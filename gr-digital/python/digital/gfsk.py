@@ -12,6 +12,7 @@
 
 
 # See gnuradio-examples/python/digital for examples
+from math import log as ln
 
 import numpy
 
@@ -190,7 +191,7 @@ class gfsk_demod(gr.hier_block2):
 
         Args:
             gain_mu: controls rate of mu adjustment (float)
-            mu: fractional delay [0.0, 1.0] (float)
+            mu: unused but unremoved for backward compatibility (unused)
             omega_relative_limit: sets max variation in omega (float, typically 0.000200 (200 ppm))
             freq_error: bit rate error as a fraction
             float:
@@ -202,7 +203,6 @@ class gfsk_demod(gr.hier_block2):
 
         self._samples_per_symbol = samples_per_symbol
         self._gain_mu = gain_mu
-        self._mu = mu
         self._omega_relative_limit = omega_relative_limit
         self._freq_error = freq_error
         self._differential = False
@@ -217,15 +217,27 @@ class gfsk_demod(gr.hier_block2):
 
         self._gain_omega = .25 * self._gain_mu * self._gain_mu        # critically damped
 
+        self._damping = 1.0
+        self._loop_bw = -ln((self._gain_mu + self._gain_omega)/(-2.0) + 1)        # critically damped
+        self._max_dev = self._omega_relative_limit * self._samples_per_symbol
+
         # Demodulate FM
         #sensitivity = (pi / 2) / samples_per_symbol
         self.fmdemod = analog.quadrature_demod_cf(1.0 / sensitivity)
 
         # the clock recovery block tracks the symbol clock and resamples as needed.
         # the output of the block is a stream of soft symbols (float)
-        self.clock_recovery = digital.clock_recovery_mm_ff(self._omega, self._gain_omega,
-                                                           self._mu, self._gain_mu,
-                                                           self._omega_relative_limit)
+        self.clock_recovery = self.digital_symbol_sync_xx_0 = digital.symbol_sync_ff(digital.TED_MUELLER_AND_MULLER,
+                            self._omega,
+                            self._loop_bw,
+                            self._damping,
+                            1.0,  # Expected TED gain
+                            self._max_dev,
+                            1,  # Output sps
+                            digital.constellation_bpsk().base(),
+                            digital.IR_MMSE_8TAP,
+                            128,
+                            [])
 
         # slice the floats at 0, outputting 1 bit (the LSB of the output byte) per sample
         self.slicer = digital.binary_slicer_fb()
@@ -248,10 +260,10 @@ class gfsk_demod(gr.hier_block2):
 
     def _print_verbage(self):
         print("bits per symbol = %d" % self.bits_per_symbol())
-        print("M&M clock recovery omega = %f" % self._omega)
-        print("M&M clock recovery gain mu = %f" % self._gain_mu)
-        print("M&M clock recovery mu = %f" % self._mu)
-        print("M&M clock recovery omega rel. limit = %f" % self._omega_relative_limit)
+        print("Symbol Sync M&M omega = %f" % self._omega)
+        print("Symbol Sync M&M gain mu = %f" % self._gain_mu)
+        print("M&M clock recovery mu (Unused) = %f" % self._mu)
+        print("Symbol Sync M&M omega rel. limit = %f" % self._omega_relative_limit)
         print("frequency error = %f" % self._freq_error)
 
 
@@ -270,13 +282,13 @@ class gfsk_demod(gr.hier_block2):
         Adds GFSK demodulation-specific options to the standard parser
         """
         parser.add_option("", "--gain-mu", type="float", default=_def_gain_mu,
-                          help="M&M clock recovery gain mu [default=%default] (GFSK/PSK)")
+                          help="Symbol Sync M&M gain mu [default=%default] (GFSK/PSK)")
         parser.add_option("", "--mu", type="float", default=_def_mu,
-                          help="M&M clock recovery mu [default=%default] (GFSK/PSK)")
+                          help="M&M clock recovery mu [default=%default] (Unused)")
         parser.add_option("", "--omega-relative-limit", type="float", default=_def_omega_relative_limit,
-                          help="M&M clock recovery omega relative limit [default=%default] (GFSK/PSK)")
+                          help="Symbol Sync M&M omega relative limit [default=%default] (GFSK/PSK)")
         parser.add_option("", "--freq-error", type="float", default=_def_freq_error,
-                          help="M&M clock recovery frequency error [default=%default] (GFSK)")
+                          help="Symbol Sync M&M frequency error [default=%default] (GFSK)")
 
     @staticmethod
     def extract_kwargs_from_options(options):
