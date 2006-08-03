@@ -91,6 +91,12 @@ _vector(pmt_t x)
   return dynamic_cast<pmt_vector*>(x.get());
 }
 
+static pmt_uniform_vector *
+_uniform_vector(pmt_t x)
+{
+  return dynamic_cast<pmt_uniform_vector*>(x.get());
+}
+
 static pmt_dict *
 _dict(pmt_t x)
 {
@@ -432,6 +438,32 @@ pmt_vector_fill(pmt_t vector, pmt_t obj)
 }
 
 ////////////////////////////////////////////////////////////////////////////
+//                       Uniform Numeric Vectors
+////////////////////////////////////////////////////////////////////////////
+
+bool
+pmt_is_uniform_vector(pmt_t x)
+{
+  return x->is_uniform_vector();
+}
+
+const void *
+pmt_uniform_vector_elements(pmt_t vector, size_t &len)
+{
+  if (!vector->is_uniform_vector())
+    throw pmt_wrong_type("pmt_uniform_vector_elements", vector);
+  return _uniform_vector(vector)->uniform_elements(len);
+}
+
+void *
+pmt_uniform_vector_writeable_elements(pmt_t vector, size_t &len)
+{
+  if (!vector->is_uniform_vector())
+    throw pmt_wrong_type("pmt_uniform_vector_writeable_elements", vector);
+  return _uniform_vector(vector)->uniform_writeable_elements(len);
+}
+
+////////////////////////////////////////////////////////////////////////////
 //                            Dictionaries
 ////////////////////////////////////////////////////////////////////////////
 
@@ -703,3 +735,4 @@ pmt_reverse_x(pmt_t list)
   // FIXME do it destructively
   return pmt_reverse(list);
 }
+

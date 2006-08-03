@@ -51,6 +51,21 @@ public:
   virtual bool is_pair()    const { return false; }
   virtual bool is_vector()  const { return false; }
   virtual bool is_dict()    const { return false; }
+
+  virtual bool is_uniform_vector() const { return false; }
+  virtual bool is_u8vector()  const { return false; }
+  virtual bool is_s8vector()  const { return false; }
+  virtual bool is_u16vector() const { return false; }
+  virtual bool is_s16vector() const { return false; }
+  virtual bool is_u32vector() const { return false; }
+  virtual bool is_s32vector() const { return false; }
+  virtual bool is_u64vector() const { return false; }
+  virtual bool is_s64vector() const { return false; }
+  virtual bool is_f32vector() const { return false; }
+  virtual bool is_f64vector() const { return false; }
+  virtual bool is_c32vector() const { return false; }
+  virtual bool is_c64vector() const { return false; }
+
 };
 
 class pmt_bool : public pmt_base
@@ -174,5 +189,15 @@ public:
   pmt_t keys() const;
   pmt_t values() const;
 };
+
+class pmt_uniform_vector : public pmt_base
+{
+public:
+  bool is_uniform_vector() const { return true; }
+  virtual const void *uniform_elements(size_t &len) = 0;
+  virtual void *uniform_writeable_elements(size_t &len) = 0;
+};
+
+#include "pmt_unv_int.h"
 
 #endif /* INCLUDED_PMT_INT_H */

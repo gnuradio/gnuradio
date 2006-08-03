@@ -1,3 +1,9 @@
+2006-07-31  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/generate_unv.py, src/lib/unv_template.cc.t,
+	src/lib/unv_template.h.t: machine generate code to support uniform
+	numeric vectors.
+
 #
 # Copyright 2006 Free Software Foundation, Inc.
 # 

@@ -25,9 +25,36 @@ TESTS = test_pmt
 
 lib_LTLIBRARIES = libpmt.la libpmt-qa.la
 
+# ----------------------------------------------------------------
+# these scripts generate code
+
+CODE_GENERATOR = 			\
+	generate_unv.py			\
+	unv_template.h.t		\
+	unv_template.cc.t		
+
+GENERATED_H =				\
+	pmt_unv_int.h			
+
+GENERATED_CC =				\
+	pmt_unv.cc			
+
+
+$(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
+	PYTHONPATH=$(top_srcdir)/src/lib srcdir=$(srcdir) $(srcdir)/generate_unv.py
+
+BUILT_SOURCES = $(GENERATED_H) $(GENERATED_CC)
+
+# ----------------------------------------------------------------
+
+EXTRA_DIST = 				\
+	$(CODE_GENERATOR)
+
+
 # These are the source files that go into the pmt shared library
 libpmt_la_SOURCES =			\
-	pmt.cc
+	pmt.cc				\
+	$(GENERATED_CC)			
 
 # magic flags
 libpmt_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
@@ -40,6 +67,7 @@ include_HEADERS =			\
 	pmt.h
 
 noinst_HEADERS = 			\
+	$(GENERATED_H)			\
 	pmt_int.h			\
 	qa_pmt.h			\
 	qa_pmt_prims.h			
@@ -69,3 +97,6 @@ LIBPMTQA = libpmt-qa.la $(LIBPMT)
 
 test_pmt_SOURCES = test_pmt.cc
 test_pmt_LDADD   = $(LIBPMTQA)
+
+
+CLEANFILES = $(BUILT_SOURCES) *.pyc
