@@ -363,18 +363,18 @@ const std::complex<double> *pmt_c64vector_elements(pmt_t v, size_t &len); //< le
 
 void *pmt_uniform_vector_writeable_elements(pmt_t v, size_t &len);  //< works with any; len is in bytes
 
-uint8_t  *pmt_u8vector_writable_elements(pmt_t v, size_t &len);  //< len is in elements
-int8_t   *pmt_s8vector_writable_elements(pmt_t v, size_t &len);  //< len is in elements
-uint16_t *pmt_u16vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-int16_t  *pmt_s16vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-uint32_t *pmt_u32vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-int32_t  *pmt_s32vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-uint64_t *pmt_u64vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-int64_t  *pmt_s64vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-float    *pmt_f32vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-double   *pmt_f64vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-std::complex<float>  *pmt_c32vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
-std::complex<double> *pmt_c64vector_writable_elements(pmt_t v, size_t &len); //< len is in elements
+uint8_t  *pmt_u8vector_writeable_elements(pmt_t v, size_t &len);  //< len is in elements
+int8_t   *pmt_s8vector_writeable_elements(pmt_t v, size_t &len);  //< len is in elements
+uint16_t *pmt_u16vector_writeable_elements(pmt_t v, size_t &len); //< len is in elements
+int16_t  *pmt_s16vector_writeable_elements(pmt_t v, size_t &len); //< len is in elements
+uint32_t *pmt_u32vector_writeable_elements(pmt_t v, size_t &len); //< len is in elements
+int32_t  *pmt_s32vector_writeable_elements(pmt_t v, size_t &len); //< len is in elements
+uint64_t *pmt_u64vector_writeable_elements(pmt_t v, size_t &len); //< len is in elements
+int64_t  *pmt_s64vector_writeable_elements(pmt_t v, size_t &len); //< len is in elements
+float    *pmt_f32vector_writeable_elements(pmt_t v, size_t &len); //< len is in elements
+double   *pmt_f64vector_writeable_elements(pmt_t v, size_t &len); //< len is in elements
+std::complex<float>  *pmt_c32vector_writeable_elements(pmt_t v, size_t &len); //< len is in elements
+std::complex<double> *pmt_c64vector_writeable_elements(pmt_t v, size_t &len); //< len is in elements
 
 /*
  * ------------------------------------------------------------------------

@@ -31,13 +31,16 @@ lib_LTLIBRARIES = libpmt.la libpmt-qa.la
 CODE_GENERATOR = 			\
 	generate_unv.py			\
 	unv_template.h.t		\
-	unv_template.cc.t		
+	unv_template.cc.t		\
+	unv_qa_template.cc.t		
 
 GENERATED_H =				\
-	pmt_unv_int.h			
+	pmt_unv_int.h			\
+	qa_pmt_unv.h			
 
 GENERATED_CC =				\
-	pmt_unv.cc			
+	pmt_unv.cc			\
+	qa_pmt_unv.cc			
 
 
 $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
@@ -54,7 +57,7 @@ EXTRA_DIST = 				\
 # These are the source files that go into the pmt shared library
 libpmt_la_SOURCES =			\
 	pmt.cc				\
-	$(GENERATED_CC)			
+	pmt_unv.cc			
 
 # magic flags
 libpmt_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
@@ -77,7 +80,8 @@ noinst_HEADERS = 			\
 
 libpmt_qa_la_SOURCES =			\
 	qa_pmt.cc			\
-	qa_pmt_prims.cc			
+	qa_pmt_prims.cc			\
+	qa_pmt_unv.cc			
 
 # magic flags
 libpmt_qa_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version

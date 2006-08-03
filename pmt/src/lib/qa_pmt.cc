@@ -26,6 +26,7 @@
 
 #include <qa_pmt.h>
 #include <qa_pmt_prims.h>
+#include <qa_pmt_unv.h>
 
 CppUnit::TestSuite *
 qa_pmt::suite ()
@@ -33,8 +34,7 @@ qa_pmt::suite ()
   CppUnit::TestSuite	*s = new CppUnit::TestSuite ("pmt");
 
   s->addTest (qa_pmt_prims::suite ());
-  //s->addTest (qa_gr_circular_file::suite ());
-  //s->addTest (qa_gr_fxpt::suite ());
+  s->addTest (qa_pmt_unv::suite ());
   
   return s;
 }

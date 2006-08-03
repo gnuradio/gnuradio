@@ -634,6 +634,21 @@ pmt_equal(pmt_t x, pmt_t y)
     return true;
   }
 
+  if (x->is_uniform_vector() && y->is_uniform_vector()){
+    pmt_uniform_vector *xv = _uniform_vector(x);
+    pmt_uniform_vector *yv = _uniform_vector(y);
+    if (xv->length() != yv->length())
+      return false;
+
+    size_t len_x, len_y;
+    if (memcmp(xv->uniform_elements(len_x),
+	       yv->uniform_elements(len_y),
+	       len_x) == 0)
+      return true;
+
+    return true;
+  }
+
   // FIXME add other cases here...
 
   return false;
@@ -645,8 +660,10 @@ pmt_length(pmt_t x)
   if (x->is_vector())
     return _vector(x)->length();
 
+  if (x->is_uniform_vector())
+    return _uniform_vector(x)->length();
+
   // FIXME list length
-  // FIXME uniform vector length
   // FIXME dictionary length (number of entries)
 
   throw pmt_wrong_type("pmt_length", x);

@@ -66,11 +66,6 @@ header = """\
  */
 """
 
-guard_head = """
-#ifndef INCLUDED_PMT_UNV_INT_H
-#define INCLUDED_PMT_UNV_INT_H
-"""
-
 guard_tail = """
 #endif
 """
@@ -82,6 +77,14 @@ includes = """
 #include <vector>
 #include <pmt.h>
 #include "pmt_int.h"
+
+"""
+
+qa_includes = """
+#include <qa_pmt_unv.h>
+#include <cppunit/TestAssert.h>
+#include <pmt.h>
+#include <stdio.h>
 
 """
 
@@ -99,6 +102,17 @@ def open_src (name, mode):
     return open(os.path.join (srcdir, name), mode)
 
 
+def guard_name(filename):
+    return 'INCLUDED_' + re.sub('\.', '_', filename.upper())
+
+def guard_head(filename):
+    guard = guard_name(filename)
+    return """
+#ifndef %s
+#define %s
+""" % (guard, guard)
+
+
 def do_substitution (d, input, out_file):
     def repl (match_obj):
         key = match_obj.group (1)
@@ -111,14 +125,14 @@ def do_substitution (d, input, out_file):
 
 def generate_h():
     template = open_src('unv_template.h.t', 'r').read()
-    output = open('pmt_unv_int.h', 'w')
+    output_filename = 'pmt_unv_int.h'
+    output = open(output_filename, 'w')
     output.write(header)
-    output.write(guard_head)
+    output.write(guard_head(output_filename))
     for tag, typ in unv_types:
         d = { 'TAG' : tag, 'TYPE' : typ }
         do_substitution(d, template, output)
     output.write(guard_tail)
-
 
 def generate_cc():
     template = open_src('unv_template.cc.t', 'r').read()
@@ -130,9 +144,47 @@ def generate_cc():
         do_substitution(d, template, output)
 
 
+def generate_qa_h():
+    output_filename = 'qa_pmt_unv.h'
+    output = open(output_filename, 'w')
+    output.write(header)
+    output.write(guard_head(output_filename))
+
+    output.write('''
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
+
+class qa_pmt_unv : public CppUnit::TestCase {
+
+  CPPUNIT_TEST_SUITE(qa_pmt_unv);
+''')
+    for tag, typ in unv_types:
+        output.write('  CPPUNIT_TEST(test_%svector);\n' % (tag,))
+    output.write('''\
+  CPPUNIT_TEST_SUITE_END();
+
+ private:
+''')     
+    for tag, typ in unv_types:
+        output.write('  void test_%svector();\n' % (tag,))
+    output.write('};\n')
+    output.write(guard_tail)
+
+def generate_qa_cc():
+    template = open_src('unv_qa_template.cc.t', 'r').read()
+    output = open('qa_pmt_unv.cc', 'w')
+    output.write(header)
+    output.write(qa_includes)
+    for tag, typ in unv_types:
+        d = { 'TAG' : tag, 'TYPE' : typ }
+        do_substitution(d, template, output)
+    
+
 def main():
     generate_h()
     generate_cc()
+    generate_qa_h()
+    generate_qa_cc()
 
 if __name__ == '__main__':
     main()
