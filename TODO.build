@@ -43,3 +43,13 @@ gnuradio-core/src/lib/utils:
 * Not all *.m files are referenced in Makefile.am for distribution. Is
 this correct?
 
+gnuradio-examples:
+
+* AUTHORS, README and README.hacking are stale
+
+* Some directories don't have Makefile.am's
+
+gnuradio-examples/python/gmsk2:
+
+* Not all examples are in Makefile.am
+

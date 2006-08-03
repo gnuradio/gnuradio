@@ -19,4 +19,4 @@
 # Boston, MA 02111-1307, USA.
 # 
 
-SUBDIRS = audio mc4020 usrp gmsk2 digital_voice multi_usrp
+SUBDIRS = audio digital_voice gmsk2 mc4020 multi_usrp usrp

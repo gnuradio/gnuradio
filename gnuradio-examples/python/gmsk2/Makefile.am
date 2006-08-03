@@ -20,6 +20,7 @@
 # 
 
 EXTRA_DIST =			\
+	README			\
 	benchmark_gmsk_rx.py	\
 	benchmark_gmsk_tx.py	\
 	benchmark_mpsk_rx.py	\

@@ -21,8 +21,5 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = README.hacking
+EXTRA_DIST = README README.hacking
 SUBDIRS = python
-
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA =
