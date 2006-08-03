@@ -25,7 +25,7 @@ include $(top_srcdir)/Makefile.common
 
 # We've got to build . before swig
 # FIXME add atsc back
-SUBDIRS =      missing runtime filter general g72x reed-solomon omnithread io . swig
+SUBDIRS = missing runtime filter general g72x reed-solomon omnithread io . swig
 
 # generate libgnuradio-core.la from the convenience libraries in subdirs
 
@@ -59,4 +59,3 @@ libgnuradio_core_qa_la_LIBADD  = 	\
 	missing/libmissing.la		\
 	libgnuradio-core.la		\
 	$(CPPUNIT_LIBS)			
-

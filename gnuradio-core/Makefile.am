@@ -29,8 +29,5 @@ EXTRA_DIST = 				\
 
 SUBDIRS = src doc
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = gnuradio-core.pc
-
 etcdir = $(sysconfdir)/gnuradio/conf.d
 etc_DATA = gnuradio-core.conf

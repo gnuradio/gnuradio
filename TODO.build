@@ -1,0 +1,45 @@
+Overall:
+
+* VPATH builds fail, starting with usrp.
+
+* Change a Makefile.am in a subdir, must manually go back up and re-run
+configure. Otherwise it gets run somehow incorrectly.
+
+* Fix overuse of LIBS vs. LIBADD, LDADD, or LDFLAGS, allong with xxx_
+
+* Make dist and distcheck have not been tested.
+
+dtools:
+
+* No checking or testing done in this directory.
+
+gnuradio-core:
+
+* NEWS, README, and TODO are stale.
+
+gnuradio-core/doc:
+
+* Make hasn't been tested yet in this directory.
+
+gnuradio-core/src/gen_interpolator_taps:
+
+* Make hasn't been tested yet in this directory.
+
+gnuradio-core/src/lib/filter:
+
+* README is stale.
+
+gnuradio-core/src/lib/general:
+
+* README is stale.
+
+gnuradio-core/src/lib/tests:
+
+* Cleanup libgnuradio-core variable, try to refer to something in
+Makefile.common 
+
+gnuradio-core/src/lib/utils:
+
+* Not all *.m files are referenced in Makefile.am for distribution. Is
+this correct?
+

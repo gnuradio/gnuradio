@@ -54,7 +54,7 @@ prep:
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(docdir)
-	@for i in $(top_srcdir)/README $(top_srcdir)/README.hacking $(top_srcdir)/ChangeLog; do \
+	@for i in $(top_srcdir)/gnuradio-core/README $(top_srcdir)/gnuradio-core/README.hacking $(top_srcdir)/gnuradio-core/ChangeLog; do \
 		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(docdir)"; \
 		$(INSTALL_DATA) $$i $(DESTDIR)$(docdir); \
 	done
