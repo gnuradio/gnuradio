@@ -53,3 +53,19 @@ gnuradio-examples/python/gmsk2:
 
 * Not all examples are in Makefile.am
 
+usrp:
+
+* README is stale
+
+usrp/doc:
+
+* Make not tested in this directory
+
+usrp/firmware/include:
+
+* Refactor include directory specification in Makefile.am into Makefile.common for use elsewhere
+
+usrp/firmware/lib:
+
+* Use refactored include directory specification from Makefile.common
+
