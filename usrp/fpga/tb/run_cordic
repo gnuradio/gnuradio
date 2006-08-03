@@ -1,0 +1,4 @@
+#!/bin/sh
+
+iverilog -y ../sdr_lib -o cordic_tb cordic_tb.v
+

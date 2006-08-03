@@ -1,0 +1,6 @@
+#!/bin/sh
+
+./test_usrp_standard_rx -D 8 -o rx.bin
+./dump_12bit_shorts <rx.bin | head -100000 >rx.ascii
+./check_order rx.ascii
+#./dump_12bit_shorts <rx.bin | ./check_order

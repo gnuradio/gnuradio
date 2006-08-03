@@ -1,0 +1,19 @@
+COMPILER_SETTINGS_LIST
+{
+	COMPILER_SETTINGS = sizetest;
+}
+SIMULATOR_SETTINGS_LIST
+{
+	SIMULATOR_SETTINGS = sizetest;
+}
+SOFTWARE_SETTINGS_LIST
+{
+	SOFTWARE_SETTINGS = Debug;
+	SOFTWARE_SETTINGS = Release;
+}
+FILES
+{
+	VERILOG_FILE = ..\..\sdr_lib\cordic_stage.v;
+	VERILOG_FILE = ..\..\sdr_lib\cordic.v;
+	VERILOG_FILE = sizetest.v;
+}

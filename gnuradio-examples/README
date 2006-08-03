@@ -1,0 +1,68 @@
+#
+# Copyright 2004 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+# 
+
+Welcome!
+
+This package is a collection of examples for the GNU Radio 2.x toolkit.
+
+They assume that at a minimum, you've got the gnuradio-core
+package installed.  In addition, depending on what i/o devices you
+have, you may want to consider installing:
+
+  gr-usrp		: support for Universal Software Radio Peripheral (Rev 1)
+  gr-audio-oss		: sound card support using OSS
+  gr-audio-alsa		: sound card support using ALSA
+  gr-audio-osx		: sound card support for OS/X
+  gr-mc4020		: Measurement Computing PCI-DAS 4020/12 A/D card
+
+
+You'll need to set your PYTHONPATH environment variable so that the
+GNU Radio toolkit and optional packages can be found by python.
+
+PYTHONPATH should include the path of the local site-packages
+directory.  It has the general form:
+
+  ${prefix}/lib/python${pythonversion}/site-packages
+
+If the above packages were installed using the default prefix
+(/usr/local) and you're using python 2.3, this should work:
+
+  $ export PYTHONPATH=/usr/local/lib/python2.3/site-packages
+
+You may want to add this to your ~/.bash_profile or similar file.
+
+
+Once PYTHONPATH is set, you should be able to run any of the examples
+for which you have the required i/o devices.
+
+To ensure that your setup is sane, try this:
+
+  $ python
+  >>> from gnuradio import gr
+
+If this works, your PYTHONPATH is set correctly.
+
+
+Have fun!
+
+The GNU Radio team
+
+

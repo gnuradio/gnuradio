@@ -1,0 +1,959 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+          "docbookx.dtd" [
+  <!ENTITY gnuradio "<application>GNU Radio</application>">
+  <!ENTITY SWIG "<application>SWIG</application>">
+  <!ENTITY gr_block "<classname>gr_block</classname>">
+  <!ENTITY square "<classname>howto_square_ff</classname>">
+
+  <!ENTITY were "we&apos;re">
+  <!ENTITY well "we&apos;ll">
+  <!ENTITY thats "that&apos;s">
+  <!ENTITY its "it&apos;s">
+  <!ENTITY lets "let&apos;s">
+  <!ENTITY youre "you&apos;re">
+
+  <!ENTITY gr_block_listing SYSTEM "gr_block.h.xml">
+  <!ENTITY qa_howto_1_listing SYSTEM "qa_howto_1.py.xml">
+  <!ENTITY howto_square_ff_h_listing SYSTEM "howto_square_ff.h.xml">
+  <!ENTITY howto_square_ff_cc_listing SYSTEM "howto_square_ff.cc.xml">
+  <!ENTITY howto_square2_ff_h_listing SYSTEM "howto_square2_ff.h.xml">
+  <!ENTITY howto_square2_ff_cc_listing SYSTEM "howto_square2_ff.cc.xml">
+  <!ENTITY howto_1_i_listing SYSTEM "howto_1.i.xml">
+  <!ENTITY src_lib_Makefile_1_am_listing SYSTEM "src_lib_Makefile_1.am.xml">
+  <!ENTITY src_lib_Makefile_2_am_listing SYSTEM "src_lib_Makefile_2.am.xml">
+
+]>
+
+<article>
+
+<articleinfo>
+<title>How to Write a Signal Processing Block</title>
+<author>
+  <firstname>Eric</firstname>
+  <surname>Blossom</surname>
+  <affiliation>
+    <address>
+      <email>eb@comsec.com</email>
+    </address>
+  </affiliation>
+</author>
+
+<revhistory>
+  <revision>
+  <revnumber>0.1</revnumber>
+  <date>2005-01-20</date>
+  </revision>
+  <revision>
+  <revnumber>0.2</revnumber>
+  <date>2005-02-02</date>
+  <revremark>Updated for SWIG 1.3.24</revremark>
+  </revision>
+  <revision>
+  <revnumber>0.3</revnumber>
+  <date>2006-07-21</date>
+  <revremark>Clarification of 1:1 fixed rate vs item size</revremark>
+  </revision>
+</revhistory>
+
+<copyright>
+  <year>2004</year>
+  <year>2005</year>
+  <holder>Free Software Foundation, Inc.</holder>
+</copyright>
+
+<abstract><para>This article explains how to write signal
+processing blocks for <application>GNU Radio</application>.
+</para></abstract>
+
+</articleinfo>
+
+<sect1 id="prereqs"><title>Prerequisites</title>
+<para>This article assumes that the reader has basic familiarity with
+GNU Radio and has read and understood 
+<ulink url="http://www.gnu.org/software/gnuradio/doc/exploring-gnuradio.html">
+<citetitle>Exploring GNU Radio</citetitle></ulink>.
+</para>
+
+<para>There is a tarball of files that accompany this article.  It
+includes the examples, DocBook source for the article and all the
+Makefiles etc it takes to make it work.  Grab it at <ulink
+url="ftp://ftp.gnu.org/gnu/gnuradio">
+ftp://ftp.gnu.org/gnu/gnuradio</ulink> or one of the mirrors.  The
+file you want is
+<filename>gr-howto-write-a-block-X.Y.tar.gz</filename>.  Pick the one
+with the highest version number. 
+See <ulink url="http://comsec.com/wiki?CvsAccess">
+http://comsec.com/wiki?CvsAccess</ulink> for CVS Access.
+</para>
+
+
+</sect1>
+
+<sect1 id="intro"><title>Introduction</title>
+<para>&gnuradio; provides a framework for building software radios.
+Waveforms -- signal processing applications -- are built using a
+combination of Python code for high level organization, policy, GUI and
+other non performance-critical functions, while performance critical
+signal processing blocks are written in C++.</para>
+
+<para>From the Python point of view, &gnuradio; provides a data flow
+abstraction.  The fundamental concepts are signal processing
+blocks and the connections between them.  This abstraction is
+implemented by the Python <classname>gr.flow_graph</classname> class.
+Each block has a set of input ports and output ports.  Each port has
+an associated data type.  The most common port types are
+<classname>float</classname> and <classname>gr_complex</classname>
+(equivalent to std::complex&lt;float&gt;), though other types are used,
+including those representing structures, arrays or other types of
+packetized data.</para>  
+
+<para>From the high level point-of-view, infinite streams of data flow
+through the ports.  At the C++ level, streams are dealt with in
+convenient sized pieces, represented as contiguous arrays of the
+underlying type.</para>
+
+</sect1>
+
+<sect1 id="overview"><title>The View from 30,000 Feet</title>
+
+<para>This article will walk through the construction of several
+simple signal processing blocks, and explain the techniques and idioms
+used.  Later sections cover debugging signal processing blocks in the
+mixed Python/C++ environment and performance measurement and
+optimization.</para>
+
+<para>The example blocks will be built in the style of all &gnuradio;
+extensions. That is, they are built outside of the gnuradio-core build
+tree, and are constructed as shared libraries that may be dynamically
+loaded into Python using the "import" mechanism.  &SWIG;, the
+Simplified Wrapper and Interface Generator, is used to generate the
+glue that allows our code to be used from Python.</para>
+
+</sect1>
+
+
+<sect1 id="gr_block"><title></title>
+
+<para>The C++ class &gr_block; is the base of all signal processing
+blocks in &gnuradio;.  Writing a new signal processing block involves
+creating 3 files: The .h and .cc files that define the new class and
+the .i file that tells &SWIG; how to generate the glue that binds the
+class into Python.  The new class must derive from &gr_block; or
+one of it&apos;s subclasses.</para>
+
+<para>Our first examples will derive directly from &gr_block;.  Later
+we will look at some other subclasses that simplify the process for
+common cases.</para>
+
+</sect1><!-- end gr_block sect1 -->
+
+
+
+<!-- ================================================================ -->
+
+<sect1 id="autotools"><title>Autotools, Makefiles, and Directory Layout</title>
+
+<para>Before we dive into the code, &lets; talk a bit about the
+overall build environment and the directory structure that &well;
+be using.</para>
+
+<para>To reduce the amount of Makefile hacking that we have to do, and
+to facilitate portability across a variety of systems, we use the GNU
+<application>autoconf</application>,
+<application>automake</application>, and
+<application>libtool</application> tools.  These are collectively
+referred to as the autotools, and once you get over the initial
+shock, they will become your friends. (The good news is that we
+provide boilerplate that can be used pretty much as-is.)</para>
+
+<variablelist>
+
+<varlistentry><term>automake</term>
+
+<listitem><para>automake and configure work together to generate GNU
+compliant Makefiles from a much higher level description contained in
+the corresponding Makefile.am file.  <filename>Makefile.am</filename>
+specifies the libraries and programs to build and the source files
+that compose each.  Automake reads <filename>Makefile.am</filename>
+and produces <filename>Makefile.in</filename>.  Configure reads
+<filename>Makefile.in</filename> and produces
+<filename>Makefile</filename>.  The resulting Makefile contains a
+zillion rules that do the right right thing to build, check and
+install your code.  It is not uncommon for the the resulting
+<filename>Makefile</filename> to be 5 or 6 times larger than
+<filename>Makefile.am</filename>.</para>
+
+</listitem>
+</varlistentry>
+
+<varlistentry><term>autoconf</term>
+<listitem><para>autoconf reads <filename>configure.ac</filename>
+and produces the <filename>configure</filename> shell
+script.  <filename>configure</filename> automatically tests for
+features of the underlying system and sets a bunch of variables and
+defines that can be used in the Makefiles and your C++ code to
+conditionalize the build.  If features are required but not found,
+configure will output an error message and stop.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry><term>libtool</term>
+<listitem><para>libtool works behind the scenes and provides the magic
+to construct shared libraries on a wide variety of systems.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para><xref linkend="dir-layout"/> shows the directory layout and
+common files &well; be using.  After renaming the
+<replaceable>topdir</replaceable> directory, use it in your projects
+too.  We'll talk about particular files as they come up later.</para>
+
+
+<table id="dir-layout"><title>Directory Layout</title>
+<tgroup cols="2">
+
+<thead><row>
+<entry>File/Dir Name</entry>
+<entry>Comment</entry>
+</row>
+</thead>
+
+<tbody>
+
+<row>
+<entry><replaceable>topdir</replaceable>/Makefile.am</entry>
+<entry>Top level Makefile.am</entry>
+</row>
+<row>
+<entry><replaceable>topdir</replaceable>/Makefile.common</entry>
+<entry>Common fragment included in sub-Makefiles</entry>
+</row>
+<row>
+<entry><replaceable>topdir</replaceable>/bootstrap</entry>
+<entry>Runs autoconf, automake, libtool first time through</entry>
+</row>
+<row>
+<entry><replaceable>topdir</replaceable>/config</entry>
+<entry>Directory of m4 macros used by configure.ac</entry>
+</row>
+<row>
+<entry><replaceable>topdir</replaceable>/configure.ac</entry>
+<entry>Input to autoconf</entry>
+</row>
+<row>
+<entry><replaceable>topdir</replaceable>/src</entry>
+</row>
+<row>
+<entry><replaceable>topdir</replaceable>/src/lib</entry>
+<entry>C++ code goes here</entry>
+</row>
+<row>
+<entry><replaceable>topdir</replaceable>/src/lib/Makefile.am</entry>
+</row>
+<row>
+<entry><replaceable>topdir</replaceable>/src/python</entry>
+<entry>Python code goes here</entry>
+</row>
+<row>
+<entry><replaceable>topdir</replaceable>/src/python/Makefile.am</entry>
+</row>
+<row>
+<entry><replaceable>topdir</replaceable>/src/python/run_tests</entry>
+<entry>Script to run tests in the build tree</entry>
+</row>
+
+</tbody>
+</tgroup>
+</table>
+
+</sect1>
+
+<!-- ================================================================ -->
+
+<sect1 id="naming"><title>Naming Conventions</title>
+
+<para>&gnuradio; uses a set of naming conventions to assist in
+comprehending the code base and gluing C++ and Python together.
+Please follow them.</para>
+
+<sect2 id="camel-case"><title><emphasis>Death to CamelCaseNames!</emphasis></title>
+
+<para>We've returned to a kinder, gentler era.  We're now using the
+&quot;STL style&quot; naming convention with a couple of modifications
+since we're not using namespaces.</para>
+
+<para>With the exception of macros and other constant values, all
+identifiers shall be lower case with <literal>words_separated_like_this</literal>.</para>
+
+<para>Macros and constant values (e.g., enumerated values,
+<literal>static const int FOO = 23</literal>) shall be in <literal>UPPER_CASE</literal>.</para>
+
+</sect2>
+
+<sect2 id="global_names"><title>Global Names</title>
+
+<para>All globally visible names (types, functions, variables, consts, etc)
+shall begin with a "package prefix", followed by an underscore.  The bulk of
+the code in GNU Radio belongs to the "gr" package, hence
+names look like <literal>gr_open_file (...)</literal>.</para>
+
+<para>Large coherent bodies of code may use other package prefixes, but
+let's try to keep them to a well thought out list.  See the list
+below.</para>
+
+</sect2>
+
+<sect2 id="package_prefixes"><title>Package Prefixes</title>
+
+<para>These are the current package prefixes:
+
+<variablelist>
+
+<varlistentry><term>gr_</term>
+<listitem><para>Almost everything.</para></listitem>
+</varlistentry>
+
+<varlistentry><term>gri_</term>
+<listitem><para>
+Implementation primitives.  Sometimes we
+have both a gr_<replaceable>foo</replaceable> and a gri_<replaceable>foo</replaceable>.  In that case,
+gr_<replaceable>foo</replaceable> would be derived from gr_block and gri_<replaceable>foo</replaceable>
+would be the low level guts of the function.</para></listitem>
+</varlistentry>
+
+<varlistentry><term>atsc_</term>
+<listitem><para>Code related to the Advanced Television Standards Committee HDTV implementation
+</para></listitem>
+</varlistentry>
+
+<varlistentry><term>usrp_</term>
+<listitem><para>Universal Software Radio Peripheral.</para></listitem>
+</varlistentry>
+
+<varlistentry><term>qa_</term>
+<listitem><para>Quality Assurance (Test code.)</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</para>
+</sect2>
+
+<sect2 id="class-data-members"><title>Class Data Members (instance variables)</title>
+
+<para>All class data members shall begin with d_<replaceable>foo</replaceable>.</para>
+
+<para>The big win is when you're staring at a block of code it's obvious
+which of the things being assigned to persist outside of the block.
+This also keeps you from having to be creative with parameter names
+for methods and constructors.  You just use the same name as the
+instance variable, without the d_. </para>
+
+<literallayout>
+class gr_wonderfulness {
+  std::string   d_name;
+  double        d_wonderfulness_factor;
+
+public:
+  gr_wonderfulness (std::string name, double wonderfulness_factor)
+    : d_name (name), d_wonderfulness_factor (wonderfulness_factor)
+  {
+    ...
+  }
+  ...
+};
+</literallayout>
+
+</sect2>
+
+<sect2 id="static-data-members"><title>Class Static Data Members (class variables)</title>
+
+<para>
+All class static data members shall begin with s_<replaceable>foo</replaceable>.
+</para>
+
+</sect2>
+
+<sect2 id="file-names"><title>File Names</title>
+
+<para>Each significant class shall be contained in its own file.  The
+declaration of class <classname>gr_foo</classname> shall be in 
+<filename>gr_foo.h</filename> and the definition in
+<filename>gr_foo.cc</filename>.</para>
+</sect2>
+
+
+<sect2><title>Suffixes</title>
+
+<para>By convention, we encode the input and output types of signal
+processing blocks in their name using suffixes.  The suffix is
+typically one or two characters long.  Source and sinks have single
+character suffixes.  Regular blocks that have both inputs and outputs
+have two character suffixes.  The first character indicates the type
+of the input streams, the second indicates the type of the output
+streams.  FIR filter blocks have a three character suffix, indicating
+the type of the inputs, outputs and taps, respectively.</para>
+
+<para>These are the suffix characters and their interpretations:
+<itemizedlist>
+<listitem><para>f - single precision floating point</para></listitem>
+<listitem><para>c - complex&lt;float&gt;</para></listitem>
+<listitem><para>s - short (16-bit integer)</para></listitem>
+<listitem><para>i - integer (32-bit integer)</para></listitem>
+</itemizedlist>
+</para>
+
+<para>In addition, for those cases where the block deals with streams
+of vectors, we use the character 'v' as the first character of the
+suffix.  An example of this usage is
+<classname>gr_fft_vcc</classname>.  The FFT block takes a vector of
+complex numbers on its input and produces a vector of complex
+numbers on its output.</para>
+
+</sect2>
+
+</sect1>
+
+
+
+
+<sect1 id="square"><title>First Block: &square;</title>
+
+<para>For our first example &well; create a block that computes
+the square of its single float input.  This block will accept a single
+float input stream and produce a single float output stream.</para>
+
+<para>Following the naming conventions, &well; use
+<literal>howto</literal> as our package prefix, and the block will
+be called <classname>howto_square_ff</classname>.</para>
+
+<para>We are going to arrange that this block, as well as the others
+that we write in this article, end up in the
+<literal>gnuradio.howto</literal> Python module.  This will allow us
+to access it from Python like this:
+<programlisting>
+from gnuradio import howto
+sqr = howto.square_ff ()
+</programlisting>
+</para>
+
+
+<sect2 id="test_driven"><title>Test Driven Programming</title>
+
+<para>We could just start banging out the C++ code, but being highly
+evolved modern programmers, &were; going to write the test code first.
+After all, we do have a good spec for the behavior: take a single
+stream of floats as the input and produce a single stream of floats as
+the output. The output should be the square of the input.</para>
+
+<para>How hard could this be?  Turns out that this is easy! Check out 
+<xref linkend="qa_howto_1.py"/>.</para>
+
+<example id="qa_howto_1.py">
+<title><filename>qa_howto.py</filename> (first version)</title>
+&qa_howto_1_listing;
+</example>
+
+<para>
+<classname>gr_unittest</classname> is an extension to the standard
+python module <classname>unittest</classname>.
+<classname>gr_unittest</classname> adds support for checking
+approximate equality of tuples of float and complex numbers.  
+Unittest uses Python&apos;s reflection mechanism to find all methods that start with
+<methodname>test_</methodname> and runs them.  Unittest wraps each call
+to <methodname>test_*</methodname> with matching calls to 
+<methodname>setUp</methodname> and <methodname>tearDown</methodname>.
+See the python <ulink url="http://docs.python.org/lib/module-unittest.html">
+unittest</ulink> documentation for details.
+</para>
+
+<para>When we run the test,
+gr_unittest.main is going to invoke
+<methodname>setUp</methodname>,
+<methodname>test_001_square_ff</methodname>, and
+<methodname>tearDown</methodname>.</para>
+<para>
+<methodname>test_001_square_ff</methodname> builds a small graph that
+contains three nodes.  gr.vector_source_f(src_data) will source the
+elements of src_data and then say that &its; finished.  howto.square_ff is the block
+&were; testing.  gr.vector_sink_f gathers the output of
+howto.square_ff.</para>
+
+<para>The <methodname>run</methodname> method runs the graph until all
+the blocks indicate they are finished.  Finally, we check that the
+result of executing square_ff on src_data matches what we expect.
+</para>
+
+</sect2>
+
+<sect2 id="build_vs_install"><title>Build Tree vs. Install Tree</title>
+
+<para>The build tree is everything from <replaceable>topdir</replaceable>
+(the one containing configure.ac) down.  The path to the install tree is
+<filename>
+<replaceable>prefix</replaceable>/lib/python<replaceable>version</replaceable>/site-packages</filename>,
+where <replaceable>prefix</replaceable> is the <literal>--prefix</literal>
+argument to configure (default <filename>/usr/local</filename>) and 
+<replaceable>version</replaceable> is the installed version of
+python. A typical value is 
+<filename>/usr/local/lib/python2.3/site-packages</filename>.</para>
+
+
+<para>We normally set our PYTHONPATH environment variable to point at
+the install tree, and do this in <filename>~/.bash_profile</filename> 
+or <filename>~/.profile</filename>.
+This allows our python apps to access all the standard python
+libraries, plus our locally installed stuff like GNU Radio.</para>
+
+<para>We write our applications such that they access the code and
+libraries in the install tree.  On the other hand, we want our test
+code to run on the build tree, where we can detect problems before
+installation.</para>
+
+</sect2>
+
+<sect2 id="make_check"><title>make check</title>
+
+
+<para>We use <command>make check</command> to run our tests.
+Make check invokes the <command>run_tests</command> shell script which 
+sets up the PYTHONPATH environment variable so that 
+our tests use the build tree versions of our code and libraries.
+It then runs all files
+which have names of the form <filename>qa_*.py</filename> and reports
+the overall success or failure.</para>
+
+<para>There is quite a bit of behind-the-scenes action required to use
+the non-installed versions of our code (look at
+<filename>runtest</filename> for a cheap thrill.)</para>
+
+<para>Finally, running <command>make check</command> in the python
+directory produces this result:
+<literallayout>
+  [eb@bufo python]$ make check
+  make  check-TESTS
+  make[1]: Entering directory `/home/eb/gr-build/gr-howto-write-a-block/src/python'
+  Traceback (most recent call last):
+    File "./qa_howto.py", line 24, in ?
+      import howto
+  ImportError: No module named howto
+  Traceback (most recent call last):
+    File "./qa_howto_1.py", line 24, in ?
+      import howto
+  ImportError: No module named howto
+  FAIL: run_tests
+  ===================
+  1 of 1 tests failed
+  ===================
+  make[1]: *** [check-TESTS] Error 1
+  make[1]: Leaving directory `/home/eb/gr-build/gr-howto-write-a-block/src/python'
+  make: *** [check-am] Error 2
+  [eb@bufo python]$
+</literallayout>
+Excellent!  Our test failed, just as we expected.  The ImportError
+indicates that it can't find the module named
+<classname>howto</classname>.  No surprise, since we haven't written it yet.
+</para>
+
+</sect2>
+
+<sect2><title>The C++ code</title>
+<para>Now that we've got a test case written that successfully fails,
+let's write the C++ code.  As we mentioned earlier, all signal
+processing blocks are derived from <classname>gr_block</classname> or
+one of its subclasses.  Let's take a look at 
+<xref linkend="gr_block.h"/>.</para>
+
+<example id="gr_block.h">
+<title><filename>gr_block.h</filename></title>
+&gr_block_listing;
+</example>
+
+<para>A quick scan of <filename>gr_block.h</filename> reveals that
+since <methodname>general_work</methodname> is pure virtual, we
+definitely need to override that. 
+<methodname>general_work</methodname> is the method that does the
+actual signal processing.  For our squaring example we'll
+need to override <methodname>general_work</methodname> and provide a
+constructor and destructor and a bit of stuff to take advantage of
+the <ulink url="http://www.boost.org">boost</ulink>
+<ulink url="http://www.boost.org/libs/smart_ptr/smart_ptr.htm">
+<classname>shared_ptr</classname>s.</ulink>
+
+</para>
+
+
+<para><xref linkend="howto_square_ff.h"/> 
+and <xref linkend="howto_square_ff.cc"/> are the header and c++
+source.</para>
+
+<example id="howto_square_ff.h">
+<title><filename>howto_square_ff.h</filename></title>
+&howto_square_ff_h_listing;
+</example>
+
+<example id="howto_square_ff.cc">
+<title><filename>howto_square_ff.cc</filename></title>
+&howto_square_ff_cc_listing;
+</example>
+
+<para>Now we need a Makefile.am to get all this to build.  
+<xref linkend="src_lib_Makefile_1"/> 
+is enough to build a shared library from our source file.  We'll be
+adding additional rules to use &SWIG; in just a bit.  If you haven't
+already, this is a good time to browse all the Makefile.am&apos;s in
+the build tree and get an idea for how it all hangs together.</para>
+
+<example id="src_lib_Makefile_1">
+<title><filename>src/lib/Makefile.am</filename> (no &SWIG;)</title>
+&src_lib_Makefile_1_am_listing;
+</example>
+
+</sect2>
+
+
+<!-- ==============================
+
+<sect2 id="io_sig"><title><classname>gr_io_signature</classname></title>
+<para></para>
+</sect2>
+
+<sect2 id="forecast"><title><methodname>forecast</methodname></title>
+<para></para>
+</sect2>
+
+<sect2 id="output_multiple">
+<title><methodname>set_output_multiple</methodname></title>
+<para></para>
+</sect2>
+
+  ============================== -->
+
+
+<sect2 id="swig"><title>The &SWIG; .i file</title> 
+
+<para>Now that we've got something that will compile, we need to write
+the &SWIG; .i file.  This is a pared-down version of the .h file, plus
+a bit of magic that has python work with the boost shared_ptr&apos;s.
+To reduce code bloat, we only declare methods that &well; want to
+access from Python.</para>
+
+<para>We&apos;re going to call the .i file
+<filename>howto.i</filename>, and use it to hold the &SWIG;
+declarations for all classes from <literal>howto</literal> that will
+be accessible from python.  It&apos;s quite small:
+&howto_1_i_listing;
+</para>
+
+</sect2>
+
+<sect2><title>Putting it all together</title>
+<para>
+Now we need to modify <filename>src/lib/Makefile.am</filename>
+to run &SWIG; and to add the glue it generates to the shared library.</para>
+
+<example id="src_lib_Makefile_2">
+<title><filename>src/lib/Makefile.am</filename> (with &SWIG;)</title>
+&src_lib_Makefile_2_am_listing;
+</example>
+
+<para><command>make</command> now builds everything successfully.  We get a
+few warnings, but &thats; OK.</para>
+
+<para>Changing directories back to the python directory we try
+<command>make check</command> again:
+<literallayout>
+  [eb@bufo python]$ make check
+  make  check-TESTS
+  make[1]: Entering directory `/home/eb/gr-build/gr-howto-write-a-block/src/python'
+  .
+  ----------------------------------------------------------------------
+  Ran 1 test in 0.004s
+  
+  OK
+  PASS: run_tests
+  ==================
+  All 1 tests passed
+  ==================
+  make[1]: Leaving directory `/home/eb/gr-build/gr-howto-write-a-block/src/python'
+  [eb@bufo python]$
+</literallayout>
+<emphasis>Victory! Our new block works!</emphasis>
+</para>
+
+</sect2>
+
+</sect1><!-- end First Block: square -->
+
+<sect1 id="additional_methods"><title>Additional gr_block methods</title>
+
+<para>In our <classname>howto_square_ff</classname> example above, we only
+had to override the <methodname>general_work</methodname> method to
+accomplish our goal.  <classname>gr_block</classname> provides a few other
+methods that are sometimes useful.</para>
+
+<sect2 id="forecast"><title>forecast</title>
+
+<para>Looking at <methodname>general_work</methodname> you may
+have wondered how the system knows how much data it needs to
+ensure is valid in each of the input arrays.  The
+<methodname>forecast</methodname> method provides this
+information.</para>
+
+<para>The default implementation of <methodname>forecast</methodname>
+says there is a 1:1 relationship between noutput_items and the
+requirements for each input stream.  The size of the items is defined by
+<classname>gr_io_signature</classname>s in the constructor of
+<classname>gr_block</classname>. The sizes of the input and output items
+can of course differ; this still qualifies as a 1:1 relationship.
+<programlisting>
+  // default implementation:  1:1
+
+  void
+  gr_block::forecast (int noutput_items,
+                      gr_vector_int &amp;ninput_items_required)
+  {
+    unsigned ninputs = ninput_items_required.size ();
+    for (unsigned i = 0; i &lt; ninputs; i++)
+      ninput_items_required[i] = noutput_items;
+  }
+</programlisting>
+</para>
+
+<para>Although the 1:1 implementation worked for howto_square_ff, it
+wouldn&apos;t be appropriate for interpolators, decimators, or blocks
+with a more complicated relationship between noutput_items and the
+input requirements.  That said, by deriving your classes from
+<classname>gr_sync_block</classname>,
+<classname>gr_sync_interpolator</classname> or
+<classname>gr_sync_decimator</classname> instead of
+<classname>gr_block</classname>, you can often avoid
+implementing <methodname>forecast</methodname>.</para>
+
+</sect2>
+
+<sect2 id="set_output_multiple"><title>set_output_multiple</title>
+
+<para>When implementing your <methodname>general_work</methodname>
+routine, &its; occasionally convenient to have the run time system
+ensure that you are only asked to produce a number of output items
+that is a multiple of some particular value.  This might occur if your
+algorithm naturally applies to a fixed sized block of data. 
+Call <methodname>set_output_multiple</methodname> in your constructor
+to specify this requirement. The default output multiple is 1.</para>
+
+</sect2>
+
+</sect1>
+
+
+<sect1 id="common_patterns">
+<title>Subclasses for common patterns</title>
+
+<para><classname>gr_block</classname> allows tremendous flexibility
+with regard to the consumption of input streams and the production of
+output streams.  Adroit use of <methodname>forecast</methodname> and
+<methodname>consume</methodname> allows variable rate blocks to be
+built.  It is possible to construct blocks that consume data at
+different rates on each input, and produce output at a rate that
+is a function of the contents of the input data.</para>
+
+<para>On the other hand, it is very common for signal processing
+blocks to have a fixed relationship between the input rate and the
+output rate.  Many are 1:1, while others have 1:N or N:1
+relationships.</para>
+
+<para>Another common requirement is the need to examine more than one
+input sample to produce a single output sample.  This is orthogonal to
+the relationship between input and output rate.  For example, a
+non-decimating, non-interpolating FIR filter needs to examine N input
+samples for each output sample it produces, where N is the number of
+taps in the filter.  However, it only consumes a single input sample
+to produce a single output.  We call this concept "history", but you
+could also think of it as "look-ahead".</para>
+
+<sect2 id="gr_sync_block"><title><classname>gr_sync_block</classname></title>
+
+<para>
+<ulink url="http://www.gnu.org/software/gnuradio/doc/classgr__sync__block.html">
+<classname>gr_sync_block</classname></ulink>
+is derived from
+<ulink url="http://www.gnu.org/software/gnuradio/doc/classgr__block.html">
+<classname>gr_block</classname></ulink>
+and implements a 1:1 block with
+optional history.  Given that we know the input to output rate,
+certain simplifications are possible.  From the implementor&apos;s
+point-of-view, the primary change is that we define a
+<methodname>work</methodname> method instead of
+<methodname>general_work</methodname>.  <methodname>work</methodname>
+has a slightly different calling sequence;
+It omits the unnecessary ninput_items parameter, and arranges for
+<methodname>consume_each</methodname> to be called on our
+behalf.</para>
+<programlisting>
+  /*!
+   * \brief Just like gr_block::general_work, only this arranges to
+   *  call consume_each for you.
+   *
+   * The user must override work to define the signal processing code
+   */
+  virtual int work (int noutput_items,
+                    gr_vector_const_void_star &amp;input_items,
+                    gr_vector_void_star &amp;output_items) = 0;
+</programlisting>
+
+<para>This gives us fewer things to worry about, and less code to
+write.  If the block requires history greater than 1, call
+<methodname>set_history</methodname> in the constructor, or any time
+the requirement changes.</para>
+
+<para><classname>gr_sync_block</classname> provides a
+version of <methodname>forecast</methodname> that handles the
+history requirement.</para>
+
+</sect2>
+
+<sect2 id="gr_sync_decimator"><title><classname>gr_sync_decimator</classname></title>
+
+<para>
+<ulink url="http://www.gnu.org/software/gnuradio/doc/classgr__sync__decimator.html">
+<classname>gr_sync_decimator</classname></ulink>
+is derived from
+<ulink url="http://www.gnu.org/software/gnuradio/doc/classgr__sync__block.html">
+<classname>gr_sync_block</classname></ulink>
+and implements a N:1 block with optional history.  
+</para>
+
+</sect2>
+
+<sect2 id="gr_sync_interpolator"><title><classname>gr_sync_interpolator</classname></title>
+
+<para>
+<ulink url="http://www.gnu.org/software/gnuradio/doc/classgr__sync__interpolator.html">
+<classname>gr_sync_interpolator</classname></ulink>
+is derived from
+<ulink url="http://www.gnu.org/software/gnuradio/doc/classgr__sync__block.html">
+<classname>gr_sync_block</classname></ulink>
+and implements a 1:N block with optional history.  
+</para>
+
+</sect2>
+
+
+</sect1>
+
+<sect1 id="square2">
+<title>Second Block: <classname>howto_square2_ff</classname></title>
+
+<para>Given that we now know about
+<classname>gr_sync_block</classname>, the way 
+<classname>howto_square_ff</classname> should really be implemented is
+by subclassing <classname>gr_sync_block</classname>.</para>
+
+<para>Here are the revised sources: <xref
+linkend="howto_square2_ff.h"/>, 
+<xref linkend="howto_square2_ff.cc"/>.  
+The accompanying files contain the additional test code.
+</para>
+
+<example id="howto_square2_ff.h">
+<title><filename>howto_square2_ff.h</filename></title>
+&howto_square2_ff_h_listing;
+</example>
+
+<example id="howto_square2_ff.cc">
+<title><filename>howto_square2_ff.cc</filename></title>
+&howto_square2_ff_cc_listing;
+</example>
+
+</sect1>
+
+<sect1 id="where_to"><title>Where to from Here?</title>
+
+<para>At this point, we&apos;ve got a basic overview of how the system
+goes together.  For more insight, I suggest that you look at the code
+of the system.  The doxygen generated <ulink
+url="http://www.gnu.org/software/gnuradio/doc/hierarchy.html"> class
+hierarchy</ulink> is a useful way to find things that might interest
+you.</para>
+
+</sect1>
+
+
+<sect1 id="tips"><title>Miscellaneous Tips</title>
+
+<sect2 id="sources_and_sinks"><title>Sources and Sinks</title>
+
+<para>Sources and sinks are derived from
+<classname>gr_sync_block</classname>.  The only thing different about
+them is that sources have no inputs and sinks have no outputs.  This
+is reflected in the <classname>gr_io_signature</classname>s that are
+passed to the <classname>gr_sync_block</classname> constructor.
+Take a look at <filename>gr_file_source.{h,cc}</filename> and
+<filename>gr_file_sink.{h,cc}</filename> for some very straight-forward examples.
+</para>
+
+</sect2>
+
+<sect2 id="debugging">
+<title>Debugging with <application>gdb</application></title>
+
+<para>If your block isn&apos;t working, and you can&apos;t sort it
+out through python test cases or a few printfs in the code, you may want to
+use <application>gdb</application> to debug it.  The trick of course
+is that all of &gnuradio;, including your new block, is dynamically
+loaded into python for execution.</para>
+
+<para>Try this:  In your python test code, after the relevant imports,
+print out the process id and wait for a keystroke.  In another
+window run gdb and tell it to attach to the python process with the
+given process id.  At this point you can set breakpoints or whatever
+in your code.  Go back to the python window and hit Enter so
+it&apos;ll continue.</para>
+
+<programlisting>
+  #!/usr/bin/env python
+  from gnuradio import gr
+  from gnuradio import my_buggy_module
+
+  # insert this in your test code...
+  import os
+  print 'Blocked waiting for GDB attach (pid = %d)' % (os.getpid(),)
+  raw_input ('Press Enter to continue: ')
+  # remainder of your test code follows...
+</programlisting>
+
+<para>Another SNAFU you might run into is that gdb 6.2 isn&apos;t
+able to set breakpoints in the constructors or destructors generated
+by g++ 3.4.  In this case, insert a call to the nop function
+gri_debugger_hook in the constructor and recompile.  Load the code as
+before and set a break point on gri_debugger_hook.</para>
+
+</sect2>
+
+<sect2 id="oprofile">
+<title>Performance Measurement with <application>oprofile</application></title>
+<para>Oprofile is your friend.  
+See <ulink url="http://oprofile.sourceforge.net">http://oprofile.sourceforge.net</ulink>.
+</para>
+</sect2>
+
+</sect1><!-- end tips -->
+
+<sect1 id="futures"><title>Coming Attractions</title>
+<para></para>
+
+<sect2 id="types"><title>Improved Type System</title>
+<para></para>
+</sect2>
+
+<sect2 id="hierarchy"><title>Hierarchical Blocks</title>
+<para></para>
+</sect2>
+
+</sect1><!-- end Coming Attractions -->
+
+</article>

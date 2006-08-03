@@ -1,0 +1,39 @@
+* Standard command line options
+
+When building applications or examples, if your command has any of
+these options, please use the following short and long names:
+
+
+
+  # General
+
+  parser = OptionParser(option_class=eng_option)
+  
+  parser.add_option("-f", "--freq", type="eng_float", default=None,
+                    help="set frequency to FREQ", metavar="FREQ")
+  parser.add_option("-g", "--gain", type="eng_float", default=None,
+                    help="set gain in dB (default is midpoint)")
+  parser.add_option("-F", "--filename", type="string", default=None)
+
+  # Audio devices
+
+  parser.add_option("-I", "--audio-input", type=string, default="",
+                    help="pcm input device name.  E.g., hw:0,0 or /dev/dsp")
+  parser.add_option("-O", "--audio-output", type=string, default="",
+                    help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
+  parser.add_option("-r", "--sample-rate", type="eng_float", default=48000,
+                    help="set sample rate to RATE (48000)")
+  
+  # USRP specific
+  
+  parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=(0, 0),
+                    help="select USRP Rx side A or B (default=A)")
+  parser.add_option("-T", "--tx-subdev-spec", type="subdev", default=(0, 0),
+                    help="select USRP Tx side A or B (default=A)")
+  parser.add_option("-d", "--decim", type="int", default=16,
+                    help="set fgpa decimation rate to DECIM (default=16)")
+  parser.add_option("-i", "--interp", type="int", default=32,
+                    help="set fgpa interpolation rate to INTERP (default=32)")
+  parser.add_option("-n", "--nchannels", type=intx, default=1,
+                    help="set number of channels to NCHANNELS (default=1)")
+

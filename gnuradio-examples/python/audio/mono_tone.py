@@ -1,0 +1,66 @@
+#!/usr/bin/env python
+#
+# Copyright 2004,2005 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+# 
+
+from gnuradio import gr
+from gnuradio import audio
+from gnuradio.eng_option import eng_option
+from optparse import OptionParser
+
+#import os
+#print os.getpid()
+#raw_input('Attach gdb and press Enter: ')
+
+class my_graph(gr.flow_graph):
+
+    def __init__(self):
+        gr.flow_graph.__init__(self)
+
+        parser = OptionParser(option_class=eng_option)
+        parser.add_option("-O", "--audio-output", type="string", default="",
+                          help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
+        parser.add_option("-r", "--sample-rate", type="eng_float", default=48000,
+                          help="set sample rate to RATE (48000)")
+        parser.add_option("-D", "--dont-block", action="store_false", default=True,
+                          dest="ok_to_block")
+
+        (options, args) = parser.parse_args ()
+        if len(args) != 0:
+            parser.print_help()
+            raise SystemExit, 1
+
+        sample_rate = int(options.sample_rate)
+        ampl = 0.1
+
+        src0 = gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE, 650, ampl)
+
+        dst = audio.sink (sample_rate,
+                          options.audio_output,
+                          options.ok_to_block)
+            
+        self.connect (src0, (dst, 0))
+
+
+if __name__ == '__main__':
+    try:
+        my_graph().run()
+    except KeyboardInterrupt:
+        pass

@@ -1,0 +1,63 @@
+USRP Darwin Fast USB Changes
+Version 0.2 of 2006-04-27
+Michael Dickens <mdickens @at@ nd .dot. edu>
+
+The files included in this archive are:
+
+circular_buffer.h
+circular_linked_list.h
+darwin_libusb.h
+fusb_darwin.cc
+fusb_darwin.h
+mld_threads.h
+
+These files allow GNURadio code for Darwin / MaxOS X to talk to the
+USRP via USB 2.0 at rates up to around 30 Mega-Bytes/sec (MBps), up
+from 4-8 MBps without the changes.
+
+I implemented the buffering myself; there are probably GR buffers
+available which would do the work but as this is "beta" software it's
+a good place to start.  Speed improvements are made by porting
+LIBUSB's non-true async bulk read and write functions into USRP's
+"fusb", and upgrading them to handle -true- async transfers.
+Unfortunately, the easiest way to do this is to spawn a thread or 2 to
+handle the "async" part of the transfers.  This implementation uses
+Darwin's pthreads to do the work for mutexes, conditions, and threads.
+Previous implementations (0.1 and before) used "omni_threads" as
+provided by gnuradio-core, which caused issues with compiling and
+execution ... I'm glad that this is no longer the case.
+
+As far as I have tested, there is no way to improve the throughput to
+32+ MBps without moving into Darwin's "port"s ... a kernel-level data
+transport method with a user/application layer for USB-specific
+functions.  Unfortunately, Apple's documentation for these "port"s is
+minimal; I have learned more from reading the Darwin source code
+< http://darwinsource.opendarwin.org/ > than by reading Apple's
+documents!  This would also require -not- using LIBUSB, of which the
+removal from the rest of the USRP code would be potentially tedious.
+
+If you run into issues either compiling or testing the USRP on
+OSX, please send me a note.
+
+(1) Go through the bootstrap, configure, compile, and install as
+usual (e.g. see < http://www.nd.edu/~mdickens/GNURadio/ > for my
+usual).
+
+(2) from .../usrp/host/apps :  run the scripts
+++++++++++++++++
+./test_usrp_standard_tx
+./test_usrp_standard_rx
+++++++++++++++++
+
+For -all- systems I've tested on thus far, both of these return
+exactly 41 overruns / underruns, and -most- systems start out with a
+stalled pipe.  This stall comes in a usb_control funciton call to
+LIBUSB; one would have to change the LIBUSB code to handle this issue.
+
+(3) from gr-build/gnuradio-examples/python/usrp :
+++++++++++++++++
+./benchmark_usb.py
+++++++++++++++++
+
+(4) If you get to here, the try doing the FM receiver (gui or not).
+If that sounds correct, then the USB is working.  Yay!

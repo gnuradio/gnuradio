@@ -1,0 +1,440 @@
+#
+# Copyright 2001,2002,2004,2006 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+# 
+
+include $(top_srcdir)/Makefile.common
+
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES)
+
+noinst_LTLIBRARIES = libgeneral.la libgeneral-qa.la
+
+# ----------------------------------------------------------------
+# these scripts generate code
+
+CODE_GENERATOR = 			\
+	generate_all.py			\
+	generate_common.py		\
+	gr_add_XX.cc.t			\
+	gr_add_XX.h.t			\
+	gr_add_XX.i.t			\
+	gr_add_const_XX.cc.t		\
+	gr_add_const_XX.h.t		\
+	gr_add_const_XX.i.t		\
+        gr_chunks_to_symbols_XX.cc.t	\
+        gr_chunks_to_symbols_XX.h.t	\
+        gr_chunks_to_symbols_XX.i.t	\
+	gr_divide_XX.cc.t		\
+	gr_divide_XX.h.t		\
+	gr_divide_XX.i.t		\
+	gr_multiply_XX.cc.t		\
+	gr_multiply_XX.h.t		\
+	gr_multiply_XX.i.t		\
+	gr_multiply_const_XX.cc.t	\
+	gr_multiply_const_XX.h.t	\
+	gr_multiply_const_XX.i.t	\
+	gr_mute_XX.cc.t			\
+	gr_mute_XX.h.t			\
+	gr_mute_XX.i.t			\
+	gr_noise_source_X.cc.t		\
+	gr_noise_source_X.h.t		\
+	gr_noise_source_X.i.t		\
+	gr_packed_to_unpacked_XX.cc.t	\
+	gr_packed_to_unpacked_XX.h.t	\
+	gr_packed_to_unpacked_XX.i.t	\
+	gr_sig_source_X.cc.t		\
+	gr_sig_source_X.h.t		\
+	gr_sig_source_X.i.t		\
+	gr_sub_XX.cc.t			\
+	gr_sub_XX.h.t			\
+	gr_sub_XX.i.t			\
+	gr_unpacked_to_packed_XX.cc.t	\
+	gr_unpacked_to_packed_XX.h.t	\
+	gr_unpacked_to_packed_XX.i.t	\
+	gr_vector_source_X.cc.t		\
+	gr_vector_source_X.h.t		\
+	gr_vector_source_X.i.t		\
+	gr_vector_sink_X.cc.t		\
+	gr_vector_sink_X.h.t		\
+	gr_vector_sink_X.i.t		
+
+# include $(srcdir)/Makefile.gen
+include Makefile.gen
+
+
+$(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
+	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(srcdir)/generate_all.py
+
+
+BUILT_SOURCES = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC)
+
+# ----------------------------------------------------------------
+
+EXTRA_DIST = 				\
+	$(CODE_GENERATOR)		\
+	gen_sine_table.py		\
+	gr_prefix.cc.in			
+
+libgeneral_la_SOURCES = 		\
+	$(GENERATED_CC)			\
+	gr_agc_cc.cc                	\
+	gr_agc_ff.cc                	\
+	gr_align_on_samplenumbers_ss.cc	\
+	gr_binary_slicer_fb.cc		\
+	gr_bytes_to_syms.cc		\
+	gr_char_to_float.cc		\
+	gr_check_counting_s.cc		\
+	gr_check_lfsr_32k_s.cc		\
+	gr_circular_file.cc		\
+	gr_clock_recovery_mm_cc.cc	\
+	gr_clock_recovery_mm_ff.cc	\
+	gr_complex_to_interleaved_short.cc \
+	gr_complex_to_xxx.cc		\
+	gr_conjugate_cc.cc		\
+	gr_constellation_decoder_cb.cc	\
+	gr_correlate_access_code_bb.cc	\
+	gr_costas_loop_cc.cc		\
+	gr_count_bits.cc		\
+	gr_crc32.cc			\
+	gr_ctcss_squelch_ff.cc		\
+	gr_dd_mpsk_sync_cc.cc		\
+	gr_deinterleave.cc		\
+	gr_diff_decoder_bb.cc		\
+	gr_diff_encoder_bb.cc		\
+	gr_diff_phasor_cc.cc		\
+	gr_fake_channel_coder_pp.cc	\
+	gr_fast_atan2f.cc		\
+	gr_feval.cc			\
+	gr_fft_vcc.cc			\
+	gr_fft_vfc.cc			\
+	gr_firdes.cc			\
+	gr_float_to_char.cc		\
+	gr_float_to_complex.cc		\
+	gr_float_to_short.cc		\
+	gr_float_to_uchar.cc		\
+	gr_frequency_modulator_fc.cc	\
+	gr_fxpt.cc			\
+	gr_framer_sink_1.cc		\
+	gr_head.cc			\
+	gr_interleave.cc		\
+	gr_interleaved_short_to_complex.cc \
+	gr_keep_one_in_n.cc		\
+	gr_kludge_copy.cc		\
+	gr_lfsr_32k_source_s.cc		\
+	gr_lms_dfe_cc.cc		\
+	gr_lms_dfe_ff.cc		\
+	gr_map_bb.cc			\
+	gr_math.cc			\
+	gr_misc.cc			\
+	gr_nlog10_ff.cc			\
+	gr_nop.cc			\
+	gr_null_sink.cc			\
+	gr_null_source.cc		\
+	gr_pa_2x2_phase_combiner.cc	\
+	gr_packet_sink.cc		\
+	gr_phase_modulator_fc.cc	\
+	gr_pll_carriertracking_cc.cc	\
+	gr_pll_freqdet_cf.cc		\
+	gr_pll_refout_cc.cc		\
+	gr_prefix.cc			\
+	gr_prefs.cc			\
+	gr_probe_avg_mag_sqrd_c.cc	\
+	gr_probe_avg_mag_sqrd_f.cc	\
+	gr_probe_signal_f.cc		\
+	gr_pwr_squelch_cc.cc		\
+	gr_pwr_squelch_ff.cc		\
+	gr_quadrature_demod_cf.cc	\
+	gr_random.cc			\
+	gr_remez.cc			\
+	gr_reverse.cc			\
+	gr_rms_cf.cc			\
+	gr_rms_ff.cc			\
+	gr_short_to_float.cc		\
+	gr_simple_correlator.cc		\
+	gr_simple_framer.cc		\
+	gr_simple_squelch_cc.cc		\
+	gr_skiphead.cc			\
+	gr_squelch_base_cc.cc		\
+	gr_squelch_base_ff.cc		\
+	gr_stream_to_streams.cc		\
+	gr_stream_to_vector.cc		\
+	gr_streams_to_stream.cc		\
+	gr_streams_to_vector.cc		\
+	gr_sync_block.cc		\
+	gr_sync_decimator.cc		\
+	gr_sync_interpolator.cc		\
+        gr_test.cc                      \
+	gr_threshold_ff.cc		\
+	gr_throttle.cc			\
+	gr_uchar_to_float.cc		\
+	gr_vco_f.cc			\
+	gr_vector_to_stream.cc		\
+	gr_vector_to_streams.cc		\
+	gri_add_const_ss_generic.cc	\
+	gri_char_to_float.cc		\
+	gri_debugger_hook.cc		\
+	gri_fft.cc			\
+	gri_float_to_char.cc		\
+	gri_float_to_short.cc		\
+	gri_float_to_uchar.cc		\
+	gri_interleaved_short_to_complex.cc \
+	gri_short_to_float.cc		\
+	gri_uchar_to_float.cc		\
+	malloc16.c			\
+	gr_unpack_k_bits_bb.cc
+
+libgeneral_qa_la_SOURCES = 		\
+	qa_general.cc			\
+	qa_gr_circular_file.cc		\
+	qa_gr_firdes.cc			\
+	qa_gr_fxpt.cc			\
+	qa_gr_fxpt_nco.cc		\
+	qa_gr_fxpt_vco.cc		
+
+
+
+grinclude_HEADERS = 			\
+	$(GENERATED_H)			\
+	gr_agc_cc.h                 	\
+	gr_agc_ff.h                 	\
+	gr_align_on_samplenumbers_ss.h	\
+	gr_binary_slicer_fb.h		\
+	gr_bytes_to_syms.h		\
+	gr_char_to_float.h		\
+	gr_check_counting_s.h		\
+	gr_check_lfsr_32k_s.h		\
+	gr_circular_file.h		\
+	gr_clock_recovery_mm_cc.h	\
+	gr_clock_recovery_mm_ff.h	\
+	gr_complex_to_interleaved_short.h \
+	gr_complex_to_xxx.h		\
+	gr_conjugate_cc.h		\
+	gr_constellation_decoder_cb.h	\
+	gr_correlate_access_code_bb.h	\
+	gr_costas_loop_cc.h		\
+	gr_count_bits.h			\
+	gr_crc32.h			\
+	gr_ctcss_squelch_ff.h		\
+	gr_dd_mpsk_sync_cc.h		\
+	gr_diff_decoder_bb.h		\
+	gr_diff_encoder_bb.h		\
+	gr_deinterleave.h		\
+	gr_diff_phasor_cc.h		\
+	gr_endianness.h			\
+	gr_expj.h			\
+	gr_fake_channel_coder_pp.h	\
+	gr_feval.h			\
+	gr_fft_vcc.h			\
+	gr_fft_vfc.h			\
+	gr_firdes.h			\
+	gr_float_to_char.h		\
+	gr_float_to_complex.h		\
+	gr_float_to_short.h		\
+	gr_float_to_uchar.h		\
+	gr_framer_sink_1.h		\
+	gr_frequency_modulator_fc.h	\
+	gr_fxpt.h			\
+	gr_fxpt_nco.h			\
+	gr_fxpt_vco.h			\
+	gr_head.h			\
+	gr_interleave.h			\
+	gr_interleaved_short_to_complex.h \
+	gr_keep_one_in_n.h		\
+	gr_kludge_copy.h		\
+	gr_lfsr_32k_source_s.h		\
+	gr_lms_dfe_cc.h			\
+	gr_lms_dfe_ff.h			\
+	gr_log2_const.h			\
+	gr_map_bb.h			\
+	gr_math.h			\
+	gr_misc.h			\
+	gr_nco.h			\
+	gr_nlog10_ff.h			\
+	gr_noise_type.h			\
+	gr_nop.h			\
+	gr_null_sink.h			\
+	gr_null_source.h		\
+	gr_pa_2x2_phase_combiner.h	\
+	gr_packet_sink.h		\
+	gr_phase_modulator_fc.h		\
+	gr_pll_carriertracking_cc.h	\
+	gr_pll_freqdet_cf.h		\
+	gr_pll_refout_cc.h		\
+	gr_prefix.h			\
+	gr_prefs.h			\
+	gr_probe_avg_mag_sqrd_c.h	\
+	gr_probe_avg_mag_sqrd_f.h	\
+	gr_probe_signal_f.h		\
+	gr_pwr_squelch_cc.h		\
+	gr_pwr_squelch_ff.h		\
+	gr_quadrature_demod_cf.h	\
+	gr_random.h			\
+	gr_remez.h			\
+	gr_reverse.h			\
+	gr_rms_cf.h			\
+	gr_rms_ff.h			\
+	gr_short_to_float.h		\
+	gr_sig_source_waveform.h	\
+	gr_simple_correlator.h		\
+	gr_simple_framer.h		\
+	gr_simple_framer_sync.h		\
+	gr_simple_squelch_cc.h		\
+	gr_skiphead.h			\
+	gr_squelch_base_cc.h		\
+	gr_squelch_base_ff.h		\
+	gr_stream_to_streams.h		\
+	gr_stream_to_vector.h		\
+	gr_streams_to_stream.h		\
+	gr_streams_to_vector.h		\
+	gr_sync_block.h			\
+	gr_sync_decimator.h		\
+	gr_sync_interpolator.h		\
+        gr_test_types.h			\
+        gr_test.h			\
+	gr_threshold_ff.h		\
+	gr_throttle.h			\
+	gr_uchar_to_float.h		\
+	gr_vco.h			\
+	gr_vco_f.h			\
+	gr_vector_to_stream.h		\
+	gr_vector_to_streams.h		\
+	gri_add_const_ss.h		\
+	gri_agc.h			\
+	gri_agc_cc.h			\
+	gri_char_to_float.h		\
+	gri_debugger_hook.h		\
+	gri_fft.h			\
+	gri_float_to_char.h		\
+	gri_float_to_short.h		\
+	gri_float_to_uchar.h		\
+	gri_interleaved_short_to_complex.h \
+	gri_lfsr_15_1_0.h		\
+	gri_lfsr_32k.h			\
+	gri_short_to_float.h		\
+	gri_uchar_to_float.h		\
+	malloc16.h			\
+	random.h			\
+	gr_unpack_k_bits_bb.h
+
+
+noinst_HEADERS = 			\
+	qa_general.h			\
+	qa_gr_circular_file.h		\
+	qa_gr_firdes.h			\
+	qa_gr_fxpt.h			\
+	qa_gr_fxpt_nco.h		\
+	qa_gr_fxpt_vco.h		\
+	sine_table.h			
+
+swiginclude_HEADERS =			\
+	$(GENERATED_I)			\
+	general.i			\
+	general_generated.i		\
+	gr_agc_cc.i                 	\
+	gr_agc_ff.i                 	\
+	gr_align_on_samplenumbers_ss.i	\
+	gr_binary_slicer_fb.i		\
+	gr_bytes_to_syms.i		\
+	gr_char_to_float.i		\
+	gr_check_counting_s.i		\
+	gr_check_lfsr_32k_s.i		\
+	gr_clock_recovery_mm_cc.i	\
+	gr_clock_recovery_mm_ff.i	\
+	gr_complex_to_interleaved_short.i \
+	gr_complex_to_xxx.i		\
+	gr_conjugate_cc.i		\
+	gr_constellation_decoder_cb.i	\
+	gr_correlate_access_code_bb.i	\
+	gr_costas_loop_cc.i		\
+	gr_crc32.i			\
+	gr_ctcss_squelch_ff.i		\
+	gr_dd_mpsk_sync_cc.i		\
+	gr_diff_decoder_bb.i		\
+	gr_diff_encoder_bb.i		\
+	gr_diff_phasor_cc.i		\
+	gr_deinterleave.i		\
+	gr_endianness.i			\
+	gr_fake_channel_coder_pp.i	\
+	gr_feval.i			\
+	gr_fft_vcc.i			\
+	gr_fft_vfc.i			\
+	gr_firdes.i			\
+	gr_float_to_char.i		\
+	gr_float_to_complex.i		\
+	gr_float_to_short.i		\
+	gr_float_to_uchar.i		\
+	gr_frequency_modulator_fc.i	\
+	gr_framer_sink_1.i		\
+	gr_head.i			\
+	gr_interleave.i 		\
+	gr_interleaved_short_to_complex.i \
+	gr_keep_one_in_n.i		\
+	gr_kludge_copy.i		\
+	gr_lfsr_32k_source_s.i		\
+	gr_lms_dfe_cc.i			\
+	gr_lms_dfe_ff.i			\
+	gr_map_bb.i			\
+	gr_nlog10_ff.i			\
+	gr_nop.i			\
+	gr_null_sink.i			\
+	gr_null_source.i		\
+	gr_pa_2x2_phase_combiner.i	\
+	gr_packet_sink.i		\
+	gr_phase_modulator_fc.i		\
+	gr_pll_carriertracking_cc.i	\
+	gr_pll_freqdet_cf.i		\
+	gr_pll_refout_cc.i		\
+	gr_prefix.i			\
+	gr_prefs.i			\
+	gr_probe_avg_mag_sqrd_c.i	\
+	gr_probe_avg_mag_sqrd_f.i	\
+	gr_probe_signal_f.i		\
+	gr_pwr_squelch_cc.i		\
+	gr_pwr_squelch_ff.i		\
+	gr_quadrature_demod_cf.i	\
+	gr_remez.i			\
+	gr_rms_cf.i			\
+	gr_rms_ff.i			\
+	gr_short_to_float.i		\
+	gr_simple_correlator.i		\
+	gr_simple_framer.i		\
+	gr_simple_squelch_cc.i		\
+	gr_skiphead.i			\
+	gr_squelch_base_cc.i		\
+	gr_squelch_base_ff.i		\
+	gr_stream_to_streams.i		\
+	gr_stream_to_vector.i		\
+	gr_streams_to_stream.i		\
+	gr_streams_to_vector.i		\
+	gr_sync_block.i			\
+	gr_sync_decimator.i		\
+	gr_sync_interpolator.i		\
+        gr_test.i			\
+	gr_threshold_ff.i		\
+	gr_throttle.i			\
+	gr_uchar_to_float.i		\
+	gr_vco_f.i			\
+	gr_vector_to_stream.i		\
+	gr_vector_to_streams.i		\
+	gri_agc.i                 	\
+	gri_agc_cc.i                 	\
+	gr_unpack_k_bits_bb.i
+
+
+CLEANFILES = $(BUILT_SOURCES) *.pyc

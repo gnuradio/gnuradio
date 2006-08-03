@@ -1,0 +1,42 @@
+2005-08-09  Eric Blossom  <eb@comsec.com>
+
+	* config/gr_python.m4: tweak for cygwin from Andrew Beck.
+	* src/audio_windows_sink.h: #define NOMINMAX to keep windows from
+	defining min and max under Cygwin.
+
+2005-07-23  Stephane Fillod  <f8cfe@free.fr>
+
+	* config/gr_libgnuradio_core_extra_ldflags.m4: new
+	* config/Makefile.am, configure.ac, src/Makefile.am: added 
+	EXTRA_LDFLAGS for --enable-runtime-pseudo-reloc option.
+	* config/gr_python.m4: update from gnuradio-core
+
+2005-07-07  Eric Blossom  <eb@comsec.com>
+
+	* src/audio_windows_source.cc: reformatted slightly.
+
+2005-05-12  Martin Dvh <nldudok1 at olifantasia com>
+	
+	Initial version based loosely on gr-audio-oss-0.6
+        only audio_sink for now (audio_source is empty stub)
+	
+#
+# Copyright 2004,2005 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+# 

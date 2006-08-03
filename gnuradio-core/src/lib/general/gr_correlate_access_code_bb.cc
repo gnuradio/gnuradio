@@ -1,0 +1,129 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2004,2006 Free Software Foundation, Inc.
+ * 
+ * This file is part of GNU Radio
+ * 
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ * 
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <gr_correlate_access_code_bb.h>
+#include <gr_io_signature.h>
+#include <stdexcept>
+#include <gr_count_bits.h>
+
+#define VERBOSE 0
+
+
+gr_correlate_access_code_bb_sptr
+gr_make_correlate_access_code_bb (const std::string &access_code, int threshold)
+{
+  return gr_correlate_access_code_bb_sptr (new gr_correlate_access_code_bb (access_code, threshold));
+}
+
+
+gr_correlate_access_code_bb::gr_correlate_access_code_bb (
+  const std::string &access_code, int threshold)
+  : gr_sync_block ("correlate_access_code_bb",
+		   gr_make_io_signature (1, 1, sizeof(char)),
+		   gr_make_io_signature (1, 1, sizeof(char))),
+    d_data_reg(0), d_flag_reg(0), d_flag_bit(0), d_mask(0),
+    d_threshold(threshold), d_flip(0)
+
+{
+  if (!set_access_code(access_code)){
+    fprintf(stderr, "gr_correlate_access_code_bb: access_code is > 64 bits\n");
+    throw std::out_of_range ("access_code is > 64 bits");
+  }
+}
+
+gr_correlate_access_code_bb::~gr_correlate_access_code_bb ()
+{
+}
+
+bool
+gr_correlate_access_code_bb::set_access_code(
+  const std::string &access_code)
+{
+  unsigned len = access_code.length();	// # of bytes in string
+  if (len > 64)
+    return false;
+
+  // set len top bits to 1.
+  d_mask = ((~0ULL) >> (64 - len)) << (64 - len);
+
+  d_flag_bit = 1LL << (64 - len);	// Where we or-in new flag values.
+                                        // new data always goes in 0x0000000000000001
+  d_access_code = 0;
+  for (unsigned i=0; i < 64; i++){
+    d_access_code <<= 1;
+    if (i < len)
+      d_access_code |= access_code[i] & 1;	// look at LSB only
+  }
+
+  return true;
+}
+
+int
+gr_correlate_access_code_bb::work (int noutput_items,
+				   gr_vector_const_void_star &input_items,
+				   gr_vector_void_star &output_items)
+{
+  const unsigned char *in = (const unsigned char *) input_items[0];
+  unsigned char *out = (unsigned char *) output_items[0];
+  
+  for (int i = 0; i < noutput_items; i++){
+
+    // compute output value
+    unsigned int t = 0;
+
+    t |= d_flip ^ (((d_data_reg >> 63) & 0x1) << 0);
+    t |= ((d_flag_reg >> 63) & 0x1) << 1;	// flag bit
+    out[i] = t;
+    
+    // compute hamming distance between desired access code and current data
+    unsigned long long wrong_bits = 0;
+    unsigned int nwrong = d_threshold+1;
+    int new_flag = 0;
+
+    wrong_bits  = (d_data_reg ^ d_access_code) & d_mask;
+    nwrong = gr_count_bits64(wrong_bits);
+
+    // test for access code with up to threshold errors or its compelement
+    new_flag = (nwrong <= d_threshold) || (nwrong >= (64-d_threshold));
+
+#if 0   
+    if(new_flag) {
+      printf("%llx  ==>  %llx  :  d_flip=%u\n", d_access_code, d_data_reg, d_flip);
+    }
+#endif
+
+    // shift in new data and new flag
+    d_data_reg = (d_data_reg << 1) | (in[i] & 0x1);
+    d_flag_reg = (d_flag_reg << 1);
+    if (new_flag) {
+      d_flag_reg |= d_flag_bit;
+      d_flip = nwrong >= (64-d_threshold);   // flip bits if this is true
+    }
+  }
+
+  return noutput_items;
+}
+  

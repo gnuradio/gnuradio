@@ -1,0 +1,31 @@
+/*!
+ * \defgroup block Signal Processing Blocks
+ * These are the signal processing blocks, blah, blah blah...
+ * @{
+ */
+
+/*!
+ * \defgroup source Signal Sources
+ * signal sources docs...
+ */
+
+/*!
+ * \defgroup sink Signal Sinks
+ * docs for sinks...
+ */
+
+/*!
+ * \defgroup filter Filters
+ */
+
+/*!
+ * \defgroup converter Type Conversions
+ */
+
+/*! @} */
+
+/*! \defgroup filter_design Filter Design		*/
+/*! \defgroup filter_primitive Filter Primitives	*/
+/*! \defgroup internal Implementation Details		*/
+/*! \defgroup qa Quality Assurance			*/
+

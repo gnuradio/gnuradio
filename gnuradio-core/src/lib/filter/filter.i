@@ -1,0 +1,45 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2004,2005,2006 Free Software Foundation, Inc.
+ * 
+ * This file is part of GNU Radio
+ * 
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ * 
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+%{
+#include <gr_iir_filter_ffd.h>
+#include <gr_single_pole_iir_filter_ff.h>
+#include <gr_single_pole_iir_filter_cc.h>
+#include <gr_hilbert_fc.h>
+#include <gr_filter_delay_fc.h>
+#include <gr_fft_filter_ccc.h>
+#include <gr_fft_filter_fff.h>
+#include <gr_goertzel_fc.h>
+#include <gr_cma_equalizer_cc.h>
+%}
+
+%include "gr_iir_filter_ffd.i"
+%include "gr_single_pole_iir_filter_ff.i"
+%include "gr_single_pole_iir_filter_cc.i"
+%include "gr_hilbert_fc.i"
+%include "gr_filter_delay_fc.i"
+%include "gr_fft_filter_ccc.i"
+%include "gr_fft_filter_fff.i"
+%include "gr_goertzel_fc.i"
+%include "gr_cma_equalizer_cc.i"
+
+%include "filter_generated.i"

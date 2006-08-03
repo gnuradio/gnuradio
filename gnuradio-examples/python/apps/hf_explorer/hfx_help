@@ -1,0 +1,180 @@
+
+		HF Explorer Help
+
+	-----------------------------------------------------------------------
+
+ Command Line Switches:
+
+	-c	DDC center frequency, set band.
+		-c 7.2e6 or -c 7.2M for 40 meter ham band.
+		Default is 3.9e6 80 meter ham band.
+		Example:
+
+		hfx.py -c 9500k 
+
+		starts up in the 31 meter band.
+
+	-a	Audio output file. Output file for 32kHz two channel
+		signed word audio. Two channels are used for
+		independent sideband. This file can be converted
+		to a wav file with sox. Example:
+
+		sox -c 2 -r 3200 file.sw file.wav
+
+		sox needs the .sw extension to indicate file type.
+		If not specified no audio file is created.
+
+	-r	Radio output file. File to write RF data to for later
+		demodulation. Records the entire band to disk, width
+		determined by sample rate/decimation. Be sure to
+		note the decimation and center freq for later use!
+		Example:
+
+		hfx.py -c 900e3 -d 80 -r rf_data_AM-c900e3-d80
+
+		writes a pre-demod rf file centered on 900kHz with a
+		bandwidth of 800kHz (That's 80 AM stations!). The
+		center and decimation could be put in the filename for
+		proper use later.
+		If not specified no rf data file is created.
+		At default 250 decimation disk usage is about
+		8Gb / hour.
+
+	-i	Radio input file. Use to play back a previously
+		recorded rf data file. Example:
+
+		hfx.py -c 900e3 -d 80 -i rf_data_AM-c900e3-d80
+
+		plays back the previously recorded band, no
+		usrp hardware needed. Tune about the 800kHz wide band.
+		When playing a recorded file, time controls
+		fast-forward and rewind are available.
+		
+	-d	Decimation. Sets sample rate and bandwidth.
+		This is the factor that the usrp sample rate, 64e6,
+		is divided by. Default is 250 for 256kHz bandwidth
+		which is enough to record a ham band without 
+		eating up disk space too fast. The 64e6 sample
+		rate limits the upper practical frequency to 32MHz.
+		The Basic RX transformer limits the lower frequency
+		to about 200kHz. 
+
+
+ Powermate Knob:
+
+	A Powermate knob is recommended but not necessary. If a knob
+	is used, it is in one of 3 or 4 modes controlling frequency,
+	volume, filter and (if playing a recorded file) time.
+	Pushing the knob switches mode and the buttons on the HFX panel
+	change to show which mode is in effect. Then just turn the knob
+	to set frequency, volume, filter or go fast forward or rewind.
+
+
+ Bandswitch:
+
+        Across the top are a set of predefined bands and buttons
+        to rapidly switch to the center of that band. To change a band,
+        type the frequency in Hz into the box under "Center Frequency",
+        then press "Set" on the left, then the button you want to
+        program. From then on (untill the program is exited) pushing
+        that button takes you to that band.  To make a band button
+        permenant edit the hfx.py script with whatever frequency you
+        want assigned to what button.
+
+
+ Frequency:
+
+	There are 6 ways to set the frequency.
+	1) Move the slider with the mouse
+	2) Use the Spin Control up/down arrows (very fine 1Hz control)
+	3) Type the frequency in Hz into the Spin Control
+	4) Turn the Powermate knob
+	5) Web control.
+	6) Clicking on the FFT display to set demod center. This is very
+	   convenient for tuning +-15kHz when you see a signal on the
+	   display. If in Lower Sideband, clicking just to the right of
+	   a signal will tune to it immediately. Clicking several times
+	   on the far right right or left of the display will rapidly
+	   tune up or down the band.
+
+
+ Volume:
+
+	Move the volume slider with the mouse, or push the Powermate knob
+	untill the volume button is active, or click on the volume button,
+	then turn the knob. Volume can also be set by web control if web
+	control is setup and enabled.
+
+
+ Filter:
+
+	Similar to volume, switches in any of 30 audio filters from 600
+	to 3600Hz in Sideband or up to 5kHz in AM.
+
+
+ Mode:
+
+	Demodulation modes are chosen by clicking on the buttons for
+	Lower Sideband, Upper Sideband, or AM.
+
+
+ PGA:
+
+	PGA slider sets the rf gain in the Analog-to-Digital converter
+	before digitizing. 0 to 20db gain easily shows up on the FFT
+	display.
+
+
+ Time:
+
+	When playing back a recorded RF data file, you can enjoy the
+	freedom of rewinding or fast-forwarding. Replay a weak signal
+	or skip through annoying AM commercials.
+
+
+ Antennas and Preamps:
+
+	The USRP Basic RX board is not sensitive enough for anything but
+	the strongest signals. In my experience about 40 db of small
+	signal gain is required to make the HFX as sensitive as other
+	receivers. Some working amplifiers are the Ramsey PR-2 with 20db
+	gain, fairly low noise and more bandwidth than we can use here.
+	Also the amp modules from Advanced Receiver Research are nice.
+	I use an ARR 7-7.4MHz GaAsFET 29db amp with .5db noise at the
+	apex of a 40 meter dipole with excellent results. Another
+	amp I like is a Minicircuits ZHL-32A 29db amp but they are
+	expensive and hard to find. Also it may help to use some filters
+	to keep strong local signals from the ADC, or limit rf input
+	to the band of interest, etc.  
+	Resonant outdoor antennas, like a dipole, in a low-noise (away
+	from consumer electronics) environment are nice.  Long random wires
+	with a tuner work. I like a small indoor tuned loop made from 10ft
+	of 1/4" copper tube, a 365pf tuning cap and a pickup loop connected
+	to rg-58. 
+
+
+ Web Control:
+
+	To control your radio remotely, ensure you have a web server
+	(Apache, etc) working and a compatible directory structure in
+	place. Directories /var/www/cgi-bin/commands and
+	/var/www/cgi-bin/state must already exist. You will need a
+	home page with forms and a set of scripts to put commands in
+	and put the current state on the home page. email me for further
+	help. Setting WEB_CONTROL to True in hfx.py turns on the timers
+	that check for commands and update the state.
+
+
+ IF Output:
+
+	There is a provision for outputting un-demodulated complex 
+	through the audio out in stereo for use with Digital Radio
+	Mondial (DRM) or using a seperate demodulation program like
+	SDRadio (by I2PHD).
+	Set IF_OUTPUT to True in weaver_isb_am1_usrp4.py.
+
+
+ --Good luck and happy LW/MW/SW Exploring.
+	Chuck
+        chuckek@musicriver.homeunix.com
+

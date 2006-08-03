@@ -1,0 +1,75 @@
+#
+# Copyright 2005 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+# 
+
+# This file is used to generate usrp_dbid.h, usrp_dbid.cc and usrp_dbid.py
+
+"Basic Tx"		0x0000
+"Basic Rx"		0x0001
+"DBS Rx"		0x0002
+"TV Rx"			0x0003
+
+"Flex 400 Rx"		0x0004
+"Flex 900 Rx"		0x0005
+"Flex 1200 Rx"		0x0006
+"Flex 2400 Rx"		0x0007
+
+"Flex 400 Tx"		0x0008
+"Flex 900 Tx"		0x0009
+"Flex 1200 Tx"		0x000a
+"Flex 2400 Tx"		0x000b
+
+"TV Rx Rev 2"		0x000c
+"DBS Rx Rev 2_1"	0x000d
+
+"LF Tx"			0x000e
+"LF Rx"			0x000f
+
+"Flex 400 Rx MIMO A"	0x0014
+"Flex 900 Rx MIMO A"	0x0015
+"Flex 1200 Rx MIMO A"	0x0016
+"Flex 2400 Rx MIMO A"	0x0017
+
+"Flex 400 Tx MIMO A"	0x0018
+"Flex 900 Tx MIMO A"	0x0019
+"Flex 1200 Tx MIMO A"	0x001a
+"Flex 2400 Tx MIMO A"	0x001b
+
+"Flex 400 Rx MIMO B"	0x0024
+"Flex 900 Rx MIMO B"	0x0025
+"Flex 1200 Rx MIMO B"	0x0026
+"Flex 2400 Rx MIMO B"	0x0027
+
+"Flex 400 Tx MIMO B"	0x0028
+"Flex 900 Tx MIMO B"	0x0029
+"Flex 1200 Tx MIMO B"	0x002a
+"Flex 2400 Tx MIMO B"	0x002b
+
+"Flex 1800 Rx"		0x0030
+"Flex 1800 Tx"		0x0031
+"Flex 1800 Rx MIMO A"	0x0032
+"Flex 1800 Tx MIMO A"	0x0033
+"Flex 1800 Rx MIMO B"	0x0034
+"Flex 1800 Tx MIMO B"	0x0035
+
+"TV Rx Rev 3"		0x0040
+
+"Experimental Tx"	0xfffe
+"Experimental Rx"	0xffff

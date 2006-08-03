@@ -1,0 +1,4 @@
+#!/bin/sh
+
+iverilog -y .. -o test_hbd test_hbd.v
+./test_hbd

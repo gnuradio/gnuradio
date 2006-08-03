@@ -1,0 +1,91 @@
+[Version]
+Signature = "$Chicago$"
+provider  = %manufacturer%
+DriverVer = 03/09/2005,0.1.10.1
+CatalogFile = usrp.cat
+
+Class = LibUsbDevices
+ClassGUID = {EB781AAF-9C70-4523-A5DF-642A87ECA567}
+
+[ClassInstall]
+AddReg=ClassInstall.AddReg
+
+[ClassInstall32]
+AddReg=ClassInstall.AddReg
+
+[ClassInstall.AddReg]
+HKR,,,,"LibUSB-Win32 Devices"
+HKR,,Icon,,"-20"
+
+[Manufacturer]
+%manufacturer%=Devices
+
+;--------------------------------------------------------------------------
+; Files
+;--------------------------------------------------------------------------
+
+[SourceDisksNames]
+1 = "Libusb-Win32 Driver Installation Disk",,
+
+[SourceDisksFiles]
+libusb0.sys = 1,,
+libusb0.dll = 1,,
+
+[DestinationDirs]
+LIBUSB.Files.Sys = 10,System32\Drivers
+LIBUSB.Files.Dll = 10,System32
+
+[LIBUSB.Files.Sys]
+libusb0.sys
+
+[LIBUSB.Files.Dll]
+libusb0.dll
+
+;--------------------------------------------------------------------------
+; Device driver
+;--------------------------------------------------------------------------
+
+[LIBUSB_DEV]
+CopyFiles = LIBUSB.Files.Sys, LIBUSB.Files.Dll
+AddReg    = LIBUSB_DEV.AddReg
+
+[LIBUSB_DEV.NT]
+CopyFiles = LIBUSB.Files.Sys, LIBUSB.Files.Dll
+
+[LIBUSB_DEV.HW]
+DelReg = LIBUSB_DEV.DelReg.HW
+
+[LIBUSB_DEV.NT.HW]
+DelReg = LIBUSB_DEV.DelReg.HW
+
+[LIBUSB_DEV.NT.Services]
+AddService = libusb0, 0x00000002, LIBUSB.AddService
+
+[LIBUSB_DEV.AddReg]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,libusb0.sys
+
+[LIBUSB_DEV.DelReg.HW]
+HKR,,"LowerFilters"
+
+;--------------------------------------------------------------------------
+; Services
+;--------------------------------------------------------------------------
+
+[LIBUSB.AddService]
+DisplayName    = "LibUsb-Win32 - Kernel Driver 03/09/2005, 0.1.10.1"
+ServiceType    = 1
+StartType      = 3
+ErrorControl   = 0
+ServiceBinary  = %12%\libusb0.sys
+
+;--------------------------------------------------------------------------
+; Devices
+;--------------------------------------------------------------------------
+
+[Devices]
+"USRP filter"=LIBUSB_DEV, USB\VID_fffe&PID_0002
+
+[Strings]
+manufacturer = "GNU Radio folks"
+

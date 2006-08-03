@@ -1,0 +1,61 @@
+Michael Dickens
+2006-Apr-30
+
+0) This module should compile and install in the same manner as the
+other GNURadio modules (e.g. gnuradio-core), with the possible
+exception that GNU libtool 1.5.20 or newer should be installed and
+used (if not first in the path) via "make LIBTOOL=/..." and so forth.
+Version 1.5.10 has failed making, and while picking version 1.5.20 is
+somewhat arbitrary, the newer version compiles and installs easily
+under OSX.
+
+1) This module should be automatically loaded by the Python command
+"from gr import audio".  The audio import script will automatically
+select gr.audio_osx if it is available (though it will try to import
+ALSA first, then OSS, then OSX, and finally WINDOWS audio modules, in
+that order).  If that import command doesn't work, try reinstalling
+gnuradio-core from scratch followed by gr-audio-osx.
+
+2) Instantiation arguments for either source or sink are:
+
+* sample_rate : integer : default == 44100
+  OSX converts the integer sample rate to a double internally; it
+  would be nice to have this input as a double natively, but that
+  doesn't work with other audio devices.
+
+* device_name : string : default == "2"
+  For OSX, the device name should be an integer string.  This value is
+  the maximum number of channels to allocate (for input or output).
+  In the "source" case (input), the actual number of channels will be
+  whatever is available on that current system input device.  In the
+  "sink" case (output), OSX will convert the provided channels into
+  whatever format is required by the current system output device.
+  For example, "3" would try to setup for 3 input or output channels.
+  NOTE that this is a very different use than that for other audio
+  modules (though they can interpret the number of channels from this
+  argument).
+
+* do_block : boolean : default == true
+  If the data transfer buffer between OSX internals and GNURadio gets
+  full, either block (true) or overwrite (false) depending on this
+  variable.
+
+The following are currently non-standard arguments:
+
+* channel_config : integer : default == -1
+  An enum (internally) describing the channel configuration.  Not
+  currently used, but rather reserved for future expansion.
+
+* max_sample_count : integer : default == -1
+  The maximum number of samples to buffer between OSX internals and
+  GNURadio.  The value -1 is mapped to 1 second's worth of data.
+
+3) When the buffer is full and do_block is false and new data comes
+in, the oldest data will be overwritten.  The source will print out
+"iX" each time this happens; the sink will print out "oX".
+
+4) In the "src" directory is a python script "test_audio_loop" which
+connects the default audio input device to the default audio output
+device.  This script is very useful in testing that audio is correctly
+installed and both the source and sink are functional.  This script is
+not run by "make check".

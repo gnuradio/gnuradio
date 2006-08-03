@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+# -*- Python -*-
+
+import sys, errno
+
+counter = 0
+
+try:
+    while 1:
+        x = sys.stdin.read (2)
+        if not x:
+            break
+
+        v = (ord(x[1]) << 8) | ord(x[0])
+        sys.stdout.write ("0x%08x  %6d  0x%04x\n" % (counter, v & 0x0fff, v))
+        counter += 1
+except IOError, e:
+    if e.errno == errno.EPIPE:
+        sys.exit (0)
+    
+  
+  
+

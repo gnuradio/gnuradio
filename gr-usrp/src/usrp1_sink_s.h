@@ -1,0 +1,86 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2004 Free Software Foundation, Inc.
+ * 
+ * This file is part of GNU Radio
+ * 
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ * 
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with GNU Radio; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ */
+
+#ifndef INCLUDED_USRP1_SINK_S_H
+#define INCLUDED_USRP1_SINK_S_H
+
+#include <usrp1_sink_base.h>
+
+class usrp1_sink_s;
+typedef boost::shared_ptr<usrp1_sink_s> usrp1_sink_s_sptr;
+
+
+// public shared_ptr constructor
+
+usrp1_sink_s_sptr
+usrp1_make_sink_s (int which_board,
+		   unsigned int interp_rate,
+		   int nchan,
+		   int mux,
+		   int fusb_block_size,
+		   int fusb_nblocks,
+		   const std::string fpga_filename,
+		   const std::string firmware_filename
+		   ) throw (std::runtime_error);
+
+/*!
+ * \brief interface to Universal Software Radio Peripheral Tx path (Rev 1)
+ *
+ * input: short
+ */
+class usrp1_sink_s : public usrp1_sink_base {
+ private:
+
+  friend usrp1_sink_s_sptr
+  usrp1_make_sink_s (int which_board,
+		     unsigned int interp_rate,
+		     int nchan,
+		     int mux,
+		     int fusb_block_size,
+		     int fusb_nblocks,
+		     const std::string fpga_filename,
+		     const std::string firmware_filename
+		     ) throw (std::runtime_error);
+
+ protected:
+  usrp1_sink_s (int which_board,
+		unsigned int interp_rate,
+		int nchan,
+		int mux,
+		int fusb_block_size,
+		int fusb_nblocks,
+		const std::string fpga_filename,
+		const std::string firmware_filename
+		) throw (std::runtime_error);
+
+  virtual void copy_to_usrp_buffer (gr_vector_const_void_star &input_items,
+				    int  input_index,
+				    int	 input_items_available,
+				    int  &input_items_consumed,
+				    void *usrp_buffer,
+				    int  usrp_buffer_length,
+				    int	 &bytes_written);
+ public:
+  ~usrp1_sink_s ();
+};
+
+#endif /* INCLUDED_USRP1_SINK_S_H */

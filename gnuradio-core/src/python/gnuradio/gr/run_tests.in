@@ -1,0 +1,33 @@
+#!/bin/sh
+
+swigbld=@abs_top_builddir@/gnuradio-core/src/lib/swig
+swigsrc=@abs_top_srcdir@/gnuradio-core/src/lib/swig
+py=@abs_top_srcdir@/gnuradio-core/src/python
+
+PYTHONPATH="$swigbld:$swigbld/.libs:$swigsrc:$py"
+export PYTHONPATH
+
+# for OS/X
+DYLD_LIBRARY_PATH="@abs_top_builddir@/gnuradio-core/src/lib/.libs"
+export DYLD_LIBRARY_PATH
+
+# Don't load user or system prefs
+GR_DONT_LOAD_PREFS=1
+export GR_DONT_LOAD_PREFS
+
+ok=yes
+for file in @srcdir@/qa_*.py
+do
+  echo $file
+  if ! $file
+  then
+    ok=no
+  fi  
+done
+
+if [ $ok = yes ]
+then
+  exit 0
+else
+  exit 1
+fi

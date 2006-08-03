@@ -1,0 +1,25 @@
+include $(top_srcdir)/Makefile.common
+
+# Install this stuff so that it ends up as the gnuradio.howto module
+# This usually ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+
+ourpythondir = $(grpythondir)
+ourlibdir    = $(grpyexecdir)
+
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+
+ourlib_LTLIBRARIES = _howto.la
+
+# These are the source files that go into the shared library
+_howto_la_SOURCES = 			\
+	howto_square_ff.cc		
+
+# magic flags
+_howto_la_LDFLAGS = -module -avoid-version
+
+# These headers get installed in ${prefix}/include/gnuradio
+grinclude_HEADERS =			\
+	howto_square_ff.h		
+
+MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc

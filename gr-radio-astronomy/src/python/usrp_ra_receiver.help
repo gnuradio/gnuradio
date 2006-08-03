@@ -1,0 +1,90 @@
+This program is used to take spectra and total power measurements.
+  It records spectral and total-power data to external datalogging
+  files.
+
+The program takes the following options:
+
+  --rx-subdev-spec     which USRP Rx side?  A or B
+
+  --decim              USRP decimation rate: 8, 16, 32, and 64 are good
+                       (8Mhz, 4Mhz, 2Mhz, and 1Mhz bandwidth)
+
+  --freq               USRP daughtercard frequency
+
+  --observing          Actual observing frequency (default is to use the
+                       setting for --freq)
+
+  --avg                Averaging setting for spectral display--higher numbers
+                       equal more averaging.  25 to 40 is typical.
+
+  --integ              Total power integration time: seconds
+
+  --gain               USRP daughtercard gain control
+
+  --reflevel           Reference level on pulse profile display
+
+  --longitude          Observer longitude: West is negative
+
+  --latitude           Observer latitude:  South is negative
+
+  --fft_size           Size of FFT for post-detector spectrum: default is 1024
+
+  --prefix             Filename prefix to use for data logging files
+                       Default is ./
+
+  --divbase            The base of the Y/Div menu in pulsar display
+
+  --division           The initial Y/Div in pulsar display
+
+  --ylabel             Y axis label
+
+  --cfunc              The function name prefix for the spectral and
+                       calibrator functions
+
+  --waterfall          Use waterfall, rather than regular spectral display
+                       NOT TESTED IN THIS APPLICATION
+
+  --stripsize          Size of the total-power stripchart, in samples
+
+There are two windows--a spectral window, and the total-power window.
+  Moving the cursor around in the spectral window shows you the
+  corresponding frequency and doppler shift.  Left clicking in this
+  window sets an interference marker, which sets a "zero" in the
+  interference filter.  Use the "clear interference" button to clear this.
+
+The total power window is updated at a fixed 2Hz rate, and grows from
+  the left of the display.
+
+If latitude and longitude are set correctly, and system time is correct,
+  then the current LMST is displayed, updated once per second.
+
+Averaging parameters, gain, and frequency can all be set from the GUI using
+  the appropriate controls.  You can also enter the current declination, which
+  will appear in the datalogging files.  This is useful both for mapping,
+  and housekeeping purposes, particularly when you haven't looked at a datafile
+  for quite some time.
+
+There are two datalog files produced by this program:
+
+     YYYYMMDDHH.tpdat      Total power data
+
+     The date/time portion of the filename is referred to local time,
+     rather than UTC or sidereal.
+
+     First field is sidereal time when sample was taken
+     Second field is total power datum
+     Third field is declination in decimal degrees
+
+     Samples are written once per second
+
+     YYYYMMDDHH.sdat       Spectral data
+
+     The date/time portion of the filename is referred to local time,
+     rather than UTC or sidereal.
+
+     First field is sidereal time when spectrum was taken
+     Second field is declination in decimal degrees
+     Third field is complex spectral data--in the same order that FFTW3 library
+         places bins:  DC to bandwidth/2, followed by -bandwidth/2 to DC.
+
+     Spectral snapshots are written once every 5 seconds

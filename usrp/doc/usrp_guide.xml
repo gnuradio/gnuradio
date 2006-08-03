@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+          "docbookx.dtd" [
+]>
+
+<article>
+  <articleinfo>
+  <title>USRP User's and Developer's Guide</title>
+    <author>
+      <firstname>Matt</firstname>
+      <surname>Ettus</surname>
+      <affiliation>
+	<orgname>Ettus Research LLC</orgname>
+	<address>
+	  Ettus Research LLC
+	  <street>604 Mariposa Ave</street>
+	  <city>Mountain View</city>, <state>CA</state> <postcode>94041</postcode>
+	  <country>USA</country>
+	  <email>matt@ettus.com</email>
+	</address>
+      </affiliation>
+    </author>
+    
+    <abstract>
+      <para>
+	This guide explains both basic usage of the USRP as well as how to expand it.
+      </para>
+    </abstract>
+    
+  </articleinfo>
+  
+  <sect1 id="intro">
+    <title>Introduction</title>
+    <para>
+      The Universal Software Radio Peripheral, or USRP (pronounced "usurp") 
+      is designed to allow general purpose computers to function as high 
+      bandwidth software radios.  In essence, it serves as a digital 
+      baseband and IF section of a radio communication system.  In addition, 
+      it has a well-defined electrical and mechanical interface to RF 
+      front-ends (daughterboards) which can translate between that IF or 
+      baseband and the RF bands of interest
+    </para>
+    <para>
+      The basic design philosophy behind the USRP has been to do all of the
+      waveform-specific processing, like modulation and demodulation, on the
+      host CPU.  All of the high-speed general purpose operations like
+      digital up- and downconversion, decimation and interpolation are done
+      on the FPGA. 
+    </para>
+    <para>
+      It is anticipated that the majority of USRP users will never need to
+      use anything other than the standard FPGA configuration.  However, for
+      those users that wish to, the FPGA design may be changed or replaced.
+      All of the interfaces are well defined and documented.
+    </para>
+    <figure id="usrp-board">
+      <title>USRP with Daughterboards</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="usrp.jpg" format="JPG"/></imageobject>
+	<caption><para>
+	  This USRP has 2 BasicTX and 2 BasicRX boards mounted on it.  
+	  Notice that the boards on the left are rotated 180 degrees.
+	</para></caption>
+      </mediaobject>
+    </figure>
+    
+    <sect2 id="requirements">
+      <title>System Requirements</title>
+      <para>
+	The USRP requires a PC or Mac with a USB2 interface.
+      </para>
+    </sect2>
+    
+  <sect2 id="capabilities">
+    <title>Capabilities</title>
+    <para>
+      The USRP has 4 high-speed analog to digital converters (ADCs), each at 
+      12 bits per sample, 64 million samples per second.  There are also 
+      4 high-speed digital to analog converters (DACs), each at 14 bits per 
+      sample, 128 million samples per second.  These 4 input and 4 output 
+      channels are connected to an Altera Cyclone EP1C12 FPGA.  The FPGA, in 
+      turn, connects to a USB2 interface chip, the Cypress FX2, and on to the 
+      computer.  The USRP connects to the computer via a high speed USB2 
+      interface only, and will not work with USB1.1.  
+    </para>
+    <figure id="usrp-block-diagram-fig"><title>Universal Software Radio Peripheral</title>
+    <mediaobject>
+      <imageobject><imagedata fileref="usrp-block-diagram.eps" format="EPS"/></imageobject>
+      <imageobject><imagedata fileref="usrp-block-diagram.png" format="PNG"/></imageobject>
+      <caption><para></para></caption>
+    </mediaobject>
+    </figure>
+  </sect2>
+  </sect1>
+  <sect1 id="getting-started">
+    <title>Getting Started</title>
+    <sect2 id="the-code">
+      <title>Getting all the Software</title>
+      <para>
+	The first step in using your USRP system is to get all of GNU Radio installed.  This can 
+	sometimes be a daunting process, as there are several other libraries which will need to be
+	installed first.
+      </para>
+      <sect3 id="dependencies">
+	<title>Library Dependencies</title>
+	<itemizedlist>
+	  <listitem>
+	    <para>SWIG</para>
+	    <para>
+	      We use SWIG (Simple Wrapper Interface Generator) to tie together the C++ and Python code 
+	      in the GNU Radio system.  We require that you have version 1.3.24 or newer.  You'll
+	      probably have to compile it from source, which you can find here: <ulink url="http://www.swig.org">SWIG</ulink>
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>FFTW</para>
+	    <para>
+	      FFTW is the library which GNU Radio uses for FFTs.  GNU Radio requires version 3.0.1 or
+	      newer, and it must be compiled for single precision.  You can get it from the 
+	      <ulink url="http://www.fftw.org">FFTW Homepage</ulink>
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>Boost Library</para>
+	    <para>
+	      Boost provides several low-level structures used in our C++ code.  If it is not included in
+	      your OS distribution, you can get it here:  <ulink url="http://boost.org">Boost</ulink>
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>CPP Unit</para>
+	    <para>
+	      CPPUnit provides our unit-testing framework.  This creates automated tests to insure that 
+	      code does not break when changes are made.  Get it at the <ulink url="http://cppunit.sf.net">
+	      CPP Unit Homepage</ulink>
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </sect3>
+      <sect3 id="getting-gradio">
+	<title>Getting GNU Radio and the USRP code</title>
+	<para>
+	  There are several packages of software which make up GNU Radio and the USRP support software.
+	  Links to the latest versions of each can be found on the GNU Radio Wiki at
+	  <ulink url="http://comsec.com/wiki?GnuRadio2.X">Download Links</ulink>.  Gr-build 
+	  can greatly simplify the installation process, and its use it highly recommended.
+	</para>
+      </sect3>
+      <sect3 id="cvs">
+	<title>Following CVS Development</title>
+	<para>
+	  Development for the USRP proceeds very quickly at times, so some users may want to keep up with
+	  the latest by following the CVS trees.  There are three separate software repositories 
+	  which contain various parts of the USRP system.
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		USRP-HW, containing the hardware and FPGA designs.
+	      </para>
+	      <para>
+		All of the schematics in this repository were created in 
+		<ulink url="http://www.geda.seul.org">gEDA</ulink>.  The board 
+		layouts were created in <ulink url="http://pcb.sf.net">PCB</ulink>.  
+		Verilog designs are compiled in Quartus II Web Edition from 
+		<ulink url="http://www.altera.com">Altera</ulink>.
+	      </para>
+	    </listitem>
+	    <listitem>
+	      <para>
+		<ulink url="https://sourceforge.net/cvs/?group_id=22397">USRP-SW</ulink>, 
+		USRP-SW, containing firmware and host drivers for the USRP
+	      </para>
+	      <para>
+		Host side drivers and firmware which runs in the USB2 interface chip on the board.
+	      </para>
+	    </listitem>
+	    <listitem>
+	      <para>
+		<ulink url="http://comsec.com/wiki?CvsAccess">GNU Radio/gr-usrp</ulink>
+		which contains the GNU Radio interface to the USRP
+	      </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+      </sect3>
+    </sect2>
+    <sect2 id="usrp-start">
+      <title>Using your USRP</title>
+      <sect3 id="physical">
+	<title>Mechanical Connection</title>
+	<para>
+	  The USRP ships with a complete set of standoffs, nuts and bolts.  There are 20 standoffs, 
+	  M3x10mm M-F, of which 4 are intended to be used as "feet" for the USRP.  Place them in the 4
+	  corner holes on the main board, inserting the male part from below.  The remaining 16 
+	  are used to hold the daughterboards in place.  Four of them should be connected to the male 
+	  portion of the 4 standoffs already inserted from below.  The remaining 12 should be
+	  connected to the board with the 12 M3x6mm screws from below.  At this point there should be
+	  16 standoffs on the board with the male ends up to serve as a guide for the daughterboards.  
+	  The 16 M3 nuts are used to fasten the daughterboards down to the main board.
+	</para>
+	<para>
+	  The USRP accomodates 2 TX and 2 RX daughterboards.  The placement of the standoffs is designed
+	  to prevent the accidental incorrect connection of daughterboards.  The 2 sides of the USRP have 
+	  their daughterboard slots rotated 180 degrees.  The USRP should not be operated without 
+	  standoffs, and daughterboards should never be connected or removed while power is applied.
+	</para>
+      </sect3>
+      <sect3 id="electrical">
+	<title>Electrical Connections</title>
+	<para>
+	  The USRP is powered by a 6V 4A power converter included in the kit.  The converter is
+	  capable of 90-260 Vac, 50/60 Hz operation, and so should work in any country.
+	  If there is a need to use another power supply, the connector is a standard 2.1mm/5.5mm 
+	  DC power connector.  The USRP	itself only needs 5V at 2A, but a 6V supply was chosen to 
+	  accomodate future daughterboards.  Extra power supplies are available from Ettus Research.
+	</para>
+	<para>
+	  The included USB cable should be connected to a USB2-capable socket on a computer.  The USRP
+	  does not support USB 1.1 operation at this time.
+	</para>
+      </sect3>
+      <sect3 id="diagnostics">
+	<title>Troubleshooting</title>
+	<para>
+	  When first powered up, an LED on the USRP should be flashing at about 3-4x per second.
+	  This indicates that the processor is running, and has put the device in a low power mode.
+	  Once firmware has been downloaded to the USRP, the LED will blink at a slower rate.
+	  If there is no blinking LED, check all power connections, and check for continuity
+	  in the power fuse (F501, near the power connector).  If the fuse needs replacement, it
+	  is size 0603, 3 amps.
+	</para>
+      </sect3>
+    </sect2>
+  </sect1>
+  <sect1 id="fpga">
+    <title>FPGA</title>
+    <sect2 id="fpga-std">
+      <title>Standard FPGA Configuration</title>
+      <para>
+	In the standard fpga configuration, usrp_std, all samples sent over
+	the USB interface are in 16-bit signed integers in IQ format.  When
+	there are multiple channels (up to 4), the channels are interleaved.
+	For example, with 4 channels, the sequence would be I0 Q0 I1 Q1 I2 Q2
+	I3 Q3 I0 Q0, etc.
+      </para>  
+      <para>
+	The USRP can operate in full duplex mode.  When in this mode, the
+	transmit and receive sides are completely independent of one another.
+	The only consideration is that the combined data rate over the bus
+	must be 32 Megabytes per second or less.  The multiple RX channels
+	(1,2, or 4) must all be the same data rate (i.e. same decimation
+	ratio).  The same applies to the 1,2, or TX channels, which each must
+	be at the same data rate (which may be different from the RX rate).
+      </para>
+      <para>
+	On the RX side, each of the 4 ADCs can be routed to either of I or the
+	Q input of any of the 4 downconverters.  This allows for having
+	multiple channels selected out of the same ADC sample stream.
+      </para>
+      <para>
+	The digital upconverters (DUCs) on the transmit side are actually
+	contained in the AD9862 CODEC chips, not in the FPGA.  The only
+	transmit signal processing blocks in the FPGA are the interpolators.
+	The interpolator outputs can be routed to any of the 4 CODEC inputs.
+      </para>
+      <figure id="ddc-fig"><title>Digital Down Converter Block Diagram</title>
+      <mediaobject>
+	<imageobject><imagedata fileref="ddc.eps" format="EPS"/></imageobject>
+	<imageobject><imagedata fileref="ddc.png" format="PNG"/></imageobject>
+	<caption><para></para></caption>
+      </mediaobject>
+      </figure>
+      
+    </sect2>
+  </sect1>
+  <sect1 id="dboard-int">
+    <title>Daughterboard Interface</title>
+    <sect2 id="power-int">
+      <title>Power</title>
+      <para>
+	Daughterboards are provided with clean regulated 3.3V for the analog
+	and digital sections.  Additionally there is a 6V connection straight from
+	the wall supply which is intended to supply a 5V LDO regulator.  All daughterboards
+	may draw a combined total of 1.5 A.
+      </para>
+    </sect2>
+      <sect2 id="logical-int">
+      <title>Logical Interface</title>
+      <para>
+	There are slots for 2 TX daughterboards, labeled TXA and TXB, and 2 
+	corresponding RX daughterboards, RXA and RXB.  Each daughterboard slot has 
+	access to 2 of the 4 high-speed data converter analog signals (DAC outputs
+	for TX, ADC inputs for RX).  This allows each daughterboard which uses real 
+	(not IQ) sampling to have 2 independent RF sections, and 2 antennas 
+	(4 total for the system).  If IQ sampling is used, each board can support 
+	a single RF section, for a total of 2 for the whole system.
+      </para>
+      <para>
+	No antialias or reconstruction filtering is provided on the USRP motherboard.
+	This allows for maximum flexibility in frequency planning for the 
+	daughterboards.  The analog input bandwidth of the ADCs is over 200 MHz, so
+	IF frequencies up to that high may be chosen.  If several decibels of loss
+	is tolerable, and IF frequency as high as 500 MHz can be used.
+      </para>
+      <para>
+	Every daughterboard has an I2C EEPROM (24LC024 or 24LC025) onboard 
+	which identifies the board to the system.  This allows the host 
+	software to automatically set up the system properly based on the 
+	installed daughterboard.  The EEPROM may also store calibration values
+	like DC offsets or IQ imbalances.  If this EEPROM is not programmed, a
+	warning message is printed every time USRP software is run.
+      </para>
+    </sect2>
+    <sect2 id="analog-int">
+      <title>Analog Interface</title>
+      <para>
+	Each RX daughterboard has 2 differential analog inputs 
+	(VINP_A/VINN_A and VINP_B/VINN_B) which are sampled at a rate of 64 MS/s.
+	The input impedance is approximately 1Kohm.
+	The motherboard has a software-controllable programmable gain amplifier 
+	on these inputs, with 0 to 20 dB of gain.  With gain set to zero, full 
+	scale inputs are 2 Volts peak-to-peak differential.  When set to 20 dB, 
+	only .2 V pk-pk differential is needed to reach full scale. 
+      </para>
+      <para>
+	If signals are AC-coupled, there is no need to provide DC bias as long as the
+	internal buffer is turned on.  It will provide an approximately 2V bias.
+	If signals are DC-couple, a DC bias of Vdd/2 (1.65V) should be provided to
+	both the positive and negative inputs, and the internal buffer should be turned off.
+	VREF provides a clean 1 V reference.
+      </para>
+      <para>
+	Each TX daughterboard has a pair of differential analog outputs which are 
+	updated at 128 MS/s.  The signals (IOUTP_A/IOUTN_A and IOUTP_B/IOUTN_B) are 
+	current-output, each varying between 0 and 20 mA.  Since they are high-impedance,
+	they can be converted into differential voltages with a resistor.
+      </para>
+      <para>
+	In addition to the high-speed signals, each daughterboard has exclusive access to 2 low-speed ADC inputs 
+	(labeled AUX_ADC_A and AUX_ADC_B) which can be read from software.  
+	These are useful for sensing RSSI signal levels, temperatures, bias 
+	levels, etc.  Additionally, each board has shared access to 4 low-speed DAC
+	signals, labeled AUX_DAC_A through AUX_DAC_D.  RXA and TXA share one set
+	of these 4 lines, and RXB and TXB share their own independent set.  These
+	signals are useful for controlling gain of variable-gain amplifiers, for example.
+	AUX_ADC_REF provides a reference level for gain setting if it is necessary.
+      </para>
+      
+    </sect2>
+    <sect2 id="dig-int">
+      <title>Digital Interface</title>
+      <para></para>
+    </sect2>
+    <sect2 id="mech-int">
+      <title>Connector Pinouts</title>
+      
+      <table frame='all'><title>RX DBoard Connector</title>
+      <tgroup cols='3' align='left' colsep='1' rowsep='1'>
+	<thead>
+	  <row>
+	    <entry>Pin #</entry>
+	    <entry>Name</entry>
+	    <entry>Description</entry>
+	  </row>
+	</thead>
+	<tbody>
+	  <row>
+	    <entry>1</entry>
+	    <entry>power</entry>
+	    <entry>This is power</entry>
+	  </row>
+	  <row>
+	    <entry>c1</entry>
+	    <entry>c4</entry>
+	  </row>
+	  <row>
+	    <entry>d1</entry>
+	    <entry>d4</entry>
+	    <entry>d5</entry>
+	  </row>
+	</tbody>
+      </tgroup>
+      </table>
+    </sect2>
+  </sect1>
+  <sect1 id="dboards">
+    <title>Available Daughterboards</title>
+    <sect2 id="basicrx">
+      <title>BasicRX</title>
+      <para>
+      </para>
+    </sect2>
+    <sect2 id="basictx">
+      <title>BasicTX</title>
+      <para>
+      </para>
+    </sect2>
+  </sect1>
+</article>

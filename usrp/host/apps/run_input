@@ -1,0 +1,5 @@
+#!/bin/sh
+
+./test_usrp_standard_rx -D 8 -o rx.bin "$@"
+./dump_shorts <rx.bin | head -50000 >rx.ascii
+

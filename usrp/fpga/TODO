@@ -1,0 +1,23 @@
+
+
+Area Reduction
+==============
+Reduce one or both stages of dec/interp to max rate of 8 instead of 16
+Optimize CICs to minimize registers
+Reduce width of RX CORDIC
+Fix CORDIC wasted logic cells from bad synthesis
+Progressively narrow x,y,z on CORDIC
+16-bit wide FIFOs, split IQ/channels on other side (?)
+
+Enhancements
+============
+Halfband filter in Spartan 3
+Muxing of inputs
+Switch over to newfc
+RAM interface?
+
+Other
+=====
+Capture/Transmit straight samples (no DUC/DDC)
+
+

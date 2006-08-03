@@ -1,0 +1,92 @@
+These instructions are intended for Linux. On other systems you will have to
+construct something compatible to build gr-audio-portaudio.
+
+In order to use portaudio with gnuradio you will need to download and install
+a late version of portaudio.  Please cd to a directory where the cvs command
+below will be allowed to build the portaudio directory tree.
+
+cvs -d:pserver:anonymous@www.portaudio.com:/home/cvs co -r v19-devel portaudio
+
+This will make a directory portaudio unless you already have one.  It will
+check out the Portaudio API version 2 release 1.9.
+
+In the directory where this README is found, there is a patch file.  Hopefully
+this patch will not be needed for long.  Portaudio is working with us to use
+auto*, libtool, etc.  The patch is autoconfiscate.patch.  
+
+cd to the portaudio directory and run
+
+patch -p0 <autoconfiscate.patch
+
+this will modify the portaudio source tree to use standard tools and prepare
+it for use with gnuradio.  Now run
+
+chmod u+x bootstrap
+
+you may need to edit bootstrap and remove the 2.50 at the end of some of the
+commands (on SUSE 10.0 for example).
+
+./bootstrap
+
+./configure --help 
+
+
+will reveal the options for configure that are available to you. If you do not
+understand the options or wish to accept the defaults please just run
+
+./configure
+
+If you do not want the includes and libraries install in /usr/local (standard)
+then enter the prefix arguments to ./configure.  This document will assume you
+are doing the standard installation and that will be into /usr/local.
+
+On Linux if you have the jack tool available from 
+
+http://jackit.sourceforge.net
+
+the portaudio configure will enable the library to talk to jack.
+
+Now you are ready to make the portaudio library.
+
+make; sudo make install;sudo ldconfig  (possibly /sbin/ldconfig).
+
+will make the code and install it into the prefix (/usr/local) selected and
+will cache the configuration information for other programs to use for their
+configuration options.
+
+Now you are ready to install gr-audio-portaudio.  In the gr-build directory
+you may run
+
+cvs co gr-audio-portaudio
+
+cd gr-audio-portaudio
+../buildit
+
+will configure, make, and install the portaudio sink and source.
+
+In gnuradio-examples/python/audio please test by running
+
+./mono_tone_portaudio.py
+
+
+If this runs you are likely in business but this chooses the default device
+(typically /dev/dsp which is being run by alsa under oss emulation and on a
+Mac it will choose coreaudio).
+
+./mono_tone_portaudio.py -O hw:0,0
+
+chooses the default alsa device.
+
+./mono_tone_portaudio.py -O /dev/dsp
+
+will force the use of OSS and the default oss device. To run with jack,  you
+will probably enter the following command:
+
+./mono_tone_portaudio.py -O alsa_pcm
+
+
+In the portaudio directory,  you may list the devices visible to portaudio by
+searching for and running the command
+
+pa_devs
+

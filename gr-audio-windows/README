@@ -1,0 +1,66 @@
+
+# Copyright 2001,2005 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+
+gr-audio-windows will add an audio-sink to gnuradio for windows
+
+Requirements for building:
+make sure you have the following installed:
+mingw
+libtool (recent version ,built yourself, (if needed remove old libtool macros from /usr/share/aclocal))
+msys
+python2.4 (just install the prebuild binary for windows)
+boost  (built yourself, maybe just unpacking the source somewhere will do, we only use header files)
+cppunit (built yourself)
+gnuradio-core (built with mingw)
+
+Building:
+sources from cvs:
+edit bootstrap to your needs (see below for example)
+./bootstrap 
+./configure /configure --with-cppunit-prefix=/whereiscppunit --with-boost-include-dir=/c/whereisboost PYTHON=/c/Python24/python am_cv_python_pythondir=/c/Python24/Lib/site-packages am_cv_python_pyexecdir=/c/Python24/Lib/site-packages
+make
+make check
+make install
+
+
+If you have multiple versions of aclocal then edit bootstrap and change aclocal and automake to the latest version
+
+You really need a recent libtool to get this built on mingw.
+If you build it with default options it will be placed in /usr/local, but the default libtool will still be in /usr.
+This will result in old m4 macros will be used by aclocal.
+So if you have a more recent libtool installed in /usr/local add -I /usr/local/share/aclocal to the aclocal commandline in bootstrap.
+(And add any other directories with the most recent m4 macros)
+You could also uninstall (delete) the old libtool macros in /usr/share/aclocal
+
+bootstrap example:
+
+!/bin/sh
+rm -fr config.cache autom4te*.cache
+aclocal-1.8 -I /usr/local/share/aclocal -I config
+autoconf
+autoheader
+libtoolize --automake
+automake-1.8 --add-missing
+
+
+configuration example:
+./configure --with-cppunit-prefix=/usr/local --with-boost-include-dir=/d/boost_1_32_0/include/boost-1_32 PYTHON=/d/Python24/python am_cv_python_pythondir=/d/Python24/Lib/site-packages am_cv_python_pyexecdir=/d/Python24/Lib/site-packages
+
+Martin Dvh, juli 2005

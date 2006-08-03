@@ -1,0 +1,86 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 1991-2003 Altera Corporation
+Any  megafunction  design,  and related netlist (encrypted  or  decrypted),
+support information,  device programming or simulation file,  and any other
+associated  documentation or information  provided by  Altera  or a partner
+under  Altera's   Megafunction   Partnership   Program  may  be  used  only
+to program  PLD  devices (but not masked  PLD  devices) from  Altera.   Any
+other  use  of such  megafunction  design,  netlist,  support  information,
+device programming or simulation file,  or any other  related documentation
+or information  is prohibited  for  any  other purpose,  including, but not
+limited to  modification,  reverse engineering,  de-compiling, or use  with
+any other  silicon devices,  unless such use is  explicitly  licensed under
+a separate agreement with  Altera  or a megafunction partner.  Title to the
+intellectual property,  including patents,  copyrights,  trademarks,  trade
+secrets,  or maskworks,  embodied in any such megafunction design, netlist,
+support  information,  device programming or simulation file,  or any other
+related documentation or information provided by  Altera  or a megafunction
+partner, remains with Altera, the megafunction partner, or their respective
+licensors. No other licenses, including any licenses needed under any third
+party's intellectual property, are provided herein.
+*/
+(header "symbol" (version "1.1"))
+(symbol
+	(rect 0 0 240 120)
+	(text "accum32" (rect 87 2 166 21)(font "Arial" (font_size 10)))
+	(text "inst" (rect 8 101 31 116)(font "Arial" ))
+	(port
+		(pt 0 40)
+		(input)
+		(text "data[31..0]" (rect 0 0 73 16)(font "Arial" (font_size 8)))
+		(text "data[31..0]" (rect 20 24 82 40)(font "Arial" (font_size 8)))
+		(line (pt 0 40)(pt 16 40)(line_width 3))
+	)
+	(port
+		(pt 0 56)
+		(input)
+		(text "clock" (rect 0 0 36 16)(font "Arial" (font_size 8)))
+		(text "clock" (rect 20 40 51 56)(font "Arial" (font_size 8)))
+		(line (pt 0 56)(pt 16 56)(line_width 1))
+	)
+	(port
+		(pt 0 72)
+		(input)
+		(text "clken" (rect 0 0 36 16)(font "Arial" (font_size 8)))
+		(text "clken" (rect 20 56 51 72)(font "Arial" (font_size 8)))
+		(line (pt 0 72)(pt 16 72)(line_width 1))
+	)
+	(port
+		(pt 0 96)
+		(input)
+		(text "aclr" (rect 0 0 24 16)(font "Arial" (font_size 8)))
+		(text "aclr" (rect 20 80 41 96)(font "Arial" (font_size 8)))
+		(line (pt 0 96)(pt 16 96)(line_width 1))
+	)
+	(port
+		(pt 240 56)
+		(output)
+		(text "result[31..0]" (rect 0 0 81 16)(font "Arial" (font_size 8)))
+		(text "result[31..0]" (rect 152 40 221 56)(font "Arial" (font_size 8)))
+		(line (pt 240 56)(pt 224 56)(line_width 3))
+	)
+	(drawing
+		(text "acc" (rect 102 48 123 64)(font "Arial" (font_size 8)))
+		(text "SIGNED" (rect 177 18 214 32)(font "Arial" ))
+		(line (pt 16 16)(pt 224 16)(line_width 1))
+		(line (pt 16 16)(pt 16 104)(line_width 1))
+		(line (pt 16 104)(pt 224 104)(line_width 1))
+		(line (pt 224 16)(pt 224 104)(line_width 1))
+		(line (pt 88 24)(pt 136 48)(line_width 1))
+		(line (pt 136 64)(pt 136 48)(line_width 1))
+		(line (pt 88 88)(pt 136 64)(line_width 1))
+		(line (pt 88 24)(pt 88 88)(line_width 1))
+		(line (pt 16 40)(pt 88 40)(line_width 1))
+		(line (pt 16 56)(pt 88 56)(line_width 1))
+		(line (pt 136 56)(pt 224 56)(line_width 1))
+		(line (pt 16 72)(pt 88 72)(line_width 1))
+		(line (pt 16 72)(pt 88 72)(line_width 1))
+		(line (pt 16 96)(pt 104 96)(line_width 1))
+		(line (pt 104 96)(pt 104 80)(line_width 1))
+	)
+)

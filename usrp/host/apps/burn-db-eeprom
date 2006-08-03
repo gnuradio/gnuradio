@@ -1,0 +1,164 @@
+#!/usr/bin/env python
+#
+# Copyright 2005 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+# 
+
+from usrp_prims import *
+from optparse import OptionParser
+import sys
+from usrp_dbid import *
+
+i2c_addr_map = { 'TX_A' : 0x54,    'RX_A' : 0x55,    'TX_B' : 0x56,    'RX_B' : 0x57 }
+
+daughterboards = {
+    # name            : ((tx-dbid, tx-oe),          (rx-dbid, rx-oe))
+    'basictx'         : ((BASIC_TX, 0x0000),        None),
+    'basicrx'         : (None,                      (BASIC_RX, 0x0000)),
+    'dbsrx'           : (None,                      (DBS_RX, 0x0000)),
+    'dbsrx2'          : (None,                      (DBS_RX_REV_2_1, 0x0000)),
+    'tvrx'            : (None,                      (TV_RX, 0x0000)),
+    'tvrx2'           : (None,                      (TV_RX_REV_2, 0x0000)),
+    'tvrx3'           : (None,                      (TV_RX_REV_3, 0x0000)),
+    'rfx400'          : ((FLEX_400_TX, 0x0000),     (FLEX_400_RX, 0x0000)),
+    'rfx900'          : ((FLEX_900_TX, 0x0000),     (FLEX_900_RX, 0x0000)),
+    'rfx1200'         : ((FLEX_1200_TX, 0x0000),    (FLEX_1200_RX, 0x0000)),
+    'rfx1800'         : ((FLEX_1800_TX, 0x0000),    (FLEX_1800_RX, 0x0000)),
+    'rfx2400'         : ((FLEX_2400_TX, 0x0000),    (FLEX_2400_RX, 0x0000)),
+    'rfx400_tx'       : ((FLEX_400_TX, 0x0000),     None),
+    'rfx900_tx'       : ((FLEX_900_TX, 0x0000),     None),
+    'rfx1200_tx'      : ((FLEX_1200_TX, 0x0000),    None),
+    'rfx1800_tx'      : ((FLEX_1800_TX, 0x0000),    None),
+    'rfx2400_tx'      : ((FLEX_2400_TX, 0x0000),    None),
+    'rfx400_rx'       : (None,                      (FLEX_400_RX, 0x0000)),
+    'rfx900_rx'       : (None,                      (FLEX_900_RX, 0x0000)),
+    'rfx1200_rx'      : (None,                      (FLEX_1200_RX, 0x0000)),
+    'rfx1800_rx'      : (None,                      (FLEX_1800_RX, 0x0000)),
+    'rfx2400_rx'      : (None,                      (FLEX_2400_RX, 0x0000)),
+    'rfx400_mimo_a'   : ((FLEX_400_TX_MIMO_A, 0x0000),     (FLEX_400_RX_MIMO_A, 0x0000)),
+    'rfx900_mimo_a'   : ((FLEX_900_TX_MIMO_A, 0x0000),     (FLEX_900_RX_MIMO_A, 0x0000)),
+    'rfx1200_mimo_a'  : ((FLEX_1200_TX_MIMO_A, 0x0000),    (FLEX_1200_RX_MIMO_A, 0x0000)),
+    'rfx1800_mimo_a'  : ((FLEX_1800_TX_MIMO_A, 0x0000),    (FLEX_1800_RX_MIMO_A, 0x0000)),
+    'rfx2400_mimo_a'  : ((FLEX_2400_TX_MIMO_A, 0x0000),    (FLEX_2400_RX_MIMO_A, 0x0000)),
+    'rfx400_mimo_b'   : ((FLEX_400_TX_MIMO_B, 0x0000),     (FLEX_400_RX_MIMO_B, 0x0000)),
+    'rfx900_mimo_b'   : ((FLEX_900_TX_MIMO_B, 0x0000),     (FLEX_900_RX_MIMO_B, 0x0000)),
+    'rfx1200_mimo_b'  : ((FLEX_1200_TX_MIMO_B, 0x0000),    (FLEX_1200_RX_MIMO_B, 0x0000)),
+    'rfx1800_mimo_b'  : ((FLEX_1800_TX_MIMO_B, 0x0000),    (FLEX_1800_RX_MIMO_B, 0x0000)),
+    'rfx2400_mimo_b'  : ((FLEX_2400_TX_MIMO_B, 0x0000),    (FLEX_2400_RX_MIMO_B, 0x0000)),
+    'lftx'            : ((LF_TX, 0x0000),           None),
+    'lfrx'            : (None,                      (LF_RX, 0x0000)),
+    'experimental_tx' : ((EXPERIMENTAL_TX, 0x0000), None),
+    'experimental_rx' : (None,                      (EXPERIMENTAL_RX, 0x0000)),
+    }
+
+def open_cmd_interface(which_board = 0):
+    if not usrp_load_standard_bits (which_board, 0):
+        raise RuntimeError, "usrp_load_standard_bits"
+    dev = usrp_find_device (which_board)
+    if not dev:
+        raise RuntimeError, "usrp_find_device"
+    u = usrp_open_cmd_interface (dev)
+    if not u:
+        raise RuntimeError, "usrp_open_cmd_interface"
+    return u
+
+def write_dboard_eeprom(u, i2c_addr, dbid, oe):
+    eeprom = 0x20 * [0]
+    eeprom[0] = 0xDB                    # magic value
+    eeprom[1] = dbid & 0xff
+    eeprom[2] = (dbid >> 8) & 0xff
+    eeprom[3] = oe & 0xff
+    eeprom[4] = (oe >> 8) & 0xff
+    eeprom[0x1f] = 0xff & (-reduce(lambda x, y: x+y, eeprom)) # checksum
+    s = ''.join (map (chr, eeprom))
+    ok = usrp_eeprom_write (u, i2c_addr, 0, s)
+    return ok
+
+
+def init_eeprom(u, slot_name, force, dbid, oe):
+    i2c_addr = i2c_addr_map[slot_name]
+    e = usrp_eeprom_read (u, i2c_addr, 0, 0x20)
+    if not e:
+        print "%s: no d'board, skipped" % (slot_name,)
+        return True
+    
+    if not force and (sum (map (ord, e)) & 0xff) == 0 and ord (e[0]) == 0xDB:
+        print "%s: already initialized, skipped" % (slot_name,)
+        return True
+        
+    if not write_dboard_eeprom (u, i2c_addr, dbid, oe):
+        print "%s: failed to write d'board EEPROM" % (slot_name,)
+        return False
+
+    print "%s: OK" % (slot_name,)
+    return True
+
+
+def init_daughterboard(u, side, type, force):
+    ok = True
+    dbinfo = daughterboards[type]
+    if dbinfo[0] is not None:           # burn tx slot
+        ok &= init_eeprom(u, 'TX_' + side, force, dbinfo[0][0], dbinfo[0][1])
+    if dbinfo[1] is not None:           # burn rx slot
+        ok &= init_eeprom(u, 'RX_' + side, force, dbinfo[1][0], dbinfo[1][1])
+    return ok
+
+
+def main():
+    dbs = daughterboards.keys()
+    dbs.sort()
+    usage = """\
+usage: %prog [options]
+You must specify a type with -t or --type,
+and at least one side using -A and/or -B."""
+
+    parser = OptionParser(usage=usage)
+    parser.add_option ("-t", "--type", type="choice", help="choose type from %r" % (dbs,),
+                       choices=dbs, default=None)
+    parser.add_option ("-A", "--burn-a", action="store_true", default=False,
+                       help="burn eeprom(s) on side A")
+    parser.add_option ("-B", "--burn-b", action="store_true", default=False,
+                       help="burn eeprom(s) on side B")
+    parser.add_option ("-f", "--force", action="store_true", default=False,
+                       help="force init of already initialized eeproms")
+    (options, args) = parser.parse_args ()
+
+    which=[]
+    if options.burn_a:
+        which.append('A')
+    if options.burn_b:
+        which.append('B')
+
+    if len(args) != 0 or len(which) == 0 or options.type is None:
+        parser.print_help()
+        sys.exit (1)
+
+    u = open_cmd_interface (0)
+    ok = True
+    for w in which:
+        ok &= init_daughterboard (u, w, options.type, options.force)
+
+    if ok:
+        sys.exit (0)
+    else:
+        sys.exit (1)
+
+if __name__ == "__main__":
+    main ()
+    

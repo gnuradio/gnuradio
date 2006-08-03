@@ -1,0 +1,411 @@
+# Copyright (C) 1991-2005 Altera Corporation
+# Your use of Altera Corporation's design tools, logic functions 
+# and other software and tools, and its AMPP partner logic       
+# functions, and any output files any of the foregoing           
+# (including device programming or simulation files), and any    
+# associated documentation or information are expressly subject  
+# to the terms and conditions of the Altera Program License      
+# Subscription Agreement, Altera MegaCore Function License       
+# Agreement, or other applicable license agreement, including,   
+# without limitation, that your use is for the sole purpose of   
+# programming logic devices manufactured by Altera and sold by   
+# Altera or its authorized distributors.  Please refer to the    
+# applicable agreement for further details.
+
+
+# The default values for assignments are stored in the file
+#		mrfm_assignment_defaults.qdf
+# If this file doesn't exist, and for assignments not listed, see file
+#		assignment_defaults.qdf
+
+# Altera recommends that you do not modify this file. This
+# file is updated automatically by the Quartus II software
+# and any changes you make may be lost or overwritten.
+
+
+# Project-Wide Assignments
+# ========================
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 3.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "00:14:04  JULY 13, 2003"
+set_global_assignment -name LAST_QUARTUS_VERSION "5.1 SP2"
+
+# Pin & Location Assignments
+# ==========================
+set_global_assignment -name RESERVE_PIN "AS INPUT TRI-STATED"
+set_location_assignment PIN_29 -to SCLK
+set_location_assignment PIN_117 -to SDI
+set_location_assignment PIN_28 -to usbclk
+set_location_assignment PIN_107 -to usbctl[0]
+set_location_assignment PIN_106 -to usbctl[1]
+set_location_assignment PIN_105 -to usbctl[2]
+set_location_assignment PIN_100 -to usbdata[0]
+set_location_assignment PIN_84 -to usbdata[10]
+set_location_assignment PIN_83 -to usbdata[11]
+set_location_assignment PIN_82 -to usbdata[12]
+set_location_assignment PIN_79 -to usbdata[13]
+set_location_assignment PIN_78 -to usbdata[14]
+set_location_assignment PIN_77 -to usbdata[15]
+set_location_assignment PIN_99 -to usbdata[1]
+set_location_assignment PIN_98 -to usbdata[2]
+set_location_assignment PIN_95 -to usbdata[3]
+set_location_assignment PIN_94 -to usbdata[4]
+set_location_assignment PIN_93 -to usbdata[5]
+set_location_assignment PIN_88 -to usbdata[6]
+set_location_assignment PIN_87 -to usbdata[7]
+set_location_assignment PIN_86 -to usbdata[8]
+set_location_assignment PIN_85 -to usbdata[9]
+set_location_assignment PIN_104 -to usbrdy[0]
+set_location_assignment PIN_101 -to usbrdy[1]
+set_location_assignment PIN_76 -to FX2_1
+set_location_assignment PIN_75 -to FX2_2
+set_location_assignment PIN_74 -to FX2_3
+set_location_assignment PIN_116 -to io_rx_a[0]
+set_location_assignment PIN_115 -to io_rx_a[1]
+set_location_assignment PIN_114 -to io_rx_a[2]
+set_location_assignment PIN_113 -to io_rx_a[3]
+set_location_assignment PIN_108 -to io_rx_a[4]
+set_location_assignment PIN_195 -to io_rx_a[5]
+set_location_assignment PIN_196 -to io_rx_a[6]
+set_location_assignment PIN_197 -to io_rx_a[7]
+set_location_assignment PIN_200 -to io_rx_a[8]
+set_location_assignment PIN_201 -to io_rx_a[9]
+set_location_assignment PIN_202 -to io_rx_a[10]
+set_location_assignment PIN_203 -to io_rx_a[11]
+set_location_assignment PIN_206 -to io_rx_a[12]
+set_location_assignment PIN_207 -to io_rx_a[13]
+set_location_assignment PIN_208 -to io_rx_a[14]
+set_location_assignment PIN_214 -to io_rx_b[0]
+set_location_assignment PIN_215 -to io_rx_b[1]
+set_location_assignment PIN_216 -to io_rx_b[2]
+set_location_assignment PIN_217 -to io_rx_b[3]
+set_location_assignment PIN_218 -to io_rx_b[4]
+set_location_assignment PIN_219 -to io_rx_b[5]
+set_location_assignment PIN_222 -to io_rx_b[6]
+set_location_assignment PIN_223 -to io_rx_b[7]
+set_location_assignment PIN_224 -to io_rx_b[8]
+set_location_assignment PIN_225 -to io_rx_b[9]
+set_location_assignment PIN_226 -to io_rx_b[10]
+set_location_assignment PIN_227 -to io_rx_b[11]
+set_location_assignment PIN_228 -to io_rx_b[12]
+set_location_assignment PIN_233 -to io_rx_b[13]
+set_location_assignment PIN_234 -to io_rx_b[14]
+set_location_assignment PIN_175 -to io_tx_a[0]
+set_location_assignment PIN_176 -to io_tx_a[1]
+set_location_assignment PIN_177 -to io_tx_a[2]
+set_location_assignment PIN_178 -to io_tx_a[3]
+set_location_assignment PIN_179 -to io_tx_a[4]
+set_location_assignment PIN_180 -to io_tx_a[5]
+set_location_assignment PIN_181 -to io_tx_a[6]
+set_location_assignment PIN_182 -to io_tx_a[7]
+set_location_assignment PIN_183 -to io_tx_a[8]
+set_location_assignment PIN_184 -to io_tx_a[9]
+set_location_assignment PIN_185 -to io_tx_a[10]
+set_location_assignment PIN_186 -to io_tx_a[11]
+set_location_assignment PIN_187 -to io_tx_a[12]
+set_location_assignment PIN_188 -to io_tx_a[13]
+set_location_assignment PIN_193 -to io_tx_a[14]
+set_location_assignment PIN_73 -to io_tx_b[0]
+set_location_assignment PIN_68 -to io_tx_b[1]
+set_location_assignment PIN_67 -to io_tx_b[2]
+set_location_assignment PIN_66 -to io_tx_b[3]
+set_location_assignment PIN_65 -to io_tx_b[4]
+set_location_assignment PIN_64 -to io_tx_b[5]
+set_location_assignment PIN_63 -to io_tx_b[6]
+set_location_assignment PIN_62 -to io_tx_b[7]
+set_location_assignment PIN_61 -to io_tx_b[8]
+set_location_assignment PIN_60 -to io_tx_b[9]
+set_location_assignment PIN_59 -to io_tx_b[10]
+set_location_assignment PIN_58 -to io_tx_b[11]
+set_location_assignment PIN_57 -to io_tx_b[12]
+set_location_assignment PIN_56 -to io_tx_b[13]
+set_location_assignment PIN_55 -to io_tx_b[14]
+set_location_assignment PIN_152 -to master_clk
+set_location_assignment PIN_144 -to rx_a_a[0]
+set_location_assignment PIN_143 -to rx_a_a[1]
+set_location_assignment PIN_141 -to rx_a_a[2]
+set_location_assignment PIN_140 -to rx_a_a[3]
+set_location_assignment PIN_139 -to rx_a_a[4]
+set_location_assignment PIN_138 -to rx_a_a[5]
+set_location_assignment PIN_137 -to rx_a_a[6]
+set_location_assignment PIN_136 -to rx_a_a[7]
+set_location_assignment PIN_135 -to rx_a_a[8]
+set_location_assignment PIN_134 -to rx_a_a[9]
+set_location_assignment PIN_133 -to rx_a_a[10]
+set_location_assignment PIN_132 -to rx_a_a[11]
+set_location_assignment PIN_23 -to rx_a_b[0]
+set_location_assignment PIN_21 -to rx_a_b[1]
+set_location_assignment PIN_20 -to rx_a_b[2]
+set_location_assignment PIN_19 -to rx_a_b[3]
+set_location_assignment PIN_18 -to rx_a_b[4]
+set_location_assignment PIN_17 -to rx_a_b[5]
+set_location_assignment PIN_16 -to rx_a_b[6]
+set_location_assignment PIN_15 -to rx_a_b[7]
+set_location_assignment PIN_14 -to rx_a_b[8]
+set_location_assignment PIN_13 -to rx_a_b[9]
+set_location_assignment PIN_12 -to rx_a_b[10]
+set_location_assignment PIN_11 -to rx_a_b[11]
+set_location_assignment PIN_131 -to rx_b_a[0]
+set_location_assignment PIN_128 -to rx_b_a[1]
+set_location_assignment PIN_127 -to rx_b_a[2]
+set_location_assignment PIN_126 -to rx_b_a[3]
+set_location_assignment PIN_125 -to rx_b_a[4]
+set_location_assignment PIN_124 -to rx_b_a[5]
+set_location_assignment PIN_123 -to rx_b_a[6]
+set_location_assignment PIN_122 -to rx_b_a[7]
+set_location_assignment PIN_121 -to rx_b_a[8]
+set_location_assignment PIN_120 -to rx_b_a[9]
+set_location_assignment PIN_119 -to rx_b_a[10]
+set_location_assignment PIN_118 -to rx_b_a[11]
+set_location_assignment PIN_8 -to rx_b_b[0]
+set_location_assignment PIN_7 -to rx_b_b[1]
+set_location_assignment PIN_6 -to rx_b_b[2]
+set_location_assignment PIN_5 -to rx_b_b[3]
+set_location_assignment PIN_4 -to rx_b_b[4]
+set_location_assignment PIN_3 -to rx_b_b[5]
+set_location_assignment PIN_2 -to rx_b_b[6]
+set_location_assignment PIN_240 -to rx_b_b[7]
+set_location_assignment PIN_239 -to rx_b_b[8]
+set_location_assignment PIN_238 -to rx_b_b[9]
+set_location_assignment PIN_237 -to rx_b_b[10]
+set_location_assignment PIN_236 -to rx_b_b[11]
+set_location_assignment PIN_156 -to SDO
+set_location_assignment PIN_153 -to SEN_FPGA
+set_location_assignment PIN_159 -to tx_a[0]
+set_location_assignment PIN_160 -to tx_a[1]
+set_location_assignment PIN_161 -to tx_a[2]
+set_location_assignment PIN_162 -to tx_a[3]
+set_location_assignment PIN_163 -to tx_a[4]
+set_location_assignment PIN_164 -to tx_a[5]
+set_location_assignment PIN_165 -to tx_a[6]
+set_location_assignment PIN_166 -to tx_a[7]
+set_location_assignment PIN_167 -to tx_a[8]
+set_location_assignment PIN_168 -to tx_a[9]
+set_location_assignment PIN_169 -to tx_a[10]
+set_location_assignment PIN_170 -to tx_a[11]
+set_location_assignment PIN_173 -to tx_a[12]
+set_location_assignment PIN_174 -to tx_a[13]
+set_location_assignment PIN_38 -to tx_b[0]
+set_location_assignment PIN_39 -to tx_b[1]
+set_location_assignment PIN_41 -to tx_b[2]
+set_location_assignment PIN_42 -to tx_b[3]
+set_location_assignment PIN_43 -to tx_b[4]
+set_location_assignment PIN_44 -to tx_b[5]
+set_location_assignment PIN_45 -to tx_b[6]
+set_location_assignment PIN_46 -to tx_b[7]
+set_location_assignment PIN_47 -to tx_b[8]
+set_location_assignment PIN_48 -to tx_b[9]
+set_location_assignment PIN_49 -to tx_b[10]
+set_location_assignment PIN_50 -to tx_b[11]
+set_location_assignment PIN_53 -to tx_b[12]
+set_location_assignment PIN_54 -to tx_b[13]
+set_location_assignment PIN_158 -to TXSYNC_A
+set_location_assignment PIN_37 -to TXSYNC_B
+set_location_assignment PIN_235 -to io_rx_b[15]
+set_location_assignment PIN_24 -to io_tx_b[15]
+set_location_assignment PIN_213 -to io_rx_a[15]
+set_location_assignment PIN_194 -to io_tx_a[15]
+set_location_assignment PIN_1 -to MYSTERY_SIGNAL
+
+# Timing Assignments
+# ==================
+set_global_assignment -name INCLUDE_EXTERNAL_PIN_DELAYS_IN_FMAX_CALCULATIONS OFF
+
+# Analysis & Synthesis Assignments
+# ================================
+set_global_assignment -name SAVE_DISK_SPACE OFF
+set_global_assignment -name DEVICE_FILTER_PACKAGE "ANY QFP"
+set_global_assignment -name DEVICE_FILTER_PIN_COUNT 240
+set_global_assignment -name EDA_DESIGN_ENTRY_SYNTHESIS_TOOL "<None>"
+set_global_assignment -name FAMILY Cyclone
+set_global_assignment -name CYCLONE_OPTIMIZATION_TECHNIQUE SPEED
+set_global_assignment -name STRATIX_OPTIMIZATION_TECHNIQUE SPEED
+set_global_assignment -name APEX20K_OPTIMIZATION_TECHNIQUE SPEED
+set_global_assignment -name TOP_LEVEL_ENTITY mrfm
+set_global_assignment -name VHDL_SHOW_LMF_MAPPING_MESSAGES OFF
+set_global_assignment -name USER_LIBRARIES "e:\\usrp\\fpga\\megacells"
+set_global_assignment -name AUTO_ENABLE_SMART_COMPILE ON
+
+# Fitter Assignments
+# ==================
+set_global_assignment -name DEVICE EP1C12Q240C8
+set_global_assignment -name CYCLONE_CONFIGURATION_SCHEME "PASSIVE SERIAL"
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED"
+set_global_assignment -name OPTIMIZE_HOLD_TIMING OFF
+set_global_assignment -name OPTIMIZE_TIMING "NORMAL COMPILATION"
+set_global_assignment -name PHYSICAL_SYNTHESIS_COMBO_LOGIC ON
+set_global_assignment -name PHYSICAL_SYNTHESIS_REGISTER_DUPLICATION ON
+set_global_assignment -name PHYSICAL_SYNTHESIS_REGISTER_RETIMING ON
+set_global_assignment -name IO_PLACEMENT_OPTIMIZATION OFF
+set_global_assignment -name PHYSICAL_SYNTHESIS_EFFORT EXTRA
+set_global_assignment -name INC_PLC_MODE OFF
+set_global_assignment -name ROUTING_BACK_ANNOTATION_MODE OFF
+set_instance_assignment -name IO_STANDARD LVTTL -to usbdata[12]
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD LVTTL
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
+
+# Timing Analysis Assignments
+# ===========================
+set_global_assignment -name MAX_SCC_SIZE 50
+
+# EDA Netlist Writer Assignments
+# ==============================
+set_global_assignment -name EDA_SIMULATION_TOOL "<None>"
+set_global_assignment -name EDA_TIMING_ANALYSIS_TOOL "<NONE>"
+set_global_assignment -name EDA_BOARD_DESIGN_TOOL "<NONE>"
+set_global_assignment -name EDA_FORMAL_VERIFICATION_TOOL "<NONE>"
+set_global_assignment -name EDA_RESYNTHESIS_TOOL "<NONE>"
+
+# Assembler Assignments
+# =====================
+set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
+set_global_assignment -name GENERATE_RBF_FILE ON
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS_NO_OUTPUT_GND "AS INPUT TRI-STATED"
+set_global_assignment -name AUTO_RESTART_CONFIGURATION OFF
+
+# Simulator Assignments
+# =====================
+set_global_assignment -name START_TIME "0 ns"
+set_global_assignment -name GLITCH_INTERVAL "1 ns"
+
+# Design Assistant Assignments
+# ============================
+set_global_assignment -name DRC_REPORT_TOP_FANOUT OFF
+set_global_assignment -name DRC_REPORT_FANOUT_EXCEEDING OFF
+set_global_assignment -name ASSG_CAT OFF
+set_global_assignment -name ASSG_RULE_MISSING_FMAX OFF
+set_global_assignment -name ASSG_RULE_MISSING_TIMING OFF
+set_global_assignment -name NONSYNCHSTRUCT_RULE_ASYN_RAM OFF
+set_global_assignment -name CLK_CAT OFF
+set_global_assignment -name CLK_RULE_COMB_CLOCK OFF
+set_global_assignment -name CLK_RULE_INV_CLOCK OFF
+set_global_assignment -name CLK_RULE_GATING_SCHEME OFF
+set_global_assignment -name CLK_RULE_INPINS_CLKNET OFF
+set_global_assignment -name CLK_RULE_CLKNET_CLKSPINES OFF
+set_global_assignment -name CLK_RULE_MIX_EDGES OFF
+set_global_assignment -name RESET_CAT OFF
+set_global_assignment -name RESET_RULE_INPINS_RESETNET OFF
+set_global_assignment -name RESET_RULE_UNSYNCH_EXRESET OFF
+set_global_assignment -name RESET_RULE_IMSYNCH_EXRESET OFF
+set_global_assignment -name RESET_RULE_COMB_ASYNCH_RESET OFF
+set_global_assignment -name RESET_RULE_UNSYNCH_ASYNCH_DOMAIN OFF
+set_global_assignment -name RESET_RULE_IMSYNCH_ASYNCH_DOMAIN OFF
+set_global_assignment -name TIMING_CAT OFF
+set_global_assignment -name TIMING_RULE_SHIFT_REG OFF
+set_global_assignment -name TIMING_RULE_COIN_CLKEDGE OFF
+set_global_assignment -name NONSYNCHSTRUCT_RULE_COMB_DRIVES_RAM_WE OFF
+set_global_assignment -name NONSYNCHSTRUCT_CAT OFF
+set_global_assignment -name NONSYNCHSTRUCT_RULE_COMBLOOP OFF
+set_global_assignment -name NONSYNCHSTRUCT_RULE_REG_LOOP OFF
+set_global_assignment -name NONSYNCHSTRUCT_RULE_DELAY_CHAIN OFF
+set_global_assignment -name NONSYNCHSTRUCT_RULE_RIPPLE_CLK OFF
+set_global_assignment -name NONSYNCHSTRUCT_RULE_ILLEGAL_PULSE_GEN OFF
+set_global_assignment -name NONSYNCHSTRUCT_RULE_MULTI_VIBRATOR OFF
+set_global_assignment -name NONSYNCHSTRUCT_RULE_SRLATCH OFF
+set_global_assignment -name NONSYNCHSTRUCT_RULE_LATCH_UNIDENTIFIED OFF
+set_global_assignment -name SIGNALRACE_CAT OFF
+set_global_assignment -name ACLK_CAT OFF
+set_global_assignment -name ACLK_RULE_NO_SZER_ACLK_DOMAIN OFF
+set_global_assignment -name ACLK_RULE_SZER_BTW_ACLK_DOMAIN OFF
+set_global_assignment -name ACLK_RULE_IMSZER_ADOMAIN OFF
+set_global_assignment -name HCPY_CAT OFF
+set_global_assignment -name HCPY_VREF_PINS OFF
+
+# SignalTap II Assignments
+# ========================
+set_global_assignment -name HUB_ENTITY_NAME SLD_HUB
+set_global_assignment -name HUB_INSTANCE_NAME SLD_HUB_INST
+set_global_assignment -name ENABLE_SIGNALTAP OFF
+
+# LogicLock Region Assignments
+# ============================
+set_global_assignment -name LOGICLOCK_INCREMENTAL_COMPILE_ASSIGNMENT OFF
+
+# -----------------
+# start CLOCK(SCLK)
+
+	# Timing Assignments
+	# ==================
+set_global_assignment -name DUTY_CYCLE 50 -section_id SCLK
+set_global_assignment -name FMAX_REQUIREMENT "1 MHz" -section_id SCLK
+set_global_assignment -name INCLUDE_EXTERNAL_PIN_DELAYS_IN_FMAX_CALCULATIONS OFF -section_id SCLK
+
+# end CLOCK(SCLK)
+# ---------------
+
+# -----------------------
+# start CLOCK(master_clk)
+
+	# Timing Assignments
+	# ==================
+set_global_assignment -name DUTY_CYCLE 50 -section_id master_clk
+set_global_assignment -name FMAX_REQUIREMENT "64 MHz" -section_id master_clk
+set_global_assignment -name INCLUDE_EXTERNAL_PIN_DELAYS_IN_FMAX_CALCULATIONS OFF -section_id master_clk
+
+# end CLOCK(master_clk)
+# ---------------------
+
+# -------------------
+# start CLOCK(usbclk)
+
+	# Timing Assignments
+	# ==================
+set_global_assignment -name DUTY_CYCLE 50 -section_id usbclk
+set_global_assignment -name FMAX_REQUIREMENT "48 MHz" -section_id usbclk
+set_global_assignment -name INCLUDE_EXTERNAL_PIN_DELAYS_IN_FMAX_CALCULATIONS OFF -section_id usbclk
+
+# end CLOCK(usbclk)
+# -----------------
+
+# ----------------------
+# start ENTITY(mrfm)
+
+	# Timing Assignments
+	# ==================
+set_instance_assignment -name CLOCK_SETTINGS SCLK -to SCLK
+set_instance_assignment -name CLOCK_SETTINGS usbclk -to usbclk
+set_instance_assignment -name CLOCK_SETTINGS master_clk -to master_clk
+
+# end ENTITY(mrfm)
+# --------------------
+
+
+set_global_assignment -name PHYSICAL_SYNTHESIS_ASYNCHRONOUS_SIGNAL_PIPELINING ON
+set_global_assignment -name SMART_RECOMPILE ON
+set_global_assignment -name VERILOG_FILE mrfm.vh
+set_global_assignment -name VERILOG_FILE biquad_2stage.v
+set_global_assignment -name VERILOG_FILE mrfm_compensator.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/ram16.v
+set_global_assignment -name VERILOG_FILE mrfm_proc.v
+set_global_assignment -name VERILOG_FILE ../../megacells/fifo_4k.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/hb/acc.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/hb/mult.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/hb/ram16_2sum.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/hb/coeff_rom.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/hb/halfband_decim.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/hb/mac.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/hb/coeff_ram.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/tx_chain.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/rx_dcoffset.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/adc_interface.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/io_pins.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/setting_reg.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/bidir_reg.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/cic_int_shifter.v
+set_global_assignment -name VERILOG_FILE ../../megacells/clk_doubler.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/gen_sync.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/master_control.v
+set_global_assignment -name VERILOG_FILE ../../megacells/fifo_2k.v
+set_global_assignment -name VERILOG_FILE ../../megacells/bustri.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/rx_buffer.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/tx_buffer.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/phase_acc.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/cic_interp.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/cic_decim.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/cordic_stage.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/cordic.v
+set_global_assignment -name VERILOG_FILE mrfm.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/clk_divider.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/serial_io.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/strobe_gen.v
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/sign_extend.v
+set_global_assignment -name FITTER_EFFORT "STANDARD FIT"

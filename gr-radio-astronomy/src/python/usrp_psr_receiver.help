@@ -1,0 +1,111 @@
+This program is used to analyse pulsars of known parameters.  It contains
+  both a post-detector spectral display, and a "pulse profile" display.
+  It has a built-in de-dispersion filter that will work up to DM=100 for
+  21cm observing, and up to DM=5 for 327Mhz observing.
+
+The program takes the following options:
+
+  --rx-subdev-spec     which USRP Rx side?  A or B
+
+  --decim              USRP decimation rate use either 64 or 128
+
+  --freq               USRP daughtercard frequency
+
+  --observing          Actual observing frequency (default is to use the
+                       setting for --freq)
+
+  --avg                Averaging setting for spectral display--higher numbers
+                       equal more averaging.  25 to 40 is typical.
+
+  --favg               Pulse folding averaging.  2 to 5 is typical.
+
+  --gain               USRP daughtercard gain control
+
+  --reflevel           Reference level on pulse profile display
+
+  --lowest             Lowest spectral bin that is considered valid, in Hz
+
+  --longitude          Observer longitude: West is negative
+
+  --latitude           Observer latitude:  South is negative
+
+  --fft_size           Size of FFT for post-detector spectrum: default is 1024
+
+  --threshold          Threshold (dB) to be considered a spectral "peak"
+                       This is relative to the average spectral level
+
+  --lowpass            Low pass frequency for post-detector spectral display
+                       20-100 is typical
+
+  --prefix             Filename prefix to use for recording files
+                       Default is ./
+
+  --pulsefreq          The frequency of the expected pulses
+                       For sentimental reasons, this defaults to 0.748Hz
+
+  --dm                 The DM
+
+  --doppler            The doppler shift, as a ratio
+
+  --divbase            The base of the Y/Div menu in pulsar display
+
+  --division           The initial Y/Div in pulsar display
+
+DM, Doppler, Gain, Frequency, and the averaging parameters can all be
+  changed using the GUI at runtime.
+
+If latitude and longitude are set correctly, and the system time is
+  correct, then the current LMST is displayed below the frequency
+  input, updated once per second.
+
+Moving the mouse in the post-detector spectrum display shows you that
+  point in the post-detector spectrum, both frequency and signal level.
+
+The post-detector spectrum is analysed, with results shown below
+  "Best freq".  It shows the spectral peaks, and computes their relationship.
+  It shows the harmonic compliance among the peaks, as well as the average
+  peak-to-peak distance.
+
+
+Here's a complete example for observing a pulsar with a frequency of
+  1.35Hz, at 431.5Mhz, using an IF of 10.7Mhz, and a DM of 12.431, using
+  1Mhz observing bandwidth:
+
+./usrp_psr_receiver.py --freq 10.7e6 --decim 64 --dm 12.431 --avg 35 \
+  --pulsefreq 1.35 --fft_size 2048 --lowest 1.00 --gain 75 --threshold 11.5 \
+  --observing 431.5e6 --reflevel 200 --division 100 --divbase 10 --favg 3 \
+  --lowpass 20 --longitude -76.02 --latitude 44.95
+
+Since the observed pulsar is at 1.35Hz, a lowpass cutoff for the
+  post-detector spectral display of 20Hz will be adequate.  We
+  tell the spectral analyser to use a threshold of 11.5dB above
+  average when analysing spectral data, and set the epoch folder
+  averager (pulse profile display) to use an average from 3 samples.
+  Notice that our actual USRP/Daughtercard frequency is 10.7Mhz, while
+  our observing frequency is 431.5Mhz--this is important in order for
+  the DM de-dispersion calculations to be correct. We also set our
+  latitude and longitude, so that logfiles and the LMST display
+  will have the correct LMST in them.
+
+The entire complex baseband can be recorded, if the "Recording baseband"
+  button is pressed.  Filenames are generated dynamically, and a header
+  file is produced giving observation parameters.  The baseband data are
+  recorded as octet pairs: one for I and one for Q.  Pressing the button again
+  turns off baseband recording.  This baseband is "raw", so it will
+  not have been de-dispersed.  The data rate will be whatever the
+  USRP was programmed to at the time (based on --decim).
+
+  The files are:  YYYYMMDDHHMM.pdat  and YYYYMMDDHHMM.phdr
+
+  The .phdr file contains ASCII header information describing the
+  contents of the .pdat file.
+
+Similarly the raw, pre-folded, band-limited post-detector "audio" data can be
+  recorded using the "Record Pulses" button.  The data rate for these is
+  currently 20Khz, recorded as short integers.  Just like baseband recording,
+  pressing the button again turns off pulse recording.
+
+  The files are: YYYYMMDDHHMM.padat  and YYMMDDHHMM.pahdr
+
+  The .pahdr file is ascii text providing information about the contents
+  of the corresponding .padat file.

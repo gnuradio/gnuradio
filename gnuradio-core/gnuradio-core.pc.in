@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@/gnuradio
+
+Name: gnuradio-core
+Description: GNU Software Radio toolkit
+Requires:
+Version: @VERSION@
+Libs: -L${libdir} -lgnuradio-core @FFTW3F_LIBS@
+Cflags: -I${includedir} @DEFINES@ @PTHREAD_CFLAGS@

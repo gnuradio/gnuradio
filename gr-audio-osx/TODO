@@ -1,0 +1,51 @@
+List as of 2006-Apr-22, by Michael Dickens, primary author
+
+* Change buffering to use gr_buffer's and necessary related classes.
+  Currently uses a circular_buffer I wrote myself (in
+  ./src/circular_buffer.h ), which hides the "circular" part from the
+  user but otherwise is very fast as well as thread safe.
+
+* A current limitation of this implementation is that the user cannot
+  dynamically switch audio devices (input or output) during playback
+  and use the new device without stopping the current executing GR and
+  restarting the process.  I would like to figure out how to get a
+  CoreAudio "listener" for when the default hardware input / output
+  device changes (e.g. when switched by the user in the "Sound" system
+  preference pane).  The code in ./src/audio-osx-source.cc creates
+  listeners for the AudioUnit being used as well as the Hardware
+  device, but these for some reason don't do the trick.  It's possible
+  that the Python framework doesn't allow for one to do this.
+
+* In both the source and sink, move the code which defines the "Audio
+  Stream Basic Description" (ASBD) to a routine to do this as needed
+  as start-up as well as in a callback ("listener") if the default
+  device changes.
+
+* Tweak the mutex (d_internal) to only where it is truly needed
+  (around class-specific variables used across all threads) in order
+  to improve performance.  Currently the mutex is used at the
+  start and end of any function requiring access to the class variables.
+
+* Change the instantiation arguments ... once those arguments are
+  finalized.  Right now gr.audio.source () takes the sample rate (int
+  - should be double), the device name (std::string), a boolean for
+  blocking or not, and 2 completely non-standard ones for channel
+  configuration and the maximum sample count to buffer.  These are
+  reasonable for OSX, but might not be for other OSs.  Nothing to do
+  right now but wait and discuss.
+
+* Once the previous issue has been resolved, then the current method
+  of determining the number of channels needs to be updated.
+  Currently the "device_name" for OSX should contain a numeric string
+  for the maximum number of channels to use (e.g. "3" means 3
+  channels, generally mapped to 2 channel stereo by OSX).  The
+  "device_name" is generally input via "-O" in Python scripts, so "-O
+  3" would allow for 3 incoming output channels (or fewer).  In theory
+  the "channel_config" argument would make more sense for determining
+  channel usage.  Example config strings might be "2.1" for stereo w/
+  subwoofer (3 channels), "5.1" or "6.1" for various surround w/
+  subwoofer (6 & 7 channels, respectively).  OSX can handle all sorts
+  of channel configurations, but the names for these will be different
+  than those use for OSS or ALMA or Windows ... thus the need for a
+  common naming scheme for all cared-about configurations, possibly
+  with options for other OS-specific options.

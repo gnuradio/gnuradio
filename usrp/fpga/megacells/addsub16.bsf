@@ -1,0 +1,96 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 1991-2003 Altera Corporation
+Any  megafunction  design,  and related netlist (encrypted  or  decrypted),
+support information,  device programming or simulation file,  and any other
+associated  documentation or information  provided by  Altera  or a partner
+under  Altera's   Megafunction   Partnership   Program  may  be  used  only
+to program  PLD  devices (but not masked  PLD  devices) from  Altera.   Any
+other  use  of such  megafunction  design,  netlist,  support  information,
+device programming or simulation file,  or any other  related documentation
+or information  is prohibited  for  any  other purpose,  including, but not
+limited to  modification,  reverse engineering,  de-compiling, or use  with
+any other  silicon devices,  unless such use is  explicitly  licensed under
+a separate agreement with  Altera  or a megafunction partner.  Title to the
+intellectual property,  including patents,  copyrights,  trademarks,  trade
+secrets,  or maskworks,  embodied in any such megafunction design, netlist,
+support  information,  device programming or simulation file,  or any other
+related documentation or information provided by  Altera  or a megafunction
+partner, remains with Altera, the megafunction partner, or their respective
+licensors. No other licenses, including any licenses needed under any third
+party's intellectual property, are provided herein.
+*/
+(header "symbol" (version "1.1"))
+(symbol
+	(rect 0 0 160 144)
+	(text "addsub16" (rect 45 2 128 21)(font "Arial" (font_size 10)))
+	(text "inst" (rect 8 125 31 140)(font "Arial" ))
+	(port
+		(pt 0 56)
+		(input)
+		(text "dataa[15..0]" (rect 0 0 81 16)(font "Arial" (font_size 8)))
+		(text "dataa[15..0]" (rect 4 40 73 56)(font "Arial" (font_size 8)))
+		(line (pt 0 56)(pt 64 56)(line_width 3))
+	)
+	(port
+		(pt 0 88)
+		(input)
+		(text "datab[15..0]" (rect 0 0 81 16)(font "Arial" (font_size 8)))
+		(text "datab[15..0]" (rect 4 72 73 88)(font "Arial" (font_size 8)))
+		(line (pt 0 88)(pt 64 88)(line_width 3))
+	)
+	(port
+		(pt 0 72)
+		(input)
+		(text "clock" (rect 0 0 36 16)(font "Arial" (font_size 8)))
+		(text "clock" (rect 4 56 35 72)(font "Arial" (font_size 8)))
+		(line (pt 0 72)(pt 64 72)(line_width 1))
+	)
+	(port
+		(pt 0 32)
+		(input)
+		(text "add_sub" (rect 0 0 57 16)(font "Arial" (font_size 8)))
+		(text "add_sub" (rect 4 16 53 32)(font "Arial" (font_size 8)))
+		(line (pt 0 32)(pt 80 32)(line_width 1))
+	)
+	(port
+		(pt 0 112)
+		(input)
+		(text "clken" (rect 0 0 36 16)(font "Arial" (font_size 8)))
+		(text "clken" (rect 4 96 35 112)(font "Arial" (font_size 8)))
+		(line (pt 0 112)(pt 74 112)(line_width 1))
+	)
+	(port
+		(pt 0 128)
+		(input)
+		(text "aclr" (rect 0 0 24 16)(font "Arial" (font_size 8)))
+		(text "aclr" (rect 4 112 25 128)(font "Arial" (font_size 8)))
+		(line (pt 0 128)(pt 85 128)(line_width 1))
+	)
+	(port
+		(pt 160 72)
+		(output)
+		(text "result[15..0]" (rect 0 0 81 16)(font "Arial" (font_size 8)))
+		(text "result[15..0]" (rect 88 56 157 72)(font "Arial" (font_size 8)))
+		(line (pt 160 72)(pt 96 72)(line_width 3))
+	)
+	(drawing
+		(text "A" (rect 66 48 75 64)(font "Arial" (font_size 8)))
+		(text "B" (rect 66 80 75 96)(font "Arial" (font_size 8)))
+		(text "A+B/A-B" (rect 82 37 134 53)(font "Arial" (font_size 8)))
+		(line (pt 64 48)(pt 96 56)(line_width 1))
+		(line (pt 96 56)(pt 96 88)(line_width 1))
+		(line (pt 96 88)(pt 64 96)(line_width 1))
+		(line (pt 64 96)(pt 64 48)(line_width 1))
+		(line (pt 80 32)(pt 80 52)(line_width 1))
+		(line (pt 106 40)(pt 125 40)(line_width 1))
+		(line (pt 74 112)(pt 74 93)(line_width 1))
+		(line (pt 85 128)(pt 85 90)(line_width 1))
+		(line (pt 64 66)(pt 70 72)(line_width 1))
+		(line (pt 70 72)(pt 64 78)(line_width 1))
+	)
+)

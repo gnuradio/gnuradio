@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+# usage: takes list of directories on command line
+
+import sys
+import os
+import os.path
+from itertools import ifilter, ifilterfalse, imap, izip
+import md5
+from pprint import pprint
+from sets import Set
+
+class info(object):
+    def __init__(self, dir, name, md5sum):
+        self.dir = dir
+        self.name = name
+        self.md5sum = md5sum
+    def __repr__(self):
+        return '<%r, %r, %r>' % (self.dir, self.name, self.md5sum)
+
+
+def md5sum_file(filename):
+    f = open(filename, 'r')
+    m = md5.new(f.read())
+    return m.hexdigest()
+
+def process_dir(dir):
+    files = list(ifilterfalse(lambda s: s.endswith('~'),
+                              _filter(os.listdir(dir), ('CVS','Makefile', 'Makefile.in', '.svn'))))
+    return [info(dir, f, md5sum_file(os.path.join(dir, f))) for f in files]
+
+
+# Return a copy with items that occur in skip removed.
+#
+def _filter(flist, skip):
+    return list(ifilterfalse(skip.__contains__, flist))
+
+def main():
+    dirs = sys.argv[1:]
+    r = []
+    for d in dirs:
+        r += process_dir(d)
+
+    names = Set([x.name for x in r])
+    #pprint(names)
+
+    # check for missing files across the union of names
+    for d in dirs:
+        names_in_dir = Set([x.name for x in r if x.dir == d])
+        diff = names.difference(names_in_dir)
+        if len(diff) != 0:
+            print "%s is missing %r" % (d, diff)
+
+    # check for different versions of files
+    name_list = [n for n in names]
+    name_list.sort()
+
+    for name in name_list:
+        vers = {}
+        pairs = [(x.dir, x.md5sum) for x in r if x.name == name]
+        for (dir, sum) in pairs:
+            if vers.has_key(sum):
+                vers[sum].append(dir)
+            else:
+                vers[sum] = [ dir ]
+        if len(vers) != 1:     # multiple versions
+            print "Multiple versions of %s:" % (name,)
+            pprint(vers)
+    
+    # pprint(r)
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,9 @@
+/*! \mainpage
+
+The top level interfaces to the USRP are usrp_standard_rx and
+usrp_standard_tx.  Also take a look at their base classes,
+usrp_basic_rx, usrp_basic_tx and usrp_basic.
+
+See also <a href="usrp_guide.html">USRP User's and Developer's Guide</a>
+
+*/

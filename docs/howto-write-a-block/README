@@ -1,0 +1,3 @@
+If you're looking for howto-write-a-block, it was moved into it's own
+tarball: gr-howto-write-a-block.  It includes the document source
+and a full build tree, Makefiles, examples, etc. 

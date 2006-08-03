@@ -1,0 +1,5 @@
+This code is from http://people.qualcomm.com/karn/code/fec
+It is based on reed-soloman-3.1.1 (1 Jan 2002).
+
+I has been converted to use automake, to better integrate with GNU
+Radio's build strategy.

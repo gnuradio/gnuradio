@@ -1,0 +1,81 @@
+Quick overview of what's here:
+
+* gmsk_test.py: stand-alone program that exercises the GMSK packet tx
+and rx code.  The two halves are connected with a simulated noisy
+channel.  It's easy to add extra instrumentation to log various internal 
+states.  We used a variant of this code to get this working in the
+first place. 
+
+* benchmark_gmsk_tx.py: generates packets of the size you
+specify and sends them across the air using the USRP.  Known to work
+well using the USRP with the Flex 400 transceiver daughterboard.
+You can specify the bitrate to use with the -r <bitrate> command line
+parameter.  The default is 500k.  Some machines will do 1M or more.
+
+* benchmark_gmsk_rx.py: the receiver half of benchmark_gmsk_tx.py.
+Command line arguments are pretty much the same as tx.  Works well
+with a USRP and Flex 400 transceiver daughterboard.  Will also work
+with TVRX daugherboard, but you'll need to fiddle with the gain.  See
+below.  Prints a summary of each packet received and keeps a running
+total of packets received, and how many of them were error free.
+There are two levels of error reporting going on.  If the access code
+(PN code) and header of a packet were properly detected, then you'll
+get an output line.  If the CRC32 of the payload was correct you get
+"ok = True", else "ok = False".  The "pktno" is extracted from the
+received packet.  If there are skipped numbers, you're missing some
+packets.  Be sure you've got a suitable antenna connected to the TX/RX
+port on each board.  A "70 cm" / 420 MHz antenna for a ham
+handi-talkie works great.  These are available at ham radio supplies,
+etc.  The boards need to be at least 3m apart.  You can also try
+experimenting with the rx gain (-g <gain> command line option).
+
+Generally speaking, I start the rx first on one machine, and then fire
+up the tx on the other machine.  The tx also supports a discontinous
+transmission mode where it sends bursts of 5 packets and then waits 1
+second.  This is useful for ensuring that all the receiver control
+loops lock up fast enough.
+
+* tunnel.py: This program provides a framework for building your own
+MACs.  It creates a "TAP" interface in the kernel, typically gr0,
+and sends and receives ethernet frames through it.  See
+/usr/src/linux/Documentation/networking/tuntap.txt and/or Google for
+"universal tun tap".  The Linux 2.6 kernel includes the tun module, you
+don't have to build it.  You may have to "modprobe tun" if it's not
+loaded by default.  If /dev/net/tun doesn't exist, try "modprobe tun".
+
+To run this program you'll need to be root or running with the
+appropriate capability to open the tun interface.  You'll need to fire
+up two copies on different machines.  Once each is running you'll need
+to ifconfig the gr0 interface to set the IP address.
+
+This will allow two machines to talk, but anything beyond the two
+machines depends on your networking setup.  Left as an exercise...
+
+On machine A:
+
+  $ su
+  # ./tunnel.py --freq 423.0M --bitrate 500k
+  # # in another window on A, also as root...
+  # ifconfig gr0 10.10.10.1
+
+
+On machine B:
+
+  $ su
+  # ./tunnel.py --freq 423.0M --bitrate 500k
+  # # in another window on B, also as root...
+  # ifconfig gr0 10.10.10.2
+
+Now, on machine A you shold be able to ping machine B:
+
+  $ ping 10.10.10.2
+
+and you should see some output for each packet in the
+tunnel.py window if you used the -v option.
+
+Likewise, on machine B:
+
+  $ ping 10.10.10.1
+
+This now uses a carrier sense MAC, so you should be able to ssh
+between the machines, web browse, etc.

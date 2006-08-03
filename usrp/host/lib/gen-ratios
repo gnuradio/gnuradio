@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+# -*- python -*-
+
+def how_good (x):
+    pof2 = [1,2,4,8,16]
+    if x in pof2:
+        return 0
+    if x in map (lambda x: x+1, pof2):
+        return -10
+    if x in map (lambda x: x-1, pof2):
+        return -5
+    return -2
+
+    
+def better (v1, v2):
+    return abs ((v1 & 0xf) - ((v1 >> 4) & 0xf)) < abs ((v2 & 0xf) - ((v2 >> 4) & 0xf))
+
+
+def foo ():
+    result = {}
+    for i in range (1,17):
+        for j in range (1,17):
+            i_goodness = how_good (i)
+            j_goodness = how_good (j)
+            goodness = i_goodness + j_goodness
+            v = ((i - 1) << 4) | (j - 1)
+
+            key = i * j
+            prev = result.get (key, None)
+            # print "i=%3d j=%3d key=%3d good=%3d v=0x%02x prev=%s" % (i, j, key, goodness, v, prev)
+
+            if not prev:
+                result[key] = (goodness, v)
+            elif goodness > prev[0]:
+                result[key] = (goodness, v)
+            elif goodness == prev[0] and better(v, prev[1]):
+                result[key] = (goodness, v)
+
+    r = result.items ()
+    r.sort ()
+    for k, d in r:
+        print "(%3d, 0x%02x)" % (k, d[1])
+
+    
+            
+foo ()
+
+	

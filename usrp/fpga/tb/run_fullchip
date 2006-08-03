@@ -1,0 +1,4 @@
+#!/bin/sh
+
+iverilog -y ../toplevel/fullchip -y ../sdr_lib -y ../models -y . -o fullchip_tb fullchip_tb.v
+

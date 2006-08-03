@@ -1,0 +1,98 @@
+Files beginning with Gr* define classes that inherit from VrSigProc.
+These are high level signal processing modules that can be glued
+together in your signal processing chain.
+
+All the others are either lower level routines which implement the
+functionality of the Gr* modules, but are easier to test (fewer
+dependencies), or they are general purpose.
+
+gr_fir_???.{h,cc}, where ??? are in F, S or C are low level Finite
+Impulse Response Filters.  These turn out to be where the bulk of the
+cycles are burned in many applications.  The ??? suffix  specifies the
+input type, output type and tap type of the arguments.  We've
+implemented the most frequently used ones.
+
+[Once upon a time this stuff was done with templates
+(gr_fir<iType,oType,tapType>), but this turned out to be a headache.
+The code appeared to trigger a bug in GCC where we were getting
+multiple definitions of unrelated stuff when we started subclassing
+partially specialized templates.  It was also not obvious as to to
+what combinations of iType, oType and tapType actually worked.  We're
+now explicit, and the world is a safer place to live...]
+
+The top level routines for FIR filtering are:
+
+    GrFIRfilterFFF : Float input, Float output, Float taps
+	-- general purpose
+
+    GrFIRfilterCCF : Complex input, Complex output, Float taps
+	-- applying real filter to a complex signal
+
+    GrFIRfilterFCC : Float input, Complex output, Complex taps
+	-- applying complex filter to float input
+
+    GrFIRfilterSCC : Short input, Complex output, Complex taps
+	-- applying complex filter to short input.  Quantizes complex
+           coefficients to 16 bits and uses MMX or SSE2 as appropriate
+
+
+The combination of down conversion (frequency translation) and channel
+selection (filtering) is performed with:
+
+    GrFreqXlatingFIRfilterSFC : Short input, Float taps, Complex baseband output
+        -- quantizes complex coefficents to 16 bits and uses MMX or
+	   SSE2 (128-bit MMX) as appropriate [optimization to be done].
+
+    GrFreqXlatingFIRfilterFFC : Float input, Float taps, Complex baseband output
+       -- 3dnow or SSE as appropriate.
+
+
+[ The stuff described from here down is used to implement the routines
+  above.  This info is only relevant to those who are hacking the internals ]
+
+
+A bit of indirection is involved in selecting the fastest
+implementation for any given platform.  The lower level classes
+gr_fir_FFF.h, gr_fir_CCF, gr_fir_FCC and gr_fir_SCC have i/o
+signatures similar to the high level clases above.   These
+should be considered the abstract base classes that you
+work with.  Note that they are not actually abstract (they've got a
+default implementation; this might be considered a bug), but they
+should not be directly instantiated by user code.
+
+Instead of directly instantiating a gr_fir_FFF, for example, your code
+should actually:
+
+       #include <gr_fir_util.h>
+
+       // let the system pick the best implementation for you
+       gr_fir_FFF *filter = gr_fir_util::create_gr_fir_FFF (my_taps);
+
+Clear?  The same for all the other gr_fir_XXX's.
+
+
+
+Performance hacking can be done by subclassing the appropriate
+base class.  For example, on the x86 platform, there are two
+additional classes derived from gr_fir_FFF, gr_fir_FFF_sse and
+gr_fir_FFF_3dnow.  These classes are then made available to the rest
+of the system by virtue of being added to gr_fir_sysconfig_x86.cc,
+along with any guards (CPUID checks) needed to ensure that only
+compatible code is executed on the current hardware.
+
+
+TO DO
+------
+
+* Move all the machine specific code to a subdirectory, then have
+configure symlink to the right directory.  This will allow us to build on
+any platform without choking.  There is generic code for all routines,
+only the machine dependent speedup will be lacking. 
+
+* Add an interface to gr_fir_util that will return a vector of all
+valid constructors with descriptive names for each i/o signature.
+This will allow the test code and benchmarking code to be blissfully
+ignorant of what platform they're running on.  The actual building of
+the vectors should be done bottom up through the gr_fir_sysconfig
+hierarchy. 
+

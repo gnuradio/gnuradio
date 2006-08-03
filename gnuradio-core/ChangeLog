@@ -1,0 +1,1893 @@
+2006-07-06  Tom Rondeau  <trondeau@vt.edu>
+
+	* src/python/gnuradio/blksimpl/gmsk2.py:
+	Added AGC to GMSK code.
+	
+2006-07-06  Tom Rondeau  <trondeau@vt.edu>
+
+	* src/python/gnuradio/blksimpl/Makefile.am: 
+	Call to gmsk.py was causing error after removal of gmsk.py file.
+	Removed call in Makefile.am to this.
+
+2006-07-05  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/blksimpl/gmsk.py: Removed long deprecated
+	code.  We'll give this a week or so for the dust to settle, then
+	we'll rename gmsk2.py to gmsk.py
+
+2006-06-29  Tom Rondeau  <trondeau@vt.edu>
+
+	* src/lib/general/gr_correlate_access_code_bb.cc (work): 
+	Removed branches; cleaned up code to only deal with a 180 degree phase shift in
+	BPSK.
+
+2006-06-28  Tom Rondeau   <trondeau@vt.edu>
+
+	* src/python/gnuradio/gr/qa_correlate_access_code.py (test_correlate_access_code.test_001):
+	Changes to access code correlator to handle BPSK phase reversal 
+	killed qa_correlate_access_code. Modified the access code search in
+	test_001 to all the test to pass properly.
+
+2006-06-28  Tom Rondeau  <trondeau@vt.edu>
+
+	* src/lib/general/gr_constellation_decoder_cb.cc: 
+	Set Compute_EVN=false by default (to clean up the output)
+
+2006-06-20  Tom Rondeau  <trondeau@vt.edu>
+
+	* src/lib/general/gr_costas_loop_cc.{h,cc,i}: modified to support
+	both BPSK and QPSK via "order" constructor argument.  Removed
+	unused ref_phase ctor arg.
+	
+2006-06-20  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_probe_avg_mag_sqrd_{f,c}.{h,cc,i}: added accessor
+	for threshold.
+
+	* src/python/gnuradio/blksimpl/pkt.py: result of refactoring
+	gmsk2_pkt.py.  This is the common packet handling framework, and
+	is modulation independent.  gmsk2_pkt is now deprecated.
+
+	* src/python/gnuradio/blksimpl/gmsk2_pkt.py: added deprecation warning.
+	
+	* src/python/gnuradio/packet_utils.py (make_packet): added
+	bits_per_baud parameter to handle QPSK, etc in the future.
+
+2006-06-17  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_realtime.{h,cc,i}: new function to enable
+	realtime scheduling.
+
+2006-06-15  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/io/gr_oscope_guts.{h,cc,i},
+	src/lib/io/gr_oscope_sink_x.{h,cc}: added set_sample_rate method.
+
+	* src/lib/general/gr_keep_one_in_n.{h,cc,i}: added set_n method.
+
+2006-06-13  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_binary_slicer_fb.h: corrected calling sequence.
+
+2006-06-08  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_feval.{h,cc,i},
+	src/python/gnuradio/gr/qa_feval.py: new C++/python helper that
+	allows C++ code to evaluate a function defined in Python.  Uses
+	SWIG directors.
+
+2006-06-06  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_unpack_k_bits_bb.cc (work): bug fix.  Was
+	computing the wrong answer and writing *way* too much data if k	was > 1.
+	* src/python/gnuradio/gr/qa_unpack_k_bits.py: new ;)
+
+	* src/lib/general/gr_diff_decoder_bb.{h,cc,i}: new.  differential
+	decoder.  constellation index in / constellation index out.
+
+	* src/lib/general/gr_map_bb.{h,cc,i}: new.  map any byte into any
+	other byte.
+
+2006-06-01  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/filter/ccomplex_dotprod_3dnow64.S,
+	src/lib/filter/3dnow_float_dotprod_really_simple.S,
+	src/lib/filter/3dnow_float_dotprod_simple.S,
+	src/lib/filter/assembly.h,
+	src/lib/filter/ccomplex_dotprod_3dnow.S,
+	src/lib/filter/ccomplex_dotprod_3dnow64.S,
+	src/lib/filter/ccomplex_dotprod_3dnowext.S,
+	src/lib/filter/ccomplex_dotprod_3dnowext64.S,
+	src/lib/filter/ccomplex_dotprod_sse.S,
+	src/lib/filter/ccomplex_dotprod_sse64.S,
+	src/lib/filter/complex_dotprod_3dnow.S,
+	src/lib/filter/complex_dotprod_3dnow64.S,
+	src/lib/filter/complex_dotprod_3dnowext.S,
+	src/lib/filter/complex_dotprod_3dnowext64.S,
+	src/lib/filter/complex_dotprod_sse.S,
+	src/lib/filter/complex_dotprod_sse64.S,
+	src/lib/filter/fcomplex_dotprod_3dnow.S,
+	src/lib/filter/fcomplex_dotprod_3dnow64.S,
+	src/lib/filter/fcomplex_dotprod_sse.S,
+	src/lib/filter/fcomplex_dotprod_sse64.S,
+	src/lib/filter/float_dotprod_3dnow.S,
+	src/lib/filter/float_dotprod_3dnow64.S,
+	src/lib/filter/float_dotprod_sse.S,
+	src/lib/filter/float_dotprod_sse64.S,
+	src/lib/filter/short_dotprod_mmx.S,
+	src/lib/filter/short_dotprod_mmx64.S: changed all occurrences of
+	.align 16 to .p2align 4 to avoid ambiguous interpretation of .align
+	argument.
+
+	
+2006-05-29  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/blksimpl/gmsk2_pkt.py: now uses string of 1's
+	and 0's for access_code representation.  Refactored to use
+	correlate_access_code_bb and frame_sink_1 instead of packet_sink.
+
+	* src/lib/general/gr_binary_slicer_fb.{h,cc,i}: new
+	* src/lib/general/gr_qpsk_slicer_cb.{h,cc,i}: deleted.  Use
+	gr_constellation_decoder_cb instead.
+
+2006-05-29  Eric Blossom  <eb@comsec.com>
+	
+	* src/lib/general/gr_clock_recovery_mm_cc.cc: revised
+	implementation based on G. R. Danesfahani, T.G. Jeans,
+	"Optimisation of modified Mueller and Muller algorithm,"
+	Electronics Letters, Vol. 31, no. 13, 22 June 1995, pp. 1032 - 1033.
+	Thanks Tom!
+	
+	* src/utils/cool.m, src/utils/db_width.m, src/utils/filter_tools.m,
+	src/utils/read_char_binary.m, src/utils/read_complex_binary.m,
+	src/utils/read_float_binary.m, src/utils/read_int_binary.m, 
+	src/utils/read_short_binary.m: modified to be compatible with
+	MATLAB.
+	
+2006-05-26  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_framer_sink_1.{h,cc,i}: new.  Refactored from
+	gr_packet_sink.  Use in combination with gr_correlate_access_code_bb.
+
+2006-05-24  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_diff_encoder_bb.{h,cc,i}: new. differential encoder.
+
+	* src/lib/general/gr_constellation_decoder_cb.{h,cc,i}: new.
+	Maps i/q value to closest constellation point and return value
+	associated with the point. This probably obsoletes 
+	gr_qpsk_slicer_cb.
+
+	* src/lib/general/gr_qpsk_slicer_cb.{h,cc,i}: new.
+	* src/lib/general/gr_unpack_k_bits_bb.{h,cc,i}: unpack bytes
+	containing k valid bits, into bytes, 1 bit per byte.
+
+	* src/lib/general/gr_correlate_access_code_bb.{h,cc,i}: new.
+	General purpose block for searching for access codes (sync
+	vectors).  Can handle any sync vector between 1 and 64 bits.
+
+2006-05-23  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_diff_phasor_cc.{h,cc,i}: new.  Compute phase
+	difference as a complex number between adjacent complex items in
+	stream.  This is useful for demodulating differentially encoded PSK.
+
+	* src/python/gnuradio/gruimpl/mathmisc.py (log2): new function.
+
+	* src/lib/general/gr_firdes.cc (root_raised_cosine): force ntaps
+	to be odd.
+
+2006-05-21  Martin Dudok van Heel <nldudok1 at olifantasia.com>
+
+	Added generic test class gr_test.
+	gr_test is a gnuradio block meant to be used in a flow_graph.
+	It doesn't do much processing, but you can specify from python every parameter you need to for testing.
+	For example history, output_multiple, input and output signature, decimation and such.
+	Especially handy for testing setting up the buffers.
+	It also touches every available input and output to check for segfaults.
+	You can also instruct it to not consume all ninput_items or not produce all noutput_items.
+	
+	There is also a new script test_buffers.py in src/tests which uses gr_test to test setting up the buffers.
+	It is NOT automatically run by make check yet, because it will fail with an assert when it reaches circbuf memory limit of the system.
+	(On linux: Trying to setup a buffer >shmmax
+        Note that you can set the smmax limit manually on a linux 2.6 system in the following way in a root console)
+	#set shmmax limit manually to 300MB
+	echo 300000000 >/proc/sys/kernel/shmmax
+
+	* src/lib/general/Makefile.am: added gr_test
+	* src/lib/general/general.i: added gr_test
+	* src/lib/general/gr_test.cc: new
+	* src/lib/general/gr_test.h: new
+	* src/lib/general/gr_test.i: new
+	* src/lib/general/gr_test_types.h: new
+	* src/tests/test_buffers.py: new script to test setting up the buffers using gr_test
+
+2006-05-21  Martin Dudok van Heel <nldudok1 at olifantasia.com>
+
+	Solved the following bugs which result from incorrect buffersize setup:
+	sched: <gr_block gr_test (21)> is requesting more input data
+	  than we can provide.
+	  ninput_items_required = 8192
+	  max_possible_items_available = 8191
+	  If this is a filter, consider reducing the number of taps.
+
+	python: src/lib/runtime/gr_buffer.h:108: unsigned int gr_buffer::index_sub(unsigned int, unsigned int):
+	 Assertion `(unsigned) s < d_bufsize' failed.
+	Aborted
+
+	* src/python/gnuradio/gr/flow_graph.py: resolved above bugs by adding + mdown.history() to nitems when appropriate
+
+2006-04-24  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_chunks_to_symbols_XX.{h,cc,i}.t,
+	src/lib/general/gr_packed_to_unpacked_XX.{h,cc,i}.t,
+	src/lib/general/gr_unpacked_to_packed_XX.{h,cc,i}.t: 
+	new pseudo-templates for generating family of blocks.  Patch
+	submitted by Achilleas Anastasopoulos <anastas@umich.edu>, touched
+	up by Eric.
+
+2006-04-24  Martin Dudok van Heel <nldudok1 at olifantasia.com>
+
+	* src/python/gnuradio/gr/flow_graph.py (buffer_sizes.allocate):
+	increase buffer size allocation for blocks with a large
+	output_multiple, not just those that are decimators.
+
+2006-04-05  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_pll_carriertracking_cc.i: added
+	squelch_enable and set_lock_threshold methods.
+
+	* src/lib/general/gr_clock_recovery_mm_cc.h: removed erroneous
+	class prefix to method.  GCC 4.1.0 complains ;)
+
+2006-04-03  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_pll_carriertracking_cc.cc (phase_detector):
+	fixed typo.
+
+	* src/python/gnuradio/gr/prefs.py: don't load prefs if
+	GR_DONT_LOAD_PREFS environment variable is set.  run_tests sets
+	this to avoid interactions with system and user prefs during
+	make check.
+
+	* src/python/gnuradio/gr/qa_rational_resampler.py: disabled two
+	tests that were causing hangs on SuSE 10.0.  Should be investigated.
+
+2006-03-30  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/filter/gr_fft_filter_ccc.{h,cc},
+	src/lib/filter/gr_fft_filter_fff.{h,cc}: reworked to allow
+	safer setting of new taps after instantiation.
+
+2006-03-29  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_prefix.{h,cc,i}: new function that returns
+	installation prefix directory (--prefix argument to configure).
+
+	* src/lib/general/gr_prefs.{h,cc,i}: reworked implementation to
+	use python ConfigParser.
+	* src/python/gnuradio/gr/prefs.py: moved from
+	src/python/gnuradio/prefs.py to solve initialization problem.
+
+	* src/lib/general/gr_stream_to_vector.{h,cc,i}: renamed from gr_serial_to_parallel
+	* src/lib/general/gr_vector_to_stream.{h,cc,i}: renamed from gr_parallel_to_serial
+	* src/lib/python/gnuradio/gr/__init__.py: new aliases for
+	backwards compatibility with rename.
+
+	* src/lib/swig/Makefile.am: cleanup for make distcheck.
+
+	* src/lib/atsc/GrAtscBitTimingLoop.cc, GrAtscBitTimingLoop.h,
+	GrAtscBitTimingLoop2.cc, GrAtscBitTimingLoop2.h,
+	GrAtscBitTimingLoop3.cc, GrAtscBitTimingLoop3.h,
+	GrAtscConvert2xTo20.cc, GrAtscConvert2xTo20.h,
+	GrAtscDataSegToSoftDataSeg.cc, GrAtscDataSegToSoftDataSeg.h,
+	GrAtscDeinterleaver.cc, GrAtscDeinterleaver.h,
+	GrAtscDerandomizer.cc, GrAtscDerandomizer.h,
+	GrAtscEqualizer.cc, GrAtscEqualizer.h, GrAtscFPLL.cc,
+	GrAtscFPLL.h, GrAtscFieldSyncChecker.cc,
+	GrAtscFieldSyncChecker.h, GrAtscFieldSyncCorrelator.cc,
+	GrAtscFieldSyncCorrelator.h, GrAtscFieldSyncDemux.cc,
+	GrAtscFieldSyncDemux.h, GrAtscFieldSyncMux.cc,
+	GrAtscFieldSyncMux.h, GrAtscInterleaver.cc,
+	GrAtscInterleaver.h, GrAtscRSDecoder.cc, GrAtscRSDecoder.h,
+	GrAtscRSEncoder.cc, GrAtscRSEncoder.h, GrAtscRandomizer.cc,
+	GrAtscRandomizer.h, GrAtscSegSymSync.cc, GrAtscSegSymSync.h,
+	GrAtscSegSymSyncImpl.cc, GrAtscSegSymSyncImpl.h,
+	GrAtscSegSymSyncImpl_export.h, GrAtscSymbolMapper.h,
+	GrAtscTrellisEncoder.cc, GrAtscTrellisEncoder.h,
+	GrAtscViterbiDecoder.cc, GrAtscViterbiDecoder.h, Makefile.am,
+	README, atsc_basic_trellis_encoder.cc,
+	atsc_basic_trellis_encoder.h, atsc_consts.h,
+	atsc_data_interleaver.cc, atsc_data_interleaver.h,
+	atsc_diag_output.h, atsc_equalizer.cc, atsc_equalizer.h,
+	atsc_equalizer_lms.cc, atsc_equalizer_lms.h,
+	atsc_equalizer_lms2.cc, atsc_equalizer_lms2.h,
+	atsc_equalizer_nop.cc, atsc_equalizer_nop.h, atsc_exp2_lp.cc,
+	atsc_exp2_lp.h, atsc_exp2_lp20.dat, atsc_exp2_lp2x.dat,
+	atsc_fake_single_viterbi.cc, atsc_fake_single_viterbi.h,
+	atsc_fs_checker.cc, atsc_fs_checker.h,
+	atsc_fs_checker_naive.cc, atsc_fs_checker_naive.h,
+	atsc_fs_correlator.cc, atsc_fs_correlator.h,
+	atsc_fs_correlator_naive.cc, atsc_fs_correlator_naive.h,
+	atsc_pnXXX.cc, atsc_pnXXX.h, atsc_randomizer.cc,
+	atsc_randomizer.h, atsc_reed_solomon.cc, atsc_reed_solomon.h,
+	atsc_root_raised_cosine.cc, atsc_root_raised_cosine.h,
+	atsc_root_raised_cosine_bandpass.cc,
+	atsc_root_raised_cosine_bandpass.h, atsc_single_viterbi.cc,
+	atsc_single_viterbi.h, atsc_slicer_agc.h,
+	atsc_sliding_correlator.cc, atsc_sliding_correlator.h,
+	atsc_sssr.cc, atsc_sssr.h, atsc_syminfo.h, atsc_sync_tag.h,
+	atsc_trellis_encoder.cc, atsc_trellis_encoder.h, atsc_types.h,
+	atsc_viterbi_decoder.cc, atsc_viterbi_decoder.h,
+	atsc_viterbi_gen.cc, atsc_vsbtx_lp.cc, atsc_vsbtx_lp.dat,
+	atsc_vsbtx_lp.h, convolutional_interleaver.h,
+	create_atsc_equalizer.cc, create_atsc_equalizer.h,
+	create_atsc_fs_checker.cc, create_atsc_fs_checker.h,
+	create_atsc_fs_correlator.cc, create_atsc_fs_correlator.h,
+	fpll_btloop_coupling.h, gen_encoder.py, interleaver_fifo.h,
+	plinfo.cc, qa_atsc.cc, qa_atsc.h,
+	qa_atsc_basic_trellis_encoder.cc,
+	qa_atsc_basic_trellis_encoder.h, qa_atsc_data_interleaver.cc,
+	qa_atsc_data_interleaver.h, qa_atsc_equalizer_nop.cc,
+	qa_atsc_equalizer_nop.h, qa_atsc_fake_single_viterbi.cc,
+	qa_atsc_fake_single_viterbi.h, qa_atsc_fs_correlator.cc,
+	qa_atsc_fs_correlator.h, qa_atsc_randomizer.cc,
+	qa_atsc_randomizer.h, qa_atsc_reed_solomon.cc,
+	qa_atsc_reed_solomon.h, qa_atsc_single_viterbi.cc,
+	qa_atsc_single_viterbi.h, qa_atsc_sliding_correlator.cc,
+	qa_atsc_sliding_correlator.h, qa_atsc_trellis_encoder.cc,
+	qa_atsc_trellis_encoder.h,
+	qa_atsc_trellis_encoder_t1_input.dat,
+	qa_atsc_trellis_encoder_t1_output.dat,
+	qa_atsc_viterbi_decoder.cc, qa_atsc_viterbi_decoder.h,
+	qa_atsc_viterbi_decoder_t1_input.dat,
+	qa_atsc_viterbi_decoder_t1_output.dat,
+	qa_convolutional_interleaver.cc,
+	qa_convolutional_interleaver.h, qa_interleaver_fifo.cc,
+	qa_interleaver_fifo.h: Moved all atsc code from src/lib/atsc to
+	new gr-atsc CVS module.
+	
+	* src/lib/general/gri_ringbuffer.{h,cc}: removed.  Use
+	gr_buffer/gr_buffer_reader instead.
+
+2006-03-27  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_prefs.{h,cc,i}: renamed parameter from "val" to
+	"v" to work around issue in SWIG 1.3.{28,29} and/or g++ 4.0.2.
+
+	* src/lib/general/gr_prefs.{h,cc,i}, src/python/gnuradio/prefs.py:
+	new class for user preferences.  This uses SWIG directors (serious
+	magic), to have the actual implementation be in python, but
+	callable transparently from C++.  We'll use this for user prefs
+	such as audio module, audio module options, etc.
+
+2006-03-25  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/io/gri_logger.h (class gri_logger): new class that can
+	safely log to a file from within a JACK or portaudio callback.
+	Uses a ringbuffer to communicate with a separate thread that
+	writes the file.
+
+2006-03-17  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_buffer.cc (gr_buffer_reader): added missing
+	drop_reader call to destructor.  Fixed latent bug.
+
+2006-03-15  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/omnithread.h,
+	src/lib/omnithread/ot_posix.h, src/lib/omnithread/posix.cc,
+	src/lib/omnithread/nt.cc: mods to
+	allow specifying a max count on semaphores. This allows the
+	construction of binary semaphores by passing max_count=1 to the ctor.
+	The default behavior is unchanged.
+
+2006-03-13  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_pll_carriertracking_cc.cc (work): refactored
+	loop control.
+
+2006-03-12  Stephane Fillod  <f8cfe@free.fr>
+	* src/lib/general/gri_ringbuffer.{cc,h},
+	  src/lib/general/Makefile.am: new lockless ringbuffer (single
+	  reader/single writer) taken from JACK software (GPL).
+	* * src/lib/omnithread/omnithread.h: add omni_mutex::trylock
+	* * src/lib/omnithread/ot_posix.h: POSIX trylock implementation
+	* * src/lib/omnithread/ot_nt.h: Win32 trylock implementation
+
+2006-03-12  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_firdes.h, src/lib/io/gr_file_source.h: Fix
+	for g++ 4.1.  Removed extra class:: qualification.  Patch
+	submitted by Martin Michlmayr <tbm@cyrius.com>
+
+2006-03-10  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_dd_mpsk_sync_cc.cc: doc fixes.  reworked
+	delay line handling.
+	* src/lib/general/gr_dd_mpsk_sync_cc.h: doc fixes.  Added DLLEN const.
+	* src/lib/general/gr_costas_loop_cc.h: doc fixes.
+	* src/lib/general/gr_costas_loop_cc.cc (work): cosmetic tweak to
+	loop control.
+
+2006-03-07  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_multiply_const_XX.h.t,
+	src/lib/general/gr_quadrature_demod_cf.h,
+	src/lib/general/gr_frequency_modulator_fc.h,
+	src/lib/general/gr_packed_to_unpacked_bb.h,
+	src/lib/general/gr_unpacked_to_packed_bb.h,
+	src/lib/general/gr_chunks_to_symbols_bf.h,
+	src/lib/general/gr_chunks_to_symbols_bc.h: doc fixs.
+
+2006-02-22  Martin Dudok van Heel <nldudok1 at olifantasia.com>
+
+        Addded new blocks gr_single_pole_iir_filter_cc
+                          gr_agc_cc
+                          gr_phase_modulator_fc
+        Changed gr_single_pole_iir.h  to make this work
+        Bugfix, to make make_check work again.
+
+        * src/lib/filter/Makefile.am: Added gr_single_pole_iir_filter_cc
+	Added missing gr_single_pole_avg.h and gr_single_pole_rec.h (fix make check bug)
+        * src/lib/filter/filter.i: changed. Added gr_single_pole_iir_filter_cc
+        * src/lib/filter/gr_single_pole_iir.h: changed template to have
+	partial specialization for <gr_complex,i_type,double>.  Needed
+	because calculations and temporary variables have to be
+	gr_complexd in this special case
+        * src/lib/filter/gr_single_pole_iir_filter_cc.cc: new
+        * src/lib/filter/gr_single_pole_iir_filter_cc.h: new
+        * src/lib/filter/gr_single_pole_iir_filter_cc.i: new
+        * src/lib/general/Makefile.am: changed. Added gr_agc_cc, gr_phase_modulator_fc,gri_agc_cc
+        * src/lib/general/general.i: changed. Added gr_agc_cc, gr_phase_modulator_fc
+        * src/lib/general/gr_agc_cc.cc: new
+        * src/lib/general/gr_agc_cc.h: new
+        * src/lib/general/gr_agc_cc.i: new
+        * src/lib/general/gr_phase_modulator_fc.cc: new
+        * src/lib/general/gr_phase_modulator_fc.h: new
+        * src/lib/general/gr_phase_modulator_fc.i: new
+        * src/lib/general/gri_agc_cc.h: new
+        * src/lib/general/gri_agc_cc.i: new
+        * src/python/gnuradio/gr/Makefile.am: changed. Added qa_single_pole_iir_cc.py
+        * src/python/gnuradio/gr/qa_single_pole_iir_cc.py: new
+	
+2006-02-17  Stephane Fillod  <f8cfe@free.fr>
+
+	* configure.ac, src/lib/filter/ccomplex_dotprod_generic.cc,
+	src/lib/filter/complex_dotprod_generic.cc,
+	src/lib/filter/generate_gr_fir_sysconfig.py,
+	src/lib/filter/generate_gr_fir_sysconfig_generic.py,
+	src/lib/filter/generate_gr_fir_util.py,
+	src/lib/filter/gr_fir_XXX.cc.t,
+	src/lib/filter/gr_fir_XXX_generic.cc.t,
+	src/lib/filter/gr_fir_ccc_simd.cc,
+	src/lib/filter/gr_fir_ccc_x86.cc,
+	src/lib/filter/gr_fir_ccf_simd.cc,
+	src/lib/filter/gr_fir_ccf_x86.cc,
+	src/lib/filter/gr_fir_fcc_simd.cc,
+	src/lib/filter/gr_fir_fcc_x86.cc,
+	src/lib/filter/gr_fir_fff_simd.cc,
+	src/lib/filter/gr_fir_fff_x86.cc,
+	src/lib/filter/gr_fir_fsf_simd.cc,
+	src/lib/filter/gr_fir_fsf_x86.cc,
+	src/lib/filter/gr_fir_scc_simd.cc,
+	src/lib/filter/gr_fir_scc_x86.cc,
+	src/lib/filter/gr_fir_sysconfig_x86.cc,
+	src/lib/filter/gri_mmse_fir_interpolator.cc,
+	src/lib/filter/gri_mmse_fir_interpolator_cc.cc,
+	src/lib/filter/sysconfig_x86.cc,
+	src/lib/general/gr_align_on_samplenumbers_ss.cc,
+	src/lib/general/gr_crc32.cc,
+	src/lib/general/gr_head.cc,
+	src/lib/general/gr_lfsr_32k_source_s.cc,
+	src/lib/general/gr_noise_source_X.cc.t,
+	src/lib/general/gr_nop.cc,
+	src/lib/general/gr_reverse.cc,
+	src/lib/general/gr_sig_source_X.cc.t,
+	src/lib/general/gr_simple_correlator.cc,
+	src/lib/general/gr_simple_framer.cc,
+	src/lib/general/gr_skiphead.cc,
+	src/lib/general/gr_vector_sink_X.cc.t,
+	src/lib/general/gr_vector_source_X.cc.t,
+	src/lib/general/qa_gr_fxpt.cc,
+	src/lib/general/qa_gr_fxpt_nco.cc,
+	src/lib/general/qa_gr_fxpt_vco.cc,
+	src/lib/io/gr_oscope_guts.cc,
+	src/lib/runtime/gr_io_signature.cc,
+	src/lib/runtime/gr_types.h,
+	src/lib/runtime/qa_gr_block.cc,
+	src/lib/runtime/qa_gr_buffer.cc,
+	src/lib/runtime/qa_gr_io_signature.cc: added proper config check
+	for stdint.h to define gr_int* types.
+
+2006-02-16  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_types.h: added typedef for gr_int64 and
+	gr_uint64.  Need proper autoconf fix for these.
+
+2006-02-08  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/io/gr_file_sink.{h,cc,i}: added new methods: enable &
+	disable.  Thanks Marcus!
+
+2006-02-06  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_kludge_copy.{h,cc,i}: new. Copies input to output.
+	* src/python/gnuradio/gr/qa_kludge_copy.py: new QA code.
+
+2006-02-05  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/qa_iir.py (test_iir.test_iir_direct_008):
+	accept either RuntimeError or ValueError in test case.  The return
+	value changed in swig 1.3.28.
+
+	* src/lib/swig/gnuradio.i: now use anonymous templates for
+	std::vector's.  This was a tip from one of the SWIG developers.
+	It generates less code.
+
+2006-02-02  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gruimpl/seq_with_cursor.py: added method to
+	select closest index by value.
+
+2006-01-30  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_packet_sink.{h,i}: Added new "carrier_sensed"
+	method.  Naive implementation, but it just might work ;)
+	* src/python/gnuradio/blksimpl/gmsk2_pkt.py (carrier_sensed): new method.
+
+2006-01-28  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_pa_2x2_phase_combiner.{h,cc,i}: new.  
+	four antenna phase combiner for phased array experiments.
+	
+	* src/lib/general/gr_simple_squelch_cc.{h,cc,i}: added threshold
+	and squelch_range methods.
+
+2006-01-24  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_sync_block.cc (forecast): removed duplicated code.
+	* src/lib/general/gr_sync_interpolator.cc (forecast): removed duplicated code.
+	* src/lib/general/gr_sync_decimation.cc (forecast): removed duplicated code.
+	* src/lib/runtime/gr_single_threaded_scheduler.cc (main_loop):
+	take advantage of fixed_rate() method so that we can consume all
+	available input.  Fixed bad audio sound with encdec.
+
+2005-12-23  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_interleaved_short_to_complex.i (class
+	gr_interleaved_short_to_complex): corrected superclass spec.
+
+2005-12-19  Martin Dudok van Heel <nldudok1 at olifantasia.com>
+
+        Addded a new blocks to convert from unsigned char to float and for char to float.
+        Added new agc block gr_agc_ff based on existing gr_agc block
+	(which can't be directly used in a flowgraph).  All needed for
+	tv-reception.
+
+        * src/lib/general/gr_uchar_to_float.{cc,h,i}: new
+        * src/lib/general/gri_uchar_to_float.{cc,h}: new
+        * src/lib/general/gr_char_to_float.{cc,h,i}: new
+        * src/lib/general/gri_char_to_float.{cc,h}: new
+        * src/lib/general/gr_agc_ff.cc: new
+        * src/lib/general/gr_agc_ff.h: new
+        * src/lib/general/gr_agc_ff.i: new
+	* src/lib/general/Makefile.am: changed. Added gr_agc_ff,
+	gr_(u)char_to_float and gri_(u)char_to_float.
+	* src/lib/general/general.i: changed. Added
+	gr_agc_ff,gr_(u)char_to_float and gri_(u)char_to_float.
+
+2005-12-17  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_quadrature_demod_cf.cc: use fast arctan code.
+
+2005-12-17  Bob McGwier N4HY <rwmcgwier@comcast.net>
+
+	* src/lib/general/gr_lms_dfe_cc.{h,cc,i}: new.
+	* src/lib/general/gr_fast_atan2f.cc:  new.  Fast arc tangent using
+	table lookup and interpolation.  Declaration added to gr_math.h
+
+2005-12-17  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_lms_dfe_ff.h: doc fix.
+	* src/lib/general/gr_lms_dfe_ff.cc: refactored.  Moved common
+	functions to gr_misc
+	* src/lib/general/gr_misc.{h,cc}: new.  Collect misc functions in
+	one place.
+	* doc/Makefile.am: --enable-doxygen default is now "no"
+
+2005-12-16  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/swig/gnuradio_swig_bug_workaround.h: removed from CVS.
+	It's generated when it's needed.
+
+2005-12-09  Eric Blossom  <eb@comsec.com>
+
+	made 2.6 release.
+
+2005-12-08  Chuck Swiger  <cswiger@widomaker.com>
+
+	* src/lib/general/gr_probe_signal_f.{h,cc,i}: new.  Return a
+	single sample from the stream.
+
+2005-12-07  Chuck Swiger  <cswiger@widomaker.com>
+
+	* src/lib/general/gr_probe_avg_mag_sqrd_{f,c}.{h,cc,i}: new.
+	Sinks that measure the average magnitude squared and allow the
+	value to be retrieved via accessors.
+
+2005-12-06  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_clock_recovery_mm_ff.cc: doc fix: added reference to book.
+
+2005-12-01  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_packet_sink.h (class gr_packet_sink): changed
+	d_threshold to unsigned to eliminate warning.
+	* src/lib/general/gr_simple_correlator.cc: removed duplicate
+	definition of slice.
+
+2005-12-01  Stephane Fillod  <f8cfe@free.fr>
+
+	* src/lib/general/gr_count_bits.cc (gr_count_bits32): faster
+	implementation.  No branching.
+
+2005-11-22  Ramakrishnan Muthukrishnan <rkrishnan@symonds.net>
+
+	* src/python/gnuradio/gr/qa_filter_delay_fc.py,
+	src/python/gnuradio/gr/qa_hilbert.py: updated QA code to reflect
+	change in delay line handling.
+
+2005-11-21  Eric Blossom  <eb@comsec.com>
+
+	* config/gr_boost.m4: reworked to look for latest version if
+	installed in version-specific subdir of /usr/local/include.
+	* src/lib/swig/Makefile.am (DISTCLEANFILES): added gnuradio_swig_python.d
+
+2005-11-19  Eric Blossom  <eb@comsec.com>
+
+	* config/usrp_libusb.m4 (USRP_LIBUSB): add -lIOKit under darwin.
+	* config/gr_no_undefinedm4, config/gr_set_md_cpu.m4,
+	config/gr_x86_64.m3, config/usrp_fusb_tech.m4,
+	config/usrp_libusb.m4: changed incorrect use of
+	AC_CANONICAL_TARGET to HOST.
+
+2005-11-18  Eric Blossom  <eb@comsec.com>
+
+	These changes enabled discontinous transmission of usrp packets.
+	The treatment of history was slightly changed.  Now we provide
+	zeros for the initial delay lines and produce N outputs for N
+	inputs.  In the past we would produce N-history-1 outputs for N inputs.
+	
+	* src/python/gnuradio/packet_utils.py: ensure at least a single
+	byte of padding to flush filters.
+	* src/lib/runtime/gr_block.{h,cc,i},
+	src/lib/general/gr_sync_block.{h,cc,i},
+	src/lib/general/gr_sync_decimator.{h,cc,i},
+	src/lib/general/gr_sync_interpolator.{h,cc,i}: moved history into
+	gr_block from gr_sync_block.  Added new methods to support fast
+	path through scheduler: fixed_rate, fixed_rate_ninput_to_output
+	and fixed_rate_noutput_to_input.
+	
+	* src/python/gnuradio/gr/flow_graph.py (flow_graph._connect_inputs):
+	account for initial history when attaching buffer reader.
+	* src/lib/runtime/gr_buffer.{h,cc,i} (gr_buffer_add_reader): modified to
+	provide zeros for initial history.
+
+	* src/python/gnuradio/gr/qa_fft_filter.py,
+	src/python/gnuradio/gr/qa_filter_delay_fc.py,
+	src/python/gnuradio/gr/qa_hilbert.py,
+	src/python/gnuradio/gr/qa_interp_fir_filter.py,
+	src/python/gnuradio/gr/qa_rational_resampler.py: tweaked QA code
+	to work with new history behavior.
+
+	
+2005-11-17  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/filter/gr_interp_fir_filter_XXX.cc.t,
+	gr_rational_resampler_base_XXX.cc.t: ensure that history is set in
+	constructor.
+
+	* src/lib/runtime/gr_msg_queue.i: more evil hackery to release
+	Python global interpreter lock around blocking msg_queue methods.
+
+	* src/python/gnuradio/packet_utils.py (make_packet): conditionally
+	add padding such that final packet is a multiple of 512 bytes on the USB.
+
+2005-11-16  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/io/gr_message_source.h (class gr_message_source): added
+	msgq limit to constructor args.
+
+	* src/lib/general/gr_packet_sink.{h,cc,i}: added access code
+	detection threshold to ctor args.
+
+	* src/lib/filter/gri_mmse_fir_interpolator.{h,cc}: declared interpolate	const.
+
+	* src/lib/general/gr_clock_recovery_mm_ff.cc: limit excursions of
+	omega using omega_relative_limit.  Added conditional diagnostic logging.
+
+	* src/lib/runtime/gr_msg_queue.{h,cc}: block when inserting into a
+	full msg queue.
+
+	* src/lib/filter/gr_fractional_interpolator.cc (general_work):
+	1.0 - d_mu -> d_mu to match revised filter defs.
+
+2005-11-15  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/io/gr_oscope_guts.{h,cc},
+	src/lib/io/gr_oscope_sink_f.{h,cc,i}: Refactored to use messages
+	and message queues to communicate to Python.  This code will never
+	block waiting for the gui.
+	* src/lib/io/gr_message_sink.{h,cc,i}: new. A sink that packages up its
+	input and puts it in a message queue.
+
+2005-11-14  Eric Blossom  <eb@comsec.com>
+
+	* doc/Doxyfile.in: updated to latest version.  Turned off serveral
+	options to reduce documentation generation time.
+
+2005-11-13  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/blksimpl/gmsk2.py,
+	src/python/gnuradio/blksimpl/gmsk2_pkt.py: new GMSK mod/demod.
+	* src/python/gnuradio/gruimpl/mathmisc.py: new: gcd, lcm.
+	* src/python/gnuradio/blksimpl/rational_resampler.py: If neither
+	taps nor fractional_bw is supplied, provide a reasonable default.
+
+2005-11-11  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/filter/qa_gri_mmse_fir_interpolator.cc (t1): revised sign.
+
+	* src/lib/filter/gr_fir_filter_XXX.cc.t (work): if taps updated, return 0.
+	* src/lib/filter/gr_interp_fir_filter_XXX.cc.t (work): if taps updated, return 0.
+
+2005-11-09  Matt Ettus  <matt@ettus.com>
+
+	* src/lib/general/gr_packet_sink.cc (gr_make_packet_sink): new.
+	slices, correlates for packet access code, checks header and
+	assembles packets.
+
+2005-11-09  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/io/gr_message_source.h: new class.  Messages sent to
+	this class are streamed to its single output.
+
+	* src/lib/runtime/gr_message.{h,cc,i}: removed unused methods; new
+	constructor from string; get contents as string.
+
+	* src/lib/filter/gri_mmse_fir_interpolator.{h,cc}: renamed from gr_mmse_fir_interpolator.
+	* src/lib/filter/gr_fractional_interpolator.{h,cc,i}: new.
+
+2005-11-08  Eric Blossom  <eb@comsec.com>
+	
+	* src/lib/general/gr_crc32.{h,cc,i}: new.  ISO 3309 CRC-32 generator.
+
+2005-11-08  Matt Ettus  <matt@ettus.com>
+
+	* src/lib/general/gr_threshold_ff.{h,cc,i}: new.
+	* src/python/gnuradio/blksimpl/standard_squelch.py: new
+	* src/python/gnuradio/blksimpl/nbfm_rx.py: removed squelch from
+	block.
+
+2005-11-07  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/blksimpl/rational_resampler.py
+	(design_filter): added code to automatically design filter.
+
+	* src/lib/general/gr_firdes.cc (window): fixed Kaiser window.
+
+2005-10-28  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/io/gr_oscope_sink_f.cc (gr_oscope_sink_f): fixed del of
+	unowned variable that was causing double-free.
+
+2005-10-23  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_nco.h (gr_nco): removed unused local var.
+
+2005-10-17  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_fxpt_vco.h: use floats instead of double.
+	Gives 30% speedup on Opteron under gcc 3.3.5
+
+2005-10-17  Stephane Fillod  <f8cfe@free.fr>
+
+	* src/lib/general/gr_fxpt_nco.h, src/lib/general/gr_nco.h,
+	src/lib/general/gr_sig_source_X.cc.t: set primitives in shape
+	for an eventual simd speedup. fix bug in sincos() of gr_nco.h.
+
+	* src/lib/general/Makefile.am, src/lib/general/gr_vco.h,
+	src/lib/general/gr_vco_f.cc, src/lib/general/gr_vco_f.h,
+	src/lib/general/qa_gr_fxpt_vco.h, src/lib/general/qa_gr_fxpt_vco.cc,
+	src/lib/general/qa_general.cc, src/tests/benchmark_vco.cc,
+	src/lib/general/gr_fxpt_vco.h: make use of fixed point cosine for VCO,
+	with appropriate QA code, set primitives in shape for an eventual 
+	simd speedup.
+	* src/lib/general/qa_gr_fxpt_vco.cc, src/lib/general/gr_vco.h,
+	src/lib/general/qa_gr_fxpt_vco.h, src/lib/general/gr_fxpt_vco.h: new
+
+	* README: reference gr-audio-jack, gr-audio-windows and gr-comedi
+
+2005-10-12  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_vmcircbuf_mmap_tmpfile.{h,cc}: resurrected
+	rev 1.1 then added check for contiguous mapping.
+	* src/lib/runtime/gr_vmcircbuf.cc: enable gr_vmcircbuf_mmap_tmpfile.
+
+2005-10-11  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_vmcircbuf_mmap_shm_open.cc
+	(gr_vmcircbuf_mmap_shm_open): corrected error message.
+
+2005-10-10  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_vmcircbuf_mmap_tmpfile.{h,cc}: removed.
+
+2005-10-10  Stephane Fillod  <f8cfe@free.fr>
+
+	* src/lib/general/gr_check_counting_s.cc,
+	src/lib/general/gr_check_lfsr_32k_s.cc,
+	src/lib/general/gr_vector_source_X.cc.t,
+	src/lib/runtime/gr_vmcircbuf_createfilemapping.cc,
+	src/lib/runtime/gr_vmcircbuf_mmap_shm_open.cc: compiler warning
+	silencing.
+
+	* src/lib/general/gr_sig_source_X.cc.t,
+	src/lib/general/gr_fxpt_nco.h,
+	src/lib/general/gr_nco.h: added sincos block primitive.
+	* src/lib/general/qa_gr_fxpt_nco.cc: qa code for new sincos
+	block primitive. cleanup.
+	* src/tests/benchmark_nco.cc: benchmark the new sincos block
+
+	* src/tests/Makefile.am: added benchmark_vco
+	src/tests/benchmark_vco.cc: new
+
+2005-10-05  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/hier_block.py (hier_block_base.__init__):
+	reenabled weakref to break circular graph.
+	* src/python/gnuradio/gr/basic_flow_graph.py (basic_flow_graph),
+	src/python/gnuradio/gr/flow_graph.py (flow_graph):
+	removed __slots__ class attribute so we can create weakrefs to
+	flow graphs.
+
+	* src/python/gnuradio/gr/gr_threading.py: New.  Load appropriate bug fix.
+	* src/python/gnuradio/gr/gr_threading_23.py (Thread.join): bug fixed
+	version of python 2.3 threading.py.
+	* src/python/gnuradio/gr/gr_threading_24.py (Thread.join): bug fixed
+	version of python 2.4 threading.py.
+
+	* src/lib/general/gr_vco_f.{h,cc,i}: new VCO block.
+
+2005-10-03  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/hier_block.py (hier_block_base.__init__):
+	backed out use of weakref.
+	* src/python/gnuradio/gr/scheduler.py (scheduler.wait): backed out
+	"Control-C fix".
+
+2005-10-02  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/blksimpl/wfm_tx.py: New. Wide band FM tx block.
+
+2005-09-29  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/hier_block.py (hier_block_base.__init__):
+	store weakref to flow_graph to break circular graph so that flow
+	graph can be reclaimed right away.
+
+	* src/python/gnuradio/gr/flow_graph.py (flow_graph.__del__): call
+	self.stop() to ensure that i/o devices get shutdown gracefully.
+
+	* src/python/gnuradio/gr/scheduler.py (scheduler.wait): calling
+	thread.join was keeping us from seeing SIGINT.  Replaced with
+	alternate implementation.
+
+2005-09-27  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/eng_option.py (check_subdev): removed the
+	(0, None) and (1, None) results.
+
+2005-09-21  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/eng_option.py (check_subdev): added new
+	command line parser type, "subdev", for selecting usrp daughterboards.
+
+2005-09-17  Krzysztof Kamieniecki <krys@kamieniecki.com>
+
+	* src/lib/filter/qa_gr_fir_ccf.cc: alignment fix for gcc 4.x
+
+2005-08-28  Stephane Fillod  <f8cfe@free.fr>
+	
+	* config/gr_set_md_cpu.m4, src/lib/filter/Makefile.am: add simd 
+	support for x86_64 platform.
+
+	* src/lib/filter/ccomplex_dotprod_3dnow64.S,
+	src/lib/filter/ccomplex_dotprod_3dnowext64.S,
+	src/lib/filter/ccomplex_dotprod_sse64.S,
+	src/lib/filter/complex_dotprod_3dnow64.S,
+	src/lib/filter/complex_dotprod_3dnowext64.S,
+	src/lib/filter/complex_dotprod_sse64.S,
+	src/lib/filter/fcomplex_dotprod_3dnow64.S,
+	src/lib/filter/fcomplex_dotprod_sse64.S,
+	src/lib/filter/float_dotprod_3dnow64.S,
+	src/lib/filter/float_dotprod_sse64.S,
+	src/lib/filter/short_dotprod_mmx64.S,
+	src/lib/filter/cpuid_x86_64.S: new
+
+	* src/lib/filter/ccomplex_dotprod_3dnow.S,
+	src/lib/filter/ccomplex_dotprod_3dnowext.S,
+	src/lib/filter/ccomplex_dotprod_sse.S,
+	src/lib/filter/complex_dotprod_3dnow.S,
+	src/lib/filter/complex_dotprod_3dnowext.S,
+	src/lib/filter/complex_dotprod_sse.S,
+	src/lib/filter/fcomplex_dotprod_3dnow.S,
+	src/lib/filter/fcomplex_dotprod_sse.S,
+	src/lib/filter/float_dotprod_3dnow.S,
+	src/lib/filter/float_dotprod_sse.S,
+	src/lib/filter/short_dotprod_mmx.S
+	src/lib/filter/cpuid_x86.S: filename debug info fix, 
+	removed useless emms instruction in pure SSE.
+	* src/lib/filter/qa_gr_fir_ccc.cc: comment fix
+	
+2005-08-28  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/malloc16.c: fixed 64-bit pointer to int cast problem.
+
+2005-08-26  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/qa_rational_resampler.py
+	(test_rational_resampler.test_002_interp):  reduced random test
+	from 10k cases to 1000 cases.  The 10k case turns up a single
+	failure.  FIXME figure out why!
+
+	* src/python/gnuradio/gr/qa_fsk_stuff.py
+	(test_bytes_to_syms.test_simple_framer):  fixed test case to
+	reflect 0x55 trailing tail.
+
+	* src/lib/filter/qa_gr_fir_ccc.cc (test_random_io): Ensure 16-byte
+	input alignment to meet contract with SIMD ccc kernel.
+
+2005-08-25  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_simple_correlator.cc: average the samples in
+	the sync field and use this to set the slicing level for the
+	payload.  This helps account for frequency offsets between the Tx
+	and Rx sides.
+
+2005-08-24  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_simple_framer_sync.h: include GRSF_TAIL_PAD
+	in GRSF_OVERHEAD.
+
+	* src/lib/runtime/gr_single_threaded_scheduler.cc (main_loop): now
+	only invoke sources if we are not making progress.  This avoids
+	blocking (in most cases) unless we've got nothing better to do.
+
+	* src/lib/filter/gr_freq_xlating_fir_filter_XXX.cc.t
+	(build_composite_fir): reversed taps to fix problem introduced
+	when we "rationalized" the tap ordering a while ago.  [We are
+	missing a unit test for this...]
+
+2005-08-22  Matt Ettus  <matt@ettus.com>
+
+	* src/python/gnuradio/blksimpl/gmsk.py:
+		made several changes to the filters on both TX and RX.
+		The demod filter (integrate_taps) should not average
+		over multiple samples.  In reality, a few samples should 
+		work, so I'm not sure why it doesn't here.
+
+2005-08-22  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_simple_correlator.cc (general_work): removed
+	incorrect magic number and replaced with constant expression.
+	[Almost as embarrassing as a buffer overflow]
+
+2005-08-21  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_simple_framer_sync.h: added one byte tail
+	padding to ensure that correlator has a chance to get synced in
+	case it was later on the previous packet.
+
+	* src/lib/general/gr_simple_correlator.cc (general_work):
+	corrected to use count_bits64.
+
+2005-08-19  Eric Blossom  <eb@comsec.com>
+
+	* doc/Makefile.am: clean-local now uses $(RM) -fr
+
+2005-08-18  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_count_bits.{h,cc}: new gr_count_bits64.
+	
+	* src/lib/general/gr_simple_correlator.{h,cc},
+	src/lib/general/gr_simple_framer.{h,cc},
+	src/lib/general/gr_simple_framer_sync.h,
+	src/python/gnuradio/gr/qa_fsk_stuff.py: changed length of SYNC
+	code from 32 to 64 bits.
+
+2005-08-16  Andrew Thomas Beck <Andrew.Beck@postgrads.unisa.edu.au>
+
+	* src/lib/runtime/gr_vmcircbuf_createfilemapping.cc (gr_vmcircbuf_createfilemapping): fixes.
+
+2005-08-15  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_single_threaded_scheduler.i,
+	src/lib/runtime/gr_block_detail.i, src/lib/runtime/gr_buffer.i:
+	fixes for SWIG 1.3.25.  Thanks to Job de Haas for a big clue!
+
+2005-08-08  Martin Dudok van Heel <nldudok1 at olifantasia.com>
+
+       Addded a new block to convert from float to unsigned char. Needed for new tv-reception example.
+
+       * src/lib/general/gr_float_to_uchar.{cc,h,i}: new
+       * src/lib/general/gri_float_to_uchar.{cc,h}: new
+       * src/lib/general/Makefile.am: changed. Added gr_float_to_uchar and gri_float_to_uchar. (Also added gr_float_to_char.h which was
+         forgotten in previous patch to add gr_float_to_char)   
+       * src/lib/general/general.i: changed. Added gr_float_to_uchar and gri_float_to_uchar.
+
+2005-07-28  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/qa_gr_circular_file.cc (t1): conditionalized
+	base on HAVE_MMAP.
+
+2005-07-24  Stephane Fillod  <f8cfe@free.fr>
+
+        * src/lib/runtime/gr_vmcircbuf_mmap_tmpfile.cc: get correct
+        granularity under Cygwin.
+
+        * src/lib/filter/Makefile.am: renamed .s files to .S in order
+        to enable preprocessor support in assembly source
+        * src/lib/general/README: misc status update
+        * src/lib/filter/assembly.h: new
+        * src/lib/filter/3dnow_float_dotprod_really_simple.S,
+        src/lib/filter/3dnow_float_dotprod_simple.S,
+        src/lib/filter/ccomplex_dotprod_3dnow.S,
+        src/lib/filter/ccomplex_dotprod_3dnowext.S,
+        src/lib/filter/ccomplex_dotprod_sse.S,
+        src/lib/filter/complex_dotprod_3dnow.S,
+        src/lib/filter/complex_dotprod_3dnowext.S,
+        src/lib/filter/complex_dotprod_sse.S,
+        src/lib/filter/fcomplex_dotprod_3dnow.S,
+        src/lib/filter/fcomplex_dotprod_sse.S,
+        src/lib/filter/float_dotprod_3dnow.S,
+        src/lib/filter/float_dotprod_sse.S,
+        src/lib/filter/short_dotprod_mmx.S,
+        src/lib/filter/cpuid_x86.S: new, moved from .s files with
+        added preprocessor macros to handle both ELF and Windows
+        x86 assembly.
+        * src/lib/filter/3dnow_float_dotprod_really_simple.s,
+        src/lib/filter/3dnow_float_dotprod_simple.s,
+        src/lib/filter/ccomplex_dotprod_3dnow.s,
+        src/lib/filter/ccomplex_dotprod_3dnowext.s,
+        src/lib/filter/ccomplex_dotprod_sse.s,
+        src/lib/filter/complex_dotprod_3dnow.s,
+        src/lib/filter/complex_dotprod_3dnowext.s,
+        src/lib/filter/complex_dotprod_sse.s,
+        src/lib/filter/fcomplex_dotprod_3dnow.s,
+        src/lib/filter/fcomplex_dotprod_sse.s,
+        src/lib/filter/float_dotprod_3dnow.s,
+        src/lib/filter/float_dotprod_sse.s,
+	src/lib/filter/short_dotprod_mmx.s,
+        src/lib/filter/cpuid_x86.s: removed (renamed)
+
+
+2005-07-21  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/filter/gr_fft_filter_fff.cc (compute_sizes): turned off
+	debugging output.
+
+2005-07-20  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/blksimpl/filterbank.py: documented channel
+	number to frequency mapping.  Fixed a couple of problems related
+	to reversing filter tap order.
+
+2005-07-20  Martin Dvh <gnuradiomail@olifantasia.com>
+
+	* src/lib/runtime/gr_vmcircbuf_createfilemapping.{h,cc}: new.
+	Native implementation for Windows NT/W2K/XP.
+	* config/gr_python.m4: MinGW mods.
+
+2005-07-19  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/filter/gr_fft_filter_fff.{h,cc,i}: new.  Work in
+	progress.  Not yet ready for prime time.
+
+	* src/lib/runtime/gr_single_threaded_scheduler.cc: fixed spinning when
+	sink's upstream was done, but there was a non-zero but too small
+	amount of data left in the sink's input buffer.
+
+2005-07-18  Stephane Fillod  <f8cfe@free.fr>
+
+	* config/gr_libgnuradio_core_extra_ldflags.m4,
+	config/gr_no_undefined.m4, config/gr_python.m4: mods for MinGW.
+
+2005-07-17  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/filter/gr_rational_resampler_base_XXX.{h,cc,i}: new.
+
+	* src/python/gnuradio/blksimpl/rational_resampler.py
+	(rational_resampler_ccc.__init__): new.  High-level wrapper for
+	gr.rational_resampler_base_???
+	
+2005-07-15  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/filter/gr_fft_filter_ccc.cc,	src/lib/filter/gr_fir_XXX.h.t,
+	src/lib/filter/gr_fir_ccc_simd.cc, src/lib/filter/gr_fir_ccc_simd.h,
+	src/lib/filter/gr_fir_ccf_simd.cc, src/lib/filter/gr_fir_ccf_simd.h,
+	src/lib/filter/gr_fir_fcc_simd.cc, src/lib/filter/gr_fir_fcc_simd.h,
+	src/lib/filter/gr_fir_fff_simd.cc, src/lib/filter/gr_fir_fsf_simd.cc,
+	src/lib/filter/gr_fir_scc_simd.cc, src/lib/filter/gr_fir_scc_simd.h,
+	src/lib/filter/gr_hilbert_fc.cc, src/lib/filter/gr_interp_fir_filter_XXX.cc.t,
+	src/lib/filter/gr_mmse_fir_interpolator.cc, src/lib/filter/qa_ccomplex_dotprod_x86.cc,
+	src/lib/filter/qa_gr_fir_ccc.cc, src/lib/filter/qa_gr_fir_ccf.cc,
+	src/lib/filter/qa_gr_fir_fcc.cc, src/lib/filter/qa_gr_fir_fff.cc,
+	src/lib/filter/qa_gr_fir_scc.cc, src/lib/general/Makefile.am,
+	src/lib/general/gr_firdes.cc, src/lib/general/gr_firdes.h,
+	src/lib/general/gr_firdes.i, src/python/gnuradio/gr/qa_filter_delay_fc.py,
+	src/python/gnuradio/gr/qa_interp_fir_filter.py: reversed order of
+	"taps" arguments constructors and set_taps, fixed taps() so it
+	returns the right order.  We now require the "right" order for
+	taps, instead of the reversed order ("dot product order") we used to
+	require.
+
+2005-07-13  Martin Dvh <gnuradiomail@olifantasia.com>
+
+	* config/gr_check_createfilemapping.m4,
+          config/gr_libgnuradio_core_extra_ldflags.m4: new files
+        * configure.ac, config/Makefile.am, src/lib/Makefile.am: added
+          support for extra ld flags and future createfilemapping
+          factory.
+        * src/lib/io/gr_file_source.cc, src/lib/io/gr_file_sink.cc:
+          binary mode support under Windows.
+
+2005-07-02  Eric Blossom  <eb@comsec.com>
+
+	* config/gr_no_undefined.m4, config/gr_x86_64.m4: new, x86_64 support.
+	* config/gr_python.m4: backed out search for libpython, making
+	x86_64 work and breaking Cygwin/MinGW.
+	* configure.ac, src/lib/Makefile.am: mods for x86_64, $(NO_UNDEFINED)
+
+	* src/python/gnuradio/gr/qa_complex_to_xxx.py: loosened up passing
+	threshold so that we pass on x86_64.
+
+2005-06-23  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_error_handler.cc: added #include <unistd.h>
+
+2005-06-19  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_single_threaded_scheduler.cc (main_loop):
+	added diagnostic logging.  Fixed problem where data was dribbling
+	through pipeline.
+
+	* src/lib/general/gr_fxpt.cc: gcc 4.x fix.
+
+2005-06-16  Eric Blossom  <eb@comsec.com>
+	
+	* src/lib/general/gr_nco.h: increase precision: float->double.
+	* src/lib/general/qa_gr_fxpt_nco.h: changed initial test frequency
+	
+2005-06-16  Stephane Fillod  <f8cfe@free.fr>
+
+        * gnuradio-core.pc.in, src/lib/Makefile.am, src/lib/atsc/Makefile.am,
+        src/lib/filter/Makefile.am, src/lib/general/Makefile.am,
+        src/lib/runtime/Makefile.am, src/tests/Makefile.am: put qa code
+        in separate library.
+	
+2005-06-12  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/blksimpl/filterbank.py: new. DFT filterbank.
+	* src/lib/general/gr_vector_to_streams.{h,cc,i}: new.
+	* src/lib/general/gr_streams_to_vector.{h,cc,i}: new.
+	* src/lib/general/gr_streams_to_stream.{h,cc,i}: new. Convert
+	streams of 1 item into a stream of N items.
+	* src/lib/general/gr_stream_to_streams.{h,cc,i}: new. Convert 
+	a stream of N items into N streams of 1 items.
+
+2005-06-11  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_nlog10_ff.{h,cc,i}: added addition constructor arg,
+	k, that is added to the return value.  Handy for normalizing FFTs.
+
+	* src/lib/filter/gr_fft_filter_ccc.{h,cc,i}: new.  FFT based FIR filtering.
+
+2005-06-10  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/flow_graph.py (buffer_sizes.allocate),
+	src/python/gnuradio/gr/basic_flow_graph.py (downstream_verticies_port):
+	modified to take into account downstream block decimation ratio.
+	This allows us to compute big FFTs, FIRs with lots of taps, etc.
+
+2005-05-18  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_block.{h,cc,i}: new start/stop methods.  These are
+	useful for minimizing latency due to startup overhead.
+	* src/lib/runtime/gr_single_threaded_scheduler.cc: call new methods.
+
+2005-05-18  John Gilmore  <gnu@toad.com>
+
+	* src/python/gnuradio/gruimpl/hexint.py: new.  Convert hex
+	constants to negative ints for long ints >= 2**31.
+
+2005-05-11  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_vmcircbuf_sysv_shm.cc
+	(gr_vmcircbuf_sysv_shm): add read-only guard page on either side
+	of buffer.
+
+	* src/lib/general/gr_throttle.{h,cc,i}: new block to rate-limit
+	samples.  Mostly useful where there's nothing stopping us from
+	sucking down all CPU.  E.g., reading from files, gr.sig_source, etc.
+
+2005-05-09  Stephane Fillod  <f8cfe@free.fr>
+	
+	* src/lib/filter/fcomplex_dotprod_{3dnow,sse}.s,
+	src/lib/filter/fcomplex_dotprod_x86.h,
+	src/lib/filter/gr_fir_ccf_simd.{cc,h},
+	src/lib/filter/gr_fir_ccf_x86.{cc,h},
+	src/lib/filter/gr_fir_fcc_simd.{cc,h},
+	src/lib/filter/gr_fir_fcc_x86.{cc,h},
+	src/tests/benchmark_dotprod_ccf.cc,
+	src/tests/benchmark_dotprod_fsf.cc: new files
+	* src/lib/filter/Makefile.am, src/tests/Makefile.am,
+	src/lib/filter/gr_fir_sysconfig_x86.{cc,h}: support for FCC and
+	CCF filter speedup
+	* src/tests/benchmark_dotprod_{ccc,fcc,scc}.cc: copy/paste fixes
+	which should not change benchmark results
+
+2005-05-09  Stephane Fillod  <f8cfe@free.fr>
+
+        * config/gr_sysv_shm.m4: SysV shared memory not mandatory
+	* config/gr_pwin32.m4, config/gr_python.m4, config/lf_cxx.m4:
+	fixes for Cygwin, MinGW
+	* src/lib/runtime/gr_error_handler.cc, src/lib/runtime/gr_local_sighandler.{h,cc},
+	src/lib/runtime/gr_vmcircbuf.cc, src/lib/runtime/gr_vmcircbuf_mmap_tmpfile.cc: 
+	modifications for Cygin, MinGW
+
+2005-04-27  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_fake_channel_coder_pp.{h,cc,i}: new classes
+	the pretend to do channel encoding and decoding, but really only
+	add and strip padding...
+
+	* src/lib/runtime/gr_buffer.cc (allocate_buffer): cleaned up formatting
+	on allocation warning message.
+	
+	* src/python/gnuradio/blksimpl/digital_voice.py: GSM vocoder + GMSK.
+
+2005-04-03  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/io/gr_oscope_guts.cc (found_trigger): fixed trigger
+	problem where value was exactly equal to trigger value.
+
+2005-03-29  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/blksimpl/gmsk.py: new GMSK mod and demod
+	from Joshua Lackey <jl@noether.uoregon.edu>
+
+2005-03-29  Ramakrishnan Muthukrishnan <rkrishnan@symonds.net>
+
+	* src/lib/filter/gr_filter_delay_fc.{h,cc,i},
+	src/python/gnuradio/gr/qa_filter_delay_fc.py:  New block that
+	pairs a filter with a delay.
+
+2005-03-26  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_dispatcher.{h,cc,i},
+	src/lib/runtime/gr_select_handler.{h,cc,i}: new.  Framework for
+	callbacks based on select(2).
+	
+	* src/lib/runtime/gr_error_handler.{h,cc,i}: new.
+
+2005-03-14  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_complex_to_xxx.{h,cc,i}: now support
+	vector length argument, vlen.
+	* src/lib/general/gr_nlog10_ff.{h,cc,i}: new.
+	* src/lib/general/gr_parallel_to_serial.{h,cc,i}: new.
+	* src/lib/filter/gr_single_pole_iir_filter_ff.{h,cc,i}: new
+	* src/python/gnuradio/gr/qa_single_pole_iir.py: new
+	* src/python/gnuradio/gr/qa_nlog10.py: new
+
+2005-03-08  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/qa_fsk_stuff.py: enabled simple_framer qa code.
+	* src/lib/general/gr_simple_framer.{h,cc}: added forecast method.
+
+2005-03-07  Eric Blossom  <eb@comsec.com>
+
+	* configure.ac: test for trunc and work around if missing.
+
+2005-03-02  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/blks/__init__.py,	src/python/gnuradio/blksimpl/__init__.py,
+	src/python/gnuradio/gru/__init__.py,
+	src/python/gnuradio/gruimpl/__init__.py: refactored organization
+	so that hierarchical blocks are physically contained in the
+	blkimpl directory, but that for convenience in naming, all blocks
+	appear in the gnuradio.blks package.  Same story for gruimpl vs gru.
+
+	Rearranged a bunch of stuff under src/python.  CVS sucks!
+
+2005-02-28  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_frequency_modulator_fc.cc (work): fixed
+	floating point loss of precision.
+	* src/lib/general/gr_simple_correlator.cc (general_work): fixed
+	bug that had it processing only a single sample at a time.
+
+2005-02-25  Matt Ettus  <matt@ettus.com>
+
+	* lib/general/Makefile.am, lib/general/general.i, 
+	lib/general/gr_rms_[ff,cf].[cc,h,i]: new rms measuring block
+
+2005-02-25  Eric Blossom  <eb@comsec.com>
+
+	* python/gnuradio/gr/qa_mute.py, lib/general/gr_mute_XX.cc.t,
+	lib/general/gr_mute_XX.h.t, lib/general/gr_mute_XX.i.t: new block.
+	* lib/general/Makefile.am, lib/general/Makefile.gen, 
+	lib/general/general_generated.i, lib/general/generate_common.py:
+	mods to generate new block.
+
+2005-02-23  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/hier_block.py: new. support for
+	hierarchical signal processing blocks.
+	* src/python/gnuradio/gr/basic_flow_graph.py,
+	src/python/gnuradio/gr/qa_basic_flow_graph.py: modified to support
+	hierarchical signal processing blocks.
+
+2005-02-22  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_simple_squelch_cc.{h,cc,i}: new.
+
+	* src/lib/runtime/gr_message.{h,cc,i},
+	src/lib/runtime/gr_msg_handler.{h,cc,i}, 
+	src/lib/runtime/gr_msg_queue.{h,cc,i}, 
+	src/lib/runtime/gr_timer.h: new. work-in-progress.
+
+2005-02-09  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/io/gr_file_descriptor_source.{h,cc}(work): reworked to
+	return as soon as any data is available.  This make it much more
+	friendly for reading sockets, named pipes, etc.
+
+2005-02-07  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/basic_flow_graph.py (coerce_endpoint):
+	fix exception message.
+
+2005-02-06  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/basic_flow_graph.py
+	(basic_flow_graph.connect): connect now takes >= 2 args, per
+	Thomas Traber's suggestion.
+	* src/python/gnuradio/gr/qa_flow_graph.py,
+	src/python/gnuradio/gr/qa_basic_flow_grapy.py:  additional test code.
+
+2005-02-05  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/basic_flow_graph.py
+	(basic_flow_graph.connect): removed unnecessary None
+
+2005-02-02  Chuck Swiger <cswiger@widomaker.com>
+
+	* src/lib/io/gr_file_source.{h,cc,i}: added seek method.
+
+2005-01-29  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_io_signature.i: mods for SWIG 1.3.24
+
+2005-01-24  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/freqz.py (freqz): New. Compute frequency
+	response of filter.
+	* src/python/gnuradio/gnuplot_freqz.py: New. Plot output of freqz.
+
+2005-01-17  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_single_threaded_scheduler.cc (main_loop):
+	Make better initial estimate of noutput_items when current block
+	is a decimator.  Removed old diagnostic code.
+
+	* src/lib/general/gr_vector_source_X.cc.t (work): reorganized the
+	repeat case so that we always return the number of items requested.
+	This fixes the excessive latency we were seeing in
+	spectrum_inversion.py
+
+	* src/python/gnuradio/gr/flow_graph.py: Set noutputs correctly.
+	* src/python/gnuradio/gr/qa_flow_graph.py: Test value of noutputs.
+	
+2005-01-16  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_single_threaded_scheduler.cc (main_loop):
+	check for situation where block is requesting more input data than
+	we will ever provide.
+
+	* src/python/gnuradio/gr/flow_graph.py (buffer_sizes.allocate):
+	set minimum buffersize to 2 * output_multiple()
+
+	* src/lib/runtime/gr_buffer.cc (space_available): fixed degenerate
+	case to be consistent with normal case.
+
+2005-01-01  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/io/sdr_1000.i (class sdr_1000_base): removed default arg
+	to work around SWIG 1.3.23 bug.
+
+2004-12-22  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/qa_gr_fxpt.cc (t0): disabled float_to_fixed test
+	to avoid spurious failures.
+
+2004-12-21  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_fxpt.h (class gr_fxpt): added explicit float cast.
+	* src/lib/general/Makefile.am (grinclude_HEADERS): added gr_fxpt_nco.h
+
+2004-12-18  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_fxpt.{h,cc},src/lib/general/gr_fxpt_nco.{h,cc},
+	src/lib/general/qa_gr_fxpt.{h,cc},src/lib/general/qa_gr_fxpt_nco.{h,cc},
+	src/tests/benchmark_nco.cc: new.  Faster sine and cosine
+	calculation.  Uses table lookup with linear interpolation.  This
+	is about 3x faster than the original code.
+
+2004-12-17  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/Makefile.am (swiginclude_HEADERS): fixed typo.
+	* src/lib/general/gr_deinterleave.{h,cc,i}: new.
+
+2004-12-11  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_interleave.{h,cc,i}: new.
+
+2004-12-10  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/eng_option.py (check_intx): now parses hex
+	numbers too.
+
+2004-12-09  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/filter/Makefile.am: fixed problem with gr_hilbert_fc on
+	OS/X (it was in the wrong place in the makefile).  Now builds and
+	checks on OS/X.
+
+2004-12-06  Ramakrishnan Muthukrishnan <rkrishnan@symonds.net>
+
+	* src/lib/filter/Makefile.am, src/lib/general/Makefile.am,
+	src/python/gnuradio/Makefile.am,
+	src/python/gnuradio/gr/Makefile.am: added *.pyc to CLEANFILES
+
+2004-11-30  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/Makefile.am, configure.ac: modified to 
+	no longer require run_test_trampoline.  Now uses AC_CONFIG_COMMANDS to
+	set execute bit on run_tests.
+	* src/python/gnuradio/gr/run_test_trampoline: removed.
+
+	* src/lib/filter/Makefile.am (swiginclude_HEADERS): fix typo in gr_hilbert_fc.i
+
+2004-11-27  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/qa_hilbert.py: new
+	* src/lib/general/gr_firdes.i: moved from filter to general.
+	* src/lib/general/gr_firdes.{h,cc}: new method: reverse.
+	* src/lib/filter/gr_hilbert_fc.i: new.
+	* src/lib/filter/gr_hilbert_fc.cc: ensure ntaps is odd.
+
+2004-11-08  Stephane Fillod <f8cfe@free.fr>
+	
+	* src/lib/filter/Makefile.am, src/tests/Makefile.am,
+        src/lib/filter/complex_dotprod_generic.cc,
+        src/lib/filter/gr_fir_sysconfig_x86.{cc,h},
+        src/lib/filter/qa_dotprod_x86.cc, src/lib/filter/qa_filter.cc:
+        added support for x86 SIMD CCC dotproduct.
+        * src/lib/filter/ccomplex_dotprod_3dnow.s,
+        src/lib/filter/ccomplex_dotprod_3dnowext.s,
+        src/lib/filter/ccomplex_dotprod_generic.{cc,h},
+        src/lib/filter/ccomplex_dotprod_sse.s,
+        src/lib/filter/ccomplex_dotprod_x86.h,
+        src/lib/filter/gr_fir_ccc_simd.{cc,h},
+        src/lib/filter/gr_fir_ccc_x86.{cc,h},
+        src/lib/filter/qa_ccomplex_dotprod_x86.{cc,h},
+        src/lib/filter/qa_gr_fir_ccc.{cc,h},
+        src/tests/benchmark_dotprod.cc,
+        src/tests/benchmark_dotprod_{ccc,fcc,scc}.cc: new
+
+2004-11-08  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_block.h: new methods: set_input_signature and
+	set_output_signature.
+
+2004-11-04  Eric Blossom  <eb@comsec.com>
+
+	* configure.ac: upped version to 2.3cvs
+	
+	* configure.ac: set version to 2.3.  Made release.
+	* src/python/gnuradio/audio.py (__init__): raise error if no audio
+	module found.
+
+2004-11-02  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_local_sighandler.cc (name): conditionalized
+	based on signal names.
+
+2004-10-30  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/gr_local_sighandler.{h,cc}: new.  get and set
+	signal handlers.
+	* src/lib/runtime/gr_vmcircbuf.cc (test_factory): install handlers
+	for SIGBUS and SIGSEGV while running tests.
+
+2004-10-18  Stephane Fillod <f8cfe@free.fr>
+	
+        * config/gr_pwin32.m4, src/lib/runtime/gr_preferences.cc: proper
+        detect Sleep() support, check for mkdir that takes only one arg
+        under win32.
+        * src/lib/runtime/gr_io_signature.cc,
+        src/lib/runtime/gr_io_signature.h,
+        src/lib/runtime/gr_io_signature.i,
+        src/lib/runtime/qa_gr_io_signature.cc: resolve a clash with
+        INFINITE already defined.
+        * src/lib/runtime/gr_pagesize.cc: declare missing prototype of
+        getpagesize() under win32.
+
+2004-10-18  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/run_tests.in: allow VPATH building.
+
+2004-10-18  Stephane Fillod <f8cfe@free.fr>
+
+	* configure.ac, src/lib/filter/Makefile.am,
+        src/lib/general/Makefile.am: allow VPATH building.
+
+2004-10-17  Eric Blossom  <eb@comsec.com>
+
+	* doc/Makefile.am (install-data-local): install html documentation.
+	* src/lib/filter/gr_iir_filter_ffd.cc (gr_iir_filter_ffd): removed
+	debug message.
+	* src/python/gnuradio/gr/run_tests.in: changed == to = for POSIX
+	compatibility.
+	* src/python/gnuradio/gr/qa_basic_flow_graph.py: use /usr/bin/env
+	to find python.
+
+2004-10-13  Eric Blossom  <eb@comsec.com>
+
+	* configure.ac: upped rev to 2.2cvs
+
+2004-10-11  Eric Blossom  <eb@comsec.com>
+
+	* configure.ac: bumped rev to 2.2, make release
+	* Makefile.am (EXTRA_DIST): added config.h.in
+
+2004-10-07  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/lmx2306.py: now works!
+
+2004-09-29  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/filter/gri_iir.h: renamed from gr_iir.h.  Also, changed
+	the sign back.  We're consistent with Oppenheim and Schafer,
+	"Discrete-Time Signal Processing."  Documented exactly what we
+	compute.  Faster delay line implementation.
+	* src/lib/filter/gr_iir_filter_ffd.{h,cc,i}: new direct form IIR block.
+	
+2004-09-23  Eric Blossom  <eb@comsec.com>
+
+	* config/usrp_fusb_tech.m4, config/bnv_have_qt.m4, config/cppunit.m4,
+	config/gr_check_mc4020.m4, config/gr_check_usrp.m4, config/gr_doxygen.m4,
+	config/gr_gprof.m4, config/gr_scripting.m4, config/gr_set_md_cpu.m4,
+	config/pkg.m4, config/usrp_fusb_tech.m4: added additional quoting
+	to first arg of AC_DEFUN to silence automake warning.
+
+2004-09-22  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/io/gr_file_descriptor_sink.cc: added missing #include <errno.h>
+	* src/lib/io/gr_file_descriptor_source.cc: added missing #include <errno.h>
+
+2004-09-21  Matthew Hall  <mahall@ncsa.uiuc.edu>
+                                                                              
+        * src/gnu/lib/gr/gr_iir.h: rewrote ctor docs. Fixed sign error
+        in filter method. Now gr_iir uses Direct Form I of IIR.
+	
+2004-09-19  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_complex_to_xxx.{h,cc,i}: new blocks.
+	* src/python/gnuradio/gr/qa_complex_xxx.py: new qa code.
+	
+	* src/lib/general/gr_simple_correlator.{h,cc,i}: payload size is
+	now in bytes, not bits.
+	* src/lib/general/gr_simple_framer.{h,cc,i}: payload size is
+	now in bytes, not bits.
+
+	* src/lib/swig/Makefile.am: now tracks swig .i file dependencies.
+	* src/lib/swig/gnuradio.i: simplification and cleanup.
+
+2004-09-18  Eric Blossom  <eb@comsec.com>
+
+	These modifications happened sometime between 2004-09-08 and 2004-09-18.
+	The details are lost in the swirl around preparing the TAPR DCC.
+
+	* src/lib/filter/gr_interp_fir_filter_XXX.{h,cc,i}.t: new
+	* src/lib/filter/generate_gr_interp_fir_filter_XXX.py: new
+	* src/lib/filter/generate_all.py: modified for to generate interpolating fir filter
+	* src/lib/general/gr_bytes_to_syms.{h,cc,i}: new
+	* src/lib/general/gr_frequency_modulator_fc.{h,cc,i}: new
+	* src/lib/general/gr_simple_framer.{h,cc,i}: new
+	* src/lib/general/gr_simple_framer_sync.h: new
+	* src/lib/general/gr_simple_correlator.{h,cc,i}: new
+	* src/lib/io/gr_oscope_guts.{h,cc}: new
+	* src/lib/io/gr_oscope_sink_{f,x}.{h,cc}: new
+	* src/lib/io/gr_trigger_mode.h: new
+	* src/lib/io/ppio.i: new
+
+	The following changes are related to moving from SWIG 1.3.21 to 1.3.22
+	
+	* src/lib/runtime/gr_block_detail.i: removed unneccesary global decl of friend.
+	* src/lib/runtime/gr_buffer.i: removed unneccesary global decl of friend.
+	* src/lib/runtime/gr_io_signature.i: removed unneccesary global decl of friend.
+	* src/lib/runtime/gr_single_threaded_scheduler.i: removed unneccesary global decl of friend.
+	* src/lib/swig/gnuradio.i: mods for improved STL support
+	
+	* src/lib/runtime/gr_types.h: new typedefs
+	* src/lib/swig/gen-swig-bug-fix: new.  generate gnuradio_swig_bug_workaround.h
+
+	* src/python/gnuradio/eng_notation.py: new
+	* src/python/gnuradio/grutil.py: new
+	* src/python/gnuradio/gr_unittest.py: new subclass of unittest
+	* src/python/gnuradio/lmx2306.py: new.  Control National PLL synthesizer
+	* src/python/gnuradio/microtune.py: new.  Command line interface
+	to microtune boards.
+	* src/python/gnuradio/gr/qa_frequency_modulator.py: new
+	* src/python/gnuradio/gr/qa_fsk_stuff.py: new
+	* src/python/gnuradio/gr/qa_head.py: new
+	* src/python/gnuradio/gr/qa_interp_fir_filter.py: new
+	* src/python/gnuradio/gr/qa_sig_source.py: new
+	
+2004-09-08  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/basic_flow_graph.py
+	(basic_flow_graph.validate): now calls check_topology.
+	* src/lib/runtime/gr_block.{h,cc,i} (check_topology): new method.
+	
+	* src/lib/general/gr_short_to_float.{h,cc,i}: new
+	* src/lib/general/gr_float_to_short.{h,cc,i}: new
+
+2004-08-26  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_fft_vfc.{h,cc,i}: new
+	* src/lib/general/gr_fft_vcc.{h,cc,i}: new
+	* src/lib/general/gri_fft.{h,cc}: renamed from gr_fft.{h,cc}
+	* src/lib/general/gr_serial_to_parallel.{h,cc,i}: new
+	* src/lib/general/gr_keep_one_in_n.{h,cc,i}: new
+
+2004-08-25  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/io/gr_file_descriptor_source.{h,cc,i}: new
+	* src/lib/io/gr_file_descriptor_sink.{h,cc,i}: new
+
+2004-08-19  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_sig_source_X.cc.t (work): performance tweak
+	for constant case.
+
+	* src/python/gnuradio/eng_option.py (check_eng_float): support
+	engineering notation in option parsing.  E.g., 32k, 106.5M
+
+2004-08-18  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/scheduler.py,
+	src/python/gnuradio/gr/basic_flow_graph.py,
+	src/python/gnuradio/gr/flow_graph.py,
+	src/python/gnuradio/gr/qa_flowgraph.py: modified to partition
+	graphs and assign separate threads to each disjoint set of
+	verticies.
+	
+
+2004-08-05  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_lfsr_32k_source_s.{h,cc,i}: new.
+
+	* src/lib/general/gr_check_counting_s.{h,cc,i}: renamed from gr_counting_sink.
+	* src/lib/general/gri_lfsr_15_1_0.h: new LFSR generator with
+	period 32K-1 bits.
+	* src/lib/general/gri_lfsr_32k.h: new LFSR generator with period
+	32K bits.
+	* src/lib/general/gr_counting_sink_s.{h,cc,i}: new.  checks that
+	it's input is a counting sequence.
+	* src/lib/filter/Makefile.am: added missing .t files
+
+2004-07-31  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_vector_source_X.{h,cc,i}.t: added repeat
+	argument to constructor.
+
+2004-07-30  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_sig_source_X.cc.t (work): now use gr_sincos
+	to compute both at same time.
+
+	* src/lib/general/gr_nco.h (gr_nco): renamed method cossin -> sincos
+	and use gr_sincos to compute value.
+
+	* configure.ac: upped rev to 2.1cvs.
+
+2004-07-21  Eric Blossom  <eb@comsec.com>
+
+	* configure.ac: upped rev to 2.1.  Made release.
+
+2004-07-20  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/optfir.py: new.  High level routines for optimal FIR design.
+	* src/lib/general/gr_remez.{h,cc}: new.  Parks-McClellan method
+	for optimal FIR design.
+
+2004-07-19  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gri_add_const_ss_generic.cc: new.
+	* src/lib/general/gri_add_const_ss.h: new.
+
+2004-07-17  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/flow_graph.py (buffer_sizes.allocate):
+	take into account output_multiple when computing buffer size.
+
+	* src/lib/runtime/gr_block.i: added output_multiple and
+	relative_rate to swig interface.
+
+2004-07-12  Eric Blossom  <eb@comsec.com>
+
+	* configure.ac: upped rev to 2.0cvs
+
+	* src/python/gnuradio/sdr_1000.py: added back in.
+	* src/lib/io/sdr_1000.{h,cc}: added back in.
+
+2004-07-11  Eric Blossom  <eb@comsec.com>
+
+	* config/gr_boost.m4 (GR_REQUIRE_BOOST_INCLUDES): new m4 macro.
+
+2004-07-09  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/audio-oss: removed all files and moved to gr-audio-oss package.
+
+2004-07-04  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_{add,sub,multiply,divide}_XX.{h,i,cc}.t: new
+	* src/lib/general/gr_multiply_const_XX.{h,i,cc}.t: new
+	* src/lib/runtime/gr_block.{h,cc} (class gr_block): renamed
+	basic_work method to general_work
+	* src/lib/general/gr_sync_block.{h,cc} (class gr_sync_block): 
+	renamed sync_work method to work.
+
+2004-07-03  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/scheduler.py: new.  Now run graph in
+	separate thread.
+	* src/lib/runtime/gr_single_threaded_scheduler.{h,i,cc}: added
+	stop method.
+	* src/lib/general/gr_noise_source_X.{h,i,cc}.t: new random noise source.
+	* config/gr_swig.m4: fail, not warn, if the right version isn't found.
+	* src/lib/general/gr_random.{h,cc}: moved implementation specific
+	defines out of header and into implementation.  Also moved statics
+	into class and cleaned up a couple of other annoyances.
+
+2004-07-01  Eric Blossom  <eb@comsec.com>
+
+	* src/python/gnuradio/gr/run_tests.in: new.  Sets PYTHONPATH
+	for sucessful testing in build tree; runs all tests.
+	* src/lib/runtime/{gr_block.i,gr_swig_block_magic.i}: revised to
+	use lambda expression for repr printing instead of referencing global.
+	* src/lib/swig/Makefile.am: now generate standalone swig runtime
+	library that all other swig modules link against.
+	
+2004-06-21  Eric Blossom  <eb@comsec.com>
+
+	Cleaned up interface to microtune modules and eval boards.
+	Now uses boost::shared_ptr's.  Refactored all uses 4937 and 4702,
+	and corresponding eval board classes.
+	
+	* src/lib/io/i2c.{h,cc}: split into i2c.{h,cc} and i2c_bitbang.{h,cc}
+	* src/lib/io/eval_board_4702_defs.h: deleted.
+	* src/lib/io/i2cio.{h,cc}: renamed to i2c_bbio.{h,cc}
+	* src/lib/io/i2cio_pp.{h,cc}: renamed to i2c_bbio_pp.{h,cc}
+
+2004-06-13  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_quadrature_demod_cf.{i,h,cc}: new.
+
+	* src/lib/audio-oss/gr_audio_sink_oss.{i,h,cc}: new.
+	FIXME: should be moved into a different build tree to decouple oss
+	dependency.
+
+	* src/lib/io/gr_file_{sink,source}.{i,h,cc} io.i: new.
+	
+2004-06-12  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/general/gr_sig_source_X.{h,cc,i}.t: new
+	* src/lib/general/gr_sig_source_waveform.h: new
+	* src/lib/general/gr_head.{h,cc,i}: new
+
+	* src/lib/runtime/gr_block_detail.cc (set_done), gr_buffer.h:
+	propagate "done" upstream
+
+
+2004-XX-XX  Eric Blossom  <eb@comsec.com>
+
+	Months of changes...  This was whatever it took to get
+	the beginning of the new code base working...
+	
+2004-03-11  Eric Blossom  <eb@comsec.com>
+
+	* src/lib/runtime/io_signature.{h,cc},
+	* src/lib/runtime/qa_io_signature.{h,cc}: new.
+
+2004-03-08  Eric Blossom  <eb@comsec.com>
+
+	Removed cppunit from our build tree and updated qa code to work
+	with cppunit-1.9.12
+
+	* Makefile.am
+	* bootstrap
+	* configure.ac
+	* config/Makefile.am
+	* config/cppunit.m4
+	* src/lib/Makefile.am
+	* src/lib/atsc/convolutional_interleaver.h
+	* src/lib/atsc/qa_atsc_basic_trellis_encoder.cc
+	* src/lib/atsc/qa_atsc_data_interleaver.cc
+	* src/lib/atsc/qa_atsc_equalizer_nop.cc
+	* src/lib/atsc/qa_atsc_fake_single_viterbi.cc
+	* src/lib/atsc/qa_atsc_fs_correlator.cc
+	* src/lib/atsc/qa_atsc_randomizer.cc
+	* src/lib/atsc/qa_atsc_reed_solomon.cc
+	* src/lib/atsc/qa_atsc_single_viterbi.cc
+	* src/lib/atsc/qa_atsc_trellis_encoder.cc
+	* src/lib/atsc/qa_atsc_viterbi_decoder.cc
+	* src/lib/atsc/qa_convolutional_interleaver.cc
+	* src/lib/atsc/qa_interleaver_fifo.cc
+	* src/lib/filter/qa_complex_dotprod_x86.cc
+	* src/lib/filter/qa_float_dotprod_x86.cc
+	* src/lib/filter/qa_gr_fir_CCF.cc
+	* src/lib/filter/qa_gr_fir_FCC.cc
+	* src/lib/filter/qa_gr_fir_FFF.cc
+	* src/lib/filter/qa_gr_fir_SCC.cc
+	* src/lib/filter/qa_gr_mmse_fir_interpolator.cc
+	* src/lib/filter/qa_sse_float_dotprod.cc
+	* src/lib/general/qa_gr_circular_file.cc
+	* src/lib/general/qa_gr_firdes.cc
+	* src/lib/general/old/qa_gr_fir_SSS.cc
+	* src/lib/general/old/qa_gr_fir_sse.cc
+	* src/lib/runtime/qa_gr_vmcircbuf.cc
+	* src/lib/vrx/VrComplex.h
+	* src/tests/GrTestSink.cc
+	* src/tests/GrTestSkippingSink.cc
+	* src/tests/GrTestSource.cc
+
+	
+
+This code was derived from gnuradio-0.9 with a massive amount of hacking.
+	
+#
+# Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+# 

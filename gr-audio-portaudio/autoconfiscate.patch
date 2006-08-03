@@ -1,0 +1,1299 @@
+Index: portaudio-2.0.pc.in
+===================================================================
+RCS file: /home/cvs/portaudio/Attic/portaudio-2.0.pc.in,v
+retrieving revision 1.1.2.1
+diff -u -b -B -w -p -r1.1.2.1 portaudio-2.0.pc.in
+--- portaudio-2.0.pc.in	19 Mar 2006 13:02:36 -0000	1.1.2.1
++++ portaudio-2.0.pc.in	19 Mar 2006 22:26:01 -0000
+@@ -9,4 +9,4 @@ Requires:
+ Version: 19
+ 
+ Libs: -L${libdir} -lportaudio @LIBS@
+-Cflags: -I${includedir} @THREAD_CFLAGS@
++Cflags: -I${includedir} @PTHREAD_CFLAGS@
+Index: pa_asio/iasiothiscallresolver.cpp
+===================================================================
+RCS file: /home/cvs/portaudio/pa_asio/Attic/iasiothiscallresolver.cpp,v
+retrieving revision 1.1.2.4
+diff -u -b -B -w -p -r1.1.2.4 iasiothiscallresolver.cpp
+--- pa_asio/iasiothiscallresolver.cpp	10 Jul 2004 03:27:41 -0000	1.1.2.4
++++ pa_asio/iasiothiscallresolver.cpp	19 Mar 2006 22:26:03 -0000
+@@ -152,6 +152,7 @@
+     recent versions of the gcc assembler.
+ */
+ 
++#include <config.h>
+ 
+ // We only need IASIOThiscallResolver at all if we are on Win32. For other
+ // platforms we simply bypass the IASIOThiscallResolver definition to allow us
+Index: pa_asio/pa_asio.cpp
+===================================================================
+RCS file: /home/cvs/portaudio/pa_asio/pa_asio.cpp,v
+retrieving revision 1.7.2.68
+diff -u -b -B -w -p -r1.7.2.68 pa_asio.cpp
+--- pa_asio/pa_asio.cpp	5 Dec 2005 04:55:28 -0000	1.7.2.68
++++ pa_asio/pa_asio.cpp	19 Mar 2006 22:26:14 -0000
+@@ -106,7 +106,7 @@
+         must be closed).
+ */
+ 
+-
++#include <config.h>
+ 
+ #include <stdio.h>
+ #include <assert.h>
+Index: pa_common/pa_allocation.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_common/Attic/pa_allocation.c,v
+retrieving revision 1.1.2.6
+diff -u -b -B -w -p -r1.1.2.6 pa_allocation.c
+--- pa_common/pa_allocation.c	20 Dec 2004 12:07:51 -0000	1.1.2.6
++++ pa_common/pa_allocation.c	19 Mar 2006 22:26:15 -0000
+@@ -35,6 +35,8 @@
+ */
+ 
+ 
++#include <config.h>
++
+ #include "pa_allocation.h"
+ #include "pa_util.h"
+ 
+Index: pa_common/pa_converters.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_common/Attic/pa_converters.c,v
+retrieving revision 1.1.2.27
+diff -u -b -B -w -p -r1.1.2.27 pa_converters.c
+--- pa_common/pa_converters.c	2 Nov 2005 12:14:07 -0000	1.1.2.27
++++ pa_common/pa_converters.c	19 Mar 2006 22:26:23 -0000
+@@ -49,6 +49,8 @@
+ */
+ 
+ 
++#include <config.h>
++
+ #include "pa_converters.h"
+ #include "pa_dither.h"
+ #include "pa_endianness.h"
+Index: pa_common/pa_cpuload.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_common/Attic/pa_cpuload.c,v
+retrieving revision 1.1.2.14
+diff -u -b -B -w -p -r1.1.2.14 pa_cpuload.c
+--- pa_common/pa_cpuload.c	8 Jan 2004 22:01:12 -0000	1.1.2.14
++++ pa_common/pa_cpuload.c	19 Mar 2006 22:26:24 -0000
+@@ -41,6 +41,8 @@
+ */
+ 
+ 
++#include <config.h>
++
+ #include "pa_cpuload.h"
+ 
+ #include <assert.h>
+Index: pa_common/pa_dither.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_common/Attic/pa_dither.c,v
+retrieving revision 1.1.2.6
+diff -u -b -B -w -p -r1.1.2.6 pa_dither.c
+--- pa_common/pa_dither.c	28 May 2005 22:49:02 -0000	1.1.2.6
++++ pa_common/pa_dither.c	19 Mar 2006 22:26:24 -0000
+@@ -34,6 +34,8 @@
+ */
+ 
+ 
++#include <config.h>
++
+ #include "pa_dither.h"
+ #include "pa_types.h"
+ 
+Index: pa_common/pa_front.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_common/Attic/pa_front.c,v
+retrieving revision 1.1.2.52
+diff -u -b -B -w -p -r1.1.2.52 pa_front.c
+--- pa_common/pa_front.c	7 Dec 2005 20:10:34 -0000	1.1.2.52
++++ pa_common/pa_front.c	19 Mar 2006 22:26:30 -0000
+@@ -89,6 +89,8 @@ enquire about status on the PortAudio ma
+ */
+ 
+ 
++#include <config.h>
++
+ #include <stdio.h>
+ #include <stdarg.h>
+ #include <memory.h>
+Index: pa_common/pa_process.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_common/Attic/pa_process.c,v
+retrieving revision 1.1.2.51
+diff -u -b -B -w -p -r1.1.2.51 pa_process.c
+--- pa_common/pa_process.c	27 Oct 2005 23:28:48 -0000	1.1.2.51
++++ pa_common/pa_process.c	19 Mar 2006 22:26:35 -0000
+@@ -72,6 +72,8 @@
+ */
+ 
+ 
++#include <config.h>
++
+ #include <assert.h>
+ #include <string.h> /* memset() */
+ 
+Index: pa_common/pa_skeleton.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_common/Attic/pa_skeleton.c,v
+retrieving revision 1.1.2.39
+diff -u -b -B -w -p -r1.1.2.39 pa_skeleton.c
+--- pa_common/pa_skeleton.c	26 Nov 2003 14:56:09 -0000	1.1.2.39
++++ pa_common/pa_skeleton.c	19 Mar 2006 22:26:38 -0000
+@@ -40,6 +40,8 @@
+ */
+ 
+ 
++#include <config.h>
++
+ #include <string.h> /* strlen() */
+ 
+ #include "pa_util.h"
+Index: pa_common/pa_stream.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_common/Attic/pa_stream.c,v
+retrieving revision 1.1.2.12
+diff -u -b -B -w -p -r1.1.2.12 pa_stream.c
+--- pa_common/pa_stream.c	20 Sep 2003 21:31:00 -0000	1.1.2.12
++++ pa_common/pa_stream.c	19 Mar 2006 22:26:39 -0000
+@@ -36,6 +36,8 @@
+ */
+ 
+ 
++#include <config.h>
++
+ #include "pa_stream.h"
+ 
+ 
+Index: pa_common/pa_trace.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_common/pa_trace.c,v
+retrieving revision 1.1.1.1.2.4
+diff -u -b -B -w -p -r1.1.1.1.2.4 pa_trace.c
+--- pa_common/pa_trace.c	2 Nov 2005 12:06:44 -0000	1.1.1.1.2.4
++++ pa_common/pa_trace.c	19 Mar 2006 22:26:39 -0000
+@@ -35,6 +35,8 @@
+ */
+ 
+ 
++#include <config.h>
++
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+Index: pa_jack/pa_jack.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_jack/Attic/pa_jack.c,v
+retrieving revision 1.1.2.20
+diff -u -b -B -w -p -r1.1.2.20 pa_jack.c
+--- pa_jack/pa_jack.c	2 Oct 2005 22:02:26 -0000	1.1.2.20
++++ pa_jack/pa_jack.c	19 Mar 2006 22:26:46 -0000
+@@ -35,6 +35,8 @@
+  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
++#include <config.h>
++
+ #include <string.h>
+ #include <regex.h>
+ #include <stdlib.h>
+@@ -56,7 +58,7 @@
+ #include "pa_process.h"
+ #include "pa_allocation.h"
+ #include "pa_cpuload.h"
+-#include "../pablio/ringbuffer.c"
++#include "pablio/ringbuffer.c"
+ 
+ static int aErr_;
+ static PaError paErr_;     /* For use with ENSURE_PA */
+Index: pa_linux_alsa/pa_linux_alsa.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_linux_alsa/Attic/pa_linux_alsa.c,v
+retrieving revision 1.1.2.90
+diff -u -b -B -w -p -r1.1.2.90 pa_linux_alsa.c
+--- pa_linux_alsa/pa_linux_alsa.c	19 Mar 2006 12:28:44 -0000	1.1.2.90
++++ pa_linux_alsa/pa_linux_alsa.c	19 Mar 2006 22:27:00 -0000
+@@ -34,6 +34,8 @@
+  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
++#include <config.h>
++
+ #define ALSA_PCM_NEW_HW_PARAMS_API
+ #define ALSA_PCM_NEW_SW_PARAMS_API
+ #include <alsa/asoundlib.h>
+Index: pa_mac/pa_mac_hostapis.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_mac/Attic/pa_mac_hostapis.c,v
+retrieving revision 1.1.2.1
+diff -u -b -B -w -p -r1.1.2.1 pa_mac_hostapis.c
+--- pa_mac/pa_mac_hostapis.c	27 May 2004 22:39:58 -0000	1.1.2.1
++++ pa_mac/pa_mac_hostapis.c	19 Mar 2006 22:27:00 -0000
+@@ -33,6 +33,7 @@
+ Mac OS host API initialization function table.
+ */
+ 
++#include <config.h>
+ 
+ #include "pa_hostapi.h"
+ 
+Index: pa_mac_core/pa_mac_core.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_mac_core/pa_mac_core.c,v
+retrieving revision 1.8.2.11
+diff -u -b -B -w -p -r1.8.2.11 pa_mac_core.c
+--- pa_mac_core/pa_mac_core.c	27 Feb 2006 14:25:50 -0000	1.8.2.11
++++ pa_mac_core/pa_mac_core.c	19 Mar 2006 22:27:08 -0000
+@@ -45,6 +45,8 @@
+  @brief AUHAL implementation of PortAudio
+ */
+ 
++#include <config.h>
++
+ #include <string.h> /* strlen(), memcmp() etc. */
+ 
+ #include <AudioUnit/AudioUnit.h>
+Index: pa_mac_core/pa_mac_core_old.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_mac_core/Attic/pa_mac_core_old.c,v
+retrieving revision 1.1.2.1
+diff -u -b -B -w -p -r1.1.2.1 pa_mac_core_old.c
+--- pa_mac_core/pa_mac_core_old.c	24 Dec 2005 01:22:52 -0000	1.1.2.1
++++ pa_mac_core/pa_mac_core_old.c	19 Mar 2006 22:27:14 -0000
+@@ -34,6 +34,8 @@
+  *
+  */
+ 
++#include <config.h>
++
+ #include <CoreAudio/CoreAudio.h>
+ #include <AudioToolbox/AudioToolbox.h>
+ #include <stdio.h>
+Index: pa_mac_core/pa_mac_core_utilities.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_mac_core/Attic/pa_mac_core_utilities.c,v
+retrieving revision 1.1.2.2
+diff -u -b -B -w -p -r1.1.2.2 pa_mac_core_utilities.c
+--- pa_mac_core/pa_mac_core_utilities.c	9 Dec 2005 19:43:14 -0000	1.1.2.2
++++ pa_mac_core/pa_mac_core_utilities.c	19 Mar 2006 22:27:14 -0000
+@@ -10,6 +10,8 @@
+  * by Bjorn Roche.
+  */
+ 
++#include <config.h>
++
+ /*
+  * Translates MacOS generated errors into PaErrors
+  */
+Index: pa_mac_sm/pa_mac_sm.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_mac_sm/Attic/pa_mac_sm.c,v
+retrieving revision 1.1.2.1
+diff -u -b -B -w -p -r1.1.2.1 pa_mac_sm.c
+--- pa_mac_sm/pa_mac_sm.c	7 Jun 2002 21:20:48 -0000	1.1.2.1
++++ pa_mac_sm/pa_mac_sm.c	19 Mar 2006 22:27:21 -0000
+@@ -76,6 +76,8 @@ O- Add support for native sample data fo
+ O- Review buffer sizing. Should it be based on result of siDeviceBufferInfo query?
+ O- Determine default devices somehow.
+ */
++#include <config.h>
++
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+Index: pa_sgi/pa_sgi.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_sgi/pa_sgi.c,v
+retrieving revision 1.2.2.20
+diff -u -b -B -w -p -r1.2.2.20 pa_sgi.c
+--- pa_sgi/pa_sgi.c	3 Jan 2004 19:20:09 -0000	1.2.2.20
++++ pa_sgi/pa_sgi.c	19 Mar 2006 22:27:27 -0000
+@@ -123,6 +123,8 @@
+        a outputs stereo. One can observe this in SGI's 'Audio Queue Monitor'.
+ */
+ 
++#include <config.h>
++
+ #include <string.h>         /* For strlen() but also for strerror()! */
+ #include <stdio.h>          /* printf() */
+ #include <math.h>           /* fabs()   */
+Index: pa_unix/pa_unix_hostapis.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_unix/Attic/pa_unix_hostapis.c,v
+retrieving revision 1.1.2.5
+diff -u -b -B -w -p -r1.1.2.5 pa_unix_hostapis.c
+--- pa_unix/pa_unix_hostapis.c	2 Oct 2003 12:35:46 -0000	1.1.2.5
++++ pa_unix/pa_unix_hostapis.c	19 Mar 2006 22:27:28 -0000
+@@ -30,6 +30,8 @@
+  */
+ 
+ 
++#include <config.h>
++
+ #include "pa_hostapi.h"
+ 
+ PaError PaJack_Initialize( PaUtilHostApiRepresentation **hostApi, PaHostApiIndex index );
+Index: pa_unix/pa_unix_util.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_unix/Attic/pa_unix_util.c,v
+retrieving revision 1.1.2.8
+diff -u -b -B -w -p -r1.1.2.8 pa_unix_util.c
+--- pa_unix/pa_unix_util.c	20 Nov 2005 13:46:13 -0000	1.1.2.8
++++ pa_unix/pa_unix_util.c	19 Mar 2006 22:27:28 -0000
+@@ -31,6 +31,8 @@
+  */
+ 
+  
++#include <config.h>
++
+ #include <pthread.h>
+ #include <unistd.h>
+ #include <stdlib.h>
+Index: pa_unix_oss/pa_unix_oss.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_unix_oss/pa_unix_oss.c,v
+retrieving revision 1.6.2.27
+diff -u -b -B -w -p -r1.6.2.27 pa_unix_oss.c
+--- pa_unix_oss/pa_unix_oss.c	21 Feb 2006 19:13:56 -0000	1.6.2.27
++++ pa_unix_oss/pa_unix_oss.c	19 Mar 2006 22:27:35 -0000
+@@ -35,6 +35,8 @@
+  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
++#include <config.h>
++
+ #include <stdio.h>
+ #include <string.h>
+ #include <math.h>
+@@ -42,7 +44,6 @@
+ #include <sys/ioctl.h>
+ #include <unistd.h>
+ #include <pthread.h>
+-#include <alloca.h>
+ #include <malloc.h>
+ #include <assert.h>
+ #include <errno.h>
+@@ -52,14 +53,21 @@
+ #include <limits.h>
+ #include <semaphore.h>
+ 
+-#ifdef __FreeBSD__
++#ifdef HAVE_SYS_SOUNDCARD_H
+ # include <sys/soundcard.h>
++#elif HAVE_LINUX_SOUNDCARD_H
++# include <linux/soundcard.h>
++#elif HAVE_SOUNDCARD_H
++# include <soundcard.h>
++#else
++# include <machine/soundcard.h> /* JH20010905 */
++#endif
++
++#ifdef __FreeBSD__
+ # define DEVICE_NAME_BASE            "/dev/dsp"
+ #elif defined __linux__
+-# include <linux/soundcard.h>
+ # define DEVICE_NAME_BASE            "/dev/dsp"
+ #else
+-# include <machine/soundcard.h> /* JH20010905 */
+ # define DEVICE_NAME_BASE            "/dev/audio"
+ #endif
+ 
+@@ -1913,7 +1921,12 @@ static signed long GetStreamWriteAvailab
+     PaOssStream *stream = (PaOssStream*)s;
+     int delay = 0;
+ 
++/*
++ * FIXME: SNDCTL_DSP_GETODELAY does not exist on NetBSD
++ */
++#ifdef SNDCTL_DSP_GETODELAY
+     if( ioctl( stream->playback->fd, SNDCTL_DSP_GETODELAY, &delay ) < 0 )
++#endif
+         return paUnanticipatedHostError;
+     
+     return (PaOssStreamComponent_BufferSize( stream->playback ) - delay) / PaOssStreamComponent_FrameSize( stream->playback );
+Index: pa_unix_oss/recplay.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_unix_oss/recplay.c,v
+retrieving revision 1.1.1.1
+diff -u -b -B -w -p -r1.1.1.1 recplay.c
+--- pa_unix_oss/recplay.c	22 Jan 2002 00:52:44 -0000	1.1.1.1
++++ pa_unix_oss/recplay.c	19 Mar 2006 22:27:35 -0000
+@@ -4,6 +4,8 @@
+  * Minimal record and playback test.
+  * 
+  */
++#include <config.h>
++
+ #include <stdio.h>
+ #include <unistd.h>
+ #include <stdlib.h>
+Index: pa_win/pa_win_hostapis.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_win/Attic/pa_win_hostapis.c,v
+retrieving revision 1.1.2.10
+diff -u -b -B -w -p -r1.1.2.10 pa_win_hostapis.c
+--- pa_win/pa_win_hostapis.c	8 Sep 2004 17:31:37 -0000	1.1.2.10
++++ pa_win/pa_win_hostapis.c	19 Mar 2006 22:27:36 -0000
+@@ -36,6 +36,7 @@
+     the Unix version does, we should consider being consistent.
+ */
+ 
++#include <config.h>
+ 
+ #include "pa_hostapi.h"
+ 
+Index: pa_win/pa_win_util.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_win/Attic/pa_win_util.c,v
+retrieving revision 1.1.2.7
+diff -u -b -B -w -p -r1.1.2.7 pa_win_util.c
+--- pa_win/pa_win_util.c	15 Sep 2003 18:30:26 -0000	1.1.2.7
++++ pa_win/pa_win_util.c	19 Mar 2006 22:27:36 -0000
+@@ -37,6 +37,9 @@
+     bug. (see msdn kb Q274323).
+ */
+  
++#include <config.h>
++
++
+ #include <windows.h>
+ #include <mmsystem.h> /* for timeGetTime() */
+ 
+Index: pa_win/pa_x86_plain_converters.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_win/Attic/pa_x86_plain_converters.c,v
+retrieving revision 1.1.2.2
+diff -u -b -B -w -p -r1.1.2.2 pa_x86_plain_converters.c
+--- pa_win/pa_x86_plain_converters.c	28 Feb 2003 01:49:59 -0000	1.1.2.2
++++ pa_win/pa_x86_plain_converters.c	19 Mar 2006 22:27:40 -0000
+@@ -1,3 +1,5 @@
++#include <config.h>
++
+ #include "pa_x86_plain_converters.h"
+ 
+ #include "pa_converters.h"
+Index: pa_win_ds/dsound_wrapper.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_win_ds/dsound_wrapper.c,v
+retrieving revision 1.1.1.1.2.11
+diff -u -b -B -w -p -r1.1.1.1.2.11 dsound_wrapper.c
+--- pa_win_ds/dsound_wrapper.c	7 Sep 2003 13:04:53 -0000	1.1.1.1.2.11
++++ pa_win_ds/dsound_wrapper.c	19 Mar 2006 22:27:43 -0000
+@@ -33,6 +33,8 @@
+  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  *
+  */
++#include <config.h>
++
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <math.h>
+Index: pa_win_ds/pa_win_ds.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_win_ds/Attic/pa_win_ds.c,v
+retrieving revision 1.1.2.51
+diff -u -b -B -w -p -r1.1.2.51 pa_win_ds.c
+--- pa_win_ds/pa_win_ds.c	26 Jan 2006 01:13:18 -0000	1.1.2.51
++++ pa_win_ds/pa_win_ds.c	19 Mar 2006 22:27:49 -0000
+@@ -58,6 +58,8 @@
+         O- fix "patest_stop.c"
+ */
+ 
++#include <config.h>
++
+ #include <stdio.h>
+ #include <string.h> /* strlen() */
+ 
+Index: pa_win_wdmks/pa_win_wdmks.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_win_wdmks/Attic/pa_win_wdmks.c,v
+retrieving revision 1.1.2.4
+diff -u -b -B -w -p -r1.1.2.4 pa_win_wdmks.c
+--- pa_win_wdmks/pa_win_wdmks.c	19 Nov 2005 10:14:01 -0000	1.1.2.4
++++ pa_win_wdmks/pa_win_wdmks.c	19 Mar 2006 22:28:00 -0000
+@@ -42,6 +42,8 @@
+  of a device for the duration of active stream using those devices
+ */
+ 
++#include <config.h>
++
+ #include <stdio.h>
+ 
+ /* Debugging/tracing support */
+Index: pa_win_wmme/pa_win_wmme.c
+===================================================================
+RCS file: /home/cvs/portaudio/pa_win_wmme/pa_win_wmme.c,v
+retrieving revision 1.6.2.88
+diff -u -b -B -w -p -r1.6.2.88 pa_win_wmme.c
+--- pa_win_wmme/pa_win_wmme.c	16 Feb 2006 01:56:45 -0000	1.6.2.88
++++ pa_win_wmme/pa_win_wmme.c	19 Mar 2006 22:28:14 -0000
+@@ -100,6 +100,8 @@ Non-critical stuff for the future:
+     Events (when necessary) inside the ReadStream() and WriteStream() functions.
+ */
+ 
++#include <config.h>
++
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <math.h>
+--- /dev/null	2006-03-10 00:02:48.821312048 +0100
++++ Makefile.am	2006-03-19 22:49:42.000000000 +0100
+@@ -0,0 +1,215 @@
++#
++# PortAudio V19 Makefile.am
++#
++# Stéphane Fillod
++#
++
++INCLUDES = -I$(top_srcdir)/pa_common
++
++COMMON_SRC = \
++	pa_common/pa_allocation.c \
++	pa_common/pa_converters.c \
++	pa_common/pa_cpuload.c \
++	pa_common/pa_dither.c \
++	pa_common/pa_front.c \
++	pa_common/pa_process.c \
++	pa_common/pa_skeleton.c \
++	pa_common/pa_stream.c \
++	pa_common/pa_trace.c
++
++libportaudio_coreaudio_la_SOURCES = \
++	pa_mac/pa_mac_hostapis.c \
++	pa_mac_core/pa_mac_core.c
++	
++libportaudio_mac_asio_la_SOURCES = \
++	pa_asio/iasiothiscallresolver.cpp
++libportaudio_mac_asio_la_LIBADD = @ASIO_OBJS@
++
++libportaudio_dsound_la_SOURCES = \
++	pa_win_ds/pa_win_ds.c \
++	pa_win_ds/dsound_wrapper.c \
++	pa_win/pa_win_hostapis.c \
++	pa_win/pa_win_util.c
++
++libportaudio_win_asio_la_SOURCES = \
++	pa_asio/pa_asio.cpp \
++	pa_win/pa_win_hostapis.c \
++	pa_win/pa_win_util.c \
++	pa_asio/iasiothiscallresolver.cpp 
++libportaudio_win_asio_la_LIBADD = @ASIO_OBJS@
++
++libportaudio_wdmks_la_SOURCES = \
++	pa_win_wdmks/pa_win_wdmks.c \
++	pa_win/pa_win_hostapis.c \
++	pa_win/pa_win_util.c
++
++libportaudio_wmme_la_SOURCES = \
++	pa_win_wmme/pa_win_wmme.c \
++	pa_win/pa_win_hostapis.c \
++       	pa_win/pa_win_util.c
++
++libportaudio_sgi_la_SOURCES = \
++	pa_sgi/pa_sgi.c
++
++libportaudio_alsa_la_SOURCES = \
++	pa_linux_alsa/pa_linux_alsa.c
++
++libportaudio_jack_la_SOURCES = \
++	pa_jack/pa_jack.c
++
++libportaudio_oss_la_SOURCES = \
++	pa_unix_oss/pa_unix_oss.c
++
++libportaudio_unix_la_SOURCES = \
++	pa_unix/pa_unix_hostapis.c \
++	pa_unix/pa_unix_util.c
++
++EXTRA_LTLIBRARIES = \
++	libportaudio-coreaudio.la \
++	libportaudio-mac-asio.la \
++	libportaudio-dsound.la \
++	libportaudio-win-asio.la \
++	libportaudio-wdmks.la \
++	libportaudio-wmme.la \
++	libportaudio-sgi.la \
++	libportaudio-alsa.la \
++	libportaudio-jack.la \
++	libportaudio-oss.la \
++	libportaudio-unix.la
++
++noinst_LTLIBRARIES = @PA_LIBADD@
++lib_LTLIBRARIES = libportaudio.la
++
++
++libportaudio_la_SOURCES = \
++	$(COMMON_SRC)
++
++# -no-undefined is required by Win32 and MacOSX, should be harmless otherwise
++libportaudio_la_LDFLAGS = $(WINLDFLAGS) -no-undefined -version-info @PA_ABI@:@PA_REV@:@PA_AGE@
++libportaudio_la_CFLAGS = $(AM_CFLAGS)
++libportaudio_la_LIBADD = @PA_LIBADD@ -lm
++libportaudio_la_DEPENDENCIES = @PA_LIBADD@
++
++
++noinst_HEADERS =  \
++	pa_asio/iasiothiscallresolver.h \
++	pa_asio/pa_asio.h \
++	pa_beos/PlaybackNode.h \
++	pablio/pablio.h \
++	pablio/ringbuffer.h \
++	pa_common/pa_allocation.h \
++	pa_common/pa_converters.h \
++	pa_common/pa_cpuload.h \
++	pa_common/pa_dither.h \
++	pa_common/pa_endianness.h \
++	pa_common/pa_hostapi.h \
++	pa_common/pa_process.h \
++	pa_common/pa_stream.h \
++	pa_common/pa_trace.h \
++	pa_common/pa_types.h \
++	pa_common/pa_util.h \
++	pa_dll_switch/PaDllEntry.h \
++	pa_dll_switch/portaudio.h \
++	pa_linux_alsa/pa_linux_alsa.h \
++	pa_mac_core/pa_mac_core.h \
++	pa_unix/pa_unix_util.h \
++	pa_win_ds/dsound_wrapper.h \
++	pa_win/pa_x86_plain_converters.h \
++	pa_win_wmme/pa_win_wmme.h
++
++include_HEADERS = \
++	pa_common/portaudio.h
++
++
++TESTS = \
++	pa_tests/paqa_errs \
++	pa_tests/patest1 \
++	pa_tests/patest_buffer \
++	pa_tests/patest_callbackstop \
++	pa_tests/patest_clip \
++	pa_tests/patest_dither \
++	pa_tests/patest_hang \
++	pa_tests/patest_in_overflow \
++	pa_tests/patest_latency \
++	pa_tests/patest_leftright \
++	pa_tests/patest_longsine \
++	pa_tests/patest_many \
++	pa_tests/patest_maxsines \
++	pa_tests/patest_multi_sine \
++	pa_tests/patest_out_underflow \
++	pa_tests/patest_pink \
++	pa_tests/patest_prime \
++	pa_tests/patest_read_record \
++	pa_tests/patest_record \
++	pa_tests/patest_ringmix \
++	pa_tests/patest_saw \
++	pa_tests/patest_sine8 \
++	pa_tests/patest_sine \
++	pa_tests/patest_sine_formats \
++	pa_tests/patest_sine_time \
++	pa_tests/patest_start_stop \
++	pa_tests/patest_stop \
++	pa_tests/patest_sync \
++	pa_tests/patest_toomanysines \
++	pa_tests/patest_underflow \
++	pa_tests/patest_wire \
++	pa_tests/patest_write_sine \
++	pa_tests/pa_devs \
++	pa_tests/pa_fuzz \
++	pa_tests/pa_minlat \
++	pa_tests/paqa_devs
++
++check_PROGRAMS = $(TESTS)
++
++LDADD = libportaudio.la
++
++# Most of these don't compile yet.  Put them in TESTS, above, if
++# you want to try to compile them...
++ALL_TESTS = \
++	pa_tests/debug_convert \
++	pa_tests/debug_dither_calc \
++	pa_tests/debug_dual \
++	pa_tests/debug_multi_in \
++	pa_tests/debug_multi_out \
++	pa_tests/debug_record \
++	pa_tests/debug_record_reuse \
++	pa_tests/debug_sine_amp \
++	pa_tests/debug_sine \
++	pa_tests/debug_sine_formats \
++	pa_tests/debug_srate \
++	pa_tests/debug_test1 \
++	$(TESTS) 
++
++pkgconfigdir = $(libdir)/pkgconfig
++pkgconfig_DATA = portaudio-2.0.pc
++
++
++SUBDIRS=
++DIST_SUBDIRS=
++
++ACLOCAL_AMFLAGS = -I config
++
++doc: config.doxy
++	doxygen config.doxy
++
++# pa_asio pa_beos pablio pa_common pa_dll_switch pa_jack pa_linux_alsa pa_mac pa_mac_core pa_mac_sm pa_sgi pa_tests pa_unix pa_unix_oss pa_win pa_win_ds pa_win_wdmks pa_win_wmme
++
++PABLIO = \
++	pablio/pablio.def \
++	pablio/README.txt \
++	pablio/ringbuffer.h \
++	pablio/test_rw_echo.c \
++	pablio/test_w_saw.c \
++	pablio/pablio.c \
++	pablio/pablio.h \
++	pablio/ringbuffer.c \
++	pablio/test_rw.c \
++	pablio/test_w_saw8.c
++
++EXTRA_DIST =  \
++	$(PABLIO) \
++	config.doxy \
++	LICENSE.txt \
++	README.txt \
++	portaudio-2.0.pc.in \
++	V19-devel-readme.txt
+--- /dev/null	2006-03-10 00:02:48.821312048 +0100
++++ configure.ac	2006-03-19 22:49:13.000000000 +0100
+@@ -0,0 +1,278 @@
++dnl
++dnl portaudio V19 configure.ac script
++dnl
++dnl Stephane Fillod, Dominic Mazzoni, Arve Knudsen
++dnl
++
++dnl Require autoconf >= 2.57
++AC_PREREQ(2.57)
++
++dnl Init autoconf and make sure configure is being called
++dnl from the right directory
++AC_INIT([portaudio], [2.0cvs], [portaudio@techweb.rfa.org])
++AC_CONFIG_SRCDIR([pa_common/portaudio.h])
++AC_CONFIG_HEADERS(config.h)
++AC_CANONICAL_TARGET([])
++
++dnl Automake Initialisation.
++AM_INIT_AUTOMAKE(AC_PACKAGE_TARNAME, AC_PACKAGE_VERSION, -)
++AM_MAINTAINER_MODE
++
++dnl Portaudio library interface version, see libtool(info), esp.
++dnl node 6.3 "Updating version info"
++PA_ABI=19
++PA_REV=0
++PA_AGE=0
++AC_SUBST(PA_ABI)
++AC_SUBST(PA_REV)
++AC_SUBST(PA_AGE)
++
++
++dnl Checks for programs.
++
++AC_PROG_CC
++AC_PROG_CXX
++AC_PROG_RANLIB
++AC_PROG_INSTALL
++AC_PROG_MAKE_SET
++
++AC_AIX
++AC_ISC_POSIX
++AC_MINIX
++AM_PROG_CC_STDC
++AC_PROG_GCC_TRADITIONAL
++AC_C_CONST
++AC_C_INLINE
++
++dnl Check for Mingw support
++#GR_PWIN32
++
++dnl libtool Initialisation
++AC_LIBTOOL_WIN32_DLL
++AC_PROG_LIBTOOL
++
++ACX_PTHREAD
++
++dnl This must be one of the first tests we do or it will fail...
++AC_C_BIGENDIAN
++
++dnl checks for various host APIs and arguments to configure that
++dnl turn them on or off
++
++AC_CHECK_LIB(asound, snd_pcm_open, [have_alsa=yes], [have_alsa=no])
++
++
++PKG_CHECK_MODULES(JACK, jack, [have_jack=yes], [have_jack=no])
++PKG_CHECK_LIB(jack_client_new, [$JACK_LIBS], [$JACK_CFLAGS], [have_jack=yes], [have_jack=no])
++
++AC_CHECK_HEADERS([sys/soundcard.h linux/soundcard.h soundcard.h machine/soundcard.h])
++AC_CHECK_HEADERS(sys/ioctl.h, [have_oss=yes], [have_oss=no])
++
++dnl sizeof checks: we will need a 16-bit and a 32-bit type
++
++AC_CHECK_SIZEOF(short)
++AC_CHECK_SIZEOF(int)
++AC_CHECK_SIZEOF(long)
++
++dnl Specify options
++
++AC_ARG_WITH(alsa, 
++            [  --with-alsa (default=yes)],
++            [with_alsa=$withval], [with_alsa=$have_alsa])
++
++AC_ARG_WITH(jack, 
++            [  --with-jack (default=yes)],
++            [with_jack=$withval], [with_jack=$have_jack])
++
++AC_ARG_WITH(oss, 
++            [  --with-oss (default=yes)],
++            [with_oss=$withval], [with_oss=$have_oss])
++
++AC_ARG_WITH(winapi,
++            [  --with-winapi ((wmme/directx/asio) default=wmme)],
++            [with_winapi=$withval], [with_winapi="wmme"])
++
++dnl Mac API added for ASIO, can have other api's listed
++AC_ARG_WITH(macapi,
++            [  --with-macapi ((asio/core/sm) default=core)],
++            [with_macapi=$withval], [with_macapi="core"])
++
++AC_ARG_WITH(asiodir,
++            [  --with-asiodir (default=/usr/local/asiosdk2)],
++            [with_asiodir=$withval], [with_asiodir="/usr/local/asiosdk2"])
++
++AC_ARG_WITH(dxdir,
++            [  --with-dxdir (default=/usr/local/dx7sdk)],
++            [with_dxdir=$withval], [with_dxdir="/usr/local/dx7sdk"])
++
++AC_ARG_ENABLE(debug-output,
++	[  --enable-debug-output],
++        [if test x$enableval != xno ; then
++	     AC_DEFINE(PA_ENABLE_DEBUG_OUTPUT,,[Enable debugging messages])
++          fi
++        ])
++
++dnl BSD configuration
++AC_HAVE_LIBRARY(ossaudio)
++
++dnl Mac OS X configuration
++
++AC_CHECK_LIB(CoreAudio, OpenAComponent,
++	    [ 
++	     have_coreaudio=yes
++	     PA_LIBADD="$PA_LIBADD libportaudio-coreaudio.la"
++	     AC_DEFINE([PA_USE_COREAUDIO], [], [Define to use Mac OS X CoreAudio])
++	     #LIBS="-framework CoreAudio -framework AudioToolbox -framework AudioUnit -framework Carbon"
++	     LIBS="-lCoreAudio -lAudioToolbox -lAudioUnit -lCarbon"
++	    ], have_coreaudio=no)
++
++ASIO_CFLAGS=""
++ASIO_OBJS=""
++
++if [[ $with_asiodir ]] ; then
++  ASIODIR="$with_asiodir"
++fi
++
++if [[ $with_macapi = "asio" ]] ; then
++  echo "ASIODIR: $ASIODIR"
++  ASIO_CFLAGS="-Ipa_asio -I$ASIDIR/host/mac -I$ASIODIR/common"
++  ASIO_OBJS=$ASIODIR/common/asio.o $ASIODIR/host/asiodrivers.o $ASIODIR/host/mac/asioshlib.o
++  PA_LIBADD="$PA_LIBADD libportaudio-mac-asio.la"
++fi
++
++if [[ $with_winapi = "asio" ]] ; then
++  echo "ASIODIR: $ASIODIR"
++  ASIO_CFLAGS="-ffast-math -fomit-frame-pointer -Ipa_asio -I$ASIDIR/host/pc -I$ASIODIR/common -I$ASIODIR/host -DPA_NO_WMME -DPA_NO_DS -DPA_NO_WDMKS -DWINDOWS"
++  ASIO_OBJS=$ASIODIR/common/asio.o $ASIODIR/host/asiodrivers.o $ASIODIR/host/pc/asiolist.o
++  LIBS="$LIBS -lwinmm -lole32 -luuid"
++  PA_LIBADD="$PA_LIBADD libportaudio-win-asio.la"
++fi
++
++
++dnl MingW/Win configuration
++
++AC_TRY_LINK_LIB(dsound, [DSW_InitOutputBuffer(0,0,0,0);], [
++		#include <windows.h>
++		#include <DSound.h>
++		], [-I$DXDIR/include],
++	    [ 
++	     have_directx=yes
++	     DXDIR="$with_dxdir"
++             echo "DXDIR: $DXDIR"
++	     # LDFLAGS -L./dx7sdk/lib  ?
++             LIBS="-lwinmm -ldsound -lole32"
++             CFLAGS="$CFLAGS -I$DXDIR/include -DPA_NO_WMME -DPA_NO_ASIO -DPA_NO_WDMKS"
++	     PA_LIBADD="$PA_LIBADD libportaudio-dsound.la"
++	    ], have_directx=no)
++
++AC_TRY_LINK_LIB(kernel32, [DeviceIoControl(0,0,0,0,0,0,0,0);],[
++		#include <windows.h>
++		#include <winbase.h>
++		#include <ks.h>
++		], [-I$DXDIR/include],
++	    [ 
++	     have_wdmks=yes
++	     DXDIR="$with_dxdir"
++             echo "DXDIR: $DXDIR"
++	     # LDFLAGS -L./dx7sdk/lib  ?
++             LIBS="-lwinmm -luuid -lsetupapi -lole32"
++             CFLAGS="$CFLAGS -I$DXDIR/include -DPA_NO_WMME -DPA_NO_DS -DPA_NO_ASIO"
++	     PA_LIBADD="$PA_LIBADD libportaudio-wdmks.la"
++	    ], have_wdmks=no)
++
++# WMME default ?
++AC_TRY_LINK_LIB(winmm, [waveOutOpen(0,0,0,0,0,0);],[
++		#include <windows.h>
++		#include <mmsystem.h>
++		], [],
++	    [ 
++	     have_wmme=yes
++             LIBS="-lwinmm -lole32 -luuid"
++             CFLAGS="$CFLAGS -DPA_NO_DS -DPA_NO_ASIO -DPA_NO_WDMKS"
++             PA_LIBADD="$PA_LIBADD libportaudio-wmme.la"
++	    ], have_wmme=no)
++
++
++dnl Unix configuration
++
++dnl SGI IRIX audio library (AL) configuration (Pieter, oct 2-13, 2003).
++dnl The 'dmedia' library is needed to read the Unadjusted System Time (UST).
++dnl
++
++AC_CHECK_LIB(audio,   alOpenPort, [have_AL=1], [have_AL=0])
++AC_CHECK_LIB(dmedia,  dmGetUST, [have_dmedia=1], [have_dmedia=0])
++
++
++if [[ $have_AL = "yes" ] && [ $have_dmedia = "yes" ]] ; then
++  dnl See the '#ifdef PA_USE_SGI' in file pa_unix/pa_unix_hostapis.c
++  dnl which selects the appropriate PaXXX_Initialize() function.
++  dnl
++
++  LIBS="-ldmedia -laudio"
++  AC_DEFINE([PA_USE_SGI], [], [Define to use special SGI system support])
++  PA_LIBADD="$PA_LIBADD libportaudio-sgi.la"
++
++ # TODO: 
++ #AC_MSG_ERROR([IRIX audio library not found!])
++ #AC_MSG_ERROR([IRIX digital media library not found!])
++fi
++
++
++if [[ $have_alsa = "yes" ] && [ $with_alsa != "no" ]] ; then
++  LIBS="$LIBS -lasound"
++  AC_DEFINE([PA_USE_ALSA], [], [Define to use ALSA])
++  PA_LIBADD="$PA_LIBADD libportaudio-alsa.la"
++fi
++
++if [[ $have_jack = "yes" ] && [ $with_jack != "no" ]] ; then
++  LIBS="$LIBS $JACK_LIBS"
++  CFLAGS="$CFLAGS $JACK_CFLAGS"
++  AC_DEFINE([PA_USE_JACK], [], [Define to use JACK])
++  PA_LIBADD="$PA_LIBADD libportaudio-jack.la"
++fi
++
++if [[ $with_oss != "no" ]] ; then
++  AC_DEFINE([PA_USE_OSS], [], [Define to use Open Sound System])
++  PA_LIBADD="$PA_LIBADD libportaudio-oss.la"
++fi
++
++dnl SGI books say -lpthread should be the last of the libs mentioned.
++if [[ $acx_pthread_ok = "yes" ]] ; then
++  LIBS="$LIBS $PTHREAD_LIBS"
++  PA_LIBADD="$PA_LIBADD libportaudio-unix.la"
++else
++  if [[ $with_winapi != "wmme" -a $with_winapi != "directx" -a $with_winapi != "asio" ]] ; then
++    AC_MSG_ERROR([libpthread not found!])
++  fi
++fi
++
++
++if [[ $with_macapi = "asio" ] || [ $with_winapi = "asio" ]] ; then
++  echo "ASIODIR: $ASIODIR"
++
++  CFLAGS="$CFLAGS $ASIO_CFLAGS"
++fi
++
++if [[ $ac_cv_c_bigendian = "yes" ]] ; then
++  CFLAGS="$CFLAGS -DPA_BIG_ENDIAN"
++else
++  CFLAGS="$CFLAGS -DPA_LITTLE_ENDIAN"
++fi
++
++
++CXXFLAGS="$CXXFLAGS"
++
++#CFLAGS="-g -O2 -Wall -pedantic -pipe"
++
++CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
++
++
++dnl extra variables
++AC_SUBST(PA_LIBADD)
++AC_SUBST(ASIO_OBJS)
++AC_SUBST(PTHREAD_CFLAGS)
++AC_SUBST(CXXFLAGS)
++AC_SUBST(NASM)
++AC_SUBST(NASMOPT)
++
++AC_OUTPUT([Makefile portaudio-2.0.pc])
+--- /dev/null	2006-03-10 00:02:48.821312048 +0100
++++ config/acx_pthread.m4	2006-03-17 15:41:05.000000000 +0100
+@@ -0,0 +1,190 @@
++dnl Available from the GNU Autoconf Macro Archive at:
++dnl http://www.gnu.org/software/ac-archive/htmldoc/acx_pthread.html
++dnl
++AC_DEFUN([ACX_PTHREAD], [
++AC_REQUIRE([AC_CANONICAL_HOST])
++AC_LANG_SAVE
++AC_LANG_C
++acx_pthread_ok=no
++
++# We used to check for pthread.h first, but this fails if pthread.h
++# requires special compiler flags (e.g. on True64 or Sequent).
++# It gets checked for in the link test anyway.
++
++# First of all, check if the user has set any of the PTHREAD_LIBS,
++# etcetera environment variables, and if threads linking works using
++# them:
++if test x"$PTHREAD_LIBS$PTHREAD_CFLAGS" != x; then
++        save_CFLAGS="$CFLAGS"
++        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
++        save_LIBS="$LIBS"
++        LIBS="$PTHREAD_LIBS $LIBS"
++        AC_MSG_CHECKING([for pthread_join in LIBS=$PTHREAD_LIBS with CFLAGS=$PTHREAD_CFLAGS])
++        AC_TRY_LINK_FUNC(pthread_join, acx_pthread_ok=yes)
++        AC_MSG_RESULT($acx_pthread_ok)
++        if test x"$acx_pthread_ok" = xno; then
++                PTHREAD_LIBS=""
++                PTHREAD_CFLAGS=""
++        fi
++        LIBS="$save_LIBS"
++        CFLAGS="$save_CFLAGS"
++fi
++
++# We must check for the threads library under a number of different
++# names; the ordering is very important because some systems
++# (e.g. DEC) have both -lpthread and -lpthreads, where one of the
++# libraries is broken (non-POSIX).
++
++# Create a list of thread flags to try.  Items starting with a "-" are
++# C compiler flags, and other items are library names, except for "none"
++# which indicates that we try without any flags at all.
++
++acx_pthread_flags="pthreads none -Kthread -kthread lthread -pthread -pthreads -mthreads pthread --thread-safe -mt"
++
++# The ordering *is* (sometimes) important.  Some notes on the
++# individual items follow:
++
++# pthreads: AIX (must check this before -lpthread)
++# none: in case threads are in libc; should be tried before -Kthread and
++#       other compiler flags to prevent continual compiler warnings
++# -Kthread: Sequent (threads in libc, but -Kthread needed for pthread.h)
++# -kthread: FreeBSD kernel threads (preferred to -pthread since SMP-able)
++# lthread: LinuxThreads port on FreeBSD (also preferred to -pthread)
++# -pthread: Linux/gcc (kernel threads), BSD/gcc (userland threads)
++# -pthreads: Solaris/gcc
++# -mthreads: Mingw32/gcc, Lynx/gcc
++# -mt: Sun Workshop C (may only link SunOS threads [-lthread], but it
++#      doesn't hurt to check since this sometimes defines pthreads too;
++#      also defines -D_REENTRANT)
++# pthread: Linux, etcetera
++# --thread-safe: KAI C++
++
++case "${host_cpu}-${host_os}" in
++        *solaris*)
++
++        # On Solaris (at least, for some versions), libc contains stubbed
++        # (non-functional) versions of the pthreads routines, so link-based
++        # tests will erroneously succeed.  (We need to link with -pthread or
++        # -lpthread.)  (The stubs are missing pthread_cleanup_push, or rather
++        # a function called by this macro, so we could check for that, but
++        # who knows whether they'll stub that too in a future libc.)  So,
++        # we'll just look for -pthreads and -lpthread first:
++
++        acx_pthread_flags="-pthread -pthreads pthread -mt $acx_pthread_flags"
++        ;;
++esac
++
++if test x"$acx_pthread_ok" = xno; then
++for flag in $acx_pthread_flags; do
++
++        case $flag in
++                none)
++                AC_MSG_CHECKING([whether pthreads work without any flags])
++                ;;
++
++                -*)
++                AC_MSG_CHECKING([whether pthreads work with $flag])
++                PTHREAD_CFLAGS="$flag"
++                ;;
++
++                *)
++                AC_MSG_CHECKING([for the pthreads library -l$flag])
++                PTHREAD_LIBS="-l$flag"
++                ;;
++        esac
++
++        save_LIBS="$LIBS"
++        save_CFLAGS="$CFLAGS"
++        LIBS="$PTHREAD_LIBS $LIBS"
++        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
++
++        # Check for various functions.  We must include pthread.h,
++        # since some functions may be macros.  (On the Sequent, we
++        # need a special flag -Kthread to make this header compile.)
++        # We check for pthread_join because it is in -lpthread on IRIX
++        # while pthread_create is in libc.  We check for pthread_attr_init
++        # due to DEC craziness with -lpthreads.  We check for
++        # pthread_cleanup_push because it is one of the few pthread
++        # functions on Solaris that doesn't have a non-functional libc stub.
++        # We try pthread_create on general principles.
++        AC_TRY_LINK([#include <pthread.h>],
++                    [pthread_t th; pthread_join(th, 0);
++                     pthread_attr_init(0); pthread_cleanup_push(0, 0);
++                     pthread_create(0,0,0,0); pthread_cleanup_pop(0); ],
++                    [acx_pthread_ok=yes])
++
++        LIBS="$save_LIBS"
++        CFLAGS="$save_CFLAGS"
++
++        AC_MSG_RESULT($acx_pthread_ok)
++        if test "x$acx_pthread_ok" = xyes; then
++                break;
++        fi
++
++        PTHREAD_LIBS=""
++        PTHREAD_CFLAGS=""
++done
++fi
++
++# Various other checks:
++if test "x$acx_pthread_ok" = xyes; then
++        save_LIBS="$LIBS"
++        LIBS="$PTHREAD_LIBS $LIBS"
++        save_CFLAGS="$CFLAGS"
++        CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
++
++        # Detect AIX lossage: threads are created detached by default
++        # and the JOINABLE attribute has a nonstandard name (UNDETACHED).
++        AC_MSG_CHECKING([for joinable pthread attribute])
++        AC_TRY_LINK([#include <pthread.h>],
++                    [int attr=PTHREAD_CREATE_JOINABLE;],
++                    ok=PTHREAD_CREATE_JOINABLE, ok=unknown)
++        if test x"$ok" = xunknown; then
++                AC_TRY_LINK([#include <pthread.h>],
++                            [int attr=PTHREAD_CREATE_UNDETACHED;],
++                            ok=PTHREAD_CREATE_UNDETACHED, ok=unknown)
++        fi
++        if test x"$ok" != xPTHREAD_CREATE_JOINABLE; then
++                AC_DEFINE(PTHREAD_CREATE_JOINABLE, $ok,
++                          [Define to the necessary symbol if this constant
++                           uses a non-standard name on your system.])
++        fi
++        AC_MSG_RESULT(${ok})
++        if test x"$ok" = xunknown; then
++                AC_MSG_WARN([we do not know how to create joinable pthreads])
++        fi
++
++        AC_MSG_CHECKING([if more special flags are required for pthreads])
++        flag=no
++        case "${host_cpu}-${host_os}" in
++                *-aix* | *-freebsd*)     flag="-D_THREAD_SAFE";;
++                *solaris* | *-osf* | *-hpux*) flag="-D_REENTRANT";;
++        esac
++        AC_MSG_RESULT(${flag})
++        if test "x$flag" != xno; then
++                PTHREAD_CFLAGS="$flag $PTHREAD_CFLAGS"
++        fi
++
++        LIBS="$save_LIBS"
++        CFLAGS="$save_CFLAGS"
++
++        # More AIX lossage: must compile with cc_r
++        AC_CHECK_PROG(PTHREAD_CC, cc_r, cc_r, ${CC})
++else
++        PTHREAD_CC="$CC"
++fi
++
++AC_SUBST(PTHREAD_LIBS)
++AC_SUBST(PTHREAD_CFLAGS)
++AC_SUBST(PTHREAD_CC)
++
++# Finally, execute ACTION-IF-FOUND/ACTION-IF-NOT-FOUND:
++if test x"$acx_pthread_ok" = xyes; then
++        ifelse([$1],,AC_DEFINE(HAVE_PTHREAD,1,[Define if you have POSIX threads libraries and header files.]),[$1])
++        :
++else
++        acx_pthread_ok=no
++        $2
++fi
++AC_LANG_RESTORE
++])dnl ACX_PTHREAD
+--- /dev/null	2006-03-10 00:02:48.821312048 +0100
++++ config/pkg_check.m4	2006-03-17 22:12:37.000000000 +0100
+@@ -0,0 +1,49 @@
++
++AC_DEFUN([PKG_CHECK_LIB], [
++AC_REQUIRE([AC_CANONICAL_HOST])
++AC_LANG_SAVE
++AC_LANG_C
++
++        save_CFLAGS="$CFLAGS"
++        CFLAGS="$CFLAGS $3"
++        save_LIBS="$LIBS"
++        LIBS="$2 $LIBS"
++        AC_MSG_CHECKING([for $1 in LIBS=$2 with CFLAGS=$3])
++        AC_TRY_LINK_FUNC([$1], pkg_check_try_link=yes, pkg_check_try_link=no)
++        AC_MSG_RESULT($pkg_check_try_link)
++        LIBS="$save_LIBS"
++        CFLAGS="$save_CFLAGS"
++
++# Finally, execute ACTION-IF-FOUND/ACTION-IF-NOT-FOUND:
++if test x"$pkg_check_try_link" = xyes; then
++	$4
++else
++	$5
++fi
++AC_LANG_RESTORE
++])dnl PKG_CHECK_LIB
++
++
++AC_DEFUN([AC_TRY_LINK_LIB], [
++AC_REQUIRE([AC_CANONICAL_HOST])
++AC_LANG_SAVE
++AC_LANG_C
++
++        save_CFLAGS="$CFLAGS"
++        CFLAGS="$CFLAGS $4"
++        save_LIBS="$LIBS"
++        LIBS="-l$1 $LIBS"
++        AC_MSG_CHECKING([for $2 in $1])
++        AC_TRY_LINK([$3], [$2], ac_try_link_lib=yes, ac_try_link_lib=no)
++        AC_MSG_RESULT($ac_try_link_lib)
++        LIBS="$save_LIBS"
++        CFLAGS="$save_CFLAGS"
++
++# Finally, execute ACTION-IF-FOUND/ACTION-IF-NOT-FOUND:
++if test x"$ac_try_link_lib" = xyes; then
++	$5
++else
++	$6
++fi
++AC_LANG_RESTORE
++])dnl AC_TRY_LINK_LIB
+--- /dev/null	2006-03-10 00:02:48.821312048 +0100
++++ bootstrap	2006-03-19 23:33:58.000000000 +0100
+@@ -0,0 +1,9 @@
++#!/bin/sh
++
++rm -rf config.cache autom4te*.cache
++
++aclocal-1.9 -I config
++autoconf2.50
++autoheader2.50
++libtoolize --automake
++automake-1.9 --add-missing --foreign

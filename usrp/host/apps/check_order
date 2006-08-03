@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+# -*- Python -*-
+
+import sys
+import fileinput
+
+skip_count = 4096
+lineno = 0
+last_error = 0
+
+for line in fileinput.input ():
+    lineno += 1
+    if lineno < skip_count:
+        continue
+    (offset, dec_val, hex_val) = line.split ()
+    if lineno == skip_count:
+        expected_val = int (dec_val)
+    int_dec_val = int (dec_val)
+    int_hex_val = int (hex_val, 16)
+    if int_dec_val != expected_val:
+        print "line %6d, delta %4d, expected %6d, got %6d" % (lineno,
+                                                              lineno - last_error,
+                                                              expected_val,
+                                                              int_dec_val)
+        last_error = lineno
+    elif ((int_hex_val >> 12) & 0xf) != (int_hex_val & 0xf):
+        print "line %6d, delta %4d, invalid high bits %04x" % (lineno,
+                                                               lineno - last_error,
+                                                               int_hex_val)
+        last_error = lineno
+        
+    # expected_val = (expected_val + 1) & 0xffff
+    expected_val = (expected_val + 1) & 0x0fff
+    
+
+        
+    
+
+    

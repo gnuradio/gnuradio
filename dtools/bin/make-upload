@@ -1,0 +1,12 @@
+#!/bin/bash
+
+read -s -p "GPG Passphrase: " passphrase
+
+for file in "$@"
+do
+	echo "directory: gnuradio" > $file.directive
+	echo "$passphrase" | gpg --passphrase-fd 0 --clearsign $file.directive
+	rm $file.directive
+	echo "$passphrase" | gpg --passphrase-fd 0 -b $file
+done
+passphrase="XYZabcdefhghakdsj;lasjdf;ajfdiuiwjr;lajv;laoisfuaoieurlkajdsflkajsdfoiuew"

@@ -1,0 +1,42 @@
+2006-03-30  Eric Blossom  <eb@comsec.com>
+
+	* gr-audio-jack.conf: new config file.
+	* src/audio_jack_source.{h,cc}, src/audio_jack_sink.{h,cc}: added
+	ok_to_block ctor argument (currently ignored).  Also query prefs
+	for default input and output device names.
+
+2005-10-13  Stephane Fillod <f8cfe@free.fr>
+
+	* src/audio_jack_{source,sink}.cc: don't use jack_get_client_name
+	since older jack versions don't have it.
+
+2005-10-09  Stephane Fillod <f8cfe@free.fr>
+
+	* src/audio_jack_{source,sink}.cc: fix, don't retrieve jack buffer 
+	when ringbuffer overflows/underflows.
+
+2005-09-30  Stephane Fillod <f8cfe@free.fr>
+
+	* src/audio_jack_source.{h,cc}: new.
+	* src/audio_jack_sink.{h,cc}: new.
+
+#
+# Copyright 2005 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+# 

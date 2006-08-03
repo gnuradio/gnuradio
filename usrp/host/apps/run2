@@ -1,0 +1,4 @@
+#!/bin/sh
+
+./test_usrp_standard_rx -D 8 -o rx.bin
+./check_order_quickly <rx.bin

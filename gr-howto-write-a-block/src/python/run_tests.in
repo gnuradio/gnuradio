@@ -1,0 +1,50 @@
+#!/bin/sh
+
+# All this strange PYTHONPATH manipulation is required to run our
+# tests using our just built shared library and swig-generated python
+# code prior to installation.
+
+# build tree == src tree unless you're doing a VPATH build.  
+# If you don't know what a VPATH build is, you're not doing one.  Relax...
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+# Where to look in the build tree for our shared library
+libbld=@abs_top_builddir@/src/lib
+# Where to look in the src tree for swig generated python code
+libsrc=@abs_top_srcdir@/src/lib
+# Where to look in the src tree for hand written python code
+py=@abs_top_srcdir@/src/python
+
+# Where to look for installed GNU Radio python modules
+# FIXME this is wrong on a distcheck.  We really need to ask gnuradio-core
+# where it put its python files.
+installed_pythondir=@pythondir@
+installed_pyexecdir=@pyexecdir@
+
+PYTHONPATH="$libbld:$libbld/.libs:$libsrc:$py:$installed_pythondir:$installed_pyexecdir:$PYTHONPATH"
+#PYTHONPATH="$libbld:$libbld/.libs:$libsrc:$py:$installed_pythondir:$installed_pyexecdir"
+
+export PYTHONPATH
+
+#
+# This is the simple part...
+# Run everything that matches qa_*.py and return the final result.
+#
+
+ok=yes
+for file in @srcdir@/qa_*.py
+do
+  if ! $file
+  then
+    ok=no
+  fi  
+done
+
+if [ $ok = yes ]
+then
+  exit 0
+else
+  exit 1
+fi

@@ -1,0 +1,12 @@
+Eric Blossom <eb@comsec.com>	       Most of the guts
+Matt Ettus <matt@ettus.com>	       ongoing code, ideas, bugfixes, the USRP
+John Gilmore  <gnu@toad.com>	       ideas, bug fixes, financial support
+Stephane Fillod  <f8cfe@free.fr>       SIMD speed ups, lots of other good stuff
+Chuck Swiger  <cswiger@widomaker.com>  hf stuff, enthusiasm ;)
+Ramakrishnan Muthukrishnan <rkrishnan@symonds.net> Debian pkgs + misc stuff
+Martin Dudok van Heel <nldudok1@olifantasia.com> lots of stuff
+Bob McGwier N4HY <rwmcgwier@comcast.net>	 wisdom, code, bugfixes.
+Krzysztof Kamieniecki <krys@kamieniecki.com>	 bugfixes
+Andrew Thomas Beck <Andrew.Beck@postgrads.unisa.edu.au> bugfixes
+Joshua Lackey <jl@noether.uoregon.edu>	Original GMSK implementation.
+Johnathan Corgan <jcorgan@aeinet.com>  Goertzel, squelch, adaptive filtering, misc.

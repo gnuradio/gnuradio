@@ -1,0 +1,77 @@
+#
+# Copyright 2004,2005,2006 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+# 
+
+include $(top_srcdir)/Makefile.common
+
+EXTRA_DIST = run_tests.in
+
+
+TESTS = 			\
+	run_tests
+
+
+grgrpythondir = $(grpythondir)/gr
+
+grgrpython_PYTHON = 		\
+	__init__.py		\
+	basic_flow_graph.py	\
+	exceptions.py		\
+	flow_graph.py		\
+	gr_threading.py		\
+	gr_threading_23.py	\
+	gr_threading_24.py	\
+	hier_block.py		\
+	prefs.py		\
+	scheduler.py		
+
+noinst_PYTHON = 			\
+	qa_add_and_friends.py		\
+	qa_basic_flow_graph.py		\
+	qa_complex_to_xxx.py		\
+	qa_correlate_access_code.py	\
+	qa_diff_encoder.py		\
+	qa_diff_phasor_cc.py		\
+	qa_feval.py			\
+	qa_fft_filter.py		\
+	qa_filter_delay_fc.py		\
+	qa_flow_graph.py		\
+	qa_frequency_modulator.py	\
+	qa_fsk_stuff.py			\
+	qa_head.py			\
+	qa_hilbert.py			\
+	qa_iir.py			\
+	qa_interleave.py		\
+	qa_interp_fir_filter.py		\
+	qa_kludge_copy.py		\
+	qa_kludged_imports.py		\
+	qa_message.py			\
+	qa_mute.py			\
+	qa_nlog10.py			\
+	qa_packed_to_unpacked.py	\
+	qa_pipe_fittings.py		\
+	qa_rational_resampler.py	\
+	qa_sig_source.py		\
+	qa_single_pole_iir.py		\
+	qa_single_pole_iir_cc.py	\
+	qa_unpack_k_bits.py		
+
+
+CLEANFILES = *.pyc
