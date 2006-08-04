@@ -24,6 +24,6 @@ include $(top_srcdir)/Makefile.common
 EXTRA_DIST = 				\
 	bootstrap 			\
 	configure 			\
-	config.h.in 			
+	config.h.in
 
 SUBDIRS = @subdirs@

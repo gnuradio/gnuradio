@@ -21,5 +21,4 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = README README.hacking
 SUBDIRS = python

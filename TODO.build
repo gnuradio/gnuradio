@@ -13,10 +13,6 @@ dtools:
 
 * No checking or testing done in this directory.
 
-gnuradio-core:
-
-* NEWS, README, and TODO are stale.
-
 gnuradio-core/doc:
 
 * Make hasn't been tested yet in this directory.
@@ -45,17 +41,11 @@ this correct?
 
 gnuradio-examples:
 
-* AUTHORS, README and README.hacking are stale
-
 * Some directories don't have Makefile.am's
 
 gnuradio-examples/python/gmsk2:
 
 * Not all examples are in Makefile.am
-
-usrp:
-
-* README is stale
 
 usrp/doc:
 
@@ -63,9 +53,18 @@ usrp/doc:
 
 usrp/firmware/include:
 
-* Refactor include directory specification in Makefile.am into Makefile.common for use elsewhere
+* Refactor include directory specification in Makefile.am into 
+Makefile.common for use elsewhere
 
 usrp/firmware/lib:
 
 * Use refactored include directory specification from Makefile.common
 
+gr-usrp/src:
+
+* Use refactored gnuradio.i specification from Makefile.common
+
+* USRP_LIBS and USRP_INCLUDES are hardcoded.  These used to come out of 
+PKGCONFIG in the old system.
+
+* Use common run_tests.in

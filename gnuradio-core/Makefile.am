@@ -23,9 +23,7 @@ include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = 				\
 	gnuradio-core.conf		\
-	gnuradio-core.pc.in 		\
-	README.hacking			\
-	README-win32-mingw-short.txt
+	gnuradio-core.pc.in
 
 SUBDIRS = src doc
 
