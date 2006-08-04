@@ -17,7 +17,7 @@ dnl along with GNU Radio; see the file COPYING.  If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-AC_DEFUN([GR_USRP_HW],[
+AC_DEFUN([GRC_USRP],[
     AC_CONFIG_SRCDIR([usrp/host/lib/usrp_prims.h])
 
     AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
@@ -80,34 +80,5 @@ AC_DEFUN([GR_USRP_HW],[
 	subdirs="$subdirs usrp"
     else
 	failed="$failed usrp"
-    fi
-])
-
-AC_DEFUN([GR_USRP],[
-    AC_CONFIG_SRCDIR([gr-usrp/src/usrp1.i])
-
-    # Don't do gr-usrp if usrp failed
-    # There *has* to be a better way to check if a value is in a string
-    succeeded=yes
-    for dir in $failed
-    do
-	if test $dir = usrp; then
-	    succeeded=no
-	fi
-    done
-
-    if test $succeeded = yes; then
-	AC_CONFIG_FILES([\
-	  gr-usrp/Makefile \
-	  gr-usrp/src/Makefile \
-	  gr-usrp/src/run_tests \
-	])
-
-	dnl run_tests is created from run_tests.in.  Make it executable.
-	AC_CONFIG_COMMANDS([run_tests_usrp], [chmod +x gr-usrp/src/run_tests])
-
-	subdirs="$subdirs gr-usrp"
-    else
-	failed="$failed gr-usrp"
     fi
 ])

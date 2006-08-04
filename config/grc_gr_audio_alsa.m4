@@ -17,17 +17,25 @@ dnl along with GNU Radio; see the file COPYING.  If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-AC_DEFUN([GR_WXGUI],[
-    AC_CONFIG_SRCDIR([gr-wxgui/src/python/stdgui.py])
+AC_DEFUN([GRC_GR_AUDIO_ALSA],[
+    AC_CONFIG_SRCDIR([gr-audio-alsa/src/audio_alsa.i])
 
-    # FIXME: Should we actually check for wxPython, even though
-    # this is a runtime requirement, not a compile/install time one?
+    succeeded=yes
+    PKG_CHECK_MODULES(ALSA, alsa >= 0.9,[],[succeeded=no])
+    if test $succeeded = yes; then
+        LIBS="$LIBS $ALSA_LIBS"
 
-    AC_CONFIG_FILES([ \
-	  gr-wxgui/Makefile \
-	  gr-wxgui/src/Makefile \
-	  gr-wxgui/src/python/Makefile \
-    ])
+        AC_CONFIG_FILES([\
+	  gr-audio-alsa/Makefile \
+	  gr-audio-alsa/src/Makefile \
+	  gr-audio-alsa/src/run_tests \
+	])
 
-    subdirs="$subdirs gr-wxgui"
+	dnl run_tests is created from run_tests.in.  Make it executable.
+        AC_CONFIG_COMMANDS([run_tests_alsa], [chmod +x gr-audio-alsa/src/run_tests])
+        subdirs="$subdirs gr-audio-alsa"
+    else
+	AC_MSG_RESULT([failed: $ALSA_PKG_ERRORS])
+	failed="$failed gr-audio-alsa"
+    fi
 ])

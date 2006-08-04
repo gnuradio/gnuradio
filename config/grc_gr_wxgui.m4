@@ -17,29 +17,17 @@ dnl along with GNU Radio; see the file COPYING.  If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-AC_DEFUN([GR_AUDIO_OSS],[
-    AC_CONFIG_SRCDIR([gr-audio-oss/src/audio_oss.i])
+AC_DEFUN([GRC_GR_WXGUI],[
+    AC_CONFIG_SRCDIR([gr-wxgui/src/python/stdgui.py])
 
-    succeeded=yes
+    # FIXME: Should we actually check for wxPython, even though
+    # this is a runtime requirement, not a compile/install time one?
 
-    dnl needed for NetBSD
-    dnl FIXME: conditionalize on NetBSD platform
-    dnl AC_HAVE_LIBRARY(ossaudio,[],[succeeded=no])
+    AC_CONFIG_FILES([ \
+	  gr-wxgui/Makefile \
+	  gr-wxgui/src/Makefile \
+	  gr-wxgui/src/python/Makefile \
+    ])
 
-    AC_CHECK_HEADER(sys/soundcard.h,[],[succeeded=no])
-    if test $succeeded = yes; then
-
-        AC_CONFIG_FILES([\
-	  gr-audio-oss/Makefile \
-	  gr-audio-oss/src/Makefile \
-	  gr-audio-oss/src/run_tests \
-	])
-
-	dnl run_tests is created from run_tests.in.  Make it executable.
-        AC_CONFIG_COMMANDS([run_tests_oss], [chmod +x gr-audio-oss/src/run_tests])
-        subdirs="$subdirs gr-audio-oss"
-    else
-	AC_MSG_RESULT([failed: $OSS_PKG_ERRORS])
-	failed="$failed gr-audio-oss"
-    fi
+    subdirs="$subdirs gr-wxgui"
 ])

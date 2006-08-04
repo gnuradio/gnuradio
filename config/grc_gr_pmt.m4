@@ -17,23 +17,18 @@ dnl along with GNU Radio; see the file COPYING.  If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-AC_DEFUN([GR_AUDIO_WINDOWS],[
-    AC_CONFIG_SRCDIR([gr-audio-windows/src/audio_windows.i])
+AC_DEFUN([GRC_GR_PMT],[
+    AC_CONFIG_SRCDIR([pmt/src/lib/pmt.h])
 
-    succeeded=yes
-    AC_HAVE_LIBRARY(winmm,[],[succeeded=no])
+    AC_CONFIG_FILES([\
+	pmt/Makefile \
+	pmt/doc/Makefile \
+	pmt/src/Makefile \
+	pmt/src/lib/Makefile
+    ])
 
-    if test $succeeded = yes; then
-        AC_CONFIG_FILES([\
-	  gr-audio-windows/Makefile \
-	  gr-audio-windows/src/Makefile \
-	  gr-audio-windows/src/run_tests \
-	])
+    dnl run_tests is created from run_tests.in.  Make it executable.
+    dnl AC_CONFIG_COMMANDS([run_tests_pmt], [chmod +x pmt/src/python/run_tests])
 
-	dnl run_tests is created from run_tests.in.  Make it executable.
-        AC_CONFIG_COMMANDS([run_tests_windows], [chmod +x gr-audio-windows/src/run_tests])
-        subdirs="$subdirs gr-audio-windows"
-    else
-	failed="$failed gr-audio-windows"
-    fi
+    subdirs="$subdirs pmt"
 ])

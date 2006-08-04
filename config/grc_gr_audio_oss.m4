@@ -17,19 +17,29 @@ dnl along with GNU Radio; see the file COPYING.  If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-AC_DEFUN([GR_RADIO_ASTRONOMY],[
-    AC_CONFIG_SRCDIR([gr-radio-astronomy/src/lib/ra.i])
+AC_DEFUN([GRC_GR_AUDIO_OSS],[
+    AC_CONFIG_SRCDIR([gr-audio-oss/src/audio_oss.i])
 
-    AC_CONFIG_FILES([\
-	gr-radio-astronomy/Makefile \
-	gr-radio-astronomy/src/Makefile \
-	gr-radio-astronomy/src/lib/Makefile \
-	gr-radio-astronomy/src/python/Makefile \
-	gr-radio-astronomy/src/python/run_tests \
-    ])
+    succeeded=yes
 
-    dnl run_tests is created from run_tests.in.  Make it executable.
-    AC_CONFIG_COMMANDS([run_tests_astronomy], [chmod +x gr-radio-astronomy/src/python/run_tests])
+    dnl needed for NetBSD
+    dnl FIXME: conditionalize on NetBSD platform
+    dnl AC_HAVE_LIBRARY(ossaudio,[],[succeeded=no])
 
-    subdirs="$subdirs gr-radio-astronomy"
+    AC_CHECK_HEADER(sys/soundcard.h,[],[succeeded=no])
+    if test $succeeded = yes; then
+
+        AC_CONFIG_FILES([\
+	  gr-audio-oss/Makefile \
+	  gr-audio-oss/src/Makefile \
+	  gr-audio-oss/src/run_tests \
+	])
+
+	dnl run_tests is created from run_tests.in.  Make it executable.
+        AC_CONFIG_COMMANDS([run_tests_oss], [chmod +x gr-audio-oss/src/run_tests])
+        subdirs="$subdirs gr-audio-oss"
+    else
+	AC_MSG_RESULT([failed: $OSS_PKG_ERRORS])
+	failed="$failed gr-audio-oss"
+    fi
 ])

@@ -17,18 +17,18 @@
 # the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-AC_DEFUN([GR_GNURADIO_EXAMPLES],[
+AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
     AC_CONFIG_SRCDIR([gnuradio-examples/README])
 
     AC_CONFIG_FILES([\
-	  gnuradio-examples/Makefile \
-	  gnuradio-examples/python/Makefile \
-	  gnuradio-examples/python/audio/Makefile \
-	  gnuradio-examples/python/digital_voice/Makefile \
-	  gnuradio-examples/python/gmsk2/Makefile \
-	  gnuradio-examples/python/mc4020/Makefile \
-	  gnuradio-examples/python/usrp/Makefile \
-	  gnuradio-examples/python/multi_usrp/Makefile \
+        gnuradio-examples/Makefile \
+        gnuradio-examples/python/Makefile \
+        gnuradio-examples/python/audio/Makefile \
+        gnuradio-examples/python/digital_voice/Makefile \
+        gnuradio-examples/python/gmsk2/Makefile \
+        gnuradio-examples/python/mc4020/Makefile \
+        gnuradio-examples/python/usrp/Makefile \
+        gnuradio-examples/python/multi_usrp/Makefile \
 	])
 
     subdirs="$subdirs gnuradio-examples"

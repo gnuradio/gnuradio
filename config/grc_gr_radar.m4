@@ -17,27 +17,20 @@ dnl along with GNU Radio; see the file COPYING.  If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-AC_DEFUN([GR_AUDIO_PORTAUDIO],[
-    AC_CONFIG_SRCDIR([gr-audio-portaudio/src/audio_portaudio.i])
+AC_DEFUN([GRC_GR_RADAR],[
+    AC_CONFIG_SRCDIR([gr-radar/src/python/usrp_rx_radar.py])
 
-    succeeded=yes
-    #PKG_CHECK_MODULES(PORTAUDIO, portaudio-2.0 >= 19,[],[succeeded=no])
-    AC_HAVE_LIBRARY([portaudio], [], [succeeded=no])
-    AC_CHECK_HEADER([portaudio.h], [], [succeeded=no])
-    if test $succeeded = yes; then
-        LIBS="$LIBS -lportaudio"
+    AC_CONFIG_FILES([\
+	gr-radar/Makefile \
+	gr-radar/doc/Makefile \
+	gr-radar/src/Makefile \
+	gr-radar/src/lib/Makefile \
+	gr-radar/src/python/Makefile \
+	gr-radar/src/python/run_tests \
+    ])
 
-        AC_CONFIG_FILES([\
-	  gr-audio-portaudio/Makefile \
-	  gr-audio-portaudio/src/Makefile \
-	  gr-audio-portaudio/src/run_tests \
-	])
+    dnl run_tests is created from run_tests.in.  Make it executable.
+    AC_CONFIG_COMMANDS([run_tests_radar], [chmod +x gr-radar/src/python/run_tests])
 
-	dnl run_tests is created from run_tests.in.  Make it executable.
-        AC_CONFIG_COMMANDS([run_tests_portaudio], [chmod +x gr-audio-portaudio/src/run_tests])
-        subdirs="$subdirs gr-audio-portaudio"
-    else
-	AC_MSG_RESULT([failed: $PORTAUDIO_PKG_ERRORS])
-	failed="$failed gr-audio-portaudio"
-    fi
+    subdirs="$subdirs gr-radar"
 ])

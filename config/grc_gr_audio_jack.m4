@@ -17,25 +17,25 @@ dnl along with GNU Radio; see the file COPYING.  If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-AC_DEFUN([GR_COMEDI],[
-    AC_CONFIG_SRCDIR([gr-comedi/src/comedi.i])
+AC_DEFUN([GRC_GR_AUDIO_JACK],[
+    AC_CONFIG_SRCDIR([gr-audio-jack/src/audio_jack.i])
 
     succeeded=yes
-    PKG_CHECK_MODULES(COMEDI, comedilib >= 0.7,[],[succeeded=no])
+    PKG_CHECK_MODULES(JACK, jack >= 0.8,[],[succeeded=no])
     if test $succeeded = yes; then
-        LIBS="$LIBS $COMEDI_LIBS"
+        LIBS="$LIBS $JACK_LIBS"
 
         AC_CONFIG_FILES([\
-	  gr-comedi/Makefile \
-	  gr-comedi/src/Makefile \
-	  gr-comedi/src/run_tests \
+          gr-audio-jack/Makefile \
+          gr-audio-jack/src/Makefile \
+	  gr-audio-jack/src/run_tests \
 	])
 
 	dnl run_tests is created from run_tests.in.  Make it executable.
-        AC_CONFIG_COMMANDS([run_tests_comedi], [chmod +x gr-comedi/src/run_tests])
-        subdirs="$subdirs gr-comedi"
+        AC_CONFIG_COMMANDS([run_tests_jack], [chmod +x gr-audio-jack/src/run_tests])
+        subdirs="$subdirs gr-audio-jack"
     else
-	AC_MSG_WARN([$COMEDI_PKG_ERRORS])
-	failed="$failed gr-comedi"
+	AC_MSG_RESULT([failed: $JACK_PKG_ERRORS])
+	failed="$failed gr-audio-jack"
     fi
 ])

@@ -17,20 +17,22 @@ dnl along with GNU Radio; see the file COPYING.  If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-AC_DEFUN([GR_GSM_FR_VOCODER],[
-    AC_CONFIG_SRCDIR([gr-gsm-fr-vocoder/src/lib/gsm_full_rate.i])
+AC_DEFUN([GRC_GR_ERROR_CORRECTING_CODES],[
+    AC_CONFIG_SRCDIR([gr-error-correcting-codes/src/lib/ecc.i])
 
     AC_CONFIG_FILES([\
-	gr-gsm-fr-vocoder/Makefile \
-	gr-gsm-fr-vocoder/src/Makefile \
-	gr-gsm-fr-vocoder/src/lib/Makefile \
-	gr-gsm-fr-vocoder/src/lib/gsm/Makefile \
-	gr-gsm-fr-vocoder/src/python/Makefile \
-	gr-gsm-fr-vocoder/src/python/run_tests \
+	gr-error-correcting-codes/Makefile \
+	gr-error-correcting-codes/src/Makefile \
+	gr-error-correcting-codes/src/lib/Makefile \
+	gr-error-correcting-codes/src/lib/libecc/Makefile \
+	gr-error-correcting-codes/src/lib/libecc/mld/Makefile \
+	gr-error-correcting-codes/src/lib/libecc/tests/Makefile \
+	gr-error-correcting-codes/src/python/Makefile \
+	gr-error-correcting-codes/src/python/run_tests \
     ])
 
     dnl run_tests is created from run_tests.in.  Make it executable.
-    AC_CONFIG_COMMANDS([run_tests_gsm], [chmod +x gr-gsm-fr-vocoder/src/python/run_tests])
+    AC_CONFIG_COMMANDS([run_tests_error_correcting_codes], [chmod +x gr-error-correcting-codes/src/python/run_tests])
 
-    subdirs="$subdirs gr-gsm-fr-vocoder"
+    subdirs="$subdirs gr-error-correcting-codes"
 ])

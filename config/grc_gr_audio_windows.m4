@@ -17,20 +17,23 @@ dnl along with GNU Radio; see the file COPYING.  If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-AC_DEFUN([GR_RADAR],[
-    AC_CONFIG_SRCDIR([gr-radar/src/python/usrp_rx_radar.py])
+AC_DEFUN([GRC_GR_AUDIO_WINDOWS],[
+    AC_CONFIG_SRCDIR([gr-audio-windows/src/audio_windows.i])
 
-    AC_CONFIG_FILES([\
-	gr-radar/Makefile \
-	gr-radar/doc/Makefile \
-	gr-radar/src/Makefile \
-	gr-radar/src/lib/Makefile \
-	gr-radar/src/python/Makefile \
-	gr-radar/src/python/run_tests \
-    ])
+    succeeded=yes
+    AC_HAVE_LIBRARY(winmm,[],[succeeded=no])
 
-    dnl run_tests is created from run_tests.in.  Make it executable.
-    AC_CONFIG_COMMANDS([run_tests_radar], [chmod +x gr-radar/src/python/run_tests])
+    if test $succeeded = yes; then
+        AC_CONFIG_FILES([\
+	  gr-audio-windows/Makefile \
+	  gr-audio-windows/src/Makefile \
+	  gr-audio-windows/src/run_tests \
+	])
 
-    subdirs="$subdirs gr-radar"
+	dnl run_tests is created from run_tests.in.  Make it executable.
+        AC_CONFIG_COMMANDS([run_tests_windows], [chmod +x gr-audio-windows/src/run_tests])
+        subdirs="$subdirs gr-audio-windows"
+    else
+	failed="$failed gr-audio-windows"
+    fi
 ])

@@ -17,18 +17,25 @@ dnl along with GNU Radio; see the file COPYING.  If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-AC_DEFUN([GR_PMT],[
-    AC_CONFIG_SRCDIR([pmt/src/lib/pmt.h])
+AC_DEFUN([GRC_GR_AUDIO_PORTAUDIO],[
+    AC_CONFIG_SRCDIR([gr-audio-portaudio/src/audio_portaudio.i])
 
-    AC_CONFIG_FILES([\
-	pmt/Makefile \
-	pmt/doc/Makefile \
-	pmt/src/Makefile \
-	pmt/src/lib/Makefile
-    ])
+    succeeded=yes
+    PKG_CHECK_MODULES(PORTAUDIO, portaudio-2.0 >= 19,[],[succeeded=no])
+    #AC_HAVE_LIBRARY([portaudio], [], [succeeded=no])
+    #AC_CHECK_HEADER([portaudio.h], [], [succeeded=no])
+    if test $succeeded = yes; then
+        AC_CONFIG_FILES([\
+	  gr-audio-portaudio/Makefile \
+	  gr-audio-portaudio/src/Makefile \
+	  gr-audio-portaudio/src/run_tests \
+	])
 
-    dnl run_tests is created from run_tests.in.  Make it executable.
-    dnl AC_CONFIG_COMMANDS([run_tests_pmt], [chmod +x pmt/src/python/run_tests])
-
-    subdirs="$subdirs pmt"
+	dnl run_tests is created from run_tests.in.  Make it executable.
+        AC_CONFIG_COMMANDS([run_tests_portaudio], [chmod +x gr-audio-portaudio/src/run_tests])
+        subdirs="$subdirs gr-audio-portaudio"
+    else
+	AC_MSG_RESULT([failed: $PORTAUDIO_PKG_ERRORS])
+	failed="$failed gr-audio-portaudio"
+    fi
 ])
