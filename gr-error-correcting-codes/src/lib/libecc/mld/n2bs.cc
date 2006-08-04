@@ -39,16 +39,10 @@ std::string DoIt (int64_t number, size_t digits)
   return (retVal);
 }
 
-std::string n2bs (int64_t number, size_t digits)
+std::string n2bs (u_int8_t number, size_t digits)
 {
-  if (digits > (sizeof (int64_t) * g_num_bits_per_byte))
-    digits = sizeof (int64_t);
-  return DoIt (number, digits);
-}
-std::string n2bs (int8_t number, size_t digits)
-{
-  if (digits > (sizeof (int8_t) * g_num_bits_per_byte))
-    digits = sizeof (int8_t);
+  if (digits > (sizeof (u_int8_t) * g_num_bits_per_byte))
+    digits = sizeof (u_int8_t);
   return DoIt ((int64_t) number, digits);
 }
 std::string n2bs (int16_t number, size_t digits)
@@ -63,16 +57,18 @@ std::string n2bs (int32_t number, size_t digits)
     digits = sizeof (int32_t);
   return DoIt ((int64_t) number, digits);
 }
-std::string n2bs (long number, size_t digits)
+std::string n2bs (int64_t number, size_t digits)
 {
-  if (digits > (sizeof (long) * g_num_bits_per_byte))
-    digits = sizeof (long);
-  return DoIt ((int64_t) number, digits);
+  if (digits > (sizeof (int64_t) * g_num_bits_per_byte))
+    digits = sizeof (int64_t);
+  return DoIt (number, digits);
 }
-std::string n2bs (u_int8_t number, size_t digits)
+
+
+std::string n2bs (int8_t number, size_t digits)
 {
-  if (digits > (sizeof (u_int8_t) * g_num_bits_per_byte))
-    digits = sizeof (u_int8_t);
+  if (digits > (sizeof (int8_t) * g_num_bits_per_byte))
+    digits = sizeof (int8_t);
   return DoIt ((int64_t) number, digits);
 }
 std::string n2bs (u_int16_t number, size_t digits)
@@ -85,12 +81,6 @@ std::string n2bs (u_int32_t number, size_t digits)
 {
   if (digits > (sizeof (u_int32_t) * g_num_bits_per_byte))
     digits = sizeof (u_int32_t);
-  return DoIt ((int64_t) number, digits);
-}
-std::string n2bs (unsigned long number, size_t digits)
-{
-  if (digits > (sizeof (unsigned long) * g_num_bits_per_byte))
-    digits = sizeof (unsigned long);
   return DoIt ((int64_t) number, digits);
 }
 std::string n2bs (u_int64_t number, size_t digits)
