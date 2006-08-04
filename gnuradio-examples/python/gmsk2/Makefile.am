@@ -30,9 +30,7 @@ EXTRA_DIST =			\
 	gmsk_test.py		\
 	pick_bitrate.py		\
 	receive_path.py		\
-	transmit_path.py	\
-	tunnel_ip_null_mac.py	
-
+	transmit_path.py
 
 
 
