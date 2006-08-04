@@ -29,8 +29,8 @@ class decoder_viterbi_full_block : public decoder_viterbi
 {
 /*!
  * \brief Decode the incoming streams using a Viterbi-style decoder,
- *     doing full trellis block decoding before putting out
- *     any bits
+ *     doing full trellis block decoding before putting out any
+ *     decoded bits.
  *
  * input: streams of metrics, two per code output: one for the 0-bit
  *     metrics and the other for the 1-bit metric.
@@ -44,8 +44,11 @@ public:
 
   virtual ~decoder_viterbi_full_block ();
 
+  virtual size_t compute_n_input_items (size_t n_output_bits);
+  virtual size_t compute_n_output_bits (size_t n_input_items);
+
 protected:
-  virtual void decode_private (const char** in_buf, char** out_buf);
+  virtual void decode_private ();
   virtual void update_traceback__up (size_t from_state_ndx,
 				     size_t to_state_ndx,
 				     size_t l_input);

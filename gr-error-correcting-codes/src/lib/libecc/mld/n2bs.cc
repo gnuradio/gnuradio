@@ -2,10 +2,8 @@
 /*
  * Copyright 2006 Free Software Foundation, Inc.
  * 
- * This file is part of GNU Radio.
+ * This file is part of GNU Radio
  *
- * Primary Author: Michael Dickens, NCIP Lab, University of Notre Dame
- * 
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -24,13 +22,12 @@
 
 #include <n2bs.h>
 #include <iostream>
+#include "../code_types.h"
 
 const int g_num_bits_per_byte = 8;
 
-std::string n2bs (long long number, size_t digits)
+std::string DoIt (int64_t number, size_t digits)
 {
-  if (digits > (sizeof (long long) * g_num_bits_per_byte))
-    digits = sizeof (long long);
   std::string retVal (digits, '0');
   if (number != 0)
     for (int n = --digits; n >= 0; n--) {
@@ -41,29 +38,66 @@ std::string n2bs (long long number, size_t digits)
     }
   return (retVal);
 }
-std::string n2bs (char number, size_t digits)
+
+std::string n2bs (int64_t number, size_t digits)
 {
-  if (digits > (sizeof (char) * g_num_bits_per_byte))
-    digits = sizeof (char);
-  return n2bs ((long long) number, digits);
+  if (digits > (sizeof (int64_t) * g_num_bits_per_byte))
+    digits = sizeof (int64_t);
+  return DoIt (number, digits);
 }
-std::string n2bs (int number, size_t digits)
+std::string n2bs (int8_t number, size_t digits)
 {
-  if (digits > (sizeof (int) * g_num_bits_per_byte))
-    digits = sizeof (int);
-  return n2bs ((long long) number, digits);
+  if (digits > (sizeof (int8_t) * g_num_bits_per_byte))
+    digits = sizeof (int8_t);
+  return DoIt ((int64_t) number, digits);
+}
+std::string n2bs (int16_t number, size_t digits)
+{
+  if (digits > (sizeof (int16_t) * g_num_bits_per_byte))
+    digits = sizeof (int16_t);
+  return DoIt ((int64_t) number, digits);
+}
+std::string n2bs (int32_t number, size_t digits)
+{
+  if (digits > (sizeof (int32_t) * g_num_bits_per_byte))
+    digits = sizeof (int32_t);
+  return DoIt ((int64_t) number, digits);
 }
 std::string n2bs (long number, size_t digits)
 {
   if (digits > (sizeof (long) * g_num_bits_per_byte))
     digits = sizeof (long);
-  return n2bs ((long long) number, digits);
+  return DoIt ((int64_t) number, digits);
 }
-std::string n2bs (size_t number, size_t digits)
+std::string n2bs (u_int8_t number, size_t digits)
 {
-  if (digits > (sizeof (size_t) * g_num_bits_per_byte))
-    digits = sizeof (size_t);
-  return n2bs ((long long) number, digits);
+  if (digits > (sizeof (u_int8_t) * g_num_bits_per_byte))
+    digits = sizeof (u_int8_t);
+  return DoIt ((int64_t) number, digits);
+}
+std::string n2bs (u_int16_t number, size_t digits)
+{
+  if (digits > (sizeof (u_int16_t) * g_num_bits_per_byte))
+    digits = sizeof (u_int16_t);
+  return DoIt ((int64_t) number, digits);
+}
+std::string n2bs (u_int32_t number, size_t digits)
+{
+  if (digits > (sizeof (u_int32_t) * g_num_bits_per_byte))
+    digits = sizeof (u_int32_t);
+  return DoIt ((int64_t) number, digits);
+}
+std::string n2bs (unsigned long number, size_t digits)
+{
+  if (digits > (sizeof (unsigned long) * g_num_bits_per_byte))
+    digits = sizeof (unsigned long);
+  return DoIt ((int64_t) number, digits);
+}
+std::string n2bs (u_int64_t number, size_t digits)
+{
+  if (digits > (sizeof (u_int64_t) * g_num_bits_per_byte))
+    digits = sizeof (u_int64_t);
+  return DoIt ((int64_t) number, digits);
 }
 
 void cout_binary (int number, int digits)

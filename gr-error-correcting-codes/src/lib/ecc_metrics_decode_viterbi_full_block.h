@@ -20,21 +20,21 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef INCLUDED_GR_METRICS_DECODE_VITERBI_FULL_BLOCK_H
-#define INCLUDED_GR_METRICS_DECODE_VITERBI_FULL_BLOCK_H
+#ifndef INCLUDED_ECC_METRICS_DECODE_VITERBI_FULL_BLOCK_H
+#define INCLUDED_ECC_METRICS_DECODE_VITERBI_FULL_BLOCK_H
 
 #include <gr_block.h>
-#include <libecc/decoder_viterbi_full_block_i1_ic1.h>
-#include <libecc/encoder_convolutional_ic1_ic1.h>
+#include <libecc/decoder_viterbi_full_block.h>
+#include <libecc/encoder_convolutional.h>
 
-class gr_metrics_decode_viterbi_full_block;
+class ecc_metrics_decode_viterbi_full_block;
 
-typedef boost::shared_ptr<gr_metrics_decode_viterbi_full_block>
-gr_metrics_decode_viterbi_full_block_sptr,
-gr_metrics_decode_viterbi_full_block_feedback_sptr;
+typedef boost::shared_ptr<ecc_metrics_decode_viterbi_full_block>
+ecc_metrics_decode_viterbi_full_block_sptr,
+ecc_metrics_decode_viterbi_full_block_feedback_sptr;
 
-gr_metrics_decode_viterbi_full_block_sptr
-gr_make_metrics_decode_viterbi_full_block
+ecc_metrics_decode_viterbi_full_block_sptr
+ecc_make_metrics_decode_viterbi_full_block
 (int frame_size_bits,
  int n_code_inputs,
  int n_code_outputs,
@@ -43,8 +43,8 @@ gr_make_metrics_decode_viterbi_full_block
  int start_memory_state = 0,
  int end_memory_state = 0);
 
-gr_metrics_decode_viterbi_full_block_feedback_sptr
-gr_make_metrics_decode_viterbi_full_block_feedback
+ecc_metrics_decode_viterbi_full_block_feedback_sptr
+ecc_make_metrics_decode_viterbi_full_block_feedback
 (int frame_size_bits,
  int n_code_inputs,
  int n_code_outputs,
@@ -63,10 +63,11 @@ gr_make_metrics_decode_viterbi_full_block_feedback
  * output: stream(s) of char, single bit stored in the LSB.
  */
 
-class gr_metrics_decode_viterbi_full_block : public gr_block
+class ecc_metrics_decode_viterbi_full_block : public gr_block
 {
-  friend gr_metrics_decode_viterbi_full_block_sptr
-  gr_make_metrics_decode_viterbi_full_block
+protected:
+  friend ecc_metrics_decode_viterbi_full_block_sptr
+  ecc_make_metrics_decode_viterbi_full_block
   (int sample_precision,
    int frame_size_bits,
    int n_code_inputs,
@@ -76,8 +77,8 @@ class gr_metrics_decode_viterbi_full_block : public gr_block
    int start_memory_state,
    int end_memory_state);
 
-  friend gr_metrics_decode_viterbi_full_block_feedback_sptr
-  gr_make_metrics_decode_viterbi_full_block_feedback
+  friend ecc_metrics_decode_viterbi_full_block_feedback_sptr
+  ecc_make_metrics_decode_viterbi_full_block_feedback
   (int sample_precision,
    int frame_size_bits,
    int n_code_inputs,
@@ -118,7 +119,7 @@ class gr_metrics_decode_viterbi_full_block : public gr_block
  * n_code_outputs: the number of decoder-output (encoder-input) streams
  */
 
-  gr_metrics_decode_viterbi_full_block
+  ecc_metrics_decode_viterbi_full_block
   (int sample_precision,
    int frame_size_bits,
    int n_code_inputs,
@@ -128,7 +129,7 @@ class gr_metrics_decode_viterbi_full_block : public gr_block
    int start_memory_state,
    int end_memory_state);
 
-  gr_metrics_decode_viterbi_full_block
+  ecc_metrics_decode_viterbi_full_block
   (int sample_precision,
    int frame_size_bits,
    int n_code_inputs,
@@ -139,8 +140,18 @@ class gr_metrics_decode_viterbi_full_block : public gr_block
    int start_memory_state,
    int end_memory_state);
 
+  void setup_io_signatures (int sample_precision,
+			    int n_code_inputs,
+			    int n_code_outputs);
+
+  int d_n_code_inputs, d_n_code_outputs;
+  decoder_viterbi_full_block* d_decoder;
+  encoder_convolutional* d_encoder;
+  code_input_ptr d_in_buf;
+  code_output_ptr d_out_buf;
+
 public:
-  ~gr_metrics_decode_viterbi_full_block ();
+  ~ecc_metrics_decode_viterbi_full_block ();
 
   virtual void forecast (int noutput_items,
 			 gr_vector_int &ninput_items_required);
@@ -149,15 +160,6 @@ public:
 			    gr_vector_int &ninput_items,
 			    gr_vector_const_void_star &input_items,
 			    gr_vector_void_star &output_items);
-
-protected:
-  void setup_io_signatures (int sample_precision,
-			    int n_code_inputs,
-			    int n_code_outputs);
-
-  int d_n_code_inputs, d_n_code_outputs;
-  decoder_viterbi_full_block_i1_ic1* d_decoder;
-  encoder_convolutional_ic1_ic1* d_encoder;
 };
 
-#endif /* INCLUDED_GR_METRICS_DECODE_VITERBI_FULL_BLOCK_H */
+#endif /* INCLUDED_ECC_METRICS_DECODE_VITERBI_FULL_BLOCK_H */

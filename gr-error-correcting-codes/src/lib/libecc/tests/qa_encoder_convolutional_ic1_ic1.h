@@ -42,8 +42,10 @@ class qa_encoder_convolutional_ic1_ic1 : public CppUnit::TestCase {
   CPPUNIT_TEST_SUITE_END ();
 
  private:
-  void do_encoder_check (const char** c_t1_in,
+  void do_encoder_check (int test_n,
+			 const char** c_t1_in,
 			 const char** c_t1_res,
+			 int n_input_items,
 			 int n_output_items,
 			 int block_size_bits,
 			 int n_code_inputs,

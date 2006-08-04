@@ -20,22 +20,22 @@
  * Boston, MA 02111-1307, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,streams_encode_turbo);
+GR_SWIG_BLOCK_MAGIC(ecc,syms_to_metrics);
 
-#include <gr_streams_encode_convolutional.h>
+ecc_syms_to_metrics_sptr ecc_make_syms_to_metrics
+(gr_feval_ff* pdf_fcn_0_bit,
+ gr_feval_ff* pdf_fcn_1_bit,
+ int n_samples,
+ float min_sample, 
+ float max_sample,
+ int sample_precision);
 
-gr_streams_encode_turbo_sptr
-gr_make_streams_encode_turbo
-(int n_code_inputs,
- int n_code_outputs,
- const std::vector<gr_streams_encode_convolutional_sptr> &encoders,
- const std::vector<size_t> &interleavers);
-
-class gr_streams_encode_turbo : public gr_block
+class ecc_syms_to_metrics : public gr_block
 {
-  gr_streams_encode_turbo
-  (int frame_size_bits,
-   int n_code_inputs,
-   const std::vector<gr_streams_encode_convolutional_sptr> &encoders,
-   const std::vector<size_t> &interleavers);
+  ecc_syms_to_metrics (gr_feval_ff* pdf_fcn_0_bit,
+		       gr_feval_ff* pdf_fcn_1_bit,
+		       int n_samples,
+		       float min_sample, 
+		       float max_sample,
+		       int sample_precision);
 };

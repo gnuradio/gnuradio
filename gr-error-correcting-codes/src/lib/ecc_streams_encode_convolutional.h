@@ -20,11 +20,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef INCLUDED_GR_STREAMS_ENCODE_CONVOLUTIONAL_H
-#define INCLUDED_GR_STREAMS_ENCODE_CONVOLUTIONAL_H
+#ifndef INCLUDED_ECC_STREAMS_ENCODE_CONVOLUTIONAL_H
+#define INCLUDED_ECC_STREAMS_ENCODE_CONVOLUTIONAL_H
 
 #include <gr_block.h>
-#include <libecc/encoder_convolutional_ic1_ic1.h>
+#include <libecc/encoder_convolutional.h>
 
 /*!
  * \brief Encode the incoming streams using a convolutional encoder
@@ -69,12 +69,12 @@
  *     default is the "all zero" state.
  */
 
-class gr_streams_encode_convolutional;
-typedef boost::shared_ptr<gr_streams_encode_convolutional>
-  gr_streams_encode_convolutional_sptr;
+class ecc_streams_encode_convolutional;
+typedef boost::shared_ptr<ecc_streams_encode_convolutional>
+  ecc_streams_encode_convolutional_sptr;
 
-gr_streams_encode_convolutional_sptr
-gr_make_streams_encode_convolutional
+ecc_streams_encode_convolutional_sptr
+ecc_make_streams_encode_convolutional
 (int frame_size_bits,
  int n_code_inputs,
  int n_code_outputs,
@@ -83,8 +83,8 @@ gr_make_streams_encode_convolutional
  int start_memory_state = 0,
  int end_memory_state = 0);
 
-gr_streams_encode_convolutional_sptr
-gr_make_streams_encode_convolutional_feedback
+ecc_streams_encode_convolutional_sptr
+ecc_make_streams_encode_convolutional_feedback
 (int frame_size_bits,
  int n_code_inputs,
  int n_code_outputs,
@@ -94,10 +94,11 @@ gr_make_streams_encode_convolutional_feedback
  int start_memory_state = 0,
  int end_memory_state = 0);
 
-class gr_streams_encode_convolutional : public gr_block
+class ecc_streams_encode_convolutional : public gr_block
 {
-  friend gr_streams_encode_convolutional_sptr
-  gr_make_streams_encode_convolutional
+protected:
+  friend ecc_streams_encode_convolutional_sptr
+  ecc_make_streams_encode_convolutional
   (int frame_size_bits,
    int n_code_inputs,
    int n_code_outputs,
@@ -106,8 +107,8 @@ class gr_streams_encode_convolutional : public gr_block
    int start_memory_state,
    int end_memory_state);
 
-  friend gr_streams_encode_convolutional_sptr
-  gr_make_streams_encode_convolutional_feedback
+  friend ecc_streams_encode_convolutional_sptr
+  ecc_make_streams_encode_convolutional_feedback
   (int frame_size_bits,
    int n_code_inputs,
    int n_code_outputs,
@@ -117,7 +118,7 @@ class gr_streams_encode_convolutional : public gr_block
    int start_memory_state,
    int end_memory_state);
 
-  gr_streams_encode_convolutional (int frame_size_bits,
+  ecc_streams_encode_convolutional (int frame_size_bits,
 				   int n_code_inputs,
 				   int n_code_outputs,
 				   const std::vector<int> &code_generator,
@@ -125,7 +126,7 @@ class gr_streams_encode_convolutional : public gr_block
 				   int start_memory_state,
 				   int end_memory_state);
 
-  gr_streams_encode_convolutional (int frame_size_bits,
+  ecc_streams_encode_convolutional (int frame_size_bits,
 				   int n_code_inputs,
 				   int n_code_outputs,
 				   const std::vector<int> &code_generator,
@@ -136,12 +137,14 @@ class gr_streams_encode_convolutional : public gr_block
 
   void setup_io_signatures (int n_code_inputs, int n_code_outputs);
 
-  encoder_convolutional_ic1_ic1* d_encoder;
+  encoder_convolutional* d_encoder;
+  code_input_ptr d_in_buf;
+  code_output_ptr d_out_buf;
 
 public:
-  ~gr_streams_encode_convolutional ();
+  ~ecc_streams_encode_convolutional ();
 
-  inline encoder_convolutional_ic1_ic1* encoder () {return (d_encoder);};
+  inline encoder_convolutional* encoder () {return (d_encoder);};
 
   virtual void forecast (int noutput_items,
 			 gr_vector_int &ninput_items_required);
@@ -152,4 +155,4 @@ public:
 			    gr_vector_void_star &output_items);
 };
 
-#endif /* INCLUDED_GR_STREAMS_ENCODE_CONVOLUTIONAL_H */
+#endif /* INCLUDED_ECC_STREAMS_ENCODE_CONVOLUTIONAL_H */

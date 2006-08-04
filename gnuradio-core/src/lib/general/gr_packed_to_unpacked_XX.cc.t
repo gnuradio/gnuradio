@@ -87,12 +87,15 @@ int
 					gr_vector_const_void_star &input_items,
 					gr_vector_void_star &output_items)
 {
+  unsigned int index_tmp;
+
   assert (input_items.size() == output_items.size());
   int nstreams = input_items.size();
 
   for (int m=0; m < nstreams; m++){
     const @I_TYPE@ *in = (@I_TYPE@ *) input_items[m];
     @O_TYPE@ *out = (@O_TYPE@ *) output_items[m];
+    index_tmp = d_index;
 
     // per stream processing
 
@@ -102,8 +105,8 @@ int
       for (int i = 0; i < noutput_items; i++){
 	//printf("here msb %d\n",i);
 	@O_TYPE@ x = 0;
-	for(unsigned int j=0; j<d_bits_per_chunk; j++, d_index++)
-	  x = (x<<1) | get_bit_be(in, d_index);
+	for(unsigned int j=0; j<d_bits_per_chunk; j++, index_tmp++)
+	  x = (x<<1) | get_bit_be(in, index_tmp);
 	out[i] = x;
       }
       break;
@@ -112,8 +115,8 @@ int
       for (int i = 0; i < noutput_items; i++){
 	//printf("here lsb %d\n",i);
 	@O_TYPE@ x = 0;
-	for(unsigned int j=0; j<d_bits_per_chunk; j++, d_index++)
-	  x = (x<<1) | get_bit_le(in, d_index);
+	for(unsigned int j=0; j<d_bits_per_chunk; j++, index_tmp++)
+	  x = (x<<1) | get_bit_le(in, index_tmp);
 	out[i] = x;
       }
       break;
@@ -126,6 +129,7 @@ int
     assert(ninput_items[m] >= (int) ((d_index+(BITS_PER_TYPE-1))>>LOG2_L_TYPE));
   }
 
+  d_index = index_tmp;
   consume_each (d_index >> LOG2_L_TYPE);
   d_index = d_index & (BITS_PER_TYPE-1);
   //printf("got to end\n");

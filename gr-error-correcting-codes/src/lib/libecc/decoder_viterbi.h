@@ -48,31 +48,11 @@ public:
  */
 
   decoder_viterbi (int sample_precision,
-		   encoder_convolutional* l_encoder);
+		   const encoder_convolutional* l_encoder);
 
   virtual ~decoder_viterbi ();
 
 protected:
-  struct state_t;
-
-/*
- * connection_t: describes an output connection from the current
- *     time-bit memory state to the next time-bit memory state
- *
- * d_to: state pointer to which this connection going
- *
- * d_to_ndx: index of the "to" state
- *
- * d_output_bits: what are the output bits, coverted into
- *     1->+1.0, 0->-1.0, for this connection
- */
-
-  typedef struct connection_t {
-    struct state_t *d_to;
-    int d_to_ndx;
-    float* d_output_bits;
-  } connection_t, *connection_t_ptr;
-
 /*
  * state_t: describes a given memory state
  *
@@ -94,7 +74,7 @@ protected:
  */
 
   typedef struct state_t {
-    connection_t_ptr d_connections;
+    struct state_t* d_connections;
     float d_max_metric;
     int d_max_state_ndx;
     int d_max_input;
@@ -149,20 +129,21 @@ protected:
     fsm_dec_viterbi_doing_middle, fsm_dec_viterbi_doing_term
   };
 
-  virtual void decode_private (const char** in_buf, char** out_buf);
-  virtual char get_next_input (const char** in_buf, size_t code_input_n);
+  virtual void decode_private ();
 #if 0
-  virtual void decode_loop (const char** in_buf, char** out_buf,
-			    size_t* which_counter, size_t how_many);
-
-  virtual char get_next_input__up (const char** in_buf,
-				      size_t code_input_n) = 0;
-  virtual char get_next_input__middle (const char** in_buf,
-					  size_t code_input_n) = 0;
-  virtual char get_next_input__term (size_t code_input_n) = 0;
+  virtual void decode_loop (size_t* which_counter, size_t how_many);
 #endif
-  virtual void increment_input_indices (bool while_decoding) = 0;
-  virtual void increment_output_indices (bool while_decoding) = 0;
+  virtual void get_next_inputs () {
+    d_in_buf->read_items ((void*)(&(d_current_inputs[0])));
+    d_in_buf->increment_indices ();
+  };
+  virtual void write_output_bits () {
+    d_out_buf->write_items ((void*)(&(d_current_outputs[0])));
+    d_out_buf->increment_indices ();
+  };
+
+  void encode_loop_up ();
+
   virtual void update_traceback__up (size_t from_state_ndx,
 				     size_t to_state_ndx,
 				     size_t l_input) = 0;
@@ -173,17 +154,32 @@ protected:
   void zero_metrics (u_char which);
 
   encoder_convolutional* d_encoder;
+  code_convolutional_trellis* d_trellis;
   fsm_dec_viterbi_t d_fsm_state;
-  size_t d_max_memory, d_total_memory;
+
   size_t d_time_count, d_n_total_inputs_per_stream;
   size_t d_n_saved_bits, d_n_saved_bits_start_ndx, d_n_traceback_els;
-  size_t d_n_states, d_n_input_combinations;
+  size_t d_n_states, d_n_input_combinations, d_total_n_delays;
   size_t d_states_ndx, d_up_term_ndx;
-  bool d_do_streaming, d_do_termination;
-  std::vector<memory_t> d_init_states, d_term_states;
-  char **d_save_buffer;
+  bool d_do_termination;
+#if 1
   state_t_ptr d_states[2];
   size_t* d_up_term_states_ndx[2];
+  char **d_save_buffer;
+#else
+  std::vector<state_t> d_states[2];
+  std::vector<size_t> d_up_term_states_ndx[2];
+  std::vector<char **> d_save_buffer;  ???
+#endif
+
+  // "inputs" are the current input symbols as soft-floats, to be
+  // converted to metrics internally
+
+  std::vector<float> d_current_inputs;
+
+  // "outputs" are the current output bits, in the LSB (&1) of each "char"
+
+  std::vector<char> d_current_outputs;
 };
 
 #endif /* INCLUDED_DECODER_VITERBI_H */

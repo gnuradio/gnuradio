@@ -127,6 +127,20 @@ decoder_viterbi_full_block::~decoder_viterbi_full_block
   delete [] d_out_buf;
 }
 
+size_t
+decoder_viterbi_full_block::compute_n_input_items
+(size_t n_output_bits)
+{
+  return (0);
+}
+
+size_t
+decoder_viterbi_full_block::compute_n_output_bits
+(size_t n_input_items)
+{
+  return (0);
+}
+
 void
 decoder_viterbi_full_block::update_traceback__up
 (size_t from_state_ndx,
@@ -272,8 +286,7 @@ decoder_viterbi_full_block::update_traceback__term
 
 void
 decoder_viterbi_full_block::decode_private
-(const char** in_buf,
- char** out_buf)
+()
 {
 #if 0
 

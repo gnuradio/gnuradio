@@ -52,55 +52,45 @@ const int g_num_bits_per_byte = 8;
 #define DO_PRINT_DEBUG_EXIT 0
 #define DO_PRINT_DEBUG 0
 
-#if DO_TIME_THOUGHPUT
 #include <mld/mld_timer.h>
-#endif
-#if DO_PRINT_DEBUG
 #include <mld/n2bs.h>
-#endif
 
 decoder_viterbi::decoder_viterbi
 (int sample_precision,
- encoder_convolutional* l_encoder)
+ const encoder_convolutional* l_encoder)
 {
-  // make sure the sample precitions makes sense
+  // make sure that the encoder is "valid"
+
+  if (! l_encoder) {
+    std::cerr << "decoder_viterbi: Error: Encoder is NULL.\n";
+    assert (0);
+  }
+
+  // make the metrics converter
+
+  //  d_code_metrics = new code_metrics (
 
   if ((sample_precision < 0) | (sample_precision > 32)) {
     std::cerr << "decoder_viterbi: "
       "Requested sample_precision (" << sample_precision <<
-      "must be between 0 and 32.\n";
+      ") must be between 0 and 32.\n";
     assert (0);
   }
 
-  // make sure that the encoder is "valid"
+  // get the trellis
 
-  if (! l_encoder) {
-    std::cerr << "decoder_viterbi: Error: Encoder is a NULL pointer.\n";
-    assert (0);
-  }
-
-  // keep around a pointer to the encoder
-
-  d_encoder = l_encoder;
+  d_encoder = (encoder_convolutional*) l_encoder;
+  d_trellis = (code_convolutional_trellis*) d_encoder->trellis ();
 
   // fill the class variables
 
   d_block_size_bits = d_encoder->block_size_bits ();
-  d_do_streaming = (d_block_size_bits == 0);
   d_n_code_inputs = d_encoder->n_code_inputs ();
   d_n_code_outputs = d_encoder->n_code_outputs ();
   d_do_termination = d_encoder->do_termination ();
-#if 0
-  d_total_memory = d_encoder->total_memory ();
-#endif
-
-  // NOTE: d_n_states is a 'long', and thus is quite limited in terms
-  // of max memory and # of input streams to 2^32 states This is OK,
-  // since that many states would be impossibly slow to decode!  might
-  // make this a "long long" (64 bits) in the future
-
-  d_n_states = 1 << d_total_memory;
-  d_n_input_combinations = 1 << d_n_code_inputs;
+  d_total_n_delays = d_encoder->total_n_delays ();
+  d_n_states = d_trellis->n_states ();
+  d_n_input_combinations = d_trellis->n_input_combinations ();
 
   // really nothing else to do here, since this class doesn't "know"
   // how to process streaming versus block decoding, or partial
@@ -112,11 +102,9 @@ decoder_viterbi::decoder_viterbi
       "d_block_size_bits          = " << d_block_size_bits << "\n" <<
       "d_n_code_inputs            = " << d_n_code_inputs << "\n" <<
       "d_n_code_outputs           = " << d_n_code_outputs << "\n" <<
-      "d_do_streaming             = " <<
-      ((d_do_streaming == true) ? "true" : "false") << "\n" <<
       "d_do_termination           = " <<
       ((d_do_termination == true) ? "true" : "false") << "\n" <<
-      "d_total_memory             = " << d_total_memory << "\n" <<
+      "d_total_n_delays           = " << d_total_n_delays << "\n" <<
       "d_n_states                 = " << d_n_states << "\n" <<
       "d_n_input_combinations     = " << d_n_input_combinations << "\n";
   }
@@ -134,17 +122,14 @@ decoder_viterbi::decoder_viterbi
 
   d_n_total_inputs_per_stream = d_block_size_bits;
   if (d_do_termination == true)
-    d_n_total_inputs_per_stream += d_max_memory;
-
-
-
+    d_n_total_inputs_per_stream += d_total_n_delays;
 }
 
 decoder_viterbi::~decoder_viterbi
 ()
 {
   // reverse over from allocation
-
+#if 0
   delete [] d_up_term_states_ndx[0];
   delete [] d_up_term_states_ndx[1];
 
@@ -177,6 +162,7 @@ decoder_viterbi::~decoder_viterbi
     delete [] (*t_save_buffer++);
   }
   delete [] d_save_buffer;
+#endif
 }
 
 void
@@ -209,20 +195,9 @@ decoder_viterbi::zero_metrics
   }
 }
 
-//FIXME 
-
-char
-decoder_viterbi::get_next_input
-(const char** in_buf,
-size_t code_input_n)
-{
-  return (0);
-}
-
 void
 decoder_viterbi::decode_private
-(const char** in_buf,
- char** out_buf)
+()
 {
 #if 0
 
@@ -231,8 +206,8 @@ decoder_viterbi::decode_private
   start_timer (&t_tp);
 #endif
 #if DO_PRINT_DEBUG
-  size_t t_state_print_bits = d_total_memory + 1;
-  size_t t_mem_print_bits = d_max_memory + 2;
+  size_t t_state_print_bits = d_total_n_delays;
+  size_t t_mem_print_bits = d_total_n_delays;
 #endif
 // setup variables for quicker access
   const char **in_buf = (const char **) &input_items[0];
@@ -319,148 +294,8 @@ decoder_viterbi::decode_private
 // jump to the correct state in the fsm
     switch (d_fsm_state) {
     case fsm_dec_viterbi_doing_up:
-#if DO_PRINT_DEBUG_FSM
-      std::cout << "Starting fsm_dec_viterbi_doing_up\n";
-#endif
-// set the number of up_down indices
-      size_t t_n_up_down_ndx = 1 << (d_n_code_inputs *
-				     d_time_count);
-// stay in this state until the correct number of input symbols are
-// reached; exit also if we run out of input symbols to process
-      while ((d_time_count < d_max_memory) &
-	     (t_in_buf_ndx < t_ninput_items)) {
-#if DO_PRINT_DEBUG_UP_0
-	std::cout << "Doing 'while' loop:\n" <<
-	  "t_n_up_down_ndx    = " << t_n_up_down_ndx << "\n" <<
-	  "d_time_count       = " << d_time_count << "\n" <<
-	  "d_max_memory       = " << d_max_memory << "\n" <<
-	  "t_in_buf_ndx       = " << t_in_buf_ndx << "\n" <<
-	  "t_ninput_items     = " << t_ninput_items << "\n";
-#endif
-// use the "from" states, loop over all inputs and compute the metric for
-// each & store it in the "to" state at the end of the connection.
-// no need to compare metrics yet, since none join into any given state
-
 #if 0
-// reset the "to" state's metrics
-// probably don't need to do this; try removing later
-        reset_metrics (d_states_ndx ^ 1);
-#if DO_PRINT_DEBUG_UP
-	std::cout << "Reset Metrics\n";
-#endif
-#endif
-
-// reset the state's index for each set of new inputs
-	size_t* t_state_ndx_ptr = d_up_term_states_ndx[d_up_term_ndx];
-	size_t* t_next_state_ndx_ptr = d_up_term_states_ndx[d_up_term_ndx ^ 1];
-// loop over all current stored "up" states
-	for (size_t n = 0; n < t_n_up_down_ndx; n++) {
-	  size_t t_state_ndx = *t_state_ndx_ptr++;
-// get a pointer to this state's structure
-	  state_t_ptr t_state = &(d_states[d_states_ndx][t_state_ndx]);
-// get the connections for all inputs
-	  connection_t_ptr t_connection = t_state->d_connections;
-#if DO_PRINT_DEBUG_UP_0
-	  std::cout << "Looping over all 'up' states:\n" <<
-	    "n                  = " << n << "\n" <<
-	    "t_n_up_down_ndx    = " << t_n_up_down_ndx << "\n" <<
-	    "d_states_ndx       = " << d_states_ndx << "\n" <<
-	    "t_state_ndx        = " << t_state_ndx << "\n" <<
-	    "d_n_input_combs    = " << d_n_input_combinations << "\n" <<
-	    "t_state            = " << t_state << "\n" <<
-	    "t_connection       = " << t_connection << "\n";
-#endif
-// loop over all possible input values, 1 bit per input stream
-	  for (size_t q = 0; q < d_n_input_combinations; q++, t_connection++) {
-// find the "to" state for this connection
-	    state_t_ptr t_to_state = t_connection->d_to;
-// get the output bits for this connection
-	    float* t_output_bit = t_connection->d_output_bits;
-// start with this state's metric
-	    float t_metric = t_state->d_max_metric;
-#if DO_PRINT_DEBUG_UP_0
-	    std::cout <<
-	      "to state index     = " << t_connection->d_to_ndx << "\n" <<
-	      "current metric     = " << t_metric << "\n";
-#endif
-	    if (d_do_mux_inputs == true) {
-// if using mux'ed input streams, handle differently
-              const float* t_in_buf = &(in_buf[0][t_in_buf_ndx]);
-// loop over all encoder-output values
-	      for (size_t r = d_n_code_outputs; r > 0; r--) {
-#if DO_PRINT_DEBUG_UP
-		std::cout << "in_sym = " << *t_in_buf << ", code_out_bit = " <<
-		  *t_output_bit << " ==> metric -> ";
-#endif
-  	        t_metric += ((*t_in_buf++) * (*t_output_bit++));
-#if DO_PRINT_DEBUG_UP
-		std::cout << t_metric << "\n";
-#endif
-	      }
-	    } else {
-// loop over all encoder-output values
-	      for (size_t r = 0; r < d_n_code_outputs; r++) {
-#if DO_PRINT_DEBUG_UP
-		std::cout << "in_sym = " << in_buf[r][t_in_buf_ndx] <<
-		  ", code_out_bit = " << *t_output_bit << " ==> metric -> ";
-#endif
-		t_metric += (in_buf[r][t_in_buf_ndx] * (*t_output_bit++));
-#if DO_PRINT_DEBUG_UP
-		std::cout << t_metric << "\n";
-#endif
-	      }
-	    }
-// get the "to" state index
-	    size_t t_to_ndx = t_connection->d_to_ndx;
-// store the metric in the "to" state; should not have been used before
-	    t_to_state->d_max_metric = t_metric;
-// add the "to" state index to the "up" state list
-	    *t_next_state_ndx_ptr++ = t_to_ndx;
-// update the traceback structure, depending on which variety it is
-// doing full trellis before decoding; use d_out_buf
-// simple: get the current state & output state
-	    traceback_t_ptr t_out_buf = &(d_out_buf[d_time_count]
-					  [t_state_ndx]);
-	    traceback_t_ptr t_next_out_buf = &(d_out_buf[d_time_count+1]
-					       [t_to_ndx]);
-#if DO_PRINT_DEBUG_UP_1
-	    std::cout << "d_o_b[" << d_time_count+1 << "] => d_o_b prev\n" <<
-	      "ndx[" << n << "] == " << t_state_ndx <<
-	      ", s[" << n2bs(t_state_ndx,t_state_print_bits) <<
-	      "]: max_ndx = " <<
-	      n2bs(t_state->d_max_state_ndx,t_state_print_bits) <<
-	      ", input = " << n2bs(q, d_n_code_inputs+1) <<
-	      ": " << t_next_out_buf << " => " << t_out_buf << "\n";
-#endif
-// and connect output to the current, set inputs on output
-	    t_next_out_buf->d_prev = t_out_buf;
-	    t_next_out_buf->d_inputs = q;
-// finished (for) this input value
-	  }
-// finished (for) this "up_term" state
-	}
-// increment the in_buf index, depending on mux'ing or not
-	t_in_buf_ndx += (d_do_mux_inputs == false) ? 1 : d_n_code_outputs;
-// increment the time counter
-        d_time_count++;
-// update the number of "up_term" states
-        d_up_term_ndx ^= 1;
-// increase the number of using states
-        t_n_up_down_ndx <<= d_n_code_inputs;
-// change which d_states' index to use as starting
-        d_states_ndx ^= 1;
-// finished (while) staying in this fsm state or not
-      }
-// if reached the end of doing the "up" part of the trellis,
-// switch states into the middle
-      if (d_time_count == d_max_memory) {
-#if DO_PRINT_DEBUG_FSM
-	std::cout << "Setting FSM to fsm_dec_viterbi_doing_middle\n";
-#endif
-        d_fsm_state = fsm_dec_viterbi_doing_middle;
-      }
-#if DO_PRINT_DEBUG_FSM
-      std::cout << "Exited fsm_dec_viterbi_doing_up\n";
+      encode_loop_up ();
 #endif
       break;
     case (fsm_dec_viterbi_doing_middle):
@@ -486,7 +321,7 @@ decoder_viterbi::decode_private
 #if DO_PRINT_DEBUG_MIDDLE
 	std::cout << "Time Count " << (d_time_count+1) << " of " <<
 	  d_block_size_bits << "\n" <<
-	  "d_states_ndx = " << d_states_ndx << "\n";;
+	  "d_states_ndx = " << d_states_ndx << "\n";
 #endif
 // loop over all current states
 	for (size_t n = 0; n < d_n_states; n++, t_state++) {
@@ -621,15 +456,15 @@ decoder_viterbi::decode_private
       std::cout << "Entered fsm_dec_viterbi_doing_term\n";
 #endif
 // set the "next" up_down index to the end of their states
-      size_t t_time_count = d_max_memory - (d_time_count - d_block_size_bits);
+      size_t t_time_count = d_total_n_delays - (d_time_count - d_block_size_bits);
       t_n_up_down_ndx = 1 << (d_n_code_inputs * t_time_count);
 // stay in this state until the correct number of input symbols are
 // reached; exit also if we run out of input symbols to process
       while ((t_time_count > 0) &
 	     (t_in_buf_ndx < t_ninput_items)) {
 #if DO_PRINT_DEBUG_TERM
-	std::cout << "Doing time " << (d_max_memory - t_time_count + 1) <<
-	  " of " << d_max_memory << "; starting buf[" << t_in_buf_ndx <<
+	std::cout << "Doing time " << (d_total_n_delays - t_time_count + 1) <<
+	  " of " << d_total_n_delays << "; starting buf[" << t_in_buf_ndx <<
 	  "] of [" << t_ninput_items << "]\n";
 #endif
 // use the "to" states,
@@ -800,15 +635,15 @@ decoder_viterbi::decode_private
 // FIXME: assume termination state == 0
 #if DO_PRINT_DEBUG_OUTPUT_0
 	std::cout << "Using termination; going through trellis for " <<
-	  d_max_memory << " bit" <<
-	  ((d_max_memory != 1) ? "s" : "") << "\n";
+	  d_total_n_delays << " bit" <<
+	  ((d_total_n_delays != 1) ? "s" : "") << "\n";
 #endif
 	t_out_buf = &(d_out_buf[d_time_count][0]);
 #if DO_PRINT_DEBUG_OUTPUT_0
 	std::cout << "Starting traceback ptr " << t_out_buf << "\n";
 #endif
 // skip over the termination bits
-	for (size_t n = d_max_memory; n > 0; n--) {
+	for (size_t n = d_total_n_delays; n > 0; n--) {
 	  t_out_buf = t_out_buf->d_prev;
 #if DO_PRINT_DEBUG_OUTPUT_0
 	  std::cout << "Next traceback ptr " << t_out_buf << "\n";
@@ -1058,3 +893,157 @@ decoder_viterbi::decode_private
     " b/s\n";
 #endif
 }
+
+#if 0
+
+void
+decoder_viterbi::encode_loop_up ()
+{
+#if DO_PRINT_DEBUG_FSM
+  std::cout << "Starting fsm_dec_viterbi_doing_up\n";
+#endif
+
+  // set the number of up_down indices
+
+  size_t t_n_up_down_ndx = 1 << (d_n_code_inputs *
+				 d_time_count);
+
+// stay in this state until the correct number of input symbols are
+// reached; exit also if we run out of input symbols to process
+      while ((d_time_count < d_total_n_delays) &
+	     (t_in_buf_ndx < t_ninput_items)) {
+#if DO_PRINT_DEBUG_UP_0
+	std::cout << "Doing 'while' loop:\n" <<
+	  "t_n_up_down_ndx    = " << t_n_up_down_ndx << "\n" <<
+	  "d_time_count       = " << d_time_count << "\n" <<
+	  "d_total_n_delays   = " << d_total_n_delays << "\n" <<
+	  "t_in_buf_ndx       = " << t_in_buf_ndx << "\n" <<
+	  "t_ninput_items     = " << t_ninput_items << "\n";
+#endif
+// use the "from" states, loop over all inputs and compute the metric for
+// each & store it in the "to" state at the end of the connection.
+// no need to compare metrics yet, since none join into any given state
+
+#if 0
+// reset the "to" state's metrics
+// probably don't need to do this; try removing later
+        reset_metrics (d_states_ndx ^ 1);
+#if DO_PRINT_DEBUG_UP
+	std::cout << "Reset Metrics\n";
+#endif
+#endif
+
+// reset the state's index for each set of new inputs
+	size_t* t_state_ndx_ptr = d_up_term_states_ndx[d_up_term_ndx];
+	size_t* t_next_state_ndx_ptr = d_up_term_states_ndx[d_up_term_ndx ^ 1];
+// loop over all current stored "up" states
+	for (size_t n = 0; n < t_n_up_down_ndx; n++) {
+	  size_t t_state_ndx = *t_state_ndx_ptr++;
+// get a pointer to this state's structure
+	  state_t_ptr t_state = &(d_states[d_states_ndx][t_state_ndx]);
+// get the connections for all inputs
+	  connection_t_ptr t_connection = t_state->d_connections;
+#if DO_PRINT_DEBUG_UP_0
+	  std::cout << "Looping over all 'up' states:\n" <<
+	    "n                  = " << n << "\n" <<
+	    "t_n_up_down_ndx    = " << t_n_up_down_ndx << "\n" <<
+	    "d_states_ndx       = " << d_states_ndx << "\n" <<
+	    "t_state_ndx        = " << t_state_ndx << "\n" <<
+	    "d_n_input_combs    = " << d_n_input_combinations << "\n" <<
+	    "t_state            = " << t_state << "\n" <<
+	    "t_connection       = " << t_connection << "\n";
+#endif
+// loop over all possible input values, 1 bit per input stream
+	  for (size_t q = 0; q < d_n_input_combinations; q++, t_connection++) {
+// find the "to" state for this connection
+	    state_t_ptr t_to_state = t_connection->d_to;
+// get the output bits for this connection
+	    float* t_output_bit = t_connection->d_output_bits;
+// start with this state's metric
+	    float t_metric = t_state->d_max_metric;
+#if DO_PRINT_DEBUG_UP_0
+	    std::cout <<
+	      "to state index     = " << t_connection->d_to_ndx << "\n" <<
+	      "current metric     = " << t_metric << "\n";
+#endif
+	    if (d_do_mux_inputs == true) {
+// if using mux'ed input streams, handle differently
+              const float* t_in_buf = &(in_buf[0][t_in_buf_ndx]);
+// loop over all encoder-output values
+	      for (size_t r = d_n_code_outputs; r > 0; r--) {
+#if DO_PRINT_DEBUG_UP
+		std::cout << "in_sym = " << *t_in_buf << ", code_out_bit = " <<
+		  *t_output_bit << " ==> metric -> ";
+#endif
+  	        t_metric += ((*t_in_buf++) * (*t_output_bit++));
+#if DO_PRINT_DEBUG_UP
+		std::cout << t_metric << "\n";
+#endif
+	      }
+	    } else {
+// loop over all encoder-output values
+	      for (size_t r = 0; r < d_n_code_outputs; r++) {
+#if DO_PRINT_DEBUG_UP
+		std::cout << "in_sym = " << in_buf[r][t_in_buf_ndx] <<
+		  ", code_out_bit = " << *t_output_bit << " ==> metric -> ";
+#endif
+		t_metric += (in_buf[r][t_in_buf_ndx] * (*t_output_bit++));
+#if DO_PRINT_DEBUG_UP
+		std::cout << t_metric << "\n";
+#endif
+	      }
+	    }
+// get the "to" state index
+	    size_t t_to_ndx = t_connection->d_to_ndx;
+// store the metric in the "to" state; should not have been used before
+	    t_to_state->d_max_metric = t_metric;
+// add the "to" state index to the "up" state list
+	    *t_next_state_ndx_ptr++ = t_to_ndx;
+// update the traceback structure, depending on which variety it is
+// doing full trellis before decoding; use d_out_buf
+// simple: get the current state & output state
+	    traceback_t_ptr t_out_buf = &(d_out_buf[d_time_count]
+					  [t_state_ndx]);
+	    traceback_t_ptr t_next_out_buf = &(d_out_buf[d_time_count+1]
+					       [t_to_ndx]);
+#if DO_PRINT_DEBUG_UP_1
+	    std::cout << "d_o_b[" << d_time_count+1 << "] => d_o_b prev\n" <<
+	      "ndx[" << n << "] == " << t_state_ndx <<
+	      ", s[" << n2bs(t_state_ndx,t_state_print_bits) <<
+	      "]: max_ndx = " <<
+	      n2bs(t_state->d_max_state_ndx,t_state_print_bits) <<
+	      ", input = " << n2bs(q, d_n_code_inputs+1) <<
+	      ": " << t_next_out_buf << " => " << t_out_buf << "\n";
+#endif
+// and connect output to the current, set inputs on output
+	    t_next_out_buf->d_prev = t_out_buf;
+	    t_next_out_buf->d_inputs = q;
+// finished (for) this input value
+	  }
+// finished (for) this "up_term" state
+	}
+// increment the in_buf index, depending on mux'ing or not
+	t_in_buf_ndx += (d_do_mux_inputs == false) ? 1 : d_n_code_outputs;
+// increment the time counter
+        d_time_count++;
+// update the number of "up_term" states
+        d_up_term_ndx ^= 1;
+// increase the number of using states
+        t_n_up_down_ndx <<= d_n_code_inputs;
+// change which d_states' index to use as starting
+        d_states_ndx ^= 1;
+// finished (while) staying in this fsm state or not
+      }
+// if reached the end of doing the "up" part of the trellis,
+// switch states into the middle
+      if (d_time_count == d_total_n_delays) {
+#if DO_PRINT_DEBUG_FSM
+	std::cout << "Setting FSM to fsm_dec_viterbi_doing_middle\n";
+#endif
+        d_fsm_state = fsm_dec_viterbi_doing_middle;
+      }
+#if DO_PRINT_DEBUG_FSM
+      std::cout << "Exited fsm_dec_viterbi_doing_up\n";
+#endif
+}
+#endif

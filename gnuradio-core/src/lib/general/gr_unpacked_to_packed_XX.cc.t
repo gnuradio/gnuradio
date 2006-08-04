@@ -78,12 +78,15 @@ int
 					gr_vector_const_void_star &input_items,
 					gr_vector_void_star &output_items)
 {
+  unsigned int index_tmp;
+
   assert (input_items.size() == output_items.size());
   int nstreams = input_items.size();
 
   for (int m=0; m< nstreams; m++) {
     const @I_TYPE@ *in = (@I_TYPE@ *) input_items[m];
     @O_TYPE@ *out = (@O_TYPE@ *) output_items[m];
+    index_tmp=d_index;
 
     // per stream processing
 
@@ -95,8 +98,8 @@ int
       for(int i=0;i<noutput_items;i++) {
 	@O_TYPE@ tmp=0;
 	for(unsigned int j=0; j<BITS_PER_TYPE; j++) {
-	  tmp = (tmp<<1) | get_bit_be1(in,d_index,d_bits_per_chunk);
-	  d_index++;
+	  tmp = (tmp<<1) | get_bit_be1(in,index_tmp,d_bits_per_chunk);
+	  index_tmp++;
 	}
 	out[i] = tmp;
       }
@@ -106,8 +109,8 @@ int
       for(int i=0;i<noutput_items;i++) {
 	unsigned long tmp=0;
 	for(unsigned int j=0; j<BITS_PER_TYPE; j++) {
-	  tmp = (tmp>>1)| (get_bit_be1(in,d_index,d_bits_per_chunk)<<(BITS_PER_TYPE-1));
-	  d_index++;
+	  tmp = (tmp>>1)| (get_bit_be1(in,index_tmp,d_bits_per_chunk)<<(BITS_PER_TYPE-1));
+	  index_tmp++;
 	}
 	out[i] = tmp;
       }
@@ -118,6 +121,7 @@ int
     }
   }
 
+  d_index = index_tmp;
   consume_each ((int)(d_index/d_bits_per_chunk));
   d_index = d_index%d_bits_per_chunk;
 

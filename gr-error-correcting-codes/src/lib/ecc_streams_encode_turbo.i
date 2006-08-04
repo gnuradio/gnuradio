@@ -3,7 +3,7 @@
  * Copyright 2006 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
- *
+ * 
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -20,26 +20,22 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef INCLUDED_N2BS_H
-#define INCLUDED_N2BS_H
+GR_SWIG_BLOCK_MAGIC(ecc,streams_encode_turbo);
 
-#include <string>
+#include <ecc_streams_encode_convolutional.h>
 
-std::string n2bs (int8_t number, size_t digits);
-std::string n2bs (int16_t number, size_t digits);
-std::string n2bs (int32_t number, size_t digits);
-#if 1
-std::string n2bs (long number, size_t digits);
-#endif
-std::string n2bs (int64_t number, size_t digits);
-std::string n2bs (u_int8_t number, size_t digits);
-std::string n2bs (u_int16_t number, size_t digits);
-std::string n2bs (u_int32_t number, size_t digits);
-#if 1
-std::string n2bs (unsigned long number, size_t digits);
-#endif
-std::string n2bs (u_int64_t number, size_t digits);
+ecc_streams_encode_turbo_sptr
+ecc_make_streams_encode_turbo
+(int n_code_inputs,
+ int n_code_outputs,
+ const std::vector<ecc_streams_encode_convolutional_sptr> &encoders,
+ const std::vector<size_t> &interleavers);
 
-void cout_binary (int number, int digits);
-
-#endif /* INCLUDED_N2BS_H */
+class ecc_streams_encode_turbo : public gr_block
+{
+  ecc_streams_encode_turbo
+  (int frame_size_bits,
+   int n_code_inputs,
+   const std::vector<ecc_streams_encode_convolutional_sptr> &encoders,
+   const std::vector<size_t> &interleavers);
+};

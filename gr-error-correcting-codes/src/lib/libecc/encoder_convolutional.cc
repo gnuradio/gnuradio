@@ -29,16 +29,12 @@
 #include <iostream>
 
 #define DO_TIME_THOUGHPUT 0
-#define DO_PRINT_DEBUG 1
 
 #include <mld/mld_timer.h>
-#include <mld/n2bs.h>
+//#include <mld/n2bs.h>
 
-static const int g_max_block_size_bits = 10000000;
-static const int g_max_num_streams = 10;
-static const int g_num_bits_per_byte = 8;
-
-void encoder_convolutional::encoder_convolutional_init
+void
+encoder_convolutional::encoder_convolutional_init
 (int block_size_bits,
  int n_code_inputs,
  int n_code_outputs,
@@ -97,14 +93,16 @@ void encoder_convolutional::encoder_convolutional_init
 
   d_init_state = start_memory_state;
 
+  // reset the inputs and outputs, both to get the correct size() and
+  // for the sake of zeroing them out.
+
   d_current_inputs.assign (d_n_code_inputs, 0);
   d_current_outputs.assign (d_n_code_outputs, 0);
 }
 
 void
 encoder_convolutional::encode_private
-(const char** in_buf,
- char** out_buf)
+()
 {
   struct timeval t_tp;
   if (DO_TIME_THOUGHPUT) {
@@ -113,18 +111,12 @@ encoder_convolutional::encode_private
 
   // reset buffer indices
 
-  d_total_n_enc_bits = d_in_buf_ndx = d_out_buf_ndx =
-    d_in_bit_shift = d_out_bit_shift = 0;
-
-  if (DO_PRINT_DEBUG) {
-    std::cout << "Beginning this encode() call; starting parameters.\n";
-    std::cout << "d_n_input_bits_left = " << d_n_input_bits_left << '\n';
-    std::cout << "d_n_output_bits_left = " << d_n_output_bits_left << '\n';
-  }
+  d_total_n_enc_bits = 0;
 
   // while there are inputs and outputs left to process ...
 
-  while ((d_n_input_bits_left != 0) & (d_n_output_bits_left != 0)) {
+  while ((d_in_buf->n_items_left() != 0) &
+	 (d_out_buf->n_items_left() != 0)) {
 
     // jump to the correct state in the fsm
 
@@ -158,7 +150,7 @@ encoder_convolutional::encode_private
       // termination bits, if any), counting down the number of
       // available input bits.
 
-      encode_loop (in_buf, out_buf, &d_n_input_bits_left, d_block_size_bits);
+      encode_loop (d_in_buf->n_items_left(), d_block_size_bits);
 
       // finished this loop; check for jumping to the next state
 
@@ -183,7 +175,12 @@ encoder_convolutional::encode_private
       // number of output bits left
 
       if (d_do_termination == true) {
-	encode_loop (in_buf, out_buf, &d_n_output_bits_left, d_total_n_delays);
+	if (d_n_enc_bits == 0) {
+	  // first time through this; save the starting termination state
+	  d_term_state = d_memory;
+	}
+
+	encode_loop (d_out_buf->n_items_left(), d_total_n_delays);
 
 	// finished this loop; check for jumping to the next state
 
@@ -207,17 +204,6 @@ encoder_convolutional::encode_private
     // done (while) there are inputs and outputs
   }
 
-  if (DO_PRINT_DEBUG) {
-    std::cout << "Done with this encode() call; ending parameters.\n"
-      "d_in_bit_shift = " << d_in_bit_shift << "\n"
-      "d_out_bit_shift = " << d_out_bit_shift << "\n"
-      "d_in_buf_ndx = " << d_in_buf_ndx << "\n"
-      "d_out_buf_ndx = " << d_out_buf_ndx << "\n"
-      "d_n_input_bits_left = " << d_n_input_bits_left << "\n"
-      "d_n_output_bits_left = " << d_n_output_bits_left << "\n"
-      "d_total_n_enc_bits = " << d_total_n_enc_bits << "\n";
-  }
-
   if (DO_TIME_THOUGHPUT) {
     // compute the throughput for this particular function call
     u_long d_t = end_timer (&t_tp);
@@ -230,28 +216,17 @@ encoder_convolutional::encode_private
 
 void
 encoder_convolutional::encode_loop
-(const char** in_buf,
- char** out_buf,
- size_t* which_counter,
+(const size_t& which_counter,
  size_t how_many)
 {
   // generic encode_loop
 
-  if (DO_PRINT_DEBUG) {
-    std::cout << "Starting encode_loop.\n";
-  }
-
-  while (((*which_counter) > 0) & (d_n_enc_bits < how_many)) {
-    if (DO_PRINT_DEBUG) {
-      std::cout << "*w_c = " << (*which_counter) << ", "
-	"# enc_bits = " << d_n_enc_bits << " of " << how_many << ".\n"
-	"Getting new inputs.\n";
-    }
+  while ((which_counter > 0) & (d_n_enc_bits < how_many)) {
 
     // get the next set of input bits from all streams;
     // written into d_current_inputs
 
-    get_next_inputs (in_buf);
+    get_next_inputs ();
 
     // use the trellis to do the encoding;
     // updates the input memory to the new memory state for the given input
@@ -261,7 +236,7 @@ encoder_convolutional::encode_loop
 
     // write the bits in d_current_outputs into the output buffer
 
-    write_output_bits (out_buf);
+    write_output_bits ();
 
     // increment the number of encoded bits for the current block, and
     // the total number of bits for this running of "encode()"
@@ -269,22 +244,88 @@ encoder_convolutional::encode_loop
     d_n_enc_bits++;
     d_total_n_enc_bits++;
   }
-
-  if (DO_PRINT_DEBUG) {
-    std::cout << "ending encode_loop.\n";
-  }
 }
 
-void
-encoder_convolutional::get_next_inputs__term
-()
+size_t
+encoder_convolutional::compute_n_output_bits
+(size_t n_input_bits)
 {
-  // FIXME: how to figure out which term bit to get?
-  // loop to set each entry of "d_current_inputs"
+  size_t t_n_output_bits, t_n_input_bits;
+  t_n_output_bits = t_n_input_bits = n_input_bits;
 
-  // need to do feedback separately, since it involves determining the
-  // FB bit value & using that as the input value to cancel it out
+  if (d_do_termination == true) {
 
-  d_current_inputs.assign (d_n_code_inputs, 0);
-  //   return (d_term_states[code_input_n] & 1);
+    // not streaming, doing termination; find the number of bits
+    // currently available with no required inputs, if any
+
+    size_t n_extra = 0;
+    if (d_fsm_state == fsm_enc_conv_doing_term) {
+      n_extra = d_total_n_delays - d_n_enc_bits;
+    }
+
+    t_n_output_bits += n_extra;
+
+    // find the number of blocks using just input bits,
+    // as well as the number of leftover bits
+
+    size_t t_n_blocks = t_n_input_bits / d_block_size_bits;
+    size_t t_leftover_bits = t_n_input_bits % d_block_size_bits;
+
+    // add the number of bits*blocks to the number of output bits, as
+    // well as the number of leftover bits which are not a whole block
+
+    t_n_output_bits += (t_n_blocks * (d_block_size_bits + d_total_n_delays));
+    t_n_output_bits += t_leftover_bits;
+  }
+
+  return (t_n_output_bits);
+}
+
+size_t
+encoder_convolutional::compute_n_input_bits
+(size_t n_output_bits)
+{
+  size_t t_n_output_bits, t_n_input_bits;
+  t_n_output_bits = t_n_input_bits = n_output_bits;
+
+  if (d_do_termination == true) {
+
+    // not streaming, doing termination; find the number of bits
+    // currently available with no required inputs, if any
+
+    size_t n_extra = 0;
+    if (d_fsm_state == fsm_enc_conv_doing_term) {
+      n_extra = d_total_n_delays - d_n_enc_bits;
+    }
+
+    // check to see if this is enough; return 0 if it is.
+
+    if (n_extra >= t_n_output_bits)
+      return (0);
+
+    // remove those which require no input
+
+    t_n_output_bits -= n_extra;
+
+    // find the number of blocks of data which could be processed
+
+    size_t t_n_output_bits_per_block = d_block_size_bits + d_total_n_delays;
+
+    // get the base number of input items required for the given
+    // number of blocks to be generated
+
+    size_t t_n_blocks = t_n_output_bits / t_n_output_bits_per_block;
+    t_n_input_bits = t_n_blocks * d_block_size_bits;
+
+    // add to that the number of leftover inputs needed to generate
+    // the remainder of the outputs within the remaining block, up to
+    // the given block size (since anything beyond that within this
+    // block requires no inputs)
+
+    size_t t_leftover_bits = t_n_output_bits % t_n_output_bits_per_block;
+    t_n_input_bits += ((t_leftover_bits > d_block_size_bits) ?
+		       d_block_size_bits : t_leftover_bits);
+  }
+
+  return (t_n_input_bits);
 }

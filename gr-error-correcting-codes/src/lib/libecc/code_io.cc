@@ -20,22 +20,14 @@
  * Boston, MA 02111-1307, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,syms_to_metrics);
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-gr_syms_to_metrics_sptr gr_make_syms_to_metrics
-(gr_feval_ff* pdf_fcn_0_bit,
- gr_feval_ff* pdf_fcn_1_bit,
- int n_samples,
- float min_sample, 
- float max_sample,
- int sample_precision);
+#include <code_io.h>
 
-class gr_syms_to_metrics : public gr_block
-{
-  gr_syms_to_metrics (gr_feval_ff* pdf_fcn_0_bit,
-		      gr_feval_ff* pdf_fcn_1_bit,
-		      int n_samples,
-		      float min_sample, 
-		      float max_sample,
-		      int sample_precision);
-};
+#define DO_PRINT_DEBUG 0
+
+static const int g_num_bits_per_byte = 8;
+
+// nothing yet ... it's all in the header file for now.

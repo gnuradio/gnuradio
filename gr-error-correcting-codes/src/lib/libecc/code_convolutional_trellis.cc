@@ -29,8 +29,8 @@
 #include <iostream>
 
 #define DO_TIME_THOUGHPUT 0
-#define DO_PRINT_DEBUG 1
-#define DO_PRINT_DEBUG_ENCODE 1
+#define DO_PRINT_DEBUG 0
+#define DO_PRINT_DEBUG_ENCODE 0
 
 #include <mld/mld_timer.h>
 #include <mld/n2bs.h>
@@ -285,7 +285,8 @@ code_convolutional_trellis::code_convolutional_trellis_init
 
   // store the parameters for SOAI
 
-  std::vector<size_t> t_fb_generators_soai, t_n_delays_soai, t_io_num_soai;
+  std::vector<memory_t> t_fb_generators_soai;
+  std::vector<size_t>  t_n_delays_soai, t_io_num_soai;
   std::vector<size_t> t_states_ndx_soai;
   size_t t_max_delay_soai, t_total_n_delays_soai, t_n_memories_soai;
 
@@ -554,23 +555,21 @@ code_convolutional_trellis::create_trellis
 
   for (size_t m = 0; m < d_n_states; m++) {
     d_trellis[m].resize (d_n_input_combinations);
-    for (size_t n = 0; n < d_n_input_combinations; n++) {
-      connection_t_ptr t_connection = &(d_trellis[m][n]);
-      t_connection->d_output_bits.resize (d_n_code_outputs);
-    }
   }
 
   // fill in the trellis
 
-  for (size_t m = 0; m < d_n_states; m++) {
-    for (size_t n = 0; n < d_n_input_combinations; n++) {
+  for (memory_t m = 0; m < d_n_states; m++) {
+    for (memory_t n = 0; n < d_n_input_combinations; n++) {
       connection_t_ptr t_connection = &(d_trellis[m][n]);
       encode_single (m, n, t_connection->d_to_state,
 		     t_connection->d_output_bits);
       if (DO_PRINT_DEBUG_ENCODE) {
 	std::cout << "set d_t[" << n2bs(m,d_total_n_delays) << "][" <<
 	  n2bs(n,d_n_code_inputs) << "] : to_st = " <<
-	  n2bs(t_connection->d_to_state,d_total_n_delays) << "\n";
+	  n2bs(t_connection->d_to_state,d_total_n_delays) <<
+	  ", o_b = " << n2bs(t_connection->d_output_bits,d_n_code_outputs) <<
+	  "\n";
       }
     }
   }
@@ -642,11 +641,33 @@ code_convolutional_trellis::mux_inputs
 }
 
 void
+code_convolutional_trellis::demux_outputs
+(memory_t outputs,
+ std::vector<char>& out_vec)
+{
+  for (size_t m = 0; m < d_n_code_outputs; m++, outputs >>= 1) {
+    out_vec[m] = (char)(outputs & 1);
+  }
+}
+
+memory_t
+code_convolutional_trellis::mux_outputs
+(const std::vector<char>& out_vec)
+{
+  size_t bit_shift = 0;
+  memory_t outputs = 0;
+  for (size_t m = 0; m < out_vec.size(); m++, bit_shift++) {
+    outputs |= (((memory_t)(out_vec[m]&1)) << bit_shift);
+  }
+  return (outputs);
+}
+
+void
 code_convolutional_trellis::encode_single
 (memory_t in_state,
- size_t inputs,
+ memory_t inputs,
  memory_t& out_state,
- std::vector<char>& out_bits)
+ memory_t& out_bits)
 {
   // set input parameters
 
@@ -672,7 +693,18 @@ code_convolutional_trellis::encode_single
   // retrieve the output parameters
 
   out_state = mux_state (d_memory);
-  out_bits = d_current_outputs;
+  out_bits = mux_outputs (d_current_outputs);
+}
+
+void
+code_convolutional_trellis::encode_lookup
+(memory_t& state,
+ const std::vector<char>& inputs,
+ memory_t& out_bits)
+{
+  connection_t_ptr t_connection = &(d_trellis[state][mux_inputs(inputs)]);
+  state = t_connection->d_to_state;
+  out_bits = t_connection->d_output_bits;
 }
 
 void
@@ -681,21 +713,9 @@ code_convolutional_trellis::encode_lookup
  const std::vector<char>& inputs,
  std::vector<char>& out_bits)
 {
-  if (DO_PRINT_DEBUG_ENCODE) {
-    std::cout << "using d_t[" << state << "][" << mux_inputs(inputs) <<
-      "] = ";
-    std::cout.flush ();
-  }
-
   connection_t_ptr t_connection = &(d_trellis[state][mux_inputs(inputs)]);
-
-  if (DO_PRINT_DEBUG_ENCODE) {
-    std::cout << t_connection << ": to_state = "
-	      << t_connection->d_to_state << "\n";
-  }
-
   state = t_connection->d_to_state;
-  out_bits = t_connection->d_output_bits;
+  demux_outputs (t_connection->d_output_bits, out_bits);
 }
 
 void
@@ -704,10 +724,14 @@ code_convolutional_trellis::get_termination_inputs
  size_t bit_num,
  std::vector<char>& inputs)
 {
-  inputs.resize (d_n_code_inputs);
+#if 1
+  // for now, just assign all 0's
+  inputs.assign (d_n_code_inputs, 0);
+#else
   for (size_t m = 0; m < d_n_code_inputs; m++) {
     inputs[m] = ((d_term_inputs[term_start_state][m]) >> bit_num) & 1;
   }
+#endif
 }
 
 void

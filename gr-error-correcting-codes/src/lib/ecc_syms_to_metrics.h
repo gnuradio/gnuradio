@@ -28,10 +28,10 @@
 #include <vector>
 #include <libecc/code_metrics.h>
 
-class gr_syms_to_metrics;
-typedef boost::shared_ptr<gr_syms_to_metrics> gr_syms_to_metrics_sptr;
+class ecc_syms_to_metrics;
+typedef boost::shared_ptr<ecc_syms_to_metrics> ecc_syms_to_metrics_sptr;
 
-gr_syms_to_metrics_sptr gr_make_syms_to_metrics
+ecc_syms_to_metrics_sptr ecc_make_syms_to_metrics
 (gr_feval_ff* pdf_fcn_0_bit,
  gr_feval_ff* pdf_fcn_1_bit,
  int n_samples,
@@ -49,18 +49,19 @@ gr_syms_to_metrics_sptr gr_make_syms_to_metrics
  * input: stream(s) of float; output: stream(s) of metrics
  */
 
-class gr_syms_to_metrics : public gr_block
+class ecc_syms_to_metrics : public gr_block
 {
-  friend gr_syms_to_metrics_sptr
-  gr_make_syms_to_metrics (gr_feval_ff* pdf_fcn_0_bit,
-			   gr_feval_ff* pdf_fcn_1_bit,
-			   int n_samples,
-			   float min_sample,
-			   float max_sample,
-			   int sample_precision);
+protected:
+  friend ecc_syms_to_metrics_sptr
+  ecc_make_syms_to_metrics (gr_feval_ff* pdf_fcn_0_bit,
+			    gr_feval_ff* pdf_fcn_1_bit,
+			    int n_samples,
+			    float min_sample,
+			    float max_sample,
+			    int sample_precision);
 
 /*
- * gr_syms_to_metrics: Convert the input soft (float) symbols into
+ * ecc_syms_to_metrics: Convert the input soft (float) symbols into
  *     log-probabilities (metrics) for use in the convolutional
  *     decoder.  Samples the provided PDF function in 'n_samples'
  *     places from 'min_sample' to 'max_sample', takes the log of that
@@ -97,17 +98,19 @@ class gr_syms_to_metrics : public gr_block
  *
  */
 
-  gr_syms_to_metrics (gr_feval_ff* pdf_fcn_0_bit,
-		      gr_feval_ff* pdf_fcn_1_bit,
-		      int n_samples,
-		      float min_sample,
-		      float max_sample,
-		      int sample_precision);
+  ecc_syms_to_metrics (gr_feval_ff* pdf_fcn_0_bit,
+		       gr_feval_ff* pdf_fcn_1_bit,
+		       int n_samples,
+		       float min_sample,
+		       float max_sample,
+		       int sample_precision);
 
   size_t d_out_item_size_bytes;
-  code_metrics* d_code_metrics;
+  code_metrics_table<float>* d_code_metrics_table;
 
 public:
+  ~ecc_syms_to_metrics() {delete d_code_metrics_table;};
+
   bool check_topology (int ninputs, int noutputs);
 
   void forecast (int noutput_items, gr_vector_int &ninput_items_required);

@@ -25,93 +25,180 @@
 #endif
 
 #include <decoder.h>
-#include <assert.h>
 #include <iostream>
 
-#define DO_PRINT_DEBUG 1
-
-#if DO_PRINT_DEBUG
-#include <mld/n2bs.h>
-#endif
+#define DO_PRINT_DEBUG 0
 
 /*
  * decode a certain number of output bits
  *
  * the 'in_buf' and 'out_buf' must have enough memory to handle the
- *     number of input metrics and output bits; no error checking is done!
+ *     number of input items and output bits; no error checking is done!
  *
- * n_bits_to_output: the number of bits per output stream to output.
+ * n_bits_to_output: the number of bits per output stream to decode.
  *
- * returns the actual number of metrics used per input stream.
+ * returns the actual number of items used per input stream.
  */
 
 size_t
 decoder::decode
-(const char** in_buf,
- char** out_buf,
+(const code_input_ptr in_buf,
+ code_output_ptr out_buf,
  size_t n_bits_to_output)
 {
+  if (in_buf == 0) {
+    std::cerr << "decoder::decode: Error: input buffer is NULL.\n";
+    assert (0);
+  }
+  if (out_buf == 0) {
+    std::cerr << "decoder::decode: Error: output buffer is NULL.\n";
+    assert (0);
+  }
+  if (n_bits_to_output == 0) {
+    std::cerr << "decoder::decode: Warning: no output bits requested.\n";
+    return (0);
+  }
+
   // set the class-internal number of input metrics
   // and output bits left to decode
 
-  size_t saved_n_input_metrics;
-  saved_n_input_metrics = d_n_input_metrics_left =
-    compute_n_input_metrics (n_bits_to_output);
-  d_n_output_bits_left = n_bits_to_output;
+  d_in_buf = in_buf;
+  d_out_buf = out_buf;
+
+  // check that there are enough output buffer items
+
+  if (d_out_buf->n_items_left() < n_bits_to_output) {
+    std::cerr << "encoder::encode: Warning: output buffer size (" <<
+      d_out_buf->n_items_left() << "is less than the desired number "
+      "of output items (" << n_bits_to_output <<
+      ") ... using lower number.\n";
+    n_bits_to_output = d_out_buf->n_items_left();
+  }
+
+  // check that there are enough input buffer items
+
+  size_t n_items_to_input = compute_n_input_items (n_bits_to_output);
+
+  if (d_in_buf->n_items_left() < n_items_to_input) {
+    std::cerr << "encoder::encode: Warning: input buffer size (" <<
+      d_in_buf->n_items_left() << "is less than the computed number "
+      "of required input items (" << n_items_to_input <<
+      ") ... using lower number.\n";
+    n_items_to_input = d_in_buf->n_items_left();
+    n_bits_to_output = compute_n_output_bits (n_items_to_input);
+  }
+
+  if (DO_PRINT_DEBUG) {
+    std::cout <<
+      "# output bits = " << n_bits_to_output << "\n"
+      "# input items = " << n_items_to_input << "\n";
+  }
 
   // call the private decode function
 
-  decode_private (in_buf, out_buf);
+  decode_private ();
 
   if (DO_PRINT_DEBUG) {
-    std::cout << "n_input_metrics_used = " <<
-      (saved_n_input_metrics - d_n_input_metrics_left) << "\n"
-      "n_output_bits_used = " <<
-      (n_bits_to_output - d_n_output_bits_left) << '\n';
+    std::cout <<
+      "# input items used = " << d_in_buf->n_items_used() << "\n"
+      "# output bits used = " << d_out_buf->n_items_used() << "\n";
   }
 
-  // return the actual number of input metrics used
+  size_t n_items_used = d_in_buf->n_items_used ();
 
-  return (saved_n_input_metrics - d_n_input_metrics_left);
+  // clear these buffers, just in case
+
+  d_in_buf = 0;
+  d_out_buf = 0;
+
+  // return the actual number of input bits used
+
+  return (n_items_used);
 }
 
 /*
  * decode a certain number of input metrics
  *
  * the 'in_buf' and 'out_buf' must have enough memory to handle the
- *     number of input metrics and output bits; no error checking is done!
+ *     number of input items and output bits; no error checking is done!
  *
- * n_metrics_to_input: the number of metrics per input stream to decode
+ * n_items_to_input: the number of items per input stream to decode
  *
  * returns the actual number of bits written per output stream
  */
 
 size_t
 decoder::decode
-(const char** in_buf,	
- size_t n_metrics_to_input,
- char** out_buf)
+(const code_input_ptr in_buf,
+ size_t n_items_to_input,
+ code_output_ptr out_buf)
 {
+  if (in_buf == 0) {
+    std::cerr << "encoder::encode: Error: input buffer is NULL.\n";
+    assert (0);
+  }
+  if (out_buf == 0) {
+    std::cerr << "encoder::encode: Error: output buffer is NULL.\n";
+    assert (0);
+  }
+  if (n_items_to_input == 0) {
+    std::cerr << "encoder::encode: Warning: no input items requested.\n";
+    return (0);
+  }
+
   // set the class-internal number of input metrics and
   // output bits left to decode
 
-  size_t saved_n_output_bits;
-  saved_n_output_bits = d_n_output_bits_left =
-    compute_n_output_bits (n_metrics_to_input);
-  d_n_input_metrics_left = n_metrics_to_input;
+  d_in_buf = in_buf;
+  d_out_buf = out_buf;
+
+  // check that there are enough input buffer items
+
+  if (d_in_buf->n_items_left() < n_items_to_input) {
+    std::cerr << "encoder::encode: Warning: input buffer size (" <<
+      d_in_buf->n_items_left() << "is less than the desired number "
+      "of input items (" << n_items_to_input <<
+      ") ... using lower number.\n";
+    n_items_to_input = d_in_buf->n_items_left();
+  }
+
+  // check that there are enough output buffer items
+
+  size_t n_bits_to_output = compute_n_output_bits (n_items_to_input);
+
+  if (d_out_buf->n_items_left() < n_bits_to_output) {
+    std::cerr << "encoder::encode: Warning: output buffer size (" <<
+      d_out_buf->n_items_left() << "is less than the computed number "
+      "of required output items (" << n_bits_to_output <<
+      ") ... using lower number.\n";
+    n_bits_to_output = d_out_buf->n_items_left();
+    n_items_to_input = compute_n_input_items (n_bits_to_output);
+  }
+
+  if (DO_PRINT_DEBUG) {
+    std::cout <<
+      "# output bits = " << n_bits_to_output << "\n"
+      "# input items = " << n_items_to_input << "\n";
+  }
 
   // call the private decode function
 
-  decode_private (in_buf, out_buf);
+  decode_private ();
 
   if (DO_PRINT_DEBUG) {
-    std::cout << "n_input_metrics_used = " <<
-      (n_metrics_to_input - d_n_input_metrics_left) << '\n';
-    std::cout << "n_output_bits_used = " <<
-      (saved_n_output_bits - d_n_output_bits_left) << '\n';
+    std::cout <<
+      "# input items used = " << d_in_buf->n_items_used() << "\n"
+      "# output bits used = " << d_out_buf->n_items_used() << "\n";
   }
+
+  size_t n_items_used = d_out_buf->n_items_used();
+
+  // clear these buffers, just in case
+
+  d_in_buf = 0;
+  d_out_buf = 0;
 
   // return the actual number of output bits written
 
-  return (saved_n_output_bits - d_n_output_bits_left);
+  return (n_items_used);
 }

@@ -27,15 +27,15 @@
 %{
 
 #include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-#include <gr_streams_encode_convolutional.h>
-#include <gr_streams_encode_turbo.h>
-#include <gr_metrics_decode_viterbi_full_block.h>
-#include <gr_syms_to_metrics.h>
+#include <ecc_streams_encode_convolutional.h>
+#include <ecc_streams_encode_turbo.h>
+#include <ecc_metrics_decode_viterbi_full_block.h>
+#include <ecc_syms_to_metrics.h>
 #include <stdexcept>
 
 %}
 
-%include "gr_streams_encode_convolutional.i"
-%include "gr_streams_encode_turbo.i"
-%include "gr_metrics_decode_viterbi_full_block.i"
-%include "gr_syms_to_metrics.i"
+%include "ecc_streams_encode_convolutional.i"
+%include "ecc_streams_encode_turbo.i"
+%include "ecc_metrics_decode_viterbi_full_block.i"
+%include "ecc_syms_to_metrics.i"

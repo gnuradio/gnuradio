@@ -20,11 +20,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef INCLUDED_GR_STREAMS_ENCODE_TURBO_H
-#define INCLUDED_GR_STREAMS_ENCODE_TURBO_H
+#ifndef INCLUDED_ECC_STREAMS_ENCODE_TURBO_H
+#define INCLUDED_ECC_STREAMS_ENCODE_TURBO_H
 
 #include <gr_block.h>
-#include <gr_streams_encode_convolutional.h>
+#include <ecc_streams_encode_convolutional.h>
 
 #if 0
 #include <libecc/encoder_turbo_ic1_ic1.h>
@@ -56,41 +56,44 @@
  *     interleaver.
  */
 
-class gr_streams_encode_turbo;
+class ecc_streams_encode_turbo;
 
-typedef boost::shared_ptr<gr_streams_encode_turbo>
-gr_streams_encode_turbo_sptr;
+typedef boost::shared_ptr<ecc_streams_encode_turbo>
+ecc_streams_encode_turbo_sptr;
 
-gr_streams_encode_turbo_sptr
-gr_make_streams_encode_turbo
+ecc_streams_encode_turbo_sptr
+ecc_make_streams_encode_turbo
 (int n_code_inputs,
  int n_code_outputs,
- const std::vector<gr_streams_encode_convolutional_sptr> &encoders,
+ const std::vector<ecc_streams_encode_convolutional_sptr> &encoders,
  const std::vector<size_t> &interleavers);
 
-class gr_streams_encode_turbo : public gr_block
+class ecc_streams_encode_turbo : public gr_block
 {
-  friend gr_streams_encode_turbo_sptr
-  gr_make_streams_encode_turbo
+protected:
+  friend ecc_streams_encode_turbo_sptr
+  ecc_make_streams_encode_turbo
     (int n_code_inputs,
      int n_code_outputs,
-     const std::vector<gr_streams_encode_convolutional_sptr> &d_encoders,
+     const std::vector<ecc_streams_encode_convolutional_sptr> &d_encoders,
      const std::vector<size_t> &d_interleavers);
 
-  gr_streams_encode_turbo
+  ecc_streams_encode_turbo
     (int n_code_inputs,
      int n_code_outputs,
-     const std::vector<gr_streams_encode_convolutional_sptr> &d_encoders,
+     const std::vector<ecc_streams_encode_convolutional_sptr> &d_encoders,
      const std::vector<size_t> &d_interleavers);
 
-  std::vector<gr_streams_encode_turbo_sptr> d_encoders;
+  std::vector<ecc_streams_encode_turbo_sptr> d_encoders;
   std::vector<size_t> d_interleavers;
   size_t d_n_encoders, d_block_size_bits;
   bool d_do_termination;
   encoder_turbo* d_encoder;
+  code_input_ptr d_in_buf;
+  code_output_ptr d_out_buf;
 
 public:
-  ~gr_streams_encode_turbo ();
+  ~ecc_streams_encode_turbo ();
 
   virtual void forecast (int noutput_items,
 			 gr_vector_int &ninput_items_required);
@@ -101,4 +104,4 @@ public:
 			    gr_vector_void_star &output_items);
 };
 
-#endif /* INCLUDED_GR_STREAMS_ENCODE_TURBO_H */
+#endif /* INCLUDED_ECC_STREAMS_ENCODE_TURBO_H */

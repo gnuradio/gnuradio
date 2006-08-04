@@ -21,7 +21,8 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) -I..
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) \
+           -I$(top_srcdir)/gr-error-correcting-codes/src/lib/libecc
 
 noinst_LTLIBRARIES = libecc-qa.la
 

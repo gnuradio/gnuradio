@@ -20,20 +20,20 @@
  * Boston, MA 02111-1307, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,streams_encode_convolutional);
+GR_SWIG_BLOCK_MAGIC(ecc,streams_encode_convolutional);
 
 // Rename second constructor
-%rename(streams_encode_convolutional_feedback) gr_make_streams_encode_convolutional_feedback;
+%rename(streams_encode_convolutional_feedback) ecc_make_streams_encode_convolutional_feedback;
 
 // support vectors of these ... for use in the convolutional decoder
 // as well as Turbo Codes (both encoder and decoder).
 
 namespace std {
-  %template(x_vector_gr_streams_encode_convolutional_sptr) vector<gr_streams_encode_convolutional_sptr>;
+  %template(x_vector_ecc_streams_encode_convolutional_sptr) vector<ecc_streams_encode_convolutional_sptr>;
 };
 
-gr_streams_encode_convolutional_sptr
-gr_make_streams_encode_convolutional
+ecc_streams_encode_convolutional_sptr
+ecc_make_streams_encode_convolutional
 (int block_size_bits,
  int n_code_inputs,
  int n_code_outputs,
@@ -42,8 +42,8 @@ gr_make_streams_encode_convolutional
  int start_memory_state = 0,
  int end_memory_state = 0);
 
-gr_streams_encode_convolutional_sptr
-gr_make_streams_encode_convolutional_feedback
+ecc_streams_encode_convolutional_sptr
+ecc_make_streams_encode_convolutional_feedback
 (int block_size_bits,
  int n_code_inputs,
  int n_code_outputs,
@@ -53,10 +53,10 @@ gr_make_streams_encode_convolutional_feedback
  int start_memory_state = 0,
  int end_memory_state = 0);
 
-class gr_streams_encode_convolutional : public gr_block
+class ecc_streams_encode_convolutional : public gr_block
 {
 private:
-  gr_streams_encode_convolutional
+  ecc_streams_encode_convolutional
   (int block_size_bits,
    int n_code_inputs,
    int n_code_outputs,
@@ -65,7 +65,7 @@ private:
    int start_memory_state,
    int end_memory_state);
 
-  gr_streams_encode_convolutional
+  ecc_streams_encode_convolutional
   (int block_size_bits,
    int n_code_inputs,
    int n_code_outputs,

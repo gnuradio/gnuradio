@@ -126,12 +126,37 @@ public:
 
   virtual ~encoder_convolutional () {delete d_trellis;};
 
+/*
+ * Compute the number of input bits needed to produce 'n_output' bits,
+ * and the number of output bits which will be produced by 'n_input'
+ * bits ... for a single stream only.
+ *
+ * For convolutional encoders, there is 1 bit output per bit input per
+ * stream, with the addition of a some bits for trellis termination if
+ * selected.  Thus the input:output bit ratio will be:
+ * 
+ * if (streaming | no termination), 1:1 exactly;
+ *
+ * if (not streaming & termination), depends on the state of the FSM,
+ * and needs to include the number of termination bits (the total # of
+ * delays); ratio is roughly (1:(1+X)), where "X" is the number of
+ * termination bits divided by the (unterminated) block length in bits.
+ *
+ * It's up to the caller to change 'bits' to 'items' ... to know if
+ * bits are packed (see e.g. code_io "ic8l") or not ("ic1l"), or all
+ * streams are mux'ed together into one stream.
+*/
+
+  virtual size_t compute_n_input_bits (size_t n_output_bits);
+  virtual size_t compute_n_output_bits (size_t n_input_bits);
+
 /* for remote access to internal info */
 
   inline const bool do_termination () {return (d_do_termination);};
   inline const bool do_feedback () {return (d_trellis->do_feedback());};
   inline const bool do_streaming () {return (d_do_streaming);};
   inline const size_t total_n_delays () {return (d_total_n_delays);};
+  inline const code_convolutional_trellis* trellis() {return (d_trellis);};
 
 protected:
 /*
@@ -161,15 +186,13 @@ protected:
 				   int start_memory_state,
 				   int end_memory_state);
 
-  virtual void encode_private (const char** in_buf, char** out_buf);
+  virtual void encode_private ();
+  virtual void encode_loop (const size_t& which_counter, size_t how_many);
 
-  virtual void encode_loop (const char** in_buf, char** out_buf,
-			    size_t* which_counter, size_t how_many);
-
-  inline void get_next_inputs (const char** in_buf) {
+  inline void get_next_inputs () {
     switch (d_fsm_state) {
     case fsm_enc_conv_doing_input:
-      get_next_inputs__input (in_buf);
+      get_next_inputs__input ();
       break;
     case fsm_enc_conv_doing_term:
       get_next_inputs__term ();
@@ -180,20 +203,27 @@ protected:
     }
   };
 
-  virtual void get_next_inputs__term ();
+  inline virtual void get_next_inputs__input () {
+    d_in_buf->read_items ((void*)(&(d_current_inputs[0])));
+    d_in_buf->increment_indices ();
+  };
+
+  inline virtual void get_next_inputs__term () {
+    d_trellis->get_termination_inputs (d_term_state,
+				       d_n_enc_bits,
+				       d_current_inputs);
+  };
+
+  inline virtual void write_output_bits () {
+    d_out_buf->write_items ((const void*)(&(d_current_outputs[0])));
+    d_out_buf->increment_indices ();
+  };
 
   void get_memory_requirements (size_t m,
 				size_t n,
 				size_t& t_max_mem,
 				size_t& t_n_unique_fb_prev_start,
 				const std::vector<int>* code_feedback);
-
-  // methods which are required by classes which inherit from this
-  // one; primarily just the parts which deal with getting input bits
-  // and writing output bits, changing the indices for those buffers.
-
-  virtual void write_output_bits (char** out_buf) = 0;
-  virtual void get_next_inputs__input (const char** in_buf) = 0;
 
   // variables
 
@@ -203,7 +233,7 @@ protected:
   // "total_n_delays" is the total # of delays, needed to determine the
   // # of states in the decoder
 
-  size_t d_total_n_delays;
+  size_t d_total_n_delays, d_n_enc_bits;
 
   // the current state of the encoder (all delays / memories)
 
@@ -225,6 +255,13 @@ protected:
   // interpreted w/r.t. the actual trellis;
 
   memory_t d_init_state;
+
+  // "term_state" is the ending state before termination, used by the
+  // trellis to determine the correct input-bit sequences needed to
+  // properly terminate the trellis to the desired end-state;
+  // used only if doing termination.
+
+  memory_t d_term_state;
 };
 
 #endif /* INCLUDED_ENCODER_CONVOLUTIONAL_H */

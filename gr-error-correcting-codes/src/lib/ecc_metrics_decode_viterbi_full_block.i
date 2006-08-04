@@ -20,17 +20,17 @@
  * Boston, MA 02111-1307, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,metrics_decode_viterbi_full_block);
+GR_SWIG_BLOCK_MAGIC(ecc,metrics_decode_viterbi_full_block);
 
 // corrected "class NAME" statement, which uses slightly different NAMEs
 
-typedef boost::shared_ptr<gr_metrics_decode_viterbi_full_block>
-gr_metrics_decode_viterbi_full_block_feedback_sptr;
+typedef boost::shared_ptr<ecc_metrics_decode_viterbi_full_block>
+ecc_metrics_decode_viterbi_full_block_feedback_sptr;
 
-LOCAL_GR_SWIG_BLOCK_MAGIC(gr,metrics_decode_viterbi_full_block_feedback);
+LOCAL_GR_SWIG_BLOCK_MAGIC(ecc,metrics_decode_viterbi_full_block_feedback);
 
-gr_metrics_decode_viterbi_full_block_sptr
-gr_make_metrics_decode_viterbi_full_block
+ecc_metrics_decode_viterbi_full_block_sptr
+ecc_make_metrics_decode_viterbi_full_block
 (int sample_precision,
  int frame_size_bits,
  int n_code_inputs,
@@ -40,8 +40,8 @@ gr_make_metrics_decode_viterbi_full_block
  int start_memory_state,
  int end_memory_state);
 
-gr_metrics_decode_viterbi_full_block_feedback_sptr
-gr_make_metrics_decode_viterbi_full_block_feedback
+ecc_metrics_decode_viterbi_full_block_feedback_sptr
+ecc_make_metrics_decode_viterbi_full_block_feedback
 (int sample_precision,
  int frame_size_bits,
  int n_code_inputs,
@@ -52,9 +52,9 @@ gr_make_metrics_decode_viterbi_full_block_feedback
  int start_memory_state,
  int end_memory_state);
 
-class gr_metrics_decode_viterbi_full_block : public gr_block
+class ecc_metrics_decode_viterbi_full_block : public gr_block
 {
-  gr_metrics_decode_viterbi_full_block
+  ecc_metrics_decode_viterbi_full_block
   (int sample_precision,
    int frame_size_bits,
    int n_code_inputs,
@@ -64,7 +64,7 @@ class gr_metrics_decode_viterbi_full_block : public gr_block
    int start_memory_state,
    int end_memory_state);
 
-  gr_metrics_decode_viterbi_full_block
+  ecc_metrics_decode_viterbi_full_block
   (int sample_precision,
    int frame_size_bits,
    int n_code_inputs,

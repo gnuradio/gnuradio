@@ -23,31 +23,27 @@ include $(top_srcdir)/Makefile.common
 
 SUBDIRS = mld . tests
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) -I..
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) -I$(top_srcdir)/gr-error-correcting-codes/src/lib
 
 noinst_LTLIBRARIES = libecc.la
 
 libecc_la_SOURCES = 				\
 	code_convolutional_trellis.cc		\
-	code_metrics.cc				\
+	code_metrics.cc	code_io.cc		\
 	encoder.cc				\
 	encoder_convolutional.cc 		\
-	encoder_convolutional_ic1_ic1.cc	\
 	encoder_turbo.cc			\
 	decoder.cc 				\
 	decoder_viterbi.cc			\
-	decoder_viterbi_full_block.cc		\
-	decoder_viterbi_full_block_i1_ic1.cc
+	decoder_viterbi_full_block.cc
 
 noinst_HEADERS =				\
-	code_types.h code_metrics.h		\
+	code_types.h code_metrics.h code_io.h	\
 	code_convolutional_trellis.h		\
 	encoder.h encoder_turbo.h		\
 	encoder_convolutional.h 		\
-	encoder_convolutional_ic1_ic1.h 	\
 	decoder.h decoder_viterbi.h		\
-	decoder_viterbi_full_block.h		\
-	decoder_viterbi_full_block_i1_ic1.h
+	decoder_viterbi_full_block.h
 
 # link the library against the c++ standard library
 libecc_la_LIBADD = 		\

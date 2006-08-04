@@ -22,6 +22,5 @@
 include $(top_srcdir)/Makefile.common
 
 SUBDIRS = src
-DIST_SUBDIRS = src
 
 MOSTLYCLEANFILES = *~

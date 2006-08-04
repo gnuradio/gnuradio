@@ -1,3 +1,9 @@
+2006-08-01  Achilleas Anastasopoulos <anastas@umich.edu>
+
+	* src/lib/general/gr_packed_to_unpacked_XX.cc.t,
+	src/lib/general/gr_unpacked_to_packed_XX.cc.t: fixed bug in
+	multiple stream support.
+
 2006-07-06  Tom Rondeau  <trondeau@vt.edu>
 
 	* src/python/gnuradio/blksimpl/gmsk2.py:

@@ -24,7 +24,8 @@
 #define INCLUDED_ENCODER_TURBO_H
 
 #include "encoder_convolutional.h"
-#include <vector>
+
+typedef std::vector<size_t> interleaver_t;
 
 class encoder_turbo : public encoder
 {
@@ -53,18 +54,19 @@ public:
   encoder_turbo
   (int n_code_inputs,
    int n_code_outputs,
-   const std::vector<encoder_convolutional*> &encoders,
-   const std::vector<size_t> &interleavers);
+   const std::vector<encoder_convolutional*>& encoders,
+   const std::vector<interleaver_t>& interleavers);
 
   virtual ~encoder_turbo () {};
 
 /* for remote access to internal info */
 
-  inline bool do_termination () {return (d_do_termination);};
+  inline const bool do_termination () {return (d_do_termination);};
 
 #if 1
-  virtual size_t compute_n_input_bits (size_t n_output_bits);
-  virtual size_t compute_n_output_bits (size_t n_input_bits);
+  // dummy functions for now
+  virtual size_t compute_n_input_bits (size_t n_output_bits){return(0);};
+  virtual size_t compute_n_output_bits (size_t n_input_bits){return(0);};
 #endif
 
 protected:
@@ -84,44 +86,15 @@ protected:
     fsm_enc_turbo_init, fsm_enc_turbo_doing_input, fsm_enc_turbo_doing_term
   };
 
-/*
- * maio(i,o): matrix access into a vector, knowing the # of code
- *     outputs (from inside the class). References into a vector with
- *     code inputs ordered by code output.
- *
- * 'i' is the first dimension - immediate memory order first - the code input
- * 'o' is the second dimension - slower memory order second - the code output
- *
- * returns ((o*n_code_outputs) + i)
- */
-
-  inline size_t maio(size_t i, size_t o) {return ((o*d_n_code_outputs) + i);};
-
-/*
- * maoi(i,o): matrix access into a vector, knowing the # of code
- *     inputs (from inside the class). References into a vector with
- *     code outputs ordered by code input.
- *
- * 'o' is the first dimension - immediate memory order first - the code output
- * 'i' is the second dimension - slower memory order second - the code input
- *
- * returns ((i*n_code_inputs) + o)
- */
-
-  inline size_t maoi(size_t i, size_t o) {return ((i*d_n_code_inputs) + o);};
-
   // methods defined in this class
 #if 1
   // temporary just to get full compilation
 
-  virtual void encode_private (const char** in_buf, char** out_buf);
-  virtual char get_next_bit (const char** in_buf, size_t code_input_n);
-  virtual void output_bit (char t_out_bit, char** out_buf,
-			   size_t t_output_stream);
+  virtual void encode_private () {};
+
 #else
-  virtual void encode_private (const char** in_buf, char** out_buf) = 0;
-  virtual void encode_loop (const char** in_buf, char** out_buf,
-			    size_t* which_counter, size_t how_many) = 0;
+  virtual void encode_private () = 0;
+  virtual void encode_loop (size_t* which_counter, size_t how_many) = 0;
   virtual char get_next_bit (const char** in_buf, size_t code_input_n) = 0;
   virtual char get_next_bit__term (size_t code_input_n) = 0;
 
@@ -131,7 +104,6 @@ protected:
 
   virtual char get_next_bit__input (const char** in_buf,
 				    size_t code_input_n) = 0;
-  virtual void increment_io_indices (bool while_encoding) = 0;
 #endif
 
   // variables

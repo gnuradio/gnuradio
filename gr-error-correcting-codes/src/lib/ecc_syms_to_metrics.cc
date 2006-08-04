@@ -24,25 +24,25 @@
 #include "config.h"
 #endif
 
-#include <gr_syms_to_metrics.h>
+#include <ecc_syms_to_metrics.h>
 #include <gr_io_signature.h>
 #include <assert.h>
 
-gr_syms_to_metrics_sptr 
-gr_make_syms_to_metrics (gr_feval_ff* pdf_fcn_0_bit,
-			 gr_feval_ff* pdf_fcn_1_bit,
-			 int n_samples,
-			 float min_sample,
-			 float max_sample,
-			 int sample_precision)
+ecc_syms_to_metrics_sptr 
+ecc_make_syms_to_metrics (gr_feval_ff* pdf_fcn_0_bit,
+			  gr_feval_ff* pdf_fcn_1_bit,
+			  int n_samples,
+			  float min_sample,
+			  float max_sample,
+			  int sample_precision)
 {
-  return gr_syms_to_metrics_sptr
-    (new gr_syms_to_metrics (pdf_fcn_0_bit,
-			     pdf_fcn_1_bit,
-			     n_samples,
-			     min_sample,
-			     max_sample,
-			     sample_precision));
+  return ecc_syms_to_metrics_sptr
+    (new ecc_syms_to_metrics (pdf_fcn_0_bit,
+			      pdf_fcn_1_bit,
+			      n_samples,
+			      min_sample,
+			      max_sample,
+			      sample_precision));
 }
 
 /*
@@ -63,7 +63,7 @@ static float pdf_fcn_1 (float x)
   return (l_pdf_fcn_1_bit->eval (x));
 }
 
-gr_syms_to_metrics::gr_syms_to_metrics
+ecc_syms_to_metrics::ecc_syms_to_metrics
 (gr_feval_ff* pdf_fcn_0_bit,
  gr_feval_ff* pdf_fcn_1_bit,
  int n_samples,
@@ -74,62 +74,45 @@ gr_syms_to_metrics::gr_syms_to_metrics
 	      gr_make_io_signature (1, -1, sizeof (float)),
 	      gr_make_io_signature (0, 0, 0))
 {
-  if ((sample_precision < 0) | (sample_precision > 32)) {
-    fprintf (stderr, "gr_syms_to_metrics: sample_precision must be "
-	     " between 0 and 32.\n");
-    assert (0);
-  }
+  // setup the dummy functions to do the conversion from the
+  // python-provided feval classes to that which is needed by the
+  // libecc's code_metrics classes.
 
   l_pdf_fcn_0_bit = pdf_fcn_0_bit;
   l_pdf_fcn_1_bit = pdf_fcn_1_bit;
 
-  if (sample_precision == 0) {
-    // float
-    d_out_item_size_bytes = sizeof (float);
-    d_code_metrics = new code_metric_ff (&pdf_fcn_0,
-					 &pdf_fcn_1,
-					 n_samples,
-					 min_sample,
-					 max_sample);
-  } else if (sample_precision <= 8) {
-    // use char
-    d_out_item_size_bytes = sizeof (char);
-    d_code_metrics = new code_metric_fb (&pdf_fcn_0,
-					 &pdf_fcn_1,
-					 n_samples,
-					 min_sample,
-					 max_sample,
-					 sample_precision);
-  } else if (sample_precision <= 16) {
-    // use short
-    d_out_item_size_bytes = sizeof (short);
-    d_code_metrics = new code_metric_fs (&pdf_fcn_0,
-					 &pdf_fcn_1,
-					 n_samples,
-					 min_sample,
-					 max_sample,
-					 sample_precision);
-  } else {
-    // use long
-    d_out_item_size_bytes = sizeof (long);
-    d_code_metrics = new code_metric_fl (&pdf_fcn_0,
-					 &pdf_fcn_1,
-					 n_samples,
-					 min_sample,
-					 max_sample,
-					 sample_precision);
-  }
+  // use the static "create" member function to create the actual
+  // code_metrics to use.
+
+  d_code_metrics_table = libecc_code_metrics_create_table<float>
+    (&pdf_fcn_0,
+     &pdf_fcn_1,
+     n_samples,
+     min_sample,
+     max_sample,
+     sample_precision);
+
+  // get the output item size in bytes from the new code_metrics.
+
+  d_out_item_size_bytes = d_code_metrics_table->out_item_size_bytes ();
+
+  // set the output signature to match that which the code_metrics
+  // will generate.
 
   set_output_signature (gr_make_io_signature (1, -1, d_out_item_size_bytes));
 }
 
-bool gr_syms_to_metrics::check_topology (int ninputs, int noutputs)
+bool ecc_syms_to_metrics::check_topology (int ninputs, int noutputs)
 {
+  // there are 2 output streams per input stream; the first is ~to
+  // log(p(0|x)) = log-probability of a 0-bit given the input symbol
+  // 'x'; the second is ~to log(p(1|x)).
+
   return ((noutputs == (2*ninputs)) ? true : false);
 }
 
 void
-gr_syms_to_metrics::forecast
+ecc_syms_to_metrics::forecast
 (int noutput_items,
  gr_vector_int &ninput_items_required)
 {
@@ -140,7 +123,7 @@ gr_syms_to_metrics::forecast
 }
 
 int
-gr_syms_to_metrics::general_work
+ecc_syms_to_metrics::general_work
 (int noutput_items,
  gr_vector_int &ninput_items,
  gr_vector_const_void_star &input_items,
@@ -153,8 +136,8 @@ gr_syms_to_metrics::general_work
     void* t_out_buf_0_bit = (void*)(&(output_items[2*n]));
     void* t_out_buf_1_bit = (void*)(&(output_items[(2*n)+1]));
 
-    d_code_metrics->convert (l_n_output_items, t_in_buf,
-			     t_out_buf_0_bit, t_out_buf_1_bit);
+    d_code_metrics_table->convert (l_n_output_items, t_in_buf,
+				   t_out_buf_0_bit, t_out_buf_1_bit);
   }
 
   // consume the number of used input items on all input streams

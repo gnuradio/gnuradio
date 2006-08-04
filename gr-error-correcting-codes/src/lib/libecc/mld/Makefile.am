@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) -I.. -I../..
+INCLUDES = $(STD_DEFINES_AND_INCLUDES)
 
 noinst_LTLIBRARIES = libmld.la
 

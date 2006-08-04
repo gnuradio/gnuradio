@@ -32,12 +32,12 @@
  *
  * d_to_state: memory configuration of the "to" state
  *
- * d_output_bits: the output bits for this connection
+ * d_output_bits: the output bits for this connection, mux'ed
  */
 
 typedef struct connection_t {
   memory_t d_to_state;
-  std::vector<char> d_output_bits;
+  memory_t d_output_bits;
 } connection_t, *connection_t_ptr;
 
 /*
@@ -152,9 +152,11 @@ public:
 
 /* for remote access to internal info */
 
-  inline size_t block_size_bits () {return (d_block_size_bits);};
-  inline size_t n_code_inputs () {return (d_n_code_inputs);};
-  inline size_t n_code_outputs () {return (d_n_code_outputs);};
+  inline const size_t block_size_bits () {return (d_block_size_bits);};
+  inline const size_t n_code_inputs () {return (d_n_code_inputs);};
+  inline const size_t n_code_outputs () {return (d_n_code_outputs);};
+  inline const size_t n_states () {return (d_n_states);};
+  inline const size_t n_input_combinations () {return (d_n_input_combinations);};
   inline const bool do_termination () {return (d_do_termination);};
   inline const bool do_feedback () {return (d_do_feedback);};
   inline const bool do_streaming () {return (d_do_streaming);};
@@ -165,14 +167,25 @@ public:
 			       size_t bit_num,
 			       std::vector<char>& inputs);
 
+  // encode_lookup: given the starting state and inputs, return the
+  // resulting state and output bits.  Two versions: the first is
+  // better for decoding, while the second is better for encoding.
+
+  void encode_lookup (memory_t& state,
+		      const std::vector<char>& inputs,
+		      memory_t& out_bits);
   void encode_lookup (memory_t& state,
 		      const std::vector<char>& inputs,
 		      std::vector<char>& out_bits);
+
+  // methods for setting and retrieving the state, inputs, and outputs.
 
   void demux_state (memory_t in_state, std::vector<memory_t>& memories);
   memory_t mux_state (const std::vector<memory_t>& memories);
   void demux_inputs (memory_t inputs, std::vector<char>& in_vec);
   memory_t mux_inputs (const std::vector<char>& in_vec);
+  void demux_outputs (memory_t outputs, std::vector<char>& out_vec);
+  memory_t mux_outputs (const std::vector<char>& out_vec);
 
 protected:
 #if 0
@@ -267,7 +280,7 @@ protected:
   void encode_single (memory_t in_state,
 		      memory_t inputs,
 		      memory_t& out_state,
-		      std::vector<char>& out_bits);
+		      memory_t& out_bits);
   virtual void encode_single_soai ();
   virtual void encode_single_siao ();
   virtual void encode_single_soai_fb ();
