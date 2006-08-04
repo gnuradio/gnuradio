@@ -32,7 +32,7 @@ The bleeding edge code can be found in our subversion repository at
 http://gnuradio.utah.edu/svn.  To checkout the latest, use this
 command:
 
-  $ svn co http://gnuradio.utah.edu/svn/gnuradio/trunk co gnuradio
+  $ svn co http://gnuradio.utah.edu/svn/gnuradio/trunk gnuradio
 
 For information about subversion, please see:
   http://subversion.tigris.org/
