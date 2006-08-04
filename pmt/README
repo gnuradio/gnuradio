@@ -24,22 +24,3 @@ polymorphic types.  These are similar to lisp or python data objects,
 and implement transparent reference counting using the boost shared_ptr
 templates.
 
-To build the examples from the tarball use the normal recipe:
-
-  $ ./configure
-  $ make
-  $ make check
-
-If you're building from CVS, you'll need to use this sequence, since
-CVS doesn't contain configure or the generated Makefiles.
-
-  $ ./bootstrap
-  $ ./configure
-  $ make
-  $ make check
-
-
-The doc directory is not built by default.  This is to avoid spurious
-build problems on systems that don't have xmlto installed.  If you
-have xmlto and its dependencies installed, you can build the html
-version of the howto article by cd'ing to doc and invoking make.

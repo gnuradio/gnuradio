@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2003,2004,2005 Free Software Foundation, Inc.
+# Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,28 +19,57 @@
 # Boston, MA 02111-1307, USA.
 # 
 
--------------------------------------------------------------------------------
+Welcome to GNU Radio!
 
-				IMPORTANT
 
--------------------------------------------------------------------------------
+As of August 3, 2006 we have restructured the GNU Radio build process
+and moved the source code repository from CVS to subversion.
 
-GNU Radio is now broken up into several packages.  You're looking at
-the gnuradio-core.  You'll probably want some or all of these too.
-Build and install them in the order listed here:
+Please see http://gnuradio.utah.edu/trac for the wiki, bug tracking,
+and source code viewer.
 
-  gnuradio-core     # main library
-  gnuradio-examples # examples
-  gr-audio-alsa     # support for sounds cards using ALSA (prefered under GNU/Linux)
-  gr-audio-oss      # support for sounds cards using OSS
-  gr-audio-jack     # support for JACK Audio Connection Kit
-  gr-audio-windows  # support for sounds cards using Windows Wave
-  gr-comedi         # support for DAQ cards using COMEDI
-  gr-wxgui	    # GUI framework built on wxPython
-  usrp		    # non-GNU Radio specific portion of usrp
-  gr-usrp	    # glues usrp into GNU Radio
-  mc4020	    # GNU/Linux driver for Measurement Computing PCI-DAS4020/12 A/D board
-  gr-mc4020	    # the glue that ties the mc4020 driver into GNU Radio
+The bleeding edge code can be found in our subversion repository at
+http://gnuradio.utah.edu/svn.  To checkout the latest, use this
+command:
+
+  $ svn co http://gnuradio.utah.edu/svn/gnuradio/trunk co gnuradio
+
+For information about subversion, please see:
+  http://subversion.tigris.org/
+
+
+
+GNU Radio is now distributed as one giant blob, instead of N smaller
+blobs.  We believe that this will reduce some of the build problems
+people were seeing.  Now you'll always get all of the code, and the
+configure step will determine which components can be built on your
+system.
+
+
+How to Build GNU Radio:
+
+  (1) Ensure that you've satisfied the external dependencies listed
+      below.  With the exception of SDCC, the following GNU/Linux
+      distributions are known to come with all required dependencies
+      pre-packaged: Ubuntu 6.06, SuSE 10.0 (the pay version, not the
+      free download), Fedora Core 5.  Other distribution may work too.
+      We know these three are easy.  The required packages may be
+      contained on your installation CD/DVD, or may be loaded over the
+      net.  The specifics vary depending on your GNU/Linux
+      distribution.  See the wiki at
+      http://gnuradio.utah.edu/trac/wiki for details.
+
+      FIXME: update the wiki; talk about OS/X, NetBSD and MinGW too.
+
+  (2) do the "usual dance"
+
+      $ ./bootstrap        # not reqd when building from the tarball
+      $ ./configure
+      $ make && make check
+      $ sudo make install
+
+
+That's it!
 
 
 -------------------------------------------------------------------------------
@@ -48,14 +77,41 @@ Build and install them in the order listed here:
 		       KNOWN INCOMPATIBILITIES
 
 
-  GNU Radio triggers bugs in g++ 3.3 for X86.  DO NOT USE GCC 3.3.
-  gcc 3.2 and 3.4 are known to work well.
+  GNU Radio triggers bugs in g++ 3.3 for X86.  DO NOT USE GCC 3.3 on
+  the X86 platform.  g++ 3.2, 3.4, and the 4.* series are known to work well.
 
 -------------------------------------------------------------------------------
 
-Prerequisites (you may already have these):
+-------------------------------------------------------------------------------
 
-(1)  pkgconfig 0.15.0 or later  http://www.freedesktop.org/Software/pkgconfig
+			  External dependencies
+
+-------------------------------------------------------------------------------
+
+Prerequisites: Before trying to build these from source, please try
+your installation tool (apt-get, YaST, yum, urpmi, etc.) first.
+Contemporary distributions have these packages available.
+
+You'll need to do a bit of sleuthing to figure out what your OS and
+packaging system calls these.  If your system has both a foo and a
+foo-devel package, install them both.
+
+
+(1) The "autotools"
+
+       autoconf 2.57    or later
+       automake 1.7.4   or later
+       libtool  1.5     or later
+
+If your system has automake-1.4, there's a good chance it also has
+automake-1.7 or later.  Check your install disk and/or try:
+
+  $ man update-alternatives
+
+for info on how some distributions support multiple versions.
+
+
+(2)  pkgconfig 0.15.0 or later  http://www.freedesktop.org/Software/pkgconfig
 
 From the web site:
 
@@ -64,7 +120,7 @@ works with automake and autoconf. It replaces the ubiquitous *-config
 scripts you may have seen with a single tool.
 
 
-(2)  FFTW 3.0 or later	      http://www.fftw.org
+(3)  FFTW 3.0 or later	      http://www.fftw.org
 
 IMPORTANT!!!  When building FFTW, you MUST use the --enable-single and
 --enable-shared configure options.  This builds the single precision
@@ -73,56 +129,63 @@ floating point version which we use.  You should also use either the
 respectively.
 
 
-(3) Python 2.3 or later	      http://www.python.org
+(4) Python 2.3 or later	      http://www.python.org
 
 Python 2.3 or later is now required.  If your distribution splits
 python into a bunch of separate RPMS including python-devel or
 libpython you'll most likely need those too.
 
 
-(4) Numeric python library   http://numeric.scipy.org
+(5) Numeric python library   http://numeric.scipy.org
 
 Provides a high performance array type for Python.
+http://sourceforge.net/project/showfiles.php?group_id=1369&package_id=1351
 
 
-(5) The Boost C++ Libraries	http://www.boost.org
+(6) The Boost C++ Libraries	http://www.boost.org
 
-We use the Smart Pointer library.  Fedore Core 2 has a package for
-this, boost-devel-1.31.0-7.  Otherwise download the source and follow
-the build instructions.  They're a bit different from the normal
-./configure && make
+We use the Smart Pointer library.  Your distribution almost certainly
+has the boost libraries available.  In the unlikely event that it
+doesn't, download the source and follow the build instructions.
+They're different from the normal ./configure && make
 
 
-(6) cppunit 1.9.14 or later.	http://cppunit.sourceforge.net
+(7) cppunit 1.9.14 or later.	http://cppunit.sourceforge.net
 
 Unit testing framework for C++.
 
 
-(7) Simple Wrapper Interface Generator.  http://www.swig.org
+(8) Simple Wrapper Interface Generator.  http://www.swig.org
 
 These versions are known to work:
   1.3.23, 1.3.24, 1.3.25, 1.3.27, 1.3.28, 1.3.29
 
+
+(9) SDCC: Small Device C Compiler.  http://sdcc.sourceforge.net/
+
+Use version 2.4.0 or later.
+
+This includes a C compiler and linker for the 8051.  It's required to
+build the firmware for the USRP.  If you don't have a USRP, don't
+worry about it.
+
+
+Optional, but nice to have:
+
+(10) wxPython.  Python binding for the wxWidgets GUI framework.  
+Use version 2.5.2.7 or later.  Again, your distribution almost
+certainly has this available.
+
+As a last resort, build it from source (not recommended!)
+http://www.wxpython.org
+
+
 ----------------------------------------------------------------
-
-For the impatient, just do the following:
-
-	$ ./configure
-	$ make
-	$ make check
-	$ make install
-
-If it doesn't work, fix it and send us a patch...
-
-
-See http://www.gnu.org/software/gnuradio/ for an overview.
-The project is hosted at http://savannah.gnu.org/projects/gnuradio/
-
 
 If you've got doxygen installed and provide the --enable-doxygen
 configure option, the build process creates documentation for the
 class hierarchy etc.  Point your browser at
-gnuradio-core/doc/html/index.html
+gnuradio/gnuradio-core/doc/html/index.html
 
 
 To run the examples you'll need to set PYTHONPATH.
@@ -134,57 +197,9 @@ installed version of python.
 You may want to add this to your ~/.bash_profile
 
 
-
-----------------------------------------------------------------
-
-    Notes on building GNU Radio from the CVS repository
-
-----------------------------------------------------------------
-
-If you're building from the CVS repository YOU MUST BE PLAYING BY THE
-RULES THAT THE OTHER DEVELOPERS ARE USING.  This is especially true
-with regard to the versions of the tools below...
-
-Ensure that you've got THESE VERSIONS of the following tools:
-
-       autoconf 2.57    or later
-       automake 1.7.4   or later
-       libtool  1.5     or later
-       swig     1.3.{23,24,25,27,28,29}
-
-If you're using earlier versions than these, don't expect the system
-to build.  Get these versions or something later.  They're available
-at any of the GNU mirrors.
-
-Then, check out a copy of GNU Radio.  
-
-See http://www.gnu.org/software/gnuradio for directions on anonymous
-access to the CVS repository.
-
-Then in the top level directory, execute
-
-     $ ./bootstrap
-
-This builds configure from configure.ac and also builds all the
-Makefile.in's from the Makefile.am's.
-
-Then carry on as usual:
-
-     $ ./configure
-     $ make
-     $ make check
-     $ make install
-
-
-For the easiest way to build from CVS, see
-http://comsec.com/wiki?HowtoBuildFromCVS
-
-
-
 Another handy trick if for example your fftw includes and libs are
 installed in, say ~/local/include and ~/local/lib, instead of
 /usr/local is this:
 
     $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/local/lib
     $ make CPPFLAGS="-I$HOME/local/include"
-

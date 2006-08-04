@@ -10,14 +10,6 @@ USE VERSION 2.4.0 or VERSION 2.5.0 due to some problems with variable
 initialization.  http://sdcc.sourceforge.net
 
 
-# To get started...
-
-./bootstrap	# if you're building from CVS
-
-./configure
-make && make check && make install
-
-
 The high level interface to the USRP using our standard FPGA bitstram
 is contained in usrp/host/lib/usrp_standard.h
 
