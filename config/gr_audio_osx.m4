@@ -22,13 +22,12 @@ AC_DEFUN([GR_AUDIO_OSX],[
 
     succeeded=yes
     MACOSX_AUDIOUNIT([],[succeeded=no])
-    if test $succeeded = yes; then
-        AC_CONFIG_FILES([\
-	  gr-audio-osx/Makefile \
-	  gr-audio-osx/src/Makefile \
-	  gr-audio-osx/src/run_tests \
+    AC_CONFIG_FILES([\
+ 	gr-audio-osx/Makefile \
+	gr-audio-osx/src/Makefile \
+	gr-audio-osx/src/run_tests \
 	])
-
+    if test $succeeded = yes; then
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_osx], [chmod +x gr-audio-osx/src/run_tests])
         subdirs="$subdirs gr-audio-osx"

@@ -27,3 +27,4 @@ EXTRA_DIST = 				\
 	config.h.in
 
 SUBDIRS = @subdirs@
+DIST_SUBDIRS = @subdirs@ @failed_subdirs@

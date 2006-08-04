@@ -165,6 +165,7 @@ GR_WXGUI
 
 dnl Has list of successfully configured components
 AC_SUBST([subdirs],$subdirs)
+AC_SUBST([failed_subdirs], $failed)
  
 AC_CONFIG_FILES([\
 	  Makefile \
