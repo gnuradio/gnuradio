@@ -77,6 +77,7 @@ swiginclude_HEADERS = 			\
 
 _audio_portaudio_la_LIBADD = 		\
 	$(PYTHON_LDFLAGS)		\
+	$(PORTAUDIO_LIBS)		\
 	-lstdc++				
 
 _audio_portaudio_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version

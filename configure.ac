@@ -205,7 +205,7 @@ if test "$failed" != ""; then
     echo You may still run the 'make' command to build the successfully configured
     echo components.
     echo
-    exit 1
+    #exit 1
 fi
 echo You my now run the 'make' command to build these packages.
 echo
