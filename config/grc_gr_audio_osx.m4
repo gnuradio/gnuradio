@@ -20,13 +20,14 @@ dnl Boston, MA 02111-1307, USA.
 AC_DEFUN([GRC_GR_AUDIO_OSX],[
     AC_CONFIG_SRCDIR([gr-audio-osx/src/audio_osx.i])
 
-    succeeded=yes
-    MACOSX_AUDIOUNIT([],[succeeded=no])
-    AC_CONFIG_FILES([\
- 	gr-audio-osx/Makefile \
+    AC_CONFIG_FILES([ \
+	gr-audio-osx/Makefile \
 	gr-audio-osx/src/Makefile \
 	gr-audio-osx/src/run_tests \
-	])
+    ])
+    
+    succeeded=yes
+    MACOSX_AUDIOUNIT([],[succeeded=no])
     if test $succeeded = yes; then
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_osx], [chmod +x gr-audio-osx/src/run_tests])

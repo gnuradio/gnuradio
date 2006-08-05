@@ -20,6 +20,12 @@ dnl Boston, MA 02111-1307, USA.
 AC_DEFUN([GRC_GR_USRP],[
     AC_CONFIG_SRCDIR([gr-usrp/src/usrp1.i])
 
+    AC_CONFIG_FILES([ \
+	 gr-usrp/Makefile \
+	 gr-usrp/src/Makefile \
+	 gr-usrp/src/run_tests \
+    ])
+
     # Don't do gr-usrp if usrp failed
     # There *has* to be a better way to check if a value is in a string
     succeeded=yes
@@ -31,15 +37,8 @@ AC_DEFUN([GRC_GR_USRP],[
     done
 
     if test $succeeded = yes; then
-	AC_CONFIG_FILES([\
-	  gr-usrp/Makefile \
-	  gr-usrp/src/Makefile \
-	  gr-usrp/src/run_tests \
-	])
-
 	dnl run_tests is created from run_tests.in.  Make it executable.
 	AC_CONFIG_COMMANDS([run_tests_usrp], [chmod +x gr-usrp/src/run_tests])
-
 	subdirs="$subdirs gr-usrp"
     else
 	failed="$failed gr-usrp"

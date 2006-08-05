@@ -20,16 +20,16 @@ dnl Boston, MA 02111-1307, USA.
 AC_DEFUN([GRC_GR_AUDIO_JACK],[
     AC_CONFIG_SRCDIR([gr-audio-jack/src/audio_jack.i])
 
+    AC_CONFIG_FILES([ \
+	gr-audio-jack/Makefile \
+        gr-audio-jack/src/Makefile \
+	gr-audio-jack/src/run_tests \
+    ])
+
     succeeded=yes
     PKG_CHECK_MODULES(JACK, jack >= 0.8,[],[succeeded=no])
     if test $succeeded = yes; then
         LIBS="$LIBS $JACK_LIBS"
-
-        AC_CONFIG_FILES([\
-          gr-audio-jack/Makefile \
-          gr-audio-jack/src/Makefile \
-	  gr-audio-jack/src/run_tests \
-	])
 
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_jack], [chmod +x gr-audio-jack/src/run_tests])

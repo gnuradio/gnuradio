@@ -20,16 +20,16 @@ dnl Boston, MA 02111-1307, USA.
 AC_DEFUN([GRC_GR_AUDIO_ALSA],[
     AC_CONFIG_SRCDIR([gr-audio-alsa/src/audio_alsa.i])
 
+    AC_CONFIG_FILES([ \
+	gr-audio-alsa/Makefile \
+	gr-audio-alsa/src/Makefile \
+	gr-audio-alsa/src/run_tests \
+    ])
+
     succeeded=yes
     PKG_CHECK_MODULES(ALSA, alsa >= 0.9,[],[succeeded=no])
     if test $succeeded = yes; then
         LIBS="$LIBS $ALSA_LIBS"
-
-        AC_CONFIG_FILES([\
-	  gr-audio-alsa/Makefile \
-	  gr-audio-alsa/src/Makefile \
-	  gr-audio-alsa/src/run_tests \
-	])
 
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_alsa], [chmod +x gr-audio-alsa/src/run_tests])

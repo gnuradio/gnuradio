@@ -20,8 +20,13 @@ dnl Boston, MA 02111-1307, USA.
 AC_DEFUN([GRC_GR_VIDEO_SDL],[
     AC_CONFIG_SRCDIR([gr-video-sdl/src/video_sdl.i])
 
+    AC_CONFIG_FILES([ \
+	gr-video-sdl/Makefile \
+	gr-video-sdl/src/Makefile \
+	gr-video-sdl/src/run_tests \
+    ])
+    
     succeeded=yes
-
     dnl Check for SDL
     SDL_VERSION=1.2.0
     AM_PATH_SDL($SDL_VERSION,[],[succeeded=no])
@@ -29,13 +34,6 @@ AC_DEFUN([GRC_GR_VIDEO_SDL],[
     if test $succeeded = yes; then
         AM_CFLAGS="$AM_CFLAGS $SDL_CFLAGS"
         AM_LDFLAGS="$AM_LDFLAGS $SDL_LIBS"
-
-        AC_CONFIG_FILES([\
-	  gr-video-sdl/Makefile \
-	  gr-video-sdl/src/Makefile \
-	  gr-video-sdl/src/run_tests \
-	])
-
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_sdl], [chmod +x gr-video-sdl/src/run_tests])
         subdirs="$subdirs gr-video-sdl"

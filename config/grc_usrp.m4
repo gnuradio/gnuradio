@@ -20,6 +20,29 @@ dnl Boston, MA 02111-1307, USA.
 AC_DEFUN([GRC_USRP],[
     AC_CONFIG_SRCDIR([usrp/host/lib/usrp_prims.h])
 
+    AC_CONFIG_FILES([ \
+	usrp/Makefile				\
+	usrp/usrp.pc 				\
+	usrp/usrp.iss				\
+	usrp/doc/Doxyfile			\
+	usrp/doc/Makefile			\
+	usrp/doc/other/Makefile			\
+	usrp/host/Makefile			\
+	usrp/host/misc/Makefile			\
+	usrp/host/lib/Makefile			\
+	usrp/host/lib/std_paths.h		\
+	usrp/host/swig/Makefile			\
+	usrp/host/apps/Makefile			\
+	usrp/firmware/Makefile			\
+	usrp/firmware/include/Makefile		\
+	usrp/firmware/lib/Makefile		\
+	usrp/firmware/src/Makefile 		\
+	usrp/firmware/src/common/Makefile 	\
+	usrp/firmware/src/usrp2/Makefile 	\
+	usrp/fpga/Makefile			\
+	usrp/fpga/rbf/Makefile			\
+    ])
+
     AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
     AM_CONDITIONAL(HAS_XMLTO, test x$XMLTO = xyes)
 
@@ -54,29 +77,6 @@ AC_DEFUN([GRC_USRP],[
         DEFINES="$USRP_DEFINES"
         AC_SUBST(DEFINES)
 
-        AC_CONFIG_FILES([ \
-	  usrp/Makefile				\
-	  usrp/usrp.pc 				\
-	  usrp/usrp.iss				\
-	  usrp/doc/Doxyfile			\
-	  usrp/doc/Makefile			\
-	  usrp/doc/other/Makefile		\
-	  usrp/host/Makefile			\
-	  usrp/host/misc/Makefile		\
-	  usrp/host/lib/Makefile		\
-	  usrp/host/lib/std_paths.h		\
-	  usrp/host/swig/Makefile		\
-	  usrp/host/apps/Makefile		\
-	  usrp/firmware/Makefile		\
-	  usrp/firmware/include/Makefile	\
-	  usrp/firmware/lib/Makefile		\
-	  usrp/firmware/src/Makefile 		\
-	  usrp/firmware/src/common/Makefile 	\
-	  usrp/firmware/src/usrp2/Makefile 	\
-	  usrp/fpga/Makefile			\
-	  usrp/fpga/rbf/Makefile		\
-	])
-    
 	subdirs="$subdirs usrp"
     else
 	failed="$failed usrp"

@@ -20,16 +20,16 @@ dnl Boston, MA 02111-1307, USA.
 AC_DEFUN([GRC_GR_AUDIO_WINDOWS],[
     AC_CONFIG_SRCDIR([gr-audio-windows/src/audio_windows.i])
 
+    AC_CONFIG_FILES([ \
+	gr-audio-windows/Makefile \
+	gr-audio-windows/src/Makefile \
+	gr-audio-windows/src/run_tests \
+    ])
+
     succeeded=yes
     AC_HAVE_LIBRARY(winmm,[],[succeeded=no])
 
     if test $succeeded = yes; then
-        AC_CONFIG_FILES([\
-	  gr-audio-windows/Makefile \
-	  gr-audio-windows/src/Makefile \
-	  gr-audio-windows/src/run_tests \
-	])
-
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_windows], [chmod +x gr-audio-windows/src/run_tests])
         subdirs="$subdirs gr-audio-windows"
