@@ -37,4 +37,4 @@ grpyexecdir = $(pyexecdir)/gnuradio
 SWIGPYTHONFLAGS = -fvirtual -python -modern
 
 # gnuradio-core library link command
-GNURADIO_CORE_LIBS = -L$(top_srcdir)/gnuradio-core/src/lib/.libs -lgnuradio-core -lfftw3f -lm
+GNURADIO_CORE_LIBS = -L$(top_srcdir)/gnuradio-core/src/lib -lgnuradio-core -lfftw3f -lm

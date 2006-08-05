@@ -61,7 +61,7 @@ ourpython_PYTHON =			\
 
 
 USRP_INCLUDES = -I$(top_srcdir)/usrp/host/lib -I$(top_srcdir)/usrp/firmware/include
-USRP_LIBS = -L$(top_srcdir)/usrp/host/lib/.libs -lusrp
+USRP_LIBS = -L$(top_srcdir)/usrp/host/lib -lusrp
 
 INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) 
 
