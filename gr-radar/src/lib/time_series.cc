@@ -32,6 +32,10 @@
 #include <unistd.h>
 #include <iostream>
 
+#ifndef O_LARGEFILE
+#define O_LARGEFILE 0
+#endif
+
 
 time_series::time_series(size_t itemsize, const std::string filename,
 			 unsigned long long starting_offset,
