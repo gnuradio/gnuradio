@@ -32,7 +32,9 @@ ourlibdir    = $(grpyexecdir)
 wxguipythondir  = $(grpythondir)/wxgui
 wxguilibdir     = $(grpyexecdir)/wxgui
 
-EXTRA_DIST = run_tests.in
+EXTRA_DIST = run_tests.in		\
+	     usrp_ra_receiver.py	\
+	     usrp_psr_receiver.py
 
 
 TESTS = 				\

@@ -21,11 +21,9 @@
 # 
 
 # includes
-# FIXME: are these used anymore?
 grincludedir   = $(includedir)/gnuradio
 
 # swig includes 
-# FIXME: are these used anymore?
 swigincludedir = $(grincludedir)/swig
 
 # Install this stuff in the appropriate subdirectory

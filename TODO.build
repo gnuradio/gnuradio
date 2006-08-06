@@ -1,13 +1,9 @@
 Overall:
 
-* VPATH builds fail.  This is now part of ticket 10.
-
 * Change a Makefile.am in a subdir, must manually go back up and re-run
 configure. Otherwise it gets run somehow incorrectly.
 
-* Fix overuse of LIBS vs. LIBADD, LDADD, or LDFLAGS, allong with xxx_
-
-* Make distcheck is failing, logged as ticket 10.
+* Fix overuse of LIBS vs. LIBADD, LDADD, or LDFLAGS, along with xxx_, now ticket 18.
 
 * Use common run_tests.in file.  This is now ticket 3.
 
@@ -52,6 +48,3 @@ gnuradio-examples/python/gmsk2:
 usrp/doc:
 
 * Make not tested in this directory
-
-All:
-
