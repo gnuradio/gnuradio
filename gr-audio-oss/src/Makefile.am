@@ -71,6 +71,7 @@ swiginclude_HEADERS = 			\
 
 _audio_oss_la_LIBADD = 			\
 	$(PYTHON_LDFLAGS)		\
+	$(OSS_LIBS)			\
 	-lstdc++				
 
 _audio_oss_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version

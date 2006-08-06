@@ -28,11 +28,20 @@ AC_DEFUN([GRC_GR_AUDIO_OSS],[
 
     succeeded=yes
 
-    dnl needed for NetBSD
-    dnl FIXME: conditionalize on NetBSD platform
-    dnl AC_HAVE_LIBRARY(ossaudio,[],[succeeded=no])
-    AC_CHECK_HEADER(sys/soundcard.h,[],[succeeded=no])
+    case $target in
+    	*-*-netbsd*)
+    	    AC_HAVE_LIBRARY(ossaudio,[],[succeeded=no])
+	    if test $succeeded = yes; then
+		OSS_LIBS=-lossaudio
+		AC_MSG_RESULT([Using OSS library $OSS_LIBS])
+	    fi
+    	    ;;
+    	*)
+    	    AC_CHECK_HEADER(sys/soundcard.h,[],[succeeded=no])
+    esac
+
     if test $succeeded = yes; then
+	AC_SUBST(OSS_LIBS)
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_oss], [chmod +x gr-audio-oss/src/run_tests])
         subdirs="$subdirs gr-audio-oss"
