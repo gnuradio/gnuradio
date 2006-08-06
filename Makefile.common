@@ -36,5 +36,27 @@ grpyexecdir = $(pyexecdir)/gnuradio
 # swig flags
 SWIGPYTHONFLAGS = -fvirtual -python -modern
 
-# gnuradio-core library link command
-GNURADIO_CORE_LIBS = -L$(top_builddir)/gnuradio-core/src/lib -lgnuradio-core -lfftw3f -lm
+GNURADIO_INCLUDES = -I$(top_srcdir)/gnuradio-core/src/lib/runtime \
+		    -I$(top_srcdir)/gnuradio-core/src/lib/general \
+		    -I$(top_srcdir)/gnuradio-core/src/lib/filter \
+                    -I$(top_srcdir)/gnuradio-core/src/lib/reed-solomon \
+		    -I$(top_srcdir)/gnuradio-core/src/lib/io \
+		    -I$(top_srcdir)/gnuradio-core/src/lib/g72x \
+		    -I$(top_srcdir)/gnuradio-core/src/lib/atsc \
+		    -I$(top_srcdir)/gnuradio-core/src/lib/omnithread \
+		    -I$(top_srcdir)/gnuradio-core/src/lib/swig \
+                    -I$(top_builddir)/gnuradio-core/src/lib/swig \
+	            $(FFTW3F_CFLAGS)
+
+GNURADIO_CORE_LIBS = -L$(top_builddir)/gnuradio-core/src/lib \
+                     -lgnuradio-core -lfftw3f -lm
+
+GNURADIO_I = $(top_builddir)/gnuradio-core/src/lib/swig/gnuradio.i
+
+USRP_INCLUDES = -I$(top_srcdir)/usrp/host/lib \
+           	-I$(top_srcdir)/usrp/firmware/include
+
+USRP_LIBS = -L$(top_builddir)/usrp/host/lib \
+	    -lusrp
+
+STD_DEFINES_AND_INCLUDES=$(DEFINES) $(GNURADIO_INCLUDES) $(BOOST_CFLAGS)

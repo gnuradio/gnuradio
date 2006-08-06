@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2003,2004 Free Software Foundation, Inc.
+# Copyright 2001,2003,2004,2006 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -27,6 +27,9 @@ include $(top_srcdir)/Makefile.common
 ourpythondir = $(pythondir)
 ourlibdir    = $(pyexecdir)
 
+INCLUDES = $(USRP_INCLUDES) 		\
+	   $(PYTHON_CPPFLAGS) 		\
+	   -I$(srcdir)
 
 LOCAL_IFILES =				\
 	prims.i
@@ -49,9 +52,6 @@ ourpython_PYTHON = 			\
 	__init__.py			\
 	usrp_fpga_regs.py		\
 	usrp_prims.py			
-
-
-INCLUDES = $(USRP_INCLUDES) $(PYTHON_CPPFLAGS) -I$(srcdir)
 
 
 SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(INCLUDES)

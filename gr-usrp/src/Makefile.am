@@ -34,8 +34,7 @@ TESTS = run_tests
 LOCAL_IFILES = 				\
 	usrp1.i				
 
-NON_LOCAL_IFILES =			\
-	$(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
+NON_LOCAL_IFILES = $(GNURADIO_I)
 
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\
@@ -60,9 +59,13 @@ ourpython_PYTHON =			\
         usrp_multi.py			
 
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(USRP_INCLUDES)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES)  \
+	   $(PYTHON_CPPFLAGS) 		\
+	   $(USRP_INCLUDES)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) $(USRP_INCLUDES)
+SWIGPYTHONARGS = $(SWIGPYTHONFLAGS)	     \
+		 $(STD_DEFINES_AND_INCLUDES) \
+		 $(USRP_INCLUDES)
 
 grinclude_HEADERS =			\
 	usrp1_sink_base.h		\
@@ -114,4 +117,3 @@ MOSTLYCLEANFILES = \
 dist-hook:
 	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
 	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
-

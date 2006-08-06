@@ -67,21 +67,6 @@ AC_DEFUN([GRC_USRP],[
     AC_C_BIGENDIAN
 
     if test $succeeded = yes; then
-	dnl Define where to look for USRP includes
-	USRP_INCLUDES='-I$(top_srcdir)/usrp/host/lib -I$(top_srcdir)/usrp/firmware/include'
-	AC_SUBST(USRP_INCLUDES)
-
-        USRP_DEFINES=''
-        AC_SUBST(USRP_DEFINES)
-
-	dnl Define where to find USRP library
-	USRP_LIBS='-L$(top_builddir)/usrp/host/lib -lusrp'
-	AC_SUBST(USRP_LIBS)
-
-	dnl FIXME this looked very suspicious
-        dnl DEFINES="$USRP_DEFINES"
-        dnl AC_SUBST(DEFINES)
-
 	subdirs="$subdirs usrp"
     else
 	failed="$failed usrp"

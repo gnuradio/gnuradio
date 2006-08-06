@@ -128,10 +128,6 @@ dnl conditional build stuff
 GR_CHECK_DOXYGEN
 GR_SET_MD_CPU
 
-dnl Define where to look for GNURADIO includes
-GNURADIO_INCLUDES='-I$(top_srcdir)/gnuradio-core/src/lib/runtime -I$(top_srcdir)/gnuradio-core/src/lib/general -I$(top_srcdir)/gnuradio-core/src/lib/filter -I$(top_srcdir)/gnuradio-core/src/lib/io -I$(top_srcdir)/gnuradio-core/src/lib/g72x -I$(top_srcdir)/gnuradio-core/src/lib/atsc -I$(top_srcdir)/gnuradio-core/src/lib/omnithread -I$(top_builddir)/gnuradio-core/src/lib/general -I$(top_builddir)/gnuradio-core/src/lib/filter -I$(top_builddir)/gnuradio-core/src/lib/reed-solomon -I$(top_builddir)/gnuradio-core/src/lib/swig $(FFTW3F_CFLAGS)'
-AC_SUBST(GNURADIO_INCLUDES)
-
 dnl Define where to look for cppunit includes and libs
 dnl sets CPPUNIT_CFLAGS and CPPUNIT_LIBS
 AM_PATH_CPPUNIT([1.9.14],[],
@@ -146,9 +142,6 @@ GR_REQUIRE_BOOST_INCLUDES
 
 DEFINES=""
 AC_SUBST(DEFINES)
-
-STD_DEFINES_AND_INCLUDES="$DEFINES $GNURADIO_INCLUDES $BOOST_CFLAGS"
-AC_SUBST(STD_DEFINES_AND_INCLUDES)
 
 dnl Component specific configuration
 dnl The order of the GR_ macros determines the order of compilation

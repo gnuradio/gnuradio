@@ -17,7 +17,10 @@
 #  along with this program; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # 
-INCLUDES = -I$(top_srcdir)/usrp/firmware/include
+
+include $(top_srcdir)/Makefile.common
+
+INCLUDES = $(USRP_INCLUDES)
 
 lib_LTLIBRARIES = libusrp.la
 
