@@ -47,6 +47,8 @@ GNURADIO_INCLUDES = -I$(top_srcdir)/gnuradio-core/src/lib/runtime \
                     -I$(top_builddir)/gnuradio-core/src/lib/swig \
 	            $(FFTW3F_CFLAGS)
 
+# These used to be set in PKGCONFIG but now point to the current
+# build tree.
 GNURADIO_CORE_LIBS = -L$(top_builddir)/gnuradio-core/src/lib \
                      -lgnuradio-core -lfftw3f -lm
 
@@ -60,4 +62,6 @@ USRP_INCLUDES = -I$(top_srcdir)/usrp/host/lib \
 USRP_LIBS = -L$(top_builddir)/usrp/host/lib \
 	    -lusrp
 
+# This used to be set in configure.ac but is now defined here for all 
+# Makefiles when this fragment is included.
 STD_DEFINES_AND_INCLUDES=$(DEFINES) $(GNURADIO_INCLUDES) $(BOOST_CFLAGS)
