@@ -60,10 +60,7 @@ ourpython_PYTHON =			\
         usrp_multi.py			
 
 
-USRP_INCLUDES = -I$(top_srcdir)/usrp/host/lib -I$(top_srcdir)/usrp/firmware/include
-USRP_LIBS = -L$(top_srcdir)/usrp/host/lib -lusrp
-
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) 
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(USRP_INCLUDES)
 
 SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) $(USRP_INCLUDES)
 

@@ -51,10 +51,7 @@ ourpython_PYTHON = 			\
 	usrp_prims.py			
 
 
-INCLUDES = 					\
-	-I$(top_srcdir)/usrp/host/lib 		\
-	-I$(top_srcdir)/usrp/firmware/include 	\
-	$(PYTHON_CPPFLAGS) -I$(srcdir)
+INCLUDES = $(USRP_INCLUDES) $(PYTHON_CPPFLAGS) -I$(srcdir)
 
 
 SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(INCLUDES)
