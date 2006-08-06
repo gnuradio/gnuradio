@@ -1,13 +1,13 @@
 Overall:
 
-* VPATH builds fail, starting with usrp.
+* VPATH builds fail.  This is now part of ticket 10.
 
 * Change a Makefile.am in a subdir, must manually go back up and re-run
 configure. Otherwise it gets run somehow incorrectly.
 
 * Fix overuse of LIBS vs. LIBADD, LDADD, or LDFLAGS, allong with xxx_
 
-* Make dist and distcheck have not been tested.
+* Make distcheck is failing, logged as ticket 10.
 
 dtools:
 
@@ -15,7 +15,7 @@ dtools:
 
 gnuradio-core/doc:
 
-* Make hasn't been tested yet in this directory.
+* Make in this directory fails, logged as ticket 8.
 
 gnuradio-core/src/gen_interpolator_taps:
 
@@ -51,20 +51,6 @@ usrp/doc:
 
 * Make not tested in this directory
 
-usrp/firmware/include:
-
-* Refactor include directory specification in Makefile.am into 
-Makefile.common for use elsewhere
-
-usrp/firmware/lib:
-
-* Use refactored include directory specification from Makefile.common
-
-gr-usrp/src:
-
-* Use refactored gnuradio.i specification from Makefile.common
-
-* USRP_LIBS and USRP_INCLUDES are hardcoded.  These used to come out of 
-PKGCONFIG in the old system.
+All:
 
 * Use common run_tests.in
