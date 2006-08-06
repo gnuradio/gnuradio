@@ -36,6 +36,7 @@ grpyexecdir = $(pyexecdir)/gnuradio
 # swig flags
 SWIGPYTHONFLAGS = -fvirtual -python -modern
 
+# Where to find gnuradio include files in the current build tree
 GNURADIO_INCLUDES = -I$(top_srcdir)/gnuradio-core/src/lib/runtime \
 		    -I$(top_srcdir)/gnuradio-core/src/lib/general \
 		    -I$(top_srcdir)/gnuradio-core/src/lib/filter \
