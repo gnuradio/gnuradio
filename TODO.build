@@ -9,6 +9,8 @@ configure. Otherwise it gets run somehow incorrectly.
 
 * Make distcheck is failing, logged as ticket 10.
 
+* Use common run_tests.in file.  This is now ticket 3.
+
 dtools:
 
 * No checking or testing done in this directory.
@@ -53,4 +55,3 @@ usrp/doc:
 
 All:
 
-* Use common run_tests.in
