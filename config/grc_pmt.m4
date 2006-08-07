@@ -17,7 +17,7 @@ dnl along with GNU Radio; see the file COPYING.  If not, write to
 dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
-AC_DEFUN([GRC_GR_PMT],[
+AC_DEFUN([GRC_PMT],[
     AC_CONFIG_SRCDIR([pmt/src/lib/pmt.h])
 
     AC_CONFIG_FILES([\

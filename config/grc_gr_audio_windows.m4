@@ -30,6 +30,9 @@ AC_DEFUN([GRC_GR_AUDIO_WINDOWS],[
     AC_HAVE_LIBRARY(winmm,[],[succeeded=no])
 
     if test $succeeded = yes; then
+	WINAUDIO_LIBS=-lwinmm
+	AC_SUBST(WINAUDIO_LIBS)
+
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_windows], [chmod +x gr-audio-windows/src/run_tests])
         subdirs="$subdirs gr-audio-windows"

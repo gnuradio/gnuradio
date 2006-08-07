@@ -29,7 +29,7 @@ AC_DEFUN([GRC_GR_COMEDI],[
     succeeded=yes
     PKG_CHECK_MODULES(COMEDI, comedilib >= 0.7,[],[succeeded=no])
     if test $succeeded = yes; then
-        LIBS="$LIBS $COMEDI_LIBS"
+	AC_SUBST(COMEDI_LIBS)
 
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_comedi], [chmod +x gr-comedi/src/run_tests])

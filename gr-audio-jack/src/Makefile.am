@@ -21,8 +21,6 @@
 
 include $(top_srcdir)/Makefile.common
 
-LIBS += $(GNURADIO_CORE_LIBS)
-
 # Install this stuff so that it ends up as the gnuradio.audio_jack module
 # This usually ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio
@@ -38,7 +36,7 @@ LOCAL_IFILES = 				\
 	audio_jack.i				
 
 NON_LOCAL_IFILES =			\
-	$(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
+	$(GNURADIO_I)
 
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\
@@ -78,6 +76,8 @@ swiginclude_HEADERS = 			\
 
 _audio_jack_la_LIBADD = 		\
 	$(PYTHON_LDFLAGS)		\
+	$(GNURADIO_CORE_LIBS)		\
+	$(JACK_LIBS)			\
 	-lstdc++				
 
 _audio_jack_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version

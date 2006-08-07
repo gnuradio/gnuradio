@@ -36,7 +36,7 @@ LOCAL_IFILES = 				\
 	comedi.i				
 
 NON_LOCAL_IFILES =			\
-	$(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
+	$(GNURADIO_I)
 
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\
@@ -76,6 +76,7 @@ swiginclude_HEADERS = 		\
 _comedi_la_LIBADD = 		\
 	$(PYTHON_LDFLAGS)	\
 	$(GNURADIO_CORE_LIBS)	\
+	$(COMEDI_LIBS)		\
 	-lstdc++				
 
 _comedi_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version

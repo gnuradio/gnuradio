@@ -162,9 +162,9 @@ GRC_GR_ERROR_CORRECTING_CODES
 GRC_GR_GSM_FR_VOCODER
 GRC_GR_RADAR
 GRC_GR_RADIO_ASTRONOMY
-GRC_GR_PMT
 GRC_GR_VIDEO_SDL
 GRC_GR_WXGUI
+GRC_PMT
 
 dnl Has list of successfully configured components
 AC_SUBST([subdirs],$subdirs)

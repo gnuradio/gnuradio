@@ -29,7 +29,7 @@ AC_DEFUN([GRC_GR_AUDIO_ALSA],[
     succeeded=yes
     PKG_CHECK_MODULES(ALSA, alsa >= 0.9,[],[succeeded=no])
     if test $succeeded = yes; then
-        LIBS="$LIBS $ALSA_LIBS"
+	AC_SUBST(ALSA_LIBS)
 
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_alsa], [chmod +x gr-audio-alsa/src/run_tests])

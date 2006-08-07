@@ -23,8 +23,6 @@ include $(top_srcdir)/Makefile.common
 
 SUBDIRS = gsm .
 
-LIBS += $(GNURADIO_CORE_LIBS)
-
 # Install this stuff so that it ends up as the gnuradio.vocoder module
 # This usually ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio/vocoder
@@ -42,7 +40,7 @@ ALL_IFILES = 				\
 	$(NON_LOCAL_IFILES)		
 
 NON_LOCAL_IFILES =			\
-	$(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
+	$(GNURADIO_I)
 
 
 LOCAL_IFILES = 				\
@@ -78,6 +76,7 @@ _gsm_full_rate_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 _gsm_full_rate_la_LIBADD = 	\
 	gsm/libgsm.la		\
 	$(PYTHON_LDFLAGS)	\
+	$(GNURADIO_CORE_LIBS)	\
 	-lstdc++			
 
 gsm_full_rate.cc gsm_full_rate.py: gsm_full_rate.i $(ALL_IFILES)

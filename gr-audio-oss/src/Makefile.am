@@ -21,8 +21,6 @@
 
 include $(top_srcdir)/Makefile.common
 
-LIBS += $(GNURADIO_CORE_LIBS)
-
 # Install this stuff so that it ends up as the gnuradio.audio_oss module
 # This usually ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio
@@ -37,7 +35,7 @@ LOCAL_IFILES = 				\
 	audio_oss.i				
 
 NON_LOCAL_IFILES =			\
-	$(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
+	$(GNURADIO_I)
 
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\
@@ -71,6 +69,7 @@ swiginclude_HEADERS = 			\
 
 _audio_oss_la_LIBADD = 			\
 	$(PYTHON_LDFLAGS)		\
+	$(GNURADIO_CORE_LIBS)		\
 	$(OSS_LIBS)			\
 	-lstdc++				
 

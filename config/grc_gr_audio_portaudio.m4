@@ -28,9 +28,9 @@ AC_DEFUN([GRC_GR_AUDIO_PORTAUDIO],[
 
     succeeded=yes
     PKG_CHECK_MODULES(PORTAUDIO, portaudio-2.0 >= 19,[],[succeeded=no])
-    #AC_HAVE_LIBRARY([portaudio], [], [succeeded=no])
-    #AC_CHECK_HEADER([portaudio.h], [], [succeeded=no])
+
     if test $succeeded = yes; then
+	AC_SUBST(PORTAUDIO_LIBS)
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_portaudio], [chmod +x gr-audio-portaudio/src/run_tests])
         subdirs="$subdirs gr-audio-portaudio"

@@ -22,7 +22,9 @@ AC_DEFUN([GRC_GR_WXGUI],[
 
     # FIXME: Should we actually check for wxPython, even though
     # this is a runtime requirement, not a compile/install time one?
-
+    #
+    # This is logged as ticket 17
+    
     AC_CONFIG_FILES([ \
 	  gr-wxgui/Makefile \
 	  gr-wxgui/src/Makefile \

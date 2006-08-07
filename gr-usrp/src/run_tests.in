@@ -18,10 +18,12 @@ libsrc=@abs_top_srcdir@/gr-usrp/src
 py=@abs_top_srcdir@/gr-usrp/src
 
 # Where to look for GNU Radio python modules in current build tree
-grbld=@abs_top_builddir@/gnuradio-core/src/python/:@abs_top_builddir@/gnuradio-core/src/lib/swig/:@abs_top_builddir@/gnuradio-core/src/lib/swig/.libs
+grbld=@abs_top_srcdir@/gnuradio-core/src/python
+grbld=$grbld:@abs_top_builddir@/gnuradio-core/src/lib/swig
+grbld=$grbld:@abs_top_builddir@/gnuradio-core/src/lib/swig/.libs
 
 # Where to look for USRP lib in current build tree
-usrpbld=@abs_top_builddir@/usrp/host/lib/.libs
+usrpbld=@abs_top_builddir@/usrp/host/lib
 
 PYTHONPATH="$grbld:$libbld:$libbld/.libs:$libsrc:$py:$usrpbld:$PYTHONPATH"
 export PYTHONPATH

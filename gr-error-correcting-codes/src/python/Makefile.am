@@ -24,7 +24,7 @@ include $(top_srcdir)/Makefile.common
 EXTRA_DIST = run_tests.in
 
 # Disable qa checks due to non-standard directory structure (eb)
-#TESTS = run_tests
+# TESTS = run_tests
 
 noinst_PYTHON =  qa_test_coding_1.py qa_test_coding_2.py
 

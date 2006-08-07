@@ -35,7 +35,7 @@ LOCAL_IFILES = 				\
 	video_sdl.i				
 
 NON_LOCAL_IFILES =			\
-	$(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
+	$(GNURADIO_I)
 
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\

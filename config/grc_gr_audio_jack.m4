@@ -29,7 +29,7 @@ AC_DEFUN([GRC_GR_AUDIO_JACK],[
     succeeded=yes
     PKG_CHECK_MODULES(JACK, jack >= 0.8,[],[succeeded=no])
     if test $succeeded = yes; then
-        LIBS="$LIBS $JACK_LIBS"
+	AC_SUBST(JACK_LIBS)
 
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_jack], [chmod +x gr-audio-jack/src/run_tests])

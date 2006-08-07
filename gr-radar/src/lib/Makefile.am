@@ -21,8 +21,6 @@
 
 include $(top_srcdir)/Makefile.common
 
-LIBS += $(GNURADIO_CORE_LIBS)
-
 # Install this stuff so that it ends up as the gnuradio.radar module
 # This usually ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio
@@ -39,7 +37,7 @@ ALL_IFILES = 				\
 	$(NON_LOCAL_IFILES)		
 
 NON_LOCAL_IFILES =			\
-	$(top_srcdr)/gnuradio-core/src/lib/swig/gnuradio.i
+	$(GNURADIO_I)
 
 
 LOCAL_IFILES = 				
@@ -66,16 +64,16 @@ bin_PROGRAMS = 				\
 	sim-airplane2			
 
 xambi_SOURCES 	= xambi.cc
-xambi_LDADD	= libradar.la
+xambi_LDADD	= libradar.la $(GNURADIO_CORE_LIBS)
 
 eb_xambi_SOURCES = eb-xambi.cc
-eb_xambi_LDADD	 = libradar.la
+eb_xambi_LDADD	 = libradar.la $(GNURADIO_CORE_LIBS)
 
 sim_airplane_SOURCES = sim-airplane.cc
-sim_airplane_LDADD = libradar.la
+sim_airplane_LDADD = libradar.la $(GNURADIO_CORE_LIBS)
 
 sim_airplane2_SOURCES = sim-airplane2.cc
-sim_airplane2_LDADD = libradar.la
+sim_airplane2_LDADD = libradar.la $(GNURADIO_CORE_LIBS)
 
 # This gets howto.py installed in the right place
 # ourpython_PYTHON =			

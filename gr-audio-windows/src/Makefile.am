@@ -35,7 +35,7 @@ LOCAL_IFILES = 				\
 	audio_windows.i				
 
 NON_LOCAL_IFILES =			\
-	$(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
+	$(GNURADIO_I)
 
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\
@@ -50,8 +50,7 @@ ourpython_PYTHON =			\
 
 INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
 
-SWIGCPPPYTHONARGS = -python $(PYTHON_CPPFLAGS) \
-		    -I$(swigincludedir) -I$(grincludedir)
+SWIGCPPPYTHONARGS = -python $(PYTHON_CPPFLAGS) $(STD_DEFINES_AND_INCLUDES)
 
 ourlib_LTLIBRARIES = _audio_windows.la
 
@@ -71,7 +70,7 @@ swiginclude_HEADERS = 			\
 _audio_windows_la_LIBADD = 		\
 	$(PYTHON_LDFLAGS)		\
 	$(GNURADIO_CORE_LIBS)		\
-	-lwinmm				\
+	$(WINAUDIO_LIBS)		\
 	-lstdc++				
 
 _audio_windows_la_LDFLAGS = -no-undefined -module -avoid-version \

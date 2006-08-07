@@ -37,8 +37,7 @@ ALL_IFILES = 				\
 	$(NON_LOCAL_IFILES)		
 
 NON_LOCAL_IFILES =			\
-	$(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
-
+	$(GNURADIO_I)
 
 LOCAL_IFILES = 				\
 	ra.i				

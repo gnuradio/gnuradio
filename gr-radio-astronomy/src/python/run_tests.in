@@ -18,9 +18,9 @@ libsrc=@abs_top_srcdir@/gr-radio-astronomy/src/lib
 py=@abs_top_srcdir@/gr-radio-astronomy/src/python
 
 # Where to look for GNU Radio python modules in current build tree
-# FIXME this is wrong on a distcheck.  We really need to ask gnuradio-core
-# where it put its python files.
-grpythonbld=@abs_top_builddir@/gnuradio-core/src/python/:@abs_top_builddir@/gnuradio-core/src/lib/swig/:@abs_top_builddir@/gnuradio-core/src/lib/swig/.libs
+grpythonbld=@abs_top_srcdir@/gnuradio-core/src/python
+grpythonbld=$grpythonbld:@abs_top_builddir@/gnuradio-core/src/lib/swig
+grpythonbld=$grpythonbld:@abs_top_builddir@/gnuradio-core/src/lib/swig/.libs
 
 PYTHONPATH="$grpythonbld:$libbld:$libbld/.libs:$libsrc:$py:$PYTHONPATH"
 export PYTHONPATH

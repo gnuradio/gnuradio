@@ -32,8 +32,11 @@ AC_DEFUN([GRC_GR_VIDEO_SDL],[
     AM_PATH_SDL($SDL_VERSION,[],[succeeded=no])
 
     if test $succeeded = yes; then
-        AM_CFLAGS="$AM_CFLAGS $SDL_CFLAGS"
-        AM_LDFLAGS="$AM_LDFLAGS $SDL_LIBS"
+        #AM_CFLAGS="$AM_CFLAGS $SDL_CFLAGS"
+        #AM_LDFLAGS="$AM_LDFLAGS $SDL_LIBS"
+	AC_SUBST(SDL_CFLAGS)
+	AC_SUBST(SDL_LIBS)
+
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_sdl], [chmod +x gr-video-sdl/src/run_tests])
         subdirs="$subdirs gr-video-sdl"

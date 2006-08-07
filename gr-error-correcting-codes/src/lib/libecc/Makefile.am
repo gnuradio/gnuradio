@@ -23,7 +23,8 @@ include $(top_srcdir)/Makefile.common
 
 SUBDIRS = mld . tests
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) -I$(top_srcdir)/gr-error-correcting-codes/src/lib
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) \
+	   -I$(top_srcdir)/gr-error-correcting-codes/src/lib
 
 noinst_LTLIBRARIES = libecc.la
 
@@ -49,6 +50,7 @@ noinst_HEADERS =				\
 libecc_la_LIBADD = 		\
 	mld/libmld.la		\
 	$(PYTHON_LDFLAGS)	\
+	$(GNURADIO_CORE_LIBS)	\
 	-lstdc++
 
 MOSTLYCLEANFILES = *.loT *~
