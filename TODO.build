@@ -3,8 +3,6 @@ Overall:
 * Change a Makefile.am in a subdir, must manually go back up and re-run
 configure. Otherwise it gets run somehow incorrectly.
 
-* Fix overuse of LIBS vs. LIBADD, LDADD, or LDFLAGS, along with xxx_, now ticket 18.
-
 * Use common run_tests.in file.  This is now ticket 3.
 
 dtools:
@@ -26,11 +24,6 @@ gnuradio-core/src/lib/filter:
 gnuradio-core/src/lib/general:
 
 * README is stale.
-
-gnuradio-core/src/lib/tests:
-
-* Cleanup libgnuradio-core variable, try to refer to something in
-Makefile.common 
 
 gnuradio-core/src/lib/utils:
 
