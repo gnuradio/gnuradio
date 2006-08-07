@@ -1,0 +1,97 @@
+#
+# Copyright 2004,2005,2006 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+# 
+
+include $(top_srcdir)/Makefile.common
+
+include Makefile.gen
+
+# Install this stuff so that it ends up as the gnuradio.trellis module
+# This usually ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+
+ourpythondir = $(grpythondir)
+ourlibdir    = $(grpyexecdir)
+
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+
+SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES)
+
+ALL_IFILES = 				\
+	$(LOCAL_IFILES)			\
+	$(NON_LOCAL_IFILES)		
+
+NON_LOCAL_IFILES =			\
+	$(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
+
+
+LOCAL_IFILES = 				\
+	trellis.i			
+
+
+# These files are built by SWIG.  The first is the C++ glue.
+# The second is the python wrapper that loads the _trellis shared library
+# and knows how to call our extensions.
+
+BUILT_SOURCES = 			\
+	trellis.cc			\
+	trellis.py				
+
+# This gets trellis.py installed in the right place
+ourpython_PYTHON =			\
+	trellis.py
+
+ourlib_LTLIBRARIES = _trellis.la
+
+# These are the source files that go into the shared library
+_trellis_la_SOURCES = 			\
+	trellis.cc			\
+        fsm.cc				\
+        trellis_calc_metric.cc		\
+	$(GENERATED_CC)                 
+
+# magic flags
+_trellis_la_LDFLAGS = -module -avoid-version
+
+# link the library against some comon swig runtime code and the 
+# c++ standard library
+_trellis_la_LIBADD = 			\
+	$(PYTHON_LDFLAGS)		\
+	$(GNURADIO_CORE_LIBS)		\
+	-lstdc++			
+
+trellis.cc trellis.py: trellis.i $(ALL_IFILES)
+	$(SWIG) $(SWIGPYTHONARGS) -module trellis -o trellis.cc $<
+
+# These headers get installed in ${prefix}/include/gnuradio
+grinclude_HEADERS =			\
+        fsm.h				\
+        trellis_metric_type.h		\
+        trellis_calc_metric.h		\
+	$(GENERATED_H)                  
+
+
+# These swig headers get installed in ${prefix}/include/gnuradio/swig
+swiginclude_HEADERS = 			\
+	$(LOCAL_IFILES)
+
+
+MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
+

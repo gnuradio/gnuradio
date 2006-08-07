@@ -165,6 +165,7 @@ GRC_GR_RADIO_ASTRONOMY
 GRC_GR_VIDEO_SDL
 GRC_GR_WXGUI
 GRC_PMT
+GRC_GR_TRELLIS
 
 dnl Has list of successfully configured components
 AC_SUBST([subdirs],$subdirs)
