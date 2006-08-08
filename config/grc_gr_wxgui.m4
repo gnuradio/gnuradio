@@ -20,16 +20,15 @@ dnl Boston, MA 02111-1307, USA.
 AC_DEFUN([GRC_GR_WXGUI],[
     AC_CONFIG_SRCDIR([gr-wxgui/src/python/stdgui.py])
 
-    # FIXME: Should we actually check for wxPython, even though
-    # this is a runtime requirement, not a compile/install time one?
-    #
-    # This is logged as ticket 17
-    
     AC_CONFIG_FILES([ \
 	  gr-wxgui/Makefile \
 	  gr-wxgui/src/Makefile \
 	  gr-wxgui/src/python/Makefile \
     ])
 
-    subdirs="$subdirs gr-wxgui"
+    if python -c 'import wx'; then
+    	subdirs="$subdirs gr-wxgui"
+    else
+    	failed="$failed gr-wxgui"
+    fi
 ])
