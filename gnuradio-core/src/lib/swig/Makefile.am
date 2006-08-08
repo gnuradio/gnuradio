@@ -80,12 +80,15 @@ _gnuradio_swig_python_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
 # If it works, we have accurate dependencies for our swig stuff, which is good.
 @am__include@ @am__quote@./gnuradio_swig_python.d@am__quote@
 
-gnuradio_swig_python.cc gnuradio_swig_python.py gnuradio_swig_python.h : gnuradio.i
+gnuradio_swig_python.py gnuradio_swig_python.h: gnuradio_swig_python.cc
+
+gnuradio_swig_python.cc : gnuradio.i
 	if $(SWIG) $(SWIGPYTHONARGS) -MMD -MF gnuradio_swig_python.Td -module gnuradio_swig_python -o gnuradio_swig_python.cc $< ;\
 	then if test $(host_os) = mingw32; \
 	     then sed 's,\\\\,/,g' <gnuradio_swig_python.Td >gnuradio_swig_python.d; rm -f gnuradio_swig_python.Td; \
 	     else mv -f gnuradio_swig_python.Td gnuradio_swig_python.d; fi \
 	else rm -f gnuradio_swig_python.Td; exit 1; fi 
+
 
 gnuradio_swig_bug_workaround.h : gnuradio_swig_python.cc $(srcdir)/gen-swig-bug-fix
 	$(srcdir)/gen-swig-bug-fix $< $@
