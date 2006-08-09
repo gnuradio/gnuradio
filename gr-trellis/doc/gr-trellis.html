@@ -2,7 +2,7 @@
 Finite State Machine (FSM) implementation and the related 
 trellis-based encoding and decoding algorithms
 for GNU Radio.
-"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="id2931733"></a>Trellis-based algorithms for GNU Radio</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Achilleas</span> <span class="surname">Anastasopoulos</span></h3><div class="affiliation"><div class="address"><p><br>
+"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="article" lang="en"><div class="titlepage"><div><div><h1 class="title"><a name="id2606540"></a>Trellis-based algorithms for GNU Radio</h1></div><div><div class="author"><h3 class="author"><span class="firstname">Achilleas</span> <span class="surname">Anastasopoulos</span></h3><div class="affiliation"><div class="address"><p><br>
            <tt class="email">&lt;<a href="mailto:anastas@umich.edu">anastas@umich.edu</a>&gt;</tt><br>
         </p></div></div></div></div><div><div class="revhistory"><table border="1" width="100%" summary="Revision history"><tr><th align="left" valign="top" colspan="2"><b>Revision History</b></th></tr><tr><td align="left">Revision v0.0</td><td align="left">2006-08-03</td></tr><tr><td align="left" colspan="2">
     First cut.
@@ -47,9 +47,9 @@ in how the outside world interprets these input and output
 integer symbols.
 Here is an example of an FSM describing the (2,1) CC
 with constraint length 3 and generator polynomial matrix
-(1+D+D<sup>2</sup>   1+D<sup>2</sup>)
+(1+D+D<sup>2</sup> ,  1+D<sup>2</sup>)
 from Proakis-Salehi pg. 779.
-</p><div class="example"><a name="cc_ex"></a><p class="title"><b>Example 1. (2,1) CC with generator polynomials (1+D+D<sup>2</sup>   1+D<sup>2</sup>)</b></p><p>
+</p><div class="example"><a name="cc_ex"></a><p class="title"><b>Example 1. (2,1) CC with generator polynomials (1+D+D<sup>2</sup> , 1+D<sup>2</sup>)</b></p><p>
 This CC accepts 1 bit at a time, and outputs 2 bits at a time.
 It has a shift register storing the last two input bits.
 In particular, 
@@ -77,7 +77,7 @@ s<sub>k</sub>	x<sub>k</sub>	s<sub>k+1</sub>
 </pre><p>
 The "output-symbol" function OS(,) can be given by
 </p><pre class="programlisting">
-s<sub>k</sub>       x<sub>k</sub>       y<sub>k</sub>
+s<sub>k</sub>	x<sub>k</sub>	y<sub>k</sub>
 0	0	0
 0	1	3
 1	0	3
@@ -131,7 +131,9 @@ ways to construct an FSM.
   fsm(const int I, const int S, const int O, const std::vector&lt;int&gt; &amp;NS, const std::vector&lt;int&gt; &amp;OS);
 </pre></li><li><p>Giving a filename containing all the FSM information:</p><pre class="programlisting">
   fsm(const char *name);
-</pre><p>This information has to be in the following format</p><pre class="programlisting">
+</pre><p>
+This information has to be in the following format:
+</p><pre class="programlisting">
 I S O
 
 NS(0,0)   NS(0,1)   ...  NS(0,I-1)
@@ -143,7 +145,10 @@ OS(0,0)   OS(0,1)   ...  OS(0,I-1)
 OS(1,0)   OS(1,1)   ...  OS(1,I-1)
 ...
 OS(S-1,0) OS(S-1,1) ... OS(S-1,I-1)
-</pre><p>For instance, the file containing the information for the example mentioned above is of the form</p><pre class="programlisting">
+</pre><p>
+</p><p>
+For instance, the file containing the information for the example mentioned above is of the form:
+</p><pre class="programlisting">
 2 4 4
 
 0 2
@@ -155,7 +160,8 @@ OS(S-1,0) OS(S-1,1) ... OS(S-1,I-1)
 3 0
 1 2
 2 1
-</pre></li><li><p>The third way is specific to FSMs resulting from shift registers, and the output symbol being the entire transition (ie, current_state and current_input). These FSMs are usefull when describibg ISI channels. In particular the state is comprised of the.....
+</pre><p>
+</p></li><li><p>The third way is specific to FSMs resulting from shift registers, and the output symbol being the entire transition (ie, current_state and current_input). These FSMs are usefull when describibg ISI channels. In particular the state is comprised of the.....
 </p><pre class="programlisting">
   fsm(const int mod_size, const int ch_length);
 </pre></li></ul></div><p>
@@ -198,112 +204,103 @@ an additive white Gaussian noise (AWGN) channel, and
 the VA performing MLSD.
 The program source is as follows.
 </p><pre class="programlisting">
-#!/usr/bin/env python
-
-from gnuradio import gr
-from gnuradio import audio
-from gnuradio import trellis
-from gnuradio import eng_notation
-import math
-import sys
-import random
-import fsm_utils
-
-def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
-    fg = gr.flow_graph ()
-
-
-    # TX
-    src = gr.lfsr_32k_source_s()
-    src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
-    s2fsmi = gr.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
-    enc = trellis.encoder_ss(f,0) # initial state = 0
-    mod = gr.chunks_to_symbols_sf(constellation,dimensionality)
-
-    
-    # CHANNEL
-    add = gr.add_ff()
-    noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
-
-
-    # RX
-    metrics = trellis.metrics_f(f.O(),dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
-    va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
-    fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
-    dst = gr.check_lfsr_32k_s(); 
-    
-
-    fg.connect (src,src_head,s2fsmi,enc,mod)
-    fg.connect (mod,(add,0))
-    fg.connect (noise,(add,1))
-    fg.connect (add,metrics)
-    fg.connect (metrics,va,fsmi2s,dst)
-    
-
-    fg.run()
-    
-    # A bit of cheating: run the program once and print the 
-    # final encoder state..
-    # Then put it as the last argument in the viterbi block
-    #print "final state = " , enc.ST()
-
-    ntotal = dst.ntotal ()
-    nright = dst.nright ()
-    runlength = dst.runlength ()
-    return (ntotal,ntotal-nright)
-
-
-
-
-def main(args):
-    nargs = len (args)
-    if nargs == 3:
-        fname=args[0]
-        esn0_db=float(args[1]) # Es/No in dB
-        rep=int(args[2]) # number of times the experiment is run to collect enough errors
-    else:
-        sys.stderr.write ('usage: test_tcm.py fsm_fname Es/No_db  repetitions\n')
-        sys.exit (1)
-
-    # system parameters
-    f=trellis.fsm(fname) # get the FSM specification from a file (will hopefully be automated in the future...)
-    Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
-    bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
-    K=Kb/bitspersymbol # packet size in trellis steps
-    modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations
-    dimensionality = modulation[0]
-    constellation = modulation[1] 
-    if len(constellation)/dimensionality != f.O():
-        sys.stderr.write ('Incompatible FSM output cardinality and modulation size.\n')
-        sys.exit (1)
-    # calculate average symbol energy
-    Es = 0
-    for i in range(len(constellation)):
-        Es = Es + constellation[i]**2
-    Es = Es / (len(constellation)/dimensionality)
-    N0=Es/pow(10.0,esn0_db/10.0); # noise variance
-    
-
-
-    tot_s=0
-    terr_s=0
-    for i in range(rep):
-        (s,e)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-long(666+i)) # run experiment with different seed to get different noise realizations
-        tot_s=tot_s+s
-        terr_s=terr_s+e
-        if (i%100==0):
-            print i,s,e,tot_s,terr_s, '%e' % ((1.0*terr_s)/tot_s)
-    # estimate of the (short) error rate
-    print tot_s,terr_s, '%e' % ((1.0*terr_s)/tot_s)
-
-
-if __name__ == '__main__':
-    main (sys.argv[1:])
+  1  #!/usr/bin/env python
+  2  
+  3  from gnuradio import gr
+  4  from gnuradio import audio
+  5  from gnuradio import trellis
+  6  from gnuradio import eng_notation
+  7  import math
+  8  import sys
+  9  import random
+ 10  import fsm_utils
+ 11  
+ 12  def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
+ 13      fg = gr.flow_graph ()
+ 14  
+ 15      # TX
+ 16      src = gr.lfsr_32k_source_s()
+ 17      src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
+ 18      s2fsmi = gr.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
+ 19      enc = trellis.encoder_ss(f,0) # initial state = 0
+ 20      mod = gr.chunks_to_symbols_sf(constellation,dimensionality)
+ 21  
+ 22      # CHANNEL
+ 23      add = gr.add_ff()
+ 24      noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+ 25  
+ 26      # RX
+ 27      metrics = trellis.metrics_f(f.O(),dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
+ 28      va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
+ 29      fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
+ 30      dst = gr.check_lfsr_32k_s(); 
+ 31  
+ 32      fg.connect (src,src_head,s2fsmi,enc,mod)
+ 33      fg.connect (mod,(add,0))
+ 34      fg.connect (noise,(add,1))
+ 35      fg.connect (add,metrics)
+ 36      fg.connect (metrics,va,fsmi2s,dst)
+ 37      
+ 38      fg.run()
+ 39      
+ 40      # A bit of cheating: run the program once and print the 
+ 41      # final encoder state.
+ 42      # Then put it as the last argument in the viterbi block
+ 43      #print "final state = " , enc.ST()
+ 44  
+ 45      ntotal = dst.ntotal ()
+ 46      nright = dst.nright ()
+ 47      runlength = dst.runlength ()
+ 48      return (ntotal,ntotal-nright)
+ 49  
+ 50  
+ 51  def main(args):
+ 52      nargs = len (args)
+ 53      if nargs == 3:
+ 54          fname=args[0]
+ 55          esn0_db=float(args[1]) # Es/No in dB
+ 56          rep=int(args[2]) # number of times the experiment is run to collect enough errors
+ 57      else:
+ 58          sys.stderr.write ('usage: test_tcm.py fsm_fname Es/No_db  repetitions\n')
+ 59          sys.exit (1)
+ 60  
+ 61      # system parameters
+ 62      f=trellis.fsm(fname) # get the FSM specification from a file (will hopefully be automated in the future...)
+ 63      Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
+ 64      bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
+ 65      K=Kb/bitspersymbol # packet size in trellis steps
+ 66      modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations
+ 67      dimensionality = modulation[0]
+ 68      constellation = modulation[1] 
+ 69      if len(constellation)/dimensionality != f.O():
+ 70          sys.stderr.write ('Incompatible FSM output cardinality and modulation size.\n')
+ 71          sys.exit (1)
+ 72      # calculate average symbol energy
+ 73      Es = 0
+ 74      for i in range(len(constellation)):
+ 75          Es = Es + constellation[i]**2
+ 76      Es = Es / (len(constellation)/dimensionality)
+ 77      N0=Es/pow(10.0,esn0_db/10.0); # noise variance
+ 78      
+ 79      tot_s=0
+ 80      terr_s=0
+ 81      for i in range(rep):
+ 82          (s,e)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-long(666+i)) # run experiment with different seed to get different noise realizations
+ 83          tot_s=tot_s+s
+ 84          terr_s=terr_s+e
+ 85          if (i%100==0):
+ 86              print i,s,e,tot_s,terr_s, '%e' % ((1.0*terr_s)/tot_s)
+ 87      # estimate of the (short) error rate
+ 88      print tot_s,terr_s, '%e' % ((1.0*terr_s)/tot_s)
+ 89  
+ 90  
+ 91  if __name__ == '__main__':
+ 92      main (sys.argv[1:])
 </pre><p>
 The program is called by
-</p><pre class="programlisting">
-./test_tcm.py fsm_fname Es/No_db repetitions
-</pre><p>
+</p><div class="literallayout"><p><br>
+./test_tcm.py fsm_fname Es/No_db repetitions<br>
+</p></div><p>
 where "fsm_fname" is the file containing the FSM specification of the
 tested TCM code, "Es/No_db" is the SNR in dB, and "repetitions" 
 are the number of packets to be transmitted and received in order to
@@ -312,7 +309,7 @@ error rate.
 </p><p>
 The FSM is first intantiated in "main" by 
 </p><pre class="programlisting">
-    f=trellis.fsm(fname)
+ 62      f=trellis.fsm(fname) # get the FSM specification from a file (will hopefully be automated in the future...)
 </pre><p>
 Each packet has size Kb bits
 (we choose Kb to be a multiple of 16 so that all bits fit nicely into shorts and can be generated by the lfsr GNU Radio).
@@ -321,9 +318,9 @@ of bitspersymbol=log<sub>2</sub>( I ). The Kb/16 shorts are now
 unpacked to K=Kb/bitspersymbol input
 symbols that will drive the FSM encoder.
 </p><pre class="programlisting">
-    Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
-    bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
-    K=Kb/bitspersymbol # packet size in trellis steps
+ 63      Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
+ 64      bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
+ 65      K=Kb/bitspersymbol # packet size in trellis steps
 </pre><p>
 The FSM will produce K output symbols (remeber the FSM produces always one output symbol for each input symbol). Each of these symbols needs to be modulated. Since we are simulating the communication system, we need not simulate the actual waveforms. An M-ary, N-dimensional
 modulation is completely specified by a set of M, N-dimensional real vectors. In "fsm_utils.py" file we give a number of useful modulations with the following format: modulation = (N,constellation), where
@@ -336,23 +333,23 @@ For instance, 4-ary PAM is represented as
 Clearly, M should be equal to the cardinality of the FSM output, O.
 Finally the average symbol energy and noise variance are calculated.
 </p><pre class="programlisting">
-    modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations
-    dimensionality = modulation[0]
-    constellation = modulation[1]
-    if len(constellation)/dimensionality != f.O():
-        sys.stderr.write ('Incompatible FSM output cardinality and modulation size.\n')
-        sys.exit (1)
-    # calculate average symbol energy
-    Es = 0
-    for i in range(len(constellation)):
-        Es = Es + constellation[i]**2
-    Es = Es / (len(constellation)/dimensionality)
-    N0=Es/pow(10.0,esn0_db/10.0); # noise variance
+ 66      modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations
+ 67      dimensionality = modulation[0]
+ 68      constellation = modulation[1]
+ 69      if len(constellation)/dimensionality != f.O():
+ 70          sys.stderr.write ('Incompatible FSM output cardinality and modulation size.\n')
+ 71          sys.exit (1)
+ 72      # calculate average symbol energy
+ 73      Es = 0
+ 74      for i in range(len(constellation)):
+ 75          Es = Es + constellation[i]**2
+ 76      Es = Es / (len(constellation)/dimensionality)
+ 77      N0=Es/pow(10.0,esn0_db/10.0); # noise variance
 </pre><p>
 Then, "run_test" is called with a different "seed" so that we get
 different noise realizations.
 </p><pre class="programlisting">
-        (s,e)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-long(666+i)) # run experiment with different seed to get different noise realizations
+ 82          (s,e)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-long(666+i)) # run experiment with different seed to get different noise realizations
 </pre><p>
 Let us examine now the "run_test" function. 
 First we set up the transmitter blocks.
@@ -361,25 +358,27 @@ symbols consistent with the FSM input alphabet.
 The FSm encoder requires the FSM specification,
 and an initial state (which is set to 0 in this example).
 </p><pre class="programlisting">
-    # TX
-    src = gr.lfsr_32k_source_s()
-    src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
-    s2fsmi = gr.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
-    enc = trellis.encoder_ss(f,0) # initial state = 0
+ 15      # TX
+ 16      src = gr.lfsr_32k_source_s()
+ 17      src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
+ 18      s2fsmi = gr.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the FSM input cardinality
+ 19      enc = trellis.encoder_ss(f,0) # initial state = 0
 </pre><p>
+We now need to modulate the FSM output symbols.
 The "chunks_to_symbols_sf" is essentially a memoryless mapper which 
 for each input symbol y_k 
 outputs a sequence of N numbers ci1,ci2,...,ciN  representing the 
 coordianates of the constellation symbol c_i with i=y_k.
 </p><pre class="programlisting">
-    mod = gr.chunks_to_symbols_sf(constellation,dimensionality)
+ 20      mod = gr.chunks_to_symbols_sf(constellation,dimensionality)
 </pre><p>
 The channel is AWGN with appropriate noise variance.
 For each transmitted symbol c_k=(ck1,ck2,...,ckN) we receive a noisy version
 r_k=(rk1,rk2,...,rkN).
 </p><pre class="programlisting">
-    add = gr.add_ff()
-    noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
+ 22      # CHANNEL
+ 23      add = gr.add_ff()
+ 24      noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 </pre><p>
 Part of the design methodology was to decouple the FSM and VA from
 the details of the modulation, channel, receiver front-end etc.
@@ -408,8 +407,8 @@ do hard decision demodulation and feed the VA with
 symbol Hamming distances, or even bit Hamming distances, etc.
 These are all implemented in "metrics_f".
 </p><pre class="programlisting">
-    # RX
-    metrics = trellis.metrics_f(f.O(),dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi           
+ 26      # RX
+ 27      metrics = trellis.metrics_f(f.O(),dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
 </pre><p>
 Now the VA can run once it is supplied by the initial and final states.
 The initial state is known to be 0; the final state is usually 
@@ -418,14 +417,14 @@ In this example, we always send the the same info sequence (we only randomize no
 or final state). The VA outputs the estimates of the symbols x_k which
 are then packed to shorts and compared with the transmitted sequence.
 </p><pre class="programlisting">
-    va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.  
-    fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
-    dst = gr.check_lfsr_32k_s();
+ 28      va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
+ 29      fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
+ 30      dst = gr.check_lfsr_32k_s();
 </pre><p>
 The function returns the number of shorts and the number of shorts in error. Observe that this way the estimated error rate refers to 
 16-bit-symbol error rate.
 </p><pre class="programlisting">
-return (ntotal,ntotal-nright)
+ 48      return (ntotal,ntotal-nright)
 </pre></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="future"></a>Future Work</h2></div></div><div></div></div><div class="itemizedlist"><ul type="disc"><li><p>
 Improve the documentation :-)
 </p></li><li><p>
@@ -437,10 +436,11 @@ Optimize the VA code.
 Provide implementation of soft-input soft-output (SISO) decoders for 
 potential use in concatenated systems. Also a host of suboptimal
 decoders, eg, sphere decoding, M- and T- algorithms, sequential decoding, etc.
+can be implemented.
 </p></li><li><p>
 Although turbo decoding is rediculously slow in software, 
-we can design it in pronciple. The question is, should 
-we use the FSM and SISO abstractions and cnnect them
-through GNU radio or should we implement turbo-decoding
+we can design it in principle. One question is, whether we should 
+use the encoder, and SISO blocks and connect them
+through GNU radio or we should implement turbo-decoding
 as a single block (issues with buffering between blocks).
 </p></li></ul></div></div></div></body></html>
