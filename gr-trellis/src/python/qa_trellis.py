@@ -31,5 +31,32 @@ class qa_trellis (gr_unittest.TestCase):
     def tearDown (self):
         self.fg = None
 
+    def test_001_fsm (self):
+        I = 2
+        S = 4
+        O = 4
+        NS = (0, 2, 0, 2, 1, 3, 1, 3)
+        OS = (0, 3, 3, 0, 1, 2, 2, 1)
+        f = trellis.fsm(I,S,O,NS,OS)
+        self.assertEqual((I,S,O,NS,OS),(f.I(),f.S(),f.O(),f.NS(),f.OS()))
+
+    def test_002_fsm (self):
+        I = 2
+        S = 4
+        O = 4
+        NS = (0, 2, 0, 2, 1, 3, 1, 3)
+        OS = (0, 3, 3, 0, 1, 2, 2, 1)
+        f = trellis.fsm(I,S,O,NS,OS)
+        g = trellis.fsm(f)
+        self.assertEqual((g.I(),g.S(),g.O(),g.NS(),g.OS()),(f.I(),f.S(),f.O(),f.NS(),f.OS()))
+
+    def test_003_fsm (self):
+        I = 2
+        S = 4
+        O = 4
+        NS = (0, 2, 0, 2, 1, 3, 1, 3)
+        OS = (0, 3, 3, 0, 1, 2, 2, 1)
+        f = trellis.fsm("awgn1o2_4.fsm")
+        self.assertEqual((I,S,O,NS,OS),(f.I(),f.S(),f.O(),f.NS(),f.OS()))
 if __name__ == '__main__':
     gr_unittest.main ()
