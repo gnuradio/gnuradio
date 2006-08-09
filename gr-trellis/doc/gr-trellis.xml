@@ -102,12 +102,12 @@ in how the outside world interprets these input and output
 integer symbols.
 Here is an example of an FSM describing the (2,1) CC
 with constraint length 3 and generator polynomial matrix
-(1+D+D<superscript>2</superscript>   1+D<superscript>2</superscript>)
+(1+D+D<superscript>2</superscript> ,  1+D<superscript>2</superscript>)
 from Proakis-Salehi pg. 779.
 </para>
 
 
-<example id="cc_ex"><title>(2,1) CC with generator polynomials (1+D+D<superscript>2</superscript>   1+D<superscript>2</superscript>)</title>
+<example id="cc_ex"><title>(2,1) CC with generator polynomials (1+D+D<superscript>2</superscript> , 1+D<superscript>2</superscript>)</title>
 
 <para>
 This CC accepts 1 bit at a time, and outputs 2 bits at a time.
@@ -137,7 +137,7 @@ s<subscript>k</subscript>	x<subscript>k</subscript>	s<subscript>k+1</subscript>
 </programlisting>
 The "output-symbol" function OS(,) can be given by
 <programlisting>
-s<subscript>k</subscript>       x<subscript>k</subscript>       y<subscript>k</subscript>
+s<subscript>k</subscript>	x<subscript>k</subscript>	y<subscript>k</subscript>
 0	0	0
 0	1	3
 1	0	3
@@ -213,7 +213,8 @@ ways to construct an FSM.
 <programlisting>
   fsm(const char *name);
 </programlisting>
-<para>This information has to be in the following format</para>
+<para>
+This information has to be in the following format:
 <programlisting>
 I S O
 
@@ -227,7 +228,9 @@ OS(1,0)   OS(1,1)   ...  OS(1,I-1)
 ...
 OS(S-1,0) OS(S-1,1) ... OS(S-1,I-1)
 </programlisting>
-<para>For instance, the file containing the information for the example mentioned above is of the form</para>
+</para>
+<para>
+For instance, the file containing the information for the example mentioned above is of the form:
 <programlisting>
 2 4 4
 
@@ -241,6 +244,7 @@ OS(S-1,0) OS(S-1,1) ... OS(S-1,I-1)
 1 2
 2 1
 </programlisting>
+</para>
 </listitem>
 
 <listitem>
@@ -324,7 +328,6 @@ import fsm_utils
 def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     fg = gr.flow_graph ()
 
-
     # TX
     src = gr.lfsr_32k_source_s()
     src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
@@ -332,25 +335,21 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     enc = trellis.encoder_ss(f,0) # initial state = 0
     mod = gr.chunks_to_symbols_sf(constellation,dimensionality)
 
-    
     # CHANNEL
     add = gr.add_ff()
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
-
 
     # RX
     metrics = trellis.metrics_f(f.O(),dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
     va = trellis.viterbi_s(f,K,0,-1) # Put -1 if the Initial/Final states are not set.
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = gr.check_lfsr_32k_s(); 
-    
 
     fg.connect (src,src_head,s2fsmi,enc,mod)
     fg.connect (mod,(add,0))
     fg.connect (noise,(add,1))
     fg.connect (add,metrics)
     fg.connect (metrics,va,fsmi2s,dst)
-    
 
     fg.run()
     
@@ -363,8 +362,6 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     nright = dst.nright ()
     runlength = dst.runlength ()
     return (ntotal,ntotal-nright)
-
-
 
 
 def main(args):
@@ -394,8 +391,6 @@ def main(args):
         Es = Es + constellation[i]**2
     Es = Es / (len(constellation)/dimensionality)
     N0=Es/pow(10.0,esn0_db/10.0); # noise variance
-    
-
 
     tot_s=0
     terr_s=0
@@ -531,6 +526,7 @@ For each transmitted symbol c_k=(ck1,ck2,...,ckN) we receive a noisy version
 r_k=(rk1,rk2,...,rkN).
 </para>
 <programlisting>
+    # CHANNEL
     add = gr.add_ff()
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
 </programlisting>
@@ -592,7 +588,7 @@ The function returns the number of shorts and the number of shorts in error. Obs
 16-bit-symbol error rate.
 </para>
 <programlisting>
-return (ntotal,ntotal-nright)
+    return (ntotal,ntotal-nright)
 </programlisting>
 
 
@@ -631,6 +627,7 @@ Optimize the VA code.
 Provide implementation of soft-input soft-output (SISO) decoders for 
 potential use in concatenated systems. Also a host of suboptimal
 decoders, eg, sphere decoding, M- and T- algorithms, sequential decoding, etc.
+can be implemented.
 </para>
 </listitem>
 
@@ -638,8 +635,8 @@ decoders, eg, sphere decoding, M- and T- algorithms, sequential decoding, etc.
 <listitem>
 <para>
 Although turbo decoding is rediculously slow in software, 
-we can design it in pronciple. The question is, should 
-we use the FSM and SISO abstractions and cnnect them
+we can design it in principle. One question is, whether we should 
+use the encoder, and SISO blocks and connect them
 through GNU radio or should we implement turbo-decoding
 as a single block (issues with buffering between blocks).
 </para>
