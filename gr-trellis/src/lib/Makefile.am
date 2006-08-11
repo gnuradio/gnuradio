@@ -64,7 +64,9 @@ ourlib_LTLIBRARIES = _trellis.la
 _trellis_la_SOURCES = 			\
 	trellis.cc			\
         fsm.cc				\
+        interleaver.cc			\
         trellis_calc_metric.cc		\
+        trellis_permutation.cc		\
 	$(GENERATED_CC)                 
 
 # magic flags
@@ -83,8 +85,10 @@ trellis.cc trellis.py: trellis.i $(ALL_IFILES)
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
         fsm.h				\
+        interleaver.h			\
         trellis_metric_type.h		\
         trellis_calc_metric.h		\
+        trellis_permutation.h		\
 	$(GENERATED_H)                  
 
 

@@ -123,7 +123,7 @@ void viterbi_algorithm(const int I, const int S, const int O,
       minm=INF;
       minmi=0;
       for(int i=0;i<S;i++)
-          if((mm=trace[(K-1)*S+i])<minm) minm=mm,minmi=i;
+          if((mm=alpha[alphai*S+i])<minm) minm=mm,minmi=i;
       st=minmi;
   }
   else {
