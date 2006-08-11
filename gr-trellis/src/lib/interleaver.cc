@@ -20,9 +20,11 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#include <cstdlib> 
 #include <cstdio>
 #include <stdexcept>
 #include <cmath>
+#include "quicksort_index.h"
 #include "interleaver.h"
 
 interleaver::interleaver()
@@ -78,3 +80,29 @@ interleaver::interleaver(const char *name)
     d_DEINTER[d_INTER[i]]=i;
   }
 }
+
+//######################################################################
+//# Generate a random interleaver
+//######################################################################
+interleaver::interleaver(const int K, unsigned int seed)
+{
+  d_K=K;
+  d_INTER.resize(d_K);
+  d_DEINTER.resize(d_K);
+
+  std::runtime_error ("Not yet implemented: something wrong with quicksort\n");
+/*
+  srand(seed); 
+  std::vector<int> tmp(d_K);
+  for(int i=0;i<d_K;i++)
+    //d_INTER[i]=i;
+    tmp[i] = rand(); 
+  quicksort_index <int> (tmp,d_INTER,0,d_K);
+
+  // generate DEINTER table
+  for(int i=0;i<d_K;i++) {
+    d_DEINTER[d_INTER[i]]=i;
+  }
+*/
+}
+

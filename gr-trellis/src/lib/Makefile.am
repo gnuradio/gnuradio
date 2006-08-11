@@ -64,6 +64,7 @@ ourlib_LTLIBRARIES = _trellis.la
 _trellis_la_SOURCES = 			\
 	trellis.cc			\
         fsm.cc				\
+        quicksort_index.cc		\
         interleaver.cc			\
         trellis_calc_metric.cc		\
         trellis_permutation.cc		\
@@ -85,6 +86,7 @@ trellis.cc trellis.py: trellis.i $(ALL_IFILES)
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
         fsm.h				\
+        quicksort_index.h		\
         interleaver.h			\
         trellis_metric_type.h		\
         trellis_calc_metric.h		\

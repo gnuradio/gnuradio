@@ -8,6 +8,7 @@
 %{
 #include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
 #include "fsm.h"
+#include "quicksort_index.h"
 #include "interleaver.h"
 #include "trellis_permutation.h"
 #include <stdexcept>
