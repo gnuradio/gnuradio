@@ -22,6 +22,7 @@
 
 #include <cstdlib> 
 #include <cstdio>
+#include <iostream>
 #include <stdexcept>
 #include <cmath>
 #include "quicksort_index.h"
@@ -90,19 +91,18 @@ interleaver::interleaver(const int K, unsigned int seed)
   d_INTER.resize(d_K);
   d_DEINTER.resize(d_K);
 
-  std::runtime_error ("Not yet implemented: something wrong with quicksort\n");
-/*
   srand(seed); 
   std::vector<int> tmp(d_K);
-  for(int i=0;i<d_K;i++)
-    //d_INTER[i]=i;
+  for(int i=0;i<d_K;i++) {
+    d_INTER[i]=i;
     tmp[i] = rand(); 
-  quicksort_index <int> (tmp,d_INTER,0,d_K);
+  }
+  //quicksort_index <int> (tmp,d_INTER,0,d_K-1); got to resolve this...
+  quicksort_index1 (tmp,d_INTER,0,d_K-1);
 
   // generate DEINTER table
   for(int i=0;i<d_K;i++) {
     d_DEINTER[d_INTER[i]]=i;
   }
-*/
 }
 

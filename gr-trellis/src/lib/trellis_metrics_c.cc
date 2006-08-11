@@ -84,6 +84,10 @@ for (int m=0;m<nstreams;m++) {
 
   for (int i = 0; i < noutput_items / d_O ; i++){
 #if 0
+    calc_metric_s(d_O, d_D, d_TABLE,&(in[i*d_D]),&(out[i*d_O]), d_TYPE);
+#elif 0
+    calc_metric_i(d_O, d_D, d_TABLE,&(in[i*d_D]),&(out[i*d_O]), d_TYPE);
+#elif 0
     calc_metric_f(d_O, d_D, d_TABLE,&(in[i*d_D]),&(out[i*d_O]), d_TYPE);
 #elif 1
     calc_metric_c(d_O, d_D, d_TABLE,&(in[i*d_D]),&(out[i*d_O]), d_TYPE);

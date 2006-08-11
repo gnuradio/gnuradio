@@ -10,6 +10,8 @@ GENERATED_H = \
 	trellis_encoder_ss.h \
 	trellis_metrics_c.h \
 	trellis_metrics_f.h \
+	trellis_metrics_i.h \
+	trellis_metrics_s.h \
 	trellis_viterbi_b.h \
 	trellis_viterbi_combined_b.h \
 	trellis_viterbi_combined_i.h \
@@ -26,6 +28,8 @@ GENERATED_I = \
 	trellis_encoder_ss.i \
 	trellis_metrics_c.i \
 	trellis_metrics_f.i \
+	trellis_metrics_i.i \
+	trellis_metrics_s.i \
 	trellis_viterbi_b.i \
 	trellis_viterbi_combined_b.i \
 	trellis_viterbi_combined_i.i \
@@ -42,6 +46,8 @@ GENERATED_CC = \
 	trellis_encoder_ss.cc \
 	trellis_metrics_c.cc \
 	trellis_metrics_f.cc \
+	trellis_metrics_i.cc \
+	trellis_metrics_s.cc \
 	trellis_viterbi_b.cc \
 	trellis_viterbi_combined_b.cc \
 	trellis_viterbi_combined_i.cc \

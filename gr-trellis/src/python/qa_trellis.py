@@ -58,5 +58,19 @@ class qa_trellis (gr_unittest.TestCase):
         OS = (0, 3, 3, 0, 1, 2, 2, 1)
         f = trellis.fsm("awgn1o2_4.fsm")
         self.assertEqual((I,S,O,NS,OS),(f.I(),f.S(),f.O(),f.NS(),f.OS()))
+
+    def test_001_interleaver (self):
+        K = 5
+        IN = (1,2,3,4,0)
+        DIN = (4,0,1,2,3)
+        i = trellis.interleaver(K,IN)
+        self.assertEqual((K,IN,DIN),(i.K(),i.INTER(),i.DEINTER()))
+
+
+
+
+
+
+
 if __name__ == '__main__':
     gr_unittest.main ()

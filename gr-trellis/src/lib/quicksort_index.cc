@@ -29,14 +29,14 @@ a=b;
 b=temp;
 }
 
+
 template <class T> void quicksort_index(std::vector<T> & p, std::vector<int> & index, int left, int right)
 {
-T pivot;
 
 if (left < right) {
     int i = left;
     int j = right + 1;
-    pivot = p[left];
+    T pivot = p[left];
     do {
         do 
             i++;
@@ -51,7 +51,36 @@ if (left < right) {
     } while (i < j);
     SWAP <T> (p[left], p[j]);
     SWAP <int> (index[left], index[j]);
-    quicksort_index(p,index, left, j-1);
-    quicksort_index(p,index, j+1, right);
+    quicksort_index <T> (p,index, left, j-1);
+    quicksort_index <T> (p,index, j+1, right);
 }
 }
+
+
+
+void quicksort_index1(std::vector<int> & p, std::vector<int> & index, int left, int right)
+{
+
+if (left < right) {
+    int i = left;
+    int j = right + 1;
+    int pivot = p[left];
+    do {
+        do
+            i++;
+        while ((p[i] < pivot) && (i < right));
+        do
+            j--;
+        while ((p[j] > pivot) && (j > left));
+        if (i < j) {
+            SWAP <int> (p[i],p[j]);
+            SWAP <int> (index[i],index[j]);
+        }
+    } while (i < j);
+    SWAP <int> (p[left], p[j]);
+    SWAP <int> (index[left], index[j]);
+    quicksort_index1 (p,index, left, j-1);
+    quicksort_index1 (p,index, j+1, right);
+}
+}
+

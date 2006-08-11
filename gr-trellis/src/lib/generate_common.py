@@ -35,7 +35,7 @@ other_roots = [
     ]
 other_signatures = (
     ['bb','bs','bi','ss','si','ii'],
-    ['f','c'],
+    ['s','i','f','c'],
     ['b','s','i'],
     ['b','s','i'],
     )

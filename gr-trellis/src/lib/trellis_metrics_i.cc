@@ -24,24 +24,24 @@
 #include "config.h"
 #endif
 
-#include <@NAME@.h>
+#include <trellis_metrics_i.h>
 #include <gr_io_signature.h>
 #include <assert.h>
 #include <stdexcept>
 #include <iostream>
 
 
-@SPTR_NAME@
-trellis_make_@BASE_NAME@ (const int O, const int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE)
+trellis_metrics_i_sptr
+trellis_make_metrics_i (const int O, const int D,  const std::vector<int> &TABLE, trellis_metric_type_t TYPE)
 {
-  return @SPTR_NAME@ (new @NAME@ (O,D,TABLE,TYPE));
+  return trellis_metrics_i_sptr (new trellis_metrics_i (O,D,TABLE,TYPE));
 }
 
 
 
-@NAME@::@NAME@ (const int O, const int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE)
-  : gr_block ("@BASE_NAME@",
-	      gr_make_io_signature (1, -1, sizeof (@I_TYPE@)),
+trellis_metrics_i::trellis_metrics_i (const int O, const int D,  const std::vector<int> &TABLE, trellis_metric_type_t TYPE)
+  : gr_block ("metrics_i",
+	      gr_make_io_signature (1, -1, sizeof (int)),
 	      gr_make_io_signature (1, -1, sizeof (float))),
     d_O (O),
     d_D (D),
@@ -56,7 +56,7 @@ trellis_make_@BASE_NAME@ (const int O, const int D,  const std::vector<@I_TYPE@>
 
 
 void
-@NAME@::forecast (int noutput_items, gr_vector_int &ninput_items_required)
+trellis_metrics_i::forecast (int noutput_items, gr_vector_int &ninput_items_required)
 {
   assert (noutput_items % d_O == 0);
   int input_required =  d_D * noutput_items / d_O;
@@ -68,7 +68,7 @@ void
 
 
 int
-@NAME@::general_work (int noutput_items,
+trellis_metrics_i::general_work (int noutput_items,
 				gr_vector_int &ninput_items,
 				gr_vector_const_void_star &input_items,
 				gr_vector_void_star &output_items)
@@ -79,17 +79,17 @@ int
   int nstreams = input_items.size();
 
 for (int m=0;m<nstreams;m++) {
-  const @I_TYPE@ *in = (@I_TYPE@ *) input_items[m];
+  const int *in = (int *) input_items[m];
   float *out = (float *) output_items[m];
 
   for (int i = 0; i < noutput_items / d_O ; i++){
-#if @IS_SHORT@
+#if 0
     calc_metric_s(d_O, d_D, d_TABLE,&(in[i*d_D]),&(out[i*d_O]), d_TYPE);
-#elif @IS_INT@
+#elif 1
     calc_metric_i(d_O, d_D, d_TABLE,&(in[i*d_D]),&(out[i*d_O]), d_TYPE);
-#elif @IS_FLOAT@
+#elif 0
     calc_metric_f(d_O, d_D, d_TABLE,&(in[i*d_D]),&(out[i*d_O]), d_TYPE);
-#elif @IS_COMPLEX@
+#elif 0
     calc_metric_c(d_O, d_D, d_TABLE,&(in[i*d_D]),&(out[i*d_O]), d_TYPE);
 #endif
   } 
