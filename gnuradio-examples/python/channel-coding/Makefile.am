@@ -27,3 +27,5 @@ EXTRA_DIST =			\
 	test_tcm_parallel.py	\
 	test_tcm_combined.py	\
 	test_sccc_hard.py
+
+MOSTLYCLEANFILES = *.pyc

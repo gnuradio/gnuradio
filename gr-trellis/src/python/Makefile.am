@@ -21,7 +21,8 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = run_tests.in
+EXTRA_DIST = run_tests.in		\
+	awgn1o2_4.fsm
 
 
 TESTS = 				\
@@ -30,3 +31,5 @@ TESTS = 				\
 
 noinst_PYTHON = 			\
 	qa_trellis.py			
+
+MOSTLYCLEANFILES = *.pyc
