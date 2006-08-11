@@ -19,4 +19,15 @@
 # Boston, MA 02111-1307, USA.
 # 
 
-SUBDIRS = audio digital_voice gmsk2 mc4020 multi_usrp usrp channel-coding
+EXTRA_DIST =			\
+	awgn1o2_4.fsm		\
+	awgn1o2_8.fsm		\
+	awgn1o2_16.fsm		\
+	awgn1o2_128.fsm		\
+	awgn2o3_4.fsm		\
+	awgn2o3_4_1.fsm		\
+	awgn2o3_16.fsm		\
+	awgn2o3_8.fsm		\
+	awgn2o4_4.fsm		\
+	rep3.fsm		\
+	rep5.fsm

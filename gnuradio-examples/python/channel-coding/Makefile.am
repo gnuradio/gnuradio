@@ -19,4 +19,13 @@
 # Boston, MA 02111-1307, USA.
 # 
 
-SUBDIRS = audio digital_voice gmsk2 mc4020 multi_usrp usrp channel-coding
+EXTRA_DIST =			\
+	fsm_utils.py		\
+	test_tcm.py		\
+	test_tcm1.py		\
+	test_tcm_parallel.py	\
+	test_tcm_combined.py	\
+	test_sccc_hard.py
+
+
+SUBDIRS = fsm_files

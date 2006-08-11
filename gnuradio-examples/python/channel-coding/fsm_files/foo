@@ -1,0 +1,17 @@
+" Press ? for keyboard shortcuts
+" Sorted by name (.bak,~,.o,.h,.info,.swp,.obj at end of list)
+"= /home/anastas/gnuradio_svn/gnuradio-examples/python/channel-coding/fsm_files/
+../
+.svn/
+Makefile.am
+awgn1o2_128.fsm
+awgn1o2_16.fsm
+awgn1o2_4.fsm
+awgn1o2_8.fsm
+awgn2o3_16.fsm
+awgn2o3_4.fsm
+awgn2o3_4_1.fsm
+awgn2o3_8.fsm
+awgn2o4_4.fsm
+rep3.fsm
+rep5.fsm
