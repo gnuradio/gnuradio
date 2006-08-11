@@ -25,7 +25,7 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
 
     
     # RX
-    va = trellis.viterbi_combined_s(f,dimensionality,constellation,K/bitspersymbol,0,7,trellis.TRELLIS_EUCLIDEAN) # Put -1 if the Initial/Final states are not set.
+    va = trellis.viterbi_combined_s(f,dimensionality,constellation,K/bitspersymbol,0,-1,trellis.TRELLIS_EUCLIDEAN) # Put -1 if the Initial/Final states are not set.
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = gr.check_lfsr_32k_s(); 
     

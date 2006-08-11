@@ -83,7 +83,7 @@ def main(args):
 
     # system parameters
     f=trellis.fsm(fname) # get the FSM specification from a file
-    Kb=1*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
+    Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
     bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
     K=Kb/bitspersymbol # packet size in trellis steps
     modulation = fsm_utils.psk4 # see fsm_utlis.py for available predefined modulations

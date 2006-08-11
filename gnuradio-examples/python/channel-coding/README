@@ -1,0 +1,33 @@
+Here we have several test programs for use with the gr-trellis implementation.
+Documentation can be found in 
+http://gnuradio.utah.edu/svn/gnuradio/trunk/gr-trellis/doc/gr-trellis.html
+
+fsm_utils.py contains several useful functions.
+
+fsm_files is a directory with some FSM definitions
+
+If you just want to see what these programs do, run each of the following:
+
+./test_tcm.py fsm_files/awgn1o2_4.fsm 10.0 1000
+./test_tcm1.py fsm_files/awgn1o2_4.fsm 10.0 1000
+./test_tcm_combined.py fsm_files/awgn1o2_4.fsm 10.0 1000
+./test_tcm_parallel.py fsm_files/awgn1o2_4.fsm 10.0 1000
+./test_sccc_hard.py fsm_files/awgn1o2_4.fsm fsm_files/awgn1o2_4.fsm 10.0 1000
+
+In your terminal you will see something like this:
+
+[anastas@ernesto channel-coding]$ ./test_tcm.py fsm_files/awgn1o2_4.fsm 6.0 1000
+100 1024 1 103424 10 9.668936e-05
+200 1024 1 205824 21 1.020289e-04
+300 1024 0 308224 40 1.297757e-04
+400 1024 0 410624 1074 2.615531e-03
+500 1024 0 513024 1081 2.107114e-03
+600 1024 0 615424 1090 1.771137e-03
+700 1024 0 717824 1097 1.528230e-03
+800 1024 0 820224 1107 1.349631e-03
+900 1024 0 922624 1120 1.213929e-03
+1024000 1129 1.102539e-03
+
+1.102539e-03 is the error rate estimates by sending 1000 packets of
+1024x16 bits each using an 1/2 4-state convolutional code and QPSK
+modulation through an AWGN with Es/N0 = 6.0 dB

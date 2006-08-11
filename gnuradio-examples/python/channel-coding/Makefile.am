@@ -20,12 +20,10 @@
 # 
 
 EXTRA_DIST =			\
+        README			\
 	fsm_utils.py		\
 	test_tcm.py		\
 	test_tcm1.py		\
 	test_tcm_parallel.py	\
 	test_tcm_combined.py	\
 	test_sccc_hard.py
-
-
-SUBDIRS = fsm_files
