@@ -45,6 +45,7 @@ m4macros = \
 	grc_gr_gsm_fr_vocoder.m4 \
 	grc_gr_radar.m4 \
 	grc_gr_radio_astronomy.m4 \
+	grc_gr_trellis.m4 \
 	grc_gr_usrp.m4 \
 	grc_gr_video_sdl.m4 \
 	grc_gr_wxgui.m4 \
@@ -53,7 +54,6 @@ m4macros = \
 	gr_check_shm_open.m4 \
 	gr_check_usrp.m4 \
 	grc_pmt.m4 \
-	grc_trellis.m4 \
 	grc_usrp.m4 \
 	gr_doxygen.m4 \
 	gr_fortran.m4 \
