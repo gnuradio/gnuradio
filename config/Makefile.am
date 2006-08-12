@@ -25,42 +25,61 @@ include $(top_srcdir)/Makefile.common
 m4datadir = $(datadir)/aclocal
 
 # List your m4 macros here
-m4macros = 			\
-	acx_pthread.m4		\
-	bnv_have_qt.m4		\
-	cppunit.m4		\
-	gr_as.m4		\
-	gr_boost.m4		\
+m4macros = \
+	acx_pthread.m4 \
+	bnv_have_qt.m4 \
+	cppunit.m4 \
+	gr_as.m4 \
+	gr_boost.m4 \
+	grc_gnuradio_core.m4 \
+	grc_gnuradio_examples.m4 \
+	grc_gr_atsc.m4 \
+	grc_gr_audio_alsa.m4 \
+	grc_gr_audio_jack.m4 \
+	grc_gr_audio_oss.m4 \
+	grc_gr_audio_osx.m4 \
+	grc_gr_audio_portaudio.m4 \
+	grc_gr_audio_windows.m4 \
+	grc_gr_comedi.m4 \
+	grc_gr_error_correcting_codes.m4 \
+	grc_gr_gsm_fr_vocoder.m4 \
+	grc_gr_radar.m4 \
+	grc_gr_radio_astronomy.m4 \
+	grc_gr_usrp.m4 \
+	grc_gr_video_sdl.m4 \
+	grc_gr_wxgui.m4 \
 	gr_check_createfilemapping.m4 \
-	gr_check_usrp.m4	\
-	gr_check_mc4020.m4	\
-	gr_check_shm_open.m4	\
-	gr_doxygen.m4		\
-	gr_gprof.m4		\
+	gr_check_mc4020.m4 \
+	gr_check_shm_open.m4 \
+	gr_check_usrp.m4 \
+	grc_pmt.m4 \
+	grc_trellis.m4 \
+	grc_usrp.m4 \
+	gr_doxygen.m4 \
+	gr_fortran.m4 \
+	gr_gprof.m4 \
 	gr_libgnuradio_core_extra_ldflags.m4 \
-	gr_no_undefined.m4	\
-	gr_omnithread.m4	\
-	gr_pwin32.m4		\
-	gr_python.m4		\
-	gr_require_mc4020.m4	\
-	gr_scripting.m4		\
-	gr_set_md_cpu.m4	\
-	gr_swig.m4		\
-	gr_sysv_shm.m4		\
-	gr_x86_64.m4		\
-	lf_cc.m4		\
-	lf_cxx.m4		\
-	lf_warnings.m4		\
-	lf_x11.m4		\
-	mkstemp.m4		\
-	onceonly.m4		\
-	pkg.m4			\
-	usrp_fusb_tech.m4	\
-	usrp_libusb.m4		\
-	usrp_sdcc.m4		
-
-
-# Don't install m4 macros anymore
-# m4data_DATA = $(m4macros) 
+	gr_no_undefined.m4 \
+	gr_omnithread.m4 \
+	gr_pwin32.m4 \
+	gr_python.m4 \
+	gr_require_mc4020.m4 \
+	gr_scripting.m4 \
+	gr_set_md_cpu.m4 \
+	gr_swig.m4 \
+	gr_sysv_shm.m4 \
+	gr_x86_64.m4 \
+	lf_cc.m4 \
+	lf_cxx.m4 \
+	lf_warnings.m4 \
+	lf_x11.m4 \
+	macosx_audiounit.m4 \
+	mkstemp.m4 \
+	onceonly.m4 \
+	pkg.m4 \
+	sdl.m4 \
+	usrp_fusb_tech.m4 \
+	usrp_libusb.m4 \
+	usrp_sdcc.m4
 
 EXTRA_DIST = $(m4macros) 
