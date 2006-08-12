@@ -1,0 +1,133 @@
+Index: Makefile.am
+===================================================================
+RCS file: /sources/avrdude/avrdude/Makefile.am,v
+retrieving revision 1.29
+diff -u -r1.29 Makefile.am
+--- Makefile.am	12 Jan 2006 23:13:50 -0000	1.29
++++ Makefile.am	7 Jul 2006 03:57:10 -0000
+@@ -71,6 +71,8 @@
+ 	fileio.c \
+ 	fileio.h \
+ 	freebsd_ppi.h \
++	ftbb.c \
++	ftbb.h \
+ 	jtagmkI.c \
+ 	jtagmkI.h \
+ 	jtagmkI_private.h \
+@@ -109,6 +111,8 @@
+ 	usbdevs.h \
+ 	usb_libusb.c
+ 
++avrdude_LDADD = $(FTDILIB)
++
+ man_MANS = avrdude.1
+ 
+ sysconf_DATA = avrdude.conf
+Index: avrdude.conf.in
+===================================================================
+RCS file: /sources/avrdude/avrdude/avrdude.conf.in,v
+retrieving revision 1.79
+diff -u -r1.79 avrdude.conf.in
+--- avrdude.conf.in	23 May 2006 22:27:43 -0000	1.79
++++ avrdude.conf.in	7 Jul 2006 03:57:10 -0000
+@@ -223,6 +223,17 @@
+ #
+ 
+ programmer
++  id       = "ezdop";
++  desc     = "AE6HO EZ-Doppler";
++  type     = ftbb;
++  baudrate = 230400;
++  reset    = 5;
++  sck      = 3;
++  mosi     = 2;
++  miso     = 1;
++;
++
++programmer
+   id    = "avrisp";
+   desc  = "Atmel AVR ISP";
+   type  = stk500;
+Index: bootstrap
+===================================================================
+RCS file: /sources/avrdude/avrdude/bootstrap,v
+retrieving revision 1.10
+diff -u -r1.10 bootstrap
+--- bootstrap	14 May 2005 08:06:18 -0000	1.10
++++ bootstrap	7 Jul 2006 03:57:10 -0000
+@@ -40,7 +40,7 @@
+ 
+ rm -rf autom4te.cache
+ 
+-${ACLOCAL}
++${ACLOCAL} -I .
+ ${AUTOHEADER}
+ ${AUTOCONF}
+ ${AUTOMAKE} -a -c
+Index: config_gram.y
+===================================================================
+RCS file: /sources/avrdude/avrdude/config_gram.y,v
+retrieving revision 1.45
+diff -u -r1.45 config_gram.y
+--- config_gram.y	23 May 2006 22:27:43 -0000	1.45
++++ config_gram.y	7 Jul 2006 03:57:10 -0000
+@@ -40,6 +40,7 @@
+ #include "avr.h"
+ #include "jtagmkI.h"
+ #include "jtagmkII.h"
++#include "ftbb.h"
+ 
+ #if defined(WIN32NATIVE)
+ #define strtok_r( _s, _sep, _lasts ) \
+@@ -123,6 +124,7 @@
+ %token K_STK500V2
+ %token K_AVR910
+ %token K_BUTTERFLY
++%token K_FTBB
+ %token K_TYPE
+ %token K_VCC
+ %token K_VFYLED
+@@ -374,6 +376,12 @@
+     }
+   } |
+ 
++  K_TYPE TKN_EQUAL K_FTBB {
++    {
++      ftbb_initpgm(current_prog);
++    }
++  } |
++
+   K_DESC TKN_EQUAL TKN_STRING {
+     strncpy(current_prog->desc, $3->value.string, PGM_DESCLEN);
+     current_prog->desc[PGM_DESCLEN-1] = 0;
+Index: configure.ac
+===================================================================
+RCS file: /sources/avrdude/avrdude/configure.ac,v
+retrieving revision 1.33
+diff -u -r1.33 configure.ac
+--- configure.ac	23 Jan 2006 21:04:13 -0000	1.33
++++ configure.ac	7 Jul 2006 03:57:10 -0000
+@@ -115,6 +115,8 @@
+ DIST_SUBDIRS_AC='windows'
+ fi
+ 
++FTBB_FTDI
++
+ AC_SUBST(DOC_INST_DIR, $DOC_INST_DIR)
+ AC_SUBST(SUBDIRS_AC, $SUBDIRS_AC)
+ AC_SUBST(DIST_SUBDIRS_AC, $DIST_SUBDIRS_AC)
+Index: lexer.l
+===================================================================
+RCS file: /sources/avrdude/avrdude/lexer.l,v
+retrieving revision 1.38
+diff -u -r1.38 lexer.l
+--- lexer.l	23 May 2006 22:27:43 -0000	1.38
++++ lexer.l	7 Jul 2006 03:57:11 -0000
+@@ -138,6 +138,7 @@
+ enablepageprogramming { yylval=NULL; return K_ENABLEPAGEPROGRAMMING; }
+ errled           { yylval=NULL; return K_ERRLED; }
+ flash            { yylval=NULL; return K_FLASH; }
++ftbb             { yylval=NULL; return K_FTBB; }
+ has_jtag         { yylval=NULL; return K_HAS_JTAG; }
+ id               { yylval=NULL; return K_ID; }
+ idr              { yylval=NULL; return K_IDR; }

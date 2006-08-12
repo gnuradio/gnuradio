@@ -50,7 +50,7 @@ AC_CHECK_LIB(socket,socket)
 
 dnl check for threads (mandatory)
 GR_OMNITHREAD
-
+#AC_SUBST(PTHREAD_CFLAGS)
 CFLAGS="${CFLAGS} $PTHREAD_CFLAGS"
 CXXFLAGS="${CXXFLAGS} $PTHREAD_CFLAGS"
 
@@ -77,6 +77,7 @@ AC_C_INLINE
 AC_TYPE_SIZE_T
 AC_HEADER_TIME
 AC_C_BIGENDIAN
+AC_STRUCT_TM
 
 dnl Checks for library functions.
 AC_FUNC_ALLOCA
@@ -84,6 +85,7 @@ AC_FUNC_SETVBUF_REVERSED
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([mmap select socket strcspn strerror strspn getpagesize sysconf])
 AC_CHECK_FUNCS([snprintf gettimeofday nanosleep sched_setscheduler])
+AC_CHECK_FUNCS([modf sqrt])
 
 AC_CHECK_LIB(m, sincos, [AC_DEFINE([HAVE_SINCOS],[1],[Define to 1 if your system has `sincos'.])])
 AC_CHECK_LIB(m, sincosf,[AC_DEFINE([HAVE_SINCOSF],[1],[Define to 1 if your system has `sincosf'.])])
@@ -91,6 +93,7 @@ AC_CHECK_LIB(m, sinf, [AC_DEFINE([HAVE_SINF],[1],[Define to 1 if your system has
 AC_CHECK_LIB(m, cosf, [AC_DEFINE([HAVE_COSF],[1],[Define to 1 if your system has `cosf'.])])
 AC_CHECK_LIB(m, trunc, [AC_DEFINE([HAVE_TRUNC],[1],[Define to 1 if your system has `trunc'.])])
 AC_CHECK_LIB(m, exp10, [AC_DEFINE([HAVE_EXP10],[1],[Define to 1 if your system has 'exp10'.])])
+#AC_FUNC_MKTIME
 
 AH_BOTTOM([
 #ifndef HAVE_TRUNC
@@ -166,6 +169,8 @@ GRC_GR_VIDEO_SDL
 GRC_GR_WXGUI
 GRC_PMT
 GRC_GR_TRELLIS
+GRC_EZDOP
+GRC_GR_EZDOP			dnl this must come after GRC_EZDOP
 
 dnl Has list of successfully configured components
 AC_SUBST([subdirs],$subdirs)

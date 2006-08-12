@@ -1,0 +1,7 @@
+These files add bitbang over FTDI USB controller as a programming option
+to the avrdude Atmel AVR programmer. This is used to program the firmware
+of the EZDOP microcontroller over the USB port.
+
+AVRDUDE is a free program available at:
+
+http://savannah.nongnu.org/projects/avrdude/

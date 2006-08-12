@@ -1,0 +1,1020 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<resource xmlns="http://www.wxwidgets.org/wxxrc" version="2.3.0.1">
+
+<object class="wxMenuBar" name="main_menu">
+    <object class="wxMenu" name="file_menu">
+        <label>_File</label>
+        <object class="wxMenuItem" name="file_new_menuitem">
+            <label>_New Search\tCtrl-N</label>
+            <help>Create a new transmitter search.</help>
+        </object>
+        <object class="wxMenuItem" name="file_open_menuitem">
+            <label>_Open Search\tCtrl-O</label>
+            <help>Open an existing search</help>
+        </object>
+        <object class="wxMenuItem" name="file_close_menuitem">
+            <label>_Close Search\tCtrl-W</label>
+            <help>Close current search.</help>
+        </object>
+        <object class="separator"/>
+        <object class="wxMenuItem" name="file_save_menuitem">
+            <label>_Save Search\tCtrl-S</label>
+            <help>Save current search to a file.</help>
+        </object>
+        <object class="separator"/>
+        <object class="wxMenuItem" name="file_exit_menuitem">
+            <label>E_xit\tAlt-X</label>
+            <help>Exit this application</help>
+        </object>
+    </object>
+
+    <object class="wxMenu" name="doppler_menu">
+        <label>_Doppler</label>
+        <object class="wxMenuItem" name="doppler_toggle_menuitem">
+            <label>_Start</label>
+            <help>Start Doppler Rotation</help>
+        </object>
+        <object class="wxMenuItem" name="doppler_autostart_menuitem">
+            <label>_Autostart</label>
+            <checkable>1</checkable>
+            <help>Automatically start Doppler when application loads</help>
+        </object>
+        <object class="wxMenuItem" name="doppler_reset_menuitem">
+            <label>_Reset</label>
+            <help>Reset Doppler</help>
+        </object>
+    </object>
+
+    <object class="wxMenu" name="calibration_menu">
+        <label>_Calibration</label>
+        <object class="wxMenuItem" name="calibration_loadfromfile_menuitem">
+            <label>_Load Calibration File</label>
+            <help>Load system calibration values from filesystem</help>
+        </object>
+        <object class="wxMenuItem" name="calibration_savetofile_menuitem">
+            <label>_Save Calibration File</label>
+            <help>Save system calibration values to filesystem</help>
+        </object>
+        <object class="separator"/>
+        <object class="wxMenuItem" name="calibration_loadtransmitter_menuitem">
+            <label>L_oad Transmitter</label>
+            <help>Load transmitter coordinates from file</help>
+        </object>
+        <object class="wxMenuItem" name="calibration_savetransmitter_menuitem">
+            <label>S_ave Transmitter</label>
+            <help>Save transmitter coordinates to file</help>
+        </object>
+    </object>
+
+    <object class="wxMenu" name="help_menu">
+        <label>_Help</label>
+        <object class="wxMenuItem" name="about_menuitem">
+            <label>_About...</label>
+            <help>About this application</help>
+        </object>
+    </object>
+</object>
+
+<object class="wxFrame" name="main_frame">                        <!-- Main window, bottom left and right panes -->
+	<title>AE6HO Radio Location System</title>
+	<object class="wxSplitterWindow" name="horiz_splitter"> 	  <!-- Divides main window into top and bottom -->
+		<style>wxSP_3D|wxSP_LIVE_UPDATE</style>
+		<orientation>horizontal</orientation>
+		<minsize>170</minsize>
+
+		<object class="wxSplitterWindow" name="vert_splitter"> 	  <!-- Divides top half into left and right -->
+			<style>wxSP_3D|wxSP_LIVE_UPDATE</style>
+			<orientation>vertical</orientation>
+			<minsize>240</minsize>
+			<sashpos>240</sashpos>
+			<object_ref ref="status_panel"/> 		              <!-- Defined below -->
+			<object class="unknown" name="tactical_panel"/> 		
+		</object>
+
+		<object_ref ref="control_panel"/>                         <!-- Defined below -->
+
+	</object>	
+
+</object>
+
+<object class="wxPanel" name="status_panel">				<!-- Read only display variables -->
+    <object class="wxBoxSizer">   <!-- Each item is a major status disply, doppler, GPS, etc. -->
+        <orient>wxVERTICAL</orient>
+        <object class="sizeritem">
+            <flag>wxGROW|wxALL</flag>
+            <border>5</border>
+        	<object class="wxStaticBoxSizer"> <!-- Each item is a Doppler status control -->
+        	    <label>Doppler</label>
+        		<orient>wxVERTICAL</orient>
+        		<object class="sizeritem">
+        			<flag>wxGROW|wxLEFT|wxRIGHT|wxBOTTOM</flag>
+        			<border>5</border>
+        			<object class="wxStaticBoxSizer"> <!-- Single item, doppler strength -->
+        				<orient>wxVERTICAL</orient>
+        				<label>Strength</label>
+        				<object class="sizeritem">
+        					<flag>wxGROW</flag>
+        					<object class="wxGauge" name="doppler_level_gauge">
+        					</object>
+        				</object>
+        			</object>
+        		</object>
+        		<object class="sizeritem">
+        			<flag>wxGROW|wxLEFT|wxRIGHT|wxBOTTOM</flag>
+        			<border>5</border>
+        			<object class="wxStaticBoxSizer"> <!-- Single item, doppler audio level -->
+        				<orient>wxVERTICAL</orient>
+        				<label>Audio Level</label>
+        				<object class="sizeritem">
+        					<flag>wxGROW</flag>
+        					<object class="wxGauge" name="doppler_audio_gauge">
+        					</object>
+        				</object>
+        			</object>
+        		</object>
+                <object class="sizeritem">
+                    <flag>wxGROW</flag>
+                    <border>5</border>
+                    <object class="wxBoxSizer">
+                        <orient>wxHORIZONTAL</orient>
+                		<object class="sizeritem">
+                			<flag>wxGROW|wxLEFT|wxRIGHT|wxBOTTOM</flag>
+                			<border>5</border>
+                			<option>1</option>
+                			<object class="wxStaticBoxSizer"> <!-- Single item, absolute bearing -->
+                				<orient>wxVERTICAL</orient>
+                				<label>Abs. Bearing</label>
+                				<object class="sizeritem">
+                					<flag>wxGROW</flag>
+                					<object class="wxStaticText" name="doppler_absolute_bearing_text">
+                					   <style>wxALIGN_RIGHT</style>
+                					</object>
+                				</object>
+                			</object>
+                		</object>
+                		<object class="sizeritem">
+                			<flag>wxGROW|wxLEFT|wxRIGHT|wxBOTTOM</flag>
+                			<border>5</border>
+                			<option>1</option>
+                			<object class="wxStaticBoxSizer"> <!-- Single item, relative bearing -->
+                				<orient>wxVERTICAL</orient>
+                				<label>Rel. Bearing</label>
+                				<object class="sizeritem">
+                					<flag>wxGROW</flag>
+                					<object class="wxStaticText" name="doppler_relative_bearing_text">
+                					   <style>wxALIGN_RIGHT</style>
+                					</object>
+                				</object>
+                			</object>
+                		</object>
+                    </object>
+                </object>
+        	</object>
+        </object>
+
+        <object class="sizeritem">
+            <flag>wxGROW|wxALL</flag>
+            <border>5</border>
+        	<object class="wxStaticBoxSizer"> <!-- Each item is a Transmitter status control -->
+        	    <label>Transmitter</label>
+        		<orient>wxVERTICAL</orient>
+           		<object class="sizeritem">
+           			<flag>wxGROW|wxLEFT|wxRIGHT|wxBOTTOM</flag>
+           			<border>5</border>
+           			<option>1</option>
+                    <object class="wxBoxSizer">
+                        <orient>wxHORIZONTAL</orient>
+                 		<object class="sizeritem">
+                			<flag>wxGROW|wxRIGHT</flag>
+                			<border>5</border>
+                			<option>1</option>
+                			<object class="wxStaticBoxSizer"> <!-- Single item, estimated transmitter bearing -->
+                				<orient>wxVERTICAL</orient>
+                				<label>Est. Bearing</label>
+                				<object class="sizeritem">
+                					<flag>wxGROW</flag>
+                					<object class="wxStaticText" name="transmitter_estimated_bearing_text">
+                					   <style>wxALIGN_RIGHT</style>
+                					</object>
+                				</object>
+                			</object>
+                		</object>
+                		<object class="sizeritem">
+                			<flag>wxGROW|wxLEFT</flag>
+                			<border>5</border>
+                			<option>1</option>
+                			<object class="wxStaticBoxSizer"> <!-- Single item, estimated transmitter range -->
+                				<orient>wxVERTICAL</orient>
+                				<label>Est. Range</label>
+                				<object class="sizeritem">
+                					<flag>wxGROW</flag>
+                					<object class="wxStaticText" name="transmitter_estimated_range_text">
+                					   <style>wxALIGN_RIGHT</style>
+                					</object>
+                				</object>
+                			</object>
+                		</object>
+                    </object>
+                </object>
+           		<object class="sizeritem">
+           			<flag>wxGROW|wxLEFT|wxRIGHT|wxBOTTOM</flag>
+           			<border>5</border>
+           			<option>1</option>
+                    <object class="wxBoxSizer">
+                        <orient>wxHORIZONTAL</orient>
+                 		<object class="sizeritem">
+                			<flag>wxGROW|wxRIGHT</flag>
+                			<border>5</border>
+                			<option>1</option>
+                			<object class="wxStaticBoxSizer"> <!-- Single item, actual transmitter bearing -->
+                				<orient>wxVERTICAL</orient>
+                				<label>Act. Bearing</label>
+                				<object class="sizeritem">
+                					<flag>wxGROW</flag>
+                					<object class="wxStaticText" name="transmitter_actual_bearing_text">
+                					   <style>wxALIGN_RIGHT</style>
+                					</object>
+                				</object>
+                			</object>
+                		</object>
+                		<object class="sizeritem">
+                			<flag>wxGROW|wxLEFT</flag>
+                			<border>5</border>
+                			<option>1</option>
+                			<object class="wxStaticBoxSizer"> <!-- Single item, actual transmitter range -->
+                				<orient>wxVERTICAL</orient>
+                				<label>Act. Range</label>
+                				<object class="sizeritem">
+                					<flag>wxGROW</flag>
+                					<object class="wxStaticText" name="transmitter_actual_range_text">
+                					   <style>wxALIGN_RIGHT</style>
+                					</object>
+                				</object>
+                			</object>
+                		</object>
+                    </object>
+                </object>
+            </object>
+        </object>
+
+        <object class="sizeritem">
+            <flag>wxGROW|wxALL</flag>
+            <border>5</border>
+            <object class="wxStaticBoxSizer">
+                <label>Error Histogram</label>
+                <orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                    <object class="unknown" name="error_histogram_panel">
+                        <bg>#000000</bg>
+                        <size>220,220</size>
+                    </object>
+                </object>
+                <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                        <style>wxHORIZONTAL</style>
+                        <object class="sizeritem">
+                            <flag>wxALL</flag>
+                            <border>5</border>
+                            <object class="wxRadioBox" name="statistics_source_radiobox">
+                				<label>Source</label>
+                				<style>wxRA_SPECIFY_COLS</style>
+                				<dimension>1</dimension>
+                				<selection>0</selection>
+                				<item>Estimated</item>
+                				<item>Actual</item>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxALL</flag>
+                            <border>5</border>
+                            <object class="wxRadioBox" name="statistics_coords_radiobox">
+                				<label>Coordinates</label>
+                				<style>wxRA_SPECIFY_COLS</style>
+                				<dimension>1</dimension>
+                				<selection>0</selection>
+                				<item>Rectangular</item>
+                				<item>Polar</item>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+            </object>
+        </object>
+    </object>
+</object>
+
+<object class="wxNotebook" name="control_panel">			<!-- all user interaction goes here -->
+	<style>wxNB_FIXEDWIDTH|wxNB_TOP</style>
+	<object class="notebookpage">
+		<label>Doppler</label>
+		<object_ref ref="doppler_control_panel"/>		<!-- Attached EZ Doppler device configuration and control -->
+	</object>
+	<object class="notebookpage">
+		<label>GPS</label>
+		<object_ref ref="gps_control_panel"/>			<!-- Attached GPS device configuration and control -->
+	</object>
+	<object class="notebookpage">
+		<label>Calibration</label>
+		<object_ref ref="calibration_control_panel"/>	<!-- System calibration control -->
+	</object>
+	<object class="notebookpage">
+		<label>Capture</label>
+		<object_ref ref="capture_control_panel"/>	    <!-- Bearing capture control -->
+	</object>
+	<object class="notebookpage">
+		<label>Search</label>
+		<object_ref ref="search_control_panel"/>		<!-- Search control -->
+	</object>
+	<object class="notebookpage">
+		<label>Statistics</label>
+		<object_ref ref="statistics_control_panel"/>	<!-- Statistics control -->
+	</object>
+	<object class="notebookpage">
+		<label>Display</label>
+		<object_ref ref="display_control_panel"/>		<!-- Tactical display control -->
+	</object>
+</object>
+
+<object class="wxPanel" name="doppler_control_panel">			<!-- Attached EZ Doppler device configuration and control -->
+	<style>wxTAB_TRAVERSAL</style>
+
+	<object class="wxBoxSizer">					<!-- Left to right controls -->
+		<orient>wxHORIZONTAL</orient>
+		<object class="sizeritem">
+			<flag>wxTOP</flag>
+			<border>5</border>
+			<object class="wxBoxSizer">
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">		<!-- Start or stop doppler operation -->
+					<flag>wxLEFT|wxTOP|wxRIGHT</flag>
+					<border>5</border>
+					<object class="wxButton" name="doppler_toggle_button">
+						<label>Start</label>
+					</object>
+				</object>
+				<object class="sizeritem">		<!-- Reset doppler -->
+					<flag>wxLEFT|wxTOP|wxRIGHT</flag>
+					<border>5</border>
+					<object class="wxButton" name="doppler_reset_button">
+						<label>Reset</label>
+					</object>
+				</object>
+				<object class="sizeritem">		<!-- Check for autostart of doppler -->
+					<flag>wxLEFT|wxTOP|wxRIGHT</flag>
+					<border>5</border>
+					<object class="wxCheckBox" name="doppler_autostart_checkbox">
+						<label>Autostart</label>
+					</object>
+				</object>
+			</object>
+		</object>
+		<object class="sizeritem">
+			<flag>wxTOP|wxRIGHT</flag>
+			<border>5</border>
+			<object class="wxStaticBoxSizer">
+				<label>Set Filtering</label>
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">		<!-- Set doppler filter time constant -->
+					<flag>wxALL|wxGROW</flag>
+                    <border>5</border>
+					<object class="wxSlider" name="doppler_filter_slider">
+						<style>wxSL_HORIZONTAL|wxSL_LABELS</style>
+						<size>250,45</size>
+						<min>1</min>
+						<value>20</value>
+						<max>100</max>
+					</object>
+				</object>
+			</object>
+		</object>
+		<object class="sizeritem">		<!-- Set doppler rotation -->
+            <flag>wxTOP</flag>
+            <border>5</border>
+            <object class="wxRadioBox" name="doppler_rotation_radiobox">
+				<label>Set Rotation Rate (Hz)</label>
+				<style>wxRA_SPECIFY_ROWS</style>
+				<dimension>2</dimension>
+				<selection>5</selection>
+				<item>250</item>
+				<item>400</item>
+				<item>500</item>
+				<item>666</item>
+				<item>1000</item>
+				<item>2000</item>
+			</object>
+		</object>
+	</object>
+</object>
+
+<object class="wxPanel" name="gps_control_panel">
+	<style>wxTAB_TRAVERSAL</style>
+	<object class="wxBoxSizer">					<!-- Left to right controls -->
+		<orient>wxHORIZONTAL</orient>
+		<object class="sizeritem">
+			<flag>wxTOP</flag>
+			<border>5</border>
+			<object class="wxBoxSizer">
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">		<!-- Start or stop GPS operation -->
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxButton" name="gps_toggle_button">
+						<label>Start</label>
+					</object>
+				</object>
+				<object class="sizeritem">		<!-- Check for autostart of GPS -->
+					<flag>wxALL</flag>
+					<border>5</border>
+					<object class="wxCheckBox" name="gps_autostart_checkbox">
+						<label>Autostart GPS</label>
+					</object>
+				</object>
+			</object>
+		</object>
+		<object class="sizeritem">
+			<flag>wxTOP|wxRIGHT</flag>
+			<border>5</border>
+			<object class="wxStaticBoxSizer">
+				<label>Select Port</label>
+				<orient>wxVERTICAL</orient>
+				<object class="sizeritem">
+					<flag>wxALL|wxGROW</flag>
+                    <border>5</border>
+					<object class="wxComboBox" name="gps_device_combobox">
+                        <size>150,30</size>
+					</object>
+				</object>
+			</object>
+		</object>
+        <object class="sizeritem">
+            <flag>wxTOP|wxRIGHT</flag>
+            <border>5</border>
+            <object class="wxStaticBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <label>Location</label>
+          		<object class="sizeritem">
+           			<object class="wxStaticBoxSizer"> <!-- Single item, current latitude -->
+           				<orient>wxVERTICAL</orient>
+           				<label>Latitude</label>
+           				<object class="sizeritem">
+           					<object class="wxStaticText" name="gps_latitude_text">
+                                <size>140,22</size>
+                                <style>wxALIGN_RIGHT</style>
+           					</object>
+           				</object>
+           			</object>
+           		</object>
+           		<object class="sizeritem">
+           			<object class="wxStaticBoxSizer"> <!-- Single item, current latitude-->
+           				<orient>wxVERTICAL</orient>
+           				<label>Longitude</label>
+           				<object class="sizeritem">
+           					<object class="wxStaticText" name="gps_longitude_text">
+                                <size>140,22</size>
+                                <style>wxALIGN_RIGHT</style>
+           					</object>
+           				</object>
+          			</object>
+          		</object>
+            </object>
+        </object>
+        <object class="sizeritem">
+            <flag>wxTOP|wxRIGHT</flag>
+            <border>5</border>
+            <object class="wxStaticBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <label>Course</label>
+          		<object class="sizeritem">
+           			<object class="wxStaticBoxSizer"> <!-- Single item, gps heading -->
+           				<orient>wxVERTICAL</orient>
+           				<label>Heading</label>
+           				<object class="sizeritem">
+           					<object class="wxStaticText" name="gps_heading_text">
+                                <size>55,22</size>
+                                <style>wxALIGN_RIGHT</style>
+           					</object>
+           				</object>
+           			</object>
+           		</object>
+           		<object class="sizeritem">
+           			<object class="wxStaticBoxSizer"> <!-- Single item, gps speed -->
+           				<orient>wxVERTICAL</orient>
+           				<label>Speed</label>
+           				<object class="sizeritem">
+           					<object class="wxStaticText" name="gps_speed_text">
+                                <size>55,22</size>
+                                <style>wxALIGN_RIGHT</style>
+           					</object>
+           				</object>
+          			</object>
+          		</object>
+            </object>
+        </object>
+	</object>
+</object>
+
+<object class="wxPanel" name="calibration_control_panel">
+	<style>wxTAB_TRAVERSAL</style>
+	<object class="wxBoxSizer">					<!-- Left to right controls -->
+		<orient>wxHORIZONTAL</orient>
+        <object class="sizeritem">
+            <flag>wxTOP|wxRIGHT</flag>
+            <border>5</border>
+            <object class="wxStaticBoxSizer" name="doppler_calibration_box">
+                <orient>wxVERTICAL</orient>
+                <label>Doppler</label>
+                <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                        <orient>wxHORIZONTAL</orient>
+        				<object class="sizeritem">		<!-- Perform doppler calibration -->
+        					<flag>wxALL</flag>
+        					<border>5</border>
+        					<object class="wxButton" name="calibration_equalize_button">
+        						<label>Equalize</label>
+                                <default>0</default>
+        					</object>
+        				</object>
+        				<object class="sizeritem">		<!-- Set calibration offset to make zero -->
+        					<flag>wxALL</flag>
+        					<border>5</border>
+        					<object class="wxButton" name="calibration_zero_button">
+        						<label>Zero</label>
+                                <default>0</default>
+        					</object>
+        				</object>
+                    </object>
+                </object>
+
+                <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                        <orient>wxHORIZONTAL</orient>
+        				<object class="sizeritem">	
+        					<flag>wxALL</flag>
+        					<border>5</border>
+        					<object class="wxStaticText">
+        						<label>Adjust Offset:</label>
+        					</object>
+        				</object>
+        				<object class="sizeritem">		<!-- Set calibration offset to make zero -->
+        					<flag>wxALL</flag>
+        					<border>5</border>
+                            <object class="wxSpinButton" name="calibration_adjust_spinner">
+                                <style>wxSP_HORIZONTAL</style>
+                                <value>500</value>
+                                <min>0</min>
+                                <max>1000</max>
+                            </object>
+        				</object>
+                    </object>
+                </object>
+
+                <object class="sizeritem">
+                    <flag>wxALL</flag>
+                    <border>5</border>
+                    <object class="wxCheckBox" name="calibration_all_checkbox">
+                        <label>Affect All Rates</label>
+                    </object>
+                </object>
+
+            </object>                                           
+        </object>
+
+        <object class="sizeritem">
+            <flag>wxTOP|wxRIGHT</flag>
+            <border>5</border>
+            <object class="wxStaticBoxSizer" name="known_transmitter_box">
+                <orient>wxHORIZONTAL</orient>
+                <label>Known Transmitter</label>
+                <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                            <flag>wxRIGHT</flag>
+                            <border>5</border>
+                            <object class="wxStaticBoxSizer">
+                                <orient>wxVERTICAL</orient>
+                                <label>Latitude</label>
+                                <object class="sizeritem">
+                        		    <object class="wxTextCtrl" name="known_transmitter_latitude_edit">
+                                        <style>wxTE_LEFT</style>
+                        			</object>
+                        		</object>
+                        	</object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxTOP||wxBOTTOM|wxALIGN_CENTRE</flag>
+                            <border>5</border>
+                            <object class="wxButton" name="known_transmitter_update_button">
+                                <label>Update</label>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+                <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                            <object class="wxStaticBoxSizer">
+                                <orient>wxVERTICAL</orient>
+                                <label>Longitude</label>
+                       			<object class="sizeritem">
+                    				<object class="wxTextCtrl" name="known_transmitter_longitude_edit">
+                                        <style>wxTE_LEFT</style>
+                    				</object>
+                    			</object>
+                       	    </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxTOP|wxALIGN_CENTRE</flag>
+                            <border>10</border>
+                            <object class="wxCheckBox" name="known_transmitter_checkbox">
+                                <label>Use</label>
+                                <default>0</default>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+            </object>                                           
+        </object>
+		<object class="sizeritem">
+		    <flag>wxTOP|wxRIGHT</flag>
+		    <border>5</border>
+            <object class="wxStaticBoxSizer">
+        	    <label>Bearing Error Statistics</label>
+        		<orient>wxHORIZONTAL</orient>
+                <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                            <flag>wxRIGHT</flag>
+                            <border>5</border>
+                            <object class="wxStaticBoxSizer">
+                                <label>Count</label>
+                                <object class="sizeritem">
+                                    <object class="wxStaticText" name="error_count_text">
+                                        <size>75,22</size>
+                                        <style>wxALIGN_RIGHT</style>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxRIGHT</flag>
+                            <border>5</border>
+                            <object class="wxStaticBoxSizer">
+                                <label>Mode</label>
+                                <object class="sizeritem">
+                                    <object class="wxStaticText" name="error_mode_text">
+                                        <size>75,22</size>
+                                        <style>wxALIGN_RIGHT</style>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+                <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                            <object class="wxStaticBoxSizer">
+                                <label>Mean</label>
+                                <object class="sizeritem">
+                                    <object class="wxStaticText" name="error_mean_text">
+                                        <size>75,22</size>
+                                        <style>wxALIGN_RIGHT</style>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <object class="wxStaticBoxSizer">
+                                <label>Concen.</label>
+                                <object class="sizeritem">
+                                    <object class="wxStaticText" name="error_conc_text">
+                                        <size>75,22</size>
+                                        <style>wxALIGN_RIGHT</style>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+            </object>
+		</object>
+	</object>
+</object>
+
+<object class="wxPanel" name="capture_control_panel">
+	<style>wxTAB_TRAVERSAL</style>
+	<object class="wxBoxSizer">					<!-- Left to right controls -->
+		<orient>wxHORIZONTAL</orient>
+		<object class="sizeritem">
+            <object class="wxPanel">
+            </object>
+		</object>
+	</object>
+</object>
+
+<object class="wxPanel" name="statistics_control_panel">
+	<style>wxTAB_TRAVERSAL</style>
+	<object class="wxBoxSizer">					<!-- Left to right controls -->
+		<orient>wxHORIZONTAL</orient>
+		<object class="sizeritem">
+            <object class="wxPanel">
+            </object>
+		</object>
+	</object>
+</object>
+
+
+
+<object class="wxDialog" name="calibration_dialog">
+    <title>Equalize Doppler Rotation Rates</title>
+    <object class="wxBoxSizer">
+        <orient>wxVERTICAL</orient>
+        <object class="sizeritem">
+            <flag>wxALL</flag>
+            <border>10</border>
+            <object class="wxStaticText" name="calibration_instructions_text">
+                <label>Please ensure the signal source remains fixed for\nthe duration of the test.  The source does not have\nto be at a zero bearing.</label>
+            </object>
+        </object>
+        <object class="sizeritem">
+            <flag>wxGROW|wxALL</flag>
+            <border>5</border>
+            <object class="wxStaticBoxSizer">
+                <orient>wxHORIZONTAL</orient>
+                <label>Calibration Progress...</label>
+                <object class="sizeritem">
+                    <style>wxGROW</style>
+                    <option>1</option>
+                    <object class="wxGauge" name="calibration_progress_gauge">
+                        <range>6</range>
+                    </object>
+                </object>
+            </object>
+        </object>
+        <object class="sizeritem">
+            <flag>wxALL</flag>
+            <border>10</border>
+            <object class="wxStaticText" name="calibration_progress_text">
+                <label>Press Start to begin, Cancel to exit...</label>
+            </object>
+        </object>
+        <object class="sizeritem">
+            <flag>wxGROW|wxALL</flag>
+            <border>5</border>
+            <object class="wxBoxSizer">
+                <orient>wxHORIZONTAL</orient>
+                <object class="sizeritem">
+                    <flag>wxALIGN_LEFT</flag>
+                    <object class="wxButton" name="calibration_start_button">
+                        <label>Start</label>
+                    </object>
+                </object>
+                <object class="spacer">
+                    <size>5</size>
+                    <option>1</option>
+                </object>
+                <object class="sizeritem">
+                    <flag>wxALIGN_RIGHT</flag>
+                    <object class="wxButton" name="calibration_cancel_button">
+                        <label>Cancel</label>
+                    </object>
+                </object>
+            </object>
+        </object>
+    </object>
+</object>
+
+<object class="wxPanel" name="display_control_panel">			<!-- Tactical display options -->
+	<style>wxTAB_TRAVERSAL</style>
+
+	<object class="wxBoxSizer">					<!-- Left to right controls -->
+		<orient>wxHORIZONTAL</orient>
+		<object class="sizeritem">
+			<flag>wxTOP|wxRIGHT</flag>
+			<border>5</border>
+            <object class="wxRadioBox" name="display_orientation_radiobox">
+				<label>Orientation</label>
+				<style>wxRA_SPECIFY_COLS</style>
+				<dimension>1</dimension>
+				<selection>0</selection>
+				<item>Track Up</item>
+				<item>North Up</item>
+			</object>
+		</object>
+		<object class="sizeritem">
+			<flag>wxTOP|wxRIGHT</flag>
+			<border>5</border>
+
+            <object class="wxStaticBoxSizer">
+                <orient>wxVERTICAL</orient>
+                <label>Display Pointers</label>
+                <object class="sizeritem">
+                    <object class="wxCheckBox" name="display_doppler_checkbox">
+                        <label>Current Doppler Bearing</label>
+                    </object>
+                </object>
+                <object class="sizeritem">
+                    <object class="wxCheckBox" name="display_known_checkbox">
+                        <label>Known Transmitter Bearing</label>
+                    </object>
+                </object>
+                <object class="sizeritem">
+                    <object class="wxCheckBox" name="display_estimated_checkbox">
+                        <label>Estimated Bearing</label>
+                    </object>
+                </object>
+            </object>
+
+		</object>
+	</object>
+</object>
+
+<object class="wxPanel" name="search_control_panel">			<!-- Search control options -->
+	<style>wxTAB_TRAVERSAL</style>
+
+	<object class="wxBoxSizer">					<!-- Left to right controls -->
+		<orient>wxHORIZONTAL</orient>
+		<object class="sizeritem">
+			<flag>wxTOP|wxRIGHT</flag>
+			<border>5</border>
+            <object class="wxStaticBoxSizer">
+        	    <label>Search Log</label>
+        		<orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                    <flag>wxLEFT|wxTOP|wxRIGHT</flag>
+                    <border>5</border>
+                    <object class="wxButton" name="search_newsave_button">
+                        <label>New</label>
+                    </object>
+                </object>
+                <object class="sizeritem">
+                    <flag>wxALL</flag>
+                    <border>5</border>
+                    <object class="wxButton" name="search_openclose_button">
+                        <label>Open</label>
+                    </object>
+                </object>
+			</object>
+		</object>
+
+		<object class="sizeritem">
+		    <flag>wxTOP|wxRIGHT</flag>
+		    <border>5</border>
+            <object class="wxStaticBoxSizer">
+        	    <label>Capture</label>
+        		<orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                    <flag>wxTOP|wxLEFT|wxRIGHT</flag>
+                    <border>5</border>
+                    <object class="wxButton" name="search_toggle_button">
+                        <label>Auto</label>
+                    </object>
+                </object>
+                <object class="sizeritem">
+                    <flag>wxALL</flag>
+                    <border>5</border>
+                    <object class="wxButton" name="search_once_button">
+                        <label>One Shot</label>
+                    </object>
+                </object>
+            </object>
+		</object>
+
+		<object class="sizeritem">
+		    <flag>wxTOP|wxRIGHT</flag>
+		    <border>5</border>
+            <object class="wxStaticBoxSizer">
+        	    <label>Estimated Location</label>
+        		<orient>wxVERTICAL</orient>
+                <object class="sizeritem">
+                    <object class="wxStaticBoxSizer">
+                        <label>Longitude</label>
+                        <object class="sizeritem">
+                            <object class="wxStaticText" name="search_longitude_text">
+                                <size>150,22</size>
+                                <style>wxALIGN_RIGHT</style>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+                <object class="sizeritem">
+                    <object class="wxStaticBoxSizer">
+                        <label>Latitude</label>
+                        <object class="sizeritem">
+                            <object class="wxStaticText" name="search_latitude_text">
+                                <size>150,22</size>
+                                <style>wxALIGN_RIGHT</style>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+            </object>
+		</object>
+
+		<object class="sizeritem">
+		    <flag>wxTOP|wxRIGHT</flag>
+		    <border>5</border>
+            <object class="wxStaticBoxSizer">
+        	    <label>Search Status</label>
+        		<orient>wxHORIZONTAL</orient>
+                <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                            <flag>wxRIGHT</flag>
+                            <border>5</border>
+                            <object class="wxStaticBoxSizer">
+                                <label>Bearings</label>
+                                <object class="sizeritem">
+                                    <object class="wxStaticText" name="search_count_text">
+                                        <size>100,22</size>
+                                        <style>wxALIGN_RIGHT</style>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxRIGHT</flag>
+                            <border>5</border>
+                            <object class="wxStaticBoxSizer">
+                                <label>Status</label>
+                                <object class="sizeritem">
+                                    <object class="wxStaticText" name="search_status_text">
+                                        <size>100,22</size>
+                                        <style>wxALIGN_RIGHT</style>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+
+                <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                            <flag>wxRIGHT</flag>
+                            <border>5</border>
+                            <object class="wxStaticBoxSizer">
+                                <label>Mode</label>
+                                <object class="sizeritem">
+                                    <object class="wxStaticText" name="search_mode_text">
+                                        <size>100,22</size>
+                                        <style>wxALIGN_RIGHT</style>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <flag>wxRIGHT</flag>
+                            <border>5</border>
+                            <object class="wxStaticBoxSizer">
+                                <label>Mean</label>
+                                <object class="sizeritem">
+                                    <object class="wxStaticText" name="search_mean_text">
+                                        <size>100,22</size>
+                                        <style>wxALIGN_RIGHT</style>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+
+                <object class="sizeritem">
+                    <object class="wxBoxSizer">
+                        <orient>wxVERTICAL</orient>
+                        <object class="sizeritem">
+                            <object class="wxStaticBoxSizer">
+                                <label>Score</label>
+                                <object class="sizeritem">
+                                    <object class="wxStaticText" name="search_score_text">
+                                        <size>100,22</size>
+                                        <style>wxALIGN_RIGHT</style>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                        <object class="sizeritem">
+                            <object class="wxStaticBoxSizer">
+                                <label>Distance Error</label>
+                                <object class="sizeritem">
+                                    <object class="wxStaticText" name="search_disterror_text">
+                                        <size>100,22</size>
+                                        <style>wxALIGN_RIGHT</style>
+                                    </object>
+                                </object>
+                            </object>
+                        </object>
+                    </object>
+                </object>
+            </object>
+		</object>
+	</object>
+</object>
+
+</resource>
