@@ -35,12 +35,12 @@ AC_DEFUN([GRC_EZDOP],[
 
     AC_PATH_PROG(AVRGCC, [avr-gcc -v], no)
     if test $AVRGCC = no; then
-    	succeeded = no
+    	succeeded=no
     fi
     
     AC_PATH_PROG(AVROBJCOPY, [avr-objcopy], no)
     if test $AVROBJCOPY = no; then
-    	succeeded = no
+    	succeeded=no
     fi
     
     AC_LANG_PUSH(C)
