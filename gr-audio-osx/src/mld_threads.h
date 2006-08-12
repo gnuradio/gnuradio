@@ -26,7 +26,7 @@
 /* classes which allow for either pthreads or omni_threads */
 
 #ifdef _USE_OMNI_THREADS_
-#include <gnuradio/omnithread.h>
+#include <omnithread.h>
 #else
 #include <pthread.h>
 #endif

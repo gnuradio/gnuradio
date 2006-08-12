@@ -28,6 +28,10 @@ usrpbld=@abs_top_builddir@/usrp/host/lib
 PYTHONPATH="$grbld:$libbld:$libbld/.libs:$libsrc:$py:$usrpbld:$PYTHONPATH"
 export PYTHONPATH
 
+# For OS/X
+DYLD_LIBRARY_PATH=@abs_top_builddir@/gnuradio-core/src/lib/.libs:@abs_top_builddir@/usrp/host/lib/.libs
+export DYLD_LIBRARY_PATH
+
 #
 # This is the simple part...
 # Run everything that matches qa_*.py and return the final result.

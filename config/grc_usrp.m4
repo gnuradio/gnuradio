@@ -59,11 +59,11 @@ AC_DEFUN([GRC_USRP],[
     dnl check for SDCC 2.4.0
     USRP_SDCC([2.4.0],[],[succeeded=no])
     
-    AC_CHECK_FUNCS([getrusage sched_setscheduler],[],[succeeded=no])
-    AC_CHECK_FUNCS([sigaction snprintf],[],[succeeded=no])
+    AC_CHECK_FUNCS([getrusage sched_setscheduler])
+    AC_CHECK_FUNCS([sigaction snprintf])
 
     dnl we use these to handle possible byteswapping to and from the USRP.
-    AC_CHECK_HEADERS([byteswap.h],[],[succeeeded=no])
+    AC_CHECK_HEADERS([byteswap.h])
     AC_C_BIGENDIAN
 
     if test $succeeded = yes; then
