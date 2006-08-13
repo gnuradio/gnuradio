@@ -437,8 +437,8 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = @top_srcdir@/host \
-                         @top_srcdir@/doc/other
+INPUT                  = @top_srcdir@/usrp/host \
+                         @top_srcdir@/usrp/doc/other
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -462,7 +462,7 @@ RECURSIVE              = YES
 # subdirectory from a directory tree whose root is specified with the INPUT tag.
 
 EXCLUDE                = CVS \
-                         @top_srcdir@/host/swig
+                         @top_srcdir@/usrp/host/swig
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or directories 
 # that are symbolic links (a Unix filesystem feature) are excluded from the input.

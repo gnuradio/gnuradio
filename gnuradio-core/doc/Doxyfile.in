@@ -445,9 +445,9 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = @top_srcdir@/src/lib \
-                         @top_srcdir@/src/tests \
-                         @top_srcdir@/doc/other
+INPUT                  = @top_srcdir@/gnuradio-core/src/lib \
+                         @top_srcdir@/gnuradio-core/src/tests \
+                         @top_srcdir@/gnuradio-core/doc/other
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -471,10 +471,10 @@ RECURSIVE              = YES
 # subdirectory from a directory tree whose root is specified with the INPUT tag.
 
 EXCLUDE                = CVS \
-                         @top_srcdir@/src/lib/swig/gnuradio_swig_python.cc \
-                         @top_srcdir@/src/lib/atsc \
-                         @top_srcdir@/src/lib/io-orig \
-                         @top_srcdir@/src/lib/vrx
+                         @top_srcdir@/gnuradio-core/src/lib/swig/gnuradio_swig_python.cc \
+                         @top_srcdir@/gnuradio-core/src/lib/atsc \
+                         @top_srcdir@/gnuradio-core/src/lib/io-orig \
+                         @top_srcdir@/gnuradio-core/src/lib/vrx
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix filesystem feature) are excluded 
