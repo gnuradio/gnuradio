@@ -63,7 +63,7 @@ GNURADIO_I = $(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
 # The below used to be set in PKGCONFIG but now point to the current
 # build tree.
 USRP_INCLUDES = -I$(top_srcdir)/usrp/host/lib \
-           	-I$(top_srcdir)/usrp/firmware/include
+		-I$(top_srcdir)/usrp/firmware/include
 
 USRP_LIBS = -L$(top_builddir)/usrp/host/lib \
 	    -lusrp
