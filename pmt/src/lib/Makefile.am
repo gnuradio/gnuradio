@@ -21,6 +21,8 @@
 
 include $(top_srcdir)/Makefile.common
 
+INCLUDES = $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES)
+
 TESTS = test_pmt
 
 lib_LTLIBRARIES = libpmt.la libpmt-qa.la
