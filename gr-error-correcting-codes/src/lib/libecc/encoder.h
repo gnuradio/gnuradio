@@ -82,7 +82,7 @@ protected:
   virtual void encode_private () = 0;
 
   size_t d_block_size_bits, d_n_code_inputs, d_n_code_outputs;
-  size_t d_total_n_enc_bits;
+  size_t d_total_n_enc_bits, d_n_bits_to_input, d_n_bits_to_output;
   code_input_ptr d_in_buf;
   code_output_ptr d_out_buf;
 };

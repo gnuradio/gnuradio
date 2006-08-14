@@ -30,7 +30,10 @@
 
 #define DO_TIME_THOUGHPUT 0
 #define DO_PRINT_DEBUG 0
-#define DO_PRINT_DEBUG_ENCODE 0
+#define DO_PRINT_DEBUG_VARS 0
+#define DO_PRINT_DEBUG_TERM 0
+#define DO_PRINT_DEBUG_TERM_END 0
+#define DO_PRINT_DEBUG_LOOKUP 0
 
 #include <mld/mld_timer.h>
 #include <mld/n2bs.h>
@@ -127,7 +130,7 @@ code_convolutional_trellis::code_convolutional_trellis_init
   d_do_streaming = (block_size_bits == 0);
   d_do_termination = (d_do_streaming == true) ? false : do_termination;
 
-  if (DO_PRINT_DEBUG) {
+  if (DO_PRINT_DEBUG_VARS) {
     std::cout <<
       "d_block_size_bits = " << d_block_size_bits << "\n"
       "d_n_code_inputs   = " << d_n_code_inputs << "\n"
@@ -335,16 +338,16 @@ code_convolutional_trellis::code_convolutional_trellis_init
     d_n_memories = d_n_code_inputs;
   }
 
-  if (DO_PRINT_DEBUG) {
+  if (DO_PRINT_DEBUG_VARS) {
     std::cout <<
       "  t_total_n_delays_siao  = " << d_total_n_delays << "\n"
       "  t_total_n_delays_soai  = " << t_total_n_delays_soai << "\n";
   }
 
-  // pick which realization to use; soai is preferred since it's faster
-  // ... but unfortunately it's also less likely
+  // pick which realization to use;
+  // siao is preferred since it's easier to debug, and more likely
 
-  if (d_total_n_delays < t_total_n_delays_soai) {
+  if (d_total_n_delays <= t_total_n_delays_soai) {
     // use siao
     // nothing else to do, since the global variables already hold
     // the correct values.
@@ -377,15 +380,16 @@ code_convolutional_trellis::code_convolutional_trellis_init
   d_n_states = (1 << d_total_n_delays);
   d_n_input_combinations = (1 << d_n_code_inputs);
 
-  memory_t t_mask = (memory_t)((2 << d_total_n_delays) - 1);
+  if (DO_PRINT_DEBUG_VARS) {
+    std::cout <<
+      "  d_n_states             = " << d_n_states << "\n"
+      "  d_n_input_combinations = " << d_n_input_combinations << "\n";
+  }
 
-  if (end_memory_state & t_mask) {
-    std::cout << "code_convolutional_trellis: Warning: " <<
-      "provided end memory state out (" << end_memory_state <<
-      ") is out of the state range [0, " <<
-      (d_n_states-1) << "]; masking off the unused bits.\n";
+  if ((d_do_feedback == true) & (d_do_encode_soai == true)) {
+    // create the individual output bits used in soai feedback
 
-    end_memory_state &= t_mask;
+    d_ind_outputs.assign (d_n_memories, 0);
   }
 
   // create the max_mem_mask to be used in encoding
@@ -399,10 +403,16 @@ code_convolutional_trellis::code_convolutional_trellis_init
       d_max_mem_masks[m] = (memory_t)((2 << (d_n_delays[m])) - 1);
   }
 
-  if (DO_PRINT_DEBUG) {
+  if (DO_PRINT_DEBUG_VARS) {
     std::cout <<
       "  d_n_memories      = " << d_n_memories << "\n"
-      "  d_total_n_delays  = " << d_total_n_delays << "\n"
+      "  d_total_n_delays  = " << d_total_n_delays << " : [";
+    for (size_t m = 0; m < d_n_memories; m++) {
+      std::cout << d_n_delays[m];
+      if (m != (d_n_memories-1))
+	std::cout << ", ";
+    }
+    std::cout << "]\n" <<
       "  d_max_delay       = " << d_max_delay << "\n"
       "  d_do_encode_soai  = " << 
       ((d_do_encode_soai == true) ? "true" : "false") << "\n";
@@ -418,6 +428,18 @@ code_convolutional_trellis::code_convolutional_trellis_init
   d_current_outputs.assign (d_n_code_outputs, 0);
 
   // create the trellis for this code:
+
+  memory_t t_mask = (memory_t)((1 << d_total_n_delays) - 1);
+  memory_t t_end_memory_state = (memory_t) end_memory_state;
+
+  if (t_end_memory_state != (t_end_memory_state & t_mask)) {
+    std::cout << "code_convolutional_trellis: Warning: " <<
+      "provided end memory state out (" << end_memory_state <<
+      ") is out of the state range [0, " <<
+      (d_n_states-1) << "]; masking off the unused bits.\n";
+
+    end_memory_state &= t_mask;
+  }
 
   create_trellis ();
 
@@ -541,11 +563,6 @@ void
 code_convolutional_trellis::create_trellis
 ()
 {
-  if (DO_PRINT_DEBUG_ENCODE) {
-    std::cout << "c_t: # states = " << d_n_states <<
-      ", d_n_input_combinations = " << d_n_input_combinations << "\n";
-  }
-
   // first dimension is the number of states
 
   d_trellis.resize (d_n_states);
@@ -559,18 +576,13 @@ code_convolutional_trellis::create_trellis
 
   // fill in the trellis
 
-  for (memory_t m = 0; m < d_n_states; m++) {
-    for (memory_t n = 0; n < d_n_input_combinations; n++) {
+  for (size_t m = 0; m < d_n_states; m++) {
+    for (size_t n = 0; n < d_n_input_combinations; n++) {
       connection_t_ptr t_connection = &(d_trellis[m][n]);
-      encode_single (m, n, t_connection->d_to_state,
+      encode_single ((memory_t) m,
+		     (memory_t) n,
+		     t_connection->d_to_state,
 		     t_connection->d_output_bits);
-      if (DO_PRINT_DEBUG_ENCODE) {
-	std::cout << "set d_t[" << n2bs(m,d_total_n_delays) << "][" <<
-	  n2bs(n,d_n_code_inputs) << "] : to_st = " <<
-	  n2bs(t_connection->d_to_state,d_total_n_delays) <<
-	  ", o_b = " << n2bs(t_connection->d_output_bits,d_n_code_outputs) <<
-	  "\n";
-      }
     }
   }
 }
@@ -585,16 +597,9 @@ code_convolutional_trellis::demux_state
   // assumes state bits start after the LSB (not at &1)
 
   memories.resize (d_n_memories);
-  if (DO_PRINT_DEBUG_ENCODE) {
-    std::cout << "in_st = " << n2bs(in_state,d_total_n_delays) << " ->\n";
-  }
   for (size_t m = 0; m < d_n_memories; m++) {
     memories[m] = (in_state << 1) & d_max_mem_masks[m];
     in_state >>= d_n_delays[m];
-    if (DO_PRINT_DEBUG_ENCODE) {
-      std::cout << "  #d = " << d_n_delays[m] << ", mem[" << m << "] = " <<
-	n2bs(memories[m], d_n_delays[m]+1) << "\n";
-    }
   }
 }
 
@@ -604,16 +609,12 @@ code_convolutional_trellis::mux_state
 {
   // mux bits for the given memory states in d_memory
   // assumes state bits start after the LSB (not at &1)
+
   memory_t t_state = 0;
   size_t shift = 0;
   for (size_t m = 0; m < d_n_memories; m++) {
     t_state |= (memories[m] >> 1) << shift;
     shift += d_n_delays[m];
-    if (DO_PRINT_DEBUG_ENCODE) {
-      std::cout << "  #d = " << d_n_delays[m] << ", mem[" << m << "] = " <<
-	n2bs(memories[m], d_n_delays[m]+1) << " -> st = " <<
-	n2bs(t_state, d_total_n_delays) << "\n";
-    }
   }
   return (t_state);
 }
@@ -623,6 +624,9 @@ code_convolutional_trellis::demux_inputs
 (memory_t inputs,
  std::vector<char>& in_vec)
 {
+  // de-mux bits for the given inputs;
+  // copy them into the provided vector;
+
   for (size_t m = 0; m < d_n_code_inputs; m++, inputs >>= 1) {
     in_vec[m] = (char)(inputs & 1);
   }
@@ -632,6 +636,8 @@ memory_t
 code_convolutional_trellis::mux_inputs
 (const std::vector<char>& in_vec)
 {
+  // mux bits for the given inputs
+
   size_t bit_shift = 0;
   memory_t inputs = 0;
   for (size_t m = 0; m < in_vec.size(); m++, bit_shift++) {
@@ -645,6 +651,9 @@ code_convolutional_trellis::demux_outputs
 (memory_t outputs,
  std::vector<char>& out_vec)
 {
+  // de-mux bits for the given outputs;
+  // copy them into the provided vector;
+
   for (size_t m = 0; m < d_n_code_outputs; m++, outputs >>= 1) {
     out_vec[m] = (char)(outputs & 1);
   }
@@ -654,6 +663,8 @@ memory_t
 code_convolutional_trellis::mux_outputs
 (const std::vector<char>& out_vec)
 {
+  // mux bits for the given outputs
+
   size_t bit_shift = 0;
   memory_t outputs = 0;
   for (size_t m = 0; m < out_vec.size(); m++, bit_shift++) {
@@ -702,9 +713,19 @@ code_convolutional_trellis::encode_lookup
  const std::vector<char>& inputs,
  memory_t& out_bits)
 {
+  if (DO_PRINT_DEBUG_LOOKUP) {
+    std::cout << "e_l: in_st = " << n2bs(state,d_total_n_delays) <<
+      ", in = " << n2bs(mux_inputs(inputs),d_n_code_inputs);
+  }
+
   connection_t_ptr t_connection = &(d_trellis[state][mux_inputs(inputs)]);
   state = t_connection->d_to_state;
   out_bits = t_connection->d_output_bits;
+
+  if (DO_PRINT_DEBUG_LOOKUP) {
+    std::cout << " -> out_st = " << n2bs(state,d_total_n_delays) <<
+      ", out = " << n2bs(out_bits, d_n_code_outputs) << "\n";
+  }
 }
 
 void
@@ -713,25 +734,20 @@ code_convolutional_trellis::encode_lookup
  const std::vector<char>& inputs,
  std::vector<char>& out_bits)
 {
+  if (DO_PRINT_DEBUG_LOOKUP) {
+    std::cout << "e_l: in_st = " << n2bs(state,d_total_n_delays) <<
+      ", in = " << n2bs(mux_inputs(inputs),d_n_code_inputs);
+  }
+
   connection_t_ptr t_connection = &(d_trellis[state][mux_inputs(inputs)]);
   state = t_connection->d_to_state;
   demux_outputs (t_connection->d_output_bits, out_bits);
-}
 
-void
-code_convolutional_trellis::get_termination_inputs
-(memory_t term_start_state,
- size_t bit_num,
- std::vector<char>& inputs)
-{
-#if 1
-  // for now, just assign all 0's
-  inputs.assign (d_n_code_inputs, 0);
-#else
-  for (size_t m = 0; m < d_n_code_inputs; m++) {
-    inputs[m] = ((d_term_inputs[term_start_state][m]) >> bit_num) & 1;
+  if (DO_PRINT_DEBUG_LOOKUP) {
+    std::cout << " -> out_st = " << n2bs(state,d_total_n_delays) <<
+      ", out = " << n2bs(t_connection->d_output_bits,
+			 d_n_code_outputs) << "\n";
   }
-#endif
 }
 
 void
@@ -747,7 +763,6 @@ code_convolutional_trellis::create_termination_table
   // particular state, listed in order from LSB for the first input
   // bit to the MSB for the last input bit.
 
-#if 0
   // create a reverse trellis
   // it's temporary, just for doing the termination, so just do it locally
 
@@ -758,62 +773,214 @@ code_convolutional_trellis::create_termination_table
   t_trellis.resize (d_n_states);
 
   // second dimension (one per first dimension) is the number of input
-  // combinations
+  // combinations; reserve so that the size() can be used for adding new
 
   for (size_t m = 0; m < d_n_states; m++) {
-    t_trellis[m].resize (d_n_input_combinations);
+    t_trellis[m].reserve (d_n_input_combinations);
   }
 
-  std::vector<char> outputs (d_n_code_outputs);
-  memory_t to_state;
+  std::vector<memory_t> tmp(d_n_memories);
+  demux_state (end_memory_state, tmp);
 
-  // fill in the trellis
+  memory_t to_state, outputs;
+  connection_t t_conn;
 
-  for (memory_t m = 0; m < d_n_states; m++) {
-    for (memory_t n = 0; n < d_n_input_combinations; n++) {
-      encode_single (m, n, to_state, outputs);
+  // fill in the trellis; discard the outputs
+  // set the trellis node's output bits to the input
 
-      connection_t_ptr t_connection = &(t_trellis[to_state][n]);
-      t_connection->d_to_state = m;
-#if 0
-      t_connection->d_output_bits.resize (d_n_code_outputs);
-      t_connection->d_output_bits = outputs;
-#endif
+  for (size_t m = 0; m < d_n_states; m++) {
+    for (size_t n = 0; n < d_n_input_combinations; n++) {
+      to_state = outputs = 0;
+
+      encode_single ((memory_t) m,
+		     (memory_t) n,
+		     to_state,
+		     outputs);
+
+      t_conn.d_to_state = (memory_t) m;
+      t_conn.d_output_bits = (memory_t) n;
+      t_trellis[to_state].push_back (t_conn);
+
+      if (DO_PRINT_DEBUG_TERM) {
+	std::cout << "[" << n2bs(m,d_total_n_delays) << "][" <<
+	  n2bs(n,d_n_code_inputs) << "] -> " <<
+	  n2bs(to_state, d_total_n_delays) << "\n";
+      }
     }
   }
 
-  // create the output vectors
+  if (DO_PRINT_DEBUG_TERM) {
+    std::cout << "Trellis:\n";
 
-  term_input_t t_term_inputs;
-  t_term_inputs.resize (d_n_states);
-  for (size_t m = 0; m < d_n_states; m++) {
-    t_term_inputs[m].assign (d_n_code_inputs, 0);
+    for (size_t m = 0; m < d_n_states; m++) {
+      for (size_t n = 0; n < d_n_input_combinations; n++) {
+	std::cout << "[" << n2bs(t_trellis[m][n].d_to_state,
+				 d_total_n_delays) << "] : [" <<
+	  n2bs(t_trellis[m][n].d_output_bits, d_n_code_inputs) << "] -> " <<
+	  n2bs(m, d_total_n_delays) << "\n";
+      }
+    }
   }
 
+  // need 2 of most buffers: one for the current-in-use variables, and
+  // one for the to-be-determined variables
 
-  std::vector<memory_t> t_used_states;
-  t_used_states.assign (d_n_states, 0);
+  // create the term input bit vectors
+
+  term_input_t t_term_inputs[2];
+  t_term_inputs[0].resize (d_n_states);
+  for (size_t m = 0; m < d_n_states; m++) {
+    t_term_inputs[0][m].assign (d_n_code_inputs, 0);
+  }
+  t_term_inputs[1].resize (d_n_states);
+  for (size_t m = 0; m < d_n_states; m++) {
+    t_term_inputs[1][m].assign (d_n_code_inputs, 0);
+  }
+
+  // create the list of "in-use" states for the current t_term_inputs
+
+  std::vector<size_t> t_used_states_ndx[2];
+  t_used_states_ndx[0].assign (d_n_states, 0);
+  t_used_states_ndx[1].assign (d_n_states, 0);
+
+  std::vector<bool> t_in_use_states[2];
+  t_in_use_states[0].assign (d_n_states, false);
+  t_in_use_states[1].assign (d_n_states, false);
+
+  // termporary 'inputs' place holder, in order to use the class's
+  // built-in inputs demux'er.
+
+  std::vector<char> t_inputs;
+  t_inputs.assign (d_n_code_inputs, 0);
 
   // setup the first state
 
-  t_states[0] = end_memory_state;
-  size_t n_states = 1;
+  size_t t_which_input = 0;
+  t_used_states_ndx[t_which_input][0] = (size_t) end_memory_state;
+  t_in_use_states[t_which_input][(size_t) end_memory_state] = true;
+  size_t n_states_used[2];
+  n_states_used[t_which_input] = 1;
+  n_states_used[t_which_input^1] = 0;
 
-  for (size_t m = 0; m < d_total_n_delays; m++) {
-    for (size_t n = 0; n < n_states; n++) {
-      memory_t t_end_state = t_states[n];
-      for (size_t p = 0; p < d_n_code_inputs; p++) {
-	connection_t_ptr t_connection = &(t_trellis[t_end_state][p]);
-	memory_t_ptr t_mem = &(t_term_inputs[t_end_state][p]);
+  // loop until either the number of states has been reached, or the
+  // number of input term bits (per stream) is too large (in which
+  // case this code can't be terminated ... shouldn't happen, but it's
+  // here just in case.
 
+  size_t n_input_term_bits = 0;
 
+  while ((n_states_used[t_which_input] < d_n_states) &
+	 (n_input_term_bits < 2*d_total_n_delays)) {
 
-      
+    if (DO_PRINT_DEBUG_TERM) {
+      std::cout << "Starting loop:\n# states in use = " <<
+	n_states_used[t_which_input] << " (of " << d_n_states <<
+	"), # term bits = " << n_input_term_bits << " (of between " <<
+	d_total_n_delays << " and " << (2*d_total_n_delays) << ")\n";
     }
+
+    // loop over all current in-use states
+
+    for (size_t m = 0; m < n_states_used[t_which_input]; m++) {
+
+      // get the current state to work with
+
+      size_t t_state_ndx = t_used_states_ndx[t_which_input][m];
+
+      for (size_t p = 0; p < d_n_input_combinations; p++) {
+	memory_t t_from_state = t_trellis[t_state_ndx][p].d_to_state;
+	if (t_in_use_states[t_which_input^1][t_from_state] == false) {
+	  // not currently in use; make use of it
+	  // if it's already in use, then why duplicate the inputs?
+
+	  memory_t t_input = t_trellis[t_state_ndx][p].d_output_bits;
+
+	  if (DO_PRINT_DEBUG_TERM) {
+	    std::cout << "doing st[" << n2bs(t_state_ndx,d_total_n_delays) <<
+	      "] <- [" << n2bs(t_from_state,d_total_n_delays) << "]: in = " <<
+	      n2bs(t_input, d_n_code_inputs) << "\n";
+	  }
+
+	  // copy over the current state's input bits to the 'from'
+	  // state's input bits, in the "current" term inputs
+
+	  t_term_inputs[t_which_input^1][t_from_state] =
+	    t_term_inputs[t_which_input][t_state_ndx];
+
+	  // update the copied bits with the current inputs, in the
+	  // correct bit position: LSB (&1) -> first input, LSB+1 (&2)
+	  // -> second input, etc...
+
+	  demux_inputs (t_input, t_inputs);
+
+	  for (size_t n = 0; n < d_n_code_inputs; n++) {
+	    memory_t t_term = t_term_inputs[t_which_input^1][t_from_state][n];
+	    t_term <<= 1;
+	    t_term |= ((memory_t)(t_inputs[n] & 1));
+	    t_term_inputs[t_which_input^1][t_from_state][n] = t_term;
+	  }
+
+	  // add this from state to the list of states for the next run
+
+	  t_used_states_ndx[t_which_input^1][n_states_used[t_which_input^1]] =
+	    t_from_state;
+
+	  // and set that this state is in use
+
+	  t_in_use_states[t_which_input^1][t_from_state] = true;
+
+	  // increase the number of next used states
+
+	  n_states_used[t_which_input^1] += 1;
+	}
+      }
+    }
+
+    // update / reset variables for this run-through
+
+    // swap buffers ("^1" is always the next set of buffers)
+
+    t_which_input ^= 1;
+
+    // zero the next # of states used
+
+    n_states_used[t_which_input^1] = 0;
+
+    // reset the next 'in use' buffer
+
+    t_in_use_states[t_which_input^1].assign (d_n_states, false);
+
+    // increase the number of required term bits (per stream)
+
+    n_input_term_bits++;
   }
 
-  t_inputs[0] = t_trellis
-#endif
+  if (n_states_used[t_which_input] != d_n_states) {
+    std::cerr << "code_convolutional_trellis::create_termination_table: "
+      "Warning: Unable to determine all required termination inputs for the "
+      "provided termination state.  Turning termination off.\n";
+    d_do_termination = false;
+  } else {
+    d_n_bits_to_term = n_input_term_bits;
+
+    d_term_inputs.resize (d_n_states);
+    for (size_t m = 0; m < d_n_states; m++) {
+      d_term_inputs[m].assign (d_n_code_inputs, 0);
+    }
+
+    d_term_inputs = t_term_inputs[t_which_input];
+
+    if (DO_PRINT_DEBUG_TERM_END) {
+      std::cout << "# Term inputs / stream = " << d_n_bits_to_term << "\n";
+
+      for (size_t m = 0; m < d_n_states; m++) {
+	for (size_t n = 0; n < d_n_code_inputs; n++) {
+	  std::cout << " [" << n2bs(m,d_total_n_delays) << "][" << n <<
+	    "] = " << n2bs(d_term_inputs[m][n], d_n_bits_to_term) << "\n";
+	}
+      }
+    }
+  }
 }
 
 void
@@ -909,13 +1076,15 @@ code_convolutional_trellis::encode_single_soai_fb
 
   for (size_t p = 0; p < d_n_memories; p++) {
     if (DO_PRINT_DEBUG) {
-      std::cout << "m_i[" << p << "] = " << d_memory[p];
+      std::cout << "m_i[" << p << "] = " <<
+	n2bs(d_memory[p], 1+d_n_delays[p]);
     }
 
     d_memory[p] >>= 1;
 
     if (DO_PRINT_DEBUG) {
-      std::cout << " -> " << d_memory[p] << "\n";
+      std::cout << " >>= 1 -> " <<
+	n2bs(d_memory[p], 1+d_n_delays[p]) << "\n";
     }
   }
 
@@ -923,9 +1092,26 @@ code_convolutional_trellis::encode_single_soai_fb
   // generators into the correct state's memory.
 
   for (size_t m = 0; m < d_n_code_inputs; m++) {
+    if (DO_PRINT_DEBUG) {
+      std::cout << "in[" << m << "] = " << ((int)d_current_inputs[m]) << "\n";
+    }
+
     if (d_current_inputs[m] == 1) {
       for (size_t n = 0; n < d_n_code_outputs; n++) {
+	if (DO_PRINT_DEBUG) {
+	  size_t p = d_states_ndx[maio(m,n)];
+	  std::cout << "d_m[" << p << "] = " <<
+	    n2bs(d_memory[p], 1+d_n_delays[p]) <<
+	    " ^= c_g[" << maio(m,n) << "] = " <<
+	    n2bs(d_code_generators[maio(m,n)],1+d_n_delays[p]);
+	}
+
 	d_memory[d_states_ndx[maio(m,n)]] ^= d_code_generators[maio(m,n)];
+
+	if (DO_PRINT_DEBUG) {
+	  size_t p = d_states_ndx[maio(m,n)];
+	  std::cout << " -> " << n2bs(d_memory[p],1+d_n_delays[p]) << "\n";
+	}
       }
     }
   }
@@ -938,7 +1124,18 @@ code_convolutional_trellis::encode_single_soai_fb
   // memory(ies) into the correct output bit
 
   for (size_t p = 0; p < d_n_memories; p++) {
-    d_current_outputs[d_io_num[p]] ^= ((char)(d_memory[p] & 1));
+    if (DO_PRINT_DEBUG) {
+      std::cout << "c_o[" << d_io_num[p] << "] = " <<
+	n2bs(d_current_outputs[d_io_num[p]],1) << " ^= m[" <<
+	p << "]&1 = " << n2bs(d_memory[p],1);
+    }
+
+    d_ind_outputs[p] = ((char)(d_memory[p] & 1));
+    d_current_outputs[d_io_num[p]] ^= d_ind_outputs[p];
+
+    if (DO_PRINT_DEBUG) {
+      std::cout << " -> " << n2bs(d_current_outputs[d_io_num[p]],1) << "\n";
+    }
   }
 
   // now that the output bits are fully created, XOR the FB back
@@ -946,13 +1143,28 @@ code_convolutional_trellis::encode_single_soai_fb
   // off already so that it doesn't contribute.
 
   for (size_t p = 0; p < d_n_memories; p++) {
-    if (d_current_outputs[d_io_num[p]] == 1) {
+    if (DO_PRINT_DEBUG) {
+      std::cout << "i_o[" << p << "] = " <<
+	n2bs(d_ind_outputs[p],1) << ", m[" << p << "] = " <<
+	n2bs(d_memory[p],1+d_n_delays[p]);
+    }
+
+    if (d_ind_outputs[p] == 1) {
       d_memory[p] ^= d_code_feedback[p];
+
+      if (DO_PRINT_DEBUG) {
+	std::cout << " ^= c_f[" << p << "] = " <<
+	  n2bs(d_code_feedback[p],1+d_n_delays[p]) <<
+	  " -> " << n2bs(d_memory[p],1+d_n_delays[p]);
+      }
+    }
+    if (DO_PRINT_DEBUG) {
+      std::cout << "\n";
     }
   }
 
   if (DO_PRINT_DEBUG) {
-    std::cout << "ending encode_single_soai.\n";
+    std::cout << "ending encode_single_soai_fb.\n";
   }
 }
 

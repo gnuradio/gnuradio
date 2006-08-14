@@ -154,8 +154,10 @@ public:
 
   inline const bool do_termination () {return (d_do_termination);};
   inline const bool do_feedback () {return (d_trellis->do_feedback());};
+  inline const bool do_encode_soai () {return (d_trellis->do_encode_soai());};
   inline const bool do_streaming () {return (d_do_streaming);};
   inline const size_t total_n_delays () {return (d_total_n_delays);};
+  inline const size_t n_bits_to_term () {return (d_n_bits_to_term);};
   inline const code_convolutional_trellis* trellis() {return (d_trellis);};
 
 protected:
@@ -187,7 +189,7 @@ protected:
 				   int end_memory_state);
 
   virtual void encode_private ();
-  virtual void encode_loop (const size_t& which_counter, size_t how_many);
+  virtual void encode_loop (size_t& which_counter, size_t how_many);
 
   inline void get_next_inputs () {
     switch (d_fsm_state) {
@@ -206,6 +208,7 @@ protected:
   inline virtual void get_next_inputs__input () {
     d_in_buf->read_items ((void*)(&(d_current_inputs[0])));
     d_in_buf->increment_indices ();
+    d_n_bits_to_input--;
   };
 
   inline virtual void get_next_inputs__term () {
@@ -217,6 +220,7 @@ protected:
   inline virtual void write_output_bits () {
     d_out_buf->write_items ((const void*)(&(d_current_outputs[0])));
     d_out_buf->increment_indices ();
+    d_n_bits_to_output--;
   };
 
   void get_memory_requirements (size_t m,
@@ -246,6 +250,13 @@ protected:
   // "outputs" are the current output bits, in the LSB (&1) of each "char"
 
   std::vector<char> d_current_outputs;
+
+  // "n_bits_to_term" is the number of bits to terminate the trellis
+  // to the desired state, as determined by the termination table.
+  //    d_max_delay <= d_n_bits_to_term <= d_total_n_delays
+  // These numbers will vary depending on the realization.
+
+  size_t d_n_bits_to_term;
 
   // "trellis" is the code trellis for the given input parameters
 

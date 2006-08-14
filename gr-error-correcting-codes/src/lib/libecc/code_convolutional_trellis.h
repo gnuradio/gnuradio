@@ -156,16 +156,24 @@ public:
   inline const size_t n_code_inputs () {return (d_n_code_inputs);};
   inline const size_t n_code_outputs () {return (d_n_code_outputs);};
   inline const size_t n_states () {return (d_n_states);};
-  inline const size_t n_input_combinations () {return (d_n_input_combinations);};
+  inline const size_t n_input_combinations ()
+  {return (d_n_input_combinations);};
   inline const bool do_termination () {return (d_do_termination);};
   inline const bool do_feedback () {return (d_do_feedback);};
   inline const bool do_streaming () {return (d_do_streaming);};
+  inline const bool do_encode_soai () {return (d_do_encode_soai);};
   inline const size_t total_n_delays () {return (d_total_n_delays);};
+  inline const size_t n_bits_to_term () {return (d_n_bits_to_term);};
 
   virtual char sum_bits_mod2 (memory_t in_mem, size_t max_memory);
   void get_termination_inputs (memory_t term_start_state,
 			       size_t bit_num,
-			       std::vector<char>& inputs);
+			       std::vector<char>& inputs) {
+    // no error checking ... be careful!
+    for (size_t m = 0; m < d_n_code_inputs; m++) {
+      inputs[m] = ((d_term_inputs[term_start_state][m]) >> bit_num) & 1;
+    }
+  };
 
   // encode_lookup: given the starting state and inputs, return the
   // resulting state and output bits.  Two versions: the first is
@@ -299,7 +307,6 @@ protected:
   bool d_do_streaming, d_do_termination, d_do_feedback, d_do_encode_soai;
 
   // "max_delay" is the max # of delays for all unique generators (ff and fb), 
-  // needed to determine (e.g.) termination
 
   size_t d_max_delay;
 
@@ -312,7 +319,7 @@ protected:
 
   // "total_n_delays" is the total # of delays, needed to determine the
   // # of states in the decoder
-  // "n_states" = (2^n_delays) - 1 .. the number of memory states
+  // "n_states" = (2^total_n_delays) - 1 .. the number of memory states
 
   size_t d_total_n_delays, d_n_states;
 
@@ -363,10 +370,17 @@ protected:
   // first dimension is the memory state #;
   // second dimension is the input stream #;
   // bits are packed, with the first input being the LSB and the last
-  //     input being closest to the MSB.
+  //     input being farthest away from the LSB.
 
   typedef std::vector<std::vector<memory_t> > term_input_t;
   term_input_t d_term_inputs;
+
+  // "n_bits_to_term" is the number of bits to terminate the trellis
+  // to the desired state, as determined by the termination table.
+  //    d_max_delay <= d_n_bits_to_term <= d_total_n_delays
+  // These numbers will vary depending on the realization.
+
+  size_t d_n_bits_to_term;
 
   // "inputs" are the current input bits, in the LSB (&1) of each "char"
 
@@ -375,6 +389,12 @@ protected:
   // "outputs" are the current output bits, in the LSB (&1) of each "char"
 
   std::vector<char> d_current_outputs;
+
+  // "ind_outputs" are the current output bits, in the LSB (&1) of
+  // each "char", for each individual memory's computations; needed
+  // for soai-type feedback only
+
+  std::vector<char> d_ind_outputs;
 
   // "trellis" is the single-stage memory state transition ("trellis")
   // representation for this code; forward paths only

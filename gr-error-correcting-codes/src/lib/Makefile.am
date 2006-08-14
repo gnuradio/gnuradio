@@ -30,16 +30,14 @@ SUBDIRS = libecc
 ourpythondir = $(grpythondir)
 ourlibdir    = $(grpythondir)
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+INCLUDES = $(PYTHON_CPPFLAGS) $(STD_DEFINES_AND_INCLUDES)
 
-SWIGCPPPYTHONARGS = -fvirtual -python -modern $(PYTHON_CPPFLAGS) $(STD_DEFINES_AND_INCLUDES)
+SWIGCPPPYTHONARGS = -fvirtual -python -modern $(PYTHON_CPPFLAGS) \
+	$(STD_DEFINES_AND_INCLUDES)
 
-ALL_IFILES = 				\
-	$(LOCAL_IFILES)			\
-	$(NON_LOCAL_IFILES)
+ALL_IFILES = $(LOCAL_IFILES) $(NON_LOCAL_IFILES)
 
-NON_LOCAL_IFILES =			\
-	$(GNURADIO_I)
+NON_LOCAL_IFILES = $(GNURADIO_I)
 
 LOCAL_IFILES = 						\
 	ecc_syms_to_metrics.i				\

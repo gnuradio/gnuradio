@@ -35,21 +35,23 @@ ecc_metrics_decode_viterbi_full_block_feedback_sptr;
 
 ecc_metrics_decode_viterbi_full_block_sptr
 ecc_make_metrics_decode_viterbi_full_block
-(int frame_size_bits,
+(int sample_precision,
+ int frame_size_bits,
  int n_code_inputs,
  int n_code_outputs,
- std::vector<int> code_generator,
+ std::vector<int>& code_generator,
  bool do_termination = true,
  int start_memory_state = 0,
  int end_memory_state = 0);
 
 ecc_metrics_decode_viterbi_full_block_feedback_sptr
 ecc_make_metrics_decode_viterbi_full_block_feedback
-(int frame_size_bits,
+(int sample_precision,
+ int frame_size_bits,
  int n_code_inputs,
  int n_code_outputs,
- std::vector<int> code_generator,
- std::vector<int> code_feedback,
+ std::vector<int>& code_generator,
+ std::vector<int>& code_feedback,
  bool do_termination = true,
  int start_memory_state = 0,
  int end_memory_state = 0);
@@ -72,7 +74,7 @@ protected:
    int frame_size_bits,
    int n_code_inputs,
    int n_code_outputs,
-   const std::vector<int> &code_generator,
+   const std::vector<int>& code_generator,
    bool do_termination,
    int start_memory_state,
    int end_memory_state);
@@ -83,8 +85,8 @@ protected:
    int frame_size_bits,
    int n_code_inputs,
    int n_code_outputs,
-   const std::vector<int> &code_generator,
-   const std::vector<int> &code_feedback,
+   const std::vector<int>& code_generator,
+   const std::vector<int>& code_feedback,
    bool do_termination,
    int start_memory_state,
    int end_memory_state);
@@ -124,7 +126,7 @@ protected:
    int frame_size_bits,
    int n_code_inputs,
    int n_code_outputs,
-   const std::vector<int> &code_generator,
+   const std::vector<int>& code_generator,
    bool do_termination,
    int start_memory_state,
    int end_memory_state);
@@ -134,8 +136,8 @@ protected:
    int frame_size_bits,
    int n_code_inputs,
    int n_code_outputs,
-   const std::vector<int> &code_generator,
-   const std::vector<int> &code_feedback,
+   const std::vector<int>& code_generator,
+   const std::vector<int>& code_feedback,
    bool do_termination,
    int start_memory_state,
    int end_memory_state);
@@ -154,7 +156,7 @@ public:
   ~ecc_metrics_decode_viterbi_full_block ();
 
   virtual void forecast (int noutput_items,
-			 gr_vector_int &ninput_items_required);
+			 gr_vector_int& ninput_items_required);
 
   virtual int general_work (int noutput_items,
 			    gr_vector_int &ninput_items,

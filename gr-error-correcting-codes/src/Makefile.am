@@ -22,3 +22,5 @@
 SUBDIRS = lib python
 
 MOSTLYCLEANFILES = *~
+
+CONFIG_CLEAN_FILES = *.in

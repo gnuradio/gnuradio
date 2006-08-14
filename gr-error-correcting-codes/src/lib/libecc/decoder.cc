@@ -69,7 +69,7 @@ decoder::decode
 
   if (d_out_buf->n_items_left() < n_bits_to_output) {
     std::cerr << "encoder::encode: Warning: output buffer size (" <<
-      d_out_buf->n_items_left() << "is less than the desired number "
+      d_out_buf->n_items_left() << ") is less than the desired number "
       "of output items (" << n_bits_to_output <<
       ") ... using lower number.\n";
     n_bits_to_output = d_out_buf->n_items_left();
@@ -81,7 +81,7 @@ decoder::decode
 
   if (d_in_buf->n_items_left() < n_items_to_input) {
     std::cerr << "encoder::encode: Warning: input buffer size (" <<
-      d_in_buf->n_items_left() << "is less than the computed number "
+      d_in_buf->n_items_left() << ") is less than the computed number "
       "of required input items (" << n_items_to_input <<
       ") ... using lower number.\n";
     n_items_to_input = d_in_buf->n_items_left();
@@ -156,7 +156,7 @@ decoder::decode
 
   if (d_in_buf->n_items_left() < n_items_to_input) {
     std::cerr << "encoder::encode: Warning: input buffer size (" <<
-      d_in_buf->n_items_left() << "is less than the desired number "
+      d_in_buf->n_items_left() << ") is less than the desired number "
       "of input items (" << n_items_to_input <<
       ") ... using lower number.\n";
     n_items_to_input = d_in_buf->n_items_left();
@@ -168,7 +168,7 @@ decoder::decode
 
   if (d_out_buf->n_items_left() < n_bits_to_output) {
     std::cerr << "encoder::encode: Warning: output buffer size (" <<
-      d_out_buf->n_items_left() << "is less than the computed number "
+      d_out_buf->n_items_left() << ") is less than the computed number "
       "of required output items (" << n_bits_to_output <<
       ") ... using lower number.\n";
     n_bits_to_output = d_out_buf->n_items_left();

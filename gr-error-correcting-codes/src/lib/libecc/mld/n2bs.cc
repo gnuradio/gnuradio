@@ -22,9 +22,8 @@
 
 #include <n2bs.h>
 #include <iostream>
-#include "../code_types.h"
 
-const int g_num_bits_per_byte = 8;
+static const int g_num_bits_per_byte = 8;
 
 std::string DoIt (int64_t number, size_t digits)
 {
@@ -39,10 +38,10 @@ std::string DoIt (int64_t number, size_t digits)
   return (retVal);
 }
 
-std::string n2bs (u_int8_t number, size_t digits)
+std::string n2bs (int8_t number, size_t digits)
 {
-  if (digits > (sizeof (u_int8_t) * g_num_bits_per_byte))
-    digits = sizeof (u_int8_t);
+  if (digits > (sizeof (int8_t) * g_num_bits_per_byte))
+    digits = sizeof (int8_t);
   return DoIt ((int64_t) number, digits);
 }
 std::string n2bs (int16_t number, size_t digits)
@@ -63,12 +62,10 @@ std::string n2bs (int64_t number, size_t digits)
     digits = sizeof (int64_t);
   return DoIt (number, digits);
 }
-
-
-std::string n2bs (int8_t number, size_t digits)
+std::string n2bs (u_int8_t number, size_t digits)
 {
-  if (digits > (sizeof (int8_t) * g_num_bits_per_byte))
-    digits = sizeof (int8_t);
+  if (digits > (sizeof (u_int8_t) * g_num_bits_per_byte))
+    digits = sizeof (u_int8_t);
   return DoIt ((int64_t) number, digits);
 }
 std::string n2bs (u_int16_t number, size_t digits)
@@ -88,10 +85,4 @@ std::string n2bs (u_int64_t number, size_t digits)
   if (digits > (sizeof (u_int64_t) * g_num_bits_per_byte))
     digits = sizeof (u_int64_t);
   return DoIt ((int64_t) number, digits);
-}
-
-void cout_binary (int number, int digits)
-{
-  while (digits-- > 0)
-    std::cout << ((number >> digits) & 1);
 }
