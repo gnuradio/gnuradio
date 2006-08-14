@@ -106,16 +106,10 @@ protected:
 		       int sample_precision);
 
   size_t d_out_item_size_bytes;
-#if 0
   code_metrics_table<float>* d_code_metrics_table;
-#endif
 
 public:
-  ~ecc_syms_to_metrics() {
-#if 0
-    delete d_code_metrics_table;
-#endif
-  };
+  ~ecc_syms_to_metrics() {delete d_code_metrics_table;};
 
   bool check_topology (int ninputs, int noutputs);
 

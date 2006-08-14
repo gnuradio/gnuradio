@@ -39,7 +39,7 @@ ecc_make_metrics_decode_viterbi_full_block
  int frame_size_bits,
  int n_code_inputs,
  int n_code_outputs,
- std::vector<int>& code_generator,
+ const std::vector<int>& code_generator,
  bool do_termination = true,
  int start_memory_state = 0,
  int end_memory_state = 0);
@@ -50,8 +50,8 @@ ecc_make_metrics_decode_viterbi_full_block_feedback
  int frame_size_bits,
  int n_code_inputs,
  int n_code_outputs,
- std::vector<int>& code_generator,
- std::vector<int>& code_feedback,
+ const std::vector<int>& code_generator,
+ const std::vector<int>& code_feedback,
  bool do_termination = true,
  int start_memory_state = 0,
  int end_memory_state = 0);
@@ -159,9 +159,9 @@ public:
 			 gr_vector_int& ninput_items_required);
 
   virtual int general_work (int noutput_items,
-			    gr_vector_int &ninput_items,
-			    gr_vector_const_void_star &input_items,
-			    gr_vector_void_star &output_items);
+			    gr_vector_int& ninput_items,
+			    gr_vector_const_void_star& input_items,
+			    gr_vector_void_star& output_items);
 };
 
 #endif /* INCLUDED_ECC_METRICS_DECODE_VITERBI_FULL_BLOCK_H */

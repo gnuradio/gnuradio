@@ -324,6 +324,21 @@ code_metrics_table_work<pdf_fcn_io_t,metric_t>::convert
     lookup (*sym++, (void*) l_bit_0++, (void*) l_bit_1++);
 }
 
+// force the compiler to instantiate a particular version of the
+// templated super-class, for <float> PDF function precision because
+// all code_metrics classes are created by this function, this is the
+// only one which is required to instantaite.
+
+template
+code_metrics_table<float>*
+libecc_code_metrics_create_table<float>
+(float (*pdf_fcn_0_bit) (float),
+ float (*pdf_fcn_1_bit) (float),
+ size_t n_samples,
+ float min_sample,
+ float max_sample,
+ int sample_precision);
+
 #if 0
   // for compute_all_outputs
 

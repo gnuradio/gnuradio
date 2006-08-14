@@ -84,7 +84,6 @@ ecc_syms_to_metrics::ecc_syms_to_metrics
   // use the static "create" member function to create the actual
   // code_metrics to use.
 
-#if 0
   d_code_metrics_table = libecc_code_metrics_create_table<float>
     (&pdf_fcn_0,
      &pdf_fcn_1,
@@ -96,7 +95,6 @@ ecc_syms_to_metrics::ecc_syms_to_metrics
   // get the output item size in bytes from the new code_metrics.
 
   d_out_item_size_bytes = d_code_metrics_table->out_item_size_bytes ();
-#endif
 
   // set the output signature to match that which the code_metrics
   // will generate.
@@ -137,11 +135,8 @@ ecc_syms_to_metrics::general_work
     float* t_in_buf = (float*)(&input_items[n]);
     void* t_out_buf_0_bit = (void*)(&(output_items[2*n]));
     void* t_out_buf_1_bit = (void*)(&(output_items[(2*n)+1]));
-
-#if 0
     d_code_metrics_table->convert (l_n_output_items, t_in_buf,
 				   t_out_buf_0_bit, t_out_buf_1_bit);
-#endif
   }
 
   // consume the number of used input items on all input streams

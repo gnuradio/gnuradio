@@ -47,15 +47,16 @@ decoder::decode
  size_t n_bits_to_output)
 {
   if (in_buf == 0) {
-    std::cerr << "decoder::decode: Error: input buffer is NULL.\n";
+    std::cerr << "decoder::decode{output}: Error: input buffer is NULL.\n";
     assert (0);
   }
   if (out_buf == 0) {
-    std::cerr << "decoder::decode: Error: output buffer is NULL.\n";
+    std::cerr << "decoder::decode{output}: Error: output buffer is NULL.\n";
     assert (0);
   }
   if (n_bits_to_output == 0) {
-    std::cerr << "decoder::decode: Warning: no output bits requested.\n";
+    std::cerr << "decoder::decode{output}: Warning: "
+      "no output bits requested.\n";
     return (0);
   }
 
@@ -68,7 +69,7 @@ decoder::decode
   // check that there are enough output buffer items
 
   if (d_out_buf->n_items_left() < n_bits_to_output) {
-    std::cerr << "encoder::encode: Warning: output buffer size (" <<
+    std::cerr << "encoder::encode{output}: Warning: output buffer size (" <<
       d_out_buf->n_items_left() << ") is less than the desired number "
       "of output items (" << n_bits_to_output <<
       ") ... using lower number.\n";
@@ -80,7 +81,7 @@ decoder::decode
   size_t n_items_to_input = compute_n_input_items (n_bits_to_output);
 
   if (d_in_buf->n_items_left() < n_items_to_input) {
-    std::cerr << "encoder::encode: Warning: input buffer size (" <<
+    std::cerr << "encoder::encode{output}: Warning: input buffer size (" <<
       d_in_buf->n_items_left() << ") is less than the computed number "
       "of required input items (" << n_items_to_input <<
       ") ... using lower number.\n";
@@ -88,10 +89,18 @@ decoder::decode
     n_bits_to_output = compute_n_output_bits (n_items_to_input);
   }
 
+  // set the correct number of I/O bits
+
+  d_n_items_to_input = n_items_to_input;
+  d_n_bits_to_output = n_bits_to_output;
+
   if (DO_PRINT_DEBUG) {
     std::cout <<
-      "# output bits = " << n_bits_to_output << "\n"
-      "# input items = " << n_items_to_input << "\n";
+      "Before Decoding{output}:\n"
+      "  # output bits      = " << d_n_bits_to_output << "\n"
+      "  # input items      = " << d_n_items_to_input << "\n"
+      "  # output bits used = " << d_out_buf->n_items_used() << "\n"
+      "  # input items used = " << d_in_buf->n_items_used() << "\n";
   }
 
   // call the private decode function
@@ -100,8 +109,11 @@ decoder::decode
 
   if (DO_PRINT_DEBUG) {
     std::cout <<
-      "# input items used = " << d_in_buf->n_items_used() << "\n"
-      "# output bits used = " << d_out_buf->n_items_used() << "\n";
+      "After Encoding{output}:\n"
+      "  # output bits      = " << d_n_bits_to_output << "\n"
+      "  # input items      = " << d_n_items_to_input << "\n"
+      "  # output bits used = " << d_out_buf->n_items_used() << "\n"
+      "  # input items used = " << d_in_buf->n_items_used() << "\n";
   }
 
   size_t n_items_used = d_in_buf->n_items_used ();
@@ -134,15 +146,16 @@ decoder::decode
  code_output_ptr out_buf)
 {
   if (in_buf == 0) {
-    std::cerr << "encoder::encode: Error: input buffer is NULL.\n";
+    std::cerr << "encoder::encode{input}: Error: input buffer is NULL.\n";
     assert (0);
   }
   if (out_buf == 0) {
-    std::cerr << "encoder::encode: Error: output buffer is NULL.\n";
+    std::cerr << "encoder::encode{input}: Error: output buffer is NULL.\n";
     assert (0);
   }
   if (n_items_to_input == 0) {
-    std::cerr << "encoder::encode: Warning: no input items requested.\n";
+    std::cerr << "encoder::encode{input}: Warning: "
+      "no input items requested.\n";
     return (0);
   }
 
@@ -155,7 +168,7 @@ decoder::decode
   // check that there are enough input buffer items
 
   if (d_in_buf->n_items_left() < n_items_to_input) {
-    std::cerr << "encoder::encode: Warning: input buffer size (" <<
+    std::cerr << "encoder::encode{input}: Warning: input buffer size (" <<
       d_in_buf->n_items_left() << ") is less than the desired number "
       "of input items (" << n_items_to_input <<
       ") ... using lower number.\n";
@@ -167,7 +180,7 @@ decoder::decode
   size_t n_bits_to_output = compute_n_output_bits (n_items_to_input);
 
   if (d_out_buf->n_items_left() < n_bits_to_output) {
-    std::cerr << "encoder::encode: Warning: output buffer size (" <<
+    std::cerr << "encoder::encode{input}: Warning: output buffer size (" <<
       d_out_buf->n_items_left() << ") is less than the computed number "
       "of required output items (" << n_bits_to_output <<
       ") ... using lower number.\n";
@@ -175,10 +188,18 @@ decoder::decode
     n_items_to_input = compute_n_input_items (n_bits_to_output);
   }
 
+  // set the correct number of I/O bits
+
+  d_n_items_to_input = n_items_to_input;
+  d_n_bits_to_output = n_bits_to_output;
+
   if (DO_PRINT_DEBUG) {
     std::cout <<
-      "# output bits = " << n_bits_to_output << "\n"
-      "# input items = " << n_items_to_input << "\n";
+      "Before Decoding{output}:\n"
+      "  # output bits      = " << d_n_bits_to_output << "\n"
+      "  # input items      = " << d_n_items_to_input << "\n"
+      "  # output bits used = " << d_out_buf->n_items_used() << "\n"
+      "  # input items used = " << d_in_buf->n_items_used() << "\n";
   }
 
   // call the private decode function
@@ -187,8 +208,11 @@ decoder::decode
 
   if (DO_PRINT_DEBUG) {
     std::cout <<
-      "# input items used = " << d_in_buf->n_items_used() << "\n"
-      "# output bits used = " << d_out_buf->n_items_used() << "\n";
+      "After Encoding{output}:\n"
+      "  # output bits      = " << d_n_bits_to_output << "\n"
+      "  # input items      = " << d_n_items_to_input << "\n"
+      "  # output bits used = " << d_out_buf->n_items_used() << "\n"
+      "  # input items used = " << d_in_buf->n_items_used() << "\n";
   }
 
   size_t n_items_used = d_out_buf->n_items_used();

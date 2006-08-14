@@ -118,6 +118,11 @@ encoder::encode
       "  # input bits used  = " << d_in_buf->n_items_used() << "\n";
   }
 
+  // clear these buffers, just in case
+
+  d_in_buf = 0;
+  d_out_buf = 0;
+
   // return the actual number of input bits used
 
   return (n_bits_to_input - d_n_bits_to_input);
@@ -208,6 +213,11 @@ encoder::encode
       "  # output bits used = " << d_out_buf->n_items_used() << "\n"
       "  # input bits used  = " << d_in_buf->n_items_used() << "\n";
   }
+
+  // clear these buffers, just in case
+
+  d_in_buf = 0;
+  d_out_buf = 0;
 
   // return the actual number of output bits written
 

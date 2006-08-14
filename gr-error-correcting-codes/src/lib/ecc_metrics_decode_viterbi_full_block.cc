@@ -35,7 +35,7 @@ ecc_make_metrics_decode_viterbi_full_block
  int frame_size_bits,
  int n_code_inputs,
  int n_code_outputs,
- const std::vector<int> &code_generator,
+ const std::vector<int>& code_generator,
  bool do_termination,
  int start_memory_state,
  int end_memory_state)
@@ -58,8 +58,8 @@ ecc_make_metrics_decode_viterbi_full_block_feedback
  int frame_size_bits,
  int n_code_inputs,
  int n_code_outputs,
- const std::vector<int> &code_generator,
- const std::vector<int> &code_feedback,
+ const std::vector<int>& code_generator,
+ const std::vector<int>& code_feedback,
  bool do_termination,
  int start_memory_state,
  int end_memory_state)
@@ -82,7 +82,7 @@ ecc_metrics_decode_viterbi_full_block::ecc_metrics_decode_viterbi_full_block
  int frame_size_bits,
  int n_code_inputs,
  int n_code_outputs,
- const std::vector<int> &code_generator,
+ const std::vector<int>& code_generator,
  bool do_termination,
  int start_memory_state,
  int end_memory_state)
@@ -106,8 +106,8 @@ ecc_metrics_decode_viterbi_full_block::ecc_metrics_decode_viterbi_full_block
  int frame_size_bits,
  int n_code_inputs,
  int n_code_outputs,
- const std::vector<int> &code_generator,
- const std::vector<int> &code_feedback,
+ const std::vector<int>& code_generator,
+ const std::vector<int>& code_feedback,
  bool do_termination,
  int start_memory_state,
  int end_memory_state)
