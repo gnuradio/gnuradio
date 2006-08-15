@@ -43,7 +43,7 @@ NON_LOCAL_IFILES =			\
 
 
 LOCAL_IFILES = 				\
-	trellis.i			
+	$(top_srcdir)/gr-trellis/src/lib/trellis.i			
 
 
 # These files are built by SWIG.  The first is the C++ glue.
@@ -80,8 +80,8 @@ _trellis_la_LIBADD = 			\
 	$(GNURADIO_CORE_LIBS)		\
 	-lstdc++			
 
-trellis.cc trellis.py: trellis.i $(ALL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module trellis -o trellis.cc $<
+trellis.cc trellis.py: $(ALL_IFILES)
+	$(SWIG) $(SWIGPYTHONARGS) -module trellis -o trellis.cc $(LOCAL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\

@@ -44,7 +44,7 @@ NON_LOCAL_IFILES =			\
 
 
 LOCAL_IFILES = 				\
-	gsm_full_rate.i				
+	$(top_srcdir)/gr-gsm-fr-vocoder/src/lib/gsm_full_rate.i				
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _howto shared library
@@ -80,7 +80,7 @@ _gsm_full_rate_la_LIBADD = 	\
 	-lstdc++			
 
 gsm_full_rate.cc gsm_full_rate.py: gsm_full_rate.i $(ALL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module gsm_full_rate -o gsm_full_rate.cc $<
+	$(SWIG) $(SWIGPYTHONARGS) -module gsm_full_rate -o gsm_full_rate.cc $(LOCAL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\

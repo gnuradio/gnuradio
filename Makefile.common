@@ -71,3 +71,7 @@ USRP_LIBS = -L$(top_builddir)/usrp/host/lib \
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.
 STD_DEFINES_AND_INCLUDES=$(DEFINES) $(GNURADIO_INCLUDES) $(BOOST_CFLAGS)
+
+# Fix for BSD make not defining $(RM).  We define it now in configure.ac
+# using AM_PATH_PROG, but now here have to add a -f to be like GNU make
+RM=$(RM_PROG) -f

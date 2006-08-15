@@ -221,7 +221,7 @@ NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
 
 LOCAL_IFILES = 				\
-	atsc.i				
+	$(top_srcdir)/gr-atsc/src/lib/atsc.i				
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _atsc shared library
@@ -253,7 +253,7 @@ _atsc_la_LIBADD = 			\
 	-lstdc++			
 
 atsc.cc atsc.py: atsc.i $(ALL_IFILES)
-	$(SWIG) $(SWIGCPPPYTHONARGS) -module atsc -o atsc.cc $<
+	$(SWIG) $(SWIGCPPPYTHONARGS) -module atsc -o atsc.cc $(LOCAL_IFILES)
 
 # These swig headers get installed in ${prefix}/include/gnuradio/swig
 swiginclude_HEADERS = 			\

@@ -32,7 +32,7 @@ EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
 LOCAL_IFILES = 				\
-	audio_oss.i				
+	$(top_srcdir)/gr-audio-oss/src/audio_oss.i
 
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
@@ -75,8 +75,8 @@ _audio_oss_la_LIBADD = 			\
 
 _audio_oss_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
-audio_oss.cc audio_oss.py: audio_oss.i $(NON_LOCAL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module audio_oss -o audio_oss.cc $<
+audio_oss.cc audio_oss.py: $(LOCAL_IFILES) $(NON_LOCAL_IFILES)
+	$(SWIG) $(SWIGPYTHONARGS) -module audio_oss -o audio_oss.cc $(LOCAL_IFILES)
 
 # Don't distribute output of swig
 dist-hook:

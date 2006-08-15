@@ -32,7 +32,7 @@ EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
 LOCAL_IFILES = 				\
-	usrp1.i				
+	$(top_srcdir)/gr-usrp/src/usrp1.i				
 
 NON_LOCAL_IFILES = $(GNURADIO_I)
 
@@ -102,8 +102,8 @@ _usrp1_la_LIBADD = 			\
 _usrp1_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
 
-usrp1.cc usrp1.py: usrp1.i $(NON_LOCAL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module usrp1 -o usrp1.cc $<
+usrp1.cc usrp1.py: usrp1.i $(NON_LOCAL_IFILES) $(LOCAL_IFILES)
+	$(SWIG) $(SWIGPYTHONARGS) -module usrp1 -o usrp1.cc $(LOCAL_IFILES)
 
 
 noinst_PYTHON =				\

@@ -32,7 +32,7 @@ EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
 LOCAL_IFILES = 				\
-	audio_windows.i				
+	$(top_srcdir)/gr-audio-windows/src/audio_windows.i				
 
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
@@ -76,8 +76,8 @@ _audio_windows_la_LIBADD = 		\
 _audio_windows_la_LDFLAGS = -no-undefined -module -avoid-version \
 			     $(LIBGNURADIO_CORE_EXTRA_LDFLAGS)
 
-audio_windows.cc audio_windows.py: audio_windows.i
-	$(SWIG) $(SWIGCPPPYTHONARGS) -module audio_windows -o audio_windows.cc $<
+audio_windows.cc audio_windows.py: $(LOCAL_IFILES)
+	$(SWIG) $(SWIGCPPPYTHONARGS) -module audio_windows -o audio_windows.cc $(LOCAL_IFILES)
 
 
 noinst_PYTHON = qa_audio_windows.py

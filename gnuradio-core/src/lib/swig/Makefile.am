@@ -83,7 +83,7 @@ _gnuradio_swig_python_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
 gnuradio_swig_python.py gnuradio_swig_python.h: gnuradio_swig_python.cc
 
 gnuradio_swig_python.cc : gnuradio.i
-	if $(SWIG) $(SWIGPYTHONARGS) -MMD -MF gnuradio_swig_python.Td -module gnuradio_swig_python -o gnuradio_swig_python.cc $< ;\
+	if $(SWIG) $(SWIGPYTHONARGS) -MMD -MF gnuradio_swig_python.Td -module gnuradio_swig_python -o gnuradio_swig_python.cc gnuradio.i ;\
 	then if test $(host_os) = mingw32; \
 	     then sed 's,\\\\,/,g' <gnuradio_swig_python.Td >gnuradio_swig_python.d; rm -f gnuradio_swig_python.Td; \
 	     else mv -f gnuradio_swig_python.Td gnuradio_swig_python.d; fi \
@@ -91,7 +91,7 @@ gnuradio_swig_python.cc : gnuradio.i
 
 
 gnuradio_swig_bug_workaround.h : gnuradio_swig_python.cc $(srcdir)/gen-swig-bug-fix
-	$(srcdir)/gen-swig-bug-fix $< $@
+	$(srcdir)/gen-swig-bug-fix gnuradio_swig_python.cc $@
 
 
 # ----------------------------------------------------------------

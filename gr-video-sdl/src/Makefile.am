@@ -32,7 +32,7 @@ EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
 LOCAL_IFILES = 				\
-	video_sdl.i				
+	$(top_srcdir)/gr-video-sdl/src/video_sdl.i				
 
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
@@ -75,8 +75,8 @@ _video_sdl_la_LIBADD = 			\
 
 _video_sdl_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
-video_sdl.cc video_sdl.py: video_sdl.i
-	$(SWIG) $(SWIGCPPPYTHONARGS) -module video_sdl -o video_sdl.cc $<
+video_sdl.cc video_sdl.py: $(ALL_IFILES)
+	$(SWIG) $(SWIGCPPPYTHONARGS) -module video_sdl -o video_sdl.cc $(LOCAL_IFILES)
 
 
 noinst_PYTHON = qa_video_sdl.py

@@ -71,7 +71,7 @@ _usrp_prims_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
 
 prims.cc usrp_prims.py : prims.i ../../firmware/include/fpga_regs_common.h ../../firmware/include/fpga_regs_standard.h
-	$(SWIG) $(SWIGPYTHONARGS) -module usrp_prims -o prims.cc $<
+	$(SWIG) $(SWIGPYTHONARGS) -module usrp_prims -o prims.cc prims.i
 
 
 MOSTLYCLEANFILES = \

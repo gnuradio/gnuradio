@@ -90,11 +90,11 @@ noinst_SCRIPTS = 		\
 	burn-usrp4-eeprom
 
 
-%.rel : %.c
+.c.rel:
 	$(XCC) $(INCLUDES) $(DEFINES) \
 		-c -o $@ `test -f '$<' || echo '$(srcdir)/'`$<
 
-%.rel : %.a51
+.a51.rel:
 	test -f `basename '$<'` || ln -s '$<' .
 	test -f ../common/`basename '$<'` -o \
 		\! -f `dirname '$<'`/../common/`basename '$<'` \
@@ -108,11 +108,11 @@ eeprom_boot.ihx: $(EEPROM_BOOT_OBJS) $(LIBDEP)
 	$(XCC) $(LINKOPTS) -o $@ $(EEPROM_BOOT_OBJS)
 
 burn-usrp2-eeprom: eeprom_boot.ihx
-	$(srcdir)/../common/build_eeprom.py -r2 $< > $@
+	$(srcdir)/../common/build_eeprom.py -r2 eeprom_boot.ihx > $@
 	chmod +x $@
 
 burn-usrp4-eeprom: eeprom_boot.ihx
-	$(srcdir)/../common/build_eeprom.py -r4 $< > $@
+	$(srcdir)/../common/build_eeprom.py -r4 eeprom_boot.ihx > $@
 	chmod +x $@
 
 

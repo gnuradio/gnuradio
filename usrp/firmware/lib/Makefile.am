@@ -57,12 +57,8 @@ LIBOBJS = 		\
 
 all: libfx2.lib
 
-%.rel : %.c
+.c.rel:
 	$(XCC) $(INCLUDES) $(DEFINES) -c $< -o $@
-
-%.rel : %.a51
-	$(XAS) $<
-
 
 $(LIBRARY): $(LIBOBJS)
 	-rm -f $(LIBRARY)
