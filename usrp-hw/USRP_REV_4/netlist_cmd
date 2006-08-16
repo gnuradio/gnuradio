@@ -1,0 +1,3 @@
+gnetlist -g pads -o usrp_mboard.net power.sch fpga.sch interface.sch dboard.sch clock.sch
+gnetlist -g partslist3 -o usrp_mboard.bom power.sch fpga.sch interface.sch dboard.sch clock.sch
+
