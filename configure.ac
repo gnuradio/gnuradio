@@ -170,7 +170,7 @@ GRC_GR_VIDEO_SDL
 GRC_GR_WXGUI
 GRC_PMT
 GRC_GR_TRELLIS
-#GRC_EZDOP
+GRC_EZDOP
 GRC_GR_EZDOP			dnl this must come after GRC_EZDOP
 
 dnl Has list of successfully configured components
