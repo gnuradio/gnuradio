@@ -29,20 +29,21 @@
 #include <iostream>
 
 trellis_permutation_sptr 
-trellis_make_permutation (const int K, const std::vector<int> &TABLE, const size_t NBYTES)
+trellis_make_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t NBYTES_INOUT)
 {
-  return trellis_permutation_sptr (new trellis_permutation (K,TABLE,NBYTES));
+  return trellis_permutation_sptr (new trellis_permutation (K,TABLE,SYMS_PER_BLOCK,NBYTES_INOUT));
 }
 
-trellis_permutation::trellis_permutation (const int K, const std::vector<int> &TABLE, const size_t NBYTES)
+trellis_permutation::trellis_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t NBYTES_INOUT)
   : gr_sync_block ("permutation",
-		   gr_make_io_signature (1, -1, NBYTES),
-		   gr_make_io_signature (1, -1, NBYTES)),
+		   gr_make_io_signature (1, -1, NBYTES_INOUT),
+		   gr_make_io_signature (1, -1, NBYTES_INOUT)),
     d_K (K),
     d_TABLE (TABLE),
-    d_NBYTES (NBYTES)
+    d_SYMS_PER_BLOCK (SYMS_PER_BLOCK),
+    d_NBYTES_INOUT (NBYTES_INOUT)
 {
-    set_output_multiple (d_K);
+    set_output_multiple (d_K*SYMS_PER_BLOCK);
     //std::cout << d_K << "\n";
 }
 
@@ -56,16 +57,23 @@ trellis_permutation::work (int noutput_items,
   int nstreams = input_items.size();
   assert (input_items.size() == output_items.size());
   assert (noutput_items % d_K ==0);
-  //std::cout << noutput_items << "\n";
 
   for (int m=0;m<nstreams;m++) {
     const char *in = (const char *) input_items[m];
     char *out = (char *) output_items[m];
 
     // per stream processing
-    for (unsigned int i = 0; i < noutput_items; i++){
-      //std::cout << i << " " << i*d_NBYTES << " " << (d_K*(i/d_K)+d_TABLE[i%d_K])*d_NBYTES  << "\n";
-      memcpy(&(out[i*d_NBYTES]), &(in[(d_K*(i/d_K)+d_TABLE[i%d_K])*d_NBYTES]), d_NBYTES);
+    for (int i = 0; i < noutput_items/d_SYMS_PER_BLOCK; i++){
+      // Index i refers to blocks.
+      // Begining of packet (in blocks)
+      int i0 = d_K*(i/d_K); 
+      // position of block within packet (in blocks)
+      int j0 = i%d_K;
+      // new position of block within packet (in blocks)
+      int k0 = d_TABLE[j0];
+      memcpy(&(out[i*d_SYMS_PER_BLOCK*d_NBYTES_INOUT]), 
+             &(in[(i0+k0)*d_SYMS_PER_BLOCK*d_NBYTES_INOUT]), 
+             d_NBYTES_INOUT*d_SYMS_PER_BLOCK);
     }
     // end per stream processing
   }

@@ -32,14 +32,14 @@
 
 
 trellis_metrics_f_sptr
-trellis_make_metrics_f (const int O, const int D,  const std::vector<float> &TABLE, trellis_metric_type_t TYPE)
+trellis_make_metrics_f (int O, int D,  const std::vector<float> &TABLE, trellis_metric_type_t TYPE)
 {
   return trellis_metrics_f_sptr (new trellis_metrics_f (O,D,TABLE,TYPE));
 }
 
 
 
-trellis_metrics_f::trellis_metrics_f (const int O, const int D,  const std::vector<float> &TABLE, trellis_metric_type_t TYPE)
+trellis_metrics_f::trellis_metrics_f (int O, int D,  const std::vector<float> &TABLE, trellis_metric_type_t TYPE)
   : gr_block ("metrics_f",
 	      gr_make_io_signature (1, -1, sizeof (float)),
 	      gr_make_io_signature (1, -1, sizeof (float))),

@@ -26,9 +26,9 @@ GR_SWIG_BLOCK_MAGIC(trellis,viterbi_i);
 
 trellis_viterbi_i_sptr trellis_make_viterbi_i (
     const fsm &FSM,
-    const int K,
-    const int S0,
-    const int SK);
+    int K,
+    int S0,
+    int SK);
 
 
 class trellis_viterbi_i : public gr_block
@@ -36,9 +36,9 @@ class trellis_viterbi_i : public gr_block
 private:
   trellis_viterbi_i (
     const fsm &FSM,
-    const int K,
-    const int S0,
-    const int SK);
+    int K,
+    int S0,
+    int SK);
 
 public:
     fsm FSM () const { return d_FSM; }

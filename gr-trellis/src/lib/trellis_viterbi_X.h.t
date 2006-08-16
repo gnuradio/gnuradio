@@ -33,9 +33,9 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 @SPTR_NAME@ trellis_make_@BASE_NAME@ (
     const fsm &FSM, 
-    const int K,
-    const int S0,
-    const int SK);
+    int K,
+    int S0,
+    int SK);
 
 
 
@@ -49,16 +49,16 @@ class @NAME@ : public gr_block
 
   friend @SPTR_NAME@ trellis_make_@BASE_NAME@ (
     const fsm &FSM,
-    const int K,
-    const int S0,
-    const int SK);
+    int K,
+    int S0,
+    int SK);
 
 
   @NAME@ (
     const fsm &FSM,
-    const int K,
-    const int S0,
-    const int SK);
+    int K,
+    int S0,
+    int SK);
 
 
 public:

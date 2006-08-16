@@ -102,17 +102,19 @@ def main(args):
     Es = Es / (len(constellation)/dimensionality)
     N0=Es/pow(10.0,esn0_db/10.0); # noise variance
     
-
-    tot_s=0
-    terr_s=0
+    tot_s=0 # total number of transmitted shorts
+    terr_s=0 # total number of shorts in error
+    terr_p=0 # total number of packets in error
     for i in range(rep):
         (s,e)=run_test(f,Kb,bitspersymbol,K,dimensionality,constellation,N0,-long(666+i)) # run experiment with different seed to get different noise realizations
         tot_s=tot_s+s
         terr_s=terr_s+e
-        if (i%1==0) & (i>0):
-            print i,s,e,tot_s,terr_s, '%e' % ((1.0*terr_s)/tot_s)
+        terr_p=terr_p+(terr_s!=0)
+        if ((i+1)%1==0) : # display progress
+            print i+1,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s)/tot_s)
     # estimate of the (short or bit) error rate
-    print tot_s,terr_s, '%e' % ((1.0*terr_s)/tot_s)
+    print rep,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s)/tot_s)
+
 
 
 if __name__ == '__main__':

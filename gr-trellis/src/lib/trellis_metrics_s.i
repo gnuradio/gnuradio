@@ -24,12 +24,12 @@
 
 GR_SWIG_BLOCK_MAGIC(trellis,metrics_s);
 
-trellis_metrics_s_sptr trellis_make_metrics_s (const int O, const int D, const std::vector<short> &TABLE, trellis_metric_type_t TYPE);
+trellis_metrics_s_sptr trellis_make_metrics_s (int O, int D, const std::vector<short> &TABLE, trellis_metric_type_t TYPE);
 
 class trellis_metrics_s : public gr_block
 {
 private:
-  trellis_metrics_s (const int O, const int D, const std::vector<short> &TABLE, trellis_metric_type_t TYPE);
+  trellis_metrics_s (int O, int D, const std::vector<short> &TABLE, trellis_metric_type_t TYPE);
 
 public:
   int O () const { return d_O; }

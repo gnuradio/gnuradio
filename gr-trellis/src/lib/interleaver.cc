@@ -42,7 +42,7 @@ interleaver::interleaver(const interleaver &INTERLEAVER)
   d_DEINTER=INTERLEAVER.DEINTER();
 }
 
-interleaver::interleaver(const int K, const std::vector<int> &INTER)
+interleaver::interleaver(int K, const std::vector<int> &INTER)
 {
   d_K=K;
   d_INTER=INTER;
@@ -85,7 +85,7 @@ interleaver::interleaver(const char *name)
 //######################################################################
 //# Generate a random interleaver
 //######################################################################
-interleaver::interleaver(const int K, unsigned int seed)
+interleaver::interleaver(int K, unsigned int seed)
 {
   d_K=K;
   d_INTER.resize(d_K);

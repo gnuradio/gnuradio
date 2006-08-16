@@ -34,24 +34,24 @@ static const float INF = 1.0e9;
 @SPTR_NAME@ 
 trellis_make_@BASE_NAME@ (
     const fsm &FSM,
-    const int D,
+    int D,
     const std::vector<float> &TABLE,
-    const int K,
-    const int S0,
-    const int SK,
-    const trellis_metric_type_t TYPE)
+    int K,
+    int S0,
+    int SK,
+    trellis_metric_type_t TYPE)
 {
   return @SPTR_NAME@ (new @NAME@ (FSM,D,TABLE,K,S0,SK,TYPE));
 }
 
 @NAME@::@NAME@ (
     const fsm &FSM,
-    const int D,
+    int D,
     const std::vector<float> &TABLE,
-    const int K,
-    const int S0,
-    const int SK,
-    const trellis_metric_type_t TYPE)
+    int K,
+    int S0,
+    int SK,
+    trellis_metric_type_t TYPE)
   : gr_block ("@BASE_NAME@",
 			  gr_make_io_signature (1, -1, sizeof (float)),
 			  gr_make_io_signature (1, -1, sizeof (@TYPE@))),  
@@ -83,16 +83,16 @@ void
 
 
 
-void viterbi_algorithm_combined(const int I, const int S, const int O, 
+void viterbi_algorithm_combined(int I, int S, int O, 
              const std::vector<int> &NS,
              const std::vector<int> &OS,
              const std::vector<int> &PS,
              const std::vector<int> &PI,
-             const int D,
+             int D,
              const std::vector<float> &TABLE,
-             const int K,
-             const int S0,const int SK,
-             const trellis_metric_type_t TYPE,
+             int K,
+             int S0,int SK,
+             trellis_metric_type_t TYPE,
              const float *in, @TYPE@ *out,
              std::vector<int> &trace) 
 {

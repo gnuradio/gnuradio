@@ -24,12 +24,12 @@
 
 GR_SWIG_BLOCK_MAGIC(trellis,encoder_ii);
 
-trellis_encoder_ii_sptr trellis_make_encoder_ii (const fsm &FSM, const int ST);
+trellis_encoder_ii_sptr trellis_make_encoder_ii (const fsm &FSM, int ST);
 
 class trellis_encoder_ii : public gr_sync_block
 {
 private:
-  trellis_encoder_ii (const fsm &FSM, const int ST);
+  trellis_encoder_ii (const fsm &FSM, int ST);
 public:
   fsm FSM () const { return d_FSM; }
   int ST () const { return d_ST; }

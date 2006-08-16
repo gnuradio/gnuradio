@@ -31,7 +31,7 @@
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ trellis_make_@BASE_NAME@ (const int O, const int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE);
+@SPTR_NAME@ trellis_make_@BASE_NAME@ (int O, int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE);
 
 /*!
  * \brief Evaluate metrics for use by the Viterbi algorithm.
@@ -45,8 +45,8 @@ class @NAME@ : public gr_block
   trellis_metric_type_t d_TYPE;
   std::vector<@I_TYPE@> d_TABLE;
 
-  friend @SPTR_NAME@ trellis_make_@BASE_NAME@ (const int O, const int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE);
-  @NAME@ (const int O, const int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE);
+  friend @SPTR_NAME@ trellis_make_@BASE_NAME@ (int O, int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE);
+  @NAME@ (int O, int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE);
 
 public:
   int O () const { return d_O; }

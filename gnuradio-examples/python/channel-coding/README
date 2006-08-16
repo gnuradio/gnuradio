@@ -8,26 +8,39 @@ fsm_files is a directory with some FSM definitions
 
 If you just want to see what these programs do, run each of the following:
 
-./test_tcm.py fsm_files/awgn1o2_4.fsm 10.0 1000
-./test_tcm1.py fsm_files/awgn1o2_4.fsm 10.0 1000
-./test_tcm_combined.py fsm_files/awgn1o2_4.fsm 10.0 1000
-./test_tcm_parallel.py fsm_files/awgn1o2_4.fsm 10.0 1000
-./test_sccc_hard.py fsm_files/awgn1o2_4.fsm fsm_files/awgn1o2_4.fsm 10.0 1000
+./test_tcm.py  fsm_files/awgn1o2_4.fsm 6.0 1000
+./test_tcm1.py fsm_files/awgn1o2_4.fsm 6.0 1000
+./test_tcm2.py 6.0 1000
+./test_tcm_combined.py fsm_files/awgn1o2_4.fsm 6.0 1000
+./test_tcm_parallel.py fsm_files/awgn1o2_4.fsm 6.0 1000
+
+./test_sccc_hard.py  fsm_files/awgn1o2_4.fsm fsm_files/awgn1o2_4_msb.fsm 10.0 100
+./test_sccc_soft.py  fsm_files/awgn1o2_4.fsm fsm_files/awgn1o2_4_msb.fsm  8.0 100
+./test_sccc_turbo.py fsm_files/awgn1o2_4.fsm fsm_files/awgn1o2_4_msb.fsm  5.0 100
 
 In your terminal you will see something like this:
 
-[anastas@ernesto channel-coding]$ ./test_tcm.py fsm_files/awgn1o2_4.fsm 6.0 1000
-100 1024 1 103424 10 9.668936e-05
-200 1024 1 205824 21 1.020289e-04
-300 1024 0 308224 40 1.297757e-04
-400 1024 0 410624 1074 2.615531e-03
-500 1024 0 513024 1081 2.107114e-03
-600 1024 0 615424 1090 1.771137e-03
-700 1024 0 717824 1097 1.528230e-03
-800 1024 0 820224 1107 1.349631e-03
-900 1024 0 922624 1120 1.213929e-03
-1024000 1129 1.102539e-03
+$ ./test_tcm.py fsm_files/awgn1o2_4.fsm 6.0 1000
+100 98 9.80e-01 102400 9 8.79e-05
+200 198 9.90e-01 204800 20 9.77e-05
+300 298 9.93e-01 307200 40 1.30e-04
+400 398 9.95e-01 409600 1074 2.62e-03
+500 498 9.96e-01 512000 1081 2.11e-03
+600 598 9.97e-01 614400 1090 1.77e-03
+700 698 9.97e-01 716800 1097 1.53e-03
+800 798 9.98e-01 819200 1107 1.35e-03
+900 898 9.98e-01 921600 1120 1.22e-03
+1000 998 9.98e-01 1024000 1129 1.10e-03
+1000 998 9.98e-01 1024000 1129 1.10e-03
 
-1.102539e-03 is the error rate estimates by sending 1000 packets of
-1024x16 bits each using an 1/2 4-state convolutional code and QPSK
+which gives you information about the:
+number of transmitted packets
+number of packets in error
+iestimated packet error rate
+number of transmitted shorts
+number of shorts in error
+estimated (short) error rate 
+
+1.10e-03 is the error rate estimate by sending 1000 packets of
+1024 shorts each, using an 1/2 4-state convolutional code and QPSK
 modulation through an AWGN with Es/N0 = 6.0 dB

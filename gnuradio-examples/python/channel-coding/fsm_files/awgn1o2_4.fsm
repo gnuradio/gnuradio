@@ -11,7 +11,4 @@
 2 1
 
 AWGN CC from Proakis-Salehi pg 779
-GM1o2_4=[1+D+D^2   1+D^2];
-
-
-
+GM1o2_4=[1+D^2, 1+D+D^2] = [5, 7] (in decimal);

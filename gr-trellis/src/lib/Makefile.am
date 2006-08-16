@@ -65,9 +65,11 @@ _trellis_la_SOURCES = 			\
 	trellis.cc			\
         fsm.cc				\
         quicksort_index.cc		\
+        base.cc				\
         interleaver.cc			\
         trellis_calc_metric.cc		\
         trellis_permutation.cc		\
+	trellis_siso_f.cc		\
 	$(GENERATED_CC)                 
 
 # magic flags
@@ -87,10 +89,13 @@ trellis.cc trellis.py: $(ALL_IFILES)
 grinclude_HEADERS =			\
         fsm.h				\
         quicksort_index.h		\
+        base.h				\
         interleaver.h			\
         trellis_metric_type.h		\
         trellis_calc_metric.h		\
         trellis_permutation.h		\
+        trellis_siso_type.h		\
+	trellis_siso_f.h		\
 	$(GENERATED_H)                  
 
 

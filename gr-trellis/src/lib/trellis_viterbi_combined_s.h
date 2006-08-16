@@ -34,12 +34,12 @@ typedef boost::shared_ptr<trellis_viterbi_combined_s> trellis_viterbi_combined_s
 
 trellis_viterbi_combined_s_sptr trellis_make_viterbi_combined_s (
     const fsm &FSM,
-    const int D,
+    int D,
     const std::vector<float> &TABLE,
-    const int K,
-    const int S0,
-    const int SK,
-    const trellis_metric_type_t TYPE);
+    int K,
+    int S0,
+    int SK,
+    trellis_metric_type_t TYPE);
 
 
 class trellis_viterbi_combined_s : public gr_block
@@ -55,22 +55,22 @@ class trellis_viterbi_combined_s : public gr_block
 
   friend trellis_viterbi_combined_s_sptr trellis_make_viterbi_combined_s (
     const fsm &FSM,
-    const int D,
+    int D,
     const std::vector<float> &TABLE,
-    const int K,
-    const int S0,
-    const int SK,
-    const trellis_metric_type_t TYPE);
+    int K,
+    int S0,
+    int SK,
+    trellis_metric_type_t TYPE);
 
 
   trellis_viterbi_combined_s (
     const fsm &FSM,
-    const int D,
+    int D,
     const std::vector<float> &TABLE,
-    const int K,
-    const int S0,
-    const int SK,
-    const trellis_metric_type_t TYPE);
+    int K,
+    int S0,
+    int SK,
+    trellis_metric_type_t TYPE);
 
 
 public:

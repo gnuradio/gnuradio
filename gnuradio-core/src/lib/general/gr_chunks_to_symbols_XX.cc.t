@@ -62,7 +62,7 @@ int
 
     // per stream processing
     for (int i = 0; i < noutput_items / d_D; i++){
-      assert (((unsigned int)in[i]*d_D) < d_symbol_table.size());
+      assert (((unsigned int)in[i]*d_D+d_D) <= d_symbol_table.size());
       memcpy(out, &d_symbol_table[(unsigned int)in[i]*d_D], d_D*sizeof(@O_TYPE@));
       out+=d_D;
     }

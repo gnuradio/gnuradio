@@ -29,12 +29,12 @@
 #include <iostream>
 
 trellis_encoder_ss_sptr 
-trellis_make_encoder_ss (const fsm &FSM, const int ST)
+trellis_make_encoder_ss (const fsm &FSM, int ST)
 {
   return trellis_encoder_ss_sptr (new trellis_encoder_ss (FSM,ST));
 }
 
-trellis_encoder_ss::trellis_encoder_ss (const fsm &FSM, const int ST)
+trellis_encoder_ss::trellis_encoder_ss (const fsm &FSM, int ST)
   : gr_sync_block ("encoder_ss",
 		   gr_make_io_signature (1, -1, sizeof (short)),
 		   gr_make_io_signature (1, -1, sizeof (short))),
@@ -50,26 +50,24 @@ trellis_encoder_ss::work (int noutput_items,
 			gr_vector_const_void_star &input_items,
 			gr_vector_void_star &output_items)
 {
-  int d_ST_tmp;
+  int ST_tmp;
 
   assert (input_items.size() == output_items.size());
   int nstreams = input_items.size();
 
-for (int m=0;m<nstreams;m++) {
-  const short *in = (const short *) input_items[m];
-  short *out = (short *) output_items[m];
-  d_ST_tmp = d_ST;
+  for (int m=0;m<nstreams;m++) {
+    const short *in = (const short *) input_items[m];
+    short *out = (short *) output_items[m];
+    ST_tmp = d_ST;
 
-// per stream processing
-
-  for (int i = 0; i < noutput_items; i++){
-    out[i] = (short) d_FSM.OS()[d_ST_tmp*d_FSM.I()+in[i]]; // direction of time?
-    d_ST_tmp = (int) d_FSM.NS()[d_ST_tmp*d_FSM.I()+in[i]];
+    // per stream processing
+    for (int i = 0; i < noutput_items; i++){
+      out[i] = (short) d_FSM.OS()[ST_tmp*d_FSM.I()+in[i]]; // direction of time?
+      ST_tmp = (int) d_FSM.NS()[ST_tmp*d_FSM.I()+in[i]];
+    }
+    // end per stream processing
   }
-
-// end per stream processing
-}
-  d_ST = d_ST_tmp;
+  d_ST = ST_tmp;
 
   return noutput_items;
 }

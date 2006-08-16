@@ -33,9 +33,9 @@ typedef boost::shared_ptr<trellis_viterbi_s> trellis_viterbi_s_sptr;
 
 trellis_viterbi_s_sptr trellis_make_viterbi_s (
     const fsm &FSM, 
-    const int K,
-    const int S0,
-    const int SK);
+    int K,
+    int S0,
+    int SK);
 
 
 
@@ -49,16 +49,16 @@ class trellis_viterbi_s : public gr_block
 
   friend trellis_viterbi_s_sptr trellis_make_viterbi_s (
     const fsm &FSM,
-    const int K,
-    const int S0,
-    const int SK);
+    int K,
+    int S0,
+    int SK);
 
 
   trellis_viterbi_s (
     const fsm &FSM,
-    const int K,
-    const int S0,
-    const int SK);
+    int K,
+    int S0,
+    int SK);
 
 
 public:

@@ -31,7 +31,7 @@
 class trellis_encoder_ii;
 typedef boost::shared_ptr<trellis_encoder_ii> trellis_encoder_ii_sptr;
 
-trellis_encoder_ii_sptr trellis_make_encoder_ii (const fsm &FSM, const int ST);
+trellis_encoder_ii_sptr trellis_make_encoder_ii (const fsm &FSM, int ST);
 
 /*!
  * \brief Convolutional encoder.
@@ -42,10 +42,10 @@ trellis_encoder_ii_sptr trellis_make_encoder_ii (const fsm &FSM, const int ST);
 class trellis_encoder_ii : public gr_sync_block
 {
 private:
-  friend trellis_encoder_ii_sptr trellis_make_encoder_ii (const fsm &FSM, const int ST);
+  friend trellis_encoder_ii_sptr trellis_make_encoder_ii (const fsm &FSM, int ST);
   fsm d_FSM;
   int d_ST;
-  trellis_encoder_ii (const fsm &FSM, const int ST); 
+  trellis_encoder_ii (const fsm &FSM, int ST); 
 
 public:
   fsm FSM () const { return d_FSM; }

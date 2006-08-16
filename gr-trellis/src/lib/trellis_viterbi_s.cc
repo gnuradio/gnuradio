@@ -34,18 +34,18 @@ static const float INF = 1.0e9;
 trellis_viterbi_s_sptr 
 trellis_make_viterbi_s (
     const fsm &FSM,
-    const int K,
-    const int S0,
-    const int SK)
+    int K,
+    int S0,
+    int SK)
 {
   return trellis_viterbi_s_sptr (new trellis_viterbi_s (FSM,K,S0,SK));
 }
 
 trellis_viterbi_s::trellis_viterbi_s (
     const fsm &FSM,
-    const int K,
-    const int S0,
-    const int SK)
+    int K,
+    int S0,
+    int SK)
   : gr_block ("viterbi_s",
 			  gr_make_io_signature (1, -1, sizeof (float)),
 			  gr_make_io_signature (1, -1, sizeof (short))),  
@@ -74,13 +74,13 @@ trellis_viterbi_s::forecast (int noutput_items, gr_vector_int &ninput_items_requ
 
 
 
-void viterbi_algorithm(const int I, const int S, const int O, 
+void viterbi_algorithm(int I, int S, int O, 
              const std::vector<int> &NS,
              const std::vector<int> &OS,
              const std::vector<int> &PS,
              const std::vector<int> &PI,
-             const int K,
-             const int S0,const int SK,
+             int K,
+             int S0,int SK,
              const float *in, short *out,
              std::vector<int> &trace) 
 {

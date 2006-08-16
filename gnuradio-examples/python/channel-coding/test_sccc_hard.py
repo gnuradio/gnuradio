@@ -18,7 +18,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
     s2fsmi = gr.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the outer FSM input cardinality
     enc_out = trellis.encoder_ss(fo,0) # initial state = 0
-    inter = trellis.permutation(interleaver.K(),interleaver.INTER(),gr.sizeof_short)
+    inter = trellis.permutation(interleaver.K(),interleaver.INTER(),1,gr.sizeof_short)
     enc_in = trellis.encoder_ss(fi,0) # initial state = 0
     mod = gr.chunks_to_symbols_sf(constellation,dimensionality)
 
@@ -29,7 +29,7 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     # RX
     metrics_in = trellis.metrics_f(fi.O(),dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner Viterbi
     va_in = trellis.viterbi_s(fi,K,0,-1) # Put -1 if the Initial/Final states are not set.
-    deinter = trellis.permutation(interleaver.K(),interleaver.DEINTER(),gr.sizeof_short)
+    deinter = trellis.permutation(interleaver.K(),interleaver.DEINTER(),1,gr.sizeof_short)
     metrics_out = trellis.metrics_s(fo.O(),1,[0,1,2,3],trellis.TRELLIS_HARD_SYMBOL) # data preprocessing to generate metrics for outer Viterbi (hard decisions)
     va_out = trellis.viterbi_s(fo,K,0,-1) # Put -1 if the Initial/Final states are not set.
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
@@ -85,14 +85,16 @@ def main(args):
     
     tot_s=0 # total number of transmitted shorts
     terr_s=0 # total number of shorts in error
+    terr_p=0 # total number of packets in error
     for i in range(rep):
         (s,e)=run_test(fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,N0,-long(666+i)) # run experiment with different seed to get different noise realizations
         tot_s=tot_s+s
         terr_s=terr_s+e
-        if (i%100==0) & (i>0): # display progress
-            print i,s,e,tot_s,terr_s, '%e' % ((1.0*terr_s)/tot_s)
+        terr_p=terr_p+(terr_s!=0)
+        if ((i+1)%100==0) : # display progress
+            print i+1,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s)/tot_s)
     # estimate of the (short or bit) error rate
-    print tot_s,terr_s, '%e' % ((1.0*terr_s)/tot_s)
+    print rep,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s)/tot_s)
 
 
 if __name__ == '__main__':

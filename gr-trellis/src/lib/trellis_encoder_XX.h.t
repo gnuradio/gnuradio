@@ -31,7 +31,7 @@
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ trellis_make_@BASE_NAME@ (const fsm &FSM, const int ST);
+@SPTR_NAME@ trellis_make_@BASE_NAME@ (const fsm &FSM, int ST);
 
 /*!
  * \brief Convolutional encoder.
@@ -42,10 +42,10 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 class @NAME@ : public gr_sync_block
 {
 private:
-  friend @SPTR_NAME@ trellis_make_@BASE_NAME@ (const fsm &FSM, const int ST);
+  friend @SPTR_NAME@ trellis_make_@BASE_NAME@ (const fsm &FSM, int ST);
   fsm d_FSM;
   int d_ST;
-  @NAME@ (const fsm &FSM, const int ST); 
+  @NAME@ (const fsm &FSM, int ST); 
 
 public:
   fsm FSM () const { return d_FSM; }

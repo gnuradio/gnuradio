@@ -37,12 +37,18 @@ private:
   std::vector<int> d_OS;
   std::vector<int> d_PS;
   std::vector<int> d_PI;
+  std::vector<int> d_TMi;
+  std::vector<int> d_TMl;
+  void generate_PS_PI ();
+  void generate_TM ();
+  bool find_es(int es);
 public:
   fsm();
   fsm(const fsm &FSM);
-  fsm(const int I, const int S, const int O, const std::vector<int> &NS, const std::vector<int> &OS);
+  fsm(int I, int S, int O, const std::vector<int> &NS, const std::vector<int> &OS);
   fsm(const char *name);
-  fsm(const int mod_size, const int ch_length);
+  fsm(int k, int n, const std::vector<int> &G);
+  fsm(int mod_size, int ch_length);
   int I () const { return d_I; }
   int S () const { return d_S; }
   int O () const { return d_O; }
@@ -50,6 +56,8 @@ public:
   const std::vector<int> & OS () const { return d_OS; }
   const std::vector<int> & PS () const { return d_PS; }
   const std::vector<int> & PI () const { return d_PI; }
+  const std::vector<int> & TMi () const { return d_TMi; }
+  const std::vector<int> & TMl () const { return d_TMl; }
 };
 
 #endif

@@ -24,12 +24,12 @@
 
 GR_SWIG_BLOCK_MAGIC(trellis,@BASE_NAME@);
 
-@SPTR_NAME@ trellis_make_@BASE_NAME@ (const fsm &FSM, const int ST);
+@SPTR_NAME@ trellis_make_@BASE_NAME@ (const fsm &FSM, int ST);
 
 class @NAME@ : public gr_sync_block
 {
 private:
-  @NAME@ (const fsm &FSM, const int ST);
+  @NAME@ (const fsm &FSM, int ST);
 public:
   fsm FSM () const { return d_FSM; }
   int ST () const { return d_ST; }

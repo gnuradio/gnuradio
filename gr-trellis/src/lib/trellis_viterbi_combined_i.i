@@ -26,12 +26,12 @@ GR_SWIG_BLOCK_MAGIC(trellis,viterbi_combined_i);
 
 trellis_viterbi_combined_i_sptr trellis_make_viterbi_combined_i (
     const fsm &FSM,
-    const int D,
+    int D,
     const std::vector<float> &TABLE,
-    const int K,
-    const int S0,
-    const int SK,
-    const trellis_metric_type_t TYPE);
+    int K,
+    int S0,
+    int SK,
+    trellis_metric_type_t TYPE);
 
 
 class trellis_viterbi_combined_i : public gr_block
@@ -39,12 +39,12 @@ class trellis_viterbi_combined_i : public gr_block
 private:
   trellis_viterbi_combined_i (
     const fsm &FSM,
-    const int D,
+    int D,
     const std::vector<float> &TABLE,
-    const int K,
-    const int S0,
-    const int SK,
-    const trellis_metric_type_t TYPE);
+    int K,
+    int S0,
+    int SK,
+    trellis_metric_type_t TYPE);
 
 public:
     fsm FSM () const { return d_FSM; }

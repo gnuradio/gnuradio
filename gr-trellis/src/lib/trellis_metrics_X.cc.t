@@ -32,14 +32,14 @@
 
 
 @SPTR_NAME@
-trellis_make_@BASE_NAME@ (const int O, const int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE)
+trellis_make_@BASE_NAME@ (int O, int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE)
 {
   return @SPTR_NAME@ (new @NAME@ (O,D,TABLE,TYPE));
 }
 
 
 
-@NAME@::@NAME@ (const int O, const int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE)
+@NAME@::@NAME@ (int O, int D,  const std::vector<@I_TYPE@> &TABLE, trellis_metric_type_t TYPE)
   : gr_block ("@BASE_NAME@",
 	      gr_make_io_signature (1, -1, sizeof (@I_TYPE@)),
 	      gr_make_io_signature (1, -1, sizeof (float))),

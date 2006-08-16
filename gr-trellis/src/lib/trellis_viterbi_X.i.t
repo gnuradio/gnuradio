@@ -26,9 +26,9 @@ GR_SWIG_BLOCK_MAGIC(trellis,@BASE_NAME@);
 
 @SPTR_NAME@ trellis_make_@BASE_NAME@ (
     const fsm &FSM,
-    const int K,
-    const int S0,
-    const int SK);
+    int K,
+    int S0,
+    int SK);
 
 
 class @NAME@ : public gr_block
@@ -36,9 +36,9 @@ class @NAME@ : public gr_block
 private:
   @NAME@ (
     const fsm &FSM,
-    const int K,
-    const int S0,
-    const int SK);
+    int K,
+    int S0,
+    int SK);
 
 public:
     fsm FSM () const { return d_FSM; }
