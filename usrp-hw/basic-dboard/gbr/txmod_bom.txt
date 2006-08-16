@@ -1,0 +1,21 @@
+# $Id$
+# PcbBOM Version 1.0
+# Date: Thu Dec 30 02:16:24 2004 UTC
+# Author: Matt Ettus
+# Title: TX Daughterboard - PCB BOM
+# Quantity, Description, Value, RefDes
+# --------------------------------------------
+1,"SSOP16","MAX3232E",U410 
+1,"DB9M","unknown",J27 
+5,"0603","0.1uF",C492 C489 C475 C491 C490 
+3,"CONNECTOR-8-2","unknown",J51 J50 J46 
+1,"CONNECTOR-10-2","unknown",J45 
+4,"0603","50",R34 R32 R37 R35 
+2,"MINICIRCUITS_CD542","unknown",T51 T50 
+2,"0603","100",R33 R36 
+4,"0603","10pF",C40 C42 C43 C41 
+1,"CONNECTOR-5-2","unknown",J47 
+2,"SMA_VERT","unknown",J48 J49 
+1,"PMC-REVERSE","unknown",J44 
+1,"0603","0",R29 
+1,"SO8","unknown",U52 
