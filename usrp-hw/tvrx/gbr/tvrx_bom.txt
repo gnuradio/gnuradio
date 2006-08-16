@@ -1,0 +1,24 @@
+# $Id$
+# PcbBOM Version 1.0
+# Date: Tue 01 Mar 2005 01:13:31 AM GMT UTC
+# Author: Matt Ettus
+# Title: RX Daughterboard - PCB BOM
+# Quantity, Description, Value, RefDes
+# --------------------------------------------
+4,"0603","470pF",C107 C105 C103 C101 
+4,"1206","4.7uF",C108 C106 C104 C102 
+5,"0603",".1uF",C83 C4 C2 C1 C3 
+1,"EIA6032","22uF",C82 
+1,"SOT223","unknown",U3 
+1,"0603","1K",R5 
+4,"0603","NONE",R3 R13 R11 R1 
+2,"SOT23","unknown",Q2 Q1 
+6,"0603","10K",R8 R14 R16 R12 R7 R9 
+2,"SO8","unknown",U4 U1 
+1,"PMC-REVERSE","unknown",J2 
+2,"CONNECTOR-8-2","unknown",J25 J24 
+2,"0603","10pF",C6 C5 
+2,"0603","2.2K",R2 R4 
+1,"MT4937DI5","unknown",U2 
+2,"0603","0",R17 R10 
+1,"0603","1.6K",R6 
