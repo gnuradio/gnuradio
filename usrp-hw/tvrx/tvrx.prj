@@ -1,0 +1,6 @@
+# List all schematics
+schematics tvrx.sch
+
+output-name tvrx
+
+elements-dir ../pkg/newlib

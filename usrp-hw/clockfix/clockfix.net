@@ -1,0 +1,8 @@
+unnamed_net6	C10-2 R2-1 R1-2 U1-5 
+unnamed_net5	U1-6 U1-7 U1-8 C5-1 L2-2 C6-1 
+unnamed_net4	C1-1 J1-1 C2-1 L1-1 
+unnamed_net3	L2-1 C3-1 C4-1 L1-2 
+unnamed_net2	R3-2 J2-1 
+GND	R2-2 U1-4 J1-2 C5-2 C6-2 C3-2 C4-2 C2-2 C1-2 J2-5 J2-4 J2-3 J2-2 C7-2 C8-2 C9-2 X1-2 
+DVDD	C10-1 R1-1 U1-2 U1-3 U1-1 C7-1 C8-1 C9-1 X1-4 X1-1 
+unnamed_net1	R3-1 X1-3 

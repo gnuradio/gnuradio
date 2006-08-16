@@ -1,0 +1,6 @@
+# List all schematics
+schematics dbsrx.sch
+
+output-name dbsrx
+
+elements-dir ../pkg/newlib

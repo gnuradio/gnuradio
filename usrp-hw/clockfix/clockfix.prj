@@ -1,0 +1,6 @@
+# List all schematics
+schematics clockfix.sch
+
+output-name clockfix
+
+elements-dir ../pkg/newlib
