@@ -1,0 +1,11 @@
+gnetlist -g partslist3 -o flex400.bom rcv400.sch common400.sch trans400.sch
+gnetlist -g pads -o flex400-pads.net rcv400.sch common400.sch trans400.sch
+
+gnetlist -g partslist3 -o flex900.bom rcv900.sch common900.sch trans900.sch
+gnetlist -g pads -o flex900-pads.net rcv900.sch common900.sch trans900.sch
+
+gnetlist -g partslist3 -o flex2400.bom rcv2400.sch common2400.sch trans2400.sch
+gnetlist -g pads -o flex2400-pads.net rcv2400.sch common2400.sch trans2400.sch
+
+gnetlist -g partslist3 -o flex.bom rcv.sch common.sch trans.sch
+gnetlist -g pads -o flex-pads.net rcv.sch common.sch trans.sch
