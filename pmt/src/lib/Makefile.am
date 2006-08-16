@@ -90,6 +90,7 @@ libpmt_qa_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
 
 # link the library against the c++ standard library
 libpmt_qa_la_LIBADD = 			\
+	libpmt.la			\
 	$(CPPUNIT_LIBS)			\
 	-lstdc++			
 
