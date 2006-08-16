@@ -1,0 +1,79 @@
+2004-11-22  Matt Ettus <matt@ettus.com>
+
+	* fpga.sch : 
+		- Added R2001-R2005.  
+		- Jumpers to gnd for TXBLANK.
+		- Unpopulated resistors for redoing SPI, shared with io_tx_a/b[15]
+
+2004-11-03  Matt Ettus <matt@ettus.com>
+
+	* fpga.sch : Removed J900 and J902 which were to test the FX2 bus.  
+		The lines were just too long.
+
+2004-10-27  Matt Ettus <matt@ettus.com>
+
+	* power.sch : Removed text note
+
+	* dboard.sch : Swapped RS-232 so that each board gets a pair, shared between RX and TX
+	
+	* interface.sch : 
+		- Removed U410 (MAX232) and associated caps
+		- Rerouted RS232 signals so they go out as CMOS levels
+		- Removed J645 which was PE[2:0]
+
+	* fpga.sch :
+		- Redid FX2 bus interface probe pins on J900
+		- Added J902 with FX2 data bus
+		
+2004-10-23  Matt Ettus <matt@ettus.com>
+
+	* netlist_cmd :
+		- Added command script for generating a netlist
+	* power.sch :
+		- Added J1001 for ground testpoints
+		- Added C0603 footprint to a bunch of caps.  
+
+2004-10-10  Matt Ettus <matt@ettus.com>
+
+	* fpga.sch :
+		- Remove io_tx_b_15 from VCXO tuning, remove R800,R803,R876,C800,C804
+		- Connect X2.1 to DVDD
+		- Removed nets CLKOUT1_x and CLKOUT2_x
+		- Removed R801, R802, R857 -- CLK120 now goes straight to FPGA
+		- Removed J901
+		- Split CLK120 into CLK_FPGA, CLK_CODEC_A, and CLK_CODEC_B, each with proper source and sink terminations.  Use 50 ohm lines.
+		- Added R1011-R1016 and C1014-C1016 for terminations
+		- Added MYSTERY_SIGNAL to replace one RX_SYNC
+		- Moved SDO to where TX_BLANK was
+		- Moved SDI to one RX_SYNC
+		- Moved SEN_FPGA to where RESET was
+
+	* dboard.sch :
+		- Removed CLKOUT1_x and CLKOUT2_x
+		- Removed io_[tx,rx]_x_16 which never did anything
+
+	* interface.sch :
+		- Added MYSTERY_SIGNAL input to INT4
+
+	* power.sch :
+		- Removed D501
+		- Added C1020 for more decoupling of 5V
+		- Increased value of C502 to 100 uF
+
+2004-10-08  Matt Ettus  <matt@ettus.com>
+
+	* interface.sch :
+		- Reset on PC0 is now RESET_CODEC
+		- Tool changed format of Text items
+		- NB -  Need to find pin for RESET_FPGA.  Maybe PE0,1,2 or FX2_1.  Send rest to dboard?
+
+	* dboard.sch :
+		- R701, R702 changed from 2K to 4K, to fit what the datasheet tells us.
+		- R1001,R1002,R1003,R1004,C1001,C1002,C1003,C1004 added to do sigma delta filtering on the motherboard
+		- Net SIGDEL_x no longer goes to dboard.  It gets filtered, and AUX_DAC_D_x is sent
+		- RESET on CODECs and Dboards is now RESET_CODEC
+		- Tool changed format of Text items
+		- NB -  Should we avoid sending REFIO_x to the dboards for sig integrity?
+		- NB -  Get rid of io_tx/rx_x_16
+		- NB -  Find a bit 15 for io buses
+
