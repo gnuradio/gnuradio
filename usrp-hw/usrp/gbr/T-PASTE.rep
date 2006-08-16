@@ -5,26 +5,30 @@ Photo-Plotter Apertures Report
 Position  Width  Hgt/ID  Shape    Qty
 ========  =====  ======  =====    ===
    10       10       0    RND       5
-   20       38      30    RECT    112
-   21       30      38    RECT     36
-   22      62.99     70.87    RECT     16
-   23       90     120    RECT      8
-   24      120      90    RECT      2
-   28       50      60    RECT      4
-   29       70      10    OVAL    152
-   30       10      70    OVAL    104
-   31       24      92    RECT    256
-   33       80      10    OVAL    120
-   34       10      80    OVAL    120
-   35       13      70    OVAL     60
-   36       70      13    OVAL     40
-   37      86.61     23.62    OVAL      8
-   38       13      65    OVAL     20
-   39      120       0    SQR       1
-   40       55     110    RECT      3
-   41      350     350    RECT      1
-   42      220      80    RECT      2
-   43       80      72    RECT      4
+   20       38      30    RECT    124
+   21       30      38    RECT     64
+   22      62.99     70.87    RECT     20
+   23       90     120    RECT     12
+   27       50      60    RECT      4
+   28       70      10    OVAL    152
+   29       10      70    OVAL    104
+   30       24      92    RECT    256
+   32       80      10    OVAL    120
+   33       10      80    OVAL    120
+   34       13      70    OVAL     60
+   35       70      13    OVAL     40
+   36      86.61     23.62    OVAL      8
+   37       13      65    OVAL     20
+   38      120       0    SQR       1
+   39       55     110    RECT      3
+   40      350     350    RECT      1
+   41      220      80    RECT      2
+   42       72      80    RECT      4
+   49      70.87     62.99    RECT      4
+   50      40.16     16.14    RECT      8
+   51      27.56     12.8    RECT     16
+   52      12.8     27.56    RECT     16
+   53      127.95       0    SQR       1
 
 
 
