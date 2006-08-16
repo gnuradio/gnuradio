@@ -1,0 +1,20 @@
+# $Id$
+# PcbBOM Version 1.0
+# Date: Thu Mar  2 20:16:21 2006 UTC
+# Author: Matt Ettus
+# Title: RX Daughterboard - PCB BOM
+# Quantity, Description, Value, RefDes
+# --------------------------------------------
+2,"0603",".1uF",C50 C24 
+2,"0603","24.9",R35 R32 
+3,"SO8","unknown",U3 U2 U1 
+8,"0603","348",R39 R38 R36 R31 R30 R34 R33 R37 
+4,"0603","82pF",C23 C22 C26 C25 
+3,"CONNECTOR-8-2","unknown",J25 J24 J16 
+1,"0603","0",R28 
+6,"0603","49.9",R4 R9 R11 R5 R10 R3 
+2,"0603","1K",R7 R6 
+2,"SMA_VERT","unknown",J19 J18 
+1,"CONNECTOR-5-2","unknown",J17 
+1,"CONNECTOR-10-2","unknown",J15 
+1,"PMC-REVERSE","unknown",J2 

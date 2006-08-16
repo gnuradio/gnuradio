@@ -1,0 +1,29 @@
+# $Id$
+# PcbBOM Version 1.0
+# Date: Fri Feb 10 03:52:58 2006 UTC
+# Author: Matt Ettus
+# Title: TX Daughterboard - PCB BOM
+# Quantity, Description, Value, RefDes
+# --------------------------------------------
+8,"0603","25",R41 R40 R36 R39 R38 R34 R33 R35 
+2,"0603","4.7pF",C34 C33 
+2,"0603","100pF",C32 C31 
+2,"1206","unknown",FB1 FB2 
+3,"0603","220pF",C5 C21 C10 
+6,"0603","0.1uF",C23 C22 C20 C8 C12 C6 
+1,"PMC-REVERSE","unknown",J44 
+3,"SO8","unknown",U2 U1 U52 
+2,"1206","22uH",L2 L1 
+2,"0603","20pF",C15 C14 
+2,"1206","10uF",C11 C3 
+1,"0603","22pF",C4 
+2,"0603","1uF",C2 C1 
+4,"0603","225",R8 R6 R5 R3 
+4,"0603","500",R7 R4 R32 R37 
+2,"0603","100",R2 R1 
+3,"CONNECTOR-8-2","unknown",J51 J46 J50 
+1,"TSOT23-95P-280L1-6N__LTC_S6_Package","unknown",U3 
+1,"CONNECTOR-10-2","unknown",J45 
+1,"CONNECTOR-5-2","unknown",J47 
+2,"SMA_VERT","unknown",J48 J49 
+1,"0603","0",R29 
