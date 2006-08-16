@@ -1,3 +1,0 @@
-gsch2pcb clockfix.prj
-gnetlist -g partslist3 -o clockfix.bom clockfix.sch
-

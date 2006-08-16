@@ -1,3 +1,0 @@
-gsch2pcb dbsrx.prj
-gnetlist -g partslist3 -o dbsrx.bom dbsrx.sch
-

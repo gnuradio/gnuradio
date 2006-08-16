@@ -1,3 +1,0 @@
-gsch2pcb tvrx.prj
-gnetlist -g partslist3 -o tvrx.bom tvrx.sch
-
