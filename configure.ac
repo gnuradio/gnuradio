@@ -170,8 +170,8 @@ GRC_GR_VIDEO_SDL
 GRC_GR_WXGUI
 GRC_PMT
 GRC_GR_TRELLIS
-GRC_EZDOP
-GRC_GR_EZDOP			dnl this must come after GRC_EZDOP
+dnl GRC_EZDOP			dnl disable until grc_ezdop.m4 fixed
+dnl GRC_GR_EZDOP		dnl this must come after GRC_EZDOP
 
 dnl Has list of successfully configured components
 AC_SUBST([subdirs],$subdirs)
