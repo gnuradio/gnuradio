@@ -204,7 +204,7 @@ main(int argc, char **argv)
       break;
       
     case 's':
-      nsamples_to_skip = (long long) strtof(optarg, 0);
+      nsamples_to_skip = (long long) strtod(optarg, 0);
       if (nsamples_to_skip < 0){
 	usage(argv[0]);
 	fprintf(stderr, "    nsamples_to_skip must be >= 0\n");
@@ -213,7 +213,7 @@ main(int argc, char **argv)
       break;
 
     case 'd':
-      max_doppler = strtof(optarg, 0);
+      max_doppler = strtod(optarg, 0);
       if (max_doppler < 0 || max_doppler >= 0.5){
 	usage(argv[0]);
 	fprintf(stderr, "    max_doppler must be in [0, 0.5)\n");

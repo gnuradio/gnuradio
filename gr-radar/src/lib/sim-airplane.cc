@@ -227,7 +227,7 @@ main(int argc, char **argv)
       break;
       
     case 's':
-      nsamples_to_skip = (long long) strtof(optarg, 0);
+      nsamples_to_skip = (long long) strtod(optarg, 0);
       if (nsamples_to_skip < 0){
 	usage(argv[0]);
 	fprintf(stderr, "    nsamples_to_skip must be >= 0\n");
@@ -236,7 +236,7 @@ main(int argc, char **argv)
       break;
 
     case 'n':
-      nsamples_to_produce = (long long) strtof(optarg, 0);
+      nsamples_to_produce = (long long) strtod(optarg, 0);
       if (nsamples_to_produce < 0){
 	usage(argv[0]);
 	fprintf(stderr, "    nsamples_to_produce must be >= 0\n");
@@ -245,15 +245,15 @@ main(int argc, char **argv)
       break;
 
     case 'g':
-      gain_db = strtof(optarg, 0);
+      gain_db = strtod(optarg, 0);
       break;
 
     case 'f':
-      tx_freq = strtof(optarg, 0);
+      tx_freq = strtod(optarg, 0);
       break;
 
     case 'r':
-      sample_rate = strtof(optarg, 0);
+      sample_rate = strtod(optarg, 0);
       break;
 
     case '?':
