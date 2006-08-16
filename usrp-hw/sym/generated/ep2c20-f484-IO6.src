@@ -1,0 +1,87 @@
+# This is the template file for creating symbols with tragesym
+# every line starting with '#' is a comment line.
+
+[options]
+# rotate_labels rotates the pintext of top and bottom pins
+# wordswap swaps labels if the pin is on the right side an looks like this:
+# "PB1 (CLK)"
+wordswap=yes
+rotate_labels=yes
+sort_labels=no
+generate_pinseq=yes
+sym_width=2800
+pinwidthvertikal=400
+pinwidthhorizontal=400
+
+[geda_attr]
+# name will be printed in the top of the symbol
+# if you have a device with slots, you'll have to use slot= and slotdef=
+# use comment= if there are special information you want to add
+version=20030525
+name=EP2C20-F484-IO6
+device=EP2C20-F484
+refdes=U?
+footprint=FG484
+description=EP2C20 Cyclone II FPGA
+documentation=http://www.altera.com
+author=mettus
+numslots=0
+#slot=1
+#slotdef=1:
+#slotdef=2:
+#slotdef=3:
+#slotdef=4:
+#comment=
+#comment=
+#comment=
+
+[pins]
+# tabseparated list of pin descriptions
+# pinnr is the physical number of the pin
+# seq is the pinseq= attribute, leave it blank if it doesn't matter
+# type can be (in, out, io, oc, oe, pas, tp, tri, clk, pwr)
+# style can be (line,dot,clk,dotclk,none). none if only want to add a net
+# posit. can be (l,r,t,b) or empty for nets
+# net specifies the name of the Vcc or GND name
+# label represents the pinlabel. 
+#	negation lines can be added with _Q_ 
+#	if you want to add a "_" or "\" use "\_" and "\\" as escape sequences
+#-----------------------------------------------------
+#pinnr	seq	type	style	posit.	net	label	
+#-----------------------------------------------------
+Y18		io	line	l		IO
+V19		io	line	r		IO/_LVDS91N_/INIT\_DONE
+W20		io	line	r		IO/LVDS91P/_nCEO_
+Y19		io	line	l		IO/_LVDS90N_
+Y20		io	line	l		IO/LVDS90P
+U18		io	line	l		IO/_PLL4\_OUTN_
+T18		io	line	l		IO/PLL4\_OUTP
+U19		io	line	l		IO/_LVDS89N_
+V20		io	line	l		IO/LVDS89P
+W21		io	line	l		IO/_LVDS88N_
+W22		io	line	l		IO/LVDS88P
+U20		io	line	l		IO/VREFB6N1
+R17		io	line	l		IO
+Y21		io	line	l		IO/_LVDS87N_
+Y22		io	line	l		IO/LVDS87P
+V21		io	line	l		IO/_LVDS86N_
+V22		io	line	l		IO/LVDS86P
+U21		io	line	l		IO/_LVDS85N_
+U22		io	line	l		IO/LVDS85P
+R18		io	line	l		IO/_LVDS84N_
+R19		io	line	l		IO/LVDS84P
+P17		io	line	l		IO/_LVDS83N_
+P18		io	line	l		IO/LVDS83P
+T21		io	line	l		IO/_LVDS82N_
+T22		io	line	l		IO/LVDS82P
+R21		io	line	l		IO/_LVDS81N_
+R22		io	line	l		IO/LVDS81P
+R20		io	line	l		IO/VREFB6N0
+P15		io	line	l		IO/_LVDS80N_
+N15		io	line	l		IO/LVDS80P
+N21		io	line	l		IO/_LVDS79N_
+N22		io	line	l		IO/LVDS79P
+M19		io	line	l		IO/_LVDS78N_
+M18		io	line	l		IO/LVDS78P
+M21		clk	clk	r		CLK7/_LVDSCLK3N_
+M22		clk	clk	r		CLK6/LVDSCLK3P

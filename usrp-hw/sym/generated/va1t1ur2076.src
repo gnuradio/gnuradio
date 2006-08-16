@@ -1,0 +1,62 @@
+# This is the template file for creating symbols with tragesym
+# every line starting with '#' is a comment line.
+
+[options]
+# rotate_labels rotates the pintext of top and bottom pins
+# wordswap swaps labels if the pin is on the right side an looks like this:
+# "PB1 (CLK)"
+wordswap=yes
+rotate_labels=no
+sort_labels=no
+generate_pinseq=yes
+sym_width=1400
+pinwidthvertikal=400
+pinwidthhorizontal=400
+
+[geda_attr]
+# name will be printed in the top of the symbol
+# if you have a device with slots, you'll have to use slot= and slotdef=
+# use comment= if there are special information you want to add
+version=20030525
+name=VA1T1UR2076
+device=VA1T1UR2076
+refdes=U?
+footprint=VA1T1UR2076
+description=Sharp Microelectronics DTV Tuner
+documentation=http://www.sharpsma.com
+author=mettus
+numslots=0
+#slot=1
+#slotdef=1:
+#slotdef=2:
+#slotdef=3:
+#slotdef=4:
+#comment=
+comment=NC pins -- 1,3
+#comment=
+
+[pins]
+# tabseparated list of pin descriptions
+# pinnr is the physical number of the pin
+# seq is the pinseq= attribute, leave it blank if it doesn't matter
+# type can be (in, out, io, oc, oe, pas, tp, tri, clk, pwr)
+# style can be (line,dot,clk,dotclk,none). none if only want to add a net
+# posit. can be (l,r,t,b) or empty for nets
+# net specifies the name of the Vcc or GND name
+# label represents the pinlabel. 
+#	negation lines can be added with _Q_ 
+#	if you want to add a "_" or "\" use "\_" and "\\" as escape sequences
+#-----------------------------------------------------
+#pinnr	seq	type	style	posit.	net	label	
+#-----------------------------------------------------
+2		pwr	line	l		BB\_5V
+5		pwr	line	l		B1\_5V
+6		pwr	line	l		B2\_5V
+9		out	line	l		BT\_30V\_MON
+4		out	line	l		RFAGC\_MON
+7		io	line	l		SCL
+8		io	line	l		SDA
+10		in	line	l		IFAGC
+11		out	line	r		IFOUT\_P
+12		out	line	r		_IFOUT\_N_
+100		pwr	line	l		GND\_CASE

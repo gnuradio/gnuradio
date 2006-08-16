@@ -1,0 +1,87 @@
+# This is the template file for creating symbols with tragesym
+# every line starting with '#' is a comment line.
+
+[options]
+# rotate_labels rotates the pintext of top and bottom pins
+# wordswap swaps labels if the pin is on the right side an looks like this:
+# "PB1 (CLK)"
+wordswap=yes
+rotate_labels=no
+sort_labels=no
+generate_pinseq=yes
+sym_width=1400
+pinwidthvertikal=400
+pinwidthhorizontal=400
+
+[geda_attr]
+# name will be printed in the top of the symbol
+# if you have a device with slots, you'll have to use slot= and slotdef=
+# use comment= if there are special information you want to add
+version=20030525
+name=AD9510-PWR
+device=AD9510
+refdes=U?
+footprint=LFCSP64
+description=Clock Divider and PLL
+documentation=http://www.analog.com
+author=mettus
+numslots=0
+#slot=1
+#slotdef=1:
+#slotdef=2:
+#slotdef=3:
+#slotdef=4:
+comment=AD9510
+comment=Part 1 of 5
+#comment=
+
+[pins]
+# tabseparated list of pin descriptions
+# pinnr is the physical number of the pin
+# seq is the pinseq= attribute, leave it blank if it doesn't matter
+# type can be (in, out, io, oc, oe, pas, tp, tri, clk, pwr)
+# style can be (line,dot,clk,dotclk,none). none if only want to add a net
+# posit. can be (l,r,t,b) or empty for nets
+# net specifies the name of the Vcc or GND name
+# label represents the pinlabel. 
+#	negation lines can be added with _Q_ 
+#	if you want to add a "_" or "\" use "\_" and "\\" as escape sequences
+#-----------------------------------------------------
+#pinnr	seq	type	style	posit.	net	label	
+#-----------------------------------------------------
+4		pwr	line	l		VS
+9		pwr	line	l		VS
+13		pwr	line	l		VS
+23		pwr	line	l		VS
+26		pwr	line	l		VS
+30		pwr	line	l		VS
+31		pwr	line	l		VS
+33		pwr	line	l		VS
+36		pwr	line	l		VS
+37		pwr	line	l		VS
+40		pwr	line	l		VS
+41		pwr	line	l		VS
+44		pwr	line	l		VS
+45		pwr	line	l		VS
+48		pwr	line	l		VS
+51		pwr	line	l		VS
+52		pwr	line	l		VS
+56		pwr	line	l		VS
+59		pwr	line	l		VS
+60		pwr	line	l		VS
+64		pwr	line	l		VS
+5		pwr	line	l		Vcp
+3		pwr	line	r		GND
+7		pwr	line	r		GND
+8		pwr	line	r		GND
+12		pwr	line	r		GND
+22		pwr	line	r		GND
+27		pwr	line	r		GND
+32		pwr	line	r		GND
+49		pwr	line	r		GND
+50		pwr	line	r		GND
+55		pwr	line	r		GND
+62		pwr	line	r		GND
+65		pwr	line	r		GND\_EP
+61		in	line	b		RSET
+63		in	line	b		CPRSET

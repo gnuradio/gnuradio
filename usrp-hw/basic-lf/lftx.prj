@@ -1,0 +1,6 @@
+# List all schematics
+schematics lftx.sch
+
+output-name lftx
+
+elements-dir ../pkg/newlib

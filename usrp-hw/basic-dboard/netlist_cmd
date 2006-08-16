@@ -1,0 +1,6 @@
+gsch2pcb rxmod.prj
+gnetlist -g partslist3 -o rxmod.bom rxmod.sch
+
+gsch2pcb txmod.prj
+gnetlist -g partslist3 -o txmod.bom txmod.sch
+

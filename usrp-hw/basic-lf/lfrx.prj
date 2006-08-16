@@ -1,0 +1,6 @@
+# List all schematics
+schematics lfrx.sch
+
+output-name lfrx
+
+elements-dir ../pkg/newlib

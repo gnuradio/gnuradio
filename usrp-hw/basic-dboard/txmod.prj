@@ -1,0 +1,6 @@
+# List all schematics
+schematics txmod.sch
+
+output-name txmod
+
+elements-dir ./pkg/newlib

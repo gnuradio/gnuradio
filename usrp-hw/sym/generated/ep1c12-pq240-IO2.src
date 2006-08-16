@@ -1,0 +1,93 @@
+# This is the template file for creating symbols with tragesym
+# every line starting with '#' is a comment line.
+
+[options]
+# rotate_labels rotates the pintext of top and bottom pins
+# wordswap swaps labels if the pin is on the right side an looks like this:
+# "PB1 (CLK)"
+wordswap=yes
+rotate_labels=yes
+sort_labels=no
+generate_pinseq=yes
+sym_width=1400
+pinwidthvertikal=400
+pinwidthhorizontal=400
+
+[geda_attr]
+# name will be printed in the top of the symbol
+# if you have a device with slots, you'll have to use slot= and slotdef=
+# use comment= if there are special information you want to add
+version=20030525
+name=EP1C12-PQ240-IO2
+device=EP1C12-PQ240
+refdes=U?
+footprint=PQ240
+description=Altera Cyclone EP1C12
+documentation=NA
+author=mettus
+numslots=0
+#slot=1
+#slotdef=1:
+#slotdef=2:
+#slotdef=3:
+#slotdef=4:
+comment=Part 7 of 9
+#comment=
+#comment=
+
+[pins]
+# tabseparated list of pin descriptions
+# pinnr is the physical number of the pin
+# seq is the pinseq= attribute, leave it blank if it doesn't matter
+# type can be (in, out, io, oc, oe, pas, tp, tri, clk, pwr)
+# style can be (line,dot,clk,dotclk,none). none if only want to add a net
+# posit. can be (l,r,t,b) or empty for nets
+# net specifies the name of the Vcc or GND name
+# label represents the pinlabel. 
+#	negation lines can be added with _Q_ 
+#	if you want to add a "_" or "\" use "\_" and "\\" as escape sequences
+#-----------------------------------------------------
+#pinnr	seq	type	style	posit.	net	label	
+#-----------------------------------------------------
+181		io	line	l		IO
+182		io	line	l		IO
+183		io	line	l		IO
+184		io	line	l		IO
+185		io	line	l		IO
+186		io	line	l		IO
+187		io	line	l		IO
+188		io	line	l		IO
+193		io	line	l		IO
+194		io	line	l		IO
+195		io	line	l		IO
+196		io	line	l		IO
+197		io	line	l		IO
+200		io	line	l		IO
+201		io	line	l		IO
+202		io	line	l		IO
+203		io	line	l		IO
+206		io	line	l		IO
+207		io	line	l		IO
+208		io	line	l		IO
+213		io	line	l		IO
+214		io	line	l		IO
+215		io	line	l		IO
+216		io	line	l		IO
+217		io	line	l		IO
+218		io	line	l		IO
+219		io	line	l		IO
+222		io	line	l		IO
+223		io	line	l		IO
+224		io	line	l		IO
+225		io	line	l		IO
+226		io	line	l		IO
+227		io	line	l		IO
+228		io	line	l		IO
+233		io	line	l		IO
+234		io	line	l		IO
+235		io	line	l		IO
+236		io	line	l		IO
+237		io	line	l		IO
+238		io	line	l		IO
+239		io	line	l		DEV\_OE/IO
+240		io	line	l		_DEV\CLRn_/IO

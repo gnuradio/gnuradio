@@ -1,0 +1,69 @@
+# This is the template file for creating symbols with tragesym
+# every line starting with '#' is a comment line.
+
+[options]
+# rotate_labels rotates the pintext of top and bottom pins
+# wordswap swaps labels if the pin is on the right side an looks like this:
+# "PB1 (CLK)"
+wordswap=yes
+rotate_labels=yes
+sort_labels=no
+generate_pinseq=yes
+sym_width=1400
+pinwidthvertikal=400
+pinwidthhorizontal=400
+
+[geda_attr]
+# name will be printed in the top of the symbol
+# if you have a device with slots, you'll have to use slot= and slotdef=
+# use comment= if there are special information you want to add
+version=20030525
+name=MAX282X-CTRL
+device=MAX282X
+refdes=U?
+footprint=TQFN56
+description=Maxim 2.4 and 5 GHz transceiver
+documentation=http://www.maxim-ic.com
+author=mettus
+numslots=0
+#slot=1
+#slotdef=1:
+#slotdef=2:
+#slotdef=3:
+#slotdef=4:
+comment=Part 2 of 4
+#comment=
+#comment=
+
+[pins]
+# tabseparated list of pin descriptions
+# pinnr is the physical number of the pin
+# seq is the pinseq= attribute, leave it blank if it doesn't matter
+# type can be (in, out, io, oc, oe, pas, tp, tri, clk, pwr)
+# style can be (line,dot,clk,dotclk,none). none if only want to add a net
+# posit. can be (l,r,t,b) or empty for nets
+# net specifies the name of the Vcc or GND name
+# label represents the pinlabel. 
+#	negation lines can be added with _Q_ 
+#	if you want to add a "_" or "\" use "\_" and "\\" as escape sequences
+#-----------------------------------------------------
+#pinnr	seq	type	style	posit.	net	label	
+#-----------------------------------------------------
+26		in	line	r		DIN
+27		in	clk	r		SCLK
+28		in	line	r		_CS_
+30		in	line	b		Rosc
+33		out	line	b		CPout
+36		in	line	b		Tune
+39		in	line	l		_SHDN_
+41		in	line	l		RXENA
+13		in	line	l		TXENA
+42		in	line	l		RXHP
+29		out	line	l		LD
+48		in	line	l		B1
+50		in	line	l		B2
+53		in	line	l		B3
+54		in	line	l		B4
+56		in	line	l		B5
+1		in	line	l		B6
+3		in	line	l		B7

@@ -1,0 +1,6 @@
+gsch2pcb lfrx.prj
+gnetlist -g partslist3 -o lfrx.bom lfrx.sch
+
+gsch2pcb lftx.prj
+gnetlist -g partslist3 -o lftx.bom lftx.sch
+

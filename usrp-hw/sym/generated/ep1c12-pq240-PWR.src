@@ -1,0 +1,105 @@
+# This is the template file for creating symbols with tragesym
+# every line starting with '#' is a comment line.
+
+[options]
+# rotate_labels rotates the pintext of top and bottom pins
+# wordswap swaps labels if the pin is on the right side an looks like this:
+# "PB1 (CLK)"
+wordswap=yes
+rotate_labels=yes
+sort_labels=yes
+generate_pinseq=yes
+sym_width=1800
+pinwidthvertikal=400
+pinwidthhorizontal=400
+
+[geda_attr]
+# name will be printed in the top of the symbol
+# if you have a device with slots, you'll have to use slot= and slotdef=
+# use comment= if there are special information you want to add
+version=20030525
+name=EP1C12-PQ240-PWR
+device=EP1C12-PQ240
+refdes=U?
+footprint=PQ240
+description=Altera Cyclone EP1C12
+documentation=NA
+author=mettus
+numslots=0
+#slot=1
+#slotdef=1:
+#slotdef=2:
+#slotdef=3:
+#slotdef=4:
+comment=Part 1 of 9
+#comment=
+#comment=
+
+[pins]
+# tabseparated list of pin descriptions
+# pinnr is the physical number of the pin
+# seq is the pinseq= attribute, leave it blank if it doesn't matter
+# type can be (in, out, io, oc, oe, pas, tp, tri, clk, pwr)
+# style can be (line,dot,clk,dotclk,none). none if only want to add a net
+# posit. can be (l,r,t,b) or empty for nets
+# net specifies the name of the Vcc or GND name
+# label represents the pinlabel. 
+#	negation lines can be added with _Q_ 
+#	if you want to add a "_" or "\" use "\_" and "\\" as escape sequences
+#-----------------------------------------------------
+#pinnr	seq	type	style	posit.	net	label	
+#-----------------------------------------------------
+9		pwr	line	l		VCCIO1
+10		pwr	line	r		GND
+22		pwr	line	l		VCCIO1
+27		pwr	line	l		VCCA\_PLL1
+30		pwr	line	r		GNDA\_PLL1
+31		pwr	line	r		GNDG\_PLL1
+40		pwr	line	r		GND
+51		pwr	line	l		VCCIO1
+52		pwr	line	r		GND
+69		pwr	line	r		GND
+70		pwr	line	l		VCCIO4
+71		pwr	line	r		GND
+72		pwr	line	l		VCCINT
+80		pwr	line	r		GND
+81		pwr	line	l		VCCINT
+89		pwr	line	r		GND
+90		pwr	line	l		VCCINT
+91		pwr	line	r		GND
+92		pwr	line	l		VCCIO4
+96		pwr	line	r		GND
+97		pwr	line	l		VCCINT
+102		pwr	line	r		GND
+103		pwr	line	l		VCCINT
+109		pwr	line	r		GND
+110		pwr	line	l		VCCINT
+111		pwr	line	r		GND
+112		pwr	line	l		VCCIO4
+129		pwr	line	r		GND
+130		pwr	line	l		VCCIO3
+142		pwr	line	r		GND
+150		pwr	line	r		GNDG\_PLL2
+151		pwr	line	r		GNDA\_PLL2
+154		pwr	line	l		VCCA\_PLL2
+157		pwr	line	l		VCCIO3
+171		pwr	line	r		GND
+172		pwr	line	l		VCCIO3
+189		pwr	line	l		VCCIO2
+190		pwr	line	r		GND
+191		pwr	line	l		VCCINT
+192		pwr	line	r		GND
+198		pwr	line	l		VCCINT
+199		pwr	line	r		GND
+204		pwr	line	l		VCCINT
+205		pwr	line	r		GND
+209		pwr	line	l		VCCIO2
+210		pwr	line	r		GND
+211		pwr	line	l		VCCINT
+212		pwr	line	r		GND
+220		pwr	line	l		VCCINT
+221		pwr	line	r		GND
+229		pwr	line	l		VCCINT
+230		pwr	line	r		GND
+231		pwr	line	l		VCCIO2
+232		pwr	line	r		GND

@@ -1,0 +1,6 @@
+# List all schematics
+schematics rxmod.sch
+
+output-name rxmod
+
+elements-dir ./pkg/newlib

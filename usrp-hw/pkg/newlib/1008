@@ -1,0 +1,28 @@
+#  Examining Arg = -v
+#  Examining Arg = x=100
+#  Found (x, 100) in argument list
+#  Examining Arg = y=40
+#  Found (y, 40) in argument list
+#  Examining Arg = g=50
+#  Found (g, 50) in argument list
+#  Examining Arg = l=115
+#  Found (l, 115) in argument list
+#  Examining Arg = w=110
+#  Found (w, 110) in argument list
+#  Examining Arg = description=SMD_1008
+#  Found (description, SMD_1008) in argument list
+Element[0x00000000 "SMD_1008" "" "" 0 0 0 0 3 100 0x00000000]
+(
+#  Part input parameters: w=110, l=115, x=100, y=40, g=50 
+# Pad is higher than wide, so draw pad line vertically.
+#  Create two pads.
+   Pad(-45 -30 -45 30 40 20 48 "Pad_1" "1" 0x00000100)
+   Pad(45 -30 45 30 40 20 48 "Pad_2" "2" 0x00000100)
+# Using maximum pad size def for .
+# Using maximum pad size def for w.
+#  Create package body outline on silk layer.
+   ElementLine(-91 -76 91 -76 12)
+   ElementLine(-91 76 91 76 12)
+   ElementLine(-91 -76 -91 76 12)
+   ElementLine(91 -76 91 76 12)
+)

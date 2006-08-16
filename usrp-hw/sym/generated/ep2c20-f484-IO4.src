@@ -1,0 +1,91 @@
+# This is the template file for creating symbols with tragesym
+# every line starting with '#' is a comment line.
+
+[options]
+# rotate_labels rotates the pintext of top and bottom pins
+# wordswap swaps labels if the pin is on the right side an looks like this:
+# "PB1 (CLK)"
+wordswap=yes
+rotate_labels=yes
+sort_labels=no
+generate_pinseq=yes
+sym_width=2800
+pinwidthvertikal=400
+pinwidthhorizontal=400
+
+[geda_attr]
+# name will be printed in the top of the symbol
+# if you have a device with slots, you'll have to use slot= and slotdef=
+# use comment= if there are special information you want to add
+version=20030525
+name=EP2C20-F484-IO4
+device=EP2C20-F484
+refdes=U?
+footprint=FG484
+description=EP2C20 Cyclone II FPGA
+documentation=http://www.altera.com
+author=mettus
+numslots=0
+#slot=1
+#slotdef=1:
+#slotdef=2:
+#slotdef=3:
+#slotdef=4:
+#comment=
+#comment=
+#comment=
+
+[pins]
+# tabseparated list of pin descriptions
+# pinnr is the physical number of the pin
+# seq is the pinseq= attribute, leave it blank if it doesn't matter
+# type can be (in, out, io, oc, oe, pas, tp, tri, clk, pwr)
+# style can be (line,dot,clk,dotclk,none). none if only want to add a net
+# posit. can be (l,r,t,b) or empty for nets
+# net specifies the name of the Vcc or GND name
+# label represents the pinlabel. 
+#	negation lines can be added with _Q_ 
+#	if you want to add a "_" or "\" use "\_" and "\\" as escape sequences
+#-----------------------------------------------------
+#pinnr	seq	type	style	posit.	net	label	
+#-----------------------------------------------------
+C18		io	line	l		IO/_LVDS61N_
+C17		io	line	l		IO/LVDS61P
+B20		io	line	l		IO/_LVDS60N_
+A20		io	line	l		IO/LVDS60P
+B19		io	line	l		IO/_LVDS59N_
+A19		io	line	l		IO/LVDS59P
+B18		io	line	l		IO/_LVDS58N_
+A18		io	line	l		IO/LVDS58P
+G16		io	line	l		IO/_LVDS57N_
+H15		io	line	l		IO/LVDS57P
+C16		io	line	l		IO/VREFB4N0
+D16		io	line	l		IO/_LVDS56N_
+E15		io	line	l		IO/LVDS56P
+H14		io	line	l		IO/_LVDS55N_
+J14		io	line	l		IO/LVDS55P
+D15		io	line	l		IO/_LVDS54N_
+C14		io	line	l		IO/LVDS54P
+G15		io	line	l		IO/_LVDS53N_
+F15		io	line	l		IO/LVDS53P
+H13		io	line	l		IO
+B17		io	line	l		IO/_LVDS52N_
+A17		io	line	l		IO/LVDS52P
+E14		io	line	l		IO/_LVDS51N_
+D14		io	line	l		IO/LVDS51P
+F14		io	line	l		IO/_LVDS50N_
+F13		io	line	l		IO/LVDS50P
+B16		io	line	l		IO/_LVDS49N_
+A16		io	line	l		IO/LVDS49P
+B15		io	line	l		IO/_LVDS48N_
+A15		io	line	l		IO/LVDS48P
+H12		io	line	l		IO
+C13		io	line	l		IO/VREFB4N1
+F12		io	line	l		IO/_LVDS47N_
+G12		io	line	l		IO/LVDS47P
+B14		io	line	l		IO/_LVDS46N_
+A14		io	line	l		IO/LVDS46P
+B13		io	line	l		IO/_LVDS45N_
+A13		io	line	l		IO/LVDS45P
+B12		io	line	r		CLK8/_LVDSCLK4N_
+A12		io	line	r		CLK9/LVDSCLK4P

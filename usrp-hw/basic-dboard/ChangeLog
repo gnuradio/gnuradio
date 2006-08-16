@@ -1,0 +1,25 @@
+2004-12-29  Matt Ettus <matt@ettus.com>
+
+	* txmod.pcb, rxmod.pcb :
+		- Enlarged logic analyzer pins
+		- Added lots of silkscreen text
+		- Moved txmod mounting hole to match MBoard
+
+2004-11-05  Matt Ettus <matt@ettus.com>
+
+	* txmod.pcb, rxmod.pcb :
+		- Enlarged and rerouted to fit the final USRP
+		
+2004-10-08  Matt Ettus <matt@ettus.com>
+
+	* txmod.sch : 
+		- Removed net SIGDEL and SIGDEL_FILT
+		- Filtering performed on mboard, so removing C38, C39, R30, R31
+		- Tool changed format a little on Text items
+
+	* rxmod.sch :
+		- Removed SIGDEL and SIGDEL_FILT
+		- Removed R1, R2, C20, C21 for same reason as above
+		- Tool changed format a little on Text items
+
+	* NB: Still need to make RX and TX connectors match

@@ -1,0 +1,75 @@
+# This is the template file for creating symbols with tragesym
+# every line starting with '#' is a comment line.
+
+[options]
+# rotate_labels rotates the pintext of top and bottom pins
+# wordswap swaps labels if the pin is on the right side an looks like this:
+# "PB1 (CLK)"
+wordswap=yes
+rotate_labels=yes
+sort_labels=yes
+generate_pinseq=yes
+sym_width=1400
+pinwidthvertikal=400
+pinwidthhorizontal=400
+
+[geda_attr]
+# name will be printed in the top of the symbol
+# if you have a device with slots, you'll have to use slot= and slotdef=
+# use comment= if there are special information you want to add
+version=20030525
+name=CY7C68013-TQ100-PWR
+device=CY7C68013-TQ100
+refdes=U?
+footprint=TQFP100
+description=Cypress FX2 USB2 Interface
+documentation=NA
+author=mettus
+numslots=0
+#slot=1
+#slotdef=1:
+#slotdef=2:
+#slotdef=3:
+#slotdef=4:
+comment=Part 1 of 7
+#comment=
+#comment=
+
+[pins]
+# tabseparated list of pin descriptions
+# pinnr is the physical number of the pin
+# seq is the pinseq= attribute, leave it blank if it doesn't matter
+# type can be (in, out, io, oc, oe, pas, tp, tri, clk, pwr)
+# style can be (line,dot,clk,dotclk,none). none if only want to add a net
+# posit. can be (l,r,t,b) or empty for nets
+# net specifies the name of the Vcc or GND name
+# label represents the pinlabel. 
+#	negation lines can be added with _Q_ 
+#	if you want to add a "_" or "\" use "\_" and "\\" as escape sequences
+#-----------------------------------------------------
+#pinnr	seq	type	style	posit.	net	label	
+#-----------------------------------------------------
+1		pwr	line	l		VCC
+2		pwr	line	r		GND
+9		pwr	line	l		AVCC
+12		pwr	line	r		AGND
+16		pwr	line	l		VCC
+19		pwr	line	r		GND
+20		pwr	line	l		VCC
+21		pwr	line	r		GND
+33		pwr	line	l		VCC
+38		pwr	line	l		VCC
+39		pwr	line	r		GND
+48		pwr	line	r		GND
+49		pwr	line	l		VCC
+50		pwr	line	r		GND
+53		pwr	line	l		VCC
+65		pwr	line	r		GND
+66		pwr	line	l		VCC
+75		pwr	line	r		GND
+78		pwr	line	l		VCC
+85		pwr	line	l		VCC
+94		pwr	line	r		GND
+99		pwr	line	r		GND
+
+
