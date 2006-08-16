@@ -162,7 +162,7 @@ GRC_GR_AUDIO_PORTAUDIO		dnl ***NOT TESTED***
 GRC_GR_AUDIO_WINDOWS		dnl ***NOT TESTED***
 GRC_GR_ATSC
 GRC_GR_COMEDI
-dnl GRC_GR_ERROR_CORRECTING_CODES  dnl disabled until fix for ticket:25
+GRC_GR_ERROR_CORRECTING_CODES  dnl disabled until fix for ticket:25
 GRC_GR_GSM_FR_VOCODER
 GRC_GR_RADAR
 GRC_GR_RADIO_ASTRONOMY
@@ -170,7 +170,7 @@ GRC_GR_VIDEO_SDL
 GRC_GR_WXGUI
 GRC_PMT
 GRC_GR_TRELLIS
-GRC_EZDOP
+#GRC_EZDOP
 GRC_GR_EZDOP			dnl this must come after GRC_EZDOP
 
 dnl Has list of successfully configured components

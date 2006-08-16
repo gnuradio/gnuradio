@@ -33,7 +33,7 @@ EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
 LOCAL_IFILES = 				\
-	audio_portaudio.i				
+	$(top_srcdir)/gr-audio-portaudio/src/audio_portaudio.i
 
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
@@ -82,7 +82,7 @@ _audio_portaudio_la_LIBADD = 		\
 _audio_portaudio_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
 audio_portaudio.cc audio_portaudio.py: $(ALL_IFILES) audio_portaudio_sink.h audio_portaudio_source.h
-	$(SWIG) $(SWIGPYTHONARGS) -module audio_portaudio -o audio_portaudio.cc $<
+	$(SWIG) $(SWIGPYTHONARGS) -module audio_portaudio -o audio_portaudio.cc $(LOCAL_IFILES)
 
 
 noinst_PYTHON = 			\

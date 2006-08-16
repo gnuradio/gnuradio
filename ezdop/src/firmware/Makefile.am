@@ -28,33 +28,22 @@ OBJCOPY=$(AVROBJCOPY)
 # What's defined for rest of project not good for avr-gcc (no -pthread for instance)
 override CFLAGS=
 
-noinst_PROGRAMS = \
-    dopctrl.elf \
-    dopctrl.hex  
+noinst_PROGRAMS = dopctrl.elf dopctrl.hex  
       
 EXTRA_DIST = \
     dopctrl.hex
 
-dopctrl_elf_CFLAGS=-mmcu=atmega8 -funsigned-char -funsigned-bitfields \
-                   -fpack-struct -fshort-enums -Wall -Wstrict-prototypes \
-                   -Wa,-adhlns=$(<:.c=.lst)
+dopctrl_elf_CFLAGS=-mmcu=atmega8 -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -Wall -Wstrict-prototypes -Wa,-adhlns=$(<:.c=.lst)
 
-dopctrl_elf_SOURCES = \
-    dopctrl.c
+dopctrl_elf_SOURCES = dopctrl.c
     
-#dopctrl_elfdir = $(includedir)
-
-include_HEADERS = \
-    dopctrl.h
-
-%.hex: %.elf
-	$(OBJCOPY) -O ihex -R .eeprom $< $@
+include_HEADERS = dopctrl.h
 
 dopctrl.hex : dopctrl.elf
-
+	$(OBJCOPY) -O ihex -R .eeprom dopctrl.elf dopctrl.hex
+	
 install-data-local:
 	$(INSTALL_DATA) -D $(top_builddir)/ezdop/src/firmware/dopctrl.hex $(DESTDIR)$(datadir)/dopctrl.hex
 
 uninstall-local:
 	$(RM) $(DESTDIR)$(datadir)/dopctrl.hex
-    

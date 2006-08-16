@@ -50,7 +50,7 @@ NON_LOCAL_IFILES =			\
 
 
 LOCAL_IFILES = 				\
-	ezdop.i				
+	$(top_srcdir)/gr-ezdop/src/lib/ezdop.i				
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _ezdop shared library
@@ -83,7 +83,7 @@ _ezdop_la_LIBADD = 			\
 	-lstdc++			
 
 ezdop.cc ezdop.py: $(ALL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module ezdop -o ezdop.cc $<
+	$(SWIG) $(SWIGPYTHONARGS) -module ezdop -o ezdop.cc $(LOCAL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\

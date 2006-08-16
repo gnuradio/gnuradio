@@ -33,7 +33,7 @@ EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
 LOCAL_IFILES = 				\
-	audio_jack.i				
+	$(top_srcdir)/gr-audio-jack/src/audio_jack.i				
 
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
@@ -82,9 +82,8 @@ _audio_jack_la_LIBADD = 		\
 
 _audio_jack_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
-audio_jack.cc audio_jack.py: audio_jack.i $(NON_LOCAL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module audio_jack -o audio_jack.cc $<
-
+audio_jack.cc audio_jack.py: $(LOCAL_IFILES) $(NON_LOCAL_IFILES)
+	$(SWIG) $(SWIGPYTHONARGS) -module audio_jack -o audio_jack.cc $(LOCAL_IFILES)
 
 noinst_PYTHON = 			\
 	qa_jack.py			

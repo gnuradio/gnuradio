@@ -35,20 +35,20 @@ INCLUDES = $(PYTHON_CPPFLAGS) $(STD_DEFINES_AND_INCLUDES)
 SWIGCPPPYTHONARGS = -fvirtual -python -modern $(PYTHON_CPPFLAGS) \
 	$(STD_DEFINES_AND_INCLUDES)
 
-ALL_IFILES = $(LOCAL_IFILES) $(NON_LOCAL_IFILES)
-
 NON_LOCAL_IFILES = $(GNURADIO_I)
 
-LOCAL_IFILES = 						\
-	ecc_syms_to_metrics.i				\
-	ecc_metrics_decode_viterbi_full_block.i		\
-	ecc_streams_encode_convolutional.i		\
-	ecc_streams_encode_turbo.i			\
-	ecc.i
+LOCAL_IFILES = \
+	$(top_srcdir)/gr-error-correcting-codes/src/lib/ecc_syms_to_metrics.i \
+	$(top_srcdir)/gr-error-correcting-codes/src/lib/ecc_metrics_decode_viterbi_full_block.i		\
+	$(top_srcdir)/gr-error-correcting-codes/src/lib/ecc_streams_encode_convolutional.i		\
+	$(top_srcdir)/gr-error-correcting-codes/src/lib/ecc_streams_encode_turbo.i			\
+	$(top_srcdir)/gr-error-correcting-codes/src/lib/ecc.i
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _howto shared library
 # and knows how to call our extensions.
+
+ALL_IFILES = $(LOCAL_IFILES) $(NON_LOCAL_IFILES)
 
 BUILT_SOURCES = 	\
 	ecc.cc		\
@@ -89,8 +89,8 @@ grinclude_HEADERS =					\
 # These swig headers get installed in ${prefix}/include/gnuradio/swig
 swiginclude_HEADERS = $(LOCAL_IFILES)
 
-ecc.cc ecc.py: ecc.i $(ALL_IFILES)
-	$(SWIG) $(SWIGCPPPYTHONARGS) -module ecc -o ecc.cc $<
+ecc.cc ecc.py: $(top_srcdir)/gr-error-correcting-codes/src/lib/ecc.i $(ALL_IFILES)
+	$(SWIG) $(SWIGCPPPYTHONARGS) -module ecc -o ecc.cc $(top_srcdir)/gr-error-correcting-codes/src/lib/ecc.i
 
 MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc *.loT *~
 

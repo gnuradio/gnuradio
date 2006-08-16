@@ -33,7 +33,7 @@ EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
 LOCAL_IFILES = 				\
-	comedi.i				
+	$(top_srcdir)/gr-comedi/src/comedi.i				
 
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
@@ -81,8 +81,8 @@ _comedi_la_LIBADD = 		\
 
 _comedi_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
-comedi.cc comedi.py: comedi.i
-	$(SWIG) $(SWIGCPPPYTHONARGS) -module comedi -o comedi.cc $<
+comedi.cc comedi.py: $(LOCAL_IFILES)
+	$(SWIG) $(SWIGCPPPYTHONARGS) -module comedi -o comedi.cc $(LOCAL_IFILES)
 
 
 noinst_PYTHON = 		\

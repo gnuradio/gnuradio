@@ -33,7 +33,7 @@ EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
 LOCAL_IFILES = 				\
-	audio_alsa.i				
+	$(top_srcdir)/gr-audio-alsa/src/audio_alsa.i				
 
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
@@ -80,9 +80,8 @@ _audio_alsa_la_LIBADD = 		\
 
 _audio_alsa_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
-audio_alsa.cc audio_alsa.py: audio_alsa.i $(NON_LOCAL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module audio_alsa -o audio_alsa.cc $<
-
+audio_alsa.cc audio_alsa.py: $(LOCAL_IFILES) $(NON_LOCAL_IFILES)
+	$(SWIG) $(SWIGPYTHONARGS) -module audio_alsa -o audio_alsa.cc $(LOCAL_IFILES)
 
 noinst_PYTHON = 			\
 	qa_alsa.py			

@@ -40,7 +40,7 @@ NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
 
 LOCAL_IFILES = 				\
-	ra.i				
+	$(top_srcdir)/gr-radio-astronomy/src/lib/ra.i				
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _howto shared library
@@ -70,8 +70,8 @@ _ra_la_LIBADD = 			\
 	$(GNURADIO_CORE_LIBS)		\
 	-lstdc++			
 
-ra.cc ra.py: ra.i $(ALL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module ra -o ra.cc $<
+ra.cc ra.py: $(ALL_IFILES)
+	$(SWIG) $(SWIGPYTHONARGS) -module ra -o ra.cc $(LOCAL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =
