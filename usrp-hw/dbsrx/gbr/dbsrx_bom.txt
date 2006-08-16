@@ -1,0 +1,41 @@
+# $Id$
+# PcbBOM Version 1.0
+# Date: Thu Apr 28 23:14:29 2005 UTC
+# Author: Matt Ettus
+# Title: RX Daughterboard - PCB BOM
+# Quantity, Description, Value, RefDes
+# --------------------------------------------
+1,"0603","NONE",R22 
+1,"0603","10",R193 
+8,"0603","250,_0.1%",R18 R65 R17 R67 R66 R68 R20 R19 
+4,"0603","22pF",C66 C86 C67 C85 
+1,"SMA_VERT","unknown",J3 
+11,"0603",".1uF",C184 C183 C187 C27 C24 C69 C68 C63 C61 C84 C100 
+1,"EIA6032","22uF",C182 
+1,"SOT223","unknown",U2 
+2,"0603",".01uF",C87 C83 
+10,"0603","1000pF",C124 C28 C81 C80 C75 C78 C79 C76 C77 C74 
+1,"SOT23","unknown",Q1 
+1,"0603","4.7",R12 
+1,"0603","75",R11 
+1,"0603","22nH",L98 
+5,"0603","100pF",C97 C64 C65 C25 C26 
+4,"0603","47pF",C96 C72 C73 C99 
+2,"1206","unknown",L601 L600 
+2,"0603",".22uF",C71 C70 
+1,"0603","86.6",R40 
+5,"0603","50",R93 R71 R16 R15 R10 
+1,"0603","10nF",C98 
+1,"0603","200pF",C261 
+4,"0603","1K",R21 R13 R7 R6 
+1,"EIA6032","100uF",C82 
+3,"SO8","unknown",U1 U5 U6 
+2,"CONNECTOR-8-2","unknown",J24 J25 
+1,"0603","2.21K",R14 
+1,"SC70_6","unknown",U4 
+1,"0603","39nH",L100 
+1,"QFN40_6_EP","unknown",U3 
+1,"PMC-REVERSE","unknown",J2 
+1,"CONNECTOR-1-2","unknown",J100 
+1,"0603","43.2",R9 
+1,"0603","3300pF",C59 
