@@ -270,7 +270,7 @@ qa_encoder_convolutional_ic1_ic1::t1
 // start state is 0, same feedback, no termination
 
 const static int t2_code_generator[] = {1, 0, 0, 1, 5, 6};
-const static size_t t2_code_feedback[] = {0, 0, 0, 0, 7, 7};
+const static int t2_code_feedback[] = {0, 0, 0, 0, 7, 7};
 const static int t2_encode_soai = 1;
 
 const static char t2_in_0[] =
@@ -1285,7 +1285,7 @@ qa_encoder_convolutional_ic1_ic1::t24
 // start state is 0, same feedback, no termination
 
 const static int t25_code_generator[] = {1, 0, 0, 1, 5, 6};
-const static size_t t25_code_feedback[] = {0, 0, 0, 0, 7, 7};
+const static int t25_code_feedback[] = {0, 0, 0, 0, 7, 7};
 const static int t25_encode_soai = 1;
 
 const static char t25_in_0[] =
