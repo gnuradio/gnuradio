@@ -169,6 +169,7 @@ GRC_GR_RADIO_ASTRONOMY
 GRC_GR_VIDEO_SDL
 GRC_GR_WXGUI
 GRC_PMT
+GRC_MBLOCK			dnl this must come after GRC_PMT
 GRC_GR_TRELLIS
 dnl GRC_EZDOP			dnl disable until grc_ezdop.m4 fixed
 dnl GRC_GR_EZDOP		dnl this must come after GRC_EZDOP

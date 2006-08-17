@@ -68,6 +68,9 @@ USRP_INCLUDES = -I$(top_srcdir)/usrp/host/lib \
 USRP_LIBS = -L$(top_builddir)/usrp/host/lib \
 	    -lusrp
 
+PMT_INCLUDES = -I$(top_srcdir)/pmt/src/lib
+PMT_LIBS = -L$(top_builddir)/pmt/src/lib -lpmt
+
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.
 STD_DEFINES_AND_INCLUDES=$(DEFINES) $(GNURADIO_INCLUDES) $(BOOST_CFLAGS)

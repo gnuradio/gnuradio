@@ -49,6 +49,7 @@ m4macros = \
 	grc_gr_usrp.m4 \
 	grc_gr_video_sdl.m4 \
 	grc_gr_wxgui.m4 \
+	grc_mblock.m4 \
 	gr_check_createfilemapping.m4 \
 	gr_check_mc4020.m4 \
 	gr_check_shm_open.m4 \
