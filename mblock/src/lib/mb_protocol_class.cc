@@ -37,6 +37,12 @@ mb_protocol_class::mb_protocol_class(pmt_t name, pmt_t incoming, pmt_t outgoing)
 {
 }
 
+mb_protocol_class::~mb_protocol_class()
+{
+  // NOP
+}
+
+
 mb_protocol_class_sptr
 mb_protocol_class::conj() const
 {
