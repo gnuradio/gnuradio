@@ -33,24 +33,30 @@ AC_DEFUN([GRC_EZDOP],[
 
     succeeded=yes
 
-    AC_PATH_PROG(AVRGCC, [avr-gcc -v], no)
-    if test $AVRGCC = no; then
+    # Firmware build requires Atmel AVR microcontroller port of GCC
+    AC_PATH_PROG([AVRGCC], [avr-gcc -v], [no])
+    if test x$AVRGCC = xno; then
     	succeeded=no
     fi
     
-    AC_PATH_PROG(AVROBJCOPY, [avr-objcopy], no)
-    if test $AVROBJCOPY = no; then
+    # ...and binutils
+    AC_PATH_PROG([AVROBJCOPY], [avr-objcopy], [no])
+    if test x$AVROBJCOPY = xno; then
     	succeeded=no
     fi
     
+    # ...and standard library (test not working yet)
+    #AC_CHECK_HEADERS([avr/io.h],[],[succeeded=no])
+
+    # Device access is via libftdi
     AC_LANG_PUSH(C)
     AC_CHECK_HEADERS([ftdi.h],[],[succeeded=no])
     save_LIBS="$LIBS"
-    AC_SEARCH_LIBS(ftdi_init, [ftdi],[FTDI_LIBS="$LIBS"],[succeeded=no])
+    AC_SEARCH_LIBS([ftdi_init], [ftdi],[FTDI_LIBS="$LIBS"],[succeeded=no])
     LIBS="$save_LIBS"
     AC_LANG_POP
     
-    if test $succeeded = yes; then
+    if test x$succeeded = xyes; then
 	EZDOP_INCLUDES='-I$(top_srcdir)/ezdop/src/host/ezdop/ -I$(top_srcdir)/ezdop/src/firmware/'
 	EZDOP_LIBS='-lezdop'
 	AC_SUBST(FTDI_LIBS)

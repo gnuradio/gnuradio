@@ -157,7 +157,7 @@ GRC_GR_USRP			dnl this must come after GRC_USRP
 GRC_GR_AUDIO_ALSA
 GRC_GR_AUDIO_JACK
 GRC_GR_AUDIO_OSS
-GRC_GR_AUDIO_OSX		dnl ***NOT TESTED***
+GRC_GR_AUDIO_OSX
 GRC_GR_AUDIO_PORTAUDIO		dnl ***NOT TESTED***
 GRC_GR_AUDIO_WINDOWS		dnl ***NOT TESTED***
 GRC_GR_ATSC
@@ -171,8 +171,8 @@ GRC_GR_WXGUI
 GRC_PMT
 GRC_MBLOCK			dnl this must come after GRC_PMT
 GRC_GR_TRELLIS
-dnl GRC_EZDOP			dnl disable until grc_ezdop.m4 fixed
-dnl GRC_GR_EZDOP		dnl this must come after GRC_EZDOP
+GRC_EZDOP		
+GRC_GR_EZDOP			dnl this must come after GRC_EZDOP
 
 dnl Has list of successfully configured components
 AC_SUBST([subdirs],$subdirs)
