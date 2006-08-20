@@ -32,7 +32,7 @@ EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
 LOCAL_IFILES = 				\
-	audio_osx.i				
+	$(top_srcdir)/gr-audio-osx/src/audio_osx.i				
 
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
@@ -78,8 +78,8 @@ _audio_osx_la_LIBADD = 			\
 
 _audio_osx_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version -framework AudioUnit -framework CoreAudio -framework AudioToolbox
 
-audio_osx.cc audio_osx.py: audio_osx.i
-	$(SWIG) $(SWIGCPPPYTHONARGS) -module audio_osx -o audio_osx.cc $<
+audio_osx.cc audio_osx.py: $(ALL_IFILES)
+	$(SWIG) $(SWIGCPPPYTHONARGS) -module audio_osx -o audio_osx.cc $(LOCAL_IFILES)
 
 noinst_PYTHON = qa_osx.py test_audio_loop.py
 

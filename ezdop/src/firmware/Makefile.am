@@ -25,12 +25,17 @@ datadir = $(prefix)/share/ezdop
 CC=$(AVRGCC)
 OBJCOPY=$(AVROBJCOPY)
 
-# What's defined for rest of project not good for avr-gcc (no -pthread for instance)
-override CFLAGS=
-
 noinst_PROGRAMS = dopctrl.elf dopctrl.hex  
 
-dopctrl_elf_CFLAGS=-mmcu=atmega8 -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -Wall -Wstrict-prototypes -Wa,-adhlns=$(<:.c=.lst)
+dopctrl_elf_CFLAGS= \
+	-mmcu=atmega8 \
+	-funsigned-char \
+	-funsigned-bitfields \
+	-fpack-struct \
+	-fshort-enums \
+	-Wall \
+	-Wstrict-prototypes \
+	-Wa,-adhlns=$@.lst
 
 dopctrl_elf_SOURCES = dopctrl.c
 
@@ -42,3 +47,4 @@ dopctrl.hex : dopctrl.elf
 firmwaredir = $(prefix)/share/ezdop
 firmware_DATA = dopctrl.hex
 
+MOSTLYCLEANFILES = *.lst *~
