@@ -16,6 +16,7 @@ def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constel
     # TX
     # this for loop is TOO slow in python!!!
     packet = [0]*(K+2*L)
+    random.seed(seed)
     for i in range(len(packet)):
         packet[i] = random.randint(0, 2**bitspersymbol - 1) # random symbols
     for i in range(L): # first/last L symbols set to 0
@@ -30,9 +31,10 @@ def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constel
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
     
     # RX
+    skip = gr.skiphead(gr.sizeof_float, L) # skip the first L samples since you know they are coming from the L zero symbols
     #metrics = trellis.metrics_f(f.O(),dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
-    #va = trellis.viterbi_s(f,K+2*L,-1,0) # Put -1 if the Initial/Final states are not set. Better if we could skip the first L symbols and start with a 0 state... don't know how to "skip" samples in gnuradio
-    va = trellis.viterbi_combined_s(f,dimensionality,tot_constellation,K+2*L,-1,0,trellis.TRELLIS_EUCLIDEAN) # using viterbi_combined_s instead of metrics_f/viterbi_s allows larger packet lengths because metrics_f is complaining for not being able to allocate large buffers. This is due to the large f.O() in this application...
+    #va = trellis.viterbi_s(f,K+L,-1,0) # Put -1 if the Initial/Final states are not set.
+    va = trellis.viterbi_combined_s(f,K+L,0,0,dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # using viterbi_combined_s instead of metrics_f/viterbi_s allows larger packet lengths because metrics_f is complaining for not being able to allocate large buffers. This is due to the large f.O() in this application...
     dst = gr.vector_sink_s()
 
     fg.connect (src,mod)
@@ -40,15 +42,15 @@ def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constel
     fg.connect (noise,(add,1))
     #fg.connect (add,metrics)
     #fg.connect (metrics,va,dst)
-    fg.connect (add,va,dst)
+    fg.connect (add,skip,va,dst)
 
     fg.run()
 
     data = dst.data() 
-    ntotal = len(data) - 2*L
+    ntotal = len(data) - L
     nright=0
     for i in range(ntotal):
-        if packet[i+L]==data[i+L]:
+        if packet[i+L]==data[i]:
             nright=nright+1
         #else:
             #print "Error in ", i

@@ -18,7 +18,12 @@ If you just want to see what these programs do, run each of the following:
 ./test_sccc_soft.py  fsm_files/awgn1o2_4.fsm fsm_files/awgn1o2_4_msb.fsm  8.0 100
 ./test_sccc_turbo.py fsm_files/awgn1o2_4.fsm fsm_files/awgn1o2_4_msb.fsm  5.0 100
 
+./test_viterbi_equalization.py  12.0 100
+./test_viterbi_equalization1.py 12.0 100
+
+
 In your terminal you will see something like this:
+
 
 $ ./test_tcm.py fsm_files/awgn1o2_4.fsm 6.0 1000
 100 98 9.80e-01 102400 9 8.79e-05
@@ -36,11 +41,11 @@ $ ./test_tcm.py fsm_files/awgn1o2_4.fsm 6.0 1000
 which gives you information about the:
 number of transmitted packets
 number of packets in error
-iestimated packet error rate
-number of transmitted shorts
-number of shorts in error
-estimated (short) error rate 
+estimated packet error rate
+number of transmitted shorts (or symbols, or bits, depending on the specific program)
+number of shorts (or symbols, or bits) in error
+estimated short (or symbol, or bit) error rate 
 
-1.10e-03 is the error rate estimate by sending 1000 packets of
-1024 shorts each, using an 1/2 4-state convolutional code and QPSK
-modulation through an AWGN with Es/N0 = 6.0 dB
+for instance, the final number 1.10e-03 is the error rate estimate by sending 1000 
+packets of 1024 shorts each, using an 1/2 4-state convolutional code 
+and QPSK modulation through an AWGN with Es/N0 = 6.0 dB
