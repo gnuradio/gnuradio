@@ -45,7 +45,7 @@ class @NAME@ : public gr_block
   int d_K;
   int d_S0;
   int d_SK;
-  std::vector<int> d_trace;
+  //std::vector<int> d_trace;
 
   friend @SPTR_NAME@ trellis_make_@BASE_NAME@ (
     const fsm &FSM,

@@ -45,7 +45,7 @@ class trellis_viterbi_s : public gr_block
   int d_K;
   int d_S0;
   int d_SK;
-  std::vector<int> d_trace;
+  //std::vector<int> d_trace;
 
   friend trellis_viterbi_s_sptr trellis_make_viterbi_s (
     const fsm &FSM,

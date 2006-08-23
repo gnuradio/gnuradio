@@ -52,8 +52,8 @@ trellis_viterbi_b::trellis_viterbi_b (
   d_FSM (FSM),
   d_K (K),
   d_S0 (S0),
-  d_SK (SK),
-  d_trace(FSM.S()*K)
+  d_SK (SK)//,
+  //d_trace(FSM.S()*K)
 {
     set_relative_rate (1.0 / ((double) d_FSM.O()));
     set_output_multiple (d_K);
@@ -81,9 +81,10 @@ void viterbi_algorithm(int I, int S, int O,
              const std::vector<int> &PI,
              int K,
              int S0,int SK,
-             const float *in, unsigned char *out,
-             std::vector<int> &trace) 
+             const float *in, unsigned char *out)//,
+             //std::vector<int> &trace) 
 {
+  std::vector<int> trace(S*K);
   std::vector<float> alpha(S*2);
   int alphai;
   float norm,mm,minm;
@@ -158,7 +159,7 @@ trellis_viterbi_b::general_work (int noutput_items,
     const float *in = (const float *) input_items[m];
     unsigned char *out = (unsigned char *) output_items[m];
     for (int n=0;n<nblocks;n++) {
-      viterbi_algorithm(d_FSM.I(),d_FSM.S(),d_FSM.O(),d_FSM.NS(),d_FSM.OS(),d_FSM.PS(),d_FSM.PI(),d_K,d_S0,d_SK,&(in[n*d_K*d_FSM.O()]),&(out[n*d_K]),d_trace);
+      viterbi_algorithm(d_FSM.I(),d_FSM.S(),d_FSM.O(),d_FSM.NS(),d_FSM.OS(),d_FSM.PS(),d_FSM.PI(),d_K,d_S0,d_SK,&(in[n*d_K*d_FSM.O()]),&(out[n*d_K]));//,d_trace);
     }
   }
 

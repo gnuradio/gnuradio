@@ -26,11 +26,11 @@ GR_SWIG_BLOCK_MAGIC(trellis,viterbi_combined_b);
 
 trellis_viterbi_combined_b_sptr trellis_make_viterbi_combined_b (
     const fsm &FSM,
-    int D,
-    const std::vector<float> &TABLE,
     int K,
     int S0,
     int SK,
+    int D,
+    const std::vector<float> &TABLE,
     trellis_metric_type_t TYPE);
 
 
@@ -39,20 +39,20 @@ class trellis_viterbi_combined_b : public gr_block
 private:
   trellis_viterbi_combined_b (
     const fsm &FSM,
-    int D,
-    const std::vector<float> &TABLE,
     int K,
     int S0,
     int SK,
+    int D,
+    const std::vector<float> &TABLE,
     trellis_metric_type_t TYPE);
 
 public:
     fsm FSM () const { return d_FSM; }
-    int D () const { return d_D; }
-    std::vector<float> TABLE () const { return d_TABLE; }
     int K () const { return d_K; }
     int S0 () const { return d_S0; }
     int SK () const { return d_SK; }
+    int D () const { return d_D; }
+    std::vector<float> TABLE () const { return d_TABLE; }
     trellis_metric_type_t TYPE () const { return d_TYPE; }
     //std::vector<short> trace () const { return d_trace; }
 };

@@ -34,35 +34,35 @@ static const float INF = 1.0e9;
 trellis_viterbi_combined_i_sptr 
 trellis_make_viterbi_combined_i (
     const fsm &FSM,
-    int D,
-    const std::vector<float> &TABLE,
     int K,
     int S0,
     int SK,
+    int D,
+    const std::vector<float> &TABLE,
     trellis_metric_type_t TYPE)
 {
-  return trellis_viterbi_combined_i_sptr (new trellis_viterbi_combined_i (FSM,D,TABLE,K,S0,SK,TYPE));
+  return trellis_viterbi_combined_i_sptr (new trellis_viterbi_combined_i (FSM,K,S0,SK,D,TABLE,TYPE));
 }
 
 trellis_viterbi_combined_i::trellis_viterbi_combined_i (
     const fsm &FSM,
-    int D,
-    const std::vector<float> &TABLE,
     int K,
     int S0,
     int SK,
+    int D,
+    const std::vector<float> &TABLE,
     trellis_metric_type_t TYPE)
   : gr_block ("viterbi_combined_i",
 			  gr_make_io_signature (1, -1, sizeof (float)),
 			  gr_make_io_signature (1, -1, sizeof (int))),  
   d_FSM (FSM),
-  d_D (D),
-  d_TABLE (TABLE),
   d_K (K),
   d_S0 (S0),
   d_SK (SK),
-  d_TYPE (TYPE),
-  d_trace(FSM.S()*K)
+  d_D (D),
+  d_TABLE (TABLE),
+  d_TYPE (TYPE)//,
+  //d_trace(FSM.S()*K)
 {
     set_relative_rate (1.0 / ((double) d_D));
     set_output_multiple (d_K);
@@ -88,14 +88,15 @@ void viterbi_algorithm_combined(int I, int S, int O,
              const std::vector<int> &OS,
              const std::vector<int> &PS,
              const std::vector<int> &PI,
-             int D,
-             const std::vector<float> &TABLE,
              int K,
              int S0,int SK,
+             int D,
+             const std::vector<float> &TABLE,
              trellis_metric_type_t TYPE,
-             const float *in, int *out,
-             std::vector<int> &trace) 
+             const float *in, int *out)//,
+             //std::vector<int> &trace) 
 {
+  std::vector<int> trace(S*K);
   std::vector<float> alpha(S*2);
   float *metric = new float[O];
   int alphai;
@@ -173,7 +174,7 @@ trellis_viterbi_combined_i::general_work (int noutput_items,
     const float *in = (const float *) input_items[m];
     int *out = (int *) output_items[m];
     for (int n=0;n<nblocks;n++) {
-      viterbi_algorithm_combined(d_FSM.I(),d_FSM.S(),d_FSM.O(),d_FSM.NS(),d_FSM.OS(),d_FSM.PS(),d_FSM.PI(),d_D,d_TABLE,d_K,d_S0,d_SK,d_TYPE,&(in[n*d_K*d_D]),&(out[n*d_K]),d_trace);
+      viterbi_algorithm_combined(d_FSM.I(),d_FSM.S(),d_FSM.O(),d_FSM.NS(),d_FSM.OS(),d_FSM.PS(),d_FSM.PI(),d_K,d_S0,d_SK,d_D,d_TABLE,d_TYPE,&(in[n*d_K*d_D]),&(out[n*d_K]));//,d_trace);
     }
   }
 

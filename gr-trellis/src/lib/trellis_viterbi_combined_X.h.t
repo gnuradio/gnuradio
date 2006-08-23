@@ -34,52 +34,52 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 @SPTR_NAME@ trellis_make_@BASE_NAME@ (
     const fsm &FSM,
-    int D,
-    const std::vector<float> &TABLE,
     int K,
     int S0,
     int SK,
+    int D,
+    const std::vector<float> &TABLE,
     trellis_metric_type_t TYPE);
 
 
 class @NAME@ : public gr_block
 {
   fsm d_FSM;
-  int d_D;
-  std::vector<float> d_TABLE;
   int d_K;
   int d_S0;
   int d_SK;
+  int d_D;
+  std::vector<float> d_TABLE;
   trellis_metric_type_t d_TYPE;
-  std::vector<int> d_trace;
+  //std::vector<int> d_trace;
 
   friend @SPTR_NAME@ trellis_make_@BASE_NAME@ (
     const fsm &FSM,
-    int D,
-    const std::vector<float> &TABLE,
     int K,
     int S0,
     int SK,
+    int D,
+    const std::vector<float> &TABLE,
     trellis_metric_type_t TYPE);
 
 
   @NAME@ (
     const fsm &FSM,
-    int D,
-    const std::vector<float> &TABLE,
     int K,
     int S0,
     int SK,
+    int D,
+    const std::vector<float> &TABLE,
     trellis_metric_type_t TYPE);
 
 
 public:
   fsm FSM () const { return d_FSM; }
-  int D () const { return d_D; }
-  std::vector<float> TABLE () const { return d_TABLE; }
   int K () const { return d_K; }
   int S0 () const { return d_S0; }
   int SK () const { return d_SK; }
+  int D () const { return d_D; }
+  std::vector<float> TABLE () const { return d_TABLE; }
   trellis_metric_type_t TYPE () const { return d_TYPE; }
   //std::vector<int> trace () const { return d_trace; }
   void forecast (int noutput_items,
