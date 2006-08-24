@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = $(USRP_INCLUDES)
+INCLUDES = $(USRP_INCLUDES) $(BOOST_CFLAGS)
 
 USRP_LIB = $(top_builddir)/usrp/host/lib/libusrp.la
 
