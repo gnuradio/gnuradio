@@ -73,7 +73,7 @@ class gr_buffer {
 
   friend class gr_buffer_reader;
   friend gr_buffer_sptr gr_make_buffer (int nitems, size_t sizeof_item);
-  friend gr_buffer_reader_sptr gr_buffer_add_reader (gr_buffer_sptr buf, int history);
+  friend gr_buffer_reader_sptr gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload);
 
  protected:
   char				       *d_base;		// base address of buffer
@@ -129,8 +129,11 @@ class gr_buffer {
 
 };
 
-//! create a new gr_buffer_reader and attach it to buffer \p buf
-gr_buffer_reader_sptr gr_buffer_add_reader (gr_buffer_sptr buf, int history);
+/*!
+ * \brief create a new gr_buffer_reader and attach it to buffer \p buf
+ * \param nzero_preload -- number of zero items to "preload" into buffer.
+ */
+gr_buffer_reader_sptr gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload);
 
 //! returns # of gr_buffers currently allocated
 long gr_buffer_ncurrently_allocated ();
@@ -179,7 +182,7 @@ class gr_buffer_reader {
  private:
 
   friend class gr_buffer;
-  friend gr_buffer_reader_sptr gr_buffer_add_reader (gr_buffer_sptr buf, int history);
+  friend gr_buffer_reader_sptr gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload);
 
 
   gr_buffer_sptr		d_buffer;

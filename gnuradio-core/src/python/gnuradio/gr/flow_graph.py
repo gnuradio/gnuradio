@@ -151,7 +151,7 @@ class flow_graph (basic_flow_graph):
                 upstream_block = e.src.block
                 upstream_port   = e.src.port
                 upstream_buffer = upstream_block.detail().output(upstream_port)
-                d.set_input(our_port, buffer_add_reader(upstream_buffer, m.history()))
+                d.set_input(our_port, buffer_add_reader(upstream_buffer, m.history()-1))
     
 
     def topological_sort (self, all_v):

@@ -88,7 +88,7 @@ t1_body ()
   int	read_counter = 0;
 
   gr_buffer_sptr buf (gr_make_buffer (nitems, sizeof (int)));
-  gr_buffer_reader_sptr r1 (gr_buffer_add_reader (buf, 1));
+  gr_buffer_reader_sptr r1 (gr_buffer_add_reader (buf, 0));
   
 
   int sa;
@@ -163,7 +163,7 @@ t2_body ()
   int	nitems = (64 * (1L << 10)) / sizeof (int);	// 64K worth of ints
 
   gr_buffer_sptr buf (gr_make_buffer (nitems, sizeof (int)));
-  gr_buffer_reader_sptr r1 (gr_buffer_add_reader (buf, 1));
+  gr_buffer_reader_sptr r1 (gr_buffer_add_reader (buf, 0));
 
   int	read_counter = 0;
   int	write_counter = 0;
@@ -237,7 +237,7 @@ t3_body ()
 
   for (int i = 0; i < N; i++){
     read_counter[i] = 0;
-    reader[i] = gr_buffer_add_reader (buf, 1);
+    reader[i] = gr_buffer_add_reader (buf, 0);
   }
 
   for (int lc = 0; lc < 1000; lc++){

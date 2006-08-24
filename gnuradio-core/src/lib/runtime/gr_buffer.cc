@@ -179,11 +179,14 @@ gr_buffer::update_write_pointer (int nitems)
 }
 
 gr_buffer_reader_sptr
-gr_buffer_add_reader (gr_buffer_sptr buf, int history)
+gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload)
 {
+  if (nzero_preload < 0)
+    throw std::invalid_argument("gr_buffer_add_reader: nzero_preload must be >= 0");
+
   gr_buffer_reader_sptr r (new gr_buffer_reader (buf,
 						 buf->index_sub(buf->d_write_index,
-								history-1)));
+								nzero_preload)));
   buf->d_readers.push_back (r.get ());
 
   return r;

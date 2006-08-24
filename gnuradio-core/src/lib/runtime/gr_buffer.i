@@ -43,7 +43,7 @@ typedef boost::shared_ptr<gr_buffer_reader> gr_buffer_reader_sptr;
 %ignore gr_buffer_reader;
 
 %rename(buffer_add_reader) gr_buffer_add_reader;
-gr_buffer_reader_sptr gr_buffer_add_reader (gr_buffer_sptr buf, int history);
+gr_buffer_reader_sptr gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload);
 
 class gr_buffer_reader {
  public:
