@@ -82,7 +82,7 @@ _trellis_la_LIBADD = 			\
 	$(GNURADIO_CORE_LIBS)		\
 	-lstdc++			
 
-trellis.cc trellis.py: $(ALL_IFILES)
+trellis.cc trellis.py: $(ALL_IFILES) $(grinclude_HEADERS)
 	$(SWIG) $(SWIGPYTHONARGS) -module trellis -o trellis.cc $(LOCAL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
