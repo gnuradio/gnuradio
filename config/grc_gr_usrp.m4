@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_USRP],[
-    AC_CONFIG_SRCDIR([gr-usrp/src/usrp1.i])
+    GRC_ENABLE([gr-usrp])
 
     AC_CONFIG_FILES([ \
 	 gr-usrp/Makefile \
@@ -26,21 +26,19 @@ AC_DEFUN([GRC_GR_USRP],[
 	 gr-usrp/src/run_tests \
     ])
 
-    # Don't do gr-usrp if usrp failed
+    passed=yes
+    # Don't do gr-usrp if usrp skipped
     # There *has* to be a better way to check if a value is in a string
-    succeeded=yes
-    for dir in $failed
+    for dir in $skipped_dirs
     do
-	if test $dir = usrp; then
-	    succeeded=no
+	if test x$dir = xusrp; then
+	    AC_MSG_RESULT([Component gr-usrp requires usrp, which is not being built.])
+	    passed=no
 	fi
     done
 
-    if test $succeeded = yes; then
+    GRC_BUILD_CONDITIONAL([gr-usrp],[
 	dnl run_tests is created from run_tests.in.  Make it executable.
 	AC_CONFIG_COMMANDS([run_tests_usrp], [chmod +x gr-usrp/src/run_tests])
-	subdirs="$subdirs gr-usrp"
-    else
-	failed="$failed gr-usrp"
-    fi
+    ])
 ])

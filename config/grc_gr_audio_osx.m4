@@ -18,21 +18,20 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_AUDIO_OSX],[
-    AC_CONFIG_SRCDIR([gr-audio-osx/src/audio_osx.i])
-
+    GRC_ENABLE([gr-audio-osx])
+    
     AC_CONFIG_FILES([ \
 	gr-audio-osx/Makefile \
 	gr-audio-osx/src/Makefile \
 	gr-audio-osx/src/run_tests \
     ])
     
-    succeeded=yes
-    MACOSX_AUDIOUNIT([],[succeeded=no])
-    if test $succeeded = yes; then
+    passed=yes
+    MACOSX_AUDIOUNIT([],
+        [passed=no;AC_MSG_RESULT([gr-audio-osx requires AudioUnit, not found.])])
+
+    GRC_BUILD_CONDITIONAL([gr-audio-osx],[
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_osx], [chmod +x gr-audio-osx/src/run_tests])
-        subdirs="$subdirs gr-audio-osx"
-    else
-	failed="$failed gr-audio-osx"
-    fi
+    ])
 ])

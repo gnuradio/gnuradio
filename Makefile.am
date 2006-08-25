@@ -26,5 +26,5 @@ EXTRA_DIST = 				\
 	configure 			\
 	config.h.in
 
-SUBDIRS = @subdirs@
-DIST_SUBDIRS = @subdirs@ @failed_subdirs@
+SUBDIRS = @build_dirs@
+DIST_SUBDIRS = @build_dirs@ @skipped_dirs@

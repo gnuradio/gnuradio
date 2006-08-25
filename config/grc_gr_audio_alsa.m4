@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_AUDIO_ALSA],[
-    AC_CONFIG_SRCDIR([gr-audio-alsa/src/audio_alsa.i])
+    GRC_ENABLE([gr-audio-alsa])
 
     AC_CONFIG_FILES([ \
 	gr-audio-alsa/Makefile \
@@ -26,16 +26,13 @@ AC_DEFUN([GRC_GR_AUDIO_ALSA],[
 	gr-audio-alsa/src/run_tests \
     ])
 
-    succeeded=yes
-    PKG_CHECK_MODULES(ALSA, alsa >= 0.9,[],[succeeded=no])
-    if test $succeeded = yes; then
-	AC_SUBST(ALSA_LIBS)
+    passed=yes
+    PKG_CHECK_MODULES(ALSA, alsa >= 0.9,[],
+        [passed=no;AC_MSG_RESULT([gr-audio-alsa requires package alsa, not found.])])
 
+    GRC_BUILD_CONDITIONAL([gr-audio-alsa],[
+	AC_SUBST(ALSA_LIBS)
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_alsa], [chmod +x gr-audio-alsa/src/run_tests])
-        subdirs="$subdirs gr-audio-alsa"
-    else
-	AC_MSG_RESULT([failed: $ALSA_PKG_ERRORS])
-	failed="$failed gr-audio-alsa"
-    fi
+    ])
 ])

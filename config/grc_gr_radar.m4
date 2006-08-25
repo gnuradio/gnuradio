@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_RADAR],[
-    AC_CONFIG_SRCDIR([gr-radar/src/python/usrp_rx_radar.py])
+    GRC_ENABLE([gr-radar])
 
     AC_CONFIG_FILES([\
 	gr-radar/Makefile \
@@ -29,8 +29,9 @@ AC_DEFUN([GRC_GR_RADAR],[
 	gr-radar/src/python/run_tests \
     ])
 
-    dnl run_tests is created from run_tests.in.  Make it executable.
-    AC_CONFIG_COMMANDS([run_tests_radar], [chmod +x gr-radar/src/python/run_tests])
-
-    subdirs="$subdirs gr-radar"
+    passed=yes
+    GRC_BUILD_CONDITIONAL([gr-radar],[
+        dnl run_tests is created from run_tests.in.  Make it executable.
+        AC_CONFIG_COMMANDS([run_tests_radar], [chmod +x gr-radar/src/python/run_tests])
+    ])
 ])

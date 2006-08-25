@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GNURADIO_CORE],[
-    AC_CONFIG_SRCDIR([gnuradio-core/src/lib/runtime/gr_vmcircbuf.cc])
+    GRC_ENABLE([gnuradio-core])
 
     AC_CONFIG_FILES([ \
         gnuradio-core/Makefile
@@ -51,13 +51,14 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
         gnuradio-core/src/python/gnuradio/gruimpl/Makefile \
         gnuradio-core/src/tests/Makefile \
         gnuradio-core/src/utils/Makefile \
-	])
+    ])
+    
+    passed=yes
+    GRC_BUILD_CONDITIONAL([gnuradio-core],[
+        dnl run_tests is created from run_tests.in.  Make it executable.
+        AC_CONFIG_COMMANDS([run_tests_core], [chmod +x gnuradio-core/src/python/gnuradio/gr/run_tests])
 
-    dnl run_tests is created from run_tests.in.  Make it executable.
-    AC_CONFIG_COMMANDS([run_tests_core], [chmod +x gnuradio-core/src/python/gnuradio/gr/run_tests])
-
-    dnl kludge up initial swig dependency file
-    AC_CONFIG_COMMANDS([swig_deps], [touch gnuradio-core/src/lib/swig/gnuradio_swig_python.d])
-
-    subdirs="$subdirs gnuradio-core"
+        dnl kludge up initial swig dependency file
+        AC_CONFIG_COMMANDS([swig_deps], [touch gnuradio-core/src/lib/swig/gnuradio_swig_python.d])
+    ])
 ])

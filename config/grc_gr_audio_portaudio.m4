@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_AUDIO_PORTAUDIO],[
-    AC_CONFIG_SRCDIR([gr-audio-portaudio/src/audio_portaudio.i])
+    GRC_ENABLE([gr-audio-portaudio])
 
     AC_CONFIG_FILES([ \
 	gr-audio-portaudio/Makefile \
@@ -26,16 +26,13 @@ AC_DEFUN([GRC_GR_AUDIO_PORTAUDIO],[
 	gr-audio-portaudio/src/run_tests \
     ])
 
-    succeeded=yes
-    PKG_CHECK_MODULES(PORTAUDIO, portaudio-2.0 >= 19,[],[succeeded=no])
+    passed=yes
+    PKG_CHECK_MODULES(PORTAUDIO, portaudio-2.0 >= 19,[],
+        [passed=no;AC_MSG_RESULT([gr-audio-portaudio requires package portaudio, not found.])])
 
-    if test $succeeded = yes; then
+    GRC_BUILD_CONDITIONAL([gr-audio-portaudio],[
 	AC_SUBST(PORTAUDIO_LIBS)
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_portaudio], [chmod +x gr-audio-portaudio/src/run_tests])
-        subdirs="$subdirs gr-audio-portaudio"
-    else
-	AC_MSG_RESULT([failed: $PORTAUDIO_PKG_ERRORS])
-	failed="$failed gr-audio-portaudio"
-    fi
+    ])
 ])

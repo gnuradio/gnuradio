@@ -18,9 +18,9 @@
 # Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
-    AC_CONFIG_SRCDIR([gnuradio-examples/README])
+    GRC_ENABLE([gnuradio-examples])
 
-    AC_CONFIG_FILES([\
+    AC_CONFIG_FILES([ \
         gnuradio-examples/Makefile \
         gnuradio-examples/python/Makefile \
         gnuradio-examples/python/audio/Makefile \
@@ -30,7 +30,8 @@ AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
         gnuradio-examples/python/mc4020/Makefile \
         gnuradio-examples/python/usrp/Makefile \
         gnuradio-examples/python/multi_usrp/Makefile \
-	])
+    ])
 
-    subdirs="$subdirs gnuradio-examples"
+    passed=yes
+    GRC_BUILD_CONDITIONAL([gnuradio-examples])
 ])

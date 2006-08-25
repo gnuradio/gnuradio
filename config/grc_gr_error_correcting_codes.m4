@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_ERROR_CORRECTING_CODES],[
-    AC_CONFIG_SRCDIR([gr-error-correcting-codes/src/lib/ecc.i])
+    GRC_ENABLE([gr-error-correcting-codes])
 
     AC_CONFIG_FILES([\
 	gr-error-correcting-codes/Makefile \
@@ -31,8 +31,9 @@ AC_DEFUN([GRC_GR_ERROR_CORRECTING_CODES],[
 	gr-error-correcting-codes/src/python/run_tests \
     ])
 
-    dnl run_tests is created from run_tests.in.  Make it executable.
-    AC_CONFIG_COMMANDS([run_tests_error_correcting_codes], [chmod +x gr-error-correcting-codes/src/python/run_tests])
-
-    subdirs="$subdirs gr-error-correcting-codes"
+    passed=yes
+    GRC_BUILD_CONDITIONAL([gr-error-correcting-codes],[
+        dnl run_tests is created from run_tests.in.  Make it executable.
+        AC_CONFIG_COMMANDS([run_tests_error_correcting_codes], [chmod +x gr-error-correcting-codes/src/python/run_tests])
+    ])
 ])

@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_GSM_FR_VOCODER],[
-    AC_CONFIG_SRCDIR([gr-gsm-fr-vocoder/src/lib/gsm_full_rate.i])
+    GRC_ENABLE([gr-gsm-fr-vocoder])
 
     AC_CONFIG_FILES([\
 	gr-gsm-fr-vocoder/Makefile \
@@ -29,8 +29,9 @@ AC_DEFUN([GRC_GR_GSM_FR_VOCODER],[
 	gr-gsm-fr-vocoder/src/python/run_tests \
     ])
 
-    dnl run_tests is created from run_tests.in.  Make it executable.
-    AC_CONFIG_COMMANDS([run_tests_gsm], [chmod +x gr-gsm-fr-vocoder/src/python/run_tests])
-
-    subdirs="$subdirs gr-gsm-fr-vocoder"
+    passed=yes
+    GRC_BUILD_CONDITIONAL([gr-gsm-fr-vocoder],[
+        dnl run_tests is created from run_tests.in.  Make it executable.
+        AC_CONFIG_COMMANDS([run_tests_gsm], [chmod +x gr-gsm-fr-vocoder/src/python/run_tests])
+    ])
 ])

@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_TRELLIS],[
-    AC_CONFIG_SRCDIR([gr-trellis/src/lib/trellis.i])
+    GRC_ENABLE([gr-trellis])
 
     AC_CONFIG_FILES([\
 	gr-trellis/Makefile \
@@ -29,8 +29,9 @@ AC_DEFUN([GRC_GR_TRELLIS],[
 	gr-trellis/src/python/run_tests \
     ])
 
-    dnl run_tests is created from run_tests.in.  Make it executable.
-    AC_CONFIG_COMMANDS([run_tests_gr_trellis], [chmod +x gr-trellis/src/python/run_tests])
-
-    subdirs="$subdirs gr-trellis"
+    passed=yes
+    GRC_BUILD_CONDITIONAL([gr-trellis],[
+        dnl run_tests is created from run_tests.in.  Make it executable.
+	AC_CONFIG_COMMANDS([run_tests_gr_trellis], [chmod +x gr-trellis/src/python/run_tests])
+    ])
 ])

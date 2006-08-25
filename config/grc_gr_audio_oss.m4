@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_AUDIO_OSS],[
-    AC_CONFIG_SRCDIR([gr-audio-oss/src/audio_oss.i])
+    GRC_ENABLE([gr-audio-oss])    
 
     AC_CONFIG_FILES([ \
 	gr-audio-oss/Makefile \
@@ -26,27 +26,24 @@ AC_DEFUN([GRC_GR_AUDIO_OSS],[
 	gr-audio-oss/src/run_tests \
     ])
 
-    succeeded=yes
-
+    passed=yes
     case $target in
     	*-*-netbsd*)
-    	    AC_HAVE_LIBRARY(ossaudio,[],[succeeded=no])
-	    if test $succeeded = yes; then
+    	    AC_HAVE_LIBRARY(ossaudio,[],
+	        [passed=no;AC_MSG_RESULT([gr-audio-oss requires library ossaudio, not found.])])
+	    if test x$passed != xno; then
 		OSS_LIBS=-lossaudio
 		AC_MSG_RESULT([Using OSS library $OSS_LIBS])
 	    fi
     	    ;;
     	*)
-    	    AC_CHECK_HEADER(sys/soundcard.h,[],[succeeded=no])
+    	    AC_CHECK_HEADER(sys/soundcard.h,[],
+	        [passed=no;AC_MSG_RESULT([gr-audio-oss requires sys/soundcard.h, not found.])])
     esac
 
-    if test $succeeded = yes; then
+    GRC_BUILD_CONDITIONAL([gr-audio-oss],[
 	AC_SUBST(OSS_LIBS)
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_oss], [chmod +x gr-audio-oss/src/run_tests])
-        subdirs="$subdirs gr-audio-oss"
-    else
-	AC_MSG_RESULT([failed: $OSS_PKG_ERRORS])
-	failed="$failed gr-audio-oss"
-    fi
+    ])
 ])

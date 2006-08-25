@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_MBLOCK],[
-    AC_CONFIG_SRCDIR([mblock/src/lib/mb_mblock.h])
+    GRC_ENABLE([mblock])
 
     AC_CONFIG_FILES([\
 	mblock/Makefile \
@@ -27,8 +27,19 @@ AC_DEFUN([GRC_MBLOCK],[
 	mblock/src/lib/Makefile
     ])
 
-    dnl run_tests is created from run_tests.in.  Make it executable.
-    dnl AC_CONFIG_COMMANDS([run_tests_mblock], [chmod +x mblock/src/python/run_tests])
+    passed=yes
+    # Don't do mblock if pmt skipped
+    # There *has* to be a better way to check if a value is in a string
+    for dir in $skipped_dirs
+    do
+	if test x$dir = xpmt; then
+	    AC_MSG_RESULT([Component mblock requires pmt, which is not being built.])
+	    passed=no
+	fi
+    done
 
-    subdirs="$subdirs mblock"
+    GRC_BUILD_CONDITIONAL([mblock],[
+        dnl run_tests is created from run_tests.in.  Make it executable.
+	dnl AC_CONFIG_COMMANDS([run_tests_mblock], [chmod +x mblock/src/python/run_tests])
+    ])
 ])

@@ -22,24 +22,14 @@ AC_DEFUN([MACOSX_AUDIOUNIT],
     	darwin*);;
     	*) 
 	   audiounitok=no
-	   AC_MSG_WARN([gr-audio-osx requires darwin or MacOS X.])
+	   AC_MSG_RESULT([gr-audio-osx requires darwin or MacOS X.])
     esac
 
-    AC_CHECK_HEADERS([AudioUnit/AudioUnit.h],
-	  [],
-	  [ 
-	    audiounitok=no,
-	    AC_MSG_WARN([gr-audio-osx requires AudioUnit/AudioUnit.h, which is available on MacOS X.])
-	  ]
-    )
+    AC_CHECK_HEADERS([AudioUnit/AudioUnit.h],[],
+	  [audiounitok=no;AC_MSG_RESULT([gr-audio-osx requires AudioUnit/AudioUnit.h, which is available on MacOS X.])])
 
-    AC_CHECK_HEADERS([AudioToolbox/AudioToolbox.h],
-	  [],
-	  [ 
-	    audiounitok=no,
-	    AC_MSG_WARN([gr-audio-osx requires AudioToolbox/AudioToolbox.h, which is available on MacOS X.])
-	  ]
-    )    
+    AC_CHECK_HEADERS([AudioToolbox/AudioToolbox.h],[],
+	  [audiounitok=no;AC_MSG_RESULT([gr-audio-osx requires AudioToolbox/AudioToolbox.h, which is available on MacOS X.])])    
 
     if test $audiounitok = yes; then
         ifelse([$1], , :, [$1])

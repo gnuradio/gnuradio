@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_COMEDI],[
-    AC_CONFIG_SRCDIR([gr-comedi/src/comedi.i])
+    GRC_ENABLE([gr-comedi])
 
     AC_CONFIG_FILES([ \
 	gr-comedi/Makefile \
@@ -26,16 +26,13 @@ AC_DEFUN([GRC_GR_COMEDI],[
 	gr-comedi/src/run_tests \
     ])
 
-    succeeded=yes
-    PKG_CHECK_MODULES(COMEDI, comedilib >= 0.7,[],[succeeded=no])
-    if test $succeeded = yes; then
-	AC_SUBST(COMEDI_LIBS)
+    passed=yes
+    PKG_CHECK_MODULES(COMEDI, comedilib >= 0.7,[],
+        [passed=no;AC_MSG_RESULT([gr-comedi requires comedilib, not found.])])
 
+    GRC_BUILD_CONDITIONAL([gr-comedi],[
+	AC_SUBST(COMEDI_LIBS)
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_comedi], [chmod +x gr-comedi/src/run_tests])
-        subdirs="$subdirs gr-comedi"
-    else
-	AC_MSG_WARN([$COMEDI_PKG_ERRORS])
-	failed="$failed gr-comedi"
-    fi
+    ])
 ])

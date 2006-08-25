@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_AUDIO_WINDOWS],[
-    AC_CONFIG_SRCDIR([gr-audio-windows/src/audio_windows.i])
+    GRC_ENABLE([gr-audio-windows])
 
     AC_CONFIG_FILES([ \
 	gr-audio-windows/Makefile \
@@ -26,17 +26,14 @@ AC_DEFUN([GRC_GR_AUDIO_WINDOWS],[
 	gr-audio-windows/src/run_tests \
     ])
 
-    succeeded=yes
-    AC_HAVE_LIBRARY(winmm,[],[succeeded=no])
+    passed=yes
+    AC_HAVE_LIBRARY(winmm,[],
+        [passed=no;AC_MSG_RESULT([gr-audio-windows requires library winmm, not found.])])
 
-    if test $succeeded = yes; then
+    GRC_BUILD_CONDITIONAL([gr-audio-windows],[
 	WINAUDIO_LIBS=-lwinmm
 	AC_SUBST(WINAUDIO_LIBS)
-
 	dnl run_tests is created from run_tests.in.  Make it executable.
-        AC_CONFIG_COMMANDS([run_tests_windows], [chmod +x gr-audio-windows/src/run_tests])
-        subdirs="$subdirs gr-audio-windows"
-    else
-	failed="$failed gr-audio-windows"
-    fi
+        AC_CONFIG_COMMANDS([run_tests_audio_windows], [chmod +x gr-audio-windows/src/run_tests])
+    ])
 ])

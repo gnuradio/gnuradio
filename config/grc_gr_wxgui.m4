@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_WXGUI],[
-    AC_CONFIG_SRCDIR([gr-wxgui/src/python/stdgui.py])
+    GRC_ENABLE([gr-wxgui])
 
     AC_CONFIG_FILES([ \
 	  gr-wxgui/Makefile \
@@ -26,9 +26,13 @@ AC_DEFUN([GRC_GR_WXGUI],[
 	  gr-wxgui/src/python/Makefile \
     ])
 
+    # FIXME: this breaks pkgsrc by calling python without a version number
+    # gdt--patch welcome :-)
     if python -c 'import wx'; then
-    	subdirs="$subdirs gr-wxgui"
+	passed=yes
     else
-    	failed="$failed gr-wxgui"
+	passed=no
     fi
+    
+    GRC_BUILD_CONDITIONAL([gr-wxgui])
 ])

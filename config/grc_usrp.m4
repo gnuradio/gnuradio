@@ -18,57 +18,47 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_USRP],[
-    AC_CONFIG_SRCDIR([usrp/host/lib/usrp_prims.h])
+    GRC_ENABLE([usrp])
 
     AC_CONFIG_FILES([ \
-	usrp/Makefile				\
-	usrp/usrp.pc 				\
-	usrp/usrp.iss				\
-	usrp/doc/Doxyfile			\
-	usrp/doc/Makefile			\
-	usrp/doc/other/Makefile			\
-	usrp/host/Makefile			\
-	usrp/host/misc/Makefile			\
-	usrp/host/lib/Makefile			\
-	usrp/host/lib/std_paths.h		\
-	usrp/host/swig/Makefile			\
-	usrp/host/apps/Makefile			\
-	usrp/firmware/Makefile			\
-	usrp/firmware/include/Makefile		\
-	usrp/firmware/lib/Makefile		\
-	usrp/firmware/src/Makefile 		\
-	usrp/firmware/src/common/Makefile 	\
-	usrp/firmware/src/usrp2/Makefile 	\
-	usrp/fpga/Makefile			\
-	usrp/fpga/rbf/Makefile			\
+	usrp/Makefile \
+	usrp/usrp.pc \
+        usrp/usrp.iss \
+        usrp/doc/Doxyfile \
+        usrp/doc/Makefile \
+        usrp/doc/other/Makefile \
+        usrp/host/Makefile \
+        usrp/host/misc/Makefile \
+        usrp/host/lib/Makefile \
+        usrp/host/lib/std_paths.h \
+        usrp/host/swig/Makefile \
+        usrp/host/apps/Makefile \
+        usrp/firmware/Makefile \
+        usrp/firmware/include/Makefile \
+        usrp/firmware/lib/Makefile \
+        usrp/firmware/src/Makefile \
+        usrp/firmware/src/common/Makefile \
+        usrp/firmware/src/usrp2/Makefile \
+        usrp/fpga/Makefile \
+        usrp/fpga/rbf/Makefile \
     ])
-
-    AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
-    AM_CONDITIONAL(HAS_XMLTO, test x$XMLTO = xyes)
 
     # gnulib.
     # FIXME: this needs to fail gracefully and continue, not implemented yet
     UTILS_FUNC_MKSTEMP
 
-    succeeded=yes
-    dnl Checks for library functions.
-    USRP_LIBUSB([],[succeeded=no])
-    USRP_SET_FUSB_TECHNIQUE([],[succeeded=no])
-
-    dnl check for firmware cross compilation tools
-    dnl check for SDCC 2.4.0
-    USRP_SDCC([2.4.0],[],[succeeded=no])
-    
+    # These checks don't fail
+    AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
+    AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
+    AC_C_BIGENDIAN
+    AC_CHECK_HEADERS([byteswap.h])
     AC_CHECK_FUNCS([getrusage sched_setscheduler])
     AC_CHECK_FUNCS([sigaction snprintf])
 
-    dnl we use these to handle possible byteswapping to and from the USRP.
-    AC_CHECK_HEADERS([byteswap.h])
-    AC_C_BIGENDIAN
+    passed=yes
+    USRP_LIBUSB([],[passed=no;AC_MSG_RESULT([Unable to configure USB dependency.])])
+    USRP_SET_FUSB_TECHNIQUE([],[passed=no;AC_MSG_RESULT([Unable to set fast USB technique.])])
+    USRP_SDCC([2.4.0],[],[passed=no;AC_MSG_RESULT([Unable to find firmware compiler.])])
 
-    if test $succeeded = yes; then
-	subdirs="$subdirs usrp"
-    else
-	failed="$failed usrp"
-    fi
+    GRC_BUILD_CONDITIONAL([usrp])
 ])

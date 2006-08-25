@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_ATSC],[
-    AC_CONFIG_SRCDIR([gr-atsc/src/lib/atsc.i])
+    GRC_ENABLE([gr-atsc])
 
     AC_CONFIG_FILES([\
 	gr-atsc/Makefile \
@@ -29,8 +29,9 @@ AC_DEFUN([GRC_GR_ATSC],[
 	gr-atsc/src/python/run_tests \
     ])
 
-    dnl run_tests is created from run_tests.in.  Make it executable.
-    AC_CONFIG_COMMANDS([run_tests_atsc], [chmod +x gr-atsc/src/python/run_tests])
-
-    subdirs="$subdirs gr-atsc"
+    passed=yes
+    GRC_BUILD_CONDITIONAL([gr-atsc],[
+        dnl run_tests is created from run_tests.in.  Make it executable.
+	AC_CONFIG_COMMANDS([run_tests_atsc], [chmod +x gr-atsc/src/python/run_tests])
+    ])
 ])

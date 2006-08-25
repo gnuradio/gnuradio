@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_VIDEO_SDL],[
-    AC_CONFIG_SRCDIR([gr-video-sdl/src/video_sdl.i])
+    GRC_ENABLE([gr-video-sdl])
 
     AC_CONFIG_FILES([ \
 	gr-video-sdl/Makefile \
@@ -26,21 +26,15 @@ AC_DEFUN([GRC_GR_VIDEO_SDL],[
 	gr-video-sdl/src/run_tests \
     ])
     
-    succeeded=yes
-    dnl Check for SDL
+    passed=yes
     SDL_VERSION=1.2.0
-    AM_PATH_SDL($SDL_VERSION,[],[succeeded=no])
+    AM_PATH_SDL($SDL_VERSION,[],
+        [passed=no;AC_MSG_RESULT([gr-video-sdl requires library sdl, not found.])])
 
-    if test $succeeded = yes; then
-        #AM_CFLAGS="$AM_CFLAGS $SDL_CFLAGS"
-        #AM_LDFLAGS="$AM_LDFLAGS $SDL_LIBS"
+    GRC_BUILD_CONDITIONAL([gr-video-sdl],[
 	AC_SUBST(SDL_CFLAGS)
 	AC_SUBST(SDL_LIBS)
-
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_sdl], [chmod +x gr-video-sdl/src/run_tests])
-        subdirs="$subdirs gr-video-sdl"
-    else
-	failed="$failed gr-video-sdl"
-    fi
+    ])
 ])

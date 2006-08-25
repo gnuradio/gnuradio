@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_AUDIO_JACK],[
-    AC_CONFIG_SRCDIR([gr-audio-jack/src/audio_jack.i])
+    GRC_ENABLE([gr-audio-jack])
 
     AC_CONFIG_FILES([ \
 	gr-audio-jack/Makefile \
@@ -26,16 +26,13 @@ AC_DEFUN([GRC_GR_AUDIO_JACK],[
 	gr-audio-jack/src/run_tests \
     ])
 
-    succeeded=yes
-    PKG_CHECK_MODULES(JACK, jack >= 0.8,[],[succeeded=no])
-    if test $succeeded = yes; then
-	AC_SUBST(JACK_LIBS)
+    passed=yes
+    PKG_CHECK_MODULES(JACK, jack >= 0.8,[],
+        [passed=no;AC_MSG_RESULT([gr-audio-jack requires package jack, not found.])])
 
+    GRC_BUILD_CONDITIONAL([gr-audio-jack],[
+	AC_SUBST(JACK_LIBS)
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_jack], [chmod +x gr-audio-jack/src/run_tests])
-        subdirs="$subdirs gr-audio-jack"
-    else
-	AC_MSG_RESULT([failed: $JACK_PKG_ERRORS])
-	failed="$failed gr-audio-jack"
-    fi
+    ])
 ])

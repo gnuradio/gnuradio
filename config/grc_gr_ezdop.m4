@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_EZDOP],[
-    AC_CONFIG_SRCDIR([gr-ezdop/src/lib/ezdop.i])
+    GRC_ENABLE([gr-ezdop])
 
     AC_CONFIG_FILES([ \
 	gr-ezdop/Makefile \
@@ -28,21 +28,18 @@ AC_DEFUN([GRC_GR_EZDOP],[
 	gr-ezdop/src/python/run_tests \
     ])
 
+    passed=yes
     # Don't do gr-ezdop if ezdop failed
     # There *has* to be a better way to check if a value is in a string
-    succeeded=yes
-    for dir in $failed
+    for dir in $skipped_dirs
     do
 	if test $dir = ezdop; then
-	    succeeded=no
+	    passed=no
 	fi
     done
 
-    if test $succeeded = yes; then
+    GRC_BUILD_CONDITIONAL([gr-ezdop],[
 	dnl run_tests is created from run_tests.in.  Make it executable.
 	AC_CONFIG_COMMANDS([run_tests_ezdop], [chmod +x gr-ezdop/src/python/run_tests])
-	subdirs="$subdirs gr-ezdop"
-    else
-	failed="$failed gr-ezdop"
-    fi
+    ])
 ])

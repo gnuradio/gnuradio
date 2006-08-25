@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_GR_RADIO_ASTRONOMY],[
-    AC_CONFIG_SRCDIR([gr-radio-astronomy/src/lib/ra.i])
+    GRC_ENABLE([gr-radio-astronomy])
 
     AC_CONFIG_FILES([\
 	gr-radio-astronomy/Makefile \
@@ -28,8 +28,9 @@ AC_DEFUN([GRC_GR_RADIO_ASTRONOMY],[
 	gr-radio-astronomy/src/python/run_tests \
     ])
 
-    dnl run_tests is created from run_tests.in.  Make it executable.
-    AC_CONFIG_COMMANDS([run_tests_astronomy], [chmod +x gr-radio-astronomy/src/python/run_tests])
-
-    subdirs="$subdirs gr-radio-astronomy"
+    passed=yes
+    GRC_BUILD_CONDITIONAL([gr-radio-astronomy],[
+        dnl run_tests is created from run_tests.in.  Make it executable.
+        AC_CONFIG_COMMANDS([run_tests_astronomy], [chmod +x gr-radio-astronomy/src/python/run_tests])
+    ])
 ])

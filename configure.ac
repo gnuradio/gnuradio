@@ -23,6 +23,7 @@ AM_CONFIG_HEADER(config.h)
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET([])
 AM_INIT_AUTOMAKE(gnuradio,2.8svn)
+AC_CONFIG_SRCDIR([gnuradio-core/src/lib/runtime/gr_vmcircbuf.cc])
 
 GR_X86_64		dnl check for lib64 suffix
 LF_CONFIGURE_CC
@@ -149,7 +150,12 @@ AC_SUBST(DEFINES)
 
 dnl Component specific configuration
 dnl The order of the GR_ macros determines the order of compilation
-subdirs="config"
+AC_ARG_ENABLE(
+    [all-components],
+    [  --enable-all-components Build all components or stop on failed dependencies]
+)
+
+build_dirs="config"
 GRC_GNURADIO_CORE
 GRC_GNURADIO_EXAMPLES
 GRC_USRP
@@ -158,55 +164,54 @@ GRC_GR_AUDIO_ALSA
 GRC_GR_AUDIO_JACK
 GRC_GR_AUDIO_OSS
 GRC_GR_AUDIO_OSX
-GRC_GR_AUDIO_PORTAUDIO		dnl ***NOT TESTED***
-GRC_GR_AUDIO_WINDOWS		dnl ***NOT TESTED***
+GRC_GR_AUDIO_PORTAUDIO
+GRC_GR_AUDIO_WINDOWS
 GRC_GR_ATSC
 GRC_GR_COMEDI
-dnl GRC_GR_ERROR_CORRECTING_CODES  dnl disabled until fix for ticket:36
+GRC_GR_ERROR_CORRECTING_CODES
 GRC_GR_GSM_FR_VOCODER
 GRC_GR_RADAR
 GRC_GR_RADIO_ASTRONOMY
+GRC_GR_TRELLIS
 GRC_GR_VIDEO_SDL
 GRC_GR_WXGUI
 GRC_PMT
 GRC_MBLOCK			dnl this must come after GRC_PMT
-GRC_GR_TRELLIS
 GRC_EZDOP		
 GRC_GR_EZDOP			dnl this must come after GRC_EZDOP
 
-dnl Has list of successfully configured components
-AC_SUBST([subdirs],$subdirs)
-AC_SUBST([failed_subdirs], $failed)
+# Each component is now either to be built, was skipped, or failed dependencies
+AC_SUBST([build_dirs], [$build_dirs])
+AC_SUBST([skipped_dirs], [$skipped_dirs])
  
 AC_CONFIG_FILES([\
-	  Makefile \
-	  config/Makefile
+    Makefile \
+    config/Makefile
 ])
 
 AC_OUTPUT
 
 echo
-echo "*******************************************************************"
+echo "*********************************************************************"
 echo The following GNU Radio components have been successfully configured:
 echo 
-for dir in $subdirs
+for dir in $build_dirs
 do
     echo $dir
 done
 echo
-if test "$failed" != ""; then
-    echo However, the following components did not configure successfully due to 
-    echo missing dependencies:
+echo You my now run the 'make' command to build these components.
+echo
+if test "$skipped_dirs" != ""; then
+    echo "*********************************************************************"
+    echo The following components were skipped either because you asked not
+    echo to build them or they didn\'t pass configuration checks:
     echo
-    for dir in $failed
+    for dir in $skipped_dirs
     do
         echo $dir
     done
     echo
-    echo You may still run the 'make' command to build the successfully configured
-    echo components.
+    echo These components will not be built.
     echo
-    #exit 1
 fi
-echo You my now run the 'make' command to build these packages.
-echo

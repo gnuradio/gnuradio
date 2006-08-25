@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_PMT],[
-    AC_CONFIG_SRCDIR([pmt/src/lib/pmt.h])
+    GRC_ENABLE([pmt])
 
     AC_CONFIG_FILES([\
 	pmt/Makefile \
@@ -27,8 +27,9 @@ AC_DEFUN([GRC_PMT],[
 	pmt/src/lib/Makefile
     ])
 
-    dnl run_tests is created from run_tests.in.  Make it executable.
-    dnl AC_CONFIG_COMMANDS([run_tests_pmt], [chmod +x pmt/src/python/run_tests])
-
-    subdirs="$subdirs pmt"
+    passed=yes
+    GRC_BUILD_CONDITIONAL([pmt],[
+        dnl run_tests is created from run_tests.in.  Make it executable.
+	dnl AC_CONFIG_COMMANDS([run_tests_pmt], [chmod +x pmt/src/python/run_tests])
+    ])
 ])

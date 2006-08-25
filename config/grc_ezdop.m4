@@ -18,7 +18,7 @@ dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 
 AC_DEFUN([GRC_EZDOP],[
-    AC_CONFIG_SRCDIR([ezdop/src/host/ezdop/ezdop.h])
+    GRC_ENABLE([ezdop])
 
     AC_CONFIG_FILES([ \
 	ezdop/Makefile \
@@ -31,32 +31,37 @@ AC_DEFUN([GRC_EZDOP],[
 	ezdop/src/host/tests/Makefile \
     ])
 
-    succeeded=yes
+    passed=yes
 
     # Firmware build requires Atmel AVR microcontroller port of GCC
     AC_PATH_PROG([AVRGCC], [avr-gcc -v], [no])
     if test x$AVRGCC = xno; then
-    	succeeded=no
+    	passed=no
+	AC_MSG_RESULT([ezdop requires avr-gcc, not found.])
     fi
     
     # ...and binutils
     AC_PATH_PROG([AVROBJCOPY], [avr-objcopy], [no])
     if test x$AVROBJCOPY = xno; then
-    	succeeded=no
+    	passed=no
+	AC_MSG_RESULT([ezdop requires avr binutils, not found.])
     fi
     
     # ...and standard library (test not working yet)
-    #AC_CHECK_HEADERS([avr/io.h],[],[succeeded=no])
+    #AC_CHECK_HEADERS([avr/io.h],[],
+    #   [passed=no;AC_MSG_RESULT([ezdop requires avr glibc, not found.])])
 
     # Device access is via libftdi
     AC_LANG_PUSH(C)
-    AC_CHECK_HEADERS([ftdi.h],[],[succeeded=no])
+    AC_CHECK_HEADERS([ftdi.h],[],
+        [passed=no;AC_MSG_RESULT([ezdop requires ftdi.h, not found.])])
     save_LIBS="$LIBS"
-    AC_SEARCH_LIBS([ftdi_init], [ftdi],[FTDI_LIBS="$LIBS"],[succeeded=no])
+    AC_SEARCH_LIBS([ftdi_init], [ftdi],[FTDI_LIBS="$LIBS"],
+        [passed=no;AC_MSG_RESULT([ezdop requires libftdi, not found.])])
     LIBS="$save_LIBS"
     AC_LANG_POP
-    
-    if test x$succeeded = xyes; then
+
+    GRC_BUILD_CONDITIONAL([ezdop],[
 	EZDOP_INCLUDES='-I$(top_srcdir)/ezdop/src/host/ezdop/ -I$(top_srcdir)/ezdop/src/firmware/'
 	EZDOP_LIBS='-lezdop'
 	AC_SUBST(FTDI_LIBS)
@@ -64,9 +69,5 @@ AC_DEFUN([GRC_EZDOP],[
 	AC_SUBST(EZDOP_LIBS)
 	AC_SUBST(AVRGCC)
 	AC_SUBST(AVROBJCOPY)
-
-        subdirs="$subdirs ezdop"
-    else
-	failed="$failed ezdop"
-    fi
+    ])
 ])
