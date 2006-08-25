@@ -88,17 +88,18 @@ def open_tun_interface(tun_device_filename):
 
 class my_graph(gr.flow_graph):
 
-    def __init__(self, mod_class, demod_class, tx_subdev_spec, rx_subdev_spec,
-                 bitrate, decim_rate, interp_rate, spb,
-                 bt, rx_callback, options):
+    def __init__(self, mod_class, demod_class,
+                 tx_subdev_spec, rx_subdev_spec,
+                 rx_callback,
+                 options, kwargs):
 
         gr.flow_graph.__init__(self)
         self.txpath = transmit_path(self, mod_class, tx_subdev_spec,
-                                    bitrate, interp_rate, spb,
-                                    bt, options)
+                                    options.bitrate, options.interp, options.spb,
+                                    options.tx_gain, options, kwargs)
         self.rxpath = receive_path(self, demod_class, rx_subdev_spec,
-                                   bitrate, decim_rate, spb,
-                                   rx_callback, options)
+                                   options.bitrate, options.decim, options.spb,
+                                   rx_callback, options, {})
 
     def send_pkt(self, payload='', eof=False):
         return self.txpath.send_pkt(payload, eof)
@@ -181,23 +182,28 @@ def main():
 
     parser = OptionParser (option_class=eng_option)
     parser.add_option("-f", "--freq", type="eng_float", default=423.1e6,
-                       help="set Tx and Rx frequency to FREQ [default=%default]", metavar="FREQ")
+                      help="set Tx and Rx frequency to FREQ [default=%default]",
+                      metavar="FREQ")
     parser.add_option("-r", "--bitrate", type="eng_float", default=None,
                       help="specify bitrate.  spb and interp will be derived.")
     parser.add_option("-g", "--rx-gain", type="eng_float", default=27,
                       help="set rx gain")
+    parser.add_option("-p", "--tx-gain", type="eng_float", default=100,
+                      help="set tx gain")
     parser.add_option("-T", "--tx-subdev-spec", type="subdev", default=None,
                       help="select USRP Tx side A or B")
     parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
                       help="select USRP Rx side A or B")
-    parser.add_option("-S", "--spb", type="int", default=None, help="set samples/baud [default=%default]")
+    parser.add_option("-S", "--spb", type="int", default=None,
+                      help="set samples/baud [default=%default]")
     parser.add_option("-d", "--decim", type="intx", default=None,
                       help="set fpga decim rate to DECIM [default=%default]")
     parser.add_option("-i", "--interp", type="intx", default=None,
                       help="set fpga interpolation rate to INTERP [default=%default]")
     parser.add_option("-c", "--carrier-threshold", type="eng_float", default=30,
                       help="set carrier detect threshold (dB) [default=%default]")
-    parser.add_option("", "--bt", type="float", default=0.3, help="set bandwidth-time product [default=%default]")
+    parser.add_option("", "--bt", type="float", default=0.3,
+                      help="set bandwidth-time product [default=%default]")
     parser.add_option("","--tun-device-filename", default="/dev/net/tun",
                       help="path to tun device file [default=%default]")
     parser.add_option("-v","--verbose", action="store_true", default=False)
@@ -210,6 +216,10 @@ def main():
 
     if options.freq < 1e6:
         options.freq *= 1e6
+
+    mod_kwargs = {
+        'bt' : options.bt,
+        }
 
     # open the TUN/TAP interface
     (tun_fd, tun_ifname) = open_tun_interface(options.tun_device_filename)
@@ -244,9 +254,8 @@ def main():
     # build the graph (PHY)
     fg = my_graph(blks.gmsk2_mod, blks.gmsk2_demod,
                   options.tx_subdev_spec, options.rx_subdev_spec,
-                  options.bitrate, options.decim, options.interp,
-                  options.spb, options.bt, mac.phy_rx_callback,
-                  options)
+                  mac.phy_rx_callback,
+                  options, mod_kwargs)
 
     mac.set_flow_graph(fg)    # give the MAC a handle for the PHY
 
@@ -269,6 +278,7 @@ def main():
         print "Failed to set Rx frequency to %s" % (eng_notation.num_to_str(options.freq),)
         raise SystemExit
 
+    print "Tx gain: ", options.tx_gain
     fg.rxpath.set_gain(options.rx_gain)
     print "Rx gain_range: ", fg.rxpath.subdev.gain_range(), " using", fg.rxpath.gain
 
