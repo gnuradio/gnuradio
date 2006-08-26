@@ -25,21 +25,204 @@
 
 #include <string>
 
-std::string n2bs (int8_t number, size_t digits);
-std::string n2bs (int16_t number, size_t digits);
-std::string n2bs (int32_t number, size_t digits);
-#if 1
-std::string n2bs (long number, size_t digits);
-#endif
-std::string n2bs (int64_t number, size_t digits);
-std::string n2bs (u_int8_t number, size_t digits);
-std::string n2bs (u_int16_t number, size_t digits);
-std::string n2bs (u_int32_t number, size_t digits);
-#if 1
-std::string n2bs (unsigned long number, size_t digits);
-#endif
-std::string n2bs (u_int64_t number, size_t digits);
+std::string n2bs (char number, unsigned char digits);
+std::string n2bs (short number, unsigned char digits);
+std::string n2bs (int number, unsigned char digits);
+std::string n2bs (long number, unsigned char digits);
+std::string n2bs (long long number, unsigned char digits);
+std::string n2bs (unsigned char number, unsigned char digits);
+std::string n2bs (unsigned short number, unsigned char digits);
+std::string n2bs (unsigned int number, unsigned char digits);
+std::string n2bs (unsigned long number, unsigned char digits);
+std::string n2bs (unsigned long long number, unsigned char digits);
 
-void cout_binary (int number, int digits);
+inline std::string n2bs (char number, char digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (short number, char digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (int number, char digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long number, char digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long long number, char digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned char number, char digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned short number, char digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned int number, char digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long number, char digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long long number, char digits)
+{return (n2bs (number, (unsigned char) digits));};
+
+inline std::string n2bs (char number, unsigned short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (short number, unsigned short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (int number, unsigned short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long number, unsigned short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long long number, unsigned short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned char number, unsigned short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned short number, unsigned short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned int number, unsigned short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long number, unsigned short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long long number, unsigned short digits)
+{return (n2bs (number, (unsigned char) digits));};
+
+inline std::string n2bs (char number, short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (short number, short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (int number, short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long number, short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long long number, short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned char number, short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned short number, short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned int number, short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long number, short digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long long number, short digits)
+{return (n2bs (number, (unsigned char) digits));};
+
+inline std::string n2bs (char number, unsigned int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (short number, unsigned int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (int number, unsigned int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long number, unsigned int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long long number, unsigned int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned char number, unsigned int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned short number, unsigned int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned int number, unsigned int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long number, unsigned int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long long number, unsigned int digits)
+{return (n2bs (number, (unsigned char) digits));};
+
+inline std::string n2bs (char number, int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (short number, int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (int number, int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long number, int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long long number, int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned char number, int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned short number, int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned int number, int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long number, int digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long long number, int digits)
+{return (n2bs (number, (unsigned char) digits));};
+
+inline std::string n2bs (char number, unsigned long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (short number, unsigned long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (int number, unsigned long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long number, unsigned long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long long number, unsigned long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned char number, unsigned long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned short number, unsigned long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned int number, unsigned long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long number, unsigned long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long long number, unsigned long digits)
+{return (n2bs (number, (unsigned char) digits));};
+
+inline std::string n2bs (char number, long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (short number, long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (int number, long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long number, long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long long number, long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned char number, long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned short number, long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned int number, long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long number, long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long long number, long digits)
+{return (n2bs (number, (unsigned char) digits));};
+
+inline std::string n2bs (char number, unsigned long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (short number, unsigned long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (int number, unsigned long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long number, unsigned long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long long number, unsigned long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned char number, unsigned long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned short number, unsigned long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned int number, unsigned long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long number, unsigned long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long long number, unsigned long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+
+inline std::string n2bs (char number, long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (short number, long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (int number, long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long number, long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (long long number, long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned char number, long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned short number, long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned int number, long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long number, long long digits)
+{return (n2bs (number, (unsigned char) digits));};
+inline std::string n2bs (unsigned long long number, long long digits)
+{return (n2bs (number, (unsigned char) digits));};
 
 #endif /* INCLUDED_N2BS_H */
