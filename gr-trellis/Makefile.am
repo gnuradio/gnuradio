@@ -21,6 +21,5 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = src
-DIST_SUBDIRS = src doc
+SUBDIRS = src doc
 

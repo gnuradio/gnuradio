@@ -19,33 +19,46 @@
 # Boston, MA 02111-1307, USA.
 # 
 
-TARGETS = gr-trellis.html
+docdir=$(prefix)/share/doc/@PACKAGE@-@VERSION@
 
+HTML_FILES =
 
-# To avoid build problems for folks who don't have xmlto installed, we
-# don't build the docs by default.
+if HAS_XMLTO
+HTML_FILES += \
+    gr-trellis.html
+endif
 
-# html: $(TARGETS)
-all: $(TARGETS)
+all: $(HTML_FILES)
 
-
-EXTRA_DIST = 				
-
+EXTRA_DIST = \
+    gr-trellis.xml \
+    make_numbered_listing.py \
+    test_tcm.py \
+    test_tcm.py.xml
 
 BUILT_XML_FILES = 			
 
-
-gr-trellis.html : gr-trellis.xml $(BUILT_XML_FILES)
-
-
-
 # ----------------------------------------------------------------
-
-clean:
-	-rm -f $(TARGETS) $(BUILT_XML_FILES)
 
 %.html : %.xml
 	xmlto html-nochunks $<
 
 %.xml : % make_numbered_listing.py
 	./make_numbered_listing.py $<
+
+install-data-local:
+	mkdir -p $(DESTDIR)$(docdir)/html
+	@for i in $(HTML_FILES); do \
+		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(docdir)/html"; \
+		$(INSTALL_DATA) $$i $(DESTDIR)$(docdir)/html; \
+	done
+
+uninstall-local:
+	@for i in $(HTML_FILES); do \
+		echo "$(RM) $(DESTDIR)$(docdir)/$$i;"; \
+		$(RM) $(DESTDIR)$(docdir)/$$i; \
+	done
+	$(RM) -fr $(DESTDIR)$(docdir)/html
+
+clean-local:
+	$(RM) -fr $(HTML_FILES) *~

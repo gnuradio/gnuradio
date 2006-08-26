@@ -47,6 +47,9 @@ GR_FORTRAN
 GR_NO_UNDEFINED		dnl do we need the -no-undefined linker flag
 GR_SCRIPTING
 
+AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
+AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
+
 dnl Checks for libraries.
 AC_CHECK_LIB(socket,socket)
 

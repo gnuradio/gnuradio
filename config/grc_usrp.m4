@@ -48,8 +48,6 @@ AC_DEFUN([GRC_USRP],[
     UTILS_FUNC_MKSTEMP
 
     # These checks don't fail
-    AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
-    AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
     AC_C_BIGENDIAN
     AC_CHECK_HEADERS([byteswap.h])
     AC_CHECK_FUNCS([getrusage sched_setscheduler])
