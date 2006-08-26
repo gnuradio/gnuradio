@@ -73,7 +73,7 @@ _trellis_la_SOURCES = 			\
 	$(GENERATED_CC)                 
 
 # magic flags
-_trellis_la_LDFLAGS = -module -avoid-version
+_trellis_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
 # link the library against some comon swig runtime code and the 
 # c++ standard library
