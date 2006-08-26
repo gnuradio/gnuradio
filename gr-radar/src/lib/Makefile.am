@@ -57,6 +57,13 @@ libradar_la_SOURCES = 			\
 	simulation.h			\
 	simulation.cc			
 
+# magic flags
+libradar_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
+
+# link the libraray against the c++ standard library
+libradar_la_LIBADD = 			\
+	-lstdc++			
+
 bin_PROGRAMS = 				\
 	xambi				\
 	eb-xambi			\
@@ -78,22 +85,6 @@ sim_airplane2_LDADD = libradar.la $(GNURADIO_CORE_LIBS)
 # This gets howto.py installed in the right place
 # ourpython_PYTHON =			
 
-#ourlib_LTLIBRARIES = _howto.la
-
-# These are the source files that go into the shared library
-#_howto_la_SOURCES = 			\
-#	howto.cc			\
-#	howto_square_ff.cc		\
-#	howto_square2_ff.cc		
-
-# magic flags
-#_howto_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
-
-# link the library against some comon swig runtime code and the 
-# c++ standard library
-#_howto_la_LIBADD = 			\
-#	$(PYTHON_LDFLAGS)		\
-#	-lstdc++			
 
 #howto.cc howto.py: howto.i $(ALL_IFILES)
 #	$(SWIG) $(SWIGPYTHONARGS) -module howto -o howto.cc $<
