@@ -20,7 +20,8 @@
 # Boston, MA 02111-1307, USA.
 # 
 
-from gnuradio import gr, gr_unittest, ecc
+from gnuradio import gr, gr_unittest
+import ecc
 
 class qa_ecc (gr_unittest.TestCase):
 
