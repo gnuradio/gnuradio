@@ -32,6 +32,9 @@ export PYTHONPATH
 DYLD_LIBRARY_PATH=$grlibdir
 export DYLD_LIBRARY_PATH
 
+# For Win32
+PATH=$grlibdir:$PATH
+
 # Don't load user or system prefs
 GR_DONT_LOAD_PREFS=1
 export GR_DONT_LOAD_PREFS
