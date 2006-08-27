@@ -23,9 +23,18 @@
 #ifndef _ASSEMBLY_H_
 #define _ASSEMBLY_H_
 
+#if defined (__APPLE__) && defined (__APPLE_CC__)
 
+// XCode ignores the .scl and .type functions in XCode 2.2.1 and 2.3,
+// but creates an error in XCode 2.4.  Just ignore them.
 
-#ifndef __ELF__
+#define GLOB_SYMB(f)    _ ## f
+
+#define DEF_FUNC_HEAD(f)  /* none */
+
+#define FUNC_TAIL(f)    /* none*/
+
+#elif !defined (__ELF__)
 
 /*
  * Too bad, the following define does not work as expected --SF
