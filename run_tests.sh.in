@@ -1,0 +1,55 @@
+#!/bin/sh
+
+# First argument is absolute path to top of component source directory
+# Second argument is absolute path to top of component build directory
+# Third argument is component source directory for qa tests
+
+# Where to find my swig generated shared library
+mylibdir=$2/src:$2/src/.libs:$2/src/lib:$2/src/lib/.libs
+
+# Where to find my swig generated python module
+mysrcdir=$1/src:$1/src/lib
+
+# Where to find my hand written python modules
+mypydir=$1/src:$1/src/python
+
+# Where to find core's swig generated shared libraries
+grswigdir=@abs_top_builddir@/gnuradio-core/src/lib/swig
+grswigdir=$grswigdir:$grswigdir/.libs
+
+# Where to find core's python modules
+grpydir=@abs_top_srcdir@/gnuradio-core/src/python
+
+# Where to find core's master library files
+grlibdir=@abs_top_srcdir@/gnuradio-core/src/lib
+grlibdir=$grlibdir:$grlibdir/.libs
+
+# Construct search path for python modules
+PYTHONPATH="$mylibdir:$mysrcdir:$mypydir:$grswigdir:$grpydir:$PYTHONPATH"
+export PYTHONPATH
+
+# For OS/X
+DYLD_LIBRARY_PATH=$grlibdir
+export DYLD_LIBRARY_PATH
+
+# Don't load user or system prefs
+GR_DONT_LOAD_PREFS=1
+export GR_DONT_LOAD_PREFS
+
+# Run everything that matches qa_*.py and return the final result.
+
+ok=yes
+for file in $3/qa_*.py
+do
+  if ! $file
+  then
+    ok=no
+  fi  
+done
+
+if [ $ok = yes ]
+then
+  exit 0
+else
+  exit 1
+fi

@@ -21,10 +21,11 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = 				\
-	bootstrap 			\
-	configure 			\
-	config.h.in
+EXTRA_DIST = \
+	bootstrap \
+	configure \
+	config.h.in \
+	run_tests.sh.in
 
 SUBDIRS = @build_dirs@
 DIST_SUBDIRS = @build_dirs@ @skipped_dirs@

@@ -1,33 +1,14 @@
 #!/bin/sh
 
-swigbld=@abs_top_builddir@/gnuradio-core/src/lib/swig
-swigsrc=@abs_top_srcdir@/gnuradio-core/src/lib/swig
-py=@abs_top_srcdir@/gnuradio-core/src/python
+# 1st parameter is absolute path to component source directory
+# 2nd parameter is absolute path to component build directory
+# 3rd parameter is path to Python QA directory
 
-PYTHONPATH="$swigbld:$swigbld/.libs:$swigsrc:$py"
-export PYTHONPATH
+# Note: calling master run_tests.sh in gnuradio core is not strictly
+# correct, as it will result in a partially bogus PYTHONPATH, but it
+# does make the correct paths in the second half so all is well.
 
-# for OS/X
-DYLD_LIBRARY_PATH="@abs_top_builddir@/gnuradio-core/src/lib/.libs"
-export DYLD_LIBRARY_PATH
-
-# Don't load user or system prefs
-GR_DONT_LOAD_PREFS=1
-export GR_DONT_LOAD_PREFS
-
-ok=yes
-for file in @srcdir@/qa_*.py
-do
-  echo $file
-  if ! $file
-  then
-    ok=no
-  fi  
-done
-
-if [ $ok = yes ]
-then
-  exit 0
-else
-  exit 1
-fi
+@top_builddir@/run_tests.sh \
+    @abs_top_srcdir@/gnuradio-core \
+    @abs_top_builddir@/gnuradio-core \
+    @srcdir@

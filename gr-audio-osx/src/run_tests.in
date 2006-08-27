@@ -1,53 +1,10 @@
 #!/bin/sh
 
-# All this strange PYTHONPATH manipulation is required to run our
-# tests using our just built shared library and swig-generated python
-# code prior to installation.
+# 1st parameter is absolute path to component source directory
+# 2nd parameter is absolute path to component build directory
+# 3rd parameter is path to Python QA directory
 
-# build tree == src tree unless you're doing a VPATH build.  
-# If you don't know what a VPATH build is, you're not doing one.  Relax...
-
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-
-# Where to look in the build tree for our shared library
-libbld=@abs_top_builddir@/gr-audio-osx/src
-# Where to look in the src tree for swig generated python code
-libsrc=@abs_top_srcdir@/gr-audio-osx/src
-# Where to look in the src tree for hand written python code
-py=@abs_top_srcdir@/gr-audio-osx/src
-
-# Where to look for GNU Radio python modules in current build tree
-# FIXME this is wrong on a distcheck.  We really need to ask gnuradio-core
-# where it put its python files.
-grpythonbld=@abs_top_srcdir@/gnuradio-core/src/python
-grpythonbld=$grpythonbld:@abs_top_builddir@/gnuradio-core/src/lib/swig
-grpythonbld=$grpythonbld:@abs_top_builddir@/gnuradio-core/src/lib/swig/.libs
-
-PYTHONPATH="$grpythonbld:$libbld:$libbld/.libs:$libsrc:$py:$PYTHONPATH"
-export PYTHONPATH
-
-# For OS/X
-DYLD_LIBRARY_PATH="@abs_top_builddir@/gnuradio-core/src/lib/.libs"
-export DYLD_LIBRARY_PATH
-
-#
-# This is the simple part...
-# Run everything that matches qa_*.py and return the final result.
-#
-
-ok=yes
-for file in @srcdir@/qa_*.py
-do
-  if ! $file
-  then
-    ok=no
-  fi  
-done
-
-if [ $ok = yes ]
-then
-  exit 0
-else
-  exit 1
-fi
+@top_builddir@/run_tests.sh \
+    @abs_top_srcdir@/gr-audio-osx \
+    @abs_top_builddir@/gr-audio-osx \
+    @srcdir@

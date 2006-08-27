@@ -189,8 +189,12 @@ AC_SUBST([skipped_dirs], [$skipped_dirs])
  
 AC_CONFIG_FILES([\
     Makefile \
+    run_tests.sh
     config/Makefile
 ])
+
+dnl run_tests.sh is created from run_tests.in.sh.  Make it executable.
+AC_CONFIG_COMMANDS([run_tests_build], [chmod +x run_tests.sh])
 
 AC_OUTPUT
 
