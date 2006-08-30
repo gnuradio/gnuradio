@@ -11,6 +11,7 @@
 #include "interleaver.h"
 #include "trellis_permutation.h"
 #include "trellis_siso_f.h"
+#include "trellis_siso_combined_f.h"
 #include <stdexcept>
 %}
 
@@ -20,6 +21,7 @@
 %include "interleaver.i"
 %include "trellis_permutation.i"
 %include "trellis_siso_f.i"
+%include "trellis_siso_combined_f.i"
 
 %include "trellis_metric_type.h"
 %include "trellis_siso_type.h"

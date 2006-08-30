@@ -70,6 +70,7 @@ _trellis_la_SOURCES = 			\
         trellis_calc_metric.cc		\
         trellis_permutation.cc		\
 	trellis_siso_f.cc		\
+	trellis_siso_combined_f.cc	\
 	$(GENERATED_CC)                 
 
 # magic flags
@@ -96,6 +97,7 @@ grinclude_HEADERS =			\
         trellis_permutation.h		\
         trellis_siso_type.h		\
 	trellis_siso_f.h		\
+	trellis_siso_combined_f.h		\
 	$(GENERATED_H)                  
 
 

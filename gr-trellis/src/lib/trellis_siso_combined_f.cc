@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <trellis_siso_f.h>
+#include <trellis_siso_combined_f.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
 #include <assert.h>
@@ -32,28 +32,34 @@
   
 static const float INF = 1.0e9;
 
-trellis_siso_f_sptr 
-trellis_make_siso_f (
+trellis_siso_combined_f_sptr 
+trellis_make_siso_combined_f (
     const fsm &FSM,
     int K,
     int S0,
     int SK,
     bool POSTI,
     bool POSTO,
-    trellis_siso_type_t SISO_TYPE)
+    trellis_siso_type_t SISO_TYPE,
+    int D,
+    const std::vector<float> &TABLE,
+    trellis_metric_type_t TYPE)
 {
-  return trellis_siso_f_sptr (new trellis_siso_f (FSM,K,S0,SK,POSTI,POSTO,SISO_TYPE));
+  return trellis_siso_combined_f_sptr (new trellis_siso_combined_f (FSM,K,S0,SK,POSTI,POSTO,SISO_TYPE,D,TABLE,TYPE));
 }
 
-trellis_siso_f::trellis_siso_f (
+trellis_siso_combined_f::trellis_siso_combined_f (
     const fsm &FSM,
     int K,
     int S0,
     int SK,
     bool POSTI,
     bool POSTO,
-    trellis_siso_type_t SISO_TYPE)
-  : gr_block ("siso_f",
+    trellis_siso_type_t SISO_TYPE,
+    int D,
+    const std::vector<float> &TABLE,
+    trellis_metric_type_t TYPE)
+  : gr_block ("siso_combined_f",
 			  gr_make_io_signature (1, -1, sizeof (float)),
 			  gr_make_io_signature (1, -1, sizeof (float))),  
   d_FSM (FSM),
@@ -62,7 +68,10 @@ trellis_siso_f::trellis_siso_f (
   d_SK (SK),
   d_POSTI (POSTI),
   d_POSTO (POSTO),
-  d_SISO_TYPE (SISO_TYPE)//,
+  d_SISO_TYPE (SISO_TYPE),
+  d_D (D),
+  d_TABLE (TABLE),
+  d_TYPE (TYPE)//,
   //d_alpha(FSM.S()*(K+1)),
   //d_beta(FSM.S()*(K+1))
 {
@@ -83,15 +92,15 @@ trellis_siso_f::trellis_siso_f (
     // let's try (assumption O>I)
     //set_relative_rate ( multiple / ((double) d_FSM.O()) );
     // I am tempted to automate like this
-    if(d_FSM.I() <= d_FSM.O())
-      set_relative_rate ( multiple / ((double) d_FSM.O()) );
+    if(d_FSM.I() <= d_D)
+      set_relative_rate ( multiple / ((double) d_D) );
     else
       set_relative_rate ( multiple / ((double) d_FSM.I()) ); 
 }
 
 
 void
-trellis_siso_f::forecast (int noutput_items, gr_vector_int &ninput_items_required)
+trellis_siso_combined_f::forecast (int noutput_items, gr_vector_int &ninput_items_required)
 {
   int multiple;
   if (d_POSTI && d_POSTO)
@@ -105,7 +114,7 @@ trellis_siso_f::forecast (int noutput_items, gr_vector_int &ninput_items_require
   //printf("forecast: Multiple = %d\n",multiple); 
   assert (noutput_items % (d_K*multiple) == 0);
   int input_required1 =  d_FSM.I() * (noutput_items/multiple) ;
-  int input_required2 =  d_FSM.O() * (noutput_items/multiple) ;
+  int input_required2 =  d_D * (noutput_items/multiple) ;
   //printf("forecast: Output requirements:  %d\n",noutput_items);
   //printf("forecast: Input requirements:  %d   %d\n",input_required1,input_required2);
   unsigned ninputs = ninput_items_required.size();
@@ -126,7 +135,7 @@ inline float min_star(float a, float b)
   return (a <= b ? a : b)-log(1+exp(a <= b ? a-b : b-a));
 }
 
-void siso_algorithm(int I, int S, int O, 
+void siso_algorithm_combined(int I, int S, int O, 
              const std::vector<int> &NS,
              const std::vector<int> &OS,
              const std::vector<int> &PS,
@@ -135,7 +144,10 @@ void siso_algorithm(int I, int S, int O,
              int S0,int SK,
              bool POSTI, bool POSTO,
              float (*p2mymin)(float,float),
-             const float *priori, const float *prioro, float *post//,
+             int D,
+             const std::vector<float> &TABLE,
+             trellis_metric_type_t TYPE,
+             const float *priori, const float *observations, float *post//,
              //std::vector<float> &alpha,
              //std::vector<float> &beta
              ) 
@@ -143,6 +155,7 @@ void siso_algorithm(int I, int S, int O,
   float norm,mm,minm;
   std::vector<float> alpha(S*(K+1));
   std::vector<float> beta(S*(K+1));
+  float *prioro = new float[O*K];
 
 
   if(S0<0) { // initial state not specified
@@ -154,6 +167,7 @@ void siso_algorithm(int I, int S, int O,
   }
 
   for(int k=0;k<K;k++) { // forward recursion
+      calc_metric_f(O, D, TABLE, &(observations[k*D]), &(prioro[k*O]),TYPE); // calc metrics
       norm=INF;
       for(int j=0;j<S;j++) {
           minm=INF;
@@ -194,79 +208,81 @@ void siso_algorithm(int I, int S, int O,
   }
 
 
-if (POSTI && POSTO)
-{
-  for(int k=0;k<K;k++) { // input combining
-      norm=INF;
-      for(int i=0;i<I;i++) {
-          minm=INF;
-          for(int j=0;j<S;j++) {
-              mm=alpha[k*S+j]+prioro[k*O+OS[j*I+i]]+beta[(k+1)*S+NS[j*I+i]];
-              minm=(*p2mymin)(minm,mm);
-          }
-          post[k*(I+O)+i]=minm;
-          if(minm<norm) norm=minm;
-      }
-      for(int i=0;i<I;i++)
-          post[k*(I+O)+i]-=norm; // normalize metrics
-  }
+  if (POSTI && POSTO)
+  {
+    for(int k=0;k<K;k++) { // input combining
+        norm=INF;
+        for(int i=0;i<I;i++) {
+            minm=INF;
+            for(int j=0;j<S;j++) {
+                mm=alpha[k*S+j]+prioro[k*O+OS[j*I+i]]+beta[(k+1)*S+NS[j*I+i]];
+                minm=(*p2mymin)(minm,mm);
+            }
+            post[k*(I+O)+i]=minm;
+            if(minm<norm) norm=minm;
+        }
+        for(int i=0;i<I;i++)
+            post[k*(I+O)+i]-=norm; // normalize metrics
+    }
 
 
-  for(int k=0;k<K;k++) { // output combining
-      norm=INF;
-      for(int n=0;n<O;n++) {
-          minm=INF;
-          for(int j=0;j<S;j++) {
-              for(int i=0;i<I;i++) {
-                  mm= (n==OS[j*I+i] ? alpha[k*S+j]+priori[k*I+i]+beta[(k+1)*S+NS[j*I+i]] : INF);
-                  minm=(*p2mymin)(minm,mm);
-              }
-          }
-          post[k*(I+O)+I+n]=minm;
-          if(minm<norm) norm=minm;
-      }
-      for(int n=0;n<O;n++)
-          post[k*(I+O)+I+n]-=norm; // normalize metrics
+    for(int k=0;k<K;k++) { // output combining
+        norm=INF;
+        for(int n=0;n<O;n++) {
+            minm=INF;
+            for(int j=0;j<S;j++) {
+                for(int i=0;i<I;i++) {
+                    mm= (n==OS[j*I+i] ? alpha[k*S+j]+priori[k*I+i]+beta[(k+1)*S+NS[j*I+i]] : INF);
+                    minm=(*p2mymin)(minm,mm);
+                }
+            }
+            post[k*(I+O)+I+n]=minm;
+            if(minm<norm) norm=minm;
+        }
+        for(int n=0;n<O;n++)
+            post[k*(I+O)+I+n]-=norm; // normalize metrics
+    }
+  } 
+  else if(POSTI) 
+  {
+    for(int k=0;k<K;k++) { // input combining
+        norm=INF;
+        for(int i=0;i<I;i++) {
+            minm=INF;
+            for(int j=0;j<S;j++) {
+                mm=alpha[k*S+j]+prioro[k*O+OS[j*I+i]]+beta[(k+1)*S+NS[j*I+i]];
+                minm=(*p2mymin)(minm,mm);
+            }
+            post[k*I+i]=minm;
+            if(minm<norm) norm=minm;
+        }
+        for(int i=0;i<I;i++)
+            post[k*I+i]-=norm; // normalize metrics
+    }
   }
-} 
-else if(POSTI) 
-{
-  for(int k=0;k<K;k++) { // input combining
-      norm=INF;
-      for(int i=0;i<I;i++) {
-          minm=INF;
-          for(int j=0;j<S;j++) {
-              mm=alpha[k*S+j]+prioro[k*O+OS[j*I+i]]+beta[(k+1)*S+NS[j*I+i]];
-              minm=(*p2mymin)(minm,mm);
-          }
-          post[k*I+i]=minm;
-          if(minm<norm) norm=minm;
-      }
-      for(int i=0;i<I;i++)
-          post[k*I+i]-=norm; // normalize metrics
+  else if(POSTO)
+  {
+    for(int k=0;k<K;k++) { // output combining
+        norm=INF;
+        for(int n=0;n<O;n++) {
+            minm=INF;
+            for(int j=0;j<S;j++) {
+                for(int i=0;i<I;i++) {
+                    mm= (n==OS[j*I+i] ? alpha[k*S+j]+priori[k*I+i]+beta[(k+1)*S+NS[j*I+i]] : INF);
+                    minm=(*p2mymin)(minm,mm);
+                }
+            }
+            post[k*O+n]=minm;
+            if(minm<norm) norm=minm;
+        }
+        for(int n=0;n<O;n++)
+            post[k*O+n]-=norm; // normalize metrics
+    }
   }
-}
-else if(POSTO)
-{
-  for(int k=0;k<K;k++) { // output combining
-      norm=INF;
-      for(int n=0;n<O;n++) {
-          minm=INF;
-          for(int j=0;j<S;j++) {
-              for(int i=0;i<I;i++) {
-                  mm= (n==OS[j*I+i] ? alpha[k*S+j]+priori[k*I+i]+beta[(k+1)*S+NS[j*I+i]] : INF);
-                  minm=(*p2mymin)(minm,mm);
-              }
-          }
-          post[k*O+n]=minm;
-          if(minm<norm) norm=minm;
-      }
-      for(int n=0;n<O;n++)
-          post[k*O+n]-=norm; // normalize metrics
-  }
-}
-else
+  else
     throw std::runtime_error ("Not both POSTI and POSTO can be false.");
+
+  delete [] prioro;
 
 }
 
@@ -276,7 +292,7 @@ else
 
 
 int
-trellis_siso_f::general_work (int noutput_items,
+trellis_siso_combined_f::general_work (int noutput_items,
                         gr_vector_int &ninput_items,
                         gr_vector_const_void_star &input_items,
                         gr_vector_void_star &output_items)
@@ -312,12 +328,13 @@ trellis_siso_f::general_work (int noutput_items,
     const float *in2 = (const float *) input_items[2*m+1];
     float *out = (float *) output_items[m];
     for (int n=0;n<nblocks;n++) {
-      siso_algorithm(d_FSM.I(),d_FSM.S(),d_FSM.O(),
+      siso_algorithm_combined(d_FSM.I(),d_FSM.S(),d_FSM.O(),
         d_FSM.NS(),d_FSM.OS(),d_FSM.PS(),d_FSM.PI(),
         d_K,d_S0,d_SK,
         d_POSTI,d_POSTO,
         p2min,
-        &(in1[n*d_K*d_FSM.I()]),&(in2[n*d_K*d_FSM.O()]),
+        d_D,d_TABLE,d_TYPE,
+        &(in1[n*d_K*d_FSM.I()]),&(in2[n*d_K*d_D]),
         &(out[n*d_K*multiple])//,
         //d_alpha,d_beta
         );
@@ -326,7 +343,7 @@ trellis_siso_f::general_work (int noutput_items,
 
   for (unsigned int i = 0; i < input_items.size()/2; i++) {
     consume(2*i,d_FSM.I() * noutput_items / multiple );
-    consume(2*i+1,d_FSM.O() * noutput_items / multiple );
+    consume(2*i+1,d_D * noutput_items / multiple );
   }
 
   return noutput_items;
