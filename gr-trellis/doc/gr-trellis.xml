@@ -178,12 +178,18 @@ private:
   std::vector&lt;int&gt; d_OS;
   std::vector&lt;int&gt; d_PS;
   std::vector&lt;int&gt; d_PI;
+  std::vector&lt;int&gt; d_TMi;
+  std::vector&lt;int&gt; d_TMl;
+  void generate_PS_PI ();
+  void generate_TM ();
+  bool find_es(int es);
 public:
   fsm();
   fsm(const fsm &amp;FSM);
-  fsm(const int I, const int S, const int O, const std::vector&lt;int&gt; &amp;NS, const std::vector&lt;int&gt; &amp;OS);
+  fsm(int I, int S, int O, const std::vector&lt;int&gt; &amp;NS, const std::vector&lt;int&gt; &amp;OS);
   fsm(const char *name);
-  fsm(const int mod_size, const int ch_length);
+  fsm(int k, int n, const std::vector&lt;int&gt; &amp;G);
+  fsm(int mod_size, int ch_length);
   int I () const { return d_I; }
   int S () const { return d_S; }
   int O () const { return d_O; }
@@ -191,6 +197,8 @@ public:
   const std::vector&lt;int&gt; &amp; OS () const { return d_OS; }
   const std::vector&lt;int&gt; &amp; PS () const { return d_PS; }
   const std::vector&lt;int&gt; &amp; PI () const { return d_PI; }
+  const std::vector&lt;int&gt; &amp; TMi () const { return d_TMi; }
+  const std::vector&lt;int&gt; &amp; TMl () const { return d_TMl; }
 };
 </programlisting>
 
@@ -247,8 +255,24 @@ For instance, the file containing the information for the example mentioned abov
 </para>
 </listitem>
 
+
 <listitem>
-<para>The third way is specific to FSMs resulting from shift registers, and the output symbol being the entire transition (ie, current_state and current_input). These FSMs are usefull when describibg ISI channels. In particular the state is comprised of the.....
+<para>
+The third way is specific to FSMs representing binary (n,k) conolutional codes. These FSMs are specified by the number of input bits k, the number of output bits n, and the generator matrix, which is a k x n matrix of integers 
+G = [g<subscript>i,j</subscript>]<subscript>i=1:k, j=1:n</subscript>, given as an one-dimensional STL vector.
+Each integer g<subscript>i,j</subscript> is the decimal representation of the 
+polynomial g<subscript>i,j</subscript>(D) (e.g., g<subscript>i,j</subscript>= 6 = 110<subscript>2</subscript> is interpreted as g<subscript>i,j</subscript>(D)=1+D) describing the connections from  the sequence x<subscript>i</subscript> to 
+y<subscript>j</subscript> (e.g., in the above example y<subscript>j</subscript>(k) = x<subscript>i</subscript>(k) + x<subscript>i</subscript>(k-1)).
+</para>
+<programlisting>
+  fsm(int k, int n, const std::vector&lt;int&gt; &amp;G);
+</programlisting>
+</listitem>
+
+
+<listitem>
+<para>
+The fourth way is specific to FSMs resulting from shift registers, and the output symbol being the entire transition (ie, current_state and current_input). These FSMs are usefull when describibg ISI channels. In particular the state is comprised of the input symbols x(k-1), x(k-2),...,x(k-L), where L = ch_length-1 and each x(i) belongs to an alphabet of size mod_size. The output is taken to be x(k), x(k-1), x(k-2),...,x(k-L) (in decimal format)
 </para>
 <programlisting>
   fsm(const int mod_size, const int ch_length);
@@ -259,7 +283,7 @@ For instance, the file containing the information for the example mentioned abov
 
 
 <para>
-Finally, as can be seen from the above description, there are
+As can be seen from the above description, there are
 two more variables included in the FSM class implementation, 
 the PS and the PI matrices. These are computed internally 
 when an FSM is instantiated and their meaning is as follows.
@@ -289,10 +313,57 @@ s<subscript>k</subscript> = NS(PS(s<subscript>k</subscript>,i),PI(s<subscript>k<
 </para>
 
 
+<para>
+Finally, there are
+two more variables included in the FSM class implementation,
+the TMl and the TMi matrices. These are both S x S matrices (represented as STL vectors) computed internally
+when an FSM is instantiated and their meaning is as follows.
+TMl(i,j) is the minimum number of trellis steps required to go from state i to state j.
+Similarly, TMi(i,j) is the initial input required to get you from state i to state j in the minimum number of steps. As an example, if TMl(1,4)=2, it means that you need 2 steps in the trellis to get from state 1 to state 4. Further,
+if TMi(1,4)=0 it means that the first such step will be followed if when at state 1 the input is 0. Furthermore, suppose that NS(1,0)=2. Then, TMl(2,4) should be 1 (ie, one more step is needed when starting from state 2 and having state 4 as the final destination). Finally, TMi(2,4) will give us the second input required to complete the path from 1 to 4.
+These matrices are useful when we want to implement an encoder with proper state termination. For instance, based on these matrices we can evaluate how many 
+additional input symbols (and which particular inputs) are required to be appended at the end of an input sequence so that the final state is always 0.
+
+</para>
+
+
 </sect1>
 
 
 
+<!--=====================================================-->
+<sect1 id="blocks"><title>Blocks Using the FSM structure</title>
+
+<para>
+In this section we give a brief description of the basic blocks implemented that make use of the previously described FSM structure.
+</para>
+
+
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<sect2 id="encoder"><title>Trellis Encoder</title>
+
+<para>
+The trellis.encoder_XX(FSM, ST) block instantiates an FSM encoder corresponding to the fsm FSM and having initial state ST. The input and output is a sequence of bytes, shorts or integers. 
+</para>
+
+</sect2>
+
+<!-- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% -->
+<sect2 id="decoder"><title>Viterbi Decoder</title>
+
+<para>
+The trellis.viterbi_X(FSM, K, S0, SK) block instantiates a Viterbi decoder
+for an underlying ...
+</para>
+
+</sect2>
+
+
+
+
+
+
+</sect1>
 
 
 <!--=====================================================-->
@@ -514,8 +585,8 @@ Improve the documentation :-)
 
 <listitem>
 <para>
-automate fsm generation from generator polynomials 
-(feedforward or feedback form).
+automate fsm generation from rational functions
+(feedback form).
 </para>
 </listitem>
 
@@ -527,8 +598,7 @@ Optimize the VA code.
 
 <listitem>
 <para>
-Provide implementation of soft-input soft-output (SISO) decoders for 
-potential use in concatenated systems. Also a host of suboptimal
+A host of suboptimal
 decoders, eg, sphere decoding, M- and T- algorithms, sequential decoding, etc.
 can be implemented.
 </para>
@@ -542,6 +612,7 @@ we can design it in principle. One question is, whether we should
 use the encoder, and SISO blocks and connect them
 through GNU radio or we should implement turbo-decoding
 as a single block (issues with buffering between blocks).
+So far the former has been implemented.
 </para>
 </listitem>
 
