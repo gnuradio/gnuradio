@@ -9,10 +9,8 @@ import sys
 import random
 import fsm_utils
 
-
-
-def make_rx(fg,fo,fi,dimensionality,constellation,K,interleaver,IT,Es,N0,type):
-    metrics_in = trellis.metrics_f(fi.O(),dimensionality,constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner Viterbi
+def make_rx(fg,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,type):
+    metrics_in = trellis.metrics_f(fi.O(),dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner SISO
     scale = gr.multiply_const_ff(1.0/N0)
     gnd = gr.vector_source_f([0],True);
 
@@ -39,7 +37,7 @@ def make_rx(fg,fo,fi,dimensionality,constellation,K,interleaver,IT,Es,N0,type):
     # connect the rest
     for it in range(IT):
       if it < IT-1:
-        fg.connect (metrics_in,(siso_in[it+1],1))
+        fg.connect (scale,(siso_in[it+1],1))
         fg.connect (siso_in[it],deinter[it],(siso_out[it],1))
         fg.connect (gnd,(siso_out[it],0))
         fg.connect (siso_out[it],inter[it+1])
@@ -51,93 +49,99 @@ def make_rx(fg,fo,fi,dimensionality,constellation,K,interleaver,IT,Es,N0,type):
     return (metrics_in,siso_out[IT-1])
 
 
-def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,Es,N0,IT,seed):
+def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constellation,Es,N0,IT,seed):
     fg = gr.flow_graph ()
-
+    L = len(channel)
 
     # TX
-    src = gr.lfsr_32k_source_s()
-    src_head = gr.head (gr.sizeof_short,Kb/16) # packet size in shorts
-    s2fsmi = gr.packed_to_unpacked_ss(bitspersymbol,gr.GR_MSB_FIRST) # unpack shorts to symbols compatible with the outer FSM input cardinality
+    # this for loop is TOO slow in python!!!
+    packet = [0]*(K)
+    random.seed(seed)
+    for i in range(len(packet)):
+        packet[i] = random.randint(0, 2**bitspersymbol - 1) # random symbols
+    src = gr.vector_source_s(packet,False)
     enc_out = trellis.encoder_ss(fo,0) # initial state = 0
     inter = trellis.permutation(interleaver.K(),interleaver.INTER(),1,gr.sizeof_short)
-    enc_in = trellis.encoder_ss(fi,0) # initial state = 0
-    mod = gr.chunks_to_symbols_sf(constellation,dimensionality)
+    mod = gr.chunks_to_symbols_sf(modulation[1],modulation[0])
 
     # CHANNEL
+    isi = gr.fir_filter_fff(1,channel)
     add = gr.add_ff()
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
-
-    # RX
-    (head,tail) = make_rx(fg,fo,fi,dimensionality,constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM)
-    #(head,tail) = make_rx(fg,fo,fi,dimensionality,constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_SUM_PRODUCT)
-    fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
-    dst = gr.check_lfsr_32k_s()
     
-    fg.connect (src,src_head,s2fsmi,enc_out,inter,enc_in,mod)
-    fg.connect (mod,(add,0))
+    # RX
+    (head,tail) = make_rx(fg,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM) 
+    dst = gr.vector_sink_s(); 
+    
+    fg.connect (src,enc_out,inter,mod)
+    fg.connect (mod,isi,(add,0))
     fg.connect (noise,(add,1))
     fg.connect (add,head)
-    fg.connect (tail,fsmi2s,dst)
-
-    fg.run()
- 
-    #print enc_out.ST(), enc_in.ST()
+    fg.connect (tail,dst)
     
-    ntotal = dst.ntotal ()
-    nright = dst.nright ()
-    runlength = dst.runlength ()
+    fg.run()
+
+    data = dst.data()
+    ntotal = len(data)
+    nright=0
+    for i in range(ntotal):
+        if packet[i]==data[i]:
+            nright=nright+1
+        #else:
+            #print "Error in ", i
+ 
     return (ntotal,ntotal-nright)
+
+
 
 
 def main(args):
     nargs = len (args)
-    if nargs == 4:
+    if nargs == 3:
         fname_out=args[0]
-        fname_in=args[1]
-        esn0_db=float(args[2]) # Es/No in dB
-        rep=int(args[3]) # number of times the experiment is run to collect enough errors
+        esn0_db=float(args[1])
+        rep=int(args[2])
     else:
-        sys.stderr.write ('usage: test_tcm.py fsm_name_out fsm_fname_in Es/No_db  repetitions\n')
+        sys.stderr.write ('usage: test_turbo_equalization.py fsm_name_out Es/No_db  repetitions\n')
         sys.exit (1)
 
     # system parameters
-    Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
+    Kb=64*16  # packet size in bits (multiple of 16)
+    modulation = fsm_utils.pam4 # see fsm_utlis.py for available predefined modulations
+    channel = fsm_utils.c_channel # see fsm_utlis.py for available predefined test channels
     fo=trellis.fsm(fname_out) # get the outer FSM specification from a file
-    fi=trellis.fsm(fname_in) # get the innner FSM specification from a file
-    bitspersymbol = int(round(math.log(fo.I())/math.log(2))) # bits per FSM input symbol
+    fi=trellis.fsm(len(modulation[1]),len(channel)) # generate the FSM automatically
     if fo.O() != fi.I():
         sys.stderr.write ('Incompatible cardinality between outer and inner FSM.\n')
         sys.exit (1)
+    bitspersymbol = int(round(math.log(fo.I())/math.log(2))) # bits per FSM input symbol
     K=Kb/bitspersymbol # packet size in trellis steps
     interleaver=trellis.interleaver(K,666) # construct a random interleaver
-    modulation = fsm_utils.psk8 # see fsm_utlis.py for available predefined modulations
-    dimensionality = modulation[0]
-    constellation = modulation[1] 
-    if len(constellation)/dimensionality != fi.O():
-        sys.stderr.write ('Incompatible FSM output cardinality and modulation size.\n')
+    tot_channel = fsm_utils.make_isi_lookup(modulation,channel,True) # generate the lookup table (normalize energy to 1)
+    dimensionality = tot_channel[0]
+    tot_constellation = tot_channel[1]
+    if len(tot_constellation)/dimensionality != fi.O():
+        sys.stderr.write ('Incompatible FSM output cardinality and lookup table size.\n')
         sys.exit (1)
-    # calculate average symbol energy
-    Es = 0
-    for i in range(len(constellation)):
-        Es = Es + constellation[i]**2
-    Es = Es / (len(constellation)/dimensionality)
-    N0=Es/pow(10.0,esn0_db/10.0); # calculate noise variance
+    N0=pow(10.0,-esn0_db/10.0); # noise variance
     IT = 3 # number of turbo iterations
-    
+
     tot_s=0 # total number of transmitted shorts
     terr_s=0 # total number of shorts in error
     terr_p=0 # total number of packets in error
+
     for i in range(rep):
-        (s,e)=run_test(fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,Es,N0,IT,-long(666+i)) # run experiment with different seed to get different noise realizations
+        (s,e)=run_test(fo,fi,interleaver,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constellation,1,N0,IT,-long(666+i)) # run experiment with different seed to get different noise realizations
         tot_s=tot_s+s
         terr_s=terr_s+e
         terr_p=terr_p+(terr_s!=0)
-        if ((i+1)%10==0): # display progress
+        if ((i+1)%10==0) : # display progress
             print i+1,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s)/tot_s)
     # estimate of the (short or bit) error rate
     print rep,terr_p, '%.2e' % ((1.0*terr_p)/(i+1)),tot_s,terr_s, '%.2e' % ((1.0*terr_s)/tot_s)
 
 
+
 if __name__ == '__main__':
     main (sys.argv[1:])
+
