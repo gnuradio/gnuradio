@@ -50,7 +50,7 @@ class waterfall_sink_base(object):
             self.avg_alpha = avg_alpha
         self.title = title
         self.input_is_real = input_is_real
-        (self.r_fd, self.w_fd) = os.pipe()
+        self.msgq = gr.msg_queue(2)         # queue up to 2 messages
 
     def set_average(self, average):
         self.average = average
@@ -91,7 +91,7 @@ class waterfall_sink_f(gr.hier_block, waterfall_sink_base):
         c2mag = gr.complex_to_mag(self.fft_size)
         self.avg = gr.single_pole_iir_filter_ff(1.0, self.fft_size)
         log = gr.nlog10_ff(20, self.fft_size, -20*math.log10(self.fft_size))
-        sink = gr.file_descriptor_sink(gr.sizeof_float * self.fft_size, self.w_fd)
+        sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
 
         fg.connect (s2p, self.one_in_n, fft, c2mag, self.avg, log, sink)
         gr.hier_block.__init__(self, fg, s2p, sink)
@@ -120,7 +120,7 @@ class waterfall_sink_c(gr.hier_block, waterfall_sink_base):
         c2mag = gr.complex_to_mag(self.fft_size)
         self.avg = gr.single_pole_iir_filter_ff(1.0, self.fft_size)
         log = gr.nlog10_ff(20, self.fft_size, -20*math.log10(self.fft_size))
-        sink = gr.file_descriptor_sink(gr.sizeof_float * self.fft_size, self.w_fd)
+        sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
 
         fg.connect(s2p, self.one_in_n, fft, c2mag, self.avg, log, sink)
         gr.hier_block.__init__(self, fg, s2p, sink)
@@ -146,10 +146,10 @@ class DataEvent(wx.PyEvent):
 
 
 class input_watcher (threading.Thread):
-    def __init__ (self, file_descriptor, fft_size, event_receiver, **kwds):
+    def __init__ (self, msgq, fft_size, event_receiver, **kwds):
         threading.Thread.__init__ (self, **kwds)
         self.setDaemon (1)
-        self.file_descriptor = file_descriptor
+        self.msgq = msgq
         self.fft_size = fft_size
         self.event_receiver = event_receiver
         self.keep_running = True
@@ -157,11 +157,17 @@ class input_watcher (threading.Thread):
 
     def run (self):
         while (self.keep_running):
-            s = gru.os_read_exactly (self.file_descriptor,
-                                     gr.sizeof_float * self.fft_size)
-            if not s:
-                self.keep_running = False
-                break
+            msg = self.msgq.delete_head()  # blocking read of message queue
+            itemsize = int(msg.arg1())
+            nitems = int(msg.arg2())
+
+            s = msg.to_string()            # get the body of the msg as a string
+
+            # There may be more than one FFT frame in the message.
+            # If so, we take only the last one
+            if nitems > 1:
+                start = itemsize * (nitems - 1)
+                s = s[start:start+itemsize]
 
             complex_data = Numeric.fromstring (s, Numeric.Float32)
             de = DataEvent (complex_data)
@@ -195,7 +201,7 @@ class waterfall_window (wx.Panel):
         wx.EVT_CLOSE (self, self.on_close_window)
         self.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
 
-        self.input_watcher = input_watcher(fftsink.r_fd, fftsink.fft_size, self)
+        self.input_watcher = input_watcher(fftsink.msgq, fftsink.fft_size, self)
 
 
     def on_close_window (self, event):
