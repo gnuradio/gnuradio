@@ -61,7 +61,7 @@
  59          sys.exit (1)
  60  
  61      # system parameters
- 62      f=trellis.fsm(fname) # get the FSM specification from a file (will hopefully be automated in the future...)
+ 62      f=trellis.fsm(fname) # get the FSM specification from a file
  63      Kb=1024*16  # packet size in bits (make it multiple of 16 so it can be packed in a short)
  64      bitspersymbol = int(round(math.log(f.I())/math.log(2))) # bits per FSM input symbol
  65      K=Kb/bitspersymbol # packet size in trellis steps

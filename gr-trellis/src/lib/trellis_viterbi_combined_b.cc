@@ -114,7 +114,7 @@ void viterbi_algorithm_combined(int I, int S, int O,
 
   alphai=0;
   for(int k=0;k<K;k++) {
-      calc_metric_f(O, D, TABLE, &(in[k*D]), metric,TYPE); // calc metrics
+      calc_metric(O, D, TABLE, &(in[k*D]), metric,TYPE); // calc metrics
       norm=INF;
       for(int j=0;j<S;j++) { // for each next state do ACS
           minm=INF;

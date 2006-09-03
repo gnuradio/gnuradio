@@ -167,7 +167,7 @@ void siso_algorithm_combined(int I, int S, int O,
   }
 
   for(int k=0;k<K;k++) { // forward recursion
-      calc_metric_f(O, D, TABLE, &(observations[k*D]), &(prioro[k*O]),TYPE); // calc metrics
+      calc_metric(O, D, TABLE, &(observations[k*D]), &(prioro[k*O]),TYPE); // calc metrics
       norm=INF;
       for(int j=0;j<S;j++) {
           minm=INF;

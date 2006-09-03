@@ -97,7 +97,7 @@ interleaver::interleaver(int K, unsigned int seed)
     d_INTER[i]=i;
     tmp[i] = rand(); 
   }
-  //quicksort_index <int> (tmp,d_INTER,0,d_K-1); got to resolve this...
+  //quicksort_index <int> (tmp,d_INTER,0,d_K-1); //got to resolve this...
   quicksort_index1 (tmp,d_INTER,0,d_K-1);
 
   // generate DEINTER table
