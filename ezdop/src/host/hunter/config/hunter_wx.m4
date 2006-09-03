@@ -4,8 +4,8 @@ AC_DEFUN([HUNTER_WX], [
 		AC_MSG_ERROR(["wxWidgets is required, not found, stop."])
 	fi
 
-	WX_FLAGS=`$WXCONFIG --cflags`
-	WX_LIBS=`$WXCONFIG --libs`
+	WX_FLAGS=`$WXCONFIG --debug --cflags`
+	WX_LIBS=`$WXCONFIG --debug --libs`
 	AC_SUBST(WX_FLAGS)
 	AC_SUBST(WX_LIBS)
 ])

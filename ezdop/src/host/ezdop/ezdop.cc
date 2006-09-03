@@ -22,6 +22,9 @@
 // Application specific includes
 #include "ezdop.h"
 
+// Boost includes
+#include <boost/scoped_array.hpp>
+
 // System includes (FIXME: autoconf these)
 #include <cassert>
 #include <cstdio>
@@ -219,26 +222,27 @@ int ezdop::read_raw(unsigned char *buffer, unsigned int length)
     return rd;
 }
 
-int ezdop::read_iq(complex<float> *buffer, unsigned int samples)
+typedef boost::scoped_array<unsigned char> unsigned_char_scoped_array;
+
+int ezdop::read_iq(complex<float> *buffer, unsigned int samples, float &volume)
 {
     assert(d_online);
     assert(d_device);
     assert(buffer);
 
     // 4 phases, d_rate samples per phase, 2 bytes per sample
-    int bufsize = 8*d_rate*samples;
-    unsigned char *raw = new unsigned char[bufsize];
+    int raw_size = 8*d_rate*samples;
+    unsigned_char_scoped_array raw(new unsigned char[raw_size]);
 
     // Read until required bytes are read. Will block until bytes arrive.
     int rd = 0;
-    while (rd < bufsize)
-        rd += read_raw(&raw[rd], bufsize-rd);
+    while (rd < raw_size)
+        rd += read_raw(&raw[rd], raw_size-rd);
 
     // Iterate through read bytes and invoke state machine
     int i = 0, j = 0;   // i index inputs, j indexes outputs
-    unsigned char ant;
 
-    while (i < bufsize) {
+    while (i < raw_size) {
         unsigned char ch = raw[i++];
         if (d_state == ST_LO) {
             d_val = ch;                     // Save lo byte
@@ -272,6 +276,7 @@ int ezdop::read_iq(complex<float> *buffer, unsigned int samples)
             d_in_phase -= d_val;
         else if (d_ant == 1)            // -Q
             d_quadrature -= d_val;
+
         d_val = 0;
     
         // Update expected antenna and sequence
@@ -292,6 +297,6 @@ int ezdop::read_iq(complex<float> *buffer, unsigned int samples)
         d_state = ST_LO;  // Switch states
     };
 
-    delete raw;
+    volume = 0.0;
     return j;
 }

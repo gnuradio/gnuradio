@@ -57,9 +57,11 @@ int main(int argc, char *argv)
     else
 	printf("failed.\n");
 
+    float volume;
+
     for (int i = 0; i < chunks; i++) {
         printf("Asking EZDOP for %i samples...", samples);
-        int rd = dop->read_iq(buffer, samples);
+        int rd = dop->read_iq(buffer, samples, volume);
 	printf("got %i --- ", rd);
 	if (rd != samples)
 	    printf("*****\n");

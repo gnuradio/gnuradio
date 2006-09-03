@@ -108,6 +108,8 @@ int ezdop_source_c::work(int noutput_items,
 	gr_vector_void_star &output_items)
 {
     assert(d_ezdop);
+    float volume = 0.0; // Dummy for now
+
     gr_complex *out = (gr_complex *)output_items[0];
-    return d_ezdop->read_iq(out, noutput_items);
+    return d_ezdop->read_iq(out, noutput_items, volume);
 }

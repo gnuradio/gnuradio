@@ -32,7 +32,7 @@ AC_CHECK_FUNCS([modf sqrt])
 
 # Application specific checks
 HUNTER_WX
-HUNTER_FTDI
+#HUNTER_FTDI
 
 AC_CONFIG_FILES([ \
     Makefile

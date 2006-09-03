@@ -197,10 +197,12 @@ float TransmitterSearch::calc_trial_error(const vector<Sample>&samples,
         sample.CalcError(trial, angle, ierror, qerror);
 
         // Wrapped cauchy distribution
-        float p = m_scale;
-        float likelihood = (1-p*p)/(1+p*p-2*p*cos(angle*M_PI/180.0));
+        //float p = m_scale;
+        //float likelihood = (1-p*p)/(1+p*p-2*p*cos(angle*M_PI/180.0));
+	//trial_error += -log(likelihood)*sample.Strength();
 
-        trial_error += -log(likelihood)*sample.Strength();
+	// Adjusted exponential distribution
+	trial_error += sqrt(1+angle*angle)*sample.Strength();
         wsum += sample.Strength();
     }    
 

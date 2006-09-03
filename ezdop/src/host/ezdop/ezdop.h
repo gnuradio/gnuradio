@@ -57,7 +57,7 @@ public:
     int read_raw(unsigned char *buffer, unsigned int length);
 
     // Read synced, downconverted I and Q samples, one per rotation
-    int read_iq(complex<float> *buffer, unsigned int samples);
+    int read_iq(complex<float> *buffer, unsigned int samples, float &volume);
 
     // Status
     bool is_online() const { return d_online; }

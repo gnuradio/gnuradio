@@ -24,19 +24,13 @@
     #include "config.h"
 #endif
 
-// USB access library
-#if HAVE_LIBFTDI
-    #include <ftdi.h>
-#elif HAVE_LIBFTD2XX
-    #if __WIN32__
-        #include <windows.h>
-    #endif
-    #include <FTD2XX.H>
-#endif
-
+// Application level includes
+#include <ezdop.h>
+#include <boost/shared_ptr.hpp>
 #include <wx/event.h>
 
-#define NUM_RATES   6
+// TODO: Read this from ezdop.h
+#define NUM_RATES   6   
 
 class EZDoppler;
 
@@ -76,6 +70,8 @@ typedef void(wxEvtHandler::*EZDopplerUpdateFunction)(EZDopplerUpdate&);
             (wxObject *)NULL \
         ),
 
+typedef boost::shared_ptr<ezdop> ezdop_sptr;
+
 class EZDoppler
 {
 public:
@@ -88,12 +84,11 @@ public:
     bool IsOnline();
     bool Start();
     bool Stop();
-    bool Zero();
     bool SetFilter(int n);
     bool SelectRotationRate(int n);
-    int  GetSelectedRotationRate();
+    int  GetRotationRate();
     bool Reset();
-    bool Sample(int nsamples, float &in_phase, float &quadrature, float &volume);
+    bool Sample(float &in_phase, float &quadrature, float &volume);
     bool Calibrate(float phase);
     bool SetCalibration(int rate, float offset);
     float GetCalibration(int rate);
@@ -102,28 +97,18 @@ public:
     bool NudgeAll(float amount);
             
 private:
-    // USB interaction
-#if HAVE_LIBFTDI
-    struct ftdi_context *m_device;          // libftdi device instance data
-#elif HAVE_LIBFTD2XX
-    FT_HANDLE m_handle;                     // FTD2XX device instance data
-    FT_STATUS m_status;                     // FTD2XX device function call results
-#endif
-    bool send_byte(unsigned char data);
-
-    // Doppler control
-    bool m_online;
-    int  m_selected_rate;
+    ezdop_sptr m_ezdop;
+    int m_selected_rate;
     wxWindow *m_gui;
     DopplerBackground *m_thread;
 
-    // DSP state
-    float m_in_phase;           // Filtered I value
-    float m_quadrature;         // Filtered Q value
-    float m_alpha;              // Exponential lowpass constant
-    float m_beta;               // Exponential lowpass constant = 1-alpha
-    float m_phase;              // Actual phase of doppler before calibration
-    float m_offset;             // Global calibration angle
+    complex<float> m_phase;         // Actual phase of doppler before calibration
+    complex<float> m_output;        // Calibrated output phase
+    complex<float> m_alpha;         // Exponential average constant
+    complex<float> m_beta;          // Exponential average constant
+    
+    float m_angle;                  // Actual angle of doppler before calibration
+    float m_offset;                 // Global calibration angle
     float m_calibration[NUM_RATES]; // Individual rotation rate offset
 };    
 

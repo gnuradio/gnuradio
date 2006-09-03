@@ -33,10 +33,18 @@ hunter_SOURCES = \
                  spherical.cc \
                  tactical.cc
 
+# FIXME: put in config macro
+EZDOP_LIBS = -L/usr/local/lib -lezdop
+
 hunter_CXXFLAGS = $(WX_FLAGS)
 hunter_LDADD = \
-    $(FTDI_LIBS) \
-    $(WX_LIBS)
+    $(WX_LIBS) \
+    $(EZDOP_LIBS)
+
+BUILT_SOURCES = \
+    $(top_builddir)/src/resource.cc
     
-resource.cc: hunter.xrc
-	wxrc -c -o resource.cc hunter.xrc
+$(top_builddir)/src/resource.cc: hunter.xrc
+	wxrc -c -o $(top_builddir)/src/resource.cc $(top_srcdir)/src/hunter.xrc
+
+MOSTLYCLEANFILES = $(BUILT_SOURCES)

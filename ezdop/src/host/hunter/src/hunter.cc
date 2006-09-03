@@ -513,19 +513,6 @@ void HunterFrame::OnDopplerUpdate(EZDopplerUpdate &event)
     m_sample.Phase(atan2(event.m_quadrature, event.m_in_phase));
 
     UpdateDopplerStatus(true);
-
-    if (m_log && m_gps_started && m_capture &&
-        m_sample.Speed() >= 5.0 && m_sample.Valid()) {
-        m_log->Add(m_sample);
-        if (m_one_shot == true) {
-            StopCapture();
-            CalcSolution();
-            if (m_search.HasSolution()) {
-                UpdateSearchStatus(true);
-                UpdateSearchDirection(true);
-            }
-        }
-    }
 }
 
 void HunterFrame::UpdateDopplerStatus(bool display)
@@ -606,7 +593,7 @@ void HunterFrame::DoCalibrationStep(int which)
     static int delay;
     
     if (which == 0) {       // Set up doppler 
-        delay = XRCCTRL(*this, "doppler_filter_slider", wxSlider)->GetValue()/3; // Empirically determined
+        delay = XRCCTRL(*this, "doppler_filter_slider", wxSlider)->GetValue(); // Empirically determined
         if (delay == 0)
             delay = 1;
     }
@@ -699,12 +686,20 @@ void HunterFrame::OnGPSUpdate(GPSUpdate &update)
     UpdateGPSValidity(update.m_gprmc->m_valid);                 // Colors red for invalid, black for valid
     UpdateGPSStatus(true);                                      // gps lat, lon, heading, speed
     UpdateKnownDirection();                                     // actual bearing and range
-
     CalcKnownStatistics();
-    if (m_capture)
+
+    if (m_log && m_capture && m_doppler_started &&
+        m_sample.Speed() >= 5.0 && m_sample.Valid()) {
+        m_log->Add(m_sample);
         CalcSolution();
-    if (m_search.HasSolution())
+        if (m_one_shot == true)
+            StopCapture();
+    }
+
+    if (m_search.HasSolution()) {
+        UpdateSearchStatus(true);
         UpdateSearchDirection(true);
+    }
         
     delete update.m_gprmc;
 }
@@ -747,7 +742,7 @@ void HunterFrame::UpdateSearchStatus(bool display)
     str.Printf(_T("%i"), m_log->Count());
     XRCCTRL(*this, "search_count_text", wxStaticText)->SetLabel(str);
 
-    str.Printf(_T("%s"), m_search.Busy() ? "BUSY" : "");
+    str.Printf(_T("%s"), m_search.Busy() ? _T("BUSY") : _T(""));
     XRCCTRL(*this, "search_status_text", wxStaticText)->SetLabel(str);
 
     str.Printf(_T("%i"), m_search.Mode());

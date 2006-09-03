@@ -19,6 +19,7 @@
 #include "serial.h"
 
 #include <wx/log.h>
+#include <errno.h>
 
 #ifdef __WIN32__
 // I hate Windows.
@@ -122,9 +123,10 @@ bool SerialPort::Open(int speed)
 
     m_opened = true;
 #else
-    m_fd = open((char *)m_port.c_str(), O_RDWR|O_NONBLOCK);
+    // Fixed at first USB port until string bug fixed
+    m_fd = open("/dev/ttyUSB0", O_RDWR|O_NONBLOCK);
     if (m_fd < 0) {
-        wxLogError(_T("SerialPort::Open: open() returned %i"), m_fd);
+        wxLogError(_T("SerialPort::Open: open(): %i"), errno);
         return false;
     }
 
