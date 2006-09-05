@@ -279,7 +279,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
             self._set_status_msg("Failed to set initial frequency")
 
         self.set_decln (self.decln)
-        calib_set_bw(self.decln)
+        calib_set_decln (self.decln)
 
         self.myform['decim'].set_value(self.u.decim_rate())
         self.myform['fs@usb'].set_value(self.u.adc_freq() / self.u.decim_rate())
@@ -287,6 +287,10 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         # Make sure calibrator knows what our bandwidth is
         calib_set_bw(self.u.adc_freq() / self.u.decim_rate())
+
+        # Set analog baseband filtering, if DBS_RX
+        if self.cardtype == usrp_dbid.DBS_RX:
+            self.subdev.set_bw((self.u.adc_freq() / self.u.decim_rate())/2)
 
         # Tell calibrator our declination as well
         calib_set_decln(self.decln)
