@@ -30,6 +30,7 @@
 #
 #
 from gnuradio import gr, gru, blks, audio
+import usrp_dbid
 from gnuradio import usrp, optfir
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
@@ -222,12 +223,19 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         # determine the daughterboard subdevice we're using
         self.subdev = usrp.selected_subdev(self.u, options.rx_subdev_spec)
+        self.cardtype = self.u.daughterboard_id(0)
 
         # Compute raw input rate
         input_rate = self.u.adc_freq() / self.u.decim_rate()
 
         # BW==input_rate for complex data
         self.bw = input_rate
+
+        #
+        # Set baseband filter bandwidth if DBS_RX:
+        #
+        if self.cardtype == usrp_dbid.DBS_RX:
+            self.subdev.set_bw((self.u.adc_freq() / self.u.decim_rate())/2)
 
         #
         # We use this as a crude volume control for the audio output
