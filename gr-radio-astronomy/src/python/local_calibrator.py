@@ -65,10 +65,11 @@ def calib_numogate_ridge_observatory_total_power(data):
 
     rainbow_file = open (filenamestr+".tpdat","a")
   
-    r = (math.sqrt(data) / 2048) * 1000.0
+    r = (data / 4096.0)
+    flt = "%6.3f" % r
     #r = calib_default_total_power(data)
     inter = globals()["calib_decln"]
-    rainbow_file.write(str(ephem.hours(sidtime))+" "+str(r)+" "+str(inter)+"\n")
+    rainbow_file.write(str(ephem.hours(sidtime))+" "+flt+" "+str(inter)+"\n")
     rainbow_file.close()
     return(r)
 
@@ -101,7 +102,7 @@ def calib_numogate_ridge_observatory_fft(data,l):
     if not "calib_then" in globals():
         globals()["calib_then"] = now
 
-    delta = 5
+    delta = (l/1024)*5
 		
     if (now - globals()["calib_then"]) >= delta:
 
