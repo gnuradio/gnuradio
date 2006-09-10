@@ -96,6 +96,18 @@ class test_complex_ops (gr_unittest.TestCase):
         actual_result = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, actual_result,5)
 
+    def test_complex_to_mag_squared (self):
+        src_data = (0, 1, -1, 3+4j, -3-4j, -3+4j)
+        expected_result = (0, 1, 1, 25, 25, 25)
+        src = gr.vector_source_c (src_data)
+        op = gr.complex_to_mag_squared ()
+        dst = gr.vector_sink_f ()
+        self.fg.connect (src, op)
+        self.fg.connect (op, dst)
+        self.fg.run ()
+        actual_result = dst.data ()
+        self.assertFloatTuplesAlmostEqual (expected_result, actual_result,5)
+
     def test_complex_to_arg (self):
         pi = math.pi
         expected_result = (0, pi/6, pi/4, pi/2, 3*pi/4, 7*pi/8,

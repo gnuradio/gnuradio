@@ -30,18 +30,21 @@ class gr_complex_to_float;
 class gr_complex_to_real;
 class gr_complex_to_imag;
 class gr_complex_to_mag;
+class gr_complex_to_mag_squared;
 class gr_complex_to_arg;
 
 typedef boost::shared_ptr<gr_complex_to_float> gr_complex_to_float_sptr;
 typedef boost::shared_ptr<gr_complex_to_real> gr_complex_to_real_sptr;
 typedef boost::shared_ptr<gr_complex_to_imag> gr_complex_to_imag_sptr;
 typedef boost::shared_ptr<gr_complex_to_mag> gr_complex_to_mag_sptr;
+typedef boost::shared_ptr<gr_complex_to_mag_squared> gr_complex_to_mag_squared_sptr;
 typedef boost::shared_ptr<gr_complex_to_arg> gr_complex_to_arg_sptr;
 
 gr_complex_to_float_sptr gr_make_complex_to_float (unsigned int vlen=1);
 gr_complex_to_real_sptr gr_make_complex_to_real (unsigned int vlen=1);
 gr_complex_to_imag_sptr gr_make_complex_to_imag (unsigned int vlen=1);
 gr_complex_to_mag_sptr gr_make_complex_to_mag (unsigned int vlen=1);
+gr_complex_to_mag_squared_sptr gr_make_complex_to_mag_squared (unsigned int vlen=1);
 gr_complex_to_arg_sptr gr_make_complex_to_arg (unsigned int vlen=1);
 
 /*!
@@ -107,6 +110,24 @@ class gr_complex_to_mag : public gr_sync_block
 {
   friend gr_complex_to_mag_sptr gr_make_complex_to_mag (unsigned int vlen);
   gr_complex_to_mag (unsigned int vlen);
+
+  unsigned int	d_vlen;
+
+ public:
+  virtual int work (int noutput_items,
+		    gr_vector_const_void_star &input_items,
+		    gr_vector_void_star &output_items);
+};
+
+/*!
+ * \brief complex in, magnitude squared out (float)
+ * \ingroup converter
+ * \param vlen	vector len (default 1)
+ */
+class gr_complex_to_mag_squared : public gr_sync_block
+{
+  friend gr_complex_to_mag_squared_sptr gr_make_complex_to_mag_squared (unsigned int vlen);
+  gr_complex_to_mag_squared (unsigned int vlen);
 
   unsigned int	d_vlen;
 

@@ -169,6 +169,39 @@ gr_complex_to_mag::work (int noutput_items,
 
 // ----------------------------------------------------------------
 
+gr_complex_to_mag_squared_sptr
+gr_make_complex_to_mag_squared (unsigned int vlen)
+{
+  return gr_complex_to_mag_squared_sptr (new gr_complex_to_mag_squared (vlen));
+}
+
+gr_complex_to_mag_squared::gr_complex_to_mag_squared (unsigned int vlen)
+  : gr_sync_block ("complex_to_mag_squared",
+		   gr_make_io_signature (1, 1, sizeof (gr_complex) * vlen),
+		   gr_make_io_signature (1, 1, sizeof (float) * vlen)),
+    d_vlen(vlen)
+{
+}
+
+int
+gr_complex_to_mag_squared::work (int noutput_items,
+				 gr_vector_const_void_star &input_items,
+				 gr_vector_void_star &output_items)
+{
+  const gr_complex *in = (const gr_complex *) input_items[0];
+  float *out = (float *) output_items[0];
+  int noi = noutput_items * d_vlen;
+
+  for (int i = 0; i < noi; i++){
+    const float __x = in[i].real();
+    const float __y = in[i].imag();
+    out[i] = __x * __x + __y * __y;
+  }
+  return noutput_items;
+}
+
+// ----------------------------------------------------------------
+
 gr_complex_to_arg_sptr
 gr_make_complex_to_arg (unsigned int vlen)
 {

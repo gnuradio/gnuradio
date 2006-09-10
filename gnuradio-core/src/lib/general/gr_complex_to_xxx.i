@@ -39,13 +39,20 @@ gr_complex_to_imag_sptr gr_make_complex_to_imag (unsigned int vlen=1);
 class gr_complex_to_imag : public gr_sync_block
 {
   gr_complex_to_imag (unsigned int vlen);
-}
-  ;
+};
+
 GR_SWIG_BLOCK_MAGIC(gr,complex_to_mag);
 gr_complex_to_mag_sptr gr_make_complex_to_mag (unsigned int vlen=1);
 class gr_complex_to_mag : public gr_sync_block
 {
   gr_complex_to_mag (unsigned int vlen);
+};
+
+GR_SWIG_BLOCK_MAGIC(gr,complex_to_mag_squared);
+gr_complex_to_mag_squared_sptr gr_make_complex_to_mag_squared (unsigned int vlen=1);
+class gr_complex_to_mag_squared : public gr_sync_block
+{
+  gr_complex_to_mag_squared (unsigned int vlen);
 };
 
 GR_SWIG_BLOCK_MAGIC(gr,complex_to_arg);
