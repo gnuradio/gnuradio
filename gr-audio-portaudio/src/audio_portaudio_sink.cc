@@ -176,16 +176,21 @@ audio_portaudio_sink::audio_portaudio_sink(int sampling_rate,
     for (i=0;i<numDevices;i++) {
       deviceInfo = Pa_GetDeviceInfo( i );
       fprintf(stderr,"Testing device name: %s",deviceInfo->name);
+      if (deviceInfo->maxOutputChannels <= 0) {
+	fprintf(stderr,"\n");
+	continue;
+      }
       if (strstr(deviceInfo->name, d_device_name.c_str())){
 	fprintf(stderr,"  Chosen!\n");
-	device = gri_pa_find_device_by_name(deviceInfo->name);
+	device = i;
 	fprintf(stderr,"%s using %s as the host\n",d_device_name.c_str(),
 		Pa_GetHostApiInfo(deviceInfo->hostApi)->name), fflush(stderr);
 	found = true;
 	deviceInfo = Pa_GetDeviceInfo(device);
 	i = numDevices; 	// force loop exit
       }
-      fprintf(stderr,"\n"),fflush(stderr);
+      else
+	fprintf(stderr,"\n"),fflush(stderr);
     }
 
     if (!found){
