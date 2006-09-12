@@ -39,6 +39,25 @@
 #include <gr_tmp_path.h>
 #include <gr_vmcircbuf_createfilemapping.h>
 
+#ifdef HAVE_CREATEFILEMAPPING
+// Print Windows error (could/should be global?)
+static void
+werror( char *where, DWORD last_error )
+{
+  char buf[1024];
+
+  FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM,
+		 NULL,
+		 last_error,
+		 0,    // default language
+		 buf,
+		 sizeof(buf)/sizeof(TCHAR),    // buffer size
+		 NULL );
+  fprintf( stderr, "%s: Error %d: %s", where, last_error, buf );
+  return;
+}
+#endif
+
 
 gr_vmcircbuf_createfilemapping::gr_vmcircbuf_createfilemapping (int size)
   : gr_vmcircbuf (size)
@@ -67,62 +86,58 @@ gr_vmcircbuf_createfilemapping::gr_vmcircbuf_createfilemapping (int size)
   s_seg_counter++;
   if (d_handle == NULL || d_handle == INVALID_HANDLE_VALUE){
     char msg[1024];
-    snprintf (msg, sizeof (msg), "gr_vmcircbuf_mmap_createfilemapping: CreateFileMapping [%s] :%d", seg_name,(int)GetLastError());
-    perror (msg);
+    snprintf( msg, sizeof(msg),
+	      "gr_vmcircbuf_mmap_createfilemapping: CreateFileMapping [%s]",
+	      seg_name );
+    werror( msg, GetLastError() );
     throw std::runtime_error ("gr_vmcircbuf_mmap_createfilemapping");
   }
 
-  int i = 0;
-  d_first_copy = d_second_copy = NULL;
-    
-  while (i++ < 8 && d_second_copy == NULL){
-    // keep the first map allocation to force allocation in a new address
-    // space
-    LPVOID first_tmp = d_first_copy;
-        
-    d_first_copy =  MapViewOfFile((HANDLE)d_handle,   // handle to map object
-				  FILE_MAP_WRITE,     // read/write permission
-				  0,
-				  0,
-				  size);
-   
-    if (d_first_copy == NULL){
-      if (first_tmp)
-	UnmapViewOfFile(first_tmp);
-
-      CloseHandle(d_handle);         // cleanup
-      char msg[1024];
-      snprintf (msg, sizeof (msg),
-		"gr_vmcircbuf_mmap_createfilemapping: MapViewOfFile (1) :%d", (int)GetLastError());
-      perror (msg);
-      throw std::runtime_error ("gr_vmcircbuf_mmap_createfilemapping");
-    }
-
-    // NOTE: d_second_copy will be NULL if MapViewFileEx() fails to allocate the
-    //       requested address space
-    d_second_copy =  MapViewOfFileEx((HANDLE)d_handle,   // handle to map object
-				     FILE_MAP_WRITE,     // read/write permission
-				     0,
-				     0,
-				     size,
-				     (char *)d_first_copy + size);//(LPVOID) ((char *)d_first_copy + size));
-
-    if (first_tmp)
-      UnmapViewOfFile(first_tmp);
-
-#ifdef DEBUG
-    fprintf (stderr,"gr_vmcircbuf_mmap_createfilemapping: contiguous? mmap %p %p %p %p, %d\n",
-	     (char *)d_first_copy, (char *)d_second_copy, size, (char *)d_first_copy + size,i);
-#endif
+  // Allocate virtual memory of the needed size, then free it so we can use it
+  LPVOID first_tmp;
+  first_tmp = VirtualAlloc( NULL, 2*size, MEM_RESERVE, PAGE_NOACCESS );
+  if (first_tmp == NULL){
+    werror( "gr_vmcircbuf_mmap_createfilemapping: VirtualAlloc", GetLastError());
+    CloseHandle(d_handle);         // cleanup
+    throw std::runtime_error ("gr_vmcircbuf_mmap_createfilemapping");
   }
 
-  if (d_second_copy == NULL){    // cleanup
-    fprintf (stderr,"gr_vmcircbuf_mmap_createfilemapping: non contiguous mmap - %p %p %p %p\n",
-	     d_first_copy, d_second_copy, size, (char *)d_first_copy + size);
+  if (VirtualFree(first_tmp, 0, MEM_RELEASE) == 0){
+    werror( "gr_vmcircbuf_mmap_createfilemapping: VirtualFree", GetLastError());
+    CloseHandle(d_handle);         // cleanup
+    throw std::runtime_error ("gr_vmcircbuf_mmap_createfilemapping");
+  }
+
+  d_first_copy =  MapViewOfFileEx((HANDLE)d_handle,   // handle to map object
+				   FILE_MAP_WRITE,    // read/write permission
+				   0,
+				   0,
+				   size,
+				   first_tmp);
+  if (d_first_copy != first_tmp){
+    werror( "gr_vmcircbuf_mmap_createfilemapping: MapViewOfFileEx(1)", GetLastError());
+    CloseHandle(d_handle);         // cleanup
+    throw std::runtime_error ("gr_vmcircbuf_mmap_createfilemapping");
+  }
+
+  d_second_copy =  MapViewOfFileEx((HANDLE)d_handle,   // handle to map object
+				   FILE_MAP_WRITE,     // read/write permission
+				   0,
+				   0,
+				   size,
+				   (char *)first_tmp + size);//(LPVOID) ((char *)d_first_copy + size));
+
+  if (d_second_copy != (char *)first_tmp + size){
+    werror( "gr_vmcircbuf_mmap_createfilemapping: MapViewOfFileEx(2)", GetLastError());
     UnmapViewOfFile(d_first_copy);
     CloseHandle(d_handle);                      // cleanup
     throw std::runtime_error ("gr_vmcircbuf_mmap_createfilemapping");
   }
+
+#ifdef DEBUG
+  fprintf (stderr,"gr_vmcircbuf_mmap_createfilemapping: contiguous? mmap %p %p %p %p\n",
+	   (char *)d_first_copy, (char *)d_second_copy, size, (char *)d_first_copy + size);
+#endif
 
   // Now remember the important stuff
   d_base = (char *) d_first_copy;
@@ -135,12 +150,12 @@ gr_vmcircbuf_createfilemapping::~gr_vmcircbuf_createfilemapping ()
 #ifdef HAVE_CREATEFILEMAPPING
   if (UnmapViewOfFile(d_first_copy) == 0)
   {
-    perror ("gr_vmcircbuf_createfilemapping: UnmapViewOfFile(d_first_copy)");
+    werror("gr_vmcircbuf_createfilemapping: UnmapViewOfFile(d_first_copy)", GetLastError());
   }
   d_base=NULL;
   if (UnmapViewOfFile(d_second_copy) == 0)
   {
-    perror ("gr_vmcircbuf_createfilemapping: UnmapViewOfFile(d_second_copy)");
+    werror("gr_vmcircbuf_createfilemapping: UnmapViewOfFile(d_second_copy)", GetLastError());
   }
   //d_second=NULL;
   CloseHandle(d_handle);
