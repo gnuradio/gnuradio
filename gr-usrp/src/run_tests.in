@@ -4,6 +4,9 @@
 # 2nd parameter is absolute path to component build directory
 # 3rd parameter is path to Python QA directory
 
+# For Win32
+PATH=@top_builddir@/usrp/host/lib/.libs:$PATH
+
 @top_builddir@/run_tests.sh \
     @abs_top_srcdir@/gr-usrp \
     @abs_top_builddir@/gr-usrp \
