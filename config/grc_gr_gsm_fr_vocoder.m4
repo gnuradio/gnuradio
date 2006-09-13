@@ -14,8 +14,8 @@ dnl GNU General Public License for more details.
 dnl 
 dnl You should have received a copy of the GNU General Public License
 dnl along with GNU Radio; see the file COPYING.  If not, write to
-dnl the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-dnl Boston, MA 02111-1307, USA.
+dnl the Free Software Foundation, Inc., 51 Franklin Street,
+dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_GSM_FR_VOCODER],[
     GRC_ENABLE([gr-gsm-fr-vocoder])

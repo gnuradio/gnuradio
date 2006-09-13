@@ -15,8 +15,8 @@ C GNU General Public License for more details.
 C
 C You should have received a copy of the GNU General Public License
 C along with GNU Radio; see the file COPYING.  If not, write to
-C the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-C Boston, MA 02111-1307, USA.
+C the Free Software Foundation, Inc., 51 Franklin Street,
+C Boston, MA 02110-1301, USA.
 C
       DOUBLE PRECISION FUNCTION PRAX2(F,INITV,NDIM,OUT)
       DOUBLE PRECISION INITV(128),OUT(128), F
