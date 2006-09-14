@@ -20,6 +20,8 @@ If you just want to see what these programs do, run each of the following:
 
 ./test_viterbi_equalization.py  12.0 100
 ./test_viterbi_equalization1.py 12.0 100
+./test_turbo_equalization1.py fsm_files/awgn1o2_4.fsm 8.0 100
+./test_turbo_equalization2.py fsm_files/awgn1o2_4.fsm 8.0 100
 
 
 In your terminal you will see something like this:

@@ -34,7 +34,9 @@ EXTRA_DIST = \
     gr-trellis.xml \
     make_numbered_listing.py \
     test_tcm.py \
-    test_tcm.py.xml
+    test_tcm.py.xml \
+    test_viterbi_equalization1.py \
+    test_viterbi_equalization1.py.xml
 
 BUILT_XML_FILES = 			
 

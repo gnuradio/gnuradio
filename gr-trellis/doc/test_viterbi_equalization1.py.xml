@@ -35,7 +35,7 @@
  33      # RX
  34      skip = gr.skiphead(gr.sizeof_float, L) # skip the first L samples since you know they are coming from the L zero symbols
  35      #metrics = trellis.metrics_f(f.O(),dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for Viterbi
- 36      #va = trellis.viterbi_s(f,K+L,-1,0) # Put -1 if the Initial/Final states are not set.
+ 36      #va = trellis.viterbi_s(f,K+L,0,0) # Put -1 if the Initial/Final states are not set.
  37      va = trellis.viterbi_combined_s(f,K+L,0,0,dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # using viterbi_combined_s instead of metrics_f/viterbi_s allows larger packet lengths because metrics_f is complaining for not being able to allocate large buffers. This is due to the large f.O() in this application...
  38      dst = gr.vector_sink_s()
  39  

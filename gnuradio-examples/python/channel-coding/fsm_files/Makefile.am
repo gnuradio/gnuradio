@@ -20,22 +20,18 @@
 # 
 
 EXTRA_DIST =			\
-        README			\
-	fsm_utils.py		\
-	test_tcm.py		\
-	test_tcm1.py		\
-	test_tcm2.py          	\
-	test_tcm_parallel.py	\
-	test_tcm_combined.py	\
-	test_sccc_hard.py	\
-	test_sccc_soft.py     	\
-	test_sccc_turbo.py    	\
-	test_viterbi_equalization1.py	\
-	test_viterbi_equalization.py	\
-	test_turbo_equalization.py	\
-	test_turbo_equalization1.py	\
-	test_turbo_equalization2.py	
+	awgn1o2_128.fsm		\
+	awgn1o2_16.fsm		\
+	awgn1o2_4.fsm		\
+	awgn1o2_8.fsm		\
+	awgn2o3_16.fsm		\
+	awgn2o3_4.fsm		\
+	awgn2o3_4_msb.fsm	\
+	awgn2o3_4_msbG.fsm	\
+	awgn2o3_8.fsm		\
+	awgn2o4_4.fsm		\
+	disconnected.fsm	\
+	rep3.fsm		\
+	rep5.fsm		\
+	simple.fsm		
 
-SUBDIRS = fsm_files
-
-MOSTLYCLEANFILES = *.pyc
