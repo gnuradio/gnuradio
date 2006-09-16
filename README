@@ -196,6 +196,15 @@ installed version of python.
 
 You may want to add this to your ~/.bash_profile
 
+Note that on Fedora Core 4 and 5 when running on X86_64 machines,
+python is shippped with a strange (wrong) configuration that requires
+you to add both the lib64 and lib paths to your PYTHONPATH.
+E.g.,
+
+  $ export PYTHONPATH=/usr/local/lib64/python2.4/site-packages:/usr/local/lib/python2.4/site-packages
+
+[Don't complain to us, complain to the Fedora Core packagers.]
+
 
 Another handy trick if for example your fftw includes and libs are
 installed in, say ~/local/include and ~/local/lib, instead of
