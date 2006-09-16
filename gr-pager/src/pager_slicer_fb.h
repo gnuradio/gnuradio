@@ -27,7 +27,7 @@
 class pager_slicer_fb;
 typedef boost::shared_ptr<pager_slicer_fb> pager_slicer_fb_sptr;
 
-pager_slicer_fb_sptr pgr_make_slicer_fb(float alpha, float beta);
+pager_slicer_fb_sptr pager_make_slicer_fb(float alpha, float beta);
 
 /*!
  * \brief slicer description

@@ -28,7 +28,7 @@ class pager_flex_deframer;
 typedef boost::shared_ptr<pager_flex_deframer> pager_flex_deframer_sptr;
 typedef std::vector<gr_int64> gr_int64_vector;
 
-pager_flex_deframer_sptr pgr_make_flex_deframer(int rate);
+pager_flex_deframer_sptr pager_make_flex_deframer(int rate);
 
 /*!
  * \brief flex deframer description
