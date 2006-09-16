@@ -25,14 +25,14 @@ Welcome to GNU Radio!
 As of August 3, 2006 we have restructured the GNU Radio build process
 and moved the source code repository from CVS to subversion.
 
-Please see http://gnuradio.utah.edu/trac for the wiki, bug tracking,
+Please see http://gnuradio.org/trac for the wiki, bug tracking,
 and source code viewer.
 
 The bleeding edge code can be found in our subversion repository at
-http://gnuradio.utah.edu/svn.  To checkout the latest, use this
+http://gnuradio.org/svn.  To checkout the latest, use this
 command:
 
-  $ svn co http://gnuradio.utah.edu/svn/gnuradio/trunk gnuradio
+  $ svn co http://gnuradio.org/svn/gnuradio/trunk gnuradio
 
 For information about subversion, please see:
   http://subversion.tigris.org/
@@ -57,7 +57,7 @@ How to Build GNU Radio:
       contained on your installation CD/DVD, or may be loaded over the
       net.  The specifics vary depending on your GNU/Linux
       distribution.  See the wiki at
-      http://gnuradio.utah.edu/trac/wiki for details.
+      http://gnuradio.org/trac/wiki for details.
 
       FIXME: update the wiki; talk about OS/X, NetBSD and MinGW too.
 
