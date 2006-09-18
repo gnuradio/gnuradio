@@ -65,7 +65,7 @@ def calib_numogate_ridge_observatory_total_power(data):
 
     rainbow_file = open (filenamestr+".tpdat","a")
   
-    r = (data / 4096.0)
+    r = (data / 409.6)
     flt = "%6.3f" % r
     #r = calib_default_total_power(data)
     inter = globals()["calib_decln"]
