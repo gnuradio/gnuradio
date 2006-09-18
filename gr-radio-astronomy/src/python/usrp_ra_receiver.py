@@ -16,8 +16,8 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
+# the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
 # 
 
 from gnuradio import gr, gru
@@ -290,7 +290,10 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         # Set analog baseband filtering, if DBS_RX
         if self.cardtype == usrp_dbid.DBS_RX:
-            self.subdev.set_bw((self.u.adc_freq() / self.u.decim_rate())/2)
+            lbw = (self.u.adc_freq() / self.u.decim_rate()) / 2
+            if lbw < 1.0e6:
+                lbw = 1.0e6
+            self.subdev.set_bw(lbw)
 
         # Tell calibrator our declination as well
         calib_set_decln(self.decln)
