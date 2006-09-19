@@ -33,7 +33,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <avr/signal.h>
+#include <compat/deprecated.h> // for timer_enable_int
 #include "dopctrl.h"
 
 #define LED 0
