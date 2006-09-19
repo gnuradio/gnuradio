@@ -54,7 +54,7 @@ decr_bi (int buffer_index)		// decrement buffer index
 gr_oscope_guts::gr_oscope_guts (int nchannels, double sample_rate, gr_msg_queue_sptr msgq)
   : d_nchannels (nchannels),
     d_msgq (msgq), 
-    d_trigger_mode (gr_TRIG_POS_SLOPE),
+    d_trigger_mode (gr_TRIG_AUTO),
     d_trigger_channel (0),
     d_sample_rate (sample_rate),
     d_update_rate (20),
