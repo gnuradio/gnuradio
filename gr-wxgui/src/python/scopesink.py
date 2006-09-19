@@ -310,7 +310,7 @@ class scope_window (wx.Panel):
         ctrlbox.Add (self.trig_chan_choice, 0, wx.ALIGN_CENTER)
 
         self.trig_mode_choice = wx.Choice (self, 1005,
-                                           choices = ['Pos', 'Neg', 'Auto'])
+                                           choices = ['Auto', 'Pos', 'Neg'])
         self.trig_mode_choice.SetToolTipString ("Select trigger slope or Auto (untriggered roll)")
         wx.EVT_CHOICE (self, 1005, self.trig_mode_choice_event)
         ctrlbox.Add (self.trig_mode_choice, 0, wx.ALIGN_CENTER)
