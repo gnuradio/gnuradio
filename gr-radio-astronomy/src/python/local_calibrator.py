@@ -63,14 +63,34 @@ def calib_numogate_ridge_observatory_total_power(data):
     filenamestr = "%s/%04d%02d%02d%02d" % (pfx, foo.tm_year, 
        foo.tm_mon, foo.tm_mday, foo.tm_hour)
 
-    rainbow_file = open (filenamestr+".tpdat","a")
+    numogate_file = open (filenamestr+".tpdat","a")
   
     r = (data / 409.6)
     flt = "%6.3f" % r
     #r = calib_default_total_power(data)
     inter = globals()["calib_decln"]
-    rainbow_file.write(str(ephem.hours(sidtime))+" "+flt+" "+str(inter)+"\n")
-    rainbow_file.close()
+    integ = globals()["calib_integ_setting"]
+    fc = globals()["calib_freq_setting"]
+    fc = fc / 1000000
+    bw = globals()["calib_bw_setting"]
+    bw = bw / 1000000
+    ga = globals()["calib_gain_setting"]
+
+    now = time.time()
+
+    if not "calib_then_tpdat" in globals():
+        globals()["calib_then_tpdat"] = now
+
+    if (now - globals()["calib_then_tpdat"]) >= 10:
+        globals()["calib_then_tpdat"] = now
+    
+        numogate_file.write(str(ephem.hours(sidtime))+" "+flt+" Dn="+str(inter)+",")
+        numogate_file.write("Ti="+str(integ)+",Fc="+str(fc)+",Bw="+str(bw))
+        numogate_file.write(",Ga="+str(ga)+"\n")
+    else:
+        numogate_file.write(str(ephem.hours(sidtime))+" "+flt+"\n")
+
+    numogate_file.close()
     return(r)
 
 def calib_numogate_ridge_observatory_fft(data,l):
@@ -107,12 +127,18 @@ def calib_numogate_ridge_observatory_fft(data,l):
     if (now - globals()["calib_then"]) >= delta:
 
         globals()["calib_then"] = now
-        rainbow_file = open (filenamestr+".sdat","a")
+        numogate_file = open (filenamestr+".sdat","a")
   
         r = calib_default_fft(data,l)
         inter = globals()["calib_decln"]
-        rainbow_file.write("data:"+str(ephem.hours(sidtime))+" "+str(inter)+" "+str(r)+"\n")
-        rainbow_file.close()
+        fc = globals()["calib_freq_setting"]
+        fc = fc / 1000000
+        bw = globals()["calib_bw_setting"]
+        bw = bw / 1000000
+        av = globals()["calib_avg_alpha"]
+        numogate_file.write("data:"+str(ephem.hours(sidtime))+" Dn="+str(inter)+",Fc="+str(fc)+",Bw="+str(bw)+",Av="+str(av))
+        numogate_file.write(" "+str(r)+"\n")
+        numogate_file.close()
         return(r)
 
     return(data)
@@ -127,15 +153,19 @@ def calib_default_fft(db,l):
 #
 def calib_set_gain(gain):
     globals()["calib_gain_setting"] = gain
+    globals()["calib_then_tpdat"] = time.time() - 50
 
 def calib_set_integ(integ):
     globals()["calib_integ_setting"] = integ
+    globals()["calib_then_tpdat"] = time.time() - 50
 
 def calib_set_bw(bw):
     globals()["calib_bw_setting"] = bw
+    globals()["calib_then_tpdat"] = time.time() - 50
 
 def calib_set_freq(freq):
     globals()["calib_freq_setting"] = freq
+    globals()["calib_then_tpdat"] = time.time() - 50
 
 def calib_set_avg_alpha(alpha):
     globals()["calib_avg_alpha"] = alpha
@@ -145,6 +175,7 @@ def calib_set_interesting(inter):
 
 def calib_set_decln(dec):
     globals()["calib_decln"] = dec
+    globals()["calib_then_tpdat"] = time.time() - 50
 
 def calib_set_prefix(pfx):
     globals()["calib_prefix"] = pfx
