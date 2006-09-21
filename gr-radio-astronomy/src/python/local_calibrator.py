@@ -81,7 +81,7 @@ def calib_numogate_ridge_observatory_total_power(data):
     if not "calib_then_tpdat" in globals():
         globals()["calib_then_tpdat"] = now
 
-    if (now - globals()["calib_then_tpdat"]) >= 10:
+    if (now - globals()["calib_then_tpdat"]) >= 20:
         globals()["calib_then_tpdat"] = now
     
         numogate_file.write(str(ephem.hours(sidtime))+" "+flt+" Dn="+str(inter)+",")
