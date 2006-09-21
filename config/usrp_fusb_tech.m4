@@ -41,6 +41,13 @@ AC_DEFUN([USRP_SET_FUSB_TECHNIQUE],[
 
     darwin*)	FUSB_TECH=darwin 	;;
     cygwin*|win*|mingw*)	FUSB_TECH=win32		;;
+    *bsd*)
+		AC_MSG_CHECKING([for RA/WB])
+		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <dev/usb/usb.h>]],
+						   [[struct usb_bulk_ra_wb_opt o;
+						     ioctl(0, USB_SET_BULK_RA, &o);]])],
+				  [FUSB_TECH=ra_wb],
+				  [FUSB_TECH=generic])		;;
     *)		FUSB_TECH=generic	;;
   esac	
 
@@ -51,5 +58,6 @@ AC_DEFUN([USRP_SET_FUSB_TECHNIQUE],[
   AM_CONDITIONAL(FUSB_TECH_win32,    test $FUSB_TECH = win32)
   AM_CONDITIONAL(FUSB_TECH_generic,  test $FUSB_TECH = generic)
   AM_CONDITIONAL(FUSB_TECH_linux,    test $FUSB_TECH = linux)
+  AM_CONDITIONAL(FUSB_TECH_ra_wb,    test $FUSB_TECH = ra_wb)
 ])
 

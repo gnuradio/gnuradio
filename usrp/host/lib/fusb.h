@@ -123,6 +123,11 @@ public:
    */
   static int max_block_size ();
 
+  /*!
+   * \brief returns the default buffer size
+   */
+  static int default_buffer_size ();
+
 };
 
 #endif /* _FUSB_H_ */

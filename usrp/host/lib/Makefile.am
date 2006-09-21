@@ -64,6 +64,10 @@ linux_CODE =				\
 	fusb_linux.cc			\
 	fusb_sysconfig_linux.cc 	
 
+ra_wb_CODE =				\
+	fusb_ra_wb.cc			\
+	fusb_sysconfig_ra_wb.cc
+
 
 #
 # include each <foo>_CODE entry here...
@@ -72,7 +76,8 @@ EXTRA_libusrp_la_SOURCES =		\
 	$(generic_CODE)			\
 	$(darwin_CODE)			\
 	$(win32_CODE)			\
-	$(linux_CODE)			
+	$(linux_CODE)			\
+	$(ra_wb_CODE)
 
 
 # work around automake deficiency
@@ -101,6 +106,10 @@ endif
 
 if FUSB_TECH_linux
 libusrp_la_SOURCES = $(libusrp_la_common_SOURCES) $(linux_CODE)
+endif
+
+if FUSB_TECH_ra_wb
+libusrp_la_SOURCES = $(libusrp_la_common_SOURCES) $(ra_wb_CODE)
 endif
 
 

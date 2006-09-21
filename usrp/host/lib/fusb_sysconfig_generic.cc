@@ -24,6 +24,7 @@
 #include <fusb_generic.h>
 
 static const int MAX_BLOCK_SIZE = 16 * 1024;		// hard limit
+static const int FUSB_BUFFER_SIZE = 2 * (1L << 20);	// 2 MB (was 8 MB)
 
 fusb_devhandle *
 fusb_sysconfig::make_devhandle (usb_dev_handle *udh)
@@ -34,4 +35,9 @@ fusb_sysconfig::make_devhandle (usb_dev_handle *udh)
 int fusb_sysconfig::max_block_size ()
 {
   return MAX_BLOCK_SIZE;
+}
+
+int fusb_sysconfig::default_buffer_size ()
+{
+  return FUSB_BUFFER_SIZE;
 }

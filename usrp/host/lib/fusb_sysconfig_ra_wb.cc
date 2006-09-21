@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2005 Free Software Foundation, Inc.
+ * Copyright 2003,2006 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,17 +21,21 @@
  */
 
 #include <fusb.h>
-#include <fusb_win32.h>
+#include <fusb_ra_wb.h>
 
-static const int MAX_BLOCK_SIZE = 64 * 1024;		// Windows kernel hard limit
-static const int FUSB_BUFFER_SIZE = 2 * (1L << 20);	// 2 MB (was 8 MB)
-	
+//static const int MAX_BLOCK_SIZE = 16 * 1024;		// hard limit
+// there's no hard limit, even before making any changes to the driver
+// 64k is empirically a pretty good number
+static const int MAX_BLOCK_SIZE = 64 * 1024;
+// there is a limit of 1 MB in the driver for the buffer size
+static const int FUSB_BUFFER_SIZE = 256 * (1L << 10);	// 256 kB
+
 fusb_devhandle *
 fusb_sysconfig::make_devhandle (usb_dev_handle *udh)
 {
-  return new fusb_devhandle_win32 (udh);
+  return new fusb_devhandle_ra_wb (udh);
 }
-
+	
 int fusb_sysconfig::max_block_size ()
 {
   return MAX_BLOCK_SIZE;
