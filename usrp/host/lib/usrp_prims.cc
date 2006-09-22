@@ -244,12 +244,13 @@ usrp_open_interface (struct usb_device *dev, int interface, int altinterface)
     abort ();
   }
 
-#if defined(WIN32)
+#if defined(_WIN32) || defined(__WIN32__) || defined(__CYGWIN__)
   // There's no get get_configuration function, and with some of the newer kernels
   // setting the configuration, even if to the same value, hoses any other processes
   // that have it open.  Hence we opt to not set it at all (We've only
   // got a single configuration anyway).  This may hose the win32 stuff...
 
+  // Appears to be required for libusb-win32 and Cygwin -- dew 09/20/06
   if (usb_set_configuration (udh, 1) < 0){
     /*
      * Ignore this error.  
