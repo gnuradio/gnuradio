@@ -27,6 +27,6 @@ TESTS = run_tests
 
 noinst_PYTHON =  qa_ecc.py
 
-grpython_PYTHON =
+#grpython_PYTHON =
 
 MOSTLYCLEANFILES = *.pyc *~ run_tests
