@@ -84,6 +84,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         parser.add_option("-O", "--doppler", type="eng_float", default=1.0, help="Doppler ratio")
         parser.add_option("-B", "--divbase", type="eng_float", default=20, help="Y/Div menu base")
         parser.add_option("-I", "--division", type="eng_float", default=100, help="Y/Div")
+        parser.add_option("-A", "--audio_source", default="plughw:0,0", help="Audio input device spec")
         (options, args) = parser.parse_args()
         if len(args) != 0:
             parser.print_help()
@@ -94,6 +95,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.reflevel = options.reflevel
         self.divbase = options.divbase
         self.division = options.division
+        self.audiodev = options.audio_dev
 
         # Low-pass cutoff for post-detector filter
         # Set to 100Hz usually, since lots of pulsars fit in this
@@ -340,7 +342,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         #
         # Audio sink
         #
-        self.audio = audio.sink(second_input_rate, "plughw:0,0")
+        self.audio = audio.sink(second_input_rate, self.audiodev)
 
         #
         # The three post-detector filters
