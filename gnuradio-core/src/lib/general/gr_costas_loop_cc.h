@@ -26,6 +26,7 @@
 
 #include <gr_sync_block.h>
 #include <stdexcept>
+#include <fstream>
 
 class gr_costas_loop_cc;
 typedef boost::shared_ptr<gr_costas_loop_cc> gr_costas_loop_cc_sptr;

@@ -25,7 +25,7 @@
 #include <gr_sync_block.h>
 #include <gr_nco.h>
 #include <gr_single_pole_iir.h>
-#include <gri_agc.h>
+#include <gri_agc_ff.h>
 #include <stdio.h>
 #include <atsci_diag_output.h>
 
@@ -67,7 +67,7 @@ public:
   double                        initial_phase;
   bool                          debug_no_update;
   gr_nco<float,float>           nco;
-  gri_agc                        agc;    // automatic gain control
+  gri_agc_ff                    agc;    // automatic gain control
   gr_single_pole_iir<float,float,float> afci;
   gr_single_pole_iir<float,float,float> afcq;
 

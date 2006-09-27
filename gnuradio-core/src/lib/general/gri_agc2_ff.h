@@ -20,38 +20,56 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _GRI_AGC_H_
-#define _GRI_AGC_H_
+#ifndef _GRI_AGC2_FF_H_
+#define _GRI_AGC2_FF_H_
 
 #include <math.h>
 
 /*!
- * \brief high performance Automatic Gain Control class
+ * \brief high performance Automatic Gain Control class with attack and decay rate
  *
  * Power is approximated by absolute value
  */
 
-class gri_agc {
+class gri_agc2_ff {
 
  public:
-  gri_agc (float rate = 1e-4, float reference = 1.0, float gain = 1.0, float max_gain = 0.0)
-    : _rate(rate), _reference(reference), _gain(gain), _max_gain(max_gain) {};
+  gri_agc2_ff (float attack_rate = 1e-1, float decay_rate = 1e-2, float reference = 1.0, 
+	       float gain = 1.0, float max_gain = 0.0)
+    : _attack_rate(attack_rate), _decay_rate(decay_rate), _reference(reference), 
+      _gain(gain), _max_gain(max_gain) {};
 
-  float rate () const      { return _rate; }
-  float reference () const { return _reference; }
-  float gain () const 	   { return _gain;  }
-  float max_gain () const  { return _max_gain; }
+  float decay_rate () const  { return _decay_rate; }
+  float attack_rate () const { return _attack_rate; }
+  float reference () const   { return _reference; }
+  float gain () const 	     { return _gain;  }
+  float max_gain () const    { return _max_gain; }
   
-  void set_rate (float rate) { _rate = rate; }
+  void set_decay_rate (float rate) { _decay_rate = rate; }
+  void set_attack_rate (float rate) { _attack_rate = rate; }
   void set_reference (float reference) { _reference = reference; }
   void set_gain (float gain) { _gain = gain; }
   void set_max_gain (float max_gain) { _max_gain = max_gain; }
   
   float scale (float input){
     float output = input * _gain;
-    _gain += (_reference - fabsf (output)) * _rate;
+    
+    float tmp = (fabsf(output)) - _reference;
+    float rate = _decay_rate;
+    if(fabsf(tmp) > _gain)
+    	rate = _attack_rate;
+    _gain -= tmp*rate;
+
+#if 0
+    fprintf(stdout, "rate = %f\ttmp = %f\t gain = %f\n", rate, tmp, _gain);
+#endif
+
+    // Not sure about this
+    if (_gain < 0.0)
+	_gain = 10e-5;
+
     if (_max_gain > 0.0 && _gain > _max_gain)
-      _gain = _max_gain;
+       _gain = _max_gain;
     return output;
   }
 
@@ -61,10 +79,11 @@ class gri_agc {
   }
   
  protected:
-  float _rate;			// adjustment rate
+  float _decay_rate;		// decay rate for slow changing signals
+  float _attack_rate;           // attack_rate for fast changing signals
   float	_reference;		// reference value
   float	_gain;			// current gain
   float _max_gain;		// maximum gain
 };
 
-#endif /* _GRI_AGC_H_ */
+#endif /* _GRI_AGC2_FF_H_ */

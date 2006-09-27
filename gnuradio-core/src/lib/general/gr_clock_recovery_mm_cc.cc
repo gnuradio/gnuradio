@@ -48,7 +48,7 @@ gr_clock_recovery_mm_cc::gr_clock_recovery_mm_cc (float omega, float gain_omega,
 						  float gain_mu, float omega_relative_limit)
   : gr_block ("clock_recovery_mm_cc",
 	      gr_make_io_signature (1, 1, sizeof (gr_complex)),
-	      gr_make_io_signature (1, 1, sizeof (gr_complex))),
+	      gr_make_io_signature (1, 2, sizeof (gr_complex))),
     d_mu (mu), d_omega(omega), d_gain_omega(gain_omega), 
     d_omega_relative_limit(omega_relative_limit), 
     d_gain_mu(gain_mu), d_last_sample(0), d_interp(new gri_mmse_fir_interpolator_cc()),
@@ -119,6 +119,9 @@ gr_clock_recovery_mm_cc::general_work (int noutput_items,
 {
   const gr_complex *in = (const gr_complex *) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
+  gr_complex *foptr = (gr_complex *) output_items[1];
+
+  bool write_foptr = output_items.size() >= 2;
   
   int  ii = 0;				// input index
   int  oo = 0;				// output index
@@ -164,6 +167,10 @@ gr_clock_recovery_mm_cc::general_work (int noutput_items,
     if(d_verbose) {
       printf("%f\t%f\n", d_omega, d_mu);
     }
+
+    // write the error signal to the second output
+    if (write_foptr)
+      foptr[oo-1] = gr_complex(d_mu,0);
 
     if (ii < 0)	// clamp it.  This should only happen with bogus input
       ii = 0;

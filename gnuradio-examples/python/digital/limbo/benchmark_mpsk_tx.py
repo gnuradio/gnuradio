@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005, 2006 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,10 +26,7 @@ from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-import random
-import time
-import struct
-import sys
+import random, time, struct, sys
 
 # from current dir
 from transmit_path import transmit_path
@@ -42,13 +39,9 @@ import fusb_options
 
 class my_graph(gr.flow_graph):
 
-    def __init__(self, mod_class, tx_subdev_spec,
-                 bitrate, interp_rate, spb, gain,
-                 options, mod_kwargs):
+    def __init__(self, options, mod_kwargs):
         gr.flow_graph.__init__(self)
-        self.txpath = transmit_path(self, mod_class, tx_subdev_spec,
-                                    bitrate, interp_rate, spb, gain,
-                                    options, mod_kwargs)
+        self.txpath = transmit_path(self, options, mod_kwargs)
 
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -71,20 +64,26 @@ def main():
                       metavar="FREQ")
     parser.add_option("-r", "--bitrate", type="eng_float", default=None,
                       help="specify bitrate.  spb and interp will be derived.")
-    parser.add_option("-S", "--spb", type="int", default=None,
+    parser.add_option("-S", "--spb", type="int", default=2,
                       help="set samples/baud [default=%default]")
     parser.add_option("-i", "--interp", type="intx", default=None,
                       help="set fpga interpolation rate to INTERP [default=%default]")
     parser.add_option("-s", "--size", type="eng_float", default=1500,
                       help="set packet size [default=%default]")
-    parser.add_option("", "--bt", type="float", default=0.3,
-                      help="set bandwidth-time product [default=%default]")
     parser.add_option("-g", "--gain", type="eng_float", default=100.0,
                       help="transmitter gain [default=%default]")
     parser.add_option("-M", "--megabytes", type="eng_float", default=1.0,
                       help="set megabytes to transmit [default=%default]")
     parser.add_option("","--discontinuous", action="store_true", default=False,
                       help="enable discontinous transmission (bursts of 5 packets)")
+
+    parser.add_option("-m", "--modulation", type="string", default='dbpsk',
+                      help="modulation type (bpsk, dbpsk, dqpsk) [default=%default]")
+    parser.add_option("", "--excess-bw", type="float", default=0.3,
+                      help="set RRC excess bandwith factor [default=%default]")
+    parser.add_option("", "--no-gray-code", action="store_false", default=True,
+                      help="Don't use gray coding on modulated bits [default=%default]")
+
     fusb_options.add_options(parser)
     (options, args) = parser.parse_args ()
 
@@ -97,14 +96,20 @@ def main():
 
     pkt_size = int(options.size)
 
+    # Add PSK modulator class to options list
+    options.modulation = getattr(blks, options.modulation + "_mod")
+ 
+    # Add PSK modulator's properties
     mod_kwargs = {
-        'bt' : options.bt,
+        'spb'       : options.spb,
+        'excess_bw' : options.excess_bw,
+        'gray_code' : options.no_gray_code,
+        'verbose'   : False,
+        'debug'     : False,
         }
-
+ 
     # build the graph
-    fg = my_graph(blks.gmsk2_mod, options.tx_subdev_spec,
-                  options.bitrate, options.interp, options.spb, options.gain,
-                  options, mod_kwargs)
+    fg = my_graph(options, mod_kwargs)
 
     print "bitrate: %sb/sec" % (eng_notation.num_to_str(fg.txpath.bitrate()),)
     print "spb:     %3d" % (fg.txpath.spb(),)

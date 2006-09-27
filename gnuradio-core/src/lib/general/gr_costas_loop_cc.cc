@@ -49,7 +49,7 @@ gr_costas_loop_cc::gr_costas_loop_cc (float alpha, float beta,
 				      ) throw (std::invalid_argument)
   : gr_sync_block ("costas_loop_cc",
 		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
-		   gr_make_io_signature (1, 1, sizeof (gr_complex))),
+		   gr_make_io_signature (1, 2, sizeof (gr_complex))),
     d_alpha(alpha), d_beta(beta), 
     d_max_freq(max_freq), d_min_freq(min_freq),
     d_phase(0), d_freq((max_freq+min_freq)/2),
@@ -92,6 +92,9 @@ gr_costas_loop_cc::work (int noutput_items,
 {
   const gr_complex *iptr = (gr_complex *) input_items[0];
   gr_complex *optr = (gr_complex *) output_items[0];
+  gr_complex *foptr = (gr_complex *) output_items[1];
+
+  bool write_foptr = output_items.size() >= 2;
 
   float error;
   gr_complex nco_out;
@@ -101,18 +104,28 @@ gr_costas_loop_cc::work (int noutput_items,
     optr[i] = iptr[i] * nco_out;
     
     error = (*this.*d_phase_detector)(optr[i]);
+    if (error > 1)
+      error = 1;
+    else if (error < -1)
+      error = -1;
     
     d_freq = d_freq + d_beta * error;
     d_phase = d_phase + d_freq + d_alpha * error;
+
     while(d_phase>M_TWOPI)
       d_phase -= M_TWOPI;
     while(d_phase<-M_TWOPI)
       d_phase += M_TWOPI;
     
-     if (d_freq > d_max_freq)
+    if (d_freq > d_max_freq)
       d_freq = d_max_freq;
     else if (d_freq < d_min_freq)
       d_freq = d_min_freq;
+    
+    if (write_foptr){
+      foptr[i] = gr_complex(d_freq,0);
+      //foptr[i] = gr_complex(error, 0);
+    }
   }
   return noutput_items;
 }

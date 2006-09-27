@@ -44,6 +44,7 @@ grgrpython_PYTHON = 		\
 
 noinst_PYTHON = 			\
 	qa_add_and_friends.py		\
+	qa_agc.py			\
 	qa_basic_flow_graph.py		\
 	qa_complex_to_xxx.py		\
 	qa_correlate_access_code.py	\

@@ -20,35 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+GR_SWIG_BLOCK_MAGIC(gr,agc2_ff)
 
-#include <gr_agc_ff.h>
-#include <gr_io_signature.h>
-#include <gri_agc_ff.h>
+%include <gri_agc2_ff.i>
 
-gr_agc_ff_sptr
-gr_make_agc_ff (float rate, float reference, float gain, float max_gain)
+gr_agc2_ff_sptr
+gr_make_agc2_ff (float attack_rate = 1e-1, float decay_rate = 1e-2, float reference = 1.0, 
+		 float gain = 1.0, float max_gain = 0.0);
+
+class gr_agc2_ff : public gr_sync_block , public gri_agc2_ff
 {
-  return gr_agc_ff_sptr (new gr_agc_ff (rate, reference, gain, max_gain));
-}
-
-gr_agc_ff::gr_agc_ff (float rate, float reference, float gain, float max_gain)
-  : gr_sync_block ("gr_agc_ff",
-		   gr_make_io_signature (1, 1, sizeof (float)),
-		   gr_make_io_signature (1, 1, sizeof (float)))
-  , gri_agc_ff (rate,  reference, gain, max_gain)
-{
-}
-
-int
-gr_agc_ff::work (int noutput_items,
-		 gr_vector_const_void_star &input_items,
-		 gr_vector_void_star &output_items)
-{
-  const float *in = (const float *) input_items[0];
-  float *out = (float *) output_items[0];
-  scaleN (out, in, noutput_items);
-  return noutput_items;
-}
+  gr_agc2_ff (float attack_rate, float decay_rate, float reference, 
+	      float gain, float max_gain);
+};

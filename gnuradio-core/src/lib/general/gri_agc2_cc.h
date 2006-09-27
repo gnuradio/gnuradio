@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GRI_AGC_CC_H
-#define INCLUDED_GRI_AGC_CC_H
+#ifndef _GRI_AGC2_CC_H_
+#define _GRI_AGC2_CC_H_
 
 #include <math.h>
 
@@ -31,20 +31,22 @@
  * For Power the absolute value of the complex number is used.
  */
 
-class gri_agc_cc {
+class gri_agc2_cc {
 
  public:
-  gri_agc_cc (float rate = 1e-4, float reference = 1.0, 
-              float gain = 1.0, float max_gain = 0.0)
-    : _rate(rate), _reference(reference),
+  gri_agc2_cc (float attack_rate = 1e-1, float decay_rate = 1e-2, float reference = 1.0, 
+	       float gain = 1.0, float max_gain = 0.0)
+    : _attack_rate(attack_rate), _decay_rate(decay_rate), _reference(reference),
       _gain(gain), _max_gain(max_gain) {};
 
-  float rate () const      { return _rate; }
-  float reference () const { return _reference; }
-  float gain () const 	   { return _gain;  }
-  float max_gain() const   { return _max_gain; }
+  float decay_rate () const  { return _decay_rate; }
+  float attack_rate () const { return _attack_rate; }
+  float reference () const   { return _reference; }
+  float gain () const 	     { return _gain;  }
+  float max_gain() const     { return _max_gain; }
 
-  void set_rate (float rate) { _rate = rate; }
+  void set_decay_rate (float rate) { _decay_rate = rate; }
+  void set_attack_rate (float rate) { _attack_rate = rate; }
   void set_reference (float reference) { _reference = reference; }
   void set_gain (float gain) { _gain = gain; }
   void set_max_gain(float max_gain) { _max_gain = max_gain; }
@@ -52,8 +54,22 @@ class gri_agc_cc {
   gr_complex scale (gr_complex input){
     gr_complex output = input * _gain;
     
-    _gain +=  _rate * (_reference - sqrt(output.real()*output.real() + 
-					 output.imag()*output.imag()));
+    float tmp = -_reference + sqrt(output.real()*output.real() + 
+				   output.imag()*output.imag());
+    float rate = _decay_rate;
+    if((tmp) > _gain)
+    	rate = _attack_rate;
+    _gain -= tmp*rate;
+    
+#if 0
+    fprintf(stdout, "rate = %f\ttmp = %f\t gain = %f\n", rate, tmp, _gain);
+#endif
+
+    // Not sure about this; will blow up if _gain < 0 (happens when rates are too high),
+    // but is this the solution?
+    if (_gain < 0.0)
+	_gain = 10e-5;
+
     if (_max_gain > 0.0 && _gain > _max_gain)
        _gain = _max_gain;						     
     return output;
@@ -65,10 +81,11 @@ class gri_agc_cc {
   }
   
  protected:
-  float _rate;			// adjustment rate
+  float _decay_rate;		// decay rate for slow changing signals
+  float _attack_rate;		// attack rate for fast changing signals
   float	_reference;		// reference value
   float	_gain;			// current gain
   float _max_gain;		// max allowable gain
 };
 
-#endif /* INCLUDED_GRI_AGC_CC_H */
+#endif /* _GRI_AGC2_CC_H_ */

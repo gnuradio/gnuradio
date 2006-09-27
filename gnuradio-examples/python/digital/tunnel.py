@@ -33,7 +33,7 @@
 # /////////////////////////////////////////////////////////////////////////////
 
 
-from gnuradio import gr, gru, blks
+from gnuradio import gr, gru, modulation_utils
 from gnuradio import usrp
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
@@ -89,17 +89,11 @@ def open_tun_interface(tun_device_filename):
 class my_graph(gr.flow_graph):
 
     def __init__(self, mod_class, demod_class,
-                 tx_subdev_spec, rx_subdev_spec,
-                 rx_callback,
-                 options, kwargs):
+                 rx_callback, options):
 
         gr.flow_graph.__init__(self)
-        self.txpath = transmit_path(self, mod_class, tx_subdev_spec,
-                                    options.bitrate, options.interp, options.spb,
-                                    options.tx_gain, options, kwargs)
-        self.rxpath = receive_path(self, demod_class, rx_subdev_spec,
-                                   options.bitrate, options.decim, options.spb,
-                                   rx_callback, options, {})
+        self.txpath = transmit_path(self, mod_class, options)
+        self.rxpath = receive_path(self, demod_class, rx_callback, options)
 
     def send_pkt(self, payload='', eof=False):
         return self.txpath.send_pkt(payload, eof)
@@ -180,46 +174,43 @@ class cs_mac(object):
 
 def main():
 
-    parser = OptionParser (option_class=eng_option)
-    parser.add_option("-f", "--freq", type="eng_float", default=423.1e6,
-                      help="set Tx and Rx frequency to FREQ [default=%default]",
-                      metavar="FREQ")
-    parser.add_option("-r", "--bitrate", type="eng_float", default=None,
-                      help="specify bitrate.  spb and interp will be derived.")
-    parser.add_option("-g", "--rx-gain", type="eng_float", default=27,
-                      help="set rx gain")
-    parser.add_option("-p", "--tx-gain", type="eng_float", default=100,
-                      help="set tx gain")
-    parser.add_option("-T", "--tx-subdev-spec", type="subdev", default=None,
-                      help="select USRP Tx side A or B")
-    parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
-                      help="select USRP Rx side A or B")
-    parser.add_option("-S", "--spb", type="int", default=None,
-                      help="set samples/baud [default=%default]")
-    parser.add_option("-d", "--decim", type="intx", default=None,
-                      help="set fpga decim rate to DECIM [default=%default]")
-    parser.add_option("-i", "--interp", type="intx", default=None,
-                      help="set fpga interpolation rate to INTERP [default=%default]")
-    parser.add_option("-c", "--carrier-threshold", type="eng_float", default=30,
-                      help="set carrier detect threshold (dB) [default=%default]")
-    parser.add_option("", "--bt", type="float", default=0.3,
-                      help="set bandwidth-time product [default=%default]")
-    parser.add_option("","--tun-device-filename", default="/dev/net/tun",
-                      help="path to tun device file [default=%default]")
-    parser.add_option("-v","--verbose", action="store_true", default=False)
-    fusb_options.add_options(parser)
-    (options, args) = parser.parse_args ()
+    mods = modulation_utils.type_1_mods()
+    demods = modulation_utils.type_1_demods()
 
+    parser = OptionParser (option_class=eng_option, conflict_handler="resolve")
+    expert_grp = parser.add_option_group("Expert")
+
+    parser.add_option("-m", "--modulation", type="choice", choices=mods.keys(),
+                      default='gmsk',
+                      help="Select modulation from: %s [default=%%default]"
+                            % (', '.join(mods.keys()),))
+
+    parser.add_option("-v","--verbose", action="store_true", default=False)
+    expert_grp.add_option("-c", "--carrier-threshold", type="eng_float", default=30,
+                          help="set carrier detect threshold (dB) [default=%default]")
+    expert_grp.add_option("","--tun-device-filename", default="/dev/net/tun",
+                          help="path to tun device file [default=%default]")
+
+    transmit_path.add_options(parser, expert_grp)
+    receive_path.add_options(parser, expert_grp)
+
+    for mod in mods.values():
+        mod.add_options(expert_grp)
+
+    for demod in demods.values():
+        demod.add_options(expert_grp)
+
+    fusb_options.add_options(expert_grp)
+
+    (options, args) = parser.parse_args ()
     if len(args) != 0:
-        parser.print_help()
+        parser.print_help(sys.stderr)
         sys.exit(1)
 
-    if options.freq < 1e6:
-        options.freq *= 1e6
-
-    mod_kwargs = {
-        'bt' : options.bt,
-        }
+    if options.rx_freq is None or options.tx_freq is None:
+        sys.stderr.write("You must specify -f FREQ or --freq FREQ\n")
+        parser.print_help(sys.stderr)
+        sys.exit(1)
 
     # open the TUN/TAP interface
     (tun_fd, tun_ifname) = open_tun_interface(options.tun_device_filename)
@@ -244,18 +235,18 @@ def main():
             options.fusb_block_size = gr.prefs().get_long('fusb', 'block_size', 4096)
             options.fusb_nblocks    = gr.prefs().get_long('fusb', 'nblocks', 16)
     
-    print "fusb_block_size =", options.fusb_block_size
-    print "fusb_nblocks    =", options.fusb_nblocks
+    #print "fusb_block_size =", options.fusb_block_size
+    #print "fusb_nblocks    =", options.fusb_nblocks
 
     # instantiate the MAC
     mac = cs_mac(tun_fd, verbose=True)
 
 
     # build the graph (PHY)
-    fg = my_graph(blks.gmsk2_mod, blks.gmsk2_demod,
-                  options.tx_subdev_spec, options.rx_subdev_spec,
+    fg = my_graph(mods[options.modulation],
+                  demods[options.modulation],
                   mac.phy_rx_callback,
-                  options, mod_kwargs)
+                  options)
 
     mac.set_flow_graph(fg)    # give the MAC a handle for the PHY
 
@@ -264,23 +255,12 @@ def main():
             eng_notation.num_to_str(fg.txpath.bitrate()),
             eng_notation.num_to_str(fg.rxpath.bitrate()))
              
-    print "bitrate: %sb/sec" % (eng_notation.num_to_str(fg.txpath.bitrate()),)
-    print "spb:     %3d" % (fg.txpath.spb(),)
-    print "interp:  %3d" % (fg.txpath.interp(),)
-
-    ok = fg.txpath.set_freq(options.freq)
-    if not ok:
-        print "Failed to set Tx frequency to %s" % (eng_notation.num_to_str(options.freq),)
-        raise SystemExit
-
-    ok = fg.rxpath.set_freq(options.freq)
-    if not ok:
-        print "Failed to set Rx frequency to %s" % (eng_notation.num_to_str(options.freq),)
-        raise SystemExit
-
-    print "Tx gain: ", options.tx_gain
-    fg.rxpath.set_gain(options.rx_gain)
-    print "Rx gain_range: ", fg.rxpath.subdev.gain_range(), " using", fg.rxpath.gain
+    print "modulation:     %s"   % (options.modulation,)
+    print "freq:           %s"      % (eng_notation.num_to_str(options.tx_freq))
+    print "bitrate:        %sb/sec" % (eng_notation.num_to_str(fg.txpath.bitrate()),)
+    print "samples/symbol: %3d" % (fg.txpath.samples_per_symbol(),)
+    #print "interp:         %3d" % (fg.txpath.interp(),)
+    #print "decim:          %3d" % (fg.rxpath.decim(),)
 
     fg.rxpath.set_carrier_threshold(options.carrier_threshold)
     print "Carrier sense threshold:", options.carrier_threshold, "dB"
@@ -289,7 +269,7 @@ def main():
     print "Allocated virtual ethernet interface: %s" % (tun_ifname,)
     print "You must now use ifconfig to set its IP address. E.g.,"
     print
-    print "  $ sudo ifconfig %s 10.10.10.1" % (tun_ifname,)
+    print "  $ sudo ifconfig %s 192.168.200.1" % (tun_ifname,)
     print
     print "Be sure to use a different address in the same subnet for each machine."
     print

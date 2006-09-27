@@ -1,0 +1,12 @@
+Files in here are in various states of disrepair and/or have been
+superceded by revised code in the directory above.
+
+They're here until we figure out what to do with them.
+
+
+* gmsk_test.py: stand-alone program that exercises the GMSK packet tx
+and rx code.  The two halves are connected with a simulated noisy
+channel.  It's easy to add extra instrumentation to log various internal 
+states.  We used a variant of this code to get this working in the
+first place. 
+

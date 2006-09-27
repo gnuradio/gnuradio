@@ -101,10 +101,10 @@ class my_graph(gr.flow_graph):
         """
         r = self.u.tune(self.subdev._which, self.subdev, target_freq)
         if r:
-            print "r.baseband_freq =", eng_notation.num_to_str(r.baseband_freq)
-            print "r.dxc_freq      =", eng_notation.num_to_str(r.dxc_freq)
-            print "r.residual_freq =", eng_notation.num_to_str(r.residual_freq)
-            print "r.inverted      =", r.inverted
+            #print "r.baseband_freq =", eng_notation.num_to_str(r.baseband_freq)
+            #print "r.dxc_freq      =", eng_notation.num_to_str(r.dxc_freq)
+            #print "r.residual_freq =", eng_notation.num_to_str(r.residual_freq)
+            #print "r.inverted      =", r.inverted
             return True
 
         return False

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2006 Free Software Foundation, Inc.
+ * Copyright 2006 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,14 +23,20 @@
 #include <math.h>
 
 /*!
- * \brief high performance Automatic Gain Control class
+ * \brief high performance Automatic Gain Control class with attack and decay rates
  *
- * Power is approximated by absolute value
+ * For Power the absolute value of the complex number is used.
  */
 
 
-class gri_agc {
+class gri_agc2_cc {
 
  public:
-  gri_agc (float rate = 1e-4, float reference = 1.0, float gain = 1.0, float max_gain = 0.0);
+  gri_agc2_cc (float attack_rate = 1e-1, float decay_rate = 1e-2, float reference = 1.0, 
+	       float gain = 1.0, float max_gain = 0.0);
+  float decay_rate ();
+  float attack_rate ();
+  float reference ();
+  float gain ();
+  float max_gain ();
   };

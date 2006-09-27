@@ -27,8 +27,7 @@ AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
         gnuradio-examples/python/channel-coding/Makefile \
         gnuradio-examples/python/channel-coding/fsm_files/Makefile \
         gnuradio-examples/python/digital_voice/Makefile \
-        gnuradio-examples/python/gmsk2/Makefile \
-        gnuradio-examples/python/mc4020/Makefile \
+        gnuradio-examples/python/digital/Makefile \
         gnuradio-examples/python/usrp/Makefile \
         gnuradio-examples/python/multi_usrp/Makefile \
     ])

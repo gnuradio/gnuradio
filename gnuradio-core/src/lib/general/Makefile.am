@@ -95,6 +95,8 @@ libgeneral_la_SOURCES = 		\
 	$(GENERATED_CC)			\
 	gr_agc_cc.cc                	\
 	gr_agc_ff.cc                	\
+	gr_agc2_cc.cc                	\
+	gr_agc2_ff.cc                	\
 	gr_align_on_samplenumbers_ss.cc	\
 	gr_binary_slicer_fb.cc		\
 	gr_bytes_to_syms.cc		\
@@ -120,6 +122,7 @@ libgeneral_la_SOURCES = 		\
 	gr_diff_phasor_cc.cc		\
 	gr_fake_channel_coder_pp.cc	\
 	gr_fast_atan2f.cc		\
+	gr_feedforward_agc_cc.cc	\
 	gr_feval.cc			\
 	gr_fft_vcc.cc			\
 	gr_fft_vfc.cc			\
@@ -213,6 +216,8 @@ grinclude_HEADERS = 			\
 	$(GENERATED_H)			\
 	gr_agc_cc.h                 	\
 	gr_agc_ff.h                 	\
+	gr_agc2_cc.h                	\
+	gr_agc2_ff.h                	\
 	gr_align_on_samplenumbers_ss.h	\
 	gr_binary_slicer_fb.h		\
 	gr_bytes_to_syms.h		\
@@ -239,6 +244,7 @@ grinclude_HEADERS = 			\
 	gr_endianness.h			\
 	gr_expj.h			\
 	gr_fake_channel_coder_pp.h	\
+	gr_feedforward_agc_cc.h		\
 	gr_feval.h			\
 	gr_fft_vcc.h			\
 	gr_fft_vfc.h			\
@@ -315,8 +321,10 @@ grinclude_HEADERS = 			\
 	gr_vector_to_stream.h		\
 	gr_vector_to_streams.h		\
 	gri_add_const_ss.h		\
-	gri_agc.h			\
 	gri_agc_cc.h			\
+	gri_agc_ff.h			\
+	gri_agc2_cc.h			\
+	gri_agc2_ff.h			\
 	gri_char_to_float.h		\
 	gri_debugger_hook.h		\
 	gri_fft.h			\
@@ -348,6 +356,8 @@ swiginclude_HEADERS =			\
 	general_generated.i		\
 	gr_agc_cc.i                 	\
 	gr_agc_ff.i                 	\
+	gr_agc2_cc.i                 	\
+	gr_agc2_ff.i                 	\
 	gr_align_on_samplenumbers_ss.i	\
 	gr_binary_slicer_fb.i		\
 	gr_bytes_to_syms.i		\
@@ -371,6 +381,7 @@ swiginclude_HEADERS =			\
 	gr_deinterleave.i		\
 	gr_endianness.i			\
 	gr_fake_channel_coder_pp.i	\
+	gr_feedforward_agc_cc.i		\
 	gr_feval.i			\
 	gr_fft_vcc.i			\
 	gr_fft_vfc.i			\
@@ -432,9 +443,11 @@ swiginclude_HEADERS =			\
 	gr_vco_f.i			\
 	gr_vector_to_stream.i		\
 	gr_vector_to_streams.i		\
-	gri_agc.i                 	\
-	gri_agc_cc.i                 	\
-	gr_unpack_k_bits_bb.i
+	gr_unpack_k_bits_bb.i		\
+	gri_agc_cc.i			\
+	gri_agc_ff.i			\
+	gri_agc2_cc.i			\
+	gri_agc2_ff.i			
 
 
 CLEANFILES = $(BUILT_SOURCES) *.pyc

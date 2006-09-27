@@ -81,8 +81,8 @@ class mod_pkts(gr.hier_block):
         else:
             # print "original_payload =", string_to_hex_list(payload)
             pkt = packet_utils.make_packet(payload,
-                                           self._modulator.samples_per_baud(),
-                                           self._modulator.bits_per_baud(),
+                                           self._modulator.samples_per_symbol(),
+                                           self._modulator.bits_per_symbol(),
                                            self._access_code,
                                            self._pad_for_usrp)
             #print "pkt =", string_to_hex_list(pkt)

@@ -29,14 +29,16 @@ grblkspythondir = $(grpythondir)/blksimpl
 grblkspython_PYTHON =		\
 	__init__.py		\
 	am_demod.py		\
+	dbpsk.py		\
+	dqpsk.py		\
 	filterbank.py		\
 	fm_demod.py		\
 	fm_emph.py		\
-	gmsk2.py		\
-	gmsk2_pkt.py		\
+	gmsk.py			\
 	nbfm_rx.py		\
 	nbfm_tx.py		\
 	pkt.py			\
+	psk.py			\
 	rational_resampler.py	\
 	standard_squelch.py	\
 	wfm_rcv.py		\

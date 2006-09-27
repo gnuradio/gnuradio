@@ -28,6 +28,7 @@ grpython_PYTHON = 			\
 	audio.py			\
 	eng_notation.py			\
 	eng_option.py			\
+	modulation_utils.py		\
 	packet_utils.py			\
 	gr_unittest.py			\
 	optfir.py			\

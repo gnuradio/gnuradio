@@ -71,7 +71,8 @@ def conv_1_0_string_to_packed_binary_string(s):
 
 default_access_code = \
   conv_packed_binary_string_to_1_0_string('\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC')
-
+preamble = \
+  conv_packed_binary_string_to_1_0_string('\xAA\xAA\xAA\xAB')
 
 def is_1_0_string(s):
     if not isinstance(s, str):
@@ -97,16 +98,17 @@ def dewhiten(s):
 def make_header(payload_len):
     return struct.pack('!HH', payload_len, payload_len)
 
-def make_packet(payload, spb, bits_per_baud, access_code=default_access_code, pad_for_usrp=True):
+def make_packet(payload, samples_per_symbol, bits_per_symbol,
+                access_code=default_access_code, pad_for_usrp=True):
     """
     Build a packet, given access code and payload.
 
-    @param payload:       packet payload, len [0, 4096]
-    @param spb:           samples per baud (needed for padding calculation)
-    @type  spb:           int
-    @param bits_per_baud: (needed for padding calculation)
-    @type bits_per_baud:  int
-    @param access_code:   string of ascii 0's and 1's
+    @param payload:               packet payload, len [0, 4096]
+    @param samples_per_symbol:    samples per symbol (needed for padding calculation)
+    @type  samples_per_symbol:    int
+    @param bits_per_symbol:       (needed for padding calculation)
+    @type bits_per_symbol:        int
+    @param access_code:           string of ascii 0's and 1's
     
     Packet will have access code at the beginning, followed by length, payload
     and finally CRC-32.
@@ -115,6 +117,7 @@ def make_packet(payload, spb, bits_per_baud, access_code=default_access_code, pa
         raise ValueError, "access_code must be a string containing only 0's and 1's (%r)" % (access_code,)
 
     (packed_access_code, padded) = conv_1_0_string_to_packed_binary_string(access_code)
+    (packed_preamble, ignore) = conv_1_0_string_to_packed_binary_string(preamble)
     
     payload_with_crc = gru.gen_and_append_crc32(payload)
     #print "outbound crc =", string_to_hex_list(payload_with_crc[-4:])
@@ -124,14 +127,14 @@ def make_packet(payload, spb, bits_per_baud, access_code=default_access_code, pa
     if L > MAXLEN:
         raise ValueError, "len(payload) must be in [0, %d]" % (MAXLEN,)
 
-    pkt = ''.join((packed_access_code, make_header(L), whiten(payload_with_crc), '\x55'))
+    pkt = ''.join((packed_preamble, packed_access_code, make_header(L), whiten(payload_with_crc), '\x55'))
     if pad_for_usrp:
-        pkt = pkt + (_npadding_bytes(len(pkt), spb, bits_per_baud) * '\x55')
+        pkt = pkt + (_npadding_bytes(len(pkt), samples_per_symbol, bits_per_symbol) * '\x55')
 
     #print "make_packet: len(pkt) =", len(pkt)
     return pkt
 
-def _npadding_bytes(pkt_byte_len, spb, bits_per_baud):
+def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
     """
     Generate sufficient padding such that each packet ultimately ends
     up being a multiple of 512 bytes when sent across the USB.  We
@@ -140,13 +143,13 @@ def _npadding_bytes(pkt_byte_len, spb, bits_per_baud):
     is a multiple of 128 samples.
 
     @param ptk_byte_len: len in bytes of packet, not including padding.
-    @param spb: samples per baud == samples per bit (1 bit / baud with GMSK)
-    @type spb: int
+    @param samples_per_symbol: samples per bit (1 bit / symbolwith GMSK)
+    @type samples_per_symbol: int
 
     @returns number of bytes of padding to append.
     """
     modulus = 128
-    byte_modulus = gru.lcm(modulus/8, spb) * bits_per_baud / spb
+    byte_modulus = gru.lcm(modulus/8, samples_per_symbol) * bits_per_symbol / samples_per_symbol
     r = pkt_byte_len % byte_modulus
     if r == 0:
         return 0

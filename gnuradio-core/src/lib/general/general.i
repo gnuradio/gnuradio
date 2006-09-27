@@ -64,6 +64,8 @@
 #include <gr_simple_squelch_cc.h>
 #include <gr_agc_ff.h>
 #include <gr_agc_cc.h>
+#include <gr_agc2_ff.h>
+#include <gr_agc2_cc.h>
 #include <gr_rms_cf.h>
 #include <gr_rms_ff.h>
 #include <gr_nlog10_ff.h>
@@ -109,6 +111,7 @@
 #include <gr_pwr_squelch_cc.h>
 #include <gr_pwr_squelch_ff.h>
 #include <gr_ctcss_squelch_ff.h>
+#include <gr_feedforward_agc_cc.h>
 %}
 
 %include "gr_sync_block.i"
@@ -154,6 +157,8 @@
 %include "gr_simple_squelch_cc.i"
 %include "gr_agc_ff.i"
 %include "gr_agc_cc.i"
+%include "gr_agc2_ff.i"
+%include "gr_agc2_cc.i"
 %include "gr_rms_cf.i"
 %include "gr_rms_ff.i"
 %include "gr_nlog10_ff.i"
@@ -199,5 +204,6 @@
 %include "gr_pwr_squelch_cc.i"
 %include "gr_pwr_squelch_ff.i"
 %include "gr_ctcss_squelch_ff.i"
+%include "gr_feedforward_agc_cc.i"
 
 %include "general_generated.i"

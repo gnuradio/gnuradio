@@ -24,21 +24,24 @@
 #define INCLUDED_GR_AGC_FF_H
 
 #include <gr_sync_block.h>
-#include <gri_agc.h>
+#include <gri_agc_ff.h>
 class gr_agc_ff;
 typedef boost::shared_ptr<gr_agc_ff> gr_agc_ff_sptr;
 
 gr_agc_ff_sptr
-gr_make_agc_ff (float rate = 1e-4, float reference = 1.0, float gain = 1.0, float max_gain = 0.0);
+gr_make_agc_ff (float rate = 1e-4, float reference = 1.0, 
+		float gain = 1.0, float max_gain = 0.0);
+
 /*!
  * \brief high performance Automatic Gain Control class
  *
  * Power is approximated by absolute value
  */
 
-class gr_agc_ff : public gr_sync_block, public gri_agc
+class gr_agc_ff : public gr_sync_block, public gri_agc_ff
 {
-  friend gr_agc_ff_sptr gr_make_agc_ff (float rate, float reference, float gain, float max_gain);
+  friend gr_agc_ff_sptr gr_make_agc_ff (float rate, float reference, 
+					float gain, float max_gain);
   gr_agc_ff (float rate, float reference, float gain, float max_gain);
 
  public:

@@ -20,22 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <math.h>
+GR_SWIG_BLOCK_MAGIC(gr,agc2_cc)
 
-/*!
- * \brief high performance Automatic Gain Control class
- *
- * For Power the absolute value of the complex number is used.
- */
+%include <gri_agc2_cc.i>
 
+gr_agc2_cc_sptr
+gr_make_agc2_cc (float attack_rate = 1e-1, float decay_rate = 1e-2, float reference = 1.0, 
+		 float gain = 1.0, float max_gain = 0.0);
 
-class gri_agc_cc {
-
- public:
-  gri_agc_cc (float rate = 1e-4, float reference = 1.0, 
-              float gain = 1.0, float max_gain = 0.0);
-  float rate ();
-  float reference ();
-  float gain ();
-  float max_gain ();
-  };
+class gr_agc2_cc : public gr_sync_block , public gri_agc2_cc
+{
+  gr_agc2_cc (float attack_rate, float decay_rate, float reference, 
+	      float gain, float max_gain);
+};

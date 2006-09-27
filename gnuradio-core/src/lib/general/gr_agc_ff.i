@@ -22,12 +22,13 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,agc_ff)
 
-%include <gri_agc.i>
+%include <gri_agc_ff.i>
 
 gr_agc_ff_sptr
-gr_make_agc_ff (float rate = 1e-4, float reference = 1.0, float gain = 1.0, float max_gain = 0.0);
+gr_make_agc_ff (float rate = 1e-4, float reference = 1.0, 
+		float gain = 1.0, float max_gain = 0.0);
 
-class gr_agc_ff : public gr_sync_block , public gri_agc
+class gr_agc_ff : public gr_sync_block , public gri_agc_ff
 {
   gr_agc_ff (float rate, float reference, float gain, float max_gain);
 };

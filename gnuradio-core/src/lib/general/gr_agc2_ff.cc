@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2005,2006 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,33 +24,34 @@
 #include "config.h"
 #endif
 
-#include <gr_agc_cc.h>
+#include <gr_agc2_ff.h>
 #include <gr_io_signature.h>
-#include <gri_agc_cc.h>
+#include <gri_agc2_ff.h>
 
-gr_agc_cc_sptr
-gr_make_agc_cc (float rate, float reference, 
-		float gain, float max_gain)
+gr_agc2_ff_sptr
+gr_make_agc2_ff (float attack_rate, float decay_rate, float reference, 
+		 float gain, float max_gain)
 {
-  return gr_agc_cc_sptr (new gr_agc_cc (rate, reference, gain, max_gain));
+  return gr_agc2_ff_sptr (new gr_agc2_ff (attack_rate, decay_rate, reference, 
+					  gain, max_gain));
 }
 
-gr_agc_cc::gr_agc_cc (float rate, float reference, 
-		      float gain, float max_gain)
-  : gr_sync_block ("gr_agc_cc",
-		   gr_make_io_signature (1, 1, sizeof (gr_complex)),
-		   gr_make_io_signature (1, 1, sizeof (gr_complex))), 
-    gri_agc_cc (rate, reference, gain, max_gain)
+gr_agc2_ff::gr_agc2_ff (float attack_rate, float decay_rate, float reference, 
+			float gain, float max_gain)
+  : gr_sync_block ("gr_agc2_ff",
+		   gr_make_io_signature (1, 1, sizeof (float)),
+		   gr_make_io_signature (1, 1, sizeof (float)))
+  , gri_agc2_ff (attack_rate, decay_rate,  reference, gain, max_gain)
 {
 }
 
 int
-gr_agc_cc::work (int noutput_items,
+gr_agc2_ff::work (int noutput_items,
 		 gr_vector_const_void_star &input_items,
 		 gr_vector_void_star &output_items)
 {
-  const gr_complex *in = (const gr_complex *) input_items[0];
-  gr_complex *out = (gr_complex *) output_items[0];
+  const float *in = (const float *) input_items[0];
+  float *out = (float *) output_items[0];
   scaleN (out, in, noutput_items);
   return noutput_items;
 }

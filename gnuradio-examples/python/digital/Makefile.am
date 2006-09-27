@@ -19,10 +19,15 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-EXTRA_DIST = 			\
-	fm_demod.py		\
-	mc4020_fft.py		
-
-
-
-
+EXTRA_DIST =			\
+	README			\
+	benchmark_rx.py		\
+	benchmark_tx.py		\
+	fusb_options.py		\
+	gen_whitener.py		\
+	pick_bitrate.py		\
+	receive_path.py		\
+	rx_voice.py		\
+	transmit_path.py	\
+	tunnel.py		\
+	tx_voice.py		
