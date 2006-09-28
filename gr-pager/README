@@ -1,38 +1,37 @@
 This GNU Radio component implements (will implement) common radiopager
 signaling protocols such as POCSAG and FLEX.
 
-Current status (9/13/06):
+Current status (9/28/06):
 
-FLEX receiving is in mid-stream of implemention.
+FLEX receiving is nearing completion.
 
-pager.slicer_fb()       Accepts a complex baseband downconverted channel 
-                        and outputs 4-level FSK symbols [0-3] as bytes.
-			This may migrate into gnuradio-core at some point.
+pager.slicer_fb()         Accepts a complex baseband downconverted channel 
+                          and outputs 4-level FSK symbols [0-3] as bytes.
+			  This may migrate into gnuradio-core at some point.
 
-pager.flex_deframer()   Accepts a symbol stream from slicer_fb() and
-                        outputs received 32-bit FLEX codewords for each
-                        defined phase.  Auto adjusts for 1600 or 3200 bps, 
-                        and 2 or 4 level FSK encoding based on received
-                        synchronization word.  The sync portion of this
-                        block may factor out into its own block for
-                        purposes of clarity and code complexity.
+pager.flex_sync()	  Accepts 4FSK symbol stream at channel rate and
+			  outputs four phases of FLEX data bits as bytes.
+			  Auto-shifts to 3200 bps as determined by received
+			  FLEX synchronization word.
+			
+pager.flex_deinterleave() Accepts a single phase of FLEX data bits and performs
+			  deinterleaving on 256-bit blocks.  Resulting code
+			  words are error corrected using BCH 32,21 ecc (stub)
+			  and converted into FLEX data words for output.
 
-pager.bch3221_ecd()     (not yet implemented) Accepts a stream of 32-bit
-                        FLEX codewords and applies BCH (32,21) error
-                        detection/correction (up to 2 bits), the emits
-                        corrected stream. This may be absorbed into the
-                        deframer at some point.
+pager.flex_parse()	  Sink block that accepts a single phase of FLEX data 
+			  words and unpacks and parses individual pages.
+			  Currently, this block decodes the capcodes of each
+			  receive page and displays the page type, but not yet
+			  the contents.
 
-pager.message_decode()  (not yet implemented) Accepts a stream of 32-bit
-                        FLEX codewords and separates individual paging
-                        messages into output stream as bytes.
+pager.flex_decode()       Combines the above blocks correctly to convert
+                          from downconverted baseband to pager messages
 
-pager.flex_decode()     Combines the above blocks correctly to convert
-                        from downconverted baseband to pager messages
-
-usrp_flex.py            Instantiates USRP receive chain to receive FLEX
-                        protocol pages.  See command-line help for options.
-                        This will probably make it into gnuradio-examples.
+usrp_flex.py              Instantiates USRP receive chain to receive FLEX
+                          protocol pages.  See command-line help for options.
+			  Right now this installs into $PREFIX/bin but will
+                          probably make it into gnuradio-examples.
 
 Johnathan Corgan
 jcorgan@aeinet.com

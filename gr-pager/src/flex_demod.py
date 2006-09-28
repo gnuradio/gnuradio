@@ -23,9 +23,9 @@ from gnuradio import gr, optfir
 from math import pi
 import pager_swig
 
-class flex_demod(gr.hier_block):
+class flex_demod:
     """
-    FLEX protocol demodulation block.
+    FLEX pager protocol demodulation block.
 
     This block demodulates a band-limited, complex down-converted baseband 
     channel into FLEX protocol frames.
@@ -35,7 +35,9 @@ class flex_demod(gr.hier_block):
     QUAD     - Quadrature demodulator converts FSK to baseband amplitudes  
     LPF      - Low pass filter to remove noise prior to slicer
     SLICER   - Converts input to one of four symbols (0, 1, 2, 3)
-    DEFRAMER - Syncronizes symbol stream and outputs FLEX codewords
+    SYNC     - Converts symbol stream to four phases of FLEX blocks
+    DEINTx   - Deinterleaves FLEX blocks into datawords
+    PARSEx   - Parse a single FLEX phase worth of data words into pages
     ---
 
     @param fg: flowgraph
@@ -46,12 +48,27 @@ class flex_demod(gr.hier_block):
     def __init__(self, fg, channel_rate):
         k = channel_rate/(2*pi*4800)        # 4800 Hz max deviation
         QUAD = gr.quadrature_demod_cf(k)
-
+	self.INPUT = QUAD
+		
         taps = optfir.low_pass(1.0, channel_rate, 3200, 6400, 0.1, 60)
         LPF = gr.fir_filter_fff(1, taps)
         SLICER = pager_swig.slicer_fb(.001, .00001) # Attack, decay
-        DEFRAMER = pager_swig.flex_deframer(channel_rate)
-	
-        fg.connect(QUAD, LPF, SLICER, DEFRAMER)
+	SYNC = pager_swig.flex_sync(channel_rate)
+        fg.connect(QUAD, LPF, SLICER, SYNC)
 
-        gr.hier_block.__init__(self, fg, QUAD, DEFRAMER)
+	DEINTA = pager_swig.flex_deinterleave()
+	PARSEA = pager_swig.flex_parse()
+
+	DEINTB = pager_swig.flex_deinterleave()
+	PARSEB = pager_swig.flex_parse()
+
+	DEINTC = pager_swig.flex_deinterleave()
+	PARSEC = pager_swig.flex_parse()
+
+	DEINTD = pager_swig.flex_deinterleave()
+	PARSED = pager_swig.flex_parse()
+	
+	fg.connect((SYNC, 0), DEINTA, PARSEA)
+	fg.connect((SYNC, 1), DEINTB, PARSEB)
+	fg.connect((SYNC, 2), DEINTC, PARSEC)
+	fg.connect((SYNC, 3), DEINTD, PARSED)

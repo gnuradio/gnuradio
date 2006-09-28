@@ -23,11 +23,21 @@
 
 const flex_mode_t flex_modes[] = 
 {
-    { 0x870C78F3, 1600, 2, true, false, false, false, 1 },
-    { 0xB0684F97, 1600, 4, true, true,  false, false, 2 },
-//  { 0xUNKNOWN,  3200, 2, true, false, true,  false, 2 },
-    { 0xDEA0215F, 3200, 4, true, true,  true,  true,  4 },
-    { 0x4C7CB383, 3200, 4, true, true,  true,  true,  4 }
+    { 0x870C78F3, 1600, 2 },
+    { 0xB0684F97, 1600, 4 },
+//  { 0xUNKNOWN,  3200, 2 },
+    { 0xDEA0215F, 3200, 4 },
+    { 0x4C7CB383, 3200, 4 }
 };
 
-const int num_flex_modes = sizeof(flex_modes);
+const int num_flex_modes = sizeof(flex_modes)/sizeof(flex_modes[0]);
+
+int find_flex_mode(gr_int32 sync_code)
+{
+    for (int i = 0; i < num_flex_modes; i++)
+	if (flex_modes[i].sync == sync_code)
+	    return i;
+	
+    // Not found
+    return -1;
+}

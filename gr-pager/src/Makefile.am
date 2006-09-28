@@ -27,6 +27,9 @@ EXTRA_DIST = \
 TESTS = \
     run_tests
 
+bin_SCRIPTS = \
+    usrp_flex.py
+
 noinst_PYTHON = \
     qa_pager.py
 
@@ -72,9 +75,12 @@ ourlib_LTLIBRARIES = _pager_swig.la
 _pager_swig_la_SOURCES = \
     pager_swig.cc \
     pager_slicer_fb.cc \
-    pager_flex_deframer.cc \
+    pager_flex_sync.cc \
+    pager_flex_deinterleave.cc \
+    pager_flex_parse.cc \
+    pageri_bch3221.cc \
     pageri_flex_modes.cc \
-    pageri_bch3221.cc
+    pageri_util.cc
     # Additional source modules here
 
 # magic flags
@@ -92,9 +98,12 @@ pager_swig.cc pager_swig.py: $(ALL_IFILES)
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = \
     pager_slicer_fb.h \
-    pager_flex_deframer.h \
+    pager_flex_sync.h \
+    pager_flex_deinterleave.h \
+    pager_flex_parse.h \
+    pageri_bch3221.h \
     pageri_flex_modes.h \
-    pageri_bch3221.h
+    pageri_util.h
     # Additional header files here
 
 # These swig headers get installed in ${prefix}/include/gnuradio/swig

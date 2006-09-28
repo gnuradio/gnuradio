@@ -23,14 +23,24 @@
 #include "config.h"
 #endif
 
-#include <pageri_bch3221.h>
+#include <pageri_util.h>
 
-// Corrects supplied data word according to BCH3221 encoding and
-// returns the number of errors detected/corrected.
-//
-// Not implemented yet
-
-int pageri_bch3221(gr_int32 &data)
+unsigned char pageri_reverse_bits8(unsigned char val)
 {
-    return 0;
+    // This method was attributed to Rich Schroeppel in the Programming 
+    // Hacks section of Beeler, M., Gosper, R. W., and Schroeppel, R. 
+    // HAKMEM. MIT AI Memo 239, Feb. 29, 1972.
+    //
+    // Reverses 8 bits in 5 machine operations with 64 bit arch
+    return (val * 0x0202020202ULL & 0x010884422010ULL) % 1023;
+}
+
+gr_int32 pageri_reverse_bits32(gr_int32 val)
+{
+    gr_int32 out = 0x00000000;
+    out |= (pageri_reverse_bits8((val >> 24) & 0x000000FF)      );
+    out |= (pageri_reverse_bits8((val >> 16) & 0x000000FF) <<  8);
+    out |= (pageri_reverse_bits8((val >>  8) & 0x000000FF) << 16);
+    out |= (pageri_reverse_bits8((val      ) & 0x000000FF) << 24);
+    return out;
 }

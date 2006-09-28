@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 
-from gnuradio import gr, gru, usrp, optfir, eng_notation, blks
+from gnuradio import gr, gru, usrp, optfir, eng_notation, blks, pager
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import time, os, sys
-
-from flex_demod import flex_demod
 
 """
 This example application demonstrates receiving and demodulating the
@@ -16,10 +14,8 @@ blocks:
 
 USRP  - Daughter board source generating complex baseband signal.
 CHAN  - Low pass filter to select channel bandwidth
-RFSQL - RF squelch zeroing output when input power below threshold
 AGC   - Automatic gain control leveling signal at [-1.0, +1.0]
 FLEX  - FLEX pager protocol decoder
-SINK  - File sink for decoded output 
 
 The following are required command line parameters:
 
@@ -35,11 +31,6 @@ The following are optional command line parameters:
 
 Once the program is running, ctrl-break (Ctrl-C) stops operation.
 """
-
-def make_filename(dir, freq):
-    t = time.strftime('%Y%m%d-%H%M%S')
-    f = 'r%s-%s.dat' % (t, eng_notation.num_to_str(freq))
-    return os.path.join(dir, f)
 
 class usrp_source_c(gr.hier_block):
     """
@@ -84,7 +75,7 @@ class app_flow_graph(gr.flow_graph):
 
         USRP = usrp_source_c(self,          # Flow graph
                     options.rx_subdev_spec, # Daugherboard spec
-	                250,                    # IF decimation ratio gets 256K if_rate
+	            250,                    # IF decimation ratio gets 256K if_rate
                     options.gain,           # Receiver gain
                     options.calibration)    # Frequency offset
         USRP.tune(options.frequency)
@@ -95,35 +86,24 @@ class app_flow_graph(gr.flow_graph):
 	
         CHAN_taps = optfir.low_pass(1.0,          # Filter gain
                                     if_rate,      # Sample rate
-			                        8000,         # One sided modulation bandwidth
-	                                10000,        # One sided channel bandwidth
-				                    0.1, 	      # Passband ripple
-				                    60) 		  # Stopband attenuation
+			            8000,         # One sided modulation bandwidth
+	                            10000,        # One sided channel bandwidth
+				    0.1,	  # Passband ripple
+				    60) 	  # Stopband attenuation
 	
         CHAN = gr.freq_xlating_fir_filter_ccf(channel_decim, # Decimation rate
                                               CHAN_taps,     # Filter taps
                                               0.0,           # Offset frequency
                                               if_rate)       # Sample rate
 
-        RFSQL = gr.pwr_squelch_cc(options.rf_squelch, # Power threshold
-                                  125.0/channel_rate, # Time constant
-				                  channel_rate/20,    # 50ms rise/fall
-                                  False)              # Zero, not gate output
-
         AGC = gr.agc_cc(1.0/channel_rate,  # Time constant
                         1.0,               # Reference power 
                         1.0,               # Initial gain
                         1.0)               # Maximum gain
 	
-        FLEX = flex_demod(self, 32000)      
+        FLEX = pager.flex_demod(self, 32000)      
 
-        SINK = gr.file_sink(4, options.filename)
-
-        self.connect(USRP, CHAN)
-	self.connect(CHAN, RFSQL)
-	self.connect(RFSQL, AGC)
-	self.connect(AGC, FLEX)
-	self.connect(FLEX, SINK)
+        self.connect(USRP, CHAN, AGC, FLEX.INPUT)
 	
 def main():
     parser = OptionParser(option_class=eng_option)
@@ -135,23 +115,11 @@ def main():
                       help="set frequency offset to Hz", metavar="Hz")
     parser.add_option("-g", "--gain", type="int", default=None,
                       help="set RF gain", metavar="dB")
-    parser.add_option("-r", "--rf-squelch", type="eng_float", default=-50.0,
-                      help="set RF squelch to dB", metavar="dB")
-    parser.add_option("-F", "--filename", default=None)
-    parser.add_option("-D", "--dir", default=None)
     (options, args) = parser.parse_args()
 
     if options.frequency < 1e6:
 	options.frequency *= 1e6
 	
-    if options.filename is None and options.dir is None:
-        sys.stderr.write('Must specify either -F FILENAME or -D DIR\n')
-        parser.print_help()
-        sys.exit(1)
-
-    if options.filename is None:
-        options.filename = make_filename(options.dir, options.frequency)
-
     fg = app_flow_graph(options, args)
     try:
         fg.run()

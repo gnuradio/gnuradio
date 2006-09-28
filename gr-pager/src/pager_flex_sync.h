@@ -19,28 +19,28 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_PAGER_FLEX_DEFRAMER_H
-#define INCLUDED_PAGER_FLEX_DEFRAMER_H
+#ifndef INCLUDED_PAGER_FLEX_SYNC_H
+#define INCLUDED_PAGER_FLEX_SYNC_H
 
 #include <gr_block.h>
 
-class pager_flex_deframer;
-typedef boost::shared_ptr<pager_flex_deframer> pager_flex_deframer_sptr;
+class pager_flex_sync;
+typedef boost::shared_ptr<pager_flex_sync> pager_flex_sync_sptr;
 typedef std::vector<gr_int64> gr_int64_vector;
 
-pager_flex_deframer_sptr pager_make_flex_deframer(int rate);
+pager_flex_sync_sptr pager_make_flex_sync(int rate);
 
 /*!
- * \brief flex deframer description
+ * \brief flex sync description
  * \ingroup block
  */
 
-class pager_flex_deframer : public gr_block
+class pager_flex_sync : public gr_block
 {
 private:
     // Constructors
-    friend pager_flex_deframer_sptr pager_make_flex_deframer(int rate);
-    pager_flex_deframer(int rate);
+    friend pager_flex_sync_sptr pager_make_flex_sync(int rate);
+    pager_flex_sync(int rate);
    
     // State machine transitions
     void enter_idle();
@@ -48,15 +48,14 @@ private:
     void enter_sync1();
     void enter_sync2();
     void enter_data();
-    void enter_output();
 
     int index_avg(int start, int end);
     bool test_sync(unsigned char sym);
-    void accumulate_frames(unsigned char sym);
-    void output_codeword(gr_int32 *out);
+    void parse_fiw();
+    int output_symbol(unsigned char sym);    
     
     // Simple state machine
-    enum state_t { ST_IDLE, ST_SYNCING, ST_SYNC1, ST_SYNC2, ST_DATA, ST_OUTPUT };
+    enum state_t { ST_IDLE, ST_SYNCING, ST_SYNC1, ST_SYNC2, ST_DATA };
     state_t d_state;     
 
     int d_rate;     // Incoming sample rate
@@ -70,18 +69,25 @@ private:
     int d_baudrate; // Current decoding baud rate
     int d_levels;   // Current decoding levels
     int d_spb;      // Current samples per baud
-    bool d_hibit;   // Current bit is high bit when 3200 baud
+    bool d_hibit;   // Alternating bit indicator for 3200 bps
+    
+    gr_int32 d_fiw; // Frame information word
+    int d_frame;    // Current FLEX frame
+    int d_cycle;    // Current FLEX cycle
+    int d_unknown1;
+    int d_unknown2;
 
+    unsigned char d_bit_a;
+    unsigned char d_bit_b;
+    unsigned char d_bit_c;
+    unsigned char d_bit_d;
+    
+    unsigned char *d_phase_a;  
+    unsigned char *d_phase_b;
+    unsigned char *d_phase_c;
+    unsigned char *d_phase_d;
+    
     gr_int64_vector d_sync; // Trial synchronizers
-
-    int d_cdi;      // 0-7 code word index for deinterleave
-    int d_cdw;      // 0-87 code word index for frame
-    int d_blk;      // 0-10 block index
-
-    int d_output_phase; // Indexes d_frames[][] during output
-    int d_output_index; // indexes d_frames[][] during output
-
-    gr_int32 d_frames[4][88]; // Frame accumulators for each phase
 
 public:
     void forecast(int noutput_items, gr_vector_int &inputs_required);
@@ -92,4 +98,4 @@ public:
                      gr_vector_void_star &output_items);
 };
 
-#endif /* INCLUDED_PAGER_FLEX_DEFRAMER_H */
+#endif /* INCLUDED_PAGER_FLEX_SYNC_H */

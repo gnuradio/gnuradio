@@ -26,7 +26,9 @@
 %{
 #include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
 #include "pager_slicer_fb.h"
-#include "pager_flex_deframer.h"
+#include "pager_flex_sync.h"
+#include "pager_flex_deinterleave.h"
+#include "pager_flex_parse.h"
 #include <stdexcept>
 %}
 
@@ -46,16 +48,42 @@ public:
 
 // ----------------------------------------------------------------
 
-GR_SWIG_BLOCK_MAGIC(pager,flex_deframer);
+GR_SWIG_BLOCK_MAGIC(pager,flex_sync);
 
-pager_flex_deframer_sptr pager_make_flex_deframer(int rate);
+pager_flex_sync_sptr pager_make_flex_sync(int rate);
 
-class pager_flex_deframer : public gr_block
+class pager_flex_sync : public gr_block
 {
 private:
-    pager_flex_deframer(int rate);
+    pager_flex_sync(int rate);
 
 public:
 };
 
 // ----------------------------------------------------------------
+
+GR_SWIG_BLOCK_MAGIC(pager,flex_deinterleave);
+
+pager_flex_deinterleave_sptr pager_make_flex_deinterleave();
+
+class pager_flex_deinterleave : public gr_sync_decimator
+{
+private:
+    pager_flex_deinterleave();
+
+public:
+};
+
+// ----------------------------------------------------------------
+
+GR_SWIG_BLOCK_MAGIC(pager,flex_parse);
+
+pager_flex_parse_sptr pager_make_flex_parse();
+
+class pager_flex_parse : public gr_block
+{
+private:
+    pager_flex_parse();
+
+public:
+};

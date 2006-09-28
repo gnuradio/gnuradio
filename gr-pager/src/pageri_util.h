@@ -19,18 +19,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#ifndef INCLUDED_PAGERI_UTIL_H
+#define INCLUDED_PAGERI_UTIL_H
 
-#include <pageri_bch3221.h>
+#include <gr_types.h>
 
-// Corrects supplied data word according to BCH3221 encoding and
-// returns the number of errors detected/corrected.
-//
-// Not implemented yet
+unsigned char pageri_reverse_bits8(unsigned char val);
+gr_int32 pageri_reverse_bits32(gr_int32 val);
 
-int pageri_bch3221(gr_int32 &data)
-{
-    return 0;
-}
+#endif /* INCLUDED_PAGERI_UTIL_H */
