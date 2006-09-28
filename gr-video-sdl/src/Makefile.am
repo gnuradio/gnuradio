@@ -84,3 +84,7 @@ noinst_PYTHON = qa_video_sdl.py
 MOSTLYCLEANFILES = \
 	$(BUILT_SOURCES) *~ *.pyc
 
+# Don't distribute output of swig
+dist-hook:
+	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
+	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done

@@ -86,3 +86,8 @@ noinst_PYTHON = qa_osx.py test_audio_loop.py
 MOSTLYCLEANFILES = $(BUILT_SOURCES) *~ *.pyc run_tests *.loT
 
 CONFIG_CLEAN_FILES = Makefile.in run_tests *.loT
+
+# Don't distribute output of swig
+dist-hook:
+	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
+	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
