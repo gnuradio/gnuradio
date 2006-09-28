@@ -103,7 +103,15 @@ grinclude_HEADERS =			\
 
 # These swig headers get installed in ${prefix}/include/gnuradio/swig
 swiginclude_HEADERS = 			\
-	$(LOCAL_IFILES)
+	$(LOCAL_IFILES)			\
+	$(GENERATED_I)			\
+	fsm.i				\
+	interleaver.i			\
+	trellis_permutation.i		\
+	trellis_siso_f.i		\
+	trellis_siso_combined_f.i	\
+	trellis_generated.i
+
 
 
 MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
