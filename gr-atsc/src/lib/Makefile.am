@@ -259,6 +259,11 @@ atsc.cc atsc.py: atsc.i $(ALL_IFILES)
 swiginclude_HEADERS = 			\
 	$(LOCAL_IFILES)			
 
+# Don't distribute output of swig
+dist-hook:
+	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
+	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
+
 # ------------------------------------------------------------------------
 #  Cleanup
 # ------------------------------------------------------------------------

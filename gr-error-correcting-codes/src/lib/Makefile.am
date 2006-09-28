@@ -92,6 +92,11 @@ swiginclude_HEADERS = $(LOCAL_IFILES)
 ecc.cc ecc.py: $(top_srcdir)/gr-error-correcting-codes/src/lib/ecc.i $(ALL_IFILES)
 	$(SWIG) $(SWIGCPPPYTHONARGS) -module ecc -o ecc.cc $(top_srcdir)/gr-error-correcting-codes/src/lib/ecc.i
 
+# Don't distribute output of swig
+dist-hook:
+	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
+	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
+
 MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc *.loT *~
 
 CONFIG_CLEAN_FILES = *.in
