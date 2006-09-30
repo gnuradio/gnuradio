@@ -331,8 +331,8 @@ class dbpsk_demod(gr.hier_block):
                          gr.file_sink(gr.sizeof_gr_complex, "diffdec.dat"))        
         self._fg.connect(self.slicer,
                         gr.file_sink(gr.sizeof_char, "slicer.dat"))
-        self._fg.connect(self.gray_decoder,
-                         gr.file_sink(gr.sizeof_char, "gray_decoder.dat"))
+        self._fg.connect(self.symbol_mapper,
+                         gr.file_sink(gr.sizeof_char, "symbol_mapper.dat"))
         self._fg.connect(self.unpack,
                          gr.file_sink(gr.sizeof_char, "unpack.dat"))
         
