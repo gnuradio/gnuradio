@@ -51,8 +51,8 @@ private:
 
     void parse_data();	      		  // Handle a frame's worth of data
     void parse_capcode(gr_int32 aw1, gr_int32 aw2);     
-    void parse_alphanumeric(int mw1, int mw2);
-    void parse_numeric(int mw1, int mw2);
+    void parse_alphanumeric(int mw1, int mw2, int j);
+    void parse_numeric(int mw1, int mw2, int j);
     void parse_tone_only();
     void parse_unknown(int mw1, int mw2);
     

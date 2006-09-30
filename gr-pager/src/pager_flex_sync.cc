@@ -141,7 +141,7 @@ void pager_flex_sync::enter_sync1()
     d_end = d_index;
     d_center = index_avg(d_start, d_end); // Center of goodness
     d_count = 0;
-//  printf("SYNC1=%08X ", flex_modes[d_mode].sync);
+    //printf("SYNC1:%08X ", flex_modes[d_mode].sync);
 }
 
 void pager_flex_sync::enter_sync2()
@@ -188,6 +188,8 @@ void pager_flex_sync::parse_fiw()
     // Bits 16-11 are some sort of marker, usually identical across
     // many frames but sometimes changes between frames or modes
     d_unknown1 = (d_fiw >> 11) & 0x3F;
+
+    //printf("CYC:%02i FRM:%03i\n", d_cycle, d_frame);
 }
 
 int pager_flex_sync::output_symbol(unsigned char sym)

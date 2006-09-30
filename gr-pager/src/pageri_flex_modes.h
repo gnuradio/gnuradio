@@ -37,6 +37,7 @@ flex_mode_t;
 extern const flex_mode_t flex_modes[];
 extern const int num_flex_modes;
 int find_flex_mode(gr_int32 sync_code);
+extern unsigned char flex_bcd[];
 
 typedef enum {
     FLEX_SECURE,

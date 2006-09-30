@@ -26,6 +26,7 @@
 #include <pager_flex_parse.h>
 #include <pageri_bch3221.h>
 #include <gr_io_signature.h>
+#include <ctype.h>
 
 pager_flex_parse_sptr pager_make_flex_parse()
 {
@@ -91,7 +92,7 @@ void pager_flex_parse::parse_data()
     int voffset = (biw >> 10) & 0x3f;
     int aoffset = ((biw >> 8) & 0x03) + 1;
     
-//  printf("BIW=%08X A=%i V=%i\n", biw, aoffset, voffset);
+    //printf("BIW:%08X AW:%02i-%02i\n", biw, aoffset, voffset);
 
     // Iterate through pages and dispatch to appropriate handler
     for (int i = aoffset; i < voffset; i++) {
@@ -127,41 +128,108 @@ void pager_flex_parse::parse_data()
 	if (mw1 > 87 || mw2 > 87)
 	    continue;				// Invalid offsets
 
-	printf("%09i: ", d_capcode);
+	printf("%010i: ", d_capcode);
 
 	if (is_alphanumeric_page(d_type))
-	    parse_alphanumeric(mw1, mw2-1);
+	    parse_alphanumeric(mw1, mw2-1, j);
 	else if (is_numeric_page(d_type))
-	    parse_numeric(mw1, mw2);
+	    parse_numeric(mw1, mw2, j);
 	else if (is_tone_page(d_type))
 	    parse_tone_only();
 	else
 	    parse_unknown(mw1, mw2);
 
 	printf("\n");
+	fflush(stdout);
     }
 }
 
-void pager_flex_parse::parse_alphanumeric(int mw1, int mw2)
+void pager_flex_parse::parse_alphanumeric(int mw1, int mw2, int j)
 {
-    printf("ALPHA");
 
-    for (int i = mw1; i < mw2; i++) {
+    int frag;
+    bool cont;
+    
+    if (!d_laddr) {
+	frag = (d_datawords[mw1] >> 11) & 0x03;
+	cont = (d_datawords[mw1] >> 10) & 0x01;
+	mw1++;
+    }
+    else {
+	frag = (d_datawords[j+1] >> 11) & 0x03;
+	cont = (d_datawords[j+1] >> 10) & 0x01;
+	mw2--;
+    }    
+
+    printf("%c F:%i C:%i|", d_type == FLEX_SECURE ? 'S' : 'A',
+	frag, cont);
+
+    for (int i = mw1; i <= mw2; i++) {
+	gr_int32 dw = d_datawords[i];
 	
+	if (i > mw1 || frag != 0x03) {
+	    unsigned char ch0 = dw & 0x7F;
+	    if (ch0 != 0x03)	// Fill
+		putchar(isprint(ch0) ? ch0 : '.');
+	}
+	
+	unsigned char ch1 = (dw >> 7) & 0x7F;
+	if (ch1 != 0x03)	// Fill
+	    putchar(isprint(ch1) ? ch1 : '.');
+	
+	unsigned char ch2 = (dw >> 14) & 0x7F;
+	if (ch2 != 0x03)	// Fill
+	    putchar(isprint(ch2) ? ch2: '.');
     }
 }
 
-void pager_flex_parse::parse_numeric(int mw1, int mw2)
+void pager_flex_parse::parse_numeric(int mw1, int mw2, int j)
 {
-    printf("NUMERIC");
+    printf("N        |");
+
+    // Get first dataword from message field or from second
+    // vector word if long address
+    gr_int32 dw;
+    if (!d_laddr) {
+	dw = d_datawords[mw1];
+	mw1++;
+	mw2++;
+    }
+    else {
+	dw = d_datawords[j+1];
+    }
+
+    unsigned char digit = 0;
+    int count = 4;
+    if (d_type == FLEX_NUMBERED_NUMERIC)
+	count += 10;	// Skip 10 header bits for numbered numeric pages
+    else
+	count += 2;	// Otherwise skip 2
+    
+    for (int i = mw1; i <= mw2; i++) {
+	for (int k = 0; k < 21; k++) {
+	    // Shift LSB from data word into digit
+	    digit = (digit >> 1) & 0x0F;
+	    if (dw & 0x01)
+		digit ^= 0x08;
+	    dw >>= 1;
+    	    if (--count == 0) {
+		if (digit != 0x0C) // Fill
+		    putchar(flex_bcd[digit]);
+		count = 4;
+	    }
+	}
+	
+	dw = d_datawords[i];
+    }
 }
 
 void pager_flex_parse::parse_tone_only()
 {
-    printf("TONE");
+    printf("T        |");
 }
 
 void pager_flex_parse::parse_unknown(int mw1, int mw2)
 {
-    printf("UNKNOWN");
+    printf("U        |(unparsed)");
 }

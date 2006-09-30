@@ -32,6 +32,8 @@ const flex_mode_t flex_modes[] =
 
 const int num_flex_modes = sizeof(flex_modes)/sizeof(flex_modes[0]);
 
+unsigned char flex_bcd[17] = "0123456789 U -][";
+
 int find_flex_mode(gr_int32 sync_code)
 {
     for (int i = 0; i < num_flex_modes; i++)
