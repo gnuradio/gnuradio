@@ -132,6 +132,7 @@ noinst_HEADERS =			\
 	fusb_win32.h			\
 	fusb_generic.h			\
 	fusb_linux.h			\
+	fusb_ra_wb.h			\
 	md5.h				\
 	rate_to_regval.h		\
 	usrp_local_sighandler.h		
