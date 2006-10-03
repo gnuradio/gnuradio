@@ -34,14 +34,6 @@ gr_feval_dd::eval(double x)
   return 0;
 }
 
-gr_feval_ff::~gr_feval_ff(){}
-
-float 
-gr_feval_ff::eval(float x)
-{
-  return 0;
-}
-
 gr_feval_cc::~gr_feval_cc(){}
 
 gr_complex
@@ -63,12 +55,6 @@ gr_feval_ll::eval(long x)
  */
 double
 gr_feval_dd_example(gr_feval_dd *f, double x)
-{
-  return f->eval(x);
-}
-
-float
-gr_feval_ff_example(gr_feval_ff *f, float x)
 {
   return f->eval(x);
 }
