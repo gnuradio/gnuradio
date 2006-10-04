@@ -66,6 +66,9 @@
 # added more comments.
 #
 # 2.4.1 updates usrp interface to support auto subdev
+# 
+# 2.8.1 changed saved file format from 8-byte complex to
+# 4-byte short for obvious storage space savings.
 
 # Web server control disabled by default. Do not enable
 # until directory structure and scripts are in place.
@@ -242,7 +245,7 @@ class MyFrame(wx.Frame):
         else: self.PLAY_FROM_USRP = False
 
         if self.PLAY_FROM_USRP:
-           self.src = usrp.source_c(decim_rate=options.decim)
+           self.src = usrp.source_s(decim_rate=options.decim)
 	   if options.rx_subdev_spec is None:
               options.rx_subdev_spec = pick_subdevice(self.src)
            self.src.set_mux(usrp.determine_rx_mux_value(self.src, options.rx_subdev_spec))
@@ -251,12 +254,12 @@ class MyFrame(wx.Frame):
            self.tune_offset = 0 # -self.usrp_center - self.src.rx_freq(0)
 
         else:
-           self.src = gr.file_source (gr.sizeof_gr_complex,options.input_file)
+           self.src = gr.file_source (gr.sizeof_short,options.input_file)
            self.tune_offset = 2200 # 2200 works for 3.5-4Mhz band
 
         # save radio data to a file
         if SAVE_RADIO_TO_FILE:
-           file = gr.file_sink(gr.sizeof_gr_complex, options.radio_file)
+           file = gr.file_sink(gr.sizeof_short, options.radio_file)
            self.fg.connect (self.src, file)
 
 	# 2nd DDC
@@ -264,6 +267,18 @@ class MyFrame(wx.Frame):
            1.0, usb_rate, 16e3, 4e3, gr.firdes.WIN_HAMMING )
         self.xlate = gr.freq_xlating_fir_filter_ccf ( \
            fir_decim, xlate_taps, self.tune_offset, usb_rate )
+
+        # convert rf data in interleaved short int form to complex
+        s2ss = gr.stream_to_streams(gr.sizeof_short,2)
+        s2f1 = gr.short_to_float()
+        s2f2 = gr.short_to_float()
+        src_f2c = gr.float_to_complex()
+        self.fg.connect(self.src,s2ss)
+        self.fg.connect((s2ss,0),s2f1)
+        self.fg.connect((s2ss,1),s2f2)
+        self.fg.connect(s2f1,(src_f2c,0))
+        self.fg.connect(s2f2,(src_f2c,1))
+
 
 	# Complex Audio filter
         audio_coeffs = gr.firdes.complex_band_pass (
@@ -327,7 +342,7 @@ class MyFrame(wx.Frame):
         self.scale = gr.multiply_const_ff(0.00001)
         dst = audio.sink(long(self.af_sample_rate))
 
-        self.fg.connect(self.src,self.xlate,self.fft)
+        self.fg.connect(src_f2c,self.xlate,self.fft)
         self.fg.connect(self.xlate,self.audio_filter,self.sel_am,(am_det,0))
 	self.fg.connect(self.sel_am,pll,self.pll_carrier_scale,self.pll_carrier_filter,c2f3)
 	self.fg.connect((c2f3,0),phaser1,(f2c,0))
