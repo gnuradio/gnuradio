@@ -1,3 +1,7 @@
+For more recent changes, please see:
+
+http://gnuradio.org/trac/timeline
+
 2006-06-20  Eric Blossom  <eb@comsec.com>
 
 	* python/gmsk2/receive_path.py, python/gmsk2/transmit_path.py,

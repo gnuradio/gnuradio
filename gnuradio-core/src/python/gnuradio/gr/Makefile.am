@@ -43,10 +43,14 @@ grgrpython_PYTHON = 		\
 	scheduler.py		
 
 noinst_PYTHON = 			\
+	benchmark_filters.py		\
 	qa_add_and_friends.py		\
+	qa_add_v_and_friends.py		\
 	qa_agc.py			\
 	qa_basic_flow_graph.py		\
+	qa_cma_equalizer.py		\
 	qa_complex_to_xxx.py		\
+	qa_constellation_decoder_cb.py  \
 	qa_correlate_access_code.py	\
 	qa_diff_encoder.py		\
 	qa_diff_phasor_cc.py		\
@@ -56,6 +60,7 @@ noinst_PYTHON = 			\
 	qa_flow_graph.py		\
 	qa_frequency_modulator.py	\
 	qa_fsk_stuff.py			\
+	qa_goertzel.py			\
 	qa_head.py			\
 	qa_hilbert.py			\
 	qa_iir.py			\

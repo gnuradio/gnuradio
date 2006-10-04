@@ -19,4 +19,5 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-SUBDIRS = audio channel-coding digital_voice digital multi_usrp usrp 
+SUBDIRS = apps audio channel-coding digital_voice digital multi-antenna \
+	  multi_usrp networking usrp 

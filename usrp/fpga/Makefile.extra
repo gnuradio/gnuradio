@@ -91,6 +91,7 @@ EXTRA_DIST =                                           \
 	sdr_lib/ram16.v                                \
 	sdr_lib/ram32.v                                \
 	sdr_lib/ram64.v                                \
+	sdr_lib/rssi.v				       \
 	sdr_lib/rx_buffer.v                            \
 	sdr_lib/rx_chain.v                             \
 	sdr_lib/rx_chain_dual.v                        \
