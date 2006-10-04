@@ -24,11 +24,10 @@ EXTRA_DIST = 			\
 	audio_fft.py		\
 	audio_play.py		\
 	audio_to_file.py	\
+	dial_squelch.py		\
 	dial_tone.py		\
 	dialtone_v.py		\
 	mono_tone.py		\
 	multi_tone.py		\
 	spectrum_inversion.py	\
 	test_resampler.py	
-
-

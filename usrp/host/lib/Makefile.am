@@ -141,7 +141,9 @@ python_PYTHON =				\
 	usrp_dbid.py			
 
 noinst_PYTHON =				\
-	gen_usrp_dbid.py
+	gen_usrp_dbid.py		\
+	check_data.py			\
+	dump_data.py
 
 usrp_dbid.py usrp_dbid.h usrp_dbid.cc: gen_usrp_dbid.py usrp_dbid.dat
 	PYTHONPATH=$(top_srcdir)/usrp/src srcdir=$(srcdir) $(srcdir)/gen_usrp_dbid.py $(srcdir)/usrp_dbid.dat
