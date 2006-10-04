@@ -37,8 +37,7 @@ AC_DEFUN([GR_SET_MD_CPU],[
   AC_SUBST(MD_CPU)
   AC_SUBST(MD_SUBCPU) 
 
-  AM_CONDITIONAL(MD_CPU_x86,     test $MD_CPU = x86)
-  AM_CONDITIONAL(MD_SUBCPU_x86_64,  test $MD_SUBCPU = x86_64)
-  AM_CONDITIONAL(MD_CPU_generic, test $MD_CPU = generic)
+  AM_CONDITIONAL(MD_CPU_x86,     test "$MD_CPU" = "x86")
+  AM_CONDITIONAL(MD_SUBCPU_x86_64,  test "$MD_SUBCPU" = "x86_64")
+  AM_CONDITIONAL(MD_CPU_generic, test "$MD_CPU" = "generic")
 ])
-
