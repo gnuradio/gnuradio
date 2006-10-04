@@ -49,15 +49,28 @@ system.
 How to Build GNU Radio:
 
   (1) Ensure that you've satisfied the external dependencies listed
-      below.  With the exception of SDCC, the following GNU/Linux
+      below.  The word "system" is used to mean "operating system
+      and/or distribution", and means a full operating system,
+      including kernel, user-space utilties, and a packaging system
+      for additional software.  On Linux, this means what
+      "distribution" means.
+
+      With the exception of SDCC, the following GNU/Linux
       distributions are known to come with all required dependencies
       pre-packaged: Ubuntu 6.06, SuSE 10.0 (the pay version, not the
       free download), Fedora Core 5.  Other distribution may work too.
       We know these three are easy.  The required packages may be
       contained on your installation CD/DVD, or may be loaded over the
       net.  The specifics vary depending on your GNU/Linux
-      distribution.  See the wiki at
-      http://gnuradio.org/trac/wiki for details.
+      distribution.
+
+      On systems using pkgsrc (e.g. NetBSD and Dragonfly), build
+      meta-packages/gnuradio, which will build a previous release and
+      force installation of the dependencies.  Then pkg_delete the
+      gnuradio and usrp packages, which will leave the dependencies.
+      (This should also work on OSX.)
+
+      See the wiki at http://gnuradio.org/trac/wiki for details.
 
       FIXME: update the wiki; talk about OS/X, NetBSD and MinGW too.
 
@@ -89,12 +102,17 @@ That's it!
 -------------------------------------------------------------------------------
 
 Prerequisites: Before trying to build these from source, please try
-your installation tool (apt-get, YaST, yum, urpmi, etc.) first.
-Contemporary distributions have these packages available.
+your system's installation tool (apt-get, pkg_install, YaST, yum,
+urpmi, etc.) first.  Most recent systems have these packages
+available.
 
 You'll need to do a bit of sleuthing to figure out what your OS and
-packaging system calls these.  If your system has both a foo and a
-foo-devel package, install them both.
+packaging system calls these.  If your system uses the convention of
+splitting files needed to run programs compiled with foo and files
+needed to do the compilation into packages named foo and foo-devel,
+install both packages.  (Most GNU/Linux systems are like this, but
+pkgsrc is not and instead uses -devel to indicate a package of a
+not-yet-released or unstable version.)
 
 
 (1) The "autotools"
@@ -104,7 +122,8 @@ foo-devel package, install them both.
        libtool  1.5     or later
 
 If your system has automake-1.4, there's a good chance it also has
-automake-1.7 or later.  Check your install disk and/or try:
+automake-1.7 or later.  Check your install disk and/or (on GNU/Linux)
+try:
 
   $ man update-alternatives
 
@@ -128,11 +147,14 @@ floating point version which we use.  You should also use either the
 --enable-3dnow or --enable-sse options if you're on an Athlon or Pentium
 respectively.
 
+[FIXME: GNU/Linux packages of single-precision fftw are typically called ??]
+In systems using pkgsrc, install math/fftwf.
+
 
 (4) Python 2.3 or later	      http://www.python.org
 
-Python 2.3 or later is now required.  If your distribution splits
-python into a bunch of separate RPMS including python-devel or
+Python 2.3 or later is now required.  If your system splits
+python into a bunch of separate packages including python-devel or
 libpython you'll most likely need those too.
 
 
@@ -144,10 +166,10 @@ http://sourceforge.net/project/showfiles.php?group_id=1369&package_id=1351
 
 (6) The Boost C++ Libraries	http://www.boost.org
 
-We use the Smart Pointer library.  Your distribution almost certainly
-has the boost libraries available.  In the unlikely event that it
-doesn't, download the source and follow the build instructions.
-They're different from the normal ./configure && make
+We use the Smart Pointer library.  Most systems already have the boost
+libraries available.  In the unlikely event that yours doesn't,
+download the source and follow the build instructions.  They're
+different from the normal ./configure && make
 
 
 (7) cppunit 1.9.14 or later.	http://cppunit.sourceforge.net
@@ -172,9 +194,9 @@ worry about it.
 
 Optional, but nice to have:
 
-(10) wxPython.  Python binding for the wxWidgets GUI framework.  
-Use version 2.5.2.7 or later.  Again, your distribution almost
-certainly has this available.
+(10) wxPython.  Python binding for the wxWidgets GUI framework.  Use
+version 2.5.2.7 or later.  Again, almost all systems have this
+available.
 
 As a last resort, build it from source (not recommended!)
 http://www.wxpython.org
@@ -188,13 +210,14 @@ class hierarchy etc.  Point your browser at
 gnuradio/gnuradio-core/doc/html/index.html
 
 
-To run the examples you'll need to set PYTHONPATH.
-Note that the python version number in the path needs to match your
+To run the examples you'll need to set PYTHONPATH.  Note that the
+prefix and python version number in the path needs to match your
 installed version of python.
 
-  $ export PYTHONPATH=/usr/local/lib/python2.3/site-packages
+  $ export PYTHONPATH=/usr/local/lib/python2.4/site-packages
 
-You may want to add this to your ~/.bash_profile
+You may want to add this to your shell init file (~/.bash_profile if
+you use bash).
 
 Note that on Fedora Core 4 and 5 when running on X86_64 machines,
 python is shippped with a strange (wrong) configuration that requires
@@ -212,3 +235,11 @@ installed in, say ~/local/include and ~/local/lib, instead of
 
     $ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/local/lib
     $ make CPPFLAGS="-I$HOME/local/include"
+
+
+Sometimes the prerequisites are installed in a location which is not
+included in the default compiler and linker search paths.  This
+happens with pkgsrc and NetBSD.  To build, tell configure to use these
+locations:
+
+	LDFLAGS="-L/usr/pkg/lib -R/usr/pkg/lib" CPPFLAGS="-I/usr/pkg/include" ./configure --prefix=/usr/gnuradio
