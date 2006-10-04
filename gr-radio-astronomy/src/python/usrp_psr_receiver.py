@@ -95,7 +95,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.reflevel = options.reflevel
         self.divbase = options.divbase
         self.division = options.division
-        self.audiodev = options.audio_dev
+        self.audiodev = options.audio_source
 
         # Low-pass cutoff for post-detector filter
         # Set to 100Hz usually, since lots of pulsars fit in this
@@ -295,7 +295,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.scope = ra_fftsink.ra_fft_sink_f (self, panel, 
            fft_size=int(options.fft_size), sample_rate=PULSAR_MAX_FREQ*2,
            title="Post-detector spectrum",  
-           cfunc=self.pulsarfunc, xydfunc=self.xydfunc, fft_rate=200)
+           ofunc=self.pulsarfunc, xydfunc=self.xydfunc, fft_rate=200)
 
         #
         # Tell scope we're looking from DC to PULSAR_MAX_FREQ

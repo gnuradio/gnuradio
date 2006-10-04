@@ -29,10 +29,16 @@ from gnuradio.wxgui import stdgui, ra_fftsink, ra_stripchartsink, waterfallsink,
 from optparse import OptionParser
 import wx
 import sys
-from Numeric import *
+import Numeric 
+import time
 import FFT
 import ephem
-from gnuradio.local_calibrator import *
+
+class continuum_calibration(gr.feval_dd):
+    def eval(self, x):
+        str = globals()["calibration_codelet"]
+        exec(str)
+        return(x)
 
 class app_flow_graph(stdgui.gui_flow_graph):
     def __init__(self, frame, panel, vbox, argv):
@@ -63,14 +69,16 @@ class app_flow_graph(stdgui.gui_flow_graph):
         parser.add_option("-o", "--observing", type="eng_float", default=0.0,
                         help="Set observing frequency")
         parser.add_option("-x", "--ylabel", default="dB", help="Y axis label") 
-        parser.add_option("-C", "--cfunc", default="default", help="Calibration function name") 
         parser.add_option("-z", "--divbase", type="eng_float", default=0.025, help="Y Division increment base") 
         parser.add_option("-v", "--stripsize", type="eng_float", default=2400, help="Size of stripchart, in 2Hz samples") 
         parser.add_option("-F", "--fft_size", type="eng_float", default=1024, help="Size of FFT")
 
         parser.add_option("-N", "--decln", type="eng_float", default=999.99, help="Observing declination")
-        parser.add_option("-I", "--interfilt", action="store_true", default=False)
         parser.add_option("-X", "--prefix", default="./")
+        parser.add_option("-M", "--fft_rate", type="eng_float", default=8.0, help="FFT Rate")
+        parser.add_option("-A", "--calib_coeff", type="eng_float", default=1.0, help="Calibration coefficient")
+        parser.add_option("-B", "--calib_offset", type="eng_float", default=0.0, help="Calibration coefficient")
+        parser.add_option("-Q", "--calib_eqn", default="x = x * 1.0", help="Calibration equation")
         (options, args) = parser.parse_args()
         if len(args) != 0:
             parser.print_help()
@@ -78,6 +86,22 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         self.show_debug_info = True
         
+        # Calibration coefficient and offset
+        self.calib_coeff = options.calib_coeff
+        self.calib_offset = options.calib_offset
+
+        self.calib_eqn = options.calib_eqn
+        globals()["calibration_codelet"] = self.calib_eqn
+
+        self.integ = options.integ
+        self.avg_alpha = options.avg
+        self.gain = options.gain
+        self.decln = options.decln
+
+        # Set initial values for datalogging timed-output
+        self.continuum_then = time.time()
+        self.spectral_then = time.time()
+      
         # build the graph
 
         self.u = usrp.source_c(decim_rate=options.decim)
@@ -86,30 +110,36 @@ class app_flow_graph(stdgui.gui_flow_graph):
         # Set initial declination
         self.decln = options.decln
 
-        # Turn off interference filter by default
-        self.use_interfilt = options.interfilt
-
         # determine the daughterboard subdevice we're using
         self.subdev = usrp.selected_subdev(self.u, options.rx_subdev_spec)
 
         input_rate = self.u.adc_freq() / self.u.decim_rate()
 
-        tpstr="calib_"+options.cfunc+"_total_power"
-        sstr="calib_"+options.cfunc+"_fft"
-        self.tpcfunc=eval(tpstr)
-        self.scfunc=eval(sstr)
-
         #
         # Set prefix for data files
         #
         self.prefix = options.prefix
-        calib_set_prefix(self.prefix)
+
+        #
+        # The lower this number, the fewer sample frames are dropped
+        #  in computing the FFT.  A sampled approach is taken to
+        #  computing the FFT of the incoming data, which reduces
+        #  sensitivity.  Increasing sensitivity inreases CPU loading.
+        #
+        self.fft_rate = options.fft_rate
+
+        self.fft_size = options.fft_size
+
+        # This buffer is used to remember the most-recent FFT display
+        #   values.  Used later by self.write_spectral_data() to write
+        #   spectral data to datalogging files.
+        self.fft_outbuf = Numeric.zeros(options.fft_size, Numeric.Float64)
 
         # Set up FFT display
         self.scope = ra_fftsink.ra_fft_sink_c (self, panel, 
-           fft_size=int(options.fft_size), sample_rate=input_rate,
-           fft_rate=8, title="Spectral",  
-           cfunc=self.scfunc, xydfunc=self.xydfunc, interfunc=self.interference)
+           fft_size=int(self.fft_size), sample_rate=input_rate,
+           fft_rate=int(self.fft_rate), title="Spectral",  
+           ofunc=self.fft_outfunc, xydfunc=self.xydfunc)
 
         # Set up ephemeris data
         self.locality = ephem.Observer()
@@ -123,7 +153,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
             title="Continuum",
             xlabel="LMST Offset (Seconds)",
             scaling=1.0, ylabel=options.ylabel,
-            divbase=options.divbase, cfunc=self.tpcfunc)
+            divbase=options.divbase)
 
         # Set center frequency
         self.centerfreq = options.freq
@@ -136,14 +166,6 @@ class app_flow_graph(stdgui.gui_flow_graph):
             self.observing = options.observing
 
         self.bw = input_rate
-
-        #
-        # Produce a default interference map
-        #  May not actually get used, unless --interfilt was specified
-        #
-        self.intmap = Numeric.zeros(256,Numeric.Complex64)
-        for i in range(0,len(self.intmap)):
-            self.intmap[i] = complex(1.0, 0.0)
 
         # We setup the first two integrators to produce a fixed integration
         # Down to 1Hz, with output at 1 samples/sec
@@ -175,18 +197,6 @@ class app_flow_graph(stdgui.gui_flow_graph):
         # Call constructors for receive chains
         #
 
-        #
-        # This is the interference-zapping filter
-        #
-        # The GUI is used to set/clear inteference zones in
-        #   the filter.  The non-interfering zones are set to
-        #   1.0.
-        #
-        if 0:
-            self.interfilt = gr.fft_filter_ccc(1,self.intmap)
-            tmp = FFT.inverse_fft(self.intmap)
-            self.interfilt.set_taps(tmp)
-
         # The three integrators--two FIR filters, and an IIR final filter
         self.integrator1 = gr.fir_filter_fff (N, tapsN)
         self.integrator2 = gr.fir_filter_fff (M, tapsM)
@@ -194,7 +204,6 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         # Split complex USRP stream into a pair of floats
         self.splitter = gr.complex_to_float (1);
-        self.toshort = gr.float_to_short();
 
         # I squarer (detector)
         self.multI = gr.multiply_ff();
@@ -205,20 +214,22 @@ class app_flow_graph(stdgui.gui_flow_graph):
         # Adding squared I and Q to produce instantaneous signal power
         self.adder = gr.add_ff();
 
+        # Signal probe
+        self.probe = gr.probe_signal_f();
+
+        #
+        # Continuum calibration stuff
+        #
+        self.cal_mult = gr.multiply_const_ff(self.calib_coeff);
+        self.cal_offs = gr.add_const_ff(self.calib_offset);
+
+        #self.cal_eqn = continuum_calibration();
+
         #
         # Start connecting configured modules in the receive chain
         #
-
-        # Connect interference-filtered USRP input to selected scope function
-        if self.use_interfilt == True:
-            self.connect(self.u, self.interfilt, self.scope)
-
-            # Connect interference-filtered USRP to a complex->float splitter
-            self.connect(self.interfilt, self.splitter)
-
-        else:
-            self.connect(self.u, self.scope)
-            self.connect(self.u, self.splitter)
+        self.connect(self.u, self.scope)
+        self.connect(self.u, self.splitter)
 
         # Connect splitter outputs to multipliers
         # First do I^2
@@ -233,26 +244,38 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.connect(self.multI, (self.adder,0))
         self.connect(self.multQ, (self.adder,1))
 
-        # Connect adder output to three-stages of FIR integrator
+        # Connect adder output to two-stages of FIR integrator
+        #   followed by a single stage IIR integrator, and
+        #   the calibrator
         self.connect(self.adder, self.integrator1, 
-           self.integrator2, self.integrator3, self.chart)
+           self.integrator2, self.integrator3, self.cal_mult, 
+           self.cal_offs, self.chart)
 
+        # Connect calibrator to probe
+        # SPECIAL NOTE:  I'm setting the ground work here
+        #   for completely changing the way local_calibrator
+        #   works, including removing some horrible kludges for
+        #   recording data.
+        # But for now, self.probe() will be used to display the
+        #  current instantaneous integrated detector value
+        self.connect(self.cal_offs, self.probe)
 
         self._build_gui(vbox)
 
         # Make GUI agree with command-line
+        self.integ = options.integ
         self.myform['integration'].set_value(int(options.integ))
         self.myform['average'].set_value(int(options.avg))
 
         # Make integrator agree with command line
         self.set_integration(int(options.integ))
 
+        self.avg_alpha = options.avg
+
         # Make spectral averager agree with command line
         if options.avg != 1.0:
             self.scope.set_avg_alpha(float(1.0/options.avg))
-            calib_set_avg_alpha(float(options.avg))
             self.scope.set_average(True)
-
 
         # Set division size
         self.chart.set_y_per_div(options.division)
@@ -278,15 +301,14 @@ class app_flow_graph(stdgui.gui_flow_graph):
         if not(self.set_freq(options.freq)):
             self._set_status_msg("Failed to set initial frequency")
 
+        # Set declination
         self.set_decln (self.decln)
-        calib_set_decln (self.decln)
 
+
+        # RF hardware information
         self.myform['decim'].set_value(self.u.decim_rate())
         self.myform['fs@usb'].set_value(self.u.adc_freq() / self.u.decim_rate())
         self.myform['dbname'].set_value(self.subdev.name())
-
-        # Make sure calibrator knows what our bandwidth is
-        calib_set_bw(self.u.adc_freq() / self.u.decim_rate())
 
         # Set analog baseband filtering, if DBS_RX
         if self.cardtype == usrp_dbid.DBS_RX:
@@ -295,10 +317,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
                 lbw = 1.0e6
             self.subdev.set_bw(lbw)
 
-        # Tell calibrator our declination as well
-        calib_set_decln(self.decln)
-
-        # Start the timer for the LMST display
+        # Start the timer for the LMST display and datalogging
         self.lmst_timer.Start(1000)
 
 
@@ -361,12 +380,6 @@ class app_flow_graph(stdgui.gui_flow_graph):
         vbox2.Add((4,0), 0, 0)
 
         buttonbox = wx.BoxSizer(wx.HORIZONTAL)
-        if self.use_interfilt == True:
-            self.doit = form.button_with_callback(self.panel,
-                  label="Clear Interference List", 
-                  callback=self.clear_interferers)
-        if self.use_interfilt == True:
-            buttonbox.Add(self.doit, 0, wx.CENTER)
         vbox.Add(buttonbox, 0, wx.CENTER)
         hbox.Add(vbox1, 0, 0)
 	hbox.Add(vbox2, wx.ALIGN_RIGHT, 0)
@@ -453,10 +466,6 @@ class app_flow_graph(stdgui.gui_flow_graph):
             self.centerfreq = target_freq
             self.observing -= delta
             self.scope.set_baseband_freq (self.observing)
-            calib_set_freq(self.observing)
-
-            # Clear interference list
-            self.clear_interferers()
 
             self.myform['baseband'].set_value(r.baseband_freq)
             self.myform['ddc'].set_value(r.dxc_freq)
@@ -468,39 +477,130 @@ class app_flow_graph(stdgui.gui_flow_graph):
     def set_decln(self, dec):
         self.decln = dec
         self.myform['decln'].set_value(dec)     # update displayed value
-        calib_set_decln(dec)
 
     def set_gain(self, gain):
         self.myform['gain'].set_value(gain)     # update displayed value
         self.subdev.set_gain(gain)
-
-        #
-        # Make sure calibrator knows our gain setting
-        #
-        calib_set_gain(gain)
+        self.gain = gain
 
     def set_averaging(self, avval):
         self.myform['average'].set_value(avval)
         self.scope.set_avg_alpha(1.0/(avval))
-        calib_set_avg_alpha(avval)
         self.scope.set_average(True)
+        self.avg_alpha = avval
 
     def set_integration(self, integval):
         self.integrator3.set_taps(1.0/integval)
         self.myform['integration'].set_value(integval)
+        self.integ = integval
 
-        #
-        # Make sure calibrator knows our integration time
-        #
-        calib_set_integ(integval)
-
+    #
+    # Timeout function
+    # Used to update LMST display, as well as current
+    #  continuum value
+    #
+    # We also write external data-logging files here
+    #
     def lmst_timeout(self):
          self.locality.date = ephem.now()
+         x = self.probe.level()
          sidtime = self.locality.sidereal_time()
-         self.myform['lmst_high'].set_value(str(ephem.hours(sidtime)))
+         # LMST
+         s = str(ephem.hours(sidtime))
+         # Continuum detector value
+         sx = "%7.4f" % x
+         s = s + "\nDet: " + str(sx)
+         self.myform['lmst_high'].set_value(s)
+
+         #
+         # Write data out to recording files
+         #
+         self.write_continuum_data(x,sidtime)
+         self.write_spectral_data(self.fft_outbuf,sidtime)
+
+    def fft_outfunc(self,data,l):
+        self.fft_outbuf=data
+
+    def write_continuum_data(self,data,sidtime):
+    
+        # Create localtime structure for producing filename
+        foo = time.localtime()
+        pfx = self.prefix
+        filenamestr = "%s/%04d%02d%02d%02d" % (pfx, foo.tm_year, 
+           foo.tm_mon, foo.tm_mday, foo.tm_hour)
+    
+        # Open the data file, appending
+        continuum_file = open (filenamestr+".tpdat","a")
+      
+        flt = "%6.3f" % data
+        inter = self.decln
+        integ = self.integ
+        fc = self.observing
+        fc = fc / 1000000
+        bw = self.bw
+        bw = bw / 1000000
+        ga = self.gain
+    
+        now = time.time()
+    
+        #
+        # If time to write full header info (saves storage this way)
+        #
+        if (now - self.continuum_then > 20):
+            self.continuum_then = now
+        
+            continuum_file.write(str(ephem.hours(sidtime))+" "+flt+" Dn="+str(inter)+",")
+            continuum_file.write("Ti="+str(integ)+",Fc="+str(fc)+",Bw="+str(bw))
+            continuum_file.write(",Ga="+str(ga)+"\n")
+        else:
+            continuum_file.write(str(ephem.hours(sidtime))+" "+flt+"\n")
+    
+        continuum_file.close()
+        return(data)
+
+    def write_spectral_data(self,data,sidtime):
+    
+        now = time.time()
+        delta = 10
+    		
+        # If time to write out spectral data
+        # We don't write this out every time, in order to
+        #   save disk space.  Since the spectral data are
+        #   typically heavily averaged, writing this data
+        #   "once in a while" is OK.
+        #
+        if (now - self.spectral_then >= delta):
+            self.spectral_then = now
+
+            # Get localtime structure to make filename from
+            foo = time.localtime()
+        
+            pfx = self.prefix
+            filenamestr = "%s/%04d%02d%02d%02d" % (pfx, foo.tm_year, 
+               foo.tm_mon, foo.tm_mday, foo.tm_hour)
+    
+            # Open the file
+            spectral_file = open (filenamestr+".sdat","a")
+      
+            # Setup data fields to be written
+            r = data
+            inter = self.decln
+            fc = self.observing
+            fc = fc / 1000000
+            bw = self.bw
+            bw = bw / 1000000
+            av = self.avg_alpha
+
+            # Write those fields
+            spectral_file.write("data:"+str(ephem.hours(sidtime))+" Dn="+str(inter)+",Fc="+str(fc)+",Bw="+str(bw)+",Av="+str(av))
+            spectral_file.write(" "+str(r)+"\n")
+            spectral_file.close()
+            return(data)
+    
+        return(data)
 
     def xydfunc(self,xyv):
-        magn = int(log10(self.observing))
+        magn = int(Numeric.log10(self.observing))
         if (magn == 6 or magn == 7 or magn == 8):
             magn = 6
         dfreq = xyv[0] * pow(10.0,magn)
@@ -516,52 +616,6 @@ class app_flow_graph(stdgui.gui_flow_graph):
         s = "%.6f%s\n%.3fdB" % (xyv[0], xhz, xyv[1])
         s2 = "\n%.3fkm/s" % vs
         self.myform['spec_data'].set_value(s+s2)
-
-    def interference(self,x):
-        if self.use_interfilt == False:
-            return
-        magn = int(log10(self.observing))
-        dfreq = x * pow(10.0,magn)
-        delta = dfreq - self.observing
-        fincr = self.bw / len(self.intmap)
-        l = len(self.intmap)
-        if delta > 0:
-            offset = delta/fincr
-        else:
-            offset = (l) - int((abs(delta)/fincr))
-
-        offset = int(offset)
-
-        if offset >= len(self.intmap) or offset < 0:
-            print "interference offset is invalid--", offset
-            return
-
-        #
-        # Zero out the region around the selected interferer
-        #
-        self.intmap[offset-2] = complex (0.5, 0.0)
-        self.intmap[offset-1] = complex (0.25, 0.0)
-        self.intmap[offset] = complex (0.0, 0.0)
-        self.intmap[offset+1] = complex(0.25, 0.0)
-        self.intmap[offset+2] = complex(0.5, 0.0)
-
-        #
-        # Set new taps
-        #
-        tmp = FFT.inverse_fft(self.intmap)
-        self.interfilt.set_taps(tmp)
-
-    def clear_interf(self):
-         self.clear_interferers()
-
-    def clear_interferers(self):
-         for i in range(0,len(self.intmap)):
-             self.intmap[i] = complex(1.0,0.0)
-         tmp = FFT.inverse_fft(self.intmap)
-         if self.use_interfilt == True:
-             self.interfilt.set_taps(tmp)
-   
-
 
     def toggle_cal(self):
         if (self.calstate == True):
@@ -580,7 +634,6 @@ class app_flow_graph(stdgui.gui_flow_graph):
         else:
           self.annotate_state = True
           self.annotation.SetLabel("Annotation: On")
-        calib_set_interesting(self.annotate_state)
         
 
 def main ():

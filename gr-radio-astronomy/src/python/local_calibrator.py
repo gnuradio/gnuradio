@@ -26,6 +26,14 @@ import ephem
 import time
 
 #
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# NO LONGER USED
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#
+#
+
+
+#
 # Simple class for allowing local definition of a calibration function
 #  for raw samples coming from the RA detector chain.  Each observatory
 #  is different, and rather than hacking up the main code in usrp_ra_receiver
@@ -49,8 +57,8 @@ def calib_numogate_ridge_observatory_total_power(data):
     #  a long time to figure that out.  If they don't arrive as strings,
     #  the calculations for sidereal time are complete garbage
     #
-    me.long = str(-76.043)
-    me.lat = str(44.967)
+    me.long = globals()["calib_long"]
+    me.lat = globals()["calib_lat"]
 
     me.date = ephem.now()
     sidtime = me.sidereal_time()
@@ -102,8 +110,8 @@ def calib_numogate_ridge_observatory_fft(data,l):
     #  a long time to figure that out.  If they don't arrive as strings,
     #  the calculations for sidereal time are complete garbage
     #
-    me.long = str(-76.043)
-    me.lat = str(44.967)
+    me.long = globals()["calib_long"]
+    me.lat = globals()["calib_lat"]
 
     me.date = ephem.now()
     sidtime = me.sidereal_time()
@@ -129,7 +137,7 @@ def calib_numogate_ridge_observatory_fft(data,l):
         globals()["calib_then"] = now
         numogate_file = open (filenamestr+".sdat","a")
   
-        r = calib_default_fft(data,l)
+        r = data
         inter = globals()["calib_decln"]
         fc = globals()["calib_freq_setting"]
         fc = fc / 1000000
@@ -179,3 +187,9 @@ def calib_set_decln(dec):
 
 def calib_set_prefix(pfx):
     globals()["calib_prefix"] = pfx
+
+def calib_set_long(long):
+    globals()["calib_long"] = long
+
+def calib_set_lat(lat):
+    globals()["calib_lat"] = lat

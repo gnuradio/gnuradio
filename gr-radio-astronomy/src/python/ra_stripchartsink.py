@@ -33,14 +33,11 @@ import time
 default_stripchartsink_size = (640,140)
 global_yvalues = []
 
-def default_cfunc(datum):
-    return(datum)
-
 class stripchart_sink_base(object):
     def __init__(self, input_is_real=False, y_per_div=10, ref_level=50,
                  sample_rate=1, stripsize=4,
                  title='',xlabel="X", ylabel="Y", divbase=0.025,
-                 cfunc=default_cfunc, parallel=False, scaling=1.0, autoscale=False):
+                 parallel=False, scaling=1.0, autoscale=False):
 
         # initialize common attributes
         self.y_divs = 8
@@ -54,7 +51,6 @@ class stripchart_sink_base(object):
         self.ylabel = ylabel
         self.divbase = divbase
         self.scaling = scaling
-        self.cfunc = cfunc
         self.input_is_real = input_is_real
         self.msgq = gr.msg_queue(2)         # queue that holds a maximum of 2 messages
         self.vector=Numeric.zeros(stripsize,Numeric.Float64)
@@ -76,7 +72,7 @@ class stripchart_sink_f(gr.hier_block, stripchart_sink_base):
                  y_per_div=10, ref_level=50, sample_rate=1,
                  title='', stripsize=4,
                  size=default_stripchartsink_size,xlabel="X", 
-                 ylabel="Y", divbase=0.025, cfunc=default_cfunc,
+                 ylabel="Y", divbase=0.025,
                  parallel=False, scaling=1.0, autoscale=False):
 
         stripchart_sink_base.__init__(self, input_is_real=True,
@@ -85,7 +81,7 @@ class stripchart_sink_f(gr.hier_block, stripchart_sink_base):
                                stripsize=stripsize,
                                xlabel=xlabel, ylabel=ylabel, 
                                divbase=divbase, title=title,
-                               cfunc=cfunc, parallel=parallel, 
+                               parallel=parallel, 
                                scaling=scaling, autoscale=autoscale)
                                
         if (parallel == True):
@@ -185,9 +181,6 @@ class stripchart_window(plot.PlotCanvas):
         d *= 0.1
         if self.stripchartsink.autoscale == True and self.stripchartsink.parallel == True:
             self.y_range = self._axisInterval ('min', calc_min-d, calc_max+d)
-
-        if (self.stripchartsink.parallel != True):
-            indata = self.stripchartsink.cfunc(indata)
 
         N = self.stripchartsink.stripsize
         if self.stripchartsink.parallel != True:

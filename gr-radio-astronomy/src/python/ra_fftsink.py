@@ -32,14 +32,11 @@ import random
 default_ra_fftsink_size = (640,140)
 
 
-def default_cfunc(db,l):
-    return(db)
-
 
 class ra_fft_sink_base(object):
     def __init__(self, input_is_real=False, baseband_freq=0, y_per_div=10, sc_y_per_div=0.5, ref_level=50, sc_ref_level=20,
                  sample_rate=1, fft_size=512, fft_rate=15,
-                 average=False, avg_alpha=None, title='', peak_hold=False, cfunc=default_cfunc, xydfunc=None, interfunc=None):
+                 average=False, avg_alpha=None, title='', peak_hold=False, ofunc=None, xydfunc=None):
 
         # initialize common attributes
         self.baseband_freq = baseband_freq
@@ -54,9 +51,9 @@ class ra_fft_sink_base(object):
         self.fft_rate = fft_rate
         self.binwidth = float(sample_rate/fft_size)
         self.average = average
-        self.cfunc = cfunc
+        self.ofunc = ofunc
         self.xydfunc = xydfunc
-        self.interfunc = interfunc
+        self.ofunc = ofunc
         if avg_alpha is None:
             self.avg_alpha = 2.0 / fft_rate
         else:
@@ -99,18 +96,18 @@ class ra_fft_sink_base(object):
 
 class ra_fft_sink_f(gr.hier_block, ra_fft_sink_base):
     def __init__(self, fg, parent, baseband_freq=0,
-                 y_per_div=10, sc_y_per_div=0.5, sc_ref_level=40, ref_level=50, sample_rate=1, fft_size=512,
+                 y_per_div=10, sc_y_per_div=0.5, sc_ref_level=40, ref_level=50,                  sample_rate=1, fft_size=512,
                  fft_rate=15, average=False, avg_alpha=None, title='',
-                 size=default_ra_fftsink_size, peak_hold=False, cfunc=default_cfunc, xydfunc=None, interfunc=None):
-
+                 size=default_ra_fftsink_size, peak_hold=False, ofunc=None,
+                 xydfunc=None):
         ra_fft_sink_base.__init__(self, input_is_real=True, baseband_freq=baseband_freq,
                                y_per_div=y_per_div, sc_y_per_div=sc_y_per_div,
                                sc_ref_level=sc_ref_level, ref_level=ref_level,
                                sample_rate=sample_rate, fft_size=fft_size,
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, title=title,
-                               peak_hold=peak_hold, cfunc=cfunc, 
-                               xydfunc=xydfunc, interfunc=interfunc)
+                               peak_hold=peak_hold, ofunc=ofunc, 
+                               xydfunc=xydfunc)
                                
         self.binwidth = float(sample_rate/2.0)/float(fft_size)
         s2p = gr.serial_to_parallel(gr.sizeof_float, fft_size)
@@ -134,7 +131,7 @@ class ra_fft_sink_c(gr.hier_block, ra_fft_sink_base):
                  y_per_div=10, sc_y_per_div=0.5, sc_ref_level=40,
                  ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=15, average=False, avg_alpha=None, title='',
-                 size=default_ra_fftsink_size, peak_hold=False, cfunc=default_cfunc, xydfunc=None, interfunc=None):
+                 size=default_ra_fftsink_size, peak_hold=False, ofunc=None, xydfunc=None):
 
         ra_fft_sink_base.__init__(self, input_is_real=False, baseband_freq=baseband_freq,
                                y_per_div=y_per_div, sc_y_per_div=sc_y_per_div,
@@ -143,8 +140,8 @@ class ra_fft_sink_c(gr.hier_block, ra_fft_sink_base):
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, 
                                title=title,
-                               peak_hold=peak_hold, cfunc=cfunc, 
-                               xydfunc=xydfunc, interfunc=interfunc)
+                               peak_hold=peak_hold, ofunc=ofunc, 
+                               xydfunc=xydfunc)
 
         s2p = gr.serial_to_parallel(gr.sizeof_gr_complex, fft_size)
         one_in_n = gr.keep_one_in_n(gr.sizeof_gr_complex * fft_size,
@@ -230,7 +227,6 @@ class fft_window (plot.PlotCanvas):
         wx.EVT_CLOSE (self, self.on_close_window)
         self.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
         self.Bind(wx.EVT_MOTION, self.on_motion)
-        self.Bind(wx.EVT_LEFT_UP, self.on_left_click)
 
         self.input_watcher = input_watcher(ra_fftsink.msgq, ra_fftsink.fft_size, self)
 
@@ -248,9 +244,10 @@ class fft_window (plot.PlotCanvas):
 
         calc_min = min(dB)
         calc_max = max(dB)
-        
-        dB = self.ra_fftsink.cfunc(dB, L)
 
+        if (self.ra_fftsink.ofunc != None):
+            self.ra_fftsink.ofunc(evt.data,L)
+        
         if self.peak_hold:
             if self.peak_vals is None:
                 self.peak_vals = dB
@@ -365,11 +362,6 @@ class fft_window (plot.PlotCanvas):
         if not self.ra_fftsink.xydfunc == None:
             xy = self.GetXY(event)
             self.ra_fftsink.xydfunc (xy)
-
-    def on_left_click(self, event):
-        if not self.ra_fftsink.interfunc == None:
-            xy = self.GetXY(event)
-            self.ra_fftsink.interfunc (xy[0])
 
     def build_popup_menu(self):
         self.id_incr_ref_level = wx.NewId()
