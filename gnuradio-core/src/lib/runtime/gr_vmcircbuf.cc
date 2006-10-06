@@ -226,9 +226,9 @@ standard_tests (gr_vmcircbuf_factory *f, int verbose)
   ok &= test_a_bunch (f,   1,   1 * granularity, &start,  v);   //   1 x   4KB =   4KB
 
   if (ok){
-    ok &= test_a_bunch (f,  64,   4 * granularity, &start, v);  // 256 x  16KB =   4MB
-    ok &= test_a_bunch (f,  32,   4 * (1L << 20),  &start, v);  //  32 x   4MB =  64MB
-    ok &= test_a_bunch (f, 256, 256 * (1L << 10),  &start, v);  // 256 x 256KB =  64MB
+    ok &= test_a_bunch (f,  64,   4 * granularity, &start, v);  //  64 x  16KB =   1MB
+    ok &= test_a_bunch (f,   4,   4 * (1L << 20),  &start, v);  //   4 x   4MB =  16MB
+//  ok &= test_a_bunch (f, 256, 256 * (1L << 10),  &start, v);  // 256 x 256KB =  64MB
   }
 
   if (verbose >= 1)
