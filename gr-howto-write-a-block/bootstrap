@@ -26,4 +26,4 @@ aclocal -I config
 autoconf
 autoheader
 libtoolize --automake
-automake --add-missing
+automake --add-missing -c -f
