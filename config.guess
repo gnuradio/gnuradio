@@ -1,9 +1,10 @@
 #! /bin/sh
 # Attempt to guess a canonical system name.
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
-#   2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+#   2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation,
+#   Inc.
 
-timestamp='2006-02-23'
+timestamp='2006-07-02'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -210,7 +211,7 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
 	echo ${UNAME_MACHINE}-unknown-solidbsd${UNAME_RELEASE}
 	exit ;;
     macppc:MirBSD:*:*)
-	echo powerppc-unknown-mirbsd${UNAME_RELEASE}
+	echo powerpc-unknown-mirbsd${UNAME_RELEASE}
 	exit ;;
     *:MirBSD:*:*)
 	echo ${UNAME_MACHINE}-unknown-mirbsd${UNAME_RELEASE}
@@ -770,6 +771,8 @@ EOF
 	case ${UNAME_MACHINE} in
 	    pc98)
 		echo i386-unknown-freebsd`echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'` ;;
+	    amd64)
+		echo x86_64-unknown-freebsd`echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'` ;;
 	    *)
 		echo ${UNAME_MACHINE}-unknown-freebsd`echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'` ;;
 	esac
@@ -780,9 +783,6 @@ EOF
     i*:MINGW*:*)
 	echo ${UNAME_MACHINE}-pc-mingw32
 	exit ;;
-    i*:MSYS_NT-*:*:*)
-	echo ${UNAME_MACHINE}-pc-mingw32
-	exit ;;
     i*:windows32*:*)
     	# uname -m includes "-pc" on this system.
     	echo ${UNAME_MACHINE}-mingw32
@@ -790,10 +790,10 @@ EOF
     i*:PW*:*)
 	echo ${UNAME_MACHINE}-pc-pw32
 	exit ;;
-    x86:Interix*:[345]*)
+    x86:Interix*:[3456]*)
 	echo i586-pc-interix${UNAME_RELEASE}
 	exit ;;
-    EM64T:Interix*:[345]*)
+    EM64T:Interix*:[3456]*)
 	echo x86_64-unknown-interix${UNAME_RELEASE}
 	exit ;;
     [345]86:Windows_95:* | [345]86:Windows_98:* | [345]86:Windows_NT:*)
@@ -829,6 +829,9 @@ EOF
 	echo ${UNAME_MACHINE}-pc-minix
 	exit ;;
     arm*:Linux:*:*)
+	echo ${UNAME_MACHINE}-unknown-linux-gnu
+	exit ;;
+    avr32*:Linux:*:*)
 	echo ${UNAME_MACHINE}-unknown-linux-gnu
 	exit ;;
     cris:Linux:*:*)
@@ -989,7 +992,7 @@ EOF
 	LIBC=gnulibc1
 	# endif
 	#else
-	#if defined(__INTEL_COMPILER) || defined(__PGI) || defined(__sun)
+	#if defined(__INTEL_COMPILER) || defined(__PGI) || defined(__SUNPRO_C) || defined(__SUNPRO_CC)
 	LIBC=gnu
 	#else
 	LIBC=gnuaout
