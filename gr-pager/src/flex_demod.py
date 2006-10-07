@@ -19,9 +19,11 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, optfir
+from gnuradio import gr, gru, optfir, blks
 from math import pi
 import pager_swig
+
+chan_rate = 16000
 
 class flex_demod:
     """
@@ -32,6 +34,7 @@ class flex_demod:
 
     Flow graph (so far):
 
+    RSAMP    - Resample incoming stream to 16000 sps
     QUAD     - Quadrature demodulator converts FSK to baseband amplitudes  
     LPF      - Low pass filter to remove noise prior to slicer
     SLICER   - Converts input to one of four symbols (0, 1, 2, 3)
@@ -45,28 +48,39 @@ class flex_demod:
     @type sample_rate: integer
     """
 
-    def __init__(self, fg, channel_rate):
-        k = channel_rate/(2*pi*4800)        # 4800 Hz max deviation
+
+    def __init__(self, fg, channel_rate, queue):
+        k = chan_rate/(2*pi*4800)        # 4800 Hz max deviation
         QUAD = gr.quadrature_demod_cf(k)
 	self.INPUT = QUAD
-		
-        taps = optfir.low_pass(1.0, channel_rate, 3200, 6400, 0.1, 60)
+			
+	if channel_rate != chan_rate:
+		interp = gru.lcm(channel_rate, chan_rate)/channel_rate
+		decim  = gru.lcm(channel_rate, chan_rate)/chan_rate
+		RESAMP = blks.rational_resampler_ccf(fg, interp, decim)
+		self.INPUT = RESAMP
+			
+        taps = optfir.low_pass(1.0, chan_rate, 3200, 6400, 0.1, 60)
         LPF = gr.fir_filter_fff(1, taps)
         SLICER = pager_swig.slicer_fb(.001, .00001) # Attack, decay
-	SYNC = pager_swig.flex_sync(channel_rate)
-        fg.connect(QUAD, LPF, SLICER, SYNC)
+	SYNC = pager_swig.flex_sync(chan_rate)
+
+	if channel_rate != chan_rate:
+            fg.connect(RESAMP, QUAD, LPF, SLICER, SYNC)
+	else:
+	    fg.connect(QUAD, LPF, SLICER, SYNC)
 
 	DEINTA = pager_swig.flex_deinterleave()
-	PARSEA = pager_swig.flex_parse()
+	PARSEA = pager_swig.flex_parse(queue)
 
 	DEINTB = pager_swig.flex_deinterleave()
-	PARSEB = pager_swig.flex_parse()
+	PARSEB = pager_swig.flex_parse(queue)
 
 	DEINTC = pager_swig.flex_deinterleave()
-	PARSEC = pager_swig.flex_parse()
+	PARSEC = pager_swig.flex_parse(queue)
 
 	DEINTD = pager_swig.flex_deinterleave()
-	PARSED = pager_swig.flex_parse()
+	PARSED = pager_swig.flex_parse(queue)
 	
 	fg.connect((SYNC, 0), DEINTA, PARSEA)
 	fg.connect((SYNC, 1), DEINTB, PARSEB)

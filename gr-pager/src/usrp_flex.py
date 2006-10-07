@@ -4,6 +4,7 @@ from gnuradio import gr, gru, usrp, optfir, eng_notation, blks, pager
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import time, os, sys
+from string import split, join
 
 """
 This example application demonstrates receiving and demodulating the
@@ -68,21 +69,21 @@ class usrp_source_c(gr.hier_block):
         return self._src.adc_rate()/self._decim
 
 class app_flow_graph(gr.flow_graph):
-    def __init__(self, options, args):
+    def __init__(self, options, args, queue):
         gr.flow_graph.__init__(self)
         self.options = options
         self.args = args
 
         USRP = usrp_source_c(self,          # Flow graph
                     options.rx_subdev_spec, # Daugherboard spec
-	            250,                    # IF decimation ratio gets 256K if_rate
+	            256,                    # IF decimation ratio gets 250K if_rate
                     options.gain,           # Receiver gain
                     options.calibration)    # Frequency offset
         USRP.tune(options.frequency)
 
         if_rate = USRP.rate()
-        channel_rate = 32000                # Oversampled by 10 or 20
-        channel_decim = if_rate // channel_rate
+        channel_rate = 25000                
+        channel_decim = int(if_rate / channel_rate)
 	
         CHAN_taps = optfir.low_pass(1.0,          # Filter gain
                                     if_rate,      # Sample rate
@@ -101,7 +102,7 @@ class app_flow_graph(gr.flow_graph):
                         1.0,               # Initial gain
                         1.0)               # Maximum gain
 	
-        FLEX = pager.flex_demod(self, 32000)      
+        FLEX = pager.flex_demod(self, 25000, queue)
 
         self.connect(USRP, CHAN, AGC, FLEX.INPUT)
 	
@@ -120,11 +121,18 @@ def main():
     if options.frequency < 1e6:
 	options.frequency *= 1e6
 	
-    fg = app_flow_graph(options, args)
+    queue = gr.msg_queue()
+
+    fg = app_flow_graph(options, args, queue)
     try:
-        fg.run()
+        fg.start()
+	while 1:
+	    msg = queue.delete_head() # Blocking read
+	    fields = split(msg.to_string(), chr(128))
+	    print join(fields, '|')
+
     except KeyboardInterrupt:
-        pass
+        fg.stop()
 
 if __name__ == "__main__":
     main()

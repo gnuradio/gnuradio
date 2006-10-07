@@ -25,12 +25,15 @@
 
 %{
 #include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
+#include "pager_flex_frame.h"
 #include "pager_slicer_fb.h"
 #include "pager_flex_sync.h"
 #include "pager_flex_deinterleave.h"
 #include "pager_flex_parse.h"
 #include <stdexcept>
 %}
+
+%include "pager_flex_frame.i"
 
 // ----------------------------------------------------------------
 
@@ -78,12 +81,12 @@ public:
 
 GR_SWIG_BLOCK_MAGIC(pager,flex_parse);
 
-pager_flex_parse_sptr pager_make_flex_parse();
+pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue);
 
 class pager_flex_parse : public gr_block
 {
 private:
-    pager_flex_parse();
+    pager_flex_parse(gr_msg_queue_sptr queue);
 
 public:
 };

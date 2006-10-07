@@ -23,24 +23,31 @@
 #define INCLUDED_PAGER_FLEX_PARSE_H
 
 #include <gr_sync_block.h>
+#include <gr_msg_queue.h>
 #include <pageri_flex_modes.h>
+#include <sstream>
 
 class pager_flex_parse;
 typedef boost::shared_ptr<pager_flex_parse> pager_flex_parse_sptr;
 
-pager_flex_parse_sptr pager_make_flex_parse();
+pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue);
 
 /*!
  * \brief flex parse description
  * \ingroup block
  */
 
+#define FIELD_DELIM ((unsigned char)128)
+
 class pager_flex_parse : public gr_sync_block
 {
 private:
     // Constructors
-    friend pager_flex_parse_sptr pager_make_flex_parse();
-    pager_flex_parse();
+    friend pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue);
+    pager_flex_parse(gr_msg_queue_sptr queue);
+
+    std::ostringstream d_payload;
+    gr_msg_queue_sptr d_queue;		  // Destination for decoded pages
 
     int d_count;	                  // Count of received codewords
     gr_int32 d_datawords[88];             // 11 blocks of 8 32-bit words

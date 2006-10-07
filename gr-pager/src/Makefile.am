@@ -28,8 +28,9 @@ TESTS = \
     run_tests
 
 bin_SCRIPTS = \
-    usrp_flex.py
-
+    usrp_flex.py \
+    aypabtu.py 
+    
 noinst_PYTHON = \
     qa_pager.py
 
@@ -46,7 +47,8 @@ SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES)
 
 ALL_IFILES = \
     $(LOCAL_IFILES) \
-    $(NON_LOCAL_IFILES)		
+    $(NON_LOCAL_IFILES)	\
+    pager_flex_frame.i
 
 NON_LOCAL_IFILES = \
     $(GNURADIO_I)
@@ -67,13 +69,15 @@ ourpython_PYTHON = \
     __init__.py \
     pager_swig.py \
     flex_demod.py \
-    usrp_flex.py
-
+    usrp_flex.py \
+    aypabtu.py
+    
 ourlib_LTLIBRARIES = _pager_swig.la
 
 # These are the source files that go into the shared library
 _pager_swig_la_SOURCES = \
     pager_swig.cc \
+    pager_flex_frame.cc \
     pager_slicer_fb.cc \
     pager_flex_sync.cc \
     pager_flex_deinterleave.cc \

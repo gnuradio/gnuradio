@@ -27,16 +27,18 @@
 #include <pageri_bch3221.h>
 #include <gr_io_signature.h>
 #include <ctype.h>
+#include <iostream>
 
-pager_flex_parse_sptr pager_make_flex_parse()
+pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue)
 {
-    return pager_flex_parse_sptr(new pager_flex_parse());
+    return pager_flex_parse_sptr(new pager_flex_parse(queue));
 }
 
-pager_flex_parse::pager_flex_parse() :
+pager_flex_parse::pager_flex_parse(gr_msg_queue_sptr queue) :
     gr_sync_block("flex_parse",
-    gr_make_io_signature(1, 1, sizeof(gr_int32)),
-    gr_make_io_signature(0, 0, 0))
+	gr_make_io_signature(1, 1, sizeof(gr_int32)),
+	gr_make_io_signature(0, 0, 0)),
+    d_queue(queue)
 {
     d_count = 0;
 }
@@ -128,7 +130,8 @@ void pager_flex_parse::parse_data()
 	if (mw1 > 87 || mw2 > 87)
 	    continue;				// Invalid offsets
 
-	printf("%010i: ", d_capcode);
+	d_payload.str("");
+	d_payload << d_capcode << FIELD_DELIM << d_type << FIELD_DELIM;
 
 	if (is_alphanumeric_page(d_type))
 	    parse_alphanumeric(mw1, mw2-1, j);
@@ -139,17 +142,19 @@ void pager_flex_parse::parse_data()
 	else
 	    parse_unknown(mw1, mw2);
 
-	printf("\n");
-	fflush(stdout);
+	//std::cout << d_payload.str() << std::endl;
+	//fflush(stdout);
+
+	gr_message_sptr msg = gr_make_message_from_string(std::string(d_payload.str()));
+	d_queue->handle(msg);
     }
 }
 
 void pager_flex_parse::parse_alphanumeric(int mw1, int mw2, int j)
 {
-
     int frag;
     bool cont;
-    
+
     if (!d_laddr) {
 	frag = (d_datawords[mw1] >> 11) & 0x03;
 	cont = (d_datawords[mw1] >> 10) & 0x01;
@@ -161,32 +166,31 @@ void pager_flex_parse::parse_alphanumeric(int mw1, int mw2, int j)
 	mw2--;
     }    
 
-    printf("%c F:%i C:%i|", d_type == FLEX_SECURE ? 'S' : 'A',
-	frag, cont);
+    d_payload << frag << FIELD_DELIM;
+    d_payload << cont << FIELD_DELIM;
 
     for (int i = mw1; i <= mw2; i++) {
 	gr_int32 dw = d_datawords[i];
+	unsigned char ch;
 	
 	if (i > mw1 || frag != 0x03) {
-	    unsigned char ch0 = dw & 0x7F;
-	    if (ch0 != 0x03)	// Fill
-		putchar(isprint(ch0) ? ch0 : '.');
+	    ch = dw & 0x7F;
+	    if (ch != 0x03)
+		d_payload << ch;
 	}
 	
-	unsigned char ch1 = (dw >> 7) & 0x7F;
-	if (ch1 != 0x03)	// Fill
-	    putchar(isprint(ch1) ? ch1 : '.');
-	
-	unsigned char ch2 = (dw >> 14) & 0x7F;
-	if (ch2 != 0x03)	// Fill
-	    putchar(isprint(ch2) ? ch2: '.');
+	ch = (dw >> 7) & 0x7F;
+	if (ch != 0x03)	// Fill
+	    d_payload << ch;
+	    	
+	ch = (dw >> 14) & 0x7F;
+	if (ch != 0x03)	// Fill
+	    d_payload << ch;
     }
 }
 
 void pager_flex_parse::parse_numeric(int mw1, int mw2, int j)
 {
-    printf("N        |");
-
     // Get first dataword from message field or from second
     // vector word if long address
     gr_int32 dw;
@@ -215,7 +219,7 @@ void pager_flex_parse::parse_numeric(int mw1, int mw2, int j)
 	    dw >>= 1;
     	    if (--count == 0) {
 		if (digit != 0x0C) // Fill
-		    putchar(flex_bcd[digit]);
+                    d_payload << flex_bcd[digit];
 		count = 4;
 	    }
 	}
@@ -226,10 +230,8 @@ void pager_flex_parse::parse_numeric(int mw1, int mw2, int j)
 
 void pager_flex_parse::parse_tone_only()
 {
-    printf("T        |");
 }
 
 void pager_flex_parse::parse_unknown(int mw1, int mw2)
 {
-    printf("U        |(unparsed)");
 }
