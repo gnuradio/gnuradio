@@ -49,7 +49,8 @@ ourpython_PYTHON =			\
 
 wxguipython_PYTHON =			\
 	ra_stripchartsink.py		\
-	ra_fftsink.py			
+	ra_fftsink.py			\
+	ra_waterfallsink.py
 
 
 # and here for applications you want installed in prefix/bin

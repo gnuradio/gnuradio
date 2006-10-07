@@ -25,7 +25,7 @@ from gnuradio import usrp
 import usrp_dbid
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
-from gnuradio.wxgui import stdgui, ra_fftsink, ra_stripchartsink, waterfallsink, form, slider
+from gnuradio.wxgui import stdgui, ra_fftsink, ra_stripchartsink, ra_waterfallsink, form, slider
 from optparse import OptionParser
 import wx
 import sys
@@ -79,13 +79,25 @@ class app_flow_graph(stdgui.gui_flow_graph):
         parser.add_option("-A", "--calib_coeff", type="eng_float", default=1.0, help="Calibration coefficient")
         parser.add_option("-B", "--calib_offset", type="eng_float", default=0.0, help="Calibration coefficient")
         parser.add_option("-Q", "--calib_eqn", default="x = x * 1.0", help="Calibration equation")
+        parser.add_option("-W", "--waterfall", action="store_true", default=False, help="Use Waterfall FFT display")
+        parser.add_option("-S", "--setimode", action="store_true", default=False, help="Enable SETI processing of spectral data")
+        parser.add_option("-T", "--setitimer", type="eng_float", default=15.0, help="Timer for computing doppler chirp for SETI analysis")
+        parser.add_option("-K", "--setik", type="eng_float", default=1.5, help="K value for SETI analysis")
         (options, args) = parser.parse_args()
         if len(args) != 0:
             parser.print_help()
             sys.exit(1)
 
         self.show_debug_info = True
-        
+        self.waterfall = options.waterfall
+        self.setimode = options.setimode
+        self.seticounter = 0
+        self.setitimer = int(options.setitimer)
+        self.setik = options.setik
+        self.hitcounter = 0
+        self.CHIRP_LOWER = 15
+        self.CHIRP_UPPER = 50
+
         # Calibration coefficient and offset
         self.calib_coeff = options.calib_coeff
         self.calib_offset = options.calib_offset
@@ -134,12 +146,19 @@ class app_flow_graph(stdgui.gui_flow_graph):
         #   values.  Used later by self.write_spectral_data() to write
         #   spectral data to datalogging files.
         self.fft_outbuf = Numeric.zeros(options.fft_size, Numeric.Float64)
+        self.old_hits = Numeric.zeros(10, Numeric.Float64)
+        self.older_hits = Numeric.zeros(10, Numeric.Float64)
 
         # Set up FFT display
-        self.scope = ra_fftsink.ra_fft_sink_c (self, panel, 
-           fft_size=int(self.fft_size), sample_rate=input_rate,
-           fft_rate=int(self.fft_rate), title="Spectral",  
-           ofunc=self.fft_outfunc, xydfunc=self.xydfunc)
+        if self.waterfall == False:
+           self.scope = ra_fftsink.ra_fft_sink_c (self, panel, 
+               fft_size=int(self.fft_size), sample_rate=input_rate,
+               fft_rate=int(self.fft_rate), title="Spectral",  
+               ofunc=self.fft_outfunc, xydfunc=self.xydfunc)
+        else:
+            self.scope = ra_waterfallsink.ra_waterfallsink_c (self, panel,
+                fft_size=int(self.fft_size), sample_rate=input_rate,
+                fft_rate=int(self.fft_rate), title="Spectral", ofunc=self.fft_outfunc, xydfunc=self.xydfunc)
 
         # Set up ephemeris data
         self.locality = ephem.Observer()
@@ -510,6 +529,9 @@ class app_flow_graph(stdgui.gui_flow_graph):
          # Continuum detector value
          sx = "%7.4f" % x
          s = s + "\nDet: " + str(sx)
+         sx = "%2d" % self.hitcounter
+         sy = "%2d" % self.CHIRP_LOWER
+         s = s + "\nH: " + str(sx) + " Cl: " + str(sy)
          self.myform['lmst_high'].set_value(s)
 
          #
@@ -517,6 +539,9 @@ class app_flow_graph(stdgui.gui_flow_graph):
          #
          self.write_continuum_data(x,sidtime)
          self.write_spectral_data(self.fft_outbuf,sidtime)
+
+         if self.setimode == True:
+             self.seti_analysis(self.fft_outbuf,sidtime)
 
     def fft_outfunc(self,data,l):
         self.fft_outbuf=data
@@ -598,6 +623,124 @@ class app_flow_graph(stdgui.gui_flow_graph):
             return(data)
     
         return(data)
+
+    def seti_analysis(self,fftbuf,sidtime):
+        l = len(fftbuf)
+        x = 0
+        hits = []
+        if self.seticounter < self.setitimer:
+            self.seticounter = self.seticounter + 1
+            return
+        else:
+            self.seticounter = 0
+
+        # Run through FFT output buffer, computing standard deviation (Sigma)
+        avg = 0
+        # First compute average
+        for i in range(0,l):
+            avg = avg + fftbuf[i]
+        avg = avg / l
+
+        sigma = 0.0
+        # Then compute standard deviation (Sigma)
+        for i in range(0,l):
+            d = fftbuf[i] - avg
+            sigma = sigma + (d*d)
+
+        sigma = Numeric.sqrt(sigma/l)
+
+        #
+        # Snarfle through the FFT output buffer again, looking for
+        #    outlying data points
+
+        start_f = self.observing - (self.bw/2)
+        current_f = start_f
+        f_incr = self.bw / l
+        l = len(fftbuf)
+        hit = -1
+
+        # -nyquist to DC
+        for i in range(l/2,l):
+            #
+            # If current FFT buffer has an item that exceeds the specified
+            #  sigma
+            #
+            if ((fftbuf[i] - avg) > (self.setik * sigma)):
+                hits.append(current_f)
+            current_f = current_f + f_incr
+
+        # DC to nyquist
+        for i in range(0,l/2):
+            #
+            # If current FFT buffer has an item that exceeds the specified
+            #  sigma
+            #
+            if ((fftbuf[i] - avg) > (self.setik * sigma)):
+                hits.append(current_f)
+            current_f = current_f + f_incr
+
+        if (len(hits) <= 0):
+            return
+
+        if (len(hits) > len(self.old_hits)*2):
+            return
+
+        #
+        #
+        # Calculate chirp limits from first principles
+        #
+        #
+        earth_diam = 12500
+        earth_circ = earth_diam * 3.14159
+        surface_speed = earth_circ / 24
+        surface_speed = surface_speed / 3600
+
+        c1 = (surface_speed/2) / 299792.0
+        c2 = (surface_speed*5) / 299792.0
+
+        self.CHIRP_LOWER = (c1 * self.observing) * self.setitimer
+        self.CHIRP_UPPER = (c2 * self.observing) * self.setitimer
+
+        #
+        # Run through all three hit buffers, computing difference between
+        #   frequencies found there, if they're all within the chirp limits
+        #   declare a good hit
+        #
+        good_hit = 0
+        for i in range(0,min(len(hits),len(self.old_hits))):
+            f_diff = abs(self.old_hits[i] - hits[i])
+            f_diff2 = abs(self.older_hits[i] - self.old_hits[i])
+            # If frequency difference is within range, we have a hit
+            if (f_diff >= self.CHIRP_LOWER and f_diff <= self.CHIRP_UPPER):
+                if (f_diff2 >= self.CHIRP_LOWER and f_diff <= self.CHIRP_UPPER):
+                    good_hit = 1
+                    self.hitcounter = self.hitcounter + 1
+                    break
+
+        if (good_hit != 0):
+            self.write_hits(hits,sidtime)
+
+        # Save old hits
+        for i in range(0,len(self.older_hits)):
+            self.older_hits[i] = self.old_hits[i]
+            self.old_hits[i] = 0
+        for i in range(0,min(len(hits),len(self.old_hits))):
+            self.old_hits[i] = hits[i]
+
+        return
+
+    def write_hits(self,hits,sidtime):
+        # Create localtime structure for producing filename
+        foo = time.localtime()
+        pfx = self.prefix
+        filenamestr = "%s/%04d%02d%02d%02d" % (pfx, foo.tm_year, 
+           foo.tm_mon, foo.tm_mday, foo.tm_hour)
+    
+        # Open the data file, appending
+        hits_file = open (filenamestr+".seti","a")
+        hits_file.write(str(ephem.hours(sidtime))+" "+str(hits)+"\n")
+        hits_file.close()
+        return
 
     def xydfunc(self,xyv):
         magn = int(Numeric.log10(self.observing))
