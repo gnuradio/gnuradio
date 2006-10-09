@@ -105,6 +105,7 @@ grinclude_HEADERS = \
     pager_flex_sync.h \
     pager_flex_deinterleave.h \
     pager_flex_parse.h \
+    pager_flex_frame.h \
     pageri_bch3221.h \
     pageri_flex_modes.h \
     pageri_util.h
@@ -112,7 +113,8 @@ grinclude_HEADERS = \
 
 # These swig headers get installed in ${prefix}/include/gnuradio/swig
 swiginclude_HEADERS = \
-    $(LOCAL_IFILES)
+    $(LOCAL_IFILES) \
+    pager_flex_frame.i
 
 MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc *~ *.tmp
 
