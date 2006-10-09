@@ -29,7 +29,7 @@ AC_DEFUN([GRC_GR_VIDEO_SDL],[
     passed=yes
     SDL_VERSION=1.2.0
     AM_PATH_SDL($SDL_VERSION,[],
-        [passed=no;AC_MSG_RESULT([gr-video-sdl requires library sdl, not found.])])
+        [passed=no;AC_MSG_RESULT([gr-video-sdl requires library sdl, not found or failed test.])])
 
     GRC_BUILD_CONDITIONAL([gr-video-sdl],[
 	AC_SUBST(SDL_CFLAGS)
