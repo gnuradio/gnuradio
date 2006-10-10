@@ -78,7 +78,6 @@ class app_flow_graph(stdgui.gui_flow_graph):
         parser.add_option("-M", "--fft_rate", type="eng_float", default=8.0, help="FFT Rate")
         parser.add_option("-A", "--calib_coeff", type="eng_float", default=1.0, help="Calibration coefficient")
         parser.add_option("-B", "--calib_offset", type="eng_float", default=0.0, help="Calibration coefficient")
-        parser.add_option("-Q", "--calib_eqn", default="x = x * 1.0", help="Calibration equation")
         parser.add_option("-W", "--waterfall", action="store_true", default=False, help="Use Waterfall FFT display")
         parser.add_option("-S", "--setimode", action="store_true", default=False, help="Enable SETI processing of spectral data")
         parser.add_option("-K", "--setik", type="eng_float", default=1.5, help="K value for SETI analysis")
@@ -89,35 +88,63 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         self.show_debug_info = True
 
+        # Pick up waterfall option
         self.waterfall = options.waterfall
 
         # SETI mode stuff
         self.setimode = options.setimode
         self.seticounter = 0
         self.setik = options.setik
+        # Because we force the input rate to be 250Khz, 12.5Khz is
+        #  exactly 1/20th of this, which makes building decimators
+        #  easier.
+        # This also allows larger FFTs to be used without totally-gobbling
+        #  CPU.  With an FFT size of 16384, for example, this bandwidth
+        #  yields a binwidth of 0.762Hz, and plenty of CPU left over
+        #  for other things, like the SETI analysis code.
+        #
         self.seti_fft_bandwidth = 12500
+
+        # Calculate binwidth
         binwidth = self.seti_fft_bandwidth / options.fft_size
+
+        # Use binwidth, and knowledge of likely chirp rates to set reasonable
+        #  values for SETI analysis code.   We assume that SETI signals will
+        #  chirp at somewhere between 0.10Hz/sec and 0.25Hz/sec.
+        #
+        # upper_limit is the "worst case"--that is, the case for which we have
+        #  wait the longest to actually see any drift, due to the quantizing
+        #  on FFT bins.
         upper_limit = binwidth / 0.10
         self.setitimer = int(upper_limit * 2.00)
+
+        # Calculate the CHIRP values based on Hz/sec
         self.CHIRP_LOWER = 0.10 * self.setitimer
         self.CHIRP_UPPER = 0.25 * self.setitimer
+
+        # Reset hit counter to 0
         self.hitcounter = 0
         # We scan through 1Mhz of bandwidth around the chosen center freq
         self.seti_freq_range = 1.0e6
+        # Calculate lower edge
         self.setifreq_lower = options.freq - (self.seti_freq_range/2)
         self.setifreq_current = options.freq
+        # Calculate upper edge
         self.setifreq_upper = options.freq + (self.seti_freq_range/2)
+
+        # We change center frequencies every 10 self.setitimer intervals
         self.setifreq_timer = self.setitimer * 10
+
+        # Create actual timer
         self.seti_then = time.time()
+
+        # The hits recording array
         self.nhits = 10
         self.hits_array = Numeric.zeros((self.nhits,3), Numeric.Float64)
 
         # Calibration coefficient and offset
         self.calib_coeff = options.calib_coeff
         self.calib_offset = options.calib_offset
-
-        self.calib_eqn = options.calib_eqn
-        globals()["calibration_codelet"] = self.calib_eqn
 
         self.integ = options.integ
         self.avg_alpha = options.avg
@@ -164,11 +191,14 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         # This buffer is used to remember the most-recent FFT display
         #   values.  Used later by self.write_spectral_data() to write
-        #   spectral data to datalogging files.
+        #   spectral data to datalogging files, and by the SETI analysis
+        #   function.
+        #
         self.fft_outbuf = Numeric.zeros(options.fft_size, Numeric.Float64)
 
         #
-        # If SETI mode, only look at a input_rate/8 at a time
+        # If SETI mode, only look at seti_fft_bandwidth (currently 12.5Khz)
+        #   at a time.
         #
         if (self.setimode):
             self.fft_input_rate = self.seti_fft_bandwidth
@@ -189,6 +219,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
                 self.fft_input_taps)
         else:
             self.fft_input_rate = input_rate
+
         # Set up FFT display
         if self.waterfall == False:
            self.scope = ra_fftsink.ra_fft_sink_c (self, panel, 
@@ -395,11 +426,16 @@ class app_flow_graph(stdgui.gui_flow_graph):
     def _build_gui(self, vbox):
 
         def _form_set_freq(kv):
+            # Adjust current SETI frequency, and limits
             self.setifreq_lower = kv['freq'] - (self.seti_freq_range/2)
             self.setifreq_current = kv['freq']
             self.setifreq_upper = kv['freq'] + (self.seti_freq_range/2)
+
+            # Reset SETI analysis timer
             self.seti_then = time.time()
+            # Zero-out hits array when changing frequency
             self.hits_array[:,:] = 0.0
+
             return self.set_freq(kv['freq'])
 
         def _form_set_decln(kv):
@@ -604,6 +640,8 @@ class app_flow_graph(stdgui.gui_flow_graph):
                  if (self.setifreq_current > self.setifreq_upper):
                      self.setifreq_current = self.setifreq_lower
                  self.set_freq(self.setifreq_current)
+                 # Make sure we zero-out the hits array when changing
+                 #   frequency.
                  self.hits_array[:,:] = 0.0
 
     def fft_outfunc(self,data,l):
