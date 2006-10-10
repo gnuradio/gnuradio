@@ -81,7 +81,6 @@ class app_flow_graph(stdgui.gui_flow_graph):
         parser.add_option("-Q", "--calib_eqn", default="x = x * 1.0", help="Calibration equation")
         parser.add_option("-W", "--waterfall", action="store_true", default=False, help="Use Waterfall FFT display")
         parser.add_option("-S", "--setimode", action="store_true", default=False, help="Enable SETI processing of spectral data")
-        parser.add_option("-T", "--setitimer", type="eng_float", default=15.0, help="Timer for computing doppler chirp for SETI analysis")
         parser.add_option("-K", "--setik", type="eng_float", default=1.5, help="K value for SETI analysis")
         (options, args) = parser.parse_args()
         if len(args) != 0:
@@ -89,14 +88,29 @@ class app_flow_graph(stdgui.gui_flow_graph):
             sys.exit(1)
 
         self.show_debug_info = True
+
         self.waterfall = options.waterfall
+
+        # SETI mode stuff
         self.setimode = options.setimode
         self.seticounter = 0
-        self.setitimer = int(options.setitimer)
         self.setik = options.setik
+        self.seti_fft_bandwidth = 12500
+        binwidth = self.seti_fft_bandwidth / options.fft_size
+        upper_limit = binwidth / 0.10
+        self.setitimer = int(upper_limit * 2.00)
+        self.CHIRP_LOWER = 0.10 * self.setitimer
+        self.CHIRP_UPPER = 0.25 * self.setitimer
         self.hitcounter = 0
-        self.CHIRP_LOWER = 15
-        self.CHIRP_UPPER = 50
+        # We scan through 1Mhz of bandwidth around the chosen center freq
+        self.seti_freq_range = 1.0e6
+        self.setifreq_lower = options.freq - (self.seti_freq_range/2)
+        self.setifreq_current = options.freq
+        self.setifreq_upper = options.freq + (self.seti_freq_range/2)
+        self.setifreq_timer = self.setitimer * 10
+        self.seti_then = time.time()
+        self.nhits = 10
+        self.hits_array = Numeric.zeros((self.nhits,3), Numeric.Float64)
 
         # Calibration coefficient and offset
         self.calib_coeff = options.calib_coeff
@@ -115,6 +129,12 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.spectral_then = time.time()
       
         # build the graph
+
+        #
+        # If SETI mode, we always run at maximum USRP decimation
+        #
+        if (self.setimode):
+            options.decim = 256
 
         self.u = usrp.source_c(decim_rate=options.decim)
         self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
@@ -146,18 +166,38 @@ class app_flow_graph(stdgui.gui_flow_graph):
         #   values.  Used later by self.write_spectral_data() to write
         #   spectral data to datalogging files.
         self.fft_outbuf = Numeric.zeros(options.fft_size, Numeric.Float64)
-        self.old_hits = Numeric.zeros(10, Numeric.Float64)
-        self.older_hits = Numeric.zeros(10, Numeric.Float64)
 
+        #
+        # If SETI mode, only look at a input_rate/8 at a time
+        #
+        if (self.setimode):
+            self.fft_input_rate = self.seti_fft_bandwidth
+
+            #
+            # Build a decimating bandpass filter
+            #
+            self.fft_input_taps = gr.firdes.complex_band_pass (1.0,
+               input_rate,
+               -(int(self.fft_input_rate/2)), int(self.fft_input_rate/2), 200,
+               gr.firdes.WIN_HAMMING, 0)
+
+            #
+            # Compute required decimation factor
+            #
+            decimation = int(input_rate/self.fft_input_rate)
+            self.fft_bandpass = gr.fir_filter_ccc (decimation, 
+                self.fft_input_taps)
+        else:
+            self.fft_input_rate = input_rate
         # Set up FFT display
         if self.waterfall == False:
            self.scope = ra_fftsink.ra_fft_sink_c (self, panel, 
-               fft_size=int(self.fft_size), sample_rate=input_rate,
+               fft_size=int(self.fft_size), sample_rate=self.fft_input_rate,
                fft_rate=int(self.fft_rate), title="Spectral",  
                ofunc=self.fft_outfunc, xydfunc=self.xydfunc)
         else:
             self.scope = ra_waterfallsink.ra_waterfallsink_c (self, panel,
-                fft_size=int(self.fft_size), sample_rate=input_rate,
+                fft_size=int(self.fft_size), sample_rate=self.fft_input_rate,
                 fft_rate=int(self.fft_rate), title="Spectral", ofunc=self.fft_outfunc, xydfunc=self.xydfunc)
 
         # Set up ephemeris data
@@ -247,7 +287,16 @@ class app_flow_graph(stdgui.gui_flow_graph):
         #
         # Start connecting configured modules in the receive chain
         #
-        self.connect(self.u, self.scope)
+
+        # The scope--handle SETI mode
+        if (self.setimode == False):
+            self.connect(self.u, self.scope)
+        else:
+            self.connect(self.u, self.fft_bandpass, self.scope)
+
+        #
+        # The head of the continuum chain
+        #
         self.connect(self.u, self.splitter)
 
         # Connect splitter outputs to multipliers
@@ -346,6 +395,11 @@ class app_flow_graph(stdgui.gui_flow_graph):
     def _build_gui(self, vbox):
 
         def _form_set_freq(kv):
+            self.setifreq_lower = kv['freq'] - (self.seti_freq_range/2)
+            self.setifreq_current = kv['freq']
+            self.setifreq_upper = kv['freq'] + (self.seti_freq_range/2)
+            self.seti_then = time.time()
+            self.hits_array[:,:] = 0.0
             return self.set_freq(kv['freq'])
 
         def _form_set_decln(kv):
@@ -407,7 +461,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self._build_subpanel(vbox)
 
         self.lmst_timer = wx.PyTimer(self.lmst_timeout)
-        self.lmst_timeout()
+        #self.lmst_timeout()
 
 
     def _build_subpanel(self, vbox_arg):
@@ -530,18 +584,27 @@ class app_flow_graph(stdgui.gui_flow_graph):
          sx = "%7.4f" % x
          s = s + "\nDet: " + str(sx)
          sx = "%2d" % self.hitcounter
-         sy = "%2d" % self.CHIRP_LOWER
-         s = s + "\nH: " + str(sx) + " Cl: " + str(sy)
+         sy = "%3.1f/%3.1f" % (self.CHIRP_LOWER, self.CHIRP_UPPER)
+         s = s + "\nH: " + str(sx) + " C: " + str(sy)
          self.myform['lmst_high'].set_value(s)
 
          #
          # Write data out to recording files
          #
-         self.write_continuum_data(x,sidtime)
-         self.write_spectral_data(self.fft_outbuf,sidtime)
+         if self.setimode == False:
+             self.write_continuum_data(x,sidtime)
+             self.write_spectral_data(self.fft_outbuf,sidtime)
 
          if self.setimode == True:
              self.seti_analysis(self.fft_outbuf,sidtime)
+             now = time.time()
+             if ((now - self.seti_then) > self.setifreq_timer):
+                 self.seti_then = now
+                 self.setifreq_current = self.setifreq_current + self.fft_input_rate
+                 if (self.setifreq_current > self.setifreq_upper):
+                     self.setifreq_current = self.setifreq_lower
+                 self.set_freq(self.setifreq_current)
+                 self.hits_array[:,:] = 0.0
 
     def fft_outfunc(self,data,l):
         self.fft_outbuf=data
@@ -653,9 +716,9 @@ class app_flow_graph(stdgui.gui_flow_graph):
         # Snarfle through the FFT output buffer again, looking for
         #    outlying data points
 
-        start_f = self.observing - (self.bw/2)
+        start_f = self.observing - (self.fft_input_rate/2)
         current_f = start_f
-        f_incr = self.bw / l
+        f_incr = self.fft_input_rate / l
         l = len(fftbuf)
         hit = -1
 
@@ -682,24 +745,9 @@ class app_flow_graph(stdgui.gui_flow_graph):
         if (len(hits) <= 0):
             return
 
-        if (len(hits) > len(self.old_hits)*2):
+        if (len(hits) > self.nhits):
             return
 
-        #
-        #
-        # Calculate chirp limits from first principles
-        #
-        #
-        earth_diam = 12500
-        earth_circ = earth_diam * 3.14159
-        surface_speed = earth_circ / 24
-        surface_speed = surface_speed / 3600
-
-        c1 = (surface_speed/2) / 299792.0
-        c2 = (surface_speed*5) / 299792.0
-
-        self.CHIRP_LOWER = (c1 * self.observing) * self.setitimer
-        self.CHIRP_UPPER = (c2 * self.observing) * self.setitimer
 
         #
         # Run through all three hit buffers, computing difference between
@@ -707,27 +755,39 @@ class app_flow_graph(stdgui.gui_flow_graph):
         #   declare a good hit
         #
         good_hit = 0
-        for i in range(0,min(len(hits),len(self.old_hits))):
-            f_diff = abs(self.old_hits[i] - hits[i])
-            f_diff2 = abs(self.older_hits[i] - self.old_hits[i])
-            # If frequency difference is within range, we have a hit
-            if (f_diff >= self.CHIRP_LOWER and f_diff <= self.CHIRP_UPPER):
-                if (f_diff2 >= self.CHIRP_LOWER and f_diff <= self.CHIRP_UPPER):
-                    good_hit = 1
-                    self.hitcounter = self.hitcounter + 1
-                    break
+        good_hit = False
+        for i in range(0,min(len(hits),len(self.hits_array[:,0]))):
+            f_d1 = abs(self.hits_array[i,0] - hits[i])
+            f_d2 = abs(self.hits_array[i,1] - self.hits_array[i,0])
+            f_d3 = abs(self.hits_array[i,2] - self.hits_array[i,1])
+            if (self.seti_isahit ([f_d1, f_d2, f_d3])):
+                good_hit = True
+                self.hitcounter = self.hitcounter + 1
+                break
 
-        if (good_hit != 0):
+        if (good_hit):
             self.write_hits(hits,sidtime)
 
-        # Save old hits
-        for i in range(0,len(self.older_hits)):
-            self.older_hits[i] = self.old_hits[i]
-            self.old_hits[i] = 0
-        for i in range(0,min(len(hits),len(self.old_hits))):
-            self.old_hits[i] = hits[i]
+        # Save 'n shuffle hits
+        self.hits_array[:,2] = self.hits_array[:,1]
+        self.hits_array[:,1] = self.hits_array[:,0]
+
+        for i in range(0,len(hits)):
+            self.hits_array[i,0] = hits[i]
 
         return
+
+    def seti_isahit(self,fdiffs):
+        truecount = 0
+
+        for i in range(0,len(fdiffs)):
+            if (fdiffs[i] >= self.CHIRP_LOWER and fdiffs[i] <= self.CHIRP_UPPER):
+                truecount = truecount + 1
+
+        if truecount == len(fdiffs):
+            return (True)
+        else:
+            return (False)
 
     def write_hits(self,hits,sidtime):
         # Create localtime structure for producing filename
@@ -738,7 +798,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
     
         # Open the data file, appending
         hits_file = open (filenamestr+".seti","a")
-        hits_file.write(str(ephem.hours(sidtime))+" "+str(hits)+"\n")
+        hits_file.write(str(ephem.hours(sidtime))+" "+str(self.decln)+" "+str(hits)+"\n")
         hits_file.close()
         return
 

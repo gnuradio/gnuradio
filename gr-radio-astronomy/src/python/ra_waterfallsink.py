@@ -193,7 +193,7 @@ class ra_waterfall_window (wx.Panel):
         wx.Panel.__init__(self, parent, id, pos, size, style, name)
 
         self.fftsink = fftsink
-        self.bm = wx.EmptyBitmap(self.fftsink.fft_size, 300, -1)
+        self.bm = wx.EmptyBitmap(1024, 300, -1)
 
         self.scale_factor = self.fftsink.scaling
         
@@ -295,7 +295,7 @@ class ra_waterfall_window (wx.Panel):
 
         dc1 = wx.MemoryDC()
         dc1.SelectObject(self.bm)
-        dc1.Blit(0,1,self.fftsink.fft_size,300,dc1,0,0,wx.COPY,False,-1,-1)
+        dc1.Blit(0,1,1024,300,dc1,0,0,wx.COPY,False,-1,-1)
 
         x = max(abs(self.fftsink.sample_rate), abs(self.fftsink.baseband_freq))
         if x >= 1e9:
