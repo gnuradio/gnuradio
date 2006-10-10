@@ -1,3 +1,9 @@
+2006-10-10  Greg Troxel  <gdt@ir.bbn.com>
+
+	* firmware/include/Makefile.am: avoid nonportable use of $< (first
+	prereq in GNU make, implied source for pattern rule in BSD make)
+	used in a non-pattern rule.
+
 2006-06-25  Eric Blossom  <eb@comsec.com>
 
 	* firmware/include/fpga_regs_standard.h: doc fix to reflect current reality.
