@@ -81,6 +81,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         parser.add_option("-W", "--waterfall", action="store_true", default=False, help="Use Waterfall FFT display")
         parser.add_option("-S", "--setimode", action="store_true", default=False, help="Enable SETI processing of spectral data")
         parser.add_option("-K", "--setik", type="eng_float", default=1.5, help="K value for SETI analysis")
+        parser.add_option("-T", "--setibandwidth", type="eng_float", default=12500, help="Instantaneous SETI observing bandwidth--must be divisor of 250Khz")
         (options, args) = parser.parse_args()
         if len(args) != 0:
             parser.print_help()
@@ -103,7 +104,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         #  yields a binwidth of 0.762Hz, and plenty of CPU left over
         #  for other things, like the SETI analysis code.
         #
-        self.seti_fft_bandwidth = 12500
+        self.seti_fft_bandwidth = int(options.setibandwidth)
 
         # Calculate binwidth
         binwidth = self.seti_fft_bandwidth / options.fft_size
@@ -132,8 +133,8 @@ class app_flow_graph(stdgui.gui_flow_graph):
         # Calculate upper edge
         self.setifreq_upper = options.freq + (self.seti_freq_range/2)
 
-        # We change center frequencies every 10 self.setitimer intervals
-        self.setifreq_timer = self.setitimer * 10
+        # We change center frequencies every 20 self.setitimer intervals
+        self.setifreq_timer = self.setitimer * 20
 
         # Create actual timer
         self.seti_then = time.time()
@@ -225,7 +226,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
            self.scope = ra_fftsink.ra_fft_sink_c (self, panel, 
                fft_size=int(self.fft_size), sample_rate=self.fft_input_rate,
                fft_rate=int(self.fft_rate), title="Spectral",  
-               ofunc=self.fft_outfunc, xydfunc=self.xydfunc)
+               ofunc=self.fft_outfunc, xydfunc=None)
         else:
             self.scope = ra_waterfallsink.ra_waterfallsink_c (self, panel,
                 fft_size=int(self.fft_size), sample_rate=self.fft_input_rate,
@@ -238,12 +239,13 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         # Set up stripchart display
         self.stripsize = int(options.stripsize)
-        self.chart = ra_stripchartsink.stripchart_sink_f (self, panel,
-            stripsize=self.stripsize,
-            title="Continuum",
-            xlabel="LMST Offset (Seconds)",
-            scaling=1.0, ylabel=options.ylabel,
-            divbase=options.divbase)
+        if self.setimode == False:
+            self.chart = ra_stripchartsink.stripchart_sink_f (self, panel,
+                stripsize=self.stripsize,
+                title="Continuum",
+                xlabel="LMST Offset (Seconds)",
+                scaling=1.0, ylabel=options.ylabel,
+                divbase=options.divbase)
 
         # Set center frequency
         self.centerfreq = options.freq
@@ -287,33 +289,32 @@ class app_flow_graph(stdgui.gui_flow_graph):
         # Call constructors for receive chains
         #
 
-        # The three integrators--two FIR filters, and an IIR final filter
-        self.integrator1 = gr.fir_filter_fff (N, tapsN)
-        self.integrator2 = gr.fir_filter_fff (M, tapsM)
-        self.integrator3 = gr.single_pole_iir_filter_ff(1.0)
-
-        # Split complex USRP stream into a pair of floats
-        self.splitter = gr.complex_to_float (1);
-
-        # I squarer (detector)
-        self.multI = gr.multiply_ff();
-
-        # Q squarer (detector)
-        self.multQ = gr.multiply_ff();
-
-        # Adding squared I and Q to produce instantaneous signal power
-        self.adder = gr.add_ff();
-
-        # Signal probe
-        self.probe = gr.probe_signal_f();
-
-        #
-        # Continuum calibration stuff
-        #
-        self.cal_mult = gr.multiply_const_ff(self.calib_coeff);
-        self.cal_offs = gr.add_const_ff(self.calib_offset);
-
-        #self.cal_eqn = continuum_calibration();
+        if self.setimode == False:
+            # The three integrators--two FIR filters, and an IIR final filter
+            self.integrator1 = gr.fir_filter_fff (N, tapsN)
+            self.integrator2 = gr.fir_filter_fff (M, tapsM)
+            self.integrator3 = gr.single_pole_iir_filter_ff(1.0)
+    
+            # Split complex USRP stream into a pair of floats
+            self.splitter = gr.complex_to_float (1);
+    
+            # I squarer (detector)
+            self.multI = gr.multiply_ff();
+    
+            # Q squarer (detector)
+            self.multQ = gr.multiply_ff();
+    
+            # Adding squared I and Q to produce instantaneous signal power
+            self.adder = gr.add_ff();
+    
+            # Signal probe
+            self.probe = gr.probe_signal_f();
+    
+            #
+            # Continuum calibration stuff
+            #
+            self.cal_mult = gr.multiply_const_ff(self.calib_coeff);
+            self.cal_offs = gr.add_const_ff(self.calib_offset);
 
         #
         # Start connecting configured modules in the receive chain
@@ -325,49 +326,52 @@ class app_flow_graph(stdgui.gui_flow_graph):
         else:
             self.connect(self.u, self.fft_bandpass, self.scope)
 
-        #
-        # The head of the continuum chain
-        #
-        self.connect(self.u, self.splitter)
-
-        # Connect splitter outputs to multipliers
-        # First do I^2
-        self.connect((self.splitter, 0), (self.multI,0))
-        self.connect((self.splitter, 0), (self.multI,1))
-
-        # Then do Q^2
-        self.connect((self.splitter, 1), (self.multQ,0))
-        self.connect((self.splitter, 1), (self.multQ,1))
-
-        # Then sum the squares
-        self.connect(self.multI, (self.adder,0))
-        self.connect(self.multQ, (self.adder,1))
-
-        # Connect adder output to two-stages of FIR integrator
-        #   followed by a single stage IIR integrator, and
-        #   the calibrator
-        self.connect(self.adder, self.integrator1, 
-           self.integrator2, self.integrator3, self.cal_mult, 
-           self.cal_offs, self.chart)
-
-        # Connect calibrator to probe
-        # SPECIAL NOTE:  I'm setting the ground work here
-        #   for completely changing the way local_calibrator
-        #   works, including removing some horrible kludges for
-        #   recording data.
-        # But for now, self.probe() will be used to display the
-        #  current instantaneous integrated detector value
-        self.connect(self.cal_offs, self.probe)
+        if self.setimode == False:
+            #
+            # The head of the continuum chain
+            #
+            self.connect(self.u, self.splitter)
+    
+            # Connect splitter outputs to multipliers
+            # First do I^2
+            self.connect((self.splitter, 0), (self.multI,0))
+            self.connect((self.splitter, 0), (self.multI,1))
+    
+            # Then do Q^2
+            self.connect((self.splitter, 1), (self.multQ,0))
+            self.connect((self.splitter, 1), (self.multQ,1))
+    
+            # Then sum the squares
+            self.connect(self.multI, (self.adder,0))
+            self.connect(self.multQ, (self.adder,1))
+    
+            # Connect adder output to two-stages of FIR integrator
+            #   followed by a single stage IIR integrator, and
+            #   the calibrator
+            self.connect(self.adder, self.integrator1, 
+               self.integrator2, self.integrator3, self.cal_mult, 
+               self.cal_offs, self.chart)
+    
+            # Connect calibrator to probe
+            # SPECIAL NOTE:  I'm setting the ground work here
+            #   for completely changing the way local_calibrator
+            #   works, including removing some horrible kludges for
+            #   recording data.
+            # But for now, self.probe() will be used to display the
+            #  current instantaneous integrated detector value
+            self.connect(self.cal_offs, self.probe)
 
         self._build_gui(vbox)
 
         # Make GUI agree with command-line
         self.integ = options.integ
-        self.myform['integration'].set_value(int(options.integ))
+        if self.setimode == False:
+            self.myform['integration'].set_value(int(options.integ))
         self.myform['average'].set_value(int(options.avg))
 
-        # Make integrator agree with command line
-        self.set_integration(int(options.integ))
+        if self.setimode == False:
+            # Make integrator agree with command line
+            self.set_integration(int(options.integ))
 
         self.avg_alpha = options.avg
 
@@ -376,11 +380,11 @@ class app_flow_graph(stdgui.gui_flow_graph):
             self.scope.set_avg_alpha(float(1.0/options.avg))
             self.scope.set_average(True)
 
-        # Set division size
-        self.chart.set_y_per_div(options.division)
-
-        # Set reference(MAX) level
-        self.chart.set_ref_level(options.reflevel)
+        if self.setimode == False:
+            # Set division size
+            self.chart.set_y_per_div(options.division)
+            # Set reference(MAX) level
+            self.chart.set_ref_level(options.reflevel)
 
         # set initial values
 
@@ -444,8 +448,9 @@ class app_flow_graph(stdgui.gui_flow_graph):
         # Position the FFT display
         vbox.Add(self.scope.win, 15, wx.EXPAND)
 
-        # Position the Total-power stripchart
-        vbox.Add(self.chart.win, 15, wx.EXPAND)
+        if self.setimode == False:
+            # Position the Total-power stripchart
+            vbox.Add(self.chart.win, 15, wx.EXPAND)
         
         # add control area at the bottom
         self.myform = myform = form.form()
@@ -462,9 +467,10 @@ class app_flow_graph(stdgui.gui_flow_graph):
             parent=self.panel, sizer=vbox1, label="Current LMST", weight=1)
         vbox1.Add((4,0), 0, 0)
 
-        myform['spec_data'] = form.static_text_field(
-            parent=self.panel, sizer=vbox1, label="Spectral Cursor", weight=1)
-        vbox1.Add((4,0), 0, 0)
+        if self.waterfall == False:
+            myform['spec_data'] = form.static_text_field(
+                parent=self.panel, sizer=vbox1, label="Spectral Cursor", weight=1)
+            vbox1.Add((4,0), 0, 0)
 
         vbox2 = wx.BoxSizer(wx.VERTICAL)
         g = self.subdev.gain_range()
@@ -479,10 +485,12 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         vbox2.Add((4,0), 0, 0)
 
-        myform['integration'] = form.slider_field(parent=self.panel, sizer=vbox2,
-               label="Continuum Integration Time (sec)", weight=1, min=1, max=180, callback=self.set_integration)
+        if self.setimode == False:
+            myform['integration'] = form.slider_field(parent=self.panel, sizer=vbox2,
+                   label="Continuum Integration Time (sec)", weight=1, min=1, max=180, callback=self.set_integration)
 
-        vbox2.Add((4,0), 0, 0)
+            vbox2.Add((4,0), 0, 0)
+
         myform['decln'] = form.float_field(
             parent=self.panel, sizer=vbox2, label="Current Declination", weight=1,
             callback=myform.check_input_and_call(_form_set_decln))
@@ -599,7 +607,8 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.avg_alpha = avval
 
     def set_integration(self, integval):
-        self.integrator3.set_taps(1.0/integval)
+        if self.setimode == False:
+            self.integrator3.set_taps(1.0/integval)
         self.myform['integration'].set_value(integval)
         self.integ = integval
 
@@ -612,16 +621,19 @@ class app_flow_graph(stdgui.gui_flow_graph):
     #
     def lmst_timeout(self):
          self.locality.date = ephem.now()
-         x = self.probe.level()
+         if self.setimode == False:
+             x = self.probe.level()
          sidtime = self.locality.sidereal_time()
          # LMST
          s = str(ephem.hours(sidtime))
          # Continuum detector value
-         sx = "%7.4f" % x
-         s = s + "\nDet: " + str(sx)
-         sx = "%2d" % self.hitcounter
-         sy = "%3.1f/%3.1f" % (self.CHIRP_LOWER, self.CHIRP_UPPER)
-         s = s + "\nH: " + str(sx) + " C: " + str(sy)
+         if self.setimode == False:
+             sx = "%7.4f" % x
+             s = s + "\nDet: " + str(sx)
+         else:
+             sx = "%2d" % self.hitcounter
+             sy = "%3.1f-%3.1f" % (self.CHIRP_LOWER, self.CHIRP_UPPER)
+             s = s + "\nHits: " + str(sx) + "\nCh lim: " + str(sy)
          self.myform['lmst_high'].set_value(s)
 
          #
@@ -631,7 +643,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
              self.write_continuum_data(x,sidtime)
              self.write_spectral_data(self.fft_outbuf,sidtime)
 
-         if self.setimode == True:
+         else:
              self.seti_analysis(self.fft_outbuf,sidtime)
              now = time.time()
              if ((now - self.seti_then) > self.setifreq_timer):
