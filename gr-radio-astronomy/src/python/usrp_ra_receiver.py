@@ -226,11 +226,11 @@ class app_flow_graph(stdgui.gui_flow_graph):
            self.scope = ra_fftsink.ra_fft_sink_c (self, panel, 
                fft_size=int(self.fft_size), sample_rate=self.fft_input_rate,
                fft_rate=int(self.fft_rate), title="Spectral",  
-               ofunc=self.fft_outfunc, xydfunc=None)
+               ofunc=self.fft_outfunc, xydfunc=self.xydfunc)
         else:
             self.scope = ra_waterfallsink.ra_waterfallsink_c (self, panel,
                 fft_size=int(self.fft_size), sample_rate=self.fft_input_rate,
-                fft_rate=int(self.fft_rate), title="Spectral", ofunc=self.fft_outfunc, xydfunc=self.xydfunc)
+                fft_rate=int(self.fft_rate), title="Spectral", ofunc=self.fft_outfunc, xydfunc=self.xydfunc_waterfall)
 
         # Set up ephemeris data
         self.locality = ephem.Observer()
@@ -467,10 +467,9 @@ class app_flow_graph(stdgui.gui_flow_graph):
             parent=self.panel, sizer=vbox1, label="Current LMST", weight=1)
         vbox1.Add((4,0), 0, 0)
 
-        if self.waterfall == False:
-            myform['spec_data'] = form.static_text_field(
-                parent=self.panel, sizer=vbox1, label="Spectral Cursor", weight=1)
-            vbox1.Add((4,0), 0, 0)
+        myform['spec_data'] = form.static_text_field(
+            parent=self.panel, sizer=vbox1, label="Spectral Cursor", weight=1)
+        vbox1.Add((4,0), 0, 0)
 
         vbox2 = wx.BoxSizer(wx.VERTICAL)
         g = self.subdev.gain_range()
@@ -869,6 +868,13 @@ class app_flow_graph(stdgui.gui_flow_graph):
         s = "%.6f%s\n%.3fdB" % (xyv[0], xhz, xyv[1])
         s2 = "\n%.3fkm/s" % vs
         self.myform['spec_data'].set_value(s+s2)
+
+    def xydfunc_waterfall(self,pos):
+        lower = self.observing - (self.seti_fft_bandwidth / 2)
+        upper = self.observing + (self.seti_fft_bandwidth / 2)
+        binwidth = self.seti_fft_bandwidth / 1024
+        s = "%.6fMHz" % ((lower + (pos.x*binwidth)) / 1.0e6)
+        self.myform['spec_data'].set_value(s)
 
     def toggle_cal(self):
         if (self.calstate == True):

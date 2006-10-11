@@ -193,7 +193,7 @@ class ra_waterfall_window (wx.Panel):
         wx.Panel.__init__(self, parent, id, pos, size, style, name)
 
         self.fftsink = fftsink
-        self.bm = wx.EmptyBitmap(1024, 300, -1)
+        self.bm = wx.EmptyBitmap(1024, 512, -1)
 
         self.scale_factor = self.fftsink.scaling
         
@@ -211,6 +211,7 @@ class ra_waterfall_window (wx.Panel):
         
         wx.EVT_CLOSE (self, self.on_close_window)
         self.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
+        self.Bind(wx.EVT_MOTION, self.on_motion)
 
         self.input_watcher = input_watcher(fftsink.msgq, fftsink.fft_size, self)
 
@@ -295,7 +296,7 @@ class ra_waterfall_window (wx.Panel):
 
         dc1 = wx.MemoryDC()
         dc1.SelectObject(self.bm)
-        dc1.Blit(0,1,1024,300,dc1,0,0,wx.COPY,False,-1,-1)
+        dc1.Blit(0,1,1024,512,dc1,0,0,wx.COPY,False,-1,-1)
 
         x = max(abs(self.fftsink.sample_rate), abs(self.fftsink.baseband_freq))
         if x >= 1e9:
@@ -330,8 +331,6 @@ class ra_waterfall_window (wx.Panel):
                idx = min(WATERFALL_WIDTH-1,idx)
                x_positions[idx] = idx
                y_values[idx] = y_values[idx] + value
-               #dc1.SetPen(self.pens[value])
-               #dc1.DrawRectangle(x_pos*p_width, 0, p_width, 1) 
         else:                               # complex fft
            for x_pos in range(0, d_max):    # positive freqs
                value = int(dB[x_pos] * scale_factor)
@@ -340,8 +339,6 @@ class ra_waterfall_window (wx.Panel):
                idx = min(WATERFALL_WIDTH-1,idx)
                x_positions[idx] = idx
                y_values[idx] = y_values[idx] + value
-               #dc1.SetPen(self.pens[value])
-               #dc1.DrawRectangle(x_pos*p_width + d_max, 0, p_width, 1) 
            for x_pos in range(0 , d_max):   # negative freqs
                value = int(dB[x_pos+d_max] * scale_factor)
                value = min(255, max(0, value))
@@ -349,8 +346,6 @@ class ra_waterfall_window (wx.Panel):
                idx = min(WATERFALL_WIDTH-1,idx)
                x_positions[idx] = idx
                y_values[idx] = y_values[idx] + value
-               #dc1.SetPen(self.pens[value])
-               #dc1.DrawRectangle(x_pos*p_width, 0, p_width, 1) 
 
         for i in range(0,WATERFALL_WIDTH):
             yv = y_values[i]/x_scale
@@ -370,6 +365,11 @@ class ra_waterfall_window (wx.Panel):
             item = menu.FindItemById(id)
             item.Check(pred())
         self.PopupMenu(menu, event.GetPosition())
+
+    def on_motion(self, event):
+        if not self.fftsink.xydfunc == None:
+            pos = event.GetPosition()
+            self.fftsink.xydfunc(pos)
 
     def on_scaling(self, evt):
         Id = evt.GetId()
