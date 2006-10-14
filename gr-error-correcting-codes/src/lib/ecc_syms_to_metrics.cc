@@ -29,11 +29,11 @@
 #include <assert.h>
 
 ecc_syms_to_metrics_sptr 
-ecc_make_syms_to_metrics (gr_feval_ff* pdf_fcn_0_bit,
-			  gr_feval_ff* pdf_fcn_1_bit,
+ecc_make_syms_to_metrics (gr_feval_dd* pdf_fcn_0_bit,
+			  gr_feval_dd* pdf_fcn_1_bit,
 			  int n_samples,
-			  float min_sample,
-			  float max_sample,
+			  double min_sample,
+			  double max_sample,
 			  int sample_precision)
 {
   return ecc_syms_to_metrics_sptr
@@ -46,29 +46,29 @@ ecc_make_syms_to_metrics (gr_feval_ff* pdf_fcn_0_bit,
 }
 
 /*
- * dummy functions and variables to get the float(*)(float) function
+ * dummy functions and variables to get the double(*)(double) function
  * to work properly with the gr_feval_XX stuff.
  */
 
-static gr_feval_ff* l_pdf_fcn_0_bit;
-static gr_feval_ff* l_pdf_fcn_1_bit;
+static gr_feval_dd* l_pdf_fcn_0_bit;
+static gr_feval_dd* l_pdf_fcn_1_bit;
 
-static float pdf_fcn_0 (float x)
+static double pdf_fcn_0 (double x)
 {
   return (l_pdf_fcn_0_bit->eval (x));
 }
 
-static float pdf_fcn_1 (float x)
+static double pdf_fcn_1 (double x)
 {
   return (l_pdf_fcn_1_bit->eval (x));
 }
 
 ecc_syms_to_metrics::ecc_syms_to_metrics
-(gr_feval_ff* pdf_fcn_0_bit,
- gr_feval_ff* pdf_fcn_1_bit,
+(gr_feval_dd* pdf_fcn_0_bit,
+ gr_feval_dd* pdf_fcn_1_bit,
  int n_samples,
- float min_sample,
- float max_sample,
+ double min_sample,
+ double max_sample,
  int sample_precision)
   : gr_block ("syms_to_metrics",
 	      gr_make_io_signature (1, -1, sizeof (float)),
@@ -84,7 +84,7 @@ ecc_syms_to_metrics::ecc_syms_to_metrics
   // use the static "create" member function to create the actual
   // code_metrics to use.
 
-  d_code_metrics_table = libecc_code_metrics_create_table<float>
+  d_code_metrics_table = libecc_code_metrics_create_table<double>
     (&pdf_fcn_0,
      &pdf_fcn_1,
      n_samples,
@@ -132,7 +132,7 @@ ecc_syms_to_metrics::general_work
   size_t l_n_output_items = noutput_items;
 
   for (size_t n = 0; n < input_items.size(); n++) {
-    float* t_in_buf = (float*)(&input_items[n]);
+    double* t_in_buf = (double*)(&input_items[n]);
     void* t_out_buf_0_bit = (void*)(&(output_items[2*n]));
     void* t_out_buf_1_bit = (void*)(&(output_items[(2*n)+1]));
     d_code_metrics_table->convert (l_n_output_items, t_in_buf,

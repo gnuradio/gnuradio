@@ -23,19 +23,19 @@
 GR_SWIG_BLOCK_MAGIC(ecc,syms_to_metrics);
 
 ecc_syms_to_metrics_sptr ecc_make_syms_to_metrics
-(gr_feval_ff* pdf_fcn_0_bit,
- gr_feval_ff* pdf_fcn_1_bit,
+(gr_feval_dd* pdf_fcn_0_bit,
+ gr_feval_dd* pdf_fcn_1_bit,
  int n_samples,
- float min_sample, 
- float max_sample,
+ double min_sample, 
+ double max_sample,
  int sample_precision);
 
 class ecc_syms_to_metrics : public gr_block
 {
-  ecc_syms_to_metrics (gr_feval_ff* pdf_fcn_0_bit,
-		       gr_feval_ff* pdf_fcn_1_bit,
+  ecc_syms_to_metrics (gr_feval_dd* pdf_fcn_0_bit,
+		       gr_feval_dd* pdf_fcn_1_bit,
 		       int n_samples,
-		       float min_sample, 
-		       float max_sample,
+		       double min_sample, 
+		       double max_sample,
 		       int sample_precision);
 };

@@ -32,11 +32,11 @@ class ecc_syms_to_metrics;
 typedef boost::shared_ptr<ecc_syms_to_metrics> ecc_syms_to_metrics_sptr;
 
 ecc_syms_to_metrics_sptr ecc_make_syms_to_metrics
-(gr_feval_ff* pdf_fcn_0_bit,
- gr_feval_ff* pdf_fcn_1_bit,
+(gr_feval_dd* pdf_fcn_0_bit,
+ gr_feval_dd* pdf_fcn_1_bit,
  int n_samples,
- float min_sample,
- float max_sample,
+ double min_sample,
+ double max_sample,
  int sample_precision);
 
 /*!
@@ -53,11 +53,11 @@ class ecc_syms_to_metrics : public gr_block
 {
 protected:
   friend ecc_syms_to_metrics_sptr
-  ecc_make_syms_to_metrics (gr_feval_ff* pdf_fcn_0_bit,
-			    gr_feval_ff* pdf_fcn_1_bit,
+  ecc_make_syms_to_metrics (gr_feval_dd* pdf_fcn_0_bit,
+			    gr_feval_dd* pdf_fcn_1_bit,
 			    int n_samples,
-			    float min_sample,
-			    float max_sample,
+			    double min_sample,
+			    double max_sample,
 			    int sample_precision);
 
 /*
@@ -70,10 +70,10 @@ protected:
  *     faster processing.
  *
  * pdf_fcn_0_bit: point to a probability distribution function which
- *     takes a float and returns a float, for the 0-bit probabilities.
+ *     takes a double and returns a double, for the 0-bit probabilities.
  *
  * pdf_fcn_1_bit: point to a probability distribution function which
- *     takes a float and returns a float, for the 1-bit probabilities.
+ *     takes a double and returns a double, for the 1-bit probabilities.
  *
  * n_samples: the number of samples between min_sample and max_sample
  *     to store in the lookup table.  Must be at least 2, but
@@ -98,15 +98,15 @@ protected:
  *
  */
 
-  ecc_syms_to_metrics (gr_feval_ff* pdf_fcn_0_bit,
-		       gr_feval_ff* pdf_fcn_1_bit,
+  ecc_syms_to_metrics (gr_feval_dd* pdf_fcn_0_bit,
+		       gr_feval_dd* pdf_fcn_1_bit,
 		       int n_samples,
-		       float min_sample,
-		       float max_sample,
+		       double min_sample,
+		       double max_sample,
 		       int sample_precision);
 
   size_t d_out_item_size_bytes;
-  code_metrics_table<float>* d_code_metrics_table;
+  code_metrics_table<double>* d_code_metrics_table;
 
 public:
   ~ecc_syms_to_metrics() {delete d_code_metrics_table;};

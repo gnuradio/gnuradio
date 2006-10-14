@@ -339,6 +339,16 @@ libecc_code_metrics_create_table<float>
  float max_sample,
  int sample_precision);
 
+template
+code_metrics_table<double>*
+libecc_code_metrics_create_table<double>
+(double (*pdf_fcn_0_bit) (double),
+ double (*pdf_fcn_1_bit) (double),
+ size_t n_samples,
+ double min_sample,
+ double max_sample,
+ int sample_precision);
+
 #if 0
   // for compute_all_outputs
 
