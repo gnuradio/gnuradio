@@ -183,7 +183,6 @@ GRC_MBLOCK			dnl this must come after GRC_PMT
 GRC_EZDOP		
 GRC_GR_EZDOP			dnl this must come after GRC_EZDOP
 GRC_GR_RDF
-GRC_GR_PAGER
 
 # Each component is now either to be built, was skipped, or failed dependencies
 AC_SUBST([build_dirs], [$build_dirs])
