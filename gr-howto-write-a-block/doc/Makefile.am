@@ -72,7 +72,7 @@ howto_square2_ff.h.xml: $(top_srcdir)/src/lib/howto_square2_ff.h make_numbered_l
 # ----------------------------------------------------------------
 
 clean:
-	-rm -f $(TARGETS) $(BUILT_XML_FILES)
+	-${RM} -f $(TARGETS) $(BUILT_XML_FILES)
 
 %.html : %.xml
 	xmlto html-nochunks $<
