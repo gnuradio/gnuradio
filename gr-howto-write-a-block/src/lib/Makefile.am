@@ -73,7 +73,7 @@ _howto_la_LIBADD = 			\
 	-lstdc++			
 
 howto.cc howto.py: howto.i $(ALL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module howto -o howto.cc $<
+	$(SWIG) $(SWIGPYTHONARGS) -module howto -o howto.cc howto.i
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
