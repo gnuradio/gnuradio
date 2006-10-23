@@ -41,7 +41,7 @@ NON_LOCAL_IFILES =			\
 
 
 LOCAL_IFILES = 				\
-	howto.i				
+	$(top_srcdir)/src/lib/howto.i				
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _howto shared library
@@ -72,8 +72,8 @@ _howto_la_LIBADD = 			\
 	$(PYTHON_LDFLAGS)		\
 	-lstdc++			
 
-howto.cc howto.py: howto.i $(ALL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module howto -o howto.cc howto.i
+howto.cc howto.py: $(LOCAL_IFILES) $(ALL_IFILES)
+	$(SWIG) $(SWIGPYTHONARGS) -module howto -o howto.cc $(LOCAL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
