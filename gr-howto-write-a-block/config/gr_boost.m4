@@ -43,8 +43,8 @@ AC_DEFUN([GR_REQUIRE_BOOST_INCLUDES],
 	           [path to boost c++ include files]),
     [
       # "yes" and "no" are bogus answers
-      if test x"$with_boost_include_dir" == xyes ||
-         test x"$with_boost_include_dir" == xno; then
+      if test x"$with_boost_include_dir" = xyes ||
+         test x"$with_boost_include_dir" = xno; then
 	gr_boost_include_dir=
       else
         gr_boost_include_dir=$with_boost_include_dir
