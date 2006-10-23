@@ -1,5 +1,5 @@
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005, 2006 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,6 +22,9 @@
 This tarball contains a build tree with examples, Makefiles, etc that
 demonstrate how to write signal processing blocks for the GNU Radio
 system.  
+
+This package requires that gnuradio-core is already installed.  It
+also depends on some GNU Radio prerequisites, such as boost.
 
 To build the examples from the tarball use the normal recipe:
 
