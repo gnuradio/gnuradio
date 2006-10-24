@@ -85,11 +85,31 @@ public:
 };
 
 /*!
+ * \brief base class for evaluating a function: void -> void
+ *
+ * This class is designed to be subclassed in Python or C++
+ * and is callable from both places.  It uses SWIG's
+ * "director" feature to implement the magic.
+ * It's slow. Don't use it in a performance critical path.
+ */
+class gr_feval
+{
+public:
+  gr_feval() {}
+  virtual ~gr_feval();
+
+  /*!
+   * \brief override this to define the function
+   */
+  virtual void eval();
+};
+
+/*!
  * \brief trivial examples / test cases showing C++ calling Python code
  */
 double     gr_feval_dd_example(gr_feval_dd *f, double x);
 gr_complex gr_feval_cc_example(gr_feval_cc *f, gr_complex x);
 long       gr_feval_ll_example(gr_feval_ll *f, long x);
-
+void       gr_feval_example(gr_feval *f);
 
 #endif /* INCLUDED_GR_FEVAL_H */

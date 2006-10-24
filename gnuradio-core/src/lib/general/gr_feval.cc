@@ -50,6 +50,14 @@ gr_feval_ll::eval(long x)
   return 0;
 }
 
+gr_feval::~gr_feval(){}
+
+void
+gr_feval::eval(void)
+{
+  // nop
+}
+
 /*
  * Trivial examples showing C++ (transparently) calling Python
  */
@@ -69,4 +77,10 @@ long
 gr_feval_ll_example(gr_feval_ll *f, long x)
 {
   return f->eval(x);
+}
+
+void
+gr_feval_example(gr_feval *f)
+{
+  f->eval();
 }

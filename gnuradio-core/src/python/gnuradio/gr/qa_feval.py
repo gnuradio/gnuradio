@@ -34,6 +34,12 @@ class my_add2_cc(gr.feval_cc):
     def eval(self, x):
         return x + (2 - 2j)
 
+class my_feval(gr.feval):
+    def __init__(self):
+        gr.feval.__init__(self)
+        self.fired = False
+    def eval(self):
+        self.fired = True
 
 class test_feval(gr_unittest.TestCase):
 
@@ -87,6 +93,18 @@ class test_feval(gr_unittest.TestCase):
         actual_result = tuple([gr.feval_cc_example(f, x) for x in src_data])
         self.assertEqual(expected_result, actual_result)
         
+    def test_void_1(self):
+        # this is all in python
+        f = my_feval()
+        f.eval()
+        self.assertEqual(True, f.fired)
+
+    def test_void_2(self):
+        # this is python -> C++ -> python and back again
+        f = my_feval()
+        gr.feval_example(f)
+        self.assertEqual(True, f.fired)
+
 
 if __name__ == '__main__':
     gr_unittest.main ()

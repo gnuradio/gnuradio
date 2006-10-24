@@ -24,6 +24,7 @@
 %feature("director") gr_feval_dd;
 %feature("director") gr_feval_cc;
 %feature("director") gr_feval_ll;
+%feature("director") gr_feval;
 
 
 %rename(feval_dd) gr_feval_dd;
@@ -56,6 +57,16 @@ public:
   virtual long eval(long x);
 };
 
+%rename(feval) gr_feval;
+class gr_feval
+{
+public:
+  gr_feval() {}
+  virtual ~gr_feval();
+
+  virtual void eval();
+};
+
 
 // examples / test cases
 
@@ -67,3 +78,6 @@ gr_complex gr_feval_cc_example(gr_feval_cc *f, gr_complex x);
 
 %rename(feval_ll_example) gr_feval_ll_example;
 long gr_feval_ll_example(gr_feval_ll *f, long x);
+
+%rename(feval_example) gr_feval_example;
+void gr_feval_example(gr_feval *f);
