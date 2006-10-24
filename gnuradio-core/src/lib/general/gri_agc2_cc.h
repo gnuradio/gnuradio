@@ -81,8 +81,8 @@ class gri_agc2_cc {
   }
   
  protected:
-  float _decay_rate;		// decay rate for slow changing signals
   float _attack_rate;		// attack rate for fast changing signals
+  float _decay_rate;		// decay rate for slow changing signals
   float	_reference;		// reference value
   float	_gain;			// current gain
   float _max_gain;		// max allowable gain

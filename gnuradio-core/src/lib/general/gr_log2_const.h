@@ -29,7 +29,7 @@
 
 #include <assert.h>
 
-template<unsigned int k> static inline int gr_log2_const() { assert(0); }
+template<unsigned int k> static inline int gr_log2_const() { assert(0); return 0; }
 
 template<> static inline int gr_log2_const<1>()   { return 0; }
 template<> static inline int gr_log2_const<2>()   { return 1; }

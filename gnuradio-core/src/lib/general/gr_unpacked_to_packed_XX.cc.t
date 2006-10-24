@@ -78,7 +78,7 @@ int
 					gr_vector_const_void_star &input_items,
 					gr_vector_void_star &output_items)
 {
-  unsigned int index_tmp;
+  unsigned int index_tmp = d_index;
 
   assert (input_items.size() == output_items.size());
   int nstreams = input_items.size();
