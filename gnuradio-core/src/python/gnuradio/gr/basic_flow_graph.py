@@ -239,7 +239,10 @@ class basic_flow_graph (object):
         src_size = src_sig.sizeof_stream_item (src_endpoint.port)
         dst_size = dst_sig.sizeof_stream_item (dst_endpoint.port)
         if src_size != dst_size:
-            raise ValueError, 'source and destination data sizes are different'
+            raise ValueError, (
+' '.join(('source and destination data sizes are different:',
+src_endpoint.block.name(),
+dst_endpoint.block.name())))
 
     def _check_contiguity (self, m, sig, used_ports, dir):
         used_ports.sort ()
