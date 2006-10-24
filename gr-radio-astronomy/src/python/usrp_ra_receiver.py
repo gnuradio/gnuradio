@@ -133,8 +133,8 @@ class app_flow_graph(stdgui.gui_flow_graph):
         # Calculate upper edge
         self.setifreq_upper = options.freq + (self.seti_freq_range/2)
 
-        # We change center frequencies every 20 self.setitimer intervals
-        self.setifreq_timer = self.setitimer * 20
+        # We change center frequencies every 10 self.setitimer intervals
+        self.setifreq_timer = self.setitimer * 10
 
         # Create actual timer
         self.seti_then = time.time()
@@ -142,6 +142,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         # The hits recording array
         self.nhits = 10
         self.hits_array = Numeric.zeros((self.nhits,3), Numeric.Float64)
+        self.hit_intensities = Numeric.zeros((self.nhits,3), Numeric.Float64)
 
         # Calibration coefficient and offset
         self.calib_coeff = options.calib_coeff
@@ -236,6 +237,8 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.locality = ephem.Observer()
         self.locality.long = str(options.longitude)
         self.locality.lat = str(options.latitude)
+        # We make notes about Sunset/Sunrise in Continuum log files
+        self.sun = ephem.Sun()
 
         # Set up stripchart display
         self.stripsize = int(options.stripsize)
@@ -439,6 +442,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
             self.seti_then = time.time()
             # Zero-out hits array when changing frequency
             self.hits_array[:,:] = 0.0
+            self.hit_intensities[:,:] = -60.0
 
             return self.set_freq(kv['freq'])
 
@@ -654,6 +658,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
                  # Make sure we zero-out the hits array when changing
                  #   frequency.
                  self.hits_array[:,:] = 0.0
+                 self.hit_intensities[:,:] = 0.0
 
     def fft_outfunc(self,data,l):
         self.fft_outbuf=data
@@ -684,11 +689,16 @@ class app_flow_graph(stdgui.gui_flow_graph):
         # If time to write full header info (saves storage this way)
         #
         if (now - self.continuum_then > 20):
+            self.sun.compute(self.locality)
+            enow = ephem.now()
+            sun_insky = "Down"
+            if ((self.sun.rise_time < enow) and (enow < self.sun.set_time)):
+               sun_insky = "Up"
             self.continuum_then = now
         
             continuum_file.write(str(ephem.hours(sidtime))+" "+flt+" Dn="+str(inter)+",")
             continuum_file.write("Ti="+str(integ)+",Fc="+str(fc)+",Bw="+str(bw))
-            continuum_file.write(",Ga="+str(ga)+"\n")
+            continuum_file.write(",Ga="+str(ga)+",Sun="+str(sun_insky)+"\n")
         else:
             continuum_file.write(str(ephem.hours(sidtime))+" "+flt+"\n")
     
@@ -740,6 +750,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         l = len(fftbuf)
         x = 0
         hits = []
+        hit_intensities = []
         if self.seticounter < self.setitimer:
             self.seticounter = self.seticounter + 1
             return
@@ -779,6 +790,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
             #
             if ((fftbuf[i] - avg) > (self.setik * sigma)):
                 hits.append(current_f)
+                hit_intensities.append(fftbuf[i])
             current_f = current_f + f_incr
 
         # DC to nyquist
@@ -789,14 +801,33 @@ class app_flow_graph(stdgui.gui_flow_graph):
             #
             if ((fftbuf[i] - avg) > (self.setik * sigma)):
                 hits.append(current_f)
+                hit_intensities.append(fftbuf[i])
             current_f = current_f + f_incr
 
+        # No hits
         if (len(hits) <= 0):
             return
 
+        #
+        # OK, so we have some hits in the FFT buffer
+        #   They'll have a rather substantial gauntlet to run before
+        #   being declared a real "hit"
+        #
+
+        # Weed out buffers with an excessive number of strong signals
         if (len(hits) > self.nhits):
             return
 
+        # Weed out FFT buffers with apparent multiple narrowband signals
+        #   separated significantly in frequency.  This means that a
+        #   single signal spanning multiple bins is OK, but a buffer that
+        #   has multiple, apparently-separate, signals isn't OK.
+        #
+        last = hits[0]
+        for i in range(1,len(hits)):
+            if ((hits[i] - last) > (f_incr*2.0)):
+                return
+            last = hits[i]
 
         #
         # Run through all three hit buffers, computing difference between
@@ -814,15 +845,20 @@ class app_flow_graph(stdgui.gui_flow_graph):
                 self.hitcounter = self.hitcounter + 1
                 break
 
-        if (good_hit):
-            self.write_hits(hits,sidtime)
 
         # Save 'n shuffle hits
         self.hits_array[:,2] = self.hits_array[:,1]
+        self.hit_intensities[:,2] = self.hit_intensities[:,1]
         self.hits_array[:,1] = self.hits_array[:,0]
+        self.hit_intensities[:,1] = self.hit_intensities[:,0]
 
         for i in range(0,len(hits)):
             self.hits_array[i,0] = hits[i]
+            self.hit_intensities[i,0] = hit_intensities[i]
+
+        # Finally, write the hits/intensities buffer
+        if (good_hit):
+            self.write_hits(sidtime)
 
         return
 
@@ -838,7 +874,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         else:
             return (False)
 
-    def write_hits(self,hits,sidtime):
+    def write_hits(self,sidtime):
         # Create localtime structure for producing filename
         foo = time.localtime()
         pfx = self.prefix
@@ -847,7 +883,21 @@ class app_flow_graph(stdgui.gui_flow_graph):
     
         # Open the data file, appending
         hits_file = open (filenamestr+".seti","a")
-        hits_file.write(str(ephem.hours(sidtime))+" "+str(self.decln)+" "+str(hits)+"\n")
+
+        # Write sidtime first
+        hits_file.write(str(ephem.hours(sidtime))+" "+str(self.decln)+"\n")
+
+        #
+        # Then write the hits/hit intensities buffers with enough
+        #   "syntax" to allow parsing by external (not yet written!)
+        #   "stuff".
+        #
+        for i in range(0,self.nhits):
+            hits_file.write(" ")
+            for j in range(0,10):
+                hits_file.write(str(self.hits_array[j,i])+":")
+                hits_file.write(str(self.hit_intensities[j,i])+",")
+        hits_file.write("\n")
         hits_file.close()
         return
 
