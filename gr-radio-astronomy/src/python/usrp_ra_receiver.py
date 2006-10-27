@@ -141,9 +141,9 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         # The hits recording array
         self.nhits = 10
-        self.hits_array = Numeric.zeros((self.nhits,3), Numeric.Float64)
-        self.hit_intensities = Numeric.zeros((self.nhits,3), Numeric.Float64)
-
+        self.nhitlines = 3
+        self.hits_array = Numeric.zeros((self.nhits,self.nhitlines), Numeric.Float64)
+        self.hit_intensities = Numeric.zeros((self.nhits,self.nhitlines), Numeric.Float64)
         # Calibration coefficient and offset
         self.calib_coeff = options.calib_coeff
         self.calib_offset = options.calib_offset
@@ -239,6 +239,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.locality.lat = str(options.latitude)
         # We make notes about Sunset/Sunrise in Continuum log files
         self.sun = ephem.Sun()
+        self.sunstate = "??"
 
         # Set up stripchart display
         self.stripsize = int(options.stripsize)
@@ -628,7 +629,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
              x = self.probe.level()
          sidtime = self.locality.sidereal_time()
          # LMST
-         s = str(ephem.hours(sidtime))
+         s = str(ephem.hours(sidtime)) + " " + self.sunstate
          # Continuum detector value
          if self.setimode == False:
              sx = "%7.4f" % x
@@ -692,8 +693,10 @@ class app_flow_graph(stdgui.gui_flow_graph):
             self.sun.compute(self.locality)
             enow = ephem.now()
             sun_insky = "Down"
+            self.sunstate = "Dn"
             if ((self.sun.rise_time < enow) and (enow < self.sun.set_time)):
                sun_insky = "Up"
+               self.sunstate = "Up"
             self.continuum_then = now
         
             continuum_file.write(str(ephem.hours(sidtime))+" "+flt+" Dn="+str(inter)+",")
@@ -847,10 +850,9 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
 
         # Save 'n shuffle hits
-        self.hits_array[:,2] = self.hits_array[:,1]
-        self.hit_intensities[:,2] = self.hit_intensities[:,1]
-        self.hits_array[:,1] = self.hits_array[:,0]
-        self.hit_intensities[:,1] = self.hit_intensities[:,0]
+        for i in range(self.nhitlines,1):
+            self.hits_array[:,i] = self.hits_array[:,i-1]
+            self.hit_intensities[:,i] = self.hit_intensities[:,i-1]
 
         for i in range(0,len(hits)):
             self.hits_array[i,0] = hits[i]
@@ -885,16 +887,16 @@ class app_flow_graph(stdgui.gui_flow_graph):
         hits_file = open (filenamestr+".seti","a")
 
         # Write sidtime first
-        hits_file.write(str(ephem.hours(sidtime))+" "+str(self.decln)+"\n")
+        hits_file.write(str(ephem.hours(sidtime))+" "+str(self.decln)+" ")
 
         #
         # Then write the hits/hit intensities buffers with enough
         #   "syntax" to allow parsing by external (not yet written!)
         #   "stuff".
         #
-        for i in range(0,self.nhits):
+        for i in range(0,self.nhitlines):
             hits_file.write(" ")
-            for j in range(0,10):
+            for j in range(0,self.nhits):
                 hits_file.write(str(self.hits_array[j,i])+":")
                 hits_file.write(str(self.hit_intensities[j,i])+",")
         hits_file.write("\n")
