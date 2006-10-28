@@ -27,7 +27,9 @@
 #include <fusb_linux.h>
 #include <usb.h>		// libusb header
 #include <stdexcept>
+#ifdef HAVE_LINUX_COMPILER_H
 #include <linux/compiler.h>
+#endif
 #include <linux/usbdevice_fs.h>	// interface to kernel portion of user mode usb driver
 #include <sys/ioctl.h>
 #include <assert.h>

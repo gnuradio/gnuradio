@@ -49,7 +49,7 @@ AC_DEFUN([GRC_USRP],[
 
     # These checks don't fail
     AC_C_BIGENDIAN
-    AC_CHECK_HEADERS([byteswap.h])
+    AC_CHECK_HEADERS([byteswap.h linux/compiler.h])
     AC_CHECK_FUNCS([getrusage sched_setscheduler])
     AC_CHECK_FUNCS([sigaction snprintf])
 
