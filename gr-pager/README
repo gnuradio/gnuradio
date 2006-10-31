@@ -1,0 +1,37 @@
+This GNU Radio component implements (will implement) common radiopager
+signaling protocols such as POCSAG and FLEX.
+
+Current status (10/6/06):
+
+FLEX receiving is completed except for addition of BCH error correction.
+
+pager.slicer_fb()         Accepts a complex baseband downconverted channel 
+                          and outputs 4-level FSK symbols [0-3] as bytes.
+
+pager.flex_sync()	  Accepts 4FSK symbol stream at channel rate and
+			  outputs four phases of FLEX data bits as bytes.
+			  Auto-shifts to 3200 bps as determined by received
+			  FLEX synchronization word.
+			
+pager.flex_deinterleave() Accepts a single phase of FLEX data bits and performs
+			  deinterleaving on 256-bit blocks.  Resulting code
+			  words are error corrected using BCH 32,21 ecc (stub)
+			  and converted into FLEX data words for output.
+
+pager.flex_parse()	  Sink block that accepts a single phase of FLEX data 
+			  words and unpacks and parses individual pages. These are 
+			  passed outside the data plane via gr_message's.
+
+pager.flex_decode()       Combines the above blocks correctly to convert
+                          from downconverted baseband to pager messages
+
+usrp_flex.py              Instantiates USRP receive chain to receive FLEX
+                          protocol pages.  See command-line help for options.
+			  Right now this installs into $PREFIX/bin but will
+                          probably make it into gnuradio-examples.
+
+aypabtu.py		  Decodes FLEX pages from multiple rx channels in a range.
+		          Incomplete.
+
+Johnathan Corgan
+jcorgan@aeinet.com
