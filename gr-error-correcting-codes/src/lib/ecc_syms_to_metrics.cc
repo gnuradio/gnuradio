@@ -55,12 +55,12 @@ static gr_feval_dd* l_pdf_fcn_1_bit;
 
 static double pdf_fcn_0 (double x)
 {
-  return (l_pdf_fcn_0_bit->eval (x));
+  return (l_pdf_fcn_0_bit->calleval (x));
 }
 
 static double pdf_fcn_1 (double x)
 {
-  return (l_pdf_fcn_1_bit->eval (x));
+  return (l_pdf_fcn_1_bit->calleval (x));
 }
 
 ecc_syms_to_metrics::ecc_syms_to_metrics

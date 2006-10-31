@@ -34,6 +34,14 @@ gr_feval_dd::eval(double x)
   return 0;
 }
 
+double
+gr_feval_dd::calleval(double x)
+{
+  return eval(x);
+}
+
+// ----------------------------------------------------------------
+
 gr_feval_cc::~gr_feval_cc(){}
 
 gr_complex
@@ -41,6 +49,14 @@ gr_feval_cc::eval(gr_complex x)
 {
   return 0;
 }
+
+gr_complex
+gr_feval_cc::calleval(gr_complex x)
+{
+  return eval(x);
+}
+
+// ----------------------------------------------------------------
 
 gr_feval_ll::~gr_feval_ll(){}
 
@@ -50,6 +66,14 @@ gr_feval_ll::eval(long x)
   return 0;
 }
 
+long
+gr_feval_ll::calleval(long x)
+{
+  return eval(x);
+}
+
+// ----------------------------------------------------------------
+
 gr_feval::~gr_feval(){}
 
 void
@@ -58,29 +82,35 @@ gr_feval::eval(void)
   // nop
 }
 
+void
+gr_feval::calleval(void)
+{
+  eval();
+}
+
 /*
  * Trivial examples showing C++ (transparently) calling Python
  */
 double
 gr_feval_dd_example(gr_feval_dd *f, double x)
 {
-  return f->eval(x);
+  return f->calleval(x);
 }
 
 gr_complex
 gr_feval_cc_example(gr_feval_cc *f, gr_complex x)
 {
-  return f->eval(x);
+  return f->calleval(x);
 }
 
 long
 gr_feval_ll_example(gr_feval_ll *f, long x)
 {
-  return f->eval(x);
+  return f->calleval(x);
 }
 
 void
 gr_feval_example(gr_feval *f)
 {
-  f->eval();
+  f->calleval();
 }

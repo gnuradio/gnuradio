@@ -48,6 +48,7 @@ noinst_PYTHON = 			\
 	qa_add_v_and_friends.py		\
 	qa_agc.py			\
 	qa_basic_flow_graph.py		\
+	qa_bin_statistics.py		\
 	qa_cma_equalizer.py		\
 	qa_complex_to_xxx.py		\
 	qa_constellation_decoder_cb.py  \

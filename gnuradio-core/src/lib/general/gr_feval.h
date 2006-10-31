@@ -31,17 +31,24 @@
  * and is callable from both places.  It uses SWIG's
  * "director" feature to implement the magic.
  * It's slow. Don't use it in a performance critical path.
+ *
+ * Override eval to define the behavior.
+ * Use calleval to invoke eval (this kludge is required to allow a
+ * python specific "shim" to be inserted.
  */
 class gr_feval_dd
 {
-public:
-  gr_feval_dd() {}
-  virtual ~gr_feval_dd();
-
+protected:
   /*!
    * \brief override this to define the function
    */
   virtual double eval(double x);
+
+public:
+  gr_feval_dd() {}
+  virtual ~gr_feval_dd();
+
+  virtual double calleval(double x);	// invoke "eval"
 };
 
 /*!
@@ -51,17 +58,24 @@ public:
  * and is callable from both places.  It uses SWIG's
  * "director" feature to implement the magic.
  * It's slow. Don't use it in a performance critical path.
+ *
+ * Override eval to define the behavior.
+ * Use calleval to invoke eval (this kludge is required to allow a
+ * python specific "shim" to be inserted.
  */
 class gr_feval_cc
 {
-public:
-  gr_feval_cc() {}
-  virtual ~gr_feval_cc();
-
+protected:
   /*!
    * \brief override this to define the function
    */
   virtual gr_complex eval(gr_complex x);
+  
+public:
+  gr_feval_cc() {}
+  virtual ~gr_feval_cc();
+
+  virtual gr_complex calleval(gr_complex x);	// invoke "eval"
 };
 
 /*!
@@ -71,17 +85,24 @@ public:
  * and is callable from both places.  It uses SWIG's
  * "director" feature to implement the magic.
  * It's slow. Don't use it in a performance critical path.
+ *
+ * Override eval to define the behavior.
+ * Use calleval to invoke eval (this kludge is required to allow a
+ * python specific "shim" to be inserted.
  */
 class gr_feval_ll
 {
-public:
-  gr_feval_ll() {}
-  virtual ~gr_feval_ll();
-
+protected:
   /*!
    * \brief override this to define the function
    */
   virtual long eval(long x);
+
+public:
+  gr_feval_ll() {}
+  virtual ~gr_feval_ll();
+
+  virtual long calleval(long x);	// invoke "eval"
 };
 
 /*!
@@ -91,17 +112,24 @@ public:
  * and is callable from both places.  It uses SWIG's
  * "director" feature to implement the magic.
  * It's slow. Don't use it in a performance critical path.
+ *
+ * Override eval to define the behavior.
+ * Use calleval to invoke eval (this kludge is required to allow a
+ * python specific "shim" to be inserted.
  */
 class gr_feval
 {
-public:
-  gr_feval() {}
-  virtual ~gr_feval();
-
+protected:
   /*!
    * \brief override this to define the function
    */
   virtual void eval();
+
+public:
+  gr_feval() {}
+  virtual ~gr_feval();
+
+  virtual void calleval();	// invoke "eval"
 };
 
 /*!

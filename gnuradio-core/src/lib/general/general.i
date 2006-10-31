@@ -112,6 +112,7 @@
 #include <gr_pwr_squelch_ff.h>
 #include <gr_ctcss_squelch_ff.h>
 #include <gr_feedforward_agc_cc.h>
+#include <gr_bin_statistics_f.h>
 %}
 
 %include "gr_sync_block.i"
@@ -205,5 +206,6 @@
 %include "gr_pwr_squelch_ff.i"
 %include "gr_ctcss_squelch_ff.i"
 %include "gr_feedforward_agc_cc.i"
+%include "gr_bin_statistics_f.i"
 
 %include "general_generated.i"

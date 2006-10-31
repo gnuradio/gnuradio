@@ -20,52 +20,168 @@
  * Boston, MA 02110-1301, USA.
  */
 
+
+/*
+ * N.B., this is a _very_ non-standard SWIG .i file
+ *
+ * It contains a bunch of magic that is required to ensure that when
+ * these classes are used as base classes for python code,
+ * everything works when calling back from C++ into Python.
+ *
+ * The gist of the problem is that our C++ code is usually not holding
+ * the Python Global Interpreter Lock (GIL).  Thus if we invoke a
+ * "director" method from C++, we'll end up in Python not holding the
+ * GIL.  Disaster (SIGSEGV) will result.  To avoid this we insert a
+ * "shim" that grabs and releases the GIL.
+ *
+ * If you don't understand SWIG "directors" or the Python GIL,
+ * don't bother trying to understand what's going on in here.
+ *
+ * [We could eliminate a bunch of this hair by requiring SWIG 1.3.29
+ * or later and some additional magic declarations, but many systems
+ * aren't shipping that version yet.  Thus we kludge...]
+ */
+
+
 // Enable SWIG directors for these classes
-%feature("director") gr_feval_dd;
-%feature("director") gr_feval_cc;
-%feature("director") gr_feval_ll;
-%feature("director") gr_feval;
+%feature("director") gr_py_feval_dd;
+%feature("director") gr_py_feval_cc;
+%feature("director") gr_py_feval_ll;
+%feature("director") gr_py_feval;
+
+%feature("nodirector") gr_py_feval_dd::calleval;
+%feature("nodirector") gr_py_feval_cc::calleval;
+%feature("nodirector") gr_py_feval_ll::calleval;
+%feature("nodirector") gr_py_feval::calleval;
 
 
-%rename(feval_dd) gr_feval_dd;
+%rename(feval_dd) gr_py_feval_dd;
+%rename(feval_cc) gr_py_feval_cc;
+%rename(feval_ll) gr_py_feval_ll;
+%rename(feval)    gr_py_feval;
+
+//%exception {
+//  try { $action }
+//  catch (Swig::DirectorException &e) { std::cerr << e.getMessage();  SWIG_fail; }
+//}
+
+%{
+
+// class that ensures we acquire and release the Python GIL
+
+class ensure_py_gil_state {
+  PyGILState_STATE	d_gstate;
+public:
+  ensure_py_gil_state()  { d_gstate = PyGILState_Ensure(); }
+  ~ensure_py_gil_state() { PyGILState_Release(d_gstate); }
+};
+
+%}
+
+/*
+ * These are the real C++ base classes, however we don't want these exposed.
+ */
+%ignore gr_feval_dd;
 class gr_feval_dd
 {
+protected:
+  virtual double eval(double x);
+
 public:
   gr_feval_dd() {}
   virtual ~gr_feval_dd();
 
-  virtual double eval(double x);
+  virtual double calleval(double x);
 };
 
-%rename(feval_cc) gr_feval_cc;
+%ignore gr_feval_cc;
 class gr_feval_cc
 {
+protected:
+  virtual gr_complex eval(gr_complex x);
+
 public:
   gr_feval_cc() {}
   virtual ~gr_feval_cc();
 
-  virtual gr_complex eval(gr_complex x);
+  virtual gr_complex calleval(gr_complex x);
 };
 
-%rename(feval_ll) gr_feval_ll;
+%ignore gr_feval_ll;
 class gr_feval_ll
 {
+protected:
+  virtual long eval(long x);
+  
 public:
   gr_feval_ll() {}
   virtual ~gr_feval_ll();
 
-  virtual long eval(long x);
+  virtual long calleval(long x);
 };
 
-%rename(feval) gr_feval;
+%ignore gr_feval;
 class gr_feval
 {
+protected:
+  virtual void eval();
+  
 public:
   gr_feval() {}
   virtual ~gr_feval();
 
-  virtual void eval();
+  virtual void calleval();
 };
+
+/*
+ * These are the ones to derive from in Python.  They have the magic shim
+ * that ensures that we're holding the Python GIL when we enter Python land...
+ */
+
+%inline %{
+
+class gr_py_feval_dd : public gr_feval_dd
+{
+ public:
+  double calleval(double x)
+  {
+    ensure_py_gil_state _lock;
+    return eval(x);
+  }
+};
+
+class gr_py_feval_cc : public gr_feval_cc
+{
+ public:
+  gr_complex calleval(gr_complex x)
+  {
+    ensure_py_gil_state _lock;
+    return eval(x);
+  }
+};
+
+class gr_py_feval_ll : public gr_feval_ll
+{
+ public:
+  long calleval(long x)
+  {
+    ensure_py_gil_state _lock;
+    return eval(x);
+  }
+};
+
+class gr_py_feval : public gr_feval
+{
+ public:
+  void calleval()
+  {
+    ensure_py_gil_state _lock;
+    eval();
+  }
+};
+
+%}
+
 
 
 // examples / test cases
