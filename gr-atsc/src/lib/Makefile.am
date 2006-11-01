@@ -77,6 +77,7 @@ libatsc_la_SOURCES = 				\
 	atsc_bit_timing_loop.cc			\
 	atsc_fpll.cc				\
 	atsc_depad.cc				\
+	atsc_pad.cc				\
 	atsci_basic_trellis_encoder.cc		\
 	atsci_data_interleaver.cc		\
 	atsci_equalizer.cc			\
@@ -137,6 +138,7 @@ grinclude_HEADERS =				\
 	atsc_bit_timing_loop.h			\
 	atsc_fpll.h				\
 	atsc_depad.h				\
+	atsc_pad.h				\
 	atsc_types.h				\
 	atsci_basic_trellis_encoder.h		\
 	atsci_data_interleaver.h		\

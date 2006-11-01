@@ -24,6 +24,7 @@
 #include <atsc_bit_timing_loop.h>
 #include <atsc_fpll.h>
 #include <atsc_depad.h>
+#include <atsc_pad.h>
 %}
 
 %include "atsc_consts.h"
@@ -267,3 +268,19 @@ public:
 };
 
 // ----------------------------------------------------------------
+
+GR_SWIG_BLOCK_MAGIC(atsc,pad);
+
+atsc_pad_sptr atsc_make_pad();
+
+class atsc_pad : public gr_sync_decimator
+{
+  atsc_pad();
+
+public:
+  void reset();
+
+};
+
+// ----------------------------------------------------------------
+
