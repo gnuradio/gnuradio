@@ -170,6 +170,31 @@ library and into the program.   I haven't tested out this idea.
 We use the standard unittest package for unit testing of Python code.
 
 
+* Subversion line ending styles
+
+All text files in the tree should have the subversion property 
+'svn:eol-style' set to 'native', with the following exceptions:
+
+config/*.m4
+configure.ac
+gr-howto-write-a-block/config/*.m4
+gr-howto-write-a-block/configure.ac
+
+The easiest way to ensure this is to add or edit the following lines in
+your svn client configuration file (~/.subversion/config):
+
+enable-auto-props=yes
+
+[auto-props]
+*.c = svn:eol-style=native
+*.cc = svn:eol-style=native  
+*.i = svn:eol-style=native
+*.h = svn:eol-style=native
+*.am = svn:eol-style=native
+*.py = svn:eol-style=native
+*.ac = svn:eol-style=LF
+*.m4 = svn:eol-style=LF
+
 * Misc tips
 
 ccache, a compiler cache, can really speed up your builds.
