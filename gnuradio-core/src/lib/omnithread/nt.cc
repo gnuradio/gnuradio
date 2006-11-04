@@ -387,7 +387,7 @@ void
 omni_semaphore::post(void)
 {
     if (!ReleaseSemaphore(nt_sem, 1, NULL)
-	&& GetLastError() != ERROR_TOO_MANY_POSTS )	// MinGW fix by Don Ward
+	&& GetLastError() != ERROR_TOO_MANY_POSTS )	// MinGW fix--see ticket:95 in trac
 	throw omni_thread_fatal(GetLastError());
 }
 
