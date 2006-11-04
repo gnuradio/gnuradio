@@ -32,6 +32,7 @@
 
 #include <stdlib.h>
 #include <errno.h>
+#include <WinError.h>
 #include <omnithread.h>
 #include <process.h>
 
@@ -385,7 +386,8 @@ omni_semaphore::trywait(void)
 void
 omni_semaphore::post(void)
 {
-    if (!ReleaseSemaphore(nt_sem, 1, NULL))
+    if (!ReleaseSemaphore(nt_sem, 1, NULL)
+	&& GetLastError() != ERROR_TOO_MANY_POSTS )	// MinGW fix by Don Ward
 	throw omni_thread_fatal(GetLastError());
 }
 
