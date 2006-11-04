@@ -33,6 +33,9 @@ AC_DEFUN([GRC_EZDOP],[
 
     passed=yes
 
+    # See ticket:96 in trac
+    AM_PROG_CC_C_O
+
     # Firmware build requires Atmel AVR microcontroller port of GCC
     AC_PATH_PROG([AVRGCC], [avr-gcc -v], [no])
     if test x$AVRGCC = xno; then
