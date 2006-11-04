@@ -29,7 +29,6 @@ m4macros = 			\
 	acx_pthread.m4		\
 	bnv_have_qt.m4		\
 	cppunit.m4		\
-	gr_as.m4		\
 	gr_boost.m4		\
 	gr_check_createfilemapping.m4 \
 	gr_check_usrp.m4	\
