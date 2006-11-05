@@ -39,7 +39,7 @@ _def_gray_code = True
 _def_verbose = False
 _def_log = False
 
-_def_costas_alpha = 0.05
+_def_costas_alpha = 0.00
 _def_gain_mu = 0.03
 _def_mu = 0.05
 _def_omega_relative_limit = 0.005
@@ -241,10 +241,12 @@ class dbpsk_demod(gr.hier_block):
 
         
         # Costas loop (carrier tracking)
-        # FIXME: need to decide how to handle this more generally; do we pull it from higher layer?
-        costas_order = 2
-        beta = .25 * self._costas_alpha * self._costas_alpha
-        self.costas_loop = gr.costas_loop_cc(self._costas_alpha, beta, 0.002, -0.002, costas_order)
+        # The Costas loop is not needed for BPSK, though it can help. Turn the Costas loop on
+        # by setting an alpha value of something greater than 0 (e.g., 0.1)
+        if self._costas_alpha > 0.0:
+            costas_order = 2
+            beta = .25 * self._costas_alpha * self._costas_alpha
+            self.costas_loop = gr.costas_loop_cc(self._costas_alpha, beta, 0.002, -0.002, costas_order)
 
         # RRC data filter
         ntaps = 11 * self._samples_per_symbol
@@ -289,9 +291,14 @@ class dbpsk_demod(gr.hier_block):
             self._setup_logging()
 
         # Connect and Initialize base class
-        self._fg.connect(self.pre_scaler, self.agc, self.costas_loop,
-                         self.rrc_filter, self.clock_recovery, self.diffdec,
-                         self.slicer, self.symbol_mapper, self.unpack)
+        if self._costas_alpha > 0.0:   # With Costas Loop
+            self._fg.connect(self.pre_scaler, self.agc, self.costas_loop,
+                             self.rrc_filter, self.clock_recovery, self.diffdec,
+                             self.slicer, self.symbol_mapper, self.unpack)
+        else: # Without Costas Loop
+            self._fg.connect(self.pre_scaler, self.agc,
+                             self.rrc_filter, self.clock_recovery, self.diffdec,
+                             self.slicer, self.symbol_mapper, self.unpack)
 
         gr.hier_block.__init__(self, self._fg, self.pre_scaler, self.unpack)
 
@@ -317,10 +324,11 @@ class dbpsk_demod(gr.hier_block):
                          gr.file_sink(gr.sizeof_gr_complex, "prescaler.dat"))
         self._fg.connect(self.agc,
                          gr.file_sink(gr.sizeof_gr_complex, "agc.dat"))
-        self._fg.connect(self.costas_loop,
-                         gr.file_sink(gr.sizeof_gr_complex, "costas_loop.dat"))
-        self._fg.connect((self.costas_loop,1),
-                         gr.file_sink(gr.sizeof_gr_complex, "costas_error.dat"))
+        if self._costas_alpha > 0.0:
+            self._fg.connect(self.costas_loop,
+                             gr.file_sink(gr.sizeof_gr_complex, "costas_loop.dat"))
+            self._fg.connect((self.costas_loop,1),
+                             gr.file_sink(gr.sizeof_gr_complex, "costas_error.dat"))
         self._fg.connect(self.rrc_filter,
                          gr.file_sink(gr.sizeof_gr_complex, "rrc_filter.dat"))
         self._fg.connect(self.clock_recovery,

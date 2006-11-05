@@ -72,7 +72,7 @@ def conv_1_0_string_to_packed_binary_string(s):
 default_access_code = \
   conv_packed_binary_string_to_1_0_string('\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC')
 preamble = \
-  conv_packed_binary_string_to_1_0_string('\xAA\xAA\xAA\xAB')
+  conv_packed_binary_string_to_1_0_string('\x6C\xC6\x6C\xC6\x6C\xC6\x6C\xC6')
 
 def is_1_0_string(s):
     if not isinstance(s, str):

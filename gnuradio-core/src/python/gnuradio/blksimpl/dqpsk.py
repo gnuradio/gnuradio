@@ -39,7 +39,7 @@ _def_gray_code = True
 _def_verbose = False
 _def_log = False
 
-_def_costas_alpha = 0.10
+_def_costas_alpha = 0.0
 _def_gain_mu = 0.03
 _def_mu = 0.05
 _def_omega_relative_limit = 0.005
@@ -238,11 +238,15 @@ class dqpsk_demod(gr.hier_block):
         self.agc = gr.feedforward_agc_cc(16, 1.0)
        
         # Costas loop (carrier tracking)
-        # FIXME: need to decide how to handle this more generally; do we pull it from higher layer?
-        costas_order = 4
-        beta = .25 * self._costas_alpha * self._costas_alpha
-        #self.costas_loop = gr.costas_loop_cc(self._costas_alpha, beta, 0.1, -0.1, costas_order)
-        self.costas_loop = gr.costas_loop_cc(self._costas_alpha, beta, 0.002, -0.002, costas_order)
+        if self._costas_alpha == 0.0:   # If no alpha value was specified by the user
+            alpha_dir = {2:0.075, 3:0.075, 4:0.105, 5:0.105, 6:0.125, 7:0.130}
+            self._costas_alpha = alpha_dir[self._samples_per_symbol]
+        
+        costas_order = 4        
+        # The value of beta is now set to be overdamped; this value can have a huge impact on the
+        # performance of QPSK. Set to 0.25 for critically damped or higher for underdamped responses.
+        beta = .15 * self._costas_alpha * self._costas_alpha
+        self.costas_loop = gr.costas_loop_cc(self._costas_alpha, beta, 0.02, -0.02, costas_order)
 
         # RRC data filter
         ntaps = 11 * samples_per_symbol
