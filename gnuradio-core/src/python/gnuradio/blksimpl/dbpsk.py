@@ -39,7 +39,7 @@ _def_gray_code = True
 _def_verbose = False
 _def_log = False
 
-_def_costas_alpha = 0.00
+_def_costas_alpha = None
 _def_gain_mu = 0.03
 _def_mu = 0.05
 _def_omega_relative_limit = 0.005
@@ -242,8 +242,8 @@ class dbpsk_demod(gr.hier_block):
         
         # Costas loop (carrier tracking)
         # The Costas loop is not needed for BPSK, though it can help. Turn the Costas loop on
-        # by setting an alpha value of something greater than 0 (e.g., 0.1)
-        if self._costas_alpha > 0.0:
+        # by setting an alpha value not None.
+        if self._costas_alpha is not None:
             costas_order = 2
             beta = .25 * self._costas_alpha * self._costas_alpha
             self.costas_loop = gr.costas_loop_cc(self._costas_alpha, beta, 0.002, -0.002, costas_order)
@@ -291,7 +291,7 @@ class dbpsk_demod(gr.hier_block):
             self._setup_logging()
 
         # Connect and Initialize base class
-        if self._costas_alpha > 0.0:   # With Costas Loop
+        if self._costas_alpha is not None:   # With Costas Loop
             self._fg.connect(self.pre_scaler, self.agc, self.costas_loop,
                              self.rrc_filter, self.clock_recovery, self.diffdec,
                              self.slicer, self.symbol_mapper, self.unpack)
@@ -313,7 +313,10 @@ class dbpsk_demod(gr.hier_block):
         print "bits per symbol = %d"         % self.bits_per_symbol()
         print "Gray code = %s"               % self._gray_code
         print "RRC roll-off factor = %.2f"   % self._excess_bw
-        print "Costas Loop alpha = %.5f"     % self._costas_alpha
+        if self._costas_alpha is not None:
+            print "Costas Loop alpha = %.5f"     % self._costas_alpha
+        else:
+            print "Costas Loop is turned off"
         print "M&M symbol sync gain = %.5f"  % self._gain_mu
         print "M&M symbol sync mu = %.5f"    % self._mu
         print "M&M omega relative limit = %.5f" % self._omega_relative_limit
@@ -324,7 +327,7 @@ class dbpsk_demod(gr.hier_block):
                          gr.file_sink(gr.sizeof_gr_complex, "prescaler.dat"))
         self._fg.connect(self.agc,
                          gr.file_sink(gr.sizeof_gr_complex, "agc.dat"))
-        if self._costas_alpha > 0.0:
+        if self._costas_alpha is not None:
             self._fg.connect(self.costas_loop,
                              gr.file_sink(gr.sizeof_gr_complex, "costas_loop.dat"))
             self._fg.connect((self.costas_loop,1),

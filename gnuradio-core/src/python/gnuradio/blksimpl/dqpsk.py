@@ -39,7 +39,7 @@ _def_gray_code = True
 _def_verbose = False
 _def_log = False
 
-_def_costas_alpha = 0.0
+_def_costas_alpha = None
 _def_gain_mu = 0.03
 _def_mu = 0.05
 _def_omega_relative_limit = 0.005
@@ -238,7 +238,7 @@ class dqpsk_demod(gr.hier_block):
         self.agc = gr.feedforward_agc_cc(16, 1.0)
        
         # Costas loop (carrier tracking)
-        if self._costas_alpha == 0.0:   # If no alpha value was specified by the user
+        if self._costas_alpha is None:   # If no alpha value was specified by the user
             alpha_dir = {2:0.075, 3:0.075, 4:0.105, 5:0.105, 6:0.125, 7:0.130}
             self._costas_alpha = alpha_dir[self._samples_per_symbol]
         
