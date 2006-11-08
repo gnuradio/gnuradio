@@ -1344,7 +1344,7 @@ usrp_write_dboard_offsets (struct usb_dev_handle *udh, int slot_id,
 std::string
 usrp_serial_number(struct usb_dev_handle *udh)
 {
-  u_int8_t iserial = usb_device(udh)->descriptor.iSerialNumber;
+  unsigned char iserial = usb_device(udh)->descriptor.iSerialNumber;
   if (iserial == 0)
     return "";
 
