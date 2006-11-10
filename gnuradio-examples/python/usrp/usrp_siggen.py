@@ -118,7 +118,7 @@ def main ():
     parser.add_option ("-f", "--rf-freq", type="eng_float", default=None,
                        help="set RF center frequency to FREQ")
     parser.add_option ("-i", "--interp", type="int", default=64,
-                       help="set fgpa interpolation rate to INTERP")
+                       help="set fgpa interpolation rate to INTERP [default=%default]")
 
     parser.add_option ("--sine", dest="type", action="store_const", const=gr.GR_SIN_WAVE,
                        help="generate a complex sinusoid [default]", default=gr.GR_SIN_WAVE)
@@ -130,11 +130,11 @@ def main ():
                        help="generate Uniform random output")
 
     parser.add_option ("-w", "--waveform-freq", type="eng_float", default=100e3,
-                       help="set waveform frequency to FREQ")
+                       help="set waveform frequency to FREQ [default=%default]")
     parser.add_option ("-a", "--amplitude", type="eng_float", default=16e3,
-                       help="set waveform amplitude to AMPLITUDE", metavar="AMPL")
+                       help="set waveform amplitude to AMPLITUDE [default=%default]", metavar="AMPL")
     parser.add_option ("-o", "--offset", type="eng_float", default=0,
-                       help="set waveform offset to OFFSET")
+                       help="set waveform offset to OFFSET [default=%default]")
     (options, args) = parser.parse_args ()
 
     if len(args) != 0:
