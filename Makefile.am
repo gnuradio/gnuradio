@@ -25,7 +25,8 @@ EXTRA_DIST = \
 	bootstrap \
 	configure \
 	config.h.in \
-	run_tests.sh.in
+	run_tests.sh.in \
+	README.hacking
 
 SUBDIRS = @build_dirs@
 DIST_SUBDIRS = @build_dirs@ @skipped_dirs@

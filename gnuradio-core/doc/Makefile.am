@@ -54,14 +54,14 @@ prep:
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(docdir)
-	@for i in $(top_srcdir)/README $(top_srcdir)/README.hacking $(top_srcdir)/ChangeLog; do \
+	@for i in $(top_srcdir)/README $(top_srcdir)/README.hacking; do \
 		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(docdir)"; \
 		$(INSTALL_DATA) $$i $(DESTDIR)$(docdir); \
 	done
 	cp -r html $(DESTDIR)$(docdir)
 
 uninstall-local:
-	@for i in README README.hacking ChangeLog; do \
+	@for i in README README.hacking; do \
 		echo "$(RM) $(DESTDIR)$(docdir)/$$i;"; \
 		$(RM) $(DESTDIR)$(docdir)/$$i; \
 	done
