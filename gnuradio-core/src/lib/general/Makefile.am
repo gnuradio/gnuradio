@@ -37,9 +37,15 @@ CODE_GENERATOR = 			\
 	gr_add_const_XX.cc.t		\
 	gr_add_const_XX.h.t		\
 	gr_add_const_XX.i.t		\
-        gr_chunks_to_symbols_XX.cc.t	\
-        gr_chunks_to_symbols_XX.h.t	\
-        gr_chunks_to_symbols_XX.i.t	\
+	gr_add_vXX.cc.t			\
+	gr_add_vXX.h.t			\
+	gr_add_vXX.i.t			\
+	gr_add_const_vXX.cc.t		\
+	gr_add_const_vXX.h.t		\
+	gr_add_const_vXX.i.t		\
+	gr_chunks_to_symbols_XX.cc.t	\
+	gr_chunks_to_symbols_XX.h.t	\
+	gr_chunks_to_symbols_XX.i.t	\
 	gr_divide_XX.cc.t		\
 	gr_divide_XX.h.t		\
 	gr_divide_XX.i.t		\
@@ -49,6 +55,12 @@ CODE_GENERATOR = 			\
 	gr_multiply_const_XX.cc.t	\
 	gr_multiply_const_XX.h.t	\
 	gr_multiply_const_XX.i.t	\
+	gr_multiply_vXX.cc.t		\
+	gr_multiply_vXX.h.t		\
+	gr_multiply_vXX.i.t		\
+	gr_multiply_const_vXX.cc.t	\
+	gr_multiply_const_vXX.h.t	\
+	gr_multiply_const_vXX.i.t	\
 	gr_mute_XX.cc.t			\
 	gr_mute_XX.h.t			\
 	gr_mute_XX.i.t			\
