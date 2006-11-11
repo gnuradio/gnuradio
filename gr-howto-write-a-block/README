@@ -19,9 +19,12 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-This tarball contains a build tree with examples, Makefiles, etc that
-demonstrate how to write signal processing blocks for the GNU Radio
-system.  
+This directory (and the resulting tarball) contains a build tree with
+examples, Makefiles, etc that demonstrate how to write signal
+processing blocks for the GNU Radio system.  This directory is
+intentionally distributed separately from the unified tarball of the
+rest of GNU Radio in order to avoid problems for people who have begun
+to write blocks with a modified copy of gr-howto-write-a-block.
 
 This package requires that gnuradio-core is already installed.  It
 also depends on some GNU Radio prerequisites, such as boost.
