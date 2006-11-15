@@ -4,9 +4,13 @@ read -s -p "GPG Passphrase: " passphrase
 
 for file in "$@"
 do
-	echo "directory: gnuradio" > $file.directive
-	echo "$passphrase" | gpg --passphrase-fd 0 --clearsign $file.directive
-	rm $file.directive
-	echo "$passphrase" | gpg --passphrase-fd 0 -b $file
+  (
+    echo "version: 1.1"
+    echo "directory: gnuradio"
+    echo "filename: $file"
+  )> $file.directive
+  echo "$passphrase" | gpg --passphrase-fd 0 --clearsign $file.directive
+  rm $file.directive
+  echo "$passphrase" | gpg --passphrase-fd 0 -b $file
 done
 passphrase="XYZabcdefhghakdsj;lasjdf;ajfdiuiwjr;lajv;laoisfuaoieurlkajdsflkajsdfoiuew"
