@@ -27,7 +27,7 @@
 # ========================
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 3.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "00:14:04  JULY 13, 2003"
-set_global_assignment -name LAST_QUARTUS_VERSION "5.1 SP2"
+set_global_assignment -name LAST_QUARTUS_VERSION "6.0 SP1"
 
 # Pin & Location Assignments
 # ==========================
