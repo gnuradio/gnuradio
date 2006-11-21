@@ -245,7 +245,7 @@ class dqpsk_demod(gr.hier_block):
         costas_order = 4        
         # The value of beta is now set to be underdamped; this value can have a huge impact on the
         # performance of QPSK. Set to 0.25 for critically damped or higher for underdamped responses.
-        beta = .5 0 * self._costas_alpha * self._costas_alpha
+        beta = .35 * self._costas_alpha * self._costas_alpha
         self.costas_loop = gr.costas_loop_cc(self._costas_alpha, beta, 0.02, -0.02, costas_order)
 
         # RRC data filter
