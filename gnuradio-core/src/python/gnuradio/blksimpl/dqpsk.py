@@ -239,13 +239,13 @@ class dqpsk_demod(gr.hier_block):
        
         # Costas loop (carrier tracking)
         if self._costas_alpha is None:   # If no alpha value was specified by the user
-            alpha_dir = {2:0.075, 3:0.075, 4:0.105, 5:0.105, 6:0.125, 7:0.130}
+            alpha_dir = {2:0.075, 3:0.09, 4:0.09, 5:0.095, 6:0.10, 7:0.105}
             self._costas_alpha = alpha_dir[self._samples_per_symbol]
         
         costas_order = 4        
-        # The value of beta is now set to be overdamped; this value can have a huge impact on the
+        # The value of beta is now set to be underdamped; this value can have a huge impact on the
         # performance of QPSK. Set to 0.25 for critically damped or higher for underdamped responses.
-        beta = .15 * self._costas_alpha * self._costas_alpha
+        beta = .5 0 * self._costas_alpha * self._costas_alpha
         self.costas_loop = gr.costas_loop_cc(self._costas_alpha, beta, 0.02, -0.02, costas_order)
 
         # RRC data filter
