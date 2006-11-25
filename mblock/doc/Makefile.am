@@ -39,5 +39,6 @@ BUILT_XML_FILES =
 clean:
 	-rm -f $(TARGETS) $(BUILT_XML_FILES)
 
-%.html : %.xml
-	xmlto html-nochunks $<
+# This is non-portable pattern rule.
+#%.html : %.xml
+#	xmlto html-nochunks $<
