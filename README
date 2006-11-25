@@ -201,6 +201,10 @@ available.
 As a last resort, build it from source (not recommended!)
 http://www.wxpython.org
 
+(11) xmlto version ? or later.   http://cyberelk.net/tim/xmlto/index.html
+
+Wrapper for XML conversion tools to ease e.g. making html from docbook.
+
 
 ----------------------------------------------------------------
 
