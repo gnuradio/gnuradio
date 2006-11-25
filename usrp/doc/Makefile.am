@@ -52,7 +52,7 @@ html/index.html:
 docbook-html: usrp_guide.html
 
 usrp_guide.html: usrp_guide.xml
-	xmlto html-nochunks usrp_guide.xml
+	xmlto html-nochunks $(top_srcdir)/usrp/doc/usrp_guide.xml
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(docdir)
