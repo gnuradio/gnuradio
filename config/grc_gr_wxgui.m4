@@ -26,9 +26,7 @@ AC_DEFUN([GRC_GR_WXGUI],[
 	  gr-wxgui/src/python/Makefile \
     ])
 
-    # FIXME: this breaks pkgsrc by calling python without a version number
-    # gdt--patch welcome :-)
-    if python -c 'import wx'; then
+    if ${PYTHON} -c 'import wx'; then
 	passed=yes
     else
 	passed=no
