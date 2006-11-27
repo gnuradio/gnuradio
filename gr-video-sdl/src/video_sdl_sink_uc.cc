@@ -28,7 +28,6 @@
 
 #include <video_sdl_sink_uc.h>
 #include <gr_io_signature.h>
-#include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
