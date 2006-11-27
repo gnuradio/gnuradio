@@ -32,6 +32,9 @@
 #ifdef HAVE_TIME_H
 #include <time.h>
 #endif
+#if !defined(HAVE_NANOSLEEP) && defined(HAVE_SSLEEP)
+#include <windows.h>
+#endif
 
 
 #ifdef HAVE_NANOSLEEP
@@ -80,7 +83,7 @@ gr_throttle::work (int noutput_items,
   const char *in = (const char *) input_items[0];
   char *out = (char *) output_items[0];
 
-#if defined(HAVE_GETTIMEOFDAY) && defined(HAVE_NANOSLEEP)
+#if defined(HAVE_GETTIMEOFDAY)
   //
   // If our average sample rate exceeds our target sample rate,
   // delay long enough to reduce to our target rate.
@@ -96,10 +99,14 @@ gr_throttle::work (int noutput_items,
   double actual_samples_per_sec = d_total_samples / t;
   if (actual_samples_per_sec > d_samples_per_sec){	// need to delay
     double delay = d_total_samples / d_samples_per_sec - t;
+#ifdef HAVE_NANOSLEEP
     struct timespec ts;
     ts.tv_sec = (time_t)floor(delay);
     ts.tv_nsec = (long)((delay - floor(delay)) * 1e9);
     gr_nanosleep(&ts);
+#elif HAVE_SSLEEP
+    Sleep( (DWORD)(delay*1000) );
+#endif
   }
 #endif  
 
