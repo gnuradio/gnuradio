@@ -21,7 +21,7 @@ grswigdir=$grswigdir:$grswigdir/.libs
 grpydir=@abs_top_srcdir@/gnuradio-core/src/python
 
 # Where to find core's master library files
-grlibdir=@abs_top_srcdir@/gnuradio-core/src/lib
+grlibdir=@abs_top_builddir@/gnuradio-core/src/lib
 grlibdir=$grlibdir:$grlibdir/.libs
 
 # Construct search path for python modules
