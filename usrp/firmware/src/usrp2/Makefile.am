@@ -95,10 +95,10 @@ noinst_SCRIPTS = 		\
 		-c -o $@ `test -f '$<' || echo '$(srcdir)/'`$<
 
 .a51.rel:
-	test -f `basename '$<'` || ln -s '$<' .
+	test -f `basename '$<'` || $(LN_S) '$<' .
 	test -f ../common/`basename '$<'` -o \
 		\! -f `dirname '$<'`/../common/`basename '$<'` \
-		|| ln -s `dirname '$<'`/../common/`basename '$<'` ../common/.
+		|| $(LN_S) `dirname '$<'`/../common/`basename '$<'` ../common/`basename '$<'`
 	$(XAS) `basename '$<'`
 
 
