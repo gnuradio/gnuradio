@@ -272,7 +272,7 @@ gr_firdes::band_reject (double gain,
 
   for (int n = -M; n <= M; n++){
     if (n == 0)
-      taps[n + M] = (1.0 + (fwT0 - fwT1)) / M_PI * w[n + M];
+      taps[n + M] = 1.0 + ((fwT0 - fwT1) / M_PI * w[n + M]);
     else {
       taps[n + M] =  (sin (n * fwT0) - sin (n * fwT1)) / (n * M_PI) * w[n + M];
     }
