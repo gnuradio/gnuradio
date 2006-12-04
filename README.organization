@@ -1,0 +1,34 @@
+[This file is currently not baked and does not claim to represent
+consensus.]
+
+This file describes the current organization of the GNU Radio source
+tree.  It is intended to be both descriptive and normative.
+
+The big issues are:
+
+1) Should we separate by "code needed to implement protocol/modulation
+foo", or related blocks. to (that are therefore not so likely to be
+used together).
+
+2) How do m-blocks impact organization?  If m-blocks are in a separate
+module, which seems reasonable, then do we have most modules depend on
+m-blocks rather than just core, or do we have two versions of blocks -
+the classic continuous block and the m-block wrapped block?  If
+m-blocks become the main path, what will be less awkward?
+
+3) Because some (ADROIT at BBN) have proposed to implement MACs in
+click instead of GNU Radio, should we have a clean separation of
+MAC/PHY within GNU Radio, to facilitate using MACs implemented in
+various places?
+
+
+The immediate question is how to integrate the 802.11 implementation
+done by BBN, available at:
+
+  http://acert.ir.bbn.com/viewvc/adroitgrdevel/adroitgrdevel/gr-bbn/
+
+This contains blocks at various places in the stack, and gdt believs
+that putting them in an 802.11 module will lead to less reuse and less
+of a tendency to generalize.
+
+[need pointers to existing documentation of big picture and what's where]
