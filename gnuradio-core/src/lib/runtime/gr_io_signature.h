@@ -23,7 +23,7 @@
 #ifndef INCLUDED_IO_SIGNATURE_H
 #define INCLUDED_IO_SIGNATURE_H
 
-#include <gr_runtime.h>
+#include <gr_runtime_types.h>
 
 /*!
  * \brief i/o signature for input and output ports.

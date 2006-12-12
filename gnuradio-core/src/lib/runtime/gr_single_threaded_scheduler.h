@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_SINGLE_THREADED_SCHEDULER_H
 #define INCLUDED_GR_SINGLE_THREADED_SCHEDULER_H
 
-#include <gr_runtime.h>
+#include <gr_runtime_types.h>
 #include <fstream>
 
 class gr_single_threaded_scheduler;

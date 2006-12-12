@@ -74,7 +74,7 @@ grinclude_HEADERS = 				\
 	gr_pagesize.h				\
 	gr_preferences.h			\
 	gr_realtime.h				\
-	gr_runtime.h				\
+	gr_runtime_types.h			\
 	gr_select_handler.h			\
 	gr_single_threaded_scheduler.h		\
 	gr_timer.h				\

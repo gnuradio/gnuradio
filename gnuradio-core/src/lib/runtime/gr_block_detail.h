@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_BLOCK_DETAIL_H
 #define INCLUDED_GR_BLOCK_DETAIL_H
 
-#include <gr_runtime.h>
+#include <gr_runtime_types.h>
 #include <stdexcept>
 
 /*!

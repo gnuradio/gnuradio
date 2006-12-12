@@ -21,7 +21,7 @@
  */
 
 %{
-#include <gr_runtime.h>
+#include <gr_runtime_types.h>
 #include <gr_io_signature.h>
 #include <gr_buffer.h>
 #include <gr_block.h>

@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_BLOCK_H
 #define INCLUDED_GR_BLOCK_H
 
-#include <gr_runtime.h>
+#include <gr_runtime_types.h>
 #include <string>
 
 /*!
