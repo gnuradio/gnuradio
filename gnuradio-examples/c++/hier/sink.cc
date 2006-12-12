@@ -1,5 +1,5 @@
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2006 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,33 +19,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+#include <sink.h>
+#include <gr_io_signature.h>
+#include <gr_kludge_copy.h>
+#include <output.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#include <qa_runtime.h>
-#include <qa_gr_vmcircbuf.h>
-#include <qa_gr_io_signature.h>
-#include <qa_gr_block.h>
-#include <qa_gr_hier_block2.h>
-#include <qa_gr_buffer.h>
-
-CppUnit::TestSuite *
-qa_runtime::suite ()
+// Shared pointer constructor
+sink_sptr make_sink()
 {
-  CppUnit::TestSuite	*s = new CppUnit::TestSuite ("runtime");
+    return sink_sptr(new sink());
+}
 
-  s->addTest (qa_gr_vmcircbuf::suite ());
-  s->addTest (qa_gr_io_signature::suite ());
-  s->addTest (qa_gr_block::suite ());
-  s->addTest (qa_gr_hier_block2::suite ());
-  s->addTest (qa_gr_buffer::suite ());
-  
-  return s;
+sink::sink() : 
+gr_hier_block2("sink",
+	       gr_make_io_signature(2,2,sizeof(float)),
+	       gr_make_io_signature(0,0,0))
+{
+    define_component("copy", gr_make_kludge_copy(sizeof(float)));
+    define_component("output", make_output());
+
+    connect("self", 0, "copy",   0);
+    connect("self", 1, "copy",   1);
+    connect("copy",  0, "output", 0);
+    connect("copy",  1, "output", 1);    
 }

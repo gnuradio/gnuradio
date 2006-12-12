@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_RUNTIME_H
-#define INCLUDED_GR_RUNTIME_H
+#ifndef INCLUDED_GR_RUNTIME_TYPES_H
+#define INCLUDED_GR_RUNTIME_TYPES_H
 
 #include <gr_types.h>
 
@@ -29,16 +29,24 @@
  * typedefs for smart pointers we use throughout the runtime system
  */
 
+class gr_basic_block;
 class gr_block;
 class gr_block_detail;
+class gr_hier_block2;
 class gr_io_signature;
 class gr_buffer;
 class gr_buffer_reader;
+class gr_simple_flowgraph;
+class gr_runtime;
 
-typedef boost::shared_ptr<gr_block>		gr_block_sptr;
-typedef boost::shared_ptr<gr_block_detail>	gr_block_detail_sptr;
-typedef boost::shared_ptr<gr_io_signature>  	gr_io_signature_sptr;
-typedef boost::shared_ptr<gr_buffer>		gr_buffer_sptr;
-typedef boost::shared_ptr<gr_buffer_reader>	gr_buffer_reader_sptr;
+typedef boost::shared_ptr<gr_basic_block>       gr_basic_block_sptr;
+typedef boost::shared_ptr<gr_block>             gr_block_sptr;
+typedef boost::shared_ptr<gr_block_detail>	    gr_block_detail_sptr;
+typedef boost::shared_ptr<gr_hier_block2>	    gr_hier_block2_sptr;
+typedef boost::shared_ptr<gr_io_signature>      gr_io_signature_sptr;
+typedef boost::shared_ptr<gr_buffer>		    gr_buffer_sptr;
+typedef boost::shared_ptr<gr_buffer_reader>	    gr_buffer_reader_sptr;
+typedef boost::shared_ptr<gr_runtime>		    gr_runtime_sptr;
+typedef boost::shared_ptr<gr_simple_flowgraph>  gr_simple_flowgraph_sptr;
 
-#endif /* INCLUDED_GR_RUNTIME_H */
+#endif /* INCLUDED_GR_RUNTIME_TYPES_H */

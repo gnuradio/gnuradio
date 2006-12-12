@@ -23,13 +23,17 @@
 #ifndef INCLUDED_GR_BLOCK_H
 #define INCLUDED_GR_BLOCK_H
 
-#include <gr_runtime_types.h>
-#include <string>
+#include <gr_basic_block.h>
 
 /*!
- * \brief The abstract base class for all signal processing blocks.
+ * \brief The abstract base class for all 'terminal' processing blocks.
  * \ingroup block
  *
+ * A signal processing flow is constructed by creating a tree of 
+ * hierarchical blocks, which at any level may also contain terminal nodes
+ * that actually implement signal processing functions. This is the base
+ * class for all such leaf nodes.
+ 
  * Blocks have a set of input streams and output streams.  The
  * input_signature and output_signature define the number of input
  * streams and output streams respectively, and the type of the data
@@ -49,16 +53,11 @@
  * It reads the input items and writes the output items.
  */
 
-class gr_block {
+class gr_block : public gr_basic_block {
 
  public:
   
   virtual ~gr_block ();
-  
-  std::string name () const { return d_name; }
-  gr_io_signature_sptr input_signature () const  { return d_input_signature; }
-  gr_io_signature_sptr output_signature () const { return d_output_signature; }
-  long unique_id () const { return d_unique_id; }
 
   /*!
    * Assume block computes y_i = f(x_i, x_i-1, x_i-2, x_i-3...)
@@ -112,21 +111,6 @@ class gr_block {
 			    gr_vector_int &ninput_items,
 			    gr_vector_const_void_star &input_items,
 			    gr_vector_void_star &output_items) = 0;
-
-  /*!
-   * \brief Confirm that ninputs and noutputs is an acceptable combination.
-   *
-   * \param ninputs	number of input streams connected
-   * \param noutputs	number of output streams connected
-   *
-   * \returns true if this is a valid configuration for this block.
-   *
-   * This function is called by the runtime system whenever the
-   * topology changes.  Most classes do not need to override this.
-   * This check is in addition to the constraints specified by the input
-   * and output gr_io_signatures.
-   */
-  virtual bool check_topology (int ninputs, int noutputs);
 
   /*!
    * \brief Called to enable drivers, etc for i/o devices.
@@ -205,32 +189,17 @@ class gr_block {
 
  private:
 
-  std::string		d_name;
-  gr_io_signature_sptr	d_input_signature;
-  gr_io_signature_sptr	d_output_signature;
-  int			d_output_multiple;
-  double		d_relative_rate;	// approx output_rate / input_rate
-  gr_block_detail_sptr	d_detail;		// implementation details
-  long			d_unique_id;		// convenient for debugging
-  unsigned		d_history;
-  bool			d_fixed_rate;
-
-  
+  int                   d_output_multiple;
+  double                d_relative_rate;	// approx output_rate / input_rate
+  gr_block_detail_sptr	d_detail;		    // implementation details
+  unsigned              d_history;
+  bool                  d_fixed_rate;
+    
  protected:
 
   gr_block (const std::string &name,
-	    gr_io_signature_sptr input_signature,
-	    gr_io_signature_sptr output_signature);
-
-  //! may only be called during constructor
-  void set_input_signature (gr_io_signature_sptr iosig){
-    d_input_signature = iosig;
-  }
-
-  //! may only be called during constructor
-  void set_output_signature (gr_io_signature_sptr iosig){
-    d_output_signature = iosig;
-  }
+            gr_io_signature_sptr input_signature,
+            gr_io_signature_sptr output_signature);
 
   void set_fixed_rate(bool fixed_rate){ d_fixed_rate = fixed_rate; }
 
@@ -242,6 +211,7 @@ class gr_block {
   void set_detail (gr_block_detail_sptr detail) { d_detail = detail; }
 };
 
-long gr_block_ncurrently_allocated ();
+typedef std::vector<gr_block_sptr> gr_block_vector_t;
+typedef std::vector<gr_block_sptr>::iterator gr_block_viter_t;
 
 #endif /* INCLUDED_GR_BLOCK_H */

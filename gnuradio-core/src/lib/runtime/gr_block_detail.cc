@@ -38,7 +38,8 @@ gr_block_detail_ncurrently_allocated ()
 gr_block_detail::gr_block_detail (unsigned int ninputs, unsigned int noutputs)
   : d_ninputs (ninputs), d_noutputs (noutputs),
     d_input (ninputs), d_output (noutputs),
-    d_done (false)
+    d_done (false),
+    d_color (gr_block_detail::WHITE)
 {
   s_ncurrently_allocated++;
 }

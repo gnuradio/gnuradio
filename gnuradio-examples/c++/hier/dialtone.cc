@@ -1,5 +1,5 @@
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2006 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,33 +19,30 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+#include <dialtone.h>
+#include <gr_io_signature.h>
+#include <source.h>
+#include <gr_kludge_copy.h>
+#include <sink.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#include <qa_runtime.h>
-#include <qa_gr_vmcircbuf.h>
-#include <qa_gr_io_signature.h>
-#include <qa_gr_block.h>
-#include <qa_gr_hier_block2.h>
-#include <qa_gr_buffer.h>
-
-CppUnit::TestSuite *
-qa_runtime::suite ()
+// Shared pointer constructor
+dialtone_sptr make_dialtone()
 {
-  CppUnit::TestSuite	*s = new CppUnit::TestSuite ("runtime");
+    return dialtone_sptr(new dialtone());
+}
 
-  s->addTest (qa_gr_vmcircbuf::suite ());
-  s->addTest (qa_gr_io_signature::suite ());
-  s->addTest (qa_gr_block::suite ());
-  s->addTest (qa_gr_hier_block2::suite ());
-  s->addTest (qa_gr_buffer::suite ());
-  
-  return s;
+// Hierarchical block constructor, with no inputs or outputs
+dialtone::dialtone() : 
+gr_hier_block2("dialtone",
+	       gr_make_io_signature(0,0,0),
+	       gr_make_io_signature(0,0,0))
+{
+    define_component("source", make_source());
+    define_component("copy", gr_make_kludge_copy(sizeof(float)));
+    define_component("sink", make_sink());
+
+    connect("source", 0, "copy", 0);
+    connect("source", 1, "copy", 1);
+    connect("copy", 0, "sink",   0);
+    connect("copy", 1, "sink",   1);
 }

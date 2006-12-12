@@ -160,7 +160,6 @@ AC_ARG_ENABLE(
 
 build_dirs="config"
 GRC_GNURADIO_CORE
-GRC_GNURADIO_EXAMPLES
 GRC_USRP
 GRC_GR_USRP			dnl this must come after GRC_USRP
 GRC_GR_AUDIO_ALSA
@@ -184,6 +183,7 @@ GRC_MBLOCK			dnl this must come after GRC_PMT
 GRC_EZDOP		
 GRC_GR_EZDOP			dnl this must come after GRC_EZDOP
 GRC_GR_RDF
+GRC_GNURADIO_EXAMPLES		dnl must come last
 
 # Each component is now either to be built, was skipped, or failed dependencies
 AC_SUBST([build_dirs], [$build_dirs])

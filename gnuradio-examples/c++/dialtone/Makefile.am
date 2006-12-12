@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2006 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,16 +19,30 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-EXTRA_DIST = 			\
-	audio_copy.py		\
-	audio_fft.py		\
-	audio_play.py		\
-	audio_to_file.py	\
-	dial_squelch.py		\
-	dial_tone.py		\
-	dial_tone2.py		\
-	dialtone_v.py		\
-	mono_tone.py		\
-	multi_tone.py		\
-	spectrum_inversion.py	\
-	test_resampler.py	
+include $(top_srcdir)/Makefile.common
+
+# For compiling within the GNU Radio build tree
+INCLUDES=$(STD_DEFINES_AND_INCLUDES) \
+         -I$(top_srcdir)/gr-audio-alsa/src 
+
+GR_AUDIO_ALSA_LIBS=$(top_builddir)/gr-audio-alsa/src/libgr_audio_alsa.la
+
+# For compiling outside the tree, these are the usual
+# INCLUDES = -I/usr/local/include -I/usr/local/include/gnuradio
+# GNURADIO_CORE_LIBS = -lgnuradio-core
+# GR_AUDIO_ALSA_LIBS = -lgr_audio_alsa
+
+noinst_PROGRAMS = dialtone
+    
+noinst_HEADERS = \
+    dialtone.h
+        
+dialtone_SOURCES = \
+    dialtone.cc	   \
+    main.cc
+
+dialtone_LDADD = \
+    $(GNURADIO_CORE_LIBS) \
+    $(GR_AUDIO_ALSA_LIBS)
+
+MOSTLYCLEANFILES = *~

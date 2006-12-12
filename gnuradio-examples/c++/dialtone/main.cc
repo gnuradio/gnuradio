@@ -1,5 +1,5 @@
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2006 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,33 +19,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+// GNU Radio C++ application
+//
+// Instantiate a top block
+// Instantiate a runtime, passing it the top block
+// Tell the runtime to go...
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#include <dialtone.h>
+#include <gr_runtime.h>
 
-#include <qa_runtime.h>
-#include <qa_gr_vmcircbuf.h>
-#include <qa_gr_io_signature.h>
-#include <qa_gr_block.h>
-#include <qa_gr_hier_block2.h>
-#include <qa_gr_buffer.h>
-
-CppUnit::TestSuite *
-qa_runtime::suite ()
+int main()
 {
-  CppUnit::TestSuite	*s = new CppUnit::TestSuite ("runtime");
+    dialtone_sptr top_block = make_dialtone();
+    gr_runtime_sptr runtime = gr_make_runtime(top_block);
 
-  s->addTest (qa_gr_vmcircbuf::suite ());
-  s->addTest (qa_gr_io_signature::suite ());
-  s->addTest (qa_gr_block::suite ());
-  s->addTest (qa_gr_hier_block2::suite ());
-  s->addTest (qa_gr_buffer::suite ());
-  
-  return s;
+    runtime->run();   
+    return 0;
 }

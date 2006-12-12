@@ -29,7 +29,7 @@ from basic_flow_graph import *
 from flow_graph import *
 from exceptions import *
 from hier_block import *
-
+from hier_block2 import *
 
 # create a couple of aliases
 serial_to_parallel = stream_to_vector

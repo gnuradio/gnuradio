@@ -1,5 +1,5 @@
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2006 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,33 +19,23 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+#include <source.h>
+#include <gr_io_signature.h>
+#include <siggen.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#include <qa_runtime.h>
-#include <qa_gr_vmcircbuf.h>
-#include <qa_gr_io_signature.h>
-#include <qa_gr_block.h>
-#include <qa_gr_hier_block2.h>
-#include <qa_gr_buffer.h>
-
-CppUnit::TestSuite *
-qa_runtime::suite ()
+// Shared pointer constructor
+source_sptr make_source()
 {
-  CppUnit::TestSuite	*s = new CppUnit::TestSuite ("runtime");
+    return source_sptr(new source());
+}
 
-  s->addTest (qa_gr_vmcircbuf::suite ());
-  s->addTest (qa_gr_io_signature::suite ());
-  s->addTest (qa_gr_block::suite ());
-  s->addTest (qa_gr_hier_block2::suite ());
-  s->addTest (qa_gr_buffer::suite ());
-  
-  return s;
+source::source() : 
+gr_hier_block2("source",
+	       gr_make_io_signature(0,0,0),
+	       gr_make_io_signature(2,2,sizeof(float)))
+{
+    define_component("siggen", make_siggen());
+
+    connect("siggen", 0, "self", 0);
+    connect("siggen", 1, "self", 1);
 }

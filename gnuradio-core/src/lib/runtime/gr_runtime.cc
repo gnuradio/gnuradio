@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2006 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,33 +20,51 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include <qa_runtime.h>
-#include <qa_gr_vmcircbuf.h>
-#include <qa_gr_io_signature.h>
-#include <qa_gr_block.h>
-#include <qa_gr_hier_block2.h>
-#include <qa_gr_buffer.h>
+#include <gr_runtime.h>
+#include <gr_runtime_impl.h>
+#include <iostream>
 
-CppUnit::TestSuite *
-qa_runtime::suite ()
+gr_runtime_sptr 
+gr_make_runtime(gr_hier_block2_sptr top_block)
 {
-  CppUnit::TestSuite	*s = new CppUnit::TestSuite ("runtime");
+    return gr_runtime_sptr(new gr_runtime(top_block));
+}
 
-  s->addTest (qa_gr_vmcircbuf::suite ());
-  s->addTest (qa_gr_io_signature::suite ());
-  s->addTest (qa_gr_block::suite ());
-  s->addTest (qa_gr_hier_block2::suite ());
-  s->addTest (qa_gr_buffer::suite ());
+gr_runtime::gr_runtime(gr_hier_block2_sptr top_block)
+{
+    d_impl = new gr_runtime_impl(top_block);
+}
   
-  return s;
+gr_runtime::~gr_runtime()
+{
+    delete d_impl;
+}
+
+void 
+gr_runtime::start()
+{
+    d_impl->start();
+}
+
+void 
+gr_runtime::stop()
+{
+    d_impl->stop();
+}
+
+void 
+gr_runtime::wait()
+{
+    d_impl->wait();
+}
+
+void 
+gr_runtime::run()
+{
+    start();
+    wait();
 }

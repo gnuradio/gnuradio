@@ -30,8 +30,13 @@ libruntime_la_LIBADD =		\
 
 
 libruntime_la_SOURCES = 			\
+	gr_basic_block.cc			\
+	gr_simple_flowgraph.cc			\
+	gr_simple_flowgraph_detail.cc		\
 	gr_block.cc				\
 	gr_block_detail.cc			\
+	gr_hier_block2.cc			\
+	gr_hier_block2_detail.cc		\
 	gr_buffer.cc				\
 	gr_dispatcher.cc			\
 	gr_error_handler.cc			\
@@ -43,6 +48,8 @@ libruntime_la_SOURCES = 			\
 	gr_pagesize.cc				\
 	gr_preferences.cc			\
 	gr_realtime.cc				\
+	gr_runtime.cc				\
+	gr_runtime_impl.cc			\
 	gr_single_threaded_scheduler.cc		\
 	gr_tmp_path.cc				\
 	gr_vmcircbuf.cc				\
@@ -54,14 +61,20 @@ libruntime_la_SOURCES = 			\
 
 libruntime_qa_la_SOURCES = 			\
 	qa_gr_block.cc				\
+	qa_gr_hier_block2.cc			\
 	qa_gr_buffer.cc				\
 	qa_gr_io_signature.cc			\
 	qa_gr_vmcircbuf.cc			\
 	qa_runtime.cc				
 
 grinclude_HEADERS = 				\
+	gr_basic_block.h			\
+	gr_simple_flowgraph.h			\
+	gr_simple_flowgraph_detail.h		\
 	gr_block.h				\
 	gr_block_detail.h			\
+	gr_hier_block2.h			\
+	gr_hier_block2_detail.h			\
 	gr_buffer.h				\
 	gr_complex.h				\
 	gr_dispatcher.h				\
@@ -74,6 +87,8 @@ grinclude_HEADERS = 				\
 	gr_pagesize.h				\
 	gr_preferences.h			\
 	gr_realtime.h				\
+	gr_runtime.h				\
+	gr_runtime_impl.h			\
 	gr_runtime_types.h			\
 	gr_select_handler.h			\
 	gr_single_threaded_scheduler.h		\
@@ -88,14 +103,17 @@ noinst_HEADERS = 				\
 	gr_vmcircbuf_sysv_shm.h			\
 	gr_vmcircbuf_createfilemapping.h	\
 	qa_gr_block.h				\
+	qa_gr_hier_block2.h			\
 	qa_gr_buffer.h				\
 	qa_gr_io_signature.h			\
 	qa_gr_vmcircbuf.h			\
 	qa_runtime.h				
 
 swiginclude_HEADERS =			\
+	gr_basic_block.i		\
 	gr_block.i			\
 	gr_block_detail.i		\
+	gr_hier_block2.i		\
 	gr_buffer.i			\
 	gr_dispatcher.i			\
 	gr_error_handler.i		\
@@ -104,6 +122,8 @@ swiginclude_HEADERS =			\
 	gr_msg_handler.i		\
 	gr_msg_queue.i			\
 	gr_realtime.i			\
+	gr_runtime.i			\
+	gr_simple_flowgraph.i		\
 	gr_single_threaded_scheduler.i	\
 	gr_swig_block_magic.i		\
 	runtime.i

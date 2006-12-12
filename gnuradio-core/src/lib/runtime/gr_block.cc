@@ -27,34 +27,21 @@
 #include <gr_block.h>
 #include <gr_block_detail.h>
 #include <stdexcept>
-
-static long s_next_id = 0;
-static long s_ncurrently_allocated = 0;
-
-long
-gr_block_ncurrently_allocated ()
-{
-  return s_ncurrently_allocated;
-}
+#include <iostream>
 
 gr_block::gr_block (const std::string &name,
 		    gr_io_signature_sptr input_signature,
 		    gr_io_signature_sptr output_signature)
-  : d_name (name),
-    d_input_signature (input_signature),
-    d_output_signature (output_signature),
+  : gr_basic_block(name, input_signature, output_signature),
     d_output_multiple (1),
     d_relative_rate (1.0),
-    d_unique_id (s_next_id++),
     d_history(1),
     d_fixed_rate(false)
 {
-  s_ncurrently_allocated++;
 }
   
 gr_block::~gr_block ()
 {
-  s_ncurrently_allocated--;
 }
 
 // stub implementation:  1:1
@@ -68,12 +55,6 @@ gr_block::forecast (int noutput_items, gr_vector_int &ninput_items_required)
 }
 
 // default implementation
-
-bool
-gr_block::check_topology (int ninputs, int noutputs)
-{
-  return true;
-}
 
 bool
 gr_block::start()

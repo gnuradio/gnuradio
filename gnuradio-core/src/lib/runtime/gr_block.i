@@ -20,6 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+%include <gr_basic_block.i>
+
 class gr_block;
 typedef boost::shared_ptr<gr_block> gr_block_sptr;
 %template(gr_block_sptr) boost::shared_ptr<gr_block>;
@@ -29,26 +31,21 @@ namespace std {
   %template(x_vector_gr_block_sptr)	vector<gr_block_sptr>;
 };
 
-class gr_block {
+class gr_block : public gr_basic_block {
  protected:
   gr_block (const std::string &name,
-	     gr_io_signature_sptr input_signature,
-	     gr_io_signature_sptr output_signature);
+            gr_io_signature_sptr input_signature,
+            gr_io_signature_sptr output_signature);
 
  public:
   
   virtual ~gr_block ();
   
-  std::string name () const;
-  gr_io_signature_sptr input_signature () const;
-  gr_io_signature_sptr output_signature () const;
-  long unique_id () const;
   unsigned history () const;
 
   int  output_multiple () const;
   double relative_rate () const;
 
-  bool check_topology (int ninputs, int noutputs);
   bool start();
   bool stop();
 
@@ -56,9 +53,6 @@ class gr_block {
   gr_block_detail_sptr detail () const { return d_detail; }
   void set_detail (gr_block_detail_sptr detail) { d_detail = detail; }
 };
-
-%rename(block_ncurrently_allocated) gr_block_ncurrently_allocated;
-long gr_block_ncurrently_allocated ();
 
 %pythoncode %{
 gr_block_sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id ())

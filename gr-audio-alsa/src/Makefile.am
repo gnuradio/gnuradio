@@ -55,8 +55,12 @@ SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES)
 
 ourlib_LTLIBRARIES = _audio_alsa.la
 
+lib_LTLIBRARIES = libgr_audio_alsa.la
+
 _audio_alsa_la_SOURCES = 		\
-	audio_alsa.cc			\
+	audio_alsa.cc
+
+libgr_audio_alsa_la_SOURCES = 		\
 	audio_alsa_sink.cc		\
 	audio_alsa_source.cc		\
 	gri_alsa.cc			
@@ -76,9 +80,15 @@ _audio_alsa_la_LIBADD = 		\
 	$(PYTHON_LDFLAGS)		\
 	$(GNURADIO_CORE_LIBS)		\
 	$(ALSA_LIBS)			\
+	libgr_audio_alsa.la		\
 	-lstdc++				
 
+libgr_audio_alsa_la_LIBADD = 		\
+	$(ALSA_LIBS)
+
 _audio_alsa_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
+
+libgr_audio_alsa_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
 
 audio_alsa.cc audio_alsa.py: $(LOCAL_IFILES) $(NON_LOCAL_IFILES)
 	$(SWIG) $(SWIGPYTHONARGS) -module audio_alsa -o audio_alsa.cc $(LOCAL_IFILES)

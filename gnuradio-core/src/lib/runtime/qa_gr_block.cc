@@ -25,7 +25,6 @@
 #endif
 #include <qa_gr_block.h>
 #include <gr_block.h>
-#include <gr_runtime_types.h>
 #include <gr_io_signature.h>
 #include <gr_null_sink.h>
 #include <gr_null_source.h>

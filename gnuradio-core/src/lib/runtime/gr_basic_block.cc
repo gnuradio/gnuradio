@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2006 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,33 +20,40 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include <qa_runtime.h>
-#include <qa_gr_vmcircbuf.h>
-#include <qa_gr_io_signature.h>
-#include <qa_gr_block.h>
-#include <qa_gr_hier_block2.h>
-#include <qa_gr_buffer.h>
+#include <gr_basic_block.h>
+#include <stdexcept>
 
-CppUnit::TestSuite *
-qa_runtime::suite ()
+static long s_next_id = 0;
+static long s_ncurrently_allocated = 0;
+
+long 
+gr_basic_block_ncurrently_allocated()
 {
-  CppUnit::TestSuite	*s = new CppUnit::TestSuite ("runtime");
+    return s_ncurrently_allocated;
+}
 
-  s->addTest (qa_gr_vmcircbuf::suite ());
-  s->addTest (qa_gr_io_signature::suite ());
-  s->addTest (qa_gr_block::suite ());
-  s->addTest (qa_gr_hier_block2::suite ());
-  s->addTest (qa_gr_buffer::suite ());
+gr_basic_block::gr_basic_block(const std::string &name,
+                               gr_io_signature_sptr input_signature,
+                               gr_io_signature_sptr output_signature) 
+  : d_name(name),
+    d_input_signature(input_signature),
+    d_output_signature(output_signature),
+    d_unique_id(s_next_id++)
+{
+    s_ncurrently_allocated++;
+}
   
-  return s;
+gr_basic_block::~gr_basic_block()
+{
+    s_ncurrently_allocated--;
+}
+
+gr_basic_block_sptr 
+gr_basic_block::basic_block()
+{
+    return shared_from_this();
 }

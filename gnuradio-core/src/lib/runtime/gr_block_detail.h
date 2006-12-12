@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more detail.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -75,18 +75,26 @@ class gr_block_detail {
 
   void produce_each (int how_many_items);
 
+  /*!
+   * \brief Allow the flowgraph to set for sorting and partitioning
+   */
+  enum vcolor { WHITE, GREY, BLACK };
+  void set_color(vcolor color) { d_color = color; }
+  vcolor color() const { return d_color; }
+
   // ----------------------------------------------------------------------------
 
  private:
-  unsigned int			    d_ninputs;
-  unsigned int			    d_noutputs;
+  unsigned int                       d_ninputs;
+  unsigned int                       d_noutputs;
   std::vector<gr_buffer_reader_sptr> d_input;
-  std::vector<gr_buffer_sptr>	    d_output;
-  bool				    d_done;
-    
+  std::vector<gr_buffer_sptr>	     d_output;
+  bool                               d_done;
+  vcolor                             d_color;
+
   gr_block_detail (unsigned int ninputs, unsigned int noutputs);
 
-  friend gr_block_detail_sptr 
+  friend gr_block_detail_sptr
   gr_make_block_detail (unsigned int ninputs, unsigned int noutputs);
 };
 

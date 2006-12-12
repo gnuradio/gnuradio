@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2006 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,33 +20,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
-
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
-#include <qa_runtime.h>
-#include <qa_gr_vmcircbuf.h>
-#include <qa_gr_io_signature.h>
-#include <qa_gr_block.h>
 #include <qa_gr_hier_block2.h>
-#include <qa_gr_buffer.h>
+#include <gr_hier_block2.h>
+#include <gr_io_signature.h>
+#include <gr_null_source.h>
+#include <gr_null_sink.h>
 
-CppUnit::TestSuite *
-qa_runtime::suite ()
+void qa_gr_hier_block2::test_make()
 {
-  CppUnit::TestSuite	*s = new CppUnit::TestSuite ("runtime");
+    gr_hier_block2_sptr src1(gr_make_hier_block2("test",
+						 gr_make_io_signature(1, 1, sizeof(int)),
+						 gr_make_io_signature(1, 1, sizeof(int))));
 
-  s->addTest (qa_gr_vmcircbuf::suite ());
-  s->addTest (qa_gr_io_signature::suite ());
-  s->addTest (qa_gr_block::suite ());
-  s->addTest (qa_gr_hier_block2::suite ());
-  s->addTest (qa_gr_buffer::suite ());
-  
-  return s;
+    CPPUNIT_ASSERT(src1);
+    CPPUNIT_ASSERT_EQUAL(std::string("test"), src1->name());
+    CPPUNIT_ASSERT_EQUAL(1, src1->input_signature()->max_streams());
+    CPPUNIT_ASSERT_EQUAL(1, src1->output_signature()->min_streams());
+    CPPUNIT_ASSERT_EQUAL(1, src1->output_signature()->max_streams());
+    CPPUNIT_ASSERT_EQUAL(sizeof(int), 
+			 src1->output_signature()->sizeof_stream_item(0));
 }

@@ -26,6 +26,9 @@
 #include <gr_buffer.h>
 #include <gr_block.h>
 #include <gr_block_detail.h>
+#include <gr_hier_block2.h>
+#include <gr_runtime.h>
+#include <gr_simple_flowgraph.h>
 #include <gr_single_threaded_scheduler.h>
 #include <gr_message.h>
 #include <gr_msg_handler.h>
@@ -37,9 +40,12 @@
 
 %include <gr_io_signature.i>
 %include <gr_buffer.i>
+%include <gr_basic_block.i>
 %include <gr_block.i>
 %include <gr_block_detail.i>
+%include <gr_hier_block2.i>
 %include <gr_swig_block_magic.i>
+%include <gr_simple_flowgraph.i>
 %include <gr_single_threaded_scheduler.i>
 %include <gr_message.i>
 %include <gr_msg_handler.i>
@@ -47,3 +53,4 @@
 %include <gr_dispatcher.i>
 %include <gr_error_handler.i>
 %include <gr_realtime.i>
+%include <gr_runtime.i>

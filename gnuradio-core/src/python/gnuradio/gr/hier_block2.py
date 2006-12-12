@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2006 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,16 +19,22 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-EXTRA_DIST = 			\
-	audio_copy.py		\
-	audio_fft.py		\
-	audio_play.py		\
-	audio_to_file.py	\
-	dial_squelch.py		\
-	dial_tone.py		\
-	dial_tone2.py		\
-	dialtone_v.py		\
-	mono_tone.py		\
-	multi_tone.py		\
-	spectrum_inversion.py	\
-	test_resampler.py	
+from gnuradio_swig_python import hier_block2_swig
+
+#
+# This hack forces a 'has-a' relationship to look like an 'is-a' one.
+#
+# It allows Python classes to subclass this one, while passing through
+# method calls to the C++ class shared pointer from SWIG.
+#
+# It also allows us to intercept method calls if needed
+#
+class hier_block2(object):
+    def __init__(self, name, input_signature, output_signature):
+	self._hb = hier_block2_swig(name, input_signature, output_signature)
+
+    def __getattr__(self, name):
+	return getattr(self._hb, name)
+
+    def define_component(self, name, comp):
+	return self._hb.define_component(name, comp.basic_block())

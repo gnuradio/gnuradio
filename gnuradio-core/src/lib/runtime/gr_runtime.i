@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2004 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,33 +20,23 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+class gr_runtime;
+typedef boost::shared_ptr<gr_runtime> gr_runtime_sptr;
+%template(gr_runtime_sptr) boost::shared_ptr<gr_runtime>;
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+%rename(runtime) gr_make_runtime;
+gr_runtime_sptr gr_make_runtime(gr_hier_block2_sptr top_block);
 
-#include <qa_runtime.h>
-#include <qa_gr_vmcircbuf.h>
-#include <qa_gr_io_signature.h>
-#include <qa_gr_block.h>
-#include <qa_gr_hier_block2.h>
-#include <qa_gr_buffer.h>
-
-CppUnit::TestSuite *
-qa_runtime::suite ()
+class gr_runtime
 {
-  CppUnit::TestSuite	*s = new CppUnit::TestSuite ("runtime");
+protected:
+    gr_runtime(gr_hier_block2_sptr top_block);
 
-  s->addTest (qa_gr_vmcircbuf::suite ());
-  s->addTest (qa_gr_io_signature::suite ());
-  s->addTest (qa_gr_block::suite ());
-  s->addTest (qa_gr_hier_block2::suite ());
-  s->addTest (qa_gr_buffer::suite ());
-  
-  return s;
-}
+public:
+    void start()
+        throw (std::runtime_error);
+    void stop();
+    void wait();
+    void run()
+        throw (std::runtime_error);
+};

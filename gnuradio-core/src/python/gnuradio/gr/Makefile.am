@@ -39,6 +39,7 @@ grgrpython_PYTHON = 		\
 	gr_threading_23.py	\
 	gr_threading_24.py	\
 	hier_block.py		\
+	hier_block2.py		\
 	prefs.py		\
 	scheduler.py		
 
@@ -63,6 +64,7 @@ noinst_PYTHON = 			\
 	qa_fsk_stuff.py			\
 	qa_goertzel.py			\
 	qa_head.py			\
+	qa_hier_block2.py		\
 	qa_hilbert.py			\
 	qa_iir.py			\
 	qa_interleave.py		\
