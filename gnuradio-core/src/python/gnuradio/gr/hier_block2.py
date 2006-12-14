@@ -19,7 +19,9 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio_swig_python import hier_block2_swig, gr_make_runtime 
+from gnuradio_swig_python import hier_block2_swig, gr_make_runtime, \
+    runtime_run_unlocked, runtime_start_unlocked, runtime_stop_unlocked, \
+    runtime_wait_unlocked 
 
 #
 # This hack forces a 'has-a' relationship to look like an 'is-a' one.
@@ -47,4 +49,13 @@ class runtime(object):
             self._r = gr_make_runtime(top_block)
 
     def run(self):
-        self._r.run()
+        runtime_run_unlocked(self._r)
+
+    def start(self):
+        runtime_start_unlocked(self._r)
+
+    def stop(self):
+        runtime_stop_unlocked(self._r)
+
+    def wait(self):
+        runtime_wait_unlocked(self._r)

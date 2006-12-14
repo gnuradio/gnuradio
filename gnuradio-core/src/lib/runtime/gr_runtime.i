@@ -37,3 +37,39 @@ public:
     void stop() throw (std::runtime_error);
     void wait() throw (std::runtime_error);
 };
+
+%{
+class ensure_py_gil_state2 {
+    PyGILState_STATE	d_gstate;
+public:
+  ensure_py_gil_state2()  { d_gstate = PyGILState_Ensure(); }
+  ~ensure_py_gil_state2() { PyGILState_Release(d_gstate); }
+};
+%}
+
+%inline %{
+void runtime_run_unlocked(gr_runtime_sptr r) throw (std::runtime_error) 
+{
+    ensure_py_gil_state2 _lock;
+    r->run();
+}
+
+void runtime_start_unlocked(gr_runtime_sptr r) throw (std::runtime_error) 
+{
+    ensure_py_gil_state2 _lock;
+    r->start();
+}
+
+void runtime_stop_unlocked(gr_runtime_sptr r) throw (std::runtime_error) 
+{
+    ensure_py_gil_state2 _lock;
+    r->stop();
+}
+
+void runtime_wait_unlocked(gr_runtime_sptr r) throw (std::runtime_error) 
+{
+    ensure_py_gil_state2 _lock;
+    r->wait();
+}
+
+%}
