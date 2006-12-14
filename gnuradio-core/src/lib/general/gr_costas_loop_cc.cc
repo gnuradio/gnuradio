@@ -98,33 +98,58 @@ gr_costas_loop_cc::work (int noutput_items,
 
   float error;
   gr_complex nco_out;
+  
+  if (write_foptr) {
 
-  for (int i = 0; i < noutput_items; i++){
-    nco_out = gr_expj(-d_phase);
-    optr[i] = iptr[i] * nco_out;
-    
-    error = (*this.*d_phase_detector)(optr[i]);
-    if (error > 1)
-      error = 1;
-    else if (error < -1)
-      error = -1;
-    
-    d_freq = d_freq + d_beta * error;
-    d_phase = d_phase + d_freq + d_alpha * error;
-
-    while(d_phase>M_TWOPI)
-      d_phase -= M_TWOPI;
-    while(d_phase<-M_TWOPI)
-      d_phase += M_TWOPI;
-    
-    if (d_freq > d_max_freq)
-      d_freq = d_max_freq;
-    else if (d_freq < d_min_freq)
-      d_freq = d_min_freq;
-    
-    if (write_foptr){
+    for (int i = 0; i < noutput_items; i++){
+      nco_out = gr_expj(-d_phase);
+      optr[i] = iptr[i] * nco_out;
+      
+      error = (*this.*d_phase_detector)(optr[i]);
+      if (error > 1)
+	error = 1;
+      else if (error < -1)
+	error = -1;
+      
+      d_freq = d_freq + d_beta * error;
+      d_phase = d_phase + d_freq + d_alpha * error;
+      
+      while(d_phase>M_TWOPI)
+	d_phase -= M_TWOPI;
+      while(d_phase<-M_TWOPI)
+	d_phase += M_TWOPI;
+      
+      if (d_freq > d_max_freq)
+	d_freq = d_max_freq;
+      else if (d_freq < d_min_freq)
+	d_freq = d_min_freq;
+      
       foptr[i] = gr_complex(d_freq,0);
-      //foptr[i] = gr_complex(error, 0);
+    } 
+  } else {
+    for (int i = 0; i < noutput_items; i++){
+      nco_out = gr_expj(-d_phase);
+      optr[i] = iptr[i] * nco_out;
+      
+      error = (*this.*d_phase_detector)(optr[i]);
+      if (error > 1)
+	error = 1;
+      else if (error < -1)
+	error = -1;
+      
+      d_freq = d_freq + d_beta * error;
+      d_phase = d_phase + d_freq + d_alpha * error;
+      
+      while(d_phase>M_TWOPI)
+	d_phase -= M_TWOPI;
+      while(d_phase<-M_TWOPI)
+	d_phase += M_TWOPI;
+      
+      if (d_freq > d_max_freq)
+	d_freq = d_max_freq;
+      else if (d_freq < d_min_freq)
+	d_freq = d_min_freq;
+      
     }
   }
   return noutput_items;
