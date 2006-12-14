@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2006 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,7 +24,6 @@ class gr_runtime;
 typedef boost::shared_ptr<gr_runtime> gr_runtime_sptr;
 %template(gr_runtime_sptr) boost::shared_ptr<gr_runtime>;
 
-%rename(runtime) gr_make_runtime;
 gr_runtime_sptr gr_make_runtime(gr_hier_block2_sptr top_block);
 
 class gr_runtime
@@ -33,10 +32,8 @@ protected:
     gr_runtime(gr_hier_block2_sptr top_block);
 
 public:
-    void start()
-        throw (std::runtime_error);
-    void stop();
-    void wait();
-    void run()
-        throw (std::runtime_error);
+    void run() throw (std::runtime_error);
+    void start() throw (std::runtime_error);
+    void stop() throw (std::runtime_error);
+    void wait() throw (std::runtime_error);
 };

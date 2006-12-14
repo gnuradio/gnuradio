@@ -10,7 +10,6 @@ class test_runtime(gr_unittest.TestCase):
     def tearDown(self):
     	pass
 
-    """
     def test_001_run(self):
 	hblock = gr.hier_block2("test_block", 
 				gr.io_signature(0,0,0), 
@@ -25,7 +24,6 @@ class test_runtime(gr_unittest.TestCase):
 	runtime = gr.runtime(hblock)
 	runtime.run()
 	self.assertRaises(RuntimeError, lambda: runtime.run())
-    """
         
 if __name__ == "__main__":
     gr_unittest.main()

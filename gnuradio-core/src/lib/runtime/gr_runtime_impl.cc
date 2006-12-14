@@ -76,7 +76,7 @@ void
 gr_runtime_impl::stop()
 {
     if (!d_running)
-        return;
+        throw std::runtime_error("not running");
 
     for (gr_scheduler_thread_viter_t p = d_threads.begin(); 
          p != d_threads.end(); p++)

@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio_swig_python import hier_block2_swig
+from gnuradio_swig_python import hier_block2_swig, gr_make_runtime 
 
 #
 # This hack forces a 'has-a' relationship to look like an 'is-a' one.
@@ -38,3 +38,13 @@ class hier_block2(object):
 
     def define_component(self, name, comp):
 	return self._hb.define_component(name, comp.basic_block())
+
+class runtime(object):
+    def __init__(self, top_block):
+        if (isinstance(top_block, hier_block2)):
+            self._r = gr_make_runtime(top_block._hb)            
+        else:
+            self._r = gr_make_runtime(top_block)
+
+    def run(self):
+        self._r.run()
