@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-# See gnuradio-examples/python/gmsk2 for examples
+# See gnuradio-examples/python/digital for examples
 
 """
 differential QPSK modulation and demodulation.
