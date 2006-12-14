@@ -77,6 +77,7 @@ noinst_PYTHON = 			\
 	qa_packed_to_unpacked.py	\
 	qa_pipe_fittings.py		\
 	qa_pll_carriertracking.py	\
+	qa_pll_refout.py		\
 	qa_rational_resampler.py	\
 	qa_sig_source.py		\
 	qa_single_pole_iir.py		\
