@@ -30,6 +30,7 @@
 #include <gr_io_signature.h>
 #include <gr_sincos.h>
 #include <math.h>
+#include <gr_math.h>
 
 #define M_TWOPI (2*M_PI)
 
@@ -64,7 +65,7 @@ float
 gr_pll_refout_cc::phase_detector(gr_complex sample,float ref_phase)
 {
   float sample_phase;
-  sample_phase = atan2(sample.imag(),sample.real());
+  sample_phase = gr_fast_atan2f(sample.imag(),sample.real());
   return mod_2pi(sample_phase-ref_phase);
 }
 
