@@ -41,6 +41,9 @@ gr_make_costas_loop_cc (float alpha, float beta,
 /*!
  * \brief Carrier tracking PLL for QPSK
  * input: complex; output: complex
+ * <br>The Costas loop can have two output streams:
+ *    stream 1 is the baseband I&Q;
+ *    stream 2 is the normalized frequency of the loop
  *
  * \p order must be 2 or 4.
  */
