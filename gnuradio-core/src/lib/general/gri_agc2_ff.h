@@ -39,14 +39,14 @@ class gri_agc2_ff {
     : _attack_rate(attack_rate), _decay_rate(decay_rate), _reference(reference), 
       _gain(gain), _max_gain(max_gain) {};
 
-  float decay_rate () const  { return _decay_rate; }
   float attack_rate () const { return _attack_rate; }
+  float decay_rate () const  { return _decay_rate; }
   float reference () const   { return _reference; }
   float gain () const 	     { return _gain;  }
   float max_gain () const    { return _max_gain; }
   
-  void set_decay_rate (float rate) { _decay_rate = rate; }
   void set_attack_rate (float rate) { _attack_rate = rate; }
+  void set_decay_rate (float rate) { _decay_rate = rate; }
   void set_reference (float reference) { _reference = reference; }
   void set_gain (float gain) { _gain = gain; }
   void set_max_gain (float max_gain) { _max_gain = max_gain; }
@@ -79,8 +79,8 @@ class gri_agc2_ff {
   }
   
  protected:
-  float _decay_rate;		// decay rate for slow changing signals
   float _attack_rate;           // attack_rate for fast changing signals
+  float _decay_rate;		// decay rate for slow changing signals
   float	_reference;		// reference value
   float	_gain;			// current gain
   float _max_gain;		// maximum gain
