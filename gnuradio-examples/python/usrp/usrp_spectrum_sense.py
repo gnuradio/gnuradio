@@ -156,7 +156,8 @@ class my_graph(gr.flow_graph):
 
         self.freq_step = 0.75 * usrp_rate
         self.min_center_freq = self.min_freq + self.freq_step/2
-        self.max_center_freq = self.max_freq - self.freq_step/2
+        nsteps = math.ceil((self.max_freq - self.min_freq) / self.freq_step)
+        self.max_center_freq = self.min_center_freq + (nsteps * self.freq_step)
 
         self.next_freq = self.min_center_freq
         
@@ -184,7 +185,7 @@ class my_graph(gr.flow_graph):
     def set_next_freq(self):
         target_freq = self.next_freq
         self.next_freq = self.next_freq + self.freq_step
-        if self.next_freq > self.max_center_freq:
+        if self.next_freq >= self.max_center_freq:
             self.next_freq = self.min_center_freq
 
         if not self.set_freq(target_freq):
