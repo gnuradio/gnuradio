@@ -75,6 +75,7 @@ class gr_simple_flowgraph_detail
 private:
     friend class gr_simple_flowgraph;
     friend class gr_runtime_impl;
+    friend class topo_block_cmp;
     
     gr_simple_flowgraph_detail();
 
@@ -87,6 +88,8 @@ private:
     void connect(const std::string &src, int src_port, 
                  const std::string &dst, int dst_port);
     gr_block_sptr lookup_block(const std::string &name);
+    std::string lookup_name(const gr_block_sptr block);
+
     void check_valid_port(gr_io_signature_sptr sig, int port);
     void check_dst_not_used(const std::string &name, int port);
     void check_type_match(gr_block_sptr src_block, int src_port,
@@ -99,6 +102,7 @@ private:
     void setup_connections();
     gr_buffer_sptr allocate_buffer(const std::string &name, int port);
     gr_block_vector_t calc_downstream_blocks(const std::string &name, int port);
+    gr_block_vector_t calc_downstream_blocks(const std::string &name);
     gr_edge_vector_t calc_upstream_edges(const std::string &name);
     gr_block_vector_t calc_used_blocks();
     std::vector<gr_block_vector_t> partition();
@@ -106,6 +110,10 @@ private:
     gr_block_vector_t topological_sort(gr_block_vector_t &blocks);
     void reachable_dfs_visit(gr_block_sptr block, gr_block_vector_t &blocks);
     gr_block_vector_t calc_adjacent_blocks(gr_block_sptr block, gr_block_vector_t &blocks);
+    bool source_p(gr_block_sptr block);
+    gr_block_vector_t sort_sources_first(gr_block_vector_t &blocks);
+    void topological_dfs_visit(gr_block_sptr block, gr_block_vector_t &output);
+    void dump_block_vector(gr_block_vector_t blocks);
         
 public:
     ~gr_simple_flowgraph_detail();
