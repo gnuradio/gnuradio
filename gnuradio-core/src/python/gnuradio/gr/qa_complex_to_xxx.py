@@ -110,9 +110,22 @@ class test_complex_ops (gr_unittest.TestCase):
 
     def test_complex_to_arg (self):
         pi = math.pi
-        expected_result = (0, pi/6, pi/4, pi/2, 3*pi/4, 7*pi/8,
-                           -pi/6, -pi/4, -pi/2, -3*pi/4, -7*pi/8)
-        src_data = tuple ([math.cos (x) + math.sin (x) * 1j for x in expected_result])
+        input_data = (0, pi/6, pi/4, pi/2, 3*pi/4, 7*pi/8,
+                      -pi/6, -pi/4, -pi/2, -3*pi/4, -7*pi/8)
+
+        expected_result = (0.0,                  # 0
+                           0.52382522821426392,  # pi/6
+                           0.78539806604385376,  # pi/4
+                           1.5707963705062866,   # pi/2
+                           2.3561947345733643,   # 3pi/4
+                           2.7491819858551025,   # 7pi/8
+                           -0.52382522821426392, # -pi/6
+                           -0.78539806604385376, # -pi/4
+                           -1.5707963705062866,  # -pi/2
+                           -2.3561947345733643,  # -3pi/4
+                           -2.7491819858551025)  # -7pi/8
+
+        src_data = tuple ([math.cos (x) + math.sin (x) * 1j for x in input_data])
         src = gr.vector_source_c (src_data)
         op = gr.complex_to_arg ()
         dst = gr.vector_sink_f ()
@@ -120,6 +133,7 @@ class test_complex_ops (gr_unittest.TestCase):
         self.fg.connect (op, dst)
         self.fg.run ()
         actual_result = dst.data ()
+
         self.assertFloatTuplesAlmostEqual (expected_result, actual_result, 5)
 
 

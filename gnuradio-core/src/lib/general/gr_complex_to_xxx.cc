@@ -26,6 +26,7 @@
 
 #include <gr_complex_to_xxx.h>
 #include <gr_io_signature.h>
+#include <gr_math.h>
 
 // ----------------------------------------------------------------
 
@@ -226,7 +227,8 @@ gr_complex_to_arg::work (int noutput_items,
   int noi = noutput_items * d_vlen;
 
   for (int i = 0; i < noi; i++){
-    out[i] = std::arg (in[i]);
+    //    out[i] = std::arg (in[i]);
+    out[i] = gr_fast_atan2f(in[i]);
   }
   return noutput_items;
 }
