@@ -196,3 +196,4 @@ gr_fast_atan2f(REAL y, REAL x)
   return (angle);
 #endif
 }
+

@@ -27,6 +27,8 @@
 #ifndef _GR_MATH_H_
 #define _GR_MATH_H_
 
+#include <gr_complex.h>
+
 long gr_gcd (long m, long n);
 
 // returns a non-zero value if value is "not-a-number" (NaN), and 0 otherwise
@@ -56,5 +58,10 @@ int gr_signbit (double x);
  * error of +/- 0.045 degrees.
  */
 float gr_fast_atan2f(float y, float x);
+
+static inline float gr_fast_atan2f(gr_complex z) 
+{ 
+  return gr_fast_atan2f(z.imag(), z.real()); 
+}
 
 #endif /* _GR_MATH_H_ */
