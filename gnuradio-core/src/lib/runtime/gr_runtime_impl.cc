@@ -30,14 +30,14 @@
 #include <gr_simple_flowgraph.h>
 #include <gr_hier_block2.h>
 #include <gr_hier_block2_detail.h>
+#include <signal.h>
 #include <stdexcept>
 #include <iostream>
 
-gr_runtime_impl::gr_runtime_impl(gr_hier_block2_sptr top_block) :
-d_running(false),
-d_top_block(top_block),
-d_sfg(gr_make_simple_flowgraph()),
-d_graphs()
+gr_runtime_impl::gr_runtime_impl(gr_hier_block2_sptr top_block) 
+  : d_running(false),
+    d_top_block(top_block),
+    d_sfg(gr_make_simple_flowgraph())
 {
 }
 
@@ -66,7 +66,7 @@ gr_runtime_impl::start()
     d_threads.clear();
     for (std::vector<gr_block_vector_t>::iterator p = d_graphs.begin();
          p != d_graphs.end(); p++) {
-        gr_scheduler_thread_sptr thread = gr_make_scheduler_thread(*p);
+        gr_scheduler_thread *thread = new gr_scheduler_thread(*p);
         thread->start();
         d_threads.push_back(thread);
     }
@@ -78,9 +78,8 @@ gr_runtime_impl::stop()
     if (!d_running)
         throw std::runtime_error("not running");
 
-    for (gr_scheduler_thread_viter_t p = d_threads.begin(); 
-         p != d_threads.end(); p++)
-        (*p)->stop();
+    for (gr_scheduler_thread_viter_t p = d_threads.begin(); p != d_threads.end(); p++)
+        (*p)->stop(); 
 
     d_running = false;
 }
@@ -88,19 +87,12 @@ gr_runtime_impl::stop()
 void
 gr_runtime_impl::wait()
 {
-    for (gr_scheduler_thread_viter_t p = d_threads.begin(); 
-         p != d_threads.end(); p++) {
-        while(1) {
-            (*p)->join(NULL);
-            if (!(*p)->state() == omni_thread::STATE_TERMINATED)
-                break;
-        }
-    }
-}
+    void *dummy_status; // don't ever dereference this
 
-gr_scheduler_thread_sptr gr_make_scheduler_thread(gr_block_vector_t graph)
-{
-    return gr_scheduler_thread_sptr(new gr_scheduler_thread(graph));
+    for (gr_scheduler_thread_viter_t p = d_threads.begin(); p != d_threads.end(); p++) {
+        (*p)->join(&dummy_status); // pthreads will self-delete, so pointer is now dead
+        (*p) = 0; // FIXME: switch to stl::list and actually remove from container
+    }
 }
 
 gr_scheduler_thread::gr_scheduler_thread(gr_block_vector_t graph) :
@@ -118,8 +110,19 @@ void gr_scheduler_thread::start()
     start_undetached();
 }
 
-void *gr_scheduler_thread::run_undetached(void *arg)
+void *
+gr_scheduler_thread::run_undetached(void *arg)
 {
+    // First code to run in new thread context
+
+    // Mask off SIGINT in this thread to gaurantee mainline thread gets signal
+    sigset_t old_set;
+    sigset_t new_set;
+    sigfillset(&new_set);
+    sigdelset(&new_set, SIGINT);
+    sigprocmask(SIG_BLOCK, &new_set, &old_set);
+
+    // Run the single-threaded scheduler
     d_sts->run();
     return 0;
 }

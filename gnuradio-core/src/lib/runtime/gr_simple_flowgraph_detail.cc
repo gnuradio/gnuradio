@@ -110,8 +110,8 @@ gr_simple_flowgraph_detail::connect(const std::string &src_name, int src_port,
     gr_block_sptr dst_block = lookup_block(dst_name);
 
     if (GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG)
-	std::cout << "Connecting " << src_name << ":" << src_port << "->"
-              << dst_name << ":" << dst_port << std::endl;
+        std::cout << "Connecting " << src_name << ":" << src_port << "->"
+                  << dst_name << ":" << dst_port << std::endl;
 
     if (!src_block)
         throw std::invalid_argument("unknown src name");
@@ -291,8 +291,8 @@ gr_simple_flowgraph_detail::setup_connections()
         gr_edge_vector_t in_edges = calc_upstream_edges(p->first);
 
         if (GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG)
-	    if (in_edges.size() > 0)
-        	std::cout << "Connecting inputs to " << p->first << "..." << std::endl;
+	        if (in_edges.size() > 0)
+        	    std::cout << "Connecting inputs to " << p->first << "..." << std::endl;
 
         // For each edge that feeds into it
         for (gr_edge_viter_t e = in_edges.begin(); e != in_edges.end(); e++) {
@@ -485,27 +485,11 @@ gr_simple_flowgraph_detail::calc_adjacent_blocks(gr_block_sptr block, gr_block_v
     return result;
 }
 
-void
-gr_simple_flowgraph_detail::dump_block_vector(gr_block_vector_t blocks)
-{
-    for (gr_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
-        std::cout << (*p) << std::endl;
-    }
-}
-
 gr_block_vector_t
 gr_simple_flowgraph_detail::topological_sort(gr_block_vector_t &blocks)
 {
     gr_block_vector_t result, tmp;
-    std::cout << "Before source sort: " << std::endl;
-    dump_block_vector(blocks);
-    std::cout << std::endl;
-
     tmp = sort_sources_first(blocks);
-
-    std::cout << "After source sort: " << std::endl;
-    dump_block_vector(tmp);
-    std::cout << std::endl;
 
     // Start 'em all white
     for (gr_block_viter_t p = tmp.begin(); p != tmp.end(); p++)
@@ -517,10 +501,6 @@ gr_simple_flowgraph_detail::topological_sort(gr_block_vector_t &blocks)
     }    
 
     reverse(result.begin(), result.end());
-
-    std::cout << "After dfs: " << std::endl;
-    dump_block_vector(result);
-    std::cout << std::endl;
 
     return result;
 }
@@ -557,18 +537,15 @@ gr_simple_flowgraph_detail::topological_dfs_visit(gr_block_sptr block, gr_block_
 {
     block->detail()->set_color(gr_block_detail::GREY);
 
-    gr_block_vector_t ds_blocks = calc_downstream_blocks(lookup_name(block));
-    std::cout << "Downstream blocks of " << block << ":" << std::endl;
-    dump_block_vector(ds_blocks);
+    gr_block_vector_t blocks(calc_downstream_blocks(lookup_name(block)));
 
-    gr_block_vector_t blocks(ds_blocks);
     for (gr_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
         switch ((*p)->detail()->color()) {
-            case gr_block_detail::WHITE:            // (u, v) is a tree edge
+            case gr_block_detail::WHITE:           
                 topological_dfs_visit(*p, output);
                 break;
 
-            case gr_block_detail::GREY:             // (u, v) is a back edge - not a DAG
+            case gr_block_detail::GREY:            
                 throw std::runtime_error("flow graph has loops!");
 
             case gr_block_detail::BLACK:
@@ -577,7 +554,6 @@ gr_simple_flowgraph_detail::topological_dfs_visit(gr_block_sptr block, gr_block_
             default:
                 throw std::runtime_error("invalid color on block!");
         }
-
     }
 
     block->detail()->set_color(gr_block_detail::BLACK);

@@ -113,7 +113,6 @@ private:
     bool source_p(gr_block_sptr block);
     gr_block_vector_t sort_sources_first(gr_block_vector_t &blocks);
     void topological_dfs_visit(gr_block_sptr block, gr_block_vector_t &output);
-    void dump_block_vector(gr_block_vector_t blocks);
         
 public:
     ~gr_simple_flowgraph_detail();

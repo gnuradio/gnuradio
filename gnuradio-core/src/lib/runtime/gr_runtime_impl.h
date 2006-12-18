@@ -28,23 +28,20 @@
 #include <omnithread.h>
 #include <gr_single_threaded_scheduler.h>
 
+// omnithread calls delete on itself after thread exits, so can't use shared ptr
 class gr_scheduler_thread;
-typedef boost::shared_ptr<gr_scheduler_thread> gr_scheduler_thread_sptr;
-typedef std::vector<gr_scheduler_thread_sptr> gr_scheduler_thread_vector_t;
-typedef std::vector<gr_scheduler_thread_sptr>::iterator gr_scheduler_thread_viter_t;
-
-gr_scheduler_thread_sptr gr_make_scheduler_thread(gr_block_vector_t graph);
+typedef std::vector<gr_scheduler_thread *> gr_scheduler_thread_vector_t;
+typedef gr_scheduler_thread_vector_t::iterator gr_scheduler_thread_viter_t;
 
 class gr_scheduler_thread : public omni_thread
 {
 private:
-    gr_scheduler_thread(gr_block_vector_t graph);
-    friend gr_scheduler_thread_sptr gr_make_scheduler_thread(gr_block_vector_t graph);
-
     gr_single_threaded_scheduler_sptr d_sts;    
 
 public:
+    gr_scheduler_thread(gr_block_vector_t graph);
     ~gr_scheduler_thread();
+
     virtual void *run_undetached(void *arg);
     void start();
     void stop();

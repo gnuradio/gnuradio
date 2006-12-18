@@ -55,7 +55,7 @@ if __name__ == '__main__':
     top_block = dial_tone()
     runtime = gr.runtime(top_block)
 
-    try:
-	runtime.run()
+    try:    
+        runtime.run()
     except KeyboardInterrupt:
-	runtime.stop()
+        pass

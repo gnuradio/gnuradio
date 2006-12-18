@@ -36,8 +36,8 @@ gr_hier_block2("dialtone",
 	       gr_make_io_signature(0,0,0),
 	       gr_make_io_signature(0,0,0))
 {
-    define_component("source0", gr_make_sig_source_f(48000, GR_SIN_WAVE, 350, 0.5));
-    define_component("source1", gr_make_sig_source_f(48000, GR_SIN_WAVE, 440, 0.5));
+    define_component("source0", gr_make_sig_source_f(48000, GR_SIN_WAVE, 350, 0.1));
+    define_component("source1", gr_make_sig_source_f(48000, GR_SIN_WAVE, 440, 0.1));
     define_component("sink", audio_alsa_make_sink(48000));
 
     connect("source0", 0, "sink", 0);
