@@ -74,7 +74,7 @@ AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(fcntl.h limits.h strings.h time.h sys/ioctl.h sys/time.h unistd.h)
 AC_CHECK_HEADERS(linux/ppdev.h sys/mman.h sys/select.h sys/types.h)
-AC_CHECK_HEADERS(sys/resource.h stdint.h sched.h)
+AC_CHECK_HEADERS(sys/resource.h stdint.h sched.h signal.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -90,7 +90,7 @@ AC_FUNC_SETVBUF_REVERSED
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([mmap select socket strcspn strerror strspn getpagesize sysconf])
 AC_CHECK_FUNCS([snprintf gettimeofday nanosleep sched_setscheduler])
-AC_CHECK_FUNCS([modf sqrt])
+AC_CHECK_FUNCS([modf sqrt sigaction sigprocmask])
 
 AC_CHECK_LIB(m, sincos, [AC_DEFINE([HAVE_SINCOS],[1],[Define to 1 if your system has `sincos'.])])
 AC_CHECK_LIB(m, sincosf,[AC_DEFINE([HAVE_SINCOSF],[1],[Define to 1 if your system has `sincosf'.])])

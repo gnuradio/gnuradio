@@ -49,7 +49,7 @@ gr_runtime::~gr_runtime()
     delete d_impl;
 }
 
-// HACK: This prevents using more than one gr_runtime instance
+// FIXME: This prevents using more than one gr_runtime instance
 static void 
 runtime_sigint_handler(int signum)
 {

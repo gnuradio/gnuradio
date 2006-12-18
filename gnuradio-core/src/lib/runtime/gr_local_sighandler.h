@@ -23,7 +23,10 @@
 #ifndef INCLUDED_GR_LOCAL_SIGHANDLER_H
 #define INCLUDED_GR_LOCAL_SIGHANDLER_H
 
+#ifdef HAVE_SIGNAL_H
 #include <signal.h>
+#endif
+
 #include <string>
 
 /*!

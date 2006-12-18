@@ -24,15 +24,19 @@
 #include "config.h"
 #endif
 
-#define GR_RUNTIME_IMPL_DEBUG 0
-
 #include <gr_runtime_impl.h>
 #include <gr_simple_flowgraph.h>
 #include <gr_hier_block2.h>
 #include <gr_hier_block2_detail.h>
+
+#ifdef HAVE_SIGNAL_H
 #include <signal.h>
+#endif
+
 #include <stdexcept>
 #include <iostream>
+
+#define GR_RUNTIME_IMPL_DEBUG 0
 
 gr_runtime_impl::gr_runtime_impl(gr_hier_block2_sptr top_block) 
   : d_running(false),
@@ -116,12 +120,13 @@ gr_scheduler_thread::run_undetached(void *arg)
     // First code to run in new thread context
 
     // Mask off SIGINT in this thread to gaurantee mainline thread gets signal
+#ifdef HAVE_SIGPROCMASK
     sigset_t old_set;
     sigset_t new_set;
-    sigfillset(&new_set);
-    sigdelset(&new_set, SIGINT);
+    sigemptyset(&new_set);
+    sigaddset(&new_set, SIGINT);
     sigprocmask(SIG_BLOCK, &new_set, &old_set);
-
+#endif
     // Run the single-threaded scheduler
     d_sts->run();
     return 0;
