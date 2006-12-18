@@ -85,7 +85,7 @@ AC_DEFUN([LF_CXX_PORTABILITY],[
 
   dnl Test whether C++ has std::isnan
   AC_MSG_CHECKING(whether C++ has std::isnan)
-  AC_TRY_COMPILE([#include <math.h>], [
+  AC_TRY_COMPILE([#include <cmath>], [
    std::isnan(0);
 ], [ AC_MSG_RESULT(yes)
 	AC_DEFINE(CXX_HAS_STD_ISNAN,[],[Define if has std::isnan]) ],
