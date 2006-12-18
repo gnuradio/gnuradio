@@ -22,6 +22,5 @@
 include $(top_srcdir)/Makefile.common
 
 SUBDIRS = \
-    dial_tone \
-    hier
+    dial_tone 
 
