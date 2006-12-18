@@ -19,27 +19,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <dialtone.h>
-#include <gr_io_signature.h>
-#include <gr_sig_source_f.h>
-#include <audio_alsa_sink.h>
+#include <gr_hier_block2.h>
 
-// Shared pointer constructor
-dialtone_sptr make_dialtone()
+class dial_tone;
+typedef boost::shared_ptr<dial_tone> dial_tone_sptr;
+dial_tone_sptr make_dial_tone();
+
+class dial_tone : public gr_hier_block2
 {
-    return dialtone_sptr(new dialtone());
-}
-
-// Hierarchical block constructor, with no inputs or outputs
-dialtone::dialtone() : 
-gr_hier_block2("dialtone",
-	       gr_make_io_signature(0,0,0),
-	       gr_make_io_signature(0,0,0))
-{
-    define_component("source0", gr_make_sig_source_f(48000, GR_SIN_WAVE, 350, 0.1));
-    define_component("source1", gr_make_sig_source_f(48000, GR_SIN_WAVE, 440, 0.1));
-    define_component("sink", audio_alsa_make_sink(48000));
-
-    connect("source0", 0, "sink", 0);
-    connect("source1", 0, "sink", 1);    
-}
+private:
+    dial_tone();
+    friend dial_tone_sptr make_dial_tone();
+};

@@ -32,16 +32,16 @@ GR_AUDIO_ALSA_LIBS=$(top_builddir)/gr-audio-alsa/src/libgr_audio_alsa.la
 # GNURADIO_CORE_LIBS = -lgnuradio-core
 # GR_AUDIO_ALSA_LIBS = -lgr_audio_alsa
 
-noinst_PROGRAMS = dialtone
+noinst_PROGRAMS = dial_tone
     
 noinst_HEADERS = \
-    dialtone.h
+    dial_tone.h
         
-dialtone_SOURCES = \
-    dialtone.cc	   \
+dial_tone_SOURCES = \
+    dial_tone.cc	   \
     main.cc
 
-dialtone_LDADD = \
+dial_tone_LDADD = \
     $(GNURADIO_CORE_LIBS) \
     $(GR_AUDIO_ALSA_LIBS)
 

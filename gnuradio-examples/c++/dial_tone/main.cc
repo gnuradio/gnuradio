@@ -19,15 +19,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gr_hier_block2.h>
+// GNU Radio C++ application
+//
+// Instantiate a top block
+// Instantiate a runtime, passing it the top block
+// Tell the runtime to go...
 
-class dialtone;
-typedef boost::shared_ptr<dialtone> dialtone_sptr;
-dialtone_sptr make_dialtone();
+#include <dial_tone.h>
+#include <gr_runtime.h>
 
-class dialtone : public gr_hier_block2
+int main()
 {
-private:
-    dialtone();
-    friend dialtone_sptr make_dialtone();
-};
+    dial_tone_sptr top_block = make_dial_tone();
+    gr_runtime_sptr runtime = gr_make_runtime(top_block);
+
+    runtime->run();   
+    return 0;
+}
