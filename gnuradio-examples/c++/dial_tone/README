@@ -1,0 +1,2 @@
+This example requires that gr-audio-alsa be built in the main tree in order
+to compile successfully.  It is not built automatically.
