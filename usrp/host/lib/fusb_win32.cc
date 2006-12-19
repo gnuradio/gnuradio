@@ -168,32 +168,32 @@ fusb_ephandle_win32::write (const void *buffer, int nbytes)
     if (d_output_short == 0)
         usb_submit_async(d_context[d_curr],
 			 &d_buffer[d_curr*d_block_size], d_block_size);
-
-	if (bytes_to_write == 0)
-		return nbytes;
-
-	assert(d_output_short == 0);
   }
 
-  d_curr = (d_curr+1)%d_nblocks;
-  buf = &d_buffer[d_curr*d_block_size];
+  while (bytes_to_write > 0) {
+    d_curr = (d_curr+1)%d_nblocks;
+    buf = &d_buffer[d_curr*d_block_size];
 
-  if (d_outstanding_write != d_nblocks) {
-    d_outstanding_write++;
-  } else {
-    retval = usb_reap_async(d_context[d_curr], USB_TIMEOUT);
-    if (retval < 0) {
-	  	fprintf(stderr, "%s: usb_reap_async: %s\n",
-  			__FUNCTION__, usb_strerror());
-        return retval;
-      }
+    if (d_outstanding_write != d_nblocks) {
+      d_outstanding_write++;
+    } else {
+      retval = usb_reap_async(d_context[d_curr], USB_TIMEOUT);
+      if (retval < 0) {
+		  fprintf(stderr, "%s: usb_reap_async: %s\n",
+			  __FUNCTION__, usb_strerror());
+	  return retval;
+	}
+    }
+
+    int ncopy = std::min(bytes_to_write, d_block_size);
+    memcpy(buf, (void *) &(((char*)buffer)[a]), ncopy);
+    bytes_to_write -= ncopy;
+    a += ncopy;
+
+    d_output_short = d_block_size - ncopy;
+    if (d_output_short == 0)
+	    usb_submit_async(d_context[d_curr], buf, d_block_size);
   }
-
-  memcpy(buf, (void *) &(((char*)buffer)[a]), bytes_to_write);
-
-  d_output_short = d_block_size - bytes_to_write;
-  if (d_output_short == 0)
-	  usb_submit_async(d_context[d_curr], buf, d_block_size);
 
   return retval < 0 ? retval : nbytes;
 }
@@ -224,27 +224,27 @@ fusb_ephandle_win32::read (void *buffer, int nbytes)
     if (d_input_leftover == 0)
         usb_submit_async(d_context[d_curr],
 			 &d_buffer[d_curr*d_block_size], d_block_size);
-
-	if (bytes_to_read == 0)
-		return nbytes;
-
-	assert(d_input_leftover == 0);
   }
 
+  while (bytes_to_read > 0) {
 
-  d_curr = (d_curr+1)%d_nblocks;
-  buf = &d_buffer[d_curr*d_block_size];
+    d_curr = (d_curr+1)%d_nblocks;
+    buf = &d_buffer[d_curr*d_block_size];
 
-  retval = usb_reap_async(d_context[d_curr], USB_TIMEOUT);
-  if (retval < 0)
-  	fprintf(stderr, "%s: usb_reap_async: %s\n",
-  			__FUNCTION__, usb_strerror());
+    retval = usb_reap_async(d_context[d_curr], USB_TIMEOUT);
+    if (retval < 0)
+	  fprintf(stderr, "%s: usb_reap_async: %s\n",
+			  __FUNCTION__, usb_strerror());
 
-  memcpy((void *) &(((char*)buffer)[a]), buf, bytes_to_read);
+    int ncopy = std::min(bytes_to_read, d_block_size);
+    memcpy((void *) &(((char*)buffer)[a]), buf, ncopy);
+    bytes_to_read -= ncopy;
+    a += ncopy;
 
-  d_input_leftover = d_block_size - bytes_to_read;
-  if (d_input_leftover == 0)
-	  usb_submit_async(d_context[d_curr], buf, d_block_size);
+    d_input_leftover = d_block_size - ncopy;
+    if (d_input_leftover == 0)
+	    usb_submit_async(d_context[d_curr], buf, d_block_size);
+  }
 
   return retval < 0 ? retval : nbytes;
 }
