@@ -60,11 +60,11 @@ gr_oscope_guts::gr_oscope_guts (int nchannels, double sample_rate, gr_msg_queue_
     d_update_rate (20),
     d_trigger_level (0),
     d_obi (0),
-    d_state (LOOK_FOR_TRIGGER),
+    d_state (HOLD_OFF),
     d_decimator_count (0),
     d_decimator_count_init (1),
     d_hold_off_count (0),
-    d_hold_off_count_init (0),
+    d_hold_off_count_init (OUTPUT_RECORD_SIZE/2),
     d_post_trigger_count (0),
     d_post_trigger_count_init (OUTPUT_RECORD_SIZE/2),
     d_prev_sample (0)
@@ -77,11 +77,14 @@ gr_oscope_guts::gr_oscope_guts (int nchannels, double sample_rate, gr_msg_queue_
   for (int i = 0; i < MAX_CHANNELS; i++)
     d_buffer[i] = 0;
 
-  for (int i = 0; i < d_nchannels; i++)
+  for (int i = 0; i < d_nchannels; i++){
     d_buffer[i] = new float [OUTPUT_RECORD_SIZE];
+    for (int j = 0; j < OUTPUT_RECORD_SIZE; j++)
+      d_buffer[i][j] = 0.0;
+  }
 
+  enter_hold_off ();
   update_rate_or_decimation_changed ();
-  enter_look_for_trigger ();
 }
 
 gr_oscope_guts::~gr_oscope_guts ()
