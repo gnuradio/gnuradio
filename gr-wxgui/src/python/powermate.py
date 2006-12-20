@@ -25,15 +25,23 @@ Handler for Griffin PowerMate, Contour ShuttlePro & ShuttleXpress USB knobs
 
 This is Linux and wxPython specific.
 """
-import select
+
 import os
-import fcntl
+import sys
 import struct
 import exceptions
 import threading
-import sys
 import wx
 from gnuradio import gru
+
+imported_ok = True
+
+try:
+    import select
+    import fcntl
+except ImportError:
+    imported_ok = False
+
 
 # First a little bit of background:
 #
@@ -157,6 +165,9 @@ class powermate(threading.Thread):
     def __init__(self, event_receiver=None, filename=None, **kwargs):
         self.event_receiver = event_receiver
         self.handle = -1
+        if not imported_ok:
+            raise exceptions.RuntimeError, 'powermate not supported on this platform'
+
         if filename:
             if not self._open_device(filename):
                 raise exceptions.RuntimeError, 'Unable to find powermate'
