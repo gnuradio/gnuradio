@@ -40,12 +40,11 @@ gr_make_iir_filter_ffd (const std::vector<double> &fftaps,
  * This filter uses the Direct Form I implementation, where
  * \p fftaps contains the feed-forward taps, and \p fbtaps the feedback ones.
  *
- * \p fftaps and \p fbtaps must have equal numbers of taps
- *
+ * 
  * The input and output satisfy a difference equation of the form
 
  \f[
- y[n] - \sum_{k=1}^{N} a_k y[n-k] = \sum_{k=0}^{M} b_k x[n-k]
+ y[n] - \sum_{k=1}^{M} a_k y[n-k] = \sum_{k=0}^{N} b_k x[n-k]
  \f]
 
  * with the corresponding rational system function

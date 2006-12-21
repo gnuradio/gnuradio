@@ -43,13 +43,13 @@ public:
    * The input and output satisfy a difference equation of the form
 
    \f[
-   y[n] - \sum_{k=1}^{N} a_k y[n-k] = \sum_{k=0}^{M} b_k x[n-k]
+   y[n] - \sum_{k=1}^{M} a_k y[n-k] = \sum_{k=0}^{N} b_k x[n-k]
    \f]
 
    * with the corresponding rational system function
 
    \f[
-   H(z) = \frac{\sum_{k=0}^{M} b_k z^{-k}}{1 - \sum_{k=1}^{N} a_k z^{-k}}
+   H(z) = \frac{\sum_{k=0}^{N} b_k z^{-k}}{1 - \sum_{k=1}^{M} a_k z^{-k}}
    \f]
 
    * Note that some texts define the system function with a + in the denominator.
@@ -61,7 +61,7 @@ public:
     set_taps (fftaps, fbtaps);
   }
 
-  gri_iir () : d_latest(0) { }
+  gri_iir () : d_latest_n(0),d_latest_m(0) { }
 
   ~gri_iir () {}
 
@@ -80,7 +80,8 @@ public:
   /*!
    * \return number of taps in filter.
    */
-  unsigned ntaps () const { return d_fftaps.size (); }
+  unsigned ntaps_ff () const { return d_fftaps.size (); }
+  unsigned ntaps_fb () const { return d_fbtaps.size (); }
 
   /*!
    * \brief install new taps.
@@ -88,19 +89,22 @@ public:
   void set_taps (const std::vector<tap_type> &fftaps, 
 		 const std::vector<tap_type> &fbtaps) throw (std::invalid_argument)
   { 
-    if (fftaps.size () != fbtaps.size ())
-      throw std::invalid_argument ("gri_iir::set_taps");
 
-    d_latest = 0;
+
+    d_latest_n = 0;
+    d_latest_m = 0;
     d_fftaps = fftaps; 
     d_fbtaps = fbtaps; 
 
     int n = fftaps.size ();
+    int m = fbtaps.size ();
     d_prev_input.resize (2 * n);
-    d_prev_output.resize (2 * n);
+    d_prev_output.resize (2 * m);
 
     for (int i = 0; i < 2 * n; i++){
       d_prev_input[i] = 0;
+     }
+    for (int i = 0; i < 2 * m; i++){
       d_prev_output[i] = 0;
     }
   }
@@ -108,7 +112,8 @@ public:
 protected:
   std::vector<tap_type>	d_fftaps;
   std::vector<tap_type>	d_fbtaps;
-  int 			d_latest;
+  int 			d_latest_n;
+  int 			d_latest_m;
   std::vector<tap_type>	d_prev_output;
   std::vector<i_type>	d_prev_input;
 };
@@ -123,29 +128,36 @@ gri_iir<i_type, o_type, tap_type>::filter (const i_type input)
 {
   tap_type	acc;
   unsigned	i = 0;
-  unsigned	n = ntaps ();
+  unsigned	n = ntaps_ff ();
+  unsigned      m = ntaps_fb ();
 
   if (n == 0)
     return (o_type) 0;
 
-  int latest = d_latest;
+  int latest_n = d_latest_n;
+  int latest_m = d_latest_m;
   
   acc = d_fftaps[0] * input;
   for (i = 1; i < n; i ++)
-    acc += (d_fftaps[i] * d_prev_input[latest + i]
-	    + d_fbtaps[i] * d_prev_output[latest + i]);
+    acc += (d_fftaps[i] * d_prev_input[latest_n + i]);
+  for (i = 1; i < m; i ++)
+    acc += (d_fbtaps[i] * d_prev_output[latest_m + i]);
 
   // store the values twice to avoid having to handle wrap-around in the loop
-  d_prev_output[latest] = acc;
-  d_prev_output[latest+n] = acc;
-  d_prev_input[latest] = input;
-  d_prev_input[latest+n] = input;
+  d_prev_output[latest_m] = acc;
+  d_prev_output[latest_m+m] = acc;
+  d_prev_input[latest_n] = input;
+  d_prev_input[latest_n+n] = input;
 
-  latest--;
-  if (latest < 0)
-    latest += n;
+  latest_n--;
+  latest_m--;
+  if (latest_n < 0)
+    latest_n += n;
+  if (latest_m < 0)
+    latest_m += m;
 
-  d_latest = latest;
+  d_latest_m = latest_m;
+  d_latest_n = latest_n;
   return (o_type) acc;
 }
 

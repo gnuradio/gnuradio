@@ -101,11 +101,6 @@ class test_iir (gr_unittest.TestCase):
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
 
     def test_iir_direct_006 (self):
-        fftaps = (2, 11,  0)
-        fbtaps = (0,  -1)
-        self.assertRaises ((RuntimeError, ValueError), gr.iir_filter_ffd, fftaps, fbtaps)
-
-    def test_iir_direct_007 (self):
         src_data = (1, 2, 3, 4, 5, 6, 7, 8)
         expected_result = (2, 13, 21, 59, 58, 186, 68, 583)
         fftaps = (2, 1)
@@ -122,13 +117,42 @@ class test_iir (gr_unittest.TestCase):
         result_data = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
 
-    def test_iir_direct_008 (self):
+    def test_iir_direct_007 (self):
+        src_data = (1, 2, 3, 4, 5, 6, 7, 8)
+        expected_result = (2,2,5,5,8,8,11,11)
         fftaps = (2, 1)
         fbtaps = (0, -1)
+        src = gr.vector_source_f (src_data)
         op = gr.iir_filter_ffd (fftaps, fbtaps)
-        fftaps = (2, 11)
-        fbtaps = (0,  -1, 3)
-        self.assertRaises ((RuntimeError, ValueError), op.set_taps, fftaps, fbtaps)
+        fftaps = (2,0,1)
+        fbtaps = (0, -1)
+        op.set_taps (fftaps, fbtaps)
+        dst = gr.vector_sink_f ()
+        self.fg.connect (src, op)
+        self.fg.connect (op, dst)
+        self.fg.run ()
+        result_data = dst.data ()
+        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+        
+    def test_iir_direct_008 (self):
+        src_data = (1, 2, 3, 4, 5, 6, 7, 8)
+        expected_result = (2,4,4,10,18,14,26,56)
+        fftaps = (2,)
+        fbtaps = (0, 1)
+        src = gr.vector_source_f (src_data)
+        op = gr.iir_filter_ffd (fftaps, fbtaps)
+        fftaps_data = (1)
+        fbtaps = (0,0, -1,3)
+        op.set_taps (fftaps, fbtaps)
+        dst = gr.vector_sink_f ()
+        self.fg.connect (src, op)
+        self.fg.connect (op, dst)
+        self.fg.run ()
+        result_data = dst.data ()
+        self.assertFloatTuplesAlmostEqual (expected_result, result_data)
+        
+        
+
 
 if __name__ == '__main__':
     gr_unittest.main ()

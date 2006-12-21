@@ -57,11 +57,6 @@ void
 gr_iir_filter_ffd::set_taps (const std::vector<double> &fftaps,
 			     const std::vector<double> &fbtaps) throw (std::invalid_argument)
 {
-  if (fftaps.size () != fbtaps.size ()){
-    fprintf (stderr,
-     "gr_iir_filter_ffd::set_taps: fftaps and fbtaps must have the same number of elements.\n");
-    throw std::invalid_argument ("gr_iir_filter_ffd::set_taps");
-  }
   
   d_new_fftaps = fftaps;
   d_new_fbtaps = fbtaps;
@@ -76,7 +71,6 @@ gr_iir_filter_ffd::work (int noutput_items,
   const float *in = (const float *) input_items[0];
   float *out = (float *) output_items[0];
 
-  // fprintf (stderr, "gr_iir_filter_ffd::work noutput_items = %d\n", noutput_items);
 
   if (d_updated){
     d_iir.set_taps (d_new_fftaps, d_new_fbtaps);
