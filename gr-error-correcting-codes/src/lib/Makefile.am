@@ -98,5 +98,3 @@ dist-hook:
 	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
 
 MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc *.loT *~
-
-CONFIG_CLEAN_FILES = *.in
