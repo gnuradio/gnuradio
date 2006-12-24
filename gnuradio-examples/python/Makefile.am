@@ -20,4 +20,4 @@
 # 
 
 SUBDIRS = apps audio channel-coding digital_voice digital multi-antenna \
-	  multi_usrp networking usrp 
+	  multi_usrp networking usrp hier

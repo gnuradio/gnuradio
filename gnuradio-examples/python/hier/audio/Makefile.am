@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2006 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,15 +19,5 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-EXTRA_DIST = 			\
-	audio_copy.py		\
-	audio_fft.py		\
-	audio_play.py		\
-	audio_to_file.py	\
-	dial_squelch.py		\
-	dial_tone.py		\
-	dialtone_v.py		\
-	mono_tone.py		\
-	multi_tone.py		\
-	spectrum_inversion.py	\
-	test_resampler.py	
+EXTRA_DIST = \
+    dial_tone2.py

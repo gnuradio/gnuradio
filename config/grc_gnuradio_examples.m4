@@ -31,10 +31,13 @@ AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
         gnuradio-examples/python/channel-coding/fsm_files/Makefile \
         gnuradio-examples/python/digital/Makefile \
         gnuradio-examples/python/digital_voice/Makefile \
+	gnuradio-examples/python/hier/Makefile \
+	gnuradio-examples/python/hier/audio/Makefile \
+	gnuradio-examples/python/hier/ofdm/Makefile \
         gnuradio-examples/python/multi-antenna/Makefile \
         gnuradio-examples/python/multi_usrp/Makefile \
         gnuradio-examples/python/networking/Makefile \
-        gnuradio-examples/python/usrp/Makefile
+        gnuradio-examples/python/usrp/Makefile \
     ])
 
     passed=yes
