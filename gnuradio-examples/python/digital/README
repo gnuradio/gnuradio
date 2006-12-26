@@ -1,6 +1,6 @@
 Quick overview of what's here:
 
-* benchmark_tx.py: generates packets of the size you
+* benchmark_rx.py: generates packets of the size you
 specify and sends them across the air using the USRP.  Known to work
 well using the USRP with the RFX transceiver daughterboards.
 You can specify the bitrate to use with the -r <bitrate> command line
