@@ -42,6 +42,7 @@
 #define	USB_PID_FSF_SSRP_reserved	0x0005	  // Simple Software Radio Peripheral
 #define USB_PID_FSF_HPSDR               0x0006    // High Performance Software Defined Radio (Internal Boot)
 #define USB_PID_FSF_HPSDR_HA    	0x0007    // High Performance Software Defined Radio (Host Assisted Boot)
+#define USB_PID_FSF_QS1R	    	0x0008    // QS1R HF receiver
 
 #define USB_PID_FSF_LBNL_UXO            0x0018    // http://recycle.lbl.gov/~ldoolitt/uxo/
 
