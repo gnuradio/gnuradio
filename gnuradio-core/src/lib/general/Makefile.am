@@ -25,86 +25,15 @@ INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES)
 
 noinst_LTLIBRARIES = libgeneral.la libgeneral-qa.la
 
-# ----------------------------------------------------------------
-# these scripts generate code
-
-CODE_GENERATOR = 			\
-	generate_all.py			\
-	generate_common.py		\
-	gr_add_XX.cc.t			\
-	gr_add_XX.h.t			\
-	gr_add_XX.i.t			\
-	gr_add_const_XX.cc.t		\
-	gr_add_const_XX.h.t		\
-	gr_add_const_XX.i.t		\
-	gr_add_vXX.cc.t			\
-	gr_add_vXX.h.t			\
-	gr_add_vXX.i.t			\
-	gr_add_const_vXX.cc.t		\
-	gr_add_const_vXX.h.t		\
-	gr_add_const_vXX.i.t		\
-	gr_chunks_to_symbols_XX.cc.t	\
-	gr_chunks_to_symbols_XX.h.t	\
-	gr_chunks_to_symbols_XX.i.t	\
-	gr_divide_XX.cc.t		\
-	gr_divide_XX.h.t		\
-	gr_divide_XX.i.t		\
-	gr_multiply_XX.cc.t		\
-	gr_multiply_XX.h.t		\
-	gr_multiply_XX.i.t		\
-	gr_multiply_const_XX.cc.t	\
-	gr_multiply_const_XX.h.t	\
-	gr_multiply_const_XX.i.t	\
-	gr_multiply_vXX.cc.t		\
-	gr_multiply_vXX.h.t		\
-	gr_multiply_vXX.i.t		\
-	gr_multiply_const_vXX.cc.t	\
-	gr_multiply_const_vXX.h.t	\
-	gr_multiply_const_vXX.i.t	\
-	gr_mute_XX.cc.t			\
-	gr_mute_XX.h.t			\
-	gr_mute_XX.i.t			\
-	gr_noise_source_X.cc.t		\
-	gr_noise_source_X.h.t		\
-	gr_noise_source_X.i.t		\
-	gr_packed_to_unpacked_XX.cc.t	\
-	gr_packed_to_unpacked_XX.h.t	\
-	gr_packed_to_unpacked_XX.i.t	\
-	gr_sig_source_X.cc.t		\
-	gr_sig_source_X.h.t		\
-	gr_sig_source_X.i.t		\
-	gr_sub_XX.cc.t			\
-	gr_sub_XX.h.t			\
-	gr_sub_XX.i.t			\
-	gr_unpacked_to_packed_XX.cc.t	\
-	gr_unpacked_to_packed_XX.h.t	\
-	gr_unpacked_to_packed_XX.i.t	\
-	gr_vector_source_X.cc.t		\
-	gr_vector_source_X.h.t		\
-	gr_vector_source_X.i.t		\
-	gr_vector_sink_X.cc.t		\
-	gr_vector_sink_X.h.t		\
-	gr_vector_sink_X.i.t		
-
-# include $(srcdir)/Makefile.gen
-include Makefile.gen
-
-
-$(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
-	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(srcdir)/generate_all.py
-
-
-BUILT_SOURCES = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC)
+BUILT_SOURCES = 
 
 # ----------------------------------------------------------------
 
 EXTRA_DIST = 				\
-	$(CODE_GENERATOR)		\
 	gen_sine_table.py		\
 	gr_prefix.cc.in			
 
 libgeneral_la_SOURCES = 		\
-	$(GENERATED_CC)			\
 	gr_agc_cc.cc                	\
 	gr_agc_ff.cc                	\
 	gr_agc2_cc.cc                	\
@@ -192,9 +121,6 @@ libgeneral_la_SOURCES = 		\
 	gr_stream_to_vector.cc		\
 	gr_streams_to_stream.cc		\
 	gr_streams_to_vector.cc		\
-	gr_sync_block.cc		\
-	gr_sync_decimator.cc		\
-	gr_sync_interpolator.cc		\
         gr_test.cc                      \
 	gr_threshold_ff.cc		\
 	gr_throttle.cc			\
@@ -226,7 +152,6 @@ libgeneral_qa_la_SOURCES = 		\
 
 
 grinclude_HEADERS = 			\
-	$(GENERATED_H)			\
 	gr_agc_cc.h                 	\
 	gr_agc_ff.h                 	\
 	gr_agc2_cc.h                	\
@@ -255,7 +180,6 @@ grinclude_HEADERS = 			\
 	gr_diff_encoder_bb.h		\
 	gr_deinterleave.h		\
 	gr_diff_phasor_cc.h		\
-	gr_endianness.h			\
 	gr_expj.h			\
 	gr_fake_channel_coder_pp.h	\
 	gr_feedforward_agc_cc.h		\
@@ -310,7 +234,6 @@ grinclude_HEADERS = 			\
 	gr_rms_cf.h			\
 	gr_rms_ff.h			\
 	gr_short_to_float.h		\
-	gr_sig_source_waveform.h	\
 	gr_simple_correlator.h		\
 	gr_simple_framer.h		\
 	gr_simple_framer_sync.h		\
@@ -322,9 +245,6 @@ grinclude_HEADERS = 			\
 	gr_stream_to_vector.h		\
 	gr_streams_to_stream.h		\
 	gr_streams_to_vector.h		\
-	gr_sync_block.h			\
-	gr_sync_decimator.h		\
-	gr_sync_interpolator.h		\
         gr_test_types.h			\
         gr_test.h			\
 	gr_threshold_ff.h		\
@@ -365,9 +285,7 @@ noinst_HEADERS = 			\
 	sine_table.h			
 
 swiginclude_HEADERS =			\
-	$(GENERATED_I)			\
 	general.i			\
-	general_generated.i		\
 	gr_agc_cc.i                 	\
 	gr_agc_ff.i                 	\
 	gr_agc2_cc.i                 	\
@@ -394,7 +312,6 @@ swiginclude_HEADERS =			\
 	gr_diff_encoder_bb.i		\
 	gr_diff_phasor_cc.i		\
 	gr_deinterleave.i		\
-	gr_endianness.i			\
 	gr_fake_channel_coder_pp.i	\
 	gr_feedforward_agc_cc.i		\
 	gr_feval.i			\
@@ -448,9 +365,6 @@ swiginclude_HEADERS =			\
 	gr_stream_to_vector.i		\
 	gr_streams_to_stream.i		\
 	gr_streams_to_vector.i		\
-	gr_sync_block.i			\
-	gr_sync_decimator.i		\
-	gr_sync_interpolator.i		\
         gr_test.i			\
 	gr_threshold_ff.i		\
 	gr_throttle.i			\

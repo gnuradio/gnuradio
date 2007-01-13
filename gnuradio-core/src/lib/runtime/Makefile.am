@@ -51,6 +51,9 @@ libruntime_la_SOURCES = 			\
 	gr_runtime.cc				\
 	gr_runtime_impl.cc			\
 	gr_single_threaded_scheduler.cc		\
+	gr_sync_block.cc			\
+	gr_sync_decimator.cc			\
+	gr_sync_interpolator.cc			\
 	gr_tmp_path.cc				\
 	gr_vmcircbuf.cc				\
 	gr_vmcircbuf_mmap_shm_open.cc		\
@@ -92,6 +95,9 @@ grinclude_HEADERS = 				\
 	gr_runtime_types.h			\
 	gr_select_handler.h			\
 	gr_single_threaded_scheduler.h		\
+	gr_sync_block.h				\
+	gr_sync_decimator.h			\
+	gr_sync_interpolator.h			\
 	gr_timer.h				\
 	gr_tmp_path.h				\
 	gr_types.h				\
@@ -125,5 +131,8 @@ swiginclude_HEADERS =			\
 	gr_runtime.i			\
 	gr_simple_flowgraph.i		\
 	gr_single_threaded_scheduler.i	\
+	gr_sync_block.i			\
+	gr_sync_decimator.i		\
+	gr_sync_interpolator.i		\
 	gr_swig_block_magic.i		\
 	runtime.i

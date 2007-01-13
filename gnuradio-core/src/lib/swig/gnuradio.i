@@ -27,8 +27,7 @@
 
 
 #ifndef SWIGIMPORTED
-// we set the module name on the command line (not any more)
-%module(directors="1") gnuradio_swig_python
+%module(directors="1") gnuradio_swig_py_runtime
 #endif
 
 ////////////////////////////////////////////////////////////////////////
@@ -75,9 +74,9 @@ namespace std {
 ////////////////////////////////////////////////////////////////////////
 
 %include <runtime.i>
-%include <general.i>
-%include <filter.i>
-%include <io.i>
+ // %include <general.i>
+ // %include <filter.i>
+ // %include <io.i>
 
 // %include <atsc.i>
 

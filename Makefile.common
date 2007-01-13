@@ -20,6 +20,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+AM_CXXFLAGS = @autoconf_default_CXXFLAGS@
+
 # includes
 grincludedir   = $(includedir)/gnuradio
 
@@ -41,6 +43,8 @@ SWIGPYTHONFLAGS = -fvirtual -python -modern
 GNURADIO_INCLUDES = -I$(top_srcdir)/gnuradio-core/src/lib/runtime \
 		    -I$(top_srcdir)/gnuradio-core/src/lib/general \
 		    -I$(top_builddir)/gnuradio-core/src/lib/general \
+		    -I$(top_srcdir)/gnuradio-core/src/lib/gengen \
+		    -I$(top_builddir)/gnuradio-core/src/lib/gengen \
 		    -I$(top_srcdir)/gnuradio-core/src/lib/filter \
 		    -I$(top_builddir)/gnuradio-core/src/lib/filter \
 		    -I$(top_srcdir)/gnuradio-core/src/lib/reed-solomon \

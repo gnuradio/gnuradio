@@ -54,5 +54,3 @@ libecc_la_LIBADD = 		\
 	-lstdc++
 
 MOSTLYCLEANFILES = *.loT *~
-
-CONFIG_CLEAN_FILES = *.in

@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -25,9 +25,34 @@ AC_CANONICAL_TARGET([])
 AM_INIT_AUTOMAKE(gnuradio,3.0svn)
 AC_CONFIG_SRCDIR([gnuradio-core/src/lib/runtime/gr_vmcircbuf.cc])
 
+dnl Remember if the user explicity set CXXFLAGS
+if test -n "${CXXFLAGS}"; then
+  user_set_cxxflags=yes
+fi
+
 GR_X86_64		dnl check for lib64 suffix
 LF_CONFIGURE_CC
 LF_CONFIGURE_CXX
+
+dnl The three macros above are known to override CXXFLAGS if the user
+dnl didn't specify them.  Though I'm sure somebody thought this was
+dnl a good idea, it makes it hard to use other than -g -O2 when compiling
+dnl selected files.  Thus we "undo" the damage here...
+dnl 
+dnl If the user specified CXXFLAGS, we use them.  Otherwise when compiling
+dnl the output of swig use use -O1 if we're using g++.
+dnl See Makefile.common for the rest of the magic.
+if test "$user_set_cxxflags" != yes; then
+  autoconf_default_CXXFLAGS="$CXXFLAGS"
+  CXXFLAGS=""
+  if test "$GXX" = yes; then
+    swig_CXXFLAGS="-g1 -O1"
+  fi
+fi
+AC_SUBST(autoconf_default_CXXFLAGS)
+AC_SUBST(swig_CXXFLAGS)
+
+
 LF_SET_WARNINGS
 GR_SET_GPROF
 GR_SET_PROF

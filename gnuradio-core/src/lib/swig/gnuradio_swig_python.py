@@ -1,5 +1,5 @@
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2006 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -13,23 +13,15 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 # 
-# You should have received a copy of the GNU General Public License
-# along with GNU Radio; see the file COPYING.  If not, write to
-# the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
-# 
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
 
-include $(top_srcdir)/Makefile.common
+# This file implements the old gnuradio_swig_python namespace
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES)
-
-noinst_LTLIBRARIES = libmld.la
-
-libmld_la_SOURCES = 	\
-	mld_timer.cc n2bs.cc
-
-noinst_HEADERS =	\
-	mld_timer.h n2bs.h
-
-MOSTLYCLEANFILES = *.loT *~
-
+from gnuradio_swig_py_runtime import *
+from gnuradio_swig_py_general import *
+from gnuradio_swig_py_gengen import *
+from gnuradio_swig_py_filter import *
+from gnuradio_swig_py_io import *

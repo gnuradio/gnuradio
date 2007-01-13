@@ -17,6 +17,9 @@ mypydir=$1/src:$1/src/python
 grswigdir=@abs_top_builddir@/gnuradio-core/src/lib/swig
 grswigdir=$grswigdir:$grswigdir/.libs
 
+# Where to find core's hand generated swig glue
+grswigsrcdir=@abs_top_srcdir@/gnuradio-core/src/lib/swig
+
 # Where to find core's python modules
 grpydir=@abs_top_srcdir@/gnuradio-core/src/python
 
@@ -25,7 +28,7 @@ grlibdir=@abs_top_builddir@/gnuradio-core/src/lib
 grlibdir=$grlibdir:$grlibdir/.libs
 
 # Construct search path for python modules
-PYTHONPATH="$mylibdir:$mysrcdir:$mypydir:$grswigdir:$grpydir:$PYTHONPATH"
+PYTHONPATH="$mylibdir:$mysrcdir:$mypydir:$grswigdir:$grswigsrcdir:$grpydir:$PYTHONPATH"
 export PYTHONPATH
 
 # For OS/X

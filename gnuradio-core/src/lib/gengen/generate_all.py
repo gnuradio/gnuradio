@@ -26,7 +26,7 @@ import generate_common
 
 def generate_all ():
     generate_common.generate ()
-    output_glue ('general')
+    output_glue ('gengen')
 
 
 if __name__ == '__main__':

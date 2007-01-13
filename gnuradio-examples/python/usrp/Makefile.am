@@ -44,6 +44,7 @@ EXTRA_DIST = 					\
 	usrp_rx_cfile.py			\
 	usrp_rx_nogui.py			\
 	usrp_siggen.py				\
+	usrp_spectrum_sense.py			\
 	usrp_tv_rcv_nogui.py			\
 	usrp_tv_rcv.py				\
 	usrp_wfm_rcv2_nogui.py			\

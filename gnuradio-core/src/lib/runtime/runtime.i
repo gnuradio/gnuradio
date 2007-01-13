@@ -36,6 +36,9 @@
 #include <gr_dispatcher.h>
 #include <gr_error_handler.h>
 #include <gr_realtime.h>
+#include <gr_sync_block.h>
+#include <gr_sync_decimator.h>
+#include <gr_sync_interpolator.h>
 %}
 
 %include <gr_io_signature.i>
@@ -54,3 +57,6 @@
 %include <gr_error_handler.i>
 %include <gr_realtime.i>
 %include <gr_runtime.i>
+%include <gr_sync_block.i>
+%include <gr_sync_decimator.i>
+%include <gr_sync_interpolator.i>

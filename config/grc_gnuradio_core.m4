@@ -34,6 +34,7 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
         gnuradio-core/src/lib/g72x/Makefile \
         gnuradio-core/src/lib/general/Makefile \
         gnuradio-core/src/lib/general/gr_prefix.cc \
+        gnuradio-core/src/lib/gengen/Makefile \
         gnuradio-core/src/lib/io/Makefile \
         gnuradio-core/src/lib/missing/Makefile \
         gnuradio-core/src/lib/omnithread/Makefile \
@@ -58,7 +59,13 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
         dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_core], [chmod +x gnuradio-core/src/python/gnuradio/gr/run_tests])
 
-        dnl kludge up initial swig dependency file
-        AC_CONFIG_COMMANDS([swig_deps], [touch gnuradio-core/src/lib/swig/gnuradio_swig_python.d])
+        dnl kludge up initial swig dependency files
+        AC_CONFIG_COMMANDS([swig_deps],	[
+		touch gnuradio-core/src/lib/swig/gnuradio_swig_py_runtime.d
+		touch gnuradio-core/src/lib/swig/gnuradio_swig_py_general.d
+		touch gnuradio-core/src/lib/swig/gnuradio_swig_py_gengen.d
+		touch gnuradio-core/src/lib/swig/gnuradio_swig_py_filter.d
+		touch gnuradio-core/src/lib/swig/gnuradio_swig_py_io.d
+		])
     ])
 ])

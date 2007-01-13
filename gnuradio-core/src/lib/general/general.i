@@ -22,15 +22,12 @@
 
 %{
 
-#include <gr_sync_block.h>
-#include <gr_sync_decimator.h>
-#include <gr_sync_interpolator.h>
 #include <gr_nop.h>
 #include <gr_null_sink.h>
 #include <gr_null_source.h>
 #include <gr_head.h>
 #include <gr_skiphead.h>
-#include <gr_sig_source_waveform.h>
+#include <gr_noise_type.h>
 #include <gr_quadrature_demod_cf.h>
 #include <gr_remez.h>
 #include <gr_float_to_complex.h>
@@ -115,15 +112,11 @@
 #include <gr_bin_statistics_f.h>
 %}
 
-%include "gr_sync_block.i"
-%include "gr_sync_decimator.i"
-%include "gr_sync_interpolator.i"
 %include "gr_nop.i"
 %include "gr_null_sink.i"
 %include "gr_null_source.i"
 %include "gr_head.i"
 %include "gr_skiphead.i"
-%include "gr_sig_source_waveform.h"
 %include "gr_noise_type.h"
 %include "gr_quadrature_demod_cf.i"
 %include "gr_remez.i"
@@ -207,5 +200,3 @@
 %include "gr_ctcss_squelch_ff.i"
 %include "gr_feedforward_agc_cc.i"
 %include "gr_bin_statistics_f.i"
-
-%include "general_generated.i"
