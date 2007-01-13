@@ -164,12 +164,6 @@ Code to use the USRP with GNU Radio.
   This module is missing a README that explains what it does.
   http://www.comedi.org/
 
-** gr-error-correcting-codes
-  This module intends to provide generic error-correcting code
-  support, rather than implementing coding for a particular standard.
-  Currently it has support for convolutional, viterbi, and turbo
-  codes.
-
 ** gr-gsm-fr-vocoder
   GSM 06.10 full rate vocoder, and gsm library
   (Note that the presence of this argues for moving the G.711 code discussed above.)
@@ -177,9 +171,6 @@ Code to use the USRP with GNU Radio.
 ** gr-pager
   POCSAG and FLEX
   (gdt suspects there are blocks in here that could be generalized.)
-
-** gr-radar
-  ?radar  (not clear)
 
 ** gr-radio-astronomy
   seems to use only standard blocks from python
