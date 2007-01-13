@@ -23,6 +23,7 @@
 #define INCLUDED_PMT_INT_H
 
 #include <pmt.h>
+#include <boost/utility.hpp>
 
 /*
  * EVERYTHING IN THIS FILE IS PRIVATE TO THE IMPLEMENTATION!
@@ -30,15 +31,10 @@
  * See pmt.h for the public interface
  */
 
-class pmt_base {
+class pmt_base : boost::noncopyable {
 protected:
   pmt_base(){};
   virtual ~pmt_base();
-
-private:
-  pmt_base(const pmt_base& rhs);		// NOT IMPLEMENTED
-  pmt_base& operator=(const pmt_base& rhs);	// NOT IMPLEMENTED
-  
 
 public:
   virtual bool is_bool()    const { return false; }
@@ -102,6 +98,7 @@ public:
   pmt_integer(long value);
   //~pmt_integer(){}
 
+  bool is_number()  const { return true; }
   bool is_integer() const { return true; }
   long value() const { return d_value; }
 };
@@ -114,6 +111,7 @@ public:
   pmt_real(double value);
   //~pmt_real(){}
 
+  bool is_number()  const { return true; }
   bool is_real() const { return true; }
   double value() const { return d_value; }
 };
@@ -126,6 +124,7 @@ public:
   pmt_complex(std::complex<double> value);
   //~pmt_complex(){}
 
+  bool is_number()  const { return true; }
   bool is_complex() const { return true; }
   std::complex<double> value() const { return d_value; }
 };

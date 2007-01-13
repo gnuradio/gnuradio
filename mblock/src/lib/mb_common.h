@@ -22,8 +22,32 @@
 #define INCLUDED_MB_COMMON_H
 
 #include <pmt.h>
+#include <vector>
+#include <stdexcept>
+#include <boost/utility.hpp>
+
 
 typedef unsigned int	mb_pri_t;
 static const mb_pri_t	MB_PRI_DEFAULT = 5;
+
+
+class mb_runtime;
+typedef boost::shared_ptr<mb_runtime> mb_runtime_sptr;
+
+class mb_runtime_impl;
+typedef boost::shared_ptr<mb_runtime_impl> mb_runtime_impl_sptr;
+
+class mb_mblock;
+typedef boost::shared_ptr<mb_mblock> mb_mblock_sptr;
+
+class mb_mblock_impl;
+typedef boost::shared_ptr<mb_mblock_impl> mb_mblock_impl_sptr;
+
+class mb_port;
+typedef boost::shared_ptr<mb_port> mb_port_sptr;
+
+class mb_port_detail;
+typedef boost::shared_ptr<mb_port_detail> mb_port_detail_sptr;
+
 
 #endif /* INCLUDED_MB_COMMON_H */

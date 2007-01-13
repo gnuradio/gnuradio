@@ -36,18 +36,23 @@ pmt_base::~pmt_base()
 //                         Exceptions
 ////////////////////////////////////////////////////////////////////////////
 
-pmt_exception::pmt_exception(const char *msg, pmt_t obj)
-  : d_msg(msg), d_obj(obj)
+pmt_exception::pmt_exception(const std::string &msg, pmt_t obj)
+  : logic_error(msg + ": " + pmt_write_string(obj))
 {
 }
 
-pmt_wrong_type::pmt_wrong_type(const char *msg, pmt_t obj)
-  : pmt_exception(msg, obj)
+pmt_wrong_type::pmt_wrong_type(const std::string &msg, pmt_t obj)
+  : pmt_exception(msg + ": wrong_type ", obj)
 {
 }
 
-pmt_out_of_range::pmt_out_of_range(const char *msg, pmt_t obj)
-  : pmt_exception(msg, obj)
+pmt_out_of_range::pmt_out_of_range(const std::string &msg, pmt_t obj)
+  : pmt_exception(msg + ": out of range ", obj)
+{
+}
+
+pmt_notimplemented::pmt_notimplemented(const std::string &msg, pmt_t obj)
+  : pmt_exception(msg + ": notimplemented ", obj)
 {
 }
 
@@ -197,6 +202,13 @@ pmt_string_to_symbol(const std::string &name)
   return sym;
 }
 
+// alias...
+pmt_t
+pmt_intern(const std::string &name)
+{
+  return pmt_string_to_symbol(name);
+}
+
 const std::string
 pmt_symbol_to_string(pmt_t sym)
 {
@@ -205,6 +217,8 @@ pmt_symbol_to_string(pmt_t sym)
 
   return _symbol(sym)->name();
 }
+
+
 
 ////////////////////////////////////////////////////////////////////////////
 //                             Number
@@ -753,3 +767,77 @@ pmt_reverse_x(pmt_t list)
   return pmt_reverse(list);
 }
 
+pmt_t
+pmt_nth(size_t n, pmt_t list)
+{
+  pmt_t t = pmt_nthcdr(n, list);
+  if (pmt_is_pair(t))
+    return pmt_car(t);
+  else
+    return PMT_NIL;
+}
+
+pmt_t
+pmt_nthcdr(size_t n, pmt_t list)
+{
+  if (!(pmt_is_null(list) || pmt_is_pair(list)))
+    throw pmt_wrong_type("pmt_nthcdr", list);
+    
+  while (n > 0){
+    if (pmt_is_pair(list)){
+      list = pmt_cdr(list);
+      n--;
+      continue;
+    }
+    if (pmt_is_null(list))
+      return PMT_NIL;
+    else
+      throw pmt_wrong_type("pmt_nthcdr: not a LIST", list);
+  }
+  return list;
+}
+
+pmt_t
+pmt_memq(pmt_t obj, pmt_t list)
+{
+  while (pmt_is_pair(list)){
+    if (pmt_eq(obj, pmt_car(list)))
+      return list;
+    list = pmt_cdr(list);
+  }
+  return PMT_BOOL_F;
+}
+
+pmt_t
+pmt_memv(pmt_t obj, pmt_t list)
+{
+  while (pmt_is_pair(list)){
+    if (pmt_eqv(obj, pmt_car(list)))
+      return list;
+    list = pmt_cdr(list);
+  }
+  return PMT_BOOL_F;
+}
+
+pmt_t
+pmt_member(pmt_t obj, pmt_t list)
+{
+  while (pmt_is_pair(list)){
+    if (pmt_equal(obj, pmt_car(list)))
+      return list;
+    list = pmt_cdr(list);
+  }
+  return PMT_BOOL_F;
+}
+
+bool
+pmt_subsetp(pmt_t list1, pmt_t list2)
+{
+  while (pmt_is_pair(list1)){
+    pmt_t p = pmt_car(list1);
+    if (pmt_is_false(pmt_memv(p, list2)))
+      return false;
+    list1 = pmt_cdr(list1);
+  }
+  return true;
+}

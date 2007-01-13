@@ -25,26 +25,58 @@
 
 #include <mb_protocol_class.h>
 
+static pmt_t s_ALL_PROTOCOL_CLASSES = PMT_NIL;
 
-mb_protocol_class_sptr 
+pmt_t 
 mb_make_protocol_class(pmt_t name, pmt_t incoming, pmt_t outgoing)
 {
-  return mb_protocol_class_sptr(new mb_protocol_class(name, incoming, outgoing));
+  // (protocol-class <name> <incoming> <outgoing>)
+
+  if (!pmt_is_symbol(name))
+    throw pmt_wrong_type("mb_make_protocol_class: NAME must be symbol", name);
+  if (!(pmt_is_pair(incoming) || pmt_is_null(incoming)))
+    throw pmt_wrong_type("mb_make_protocol_class: INCOMING must be a list", name);
+  if (!(pmt_is_pair(outgoing) || pmt_is_null(outgoing)))
+    throw pmt_wrong_type("mb_make_protocol_class: OUTGOING must be a list", name);
+
+  pmt_t t = pmt_cons(pmt_intern("protocol-class"),
+		     pmt_cons(name,
+			      pmt_cons(incoming,
+				       pmt_cons(outgoing, PMT_NIL))));
+
+  // Remember this protocol class.
+  s_ALL_PROTOCOL_CLASSES = pmt_cons(t, s_ALL_PROTOCOL_CLASSES);
+  return t;
 }
 
-mb_protocol_class::mb_protocol_class(pmt_t name, pmt_t incoming, pmt_t outgoing)
-  : d_name(name), d_incoming(incoming), d_outgoing(outgoing)
+pmt_t
+mb_protocol_class_name(pmt_t pc)
 {
+  return pmt_nth(1, pc);
 }
 
-mb_protocol_class::~mb_protocol_class()
+pmt_t
+mb_protocol_class_incoming(pmt_t pc)
 {
-  // NOP
+  return pmt_nth(2, pc);
 }
 
-
-mb_protocol_class_sptr
-mb_protocol_class::conj() const
+pmt_t
+mb_protocol_class_outgoing(pmt_t pc)
 {
-  return mb_make_protocol_class(name(), outgoing(), incoming());
+  return pmt_nth(3, pc);
+}
+
+pmt_t
+mb_protocol_class_lookup(pmt_t name)
+{
+  pmt_t lst = s_ALL_PROTOCOL_CLASSES;
+
+  while (pmt_is_pair(lst)){
+    if (pmt_eq(name, mb_protocol_class_name(pmt_car(lst))))
+      return pmt_car(lst);
+    lst = pmt_cdr(lst);
+  }
+
+  return PMT_NIL;
 }

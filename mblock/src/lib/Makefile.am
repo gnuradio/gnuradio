@@ -23,7 +23,7 @@ include $(top_srcdir)/Makefile.common
 
 INCLUDES = $(PMT_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES)
 
-# TESTS = test_mblock
+TESTS = test_mblock
 
 lib_LTLIBRARIES = libmblock.la libmblock-qa.la
 
@@ -32,8 +32,17 @@ EXTRA_DIST =
 
 # These are the source files that go into the mblock shared library
 libmblock_la_SOURCES =			\
+	mb_connection.cc		\
+	mb_exception.cc			\
+	mb_mblock.cc			\
+	mb_mblock_impl.cc		\
 	mb_message.cc			\
-	mb_protocol_class.cc		
+	mb_port.cc			\
+	mb_port_detail.cc		\
+	mb_protocol_class.cc		\
+	mb_runtime.cc			\
+	mb_runtime_impl.cc		\
+	mb_util.cc			
 
 
 # magic flags
@@ -45,38 +54,52 @@ libmblock_la_LIBADD = 			\
 	-lstdc++			
 
 include_HEADERS =			\
-	mb_mblock.h			\
 	mb_common.h			\
+	mb_exception.h			\
+	mb_mblock.h			\
 	mb_message.h			\
-	mb_protocol_class.h		
+	mb_port.h			\
+	mb_protocol_class.h		\
+	mb_runtime.h			\
+	mb_util.h			
 
-noinst_HEADERS = 			
+
+noinst_HEADERS = 			\
+	mb_connection.h			\
+	mb_endpoint.h			\
+	mb_mblock_impl.h		\
+	mb_port_detail.h		\
+	mb_runtime_impl.h		\
+	qa_mblock.h			\
+	qa_mblock_prims.h		
 
 
 # Build the qa code into its own library
 
-libmblock_qa_la_SOURCES =		
+libmblock_qa_la_SOURCES =		\
+	qa_mblock.cc			\
+	qa_mblock_prims.cc		
 
 
 # magic flags
 libmblock_qa_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
 
 # link the library against the c++ standard library
-libmblock_qa_la_LIBADD = 			\
-	libmblock.la				\
-	$(CPPUNIT_LIBS)				\
+libmblock_qa_la_LIBADD = 		\
+	libmblock.la			\
+	$(CPPUNIT_LIBS)			\
 	-lstdc++			
 
 
-#noinst_PROGRAMS	=			\
-#	test_mblock
+noinst_PROGRAMS	=			\
+	test_mblock
 
 
 LIBMBLOCK   = libmblock.la
 LIBMBLOCKQA = libmblock-qa.la $(LIBMBLOCK)
 
-#test_mblock_SOURCES = test_mblock.cc
-#test_mblock_LDADD   = $(LIBMBLOCKQA)
+test_mblock_SOURCES = test_mblock.cc
+test_mblock_LDADD   = $(LIBMBLOCKQA)
 
 
 CLEANFILES = $(BUILT_SOURCES) *.pyc

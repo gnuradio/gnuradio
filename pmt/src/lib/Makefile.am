@@ -59,6 +59,7 @@ EXTRA_DIST = 				\
 # These are the source files that go into the pmt shared library
 libpmt_la_SOURCES =			\
 	pmt.cc				\
+	pmt_io.cc			\
 	pmt_unv.cc			
 
 # magic flags

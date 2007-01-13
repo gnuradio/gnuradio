@@ -18,25 +18,24 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_MB_PROTOCOL_CLASS_H
-#define INCLUDED_MB_PROTOCOL_CLASS_H
+#ifndef INCLUDED_MB_RUNTIME_IMPL_H
+#define INCLUDED_MB_RUNTIME_IMPL_H
 
 #include <mb_common.h>
 
 /*!
- * \brief construct a protocol_class
- *
- * \param name		the name of the class (symbol)
- * \param incoming	incoming message set (list of symbols)
- * \param outgoing	outgoing message set (list of symbols)
+ * \brief The private implementation details of the runtime system.
  */
-pmt_t mb_make_protocol_class(pmt_t name, pmt_t incoming, pmt_t outgoing);
+class mb_runtime_impl : boost::noncopyable
+{
+private:
+  friend class mb_runtime;
 
-// Accessors
-pmt_t mb_protocol_class_name(pmt_t pc);		//< return name of protocol class
-pmt_t mb_protocol_class_incoming(pmt_t pc);	//< return incoming message set
-pmt_t mb_protocol_class_outgoing(pmt_t pc);	//< return outgoing message set
+  mb_runtime_impl();
 
-pmt_t mb_protocol_class_lookup(pmt_t name);	//< lookup an existing protocol class by name
+public:
+  ~mb_runtime_impl();
+};
 
-#endif /* INCLUDED_MB_PROTOCOL_CLASS_H */
+
+#endif /* INCLUDED_MB_RUNTIME_IMPL_H */

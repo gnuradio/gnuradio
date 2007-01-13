@@ -18,25 +18,35 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_MB_PROTOCOL_CLASS_H
-#define INCLUDED_MB_PROTOCOL_CLASS_H
 
-#include <mb_common.h>
+#ifndef INCLUDED_MB_ENDPOINT_H
+#define INCLUDED_MB_ENDPOINT_H
+
+#include <string>
+#include <mb_port.h>
 
 /*!
- * \brief construct a protocol_class
- *
- * \param name		the name of the class (symbol)
- * \param incoming	incoming message set (list of symbols)
- * \param outgoing	outgoing message set (list of symbols)
+ * \brief Endpoint specification for connection
  */
-pmt_t mb_make_protocol_class(pmt_t name, pmt_t incoming, pmt_t outgoing);
+class mb_endpoint
+{
+  std::string	d_component_name;
+  std::string	d_port_name;
+  mb_port_sptr	d_port;			// the port object that this maps to
 
-// Accessors
-pmt_t mb_protocol_class_name(pmt_t pc);		//< return name of protocol class
-pmt_t mb_protocol_class_incoming(pmt_t pc);	//< return incoming message set
-pmt_t mb_protocol_class_outgoing(pmt_t pc);	//< return outgoing message set
+public:
+  mb_endpoint(){}
 
-pmt_t mb_protocol_class_lookup(pmt_t name);	//< lookup an existing protocol class by name
+  mb_endpoint(const std::string &component_name,
+	      const std::string &port_name,
+	      mb_port_sptr port)
+    : d_component_name(component_name),
+      d_port_name(port_name),
+      d_port(port) {}
 
-#endif /* INCLUDED_MB_PROTOCOL_CLASS_H */
+  const std::string &component_name() const { return d_component_name; }
+  const std::string &port_name() const { return d_port_name; }
+  mb_port_sptr port() const { return d_port; }
+};
+
+#endif /* INCLUDED_MB_ENDPOINT_H */

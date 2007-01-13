@@ -18,25 +18,35 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_MB_PROTOCOL_CLASS_H
-#define INCLUDED_MB_PROTOCOL_CLASS_H
 
-#include <mb_common.h>
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-/*!
- * \brief construct a protocol_class
- *
- * \param name		the name of the class (symbol)
- * \param incoming	incoming message set (list of symbols)
- * \param outgoing	outgoing message set (list of symbols)
- */
-pmt_t mb_make_protocol_class(pmt_t name, pmt_t incoming, pmt_t outgoing);
+#include <mb_runtime.h>
+#include <mb_runtime_impl.h>
 
-// Accessors
-pmt_t mb_protocol_class_name(pmt_t pc);		//< return name of protocol class
-pmt_t mb_protocol_class_incoming(pmt_t pc);	//< return incoming message set
-pmt_t mb_protocol_class_outgoing(pmt_t pc);	//< return outgoing message set
+mb_runtime_sptr
+mb_make_runtime()
+{
+  return mb_runtime_sptr(new mb_runtime());
+}
 
-pmt_t mb_protocol_class_lookup(pmt_t name);	//< lookup an existing protocol class by name
+mb_runtime::mb_runtime()
+  : d_impl(mb_runtime_impl_sptr(new mb_runtime_impl()))
+{
+  // FIXME
+  
+}
 
-#endif /* INCLUDED_MB_PROTOCOL_CLASS_H */
+mb_runtime::~mb_runtime()
+{
+  // FIXME
+}
+
+bool
+mb_runtime::run()
+{
+  // FIXME
+  return true;
+}

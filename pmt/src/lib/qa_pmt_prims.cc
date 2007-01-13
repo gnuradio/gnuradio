@@ -282,3 +282,14 @@ qa_pmt_prims::test_dict()
   CPPUNIT_ASSERT(pmt_equal(keys, pmt_dict_keys(dict)));
   CPPUNIT_ASSERT(pmt_equal(vals, pmt_dict_values(dict)));
 }
+
+void
+qa_pmt_prims::test_io()
+{
+  pmt_t k0 = pmt_string_to_symbol("k0");
+  pmt_t k1 = pmt_string_to_symbol("k1");
+  pmt_t k2 = pmt_string_to_symbol("k2");
+  pmt_t k3 = pmt_string_to_symbol("k3");
+
+  CPPUNIT_ASSERT_EQUAL(std::string("k0"), pmt_write_string(k0));
+}

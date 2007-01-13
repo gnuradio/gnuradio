@@ -16,44 +16,28 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
+ * the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
  */
-#ifndef INCLUDED_QA_PMT_PRIMS_H
-#define INCLUDED_QA_PMT_PRIMS_H
+#ifndef INCLUDED_QA_MBLOCK_PRIMS_H
+#define INCLUDED_QA_MBLOCK_PRIMS_H
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
 
-class qa_pmt_prims : public CppUnit::TestCase {
+class qa_mblock_prims : public CppUnit::TestCase {
 
-  CPPUNIT_TEST_SUITE(qa_pmt_prims);
-  CPPUNIT_TEST(test_symbols);
-  CPPUNIT_TEST(test_booleans);
-  CPPUNIT_TEST(test_integers);
-  CPPUNIT_TEST(test_reals);
-  CPPUNIT_TEST(test_complexes);
-  CPPUNIT_TEST(test_pairs);
-  CPPUNIT_TEST(test_vectors);
-  CPPUNIT_TEST(test_equivalence);
-  CPPUNIT_TEST(test_misc);
-  CPPUNIT_TEST(test_dict);
-  CPPUNIT_TEST(test_io);
+  CPPUNIT_TEST_SUITE(qa_mblock_prims);
+  CPPUNIT_TEST(test_define_ports);
+  CPPUNIT_TEST(test_define_components);
+  CPPUNIT_TEST(test_connect);
   CPPUNIT_TEST_SUITE_END();
 
  private:
-  void test_symbols();
-  void test_booleans();
-  void test_integers();
-  void test_reals();
-  void test_complexes();
-  void test_pairs();
-  void test_vectors();
-  void test_equivalence();
-  void test_misc();
-  void test_dict();
-  void test_io();
+  void test_define_ports();
+  void test_define_components();
+  void test_connect();
 };
 
-#endif /* INCLUDED_QA_PMT_PRIMS_H */
+#endif /* INCLUDED_QA_MBLOCK_PRIMS_H */
 

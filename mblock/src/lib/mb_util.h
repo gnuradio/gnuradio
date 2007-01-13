@@ -18,25 +18,18 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_MB_PROTOCOL_CLASS_H
-#define INCLUDED_MB_PROTOCOL_CLASS_H
 
-#include <mb_common.h>
+#ifndef INCLUDED_MB_UTIL_H
+#define INCLUDED_MB_UTIL_H
 
-/*!
- * \brief construct a protocol_class
- *
- * \param name		the name of the class (symbol)
- * \param incoming	incoming message set (list of symbols)
- * \param outgoing	outgoing message set (list of symbols)
- */
-pmt_t mb_make_protocol_class(pmt_t name, pmt_t incoming, pmt_t outgoing);
+#include <string>
 
-// Accessors
-pmt_t mb_protocol_class_name(pmt_t pc);		//< return name of protocol class
-pmt_t mb_protocol_class_incoming(pmt_t pc);	//< return incoming message set
-pmt_t mb_protocol_class_outgoing(pmt_t pc);	//< return outgoing message set
+class mb_util
+{
+public:
+  static std::string
+  join_names(const std::string &comp_name,
+	     const std::string &port_name);
+};
 
-pmt_t mb_protocol_class_lookup(pmt_t name);	//< lookup an existing protocol class by name
-
-#endif /* INCLUDED_MB_PROTOCOL_CLASS_H */
+#endif /* INCLUDED_MB_UTIL_H */

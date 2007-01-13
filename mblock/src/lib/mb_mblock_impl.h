@@ -18,73 +18,33 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_MB_MBLOCK_H
-#define INCLUDED_MB_MBLOCK_H
+#ifndef INCLUDED_MB_MBLOCK_IMPL_H
+#define INCLUDED_MB_MBLOCK_IMPL_H
 
-#include <mb_common.h>
-#include <mb_message.h>
-#include <mb_port.h>
+#include <mb_mblock.h>
+#include <mb_connection.h>
+#include <list>
+#include <map>
+
+
+typedef std::map<std::string, mb_port_sptr>   mb_port_map_t;
+typedef std::map<std::string, mb_mblock_sptr> mb_comp_map_t;
 
 
 /*!
- * Abstract class implementing visitor pattern
- * \ingroup internal
+ * \brief The private implementation details of the mblock system.
  */
-class mb_visitor
+class mb_mblock_impl : boost::noncopyable
 {
+  mb_mblock		       *d_mb;		// pointer to our associated mblock
+
+  mb_port_map_t			d_port_map;	// our ports
+  mb_comp_map_t			d_comp_map;	// our components
+  mb_conn_table			d_conn_table;	// our connections
+
 public:
-  virtual ~mb_visitor();
-  bool operator()(mb_mblock *mblock, const std::string &path) { return visit(mblock, path); }
-  virtual bool visit(mb_mblock *mblock, const std::string &path) = 0;
-};
-
-// ----------------------------------------------------------------------
-
-/*!
- * \brief Parent class for all message passing blocks
- *
- * Subclass this to define your mblocks.
- */
-class mb_mblock : boost::noncopyable
-{
-private:
-  mb_mblock_impl_sptr	        d_impl;		// implementation details
-
-  friend class mb_runtime;
-  friend class mb_mblock_impl;
-
-protected:
-  /*!
-   * \brief mblock constructor.
-   *
-   * Initializing all mblocks in the system is a 3 step procedure.
-   *
-   * The top level mblock's constructor is run.  That constructor (a)
-   * registers all of its ports using define_port, (b) constructs and
-   * registers any subcomponents it may have via the define_component
-   * method, and then (c) issues connect calls to wire its
-   * subcomponents together.
-   */
-  mb_mblock();
-
-  /*!
-   * \brief Called by the runtime system to execute the initial
-   * transition of the finite state machine.
-   *
-   * Override this to initialize your finite state machine.
-   */
-  virtual void init_fsm();
-
-  /*!
-   * \brief Called by the runtime system when there's a message to handle.
-   *
-   * Override this to define your behavior.
-   *
-   * Do not issue any potentially blocking calls in this method.  This
-   * includes things such reads or writes on sockets, pipes or slow
-   * i/o devices.
-   */
-  virtual void handle_message(mb_message_sptr msg);
+  mb_mblock_impl(mb_mblock *mb);
+  ~mb_mblock_impl();
 
   /*!
    * \brief Define a port.
@@ -172,17 +132,31 @@ protected:
   int
   nconnections() const;
 
-
-public:
-  virtual ~mb_mblock();
-
-  /*!
-   * \brief Perform a pre-order depth-first traversal of the hierarchy.
-   *
-   * The traversal stops and returns false if any call to visitor returns false.
+  bool
+  walk_tree(mb_visitor *visitor, const std::string &path="");
+  
+  /*
+   * Our implementation methods
    */
-  bool walk_tree(mb_visitor *visitor, const std::string &path="");
+private:
+  //bool port_is_defined(pmt_t name);
+  bool port_is_defined(const std::string &name);
+  //bool comp_is_defined(pmt_t name);
+  bool comp_is_defined(const std::string &name);
+
+  mb_endpoint 
+  check_and_resolve_endpoint(const std::string &comp_name,
+			     const std::string &port_name);
+
+
+  mb_port_sptr
+  resolve_port(const std::string &comp_name,
+	       const std::string &port_name);
+
+  static bool
+  ports_are_compatible(mb_port_sptr p0, mb_port_sptr p1);
+
 };
 
 
-#endif /* INCLUDED_MB_MBLOCK_H */
+#endif /* INCLUDED_MB_MBLOCK_IMPL_H */
