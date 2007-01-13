@@ -1,3 +1,10 @@
+The instructions below are now obsolete.  Please see:
+
+http://gnuradio.org/trac/wiki/PortAudioInstall
+
+======
+OBSOLETED
+
 These instructions are intended for Linux. On other systems you will have to
 construct something compatible to build gr-audio-portaudio.
 
