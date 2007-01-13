@@ -298,7 +298,7 @@ main (int argc, char **argv)
   else if (strcmp (cmd, "i2c_write") == 0){
     CHKARGS (2);
     int	i2c_addr = strtol (argv[optind], 0, 0);
-    int	len;
+    int	len = 0;
     char *hex_string  = argv[optind + 1];
     unsigned char *buf = hex_string_to_binary (hex_string, &len);
     if (buf == 0)
