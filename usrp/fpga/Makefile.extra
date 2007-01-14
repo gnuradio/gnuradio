@@ -59,7 +59,6 @@ EXTRA_DIST =                                           \
 	models/ssram.v                                 \
 	sdr_lib/adc_interface.v                        \
 	sdr_lib/bidir_reg.v                            \
-	sdr_lib/bus_interface.v                        \
 	sdr_lib/cic_decim.v                            \
 	sdr_lib/cic_int_shifter.v                      \
 	sdr_lib/cic_interp.v                           \
