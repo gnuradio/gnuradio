@@ -74,6 +74,7 @@ noinst_PYTHON = 			\
 	qa_message.py			\
 	qa_mute.py			\
 	qa_nlog10.py			\
+	qa_noise.py			\
 	qa_packed_to_unpacked.py	\
 	qa_pipe_fittings.py		\
 	qa_pll_carriertracking.py	\
