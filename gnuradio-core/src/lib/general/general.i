@@ -27,7 +27,6 @@
 #include <gr_null_source.h>
 #include <gr_head.h>
 #include <gr_skiphead.h>
-#include <gr_noise_type.h>
 #include <gr_quadrature_demod_cf.h>
 #include <gr_remez.h>
 #include <gr_float_to_complex.h>
@@ -117,7 +116,6 @@
 %include "gr_null_source.i"
 %include "gr_head.i"
 %include "gr_skiphead.i"
-%include "gr_noise_type.h"
 %include "gr_quadrature_demod_cf.i"
 %include "gr_remez.i"
 %include "gr_float_to_complex.i"

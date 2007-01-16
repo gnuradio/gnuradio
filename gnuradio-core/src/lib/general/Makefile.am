@@ -210,7 +210,6 @@ grinclude_HEADERS = 			\
 	gr_misc.h			\
 	gr_nco.h			\
 	gr_nlog10_ff.h			\
-	gr_noise_type.h			\
 	gr_nop.h			\
 	gr_null_sink.h			\
 	gr_null_source.h		\

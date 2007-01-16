@@ -110,6 +110,7 @@ libgengen_la_SOURCES = 			\
 grinclude_HEADERS = 			\
 	$(GENERATED_H)			\
 	gr_endianness.h			\
+	gr_noise_type.h			\
 	gr_sig_source_waveform.h	
 
 noinst_HEADERS = 			
