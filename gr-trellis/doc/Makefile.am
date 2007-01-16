@@ -47,6 +47,7 @@ BUILT_XML_FILES =
 gr-trellis.html : gr-trellis.xml
 	xmlto html-nochunks $(top_srcdir)/gr-trellis/doc/gr-trellis.xml
 
+# XXX `%'-style pattern rules are a GNU make extension
 %.xml : % make_numbered_listing.py
 	./make_numbered_listing.py $<
 
