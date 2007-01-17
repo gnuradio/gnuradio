@@ -66,20 +66,20 @@ module tx_buffer
 	  load_next <= #1 4'd0;
        end
      else
-       if((load_next != channels) & !tx_empty)
+       if(load_next != channels)
 	 begin
 	    load_next <= #1 load_next + 4'd1;
 	    case(load_next)
-	      4'd0 : tx_i_0 <= #1 fifodata;
-	      4'd1 : tx_q_0 <= #1 fifodata;
-	      4'd2 : tx_i_1 <= #1 fifodata;
-	      4'd3 : tx_q_1 <= #1 fifodata;
-	      4'd4 : tx_i_2 <= #1 fifodata;
-	      4'd5 : tx_q_2 <= #1 fifodata;
-	      4'd6 : tx_i_3 <= #1 fifodata;
-	      4'd7 : tx_q_3 <= #1 fifodata;
+	      4'd0 : tx_i_0 <= #1 tx_empty ? 16'd0 : fifodata;
+	      4'd1 : tx_q_0 <= #1 tx_empty ? 16'd0 : fifodata;
+	      4'd2 : tx_i_1 <= #1 tx_empty ? 16'd0 : fifodata;
+	      4'd3 : tx_q_1 <= #1 tx_empty ? 16'd0 : fifodata;
+	      4'd4 : tx_i_2 <= #1 tx_empty ? 16'd0 : fifodata;
+	      4'd5 : tx_q_2 <= #1 tx_empty ? 16'd0 : fifodata;
+	      4'd6 : tx_i_3 <= #1 tx_empty ? 16'd0 : fifodata;
+	      4'd7 : tx_q_3 <= #1 tx_empty ? 16'd0 : fifodata;
 	    endcase // case(load_next)
-	 end // if ((load_next != channels) & !tx_empty)
+	 end // if (load_next != channels)
        else if(txstrobe & (load_next == channels))
 	 begin
 	    load_next <= #1 4'd0;
