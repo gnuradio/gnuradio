@@ -50,7 +50,9 @@ libio_la_SOURCES = 			\
 	microtune_xxxx_eval_board.cc	\
 	ppio.cc				\
 	ppio_ppdev.cc			\
-	sdr_1000.cc			
+	sdr_1000.cc			\
+	gr_udp_sink.cc			\
+	gr_udp_source.cc
 
 grinclude_HEADERS = 			\
 	gr_file_sink.h			\
@@ -93,4 +95,6 @@ swiginclude_HEADERS =			\
 	microtune_4702_eval_board.i	\
 	microtune_4937_eval_board.i	\
 	ppio.i				\
-	sdr_1000.i			
+	sdr_1000.i			\
+	gr_udp_sink.i			\
+	gr_udp_source.i

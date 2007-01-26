@@ -34,6 +34,8 @@
 #include <ppio.h>
 #include <gr_message_source.h>
 #include <gr_message_sink.h>
+#include <gr_udp_sink.cc>
+#include <gr_udp_source.cc>
 
 %}
 
@@ -49,4 +51,6 @@
 %include "ppio.i"
 %include "gr_message_source.i"
 %include "gr_message_sink.i"
+%include "gr_udp_sink.i"
+%include "gr_udp_source.i"
 
