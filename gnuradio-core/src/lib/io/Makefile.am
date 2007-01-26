@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2003,2004 Free Software Foundation, Inc.
+# Copyright 2001,2003,2004,2006 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -79,7 +79,9 @@ grinclude_HEADERS = 			\
 	microtune_xxxx_eval_board.h	\
 	ppio.h				\
 	ppio_ppdev.h			\
-	sdr_1000.h			
+	sdr_1000.h			\
+	gr_udp_sink.h			\
+	gr_udp_source.h
 
 
 swiginclude_HEADERS =			\
