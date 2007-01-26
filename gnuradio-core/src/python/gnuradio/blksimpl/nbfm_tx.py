@@ -58,16 +58,13 @@ class nbfm_tx(gr.hier_block):
         
         if do_interp:
             interp_factor = quad_rate / audio_rate
-            if 0:
-                interp_taps = optfir.low_pass (interp_factor,   # gain
-                                               quad_rate,       # Fs
-                                               4500,            # passband cutoff
-                                               7000,            # stopband cutoff
-                                               0.1,  	    # passband ripple dB
-                                               40)              # stopband atten dB
+            interp_taps = optfir.low_pass (interp_factor,   # gain
+                                           quad_rate,       # Fs
+                                           4500,            # passband cutoff
+                                           7000,            # stopband cutoff
+                                           0.1,  	    # passband ripple dB
+                                           40)              # stopband atten dB
 
-            else:
-                interp_taps = gr.firdes.low_pass(interp_factor, quad_rate, 10e3, 8e3)
             #print "len(interp_taps) =", len(interp_taps)
             self.interpolator = gr.interp_fir_filter_fff (interp_factor, interp_taps)
 
