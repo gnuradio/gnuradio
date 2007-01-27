@@ -72,14 +72,14 @@ gr_udp_source::open()
    
   // create socket
   d_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if(d_socket == 0) {
+  if(d_socket == -1) {
     perror("socket open");
     throw std::runtime_error("can't open socket");
   }
 
   // Turn on reuse address
   bool opt_val = true;
-  if(setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, (void*)&opt_val, sizeof(int))) {
+  if(setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, (void*)&opt_val, sizeof(int)) == -1) {
     perror("SO_REUSEADDR");
     throw std::runtime_error("can't set socket option SO_REUSEADDR");
   }
@@ -88,7 +88,7 @@ gr_udp_source::open()
   linger lngr;
   lngr.l_onoff  = 1;
   lngr.l_linger = 0;
-  if(setsockopt(d_socket, SOL_SOCKET, SO_LINGER, (void*)&lngr, sizeof(linger))) {
+  if(setsockopt(d_socket, SOL_SOCKET, SO_LINGER, (void*)&lngr, sizeof(linger)) == -1) {
     perror("SO_LINGER");
     throw std::runtime_error("can't set socket option SO_LINGER");
   }
@@ -98,13 +98,13 @@ gr_udp_source::open()
   timeval timeout;
   timeout.tv_sec = 1;
   timeout.tv_usec = 0;
-  if(setsockopt(d_socket, SOL_SOCKET, SO_RCVTIMEO, (void*)&timeout, sizeof(timeout))) {
+  if(setsockopt(d_socket, SOL_SOCKET, SO_RCVTIMEO, (void*)&timeout, sizeof(timeout)) == -1) {
     perror("SO_RCVTIMEO");
     throw std::runtime_error("can't set socket option SO_RCVTIMEO");
   }
 
   // bind socket to an address and port number to listen on
-  if(bind (d_socket, (sockaddr*)&d_sockaddr_local, sizeof(struct sockaddr))) {
+  if(bind (d_socket, (sockaddr*)&d_sockaddr_local, sizeof(struct sockaddr)) == -1) {
     perror("socket bind");
     throw std::runtime_error("can't bind socket");
   }
@@ -143,6 +143,8 @@ gr_udp_source::work (int noutput_items,
     // This is a blocking call, but it's timeout has been set in the constructor
     bytes = recv(d_socket, out, bytes_to_receive, 0);
 
+    // FIXME if bytes < 0 bail
+
     if(bytes > 0) {
       // keep track of the total number of bytes received
       bytes_received += bytes;
@@ -156,5 +158,6 @@ gr_udp_source::work (int noutput_items,
   printf("\nTotal Bytes Received: %d (noutput_items=%d)\n", bytes_received, noutput_items); 
   #endif
 
+  // FIXME what if (bytes_received % d_itemsize) != 0 ???
   return int(bytes_received / d_itemsize);
 }
