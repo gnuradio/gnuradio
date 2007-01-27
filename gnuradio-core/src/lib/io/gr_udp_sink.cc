@@ -85,14 +85,14 @@ gr_udp_sink::open()
   omni_mutex_lock l(d_mutex);	// hold mutex for duration of this function
 
   // create socket
-  if((d_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == NULL) {
+  if((d_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
     perror("socket open");
     throw std::runtime_error("can't open socket");
   }
 
   // Turn on reuse address
   bool opt_val = true;
-  if(setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, (void*)&opt_val, sizeof(int))) {
+  if(setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, (void*)&opt_val, sizeof(int)) == -1) {
     perror("SO_REUSEADDR");
     throw std::runtime_error("can't set socket option SO_REUSEADDR");
   }
@@ -101,19 +101,19 @@ gr_udp_sink::open()
   linger lngr;
   lngr.l_onoff  = 1;
   lngr.l_linger = 0;
-  if(setsockopt(d_socket, SOL_SOCKET, SO_LINGER, (void*)&lngr, sizeof(linger))) {
+  if(setsockopt(d_socket, SOL_SOCKET, SO_LINGER, (void*)&lngr, sizeof(linger)) == -1) {
     perror("SO_LINGER");
     throw std::runtime_error("can't set socket option SO_LINGER");
   }
 
   // bind socket to an address and port number to listen on
-  if(bind (d_socket, (sockaddr*)&d_sockaddr_local, sizeof(struct sockaddr))) {
+  if(bind (d_socket, (sockaddr*)&d_sockaddr_local, sizeof(struct sockaddr)) == -1) {
     perror("socket bind");
     throw std::runtime_error("can't bind socket");
   }
 
   // Not sure if we should throw here or allow retries
-  if(connect(d_socket, (sockaddr*)&d_sockaddr_remote, sizeof(struct sockaddr))) {
+  if(connect(d_socket, (sockaddr*)&d_sockaddr_remote, sizeof(struct sockaddr)) == -1) {
     perror("socket connect");
     throw std::runtime_error("can't connect to socket");
   }
@@ -145,7 +145,7 @@ gr_udp_sink::work (int noutput_items,
 
   while(bytes_sent < total_size) {
     bytes_to_send = (bytes_sent+d_mtu < total_size ? d_mtu : total_size-bytes_sent);
-    bytes =send(d_socket, (in+bytes_sent), bytes_to_send, MSG_DONTWAIT);
+    bytes = send(d_socket, (in+bytes_sent), bytes_to_send, MSG_DONTWAIT);
     bytes_sent += bytes;
   }
 
