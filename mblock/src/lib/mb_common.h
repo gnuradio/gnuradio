@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,11 +25,44 @@
 #include <vector>
 #include <stdexcept>
 #include <boost/utility.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 
+/*
+ * The priority type and valid range
+ */
 typedef unsigned int	mb_pri_t;
-static const mb_pri_t	MB_PRI_DEFAULT = 5;
+static const mb_pri_t	MB_PRI_BEST    = 0;
+static const mb_pri_t	MB_PRI_DEFAULT = 4; 
+static const mb_pri_t   MB_PRI_WORST   = 7;
+static const mb_pri_t	MB_NPRI = MB_PRI_WORST + 1;	  // number of valid priorities 
 
+/*!
+ * \brief return true iff priority a is better than priority b
+ */
+inline static bool
+mb_pri_better(mb_pri_t a, mb_pri_t b)
+{
+  return a < b;
+}
+
+/*!
+ * \brief return true iff priority a is worse than priority b
+ */
+inline static bool
+mb_pri_worse(mb_pri_t a, mb_pri_t b)
+{
+  return a > b;
+}
+
+/*!
+ * \brief ensure that pri is valid
+ */
+inline static mb_pri_t
+mb_pri_clamp(mb_pri_t p)
+{
+  return p < MB_NPRI ? p : MB_NPRI - 1;
+}
 
 class mb_runtime;
 typedef boost::shared_ptr<mb_runtime> mb_runtime_sptr;
@@ -49,5 +82,13 @@ typedef boost::shared_ptr<mb_port> mb_port_sptr;
 class mb_port_detail;
 typedef boost::shared_ptr<mb_port_detail> mb_port_detail_sptr;
 
+class mb_msg_accepter;
+typedef boost::shared_ptr<mb_msg_accepter> mb_msg_accepter_sptr;
+
+class mb_message;
+typedef boost::shared_ptr<mb_message> mb_message_sptr;
+
+class mb_msg_queue;
+typedef boost::shared_ptr<mb_msg_queue> mb_msg_queue_sptr;
 
 #endif /* INCLUDED_MB_COMMON_H */

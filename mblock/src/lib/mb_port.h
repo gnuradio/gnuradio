@@ -24,7 +24,7 @@
 #include <mb_common.h>
 
 /*!
- * \brief Public port characteristics
+ * \brief Abstract port characteristics
  */
 class mb_port : boost::noncopyable
 {
@@ -38,20 +38,21 @@ public:
   };
 
 private:
-  friend class mb_mblock_impl;
 
-  mb_port_detail_sptr   d_detail;
   std::string		d_port_name;
   pmt_t			d_protocol_class;
   bool			d_conjugated;
   port_type_t		d_port_type;
 
-  // private constructor
-  mb_port(const std::string &port_name,
-		const std::string &protocol_class_name,
-		bool conjugated,
-		mb_port::port_type_t port_type);
+protected:
+  mb_mblock	       *d_mblock;  // mblock we're defined in
 
+  // protected constructor
+  mb_port(mb_mblock *mblock,
+	  const std::string &port_name,
+	  const std::string &protocol_class_name,
+	  bool conjugated,
+	  mb_port::port_type_t port_type);
 
 public:
   std::string	port_name() const { return d_port_name; }
@@ -62,7 +63,7 @@ public:
   pmt_t		incoming_message_set() const;
   pmt_t		outgoing_message_set() const;
 
-  ~mb_port();
+  virtual ~mb_port();
 
   /*!
    * \brief send a message
@@ -72,12 +73,11 @@ public:
    * \param metadata	optional metadata
    * \param priority	the urgency at which the message is sent
    */
-  void
+  virtual void
   send(pmt_t signal,
        pmt_t data = PMT_NIL,
        pmt_t metadata = PMT_NIL,
-       mb_pri_t priority = MB_PRI_DEFAULT);
-
+       mb_pri_t priority = MB_PRI_DEFAULT) = 0;
 };
 
 #endif /* INCLUDED_MB_PORT_H */

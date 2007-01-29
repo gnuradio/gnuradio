@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,12 +31,16 @@ class qa_mblock_prims : public CppUnit::TestCase {
   CPPUNIT_TEST(test_define_ports);
   CPPUNIT_TEST(test_define_components);
   CPPUNIT_TEST(test_connect);
+  CPPUNIT_TEST(test_msg_queue);
+  CPPUNIT_TEST(test_make_accepter);
   CPPUNIT_TEST_SUITE_END();
 
  private:
   void test_define_ports();
   void test_define_components();
   void test_connect();
+  void test_msg_queue();
+  void test_make_accepter();
 };
 
 #endif /* INCLUDED_QA_MBLOCK_PRIMS_H */

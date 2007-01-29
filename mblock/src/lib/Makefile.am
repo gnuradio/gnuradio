@@ -1,5 +1,5 @@
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -37,8 +37,11 @@ libmblock_la_SOURCES =			\
 	mb_mblock.cc			\
 	mb_mblock_impl.cc		\
 	mb_message.cc			\
+	mb_msg_accepter.cc		\
+	mb_msg_accepter_smp.cc		\
+	mb_msg_queue.cc			\
 	mb_port.cc			\
-	mb_port_detail.cc		\
+	mb_port_simple.cc		\
 	mb_protocol_class.cc		\
 	mb_runtime.cc			\
 	mb_runtime_impl.cc		\
@@ -58,7 +61,10 @@ include_HEADERS =			\
 	mb_exception.h			\
 	mb_mblock.h			\
 	mb_message.h			\
+	mb_msg_accepter.h		\
+	mb_msg_queue.h			\
 	mb_port.h			\
+	mb_port_simple.h		\
 	mb_protocol_class.h		\
 	mb_runtime.h			\
 	mb_util.h			
@@ -68,6 +74,7 @@ noinst_HEADERS = 			\
 	mb_connection.h			\
 	mb_endpoint.h			\
 	mb_mblock_impl.h		\
+	mb_msg_accepter_smp.h		\
 	mb_port_detail.h		\
 	mb_runtime_impl.h		\
 	qa_mblock.h			\

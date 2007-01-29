@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,6 +23,7 @@
 
 #include <mb_mblock.h>
 #include <mb_connection.h>
+#include <mb_msg_queue.h>
 #include <list>
 #include <map>
 
@@ -37,10 +38,13 @@ typedef std::map<std::string, mb_mblock_sptr> mb_comp_map_t;
 class mb_mblock_impl : boost::noncopyable
 {
   mb_mblock		       *d_mb;		// pointer to our associated mblock
+  mb_mblock		       *d_mb_parent;	// pointer to our parent
 
   mb_port_map_t			d_port_map;	// our ports
   mb_comp_map_t			d_comp_map;	// our components
   mb_conn_table			d_conn_table;	// our connections
+
+  mb_msg_queue			d_msgq;		// incoming messages for us
 
 public:
   mb_mblock_impl(mb_mblock *mb);
@@ -80,9 +84,9 @@ public:
   /*!
    * \brief connect endpoint_1 to endpoint_2
    *
-   * \param comp_name1  component on one of the connection
+   * \param comp_name1  component on one end of the connection
    * \param port_name1  the name of the port on comp1
-   * \param comp_name2  component on the other end the connection
+   * \param comp_name2  component on the other end of the connection
    * \param port_name2  the name of the port on comp2
    *
    * An endpoint is specified by the component's local name (given as
@@ -98,9 +102,9 @@ public:
   /*!
    * \brief disconnect endpoint_1 from endpoint_2
    *
-   * \param comp_name1  component on one of the connection
+   * \param comp_name1  component on one end of the connection
    * \param port_name1  the name of the port on comp1
-   * \param comp_name2  component on the other end the connection
+   * \param comp_name2  component on the other end of the connection
    * \param port_name2  the name of the port on comp2
    *
    * An endpoint is specified by the component's local name (given as
@@ -135,6 +139,12 @@ public:
   bool
   walk_tree(mb_visitor *visitor, const std::string &path="");
   
+  mb_msg_accepter_sptr
+  make_accepter(const std::string port_name);
+
+  mb_msg_queue &
+  msgq() { return d_msgq; }
+
   /*
    * Our implementation methods
    */

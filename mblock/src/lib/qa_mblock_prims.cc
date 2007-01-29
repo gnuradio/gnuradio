@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,6 +26,10 @@
 #include <mb_runtime.h>
 #include <mb_protocol_class.h>
 #include <mb_exception.h>
+#include <mb_msg_queue.h>
+#include <mb_message.h>
+#include <mb_mblock_impl.h>
+#include <mb_msg_accepter.h>
 #include <stdio.h>
 
 static pmt_t s_cs = pmt_intern("cs");
@@ -329,3 +333,87 @@ qa_mblock_prims::test_connect()
   mb_runtime_sptr	rt = mb_make_runtime();
   mb_mblock_sptr	mb0 = mb_mblock_sptr(new tc_0());
 }
+
+////////////////////////////////////////////////////////////////
+
+void
+qa_mblock_prims::test_msg_queue()
+{
+  mb_msg_queue	q;
+
+  // check initial state
+  CPPUNIT_ASSERT(q.get_highest_pri_msg() == 0);
+
+  CPPUNIT_ASSERT(MB_NPRI >= 5);	// sanity check for this test
+
+  // insert three messages at the same pri and ensure that they come out in order
+  //                       signal       data          metadata     pri
+  q.insert(mb_make_message(PMT_NIL, pmt_from_long(0), PMT_NIL, MB_PRI_BEST + 2));
+  q.insert(mb_make_message(PMT_NIL, pmt_from_long(1), PMT_NIL, MB_PRI_BEST + 2));
+  q.insert(mb_make_message(PMT_NIL, pmt_from_long(2), PMT_NIL, MB_PRI_BEST + 2));
+  
+  CPPUNIT_ASSERT_EQUAL(0L, pmt_to_long(q.get_highest_pri_msg()->data()));
+  CPPUNIT_ASSERT_EQUAL(1L, pmt_to_long(q.get_highest_pri_msg()->data()));
+  CPPUNIT_ASSERT_EQUAL(2L, pmt_to_long(q.get_highest_pri_msg()->data()));
+
+  CPPUNIT_ASSERT(q.get_highest_pri_msg() == 0);
+
+
+  // insert messages of different priorities in pseudo-random order
+  //                       signal   data     metadata     pri
+  q.insert(mb_make_message(PMT_NIL, PMT_NIL, PMT_NIL, MB_PRI_BEST + 3));
+  q.insert(mb_make_message(PMT_NIL, PMT_NIL, PMT_NIL, MB_PRI_BEST + 2));
+  q.insert(mb_make_message(PMT_NIL, PMT_NIL, PMT_NIL, MB_PRI_BEST + 4));
+  q.insert(mb_make_message(PMT_NIL, PMT_NIL, PMT_NIL, MB_PRI_BEST + 0));
+  q.insert(mb_make_message(PMT_NIL, PMT_NIL, PMT_NIL, MB_PRI_BEST + 1));
+  q.insert(mb_make_message(PMT_NIL, PMT_NIL, PMT_NIL, MB_PRI_BEST + 3));
+  q.insert(mb_make_message(PMT_NIL, PMT_NIL, PMT_NIL, MB_PRI_BEST + 2));
+  q.insert(mb_make_message(PMT_NIL, PMT_NIL, PMT_NIL, MB_PRI_BEST + 4));
+  q.insert(mb_make_message(PMT_NIL, PMT_NIL, PMT_NIL, MB_PRI_BEST + 0));
+  q.insert(mb_make_message(PMT_NIL, PMT_NIL, PMT_NIL, MB_PRI_BEST + 1));
+
+  // confirm that they come out in order
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 0, q.get_highest_pri_msg()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 0, q.get_highest_pri_msg()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 1, q.get_highest_pri_msg()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 1, q.get_highest_pri_msg()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 2, q.get_highest_pri_msg()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 2, q.get_highest_pri_msg()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 3, q.get_highest_pri_msg()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 3, q.get_highest_pri_msg()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 4, q.get_highest_pri_msg()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 4, q.get_highest_pri_msg()->priority());
+  
+  // check final state
+  CPPUNIT_ASSERT(q.get_highest_pri_msg() == 0);
+}
+
+////////////////////////////////////////////////////////////////
+
+void
+qa_mblock_prims::test_make_accepter()
+{
+  // create a block
+  mb_mblock_sptr mb = mb_mblock_sptr(new dp_2());
+
+  // use "internal use only" method...
+  mb_msg_accepter_sptr accepter = mb->impl()->make_accepter("cs");
+
+  // Now push a few messages into it...
+  //          signal       data          metadata     pri
+  (*accepter)(PMT_NIL, pmt_from_long(0), PMT_NIL, MB_PRI_BEST + 2);
+  (*accepter)(PMT_NIL, pmt_from_long(1), PMT_NIL, MB_PRI_BEST + 2);
+  (*accepter)(PMT_NIL, pmt_from_long(2), PMT_NIL, MB_PRI_BEST + 2);
+
+  // try to pull them out
+
+  pmt_t cs = pmt_intern("cs");
+
+  mb_message_sptr msg = mb->impl()->msgq().get_highest_pri_msg();
+  CPPUNIT_ASSERT(pmt_eq(cs, msg->port_id()));	      // confirm that port_id is set
+  CPPUNIT_ASSERT_EQUAL(0L, pmt_to_long(msg->data())); // and that data is correct
+
+  CPPUNIT_ASSERT_EQUAL(1L, pmt_to_long(mb->impl()->msgq().get_highest_pri_msg()->data()));
+  CPPUNIT_ASSERT_EQUAL(2L, pmt_to_long(mb->impl()->msgq().get_highest_pri_msg()->data()));
+}
+

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -34,18 +34,21 @@ typedef boost::shared_ptr<mb_message> mb_message_sptr;
  * \param metadata	information about the data
  * \param priority	urgency
  */
-mb_message_sptr 
+mb_message_sptr
 mb_make_message(pmt_t signal,
 		pmt_t data = PMT_NIL,
 		pmt_t metadata = PMT_NIL,
 		mb_pri_t priority = MB_PRI_DEFAULT);
 
 class mb_message {
-  pmt_t		d_signal;
-  pmt_t		d_data;
-  pmt_t		d_metadata;
-  mb_pri_t	d_priority;
-  // foo	d_rcvd_port_id;
+  mb_message_sptr d_next;		// link field for msg queue
+  pmt_t		  d_signal;
+  pmt_t		  d_data;
+  pmt_t		  d_metadata;
+  mb_pri_t	  d_priority;
+  pmt_t	  	  d_port_id;		// name of port msg was rcvd on (symbol)
+
+  friend class mb_msg_queue;
 
   friend mb_message_sptr
   mb_make_message(pmt_t signal, pmt_t data, pmt_t metadata, mb_pri_t priority);
@@ -60,7 +63,9 @@ public:
   pmt_t data() const { return d_data; }
   pmt_t metadata() const { return d_metadata; }
   mb_pri_t priority() const { return d_priority; }
-  // foo rcvd_port_id const { return d_rcvd_port_id; }
+  pmt_t port_id() const { return d_port_id; }
+
+  void set_port_id(pmt_t port_id){ d_port_id = port_id; }
 };
 
 #endif /* INCLUDED_MB_MESSAGE_H */

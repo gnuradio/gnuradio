@@ -26,8 +26,10 @@
 #include <mb_mblock.h>
 #include <mb_protocol_class.h>
 #include <mb_port.h>
+#include <mb_port_simple.h>
 #include <mb_exception.h>
 #include <mb_util.h>
+#include <mb_msg_accepter_smp.h>
 
 
 static pmt_t s_self = pmt_intern("self");
@@ -49,7 +51,7 @@ mb_mblock_impl::comp_is_defined(const std::string &name)
 ////////////////////////////////////////////////////////////////////////
 
 mb_mblock_impl::mb_mblock_impl(mb_mblock *mb)
-  : d_mb(mb)
+  : d_mb(mb), d_mb_parent(0)
 {
 }
 
@@ -66,13 +68,17 @@ mb_mblock_impl::define_port(const std::string &port_name,
 			    mb_port::port_type_t port_type)
 {
   if (port_type == mb_port::RELAY)
-    throw mbe_base(d_mb, "mb_block_impl::define_port: RELAY ports are not implemented: " + port_name);
+    throw mbe_base(d_mb,
+	     "mb_block_impl::define_port: RELAY ports are not implemented: "
+	     + port_name);
   
   if (port_is_defined(port_name))
     throw mbe_duplicate_port(d_mb, port_name);
 
-  mb_port_sptr p = mb_port_sptr(new mb_port(port_name, protocol_class_name,
-					    conjugated, port_type));
+  mb_port_sptr p =
+    mb_port_sptr(new mb_port_simple(d_mb,
+				    port_name, protocol_class_name,
+				    conjugated, port_type));
   d_port_map[port_name] = p;
   return p;
 }
@@ -84,12 +90,15 @@ mb_mblock_impl::define_component(const std::string &name,
   if (comp_is_defined(name))	// check for duplicate name
     throw mbe_duplicate_component(d_mb, name);
 
+  component->d_impl->d_mb_parent = d_mb;    // set component's parent link
   d_comp_map[name] = component;
 }
 
 void
-mb_mblock_impl::connect(const std::string &comp_name1, const std::string &port_name1,
-			const std::string &comp_name2, const std::string &port_name2)
+mb_mblock_impl::connect(const std::string &comp_name1,
+			const std::string &port_name1,
+			const std::string &comp_name2,
+			const std::string &port_name2)
 {
   mb_endpoint	ep0 = check_and_resolve_endpoint(comp_name1, port_name1);
   mb_endpoint	ep1 = check_and_resolve_endpoint(comp_name2, port_name2);
@@ -104,8 +113,10 @@ mb_mblock_impl::connect(const std::string &comp_name1, const std::string &port_n
 }
 
 void
-mb_mblock_impl::disconnect(const std::string &comp_name1, const std::string &port_name1,
-			   const std::string &comp_name2, const std::string &port_name2)
+mb_mblock_impl::disconnect(const std::string &comp_name1,
+			   const std::string &port_name1,
+			   const std::string &comp_name2,
+			   const std::string &port_name2)
 {
   d_conn_table.disconnect(comp_name1, port_name1, comp_name2, port_name2);
 }
@@ -173,7 +184,7 @@ mb_mblock_impl::resolve_port(const std::string &comp_name,
 
     mb_port_sptr c_port = c_impl->d_port_map[port_name];
 
-    if (c_port->port_type() == mb_port::INTERNAL)	      // can't "see" a child's internal ports
+    if (c_port->port_type() == mb_port::INTERNAL) // can't "see" a child's internal ports
       throw mbe_no_such_port(d_mb, mb_util::join_names(comp_name, port_name));
 
     return c_port;
@@ -212,3 +223,12 @@ mb_mblock_impl::walk_tree(mb_visitor *visitor, const std::string &path)
   return true;
 }
 
+mb_msg_accepter_sptr
+mb_mblock_impl::make_accepter(const std::string port_name)
+{
+  mb_msg_accepter *ma =
+    new mb_msg_accepter_smp(d_mb->shared_from_this(),
+			    pmt_intern(port_name));
+
+  return mb_msg_accepter_sptr(ma);
+}

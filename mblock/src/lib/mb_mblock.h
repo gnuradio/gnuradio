@@ -24,6 +24,7 @@
 #include <mb_common.h>
 #include <mb_message.h>
 #include <mb_port.h>
+#include <boost/enable_shared_from_this.hpp>
 
 
 /*!
@@ -45,7 +46,8 @@ public:
  *
  * Subclass this to define your mblocks.
  */
-class mb_mblock : boost::noncopyable
+class mb_mblock : boost::noncopyable,
+		  public boost::enable_shared_from_this<mb_mblock>
 {
 private:
   mb_mblock_impl_sptr	        d_impl;		// implementation details
@@ -120,9 +122,9 @@ protected:
   /*!
    * \brief connect endpoint_1 to endpoint_2
    *
-   * \param comp_name1  component on one of the connection
+   * \param comp_name1  component on one end of the connection
    * \param port_name1  the name of the port on comp1
-   * \param comp_name2  component on the other end the connection
+   * \param comp_name2  component on the other end of the connection
    * \param port_name2  the name of the port on comp2
    *
    * An endpoint is specified by the component's local name (given as
@@ -138,9 +140,9 @@ protected:
   /*!
    * \brief disconnect endpoint_1 from endpoint_2
    *
-   * \param comp_name1  component on one of the connection
+   * \param comp_name1  component on one end of the connection
    * \param port_name1  the name of the port on comp1
-   * \param comp_name2  component on the other end the connection
+   * \param comp_name2  component on the other end of the connection
    * \param port_name2  the name of the port on comp2
    *
    * An endpoint is specified by the component's local name (given as
@@ -181,7 +183,15 @@ public:
    *
    * The traversal stops and returns false if any call to visitor returns false.
    */
-  bool walk_tree(mb_visitor *visitor, const std::string &path="");
+  bool
+  walk_tree(mb_visitor *visitor, const std::string &path="");
+
+
+  //! \implementation
+  // internal use only
+  mb_mblock_impl_sptr
+  impl() const { return d_impl; }
+
 };
 
 

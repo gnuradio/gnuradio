@@ -27,12 +27,13 @@
 #include <mb_port_detail.h>
 #include <mb_protocol_class.h>
 
-mb_port::mb_port(const std::string &port_name,
+mb_port::mb_port(mb_mblock *mblock,
+		 const std::string &port_name,
 		 const std::string &protocol_class_name,
 		 bool conjugated,
 		 mb_port::port_type_t port_type)
-  : d_detail(mb_port_detail_sptr(new mb_port_detail())),
-    d_port_name(port_name), d_conjugated(conjugated), d_port_type(port_type)
+  : d_port_name(port_name), d_conjugated(conjugated), d_port_type(port_type),
+    d_mblock(mblock)
 {
   pmt_t pc = mb_protocol_class_lookup(pmt_intern(protocol_class_name));
   if (pmt_is_null(pc)){

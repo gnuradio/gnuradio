@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,21 +22,29 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+#include <mb_msg_accepter_smp.h>
+#include <mb_common.h>
+#include <mb_mblock.h>
+#include <mb_mblock_impl.h>
 #include <mb_message.h>
 
-mb_message_sptr
-mb_make_message(pmt_t signal, pmt_t data, pmt_t metadata, mb_pri_t priority)
-{
-  return mb_message_sptr(new mb_message(signal, data, metadata, priority));
-}
-
-mb_message::mb_message(pmt_t signal, pmt_t data, pmt_t metadata, mb_pri_t priority)
-  : d_signal(signal), d_data(data), d_metadata(metadata), d_priority(priority),
-    d_port_id(PMT_NIL)
+mb_msg_accepter_smp::mb_msg_accepter_smp(mb_mblock_sptr mblock, pmt_t port_name)
+  : d_mb(mblock), d_port_name(port_name)
 {
 }
 
-mb_message::~mb_message()
+mb_msg_accepter_smp::~mb_msg_accepter_smp()
 {
-  // NOP
+  // nop
+}
+
+void
+mb_msg_accepter_smp::operator()(pmt_t signal, pmt_t data,
+				pmt_t metadata, mb_pri_t priority)
+{
+  mb_message_sptr msg = mb_make_message(signal, data, metadata, priority);
+  msg->set_port_id(d_port_name);
+  d_mb->impl()->msgq().insert(msg);
+
+  // FIXME tell runtime that we're ready to run
 }
