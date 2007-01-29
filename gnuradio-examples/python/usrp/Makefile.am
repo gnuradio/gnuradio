@@ -23,7 +23,6 @@ EXTRA_DIST = 					\
 	am_rcv.py				\
 	ayfabtu.py				\
 	benchmark_usb.py			\
-	dsb_tx.py				\
 	flexrf_debug.py				\
 	flexrf_siggen.py			\
 	fm_tx_2_daughterboards.py		\
