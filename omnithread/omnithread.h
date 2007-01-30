@@ -73,7 +73,7 @@ class omni_thread;
 //
 
 #if !defined(OMNITHREAD_POSIX) && !defined(OMNITHREAD_NT) && defined HAVE_CONFIG_H
-#include <config.h>
+// #include <config.h>      // No, No, No!  Never include <config.h> from a header
 #endif
 
 #if defined(OMNITHREAD_POSIX)

@@ -25,6 +25,9 @@ AC_CANONICAL_TARGET([])
 AM_INIT_AUTOMAKE(gnuradio,3.0svn)
 AC_CONFIG_SRCDIR([gnuradio-core/src/lib/runtime/gr_vmcircbuf.cc])
 
+DEFINES=""
+AC_SUBST(DEFINES)
+
 dnl Remember if the user explicity set CXXFLAGS
 if test -n "${CXXFLAGS}"; then
   user_set_cxxflags=yes
@@ -172,9 +175,6 @@ AC_SUBST(CPPUNIT_INCLUDES)
 dnl Define where to find boost includes
 dnl defines BOOST_CFLAGS
 GR_REQUIRE_BOOST_INCLUDES
-
-DEFINES=""
-AC_SUBST(DEFINES)
 
 dnl Component specific configuration
 dnl The order of the GR_ macros determines the order of compilation

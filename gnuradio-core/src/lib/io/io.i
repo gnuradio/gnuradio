@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -34,8 +34,8 @@
 #include <ppio.h>
 #include <gr_message_source.h>
 #include <gr_message_sink.h>
-#include <gr_udp_sink.cc>
-#include <gr_udp_source.cc>
+#include <gr_udp_sink.h>
+#include <gr_udp_source.h>
 
 %}
 
