@@ -50,7 +50,6 @@ GNURADIO_INCLUDES = -I$(top_srcdir)/gnuradio-core/src/lib/runtime \
 		    -I$(top_srcdir)/gnuradio-core/src/lib/reed-solomon \
 		    -I$(top_srcdir)/gnuradio-core/src/lib/io \
 		    -I$(top_srcdir)/gnuradio-core/src/lib/g72x \
-		    -I$(top_srcdir)/gnuradio-core/src/lib/omnithread \
 		    -I$(top_srcdir)/gnuradio-core/src/lib/swig \
 		    -I$(top_builddir)/gnuradio-core/src/lib/swig \
 	            $(FFTW3F_CFLAGS)
@@ -58,6 +57,7 @@ GNURADIO_INCLUDES = -I$(top_srcdir)/gnuradio-core/src/lib/runtime \
 
 # These used to be set in PKGCONFIG but now point to the current
 # build tree.
+# FIXME shouldn't -lfftw3f -lm just be extracted from libgnuradio-core.la ???
 GNURADIO_CORE_LIBS = -L$(top_builddir)/gnuradio-core/src/lib \
                      -lgnuradio-core -lfftw3f -lm
 
@@ -69,15 +69,17 @@ GNURADIO_I = $(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
 USRP_INCLUDES = -I$(top_srcdir)/usrp/host/lib \
 		-I$(top_srcdir)/usrp/firmware/include
 
-USRP_LIBS = -L$(top_builddir)/usrp/host/lib \
-	    -lusrp
+USRP_LIBS = -L$(top_builddir)/usrp/host/lib -lusrp
 
 PMT_INCLUDES = -I$(top_srcdir)/pmt/src/lib
 PMT_LIBS = -L$(top_builddir)/pmt/src/lib -lpmt
 
+OMNITHREAD_INCLUDES = -I$(top_srcdir)/omnithread
+OMNITHREAD_LIBS = -L$(top_builddir)/omnithread -lgromnithread
+
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.
-STD_DEFINES_AND_INCLUDES=$(DEFINES) $(GNURADIO_INCLUDES) $(BOOST_CFLAGS)
+STD_DEFINES_AND_INCLUDES=$(DEFINES) $(OMNITHREAD_INCLUDES) $(GNURADIO_INCLUDES) $(BOOST_CFLAGS)
 
 # Fix for BSD make not defining $(RM).  We define it now in configure.ac
 # using AM_PATH_PROG, but now here have to add a -f to be like GNU make

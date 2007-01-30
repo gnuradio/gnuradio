@@ -184,6 +184,7 @@ AC_ARG_ENABLE(
 )
 
 build_dirs="config"
+GRC_OMNITHREAD			dnl must come before gnuradio-core and mblock
 GRC_GNURADIO_CORE
 GRC_USRP
 GRC_GR_USRP			dnl this must come after GRC_USRP

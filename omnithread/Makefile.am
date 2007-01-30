@@ -27,23 +27,24 @@ include $(top_srcdir)/Makefile.common
 # we should do some configure hacking to determine these on the fly
 OMNITHREAD_DEFINES = -DPthreadDraftVersion=10
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(OMNITHREAD_DEFINES)
+INCLUDES = $(DEFINES) $(OMNITHREAD_DEFINES) $(OMNITHREAD_INCLUDES)
 
-noinst_LTLIBRARIES = libomnithread.la
+# we call it libgromnithread to avoid a collision with libomnithread on Debian
+lib_LTLIBRARIES = libgromnithread.la
 
 # At this point we only support the posix and nt pthreads i/f...
 
 if OMNITHREAD_POSIX
-libomnithread_la_SOURCES =		\
+libgromnithread_la_SOURCES =		\
 	posix.cc
 endif
 
 if OMNITHREAD_NT
-libomnithread_la_SOURCES =		\
+libgromnithread_la_SOURCES =		\
 	nt.cc
 endif
 
-libomnithread_la_LIBADD =		\
+libgromnithread_la_LIBADD =		\
 	$(PTHREAD_LIBS)
 
 # ... but this code also came with the package

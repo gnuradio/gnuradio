@@ -28,6 +28,16 @@ AC_DEFUN([GRC_MBLOCK],[
     ])
 
     passed=yes
+    # Don't do mblock if omnithread skipped
+    # There *has* to be a better way to check if a value is in a string
+    for dir in $skipped_dirs
+    do
+	if test x$dir = xomnithread; then
+	    AC_MSG_RESULT([Component mblock requires omnithread, which is not being built.])
+	    passed=no
+	fi
+    done
+
     # Don't do mblock if pmt skipped
     # There *has* to be a better way to check if a value is in a string
     for dir in $skipped_dirs

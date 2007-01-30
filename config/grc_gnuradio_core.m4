@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -37,7 +37,6 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
         gnuradio-core/src/lib/gengen/Makefile \
         gnuradio-core/src/lib/io/Makefile \
         gnuradio-core/src/lib/missing/Makefile \
-        gnuradio-core/src/lib/omnithread/Makefile \
         gnuradio-core/src/lib/reed-solomon/Makefile \
         gnuradio-core/src/lib/runtime/Makefile \
         gnuradio-core/src/lib/swig/Makefile \
@@ -55,6 +54,16 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
     ])
     
     passed=yes
+    # Don't do gnuradio-core if omnithread skipped
+    # There *has* to be a better way to check if a value is in a string
+    for dir in $skipped_dirs
+    do
+	if test x$dir = xomnithread; then
+	    AC_MSG_RESULT([Component gnuradio-core requires omnithread, which is not being built.])
+	    passed=no
+	fi
+    done
+
     GRC_BUILD_CONDITIONAL([gnuradio-core],[
         dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_core], [chmod +x gnuradio-core/src/python/gnuradio/gr/run_tests])
