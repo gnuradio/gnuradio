@@ -39,7 +39,7 @@ EXTRA_DIST = 			\
 all: usrp_gpif.c
 
 usrp_gpif.c usrp_gpif_inline.h : gpif.c
-	srcdir=$(srcdir) $(srcdir)/edit-gpif $(srcdir)/gpif.c usrp_gpif.c usrp_gpif_inline.h
+	srcdir=$(srcdir) $(PYTHON) $(srcdir)/edit-gpif $(srcdir)/gpif.c usrp_gpif.c usrp_gpif_inline.h
 
 CLEANFILES = \
 	*.ihx *.lnk *.lst *.map *.mem *.rel *.rst *.sym *.asm *.lib \

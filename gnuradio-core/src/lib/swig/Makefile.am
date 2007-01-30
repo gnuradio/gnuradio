@@ -268,7 +268,7 @@ gnuradio_swig_py_io.cc : sw_io.i
 # FIXME As of swig 1.3.31, this still seems to be required...
 
 gnuradio_swig_bug_workaround.h : gnuradio_swig_py_runtime.cc $(srcdir)/gen-swig-bug-fix
-	$(srcdir)/gen-swig-bug-fix gnuradio_swig_py_runtime.cc $@
+	$(PYTHON) $(srcdir)/gen-swig-bug-fix gnuradio_swig_py_runtime.cc $@
 
 # ----------------------------------------------------------------
 

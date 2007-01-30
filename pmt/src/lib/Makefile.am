@@ -46,7 +46,7 @@ GENERATED_CC =				\
 
 
 $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
-	PYTHONPATH=$(top_srcdir)/pmt/src/lib srcdir=$(srcdir) $(srcdir)/generate_unv.py
+	PYTHONPATH=$(top_srcdir)/pmt/src/lib srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_unv.py
 
 BUILT_SOURCES = $(GENERATED_H) $(GENERATED_CC)
 

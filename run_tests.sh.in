@@ -47,7 +47,7 @@ export GR_DONT_LOAD_PREFS
 ok=yes
 for file in $3/qa_*.py
 do
-  if ! $file
+  if ! @PYTHON@ $file
   then
     ok=no
   fi  

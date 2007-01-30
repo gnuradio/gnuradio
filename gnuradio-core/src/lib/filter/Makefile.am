@@ -69,7 +69,7 @@ include Makefile.gen
 
 
 $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
-	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(srcdir)/generate_all.py
+	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
 
 
 BUILT_SOURCES = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC)
