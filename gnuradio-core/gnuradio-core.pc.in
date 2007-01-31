@@ -7,5 +7,5 @@ Name: gnuradio-core
 Description: GNU Software Radio toolkit
 Requires:
 Version: @VERSION@
-Libs: -L${libdir} -lgnuradio-core @FFTW3F_LIBS@ @OMNITHREAD_LIBS@
+Libs: -L${libdir} -lgnuradio-core @FFTW3F_LIBS@ -lgromnithread
 Cflags: -I${includedir} @DEFINES@ @PTHREAD_CFLAGS@
