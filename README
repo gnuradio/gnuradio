@@ -114,6 +114,8 @@ install both packages.  (Most GNU/Linux systems are like this, but
 pkgsrc is not and instead uses -devel to indicate a package of a
 not-yet-released or unstable version.)
 
+For those using pkgsrc, see gnuradio-pkg_chk.conf.  Those not using
+pkgsrc may also find the list useful.
 
 (1) The "autotools"
 
