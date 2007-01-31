@@ -68,11 +68,13 @@ gr_vmcircbuf_sysv_shm::gr_vmcircbuf_sysv_shm (int size)
 
   if ((shmid2 = shmget (IPC_PRIVATE, 2 * size + 2 * pagesize, IPC_CREAT | 0700)) == -1){
     perror ("gr_vmcircbuf_sysv_shm: shmget (1)");
+    shmctl (shmid_guard, IPC_RMID, 0);
     throw std::runtime_error ("gr_vmcircbuf_sysv_shm");
   }
 
   if ((shmid1 = shmget (IPC_PRIVATE, size, IPC_CREAT | 0700)) == -1){
     perror ("gr_vmcircbuf_sysv_shm: shmget (2)");
+    shmctl (shmid_guard, IPC_RMID, 0);
     shmctl (shmid2, IPC_RMID, 0);
     throw std::runtime_error ("gr_vmcircbuf_sysv_shm");
   }
