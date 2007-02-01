@@ -17,7 +17,7 @@
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded 
 # by quotes) that should identify the project.
 
-PROJECT_NAME           = "GNU Radio 2.x"
+PROJECT_NAME           = "GNU Radio @VERSION@"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. 
 # This could be handy for archiving the generated documentation or 
@@ -447,7 +447,23 @@ WARN_LOGFILE           =
 
 INPUT                  = @top_srcdir@/gnuradio-core/src/lib \
                          @top_srcdir@/gnuradio-core/src/tests \
-                         @top_srcdir@/gnuradio-core/doc/other
+                         @top_srcdir@/gnuradio-core/doc/other \
+			 @top_srcdir@/gr-audio-alsa \
+			 @top_srcdir@/gr-audio-jack \
+			 @top_srcdir@/gr-audio-oss \
+			 @top_srcdir@/gr-audio-osx \
+			 @top_srcdir@/gr-audio-portaudio \
+			 @top_srcdir@/gr-gsm-fr-vocoder \
+			 @top_srcdir@/gr-pager \
+			 @top_srcdir@/gr-radio-astronomy \
+			 @top_srcdir@/gr-trellis \
+			 @top_srcdir@/gr-usrp \
+			 @top_srcdir@/gr-video-sdl \
+			 @top_srcdir@/mblock \
+			 @top_srcdir@/omnithread \
+			 @top_srcdir@/pmt \
+			 @top_srcdir@/usrp/host
+
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -470,11 +486,30 @@ RECURSIVE              = YES
 # excluded from the INPUT source files. This way you can easily exclude a 
 # subdirectory from a directory tree whose root is specified with the INPUT tag.
 
-EXCLUDE                = CVS \
-                         @top_srcdir@/gnuradio-core/src/lib/swig/gnuradio_swig_python.cc \
-                         @top_srcdir@/gnuradio-core/src/lib/atsc \
-                         @top_srcdir@/gnuradio-core/src/lib/io-orig \
-                         @top_srcdir@/gnuradio-core/src/lib/vrx
+EXCLUDE                = CVS .svn .libs .deps \
+			 @top_builddir@/gnuradio-core/src/lib/swig/gnuradio_swig_py_filter.cc \
+			 @top_builddir@/gnuradio-core/src/lib/swig/gnuradio_swig_py_general.cc \
+			 @top_builddir@/gnuradio-core/src/lib/swig/gnuradio_swig_py_gengen.cc \
+			 @top_builddir@/gnuradio-core/src/lib/swig/gnuradio_swig_py_io.cc \
+			 @top_builddir@/gnuradio-core/src/lib/swig/gnuradio_swig_py_runtime.cc \
+			 @top_builddir@/gr-atsc/src/lib/atsc.cc \
+			 @top_builddir@/gr-audio-alsa/src/audio_alsa.cc \
+			 @top_builddir@/gr-audio-jack/src/audio_jack.cc \
+			 @top_builddir@/gr-audio-oss/src/audio_oss.cc \
+			 @top_builddir@/gr-audio-osx/src/audio_osx.cc \
+			 @top_builddir@/gr-audio-portaudio/src/audio_portaudio.cc \
+			 @top_builddir@/gr-audio-windows/src/audio_windows.cc \
+			 @top_builddir@/gr-comedi/src/comedi.cc \
+			 @top_builddir@/gr-ezdop/src/lib/ezdop.cc \
+			 @top_builddir@/gr-gsm-fr-vocoder/src/lib/gsm_full_rate.cc \
+			 @top_builddir@/gr-howto-write-a-block/src/lib/howto.cc \
+			 @top_builddir@/gr-pager/src/pager_swig.cc \
+			 @top_builddir@/gr-radio-astronomy/src/lib/ra.cc \
+			 @top_builddir@/gr-trellis/src/lib/trellis.cc \
+			 @top_builddir@/gr-usrp/src/usrp1.cc \
+			 @top_builddir@/gr-video-sdl/src/video_sdl.cc \
+			 @top_builddir@/usrp/host/swig/prims.cc
+
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix filesystem feature) are excluded 
