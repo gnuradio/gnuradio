@@ -129,8 +129,8 @@ inline float min_star(float a, float b)
 void siso_algorithm(int I, int S, int O, 
              const std::vector<int> &NS,
              const std::vector<int> &OS,
-             const std::vector<int> &PS,
-             const std::vector<int> &PI,
+             const std::vector< std::vector<int> > &PS,
+             const std::vector< std::vector<int> > &PI,
              int K,
              int S0,int SK,
              bool POSTI, bool POSTO,
@@ -157,9 +157,9 @@ void siso_algorithm(int I, int S, int O,
       norm=INF;
       for(int j=0;j<S;j++) {
           minm=INF;
-          for(int i=0;i<I;i++) {
-              int i0 = j*I+i;
-              mm=alpha[k*S+PS[i0]]+priori[k*I+PI[i0]]+prioro[k*O+OS[PS[i0]*I+PI[i0]]];
+          for(int i=0;i<PS[j].size();i++) {
+              //int i0 = j*I+i;
+              mm=alpha[k*S+PS[j][i]]+priori[k*I+PI[j][i]]+prioro[k*O+OS[PS[j][i]*I+PI[j][i]]];
               minm=(*p2mymin)(minm,mm);
           }
           alpha[(k+1)*S+j]=minm;

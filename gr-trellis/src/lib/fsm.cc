@@ -47,7 +47,7 @@ fsm::fsm(const fsm &FSM)
   d_O=FSM.O();
   d_NS=FSM.NS();
   d_OS=FSM.OS();
-  d_PS=FSM.PS();
+  d_PS=FSM.PS(); // is this going to make a deep copy?
   d_PI=FSM.PI();
   d_TMi=FSM.TMi();
   d_TMl=FSM.TMl();
@@ -241,17 +241,21 @@ fsm::fsm(int mod_size, int ch_length)
 //######################################################################
 void fsm::generate_PS_PI()
 {
-  d_PS.resize(d_I*d_S);
-  d_PI.resize(d_I*d_S);
+  d_PS.resize(d_S);
+  d_PI.resize(d_S);
 
   for(int i=0;i<d_S;i++) {
+    d_PS[i].resize(d_I*d_S); // max possible size
+    d_PI[i].resize(d_I*d_S);
     int j=0;
     for(int ii=0;ii<d_S;ii++) for(int jj=0;jj<d_I;jj++) {
       if(d_NS[ii*d_I+jj]!=i) continue;
-      d_PS[i*d_I+j]=ii;
-      d_PI[i*d_I+j]=jj;
+      d_PS[i][j]=ii;
+      d_PI[i][j]=jj;
       j++;
     }
+    d_PS[i].resize(j);
+    d_PI[i].resize(j);
   }
 }
 
@@ -278,9 +282,11 @@ void fsm::generate_TM()
       done = find_es(s);
       attempts ++;
     }
-    if (done == false)
+    if (done == false) {
       //throw std::runtime_error ("fsm::generate_TM(): FSM appears to be disconnected\n");
       printf("fsm::generate_TM(): FSM appears to be disconnected\n");
+      printf("state %d cannot be reached from all other states\n",s);
+    }
   }
 }
 

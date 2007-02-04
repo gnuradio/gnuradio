@@ -86,8 +86,8 @@ trellis_viterbi_combined_b::forecast (int noutput_items, gr_vector_int &ninput_i
 void viterbi_algorithm_combined(int I, int S, int O, 
              const std::vector<int> &NS,
              const std::vector<int> &OS,
-             const std::vector<int> &PS,
-             const std::vector<int> &PI,
+             const std::vector< std::vector<int> > &PS,
+             const std::vector< std::vector<int> > &PI,
              int K,
              int S0,int SK,
              int D,
@@ -119,9 +119,9 @@ void viterbi_algorithm_combined(int I, int S, int O,
       for(int j=0;j<S;j++) { // for each next state do ACS
           minm=INF;
           minmi=0;
-          for(int i=0;i<I;i++) {
+          for(int i=0;i<PS[j].size();i++) {
               int i0 = j*I+i;
-              if((mm=alpha[alphai*S+PS[i0]]+metric[OS[PS[i0]*I+PI[i0]]])<minm)
+              if((mm=alpha[alphai*S+PS[j][i]]+metric[OS[PS[j][i]*I+PI[j][i]]])<minm)
                   minm=mm,minmi=i;
           }
           trace[k*S+j]=minmi;
@@ -145,9 +145,9 @@ void viterbi_algorithm_combined(int I, int S, int O,
   }
 
   for(int k=K-1;k>=0;k--) { // traceback
-      int i0=st*I+trace[k*S+st];
-      out[k]= (unsigned char) PI[i0];
-      st=PS[i0];
+      int i0=trace[k*S+st];
+      out[k]= (unsigned char) PI[st][i0];
+      st=PS[st][i0];
   }
   
   delete [] metric;
