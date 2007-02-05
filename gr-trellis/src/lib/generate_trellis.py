@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,19 +20,19 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from build_utils import expand_template, standard_dict
+from build_utils import expand_template, copyright, open_and_log_name
 from build_utils_codes import *
-
 import re
 
-
 # regular blocks
+
 other_roots = [
     'trellis_encoder_XX',
     'trellis_metrics_X',
     'trellis_viterbi_X',
     'trellis_viterbi_combined_X',
     ]
+
 other_signatures = (
     ['bb','bs','bi','ss','si','ii'],
     ['s','i','f','c'],
@@ -40,6 +40,60 @@ other_signatures = (
     ['b','s','i'],
     )
 
+
+def is_byte (code3):
+    if i_code (code3) == 'b' or o_code (code3) == 'b':
+        return '1'
+    else:
+        return '0'
+
+
+def is_short (code3):
+    if i_code (code3) == 's' or o_code (code3) == 's':
+        return '1'
+    else:
+        return '0'
+
+
+def is_int (code3):
+    if i_code (code3) == 'i' or o_code (code3) == 'i':
+        return '1'
+    else:
+        return '0'
+
+
+def is_float (code3):
+    if i_code (code3) == 'f' or o_code (code3) == 'f':
+        return '1'
+    else:
+        return '0'
+
+
+def is_complex (code3):
+    if i_code (code3) == 'c' or o_code (code3) == 'c':
+        return '1'
+    else:
+        return '0'
+
+
+def standard_dict (name, code3):
+    d = {}
+    d['NAME'] = name
+    d['GUARD_NAME'] = 'INCLUDED_%s_H' % name.upper ()
+    d['BASE_NAME'] = re.sub ('^trellis_', '', name)
+    d['SPTR_NAME'] = '%s_sptr' % name
+    d['WARNING'] = 'WARNING: this file is machine generated.  Edits will be over written'
+    d['COPYRIGHT'] = copyright
+    d['TYPE'] = i_type (code3)
+    d['I_TYPE'] = i_type (code3)
+    d['O_TYPE'] = o_type (code3)
+    d['TAP_TYPE'] = tap_type (code3)
+    d['IS_BYTE'] = is_byte (code3)
+    d['IS_SHORT'] = is_short (code3)
+    d['IS_INT'] = is_int (code3)
+    d['IS_FLOAT'] = is_float (code3)
+    d['IS_COMPLEX'] = is_complex (code3)
+    return d
 
 
 def expand_h_cc_i (root, sig):
@@ -57,10 +111,7 @@ def generate ():
         for s in other_signatures[i]:
             expand_h_cc_i (r, s)
         i=i+1
-            
 
 
 if __name__ == '__main__':
     generate ()
-
-    

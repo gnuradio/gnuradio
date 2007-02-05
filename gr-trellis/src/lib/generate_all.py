@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,12 +22,11 @@
 
 from build_utils import output_glue
 
-import generate_common
+import generate_trellis
 
 def generate_all ():
-    generate_common.generate ()
+    generate_trellis.generate ()
     output_glue ('trellis')
-
 
 if __name__ == '__main__':
     generate_all ()

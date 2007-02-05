@@ -20,6 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
+// WARNING: this file is machine generated.  Edits will be over written
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -50,7 +52,7 @@ trellis_encoder_bs::work (int noutput_items,
 			gr_vector_const_void_star &input_items,
 			gr_vector_void_star &output_items)
 {
-  int ST_tmp;
+  int ST_tmp=0;
 
   assert (input_items.size() == output_items.size());
   int nstreams = input_items.size();
