@@ -171,8 +171,8 @@ void siso_algorithm_combined(int I, int S, int O,
       norm=INF;
       for(int j=0;j<S;j++) {
           minm=INF;
-          for(int i=0;i<PS[j].size();i++) {
-              int i0 = j*I+i;
+          for(unsigned int i=0;i<PS[j].size();i++) {
+              //int i0 = j*I+i;
               mm=alpha[k*S+PS[j][i]]+priori[k*I+PI[j][i]]+prioro[k*O+OS[PS[j][i]*I+PI[j][i]]];
               minm=(*p2mymin)(minm,mm);
           }

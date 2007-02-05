@@ -108,7 +108,7 @@ void viterbi_algorithm(int I, int S, int O,
       for(int j=0;j<S;j++) { // for each next state do ACS
           minm=INF;
           minmi=0;
-          for(int i=0;i<PS[j].size();i++) {
+          for(unsigned int i=0;i<PS[j].size();i++) {
               //int i0 = j*I+i;
               if((mm=alpha[alphai*S+PS[j][i]]+in[k*O+OS[PS[j][i]*I+PI[j][i]]])<minm)
                   minm=mm,minmi=i;
