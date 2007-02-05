@@ -61,7 +61,7 @@ $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
 # The second is the python wrapper that loads the _trellis shared library
 # and knows how to call our extensions.
 
-SWIG_BUILT_SOURCES = 		\
+swig_built_sources = 		\
 	trellis.cc		\
 	trellis.py				
 
@@ -69,7 +69,7 @@ BUILT_SOURCES = \
 	$(GENERATED_H)		\
 	$(GENERATED_I)		\
 	$(GENERATED_CC)		\
-	$(SWIG_BUILT_SOURCES)
+	$(swig_built_sources)
 
 ALL_IFILES = 			\
 	$(LOCAL_IFILES)		\
@@ -145,5 +145,5 @@ CLEANFILES = $(BUILT_SOURCES) *.pyc
 
 # Don't distribute output of swig
 dist-hook:
-	@for file in $(SWIG_BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(SWIG_BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
+	@for file in $(swig_built_sources); do echo $(RM) $(distdir)/$$file; done
+	@for file in $(swig_built_sources); do $(RM) $(distdir)/$$file; done
