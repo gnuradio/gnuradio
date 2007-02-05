@@ -14,9 +14,9 @@ If you just want to see what these programs do, run each of the following:
 ./test_tcm_combined.py fsm_files/awgn1o2_4.fsm 6.0 1000
 ./test_tcm_parallel.py fsm_files/awgn1o2_4.fsm 6.0 1000
 
-./test_sccc_hard.py  fsm_files/awgn1o2_4.fsm fsm_files/awgn1o2_4_msb.fsm 10.0 100
-./test_sccc_soft.py  fsm_files/awgn1o2_4.fsm fsm_files/awgn1o2_4_msb.fsm  8.0 100
-./test_sccc_turbo.py fsm_files/awgn1o2_4.fsm fsm_files/awgn1o2_4_msb.fsm  5.0 100
+./test_sccc_hard.py  fsm_files/awgn1o2_4.fsm fsm_files/awgn2o3_4_msb.fsm 10.0 100
+./test_sccc_soft.py  fsm_files/awgn1o2_4.fsm fsm_files/awgn2o3_4_msb.fsm  8.0 100
+./test_sccc_turbo.py fsm_files/awgn1o2_4.fsm fsm_files/awgn2o3_4_msb.fsm  5.0 100
 
 ./test_viterbi_equalization.py  12.0 100
 ./test_viterbi_equalization1.py 12.0 100
