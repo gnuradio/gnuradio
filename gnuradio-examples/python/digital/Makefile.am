@@ -28,6 +28,7 @@ EXTRA_DIST =			\
 	pick_bitrate.py		\
 	receive_path.py		\
 	rx_voice.py		\
+	run_length.py		\
 	transmit_path.py	\
 	tunnel.py		\
 	tx_voice.py		

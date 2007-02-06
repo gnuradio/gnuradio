@@ -52,13 +52,14 @@ gr_framer_sink_1::enter_have_sync()
 }
 
 inline void
-gr_framer_sink_1::enter_have_header(int payload_len)
+gr_framer_sink_1::enter_have_header(int payload_len, int whitener_offset)
 {
   if (VERBOSE)
-    fprintf(stderr, "@ enter_have_header (payload_len = %d)\n", payload_len);
+    fprintf(stderr, "@ enter_have_header (payload_len = %d) (offset = %d)\n", payload_len, whitener_offset);
 
   d_state = STATE_HAVE_HEADER;
   d_packetlen = payload_len;
+  d_packet_whitener_offset = whitener_offset;
   d_packetlen_cnt = 0;
   d_packet_byte = 0;
   d_packet_byte_index = 0;
@@ -125,11 +126,10 @@ gr_framer_sink_1::work (int noutput_items,
 
 	  // we have a full header, check to see if it has been received properly
 	  if (header_ok()){
-	    int payload_len = header_payload_len();
-	    if (payload_len <= MAX_PKT_LEN)		// reasonable?
-	      enter_have_header(payload_len);		// yes.
-	    else
-	      enter_search();				// no.
+	    int payload_len;
+	    int payload_offset;
+	    header_payload(&payload_len, &payload_offset);
+	    enter_have_header(payload_len, payload_offset);
 	  }
 	  else
 	    enter_search();				// no.
@@ -151,7 +151,8 @@ gr_framer_sink_1::work (int noutput_items,
 	  if (d_packetlen_cnt == d_packetlen){		// packet is filled
 
 	    // build a message
-	    gr_message_sptr msg = gr_make_message(0, 0, 0, d_packetlen_cnt);  	    
+	    // NOTE: passing header field as arg1 is not scalable
+	    gr_message_sptr msg = gr_make_message(0, d_packet_whitener_offset, 0, d_packetlen_cnt);  	    
 	    memcpy(msg->msg(), d_packet, d_packetlen_cnt);
 
 	    d_target_queue->insert_tail(msg);		// send it

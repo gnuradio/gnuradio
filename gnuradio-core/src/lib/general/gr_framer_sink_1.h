@@ -70,6 +70,7 @@ class gr_framer_sink_1 : public gr_sync_block
   unsigned char	     d_packet_byte;		// byte being assembled
   int		     d_packet_byte_index;	// which bit of d_packet_byte we're working on
   int 		     d_packetlen;		// length of packet
+  int                d_packet_whitener_offset;  // offset into whitener string to use
   int		     d_packetlen_cnt;		// how many so far
 
  protected:
@@ -77,7 +78,7 @@ class gr_framer_sink_1 : public gr_sync_block
 
   void enter_search();
   void enter_have_sync();
-  void enter_have_header(int payload_len);
+  void enter_have_header(int payload_len, int whitener_offset);
   
   bool header_ok()
   {
@@ -85,11 +86,13 @@ class gr_framer_sink_1 : public gr_sync_block
     return ((d_header >> 16) ^ (d_header & 0xffff)) == 0;
   }
 
-  int header_payload_len()
+  void header_payload(int *len, int *offset)
   {
     // header consists of two 16-bit shorts in network byte order
-    int t = (d_header >> 16) & 0xffff;
-    return t;
+    // payload length is lower 12 bits
+    // whitener offset is upper 4 bits
+    *len = (d_header >> 16) & 0x0fff;
+    *offset = (d_header >> 28) & 0x000f;
   }
 
  public:

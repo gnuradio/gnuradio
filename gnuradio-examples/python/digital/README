@@ -75,3 +75,10 @@ Likewise, on machine B:
 
 This now uses a carrier sense MAC, so you should be able to ssh
 between the machines, web browse, etc.
+
+* run_length.py: This program takes a single argument '-f FILE' and
+outputs the number of runs of similar bits within the file. It is
+useful as a diagnostic tool when experimenting with line coding or
+whitening algorithms.
+
+

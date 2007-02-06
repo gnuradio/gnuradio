@@ -50,7 +50,8 @@ class transmit_path(gr.hier_block):
         self._samples_per_symbol = options.samples_per_symbol  # desired samples/baud
         self._fusb_block_size    = options.fusb_block_size # usb info for USRP
         self._fusb_nblocks       = options.fusb_nblocks    # usb info for USRP
-
+        self._use_whitener_offset = options.use_whitener_offset # increment start of whitener XOR data
+        
         self._modulator_class = modulator_class         # the modulator_class we are using
     
         if self._tx_freq is None:
@@ -80,7 +81,8 @@ class transmit_path(gr.hier_block):
                           self._modulator_class(fg, **mod_kwargs),
                           access_code=None,
                           msgq_limit=4,
-                          pad_for_usrp=True)
+                          pad_for_usrp=True,
+                          use_whitener_offset=options.use_whitener_offset)
 
 
         # Set the USRP for maximum transmit gain
@@ -200,6 +202,8 @@ class transmit_path(gr.hier_block):
                           help="set fpga interpolation rate to INTERP [default=%default]")
         expert.add_option("", "--log", action="store_true", default=False,
                           help="Log all parts of flow graph to file (CAUTION: lots of data)")
+        expert.add_option("","--use-whitener-offset", action="store_true", default=False,
+                          help="make sequential packets use different whitening")
 
     # Make a static method to call before instantiation
     add_options = staticmethod(add_options)

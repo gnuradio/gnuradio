@@ -71,6 +71,8 @@ def main():
                       help="set megabytes to transmit [default=%default]")
     parser.add_option("","--discontinuous", action="store_true", default=False,
                       help="enable discontinous transmission (bursts of 5 packets)")
+    parser.add_option("","--from-file", default=None,
+                      help="use file for packet contents")
 
     transmit_path.add_options(parser, expert_grp)
 
@@ -89,6 +91,9 @@ def main():
         parser.print_help(sys.stderr)
         sys.exit(1)
 
+    if options.from_file is not None:
+        source_file = open(options.from_file, 'r')
+
     # build the graph
     fg = my_graph(mods[options.modulation], options)
 
@@ -98,7 +103,6 @@ def main():
 
     fg.start()                       # start flow graph
 
-
     # generate and send packets
     nbytes = int(1e6 * options.megabytes)
     n = 0
@@ -106,8 +110,16 @@ def main():
     pkt_size = int(options.size)
 
     while n < nbytes:
-        send_pkt(struct.pack('!H', pktno) + (pkt_size - 2) * chr(pktno & 0xff))
-        n += pkt_size
+        if options.from_file is None:
+            data = (pkt_size - 2) * chr(pktno & 0xff) 
+        else:
+            data = source_file.read(pkt_size - 2)
+            if data == '':
+                break;
+
+        payload = struct.pack('!H', pktno) + data
+        send_pkt(payload)
+        n += len(payload)
         sys.stderr.write('.')
         if options.discontinuous and pktno % 5 == 4:
             time.sleep(1)

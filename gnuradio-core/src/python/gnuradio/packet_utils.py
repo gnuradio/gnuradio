@@ -86,22 +86,26 @@ def string_to_hex_list(s):
     return map(lambda x: hex(ord(x)), s)
 
 
-def whiten(s):
+def whiten(s, o):
     sa = Numeric.fromstring(s, Numeric.UnsignedInt8)
-    z = sa ^ random_mask_vec8[0:len(sa)]
+    z = sa ^ random_mask_vec8[o:len(sa)+o]
     return z.tostring()
 
-def dewhiten(s):
-    return whiten(s)        # self inverse
+def dewhiten(s, o):
+    return whiten(s, o)        # self inverse
 
 
-def make_header(payload_len):
-    return struct.pack('!HH', payload_len, payload_len)
+def make_header(payload_len, whitener_offset=0):
+    # Upper nibble is offset, lower 12 bits is len
+    val = ((whitener_offset & 0xf) << 12) | (payload_len & 0x0fff)
+    #print "offset =", whitener_offset, " len =", payload_len, " val=", val
+    return struct.pack('!HH', val, val)
 
 def make_packet(payload, samples_per_symbol, bits_per_symbol,
-                access_code=default_access_code, pad_for_usrp=True):
+                access_code=default_access_code, pad_for_usrp=True,
+                whitener_offset=0):
     """
-    Build a packet, given access code and payload.
+    Build a packet, given access code, payload, and whitener offset
 
     @param payload:               packet payload, len [0, 4096]
     @param samples_per_symbol:    samples per symbol (needed for padding calculation)
@@ -109,12 +113,16 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
     @param bits_per_symbol:       (needed for padding calculation)
     @type bits_per_symbol:        int
     @param access_code:           string of ascii 0's and 1's
+    @param whitener_offset        offset into whitener string to use [0-16)
     
     Packet will have access code at the beginning, followed by length, payload
     and finally CRC-32.
     """
     if not is_1_0_string(access_code):
         raise ValueError, "access_code must be a string containing only 0's and 1's (%r)" % (access_code,)
+
+    if not whitener_offset >=0 and whitener_offset < 16:
+        raise ValueError, "whitener_offset must be between 0 and 15, inclusive (%i)" % (whitener_offset,)
 
     (packed_access_code, padded) = conv_1_0_string_to_packed_binary_string(access_code)
     (packed_preamble, ignore) = conv_1_0_string_to_packed_binary_string(preamble)
@@ -127,7 +135,8 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
     if L > MAXLEN:
         raise ValueError, "len(payload) must be in [0, %d]" % (MAXLEN,)
 
-    pkt = ''.join((packed_preamble, packed_access_code, make_header(L), whiten(payload_with_crc), '\x55'))
+    pkt = ''.join((packed_preamble, packed_access_code, make_header(L, whitener_offset),
+                   whiten(payload_with_crc, whitener_offset), '\x55'))
     if pad_for_usrp:
         pkt = pkt + (_npadding_bytes(len(pkt), samples_per_symbol, bits_per_symbol) * '\x55')
 
@@ -156,13 +165,13 @@ def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
     return byte_modulus - r
     
 
-def unmake_packet(whitened_payload_with_crc):
+def unmake_packet(whitened_payload_with_crc, whitener_offset=0):
     """
     Return (ok, payload)
 
     @param whitened_payload_with_crc: string
     """
-    payload_with_crc = dewhiten(whitened_payload_with_crc)
+    payload_with_crc = dewhiten(whitened_payload_with_crc, whitener_offset)
     ok, payload = gru.check_crc32(payload_with_crc)
 
     if 0:

@@ -36,7 +36,7 @@ class mod_pkts(gr.hier_block):
 
     Send packets by calling send_pkt
     """
-    def __init__(self, fg, modulator, access_code=None, msgq_limit=2, pad_for_usrp=True):
+    def __init__(self, fg, modulator, access_code=None, msgq_limit=2, pad_for_usrp=True, use_whitener_offset=False):
         """
 	Hierarchical block for sending packets
 
@@ -52,12 +52,15 @@ class mod_pkts(gr.hier_block):
         @param msgq_limit: maximum number of messages in message queue
         @type msgq_limit: int
         @param pad_for_usrp: If true, packets are padded such that they end up a multiple of 128 samples
-
+        @param use_whitener_offset: If true, start of whitener XOR string is incremented each packet
+        
         See gmsk_mod for remaining parameters
         """
         self._modulator = modulator
         self._pad_for_usrp = pad_for_usrp
-
+        self._use_whitener_offset = use_whitener_offset
+        self._whitener_offset = 0
+        
         if access_code is None:
             access_code = packet_utils.default_access_code
         if not packet_utils.is_1_0_string(access_code):
@@ -84,9 +87,13 @@ class mod_pkts(gr.hier_block):
                                            self._modulator.samples_per_symbol(),
                                            self._modulator.bits_per_symbol(),
                                            self._access_code,
-                                           self._pad_for_usrp)
+                                           self._pad_for_usrp,
+                                           self._whitener_offset)
             #print "pkt =", string_to_hex_list(pkt)
             msg = gr.message_from_string(pkt)
+            if self._use_whitener_offset is True:
+                self._whitener_offset = (self._whitener_offset + 1) % 16
+                
         self._pkt_input.msgq().insert_tail(msg)
 
 
@@ -151,6 +158,6 @@ class _queue_watcher_thread(_threading.Thread):
     def run(self):
         while self.keep_running:
             msg = self.rcvd_pktq.delete_head()
-            ok, payload = packet_utils.unmake_packet(msg.to_string())
+            ok, payload = packet_utils.unmake_packet(msg.to_string(), int(msg.arg1()))
             if self.callback:
                 self.callback(ok, payload)
