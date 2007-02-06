@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,8 +25,11 @@
 
 #include <vector>
 
-template <class T> void SWAP (T & a, T & b);
-template <class T> void quicksort_index(std::vector<T> & p, std::vector<int> & index, int left, int right);
-void quicksort_index1(std::vector<int> & p, std::vector<int> & index, int left, int right);
+template <class T>
+void SWAP (T & a, T & b);
+
+template <class T>
+void quicksort_index (std::vector<T> & p, std::vector<int> & index,
+		      int left, int right);
 
 #endif
