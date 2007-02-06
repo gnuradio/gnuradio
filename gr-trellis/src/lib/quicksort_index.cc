@@ -30,6 +30,8 @@ b=temp;
 }
 
 
+// standard quicksorting but also return the indices of the sorted data
+// don't know how to make it work with swig...
 template <class T> void quicksort_index(std::vector<T> & p, std::vector<int> & index, int left, int right)
 {
 
@@ -58,6 +60,7 @@ if (left < right) {
 
 
 
+// Same as above (only works for int data)
 void quicksort_index1(std::vector<int> & p, std::vector<int> & index, int left, int right)
 {
 
