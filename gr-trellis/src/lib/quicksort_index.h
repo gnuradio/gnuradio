@@ -29,7 +29,6 @@ template <class T>
 void SWAP (T & a, T & b);
 
 template <class T>
-void quicksort_index (std::vector<T> & p, std::vector<int> & index,
-		      int left, int right);
+void quicksort_index (std::vector<T> & p, std::vector<int> & index, int left, int right);
 
 #endif

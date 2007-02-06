@@ -30,7 +30,7 @@ public:
   interleaver(const interleaver & INTERLEAVER);
   interleaver(int K, const std::vector<int> & INTER);
   interleaver(const char *name);
-  interleaver(int K, unsigned int seed);
+  interleaver(int K, int seed);
   int K () const { return d_K; }
   const std::vector<int> & INTER () const { return d_INTER; }
   const std::vector<int> & DEINTER () const { return d_DEINTER; }

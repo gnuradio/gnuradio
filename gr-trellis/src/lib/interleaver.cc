@@ -85,13 +85,13 @@ interleaver::interleaver(const char *name)
 //######################################################################
 //# Generate a random interleaver
 //######################################################################
-interleaver::interleaver(int K, unsigned int seed)
+interleaver::interleaver(int K, int seed)
 {
   d_K=K;
   d_INTER.resize(d_K);
   d_DEINTER.resize(d_K);
 
-  srand(seed);
+  if(seed>=0) srand((unsigned int)seed); 
   std::vector<int> tmp(d_K);
   for(int i=0;i<d_K;i++) {
     d_INTER[i]=i;

@@ -61,7 +61,7 @@ quicksort_index
 }
 
 // instantiate an <int> version of the quicksort_index
-
+//template <int> void SWAP (int & a, int & b);
 template
 void
 quicksort_index<int>
