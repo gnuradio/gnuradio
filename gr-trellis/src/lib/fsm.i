@@ -49,5 +49,6 @@ public:
   const std::vector< std::vector<int> > & PI () const { return d_PI; }
   const std::vector<int> & TMi () const { return d_TMi; }
   const std::vector<int> & TMl () const { return d_TMl; }
+  void fsm::write_trellis_svg( std::string filename ,int number_stages);
 };
 

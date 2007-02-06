@@ -21,6 +21,9 @@
  */
 
 #include <cstdio>
+#include <string>
+#include <iostream>
+#include <fstream>
 #include <stdexcept>
 #include <cmath>
 #include "base.h"
@@ -320,10 +323,63 @@ bool fsm::find_es(int es)
 
 
 
+//######################################################################
+//#  generate trellis representation of FSM as an SVG file
+//######################################################################
+void fsm::write_trellis_svg( std::string filename ,int number_stages)
+{
+   std::ofstream trellis_fname (filename.c_str());
+   if (!trellis_fname) {std::cout << "file not found " << std::endl ; exit(-1);}
+   const int TRELLIS_Y_OFFSET = 30;
+   const int TRELLIS_X_OFFSET = 20;
+   const int STAGE_LABEL_Y_OFFSET = 25;
+   const int STAGE_LABEL_X_OFFSET = 20;
+   const int STATE_LABEL_Y_OFFSET = 30;
+   const int STATE_LABEL_X_OFFSET = 5;
+   const int STAGE_STATE_OFFSETS = 10;
+//   std::cout << "################## BEGIN SVG TRELLIS PIC #####################" << std::endl;
+   trellis_fname << "<svg viewBox = \"0 0 200 200\" version = \"1.1\">" << std::endl;
+
+    for(unsigned int stage_num = 0;stage_num < number_stages;stage_num ++){
+    // draw states
+      for (unsigned int state_num = 0;state_num < d_S ; state_num ++ ) {
+        trellis_fname << "<circle cx = \"" << stage_num * STAGE_STATE_OFFSETS + TRELLIS_X_OFFSET << 
+        "\" cy = \"" << state_num * STAGE_STATE_OFFSETS + TRELLIS_Y_OFFSET << "\" r = \"1\"/>" << std::endl;
+      //draw branches
+        if(stage_num != number_stages-1){
+          for(unsigned int branch_num = 0;branch_num < d_I; branch_num++){
+            trellis_fname << "<line x1 =\"" << STAGE_STATE_OFFSETS * stage_num+ TRELLIS_X_OFFSET  << "\" ";
+            trellis_fname << "y1 =\"" << state_num * STAGE_STATE_OFFSETS + TRELLIS_Y_OFFSET<< "\" ";
+            trellis_fname << "x2 =\"" <<  STAGE_STATE_OFFSETS *stage_num + STAGE_STATE_OFFSETS+ TRELLIS_X_OFFSET << "\" ";
+            trellis_fname << "y2 =\"" << d_NS[d_I * state_num + branch_num] * STAGE_STATE_OFFSETS + TRELLIS_Y_OFFSET << "\" ";
+            trellis_fname << " stroke-dasharray = \"3," <<  branch_num << "\" ";
+            trellis_fname << " stroke = \"black\" stroke-width = \"0.3\"/>" << std::endl;
+          }
+        }
+      }
+    }
+  // label the stages
+  trellis_fname << "<g font-size = \"4\" font= \"times\" fill = \"black\">" << std::endl;
+  for(unsigned int stage_num = 0;stage_num < number_stages ;stage_num ++){
+    trellis_fname << "<text x = \"" << stage_num * STAGE_STATE_OFFSETS + STAGE_LABEL_X_OFFSET << 
+      "\" y = \""  << STAGE_LABEL_Y_OFFSET  << "\" >" << std::endl;
+    trellis_fname << stage_num <<  std::endl;
+    trellis_fname << "</text>" << std::endl;
+  }
+  trellis_fname << "</g>" << std::endl;
+
+  // label the states
+  trellis_fname << "<g font-size = \"4\" font= \"times\" fill = \"black\">" << std::endl;
+  for(unsigned int state_num = 0;state_num < d_S ; state_num ++){
+    trellis_fname << "<text y = \"" << state_num * STAGE_STATE_OFFSETS + STATE_LABEL_Y_OFFSET << 
+      "\" x = \""  << STATE_LABEL_X_OFFSET  << "\" >" << std::endl;
+    trellis_fname << state_num <<  std::endl;
+    trellis_fname << "</text>" << std::endl;
+  }
+  trellis_fname << "</g>" << std::endl;
 
 
-
-
-
-
-
+  trellis_fname << "</svg>" << std::endl;
+//  std::cout << "################## END SVG TRELLIS PIC ##################### " << std::endl;
+  trellis_fname.close();
+}
