@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -54,19 +54,19 @@ howto-write-a-block.html : howto-write-a-block.xml $(BUILT_XML_FILES)
 
 
 gr_block.h.xml: $(GNURADIO_CORE_INCLUDEDIR)/gr_block.h make_numbered_listing.py
-	./make_numbered_listing.py $(GNURADIO_CORE_INCLUDEDIR)/gr_block.h
+	$(PYTHON) ./make_numbered_listing.py $(GNURADIO_CORE_INCLUDEDIR)/gr_block.h
 
 howto_square_ff.cc.xml: $(top_srcdir)/src/lib/howto_square_ff.cc make_numbered_listing.py
-	./make_numbered_listing.py $(top_srcdir)/src/lib/howto_square_ff.cc 
+	$(PYTHON) ./make_numbered_listing.py $(top_srcdir)/src/lib/howto_square_ff.cc 
 
 howto_square_ff.h.xml: $(top_srcdir)/src/lib/howto_square_ff.h make_numbered_listing.py
-	./make_numbered_listing.py $(top_srcdir)/src/lib/howto_square_ff.h 
+	$(PYTHON) ./make_numbered_listing.py $(top_srcdir)/src/lib/howto_square_ff.h 
 
 howto_square2_ff.cc.xml: $(top_srcdir)/src/lib/howto_square2_ff.cc make_numbered_listing.py
-	./make_numbered_listing.py $(top_srcdir)/src/lib/howto_square2_ff.cc 
+	$(PYTHON) ./make_numbered_listing.py $(top_srcdir)/src/lib/howto_square2_ff.cc 
 
 howto_square2_ff.h.xml: $(top_srcdir)/src/lib/howto_square2_ff.h make_numbered_listing.py
-	./make_numbered_listing.py $(top_srcdir)/src/lib/howto_square2_ff.h 
+	$(PYTHON) ./make_numbered_listing.py $(top_srcdir)/src/lib/howto_square2_ff.h 
 
 
 # ----------------------------------------------------------------
@@ -78,4 +78,4 @@ clean:
 	xmlto html-nochunks $<
 
 %.xml : % make_numbered_listing.py
-	./make_numbered_listing.py $<
+	$(PYTHON) ./make_numbered_listing.py $<
