@@ -1,6 +1,6 @@
 Quick overview of what's here:
 
-* benchmark_rx.py: generates packets of the size you
+* benchmark_tx.py: generates packets of the size you
 specify and sends them across the air using the USRP.  Known to work
 well using the USRP with the RFX transceiver daughterboards.
 You can specify the bitrate to use with the -r <bitrate> command line
@@ -8,7 +8,7 @@ parameter.  The default is 500k.  Some machines will do 1M or more.
 You can select the modulation to use with the -m <modulation> command
 line argument.  The legal values for <modulation> are gmsk, dbpsk and dqpsk.
 
-* benchmark_tx.py: the receiver half of benchmark_tx.py.
+* benchmark_rx.py: the receiver half of benchmark_tx.py.
 Command line arguments are pretty much the same as rx.  Works well
 with a USRP and RFX transceiver daughterboards.  Will also work
 with TVRX daugherboard, but you'll need to fiddle with the gain.  See
