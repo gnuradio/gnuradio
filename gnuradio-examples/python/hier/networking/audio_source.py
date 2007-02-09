@@ -20,34 +20,20 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr
+from gnuradio import gr, audio
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-class dial_tone_source(gr.hier_block2):
+class audio_source(gr.hier_block2):
     def __init__(self, src, dst, port, pkt_size, sample_rate):
         gr.hier_block2.__init__(self, 
-                                "dial_tone_source",	# Block type 
+                                "audio_source",	# Block type 
                                 gr.io_signature(0,0,0), # Input signature
                                 gr.io_signature(0,0,0)) # Output signature
 
-        amplitude = 0.3
-        self.define_component("src0", gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE,
-                                                       350, amplitude))
-        self.define_component("src1", gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE,
-                                                       440, amplitude))
-        self.define_component("add", gr.add_ff())
-
-        # Throttle needed here to account for the other side's audio card sampling rate
-	self.define_component("thr", gr.throttle(gr.sizeof_float, sample_rate))
+        self.define_component("src", audio.source(sample_rate))
 	self.define_component("dst",  gr.udp_sink(gr.sizeof_float, src, 0, dst, port, pkt_size))
-
-        self.connect("src0", 0, "add", 0)	
-        self.connect("src1", 0, "add", 1)
-	self.connect("add", 0, "thr", 0)
-	self.connect("thr", 0, "dst", 0)
-        
-
+        self.connect("src", 0, "dst", 0)
 
 if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option)
@@ -59,7 +45,7 @@ if __name__ == '__main__':
                       help="port value to connect to")
     parser.add_option("", "--packet-size", type="int", default=1472,
                       help="packet size.")
-    parser.add_option("-r", "--sample-rate", type="int", default=8000,
+    parser.add_option("-r", "--sample-rate", type="int", default=32000 ,
                       help="audio signal sample rate [default=%default]")
     (options, args) = parser.parse_args()
     if len(args) != 0:
@@ -67,8 +53,8 @@ if __name__ == '__main__':
         raise SystemExit, 1
 
     # Create an instance of a hierarchical block
-    top_block = dial_tone_source(options.src_name, options.dst_name, options.dst_port,
-                                 options.packet_size, options.sample_rate)
+    top_block = audio_source(options.src_name, options.dst_name, options.dst_port,
+                             options.packet_size, options.sample_rate)
     
     # Create an instance of a runtime, passing it the top block
     runtime = gr.runtime(top_block)

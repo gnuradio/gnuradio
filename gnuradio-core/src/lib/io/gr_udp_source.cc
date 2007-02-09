@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,48 +20,58 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <gr_udp_source.h>
 #include <gr_io_signature.h>
-#include <cstdio>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include <stdexcept>
+#include <errno.h>
+#include <netdb.h>
 
 #define SRC_VERBOSE 0
 
-gr_udp_source::gr_udp_source(size_t itemsize, const char *ipaddr, 
-			     unsigned short port, unsigned int mtu)
+gr_udp_source::gr_udp_source(size_t itemsize, const char *src, 
+			     unsigned short port_src, int payload_size)
   : gr_sync_block ("udp_source",
 		   gr_make_io_signature(0, 0, 0),
 		   gr_make_io_signature(1, 1, itemsize)),
-    d_itemsize(itemsize), d_updated(false), d_mtu(mtu)
+    d_itemsize(itemsize), d_updated(false), d_payload_size(payload_size), d_residual(0), d_temp_offset(0)
 {
-  // Set up the address stucture for the local address and port numbers
-  inet_aton(ipaddr, &d_ipaddr_local);     // format IP address
-  d_port_local = htons(port);             // format port number
+  int ret = 0;
   
-  d_sockaddr_local.sin_family = AF_INET;
-  d_sockaddr_local.sin_addr   = d_ipaddr_local;
-  d_sockaddr_local.sin_port   = d_port_local;
+  // Set up the address stucture for the source address and port numbers
+  // Get the source IP address from the host name
+  struct hostent *hsrc = gethostbyname(src);
+  if(hsrc) {   // if the source was provided as a host namex
+    d_ip_src = *(struct in_addr*)hsrc->h_addr_list[0];    
+  }
+  else { // assume it was specified as an IP address
+    if((ret=inet_aton(src, &d_ip_src)) == 0) {            // format IP address
+      perror("Not a valid source IP address or host name");
+      throw std::runtime_error("can't initialize source socket");
+    }
+  }
+
+  d_port_src = htons(port_src);     // format port number
+  
+  d_sockaddr_src.sin_family = AF_INET;
+  d_sockaddr_src.sin_addr   = d_ip_src;
+  d_sockaddr_src.sin_port   = d_port_src;
+
+  d_temp_buff = new char[d_payload_size];   // allow it to hold up to payload_size bytes
   
   open();
 }
 
 gr_udp_source_sptr
 gr_make_udp_source (size_t itemsize, const char *ipaddr, 
-		    unsigned short port, unsigned int mtu)
+		    unsigned short port, int payload_size)
 {
   return gr_udp_source_sptr (new gr_udp_source (itemsize, ipaddr, 
-						port, mtu));
+						port, payload_size));
 }
 
 gr_udp_source::~gr_udp_source ()
 {
+  delete [] d_temp_buff;
   close();
 }
 
@@ -69,16 +79,15 @@ bool
 gr_udp_source::open()
 {
   omni_mutex_lock l(d_mutex);	// hold mutex for duration of this function
-   
   // create socket
-  d_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  d_socket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
   if(d_socket == -1) {
     perror("socket open");
     throw std::runtime_error("can't open socket");
   }
 
   // Turn on reuse address
-  bool opt_val = true;
+  int opt_val = 1;
   if(setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, (void*)&opt_val, sizeof(int)) == -1) {
     perror("SO_REUSEADDR");
     throw std::runtime_error("can't set socket option SO_REUSEADDR");
@@ -104,7 +113,7 @@ gr_udp_source::open()
   }
 
   // bind socket to an address and port number to listen on
-  if(bind (d_socket, (sockaddr*)&d_sockaddr_local, sizeof(struct sockaddr)) == -1) {
+  if(bind (d_socket, (sockaddr*)&d_sockaddr_src, sizeof(struct sockaddr)) == -1) {
     perror("socket bind");
     throw std::runtime_error("can't bind socket");
   }
@@ -131,33 +140,86 @@ gr_udp_source::work (int noutput_items,
 		     gr_vector_void_star &output_items)
 {
   char *out = (char *) output_items[0];
-  socklen_t bytes_to_receive=0, bytes_received=0;
-  int bytes=0;
+  ssize_t r=0, nbytes=0, bytes_received=0;
+  ssize_t total_bytes = (ssize_t)(d_itemsize*noutput_items);
 
-  while((bytes_received < (unsigned)noutput_items) && (bytes>-1)) {
-    // caclulate the number of byte left if we can fit in all d_mtu bytes
-    bytes_to_receive = (bytes_received+d_mtu < noutput_items ? 
-			d_mtu : noutput_items-bytes_received);
+  #if SRC_VERBOSE
+  printf("\nEntered udp_source\n");
+  #endif
+
+  // Remove items from temp buffer if they are in there
+  if(d_residual) {
+    nbytes = std::min(d_residual, total_bytes);
+    memcpy(out, d_temp_buff+d_temp_offset, nbytes);
+    bytes_received = nbytes;
+
+    #if SRC_VERBOSE
+    printf("\tTemp buff size: %d  offset: %d (bytes_received: %d) (noutput_items: %d)\n", 
+	   d_residual, d_temp_offset, bytes_received, noutput_items);
+    #endif
+
+    // Increment pointer
+    out += bytes_received;
     
+    // Update indexing of amount of bytes left in the buffer
+    d_residual -= nbytes;
+    d_temp_offset = d_temp_offset+d_residual;
+  }
+
+  while(1) {
     // get the data into our output buffer and record the number of bytes
-    // This is a blocking call, but it's timeout has been set in the constructor
-    bytes = recv(d_socket, out, bytes_to_receive, 0);
+    // This is a non-blocking call with a timeout set in the constructor
+    r = recv(d_socket, d_temp_buff, d_payload_size, 0);  // get the entire payload or the what's available
 
-    // FIXME if bytes < 0 bail
+    // Check if there was a problem; forget it if the operation just timed out
+    if(r == -1) {
+      if(errno == EAGAIN) {  // handle non-blocking call timeout
+        #if SRC_VERBOSE
+	printf("UDP receive timed out\n"); 
+        #endif
 
-    if(bytes > 0) {
+	// Break here to allow the rest of the flow graph time to run and so ctrl-C breaks
+	break;
+      }
+      else {
+	perror("udp_source");
+	return -1;
+      }
+    }
+    else {
+      // Calculate the number of bytes we can take from the buffer in this call
+      nbytes = std::min(r, total_bytes-bytes_received);
+      
+      // adjust the total number of bytes we have to round down to nearest integer of an itemsize
+      nbytes -= ((bytes_received+nbytes) % d_itemsize);   
+
+      // copy the number of bytes we want to look at here
+      memcpy(out, d_temp_buff, nbytes);    
+
+      d_residual = r - nbytes;                      // save the number of bytes stored
+      d_temp_offset=nbytes;                         // reset buffer index
+
       // keep track of the total number of bytes received
-      bytes_received += bytes;
+      bytes_received += nbytes;
 
       // increment the pointer
-      out += bytes;
+      out += nbytes;
+
+      // Immediately return when data comes in
+      break;
     }
+
+    #if SNK_VERBOSE
+    printf("\tbytes received: %d bytes (nbytes: %d)\n", bytes, nbytes);
+    #endif
   }
 
   #if SRC_VERBOSE
-  printf("\nTotal Bytes Received: %d (noutput_items=%d)\n", bytes_received, noutput_items); 
+  printf("Total Bytes Received: %d (bytes_received / noutput_items = %d / %d)\n", 
+	 bytes_received, bytes_received, noutput_items);
   #endif
 
-  // FIXME what if (bytes_received % d_itemsize) != 0 ???
-  return int(bytes_received / d_itemsize);
+  // bytes_received is already set to some integer multiple of itemsize
+  return bytes_received/d_itemsize;
 }
+

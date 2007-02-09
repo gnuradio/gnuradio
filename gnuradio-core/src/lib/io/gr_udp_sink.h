@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,43 +31,66 @@
 class gr_udp_sink;
 typedef boost::shared_ptr<gr_udp_sink> gr_udp_sink_sptr;
 
-/*!
- * \brief Write stream to an Udp port (over UDP).
- * \ingroup sink
- */
-
 gr_udp_sink_sptr
 gr_make_udp_sink (size_t itemsize, 
-		  const char *ipaddrl, unsigned short portl,
-		  const char *ipaddrr, unsigned short portr,
-		  unsigned int mtu=540);
+		  const char *src, unsigned short port_src,
+		  const char *dst, unsigned short port_dst,
+		  int payload_size=1472);
+
+/*!
+ * \brief Write stream to an UDP socket.
+ * \ingroup sink
+ * 
+ * \param itemsize     The size (in bytes) of the item datatype
+ * \param src          The source address as either the host name or the 'numbers-and-dots'
+ *                     IP address
+ * \param port_src     Destination port to bind to (0 allows socket to choose an appropriate port)
+ * \param dst          The destination address as either the host name or the 'numbers-and-dots'
+ *                     IP address
+ * \param port_dst     Destination port to connect to
+ * \param payload_size UDP payload size by default set to 
+ *                     1472 = (1500 MTU - (8 byte UDP header) - (20 byte IP header))
+ */
 
 class gr_udp_sink : public gr_sync_block
 {
   friend gr_udp_sink_sptr gr_make_udp_sink (size_t itemsize, 
-					    const char *ipaddrl, unsigned short portl,
-					    const char *ipaddrr, unsigned short portr,
-					    unsigned int mtu);
+					    const char *src, unsigned short port_src,
+					    const char *dst, unsigned short port_dst,
+					    int payload_size);
  private:
   size_t	d_itemsize;
   bool		d_updated;
   omni_mutex	d_mutex;
 
-  unsigned int   d_mtu;             // maximum transmission unit (packet length)
+  int            d_payload_size;    // maximum transmission unit (packet length)
   int            d_socket;          // handle to socket
   int            d_socket_rcv;      // handle to socket retuned in the accept call
-  struct in_addr d_ipaddr_local;    // store the local IP address to use
-  struct in_addr d_ipaddr_remote;   // store the remote IP address that connected to us
-  unsigned short d_port_local;      // the port number to open for connections to this service
-  unsigned short d_port_remote;     // port number of the remove system
-  sockaddr_in    d_sockaddr_local;  // store the local sockaddr data (formatted IP address and port number)
-  sockaddr_in    d_sockaddr_remote; // store the remote sockaddr data (formatted IP address and port number)
+  struct in_addr d_ip_src;          // store the source ip info
+  struct in_addr d_ip_dst;          // store the destination ip info
+  unsigned short d_port_src;        // the port number to open for connections to this service
+  unsigned short d_port_dst;        // port number of the remove system
+  sockaddr_in    d_sockaddr_src;    // store the source sockaddr data (formatted IP address and port number)
+  sockaddr_in    d_sockaddr_dst;    // store the destination sockaddr data (formatted IP address and port number)
 
  protected:
+  /*!
+   * \brief UDP Sink Constructor
+   * 
+   * \param itemsize     The size (in bytes) of the item datatype
+   * \param src          The source address as either the host name or the 'numbers-and-dots'
+   *                     IP address
+   * \param port_src     Destination port to bind to (0 allows socket to choose an appropriate port)
+   * \param dst          The destination address as either the host name or the 'numbers-and-dots'
+   *                     IP address
+   * \param port_dst     Destination port to connect to
+   * \param payload_size UDP payload size by default set to 
+   *                     1472 = (1500 MTU - (8 byte UDP header) - (20 byte IP header))
+   */
   gr_udp_sink (size_t itemsize, 
-		    const char *ipaddrl, unsigned short portl,
-		    const char *ipaddrr, unsigned short portr,
-		    unsigned int mtu);
+	       const char *src, unsigned short port_src,
+	       const char *dst, unsigned short port_dst,
+	       int payload_size);
 
  public:
   ~gr_udp_sink ();
@@ -87,11 +110,8 @@ class gr_udp_sink : public gr_sync_block
    */
   void close();
 
-  /*! \brief set the MTU of the socket */
-  void set_mtu(unsigned int mtu) { d_mtu = mtu; }
-
-  /*! \brief return the MTU of the socket */
-  unsigned int mtu() { return d_mtu; }
+  /*! \brief return the PAYLOAD_SIZE of the socket */
+  int payload_size() { return d_payload_size; }
 
   // should we export anything else?
 

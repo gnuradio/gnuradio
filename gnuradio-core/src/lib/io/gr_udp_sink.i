@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,22 +25,21 @@ GR_SWIG_BLOCK_MAGIC(gr,udp_sink)
 
 gr_udp_sink_sptr 
 gr_make_udp_sink (size_t itemsize, 
-		  const char *ipaddrl, unsigned short portl,
-		  const char *ipaddrr, unsigned short portr,
-		  unsigned int mtu=540);
+		  const char *src, unsigned short port_src,
+		  const char *dst, unsigned short port_dst,
+		  int payload_size=1472);
 
 class gr_udp_sink : public gr_sync_block
 {
  protected:
   gr_udp_sink (size_t itemsize, 
-	       const char *ipaddrl, unsigned short portl,
-	       const char *ipaddrr, unsigned short portr,
-	       unsigned int mtu);
+	       const char *src, unsigned short port_src,
+	       const char *dst, unsigned short port_dst,
+	       int payload_size);
 
   bool open();
   void close();
-  void set_mtu(unsigned int mtu) { d_mtu = mtu; }
-  unsigned int mtu() { return d_mtu; }
+  int payload_size() { return d_payload_size; }
 
  public:
   ~gr_udp_sink ();
