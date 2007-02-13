@@ -110,6 +110,7 @@ def main(args):
         sys.exit (1)
     bitspersymbol = int(round(math.log(fo.I())/math.log(2))) # bits per FSM input symbol
     K=Kb/bitspersymbol # packet size in trellis steps
+    print 'size = ',K
     interleaver=trellis.interleaver(K,666) # construct a random interleaver
     tot_channel = fsm_utils.make_isi_lookup(modulation,channel,True) # generate the lookup table (normalize energy to 1)
     dimensionality = tot_channel[0]
@@ -126,6 +127,7 @@ def main(args):
 
     for i in range(rep):
         (s,e)=run_test(fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,tot_constellation,1,N0,IT,-long(666+i)) # run experiment with different seed to get different noise realizations
+        print s
         tot_s=tot_s+s
         terr_s=terr_s+e
         terr_p=terr_p+(terr_s!=0)
