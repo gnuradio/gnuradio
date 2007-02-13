@@ -45,10 +45,12 @@ public:
   int O () const { return d_O; }
   const std::vector<int> & NS () const { return d_NS; }
   const std::vector<int> & OS () const { return d_OS; }
-  const std::vector< std::vector<int> > & PS () const { return d_PS; }
-  const std::vector< std::vector<int> > & PI () const { return d_PI; }
+  // disable these accessors until we find out how to swig them
+  //const std::vector< std::vector<int> > & PS () const { return d_PS; }
+  //const std::vector< std::vector<int> > & PI () const { return d_PI; }
   const std::vector<int> & TMi () const { return d_TMi; }
   const std::vector<int> & TMl () const { return d_TMl; }
-  void fsm::write_trellis_svg( std::string filename ,int number_stages);
+  void fsm::write_trellis_svg(std::string filename ,int number_stages);
+  void fsm::write_fsm_txt(std::string filename);
 };
 

@@ -103,7 +103,6 @@ fsm::fsm(const char *name)
 
 
 
-
 //######################################################################
 //# Automatically generate the FSM from the generator matrix
 //# of a (n,k) binary convolutional code
@@ -340,14 +339,14 @@ void fsm::write_trellis_svg( std::string filename ,int number_stages)
 //   std::cout << "################## BEGIN SVG TRELLIS PIC #####################" << std::endl;
    trellis_fname << "<svg viewBox = \"0 0 200 200\" version = \"1.1\">" << std::endl;
 
-    for(unsigned int stage_num = 0;stage_num < number_stages;stage_num ++){
+    for( int stage_num = 0;stage_num < number_stages;stage_num ++){
     // draw states
-      for (unsigned int state_num = 0;state_num < d_S ; state_num ++ ) {
+      for ( int state_num = 0;state_num < d_S ; state_num ++ ) {
         trellis_fname << "<circle cx = \"" << stage_num * STAGE_STATE_OFFSETS + TRELLIS_X_OFFSET << 
         "\" cy = \"" << state_num * STAGE_STATE_OFFSETS + TRELLIS_Y_OFFSET << "\" r = \"1\"/>" << std::endl;
       //draw branches
         if(stage_num != number_stages-1){
-          for(unsigned int branch_num = 0;branch_num < d_I; branch_num++){
+          for( int branch_num = 0;branch_num < d_I; branch_num++){
             trellis_fname << "<line x1 =\"" << STAGE_STATE_OFFSETS * stage_num+ TRELLIS_X_OFFSET  << "\" ";
             trellis_fname << "y1 =\"" << state_num * STAGE_STATE_OFFSETS + TRELLIS_Y_OFFSET<< "\" ";
             trellis_fname << "x2 =\"" <<  STAGE_STATE_OFFSETS *stage_num + STAGE_STATE_OFFSETS+ TRELLIS_X_OFFSET << "\" ";
@@ -360,7 +359,7 @@ void fsm::write_trellis_svg( std::string filename ,int number_stages)
     }
   // label the stages
   trellis_fname << "<g font-size = \"4\" font= \"times\" fill = \"black\">" << std::endl;
-  for(unsigned int stage_num = 0;stage_num < number_stages ;stage_num ++){
+  for( int stage_num = 0;stage_num < number_stages ;stage_num ++){
     trellis_fname << "<text x = \"" << stage_num * STAGE_STATE_OFFSETS + STAGE_LABEL_X_OFFSET << 
       "\" y = \""  << STAGE_LABEL_Y_OFFSET  << "\" >" << std::endl;
     trellis_fname << stage_num <<  std::endl;
@@ -370,7 +369,7 @@ void fsm::write_trellis_svg( std::string filename ,int number_stages)
 
   // label the states
   trellis_fname << "<g font-size = \"4\" font= \"times\" fill = \"black\">" << std::endl;
-  for(unsigned int state_num = 0;state_num < d_S ; state_num ++){
+  for( int state_num = 0;state_num < d_S ; state_num ++){
     trellis_fname << "<text y = \"" << state_num * STAGE_STATE_OFFSETS + STATE_LABEL_Y_OFFSET << 
       "\" x = \""  << STATE_LABEL_X_OFFSET  << "\" >" << std::endl;
     trellis_fname << state_num <<  std::endl;
@@ -383,3 +382,32 @@ void fsm::write_trellis_svg( std::string filename ,int number_stages)
 //  std::cout << "################## END SVG TRELLIS PIC ##################### " << std::endl;
   trellis_fname.close();
 }
+
+
+
+
+
+
+//######################################################################
+//# Write trellis specification to a text files,
+//# in the same format used when reading FSM files
+//######################################################################
+void fsm::write_fsm_txt(std::string filename)
+{
+   std::ofstream trellis_fname (filename.c_str());
+   if (!trellis_fname) {std::cout << "file not found " << std::endl ; exit(-1);}
+   trellis_fname << d_I << ' ' << d_S << ' ' << d_O << std::endl;
+   trellis_fname << std::endl;
+   for(int i=0;i<d_S;i++) {
+     for(int j=0;j<d_I;j++)  trellis_fname << d_NS[i*d_I+j] << ' ';
+     trellis_fname << std::endl;
+   }
+   trellis_fname << std::endl;
+   for(int i=0;i<d_S;i++) {
+     for(int j=0;j<d_I;j++) trellis_fname << d_OS[i*d_I+j] << ' ';
+     trellis_fname << std::endl;
+   }
+   trellis_fname << std::endl;
+   trellis_fname.close();
+}
+
