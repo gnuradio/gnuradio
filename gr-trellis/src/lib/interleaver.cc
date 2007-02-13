@@ -23,10 +23,15 @@
 #include <cstdlib> 
 #include <cstdio>
 #include <iostream>
+#include <string>
+#include <fstream>
 #include <stdexcept>
 #include <cmath>
 #include "quicksort_index.h"
 #include "interleaver.h"
+
+
+
 
 interleaver::interleaver()
 {
@@ -103,4 +108,28 @@ interleaver::interleaver(int K, int seed)
   for(int i=0;i<d_K;i++) {
     d_DEINTER[d_INTER[i]]=i;
   }
+}
+
+
+
+
+
+//######################################################################
+//# Write an INTERLEAVER specification from a file.
+//# Format
+//# K
+//# blank line
+//# list of space separated K integers from 0 to K-1 in appropriate order
+//# optional comments
+//######################################################################
+void interleaver::write_interleaver_txt(std::string filename)
+{
+   std::ofstream interleaver_fname (filename.c_str());
+   if (!interleaver_fname) {std::cout << "file not found " << std::endl ; exit(-1);}
+   interleaver_fname << d_K << std::endl;
+   interleaver_fname << std::endl;
+   for(int i=0;i<d_K;i++)
+     interleaver_fname << d_INTER[i] << ' ';
+   interleaver_fname << std::endl;
+   interleaver_fname.close();
 }

@@ -42,6 +42,7 @@ public:
   int K () const { return d_K; }
   const std::vector<int> & INTER () const { return d_INTER; }
   const std::vector<int> & DEINTER () const { return d_DEINTER; }
+  void write_interleaver_txt(std::string filename);
 };
 
 #endif
