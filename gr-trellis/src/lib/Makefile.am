@@ -44,9 +44,9 @@ CODE_GENERATOR = 				\
 	trellis_metrics_X.cc.t			\
 	trellis_metrics_X.h.t			\
 	trellis_metrics_X.i.t			\
-	trellis_viterbi_combined_X.cc.t		\
-	trellis_viterbi_combined_X.h.t		\
-	trellis_viterbi_combined_X.i.t		\
+	trellis_viterbi_combined_XX.cc.t		\
+	trellis_viterbi_combined_XX.h.t		\
+	trellis_viterbi_combined_XX.i.t		\
 	trellis_viterbi_X.cc.t			\
 	trellis_viterbi_X.h.t			\
 	trellis_viterbi_X.i.t

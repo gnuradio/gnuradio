@@ -30,14 +30,14 @@ other_roots = [
     'trellis_encoder_XX',
     'trellis_metrics_X',
     'trellis_viterbi_X',
-    'trellis_viterbi_combined_X',
+    'trellis_viterbi_combined_XX',
     ]
 
 other_signatures = (
     ['bb','bs','bi','ss','si','ii'],
     ['s','i','f','c'],
     ['b','s','i'],
-    ['b','s','i'],
+    ['sb','ss','si','ib','is','ii','fb','fs','fi','cb','cs','ci'],
     )
 
 

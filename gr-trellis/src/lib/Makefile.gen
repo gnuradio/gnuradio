@@ -13,9 +13,18 @@ GENERATED_H = \
 	trellis_metrics_i.h \
 	trellis_metrics_s.h \
 	trellis_viterbi_b.h \
-	trellis_viterbi_combined_b.h \
-	trellis_viterbi_combined_i.h \
-	trellis_viterbi_combined_s.h \
+	trellis_viterbi_combined_cb.h \
+	trellis_viterbi_combined_ci.h \
+	trellis_viterbi_combined_cs.h \
+	trellis_viterbi_combined_fb.h \
+	trellis_viterbi_combined_fi.h \
+	trellis_viterbi_combined_fs.h \
+	trellis_viterbi_combined_ib.h \
+	trellis_viterbi_combined_ii.h \
+	trellis_viterbi_combined_is.h \
+	trellis_viterbi_combined_sb.h \
+	trellis_viterbi_combined_si.h \
+	trellis_viterbi_combined_ss.h \
 	trellis_viterbi_i.h \
 	trellis_viterbi_s.h
 
@@ -31,9 +40,18 @@ GENERATED_I = \
 	trellis_metrics_i.i \
 	trellis_metrics_s.i \
 	trellis_viterbi_b.i \
-	trellis_viterbi_combined_b.i \
-	trellis_viterbi_combined_i.i \
-	trellis_viterbi_combined_s.i \
+	trellis_viterbi_combined_cb.i \
+	trellis_viterbi_combined_ci.i \
+	trellis_viterbi_combined_cs.i \
+	trellis_viterbi_combined_fb.i \
+	trellis_viterbi_combined_fi.i \
+	trellis_viterbi_combined_fs.i \
+	trellis_viterbi_combined_ib.i \
+	trellis_viterbi_combined_ii.i \
+	trellis_viterbi_combined_is.i \
+	trellis_viterbi_combined_sb.i \
+	trellis_viterbi_combined_si.i \
+	trellis_viterbi_combined_ss.i \
 	trellis_viterbi_i.i \
 	trellis_viterbi_s.i
 
@@ -49,9 +67,18 @@ GENERATED_CC = \
 	trellis_metrics_i.cc \
 	trellis_metrics_s.cc \
 	trellis_viterbi_b.cc \
-	trellis_viterbi_combined_b.cc \
-	trellis_viterbi_combined_i.cc \
-	trellis_viterbi_combined_s.cc \
+	trellis_viterbi_combined_cb.cc \
+	trellis_viterbi_combined_ci.cc \
+	trellis_viterbi_combined_cs.cc \
+	trellis_viterbi_combined_fb.cc \
+	trellis_viterbi_combined_fi.cc \
+	trellis_viterbi_combined_fs.cc \
+	trellis_viterbi_combined_ib.cc \
+	trellis_viterbi_combined_ii.cc \
+	trellis_viterbi_combined_is.cc \
+	trellis_viterbi_combined_sb.cc \
+	trellis_viterbi_combined_si.cc \
+	trellis_viterbi_combined_ss.cc \
 	trellis_viterbi_i.cc \
 	trellis_viterbi_s.cc
 
