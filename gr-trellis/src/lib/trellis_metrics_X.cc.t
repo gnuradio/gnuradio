@@ -85,17 +85,6 @@ for (int m=0;m<nstreams;m++) {
   float *out = (float *) output_items[m];
 
   for (int i = 0; i < noutput_items / d_O ; i++){
-/*
-#if @IS_SHORT@
-    calc_metric_s(d_O, d_D, d_TABLE,&(in[i*d_D]),&(out[i*d_O]), d_TYPE);
-#elif @IS_INT@
-    calc_metric_i(d_O, d_D, d_TABLE,&(in[i*d_D]),&(out[i*d_O]), d_TYPE);
-#elif @IS_FLOAT@
-    calc_metric_f(d_O, d_D, d_TABLE,&(in[i*d_D]),&(out[i*d_O]), d_TYPE);
-#elif @IS_COMPLEX@
-    calc_metric_c(d_O, d_D, d_TABLE,&(in[i*d_D]),&(out[i*d_O]), d_TYPE);
-#endif
-*/
     calc_metric(d_O, d_D, d_TABLE,&(in[i*d_D]),&(out[i*d_O]), d_TYPE);
   } 
 }
