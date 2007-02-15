@@ -54,12 +54,18 @@ GNURADIO_INCLUDES = -I$(top_srcdir)/gnuradio-core/src/lib/runtime \
 		    -I$(top_builddir)/gnuradio-core/src/lib/swig \
 	            $(FFTW3F_CFLAGS)
 
+# How to link in the top-level omnithreads library
+OMNITHREAD_INCLUDES = -I$(top_srcdir)/omnithread
+OMNITHREAD_LIBS = -L$(top_builddir)/omnithread -lgromnithread
 
-# These used to be set in PKGCONFIG but now point to the current
-# build tree.
-# FIXME shouldn't -lfftw3f -lm just be extracted from libgnuradio-core.la ???
-GNURADIO_CORE_LIBS = -L$(top_builddir)/gnuradio-core/src/lib \
-                     -lgnuradio-core -lfftw3f -lm
+# How to link in GNU Radio core library
+# Note: Win32 libtool cannot extract DLL dependencies already stored in
+# libgnuradio-core, so the core's dependencies must be repeated here
+# This is redundant but harmless on non-Win32 platforms
+GNURADIO_CORE_LIBS = $(OMNITHREAD_LIBS)				\
+		     $(FFTW3F_LIBS)				\
+		     -L$(top_builddir)/gnuradio-core/src/lib	\
+                     -lgnuradio-core
 
 # This is a dependency for many swig operations
 GNURADIO_I = $(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
@@ -73,9 +79,6 @@ USRP_LIBS = -L$(top_builddir)/usrp/host/lib -lusrp
 
 PMT_INCLUDES = -I$(top_srcdir)/pmt/src/lib
 PMT_LIBS = -L$(top_builddir)/pmt/src/lib -lpmt
-
-OMNITHREAD_INCLUDES = -I$(top_srcdir)/omnithread
-OMNITHREAD_LIBS = -L$(top_builddir)/omnithread -lgromnithread
 
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.
