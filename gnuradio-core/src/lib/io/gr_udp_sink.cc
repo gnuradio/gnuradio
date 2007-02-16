@@ -165,7 +165,7 @@ gr_udp_sink::work (int noutput_items,
   #endif
 
   while(bytes_sent <  total_size) {
-    bytes_to_send = std::min(d_payload_size, (total_size-bytes_sent));
+    bytes_to_send = std::min((ssize_t)d_payload_size, (total_size-bytes_sent));
   
     r = send(d_socket, (in+bytes_sent), bytes_to_send, 0);
     if(r == -1) {         // error on send command
