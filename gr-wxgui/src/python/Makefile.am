@@ -37,4 +37,5 @@ ourpython_PYTHON =			\
 	scopesink.py			\
 	waterfallsink.py		\
 	slider.py			\
-	stdgui.py			
+	stdgui.py			\
+	numbersink.py		
