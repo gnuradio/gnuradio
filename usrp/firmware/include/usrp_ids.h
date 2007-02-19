@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003 Free Software Foundation, Inc.
+ * Copyright 2003,2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -44,6 +44,16 @@
 #define USB_PID_FSF_HPSDR_HA    	0x0007    // High Performance Software Defined Radio (Host Assisted Boot)
 #define USB_PID_FSF_QS1R	    	0x0008    // QS1R HF receiver
 #define USB_PID_FSF_EZDOP	    	0x0009    // ezdop <jcorgan@aeinet.com>
+#define USB_PID_FSF_BDALE_0		0x000a	  // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_1		0x000b	  // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_2		0x000c	  // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_3		0x000d	  // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_4		0x000e	  // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_5		0x000f	  // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_6		0x0010	  // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_7		0x0011	  // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_8		0x0012	  // Bdale Garbee <bdale@gag.com>
+#define USB_PID_FSF_BDALE_9		0x0013	  // Bdale Garbee <bdale@gag.com>
 
 #define USB_PID_FSF_LBNL_UXO            0x0018    // http://recycle.lbl.gov/~ldoolitt/uxo/
 
