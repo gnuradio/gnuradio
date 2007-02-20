@@ -41,7 +41,6 @@ class qa_gr_io_signature : public CppUnit::TestCase {
   void t1 ();
   void t2 ();
   void t3 ();
-
 };
 
 #endif /* INCLUDED_QA_GR_IO_SIGNATURE_H */

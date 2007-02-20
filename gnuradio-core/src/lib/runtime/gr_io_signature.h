@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,13 +26,78 @@
 #include <gr_runtime_types.h>
 
 /*!
- * \brief i/o signature for input and output ports.
+ * \brief Create an i/o signature
  *
- * For now, we restrict all streams to be the same type.
- * We can fix this later.
+ * \param min_streams  specify minimum number of streams (>= 0)
+ * \param max_streams  specify maximum number of streams (>= min_streams or -1 -> infinite)
+ * \param sizeof_stream_item  specify the size of the items in each stream
  */
-  
+gr_io_signature_sptr
+gr_make_io_signature(int min_streams, int max_streams,
+		     int sizeof_stream_item);
+
+/*!
+ * \brief Create an i/o signature
+ *
+ * \param min_streams  specify minimum number of streams (>= 0)
+ * \param max_streams  specify maximum number of streams (>= min_streams or -1 -> infinite)
+ * \param sizeof_stream_item1 specify the size of the items in the first stream
+ * \param sizeof_stream_item2 specify the size of the items in the second and subsequent streams
+ */
+gr_io_signature_sptr
+gr_make_io_signature2(int min_streams, int max_streams,
+		      int sizeof_stream_item1,
+		      int sizeof_stream_item2
+		      );
+
+/*!
+ * \brief Create an i/o signature
+ *
+ * \param min_streams  specify minimum number of streams (>= 0)
+ * \param max_streams  specify maximum number of streams (>= min_streams or -1 -> infinite)
+ * \param sizeof_stream_item1 specify the size of the items in the first stream
+ * \param sizeof_stream_item2 specify the size of the items in the second stream
+ * \param sizeof_stream_item3 specify the size of the items in the third and subsequent streams
+ */
+gr_io_signature_sptr
+gr_make_io_signature3(int min_streams, int max_streams, 
+		      int sizeof_stream_item1,
+		      int sizeof_stream_item2,
+		      int sizeof_stream_item3
+		      );
+
+/*!
+ * \brief Create an i/o signature
+ *
+ * \param min_streams  specify minimum number of streams (>= 0)
+ * \param max_streams  specify maximum number of streams (>= min_streams or -1 -> infinite)
+ * \param sizeof_stream_items specify the size of the items in the streams
+ *
+ * If there are more streams than there are entries in sizeof_stream_items, the
+ * value of the last entry in sizeof_stream_items is used for the missing values.
+ * sizeof_stream_items must contain at least 1 entry.
+ */
+gr_io_signature_sptr
+gr_make_io_signaturev(int min_streams, int max_streams,
+		      const std::vector<int> &sizeof_stream_items);
+
+
+/*!
+ * \brief i/o signature for input and output ports.
+ */
 class gr_io_signature {
+  int			d_min_streams;
+  int			d_max_streams;
+  std::vector<int>	d_sizeof_stream_item;
+
+  gr_io_signature(int min_streams, int max_streams,
+		  const std::vector<int> &sizeof_stream_items);
+
+  friend gr_io_signature_sptr 
+  gr_make_io_signaturev(int min_streams,
+			int max_streams,
+			const std::vector<int> &sizeof_stream_item);
+
  public:
 
   static const int IO_INFINITE = -1;
@@ -41,25 +106,9 @@ class gr_io_signature {
     
   int min_streams () const { return d_min_streams; }
   int max_streams () const { return d_max_streams; }
-  size_t sizeof_stream_item (int index) const { return d_sizeof_stream_item; }
-
-  // ----------------------------------------------------------------------------
-
- private:
-  
-  int		d_min_streams;
-  int		d_max_streams;
-  size_t	d_sizeof_stream_item;
-
-  gr_io_signature (int min_streams, int max_streams, size_t sizeof_stream_item);
-
-  friend gr_io_signature_sptr gr_make_io_signature (int min_streams,
-						   int max_streams,
-						   size_t sizeof_stream_item);
+  int sizeof_stream_item (int index) const;
+  std::vector<int> sizeof_stream_items() const;
 };
-
-gr_io_signature_sptr
-gr_make_io_signature (int min_streams, int max_streams, size_t sizeof_stream_item);
 
 
 #endif /* INCLUDED_IO_SIGNATURE_H */
