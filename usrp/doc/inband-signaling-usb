@@ -1,0 +1,83 @@
+This file specifies the format of USB packets used for in-band data
+transmission and signaling on the USRP.  All packets are 512-byte long,
+and are transfered using USB "bulk" transfers.
+
+IN packets are sent towards the host.
+OUT packets are sent away from the host.
+
+The layout is 32-bits wide.  All data is transmitted in little-endian
+format across the USB.
+
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |O|U|E|D|   mbz       |  Chan   | mbz |  Tag  |   Payload Len   |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                           Timestamp                           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   +                                                               +
+   |                            Payload                            |
+   .                                                               .
+   .                                                               .
+   .                                                               .
+   |                                                               |
+   +             +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |      ...    |                                                 .
+   +-+-+-+-+-+-+-+                                                 .
+   .                                                               .
+   .                            Padding                            .
+   .                                                               .
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   
+
+  mbz   Must be Zero: these bits must be zero in both IN and OUT packets.
+
+  O     Overrun Flag: set in an IN packet if an overrun condition was
+        detected.  Must be zero in OUT packets.  Overrun occurs when
+        the FPGA has data to transmit to the host and there is no
+        buffer space available.  This generally indicates a problem on
+        the host.  Either it is not keeping up, or it has configured
+        the FPGA to transmit data at a higher rate than the transport
+        (USB) can support.
+
+  U     Underrun Flag: set in an IN packet if an underrun condition
+        was detected.  Must be zero in OUT packets.  Underrun occurs
+        when the FPGA runs out of samples, and it's not between
+        bursts.  See the "End of Burst flag" below.
+
+  E     End of Burst Flag:  Set in an OUT packet if the data is the
+        last segment of what is logically a continuous burst of data.
+        Must be zero in IN packets.  Underruns are not reported
+        when the FPGA runs out of samples between bursts.
+
+  D     Dropped Packet Flag: Set in an IN packet if the FPGA
+	discarded an OUT packet because its timestamp had already
+	passed.
+
+  Chan  5-bit logical channel number.  Channel number 0x1f is reserved
+        for control information.  See "Control Channel" below.  Other
+        channels are "data channels."  Each data channel is logically
+        independent of the others.  A data channel payload field
+        contains a sequence of homogeneous samples.  The format of the
+        samples is determined by the configuration associated with the
+        given channel.  It is often the case that the payload field
+        contains 32-bit complex samples, each containing 16-bit real
+        and imaginary components.
+
+  Tag   4-bit tag for matching IN packets with OUT packets.
+        [FIXME, write more...]
+
+  Payload Len: 9-bit field that specifies the length of the payload
+        field in bytes.  Must be in the range 0 to 504 inclusive.
+
+  Timestamp: 32-bit timestamp.  [FIXME, Write more]
+	On OUT packets, 0xffffffff means "Now".
+
+  Payload: Variable length field.  Length is specified by the
+        Payload Len field.
+
+  Padding: This field is 504 - Payload Len bytes long, and its content
+        is unspecified.  This field pads the packet out to a constant
+        512 bytes.
+
