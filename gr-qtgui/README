@@ -1,0 +1,31 @@
+This requires qt 3 or later.  See http://www.trolltech.com
+
+To support the widgets needed for this code you need Qwt:
+
+http://n4hy.org/Qwt/qwt.spec
+http://n4hy.org/Qwt/qwt.pc
+http://n4hy.org/Qwt/qwt-5.0.0.tar.bz2
+http://n4hy.org/Qwt/qwt-5.0.0-1.src.rpm
+
+QTDIR is an environment variable that must be set for
+gr-qtgui to make.
+
+On Ubuntu with a standard apt-get or synaptic install,
+this is done by:
+
+export QTDIR=/usr/share/qt3
+
+on Fedora Core 6 for example it is automatically set to 
+
+/usr/lib/qt-3.3
+
+by Qt install
+
+Qwt probably needs to be built and installed for now using
+
+rpmbuild --rebuild qwt-5.0.0-1.src.rpm
+
+which must be run as root (as in sudo) so that files are
+installed in the proper place for the gnuradio build
+(such as qwt.pc).  
+
