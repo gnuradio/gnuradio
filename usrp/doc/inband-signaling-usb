@@ -10,7 +10,7 @@ format across the USB.
 
 
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |O|U|E|D|   mbz       |  Chan   | mbz |  Tag  |   Payload Len   |
+   |O|U|D|S|E|    mbz    |  Chan   | mbz |  Tag  |   Payload Len   |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                           Timestamp                           |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -46,14 +46,19 @@ format across the USB.
         when the FPGA runs out of samples, and it's not between
         bursts.  See the "End of Burst flag" below.
 
+  D     Dropped Packet Flag: Set in an IN packet if the FPGA
+	discarded an OUT packet because its timestamp had already
+	passed.
+
+  S     Start of Burst Flag:  Set in an OUT packet if the data is the
+        first segment of what is logically a continuous burst of data.
+        Must be zero in IN packets.
+
   E     End of Burst Flag:  Set in an OUT packet if the data is the
         last segment of what is logically a continuous burst of data.
         Must be zero in IN packets.  Underruns are not reported
         when the FPGA runs out of samples between bursts.
 
-  D     Dropped Packet Flag: Set in an IN packet if the FPGA
-	discarded an OUT packet because its timestamp had already
-	passed.
 
   Chan  5-bit logical channel number.  Channel number 0x1f is reserved
         for control information.  See "Control Channel" below.  Other
