@@ -32,9 +32,7 @@ gromnidir=@abs_top_builddir@/omnithread
 gromnidir=$gromnidir:$gromnidir/.libs
 grcoredir=@abs_top_builddir@/gnuradio-core/src/lib
 grcoredir=$grcoredir:$grcoredir/.libs
-grusrpdir=@abs_top_builddir@/usrp/host/lib
-grusrpdir=$grusrpdir:$grusrpdir/.libs
-grlibdir=$gromnidir:$grcoredir:$grusrpdir
+grlibdir=$gromnidir:$grcoredir
 
 # For OS/X
 DYLD_LIBRARY_PATH=$grlibdir
