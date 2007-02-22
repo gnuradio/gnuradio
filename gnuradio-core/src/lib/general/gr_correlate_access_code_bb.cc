@@ -45,7 +45,7 @@ gr_correlate_access_code_bb::gr_correlate_access_code_bb (
 		   gr_make_io_signature (1, 1, sizeof(char)),
 		   gr_make_io_signature (1, 1, sizeof(char))),
     d_data_reg(0), d_flag_reg(0), d_flag_bit(0), d_mask(0),
-    d_threshold(threshold), d_flip(0)
+    d_threshold(threshold)
 
 {
   if (!set_access_code(access_code)){
@@ -94,7 +94,7 @@ gr_correlate_access_code_bb::work (int noutput_items,
     // compute output value
     unsigned int t = 0;
 
-    t |= d_flip ^ (((d_data_reg >> 63) & 0x1) << 0);
+    t |= ((d_data_reg >> 63) & 0x1) << 0;
     t |= ((d_flag_reg >> 63) & 0x1) << 1;	// flag bit
     out[i] = t;
     
@@ -106,8 +106,8 @@ gr_correlate_access_code_bb::work (int noutput_items,
     wrong_bits  = (d_data_reg ^ d_access_code) & d_mask;
     nwrong = gr_count_bits64(wrong_bits);
 
-    // test for access code with up to threshold errors or its compelement
-    new_flag = (nwrong <= d_threshold) || (nwrong >= (64-d_threshold));
+    // test for access code with up to threshold errors
+    new_flag = (nwrong <= d_threshold);
 
 #if 0   
     if(new_flag) {
@@ -120,7 +120,6 @@ gr_correlate_access_code_bb::work (int noutput_items,
     d_flag_reg = (d_flag_reg << 1);
     if (new_flag) {
       d_flag_reg |= d_flag_bit;
-      d_flip = nwrong >= (64-d_threshold);   // flip bits if this is true
     }
   }
 

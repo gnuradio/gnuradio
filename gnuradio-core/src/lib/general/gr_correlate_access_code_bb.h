@@ -62,8 +62,6 @@ class gr_correlate_access_code_bb : public gr_sync_block
   unsigned long long d_mask;		// masks access_code bits (top N bits are set where
                                         //   N is the number of bits in the access code)
   unsigned int	     d_threshold;	// how many bits may be wrong in sync vector
-  unsigned int       d_flip;            // flip bits if 180 degress out of sync
-
 
  protected:
   gr_correlate_access_code_bb(const std::string &access_code, int threshold);
