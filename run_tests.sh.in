@@ -35,7 +35,7 @@ grcoredir=$grcoredir:$grcoredir/.libs
 grlibdir=$gromnidir:$grcoredir
 
 # For OS/X
-DYLD_LIBRARY_PATH=$grlibdir
+DYLD_LIBRARY_PATH=$grlibdir:$DYLD_LIBRARY_PATH
 export DYLD_LIBRARY_PATH
 
 # For Win32

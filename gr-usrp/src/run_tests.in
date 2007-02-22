@@ -5,7 +5,8 @@
 # 3rd parameter is path to Python QA directory
 
 # For OS/X
-DYLD_LIBRARY_PATH=@abs_top_builddir@/usrp/host/lib/.libs:$DYLD_LIBRARY_PATH
+DYLD_LIBRARY_PATH=@abs_top_builddir@/usrp/host/lib/:@abs_top_builddir@/usrp/host/lib/.libs:$DYLD_LIBRARY_PATH
+export DYLD_LIBRARY_PATH
 
 # For Win32
 PATH=@abs_top_builddir@/usrp/host/lib/.libs:$PATH
