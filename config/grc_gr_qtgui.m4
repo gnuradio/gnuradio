@@ -28,10 +28,17 @@ AC_DEFUN([GRC_GR_QTGUI],[
 
     passed=yes
     PKG_CHECK_MODULES(QT, qt >= 3.3,[],
-    [passed=no;AC_MSG_RESULT([gr-qtgui requires qt, not found. Check for symlink between qt-mt.pc and qt.pc])])
+    [passed=no;AC_MSG_RESULT([gr-qtgui requires qt, not found. Checking for qt-mt])])
+
+    if test x$passed == xno; then
+	passed=yes
+	PKG_CHECK_MODULES(QT, qt-mt >= 3.3,[],
+    	[passed=no;AC_MSG_RESULT([gr-qtgui requires qt, not found. Checking for qt-mt])])
+    fi
 
     PKG_CHECK_MODULES(QWT, qwt >= 5.0.0, [],
     [passed=no;AC_MSG_RESULT([gr-qtgui requires qwt, not found.])])
+
     
     GRC_BUILD_CONDITIONAL([gr-qtgui], [
     AC_SUBST(QT_LIBS)
