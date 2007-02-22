@@ -28,7 +28,9 @@ gromnidir=@abs_top_builddir@/omnithread
 gromnidir=$gromnidir:$gromnidir/.libs
 grcoredir=@abs_top_builddir@/gnuradio-core/src/lib
 grcoredir=$grcoredir:$grcoredir/.libs
-grlibdir=$gromnidir:$grcoredir
+grusrpdir=@abs_top_builddir@/usrp/host/lib
+grusrpdir=$grusrpdir:$grusrpdir/.libs
+grlibdir=$gromnidir:$grcoredir:$grusrpdir
 
 # Construct search path for python modules
 PYTHONPATH="$mylibdir:$mysrcdir:$mypydir:$grswigdir:$grswigsrcdir:$grpydir:$PYTHONPATH"
