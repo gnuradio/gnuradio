@@ -23,6 +23,10 @@ grswigsrcdir=@abs_top_srcdir@/gnuradio-core/src/lib/swig
 # Where to find core's python modules
 grpydir=@abs_top_srcdir@/gnuradio-core/src/python
 
+# Construct search path for python modules
+PYTHONPATH="$mylibdir:$mysrcdir:$mypydir:$grswigdir:$grswigsrcdir:$grpydir:$PYTHONPATH"
+export PYTHONPATH
+
 # Where to find core's master library files and dependencies
 gromnidir=@abs_top_builddir@/omnithread
 gromnidir=$gromnidir:$gromnidir/.libs
@@ -31,10 +35,6 @@ grcoredir=$grcoredir:$grcoredir/.libs
 grusrpdir=@abs_top_builddir@/usrp/host/lib
 grusrpdir=$grusrpdir:$grusrpdir/.libs
 grlibdir=$gromnidir:$grcoredir:$grusrpdir
-
-# Construct search path for python modules
-PYTHONPATH="$mylibdir:$mysrcdir:$mypydir:$grswigdir:$grswigsrcdir:$grpydir:$PYTHONPATH"
-export PYTHONPATH
 
 # For OS/X
 DYLD_LIBRARY_PATH=$grlibdir
