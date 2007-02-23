@@ -45,7 +45,7 @@ gr_glfsr_source_b::gr_glfsr_source_b(int degree, bool repeat, int mask, int seed
 {
   if (degree < 1 || degree > 32)
     throw std::runtime_error("gr_glfsr_source_b: degree must be between 1 and 32 inclusive");
-  d_length = (int)(1ULL << degree)-1;
+  d_length = (unsigned int)((1ULL << degree)-1);
 
   if (mask == 0)
     mask = gri_glfsr::glfsr_mask(degree);
