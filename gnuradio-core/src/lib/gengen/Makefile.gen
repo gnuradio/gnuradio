@@ -1,3 +1,6 @@
+#
+# This file is machine generated.  All edits will be overwritten
+#
 GENERATED_H = \
 	gr_add_cc.h \
 	gr_add_const_cc.h \

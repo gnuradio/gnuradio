@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2004,2006 Free Software Foundation, Inc.
+# Copyright 2001,2002,2004,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -76,6 +76,7 @@ libgeneral_la_SOURCES = 		\
 	gr_frequency_modulator_fc.cc	\
 	gr_fxpt.cc			\
 	gr_framer_sink_1.cc		\
+	gr_glfsr_source_b.cc		\
 	gr_head.cc			\
 	gr_interleave.cc		\
 	gr_interleaved_short_to_complex.cc \
@@ -135,6 +136,7 @@ libgeneral_la_SOURCES = 		\
 	gri_float_to_char.cc		\
 	gri_float_to_short.cc		\
 	gri_float_to_uchar.cc		\
+	gri_glfsr.cc			\
 	gri_interleaved_short_to_complex.cc \
 	gri_short_to_float.cc		\
 	gri_uchar_to_float.cc		\
@@ -196,6 +198,7 @@ grinclude_HEADERS = 			\
 	gr_fxpt.h			\
 	gr_fxpt_nco.h			\
 	gr_fxpt_vco.h			\
+	gr_glfsr_source_b.h		\
 	gr_head.h			\
 	gr_interleave.h			\
 	gr_interleaved_short_to_complex.h \
@@ -264,6 +267,7 @@ grinclude_HEADERS = 			\
 	gri_float_to_char.h		\
 	gri_float_to_short.h		\
 	gri_float_to_uchar.h		\
+	gri_glfsr.h			\
 	gri_interleaved_short_to_complex.h \
 	gri_lfsr_15_1_0.h		\
 	gri_lfsr_32k.h			\
@@ -323,6 +327,7 @@ swiginclude_HEADERS =			\
 	gr_float_to_uchar.i		\
 	gr_frequency_modulator_fc.i	\
 	gr_framer_sink_1.i		\
+	gr_glfsr_source_b.i		\
 	gr_head.i			\
 	gr_interleave.i 		\
 	gr_interleaved_short_to_complex.i \
