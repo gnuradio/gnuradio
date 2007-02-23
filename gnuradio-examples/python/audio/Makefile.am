@@ -29,5 +29,6 @@ EXTRA_DIST = 			\
 	dialtone_v.py		\
 	mono_tone.py		\
 	multi_tone.py		\
+	noise.py		\
 	spectrum_inversion.py	\
 	test_resampler.py	
