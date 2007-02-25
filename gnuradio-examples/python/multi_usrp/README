@@ -23,7 +23,7 @@ You can do without a serial but then you never know which usrp is the master and
 CONNECTING THE CABLES
 Now connect the 64MHz clocks between the boards with a short sma coax cable.
 (See the wiki on how to enable clock-out and clock-in 
-http://comsec.com/wiki?USRPClockingNotes )
+http://gnuradio.org/trac/wiki/USRPClockingNotes )
 
 You need one board with a clock out and one board with a clock in.
 
