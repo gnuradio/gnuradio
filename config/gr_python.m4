@@ -28,6 +28,13 @@ AC_DEFUN([PYTHON_DEVEL],[
 	AC_REQUIRE([AM_PATH_PYTHON])
 	AC_REQUIRE([AC_CANONICAL_HOST])
 
+	# For Fedora Core 5 and 6, see ticket:39 in Trac
+	if test -f '/etc/redhat-release'; then
+		if  (echo $pyexecdir | grep -q lib64); then
+			pythondir="$pyexecdir"
+		fi
+	fi
+
 	# Check for Python include path
 	AC_MSG_CHECKING([for Python include path])
 	if test -z "$PYTHON" ; then
@@ -93,22 +100,10 @@ print path
           PYTHON_LDFLAGS="-L$python_stdlib_path -l$libpython_name"
           AC_MSG_RESULT($PYTHON_LDFLAGS) 
           # Replace all backslashes in PYTHON Paths with forward slashes
-          AC_MSG_CHECKING([for pythondir])
           pythondir=`echo $pythondir |sed 's,\\\\,/,g'`
-          AC_MSG_RESULT($pythondir)
-          AC_SUBST([pythondir])
-          AC_MSG_CHECKING([for pkgpythondir])
           pkgpythondir=`echo $pkgpythondir |sed 's,\\\\,/,g'`
-          AC_MSG_RESULT($pkgpythondir)
-          AC_SUBST([pkgpythondir])
-          AC_MSG_CHECKING([for pyexecdir])
           pyexecdir=`echo $pyexecdir |sed 's,\\\\,/,g'`
-          AC_MSG_RESULT($pyexecdir)
-          AC_SUBST([pyexecdir])
-          AC_MSG_CHECKING([for pkgpyexecdir])
           pkgpyexecdir=`echo $pkgpyexecdir |sed 's,\\\\,/,g'`
-          AC_MSG_RESULT($pkgpyexecdir)
-          AC_SUBST([pkgpyexecdir])
 	  ;;
         esac
 
