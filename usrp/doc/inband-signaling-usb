@@ -10,7 +10,7 @@ format across the USB.
 
 
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |O|U|D|S|E|    mbz    |  Chan   | mbz |  Tag  |   Payload Len   |
+   |O|U|D|S|E|   RSSI    |  Chan   | mbz |  Tag  |   Payload Len   |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                           Timestamp                           |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -60,6 +60,10 @@ format across the USB.
         when the FPGA runs out of samples between bursts.
 
 
+  RSSI  6-bit Received Strength Signal Indicator:  Must be zero in OUT
+        packets.  In IN packets, indicates RSSI as reported by front end.
+	FIXME The format and interpretation are to be determined.
+
   Chan  5-bit logical channel number.  Channel number 0x1f is reserved
         for control information.  See "Control Channel" below.  Other
         channels are "data channels."  Each data channel is logically
@@ -76,8 +80,16 @@ format across the USB.
   Payload Len: 9-bit field that specifies the length of the payload
         field in bytes.  Must be in the range 0 to 504 inclusive.
 
-  Timestamp: 32-bit timestamp.  [FIXME, Write more]
-	On OUT packets, 0xffffffff means "Now".
+  Timestamp: 32-bit timestamp.
+	On IN packets, the timestamp indicates the time at which the
+	first sample of the packet was produced by the A/D converter(s)
+        for that channel.  On OUT packets, the timestamp specifies the
+        time at which the first sample in the packet should go out the
+        D/A converter(s) for that channel.  If a packet reaches the
+	head of the transmit queue, and the current time is later than
+	the timestamp, an error is assumed to have occurred and the
+	packet is discarded.  As a special case, the timestamp
+	0xffffffff is interpreted as "Now".
 
   Payload: Variable length field.  Length is specified by the
         Payload Len field.
@@ -85,4 +97,175 @@ format across the USB.
   Padding: This field is 504 - Payload Len bytes long, and its content
         is unspecified.  This field pads the packet out to a constant
         512 bytes.
+
+
+
+
+"Control Channel" payload format:
+---------------------------------
+
+The control channel payload consists of a sequence of 0 or more
+sub-packets.
+
+Each sub-packet starts on a 32-bit boundary, and consists of an 8-bit
+Opcode field, an 8-bit Length field, Length bytes of arguments, and 0,
+1, 2 or 3 bytes of padding to align the tail of the sub-packet to
+a 32-bit boundary.
+
+Control channel packets shall be processed at the head of the queue,
+and shall observe the timestamp semantics described above.
+
+
+General sub-packet format:
+--------------------------
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-//-+-+-+-+-+-+-+-+
+   |     Opcode    |    Length     |        <length bytes> ...    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-//-+-+-+-+-+-+-+-+
+
+
+Specific sub-packet formats:
+----------------------------
+
+  RID: 6-bit Request-ID. Copied from request sub-packet into corresponding
+       reply sub-packet.  RID allows the host to match requests and replies.
+
+  Reg Number: 10-bit Register Number.
+
+
+
+Ping Fixed Length:
+
+    Opcode:	OP_PING_FIXED
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       2       |    RID    |     Ping Value    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+Ping Fixed Length Reply:
+
+    Opcode:	OP_PING_FIXED_REPLY
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       2       |    RID    |     Ping Value    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+Write Register:
+
+    Opcode:	OP_WRITE_REG
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       6       |    mbz    |     Reg Number    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Register Value                         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+Read Register:
+
+    Opcode:	OP_READ_REG
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       2       |    RID    |     Reg Number    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+Read Register Reply:
+
+    Opcode:	OP_READ_REG_REPLY
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       6       |    RID    |     Reg Number    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Register Value                         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+I2C Write:
+
+    Opcode:	OP_I2C_WRITE
+    I2C Addr:   7-bit I2C address
+    Data:	The bytes to write to the I2C bus
+    Length:     Length of Data + 2
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |    Length     |       mbz       |   I2C Addr  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    Data ...			                           .
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+I2C Read:
+
+    Opcode:	OP_I2C_READ
+    I2C Addr:	7-bit I2C address
+    Nbytes:	Number of bytes to read from I2C bus
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       3       |    RID    | mbz |   I2C Addr  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Nbytes    |              unspecified padding              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+I2C Read Reply:
+
+    Opcode:	OP_I2C_READ_REPLY
+    I2C Addr:	7-bit I2C address
+    Data:	Length - 2 bytes of data read from I2C bus.
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |     Length    |    RID    | mbz |   I2C Addr  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    Data ...			                           .
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+SPI Write:
+
+    Opcode:	      OP_SPI_WRITE
+    Enables:	      Which SPI enables to assert (mask)
+    Format:	      Specifies format of SPI data and Opt Header Bytes
+    Opt Header Bytes: 2-byte field containing optional Tx bytes; see Format
+    Data:	      The bytes to write to the I2C bus
+    Length:	      Length of Data + 6
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |    Length     |              mbz              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    Enables    |    Format     |        Opt Header Bytes       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    Data ...			                           .
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+SPI Read:
+
+    Opcode:	      OP_SPI_READ
+    Enables:	      Which SPI enables to assert (mask)
+    Format:	      Specifies format of SPI data and Opt Header Bytes
+    Opt Header Bytes: 2-byte field containing optional Tx bytes; see Format
+    Nbytes:	      Number of bytes to read from SPI bus.
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       7       |    RID    |        mbz        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    Enables    |    Format     |        Opt Header Bytes       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Nbytes    |              unspecified padding              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+SPI Read Reply:
+
+    Opcode:   OP_SPI_READ_REPLY
+    Data:     Length - 2 bytes of data read from SPI bus.
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |     Length    |    RID    |        mbz        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    Data ...			                           .
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
