@@ -37,7 +37,7 @@
 //`define TX_HB_ON
 
 // ------------------------------------------------------------
-// IF RX_ON is not defined, there is *no* transmit circuitry built
+// IF RX_ON is not defined, there is *no* receive circuitry built
   `define RX_ON
 
 // ------------------------------------------------------------
