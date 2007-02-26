@@ -91,6 +91,9 @@ format across the USB.
 	packet is discarded.  As a special case, the timestamp
 	0xffffffff is interpreted as "Now".
 
+	The time base is a free running 32-bit counter that is
+	incremented by the A/D sample-clock.
+
   Payload: Variable length field.  Length is specified by the
         Payload Len field.
 
@@ -100,12 +103,21 @@ format across the USB.
 
 
 
+"Data Channel" payload format:
+-------------------------------
+
+If Chan != 0x1f, the packet is a "data packet" and the payload is a
+sequence of homogeneous samples.  The format of the samples is
+determined by the configuration associated with the given channel.  
+It is often the case that the payload field contains 32-bit complex
+samples, each containing 16-bit real and imaginary components.
+
 
 "Control Channel" payload format:
 ---------------------------------
 
-The control channel payload consists of a sequence of 0 or more
-sub-packets.
+If Chan == 0x1f, the packet is a "control packet".  The control channel
+payload consists of a sequence of 0 or more sub-packets.
 
 Each sub-packet starts on a 32-bit boundary, and consists of an 8-bit
 Opcode field, an 8-bit Length field, Length bytes of arguments, and 0,
@@ -160,6 +172,25 @@ Write Register:
    |     Opcode    |       6       |    mbz    |     Reg Number    |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                        Register Value                         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+Write Register Masked:
+
+    Opcode:	OP_WRITE_REG_MASKED
+
+    REG[Num] = (REG[Num] & ~Mask) | (Value & Mask)
+
+    That is, only the register bits that correspond to 1's in the
+    mask are written with the new value.
+
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |      10       |    mbz    |     Reg Number    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                         Register Value                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                           Mask Value                          |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
@@ -229,7 +260,7 @@ SPI Write:
     Enables:	      Which SPI enables to assert (mask)
     Format:	      Specifies format of SPI data and Opt Header Bytes
     Opt Header Bytes: 2-byte field containing optional Tx bytes; see Format
-    Data:	      The bytes to write to the I2C bus
+    Data:	      The bytes to write to the SPI bus
     Length:	      Length of Data + 6
 
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
