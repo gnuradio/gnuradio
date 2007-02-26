@@ -32,6 +32,11 @@ public:
   mbe_base(mb_mblock *mb, const std::string &msg);
 };
 
+class mbe_not_implemented : public mbe_base
+{
+public:
+  mbe_not_implemented(mb_mblock *mb, const std::string &msg);
+};
 
 
 class mbe_no_such_component : public mbe_base

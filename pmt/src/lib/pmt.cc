@@ -841,3 +841,27 @@ pmt_subsetp(pmt_t list1, pmt_t list2)
   }
   return true;
 }
+
+pmt_t
+pmt_list1(pmt_t x1)
+{
+  return pmt_cons(x1, PMT_NIL);
+}
+
+pmt_t
+pmt_list2(pmt_t x1, pmt_t x2)
+{
+  return pmt_cons(x1, pmt_cons(x2, PMT_NIL));
+}
+
+pmt_t
+pmt_list3(pmt_t x1, pmt_t x2, pmt_t x3)
+{
+  return pmt_cons(x1, pmt_cons(x2, pmt_cons(x3, PMT_NIL)));
+}
+
+pmt_t
+pmt_list4(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4)
+{
+  return pmt_cons(x1, pmt_cons(x2, pmt_cons(x3, pmt_cons(x4, PMT_NIL))));
+}

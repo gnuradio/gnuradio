@@ -33,6 +33,11 @@ mbe_base::mbe_base(mb_mblock *mb, const std::string &msg)
 {
 }
 
+mbe_not_implemented::mbe_not_implemented(mb_mblock *mb, const std::string &msg)
+  : mbe_base(mb, "Not implemented: " + msg)
+{
+}
+
 mbe_no_such_component::mbe_no_such_component(mb_mblock *mb, const std::string &component_name)
   : mbe_base(mb, "No such component: " + component_name)
 {

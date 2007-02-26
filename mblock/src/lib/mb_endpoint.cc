@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -18,24 +18,32 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_MB_RUNTIME_IMPL_H
-#define INCLUDED_MB_RUNTIME_IMPL_H
 
-#include <mb_common.h>
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+#include <mb_endpoint.h>
 
-/*!
- * \brief The private implementation details of the runtime system.
- */
-class mb_runtime_impl : boost::noncopyable
+bool
+mb_endpoint::inside_of_relay_port_p() const
 {
-private:
-  friend class mb_runtime;
+  return d_port->port_type() == mb_port::RELAY && d_component_name == "self";
+}
 
-  mb_runtime_impl();
+pmt_t
+mb_endpoint::incoming_message_set() const
+{
+  if (inside_of_relay_port_p())			// swap incoming and outgoing
+    return port()->outgoing_message_set();
+  else
+    return port()->incoming_message_set();
+}
 
-public:
-  ~mb_runtime_impl();
-};
-
-
-#endif /* INCLUDED_MB_RUNTIME_IMPL_H */
+pmt_t
+mb_endpoint::outgoing_message_set() const
+{
+  if (inside_of_relay_port_p())			// swap incoming and outgoing
+    return port()->incoming_message_set();
+  else
+    return port()->outgoing_message_set();
+}

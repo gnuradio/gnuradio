@@ -54,6 +54,8 @@ protected:
 	  bool conjugated,
 	  mb_port::port_type_t port_type);
 
+  mb_mblock *mblock() const { return d_mblock; }
+
 public:
   std::string	port_name() const { return d_port_name; }
   pmt_t		protocol_class() const { return d_protocol_class; }

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -18,18 +18,25 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#ifndef INCLUDED_MB_RUNTIME_SINGLE_THREADED_H
+#define INCLUDED_MB_RUNTIME_SINGLE_THREADED_H
 
-#ifndef INCLUDED_MB_PORT_DETAIL_H
-#define INCLUDED_MB_PORT_DETAIL_H
+#include <mb_runtime.h>
 
-#include <mb_port.h>
-
-class mb_port_detail : boost::noncopyable
+/*!
+ * \brief Concrete runtime that uses a single thread for all work.
+ */
+class mb_runtime_single_threaded : public mb_runtime
 {
+  mb_mblock_sptr	d_top;		// top mblock
+
 public:
-  mb_port_detail();
-  ~mb_port_detail();
+  mb_runtime_single_threaded();
+  ~mb_runtime_single_threaded();
+
+  bool run(mb_mblock_sptr top);
 };
 
 
-#endif /* INCLUDED_MB_PORT_DETAIL_H */
+
+#endif /* INCLUDED_MB_RUNTIME_SINGLE_THREADED_H */

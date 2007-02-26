@@ -24,29 +24,15 @@
 #endif
 
 #include <mb_runtime.h>
-#include <mb_runtime_impl.h>
+#include <mb_runtime_single_threaded.h>
 
 mb_runtime_sptr
 mb_make_runtime()
 {
-  return mb_runtime_sptr(new mb_runtime());
-}
-
-mb_runtime::mb_runtime()
-  : d_impl(mb_runtime_impl_sptr(new mb_runtime_impl()))
-{
-  // FIXME
-  
+  return mb_runtime_sptr(new mb_runtime_single_threaded());
 }
 
 mb_runtime::~mb_runtime()
 {
-  // FIXME
-}
-
-bool
-mb_runtime::run()
-{
-  // FIXME
-  return true;
+  // nop
 }

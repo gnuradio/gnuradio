@@ -22,7 +22,7 @@
 #define INCLUDED_MB_MSG_QUEUE_H
 
 #include <mb_common.h>
-//#include <omnithread.h>	FIXME
+#include <omnithread.h>
 
 /*!
  * \brief priority queue for mblock messages
@@ -37,7 +37,7 @@ class mb_msg_queue : boost::noncopyable
     bool empty_p() const { return head == 0; }
   };
 
-  // omni_mutex	d_mutex;	FIXME
+  omni_mutex	d_mutex;
 
   // FIXME add bitmap to indicate which queues are non-empty.
   subq		d_queue[MB_NPRI];

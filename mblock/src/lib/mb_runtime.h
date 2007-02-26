@@ -24,40 +24,31 @@
 #include <mb_common.h>
 
 /*!
- * \brief Public constructor for mb_runtime.
+ * \brief Public constructor (factory) for mb_runtime objects.
  */
 mb_runtime_sptr mb_make_runtime();
 
 /*!
- * \brief Runtime support for m-blocks
+ * \brief Abstract runtime support for m-blocks
  *
  * There should generally be only a single instance of this class.
- *
- * It should be created by the top-level initialization code,
- * and that instance should be passed into the constructor of the
- * top-level mblock.
  */
 class mb_runtime : boost::noncopyable
 {
-private:
-  mb_runtime_impl_sptr	        d_impl;		  // implementation details
-
-  mb_runtime();
-
-  friend mb_runtime_sptr mb_make_runtime();
-
 public:
-  ~mb_runtime();
+  mb_runtime(){}
+  virtual ~mb_runtime();
 
   /*!
-   * \brief Run the mblocks...
+   * \brief Run the mblock hierarchy rooted at \p top
    *
    * This routine turns into the m-block scheduler, and
    * blocks until the system is shutdown.
    *
+   * \param top top-level mblock
    * \returns true if the system ran successfully.
    */
-  bool run();
+  virtual bool run(mb_mblock_sptr top) = 0;
 };
 
 #endif /* INCLUDED_MB_RUNTIME_H */

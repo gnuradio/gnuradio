@@ -548,6 +548,26 @@ pmt_t pmt_member(pmt_t obj, pmt_t list);
  */
 bool pmt_subsetp(pmt_t list1, pmt_t list2);
 
+/*!
+ * \brief Return a list of length 1 containing \p x1
+ */
+pmt_t pmt_list1(pmt_t x1);
+
+/*!
+ * \brief Return a list of length 2 containing \p x1, \p x2
+ */
+pmt_t pmt_list2(pmt_t x1, pmt_t x2);
+
+/*!
+ * \brief Return a list of length 3 containing \p x1, \p x2, \p x3
+ */
+pmt_t pmt_list3(pmt_t x1, pmt_t x2, pmt_t x3);
+
+/*!
+ * \brief Return a list of length 4 containing \p x1, \p x2, \p x3, \p x4
+ */
+pmt_t pmt_list4(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4);
+
 /*
  * ------------------------------------------------------------------------
  *			     read / write

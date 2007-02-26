@@ -30,5 +30,5 @@ std::string
 mb_util::join_names(const std::string &comp_name,
 		    const std::string &port_name)
 {
-  return comp_name + "/" + port_name;
+  return comp_name + ":" + port_name;
 }

@@ -51,7 +51,7 @@ mb_mblock_impl::comp_is_defined(const std::string &name)
 ////////////////////////////////////////////////////////////////////////
 
 mb_mblock_impl::mb_mblock_impl(mb_mblock *mb)
-  : d_mb(mb), d_mb_parent(0)
+  : d_mb(mb), d_mb_parent(0), d_fullname("<unknown>")
 {
 }
 
@@ -67,11 +67,6 @@ mb_mblock_impl::define_port(const std::string &port_name,
 			    bool conjugated,
 			    mb_port::port_type_t port_type)
 {
-  if (port_type == mb_port::RELAY)
-    throw mbe_base(d_mb,
-	     "mb_block_impl::define_port: RELAY ports are not implemented: "
-	     + port_name);
-  
   if (port_is_defined(port_name))
     throw mbe_duplicate_port(d_mb, port_name);
 
@@ -90,7 +85,7 @@ mb_mblock_impl::define_component(const std::string &name,
   if (comp_is_defined(name))	// check for duplicate name
     throw mbe_duplicate_component(d_mb, name);
 
-  component->d_impl->d_mb_parent = d_mb;    // set component's parent link
+  component->d_impl->d_mb_parent = d_mb;     // set component's parent link
   d_comp_map[name] = component;
 }
 
@@ -103,7 +98,7 @@ mb_mblock_impl::connect(const std::string &comp_name1,
   mb_endpoint	ep0 = check_and_resolve_endpoint(comp_name1, port_name1);
   mb_endpoint	ep1 = check_and_resolve_endpoint(comp_name2, port_name2);
 
-  if (!ports_are_compatible(ep0.port(), ep1.port()))
+  if (!endpoints_are_compatible(ep0, ep1))
     throw mbe_incompatible_ports(d_mb,
 				 comp_name1, port_name1,
 				 comp_name2, port_name2);
@@ -194,16 +189,14 @@ mb_mblock_impl::resolve_port(const std::string &comp_name,
 
 
 bool
-mb_mblock_impl::ports_are_compatible(mb_port_sptr p0, mb_port_sptr p1)
+mb_mblock_impl::endpoints_are_compatible(const mb_endpoint &ep0,
+					 const mb_endpoint &ep1)
 {
-  using std::cout;
-  using std::endl;
+  pmt_t p0_outgoing = ep0.outgoing_message_set();
+  pmt_t p0_incoming = ep0.incoming_message_set();
 
-  pmt_t p0_outgoing = p0->outgoing_message_set();
-  pmt_t p0_incoming = p0->incoming_message_set();
-
-  pmt_t p1_outgoing = p1->outgoing_message_set();
-  pmt_t p1_incoming = p1->incoming_message_set();
+  pmt_t p1_outgoing = ep1.outgoing_message_set();
+  pmt_t p1_incoming = ep1.incoming_message_set();
 
   return (pmt_subsetp(p0_outgoing, p1_incoming)
 	  && pmt_subsetp(p1_outgoing, p0_incoming));
@@ -232,3 +225,35 @@ mb_mblock_impl::make_accepter(const std::string port_name)
 
   return mb_msg_accepter_sptr(ma);
 }
+
+bool
+mb_mblock_impl::lookup_other_endpoint(const mb_port *port, mb_endpoint *ep)
+{
+  mb_conn_iter	it;
+  int		which_ep = 0;
+
+  if (!d_conn_table.lookup_conn_by_port(port, &it, &which_ep))
+    return false;
+  
+  *ep = it->d_ep[which_ep^1];
+  return true;
+}
+
+mb_mblock_sptr
+mb_mblock_impl::component(const std::string &comp_name)
+{
+  if (comp_name == "self")
+    return d_mb->shared_from_this();
+
+  if (d_comp_map.count(comp_name) == 0)
+    return mb_mblock_sptr();	// null pointer
+
+  return d_comp_map[comp_name];
+}
+
+void
+mb_mblock_impl::set_fullname(const std::string &name)
+{
+  d_fullname = name;
+}
+

@@ -35,8 +35,7 @@ class mb_visitor
 {
 public:
   virtual ~mb_visitor();
-  bool operator()(mb_mblock *mblock, const std::string &path) { return visit(mblock, path); }
-  virtual bool visit(mb_mblock *mblock, const std::string &path) = 0;
+  virtual bool operator()(mb_mblock *mblock, const std::string &path) = 0;
 };
 
 // ----------------------------------------------------------------------
@@ -69,6 +68,7 @@ protected:
    */
   mb_mblock();
 
+public:
   /*!
    * \brief Called by the runtime system to execute the initial
    * transition of the finite state machine.
@@ -77,6 +77,7 @@ protected:
    */
   virtual void init_fsm();
 
+protected:
   /*!
    * \brief Called by the runtime system when there's a message to handle.
    *
@@ -178,13 +179,21 @@ protected:
 public:
   virtual ~mb_mblock();
 
+  void set_fullname(const std::string name);
+  
+  //! Return full name of this block
+  std::string fullname() const;
+
+  //! Return the parent of this mblock, or 0 if we're the top-level block.
+  mb_mblock *parent() const;
+
   /*!
    * \brief Perform a pre-order depth-first traversal of the hierarchy.
    *
    * The traversal stops and returns false if any call to visitor returns false.
    */
   bool
-  walk_tree(mb_visitor *visitor, const std::string &path="");
+  walk_tree(mb_visitor *visitor, const std::string &path="top");
 
 
   //! \implementation

@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = $(PMT_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES)
+INCLUDES = $(DEFINES) $(OMNITHREAD_INCLUDES) $(PMT_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES)
 
 TESTS = test_mblock
 
@@ -33,6 +33,7 @@ EXTRA_DIST =
 # These are the source files that go into the mblock shared library
 libmblock_la_SOURCES =			\
 	mb_connection.cc		\
+	mb_endpoint.cc			\
 	mb_exception.cc			\
 	mb_mblock.cc			\
 	mb_mblock_impl.cc		\
@@ -44,7 +45,7 @@ libmblock_la_SOURCES =			\
 	mb_port_simple.cc		\
 	mb_protocol_class.cc		\
 	mb_runtime.cc			\
-	mb_runtime_impl.cc		\
+	mb_runtime_single_threaded.cc	\
 	mb_util.cc			
 
 
@@ -53,6 +54,7 @@ libmblock_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
 
 # link the library against the c++ standard library
 libmblock_la_LIBADD = 			\
+	$(OMNITHREAD_LIBS)		\
 	$(PMT_LIBS)			\
 	-lstdc++			
 
@@ -67,6 +69,7 @@ include_HEADERS =			\
 	mb_port_simple.h		\
 	mb_protocol_class.h		\
 	mb_runtime.h			\
+	mb_runtime_single_threaded.h	\
 	mb_util.h			
 
 
@@ -75,17 +78,17 @@ noinst_HEADERS = 			\
 	mb_endpoint.h			\
 	mb_mblock_impl.h		\
 	mb_msg_accepter_smp.h		\
-	mb_port_detail.h		\
-	mb_runtime_impl.h		\
 	qa_mblock.h			\
-	qa_mblock_prims.h		
+	qa_mblock_prims.h		\
+	qa_mblock_send.h		
 
 
 # Build the qa code into its own library
 
 libmblock_qa_la_SOURCES =		\
 	qa_mblock.cc			\
-	qa_mblock_prims.cc		
+	qa_mblock_prims.cc		\
+	qa_mblock_send.cc		
 
 
 # magic flags

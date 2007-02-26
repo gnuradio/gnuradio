@@ -47,6 +47,12 @@ public:
   const std::string &component_name() const { return d_component_name; }
   const std::string &port_name() const { return d_port_name; }
   mb_port_sptr port() const { return d_port; }
+
+  //! Does this endpoint represent the inside of a relay port
+  bool inside_of_relay_port_p() const;
+
+  pmt_t	incoming_message_set() const;
+  pmt_t	outgoing_message_set() const;
 };
 
 #endif /* INCLUDED_MB_ENDPOINT_H */

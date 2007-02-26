@@ -40,6 +40,8 @@ class mb_mblock_impl : boost::noncopyable
   mb_mblock		       *d_mb;		// pointer to our associated mblock
   mb_mblock		       *d_mb_parent;	// pointer to our parent
 
+  std::string			d_fullname;	// hierarchical name
+
   mb_port_map_t			d_port_map;	// our ports
   mb_comp_map_t			d_comp_map;	// our components
   mb_conn_table			d_conn_table;	// our connections
@@ -145,6 +147,34 @@ public:
   mb_msg_queue &
   msgq() { return d_msgq; }
 
+  //! Return full name of this block
+  std::string fullname() const { return d_fullname; }
+
+  //! Set the name of this block
+  void set_fullname(const std::string &name);
+
+  /*!
+   * \brief If bound, store endpoint from the other end of the connection.
+   *
+   * \param port [in]  port the port that we're searching for.
+   * \param ep   [out] the other end point from the matching connection.
+   *
+   * \returns true iff there's a matching connection.
+   */
+  bool
+  lookup_other_endpoint(const mb_port *port, mb_endpoint *ep);
+
+
+  mb_mblock *
+  mblock() const { return d_mb; }
+
+  mb_mblock *
+  mblock_parent() const { return d_mb_parent; }
+
+  mb_mblock_sptr
+  component(const std::string &comp_name);
+
+
   /*
    * Our implementation methods
    */
@@ -164,7 +194,8 @@ private:
 	       const std::string &port_name);
 
   static bool
-  ports_are_compatible(mb_port_sptr p0, mb_port_sptr p1);
+  endpoints_are_compatible(const mb_endpoint &ep0,
+			   const mb_endpoint &ep1);
 
 };
 

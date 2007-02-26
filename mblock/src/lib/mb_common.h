@@ -67,8 +67,8 @@ mb_pri_clamp(mb_pri_t p)
 class mb_runtime;
 typedef boost::shared_ptr<mb_runtime> mb_runtime_sptr;
 
-class mb_runtime_impl;
-typedef boost::shared_ptr<mb_runtime_impl> mb_runtime_impl_sptr;
+//class mb_runtime_impl;
+//typedef boost::shared_ptr<mb_runtime_impl> mb_runtime_impl_sptr;
 
 class mb_mblock;
 typedef boost::shared_ptr<mb_mblock> mb_mblock_sptr;
@@ -79,8 +79,8 @@ typedef boost::shared_ptr<mb_mblock_impl> mb_mblock_impl_sptr;
 class mb_port;
 typedef boost::shared_ptr<mb_port> mb_port_sptr;
 
-class mb_port_detail;
-typedef boost::shared_ptr<mb_port_detail> mb_port_detail_sptr;
+//class mb_port_detail;
+//typedef boost::shared_ptr<mb_port_detail> mb_port_detail_sptr;
 
 class mb_msg_accepter;
 typedef boost::shared_ptr<mb_msg_accepter> mb_msg_accepter_sptr;

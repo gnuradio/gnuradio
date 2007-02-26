@@ -20,6 +20,10 @@
  * Boston, MA 02111-1307, USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <qa_mblock_prims.h>
 #include <cppunit/TestAssert.h>
 #include <mb_mblock.h>
@@ -103,32 +107,16 @@ qa_mblock_prims::test_define_ports()
 
   // define the protocol class
   pmt_t pc = mb_make_protocol_class(pmt_intern("cs-protocol"),
-				    pmt_cons(pmt_intern("start"),
-					     pmt_cons(pmt_intern("stop"),
-						      PMT_NIL)),
+				    pmt_list2(pmt_intern("start"),
+					      pmt_intern("stop")),
 				    PMT_NIL);
 
   // std::cout << "pc = " << pc << '\n';
 
   mb_mblock_sptr mb2 = mb_mblock_sptr(new dp_2());
 
-  // intf = mb2->peer_interface();
-  // CPPUNIT_ASSERT_EQUAL(size_t(1), intf.size());
-  // CPPUNIT_ASSERT(pmt_eq(s_cs, intf[0]->port_name()));
-
-
   // raises pmt_exception because of duplicate port definition of "cs"
   CPPUNIT_ASSERT_THROW(mb_mblock_sptr(new dp_3()), mbe_duplicate_port);
-
-#if 0
-  try {
-    mb_mblock_sptr mb2 = mb_mblock_sptr(new dp_2());
-  }
-  catch (pmt_exception &e){
-    std::cerr << e.msg() << ' ' << e.obj() << '\n';
-  }
-#endif
-
 }
 
 // ================================================================
@@ -321,13 +309,13 @@ void
 qa_mblock_prims::test_connect()
 {
   // define the protocol class
-  mb_make_protocol_class(pmt_intern("data"),				// name of class
-			 pmt_cons(pmt_intern("data"), PMT_NIL),		// in
-			 PMT_NIL);					// out
+  mb_make_protocol_class(pmt_intern("data"),			// name of class
+			 pmt_list1(pmt_intern("data")),		// in
+			 PMT_NIL);				// out
 
-  mb_make_protocol_class(pmt_intern("i/o"),				// name of class
-			 pmt_cons(pmt_intern("in"), PMT_NIL),		// in
-			 pmt_cons(pmt_intern("out"), PMT_NIL));		// out
+  mb_make_protocol_class(pmt_intern("i/o"),			// name of class
+			 pmt_list1(pmt_intern("in")),		// in
+			 pmt_list1(pmt_intern("out")));		// out
 
 
   mb_runtime_sptr	rt = mb_make_runtime();
@@ -416,4 +404,3 @@ qa_mblock_prims::test_make_accepter()
   CPPUNIT_ASSERT_EQUAL(1L, pmt_to_long(mb->impl()->msgq().get_highest_pri_msg()->data()));
   CPPUNIT_ASSERT_EQUAL(2L, pmt_to_long(mb->impl()->msgq().get_highest_pri_msg()->data()));
 }
-

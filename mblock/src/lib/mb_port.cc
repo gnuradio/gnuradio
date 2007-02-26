@@ -24,7 +24,6 @@
 #endif
 
 #include <mb_port.h>
-#include <mb_port_detail.h>
 #include <mb_protocol_class.h>
 
 mb_port::mb_port(mb_mblock *mblock,

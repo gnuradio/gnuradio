@@ -27,6 +27,12 @@
 #include <mb_mblock_impl.h>
 
 
+mb_visitor::~mb_visitor()
+{
+  // nop base case for virtual destructor.
+}
+
+
 mb_mblock::mb_mblock()
   : d_impl(mb_mblock_impl_sptr(new mb_mblock_impl(this)))
 {
@@ -112,4 +118,22 @@ bool
 mb_mblock::walk_tree(mb_visitor *visitor, const std::string &path)
 {
   return d_impl->walk_tree(visitor, path);
+}
+
+std::string
+mb_mblock::fullname() const
+{
+  return d_impl->fullname();
+}
+
+void
+mb_mblock::set_fullname(const std::string name)
+{
+  d_impl->set_fullname(name);
+}
+
+mb_mblock *
+mb_mblock::parent() const
+{
+  return d_impl->mblock_parent();
 }

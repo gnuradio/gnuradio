@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -18,23 +19,25 @@
  * the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+#ifndef INCLUDED_QA_MBLOCK_SEND_H
+#define INCLUDED_QA_MBLOCK_SEND_H
 
-/*
- * This class gathers together all the test cases for mblock into
- * a single test suite.  As you create new test cases, add them here.
- */
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
 
-#include <qa_mblock.h>
-#include <qa_mblock_prims.h>
-#include <qa_mblock_send.h>
+class qa_mblock_send : public CppUnit::TestCase {
 
-CppUnit::TestSuite *
-qa_mblock::suite()
-{
-  CppUnit::TestSuite	*s = new CppUnit::TestSuite("mblock");
+  CPPUNIT_TEST_SUITE(qa_mblock_send);
+  CPPUNIT_TEST(test_simple_routing);
+  CPPUNIT_TEST(test_relay_routing_1);
+  CPPUNIT_TEST(test_relay_routing_2);
+  CPPUNIT_TEST_SUITE_END();
 
-  s->addTest (qa_mblock_prims::suite());
-  s->addTest (qa_mblock_send::suite());
-  
-  return s;
-}
+ private:
+  void test_simple_routing();
+  void test_relay_routing_1();
+  void test_relay_routing_2();
+};
+
+#endif /* INCLUDED_QA_MBLOCK_SEND_H */
+

@@ -38,7 +38,7 @@ mb_msg_queue::~mb_msg_queue()
 void
 mb_msg_queue::insert(mb_message_sptr msg)
 {
-  // omni_mutex_lock	l(d_mutex);		FIXME
+  omni_mutex_lock	l(d_mutex);
   
   mb_pri_t q = mb_pri_clamp(msg->priority());
 
@@ -57,7 +57,7 @@ mb_msg_queue::insert(mb_message_sptr msg)
 mb_message_sptr
 mb_msg_queue::get_highest_pri_msg()
 {
-  // omni_mutex_lock	l(d_mutex);		FIXME
+  omni_mutex_lock	l(d_mutex);
 
   // FIXME use bitmap and ffz to find best queue in O(1)
 

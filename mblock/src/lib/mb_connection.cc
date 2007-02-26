@@ -52,17 +52,17 @@ mb_conn_table::lookup_conn_by_name(const std::string &component_name,
 }
 
 bool
-mb_conn_table::lookup_conn_by_port(mb_port_sptr port,
+mb_conn_table::lookup_conn_by_port(const mb_port *port,
 				   mb_conn_iter *itp, int *which_ep)
 {
   mb_conn_iter end = d_connections.end();
   for (mb_conn_iter it = d_connections.begin(); it != end; ++it){
-    if (it->d_ep[0].port() == port){
+    if (it->d_ep[0].port().get() == port){
       *itp = it;
       *which_ep = 0;
       return true;
     }
-    if (it->d_ep[1].port() == port){
+    if (it->d_ep[1].port().get() == port){
       *itp = it;
       *which_ep = 1;
       return true;

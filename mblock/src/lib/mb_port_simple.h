@@ -29,8 +29,11 @@
 class mb_port_simple : public mb_port
 {
 protected:
+  static mb_msg_accepter_sptr
+  find_accepter(mb_port_simple *start);
+
   mb_msg_accepter_sptr
-  find_accepter();
+  make_accepter();
 
 public:
   mb_port_simple(mb_mblock *mblock,

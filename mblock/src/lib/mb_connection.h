@@ -53,8 +53,8 @@ public:
 		      mb_conn_iter *it, int *which_ep);
 
   bool
-  lookup_conn_by_port(mb_port_sptr port,
-		       mb_conn_iter *it, int *which_ep);
+  lookup_conn_by_port(const mb_port *port,
+		      mb_conn_iter *it, int *which_ep);
 
   void
   create_conn(const mb_endpoint &ep0, const mb_endpoint &ep1);
