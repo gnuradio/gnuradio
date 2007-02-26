@@ -89,12 +89,8 @@ libpmt_qa_la_SOURCES =			\
 # magic flags
 libpmt_qa_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
 
-# link the library against the c++ standard library
-# Note: Win32 libtool doesn't pull dependencies from the .la file
-# correctly, so we must add $(PMT_LIBS) below
 libpmt_qa_la_LIBADD = 			\
 	libpmt.la			\
-	$(PMT_LIBS)			\
 	$(CPPUNIT_LIBS)			\
 	-lstdc++			
 

@@ -78,7 +78,7 @@ swiginclude_HEADERS = 			\
 
 _audio_alsa_la_LIBADD = 		\
 	$(PYTHON_LDFLAGS)		\
-	$(GNURADIO_CORE_LIBS)		\
+	$(GNURADIO_CORE_LA)		\
 	$(ALSA_LIBS)			\
 	libgr_audio_alsa.la		\
 	-lstdc++				

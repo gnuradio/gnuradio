@@ -94,8 +94,8 @@ _usrp1_la_SOURCES = 			\
 
 _usrp1_la_LIBADD = 			\
 	$(PYTHON_LDFLAGS)		\
-	$(GNURADIO_CORE_LIBS)		\
-	$(USRP_LIBS)			\
+	$(GNURADIO_CORE_LA)		\
+	$(USRP_LA)			\
 	-lstdc++
 
 

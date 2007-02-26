@@ -93,7 +93,7 @@ _pager_swig_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 # link the library against the c++ standard library
 _pager_swig_la_LIBADD = \
     $(PYTHON_LDFLAGS) \
-    $(GNURADIO_CORE_LIBS) \
+    $(GNURADIO_CORE_LA) \
     -lstdc++			
 
 pager_swig.cc pager_swig.py: $(ALL_IFILES)

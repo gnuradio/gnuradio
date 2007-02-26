@@ -30,8 +30,6 @@ ourlibdir    = $(grpyexecdir)
 
 INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(CPPUNIT_INCLUDES)
 
-#LIBS += $(GNURADIO_CORE_LIBS)
-
 EXTRA_DIST =					\
 	gen_encoder.py				\
 	qa_atsci_trellis_encoder_t1_input.dat	\
@@ -204,8 +202,11 @@ atsci_viterbi_mux.cc: atsci_viterbi_gen$(EXEEXT)
 
 
 test_atsci_SOURCES = test_atsci.cc
-test_atsci_LDADD   = libatsc-qa.la libatsc.la $(GNURADIO_CORE_LIBS) $(CPPUNIT_LIBS)
-
+test_atsci_LDADD   =  		\
+	libatsc-qa.la 		\
+	libatsc.la		\
+	$(GNURADIO_CORE_LA)	\
+	$(CPPUNIT_LIBS)
 
 # ------------------------------------------------------------------------
 #  This is the swig-ish part of the Makefile.
@@ -249,7 +250,7 @@ _atsc_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 # link the library against some comon swig runtime code and the 
 # c++ standard library
 _atsc_la_LIBADD = 			\
-	$(GNURADIO_CORE_LIBS)		\
+	$(GNURADIO_CORE_LA)		\
 	$(PYTHON_LDFLAGS)		\
 	libatsc.la			\
 	-lstdc++			

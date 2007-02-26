@@ -75,7 +75,7 @@ swiginclude_HEADERS = 		\
 
 _comedi_la_LIBADD = 		\
 	$(PYTHON_LDFLAGS)	\
-	$(GNURADIO_CORE_LIBS)	\
+	$(GNURADIO_CORE_LA)	\
 	$(COMEDI_LIBS)		\
 	-lstdc++				
 

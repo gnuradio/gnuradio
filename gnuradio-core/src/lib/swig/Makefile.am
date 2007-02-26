@@ -118,8 +118,7 @@ _gnuradio_swig_py_runtime_la_SOURCES = 		\
 
 
 _gnuradio_swig_py_runtime_la_LIBADD  = 		\
-	$(GNURADIO_CORE_LIBS)			\
-	$(top_builddir)/gnuradio-core/src/lib/libgnuradio-core.la	\
+	$(GNURADIO_CORE_LA)			\
 	$(PYTHON_LDFLAGS)			\
 	-lstdc++
 
@@ -150,8 +149,7 @@ _gnuradio_swig_py_general_la_SOURCES = 		\
 
 
 _gnuradio_swig_py_general_la_LIBADD  = 		\
-	$(GNURADIO_CORE_LIBS)			\
-	$(top_builddir)/gnuradio-core/src/lib/libgnuradio-core.la	\
+	$(GNURADIO_CORE_LA)			\
 	$(PYTHON_LDFLAGS)			\
 	-lstdc++
 
@@ -182,8 +180,7 @@ _gnuradio_swig_py_gengen_la_SOURCES = 		\
 
 
 _gnuradio_swig_py_gengen_la_LIBADD  = 		\
-	$(GNURADIO_CORE_LIBS)			\
-	$(top_builddir)/gnuradio-core/src/lib/libgnuradio-core.la	\
+	$(GNURADIO_CORE_LA)			\
 	$(PYTHON_LDFLAGS)			\
 	-lstdc++
 
@@ -214,8 +211,7 @@ _gnuradio_swig_py_filter_la_SOURCES = 		\
 
 
 _gnuradio_swig_py_filter_la_LIBADD  = 		\
-	$(GNURADIO_CORE_LIBS)			\
-	$(top_builddir)/gnuradio-core/src/lib/libgnuradio-core.la	\
+	$(GNURADIO_CORE_LA)			\
 	$(PYTHON_LDFLAGS)			\
 	-lstdc++
 
@@ -246,8 +242,7 @@ _gnuradio_swig_py_io_la_SOURCES = 		\
 
 
 _gnuradio_swig_py_io_la_LIBADD  = 		\
-	$(GNURADIO_CORE_LIBS)			\
-	$(top_builddir)/gnuradio-core/src/lib/libgnuradio-core.la	\
+	$(GNURADIO_CORE_LA)			\
 	$(PYTHON_LDFLAGS)			\
 	-lstdc++
 

@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 #
-# Copyright 2004,2006 Free Software Foundation, Inc.
+# Copyright 2004,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -54,31 +54,24 @@ GNURADIO_INCLUDES = -I$(top_srcdir)/gnuradio-core/src/lib/runtime \
 		    -I$(top_builddir)/gnuradio-core/src/lib/swig \
 	            $(FFTW3F_CFLAGS)
 
-# How to link in the top-level omnithreads library
+# How to link in the top-level omnithreads library from inside the tree
 OMNITHREAD_INCLUDES = -I$(top_srcdir)/omnithread
-OMNITHREAD_LIBS = -L$(top_builddir)/omnithread -lgromnithread
+OMNITHREAD_LA = $(top_builddir)/omnithread/libgromnithread.la
 
-# How to link in GNU Radio core library
-# Note: Win32 libtool cannot extract DLL dependencies already stored in
-# libgnuradio-core, so the core's dependencies must be repeated here
-# This is redundant but harmless on non-Win32 platforms
-GNURADIO_CORE_LIBS = $(OMNITHREAD_LIBS)				\
-		     $(FFTW3F_LIBS)				\
-		     -L$(top_builddir)/gnuradio-core/src/lib	\
-                     -lgnuradio-core
+# How to link in GNU Radio core library from inside the tree
+GNURADIO_CORE_LA = $(top_builddir)/gnuradio-core/src/lib/libgnuradio-core.la
 
 # This is a dependency for many swig operations
 GNURADIO_I = $(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
 
-# The below used to be set in PKGCONFIG but now point to the current
-# build tree.
+# How to link in the USRP library from inside the tree
 USRP_INCLUDES = -I$(top_srcdir)/usrp/host/lib \
 		-I$(top_srcdir)/usrp/firmware/include
+USRP_LA = $(top_builddir)/usrp/host/lib/libusrp.la
 
-USRP_LIBS = -L$(top_builddir)/usrp/host/lib -lusrp
-
+# How to link the PMT library from inside the tree
 PMT_INCLUDES = -I$(top_srcdir)/pmt/src/lib
-PMT_LIBS = -L$(top_builddir)/pmt/src/lib -lpmt
+PMT_LA = $(top_builddir)/pmt/src/lib/libpmt.la
 
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.

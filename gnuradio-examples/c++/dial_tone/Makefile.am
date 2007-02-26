@@ -25,12 +25,9 @@ include $(top_srcdir)/Makefile.common
 INCLUDES=$(STD_DEFINES_AND_INCLUDES) \
          -I$(top_srcdir)/gr-audio-alsa/src 
 
-GR_AUDIO_ALSA_LIBS=$(top_builddir)/gr-audio-alsa/src/libgr_audio_alsa.la
+GR_AUDIO_ALSA_LA=$(top_builddir)/gr-audio-alsa/src/libgr_audio_alsa.la
 
-# For compiling outside the tree, these are the usual
-# INCLUDES = -I/usr/local/include -I/usr/local/include/gnuradio
-# GNURADIO_CORE_LIBS = -lgnuradio-core
-# GR_AUDIO_ALSA_LIBS = -lgr_audio_alsa
+# For compiling outside the tree, these will get fished out by pkgconfig
 
 noinst_PROGRAMS = dial_tone
     
@@ -42,7 +39,7 @@ dial_tone_SOURCES = \
     main.cc
 
 dial_tone_LDADD = \
-    $(GNURADIO_CORE_LIBS) \
+    $(GNURADIO_CORE_LA) \
     $(GR_AUDIO_ALSA_LIBS)
 
 MOSTLYCLEANFILES = *~

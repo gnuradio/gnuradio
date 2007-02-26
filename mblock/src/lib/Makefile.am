@@ -54,8 +54,8 @@ libmblock_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
 
 # link the library against the c++ standard library
 libmblock_la_LIBADD = 			\
-	$(OMNITHREAD_LIBS)		\
-	$(PMT_LIBS)			\
+	$(OMNITHREAD_LA)		\
+	$(PMT_LA)			\
 	-lstdc++			
 
 include_HEADERS =			\

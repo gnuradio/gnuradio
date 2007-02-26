@@ -110,7 +110,7 @@ _trellis_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 # c++ standard library
 _trellis_la_LIBADD = 			\
 	$(PYTHON_LDFLAGS)		\
-	$(GNURADIO_CORE_LIBS)		\
+	$(GNURADIO_CORE_LA)		\
 	-lstdc++
 
 trellis.cc trellis.py: $(ALL_IFILES) $(grinclude_HEADERS)

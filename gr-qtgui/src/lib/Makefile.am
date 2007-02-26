@@ -43,18 +43,23 @@ include_HEADERS =
 noinst_PROGRAMS = 			\
 	qt_examples	
 
-qt_examples_MOC =			\
+BUILT_SOURCES = 			\
 	moc_fftdisplay.cc
 
+nodist_qt_examples_SOURCES =		\
+	$(BUILT_SOURCES)
+	
 qt_examples_SOURCES = 			\
 	fftdisplay.cc			\
-	qt_examples.cc			\
-	$(qt_examples_MOC)
+	qt_examples.cc
 
-qt_examples_LDADD = $(QWT_LIBS) $(QT_LIBS)
-qt_examples_LDFLAGS = $(QT_CFLAGS) $(QWT_CFLAGS) $(GNURADIO_CORE_LIBS)
+qt_examples_LDADD = $(QWT_LIBS) 	\
+		    $(QT_LIBS)		\
+		    $(GNURADIO_CORE_LA)
+
+
+qt_examples_LDFLAGS = $(QT_CFLAGS) 	\
+		      $(QWT_CFLAGS)
 
 MOSTLYCLEANFILES = 			\
-	*~
-
-CLEANFILES = $(filter moc_%.cc, $(qt_examples_SOURCES))		
+	*~ $(BUILT_SOURCES)

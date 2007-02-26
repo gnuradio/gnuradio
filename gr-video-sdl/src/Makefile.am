@@ -69,7 +69,7 @@ swiginclude_HEADERS = 			\
 
 _video_sdl_la_LIBADD = 			\
 	$(PYTHON_LDFLAGS)		\
-	$(GNURADIO_CORE_LIBS)		\
+	$(GNURADIO_CORE_LA)		\
         $(SDL_LIBS)			\
 	-lstdc++				
 

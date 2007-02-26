@@ -76,7 +76,7 @@ _gsm_full_rate_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 _gsm_full_rate_la_LIBADD = 	\
 	gsm/libgsm.la		\
 	$(PYTHON_LDFLAGS)	\
-	$(GNURADIO_CORE_LIBS)	\
+	$(GNURADIO_CORE_LA)	\
 	-lstdc++			
 
 gsm_full_rate.cc gsm_full_rate.py: gsm_full_rate.i $(ALL_IFILES)

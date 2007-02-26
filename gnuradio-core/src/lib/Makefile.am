@@ -36,7 +36,6 @@ libgnuradio_core_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
 libgnuradio_core_qa_la_SOURCES = bug_work_around_6.cc
 libgnuradio_core_qa_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 \
 				 $(LIBGNURADIO_CORE_EXTRA_LDFLAGS)
-
 libgnuradio_core_la_LIBADD  = 		\
 	filter/libfilter.la		\
 	g72x/libccitt.la		\
@@ -46,7 +45,7 @@ libgnuradio_core_la_LIBADD  = 		\
 	missing/libmissing.la		\
 	reed-solomon/librs.la		\
 	runtime/libruntime.la		\
-	$(OMNITHREAD_LIBS)		\
+	$(OMNITHREAD_LA)		\
 	$(FFTW3F_LIBS)
 
 libgnuradio_core_qa_la_LIBADD  = 	\

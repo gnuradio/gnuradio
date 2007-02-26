@@ -65,9 +65,9 @@ _ra_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
 # link the library against some comon swig runtime code and the 
 # c++ standard library
-_ra_la_LIBADD = 			\
-	$(PYTHON_LDFLAGS)		\
-	$(GNURADIO_CORE_LIBS)		\
+_ra_la_LIBADD = 		\
+	$(PYTHON_LDFLAGS)	\
+	$(GNURADIO_CORE_LA)	\
 	-lstdc++			
 
 ra.cc ra.py: $(ALL_IFILES)

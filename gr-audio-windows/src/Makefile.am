@@ -69,7 +69,7 @@ swiginclude_HEADERS = 			\
 
 _audio_windows_la_LIBADD = 		\
 	$(PYTHON_LDFLAGS)		\
-	$(GNURADIO_CORE_LIBS)		\
+	$(GNURADIO_CORE_LA)		\
 	$(WINAUDIO_LIBS)		\
 	-lstdc++				
 

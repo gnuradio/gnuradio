@@ -73,7 +73,7 @@ swiginclude_HEADERS = 			\
 
 _audio_osx_la_LIBADD = 			\
 	$(PYTHON_LDFLAGS)		\
-	$(GNURADIO_CORE_LIBS)		\
+	$(GNURADIO_CORE_LA)		\
 	-lstdc++				
 
 _audio_osx_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version -framework AudioUnit -framework CoreAudio -framework AudioToolbox

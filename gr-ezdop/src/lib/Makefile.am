@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -32,7 +32,7 @@ EZDOP_INCLUDES = \
     -I$(top_srcdir)/ezdop/src/firmware \
     -I$(top_srcdir)/ezdop/src/host/ezdop
 
-EZDOP_LIBS = -L$(top_builddir)/ezdop/src/host/ezdop/ -lezdop
+EZDOP_LA = $(top_builddir)/ezdop/src/host/ezdop/libezdop.la
 
 INCLUDES = \
     $(STD_DEFINES_AND_INCLUDES) \
@@ -78,8 +78,8 @@ _ezdop_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 # c++ standard library
 _ezdop_la_LIBADD = 			\
 	$(PYTHON_LDFLAGS)		\
-	$(GNURADIO_CORE_LIBS)		\
-	$(EZDOP_LIBS)			\
+	$(GNURADIO_CORE_LA)		\
+	$(EZDOP_LA)			\
 	-lstdc++			
 
 ezdop.cc ezdop.py: $(ALL_IFILES)
@@ -88,7 +88,6 @@ ezdop.cc ezdop.py: $(ALL_IFILES)
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
 	ezdop_source_c.h
-
 
 # These swig headers get installed in ${prefix}/include/gnuradio/swig
 swiginclude_HEADERS = 			\

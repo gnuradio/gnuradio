@@ -69,7 +69,7 @@ swiginclude_HEADERS = 			\
 
 _audio_oss_la_LIBADD = 			\
 	$(PYTHON_LDFLAGS)		\
-	$(GNURADIO_CORE_LIBS)		\
+	$(GNURADIO_CORE_LA)		\
 	$(OSS_LIBS)			\
 	-lstdc++				
 
