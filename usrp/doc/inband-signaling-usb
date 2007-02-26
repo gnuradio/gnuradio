@@ -269,3 +269,15 @@ SPI Read Reply:
    |    Data ...			                           .
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
+
+Delay:
+
+    Opcode:	OP_DELAY
+    Ticks:	16-bit unsigned delay count
+
+    Delay Ticks clock ticks before executing next operation.
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       2       |            Ticks              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
