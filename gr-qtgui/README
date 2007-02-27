@@ -1,11 +1,18 @@
 This requires qt 3 or later.  See http://www.trolltech.com
 
-To support the widgets needed for this code you need Qwt:
+To support the widgets needed for this code you need Qwt, available
+from http://sourceforge.net/projects/qwt
 
-http://n4hy.org/Qwt/qwt.spec
-http://n4hy.org/Qwt/qwt.pc
-http://n4hy.org/Qwt/qwt-5.0.0.tar.bz2
-http://n4hy.org/Qwt/qwt-5.0.0-1.src.rpm
+For Linux, this may be obtained from:
+
+  http://n4hy.org/Qwt/qwt.spec
+  http://n4hy.org/Qwt/qwt.pc
+  http://n4hy.org/Qwt/qwt-5.0.0.tar.bz2
+  http://n4hy.org/Qwt/qwt-5.0.0-1.src.rpm
+
+On NetBSD or other pkgsrc systems, pkgsrc/x11/qwt exists and seems to
+be a much older version linked against qt2.
+
 
 QTDIR is an environment variable that must be set for
 gr-qtgui to make.
