@@ -201,7 +201,7 @@ GRC_GR_PAGER
 GRC_GR_RADIO_ASTRONOMY
 GRC_GR_TRELLIS
 GRC_GR_VIDEO_SDL
-GRC_GR_QTGUI
+#GRC_GR_QTGUI			dnl disabled until grc_gr_qtgui.m4 is final
 GRC_GR_WXGUI
 GRC_PMT
 GRC_MBLOCK			dnl this must come after GRC_PMT
