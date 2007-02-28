@@ -101,15 +101,9 @@ libmblock_qa_la_LIBADD = 		\
 	-lstdc++			
 
 
-noinst_PROGRAMS	=			\
-	test_mblock
-
-
-LIBMBLOCK   = libmblock.la
-LIBMBLOCKQA = libmblock-qa.la $(LIBMBLOCK)
+noinst_PROGRAMS	= test_mblock
 
 test_mblock_SOURCES = test_mblock.cc
-test_mblock_LDADD   = $(LIBMBLOCKQA)
-
+test_mblock_LDADD   = libmblock-qa.la
 
 CLEANFILES = $(BUILT_SOURCES) *.pyc
