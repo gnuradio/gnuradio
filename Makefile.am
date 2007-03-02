@@ -19,6 +19,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+ACLOCAL_AMFLAGS = -I config
+
 include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = \
