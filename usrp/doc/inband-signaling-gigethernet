@@ -1,0 +1,25 @@
+Gigabit Ethernet Interconnect for the USRP2
+
+At this point, this is a place to summarize design requirements,
+possible solutions, point-counterpoint, etc.
+
+
+Requirements:
+
+(R1) High throughput and low latency between USRP h/w and user-space.
+One of the primary reasons for switching from USB to gigabit ethernet
+is to increase throughput.  Many users want to be be able to build
+WLAN type systems, and are thwarted by the relatively low throughput
+available over the USB.  Eric thinks we should shoot for at least
+100MB/s full-duplex into user space, using packets with payloads on
+the order of 256 bytes.  The small packet size is to reduce the
+latency.  This is important for many MACs that people want to build on
+the host side.
+
+(R2) Non-priviledged user programs should be able to access the USRP.
+Could be implemented by a priviledged daemon that actually handles the
+low level communication with the USRP2.  This daemon may be desirable
+for other reasons, including central point of control for
+arbitrating/muxing/demuxing between multiple concurrent users (e.g.,
+Tx, Rx, various logical channels).
+
