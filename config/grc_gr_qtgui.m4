@@ -36,8 +36,8 @@ AC_DEFUN([GRC_GR_QTGUI],[
     	[passed=no;AC_MSG_RESULT([gr-qtgui requires qt, not found. Checking for qt-mt])])
     fi
 
-    PKG_CHECK_MODULES(QWT, qwt >= 5.0.0, [],
-    [passed=no;AC_MSG_RESULT([gr-qtgui requires qwt, not found.])])
+    AC_HAVE_LIBRARY(qwt, [],
+	[passed=no;AC_MSG_RESULT([gr-qtgui requires qwt, not found.])])
 
     
     GRC_BUILD_CONDITIONAL([gr-qtgui], [

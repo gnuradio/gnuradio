@@ -5,13 +5,10 @@ from http://sourceforge.net/projects/qwt
 
 For Linux, this may be obtained from:
 
-  http://n4hy.org/Qwt/qwt.spec
-  http://n4hy.org/Qwt/qwt.pc
   http://n4hy.org/Qwt/qwt-5.0.0.tar.bz2
-  http://n4hy.org/Qwt/qwt-5.0.0-1.src.rpm
 
 On NetBSD or other pkgsrc systems, pkgsrc/x11/qwt exists and seems to
-be a much older version linked against qt2.
+be a much older version linked against qt2.  You need qt3!
 
 
 QTDIR is an environment variable that must be set for
@@ -26,11 +23,30 @@ on Fedora Core 6 for example it is automatically set to
 
 /usr/lib/qt-3.3
 
-by Qt install
+by Qt install from the Fedora Core software setup.
 
-Qwt probably needs to be built and installed for now using
+If you are building from source from n4hy.org, the untar the bz2 ball,
+cd into the qwt-5.0.0 directory and run
 
-rpmbuild --rebuild qwt-5.0.0-1.src.rpm
+qmake
+
+Now edit the file  qwtconfig.pri
+
+and make the INSTALLBASE = /usr/local
+
+
+run 
+
+make
+sudo make install
+
+and qwt will be loaded into /usr/local/lib and the includes will be in
+/usr/local/include
+
+gr-qtgui will now make.
+
+
+
 
 which must be run as root (as in sudo) so that files are
 installed in the proper place for the gnuradio build
