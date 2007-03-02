@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,27 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
+EXTRA_DIST = 			\
+	usrp_fft.py
 
-# Install this stuff so that it ends up as the gnuradio.wxgui module
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/wxgui
-
-ourpythondir = $(grpythondir)/wxgui
-ourlibdir    = $(grpyexecdir)/wxgui
-
-ourpython_PYTHON =			\
-	__init__.py			\
-	form.py				\
-	fftsink.py			\
-	fftsink2.py			\
-	plot.py				\
-	powermate.py			\
-	scopesink.py			\
-	scopesink2.py			\
-	waterfallsink.py		\
-	waterfallsink2.py		\
-	slider.py			\
-	stdgui.py			\
-	stdgui2.py			\
-	numbersink.py		
+MOSTLYCLEANFILES = *.pyc *~

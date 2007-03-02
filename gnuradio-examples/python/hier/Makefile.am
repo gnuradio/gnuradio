@@ -21,4 +21,7 @@
 
 SUBDIRS = \
     audio \
-    ofdm
+    ofdm \
+    networking \
+    sounder \
+    usrp
