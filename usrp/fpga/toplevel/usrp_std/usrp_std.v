@@ -124,7 +124,7 @@ module usrp_std
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    // Transmit Side
 `ifdef TX_ON
-   assign     bb_tx_i0 = ch0tx;
+   assign      bb_tx_i0 = ch0tx;
    assign      bb_tx_q0 = ch1tx;
    assign      bb_tx_i1 = ch2tx;
    assign      bb_tx_q1 = ch3tx;
@@ -142,17 +142,27 @@ module usrp_std
        .tx_empty(tx_empty),
        .debugbus(tx_debugbus) );
 
+ `ifdef TX_EN_0
    tx_chain tx_chain_0
      ( .clock(clk64),.reset(tx_dsp_reset),.enable(enable_tx),
        .interp_rate(interp_rate),.sample_strobe(tx_sample_strobe),
        .interpolator_strobe(strobe_interp),.freq(),
        .i_in(bb_tx_i0),.q_in(bb_tx_q0),.i_out(i_out_0),.q_out(q_out_0) );
+ `else
+   assign      i_out_0=16'd0;
+   assign      q_out_0=16'd0;
+ `endif
 
+ `ifdef TX_EN_1
    tx_chain tx_chain_1
      ( .clock(clk64),.reset(tx_dsp_reset),.enable(enable_tx),
        .interp_rate(interp_rate),.sample_strobe(tx_sample_strobe),
        .interpolator_strobe(strobe_interp),.freq(),
        .i_in(bb_tx_i1),.q_in(bb_tx_q1),.i_out(i_out_1),.q_out(q_out_1) );
+ `else
+   assign      i_out_1=16'd0;
+   assign      q_out_1=16'd0;
+ `endif
 
    setting_reg #(`FR_TX_MUX) 
      sr_txmux(.clock(clk64),.reset(tx_dsp_reset),.strobe(serial_strobe),.addr(serial_addr),.in(serial_data),

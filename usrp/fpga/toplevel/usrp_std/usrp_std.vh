@@ -26,6 +26,9 @@
 //
 // ====================================================================
 
+// Uncomment this for 1 rx channel (w/ halfband) & 1 transmit channel
+//`include "usrp_std_config_1rxhb_1tx.vh"
+
 // Uncomment this for 2 rx channels (w/ halfband) & 2 transmit channels
   `include "usrp_std_config_2rxhb_2tx.vh"
 
