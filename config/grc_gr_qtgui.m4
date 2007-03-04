@@ -42,5 +42,6 @@ AC_DEFUN([GRC_GR_QTGUI],[
     
     GRC_BUILD_CONDITIONAL([gr-qtgui], [
     AC_SUBST(QT_LIBS)
+    AC_SUBST(QWT_CFLAGS)
     AC_SUBST(QWT_LIBS)])
 ])
