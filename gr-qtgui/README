@@ -35,15 +35,19 @@ Now edit the file  qwtconfig.pri
 and make the INSTALLBASE = /usr/local
 
 
+
 run 
 
 make
 sudo make install
 
-and qwt will be loaded into /usr/local/lib and the includes will be in
-/usr/local/include
+edit qwt.pc and change the prefix to be /usr/local and then install this file in /usr/local/lib/pkgconfig
 
-gr-qtgui will now make.
+
+qwt will be loaded into /usr/local/lib and the includes will be in /usr/local/include,  qwt.pc will cause all of the
+necessary flags to be including in the make files.
+
+gr-qtgui will now make. 
 
 
 
