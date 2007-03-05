@@ -21,7 +21,8 @@
 
 // Following defines conditionally include RX path circuitry
 
-`include "usrp_std.vh"
+`include "config.vh"	// resolved relative to project root
+
 module rx_chain
   (input clock,
    input reset,

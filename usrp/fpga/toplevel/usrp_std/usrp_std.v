@@ -27,7 +27,7 @@
 
 // Uncomment the following to include optional circuitry
 
-`include "usrp_std.vh"
+`include "config.vh"
 `include "../../../firmware/include/fpga_regs_common.v"
 `include "../../../firmware/include/fpga_regs_standard.v"
 

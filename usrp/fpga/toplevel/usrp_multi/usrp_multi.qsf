@@ -27,7 +27,7 @@
 # ========================
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 3.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "00:14:04  JULY 13, 2003"
-set_global_assignment -name LAST_QUARTUS_VERSION "5.1 SP1"
+set_global_assignment -name LAST_QUARTUS_VERSION 6.1
 
 # Pin & Location Assignments
 # ==========================
@@ -223,7 +223,7 @@ set_global_assignment -name APEX20K_OPTIMIZATION_TECHNIQUE SPEED
 set_global_assignment -name TOP_LEVEL_ENTITY usrp_multi
 set_global_assignment -name VHDL_SHOW_LMF_MAPPING_MESSAGES OFF
 set_global_assignment -name USER_LIBRARIES "H:\\usrp-for2.7\\fpga\\megacells"
-set_global_assignment -name AUTO_ENABLE_SMART_COMPILE On
+set_global_assignment -name AUTO_ENABLE_SMART_COMPILE ON
 
 # Fitter Assignments
 # ==================
@@ -314,7 +314,7 @@ set_global_assignment -name HCPY_VREF_PINS OFF
 # ========================
 set_global_assignment -name HUB_ENTITY_NAME SLD_HUB
 set_global_assignment -name HUB_INSTANCE_NAME SLD_HUB_INST
-set_global_assignment -name ENABLE_SIGNALTAP Off
+set_global_assignment -name ENABLE_SIGNALTAP OFF
 
 # LogicLock Region Assignments
 # ============================
@@ -326,8 +326,8 @@ set_global_assignment -name LOGICLOCK_INCREMENTAL_COMPILE_ASSIGNMENT OFF
 	# Timing Assignments
 	# ==================
 set_global_assignment -name DUTY_CYCLE 50 -section_id SCLK
-	set_global_assignment -name FMAX_REQUIREMENT "1.0 MHz" -section_id SCLK
-	set_global_assignment -name INCLUDE_EXTERNAL_PIN_DELAYS_IN_FMAX_CALCULATIONS OFF -section_id SCLK
+set_global_assignment -name FMAX_REQUIREMENT "1 MHz" -section_id SCLK
+set_global_assignment -name INCLUDE_EXTERNAL_PIN_DELAYS_IN_FMAX_CALCULATIONS OFF -section_id SCLK
 
 # end CLOCK(SCLK)
 # ---------------
@@ -338,8 +338,8 @@ set_global_assignment -name DUTY_CYCLE 50 -section_id SCLK
 	# Timing Assignments
 	# ==================
 set_global_assignment -name DUTY_CYCLE 50 -section_id master_clk
-	set_global_assignment -name FMAX_REQUIREMENT "64.0 MHz" -section_id master_clk
-	set_global_assignment -name INCLUDE_EXTERNAL_PIN_DELAYS_IN_FMAX_CALCULATIONS OFF -section_id master_clk
+set_global_assignment -name FMAX_REQUIREMENT "64 MHz" -section_id master_clk
+set_global_assignment -name INCLUDE_EXTERNAL_PIN_DELAYS_IN_FMAX_CALCULATIONS OFF -section_id master_clk
 
 # end CLOCK(master_clk)
 # ---------------------
@@ -350,8 +350,8 @@ set_global_assignment -name DUTY_CYCLE 50 -section_id master_clk
 	# Timing Assignments
 	# ==================
 set_global_assignment -name DUTY_CYCLE 50 -section_id usbclk
-	set_global_assignment -name FMAX_REQUIREMENT "48.0 MHz" -section_id usbclk
-	set_global_assignment -name INCLUDE_EXTERNAL_PIN_DELAYS_IN_FMAX_CALCULATIONS OFF -section_id usbclk
+set_global_assignment -name FMAX_REQUIREMENT "48 MHz" -section_id usbclk
+set_global_assignment -name INCLUDE_EXTERNAL_PIN_DELAYS_IN_FMAX_CALCULATIONS OFF -section_id usbclk
 
 # end CLOCK(usbclk)
 # -----------------
@@ -361,18 +361,18 @@ set_global_assignment -name DUTY_CYCLE 50 -section_id usbclk
 
 	# Timing Assignments
 	# ==================
-	set_instance_assignment -name CLOCK_SETTINGS SCLK -to SCLK
-	set_instance_assignment -name CLOCK_SETTINGS usbclk -to usbclk
-	set_instance_assignment -name CLOCK_SETTINGS master_clk -to master_clk
+set_instance_assignment -name CLOCK_SETTINGS SCLK -to SCLK
+set_instance_assignment -name CLOCK_SETTINGS usbclk -to usbclk
+set_instance_assignment -name CLOCK_SETTINGS master_clk -to master_clk
 
 # end ENTITY(usrp_multi)
 # --------------------
 
 
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/rssi.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/setting_reg_masked.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/master_control_multi.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/ram16.v
-set_global_assignment -name VERILOG_FILE usrp_multi.vh
 set_global_assignment -name VERILOG_FILE ../../megacells/fifo_4k.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/hb/acc.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/hb/mult.v

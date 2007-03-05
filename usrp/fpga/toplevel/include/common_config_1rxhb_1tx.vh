@@ -26,9 +26,9 @@
 // ------------------------------------------------------------
 // Define 1 and only one of TX_SINGLE, TX_DUAL and TX_QUAD
 // to respectively enable 1, 2 or 4 transmit channels.
-// [Please note that only TX_DUAL is currently valid]
-//`define TX_SINGLE
-  `define TX_DUAL
+// [Please note that only TX_SINGLE and TX_DUAL are currently valid]
+  `define TX_SINGLE
+//`define TX_DUAL
 //`define TX_QUAD
 
 // ------------------------------------------------------------
@@ -44,8 +44,8 @@
 // Define 1 and only one of RX_SINGLE, RX_DUAL and RX_QUAD
 // to respectively define 1, 2 or 4 receive channels.
 
-//`define RX_SINGLE
-  `define RX_DUAL
+  `define RX_SINGLE
+//`define RX_DUAL
 //`define RX_QUAD
 
 // ------------------------------------------------------------

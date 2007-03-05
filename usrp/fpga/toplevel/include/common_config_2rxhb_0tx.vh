@@ -3,6 +3,7 @@
 //  USRP - Universal Software Radio Peripheral
 //
 //  Copyright (C) 2006 Matt Ettus
+//  Copyright (C) 2006 Martin Dudok van Heel
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -18,7 +19,6 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 51 Franklin Street, Boston, MA  02110-1301  USA
 //
-
 // ------------------------------------------------------------
 // If TX_ON is not defined, there is *no* transmit circuitry built
 // `define TX_ON
@@ -26,7 +26,7 @@
 // ------------------------------------------------------------
 // Define 1 and only one of TX_SINGLE, TX_DUAL and TX_QUAD
 // to respectively enable 1, 2 or 4 transmit channels.
-// [Please note that only TX_DUAL is currently valid]
+// [Please note that only TX_SINGLE and TX_DUAL are currently valid]
 //`define TX_SINGLE
 //`define TX_DUAL
 //`define TX_QUAD
@@ -37,7 +37,7 @@
 //`define TX_HB_ON
 
 // ------------------------------------------------------------
-// IF RX_ON is not defined, there is *no* receive circuitry built
+// IF RX_ON is not defined, there is *no* transmit circuitry built
   `define RX_ON
 
 // ------------------------------------------------------------
@@ -45,12 +45,12 @@
 // to respectively define 1, 2 or 4 receive channels.
 
 //`define RX_SINGLE
-//`define RX_DUAL
-  `define RX_QUAD
+  `define RX_DUAL
+//`define RX_QUAD
 
 // ------------------------------------------------------------
 // Define RX_HB_ON to enable the receive halfband filter
-//`define RX_HB_ON
+  `define RX_HB_ON
 
 // ------------------------------------------------------------
 // Define RX_NCO_ON to enable the receive Numerical Controlled Osc

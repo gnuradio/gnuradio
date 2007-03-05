@@ -133,18 +133,11 @@ EXTRA_DIST =                                           \
 	toplevel/usrp_multi/usrp_multi.qpf             \
 	toplevel/usrp_multi/usrp_multi.qsf             \
 	toplevel/usrp_multi/usrp_multi.v               \
-	toplevel/usrp_multi/usrp_multi.vh              \
-	toplevel/usrp_multi/usrp_multi_config_2rx_0tx.vh   \
-	toplevel/usrp_multi/usrp_multi_config_2rxhb_0tx.vh \
-	toplevel/usrp_multi/usrp_multi_config_2rxhb_2tx.vh \
-	toplevel/usrp_multi/usrp_multi_config_4rx_0tx.vh   \
-	toplevel/usrp_multi/usrp_std.vh                \
+	toplevel/usrp_multi/config.vh		       \
 	toplevel/usrp_std/usrp_std.csf                 \
 	toplevel/usrp_std/usrp_std.esf                 \
 	toplevel/usrp_std/usrp_std.psf                 \
 	toplevel/usrp_std/usrp_std.qpf                 \
 	toplevel/usrp_std/usrp_std.qsf                 \
 	toplevel/usrp_std/usrp_std.v                   \
-	toplevel/usrp_std/usrp_std.vh                  \
-	toplevel/usrp_std/usrp_std_config_2rxhb_2tx.vh \
-	toplevel/usrp_std/usrp_std_config_4rx_0tx.vh
+	toplevel/usrp_std/config.vh		       

@@ -18,7 +18,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 51 Franklin Street, Boston, MA  02110-1301  USA
 //
-`include "usrp_multi.vh"
+`include "config.vh"
 `include "../../../firmware/include/fpga_regs_common.v"
 `include "../../../firmware/include/fpga_regs_standard.v"
 // Clock, enable, and reset controls for whole system

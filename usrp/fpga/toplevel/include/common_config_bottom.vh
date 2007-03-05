@@ -2,7 +2,7 @@
 //
 //  USRP - Universal Software Radio Peripheral
 //
-//  Copyright (C) 2006 Matt Ettus
+//  Copyright (C) 2006,2007 Matt Ettus
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,28 +20,10 @@
 //
 
 // ====================================================================
-//            User control over what parts get included
-//
-//                  >>>> EDIT ONLY THIS SECTION <<<<
-//
-// ====================================================================
-
-// Uncomment this for 1 rx channel (w/ halfband) & 1 transmit channel
-//`include "usrp_std_config_1rxhb_1tx.vh"
-
-// Uncomment this for 2 rx channels (w/ halfband) & 2 transmit channels
-  `include "usrp_std_config_2rxhb_2tx.vh"
-
-// Uncomment this for 4 rx channels (w/o halfband) & 0 transmit channels
-//`include "usrp_std_config_4rx_0tx.vh"
-
-// Add other "known to fit" configurations here...
-
+//	   This is the common tail for standard configuation
 // ====================================================================
 // 
 //                  >>>> DO NOT EDIT BELOW HERE <<<<
-//
-// [The stuff from here down is derived from the stuff included above]
 //
 // N.B., *all* the remainder of the code should be conditionalized
 // only in terms of:
