@@ -49,7 +49,19 @@ if test "$user_set_cxxflags" != yes; then
   autoconf_default_CXXFLAGS="$CXXFLAGS"
   CXXFLAGS=""
   if test "$GXX" = yes; then
-    swig_CXXFLAGS="-g1 -O1"
+    case "$host_os" in
+    	darwin*)
+	if test "$host_cpu" = i386; then
+	   swig_CXXFLAGS="-g1 -O1"
+	else
+	   # "-O1" breaks PPC-OSX for some reason
+	   swig_CXXFLAGS="-g1 -O2"
+	fi	
+	;;
+    	*) 
+	swig_CXXFLAGS="-g1 -O1"
+	;;
+    esac
   fi
 fi
 AC_SUBST(autoconf_default_CXXFLAGS)
