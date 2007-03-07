@@ -38,14 +38,14 @@ def make_gray_constellation(m):
         re = math.cos(theta)
         im = math.sin(theta)
         const_map.append(complex(re, im))   # plug it into the constellation
-    
+        
     # return the constellation; by default, it is normalized
     return const_map
 
 # This makes a constellation that increments around the unit circle
 def make_constellation(m):
     return [cmath.exp(i * 2 * pi / m * 1j) for i in range(m)]
-
+        
 # Common definition of constellations for Tx and Rx
 constellation = {
     2 : make_constellation(2),           # BPSK
@@ -62,7 +62,7 @@ binary_to_gray = {
     4 : [0,1,3,2],
     8 : [0, 1, 3, 2, 7, 6, 4, 5]
     }
-
+   
 # gray to binary
 gray_to_binary = {
     2 : range(2),
@@ -79,7 +79,7 @@ binary_to_ungray = {
     4 : range(4),
     8 : range(8)
     }
-
+    
 # identity mapping
 ungray_to_binary = {
     2 : range(2),

@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2005 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,17 +21,20 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = gr gru gruimpl blks blksimpl blks2 blksimpl2
+# EXTRA_DIST = run_tests.in
+# TESTS = run_tests
 
-grpython_PYTHON = 			\
-	__init__.py			\
-	audio.py			\
-	eng_notation.py			\
-	eng_option.py			\
-	modulation_utils.py		\
-	packet_utils.py			\
-	gr_unittest.py			\
-	optfir.py			\
-	window.py
+grblkspythondir = $(grpythondir)/blksimpl2
 
-CLEANFILES = *.pyc
+grblkspython_PYTHON =		\
+	__init__.py		\
+	dbpsk.py		\
+	dqpsk.py		\
+	d8psk.py		\
+	gmsk.py			\
+	pkt.py			\
+	psk.py
+
+noinst_PYTHON = 		
+
+CLEANFILES = *.pyc *.pyo

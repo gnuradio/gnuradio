@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2005 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,19 +19,19 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
+import glob
+import os.path
 
-SUBDIRS = gr gru gruimpl blks blksimpl blks2 blksimpl2
+# Semi-hideous kludge to import everything in the blksimpl2 directory
+# into the gnuradio.blks2 namespace.  This keeps us from having to remember 
+# to manually update this file.
 
-grpython_PYTHON = 			\
-	__init__.py			\
-	audio.py			\
-	eng_notation.py			\
-	eng_option.py			\
-	modulation_utils.py		\
-	packet_utils.py			\
-	gr_unittest.py			\
-	optfir.py			\
-	window.py
-
-CLEANFILES = *.pyc
+for p in __path__:
+    filenames = glob.glob (os.path.join (p, "..", "blksimpl2", "*.py"))
+    for f in filenames:
+        f = os.path.basename(f).lower()
+        f = f[:-3]
+        if f == '__init__':
+            continue
+        # print f
+        exec "from gnuradio.blksimpl2.%s import *" % (f,)

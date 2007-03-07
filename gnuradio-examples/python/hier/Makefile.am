@@ -21,6 +21,7 @@
 
 SUBDIRS = \
     audio \
+    digital \
     ofdm \
     networking \
     sounder \

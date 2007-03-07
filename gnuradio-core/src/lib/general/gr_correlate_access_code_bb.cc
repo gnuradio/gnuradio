@@ -88,7 +88,7 @@ gr_correlate_access_code_bb::work (int noutput_items,
 {
   const unsigned char *in = (const unsigned char *) input_items[0];
   unsigned char *out = (unsigned char *) output_items[0];
-  
+
   for (int i = 0; i < noutput_items; i++){
 
     // compute output value
@@ -109,9 +109,12 @@ gr_correlate_access_code_bb::work (int noutput_items,
     // test for access code with up to threshold errors
     new_flag = (nwrong <= d_threshold);
 
-#if 0   
+#if VERBOSE
     if(new_flag) {
-      printf("%llx  ==>  %llx  :  d_flip=%u\n", d_access_code, d_data_reg, d_flip);
+      fprintf(stderr, "access code found: %llx\n", d_access_code);
+    }
+    else {
+      fprintf(stderr, "%llx  ==>  %llx\n", d_access_code, d_data_reg);
     }
 #endif
 

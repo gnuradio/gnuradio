@@ -20,6 +20,7 @@
 # 
 
 EXTRA_DIST = 			\
-	usrp_fft.py
+	usrp_fft.py		\
+	usrp_siggen.py
 
 MOSTLYCLEANFILES = *.pyc *~

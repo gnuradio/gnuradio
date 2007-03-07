@@ -19,19 +19,17 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
-
-SUBDIRS = gr gru gruimpl blks blksimpl blks2 blksimpl2
-
-grpython_PYTHON = 			\
-	__init__.py			\
-	audio.py			\
-	eng_notation.py			\
-	eng_option.py			\
-	modulation_utils.py		\
-	packet_utils.py			\
-	gr_unittest.py			\
-	optfir.py			\
-	window.py
-
-CLEANFILES = *.pyc
+EXTRA_DIST =			\
+	README			\
+	benchmark_loopback.py	\
+	benchmark_rx.py		\
+	benchmark_tx.py		\
+	fusb_options.py		\
+	pick_bitrate.py		\
+	receive_path.py		\
+	receive_path_lb.py	\
+	rx_voice.py		\
+	transmit_path.py	\
+	transmit_path_lb.py	\
+	tunnel.py		\
+	tx_voice.py		

@@ -37,7 +37,7 @@ _def_bt = 0.35
 _def_verbose = False
 _def_log = False
 
-_def_gain_mu = None
+_def_gain_mu = 0.05
 _def_mu = 0.5
 _def_freq_error = 0.0
 _def_omega_relative_limit = 0.005
@@ -47,9 +47,9 @@ _def_omega_relative_limit = 0.005
 #                              GMSK modulator
 # /////////////////////////////////////////////////////////////////////////////
 
-class gmsk_mod(gr.hier_block):
+class gmsk_mod(gr.hier_block2):
 
-    def __init__(self, fg,
+    def __init__(self,
                  samples_per_symbol=_def_samples_per_symbol,
                  bt=_def_bt,
                  verbose=_def_verbose,
@@ -61,8 +61,6 @@ class gmsk_mod(gr.hier_block):
 	The input is a byte stream (unsigned char) and the
 	output is the complex modulated signal at baseband.
 
-	@param fg: flow graph
-	@type fg: flow graph
 	@param samples_per_symbol: samples per baud >= 2
 	@type samples_per_symbol: integer
 	@param bt: Gaussian filter bandwidth * symbol time
@@ -73,7 +71,10 @@ class gmsk_mod(gr.hier_block):
         @type debug: bool       
 	"""
 
-        self._fg = fg
+        gr.hier_block2.__init__(self, "gmsk_mod",
+                                gr.io_signature(1,1,gr.sizeof_char),       # Input signature
+                                gr.io_signature(1,1,gr.sizeof_gr_complex)) # Output signature
+
         self._samples_per_symbol = samples_per_symbol
         self._bt = bt
 
@@ -102,15 +103,22 @@ class gmsk_mod(gr.hier_block):
 	# FM modulation
 	self.fmmod = gr.frequency_modulator_fc(sensitivity)
 		
+        # Define components from objects
+        self.define_component("nrz", self.nrz)
+        self.define_component("gaussian_filter", self.gaussian_filter)
+        self.define_component("fmmod", self.fmmod)
+
+	# Connect components
+        self.connect("self", 0, "nrz", 0)
+        self.connect("nrz", 0, "gaussian_filter", 0)
+        self.connect("gaussian_filter", 0, "fmmod", 0)
+        self.connect("fmmod", 0, "self", 0)
+
         if verbose:
             self._print_verbage()
          
         if log:
             self._setup_logging()
-
-	# Connect & Initialize base class
-	self._fg.connect(self.nrz, self.gaussian_filter, self.fmmod)
-	gr.hier_block.__init__(self, self._fg, self.nrz, self.fmmod)
 
     def samples_per_symbol(self):
         return self._samples_per_symbol
@@ -127,13 +135,13 @@ class gmsk_mod(gr.hier_block):
 
     def _setup_logging(self):
         print "Modulation logging turned on."
-        self._fg.connect(self.nrz,
-                         gr.file_sink(gr.sizeof_float, "nrz.dat"))
-        self._fg.connect(self.gaussian_filter,
-                         gr.file_sink(gr.sizeof_float, "gaussian_filter.dat"))
-        self._fg.connect(self.fmmod,
-                         gr.file_sink(gr.sizeof_gr_complex, "fmmod.dat"))
+        self.define_component("nrz_dat", gr.file_sink(gr.sizeof_float, "tx_nrz.dat"))
+        self.define_component("gaussian_filter_dat", gr.file_sink(gr.sizeof_float, "tx_gaussian_filter.dat"))
+        self.define_component("fmmod_dat", gr.file_sink(gr.sizeof_gr_complex, "tx_fmmod.dat"))
 
+        self.connect("nrz", 0, "nrz_dat", 0)
+        self.connect("gaussian_filter", 0, "gaussian_filter_dat", 0)
+        self.connect("fmmod", 0, "fmmod_dat", 0)
 
     def add_options(parser):
         """
@@ -158,9 +166,9 @@ class gmsk_mod(gr.hier_block):
 #                            GMSK demodulator
 # /////////////////////////////////////////////////////////////////////////////
 
-class gmsk_demod(gr.hier_block):
+class gmsk_demod(gr.hier_block2):
 
-    def __init__(self, fg,
+    def __init__(self,
                  samples_per_symbol=_def_samples_per_symbol,
                  gain_mu=_def_gain_mu,
                  mu=_def_mu,
@@ -175,8 +183,6 @@ class gmsk_demod(gr.hier_block):
 	The input is the complex modulated signal at baseband.
 	The output is a stream of bits packed 1 bit per byte (the LSB)
 
-	@param fg: flow graph
-	@type fg: flow graph
 	@param samples_per_symbol: samples per baud
 	@type samples_per_symbol: integer
         @param verbose: Print information about modulator?
@@ -196,7 +202,10 @@ class gmsk_demod(gr.hier_block):
         @param float
 	"""
 
-        self._fg = fg
+        gr.hier_block2.__init__(self, "gmsk_demod",
+                                gr.io_signature(1,1,gr.sizeof_gr_complex), # Input signature
+                                gr.io_signature(1,1,gr.sizeof_char))       # Output signature
+
         self._samples_per_symbol = samples_per_symbol
         self._gain_mu = gain_mu
         self._mu = mu
@@ -208,9 +217,6 @@ class gmsk_demod(gr.hier_block):
 
         self._omega = samples_per_symbol*(1+self._freq_error)
 
-        if not self._gain_mu:
-            self._gain_mu = 0.175
-            
 	self._gain_omega = .25 * self._gain_mu * self._gain_mu        # critically damped
 
 	# Demodulate FM
@@ -226,15 +232,22 @@ class gmsk_demod(gr.hier_block):
         # slice the floats at 0, outputting 1 bit (the LSB of the output byte) per sample
         self.slicer = gr.binary_slicer_fb()
 
+        # Define components from objects
+        self.define_component("fmdemod", self.fmdemod)
+        self.define_component("clock_recovery", self.clock_recovery)
+        self.define_component("slicer", self.slicer)
+
+	# Connect components
+        self.connect("self", 0, "fmdemod", 0)
+        self.connect("fmdemod", 0, "clock_recovery", 0)
+        self.connect("clock_recovery", 0, "slicer", 0)
+        self.connect("slicer", 0, "self", 0)
+
         if verbose:
             self._print_verbage()
          
         if log:
             self._setup_logging()
-
-	# Connect & Initialize base class
-	self._fg.connect(self.fmdemod, self.clock_recovery, self.slicer)
-	gr.hier_block.__init__(self, self._fg, self.fmdemod, self.slicer)
 
     def samples_per_symbol(self):
         return self._samples_per_symbol
@@ -242,7 +255,6 @@ class gmsk_demod(gr.hier_block):
     def bits_per_symbol(self=None):   # staticmethod that's also callable on an instance
         return 1
     bits_per_symbol = staticmethod(bits_per_symbol)      # make it a static method.
-
 
     def _print_verbage(self):
         print "bits per symbol = %d" % self.bits_per_symbol()
@@ -255,12 +267,13 @@ class gmsk_demod(gr.hier_block):
 
     def _setup_logging(self):
         print "Demodulation logging turned on."
-        self._fg.connect(self.fmdemod,
-                        gr.file_sink(gr.sizeof_float, "fmdemod.dat"))
-        self._fg.connect(self.clock_recovery,
-                        gr.file_sink(gr.sizeof_float, "clock_recovery.dat"))
-        self._fg.connect(self.slicer,
-                        gr.file_sink(gr.sizeof_char, "slicer.dat"))
+        self.define_component("fmdemod_dat", gr.file_sink(gr.sizeof_float, "rx_fmdemod.dat"))
+        self.define_component("clock_recovery_dat", gr.file_sink(gr.sizeof_float, "rx_clock_recovery.dat"))
+        self.define_component("slicer_dat", gr.file_sink(gr.sizeof_char, "rx_slicer.dat"))
+
+        self.connect("fmdemod", 0, "fmdemod_dat", 0)
+        self.connect("clock_recovery", 0, "clock_recovery_dat", 0)
+        self.connect("slicer", 0, "slicer_dat", 0)
 
     def add_options(parser):
         """

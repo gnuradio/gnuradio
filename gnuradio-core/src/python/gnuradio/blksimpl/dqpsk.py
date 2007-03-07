@@ -39,9 +39,9 @@ _def_gray_code = True
 _def_verbose = False
 _def_log = False
 
-_def_costas_alpha = None
-_def_gain_mu = 0.03
-_def_mu = 0.05
+_def_costas_alpha = 0.15
+_def_gain_mu = None
+_def_mu = 0.5
 _def_omega_relative_limit = 0.005
 
 
@@ -133,22 +133,23 @@ class dqpsk_mod(gr.hier_block):
     bits_per_symbol = staticmethod(bits_per_symbol)      # make it a static method.  RTFM
 
     def _print_verbage(self):
-        print "bits per symbol = %d" % self.bits_per_symbol()
-        print "Gray code = %s" % self._gray_code
-        print "RRS roll-off factor = %f" % self._excess_bw
+        print "\nModulator:"
+        print "bits per symbol:     %d" % self.bits_per_symbol()
+        print "Gray code:           %s" % self._gray_code
+        print "RRS roll-off factor: %f" % self._excess_bw
 
     def _setup_logging(self):
         print "Modulation logging turned on."
         self._fg.connect(self.bytes2chunks,
-                         gr.file_sink(gr.sizeof_char, "bytes2chunks.dat"))
+                         gr.file_sink(gr.sizeof_char, "tx_bytes2chunks.dat"))
         self._fg.connect(self.symbol_mapper,
-                         gr.file_sink(gr.sizeof_char, "graycoder.dat"))
+                         gr.file_sink(gr.sizeof_char, "tx_graycoder.dat"))
         self._fg.connect(self.diffenc,
-                         gr.file_sink(gr.sizeof_char, "diffenc.dat"))        
+                         gr.file_sink(gr.sizeof_char, "tx_diffenc.dat"))        
         self._fg.connect(self.chunks2symbols,
-                         gr.file_sink(gr.sizeof_gr_complex, "chunks2symbols.dat"))
+                         gr.file_sink(gr.sizeof_gr_complex, "tx_chunks2symbols.dat"))
         self._fg.connect(self.rrc_filter,
-                         gr.file_sink(gr.sizeof_gr_complex, "rrc_filter.dat"))
+                         gr.file_sink(gr.sizeof_gr_complex, "tx_rrc_filter.dat"))
 
     def add_options(parser):
         """
@@ -221,9 +222,9 @@ class dqpsk_demod(gr.hier_block):
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
         self._costas_alpha = costas_alpha
-        self._gain_mu = gain_mu
-        self._mu = mu
-        self._omega_relative_limit = omega_relative_limit
+        self._mm_gain_mu = gain_mu
+        self._mm_mu = mu
+        self._mm_omega_relative_limit = omega_relative_limit
         self._gray_code = gray_code
 
         if samples_per_symbol < 2:
@@ -235,53 +236,47 @@ class dqpsk_demod(gr.hier_block):
         scale = (1.0/16384.0)
         self.pre_scaler = gr.multiply_const_cc(scale)   # scale the signal from full-range to +-1
         #self.agc = gr.agc2_cc(0.6e-1, 1e-3, 1, 1, 100)
-        self.agc = gr.feedforward_agc_cc(16, 1.0)
+        self.agc = gr.feedforward_agc_cc(16, 2.0)
        
-        # Costas loop (carrier tracking)
-        if self._costas_alpha is None:   # If no alpha value was specified by the user
-            alpha_dir = {2:0.075, 3:0.09, 4:0.09, 5:0.095, 6:0.10, 7:0.105}
-            self._costas_alpha = alpha_dir[self._samples_per_symbol]
-        
-        costas_order = 4        
-        # The value of beta is now set to be underdamped; this value can have a huge impact on the
-        # performance of QPSK. Set to 0.25 for critically damped or higher for underdamped responses.
-        beta = .35 * self._costas_alpha * self._costas_alpha
-        self.costas_loop = gr.costas_loop_cc(self._costas_alpha, beta, 0.02, -0.02, costas_order)
-
         # RRC data filter
         ntaps = 11 * samples_per_symbol
         self.rrc_taps = gr.firdes.root_raised_cosine(
-            self._samples_per_symbol, # gain
+            1.0,                      # gain
             self._samples_per_symbol, # sampling rate
             1.0,                      # symbol rate
             self._excess_bw,          # excess bandwidth (roll-off factor)
             ntaps)
+        self.rrc_filter=gr.interp_fir_filter_ccf(1, self.rrc_taps)        
 
-        self.rrc_filter=gr.fir_filter_ccf(1, self.rrc_taps)
+        if not self._mm_gain_mu:
+            sbs_to_mm = {2: 0.050, 3: 0.075, 4: 0.11, 5: 0.125, 6: 0.15, 7: 0.15}
+            self._mm_gain_mu = sbs_to_mm[samples_per_symbol]
 
-        # symbol clock recovery
-        omega = self._samples_per_symbol
-        gain_omega = .25 * self._gain_mu * self._gain_mu
-        self.clock_recovery=gr.clock_recovery_mm_cc(omega, gain_omega,
-                                                    self._mu, self._gain_mu,
-                                                    self._omega_relative_limit)
+        self._mm_omega = self._samples_per_symbol
+        self._mm_gain_omega = .25 * self._mm_gain_mu * self._mm_gain_mu
+        self._costas_beta  = 0.25 * self._costas_alpha * self._costas_alpha
+        fmin = -0.025
+        fmax = 0.025
+        
+        self.receiver=gr.mpsk_receiver_cc(arity, pi/4.0,
+                                          self._costas_alpha, self._costas_beta,
+                                          fmin, fmax,
+                                          self._mm_mu, self._mm_gain_mu,
+                                          self._mm_omega, self._mm_gain_omega,
+                                          self._mm_omega_relative_limit)
 
+        # Perform Differential decoding on the constellation
         self.diffdec = gr.diff_phasor_cc()
-        #self.diffdec = gr.diff_decoder_bb(arity)
-
+        
         # find closest constellation point
         rot = 1
-        #rot = .707 + .707j
         rotated_const = map(lambda pt: pt * rot, psk.constellation[arity])
-        #print "rotated_const = %s" % rotated_const
-
         self.slicer = gr.constellation_decoder_cb(rotated_const, range(arity))
 
         if self._gray_code:
             self.symbol_mapper = gr.map_bb(psk.gray_to_binary[arity])
         else:
             self.symbol_mapper = gr.map_bb(psk.ungray_to_binary[arity])
-
         
         # unpack the k bit vector into a stream of bits
         self.unpack = gr.unpack_k_bits_bb(self.bits_per_symbol())
@@ -293,10 +288,8 @@ class dqpsk_demod(gr.hier_block):
             self._setup_logging()
  
         # Connect & Initialize base class
-        self._fg.connect(self.pre_scaler, self.agc, self.costas_loop,
-                         self.rrc_filter, self.clock_recovery,
-                         self.diffdec, self.slicer, self.symbol_mapper,
-                         self.unpack)
+        self._fg.connect(self.pre_scaler, self.agc, self.rrc_filter, self.receiver,
+                         self.diffdec, self.slicer, self.symbol_mapper, self.unpack)
         gr.hier_block.__init__(self, self._fg, self.pre_scaler, self.unpack)
 
     def samples_per_symbol(self):
@@ -307,39 +300,36 @@ class dqpsk_demod(gr.hier_block):
     bits_per_symbol = staticmethod(bits_per_symbol)      # make it a static method.  RTFM
 
     def _print_verbage(self):
-        print "bits per symbol = %d"         % self.bits_per_symbol()
-        print "Gray code = %s"               % self._gray_code
-        print "RRC roll-off factor = %.2f"   % self._excess_bw
-        print "Costas Loop alpha = %.5f"     % self._costas_alpha
-        print "M&M symbol sync gain = %.5f"  % self._gain_mu
-        print "M&M symbol sync mu = %.5f"    % self._mu
-        print "M&M omega relative limit = %.5f" % self._omega_relative_limit
-        
+        print "\nDemodulator:"
+        print "bits per symbol:     %d"   % self.bits_per_symbol()
+        print "Gray code:           %s"   % self._gray_code
+        print "RRC roll-off factor: %.2f" % self._excess_bw
+        print "Costas Loop alpha:   %.2e" % self._costas_alpha
+        print "Costas Loop beta:    %.2e" % self._costas_beta
+        print "M&M mu:              %.2f" % self._mm_mu
+        print "M&M mu gain:         %.2e" % self._mm_gain_mu
+        print "M&M omega:           %.2f" % self._mm_omega
+        print "M&M omega gain:      %.2e" % self._mm_gain_omega
+        print "M&M omega limit:     %.2f" % self._mm_omega_relative_limit
 
     def _setup_logging(self):
         print "Modulation logging turned on."
         self._fg.connect(self.pre_scaler,
-                         gr.file_sink(gr.sizeof_gr_complex, "prescaler.dat"))
+                         gr.file_sink(gr.sizeof_gr_complex, "rx_prescaler.dat"))
         self._fg.connect(self.agc,
-                         gr.file_sink(gr.sizeof_gr_complex, "agc.dat"))
-        self._fg.connect(self.costas_loop,
-                         gr.file_sink(gr.sizeof_gr_complex, "costas_loop.dat"))
-        self._fg.connect((self.costas_loop,1),
-                         gr.file_sink(gr.sizeof_gr_complex, "costas_error.dat"))
+                         gr.file_sink(gr.sizeof_gr_complex, "rx_agc.dat"))
         self._fg.connect(self.rrc_filter,
-                         gr.file_sink(gr.sizeof_gr_complex, "rrc_filter.dat"))
-        self._fg.connect(self.clock_recovery,
-                         gr.file_sink(gr.sizeof_gr_complex, "clock_recovery.dat"))
-        self._fg.connect((self.clock_recovery,1),
-                        gr.file_sink(gr.sizeof_gr_complex, "clock_recovery_error.dat"))
+                         gr.file_sink(gr.sizeof_gr_complex, "rx_rrc_filter.dat"))
+        self._fg.connect(self.receiver,
+                         gr.file_sink(gr.sizeof_gr_complex, "rx_receiver.dat"))
         self._fg.connect(self.diffdec,
-                         gr.file_sink(gr.sizeof_gr_complex, "diffdec.dat"))        
+                         gr.file_sink(gr.sizeof_gr_complex, "rx_diffdec.dat"))        
         self._fg.connect(self.slicer,
-                         gr.file_sink(gr.sizeof_char, "slicer.dat"))
+                         gr.file_sink(gr.sizeof_char, "rx_slicer.dat"))
         self._fg.connect(self.symbol_mapper,
-                         gr.file_sink(gr.sizeof_char, "gray_decoder.dat"))
+                         gr.file_sink(gr.sizeof_char, "rx_gray_decoder.dat"))
         self._fg.connect(self.unpack,
-                         gr.file_sink(gr.sizeof_char, "unpack.dat"))
+                         gr.file_sink(gr.sizeof_char, "rx_unpack.dat"))
 
     def add_options(parser):
         """
@@ -350,7 +340,7 @@ class dqpsk_demod(gr.hier_block):
         parser.add_option("", "--no-gray-code", dest="gray_code",
                           action="store_false", default=_def_gray_code,
                           help="disable gray coding on modulated bits (PSK)")
-        parser.add_option("", "--costas-alpha", type="float", default=None,
+        parser.add_option("", "--costas-alpha", type="float", default=_def_costas_alpha,
                           help="set Costas loop alpha value [default=%default] (PSK)")
         parser.add_option("", "--gain-mu", type="float", default=_def_gain_mu,
                           help="set M&M symbol sync loop gain mu value [default=%default] (PSK)")

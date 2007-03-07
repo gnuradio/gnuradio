@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2006 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,19 +19,13 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
-
-SUBDIRS = gr gru gruimpl blks blksimpl blks2 blksimpl2
-
-grpython_PYTHON = 			\
-	__init__.py			\
-	audio.py			\
-	eng_notation.py			\
-	eng_option.py			\
-	modulation_utils.py		\
-	packet_utils.py			\
-	gr_unittest.py			\
-	optfir.py			\
-	window.py
-
-CLEANFILES = *.pyc
+def add_options(parser):
+    """
+    Add Fast USB specifc options to command line parser.
+    
+    @param parser: instance of OptionParser
+    """
+    parser.add_option("-B", "--fusb-block-size", type="int", default=0,
+                      help="specify fast usb block size [default=%default]")
+    parser.add_option("-N", "--fusb-nblocks", type="int", default=0,
+                      help="specify number of fast usb blocks [default=%default]")

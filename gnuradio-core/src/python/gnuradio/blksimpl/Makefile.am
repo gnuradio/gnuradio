@@ -31,6 +31,7 @@ grblkspython_PYTHON =		\
 	am_demod.py		\
 	dbpsk.py		\
 	dqpsk.py		\
+	d8psk.py		\
 	filterbank.py		\
 	fm_demod.py		\
 	fm_emph.py		\
@@ -39,6 +40,11 @@ grblkspython_PYTHON =		\
 	nbfm_tx.py		\
 	pkt.py			\
 	psk.py			\
+	qam.py			\
+	qam8.py			\
+	qam16.py		\
+	qam64.py		\
+	qam256.py		\
 	rational_resampler.py	\
 	standard_squelch.py	\
 	wfm_rcv.py		\

@@ -72,7 +72,7 @@ def conv_1_0_string_to_packed_binary_string(s):
 default_access_code = \
   conv_packed_binary_string_to_1_0_string('\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC')
 preamble = \
-  conv_packed_binary_string_to_1_0_string('\x6C\xC6\x6C\xC6\x6C\xC6\x6C\xC6')
+  conv_packed_binary_string_to_1_0_string('\xA4\xF2')
 
 def is_1_0_string(s):
     if not isinstance(s, str):
@@ -103,7 +103,7 @@ def make_header(payload_len, whitener_offset=0):
 
 def make_packet(payload, samples_per_symbol, bits_per_symbol,
                 access_code=default_access_code, pad_for_usrp=True,
-                whitener_offset=0):
+                whitener_offset=0, whitening=True):
     """
     Build a packet, given access code, payload, and whitener offset
 
@@ -135,8 +135,13 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
     if L > MAXLEN:
         raise ValueError, "len(payload) must be in [0, %d]" % (MAXLEN,)
 
-    pkt = ''.join((packed_preamble, packed_access_code, make_header(L, whitener_offset),
-                   whiten(payload_with_crc, whitener_offset), '\x55'))
+    if whitening:
+        pkt = ''.join((packed_preamble, packed_access_code, make_header(L, whitener_offset),
+                       whiten(payload_with_crc, whitener_offset), '\x55'))
+    else:
+        pkt = ''.join((packed_preamble, packed_access_code, make_header(L, whitener_offset),
+                       (payload_with_crc), '\x55'))
+
     if pad_for_usrp:
         pkt = pkt + (_npadding_bytes(len(pkt), samples_per_symbol, bits_per_symbol) * '\x55')
 
@@ -165,13 +170,18 @@ def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
     return byte_modulus - r
     
 
-def unmake_packet(whitened_payload_with_crc, whitener_offset=0):
+def unmake_packet(whitened_payload_with_crc, whitener_offset=0, dewhitening=True):
     """
     Return (ok, payload)
 
     @param whitened_payload_with_crc: string
     """
-    payload_with_crc = dewhiten(whitened_payload_with_crc, whitener_offset)
+
+    if dewhitening:
+        payload_with_crc = dewhiten(whitened_payload_with_crc, whitener_offset)
+    else:
+        payload_with_crc = (whitened_payload_with_crc)
+
     ok, payload = gru.check_crc32(payload_with_crc)
 
     if 0:

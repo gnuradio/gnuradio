@@ -39,8 +39,8 @@ _def_gray_code = True
 _def_verbose = False
 _def_log = False
 
-_def_costas_alpha = 0.1
-_def_gain_mu = None
+_def_costas_alpha = 0.15
+_def_gain_mu = 0.1
 _def_mu = 0.5
 _def_omega_relative_limit = 0.005
 
@@ -49,9 +49,8 @@ _def_omega_relative_limit = 0.005
 #                             DBPSK modulator
 # /////////////////////////////////////////////////////////////////////////////
 
-class dbpsk_mod(gr.hier_block):
-
-    def __init__(self, fg,
+class dbpsk_mod(gr.hier_block2):
+    def __init__(self,
                  samples_per_symbol=_def_samples_per_symbol,
                  excess_bw=_def_excess_bw,
                  gray_code=_def_gray_code,
@@ -63,8 +62,6 @@ class dbpsk_mod(gr.hier_block):
 	The input is a byte stream (unsigned char) and the
 	output is the complex modulated signal at baseband.
         
-	@param fg: flow graph
-	@type fg: flow graph
 	@param samples_per_symbol: samples per baud >= 2
 	@type samples_per_symbol: integer
 	@param excess_bw: Root-raised cosine filter excess bandwidth
@@ -77,7 +74,10 @@ class dbpsk_mod(gr.hier_block):
         @type log: bool
 	"""
 
-        self._fg = fg
+        gr.hier_block2.__init__(self, "dbpsk_mod",
+                                gr.io_signature(1,1,gr.sizeof_char), # Input signature
+                                gr.io_signature(1,1,gr.sizeof_gr_complex)) # Output signature
+
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
         self._gray_code = gray_code
@@ -113,18 +113,25 @@ class dbpsk_mod(gr.hier_block):
 	self.rrc_filter = gr.interp_fir_filter_ccf(self._samples_per_symbol,
                                                    self.rrc_taps)
 
-	# Connect
-        fg.connect(self.bytes2chunks, self.symbol_mapper, self.diffenc,
-                   self.chunks2symbols, self.rrc_filter)
+        self.define_component("bytes2chunks", self.bytes2chunks)
+        self.define_component("symbol_mapper", self.symbol_mapper)
+        self.define_component("diffenc", self.diffenc)
+        self.define_component("chunks2symbols", self.chunks2symbols)
+        self.define_component("rrc_filter", self.rrc_filter)
+
+	# Connect components
+        self.connect("self", 0, "bytes2chunks", 0)
+        self.connect("bytes2chunks", 0, "symbol_mapper", 0)
+        self.connect("symbol_mapper", 0, "diffenc", 0)
+        self.connect("diffenc", 0, "chunks2symbols", 0)
+        self.connect("chunks2symbols", 0, "rrc_filter", 0)
+        self.connect("rrc_filter", 0, "self", 0)
 
         if verbose:
             self._print_verbage()
             
         if log:
             self._setup_logging()
-            
-	# Initialize base class
-	gr.hier_block.__init__(self, self._fg, self.bytes2chunks, self.rrc_filter)
 
     def samples_per_symbol(self):
         return self._samples_per_symbol
@@ -155,22 +162,28 @@ class dbpsk_mod(gr.hier_block):
 
     def _print_verbage(self):
         print "\nModulator:"
-        print "bits per symbol:     %d" % self.bits_per_symbol()
-        print "Gray code:           %s" % self._gray_code
-        print "RRC roll-off factor: %.2f" % self._excess_bw
+        print "bits per symbol = %d" % self.bits_per_symbol()
+        print "Gray code = %s" % self._gray_code
+        print "RRC roll-off factor = %.2f" % self._excess_bw
 
     def _setup_logging(self):
         print "Modulation logging turned on."
-        self._fg.connect(self.bytes2chunks,
-                         gr.file_sink(gr.sizeof_char, "tx_bytes2chunks.dat"))
-        self._fg.connect(self.symbol_mapper,
-                         gr.file_sink(gr.sizeof_char, "tx_graycoder.dat"))
-        self._fg.connect(self.diffenc,
-                         gr.file_sink(gr.sizeof_char, "tx_diffenc.dat"))
-        self._fg.connect(self.chunks2symbols,
-                         gr.file_sink(gr.sizeof_gr_complex, "tx_chunks2symbols.dat"))
-        self._fg.connect(self.rrc_filter,
-                         gr.file_sink(gr.sizeof_gr_complex, "tx_rrc_filter.dat"))
+        self.define_component("bytes2chunks_dat",
+                              gr.file_sink(gr.sizeof_char, "tx_bytes2chunks.dat"))
+        self.define_component("symbol_mapper_dat",
+                              gr.file_sink(gr.sizeof_char, "tx_symbol_mapper.dat"))
+        self.define_component("diffenc_dat",
+                              gr.file_sink(gr.sizeof_char, "tx_diffenc.dat"))
+        self.define_component("chunks2symbols_dat",
+                              gr.file_sink(gr.sizeof_gr_complex, "tx_chunks2symbols.dat"))
+        self.define_component("rrc_filter_dat",
+                              gr.file_sink(gr.sizeof_gr_complex, "tx_rrc_filter.dat"))
+
+        self.connect("bytes2chunks", 0, "bytes2chunks_dat", 0)
+        self.connect("symbol_mapper", 0, "symbol_mapper_dat", 0)
+        self.connect("diffenc", 0, "diffenc_dat", 0)
+        self.connect("chunks2symbols", 0, "chunks2symbols_dat", 0)
+        self.connect("rrc_filter", 0, "rrc_filter_dat", 0)
               
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -179,9 +192,9 @@ class dbpsk_mod(gr.hier_block):
 #      Differentially coherent detection of differentially encoded BPSK
 # /////////////////////////////////////////////////////////////////////////////
 
-class dbpsk_demod(gr.hier_block):
+class dbpsk_demod(gr.hier_block2):
 
-    def __init__(self, fg,
+    def __init__(self,
                  samples_per_symbol=_def_samples_per_symbol,
                  excess_bw=_def_excess_bw,
                  costas_alpha=_def_costas_alpha,
@@ -197,8 +210,6 @@ class dbpsk_demod(gr.hier_block):
 	The input is the complex modulated signal at baseband.
 	The output is a stream of bits packed 1 bit per byte (LSB)
 
-	@param fg: flow graph
-	@type fg: flow graph
 	@param samples_per_symbol: samples per symbol >= 2
 	@type samples_per_symbol: float
 	@param excess_bw: Root-raised cosine filter excess bandwidth
@@ -218,8 +229,12 @@ class dbpsk_demod(gr.hier_block):
         @param debug: Print modualtion data to files?
         @type debug: bool
 	"""
+
+        gr.hier_block2.__init__(self, "dbpsk_demod",
+                                gr.io_signature(1,1,gr.sizeof_gr_complex), # Input signature
+                                gr.io_signature(1,1,gr.sizeof_char))       # Output signature
+
         
-        self._fg = fg
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
         self._costas_alpha = costas_alpha
@@ -237,8 +252,9 @@ class dbpsk_demod(gr.hier_block):
         scale = (1.0/16384.0)
         self.pre_scaler = gr.multiply_const_cc(scale)   # scale the signal from full-range to +-1
         #self.agc = gr.agc2_cc(0.6e-1, 1e-3, 1, 1, 100)
-        self.agc = gr.feedforward_agc_cc(16, 2.0)
+        self.agc = gr.feedforward_agc_cc(16, 1.0)
 
+        
         # RRC data filter
         ntaps = 11 * samples_per_symbol
         self.rrc_taps = gr.firdes.root_raised_cosine(
@@ -250,23 +266,20 @@ class dbpsk_demod(gr.hier_block):
         self.rrc_filter=gr.interp_fir_filter_ccf(1, self.rrc_taps)        
 
         # symbol clock recovery
-        if not self._mm_gain_mu:
-            self._mm_gain_mu = 0.1
-            
         self._mm_omega = self._samples_per_symbol
         self._mm_gain_omega = .25 * self._mm_gain_mu * self._mm_gain_mu
         self._costas_beta  = 0.25 * self._costas_alpha * self._costas_alpha
-        fmin = -0.025
-        fmax = 0.025
+        fmin = -0.02
+        fmax = 0.02
         
         self.receiver=gr.mpsk_receiver_cc(arity, 0,
-                                         self._costas_alpha, self._costas_beta,
-                                         fmin, fmax,
-                                         self._mm_mu, self._mm_gain_mu,
-                                         self._mm_omega, self._mm_gain_omega,
-                                         self._mm_omega_relative_limit)
+                                          self._costas_alpha, self._costas_beta,
+                                          fmin, fmax,
+                                          self._mm_mu, self._mm_gain_mu,
+                                          self._mm_omega, self._mm_gain_omega,
+                                          self._mm_omega_relative_limit)
 
-        # Do differential decoding based on phase change of symbols
+        # Using differential decoding
         self.diffdec = gr.diff_phasor_cc()
 
         # find closest constellation point
@@ -282,16 +295,32 @@ class dbpsk_demod(gr.hier_block):
         # unpack the k bit vector into a stream of bits
         self.unpack = gr.unpack_k_bits_bb(self.bits_per_symbol())
 
+        # Define components
+        self.define_component("pre_scaler", self.pre_scaler)
+        self.define_component("agc", self.agc)
+        self.define_component("rrc_filter", self.rrc_filter)
+        self.define_component("receiver", self.receiver)
+        self.define_component("slicer", self.slicer)
+        self.define_component("diffdec", self.diffdec)
+        self.define_component("symbol_mapper", self.symbol_mapper)
+        self.define_component("unpack", self.unpack)
+
+        # Connect and Initialize base class
+        self.connect("self", 0, "pre_scaler", 0)
+        self.connect("pre_scaler", 0, "agc", 0)
+        self.connect("agc", 0, "rrc_filter", 0)
+        self.connect("rrc_filter", 0, "receiver", 0)
+        self.connect("receiver", 0, "diffdec", 0)
+        self.connect("diffdec", 0, "slicer", 0)
+        self.connect("slicer", 0, "symbol_mapper", 0)
+        self.connect("symbol_mapper", 0, "unpack", 0)
+        self.connect("unpack", 0, "self", 0)
+        
         if verbose:
             self._print_verbage()
 
         if log:
             self._setup_logging()
-
-        # Connect and Initialize base class
-        self._fg.connect(self.pre_scaler, self.agc, self.rrc_filter, self.receiver,
-                         self.diffdec, self.slicer, self.symbol_mapper, self.unpack)
-        gr.hier_block.__init__(self, self._fg, self.pre_scaler, self.unpack)
 
     def samples_per_symbol(self):
         return self._samples_per_symbol
@@ -314,23 +343,33 @@ class dbpsk_demod(gr.hier_block):
         print "M&M omega limit:     %.2f" % self._mm_omega_relative_limit
 
     def _setup_logging(self):
-        print "Modulation logging turned on."
-        self._fg.connect(self.pre_scaler,
-                         gr.file_sink(gr.sizeof_gr_complex, "rx_prescaler.dat"))
-        self._fg.connect(self.agc,
-                         gr.file_sink(gr.sizeof_gr_complex, "rx_agc.dat"))
-        self._fg.connect(self.rrc_filter,
-                         gr.file_sink(gr.sizeof_gr_complex, "rx_rrc_filter.dat"))
-        self._fg.connect(self.receiver,
-                         gr.file_sink(gr.sizeof_gr_complex, "rx_receiver.dat"))
-        self._fg.connect(self.diffdec,
-                         gr.file_sink(gr.sizeof_gr_complex, "rx_diffdec.dat"))        
-        self._fg.connect(self.slicer,
-                        gr.file_sink(gr.sizeof_char, "rx_slicer.dat"))
-        self._fg.connect(self.symbol_mapper,
-                         gr.file_sink(gr.sizeof_char, "rx_symbol_mapper.dat"))
-        self._fg.connect(self.unpack,
-                         gr.file_sink(gr.sizeof_char, "rx_unpack.dat"))
+        print "Demodulation logging turned on."
+        self.define_component("prescaler_dat",
+                              gr.file_sink(gr.sizeof_gr_complex, "rx_prescaler.dat"))
+        self.define_component("agc_dat",
+                              gr.file_sink(gr.sizeof_gr_complex, "rx_agc.dat"))
+        self.define_component("rrc_filter_dat",
+                              gr.file_sink(gr.sizeof_gr_complex, "rx_rrc_filter.dat"))
+        self.define_component("receiver_dat",
+                              gr.file_sink(gr.sizeof_gr_complex, "rx_receiver.dat"))
+        self.define_component("diffdec_dat",
+                              gr.file_sink(gr.sizeof_gr_complex, "rx_diffdec.dat"))
+        self.define_component("slicer_dat",
+                              gr.file_sink(gr.sizeof_char, "rx_slicer.dat"))
+        self.define_component("symbol_mapper_dat",
+                              gr.file_sink(gr.sizeof_char, "rx_symbol_mapper.dat"))
+        self.define_component("unpack_dat",
+                              gr.file_sink(gr.sizeof_char, "rx_unpack.dat"))
+
+        self.connect("pre_scaler", 0, "prescaler_dat", 0)
+        self.connect("agc", 0, "agc_dat", 0)
+        self.connect("rrc_filter", 0, "rrc_filter_dat", 0)
+        self.connect("receiver", 0, "receiver_dat", 0)
+        self.connect("diffdec", 0, "diffdec_dat", 0)
+        self.connect("slicer", 0, "slicer_dat", 0)
+        self.connect("symbol_mapper", 0, "symbol_mapper_dat", 0)
+        self.connect("unpack", 0, "unpack_dat", 0)
+
         
     def add_options(parser):
         """
@@ -356,7 +395,7 @@ class dbpsk_demod(gr.hier_block):
         Given command line options, create dictionary suitable for passing to __init__
         """
         return modulation_utils.extract_kwargs_from_options(
-                 dbpsk_demod.__init__, ('self', 'fg'), options)
+                 dbpsk_demod.__init__, ('self'), options)
     extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
 #
 # Add these to the mod/demod registry

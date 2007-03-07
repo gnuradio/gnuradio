@@ -45,6 +45,8 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
         gnuradio-core/src/python/gnuradio/Makefile \
         gnuradio-core/src/python/gnuradio/blks/Makefile \
         gnuradio-core/src/python/gnuradio/blksimpl/Makefile \
+        gnuradio-core/src/python/gnuradio/blks2/Makefile \
+        gnuradio-core/src/python/gnuradio/blksimpl2/Makefile \
         gnuradio-core/src/python/gnuradio/gr/Makefile \
         gnuradio-core/src/python/gnuradio/gr/run_tests \
         gnuradio-core/src/python/gnuradio/gru/Makefile \

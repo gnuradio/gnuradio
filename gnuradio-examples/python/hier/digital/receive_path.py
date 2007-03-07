@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, blks
+from gnuradio import gr, gru, blks2
 from gnuradio import usrp
 from gnuradio import eng_notation
 import copy
@@ -33,8 +33,11 @@ from pick_bitrate import pick_rx_bitrate
 #                              receive path
 # /////////////////////////////////////////////////////////////////////////////
 
-class receive_path(gr.hier_block):
-    def __init__(self, fg, demod_class, rx_callback, options):
+class receive_path(gr.hier_block2):
+    def __init__(self, demod_class, rx_callback, options):
+        gr.hier_block2.__init__(self, "receive_path",
+                                gr.io_signature(0,0,0), # Input signature
+                                gr.io_signature(0,0,0)) # Output signature
 
         options = copy.copy(options)    # make a copy so we can destructively modify
 
@@ -93,27 +96,35 @@ class receive_path(gr.hier_block):
         # complex in and out, float taps
         self.chan_filt = gr.fft_filter_ccc(sw_decim, chan_coeffs)
         #self.chan_filt = gr.fir_filter_ccf(sw_decim, chan_coeffs)
-
         # receiver
         self.packet_receiver = \
-            blks.demod_pkts(fg,
-                            self._demod_class(fg, **demod_kwargs),
-                            access_code=None,
-                            callback=self._rx_callback,
-                            threshold=-1)
-    
+            blks2.demod_pkts(self._demod_class(**demod_kwargs),
+                             access_code=None,
+                             callback=self._rx_callback,
+                             threshold=-1)
+
         # Carrier Sensing Blocks
         alpha = 0.001
         thresh = 30   # in dB, will have to adjust
         self.probe = gr.probe_avg_mag_sqrd_c(thresh,alpha)
-        fg.connect(self.chan_filt, self.probe)
 
         # Display some information about the setup
         if self._verbose:
             self._print_verbage()
             
-        fg.connect(self.u, self.chan_filt, self.packet_receiver)
-        gr.hier_block.__init__(self, fg, None, None)
+        # Define the components
+        self.define_component("usrp", self.u)
+        self.define_component("channel_filter", gr.fft_filter_ccc(sw_decim, chan_coeffs))
+        self.define_component("channel_probe", self.probe)
+        self.define_component("packet_receiver", self.packet_receiver)
+
+        # connect the channel input filter to the carrier power detector
+        self.connect("usrp", 0, "channel_filter", 0)
+        self.connect("channel_filter", 0, "channel_probe", 0)
+
+        # connect channel filter to the packet receiver
+        self.connect("channel_filter", 0, "packet_receiver", 0)
+        
 
     def _setup_usrp_source(self):
         self.u = usrp.source_c (fusb_block_size=self._fusb_block_size,
@@ -237,7 +248,6 @@ class receive_path(gr.hier_block):
         print "samples/symbol:  %3d"   % (self._samples_per_symbol)
         print "decim:           %3d"   % (self._decim)
         print "Rx Frequency:    %s"    % (eng_notation.num_to_str(self._rx_freq))
-        # print "Rx Frequency:    %f"    % (self._rx_freq)
 
 def add_freq_option(parser):
     """

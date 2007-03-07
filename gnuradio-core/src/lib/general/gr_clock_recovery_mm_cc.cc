@@ -133,47 +133,90 @@ gr_clock_recovery_mm_cc::general_work (int noutput_items,
   float mm_val=0;
   gr_complex u, x, y;
 
-  while(oo < noutput_items && ii < ni) {
-    d_p_2T = d_p_1T;
-    d_p_1T = d_p_0T;
-    d_p_0T = d_interp->interpolate (&in[ii], d_mu);
+  // This loop writes the error to the second output, if it exists
+  if (write_foptr) {
+    while(oo < noutput_items && ii < ni) {
+      d_p_2T = d_p_1T;
+      d_p_1T = d_p_0T;
+      d_p_0T = d_interp->interpolate (&in[ii], d_mu);
 
-    d_c_2T = d_c_1T;
-    d_c_1T = d_c_0T;
-    d_c_0T = slicer_0deg(d_p_0T);
-
-    x = (d_c_0T - d_c_2T) * conj(d_p_1T);
-    y = (d_p_0T - d_p_2T) * conj(d_c_1T);
-    u = y - x;
-    mm_val = u.real();
-    out[oo++] = d_p_0T;
-
-    // limit mm_val
-    if (mm_val > 1.0)
-      mm_val = 1.0;
-    else if (mm_val < -1.0)
-      mm_val = -1.0;
-
-    d_omega = d_omega + d_gain_omega * mm_val;
-    if (d_omega > d_max_omega)
-      d_omega = d_max_omega;
-    else if (d_omega < d_min_omega)
-      d_omega = d_min_omega;
-
-    d_mu = d_mu + d_omega + d_gain_mu * mm_val;
-    ii += (int)floor(d_mu);
-    d_mu -= floor(d_mu);
-
-    if(d_verbose) {
+      d_c_2T = d_c_1T;
+      d_c_1T = d_c_0T;
+      d_c_0T = slicer_0deg(d_p_0T);
+      
+      x = (d_c_0T - d_c_2T) * conj(d_p_1T);
+      y = (d_p_0T - d_p_2T) * conj(d_c_1T);
+      u = y - x;
+      mm_val = u.real();
+      out[oo++] = d_p_0T;
+      
+      // limit mm_val
+      if (mm_val > 1.0)
+	mm_val = 1.0;
+      else if (mm_val < -1.0)
+	mm_val = -1.0;
+      
+      d_omega = d_omega + d_gain_omega * mm_val;
+      if (d_omega > d_max_omega)
+	d_omega = d_max_omega;
+      else if (d_omega < d_min_omega)
+	d_omega = d_min_omega;
+      
+      d_mu = d_mu + d_omega + d_gain_mu * mm_val;
+      ii += (int)floor(d_mu);
+      d_mu -= floor(d_mu);
+      
+      #if 0
       printf("%f\t%f\n", d_omega, d_mu);
-    }
-
-    // write the error signal to the second output
-    if (write_foptr)
+      #endif
+      
+      // write the error signal to the second output
       foptr[oo-1] = gr_complex(d_mu,0);
+      
+      if (ii < 0)	// clamp it.  This should only happen with bogus input
+	ii = 0;
+    }
+  }
+  // This loop does not write to the second output (ugly, but faster)
+  else {
+    while(oo < noutput_items && ii < ni) {
+      d_p_2T = d_p_1T;
+      d_p_1T = d_p_0T;
+      d_p_0T = d_interp->interpolate (&in[ii], d_mu);
 
-    if (ii < 0)	// clamp it.  This should only happen with bogus input
-      ii = 0;
+      d_c_2T = d_c_1T;
+      d_c_1T = d_c_0T;
+      d_c_0T = slicer_0deg(d_p_0T);
+      
+      x = (d_c_0T - d_c_2T) * conj(d_p_1T);
+      y = (d_p_0T - d_p_2T) * conj(d_c_1T);
+      u = y - x;
+      mm_val = u.real();
+      out[oo++] = d_p_0T;
+      
+      // limit mm_val
+      if (mm_val > 1.0)
+	mm_val = 1.0;
+      else if (mm_val < -1.0)
+	mm_val = -1.0;
+      
+      d_omega = d_omega + d_gain_omega * mm_val;
+      if (d_omega > d_max_omega)
+	d_omega = d_max_omega;
+      else if (d_omega < d_min_omega)
+	d_omega = d_min_omega;
+      
+      d_mu = d_mu + d_omega + d_gain_mu * mm_val;
+      ii += (int)floor(d_mu);
+      d_mu -= floor(d_mu);
+      
+      if(d_verbose) {
+	printf("%f\t%f\n", d_omega, d_mu);
+      }
+            
+      if (ii < 0)	// clamp it.  This should only happen with bogus input
+	ii = 0;
+    }
   }
 
   if (ii > 0){
