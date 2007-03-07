@@ -31,7 +31,7 @@ from gnuradio import audio
 from gnuradio import blks
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import stdgui, fftsink, scopesink, slider, form
-import usrp_dbid
+from usrpm import usrp_dbid
 
 from Numeric import convolve, array
 

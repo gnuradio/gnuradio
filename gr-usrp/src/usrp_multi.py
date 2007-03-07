@@ -25,7 +25,7 @@ from gnuradio.gr import hier_block_base
 from gnuradio import usrp
 from gnuradio import usrp1              # usrp Rev 1 and later
 from gnuradio import blks
-import usrp_prims
+from usrpm import usrp_prims
 import sys
 
 

@@ -20,7 +20,7 @@
 # 
 
 import math
-import usrp_dbid
+from usrpm import usrp_dbid
 import db_base
 import db_instantiator
 

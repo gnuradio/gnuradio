@@ -8,7 +8,7 @@ from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
 from gnuradio.wxgui import stdgui, fftsink, form
 from optparse import OptionParser
-import usrp_dbid
+from usrpm import usrp_dbid
 import sys
 import math
 import wx

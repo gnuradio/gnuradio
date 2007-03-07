@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-import usrp_prims
+from usrpm import usrp_prims
 
 # Copy everything that starts with FR_ or bmFR_ from the usrp_prims
 # name space into our name space.  This is effectively a python binding for

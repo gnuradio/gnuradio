@@ -1,7 +1,7 @@
 #
 #  USRP - Universal Software Radio Peripheral
 # 
-#  Copyright (C) 2003,2004,2006 Free Software Foundation, Inc.
+#  Copyright (C) 2003,2004,2006,2007 Free Software Foundation, Inc.
 # 
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -137,7 +137,7 @@ noinst_HEADERS =			\
 	rate_to_regval.h		\
 	usrp_local_sighandler.h		
 
-python_PYTHON =				\
+usrppython_PYTHON =			\
 	usrp_dbid.py			
 
 noinst_PYTHON =				\

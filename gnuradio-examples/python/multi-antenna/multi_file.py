@@ -8,7 +8,7 @@ from gnuradio import optfir
 from optparse import OptionParser
 from gnuradio.wxgui import stdgui, fftsink, waterfallsink, scopesink, form, slider
 import wx
-import usrp_dbid
+from usrpm import usrp_dbid
 import time
 import os.path
 import sys

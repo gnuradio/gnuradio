@@ -21,11 +21,11 @@
 
 
 
-import usrp_prims
-import usrp_dbid
+from usrpm import usrp_prims
+from usrpm import usrp_dbid
 from gnuradio import usrp1              # usrp Rev 1 and later
 from gnuradio import gru
-from usrp_fpga_regs import *
+from usrpm.usrp_fpga_regs import *
 
 FPGA_MODE_NORMAL   = usrp1.FPGA_MODE_NORMAL
 FPGA_MODE_LOOPBACK = usrp1.FPGA_MODE_LOOPBACK

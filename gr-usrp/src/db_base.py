@@ -19,9 +19,9 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-import usrp_prims
 import weakref
-from usrp_fpga_regs import *
+from usrpm import usrp_prims
+from usrpm.usrp_fpga_regs import *
 
 class db_base(object):
     """

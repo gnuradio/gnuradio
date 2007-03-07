@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2003,2004,2006 Free Software Foundation, Inc.
+# Copyright 2001,2003,2004,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,11 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/usrp_prims
+ourpythondir = $(usrppythondir)
+ourlibdir    = $(usrppyexecdir)
 
-ourpythondir = $(pythondir)
-ourlibdir    = $(pyexecdir)
 
 INCLUDES = $(USRP_INCLUDES) 		\
 	   $(PYTHON_CPPFLAGS) 		\

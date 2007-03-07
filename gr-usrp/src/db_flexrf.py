@@ -22,10 +22,10 @@
 from gnuradio import usrp1
 import time,math
 
-import usrp_dbid
+from usrpm import usrp_dbid
 import db_base
 import db_instantiator
-from usrp_fpga_regs import *
+from usrpm.usrp_fpga_regs import *
 
 #debug_using_gui = True                  # Must be set to True or False
 debug_using_gui = False                  # Must be set to True or False

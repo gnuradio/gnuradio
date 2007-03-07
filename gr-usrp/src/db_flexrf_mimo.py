@@ -22,10 +22,10 @@
 from gnuradio import usrp1
 import time,math
 
-import usrp_dbid
+from usrpm import usrp_dbid
 import db_base
 import db_instantiator
-from usrp_fpga_regs import *
+from usrpm.usrp_fpga_regs import *
 from db_flexrf import *
 
 # self._u.fpga_master_clock_freq()

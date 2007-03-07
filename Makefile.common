@@ -28,12 +28,20 @@ grincludedir   = $(includedir)/gnuradio
 # swig includes 
 swigincludedir = $(grincludedir)/swig
 
-# Install this stuff in the appropriate subdirectory
+# Install the gnuradio stuff in the appropriate subdirectory
 # This usually ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio
 
 grpythondir = $(pythondir)/gnuradio
 grpyexecdir = $(pyexecdir)/gnuradio
+
+# Install the non-gnuradio usrp stuff in the appropriate subdirectory
+# This usually ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/usrpm
+
+usrppythondir = $(pythondir)/usrpm
+usrppyexecdir = $(pyexecdir)/usrpm
+
 
 # swig flags
 SWIGPYTHONFLAGS = -fvirtual -python -modern

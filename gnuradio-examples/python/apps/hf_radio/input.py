@@ -7,7 +7,7 @@
  
 from gnuradio import gr, gru, optfir
 from gnuradio import usrp
-import usrp_dbid
+from usrpm import usrp_dbid
 import math
 
 # Put special knowlege of usrp here.

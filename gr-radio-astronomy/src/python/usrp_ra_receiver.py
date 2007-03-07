@@ -22,7 +22,7 @@
 
 from gnuradio import gr, gru
 from gnuradio import usrp
-import usrp_dbid
+from usrpm import usrp_dbid
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import stdgui, ra_fftsink, ra_stripchartsink, ra_waterfallsink, form, slider

@@ -17,7 +17,7 @@ from gnuradio import audio
 from gnuradio import blks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
-import usrp_dbid
+from usrpm import usrp_dbid
 import math
 import sys
 

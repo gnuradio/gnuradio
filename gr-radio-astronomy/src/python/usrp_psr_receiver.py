@@ -30,7 +30,7 @@
 #
 #
 from gnuradio import gr, gru, blks, audio
-import usrp_dbid
+from usrpm import usrp_dbid
 from gnuradio import usrp, optfir
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
