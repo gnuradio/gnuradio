@@ -1,0 +1,258 @@
+#
+# Copyright 2007 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License along
+# with this program; if not, write to the Free Software Foundation, Inc.,
+# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+
+This is preliminary design document on the organization of the host
+component of the USRP inband signaling implementation over USB.
+
+Assumptions: we'll have a single usrp_usb_daemon, implemented as an
+mblock, that will provide the high-level message based interface to
+the USRP.  The daemon will handle all resource allocation, muxing and
+demuxing for the control and status messages from multiple clients.
+
+The underlying cross-process IPC mechanism is not yet specified.
+All communication will be via messages.
+
+The external interface to the usrp_usb_daemon will consist of two sets
+of replicated ports, one set for the transmit, and one set for
+receive.
+
+
+// ------------------------------------------------------------------------
+
+// Protocol class usrp_usb_common
+// Defined from client's point-of-view
+//
+// This protocol class is shared by the usrp_usb_tx and usrp_usb_rx
+// protocol classes
+
+// outgoing:
+
+cmd_allocate_channel(invocation_handle, channel, capacity_reservation)
+
+invocation_handle
+Type	Handle
+Use	The identifier provided by the client to tag the method invocation.
+	The identifier will be returned with the response, to provide
+	the client with a mechanism to match asynchronous responses with
+	commands that generated them.
+
+channel
+Type	integer
+Use	Specifies the Tx channel to allocate
+
+capacity_reservation
+Type	float, units are bytes/s
+Use	Specifies the number of bytes/s of USB capacity to reserve for
+	this channel.
+
+
+// incoming:
+
+response_allocate_channel(invocation_handle, status)
+
+Type	Handle
+Use	The identifier provided by the client in the prompting invocation.
+	The identifier is returned with the response, so that the
+	client has a mechanism to match asynchronous responses with
+	commands that generated them.  The value of the	invocation_handle
+	is opaque to the server, and is not required by the server to be unique.
+
+Type	Status
+Use	Contains the status code for the operation, per FIXME, and
+	an optional message.
+
+Preconditions:
+  a) None
+  
+Postconditions:
+  a) If successful, the requested channel and USB capacity are
+     allocated for the client's exclusive use.
+
+
+// outgoing:
+
+cmd_deallocate_channel(invocation_handle, channel)
+
+invocation_handle
+Type	Handle
+Use	The identifier provided by the client to tag the method invocation.
+	The identifier will be returned with the response, to provide
+	the client with a mechanism to match asynchronous responses with
+	commands that generated them.
+
+channel
+Type	integer
+Use	Specifies the Tx channel to deallocate
+
+
+// incoming:
+
+response_deallocate_channel(invocation_handle, status)
+
+Type	Handle
+Use	The identifier provided by the client in the prompting invocation.
+	The identifier is returned with the response, so that the
+	client has a mechanism to match asynchronous responses with
+	commands that generated them.  The value of the	invocation_handle
+	is opaque to the server, and is not required by the server to be unique.
+
+Type	Status
+Use	Contains the status code for the operation, per FIXME, and
+	an optional message.
+
+Preconditions:
+  a) None
+  
+Postconditions: 
+  a) If successful, the requested channel and associated USB capacity
+     are deallocated, and return to the pool of available resources.
+
+
+// ------------------------------------------------------------------------
+
+// Protocol class usrp_usb_tx inherits from usrp_usb_common 
+// Defined from client's point-of-view
+
+// outgoing:
+
+cmd_xmit_raw_frame(invocation_handle, channel, samples, timestamp)
+
+invocation_handle
+Type	Handle
+Use	The identifier provided by the client to tag the method invocation.
+	The identifier will be returned with the response, to provide
+	the client with a mechanism to match asynchronous responses with
+	commands that generated them.
+
+channel
+Type	integer
+Use	Specifies the channel that the frame of samples shall be transmitted on.
+
+samples
+Type	homogenous vector of unsigned char
+Use	These samples must already be in the appropriate format for parsing
+	by the USRP FPGA.  The required format depends on the
+	configuration associated with this channel.  No conversion of
+	the samples takes place in this method.  Samples will be split
+	into multiple USB data packets as required for transport
+	across the USB.
+
+timestamp
+Type	32-bit integer
+Use	Specifies the time at which the first sample in samples
+	shall be sent to the D/A converter.  The format and
+	interpretation of time is as specified in
+	inband-signaling-usb.
+
+
+// incoming:
+
+response_xmit_raw_frame(invocation_handle, status)
+
+Type	Handle
+Use	The identifier provided by the client in the prompting invocation.
+	The identifier is returned with the response, so that the
+	client has a mechanism to match asynchronous responses with
+	commands that generated them.  The value of the	invocation_handle
+	is opaque to the server, and is not required by the server to be unique.
+
+Type	Status
+Use	Contains the status code for the operation, per FIXME, and
+	an optional message.
+
+Preconditions:
+  a) The specified channel is allocated to this client
+  
+Postconditions: 
+  a) If successful, the samples of the frame have been queued for
+     transmission to the USRP.
+
+
+// ------------------------------------------------------------------------
+
+// Protocol class usrp_usb_rx inherits from usrp_usb_common 
+// Defined from client's point-of-view
+
+
+// outgoing:
+
+cmd_recv_raw_samples(invocation_handle, channel)
+
+invocation_handle
+Type	Handle
+Use	The identifier provided by the client to tag the method invocation.
+	The identifier will be returned with the response, to provide
+	the client with a mechanism to match asynchronous responses with
+	commands that generated them.
+
+channel
+Type	integer
+Use	Specifies the channel that the samples shall be received from.
+
+The client may issue multiple cmd_recv_raw_samples commands to ensure
+an uninterrupted flow of samples.  The appropriate number of
+outstanding cmds to issue is TBD, but is at least 2.
+
+[Discussion: I'm not sure if this is really the interface we want.  
+We may want to provide an enable/disable method, and then just begin
+streaming samples.  Or, we may wan to implement packet boundary
+detection in the FPGA, and then return a frame's worth of samples
+(potentially in multiple pieces).
+
+It may be that we need to different modes, one for packet based
+reception and one for continuous streaming.]
+
+
+// incoming:
+
+response_recv_raw_samples(invocation_handle, samples, timestamp, properties)
+
+Type	Handle
+Use	The identifier provided by the client in the prompting invocation.
+	The identifier is returned with the response, so that the
+	client has a mechanism to match asynchronous responses with
+	commands that generated them.  The value of the	invocation_handle
+	is opaque to the server, and is not required by the server to be unique.
+
+samples
+Type	homogenous vector of unsigned char
+Use	Samples as returned by the USRP FPGA.  The format of the
+	returned samples depends on the configuration associated with
+	this channel.  No conversion or unpacking of samples takes place in
+	this method.
+
+timestamp
+Type	32-bit integer
+Use	Specifies the time at which the first sample in samples
+	was received from the A/D converter.  The format and
+	interpretation of time is as specified in
+	inband-signaling-usb.
+
+properties
+Type	Map
+Use	Returns additional (key, value) pairs associated with the
+	reception of these samples.  In particular, the map may contain
+	the Received Strength Signal Indication (RSSI) reported by the
+	front end at the time the first sample was received from the A/D.
+
+// ------------------------------------------------------------------------
+
+To do: control and configuration messages...
+
