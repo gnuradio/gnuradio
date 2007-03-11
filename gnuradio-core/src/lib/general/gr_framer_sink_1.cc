@@ -57,6 +57,11 @@ gr_framer_sink_1::enter_have_header(int payload_len, int whitener_offset)
   if (VERBOSE)
     fprintf(stderr, "@ enter_have_header (payload_len = %d) (offset = %d)\n", payload_len, whitener_offset);
 
+  if (payload_len < 4) {	// should be at least the length of the CRC field
+    enter_search();
+    return;
+  }
+
   d_state = STATE_HAVE_HEADER;
   d_packetlen = payload_len;
   d_packet_whitener_offset = whitener_offset;
