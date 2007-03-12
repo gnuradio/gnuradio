@@ -28,6 +28,8 @@ def gen_and_append_crc32(s):
     return s + struct.pack(">I", hexint(crc))
 
 def check_crc32(s):
+    if len(s) < 4:
+        return (False, '')
     msg = s[:-4]
     #print "msg = '%s'" % (msg,)
     actual = gr.crc32(msg)

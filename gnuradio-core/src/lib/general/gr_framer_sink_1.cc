@@ -57,11 +57,6 @@ gr_framer_sink_1::enter_have_header(int payload_len, int whitener_offset)
   if (VERBOSE)
     fprintf(stderr, "@ enter_have_header (payload_len = %d) (offset = %d)\n", payload_len, whitener_offset);
 
-  if (payload_len < 4) {	// should be at least the length of the CRC field
-    enter_search();
-    return;
-  }
-
   d_state = STATE_HAVE_HEADER;
   d_packetlen = payload_len;
   d_packet_whitener_offset = whitener_offset;
@@ -132,13 +127,25 @@ gr_framer_sink_1::work (int noutput_items,
 	  // we have a full header, check to see if it has been received properly
 	  if (header_ok()){
 	    int payload_len;
-	    int payload_offset;
-	    header_payload(&payload_len, &payload_offset);
-	    enter_have_header(payload_len, payload_offset);
+	    int whitener_offset;
+	    header_payload(&payload_len, &whitener_offset);
+	    enter_have_header(payload_len, whitener_offset);
+
+	    if (d_packetlen == 0){	    // check for zero-length payload
+	      // build a zero-length message
+	      // NOTE: passing header field as arg1 is not scalable
+	      gr_message_sptr msg =
+		gr_make_message(0, d_packet_whitener_offset, 0, 0);
+	      
+	      d_target_queue->insert_tail(msg);		// send it
+	      msg.reset();  				// free it up
+
+	      enter_search();				
+	    }
 	  }
 	  else
-	    enter_search();				// no.
-	  break;			// we're in a new state
+	    enter_search();				// bad header
+	  break;					// we're in a new state
 	}
       }
       break;
@@ -157,7 +164,8 @@ gr_framer_sink_1::work (int noutput_items,
 
 	    // build a message
 	    // NOTE: passing header field as arg1 is not scalable
-	    gr_message_sptr msg = gr_make_message(0, d_packet_whitener_offset, 0, d_packetlen_cnt);  	    
+	    gr_message_sptr msg =
+	      gr_make_message(0, d_packet_whitener_offset, 0, d_packetlen_cnt);
 	    memcpy(msg->msg(), d_packet, d_packetlen_cnt);
 
 	    d_target_queue->insert_tail(msg);		// send it
