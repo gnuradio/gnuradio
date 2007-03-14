@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2007 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -25,21 +25,21 @@
 #endif
 
 #include <gr_io_signature.h>
-#include <gr_fractional_interpolator.h>
-#include <gri_mmse_fir_interpolator.h>
+#include <gr_fractional_interpolator_cc.h>
+#include <gri_mmse_fir_interpolator_cc.h>
 #include <stdexcept>
 
 // Public constructor
-gr_fractional_interpolator_sptr gr_make_fractional_interpolator(float phase_shift, float interp_ratio)
+gr_fractional_interpolator_cc_sptr gr_make_fractional_interpolator_cc(float phase_shift, float interp_ratio)
 {
-  return gr_fractional_interpolator_sptr(new gr_fractional_interpolator(phase_shift, interp_ratio));
+  return gr_fractional_interpolator_cc_sptr(new gr_fractional_interpolator_cc(phase_shift, interp_ratio));
 }
 
-gr_fractional_interpolator::gr_fractional_interpolator(float phase_shift, float interp_ratio)
-  : gr_block ("fractional_interpolator",
+gr_fractional_interpolator_cc::gr_fractional_interpolator_cc(float phase_shift, float interp_ratio)
+  : gr_block ("fractional_interpolator_cc",
 	      gr_make_io_signature (1, 1, sizeof (float)),
 	      gr_make_io_signature (1, 1, sizeof (float))),
-    d_mu (phase_shift), d_mu_inc (interp_ratio), d_interp()
+    d_mu (phase_shift), d_mu_inc (interp_ratio), d_interp(new gri_mmse_fir_interpolator_cc())
 {
   if (interp_ratio <=  0)
     throw std::out_of_range ("interpolation ratio must be > 0");
@@ -49,13 +49,13 @@ gr_fractional_interpolator::gr_fractional_interpolator(float phase_shift, float 
   set_relative_rate (1.0 / interp_ratio);
 }
 
-gr_fractional_interpolator::~gr_fractional_interpolator()
+gr_fractional_interpolator_cc::~gr_fractional_interpolator_cc()
 {
-    delete d_interp;
+  delete d_interp;
 }
 
 void
-gr_fractional_interpolator::forecast(int noutput_items, gr_vector_int &ninput_items_required)
+gr_fractional_interpolator_cc::forecast(int noutput_items, gr_vector_int &ninput_items_required)
 {
   unsigned ninputs = ninput_items_required.size();
   for (unsigned i=0; i < ninputs; i++)
@@ -65,24 +65,20 @@ gr_fractional_interpolator::forecast(int noutput_items, gr_vector_int &ninput_it
 }
 
 int
-gr_fractional_interpolator::general_work(int noutput_items,
-					 gr_vector_int &ninput_items,
-					 gr_vector_const_void_star &input_items,
-					 gr_vector_void_star &output_items)
+gr_fractional_interpolator_cc::general_work(int noutput_items,
+					    gr_vector_int &ninput_items,
+					    gr_vector_const_void_star &input_items,
+					    gr_vector_void_star &output_items)
 {
-  const float *in = (const float *) input_items[0];
-  float *out = (float *) output_items[0];
+  const gr_complex *in = (const gr_complex *) input_items[0];
+  gr_complex *out = (gr_complex *) output_items[0];
 
   int 	ii = 0;				// input index
   int  	oo = 0;				// output index
 
-  while (oo < noutput_items){
-
-    // produce output sample
+  while (oo < noutput_items) {
 
     out[oo++] = d_interp->interpolate(&in[ii], d_mu);
-
-    //  printf( "%4d %9.6f\n", ii, d_mu);
 
     double s = d_mu + d_mu_inc;
     double f = floor (s);

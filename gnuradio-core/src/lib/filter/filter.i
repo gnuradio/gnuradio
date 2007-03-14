@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2005,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2005,2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,6 +28,8 @@
 #include <gr_filter_delay_fc.h>
 #include <gr_fft_filter_ccc.h>
 #include <gr_fft_filter_fff.h>
+#include <gr_fractional_interpolator_ff.h>
+#include <gr_fractional_interpolator_cc.h>
 #include <gr_goertzel_fc.h>
 #include <gr_cma_equalizer_cc.h>
 %}
@@ -39,6 +41,8 @@
 %include "gr_filter_delay_fc.i"
 %include "gr_fft_filter_ccc.i"
 %include "gr_fft_filter_fff.i"
+%include "gr_fractional_interpolator_ff.i"
+%include "gr_fractional_interpolator_cc.i"
 %include "gr_goertzel_fc.i"
 %include "gr_cma_equalizer_cc.i"
 

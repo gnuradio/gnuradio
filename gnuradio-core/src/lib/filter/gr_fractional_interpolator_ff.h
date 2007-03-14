@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2007 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -20,43 +20,48 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_FRACTIONAL_INTERPOLATOR_H
-#define	INCLUDED_GR_FRACTIONAL_INTERPOLATOR_H
+#ifndef INCLUDED_GR_FRACTIONAL_INTERPOLATOR_FF_H
+#define	INCLUDED_GR_FRACTIONAL_INTERPOLATOR_FF_H
 
 #include <gr_block.h>
 
 class gri_mmse_fir_interpolator;
 
-class gr_fractional_interpolator;
-typedef boost::shared_ptr<gr_fractional_interpolator> gr_fractional_interpolator_sptr;
+class gr_fractional_interpolator_ff;
+typedef boost::shared_ptr<gr_fractional_interpolator_ff> gr_fractional_interpolator_ff_sptr;
 
 // public constructor
-gr_fractional_interpolator_sptr gr_make_fractional_interpolator (float phase_shift, float interp_ratio);
+gr_fractional_interpolator_ff_sptr gr_make_fractional_interpolator_ff (float phase_shift, float interp_ratio);
 
 /*!
  * \brief Interpolating mmse filter with float input, float output
  * \ingroup filter
  */
-class gr_fractional_interpolator : public gr_block
+class gr_fractional_interpolator_ff : public gr_block
 {
- public:
-  ~gr_fractional_interpolator ();
+public:
+  ~gr_fractional_interpolator_ff ();
   void forecast(int noutput_items, gr_vector_int &ninput_items_required);
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,
 		    gr_vector_const_void_star &input_items,
 		    gr_vector_void_star &output_items);
 
-protected:
-  gr_fractional_interpolator (float phase_shift, float interp_ratio);
+  float mu() const { return d_mu;}
+  float interp_ratio() const { return d_mu_inc;}
+  void set_mu (float mu) { d_mu = mu; }
+  void set_interp_ratio (float interp_ratio) { d_mu_inc = interp_ratio; }
 
- private:
+protected:
+  gr_fractional_interpolator_ff (float phase_shift, float interp_ratio);
+
+private:
   float 			d_mu;
   float 			d_mu_inc;
   gri_mmse_fir_interpolator 	*d_interp;
 
-  friend gr_fractional_interpolator_sptr
-    gr_make_fractional_interpolator (float phase_shift, float interp_ratio);
+  friend gr_fractional_interpolator_ff_sptr
+  gr_make_fractional_interpolator_ff (float phase_shift, float interp_ratio);
 };
 
 #endif
