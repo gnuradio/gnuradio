@@ -21,7 +21,7 @@ dnl
 
 dnl Configure paths for library qwt.
 dnl
-dnl GR_PATH_QWT([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
+dnl GR_QWT([ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
 dnl
 dnl Test for library qwt, set QWT_CFLAGS and QWT_LIBS if found. Assumes 
 dnl QT_CFLAGS and QT_LIBS have already been correctly set.
@@ -76,7 +76,7 @@ AC_DEFUN([GR_QWT],
     AC_TRY_LINK([#include <qwt/qwt_text.h>],
 		[Qt::TextFormat tf = QwtText::defaultFormat()],
 		[],
-                [libqwt_ok=no]
+                [libqwt_ok=no;AC_MSG_RESULT([unable to link QWT library])]
     )
 
     dnl Restore saved variables
