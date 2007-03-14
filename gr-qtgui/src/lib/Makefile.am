@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -48,7 +48,7 @@ BUILT_SOURCES = 			\
 
 nodist_qt_examples_SOURCES =		\
 	$(BUILT_SOURCES)
-	
+
 qt_examples_SOURCES = 			\
 	fftdisplay.cc			\
 	qt_examples.cc
@@ -56,10 +56,6 @@ qt_examples_SOURCES = 			\
 qt_examples_LDADD = $(QWT_LIBS) 	\
 		    $(QT_LIBS)		\
 		    $(GNURADIO_CORE_LA)
-
-
-qt_examples_LDFLAGS = $(QT_CFLAGS) 	\
-		      $(QWT_CFLAGS)
 
 MOSTLYCLEANFILES = 			\
 	*~ $(BUILT_SOURCES)

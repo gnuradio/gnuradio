@@ -26,22 +26,19 @@ AC_DEFUN([GRC_GR_QTGUI],[
 	  gr-qtgui/src/lib/Makefile \
     ])
 
+    # Check for package qt or qt-mt, set QT_CFLAGS and QT_LIBS
     passed=yes
     PKG_CHECK_MODULES(QT, qt >= 3.3,[],
-    [passed=no;AC_MSG_RESULT([gr-qtgui requires qt, not found. Checking for qt-mt])])
+    [passed=no;AC_MSG_RESULT([gr-qtgui requires libqt or libqt-mt, libqt not found. Checking for libqt-mt])])
 
     if test x$passed == xno; then
 	passed=yes
 	PKG_CHECK_MODULES(QT, qt-mt >= 3.3,[],
-    	[passed=no;AC_MSG_RESULT([gr-qtgui requires qt, not found. Checking for qt-mt])])
+    	[passed=no;AC_MSG_RESULT([gr-qtgui requires libqt or libqt-mt, neither found.])])
     fi
 
-    PKG_CHECK_MODULES(qwt, qwt >= 5.0,[],
-    [passed=no;AC_MSG_RESULT([gr-qtgui requires qwt, not found. Checking for qt-mt])])
+    # Fetch QWT variables
+    GR_QWT([], [passed=no])
 
-    
-    GRC_BUILD_CONDITIONAL([gr-qtgui], [
-    AC_SUBST(QT_LIBS)
-    AC_SUBST(QWT_CFLAGS)
-    AC_SUBST(QWT_LIBS)])
+    GRC_BUILD_CONDITIONAL([gr-qtgui],[])
 ])

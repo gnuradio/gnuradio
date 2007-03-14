@@ -6,7 +6,7 @@
 #include <vector>
 
 #include <qwidget.h>
-#include <qwt_plot.h>
+#include <qwt/qwt_plot.h>
 #include <qevent.h>
 
 class fft_display_event:public QCustomEvent{
