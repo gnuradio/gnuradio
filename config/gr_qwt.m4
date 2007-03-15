@@ -55,16 +55,16 @@ AC_DEFUN([GR_QWT],
     CPPFLAGS="$CPPFLAGS $QT_CFLAGS $QWT_CFLAGS"
 
     dnl Check for presence of header files
-    AC_CHECK_HEADERS([qwt/qwt.h], 
+    AC_CHECK_HEADERS([qwt.h], 
 		     [],
 		     [libqwt_ok=no;AC_MSG_RESULT([cannot find usable qwt headers])]
     )
 
     dnl Set QWT_LIBS based on user input
     AC_MSG_CHECKING(QWT_LIBS)
-    QWT_LIBS="-lqwt"
+    QWT_LIBS="$QWT_LIBS -lqwt"
     if test "$qwt_libdir" != "" ; then
-	QWT_LIBS="$QWT_LIBS -L$qwt_libdir"
+	QWT_LIBS="-L$qwt_libdir $QWT_LIBS"
     fi
     AC_MSG_RESULT($QWT_LIBS)
 

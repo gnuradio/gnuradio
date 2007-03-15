@@ -1,10 +1,10 @@
 #ifndef FFT_DISPLAY_CC
 #define FFT_DISPLAY_CC
 
-#include <qwt/qwt_painter.h>
-#include <qwt/qwt_plot_canvas.h>
-#include <qwt/qwt_plot_curve.h>
-#include <qwt/qwt_scale_engine.h>
+#include <qwt_painter.h>
+#include <qwt_plot_canvas.h>
+#include <qwt_plot_curve.h>
+#include <qwt_scale_engine.h>
 #include <qapplication.h>
 #include <fftdisplay.h>
 
