@@ -178,7 +178,7 @@ class stripchart_window(plot.PlotCanvas):
         calc_min = min(indata)
         calc_max = max(indata)
         d = calc_max - calc_min
-        d *= 0.1
+        d = d * 0.1
         if self.stripchartsink.autoscale == True and self.stripchartsink.parallel == True:
             self.y_range = self._axisInterval ('min', calc_min-d, calc_max+d)
 

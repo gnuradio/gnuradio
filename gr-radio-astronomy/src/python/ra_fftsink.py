@@ -292,7 +292,7 @@ class fft_window (plot.PlotCanvas):
 
         self.Draw (graphics, xAxis=None, yAxis=self.y_range)
         d = calc_max - calc_min
-        d *= 0.1
+        d = d * 0.1
         if self.ra_fftsink.autoscale == True:
             self.y_range = self._axisInterval ('min', calc_min-d, calc_max+d)
         else:
