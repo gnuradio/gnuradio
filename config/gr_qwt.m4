@@ -73,8 +73,8 @@ AC_DEFUN([GR_QWT],
 
     dnl Check that library files can be linked in
     dnl This references an arbitrary static class method 
-    AC_TRY_LINK([#include <qwt/qwt_text.h>],
-		[Qt::TextFormat tf = QwtText::defaultFormat()],
+    AC_TRY_LINK([#include <qwt_text.h>],
+		[QwtTextEngine const *te = QwtText::textEngine(QwtText::AutoText)],
 		[],
                 [libqwt_ok=no;AC_MSG_RESULT([unable to link QWT library])]
     )
