@@ -189,14 +189,14 @@ class app_flow_graph(stdgui.gui_flow_graph):
         #
         self.fft_rate = options.fft_rate
 
-        self.fft_size = options.fft_size
+        self.fft_size = int(options.fft_size)
 
         # This buffer is used to remember the most-recent FFT display
         #   values.  Used later by self.write_spectral_data() to write
         #   spectral data to datalogging files, and by the SETI analysis
         #   function.
         #
-        self.fft_outbuf = Numeric.zeros(options.fft_size, Numeric.Float64)
+        self.fft_outbuf = Numeric.zeros(self.fft_size, Numeric.Float64)
 
         #
         # If SETI mode, only look at seti_fft_bandwidth (currently 12.5Khz)
@@ -485,7 +485,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         vbox2.Add((4,0), 0, 0)
         myform['average'] = form.slider_field(parent=self.panel, sizer=vbox2, 
-                    label="Spectral Averaging (FFT frames)", weight=1, min=1, max=2000, callback=self.set_averaging)
+                    label="Spectral Averaging (FFT frames)", weight=1, min=1, max=3000, callback=self.set_averaging)
 
         vbox2.Add((4,0), 0, 0)
 
