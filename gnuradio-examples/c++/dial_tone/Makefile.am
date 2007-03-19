@@ -40,6 +40,6 @@ dial_tone_SOURCES = \
 
 dial_tone_LDADD = \
     $(GNURADIO_CORE_LA) \
-    $(GR_AUDIO_ALSA_LIBS)
+    $(GR_AUDIO_ALSA_LA)
 
 MOSTLYCLEANFILES = *~
