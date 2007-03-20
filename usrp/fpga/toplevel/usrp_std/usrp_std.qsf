@@ -368,6 +368,7 @@ set_instance_assignment -name CLOCK_SETTINGS master_clk -to master_clk
 # end ENTITY(usrp_std)
 # --------------------
 
+set_global_assignment -name VERILOG_FILE ../../sdr_lib/cic_dec_shifter.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/rssi.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/ram16.v
 set_global_assignment -name VERILOG_FILE ../../megacells/fifo_4k.v

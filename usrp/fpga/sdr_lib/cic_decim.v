@@ -24,7 +24,7 @@ module cic_decim
   ( clock,reset,enable,rate,strobe_in,strobe_out,signal_in,signal_out);
    parameter bw = 16;
    parameter N = 4;
-   parameter log2_of_max_rate = 8;
+   parameter log2_of_max_rate = 7;
    parameter maxbitgain = N * log2_of_max_rate;
    
    input clock;
@@ -82,25 +82,8 @@ module cic_decim
       
    wire [bw+maxbitgain-1:0] signal_out_unnorm = pipeline[N-1];
 
-   // Output Scaling to same width as input
-   function [2:0] log_ceil;
-      input [7:0] val;
-      log_ceil = val[6] ? 3'd7 : val[5] ? 3'd6 : val[4] ? 3'd5 :
-		 val[3] ? 3'd4 : val[2] ? 3'd3 : val[1] ? 3'd2 : 3'd1; 
-   endfunction // log_ceil
-   
-   wire [2:0] shift = log_ceil(rate);
-   
-   always @*
-     case(shift)
-       3'd2 : signal_out = signal_out_unnorm[2*N+bw-1:2*N]; //  Decim by 4
-       3'd3 : signal_out = signal_out_unnorm[3*N+bw-1:3*N];
-       3'd4 : signal_out = signal_out_unnorm[4*N+bw-1:4*N];
-       3'd5 : signal_out = signal_out_unnorm[5*N+bw-1:5*N];
-       3'd6 : signal_out = signal_out_unnorm[6*N+bw-1:6*N];
-       3'd7 : signal_out = signal_out_unnorm[7*N+bw-1:7*N];
-       default : signal_out = signal_out_unnorm[7*N+bw-1:7*N];
-     endcase // case(shift)
+   cic_dec_shifter #(bw)
+	cic_dec_shifter(rate,signal_out_unnorm,signal_out);
    
 endmodule // cic_decim
 
