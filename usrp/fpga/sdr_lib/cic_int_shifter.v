@@ -35,12 +35,12 @@ module cic_int_shifter(rate,signal_in,signal_out);
       input [7:0] rate;
       case(rate)
 	// Exact Cases
-	8'd4 : bitgain = 2*(N-1);
-	8'd8 : bitgain = 3*(N-1);
-	8'd16 : bitgain = 4*(N-1);
-	8'd32 : bitgain = 5*(N-1);
-	8'd64 : bitgain = 6*(N-1);
-	8'd128 : bitgain = 7*(N-1);
+	8'd4 : bitgain = 6;
+	8'd8 : bitgain = 9;
+	8'd16 : bitgain = 12;
+	8'd32 : bitgain = 15;
+	8'd64 : bitgain = 18;
+	8'd128 : bitgain = 21;
 	
 	// Nearest without overflow
 	8'd5 : bitgain = 7;
