@@ -20,25 +20,21 @@
 //
 
 
+// NOTE   This only works for N=4, max interp rate of 128
+// NOTE   signal "rate" is ONE LESS THAN the actual rate
+
 module cic_int_shifter(rate,signal_in,signal_out);
    parameter bw = 16;
-   parameter N = 4;
-   parameter log2_of_max_rate = 7;
-   parameter maxbitgain = (N-1)*log2_of_max_rate;
+   parameter maxbitgain = 21;
    
    input [7:0] rate;
    input       wire [bw+maxbitgain-1:0] signal_in;
    output      reg [bw-1:0] signal_out;
 
-   function [2:0] log_ceil;
-      input [7:0] val;
-      log_ceil = val[6] ? 3'd7 : val[5] ? 3'd6 : val[4] ? 3'd5 : 
-		 val[3] ? 3'd4 : val[2] ? 3'd3 : val[1] ? 3'd2 : 3'd1; 
-   endfunction // log_ceil
-   
    function [4:0] bitgain;
       input [7:0] rate;
       case(rate)
+	// Exact Cases
 	8'd4 : bitgain = 2*(N-1);
 	8'd8 : bitgain = 3*(N-1);
 	8'd16 : bitgain = 4*(N-1);
@@ -46,6 +42,7 @@ module cic_int_shifter(rate,signal_in,signal_out);
 	8'd64 : bitgain = 6*(N-1);
 	8'd128 : bitgain = 7*(N-1);
 	
+	// Nearest without overflow
 	8'd5 : bitgain = 7;
 	8'd6 : bitgain = 8;
 	8'd7 : bitgain = 9;
@@ -89,7 +86,6 @@ module cic_int_shifter(rate,signal_in,signal_out);
        5'd17 : signal_out = signal_in[17+bw-1:17];
        5'd19 : signal_out = signal_in[19+bw-1:19];
        5'd20 : signal_out = signal_in[20+bw-1:20];
-       
        
        default : signal_out = signal_in[21+bw-1:21];
      endcase // case(shift)
