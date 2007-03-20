@@ -82,7 +82,8 @@ module cic_interp(clock,reset,enable,rate,strobe_in,strobe_out,signal_in,signal_
    
    wire [bw+maxbitgain-1:0] signal_out_unnorm = integrator[N-1];
 
-   cic_int_shifter cic_int_shifter(rate,signal_out_unnorm,signal_out);
+   cic_int_shifter #(bw)
+	cic_int_shifter(rate,signal_out_unnorm,signal_out);
    
 endmodule // cic_interp
 
