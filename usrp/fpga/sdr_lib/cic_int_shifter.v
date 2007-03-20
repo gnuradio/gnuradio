@@ -47,7 +47,7 @@ module cic_int_shifter(rate,signal_in,signal_out);
 	8'd6 : bitgain = 8;
 	8'd7 : bitgain = 9;
 	8'd9,8'd10 : bitgain = 10;
-	8'd12 : bitgain = 11;
+	8'd11,8'd12 : bitgain = 11;
 	8'd13,8'd14,8'd15 : bitgain = 12;
 	8'd17,8'd18,8'd19,8'd20 : bitgain = 13;
 	8'd21,8'd22,8'd23,8'd24,8'd25 : bitgain = 14;
