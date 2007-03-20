@@ -19,11 +19,13 @@
 //  Foundation, Inc., 51 Franklin Street, Boston, MA  02110-1301  USA
 //
 
+
+
 module strobe_gen 
   ( input clock,
     input reset,
     input enable,
-    input [7:0] rate,
+    input [7:0] rate, // Rate should be 1 LESS THAN your desired divide ratio
     input strobe_in,
     output wire strobe );
    
