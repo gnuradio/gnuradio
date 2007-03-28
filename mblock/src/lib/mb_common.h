@@ -26,7 +26,7 @@
 #include <stdexcept>
 #include <boost/utility.hpp>
 #include <boost/enable_shared_from_this.hpp>
-
+#include <boost/weak_ptr.hpp>
 
 /*
  * The priority type and valid range

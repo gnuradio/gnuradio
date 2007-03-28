@@ -30,6 +30,8 @@
 #include <mb_exception.h>
 #include <mb_util.h>
 #include <mb_msg_accepter_smp.h>
+#include <mb_runtime_placeholder.h>
+#include <mbi_runtime_lock.h>
 
 
 static pmt_t s_self = pmt_intern("self");
@@ -51,7 +53,8 @@ mb_mblock_impl::comp_is_defined(const std::string &name)
 ////////////////////////////////////////////////////////////////////////
 
 mb_mblock_impl::mb_mblock_impl(mb_mblock *mb)
-  : d_mb(mb), d_mb_parent(0), d_fullname("<unknown>")
+  : d_mb(mb), d_mb_parent(0), d_runtime(mb_runtime_placeholder::singleton()),
+    d_instance_name("<unknown>"), d_class_name("mblock")
 {
 }
 
@@ -67,6 +70,8 @@ mb_mblock_impl::define_port(const std::string &port_name,
 			    bool conjugated,
 			    mb_port::port_type_t port_type)
 {
+  mbi_runtime_lock	l(this);
+
   if (port_is_defined(port_name))
     throw mbe_duplicate_port(d_mb, port_name);
 
@@ -82,6 +87,8 @@ void
 mb_mblock_impl::define_component(const std::string &name,
 				 mb_mblock_sptr component)
 {
+  mbi_runtime_lock	l(this);
+
   if (comp_is_defined(name))	// check for duplicate name
     throw mbe_duplicate_component(d_mb, name);
 
@@ -95,6 +102,8 @@ mb_mblock_impl::connect(const std::string &comp_name1,
 			const std::string &comp_name2,
 			const std::string &port_name2)
 {
+  mbi_runtime_lock	l(this);
+
   mb_endpoint	ep0 = check_and_resolve_endpoint(comp_name1, port_name1);
   mb_endpoint	ep1 = check_and_resolve_endpoint(comp_name2, port_name2);
 
@@ -113,24 +122,32 @@ mb_mblock_impl::disconnect(const std::string &comp_name1,
 			   const std::string &comp_name2,
 			   const std::string &port_name2)
 {
+  mbi_runtime_lock	l(this);
+
   d_conn_table.disconnect(comp_name1, port_name1, comp_name2, port_name2);
 }
 
 void
 mb_mblock_impl::disconnect_component(const std::string component_name)
 {
+  mbi_runtime_lock	l(this);
+
   d_conn_table.disconnect_component(component_name);
 }
 
 void
 mb_mblock_impl::disconnect_all()
 {
+  mbi_runtime_lock	l(this);
+
   d_conn_table.disconnect_all();
 }
 
 int
-mb_mblock_impl::nconnections() const
+mb_mblock_impl::nconnections()
 {
+  mbi_runtime_lock	l(this);
+
   return d_conn_table.nconnections();
 }
 
@@ -219,6 +236,7 @@ mb_mblock_impl::walk_tree(mb_visitor *visitor, const std::string &path)
 mb_msg_accepter_sptr
 mb_mblock_impl::make_accepter(const std::string port_name)
 {
+  // FIXME this should probably use some kind of configurable factory
   mb_msg_accepter *ma =
     new mb_msg_accepter_smp(d_mb->shared_from_this(),
 			    pmt_intern(port_name));
@@ -252,8 +270,14 @@ mb_mblock_impl::component(const std::string &comp_name)
 }
 
 void
-mb_mblock_impl::set_fullname(const std::string &name)
+mb_mblock_impl::set_instance_name(const std::string &name)
 {
-  d_fullname = name;
+  d_instance_name = name;
+}
+
+void
+mb_mblock_impl::set_class_name(const std::string &name)
+{
+  d_class_name = name;
 }
 

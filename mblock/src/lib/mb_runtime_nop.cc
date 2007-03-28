@@ -22,27 +22,43 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <mb_msg_accepter_smp.h>
-#include <mb_common.h>
+#include <mb_runtime_nop.h>
 #include <mb_mblock.h>
-#include <mb_mblock_impl.h>
-#include <mb_message.h>
 
-mb_msg_accepter_smp::mb_msg_accepter_smp(mb_mblock_sptr mblock, pmt_t port_name)
-  : d_mb(mblock), d_port_name(port_name)
+mb_runtime_sptr 
+mb_make_runtime_nop()
 {
+  return mb_runtime_sptr(new mb_runtime_nop());
 }
 
-mb_msg_accepter_smp::~mb_msg_accepter_smp()
+
+mb_runtime_nop::mb_runtime_nop()
 {
-  // nop
+  // nop for now
 }
 
-void
-mb_msg_accepter_smp::operator()(pmt_t signal, pmt_t data,
-				pmt_t metadata, mb_pri_t priority)
+mb_runtime_nop::~mb_runtime_nop()
 {
-  mb_message_sptr msg = mb_make_message(signal, data, metadata, priority);
-  msg->set_port_id(d_port_name);
-  d_mb->impl()->msgq().insert(msg);
+  // nop for now
+}
+
+bool
+mb_runtime_nop::run(mb_mblock_sptr top)
+{
+  class initial_visitor : public mb_visitor
+  {
+  public:
+    bool operator()(mb_mblock *mblock, const std::string &path)
+    {
+      mblock->set_instance_name(path);
+      mblock->init_fsm();
+      return true;
+    }
+  };
+
+  initial_visitor	visitor;
+
+  top->walk_tree(&visitor);
+
+  return true;
 }

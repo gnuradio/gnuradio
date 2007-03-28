@@ -28,6 +28,7 @@
 #include <cppunit/TestAssert.h>
 #include <mb_mblock.h>
 #include <mb_runtime.h>
+#include <mb_runtime_nop.h>		// QA only
 #include <mb_protocol_class.h>
 #include <mb_exception.h>
 #include <mb_msg_queue.h>
@@ -86,10 +87,10 @@ sr1::~sr1(){}
 void
 sr1::init_fsm()
 {
-  // std::cout << fullname() << "[sr1]: init_fsm\n";
+  // std::cout << instance_name() << "[sr1]: init_fsm\n";
 
   // send two messages to each port
-  pmt_t our_name = pmt_intern(fullname());
+  pmt_t our_name = pmt_intern(instance_name());
   d_p1->send(s_status, pmt_list3(our_name, s_p1, pmt_from_long(0)));
   d_p1->send(s_status, pmt_list3(our_name, s_p1, pmt_from_long(1)));
 
@@ -127,10 +128,10 @@ sr0::~sr0(){}
 void
 sr0::init_fsm()
 {
-  // std::cout << fullname() << "[sr0]: init_fsm\n";
+  // std::cout << instance_name() << "[sr0]: init_fsm\n";
 
   // send two messages to p0
-  pmt_t our_name = pmt_intern(fullname());
+  pmt_t our_name = pmt_intern(instance_name());
   d_p0->send(s_control, pmt_list3(our_name, s_p0, pmt_from_long(0)));
   d_p0->send(s_control, pmt_list3(our_name, s_p0, pmt_from_long(1)));
 }
@@ -149,21 +150,21 @@ qa_mblock_send::test_simple_routing()
 
   mb_message_sptr msg;
 
-  mb_runtime_sptr rt = mb_make_runtime();
+  mb_runtime_sptr rt = mb_make_runtime_nop();
   mb_mblock_sptr mb0 = mb_mblock_sptr(new sr0());
   rt->run(mb0);
 
   // Reach into the guts and see if the messages ended up where they should have
 
   // mb0 should have received two messages sent from mb1 via its p1
-  msg = mb0->impl()->msgq().get_highest_pri_msg();
+  msg = mb0->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   // std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p0, msg->port_id());
   CPPUNIT_ASSERT(pmt_equal(pmt_list3(pmt_intern("top/mb1"), s_p1, pmt_from_long(0)),
 			   msg->data()));
 
-  msg = mb0->impl()->msgq().get_highest_pri_msg();
+  msg = mb0->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   // std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p0, msg->port_id());
@@ -176,28 +177,28 @@ qa_mblock_send::test_simple_routing()
 
   mb_mblock_sptr mb1 = mb0->impl()->component("mb1");
 
-  msg = mb1->impl()->msgq().get_highest_pri_msg();
+  msg = mb1->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   // std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p1, msg->port_id());
   CPPUNIT_ASSERT(pmt_equal(pmt_list3(pmt_intern("top"), s_p0, pmt_from_long(0)),
 			   msg->data()));
 
-  msg = mb1->impl()->msgq().get_highest_pri_msg();
+  msg = mb1->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   // std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p1, msg->port_id());
   CPPUNIT_ASSERT(pmt_equal(pmt_list3(pmt_intern("top"), s_p0, pmt_from_long(1)),
 			   msg->data()));
 
-  msg = mb1->impl()->msgq().get_highest_pri_msg();
+  msg = mb1->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   // std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p3, msg->port_id());
   CPPUNIT_ASSERT(pmt_equal(pmt_list3(pmt_intern("top/mb2"), s_p2, pmt_from_long(0)),
 			   msg->data()));
 
-  msg = mb1->impl()->msgq().get_highest_pri_msg();
+  msg = mb1->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   // std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p3, msg->port_id());
@@ -210,14 +211,14 @@ qa_mblock_send::test_simple_routing()
 
   mb_mblock_sptr mb2 = mb0->impl()->component("mb2");
 
-  msg = mb2->impl()->msgq().get_highest_pri_msg();
+  msg = mb2->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   // std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p3, msg->port_id());
   CPPUNIT_ASSERT(pmt_equal(pmt_list3(pmt_intern("top/mb1"), s_p2, pmt_from_long(0)),
 			   msg->data()));
 
-  msg = mb2->impl()->msgq().get_highest_pri_msg();
+  msg = mb2->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   // std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p3, msg->port_id());
@@ -253,10 +254,10 @@ rr2::~rr2(){}
 void
 rr2::init_fsm()
 {
-  // std::cout << fullname() << "[rr2]: init_fsm\n";
+  // std::cout << instance_name() << "[rr2]: init_fsm\n";
 
   // send two messages via p1
-  pmt_t our_name = pmt_intern(fullname());
+  pmt_t our_name = pmt_intern(instance_name());
   d_p1->send(s_status, pmt_list3(our_name, s_p1, pmt_from_long(0)));
   d_p1->send(s_status, pmt_list3(our_name, s_p1, pmt_from_long(1)));
 }
@@ -321,7 +322,7 @@ qa_mblock_send::test_relay_routing_1()
 {
   mb_message_sptr msg;
 
-  mb_runtime_sptr rt = mb_make_runtime();
+  mb_runtime_sptr rt = mb_make_runtime_nop();
   mb_mblock_sptr  top = mb_mblock_sptr(new rr0_a());
   rt->run(top);
 
@@ -335,14 +336,14 @@ qa_mblock_send::test_relay_routing_1()
   // c0c0 should have received
   //   two message from c1 via its p2
 
-  msg = c0c0->impl()->msgq().get_highest_pri_msg();
+  msg = c0c0->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   //std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p2, msg->port_id());
   CPPUNIT_ASSERT(pmt_equal(pmt_list3(pmt_intern("top/c1"), s_p1, pmt_from_long(0)),
 			   msg->data()));
 
-  msg = c0c0->impl()->msgq().get_highest_pri_msg();
+  msg = c0c0->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   //std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p2, msg->port_id());
@@ -352,14 +353,14 @@ qa_mblock_send::test_relay_routing_1()
   // c1 should have received
   //   two message from c0c0 via its p2
 
-  msg = c1->impl()->msgq().get_highest_pri_msg();
+  msg = c1->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   //std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p2, msg->port_id());
   CPPUNIT_ASSERT(pmt_equal(pmt_list3(pmt_intern("top/c0/c0"), s_p1, pmt_from_long(0)),
 			   msg->data()));
 
-  msg = c1->impl()->msgq().get_highest_pri_msg();
+  msg = c1->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   //std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p2, msg->port_id());
@@ -402,7 +403,7 @@ qa_mblock_send::test_relay_routing_2()
 {
   mb_message_sptr msg;
 
-  mb_runtime_sptr rt = mb_make_runtime();
+  mb_runtime_sptr rt = mb_make_runtime_nop();
   mb_mblock_sptr  top = mb_mblock_sptr(new rr0_b());
   rt->run(top);
 
@@ -417,14 +418,14 @@ qa_mblock_send::test_relay_routing_2()
   // c0c0 should have received
   //   two message from c1c0 via its p2
 
-  msg = c0c0->impl()->msgq().get_highest_pri_msg();
+  msg = c0c0->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   // std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p2, msg->port_id());
   CPPUNIT_ASSERT(pmt_equal(pmt_list3(pmt_intern("top/c1/c0"), s_p1, pmt_from_long(0)),
 			   msg->data()));
 
-  msg = c0c0->impl()->msgq().get_highest_pri_msg();
+  msg = c0c0->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   // std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p2, msg->port_id());
@@ -434,14 +435,14 @@ qa_mblock_send::test_relay_routing_2()
   // c1c0 should have received
   //   two message from c0c0 via its p2
 
-  msg = c1c0->impl()->msgq().get_highest_pri_msg();
+  msg = c1c0->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   // std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p2, msg->port_id());
   CPPUNIT_ASSERT(pmt_equal(pmt_list3(pmt_intern("top/c0/c0"), s_p1, pmt_from_long(0)),
 			   msg->data()));
 
-  msg = c1c0->impl()->msgq().get_highest_pri_msg();
+  msg = c1c0->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(msg);
   // std::cerr << msg->data() << std::endl;
   CPPUNIT_ASSERT_EQUAL(s_p2, msg->port_id());

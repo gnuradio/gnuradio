@@ -25,9 +25,9 @@
 #include <mb_msg_queue.h>
 #include <mb_message.h>
 
-// FIXME turn this into a template so we can use it for the runq of mblocks too
 
 mb_msg_queue::mb_msg_queue()
+  : d_not_empty(&d_mutex)
 {
 }
 
@@ -51,14 +51,21 @@ mb_msg_queue::insert(mb_message_sptr msg)
     d_queue[q].tail = msg;
     msg->d_next.reset();	// msg->d_next = 0;
   }
+
   // FIXME set bit in bitmap
+
+  d_not_empty.signal();
 }
 
+/*
+ * Delete highest pri message from the queue and return it.
+ * Returns equivalent of zero pointer if queue is empty.
+ *
+ * Caller must be holding d_mutex
+ */
 mb_message_sptr
-mb_msg_queue::get_highest_pri_msg()
+mb_msg_queue::get_highest_pri_msg_helper()
 {
-  omni_mutex_lock	l(d_mutex);
-
   // FIXME use bitmap and ffz to find best queue in O(1)
 
   for (mb_pri_t q = 0; q <= MB_PRI_WORST; q++){
@@ -78,3 +85,27 @@ mb_msg_queue::get_highest_pri_msg()
 
   return mb_message_sptr();	// equivalent of a zero pointer
 }
+
+
+mb_message_sptr
+mb_msg_queue::get_highest_pri_msg_nowait()
+{
+  omni_mutex_lock	l(d_mutex);
+
+  return get_highest_pri_msg_helper();
+}
+
+mb_message_sptr
+mb_msg_queue::get_highest_pri_msg()
+{
+  omni_mutex_lock l(d_mutex);
+
+  while (1){
+    mb_message_sptr msg = get_highest_pri_msg_helper();
+    if (msg)			// Got one; return it
+      return msg;
+
+    d_not_empty.wait();		// Wait for something
+  }
+}
+

@@ -27,7 +27,8 @@ TESTS = test_mblock
 
 lib_LTLIBRARIES = libmblock.la libmblock-qa.la
 
-EXTRA_DIST = 				
+EXTRA_DIST = 				\
+	README.locking			
 
 
 # These are the source files that go into the mblock shared library
@@ -45,7 +46,9 @@ libmblock_la_SOURCES =			\
 	mb_port_simple.cc		\
 	mb_protocol_class.cc		\
 	mb_runtime.cc			\
-	mb_runtime_single_threaded.cc	\
+	mb_runtime_nop.cc		\
+	mb_runtime_placeholder.cc	\
+	mb_runtime_thread_per_mblock.cc	\
 	mb_util.cc			
 
 
@@ -69,7 +72,9 @@ include_HEADERS =			\
 	mb_port_simple.h		\
 	mb_protocol_class.h		\
 	mb_runtime.h			\
-	mb_runtime_single_threaded.h	\
+	mb_runtime_nop.h		\
+	mb_runtime_placeholder.h	\
+	mb_runtime_thread_per_mblock.h	\
 	mb_util.h			
 
 
@@ -78,6 +83,7 @@ noinst_HEADERS = 			\
 	mb_endpoint.h			\
 	mb_mblock_impl.h		\
 	mb_msg_accepter_smp.h		\
+	mbi_runtime_lock.h		\
 	qa_mblock.h			\
 	qa_mblock_prims.h		\
 	qa_mblock_send.h		

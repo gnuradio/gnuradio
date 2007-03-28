@@ -18,25 +18,40 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_MB_RUNTIME_SINGLE_THREADED_H
-#define INCLUDED_MB_RUNTIME_SINGLE_THREADED_H
 
-#include <mb_runtime.h>
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+#include <mb_runtime_placeholder.h>
+#include <mb_mblock.h>
+#include <mb_exception.h>
 
-/*!
- * \brief Concrete runtime that uses a single thread for all work.
- */
-class mb_runtime_single_threaded : public mb_runtime
+
+static mb_runtime *s_singleton = 0;
+
+
+mb_runtime_placeholder::mb_runtime_placeholder()
 {
-  mb_mblock_sptr	d_top;		// top mblock
+  // nop
+}
 
-public:
-  mb_runtime_single_threaded();
-  ~mb_runtime_single_threaded();
+mb_runtime_placeholder::~mb_runtime_placeholder()
+{
+  // nop
+}
 
-  bool run(mb_mblock_sptr top);
-};
+bool
+mb_runtime_placeholder::run(mb_mblock_sptr top)
+{
+  throw mbe_not_implemented(top.get(), "mb_runtime_placeholder::run");
+}
 
+mb_runtime *
+mb_runtime_placeholder::singleton()
+{
+  if (s_singleton)
+    return s_singleton;
 
-
-#endif /* INCLUDED_MB_RUNTIME_SINGLE_THREADED_H */
+  s_singleton = new mb_runtime_placeholder();
+  return s_singleton;
+}

@@ -1,0 +1,4 @@
+The Big Runtime Lock must be held when:
+
+Manipulating or traversing any mblock's d_port_map, d_comp_map or d_conn_table.
+

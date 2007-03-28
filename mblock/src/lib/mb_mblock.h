@@ -24,7 +24,6 @@
 #include <mb_common.h>
 #include <mb_message.h>
 #include <mb_port.h>
-#include <boost/enable_shared_from_this.hpp>
 
 
 /*!
@@ -175,15 +174,21 @@ protected:
   int
   nconnections() const;
 
+  //! Set the class name
+  void set_class_name(const std::string name);
 
 public:
   virtual ~mb_mblock();
 
-  void set_fullname(const std::string name);
-  
-  //! Return full name of this block
-  std::string fullname() const;
+  //! Return instance name of this block
+  std::string instance_name() const;
 
+  //! Return the class name of this block
+  std::string class_name() const;
+
+  //! Set the instance name of this block.
+  void set_instance_name(const std::string name);
+  
   //! Return the parent of this mblock, or 0 if we're the top-level block.
   mb_mblock *parent() const;
 

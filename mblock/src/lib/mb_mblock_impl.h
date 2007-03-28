@@ -39,8 +39,10 @@ class mb_mblock_impl : boost::noncopyable
 {
   mb_mblock		       *d_mb;		// pointer to our associated mblock
   mb_mblock		       *d_mb_parent;	// pointer to our parent
+  mb_runtime		       *d_runtime;	// pointer to runtime
 
-  std::string			d_fullname;	// hierarchical name
+  std::string			d_instance_name;    // hierarchical name
+  std::string			d_class_name;	    // name of this (derived) class
 
   mb_port_map_t			d_port_map;	// our ports
   mb_comp_map_t			d_comp_map;	// our components
@@ -136,7 +138,7 @@ public:
    * \brief Return number of connections (QA mostly)
    */
   int
-  nconnections() const;
+  nconnections();
 
   bool
   walk_tree(mb_visitor *visitor, const std::string &path="");
@@ -147,11 +149,17 @@ public:
   mb_msg_queue &
   msgq() { return d_msgq; }
 
-  //! Return full name of this block
-  std::string fullname() const { return d_fullname; }
+  //! Return instance name of this block
+  std::string instance_name() const { return d_instance_name; }
 
-  //! Set the name of this block
-  void set_fullname(const std::string &name);
+  //! Set the instance name of this block
+  void set_instance_name(const std::string &name);
+
+  //! Return the class name of this block
+  std::string class_name() const { return d_class_name; }
+
+  //! Set the class name
+  void set_class_name(const std::string &name);
 
   /*!
    * \brief If bound, store endpoint from the other end of the connection.
@@ -165,15 +173,20 @@ public:
   lookup_other_endpoint(const mb_port *port, mb_endpoint *ep);
 
 
-  mb_mblock *
-  mblock() const { return d_mb; }
+  //! Return point to associated mblock
+  mb_mblock *mblock() const { return d_mb; }
 
-  mb_mblock *
-  mblock_parent() const { return d_mb_parent; }
+  //! Return pointer to the parent of our mblock
+  mb_mblock *mblock_parent() const { return d_mb_parent; }
 
-  mb_mblock_sptr
-  component(const std::string &comp_name);
+  //! Lookup a component by name
+  mb_mblock_sptr component(const std::string &comp_name);
 
+  //! Return the runtime instance
+  mb_runtime *runtime() { return d_runtime; }
+
+  //! Set the runtime instance
+  void set_runtime(mb_runtime *runtime) { d_runtime = runtime; }
 
   /*
    * Our implementation methods

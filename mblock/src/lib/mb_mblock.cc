@@ -121,15 +121,27 @@ mb_mblock::walk_tree(mb_visitor *visitor, const std::string &path)
 }
 
 std::string
-mb_mblock::fullname() const
+mb_mblock::instance_name() const
 {
-  return d_impl->fullname();
+  return d_impl->instance_name();
 }
 
 void
-mb_mblock::set_fullname(const std::string name)
+mb_mblock::set_instance_name(const std::string name)
 {
-  d_impl->set_fullname(name);
+  d_impl->set_instance_name(name);
+}
+
+std::string
+mb_mblock::class_name() const
+{
+  return d_impl->class_name();
+}
+
+void
+mb_mblock::set_class_name(const std::string name)
+{
+  d_impl->set_class_name(name);
 }
 
 mb_mblock *

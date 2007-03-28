@@ -37,10 +37,13 @@ class mb_msg_queue : boost::noncopyable
     bool empty_p() const { return head == 0; }
   };
 
-  omni_mutex	d_mutex;
+  omni_mutex	 d_mutex;
+  omni_condition d_not_empty;	// reader waits on this
 
   // FIXME add bitmap to indicate which queues are non-empty.
-  subq		d_queue[MB_NPRI];
+  subq		 d_queue[MB_NPRI];
+
+  mb_message_sptr get_highest_pri_msg_helper();
 
 public:
   mb_msg_queue();
@@ -52,6 +55,12 @@ public:
   /*
    * \brief Delete highest pri message from the queue and return it.
    * Returns equivalent of zero pointer if queue is empty.
+   */
+  mb_message_sptr get_highest_pri_msg_nowait();
+
+  /*
+   * \brief Delete highest pri message from the queue and return it.
+   * If the queue is empty, this call blocks until it can return a message.
    */
   mb_message_sptr get_highest_pri_msg();
 };

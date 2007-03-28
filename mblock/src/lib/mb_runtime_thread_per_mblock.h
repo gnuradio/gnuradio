@@ -18,31 +18,23 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#ifndef INCLUDED_MB_RUNTIME_THREAD_PER_MBLOCK_H
+#define INCLUDED_MB_RUNTIME_THREAD_PER_MBLOCK_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-#include <mb_msg_accepter_smp.h>
-#include <mb_common.h>
-#include <mb_mblock.h>
-#include <mb_mblock_impl.h>
-#include <mb_message.h>
+#include <mb_runtime.h>
 
-mb_msg_accepter_smp::mb_msg_accepter_smp(mb_mblock_sptr mblock, pmt_t port_name)
-  : d_mb(mblock), d_port_name(port_name)
+/*!
+ * \brief Concrete runtime that uses a single thread for all work.
+ */
+class mb_runtime_thread_per_mblock : public mb_runtime
 {
-}
+  mb_mblock_sptr	d_top;		// top mblock
 
-mb_msg_accepter_smp::~mb_msg_accepter_smp()
-{
-  // nop
-}
+public:
+  mb_runtime_thread_per_mblock();
+  ~mb_runtime_thread_per_mblock();
 
-void
-mb_msg_accepter_smp::operator()(pmt_t signal, pmt_t data,
-				pmt_t metadata, mb_pri_t priority)
-{
-  mb_message_sptr msg = mb_make_message(signal, data, metadata, priority);
-  msg->set_port_id(d_port_name);
-  d_mb->impl()->msgq().insert(msg);
-}
+  bool run(mb_mblock_sptr top);
+};
+
+#endif /* INCLUDED_MB_RUNTIME_THREAD_PER_MBLOCK_H */

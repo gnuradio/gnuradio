@@ -29,6 +29,7 @@
 #include <mb_mblock.h>
 #include <mb_mblock_impl.h>
 #include <assert.h>
+#include <mbi_runtime_lock.h>
 
 
 mb_port_simple::mb_port_simple(mb_mblock *mblock,
@@ -49,7 +50,7 @@ void
 mb_port_simple::send(pmt_t signal, pmt_t data, pmt_t metadata, mb_pri_t priority)
 {
   if (port_type() == mb_port::RELAY)  // Can't send directly to a RELAY port
-    throw mbe_invalid_port_type(mblock(), mblock()->fullname(), port_name());
+    throw mbe_invalid_port_type(mblock(), mblock()->instance_name(), port_name());
 
   mb_msg_accepter_sptr  accepter = find_accepter(this);
   if (accepter)
@@ -65,6 +66,8 @@ mb_port_simple::find_accepter(mb_port_simple *start)
   mb_mblock 		*context = 0;
   mb_endpoint 		peer_ep;
   mb_msg_accepter_sptr	r;
+
+  mbi_runtime_lock	l(p->mblock());
 
   // Set up initial context.
 

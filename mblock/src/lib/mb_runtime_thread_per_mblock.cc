@@ -22,35 +22,40 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <mb_runtime_single_threaded.h>
+#include <mb_runtime_thread_per_mblock.h>
 #include <mb_mblock.h>
+#include <mb_mblock_impl.h>
 
 
-mb_runtime_single_threaded::mb_runtime_single_threaded()
+mb_runtime_thread_per_mblock::mb_runtime_thread_per_mblock()
 {
   // nop for now
 }
 
-mb_runtime_single_threaded::~mb_runtime_single_threaded()
+mb_runtime_thread_per_mblock::~mb_runtime_thread_per_mblock()
 {
   // nop for now
 }
 
 bool
-mb_runtime_single_threaded::run(mb_mblock_sptr top)
+mb_runtime_thread_per_mblock::run(mb_mblock_sptr top)
 {
   class initial_visitor : public mb_visitor
   {
+    mb_runtime  *d_rt;
+
   public:
+    initial_visitor(mb_runtime *rt) : d_rt(rt) {}
     bool operator()(mb_mblock *mblock, const std::string &path)
     {
-      mblock->set_fullname(path);
+      mblock->impl()->set_runtime(d_rt);
+      mblock->set_instance_name(path);
       mblock->init_fsm();
       return true;
     }
   };
 
-  initial_visitor	visitor;
+  initial_visitor	visitor(this);
 
   d_top = top;		// remember top of tree
 

@@ -22,6 +22,7 @@
 #define INCLUDED_MB_RUNTIME_H
 
 #include <mb_common.h>
+#include <omnithread.h>
 
 /*!
  * \brief Public constructor (factory) for mb_runtime objects.
@@ -33,8 +34,11 @@ mb_runtime_sptr mb_make_runtime();
  *
  * There should generally be only a single instance of this class.
  */
-class mb_runtime : boost::noncopyable
+class mb_runtime : boost::noncopyable,
+		   public boost::enable_shared_from_this<mb_runtime>
 {
+  omni_mutex	d_brl;		// big runtime lock (avoid using this if possible...)
+
 public:
   mb_runtime(){}
   virtual ~mb_runtime();
@@ -49,6 +53,24 @@ public:
    * \returns true if the system ran successfully.
    */
   virtual bool run(mb_mblock_sptr top) = 0;
+
+
+  // ----------------------------------------------------------------
+  // Stuff from here down is really private to the implementation...
+  // ----------------------------------------------------------------
+
+  /*!
+   * \brief lock the big runtime lock
+   * \implementation
+   */
+  inline void lock() { d_brl.lock(); }
+
+  /*!
+   * \brief unlock the big runtime lock
+   * \implementation
+   */
+  inline void unlock() { d_brl.unlock(); }
+
 };
 
 #endif /* INCLUDED_MB_RUNTIME_H */

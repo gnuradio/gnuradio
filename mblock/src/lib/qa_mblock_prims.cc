@@ -95,7 +95,6 @@ dp_3::~dp_3(){}
 void
 qa_mblock_prims::test_define_ports()
 {
-  mb_runtime_sptr	rt = mb_make_runtime();
   // std::vector<mb_port_sptr>	intf;
 
   mb_mblock_sptr	mb1 = mb_mblock_sptr(new dp_1());
@@ -175,7 +174,6 @@ dc_not_ok::~dc_not_ok(){}
 void
 qa_mblock_prims::test_define_components()
 {
-  mb_runtime_sptr	rt = mb_make_runtime();
   mb_mblock_sptr	mb1 = mb_mblock_sptr(new dc_ok());	// OK
 
   // raises pmt_exception because of duplicate component definition of "c0"
@@ -317,8 +315,6 @@ qa_mblock_prims::test_connect()
 			 pmt_list1(pmt_intern("in")),		// in
 			 pmt_list1(pmt_intern("out")));		// out
 
-
-  mb_runtime_sptr	rt = mb_make_runtime();
   mb_mblock_sptr	mb0 = mb_mblock_sptr(new tc_0());
 }
 
@@ -330,7 +326,7 @@ qa_mblock_prims::test_msg_queue()
   mb_msg_queue	q;
 
   // check initial state
-  CPPUNIT_ASSERT(q.get_highest_pri_msg() == 0);
+  CPPUNIT_ASSERT(q.get_highest_pri_msg_nowait() == 0);
 
   CPPUNIT_ASSERT(MB_NPRI >= 5);	// sanity check for this test
 
@@ -340,11 +336,11 @@ qa_mblock_prims::test_msg_queue()
   q.insert(mb_make_message(PMT_NIL, pmt_from_long(1), PMT_NIL, MB_PRI_BEST + 2));
   q.insert(mb_make_message(PMT_NIL, pmt_from_long(2), PMT_NIL, MB_PRI_BEST + 2));
   
-  CPPUNIT_ASSERT_EQUAL(0L, pmt_to_long(q.get_highest_pri_msg()->data()));
-  CPPUNIT_ASSERT_EQUAL(1L, pmt_to_long(q.get_highest_pri_msg()->data()));
-  CPPUNIT_ASSERT_EQUAL(2L, pmt_to_long(q.get_highest_pri_msg()->data()));
+  CPPUNIT_ASSERT_EQUAL(0L, pmt_to_long(q.get_highest_pri_msg_nowait()->data()));
+  CPPUNIT_ASSERT_EQUAL(1L, pmt_to_long(q.get_highest_pri_msg_nowait()->data()));
+  CPPUNIT_ASSERT_EQUAL(2L, pmt_to_long(q.get_highest_pri_msg_nowait()->data()));
 
-  CPPUNIT_ASSERT(q.get_highest_pri_msg() == 0);
+  CPPUNIT_ASSERT(q.get_highest_pri_msg_nowait() == 0);
 
 
   // insert messages of different priorities in pseudo-random order
@@ -361,19 +357,19 @@ qa_mblock_prims::test_msg_queue()
   q.insert(mb_make_message(PMT_NIL, PMT_NIL, PMT_NIL, MB_PRI_BEST + 1));
 
   // confirm that they come out in order
-  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 0, q.get_highest_pri_msg()->priority());
-  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 0, q.get_highest_pri_msg()->priority());
-  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 1, q.get_highest_pri_msg()->priority());
-  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 1, q.get_highest_pri_msg()->priority());
-  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 2, q.get_highest_pri_msg()->priority());
-  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 2, q.get_highest_pri_msg()->priority());
-  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 3, q.get_highest_pri_msg()->priority());
-  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 3, q.get_highest_pri_msg()->priority());
-  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 4, q.get_highest_pri_msg()->priority());
-  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 4, q.get_highest_pri_msg()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 0, q.get_highest_pri_msg_nowait()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 0, q.get_highest_pri_msg_nowait()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 1, q.get_highest_pri_msg_nowait()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 1, q.get_highest_pri_msg_nowait()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 2, q.get_highest_pri_msg_nowait()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 2, q.get_highest_pri_msg_nowait()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 3, q.get_highest_pri_msg_nowait()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 3, q.get_highest_pri_msg_nowait()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 4, q.get_highest_pri_msg_nowait()->priority());
+  CPPUNIT_ASSERT_EQUAL(MB_PRI_BEST + 4, q.get_highest_pri_msg_nowait()->priority());
   
   // check final state
-  CPPUNIT_ASSERT(q.get_highest_pri_msg() == 0);
+  CPPUNIT_ASSERT(q.get_highest_pri_msg_nowait() == 0);
 }
 
 ////////////////////////////////////////////////////////////////
@@ -397,10 +393,10 @@ qa_mblock_prims::test_make_accepter()
 
   pmt_t cs = pmt_intern("cs");
 
-  mb_message_sptr msg = mb->impl()->msgq().get_highest_pri_msg();
+  mb_message_sptr msg = mb->impl()->msgq().get_highest_pri_msg_nowait();
   CPPUNIT_ASSERT(pmt_eq(cs, msg->port_id()));	      // confirm that port_id is set
   CPPUNIT_ASSERT_EQUAL(0L, pmt_to_long(msg->data())); // and that data is correct
 
-  CPPUNIT_ASSERT_EQUAL(1L, pmt_to_long(mb->impl()->msgq().get_highest_pri_msg()->data()));
-  CPPUNIT_ASSERT_EQUAL(2L, pmt_to_long(mb->impl()->msgq().get_highest_pri_msg()->data()));
+  CPPUNIT_ASSERT_EQUAL(1L, pmt_to_long(mb->impl()->msgq().get_highest_pri_msg_nowait()->data()));
+  CPPUNIT_ASSERT_EQUAL(2L, pmt_to_long(mb->impl()->msgq().get_highest_pri_msg_nowait()->data()));
 }
