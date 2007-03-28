@@ -118,6 +118,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         #  on FFT bins.
         upper_limit = binwidth / 0.10
         self.setitimer = int(upper_limit * 2.00)
+        self.scanning = True
 
         # Calculate the CHIRP values based on Hz/sec
         self.CHIRP_LOWER = 0.10 * self.setitimer
@@ -487,6 +488,16 @@ class app_flow_graph(stdgui.gui_flow_graph):
         myform['average'] = form.slider_field(parent=self.panel, sizer=vbox2, 
                     label="Spectral Averaging (FFT frames)", weight=1, min=1, max=3000, callback=self.set_averaging)
 
+        # Set up scan control button when in SETI mode
+        if (self.setimode == True):
+	        # SETI scanning control
+	        buttonbox = wx.BoxSizer(wx.HORIZONTAL)
+	        self.scan_control = form.button_with_callback(self.panel,
+	              label="Scan: On ",
+	              callback=self.toggle_scanning)
+	
+	        buttonbox.Add(self.scan_control, 0, wx.CENTER)
+	        vbox2.Add(buttonbox, 0, wx.CENTER)
         vbox2.Add((4,0), 0, 0)
 
         if self.setimode == False:
@@ -650,7 +661,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
          else:
              self.seti_analysis(self.fft_outbuf,sidtime)
              now = time.time()
-             if ((now - self.seti_then) > self.setifreq_timer):
+             if ((self.scanning == True) and ((now - self.seti_then) > self.setifreq_timer)):
                  self.seti_then = now
                  self.setifreq_current = self.setifreq_current + self.fft_input_rate
                  if (self.setifreq_current > self.setifreq_upper):
@@ -945,7 +956,19 @@ class app_flow_graph(stdgui.gui_flow_graph):
         else:
           self.annotate_state = True
           self.annotation.SetLabel("Annotation: On")
-        
+    #
+    # Turn scanning on/off
+    # Called-back by "Recording" button
+    #
+    def toggle_scanning(self):
+        # Current scanning?  Flip state
+        if (self.scanning == True):
+          self.scanning = False
+          self.scan_control.SetLabel("Scan: Off")
+        # Not scanning
+        else:
+          self.scanning = True
+          self.scan_control.SetLabel("Scan: On ")
 
 def main ():
     app = stdgui.stdapp(app_flow_graph, "RADIO ASTRONOMY SPECTRAL/CONTINUUM RECEIVER: $Revision$", nstatus=1)
