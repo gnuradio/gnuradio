@@ -35,7 +35,8 @@ module cic_decim
    input [bw-1:0] signal_in;
    output [bw-1:0] signal_out;
    reg [bw-1:0] signal_out;
-
+   wire [bw-1:0] signal_out_unreg;
+   
    wire [bw+maxbitgain-1:0] signal_in_ext;
    reg [bw+maxbitgain-1:0]  integrator [0:N-1];
    reg [bw+maxbitgain-1:0] differentiator [0:N-1];
@@ -83,7 +84,10 @@ module cic_decim
    wire [bw+maxbitgain-1:0] signal_out_unnorm = pipeline[N-1];
 
    cic_dec_shifter #(bw)
-	cic_dec_shifter(rate,signal_out_unnorm,signal_out);
+	cic_dec_shifter(rate,signal_out_unnorm,signal_out_unreg);
+
+   always @(posedge clock)
+     signal_out <= #1 signal_out_unreg;
    
 endmodule // cic_decim
 
