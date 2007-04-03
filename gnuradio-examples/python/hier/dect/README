@@ -1,0 +1,45 @@
+This directory contains a work in progress service monitor for DECT
+digital cordless phone base stations and handsets.
+
+
+Status
+------
+
+2007 Apr 03 - Development on hold.
+2007 Feb 11 - Added GMSK demodulation and option to log to file
+2007 Feb 10 - Able to tune and log filtered baseband to file
+
+
+Files
+-----
+
+usrp_dect.py     - DECT receiver application
+
+dect_receiver.py - Top-level hierarchical block (new type) implementing 
+                   receiver
+
+usrp_source.py   - Hierarchical block (new type) implementing a USRP 
+                   complex source, with convenience functions for tuning, 
+                   gain, decimation, etc.
+
+gmsk2.py         - Hierarchical block (new type) implementing GMSK
+                   modulation and demodulation.  This will eventually go
+                   into the core blksimpl directory
+
+DECT Modulation Details
+-----------------------
+
+In the US, the FCC has allocated four carrier frequencies for DECT usage:
+
+Channel		Frequency
+-------		---------
+   1		1921.536 MHz
+   2		1923.264 MHz
+   3		1924.992 MHz
+   4		1926.720 MHz
+
+These are spaced at 1.728 MHz intervals.
+
+The DECT PHY uses GMSK with a 0.5 bandwidth-time product at 1.152 Msym/sec,
+for an occupied bandwidth (99% power) of 1.186 MHz (1.03 x symbol rate.)
+

@@ -1,5 +1,5 @@
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,11 +19,10 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-SUBDIRS = \
-    audio \
-    dect \
-    digital \
-    ofdm \
-    networking \
-    sounder \
-    usrp
+EXTRA_DIST = 			\
+	README			\
+	dect_receiver.py	\
+	usrp_source.py		\
+	usrp_dect.py
+
+MOSTLYCLEANFILES = *.pyc *~
