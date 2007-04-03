@@ -77,6 +77,7 @@ libgeneral_la_SOURCES = 		\
 	gr_fxpt.cc			\
 	gr_framer_sink_1.cc		\
 	gr_glfsr_source_b.cc		\
+	gr_glfsr_source_f.cc		\
 	gr_head.cc			\
 	gr_interleave.cc		\
 	gr_interleaved_short_to_complex.cc \
@@ -99,6 +100,7 @@ libgeneral_la_SOURCES = 		\
 	gr_pll_carriertracking_cc.cc	\
 	gr_pll_freqdet_cf.cc		\
 	gr_pll_refout_cc.cc		\
+	gr_pn_correlator_cc.cc		\
 	gr_prefix.cc			\
 	gr_prefs.cc			\
 	gr_probe_avg_mag_sqrd_c.cc	\
@@ -200,6 +202,7 @@ grinclude_HEADERS = 			\
 	gr_fxpt_nco.h			\
 	gr_fxpt_vco.h			\
 	gr_glfsr_source_b.h		\
+	gr_glfsr_source_f.h		\
 	gr_head.h			\
 	gr_interleave.h			\
 	gr_interleaved_short_to_complex.h \
@@ -224,6 +227,7 @@ grinclude_HEADERS = 			\
 	gr_pll_carriertracking_cc.h	\
 	gr_pll_freqdet_cf.h		\
 	gr_pll_refout_cc.h		\
+	gr_pn_correlator_cc.h		\
 	gr_prefix.h			\
 	gr_prefs.h			\
 	gr_probe_avg_mag_sqrd_c.h	\
@@ -330,6 +334,7 @@ swiginclude_HEADERS =			\
 	gr_frequency_modulator_fc.i	\
 	gr_framer_sink_1.i		\
 	gr_glfsr_source_b.i		\
+	gr_glfsr_source_f.i		\
 	gr_head.i			\
 	gr_interleave.i 		\
 	gr_interleaved_short_to_complex.i \
@@ -350,6 +355,7 @@ swiginclude_HEADERS =			\
 	gr_pll_carriertracking_cc.i	\
 	gr_pll_freqdet_cf.i		\
 	gr_pll_refout_cc.i		\
+	gr_pn_correlator_cc.i		\
 	gr_prefix.i			\
 	gr_prefs.i			\
 	gr_probe_avg_mag_sqrd_c.i	\

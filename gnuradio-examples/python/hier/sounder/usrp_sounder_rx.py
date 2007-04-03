@@ -23,47 +23,85 @@
 from gnuradio import gr, eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
+from usrp_source import usrp_source_c
 from sounder_rx import sounder_rx
 
+n2s = eng_notation.num_to_str
+
+class usrp_sounder_rx(gr.hier_block2):
+    def __init__(self, options):
+        gr.hier_block2.__init__(self, "usrp_sounder_rx",
+                                gr.io_signature(0,0,0),
+                                gr.io_signature(0,0,0))
+
+        self._options = options
+        self._u = usrp_source_c(0,
+                                self._options.rx_subdev_spec,
+                                self._options.gain,
+                                self._options.chip_rate,
+                                self._options.freq,
+                                self._options.cal,
+                                self._options.verbose)
+        self._options.chip_rate = self._u._if_rate
+        self._length = 2**self._options.degree-1
+        self._receiver = sounder_rx(self._options.chip_rate,
+                                    self._options.degree,
+                                    self._options.verbose)
+
+        samples = 100 * self._length**2
+
+        self.define_component("usrp", self._u)
+        self.define_component("head", gr.head(gr.sizeof_gr_complex, samples))
+	self.define_component("rx",   self._receiver)
+        self.define_component("c2m",  gr.complex_to_mag())
+        self.define_component("s2v",  gr.stream_to_vector(gr.sizeof_float, self._length))
+        self.define_component("lpf",  gr.single_pole_iir_filter_ff(self._options.alpha, self._length))
+        self.define_component("v2s",  gr.vector_to_stream(gr.sizeof_float, self._length))
+        self.define_component("sink", gr.file_sink(gr.sizeof_float, "impulse.dat"))
+
+        self.connect("usrp", 0, "head", 0)
+        self.connect("head", 0, "rx", 0)
+        self.connect("rx", 0, "c2m", 0)
+        self.connect("c2m", 0, "s2v", 0)
+        self.connect("s2v", 0, "lpf", 0)
+        self.connect("lpf", 0, "v2s", 0)
+        self.connect("v2s", 0, "sink", 0)
+
+	if self._options.verbose:
+            print "Chip rate is", n2s(self._options.chip_rate), "chips/sec"
+            print "Resolution is", n2s(1.0/self._options.chip_rate), "sec"
+            print "Using PN code of degree", self._options.degree
+
 def main():
-	parser = OptionParser(option_class=eng_option)
+    parser = OptionParser(option_class=eng_option)
+    parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
+                      help="select USRP Rx side A or B (default=first found)")
+    parser.add_option("-f", "--freq", type="eng_float", default=0.0,
+                      help="set center frequency (default=%default)")
+    parser.add_option("-c", "--cal", type="eng_float", default=0.0,
+                      help="set frequency calibration offset (default=%default)")
+    parser.add_option("-v", "--verbose", action="store_true", default=False,
+                      help="print extra debugging info")
+    parser.add_option("-d", "--degree", type="int", default=10,
+                      help="set PN code degree (length=2**degree-1, default=%default)")
+    parser.add_option("-r", "--chip-rate", type="eng_float", default=8e6,
+                      help="set sounder chip rate (default=%default)")
+    parser.add_option("-g", "--gain", type="eng_float", default=None,
+                      help="set receiver gain (default=%default)")
+    parser.add_option("", "--alpha", type="eng_float", default=1.0,
+                      help="set smoothing constant (default=%default)")
+    (options, args) = parser.parse_args()
+    if len(args) != 0:
+        parser.print_help()
+        sys.exit(1)
 
-	# Receive path options
-        parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
-                          help="select USRP Rx side A or B (default=first found)")
-        parser.add_option("-f", "--freq", type="eng_float", default=0.0,
-                          help="set center frequency (default=%default)")
-        parser.add_option("-c", "--cal", type="eng_float", default=0.0,
-                          help="set frequency calibration offset (default=%default)")
-	parser.add_option("-v", "--verbose", action="store_true", default=False,
-			  help="print extra debugging info")
-	parser.add_option("-d", "--max-delay", type="eng_float", default=10e-6,
-			  help="set maximum delay spread (default=%default)")
-	parser.add_option("-r", "--chip-rate", type="eng_float", default=8e6,
-			  help="set sounder chip rate (default=%default)")
-	parser.add_option("-g", "--gain", type="eng_float", default=None,
-			  help="set output amplitude (default=%default)")
-        (options, args) = parser.parse_args()
+    top_block = usrp_sounder_rx(options)
+    runtime = gr.runtime(top_block)
 
-	if len(args) != 0:
-            parser.print_help()
-            sys.exit(1)
-
-	# Create an instance of a hierarchical block
-	top_block = sounder_rx(options.rx_subdev_spec, options.freq, options.cal,
-	                       options.verbose, options.max_delay, options.chip_rate,
-			       options.gain)
-			      
-	# Create an instance of a runtime, passing it the top block
-	# to process
-	runtime = gr.runtime(top_block)
-
-	try:    
-            # Run forever
-            runtime.run()
-	except KeyboardInterrupt:
-            # Ctrl-C exits
-            pass
+    try:
+        runtime.run()
+    except KeyboardInterrupt:
+        pass
 
 if __name__ == '__main__':
     main ()

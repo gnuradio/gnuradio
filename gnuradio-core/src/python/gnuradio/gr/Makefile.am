@@ -63,6 +63,7 @@ noinst_PYTHON = 			\
 	qa_fractional_interpolator.py   \
 	qa_frequency_modulator.py	\
 	qa_fsk_stuff.py			\
+	qa_glfsr_source.py		\
 	qa_goertzel.py			\
 	qa_head.py			\
 	qa_hier_block2.py		\
@@ -81,6 +82,7 @@ noinst_PYTHON = 			\
 	qa_pll_carriertracking.py	\
 	qa_pll_freqdet.py		\
 	qa_pll_refout.py		\
+	qa_pn_correlator_cc.py		\
 	qa_rational_resampler.py	\
 	qa_sig_source.py		\
 	qa_single_pole_iir.py		\

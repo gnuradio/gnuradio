@@ -28,51 +28,28 @@ n2s = eng_notation.num_to_str
 
 class sounder_rx(gr.hier_block2):
     """
-    Creates a top-level channel sounder block with the given parameters.
+    Creates a channel sounder receiver block with the given parameters.
     """
 
-    def __init__(self, subdev_spec, freq, cal, verbose, max_delay, chip_rate, gain):
+    def __init__(self, chip_rate, degree, verbose):
 
         # Call hierarchical block constructor
         # Top-level blocks have no inputs or outputs
         gr.hier_block2.__init__(self,
-                                "sounder_rx",           # Block typename
-                                gr.io_signature(0,0,0), # Input signature
-                                gr.io_signature(0,0,0)) # Output signature
-        self._freq = freq
-        self._cal = cal
+                                "sounder_rx",                                # Block typename
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+
+        self._degree = degree
+        self._chip_rate = chip_rate
         self._verbose = verbose
-        self._max_delay = max_delay
-
-        self._u = usrp_source_c(0, subdev_spec, gain, chip_rate, self._freq, self._cal, verbose)
-        self.define_component("usrp", self._u)
-
-        self._chip_rate = self._u._if_rate
-        self._resolution = 1.0/self._chip_rate
-
-        min_chips = int(math.ceil(2.0*self._max_delay * self._chip_rate))
-        degree = int(math.ceil(math.log(min_chips)/math.log(2)))
-        self._length = 2**degree-1
-        self._seq_per_sec = self._chip_rate/self._length
-        self._tap = 0.0001
+        self._length = 2**self._degree-1
+        self._rep_rate = self._chip_rate/float(self._length)
 
         if self._verbose:
-            print "Actual chip rate is", n2s(self._chip_rate), "chips/sec"
-            print "Resolution is", n2s(self._resolution), "sec"
-            print "Using specified maximum delay spread of", self._max_delay, "sec"
-            print "Mininum sequence length needed is", n2s(min_chips), "chips"
-            print "Using PN sequence of degree", degree, "length", self._length
-            print "Sequences per second is", self._seq_per_sec
-            print "IIR tap is", self._tap
+            print "Using PN sequence of degree", self._degree, "length", self._length
+            print "Sequence repetition rate is", n2s(self._rep_rate), "per sec"
         
-        self.define_component("s2v", gr.stream_to_vector(gr.sizeof_gr_complex, self._length))
-        self.define_component("fft", gr.fft_vcc(self._length, True, ())) # No window needed
-        self.define_component("avg", gr.single_pole_iir_filter_cc(self._tap, self._length))
-        self.define_component("keep", gr.keep_one_in_n(gr.sizeof_gr_complex*self._length, int(self._seq_per_sec)))
-        self.define_component("sink", gr.file_sink(gr.sizeof_gr_complex*self._length, "FFT.dat"))
-
-        self.connect("usrp", 0, "s2v", 0)
-        self.connect("s2v", 0, "fft", 0)
-        self.connect("fft", 0, "avg", 0)
-        self.connect("avg", 0, "keep", 0)
-        self.connect("keep", 0, "sink", 0)
+        self.define_component("corr", gr.pn_correlator_cc(self._degree))
+        self.connect("self", 0, "corr", 0)
+        self.connect("corr", 0, "self", 0)

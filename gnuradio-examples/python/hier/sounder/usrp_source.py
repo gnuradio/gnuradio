@@ -93,7 +93,9 @@ class usrp_source_c(gr.hier_block2):
 	    gain = (g[0]+g[1])/2.0
         self._gain = gain
         self._subdev.set_gain(self._gain)
-
+        if self._verbose:
+            print "USRP gain set to", self._gain
+            
     def set_calibration(self, calibration):
         self._cal = calibration
         if self._verbose:
