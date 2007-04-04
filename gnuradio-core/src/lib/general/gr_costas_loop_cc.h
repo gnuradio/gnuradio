@@ -31,6 +31,30 @@
 class gr_costas_loop_cc;
 typedef boost::shared_ptr<gr_costas_loop_cc> gr_costas_loop_cc_sptr;
 
+/*! \brief A Costas loop carrier recovery module.
+ *  
+ *  The Costas loop locks to the center frequency of a signal and
+ *  downconverts it to baseband. The second (order=2) order loop is
+ *  used for BPSK where the real part of the output signal is the
+ *  baseband BPSK signal and the imaginary part is the error
+ *  signal. When order=4, it can be used for quadrature modulations
+ *  where both I and Q (real and imaginary) are outputted.
+ *
+ *  More details can be found online:
+ *
+ *  J. Feigin, "Practical Costas loop design: Designing a simple and inexpensive
+ *  BPSK Costas loop carrier recovery circuit," RF signal processing, pp. 20-36,
+ *  2002.
+ *
+ *  http://rfdesign.com/images/archive/0102Feigin20.pdf
+ *  
+ * \param alpha the loop gain used for phase adjustment
+ * \param beta the loop gain for frequency adjustments
+ * \param max_freq the maximum frequency deviation the loop can handle
+ * \param min_freq the minimum frequency deviation the loop can
+ * handle
+ * \param order the loop order, either 2 or 4
+ */
 gr_costas_loop_cc_sptr 
 gr_make_costas_loop_cc (float alpha, float beta,
 			float max_freq, float min_freq, 
@@ -40,9 +64,10 @@ gr_make_costas_loop_cc (float alpha, float beta,
 
 /*!
  * \brief Carrier tracking PLL for QPSK
+ * \ingroup block
  * input: complex; output: complex
  * <br>The Costas loop can have two output streams:
- *    stream 1 is the baseband I&Q;
+ *    stream 1 is the baseband I and Q;
  *    stream 2 is the normalized frequency of the loop
  *
  * \p order must be 2 or 4.
@@ -62,8 +87,19 @@ class gr_costas_loop_cc : public gr_sync_block
 		     int order
 		     ) throw (std::invalid_argument);
 
+  /*! \breif the phase detector circuit for fourth-order loops
+   *  \param a complex sample
+   *  \return the phase error
+   */
   float phase_detector_4(gr_complex sample) const;    // for QPSK
+
+  /*! \breif the phase detector circuit for second-order loops
+   *  \param a complex sample
+   *  \return the phase error
+   */
   float phase_detector_2(gr_complex sample) const;    // for BPSK
+
+
   float (gr_costas_loop_cc::*d_phase_detector)(gr_complex sample) const;
 
 public:
