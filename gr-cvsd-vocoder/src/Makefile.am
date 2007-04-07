@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,6 +19,4 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-EXTRA_DIST = 					\
-	encdec.py				\
-	cvsd_test.py
+SUBDIRS = lib python

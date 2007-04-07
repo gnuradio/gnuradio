@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,6 +19,22 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-EXTRA_DIST = 					\
-	encdec.py				\
-	cvsd_test.py
+include $(top_srcdir)/Makefile.common
+
+EXTRA_DIST = run_tests.in
+
+
+TESTS = 				\
+	run_tests
+
+
+grblkspythondir = $(grpythondir)/blksimpl
+
+grblkspython_PYTHON =		\
+	cvsd.py
+
+noinst_PYTHON = 			\
+	encdec.py			\
+	qa_cvsd_vocoder.py		
+
+CLEANFILES = *.pyc *.pyo
