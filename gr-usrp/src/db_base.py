@@ -154,6 +154,20 @@ class db_base(object):
         """
         return self._u._write_fpga_reg(FR_ATR_RXVAL_0 + 3 * self._slot, v)
 
+    def set_atr_tx_delay(self, v):
+	"""
+	Set Auto T/R delay (in clock ticks) from when Tx fifo gets data to 
+	when T/R switches.
+	"""
+	return self._u._write_fpga_reg(FR_ATR_TX_DELAY, v)
+	
+    def set_atr_rx_delay(self, v):
+	"""
+	Set Auto T/R delay (in clock ticks) from when Tx fifo goes empty to 
+	when T/R switches.
+	"""
+	return self._u._write_fpga_reg(FR_ATR_RX_DELAY, v)
+	
     # derived classes should override the following methods
 
     def freq_range(self):

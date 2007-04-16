@@ -32,8 +32,7 @@
 #define	FR_TX_SAMPLE_RATE_DIV	 0
 #define	FR_RX_SAMPLE_RATE_DIV	 1
 
-// 2 is available.
-// 3 is available.
+// 2 and 3 are defined in the ATR section
 
 #define	FR_MASTER_CTRL		 4	// master enable and reset controls
 #  define  bmFR_MC_ENABLE_TX		(1 << 0)
@@ -143,5 +142,9 @@
 #define FR_ATR_MASK_3		29	// slot 3
 #define	FR_ATR_TXVAL_3		30
 #define FR_ATR_RXVAL_3		31
+
+// Clock ticks to delay rising and falling edge of T/R signal
+#define FR_ATR_TX_DELAY          2
+#define FR_ATR_RX_DELAY          3
 
 #endif /* INCLUDED_FPGA_REGS_COMMON_H */

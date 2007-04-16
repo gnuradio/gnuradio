@@ -3,6 +3,7 @@
 //  USRP - Universal Software Radio Peripheral
 //
 //  Copyright (C) 2003,2005 Matt Ettus
+//  Copyright (C) 2007 Corgan Enterprises LLC
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -111,8 +112,9 @@ module master_control
 	   <= #1 (io_3_reg & ~serial_data[31:16]) | (serial_data[15:0] & serial_data[31:16] );
        endcase // case(serial_addr)
 
-   wire        transmit_now = !tx_empty & enable_tx;
+   wire        transmit_now;
    wire        atr_ctl;
+   wire [31:0] atr_tx_delay, atr_rx_delay;
    wire [15:0] atr_mask_0, atr_txval_0, atr_rxval_0, atr_mask_1, atr_txval_1, atr_rxval_1, atr_mask_2, atr_txval_2, atr_rxval_2, atr_mask_3, atr_txval_3, atr_rxval_3;
       
    setting_reg #(`FR_ATR_MASK_0) sr_atr_mask_0(.clock(master_clk),.reset(1'b0),.strobe(serial_strobe),.addr(serial_addr),.in(serial_data),.out(atr_mask_0));
@@ -132,8 +134,14 @@ module master_control
    setting_reg #(`FR_ATR_RXVAL_3) sr_atr_rxval_3(.clock(master_clk),.reset(1'b0),.strobe(serial_strobe),.addr(serial_addr),.in(serial_data),.out(atr_rxval_3));
 
    //setting_reg #(`FR_ATR_CTL) sr_atr_ctl(.clock(master_clk),.reset(1'b0),.strobe(serial_strobe),.addr(serial_addr),.in(serial_data),.out(atr_ctl));
+   setting_reg #(`FR_ATR_TX_DELAY) sr_atr_tx_delay(.clock(master_clk),.reset(1'b0),.strobe(serial_strobe),.addr(serial_addr),.in(serial_data),.out(atr_tx_delay));
+   setting_reg #(`FR_ATR_RX_DELAY) sr_atr_rx_delay(.clock(master_clk),.reset(1'b0),.strobe(serial_strobe),.addr(serial_addr),.in(serial_data),.out(atr_rx_delay));
+
    assign      atr_ctl = 1'b1;
 
+   atr_delay atr_delay(.clk_i(master_clk),.rst_i(tx_dsp_reset),.ena_i(atr_ctl & enable_tx),.tx_empty_i(tx_empty),
+		       .tx_delay_i(atr_tx_delay),.rx_delay_i(atr_rx_delay),.atr_tx_o(transmit_now));
+   
    wire [15:0] atr_selected_0 = transmit_now ? atr_txval_0 : atr_rxval_0;
    wire [15:0] io_0 = ({{16{atr_ctl}}} &  atr_mask_0 & atr_selected_0) | (~({{16{atr_ctl}}} & atr_mask_0) & io_0_reg);
    

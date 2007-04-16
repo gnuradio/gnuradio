@@ -13,8 +13,7 @@
 `define FR_TX_SAMPLE_RATE_DIV     7'd0
 `define FR_RX_SAMPLE_RATE_DIV     7'd1
 
-// 2 is available.
-// 3 is available.
+// 2 and 3 are defined in the ATR section
 
 `define FR_MASTER_CTRL            7'd4	// master enable and reset controls
 
@@ -111,4 +110,8 @@
 `define FR_ATR_MASK_3             7'd29	// slot 3
 `define FR_ATR_TXVAL_3            7'd30
 `define FR_ATR_RXVAL_3            7'd31
+
+// Clock ticks to delay rising and falling edge of T/R signal
+`define FR_ATR_TX_DELAY           7'd2
+`define FR_ATR_RX_DELAY           7'd3
 
