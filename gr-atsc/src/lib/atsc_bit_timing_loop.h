@@ -76,9 +76,7 @@ public:
   atsci_interpolator            d_interp;
   unsigned long long            d_next_input;
   double                        d_rx_clock_to_symbol_freq;
-
-  unsigned long long            inputs0_index;     // for inputs[0].index
-  unsigned long			inputs0_size;	   // for inputs[0].size
+  int				d_si;
 
 
 };

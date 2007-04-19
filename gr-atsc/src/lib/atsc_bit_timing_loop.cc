@@ -44,7 +44,8 @@ atsc_bit_timing_loop::atsc_bit_timing_loop()
 		  gr_make_io_signature(1, 1, sizeof(float)),
 		  gr_make_io_signature(2, 2, sizeof(float))),
 		  d_interp(ratio_of_rx_clock_to_symbol_freq), d_next_input(0),
-		  d_rx_clock_to_symbol_freq (ratio_of_rx_clock_to_symbol_freq)
+		  d_rx_clock_to_symbol_freq (ratio_of_rx_clock_to_symbol_freq),
+		  d_si(0)
 {
   reset();
 }
@@ -56,8 +57,6 @@ atsc_bit_timing_loop::forecast (int noutput_items, gr_vector_int &ninput_items_r
   for (unsigned i = 0; i < ninputs; i++)
     ninput_items_required[i] = noutput_items * d_rx_clock_to_symbol_freq + 1500 - 1;
 
-  inputs0_size = noutput_items * d_rx_clock_to_symbol_freq + 1500 - 1;
-  inputs0_index = d_next_input;
 }
 
 int
@@ -68,7 +67,7 @@ atsc_bit_timing_loop::general_work (int noutput_items,
 {
   int   r = work (noutput_items, input_items, output_items);
   if (r > 0)
-    consume_each (r * d_rx_clock_to_symbol_freq);
+    consume_each (d_si);
   return r;
 }
 
@@ -87,7 +86,6 @@ atsc_bit_timing_loop::work (int noutput_items,
   // We are tasked with producing output.size output samples.
   // We will consume approximately 2 * output.size input samples.
 
-  int           si = 0;         // source index
   unsigned int  k;              // output index
 
   float         interp_sample;
@@ -95,12 +93,16 @@ atsc_bit_timing_loop::work (int noutput_items,
   double        timing_adjustment = 0;
   bool          seg_locked;
   atsc::syminfo    tag;
+  // ammount requested in forecast
+  unsigned long input_size = noutput_items * d_rx_clock_to_symbol_freq + 1500 -1;
 
   memset (&tag, 0, sizeof (tag));
 
+  // ammount actually consumed
+  d_si = 0;
   
   for (k = 0; k < noutput_items; k++){
-    if (!d_interp.update (in, inputs0_size, &si, timing_adjustment, &interp_sample)){
+    if (!d_interp.update (in, input_size, &d_si, timing_adjustment, &interp_sample)){
       fprintf (stderr, "GrAtscBitTimingLoop3: ran short on data...\n");
       break;
     }
@@ -113,6 +115,5 @@ atsc_bit_timing_loop::work (int noutput_items,
 
   }
 
-  d_next_input += si;    // update next_input so forecast can get us what we need
   return k;
 }
