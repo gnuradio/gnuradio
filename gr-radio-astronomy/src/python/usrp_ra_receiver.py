@@ -300,17 +300,20 @@ class app_flow_graph(stdgui.gui_flow_graph):
             self.integrator2 = gr.fir_filter_fff (M, tapsM)
             self.integrator3 = gr.single_pole_iir_filter_ff(1.0)
     
+            # The detector
+            self.detector = gr.complex_to_mag_squared()
+
             # Split complex USRP stream into a pair of floats
-            self.splitter = gr.complex_to_float (1);
+            #self.splitter = gr.complex_to_float (1);
     
-            # I squarer (detector)
-            self.multI = gr.multiply_ff();
-    
-            # Q squarer (detector)
-            self.multQ = gr.multiply_ff();
-    
-            # Adding squared I and Q to produce instantaneous signal power
-            self.adder = gr.add_ff();
+#            # I squarer (detector)
+#            self.multI = gr.multiply_ff();
+#    
+#            # Q squarer (detector)
+#            self.multQ = gr.multiply_ff();
+#    
+#            # Adding squared I and Q to produce instantaneous signal power
+#            self.adder = gr.add_ff();
     
             # Signal probe
             self.probe = gr.probe_signal_f();
@@ -332,30 +335,34 @@ class app_flow_graph(stdgui.gui_flow_graph):
             self.connect(self.u, self.fft_bandpass, self.scope)
 
         if self.setimode == False:
-            #
-            # The head of the continuum chain
-            #
-            self.connect(self.u, self.splitter)
-    
-            # Connect splitter outputs to multipliers
-            # First do I^2
-            self.connect((self.splitter, 0), (self.multI,0))
-            self.connect((self.splitter, 0), (self.multI,1))
-    
-            # Then do Q^2
-            self.connect((self.splitter, 1), (self.multQ,0))
-            self.connect((self.splitter, 1), (self.multQ,1))
-    
-            # Then sum the squares
-            self.connect(self.multI, (self.adder,0))
-            self.connect(self.multQ, (self.adder,1))
-    
-            # Connect adder output to two-stages of FIR integrator
-            #   followed by a single stage IIR integrator, and
-            #   the calibrator
-            self.connect(self.adder, self.integrator1, 
-               self.integrator2, self.integrator3, self.cal_mult, 
-               self.cal_offs, self.chart)
+#            #
+#            # The head of the continuum chain
+#            #
+#            self.connect(self.u, self.splitter)
+#    
+#            # Connect splitter outputs to multipliers
+#            # First do I^2
+#            self.connect((self.splitter, 0), (self.multI,0))
+#            self.connect((self.splitter, 0), (self.multI,1))
+#    
+#            # Then do Q^2
+#            self.connect((self.splitter, 1), (self.multQ,0))
+#            self.connect((self.splitter, 1), (self.multQ,1))
+#    
+#            # Then sum the squares
+#            self.connect(self.multI, (self.adder,0))
+#            self.connect(self.multQ, (self.adder,1))
+#    
+#            # Connect adder output to two-stages of FIR integrator
+#            #   followed by a single stage IIR integrator, and
+#            #   the calibrator
+#            self.connect(self.adder, self.integrator1, 
+#               self.integrator2, self.integrator3, self.cal_mult, 
+#               self.cal_offs, self.chart)
+
+            self.connect(self.u, self.detector, 
+                self.integrator1, self.integrator2,
+                self.integrator3, self.cal_mult, self.cal_offs, self.chart)
     
             # Connect calibrator to probe
             # SPECIAL NOTE:  I'm setting the ground work here
