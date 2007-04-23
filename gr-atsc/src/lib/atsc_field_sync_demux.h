@@ -22,7 +22,7 @@
 #ifndef INCLUDED_ATSC_FIELD_SYNC_DEMUX_H
 #define INCLUDED_ATSC_FIELD_SYNC_DEMUX_H
 
-#include <gr_sync_decimator.h>
+#include <gr_block.h>
 #include <atsc_types.h>
 
 class atsc_field_sync_demux;
@@ -36,9 +36,8 @@ atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
  * This class accepts 1 stream of floats (data), and 1 stream of tags (syminfo). * It outputs one stream of atsc_soft_data_segment packets
  * \ingroup atsc
  *
- * input: atsc_data_segment; output: atsc_data_segment
  */
-class atsc_field_sync_demux : public gr_sync_decimator
+class atsc_field_sync_demux : public gr_block
 {
   friend atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
 
@@ -46,6 +45,13 @@ class atsc_field_sync_demux : public gr_sync_decimator
 
 public:
   void forecast (int noutput_items, gr_vector_int &ninput_items_required);
+
+  int  general_work (int noutput_items,
+                     gr_vector_int &ninput_items,
+                     gr_vector_const_void_star &input_items,
+                     gr_vector_void_star &output_items);
+
+
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
@@ -59,8 +65,9 @@ protected:
   gr_uint64       d_next_input;
   gr_uint64       d_lost_index;         // diagnostic fluff
 
-  unsigned long long inputs0_index;	// for inputs[0].index
-  unsigned long	  inputs0_size;		// for inputs[0].size
+  unsigned long long d_inputs0_index;	// for inputs[0].index
+  unsigned long	  d_inputs0_size;		// for inputs[0].size
+  int		  d_consume;
 
 };
 

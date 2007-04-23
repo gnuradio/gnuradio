@@ -1,0 +1,32 @@
+Currently the best, fastest software decode is by using
+19.2MSps over 5 processes.
+
+1) Capture data - adjust gain (-g) frequency (-f) and which side
+the tvrx is on to fit your local setup:
+
+usrp_rx_cfile -R B -d 10 -g 65 -f 503e6 atsc_data_6-4m_complex 
+
+
+2) Make pipes:
+
+mkfifo /tmp/atsc_pipe_1
+mkfifo /tmp/atsc_pipe_2
+mkfifo /tmp/atsc_pipe_3
+mkfifo /tmp/atsc_pipe_4
+mkfifo /tmp/atsc_pipe_5
+
+3) In seperate windows run processes:
+
+./interp.py <input rf data at 6.4Msps>
+./xlate.py
+./fpll.py
+./btl-fsd.py
+./viterbi-out.py <output mpeg transport stream>
+
+
+Status: Not fully working.
+
+Currently gr-atsc 2.x will produce the exact amount of data as a working system,
+but there are a some differences in the output. If you substitute the btl-fsd.py
+block with the corresponding code from gnuradio-0.9 it works.
+

@@ -187,7 +187,7 @@ GR_SWIG_BLOCK_MAGIC(atsc,field_sync_demux);
 
 atsc_field_sync_demux_sptr atsc_make_field_sync_demux();
 
-class atsc_field_sync_demux : public gr_sync_decimator
+class atsc_field_sync_demux : public gr_block
 {
   atsc_field_sync_demux();
 

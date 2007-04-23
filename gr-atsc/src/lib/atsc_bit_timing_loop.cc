@@ -28,7 +28,8 @@
 #include <gr_io_signature.h>
 #include <atsc_consts.h>
 
-float input_rate = 20e6;
+// Input rate changed from 20MHz to 19.2 to support usrp at 3 * 6.4MHz
+float input_rate = 19.2e6;
 double ratio_of_rx_clock_to_symbol_freq = input_rate / ATSC_SYMBOL_RATE;
 
 

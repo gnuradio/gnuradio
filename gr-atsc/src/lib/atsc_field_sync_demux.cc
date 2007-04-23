@@ -46,11 +46,12 @@ atsc_make_field_sync_demux()
 }
 
 atsc_field_sync_demux::atsc_field_sync_demux()
-  : gr_sync_decimator("atsc_field_sync_demux",
+  : gr_block("atsc_field_sync_demux",
 		  gr_make_io_signature(2, 2, sizeof(float)),
-		  gr_make_io_signature(1, 1, sizeof(atsc_soft_data_segment)),DEC),
+		  gr_make_io_signature(1, 1, sizeof(atsc_soft_data_segment))),
 		  d_locked(false), d_in_field2(true), d_segment_number(0),
-		  d_next_input(0), d_lost_index(0)
+		  d_next_input(0), d_lost_index(0), d_inputs0_size(0),
+		  d_inputs0_index(0), d_consume(0)
 {
   reset();
 }
@@ -66,11 +67,25 @@ atsc_field_sync_demux::forecast (int noutput_items, gr_vector_int &ninput_items_
 {
   unsigned ninputs = ninput_items_required.size();
   for (unsigned i = 0; i < ninputs; i++) {
-    ninput_items_required[i] = noutput_items * DEC + 2 * DEC - 1;
+    ninput_items_required[i] = noutput_items * DEC + 2 * DEC ;
 
-  inputs0_index = d_next_input;
-  inputs0_size = noutput_items * DEC + 2 * DEC - 1;
+  d_inputs0_index = d_next_input;
+  d_inputs0_size = noutput_items * DEC + 2 * DEC ;
   }
+}
+
+int
+atsc_field_sync_demux::general_work (int noutput_items,
+                                 gr_vector_int &ninput_items,
+                                 gr_vector_const_void_star &input_items,
+                                 gr_vector_void_star &output_items)
+{
+  int   r = work (noutput_items, input_items, output_items);
+    consume_each (d_consume);
+    // printf("Consumed: %d, produced: %d\n",d_consume,r);
+    // we consume input even if no output is produced
+    // while looking for sync
+  return r;
 }
 
 
@@ -92,7 +107,7 @@ atsc_field_sync_demux::work (int noutput_items,
 
     if (d_locked){
       d_locked = false;
-      d_lost_index = inputs0_index + ii;
+      d_lost_index = d_inputs0_index + ii;
       cerr << "atsc_field_sync_demux: lost sync at  "
            << d_lost_index << endl;
     }
@@ -100,9 +115,9 @@ atsc_field_sync_demux::work (int noutput_items,
     // ... search for beginning of a field sync
 
     // cerr << "atsc_field_sync_demux: searching for sync at "
-    //      << inputs0_index + ii << endl;
+    //      << d_inputs0_index + ii << endl;
 
-    for (ii = 1; ii < inputs0_size; ii++){
+    for (ii = 1; ii < d_inputs0_size; ii++){
       if (atsc::tag_is_start_field_sync (input_tags[ii])){
         // found one
         d_locked = true;
@@ -116,16 +131,19 @@ atsc_field_sync_demux::work (int noutput_items,
           str = "SEGMENT";
 
         cerr << "atsc_field_sync_demux: synced (" << str << ") at "
-             << inputs0_index + ii
-             << " [delta = " << inputs0_index + ii - d_lost_index
+             << d_inputs0_index + ii
+             << " [delta = " << d_inputs0_index + ii - d_lost_index
              << "]\n";
 
         d_next_input += ii;     // update for forecast
+	d_consume = ii;
         return 0;               // no work completed so far
       }
     }
     // no non-NORMAL tag found
     d_next_input += ii;         // update for forecast
+    d_consume = ii;
+    // printf("ii: %d, d_next_input: %d\n",ii,d_next_input);
     return 0;                   // no work completed so far
   }
 
@@ -135,7 +153,7 @@ atsc_field_sync_demux::work (int noutput_items,
 
   while (k < noutput_items){
 
-    if (inputs0_size - ii <  ATSC_DATA_SEGMENT_LENGTH){
+    if (d_inputs0_size - ii <  ATSC_DATA_SEGMENT_LENGTH){
       // We're out of input data.
       cerr << "atsc_field_sync_demux: ran out of input data\n";
       d_next_input += ii;       // update for forecast
@@ -145,7 +163,7 @@ atsc_field_sync_demux::work (int noutput_items,
     if (!tag_is_seg_sync_or_field_sync (input_tags[ii])){
       // lost sync...
       cerr << "atsc_field_sync_demux: lost sync at "
-           << inputs0_index + ii << endl;
+           << d_inputs0_index + ii << endl;
 
       d_next_input += ii;       // update for forecast
       return k;                 // return amount of work completed so far
@@ -179,6 +197,7 @@ atsc_field_sync_demux::work (int noutput_items,
   }
 
   d_next_input += ii;           // update for forecast
+  d_consume = ii;
   return k;                     // return amount of work completed
 
 }
