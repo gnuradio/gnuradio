@@ -453,6 +453,7 @@ INPUT                  = @top_srcdir@/gnuradio-core/src/lib \
 			 @top_srcdir@/gr-audio-oss \
 			 @top_srcdir@/gr-audio-osx \
 			 @top_srcdir@/gr-audio-portaudio \
+			 @top_srcdir@/gr-cvsd-vocoder \
 			 @top_srcdir@/gr-gsm-fr-vocoder \
 			 @top_srcdir@/gr-pager \
 			 @top_srcdir@/gr-radio-astronomy \
