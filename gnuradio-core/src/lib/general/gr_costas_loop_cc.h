@@ -50,9 +50,8 @@ typedef boost::shared_ptr<gr_costas_loop_cc> gr_costas_loop_cc_sptr;
  *  
  * \param alpha the loop gain used for phase adjustment
  * \param beta the loop gain for frequency adjustments
- * \param max_freq the maximum frequency deviation the loop can handle
- * \param min_freq the minimum frequency deviation the loop can
- * handle
+ * \param max_freq the maximum frequency deviation (normalized frequency) the loop can handle
+ * \param min_freq the minimum frequency deviation (normalized frequency) the loop can handle
  * \param order the loop order, either 2 or 4
  */
 gr_costas_loop_cc_sptr 
@@ -87,8 +86,8 @@ class gr_costas_loop_cc : public gr_sync_block
 		     int order
 		     ) throw (std::invalid_argument);
 
-  /*! \breif the phase detector circuit for fourth-order loops
-   *  \param a complex sample
+  /*! \brief the phase detector circuit for fourth-order loops
+   *  \param sample complex sample
    *  \return the phase error
    */
   float phase_detector_4(gr_complex sample) const;    // for QPSK
