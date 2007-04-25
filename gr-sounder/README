@@ -1,0 +1,61 @@
+This is a work-in-progress implementation of a m-sequence based channel 
+sounder for GNU Radio and the USRP.
+
+At present, only the transmitter is implemented. When completed, you
+will be able to place the sounder transmitter at one location, the
+sounder receiver at another location, then determine in real-time the
+channel impulse and frequency response between them.
+
+The sounder uses a custom FPGA bitstream that is able to generate and
+receive a sounder waveform across a full 32 MHz wide swath of RF spectrum;
+the waveform generation and impulse response processing occur in logic in
+the USRP FPGA and not in the host PC.  This avoids the USB throughput 
+bottleneck entirely.  Unfortunately, there is still roll-off in the AD9862
+digital up-converter interpolation filter that impacts the outer 20% of
+bandwidth, but this can be compensated for by measuring and subtracting
+out this response during calibration.
+
+The sounder is based on sending a maximal-length PN code modulated as BPSK
+with the supplied center frequency, with a chip-rate of 32 MHz. The
+receiver (partially implemented at this time but not working yet) correlates
+the received signal across all phases of the PN code and outputs an impulse
+response vector.  As auto-correlation of an m-sequence is near zero for
+any relative phase shift, the actual measured energy at a particular
+phase shift is related to the impulse response for that time delay.  This
+is the same principle used in spread-spectrum RAKE receivers such as are
+used with GPS and CDMA.
+
+The transmitter and receiver are designed to work only with the board in
+side A.  This may be a standalone LFTX/LFRX or an RFX daughterboard.
+
+To use, the following script is installed into $prefix/bin:
+
+usage: usrp_sounder.py [options]
+
+options:
+  -h, --help            show this help message and exit
+  -f FREQ, --frequency=FREQ
+                        set frequency to FREQ in Hz, default is 0.0
+  -t, --transmit        enable sounding transmitter
+  -r, --receive         enable sounding receiver
+  -d DEGREE, --degree=DEGREE
+                        set souding sequence degree (len=2^degree-1), default
+                        is 16
+  -n SAMPLES, --samples=SAMPLES
+                        number of samples to capture on receive, default is
+                        infinite
+  -l, --loopback        enable digital loopback, default is disabled
+
+To use with an LFTX board, set the center frequency to 16M:
+
+$ usrp_sounder.py -f 16M -t
+
+You can vary the m-sequence degree between 1 and 16, which will create
+sequence lengths between 1 (DC) and 65535 (1.023 us).  This will affect
+how frequently the receiver can calculate impulse response vectors (to be
+documented as the receiver is completed.)
+
+Johnathan Corgan
+Corgan Enterprises LLC
+jcorgan@corganenterprises.com
+4/25/07
