@@ -923,6 +923,8 @@ usrp_basic_tx::usrp_basic_tx (int which_board, int fusb_block_size, int fusb_nbl
   _write_fpga_reg(FR_ATR_MASK_2, 0);
   _write_fpga_reg(FR_ATR_TXVAL_2, 0);
   _write_fpga_reg(FR_ATR_RXVAL_2, 0);
+  _write_fpga_reg(FR_ATR_TX_DELAY, 0);
+  _write_fpga_reg(FR_ATR_RX_DELAY, 0);
 }
 
 
