@@ -319,7 +319,7 @@ gr_mpsk_receiver_cc::general_work (int noutput_items,
   int i=0, o=0;
 
   //while(i < ninput_items[0]) {    
-  while(o < noutput_items) {
+  while((o < noutput_items) && (i < ninput_items[0])) {
     while((d_mu > 1) && (i < ninput_items[0]))  {
       mm_sampler(in[i]);   // puts symbols into a buffer and adjusts d_mu
       i++;

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
-#!/usr/bin/env python
 #
-# Copyright 2005, 2006 Free Software Foundation, Inc.
+# Copyright 2005, 2006, 2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -77,10 +76,23 @@ class my_graph(gr.flow_graph):
         self.rxpath = receive_path(self, demod_class, rx_callback, options)
 
         if channelon:
-            self.channel = awgn_channel(self, options.sample_rate, noise_voltage, frequency_offset, options.seed)
+            self.channel = awgn_channel(self, options.sample_rate, noise_voltage,
+                                        frequency_offset, options.seed)
 
-            # Connect components
-            self.connect(self.txpath, self.throttle, self.channel, self.rxpath)
+            if options.discontinuous:
+                z = 20000*[0,]
+                self.zeros = gr.vector_source_c(z, True)
+                packet_size = 5*((4+8+4+1500+4) * 8)
+                self.mux = gr.stream_mux(gr.sizeof_gr_complex, [packet_size-0, int(9e5)])
+
+                # Connect components
+                self.connect(self.txpath, (self.mux,0))
+                self.connect(self.zeros, (self.mux,1))
+                self.connect(self.mux, self.channel, self.rxpath)
+
+            else:
+                self.connect(self.txpath, self.channel, self.rxpath)
+
         else:
             # Connect components
             self.connect(self.txpath, self.throttle, self.rxpath)
@@ -106,6 +118,7 @@ def main():
 
         print "ok = %5s  pktno = %4d  n_rcvd = %4d  n_right = %4d" % (
             ok, pktno, n_rcvd, n_right)
+        # print payload[2:len(payload)]
 
     def send_pkt(payload='', eof=False):
         return fg.txpath.send_pkt(payload, eof)
@@ -170,8 +183,6 @@ def main():
     while n < nbytes:
         send_pkt(struct.pack('!H', pktno) + (pkt_size - 2) * chr(pktno & 0xff))
         n += pkt_size
-        if options.discontinuous and pktno % 5 == 4:
-            time.sleep(1)
         pktno += 1
         
     send_pkt(eof=True)

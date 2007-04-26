@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2005,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2005,2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -57,6 +57,7 @@
 #include <gr_firdes.h>
 #include <gr_interleave.h>
 #include <gr_deinterleave.h>
+#include <gr_delay.h>
 #include <gr_simple_squelch_cc.h>
 #include <gr_agc_ff.h>
 #include <gr_agc_cc.h>
@@ -68,6 +69,7 @@
 #include <gr_fake_channel_coder_pp.h>
 #include <gr_throttle.h>
 #include <gr_mpsk_receiver_cc.h>
+#include <gr_stream_mux.h>
 #include <gr_stream_to_streams.h>
 #include <gr_streams_to_stream.h>
 #include <gr_streams_to_vector.h>
@@ -82,6 +84,7 @@
 #include <gr_packet_sink.h>
 #include <gr_lms_dfe_cc.h>
 #include <gr_lms_dfe_ff.h>
+#include <gr_dpll_ff.h>
 #include <gr_pll_freqdet_cf.h>
 #include <gr_pll_refout_cc.h>
 #include <gr_pll_carriertracking_cc.h>
@@ -89,6 +92,11 @@
 #include <gr_probe_avg_mag_sqrd_c.h>
 #include <gr_probe_avg_mag_sqrd_f.h>
 #include <gr_probe_signal_f.h>
+#include <gr_ofdm_correlator.h>
+#include <gr_ofdm_cyclic_prefixer.h>
+#include <gr_ofdm_bpsk_demapper.h>
+#include <gr_ofdm_bpsk_mapper.h>
+#include <gr_ofdm_sampler.h>
 #include <gr_costas_loop_cc.h>
 #include <gr_pa_2x2_phase_combiner.h>
 #include <gr_kludge_copy.h>
@@ -150,6 +158,7 @@
 %include "gr_firdes.i"
 %include "gr_interleave.i"
 %include "gr_deinterleave.i"
+%include "gr_delay.i"
 %include "gr_simple_squelch_cc.i"
 %include "gr_agc_ff.i"
 %include "gr_agc_cc.i"
@@ -161,6 +170,7 @@
 %include "gr_fake_channel_coder_pp.i"
 %include "gr_throttle.i"
 %include "gr_mpsk_receiver_cc.i"
+%include "gr_stream_mux.i"
 %include "gr_stream_to_streams.i"
 %include "gr_streams_to_stream.i"
 %include "gr_streams_to_vector.i"
@@ -175,6 +185,7 @@
 %include "gr_packet_sink.i"
 %include "gr_lms_dfe_cc.i"
 %include "gr_lms_dfe_ff.i"
+%include "gr_dpll_ff.i"
 %include "gr_pll_freqdet_cf.i"
 %include "gr_pll_refout_cc.i"
 %include "gr_pll_carriertracking_cc.i"
@@ -182,6 +193,11 @@
 %include "gr_probe_avg_mag_sqrd_c.i"
 %include "gr_probe_avg_mag_sqrd_f.i"
 %include "gr_probe_signal_f.i"
+%include "gr_ofdm_correlator.i"
+%include "gr_ofdm_cyclic_prefixer.i"
+%include "gr_ofdm_bpsk_demapper.i"
+%include "gr_ofdm_bpsk_mapper.i"
+%include "gr_ofdm_sampler.i"
 %include "gr_costas_loop_cc.i"
 %include "gr_pa_2x2_phase_combiner.i"
 %include "gr_kludge_copy.i"

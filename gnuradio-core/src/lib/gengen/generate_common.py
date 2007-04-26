@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2006 Free Software Foundation, Inc.
+# Copyright 2004,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -50,14 +50,16 @@ reg_roots = [
     'gr_add_vXX',
     'gr_multiply_vXX',
     'gr_add_const_vXX',
-    'gr_multiply_const_vXX'
+    'gr_multiply_const_vXX',
     ]
 
 # other blocks
 others = (
     ('gr_chunks_to_symbols_XX',     ('bf', 'bc', 'sf', 'sc', 'if', 'ic')),
     ('gr_unpacked_to_packed_XX',    ('bb','ss','ii')),
-    ('gr_packed_to_unpacked_XX',    ('bb','ss','ii'))
+    ('gr_packed_to_unpacked_XX',    ('bb','ss','ii')),
+    ('gr_sample_and_hold_XX',       ('bb','ss','ii','ff')),
+    ('gr_peak_detector_XX',         ('ff','ii','ss'))
     )
 
 

@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2004,2006 Free Software Foundation, Inc.
+# Copyright 2001,2002,2004,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -71,6 +71,9 @@ CODE_GENERATOR = 			\
 	gr_packed_to_unpacked_XX.cc.t	\
 	gr_packed_to_unpacked_XX.h.t	\
 	gr_packed_to_unpacked_XX.i.t	\
+	gr_peak_detector_XX.cc.t	\
+	gr_peak_detector_XX.h.t		\
+	gr_peak_detector_XX.i.t		\
 	gr_sig_source_X.cc.t		\
 	gr_sig_source_X.h.t		\
 	gr_sig_source_X.i.t		\

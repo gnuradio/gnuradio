@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,16 +30,16 @@
 #include <math.h>
 
 gr_fft_vcc_sptr
-gr_make_fft_vcc (int fft_size, bool forward,const std::vector<float> window)
+gr_make_fft_vcc (int fft_size, bool forward,const std::vector<float> window, bool shift)
 {
-  return gr_fft_vcc_sptr (new gr_fft_vcc (fft_size, forward, window));
+  return gr_fft_vcc_sptr (new gr_fft_vcc (fft_size, forward, window, shift));
 }
 
-gr_fft_vcc::gr_fft_vcc (int fft_size, bool forward, const std::vector<float> window)
+gr_fft_vcc::gr_fft_vcc (int fft_size, bool forward, const std::vector<float> window, bool shift)
   : gr_sync_block ("fft_vcc",
 		   gr_make_io_signature (1, 1, fft_size * sizeof (gr_complex)),
 		   gr_make_io_signature (1, 1, fft_size * sizeof (gr_complex))),
-    d_fft_size(fft_size)
+    d_fft_size(fft_size), d_forward(forward), d_shift(shift)
 {
   d_fft = new gri_fft_complex (d_fft_size, forward);
 
@@ -66,27 +66,43 @@ gr_fft_vcc::work (int noutput_items,
   int count = 0;
 
   while (count++ < noutput_items){
-
+    
     // copy input into optimally aligned buffer
-
+    
     if (d_window.size()){
       gr_complex *dst = d_fft->get_inbuf();
       for (unsigned int i = 0; i < d_fft_size; i++)		// apply window
 	dst[i] = in[i] * d_window[i];
     }
-    else
-      memcpy (d_fft->get_inbuf(), in, input_data_size);
-
+    else {
+      if(!d_forward && d_shift) {  // apply an ifft shift on the data
+	gr_complex *dst = d_fft->get_inbuf();
+	unsigned int len = (unsigned int)(floor(d_fft_size/2.0)); // half length of complex array
+	memcpy(&dst[0], &in[len], sizeof(gr_complex)*(d_fft_size - len));
+	memcpy(&dst[d_fft_size - len], &in[0], sizeof(gr_complex)*len);
+      }
+      else {
+	memcpy (d_fft->get_inbuf(), in, input_data_size);
+      }
+    }
+    
     // compute the fft
     d_fft->execute ();
-
-    // cpoy result to our output
-    memcpy (out, d_fft->get_outbuf (), output_data_size);
-
+    
+    // copy result to our output
+    if(d_forward && d_shift) {  // apply a fft shift on the data
+      unsigned int len = (unsigned int)(ceil(d_fft_size/2.0));
+      memcpy(&out[0], &d_fft->get_outbuf()[len], sizeof(gr_complex)*(d_fft_size - len));
+      memcpy(&out[d_fft_size - len], &d_fft->get_outbuf()[0], sizeof(gr_complex)*len);
+    }
+    else {
+      memcpy (out, d_fft->get_outbuf (), output_data_size);
+    }
+    
     in  += d_fft_size;
     out += d_fft_size;
   }
-
+  
   return noutput_items;
 }
 
@@ -100,3 +116,18 @@ gr_fft_vcc::set_window(const std::vector<float> window)
   else 
     return false;
 }
+
+/*
+fftshift
+
+  for(i=0; i < ceil(d_occupied_carriers/2.0); i++) {
+    unsigned int k=ceil(d_occupied_carriers/2.0);
+    out[i] = gr_complex(-1+2*in[i+k],0);
+  }
+  for(; i < d_vlen - ceil(d_occupied_carriers/2.0); i++) {
+    out[i]=gr_complex(0,0);
+  }
+  for(unsigned int j=0;i<d_vlen;i++,j++) {
+    out[i]= gr_complex((-1+2*in[j]),0);
+  }
+*/

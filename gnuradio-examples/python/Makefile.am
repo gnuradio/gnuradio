@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,4 +20,4 @@
 # 
 
 SUBDIRS = apps audio channel-coding digital_voice digital multi-antenna \
-	  multi_usrp networking usrp hier
+	  multi_usrp networking usrp hier ofdm
