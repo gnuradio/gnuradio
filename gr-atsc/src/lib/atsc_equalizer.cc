@@ -59,15 +59,14 @@ atsc_equalizer::forecast (int noutput_items, gr_vector_int &ninput_items_require
 {
 
   int ntaps = d_equalizer->ntaps ();
-  int npretaps = d_equalizer->npretaps ();
-
-  assert (ntaps >= 1);
-  assert (npretaps >= 0 && npretaps < ntaps);
 
   unsigned ninputs = ninput_items_required.size();
   for (unsigned i = 0; i < ninputs; i++)
-    ninput_items_required[i] = fixed_rate_noutput_to_ninput (noutput_items);
+    ninput_items_required[i] = fixed_rate_noutput_to_ninput (noutput_items + ntaps);
+
+
 }
+
 
 
 int
@@ -82,16 +81,25 @@ atsc_equalizer::work (int noutput_items,
 
   assert(sizeof(float) == sizeof(atsc::syminfo));
 
+  int ntaps = d_equalizer->ntaps ();
+  int npretaps = d_equalizer->npretaps ();
+
+  assert (ntaps >= 1);
+  assert (npretaps >= 0 && npretaps < ntaps);
+
+  int offset = ntaps - npretaps - 1;
+  assert (offset >= 0 && offset < ntaps);
+
 
   // peform the actual equalization
 
-  d_equalizer->filter (in, in_tags,
+  d_equalizer->filter (in, in_tags + offset,
                        out, noutput_items);
 
   // write the output tags
 
   for (int i = 0; i < noutput_items; i++)
-    out_tags[i] = in_tags[i];
+    out_tags[i] = in_tags[i + offset];
 
   return noutput_items;
 }
