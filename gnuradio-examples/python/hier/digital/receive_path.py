@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -33,12 +33,9 @@ from pick_bitrate import pick_rx_bitrate
 #                              receive path
 # /////////////////////////////////////////////////////////////////////////////
 
-class receive_path(gr.hier_block2):
+class receive_path(gr.top_block):
     def __init__(self, demod_class, rx_callback, options):
-        gr.hier_block2.__init__(self, "receive_path",
-                                gr.io_signature(0,0,0), # Input signature
-                                gr.io_signature(0,0,0)) # Output signature
-
+        gr.top_block.__init__(self, "receive_path")
         options = copy.copy(options)    # make a copy so we can destructively modify
 
         self._verbose            = options.verbose
@@ -112,18 +109,13 @@ class receive_path(gr.hier_block2):
         if self._verbose:
             self._print_verbage()
             
-        # Define the components
-        self.define_component("usrp", self.u)
-        self.define_component("channel_filter", gr.fft_filter_ccc(sw_decim, chan_coeffs))
-        self.define_component("channel_probe", self.probe)
-        self.define_component("packet_receiver", self.packet_receiver)
+        self.channel_filter = gr.fft_filter_ccc(sw_decim, chan_coeffs)
 
         # connect the channel input filter to the carrier power detector
-        self.connect("usrp", 0, "channel_filter", 0)
-        self.connect("channel_filter", 0, "channel_probe", 0)
+        self.connect(self.u, self.channel_filter, self.probe)
 
         # connect channel filter to the packet receiver
-        self.connect("channel_filter", 0, "packet_receiver", 0)
+        self.connect(self.channel_filter, self.packet_receiver)
         
 
     def _setup_usrp_source(self):

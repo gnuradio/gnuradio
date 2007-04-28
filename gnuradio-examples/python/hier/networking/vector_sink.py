@@ -24,19 +24,13 @@ from gnuradio import gr
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-class vector_sink(gr.hier_block2):
+class vector_sink(gr.top_block):
     def __init__(self, src, port, pkt_size):
-        gr.hier_block2.__init__(self, 
-                                "vector_sink",	        # Block type 
-                                gr.io_signature(0,0,0), # Input signature
-                                gr.io_signature(0,0,0)) # Output signature
+        gr.top_block.__init__(self, "vector_sink")
 
         udp = gr.udp_source(gr.sizeof_float, src, port, pkt_size)
-        
-        self.define_component("src", udp)
-        self.define_component("dst", gr.file_sink(gr.sizeof_float, "received.dat"))
-
-        self.connect("src", 0, "dst", 0)	
+        sink = gr.file_sink(gr.sizeof_float, "received.dat")
+        self.connect(udp, sink)
 
 if __name__ == "__main__":
     parser = OptionParser(option_class=eng_option)

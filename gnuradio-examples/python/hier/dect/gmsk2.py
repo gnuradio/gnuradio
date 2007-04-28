@@ -106,14 +106,7 @@ class gmsk2_mod(gr.hier_block2):
         if verbose:
             self._print_verbage()
          
-	# Define and connect components
-        self.define_component("nrz", self.nrz)
-        self.define_component("filter", self.gaussian_filter)
-        self.define_component("fmmod", self.fmmod)
-        self.connect("self", 0, "nrz", 0)
-        self.connect("nrz", 0, "filter", 0)
-        self.connect("filter", 0, "fmmod", 0)
-        self.connect("fmmod", 0, "self", 0)
+        self.connect(self, self.nrz, self.gaussian_filter, self.fmmod, self)
 
         if log:
             self._setup_logging()
@@ -125,7 +118,6 @@ class gmsk2_mod(gr.hier_block2):
         return 1
     bits_per_symbol = staticmethod(bits_per_symbol)      # make it a static method.
 
-
     def _print_verbage(self):
         print "bits per symbol = %d" % self.bits_per_symbol()
         print "Gaussian filter bt = %.2f" % self._bt
@@ -133,12 +125,9 @@ class gmsk2_mod(gr.hier_block2):
 
     def _setup_logging(self):
         print "Modulation logging turned on."
-        self.define_component("nrz_log", gr.file_sink(gr.sizeof_float, "nrz.dat"))
-        self.define_component("filter_log", gr.file_sink(gr.sizeof_float, "gaussian_filter.dat"))
-        self.define_component("fmmod_log", gr.file_sink(gr.sizeof_gr_complex, "fmmod.dat"))
-        self.connect("nrz", 0, "nrz_log", 0)
-        self.connect("filter", 0, "filter_log", 0)
-        self.connect("fmmod", 0, "fmmod_log", 0)
+        self.connect(self.nrz, gr.file_sink(gr.sizeof_float, "nrz.dat"))
+        self.connect(self.gaussian_filter, gr.file_sink(gr.sizeof_float, "gaussian_filter.dat"))
+        self.connect(self.fmmod, gr.file_sink(gr.sizeof_gr_complex, "fmmod.dat"))
 
     def add_options(parser):
         """
@@ -232,14 +221,7 @@ class gmsk2_demod(gr.hier_block2):
         if verbose:
             self._print_verbage()
 
-        # Define and connect components
-        self.define_component("fmdemod", self.fmdemod)
-        self.define_component("clock_recovery", self.clock_recovery)
-        self.define_component("slicer", self.slicer)
-        self.connect("self", 0, "fmdemod", 0)
-        self.connect("fmdemod", 0, "clock_recovery", 0)
-        self.connect("clock_recovery", 0, "slicer", 0)
-        self.connect("slicer", 0, "self", 0)
+        self.connect(self, self.fmdemod, self.clock_recovery, self.slicer, self)
 
         if log:
             self._setup_logging()
@@ -250,7 +232,6 @@ class gmsk2_demod(gr.hier_block2):
     def bits_per_symbol(self=None):   # staticmethod that's also callable on an instance
         return 1
     bits_per_symbol = staticmethod(bits_per_symbol)      # make it a static method.
-
 
     def _print_verbage(self):
         print "bits per symbol = %d" % self.bits_per_symbol()
@@ -263,12 +244,9 @@ class gmsk2_demod(gr.hier_block2):
 
     def _setup_logging(self):
         print "Demodulation logging turned on."
-        self.define_component("fmdemod_log", gr.file_sink(gr.sizeof_float, "fmdemod.dat"))
-        self.define_component("clock_recovery_log", gr.file_sink(gr.sizeof_float, "clock_recovery.dat"))
-        self.define_component("slicer_log", gr.file_sink(gr.sizeof_char, "slicer.dat"))
-        self.connect("fmdemod", 0, "fmdemod_log", 0)
-        self.connect("clock_recovery", 0, "clock_recovery_log", 0)
-        self.connect("slicer", 0, "slicer_log", 0)
+        self.connect(fmdemod, gr.file_sink(gr.sizeof_float, "fmdemod.dat"))
+        self.connect(clock_recovery, gr.file_sink(gr.sizeof_float, "clock_recovery.dat"))
+        self.connect(slicer, gr.file_sink(gr.sizeof_char, "slicer.dat"))
 
     def add_options(parser):
         """

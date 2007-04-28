@@ -27,4 +27,4 @@ EXTRA_DIST = 			\
 	sounder_rx.py		\
 	sounder_tx.py
 
-MOSTLYCLEANFILES = *.pyc *~
+MOSTLYCLEANFILES = *.pyc *~ *.dat

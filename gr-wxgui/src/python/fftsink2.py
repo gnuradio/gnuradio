@@ -106,37 +106,25 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
                                average=average, avg_alpha=avg_alpha, title=title,
                                peak_hold=peak_hold)
                                
-        self.define_component("s2p", gr.stream_to_vector(gr.sizeof_float, self.fft_size))
+        self.s2p = gr.stream_to_vector(gr.sizeof_float, self.fft_size)
         self.one_in_n = gr.keep_one_in_n(gr.sizeof_float * self.fft_size,
                                          max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
-        self.define_component("one_in_n", self.one_in_n)
         
         mywindow = window.blackmanharris(self.fft_size)
-        self.define_component("fft", gr.fft_vfc(self.fft_size, True, mywindow))
+        self.fft = gr.fft_vfc(self.fft_size, True, mywindow)
         power = 0
         for tap in mywindow:
             power += tap*tap
             
-        self.define_component("c2mag", gr.complex_to_mag(self.fft_size))
+        self.c2mag = gr.complex_to_mag(self.fft_size)
         self.avg = gr.single_pole_iir_filter_ff(1.0, self.fft_size)
-        self.define_component("avg", self.avg)
 
         # FIXME  We need to add 3dB to all bins but the DC bin
-        self.define_component("log", gr.nlog10_ff(20, self.fft_size,
-                                     -20*math.log10(self.fft_size)-10*math.log10(power/self.fft_size)))
-        self.define_component("sink", gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True))
+        self.log = gr.nlog10_ff(20, self.fft_size,
+                               -20*math.log10(self.fft_size)-10*math.log10(power/self.fft_size))
+        self.sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
+	self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
 
-
-        # Ultimately this will be
-        # self.connect("self s2p one_in_n fft c2mag avg log sink")
-        self.connect("self", 0, "s2p", 0)
-        self.connect("s2p", 0, "one_in_n", 0)
-        self.connect("one_in_n", 0, "fft", 0)
-        self.connect("fft", 0, "c2mag", 0)
-        self.connect("c2mag", 0, "avg", 0)
-        self.connect("avg", 0, "log", 0)
-        self.connect("log", 0, "sink", 0)
-                              
         self.win = fft_window(self, parent, size=size)
         self.set_average(self.average)
 
@@ -158,35 +146,24 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
                                average=average, avg_alpha=avg_alpha, title=title,
                                peak_hold=peak_hold)
 
-        self.define_component("s2p", gr.stream_to_vector(gr.sizeof_gr_complex, self.fft_size))
+        self.s2p = gr.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
         self.one_in_n = gr.keep_one_in_n(gr.sizeof_gr_complex * self.fft_size,
                                          max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
-        self.define_component("one_in_n", self.one_in_n)
         
         mywindow = window.blackmanharris(self.fft_size)
-        self.define_component("fft", gr.fft_vcc(self.fft_size, True, mywindow))
+        self.fft = gr.fft_vcc(self.fft_size, True, mywindow)
         power = 0
         for tap in mywindow:
             power += tap*tap
             
-        self.define_component("c2mag", gr.complex_to_mag(self.fft_size))
+        self.c2mag = gr.complex_to_mag(self.fft_size)
         self.avg = gr.single_pole_iir_filter_ff(1.0, self.fft_size)
-        self.define_component("avg", self.avg)
 
         # FIXME  We need to add 3dB to all bins but the DC bin
-        self.define_component("log", gr.nlog10_ff(20, self.fft_size,
-                                     -20*math.log10(self.fft_size)-10*math.log10(power/self.fft_size)))
-        self.define_component("sink", gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True))
-
-        # Ultimately this will be
-        # self.connect("self s2p one_in_n fft c2mag avg log sink")
-        self.connect("self", 0, "s2p", 0)
-        self.connect("s2p", 0, "one_in_n", 0)
-        self.connect("one_in_n", 0, "fft", 0)
-        self.connect("fft", 0, "c2mag", 0)
-        self.connect("c2mag", 0, "avg", 0)
-        self.connect("avg", 0, "log", 0)
-        self.connect("log", 0, "sink", 0)
+        self.log = gr.nlog10_ff(20, self.fft_size,
+                                -20*math.log10(self.fft_size)-10*math.log10(power/self.fft_size))
+        self.sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
+	self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
 
         self.win = fft_window(self, parent, size=size)
         self.set_average(self.average)
@@ -475,12 +452,7 @@ class test_app_block (stdgui2.std_top_block):
                             ref_level=0, y_per_div=20)
         vbox.Add (sink1.win, 1, wx.EXPAND)
 
-        self.define_component("src1", src1)
-        self.define_component("thr1", thr1)
-        self.define_component("sink1", sink1)
-
-        self.connect ("src1", 0, "thr1", 0)
-        self.connect ("thr1", 0, "sink1", 0)
+	self.connect(src1, thr1, sink1)
 
         #src2 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 2e3, 1)
         src2 = gr.sig_source_f (input_rate, gr.GR_CONST_WAVE, 5.75e3, 1)
@@ -490,16 +462,10 @@ class test_app_block (stdgui2.std_top_block):
                             ref_level=0, y_per_div=20)
         vbox.Add (sink2.win, 1, wx.EXPAND)
 
-        self.define_component("src2", src2)
-        self.define_component("thr2", thr2)
-        self.define_component("sink2", sink2)
-        
-        self.connect ("src2", 0, "thr2", 0)
-        self.connect ("thr2", 0, "sink2", 0)
+	self.connect(src2, thr2, sink2)
 
 def main ():
-    app = stdgui2.stdapp (test_app_block,
-                         "FFT Sink Test App")
+    app = stdgui2.stdapp (test_app_block, "FFT Sink Test App")
     app.MainLoop ()
 
 if __name__ == '__main__':

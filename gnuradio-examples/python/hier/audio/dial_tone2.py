@@ -27,32 +27,20 @@ from optparse import OptionParser
 
 # Top-level block creating a dial tone
 # Derives from new class gr.hier_block2
-class dial_tone(gr.hier_block2):
+class dial_tone(gr.top_block):
 	def __init__(self, 
 		     sample_rate,  # Audio output sample rate (int)
 		     audio_output, # Audio output device
 		     amplitude):   # Output volume (0.0-1.0)
 
-		# Call hierarchical block constructor
-		# Top-level blocks have no inputs or outputs
-		gr.hier_block2.__init__(self, 
-					"dial_tone",		# Block type 
-					gr.io_signature(0,0,0), # Input signature
-					gr.io_signature(0,0,0)) # Output signature
+		gr.top_block.__init__(self, "dial_tone")
 
-		# Hierarchical blocks have a set of 'components' (which may
-		# be themselves hierarchical blocks), mapped to names.
-		# 'define_component' takes a string and either a hierarchical 
-		# block or an instance of a 'leaf node' (gr_block) block
+		src0 = gr.sig_source_f(sample_rate, gr.GR_SIN_WAVE, 350, amplitude)
+		src1 = gr.sig_source_f(sample_rate, gr.GR_SIN_WAVE, 440, amplitude)
+		dst  = audio.sink(sample_rate, audio_output)
 
-		# Give names to two sine wave sources and an audio sink
-		self.define_component("src0", gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE, 350, amplitude))
-		self.define_component("src1", gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE, 440, amplitude))
-		self.define_component("dst",  audio.sink(sample_rate, audio_output))
-
-		# Wire up outputs to inputs. (TODO: convenience functions)
-		self.connect("src0", 0, "dst", 0)	
-		self.connect("src1", 0, "dst", 1)
+		self.connect(src0, (dst, 0))	
+		self.connect(src1, (dst, 1))
 	
 if __name__ == '__main__':
 	parser = OptionParser(option_class=eng_option)
@@ -68,13 +56,13 @@ if __name__ == '__main__':
             raise SystemExit, 1
 
 	# Create an instance of a hierarchical block
-	top_block = dial_tone(int(options.sample_rate), 
-			      options.audio_output, 
-			      options.amplitude)
+	top = dial_tone(int(options.sample_rate), 
+			options.audio_output, 
+			options.amplitude)
 			      
 	# Create an instance of a runtime, passing it the top block
 	# to process
-	runtime = gr.runtime(top_block)
+	runtime = gr.runtime(top)
 
 	try:    
 		# Run forever

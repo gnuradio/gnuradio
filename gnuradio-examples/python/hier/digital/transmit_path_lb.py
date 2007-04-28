@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -65,13 +65,8 @@ class transmit_path(gr.hier_block2):
         if self._verbose:
             self._print_verbage()
 
-        # Define the components
-        self.define_component("packet_transmitter", self.packet_transmitter)
-        self.define_component("amp", self.amp)
-
-        # Connect components in the flowgraph; set amp component to the output of this block
-        self.connect("packet_transmitter", 0, "amp", 0)
-        self.connect("amp", 0, "self", 0)
+        # Connect blocks in the flowgraph; set amp component to the output of this block
+        self.connect(self.packet_transmitter, self.amp, self)
 
     def set_tx_amplitude(self, ampl):
         """

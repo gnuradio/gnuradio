@@ -50,6 +50,4 @@ class sounder_rx(gr.hier_block2):
             print "Using PN sequence of degree", self._degree, "length", self._length
             print "Sequence repetition rate is", n2s(self._rep_rate), "per sec"
         
-        self.define_component("corr", gr.pn_correlator_cc(self._degree))
-        self.connect("self", 0, "corr", 0)
-        self.connect("corr", 0, "self", 0)
+        self.connect(self, gr.pn_correlator_cc(self._degree), self)

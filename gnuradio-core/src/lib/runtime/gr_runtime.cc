@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -34,57 +34,64 @@ static gr_runtime *s_runtime = 0;
 gr_runtime_sptr 
 gr_make_runtime(gr_hier_block2_sptr top_block)
 {
-    return gr_runtime_sptr(new gr_runtime(top_block));
+  return gr_runtime_sptr(new gr_runtime(top_block));
 }
 
 gr_runtime::gr_runtime(gr_hier_block2_sptr top_block)
 {
-    d_impl = new gr_runtime_impl(top_block);
-    s_runtime = this;
+  d_impl = new gr_runtime_impl(top_block);
+  s_runtime = this;
 }
   
 gr_runtime::~gr_runtime()
 {
-    s_runtime = 0; // we don't own this
-    delete d_impl;
+  s_runtime = 0; // we don't own this
+  delete d_impl;
 }
 
 // FIXME: This prevents using more than one gr_runtime instance
 static void 
 runtime_sigint_handler(int signum)
 {
-
-    if (s_runtime)
-        s_runtime->stop();
+  if (s_runtime)
+    s_runtime->stop();
 }
 
 void 
 gr_runtime::start()
 {
-    gr_local_sighandler sigint(SIGINT, runtime_sigint_handler);
+  gr_local_sighandler sigint(SIGINT, runtime_sigint_handler);
 
-    d_impl->start();
+  d_impl->start();
 }
 
 void 
 gr_runtime::stop()
 {
-    d_impl->stop();
+  d_impl->stop();
 }
 
 void 
 gr_runtime::wait()
 {
-    gr_local_sighandler sigint(SIGINT, runtime_sigint_handler);
+  gr_local_sighandler sigint(SIGINT, runtime_sigint_handler);
 
-    d_impl->wait();
+  d_impl->wait();
 }
 
 void 
 gr_runtime::run()
 {
-    gr_local_sighandler sigint(SIGINT, runtime_sigint_handler);
+  gr_local_sighandler sigint(SIGINT, runtime_sigint_handler);
 
-    d_impl->start();
-    d_impl->wait();
+  d_impl->start();
+  d_impl->wait();
+}
+
+void
+gr_runtime::restart()
+{
+  gr_local_sighandler sigint(SIGINT, runtime_sigint_handler);
+
+  d_impl->restart();
 }

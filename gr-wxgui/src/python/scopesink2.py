@@ -43,9 +43,7 @@ class scope_sink_f(gr.hier_block2):
 
         msgq = gr.msg_queue(2)         # message queue that holds at most 2 messages
         self.guts = gr.oscope_sink_f(sample_rate, msgq)
-        self.define_component("guts", self.guts)
-
-        self.connect("self", 0, "guts", 0)
+        self.connect(self, self.guts)
 
         self.win = scope_window(win_info (msgq, sample_rate, frame_decim,
                                           v_scale, t_scale, self.guts, title), parent)
@@ -64,13 +62,11 @@ class scope_sink_c(gr.hier_block2):
                                 gr.io_signature(0,0,0))
 
         msgq = gr.msg_queue(2)         # message queue that holds at most 2 messages
-        self.define_component("c2f", gr.complex_to_float())
+        self.c2f = gr.complex_to_float()
         self.guts = gr.oscope_sink_f(sample_rate, msgq)
-        self.define_component("guts", self.guts)
-
-        self.connect("self", 0, "c2f", 0)
-        self.connect("c2f", 0, "guts", 0)
-        self.connect("c2f", 1, "guts", 1)
+	self.connect(self, self.c2f)
+	self.connect((self.c2f, 0), (self.guts, 0))
+	self.connect((self.c2f, 1), (self.guts, 1))
         
         self.win = scope_window(win_info(msgq, sample_rate, frame_decim,
                                          v_scale, t_scale, self.guts, title), parent)
@@ -631,23 +627,20 @@ class test_top_block (stdgui2.std_top_block):
         input_rate = 1e6
 
         # Generate a complex sinusoid
-        self.define_component("src0", gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 25.1e3, 1e3))
+        self.src0 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 25.1e3, 1e3)
 
         # We add this throttle block so that this demo doesn't suck down
         # all the CPU available.  You normally wouldn't use it...
-        self.define_component("throttle", gr.throttle(gr.sizeof_gr_complex, input_rate))
+        self.thr = gr.throttle(gr.sizeof_gr_complex, input_rate)
 
         scope = scope_sink_c (panel,"Secret Data",sample_rate=input_rate,
                               frame_decim=frame_decim,
                               v_scale=v_scale, t_scale=t_scale)
-        self.define_component("scope", scope)
         vbox.Add (scope.win, 1, wx.EXPAND)
 
         # Ultimately this will be
         # self.connect("src0 throttle scope")
-        self.connect("src0", 0, "throttle", 0)
-        self.connect("throttle", 0, "scope", 0)
-
+	self.connect(self.src0, self.thr, scope) 
 
 def main ():
     app = stdgui2.stdapp (test_top_block, "O'Scope Test App")

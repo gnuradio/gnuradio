@@ -28,12 +28,9 @@ from sounder_rx import sounder_rx
 
 n2s = eng_notation.num_to_str
 
-class usrp_sounder_rx(gr.hier_block2):
+class usrp_sounder_rx(gr.top_block):
     def __init__(self, options):
-        gr.hier_block2.__init__(self, "usrp_sounder_rx",
-                                gr.io_signature(0,0,0),
-                                gr.io_signature(0,0,0))
-
+        gr.top_block.__init__(self, "usrp_sounder_rx")
         self._options = options
         self._u = usrp_source_c(0,
                                 self._options.rx_subdev_spec,
@@ -50,22 +47,14 @@ class usrp_sounder_rx(gr.hier_block2):
 
         samples = 100 * self._length**2
 
-        self.define_component("usrp", self._u)
-        self.define_component("head", gr.head(gr.sizeof_gr_complex, samples))
-	self.define_component("rx",   self._receiver)
-        self.define_component("c2m",  gr.complex_to_mag())
-        self.define_component("s2v",  gr.stream_to_vector(gr.sizeof_float, self._length))
-        self.define_component("lpf",  gr.single_pole_iir_filter_ff(self._options.alpha, self._length))
-        self.define_component("v2s",  gr.vector_to_stream(gr.sizeof_float, self._length))
-        self.define_component("sink", gr.file_sink(gr.sizeof_float, "impulse.dat"))
+        head = gr.head(gr.sizeof_gr_complex, samples)
+        c2m = gr.complex_to_mag()
+        s2v = gr.stream_to_vector(gr.sizeof_float, self._length)
+        lpf = gr.single_pole_iir_filter_ff(self._options.alpha, self._length)
+        v2s = gr.vector_to_stream(gr.sizeof_float, self._length)
+        sink = gr.file_sink(gr.sizeof_float, "impulse.dat")
 
-        self.connect("usrp", 0, "head", 0)
-        self.connect("head", 0, "rx", 0)
-        self.connect("rx", 0, "c2m", 0)
-        self.connect("c2m", 0, "s2v", 0)
-        self.connect("s2v", 0, "lpf", 0)
-        self.connect("lpf", 0, "v2s", 0)
-        self.connect("v2s", 0, "sink", 0)
+	self.connect(self._u, head, self._receiver, c2m, s2v, lpf, v2s, sink)
 
 	if self._options.verbose:
             print "Chip rate is", n2s(self._options.chip_rate), "chips/sec"

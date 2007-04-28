@@ -5,6 +5,7 @@ digital cordless phone base stations and handsets.
 Status
 ------
 
+2007 Apr 27 - Converted to new hier_block2 format
 2007 Apr 03 - Development on hold.
 2007 Feb 11 - Added GMSK demodulation and option to log to file
 2007 Feb 10 - Able to tune and log filtered baseband to file

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #!/usr/bin/env python
 #
-# Copyright 2005, 2006 Free Software Foundation, Inc.
+# Copyright 2005, 2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -45,27 +45,23 @@ class awgn_channel(gr.hier_block2):
         else:
             rseed = int(time.time())
             self.noise = gr.noise_source_c(gr.GR_GAUSSIAN, noise_voltage, rseed)
-        self.define_component("noise", self.noise)
-        self.define_component("adder", gr.add_cc())
+        self.adder = gr.add_cc()
 
         # Create the frequency offset
-        self.define_component("offset", gr.sig_source_c((sample_rate*1.0), gr.GR_SIN_WAVE,
-                                                        frequency_offset, 1.0, 0.0))
-        self.define_component("mixer", gr.multiply_cc())
+        self.offset = gr.sig_source_c((sample_rate*1.0), gr.GR_SIN_WAVE, frequency_offset, 1.0, 0.0)
+        self.mixer = gr.multiply_cc()
 
         # Connect the components
-        self.connect("self", 0, "mixer", 0)
-        self.connect("offset", 0, "mixer", 1)
-        self.connect("mixer", 0, "adder", 0)
-        self.connect("noise", 0, "adder", 1)
-        self.connect("adder", 0, "self", 0)
+        self.connect(self,        (self.mixer, 0))
+        self.connect(self.offset, (self.mixer, 1))
+        self.connect(self.mixer,  (self.adder, 0))
+        self.connect(self.noise,  (self.adder, 1))
+        self.connect(self.adder,   self)
 
 
-class my_graph(gr.hier_block2):
+class my_graph(gr.top_block):
     def __init__(self, mod_class, demod_class, rx_callback, options):
-        gr.hier_block2.__init__(self, "my_graph",
-                                gr.io_signature(0,0,0), # Input signature
-                                gr.io_signature(0,0,0)) # Output signature
+        gr.top_block.__init__(self, "my_graph")
 
         channelon = True;
 
@@ -82,27 +78,9 @@ class my_graph(gr.hier_block2):
 
         if channelon:
             self.channel = awgn_channel(options.sample_rate, noise_voltage, frequency_offset, options.seed)
-
-            # Define the components
-            self.define_component("txpath", self.txpath)
-            self.define_component("throttle", self.throttle)
-            self.define_component("channel", self.channel)
-            self.define_component("rxpath", self.rxpath)
-            
-            # Connect components
-            self.connect("txpath", 0, "throttle", 0)
-            self.connect("throttle", 0, "channel", 0)
-            self.connect("channel", 0, "rxpath", 0)
+            self.connect(self.txpath, self.throttle, self.channel, self.rxpath)
         else:
-            # Define the components
-            self.define_component("txpath", self.txpath)
-            self.define_component("throttle", self.throttle)
-            self.define_component("rxpath", self.rxpath)
-        
-            # Connect components
-            self.connect("txpath", 0, "throttle", 0)
-            self.connect("throttle", 0, "rxpath", 0)
-
+            self.connect(self.txpath, self.throttle, self.rxpath)
 
 # /////////////////////////////////////////////////////////////////////////////
 #                                   main

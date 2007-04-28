@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -24,30 +24,21 @@ from gnuradio import gr
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-class dial_tone_source(gr.hier_block2):
+class dial_tone_source(gr.top_block):
     def __init__(self, src, dst, port, pkt_size, sample_rate):
-        gr.hier_block2.__init__(self, 
-                                "dial_tone_source",	# Block type 
-                                gr.io_signature(0,0,0), # Input signature
-                                gr.io_signature(0,0,0)) # Output signature
+        gr.top_block.__init__(self, "dial_tone_source")
 
         amplitude = 0.3
-        self.define_component("src0", gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE,
-                                                       350, amplitude))
-        self.define_component("src1", gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE,
-                                                       440, amplitude))
-        self.define_component("add", gr.add_ff())
+        src0 = gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE, 350, amplitude)
+        src1 = gr.sig_source_f (sample_rate, gr.GR_SIN_WAVE, 440, amplitude)
+        add = gr.add_ff()
 
         # Throttle needed here to account for the other side's audio card sampling rate
-	self.define_component("thr", gr.throttle(gr.sizeof_float, sample_rate))
-	self.define_component("dst",  gr.udp_sink(gr.sizeof_float, src, 0, dst, port, pkt_size))
-
-        self.connect("src0", 0, "add", 0)	
-        self.connect("src1", 0, "add", 1)
-	self.connect("add", 0, "thr", 0)
-	self.connect("thr", 0, "dst", 0)
-        
-
+	thr = gr.throttle(gr.sizeof_float, sample_rate)
+	sink = gr.udp_sink(gr.sizeof_float, src, 0, dst, port, pkt_size)
+	self.connect(src0, (add, 0))
+	self.connect(src1, (add, 1))
+	self.connect(add, thr, sink)
 
 if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option)

@@ -7,15 +7,9 @@ from gnuradio import eng_notation
 from optparse import OptionParser
 import sys
 
-
-class my_graph(gr.hier_block2):
+class my_graph(gr.top_block):
     def __init__ (self, type, ampl, wfreq, offset, subdev_spec, interp, rf_freq):
-        # Call hierarchical block constructor
-        # Top-level blocks have no inputs or outputs
-        gr.hier_block2.__init__(self, 
-                                "usrp_siggen",		# Block type 
-                                gr.io_signature(0,0,0), # Input signature
-                                gr.io_signature(0,0,0)) # Output signature
+        gr.top_block.__init__(self, "usrp_siggen")
         
         # controllable values
         self.interp = interp
@@ -40,28 +34,21 @@ class my_graph(gr.hier_block2):
             sys.stderr.write('Failed to set RF frequency\n')
             raise SystemExit
 
-        self.define_component("usrp", self.u)
-
         if type == gr.GR_SIN_WAVE or type == gr.GR_CONST_WAVE:
             self.src = gr.sig_source_c (self.usb_freq (),
                                         gr.GR_SIN_WAVE,
                                         self.waveform_freq,
                                         self.waveform_ampl,
                                         self.waveform_offset)
-            self.define_component("src", self.src)
 
         elif type == gr.GR_UNIFORM or type == gr.GR_GAUSSIAN:
             self.src = gr.noise_source_c (gr.GR_UNIFORM,
                                           self.waveform_ampl)
-            self.define_component("src", self.src)
-        
+
         else:
             raise ValueError, type
 
-        # self.file_sink = gr.file_sink (gr.sizeof_gr_complex, "siggen.dat")
-        # self.define_component("file_sink", self.file_sink)
-
-        self.connect ("src", 0, "usrp", 0)
+        self.connect (self.src, self.u)
 
 
     def usb_freq (self):

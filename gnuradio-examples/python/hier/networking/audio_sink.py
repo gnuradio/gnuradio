@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -24,18 +24,12 @@ from gnuradio import gr, audio
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-class audio_sink(gr.hier_block2):
+class audio_sink(gr.top_block):
     def __init__(self, src, port, pkt_size, sample_rate):
-        gr.hier_block2.__init__(self, 
-                                "audio_sink",	# Block type 
-                                gr.io_signature(0,0,0), # Input signature
-                                gr.io_signature(0,0,0)) # Output signature
-
-
-        self.define_component("src",  gr.udp_source(gr.sizeof_float, src, port, pkt_size))
-        self.define_component("dst",  audio.sink(sample_rate))
-
-        self.connect("src", 0, "dst", 0)
+        gr.top_block.__init__(self, "audio_sink")
+        src = gr.udp_source(gr.sizeof_float, src, port, pkt_size)
+        dst = audio.sink(sample_rate)
+        self.connect(src, dst)
         
 if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -37,16 +37,6 @@ import fusb_options
 #import os
 #print os.getpid()
 #raw_input('Attach and press enter: ')
-
-
-class my_graph(gr.hier_block2):
-    def __init__(self, demod_class, rx_callback, options):
-        gr.hier_block2.__init__(self, "my_graph",
-                                gr.io_signature(0,0,0), # Input signature
-                                gr.io_signature(0,0,0)) # Output signature
-        self.rxpath = receive_path(demod_class, rx_callback, options)
-        self.define_component("rxpath", self.rxpath)
-
 
 # /////////////////////////////////////////////////////////////////////////////
 #                                   main
@@ -104,7 +94,7 @@ def main():
         print "Warning: Failed to enable realtime scheduling."
 
     # Create an instance of a hierarchical block
-    top_block = my_graph(demods[options.modulation], rx_callback, options)
+    top_block = receive_path(demods[options.modulation], rx_callback, options)
     
     # Create an instance of a runtime, passing it the top block
     runtime = gr.runtime(top_block)

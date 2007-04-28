@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -33,16 +33,13 @@ from pick_bitrate import pick_tx_bitrate
 #                              transmit path
 # /////////////////////////////////////////////////////////////////////////////
 
-class transmit_path(gr.hier_block2): 
+class transmit_path(gr.top_block): 
     def __init__(self, modulator_class, options):
         '''
         See below for what options should hold
         '''
         
-        gr.hier_block2.__init__(self, "transmit_path",
-                                gr.io_signature(0,0,0), # Input signature
-                                gr.io_signature(0,0,0)) # Output signature
-
+        gr.top_block.__init__(self, "transmit_path")
         options = copy.copy(options)    # make a copy so we can destructively modify
 
         self._verbose            = options.verbose
@@ -99,14 +96,7 @@ class transmit_path(gr.hier_block2):
         if self._verbose:
             self._print_verbage()
 
-        # Define the components
-        self.define_component("packet_transmitter", self.packet_transmitter)
-        self.define_component("amp", self.amp)
-        self.define_component("usrp", self.u)
-
-        # Connect components in the flowgraph; set amp component to the output of this block
-        self.connect("packet_transmitter", 0, "amp", 0)
-        self.connect("amp", 0, "usrp", 0)
+        self.connect(self.packet_transmitter, self.amp, self.u)
 
     def _setup_usrp_sink(self):
         """

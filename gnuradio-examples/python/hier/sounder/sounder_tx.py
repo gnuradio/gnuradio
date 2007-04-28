@@ -42,5 +42,4 @@ class sounder_tx(gr.hier_block2):
         self._length = 2**degree-1
         
         # Connect PN source to block output
-        self.define_component("glfsr", gr.glfsr_source_f(degree))
-        self.connect("glfsr", 0, "self", 0)
+        self.connect(gr.glfsr_source_f(degree), self)

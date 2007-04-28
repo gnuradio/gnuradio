@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -67,11 +67,7 @@ class mod_pkts(gr.hier_block2):
 
         # accepts messages from the outside world
         self._pkt_input = gr.message_source(gr.sizeof_char, msgq_limit)
-        self.define_component("packet_source", self._pkt_input)
-        self.define_component("modulator", self._modulator)
-
-        self.connect("packet_source", 0, "modulator", 0)
-        self.connect("modulator", 0, "self", 0)
+	self.connect(self._pkt_input, self._modulator, self)
 
     def send_pkt(self, payload='', eof=False):
         """
@@ -136,13 +132,9 @@ class demod_pkts(gr.hier_block2):
 
         self._rcvd_pktq = gr.msg_queue()          # holds packets from the PHY
 
-        self.define_component("demodulator", self._demodulator)
-        self.define_component("correlator", gr.correlate_access_code_bb(access_code, threshold))
-        self.define_component("framer_sink", gr.framer_sink_1(self._rcvd_pktq))
-
-        self.connect("self", 0, "demodulator",0)
-        self.connect("demodulator", 0, "correlator", 0)
-        self.connect("correlator", 0, "framer_sink", 0)
+        self._correlator = gr.correlate_access_code_bb(access_code, threshold)
+        self._framer_sink = gr.framer_sink_1(self._rcvd_pktq)
+	self.connect(self, self._demodulator, self._correlator, self._framer_sink)
 
         self._watcher = _queue_watcher_thread(self._rcvd_pktq, callback)
 

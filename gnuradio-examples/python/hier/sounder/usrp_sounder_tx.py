@@ -28,16 +28,12 @@ from sounder_tx import sounder_tx
 
 n2s = eng_notation.num_to_str
 
-class usrp_sounder_tx(gr.hier_block2):
+class usrp_sounder_tx(gr.top_block):
     def __init__(self, subdev_spec, freq, cal, verbose, degree, chip_rate, amplitude):
 
         # Call hierarchical block constructor
         # Top-level blocks have no inputs or outputs
-        gr.hier_block2.__init__(self,
-                                "usrp_sounder_tx",      # Block typename
-                                gr.io_signature(0,0,0), # Input signature
-                                gr.io_signature(0,0,0)) # Output signature
-
+        gr.top_block.__init__(self, "usrp_sounder_tx")
         self._freq = freq
         self._cal = cal
         self._verbose = verbose
@@ -46,12 +42,12 @@ class usrp_sounder_tx(gr.hier_block2):
 	self._amplitude = amplitude
 	
         self._u = usrp_sink_c(0, subdev_spec, chip_rate, self._freq, self._cal, self._verbose)
-	self.define_component("usrp", self._u)
         self._chip_rate = self._u._if_rate
         self._max_time = float(self._length)/self._chip_rate
-	self.define_component("pn", sounder_tx(self._degree, self._chip_rate, self._verbose))
-        self.define_component("gain", gr.multiply_const_ff(amplitude));
-        self.define_component("f2c", gr.float_to_complex())
+	self._pn = sounder_tx(self._degree, self._chip_rate, self._verbose)
+        self._gain = gr.multiply_const_ff(amplitude)
+        self._f2c = gr.float_to_complex()
+	self.connect(self._pn, self._gain, self._f2c, self._u)
         
         if self._verbose:
             print "Chip rate is", n2s(self._chip_rate), "chips/sec"
@@ -60,11 +56,6 @@ class usrp_sounder_tx(gr.hier_block2):
             print "Maximum measurable impulse response is", n2s(self._max_time), "sec"
             print "Output amplitude is", amplitude
 
-	# Ultimately this will be
-	# self.connect("pn gain f2c usrp")
-	self.connect("pn", 0, "gain", 0)
-        self.connect("gain", 0, "f2c", 0)
-        self.connect("f2c", 0, "usrp", 0)
                               
 def main():
 	parser = OptionParser(option_class=eng_option)

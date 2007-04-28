@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,9 +25,6 @@
 #include <gr_simple_flowgraph_detail.h>
 #include <boost/utility.hpp>
 
-typedef std::map<std::string, gr_basic_block_sptr> gr_hier_component_map_t;
-typedef std::map<std::string, gr_basic_block_sptr>::iterator gr_hier_component_miter_t;
-
 class gr_hier_block2_detail : boost::noncopyable
 {
 private:
@@ -39,26 +36,21 @@ private:
 
     // Private implementation data
     gr_hier_block2 *d_owner;
-    gr_hier_component_map_t d_components;
-    gr_edge_vector_t d_edges;
+    gr_simple_flowgraph_sptr d_fg;
+    gr_endpoint_vector_t d_inputs;
+    gr_endpoint_vector_t d_outputs;
         
     // Private implementation methods
-    void define_component(const std::string &name, gr_basic_block_sptr block);
-    gr_basic_block_sptr lookup_block(const std::string &name);
-    void connect(const std::string &src_name, int src_port, 
-                 const std::string &dst_name, int dst_port);
-    void check_valid_port(gr_io_signature_sptr sig, int port);
-    void check_dst_not_used(const std::string name, int port);
-    void check_type_match(gr_io_signature_sptr src_sig, int src_port,
-                          gr_io_signature_sptr dst_sig, int dst_port);
-    std::string prepend_prefix(const std::string &prefix, const std::string &str);
-    void flatten(gr_simple_flowgraph_sptr sfg, const std::string &prefix = "");
-    void flatten_components(gr_simple_flowgraph_sptr sfg, const std::string &prefix);
-    void flatten_edges(gr_simple_flowgraph_sptr sfg, const std::string &prefix);
-    gr_endpoint match_endpoint(const std::string &name, int port, bool is_input);
-    gr_endpoint resolve_endpoint(const std::string &name, int port, 
-                                 const std::string &prefix, bool is_input);
-    
+    void connect(gr_basic_block_sptr src, int src_port, 
+                 gr_basic_block_sptr dst, int dst_port);
+    void disconnect(gr_basic_block_sptr, int src_port, 
+                    gr_basic_block_sptr, int dst_port);
+    void assign_input(int my_port, int port, gr_basic_block_sptr block);
+    void assign_output(int my_port, int port, gr_basic_block_sptr block);
+    void flatten(gr_simple_flowgraph_sptr sfg);
+    gr_endpoint resolve_port(int port, bool is_input);
+    gr_endpoint resolve_endpoint(const gr_endpoint &endp, bool is_input);
+
 public:
     ~gr_hier_block2_detail();
 };

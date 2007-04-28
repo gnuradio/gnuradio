@@ -46,10 +46,7 @@ class usrp_sink_c(gr.hier_block2):
         self.set_if_rate(if_rate)
         self.set_calibration(calibration)
         self.tune(freq)
-
-        self.define_component("usrp", self._u)
-        self.connect("self", 0, "usrp", 0)
-
+        self.connect(self, self._u)
 
     def set_subdev(self, subdev_spec):
         if subdev_spec is None:

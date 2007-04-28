@@ -74,7 +74,6 @@ class app_top_block(stdgui2.std_top_block):
         self.show_debug_info = True
         
         self.u = usrp.source_c(decim_rate=options.decim)
-        self.define_component("usrp", self.u)
         if options.rx_subdev_spec is None:
             options.rx_subdev_spec = pick_subdevice(self.u)
         self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
@@ -99,11 +98,8 @@ class app_top_block(stdgui2.std_top_block):
             self.scope = scopesink2.scope_sink_c(panel, sample_rate=input_rate)
         else:
     	    self.scope = fftsink2.fft_sink_c (panel, fft_size=1024, sample_rate=input_rate)
-        self.define_component("scope", self.scope)
 
-        # Ultimately this will be
-        # self.connect("usrp scope")
-        self.connect("usrp", 0, "scope", 0)
+        self.connect(self.u, self.scope)
 
         self._build_gui(vbox)
 

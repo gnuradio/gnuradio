@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -36,6 +36,7 @@ public:
     void start() throw (std::runtime_error);
     void stop() throw (std::runtime_error);
     void wait() throw (std::runtime_error);
+    void restart() throw (std::runtime_error);
 };
 
 %{
@@ -70,6 +71,12 @@ void runtime_wait_unlocked(gr_runtime_sptr r) throw (std::runtime_error)
 {
     ensure_py_gil_state2 _lock;
     r->wait();
+}
+
+void runtime_restart_unlocked(gr_runtime_sptr r) throw (std::runtime_error) 
+{
+    ensure_py_gil_state2 _lock;
+    r->restart();
 }
 
 %}

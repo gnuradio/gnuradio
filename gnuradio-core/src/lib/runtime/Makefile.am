@@ -129,7 +129,6 @@ swiginclude_HEADERS =			\
 	gr_msg_queue.i			\
 	gr_realtime.i			\
 	gr_runtime.i			\
-	gr_simple_flowgraph.i		\
 	gr_single_threaded_scheduler.i	\
 	gr_sync_block.i			\
 	gr_sync_decimator.i		\

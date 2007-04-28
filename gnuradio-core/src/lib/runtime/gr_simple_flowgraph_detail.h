@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,48 +23,30 @@
 #ifndef INCLUDED_GR_SIMPLE_FLOWGRAPH_DETAIL_H
 #define INCLUDED_GR_SIMPLE_FLOWGRAPH_DETAIL_H
 
-#include <gr_block.h>
-#include <map>
+#include <gr_basic_block.h>
+#include <gr_simple_flowgraph.h>
+#include <iostream>
 
 #define GR_FIXED_BUFFER_SIZE (32*(1L<<10))
 
-typedef std::map<std::string, gr_block_sptr> gr_component_map_t;
-typedef std::map<std::string, gr_block_sptr>::iterator gr_component_miter_t;
-
-class gr_endpoint
-{
-private:
-    std::string d_name;
-    int d_port;
-
-public:
-    gr_endpoint(const std::string &name, int port) { d_name = name; d_port = port; }
-    const std::string &name() const { return d_name; }
-    int port() const { return d_port; }
-};    
-
 class gr_edge;
 typedef boost::shared_ptr<gr_edge> gr_edge_sptr;
-gr_edge_sptr gr_make_edge(const std::string &src_name, int src_port, 
-                          const std::string &dst_name, int dst_port);
+gr_edge_sptr gr_make_edge(const gr_endpoint &src, const gr_endpoint &dst);
 
 class gr_edge
 {
 private:
-    friend gr_edge_sptr gr_make_edge(const std::string &src_name, int src_port,
-                                     const std::string &dst_name, int dst_port);
-    gr_edge(const std::string &name, int src_port,
-            const std::string &name, int dst_port);
+  friend gr_edge_sptr gr_make_edge(const gr_endpoint &src, const gr_endpoint &dst);
+  gr_edge(const gr_endpoint &src, const gr_endpoint &dst) : d_src(src), d_dst(dst) { }
 
-    gr_endpoint d_src;
-    gr_endpoint d_dst;
+  gr_endpoint d_src;
+  gr_endpoint d_dst;
 
 public:
-    ~gr_edge();
-    const std::string src_name() const { return d_src.name(); }
-    const std::string dst_name() const { return d_dst.name(); }
-    int src_port() const { return d_src.port(); }
-    int dst_port() const { return d_dst.port(); }
+  ~gr_edge();
+
+  const gr_endpoint &src() const { return d_src; }
+  const gr_endpoint &dst() const { return d_dst; }
 };
 
 typedef std::vector<gr_edge_sptr> gr_edge_vector_t;
@@ -73,63 +55,68 @@ typedef std::vector<gr_edge_sptr>::iterator gr_edge_viter_t;
 class gr_simple_flowgraph_detail
 {
 private:
-    friend class gr_simple_flowgraph;
-    friend class gr_runtime_impl;
-    friend class topo_block_cmp;
+  friend class gr_simple_flowgraph;
+  friend class gr_runtime_impl;
+  friend class gr_hier_block2_detail;
+  friend class topo_block_cmp;
     
-    gr_simple_flowgraph_detail();
+  gr_simple_flowgraph_detail() : d_blocks(), d_edges() { }
 
-    gr_component_map_t d_components;
-    gr_edge_vector_t   d_edges;
-    static const unsigned int s_fixed_buffer_size = GR_FIXED_BUFFER_SIZE;
+  gr_basic_block_vector_t d_blocks;
+  gr_edge_vector_t  d_edges;
+  static const unsigned int s_fixed_buffer_size = GR_FIXED_BUFFER_SIZE;
     
-    void reset();
-    void define_component(const std::string &name, gr_block_sptr block);    
-    void connect(const std::string &src, int src_port, 
-                 const std::string &dst, int dst_port);
-    gr_block_sptr lookup_block(const std::string &name);
-    std::string lookup_name(const gr_block_sptr block);
+  void reset();
+  void connect(const gr_endpoint &src, const gr_endpoint &dst);
+  void disconnect(const gr_endpoint &src, const gr_endpoint &dst);
+  void check_valid_port(gr_io_signature_sptr sig, int port);
+  void check_dst_not_used(const gr_endpoint &dst);
+  void check_type_match(const gr_endpoint &src, const gr_endpoint &dst);
+  void validate();
+  gr_edge_vector_t calc_connections(gr_basic_block_sptr block, bool check_inputs); // false=use outputs
+  std::vector<int> calc_used_ports(gr_basic_block_sptr block, bool check_inputs); 
+  void check_contiguity(gr_basic_block_sptr block, const std::vector<int> &used_ports, bool check_inputs);
+  void setup_connections();
+  void merge_connections(gr_simple_flowgraph_sptr sfg);
 
-    void check_valid_port(gr_io_signature_sptr sig, int port);
-    void check_dst_not_used(const std::string &name, int port);
-    void check_type_match(gr_block_sptr src_block, int src_port,
-                          gr_block_sptr dst_block, int dst_port);
-    void validate();
-    gr_edge_vector_t calc_connections(const std::string &name, bool check_inputs); // false=use outputs
-    std::vector<int> calc_used_ports(const std::string &name, bool check_inputs); 
-    void check_contiguity(gr_block_sptr block, const std::vector<int> &used_ports, 
-                          bool check_inputs);
-    void setup_connections();
-    gr_buffer_sptr allocate_buffer(const std::string &name, int port);
-    gr_block_vector_t calc_downstream_blocks(const std::string &name, int port);
-    gr_block_vector_t calc_downstream_blocks(const std::string &name);
-    gr_edge_vector_t calc_upstream_edges(const std::string &name);
-    gr_block_vector_t calc_used_blocks();
-    std::vector<gr_block_vector_t> partition();
-    gr_block_vector_t calc_reachable_blocks(gr_block_sptr block, gr_block_vector_t &blocks);
-    gr_block_vector_t topological_sort(gr_block_vector_t &blocks);
-    void reachable_dfs_visit(gr_block_sptr block, gr_block_vector_t &blocks);
-    gr_block_vector_t calc_adjacent_blocks(gr_block_sptr block, gr_block_vector_t &blocks);
-    bool source_p(gr_block_sptr block);
-    gr_block_vector_t sort_sources_first(gr_block_vector_t &blocks);
-    void topological_dfs_visit(gr_block_sptr block, gr_block_vector_t &output);
+  gr_buffer_sptr allocate_buffer(gr_basic_block_sptr block, int port);
+  gr_basic_block_vector_t calc_downstream_blocks(gr_basic_block_sptr block, int port);
+  gr_basic_block_vector_t calc_downstream_blocks(gr_basic_block_sptr block);
+  gr_edge_vector_t calc_upstream_edges(gr_basic_block_sptr block);
+  gr_basic_block_vector_t calc_used_blocks();
+  std::vector<gr_block_vector_t> partition();
+  gr_basic_block_vector_t calc_reachable_blocks(gr_basic_block_sptr block, gr_basic_block_vector_t &blocks);
+  gr_block_vector_t topological_sort(gr_basic_block_vector_t &blocks);
+  void reachable_dfs_visit(gr_basic_block_sptr block, gr_basic_block_vector_t &blocks);
+  gr_basic_block_vector_t calc_adjacent_blocks(gr_basic_block_sptr block, gr_basic_block_vector_t &blocks);
+  bool source_p(gr_basic_block_sptr block);
+  gr_basic_block_vector_t sort_sources_first(gr_basic_block_vector_t &blocks);
+  void topological_dfs_visit(gr_basic_block_sptr block, gr_block_vector_t &output);
         
 public:
-    ~gr_simple_flowgraph_detail();
+  ~gr_simple_flowgraph_detail();
 };
-
-inline std::ostream&
-operator <<(std::ostream& os, const gr_block_sptr p)
-{
-    os << "<gr_block " << p->name() << " (" << p->unique_id() << ")>";
-    return os;
-}
 
 inline std::ostream&
 operator <<(std::ostream &os, const gr_endpoint endp)
 {
-    os << endp.name() << ":" << endp.port();
-    return os;
+  os << endp.block()->name() << ":" << endp.port();
+  return os;
+}
+
+inline std::ostream&
+operator <<(std::ostream &os, const gr_edge_sptr edge)
+{
+  os << edge->src() << "->" << edge->dst();
+  return os;
+}
+
+inline void
+enumerate_edges(gr_edge_vector_t &edges)
+{
+  std::cout << "Edge list has " << edges.size() << " elements" << std::endl;
+  for(gr_edge_viter_t p = edges.begin(); p != edges.end(); p++)
+    std::cout << *p << std::endl;
 }
 
 #endif /* INCLUDED_GR_SIMPLE_FLOWGRAPH_H */

@@ -47,9 +47,7 @@ class usrp_source_c(gr.hier_block2):
         self.set_gain(gain)
         self.set_calibration(calibration)
         self.tune(freq)
-
-        self.define_component("usrp", self._u)
-        self.connect("usrp", 0, "self", 0)
+        self.connect(self._u, self)
 
     def set_subdev(self, subdev_spec):
         if subdev_spec is None:

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,38 +33,56 @@ class gr_scheduler_thread;
 typedef std::vector<gr_scheduler_thread *> gr_scheduler_thread_vector_t;
 typedef gr_scheduler_thread_vector_t::iterator gr_scheduler_thread_viter_t;
 
+/*!
+ *\brief A single thread of execution for the scheduler
+ *
+ * This class implements a single thread that runs undetached, and
+ * invokes the single-threaded block scheduler.  The runtime makes
+ * one of these for each distinct partition of a flowgraph and runs
+ * them in parallel.
+ *
+ */
 class gr_scheduler_thread : public omni_thread
 {
 private:
-    gr_single_threaded_scheduler_sptr d_sts;    
+  gr_single_threaded_scheduler_sptr d_sts;    
 
 public:
-    gr_scheduler_thread(gr_block_vector_t graph);
-    ~gr_scheduler_thread();
+  gr_scheduler_thread(gr_block_vector_t graph);
+  ~gr_scheduler_thread();
 
-    virtual void *run_undetached(void *arg);
-    void start();
-    void stop();
+  virtual void *run_undetached(void *arg);
+  void start();
+  void stop();
 };
 
+/*!
+ *\brief Implementation details of gr_runtime
+ *
+ * The actual implementation of gr_runtime. Separate class allows
+ * decoupling of changes from dependent classes.
+ *
+ */
 class gr_runtime_impl
 {
 private:
-    gr_runtime_impl(gr_hier_block2_sptr top_block);
-    friend class gr_runtime;
+  gr_runtime_impl(gr_hier_block2_sptr top_block);
+  friend class gr_runtime;
     
-    bool                           d_running;
-    gr_hier_block2_sptr            d_top_block;
-    gr_simple_flowgraph_sptr       d_sfg;
-    std::vector<gr_block_vector_t> d_graphs;
-    gr_scheduler_thread_vector_t   d_threads;
+  bool                           d_running;
+  gr_hier_block2_sptr            d_top_block;
+  gr_simple_flowgraph_sptr       d_sfg;
+  std::vector<gr_block_vector_t> d_graphs;
+  gr_scheduler_thread_vector_t   d_threads;
             
-    void start();
-    void stop();
-    void wait();
-    
+  void start();
+  void start_threads();
+  void stop();
+  void wait();
+  void restart();
+
 public:
-    ~gr_runtime_impl();
+  ~gr_runtime_impl();
 
 };
 

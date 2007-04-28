@@ -28,11 +28,9 @@
 #include <gr_simple_flowgraph_detail.h>
 #include <iostream>
 
-#define GR_SIMPLE_FLOWGRAPH_DEBUG 0
-
 gr_simple_flowgraph_sptr gr_make_simple_flowgraph()
 {
-    return gr_simple_flowgraph_sptr(new gr_simple_flowgraph());
+  return gr_simple_flowgraph_sptr(new gr_simple_flowgraph());
 }
 
 gr_simple_flowgraph::gr_simple_flowgraph() :
@@ -42,26 +40,31 @@ d_detail(new gr_simple_flowgraph_detail())
   
 gr_simple_flowgraph::~gr_simple_flowgraph()
 {
-    delete d_detail;
+  delete d_detail;
 }
 
 void
-gr_simple_flowgraph::define_component(const std::string &name, gr_block_sptr block)
+gr_simple_flowgraph::connect(gr_basic_block_sptr src_block, int src_port,
+			     gr_basic_block_sptr dst_block, int dst_port)
 {
-    if (GR_SIMPLE_FLOWGRAPH_DEBUG)
-        std::cout << "Defining block " << block << " as " << name << std::endl;
-    d_detail->define_component(name, block);
+  d_detail->connect(gr_endpoint(src_block, src_port), gr_endpoint(dst_block, dst_port));
 }
 
 void
-gr_simple_flowgraph::connect(const std::string &src_name, int src_port,
-                             const std::string &dst_name, int dst_port)
+gr_simple_flowgraph::connect(const gr_endpoint &src, const gr_endpoint &dst)
 {
-    d_detail->connect(src_name, src_port, dst_name, dst_port);
+  d_detail->connect(src, dst);
+}
+
+void
+gr_simple_flowgraph::disconnect(gr_basic_block_sptr src_block, int src_port,
+				gr_basic_block_sptr dst_block, int dst_port)
+{
+  d_detail->disconnect(gr_endpoint(src_block, src_port), gr_endpoint(dst_block, dst_port));
 }
 
 void
 gr_simple_flowgraph::validate()
 {
-    d_detail->validate();
+  d_detail->validate();
 }

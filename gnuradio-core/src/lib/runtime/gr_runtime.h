@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -29,21 +29,57 @@ class gr_runtime_impl;
 
 gr_runtime_sptr gr_make_runtime(gr_hier_block2_sptr top_block);
 
+/*!
+ *\brief Runtime object that controls simple flow graph operation
+ *
+ * This class is instantiated with a top-level gr_hier_block2. The
+ * runtime then flattens the hierarchical block into a gr_simple_flowgraph,
+ * and allows control through start(), stop(), wait(), and run().
+ * 
+ */
 class gr_runtime
 {
 private:
-    gr_runtime(gr_hier_block2_sptr top_block);
-    friend gr_runtime_sptr gr_make_runtime(gr_hier_block2_sptr top_block);
+  gr_runtime(gr_hier_block2_sptr top_block);
+  friend gr_runtime_sptr gr_make_runtime(gr_hier_block2_sptr top_block);
 
-    gr_runtime_impl *d_impl;
+  gr_runtime_impl *d_impl;
     
 public:
-    ~gr_runtime();
+  ~gr_runtime();
 
-    void start();
-    void stop();
-    void wait();
-    void run();
+  /*!
+   * Start the flow graph.  Creates an undetached scheduler thread for
+   * each flow graph partition. Returns to caller once created.
+   */
+  void start();
+  
+  /*!
+   * Stop a running flow graph.  Tells each created scheduler thread
+   * to exit, then returns to caller.
+   */
+  void stop();
+
+  /*!
+   * Wait for a stopped flow graph to complete.  Joins each completed
+   * thread.
+   */
+  void wait();
+
+  /*!
+   * Calls start(), then wait().  Used to run a flow graph that will stop
+   * on its own, or to run a flow graph indefinitely until SIGTERM is
+   * received().
+   */
+  void run();
+
+  /*!
+   * Restart a running flow graph, after topology changes have
+   * been made to its top_block (or children). Causes each created 
+   * scheduler thread to end, recalculates the flow graph, and 
+   * recreates new threads (possibly a different number from before.)
+   */
+  void restart();
 };
 
 #endif /* INCLUDED_GR_RUNTIME_H */

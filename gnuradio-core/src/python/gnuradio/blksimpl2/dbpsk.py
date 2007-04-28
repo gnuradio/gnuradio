@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -113,19 +113,9 @@ class dbpsk_mod(gr.hier_block2):
 	self.rrc_filter = gr.interp_fir_filter_ccf(self._samples_per_symbol,
                                                    self.rrc_taps)
 
-        self.define_component("bytes2chunks", self.bytes2chunks)
-        self.define_component("symbol_mapper", self.symbol_mapper)
-        self.define_component("diffenc", self.diffenc)
-        self.define_component("chunks2symbols", self.chunks2symbols)
-        self.define_component("rrc_filter", self.rrc_filter)
-
 	# Connect components
-        self.connect("self", 0, "bytes2chunks", 0)
-        self.connect("bytes2chunks", 0, "symbol_mapper", 0)
-        self.connect("symbol_mapper", 0, "diffenc", 0)
-        self.connect("diffenc", 0, "chunks2symbols", 0)
-        self.connect("chunks2symbols", 0, "rrc_filter", 0)
-        self.connect("rrc_filter", 0, "self", 0)
+	self.connect(self, self.bytes2chunks, self.symbol_mapper, self.diffenc, 
+		     self.chunks2symbols, self.rrc_filter, self)
 
         if verbose:
             self._print_verbage()
@@ -168,22 +158,11 @@ class dbpsk_mod(gr.hier_block2):
 
     def _setup_logging(self):
         print "Modulation logging turned on."
-        self.define_component("bytes2chunks_dat",
-                              gr.file_sink(gr.sizeof_char, "tx_bytes2chunks.dat"))
-        self.define_component("symbol_mapper_dat",
-                              gr.file_sink(gr.sizeof_char, "tx_symbol_mapper.dat"))
-        self.define_component("diffenc_dat",
-                              gr.file_sink(gr.sizeof_char, "tx_diffenc.dat"))
-        self.define_component("chunks2symbols_dat",
-                              gr.file_sink(gr.sizeof_gr_complex, "tx_chunks2symbols.dat"))
-        self.define_component("rrc_filter_dat",
-                              gr.file_sink(gr.sizeof_gr_complex, "tx_rrc_filter.dat"))
-
-        self.connect("bytes2chunks", 0, "bytes2chunks_dat", 0)
-        self.connect("symbol_mapper", 0, "symbol_mapper_dat", 0)
-        self.connect("diffenc", 0, "diffenc_dat", 0)
-        self.connect("chunks2symbols", 0, "chunks2symbols_dat", 0)
-        self.connect("rrc_filter", 0, "rrc_filter_dat", 0)
+        self.connect(self.bytes2chunks, gr.file_sink(gr.sizeof_char, "tx_bytes2chunks.dat"))
+        self.connect(self.symbol_mapper, gr.file_sink(gr.sizeof_char, "tx_symbol_mapper.dat"))
+        self.connect(self.diffenc, gr.file_sink(gr.sizeof_char, "tx_diffenc.dat"))
+        self.connect(self.chunks2symbols, gr.file_sink(gr.sizeof_gr_complex, "tx_chunks2symbols.dat"))
+        self.connect(self.rrc_filter, gr.file_sink(gr.sizeof_gr_complex, "tx_rrc_filter.dat"))
               
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -295,27 +274,10 @@ class dbpsk_demod(gr.hier_block2):
         # unpack the k bit vector into a stream of bits
         self.unpack = gr.unpack_k_bits_bb(self.bits_per_symbol())
 
-        # Define components
-        self.define_component("pre_scaler", self.pre_scaler)
-        self.define_component("agc", self.agc)
-        self.define_component("rrc_filter", self.rrc_filter)
-        self.define_component("receiver", self.receiver)
-        self.define_component("slicer", self.slicer)
-        self.define_component("diffdec", self.diffdec)
-        self.define_component("symbol_mapper", self.symbol_mapper)
-        self.define_component("unpack", self.unpack)
-
         # Connect and Initialize base class
-        self.connect("self", 0, "pre_scaler", 0)
-        self.connect("pre_scaler", 0, "agc", 0)
-        self.connect("agc", 0, "rrc_filter", 0)
-        self.connect("rrc_filter", 0, "receiver", 0)
-        self.connect("receiver", 0, "diffdec", 0)
-        self.connect("diffdec", 0, "slicer", 0)
-        self.connect("slicer", 0, "symbol_mapper", 0)
-        self.connect("symbol_mapper", 0, "unpack", 0)
-        self.connect("unpack", 0, "self", 0)
-        
+	self.connect(self, self.pre_scaler, self.agc, self.rrc_filter, self.receiver,
+		     self.diffdec, self.slicer, self.symbol_mapper, self.unpack, self)
+
         if verbose:
             self._print_verbage()
 
@@ -344,32 +306,14 @@ class dbpsk_demod(gr.hier_block2):
 
     def _setup_logging(self):
         print "Demodulation logging turned on."
-        self.define_component("prescaler_dat",
-                              gr.file_sink(gr.sizeof_gr_complex, "rx_prescaler.dat"))
-        self.define_component("agc_dat",
-                              gr.file_sink(gr.sizeof_gr_complex, "rx_agc.dat"))
-        self.define_component("rrc_filter_dat",
-                              gr.file_sink(gr.sizeof_gr_complex, "rx_rrc_filter.dat"))
-        self.define_component("receiver_dat",
-                              gr.file_sink(gr.sizeof_gr_complex, "rx_receiver.dat"))
-        self.define_component("diffdec_dat",
-                              gr.file_sink(gr.sizeof_gr_complex, "rx_diffdec.dat"))
-        self.define_component("slicer_dat",
-                              gr.file_sink(gr.sizeof_char, "rx_slicer.dat"))
-        self.define_component("symbol_mapper_dat",
-                              gr.file_sink(gr.sizeof_char, "rx_symbol_mapper.dat"))
-        self.define_component("unpack_dat",
-                              gr.file_sink(gr.sizeof_char, "rx_unpack.dat"))
-
-        self.connect("pre_scaler", 0, "prescaler_dat", 0)
-        self.connect("agc", 0, "agc_dat", 0)
-        self.connect("rrc_filter", 0, "rrc_filter_dat", 0)
-        self.connect("receiver", 0, "receiver_dat", 0)
-        self.connect("diffdec", 0, "diffdec_dat", 0)
-        self.connect("slicer", 0, "slicer_dat", 0)
-        self.connect("symbol_mapper", 0, "symbol_mapper_dat", 0)
-        self.connect("unpack", 0, "unpack_dat", 0)
-
+        self.connect(self.pre_scaler, gr.file_sink(gr.sizeof_gr_complex, "rx_prescaler.dat"))
+        self.connect(self.agc, gr.file_sink(gr.sizeof_gr_complex, "rx_agc.dat"))
+        self.connect(self.rrc_filter, gr.file_sink(gr.sizeof_gr_complex, "rx_rrc_filter.dat"))
+        self.connect(self.receiver, gr.file_sink(gr.sizeof_gr_complex, "rx_receiver.dat"))
+        self.connect(self.diffdec, gr.file_sink(gr.sizeof_gr_complex, "rx_diffdec.dat"))
+        self.connect(self.slicer, gr.file_sink(gr.sizeof_char, "rx_slicer.dat"))
+        self.connect(self.symbol_mapper, gr.file_sink(gr.sizeof_char, "rx_symbol_mapper.dat"))
+        self.connect(self.unpack, gr.file_sink(gr.sizeof_char, "rx_unpack.dat"))
         
     def add_options(parser):
         """

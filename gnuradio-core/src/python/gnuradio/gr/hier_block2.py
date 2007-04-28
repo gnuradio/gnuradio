@@ -21,7 +21,7 @@
 
 from gnuradio_swig_python import hier_block2_swig, gr_make_runtime, \
     runtime_run_unlocked, runtime_start_unlocked, runtime_stop_unlocked, \
-    runtime_wait_unlocked 
+    runtime_wait_unlocked, runtime_restart_unlocked, io_signature
 
 #
 # This hack forces a 'has-a' relationship to look like an 'is-a' one.
@@ -38,9 +38,55 @@ class hier_block2(object):
     def __getattr__(self, name):
 	return getattr(self._hb, name)
 
-    def define_component(self, name, comp):
-	return self._hb.define_component(name, comp.basic_block())
+    def connect(self, *points):
+        '''connect requires two or more arguments that can be coerced to endpoints.
+        If more than two arguments are provided, they are connected together successively.
+        '''
+        if len (points) < 2:
+            raise ValueError, ("connect requires at least two endpoints; %d provided." % (len (points),))
+        for i in range (1, len (points)):
+            self._connect(points[i-1], points[i])
 
+    def _connect(self, src, dst):
+        (src_block, src_port) = self._coerce_endpoint(src)
+        (dst_block, dst_port) = self._coerce_endpoint(dst)
+        self._hb.connect(src_block.basic_block(), src_port,
+                         dst_block.basic_block(), dst_port)
+
+    def _coerce_endpoint(self, endp):
+        if hasattr(endp, 'basic_block'):
+            return (endp, 0)
+        else:
+            if hasattr(endp, "__getitem__") and len(endp) == 2:
+                return endp # Assume user put (block, port)
+            else:
+                raise ValueError("unable to coerce endpoint")
+
+    def disconnect(self, *points):
+        '''connect requires two or more arguments that can be coerced to endpoints.
+        If more than two arguments are provided, they are disconnected successively.
+        '''
+        if len (points) < 2:
+            raise ValueError, ("disconnect requires at least two endpoints; %d provided." % (len (points),))
+        for i in range (1, len (points)):
+            self._disconnect(points[i-1], points[i])
+
+    def _disconnect(self, src, dst):
+        (src_block, src_port) = self._coerce_endpoint(src)
+        (dst_block, dst_port) = self._coerce_endpoint(dst)
+        self._hb.disconnect(src_block.basic_block(), src_port,
+                            dst_block.basic_block(), dst_port)
+
+# Convenience class to create a no input, no output block for runtime top block
+class top_block(hier_block2):
+    def __init__(self, name):
+        hier_block2.__init__(self, name, io_signature(0,0,0), io_signature(0,0,0))
+
+# This allows the 'run_locked' methods, which are defined in gr_runtime.i,
+# to release the Python global interpreter lock before calling the actual
+# method in gr.runtime
+#
+# This probably should be elsewhere but it works here
 class runtime(object):
     def __init__(self, top_block):
         if (isinstance(top_block, hier_block2)):
@@ -59,3 +105,6 @@ class runtime(object):
 
     def wait(self):
         runtime_wait_unlocked(self._r)
+
+    def restart(self):
+        runtime_restart_unlocked(self._r)

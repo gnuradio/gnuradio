@@ -2,7 +2,7 @@
 # GMSK modulation and demodulation.  
 #
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -103,16 +103,8 @@ class gmsk_mod(gr.hier_block2):
 	# FM modulation
 	self.fmmod = gr.frequency_modulator_fc(sensitivity)
 		
-        # Define components from objects
-        self.define_component("nrz", self.nrz)
-        self.define_component("gaussian_filter", self.gaussian_filter)
-        self.define_component("fmmod", self.fmmod)
-
 	# Connect components
-        self.connect("self", 0, "nrz", 0)
-        self.connect("nrz", 0, "gaussian_filter", 0)
-        self.connect("gaussian_filter", 0, "fmmod", 0)
-        self.connect("fmmod", 0, "self", 0)
+	self.connect(self, self.nrz, self.gaussian_filter, self.fmmod, self)
 
         if verbose:
             self._print_verbage()
@@ -135,13 +127,9 @@ class gmsk_mod(gr.hier_block2):
 
     def _setup_logging(self):
         print "Modulation logging turned on."
-        self.define_component("nrz_dat", gr.file_sink(gr.sizeof_float, "tx_nrz.dat"))
-        self.define_component("gaussian_filter_dat", gr.file_sink(gr.sizeof_float, "tx_gaussian_filter.dat"))
-        self.define_component("fmmod_dat", gr.file_sink(gr.sizeof_gr_complex, "tx_fmmod.dat"))
-
-        self.connect("nrz", 0, "nrz_dat", 0)
-        self.connect("gaussian_filter", 0, "gaussian_filter_dat", 0)
-        self.connect("fmmod", 0, "fmmod_dat", 0)
+        self.connect(self.nrz, gr.file_sink(gr.sizeof_float, "tx_nrz.dat"))
+        self.connect(self.gaussian_filter, gr.file_sink(gr.sizeof_float, "tx_gaussian_filter.dat"))
+        self.connect(self.fmmod, gr.file_sink(gr.sizeof_gr_complex, "tx_fmmod.dat"))
 
     def add_options(parser):
         """
@@ -232,16 +220,8 @@ class gmsk_demod(gr.hier_block2):
         # slice the floats at 0, outputting 1 bit (the LSB of the output byte) per sample
         self.slicer = gr.binary_slicer_fb()
 
-        # Define components from objects
-        self.define_component("fmdemod", self.fmdemod)
-        self.define_component("clock_recovery", self.clock_recovery)
-        self.define_component("slicer", self.slicer)
-
 	# Connect components
-        self.connect("self", 0, "fmdemod", 0)
-        self.connect("fmdemod", 0, "clock_recovery", 0)
-        self.connect("clock_recovery", 0, "slicer", 0)
-        self.connect("slicer", 0, "self", 0)
+	self.connect(self, self.fmdemod, self.clock_recovery, self.slicer, self)
 
         if verbose:
             self._print_verbage()
@@ -267,13 +247,9 @@ class gmsk_demod(gr.hier_block2):
 
     def _setup_logging(self):
         print "Demodulation logging turned on."
-        self.define_component("fmdemod_dat", gr.file_sink(gr.sizeof_float, "rx_fmdemod.dat"))
-        self.define_component("clock_recovery_dat", gr.file_sink(gr.sizeof_float, "rx_clock_recovery.dat"))
-        self.define_component("slicer_dat", gr.file_sink(gr.sizeof_char, "rx_slicer.dat"))
-
-        self.connect("fmdemod", 0, "fmdemod_dat", 0)
-        self.connect("clock_recovery", 0, "clock_recovery_dat", 0)
-        self.connect("slicer", 0, "slicer_dat", 0)
+        self.connect(self.fmdemod, gr.file_sink(gr.sizeof_float, "rx_fmdemod.dat"))
+        self.connect(self.clock_recovery, gr.file_sink(gr.sizeof_float, "rx_clock_recovery.dat"))
+        self.connect(self.slicer, gr.file_sink(gr.sizeof_char, "rx_slicer.dat"))
 
     def add_options(parser):
         """

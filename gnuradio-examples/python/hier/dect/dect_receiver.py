@@ -30,19 +30,15 @@ _dect_channel_bandwidth = 1.728e6
 
 # Top-level hierarchical block that implements DECT demodulation and
 # decoding.
-class dect_receiver(gr.hier_block2):
+class dect_receiver(gr.top_block):
     def __init__(self, options):
-	gr.hier_block2.__init__(self, 
-                                "dect_receiver",        # Block typename
-				gr.io_signature(0,0,0), # Input signature
-				gr.io_signature(0,0,0)) # Output signature
+	gr.top_block.__init__(self, "dect_receiver")
         self._options = options
 
         # Need greater than 2 samples per symbol. This makes a decimation
         # rate of 26 and a samples per symbol of 2.136752
         if_rate = 2.461538e6
-        self._usrp = usrp_source_c(self,
-                                   which=0,
+        self._usrp = usrp_source_c(which=0,
                                    subdev_spec=options.rx_subdev_spec,
                                    if_rate=if_rate,
                                    gain=options.gain,
@@ -67,25 +63,19 @@ class dect_receiver(gr.hier_block2):
         self._demod = gmsk2_demod(samples_per_symbol=if_rate/_dect_symbol_rate,
                                   verbose=options.verbose)
 
-        # Define and connect components
-        self.define_component("usrp", self._usrp)
-        self.define_component("channel", self._channel_filter)
-        self.define_component("demod", self._demod)
-        self.define_component("sink", gr.null_sink(gr.sizeof_char))
-        self.connect("usrp", 0, "channel", 0)
-        self.connect("channel", 0, "demod", 0)
-        self.connect("demod", 0, "sink", 0)
+        self._sink = gr.null_sink(gr.sizeof_char)
+        self.connect(self._usrp, self._channel_filter, self._demod, self._sink)
 
         # Log baseband to file if requested
         if options.log_baseband is not None:
             if options.verbose:
                 print "Logging baseband to file", options.log_baseband
-            self.define_component("baseband_log", gr.file_sink(gr.sizeof_gr_complex, options.log_baseband))
-            self.connect("channel", 0, "baseband_log", 0)
+            self.baseband_log = gr.file_sink(gr.sizeof_gr_complex, options.log_baseband)
+            self.connect(self._channel_filter, self.baseband_log)
 
         # Log demodulator output to file if requested
         if options.log_demod is not None:
             if options.verbose:
                 print "Logging demodulator to file", options.log_demod
-            self.define_component("demod_log", gr.file_sink(gr.sizeof_char, options.log_demod))
-            self.connect("demod", 0, "demod_log", 0)
+            self.demod_log = gr.file_sink(gr.sizeof_char, options.log_demod)
+            self.connect(self._demod, self.demod_log)

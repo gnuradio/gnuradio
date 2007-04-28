@@ -86,10 +86,8 @@ class stdpanel (wx.Panel):
         self.runtime = gr.runtime(self.top_block)
         self.runtime.start ()
 
-class std_top_block (gr.hier_block2):
+class std_top_block (gr.top_block):
     def __init__ (self, parent, panel, vbox, argv):
         # Call the hier_block2 constructor
         # Top blocks have no inputs and outputs
-        gr.hier_block2.__init__(self, "std_top_block",
-                                gr.io_signature(0,0,0),
-                                gr.io_signature(0,0,0))
+        gr.top_block.__init__(self, "std_top_block")

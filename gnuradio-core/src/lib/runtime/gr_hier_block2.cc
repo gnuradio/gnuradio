@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -50,14 +50,15 @@ gr_hier_block2::~gr_hier_block2()
 }
 
 void 
-gr_hier_block2::define_component(const std::string &name, gr_basic_block_sptr block)
+gr_hier_block2::connect(gr_basic_block_sptr src, int src_port, 
+                        gr_basic_block_sptr dst, int dst_port)
 {
-    d_detail->define_component(name, block);
+    d_detail->connect(src, src_port, dst, dst_port);
 }
 
 void 
-gr_hier_block2::connect(const std::string &src_name, int src_port, 
-                        const std::string &dst_name, int dst_port)
+gr_hier_block2::disconnect(gr_basic_block_sptr src, int src_port, 
+                           gr_basic_block_sptr dst, int dst_port)
 {
-    d_detail->connect(src_name, src_port, dst_name, dst_port);
+    d_detail->disconnect(src, src_port, dst, dst_port);
 }

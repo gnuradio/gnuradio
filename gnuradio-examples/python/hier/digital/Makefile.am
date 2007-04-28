@@ -33,3 +33,5 @@ EXTRA_DIST =			\
 	transmit_path_lb.py	\
 	tunnel.py		\
 	tx_voice.py		
+
+MOSTLYCLEANFILES = *~ *.pyc *.dat
