@@ -279,6 +279,7 @@ usb_handle_setup_packet (void)
 	  fx2_stall_ep0 ();
 	  break;
 	}
+	break;
 
       // --------------------------------
 
