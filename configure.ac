@@ -218,9 +218,6 @@ GRC_GR_QTGUI
 GRC_GR_WXGUI
 GRC_PMT
 GRC_MBLOCK			dnl this must come after GRC_PMT
-GRC_EZDOP		
-GRC_GR_EZDOP			dnl this must come after GRC_EZDOP
-GRC_GR_RDF
 GRC_GR_SOUNDER			dnl this must come after GRC_USRP
 GRC_GNURADIO_EXAMPLES		dnl must come last
 
