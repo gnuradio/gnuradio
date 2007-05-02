@@ -114,7 +114,7 @@ module master_control
 
    wire        transmit_now;
    wire        atr_ctl;
-   wire [31:0] atr_tx_delay, atr_rx_delay;
+   wire [11:0] atr_tx_delay, atr_rx_delay;
    wire [15:0] atr_mask_0, atr_txval_0, atr_rxval_0, atr_mask_1, atr_txval_1, atr_rxval_1, atr_mask_2, atr_txval_2, atr_rxval_2, atr_mask_3, atr_txval_3, atr_rxval_3;
       
    setting_reg #(`FR_ATR_MASK_0) sr_atr_mask_0(.clock(master_clk),.reset(1'b0),.strobe(serial_strobe),.addr(serial_addr),.in(serial_data),.out(atr_mask_0));
@@ -139,7 +139,7 @@ module master_control
 
    assign      atr_ctl = 1'b1;
 
-   atr_delay atr_delay(.clk_i(master_clk),.rst_i(tx_dsp_reset),.ena_i(atr_ctl & enable_tx),.tx_empty_i(tx_empty),
+   atr_delay atr_delay(.clk_i(master_clk),.rst_i(tx_dsp_reset),.ena_i(atr_ctl),.tx_empty_i(tx_empty),
 		       .tx_delay_i(atr_tx_delay),.rx_delay_i(atr_rx_delay),.atr_tx_o(transmit_now));
    
    wire [15:0] atr_selected_0 = transmit_now ? atr_txval_0 : atr_rxval_0;

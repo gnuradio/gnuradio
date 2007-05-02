@@ -24,12 +24,12 @@ module atr_delay(clk_i,rst_i,ena_i,tx_empty_i,tx_delay_i,rx_delay_i,atr_tx_o);
    input        rst_i;
    input        ena_i;
    input        tx_empty_i;
-   input [31:0] tx_delay_i;
-   input [31:0] rx_delay_i;
+   input [11:0] tx_delay_i;
+   input [11:0] rx_delay_i;
    output       atr_tx_o;
 
    reg [3:0] 	state;
-   reg [31:0] 	count;
+   reg [11:0] 	count;
 
    `define ST_RX_DELAY 4'b0001
    `define ST_RX       4'b0010
@@ -40,7 +40,7 @@ module atr_delay(clk_i,rst_i,ena_i,tx_empty_i,tx_delay_i,rx_delay_i,atr_tx_o);
      if (rst_i | ~ena_i)
        begin
 	  state <= `ST_RX;
-	  count <= 0;
+	  count <= 12'b0;
        end
      else
        case (state)
