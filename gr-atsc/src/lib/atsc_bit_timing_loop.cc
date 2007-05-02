@@ -56,7 +56,7 @@ atsc_bit_timing_loop::forecast (int noutput_items, gr_vector_int &ninput_items_r
 {
   unsigned ninputs = ninput_items_required.size();
   for (unsigned i = 0; i < ninputs; i++)
-    ninput_items_required[i] = noutput_items * d_rx_clock_to_symbol_freq + 1500 - 1;
+    ninput_items_required[i] = static_cast<int>(noutput_items * d_rx_clock_to_symbol_freq) + 1500 - 1;
 
 }
 

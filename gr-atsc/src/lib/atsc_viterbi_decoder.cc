@@ -27,8 +27,10 @@
 #include <atsc_viterbi_decoder.h>
 #include <gr_io_signature.h>
 #include <atsc_consts.h>
-#include <iostream.h>
+#include <iostream>
 
+using std::cerr;
+using std::endl;
 
 atsc_viterbi_decoder_sptr
 atsc_make_viterbi_decoder()

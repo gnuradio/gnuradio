@@ -32,9 +32,11 @@
 #include <atsci_syminfo.h>
 #include <stdio.h>
 #include <assert.h>
-#include <iostream.h>
+#include <iostream>
 
-using std::abs;
+using std::cerr;
+using std::endl;
+
 
 static const int        DEC = ATSC_DATA_SEGMENT_LENGTH; // nominal decimation factor
 
