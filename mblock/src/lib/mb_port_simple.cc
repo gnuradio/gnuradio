@@ -37,7 +37,8 @@ mb_port_simple::mb_port_simple(mb_mblock *mblock,
 			       const std::string &protocol_class_name,
 			       bool conjugated,
 			       mb_port::port_type_t port_type)
-  : mb_port(mblock, port_name, protocol_class_name, conjugated, port_type)
+  : mb_port(mblock, port_name, protocol_class_name, conjugated, port_type),
+    d_cache_valid(false)
 {
 }
 
@@ -67,6 +68,9 @@ mb_port_simple::find_accepter(mb_port_simple *start)
   mb_endpoint 		peer_ep;
   mb_msg_accepter_sptr	r;
 
+  if (start->d_cache_valid)
+    return start->d_cached_accepter;
+
   mbi_runtime_lock	l(p->mblock());
 
   // Set up initial context.
@@ -78,6 +82,8 @@ mb_port_simple::find_accepter(mb_port_simple *start)
 
   case mb_port::EXTERNAL:	// binding is in parent's name space
     context = p->mblock()->parent();
+    if (!context)			// can't be bound if there's no parent
+      return mb_msg_accepter_sptr();	// not bound
     break;
 
   default:
@@ -97,7 +103,11 @@ mb_port_simple::find_accepter(mb_port_simple *start)
   case mb_port::INTERNAL:	// Terminate here.
   case mb_port::EXTERNAL:
     r = pp->make_accepter();
-    // FIXME cache the result
+
+    // cache the result
+
+    start->d_cached_accepter = r;
+    start->d_cache_valid = true;
     return r;
 
   case mb_port::RELAY:		// Traverse to other side of relay port.
@@ -130,5 +140,12 @@ mb_port_simple::find_accepter(mb_port_simple *start)
 mb_msg_accepter_sptr
 mb_port_simple::make_accepter()
 {
-  return d_mblock->impl()->make_accepter(port_name());
+  return d_mblock->impl()->make_accepter(port_symbol());
+}
+
+void
+mb_port_simple::invalidate_cache()
+{
+  d_cache_valid = false;
+  d_cached_accepter.reset();
 }

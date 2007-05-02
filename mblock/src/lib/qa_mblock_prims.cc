@@ -34,6 +34,7 @@
 #include <mb_message.h>
 #include <mb_mblock_impl.h>
 #include <mb_msg_accepter.h>
+#include <mb_class_registry.h>
 #include <stdio.h>
 
 static pmt_t s_cs = pmt_intern("cs");
@@ -47,42 +48,49 @@ static pmt_t s_out = pmt_intern("out");
 class dp_1 : public mb_mblock
 {
 public:
-  dp_1();
+  dp_1(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg);
   ~dp_1();
 };
 
-dp_1::dp_1()
+dp_1::dp_1(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+  : mb_mblock(runtime, instance_name, user_arg)
 {
 }
 
 dp_1::~dp_1(){}
+
+REGISTER_MBLOCK_CLASS(dp_1);
 
 // ----------------------------------------------------------------
 
 class dp_2 : public mb_mblock
 {
 public:
-  dp_2();
+  dp_2(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg);
   ~dp_2();
 };
 
-dp_2::dp_2()
+dp_2::dp_2(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+  : mb_mblock(runtime, instance_name, user_arg)
 {
   define_port("cs", "cs-protocol", false, mb_port::EXTERNAL);
 }
 
 dp_2::~dp_2(){}
 
+REGISTER_MBLOCK_CLASS(dp_2);
+
 // ----------------------------------------------------------------
 
 class dp_3 : public mb_mblock
 {
 public:
-  dp_3();
+  dp_3(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg);
   ~dp_3();
 };
 
-dp_3::dp_3()
+dp_3::dp_3(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+  : mb_mblock(runtime, instance_name, user_arg)
 {
   define_port("cs", "cs-protocol", false, mb_port::EXTERNAL);
   define_port("cs", "cs-protocol", false, mb_port::EXTERNAL);	// duplicate def
@@ -90,19 +98,23 @@ dp_3::dp_3()
 
 dp_3::~dp_3(){}
 
+REGISTER_MBLOCK_CLASS(dp_3);
+
 // ----------------------------------------------------------------
 
 void
 qa_mblock_prims::test_define_ports()
 {
-  // std::vector<mb_port_sptr>	intf;
-
-  mb_mblock_sptr	mb1 = mb_mblock_sptr(new dp_1());
-  // intf = mb1->peer_interface();
-  // CPPUNIT_ASSERT_EQUAL(size_t(0), intf.size());
+  
+  mb_runtime_sptr rts = mb_make_runtime();
+  mb_runtime *rt = rts.get();
+  
+  // Should work
+  mb_mblock_sptr  mb1 = mb_mblock_sptr(new dp_1(rt, "top", PMT_F));
 
   // raises runtime_error because of unknown protocol "cs-protocol"
-  CPPUNIT_ASSERT_THROW(mb_mblock_sptr(new dp_2()), std::runtime_error);
+  CPPUNIT_ASSERT_THROW(mb_mblock_sptr(new dp_2(rt, "top", PMT_F)),
+		       std::runtime_error);
 
   // define the protocol class
   pmt_t pc = mb_make_protocol_class(pmt_intern("cs-protocol"),
@@ -112,10 +124,11 @@ qa_mblock_prims::test_define_ports()
 
   // std::cout << "pc = " << pc << '\n';
 
-  mb_mblock_sptr mb2 = mb_mblock_sptr(new dp_2());
+  mb_mblock_sptr mb2 = mb_mblock_sptr(new dp_2(rt, "top", PMT_F));
 
   // raises pmt_exception because of duplicate port definition of "cs"
-  CPPUNIT_ASSERT_THROW(mb_mblock_sptr(new dp_3()), mbe_duplicate_port);
+  CPPUNIT_ASSERT_THROW(mb_mblock_sptr(new dp_3(rt, "top", PMT_F)),
+		       mbe_duplicate_port);
 }
 
 // ================================================================
@@ -123,61 +136,74 @@ qa_mblock_prims::test_define_ports()
 class dc_0 : public mb_mblock
 {
 public:
-  dc_0();
+  dc_0(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg);
   ~dc_0();
 };
 
-dc_0::dc_0()
+dc_0::dc_0(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+  : mb_mblock(runtime, instance_name, user_arg)
 {
 }
 
 dc_0::~dc_0() {}
+
+REGISTER_MBLOCK_CLASS(dc_0);
 
 // ----------------------------------------------------------------
 
 class dc_ok : public mb_mblock
 {
 public:
-  dc_ok();
+  dc_ok(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg);
   ~dc_ok();
 };
 
-dc_ok::dc_ok()
+dc_ok::dc_ok(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+  : mb_mblock(runtime, instance_name, user_arg)
 {
-  define_component("c0", mb_mblock_sptr(new dc_0()));
-  define_component("c1", mb_mblock_sptr(new dc_0()));
-  define_component("c2", mb_mblock_sptr(new dc_0()));
+  define_component("c0", "dc_0");
+  define_component("c1", "dc_0");
+  define_component("c2", "dc_0");
 }
 
 dc_ok::~dc_ok(){}
+
+REGISTER_MBLOCK_CLASS(dc_ok);
 
 // ----------------------------------------------------------------
 
 class dc_not_ok : public mb_mblock
 {
 public:
-  dc_not_ok();
+  dc_not_ok(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg);
   ~dc_not_ok();
 };
 
-dc_not_ok::dc_not_ok()
-  : mb_mblock()
+dc_not_ok::dc_not_ok(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+  : mb_mblock(runtime, instance_name, user_arg)
 {
-  define_component("c0", mb_mblock_sptr(new dc_0()));
-  define_component("c0", mb_mblock_sptr(new dc_0()));	// duplicate name
+  define_component("c0", "dc_0");
+  define_component("c0", "dc_0");	// duplicate name
 }
 
 dc_not_ok::~dc_not_ok(){}
+
+REGISTER_MBLOCK_CLASS(dc_not_ok);
 
 // ----------------------------------------------------------------
 
 void
 qa_mblock_prims::test_define_components()
 {
-  mb_mblock_sptr	mb1 = mb_mblock_sptr(new dc_ok());	// OK
+  mb_runtime_sptr rts = mb_make_runtime();
+  mb_runtime *rt = rts.get();
+  
+  // Should work
+  mb_mblock_sptr  mb1 = mb_mblock_sptr(new dc_ok(rt, "top", PMT_F));
 
   // raises pmt_exception because of duplicate component definition of "c0"
-  CPPUNIT_ASSERT_THROW(mb_mblock_sptr(new dc_not_ok()), mbe_duplicate_component);
+  CPPUNIT_ASSERT_THROW(mb_mblock_sptr(new dc_not_ok(rt, "top", PMT_F)),
+		       mbe_duplicate_component);
 }
 
 // ================================================================
@@ -185,7 +211,9 @@ qa_mblock_prims::test_define_components()
 class tc_norm : public mb_mblock
 {
 public:
-  tc_norm(){
+  tc_norm(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+    : mb_mblock(runtime, instance_name, user_arg)
+  {
     define_port("data", "i/o", false, mb_port::EXTERNAL);
     define_port("norm", "i/o", false, mb_port::EXTERNAL);
     define_port("conj", "i/o", true,  mb_port::EXTERNAL);
@@ -197,22 +225,26 @@ public:
 
 tc_norm::~tc_norm(){}
 
+REGISTER_MBLOCK_CLASS(tc_norm);
+
 ////////////////////////////////////////////////////////////////
 
 class tc_0 : public mb_mblock
 {
 public:
-  tc_0(){
+  tc_0(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+    : mb_mblock(runtime, instance_name, user_arg)
+  {
     define_port("norm", "i/o", false, mb_port::EXTERNAL);
     define_port("conj", "i/o", true,  mb_port::EXTERNAL);
     define_port("int",  "i/o", false, mb_port::INTERNAL);
 
-    define_component("c0", mb_mblock_sptr(new tc_norm()));
-    define_component("c1", mb_mblock_sptr(new tc_norm()));
-    define_component("c2", mb_mblock_sptr(new tc_norm()));
-    define_component("c3", mb_mblock_sptr(new tc_norm()));
-    define_component("c4", mb_mblock_sptr(new tc_norm()));
-    define_component("c5", mb_mblock_sptr(new tc_norm()));
+    define_component("c0", "tc_norm");
+    define_component("c1", "tc_norm");
+    define_component("c2", "tc_norm");
+    define_component("c3", "tc_norm");
+    define_component("c4", "tc_norm");
+    define_component("c5", "tc_norm");
 
     // OK
     connect("c0", "norm", "c1", "conj");
@@ -284,14 +316,18 @@ public:
 
 tc_0::~tc_0(){}
 
+REGISTER_MBLOCK_CLASS(tc_0);
+
 ////////////////////////////////////////////////////////////////
 
 class tc_1 : public mb_mblock
 {
 public:
-  tc_1(){
-    define_component("c0", mb_mblock_sptr(new tc_norm()));
-    define_component("c1", mb_mblock_sptr(new tc_norm()));
+  tc_1(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+    : mb_mblock(runtime, instance_name, user_arg)
+  {
+    define_component("c0", "tc_norm");
+    define_component("c1", "tc_norm");
 
     connect("c0", "norm", "c1", "conj");
   }
@@ -300,6 +336,8 @@ public:
 };
 
 tc_1::~tc_1(){}
+
+REGISTER_MBLOCK_CLASS(tc_1);
 
 ////////////////////////////////////////////////////////////////
 
@@ -315,7 +353,10 @@ qa_mblock_prims::test_connect()
 			 pmt_list1(pmt_intern("in")),		// in
 			 pmt_list1(pmt_intern("out")));		// out
 
-  mb_mblock_sptr	mb0 = mb_mblock_sptr(new tc_0());
+  mb_runtime_sptr rts = mb_make_runtime();
+  mb_runtime *rt = rts.get();
+
+  mb_mblock_sptr	mb0 = mb_mblock_sptr(new tc_0(rt, "top", PMT_F));
 }
 
 ////////////////////////////////////////////////////////////////
@@ -377,11 +418,14 @@ qa_mblock_prims::test_msg_queue()
 void
 qa_mblock_prims::test_make_accepter()
 {
+  mb_runtime_sptr rts = mb_make_runtime();
+  mb_runtime *rt = rts.get();
+
   // create a block
-  mb_mblock_sptr mb = mb_mblock_sptr(new dp_2());
+  mb_mblock_sptr mb = mb_mblock_sptr(new dp_2(rt, "top", PMT_F));
 
   // use "internal use only" method...
-  mb_msg_accepter_sptr accepter = mb->impl()->make_accepter("cs");
+  mb_msg_accepter_sptr accepter = mb->impl()->make_accepter(pmt_intern("cs"));
 
   // Now push a few messages into it...
   //          signal       data          metadata     pri

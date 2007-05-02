@@ -114,7 +114,7 @@ AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(fcntl.h limits.h strings.h time.h sys/ioctl.h sys/time.h unistd.h)
 AC_CHECK_HEADERS(linux/ppdev.h sys/mman.h sys/select.h sys/types.h)
-AC_CHECK_HEADERS(sys/resource.h stdint.h sched.h signal.h)
+AC_CHECK_HEADERS(sys/resource.h stdint.h sched.h signal.h sys/syscall.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -131,6 +131,7 @@ AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([mmap select socket strcspn strerror strspn getpagesize sysconf])
 AC_CHECK_FUNCS([snprintf gettimeofday nanosleep sched_setscheduler])
 AC_CHECK_FUNCS([modf sqrt sigaction sigprocmask])
+AC_CHECK_FUNCS([sched_setaffinity])
 
 AC_CHECK_LIB(m, sincos, [AC_DEFINE([HAVE_SINCOS],[1],[Define to 1 if your system has `sincos'.])])
 AC_CHECK_LIB(m, sincosf,[AC_DEFINE([HAVE_SINCOSF],[1],[Define to 1 if your system has `sincosf'.])])
@@ -198,6 +199,8 @@ AC_ARG_ENABLE(
 build_dirs="config"
 GRC_OMNITHREAD			dnl must come before gnuradio-core and mblock
 GRC_GNURADIO_CORE
+GRC_PMT
+GRC_MBLOCK			dnl this must come after GRC_PMT
 GRC_USRP
 GRC_GR_USRP			dnl this must come after GRC_USRP
 GRC_GR_AUDIO_ALSA
@@ -216,8 +219,6 @@ GRC_GR_TRELLIS
 GRC_GR_VIDEO_SDL
 GRC_GR_QTGUI
 GRC_GR_WXGUI
-GRC_PMT
-GRC_MBLOCK			dnl this must come after GRC_PMT
 GRC_GR_SOUNDER			dnl this must come after GRC_USRP
 GRC_GNURADIO_EXAMPLES		dnl must come last
 

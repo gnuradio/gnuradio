@@ -22,44 +22,36 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <mb_runtime_thread_per_mblock.h>
-#include <mb_mblock.h>
-#include <mb_mblock_impl.h>
+#include <mb_runtime_base.h>
 
+/*
+ * Default nop implementations...
+ */
 
-mb_runtime_thread_per_mblock::mb_runtime_thread_per_mblock()
+void
+mb_runtime_base::request_shutdown(pmt_t result)
 {
-  // nop for now
 }
 
-mb_runtime_thread_per_mblock::~mb_runtime_thread_per_mblock()
+pmt_t
+mb_runtime_base::schedule_one_shot_timeout(const mb_time &abs_time,
+					   pmt_t user_data,
+					   mb_msg_accepter_sptr accepter)
 {
-  // nop for now
+  return PMT_F;
 }
 
-bool
-mb_runtime_thread_per_mblock::run(mb_mblock_sptr top)
+pmt_t
+mb_runtime_base::schedule_periodic_timeout(const mb_time &first_abs_time,
+					   const mb_time &delta_time,
+					   pmt_t user_data,
+					   mb_msg_accepter_sptr accepter)
 {
-  class initial_visitor : public mb_visitor
-  {
-    mb_runtime  *d_rt;
-
-  public:
-    initial_visitor(mb_runtime *rt) : d_rt(rt) {}
-    bool operator()(mb_mblock *mblock, const std::string &path)
-    {
-      mblock->impl()->set_runtime(d_rt);
-      mblock->set_instance_name(path);
-      mblock->init_fsm();
-      return true;
-    }
-  };
-
-  initial_visitor	visitor(this);
-
-  d_top = top;		// remember top of tree
-
-  d_top->walk_tree(&visitor);
-
-  return true;
+  return PMT_F;
 }
+
+void
+mb_runtime_base::cancel_timeout(pmt_t handle)
+{
+}
+

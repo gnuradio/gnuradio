@@ -19,39 +19,17 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-#include <mb_runtime_placeholder.h>
-#include <mb_mblock.h>
-#include <mb_exception.h>
+#include <qa_inband.h>
+#include <qa_inband_packet_prims.h>
+#include <qa_inband_usrp_server.h>
 
-
-static mb_runtime *s_singleton = 0;
-
-
-mb_runtime_placeholder::mb_runtime_placeholder()
+CppUnit::TestSuite *
+qa_inband::suite()
 {
-  // nop
-}
+  CppUnit::TestSuite	*s = new CppUnit::TestSuite("inband");
 
-mb_runtime_placeholder::~mb_runtime_placeholder()
-{
-  // nop
-}
+  s->addTest (qa_inband_packet_prims::suite());
+  s->addTest (qa_inband_usrp_server::suite());
 
-bool
-mb_runtime_placeholder::run(mb_mblock_sptr top)
-{
-  throw mbe_not_implemented(top.get(), "mb_runtime_placeholder::run");
-}
-
-mb_runtime *
-mb_runtime_placeholder::singleton()
-{
-  if (s_singleton)
-    return s_singleton;
-
-  s_singleton = new mb_runtime_placeholder();
-  return s_singleton;
+  return s;
 }

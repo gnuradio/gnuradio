@@ -37,40 +37,32 @@ mb_runtime_sptr mb_make_runtime();
 class mb_runtime : boost::noncopyable,
 		   public boost::enable_shared_from_this<mb_runtime>
 {
-  omni_mutex	d_brl;		// big runtime lock (avoid using this if possible...)
+protected:  
+  mb_mblock_sptr	d_top;
 
 public:
   mb_runtime(){}
   virtual ~mb_runtime();
 
   /*!
-   * \brief Run the mblock hierarchy rooted at \p top
+   * \brief Construct and run the specified mblock hierarchy.
    *
    * This routine turns into the m-block scheduler, and
    * blocks until the system is shutdown.
    *
-   * \param top top-level mblock
+   * \param name name of the top-level mblock (conventionally "top")
+   * \param class_name The class of the top-level mblock to create.
+   * \param user_arg The argument to pass to the top-level mblock constructor
+   *
    * \returns true if the system ran successfully.
    */
-  virtual bool run(mb_mblock_sptr top) = 0;
+  virtual bool run(const std::string &instance_name,
+		   const std::string &class_name,
+		   pmt_t user_arg,
+		   pmt_t *result = 0) = 0;
 
-
-  // ----------------------------------------------------------------
-  // Stuff from here down is really private to the implementation...
-  // ----------------------------------------------------------------
-
-  /*!
-   * \brief lock the big runtime lock
-   * \implementation
-   */
-  inline void lock() { d_brl.lock(); }
-
-  /*!
-   * \brief unlock the big runtime lock
-   * \implementation
-   */
-  inline void unlock() { d_brl.unlock(); }
-
+  // QA only...
+  mb_mblock_sptr top() { return d_top; }
 };
 
 #endif /* INCLUDED_MB_RUNTIME_H */

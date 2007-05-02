@@ -83,7 +83,7 @@ mb_msg_queue::get_highest_pri_msg_helper()
     }
   }
 
-  return mb_message_sptr();	// equivalent of a zero pointer
+  return mb_message_sptr();		// eqv to a zero pointer
 }
 
 
@@ -109,3 +109,20 @@ mb_msg_queue::get_highest_pri_msg()
   }
 }
 
+mb_message_sptr
+mb_msg_queue::get_highest_pri_msg_timedwait(const mb_time &abs_time)
+{
+  unsigned long secs  = abs_time.d_secs;
+  unsigned long nsecs = abs_time.d_nsecs;
+
+  omni_mutex_lock l(d_mutex);
+
+  while (1){
+    mb_message_sptr msg = get_highest_pri_msg_helper();
+    if (msg)			// Got one; return it
+      return msg;
+
+    if (!d_not_empty.timedwait(secs, nsecs))	// timed out
+      return mb_message_sptr();			// eqv to zero pointer
+  }
+}

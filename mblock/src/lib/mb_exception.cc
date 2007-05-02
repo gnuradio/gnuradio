@@ -38,6 +38,11 @@ mbe_not_implemented::mbe_not_implemented(mb_mblock *mb, const std::string &msg)
 {
 }
 
+mbe_no_such_class::mbe_no_such_class(mb_mblock *mb, const std::string &class_name)
+  : mbe_base(mb, "No such class: " + class_name)
+{
+}
+
 mbe_no_such_component::mbe_no_such_component(mb_mblock *mb, const std::string &component_name)
   : mbe_base(mb, "No such component: " + component_name)
 {
@@ -83,5 +88,19 @@ mbe_invalid_port_type::mbe_invalid_port_type(mb_mblock *mb,
 					     const std::string &comp_name,
 					     const std::string &port_name)
   : mbe_base(mb, "Invalid port type for connection: " + mb_util::join_names(comp_name, port_name))
+{
+}
+
+mbe_mblock_failed::mbe_mblock_failed(mb_mblock *mb,
+				     const std::string &msg)
+  : mbe_base(mb, "Message block failed: " + msg)
+{
+}
+
+mbe_terminate::mbe_terminate()
+{
+}
+
+mbe_exit::mbe_exit()
 {
 }

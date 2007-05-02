@@ -18,23 +18,19 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_MB_RUNTIME_THREAD_PER_MBLOCK_H
-#define INCLUDED_MB_RUNTIME_THREAD_PER_MBLOCK_H
 
-#include <mb_runtime.h>
+#include <cppunit/TextTestRunner.h>
+#include <qa_inband.h>
 
-/*!
- * \brief Concrete runtime that uses a single thread for all work.
- */
-class mb_runtime_thread_per_mblock : public mb_runtime
+int 
+main(int argc, char **argv)
 {
-  mb_mblock_sptr	d_top;		// top mblock
+  
+  CppUnit::TextTestRunner	runner;
 
-public:
-  mb_runtime_thread_per_mblock();
-  ~mb_runtime_thread_per_mblock();
+  runner.addTest(qa_inband::suite ());
+  
+  bool was_successful = runner.run("", false);
 
-  bool run(mb_mblock_sptr top);
-};
-
-#endif /* INCLUDED_MB_RUNTIME_THREAD_PER_MBLOCK_H */
+  return was_successful ? 0 : 1;
+}

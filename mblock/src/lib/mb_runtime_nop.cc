@@ -24,6 +24,8 @@
 #endif
 #include <mb_runtime_nop.h>
 #include <mb_mblock.h>
+#include <mb_class_registry.h>
+#include <mb_exception.h>
 
 mb_runtime_sptr 
 mb_make_runtime_nop()
@@ -42,23 +44,41 @@ mb_runtime_nop::~mb_runtime_nop()
   // nop for now
 }
 
+
 bool
-mb_runtime_nop::run(mb_mblock_sptr top)
+mb_runtime_nop::run(const std::string &instance_name,
+		    const std::string &class_name,
+		    pmt_t user_arg, pmt_t *result)
 {
   class initial_visitor : public mb_visitor
   {
   public:
-    bool operator()(mb_mblock *mblock, const std::string &path)
+    bool operator()(mb_mblock *mblock)
     {
-      mblock->set_instance_name(path);
-      mblock->init_fsm();
+      mblock->initial_transition();
       return true;
     }
   };
 
-  initial_visitor	visitor;
+  initial_visitor visitor;
 
-  top->walk_tree(&visitor);
+  if (result)
+    *result = PMT_T;
+
+  d_top = create_component(instance_name, class_name, user_arg);
+  d_top->walk_tree(&visitor);
 
   return true;
+}
+
+mb_mblock_sptr
+mb_runtime_nop::create_component(const std::string &instance_name,
+				 const std::string &class_name,
+				 pmt_t user_arg)
+{
+  mb_mblock_maker_t maker;
+  if (!mb_class_registry::lookup_maker(class_name, &maker))
+    throw mbe_no_such_class(0, class_name + " (in " + instance_name + ")");
+
+  return maker(this, instance_name, user_arg);
 }

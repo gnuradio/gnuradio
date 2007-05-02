@@ -27,6 +27,8 @@
 #include <qa_mblock.h>
 #include <qa_mblock_prims.h>
 #include <qa_mblock_send.h>
+#include <qa_mblock_sys.h>
+#include <qa_timeouts.h>
 
 CppUnit::TestSuite *
 qa_mblock::suite()
@@ -35,6 +37,8 @@ qa_mblock::suite()
 
   s->addTest (qa_mblock_prims::suite());
   s->addTest (qa_mblock_send::suite());
+  s->addTest (qa_mblock_sys::suite());
+  s->addTest (qa_timeouts::suite());
   
   return s;
 }

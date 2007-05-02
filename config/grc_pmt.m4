@@ -24,10 +24,18 @@ AC_DEFUN([GRC_PMT],[
 	pmt/Makefile \
 	pmt/doc/Makefile \
 	pmt/src/Makefile \
-	pmt/src/lib/Makefile
+	pmt/src/lib/Makefile \
+	pmt/src/scheme/Makefile \
+	pmt/src/scheme/gnuradio/Makefile \
     ])
 
     passed=yes
+    AC_PATH_PROG(GUILE,guile)
+    if test "$GUILE" = "" ; then
+      AC_MSG_RESULT([Component pmt requires guile, which was not found.])
+      passed=no
+    fi
+
     GRC_BUILD_CONDITIONAL([pmt],[
         dnl run_tests is created from run_tests.in.  Make it executable.
 	dnl AC_CONFIG_COMMANDS([run_tests_pmt], [chmod +x pmt/src/python/run_tests])

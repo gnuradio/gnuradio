@@ -23,6 +23,34 @@
 #include <config.h>
 #endif
 #include <mb_message.h>
+#include <stdio.h>
+#include <pmt_pool.h>
+
+static const int CACHE_LINE_SIZE = 64;		// good guess
+
+
+#if MB_MESSAGE_LOCAL_ALLOCATOR
+
+static pmt_pool global_msg_pool(sizeof(mb_message), CACHE_LINE_SIZE);
+
+void *
+mb_message::operator new(size_t size)
+{
+  void *p = global_msg_pool.malloc();
+
+  // fprintf(stderr, "mb_message::new p = %p\n", p);
+  assert((reinterpret_cast<intptr_t>(p) & (CACHE_LINE_SIZE - 1)) == 0);
+  return p;
+}
+
+void
+mb_message::operator delete(void *p, size_t size)
+{
+  global_msg_pool.free(p);
+}
+
+#endif
+
 
 mb_message_sptr
 mb_make_message(pmt_t signal, pmt_t data, pmt_t metadata, mb_pri_t priority)
@@ -39,4 +67,17 @@ mb_message::mb_message(pmt_t signal, pmt_t data, pmt_t metadata, mb_pri_t priori
 mb_message::~mb_message()
 {
   // NOP
+}
+
+std::ostream& 
+operator<<(std::ostream& os, const mb_message &msg)
+{
+  os << "<msg: signal=" << msg.signal()
+     << " port_id=" << msg.port_id()
+     << " data=" << msg.data()
+     << " metadata=" << msg.metadata()
+     << " pri=" << msg.priority()
+     << ">";
+  
+  return os;
 }

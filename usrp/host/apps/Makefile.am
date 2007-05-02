@@ -23,8 +23,6 @@ include $(top_srcdir)/Makefile.common
 
 INCLUDES = $(USRP_INCLUDES) $(BOOST_CFLAGS)
 
-USRP_LIB = $(top_builddir)/usrp/host/lib/libusrp.la
-
 bin_PROGRAMS =				\
 	usrper				\
 	usrp_cal_dc_offset		
@@ -45,13 +43,13 @@ noinst_PYTHON =				\
 check_order_quickly_SOURCES	= check_order_quickly.cc
 
 test_usrp_standard_rx_SOURCES 	= test_usrp_standard_rx.cc time_stuff.c
-test_usrp_standard_rx_LDADD   	= $(USRP_LIB)
+test_usrp_standard_rx_LDADD   	= $(USRP_LA)
 
 test_usrp_standard_tx_SOURCES 	= test_usrp_standard_tx.cc time_stuff.c
-test_usrp_standard_tx_LDADD   	= $(USRP_LIB)
+test_usrp_standard_tx_LDADD   	= $(USRP_LA)
 
 usrper_SOURCES			= usrper.cc
-usrper_LDADD 			= $(USRP_LIB)
+usrper_LDADD 			= $(USRP_LA)
 
 usrp_cal_dc_offset_SOURCES	= usrp_cal_dc_offset.cc
-usrp_cal_dc_offset_LDADD	= $(USRP_LIB)
+usrp_cal_dc_offset_LDADD	= $(USRP_LA)

@@ -38,6 +38,11 @@ public:
   mbe_not_implemented(mb_mblock *mb, const std::string &msg);
 };
 
+class mbe_no_such_class : public mbe_base
+{
+public:
+  mbe_no_such_class(mb_mblock *, const std::string &class_name);
+};
 
 class mbe_no_such_component : public mbe_base
 {
@@ -56,6 +61,7 @@ class mbe_no_such_port : public mbe_base
 public:
   mbe_no_such_port(mb_mblock *, const std::string &port_name);
 };
+
 
 class mbe_duplicate_port : public mbe_base
 {
@@ -87,6 +93,26 @@ public:
 			const std::string &port_name);
 };
 
+class mbe_mblock_failed : public mbe_base
+{
+public:
+  mbe_mblock_failed(mb_mblock *, const std::string &msg);
+};
 
+
+
+// not derived from mbe_base to simplify try/catch
+class mbe_terminate
+{
+public:
+  mbe_terminate();
+};
+
+// not derived from mbe_base to simplify try/catch
+class mbe_exit
+{
+public:
+  mbe_exit();
+};
 
 #endif /* INCLUDED_MB_EXCEPTION_H */

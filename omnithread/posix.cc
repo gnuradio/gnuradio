@@ -51,6 +51,10 @@
 #include <time.h>
 #include <omnithread.h>
 
+#if (PthreadDraftVersion == 0)
+#error "PthreadDraftVersion not defined.  If not sure, define it to 10"
+#endif
+
 #ifdef HAVE_NANOSLEEP
 #undef NoNanoSleep
 #else
@@ -73,8 +77,14 @@
 #endif
 #endif
 
+#if 1
 #define DB(x) // x
-//#include <iostream.h> or #include <iostream> if DB is on.
+#else
+#define DB(x) x
+#include <iostream>
+using std::cerr;
+using std::endl;
+#endif
 
 #if (PthreadDraftVersion <= 6)
 #define ERRNO(x) (((x) != 0) ? (errno) : 0)

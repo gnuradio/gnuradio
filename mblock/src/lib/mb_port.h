@@ -40,6 +40,7 @@ public:
 private:
 
   std::string		d_port_name;
+  pmt_t			d_port_symbol;		// the port_name as a pmt symbol
   pmt_t			d_protocol_class;
   bool			d_conjugated;
   port_type_t		d_port_type;
@@ -58,6 +59,7 @@ protected:
 
 public:
   std::string	port_name() const { return d_port_name; }
+  pmt_t		port_symbol() const { return d_port_symbol; }
   pmt_t		protocol_class() const { return d_protocol_class; }
   bool          conjugated() const { return d_conjugated; }
   port_type_t	port_type() const { return d_port_type; }
@@ -77,9 +79,15 @@ public:
    */
   virtual void
   send(pmt_t signal,
-       pmt_t data = PMT_NIL,
-       pmt_t metadata = PMT_NIL,
+       pmt_t data = PMT_F,
+       pmt_t metadata = PMT_F,
        mb_pri_t priority = MB_PRI_DEFAULT) = 0;
+
+  /*
+   * \brief Invalidate any cached peer resolutions
+   * \implementation
+   */
+  virtual void invalidate_cache() = 0;
 };
 
 #endif /* INCLUDED_MB_PORT_H */

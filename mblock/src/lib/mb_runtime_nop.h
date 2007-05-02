@@ -21,7 +21,7 @@
 #ifndef INCLUDED_MB_RUNTIME_NOP_H
 #define INCLUDED_MB_RUNTIME_NOP_H
 
-#include <mb_runtime.h>
+#include <mb_runtime_base.h>
 
 /*!
  * \brief Public constructor (factory) for mb_runtime_nop objects.
@@ -31,14 +31,22 @@ mb_runtime_sptr mb_make_runtime_nop();
 /*!
  * \brief Concrete runtime that does nothing.  Used only during early QA tests.
  */
-class mb_runtime_nop : public mb_runtime
+class mb_runtime_nop : public mb_runtime_base
 {
-
 public:
   mb_runtime_nop();
   ~mb_runtime_nop();
 
-  bool run(mb_mblock_sptr top);
+  bool run(const std::string &instance_name,
+	   const std::string &class_name,
+	   pmt_t user_arg,
+	   pmt_t *result);
+
+protected:
+  mb_mblock_sptr
+  create_component(const std::string &instance_name,
+		   const std::string &class_name,
+		   pmt_t user_arg);
 };
 
 #endif /* INCLUDED_MB_RUNTIME_NOP_H */

@@ -22,6 +22,9 @@
 #define INCLUDED_MB_MESSAGE_H
 
 #include <mb_common.h>
+#include <iosfwd>
+
+#define MB_MESSAGE_LOCAL_ALLOCATOR 0	// define to 0 or 1
 
 class mb_message;
 typedef boost::shared_ptr<mb_message> mb_message_sptr;
@@ -66,6 +69,20 @@ public:
   pmt_t port_id() const { return d_port_id; }
 
   void set_port_id(pmt_t port_id){ d_port_id = port_id; }
+
+#if (MB_MESSAGE_LOCAL_ALLOCATOR)
+  void *operator new(size_t);
+  void operator delete(void *, size_t);
+#endif
 };
+
+std::ostream& operator<<(std::ostream& os, const mb_message &msg);
+
+inline
+std::ostream& operator<<(std::ostream& os, const mb_message_sptr msg)
+{
+  os << *(msg.get());
+  return os;
+}
 
 #endif /* INCLUDED_MB_MESSAGE_H */

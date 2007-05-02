@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES)
+INCLUDES = $(DEFINES) $(OMNITHREAD_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES) 
 
 TESTS = test_pmt
 
@@ -48,18 +48,22 @@ GENERATED_CC =				\
 $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
 	PYTHONPATH=$(top_srcdir)/pmt/src/lib srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_unv.py
 
-BUILT_SOURCES = $(GENERATED_H) $(GENERATED_CC)
+pmt_serial_tags.h: $(srcdir)/../scheme/gnuradio/gen-serial-tags.scm $(srcdir)/../scheme/gnuradio/pmt-serial-tags.scm
+	$(RUN_GUILE) $(srcdir)/../scheme/gnuradio/gen-serial-tags.scm $(srcdir)/../scheme/gnuradio/pmt-serial-tags.scm pmt_serial_tags.h
+
+BUILT_SOURCES = $(GENERATED_H) $(GENERATED_CC) pmt_serial_tags.h
 
 # ----------------------------------------------------------------
 
 EXTRA_DIST = 				\
-	$(CODE_GENERATOR)
-
+	$(CODE_GENERATOR)		
 
 # These are the source files that go into the pmt shared library
 libpmt_la_SOURCES =			\
 	pmt.cc				\
 	pmt_io.cc			\
+	pmt_pool.cc			\
+	pmt_serialize.cc		\
 	pmt_unv.cc			
 
 # magic flags
@@ -67,10 +71,13 @@ libpmt_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
 
 # link the library against the c++ standard library
 libpmt_la_LIBADD = 			\
+	$(OMNITHREAD_LA)		\
 	-lstdc++			
 
 include_HEADERS =			\
-	pmt.h
+	pmt.h				\
+	pmt_pool.h			\
+	pmt_serial_tags.h		
 
 noinst_HEADERS = 			\
 	$(GENERATED_H)			\

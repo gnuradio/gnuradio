@@ -19,6 +19,7 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 51 Franklin Street, Boston, MA  02110-1301  USA
 //
+`define IN_BAND
 
 `include "config.vh"
 `include "../../../firmware/include/fpga_regs_common.v"
@@ -122,6 +123,20 @@ module usrp_inband_usb
    assign      bb_tx_i1 = ch2tx;
    assign      bb_tx_q1 = ch3tx;
    
+`ifdef IN_BAND
+ 	tx_buffer_inband tx_buffer
+     ( .usbclk(usbclk),.bus_reset(tx_bus_reset),.reset(tx_dsp_reset),
+       .usbdata(usbdata),.WR(WR),.have_space(have_space),.tx_underrun(tx_underrun),
+       .channels({tx_numchan,1'b0}),
+       .tx_i_0(ch0tx),.tx_q_0(ch1tx),
+       .tx_i_1(ch2tx),.tx_q_1(ch3tx),
+       .tx_i_2(),.tx_q_2(),
+       .tx_i_3(),.tx_q_3(),
+       .txclk(clk64),.txstrobe(strobe_interp),
+       .clear_status(clear_status),
+       .tx_empty(tx_empty),
+       .debugbus(tx_debugbus) );
+`else
    tx_buffer tx_buffer
      ( .usbclk(usbclk),.bus_reset(tx_bus_reset),.reset(tx_dsp_reset),
        .usbdata(usbdata),.WR(WR),.have_space(have_space),.tx_underrun(tx_underrun),
@@ -134,6 +149,7 @@ module usrp_inband_usb
        .clear_status(clear_status),
        .tx_empty(tx_empty),
        .debugbus(tx_debugbus) );
+`endif
 
  `ifdef TX_EN_0
    tx_chain tx_chain_0

@@ -23,6 +23,7 @@
 
 #include <mb_common.h>
 #include <omnithread.h>
+#include <mb_time.h>
 
 /*!
  * \brief priority queue for mblock messages
@@ -63,6 +64,19 @@ public:
    * If the queue is empty, this call blocks until it can return a message.
    */
   mb_message_sptr get_highest_pri_msg();
+
+  /*
+   * \brief Delete highest pri message from the queue and return it.
+   * If the queue is empty, this call blocks until it can return a message
+   * or real-time exceeds the absolute time, abs_time.
+   *
+   * \param abs_time specifies the latest absolute time to wait until.
+   * \sa mb_time::time
+   *
+   * \returns a valid mb_message_sptr, or the equivalent of a zero pointer
+   * if the call timed out while waiting.
+   */
+  mb_message_sptr get_highest_pri_msg_timedwait(const mb_time &abs_time);
 };
 
 #endif /* INCLUDED_MB_MSG_QUEUE_H */

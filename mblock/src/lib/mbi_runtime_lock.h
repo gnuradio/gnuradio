@@ -48,9 +48,9 @@
  */
 
 class mbi_runtime_lock : boost::noncopyable {
-  mb_runtime	*d_rt;
+  mb_runtime_base	*d_rt;
 public:
-  mbi_runtime_lock(mb_runtime *rt) : d_rt(rt) { d_rt->lock(); }
+  mbi_runtime_lock(mb_runtime_base *rt) : d_rt(rt) { d_rt->lock(); }
   mbi_runtime_lock(mb_mblock_impl *mi) : d_rt(mi->runtime()) { d_rt->lock(); }
   mbi_runtime_lock(mb_mblock *mb) : d_rt(mb->impl()->runtime()) { d_rt->lock(); }
   ~mbi_runtime_lock(void) { d_rt->unlock(); }

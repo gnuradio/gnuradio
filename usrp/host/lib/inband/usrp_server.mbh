@@ -1,0 +1,256 @@
+;; -*- scheme -*- ; not really, but tells emacs how to format this
+;;
+;; Copyright 2007 Free Software Foundation, Inc.
+;; 
+;; This file is part of GNU Radio
+;; 
+;; GNU Radio is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 2, or (at your option)
+;; any later version.
+;; 
+;; GNU Radio is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;; 
+;; You should have received a copy of the GNU General Public License along
+;; with this program; if not, write to the Free Software Foundation, Inc.,
+;; 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+;;
+
+;; ----------------------------------------------------------------
+;;              This is an mblock header file
+;;
+;; The format is very much a work-in-progress.
+;; It'll be compiled to C++.
+;; ----------------------------------------------------------------
+
+;; In the outgoing messages described below, invocation-handle is an
+;; identifier provided by the client to tag the method invocation.
+;; The identifier will be returned with the response, to provide the
+;; client with a mechanism to match asynchronous responses with the
+;; commands that generate them.  The value of the invocation-handle is
+;; opaque the the server, and is not required by the server to be
+;; unique.
+;;
+;; In the incoming messages described below, invocation-handle is the
+;; identifier provided by the client in the prompting invocation.  The
+;; identifier is returned with the response, so that the client has a
+;; mechanism to match asynchronous responses with the commands that
+;; generated them.
+;;
+;; status is either #t, indicating success, or a pair containing
+;; (status-code . message), where status-code is a symbol and message
+;; is a string.
+
+
+;; ----------------------------------------------------------------
+;; usrp-channel
+;;
+;; The protocol class is defined from the client's point-of-view.
+;; (The client port is unconjugated, the server port is conjugated.)
+
+(define-protocol-class usrp-channel
+
+  (:outgoing
+
+   (cmd-allocate-channel invocation-handle capacity-reservation)
+
+   ;; The cmd-allocate-channel message requests that the server
+   ;; allocates a logical channel in the FPGA for use.
+   ;; capacity-reservation specifies the number of bytes/s of
+   ;; interconnect capacity (USB or ethernet) to reserve for this
+   ;; channel.  (The reservation is just a sanity check, no OS
+   ;; specific mechanism is used.)
+
+   (cmd-deallocate-channel invocation-handle channel)
+
+   ;; The integer channel specifies the channel to deallocate.
+
+   )
+
+  (:incoming
+
+
+   (response-allocate-channel invocation-handle status channel)
+
+   ;; If successful, a channel the specified capacity was allocated.
+   ;; channel, an integer, indicates which channel was allocated.
+
+   (response-deallocate-channel invocation-handle status)
+
+   ;; If successful, the specified channel and associated interconnect
+   ;; capacity were deallocated.
+
+   )
+  )
+
+;; ----------------------------------------------------------------
+;; usrp-low-level-cs
+;;
+;; The protocol class is defined from the client's point-of-view.
+;; (The client port is unconjugated, the server port is conjugated.)
+;;
+;; This defines a low level control and status interface to the usrp.
+;; This will probably be replaced (or at least augmented) with a
+;; higher level interface.  For now, this will allow us to get on
+;; the air.
+;;
+;; The subpackets are lists containing the relevant parameters.  The
+;; server will marshall them appropriately.  Below is a list of
+;; subpackets.  See inband-signaling-usb for details.  The opcodes are
+;; symbols; unless otherwise indicated the remaining parameters are
+;; integers.  rid values are limited to 3-bits.
+;;
+;;   (op-ping-fixed rid ping-value)
+;;   (op-ping-fixed-reply rid ping-value)
+;;   (op-write-reg reg-number reg-value)
+;;   (op-write-reg-masked reg-number reg-value mask-value)
+;;   (op-read-reg rid reg-number reg-value)
+;;   (op-read-reg-reply rid reg-number reg-value)
+;;   (op-i2c-write i2c-addr u8-vec)
+;;   (op-i2c-read rid i2c-addr nbytes)
+;;   (op-i2c-read-reply rid i2c-addr u8-vec)
+;;   (op-spi-write enables format opt-header-bytes u8-vec)
+;;   (op-spi-read rid enables format opt-header-bytes nbytes)
+;;   (op-spi-read-reply rid u8-vec)
+;;   (op-delay ticks)
+
+
+(define-protocol-class usrp-low-level-cs
+
+  (:outgoing
+
+   (cmd-to-control-channel invocation-handle list-of-subpackets)
+
+   )
+
+  (:incoming
+
+   (response-from-control-channel invocation-handle status list-of-subpackets)
+
+   )
+  )
+
+;; ----------------------------------------------------------------
+;; usrp-tx
+;;
+;; The protocol class is defined from the client's point-of-view.
+;; (The client port is unconjugated, the server port is conjugated.)
+
+(define-protocol-class usrp-tx
+  (:include usrp-channel)
+  (:include usrp-low-level-cs)
+
+  (:outgoing
+
+   (cmd-xmit-raw-frame invocation-handle channel samples timestamp)
+
+   ;; The argument channel must be an integer.  It specifies the
+   ;; channel on which the frame of samples will be be sent.
+   ;;
+   ;; samples must be a uniform numeric vector.  The contents of the
+   ;; sample vector is treated as opaque and is passed on to the FPGA
+   ;; unmodified.  It is the responsibility of the sender to ensure
+   ;; that the binary format is sensible for the current FPGA
+   ;; configuration.
+   ;;
+   ;; timestamp is a 32-bit integer that specifies the time at which
+   ;; the first sample in samples shall be sent to the D/A converter.
+   ;; The format and interpration of time is specified in the file
+   ;; inband-signaling-usb
+   )
+
+  (:incoming
+
+   (response-xmit-raw-frame invocation-handle status)
+
+   ;; If successful, the samples of the associated frame have been
+   ;; transmitted to the USRP.  This message may be used to implement
+   ;; Tx flow control.  The client could for example implement a
+   ;; policy of never having more than 4 unacknowledged
+   ;; cmd-xmit-raw-frame's outstanding.
+
+   )
+  )
+
+;; ----------------------------------------------------------------
+;; usrp-rx
+;;
+;; The protocol class is defined from the client's point-of-view.
+;; (The client port is unconjugated, the server port is conjugated.)
+
+(define-protocol-class usrp-rx
+  (:include usrp-channel)
+  (:include usrp-low-level-cs)
+
+  (:outgoing
+
+   (cmd-start-recv-raw-samples invocation-handle channel)
+
+   ;; The argument channel must be an integer.  It specifies the
+   ;; channel from which frames of samples will be be received.  The
+   ;; server will return response-recv-raw-samples messages until a
+   ;; cmd-stop-recv-raw-samples message is received.
+
+   (cmd-stop-recv-raw-samples invocation-handle channel)
+
+   ;; The argument channel must be an integer.  There is no reply to
+   ;; this message.
+   
+   )
+
+  (:incoming
+
+   (response-recv-raw-samples invocation-handle status samples timestamp properties)
+
+   ;; samples is a uniform numeric vector.  The contents of the sample
+   ;; vector is treated as opaque and is passed from the FPGA
+   ;; unmodified.  It is the responsibility of the receiver to decode
+   ;; the binary format as appropriate for the current FPGA
+   ;; configuration.
+   ;;
+   ;; timestamp is a 32-bit integer that specifies the time at which
+   ;; the first sample in samples was received from the A/D converter.
+   ;; The format and interpretation of time is as specified in the
+   ;; file inband-signaling-usb.
+   ;;
+   ;; properties is a dictionary containing additional (key, value)
+   ;; pairs associated with the reception of these samples.  In
+   ;; particular, the map may contain the Received Signal Strength
+   ;; Indication (RSSI) reported by the front end at the time the
+   ;; first sample was received from the A/D.
+
+   )
+  )
+
+
+;; ----------------------------------------------------------------
+;; usrp-server-cs
+;;
+;; Control and status port for usrp-server
+;;
+;; The protocol class is defined from the client's point-of-view.
+;; (The client port is unconjugated, the server port is conjugated.)
+
+(define-protocol-class usrp-server-cs
+
+  (:outgoing
+   (cmd-open invocation-handle which-usrp)
+   (cmd-close invocation-handle)
+   (cmd-max-capacity invocation-handle)
+   (cmd-ntx-chan invocation-handle)
+   (cmd-nrx-chan invocation-handle)
+   (cmd-current-capacity-allocation invocation-handle)
+   )
+
+  (:incoming
+   (response-open invocation-handle status)
+   (response-close invocation-handle status)
+   (response-max-capacity invocation-handle capacity)
+   (response-ntx-chan invocation-handle ntx-chan)
+   (response-nrx-chan invocation-handle nrx-chan)
+   (response-current-capacity-allocation invocation-handle capacity)
+   )
+  )

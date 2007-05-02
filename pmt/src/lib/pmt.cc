@@ -26,6 +26,33 @@
 #include <vector>
 #include <pmt.h>
 #include "pmt_int.h"
+#include <stdio.h>
+#include <pmt_pool.h>
+
+static const int CACHE_LINE_SIZE = 64;		// good guess
+
+# if (PMT_LOCAL_ALLOCATOR)
+
+static pmt_pool global_pmt_pool(sizeof(pmt_pair), CACHE_LINE_SIZE);
+
+void *
+pmt_base::operator new(size_t size)
+{
+  void *p = global_pmt_pool.malloc();
+
+  // fprintf(stderr, "pmt_base::new p = %p\n", p);
+  assert((reinterpret_cast<intptr_t>(p) & (CACHE_LINE_SIZE - 1)) == 0);
+  return p;
+}
+
+void
+pmt_base::operator delete(void *p, size_t size)
+{
+  global_pmt_pool.free(p);
+}
+
+#endif
+
 
 pmt_base::~pmt_base()
 {
@@ -108,25 +135,37 @@ _dict(pmt_t x)
   return dynamic_cast<pmt_dict*>(x.get());
 }
 
+static pmt_any *
+_any(pmt_t x)
+{
+  return dynamic_cast<pmt_any*>(x.get());
+}
+
+////////////////////////////////////////////////////////////////////////////
+//                           Globals
+////////////////////////////////////////////////////////////////////////////
+
+const pmt_t PMT_T = pmt_t(new pmt_bool());		// singleton
+const pmt_t PMT_F = pmt_t(new pmt_bool());		// singleton
+const pmt_t PMT_NIL = pmt_t(new pmt_null());		// singleton
+const pmt_t PMT_EOF = pmt_cons(PMT_NIL, PMT_NIL);	// singleton
+
 ////////////////////////////////////////////////////////////////////////////
 //                           Booleans
 ////////////////////////////////////////////////////////////////////////////
-
-const pmt_t PMT_BOOL_T = pmt_t(new pmt_bool());		// singleton
-const pmt_t PMT_BOOL_F = pmt_t(new pmt_bool());		// singleton
 
 pmt_bool::pmt_bool(){}
 
 bool
 pmt_is_true(pmt_t obj)
 {
-  return obj != PMT_BOOL_F;
+  return obj != PMT_F;
 }
 
 bool
 pmt_is_false(pmt_t obj)
 {
-  return obj == PMT_BOOL_F;
+  return obj == PMT_F;
 }
 
 bool
@@ -138,15 +177,15 @@ pmt_is_bool(pmt_t obj)
 pmt_t
 pmt_from_bool(bool val)
 {
-  return val ? PMT_BOOL_T : PMT_BOOL_F;
+  return val ? PMT_T : PMT_F;
 }
 
 bool
 pmt_to_bool(pmt_t val)
 {
-  if (val == PMT_BOOL_T)
+  if (val == PMT_T)
     return true;
-  if (val == PMT_BOOL_F)
+  if (val == PMT_F)
     return false;
   throw pmt_wrong_type("pmt_to_bool", val);
 }
@@ -167,7 +206,7 @@ hash_string(const std::string &s)
   unsigned int h = 0;
   unsigned int g = 0;
 
-  for (std::string::const_iterator p = s.begin(); p != s.end(); p++){
+  for (std::string::const_iterator p = s.begin(); p != s.end(); ++p){
     h = (h << 4) + (*p & 0xff);
     g = h & 0xf0000000;
     if (g){
@@ -321,8 +360,6 @@ pmt_to_complex(pmt_t x)
 ////////////////////////////////////////////////////////////////////////////
 //                              Pairs
 ////////////////////////////////////////////////////////////////////////////
-
-const pmt_t PMT_NIL = pmt_t(new pmt_null());		// singleton
 
 pmt_null::pmt_null() {}
 pmt_pair::pmt_pair(pmt_t car, pmt_t cdr) : d_car(car), d_cdr(cdr) {}
@@ -599,6 +636,40 @@ pmt_dict_values(pmt_t dict)
 }
 
 ////////////////////////////////////////////////////////////////////////////
+//                                 Any
+////////////////////////////////////////////////////////////////////////////
+
+pmt_any::pmt_any(const boost::any &any) : d_any(any) {}
+
+bool
+pmt_is_any(pmt_t obj)
+{
+  return obj->is_any();
+}
+
+pmt_t
+pmt_make_any(const boost::any &any)
+{
+  return pmt_t(new pmt_any(any));
+}
+
+boost::any
+pmt_any_ref(pmt_t obj)
+{
+  if (!obj->is_any())
+    throw pmt_wrong_type("pmt_any_ref", obj);
+  return _any(obj)->ref();
+}
+
+void
+pmt_any_set(pmt_t obj, const boost::any &any)
+{
+  if (!obj->is_any())
+    throw pmt_wrong_type("pmt_any_set", obj);
+  _any(obj)->set(any);
+}
+
+////////////////////////////////////////////////////////////////////////////
 //                          General Functions
 ////////////////////////////////////////////////////////////////////////////
 
@@ -689,14 +760,14 @@ pmt_assq(pmt_t obj, pmt_t alist)
   while (pmt_is_pair(alist)){
     pmt_t p = pmt_car(alist);
     if (!pmt_is_pair(p))	// malformed alist
-      return PMT_BOOL_F;
+      return PMT_F;
 
     if (pmt_eq(obj, pmt_car(p)))
       return p;
 
     alist = pmt_cdr(alist);
   }
-  return PMT_BOOL_F;
+  return PMT_F;
 }
 
 pmt_t
@@ -705,14 +776,14 @@ pmt_assv(pmt_t obj, pmt_t alist)
   while (pmt_is_pair(alist)){
     pmt_t p = pmt_car(alist);
     if (!pmt_is_pair(p))	// malformed alist
-      return PMT_BOOL_F;
+      return PMT_F;
 
     if (pmt_eqv(obj, pmt_car(p)))
       return p;
 
     alist = pmt_cdr(alist);
   }
-  return PMT_BOOL_F;
+  return PMT_F;
 }
 
 pmt_t
@@ -721,14 +792,14 @@ pmt_assoc(pmt_t obj, pmt_t alist)
   while (pmt_is_pair(alist)){
     pmt_t p = pmt_car(alist);
     if (!pmt_is_pair(p))	// malformed alist
-      return PMT_BOOL_F;
+      return PMT_F;
 
     if (pmt_equal(obj, pmt_car(p)))
       return p;
 
     alist = pmt_cdr(alist);
   }
-  return PMT_BOOL_F;
+  return PMT_F;
 }
 
 pmt_t
@@ -805,7 +876,7 @@ pmt_memq(pmt_t obj, pmt_t list)
       return list;
     list = pmt_cdr(list);
   }
-  return PMT_BOOL_F;
+  return PMT_F;
 }
 
 pmt_t
@@ -816,7 +887,7 @@ pmt_memv(pmt_t obj, pmt_t list)
       return list;
     list = pmt_cdr(list);
   }
-  return PMT_BOOL_F;
+  return PMT_F;
 }
 
 pmt_t
@@ -827,7 +898,7 @@ pmt_member(pmt_t obj, pmt_t list)
       return list;
     list = pmt_cdr(list);
   }
-  return PMT_BOOL_F;
+  return PMT_F;
 }
 
 bool
@@ -864,4 +935,63 @@ pmt_t
 pmt_list4(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4)
 {
   return pmt_cons(x1, pmt_cons(x2, pmt_cons(x3, pmt_cons(x4, PMT_NIL))));
+}
+
+pmt_t
+pmt_caar(pmt_t pair)
+{
+  return (pmt_car(pmt_car(pair)));
+}
+
+pmt_t
+pmt_cadr(pmt_t pair)
+{
+  return pmt_car(pmt_cdr(pair));
+}
+
+pmt_t
+pmt_cdar(pmt_t pair)
+{
+  return pmt_cdr(pmt_car(pair));
+}
+
+pmt_t
+pmt_cddr(pmt_t pair)
+{
+  return pmt_cdr(pmt_cdr(pair));
+}
+
+pmt_t
+pmt_caddr(pmt_t pair)
+{
+  return pmt_car(pmt_cdr(pmt_cdr(pair)));
+}
+
+pmt_t
+pmt_cadddr(pmt_t pair)
+{
+  return pmt_car(pmt_cdr(pmt_cdr(pmt_cdr(pair))));
+}
+  
+bool
+pmt_is_eof_object(pmt_t obj)
+{
+  return pmt_eq(obj, PMT_EOF);
+}
+
+void
+pmt_dump_sizeof()
+{
+  printf("sizeof(pmt_t)              = %3zd\n", sizeof(pmt_t));
+  printf("sizeof(pmt_base)           = %3zd\n", sizeof(pmt_base));
+  printf("sizeof(pmt_bool)           = %3zd\n", sizeof(pmt_bool));
+  printf("sizeof(pmt_symbol)         = %3zd\n", sizeof(pmt_symbol));
+  printf("sizeof(pmt_integer)        = %3zd\n", sizeof(pmt_integer));
+  printf("sizeof(pmt_real)           = %3zd\n", sizeof(pmt_real));
+  printf("sizeof(pmt_complex)        = %3zd\n", sizeof(pmt_complex));
+  printf("sizeof(pmt_null)           = %3zd\n", sizeof(pmt_null));
+  printf("sizeof(pmt_pair)           = %3zd\n", sizeof(pmt_pair));
+  printf("sizeof(pmt_vector)         = %3zd\n", sizeof(pmt_vector));
+  printf("sizeof(pmt_dict)           = %3zd\n", sizeof(pmt_dict));
+  printf("sizeof(pmt_uniform_vector) = %3zd\n", sizeof(pmt_uniform_vector));
 }

@@ -24,15 +24,16 @@
 #endif
 
 #include <mb_runtime.h>
-#include <mb_runtime_thread_per_mblock.h>
+#include <mb_runtime_thread_per_block.h>
 
 mb_runtime_sptr
 mb_make_runtime()
 {
-  return mb_runtime_sptr(new mb_runtime_thread_per_mblock());
+  return mb_runtime_sptr(new mb_runtime_thread_per_block());
 }
 
 mb_runtime::~mb_runtime()
 {
   // nop
 }
+

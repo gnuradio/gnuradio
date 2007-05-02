@@ -22,6 +22,7 @@
 #define INCLUDED_MB_MBLOCK_IMPL_H
 
 #include <mb_mblock.h>
+#include <mb_runtime_base.h>
 #include <mb_connection.h>
 #include <mb_msg_queue.h>
 #include <list>
@@ -37,9 +38,9 @@ typedef std::map<std::string, mb_mblock_sptr> mb_comp_map_t;
  */
 class mb_mblock_impl : boost::noncopyable
 {
+  mb_runtime_base	       *d_runtime;	// pointer to runtime
   mb_mblock		       *d_mb;		// pointer to our associated mblock
   mb_mblock		       *d_mb_parent;	// pointer to our parent
-  mb_runtime		       *d_runtime;	// pointer to runtime
 
   std::string			d_instance_name;    // hierarchical name
   std::string			d_class_name;	    // name of this (derived) class
@@ -51,7 +52,8 @@ class mb_mblock_impl : boost::noncopyable
   mb_msg_queue			d_msgq;		// incoming messages for us
 
 public:
-  mb_mblock_impl(mb_mblock *mb);
+  mb_mblock_impl(mb_runtime_base *runtime, mb_mblock *mb,
+		 const std::string &instance_name);
   ~mb_mblock_impl();
 
   /*!
@@ -79,11 +81,13 @@ public:
    * names and identities of our sub-component mblocks.
    *
    * \param component_name  The name of the sub-component (must be unique with this mblock).
-   * \param component       The sub-component instance.
+   * \param class_name      The class of the instance that is to be created.
+   * \param user_arg The argument to pass to the constructor of the component.
    */
   void
   define_component(const std::string &component_name,
-		   mb_mblock_sptr component);
+		   const std::string &class_name,
+		   pmt_t user_arg);
 
   /*!
    * \brief connect endpoint_1 to endpoint_2
@@ -141,10 +145,10 @@ public:
   nconnections();
 
   bool
-  walk_tree(mb_visitor *visitor, const std::string &path="");
+  walk_tree(mb_visitor *visitor);
   
   mb_msg_accepter_sptr
-  make_accepter(const std::string port_name);
+  make_accepter(pmt_t port_name);
 
   mb_msg_queue &
   msgq() { return d_msgq; }
@@ -183,10 +187,10 @@ public:
   mb_mblock_sptr component(const std::string &comp_name);
 
   //! Return the runtime instance
-  mb_runtime *runtime() { return d_runtime; }
+  mb_runtime_base *runtime() { return d_runtime; }
 
   //! Set the runtime instance
-  void set_runtime(mb_runtime *runtime) { d_runtime = runtime; }
+  void set_runtime(mb_runtime_base *runtime) { d_runtime = runtime; }
 
   /*
    * Our implementation methods
@@ -210,6 +214,12 @@ private:
   endpoints_are_compatible(const mb_endpoint &ep0,
 			   const mb_endpoint &ep1);
 
+  /*!
+   * \brief walk mblock tree and invalidate all port resolution caches.
+   * \implementation
+   */
+  void
+  invalidate_all_port_caches();
 };
 
 

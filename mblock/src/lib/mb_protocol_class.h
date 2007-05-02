@@ -39,4 +39,14 @@ pmt_t mb_protocol_class_outgoing(pmt_t pc);	//< return outgoing message set
 
 pmt_t mb_protocol_class_lookup(pmt_t name);	//< lookup an existing protocol class by name
 
+
+/*!
+ * \brief Initialize one or more protocol class from a serialized description.
+ * Used by machine generated code.
+ */
+class mb_protocol_class_init {
+public:
+  mb_protocol_class_init(const char *data, size_t len);
+};
+
 #endif /* INCLUDED_MB_PROTOCOL_CLASS_H */

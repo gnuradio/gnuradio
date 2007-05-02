@@ -73,13 +73,18 @@ GNURADIO_CORE_LA = $(top_builddir)/gnuradio-core/src/lib/libgnuradio-core.la
 GNURADIO_I = $(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
 
 # How to link in the USRP library from inside the tree
-USRP_INCLUDES = -I$(top_srcdir)/usrp/host/lib \
+USRP_INCLUDES = -I$(top_srcdir)/usrp/host/lib/legacy \
+		-I$(top_srcdir)/usrp/host/lib/inband \
 		-I$(top_srcdir)/usrp/firmware/include
-USRP_LA = $(top_builddir)/usrp/host/lib/libusrp.la
+USRP_LA = $(top_builddir)/usrp/host/lib/legacy/libusrp.la
 
 # How to link the PMT library from inside the tree
 PMT_INCLUDES = -I$(top_srcdir)/pmt/src/lib
 PMT_LA = $(top_builddir)/pmt/src/lib/libpmt.la
+
+# How to link the mblock library from inside the tree
+MBLOCK_INCLUDES = -I$(top_srcdir)/mblock/src/lib
+MBLOCK_LA = $(top_builddir)/mblock/src/lib/libmblock.la
 
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.
@@ -88,3 +93,6 @@ STD_DEFINES_AND_INCLUDES=$(DEFINES) $(OMNITHREAD_INCLUDES) $(GNURADIO_INCLUDES) 
 # Fix for BSD make not defining $(RM).  We define it now in configure.ac
 # using AM_PATH_PROG, but now here have to add a -f to be like GNU make
 RM=$(RM_PROG) -f
+
+RUN_GUILE = GUILE_LOAD_PATH="@abs_top_srcdir@/pmt/src/scheme:@abs_top_srcdir@/mblock/src/scheme" @GUILE@ -e main -s
+COMPILE_MBH = $(RUN_GUILE) $(top_srcdir)/mblock/src/scheme/gnuradio/compile-mbh.scm

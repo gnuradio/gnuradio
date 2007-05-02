@@ -24,7 +24,7 @@ include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = microtune.py
 
-bin_SCRIPTS = 			\
+noinst_SCRIPTS = 		\
 	microtune.py		
 
 CLEANFILES = *.pyc

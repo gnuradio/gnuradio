@@ -31,6 +31,8 @@
  * See pmt.h for the public interface
  */
 
+#define PMT_LOCAL_ALLOCATOR 0		// define to 0 or 1
+
 class pmt_base : boost::noncopyable {
 protected:
   pmt_base(){};
@@ -47,6 +49,7 @@ public:
   virtual bool is_pair()    const { return false; }
   virtual bool is_vector()  const { return false; }
   virtual bool is_dict()    const { return false; }
+  virtual bool is_any()     const { return false; }
 
   virtual bool is_uniform_vector() const { return false; }
   virtual bool is_u8vector()  const { return false; }
@@ -62,6 +65,10 @@ public:
   virtual bool is_c32vector() const { return false; }
   virtual bool is_c64vector() const { return false; }
 
+# if (PMT_LOCAL_ALLOCATOR)
+  void *operator new(size_t);
+  void operator delete(void *, size_t);
+#endif
 };
 
 class pmt_bool : public pmt_base
@@ -188,6 +195,20 @@ public:
   pmt_t keys() const;
   pmt_t values() const;
 };
+
+class pmt_any : public pmt_base
+{
+  boost::any	d_any;
+
+public:
+  pmt_any(const boost::any &any);
+  //~pmt_any();
+
+  bool is_any() const { return true; }
+  const boost::any &ref() const { return d_any; }
+  void  set(const boost::any &any) { d_any = any; }
+};
+
 
 class pmt_uniform_vector : public pmt_base
 {

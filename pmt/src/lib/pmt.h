@@ -24,10 +24,11 @@
 #define INCLUDED_PMT_H
 
 #include <boost/shared_ptr.hpp>
+#include <boost/any.hpp>
 #include <complex>
 #include <string>
 #include <stdint.h>
-#include <iostream>
+#include <iosfwd>
 #include <stdexcept>
 
 /*!
@@ -82,8 +83,8 @@ public:
  * I.e., there is a single false value, #f.
  * ------------------------------------------------------------------------
  */
-extern const pmt_t PMT_BOOL_T;	//< #t : boolean true constant
-extern const pmt_t PMT_BOOL_F;	//< #f : boolean false constant
+extern const pmt_t PMT_T;	//< #t : boolean true constant
+extern const pmt_t PMT_F;	//< #f : boolean false constant
 
 //! Return true if obj is #t or #f, else return false.
 bool pmt_is_bool(pmt_t obj);
@@ -97,7 +98,7 @@ bool pmt_is_false(pmt_t obj);
 //! Return #f is val is false, else return #t.
 pmt_t pmt_from_bool(bool val);
 
-//! Return true if val is PMT_BOOL_T, return false when val is PMT_BOOL_F, 
+//! Return true if val is PMT_T, return false when val is PMT_F, 
 // else raise wrong_type exception.
 bool pmt_to_bool(pmt_t val);
 
@@ -224,6 +225,13 @@ void pmt_set_car(pmt_t pair, pmt_t value);
 
 //! Stores \p value in the cdr field of \p pair.
 void pmt_set_cdr(pmt_t pair, pmt_t value);
+
+pmt_t pmt_caar(pmt_t pair);
+pmt_t pmt_cadr(pmt_t pair);
+pmt_t pmt_cdar(pmt_t pair);
+pmt_t pmt_cddr(pmt_t pair);
+pmt_t pmt_caddr(pmt_t pair);
+pmt_t pmt_cadddr(pmt_t pair);
 
 /*
  * ------------------------------------------------------------------------
@@ -411,6 +419,28 @@ pmt_t pmt_dict_keys(pmt_t dict);
 
 //! Return list of values
 pmt_t pmt_dict_values(pmt_t dict);
+
+/*
+ * ------------------------------------------------------------------------
+ *   Any (wraps boost::any -- can be used to wrap pretty much anything)
+ *
+ * Cannot be serialized or used across process boundaries.
+ * See http://www.boost.org/doc/html/any.html
+ * ------------------------------------------------------------------------
+ */
+
+//! Return true if \p obj is an any
+bool pmt_is_any(pmt_t obj);
+
+//! make an any
+pmt_t pmt_make_any(const boost::any &any);
+
+//! Return underlying boost::any
+boost::any pmt_any_ref(pmt_t obj);
+
+//! Store \p any in \p obj
+void pmt_any_set(pmt_t obj, const boost::any &any);
+
 
 /*
  * ------------------------------------------------------------------------
@@ -618,11 +648,14 @@ std::ostream& operator<<(std::ostream &os, pmt_t obj);
 /*!
  * \brief Write portable byte-serial representation of \p obj to \p sink
  */
-void pmt_serialize(pmt_t obj, std::ostream &sink);
+bool pmt_serialize(pmt_t obj, std::streambuf &sink);
 
 /*!
  * \brief Create obj from portable byte-serial representation
  */
-pmt_t pmt_deserialize(std::istream &source);
+pmt_t pmt_deserialize(std::streambuf &source);
+
+
+void pmt_dump_sizeof();	// debugging
 
 #endif /* INCLUDED_PMT_H */

@@ -28,6 +28,9 @@
  */
 class mb_port_simple : public mb_port
 {
+  bool			d_cache_valid;
+  mb_msg_accepter_sptr	d_cached_accepter;
+
 protected:
   static mb_msg_accepter_sptr
   find_accepter(mb_port_simple *start);
@@ -57,6 +60,13 @@ public:
        pmt_t data = PMT_NIL,
        pmt_t metadata = PMT_NIL,
        mb_pri_t priority = MB_PRI_DEFAULT);
+
+  /*
+   * \brief Invalidate any cached peer resolutions
+   * \implementation
+   */
+  void invalidate_cache();
+
 };
 
 #endif /* INCLUDED_MB_PORT_SIMPLE_H */

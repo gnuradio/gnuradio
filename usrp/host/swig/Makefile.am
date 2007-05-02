@@ -64,7 +64,7 @@ _usrp_prims_la_SOURCES = 		\
 
 noinst_HEADERS =
 
-_usrp_prims_la_LIBADD  = $(top_builddir)/usrp/host/lib/libusrp.la -lstdc++ $(PYTHON_LDFLAGS)
+_usrp_prims_la_LIBADD  = $(USRP_LA) -lstdc++ $(PYTHON_LDFLAGS)
 _usrp_prims_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
 

@@ -391,10 +391,14 @@ protected:
 	// execute the run() or run_undetached() member functions depending on
 	// whether start() or start_undetached() is called respectively.
 
+public:
+
     void start_undetached(void);
 	// can be used with the above constructor in a derived class to cause
 	// the thread to be undetached.  In this case the thread executes the
 	// run_undetached member function.
+
+protected:
 
     virtual ~omni_thread(void);
 	// destructor cannot be called by user (except via a derived class).

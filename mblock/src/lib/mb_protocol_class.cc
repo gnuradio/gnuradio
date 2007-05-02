@@ -24,6 +24,7 @@
 #endif
 
 #include <mb_protocol_class.h>
+#include <iostream>
 
 static pmt_t s_ALL_PROTOCOL_CLASSES = PMT_NIL;
 
@@ -79,4 +80,26 @@ mb_protocol_class_lookup(pmt_t name)
   }
 
   return PMT_NIL;
+}
+
+mb_protocol_class_init::mb_protocol_class_init(const char *data, size_t len)
+{
+  std::stringbuf sb;
+  sb.str(std::string(data, len));
+
+  while (1){
+    pmt_t obj = pmt_deserialize(sb);
+
+    if (0){
+      pmt_write(obj, std::cout);
+      std::cout << std::endl;
+    }
+
+    if (pmt_is_eof_object(obj))
+      return;
+
+    mb_make_protocol_class(pmt_nth(0, obj),   // protocol-class name
+			   pmt_nth(1, obj),   // list of incoming msg names
+			   pmt_nth(2, obj));  // list of outgoing msg names
+  }
 }

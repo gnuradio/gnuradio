@@ -24,6 +24,7 @@
 #include <mb_common.h>
 #include <mb_message.h>
 #include <mb_port.h>
+#include <mb_time.h>
 
 
 /*!
@@ -34,7 +35,7 @@ class mb_visitor
 {
 public:
   virtual ~mb_visitor();
-  virtual bool operator()(mb_mblock *mblock, const std::string &path) = 0;
+  virtual bool operator()(mb_mblock *mblock) = 0;
 };
 
 // ----------------------------------------------------------------------
@@ -52,6 +53,7 @@ private:
 
   friend class mb_runtime;
   friend class mb_mblock_impl;
+  friend class mb_worker;
 
 protected:
   /*!
@@ -59,22 +61,29 @@ protected:
    *
    * Initializing all mblocks in the system is a 3 step procedure.
    *
-   * The top level mblock's constructor is run.  That constructor (a)
-   * registers all of its ports using define_port, (b) constructs and
-   * registers any subcomponents it may have via the define_component
-   * method, and then (c) issues connect calls to wire its
-   * subcomponents together.
+   * The top level mblock's constructor is run.  That constructor 
+   * (a) registers all of its ports using define_port, (b) registers any
+   * subcomponents it may have via the define_component method, and
+   * then (c) issues connect calls to wire its subcomponents together.
+   *
+   * \param runtime the runtime associated with this mblock
+   * \param instance_name specify the name of this instance
+   *        (for debugging, NUMA mapping, etc)
+   * \param user_arg argument passed by user to constructor
+   *        (ignored by the mb_mblock base class)
    */
-  mb_mblock();
+  mb_mblock(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg);
 
 public:
   /*!
    * \brief Called by the runtime system to execute the initial
    * transition of the finite state machine.
    *
-   * Override this to initialize your finite state machine.
+   * This method is called by the runtime after all blocks are
+   * constructed and before the first message is delivered.  Override
+   * this to initialize your finite state machine.
    */
-  virtual void init_fsm();
+  virtual void initial_transition();
 
 protected:
   /*!
@@ -113,11 +122,13 @@ protected:
    * names and identities of our sub-component mblocks.
    *
    * \param component_name  The name of the sub-component (must be unique with this mblock).
-   * \param component       The sub-component instance.
+   * \param class_name      The class of the instance that is to be created.
+   * \param user_arg The argument to pass to the constructor of the component.
    */
   void
   define_component(const std::string &component_name,
-		   mb_mblock_sptr component);
+		   const std::string &class_name,
+		   pmt_t user_arg = PMT_NIL);
 
   /*!
    * \brief connect endpoint_1 to endpoint_2
@@ -160,7 +171,7 @@ protected:
    * \param component_name component to disconnect
    */
   void
-  disconnect_component(const std::string component_name);
+  disconnect_component(const std::string &component_name);
 
   /*!
    * \brief disconnect all connections to all components
@@ -175,8 +186,47 @@ protected:
   nconnections() const;
 
   //! Set the class name
-  void set_class_name(const std::string name);
+  void set_class_name(const std::string &name);
 
+  /*!
+   * \brief Tell runtime that we are done.
+   *
+   * This method does not return.
+   */
+  void exit();
+
+  /*!
+   * \brief Ask runtime to execute the shutdown procedure for all blocks.
+   * 
+   * \param result sets value of \p result output argument of runtime->run(...)
+   *
+   * The runtime first sends a maximum priority %shutdown message to
+   * all blocks.  All blocks should handle the %shutdown message,
+   * perform whatever clean up is required, and call this->exit();
+   *
+   * After a period of time (~100ms), any blocks which haven't yet
+   * called this->exit() are sent a maximum priority %halt message.
+   * %halt is detected in main_loop, and this->exit() is called.
+   *
+   * After an additional period of time (~100ms), any blocks which
+   * still haven't yet called this->exit() are sent a SIG<FOO> (TBD)
+   * signal, which will blow them out of any blocking system calls and
+   * raise an mbe_terminate exception.  The default top-level
+   * runtime-provided exception handler will call this->exit() to
+   * finish the process.
+   *
+   * runtime->run(...) returns when all blocks have called exit.
+   */
+  void shutdown_all(pmt_t result);
+
+  /*!
+   * \brief main event dispatching loop
+   *
+   * Although it is possible to override this, the default implementation
+   * should work for virtually all cases.
+   */
+  virtual void main_loop();
+  
 public:
   virtual ~mb_mblock();
 
@@ -187,10 +237,66 @@ public:
   std::string class_name() const;
 
   //! Set the instance name of this block.
-  void set_instance_name(const std::string name);
+  void set_instance_name(const std::string &name);
   
   //! Return the parent of this mblock, or 0 if we're the top-level block.
   mb_mblock *parent() const;
+
+  /*!
+   * \brief Schedule a "one shot" timeout.
+   *
+   * \param abs_time the absolute time at which the timeout should fire
+   * \param user_data the data passed in the %timeout message.
+   *
+   * When the timeout fires, a message will be sent to the mblock.
+   *
+   * The message will have port_id = %sys-port, signal = %timeout,
+   * data = user_data, metadata = the handle returned from
+   * schedule_one_shot_timeout, pri = MB_PRI_BEST.
+   *
+   * \returns a handle that can be used in cancel_timeout, and is passed
+   * as the metadata field of the generated %timeout message.
+   *
+   * To cancel a pending timeout, call cancel_timeout.
+   */
+  pmt_t
+  schedule_one_shot_timeout(const mb_time &abs_time, pmt_t user_data);
+
+  /*!
+   * \brief Schedule a periodic timeout.
+   *
+   * \param first_abs_time The absolute time at which the first timeout should fire.
+   * \param delta_time The relative delay between the first and successive timeouts.
+   * \param user_data the data passed in the %timeout message.
+   *
+   * When the timeout fires, a message will be sent to the mblock, and a
+   * new timeout will be scheduled for previous absolute time + delta_time.
+   *
+   * The message will have port_id = %sys-port, signal = %timeout,
+   * data = user_data, metadata = the handle returned from
+   * schedule_one_shot_timeout, pri = MB_PRI_BEST.
+   *
+   * \returns a handle that can be used in cancel_timeout, and is passed
+   * as the metadata field of the generated %timeout message.
+   *
+   * To cancel a pending timeout, call cancel_timeout.
+   */
+  pmt_t
+  schedule_periodic_timeout(const mb_time &first_abs_time,
+			    const mb_time &delta_time,
+			    pmt_t user_data);
+
+  /*!
+   * \brief Attempt to cancel a pending timeout.
+   *
+   * Note that this only stops a future timeout from firing.  It is
+   * possible that a timeout may have already fired and enqueued a
+   * %timeout message, but that that message has not yet been seen by
+   * handle_message.
+   *
+   * \param handle returned from schedule_one_shot_timeout or schedule_periodic_timeout.
+   */
+  void cancel_timeout(pmt_t handle);
 
   /*!
    * \brief Perform a pre-order depth-first traversal of the hierarchy.
@@ -198,7 +304,7 @@ public:
    * The traversal stops and returns false if any call to visitor returns false.
    */
   bool
-  walk_tree(mb_visitor *visitor, const std::string &path="top");
+  walk_tree(mb_visitor *visitor);
 
 
   //! \implementation

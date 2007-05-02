@@ -35,6 +35,7 @@
 #include <mb_message.h>
 #include <mb_mblock_impl.h>
 #include <mb_msg_accepter.h>
+#include <mb_class_registry.h>
 #include <stdio.h>
 
 static pmt_t s_data    = pmt_intern("data");
@@ -57,6 +58,12 @@ define_protocol_classes()
 
 }
 
+mb_mblock_sptr
+get_top(mb_runtime_sptr rts)
+{
+  return dynamic_cast<mb_runtime_nop *>(rts.get())->top();
+}
+
 // ================================================================
 //		       test_simple_routing
 // ================================================================
@@ -70,12 +77,13 @@ class sr1 : public mb_mblock
   mb_port_sptr	d_p3;
 
 public:
-  sr1();
+  sr1(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg);
   ~sr1();
-  void init_fsm();
+  void initial_transition();
 };
 
-sr1::sr1()
+sr1::sr1(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+  : mb_mblock(runtime, instance_name, user_arg)
 {
   d_p1 = define_port("p1", "qa-send-cs", true, mb_port::EXTERNAL);
   d_p2 = define_port("p2", "qa-send-cs", true, mb_port::EXTERNAL);
@@ -85,9 +93,9 @@ sr1::sr1()
 sr1::~sr1(){}
   
 void
-sr1::init_fsm()
+sr1::initial_transition()
 {
-  // std::cout << instance_name() << "[sr1]: init_fsm\n";
+  // std::cout << instance_name() << "[sr1]: initial_transition\n";
 
   // send two messages to each port
   pmt_t our_name = pmt_intern(instance_name());
@@ -98,6 +106,8 @@ sr1::init_fsm()
   d_p2->send(s_status, pmt_list3(our_name, s_p2, pmt_from_long(1)));
 }
 
+REGISTER_MBLOCK_CLASS(sr1);
+
 // ----------------------------------------------------------------
 
 // top-level container block for test_simple_routing
@@ -106,17 +116,18 @@ class sr0 : public mb_mblock
   mb_port_sptr	d_p0;
   
 public:
-  sr0();
+  sr0(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg);
   ~sr0();
-  void init_fsm();
+  void initial_transition();
 };
 
-sr0::sr0()
+sr0::sr0(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+  : mb_mblock(runtime, instance_name, user_arg)
 {
   d_p0 = define_port("p0", "qa-send-cs", false, mb_port::INTERNAL);
 
-  define_component("mb1", mb_mblock_sptr(new sr1()));
-  define_component("mb2", mb_mblock_sptr(new sr1()));
+  define_component("mb1", "sr1");
+  define_component("mb2", "sr1");
 
   connect("self", "p0", "mb1", "p1");
   connect("mb1", "p2", "mb2", "p3");
@@ -126,9 +137,9 @@ sr0::sr0()
 sr0::~sr0(){}
 
 void
-sr0::init_fsm()
+sr0::initial_transition()
 {
-  // std::cout << instance_name() << "[sr0]: init_fsm\n";
+  // std::cout << instance_name() << "[sr0]: initial_transition\n";
 
   // send two messages to p0
   pmt_t our_name = pmt_intern(instance_name());
@@ -136,6 +147,8 @@ sr0::init_fsm()
   d_p0->send(s_control, pmt_list3(our_name, s_p0, pmt_from_long(1)));
 }
   
+REGISTER_MBLOCK_CLASS(sr0);
+
 // ----------------------------------------------------------------
 
 /*
@@ -151,9 +164,10 @@ qa_mblock_send::test_simple_routing()
   mb_message_sptr msg;
 
   mb_runtime_sptr rt = mb_make_runtime_nop();
-  mb_mblock_sptr mb0 = mb_mblock_sptr(new sr0());
-  rt->run(mb0);
+  rt->run("top", "sr0", PMT_F);
 
+  mb_mblock_sptr mb0 = get_top(rt);
+  
   // Reach into the guts and see if the messages ended up where they should have
 
   // mb0 should have received two messages sent from mb1 via its p1
@@ -238,12 +252,13 @@ class rr2 : public mb_mblock
   mb_port_sptr	d_p2;
 
 public:
-  rr2();
+  rr2(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg);
   ~rr2();
-  void init_fsm();
+  void initial_transition();
 };
 
-rr2::rr2()
+rr2::rr2(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+  : mb_mblock(runtime, instance_name, user_arg)
 {
   d_p1 = define_port("p1", "qa-send-cs", true,  mb_port::EXTERNAL);
   d_p2 = define_port("p2", "qa-send-cs", false, mb_port::EXTERNAL);
@@ -252,15 +267,17 @@ rr2::rr2()
 rr2::~rr2(){}
   
 void
-rr2::init_fsm()
+rr2::initial_transition()
 {
-  // std::cout << instance_name() << "[rr2]: init_fsm\n";
+  // std::cout << instance_name() << "[rr2]: initial_transition\n";
 
   // send two messages via p1
   pmt_t our_name = pmt_intern(instance_name());
   d_p1->send(s_status, pmt_list3(our_name, s_p1, pmt_from_long(0)));
   d_p1->send(s_status, pmt_list3(our_name, s_p1, pmt_from_long(1)));
 }
+
+REGISTER_MBLOCK_CLASS(rr2);
 
 // ----------------------------------------------------------------
 
@@ -272,22 +289,25 @@ class rr1 : public mb_mblock
   mb_port_sptr	d_p2;
 
 public:
-  rr1();
+  rr1(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg);
   ~rr1();
 };
 
-rr1::rr1()
+rr1::rr1(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+  : mb_mblock(runtime, instance_name, user_arg)
 {
   d_p1 = define_port("p1", "qa-send-cs", true,  mb_port::RELAY);
   d_p2 = define_port("p2", "qa-send-cs", false, mb_port::RELAY);
 
-  define_component("c0", mb_mblock_sptr(new rr2()));
+  define_component("c0", "rr2");
 
   connect("self", "p1", "c0", "p1");
   connect("self", "p2", "c0", "p2");
 }
 
 rr1::~rr1(){}
+
+REGISTER_MBLOCK_CLASS(rr1);
 
 // ----------------------------------------------------------------
 
@@ -296,14 +316,15 @@ rr1::~rr1(){}
 class rr0_a : public mb_mblock
 {
 public:
-  rr0_a();
+  rr0_a(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg);
   ~rr0_a();
 };
 
-rr0_a::rr0_a()
+rr0_a::rr0_a(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+  : mb_mblock(runtime, instance_name, user_arg)
 {
-  define_component("c0", mb_mblock_sptr(new rr1()));
-  define_component("c1", mb_mblock_sptr(new rr2()));
+  define_component("c0", "rr1");
+  define_component("c1", "rr2");
 
   connect("c0", "p1", "c1", "p2");
   connect("c0", "p2", "c1", "p1");
@@ -311,6 +332,7 @@ rr0_a::rr0_a()
 
 rr0_a::~rr0_a(){}
 
+REGISTER_MBLOCK_CLASS(rr0_a);
 
 /*
  * This tests basic message routing using RELAY and EXTERNAL ports.
@@ -323,8 +345,8 @@ qa_mblock_send::test_relay_routing_1()
   mb_message_sptr msg;
 
   mb_runtime_sptr rt = mb_make_runtime_nop();
-  mb_mblock_sptr  top = mb_mblock_sptr(new rr0_a());
-  rt->run(top);
+  rt->run("top", "rr0_a", PMT_F);
+  mb_mblock_sptr top = get_top(rt);
 
   // Reach into the guts and see if the messages ended up where they should have
 
@@ -377,14 +399,15 @@ qa_mblock_send::test_relay_routing_1()
 class rr0_b : public mb_mblock
 {
 public:
-  rr0_b();
+  rr0_b(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg);
   ~rr0_b();
 };
 
-rr0_b::rr0_b()
+rr0_b::rr0_b(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
+  : mb_mblock(runtime, instance_name, user_arg)
 {
-  define_component("c0", mb_mblock_sptr(new rr1()));
-  define_component("c1", mb_mblock_sptr(new rr1()));
+  define_component("c0", "rr1");
+  define_component("c1", "rr1");
 
   connect("c0", "p1", "c1", "p2");
   connect("c0", "p2", "c1", "p1");
@@ -392,6 +415,7 @@ rr0_b::rr0_b()
 
 rr0_b::~rr0_b(){}
 
+REGISTER_MBLOCK_CLASS(rr0_b);
 
 /*
  * This tests basic message routing using RELAY and EXTERNAL ports.
@@ -404,8 +428,8 @@ qa_mblock_send::test_relay_routing_2()
   mb_message_sptr msg;
 
   mb_runtime_sptr rt = mb_make_runtime_nop();
-  mb_mblock_sptr  top = mb_mblock_sptr(new rr0_b());
-  rt->run(top);
+  rt->run("top", "rr0_b", PMT_F);
+  mb_mblock_sptr top = get_top(rt);
 
   // Reach into the guts and see if the messages ended up where they should have
 

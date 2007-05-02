@@ -30,8 +30,8 @@
 #include <mb_exception.h>
 #include <mb_util.h>
 #include <mb_msg_accepter_smp.h>
-#include <mb_runtime_placeholder.h>
 #include <mbi_runtime_lock.h>
+#include <iostream>
 
 
 static pmt_t s_self = pmt_intern("self");
@@ -52,9 +52,10 @@ mb_mblock_impl::comp_is_defined(const std::string &name)
 
 ////////////////////////////////////////////////////////////////////////
 
-mb_mblock_impl::mb_mblock_impl(mb_mblock *mb)
-  : d_mb(mb), d_mb_parent(0), d_runtime(mb_runtime_placeholder::singleton()),
-    d_instance_name("<unknown>"), d_class_name("mblock")
+mb_mblock_impl::mb_mblock_impl(mb_runtime_base *runtime, mb_mblock *mb,
+			       const std::string &instance_name)
+  : d_runtime(runtime), d_mb(mb), d_mb_parent(0), 
+    d_instance_name(instance_name), d_class_name("mblock")
 {
 }
 
@@ -85,15 +86,28 @@ mb_mblock_impl::define_port(const std::string &port_name,
 
 void
 mb_mblock_impl::define_component(const std::string &name,
-				 mb_mblock_sptr component)
+				 const std::string &class_name,
+				 pmt_t user_arg)
 {
-  mbi_runtime_lock	l(this);
+  {
+    mbi_runtime_lock	l(this);
 
-  if (comp_is_defined(name))	// check for duplicate name
-    throw mbe_duplicate_component(d_mb, name);
+    if (comp_is_defined(name))	// check for duplicate name
+      throw mbe_duplicate_component(d_mb, name);
+  }
 
-  component->d_impl->d_mb_parent = d_mb;     // set component's parent link
-  d_comp_map[name] = component;
+  // We ask the runtime to create the component so that it can worry about
+  // mblock placement on a NUMA machine or on a distributed multicomputer
+
+  mb_mblock_sptr component =
+    d_runtime->create_component(instance_name() + "/" + name,
+				class_name, user_arg);
+  {
+    mbi_runtime_lock	l(this);
+
+    component->d_impl->d_mb_parent = d_mb;     // set component's parent link
+    d_comp_map[name] = component;
+  }
 }
 
 void
@@ -125,6 +139,7 @@ mb_mblock_impl::disconnect(const std::string &comp_name1,
   mbi_runtime_lock	l(this);
 
   d_conn_table.disconnect(comp_name1, port_name1, comp_name2, port_name2);
+  invalidate_all_port_caches();
 }
 
 void
@@ -133,6 +148,7 @@ mb_mblock_impl::disconnect_component(const std::string component_name)
   mbi_runtime_lock	l(this);
 
   d_conn_table.disconnect_component(component_name);
+  invalidate_all_port_caches();
 }
 
 void
@@ -141,6 +157,7 @@ mb_mblock_impl::disconnect_all()
   mbi_runtime_lock	l(this);
 
   d_conn_table.disconnect_all();
+  invalidate_all_port_caches();
 }
 
 int
@@ -220,26 +237,25 @@ mb_mblock_impl::endpoints_are_compatible(const mb_endpoint &ep0,
 }
 
 bool
-mb_mblock_impl::walk_tree(mb_visitor *visitor, const std::string &path)
+mb_mblock_impl::walk_tree(mb_visitor *visitor)
 {
-  if (!(*visitor)(d_mb, path))
+  if (!(*visitor)(d_mb))
     return false;
 
   mb_comp_map_t::iterator it;
   for (it = d_comp_map.begin(); it != d_comp_map.end(); ++it)
-    if (!(it->second->walk_tree(visitor, path + "/" + it->first)))
+    if (!(it->second->walk_tree(visitor)))
       return false;
 
   return true;
 }
 
 mb_msg_accepter_sptr
-mb_mblock_impl::make_accepter(const std::string port_name)
+mb_mblock_impl::make_accepter(pmt_t port_name)
 {
   // FIXME this should probably use some kind of configurable factory
   mb_msg_accepter *ma =
-    new mb_msg_accepter_smp(d_mb->shared_from_this(),
-			    pmt_intern(port_name));
+    new mb_msg_accepter_smp(d_mb->shared_from_this(), port_name);
 
   return mb_msg_accepter_sptr(ma);
 }
@@ -281,3 +297,31 @@ mb_mblock_impl::set_class_name(const std::string &name)
   d_class_name = name;
 }
 
+/*
+ * This is the "Big Hammer" port cache invalidator.
+ * It invalidates _all_ of the port caches in the entire mblock tree.
+ * It's overkill, but was simple to code.
+ */
+void
+mb_mblock_impl::invalidate_all_port_caches()
+{
+  class invalidator : public mb_visitor
+  {
+  public:
+    bool operator()(mb_mblock *mblock)
+    {
+      mb_mblock_impl_sptr impl = mblock->impl();
+      mb_port_map_t::iterator it = impl->d_port_map.begin();
+      mb_port_map_t::iterator end = impl->d_port_map.end();
+      for (; it != end; ++it)
+	it->second->invalidate_cache();
+      return true;
+    }
+  };
+
+  invalidator visitor;
+
+  // Always true, except in early QA code
+  if (runtime()->top())
+    runtime()->top()->walk_tree(&visitor);
+}

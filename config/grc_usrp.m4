@@ -30,7 +30,9 @@ AC_DEFUN([GRC_USRP],[
         usrp/host/Makefile \
         usrp/host/misc/Makefile \
         usrp/host/lib/Makefile \
-        usrp/host/lib/std_paths.h \
+        usrp/host/lib/inband/Makefile \
+        usrp/host/lib/legacy/Makefile \
+        usrp/host/lib/legacy/std_paths.h \
         usrp/host/swig/Makefile \
         usrp/host/apps/Makefile \
         usrp/firmware/Makefile \
@@ -54,6 +56,16 @@ AC_DEFUN([GRC_USRP],[
     AC_CHECK_FUNCS([sigaction snprintf])
 
     passed=yes
+    # Don't do usrp if mblock skipped
+    # There *has* to be a better way to check if a value is in a string
+    for dir in $skipped_dirs
+    do
+	if test "$dir" = "mblock"; then
+	    AC_MSG_RESULT([Component usrp requires mblock, which is not being built.])
+	    passed=no
+	fi
+    done
+
     USRP_LIBUSB([],[passed=no;AC_MSG_RESULT([Unable to configure USB dependency.])])
     USRP_SET_FUSB_TECHNIQUE([],[passed=no;AC_MSG_RESULT([Unable to set fast USB technique.])])
     USRP_SDCC([2.4.0],[],[passed=no;AC_MSG_RESULT([Unable to find firmware compiler.])])

@@ -24,13 +24,14 @@
 #include <cppunit/TestAssert.h>
 #include <pmt.h>
 #include <stdio.h>
+#include <sstream>
 
 void
 qa_pmt_prims::test_symbols()
 {
-  CPPUNIT_ASSERT(!pmt_is_symbol(PMT_BOOL_T));
-  CPPUNIT_ASSERT(!pmt_is_symbol(PMT_BOOL_F));
-  CPPUNIT_ASSERT_THROW(pmt_symbol_to_string(PMT_BOOL_F), pmt_wrong_type);
+  CPPUNIT_ASSERT(!pmt_is_symbol(PMT_T));
+  CPPUNIT_ASSERT(!pmt_is_symbol(PMT_F));
+  CPPUNIT_ASSERT_THROW(pmt_symbol_to_string(PMT_F), pmt_wrong_type);
 
   pmt_t sym1 = pmt_string_to_symbol("test");
   CPPUNIT_ASSERT(pmt_is_symbol(sym1));
@@ -76,13 +77,13 @@ void
 qa_pmt_prims::test_booleans()
 {
   pmt_t sym = pmt_string_to_symbol("test");
-  CPPUNIT_ASSERT(pmt_is_bool(PMT_BOOL_T));
-  CPPUNIT_ASSERT(pmt_is_bool(PMT_BOOL_F));
+  CPPUNIT_ASSERT(pmt_is_bool(PMT_T));
+  CPPUNIT_ASSERT(pmt_is_bool(PMT_F));
   CPPUNIT_ASSERT(!pmt_is_bool(sym));
-  CPPUNIT_ASSERT_EQUAL(pmt_from_bool(false), PMT_BOOL_F);
-  CPPUNIT_ASSERT_EQUAL(pmt_from_bool(true), PMT_BOOL_T);
-  CPPUNIT_ASSERT_EQUAL(false, pmt_to_bool(PMT_BOOL_F));
-  CPPUNIT_ASSERT_EQUAL(true, pmt_to_bool(PMT_BOOL_T));
+  CPPUNIT_ASSERT_EQUAL(pmt_from_bool(false), PMT_F);
+  CPPUNIT_ASSERT_EQUAL(pmt_from_bool(true), PMT_T);
+  CPPUNIT_ASSERT_EQUAL(false, pmt_to_bool(PMT_F));
+  CPPUNIT_ASSERT_EQUAL(true, pmt_to_bool(PMT_T));
   CPPUNIT_ASSERT_THROW(pmt_to_bool(sym), pmt_wrong_type);
 }
 
@@ -91,10 +92,10 @@ qa_pmt_prims::test_integers()
 {
   pmt_t p1 = pmt_from_long(1);
   pmt_t m1 = pmt_from_long(-1);
-  CPPUNIT_ASSERT(!pmt_is_integer(PMT_BOOL_T));
+  CPPUNIT_ASSERT(!pmt_is_integer(PMT_T));
   CPPUNIT_ASSERT(pmt_is_integer(p1));
   CPPUNIT_ASSERT(pmt_is_integer(m1));
-  CPPUNIT_ASSERT_THROW(pmt_to_long(PMT_BOOL_T), pmt_wrong_type);
+  CPPUNIT_ASSERT_THROW(pmt_to_long(PMT_T), pmt_wrong_type);
   CPPUNIT_ASSERT_EQUAL(-1L, pmt_to_long(m1));
   CPPUNIT_ASSERT_EQUAL(1L, pmt_to_long(p1));
 }
@@ -104,10 +105,10 @@ qa_pmt_prims::test_reals()
 {
   pmt_t p1 = pmt_from_double(1);
   pmt_t m1 = pmt_from_double(-1);
-  CPPUNIT_ASSERT(!pmt_is_real(PMT_BOOL_T));
+  CPPUNIT_ASSERT(!pmt_is_real(PMT_T));
   CPPUNIT_ASSERT(pmt_is_real(p1));
   CPPUNIT_ASSERT(pmt_is_real(m1));
-  CPPUNIT_ASSERT_THROW(pmt_to_double(PMT_BOOL_T), pmt_wrong_type);
+  CPPUNIT_ASSERT_THROW(pmt_to_double(PMT_T), pmt_wrong_type);
   CPPUNIT_ASSERT_EQUAL(-1.0, pmt_to_double(m1));
   CPPUNIT_ASSERT_EQUAL(1.0, pmt_to_double(p1));
   CPPUNIT_ASSERT_EQUAL(1.0, pmt_to_double(pmt_from_long(1)));
@@ -118,10 +119,10 @@ qa_pmt_prims::test_complexes()
 {
   pmt_t p1 = pmt_make_rectangular(2, -3);
   pmt_t m1 = pmt_make_rectangular(-3, 2);
-  CPPUNIT_ASSERT(!pmt_is_complex(PMT_BOOL_T));
+  CPPUNIT_ASSERT(!pmt_is_complex(PMT_T));
   CPPUNIT_ASSERT(pmt_is_complex(p1));
   CPPUNIT_ASSERT(pmt_is_complex(m1));
-  CPPUNIT_ASSERT_THROW(pmt_to_complex(PMT_BOOL_T), pmt_wrong_type);
+  CPPUNIT_ASSERT_THROW(pmt_to_complex(PMT_T), pmt_wrong_type);
   CPPUNIT_ASSERT_EQUAL(std::complex<double>(2, -3), pmt_to_complex(p1));
   CPPUNIT_ASSERT_EQUAL(std::complex<double>(-3, 2), pmt_to_complex(m1));
   CPPUNIT_ASSERT_EQUAL(std::complex<double>(1.0, 0), pmt_to_complex(pmt_from_long(1)));
@@ -242,7 +243,7 @@ qa_pmt_prims::test_misc()
   
   pmt_t alist = pmt_cons(p0, pmt_cons(p1, pmt_cons(p2, PMT_NIL)));
   CPPUNIT_ASSERT(pmt_eq(p1, pmt_assv(k1, alist)));
-  CPPUNIT_ASSERT(pmt_eq(PMT_BOOL_F, pmt_assv(k3, alist)));
+  CPPUNIT_ASSERT(pmt_eq(PMT_F, pmt_assv(k3, alist)));
   
   pmt_t keys = pmt_cons(k0, pmt_cons(k1, pmt_cons(k2, PMT_NIL)));
   pmt_t vals = pmt_cons(v0, pmt_cons(v1, pmt_cons(v2, PMT_NIL)));
@@ -292,4 +293,103 @@ qa_pmt_prims::test_io()
   pmt_t k3 = pmt_string_to_symbol("k3");
 
   CPPUNIT_ASSERT_EQUAL(std::string("k0"), pmt_write_string(k0));
+}
+
+// ------------------------------------------------------------------------
+
+// class foo is used in test_any below.
+// It can't be declared in the scope of test_any because of template
+// namespace problems.
+
+class foo {
+public:
+  double	d_double;
+  int		d_int;
+  foo(double d=0, int i=0) : d_double(d), d_int(i) {}
+};
+
+bool operator==(const foo &a, const foo &b)
+{
+  return a.d_double == b.d_double && a.d_int == b.d_int;
+}
+
+std::ostream& operator<<(std::ostream &os, const foo obj)
+{
+  os << "<foo: " << obj.d_double << ", " << obj.d_int << ">";
+  return os;
+}
+
+void
+qa_pmt_prims::test_any()
+{
+  boost::any a0;
+  boost::any a1;
+  boost::any a2;
+
+  a0 = std::string("Hello!");
+  a1 = 42;
+  a2 = foo(3.250, 21);
+
+  pmt_t p0 = pmt_make_any(a0);
+  pmt_t p1 = pmt_make_any(a1);
+  pmt_t p2 = pmt_make_any(a2);
+
+  CPPUNIT_ASSERT_EQUAL(std::string("Hello!"),
+		       boost::any_cast<std::string>(pmt_any_ref(p0)));
+
+  CPPUNIT_ASSERT_EQUAL(42,
+		       boost::any_cast<int>(pmt_any_ref(p1)));
+
+  CPPUNIT_ASSERT_EQUAL(foo(3.250, 21),
+		       boost::any_cast<foo>(pmt_any_ref(p2)));
+}
+
+// ------------------------------------------------------------------------
+
+void
+qa_pmt_prims::test_serialize()
+{
+  std::stringbuf sb;		// fake channel
+  pmt_t a = pmt_intern("a");
+  pmt_t b = pmt_intern("b");
+  pmt_t c = pmt_intern("c");
+
+  sb.str("");			// reset channel to empty
+
+  // write stuff to channel
+
+  pmt_serialize(PMT_NIL, sb);
+  pmt_serialize(pmt_intern("foobarvia"), sb);
+  pmt_serialize(pmt_from_long(123456789), sb);
+  pmt_serialize(pmt_from_long(-123456789), sb);
+  pmt_serialize(pmt_cons(PMT_NIL, PMT_NIL), sb);
+  pmt_serialize(pmt_cons(a, b), sb);
+  pmt_serialize(pmt_list1(a), sb);
+  pmt_serialize(pmt_list2(a, b), sb);
+  pmt_serialize(pmt_list3(a, b, c), sb);
+  pmt_serialize(pmt_list3(a, pmt_list3(c, b, a), c), sb);
+  pmt_serialize(PMT_T, sb);
+  pmt_serialize(PMT_F, sb);
+
+  // read it back
+
+  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), PMT_NIL));
+  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), pmt_intern("foobarvia")));
+  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), pmt_from_long(123456789)));
+  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), pmt_from_long(-123456789)));
+  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), pmt_cons(PMT_NIL, PMT_NIL)));
+  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), pmt_cons(a, b)));
+  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), pmt_list1(a)));
+  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), pmt_list2(a, b)));
+  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), pmt_list3(a, b, c)));
+  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), pmt_list3(a, pmt_list3(c, b, a), c)));
+  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), PMT_T));
+  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), PMT_F));
+
+  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), PMT_EOF));	// last item
+
+
+  // FIXME add tests for real, complex, vector, uniform-vector, dict
+  // FIXME add tests for malformed input too.
+
 }

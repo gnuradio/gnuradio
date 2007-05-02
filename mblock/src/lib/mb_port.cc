@@ -31,7 +31,8 @@ mb_port::mb_port(mb_mblock *mblock,
 		 const std::string &protocol_class_name,
 		 bool conjugated,
 		 mb_port::port_type_t port_type)
-  : d_port_name(port_name), d_conjugated(conjugated), d_port_type(port_type),
+  : d_port_name(port_name), d_port_symbol(pmt_intern(port_name)),
+    d_conjugated(conjugated), d_port_type(port_type),
     d_mblock(mblock)
 {
   pmt_t pc = mb_protocol_class_lookup(pmt_intern(protocol_class_name));

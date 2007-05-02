@@ -18,33 +18,28 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_MB_RUNTIME_PLACEHOLDER_H
-#define INCLUDED_MB_RUNTIME_PLACEHOLDER_H
 
 #include <mb_runtime.h>
+#include <iostream>
 
-/*!
- * \brief Concrete runtime that serves as a placeholder until the real
- * runtime is known.
- *
- * The singleton instance of this class is installed in the d_runtime
- * instance variable of each mb_mblock_impl at construction time.
- * Having a valid instance of runtime removes the "pre runtime::run"
- * corner case, and allows us to lock and unlock the big runtime lock
- * even though there's no "real runtime" yet.
- */
-class mb_runtime_placeholder : public mb_runtime
+int
+main(int argc, char **argv)
 {
+  mb_runtime_sptr rt = mb_make_runtime();
+  pmt_t result = PMT_NIL;
 
-public:
-  mb_runtime_placeholder();
-  ~mb_runtime_placeholder();
+  long nmsgs =      1000000;
+  long batch_size =     100;
 
-  //! throws mbe_not_implemented
-  bool run(mb_mblock_sptr top);
+  pmt_t arg = pmt_list2(pmt_from_long(nmsgs),	// # of messages to send through pipe
+			pmt_from_long(batch_size));
 
-  //! Return the placeholder singleton
-  static mb_runtime *singleton();
-};
+  rt->run("top", "qa_bitset_top", arg, &result);
 
-#endif /* INCLUDED_MB_RUNTIME_PLACEHOLDER_H */
+  if (!pmt_equal(PMT_T, result)){
+    std::cerr << "benchmark_send: incorrect result";
+    return 1;
+  }
+
+  return 0;
+}

@@ -24,7 +24,9 @@ AC_DEFUN([GRC_MBLOCK],[
 	mblock/Makefile \
 	mblock/doc/Makefile \
 	mblock/src/Makefile \
-	mblock/src/lib/Makefile
+	mblock/src/lib/Makefile \
+	mblock/src/scheme/Makefile \
+	mblock/src/scheme/gnuradio/Makefile \
     ])
 
     passed=yes
@@ -47,6 +49,12 @@ AC_DEFUN([GRC_MBLOCK],[
 	    passed=no
 	fi
     done
+
+    AC_PATH_PROG(GUILE,guile)
+    if test "$GUILE" = "" ; then
+      AC_MSG_RESULT([Component mblock requires guile, which was not found.])
+      passed=no
+    fi
 
     GRC_BUILD_CONDITIONAL([mblock],[
         dnl run_tests is created from run_tests.in.  Make it executable.
