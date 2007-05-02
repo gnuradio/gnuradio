@@ -26,7 +26,8 @@ INCLUDES = 	\
 
 TESTS = test_inband
 
-EXTRA_DIST =				
+EXTRA_DIST =				\
+	usrp_server.mbh			
 
 lib_LTLIBRARIES = 			\
 	libusrp_inband.la		\
@@ -59,7 +60,9 @@ include_HEADERS =			\
 noinst_HEADERS =      			\
 	qa_inband.h			\
 	qa_inband_packet_prims.h	\
-	qa_inband_usrp_server.h
+	qa_inband_usrp_server.h		\
+	usrp_inband_usb_packet.h	
+
 
 # ------------------------------------------------------------------------
 # Build the qa code in its own library
