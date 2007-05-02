@@ -181,19 +181,19 @@ int
   /* The triangle wave rises from -PI to 0 and falls from 0 to PI.	*/ 
   case GR_TRI_WAVE:	
     for (int i = 0; i < noutput_items; i++){
-      t = (@TYPE@) d_ampl*d_nco.get_phase()/M_PI;
-        if (d_nco.get_phase() < 0)
-          optr[i] = t + d_ampl + d_offset;
-        else
-          optr[i] = -1*t + d_ampl + d_offset;
-        d_nco.step();
+      double t = d_ampl*d_nco.get_phase()/M_PI;
+      if (d_nco.get_phase() < 0)
+	optr[i] = static_cast<@TYPE@>(t + d_ampl + d_offset);
+      else
+	optr[i] = static_cast<@TYPE@>(-1*t + d_ampl + d_offset);
+      d_nco.step();
     }
     break;
 	
   /* The saw tooth wave rises from -PI to PI.	*/
   case GR_SAW_WAVE:	
     for (int i = 0; i < noutput_items; i++){
-      t = (@TYPE@) d_ampl*d_nco.get_phase()/(2*M_PI) + d_ampl/2 + d_offset;
+      t = static_cast<@TYPE@>(d_ampl*d_nco.get_phase()/(2*M_PI) + d_ampl/2 + d_offset);
       optr[i] = t;	   	
       d_nco.step();
     }
