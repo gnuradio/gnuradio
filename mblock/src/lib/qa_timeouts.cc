@@ -27,12 +27,10 @@
 #include <mb_mblock.h>
 #include <mb_runtime.h>
 #include <mb_protocol_class.h>
-#include <mb_exception.h>
 #include <mb_message.h>
 #include <mb_msg_accepter.h>
 #include <mb_class_registry.h>
 #include <mb_timer_queue.h>
-#include <stdio.h>
 #include <string.h>
 #include <iostream>
 
