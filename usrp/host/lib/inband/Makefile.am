@@ -41,7 +41,7 @@ BUILT_SOURCES =				\
 	usrp_server_mbh.cc
 
 usrp_server_mbh.cc : usrp_server.mbh
-	$(COMPILE_MBH) usrp_server.mbh usrp_server_mbh.cc
+	$(COMPILE_MBH) $(srcdir)/usrp_server.mbh usrp_server_mbh.cc
 
 libusrp_inband_la_SOURCES =		\
 	$(BUILT_SOURCES)		\

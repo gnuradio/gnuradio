@@ -36,7 +36,7 @@ BUILT_SOURCES =				\
 	qa_bitset_mbh.cc		
 
 qa_bitset_mbh.cc : qa_bitset.mbh
-	$(COMPILE_MBH) qa_bitset.mbh qa_bitset_mbh.cc
+	$(COMPILE_MBH) $(srcdir)/qa_bitset.mbh qa_bitset_mbh.cc
 
 # These are the source files that go into the mblock shared library
 libmblock_la_SOURCES =			\
