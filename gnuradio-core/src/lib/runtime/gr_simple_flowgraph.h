@@ -62,6 +62,7 @@ class gr_simple_flowgraph
 {
 private:
   friend class gr_runtime_impl;
+  friend class gr_simple_flowgraph_detail;
   friend class gr_hier_block2_detail;
   friend gr_simple_flowgraph_sptr gr_make_simple_flowgraph();
   gr_simple_flowgraph();

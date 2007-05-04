@@ -157,6 +157,12 @@ class gr_buffer_reader {
   int items_available () const;
 
   /*!
+   * \brief Return buffer this reader reads from.
+   */
+  gr_buffer_sptr buffer () const { return d_buffer; }
+
+
+  /*!
    * \brief Return maximum number of items that could ever be available for reading.
    * This is used as a sanity check in the scheduler to avoid looping forever.
    */

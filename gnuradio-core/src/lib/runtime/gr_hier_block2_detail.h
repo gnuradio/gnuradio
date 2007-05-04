@@ -45,8 +45,10 @@ private:
                  gr_basic_block_sptr dst, int dst_port);
     void disconnect(gr_basic_block_sptr, int src_port, 
                     gr_basic_block_sptr, int dst_port);
-    void assign_input(int my_port, int port, gr_basic_block_sptr block);
-    void assign_output(int my_port, int port, gr_basic_block_sptr block);
+    void connect_input(int my_port, int port, gr_basic_block_sptr block);
+    void connect_output(int my_port, int port, gr_basic_block_sptr block);
+    void disconnect_input(int my_port, int port, gr_basic_block_sptr block);
+    void disconnect_output(int my_port, int port, gr_basic_block_sptr block);
     void flatten(gr_simple_flowgraph_sptr sfg);
     gr_endpoint resolve_port(int port, bool is_input);
     gr_endpoint resolve_endpoint(const gr_endpoint &endp, bool is_input);

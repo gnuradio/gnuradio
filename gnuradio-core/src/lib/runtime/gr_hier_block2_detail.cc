@@ -55,20 +55,20 @@ gr_hier_block2_detail::connect(gr_basic_block_sptr src, int src_port,
   if (src.get() == dst.get())
     throw std::invalid_argument("src and destination blocks cannot be the same");
 
-  // Assignments to block inputs or outputs
+  // Connectments to block inputs or outputs
   int max_port;
   if (src.get() == d_owner) {
     max_port = src->input_signature()->max_streams();
     if ((max_port != -1 && (src_port >= max_port)) || src_port < 0)
       throw std::invalid_argument("source port out of range");
-    return assign_input(src_port, dst_port, dst);
+    return connect_input(src_port, dst_port, dst);
   }
 
   if (dst.get() == d_owner) {
     max_port = dst->output_signature()->max_streams();
     if ((max_port != -1 && (dst_port >= max_port)) || dst_port < 0)
       throw std::invalid_argument("source port out of range");
-    return assign_output(dst_port, src_port, src);
+    return connect_output(dst_port, src_port, src);
   }
 
   // Internal connections
@@ -81,13 +81,25 @@ void
 gr_hier_block2_detail::disconnect(gr_basic_block_sptr src, int src_port, 
                                   gr_basic_block_sptr dst, int dst_port)
 {
-  // Handle disconnecting inputs and outputs
+  if (GR_HIER_BLOCK2_DETAIL_DEBUG)
+    std::cout << "disconnecting: " << gr_endpoint(src, src_port)
+              << " -> " << gr_endpoint(dst, dst_port) << std::endl;
 
+  if (src.get() == dst.get())
+    throw std::invalid_argument("src and destination blocks cannot be the same");
+
+  if (src.get() == d_owner)
+    return disconnect_input(src_port, dst_port, dst);
+
+  if (dst.get() == d_owner)
+    return disconnect_output(dst_port, src_port, src);
+
+  // Internal connections
   d_fg->disconnect(src, src_port, dst, dst_port);
 }
 
 void
-gr_hier_block2_detail::assign_input(int my_port, int port, gr_basic_block_sptr block)
+gr_hier_block2_detail::connect_input(int my_port, int port, gr_basic_block_sptr block)
 {
   if (my_port < 0 || my_port >= (signed)d_inputs.size())
     throw std::invalid_argument("input port number out of range");
@@ -99,7 +111,7 @@ gr_hier_block2_detail::assign_input(int my_port, int port, gr_basic_block_sptr b
 }
 
 void
-gr_hier_block2_detail::assign_output(int my_port, int port, gr_basic_block_sptr block)
+gr_hier_block2_detail::connect_output(int my_port, int port, gr_basic_block_sptr block)
 {
   if (my_port < 0 || my_port >= (signed)d_outputs.size())
     throw std::invalid_argument("output port number out of range");
@@ -108,6 +120,30 @@ gr_hier_block2_detail::assign_output(int my_port, int port, gr_basic_block_sptr 
     throw std::invalid_argument("output port in use");
 
   d_outputs[my_port] = gr_endpoint(block, port);
+}
+
+void
+gr_hier_block2_detail::disconnect_input(int my_port, int port, gr_basic_block_sptr block)
+{
+  if (my_port < 0 || my_port >= (signed)d_inputs.size())
+    throw std::invalid_argument("input port number out of range");
+
+  if (d_inputs[my_port].block() != block)
+    throw std::invalid_argument("block not assigned to given input, can't disconnect");
+
+  d_inputs[my_port] = gr_endpoint();
+}
+
+void
+gr_hier_block2_detail::disconnect_output(int my_port, int port, gr_basic_block_sptr block)
+{
+  if (my_port < 0 || my_port >= (signed)d_outputs.size())
+    throw std::invalid_argument("input port number out of range");
+
+  if (d_outputs[my_port].block() != block)
+    throw std::invalid_argument("block not assigned to given output, can't disconnect");
+
+  d_outputs[my_port] = gr_endpoint();
 }
 
 gr_endpoint

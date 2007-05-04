@@ -67,6 +67,7 @@ class gr_runtime_impl
 {
 private:
   gr_runtime_impl(gr_hier_block2_sptr top_block);
+  friend void runtime_sigint_handler(int signum);
   friend class gr_runtime;
     
   bool                           d_running;

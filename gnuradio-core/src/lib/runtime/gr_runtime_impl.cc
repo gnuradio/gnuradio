@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -24,10 +24,12 @@
 #include "config.h"
 #endif
 
+#include <gr_runtime.h>
 #include <gr_runtime_impl.h>
 #include <gr_simple_flowgraph.h>
 #include <gr_hier_block2.h>
 #include <gr_hier_block2_detail.h>
+#include <gr_local_sighandler.h>
 
 #ifdef HAVE_SIGNAL_H
 #include <signal.h>
@@ -36,24 +38,42 @@
 #include <stdexcept>
 #include <iostream>
 
+#define GR_RUNTIME_IMPL_DEBUG 1
+
+static gr_runtime_impl *s_runtime = 0;
+
+// FIXME: This prevents using more than one gr_runtime instance
+void 
+runtime_sigint_handler(int signum)
+{
+  if (GR_RUNTIME_IMPL_DEBUG)
+    std::cout << "SIGINT received, calling stop() on all threads" << std::endl;
+
+  if (s_runtime)
+    s_runtime->stop();
+}
+
 gr_runtime_impl::gr_runtime_impl(gr_hier_block2_sptr top_block) 
   : d_running(false),
     d_top_block(top_block),
     d_sfg(gr_make_simple_flowgraph())
 {
+  s_runtime = this;
 }
 
 gr_runtime_impl::~gr_runtime_impl()
 {
+  s_runtime = 0; // we don't own this
 }
 
 void
 gr_runtime_impl::start()
 {
+  if (GR_RUNTIME_IMPL_DEBUG)
+    std::cout << "start: entered" << std::endl;
+
   if (d_running)
     throw std::runtime_error("already running");
-  else
-    d_running = true;
 
   // Create new simple flow graph by flattening hierarchical block
   d_sfg->d_detail->reset();
@@ -70,24 +90,33 @@ gr_runtime_impl::start()
 void
 gr_runtime_impl::start_threads()
 {
+  if (GR_RUNTIME_IMPL_DEBUG)
+    std::cout << "start_threads: entered" << std::endl;
+
   d_graphs = d_sfg->d_detail->partition();
-  d_threads.clear();
   for (std::vector<gr_block_vector_t>::iterator p = d_graphs.begin();
        p != d_graphs.end(); p++) {
     gr_scheduler_thread *thread = new gr_scheduler_thread(*p);
-    thread->start();
     d_threads.push_back(thread);
+    if (GR_RUNTIME_IMPL_DEBUG)
+      std::cout << "start_threads: starting " << thread << std::endl;
+    thread->start();
   }
+
+  d_running = true;
 }
 
 void
 gr_runtime_impl::stop()
 {
-  if (!d_running)
-    throw std::runtime_error("not running");
+  if (GR_RUNTIME_IMPL_DEBUG)
+    std::cout << "stop: entered" << std::endl;
 
-  for (gr_scheduler_thread_viter_t p = d_threads.begin(); p != d_threads.end(); p++)
-    (*p)->stop(); 
+  for (gr_scheduler_thread_viter_t p = d_threads.begin(); p != d_threads.end(); p++) {
+    if (GR_RUNTIME_IMPL_DEBUG)
+      std::cout << "stop: stopping thread " << (*p) << std::endl;
+    (*p)->stop();
+  }
 
   d_running = false;
 }
@@ -95,30 +124,48 @@ gr_runtime_impl::stop()
 void
 gr_runtime_impl::wait()
 {
+  if (GR_RUNTIME_IMPL_DEBUG)
+    std::cout << "wait: entered" << std::endl;
+
   void *dummy_status; // don't ever dereference this
+  gr_local_sighandler sigint(SIGINT, runtime_sigint_handler);
 
   for (gr_scheduler_thread_viter_t p = d_threads.begin(); p != d_threads.end(); p++) {
+    if (GR_RUNTIME_IMPL_DEBUG)
+      std::cout << "wait: joining thread " << (*p) << std::endl;
     (*p)->join(&dummy_status); // pthreads will self-delete, so pointer is now dead
     (*p) = 0; // FIXME: switch to stl::list and actually remove from container
+    if (GR_RUNTIME_IMPL_DEBUG)
+      std::cout << "wait: join returned" << std::endl;
   }
+
+  d_threads.clear();
 }
 
 void
 gr_runtime_impl::restart()
 {
+  if (GR_RUNTIME_IMPL_DEBUG)
+    std::cout << "restart: entered" << std::endl;
+
   if (!d_running)
     throw std::runtime_error("not running");
 
   // Stop scheduler threads and wait for completion
   stop();
   wait();
-  
+  if (GR_RUNTIME_IMPL_DEBUG)
+    std::cout << "restart: threads stopped" << std::endl;
+
   // Create new simple flow graph 
   gr_simple_flowgraph_sptr new_sfg = gr_make_simple_flowgraph();
   d_top_block->d_detail->flatten(new_sfg);
   new_sfg->validate();
   new_sfg->d_detail->merge_connections(d_sfg);
-  // d_sfg = new_sfg;
+
+  if (GR_RUNTIME_IMPL_DEBUG)
+    std::cout << "restart: replacing old flow graph with new" << std::endl;
+  d_sfg = new_sfg;
 
   start_threads();
 }
@@ -161,3 +208,4 @@ gr_scheduler_thread::stop()
 {
   d_sts->stop();
 }
+

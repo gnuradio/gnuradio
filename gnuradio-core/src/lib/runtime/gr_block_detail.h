@@ -55,6 +55,14 @@ class gr_block_detail {
     return d_input[which];
   }
 
+  void clear_input (unsigned int which)
+  {
+    if (which >= d_ninputs)
+      throw std::invalid_argument ("gr_block_detail::input");
+    if (d_input[which])
+      d_input[which].reset();
+  }
+
   void set_output (unsigned int which, gr_buffer_sptr buffer);
   gr_buffer_sptr output (unsigned int which)
   {

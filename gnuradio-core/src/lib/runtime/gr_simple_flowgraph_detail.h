@@ -79,9 +79,13 @@ private:
   void setup_connections();
   void merge_connections(gr_simple_flowgraph_sptr sfg);
 
+  void connect_block_inputs(gr_basic_block_sptr block);
+  gr_block_detail_sptr allocate_block_detail(gr_basic_block_sptr block, 
+					     gr_block_detail_sptr old_detail=gr_block_detail_sptr());
   gr_buffer_sptr allocate_buffer(gr_basic_block_sptr block, int port);
   gr_basic_block_vector_t calc_downstream_blocks(gr_basic_block_sptr block, int port);
   gr_basic_block_vector_t calc_downstream_blocks(gr_basic_block_sptr block);
+  gr_edge_sptr calc_upstream_edge(gr_basic_block_sptr block, int port);
   gr_edge_vector_t calc_upstream_edges(gr_basic_block_sptr block);
   gr_basic_block_vector_t calc_used_blocks();
   std::vector<gr_block_vector_t> partition();
@@ -92,7 +96,8 @@ private:
   bool source_p(gr_basic_block_sptr block);
   gr_basic_block_vector_t sort_sources_first(gr_basic_block_vector_t &blocks);
   void topological_dfs_visit(gr_basic_block_sptr block, gr_block_vector_t &output);
-        
+  bool has_block_p(gr_basic_block_sptr block);
+
 public:
   ~gr_simple_flowgraph_detail();
 };
@@ -100,7 +105,7 @@ public:
 inline std::ostream&
 operator <<(std::ostream &os, const gr_endpoint endp)
 {
-  os << endp.block()->name() << ":" << endp.port();
+  os << endp.block() << ":" << endp.port();
   return os;
 }
 

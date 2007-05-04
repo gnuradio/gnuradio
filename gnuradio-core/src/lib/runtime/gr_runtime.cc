@@ -26,10 +26,7 @@
 
 #include <gr_runtime.h>
 #include <gr_runtime_impl.h>
-#include <gr_local_sighandler.h>
 #include <iostream>
-
-static gr_runtime *s_runtime = 0;
 
 gr_runtime_sptr 
 gr_make_runtime(gr_hier_block2_sptr top_block)
@@ -40,28 +37,16 @@ gr_make_runtime(gr_hier_block2_sptr top_block)
 gr_runtime::gr_runtime(gr_hier_block2_sptr top_block)
 {
   d_impl = new gr_runtime_impl(top_block);
-  s_runtime = this;
 }
   
 gr_runtime::~gr_runtime()
 {
-  s_runtime = 0; // we don't own this
   delete d_impl;
-}
-
-// FIXME: This prevents using more than one gr_runtime instance
-static void 
-runtime_sigint_handler(int signum)
-{
-  if (s_runtime)
-    s_runtime->stop();
 }
 
 void 
 gr_runtime::start()
 {
-  gr_local_sighandler sigint(SIGINT, runtime_sigint_handler);
-
   d_impl->start();
 }
 
@@ -74,24 +59,18 @@ gr_runtime::stop()
 void 
 gr_runtime::wait()
 {
-  gr_local_sighandler sigint(SIGINT, runtime_sigint_handler);
-
   d_impl->wait();
 }
 
 void 
 gr_runtime::run()
 {
-  gr_local_sighandler sigint(SIGINT, runtime_sigint_handler);
-
-  d_impl->start();
-  d_impl->wait();
+  start();
+  wait();
 }
 
 void
 gr_runtime::restart()
 {
-  gr_local_sighandler sigint(SIGINT, runtime_sigint_handler);
-
   d_impl->restart();
 }

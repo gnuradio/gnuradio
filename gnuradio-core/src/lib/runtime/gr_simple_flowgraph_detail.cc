@@ -31,6 +31,9 @@
 #include <gr_buffer.h>
 #include <iostream>
 #include <stdexcept>
+#include <map>
+
+#define GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG 1
 
 gr_edge_sptr
 gr_make_edge(const gr_endpoint &src, const gr_endpoint &dst)
@@ -115,6 +118,9 @@ gr_simple_flowgraph_detail::validate()
     std::vector<int> used_ports;
     int ninputs, noutputs;
 
+    if (GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG)
+      std::cout << "Validating block: " << (*p) << std::endl;
+
     used_ports = calc_used_ports(*p, true); // inputs
     ninputs = used_ports.size();
     check_contiguity(*p, used_ports, true); // inputs
@@ -190,76 +196,6 @@ gr_simple_flowgraph_detail::check_contiguity(gr_basic_block_sptr block,
       if (used_ports[i] != i)
 	throw std::runtime_error("missing input assignment");
   }
-}
-
-void
-gr_simple_flowgraph_detail::setup_connections()
-{
-  // Assign block details to blocks
-  for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
-    int ninputs = calc_used_ports(*p, true).size();
-    int noutputs = calc_used_ports(*p, false).size();
-    gr_block_detail_sptr detail = gr_make_block_detail(ninputs, noutputs);
-    for (int i = 0; i < noutputs; i++)
-      detail->set_output(i, allocate_buffer(*p, i));
-
-    boost::dynamic_pointer_cast<gr_block, gr_basic_block>(*p)->set_detail(detail);
-  }
-
-  // Connect inputs to outputs for each block
-  for(gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
-    gr_block_sptr grblock(boost::dynamic_pointer_cast<gr_block, gr_basic_block>(*p));
-    if (!grblock)
-      throw std::runtime_error("setup_connections found non-gr_block");
-
-    // Get its detail and edges that feed into it
-    gr_block_detail_sptr detail = grblock->detail();
-    gr_edge_vector_t in_edges = calc_upstream_edges(*p);
-
-    // For each edge that feeds into it
-    for (gr_edge_viter_t e = in_edges.begin(); e != in_edges.end(); e++) {
-      // Set the input reader on the destination port to the output
-      // buffer on the source port
-      int dst_port = (*e)->dst().port();
-      int src_port = (*e)->src().port();
-      gr_basic_block_sptr src_block = (*e)->src().block();
-      gr_block_sptr src_grblock(boost::dynamic_pointer_cast<gr_block, gr_basic_block>(src_block));
-      if (!grblock)
-	throw std::runtime_error("setup_connections found non-gr_block");
-      gr_buffer_sptr src_buffer = src_grblock->detail()->output(src_port);
-
-      detail->set_input(dst_port, gr_buffer_add_reader(src_buffer, grblock->history()-1));
-    }
-  }
-}
-
-gr_buffer_sptr
-gr_simple_flowgraph_detail::allocate_buffer(gr_basic_block_sptr block, int port)
-{
-  gr_block_sptr grblock(boost::dynamic_pointer_cast<gr_block, gr_basic_block>(block));
-  if (!grblock)
-    throw std::runtime_error("allocate_buffer found non-gr_block");
-  int item_size = block->output_signature()->sizeof_stream_item(port);
-  int nitems = s_fixed_buffer_size/item_size;
-
-  // Make sure there are at least twice the output_multiple no. of items
-  if (nitems < 2*grblock->output_multiple())	// Note: this means output_multiple()
-    nitems = 2*grblock->output_multiple();	// can't be changed by block dynamically
-
-  // If any downstream blocks are decimators and/or have a large output_multiple,
-  // ensure we have a buffer at least twice their decimation factor*output_multiple
-  gr_basic_block_vector_t blocks = calc_downstream_blocks(block, port);
-  for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
-    gr_block_sptr dgrblock(boost::dynamic_pointer_cast<gr_block, gr_basic_block>(*p));
-      if (!dgrblock)
-	throw std::runtime_error("allocate_buffer found non-gr_block");
-    int decimation = (int)(1.0/dgrblock->relative_rate());
-    int multiple   = dgrblock->output_multiple();
-    int history    = dgrblock->history();
-    nitems = std::max(nitems, 2*(decimation*multiple+history));
-  }
-
-  return gr_make_buffer(nitems, item_size);
 }
 
 gr_basic_block_vector_t
@@ -476,8 +412,198 @@ gr_simple_flowgraph_detail::topological_dfs_visit(gr_basic_block_sptr block, gr_
   output.push_back(result_block);
 }
 
-void
-gr_simple_flowgraph_detail::merge_connections(gr_simple_flowgraph_sptr sfg)
+bool
+gr_simple_flowgraph_detail::has_block_p(gr_basic_block_sptr block)
 {
-    // NOT IMPLEMENTED
+  gr_basic_block_viter_t result;
+  result = std::find(d_blocks.begin(), d_blocks.end(), block);
+  return (result != d_blocks.end());
+}
+
+gr_edge_sptr
+gr_simple_flowgraph_detail::calc_upstream_edge(gr_basic_block_sptr block, int port)
+{
+  gr_edge_sptr result;
+
+  for (gr_edge_viter_t p = d_edges.begin(); p != d_edges.end(); p++) {
+    if ((*p)->dst().block() == block && (*p)->dst().port() == port) {
+      result = (*p);
+      break;
+    }
+  }
+
+  return result;
+}
+
+gr_block_detail_sptr
+gr_simple_flowgraph_detail::allocate_block_detail(gr_basic_block_sptr block, gr_block_detail_sptr old_detail)
+{
+  int ninputs = calc_used_ports(block, true).size();
+  int noutputs = calc_used_ports(block, false).size();
+  gr_block_detail_sptr detail = gr_make_block_detail(ninputs, noutputs);
+
+  if (GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG)
+    std::cout << "Creating block detail for " << block << std::endl;
+
+  // Re-use or allocate output buffers
+  for (int i = 0; i < noutputs; i++) {
+    gr_buffer_sptr buffer;
+
+    if (!old_detail || i >= old_detail->noutputs()) {
+      if (GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG)
+	std::cout << "Allocating new buffer for output " << i << std::endl;
+      buffer = allocate_buffer(block, i);
+    }
+    else {
+      if (GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG)
+	std::cout << "Reusing old buffer for output " << i << std::endl;
+      buffer = old_detail->output(i);
+    }
+
+    detail->set_output(i, buffer);
+  }
+
+  return detail;
+}
+
+void
+gr_simple_flowgraph_detail::connect_block_inputs(gr_basic_block_sptr block)
+{
+  gr_block_sptr grblock(boost::dynamic_pointer_cast<gr_block, gr_basic_block>(block));
+  if (!grblock)
+    throw std::runtime_error("found non-gr_block");
+  
+  // Get its detail and edges that feed into it
+  gr_block_detail_sptr detail = grblock->detail();
+  gr_edge_vector_t in_edges = calc_upstream_edges(block);
+  
+  // For each edge that feeds into it
+  for (gr_edge_viter_t e = in_edges.begin(); e != in_edges.end(); e++) {
+    // Set the buffer reader on the destination port to the output
+    // buffer on the source port
+    int dst_port = (*e)->dst().port();
+    int src_port = (*e)->src().port();
+    gr_basic_block_sptr src_block = (*e)->src().block();
+    gr_block_sptr src_grblock(boost::dynamic_pointer_cast<gr_block, gr_basic_block>(src_block));
+    if (!grblock)
+      throw std::runtime_error("found non-gr_block");
+    gr_buffer_sptr src_buffer = src_grblock->detail()->output(src_port);
+    
+    if (GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG)
+      std::cout << "Setting input " << dst_port << " from edge " << (*e) << std::endl;
+
+    detail->set_input(dst_port, gr_buffer_add_reader(src_buffer, grblock->history()-1));
+  }
+}
+
+gr_buffer_sptr
+gr_simple_flowgraph_detail::allocate_buffer(gr_basic_block_sptr block, int port)
+{
+  gr_block_sptr grblock(boost::dynamic_pointer_cast<gr_block, gr_basic_block>(block));
+  if (!grblock)
+    throw std::runtime_error("allocate_buffer found non-gr_block");
+  int item_size = block->output_signature()->sizeof_stream_item(port);
+  int nitems = s_fixed_buffer_size/item_size;
+
+  // Make sure there are at least twice the output_multiple no. of items
+  if (nitems < 2*grblock->output_multiple())	// Note: this means output_multiple()
+    nitems = 2*grblock->output_multiple();	// can't be changed by block dynamically
+
+  // If any downstream blocks are decimators and/or have a large output_multiple,
+  // ensure we have a buffer at least twice their decimation factor*output_multiple
+  gr_basic_block_vector_t blocks = calc_downstream_blocks(block, port);
+  for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
+    gr_block_sptr dgrblock(boost::dynamic_pointer_cast<gr_block, gr_basic_block>(*p));
+      if (!dgrblock)
+	throw std::runtime_error("allocate_buffer found non-gr_block");
+    int decimation = (int)(1.0/dgrblock->relative_rate());
+    int multiple   = dgrblock->output_multiple();
+    int history    = dgrblock->history();
+    nitems = std::max(nitems, 2*(decimation*multiple+history));
+  }
+
+  return gr_make_buffer(nitems, item_size);
+}
+
+void
+gr_simple_flowgraph_detail::setup_connections()
+{
+  // Assign block details to blocks
+  for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++)
+    boost::dynamic_pointer_cast<gr_block, gr_basic_block>(*p)->set_detail(allocate_block_detail(*p));
+
+  // Connect inputs to outputs for each block
+  for(gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++)
+    connect_block_inputs(*p);
+}
+
+void
+gr_simple_flowgraph_detail::merge_connections(gr_simple_flowgraph_sptr old_sfg)
+{
+  std::map<gr_block_sptr, gr_block_detail_sptr> old_details;
+
+  // Allocate or reuse output buffers
+  for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
+    gr_block_sptr block(boost::dynamic_pointer_cast<gr_block, gr_basic_block>(*p));
+
+    gr_block_detail_sptr old_detail = block->detail();
+    block->set_detail(allocate_block_detail(block, old_detail));
+
+    // Save old detail for use in next step
+    old_details[block] = old_detail;
+  }
+
+  for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
+    gr_block_sptr block(boost::dynamic_pointer_cast<gr_block, gr_basic_block>(*p));
+
+    if (GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG)
+      std::cout << "merge: testing " << (*p) << "...";
+    
+    if (old_sfg->d_detail->has_block_p(*p)) {
+      // Block exists in old flow graph
+      if (GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG)
+	std::cout << "used in old flow graph" << std::endl;
+      gr_block_detail_sptr detail = block->detail();
+
+      // Iterate through the inputs and see what needs to be done
+      for (int i = 0; i < detail->ninputs(); i++) {
+	if (GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG)
+	  std::cout << "Checking input " << i << "...";
+
+	gr_edge_sptr edge = calc_upstream_edge(*p, i);
+	if (!edge)
+	  throw std::runtime_error("merge: missing input edge");
+
+	// Fish out old buffer reader and see if it matches correct buffer from edge list
+	gr_block_sptr src_block(boost::dynamic_pointer_cast<gr_block, gr_basic_block>(edge->src().block()));
+	gr_block_detail_sptr src_detail = src_block->detail();
+	gr_buffer_sptr src_buffer = src_detail->output(edge->src().port());
+	gr_buffer_reader_sptr old_reader;
+	gr_block_detail_sptr old_detail = old_details[block];
+	if (old_detail && i < old_detail->ninputs())
+	  old_reader = old_detail->input(i);
+	
+	// If there's a match, use it
+	if (old_reader && (src_buffer == old_reader->buffer())) {
+	  if (GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG)
+	    std::cout << "matched" << std::endl;
+	  detail->set_input(i, old_reader);
+
+	}
+	else {
+	  if (GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG)
+	    std::cout << "needs a new reader" << std::endl;
+
+	  // Create new buffer reader and assign
+	  detail->set_input(i, gr_buffer_add_reader(src_buffer, block->history()-1));
+	}
+      }
+    }
+    else {
+      // Block is new, it just needs buffer readers at this point
+      if (GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG)
+	std::cout << "new block" << std::endl;
+      connect_block_inputs(block);
+    }
+  }  
 }
