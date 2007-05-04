@@ -55,7 +55,7 @@ gr_hier_block2_detail::connect(gr_basic_block_sptr src, int src_port,
   if (src.get() == dst.get())
     throw std::invalid_argument("src and destination blocks cannot be the same");
 
-  // Connectments to block inputs or outputs
+  // Connections to block inputs or outputs
   int max_port;
   if (src.get() == d_owner) {
     max_port = src->input_signature()->max_streams();
