@@ -29,6 +29,8 @@
 #include <gr_hier_block2_detail.h>
 #include <iostream>
 
+#define GR_HIER_BLOCK2_DEBUG 1
+
 gr_hier_block2_sptr gr_make_hier_block2(const std::string &name, 
                                         gr_io_signature_sptr input_signature,
                                         gr_io_signature_sptr output_signature)
@@ -61,4 +63,24 @@ gr_hier_block2::disconnect(gr_basic_block_sptr src, int src_port,
                            gr_basic_block_sptr dst, int dst_port)
 {
     d_detail->disconnect(src, src_port, dst, dst_port);
+}
+
+void
+gr_hier_block2::set_runtime(gr_runtime *runtime)
+{
+    if (GR_HIER_BLOCK2_DEBUG)
+      std::cout << "Setting runtime on " << this << " to " << runtime << std::endl;
+    d_detail->set_runtime(runtime);
+}
+
+void
+gr_hier_block2::lock()
+{
+    d_detail->lock();
+}
+
+void
+gr_hier_block2::unlock()
+{
+    d_detail->unlock();
 }

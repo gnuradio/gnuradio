@@ -80,6 +80,26 @@ public:
    * recreates new threads (possibly a different number from before.)
    */
   void restart();
+
+  /*!
+   * Lock a flow graph in preparation for reconfiguration.  When an equal
+   * number of calls to lock() and unlock() have occurred, the flow graph
+   * will be restarted automatically.
+   *
+   * N.B. lock() and unlock() cannot be called from a flow graph thread or
+   * deadlock will occur when reconfiguration happens.
+   */
+  void lock();
+
+  /*!
+   * Lock a flow graph in preparation for reconfiguration.  When an equal
+   * number of calls to lock() and unlock() have occurred, the flow graph
+   * will be restarted automatically.
+   *
+   * N.B. lock() and unlock() cannot be called from a flow graph thread or
+   * deadlock will occur when reconfiguration happens.
+   */
+  void unlock();
 };
 
 #endif /* INCLUDED_GR_RUNTIME_H */

@@ -26,6 +26,7 @@
 #include <gr_hier_block2_detail.h>
 #include <gr_simple_flowgraph.h>
 #include <gr_io_signature.h>
+#include <gr_runtime.h>
 #include <stdexcept>
 #include <iostream>
 
@@ -33,9 +34,11 @@
 
 gr_hier_block2_detail::gr_hier_block2_detail(gr_hier_block2 *owner) :
   d_owner(owner), 
+  d_parent_detail(0),
   d_fg(gr_make_simple_flowgraph()),
   d_inputs(owner->input_signature()->max_streams()),
-  d_outputs(owner->output_signature()->max_streams())
+  d_outputs(owner->output_signature()->max_streams()),
+  d_runtime()
 {
 }
 
@@ -54,6 +57,21 @@ gr_hier_block2_detail::connect(gr_basic_block_sptr src, int src_port,
 
   if (src.get() == dst.get())
     throw std::invalid_argument("src and destination blocks cannot be the same");
+
+  gr_hier_block2_sptr src_block(boost::dynamic_pointer_cast<gr_hier_block2, gr_basic_block>(src));
+  gr_hier_block2_sptr dst_block(boost::dynamic_pointer_cast<gr_hier_block2, gr_basic_block>(dst));
+
+  if (src_block && src.get() != d_owner) {
+    if (GR_HIER_BLOCK2_DETAIL_DEBUG)
+      std::cout << "connect: src is hierarchical, setting parent to " << this << std::endl;
+    src_block->d_detail->d_parent_detail = this;
+  }
+		
+  if (dst_block && dst.get() != d_owner) {
+    if (GR_HIER_BLOCK2_DETAIL_DEBUG)
+      std::cout << "connect: dst is hierarchical, setting parent to " << this << std::endl;
+    dst_block->d_detail->d_parent_detail = this;
+  }
 
   // Connections to block inputs or outputs
   int max_port;
@@ -87,6 +105,21 @@ gr_hier_block2_detail::disconnect(gr_basic_block_sptr src, int src_port,
 
   if (src.get() == dst.get())
     throw std::invalid_argument("src and destination blocks cannot be the same");
+
+  gr_hier_block2_sptr src_block(boost::dynamic_pointer_cast<gr_hier_block2, gr_basic_block>(src));
+  gr_hier_block2_sptr dst_block(boost::dynamic_pointer_cast<gr_hier_block2, gr_basic_block>(dst));
+
+  if (src_block && src.get() != d_owner) {
+    if (GR_HIER_BLOCK2_DETAIL_DEBUG)
+      std::cout << "connect: src is hierarchical, clearing parent" << std::endl;
+    src_block->d_detail->d_parent_detail = 0;
+  }
+		
+  if (dst_block && dst.get() != d_owner) {
+    if (GR_HIER_BLOCK2_DETAIL_DEBUG)
+      std::cout << "connect: dst is hierarchical, clearing parent" << std::endl;
+    dst_block->d_detail->d_parent_detail = 0;
+  }
 
   if (src.get() == d_owner)
     return disconnect_input(src_port, dst_port, dst);
@@ -218,4 +251,30 @@ gr_hier_block2_detail::flatten(gr_simple_flowgraph_sptr sfg)
     if (hier_block2)
       hier_block2->d_detail->flatten(sfg);
   }
+}
+
+void
+gr_hier_block2_detail::lock()
+{
+  if (GR_HIER_BLOCK2_DETAIL_DEBUG)
+    std::cout << "lock: entered in " << this << std::endl;
+
+  if (d_parent_detail)
+    d_parent_detail->lock();
+  else
+    if (d_runtime)
+      d_runtime->lock();
+}
+
+void
+gr_hier_block2_detail::unlock()
+{
+  if (GR_HIER_BLOCK2_DETAIL_DEBUG)
+    std::cout << "unlock: entered in " << this << std::endl;
+
+  if (d_parent_detail)
+    d_parent_detail->unlock();
+  else
+    if (d_runtime)
+      d_runtime->unlock();
 }

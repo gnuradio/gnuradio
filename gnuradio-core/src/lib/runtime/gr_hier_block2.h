@@ -50,7 +50,10 @@ private:
      * \brief Private implementation details of gr_hier_block2
      */
     gr_hier_block2_detail *d_detail;
-    
+
+    /* Internal use only */
+    void set_runtime(gr_runtime *runtime);
+
 protected: 
     gr_hier_block2(const std::string &name,
                    gr_io_signature_sptr input_signature,
@@ -63,6 +66,8 @@ public:
                  gr_basic_block_sptr dst, int dst_port);
     void disconnect(gr_basic_block_sptr src, int src_port,
 	            gr_basic_block_sptr dst, int dst_port);
+    void lock();
+    void unlock();
 };
 
 #endif /* INCLUDED_GR_HIER_BLOCK2_H */

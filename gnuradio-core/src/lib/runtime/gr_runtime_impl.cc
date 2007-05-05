@@ -53,17 +53,20 @@ runtime_sigint_handler(int signum)
     s_runtime->stop();
 }
 
-gr_runtime_impl::gr_runtime_impl(gr_hier_block2_sptr top_block) 
+gr_runtime_impl::gr_runtime_impl(gr_hier_block2_sptr top_block, gr_runtime *owner) 
   : d_running(false),
     d_top_block(top_block),
-    d_sfg(gr_make_simple_flowgraph())
+    d_sfg(gr_make_simple_flowgraph()),
+    d_owner(owner)
 {
   s_runtime = this;
+  top_block->set_runtime(d_owner);
 }
 
 gr_runtime_impl::~gr_runtime_impl()
 {
-  s_runtime = 0; // we don't own this
+  s_runtime = 0; // don't call delete we don't own these
+  d_owner = 0;
 }
 
 void
@@ -142,6 +145,33 @@ gr_runtime_impl::wait()
   d_threads.clear();
 }
 
+
+// N.B. lock() and unlock() cannot be called from a flow graph thread or
+// deadlock will occur when reconfiguration happens
+void
+gr_runtime_impl::lock()
+{
+  omni_mutex_lock lock(d_reconf);
+  d_lock_count++;
+  if (GR_RUNTIME_IMPL_DEBUG)
+    std::cout << "runtime: locked, count = " << d_lock_count <<  std::endl;
+}
+
+void
+gr_runtime_impl::unlock()
+{
+  omni_mutex_lock lock(d_reconf);
+  if (d_lock_count == 0)
+    throw std::runtime_error("unpaired unlock() call");
+
+  d_lock_count--;
+  if (GR_RUNTIME_IMPL_DEBUG)
+    std::cout << "runtime: unlocked, count = " << d_lock_count << std::endl;
+
+  if (d_lock_count == 0)
+    restart();
+}
+
 void
 gr_runtime_impl::restart()
 {
@@ -208,4 +238,3 @@ gr_scheduler_thread::stop()
 {
   d_sts->stop();
 }
-

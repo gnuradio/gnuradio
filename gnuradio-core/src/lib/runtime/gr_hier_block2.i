@@ -50,4 +50,6 @@ public:
     void disconnect(gr_basic_block_sptr src, int src_port,
                     gr_basic_block_sptr dst, int dst_port)
         throw (std::invalid_argument);
+    void lock();
+    void unlock();
 };

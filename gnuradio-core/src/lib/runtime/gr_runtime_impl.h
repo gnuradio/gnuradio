@@ -66,7 +66,7 @@ public:
 class gr_runtime_impl
 {
 private:
-  gr_runtime_impl(gr_hier_block2_sptr top_block);
+  gr_runtime_impl(gr_hier_block2_sptr top_block, gr_runtime *owner);
   friend void runtime_sigint_handler(int signum);
   friend class gr_runtime;
     
@@ -75,12 +75,17 @@ private:
   gr_simple_flowgraph_sptr       d_sfg;
   std::vector<gr_block_vector_t> d_graphs;
   gr_scheduler_thread_vector_t   d_threads;
-            
+  gr_runtime                    *d_owner;
+  int                            d_lock_count;
+  omni_mutex                     d_reconf;
+
   void start();
   void start_threads();
   void stop();
   void wait();
   void restart();
+  void lock();
+  void unlock();
 
 public:
   ~gr_runtime_impl();

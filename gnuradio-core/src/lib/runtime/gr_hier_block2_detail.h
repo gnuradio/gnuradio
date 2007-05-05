@@ -36,10 +36,12 @@ private:
 
     // Private implementation data
     gr_hier_block2 *d_owner;
+    gr_hier_block2_detail *d_parent_detail;
     gr_simple_flowgraph_sptr d_fg;
     gr_endpoint_vector_t d_inputs;
     gr_endpoint_vector_t d_outputs;
-        
+    gr_runtime *d_runtime;
+
     // Private implementation methods
     void connect(gr_basic_block_sptr src, int src_port, 
                  gr_basic_block_sptr dst, int dst_port);
@@ -52,6 +54,9 @@ private:
     void flatten(gr_simple_flowgraph_sptr sfg);
     gr_endpoint resolve_port(int port, bool is_input);
     gr_endpoint resolve_endpoint(const gr_endpoint &endp, bool is_input);
+    void set_runtime(gr_runtime *runtime) { d_runtime = runtime; }
+    void lock();
+    void unlock();
 
 public:
     ~gr_hier_block2_detail();

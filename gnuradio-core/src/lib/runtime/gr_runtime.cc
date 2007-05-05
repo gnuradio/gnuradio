@@ -36,7 +36,7 @@ gr_make_runtime(gr_hier_block2_sptr top_block)
 
 gr_runtime::gr_runtime(gr_hier_block2_sptr top_block)
 {
-  d_impl = new gr_runtime_impl(top_block);
+  d_impl = new gr_runtime_impl(top_block, this);
 }
   
 gr_runtime::~gr_runtime()
@@ -74,3 +74,16 @@ gr_runtime::restart()
 {
   d_impl->restart();
 }
+
+void
+gr_runtime::lock()
+{
+  d_impl->lock();
+}
+
+void
+gr_runtime::unlock()
+{
+  d_impl->unlock();
+}
+
