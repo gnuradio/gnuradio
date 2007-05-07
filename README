@@ -192,17 +192,22 @@ This includes a C compiler and linker for the 8051.  It's required to
 build the firmware for the USRP.  If you don't have a USRP, don't
 worry about it.
 
+(10) Guile 1.6 or 1.8 
+
+Scheme interpreter.  http://www.gnu.org/software/guile/guile.html
+
+
 
 Optional, but nice to have:
 
-(10) wxPython.  Python binding for the wxWidgets GUI framework.  Use
+(11) wxPython.  Python binding for the wxWidgets GUI framework.  Use
 version 2.5.2.7 or later.  Again, almost all systems have this
 available.
 
 As a last resort, build it from source (not recommended!)
 http://www.wxpython.org
 
-(11) xmlto version ? or later.   http://cyberelk.net/tim/xmlto/index.html
+(12) xmlto version ? or later.   http://cyberelk.net/tim/xmlto/index.html
 
 Wrapper for XML conversion tools to ease e.g. making html from docbook.
 
