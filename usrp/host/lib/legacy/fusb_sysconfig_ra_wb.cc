@@ -41,6 +41,11 @@ int fusb_sysconfig::max_block_size ()
   return MAX_BLOCK_SIZE;
 }
 
+int fusb_sysconfig::default_block_size ()
+{
+  return fusb_sysconfig::max_block_size ();
+}
+
 int fusb_sysconfig::default_buffer_size ()
 {
   return FUSB_BUFFER_SIZE;

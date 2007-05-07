@@ -119,12 +119,17 @@ public:
   static fusb_devhandle *make_devhandle (usb_dev_handle *udh);
 
   /*!
-   * \brief returns max block size hard limit
+   * \brief Returns max block size in bytes (hard limit).
    */
   static int max_block_size ();
 
   /*!
-   * \brief returns the default buffer size
+   * \brief Returns default block size in bytes.
+   */
+  static int default_block_size ();
+
+  /*!
+   * \brief Returns the default buffer size in bytes.
    */
   static int default_buffer_size ();
 

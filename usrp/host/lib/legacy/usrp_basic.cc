@@ -475,7 +475,7 @@ usrp_basic_rx::usrp_basic_rx (int which_board, int fusb_block_size, int fusb_nbl
     throw std::out_of_range ("usrp_basic_rx: invalid fusb_nblocks");
   
   if (fusb_block_size == 0)
-    fusb_block_size = FUSB_BLOCK_SIZE;
+    fusb_block_size = fusb_sysconfig::default_block_size();
 
   if (fusb_nblocks == 0)
     fusb_nblocks = std::max (1, FUSB_BUFFER_SIZE / fusb_block_size);

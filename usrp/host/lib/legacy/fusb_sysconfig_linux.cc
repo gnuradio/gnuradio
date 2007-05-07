@@ -23,8 +23,9 @@
 #include <fusb.h>
 #include <fusb_linux.h>
 
-static const int MAX_BLOCK_SIZE = 16 * 1024;		// hard limit
-static const int FUSB_BUFFER_SIZE = 2 * (1L << 20);	// 2 MB (was 8 MB)
+static const int MAX_BLOCK_SIZE     =  16 * 1024;	// hard limit
+static const int DEFAULT_BLOCK_SIZE =   4 * 1024;	// fewer kernel memory problems
+static const int FUSB_BUFFER_SIZE   =   1 * (1L << 20); // 1MB
 
 fusb_devhandle *
 fusb_sysconfig::make_devhandle (usb_dev_handle *udh)
@@ -35,6 +36,11 @@ fusb_sysconfig::make_devhandle (usb_dev_handle *udh)
 int fusb_sysconfig::max_block_size ()
 {
   return MAX_BLOCK_SIZE;
+}
+
+int fusb_sysconfig::default_block_size ()
+{
+  return DEFAULT_BLOCK_SIZE;
 }
 
 int fusb_sysconfig::default_buffer_size ()
