@@ -117,6 +117,17 @@ not-yet-released or unstable version.)
 For those using pkgsrc, see gnuradio-pkg_chk.conf.  Those not using
 pkgsrc may also find the list useful.
 
+(0) GNU make
+
+It used to be required to have a "reasonable make", meaning GNU make,
+BSD make, or perhaps Solaris make.  It is now required to use GNU
+make.  Version 3.81 should certainly work; the intent is not to
+require the bleeding edge.
+
+Note that the examples below are written with "make".  They probably
+should say "gmake", as GNU make is installed as gmake when it is not
+the native make.
+
 (1) The "autotools"
 
        autoconf 2.57    or later
@@ -150,7 +161,9 @@ floating point version which we use.  You should also use either the
 respectively.
 
 [FIXME: GNU/Linux packages of single-precision fftw are typically called ??]
-In systems using pkgsrc, install math/fftwf.
+
+In systems using pkgsrc, install math/fftwf, which provides the
+single-precision libraries.
 
 
 (4) Python 2.3 or later	      http://www.python.org
