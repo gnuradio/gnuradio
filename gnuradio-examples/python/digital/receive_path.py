@@ -105,8 +105,14 @@ class receive_path(gr.hier_block):
         # Carrier Sensing Blocks
         alpha = 0.001
         thresh = 30   # in dB, will have to adjust
-        self.probe = gr.probe_avg_mag_sqrd_c(thresh,alpha)
-        fg.connect(self.chan_filt, self.probe)
+
+        if options.log_rx_power == True:
+            self.probe = gr.probe_avg_mag_sqrd_cf(thresh,alpha)
+            self.power_sink = gr.file_sink(gr.sizeof_float, "rxpower.dat")
+            fg.connect(self.chan_filt, self.probe, self.power_sink)
+        else:
+            self.probe = gr.probe_avg_mag_sqrd_c(thresh,alpha)
+            fg.connect(self.chan_filt, self.probe)
 
         # Display some information about the setup
         if self._verbose:
@@ -220,6 +226,8 @@ class receive_path(gr.hier_block):
                           help="set fpga decimation rate to DECIM [default=%default]")
         expert.add_option("", "--log", action="store_true", default=False,
                           help="Log all parts of flow graph to files (CAUTION: lots of data)")
+        expert.add_option("", "--log-rx-power", action="store_true", default=False,
+                          help="Log receive signal power to file (CAUTION: lots of data)")
 
     # Make a static method to call before instantiation
     add_options = staticmethod(add_options)
@@ -238,7 +246,7 @@ class receive_path(gr.hier_block):
         print "decim:           %3d"   % (self._decim)
         print "Rx Frequency:    %s"    % (eng_notation.num_to_str(self._rx_freq))
         # print "Rx Frequency:    %f"    % (self._rx_freq)
-
+            
 def add_freq_option(parser):
     """
     Hackery that has the -f / --freq option set both tx_freq and rx_freq

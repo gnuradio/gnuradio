@@ -113,6 +113,7 @@ libgeneral_la_SOURCES = 		\
 	gr_prefix.cc			\
 	gr_prefs.cc			\
 	gr_probe_avg_mag_sqrd_c.cc	\
+	gr_probe_avg_mag_sqrd_cf.cc	\
 	gr_probe_avg_mag_sqrd_f.cc	\
 	gr_probe_signal_f.cc		\
 	gr_pwr_squelch_cc.cc		\
@@ -250,6 +251,7 @@ grinclude_HEADERS = 			\
 	gr_prefix.h			\
 	gr_prefs.h			\
 	gr_probe_avg_mag_sqrd_c.h	\
+	gr_probe_avg_mag_sqrd_cf.h	\
 	gr_probe_avg_mag_sqrd_f.h	\
 	gr_probe_signal_f.h		\
 	gr_pwr_squelch_cc.h		\
@@ -388,6 +390,7 @@ swiginclude_HEADERS =			\
 	gr_prefix.i			\
 	gr_prefs.i			\
 	gr_probe_avg_mag_sqrd_c.i	\
+	gr_probe_avg_mag_sqrd_cf.i	\
 	gr_probe_avg_mag_sqrd_f.i	\
 	gr_probe_signal_f.i		\
 	gr_pwr_squelch_cc.i		\
