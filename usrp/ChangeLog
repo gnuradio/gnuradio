@@ -1,3 +1,8 @@
+2007-05-14  Greg Troxel  <Greg Troxel <gdt@ir.bbn.com>>
+
+	* host/lib/legacy/usrp_bytesex.h: Fix typo in portability code.
+	Add #warning that it is non-portable.
+
 2006-10-10  Greg Troxel  <gdt@ir.bbn.com>
 
 	* firmware/include/Makefile.am: avoid nonportable use of $< (first
