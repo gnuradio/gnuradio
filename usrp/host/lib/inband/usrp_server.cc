@@ -141,6 +141,7 @@ usrp_server::handle_message(mb_message_sptr msg)
       
       // Do the right thing....
       // build a reply
+      (void) which_usrp;	// avoid unused warning
 
       // if everything OK
       status = PMT_T;
