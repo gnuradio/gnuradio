@@ -36,6 +36,7 @@ grblkspython_PYTHON =		\
 	fm_demod.py		\
 	fm_emph.py		\
 	gmsk.py			\
+	cpm.py			\
 	nbfm_rx.py		\
 	nbfm_tx.py		\
 	ofdm_pkt.py		\
