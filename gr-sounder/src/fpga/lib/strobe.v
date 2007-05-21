@@ -19,27 +19,30 @@
 //  Foundation, Inc., 51 Franklin Street, Boston, MA  02110-1301  USA
 //
 
-`include "../../../../usrp/firmware/include/fpga_regs_common.v"
-`include "../../../../usrp/firmware/include/fpga_regs_standard.v"
+module strobe(clk_i,rst_i,ena_i,rate_i,strobe_i,strobe_o,count_o);
+   parameter width = 16;
 
-`define MAX_VALUE 14'h1FFF // 2s complement
-`define MIN_VALUE 14'h2001
+   input              clk_i;
+   input 	      rst_i;
+   input 	      ena_i;
+   input  [width-1:0] rate_i;	// Desired period minus one
+   input 	      strobe_i;
+   output 	      strobe_o;
+   output [width-1:0] count_o;
 
-module sounder_tx(clk_i,rst_i,ena_i,strobe_i,mask_i,tx_i_o,tx_q_o);
-   input         clk_i;
-   input         rst_i;
-   input         ena_i;
-   input         strobe_i;
-   input  [15:0] mask_i;
-   output [13:0] tx_i_o;
-   output [13:0] tx_q_o;
+   
+   reg [width-1:0] counter;
 
-   wire          pn;
+   always @(posedge clk_i)
+     if(rst_i | ~ena_i)
+       counter <= 32'hFFFFFFFF;	// First period is short by one
+     else if(strobe_i)
+       if(counter == rate_i)
+	 counter <= 0;
+       else 
+	 counter <= counter + 1;
 
-   lfsr pn_code
-     ( .clk_i(clk_i),.rst_i(rst_i),.ena_i(ena_i),.strobe_i(strobe_i),.mask_i(mask_i),.pn_o(pn) );
-
-   assign tx_i_o = ena_i ? (pn ? `MAX_VALUE : `MIN_VALUE) : 14'b0; // Bipolar
-   assign tx_q_o = 14'b0;
-
-endmodule // sounder_tx
+   assign strobe_o = (counter == rate_i) & strobe_i;
+   assign count_o = counter;
+   
+endmodule // strobe

@@ -28,67 +28,140 @@ import sys, time
 
 n2s = eng_notation.num_to_str
 
-# Set to 0 for 32 MHz tx clock, 1 for 64 MHz tx clock
-# Must match config.vh in FPGA code
-TX_RATE_MAX = 0
-_tx_freq_divisor = 32e6*(TX_RATE_MAX+1)
+FR_MODE = usrp.FR_USER_0
+bmFR_MODE_RESET = 1 << 0	# bit 0: active high reset
+bmFR_MODE_TX    = 1 << 1	# bit 1: enable transmitter
+bmFR_MODE_RX    = 1 << 2	# bit 2: enable receiver
+bmFR_MODE_LP    = 1 << 3	# bit 3: enable digital loopback
 
-class sounder_tx:
-    def __init__(self, frequency, degree, loopback):
-	self.trans = usrp.sink_s(fpga_filename='usrp_sounder.rbf')
-        self.subdev_spec = usrp.pick_tx_subdevice(self.trans)
-        self.subdev = usrp.selected_subdev(self.trans, self.subdev_spec)
-        self.trans.tune(0, self.subdev, frequency)
-        self.set_degree(degree);
-        self.set_loopback(loopback)
-            
-    def turn_on(self):
-	self.trans.start()
+FR_DEGREE = usrp.FR_USER_1
+
+class sounder:
+    def __init__(self, options):
+	self._options = options
+	self._mode = 0
 	
-    def turn_off(self):
-	self.trans.stop()
+	self._u = None
+	self._trans = None
+	self._rcvr = None
+	self._transmitting = False
+	self._receiving = False
+		
+	if options.transmit:
+	    print "Creating sounder transmitter."
+	    self._trans = usrp.sink_s(fpga_filename='usrp_sounder.rbf')
+            self._trans_subdev_spec = usrp.pick_tx_subdevice(self._trans)
+	    self._trans_subdev = usrp.selected_subdev(self._trans, self._trans_subdev_spec)
+	    self._trans.start()
+	    self._u = self._trans
+	        
+	if options.receive:
+	    print "Creating sounder receiver."
+            self._fg = gr.flow_graph()
+    	    self._rcvr = usrp.source_s(fpga_filename='usrp_sounder.rbf', decim_rate=128)
+	    self._rcvr_subdev_spec = usrp.pick_rx_subdevice(self._rcvr)
+	    self._rcvr_subdev = usrp.selected_subdev(self._rcvr, self._rcvr_subdev_spec)
+	    self._sink = gr.file_sink(gr.sizeof_short, "output.dat")
 
-    def set_degree(self, value):
-        return self.trans._write_fpga_reg(usrp.FR_USER_0, value);
+	    if options.samples >= 0:
+		self._head = gr.head(gr.sizeof_short, options.samples*gr.sizeof_short)
+		self._fg.connect(self._rcvr, self._head, self._sink)
+	    else:
+		self._fg.connect(self._rcvr, self._sink)
+	    self._u = self._rcvr # either receiver or transmitter object will do
+	
+	self.set_reset(True)
+	self.set_freq(options.frequency)
+	self.set_degree(options.degree)
+	self.set_loopback(options.loopback)	
+	self.set_reset(False)
+		
+    def set_freq(self, frequency):
+	print "Setting center frequency to", n2s(frequency)
+	if self._rcvr:
+	    self._rcvr.tune(0, self._rcvr_subdev, frequency)
+	
+	if self._trans:
+	    self._trans.tune(0, self._trans_subdev, frequency)
 
-    def set_loopback(self, value):
-        return self.trans._write_fpga_reg(usrp.FR_USER_1, value==True);
+    def set_degree(self, degree):
+	print "Setting PN code degree to", degree
+        self._u._write_fpga_reg(FR_DEGREE, degree);
+	    
+    def _write_mode(self):
+	print "Writing mode register with:", hex(self._mode)
+        self._u._write_fpga_reg(FR_MODE, self._mode)
 
-class sounder_rx:
-    def __init__(self, frequency, degree, samples):
-        self.fg = gr.flow_graph()
-	self.rcvr = usrp.source_s(fpga_filename='usrp_sounder.rbf', decim_rate=8)
-        self.subdev_spec = usrp.pick_rx_subdevice(self.rcvr)
-        self.subdev = usrp.selected_subdev(self.rcvr, self.subdev_spec)
-        self.rcvr.tune(0, self.subdev, frequency)
-        self.set_degree(degree);
-	self.sink = gr.file_sink(gr.sizeof_short, "output.dat")
-
-	if samples >= 0:
-	    self.head = gr.head(gr.sizeof_short, 2*samples*gr.sizeof_short)
-	    self.fg.connect(self.rcvr, self.head, self.sink)
+    def enable_tx(self, value):
+	if value:
+	    print "Enabling transmitter."
+	    self._mode |= bmFR_MODE_TX
+	    self._transmitting = True
 	else:
-	    self.fg.connect(self.rcvr, self.sink)
+	    print "Disabling transmitter."
+	    self._mode &= ~bmFR_MODE_TX
+	self._write_mode()
+		    
+    def enable_rx(self, value):
+	if value:
+	    print "Starting receiver flow graph."
+	    self._mode |= bmFR_MODE_RX
+	    self._write_mode()
+	    self._fg.start()
+	    self._receiving = True
+	    if self._options.samples >= 0:
+		self._fg.wait()
+	else:
+	    print "Stopping receiver flow graph."
+	    if self._options.samples < 0:
+		self._fg.stop()
+		print "Waiting for threads..."
+		self._fg.wait()
+		print "Receiver flow graph stopped."
+	    self._mode &= ~bmFR_MODE_RX
+	    self._write_mode()
+	    self._receiving = False
+	        
+    def set_loopback(self, value):
+	if value:
+	    print "Enabling digital loopback."
+	    self._mode |= bmFR_MODE_LP
+	else:
+	    print "Disabling digital loopback."
+	    self._mode &= ~bmFR_MODE_LP
+	self._write_mode()
 
-    def receive(self):
-	self.fg.run()
-	
-    def set_degree(self, value):
-        return self.rcvr._write_fpga_reg(usrp.FR_USER_0, value);
+    def set_reset(self, value):
+	if value:
+	    print "Asserting reset."
+	    self._mode |= bmFR_MODE_RESET
+	else:
+	    print "De-asserting reset."
+	    self._mode &= ~bmFR_MODE_RESET
+	self._write_mode()
 
+    def __del__(self):
+	if self._transmitting:
+	    self.enable_tx(False)
+	    
+	if self._receiving:
+	    self.enable_rx(False)
+	    
+# ------------------------------------------------------------------------------
+    
 def main():
     parser = OptionParser(option_class=eng_option)
     parser.add_option("-f", "--frequency", type="eng_float", default=0.0,
                       help="set frequency to FREQ in Hz, default is %default", metavar="FREQ")
+
+    parser.add_option("-d", "--degree", type="int", default=16,
+                      help="set souding sequence degree (len=2^degree-1), default is %default")
 
     parser.add_option("-t", "--transmit", action="store_true", default=False,
                       help="enable sounding transmitter")
 
     parser.add_option("-r", "--receive", action="store_true", default=False,
                       help="enable sounding receiver")
-
-    parser.add_option("-d", "--degree", type="int", default=16,
-                      help="set souding sequence degree (len=2^degree-1), default is %default")
 
     parser.add_option("-n", "--samples", type="int", default=-1,
                       help="number of samples to capture on receive, default is infinite")
@@ -105,26 +178,16 @@ def main():
     print "Using PN code degree of", options.degree, "length", 2**options.degree-1
     print "Sounding frequency range is", n2s(options.frequency-16e6), "to", n2s(options.frequency+16e6)
     
-    if (options.transmit):
-	print "Enabling sounder transmitter."
-	if (options.loopback):
-	    print "Enabling digital loopback."
-        tx = sounder_tx(options.frequency, options.degree, options.loopback)
-	tx.turn_on()
-	
-    try:
-        if (options.receive):
-    	    print "Enabling sounder receiver."
-	    rx = sounder_rx(options.frequency, options.degree, options.samples)
-	    rx.receive()
-	else:
-	    if (options.transmit):
-		while (True): time.sleep(1.0)
+    s = sounder(options)
 
-    except KeyboardInterrupt:
-	if (options.transmit):
-	    tx.turn_off()
+    if options.transmit:
+	s.enable_tx(True)
 
+    if options.receive:
+	s.enable_rx(True)
+
+    if options.samples < 0:
+        raw_input("Press enter to exit.")
 	
 if __name__ == "__main__":
     main()

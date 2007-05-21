@@ -24,8 +24,8 @@ module lfsr_constants(degree_i,mask_o,len_o);
    output reg  [15:0] mask_o;
    output wire [15:0] len_o;
    
-   assign len_o = (16'b1 << degree_i) - 1;
-
+   assign len_o = (1 << degree_i) - 1;
+   
    always @*
      case (degree_i)
        5'd00: mask_o = 16'h0000;

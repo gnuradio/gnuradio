@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,24 +21,10 @@
 
 include $(top_srcdir)/Makefile.common
 
-datadir = $(prefix)/share/usrp
-
-rbfs = 				\
-	rev2/usrp_sounder.rbf	\
-	rev4/usrp_sounder.rbf
-
 EXTRA_DIST = \
-	$(rbfs)
+	sounder_tb.v \
+	sounder_tb.sav \
+	sounder_tb.sh \
+	sounder_tb_wave.sh
 
-
-install-data-local:
-	@for file in $(rbfs); do \
-		echo "$(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(datadir)/$$file"; \
-		$(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(datadir)/$$file; \
-	done
-
-uninstall-local:
-	@for file in $(rbfs); do \
-		echo "$(RM) $(DESTDIR)$(datadir)/$$file"; \
-		$(RM) $(DESTDIR)$(datadir)/$$file; \
-	done
+MOSTLYCLEANFILES = *~ *.vcd *.out* sounder_tb

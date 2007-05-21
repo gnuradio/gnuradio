@@ -27,7 +27,7 @@ AC_DEFUN([GRC_GR_SOUNDER],[
 	 gr-sounder/src/fpga/Makefile \
 	 gr-sounder/src/fpga/top/Makefile \
          gr-sounder/src/fpga/lib/Makefile \
-	 gr-sounder/src/fpga/rbf/Makefile \
+	 gr-sounder/src/fpga/tb/Makefile \
 	 gr-sounder/src/lib/Makefile \
 	 gr-sounder/src/python/Makefile \
          gr-sounder/src/python/run_tests

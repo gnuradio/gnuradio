@@ -21,23 +21,43 @@
 
 include $(top_srcdir)/Makefile.common
 
+datadir = $(prefix)/share/usrp
+
 EXTRA_DIST =			\
 	config.vh		\
 	usrp_sounder.v		\
 	usrp_sounder.csf	\
 	usrp_sounder.esf	\
 	usrp_sounder.psf	\
-	usrp_sounder.qpf
+	usrp_sounder.qpf	\
+	$(RBFS)
+
+RBFS = 	usrp_sounder.rbf
+
+install-data-local:
+	@for file in $(RBFS); do \
+		echo "$(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(datadir)/rev2/$$file"; \
+		$(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(datadir)/rev2/$$file; \
+		echo "$(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(datadir)/rev4/$$file"; \
+		$(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(datadir)/rev4/$$file; \
+	done
+
+uninstall-local:
+	@for file in $(rbfs); do \
+		echo "$(RM) $(DESTDIR)$(datadir)/rev2/$$file"; \
+		$(RM) $(DESTDIR)$(datadir)/rev2/$$file; \
+		echo "$(RM) $(DESTDIR)$(datadir)/rev4/$$file"; \
+		$(RM) $(DESTDIR)$(datadir)/rev4/$$file; \
+	done
 
 MOSTLYCLEANFILES = 	\
 	db/*		\
 	*.rpt		\
 	*.summary	\
-	*.rbf		\
 	*.qws		\
 	*.smsg		\
 	*.done		\
 	*.pin		\
-	*.sof
-
+	*.sof		\
+	*~
 

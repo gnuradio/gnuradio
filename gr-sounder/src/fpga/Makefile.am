@@ -21,4 +21,4 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = top lib rbf
+SUBDIRS = top lib tb

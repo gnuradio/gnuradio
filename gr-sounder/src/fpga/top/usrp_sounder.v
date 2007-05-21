@@ -103,14 +103,14 @@ module usrp_sounder
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    // Transmit Side
    
-   wire [15:0] tx_i, tx_q;
-   wire [15:0] tx_dac;
+   wire [13:0] tx_i, tx_q;
+   wire [13:0] tx_dac;
    
    dac_interface dac(.clk_i(clk64),.rst_i(tx_dsp_reset),.ena_i(enable_tx),
 		     .strobe_i(tx_sample_strobe),.tx_i_i(tx_i),.tx_q_i(tx_q),
 		     .tx_data_o(tx_dac),.tx_sync_o(TXSYNC_A));
 
-   assign tx_a = tx_dac[15:2];
+   assign tx_a = tx_dac;
 
    // Wedge DAC #2 at zero
    assign TXSYNC_B = 1'b0;
@@ -151,10 +151,9 @@ module usrp_sounder
 
    sounder sounder
      ( .clk_i(clk64),.saddr_i(serial_addr),.sdata_i(serial_data),.s_strobe_i(serial_strobe),
-       .tx_rst_i(tx_dsp_reset),.tx_enable_i(enable_tx),.tx_strobe_i(tx_sample_strobe),
-       .tx_dac_i_o(tx_i),.tx_dac_q_o(tx_q),
-       .rx_rst_i(rx_dsp_reset),.rx_enable_i(enable_rx),.rx_strobe_i(rx_sample_strobe),.rx_strobe_o(rx_strobe),
-       .rx_adc_i_i(rx_adc0_i),.rx_adc_q_i(rx_adc0_q),.rx_imp_i_o(rx_buf_i),.rx_imp_q_o(rx_buf_q)
+       .tx_strobe_i(tx_sample_strobe),.tx_dac_i_o(tx_i),.tx_dac_q_o(tx_q),
+       .rx_strobe_i(rx_sample_strobe),.rx_adc_i_i(rx_adc0_i),.rx_adc_q_i(rx_adc0_q),
+       .rx_strobe_o(rx_strobe),.rx_imp_i_o(rx_buf_i),.rx_imp_q_o(rx_buf_q)
        );
 
    

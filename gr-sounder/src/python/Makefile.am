@@ -29,4 +29,4 @@ EXTRA_DIST = 		\
 bin_SCRIPTS = 		\
 	usrp_sounder.py
 
-MOSTLYCLEANFILES = *~ *.pyc *.pyo
+MOSTLYCLEANFILES = *~ *.pyc *.pyo output.*

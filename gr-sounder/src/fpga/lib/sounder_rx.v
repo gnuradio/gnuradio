@@ -19,8 +19,9 @@
 //  Foundation, Inc., 51 Franklin Street, Boston, MA  02110-1301  USA
 //
 
-module sounder_rx(clk_i,rst_i,ena_i,rx_strobe_i,tx_strobe_i,mask_i,len_i,
-		  rx_in_i_i,rx_in_q_i,rx_i_o,rx_q_o,rx_strobe_o);
+module sounder_rx(clk_i,rst_i,ena_i,rx_strobe_i,tx_strobe_i,mask_i,degree_i,len_i,
+		  rx_in_i_i,rx_in_q_i,rx_i_o,rx_q_o,rx_strobe_o,
+		  loop_i);
    
    input         clk_i;		// Master clock
    input         rst_i;         // Subsystem reset
@@ -29,6 +30,7 @@ module sounder_rx(clk_i,rst_i,ena_i,rx_strobe_i,tx_strobe_i,mask_i,len_i,
    input         tx_strobe_i;	// Strobe every transmitted sample
     
    input  [15:0] mask_i;	// PN code LFSR mask
+   input  [4:0]  degree_i;	// PN code LFSR sequency degree
    input  [15:0] len_i;		// PN code LFSR sequence length
    input  [15:0] rx_in_i_i;	// I channel on receive
    input  [15:0] rx_in_q_i;	// Q channel on receive
@@ -37,48 +39,57 @@ module sounder_rx(clk_i,rst_i,ena_i,rx_strobe_i,tx_strobe_i,mask_i,len_i,
    output [15:0] rx_q_o;	// Q channel of impulse response
    output        rx_strobe_o;   // Impulse response value ready
 
-   // LFSR phase counter
-   reg [15:0] count;
-   wire cycle = (count == (len_i - 1));
-
-   always @(posedge clk_i)
-     if (rst_i | ~ena_i)
-       count <= 16'b0;
-     else
-       if (cycle)
-	 count <= 16'b0;
-       else
-	 count <= count + 16'b1;
-           
-   // Retard LFSR phase once per cycle
-   wire lfsr_strobe = (tx_strobe_i & ~cycle);
-
-   // Recreate local reference of transmitted PN code
-   wire pn;
-   lfsr reference
-     ( .clk_i(clk_i),.rst_i(rst_i),.ena_i(ena_i),.strobe_i(lfsr_strobe),.mask_i(mask_i),.pn_o(pn) );
-
-   wire [31:0] rx_i_ext, rx_q_ext;
-   sign_extend #(16,32) i_extend(rx_in_i_i, rx_i_ext);
-   sign_extend #(16,32) q_extend(rx_in_q_i, rx_q_ext);
-
-   reg [31:0] accum;
-   always @(posedge clk_i)
-     if (rst_i | ~ena_i)
-       accum <= 32'b0;
-     else
-       if (rx_strobe_i)
-	 if (cycle)
-	   accum <= 32'b0;
-	 else
-	   if (pn)
-	     accum <= accum + rx_i_ext;
-	   else
-	     accum <= accum - rx_i_ext;
+   input         loop_i;        // Implement loopback
    
-   assign rx_i_o = accum[31:16];
-   assign rx_q_o = accum[15:0];
-   assign rx_strobe_o = rx_strobe_i & cycle;
+   wire strobe_in  = loop_i ? tx_strobe_i : rx_strobe_i;
+   wire [16:0] len = loop_i ? (len_i - 1) : ((len_i << 1) - 2);
+		 
+   strobe #(17) phase_strobe(.clk_i(clk_i),.rst_i(rst_i),.ena_i(ena_i),
+		       .rate_i(len),.strobe_i(strobe_in),.strobe_o(rx_strobe_o),
+		       .count_o());
 
+   wire pn_ref;
+   wire ref_strobe = tx_strobe_i & ~rx_strobe_o; // Retard reference phase once per period
+   lfsr ref_code
+     ( .clk_i(clk_i),.rst_i(rst_i),.ena_i(ena_i),.strobe_i(ref_strobe),.mask_i(mask_i),.pn_o(pn_ref) );
+
+   wire [5:0] offset = (5'd16-degree_i);
+   
+   reg  [31:0] sum_i, sum_q;
+   reg  [31:0] total_i, total_q;
+   wire [31:0] scaled_i = total_i << offset;
+   wire [31:0] scaled_q = total_q << offset;
+   wire [31:0] i_ext, q_ext;
+
+   sign_extend #(16,32) i_extender(rx_in_i_i, i_ext);
+   sign_extend #(16,32) q_extender(rx_in_q_i, q_ext);
+
+   wire [31:0] prod_i = pn_ref ? i_ext : -i_ext;
+   wire [31:0] prod_q = pn_ref ? q_ext : -q_ext;
+   
+   always @(posedge clk_i)
+     if (rst_i | ~ena_i)
+       begin
+	  sum_i <= 0;
+	  sum_q <= 0;
+	  total_i <= 0;
+	  total_q <= 0;
+       end
+     else if (rx_strobe_o)
+       begin
+	  total_i <= sum_i + prod_i;
+	  total_q <= sum_q + prod_q;
+	  sum_i <= 0;
+	  sum_q <= 0;
+       end
+     else if (strobe_in)
+       begin
+	  sum_i = sum_i + prod_i;
+	  sum_q = sum_q + prod_q;
+       end
+   
+   assign rx_i_o = scaled_i[31:16];
+   assign rx_q_o = scaled_q[31:16];
+   
 endmodule // sounder_rx
 

@@ -28,3 +28,4 @@ EXTRA_DIST = \
 	sounder_rx.v \
 	sounder_tx.v
 
+MOSTLYCLEANFILES = *~
