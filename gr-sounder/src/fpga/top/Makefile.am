@@ -23,6 +23,8 @@ include $(top_srcdir)/Makefile.common
 
 datadir = $(prefix)/share/usrp
 
+RBFS = 	usrp_sounder.rbf
+
 EXTRA_DIST =			\
 	config.vh		\
 	usrp_sounder.v		\
@@ -32,7 +34,6 @@ EXTRA_DIST =			\
 	usrp_sounder.qpf	\
 	$(RBFS)
 
-RBFS = 	usrp_sounder.rbf
 
 install-data-local:
 	@for file in $(RBFS); do \
@@ -43,7 +44,7 @@ install-data-local:
 	done
 
 uninstall-local:
-	@for file in $(rbfs); do \
+	@for file in $(RBFS); do \
 		echo "$(RM) $(DESTDIR)$(datadir)/rev2/$$file"; \
 		$(RM) $(DESTDIR)$(datadir)/rev2/$$file; \
 		echo "$(RM) $(DESTDIR)$(datadir)/rev4/$$file"; \
