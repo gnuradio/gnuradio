@@ -39,7 +39,7 @@ gr_rt_status_t
 gr_enable_realtime_scheduling()
 {
   int policy = SCHED_FIFO;
-  int pri = (sched_get_priority_max (policy) - sched_get_priority_min (policy)) / 2;
+  int pri = (sched_get_priority_max (policy) + sched_get_priority_min (policy)) / 2;
   int pid = 0;  // this process
 
   struct sched_param param;
