@@ -65,7 +65,7 @@ class cpm_mod(gr.hier_block):
 	modulation.
 
 	The input is a byte stream (unsigned char) 
-        representing unpacked bits and the
+        representing packed bits and the
 	output is the complex modulated signal at baseband.
 
         See Proakis for definition of generic CPM signals:
@@ -82,13 +82,13 @@ class cpm_mod(gr.hier_block):
 	@type bits_per_symbol: integer
 	@param h_numerator: numerator of modulation index
 	@type h_numerator: integer
-	@param h_denominator: denominator of modulation index (num and denom must be relative primes)
+	@param h_denominator: denominator of modulation index (numerator and denominator must be relative primes)
 	@type h_denominator: integer
 	@param cpm_type: supported types are: 0=CPFSK, 1=GMSK, 2=RC, 3=GENERAL
 	@type cpm_type: integer
         @param bt: bandwidth symbol time product for GMSK
         @type bt: float
-	@param symbols_per_pulse: pulse duration in symbols
+	@param symbols_per_pulse: shaping pulse duration in symbols
 	@type symbols_per_pulse: integer
 	@param generic_taps: define a generic CPM pulse shape (sum = samples_per_symbol/2)
 	@type generic_taps: array of floats
@@ -126,7 +126,7 @@ class cpm_mod(gr.hier_block):
 	sensitivity = 2 * pi * h_numerator / h_denominator / samples_per_symbol
 
         # Unpack Bytes into bits_per_symbol groups
-        self.B2s = gr.packed_to_unpacked_bb(bits_per_symbol,gr.GR_MSB_FIRST) # unpack bytes to symbols compatible with the modulation cardinality
+        self.B2s = gr.packed_to_unpacked_bb(bits_per_symbol,gr.GR_MSB_FIRST)
  
  
 	# Turn it into symmetric PAM data.
@@ -150,9 +150,7 @@ class cpm_mod(gr.hier_block):
         elif cpm_type == 3: # Generic CPM
             self.taps = generic_taps
         else:
-            print "Not yet implemented"
-        #print self.taps
-        #print  "Sum of taps = " , Numeric.sum(self.taps)
+            raise TypeError, ("cpm_type must be an integer in {0,1,2,3}, is %r" % (cpm_type,))
 
 	self.filter = gr.interp_fir_filter_fff(samples_per_symbol, self.taps)
 
@@ -220,8 +218,8 @@ class cpm_mod(gr.hier_block):
         """
         Adds CPM modulation-specific options to the standard parser
         """
-        parser.add_option("", "--param", type="float", default=_def_param,
-                          help="set modulation-specific parameter [default=%default] (CPM)")
+        parser.add_option("", "--bt", type="float", default=_def_bt,
+                          help="set bandwidth-time product [default=%default] (GMSK)")
     add_options=staticmethod(add_options)
 
 
