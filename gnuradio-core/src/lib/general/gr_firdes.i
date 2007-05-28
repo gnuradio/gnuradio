@@ -39,7 +39,7 @@ class gr_firdes {
 	    double cutoff_freq,		// Hz center of transition band
 	    double transition_width,	// Hz width of transition band
 	    win_type window = WIN_HAMMING,
-	    double beta = 6.76);		// used only with Kaiser
+	    double beta = 6.76) throw(std::out_of_range); // used only with Kaiser
 
   /*!
    * \brief use "window method" to design a high-pass FIR filter
@@ -61,7 +61,7 @@ class gr_firdes {
 	     double cutoff_freq,		// Hz center of transition band
 	     double transition_width,		// Hz width of transition band
 	     win_type window = WIN_HAMMING,
-	     double beta = 6.76);		// used only with Kaiser
+	     double beta = 6.76) throw(std::out_of_range); // used only with Kaiser
 
   /*!
    * \brief use "window method" to design a band-pass FIR filter
@@ -85,7 +85,7 @@ class gr_firdes {
 	     double high_cutoff_freq,		// Hz center of transition band
 	     double transition_width,		// Hz width of transition band
 	     win_type window = WIN_HAMMING,
-	     double beta = 6.76);		// used only with Kaiser
+	     double beta = 6.76) throw(std::out_of_range); // used only with Kaiser
 
 
   /*!
@@ -111,7 +111,7 @@ class gr_firdes {
 	     double high_cutoff_freq,		// Hz center of transition band
 	     double transition_width,		// Hz width of transition band
 	     win_type window = WIN_HAMMING,
-	     double beta = 6.76);		// used only with Kaiser
+	     double beta = 6.76) throw(std::out_of_range); // used only with Kaiser
 
 
   /*!
@@ -137,7 +137,7 @@ class gr_firdes {
 	       double high_cutoff_freq,		// Hz center of transition band
 	       double transition_width,		// Hz width of transition band
 	       win_type window = WIN_HAMMING,
-	       double beta = 6.76);		// used only with Kaiser
+	       double beta = 6.76) throw(std::out_of_range); // used only with Kaiser
 
   /*!\brief design a Hilbert Transform Filter
    *
@@ -148,7 +148,7 @@ class gr_firdes {
   static std::vector<float>
   hilbert (unsigned int ntaps,
 	   win_type windowtype = WIN_RECTANGULAR,
-	   double beta = 6.76);
+	   double beta = 6.76) throw(std::out_of_range);
    
   /*!
    * \brief design a Root Cosine FIR Filter (do we need a window?)
@@ -164,7 +164,7 @@ class gr_firdes {
 		      double sampling_freq,
 		      double symbol_rate,       // Symbol rate, NOT bitrate (unless BPSK)
 		      double alpha,             // Excess Bandwidth Factor
-		      int ntaps);
+		      int ntaps) throw(std::out_of_range);
 
   /*!
    * \brief design a Gaussian filter
@@ -178,10 +178,11 @@ class gr_firdes {
   gaussian (double gain,
 	    double spb,       
 	    double bt,              // Bandwidth to bitrate ratio
-	    int ntaps);
+	    int ntaps) throw(std::out_of_range);
 
   /*!
    * Return window given type, ntaps and optional beta.
    */
-  static std::vector<float> gr_firdes::window (win_type type, int ntaps, double beta);
+  static std::vector<float> gr_firdes::window (win_type type, int ntaps, double beta) 
+    throw(std::runtime_error);
 };
