@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -51,11 +51,6 @@ class db_base(object):
             self._tx = False
             self._slot = which * 2 + 1
 
-        FR_TX_A_REFCLK = 40
-        FR_RX_A_REFCLK = 41
-        FR_TX_B_REFCLK = 42
-        FR_RX_B_REFCLK = 43
-
         self._refclk_reg = (FR_TX_A_REFCLK,FR_RX_A_REFCLK,FR_TX_B_REFCLK,FR_RX_B_REFCLK)[self._slot]
 
 
@@ -88,7 +83,6 @@ class db_base(object):
     # Bit 7  -- 1 turns on refclk, 0 allows IO use
     # Bits 6:0 Divider value
     #
-    # FIXME get these from the fpga_regs_standard.h
     
     def _refclk_freq(self):
         return self._u.fpga_master_clock_freq()/self._refclk_divisor()
