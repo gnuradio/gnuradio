@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -29,7 +29,6 @@ from gnuradio import gr, gru, modulation_utils
 from math import pi, sqrt
 import psk
 import cmath
-import Numeric
 from pprint import pprint
 
 # default values (used in __init__ and add_options)

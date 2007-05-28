@@ -27,7 +27,7 @@
 from gnuradio import gr
 from gnuradio import modulation_utils
 from math import pi
-import Numeric
+import numpy
 from pprint import pprint
 import inspect
 
@@ -97,7 +97,7 @@ class gmsk_mod(gr.hier_block2):
 		)
 
 	self.sqwave = (1,) * samples_per_symbol       # rectangular window
-	self.taps = Numeric.convolve(Numeric.array(self.gaussian_taps),Numeric.array(self.sqwave))
+	self.taps = numpy.convolve(numpy.array(self.gaussian_taps),numpy.array(self.sqwave))
 	self.gaussian_filter = gr.interp_fir_filter_fff(samples_per_symbol, self.taps)
 
 	# FM modulation

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -54,9 +54,9 @@
 
 __all__ = ['freqz']
 
-import Numeric
-from Numeric import *
-Num=Numeric
+import numpy
+from numpy import *
+Num=numpy
 
 def atleast_1d(*arys):
     """ Force a sequence of arrays to each be at least 1D.
@@ -74,7 +74,7 @@ def atleast_1d(*arys):
     for ary in arys:
         ary = asarray(ary)
         if len(ary.shape) == 0: 
-            result = Numeric.array([ary[0]])
+            result = numpy.array([ary[0]])
         else:
             result = ary
         res.append(result)
@@ -101,7 +101,7 @@ def polyval(p,x):
         y = 0
     else:
         x = asarray(x)
-        y = Numeric.zeros(x.shape,x.typecode())
+        y = numpy.zeros(x.shape,x.typecode())
     for i in range(len(p)):
         y = x * y + p[i]
     return y
@@ -135,7 +135,7 @@ class poly1d:
             raise ValueError, "Polynomial must be 1d only."
         c_or_r = trim_zeros(c_or_r, trim='f')
         if len(c_or_r) == 0:
-            c_or_r = Numeric.array([0])
+            c_or_r = numpy.array([0])
         self.__dict__['coeffs'] = c_or_r
         self.__dict__['order'] = len(c_or_r) - 1
 
@@ -281,8 +281,8 @@ class poly1d:
         if key < 0:
             raise ValueError, "Does not support negative powers."
         if key > self.order:
-            zr = Numeric.zeros(key-self.order,self.coeffs.typecode())
-            self.__dict__['coeffs'] = Numeric.concatenate((zr,self.coeffs))
+            zr = numpy.zeros(key-self.order,self.coeffs.typecode())
+            self.__dict__['coeffs'] = numpy.concatenate((zr,self.coeffs))
             self.__dict__['order'] = key
             ind = 0
         self.__dict__['coeffs'][ind] = val

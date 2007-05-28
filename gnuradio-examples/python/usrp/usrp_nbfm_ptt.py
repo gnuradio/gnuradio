@@ -33,7 +33,7 @@ from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import stdgui, fftsink, scopesink, slider, form
 from usrpm import usrp_dbid
 
-from Numeric import convolve, array
+from numpy import convolve, array
 
 #import os
 #print "pid =", os.getpid()

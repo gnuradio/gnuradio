@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2003,2004,2005,2006 Free Software Foundation, Inc.
+# Copyright 2003,2004,2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,7 +25,7 @@ from gnuradio.wxgui import stdgui
 import wx
 #from wx import StaticText
 import gnuradio.wxgui.plot as plot
-import Numeric
+import numpy
 import threading
 import math    
 
@@ -204,7 +204,7 @@ class input_watcher (threading.Thread):
                 start = itemsize * (nitems - 1)
                 s = s[start:start+itemsize]
 
-            complex_data = Numeric.fromstring (s, Numeric.Float32)
+            complex_data = numpy.fromstring (s, numpy.float32)
             de = DataEvent (complex_data)
             wx.PostEvent (self.event_receiver, de)
             del de
@@ -478,7 +478,7 @@ class number_window (plot.PlotCanvas):
             if self.peak_vals is None:
                 self.peak_vals = numbers
             else:
-                self.peak_vals = Numeric.maximum(numbers, self.peak_vals)
+                self.peak_vals = numpy.maximum(numbers, self.peak_vals)
                 numbers = self.peak_vals
 
         if self.numbersink.input_is_real:

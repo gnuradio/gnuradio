@@ -29,7 +29,6 @@ from gnuradio import gr, gru, modulation_utils
 from math import pi, sqrt
 import psk
 import cmath
-import Numeric
 from pprint import pprint
 
 # default values (used in __init__ and add_options)

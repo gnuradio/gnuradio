@@ -173,11 +173,10 @@ python into a bunch of separate packages including python-devel or
 libpython you'll most likely need those too.
 
 
-(5) Numeric python library   http://numeric.scipy.org
+(5) Numpy python library   http://numeric.scipy.org
 
 Provides a high performance array type for Python.
-http://sourceforge.net/project/showfiles.php?group_id=1369&package_id=1351
-
+http://sourceforge.net/project/showfiles.php?group_id=1369&package_id=175103
 
 (6) The Boost C++ Libraries	http://www.boost.org
 

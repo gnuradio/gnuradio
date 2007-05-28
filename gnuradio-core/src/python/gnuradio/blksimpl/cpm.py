@@ -2,7 +2,7 @@
 # CPM modulation and demodulation.  
 #
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -27,7 +27,7 @@
 from gnuradio import gr
 from gnuradio import modulation_utils
 from math import pi
-import Numeric
+import numpy
 from pprint import pprint
 import inspect
 
@@ -39,7 +39,7 @@ _def_h_denominator = 2
 _def_cpm_type = 0 # 0=CPFSK, 1=GMSK, 2=RC, 3=GENERAL
 _def_bt = 0.35
 _def_symbols_per_pulse = 1
-_def_generic_taps = Numeric.empty(1)
+_def_generic_taps = numpy.empty(1)
 _def_verbose = False
 _def_log = False
 
@@ -113,13 +113,13 @@ class cpm_mod(gr.hier_block):
         else:
             raise TypeError, ("cpm_type must be an integer in {0,1,2,3}, is %r" % (cpm_type,))
 
-        self._generic_taps=Numeric.array(generic_taps)
+        self._generic_taps=numpy.array(generic_taps)
 
         if not isinstance(samples_per_symbol, int) or samples_per_symbol < 2:
             raise TypeError, ("samples_per_symbol must be an integer >= 2, is %r" % (samples_per_symbol,))
 
         self.nsymbols = 2**bits_per_symbol
-        self.sym_alphabet=Numeric.arrayrange(-(self.nsymbols-1),self.nsymbols,2)
+        self.sym_alphabet=numpy.arange(-(self.nsymbols-1),self.nsymbols,2)
 
 
 	self.ntaps = self._symbols_per_pulse * samples_per_symbol
@@ -143,10 +143,10 @@ class cpm_mod(gr.hier_block):
                 self.ntaps                  # number of taps
                 )
 	    sqwave = (1,) * samples_per_symbol       # rectangular window
-	    self.taps = Numeric.convolve(Numeric.array(gaussian_taps),Numeric.array(sqwave))
+	    self.taps = numpy.convolve(numpy.array(gaussian_taps),numpy.array(sqwave))
         elif cpm_type == 2: # Raised Cosine
             # generalize it for arbitrary roll-off factor
-            self.taps = (1-Numeric.cos(2*pi*Numeric.arrayrange(0,self.ntaps)/samples_per_symbol/self._symbols_per_pulse))/(2*self._symbols_per_pulse)
+            self.taps = (1-numpy.cos(2*pi*numpy.arange(0,self.ntaps)/samples_per_symbol/self._symbols_per_pulse))/(2*self._symbols_per_pulse)
         elif cpm_type == 3: # Generic CPM
             self.taps = generic_taps
         else:

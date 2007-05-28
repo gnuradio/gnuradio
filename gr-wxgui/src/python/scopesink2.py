@@ -24,7 +24,7 @@ from gnuradio import gr, gru, eng_notation
 from gnuradio.wxgui import stdgui2
 import wx
 import gnuradio.wxgui.plot as plot
-import Numeric
+import numpy
 import threading
 import struct
 
@@ -216,7 +216,7 @@ class input_watcher (threading.Thread):
 
                     start = ch * bytes_per_chan
                     chan_data = s[start:start+bytes_per_chan]
-                    rec = Numeric.fromstring (chan_data, Numeric.Float32)
+                    rec = numpy.fromstring (chan_data, numpy.float32)
                     records.append (rec)
 
                 # print "nrecords = %d, reclen = %d" % (len (records),nsamples)
@@ -486,7 +486,7 @@ class graph_window (plot.PlotCanvas):
         objects = []
 
         Ts = 1.0 / (info.get_sample_rate () / info.get_decimation_rate ())
-        x_vals = Ts * Numeric.arrayrange (-npoints/2, npoints/2)
+        x_vals = Ts * numpy.arange (-npoints/2, npoints/2)
 
         # preliminary clipping based on time axis here, instead of in graphics code
         time_per_window = self.info.get_time_per_div () * 10
@@ -504,7 +504,7 @@ class graph_window (plot.PlotCanvas):
             lb = npoints/2 - n/2
             ub = npoints/2 + n/2
             # points = zip (x_vals[lb:ub], r[lb:ub])
-            points = Numeric.zeros ((ub-lb, 2), Numeric.Float64)
+            points = numpy.zeros ((ub-lb, 2), numpy.float64)
             points[:,0] = x_vals[lb:ub]
             points[:,1] = r[lb:ub]
 
@@ -543,7 +543,7 @@ class graph_window (plot.PlotCanvas):
 
         objects = []
         # points = zip (records[0], records[1])
-        points = Numeric.zeros ((len(records[0]), 2), Numeric.Float32)
+        points = numpy.zeros ((len(records[0]), 2), numpy.float32)
         points[:,0] = records[0]
         points[:,1] = records[1]
         

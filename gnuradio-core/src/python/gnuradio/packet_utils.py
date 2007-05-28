@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,7 +20,7 @@
 # 
 
 import struct
-import Numeric
+import numpy
 from gnuradio import gru
 
 
@@ -87,7 +87,7 @@ def string_to_hex_list(s):
 
 
 def whiten(s, o):
-    sa = Numeric.fromstring(s, Numeric.UnsignedInt8)
+    sa = numpy.fromstring(s, numpy.uint8)
     z = sa ^ random_mask_vec8[o:len(sa)+o]
     return z.tostring()
 
@@ -451,5 +451,5 @@ random_mask_tuple = (
   199, 113, 146, 164, 109, 187, 109, 179, 109, 181, 237, 183,  13, 182, 133, 182, 
   227,  54, 201, 214, 214, 222, 222, 216,  88,  90, 186, 187,  51,  51, 255,  63 )
 
-random_mask_vec8 = Numeric.array(random_mask_tuple, Numeric.UnsignedInt8)
+random_mask_vec8 = numpy.array(random_mask_tuple, numpy.uint8)
 

@@ -24,7 +24,7 @@ from gnuradio import gr, gru, window
 from gnuradio.wxgui import stdgui2
 import wx
 import gnuradio.wxgui.plot as plot
-import Numeric
+import numpy
 import os
 import threading
 import math    
@@ -174,7 +174,7 @@ class input_watcher (threading.Thread):
                 start = itemsize * (nitems - 1)
                 s = s[start:start+itemsize]
 
-            complex_data = Numeric.fromstring (s, Numeric.Float32)
+            complex_data = numpy.fromstring (s, numpy.float32)
             de = DataEvent (complex_data)
             wx.PostEvent (self.event_receiver, de)
             del de

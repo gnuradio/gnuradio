@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,7 +25,7 @@ __all__ = ['gnuplot_freqz']
 import tempfile
 import os
 import math
-import Numeric
+import numpy
 
 from gnuradio import gr
 from gnuradio.gruimpl.freqz import freqz
@@ -45,7 +45,7 @@ def gnuplot_freqz (hw, Fs=None, logfreq=False):
     cmd_file = os.popen ('gnuplot', 'w')
 
     h, w = hw
-    ampl = 20 * Numeric.log10 (Numeric.absolute (h) + 1e-9)
+    ampl = 20 * numpy.log10 (numpy.absolute (h) + 1e-9)
     phase = map (lambda x: math.atan2 (x.imag, x.real), h)
     
     if Fs:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2003,2004,2005 Free Software Foundation, Inc.
+# Copyright 2003,2004,2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -24,7 +24,7 @@ from gnuradio import gr, gru, window
 from gnuradio.wxgui import stdgui
 import wx
 import gnuradio.wxgui.plot as plot
-import Numeric
+import numpy
 import os
 import threading
 import math    
@@ -169,7 +169,7 @@ class input_watcher (threading.Thread):
                 start = itemsize * (nitems - 1)
                 s = s[start:start+itemsize]
 
-            complex_data = Numeric.fromstring (s, Numeric.Float32)
+            complex_data = numpy.fromstring (s, numpy.float32)
             de = DataEvent (complex_data)
             wx.PostEvent (self.event_receiver, de)
             del de
