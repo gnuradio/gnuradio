@@ -1,10 +1,9 @@
 This is a work-in-progress implementation of a m-sequence based channel 
 sounder for GNU Radio and the USRP.
 
-At present, only the transmitter is implemented. When completed, you
-will be able to place the sounder transmitter at one location, the
-sounder receiver at another location, then determine in real-time the
-channel impulse and frequency response between them.
+In typical use, the user would run the sounder as a transmitter on one
+USRP, and a receiver on another at a different location.  The receiver
+will determine the impulse response of the RF channel in between.
 
 The sounder uses a custom FPGA bitstream that is able to generate and
 receive a sounder waveform across a full 32 MHz wide swath of RF spectrum;
@@ -17,45 +16,76 @@ out this response during calibration.
 
 The sounder is based on sending a maximal-length PN code modulated as BPSK
 with the supplied center frequency, with a chip-rate of 32 MHz. The
-receiver (partially implemented at this time but not working yet) correlates
-the received signal across all phases of the PN code and outputs an impulse
-response vector.  As auto-correlation of an m-sequence is near zero for
-any relative phase shift, the actual measured energy at a particular
-phase shift is related to the impulse response for that time delay.  This
-is the same principle used in spread-spectrum RAKE receivers such as are
+receiver correlates the received signal across all phases of the PN code 
+and outputs an impulse response vector.  As auto-correlation of an m-sequence
+is near zero for any relative phase shift, the actual measured energy at a 
+particular phase shift is related to the impulse response for that time delay.
+This is the same principle used in spread-spectrum RAKE receivers such as are
 used with GPS and CDMA.
 
-The transmitter and receiver are designed to work only with the board in
-side A.  This may be a standalone LFTX/LFRX or an RFX daughterboard.
+The transmitter is designed to work only with the board in side A.  The 
+receiver may be in side A or side B.  The boards may be standalone LFTX/LFRXs
+or RFX daughterboards.
 
 To use, the following script is installed into $prefix/bin:
 
-usage: usrp_sounder.py [options]
+Usage: usrp_sounder.py [options]
 
-options:
+Options:
   -h, --help            show this help message and exit
+  -R RX_SUBDEV_SPEC, --rx-subdev-spec=RX_SUBDEV_SPEC
+                        select USRP Rx side A or B
   -f FREQ, --frequency=FREQ
                         set frequency to FREQ in Hz, default is 0.0
+  -d DEGREE, --degree=DEGREE
+                        set sounding sequence degree (2-12), default is 12,
   -t, --transmit        enable sounding transmitter
   -r, --receive         enable sounding receiver
-  -d DEGREE, --degree=DEGREE
-                        set souding sequence degree (len=2^degree-1), default
-                        is 16
-  -n SAMPLES, --samples=SAMPLES
-                        number of samples to capture on receive, default is
-                        infinite
   -l, --loopback        enable digital loopback, default is disabled
+  -v, --verbose         enable verbose output, default is disabled
+  -D, --debug           enable debugging output, default is disabled
+  -F FILENAME, --filename=FILENAME
+                        log received impulse responses to file
 
 To use with an LFTX board, set the center frequency to 16M:
 
 $ usrp_sounder.py -f 16M -t
 
-You can vary the m-sequence degree between 1 and 16, which will create
-sequence lengths between 1 (DC) and 65535 (1.023 us).  This will affect
-how frequently the receiver can calculate impulse response vectors (to be
-documented as the receiver is completed.)
+The sounder receiver command line is:
+
+$ usrp_sounder.py -f 16M -r -F output.dat
+
+You can vary the m-sequence degree between 2 and 12, which will create
+sequence lengths between 3 and 4095 (128 us).  This will affect
+how frequently the receiver can calculate impulse response vectors.
+
+The correlator uses an O(N^2) algorithm, by using an entire PN period
+of the received signal to correlate at each lag value.  Thus, using a
+degree 12 PN code of length 4095, it takes 4095*4095/32e6 seconds to
+calculate a single impulse response vector, about a half a second.  One
+can reduce this time by a factor of 4 for each decrement in PN code
+degree, but this also reduces the inherent processing gain by 6 dB as
+well.
+
+The impulse response vectors are written to a file in complex float
+format, and consist of the actual impulse response with a noise floor
+dependent on the PN code degree in use.
+
+There is a loopback test mode that causes the sounding waveform to be
+routed back to the receiver inside the USRP:
+
+$ usrp_sounder.py -r -t -l -F output.dat
+
+The resulting impulse response will be a spike followed by a near zero
+value for the rest of the period.
+
+Synchronization at the receiver is not yet implemented, so the actual
+impulse response may be time shifted an arbitrary value within the the
+impulse response vector.  If one assumes the first to arrive signal is
+the strongest, then one can circularly rotate the vector until the peak
+is at time zero.
 
 Johnathan Corgan
 Corgan Enterprises LLC
 jcorgan@corganenterprises.com
-4/25/07
+5/28/07

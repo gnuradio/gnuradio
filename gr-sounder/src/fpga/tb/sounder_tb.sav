@@ -1,4 +1,4 @@
-*-26.117517 250000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-24.753519 93900000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 @28
 sounder_tb.uut.clk_i
 sounder_tb.rst
@@ -23,7 +23,9 @@ sounder_tb.tx_dac_i[13:0]
 -
 @22
 sounder_tb.fifo_strobe
+@8421
 sounder_tb.fifo_i[15:0]
+@22
 sounder_tb.fifo_q[15:0]
 @200
 -
@@ -32,3 +34,7 @@ sounder_tb.uut.transmitter.pn_code.pn_o
 sounder_tb.uut.receiver.pn_ref
 @200
 -
+@28
+sounder_tb.tx_strobe
+@8420
+sounder_tb.uut.receiver.sum_i[31:0]

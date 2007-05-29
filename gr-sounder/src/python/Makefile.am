@@ -21,12 +21,23 @@
 
 include $(top_srcdir)/Makefile.common
 
+# Install this stuff so that it ends up as the gnuradio.sounder module
+# This usually ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+
+ourpythondir = $(grpythondir)
+ourlibdir    = $(grpyexecdir)
+
 EXTRA_DIST = 		\
-	usrp_sounder.py	\
+	usrp_sounder.py \
+	sounder_loopback.sh \
 	qa_nothing.py	\
 	run_tests.in
 
 bin_SCRIPTS = 		\
 	usrp_sounder.py
 
-MOSTLYCLEANFILES = *~ *.pyc *.pyo output.*
+ourpython_PYTHON =	\
+	sounder.py
+
+MOSTLYCLEANFILES = *~ *.pyc *.pyo

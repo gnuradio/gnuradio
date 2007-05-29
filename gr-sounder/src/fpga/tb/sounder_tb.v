@@ -197,14 +197,14 @@ module sounder_tb;
 	 #20 enable_rx(1);
 	 #20 enable_lp(1);
 	 #20 set_reset(0);
-	 #((uut.len+1)*uut.len*20);
+	 #((uut.len+1)*uut.len*20*2);
       end
    endtask // test_lp
    
    // Execute tests
    initial
      begin
-        #20 test_tx(12);
+        // #20 test_tx(12);
 	#20 test_lp(12);
 	#100 $finish;
      end
