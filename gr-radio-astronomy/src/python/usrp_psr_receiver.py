@@ -356,17 +356,8 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.second = gr.fir_filter_fff (int(p), second_filter)
         self.third = gr.fir_filter_fff (10, third_filter)
 
-        # Split complex USRP stream into a pair of floats
-        self.splitter = gr.complex_to_float (1);
-
-        # I squarer (detector)
-        self.multI = gr.multiply_ff();
-
-        # Q squarer (detector)
-        self.multQ = gr.multiply_ff();
-
-        # Adding squared I and Q to produce instantaneous signal power
-        self.adder = gr.add_ff();
+        # Detector
+        self.detector = gr.complex_to_mag_squared()
 
         self.enable_comb_filter = False
         # Epoch folder comb filter
@@ -402,25 +393,12 @@ class app_flow_graph(stdgui.gui_flow_graph):
         # Start connecting configured modules in the receive chain
         #
 
-        # Connect raw USRP to de-dispersion filter, complex->float splitter
-        self.connect(self.u, self.dispfilt, self.splitter)
+        # Connect raw USRP to de-dispersion filter, detector
+        self.connect(self.u, self.dispfilt, self.detector)
 
-        # Connect splitter outputs to multipliers
-        # First do I^2
-        self.connect((self.splitter, 0), (self.multI,0))
-        self.connect((self.splitter, 0), (self.multI,1))
-
-        # Then do Q^2
-        self.connect((self.splitter, 1), (self.multQ,0))
-        self.connect((self.splitter, 1), (self.multQ,1))
-
-        # Then sum the squares
-        self.connect(self.multI, (self.adder,0))
-        self.connect(self.multQ, (self.adder,1))
-
-        # Connect detector/adder output to FIR LPF
+        # Connect detector output to FIR LPF
         #  in two stages, followed by the FFT scope
-        self.connect(self.adder, self.first,
+        self.connect(self.detector, self.first,
             self.second, self.third, self.scope)
 
         # Connect audio output

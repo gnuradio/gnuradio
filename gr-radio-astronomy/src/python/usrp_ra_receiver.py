@@ -168,12 +168,12 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         self.u = usrp.source_c(decim_rate=options.decim)
         self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
-        self.cardtype = self.u.daughterboard_id(0)
         # Set initial declination
         self.decln = options.decln
 
         # determine the daughterboard subdevice we're using
         self.subdev = usrp.selected_subdev(self.u, options.rx_subdev_spec)
+        self.cardtype = self.subdev.dbid()
 
         input_rate = self.u.adc_freq() / self.u.decim_rate()
 
@@ -426,7 +426,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.myform['dbname'].set_value(self.subdev.name())
 
         # Set analog baseband filtering, if DBS_RX
-        if self.cardtype == usrp_dbid.DBS_RX:
+        if self.cardtype in (usrp_dbid.DBS_RX, usrp_dbid.DBS_RX_2_1):
             lbw = (self.u.adc_freq() / self.u.decim_rate()) / 2
             if lbw < 1.0e6:
                 lbw = 1.0e6
