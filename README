@@ -176,6 +176,7 @@ libpython you'll most likely need those too.
 (5) Numpy python library   http://numeric.scipy.org
 
 Provides a high performance array type for Python.
+http://numpy.scipy.org
 http://sourceforge.net/project/showfiles.php?group_id=1369&package_id=175103
 
 (6) The Boost C++ Libraries	http://www.boost.org
