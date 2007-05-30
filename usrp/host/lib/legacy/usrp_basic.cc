@@ -541,17 +541,19 @@ usrp_basic_rx::stop ()
 {
   bool ok = usrp_basic::stop();
 
-  if (!d_ephandle->stop()){
-    fprintf (stderr, "usrp_basic_rx: failed to stop end point streaming");
-    usb_strerror ();
-    ok = false;
-  }
   if (!set_rx_enable(false)){
     fprintf (stderr, "usrp_basic_rx: set_rx_enable(false) failed\n");
     usb_strerror ();
     ok = false;
   }
-  return false;
+
+  if (!d_ephandle->stop()){
+    fprintf (stderr, "usrp_basic_rx: failed to stop end point streaming");
+    usb_strerror ();
+    ok = false;
+  }
+
+  return ok;
 }
 
 usrp_basic_rx *
@@ -970,16 +972,18 @@ usrp_basic_tx::stop ()
 {
   bool ok = usrp_basic::stop ();
 
-  if (!set_tx_enable (false)){
-    fprintf (stderr, "usrp_basic_tx: set_tx_enable(false) failed\n");
-    usb_strerror ();
-    ok = false;
-  }
   if (!d_ephandle->stop ()){
     fprintf (stderr, "usrp_basic_tx: failed to stop end point streaming");
     usb_strerror ();
     ok = false;
   }
+
+  if (!set_tx_enable (false)){
+    fprintf (stderr, "usrp_basic_tx: set_tx_enable(false) failed\n");
+    usb_strerror ();
+    ok = false;
+  }
+
   return ok;
 }
 
