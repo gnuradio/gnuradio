@@ -104,7 +104,13 @@ class fm_tx_graph (stdgui.gui_flow_graph):
         print "Using TX d'board %s" % (self.subdev.side_and_name(),)
 
         self.subdev.set_gain(self.subdev.gain_range()[1])    # set max Tx gain
-        self.set_freq(options.freq)
+        if not self.set_freq(options.freq):
+            freq_range = self.subdev.freq_range()
+            print "Failed to set frequency to %s.  Daughterboard supports %s to %s" % (
+                eng_notation.num_to_str(options.freq),
+                eng_notation.num_to_str(freq_range[0]),
+                eng_notation.num_to_str(freq_range[1]))
+            raise SystemExit
         self.subdev.set_enable(True)                         # enable transmitter
 
         sum = gr.add_cc ()
