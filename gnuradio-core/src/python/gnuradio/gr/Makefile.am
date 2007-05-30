@@ -48,6 +48,7 @@ noinst_PYTHON = 			\
 	qa_add_and_friends.py		\
 	qa_add_v_and_friends.py		\
 	qa_agc.py			\
+	qa_argmax.py			\
 	qa_basic_flow_graph.py		\
 	qa_bin_statistics.py		\
 	qa_cma_equalizer.py		\
@@ -73,6 +74,7 @@ noinst_PYTHON = 			\
 	qa_interp_fir_filter.py		\
 	qa_kludge_copy.py		\
 	qa_kludged_imports.py		\
+	qa_max.py			\
 	qa_message.py			\
 	qa_mute.py			\
 	qa_nlog10.py			\

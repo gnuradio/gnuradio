@@ -44,12 +44,18 @@ CODE_GENERATOR = 			\
 	gr_add_const_vXX.cc.t		\
 	gr_add_const_vXX.h.t		\
 	gr_add_const_vXX.i.t		\
+	gr_argmax_XX.cc.t		\
+	gr_argmax_XX.h.t		\
+	gr_argmax_XX.i.t		\
 	gr_chunks_to_symbols_XX.cc.t	\
 	gr_chunks_to_symbols_XX.h.t	\
 	gr_chunks_to_symbols_XX.i.t	\
 	gr_divide_XX.cc.t		\
 	gr_divide_XX.h.t		\
 	gr_divide_XX.i.t		\
+	gr_max_XX.cc.t			\
+	gr_max_XX.h.t			\
+	gr_max_XX.i.t			\
 	gr_multiply_XX.cc.t		\
 	gr_multiply_XX.h.t		\
 	gr_multiply_XX.i.t		\

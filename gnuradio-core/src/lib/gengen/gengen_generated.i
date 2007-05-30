@@ -19,6 +19,9 @@
 #include <gr_add_vff.h>
 #include <gr_add_vii.h>
 #include <gr_add_vss.h>
+#include <gr_argmax_fs.h>
+#include <gr_argmax_is.h>
+#include <gr_argmax_ss.h>
 #include <gr_chunks_to_symbols_bc.h>
 #include <gr_chunks_to_symbols_bf.h>
 #include <gr_chunks_to_symbols_ic.h>
@@ -29,6 +32,9 @@
 #include <gr_divide_ff.h>
 #include <gr_divide_ii.h>
 #include <gr_divide_ss.h>
+#include <gr_max_ff.h>
+#include <gr_max_ii.h>
+#include <gr_max_ss.h>
 #include <gr_multiply_cc.h>
 #include <gr_multiply_const_cc.h>
 #include <gr_multiply_const_ff.h>
@@ -103,6 +109,9 @@
 %include <gr_add_vff.i>
 %include <gr_add_vii.i>
 %include <gr_add_vss.i>
+%include <gr_argmax_fs.i>
+%include <gr_argmax_is.i>
+%include <gr_argmax_ss.i>
 %include <gr_chunks_to_symbols_bc.i>
 %include <gr_chunks_to_symbols_bf.i>
 %include <gr_chunks_to_symbols_ic.i>
@@ -113,6 +122,9 @@
 %include <gr_divide_ff.i>
 %include <gr_divide_ii.i>
 %include <gr_divide_ss.i>
+%include <gr_max_ff.i>
+%include <gr_max_ii.i>
+%include <gr_max_ss.i>
 %include <gr_multiply_cc.i>
 %include <gr_multiply_const_cc.i>
 %include <gr_multiply_const_ff.i>
