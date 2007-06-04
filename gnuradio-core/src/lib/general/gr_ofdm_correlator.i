@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2006, 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,23 +22,23 @@
 
 #include <vector>
 
-GR_SWIG_BLOCK_MAGIC(gr,ofdm_correlator)
+GR_SWIG_BLOCK_MAGIC(gr,ofdm_correlator);
 
 gr_ofdm_correlator_sptr 
 gr_make_ofdm_correlator (unsigned int occupied_carriers, 
-			 unsigned int vlen,
+			 unsigned int fft_length,
 			 unsigned int cplen,
-			 std::vector<gr_complex> known_symbol1, 
-			 std::vector<gr_complex> known_symbol2);
+			 const std::vector<gr_complex> &known_symbol1, 
+			 const std::vector<gr_complex> &known_symbol2);
 
 class gr_ofdm_correlator : public gr_sync_decimator
 {
  protected:
   gr_ofdm_correlator (unsigned int occupied_carriers,
-		      unsigned int vlen,
+		      unsigned int fft_length,
 		      unsigned int cplen,
-		      std::vector<gr_complex> known_symbol1, 
-		      std::vector<gr_complex> known_symbol2);
+		      const std::vector<gr_complex> &known_symbol1, 
+		      const std::vector<gr_complex> &known_symbol2);
 
  public:
   float snr() { return d_snr_est; }

@@ -25,8 +25,6 @@ EXTRA_DIST = 					\
 		benchmark_ofdm_tx.py		\
 		fftshift.py			\
 		fusb_options.py			\
-		ofdm.py				\
-		ofdm_receiver.py		\
 		pick_bitrate.py			\
 		receive_path.py			\
 		transmit_path.py

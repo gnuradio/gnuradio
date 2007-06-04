@@ -26,9 +26,6 @@ from gnuradio import eng_notation
 import copy
 import sys
 
-# from current dir
-import ofdm
-
 # /////////////////////////////////////////////////////////////////////////////
 #                              transmit path
 # /////////////////////////////////////////////////////////////////////////////
@@ -44,13 +41,11 @@ class transmit_path(gr.hier_block):
         self._verbose      = options.verbose
         self._tx_amplitude = options.tx_amplitude    # digital amplitude sent to USRP
 
-        self.ofdm_mod = ofdm.ofdm_mod(fg, options)
-        self.packet_transmitter = \
+        self.ofdm_transmitter = \
             blks.mod_ofdm_pkts(fg,
-                               self.ofdm_mod,
-                               access_code=None,
+                               options,
                                msgq_limit=4,
-                               pad_for_usrp=True)
+                               pad_for_usrp=False)
 
         self.amp = gr.multiply_const_cc(1)
         self.set_tx_amplitude(self._tx_amplitude)
@@ -60,7 +55,7 @@ class transmit_path(gr.hier_block):
             self._print_verbage()
 
         # Create and setup transmit path flow graph
-        fg.connect(self.packet_transmitter, self.amp)
+        fg.connect(self.ofdm_transmitter, self.amp)
         gr.hier_block.__init__(self, fg, None, self.amp)
 
     def set_tx_amplitude(self, ampl):
@@ -75,7 +70,7 @@ class transmit_path(gr.hier_block):
         """
         Calls the transmitter method to send a packet
         """
-        return self.packet_transmitter.send_pkt(payload, eof)
+        return self.ofdm_transmitter.send_pkt(payload, eof)
         
     def bitrate(self):
         return self._bitrate
@@ -87,7 +82,7 @@ class transmit_path(gr.hier_block):
         """
         Adds transmitter-specific options to the Options Parser
         """
-        normal.add_option("", "--tx-amplitude", type="eng_float", default=12000, metavar="AMPL",
+        normal.add_option("", "--tx-amplitude", type="eng_float", default=1, metavar="AMPL",
                           help="set transmitter digital amplitude: 0 <= AMPL < 32768 [default=%default]")
         normal.add_option("-v", "--verbose", action="store_true", default=False)
         expert.add_option("", "--log", action="store_true", default=False,

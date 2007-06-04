@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2004,2006 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,14 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// WARNING: this file is machine generated.  Edits will be over written
+GR_SWIG_BLOCK_MAGIC(gr,ofdm_frame_sink);
 
-GR_SWIG_BLOCK_MAGIC(gr,dpll_ff)
+gr_ofdm_frame_sink_sptr 
+gr_make_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
 
-  gr_dpll_ff_sptr gr_make_dpll_ff (float period, float gain);
-
-class gr_dpll_ff : public gr_sync_block
+class gr_ofdm_frame_sink : public gr_sync_block
 {
- private:
-  gr_dpll_ff (float period, float gain);
+ protected:
+  gr_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
+
+ public:
+  ~gr_ofdm_frame_sink();
 };

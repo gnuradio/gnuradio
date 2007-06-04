@@ -29,12 +29,12 @@ noinst_LTLIBRARIES = libio.la
 
 libio_la_SOURCES = 			\
 	gr_file_sink.cc			\
+	gr_file_sink_base.cc		\
 	gr_file_source.cc		\
 	gr_file_descriptor_sink.cc	\
 	gr_file_descriptor_source.cc	\
 	gr_message_sink.cc		\
 	gr_message_source.cc		\
-	gr_message_vector_source.cc	\
 	gr_oscope_guts.cc		\
 	gr_oscope_sink_f.cc		\
 	gr_oscope_sink_x.cc		\
@@ -57,13 +57,12 @@ libio_la_SOURCES = 			\
 
 grinclude_HEADERS = 			\
 	gr_file_sink.h			\
+	gr_file_sink_base.h		\
 	gr_file_source.h		\
 	gr_file_descriptor_sink.h	\
 	gr_file_descriptor_source.h	\
-	gr_frame.h			\
 	gr_message_sink.h		\
 	gr_message_source.h		\
-	gr_message_vector_source.h	\
 	gr_oscope_guts.h		\
 	gr_oscope_sink_f.h		\
 	gr_oscope_sink_x.h		\
@@ -90,12 +89,12 @@ grinclude_HEADERS = 			\
 swiginclude_HEADERS =			\
 	io.i				\
 	gr_file_sink.i			\
+	gr_file_sink_base.i		\
 	gr_file_source.i		\
 	gr_file_descriptor_sink.i	\
 	gr_file_descriptor_source.i	\
 	gr_message_sink.i		\
 	gr_message_source.i		\
-	gr_message_vector_source.i		\
 	gr_oscope_sink.i		\
 	microtune_xxxx_eval_board.i	\
 	microtune_4702_eval_board.i	\

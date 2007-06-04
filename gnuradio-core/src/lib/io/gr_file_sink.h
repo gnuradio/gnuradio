@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,7 +24,7 @@
 #define INCLUDED_GR_FILE_SINK_H
 
 #include <gr_sync_block.h>
-#include <omnithread.h>
+#include <gr_file_sink_base.h>
 
 class gr_file_sink;
 typedef boost::shared_ptr<gr_file_sink> gr_file_sink_sptr;
@@ -36,16 +36,12 @@ gr_file_sink_sptr gr_make_file_sink(size_t itemsize, const char *filename);
  * \ingroup sink
  */
 
-class gr_file_sink : public gr_sync_block
+class gr_file_sink : public gr_sync_block, public gr_file_sink_base
 {
   friend gr_file_sink_sptr gr_make_file_sink(size_t itemsize, const char *filename);
 
  private:
   size_t	d_itemsize;
-  void	       *d_fp;		// current FILE pointer
-  void	       *d_new_fp;	// new FILE pointer
-  bool		d_updated;	// is there a new FILE pointer?
-  omni_mutex	d_mutex;
 
  protected:
   gr_file_sink(size_t itemsize, const char *filename);
@@ -53,23 +49,9 @@ class gr_file_sink : public gr_sync_block
  public:
   ~gr_file_sink();
 
-  /*! 
-   * \brief Open filename and begin output to it.
-   */
-  bool open(const char *filename);
-
-  /*!
-   * \brief Close current output file.
-   *
-   * Closes current output file and ignores any output until
-   * open is called to connect to another file.
-   */
-  void close();
-
   int work(int noutput_items,
 	   gr_vector_const_void_star &input_items,
 	   gr_vector_void_star &output_items);
 };
-
 
 #endif /* INCLUDED_GR_FILE_SINK_H */

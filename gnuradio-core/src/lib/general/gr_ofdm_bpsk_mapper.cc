@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -29,30 +29,32 @@
 #include <vector>
 
 gr_ofdm_bpsk_mapper_sptr
-gr_make_ofdm_bpsk_mapper (unsigned int mtu, unsigned int occupied_carriers, unsigned int vlen,
-			  std::vector<gr_complex> known_symbol1, std::vector<gr_complex> known_symbol2)
+gr_make_ofdm_bpsk_mapper (unsigned int msgq_limit, 
+			  unsigned int occupied_carriers, unsigned int fft_length,
+			  const std::vector<gr_complex> &known_symbol1, 
+			  const std::vector<gr_complex> &known_symbol2)
 {
-  return gr_ofdm_bpsk_mapper_sptr (new gr_ofdm_bpsk_mapper (mtu, occupied_carriers, vlen, 
+  return gr_ofdm_bpsk_mapper_sptr (new gr_ofdm_bpsk_mapper (msgq_limit, occupied_carriers, fft_length, 
 							    known_symbol1, known_symbol2));
 }
 
-gr_ofdm_bpsk_mapper::gr_ofdm_bpsk_mapper (unsigned int mtu, unsigned int occupied_carriers, unsigned int vlen,
-					  std::vector<gr_complex> known_symbol1, 
-					  std::vector<gr_complex> known_symbol2)
-  : gr_block ("ofdm_bpsk_mapper",
-	      gr_make_io_signature (1, 1, 2*sizeof(int) + sizeof(unsigned char)*mtu),
-	      gr_make_io_signature (1, 1, sizeof(gr_complex)*vlen)),
-    d_mtu(mtu),
+// Consumes 1 packet and produces as many OFDM symbols of fft_length to hold the full packet
+gr_ofdm_bpsk_mapper::gr_ofdm_bpsk_mapper (unsigned int msgq_limit, 
+					  unsigned int occupied_carriers, unsigned int fft_length,
+					  const std::vector<gr_complex> &known_symbol1, 
+					  const std::vector<gr_complex> &known_symbol2)
+  : gr_sync_block ("ofdm_bpsk_mapper",
+		   gr_make_io_signature (0, 0, 0),
+		   gr_make_io_signature2 (1, 2, sizeof(gr_complex)*fft_length, sizeof(char))),
+    d_msgq(gr_make_msg_queue(msgq_limit)), d_msg_offset(0), d_eof(false),
     d_occupied_carriers(occupied_carriers),
-    d_vlen(vlen),
-    d_packet_offset(0),
+    d_fft_length(fft_length),
     d_bit_offset(0),
     d_header_sent(0),
     d_known_symbol1(known_symbol1),
     d_known_symbol2(known_symbol2)
-
 {
-  assert(d_occupied_carriers < d_vlen);
+  assert(d_occupied_carriers <= d_fft_length);
   assert(d_occupied_carriers == d_known_symbol1.size());
   assert(d_occupied_carriers == d_known_symbol2.size());
 }
@@ -61,99 +63,101 @@ gr_ofdm_bpsk_mapper::~gr_ofdm_bpsk_mapper(void)
 {
 }
 
-void
-gr_ofdm_bpsk_mapper::forecast (int noutput_items, gr_vector_int &ninput_items_required)
+float randombit()
 {
-  unsigned ninputs = ninput_items_required.size ();
-  for (unsigned i = 0; i < ninputs; i++)
-    ninput_items_required[i] = 1;
+  int r = rand()&1;
+  return (float)(-1 + 2*r);
 }
 
 int
-gr_ofdm_bpsk_mapper::general_work(int noutput_items,
-				  gr_vector_int &ninput_items,
-				  gr_vector_const_void_star &input_items,
-				  gr_vector_void_star &output_items)
+gr_ofdm_bpsk_mapper::work(int noutput_items,
+			  gr_vector_const_void_star &input_items,
+			  gr_vector_void_star &output_items)
 {
-  const gr_frame *in = (const gr_frame *) input_items[0];
   gr_complex *out = (gr_complex *)output_items[0];
   
   unsigned int i=0;
-  unsigned int num_symbols = 0, pkt_length;
+  unsigned int unoccupied_carriers = d_fft_length - d_occupied_carriers;
+  unsigned int zeros_on_left = (unsigned)ceil(unoccupied_carriers/2.0);
 
   //printf("OFDM BPSK Mapper:  ninput_items: %d   noutput_items: %d\n", ninput_items[0], noutput_items);
 
-  pkt_length = in[0].length;
-
-  std::vector<gr_complex>::iterator ks_itr;
-  if(d_header_sent == 0) {
-     ks_itr = d_known_symbol1.begin();
-  }
-  else if(d_header_sent == 1) {
-    ks_itr = d_known_symbol2.begin();
+  if(d_eof) {
+    return -1;
   }
   
-  if(d_header_sent < 2) {
-    //  Add training symbols here
-    for(i=0; i < (ceil((d_vlen - d_occupied_carriers)/2.0)); i++) {
-      out[i] = gr_complex(0,0);
-    }
-    for(;i<d_vlen - ceil((d_vlen-d_occupied_carriers)/2.0);i++) {
-      //out[i] = gr_complex(1,0);
-      out[i] = *(ks_itr++);
-    }
-    for(; i < d_vlen; i++) {
-      out[i] = gr_complex(0,0);
-    }
-
-    num_symbols = 1;
-    out += d_vlen;
-    d_header_sent++;
-  }
-  
-  unsigned int unoccupied_carriers = d_vlen - d_occupied_carriers;
-  unsigned int zeros_on_left = (unsigned)ceil(unoccupied_carriers/2.0);
-  unsigned int zeros_on_right = unoccupied_carriers - zeros_on_left;
-
-  while(num_symbols < (unsigned)noutput_items) {
-
-    // stick in unused carriers
-    for(i = d_vlen-zeros_on_right; i < d_vlen; i++) {
-      out[i] = gr_complex(0,0);
-    }
-
-    for(i=0; i < zeros_on_left; i++) {
-      out[i] = gr_complex(0,0);
-    }
-
-    while((d_packet_offset < pkt_length) && (i < d_vlen-zeros_on_right)) {
-      unsigned char bit = (in[0].data[d_packet_offset] >> (d_bit_offset++)) & 0x01;
-      out[i++] = gr_complex(-1+2*(bit));
-      if(d_bit_offset == 8) {
-	d_bit_offset = 0;
-	d_packet_offset++;
-      }
-    }
-
-    // Ran out of data to put in symbols
-    if(d_packet_offset == pkt_length) {
-      while(i < d_vlen-zeros_on_right) {
-	out[i++] = gr_complex(0,0);
-      }
-
-      d_packet_offset = 0;
-      assert(d_bit_offset == 0);
-      num_symbols++;
-      d_header_sent = 0;
-      consume_each(1);
-      return num_symbols;
-    }
+  if(!d_msg) {
+    d_msg = d_msgq->delete_head();	   // block, waiting for a message
+    d_msg_offset = 0;
+    d_bit_offset = 0;
+    d_header_sent = 0;
     
-    // Ran out of space in symbol
-    out += d_vlen;
-    num_symbols++;
+    if((d_msg->length() == 0) && (d_msg->type() == 1)) {
+      d_msg.reset();
+      return -1;
+    }
   }
-  consume_each(0);
-  return num_symbols;
+
+  if(output_items.size() == 2) {
+    char *sig = (char *)output_items[1];
+    if(d_header_sent == 1) {
+      sig[0] = 1;
+    }
+    else {
+      sig[0] = 0;
+    }
+  }
+  
+  // Build a single symbol:
+
+  // Initialize all bins to 0 to set unused carriers
+  memset(out, 0, d_fft_length*sizeof(gr_complex));
+  
+  if(d_header_sent == 0) {
+     for(i=0; i < d_occupied_carriers; i++) {
+       out[i+zeros_on_left] = d_known_symbol1[i];
+     }
+    d_header_sent++;
+
+    return 1;
+  }
+  
+  if(d_header_sent == 1) {
+    for(i=0; i < d_occupied_carriers; i++) {
+      out[i+zeros_on_left] = d_known_symbol2[i];
+    }
+    d_header_sent++;
+
+    return 1;
+  }
+
+  i = 0;
+  while((d_msg_offset < d_msg->length()) && (i < d_occupied_carriers)) {
+    unsigned char bit = (d_msg->msg()[d_msg_offset] >> (d_bit_offset)) & 0x01;
+    out[i + zeros_on_left] = gr_complex(-1+2*(bit));
+    i++;
+    d_bit_offset++;
+    if(d_bit_offset == 8) {
+      d_bit_offset = 0;
+      d_msg_offset++;
+    }
+  }
+
+  // Ran out of data to put in symbol
+  if (d_msg_offset == d_msg->length()) {
+    while(i < d_occupied_carriers) {   // finish filling out the symbol
+      out[i + zeros_on_left] = gr_complex(randombit(),0);
+      i++;
+    }
+
+    if (d_msg->type() == 1)	           // type == 1 sets EOF
+      d_eof = true;
+    d_msg.reset();   // finished packet, free message
+ 
+    assert(d_bit_offset == 0);
+    return 1;          // produced one symbol
+  }
+  
+  return 1;  // produced symbol
 }
 

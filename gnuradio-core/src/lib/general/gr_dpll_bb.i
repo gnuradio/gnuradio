@@ -20,22 +20,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_FRAME_H
-#define INCLUDED_GR_FRAME_H
+GR_SWIG_BLOCK_MAGIC(gr,dpll_bb)
 
-#include <vector>
+  gr_dpll_bb_sptr gr_make_dpll_bb (float period, float gain);
 
-class gr_frame
+class gr_dpll_bb : public gr_sync_block
 {
- public:
-  gr_frame(unsigned int mtu)
-    : mtu(mtu), length(0)
-  { }
-
-  unsigned int mtu;
-  unsigned int length;
-  unsigned char data[];
+ private:
+  gr_dpll_bb (float period, float gain);
 };
-
-#endif
-

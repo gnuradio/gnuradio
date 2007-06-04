@@ -62,9 +62,9 @@
 #include <gr_packed_to_unpacked_bb.h>
 #include <gr_packed_to_unpacked_ii.h>
 #include <gr_packed_to_unpacked_ss.h>
-#include <gr_peak_detector_ff.h>
-#include <gr_peak_detector_ii.h>
-#include <gr_peak_detector_ss.h>
+#include <gr_peak_detector_fb.h>
+#include <gr_peak_detector_ib.h>
+#include <gr_peak_detector_sb.h>
 #include <gr_sample_and_hold_bb.h>
 #include <gr_sample_and_hold_ff.h>
 #include <gr_sample_and_hold_ii.h>
@@ -152,9 +152,9 @@
 %include <gr_packed_to_unpacked_bb.i>
 %include <gr_packed_to_unpacked_ii.i>
 %include <gr_packed_to_unpacked_ss.i>
-%include <gr_peak_detector_ff.i>
-%include <gr_peak_detector_ii.i>
-%include <gr_peak_detector_ss.i>
+%include <gr_peak_detector_fb.i>
+%include <gr_peak_detector_ib.i>
+%include <gr_peak_detector_sb.i>
 %include <gr_sample_and_hold_bb.i>
 %include <gr_sample_and_hold_ff.i>
 %include <gr_sample_and_hold_ii.i>

@@ -44,7 +44,7 @@ gr_make_@BASE_NAME@ (float threshold_factor_rise,
 		int look_ahead, float alpha)
   : gr_sync_block ("@BASE_NAME@",
 		   gr_make_io_signature (1, 1, sizeof (@I_TYPE@)),
-		   gr_make_io_signature (1, 1, sizeof (@O_TYPE@))),
+		   gr_make_io_signature (1, 1, sizeof (char))),
     d_threshold_factor_rise(threshold_factor_rise), 
     d_threshold_factor_fall(threshold_factor_fall),
     d_look_ahead(look_ahead), d_avg_alpha(alpha), d_avg(0), d_found(0)
@@ -57,9 +57,9 @@ int
 	      gr_vector_void_star &output_items)
 {
   @I_TYPE@ *iptr = (@I_TYPE@ *) input_items[0];
-  @O_TYPE@ *optr = (@O_TYPE@ *) output_items[0];
+  char *optr = (char *) output_items[0];
 
-  memset(optr, 0, noutput_items*sizeof(@O_TYPE@));
+  memset(optr, 0, noutput_items*sizeof(char));
 
   @I_TYPE@ peak_val = -(@I_TYPE@)INFINITY;
   int peak_ind = 0;
@@ -90,7 +90,7 @@ int
 	i++;
       }
       else {
-	optr[peak_ind] = (@O_TYPE@)1;
+	optr[peak_ind] = 1;
 	state = 0;
 	peak_val = -(@I_TYPE@)INFINITY;
 	//printf("Leaving  State 1: Peak: %f  Peak Ind: %d   i: %d  noutput_items: %d\n", 

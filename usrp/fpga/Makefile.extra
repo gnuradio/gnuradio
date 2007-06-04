@@ -72,7 +72,6 @@ EXTRA_DIST =                                           \
 	sdr_lib/gen_cordic_consts.py                   \
 	sdr_lib/gen_sync.v                             \
 	sdr_lib/hb/acc.v                               \
-	sdr_lib/hb/coeff_ram.v                         \
 	sdr_lib/hb/coeff_rom.v                         \
 	sdr_lib/hb/halfband_decim.v                    \
 	sdr_lib/hb/halfband_interp.v                   \

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,26 +20,48 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,file_sink)
+#ifndef INCLUDED_GR_FILE_SINK_BASE_H
+#define INCLUDED_GR_FILE_SINK_BASE_H
 
-gr_file_sink_sptr 
-gr_make_file_sink (size_t itemsize, const char *filename);
+#include <omnithread.h>
+#include <cstdio>
 
-class gr_file_sink : public gr_sync_block, public gr_file_sink_base
+/*!
+ * \brief Common base class for file sinks
+ */
+class gr_file_sink_base 
 {
  protected:
-  gr_file_sink (size_t itemsize, const char *filename);
+  FILE	       *d_fp;		// current FILE pointer
+  FILE	       *d_new_fp;	// new FILE pointer
+  bool		d_updated;	// is there a new FILE pointer?
+  bool		d_is_binary;
+  omni_mutex	d_mutex;
+
+ protected:
+  gr_file_sink_base(const char *filename, bool is_binary);
 
  public:
-  ~gr_file_sink ();
+  ~gr_file_sink_base();
 
   /*! 
-   * \brief open filename and begin output to it.
+   * \brief Open filename and begin output to it.
    */
   bool open(const char *filename);
 
   /*!
-   * \brief close current output file.
+   * \brief Close current output file.
+   *
+   * Closes current output file and ignores any output until
+   * open is called to connect to another file.
    */
   void close();
+
+  /*!
+   * \brief if we've had an update, do it now.
+   */
+  void do_update();
 };
+
+
+#endif /* INCLUDED_GR_FILE_SINK_BASE_H */

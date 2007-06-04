@@ -29,6 +29,7 @@ grblkspythondir = $(grpythondir)/blksimpl
 grblkspython_PYTHON =		\
 	__init__.py		\
 	am_demod.py		\
+	channel_model.py	\
 	dbpsk.py		\
 	dqpsk.py		\
 	d8psk.py		\
@@ -40,6 +41,8 @@ grblkspython_PYTHON =		\
 	nbfm_rx.py		\
 	nbfm_tx.py		\
 	ofdm_pkt.py		\
+	ofdm_receiver.py	\
+	ofdm_sync.py		\
 	pkt.py			\
 	psk.py			\
 	qam.py			\

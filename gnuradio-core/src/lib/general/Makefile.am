@@ -63,7 +63,7 @@ libgeneral_la_SOURCES = 		\
 	gr_diff_decoder_bb.cc		\
 	gr_diff_encoder_bb.cc		\
 	gr_diff_phasor_cc.cc		\
-	gr_dpll_ff.cc			\
+	gr_dpll_bb.cc			\
 	gr_fake_channel_coder_pp.cc	\
 	gr_fast_atan2f.cc		\
 	gr_feedforward_agc_cc.cc	\
@@ -102,6 +102,7 @@ libgeneral_la_SOURCES = 		\
         gr_ofdm_mapper_bcv.cc           \
         gr_ofdm_bpsk_demapper.cc        \
         gr_ofdm_bpsk_mapper.cc          \
+	gr_ofdm_frame_sink.cc		\
         gr_ofdm_sampler.cc              \
 	gr_pa_2x2_phase_combiner.cc	\
 	gr_packet_sink.cc		\
@@ -197,7 +198,7 @@ grinclude_HEADERS = 			\
 	gr_deinterleave.h		\
 	gr_delay.h			\
 	gr_diff_phasor_cc.h		\
-	gr_dpll_ff.h			\
+	gr_dpll_bb.h			\
 	gr_expj.h			\
 	gr_fake_channel_coder_pp.h	\
 	gr_feedforward_agc_cc.h		\
@@ -240,7 +241,8 @@ grinclude_HEADERS = 			\
         gr_ofdm_mapper_bcv.h            \
         gr_ofdm_bpsk_mapper.h           \
         gr_ofdm_bpsk_demapper.h         \
-        gr_ofdm_sampler.h               \
+        gr_ofdm_frame_sink.h		\
+	gr_ofdm_sampler.h               \
 	gr_pa_2x2_phase_combiner.h	\
 	gr_packet_sink.h		\
 	gr_phase_modulator_fc.h		\
@@ -342,7 +344,7 @@ swiginclude_HEADERS =			\
 	gr_diff_decoder_bb.i		\
 	gr_diff_encoder_bb.i		\
 	gr_diff_phasor_cc.i		\
-	gr_dpll_ff.i			\
+	gr_dpll_bb.i			\
 	gr_deinterleave.i		\
 	gr_delay.i			\
 	gr_fake_channel_coder_pp.i	\
@@ -379,7 +381,8 @@ swiginclude_HEADERS =			\
         gr_ofdm_mapper_bcv.i            \
         gr_ofdm_bpsk_demapper.i         \
         gr_ofdm_bpsk_mapper.i           \
-        gr_ofdm_sampler.i               \
+        gr_ofdm_frame_sink.i		\
+	gr_ofdm_sampler.i               \
 	gr_pa_2x2_phase_combiner.i	\
 	gr_packet_sink.i		\
 	gr_phase_modulator_fc.i		\

@@ -56,7 +56,7 @@ gr_delay::work (int noutput_items,
     iptr = (const char *) input_items[i];
     optr = (char *) output_items[i];
 
-    memcpy(optr, iptr + delay()*d_itemsize, noutput_items*d_itemsize);
+    memcpy(optr, iptr, noutput_items*d_itemsize);
   }
   
   return noutput_items;

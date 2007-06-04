@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006, 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,10 +31,10 @@ class gr_ofdm_correlator;
 typedef boost::shared_ptr<gr_ofdm_correlator> gr_ofdm_correlator_sptr;
 
 gr_ofdm_correlator_sptr 
-gr_make_ofdm_correlator (unsigned int occupied_carriers, unsigned int vlen,
+gr_make_ofdm_correlator (unsigned int occupied_carriers, unsigned int fft_length,
 			 unsigned int cplen,
-			 std::vector<gr_complex> known_symbol1, 
-			 std::vector<gr_complex> known_symbol2);
+			 const std::vector<gr_complex> &known_symbol1, 
+			 const std::vector<gr_complex> &known_symbol2);
 
 /*!
  * \brief take a vector of complex constellation points in from an FFT
@@ -48,7 +48,7 @@ gr_make_ofdm_correlator (unsigned int occupied_carriers, unsigned int vlen,
  * been corrected and that the samples fall in the middle of one FFT bin.
  *
  * It then uses one of those known
- * symbosl to estimate the channel response overa all subcarriers and does a simple 
+ * symbols to estimate the channel response over all subcarriers and does a simple 
  * 1-tap equalization on all subcarriers. This corrects for the phase and amplitude
  * distortion caused by the channel.
  */
@@ -58,7 +58,7 @@ class gr_ofdm_correlator : public gr_block
   /*! 
    * \brief Build an OFDM correlator and equalizer.
    * \param occupied_carriers   The number of subcarriers with data in the received symbol
-   * \param vlen                The size of the FFT vector (occupied_carriers + unused carriers)
+   * \param fft_length          The size of the FFT vector (occupied_carriers + unused carriers)
    * \param known_symbol1       A vector of complex numbers representing a known symbol at the
    *                            start of a frame (usually a BPSK PN sequence)
    * \param known_symbol2       A vector of complex numbers representing a known symbol at the
@@ -67,16 +67,16 @@ class gr_ofdm_correlator : public gr_block
    *                            for phase changes between symbols. 
    */
   friend gr_ofdm_correlator_sptr
-  gr_make_ofdm_correlator (unsigned int occupied_carriers, unsigned int vlen,
+  gr_make_ofdm_correlator (unsigned int occupied_carriers, unsigned int fft_length,
 			   unsigned int cplen,
-			   std::vector<gr_complex> known_symbol1, 
-			   std::vector<gr_complex> known_symbol2);
+			   const std::vector<gr_complex> &known_symbol1, 
+			   const std::vector<gr_complex> &known_symbol2);
   
  protected:
-  gr_ofdm_correlator (unsigned int occupied_carriers, unsigned int vlen,
+  gr_ofdm_correlator (unsigned int occupied_carriers, unsigned int fft_length,
 		      unsigned int cplen,
-		      std::vector<gr_complex> known_symbol1, 
-		      std::vector<gr_complex> known_symbol2);
+		      const std::vector<gr_complex> &known_symbol1, 
+		      const std::vector<gr_complex> &known_symbol2);
   
  private:
   unsigned char slicer(gr_complex x);
@@ -86,15 +86,15 @@ class gr_ofdm_correlator : public gr_block
   gr_complex coarse_freq_comp(int freq_delta, int count);
   
   unsigned int d_occupied_carriers;  // !< \brief number of subcarriers with data
-  unsigned int d_vlen;               // !< \brief length of FFT vector
+  unsigned int d_fft_length;         // !< \brief length of FFT vector
   unsigned int d_cplen;              // !< \brief length of cyclic prefix in samples
   unsigned int d_freq_shift_len;     // !< \brief number of surrounding bins to look at for correlation
   std::vector<gr_complex> d_known_symbol1, d_known_symbol2; // !< \brief known symbols at start of frame
   std::vector<gr_complex> d_diff_corr_factor; // !< \brief factor used in correlation
-  std::vector<gr_complex> d_hestimate; // !< channel estimate
-  signed int d_coarse_freq; // !< \brief search distance in number of bins
-  unsigned int d_phase_count;        // !< \brief accumulator for coarse freq correction
-  float d_snr_est;  // !< an estimation of the signal to noise ratio
+  std::vector<gr_complex> d_hestimate;  // !< channel estimate
+  signed int d_coarse_freq;             // !< \brief search distance in number of bins
+  unsigned int d_phase_count;           // !< \brief accumulator for coarse freq correction
+  float d_snr_est;                      // !< an estimation of the signal to noise ratio
 
   void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 

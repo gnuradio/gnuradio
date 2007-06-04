@@ -84,7 +84,7 @@
 #include <gr_packet_sink.h>
 #include <gr_lms_dfe_cc.h>
 #include <gr_lms_dfe_ff.h>
-#include <gr_dpll_ff.h>
+#include <gr_dpll_bb.h>
 #include <gr_pll_freqdet_cf.h>
 #include <gr_pll_refout_cc.h>
 #include <gr_pll_carriertracking_cc.h>
@@ -97,6 +97,7 @@
 #include <gr_ofdm_cyclic_prefixer.h>
 #include <gr_ofdm_bpsk_demapper.h>
 #include <gr_ofdm_bpsk_mapper.h>
+#include <gr_ofdm_frame_sink.h>
 #include <gr_ofdm_sampler.h>
 #include <gr_costas_loop_cc.h>
 #include <gr_pa_2x2_phase_combiner.h>
@@ -186,7 +187,7 @@
 %include "gr_packet_sink.i"
 %include "gr_lms_dfe_cc.i"
 %include "gr_lms_dfe_ff.i"
-%include "gr_dpll_ff.i"
+%include "gr_dpll_bb.i"
 %include "gr_pll_freqdet_cf.i"
 %include "gr_pll_refout_cc.i"
 %include "gr_pll_carriertracking_cc.i"
@@ -199,6 +200,7 @@
 %include "gr_ofdm_cyclic_prefixer.i"
 %include "gr_ofdm_bpsk_demapper.i"
 %include "gr_ofdm_bpsk_mapper.i"
+%include "gr_ofdm_frame_sink.i"
 %include "gr_ofdm_sampler.i"
 %include "gr_costas_loop_cc.i"
 %include "gr_pa_2x2_phase_combiner.i"

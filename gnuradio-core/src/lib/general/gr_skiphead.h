@@ -26,6 +26,10 @@
 #include <gr_sync_block.h>
 #include <stddef.h>      // size_t
 
+class gr_skiphead;
+typedef boost::shared_ptr<gr_skiphead> gr_skiphead_sptr;
+
+
 /*!
  * \brief skips the first N items, from then on copies items to the output
  * \ingroup block
@@ -33,22 +37,24 @@
  * Useful for building test cases and sources which have metadata or junk at the start
  */
 
-class gr_skiphead : public gr_sync_block
+class gr_skiphead : public gr_block
 {
-  friend gr_block_sptr gr_make_skiphead (size_t sizeof_stream_item, int nitems);
-  gr_skiphead (size_t sizeof_stream_item, int nitems);
+  friend gr_skiphead_sptr gr_make_skiphead (size_t itemsize, size_t nitems_to_skip);
+  gr_skiphead (size_t itemsize, size_t nitems_to_skip);
 
-  int  d_nitems;
-  int  d_nskipped_items;
+  long long  		d_nitems_to_skip;
+  long long		d_nitems;		// total items seen
 
  public:
-  int work (int noutput_items,
-     gr_vector_const_void_star &input_items,
-     gr_vector_void_star &output_items);
+
+  int general_work(int noutput_items,
+		   gr_vector_int &ninput_items,
+		   gr_vector_const_void_star &input_items,
+		   gr_vector_void_star &output_items);
 };
 
-gr_block_sptr
-gr_make_skiphead (size_t sizeof_stream_item, int nitems);
+gr_skiphead_sptr
+gr_make_skiphead (size_t itemsize, size_t nitems_to_skip);
 
 
 #endif /* INCLUDED_GR_SKIPHEAD_H */

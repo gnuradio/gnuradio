@@ -20,25 +20,23 @@
  * Boston, MA 02110-1301, USA.
  */
 
-// WARNING: this file is machine generated.  Edits will be over written
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include <gr_dpll_ff.h>
+#include <gr_dpll_bb.h>
 #include <gr_io_signature.h>
 
-gr_dpll_ff_sptr
-gr_make_dpll_ff (float period, float gain)
+gr_dpll_bb_sptr
+gr_make_dpll_bb (float period, float gain)
 {
-  return gr_dpll_ff_sptr (new gr_dpll_ff (period, gain));
+  return gr_dpll_bb_sptr (new gr_dpll_bb (period, gain));
 }
 
-gr_dpll_ff::gr_dpll_ff (float period, float gain)
-  : gr_sync_block ("dpll_ff",
-		   gr_make_io_signature (1, 1, sizeof (float)),
-		   gr_make_io_signature (1, 1, sizeof (float))),
+gr_dpll_bb::gr_dpll_bb (float period, float gain)
+  : gr_sync_block ("dpll_bb",
+		   gr_make_io_signature (1, 1, sizeof (char)),
+		   gr_make_io_signature (1, 1, sizeof (char))),
     d_restart(0),d_pulse_phase(0)
 {
   d_pulse_frequency = 1.0/period;
@@ -55,16 +53,16 @@ gr_dpll_ff::gr_dpll_ff (float period, float gain)
 }
 
 int
-gr_dpll_ff::work (int noutput_items,
+gr_dpll_bb::work (int noutput_items,
 	      gr_vector_const_void_star &input_items,
 	      gr_vector_void_star &output_items)
 {
-  float *iptr = (float *) input_items[0];
-  float *optr = (float *) output_items[0];
+  const char *iptr = (const char *) input_items[0];
+  char *optr = (char *) output_items[0];
 
   for (int i = 0; i < noutput_items; i++){
-    optr[i]= (float)0;
-    if(iptr[i] ==(float)1) {
+    optr[i]= 0;
+    if(iptr[i] == 1) {
       if (d_restart == 0) {
 	d_pulse_phase = 1;
       } else {
@@ -77,7 +75,7 @@ gr_dpll_ff::work (int noutput_items,
       d_pulse_phase -= 1.0;
       if (d_restart > 0) {
 	d_restart -= 1;
-	optr[i] = (float)1;
+	optr[i] = 1;
       }
     }
     d_pulse_phase += d_pulse_frequency;

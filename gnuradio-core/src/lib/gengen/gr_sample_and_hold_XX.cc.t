@@ -37,7 +37,7 @@ gr_make_@BASE_NAME@ ()
 
 @NAME@::@NAME@ ()
   : gr_sync_block ("@BASE_NAME@",
-		   gr_make_io_signature (2, 2, sizeof (@I_TYPE@)),
+		   gr_make_io_signature2 (2, 2, sizeof (@I_TYPE@), sizeof(char)),
 		   gr_make_io_signature (1, 1, sizeof (@O_TYPE@))),
     d_data(0)
 {
@@ -49,11 +49,11 @@ int
 		   gr_vector_void_star &output_items)
 {
   @I_TYPE@ *iptr = (@I_TYPE@ *) input_items[0];
-  @I_TYPE@ *ctrl = (@I_TYPE@ *) input_items[1];
+  const char *ctrl = (const char *) input_items[1];
   @O_TYPE@ *optr = (@O_TYPE@ *) output_items[0];
 
   for (int i = 0; i < noutput_items; i++){
-    if(ctrl[i] > 0.5) {
+    if(ctrl[i]) {
       d_data = iptr[i];
     }
     optr[i] = d_data;

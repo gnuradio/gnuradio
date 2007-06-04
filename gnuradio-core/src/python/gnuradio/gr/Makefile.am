@@ -55,6 +55,7 @@ noinst_PYTHON = 			\
 	qa_complex_to_xxx.py		\
 	qa_constellation_decoder_cb.py  \
 	qa_correlate_access_code.py	\
+	qa_delay.py			\
 	qa_diff_encoder.py		\
 	qa_diff_phasor_cc.py		\
 	qa_feval.py			\
@@ -89,6 +90,7 @@ noinst_PYTHON = 			\
 	qa_sig_source.py		\
 	qa_single_pole_iir.py		\
 	qa_single_pole_iir_cc.py	\
+	qa_skiphead.py			\
 	qa_unpack_k_bits.py		
 
 

@@ -22,27 +22,28 @@
 
 #include <vector>
 
-GR_SWIG_BLOCK_MAGIC(gr,ofdm_bpsk_mapper)
+GR_SWIG_BLOCK_MAGIC(gr,ofdm_bpsk_mapper);
 
 gr_ofdm_bpsk_mapper_sptr 
-gr_make_ofdm_bpsk_mapper (unsigned int mtu,
+gr_make_ofdm_bpsk_mapper (unsigned int msgq_limit,
 			  unsigned int bits_per_symbol, 
-			  unsigned int vlen,
-			  std::vector<gr_complex> known_symbol1, 
-			  std::vector<gr_complex> known_symbol2);
+			  unsigned int fft_length,
+			  const std::vector<gr_complex> &known_symbol1, 
+			  const std::vector<gr_complex> &known_symbol2);
 
-class gr_ofdm_bpsk_mapper : public gr_block
+class gr_ofdm_bpsk_mapper : public gr_sync_block
 {
  protected:
-  gr_ofdm_bpsk_mapper (unsigned int mtu,
+  gr_ofdm_bpsk_mapper (unsigned int msgq_limit,
 		       unsigned int bits_per_symbol,
-		       unsigned int vlen,
-		       std::vector<gr_complex> known_symbol1,
-		       std::vector<gr_complex> known_symbol2);
+		       unsigned int fft_length,
+		       const std::vector<gr_complex> &known_symbol1, 
+		       const std::vector<gr_complex> &known_symbol2);
 
  public:
-  int general_work(int noutput_items,
-		   gr_vector_int &ninput_items,
-		   gr_vector_const_void_star &input_items,
-		   gr_vector_void_star &output_items);
+  gr_msg_queue_sptr msgq();
+
+  int work(int noutput_items,
+	   gr_vector_const_void_star &input_items,
+	   gr_vector_void_star &output_items);
 };

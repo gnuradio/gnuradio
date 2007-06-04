@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005, 2006 Free Software Foundation, Inc.
+# Copyright 2006, 2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,90 +20,68 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, modulation_utils
-from gnuradio import usrp
+from gnuradio import gr, blks
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
+from gnuradio.blksimpl import ofdm_pkt
 
 import random, time, struct, sys, math, os
 
 # from current dir
 from transmit_path import transmit_path
 from receive_path import receive_path
-import ofdm
 
-class awgn_channel(gr.hier_block):
-    def __init__(self, fg, sample_rate, noise_voltage, frequency_offset):
-
-        self.input = gr.add_const_cc(0)
-
-        self.noise_adder = gr.add_cc()
-        self.noise = gr.noise_source_c(gr.GR_GAUSSIAN,noise_voltage)
-        self.offset = gr.sig_source_c(1, gr.GR_SIN_WAVE, frequency_offset, 1.0, 0.0)
-        self.mixer_offset = gr.multiply_cc()
-
-        fg.connect(self.input, (self.mixer_offset,0))
-        fg.connect(self.offset,(self.mixer_offset,1))
-        fg.connect(self.mixer_offset, (self.noise_adder,1))
-        fg.connect(self.noise, (self.noise_adder,0))
-
-        gr.hier_block.__init__(self, fg, self.input, self.noise_adder)
-
-class multipath_channel(gr.hier_block):
-    def __init__(self, fg):
-
-        self.taps = [1.0, .2, 0.0, .1, .08, -.4, .12, -.2, 0, 0, 0, .3]
-        self.chan = gr.fir_filter_ccc(1, self.taps)
-        
-        gr.hier_block.__init__(self, fg, self.chan, self.chan)
 
 class my_graph(gr.flow_graph):
     def __init__(self, callback, options):
         gr.flow_graph.__init__(self)
 
-        channel_on = True
+        if options.channel_on:
+            SNR = 10.0**(options.snr/10.0)
+            power_in_signal = 1.0
+            noise_power_in_channel = power_in_signal/SNR
+            noise_voltage = math.sqrt(noise_power_in_channel/2.0)
+            print "Noise voltage: ", noise_voltage
 
-        SNR = 10.0**(options.snr/10.0)
-        frequency_offset = options.frequency_offset / options.fft_length
-        
-        power_in_signal = options.occupied_tones
-        noise_power_in_channel = power_in_signal/SNR
-        noise_power_required = noise_power_in_channel * options.fft_length / options.occupied_tones
-        noise_voltage = math.sqrt(noise_power_required)
+            frequency_offset = options.frequency_offset / options.fft_length
 
-        self.txpath = transmit_path(self, options)
-        self.throttle = gr.throttle(gr.sizeof_gr_complex, options.sample_rate)
-        self.rxpath = receive_path(self, callback, options)
-
-        if channel_on:
-            self.channel = awgn_channel(self, options.sample_rate, noise_voltage, frequency_offset)
-            self.multipath = multipath_channel(self)
-
-            if options.discontinuous:
-                z = 20000*[0,]
-                self.zeros = gr.vector_source_c(z, True)
-                packet_size = 15*((4+8+4+1500+4) * 8)
-                self.mux = gr.stream_mux(gr.sizeof_gr_complex, [packet_size-0, int(10e5)])
-
-                # Connect components
-                self.connect(self.txpath, (self.mux,0))
-                self.connect(self.zeros, (self.mux,1))
-                self.connect(self.mux, self.throttle, self.channel, self.rxpath)
-                self.connect(self.mux, gr.file_sink(gr.sizeof_gr_complex, "tx_ofdm.dat"))
-
+            if options.multipath_on:
+                taps = [1.0, .2, 0.0, .1, .08, -.4, .12, -.2, 0, 0, 0, .3]
             else:
-                #self.connect(self.txpath, self.throttle, self.multipath, self.channel)
-                self.connect(self.txpath, self.throttle, self.channel)
-                self.connect(self.channel, self.rxpath)
-                self.connect(self.txpath, gr.file_sink(gr.sizeof_gr_complex, "tx_ofdm.dat"))
-            
+                taps = [1.0, 0.0]
+
         else:
-            self.connect(self.txpath, self.throttle, self.rxpath)
-            self.connect(self.txpath, gr.file_sink(gr.sizeof_gr_complex, "tx"))
-            self.connect(self.rxpath.ofdm_demod.ofdm_rx, gr.file_sink(options.fft_length*gr.sizeof_gr_complex, "rx"))
+            noise_voltage = 0.0
+            frequency_offset = 0.0
+            taps = [1.0, 0.0]
 
+        symbols_per_packet = math.ceil(((4+options.size+4) * 8) / options.occupied_tones)
+        samples_per_packet = (symbols_per_packet+2) * (options.fft_length+options.cp_length)
+        print "Symbols per Packet: ", symbols_per_packet
+        print "Samples per Packet: ", samples_per_packet
+        if options.discontinuous:
+            stream_size = [100000, int(options.discontinuous*samples_per_packet)]
+        else:
+            stream_size = [0, 100000]
 
+        z = [0,]
+        self.zeros = gr.vector_source_c(z, True)
+        self.txpath = transmit_path(self, options)
+
+        self.mux = gr.stream_mux(gr.sizeof_gr_complex, stream_size)
+        self.throttle = gr.throttle(gr.sizeof_gr_complex, options.sample_rate)
+        self.channel = blks.channel_model(self, noise_voltage, frequency_offset, options.clockrate_ratio, taps)
+        self.rxpath = receive_path(self, callback, options)
+                
+        self.connect(self.zeros, (self.mux,0))
+        self.connect(self.txpath, (self.mux,1))
+        self.connect(self.mux, self.throttle, self.channel, self.rxpath)
+        
+        self.connect(self.txpath, gr.file_sink(gr.sizeof_gr_complex, "txpath.dat"))
+        self.connect(self.mux, gr.file_sink(gr.sizeof_gr_complex, "mux.dat"))
+        self.connect(self.channel, gr.file_sink(gr.sizeof_gr_complex, "channel.dat"))
+            
 # /////////////////////////////////////////////////////////////////////////////
 #                                   main
 # /////////////////////////////////////////////////////////////////////////////
@@ -124,6 +102,17 @@ def main():
         if ok:
             n_right += 1
         print "ok: %r \t pktno: %d \t n_rcvd: %d \t n_right: %d" % (ok, pktno, n_rcvd, n_right)
+
+        printlst = list()
+        for x in payload[2:]:
+            t = hex(ord(x)).replace('0x', '')
+            if(len(t) == 1):
+                t = '0' + t
+            printlst.append(t)
+        printable = ''.join(printlst)
+
+        print printable
+        print "\n"
                 
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
@@ -137,21 +126,22 @@ def main():
                       help="set the SNR of the channel in dB [default=%default]")
     parser.add_option("", "--frequency-offset", type="eng_float", default=0,
                       help="set frequency offset introduced by channel [default=%default]")
-    parser.add_option("","--discontinuous", action="store_true", default=False,
-                      help="enable discontinous transmission (bursts of 5 packets)")
+    parser.add_option("", "--clockrate-ratio", type="eng_float", default=1.0,
+                      help="set clock rate ratio (sample rate difference) between two systems [default=%default]")
+    parser.add_option("","--discontinuous", type="int", default=0,
+                      help="enable discontinous transmission, burst of N packets [Default is continuous]")
+    parser.add_option("","--channel-on", action="store_true", default=True,
+                      help="Enables AWGN, freq offset")
+    parser.add_option("","--multipath-on", action="store_true", default=False,
+                      help="enable multipath")
 
     transmit_path.add_options(parser, expert_grp)
     receive_path.add_options(parser, expert_grp)
-    ofdm.ofdm_mod.add_options(parser, expert_grp)
-    ofdm.ofdm_demod.add_options(parser, expert_grp)
+    ofdm_pkt.mod_ofdm_pkts.add_options(parser, expert_grp)
+    ofdm_pkt.demod_ofdm_pkts.add_options(parser, expert_grp)
     
     (options, args) = parser.parse_args ()
-
-    if(options.mtu < options.size):
-        sys.stderr.write("MTU (%.0f) must be larger than the packet size (%.0f)\n"
-                         % (options.mtu, options.size))
-        sys.exit(1)
-        
+       
     # build the graph
     fg = my_graph(rx_callback, options)
     
@@ -167,12 +157,12 @@ def main():
     pktno = 0
     pkt_size = int(options.size)
 
-    
-    
     while n < nbytes:
-        r = ''.join([chr(random.randint(0,255)) for i in range(pkt_size-2)])
-        #pkt_contents = struct.pack('!H', pktno) + (pkt_size - 2) * chr(pktno & 0xff)
-        pkt_contents = struct.pack('!H', pktno) + r
+        #r = ''.join([chr(random.randint(0,255)) for i in range(pkt_size-2)])
+        #pkt_contents = struct.pack('!H', pktno) + r
+
+        pkt_contents = struct.pack('!H', pktno) + (pkt_size - 2) * chr(pktno & 0xff)
+
         send_pkt(pkt_contents)
         n += pkt_size
         #sys.stderr.write('.')

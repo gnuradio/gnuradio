@@ -34,12 +34,12 @@
 #include <ppio.h>
 #include <gr_message_source.h>
 #include <gr_message_sink.h>
-#include <gr_message_vector_source.h>
 #include <gr_udp_sink.h>
 #include <gr_udp_source.h>
 
 %}
 
+%include "gr_file_sink_base.i"
 %include "gr_file_sink.i"
 %include "gr_file_source.i"
 %include "gr_file_descriptor_sink.i"
@@ -51,7 +51,6 @@
 %include "gr_oscope_sink.i"
 %include "ppio.i"
 %include "gr_message_source.i"
-%include "gr_message_vector_source.i"
 %include "gr_message_sink.i"
 %include "gr_udp_sink.i"
 %include "gr_udp_source.i"

@@ -53,19 +53,24 @@ gr_conjugate_cc::work (int noutput_items,
   int	size = noutput_items;
 
   while (size >= 8){
-    *optr++ = gr_complex(real(*iptr),-imag(*iptr));iptr++;
-    *optr++ = gr_complex(real(*iptr),-imag(*iptr));iptr++;
-    *optr++ = gr_complex(real(*iptr),-imag(*iptr));iptr++;
-    *optr++ = gr_complex(real(*iptr),-imag(*iptr));iptr++;
-    *optr++ = gr_complex(real(*iptr),-imag(*iptr));iptr++;
-    *optr++ = gr_complex(real(*iptr),-imag(*iptr));iptr++;
-    *optr++ = gr_complex(real(*iptr),-imag(*iptr));iptr++;
-    *optr++ = gr_complex(real(*iptr),-imag(*iptr));iptr++;
+    optr[0] = conj(iptr[0]);
+    optr[1] = conj(iptr[1]);
+    optr[2] = conj(iptr[2]);
+    optr[3] = conj(iptr[3]);
+    optr[4] = conj(iptr[4]);
+    optr[5] = conj(iptr[5]);
+    optr[6] = conj(iptr[6]);
+    optr[7] = conj(iptr[7]);
     size -= 8;
+    optr += 8;
+    iptr += 8;
   }
 
-  while (size-- > 0)
-    *optr++ = gr_complex(real(*iptr),-imag(*iptr));iptr++;
-  
+  while (size-- > 0) {
+    *optr = conj(*iptr);
+    iptr++;
+    optr++;
+  }
+
   return noutput_items;
 }

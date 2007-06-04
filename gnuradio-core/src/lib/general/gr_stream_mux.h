@@ -25,7 +25,6 @@
 
 
 #include <gr_block.h>
-#include <gr_frame.h>
 #include <vector>
 
 class gr_stream_mux;
@@ -66,14 +65,15 @@ class gr_stream_mux : public gr_block
   
  protected:
    gr_stream_mux (size_t itemsize, const std::vector<int> &lengths);
+
  private:
-   size_t d_itemsize;
-   unsigned int d_stream;
-   int d_residual;
-   int d_times;
-   int d_unconsume;
-   //gr_vector_int d_unconsume;            
-   gr_vector_int d_lengths;
+  size_t d_itemsize;
+  unsigned int d_stream;    // index of currently selected stream
+  int d_residual;           // number if items left to put into current stream
+  gr_vector_int d_lengths;  // number if items to pack per stream
+ 
+  void increment_stream();
+
  public:
   ~gr_stream_mux(void);
 

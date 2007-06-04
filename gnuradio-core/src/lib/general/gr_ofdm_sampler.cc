@@ -38,7 +38,7 @@ gr_make_ofdm_sampler (unsigned int fft_length,
 gr_ofdm_sampler::gr_ofdm_sampler (unsigned int fft_length, 
 				  unsigned int symbol_length)
   : gr_block ("ofdm_sampler",
-	      gr_make_io_signature (2, 2, sizeof (gr_complex)),
+	      gr_make_io_signature2 (2, 2, sizeof (gr_complex), sizeof(char)),
 	      gr_make_io_signature (1, 1, sizeof (gr_complex)*fft_length)),
     d_fft_length(fft_length), d_symbol_length(symbol_length)
 {
@@ -61,7 +61,7 @@ gr_ofdm_sampler::general_work (int noutput_items,
 			       gr_vector_void_star &output_items)
 {
   gr_complex *iptr = (gr_complex *) input_items[0];
-  gr_complex *trigger = (gr_complex *) input_items[1];
+  char *trigger = (char *) input_items[1];
 
   gr_complex *optr = (gr_complex *) output_items[0];
 
@@ -70,7 +70,7 @@ gr_ofdm_sampler::general_work (int noutput_items,
   unsigned int i=d_fft_length-1;
 
   while(!found && i<std::min(ninput_items[0],ninput_items[1]) )
-    if(trigger[i].real() > 0.5)
+    if(trigger[i])
       found = 1;
     else
       i++;

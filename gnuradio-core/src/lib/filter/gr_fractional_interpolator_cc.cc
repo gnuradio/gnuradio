@@ -37,8 +37,8 @@ gr_fractional_interpolator_cc_sptr gr_make_fractional_interpolator_cc(float phas
 
 gr_fractional_interpolator_cc::gr_fractional_interpolator_cc(float phase_shift, float interp_ratio)
   : gr_block ("fractional_interpolator_cc",
-	      gr_make_io_signature (1, 1, sizeof (float)),
-	      gr_make_io_signature (1, 1, sizeof (float))),
+	      gr_make_io_signature (1, 1, sizeof (gr_complex)),
+	      gr_make_io_signature (1, 1, sizeof (gr_complex))),
     d_mu (phase_shift), d_mu_inc (interp_ratio), d_interp(new gri_mmse_fir_interpolator_cc())
 {
   if (interp_ratio <=  0)

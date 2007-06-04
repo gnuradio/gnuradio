@@ -68,9 +68,6 @@ def conv_1_0_string_to_packed_binary_string(s):
     return (''.join(r), padded)
         
 
-default_access_code = \
-  conv_packed_binary_string_to_1_0_string('\xAC\xDD\xA4\xE2\xF2\x8C\x20\xFC')
-
 def is_1_0_string(s):
     if not isinstance(s, str):
         return False
@@ -99,8 +96,7 @@ def make_header(payload_len, whitener_offset=0):
     return struct.pack('!HH', val, val)
 
 def make_packet(payload, samples_per_symbol, bits_per_symbol,
-                access_code=default_access_code, pad_for_usrp=True,
-                whitener_offset=0):
+                pad_for_usrp=True, whitener_offset=0, dowhiten=1):
     """
     Build a packet, given access code, payload, and whitener offset
 
@@ -109,20 +105,14 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
     @type  samples_per_symbol:    int
     @param bits_per_symbol:       (needed for padding calculation)
     @type bits_per_symbol:        int
-    @param access_code:           string of ascii 0's and 1's
     @param whitener_offset        offset into whitener string to use [0-16)
     
     Packet will have access code at the beginning, followed by length, payload
     and finally CRC-32.
     """
-    if not is_1_0_string(access_code):
-        raise ValueError, "access_code must be a string containing only 0's and 1's (%r)" % (access_code,)
-
     if not whitener_offset >=0 and whitener_offset < 16:
         raise ValueError, "whitener_offset must be between 0 and 15, inclusive (%i)" % (whitener_offset,)
 
-    (packed_access_code, padded) = conv_1_0_string_to_packed_binary_string(access_code)
-    
     payload_with_crc = gru.gen_and_append_crc32(payload)
     #print "outbound crc =", string_to_hex_list(payload_with_crc[-4:])
 
@@ -131,16 +121,18 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
     if L > MAXLEN:
         raise ValueError, "len(payload) must be in [0, %d]" % (MAXLEN,)
 
-    #pkt = ''.join((packed_access_code, make_header(L, whitener_offset)),
-    #               whiten(payload_with_crc, whitener_offset), '\x55'))
-    pkt_hd = ''.join((packed_access_code, make_header(L, whitener_offset)))
+    pkt_hd = make_header(L, whitener_offset)
     pkt_dt = ''.join((payload_with_crc, '\x55'))
     packet_length = len(pkt_hd) + len(pkt_dt)
 
     if pad_for_usrp:
         usrp_packing = _npadding_bytes(packet_length, samples_per_symbol, bits_per_symbol) * '\x55'
-    pkt_dt = pkt_dt + usrp_packing
-    pkt = pkt_hd + whiten(pkt_dt, whitener_offset)
+        pkt_dt = pkt_dt + usrp_packing
+
+    if(dowhiten):
+        pkt = pkt_hd + whiten(pkt_dt, whitener_offset)
+    else:
+        pkt = pkt_hd + pkt_dt
 
     #print "make_packet: len(pkt) =", len(pkt)
 
@@ -168,13 +160,17 @@ def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
     return byte_modulus - r
     
 
-def unmake_packet(whitened_payload_with_crc, whitener_offset=0):
+def unmake_packet(whitened_payload_with_crc, whitener_offset=0, dodewhiten=1):
     """
     Return (ok, payload)
 
     @param whitened_payload_with_crc: string
     """
-    payload_with_crc = dewhiten(whitened_payload_with_crc, whitener_offset)
+    if dodewhiten:
+        payload_with_crc = dewhiten(whitened_payload_with_crc, whitener_offset)
+    else:
+        payload_with_crc = whitened_payload_with_crc
+
     ok, payload = gru.check_crc32(payload_with_crc)
 
     if 0:

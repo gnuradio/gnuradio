@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006, 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,29 +26,30 @@
 
 #include <gr_ofdm_correlator.h>
 #include <gr_io_signature.h>
+#include <gr_expj.h>
 
 #define VERBOSE 0
 #define M_TWOPI (2*M_PI)
 
 gr_ofdm_correlator_sptr
-gr_make_ofdm_correlator (unsigned int occupied_carriers, unsigned int vlen, 
+gr_make_ofdm_correlator (unsigned int occupied_carriers, unsigned int fft_length, 
 			 unsigned int cplen,
-			 std::vector<gr_complex> known_symbol1, 
-			 std::vector<gr_complex> known_symbol2)
+			 const std::vector<gr_complex> &known_symbol1, 
+			 const std::vector<gr_complex> &known_symbol2)
 {
-  return gr_ofdm_correlator_sptr (new gr_ofdm_correlator (occupied_carriers, vlen, cplen,
+  return gr_ofdm_correlator_sptr (new gr_ofdm_correlator (occupied_carriers, fft_length, cplen,
 							  known_symbol1, known_symbol2));
 }
 
-gr_ofdm_correlator::gr_ofdm_correlator (unsigned occupied_carriers, unsigned int vlen, 
+gr_ofdm_correlator::gr_ofdm_correlator (unsigned occupied_carriers, unsigned int fft_length, 
 					unsigned int cplen,
-					std::vector<gr_complex> known_symbol1, 
-					std::vector<gr_complex> known_symbol2)
+					const std::vector<gr_complex> &known_symbol1, 
+					const std::vector<gr_complex> &known_symbol2)
   : gr_block ("ofdm_correlator",
-	      gr_make_io_signature (1, 1, sizeof(gr_complex)*vlen),
-	      gr_make_io_signature (1, 1, sizeof(gr_complex)*occupied_carriers)),
+	      gr_make_io_signature (1, 1, sizeof(gr_complex)*fft_length),
+	      gr_make_io_signature2 (2, 2, sizeof(gr_complex)*occupied_carriers, sizeof(char))),
     d_occupied_carriers(occupied_carriers),
-    d_vlen(vlen),
+    d_fft_length(fft_length),
     d_cplen(cplen),
     d_freq_shift_len(5),
     d_known_symbol1(known_symbol1),
@@ -84,8 +85,9 @@ gr_ofdm_correlator::forecast (int noutput_items, gr_vector_int &ninput_items_req
 gr_complex
 gr_ofdm_correlator::coarse_freq_comp(int freq_delta, int symbol_count)
 {
-  return gr_complex(cos(-M_TWOPI*freq_delta*d_cplen/d_vlen*symbol_count),
-		    sin(-M_TWOPI*freq_delta*d_cplen/d_vlen*symbol_count));
+  //  return gr_complex(cos(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count),
+  //	    sin(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count));
+  return gr_expj(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count);
 }
 
 bool
@@ -99,7 +101,7 @@ gr_ofdm_correlator::correlate(const gr_complex *previous, const gr_complex *curr
   gr_complex h_sqrd = gr_complex(0.0,0.0);
   float power = 0.0F;
 
-  while(!found && (abs(search_delta) < d_freq_shift_len)) {
+  while(!found && ((unsigned)abs(search_delta) < d_freq_shift_len)) {
     h_sqrd = gr_complex(0.0,0.0);
     power = 0.0F;
 
@@ -115,11 +117,20 @@ gr_ofdm_correlator::correlate(const gr_complex *previous, const gr_complex *curr
 	     search_delta, h_sqrd.real(), h_sqrd.imag(), power, h_sqrd.real()/power, arg(h_sqrd)); 
 #endif
 
-    if(h_sqrd.real() > 0.75*power) {
+      // FIXME: Look at h_sqrd.read() > power
+    if((h_sqrd.real() > 0.82*power)  && (h_sqrd.real() < 1.1 * power)) {
       found = true;
       d_coarse_freq = search_delta;
       d_phase_count = 1;
-      d_snr_est = 10*log10(power/(power-h_sqrd.real()));
+      //d_snr_est = 10*log10(power/(power-h_sqrd.real()));
+
+      // check for low noise power; sets maximum SNR at 100 dB
+      if(fabs(h_sqrd.imag()) <= 1e-12) {
+	d_snr_est = 100.0;
+      }
+      else {
+	d_snr_est = 10*log10(fabs(h_sqrd.real()/h_sqrd.imag()));
+      }
 
       printf("CORR: Found, bin %d\tSNR Est %f dB\tcorr power fraction %f\n", 
              search_delta, d_snr_est, h_sqrd.real()/power);
@@ -168,23 +179,30 @@ gr_ofdm_correlator::general_work(int noutput_items,
 {
   const gr_complex *in = (const gr_complex *)input_items[0];
   const gr_complex *previous = &in[0];
-  const gr_complex *current = &in[d_vlen];
+  const gr_complex *current = &in[d_fft_length];
 
   gr_complex *out = (gr_complex *) output_items[0];
+  char *sig = (char *) output_items[1];
   
   unsigned int i=0;
 
-  int unoccupied_carriers = d_vlen - d_occupied_carriers;
+  int unoccupied_carriers = d_fft_length - d_occupied_carriers;
   int zeros_on_left = (int)ceil(unoccupied_carriers/2.0);
 
   bool corr = correlate(previous, current, zeros_on_left);
   if(corr) {
     calculate_equalizer(previous, current, zeros_on_left);
+    sig[0] = 1;
+  }
+  else {
+    sig[0] = 0;
   }
 
   for(i = 0; i < d_occupied_carriers; i++) {
     out[i] = d_hestimate[i]*coarse_freq_comp(d_coarse_freq,d_phase_count)*current[i+zeros_on_left+d_coarse_freq];
   }
+  
+
   d_phase_count++;
   consume_each(1);
   return 1;

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,45 +26,57 @@
 #include <gr_skiphead.h>
 #include <gr_io_signature.h>
 
-gr_skiphead::gr_skiphead (size_t sizeof_stream_item, int nitems)
-  : gr_sync_block ("skiphead",
-       gr_make_io_signature (1, 1, sizeof_stream_item),
-       gr_make_io_signature (1, 1, sizeof_stream_item)),
-    d_nitems (nitems), d_nskipped_items (0)
+gr_skiphead::gr_skiphead (size_t itemsize, size_t nitems_to_skip)
+  : gr_block ("skiphead",
+	      gr_make_io_signature(1, 1, itemsize),
+	      gr_make_io_signature(1, 1, itemsize)),
+    d_nitems_to_skip(nitems_to_skip), d_nitems(0)
 {
 }
 
-gr_block_sptr
-gr_make_skiphead (size_t sizeof_stream_item, int nitems)
+gr_skiphead_sptr
+gr_make_skiphead (size_t itemsize, size_t nitems_to_skip)
 {
-  return gr_block_sptr (new gr_skiphead (sizeof_stream_item, nitems));
+  return gr_skiphead_sptr (new gr_skiphead (itemsize, nitems_to_skip));
 }
 
 int
-gr_skiphead::work (int noutput_items,
-        gr_vector_const_void_star &input_items,
-        gr_vector_void_star &output_items)
+gr_skiphead::general_work(int noutput_items,
+			  gr_vector_int &ninput_items_ignored,
+			  gr_vector_const_void_star &input_items,
+			  gr_vector_void_star &output_items)
 {
-  int items_to_skip = d_nitems - d_nskipped_items;
-  if (items_to_skip <=0)
-  {
-     //Done with skipping, copy all input to the output;
-     memcpy (output_items[0], input_items[0], noutput_items * input_signature()->sizeof_stream_item (0));
-     return noutput_items;
-  } else if (items_to_skip < noutput_items)
-  {
-     memcpy (output_items[0], &(((char *)input_items[0])[items_to_skip*input_signature()->sizeof_stream_item (0)]), (noutput_items -items_to_skip) * input_signature()->sizeof_stream_item (0));
-    //memcpy (output_items[0], &((input_items[0])[items_to_skip]), (noutput_items -items_to_skip) * input_signature()->sizeof_stream_item (0));
-     //memcpy (output_items[0], input_items[0]+items_to_skip*input_signature()->sizeof_stream_item (0), (noutput_items -items_to_skip) * input_signature()->sizeof_stream_item (0));
-     d_nskipped_items += items_to_skip;
-     consume_each (items_to_skip);
-     return (noutput_items -items_to_skip);
-  } else
-  {
-     d_nskipped_items += noutput_items;
-     consume_each (items_to_skip);
-     return 0;
+  const char *in = (const char *) input_items[0];
+  char *out = (char *) output_items[0];
+
+  int ninput_items = noutput_items;	// we've got at least this many input items
+  int ii = 0;				// input index
+
+  while (ii < ninput_items){
+
+    long long ni_total = ii + d_nitems;  	// total items processed so far
+    if (ni_total < d_nitems_to_skip){		// need to skip some more
+
+      int n_to_skip = (int) std::min(d_nitems_to_skip - ni_total,
+				     (long long)(ninput_items - ii));
+      ii += n_to_skip;
+    }
+
+    else {		// nothing left to skip.  copy away
+
+      int n_to_copy = ninput_items - ii;
+      if (n_to_copy > 0){
+	size_t itemsize = output_signature()->sizeof_stream_item(0);
+	memcpy(out, in + (ii*itemsize), n_to_copy*itemsize);
+      }
+
+      d_nitems += ninput_items;
+      consume_each(ninput_items);
+      return n_to_copy;
+    }
   }
 
-  return -1;//Should never get here
+  d_nitems += ninput_items;
+  consume_each(ninput_items);
+  return 0;
 }

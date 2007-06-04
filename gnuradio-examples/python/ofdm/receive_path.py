@@ -28,7 +28,6 @@ import sys
 
 # from current dir
 from pick_bitrate import pick_rx_bitrate
-import ofdm
 
 # /////////////////////////////////////////////////////////////////////////////
 #                              receive path
@@ -43,40 +42,22 @@ class receive_path(gr.hier_block):
         self._log         = options.log
         self._rx_callback = rx_callback      # this callback is fired when there's a packet available
 
-        if 0:
-            
-            chan_coeffs = gr.firdes.low_pass (1.0,                  # gain
-                                              2.0,                  # sampling rate
-                                              bw,                   # midpoint of trans. band
-                                              1*bw,               # width of trans. band
-                                              gr.firdes.WIN_KAISER)   # filter type 
-        else:
-            chan_coeffs = [ 1.0, 0.0, 0 ] 
-        self.chan_filt = gr.fft_filter_ccc(1, chan_coeffs)
-
-        self.ofdm_demod = ofdm.ofdm_demod(fg, options)
-        
         # receiver
-        self.packet_receiver = \
-            blks.demod_ofdm_pkts(fg,
-                                 self.ofdm_demod,
-                                 access_code=None,
-                                 callback=self._rx_callback,
-                                 threshold=-1)
+        self.ofdm_receiver = \
+            blks.demod_ofdm_pkts(fg, options,
+                                 callback=self._rx_callback)
 
         # Carrier Sensing Blocks
-        alpha = 0.001
-        thresh = 30   # in dB, will have to adjust
-        self.probe = gr.probe_avg_mag_sqrd_c(thresh,alpha)
-        fg.connect(self.chan_filt, self.probe)
+        #alpha = 0.001
+        #thresh = 30   # in dB, will have to adjust
+        #self.probe = gr.probe_avg_mag_sqrd_c(thresh,alpha)
+        #fg.connect(self.chan_filt, self.probe)
 
         # Display some information about the setup
         if self._verbose:
             self._print_verbage()
         
-        fg.connect(self.chan_filt, self.packet_receiver)
-        #fg.connect(self.chan_filt, gr.file_sink(gr.sizeof_gr_complex, "ofdmrx_chflt.dat"))
-        gr.hier_block.__init__(self, fg, self.chan_filt, None)
+        gr.hier_block.__init__(self, fg, self.ofdm_receiver, None)
 
     def carrier_sensed(self):
         """
