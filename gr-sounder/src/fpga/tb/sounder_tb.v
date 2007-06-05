@@ -19,7 +19,7 @@
 //  Foundation, Inc., 51 Franklin Street, Boston, MA  02110-1301  USA
 //
 
-`timescale 1ns/1ps
+`timescale 1ns/100ps
 
 `include "../lib/sounder.v"
 
@@ -30,6 +30,7 @@
 `define bmFR_MODE_LP            32'h0008
 
 `define FR_DEGREE		7'd65
+`define FR_AMPL                 7'd66
 
 module sounder_tb;
 
@@ -44,12 +45,11 @@ module sounder_tb;
    reg 	       s_strobe;
 
    // DAC bus
-   reg         tx_strobe;
+   wire        tx_strobe;
    wire [13:0] tx_dac_i;
    wire [13:0] tx_dac_q;
 
    // ADC bus
-   reg         rx_strobe;
    reg [15:0]  rx_adc_i;
    reg [15:0]  rx_adc_q;
    
@@ -64,14 +64,10 @@ module sounder_tb;
    
    sounder uut
      (.clk_i(clk),.saddr_i(saddr),.sdata_i(sdata),.s_strobe_i(s_strobe),
-      .tx_strobe_i(tx_strobe),.tx_dac_i_o(tx_dac_i),.tx_dac_q_o(tx_dac_q),
-      .rx_strobe_i(rx_strobe),.rx_adc_i_i(rx_adc_i),.rx_adc_q_i(rx_adc_q),
-      .rx_strobe_o(fifo_strobe),.rx_imp_i_o(fifo_i),.rx_imp_q_o(fifo_q));
+      .tx_strobe_o(tx_strobe),.tx_dac_i_o(tx_dac_i),.tx_dac_q_o(tx_dac_q),
+      .rx_strobe_o(fifo_strobe),.rx_adc_i_i(rx_adc_i),.rx_adc_q_i(rx_adc_q),
+      .rx_imp_i_o(fifo_i),.rx_imp_q_o(fifo_q));
 
-   // Drive tx_strobe @ half clock rate
-   always @(posedge clk)
-     tx_strobe <= ~tx_strobe;
-   
    // Start up initialization
    initial
      begin
@@ -81,8 +77,6 @@ module sounder_tb;
 	saddr = 0;
 	sdata = 0;
 	s_strobe = 0;
-	tx_strobe = 0;
-	rx_strobe = 1;
 	rx_adc_i = 0;
 	rx_adc_q = 0;
 	mode = 0;
@@ -101,9 +95,11 @@ module sounder_tb;
    
    initial
      begin
-	$monitor($time, " clk=%b rst=%b tx_strobe=%b fifo_strobe=%b phs=%x pn_o=%b pn_ref=%b fifo_i=%x fifo_q=", 
-		 clk, uut.reset, tx_strobe, fifo_strobe, uut.receiver.phase_strobe.count_o,
-		 uut.transmitter.pn, uut.receiver.pn_ref, fifo_i, fifo_q);
+	$monitor($time, " c=%b r=%b phs=%d txs=%b rfs=%b rxs=%b sms=%b pn=%b pnr=%b prd=%x sum=%x tot=%x",
+		 clk, rst, uut.master.phase, uut.tx_strobe_o, uut.ref_strobe, uut.rx_strobe_o, 
+		 uut.sum_strobe, uut.transmitter.pn, uut.receiver.pn_ref, uut.receiver.prod_i,
+		 uut.receiver.sum_i, uut.receiver.total_i);
+
 	$dumpfile("sounder_tb.vcd");
 	$dumpvars(0, sounder_tb);
      end
@@ -115,11 +111,11 @@ module sounder_tb;
       
       begin
 	 @(posedge clk);
-	 saddr <= regno;
-	 sdata <= value;
-	 s_strobe <= 1'b1;
+	 saddr <= #5 regno;
+	 sdata <= #5 value;
+	 s_strobe <= #5 1'b1;
 	 @(posedge clk);
-	 s_strobe <= 0;
+	 s_strobe <= #5 0;
       end
    endtask // write_cfg_register
    
@@ -140,6 +136,14 @@ module sounder_tb;
 	 write_cfg_register(`FR_DEGREE, degree);
       end
    endtask // set_degree
+   
+   // Set the PN amplitude
+   task set_amplitude;
+      input [13:0] ampl;
+      begin
+	 write_cfg_register(`FR_AMPL, ampl);
+      end
+   endtask // set_ampl
    
    // Turn on or off the transmitter
    task enable_tx;
@@ -175,20 +179,24 @@ module sounder_tb;
    // Test transmitter functionality
    task test_tx;
       input [5:0] degree;
+      input [31:0] test_len;
       
       begin
 	 #20 set_reset(1);
 	 #20 set_degree(degree);
+	 #20 set_amplitude(14'h1000);
 	 #20 enable_tx(1);
+	 #20 enable_rx(0);
+	 #20 enable_lp(0);
 	 #20 set_reset(0);
-	 #(uut.len*20);		// One PN code period
-
+	 #(test_len);
       end
    endtask // test_tx
    
    // Test loopback functionality
    task test_lp;
       input [5:0] degree;
+      input [31:0] test_len;
       
       begin
 	 #20 set_reset(1);
@@ -197,16 +205,34 @@ module sounder_tb;
 	 #20 enable_rx(1);
 	 #20 enable_lp(1);
 	 #20 set_reset(0);
-	 #((uut.len+1)*uut.len*20*2);
+	 #(test_len);
       end
    endtask // test_lp
+   
+   // Test receiver only functionality
+   task test_rx;
+      input [5:0] degree;
+      input [31:0] test_len;
+      
+      begin
+	 #20 set_reset(1);
+	 #20 set_degree(degree);
+	 #20 enable_tx(0);
+	 #20 enable_rx(1);
+	 #20 enable_lp(0);
+	 #20 set_reset(0);
+	 #(test_len);
+      end
+   endtask // test_rx
    
    // Execute tests
    initial
      begin
-        // #20 test_tx(12);
-	#20 test_lp(12);
-	#100 $finish;
+        #20 test_tx(8,255*20);
+	#20 test_lp(8,255*255*20*5);
+	//#20 test_rx(8,255*255*20*5);
+	#500 $finish;
      end
+
 endmodule
 

@@ -151,8 +151,8 @@ module usrp_sounder
 
    sounder sounder
      ( .clk_i(clk64),.saddr_i(serial_addr),.sdata_i(serial_data),.s_strobe_i(serial_strobe),
-       .tx_strobe_i(tx_sample_strobe),.tx_dac_i_o(tx_i),.tx_dac_q_o(tx_q),
-       .rx_strobe_i(rx_sample_strobe),.rx_adc_i_i(rx_adc0_i),.rx_adc_q_i(rx_adc0_q),
+       .tx_strobe_o(tx_sample_strobe),.tx_dac_i_o(tx_i),.tx_dac_q_o(tx_q),
+       .rx_adc_i_i(rx_adc0_i),.rx_adc_q_i(rx_adc0_q),
        .rx_strobe_o(rx_strobe),.rx_imp_i_o(rx_buf_i),.rx_imp_q_o(rx_buf_q)
        );
 
@@ -170,7 +170,7 @@ module usrp_sounder
      ( .master_clk(clk64),.serial_clock(SCLK),.serial_data_in(SDI),
        .enable(SEN_FPGA),.reset(1'b0),.serial_data_out(SDO),
        .serial_addr(serial_addr),.serial_data(serial_data),.serial_strobe(serial_strobe),
-       .readback_0(),.readback_1(),.readback_2(capabilities),.readback_3(),
+       .readback_0({io_rx_a,io_tx_a}),.readback_1({io_rx_b,io_tx_b}),.readback_2(capabilities),.readback_3(32'hf0f0931a),
        .readback_4(),.readback_5(),.readback_6(),.readback_7()
        );
 
@@ -182,7 +182,7 @@ module usrp_sounder
        .tx_dsp_reset(tx_dsp_reset),.rx_dsp_reset(rx_dsp_reset),
        .enable_tx(enable_tx),.enable_rx(enable_rx),
        .interp_rate(),.decim_rate(),
-       .tx_sample_strobe(tx_sample_strobe),.strobe_interp(),
+       .tx_sample_strobe(),.strobe_interp(),
        .rx_sample_strobe(rx_sample_strobe),.strobe_decim(),
        .tx_empty(tx_empty),
        .debug_0(),.debug_1(),

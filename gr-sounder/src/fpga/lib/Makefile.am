@@ -25,6 +25,7 @@ EXTRA_DIST = \
 	dac_interface.v \
 	dacpll.v \
 	sounder.v \
+	sounder_ctrl.v \
 	sounder_rx.v \
 	sounder_tx.v
 

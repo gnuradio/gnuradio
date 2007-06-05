@@ -36,10 +36,10 @@ module lfsr(clk_i,rst_i,ena_i,strobe_i,mask_i,pn_o);
    
    always @(posedge clk_i)
      if (rst_i | ~ena_i)
-       shifter <= 1;
+       shifter <= #5 1;
      else
        if (strobe_i)
-	 shifter <= {shifter[width-2:0],parity};
+	 shifter <= #5 {shifter[width-2:0],parity};
 
    assign pn_o = shifter[0];
    

@@ -32,6 +32,7 @@ bmFR_MODE_RX    = 1 << 2	# bit 2: enable receiver
 bmFR_MODE_LP    = 1 << 3	# bit 3: enable digital loopback
 
 FR_DEGREE = usrp.FR_USER_1
+FR_AMPL = usrp.FR_USER_2
 
 def pick_subdevice(u):
     """
@@ -47,15 +48,18 @@ def pick_subdevice(u):
     return (0, 0)
 
 class sounder_tx:
-    def __init__(self, loopback=False,verbose=False):
+    def __init__(self, loopback=False,ampl=4096,verbose=False,debug=False):
 	self._loopback=loopback
+        self._amplitude = ampl
 	self._verbose = verbose
+	self._debug = debug
         self._u = usrp.sink_s(fpga_filename='usrp_sounder.rbf')
 	if not self._loopback:
             self._subdev_spec = usrp.pick_tx_subdevice(self._u)
             self._subdev = usrp.selected_subdev(self._u, self._subdev_spec)
             if self._verbose:
                 print "Using", self._subdev.name(), "for sounder transmitter."            
+        self.set_amplitude(ampl)
         self._u.start()
 
     def tune(self, frequency):
@@ -65,9 +69,16 @@ class sounder_tx:
         if result == False:
             raise RuntimeError("Failed to set transmitter frequency.")
 
+    def set_amplitude(self, ampl):
+	self._amplitude = ampl
+        if self._debug:
+            print "Writing amplitude register with:", hex(self._mode)
+        self._u._write_fpga_reg(FR_AMPL, self._amplitude)
+
 class sounder_rx:
-    def __init__(self,subdev_spec=None,length=1,msgq=None,loopback=False,verbose=False,debug=False):
+    def __init__(self,subdev_spec=None,gain=None,length=1,msgq=None,loopback=False,verbose=False,debug=False):
 	self._subdev_spec = subdev_spec
+        self._gain = gain
         self._length = length
         self._msgq = msgq
 	self._loopback = loopback
@@ -84,6 +95,7 @@ class sounder_rx:
             if self._verbose:
 	        print "Using", self._subdev.name(), "for sounder receiver."
 
+        self.set_gain(self._gain)
         self._vblen = gr.sizeof_gr_complex*self._length
 	if self._debug:
             print "Generating impulse vectors of length", self._length, "byte length", self._vblen
@@ -98,6 +110,19 @@ class sounder_rx:
         result = self._u.tune(0, self._subdev, frequency)
         if result == False:
             raise RuntimeError("Failed to set receiver frequency.")
+
+    def set_gain(self, gain):
+        self._gain = gain
+	if self._loopback:
+	    return
+	    
+        if self._gain is None:
+            # if no gain was specified, use the mid-point in dB
+            g = self._subdev.gain_range()
+            self._gain = float(g[0]+g[1])/2
+        if self._verbose:
+            print "Setting receiver gain to", gain
+        self._subdev.set_gain(self._gain)
 
     def start(self):
         if self._debug:
@@ -119,13 +144,15 @@ class sounder_rx:
 
 
 class sounder:
-    def __init__(self,transmit=False,receive=False,loopback=False,rx_subdev_spec=None,
-                 frequency=0.0,degree=10,length=1,msgq=None,verbose=False,debug=False):
+    def __init__(self,transmit=False,receive=False,loopback=False,rx_subdev_spec=None,ampl=0x1FFF,
+                 frequency=0.0,rx_gain=None,degree=12,length=1,msgq=None,verbose=False,debug=False):
         self._transmit = transmit
         self._receive = receive
         self._loopback = loopback
         self._rx_subdev_spec = rx_subdev_spec
         self._frequency = frequency
+        self._amplitude = ampl
+        self._rx_gain = rx_gain
         self._degree = degree
         self._length = length
         self._msgq = msgq
@@ -139,11 +166,12 @@ class sounder:
 	self._receiving = False
 		
 	if self._transmit:
-	    self._trans = sounder_tx(loopback=self._loopback,verbose=self._verbose)
+	    self._trans = sounder_tx(loopback=self._loopback,ampl=self._amplitude,
+                                     verbose=self._verbose)
             self._u = self._trans._u
             
 	if self._receive:
-            self._rcvr = sounder_rx(subdev_spec=self._rx_subdev_spec,length=self._length,
+            self._rcvr = sounder_rx(subdev_spec=self._rx_subdev_spec,length=self._length,gain=self._rx_gain,
 				    msgq=self._msgq,loopback=self._loopback,verbose=self._verbose, 
 				    debug=self._debug)
 	    self._u = self._rcvr._u # either receiver or transmitter object will do

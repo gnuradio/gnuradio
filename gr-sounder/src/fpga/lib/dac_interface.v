@@ -43,11 +43,11 @@ module dac_interface(clk_i,rst_i,ena_i,strobe_i,tx_i_i,tx_q_i,tx_data_o,tx_sync_
 
    // Register the clk64 clock in the clk128 domain
    always @(posedge clk128)
-     clk64_d <= clk_i;
+     clk64_d <= #1 clk_i;
 
    // Register the tx data in the clk128 domain
    always @(posedge clk128)
-     tx_data_o <= clk64_d ? tx_i_i : tx_q_i;
+     tx_data_o <= #1 clk64_d ? tx_i_i : tx_q_i;
 
    assign tx_sync_o = clk64_d;
    

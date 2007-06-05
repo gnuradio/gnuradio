@@ -25,6 +25,7 @@ from gnuradio.sounder import sounder
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
+import numpy
 import sys
 
 n2s = eng_notation.num_to_str
@@ -33,10 +34,14 @@ def main():
     parser = OptionParser(option_class=eng_option)
     parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=(0, 0),
                       help="select USRP Rx side A or B")
+    parser.add_option("-g", "--gain", type="eng_float", default=None,
+                      help="set gain in dB (default is midpoint)")
     parser.add_option("-f", "--frequency", type="eng_float", default=0.0,
                       help="set frequency to FREQ in Hz, default is %default", metavar="FREQ")
     parser.add_option("-d", "--degree", type="int", default=12,
                       help="set sounding sequence degree (2-12), default is %default,")
+    parser.add_option("-a", "--amplitude", type="int", default=4096,
+                      help="set waveform amplitude, default is %default,")
     parser.add_option("-t", "--transmit", action="store_true", default=False,
                       help="enable sounding transmitter")
     parser.add_option("-r", "--receive", action="store_true", default=False,
@@ -74,8 +79,9 @@ def main():
 	    
     msgq = gr.msg_queue()
     s = sounder(transmit=options.transmit,receive=options.receive,loopback=options.loopback,
-                rx_subdev_spec=options.rx_subdev_spec,frequency=options.frequency,degree=options.degree,
-                length=length,msgq=msgq,verbose=options.verbose,debug=options.debug)
+                rx_subdev_spec=options.rx_subdev_spec,frequency=options.frequency,rx_gain=options.gain,
+                degree=options.degree,length=length,msgq=msgq,verbose=options.verbose,ampl=options.amplitude,
+                debug=options.debug)
     s.start()
 
     if options.receive:
@@ -89,7 +95,10 @@ def main():
 		rec = msg.to_string()[:length*gr.sizeof_gr_complex]
 		if options.debug:
 		    print "Received impulse vector of length", len(rec)
-		f.write(rec)
+                recarray = numpy.fromstring(rec, dtype=numpy.complex64)
+                imparray = recarray[::-1]
+                data = imparray.tostring()
+		f.write(data)
 		
         except KeyboardInterrupt:
             pass

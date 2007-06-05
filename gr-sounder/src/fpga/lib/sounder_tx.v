@@ -22,24 +22,23 @@
 `include "../../../../usrp/firmware/include/fpga_regs_common.v"
 `include "../../../../usrp/firmware/include/fpga_regs_standard.v"
 
-`define MAX_VALUE 14'h1FFF // 2s complement
-`define MIN_VALUE 14'h2001
-
-module sounder_tx(clk_i,rst_i,ena_i,strobe_i,mask_i,tx_i_o,tx_q_o);
+module sounder_tx(clk_i,rst_i,ena_i,strobe_i,ampl_i,mask_i,tx_i_o,tx_q_o);
    input         clk_i;
    input         rst_i;
    input         ena_i;
    input         strobe_i;
+   input  [13:0] ampl_i;
    input  [15:0] mask_i;
    output [13:0] tx_i_o;
    output [13:0] tx_q_o;
 
    wire          pn;
-
+   wire   [13:0] min_value = (~ampl_i)+14'b1;
+   
    lfsr pn_code
      ( .clk_i(clk_i),.rst_i(rst_i),.ena_i(ena_i),.strobe_i(strobe_i),.mask_i(mask_i),.pn_o(pn) );
 
-   assign tx_i_o = ena_i ? (pn ? `MAX_VALUE : `MIN_VALUE) : 14'b0; // Bipolar
+   assign tx_i_o = ena_i ? (pn ? ampl_i : min_value) : 14'b0; // Bipolar
    assign tx_q_o = 14'b0;
 
 endmodule // sounder_tx
