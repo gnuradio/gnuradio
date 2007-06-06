@@ -76,10 +76,11 @@ class sounder_tx:
         self._u._write_fpga_reg(FR_AMPL, self._amplitude)
 
 class sounder_rx:
-    def __init__(self,subdev_spec=None,gain=None,length=1,msgq=None,loopback=False,verbose=False,debug=False):
+    def __init__(self,subdev_spec=None,gain=None,length=1,alpha=1.0,msgq=None,loopback=False,verbose=False,debug=False):
 	self._subdev_spec = subdev_spec
         self._gain = gain
         self._length = length
+        self._alpha = alpha
         self._msgq = msgq
 	self._loopback = loopback
 	self._verbose = verbose
@@ -101,8 +102,11 @@ class sounder_rx:
             print "Generating impulse vectors of length", self._length, "byte length", self._vblen
             
         self._s2v = gr.stream_to_vector(gr.sizeof_gr_complex, self._length)
+	if self._verbose:
+	    print "Using smoothing alpha of", self._alpha
+        self._lpf = gr.single_pole_iir_filter_cc(self._alpha, self._length)
         self._sink = gr.message_sink(self._vblen, self._msgq, True)
-        self._fg.connect(self._u, self._s2v, self._sink)
+        self._fg.connect(self._u, self._s2v, self._lpf, self._sink)
 
     def tune(self, frequency):
         if self._verbose:
@@ -145,7 +149,7 @@ class sounder_rx:
 
 class sounder:
     def __init__(self,transmit=False,receive=False,loopback=False,rx_subdev_spec=None,ampl=0x1FFF,
-                 frequency=0.0,rx_gain=None,degree=12,length=1,msgq=None,verbose=False,debug=False):
+                 frequency=0.0,rx_gain=None,degree=12,length=1,alpha=1.0,msgq=None,verbose=False,debug=False):
         self._transmit = transmit
         self._receive = receive
         self._loopback = loopback
@@ -155,6 +159,7 @@ class sounder:
         self._rx_gain = rx_gain
         self._degree = degree
         self._length = length
+        self._alpha = alpha
         self._msgq = msgq
         self._verbose = verbose
         self._debug = debug
@@ -171,8 +176,9 @@ class sounder:
             self._u = self._trans._u
             
 	if self._receive:
-            self._rcvr = sounder_rx(subdev_spec=self._rx_subdev_spec,length=self._length,gain=self._rx_gain,
-				    msgq=self._msgq,loopback=self._loopback,verbose=self._verbose, 
+            self._rcvr = sounder_rx(subdev_spec=self._rx_subdev_spec,length=self._length,
+                                    gain=self._rx_gain,alpha=self._alpha,msgq=self._msgq,
+                                    loopback=self._loopback,verbose=self._verbose, 
 				    debug=self._debug)
 	    self._u = self._rcvr._u # either receiver or transmitter object will do
 	

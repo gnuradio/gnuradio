@@ -54,6 +54,8 @@ def main():
                       help="enable debugging output, default is disabled")
     parser.add_option("-F", "--filename", default=None,
 		      help="log received impulse responses to file")
+    parser.add_option("", "--alpha", type="eng_float", default=1.0,
+		      help="smoothing factor (0.0-1.0), default is %default (none)")
 		      
     (options, args) = parser.parse_args()
 
@@ -78,9 +80,11 @@ def main():
 	    print "Logging impulse records to file: ", options.filename
 	    
     msgq = gr.msg_queue()
-    s = sounder(transmit=options.transmit,receive=options.receive,loopback=options.loopback,
-                rx_subdev_spec=options.rx_subdev_spec,frequency=options.frequency,rx_gain=options.gain,
-                degree=options.degree,length=length,msgq=msgq,verbose=options.verbose,ampl=options.amplitude,
+    s = sounder(transmit=options.transmit,receive=options.receive,
+                loopback=options.loopback,rx_subdev_spec=options.rx_subdev_spec,
+                frequency=options.frequency,rx_gain=options.gain,
+                degree=options.degree,length=length,alpha=options.alpha,
+                msgq=msgq,verbose=options.verbose,ampl=options.amplitude,
                 debug=options.debug)
     s.start()
 
@@ -95,10 +99,8 @@ def main():
 		rec = msg.to_string()[:length*gr.sizeof_gr_complex]
 		if options.debug:
 		    print "Received impulse vector of length", len(rec)
-                recarray = numpy.fromstring(rec, dtype=numpy.complex64)
-                imparray = recarray[::-1]
-                data = imparray.tostring()
-		f.write(data)
+
+		f.write(rec)
 		
         except KeyboardInterrupt:
             pass
