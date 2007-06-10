@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,25 +20,16 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,ofdm_bpsk_mapper);
+GR_SWIG_BLOCK_MAGIC(gr,ofdm_insert_preamble);
 
-gr_ofdm_bpsk_mapper_sptr 
-gr_make_ofdm_bpsk_mapper (unsigned int msgq_limit,
-			  unsigned int bits_per_symbol, 
-			  unsigned int fft_length);
+gr_ofdm_insert_preamble_sptr
+gr_make_ofdm_insert_preamble(int fft_length,
+			     const std::vector<std::vector<gr_complex> > &preamble);
 
 
-class gr_ofdm_bpsk_mapper : public gr_sync_block
+class gr_ofdm_insert_preamble : public gr_block
 {
  protected:
-  gr_ofdm_bpsk_mapper (unsigned int msgq_limit,
-		       unsigned int bits_per_symbol,
-		       unsigned int fft_length);
-
- public:
-  gr_msg_queue_sptr msgq();
-
-  int work(int noutput_items,
-	   gr_vector_const_void_star &input_items,
-	   gr_vector_void_star &output_items);
+  gr_ofdm_insert_preamble(int fft_length,
+			  const std::vector<std::vector<gr_complex> > &preamble);
 };

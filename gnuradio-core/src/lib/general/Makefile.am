@@ -102,7 +102,10 @@ libgeneral_la_SOURCES = 		\
         gr_ofdm_mapper_bcv.cc           \
         gr_ofdm_bpsk_demapper.cc        \
         gr_ofdm_bpsk_mapper.cc          \
+        gr_ofdm_qpsk_mapper.cc          \
+        gr_ofdm_qam_mapper.cc	        \
 	gr_ofdm_frame_sink.cc		\
+	gr_ofdm_insert_preamble.cc	\
         gr_ofdm_sampler.cc              \
 	gr_pa_2x2_phase_combiner.cc	\
 	gr_packet_sink.cc		\
@@ -121,6 +124,7 @@ libgeneral_la_SOURCES = 		\
 	gr_pwr_squelch_ff.cc		\
 	gr_quadrature_demod_cf.cc	\
 	gr_random.cc			\
+	gr_regenerate_bb.cc		\
 	gr_remez.cc			\
 	gr_reverse.cc			\
 	gr_rms_cf.cc			\
@@ -240,8 +244,11 @@ grinclude_HEADERS = 			\
         gr_ofdm_demapper_vcb.h          \
         gr_ofdm_mapper_bcv.h            \
         gr_ofdm_bpsk_mapper.h           \
+        gr_ofdm_qpsk_mapper.h		\
+        gr_ofdm_qam_mapper.h		\
         gr_ofdm_bpsk_demapper.h         \
         gr_ofdm_frame_sink.h		\
+	gr_ofdm_insert_preamble.h	\
 	gr_ofdm_sampler.h               \
 	gr_pa_2x2_phase_combiner.h	\
 	gr_packet_sink.h		\
@@ -260,6 +267,7 @@ grinclude_HEADERS = 			\
 	gr_pwr_squelch_ff.h		\
 	gr_quadrature_demod_cf.h	\
 	gr_random.h			\
+	gr_regenerate_bb.h		\
 	gr_remez.h			\
 	gr_reverse.h			\
 	gr_rms_cf.h			\
@@ -381,7 +389,10 @@ swiginclude_HEADERS =			\
         gr_ofdm_mapper_bcv.i            \
         gr_ofdm_bpsk_demapper.i         \
         gr_ofdm_bpsk_mapper.i           \
+        gr_ofdm_qpsk_mapper.i	        \
+        gr_ofdm_qam_mapper.i	        \
         gr_ofdm_frame_sink.i		\
+	gr_ofdm_insert_preamble.i	\
 	gr_ofdm_sampler.i               \
 	gr_pa_2x2_phase_combiner.i	\
 	gr_packet_sink.i		\
@@ -399,6 +410,7 @@ swiginclude_HEADERS =			\
 	gr_pwr_squelch_cc.i		\
 	gr_pwr_squelch_ff.i		\
 	gr_quadrature_demod_cf.i	\
+	gr_regenerate_bb.i		\
 	gr_remez.i			\
 	gr_rms_cf.i			\
 	gr_rms_ff.i			\

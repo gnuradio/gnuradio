@@ -34,7 +34,8 @@ gr_ofdm_correlator_sptr
 gr_make_ofdm_correlator (unsigned int occupied_carriers, unsigned int fft_length,
 			 unsigned int cplen,
 			 const std::vector<gr_complex> &known_symbol1, 
-			 const std::vector<gr_complex> &known_symbol2);
+			 const std::vector<gr_complex> &known_symbol2,
+			 unsigned int max_fft_shift_len=4);
 
 /*!
  * \brief take a vector of complex constellation points in from an FFT
@@ -65,18 +66,21 @@ class gr_ofdm_correlator : public gr_block
    *                            start of a frame after known_symbol1 (usually a BPSK PN sequence). 
    *                            Both of these start symbols are differentially correlated to compensate
    *                            for phase changes between symbols. 
+   * \param max_fft_shift_len   Set's the maximum distance you can look between bins for correlation
    */
   friend gr_ofdm_correlator_sptr
   gr_make_ofdm_correlator (unsigned int occupied_carriers, unsigned int fft_length,
 			   unsigned int cplen,
 			   const std::vector<gr_complex> &known_symbol1, 
-			   const std::vector<gr_complex> &known_symbol2);
+			   const std::vector<gr_complex> &known_symbol2,
+			   unsigned int max_fft_shift_len);
   
  protected:
   gr_ofdm_correlator (unsigned int occupied_carriers, unsigned int fft_length,
 		      unsigned int cplen,
 		      const std::vector<gr_complex> &known_symbol1, 
-		      const std::vector<gr_complex> &known_symbol2);
+		      const std::vector<gr_complex> &known_symbol2,
+		      unsigned int max_fft_shift_len);
   
  private:
   unsigned char slicer(gr_complex x);
@@ -95,6 +99,8 @@ class gr_ofdm_correlator : public gr_block
   signed int d_coarse_freq;             // !< \brief search distance in number of bins
   unsigned int d_phase_count;           // !< \brief accumulator for coarse freq correction
   float d_snr_est;                      // !< an estimation of the signal to noise ratio
+
+  gr_complex *d_phase_lut;  // !< look-up table for coarse frequency compensation
 
   void forecast(int noutput_items, gr_vector_int &ninput_items_required);
 

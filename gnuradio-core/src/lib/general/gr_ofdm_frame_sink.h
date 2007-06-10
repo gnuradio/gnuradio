@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2006 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,30 +30,22 @@ class gr_ofdm_frame_sink;
 typedef boost::shared_ptr<gr_ofdm_frame_sink> gr_ofdm_frame_sink_sptr;
 
 gr_ofdm_frame_sink_sptr 
-gr_make_ofdm_frame_sink (gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
+gr_make_ofdm_frame_sink (gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
+			 const std::string &mod);
 
 /*!
- * \brief Given a stream of bits and access_code flags, assemble packets.
- * \ingroup sink
- *
- * input: stream of bytes from gr_correlate_access_code_bb
- * output: none.  Pushes assembled packet into target queue
- *
- * The framer expects a fixed length header of 2 16-bit shorts
- * containing the payload length, followed by the payload.  If the 
- * 2 16-bit shorts are not identical, this packet is ignored.  Better
- * algs are welcome.
- *
- * The input data consists of bytes that have two bits used.
- * Bit 0, the LSB, contains the data bit.
- * Bit 1 if set, indicates that the corresponding bit is the
- * the first bit of the packet.  That is, this bit is the first
- * one after the access code.
+ * \brief Takes an OFDM symbol in, demaps it into bits of 0's and 1's, packs
+ * them into packets, and sends to to a message queue sink.
+
+ * NOTE: The mod input parameter simply chooses a pre-defined demapper/slicer. Eventually,
+ * we want to be able to pass in a reference to an object to do the demapping and slicing
+ * for a given modulation type.
  */
 class gr_ofdm_frame_sink : public gr_sync_block
 {
   friend gr_ofdm_frame_sink_sptr 
-  gr_make_ofdm_frame_sink (gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
+  gr_make_ofdm_frame_sink (gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
+			   const std::string &mod);
 
  private:
   enum state_t {STATE_SYNC_SEARCH, STATE_HAVE_SYNC, STATE_HAVE_HEADER};
@@ -78,7 +70,8 @@ class gr_ofdm_frame_sink : public gr_sync_block
   int		     d_packetlen_cnt;		// how many so far
 
  protected:
-  gr_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
+  gr_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
+		     const std::string &mod);
 
   void enter_search();
   void enter_have_sync();
@@ -93,6 +86,13 @@ class gr_ofdm_frame_sink : public gr_sync_block
   unsigned char bpsk_slicer(gr_complex x);
   unsigned int bpsk_demapper(const gr_complex *in,
 			     unsigned char *out);  
+
+  unsigned char qpsk_slicer(gr_complex x);
+  unsigned int qpsk_demapper(const gr_complex *in,
+			     unsigned char *out);
+
+  // pointer to mod-specific demapper
+  unsigned int (gr_ofdm_frame_sink::*d_demapper)(const gr_complex *in, unsigned char *out);
 
  public:
   ~gr_ofdm_frame_sink();

@@ -41,11 +41,8 @@ class transmit_path(gr.hier_block):
         self._verbose      = options.verbose
         self._tx_amplitude = options.tx_amplitude    # digital amplitude sent to USRP
 
-        self.ofdm_transmitter = \
-            blks.mod_ofdm_pkts(fg,
-                               options,
-                               msgq_limit=4,
-                               pad_for_usrp=False)
+        self.ofdm_tx = \
+                     blks.ofdm_mod(fg, options, msgq_limit=4, pad_for_usrp=False)
 
         self.amp = gr.multiply_const_cc(1)
         self.set_tx_amplitude(self._tx_amplitude)
@@ -55,7 +52,7 @@ class transmit_path(gr.hier_block):
             self._print_verbage()
 
         # Create and setup transmit path flow graph
-        fg.connect(self.ofdm_transmitter, self.amp)
+        fg.connect(self.ofdm_tx, self.amp)
         gr.hier_block.__init__(self, fg, None, self.amp)
 
     def set_tx_amplitude(self, ampl):
@@ -70,14 +67,8 @@ class transmit_path(gr.hier_block):
         """
         Calls the transmitter method to send a packet
         """
-        return self.ofdm_transmitter.send_pkt(payload, eof)
+        return self.ofdm_tx.send_pkt(payload, eof)
         
-    def bitrate(self):
-        return self._bitrate
-
-    def samples_per_symbol(self):
-        return self._samples_per_symbol
-
     def add_options(normal, expert):
         """
         Adds transmitter-specific options to the Options Parser

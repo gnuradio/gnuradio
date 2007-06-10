@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,34 +20,34 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_OFDM_BPSK_MAPPER_H
-#define INCLUDED_GR_OFDM_BPSK_MAPPER_H
+#ifndef INCLUDED_GR_OFDM_QPSK_MAPPER_H
+#define INCLUDED_GR_OFDM_QPSK_MAPPER_H
 
 
 #include <gr_sync_block.h>
 #include <gr_message.h>
 #include <gr_msg_queue.h>
 
-class gr_ofdm_bpsk_mapper;
-typedef boost::shared_ptr<gr_ofdm_bpsk_mapper> gr_ofdm_bpsk_mapper_sptr;
+class gr_ofdm_qpsk_mapper;
+typedef boost::shared_ptr<gr_ofdm_qpsk_mapper> gr_ofdm_qpsk_mapper_sptr;
 
-gr_ofdm_bpsk_mapper_sptr 
-gr_make_ofdm_bpsk_mapper (unsigned msgq_limit, 
+gr_ofdm_qpsk_mapper_sptr 
+gr_make_ofdm_qpsk_mapper (unsigned msgq_limit, 
 			  unsigned occupied_carriers, unsigned int fft_length);
 
 /*!
  * \brief take a message in and map to a vector of complex
  * constellation points suitable for IFFT input to be used in an ofdm
- * modulator.  Simple BPSK version.
+ * modulator.  Simple QPSK version.
  */
 
-class gr_ofdm_bpsk_mapper : public gr_sync_block
+class gr_ofdm_qpsk_mapper : public gr_sync_block
 {
-  friend gr_ofdm_bpsk_mapper_sptr
-  gr_make_ofdm_bpsk_mapper (unsigned msgq_limit, 
+  friend gr_ofdm_qpsk_mapper_sptr
+  gr_make_ofdm_qpsk_mapper (unsigned msgq_limit, 
 			    unsigned occupied_carriers, unsigned int fft_length);
  protected:
-  gr_ofdm_bpsk_mapper (unsigned msgq_limit, 
+  gr_ofdm_qpsk_mapper (unsigned msgq_limit, 
 		       unsigned occupied_carriers, unsigned int fft_length);
 
  private:
@@ -62,7 +62,7 @@ class gr_ofdm_bpsk_mapper : public gr_sync_block
   int			d_pending_flag;
 
  public:
-  ~gr_ofdm_bpsk_mapper(void);
+  ~gr_ofdm_qpsk_mapper(void);
 
   gr_msg_queue_sptr	msgq() const { return d_msgq; }
 

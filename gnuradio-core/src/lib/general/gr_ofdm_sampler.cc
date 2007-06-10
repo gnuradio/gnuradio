@@ -67,7 +67,7 @@ gr_ofdm_sampler::general_work (int noutput_items,
 
   int found=0;
 
-  unsigned int i=d_fft_length-1;
+  int i=d_fft_length-1;
 
   while(!found && i<std::min(ninput_items[0],ninput_items[1]) )
     if(trigger[i])
@@ -77,7 +77,7 @@ gr_ofdm_sampler::general_work (int noutput_items,
 
   if(found) {
     assert(i-d_fft_length+1 >= 0);
-    for(unsigned int j=i-d_fft_length+1;j<=i;j++)
+    for(int j=i-d_fft_length+1;j<=i;j++)
       *optr++ = iptr[j];
     consume_each(i-d_fft_length+2);
     //printf("OFDM Sampler found:  ninput_items: %d/%d   noutput_items: %d  consumed: %d   found: %d\n", 

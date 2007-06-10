@@ -23,9 +23,19 @@
 import math
 from gnuradio import gr
 
-class ofdm_sync(gr.hier_block):
-    def __init__(self, fg, fft_length, cp_length, snr):
+class ofdm_sync_ml(gr.hier_block):
+    def __init__(self, fg, fft_length, cp_length, snr, logging):
+        ''' Maximum Likelihood OFDM synchronizer:
+        J. van de Beek, M. Sandell, and P. O. Borjesson, "ML Estimation
+        of Time and Frequency Offset in OFDM Systems," IEEE Trans.
+        Signal Processing, vol. 45, no. 7, pp. 1800-1805, 1997.
+        '''
+
         self.fg = fg
+
+        # FIXME: when converting to hier_block2's, the output signature
+        # should be the output of the divider (the normalized peaks) and
+        # the angle value out of the sample and hold block
 
         self.input = gr.add_const_cc(0)
 
@@ -77,13 +87,12 @@ class ofdm_sync(gr.hier_block):
         self.fg.connect(self.moving_sum_filter,(self.diff,1))
 
         #ML measurements input to sampler block and detect
-        nco_sensitivity = 1.0/fft_length
+        nco_sensitivity = -1.0/fft_length
         self.f2c = gr.float_to_complex()
         self.sampler = gr.ofdm_sampler(fft_length,symbol_length)
         self.pk_detect = gr.peak_detector_fb(0.2, 0.25, 30, 0.0005)
         self.sample_and_hold = gr.sample_and_hold_ff()
         self.nco = gr.frequency_modulator_fc(nco_sensitivity)
-        self.inv = gr.multiply_const_ff(-1)
         self.sigmix = gr.multiply_cc()
 
         # Mix the signal with an NCO controlled by the sync loop
@@ -96,46 +105,31 @@ class ofdm_sync(gr.hier_block):
         #     self.angle = epsilon
                           
         self.fg.connect(self.diff, self.pk_detect)
+
         use_dpll = 1
-
-        fixed_timing = 0
-        if fixed_timing:
-            # Use a fixed trigger point instead of sync block
-            peak_null = gr.null_sink(gr.sizeof_char)
-            data = 640*[0,]
-            data[639] = 1
-            peak_trigger = gr.vector_source_b(data, True)
-
-            self.fg.connect(self.pk_detect, peak_null)
-            self.fg.connect(peak_trigger, (self.sampler,1))
-            self.fg.connect(peak_trigger, (self.sample_and_hold,1))
-        else:
+        if use_dpll:
             self.dpll = gr.dpll_bb(float(symbol_length),0.01)
-            if use_dpll:
-                self.fg.connect(self.pk_detect, self.dpll)
-                self.fg.connect(self.dpll, (self.sampler,1))
-                self.fg.connect(self.dpll, (self.sample_and_hold,1))
-            else:
-                self.fg.connect(self.pk_detect, (self.sampler,1))
-                self.fg.connect(self.pk_detect, (self.sample_and_hold,1))
+            self.fg.connect(self.pk_detect, self.dpll)
+            self.fg.connect(self.dpll, (self.sampler,1))
+            self.fg.connect(self.dpll, (self.sample_and_hold,1))
+        else:
+            self.fg.connect(self.pk_detect, (self.sampler,1))
+            self.fg.connect(self.pk_detect, (self.sample_and_hold,1))
             
         self.fg.connect(self.angle, (self.sample_and_hold,0))
-        self.fg.connect(self.sample_and_hold, self.inv, self.nco)
+        self.fg.connect(self.sample_and_hold, self.nco)
 
-        if 1:
-            self.fg.connect(self.diff, gr.file_sink(gr.sizeof_float, "theta_f.dat"))
-            self.fg.connect(self.angle, gr.file_sink(gr.sizeof_float, "epsilon_f.dat"))
-            if fixed_timing:
-                self.fg.connect(peak_trigger, gr.file_sink(gr.sizeof_char, "peaks_b.dat"))
-            else:
-                self.fg.connect(self.pk_detect, gr.file_sink(gr.sizeof_char, "peaks_b.dat"))
-                if use_dpll:
-                    self.fg.connect(self.dpll, gr.file_sink(gr.sizeof_char, "dpll_b.dat"))
+        if logging:
+            self.fg.connect(self.diff, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-theta_f.dat"))
+            self.fg.connect(self.angle, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-epsilon_f.dat"))
+            self.fg.connect(self.pk_detect, gr.file_sink(gr.sizeof_char, "ofdm_sync_ml-peaks_b.dat"))
+            if use_dpll:
+                self.fg.connect(self.dpll, gr.file_sink(gr.sizeof_char, "ofdm_sync_ml-dpll_b.dat"))
 
-            self.fg.connect(self.sigmix, gr.file_sink(gr.sizeof_gr_complex, "sigmix_c.dat"))
-            self.fg.connect(self.sampler, gr.file_sink(gr.sizeof_gr_complex*fft_length, "sampler_c.dat"))
-            self.fg.connect(self.sample_and_hold, gr.file_sink(gr.sizeof_float, "sample_and_hold_f.dat"))
-            self.fg.connect(self.nco, gr.file_sink(gr.sizeof_gr_complex, "nco_c.dat"))
-            self.fg.connect(self.input, gr.file_sink(gr.sizeof_gr_complex, "input_c.dat"))
+            self.fg.connect(self.sigmix, gr.file_sink(gr.sizeof_gr_complex, "ofdm_sync_ml-sigmix_c.dat"))
+            self.fg.connect(self.sampler, gr.file_sink(gr.sizeof_gr_complex*fft_length, "ofdm_sync_ml-sampler_c.dat"))
+            self.fg.connect(self.sample_and_hold, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-sample_and_hold_f.dat"))
+            self.fg.connect(self.nco, gr.file_sink(gr.sizeof_gr_complex, "ofdm_sync_ml-nco_c.dat"))
+            self.fg.connect(self.input, gr.file_sink(gr.sizeof_gr_complex, "ofdm_sync_ml-input_c.dat"))
 
         gr.hier_block.__init__(self, fg, self.input, self.sampler)

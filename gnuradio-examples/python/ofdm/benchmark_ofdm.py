@@ -24,7 +24,6 @@ from gnuradio import gr, blks
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
-from gnuradio.blksimpl import ofdm_pkt
 
 import random, time, struct, sys, math, os
 
@@ -77,10 +76,11 @@ class my_graph(gr.flow_graph):
         self.connect(self.zeros, (self.mux,0))
         self.connect(self.txpath, (self.mux,1))
         self.connect(self.mux, self.throttle, self.channel, self.rxpath)
-        
-        self.connect(self.txpath, gr.file_sink(gr.sizeof_gr_complex, "txpath.dat"))
-        self.connect(self.mux, gr.file_sink(gr.sizeof_gr_complex, "mux.dat"))
-        self.connect(self.channel, gr.file_sink(gr.sizeof_gr_complex, "channel.dat"))
+
+        if options.log:
+            self.connect(self.txpath, gr.file_sink(gr.sizeof_gr_complex, "txpath.dat"))
+            self.connect(self.mux, gr.file_sink(gr.sizeof_gr_complex, "mux.dat"))
+            self.connect(self.channel, gr.file_sink(gr.sizeof_gr_complex, "channel.dat"))
             
 # /////////////////////////////////////////////////////////////////////////////
 #                                   main
@@ -121,7 +121,7 @@ def main():
     parser.add_option("-M", "--megabytes", type="eng_float", default=1.0,
                       help="set megabytes to transmit [default=%default]")
     parser.add_option("-r", "--sample-rate", type="eng_float", default=1e5,
-                      help="set sample rate to RATE (%default)") 
+                      help="limit sample rate to RATE in throttle (%default)") 
     parser.add_option("", "--snr", type="eng_float", default=30,
                       help="set the SNR of the channel in dB [default=%default]")
     parser.add_option("", "--frequency-offset", type="eng_float", default=0,
@@ -137,8 +137,8 @@ def main():
 
     transmit_path.add_options(parser, expert_grp)
     receive_path.add_options(parser, expert_grp)
-    ofdm_pkt.mod_ofdm_pkts.add_options(parser, expert_grp)
-    ofdm_pkt.demod_ofdm_pkts.add_options(parser, expert_grp)
+    blks.ofdm_mod.add_options(parser, expert_grp)
+    blks.ofdm_demod.add_options(parser, expert_grp)
     
     (options, args) = parser.parse_args ()
        

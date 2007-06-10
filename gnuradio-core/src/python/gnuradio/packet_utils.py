@@ -157,8 +157,10 @@ def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
     is a multiple of 128 samples.
 
     @param ptk_byte_len: len in bytes of packet, not including padding.
-    @param samples_per_symbol: samples per bit (1 bit / symbolwith GMSK)
+    @param samples_per_symbol: samples per bit (1 bit / symbolwidth GMSK)
     @type samples_per_symbol: int
+    @param bits_per_symbol: bits per symbol (log2(modulation order))
+    @type bits_per_symbol: int
 
     @returns number of bytes of padding to append.
     """

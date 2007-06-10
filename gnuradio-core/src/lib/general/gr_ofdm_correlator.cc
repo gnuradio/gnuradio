@@ -30,28 +30,32 @@
 
 #define VERBOSE 0
 #define M_TWOPI (2*M_PI)
+#define MAX_NUM_SYMBOLS 1000
 
 gr_ofdm_correlator_sptr
 gr_make_ofdm_correlator (unsigned int occupied_carriers, unsigned int fft_length, 
 			 unsigned int cplen,
 			 const std::vector<gr_complex> &known_symbol1, 
-			 const std::vector<gr_complex> &known_symbol2)
+			 const std::vector<gr_complex> &known_symbol2,
+			 unsigned int max_fft_shift_len)
 {
   return gr_ofdm_correlator_sptr (new gr_ofdm_correlator (occupied_carriers, fft_length, cplen,
-							  known_symbol1, known_symbol2));
+							  known_symbol1, known_symbol2,
+							  max_fft_shift_len));
 }
 
 gr_ofdm_correlator::gr_ofdm_correlator (unsigned occupied_carriers, unsigned int fft_length, 
 					unsigned int cplen,
 					const std::vector<gr_complex> &known_symbol1, 
-					const std::vector<gr_complex> &known_symbol2)
+					const std::vector<gr_complex> &known_symbol2,
+					unsigned int max_fft_shift_len)
   : gr_block ("ofdm_correlator",
 	      gr_make_io_signature (1, 1, sizeof(gr_complex)*fft_length),
 	      gr_make_io_signature2 (2, 2, sizeof(gr_complex)*occupied_carriers, sizeof(char))),
     d_occupied_carriers(occupied_carriers),
     d_fft_length(fft_length),
     d_cplen(cplen),
-    d_freq_shift_len(5),
+    d_freq_shift_len(max_fft_shift_len),
     d_known_symbol1(known_symbol1),
     d_known_symbol2(known_symbol2),
     d_coarse_freq(0),
@@ -62,16 +66,24 @@ gr_ofdm_correlator::gr_ofdm_correlator (unsigned occupied_carriers, unsigned int
 
   std::vector<gr_complex>::iterator i1, i2;
 
-  int i = 0;
+  unsigned int i = 0, j = 0;
   gr_complex one(1.0, 0.0);
   for(i1 = d_known_symbol1.begin(), i2 = d_known_symbol2.begin(); i1 != d_known_symbol1.end(); i1++, i2++) {
     d_diff_corr_factor[i] = one / ((*i1) * conj(*i2));
     i++;
   }
+  
+  d_phase_lut = new gr_complex[(2*d_freq_shift_len+1) * MAX_NUM_SYMBOLS];
+  for(i = 0; i <= 2*d_freq_shift_len; i++) {
+    for(j = 0; j < MAX_NUM_SYMBOLS; j++) {
+      d_phase_lut[j + i*MAX_NUM_SYMBOLS] =  gr_expj(-M_TWOPI*d_cplen/d_fft_length*(i-d_freq_shift_len)*j);
+    }
+  }
 }
 
 gr_ofdm_correlator::~gr_ofdm_correlator(void)
 {
+  delete [] d_phase_lut;
 }
 
 void
@@ -87,7 +99,12 @@ gr_ofdm_correlator::coarse_freq_comp(int freq_delta, int symbol_count)
 {
   //  return gr_complex(cos(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count),
   //	    sin(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count));
-  return gr_expj(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count);
+  //return gr_expj(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count);
+
+  assert(d_freq_shift_len + freq_delta >= 0);
+  assert(symbol_count <= MAX_NUM_SYMBOLS);
+
+  return d_phase_lut[MAX_NUM_SYMBOLS * (d_freq_shift_len + freq_delta) + symbol_count];
 }
 
 bool
@@ -132,14 +149,17 @@ gr_ofdm_correlator::correlate(const gr_complex *previous, const gr_complex *curr
 	d_snr_est = 10*log10(fabs(h_sqrd.real()/h_sqrd.imag()));
       }
 
+#if VERBOSE
       printf("CORR: Found, bin %d\tSNR Est %f dB\tcorr power fraction %f\n", 
              search_delta, d_snr_est, h_sqrd.real()/power);
+#endif
+
       // search_delta,10*log10(h_sqrd.real()/fabs(h_sqrd.imag())),h_sqrd.real()/power);
       break;
     }
     else {
       if(search_delta <= 0)
-	search_delta = (-search_delta) + 1;
+	search_delta = (-search_delta) + 2;
       else
 	search_delta = -search_delta;
     }
@@ -161,10 +181,6 @@ gr_ofdm_correlator::calculate_equalizer(const gr_complex *previous, const gr_com
     d_hestimate[i] = 0.5F * (d_known_symbol1[i] / previous[i+zeros_on_left+d_coarse_freq] +
 			     d_known_symbol2[i] / (coarse_freq_comp(d_coarse_freq,1)*
 						   current[i+zeros_on_left+d_coarse_freq]));
-    
-#if VERBOSE
-    fprintf(stderr, "%f %f ", d_hestimate[i].real(), d_hestimate[i].imag());
-#endif
   }
 #if VERBOSE
   fprintf(stderr, "\n");

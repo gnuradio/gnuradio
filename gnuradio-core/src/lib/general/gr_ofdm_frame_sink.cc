@@ -79,6 +79,14 @@ unsigned char gr_ofdm_frame_sink::bpsk_slicer(gr_complex x)
   return (unsigned char)(x.real() > 0 ? 1 : 0);
 }
 
+unsigned char gr_ofdm_frame_sink::qpsk_slicer(gr_complex x)
+{
+  unsigned char i = (x.real() > 0 ? 1 : 0);
+  unsigned char q = (x.imag() > 0 ? 1 : 0);
+
+  return (q << 1) | i;
+}
+
 unsigned int gr_ofdm_frame_sink::bpsk_demapper(const gr_complex *in,
 					       unsigned char *out)
 {
@@ -101,23 +109,56 @@ unsigned int gr_ofdm_frame_sink::bpsk_demapper(const gr_complex *in,
   return bytes_produced;
 }
 
+unsigned int gr_ofdm_frame_sink::qpsk_demapper(const gr_complex *in,
+					       unsigned char *out)
+{
+  unsigned int i=0, bytes_produced=0;
 
+  while(i < d_occupied_carriers) {
+    
+    while((d_byte_offset < 8) && (i < d_occupied_carriers)) {
+      //fprintf(stderr, "%f+j%f\n", in[i].real(), in[i].imag()); 
+      d_partial_byte |= qpsk_slicer(in[i++]) << (d_byte_offset);
+      d_byte_offset += 2;
+    }
+
+    if(d_byte_offset == 8) {
+      out[bytes_produced++] = d_partial_byte;
+      d_byte_offset = 0;
+      d_partial_byte = 0;
+    }
+  }
+
+  return bytes_produced;
+}
 
 gr_ofdm_frame_sink_sptr
-gr_make_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_carriers)
+gr_make_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_carriers,
+			const std::string &mod)
 {
-  return gr_ofdm_frame_sink_sptr(new gr_ofdm_frame_sink(target_queue, occupied_carriers));
+  return gr_ofdm_frame_sink_sptr(new gr_ofdm_frame_sink(target_queue, occupied_carriers, mod));
 }
 
 
-gr_ofdm_frame_sink::gr_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_carriers)
+gr_ofdm_frame_sink::gr_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_carriers,
+				       const std::string &mod)
   : gr_sync_block ("ofdm_frame_sink",
 		   gr_make_io_signature2 (2, 2, sizeof(gr_complex)*occupied_carriers, sizeof(char)),
 		   gr_make_io_signature (0, 0, 0)),
     d_target_queue(target_queue), d_occupied_carriers(occupied_carriers), 
     d_byte_offset(0), d_partial_byte(0)
 {
-  d_bytes_out = new unsigned char[(int)ceil(d_occupied_carriers/8.0)];
+  d_bytes_out = new unsigned char[(int)ceil(d_occupied_carriers/4.0)];
+
+  if(mod == "qpsk") {
+    d_demapper = &gr_ofdm_frame_sink::qpsk_demapper;
+  }
+  else if(mod == "bpsk") {
+    d_demapper = &gr_ofdm_frame_sink::bpsk_demapper;
+  }
+  else {
+    throw std::invalid_argument("Modulation type must be BPSK or QPSK.");  
+  }
 
   enter_search();
 }
@@ -134,15 +175,15 @@ gr_ofdm_frame_sink::work (int noutput_items,
 {
   const gr_complex *in = (const gr_complex *) input_items[0];
   const char *sig = (const char *) input_items[1];
-  int count_tones=0, count_items=0;
   unsigned int j = 0;
   unsigned int bytes=0;
   
   if (VERBOSE)
     fprintf(stderr,">>> Entering state machine\n");
   
-  bytes = bpsk_demapper(&in[0], d_bytes_out);
-  
+  //bytes = bpsk_demapper(&in[0], d_bytes_out);
+  bytes = (this->*d_demapper)(&in[0], d_bytes_out);  
+
   switch(d_state) {
       
   case STATE_SYNC_SEARCH:    // Look for flag indicating beginning of pkt
@@ -155,12 +196,13 @@ gr_ofdm_frame_sink::work (int noutput_items,
     break;
 
   case STATE_HAVE_SYNC:
-    if(sig[0])
-      printf("ERROR -- Found SYNC in HAVE_SYNC\n");
-    if (VERBOSE)
+    if (VERBOSE) {
+      if(sig[0])
+	printf("ERROR -- Found SYNC in HAVE_SYNC\n");
       fprintf(stderr,"Header Search bitcnt=%d, header=0x%08x\n",
 	      d_headerbytelen_cnt, d_header);
-    
+    }
+
     j = 0;
     while(j < bytes) {
       d_header = (d_header << 8) | (d_bytes_out[j] & 0xFF);
@@ -174,10 +216,9 @@ gr_ofdm_frame_sink::work (int noutput_items,
 	// we have a full header, check to see if it has been received properly
 	if (header_ok()){
 	  enter_have_header();
-	  printf("\nPacket Length: %d\n", d_packetlen);
-	  //for(int k=0; k < d_packetlen; k++)
-	  //  printf("%02x", d_packet[k]);
-	  //printf("\n");
+	  
+	  if (VERBOSE)
+	    printf("\nPacket Length: %d\n", d_packetlen);
 	  
 	  while((j < bytes) && (d_packetlen_cnt < d_packetlen)) {
 	    d_packet[d_packetlen_cnt++] = d_bytes_out[j++];
@@ -201,10 +242,11 @@ gr_ofdm_frame_sink::work (int noutput_items,
     break;
       
   case STATE_HAVE_HEADER:
-    if(sig[0])
-      printf("ERROR -- Found SYNC in HAVE_HEADER at %d, length of %d\n", d_packetlen_cnt, d_packetlen);
-    if (VERBOSE)
-	fprintf(stderr,"Packet Build\n");
+    if (VERBOSE) {
+      if(sig[0])
+	printf("ERROR -- Found SYNC in HAVE_HEADER at %d, length of %d\n", d_packetlen_cnt, d_packetlen);
+      fprintf(stderr,"Packet Build\n");
+    }
     
     j = 0;
     while(j < bytes) {

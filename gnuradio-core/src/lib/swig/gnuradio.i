@@ -59,7 +59,15 @@ namespace std {
   %template()	  vector<int>;
   %template()	  vector<float>;
   %template()	  vector<double>;
-  %template() 	  vector<std::complex<float> >;
+
+  %template() 	  vector< std::complex<float> >;
+  %template()     vector< std::vector< unsigned char > >;
+  %template()     vector< std::vector< char > >;
+  %template()     vector< std::vector< short > >;
+  %template()     vector< std::vector< int > >;
+  %template()     vector< std::vector< float > >;
+  %template()     vector< std::vector< double > >;
+  %template()     vector< std::vector< std::complex<float> > >;
 };
 
 ////////////////////////////////////////////////////////////////////////

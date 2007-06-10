@@ -97,8 +97,12 @@
 #include <gr_ofdm_cyclic_prefixer.h>
 #include <gr_ofdm_bpsk_demapper.h>
 #include <gr_ofdm_bpsk_mapper.h>
+#include <gr_ofdm_qpsk_mapper.h>
+#include <gr_ofdm_qam_mapper.h>
 #include <gr_ofdm_frame_sink.h>
+#include <gr_ofdm_insert_preamble.h>
 #include <gr_ofdm_sampler.h>
+#include <gr_regenerate_bb.h>
 #include <gr_costas_loop_cc.h>
 #include <gr_pa_2x2_phase_combiner.h>
 #include <gr_kludge_copy.h>
@@ -200,8 +204,12 @@
 %include "gr_ofdm_cyclic_prefixer.i"
 %include "gr_ofdm_bpsk_demapper.i"
 %include "gr_ofdm_bpsk_mapper.i"
+%include "gr_ofdm_qpsk_mapper.i"
+%include "gr_ofdm_qam_mapper.i"
 %include "gr_ofdm_frame_sink.i"
+%include "gr_ofdm_insert_preamble.i"
 %include "gr_ofdm_sampler.i"
+%include "gr_regenerate_bb.i"
 %include "gr_costas_loop_cc.i"
 %include "gr_pa_2x2_phase_combiner.i"
 %include "gr_kludge_copy.i"

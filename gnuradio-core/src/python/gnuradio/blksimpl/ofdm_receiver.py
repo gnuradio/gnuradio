@@ -22,10 +22,12 @@
 
 import math
 from gnuradio import gr
-from gnuradio.blksimpl.ofdm_sync import ofdm_sync
+from gnuradio.blksimpl.ofdm_sync_ml import ofdm_sync_ml
+from gnuradio.blksimpl.ofdm_sync_pn import ofdm_sync_pn
+from gnuradio.blksimpl.ofdm_sync_pnac import ofdm_sync_pnac
 
 class ofdm_receiver(gr.hier_block):
-    def __init__(self, fg, fft_length, cp_length, occupied_tones, snr, ks1, ks2):
+    def __init__(self, fg, fft_length, cp_length, occupied_tones, snr, ks, logging=False):
         self.fg = fg
 
         bw = (float(occupied_tones) / float(fft_length)) / 2.0
@@ -39,14 +41,21 @@ class ofdm_receiver(gr.hier_block):
         
         win = [1 for i in range(fft_length)]
 
-        self.ofdm_sync = ofdm_sync(fg, fft_length, cp_length, snr)
+        SYNC = "pn"
+        if SYNC == "ml":
+            self.ofdm_sync = ofdm_sync_ml(fg, fft_length, cp_length, snr, logging)
+        elif SYNC == "pn":
+            self.ofdm_sync = ofdm_sync_pn(fg, fft_length, cp_length, logging)
+        elif SYNC == "pnac":
+            self.ofdm_sync = ofdm_sync_pnac(fg, fft_length, cp_length, ks[0])
+
         self.fft_demod = gr.fft_vcc(fft_length, True, win, True)
         self.ofdm_corr  = gr.ofdm_correlator(occupied_tones, fft_length,
-                                             cp_length, ks1, ks2)
+                                             cp_length, ks[1], ks[2])
 
         self.fg.connect(self.chan_filt, self.ofdm_sync, self.fft_demod, self.ofdm_corr)
         
-        if 1:
+        if logging:
             self.fg.connect(self.chan_filt, gr.file_sink(gr.sizeof_gr_complex, "chan_filt_c.dat"))
             self.fg.connect(self.fft_demod, gr.file_sink(gr.sizeof_gr_complex*fft_length, "fft_out_c.dat"))
             self.fg.connect(self.ofdm_corr, gr.file_sink(gr.sizeof_gr_complex*occupied_tones, "ofdm_corr_out_c.dat"))

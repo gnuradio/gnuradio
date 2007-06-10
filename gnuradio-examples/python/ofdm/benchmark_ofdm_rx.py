@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005, 2006 Free Software Foundation, Inc.
+# Copyright 2006, 2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,17 +20,17 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, modulation_utils
+from gnuradio import gr, blks
 from gnuradio import usrp
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-import random, time, struct, sys, math
+import random, time, struct, sys
 
 # from current dir
 from receive_path import receive_path
-import ofdm, fusb_options
+import fusb_options
 
 class usrp_graph(gr.flow_graph):
     def __init__(self, callback, options):
@@ -118,9 +118,6 @@ class usrp_graph(gr.flow_graph):
         Adds usrp-specific options to the Options Parser
         """
         add_freq_option(normal)
-        if not normal.has_option("--bitrate"):
-            normal.add_option("-r", "--bitrate", type="eng_float", default=None,
-                              help="specify bitrate.  samples-per-symbol and interp/decim will be derived.")
         normal.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
                           help="select USRP Rx side A or B")
         normal.add_option("", "--rx-gain", type="eng_float", default=None, metavar="GAIN",
@@ -129,8 +126,6 @@ class usrp_graph(gr.flow_graph):
                           help="print min and max Rx gain available on selected daughterboard")
         normal.add_option("-v", "--verbose", action="store_true", default=False)
 
-        expert.add_option("-S", "--samples-per-symbol", type="int", default=None,
-                          help="set samples/symbol [default=%default]")
         expert.add_option("", "--rx-freq", type="eng_float", default=None,
                           help="set Rx frequency to FREQ [default=%default]", metavar="FREQ")
         expert.add_option("-d", "--decim", type="intx", default=32,
@@ -175,14 +170,27 @@ def main():
             n_right += 1
         print "ok: %r \t pktno: %d \t n_rcvd: %d \t n_right: %d" % (ok, pktno, n_rcvd, n_right)
 
+        if 0:
+            printlst = list()
+            for x in payload[2:]:
+                t = hex(ord(x)).replace('0x', '')
+                if(len(t) == 1):
+                    t = '0' + t
+                printlst.append(t)
+            printable = ''.join(printlst)
+
+            print printable
+            print "\n"
+
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
-    parser.add_option("-r", "--sample-rate", type="eng_float", default=1e5,
-                      help="set sample rate to RATE (%default)") 
+    parser.add_option("","--discontinuous", action="store_true", default=False,
+                      help="enable discontinuous")
 
     usrp_graph.add_options(parser, expert_grp)
     receive_path.add_options(parser, expert_grp)
-    ofdm.ofdm_mod.add_options(parser, expert_grp)
+    blks.ofdm_mod.add_options(parser, expert_grp)
+    blks.ofdm_demod.add_options(parser, expert_grp)
     fusb_options.add_options(expert_grp)
 
     (options, args) = parser.parse_args ()

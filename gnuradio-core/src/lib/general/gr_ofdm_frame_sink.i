@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,12 +23,14 @@
 GR_SWIG_BLOCK_MAGIC(gr,ofdm_frame_sink);
 
 gr_ofdm_frame_sink_sptr 
-gr_make_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
+gr_make_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
+			const std::string &mod);
 
 class gr_ofdm_frame_sink : public gr_sync_block
 {
  protected:
-  gr_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
+  gr_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
+		     const std::string &mod);
 
  public:
   ~gr_ofdm_frame_sink();

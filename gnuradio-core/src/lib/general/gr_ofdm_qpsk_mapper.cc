@@ -24,21 +24,21 @@
 #include "config.h"
 #endif
 
-#include <gr_ofdm_bpsk_mapper.h>
+#include <gr_ofdm_qpsk_mapper.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
 
-gr_ofdm_bpsk_mapper_sptr
-gr_make_ofdm_bpsk_mapper (unsigned int msgq_limit, 
+gr_ofdm_qpsk_mapper_sptr
+gr_make_ofdm_qpsk_mapper (unsigned int msgq_limit, 
 			  unsigned int occupied_carriers, unsigned int fft_length)
 {
-  return gr_ofdm_bpsk_mapper_sptr (new gr_ofdm_bpsk_mapper (msgq_limit, occupied_carriers, fft_length));
+  return gr_ofdm_qpsk_mapper_sptr (new gr_ofdm_qpsk_mapper (msgq_limit, occupied_carriers, fft_length));
 }
 
 // Consumes 1 packet and produces as many OFDM symbols of fft_length to hold the full packet
-gr_ofdm_bpsk_mapper::gr_ofdm_bpsk_mapper (unsigned int msgq_limit, 
+gr_ofdm_qpsk_mapper::gr_ofdm_qpsk_mapper (unsigned int msgq_limit, 
 					  unsigned int occupied_carriers, unsigned int fft_length)
-  : gr_sync_block ("ofdm_bpsk_mapper",
+  : gr_sync_block ("ofdm_qpsk_mapper",
 		   gr_make_io_signature (0, 0, 0),
 		   gr_make_io_signature2 (1, 2, sizeof(gr_complex)*fft_length, sizeof(char))),
     d_msgq(gr_make_msg_queue(msgq_limit)), d_msg_offset(0), d_eof(false),
@@ -48,22 +48,23 @@ gr_ofdm_bpsk_mapper::gr_ofdm_bpsk_mapper (unsigned int msgq_limit,
     d_pending_flag(0)
 {
   if (!(d_occupied_carriers <= d_fft_length))
-    throw std::invalid_argument("gr_ofdm_bpsk_mapper: occupied carriers must be <= fft_length");
+    throw std::invalid_argument("gr_ofdm_qpsk_mapper: occupied carriers must be <= fft_length");
 }
 
-gr_ofdm_bpsk_mapper::~gr_ofdm_bpsk_mapper(void)
+gr_ofdm_qpsk_mapper::~gr_ofdm_qpsk_mapper(void)
 {
 }
 
-static float
+static gr_complex
 randombit()
 {
-  int r = rand()&1;
-  return (float)(-1 + 2*r);
+  int r1 = rand()&1;
+  int r2 = rand()&1;
+  return gr_complex((0.707)*(-1 + 2*r1),(0.707)*(-1 + 2*r2));
 }
 
 int
-gr_ofdm_bpsk_mapper::work(int noutput_items,
+gr_ofdm_qpsk_mapper::work(int noutput_items,
 			  gr_vector_const_void_star &input_items,
 			  gr_vector_void_star &output_items)
 {
@@ -73,7 +74,7 @@ gr_ofdm_bpsk_mapper::work(int noutput_items,
   unsigned int unoccupied_carriers = d_fft_length - d_occupied_carriers;
   unsigned int zeros_on_left = (unsigned)ceil(unoccupied_carriers/2.0);
 
-  //printf("OFDM BPSK Mapper:  ninput_items: %d   noutput_items: %d\n", ninput_items[0], noutput_items);
+  //printf("OFDM QPSK Mapper:  ninput_items: %d   noutput_items: %d\n", ninput_items[0], noutput_items);
 
   if(d_eof) {
     return -1;
@@ -104,10 +105,14 @@ gr_ofdm_bpsk_mapper::work(int noutput_items,
   
   i = 0;
   while((d_msg_offset < d_msg->length()) && (i < d_occupied_carriers)) {
-    unsigned char bit = (d_msg->msg()[d_msg_offset] >> (d_bit_offset)) & 0x01;
-    out[i + zeros_on_left] = gr_complex(-1+2*(bit));
-    i++;
+    unsigned char bit0 = (d_msg->msg()[d_msg_offset] >> (d_bit_offset)) & 0x01;
     d_bit_offset++;
+    
+    unsigned char bit1 = (d_msg->msg()[d_msg_offset] >> (d_bit_offset)) & 0x01;
+    d_bit_offset++;
+    
+    out[i + zeros_on_left] = gr_complex((0.707)*(-1+2*(bit0)), (0.707)*(-1+2*(bit1)) );
+    i++;
     if(d_bit_offset == 8) {
       d_bit_offset = 0;
       d_msg_offset++;
@@ -117,7 +122,7 @@ gr_ofdm_bpsk_mapper::work(int noutput_items,
   // Ran out of data to put in symbol
   if (d_msg_offset == d_msg->length()) {
     while(i < d_occupied_carriers) {   // finish filling out the symbol
-      out[i + zeros_on_left] = gr_complex(randombit(),0);
+      out[i + zeros_on_left] = randombit();
       i++;
     }
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,18 +20,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,ofdm_bpsk_mapper);
+GR_SWIG_BLOCK_MAGIC(gr,ofdm_qpsk_mapper);
 
-gr_ofdm_bpsk_mapper_sptr 
-gr_make_ofdm_bpsk_mapper (unsigned int msgq_limit,
+gr_ofdm_qpsk_mapper_sptr 
+gr_make_ofdm_qpsk_mapper (unsigned int msgq_limit,
 			  unsigned int bits_per_symbol, 
 			  unsigned int fft_length);
 
 
-class gr_ofdm_bpsk_mapper : public gr_sync_block
+class gr_ofdm_qpsk_mapper : public gr_sync_block
 {
  protected:
-  gr_ofdm_bpsk_mapper (unsigned int msgq_limit,
+  gr_ofdm_qpsk_mapper (unsigned int msgq_limit,
 		       unsigned int bits_per_symbol,
 		       unsigned int fft_length);
 

@@ -52,7 +52,7 @@ gr_delay::work (int noutput_items,
   const char *iptr;
   char *optr;
 
-  for(int i = 0; i < input_items.size(); i++) {
+  for(size_t i = 0; i < input_items.size(); i++) {
     iptr = (const char *) input_items[i];
     optr = (char *) output_items[i];
 

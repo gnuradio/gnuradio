@@ -29,7 +29,8 @@ gr_make_ofdm_correlator (unsigned int occupied_carriers,
 			 unsigned int fft_length,
 			 unsigned int cplen,
 			 const std::vector<gr_complex> &known_symbol1, 
-			 const std::vector<gr_complex> &known_symbol2);
+			 const std::vector<gr_complex> &known_symbol2,
+			 unsigned int max_fft_shift_len=4);
 
 class gr_ofdm_correlator : public gr_sync_decimator
 {
@@ -38,7 +39,8 @@ class gr_ofdm_correlator : public gr_sync_decimator
 		      unsigned int fft_length,
 		      unsigned int cplen,
 		      const std::vector<gr_complex> &known_symbol1, 
-		      const std::vector<gr_complex> &known_symbol2);
+		      const std::vector<gr_complex> &known_symbol2,
+		      unsigned int max_fft_shift_len);
 
  public:
   float snr() { return d_snr_est; }

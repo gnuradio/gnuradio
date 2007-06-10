@@ -96,7 +96,7 @@ def make_header(payload_len, whitener_offset=0):
     return struct.pack('!HH', val, val)
 
 def make_packet(payload, samples_per_symbol, bits_per_symbol,
-                pad_for_usrp=True, whitener_offset=0, dowhiten=1):
+                pad_for_usrp=True, whitener_offset=0, whitening=True):
     """
     Build a packet, given access code, payload, and whitener offset
 
@@ -106,10 +106,13 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
     @param bits_per_symbol:       (needed for padding calculation)
     @type bits_per_symbol:        int
     @param whitener_offset        offset into whitener string to use [0-16)
+    @param whitening:             Turn whitener on or off
+    @type whitening:              bool
     
     Packet will have access code at the beginning, followed by length, payload
     and finally CRC-32.
     """
+
     if not whitener_offset >=0 and whitener_offset < 16:
         raise ValueError, "whitener_offset must be between 0 and 15, inclusive (%i)" % (whitener_offset,)
 
@@ -129,7 +132,7 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
         usrp_packing = _npadding_bytes(packet_length, samples_per_symbol, bits_per_symbol) * '\x55'
         pkt_dt = pkt_dt + usrp_packing
 
-    if(dowhiten):
+    if(whitening):
         pkt = pkt_hd + whiten(pkt_dt, whitener_offset)
     else:
         pkt = pkt_hd + pkt_dt
@@ -147,8 +150,10 @@ def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
     is a multiple of 128 samples.
 
     @param ptk_byte_len: len in bytes of packet, not including padding.
-    @param samples_per_symbol: samples per bit (1 bit / symbolwith GMSK)
+    @param samples_per_symbol: samples per bit (1 bit / symbolwidth GMSK)
     @type samples_per_symbol: int
+    @param bits_per_symbol: bits per symbol (log2(modulation order))
+    @type bits_per_symbol: int
 
     @returns number of bytes of padding to append.
     """
@@ -160,13 +165,17 @@ def _npadding_bytes(pkt_byte_len, samples_per_symbol, bits_per_symbol):
     return byte_modulus - r
     
 
-def unmake_packet(whitened_payload_with_crc, whitener_offset=0, dodewhiten=1):
+def unmake_packet(whitened_payload_with_crc, whitener_offset=0, dewhitening=1):
     """
     Return (ok, payload)
 
     @param whitened_payload_with_crc: string
+    @param whitener_offset        offset into whitener string to use [0-16)
+    @param dewhitening:           Turn whitener on or off
+    @type  dewhitening:           bool
     """
-    if dodewhiten:
+
+    if dewhitening:
         payload_with_crc = dewhiten(whitened_payload_with_crc, whitener_offset)
     else:
         payload_with_crc = whitened_payload_with_crc

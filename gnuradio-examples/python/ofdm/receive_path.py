@@ -43,9 +43,8 @@ class receive_path(gr.hier_block):
         self._rx_callback = rx_callback      # this callback is fired when there's a packet available
 
         # receiver
-        self.ofdm_receiver = \
-            blks.demod_ofdm_pkts(fg, options,
-                                 callback=self._rx_callback)
+        self.ofdm_rx = \
+                     blks.ofdm_demod(fg, options, callback=self._rx_callback)
 
         # Carrier Sensing Blocks
         #alpha = 0.001
@@ -57,7 +56,7 @@ class receive_path(gr.hier_block):
         if self._verbose:
             self._print_verbage()
         
-        gr.hier_block.__init__(self, fg, self.ofdm_receiver, None)
+        gr.hier_block.__init__(self, fg, self.ofdm_rx, None)
 
     def carrier_sensed(self):
         """
@@ -98,9 +97,4 @@ class receive_path(gr.hier_block):
         """
         Prints information about the receive path
         """
-        print "Using RX d'board %s"    % (self.subdev.side_and_name(),)
-        print "Rx gain:         %g"    % (self.gain,)
-        print "modulation:      %s"    % (self._demod_class.__name__)
-        print "bitrate:         %sb/s" % (eng_notation.num_to_str(self._bitrate))
-        print "samples/symbol:  %3d"   % (self._samples_per_symbol)
-        print "decim:           %3d"   % (self._decim)
+        pass

@@ -20,18 +20,18 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, modulation_utils
+from gnuradio import gr, blks
 from gnuradio import usrp
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-import random, time, struct, sys, math
+import time, struct, sys
 
 # from current dir
 from transmit_path import transmit_path
 from pick_bitrate import pick_tx_bitrate
-import ofdm, fusb_options
+import fusb_options
 
 class usrp_graph(gr.flow_graph):
     def __init__(self, options):
@@ -39,7 +39,6 @@ class usrp_graph(gr.flow_graph):
 
         self._tx_freq            = options.tx_freq         # tranmitter's center frequency
         self._tx_subdev_spec     = options.tx_subdev_spec  # daughterboard to use
-        self._bitrate            = options.bitrate         # desired bit rate
         self._interp             = options.interp          # interpolating rate for the USRP (prelim)
         self._fusb_block_size    = options.fusb_block_size # usb info for USRP
         self._fusb_nblocks       = options.fusb_nblocks    # usb info for USRP
@@ -82,7 +81,7 @@ class usrp_graph(gr.flow_graph):
 
         # Set the USRP for maximum transmit gain
         # (Note that on the RFX cards this is a nop.)
-        self.set_gain(self.subdev.gain_range()[0])
+        self.set_gain(self.subdev.gain_range()[1])
 
         # enable Auto Transmit/Receive switching
         self.set_auto_tr(True)
@@ -126,15 +125,10 @@ class usrp_graph(gr.flow_graph):
         Adds usrp-specific options to the Options Parser
         """
         add_freq_option(normal)
-        if not normal.has_option('--bitrate'):
-            normal.add_option("-r", "--bitrate", type="eng_float", default=None,
-                              help="specify bitrate.  samples-per-symbol and interp/decim will be derived.")
         normal.add_option("-T", "--tx-subdev-spec", type="subdev", default=None,
                           help="select USRP Tx side A or B")
         normal.add_option("-v", "--verbose", action="store_true", default=False)
 
-        expert.add_option("-S", "--samples-per-symbol", type="int", default=None,
-                          help="set samples/symbol [default=%default]")
         expert.add_option("", "--tx-freq", type="eng_float", default=None,
                           help="set transmit frequency to FREQ [default=%default]", metavar="FREQ")
         expert.add_option("-i", "--interp", type="intx", default=64,
@@ -181,20 +175,16 @@ def main():
                       help="set packet size [default=%default]")
     parser.add_option("-M", "--megabytes", type="eng_float", default=1.0,
                       help="set megabytes to transmit [default=%default]")
-    parser.add_option("-r", "--sample-rate", type="eng_float", default=1e5,
-                      help="set sample rate to RATE (%default)") 
+    parser.add_option("","--discontinuous", action="store_true", default=False,
+                      help="enable discontinuous mode")
 
     usrp_graph.add_options(parser, expert_grp)
     transmit_path.add_options(parser, expert_grp)
-    ofdm.ofdm_mod.add_options(parser, expert_grp)
+    blks.ofdm_mod.add_options(parser, expert_grp)
+    blks.ofdm_demod.add_options(parser, expert_grp)
     fusb_options.add_options(expert_grp)
 
     (options, args) = parser.parse_args ()
-
-    if(options.mtu < options.size):
-        sys.stderr.write("MTU (%.0f) must be larger than the packet size (%.0f)\n"
-                         % (options.mtu, options.size))
-        sys.exit(1)
 
     # build the graph
     fg = usrp_graph(options)
@@ -215,8 +205,8 @@ def main():
         send_pkt(struct.pack('!H', pktno) + (pkt_size - 2) * chr(pktno & 0xff))
         n += pkt_size
         sys.stderr.write('.')
-        #if options.discontinuous and pktno % 5 == 4:
-        #    time.sleep(1)
+        if options.discontinuous and pktno % 5 == 1:
+            time.sleep(1)
         pktno += 1
         
     send_pkt(eof=True)
