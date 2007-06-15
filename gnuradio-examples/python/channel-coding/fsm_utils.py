@@ -26,6 +26,7 @@ import math
 import sys
 import operator
 
+from gnuradio import trellis
 
 
 
@@ -56,6 +57,59 @@ def base2dec(s,base):
         num=num*base+s[i]
     return num
 
+
+######################################################################
+# Generate a new FSM representing the concatenation of two FSMs
+######################################################################
+def fsm_concatenate(f1,f2):
+    if f1.O() > f2.I():
+        print "Not compatible FSMs\n"
+    I=f1.I()
+    S=f1.S()*f2.S() 
+    O=f2.O()
+    nsm=list([0]*I*S)
+    osm=list([0]*I*S)
+    for s1 in range(f1.S()):
+        for s2 in range(f2.S()):
+            for i in range(f1.I()):
+                ns1=f1.NS()[s1*f1.I()+i]
+                o1=f1.OS()[s1*f1.I()+i]
+                ns2=f2.NS()[s2*f2.I()+o1]
+                o2=f2.OS()[s2*f2.I()+o1]
+
+                s=s1*f2.S()+s2
+                ns=ns1*f2.S()+ns2
+                nsm[s*I+i]=ns
+                osm[s*I+i]=o2
+
+
+    f=trellis.fsm(I,S,O,nsm,osm)
+    return f
+
+######################################################################
+# Generate a new FSM representing n stages through the original FSM
+######################################################################
+def fsm_radix(f,n):
+    I=f.I()**n
+    S=f.S()
+    O=f.O()**n
+    nsm=list([0]*I*S)
+    osm=list([0]*I*S)
+    for s in range(f.S()):
+        for i in range(I):
+            ii=dec2base(i,f.I(),n) 
+            oo=list([0]*n)
+            ns=s
+            for k in range(n):
+                oo[k]=f.OS()[ns*f.I()+ii[k]]
+                ns=f.NS()[ns*f.I()+ii[k]]
+
+            nsm[s*I+i]=ns
+            osm[s*I+i]=base2dec(oo,f.O())
+
+
+    f=trellis.fsm(I,S,O,nsm,osm)
+    return f
 
 
 
@@ -138,7 +192,22 @@ c_channel = [0.227, 0.460, 0.688, 0.460, 0.227]
 
 
 if __name__ == '__main__':
-    make_fsm_bin_cc_ff (1,2,[[7,5]])
+    f1=trellis.fsm('fsm_files/awgn1o2_4.fsm')
+    #f2=trellis.fsm('fsm_files/awgn2o3_4.fsm')
+    print f1.I(), f1.S(), f1.O()
+    print f1.NS()
+    print f1.OS()
+    #print f2.I(), f2.S(), f2.O()
+    #print f2.NS()
+    #print f2.OS()
+    ##f1.write_trellis_svg('f1.svg',4)
+    #f2.write_trellis_svg('f2.svg',4)
+    #f=fsm_concatenate(f1,f2)
+    f=fsm_radix(f1,2)
+
     print "----------\n"
-    make_fsm_bin_cc_ff (2,3,[[1,0,2],[0,1,6]])
+    print f.I(), f.S(), f.O()
+    print f.NS()
+    print f.OS()
+    #f.write_trellis_svg('f.svg',4)
 
