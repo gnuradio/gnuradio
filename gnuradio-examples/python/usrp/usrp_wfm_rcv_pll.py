@@ -102,7 +102,11 @@ class wfm_rx_graph (stdgui.gui_flow_graph):
         self.connect (self.u, chan_filt, self.guts)
         self.connect ((self.guts, 0), self.volume_control_l, (audio_sink, 0))
         self.connect ((self.guts, 1), self.volume_control_r, (audio_sink, 1))
-        self.guts.stereo_carrier_pll_recovery.squelch_enable(True);
+        try:
+          self.guts.stereo_carrier_pll_recovery.squelch_enable(True)
+        except:
+          print "FYI: This implementation of the stereo_carrier_pll_recovery has no squelch implementation yet"
+
 
         self._build_gui(vbox, usrp_rate, demod_rate, audio_rate)
 
@@ -122,7 +126,11 @@ class wfm_rx_graph (stdgui.gui_flow_graph):
 
         self.set_gain(options.gain)
         self.set_vol(options.volume)
-        self.guts.stereo_carrier_pll_recovery.set_lock_threshold(options.squelch);
+        try:
+          self.guts.stereo_carrier_pll_recovery.set_lock_threshold(options.squelch)
+        except:
+          print "FYI: This implementation of the stereo_carrier_pll_recovery has no squelch implementation yet"
+
         if not(self.set_freq(options.freq)):
             self._set_status_msg("Failed to set initial frequency")
 
@@ -219,7 +227,7 @@ class wfm_rx_graph (stdgui.gui_flow_graph):
         myform['sqlch_thrsh'] = \
             form.quantized_slider_field(parent=self.panel, sizer=hbox, label="Stereo Squelch Threshold",
                                         weight=3, range=(0.0,1.0,0.01),
-                                        callback=self.guts.stereo_carrier_pll_recovery.set_lock_threshold)
+                                        callback=self.set_squelch)
         hbox.Add((5,0), 0)
         vbox.Add(hbox, 0, wx.EXPAND)
 
@@ -268,6 +276,12 @@ class wfm_rx_graph (stdgui.gui_flow_graph):
         self.volume_control_r.set_k(10**(self.vol/10))
         self.myform['volume'].set_value(self.vol)
         self.update_status_bar ()
+
+    def set_squelch(self,squelch_threshold):
+        try:
+          self.guts.stereo_carrier_pll_recovery.set_lock_threshold(squelch_threshold);
+        except:
+          print "FYI: This implementation of the stereo_carrier_pll_recovery has no squelch implementation yet"
                                         
     def set_freq(self, target_freq):
         """
