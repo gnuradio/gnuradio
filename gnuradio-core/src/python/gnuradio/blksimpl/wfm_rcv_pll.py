@@ -131,8 +131,8 @@ class wfm_rcv_pll(gr.hier_block):
             max_freq = -2.0*math.pi*18990/audio_rate;
             min_freq = -2.0*math.pi*19010/audio_rate;
             
-            self.stereo_carrier_pll_recovery = gr.pll_carriertracking_cc(alpha,beta,max_freq,min_freq);
-            self.stereo_carrier_pll_recovery.squelch_enable(False);
+            self.stereo_carrier_pll_recovery = gr.pll_refout_cc(alpha,beta,max_freq,min_freq);
+            #self.stereo_carrier_pll_recovery.squelch_enable(False) #pll_refout does not have squelch yet, so disabled for now 
             
 
             # set up mixer (multiplier) to get the L-R signal at baseband
