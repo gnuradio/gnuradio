@@ -36,8 +36,8 @@ gr_make_kludge_copy(size_t itemsize)
 
 gr_kludge_copy::gr_kludge_copy(size_t itemsize)
   : gr_sync_block ("kludge_copy",
-		   gr_make_io_signature (1, -1, sizeof (float)),
-		   gr_make_io_signature (1, -1, sizeof (float))),
+		   gr_make_io_signature (1, -1, itemsize),
+		   gr_make_io_signature (1, -1, itemsize)),
     d_itemsize(itemsize)
 {
 }
