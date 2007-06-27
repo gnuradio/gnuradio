@@ -3,7 +3,7 @@
 from gnuradio import gr
 from gnuradio import usrp
 from optparse import OptionParser
-import usrp_dbid
+from usrpm import usrp_dbid
 
 u_source = usrp.source_c()
 u_sink = usrp.sink_c()
