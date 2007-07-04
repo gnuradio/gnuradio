@@ -129,7 +129,7 @@ class app_flow_graph(gr.flow_graph):
 	
 def main():
     parser = OptionParser(option_class=eng_option)
-    parser.add_option("-f", "--frequency", type="eng_float",
+    parser.add_option("-f", "--frequency", type="eng_float", default=None,
                       help="set receive frequency to Hz", metavar="Hz")
     parser.add_option("-R", "--rx-subdev-spec", type="subdev",
                       help="select USRP Rx side A or B", metavar="SUBDEV")
@@ -138,6 +138,10 @@ def main():
     parser.add_option("-g", "--gain", type="int", default=None,
                       help="set RF gain", metavar="dB")
     (options, args) = parser.parse_args()
+
+    if len(args) > 0 or options.frequency == None:
+	print "Run 'usrp_flex.py -h' for options."
+	sys.exit(1)
 
     if options.frequency < 1e6:
 	options.frequency *= 1e6
@@ -150,8 +154,15 @@ def main():
 	while 1:
 	    if not queue.empty_p():
 		msg = queue.delete_head() # Blocking read
-		fields = split(msg.to_string(), chr(128))
-		print join(fields, '|')
+		page = join(split(msg.to_string(), chr(128)), '|')
+		disp = []
+		for n in range(len(page)):
+		    if ord(page[n]) < 32:
+			disp.append('.')
+		    else:
+			disp.append(page[n])
+		print join(disp, '')
+						
 	    else:
 		time.sleep(1)
 
