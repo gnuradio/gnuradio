@@ -66,7 +66,7 @@ module cordic(clock, reset, enable, xi, yi, zi, xo, yo, zo );
        begin
 	  x0   <= #1 0; y0   <= #1 0;  z0   <= #1 0;
        end
-     else// if(enable)
+     else if(enable)
        begin
 	  z0 <= #1 zi[zwidth-2:0];
 	  case (zi[zwidth-1:zwidth-2])

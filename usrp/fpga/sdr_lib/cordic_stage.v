@@ -45,7 +45,7 @@ module cordic_stage( clock, reset, enable, xi,yi,zi,constant,xo,yo,zo);
 	  yo <= #1 0;
 	  zo <= #1 0;
        end
-     else //if(enable)
+     else if(enable)
        begin
 	  xo <= #1 z_is_pos ?   
 		xi - {{shift+1{yi[bitwidth-1]}},yi[bitwidth-2:shift]} :

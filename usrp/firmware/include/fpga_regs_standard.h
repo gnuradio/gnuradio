@@ -185,7 +185,7 @@
 // FIXME register numbers 50 to 63 are available
 
 // ------------------------------------------------------------------------
-// Registers 64 to 79 are reserved for user custom FPGA builds.
+// Registers 64 to 95 are reserved for user custom FPGA builds.
 // The standard USRP software will not touch these.
 
 #define FR_USER_0	64
@@ -204,6 +204,22 @@
 #define FR_USER_13	77
 #define FR_USER_14	78
 #define FR_USER_15	79
+#define FR_USER_16	80
+#define FR_USER_17	81
+#define FR_USER_18	82
+#define FR_USER_19	83
+#define FR_USER_20	84
+#define FR_USER_21	85
+#define FR_USER_22	86
+#define FR_USER_23	87
+#define FR_USER_24	88
+#define FR_USER_25	89
+#define FR_USER_26	90
+#define FR_USER_27	91
+#define FR_USER_28	92
+#define FR_USER_29	93
+#define FR_USER_30	94
+#define FR_USER_31	95
 
 //Registers needed for multi usrp master/slave configuration
 //

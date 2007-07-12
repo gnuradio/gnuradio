@@ -1,0 +1,14 @@
+This GNU Radio component implements (will implement) a monostatic 
+radar transmitter and receiver.  It uses (will use) a custom FPGA 
+build to generate a linear FM chip waveform directly in the USRP.
+Echo returns are (will be) recorded to a file.
+
+Currently, only a CW signal is generated for testing the frequency
+response of the FPGA code, AD9862, and daughterboard mixer.
+
+This is experimental code.
+
+Johnathan Corgan
+Corgan Enterprises LLC
+jcorgan@corganenterprises.com
+7/11/2007
