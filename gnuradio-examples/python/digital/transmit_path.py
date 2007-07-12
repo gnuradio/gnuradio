@@ -87,7 +87,7 @@ class transmit_path(gr.hier_block):
 
         # Set the USRP for maximum transmit gain
         # (Note that on the RFX cards this is a nop.)
-        self.set_gain(self.subdev.gain_range()[0])
+        self.set_gain(self.subdev.gain_range()[1])
 
         self.amp = gr.multiply_const_cc(1)
         self.set_tx_amplitude(self._tx_amplitude)
