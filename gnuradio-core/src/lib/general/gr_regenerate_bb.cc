@@ -38,9 +38,24 @@ gr_regenerate_bb::gr_regenerate_bb (int period, unsigned int max_regen)
 		   gr_make_io_signature (1, 1, sizeof (char)),
 		   gr_make_io_signature (1, 1, sizeof (char))),
     d_period(period),
+    d_countdown(0),
     d_max_regen(max_regen),
-    d_regen_count(0)
+    d_regen_count(max_regen)
 {
+}
+
+void gr_regenerate_bb::set_max_regen(unsigned int regen)
+{
+  d_max_regen = regen;
+  d_countdown = 0;
+  d_regen_count = d_max_regen;
+}
+
+void gr_regenerate_bb::set_period(int period)
+{
+  d_period = period;
+  d_countdown = 0;
+  d_regen_count = d_max_regen;
 }
 
 int
@@ -53,14 +68,8 @@ gr_regenerate_bb::work (int noutput_items,
 
   for (int i = 0; i < noutput_items; i++){
     optr[i] = 0;
-    
-    if(iptr[i] == 1) {
-      d_countdown = d_period;
-      optr[i] = 1;
-      d_regen_count = 0;
-    }
 
-    if(d_regen_count <= d_max_regen) {
+    if(d_regen_count < d_max_regen) {
       d_countdown--;
       
       if(d_countdown == 0) {
@@ -69,6 +78,13 @@ gr_regenerate_bb::work (int noutput_items,
 	d_regen_count++;
       }
     }
+    
+    if(iptr[i] == 1) {
+      d_countdown = d_period;
+      optr[i] = 1;
+      d_regen_count = 0;
+    }
+
   }
   return noutput_items;
 }

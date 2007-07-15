@@ -28,4 +28,11 @@ class gr_regenerate_bb : public gr_sync_block
 {
  private:
   gr_regenerate_bb (int period, unsigned int max_regen);
+
+public:
+  void set_max_regen(unsigned int regen);
+  
+  /*! \brief Reset the period of regenerations; this will reset the current regen.
+   */
+  void set_period(int period);
 };

@@ -31,14 +31,23 @@ typedef boost::shared_ptr<gr_regenerate_bb> gr_regenerate_bb_sptr;
 gr_regenerate_bb_sptr gr_make_regenerate_bb (int period, unsigned int max_regen=500);
 
 /*!
- * \brief Detect the peak of a signal
+ * \brief Detect the peak of a signal and repeat every period samples
  * \ingroup block
  *
  * If a peak is detected, this block outputs a 1 repeated every period samples 
- * until reset by detection of another 1 on the input
+ * until reset by detection of another 1 on the input or stopped after max_regen
+ * regenerations have occurred.
+ *
+ * Note that if max_regen=(-1)/ULONG_MAX then the regeneration will run forever.
  */
 class gr_regenerate_bb : public gr_sync_block
 {
+  /*!
+   * \brief Make a regenerate block
+   * \param period The number of samples between regenerations
+   * \param max_regen The maximum number of regenerations to perform; if set to 
+   * ULONG_MAX, it will regenerate continuously.
+   */
   friend gr_regenerate_bb_sptr gr_make_regenerate_bb (int period, unsigned int max_regen);
 
   gr_regenerate_bb (int period, unsigned int max_regen);
@@ -50,6 +59,13 @@ class gr_regenerate_bb : public gr_sync_block
   unsigned int d_regen_count;
 
  public:
+  /*! \brief Reset the maximum regeneration count; this will reset the current regen.
+   */
+  void set_max_regen(unsigned int regen);
+
+  /*! \brief Reset the period of regenerations; this will reset the current regen.
+   */
+  void set_period(int period);
 
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
