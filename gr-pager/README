@@ -1,37 +1,85 @@
-This GNU Radio component implements (will implement) common radiopager
-signaling protocols such as POCSAG and FLEX.
+This GNU Radio component implements a FLEX radiopager receiver/demodulator.
 
-Current status (10/6/06):
+FLEX pager towers are between 929 MHz and 932 MHz at 25 KHz centers.
+
+Current status (7/16/07):
 
 FLEX receiving is completed except for addition of BCH error correction.
 
-pager.slicer_fb()         Accepts a complex baseband downconverted channel 
-                          and outputs 4-level FSK symbols [0-3] as bytes.
+There are three scripts:
 
-pager.flex_sync()	  Accepts 4FSK symbol stream at channel rate and
-			  outputs four phases of FLEX data bits as bytes.
-			  Auto-shifts to 3200 bps as determined by received
-			  FLEX synchronization word.
-			
-pager.flex_deinterleave() Accepts a single phase of FLEX data bits and performs
-			  deinterleaving on 256-bit blocks.  Resulting code
-			  words are error corrected using BCH 32,21 ecc (stub)
-			  and converted into FLEX data words for output.
+usrp_flex.py - Receives and displays pages from a single paging channel. To
+               work from recorded data, record from USRP with decimation 256
+	       at center frequency.
 
-pager.flex_parse()	  Sink block that accepts a single phase of FLEX data 
-			  words and unpacks and parses individual pages. These are 
-			  passed outside the data plane via gr_message's.
+    Usage: usrp_flex.py [options]
 
-pager.flex_decode()       Combines the above blocks correctly to convert
-                          from downconverted baseband to pager messages
+    Options:
+      -h, --help                          show this help message and exit
+      -f Hz, --frequency=Hz               set receive frequency to Hz
+      -R SUBDEV, --rx-subdev-spec=SUBDEV  select USRP Rx side A or B
+      -c Hz, --calibration=Hz             set frequency offset to Hz
+      -g dB, --gain=dB                    set RF gain
+      -l, --log                           log flowgraph to files (LOTS of data)
+      -v, --verbose                       display debug output
+      -F FROM_FILE, --from-file=FROM_FILE read samples from file instead of USRP
 
-usrp_flex.py              Instantiates USRP receive chain to receive FLEX
-                          protocol pages.  See command-line help for options.
-			  Right now this installs into $PREFIX/bin but will
-                          probably make it into gnuradio-examples.
+    Example, to receive from 931.95M (a common nationwide channel) with DBSRX in
+    side A of USRP:
+    
+    $ usrp_flex.py -f 931.95M -g 32 -R A
 
-aypabtu.py		  Decodes FLEX pages from multiple rx channels in a range.
-		          Incomplete.
+      
+usrp_flex_band.py - Receives and displays pages from a 1 MHz paging band (40 pager
+		    channels.) To work from recorded data, record from USRP with
+		    decimation 64 at center frequency.
+
+Usage: usrp_flex_band.py [options]
+
+    Options:
+      -h, --help                              show this help message and exit
+      -f Hz, --frequency=Hz                   set receive center frequency to Hz
+      -R SUBDEV, --rx-subdev-spec=SUBDEV      select USRP Rx side A or B
+      -c Hz, --calibration=Hz                 set frequency offset to Hz
+      -g dB, --gain=dB                        set RF gain
+      -F FROM_FILE, --from-file=FROM_FILE     Read from file instead of USRP
+      -l, --log             		      log flowgraph to files (LOTS of data)
+      -v, --verbose                           display debug output
+
+    Example, to receive from the lower third of the pager band with DBSRX in side B
+    of USRP:
+    
+    $ usrp_flex_band.py -f 929.5M -g 32 -R B																			    
+
+usrp_flex_all.py - Receives and displays pages from entire pager band (3 MHz,
+                   120 pager channels.)  This does not work in real time due
+		   to CPU limitations, but can work from recorded USRP data. To
+		   work from recorded data, record from USRP with decimation 20 at
+		   center frequency of 930.5M.
+
+    Usage: usrp_flex_all.py [options]
+
+	Options:
+          -h, --help             	      show this help message and exit
+          -R SUBDEV, --rx-subdev-spec=SUBDEVC select USRP Rx side A or B
+          -c Hz, --calibration=Hz             set frequency offset to Hz
+          -g dB, --gain=dB                    set RF gain
+          -F FROM_FILE, --from-file=FROM_FILE Read from file instead of USRP
+          -l, --log                           log flowgraph to files (LOTS of data)
+          -v, --verbose                       display debug output
+
+    Example, to receive all pager channels with DBSRX in side A:
+    
+    $ usrp_flex_all.py -R A
+
+The demodulator is relatively sensitive to frequency offset and can capture a signal
+within 3k of the actual signal.  
+
+All three scripts take a 'calibration' parameter, which specifies the frequency offset
+of the daughterboard.  This causes the USRP to be tuned to the given center frequency
+plus the calibration offset.  For example, if your DBSRX shows 930MHz as 930.001MHz in
+usrp_fft.py, then use '-c 1k' in the command line to automatically add this.
 
 Johnathan Corgan
-jcorgan@aeinet.com
+Corgan Enterprises LLC
+jcorgan@corganenterprises.com
