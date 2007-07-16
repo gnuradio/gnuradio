@@ -38,7 +38,7 @@
 #include <stdexcept>
 #include <iostream>
 
-#define GR_RUNTIME_IMPL_DEBUG 1
+#define GR_RUNTIME_IMPL_DEBUG 0
 
 static gr_runtime_impl *s_runtime = 0;
 

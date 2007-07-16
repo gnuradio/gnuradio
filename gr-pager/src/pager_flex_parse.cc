@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,17 +28,19 @@
 #include <gr_io_signature.h>
 #include <ctype.h>
 #include <iostream>
+#include <iomanip>
 
-pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue)
+pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue, float freq)
 {
-    return pager_flex_parse_sptr(new pager_flex_parse(queue));
+    return pager_flex_parse_sptr(new pager_flex_parse(queue, freq));
 }
 
-pager_flex_parse::pager_flex_parse(gr_msg_queue_sptr queue) :
+pager_flex_parse::pager_flex_parse(gr_msg_queue_sptr queue, float freq) :
     gr_sync_block("flex_parse",
-	gr_make_io_signature(1, 1, sizeof(gr_int32)),
-	gr_make_io_signature(0, 0, 0)),
-    d_queue(queue)
+    gr_make_io_signature(1, 1, sizeof(gr_int32)),
+    gr_make_io_signature(0, 0, 0)),
+    d_queue(queue),
+    d_freq(freq)
 {
     d_count = 0;
 }
@@ -131,7 +133,11 @@ void pager_flex_parse::parse_data()
 	    continue;				// Invalid offsets
 
 	d_payload.str("");
-	d_payload << d_capcode << FIELD_DELIM << d_type << FIELD_DELIM;
+	d_payload.setf(std::ios::showpoint);
+	d_payload << std::setprecision(6) << std::setw(7)
+		  << d_freq/1e6 << FIELD_DELIM 
+		  << std::setw(10) << d_capcode << FIELD_DELIM
+		  << flex_page_desc[d_type] << FIELD_DELIM;
 
 	if (is_alphanumeric_page(d_type))
 	    parse_alphanumeric(mw1, mw2-1, j);
@@ -141,9 +147,6 @@ void pager_flex_parse::parse_data()
 	    parse_tone_only();
 	else
 	    parse_unknown(mw1, mw2);
-
-	//std::cout << d_payload.str() << std::endl;
-	//fflush(stdout);
 
 	gr_message_sptr msg = gr_make_message_from_string(std::string(d_payload.str()));
 	d_queue->handle(msg);
@@ -166,8 +169,8 @@ void pager_flex_parse::parse_alphanumeric(int mw1, int mw2, int j)
 	mw2--;
     }    
 
-    d_payload << frag << FIELD_DELIM;
-    d_payload << cont << FIELD_DELIM;
+    //d_payload << frag << FIELD_DELIM;
+    //d_payload << cont << FIELD_DELIM;
 
     for (int i = mw1; i <= mw2; i++) {
 	gr_int32 dw = d_datawords[i];

@@ -31,9 +31,11 @@ grblkspython_PYTHON =		\
 	dbpsk.py		\
 	dqpsk.py		\
 	d8psk.py		\
+	filterbank.py		\
 	gmsk.py			\
 	pkt.py			\
-	psk.py
+	psk.py			\
+	rational_resampler.py
 
 noinst_PYTHON = 		
 

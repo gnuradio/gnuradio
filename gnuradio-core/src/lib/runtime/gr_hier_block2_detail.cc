@@ -30,7 +30,7 @@
 #include <stdexcept>
 #include <iostream>
 
-#define GR_HIER_BLOCK2_DETAIL_DEBUG 1
+#define GR_HIER_BLOCK2_DETAIL_DEBUG 0
 
 gr_hier_block2_detail::gr_hier_block2_detail(gr_hier_block2 *owner) :
   d_owner(owner), 

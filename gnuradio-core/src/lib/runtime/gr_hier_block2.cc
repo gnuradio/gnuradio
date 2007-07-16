@@ -29,7 +29,7 @@
 #include <gr_hier_block2_detail.h>
 #include <iostream>
 
-#define GR_HIER_BLOCK2_DEBUG 1
+#define GR_HIER_BLOCK2_DEBUG 0
 
 gr_hier_block2_sptr gr_make_hier_block2(const std::string &name, 
                                         gr_io_signature_sptr input_signature,

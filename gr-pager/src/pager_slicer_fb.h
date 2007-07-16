@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -27,7 +27,7 @@
 class pager_slicer_fb;
 typedef boost::shared_ptr<pager_slicer_fb> pager_slicer_fb_sptr;
 
-pager_slicer_fb_sptr pager_make_slicer_fb(float alpha, float beta);
+pager_slicer_fb_sptr pager_make_slicer_fb(float alpha);
 
 /*!
  * \brief slicer description
@@ -36,18 +36,14 @@ pager_slicer_fb_sptr pager_make_slicer_fb(float alpha, float beta);
 class pager_slicer_fb : public gr_sync_block
 {
 private:
-    friend pager_slicer_fb_sptr pager_make_slicer_fb(float alpha, float beta);
-    pager_slicer_fb(float alpha, float beta);
+    friend pager_slicer_fb_sptr pager_make_slicer_fb(float alpha);
+    pager_slicer_fb(float alpha);
 
     unsigned char slice(float sample);
 
-    float d_alpha;      // Attack constant
-    float d_beta;       // Decay constant
-    float d_max;        // Maximum value for symbol comparison
-    float d_hi;         // High side decision boundary
+    float d_alpha;      // DC removal time constant
+    float d_beta;	// 1.0-d_alpha
     float d_avg;        // Average value for DC offset subtraction
-    float d_lo;         // Low side decision boundary
-    float d_min;        // Minimum value for symbol comparison
 
 public:
     int work (int noutput_items,

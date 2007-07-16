@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -35,6 +35,7 @@ typedef struct flex_mode
 flex_mode_t;
 
 extern const flex_mode_t flex_modes[];
+extern const char *flex_page_desc[];
 extern const int num_flex_modes;
 int find_flex_mode(gr_int32 sync_code);
 extern unsigned char flex_bcd[];

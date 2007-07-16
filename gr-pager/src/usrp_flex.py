@@ -31,101 +31,92 @@ from string import split, join
 This example application demonstrates receiving and demodulating the
 FLEX pager protocol.
 
-A receive chain is built up of the following signal processing
-blocks:
-
-USRP  - Daughter board source generating complex baseband signal.
-CHAN  - Low pass filter to select channel bandwidth
-AGC   - Automatic gain control leveling signal at [-1.0, +1.0]
-FLEX  - FLEX pager protocol decoder
-
 The following are required command line parameters:
 
--f FREQ		USRP receive frequency
+-f FREQ	    USRP receive frequency
 
 The following are optional command line parameters:
 
 -R SUBDEV   Daughter board specification, defaults to first found
+-F FILE     Read samples from a file instead of USRP.
 -c FREQ     Calibration offset.  Gets added to receive frequency.
             Defaults to 0.0 Hz.
 -g GAIN     Daughterboard gain setting. Defaults to mid-range.
--r RFSQL	RF squelch in db. Defaults to -50.0.
+-l          Log flow graph to files (LOTS of data)
+-v          Verbose output
 
 Once the program is running, ctrl-break (Ctrl-C) stops operation.
 """
 
-class usrp_source_c(gr.hier_block):
-    """
-    Create a USRP source object supplying complex floats.
-    
-    Selects user supplied subdevice or chooses first available one.
-
-    Calibration value is the offset from the tuned frequency to 
-    the actual frequency.       
-    """
-    def __init__(self, fg, subdev_spec, decim, gain=None, calibration=0.0):
-        self._decim = decim
-        self._src = usrp.source_c()
-        if subdev_spec is None:
-            subdev_spec = usrp.pick_rx_subdevice(self._src)
-        self._subdev = usrp.selected_subdev(self._src, subdev_spec)
-        self._src.set_mux(usrp.determine_rx_mux_value(self._src, subdev_spec))
-        self._src.set_decim_rate(self._decim)
-
-        # If no gain specified, set to midrange
-        if gain is None:
-            g = self._subdev.gain_range()
-            gain = (g[0]+g[1])/2.0
-
-        self._subdev.set_gain(gain)
-        self._cal = calibration
-
-        gr.hier_block.__init__(self, fg, self._src, self._src)
-
-    def tune(self, freq):
-        result = usrp.tune(self._src, 0, self._subdev, freq+self._cal)
-        # TODO: deal with residual
-
-    def rate(self):
-        return self._src.adc_rate()/self._decim
-
-class app_flow_graph(gr.flow_graph):
-    def __init__(self, options, args, queue):
-        gr.flow_graph.__init__(self)
+class app_top_block(gr.top_block):
+    def __init__(self, options, queue):
+        gr.top_block.__init__(self, "usrp_flex")
         self.options = options
-        self.args = args
 
-        USRP = usrp_source_c(self,          # Flow graph
-                    options.rx_subdev_spec, # Daugherboard spec
-	            256,                    # IF decimation ratio gets 250K if_rate
-                    options.gain,           # Receiver gain
-                    options.calibration)    # Frequency offset
-        USRP.tune(options.frequency)
+	if options.from_file is None:
+            # Set up USRP source with specified RX daughterboard
+            src = usrp.source_c()
+            if options.rx_subdev_spec == None:
+                options.subdev_spec = usrp.pick_rx_subdevice(src)
+            subdev = usrp.selected_subdev(src, options.rx_subdev_spec)
+            src.set_mux(usrp.determine_rx_mux_value(src, options.rx_subdev_spec))
 
-        if_rate = USRP.rate()
-        channel_rate = 25000                
-        channel_decim = int(if_rate / channel_rate)
+            # Grab 250 KHz of spectrum (sample rate becomes 250 ksps complex)
+            src.set_decim_rate(256)
+	    	    
+            # If no gain specified, set to midrange
+            if options.gain is None:
+                g = subdev.gain_range()
+                options.gain = (g[0]+g[1])/2.0
+            subdev.set_gain(options.gain)
+
+            # Tune daughterboard
+            actual_frequency = options.frequency+options.calibration
+            tune_result = usrp.tune(src, 0, subdev, actual_frequency)
+            if not tune_result:
+                sys.stderr.write("Failed to set center frequency to"+`actual_frequency`+"\n")
+                sys.exit(1)
+
+            if options.verbose:
+                print "Using RX daughterboard", subdev.side_and_name()
+                print "USRP gain is", options.gain
+                print "USRP tuned to", actual_frequency
+            
+        else:
+            # Use supplied file as source of samples
+            src = gr.file_source(gr.sizeof_gr_complex, options.from_file)
+            if options.verbose:
+                print "Reading samples from", options.from_file
+	    
+        if options.log and not options.from_file:
+            usrp_sink = gr.file_sink(gr.sizeof_gr_complex, 'usrp.dat')
+            self.connect(src, usrp_sink)
+
+        # Set up 22KHz-wide bandpass about center frequency. Decimate by 10
+        # to get channel rate of 25Ksps
+        taps = optfir.low_pass(1.0,   # Filter gain
+                               250e3, # Sample rate
+                               11000, # One-sided modulation bandwidth
+                               12500, # One-sided channel bandwidth
+                               0.1,   # Passband ripple
+                               60)    # Stopband attenuation
 	
-        CHAN_taps = optfir.low_pass(1.0,          # Filter gain
-                                    if_rate,      # Sample rate
-			            8000,         # One sided modulation bandwidth
-	                            10000,        # One sided channel bandwidth
-				    0.1,	  # Passband ripple
-				    60) 	  # Stopband attenuation
-	
-        CHAN = gr.freq_xlating_fir_filter_ccf(channel_decim, # Decimation rate
-                                              CHAN_taps,     # Filter taps
-                                              0.0,           # Offset frequency
-                                              if_rate)       # Sample rate
+	if options.verbose:
+	    print "Channel filter has", len(taps), "taps."
 
-        AGC = gr.agc_cc(1.0/channel_rate,  # Time constant
-                        1.0,               # Reference power 
-                        1.0,               # Initial gain
-                        1.0)               # Maximum gain
-	
-        FLEX = pager.flex_demod(self, 25000, queue)
+        chan = gr.freq_xlating_fir_filter_ccf(10,    # Decimation rate
+                                              taps,  # Filter taps
+                                              0.0,   # Offset frequency
+                                              250e3) # Sample rate
 
-        self.connect(USRP, CHAN, AGC, FLEX.INPUT)
+	if options.log:
+	    chan_sink = gr.file_sink(gr.sizeof_gr_complex, 'chan.dat')
+	    self.connect(chan, chan_sink)
+
+        # FLEX protocol demodulator
+        flex = pager.flex_demod(queue, options.frequency, options.verbose, options.log)
+
+        self.connect(src, chan, flex)
 	
 def main():
     parser = OptionParser(option_class=eng_option)
@@ -137,20 +128,28 @@ def main():
                       help="set frequency offset to Hz", metavar="Hz")
     parser.add_option("-g", "--gain", type="int", default=None,
                       help="set RF gain", metavar="dB")
+    parser.add_option("-l", "--log", action="store_true", default=False,
+                      help="log flowgraph to files (LOTS of data)")
+    parser.add_option("-v", "--verbose", action="store_true", default=False,
+                      help="display debug output")
+    parser.add_option("-F", "--from-file", default=None,
+                      help="read samples from file instead of USRP")
     (options, args) = parser.parse_args()
 
-    if len(args) > 0 or options.frequency == None:
+    if len(args) > 0 or (options.frequency == None and options.from_file == None):
 	print "Run 'usrp_flex.py -h' for options."
 	sys.exit(1)
 
-    if options.frequency < 1e6:
-	options.frequency *= 1e6
-	
-    queue = gr.msg_queue()
+    if options.frequency == None:
+	options.frequency = 0.0
 
-    fg = app_flow_graph(options, args, queue)
+    # Flow graph emits pages into message queue
+    queue = gr.msg_queue()
+    tb = app_top_block(options, queue)
+    r = gr.runtime(tb)
+    
     try:
-        fg.start()
+        r.start()
 	while 1:
 	    if not queue.empty_p():
 		msg = queue.delete_head() # Blocking read
@@ -167,7 +166,7 @@ def main():
 		time.sleep(1)
 
     except KeyboardInterrupt:
-        fg.stop()
+        r.stop()
 
 if __name__ == "__main__":
     main()

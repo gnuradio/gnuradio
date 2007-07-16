@@ -1,5 +1,5 @@
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,23 +26,19 @@
 #include <pager_slicer_fb.h>
 #include <gr_io_signature.h>
 
-pager_slicer_fb_sptr pager_make_slicer_fb(float alpha, float beta)
+pager_slicer_fb_sptr pager_make_slicer_fb(float alpha)
 {
-    return pager_slicer_fb_sptr(new pager_slicer_fb(alpha, beta));
+    return pager_slicer_fb_sptr(new pager_slicer_fb(alpha));
 }
 
-pager_slicer_fb::pager_slicer_fb(float alpha, float beta) :
+pager_slicer_fb::pager_slicer_fb(float alpha) :
     gr_sync_block ("slicer_fb",
                    gr_make_io_signature (1, 1, sizeof(float)),
                    gr_make_io_signature (1, 1, sizeof(unsigned char)))
 {
     d_alpha = alpha;
-    d_beta = beta;
-    d_max = 0.0;
-    d_hi = 0.0;
+    d_beta = 1.0-alpha;
     d_avg = 0.0;
-    d_lo = 0.0;
-    d_min = 0.0;
 }
 
 // Tracks average, minimum, and peak, then converts input into one of:
@@ -53,34 +49,22 @@ unsigned char pager_slicer_fb::slice(float sample)
     unsigned char decision;
 
     // Update DC level and remove
-    d_avg = d_avg*(1.0-d_alpha)+sample*d_alpha;
+    d_avg = d_avg*d_beta+sample*d_alpha;
     sample -= d_avg;
 
     if (sample > 0) {
-        if (sample > d_hi) {                // In max region
-            d_max = d_max*(1.0-d_alpha) + sample*d_alpha;
+        if (sample > 2.0)          
             decision = 3;
-        }
-        else {
-            d_max -= (d_max-d_avg)*d_beta;  // decay otherwise
+        else
             decision = 2;
-        }
     }
     else {
-        if (sample < d_lo) {                // In min region
-            d_min = d_min*(1.0-d_alpha) + sample*d_alpha;
+        if (sample < -2.0)
             decision = 0;
-        }
-        else {
-            d_min -= (d_min-d_avg)*d_beta;  // decay otherwise
+        else
             decision = 1;
-        }
     }
 
-    d_hi = d_max*2.0/3.0;
-    d_lo = d_min*2.0/3.0;
-
-    //fprintf(stderr, "%f %d\n", sample, decision);
     return decision;
 }
 

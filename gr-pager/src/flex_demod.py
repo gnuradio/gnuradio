@@ -19,70 +19,43 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, optfir, blks
+from gnuradio import gr, gru, optfir, blks2
 from math import pi
 import pager_swig
 
-chan_rate = 16000
-
-class flex_demod:
+class flex_demod(gr.hier_block2):
     """
     FLEX pager protocol demodulation block.
 
     This block demodulates a band-limited, complex down-converted baseband 
     channel into FLEX protocol frames.
 
-    Flow graph (so far):
-
-    RSAMP    - Resample incoming stream to 16000 sps
-    QUAD     - Quadrature demodulator converts FSK to baseband amplitudes  
-    LPF      - Low pass filter to remove noise prior to slicer
-    SLICER   - Converts input to one of four symbols (0, 1, 2, 3)
-    SYNC     - Converts symbol stream to four phases of FLEX blocks
-    DEINTx   - Deinterleaves FLEX blocks into datawords
-    PARSEx   - Parse a single FLEX phase worth of data words into pages
-    ---
-
-    @param fg: flowgraph
-    @param channel_rate:  incoming sample rate of the baseband channel
-    @type sample_rate: integer
     """
 
+    def __init__(self, queue, freq=0.0, verbose=False, log=False):
+	gr.hier_block2.__init__(self, "flex_demod",
+				gr.io_signature(1, 1, gr.sizeof_gr_complex),
+				gr.io_signature(0,0,0))
 
-    def __init__(self, fg, channel_rate, queue):
-        k = chan_rate/(2*pi*4800)        # 4800 Hz max deviation
-        QUAD = gr.quadrature_demod_cf(k)
-	self.INPUT = QUAD
-			
-	if channel_rate != chan_rate:
-		interp = gru.lcm(channel_rate, chan_rate)/channel_rate
-		decim  = gru.lcm(channel_rate, chan_rate)/chan_rate
-		RESAMP = blks.rational_resampler_ccf(fg, interp, decim)
-		self.INPUT = RESAMP
-			
-        taps = optfir.low_pass(1.0, chan_rate, 3200, 6400, 0.1, 60)
-        LPF = gr.fir_filter_fff(1, taps)
-        SLICER = pager_swig.slicer_fb(.001, .00001) # Attack, decay
-	SYNC = pager_swig.flex_sync(chan_rate)
-
-	if channel_rate != chan_rate:
-            fg.connect(RESAMP, QUAD, LPF, SLICER, SYNC)
-	else:
-	    fg.connect(QUAD, LPF, SLICER, SYNC)
-
-	DEINTA = pager_swig.flex_deinterleave()
-	PARSEA = pager_swig.flex_parse(queue)
-
-	DEINTB = pager_swig.flex_deinterleave()
-	PARSEB = pager_swig.flex_parse(queue)
-
-	DEINTC = pager_swig.flex_deinterleave()
-	PARSEC = pager_swig.flex_parse(queue)
-
-	DEINTD = pager_swig.flex_deinterleave()
-	PARSED = pager_swig.flex_parse(queue)
+        k = 25000/(2*pi*1600)        # 4800 Hz max deviation
+        quad = gr.quadrature_demod_cf(k)
+	self.connect(self, quad)
 	
-	fg.connect((SYNC, 0), DEINTA, PARSEA)
-	fg.connect((SYNC, 1), DEINTB, PARSEB)
-	fg.connect((SYNC, 2), DEINTC, PARSEC)
-	fg.connect((SYNC, 3), DEINTD, PARSED)
+        rsamp = blks2.rational_resampler_fff(16, 25)
+        slicer = pager_swig.slicer_fb(1e-5) # DC removal averaging filter constant
+	sync = pager_swig.flex_sync(16000)
+
+        self.connect(quad, rsamp, slicer, sync)
+
+	for i in range(4):
+	    self.connect((sync, i), pager_swig.flex_deinterleave(), pager_swig.flex_parse(queue, freq))
+
+	if log:
+	    suffix = '_'+ "%3.3f" % (freq/1e6,) + '.dat'
+	    quad_sink = gr.file_sink(gr.sizeof_float, 'quad'+suffix)
+	    rsamp_sink = gr.file_sink(gr.sizeof_float, 'rsamp'+suffix)
+	    slicer_sink = gr.file_sink(gr.sizeof_char, 'slicer'+suffix)
+	    self.connect(rsamp, rsamp_sink)
+	    self.connect(quad, quad_sink)
+	    self.connect(slicer, slicer_sink)
+	    

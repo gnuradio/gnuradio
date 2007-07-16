@@ -29,7 +29,7 @@ TESTS = \
 
 bin_SCRIPTS = \
     usrp_flex.py \
-    aypabtu.py 
+    usrp_flex_all.py
     
 noinst_PYTHON = \
     qa_pager.py
@@ -70,8 +70,8 @@ ourpython_PYTHON = \
     pager_swig.py \
     flex_demod.py \
     usrp_flex.py \
-    aypabtu.py
-    
+    usrp_flex_all.py
+        
 ourlib_LTLIBRARIES = _pager_swig.la
 
 # These are the source files that go into the shared library

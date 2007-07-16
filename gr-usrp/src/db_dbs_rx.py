@@ -264,7 +264,7 @@ class db_dbs_rx (db_base.db_base):
             vcofreq = 2 * freq
         self._set_ade(1)
         rmin=max(2,self._refclk_freq()/2e6)
-        rmax=min(128,self._refclk_freq()/150e3)
+        rmax=min(128,self._refclk_freq()/500e3)
         r = 2
         n=0
         best_r = 2

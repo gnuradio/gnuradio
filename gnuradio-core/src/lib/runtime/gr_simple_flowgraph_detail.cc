@@ -33,7 +33,7 @@
 #include <stdexcept>
 #include <map>
 
-#define GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG 1
+#define GR_SIMPLE_FLOWGRAPH_DETAIL_DEBUG 0
 
 gr_edge_sptr
 gr_make_edge(const gr_endpoint &src, const gr_endpoint &dst)

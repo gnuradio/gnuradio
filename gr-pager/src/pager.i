@@ -39,12 +39,12 @@
 
 GR_SWIG_BLOCK_MAGIC(pager,slicer_fb);
 
-pager_slicer_fb_sptr pager_make_slicer_fb(float alpha, float beta);
+pager_slicer_fb_sptr pager_make_slicer_fb(float alpha);
 
 class pager_slicer_fb : public gr_sync_block
 {
 private:
-    pager_slicer_fb(float alpha, float beta);
+    pager_slicer_fb(float alpha);
 
 public:
 };
@@ -81,12 +81,12 @@ public:
 
 GR_SWIG_BLOCK_MAGIC(pager,flex_parse);
 
-pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue);
+pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue, float freq);
 
 class pager_flex_parse : public gr_block
 {
 private:
-    pager_flex_parse(gr_msg_queue_sptr queue);
+    pager_flex_parse(gr_msg_queue_sptr queue, float freq);
 
 public:
 };

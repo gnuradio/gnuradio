@@ -30,7 +30,7 @@
 class pager_flex_parse;
 typedef boost::shared_ptr<pager_flex_parse> pager_flex_parse_sptr;
 
-pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue);
+pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue, float freq);
 
 /*!
  * \brief flex parse description
@@ -43,8 +43,8 @@ class pager_flex_parse : public gr_sync_block
 {
 private:
     // Constructors
-    friend pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue);
-    pager_flex_parse(gr_msg_queue_sptr queue);
+    friend pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue, float freq);
+    pager_flex_parse(gr_msg_queue_sptr queue, float freq);
 
     std::ostringstream d_payload;
     gr_msg_queue_sptr d_queue;		  // Destination for decoded pages
@@ -52,10 +52,11 @@ private:
     int d_count;	                  // Count of received codewords
     gr_int32 d_datawords[88];             // 11 blocks of 8 32-bit words
 
-    page_type_t d_type;		  // Current page type
+    page_type_t d_type;		  	  // Current page type
     int d_capcode;	                  // Current page destination address
     bool d_laddr;	                  // Current page has long address
-
+    float d_freq;			  // Channel frequency
+    
     void parse_data();	      		  // Handle a frame's worth of data
     void parse_capcode(gr_int32 aw1, gr_int32 aw2);     
     void parse_alphanumeric(int mw1, int mw2, int j);
