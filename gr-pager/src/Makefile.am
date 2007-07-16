@@ -29,7 +29,8 @@ TESTS = \
 
 bin_SCRIPTS = \
     usrp_flex.py \
-    usrp_flex_all.py
+    usrp_flex_all.py \
+    usrp_flex_band.py
     
 noinst_PYTHON = \
     qa_pager.py
@@ -70,7 +71,8 @@ ourpython_PYTHON = \
     pager_swig.py \
     flex_demod.py \
     usrp_flex.py \
-    usrp_flex_all.py
+    usrp_flex_all.py \
+    usrp_flex_band.py
         
 ourlib_LTLIBRARIES = _pager_swig.la
 
