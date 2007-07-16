@@ -48,7 +48,7 @@ class app_top_block(gr.top_block):
 	    else:
 		freq = 928.9e6+(i-64)*25e3
 
-	    if ((i < 20) or (i >= 60 and i < 68) or (i >= 108)): # Non-forward channel frequencies
+	    if (freq < 929.0e6 or freq > 932.0e6):
                 self.connect((bank, i), gr.null_sink(gr.sizeof_gr_complex))
 	    else:
             	self.connect((bank, i), pager.flex_demod(queue, freq, options.verbose, options.log))
