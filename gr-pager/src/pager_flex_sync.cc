@@ -30,9 +30,9 @@
 #include <gr_io_signature.h>
 #include <gr_count_bits.h>
 
-pager_flex_sync_sptr pager_make_flex_sync(int rate)
+pager_flex_sync_sptr pager_make_flex_sync()
 {
-    return pager_flex_sync_sptr(new pager_flex_sync(rate));
+    return pager_flex_sync_sptr(new pager_flex_sync());
 }
 
 // FLEX sync block takes input from sliced baseband stream [0-3] at specified 
@@ -41,13 +41,12 @@ pager_flex_sync_sptr pager_make_flex_sync(int rate)
 // worth of bits on each output phase for the data portion of the frame. Unused phases
 // get all zeros, which are considered idle code words.
 
-pager_flex_sync::pager_flex_sync(int rate) :
+pager_flex_sync::pager_flex_sync() :
     gr_block ("flex_sync",
     gr_make_io_signature (1, 1, sizeof(unsigned char)),
     gr_make_io_signature (4, 4, sizeof(unsigned char))),
-    d_sync(rate/1600) // Maximum samples per baud
+    d_sync(10) // Fixed at 10 samples per baud (@ 1600 baud)
 {
-    d_rate = rate;
     enter_idle();
 }
 
@@ -120,7 +119,7 @@ void pager_flex_sync::enter_idle()
     d_mode = 0;
     d_baudrate = 1600;
     d_levels = 2;
-    d_spb = d_rate/d_baudrate;
+    d_spb = 16000/d_baudrate;
     d_bit_a = 0;
     d_bit_b = 0;
     d_bit_c = 0;
@@ -141,7 +140,6 @@ void pager_flex_sync::enter_sync1()
     d_end = d_index;
     d_center = index_avg(d_start, d_end); // Center of goodness
     d_count = 0;
-    //printf("SYNC1:%08X ", flex_modes[d_mode].sync);
 }
 
 void pager_flex_sync::enter_sync2()
@@ -150,7 +148,7 @@ void pager_flex_sync::enter_sync2()
     d_count = 0;
     d_baudrate = flex_modes[d_mode].baud;
     d_levels = flex_modes[d_mode].levels;
-    d_spb = d_rate/d_baudrate;
+    d_spb = 16000/d_baudrate;
 
     if (d_baudrate == 3200) {
         // Oversampling buffer just got halved

@@ -52,7 +52,10 @@ class app_top_block(gr.top_block):
     def __init__(self, options, queue):
         gr.top_block.__init__(self, "usrp_flex")
         self.options = options
-
+	self.offset = 0.0
+	self.adj_time = time.time()
+	self.verbose = options.verbose
+			
 	if options.from_file is None:
             # Set up USRP source with specified RX daughterboard
             self.src = usrp.source_c()
@@ -104,20 +107,31 @@ class app_top_block(gr.top_block):
 	if options.verbose:
 	    print "Channel filter has", len(taps), "taps."
 
-        chan = gr.freq_xlating_fir_filter_ccf(10,    # Decimation rate
+        self.chan = gr.freq_xlating_fir_filter_ccf(10,    # Decimation rate
                                               taps,  # Filter taps
                                               0.0,   # Offset frequency
                                               250e3) # Sample rate
 
 	if options.log:
 	    chan_sink = gr.file_sink(gr.sizeof_gr_complex, 'chan.dat')
-	    self.connect(chan, chan_sink)
+	    self.connect(self.chan, chan_sink)
 
         # FLEX protocol demodulator
-        flex = pager.flex_demod(queue, options.frequency, options.verbose, options.log)
+        self.flex = pager.flex_demod(queue, options.frequency, options.verbose, options.log)
 
-        self.connect(self.src, chan, flex)
-	
+        self.connect(self.src, self.chan, self.flex)
+
+    def freq_offset(self):
+	return self.flex.dc_offset()*1600
+
+    def adjust_freq(self):
+	if time.time() - self.adj_time > 1.6:	# Only do it once per FLEX frame
+	    self.adj_time = time.time()
+	    self.offset -= self.freq_offset()
+	    self.chan.set_center_freq(self.offset)
+	    if self.verbose:
+		print "Channel frequency offset (Hz):", int(self.offset)
+	    		
 def main():
     parser = OptionParser(option_class=eng_option)
     parser.add_option("-f", "--frequency", type="eng_float", default=None,
@@ -161,7 +175,8 @@ def main():
 		    else:
 			disp.append(page[n])
 		print join(disp, '')
-						
+		tb.adjust_freq()
+										
 	    else:
 		time.sleep(1)
 

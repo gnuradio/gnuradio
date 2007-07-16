@@ -28,7 +28,7 @@ class pager_flex_sync;
 typedef boost::shared_ptr<pager_flex_sync> pager_flex_sync_sptr;
 typedef std::vector<gr_int64> gr_int64_vector;
 
-pager_flex_sync_sptr pager_make_flex_sync(int rate);
+pager_flex_sync_sptr pager_make_flex_sync();
 
 /*!
  * \brief flex sync description
@@ -39,8 +39,8 @@ class pager_flex_sync : public gr_block
 {
 private:
     // Constructors
-    friend pager_flex_sync_sptr pager_make_flex_sync(int rate);
-    pager_flex_sync(int rate);
+    friend pager_flex_sync_sptr pager_make_flex_sync();
+    pager_flex_sync();
    
     // State machine transitions
     void enter_idle();
@@ -58,7 +58,6 @@ private:
     enum state_t { ST_IDLE, ST_SYNCING, ST_SYNC1, ST_SYNC2, ST_DATA };
     state_t d_state;     
 
-    int d_rate;     // Incoming sample rate
     int d_index;    // Index into current baud
     int d_start;    // Start of good sync 
     int d_center;   // Center of bit

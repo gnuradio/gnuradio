@@ -49,6 +49,8 @@ public:
     int work (int noutput_items,
               gr_vector_const_void_star &input_items, 
               gr_vector_void_star &output_items);
+
+    float dc_offset() const { return d_avg; }
 };
 
 #endif /* INCLUDED_PAGER_SLICER_FB_H */

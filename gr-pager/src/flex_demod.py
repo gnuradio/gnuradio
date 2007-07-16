@@ -42,13 +42,13 @@ class flex_demod(gr.hier_block2):
 	self.connect(self, quad)
 	
         rsamp = blks2.rational_resampler_fff(16, 25)
-        slicer = pager_swig.slicer_fb(5e-5) # DC removal averaging filter constant
-	sync = pager_swig.flex_sync(16000)
+        self.slicer = pager_swig.slicer_fb(5e-6) # DC removal averaging filter constant
+	self.sync = pager_swig.flex_sync()
 
-        self.connect(quad, rsamp, slicer, sync)
+        self.connect(quad, rsamp, self.slicer, self.sync)
 
 	for i in range(4):
-	    self.connect((sync, i), pager_swig.flex_deinterleave(), pager_swig.flex_parse(queue, freq))
+	    self.connect((self.sync, i), pager_swig.flex_deinterleave(), pager_swig.flex_parse(queue, freq))
 
 	if log:
 	    suffix = '_'+ "%3.3f" % (freq/1e6,) + '.dat'
@@ -57,5 +57,8 @@ class flex_demod(gr.hier_block2):
 	    slicer_sink = gr.file_sink(gr.sizeof_char, 'slicer'+suffix)
 	    self.connect(rsamp, rsamp_sink)
 	    self.connect(quad, quad_sink)
-	    self.connect(slicer, slicer_sink)
-	    
+	    self.connect(self.slicer, slicer_sink)
+
+    def dc_offset(self):
+	return self.slicer.dc_offset()
+		    
