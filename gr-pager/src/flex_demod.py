@@ -42,7 +42,7 @@ class flex_demod(gr.hier_block2):
 	self.connect(self, quad)
 	
         rsamp = blks2.rational_resampler_fff(16, 25)
-        slicer = pager_swig.slicer_fb(1e-5) # DC removal averaging filter constant
+        slicer = pager_swig.slicer_fb(5e-5) # DC removal averaging filter constant
 	sync = pager_swig.flex_sync(16000)
 
         self.connect(quad, rsamp, slicer, sync)

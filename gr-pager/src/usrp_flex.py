@@ -55,42 +55,42 @@ class app_top_block(gr.top_block):
 
 	if options.from_file is None:
             # Set up USRP source with specified RX daughterboard
-            src = usrp.source_c()
+            self.src = usrp.source_c()
             if options.rx_subdev_spec == None:
-                options.subdev_spec = usrp.pick_rx_subdevice(src)
-            subdev = usrp.selected_subdev(src, options.rx_subdev_spec)
-            src.set_mux(usrp.determine_rx_mux_value(src, options.rx_subdev_spec))
+                options.rx_subdev_spec = usrp.pick_rx_subdevice(self.src)
+            self.subdev = usrp.selected_subdev(self.src, options.rx_subdev_spec)
+            self.src.set_mux(usrp.determine_rx_mux_value(self.src, options.rx_subdev_spec))
 
             # Grab 250 KHz of spectrum (sample rate becomes 250 ksps complex)
-            src.set_decim_rate(256)
+            self.src.set_decim_rate(256)
 	    	    
             # If no gain specified, set to midrange
             if options.gain is None:
-                g = subdev.gain_range()
+                g = self.subdev.gain_range()
                 options.gain = (g[0]+g[1])/2.0
-            subdev.set_gain(options.gain)
+            self.subdev.set_gain(options.gain)
 
             # Tune daughterboard
             actual_frequency = options.frequency+options.calibration
-            tune_result = usrp.tune(src, 0, subdev, actual_frequency)
+            tune_result = usrp.tune(self.src, 0, self.subdev, actual_frequency)
             if not tune_result:
-                sys.stderr.write("Failed to set center frequency to"+`actual_frequency`+"\n")
+                sys.stderr.write("Failed to set center frequency to "+`actual_frequency`+"\n")
                 sys.exit(1)
 
             if options.verbose:
-                print "Using RX daughterboard", subdev.side_and_name()
+                print "Using RX daughterboard", self.subdev.side_and_name()
                 print "USRP gain is", options.gain
                 print "USRP tuned to", actual_frequency
             
         else:
             # Use supplied file as source of samples
-            src = gr.file_source(gr.sizeof_gr_complex, options.from_file)
+            self.src = gr.file_source(gr.sizeof_gr_complex, options.from_file)
             if options.verbose:
                 print "Reading samples from", options.from_file
 	    
         if options.log and not options.from_file:
             usrp_sink = gr.file_sink(gr.sizeof_gr_complex, 'usrp.dat')
-            self.connect(src, usrp_sink)
+            self.connect(self.src, usrp_sink)
 
         # Set up 22KHz-wide bandpass about center frequency. Decimate by 10
         # to get channel rate of 25Ksps
@@ -116,7 +116,7 @@ class app_top_block(gr.top_block):
         # FLEX protocol demodulator
         flex = pager.flex_demod(queue, options.frequency, options.verbose, options.log)
 
-        self.connect(src, chan, flex)
+        self.connect(self.src, chan, flex)
 	
 def main():
     parser = OptionParser(option_class=eng_option)
