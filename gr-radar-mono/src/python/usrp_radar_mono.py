@@ -33,11 +33,18 @@ def main():
     parser = OptionParser(option_class=eng_option)
     parser.add_option("-f", "--frequency", type="eng_float", default=0.0,
                       help="set transmitter center frequency to FREQ in Hz, default is %default", metavar="FREQ")
-    # Temporary for debugging transmitter frequency response
-    parser.add_option("-w", "--waveform-frequency", type="eng_float", default=1e3,
-                      help="set waveform offset frequency to FREQ in Hz, default is %default", metavar="FREQ")
+    parser.add_option("-w", "--chirp-width", type="eng_float", default=32e6,
+                      help="set LFM chirp bandwidth in Hz, default is %default", metavar="FREQ")
     parser.add_option("-a", "--amplitude", type="eng_float", default=100,
                       help="set waveform amplitude in % full scale, default is %default,")
+    parser.add_option("",   "--ton", type="eng_float", default=5e-6,
+		      help="set pulse on period in seconds, default is %default,")
+    parser.add_option("",   "--tsw", type="eng_float", default=406.25e-9,
+		      help="set transmitter switching period in seconds, default is %default,")
+    parser.add_option("",   "--tlook", type="eng_float", default=5e-6,
+		      help="set receiver look time in seconds, default is %default,")
+    parser.add_option("",   "--prf", type="eng_float", default=10e3,
+		      help="set pulse repetition frequency in Hz, default is %default,")
     parser.add_option("-v", "--verbose", action="store_true", default=False,
                       help="enable verbose output, default is disabled")
     parser.add_option("-D", "--debug", action="store_true", default=False,
@@ -69,8 +76,13 @@ def main():
     msgq = gr.msg_queue()
     s = radar(msgq=msgq,verbose=options.verbose,debug=options.debug)
 
+    s.set_ton(options.ton)
+    s.set_tsw(options.tsw)
+    s.set_tlook(options.tlook)
+    s.set_prf(options.prf)
     s.set_amplitude(options.amplitude)
-    s.tune(options.frequency, options.waveform_frequency)
+    s.set_freq(options.frequency, options.chirp_width)
+
     s.start()
 
     """

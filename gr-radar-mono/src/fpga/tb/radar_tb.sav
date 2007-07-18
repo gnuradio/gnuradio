@@ -1,17 +1,17 @@
-*-20.535921 1109000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-24.712317 37100000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 @28
 radar_tb.clk
 radar_tb.ena
 radar_tb.rst
 radar_tb.uut.reset
-radar_tb.uut.tx_enable
-radar_tb.uut.rx_enable
 @200
 -
-@24
-radar_tb.uut.freq[31:0]
-@421
+@420
 radar_tb.uut.controller.ampl_o[15:0]
+@22
+radar_tb.uut.controller.fstart_o[31:0]
+radar_tb.uut.controller.fincr_o[31:0]
+radar_tb.uut.transmitter.freq[31:0]
 @200
 -
 @28
@@ -21,3 +21,6 @@ radar_tb.uut.tx_dac_i_o[13:0]
 radar_tb.uut.tx_dac_q_o[13:0]
 @200
 -
+@28
+radar_tb.uut.controller.tx_ctrl_o
+radar_tb.uut.controller.rx_ctrl_o

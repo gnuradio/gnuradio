@@ -36,7 +36,7 @@ module radar_tb;
    reg 	       s_strobe;
 
    // DAC bus
-   reg         tx_strobe;
+   wire        tx_strobe;
    wire [13:0] tx_dac_i;
    wire [13:0] tx_dac_q;
 
@@ -55,14 +55,10 @@ module radar_tb;
    
    radar uut
      (.clk_i(clk),.saddr_i(saddr),.sdata_i(sdata),.s_strobe_i(s_strobe),
-      .tx_strobe_i(tx_strobe),.tx_dac_i_o(tx_dac_i),.tx_dac_q_o(tx_dac_q),
+      .tx_strobe_o(tx_strobe),.tx_dac_i_o(tx_dac_i),.tx_dac_q_o(tx_dac_q),
       .rx_strobe_i(rx_strobe),.rx_adc_i_i(rx_adc_i),.rx_adc_q_i(rx_adc_q),
       .rx_strobe_o(fifo_strobe),.rx_ech_i_o(fifo_i),.rx_ech_q_o(fifo_q));
 
-   // Drive tx_strobe @ half clock rate
-   always @(posedge clk)
-     tx_strobe <= ~tx_strobe;
-   
    // Start up initialization
    initial
      begin
@@ -72,7 +68,6 @@ module radar_tb;
 	saddr = 0;
 	sdata = 0;
 	s_strobe = 0;
-	tx_strobe = 0;
 	rx_strobe = 1;
 	rx_adc_i = 0;
 	rx_adc_q = 0;
@@ -122,54 +117,85 @@ module radar_tb;
       end
    endtask // reset
    
-   // Enable/disable transmitter
-   task enable_tx;
-      input enabled;
-      
+   // Waveform on time
+   task set_ton;
+      input [23:0] t_on;
+
       begin
-	 mode = enabled ? (mode | `bmFR_RADAR_MODE_TX) : (mode & ~`bmFR_RADAR_MODE_TX);
-	 write_cfg_register(`FR_RADAR_MODE, mode);
+	 write_cfg_register(`FR_RADAR_TON, t_on);
       end
-   endtask // enable_tx
+   endtask // set_ton
+
+   // Transmitter switching time
+   task set_tsw;
+      input [23:0] t_sw;
+
+      begin
+	 write_cfg_register(`FR_RADAR_TSW, t_sw);
+      end
+   endtask // t_sw
+
+   // Receiver look time
+   task set_tlook;
+      input [23:0] t_look;
+
+      begin
+	 write_cfg_register(`FR_RADAR_TLOOK, t_look);
+      end
+   endtask // set_tlook
+
+   // Inter-pulse idle time
+   task set_tidle;
+      input [23:0] t_idle;
+
+      begin
+	 write_cfg_register(`FR_RADAR_TIDLE, t_idle);
+      end
+   endtask // set_tidle
+
+   // Chirp amplitude
+   task set_ampl;
+      input [31:0] ampl;
+
+      begin
+	 write_cfg_register(`FR_RADAR_AMPL, ampl);
+      end
+   endtask // set_ampl
+
+   // Chirp start frequency
+   task set_fstart;
+      input [31:0] fstart;
+
+      begin
+	 write_cfg_register(`FR_RADAR_FSTART, fstart);
+      end
+   endtask // set_fstart
    
-   // Enable/disable receiver
-   task enable_rx;
-      input enabled;
-      
-      begin
-	 mode = enabled ? (mode | `bmFR_RADAR_MODE_RX) : (mode & ~`bmFR_RADAR_MODE_RX);
-	 write_cfg_register(`FR_RADAR_MODE, mode);
-      end
-   endtask // enable_rx
-   
-   // Waveform amplitude
-   task set_amplitude;
-      input [13:0] amp;
+   // Chirp frequency increment
+   task set_fincr;
+      input [31:0] fincr;
 
       begin
-	 write_cfg_register(`FR_RADAR_AMPL, amp);
+	 write_cfg_register(`FR_RADAR_FINCR, fincr);
       end
-   endtask // set_amplitude
-
-   // Waveform frequency
-   task set_frequency;
-      input [31:0] freq;
-
-      begin
-	 write_cfg_register(`FR_RADAR_FREQ1N, freq);
-      end
-   endtask // frequency
+   endtask // set_fincr
 
    // Test transmitter functionality
    task test_tx;
       begin
 	 #20 set_reset(1);
-	 #20 set_amplitude(16'd9946);
-	 #20 set_frequency(32'h08000000);
-	 #20 enable_tx(1);
-	 #20 enable_rx(0);
+
+	 #20 set_ton(320-1);	// 5us on time
+	 #20 set_tsw(26-1);	// 406ns switching time
+	 #20 set_tlook(320-1);  // 5us look time
+	 #20 set_tidle(3174-1); // 60us pulse period
+	 
+	 #20 set_ampl(16'd9946);
+	 #20 set_fstart(32'h80000000); // -16 to 16 MHz
+	 #20 set_fincr (32'h0199999A);
+	 
 	 #20 set_reset(0);
-	 #10000;
+	 #200000;
       end
    endtask // test_tx
    

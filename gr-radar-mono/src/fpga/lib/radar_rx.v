@@ -22,8 +22,8 @@
 `include "../../../../usrp/firmware/include/fpga_regs_common.v"
 `include "../../../../usrp/firmware/include/fpga_regs_standard.v"
 
-module radar_rx(clk_i,rst_i,ena_i,strobe_i,saddr_i,sdata_i,s_strobe_i,rx_in_i_i,rx_in_q_i,
-		rx_i_o,rx_q_o,rx_strobe_o);
+module radar_rx(clk_i,rst_i,ena_i,strobe_i,saddr_i,sdata_i,s_strobe_i,
+		rx_in_i_i,rx_in_q_i,rx_i_o,rx_q_o,rx_strobe_o);
    
    input clk_i;
    input rst_i;
@@ -36,7 +36,7 @@ module radar_rx(clk_i,rst_i,ena_i,strobe_i,saddr_i,sdata_i,s_strobe_i,rx_in_i_i,
 
    input [15:0] rx_in_i_i;
    input [15:0] rx_in_q_i;
-
+   
    output [15:0] rx_i_o;
    output [15:0] rx_q_o;
    output rx_strobe_o;

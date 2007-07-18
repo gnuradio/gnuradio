@@ -21,39 +21,122 @@
 
 `include "../lib/radar_config.vh"
 
-module radar_control(clk_i,rst_i,ena_i,saddr_i,sdata_i,s_strobe_i,
-		     reset_o,tx_ena_o,rx_ena_o,ampl_o,freq_o);
+module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,
+		     reset_o,tx_strobe_o,tx_ctrl_o,rx_ctrl_o,
+		     ampl_o,fstart_o,fincr_o);
 
    // System interface
    input         clk_i;		// Master clock @ 64 MHz
-   input         rst_i;         // Master reset
-   input         ena_i;         // Module level enable
    input  [6:0]  saddr_i;	// Configuration bus address
    input  [31:0] sdata_i;	// Configuration bus data
    input 	 s_strobe_i;    // Configuration bus write
 
-   // Configuration outputs
+   // Control and configuration outputs
    output 	 reset_o;
-   output        tx_ena_o;
-   output        rx_ena_o;
-   
+   output        tx_strobe_o;
+   output        tx_ctrl_o;
+   output        rx_ctrl_o;
    output [15:0] ampl_o;
-   output [31:0] freq_o;
-
+   output [31:0] fstart_o;
+   output [31:0] fincr_o;
+   
    // Internal configuration
    wire 	 lp_ena;
    wire 	 dr_ena;
    wire 	 md_ena;
-   wire [1:0] 	 chirps;
+   wire   [1:0]  chirps;
+   wire   [15:0] t_on;
+   wire   [15:0] t_sw;
+   wire   [15:0] t_look;
+   wire   [31:0] t_idle;
 
    // Configuration from host
-   setting_reg #(`FR_RADAR_MODE) sr_mode(.clock(clk_i),.reset(rst_i),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
-				       .out({chirps,md_ena,dr_ena,lp_ena,rx_ena_o,tx_ena_o,reset_o}));
+   setting_reg #(`FR_RADAR_MODE)   sr_mode(.clock(clk_i),.reset(1'b0),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
+					   .out({chirps,md_ena,dr_ena,lp_ena,reset_o}));
    				     
-   setting_reg #(`FR_RADAR_AMPL) sr_ampl(.clock(clk_i),.reset(rst_i),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
-				       .out(ampl_o));
+   setting_reg #(`FR_RADAR_TON)    sr_ton(.clock(clk_i),.reset(1'b0),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
+					  .out(t_on));
+   
+   setting_reg #(`FR_RADAR_TSW)    sr_tsw(.clock(clk_i),.reset(1'b0),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
+					  .out(t_sw));
+   				     
+   setting_reg #(`FR_RADAR_TLOOK)  sr_tlook(.clock(clk_i),.reset(1'b0),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
+					    .out(t_look));
+   				     
+   setting_reg #(`FR_RADAR_TIDLE)  sr_tidle(.clock(clk_i),.reset(1'b0),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
+					    .out(t_idle));
+   				     
+   setting_reg #(`FR_RADAR_AMPL)   sr_ampl(.clock(clk_i),.reset(1'b0),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
+					   .out(ampl_o));
 
-   setting_reg #(`FR_RADAR_FREQ1N) sr_freq(.clock(clk_i),.reset(rst_i),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
-					 .out(freq_o));
+   setting_reg #(`FR_RADAR_FSTART) sr_fstart(.clock(clk_i),.reset(1'b0),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
+					     .out(fstart_o));
+
+   setting_reg #(`FR_RADAR_FINCR)  sr_fincr(.clock(clk_i),.reset(1'b0),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
+					    .out(fincr_o));
+
+   // Pulse state machine
+   `define ST_ON   4'b0001
+   `define ST_SW   4'b0010
+   `define ST_LOOK 4'b0100
+   `define ST_IDLE 4'b1000
+
+   reg [3:0]  state;
+   reg [31:0] count;
+
+   always @(posedge clk_i)
+     if (reset_o)
+       begin
+	  state <= `ST_ON;
+	  count <= 32'b0;
+       end
+     else
+       case (state)
+	 `ST_ON:
+	   if (count == {16'b0,t_on})
+	     begin
+	        state <= `ST_SW;
+	        count <= 32'b0;
+	     end
+	   else
+	     count <= count + 32'b1;
+	 
+	 `ST_SW:
+	   if (count == {16'b0,t_sw})
+	     begin
+		state <= `ST_LOOK;
+		count <= 32'b0;
+	     end
+	   else
+	     count <= count + 24'b1;
+
+	 `ST_LOOK:
+	   if (count == {16'b0,t_look})
+	     begin
+		state <= `ST_IDLE;
+		count <= 32'b0;
+	     end
+	   else
+	     count <= count + 32'b1;
+
+	 `ST_IDLE:
+	   if (count == t_idle)
+	     begin
+		state <= `ST_ON;
+		count <= 24'b0;
+	     end
+	   else
+	     count <= count + 32'b1;
+
+	 default:		  // Invalid state, reset state machine
+	   begin
+	      state <= `ST_ON;
+	      count <= 32'b0;
+	   end
+       endcase
+   
+   assign tx_strobe_o = count[0]; // Drive DAC inputs at 32 MHz
+   assign tx_ctrl_o = (state == `ST_ON);
+   assign rx_ctrl_o = (state == `ST_LOOK);
    
 endmodule // radar_control

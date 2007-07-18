@@ -47,7 +47,7 @@ module cordic_nco(clk_i,rst_i,ena_i,strobe_i,ampl_i,freq_i,phs_i,data_i_o,data_q
    assign ampl = ena_i ? ampl_i : 16'b0;
 
    cordic tx_cordic
-     (.clock(clk_i),.reset(rst_in),.enable(strobe_i), 
+     (.clock(clk_i),.reset(rst_i),.enable(strobe_i), 
        .xi(ampl),.yi(16'b0),.zi(phase[31:16]),
        .xo(data_i_o),.yo(data_q_o),.zo());
 	  

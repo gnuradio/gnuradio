@@ -24,8 +24,12 @@
 
 `define FR_RADAR_MODE           `FR_USER_0
 `define bmFR_RADAR_MODE_RESET	32'h0001
-`define bmFR_RADAR_MODE_TX      32'h0002
-`define bmFR_RADAR_MODE_RX      32'h0004
 
+`define FR_RADAR_TON            `FR_USER_1
+`define FR_RADAR_TSW            `FR_USER_2
+`define FR_RADAR_TLOOK          `FR_USER_3
+`define FR_RADAR_TIDLE          `FR_USER_4
 `define FR_RADAR_AMPL           `FR_USER_5
-`define FR_RADAR_FREQ1N         `FR_USER_8
+`define FR_RADAR_FSTART         `FR_USER_6
+`define FR_RADAR_FINCR          `FR_USER_7
+

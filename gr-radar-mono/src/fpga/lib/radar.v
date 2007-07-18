@@ -22,7 +22,7 @@
 `include "../lib/radar_config.vh"
 
 module radar(clk_i,saddr_i,sdata_i,s_strobe_i,
-	     tx_strobe_i,tx_dac_i_o,tx_dac_q_o,
+	     tx_strobe_o,tx_dac_i_o,tx_dac_q_o,
 	     rx_strobe_i,rx_adc_i_i,rx_adc_q_i,
 	     rx_strobe_o,rx_ech_i_o,rx_ech_q_o);
 
@@ -33,7 +33,7 @@ module radar(clk_i,saddr_i,sdata_i,s_strobe_i,
    input 	 s_strobe_i;    // Configuration bus write
    
    // Transmit subsystem
-   input         tx_strobe_i;	// Generate an transmitter output sample
+   output        tx_strobe_o;	// Generate an transmitter output sample
    output [13:0] tx_dac_i_o;	// I channel transmitter output to DAC
    output [13:0] tx_dac_q_o;    // Q channel transmitter output to DAC
 
@@ -45,26 +45,30 @@ module radar(clk_i,saddr_i,sdata_i,s_strobe_i,
    output [15:0] rx_ech_i_o;	// I channel processed echos to Rx FIFO
    output [15:0] rx_ech_q_o;	// Q channel processed echos to Rx FIFO
 
+   // Application control
    wire          reset;		// Master application reset
    wire 	 tx_enable;     // Transmitter enable
    wire 	 rx_enable;     // Receiver enable
-   
-   wire [15:0] 	 ampl;		
-   wire [31:0] 	 freq;		// temporary
-   
+   wire          tx_ctrl;       // Transmitter on control
+   wire          rx_ctrl;       // Receiver on control
+ 	 
+   // Configuration
+   wire [15:0] 	 ampl;		// Pulse amplitude
+   wire [31:0] 	 fstart;	// Chirp start frequency
+   wire [31:0] 	 fincr;         // Chirp per strobe frequency increment
+
    radar_control controller
-     (.clk_i(clk_i),.rst_i(1'b0),.ena_i(1'b1),
-      .s_strobe_i(s_strobe_i),.saddr_i(saddr_i),.sdata_i(sdata_i),
-      .reset_o(reset),.tx_ena_o(tx_enable),.rx_ena_o(rx_enable),
-      .ampl_o(ampl),.freq_o(freq));
+     (.clk_i(clk_i),.saddr_i(saddr_i),.sdata_i(sdata_i),.s_strobe_i(s_strobe_i),
+      .reset_o(reset),.tx_strobe_o(tx_strobe_o),.tx_ctrl_o(tx_ctrl),.rx_ctrl_o(rx_ctrl),
+      .ampl_o(ampl),.fstart_o(fstart),.fincr_o(fincr));
 
    radar_tx transmitter
-     ( .clk_i(clk_i),.rst_i(reset),.ena_i(tx_enable),
-       .ampl_i(ampl),.freq_i(freq),
-       .strobe_i(tx_strobe_i),.tx_i_o(tx_dac_i_o),.tx_q_o(tx_dac_q_o) );
+     ( .clk_i(clk_i),.rst_i(reset),.ena_i(tx_ctrl),.strobe_i(tx_strobe_o),
+       .ampl_i(ampl),.fstart_i(fstart),.fincr_i(fincr),
+       .tx_i_o(tx_dac_i_o),.tx_q_o(tx_dac_q_o) );
    
    radar_rx receiver
-     ( .clk_i(clk_i),.rst_i(reset),.ena_i(rx_enable),
+     ( .clk_i(clk_i),.rst_i(reset),.ena_i(rx_ctrl & 1'b0), // Disable receiver for now
        .strobe_i(rx_strobe_i),.rx_in_i_i(rx_adc_i_i),.rx_in_q_i(rx_adc_q_i),
        .rx_strobe_o(rx_strobe_o),.rx_i_o(rx_ech_i_o),.rx_q_o(rx_ech_q_o) );
    

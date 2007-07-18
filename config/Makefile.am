@@ -46,7 +46,6 @@ m4macros = \
 	grc_gr_radar_mono.m4 \
 	grc_gr_radio_astronomy.m4 \
 	grc_gr_rdf.m4 \
-	grc_gr_radar_mono.m4 \
 	grc_gr_sounder.m4 \
 	grc_gr_trellis.m4 \
 	grc_gr_usrp.m4 \
