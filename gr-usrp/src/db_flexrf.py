@@ -225,7 +225,7 @@ class flexrf_base_tx(flexrf_base):
         # power up the transmit side, but don't enable the mixer
         self._u._write_oe(self._which,(POWER_UP|RX_TXN|ENABLE), 0xffff)
         self._u.write_io(self._which, (self.power_on|RX_TXN), (POWER_UP|RX_TXN|ENABLE))
-        self.lo_offset = 4e6             # FIXME may want to be a function of d'board
+        self.lo_offset = 4e6 
 
     def __del__(self):
         #print "flexrf_base_tx.__del__"
@@ -275,7 +275,22 @@ class flexrf_base_tx(flexrf_base):
         """
         return self._set_pga(self._u.pga_max())
 
+    def set_lo_offset(self, offset):
+	"""
+	Set amount by which LO is offset from requested tuning frequency.
+	
+	@param offset: offset in Hz
+	"""
+	self.lo_offset = offset
 
+    def get_lo_offset(self):
+	"""
+	Get amount by which LO is offset from requested tuning frequency.
+	
+	@returns Offset in Hz
+	"""
+	return self.lo_offset
+	
 class flexrf_base_rx(flexrf_base):
     def __init__(self, usrp, which):
         """
@@ -293,7 +308,7 @@ class flexrf_base_rx(flexrf_base):
 
         self.bypass_adc_buffers(True)
 
-        self.lo_offset = -4e6             # FIXME may want to be a function of d'board
+        self.lo_offset = -4e6
 
     def __del__(self):
         # print "flexrf_base_rx.__del__"
@@ -346,6 +361,22 @@ class flexrf_base_rx(flexrf_base):
         return self._u.write_aux_dac(self._which, 0, int(dac_value)) and \
                self._set_pga(int(pga_gain))
 
+    def set_lo_offset(self, offset):
+	"""
+	Set amount by which LO is offset from requested tuning frequency.
+	
+	@param offset: offset in Hz
+	"""
+	self.lo_offset = offset
+
+    def get_lo_offset(self):
+	"""
+	Get amount by which LO is offset from requested tuning frequency.
+	
+	@returns Offset in Hz
+	"""
+	return self.lo_offset
+	
 
 # ----------------------------------------------------------------
 

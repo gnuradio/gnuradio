@@ -9,7 +9,7 @@ a range resolution of approximately 5 meters.
 
 Only boards in slot A are supported.
 
-The script to run is place in $prefix/bin:
+The script to run is placed in $prefix/bin:
 
 Usage: usrp_radar_mono.py [options]
 
@@ -32,7 +32,7 @@ Options:
   -v, --verbose         enable verbose output, default is disabled
   -D, --debug           enable debugging output, default is disabled
 
-The transmitter creates a LFM chirp, evenly centered on the supplied frequency.
+The transmitter creates an LFM chirp, evenly centered on the supplied frequency.
 The four timing parameters are:
 
 ton	Chirp on time in seconds.  

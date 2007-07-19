@@ -35,7 +35,7 @@ def main():
                       help="set transmitter center frequency to FREQ in Hz, default is %default", metavar="FREQ")
     parser.add_option("-w", "--chirp-width", type="eng_float", default=32e6,
                       help="set LFM chirp bandwidth in Hz, default is %default", metavar="FREQ")
-    parser.add_option("-a", "--amplitude", type="eng_float", default=100,
+    parser.add_option("-a", "--amplitude", type="eng_float", default=15,
                       help="set waveform amplitude in % full scale, default is %default,")
     parser.add_option("",   "--ton", type="eng_float", default=5e-6,
 		      help="set pulse on period in seconds, default is %default,")
