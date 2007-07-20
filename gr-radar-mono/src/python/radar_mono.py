@@ -69,8 +69,7 @@ class radar_tx:
         self._u = usrp.sink_s(fpga_filename='usrp_radar_mono.rbf')
         self._subdev_spec = (0,0); # FPGA code only implements side A
         self._subdev = usrp.selected_subdev(self._u, self._subdev_spec)
-	if hasattr(self._subdev, 'set_lo_offset'):
-	    self._subdev.set_lo_offset(0)
+	self._subdev.set_lo_offset(0.0)
 	self._ton_ticks = 0
 	self._tsw_ticks = 0
 	self._tlook_ticks = 0
