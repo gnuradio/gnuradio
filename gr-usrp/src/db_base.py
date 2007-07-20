@@ -53,7 +53,6 @@ class db_base(object):
 
         self._refclk_reg = (FR_TX_A_REFCLK,FR_RX_A_REFCLK,FR_TX_B_REFCLK,FR_RX_B_REFCLK)[self._slot]
 
-
     def dbid(self):
         return self._u.daughterboard_id(self._which)
 
@@ -240,3 +239,18 @@ class db_base(object):
         """
         pass
 
+    def set_lo_offset(self, offset):
+	"""
+	Set how much LO is offset from requested frequency
+	
+	Should be overriden by daughterboards that care.
+	"""
+	pass
+	
+    def lo_offset(self, offset):
+	"""
+	Get how much LO is offset from requested frequency
+
+	Should be overriden by daughterboards that care.
+	"""
+	return 0.0
