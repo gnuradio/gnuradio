@@ -5,7 +5,7 @@ C This file is part of GNU Radio
 C
 C GNU Radio is free software; you can redistribute it and/or modify
 C it under the terms of the GNU General Public License as published by
-C the Free Software Foundation; either version 2, or (at your option)
+C the Free Software Foundation; either version 3, or (at your option)
 C any later version.
 C
 C GNU Radio is distributed in the hope that it will be useful,
