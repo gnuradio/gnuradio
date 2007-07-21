@@ -34,10 +34,16 @@
  * complement of the final running CRC.  The resulting CRC should be
  * transmitted in big endian order.
  */
-unsigned int gr_update_crc32(unsigned int crc, const unsigned char *buf, int len);
-unsigned int gr_update_crc32(unsigned int crc, const std::string buf);
+unsigned int 
+gr_update_crc32(unsigned int crc, const unsigned char *buf, size_t len);
 
-unsigned int gr_crc32(const unsigned char *buf, int len);
-unsigned int gr_crc32(const std::string buf);
+unsigned int 
+gr_update_crc32(unsigned int crc, const std::string buf);
+
+unsigned int 
+gr_crc32(const unsigned char *buf, size_t len);
+
+unsigned int 
+gr_crc32(const std::string buf);
 
 #endif /* INCLUDED_CRC32_H */
