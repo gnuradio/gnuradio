@@ -148,7 +148,15 @@ class app_flow_graph(stdgui.gui_flow_graph):
         # Calibration coefficient and offset
         self.calib_coeff = options.calib_coeff
         self.calib_offset = options.calib_offset
-        self.orig_calib_offset = options.calib_offset
+        if self.calib_offset < -750:
+            self.calib_offset = -750
+        if self.calib_offset > 750:
+            self.calib_offset = 750
+
+        if self.calib_coeff < 1:
+            self.calib_offset = 1
+        if self.calib_coeff > 100:
+            self.calib_offset = 100
 
         self.integ = options.integ
         self.avg_alpha = options.avg
@@ -374,8 +382,8 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.integ = options.integ
         if self.setimode == False:
             self.myform['integration'].set_value(int(options.integ))
-            self.myform['offset'].set_value(options.calib_offset)
-            self.myform['dcgain'].set_value(options.calib_coeff)
+            self.myform['offset'].set_value(self.calib_offset)
+            self.myform['dcgain'].set_value(self.calib_coeff)
         self.myform['average'].set_value(int(options.avg))
 
 
@@ -521,7 +529,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         if self.setimode == False:
             myform['offset'] = form.slider_field(parent=self.panel, sizer=vbox3,
-                label="Post-Detector Offset", weight=1, min=-500, max=500, 
+                label="Post-Detector Offset", weight=1, min=-750, max=750, 
                 callback=self.set_pd_offset)
             vbox3.Add((2,0), 0, 0)
             myform['dcgain'] = form.slider_field(parent=self.panel, sizer=vbox3,
