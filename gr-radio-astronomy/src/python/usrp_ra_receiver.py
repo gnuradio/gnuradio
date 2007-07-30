@@ -148,6 +148,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         # Calibration coefficient and offset
         self.calib_coeff = options.calib_coeff
         self.calib_offset = options.calib_offset
+        self.orig_calib_offset = options.calib_offset
 
         self.integ = options.integ
         self.avg_alpha = options.avg
@@ -321,8 +322,8 @@ class app_flow_graph(stdgui.gui_flow_graph):
             #
             # Continuum calibration stuff
             #
-            self.cal_mult = gr.multiply_const_ff(self.calib_coeff);
-            self.cal_offs = gr.add_const_ff(self.calib_offset);
+            self.cal_mult = gr.multiply_const_ff(self.calib_coeff/100.0);
+            self.cal_offs = gr.add_const_ff(self.calib_offset*4000);
 
         #
         # Start connecting configured modules in the receive chain
@@ -364,12 +365,6 @@ class app_flow_graph(stdgui.gui_flow_graph):
                 self.integrator1, self.integrator2,
                 self.integrator3, self.cal_mult, self.cal_offs, self.chart)
     
-            # Connect calibrator to probe
-            # SPECIAL NOTE:  I'm setting the ground work here
-            #   for completely changing the way local_calibrator
-            #   works, including removing some horrible kludges for
-            #   recording data.
-            # But for now, self.probe() will be used to display the
             #  current instantaneous integrated detector value
             self.connect(self.cal_offs, self.probe)
 
@@ -379,7 +374,10 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.integ = options.integ
         if self.setimode == False:
             self.myform['integration'].set_value(int(options.integ))
+            self.myform['offset'].set_value(options.calib_offset)
+            self.myform['dcgain'].set_value(options.calib_coeff)
         self.myform['average'].set_value(int(options.avg))
+
 
         if self.setimode == False:
             # Make integrator agree with command line
@@ -485,6 +483,8 @@ class app_flow_graph(stdgui.gui_flow_graph):
         vbox1.Add((4,0), 0, 0)
 
         vbox2 = wx.BoxSizer(wx.VERTICAL)
+        if self.setimode == False:
+            vbox3 = wx.BoxSizer(wx.VERTICAL)
         g = self.subdev.gain_range()
         myform['gain'] = form.slider_field(parent=self.panel, sizer=vbox2, label="RF Gain",
                                            weight=1,
@@ -505,6 +505,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
 	
 	        buttonbox.Add(self.scan_control, 0, wx.CENTER)
 	        vbox2.Add(buttonbox, 0, wx.CENTER)
+
         vbox2.Add((4,0), 0, 0)
 
         if self.setimode == False:
@@ -518,10 +519,21 @@ class app_flow_graph(stdgui.gui_flow_graph):
             callback=myform.check_input_and_call(_form_set_decln))
         vbox2.Add((4,0), 0, 0)
 
-        buttonbox = wx.BoxSizer(wx.HORIZONTAL)
-        vbox.Add(buttonbox, 0, wx.CENTER)
+        if self.setimode == False:
+            myform['offset'] = form.slider_field(parent=self.panel, sizer=vbox3,
+                label="Post-Detector Offset", weight=1, min=-500, max=500, 
+                callback=self.set_pd_offset)
+            vbox3.Add((2,0), 0, 0)
+            myform['dcgain'] = form.slider_field(parent=self.panel, sizer=vbox3,
+                label="Post-Detector Gain", weight=1, min=1, max=100, 
+                callback=self.set_pd_gain)
+            vbox3.Add((2,0), 0, 0)
         hbox.Add(vbox1, 0, 0)
-	hbox.Add(vbox2, wx.ALIGN_RIGHT, 0)
+        hbox.Add(vbox2, wx.ALIGN_RIGHT, 0)
+
+        if self.setimode == False:
+            hbox.Add(vbox3, wx.ALIGN_RIGHT, 0)
+
         vbox.Add(hbox, 0, wx.EXPAND)
 
         self._build_subpanel(vbox)
@@ -976,6 +988,16 @@ class app_flow_graph(stdgui.gui_flow_graph):
         else:
           self.scanning = True
           self.scan_control.SetLabel("Scan: On ")
+
+    def set_pd_offset(self,offs):
+         self.myform['offset'].set_value(offs)
+         self.calib_offset=offs
+         self.cal_offs.set_k(offs*4000)
+
+    def set_pd_gain(self,gain):
+         self.myform['dcgain'].set_value(gain)
+         self.cal_mult.set_k(gain*0.01)
+         self.calib_coeff = gain
 
 def main ():
     app = stdgui.stdapp(app_flow_graph, "RADIO ASTRONOMY SPECTRAL/CONTINUUM RECEIVER: $Revision$", nstatus=1)
