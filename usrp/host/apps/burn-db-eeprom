@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,10 +20,10 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from usrp_prims import *
+from usrpm.usrp_prims import *
 from optparse import OptionParser
 import sys
-from usrp_dbid import *
+from usrpm.usrp_dbid import *
 
 i2c_addr_map = { 'TX_A' : 0x54,    'RX_A' : 0x55,    'TX_B' : 0x56,    'RX_B' : 0x57 }
 

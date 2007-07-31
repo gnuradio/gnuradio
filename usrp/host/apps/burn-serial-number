@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from usrp_prims import *
+from usrpm.usrp_prims import *
 from optparse import OptionParser
 import sys
 import time
