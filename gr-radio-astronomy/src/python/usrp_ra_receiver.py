@@ -82,10 +82,28 @@ class app_flow_graph(stdgui.gui_flow_graph):
         parser.add_option("-S", "--setimode", action="store_true", default=False, help="Enable SETI processing of spectral data")
         parser.add_option("-K", "--setik", type="eng_float", default=1.5, help="K value for SETI analysis")
         parser.add_option("-T", "--setibandwidth", type="eng_float", default=12500, help="Instantaneous SETI observing bandwidth--must be divisor of 250Khz")
+        parser.add_option("-n", "--notches", action="store_true", default=False,
+            help="Notches appear after all other arguments")
         (options, args) = parser.parse_args()
-        if len(args) != 0:
+
+        self.notches = Numeric.zeros(64,Numeric.Float64)
+        if len(args) != 0 and options.notches == False:
             parser.print_help()
             sys.exit(1)
+
+        if len(args) == 0 and options.notches != False:
+            parser.print_help()
+            sys.exit()
+
+        self.use_notches = options.notches
+
+        # Get notch locations
+        j = 0
+        for i in args:
+            self.notches[j] = float(i)
+            j = j+1
+
+        self.notch_count = j
 
         self.show_debug_info = True
 
@@ -312,17 +330,6 @@ class app_flow_graph(stdgui.gui_flow_graph):
             # The detector
             self.detector = gr.complex_to_mag_squared()
 
-            # Split complex USRP stream into a pair of floats
-            #self.splitter = gr.complex_to_float (1);
-    
-#            # I squarer (detector)
-#            self.multI = gr.multiply_ff();
-#    
-#            # Q squarer (detector)
-#            self.multQ = gr.multiply_ff();
-#    
-#            # Adding squared I and Q to produce instantaneous signal power
-#            self.adder = gr.add_ff();
     
             # Signal probe
             self.probe = gr.probe_signal_f();
@@ -333,45 +340,57 @@ class app_flow_graph(stdgui.gui_flow_graph):
             self.cal_mult = gr.multiply_const_ff(self.calib_coeff/100.0);
             self.cal_offs = gr.add_const_ff(self.calib_offset*4000);
 
+            if self.use_notches == True:
+                NOTCH_TAPS = 256
+                tmptaps = Numeric.zeros(NOTCH_TAPS,Numeric.Complex64)
+                binwidth = self.bw / NOTCH_TAPS
+
+                for i in range(0,NOTCH_TAPS):
+                    tmptaps[i] = complex(1.0,0.0)
+
+                for i in self.notches:
+                    diff = i - self.observing
+                    if i == 0:
+                        break
+                    if (diff > 0):
+                        idx = diff / binwidth
+                        idx = idx + 1
+                        tmptaps[int(idx)] = complex(0.0, 0.0)
+                    if (diff < 0):
+                        idx = -diff / binwidth
+                        idx = (NOTCH_TAPS/2) - idx
+                        idx = int(idx+(NOTCH_TAPS/2))
+                        tmptaps[idx] = complex(0.0, 0.0)
+    
+                    self.notch_taps = FFT.inverse_fft(tmptaps)
+                    self.notch_filt = gr.fft_filter_ccc(1, self.notch_taps)
+
         #
         # Start connecting configured modules in the receive chain
         #
 
         # The scope--handle SETI mode
         if (self.setimode == False):
-            self.connect(self.u, self.scope)
+            if (self.use_notches == True):
+                self.connect(self.u, self.notch_filt, self.scope)
+            else:
+                self.connect(self.u, self.scope)
         else:
-            self.connect(self.u, self.fft_bandpass, self.scope)
+            if (self.use_notches == True):
+                self.connect(self.u, self.notch_filt, 
+                    self.fft_bandpass, self.scope)
+            else:
+                self.connect(self.u, self.fft_bandpass, self.scope)
 
         if self.setimode == False:
-#            #
-#            # The head of the continuum chain
-#            #
-#            self.connect(self.u, self.splitter)
-#    
-#            # Connect splitter outputs to multipliers
-#            # First do I^2
-#            self.connect((self.splitter, 0), (self.multI,0))
-#            self.connect((self.splitter, 0), (self.multI,1))
-#    
-#            # Then do Q^2
-#            self.connect((self.splitter, 1), (self.multQ,0))
-#            self.connect((self.splitter, 1), (self.multQ,1))
-#    
-#            # Then sum the squares
-#            self.connect(self.multI, (self.adder,0))
-#            self.connect(self.multQ, (self.adder,1))
-#    
-#            # Connect adder output to two-stages of FIR integrator
-#            #   followed by a single stage IIR integrator, and
-#            #   the calibrator
-#            self.connect(self.adder, self.integrator1, 
-#               self.integrator2, self.integrator3, self.cal_mult, 
-#               self.cal_offs, self.chart)
-
-            self.connect(self.u, self.detector, 
-                self.integrator1, self.integrator2,
-                self.integrator3, self.cal_mult, self.cal_offs, self.chart)
+            if (self.use_notches == True):
+                self.connect(self.notch_filt, self.detector, 
+                    self.integrator1, self.integrator2,
+                    self.integrator3, self.cal_mult, self.cal_offs, self.chart)
+            else:
+                self.connect(self.u, self.detector, 
+                    self.integrator1, self.integrator2,
+                    self.integrator3, self.cal_mult, self.cal_offs, self.chart)
     
             #  current instantaneous integrated detector value
             self.connect(self.cal_offs, self.probe)
