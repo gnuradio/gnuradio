@@ -341,29 +341,8 @@ class app_flow_graph(stdgui.gui_flow_graph):
             self.cal_offs = gr.add_const_ff(self.calib_offset*4000);
 
             if self.use_notches == True:
-                NOTCH_TAPS = 256
-                tmptaps = Numeric.zeros(NOTCH_TAPS,Numeric.Complex64)
-                binwidth = self.bw / NOTCH_TAPS
-
-                for i in range(0,NOTCH_TAPS):
-                    tmptaps[i] = complex(1.0,0.0)
-
-                for i in self.notches:
-                    diff = i - self.observing
-                    if i == 0:
-                        break
-                    if (diff > 0):
-                        idx = diff / binwidth
-                        idx = idx + 1
-                        tmptaps[int(idx)] = complex(0.0, 0.0)
-                    if (diff < 0):
-                        idx = -diff / binwidth
-                        idx = (NOTCH_TAPS/2) - idx
-                        idx = int(idx+(NOTCH_TAPS/2))
-                        tmptaps[idx] = complex(0.0, 0.0)
-    
-                    self.notch_taps = FFT.inverse_fft(tmptaps)
-                    self.notch_filt = gr.fft_filter_ccc(1, self.notch_taps)
+                self.compute_notch_taps(self.notches)
+                self.notch_filt = gr.fft_filter_ccc(1, self.notch_taps)
 
         #
         # Start connecting configured modules in the receive chain
@@ -647,6 +626,10 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
             self.myform['baseband'].set_value(r.baseband_freq)
             self.myform['ddc'].set_value(r.dxc_freq)
+
+            if self.use_notches == True:
+                self.compute_notch_taps(self.notches)
+                self.notch_filt.set_taps(self.notch_taps)
 
             return True
 
@@ -1025,6 +1008,35 @@ class app_flow_graph(stdgui.gui_flow_graph):
          self.myform['dcgain'].set_value(gain)
          self.cal_mult.set_k(gain*0.01)
          self.calib_coeff = gain
+
+    def compute_notch_taps(self,notchlist):
+         NOTCH_TAPS = 256
+         tmptaps = Numeric.zeros(NOTCH_TAPS,Numeric.Complex64)
+         binwidth = self.bw / NOTCH_TAPS
+ 
+         for i in range(0,NOTCH_TAPS):
+             tmptaps[i] = complex(1.0,0.0)
+ 
+         for i in notchlist:
+             diff = i - self.observing
+             if i == 0:
+                 break
+             if (diff > 0):
+                 idx = diff / binwidth
+                 idx = int(idx)
+                 if (idx < 0 or idx > (NOTCH_TAPS/2)):
+                     break
+                 tmptaps[idx] = complex(0.0, 0.0)
+
+             if (diff < 0):
+                 idx = -diff / binwidth
+                 idx = (NOTCH_TAPS/2) - idx
+                 idx = int(idx+(NOTCH_TAPS/2))
+                 if (idx < 0 or idx > (NOTCH_TAPS)):
+                     break
+                 tmptaps[idx] = complex(0.0, 0.0)
+
+         self.notch_taps = FFT.inverse_fft(tmptaps)
 
 def main ():
     app = stdgui.stdapp(app_flow_graph, "RADIO ASTRONOMY SPECTRAL/CONTINUUM RECEIVER: $Revision$", nstatus=1)
