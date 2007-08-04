@@ -36,14 +36,15 @@ class my_graph(gr.flow_graph):
     def __init__(self, callback, options):
         gr.flow_graph.__init__(self)
 
-        if options.channel_on:
+        if not options.channel_off:
             SNR = 10.0**(options.snr/10.0)
-            power_in_signal = 1.0
+            power_in_signal = abs(options.tx_amplitude)**2.0
             noise_power_in_channel = power_in_signal/SNR
             noise_voltage = math.sqrt(noise_power_in_channel/2.0)
             print "Noise voltage: ", noise_voltage
 
             frequency_offset = options.frequency_offset / options.fft_length
+            print "Frequency offset: ", frequency_offset
 
             if options.multipath_on:
                 taps = [1.0, .2, 0.0, .1, .08, -.4, .12, -.2, 0, 0, 0, .3]
@@ -70,7 +71,8 @@ class my_graph(gr.flow_graph):
 
         self.mux = gr.stream_mux(gr.sizeof_gr_complex, stream_size)
         self.throttle = gr.throttle(gr.sizeof_gr_complex, options.sample_rate)
-        self.channel = blks.channel_model(self, noise_voltage, frequency_offset, options.clockrate_ratio, taps)
+        self.channel = blks.channel_model(self, noise_voltage, frequency_offset,
+                                          options.clockrate_ratio, taps)
         self.rxpath = receive_path(self, callback, options)
                 
         self.connect(self.zeros, (self.mux,0))
@@ -116,7 +118,7 @@ def main():
                 
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
-    parser.add_option("-s", "--size", type="eng_float", default=1450,
+    parser.add_option("-s", "--size", type="eng_float", default=400,
                       help="set packet size [default=%default]")
     parser.add_option("-M", "--megabytes", type="eng_float", default=1.0,
                       help="set megabytes to transmit [default=%default]")
@@ -130,8 +132,8 @@ def main():
                       help="set clock rate ratio (sample rate difference) between two systems [default=%default]")
     parser.add_option("","--discontinuous", type="int", default=0,
                       help="enable discontinous transmission, burst of N packets [Default is continuous]")
-    parser.add_option("","--channel-on", action="store_true", default=True,
-                      help="Enables AWGN, freq offset")
+    parser.add_option("","--channel-off", action="store_true", default=False,
+                      help="Turns AWGN, freq offset channel off")
     parser.add_option("","--multipath-on", action="store_true", default=False,
                       help="enable multipath")
 

@@ -47,10 +47,10 @@ class receive_path(gr.hier_block):
                      blks.ofdm_demod(fg, options, callback=self._rx_callback)
 
         # Carrier Sensing Blocks
-        #alpha = 0.001
-        #thresh = 30   # in dB, will have to adjust
-        #self.probe = gr.probe_avg_mag_sqrd_c(thresh,alpha)
-        #fg.connect(self.chan_filt, self.probe)
+        alpha = 0.001
+        thresh = 30   # in dB, will have to adjust
+        self.probe = gr.probe_avg_mag_sqrd_c(thresh,alpha)
+        fg.connect(self.ofdm_rx.ofdm_recv.chan_filt, self.probe)
 
         # Display some information about the setup
         if self._verbose:

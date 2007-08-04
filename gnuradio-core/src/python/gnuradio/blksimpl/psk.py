@@ -53,6 +53,12 @@ constellation = {
     8 : make_constellation(8)            # 8PSK
     }
 
+gray_constellation = {
+    2 : make_gray_constellation(2),           # BPSK
+    4 : make_gray_constellation(4),           # QPSK
+    8 : make_gray_constellation(8)            # 8PSK
+    }
+
 # -----------------------
 # Do Gray code
 # -----------------------

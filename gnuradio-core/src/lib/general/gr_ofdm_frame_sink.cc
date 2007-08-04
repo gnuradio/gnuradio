@@ -74,32 +74,57 @@ gr_ofdm_frame_sink::enter_have_header()
 	    d_packetlen, d_packet_whitener_offset);
 }
 
-unsigned char gr_ofdm_frame_sink::bpsk_slicer(gr_complex x)
+
+unsigned char gr_ofdm_frame_sink::slicer(const gr_complex x)
 {
-  return (unsigned char)(x.real() > 0 ? 1 : 0);
+  unsigned int table_size = d_sym_value_out.size();
+  unsigned int min_index = 0;
+  float min_euclid_dist = norm(x - d_sym_position[0]);
+  float euclid_dist = 0;
+  
+  for (unsigned int j = 1; j < table_size; j++){
+    euclid_dist = norm(x - d_sym_position[j]);
+    if (euclid_dist < min_euclid_dist){
+      min_euclid_dist = euclid_dist;
+      min_index = j;
+    }
+  }
+  return d_sym_value_out[min_index];
 }
 
-unsigned char gr_ofdm_frame_sink::qpsk_slicer(gr_complex x)
-{
-  unsigned char i = (x.real() > 0 ? 1 : 0);
-  unsigned char q = (x.imag() > 0 ? 1 : 0);
-
-  return (q << 1) | i;
-}
-
-unsigned int gr_ofdm_frame_sink::bpsk_demapper(const gr_complex *in,
-					       unsigned char *out)
+unsigned int gr_ofdm_frame_sink::demapper(const gr_complex *in,
+					  unsigned char *out)
 {
   unsigned int i=0, bytes_produced=0;
 
   while(i < d_occupied_carriers) {
+    if(d_nresid > 0) {
+      d_partial_byte |= d_resid;
+      d_byte_offset += d_nresid;
+      d_nresid = 0;
+      d_resid = 0;
+    }
 
     while((d_byte_offset < 8) && (i < d_occupied_carriers)) {
-      //fprintf(stderr, "%f+j%f\n", in[i].real(), in[i].imag()); 
-      d_partial_byte |= bpsk_slicer(in[i++]) << (d_byte_offset++);
+      //fprintf(stderr, "%f+j%f  = %d\n", in[i].real(), in[i].imag(), slicer(in[i])); 
+      unsigned char bits = slicer(in[i++]);
+      if((8 - d_byte_offset) >= d_nbits) {
+	d_partial_byte |= bits << (d_byte_offset);
+	d_byte_offset += d_nbits;
+      }
+      else {
+	d_nresid = d_nbits-(8-d_byte_offset);
+	int mask = ((1<<(8-d_byte_offset))-1);
+	d_partial_byte |= (bits & mask) << d_byte_offset;
+	d_resid = bits >> (8-d_byte_offset);
+	d_byte_offset += (d_nbits - d_nresid);
+      }
+      //printf("demod symbol: %.4f + j%.4f   bits: %x   partial_byte: %x   byte_offset: %d   resid: %x   nresid: %d\n", 
+      //     in[i-1].real(), in[i-1].imag(), bits, d_partial_byte, d_byte_offset, d_resid, d_nresid);
     }
 
     if(d_byte_offset == 8) {
+      //printf("demod byte: %x \n\n", d_partial_byte);
       out[bytes_produced++] = d_partial_byte;
       d_byte_offset = 0;
       d_partial_byte = 0;
@@ -109,57 +134,31 @@ unsigned int gr_ofdm_frame_sink::bpsk_demapper(const gr_complex *in,
   return bytes_produced;
 }
 
-unsigned int gr_ofdm_frame_sink::qpsk_demapper(const gr_complex *in,
-					       unsigned char *out)
-{
-  unsigned int i=0, bytes_produced=0;
-
-  while(i < d_occupied_carriers) {
-    
-    while((d_byte_offset < 8) && (i < d_occupied_carriers)) {
-      //fprintf(stderr, "%f+j%f\n", in[i].real(), in[i].imag()); 
-      d_partial_byte |= qpsk_slicer(in[i++]) << (d_byte_offset);
-      d_byte_offset += 2;
-    }
-
-    if(d_byte_offset == 8) {
-      out[bytes_produced++] = d_partial_byte;
-      d_byte_offset = 0;
-      d_partial_byte = 0;
-    }
-  }
-
-  return bytes_produced;
-}
 
 gr_ofdm_frame_sink_sptr
-gr_make_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_carriers,
-			const std::string &mod)
+gr_make_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
+			const std::vector<unsigned char> &sym_value_out,
+			gr_msg_queue_sptr target_queue, unsigned int occupied_carriers)
 {
-  return gr_ofdm_frame_sink_sptr(new gr_ofdm_frame_sink(target_queue, occupied_carriers, mod));
+  return gr_ofdm_frame_sink_sptr(new gr_ofdm_frame_sink(sym_position, sym_value_out,
+							target_queue, occupied_carriers));
 }
 
 
-gr_ofdm_frame_sink::gr_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_carriers,
-				       const std::string &mod)
+gr_ofdm_frame_sink::gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
+				       const std::vector<unsigned char> &sym_value_out,
+				       gr_msg_queue_sptr target_queue, unsigned int occupied_carriers)
   : gr_sync_block ("ofdm_frame_sink",
 		   gr_make_io_signature2 (2, 2, sizeof(gr_complex)*occupied_carriers, sizeof(char)),
 		   gr_make_io_signature (0, 0, 0)),
     d_target_queue(target_queue), d_occupied_carriers(occupied_carriers), 
-    d_byte_offset(0), d_partial_byte(0)
+    d_byte_offset(0), d_partial_byte(0),
+    d_resid(0), d_nresid(0)
 {
-  d_bytes_out = new unsigned char[(int)ceil(d_occupied_carriers/4.0)];
+  d_bytes_out = new unsigned char[d_occupied_carriers];
 
-  if(mod == "qpsk") {
-    d_demapper = &gr_ofdm_frame_sink::qpsk_demapper;
-  }
-  else if(mod == "bpsk") {
-    d_demapper = &gr_ofdm_frame_sink::bpsk_demapper;
-  }
-  else {
-    throw std::invalid_argument("Modulation type must be BPSK or QPSK.");  
-  }
-
+  set_sym_value_out(sym_position, sym_value_out);
+  
   enter_search();
 }
 
@@ -167,6 +166,24 @@ gr_ofdm_frame_sink::~gr_ofdm_frame_sink ()
 {
   delete [] d_bytes_out;
 }
+
+bool
+gr_ofdm_frame_sink::set_sym_value_out(const std::vector<gr_complex> &sym_position, 
+				      const std::vector<unsigned char> &sym_value_out)
+{
+  if (sym_position.size() != sym_value_out.size())
+    return false;
+
+  if (sym_position.size()<1)
+    return false;
+
+  d_sym_position  = sym_position;
+  d_sym_value_out = sym_value_out;
+  d_nbits = (unsigned long)(log10(d_sym_value_out.size()) / log10(2));
+
+  return true;
+}
+
 
 int
 gr_ofdm_frame_sink::work (int noutput_items,
@@ -181,9 +198,8 @@ gr_ofdm_frame_sink::work (int noutput_items,
   if (VERBOSE)
     fprintf(stderr,">>> Entering state machine\n");
   
-  //bytes = bpsk_demapper(&in[0], d_bytes_out);
-  bytes = (this->*d_demapper)(&in[0], d_bytes_out);  
-
+  bytes = demapper(&in[0], d_bytes_out);
+  
   switch(d_state) {
       
   case STATE_SYNC_SEARCH:    // Look for flag indicating beginning of pkt

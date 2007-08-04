@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,17 +20,27 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,ofdm_mapper_bcv)
+GR_SWIG_BLOCK_MAGIC(gr,ofdm_mapper_bcv);
 
 gr_ofdm_mapper_bcv_sptr 
-gr_make_ofdm_mapper_bcv (unsigned int bits_per_symbol, 
-			 unsigned int vlen);
+gr_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation,
+			 unsigned int msgq_limit,
+			 unsigned int bits_per_symbol, 
+			 unsigned int fft_length);
 
-class gr_ofdm_mapper_bcv : public gr_sync_decimator
+
+class gr_ofdm_mapper_bcv : public gr_sync_block
 {
  protected:
-  gr_ofdm_mapper_bcv (unsigned int bits_per_symbol,
-		      unsigned int vlen);
-
+  gr_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation,
+		      unsigned int msgq_limit,
+		      unsigned int bits_per_symbol,
+		      unsigned int fft_length);
+  
  public:
+  gr_msg_queue_sptr msgq();
+  
+  int work(int noutput_items,
+	   gr_vector_const_void_star &input_items,
+	   gr_vector_void_star &output_items);
 };

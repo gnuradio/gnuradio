@@ -96,6 +96,7 @@
 #include <gr_ofdm_correlator.h>
 #include <gr_ofdm_cyclic_prefixer.h>
 #include <gr_ofdm_bpsk_demapper.h>
+#include <gr_ofdm_mapper_bcv.h>
 #include <gr_ofdm_bpsk_mapper.h>
 #include <gr_ofdm_qpsk_mapper.h>
 #include <gr_ofdm_qam_mapper.h>
@@ -203,6 +204,7 @@
 %include "gr_ofdm_correlator.i"
 %include "gr_ofdm_cyclic_prefixer.i"
 %include "gr_ofdm_bpsk_demapper.i"
+%include "gr_ofdm_mapper_bcv.i"
 %include "gr_ofdm_bpsk_mapper.i"
 %include "gr_ofdm_qpsk_mapper.i"
 %include "gr_ofdm_qam_mapper.i"

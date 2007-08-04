@@ -23,14 +23,16 @@
 GR_SWIG_BLOCK_MAGIC(gr,ofdm_frame_sink);
 
 gr_ofdm_frame_sink_sptr 
-gr_make_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
-			const std::string &mod);
+gr_make_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
+			const std::vector<unsigned char> &sym_value_out,
+			gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
 
 class gr_ofdm_frame_sink : public gr_sync_block
 {
  protected:
-  gr_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
-		     const std::string &mod);
+  gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
+		     const std::vector<unsigned char> &sym_value_out,
+		     gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
 
  public:
   ~gr_ofdm_frame_sink();

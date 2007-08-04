@@ -59,7 +59,7 @@ static float
 randombit()
 {
   int r = rand()&1;
-  return (float)(-1 + 2*r);
+  return (float)(1 - 2*r);
 }
 
 int
@@ -105,7 +105,7 @@ gr_ofdm_bpsk_mapper::work(int noutput_items,
   i = 0;
   while((d_msg_offset < d_msg->length()) && (i < d_occupied_carriers)) {
     unsigned char bit = (d_msg->msg()[d_msg_offset] >> (d_bit_offset)) & 0x01;
-    out[i + zeros_on_left] = gr_complex(-1+2*(bit));
+    out[i + zeros_on_left] = gr_complex(1-2*(bit));
     i++;
     d_bit_offset++;
     if(d_bit_offset == 8) {

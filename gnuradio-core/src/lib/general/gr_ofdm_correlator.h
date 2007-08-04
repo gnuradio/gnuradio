@@ -35,7 +35,7 @@ gr_make_ofdm_correlator (unsigned int occupied_carriers, unsigned int fft_length
 			 unsigned int cplen,
 			 const std::vector<gr_complex> &known_symbol1, 
 			 const std::vector<gr_complex> &known_symbol2,
-			 unsigned int max_fft_shift_len=4);
+			 unsigned int max_fft_shift_len=10);
 
 /*!
  * \brief take a vector of complex constellation points in from an FFT

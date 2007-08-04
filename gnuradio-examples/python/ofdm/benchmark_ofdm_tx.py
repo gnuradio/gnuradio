@@ -131,7 +131,7 @@ class usrp_graph(gr.flow_graph):
 
         expert.add_option("", "--tx-freq", type="eng_float", default=None,
                           help="set transmit frequency to FREQ [default=%default]", metavar="FREQ")
-        expert.add_option("-i", "--interp", type="intx", default=64,
+        expert.add_option("-i", "--interp", type="intx", default=256,
                           help="set fpga interpolation rate to INTERP [default=%default]")
     # Make a static method to call before instantiation
     add_options = staticmethod(add_options)
@@ -171,7 +171,7 @@ def main():
 
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
-    parser.add_option("-s", "--size", type="eng_float", default=1450,
+    parser.add_option("-s", "--size", type="eng_float", default=400,
                       help="set packet size [default=%default]")
     parser.add_option("-M", "--megabytes", type="eng_float", default=1.0,
                       help="set megabytes to transmit [default=%default]")

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,14 +23,16 @@
 #ifndef INCLUDED_GR_OFDM_MAPPER_BCV_H
 #define INCLUDED_GR_OFDM_MAPPER_BCV_H
 
-#include <gr_sync_decimator.h>
+#include <gr_sync_block.h>
+#include <gr_message.h>
+#include <gr_msg_queue.h>
 
 class gr_ofdm_mapper_bcv;
 typedef boost::shared_ptr<gr_ofdm_mapper_bcv> gr_ofdm_mapper_bcv_sptr;
 
 gr_ofdm_mapper_bcv_sptr 
-gr_make_ofdm_mapper_bcv (unsigned int bits_per_symbol, unsigned int vlen);
-
+gr_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned msgq_limit, 
+			 unsigned occupied_carriers, unsigned int fft_length);
 
 /*!
  * \brief take a stream of bytes in and map to a vector of complex
@@ -39,18 +41,44 @@ gr_make_ofdm_mapper_bcv (unsigned int bits_per_symbol, unsigned int vlen);
  *
  */
 
-class gr_ofdm_mapper_bcv : public gr_sync_decimator
+class gr_ofdm_mapper_bcv : public gr_sync_block
 {
   friend gr_ofdm_mapper_bcv_sptr
-  gr_make_ofdm_mapper_bcv (unsigned int bits_per_symbol, unsigned int vlen);
+  gr_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned msgq_limit, 
+			   unsigned occupied_carriers, unsigned int fft_length);
+ protected:
+  gr_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned msgq_limit, 
+		      unsigned occupied_carriers, unsigned int fft_length);
 
-protected:
-  gr_ofdm_mapper_bcv (unsigned int bits_per_symbol, unsigned int vlen);
+ private:
+  std::vector<gr_complex> d_constellation;
+  gr_msg_queue_sptr	d_msgq;
+  gr_message_sptr	d_msg;
+  unsigned		d_msg_offset;
+  bool			d_eof;
+  
+  unsigned int 		d_occupied_carriers;
+  unsigned int 		d_fft_length;
+  unsigned int 		d_bit_offset;
+  int			d_pending_flag;
 
-public:
+  unsigned long  d_nbits;
+  unsigned char  d_msgbytes;
+  
+  unsigned char d_resid;
+  unsigned int d_nresid;
+
+  int randsym();
+
+ public:
   ~gr_ofdm_mapper_bcv(void);
+
+  gr_msg_queue_sptr	msgq() const { return d_msgq; }
+
+  int work(int noutput_items,
+	   gr_vector_const_void_star &input_items,
+	   gr_vector_void_star &output_items);
+
 };
-
-
 
 #endif

@@ -60,7 +60,7 @@ randombit()
 {
   int r1 = rand()&1;
   int r2 = rand()&1;
-  return gr_complex((0.707)*(-1 + 2*r1),(0.707)*(-1 + 2*r2));
+  return gr_complex((0.707)*(1 - 2*r1),(0.707)*(1 - 2*r2));
 }
 
 int
@@ -111,7 +111,7 @@ gr_ofdm_qpsk_mapper::work(int noutput_items,
     unsigned char bit1 = (d_msg->msg()[d_msg_offset] >> (d_bit_offset)) & 0x01;
     d_bit_offset++;
     
-    out[i + zeros_on_left] = gr_complex((0.707)*(-1+2*(bit0)), (0.707)*(-1+2*(bit1)) );
+    out[i + zeros_on_left] = gr_complex((0.707)*(1-2*(bit0)), (0.707)*(1-2*(bit1)) );
     i++;
     if(d_bit_offset == 8) {
       d_bit_offset = 0;

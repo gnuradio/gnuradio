@@ -30,8 +30,9 @@ class gr_ofdm_frame_sink;
 typedef boost::shared_ptr<gr_ofdm_frame_sink> gr_ofdm_frame_sink_sptr;
 
 gr_ofdm_frame_sink_sptr 
-gr_make_ofdm_frame_sink (gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
-			 const std::string &mod);
+gr_make_ofdm_frame_sink (const std::vector<gr_complex> &sym_position, 
+			 const std::vector<unsigned char> &sym_value_out,
+			 gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
 
 /*!
  * \brief Takes an OFDM symbol in, demaps it into bits of 0's and 1's, packs
@@ -44,8 +45,9 @@ gr_make_ofdm_frame_sink (gr_msg_queue_sptr target_queue, unsigned int occupied_t
 class gr_ofdm_frame_sink : public gr_sync_block
 {
   friend gr_ofdm_frame_sink_sptr 
-  gr_make_ofdm_frame_sink (gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
-			   const std::string &mod);
+  gr_make_ofdm_frame_sink (const std::vector<gr_complex> &sym_position, 
+			   const std::vector<unsigned char> &sym_value_out,
+			   gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
 
  private:
   enum state_t {STATE_SYNC_SEARCH, STATE_HAVE_SYNC, STATE_HAVE_HEADER};
@@ -69,9 +71,17 @@ class gr_ofdm_frame_sink : public gr_sync_block
   int                d_packet_whitener_offset;  // offset into whitener string to use
   int		     d_packetlen_cnt;		// how many so far
 
+  std::vector<gr_complex>    d_sym_position;
+  std::vector<unsigned char> d_sym_value_out;
+  unsigned int d_nbits;
+
+  unsigned char d_resid;
+  unsigned int d_nresid;
+
  protected:
-  gr_ofdm_frame_sink(gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
-		     const std::string &mod);
+  gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
+		     const std::vector<unsigned char> &sym_value_out,
+		     gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
 
   void enter_search();
   void enter_have_sync();
@@ -82,17 +92,13 @@ class gr_ofdm_frame_sink : public gr_sync_block
     // confirm that two copies of header info are identical
     return ((d_header >> 16) ^ (d_header & 0xffff)) == 0;
   }
+  
+  unsigned char slicer(const gr_complex x);
+  unsigned int demapper(const gr_complex *in,
+			unsigned char *out);
 
-  unsigned char bpsk_slicer(gr_complex x);
-  unsigned int bpsk_demapper(const gr_complex *in,
-			     unsigned char *out);  
-
-  unsigned char qpsk_slicer(gr_complex x);
-  unsigned int qpsk_demapper(const gr_complex *in,
-			     unsigned char *out);
-
-  // pointer to mod-specific demapper
-  unsigned int (gr_ofdm_frame_sink::*d_demapper)(const gr_complex *in, unsigned char *out);
+  bool set_sym_value_out(const std::vector<gr_complex> &sym_position, 
+			 const std::vector<unsigned char> &sym_value_out);
 
  public:
   ~gr_ofdm_frame_sink();

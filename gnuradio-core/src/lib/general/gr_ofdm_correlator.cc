@@ -99,12 +99,13 @@ gr_ofdm_correlator::coarse_freq_comp(int freq_delta, int symbol_count)
 {
   //  return gr_complex(cos(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count),
   //	    sin(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count));
-  //return gr_expj(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count);
 
-  assert(d_freq_shift_len + freq_delta >= 0);
-  assert(symbol_count <= MAX_NUM_SYMBOLS);
+  return gr_expj(-M_TWOPI*freq_delta*d_cplen/d_fft_length*symbol_count);
 
-  return d_phase_lut[MAX_NUM_SYMBOLS * (d_freq_shift_len + freq_delta) + symbol_count];
+  //assert(d_freq_shift_len + freq_delta >= 0);
+  //assert(symbol_count <= MAX_NUM_SYMBOLS);
+
+  //return d_phase_lut[MAX_NUM_SYMBOLS * (d_freq_shift_len + freq_delta) + symbol_count];
 }
 
 bool
@@ -118,7 +119,7 @@ gr_ofdm_correlator::correlate(const gr_complex *previous, const gr_complex *curr
   gr_complex h_sqrd = gr_complex(0.0,0.0);
   float power = 0.0F;
 
-  while(!found && ((unsigned)abs(search_delta) < d_freq_shift_len)) {
+  while(!found && ((unsigned)abs(search_delta) <= d_freq_shift_len)) {
     h_sqrd = gr_complex(0.0,0.0);
     power = 0.0F;
 
@@ -126,17 +127,18 @@ gr_ofdm_correlator::correlate(const gr_complex *previous, const gr_complex *curr
       h_sqrd = h_sqrd + previous[i+zeros_on_left+search_delta] * 
 	conj(coarse_freq_comp(search_delta,1)*current[i+zeros_on_left+search_delta]) * 
 	d_diff_corr_factor[i];
+      
       power = power + norm(current[i+zeros_on_left+search_delta]); // No need to do coarse freq here
     }
     
 #if VERBOSE
-      printf("bin %d\th_sqrd = ( %f, %f )\t power = %f\t real(h)/p = %f\t angle = %f\n", 
-	     search_delta, h_sqrd.real(), h_sqrd.imag(), power, h_sqrd.real()/power, arg(h_sqrd)); 
-#endif
-
-      // FIXME: Look at h_sqrd.read() > power
-    if((h_sqrd.real() > 0.82*power)  && (h_sqrd.real() < 1.1 * power)) {
+    printf("bin %d\th_sqrd = ( %f, %f )\t power = %f\t real(h)/p = %f\t angle = %f\n", 
+	   search_delta, h_sqrd.real(), h_sqrd.imag(), power, h_sqrd.real()/power, arg(h_sqrd)); 
+#endif      
+    // FIXME: Look at h_sqrd.read() > power
+    if((h_sqrd.real() > 0.82*power) && (h_sqrd.real() < 1.1 * power)) {
       found = true;
+      //printf("search delta: %d\n", search_delta);
       d_coarse_freq = search_delta;
       d_phase_count = 1;
       //d_snr_est = 10*log10(power/(power-h_sqrd.real()));
@@ -220,6 +222,10 @@ gr_ofdm_correlator::general_work(int noutput_items,
   
 
   d_phase_count++;
+  if(d_phase_count == MAX_NUM_SYMBOLS) {
+    d_phase_count = 1;
+  }
+
   consume_each(1);
   return 1;
 }

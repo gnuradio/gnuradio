@@ -128,7 +128,7 @@ class usrp_graph(gr.flow_graph):
 
         expert.add_option("", "--rx-freq", type="eng_float", default=None,
                           help="set Rx frequency to FREQ [default=%default]", metavar="FREQ")
-        expert.add_option("-d", "--decim", type="intx", default=32,
+        expert.add_option("-d", "--decim", type="intx", default=128,
                           help="set fpga decimation rate to DECIM [default=%default]")
         expert.add_option("", "--snr", type="eng_float", default=30,
                           help="set the SNR of the channel in dB [default=%default]")

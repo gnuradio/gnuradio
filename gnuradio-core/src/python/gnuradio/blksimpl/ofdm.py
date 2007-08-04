@@ -24,6 +24,7 @@ import math
 from numpy import fft
 from gnuradio import gr, ofdm_packet_utils
 import gnuradio.gr.gr_threading as _threading
+import psk, qam
 
 from gnuradio.blksimpl.ofdm_receiver import ofdm_receiver
 
@@ -81,15 +82,21 @@ class ofdm_mod(gr.hier_block):
             padded_preambles.append(padded)
             
         symbol_length = options.fft_length + options.cp_length
-
-        # The next step will all us to pass a constellation into a generic mapper function instead
-        # of using these hard-coded versions
-        if self._modulation == "bpsk":
-            self._pkt_input = gr.ofdm_bpsk_mapper(msgq_limit, options.occupied_tones, options.fft_length)
-        elif self._modulation == "qpsk":
-            self._pkt_input = gr.ofdm_qpsk_mapper(msgq_limit, options.occupied_tones, options.fft_length)
-        else:
-            print "Modulation type not supported (must be \"bpsk\" or \"qpsk\""
+        
+        mods = {"bpsk": 2, "qpsk": 4, "8psk": 8, "qam8": 8, "qam16": 16, "qam64": 64, "qam256": 256}
+        arity = mods[self._modulation]
+        
+        rot = 1
+        if self._modulation == "qpsk":
+            rot = (0.707+0.707j)
+            
+        if(self._modulation.find("psk") >= 0):
+            rotated_const = map(lambda pt: pt * rot, psk.gray_constellation[arity])
+        elif(self._modulation.find("qam") >= 0):
+            rotated_const = map(lambda pt: pt * rot, qam.constellation[arity])
+        #print rotated_const
+        self._pkt_input = gr.ofdm_mapper_bcv(rotated_const, msgq_limit,
+                                                 options.occupied_tones, options.fft_length)
         
         self.preambles = gr.ofdm_insert_preamble(self._fft_length, padded_preambles)
         self.ifft = gr.fft_vcc(self._fft_length, False, win, True)
@@ -104,7 +111,8 @@ class ofdm_mod(gr.hier_block):
             self._print_verbage()
 
         if options.log:
-            fg.connect(self._pkt_input, gr.file_sink(gr.sizeof_gr_complex*options.fft_length, "ofdm_mapper_c.dat"))
+            fg.connect(self._pkt_input, gr.file_sink(gr.sizeof_gr_complex*options.fft_length,
+                                                     "ofdm_mapper_c.dat"))
 
         gr.hier_block.__init__(self, fg, None, self.scale)
 
@@ -119,8 +127,8 @@ class ofdm_mod(gr.hier_block):
             msg = gr.message(1) # tell self._pkt_input we're not sending any more packets
         else:
             # print "original_payload =", string_to_hex_list(payload)
-            pkt = ofdm_packet_utils.make_packet(payload, 1, 1, self._pad_for_usrp)
-
+            pkt = ofdm_packet_utils.make_packet(payload, 1, 1, self._pad_for_usrp, whitening=True)
+            
             #print "pkt =", string_to_hex_list(pkt)
             msg = gr.message_from_string(pkt)
         self._pkt_input.msgq().insert_tail(msg)
@@ -208,9 +216,22 @@ class ofdm_demod(gr.hier_block):
         self.ofdm_recv = ofdm_receiver(fg, self._fft_length, self._cp_length,
                                        self._occupied_tones, self._snr, preambles,
                                        options.log)
-        self.ofdm_demod = gr.ofdm_frame_sink(self._rcvd_pktq,
-                                             self._occupied_tones,
-                                             self._modulation)
+
+        mods = {"bpsk": 2, "qpsk": 4, "8psk": 8, "qam8": 8, "qam16": 16, "qam64": 64, "qam256": 256}
+        arity = mods[self._modulation]
+        
+        rot = 1
+        if self._modulation == "qpsk":
+            rot = (0.707+0.707j)
+
+        if(self._modulation.find("psk") >= 0):
+            rotated_const = map(lambda pt: pt * rot, psk.gray_constellation[arity])
+        elif(self._modulation.find("qam") >= 0):
+            rotated_const = map(lambda pt: pt * rot, qam.constellation[arity])
+        #print rotated_const
+        self.ofdm_demod = gr.ofdm_frame_sink(rotated_const, range(arity),
+                                             self._rcvd_pktq,
+                                             self._occupied_tones)
         
         fg.connect((self.ofdm_recv, 0), (self.ofdm_demod, 0))
         fg.connect((self.ofdm_recv, 1), (self.ofdm_demod, 1))
