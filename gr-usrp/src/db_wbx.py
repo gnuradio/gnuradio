@@ -34,7 +34,6 @@ debug_using_gui = False                  # Must be set to True or False
 #    import flexrf_debug_gui
 
 # d'board i/o pin defs
-# Tx and Rx have shared defs, but different i/o regs
 
 # TX IO Pins
 TX_POWER = (1 << 0)         # TX Side Power
@@ -59,6 +58,17 @@ SPI_ENABLE_TX_B = usrp1.SPI_ENABLE_TX_B
 SPI_ENABLE_RX_A = usrp1.SPI_ENABLE_RX_A
 SPI_ENABLE_RX_B = usrp1.SPI_ENABLE_RX_B
 
+
+"""
+A few comments about the WBX boards:
+  They are half-duplex.  I.e., transmit and receive are mutually exclusive.
+  There is a single LO for both the Tx and Rx sides.
+  The the shared control signals are hung off of the Rx side.
+  The shared io controls are duplexed onto the Rx side pins.
+  The wbx_high d'board always needs to be in 'auto_tr_mode'
+"""
+
+
 class wbx_base(db_base.db_base):
     """
     Abstract base class for all wbx boards.
@@ -77,8 +87,9 @@ class wbx_base(db_base.db_base):
         self.first = True
         self.spi_format = usrp1.SPI_FMT_MSB | usrp1.SPI_FMT_HDR_0
 
-        self._u._write_oe(self._which, 0, 0xffff)   # turn off all outputs
-        self._enable_refclk(False)                  # disable refclk
+        # FIXME figure our right answer here...
+        #self._u._tx_write_oe(0, 0xffff)         # turn off all outputs
+        #self._u._rx_write_oe(0, 0xffff)         # turn off all outputs
 
         self.set_auto_tr(False)
         
@@ -91,9 +102,8 @@ class wbx_base(db_base.db_base):
 
 
     def __del__(self):
-        self._u.write_io(self._which, self.power_off, POWER_UP)   # turn off power to board
-        self._u._write_oe(self._which, 0, 0xffff)   # turn off all outputs
-        self._enable_refclk(False)                       # turn off refclk
+        #self._u.write_io(self._which, self.power_off, POWER_UP)   # turn off power to board
+        #self._u._write_oe(self._which, 0, 0xffff)   # turn off all outputs
         self.set_auto_tr(False)
 
     def _lock_detect(self):
@@ -101,7 +111,7 @@ class wbx_base(db_base.db_base):
         @returns: the value of the VCO/PLL lock detect bit.
         @rtype: 0 or 1
         """
-        if self._u.read_io(self._which) & PLL_LOCK_DETECT:
+        if self._u.rx_read_io(self._which) & PLL_LOCK_DETECT:
             return True
         else:      # Give it a second chance
             if self._u.read_io(self._which) & PLL_LOCK_DETECT:
@@ -109,6 +119,35 @@ class wbx_base(db_base.db_base):
             else:
                 return False
         
+    # Both sides need access to the Rx pins.
+    # Write them directly, bypassing the convenience routines.
+    # (Sort of breaks modularity, but will work...)
+
+    def _tx_write_oe(self, value, mask):
+        return self._u._write_fpga_reg((FR_OE_0, FR_OE_2)[self._which],
+                                       ((mask & 0xffff) << 16) | (value & 0xffff))
+
+    def _rx_write_oe(self, value, mask):
+        return self._u._write_fpga_reg((FR_OE_1, FR_OE_3)[self._which],
+                                       ((mask & 0xffff) << 16) | (value & 0xffff))
+
+    def _tx_write_io(self, value, mask):
+        return self._u._write_fpga_reg((FR_IO_0, FR_IO_2)[self._which],
+                                       ((mask & 0xffff) << 16) | (value & 0xffff))
+
+    def _rx_write_io(self, value, mask):
+        return self._u._write_fpga_reg((FR_IO_1, FR_IO_3)[self._which],
+                                       ((mask & 0xffff) << 16) | (value & 0xffff))
+
+    def _rx_read_io(self):
+        t = self._u._read_fpga_reg((FR_RB_IO_RX_A_IO_TX_A, FR_RB_IO_RX_B_IO_TX_B)[self._which])
+        return (t >> 16) & 0xffff
+
+    def _tx_read_io(self):
+        t = self._u._read_fpga_reg((FR_RB_IO_RX_A_IO_TX_A, FR_RB_IO_RX_B_IO_TX_B)[self._which])
+        return t & 0xffff
+
+
     def _compute_regs(self, freq):
         """
         Determine values of registers, along with actual freq.
@@ -130,6 +169,8 @@ class wbx_base(db_base.db_base):
         Return value to stick in REFCLK_DIVISOR register
         """
         return 1
+    
+    # ----------------------------------------------------------------
     
     def set_freq(self, freq):
         """
