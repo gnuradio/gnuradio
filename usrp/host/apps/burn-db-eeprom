@@ -63,6 +63,7 @@ daughterboards = {
     'rfx2400_mimo_b'  : ((FLEX_2400_TX_MIMO_B, 0x0000),    (FLEX_2400_RX_MIMO_B, 0x0000)),
     'lftx'            : ((LF_TX, 0x0000),           None),
     'lfrx'            : (None,                      (LF_RX, 0x0000)),
+    'wbx_lo'          : ((WBX_LO_TX, 0x0000),       (WBX_LO_RX, 0x0000)),
     'experimental_tx' : ((EXPERIMENTAL_TX, 0x0000), None),
     'experimental_rx' : (None,                      (EXPERIMENTAL_RX, 0x0000)),
     }

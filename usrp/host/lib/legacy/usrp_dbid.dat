@@ -70,5 +70,8 @@
 
 "TV Rx Rev 3"		0x0040
 
+"WBX LO TX"		0x0050
+"WBX LO RX"		0x0051
+
 "Experimental Tx"	0xfffe
 "Experimental Rx"	0xffff
