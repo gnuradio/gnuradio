@@ -98,7 +98,7 @@ class flexrf_base(db_base.db_base):
         Adds 10ms delay between writing control and N if this is first call.
         This is the required power-up sequence.
         
-        @param $: 24-bit R counter latch
+        @param R: 24-bit R counter latch
         @type R: int
         @param control: 24-bit control latch
         @type control: int
@@ -345,6 +345,7 @@ class flexrf_base_rx(flexrf_base):
         @returns True/False
         """
         maxgain = self.gain_range()[1] - self._u.pga_max()
+        mingain = self.gain_range()[0]
         if gain > maxgain:
             pga_gain = gain-maxgain
             assert pga_gain <= self._u.pga_max()
@@ -355,7 +356,7 @@ class flexrf_base_rx(flexrf_base):
         V_maxgain = .2
         V_mingain = 1.2
         V_fullscale = 3.3
-        dac_value = (agc_gain*(V_maxgain-V_mingain)/maxgain + V_mingain)*4096/V_fullscale
+        dac_value = (agc_gain*(V_maxgain-V_mingain)/(maxgain-mingain) + V_mingain)*4096/V_fullscale
         assert dac_value>=0 and dac_value<4096
         return self._u.write_aux_dac(self._which, 0, int(dac_value)) and \
                self._set_pga(int(pga_gain))
