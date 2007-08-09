@@ -187,7 +187,7 @@ class wbx_base_tx(wbx_base):
         # power up the transmit side, but set antenna to receive
         self._u._write_oe(self._which,(TX_POWER|RX_TXN), 0xffff)
         self._u.write_io(self._which, (TX_POWER|RX_TXN), (TX_POWER|RX_TXN))
-        self.lo_offset = 0e6
+        self._lo_offset = 0e6
 
         #  Gain is not set by the PGA, but the PGA must be set at max gain in the TX
         return self._set_pga(self._u.pga_max())
@@ -223,15 +223,15 @@ class wbx_base_tx(wbx_base):
 	
 	@param offset: offset in Hz
 	"""
-	self.lo_offset = offset
+	self._lo_offset = offset
 
-    def get_lo_offset(self):
+    def lo_offset(self):
 	"""
 	Get amount by which LO is offset from requested tuning frequency.
 	
 	@returns Offset in Hz
 	"""
-	return self.lo_offset
+	return self._lo_offset
 	
 class wbx_base_rx(wbx_base):
     def __init__(self, usrp, which):
@@ -250,7 +250,7 @@ class wbx_base_rx(wbx_base):
 
         self.bypass_adc_buffers(True)
 
-        self.lo_offset = -4e6
+        self._lo_offset = -4e6
 
     def __del__(self):
         # Power down
@@ -309,15 +309,15 @@ class wbx_base_rx(wbx_base):
 	
 	@param offset: offset in Hz
 	"""
-	self.lo_offset = offset
+	self._lo_offset = offset
 
-    def get_lo_offset(self):
+    def lo_offset(self):
 	"""
 	Get amount by which LO is offset from requested tuning frequency.
 	
 	@returns Offset in Hz
 	"""
-	return self.lo_offset
+	return self._lo_offset
 	
 
 # ----------------------------------------------------------------
@@ -533,7 +533,7 @@ db_instantiator.add(usrp_dbid.WBX_LO_TX, lambda usrp, which : (db_wbx_lo_tx(usrp
 db_instantiator.add(usrp_dbid.WBX_LO_RX, lambda usrp, which : (db_wbx_lo_rx(usrp, which),))
 
 
-#        freq += self.lo_offset
+#        freq += self._lo_offset
 #        
 #        R, N, control, actual_freq = self._compute_regs(freq)
 #        if R==0:
