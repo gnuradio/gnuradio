@@ -24,7 +24,7 @@ from gnuradio import gr, gru, window
 from gnuradio.wxgui import stdgui
 import wx
 import gnuradio.wxgui.plot as plot
-import Numeric
+import numpy
 import threading
 import math    
 import random
@@ -200,7 +200,7 @@ class input_watcher (threading.Thread):
                 start = itemsize * (nitems - 1)
                 s = s[start:start+itemsize]
 
-            complex_data = Numeric.fromstring (s, Numeric.Float32)
+            complex_data = numpy.fromstring (s, numpy.float32)
             de = DataEvent (complex_data)
             wx.PostEvent (self.event_receiver, de)
             del de
@@ -252,7 +252,7 @@ class fft_window (plot.PlotCanvas):
             if self.peak_vals is None:
                 self.peak_vals = dB
             else:
-                self.peak_vals = Numeric.maximum(dB, self.peak_vals)
+                self.peak_vals = numpy.maximum(dB, self.peak_vals)
                 dB = self.peak_vals
 
         x = max(abs(self.ra_fftsink.sample_rate), abs(self.ra_fftsink.baseband_freq))
@@ -270,20 +270,20 @@ class fft_window (plot.PlotCanvas):
             units = "Hz"
 
         if self.ra_fftsink.input_is_real:     # only plot 1/2 the points
-            x_vals = ((Numeric.arrayrange (L/2)
+            x_vals = ((numpy.arange (L/2)
                        * (self.ra_fftsink.sample_rate * sf / L))
                       + self.ra_fftsink.baseband_freq * sf)
-            points = Numeric.zeros((len(x_vals), 2), Numeric.Float64)
+            points = numpy.zeros((len(x_vals), 2), numpy.float64)
             points[:,0] = x_vals
             points[:,1] = dB[0:L/2]
         else:
             # the "negative freqs" are in the second half of the array
-            x_vals = ((Numeric.arrayrange (-L/2, L/2)
+            x_vals = ((numpy.arange(-L/2, L/2)
                        * (self.ra_fftsink.sample_rate * sf / L))
                       + self.ra_fftsink.baseband_freq * sf)
-            points = Numeric.zeros((len(x_vals), 2), Numeric.Float64)
+            points = numpy.zeros((len(x_vals), 2), numpy.float64)
             points[:,0] = x_vals
-            points[:,1] = Numeric.concatenate ((dB[L/2:], dB[0:L/2]))
+            points[:,1] = numpy.concatenate ((dB[L/2:], dB[0:L/2]))
 
         lines = plot.PolyLine (points, colour='BLUE')
         graphics = plot.PlotGraphics ([lines],
