@@ -491,27 +491,37 @@ class _lo_common(_ADF410X_common):
         self.CPGAIN = 0   # bit 21
         self.freq_mult = 1
 
+	self.div = 1
+	self.aux_div = 2
+
     def freq_range(self):           # FIXME
         return (50e6, 1000e6, 16e6)
 
     def set_divider(self, main_or_aux, divisor):
+	print "set %s to %d" % (main_or_aux, divisor)
         if main_or_aux not in (0, 'main', 1, 'aux'):
             raise ValueError, "main_or_aux must be 'main' or 'aux'"
         if main_or_aux in (0, 'main'):
-            if value not in (1,2,4,8):
+            if divisor not in (1,2,4,8):
                 raise ValueError, "Main Divider Must be 1, 2, 4, or 8"
             for (div,val) in ((1,0),(2,1),(4,2),(8,3)):
                 if(div == divisor):
                     self.main_div = val
         else:
-            if value not in (2,4,8,18):
+            if divisor not in (2,4,8,16):
                 raise ValueError, "Aux Divider Must be 2, 4, 8 or 16"
             for (div,val) in ((2,0),(4,1),(8,2),(16,3)):
                 if(div == divisor):
                     self.aux_div = val
         
-        self._u._rx_write_io(self._which, ((self.main_div<<SELA0) | (self.aux_div<<SELB0)),
+	self._rx_write_io(((self.main_div*SELA0) | (self.aux_div*SELB0)),
                              (SELA0|SELA1|SELB0|SELB1))   # only works on RX
+
+	print "Main %d aux %d" % (self.main_div, self.aux_div)
+
+    def _rx_write_io(self, value, mask):
+        return self._u._write_fpga_reg((FR_IO_1, FR_IO_3)[self._which],
+                                       ((mask & 0xffff) << 16) | (value & 0xffff))
 
     def set_freq(self, freq):
         #freq += self._lo_offset
@@ -520,12 +530,12 @@ class _lo_common(_ADF410X_common):
             raise ValueError, "Requested frequency out of range"
         div = 1
         lo_freq = freq * 2
-        while freq < 1e9 and div < 8:
+        while lo_freq < 1e9 and div < 8:
             div = div * 2
             lo_freq = lo_freq * 2
         print "For RF freq of %f, we set DIV=%d and LO Freq=%f" % (freq, div, lo_freq)
         self.set_divider('main', div)
-        self.set_divider('aux', 2)
+        self.set_divider('aux', 16)
 
         R, N, control, actual_freq = self._compute_regs(freq)
         if R==0:
@@ -537,8 +547,6 @@ class _lo_common(_ADF410X_common):
 #------------------------------------------------------------    
 class db_wbx_lo_tx(_lo_common, wbx_base_tx):
     def __init__(self, usrp, which):
-        self.power_on = ~POWER_UP
-        self.power_off = ~POWER_UP    # powering it off kills the serial bus
         wbx_base_tx.__init__(self, usrp, which)
         _lo_common.__init__(self)
         
@@ -575,8 +583,6 @@ class db_wbx_lo_tx(_lo_common, wbx_base_tx):
 
 class db_wbx_lo_rx(_lo_common, wbx_base_rx):
     def __init__(self, usrp, which):
-        self.power_on = ~POWER_UP
-        self.power_off = ~POWER_UP   # Powering it off kills the serial bus
         wbx_base_rx.__init__(self, usrp, which)
         _lo_common.__init__(self)
 
