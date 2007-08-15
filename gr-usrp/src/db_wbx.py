@@ -510,9 +510,30 @@ class _lo_common(_ADF410X_common):
                 if(div == divisor):
                     self.aux_div = val
         
-        self._u.write_io(self._which, ((self.main_div<<SELA0) | (self.aux_div<<SELB0)),
-                         (SELA0|SELA1|SELB0|SELB1))   # only works on RX
+        self._u._rx_write_io(self._which, ((self.main_div<<SELA0) | (self.aux_div<<SELB0)),
+                             (SELA0|SELA1|SELB0|SELB1))   # only works on RX
 
+    def set_freq(self, freq):
+        #freq += self._lo_offset
+
+        if(freq < 20e6 or freq > 1200e6):
+            raise ValueError, "Requested frequency out of range"
+        div = 1
+        lo_freq = freq * 2
+        while freq < 1e9 and div < 8:
+            div = div * 2
+            lo_freq = lo_freq * 2
+        print "For RF freq of %f, we set DIV=%d and LO Freq=%f" % (freq, div, lo_freq)
+        self.set_divider('main', div)
+        self.set_divider('aux', 2)
+
+        R, N, control, actual_freq = self._compute_regs(freq)
+        if R==0:
+            return(False,0)
+        self._write_all(R, N, control)
+        return (self._lock_detect(), actual_freq)
+
+        
 #------------------------------------------------------------    
 class db_wbx_lo_tx(_lo_common, wbx_base_tx):
     def __init__(self, usrp, which):
@@ -573,12 +594,4 @@ class db_wbx_lo_rx(_lo_common, wbx_base_rx):
 db_instantiator.add(usrp_dbid.WBX_LO_TX, lambda usrp, which : (db_wbx_lo_tx(usrp, which),))
 db_instantiator.add(usrp_dbid.WBX_LO_RX, lambda usrp, which : (db_wbx_lo_rx(usrp, which),))
 
-
-#        freq += self._lo_offset
-#        
-#        R, N, control, actual_freq = self._compute_regs(freq)
-#        if R==0:
-#            return(False,0)
-#        self._write_all(R, N, control)
-#        return (self._lock_detect(), actual_freq)
 
