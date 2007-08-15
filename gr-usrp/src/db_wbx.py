@@ -87,9 +87,14 @@ class wbx_base(db_base.db_base):
         self.first = True
         self.spi_format = usrp1.SPI_FMT_MSB | usrp1.SPI_FMT_HDR_0
 
-        # FIXME figure our right answer here...
-        #self._u._tx_write_oe(0, 0xffff)         # turn off all outputs
-        #self._u._rx_write_oe(0, 0xffff)         # turn off all outputs
+        # FIXME -- the write reg functions don't work with 0xffff for masks
+        self._rx_write_oe(int(PLL_ENABLE|MReset|SELA0|SELA1|SELB0|SELB1|RX2_RX1N|RXENABLE), 0x7fff)
+        self._rx_write_io((PLL_ENABLE|MReset|0|RXENABLE), (PLL_ENABLE|MReset|RX2_RX1N|RXENABLE))
+
+        self._tx_write_oe((TX_POWER|RX_TXN), 0x7fff)
+        self._tx_write_io((0|RX_TXN), (TX_POWER|RX_TXN))  # TX off, TR switch set to RX
+
+        self.spi_enable = (SPI_ENABLE_RX_A, SPI_ENABLE_RX_B)[which]
 
         self.set_auto_tr(False)
         
@@ -111,10 +116,10 @@ class wbx_base(db_base.db_base):
         @returns: the value of the VCO/PLL lock detect bit.
         @rtype: 0 or 1
         """
-        if self._u.rx_read_io(self._which) & PLL_LOCK_DETECT:
+        if self._rx_read_io() & PLL_LOCK_DETECT:
             return True
         else:      # Give it a second chance
-            if self._u.read_io(self._which) & PLL_LOCK_DETECT:
+            if self._rx_read_io() & PLL_LOCK_DETECT:
                 return True
             else:
                 return False
@@ -223,11 +228,9 @@ class wbx_base_tx(wbx_base):
         @param which: 0 or 1 corresponding to side TX_A or TX_B respectively.
         """
         wbx_base.__init__(self, usrp, which)
-        self.spi_enable = (SPI_ENABLE_TX_A, SPI_ENABLE_TX_B)[which]
 
-        # power up the transmit side, but set antenna to receive
-        self._u._write_oe(self._which,(TX_POWER|RX_TXN), 0xffff)
-        self._u.write_io(self._which, (TX_POWER|RX_TXN), (TX_POWER|RX_TXN))
+        # power up the transmit side, NO -- but set antenna to receive
+        self._u.write_io(self._which, (TX_POWER), (TX_POWER|RX_TXN))
         self._lo_offset = 0e6
 
         #  Gain is not set by the PGA, but the PGA must be set at max gain in the TX
@@ -281,11 +284,7 @@ class wbx_base_rx(wbx_base):
         @param which: 0 or 1 corresponding to side RX_A or RX_B respectively.
         """
         wbx_base.__init__(self, usrp, which)
-        self.spi_enable = (SPI_ENABLE_RX_A, SPI_ENABLE_RX_B)[which]
         
-        self._u._write_oe(self._which, (RX2_RX1N|RXENABLE), 0xffff)
-        self._u.write_io(self._which,  (0|RXENABLE), (RX2_RX1N|RXENABLE))
-
         # set up for RX on TX/RX port
         self.select_rx_antenna('TX/RX')
 
@@ -359,7 +358,13 @@ class wbx_base_rx(wbx_base):
 	@returns Offset in Hz
 	"""
 	return self._lo_offset
-	
+
+
+    def i_and_q_swapped(self):
+        """
+        Return True if this is a quadrature device and ADC 0 is Q.
+        """
+        return True	
 
 # ----------------------------------------------------------------
 
@@ -383,7 +388,7 @@ class _ADF410X_common(object):
         self.TC = 0       # bits 14-11    PFD Timeout
         self.FL = 0       # bit 10,9      Fastlock Disabled
         self.CP3S = 0     # bit 8         CP Enabled
-        self.PDP = 1      # bit 7         Phase detector polarity, Positive=1
+        self.PDP = 0      # bit 7         Phase detector polarity, Positive=1
         self.MUXOUT = 1   # bits 6:4      Digital Lock Detect
         self.PD1 = 0      # bit 3         Normal operation
         self.CR = 0       # bit 2         Normal operation
@@ -394,16 +399,20 @@ class _ADF410X_common(object):
         
         @param freq: target frequency in Hz
         @type freq: float
-        @returns: (R, control, N, actual_freq)
+        @returns: (R, N, control, actual_freq)
         @rtype: tuple(int, int, int, float)
         """
 
         #  Band-specific N-Register Values
         phdet_freq = self._refclk_freq()/self.R_DIV
+        print "phdet_freq = %f" % (phdet_freq,)
         desired_n = round(freq*self.freq_mult/phdet_freq)
+        print "desired_n %f" % (desired_n,)
         actual_freq = desired_n * phdet_freq
+        print "actual freq %f" % (actual_freq,)
         B = math.floor(desired_n/self._prescaler())
         A = desired_n - self._prescaler()*B
+        print "A %d B %d" % (A,B)
         self.B_DIV = int(B)    # bits 20:8
         self.A_DIV = int(A)    # bit 6:2
         #assert self.B_DIV >= self.A_DIV
@@ -439,8 +448,8 @@ class _ADF410X_common(object):
         @type control: int
         """
         self._write_R(R)
-        self._write_func(func)
-        self._write_init(init)
+        self._write_func(control)
+        self._write_init(control)
         if self.first:
             time.sleep(0.010)
             self.first = False
@@ -456,7 +465,7 @@ class _ADF410X_common(object):
         self._write_it((func & ~0x3) | 2)
 
     def _write_init(self, init):
-        self._write_it((func & ~0x3) | 3)
+        self._write_it((init & ~0x3) | 3)
 
     def _write_it(self, v):
         s = ''.join((chr((v >> 16) & 0xff),
@@ -469,8 +478,12 @@ class _ADF410X_common(object):
             return 8
         elif self.P == 1:
             return 16
-        else:
+        elif self.P == 2:
             return 32
+        elif self.P == 3:
+            return 64
+        else:
+            raise ValueError, "Prescaler out of range"
 
 #----------------------------------------------------------------------
 class _lo_common(_ADF410X_common):
@@ -478,10 +491,10 @@ class _lo_common(_ADF410X_common):
         _ADF410X_common.__init__(self)
 
         # Band-specific R-Register Values
-        self.R_DIV = 16  # bits 15:2
+        self.R_DIV = 4  # bits 15:2
    
         # Band-specific C-Register values
-        self.P = 1        # bits 23,22   Div by 16/17
+        self.P = 0        # bits 23,22   0 = Div by 8/9
         self.CP2 = 7      # bits 19:17
         self.CP1 = 7      # bits 16:14
 
@@ -498,7 +511,6 @@ class _lo_common(_ADF410X_common):
         return (50e6, 1000e6, 16e6)
 
     def set_divider(self, main_or_aux, divisor):
-	print "set %s to %d" % (main_or_aux, divisor)
         if main_or_aux not in (0, 'main', 1, 'aux'):
             raise ValueError, "main_or_aux must be 'main' or 'aux'"
         if main_or_aux in (0, 'main'):
@@ -513,15 +525,13 @@ class _lo_common(_ADF410X_common):
             for (div,val) in ((2,0),(4,1),(8,2),(16,3)):
                 if(div == divisor):
                     self.aux_div = val
-        
+
+        vala = self.main_div*SELA0
+        valb = self.aux_div*SELB0
+        mask = SELA0|SELA1|SELB0|SELB1
+
 	self._rx_write_io(((self.main_div*SELA0) | (self.aux_div*SELB0)),
-                             (SELA0|SELA1|SELB0|SELB1))   # only works on RX
-
-	print "Main %d aux %d" % (self.main_div, self.aux_div)
-
-    def _rx_write_io(self, value, mask):
-        return self._u._write_fpga_reg((FR_IO_1, FR_IO_3)[self._which],
-                                       ((mask & 0xffff) << 16) | (value & 0xffff))
+                             (SELA0|SELA1|SELB0|SELB1))
 
     def set_freq(self, freq):
         #freq += self._lo_offset
@@ -535,13 +545,14 @@ class _lo_common(_ADF410X_common):
             lo_freq = lo_freq * 2
         print "For RF freq of %f, we set DIV=%d and LO Freq=%f" % (freq, div, lo_freq)
         self.set_divider('main', div)
-        self.set_divider('aux', 16)
+        self.set_divider('aux', div*2)
 
-        R, N, control, actual_freq = self._compute_regs(freq)
+        R, N, control, actual_freq = self._compute_regs(lo_freq)
+        print "R %d N %d control %d actual freq %f" % (R,N,control,actual_freq)
         if R==0:
             return(False,0)
         self._write_all(R, N, control)
-        return (self._lock_detect(), actual_freq)
+        return (self._lock_detect(), actual_freq/div/2)
 
         
 #------------------------------------------------------------    
@@ -572,13 +583,17 @@ class db_wbx_lo_tx(_lo_common, wbx_base_tx):
         mingain = self.gain_range()[0]
         if gain > maxgain:
             txvga_gain = maxgain
+        elif gain < mingain:
+            txvga_gain = mingain
         else:
             txvga_gain = gain
+
         V_maxgain = 1.4
         V_mingain = 0.1
         V_fullscale = 3.3
-        dac_value = (txvga_gain*(V_maxgain-V_mingain)/(maxgain-mingain) + V_mingain)*4096/V_fullscale
+        dac_value = ((txvga_gain-mingain)*(V_maxgain-V_mingain)/(maxgain-mingain) + V_mingain)*4096/V_fullscale
         assert dac_value>=0 and dac_value<4096
+        print "DAC value %d" % (dac_value,)
         return self._u.write_aux_dac(self._which, 1, int(dac_value))
 
 class db_wbx_lo_rx(_lo_common, wbx_base_rx):
