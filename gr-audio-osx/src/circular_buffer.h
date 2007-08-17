@@ -159,6 +159,8 @@ public:
       d_internal->unlock ();
       return (2);
     }
+    // set the return value to 1: success; change if needed
+    int retval = 1;
     if (bufLen_I > d_n_avail_write_I) {
       if (d_doWriteBlock) {
 	while (bufLen_I > d_n_avail_write_I) {
@@ -185,7 +187,7 @@ public:
 #if DO_DEBUG
 	fprintf (stderr, "circular_buffer::enqueue: overflow\n");
 #endif
-	return (-1);
+	retval = -1;
       }
     }
     UInt32 n_now_I = d_bufLen_I - d_writeNdx_I, n_start_I = 0;
@@ -203,7 +205,7 @@ public:
     d_n_avail_write_I -= bufLen_I;
     d_readBlock->signal ();
     d_internal->unlock ();
-    return (1);
+    return (retval);
   };
 
 /*

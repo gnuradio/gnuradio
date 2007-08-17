@@ -248,7 +248,7 @@ audio_osx_source::audio_osx_source (int sample_rate,
 		      "audio_osx_source::audio_osx_source");
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "---- Device Stream Format ----\n" );
+  fprintf (stderr, "\n---- Device Stream Format ----\n" );
   PrintStreamDesc (&asbd_device);
 #endif
 
@@ -264,7 +264,7 @@ audio_osx_source::audio_osx_source (int sample_rate,
 		      "audio_osx_source::audio_osx_source");
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "---- Client Stream Format ----\n");
+  fprintf (stderr, "\n---- Client Stream Format ----\n");
   PrintStreamDesc (&asbd_client);
 #endif
 
@@ -839,6 +839,11 @@ audio_osx_source::AUInputCallback (void* inRefCon,
 
   while (--l_counter >= 0) {
     float* inBuffer = (float*) This->d_OutputBuffer->mBuffers[l_counter].mData;
+
+#if _OSX_AU_DEBUG_
+  fprintf (stderr, "cb2.5: enqueuing audio data.\n");
+#endif
+
     int l_res = This->d_buffers[l_counter]->enqueue (inBuffer, ActualOutputFrames);
     if (l_res == -1)
       res = -1;
@@ -857,7 +862,7 @@ audio_osx_source::AUInputCallback (void* inRefCon,
   }
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "cb5: #OI = %4ld, #Cnt = %4ld, mSC = %ld, \n",
+  fprintf (stderr, "cb3: #OI = %4ld, #Cnt = %4ld, mSC = %ld, \n",
 	   ActualOutputFrames, This->d_queueSampleCount,
 	   This->d_max_sample_count);
 #endif
@@ -865,8 +870,16 @@ audio_osx_source::AUInputCallback (void* inRefCon,
 // signal that data is available, if appropraite
   This->d_cond_data->signal ();
 
+#if _OSX_AU_DEBUG_
+  fprintf (stderr, "cb4: releasing internal mutex.\n");
+#endif
+
 // release control to allow for other processing parts to run
   This->d_internal->post ();
+
+#if _OSX_AU_DEBUG_
+  fprintf (stderr, "cb5: returning.\n");
+#endif
 
   return (err);
 }
