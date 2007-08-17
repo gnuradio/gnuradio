@@ -26,7 +26,7 @@
 
 // tell mld_threads to NOT use omni_threads,
 // but rather Darwin's pthreads
-#undef _USE_OMNI_THREADS_
+#define _USE_OMNI_THREADS_
 
 #include <usb.h>
 #include "fusb.h"

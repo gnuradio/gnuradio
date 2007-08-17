@@ -20,7 +20,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = $(USRP_INCLUDES)
+INCLUDES = $(USRP_INCLUDES) $(OMNITHREAD_INCLUDES)
 
 lib_LTLIBRARIES = libusrp.la
 
