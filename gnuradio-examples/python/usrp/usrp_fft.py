@@ -52,6 +52,9 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.panel = panel
         
         parser = OptionParser(option_class=eng_option)
+        parser.add_option("-w", "--which", type=int, default=0,
+                          help="select which USRP (0, 1, ...) default is %default",
+			  metavar="NUM")
         parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
                           help="select USRP Rx side A or B (default=first one with a daughterboard)")
         parser.add_option("-d", "--decim", type="int", default=16,
@@ -75,7 +78,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         
         # build the graph
 
-        self.u = usrp.source_c(decim_rate=options.decim)
+        self.u = usrp.source_c(which=options.which, decim_rate=options.decim)
         if options.rx_subdev_spec is None:
             options.rx_subdev_spec = pick_subdevice(self.u)
         self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
