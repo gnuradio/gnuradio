@@ -114,7 +114,7 @@ audio_osx_source::audio_osx_source (int sample_rate,
   d_max_sample_count = max_sample_count;
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "source(): max # samples = %ld", d_max_sample_count);
+  fprintf (stderr, "source(): max # samples = %ld\n", d_max_sample_count);
 #endif
 
   OSStatus err = noErr;
@@ -630,11 +630,12 @@ audio_osx_source::check_topology (int ninputs, int noutputs)
 }
 
 int
-audio_osx_source::work (int noutput_items,
-			gr_vector_const_void_star &input_items,
-			gr_vector_void_star &output_items)
+audio_osx_source::work
+(int noutput_items,
+ gr_vector_const_void_star &input_items,
+ gr_vector_void_star &output_items)
 {
-// acquire control to do processing here only
+  // acquire control to do processing here only
   d_internal->wait ();
 
 #if _OSX_AU_DEBUG_
@@ -642,35 +643,44 @@ audio_osx_source::work (int noutput_items,
 	   d_queueSampleCount, noutput_items, output_items.size());
 #endif
 
-// ?: always block until there is something to output from the source
-//    or return anything that is available, even if it's less than desired?
+  // set the actual # of output items to the 'desired' amount then
+  // verify that data is available; if not enough data is available,
+  // either wait until it is (is "do_block" is true), return (0) is no
+  // data is available and "do_block" is false, or process the actual
+  // amount of available data.
 
   UInt32 actual_noutput_items = noutput_items;
 
   if (d_queueSampleCount < actual_noutput_items) {
     if (d_queueSampleCount == 0) {
-// no data; do_block decides what to do
+      // no data; do_block decides what to do
       if (d_do_block == true) {
 	while (d_queueSampleCount == 0) {
-// release control so-as to allow data to be retrieved
+	  // release control so-as to allow data to be retrieved
 	  d_internal->post ();
-// block until there is data to return
+	  // block until there is data to return
 	  d_cond_data->wait ();
-// the condition's signal() was called; acquire control
-// to keep thread safe
+	  // the condition's signal() was called; acquire control to
+	  // keep thread safe
 	  d_internal->wait ();
 	}
       } else {
-// not enough data & not blocking; return nothing
+	// no data & not blocking; return nothing
+	// release control so-as to allow data to be retrieved
+	d_internal->post ();
 	return (0);
       }
     }
+    // use the actual amount of available data
     actual_noutput_items = d_queueSampleCount;
   }
 
+  // number of channels
   int l_counter = (int) output_items.size();
 
-// get the items from the circular buffers
+  // copy the items from the circular buffer(s) to 'work's output buffers
+  // verify that the number copied out is as expected.
+
   while (--l_counter >= 0) {
     UInt32 t_n_output_items = actual_noutput_items;
     d_buffers[l_counter]->dequeue ((float*) output_items[l_counter],
@@ -684,6 +694,9 @@ audio_osx_source::work (int noutput_items,
     }
   }
 
+  // subtract the actual number of items removed from the buffer(s)
+  // from the local accounting of the number of available samples
+
   d_queueSampleCount -= actual_noutput_items;
 
 #if _OSX_AU_DEBUG_
@@ -691,21 +704,28 @@ audio_osx_source::work (int noutput_items,
 	   d_queueSampleCount, actual_noutput_items);
 #endif
 
-// release control to allow for other processing parts to run
+  // release control to allow for other processing parts to run
+
   d_internal->post ();
+
+#if _OSX_AU_DEBUG_
+  fprintf (stderr, "work3: Returning.\n");
+#endif
 
   return (actual_noutput_items);
 }
 
 OSStatus
-audio_osx_source::ConverterCallback (AudioConverterRef inAudioConverter,
-				     UInt32* ioNumberDataPackets,
-				     AudioBufferList* ioData,
-				     AudioStreamPacketDescription** ioASPD,
-				     void* inUserData)
+audio_osx_source::ConverterCallback
+(AudioConverterRef inAudioConverter,
+ UInt32* ioNumberDataPackets,
+ AudioBufferList* ioData,
+ AudioStreamPacketDescription** ioASPD,
+ void* inUserData)
 {
-// take current device buffers and copy them to the tail of the input buffers
-// the lead buffer is already there in the first d_leadSizeFrames slots
+  // take current device buffers and copy them to the tail of the
+  // input buffers the lead buffer is already there in the first
+  // d_leadSizeFrames slots
 
   audio_osx_source* This = static_cast<audio_osx_source*>(inUserData);
   AudioBufferList* l_inputABL = This->d_InputBuffer;
@@ -725,6 +745,10 @@ audio_osx_source::ConverterCallback (AudioConverterRef inAudioConverter,
     l_ioD_AB->mData = (float*)(l_inputABL->mBuffers[counter].mData);
     l_ioD_AB->mDataByteSize = totalInputBufferSizeBytes;
   }
+
+#if _OSX_AU_DEBUG_
+  fprintf (stderr, "cc2: Returning.\n");
+#endif
 
   return (noErr);
 }
@@ -841,7 +865,7 @@ audio_osx_source::AUInputCallback (void* inRefCon,
     float* inBuffer = (float*) This->d_OutputBuffer->mBuffers[l_counter].mData;
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "cb2.5: enqueuing audio data.\n");
+  fprintf (stderr, "cb3: enqueuing audio data.\n");
 #endif
 
     int l_res = This->d_buffers[l_counter]->enqueue (inBuffer, ActualOutputFrames);
@@ -862,7 +886,7 @@ audio_osx_source::AUInputCallback (void* inRefCon,
   }
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "cb3: #OI = %4ld, #Cnt = %4ld, mSC = %ld, \n",
+  fprintf (stderr, "cb4: #OI = %4ld, #Cnt = %4ld, mSC = %ld, \n",
 	   ActualOutputFrames, This->d_queueSampleCount,
 	   This->d_max_sample_count);
 #endif
@@ -871,14 +895,14 @@ audio_osx_source::AUInputCallback (void* inRefCon,
   This->d_cond_data->signal ();
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "cb4: releasing internal mutex.\n");
+  fprintf (stderr, "cb5: releasing internal mutex.\n");
 #endif
 
 // release control to allow for other processing parts to run
   This->d_internal->post ();
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "cb5: returning.\n");
+  fprintf (stderr, "cb6: returning.\n");
 #endif
 
   return (err);
