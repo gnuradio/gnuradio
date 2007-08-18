@@ -35,7 +35,7 @@ typedef boost::shared_ptr<audio_osx_source> audio_osx_source_sptr;
 audio_osx_source_sptr
 audio_osx_make_source (int sample_rate = 44100,
 		       const std::string device_name = "",
-		       bool do_block = false,
+		       bool do_block = true,
 		       int channel_config = -1,
 		       int max_sample_count = -1);
 

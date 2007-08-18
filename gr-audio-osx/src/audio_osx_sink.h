@@ -35,7 +35,7 @@ typedef boost::shared_ptr<audio_osx_sink> audio_osx_sink_sptr;
 audio_osx_sink_sptr
 audio_osx_make_sink (int sample_rate = 44100,
 		     const std::string device_name = "2",
-		     bool do_block = false,
+		     bool do_block = true,
 		     int channel_config = -1,
 		     int max_sample_count = -1);
 
