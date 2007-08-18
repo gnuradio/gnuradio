@@ -27,6 +27,13 @@
 #include <stdexcept>
 
 #define __INLINE__ inline
+#define DO_DEBUG 0
+
+#if DO_DEBUG
+#define DEBUG(X) do{X} while(0);
+#else
+#define DEBUG(X) do{} while(0);
+#endif
 
 template <class T> class s_both;
 
@@ -140,8 +147,8 @@ public:
       }
     }
     d_available = d_current = l_prev;
-    d_internal = new mld_mutex ();
     d_ioBlock = new mld_condition ();
+    d_internal = d_ioBlock->mutex ();
   };
 
   ~circular_linked_list () {
@@ -151,8 +158,6 @@ public:
       delete l_node;
       l_node = iterate_next ();
     }
-    delete d_internal;
-    d_internal = NULL;
     delete d_ioBlock;
     d_ioBlock = NULL;
     d_available = d_inUse = d_iterate = d_current = NULL;
@@ -163,13 +168,17 @@ public:
     d_internal->lock ();
 // find an available node
     s_node_ptr l_node = d_available; 
+    DEBUG (fprintf (stderr, "w "));
     while (! l_node) {
-      d_internal->unlock ();
+      DEBUG (fprintf (stderr, "x\n"));
+      // the ioBlock condition will automatically unlock() d_internal
       d_ioBlock->wait ();
-      d_internal->lock ();
+      // and lock() is here
+      DEBUG (fprintf (stderr, "y\n"));
       l_node = d_available;
     }
-//  fprintf (stderr, "::f_n_a_n: #u = %ld, node = %p\n", num_used(), l_node);
+    DEBUG (fprintf (stderr, "::f_n_a_n: #u = %ld, node = %p\n",
+		    num_used(), l_node));
 // remove this one from the current available list
     if (num_available () == 1) {
 // last one, just set available to NULL
@@ -191,7 +200,8 @@ public:
   void make_node_available (s_node_ptr l_node) {
     if (!l_node) return;
     d_internal->lock ();
-//  fprintf (stderr, "::m_n_a: #u = %ld, node = %p\n", num_used(), l_node);
+    DEBUG (fprintf (stderr, "::m_n_a: #u = %ld, node = %p\n",
+		    num_used(), l_node));
 // remove this node from the inUse list
     if (num_used () == 1) {
 // last one, just set inUse to NULL
@@ -205,8 +215,12 @@ public:
     else
       l_node->insert_before (d_available);
     d_n_used--;
+
+    DEBUG (fprintf (stderr, "s%ld ", d_n_used));
 // signal the condition when new data arrives
     d_ioBlock->signal ();
+    DEBUG (fprintf (stderr, "t "));
+
 // unlock the mutex for thread safety
     d_internal->unlock ();
   };

@@ -51,7 +51,7 @@ usual).
 
 For -all- systems I've tested on thus far, both of these return
 exactly 41 overruns / underruns, and -most- systems start out with a
-stalled pipe.  This stall comes in a usb_control funciton call to
+stalled pipe.  This stall comes in a usb_control function call to
 LIBUSB; one would have to change the LIBUSB code to handle this issue.
 
 (3) from gr-build/gnuradio-examples/python/usrp :

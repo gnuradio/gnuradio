@@ -366,6 +366,10 @@ fusb_ephandle_darwin::read (void* buffer, int nbytes)
 {
   UInt32 l_nbytes = (UInt32) nbytes;
   d_buffer->dequeue ((char*) buffer, &l_nbytes);
+
+  if (usb_debug > 4)
+    fprintf (stderr, "fusb_ephandle_darwin::read: request for %d bytes, %ld bytes retrieved.\n", nbytes, l_nbytes);
+
   return ((int) l_nbytes);
 }
 

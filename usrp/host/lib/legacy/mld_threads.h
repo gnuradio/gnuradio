@@ -37,6 +37,13 @@
 #include <stdexcept>
 
 #define __INLINE__ inline
+#define DO_DEBUG 0
+
+#if DO_DEBUG
+#define DEBUG(X) do{X} while(0);
+#else
+#define DEBUG(X) do{} while(0);
+#endif
 
 class mld_condition_t;
 
@@ -133,12 +140,17 @@ class mld_condition_t {
 private:
   l_condition_ptr d_condition;
   mld_mutex_ptr d_mutex;
-  bool d_waiting;
+  bool d_i_own_mutex;
 
 public:
-  __INLINE__ mld_condition_t () {
-    d_waiting = false;
-    d_mutex = new mld_mutex ();
+  __INLINE__ mld_condition_t (mld_mutex_ptr mutex = NULL) {
+    if (mutex) {
+      d_i_own_mutex = false;
+      d_mutex = mutex;
+    } else {
+      d_i_own_mutex = true;
+      d_mutex = new mld_mutex ();
+    }
 #ifdef _USE_OMNI_THREADS_
     d_condition = new omni_condition (d_mutex->mutex ());
 #else
@@ -162,38 +174,40 @@ public:
 #endif
     delete d_condition;
     d_condition = NULL;
-    delete d_mutex;
+    if (d_i_own_mutex)
+      delete d_mutex;
     d_mutex = NULL;
   };
 
+  __INLINE__ mld_mutex_ptr mutex () {return (d_mutex);};
+
   __INLINE__ void signal () {
-    if (d_waiting == true) {
+    DEBUG (fprintf (stderr, "a "));
+
 #ifdef _USE_OMNI_THREADS_
-      d_condition->signal ();
+    d_condition->signal ();
 #else
-      int l_ret = pthread_cond_signal (d_condition);
-      if (l_ret != 0) {
-	fprintf (stderr, "mld_condition_t::signal(): "
-		 "Error %d.\n", l_ret);
-      }
-#endif
-      d_waiting = false;
+    int l_ret = pthread_cond_signal (d_condition);
+    if (l_ret != 0) {
+      fprintf (stderr, "mld_condition_t::signal(): "
+	       "Error %d.\n", l_ret);
     }
+#endif
+    DEBUG (fprintf (stderr, "b "));
   };
 
   __INLINE__ void wait () {
-    if (d_waiting == false) {
-      d_waiting = true;
+    DEBUG (fprintf (stderr, "c "));
 #ifdef _USE_OMNI_THREADS_
-      d_condition->wait ();
+    d_condition->wait ();
 #else
-      int l_ret = pthread_cond_wait (d_condition, d_mutex->mutex ());
-      if (l_ret != 0) {
-	fprintf (stderr, "mld_condition_t::wait(): "
-		 "Error %d.\n", l_ret);
-      }
-#endif
+    int l_ret = pthread_cond_wait (d_condition, d_mutex->mutex ());
+    if (l_ret != 0) {
+      fprintf (stderr, "mld_condition_t::wait(): "
+	       "Error %d.\n", l_ret);
     }
+#endif
+    DEBUG (printf (stderr, "d "));
   };
 };
 
