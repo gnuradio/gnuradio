@@ -154,15 +154,11 @@ audio_osx_sink::audio_osx_sink (int sample_rate,
 
 // create the stuff to regulate I/O
 
-  d_internal = new mld_mutex ();
-  if (d_internal == NULL)
-    CheckErrorAndThrow (errno, "new mld_mutex (internal)",
-			"audio_osx_source::audio_osx_source");
-
   d_cond_data = new mld_condition ();
   if (d_cond_data == NULL)
     CheckErrorAndThrow (errno, "new mld_condition (data)",
 			"audio_osx_source::audio_osx_source");
+  d_internal = d_cond_data->mutex ();
 
 // initialize the AU for output
 
@@ -235,7 +231,6 @@ audio_osx_sink::~audio_osx_sink ()
   d_buffers = 0;
 
 // close and delete control stuff
-  delete d_internal;
   delete d_cond_data;
 }
 
@@ -258,7 +253,7 @@ audio_osx_sink::work (int noutput_items,
 		      gr_vector_const_void_star &input_items,
 		      gr_vector_void_star &output_items)
 {
-  d_internal->wait ();
+  d_internal->lock ();
 
   /* take the input data, copy it, and push it to the bottom of the queue
      mono input are pushed onto queue[0];
@@ -289,13 +284,11 @@ audio_osx_sink::work (int noutput_items,
     if (d_do_block == true) {
 // block until there is data to return
       while (d_queueSampleCount > l_max_count) {
-// release control so-as to allow data to be retrieved
-	d_internal->post ();
+// release control so-as to allow data to be retrieved;
 // block until there is data to return
 	d_cond_data->wait ();
 // the condition's signal() was called; acquire control
 // to keep thread safe
-	d_internal->wait ();
       }
     }
   }
@@ -340,7 +333,7 @@ audio_osx_sink::work (int noutput_items,
 #endif
 
 // release control to allow for other processing parts to run
-  d_internal->post ();
+  d_internal->unlock ();
 
   return (noutput_items);
 }
@@ -356,7 +349,7 @@ OSStatus audio_osx_sink::AUOutputCallback
   audio_osx_sink* This = (audio_osx_sink*) inRefCon;
   OSStatus err = noErr;
 
-  This->d_internal->wait ();
+  This->d_internal->lock ();
 
 #if _OSX_AU_DEBUG_
   fprintf (stderr, "cb_in: SC = %4ld, in#F = %4ld\n",
@@ -392,7 +385,7 @@ OSStatus audio_osx_sink::AUOutputCallback
   This->d_cond_data->signal ();
 
 // release control to allow for other processing parts to run
-  This->d_internal->post ();
+  This->d_internal->unlock ();
 
   return (err);
 }

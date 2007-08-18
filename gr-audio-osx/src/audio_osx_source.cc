@@ -423,15 +423,11 @@ audio_osx_source::audio_osx_source (int sample_rate,
 
 // create the stuff to regulate I/O
 
-  d_internal = new mld_mutex ();
-  if (d_internal == NULL)
-    CheckErrorAndThrow (errno, "new mld_mutex (internal)",
-			"audio_osx_source::audio_osx_source");
-
   d_cond_data = new mld_condition ();
   if (d_cond_data == NULL)
     CheckErrorAndThrow (errno, "new mld_condition (data)",
 			"audio_osx_source::audio_osx_source");
+  d_internal = d_cond_data->mutex ();
 
 // initialize the AU for input
 
@@ -580,7 +576,6 @@ audio_osx_source::~audio_osx_source ()
   d_buffers = 0;
 
 // close and delete the control stuff
-  delete d_internal;
   delete d_cond_data;
 }
 
@@ -636,7 +631,7 @@ audio_osx_source::work
  gr_vector_void_star &output_items)
 {
   // acquire control to do processing here only
-  d_internal->wait ();
+  d_internal->lock ();
 
 #if _OSX_AU_DEBUG_
   fprintf (stderr, "work1: SC = %4ld, #OI = %4d, #Chan = %ld\n",
@@ -656,18 +651,16 @@ audio_osx_source::work
       // no data; do_block decides what to do
       if (d_do_block == true) {
 	while (d_queueSampleCount == 0) {
-	  // release control so-as to allow data to be retrieved
-	  d_internal->post ();
+	  // release control so-as to allow data to be retrieved;
 	  // block until there is data to return
 	  d_cond_data->wait ();
 	  // the condition's signal() was called; acquire control to
 	  // keep thread safe
-	  d_internal->wait ();
 	}
       } else {
 	// no data & not blocking; return nothing
 	// release control so-as to allow data to be retrieved
-	d_internal->post ();
+	d_internal->unlock ();
 	return (0);
       }
     }
@@ -706,7 +699,7 @@ audio_osx_source::work
 
   // release control to allow for other processing parts to run
 
-  d_internal->post ();
+  d_internal->unlock ();
 
 #if _OSX_AU_DEBUG_
   fprintf (stderr, "work3: Returning.\n");
@@ -764,7 +757,7 @@ audio_osx_source::AUInputCallback (void* inRefCon,
   OSStatus err = noErr;
   audio_osx_source* This = static_cast<audio_osx_source*>(inRefCon);
 
-  This->d_internal->wait ();
+  This->d_internal->lock ();
 
 #if _OSX_AU_DEBUG_
   fprintf (stderr, "cb0: in#F = %4ld, inBN = %ld, SC = %4ld\n",
@@ -899,7 +892,7 @@ audio_osx_source::AUInputCallback (void* inRefCon,
 #endif
 
 // release control to allow for other processing parts to run
-  This->d_internal->post ();
+  This->d_internal->unlock ();
 
 #if _OSX_AU_DEBUG_
   fprintf (stderr, "cb6: returning.\n");
