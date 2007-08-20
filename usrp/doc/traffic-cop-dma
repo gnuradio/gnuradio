@@ -1,0 +1,128 @@
+Matt,
+
+Here's my idea on the interface to the traffic cop.  Basically I'm
+thinking about treating it as 4 separate DMA channels, one for each of
+the four possible "flows".  In the interest of simplicity, I think we can
+assign buffers 0,1 to channel 0;  2,3 to channel 1, etc...
+
+port assignments
+-----------------
+  0   SERDES
+  1   DSP pipeline
+  2   Gigabit ethernet MAC
+  3   RAM
+
+
+registers
+---------
+
+  MBZ == Must Be Zero
+
+     3                   2                   1
+   1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 
+
+
+TC_DMA_SRC_{0,3} [WR] ("traffic cop DMA source, channel N")
+
+  Specifies where the writing port adapter writes info the buffer, and
+  the maximum number of lines to write.
+
+       5             9                  9                9  
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |   MBZ   |      start      |     end (max)   |       step      |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+  start: starting line number for transfer (32-bit lines)
+  end:   maximum number of lines to write
+  step:  normally 1.
+
+
+TC_DMA_DST_{0,3} [WR]
+
+  Specifies the range of lines that the reading port adapter accesses.
+  The number of lines to be transferred is controlled by the source.
+
+       5             9                  9                9  
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |   MBZ   |      start      |        MBZ      |       step      |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+  start: starting line number tranfer (32-bit lines)
+  step:  normally 1.
+
+
+TC_DMA_CTRL_{0,3} [WR]
+
+      4       4    1                  19                      4
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |  src  |  dst  |A|                 MBZ                 |  cmd  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+  src:  source port number.  E.g., 2 = ethernet MAC (the buffer writer)
+
+  dst:  destination port number.  E.g., 1 = DSP pipeline (the buffer reader)
+
+  A:    Set if "Host Approval" is required before beginning xfer to dst.
+        Used to allow processor to inspect packet for s/w dispatch.  If set,
+	traffic cop sets PENDING_APPROVAL bit (and causes interrupt?) after the
+	2nd line has been written into the buffer.   Reader is held off
+	until hosts APPROVES or DROPS the buffer.
+
+
+  cmd:  command
+
+    TC_DMA_CMD_RESET	     0  // abort active tranfers now; reset to idle state
+    TC_DMA_CMD_START	     1  // begin transfers according to src, dst, A
+    TC_DMA_CMD_STOP	     2  // stop transfers at completion of current buffer
+    TC_DMA_CMD_APPROVE_0     3  // host approves xfer on even buffer, continue
+    TC_DMA_CMD_APPROVE_1     4  // host approves xfer on odd buffer, continue
+    TC_DMA_CMD_DROP_0	     5  // host naks xfer on even buffer, drop buffer and continue
+    TC_DMA_CMD_DROP_1	     6  // host naks xfer on even buffer, drop buffer and continue
+
+
+TC_DMA_STATUS_{0,3} [RD]
+
+           10                  10
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |    nwritten even  |   nwritten odd    |     state?    | flags |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+  nwritten even:  number of lines written into even buffer
+  nwritten odd:   number of lines written into odd buffer
+
+  flag bits:
+
+    bmTCDS_PENDING_APPROVAL_0	(1 << 0)   // pending host approval on even buffer
+    bmTCDS_PENDING_APPROVAL_1	(1 << 1)   // pending host approval on odd buffer
+    bmTCDS_WRITE_DONE_0	        (1 << 2)   // the even buffer write is complete
+    bmTCDS_WRITE_DONE_1	        (1 << 3)   // the odd buffer write is complete
+
+I think the combination of the "host approval" and WRITE_DONE bits
+will allow us to handle the cases where the host looks and doesn't
+care, and the case where the host looks, cares, and needs to wait
+until it sees the whole packet.
+
+WRITE_DONE_* should be cleared when the corresponding buffer is
+selected to be written into (e.g., when swapping buffers, and at init)
+prior to writing the first line.  WRITE_DONE_* is set when the
+requested number of lines have been written into the buffer.
+
+
+
+I also want a "global status register" that pulls the 4 flag bits
+from each of the 4 status registers into a single word.  This should
+allow me to read a single word to figure out what to do.
+
+
+TC_DMA_STATUS_GLOBAL [RD]
+
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |              MBZ              |flags3 |flags2 |flags1 |flags0 |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+I'm sure I've missed something...
+
+What do you think?
+
+Eric
