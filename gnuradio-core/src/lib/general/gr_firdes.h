@@ -172,7 +172,7 @@ class gr_firdes {
    * \p beta:                   Only used for Kaiser
    */
   static std::vector<float>
-  hilbert (unsigned int ntaps,
+  hilbert (unsigned int ntaps = 19,
 	   win_type windowtype = WIN_RECTANGULAR,
 	   double beta = 6.76);
    
