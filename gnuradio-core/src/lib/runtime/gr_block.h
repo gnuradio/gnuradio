@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -213,5 +213,10 @@ class gr_block : public gr_basic_block {
 
 typedef std::vector<gr_block_sptr> gr_block_vector_t;
 typedef std::vector<gr_block_sptr>::iterator gr_block_viter_t;
+
+inline gr_block_sptr make_gr_block_sptr(gr_basic_block_sptr p)
+{
+  return boost::dynamic_pointer_cast<gr_block, gr_basic_block>(p);
+}
 
 #endif /* INCLUDED_GR_BLOCK_H */

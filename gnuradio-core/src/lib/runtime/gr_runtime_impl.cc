@@ -26,7 +26,7 @@
 
 #include <gr_runtime.h>
 #include <gr_runtime_impl.h>
-#include <gr_simple_flowgraph.h>
+#include <gr_flat_flowgraph.h>
 #include <gr_hier_block2.h>
 #include <gr_hier_block2_detail.h>
 #include <gr_local_sighandler.h>
@@ -42,6 +42,19 @@
 
 static gr_runtime_impl *s_runtime = 0;
 
+// Make a vector of gr_block from a vector of gr_basic_block
+static
+gr_block_vector_t
+make_gr_block_vector(gr_basic_block_vector_t &blocks)
+{
+  gr_block_vector_t result;
+  for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
+    result.push_back(make_gr_block_sptr(*p));
+  }
+
+  return result;
+}
+
 // FIXME: This prevents using more than one gr_runtime instance
 void 
 runtime_sigint_handler(int signum)
@@ -56,7 +69,7 @@ runtime_sigint_handler(int signum)
 gr_runtime_impl::gr_runtime_impl(gr_hier_block2_sptr top_block, gr_runtime *owner) 
   : d_running(false),
     d_top_block(top_block),
-    d_sfg(gr_make_simple_flowgraph()),
+    d_ffg(gr_make_flat_flowgraph()),
     d_owner(owner)
 {
   s_runtime = this;
@@ -79,12 +92,12 @@ gr_runtime_impl::start()
     throw std::runtime_error("already running");
 
   // Create new simple flow graph by flattening hierarchical block
-  d_sfg->d_detail->reset();
-  d_top_block->d_detail->flatten(d_sfg);
+  d_ffg->clear();
+  d_top_block->d_detail->flatten(d_ffg);
 
   // Validate new simple flow graph and wire it up
-  d_sfg->d_detail->validate();
-  d_sfg->d_detail->setup_connections();
+  d_ffg->validate();
+  d_ffg->setup_connections();
 
   // Execute scheduler threads
   start_threads();
@@ -96,10 +109,10 @@ gr_runtime_impl::start_threads()
   if (GR_RUNTIME_IMPL_DEBUG)
     std::cout << "start_threads: entered" << std::endl;
 
-  d_graphs = d_sfg->d_detail->partition();
-  for (std::vector<gr_block_vector_t>::iterator p = d_graphs.begin();
+  d_graphs = d_ffg->partition();
+  for (std::vector<gr_basic_block_vector_t>::iterator p = d_graphs.begin();
        p != d_graphs.end(); p++) {
-    gr_scheduler_thread *thread = new gr_scheduler_thread(*p);
+    gr_scheduler_thread *thread = new gr_scheduler_thread(make_gr_block_vector(*p));
     d_threads.push_back(thread);
     if (GR_RUNTIME_IMPL_DEBUG)
       std::cout << "start_threads: starting " << thread << std::endl;
@@ -188,14 +201,14 @@ gr_runtime_impl::restart()
     std::cout << "restart: threads stopped" << std::endl;
 
   // Create new simple flow graph 
-  gr_simple_flowgraph_sptr new_sfg = gr_make_simple_flowgraph();
-  d_top_block->d_detail->flatten(new_sfg);
-  new_sfg->validate();
-  new_sfg->d_detail->merge_connections(d_sfg);
+  gr_flat_flowgraph_sptr new_ffg = gr_make_flat_flowgraph();
+  d_top_block->d_detail->flatten(new_ffg);
+  new_ffg->validate();
+  new_ffg->merge_connections(d_ffg);
 
   if (GR_RUNTIME_IMPL_DEBUG)
     std::cout << "restart: replacing old flow graph with new" << std::endl;
-  d_sfg = new_sfg;
+  d_ffg = new_ffg;
 
   start_threads();
 }

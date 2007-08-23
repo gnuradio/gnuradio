@@ -24,7 +24,6 @@
 #endif
 
 #include <gr_hier_block2_detail.h>
-#include <gr_simple_flowgraph.h>
 #include <gr_io_signature.h>
 #include <gr_runtime.h>
 #include <stdexcept>
@@ -35,7 +34,7 @@
 gr_hier_block2_detail::gr_hier_block2_detail(gr_hier_block2 *owner) :
   d_owner(owner), 
   d_parent_detail(0),
-  d_fg(gr_make_simple_flowgraph()),
+  d_fg(gr_make_flowgraph()),
   d_inputs(owner->input_signature()->max_streams()),
   d_outputs(owner->output_signature()->max_streams()),
   d_runtime()
@@ -228,22 +227,24 @@ gr_hier_block2_detail::resolve_endpoint(const gr_endpoint &endp, bool is_input)
 }
 
 void
-gr_hier_block2_detail::flatten(gr_simple_flowgraph_sptr sfg)
+gr_hier_block2_detail::flatten(gr_flat_flowgraph_sptr sfg)
 {
   if (GR_HIER_BLOCK2_DETAIL_DEBUG)
     std::cout << "flattening " << d_owner->name() << std::endl;
 
   // Add my edges to the flow graph, resolving references to actual endpoints
-  for (gr_edge_viter_t p = d_fg->d_detail->d_edges.begin(); p != d_fg->d_detail->d_edges.end(); p++) {
+  gr_edge_vector_t edges = d_fg->edges();
+
+  for (gr_edge_viter_t p = edges.begin(); p != edges.end(); p++) {
     if (GR_HIER_BLOCK2_DETAIL_DEBUG)
       std::cout << "Flattening edge " << (*p) << std::endl;
 
-    gr_endpoint src_endp = resolve_endpoint((*p)->src(), false);
-    gr_endpoint dst_endp = resolve_endpoint((*p)->dst(), true);
+    gr_endpoint src_endp = resolve_endpoint(p->src(), false);
+    gr_endpoint dst_endp = resolve_endpoint(p->dst(), true);
     sfg->connect(src_endp, dst_endp);
   }
 
-  gr_basic_block_vector_t blocks = d_fg->d_detail->calc_used_blocks();
+  gr_basic_block_vector_t blocks = d_fg->calc_used_blocks();
 
   // Recurse hierarchical children
   for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {

@@ -41,10 +41,16 @@
 class gr_basic_block : public boost::enable_shared_from_this<gr_basic_block>
 {
 protected:
+    friend class gr_flowgraph;
+    friend class gr_flat_flowgraph; // TODO: will be redundant
+
+    enum vcolor { WHITE, GREY, BLACK };
+
     std::string          d_name;
     gr_io_signature_sptr d_input_signature;
     gr_io_signature_sptr d_output_signature;
     long                 d_unique_id;
+    vcolor               d_color;
 
     //! Protected constructor prevents instantiation by non-derived classes
     gr_basic_block(const std::string &name,
@@ -60,6 +66,12 @@ protected:
     void set_output_signature(gr_io_signature_sptr iosig) {
         d_output_signature = iosig;
     }
+
+    /*!
+     * \brief Allow the flowgraph to set for sorting and partitioning
+     */
+    void set_color(vcolor color) { d_color = color; }
+    vcolor color() const { return d_color; }
 
 public:
     virtual ~gr_basic_block();

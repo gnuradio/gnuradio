@@ -31,8 +31,8 @@ libruntime_la_LIBADD =		\
 
 libruntime_la_SOURCES = 			\
 	gr_basic_block.cc			\
-	gr_simple_flowgraph.cc			\
-	gr_simple_flowgraph_detail.cc		\
+	gr_flowgraph.cc				\
+	gr_flat_flowgraph.cc			\
 	gr_block.cc				\
 	gr_block_detail.cc			\
 	gr_hier_block2.cc			\
@@ -66,14 +66,15 @@ libruntime_qa_la_SOURCES = 			\
 	qa_gr_block.cc				\
 	qa_gr_hier_block2.cc			\
 	qa_gr_buffer.cc				\
+	qa_gr_flowgraph.cc			\
 	qa_gr_io_signature.cc			\
 	qa_gr_vmcircbuf.cc			\
 	qa_runtime.cc				
 
 grinclude_HEADERS = 				\
 	gr_basic_block.h			\
-	gr_simple_flowgraph.h			\
-	gr_simple_flowgraph_detail.h		\
+	gr_flowgraph.h				\
+	gr_flat_flowgraph.h			\
 	gr_block.h				\
 	gr_block_detail.h			\
 	gr_hier_block2.h			\
@@ -109,6 +110,7 @@ noinst_HEADERS = 				\
 	gr_vmcircbuf_sysv_shm.h			\
 	gr_vmcircbuf_createfilemapping.h	\
 	qa_gr_block.h				\
+	qa_gr_flowgraph.h			\
 	qa_gr_hier_block2.h			\
 	qa_gr_buffer.h				\
 	qa_gr_io_signature.h			\
@@ -135,3 +137,5 @@ swiginclude_HEADERS =			\
 	gr_sync_interpolator.i		\
 	gr_swig_block_magic.i		\
 	runtime.i
+
+MOSTLYCLEANFILES = *~ *.loT

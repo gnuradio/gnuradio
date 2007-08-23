@@ -42,7 +42,8 @@ gr_basic_block::gr_basic_block(const std::string &name,
   : d_name(name),
     d_input_signature(input_signature),
     d_output_signature(output_signature),
-    d_unique_id(s_next_id++)
+    d_unique_id(s_next_id++),
+    d_color(WHITE)
 {
     s_ncurrently_allocated++;
 }

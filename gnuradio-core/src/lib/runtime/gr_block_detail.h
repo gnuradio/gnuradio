@@ -75,13 +75,6 @@ class gr_block_detail {
 
   void produce_each (int how_many_items);
 
-  /*!
-   * \brief Allow the flowgraph to set for sorting and partitioning
-   */
-  enum vcolor { WHITE, GREY, BLACK };
-  void set_color(vcolor color) { d_color = color; }
-  vcolor color() const { return d_color; }
-
   // ----------------------------------------------------------------------------
 
  private:
@@ -90,7 +83,6 @@ class gr_block_detail {
   std::vector<gr_buffer_reader_sptr> d_input;
   std::vector<gr_buffer_sptr>	     d_output;
   bool                               d_done;
-  vcolor                             d_color;
 
   gr_block_detail (unsigned int ninputs, unsigned int noutputs);
 

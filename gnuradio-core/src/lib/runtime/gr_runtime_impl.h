@@ -72,8 +72,8 @@ private:
     
   bool                           d_running;
   gr_hier_block2_sptr            d_top_block;
-  gr_simple_flowgraph_sptr       d_sfg;
-  std::vector<gr_block_vector_t> d_graphs;
+  gr_flat_flowgraph_sptr         d_ffg;
+  std::vector<gr_basic_block_vector_t> d_graphs;
   gr_scheduler_thread_vector_t   d_threads;
   gr_runtime                    *d_owner;
   int                            d_lock_count;

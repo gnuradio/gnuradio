@@ -22,7 +22,7 @@
 #define INCLUDED_GR_HIER_BLOCK2_DETAIL_H
 
 #include <gr_hier_block2.h>
-#include <gr_simple_flowgraph_detail.h>
+#include <gr_flat_flowgraph.h>
 #include <boost/utility.hpp>
 
 class gr_hier_block2_detail : boost::noncopyable
@@ -37,7 +37,7 @@ private:
     // Private implementation data
     gr_hier_block2 *d_owner;
     gr_hier_block2_detail *d_parent_detail;
-    gr_simple_flowgraph_sptr d_fg;
+    gr_flowgraph_sptr d_fg;
     gr_endpoint_vector_t d_inputs;
     gr_endpoint_vector_t d_outputs;
     gr_runtime *d_runtime;
@@ -51,7 +51,7 @@ private:
     void connect_output(int my_port, int port, gr_basic_block_sptr block);
     void disconnect_input(int my_port, int port, gr_basic_block_sptr block);
     void disconnect_output(int my_port, int port, gr_basic_block_sptr block);
-    void flatten(gr_simple_flowgraph_sptr sfg);
+    void flatten(gr_flat_flowgraph_sptr sfg);
     gr_endpoint resolve_port(int port, bool is_input);
     gr_endpoint resolve_endpoint(const gr_endpoint &endp, bool is_input);
     void set_runtime(gr_runtime *runtime) { d_runtime = runtime; }
