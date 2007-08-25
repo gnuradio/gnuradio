@@ -462,9 +462,7 @@ INPUT                  = @top_srcdir@/gnuradio-core/src/lib \
 			 @top_srcdir@/gr-video-sdl \
 			 @top_srcdir@/mblock \
 			 @top_srcdir@/omnithread \
-			 @top_srcdir@/pmt \
-			 @top_srcdir@/usrp/host
-
+			 @top_srcdir@/pmt
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
