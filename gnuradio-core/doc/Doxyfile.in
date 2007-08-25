@@ -453,10 +453,13 @@ INPUT                  = @top_srcdir@/gnuradio-core/src/lib \
 			 @top_srcdir@/gr-audio-oss \
 			 @top_srcdir@/gr-audio-osx \
 			 @top_srcdir@/gr-audio-portaudio \
+			 @top_srcdir@/gr-comedi \
 			 @top_srcdir@/gr-cvsd-vocoder \
 			 @top_srcdir@/gr-gsm-fr-vocoder \
 			 @top_srcdir@/gr-pager \
+			 @top_srcdir@/gr-radar-mono \
 			 @top_srcdir@/gr-radio-astronomy \
+			 @top_srcdir@/gr-sounder \
 			 @top_srcdir@/gr-trellis \
 			 @top_srcdir@/gr-usrp \
 			 @top_srcdir@/gr-video-sdl \
@@ -499,16 +502,13 @@ EXCLUDE                = CVS .svn .libs .deps \
 			 @top_builddir@/gr-audio-portaudio/src/audio_portaudio.cc \
 			 @top_builddir@/gr-audio-windows/src/audio_windows.cc \
 			 @top_builddir@/gr-comedi/src/comedi.cc \
-			 @top_builddir@/gr-ezdop/src/lib/ezdop.cc \
 			 @top_builddir@/gr-gsm-fr-vocoder/src/lib/gsm_full_rate.cc \
 			 @top_builddir@/gr-howto-write-a-block/src/lib/howto.cc \
 			 @top_builddir@/gr-pager/src/pager_swig.cc \
 			 @top_builddir@/gr-radio-astronomy/src/lib/ra.cc \
 			 @top_builddir@/gr-trellis/src/lib/trellis.cc \
 			 @top_builddir@/gr-usrp/src/usrp1.cc \
-			 @top_builddir@/gr-video-sdl/src/video_sdl.cc \
-			 @top_builddir@/usrp/host/swig/prims.cc
-
+			 @top_builddir@/gr-video-sdl/src/video_sdl.cc
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix filesystem feature) are excluded 
