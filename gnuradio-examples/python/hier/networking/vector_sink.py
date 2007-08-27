@@ -48,12 +48,9 @@ if __name__ == "__main__":
     # Create an instance of a hierarchical block
     top_block = vector_sink(options.src_name, options.src_port, options.packet_size)
     
-    # Create an instance of a runtime, passing it the top block
-    runtime = gr.runtime(top_block)
-    
     try:    
         # Run forever
-        runtime.run()
+        top_block.run()
     except KeyboardInterrupt:
         # Ctrl-C exits
         pass

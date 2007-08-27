@@ -76,10 +76,9 @@ def main():
 
     queue = gr.msg_queue()
     tb = app_top_block(options, queue)
-    r = gr.runtime(tb)
 
     try:
-        r.start()
+        tb.start()
 	while 1:
 	    if not queue.empty_p():
 		msg = queue.delete_head() # Blocking read
@@ -96,7 +95,7 @@ def main():
 		time.sleep(1)
 
     except KeyboardInterrupt:
-        r.stop()
+        tb.stop()
     
 if __name__ == "__main__":
     main()

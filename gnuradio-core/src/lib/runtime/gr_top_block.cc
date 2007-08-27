@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,66 +24,64 @@
 #include "config.h"
 #endif
 
-#include <gr_runtime.h>
-#include <gr_runtime_impl.h>
+#include <gr_top_block.h>
+#include <gr_top_block_impl.h>
+#include <gr_io_signature.h>
 #include <iostream>
 
-gr_runtime_sptr 
-gr_make_runtime(gr_hier_block2_sptr top_block)
+gr_top_block_sptr 
+gr_make_top_block(const std::string &name)
 {
-  return gr_runtime_sptr(new gr_runtime(top_block));
+  return gr_top_block_sptr(new gr_top_block(name));
 }
 
-gr_runtime::gr_runtime(gr_hier_block2_sptr top_block)
+gr_top_block::gr_top_block(const std::string &name)
+  : gr_hier_block2(name, 
+		   gr_make_io_signature(0,0,0), 
+		   gr_make_io_signature(0,0,0))
+  
 {
-  d_impl = new gr_runtime_impl(top_block, this);
+  d_impl = new gr_top_block_impl(this);
 }
   
-gr_runtime::~gr_runtime()
+gr_top_block::~gr_top_block()
 {
   delete d_impl;
 }
 
 void 
-gr_runtime::start()
+gr_top_block::start()
 {
   d_impl->start();
 }
 
 void 
-gr_runtime::stop()
+gr_top_block::stop()
 {
   d_impl->stop();
 }
 
 void 
-gr_runtime::wait()
+gr_top_block::wait()
 {
   d_impl->wait();
 }
 
 void 
-gr_runtime::run()
+gr_top_block::run()
 {
   start();
   wait();
 }
 
 void
-gr_runtime::restart()
-{
-  d_impl->restart();
-}
-
-void
-gr_runtime::lock()
+gr_top_block::lock()
 {
   d_impl->lock();
 }
 
 void
-gr_runtime::unlock()
+gr_top_block::unlock()
 {
   d_impl->unlock();
 }
-

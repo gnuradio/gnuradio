@@ -20,7 +20,4 @@
 # 
 
 include $(top_srcdir)/Makefile.common
-
-# FIXME: do not build automatically; need to detect required pre-requisites
-
 # SUBDIRS = dial_tone 

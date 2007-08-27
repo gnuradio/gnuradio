@@ -85,10 +85,9 @@ def main():
         sys.exit(1)
 
     top_block = usrp_sounder_rx(options)
-    runtime = gr.runtime(top_block)
 
     try:
-        runtime.run()
+        top_block.run()
     except KeyboardInterrupt:
         pass
 

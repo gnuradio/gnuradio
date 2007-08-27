@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,25 +20,32 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <dial_tone.h>
-#include <gr_io_signature.h>
-#include <gr_sig_source_f.h>
-#include <audio_alsa_sink.h>
+#ifndef INCLUDED_QA_GR_TOP_BLOCK_H
+#define INCLUDED_QA_GR_TOP_BLOCK_H
 
-// Shared pointer constructor
-dial_tone_sptr make_dial_tone()
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
+#include <stdexcept>
+
+class qa_gr_top_block : public CppUnit::TestCase 
 {
-    return dial_tone_sptr(new dial_tone());
-}
+  CPPUNIT_TEST_SUITE(qa_gr_top_block);
+  
+  CPPUNIT_TEST(t0);
+  CPPUNIT_TEST(t1_run);
+  CPPUNIT_TEST(t2_start_stop_wait);
+  CPPUNIT_TEST(t3_lock_unlock);
+  // CPPUNIT_TEST(t4_reconfigure);  triggers 'join never returns' bug
 
-// Hierarchical block constructor, with no inputs or outputs
-dial_tone::dial_tone() : 
-    gr_top_block("dial_tone")
-{
-    gr_sig_source_f_sptr src0 = gr_make_sig_source_f(48000, GR_SIN_WAVE, 350, 0.1);
-    gr_sig_source_f_sptr src1 = gr_make_sig_source_f(48000, GR_SIN_WAVE, 440, 0.1);
-    audio_alsa_sink_sptr sink = audio_alsa_make_sink(48000);
+  CPPUNIT_TEST_SUITE_END();
 
-    connect(src0, 0, sink, 0);
-    connect(src1, 0, sink, 1);
-}
+private:
+
+  void t0();
+  void t1_run();
+  void t2_start_stop_wait();
+  void t3_lock_unlock();
+  void t4_reconfigure();
+};
+
+#endif /* INCLUDED_QA_GR_TOP_BLOCK_H */

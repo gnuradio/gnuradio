@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2007 Free Software Foundation, Inc.
+# Copyright 2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,7 +19,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio_swig_python import hier_block2_swig
+from gnuradio_swig_python import top_block_swig, \
+    top_block_wait_unlocked, top_block_run_unlocked
 
 #
 # This hack forces a 'has-a' relationship to look like an 'is-a' one.
@@ -27,14 +28,27 @@ from gnuradio_swig_python import hier_block2_swig
 # It allows Python classes to subclass this one, while passing through
 # method calls to the C++ class shared pointer from SWIG.
 #
-# It also allows us to intercept method calls if needed
+# It also allows us to intercept method calls if needed.
 #
-class hier_block2(object):
-    def __init__(self, name, input_signature, output_signature):
-	self._hb = hier_block2_swig(name, input_signature, output_signature)
+# This allows the 'run_locked' methods, which are defined in gr_top_block.i,
+# to release the Python global interpreter lock before calling the actual
+# method in gr_top_block
+#
+class top_block(object):
+    def __init__(self, name="top_block"):
+	self._tb = top_block_swig(name)
 
     def __getattr__(self, name):
-	return getattr(self._hb, name)
+	return getattr(self._tb, name)
+
+    def run(self):
+        top_block_run_unlocked(self._tb)
+
+    def wait(self):
+        top_block_wait_unlocked(self._tb)
+
+    # FIXME: these are duplicated from hier_block2.py; they should really be implemented
+    # in the original C++ class (gr_hier_block2), then they would all be inherited here
 
     def connect(self, *points):
         '''connect requires two or more arguments that can be coerced to endpoints.
@@ -48,7 +62,7 @@ class hier_block2(object):
     def _connect(self, src, dst):
         (src_block, src_port) = self._coerce_endpoint(src)
         (dst_block, dst_port) = self._coerce_endpoint(dst)
-        self._hb.connect(src_block.basic_block(), src_port,
+        self._tb.connect(src_block.basic_block(), src_port,
                          dst_block.basic_block(), dst_port)
 
     def _coerce_endpoint(self, endp):
@@ -72,6 +86,6 @@ class hier_block2(object):
     def _disconnect(self, src, dst):
         (src_block, src_port) = self._coerce_endpoint(src)
         (dst_block, dst_port) = self._coerce_endpoint(dst)
-        self._hb.disconnect(src_block.basic_block(), src_port,
+        self._tb.disconnect(src_block.basic_block(), src_port,
                             dst_block.basic_block(), dst_port)
 

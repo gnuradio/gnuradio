@@ -40,34 +40,32 @@ class gr_hier_block2_detail;
 class gr_hier_block2 : public gr_basic_block
 {
 private:
-    friend class gr_hier_block2_detail;
-    friend class gr_runtime_impl;
-    friend gr_hier_block2_sptr gr_make_hier_block2(const std::string &name,
-                                                   gr_io_signature_sptr input_signature,
-                                                   gr_io_signature_sptr output_signature);
-
-    /*!
-     * \brief Private implementation details of gr_hier_block2
-     */
-    gr_hier_block2_detail *d_detail;
-
-    /* Internal use only */
-    void set_runtime(gr_runtime *runtime);
-
+  friend class gr_hier_block2_detail;
+  friend gr_hier_block2_sptr gr_make_hier_block2(const std::string &name,
+						 gr_io_signature_sptr input_signature,
+						 gr_io_signature_sptr output_signature);
+  
+  /*!
+   * \brief Private implementation details of gr_hier_block2
+   */
+  gr_hier_block2_detail *d_detail;
+  
 protected: 
-    gr_hier_block2(const std::string &name,
-                   gr_io_signature_sptr input_signature,
-                   gr_io_signature_sptr output_signature);
-
+  gr_hier_block2(const std::string &name,
+		 gr_io_signature_sptr input_signature,
+		 gr_io_signature_sptr output_signature);
+  
 public:
-    virtual ~gr_hier_block2();
+  virtual ~gr_hier_block2();
+  
+  void connect(gr_basic_block_sptr src, int src_port, 
+	       gr_basic_block_sptr dst, int dst_port);
+  void disconnect(gr_basic_block_sptr src, int src_port,
+		  gr_basic_block_sptr dst, int dst_port);
+  virtual void lock();
+  virtual void unlock();
 
-    void connect(gr_basic_block_sptr src, int src_port, 
-                 gr_basic_block_sptr dst, int dst_port);
-    void disconnect(gr_basic_block_sptr src, int src_port,
-	            gr_basic_block_sptr dst, int dst_port);
-    void lock();
-    void unlock();
+  void flatten(gr_flat_flowgraph_sptr ffg);
 };
 
 #endif /* INCLUDED_GR_HIER_BLOCK2_H */

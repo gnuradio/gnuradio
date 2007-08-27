@@ -65,11 +65,11 @@ class stdframe (wx.Frame):
         vbox.Fit(self)
 
     def OnCloseWindow (self, event):
-        self.runtime().stop()
+        self.top_block().stop()
         self.Destroy ()
 
-    def runtime (self):
-        return self.panel.runtime
+    def top_block (self):
+        return self.panel.top_block
     
 class stdpanel (wx.Panel):
     def __init__ (self, parent, frame, top_block_maker):
@@ -83,8 +83,7 @@ class stdpanel (wx.Panel):
         self.SetAutoLayout (True)
         vbox.Fit (self)
 
-        self.runtime = gr.runtime(self.top_block)
-        self.runtime.start ()
+        self.top_block.start ()
 
 class std_top_block (gr.top_block):
     def __init__ (self, parent, panel, vbox, argv):

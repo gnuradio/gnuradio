@@ -35,7 +35,7 @@ gr_hier_block2_sptr gr_make_hier_block2(const std::string &name,
                                         gr_io_signature_sptr input_signature,
                                         gr_io_signature_sptr output_signature)
 {
-    return gr_hier_block2_sptr(new gr_hier_block2(name, input_signature, output_signature));
+  return gr_hier_block2_sptr(new gr_hier_block2(name, input_signature, output_signature));
 }
 
 gr_hier_block2::gr_hier_block2(const std::string &name,
@@ -48,39 +48,37 @@ gr_hier_block2::gr_hier_block2(const std::string &name,
 
 gr_hier_block2::~gr_hier_block2()
 {
-    delete d_detail;
+  delete d_detail;
 }
 
 void 
 gr_hier_block2::connect(gr_basic_block_sptr src, int src_port, 
                         gr_basic_block_sptr dst, int dst_port)
 {
-    d_detail->connect(src, src_port, dst, dst_port);
+  d_detail->connect(src, src_port, dst, dst_port);
 }
 
 void 
 gr_hier_block2::disconnect(gr_basic_block_sptr src, int src_port, 
                            gr_basic_block_sptr dst, int dst_port)
 {
-    d_detail->disconnect(src, src_port, dst, dst_port);
-}
-
-void
-gr_hier_block2::set_runtime(gr_runtime *runtime)
-{
-    if (GR_HIER_BLOCK2_DEBUG)
-      std::cout << "Setting runtime on " << this << " to " << runtime << std::endl;
-    d_detail->set_runtime(runtime);
+  d_detail->disconnect(src, src_port, dst, dst_port);
 }
 
 void
 gr_hier_block2::lock()
 {
-    d_detail->lock();
+  d_detail->lock();
 }
 
 void
 gr_hier_block2::unlock()
 {
-    d_detail->unlock();
+  d_detail->unlock();
+}
+
+void
+gr_hier_block2::flatten(gr_flat_flowgraph_sptr ffg)
+{
+  d_detail->flatten(ffg);
 }

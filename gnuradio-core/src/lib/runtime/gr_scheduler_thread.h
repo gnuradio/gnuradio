@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,13 +20,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_RUNTIME_IMPL_H
-#define INCLUDED_GR_RUNTIME_IMPL_H
+#ifndef INCLUDED_GR_SCHEDULER_THREAD_H
+#define INCLUDED_GR_SCHEDULER_THREAD_H
 
-#include <gr_runtime_types.h>
-#include <gr_block.h>
 #include <omnithread.h>
 #include <gr_single_threaded_scheduler.h>
+#include <gr_block.h>
 
 // omnithread calls delete on itself after thread exits, so can't use shared ptr
 class gr_scheduler_thread;
@@ -56,40 +55,4 @@ public:
   void stop();
 };
 
-/*!
- *\brief Implementation details of gr_runtime
- *
- * The actual implementation of gr_runtime. Separate class allows
- * decoupling of changes from dependent classes.
- *
- */
-class gr_runtime_impl
-{
-private:
-  gr_runtime_impl(gr_hier_block2_sptr top_block, gr_runtime *owner);
-  friend void runtime_sigint_handler(int signum);
-  friend class gr_runtime;
-    
-  bool                           d_running;
-  gr_hier_block2_sptr            d_top_block;
-  gr_flat_flowgraph_sptr         d_ffg;
-  std::vector<gr_basic_block_vector_t> d_graphs;
-  gr_scheduler_thread_vector_t   d_threads;
-  gr_runtime                    *d_owner;
-  int                            d_lock_count;
-  omni_mutex                     d_reconf;
-
-  void start();
-  void start_threads();
-  void stop();
-  void wait();
-  void restart();
-  void lock();
-  void unlock();
-
-public:
-  ~gr_runtime_impl();
-
-};
-
-#endif /* INCLUDED_GR_RUNTIME_IMPL_H */
+#endif /* INCLUDED_GR_SCHEDULER_THREAD_H */

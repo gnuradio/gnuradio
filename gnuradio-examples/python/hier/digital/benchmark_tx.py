@@ -88,10 +88,7 @@ def main():
 
     # Create an instance of a hierarchical block
     top_block = transmit_path(mods[options.modulation], options)
-    
-    # Create an instance of a runtime, passing it the top block
-    runtime = gr.runtime(top_block)
-    runtime.start()
+    top_block.start()    
 
     # generate and send packets
     nbytes = int(1e6 * options.megabytes)
@@ -108,7 +105,7 @@ def main():
         pktno += 1
         
     send_pkt(eof=True)
-    runtime.wait()
+    top_block.wait()
 
 if __name__ == '__main__':
     try:

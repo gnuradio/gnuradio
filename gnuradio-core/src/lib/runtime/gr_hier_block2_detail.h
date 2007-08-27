@@ -40,7 +40,6 @@ private:
     gr_flowgraph_sptr d_fg;
     gr_endpoint_vector_t d_inputs;
     gr_endpoint_vector_t d_outputs;
-    gr_runtime *d_runtime;
 
     // Private implementation methods
     void connect(gr_basic_block_sptr src, int src_port, 
@@ -54,7 +53,6 @@ private:
     void flatten(gr_flat_flowgraph_sptr sfg);
     gr_endpoint resolve_port(int port, bool is_input);
     gr_endpoint resolve_endpoint(const gr_endpoint &endp, bool is_input);
-    void set_runtime(gr_runtime *runtime) { d_runtime = runtime; }
     void lock();
     void unlock();
 

@@ -119,11 +119,9 @@ def main ():
     top_block = my_graph(options.type, options.amplitude, options.waveform_freq, options.offset,
                          options.tx_subdev_spec, options.interp, options.rf_freq)
 
-    runtime = gr.runtime(top_block)
-    
     try:    
         # Run forever
-        runtime.run()
+        top_block.run()
     except KeyboardInterrupt:
         # Ctrl-C exits
         pass

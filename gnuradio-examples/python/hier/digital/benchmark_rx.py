@@ -95,12 +95,7 @@ def main():
 
     # Create an instance of a hierarchical block
     top_block = receive_path(demods[options.modulation], rx_callback, options)
-    
-    # Create an instance of a runtime, passing it the top block
-    runtime = gr.runtime(top_block)
-    runtime.start()
-
-    runtime.wait()         # wait for it to finish
+    top_block.run()    
 
 if __name__ == '__main__':
     try:

@@ -50,12 +50,9 @@ if __name__ == '__main__':
     top_block = dial_tone_sink(options.src_name, options.src_port,
                                options.packet_size, options.sample_rate)
     
-    # Create an instance of a runtime, passing it the top block
-    runtime = gr.runtime(top_block)
-    
     try:    
         # Run forever
-        runtime.run()
+        top_block.run()
     except KeyboardInterrupt:
         # Ctrl-C exits
         pass

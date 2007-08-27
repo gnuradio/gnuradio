@@ -51,13 +51,9 @@ def main():
 	# Create an instance of a hierarchical block
 	top_block = dect_receiver(options)
 			      
-	# Create an instance of a runtime, passing it the top block
-	# to process
-	runtime = gr.runtime(top_block)
-
 	try:    
             # Run forever
-            runtime.run()
+            top_block.run()
 	except KeyboardInterrupt:
             # Ctrl-C exits
             pass

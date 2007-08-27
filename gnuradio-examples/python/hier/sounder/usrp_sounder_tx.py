@@ -99,13 +99,9 @@ def main():
 				    options.verbose, options.degree, options.chip_rate,
 				    options.amplitude)
 			      
-	# Create an instance of a runtime, passing it the top block
-	# to process
-	runtime = gr.runtime(top_block)
-
 	try:    
             # Run forever
-            runtime.run()
+            top_block.run()
 	except KeyboardInterrupt:
             # Ctrl-C exits
             pass

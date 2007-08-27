@@ -100,8 +100,7 @@ class test_hier_block2(gr_unittest.TestCase):
         sink2 = gr.vector_sink_f()
         hblock.connect(src, sink1)
         hblock.connect(src, sink2)
-        runtime = gr.runtime(hblock)
-        runtime.run()
+        hblock.run()
         actual1 = sink1.data()
         actual2 = sink2.data()
         self.assertEquals(expected, actual1)
@@ -185,8 +184,7 @@ class test_hier_block2(gr_unittest.TestCase):
 	src = gr.vector_source_f(data, False)
 	dst = gr.vector_sink_f()
 	hblock.connect(src, dst)
-	r = gr.runtime(hblock)
-	r.run()
+	hblock.run()
 	self.assertEquals(data, dst.data())
 
 if __name__ == "__main__":

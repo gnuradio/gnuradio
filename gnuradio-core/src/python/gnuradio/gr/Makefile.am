@@ -41,7 +41,8 @@ grgrpython_PYTHON = 		\
 	hier_block.py		\
 	hier_block2.py		\
 	prefs.py		\
-	scheduler.py		
+	scheduler.py		\
+	top_block.py
 
 noinst_PYTHON = 			\
 	benchmark_filters.py		\

@@ -38,7 +38,8 @@ class gr_buffer;
 class gr_buffer_reader;
 class gr_flowgraph;
 class gr_flat_flowgraph;
-class gr_runtime;
+class gr_top_block;
+class gr_top_block_detail;
 
 typedef boost::shared_ptr<gr_basic_block>       gr_basic_block_sptr;
 typedef boost::shared_ptr<gr_block>             gr_block_sptr;
@@ -47,8 +48,8 @@ typedef boost::shared_ptr<gr_hier_block2>	gr_hier_block2_sptr;
 typedef boost::shared_ptr<gr_io_signature>      gr_io_signature_sptr;
 typedef boost::shared_ptr<gr_buffer>		gr_buffer_sptr;
 typedef boost::shared_ptr<gr_buffer_reader>	gr_buffer_reader_sptr;
-typedef boost::shared_ptr<gr_runtime>		gr_runtime_sptr;
 typedef boost::shared_ptr<gr_flowgraph>         gr_flowgraph_sptr;
 typedef boost::shared_ptr<gr_flat_flowgraph>    gr_flat_flowgraph_sptr;
+typedef boost::shared_ptr<gr_top_block>         gr_top_block_sptr;
 
 #endif /* INCLUDED_GR_RUNTIME_TYPES_H */

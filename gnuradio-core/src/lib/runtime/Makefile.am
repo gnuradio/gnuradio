@@ -1,5 +1,5 @@
 #
-# Copyright 2003,2004 Free Software Foundation, Inc.
+# Copyright 2003,2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -48,12 +48,13 @@ libruntime_la_SOURCES = 			\
 	gr_pagesize.cc				\
 	gr_preferences.cc			\
 	gr_realtime.cc				\
-	gr_runtime.cc				\
-	gr_runtime_impl.cc			\
+	gr_scheduler_thread.cc			\
 	gr_single_threaded_scheduler.cc		\
 	gr_sync_block.cc			\
 	gr_sync_decimator.cc			\
 	gr_sync_interpolator.cc			\
+	gr_top_block.cc				\
+	gr_top_block_impl.cc			\
 	gr_tmp_path.cc				\
 	gr_vmcircbuf.cc				\
 	gr_vmcircbuf_mmap_shm_open.cc		\
@@ -67,6 +68,7 @@ libruntime_qa_la_SOURCES = 			\
 	qa_gr_hier_block2.cc			\
 	qa_gr_buffer.cc				\
 	qa_gr_flowgraph.cc			\
+	qa_gr_top_block.cc			\
 	qa_gr_io_signature.cc			\
 	qa_gr_vmcircbuf.cc			\
 	qa_runtime.cc				
@@ -91,14 +93,15 @@ grinclude_HEADERS = 				\
 	gr_pagesize.h				\
 	gr_preferences.h			\
 	gr_realtime.h				\
-	gr_runtime.h				\
-	gr_runtime_impl.h			\
 	gr_runtime_types.h			\
+	gr_scheduler_thread.h			\
 	gr_select_handler.h			\
 	gr_single_threaded_scheduler.h		\
 	gr_sync_block.h				\
 	gr_sync_decimator.h			\
 	gr_sync_interpolator.h			\
+	gr_top_block.h				\
+	gr_top_block_impl.h			\
 	gr_timer.h				\
 	gr_tmp_path.h				\
 	gr_types.h				\
@@ -114,6 +117,7 @@ noinst_HEADERS = 				\
 	qa_gr_hier_block2.h			\
 	qa_gr_buffer.h				\
 	qa_gr_io_signature.h			\
+	qa_gr_top_block.h			\
 	qa_gr_vmcircbuf.h			\
 	qa_runtime.h				
 
@@ -130,12 +134,12 @@ swiginclude_HEADERS =			\
 	gr_msg_handler.i		\
 	gr_msg_queue.i			\
 	gr_realtime.i			\
-	gr_runtime.i			\
 	gr_single_threaded_scheduler.i	\
 	gr_sync_block.i			\
 	gr_sync_decimator.i		\
 	gr_sync_interpolator.i		\
 	gr_swig_block_magic.i		\
+	gr_top_block.i			\
 	runtime.i
 
 MOSTLYCLEANFILES = *~ *.loT

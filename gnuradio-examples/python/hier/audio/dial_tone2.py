@@ -60,13 +60,9 @@ if __name__ == '__main__':
 			options.audio_output, 
 			options.amplitude)
 			      
-	# Create an instance of a runtime, passing it the top block
-	# to process
-	runtime = gr.runtime(top)
-
 	try:    
 		# Run forever
-		runtime.run()
+		top.run()
 	except KeyboardInterrupt:
 		# Ctrl-C exits
 		pass

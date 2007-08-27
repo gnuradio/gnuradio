@@ -25,7 +25,6 @@
 
 #include <gr_hier_block2_detail.h>
 #include <gr_io_signature.h>
-#include <gr_runtime.h>
 #include <stdexcept>
 #include <iostream>
 
@@ -36,8 +35,7 @@ gr_hier_block2_detail::gr_hier_block2_detail(gr_hier_block2 *owner) :
   d_parent_detail(0),
   d_fg(gr_make_flowgraph()),
   d_inputs(owner->input_signature()->max_streams()),
-  d_outputs(owner->output_signature()->max_streams()),
-  d_runtime()
+  d_outputs(owner->output_signature()->max_streams())
 {
 }
 
@@ -263,8 +261,7 @@ gr_hier_block2_detail::lock()
   if (d_parent_detail)
     d_parent_detail->lock();
   else
-    if (d_runtime)
-      d_runtime->lock();
+    d_owner->lock();
 }
 
 void
@@ -276,6 +273,5 @@ gr_hier_block2_detail::unlock()
   if (d_parent_detail)
     d_parent_detail->unlock();
   else
-    if (d_runtime)
-      d_runtime->unlock();
+    d_owner->unlock();
 }

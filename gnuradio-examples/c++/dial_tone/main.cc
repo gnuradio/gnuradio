@@ -26,13 +26,10 @@
 // Tell the runtime to go...
 
 #include <dial_tone.h>
-#include <gr_runtime.h>
 
 int main()
 {
     dial_tone_sptr top_block = make_dial_tone();
-    gr_runtime_sptr runtime = gr_make_runtime(top_block);
-
-    runtime->run();   
+    top_block->run();   
     return 0;
 }

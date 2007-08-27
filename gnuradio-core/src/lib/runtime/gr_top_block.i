@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006,2007 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,23 +20,31 @@
  * Boston, MA 02110-1301, USA.
  */
 
-class gr_runtime;
-typedef boost::shared_ptr<gr_runtime> gr_runtime_sptr;
-%template(gr_runtime_sptr) boost::shared_ptr<gr_runtime>;
+%include <gr_top_block.i>
 
-gr_runtime_sptr gr_make_runtime(gr_hier_block2_sptr top_block);
+class gr_top_block;
+typedef boost::shared_ptr<gr_top_block> gr_top_block_sptr;
+%template(gr_top_block_sptr) boost::shared_ptr<gr_top_block>;
 
-class gr_runtime
+// Hack to have a Python shim implementation of gr.top_block
+// that instantiates one of these and passes through calls
+%rename(top_block_swig) gr_make_top_block;
+gr_top_block_sptr gr_make_top_block(const std::string name);
+
+class gr_top_block : public gr_hier_block2
 {
-protected:
-    gr_runtime(gr_hier_block2_sptr top_block);
-
+private:
+  gr_top_block(const std::string &name);
+    
 public:
-    void run() throw (std::runtime_error);
-    void start() throw (std::runtime_error);
-    void stop() throw (std::runtime_error);
-    void wait() throw (std::runtime_error);
-    void restart() throw (std::runtime_error);
+  ~gr_top_block();
+
+  void start();
+  void stop();
+  void wait();
+  void run();
+  void lock();
+  void unlock();
 };
 
 %{
@@ -49,34 +57,15 @@ public:
 %}
 
 %inline %{
-void runtime_run_unlocked(gr_runtime_sptr r) throw (std::runtime_error) 
+void top_block_run_unlocked(gr_top_block_sptr r) throw (std::runtime_error) 
 {
     ensure_py_gil_state2 _lock;
     r->run();
 }
 
-void runtime_start_unlocked(gr_runtime_sptr r) throw (std::runtime_error) 
-{
-    ensure_py_gil_state2 _lock;
-    r->start();
-}
-
-void runtime_stop_unlocked(gr_runtime_sptr r) throw (std::runtime_error) 
-{
-    ensure_py_gil_state2 _lock;
-    r->stop();
-}
-
-void runtime_wait_unlocked(gr_runtime_sptr r) throw (std::runtime_error) 
+void top_block_wait_unlocked(gr_top_block_sptr r) throw (std::runtime_error) 
 {
     ensure_py_gil_state2 _lock;
     r->wait();
 }
-
-void runtime_restart_unlocked(gr_runtime_sptr r) throw (std::runtime_error) 
-{
-    ensure_py_gil_state2 _lock;
-    r->restart();
-}
-
 %}

@@ -19,13 +19,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gr_hier_block2.h>
+#include <gr_top_block.h>
 
 class dial_tone;
 typedef boost::shared_ptr<dial_tone> dial_tone_sptr;
 dial_tone_sptr make_dial_tone();
 
-class dial_tone : public gr_hier_block2
+class dial_tone : public gr_top_block
 {
 private:
     dial_tone();

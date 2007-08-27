@@ -22,6 +22,7 @@ AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
 
     AC_CONFIG_FILES([ \
         gnuradio-examples/Makefile \
+	gnuradio-examples/c++/Makefile \
         gnuradio-examples/python/Makefile \
         gnuradio-examples/python/apps/hf_explorer/Makefile \
         gnuradio-examples/python/apps/hf_radio/Makefile \
