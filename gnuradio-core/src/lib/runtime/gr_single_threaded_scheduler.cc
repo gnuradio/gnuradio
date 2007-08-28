@@ -82,10 +82,18 @@ gr_single_threaded_scheduler::~gr_single_threaded_scheduler ()
 void
 gr_single_threaded_scheduler::run ()
 {
-  d_enabled = true;
+  // d_enabled = true;		// KLUDGE
   main_loop ();
 }
 
+void
+gr_single_threaded_scheduler::stop ()
+{ 
+  if (0)
+    std::cout << "gr_singled_threaded_scheduler::stop() "
+	      << this << std::endl;
+  d_enabled = false;
+}
 
 inline static unsigned int
 round_up (unsigned int n, unsigned int multiple)

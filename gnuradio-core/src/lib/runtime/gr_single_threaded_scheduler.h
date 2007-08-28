@@ -40,7 +40,7 @@ class gr_single_threaded_scheduler {
   ~gr_single_threaded_scheduler ();
 
   void run ();
-  void stop () { d_enabled = false; }
+  void stop ();
 
  private:
   const std::vector<gr_block_sptr>	d_blocks;

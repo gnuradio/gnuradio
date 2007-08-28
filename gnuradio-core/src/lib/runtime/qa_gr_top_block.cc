@@ -29,9 +29,14 @@
 #include <gr_head.h>
 #include <gr_null_source.h>
 #include <gr_null_sink.h>
+#include <iostream>
+
+#define VERBOSE 0
 
 void qa_gr_top_block::t0()
 {
+  if (VERBOSE) std::cout << "qa_gr_top_block::t0()\n";
+
   gr_top_block_sptr tb = gr_make_top_block("top");
 
   CPPUNIT_ASSERT(tb);
@@ -39,10 +44,12 @@ void qa_gr_top_block::t0()
 
 void qa_gr_top_block::t1_run()
 {
+  if (VERBOSE) std::cout << "qa_gr_top_block::t1()\n";
+
   gr_top_block_sptr tb = gr_make_top_block("top");
 
   gr_block_sptr src = gr_make_null_source(sizeof(int));
-  gr_block_sptr head = gr_make_head(sizeof(int), 1);
+  gr_block_sptr head = gr_make_head(sizeof(int), 100000);
   gr_block_sptr dst = gr_make_null_sink(sizeof(int));
 
   tb->connect(src, 0, head, 0);
@@ -52,10 +59,12 @@ void qa_gr_top_block::t1_run()
 
 void qa_gr_top_block::t2_start_stop_wait()
 {
+  if (VERBOSE) std::cout << "qa_gr_top_block::t2()\n";
+
   gr_top_block_sptr tb = gr_make_top_block("top");
 
   gr_block_sptr src = gr_make_null_source(sizeof(int));
-  gr_block_sptr head = gr_make_head(sizeof(int), 1000000);
+  gr_block_sptr head = gr_make_head(sizeof(int), 100000);
   gr_block_sptr dst = gr_make_null_sink(sizeof(int));
 
   tb->connect(src, 0, head, 0);
@@ -68,14 +77,14 @@ void qa_gr_top_block::t2_start_stop_wait()
 
 void qa_gr_top_block::t3_lock_unlock()
 {
+  if (VERBOSE) std::cout << "qa_gr_top_block::t3()\n";
+
   gr_top_block_sptr tb = gr_make_top_block("top");
 
   gr_block_sptr src = gr_make_null_source(sizeof(int));
-  gr_block_sptr head = gr_make_head(sizeof(int), 1000000);
   gr_block_sptr dst = gr_make_null_sink(sizeof(int));
 
-  tb->connect(src, 0, head, 0);
-  tb->connect(head, 0, dst, 0);
+  tb->connect(src, 0, dst, 0);
 
   tb->start();
 
@@ -88,10 +97,12 @@ void qa_gr_top_block::t3_lock_unlock()
 
 void qa_gr_top_block::t4_reconfigure()
 {
+  if (VERBOSE) std::cout << "qa_gr_top_block::t4()\n";
+
   gr_top_block_sptr tb = gr_make_top_block("top");
 
   gr_block_sptr src = gr_make_null_source(sizeof(int));
-  gr_block_sptr head = gr_make_head(sizeof(int), 1);
+  gr_block_sptr head = gr_make_head(sizeof(int), 100000);
   gr_block_sptr dst = gr_make_null_sink(sizeof(int));
 
   // Start infinite flowgraph

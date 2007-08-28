@@ -45,6 +45,9 @@ gr_scheduler_thread::~gr_scheduler_thread()
 
 void gr_scheduler_thread::start()
 {
+  if (GR_SCHEDULER_THREAD_DEBUG)
+    std::cout << "gr_scheduler_thread::start() "
+	      << this << std::endl;
   start_undetached();
 }
 
@@ -70,6 +73,7 @@ void
 gr_scheduler_thread::stop()
 {
   if (GR_SCHEDULER_THREAD_DEBUG)
-    std::cout << "gr_scheduler_thread::stop()" << std::endl;
+    std::cout << "gr_scheduler_thread::stop() "
+	      << this << std::endl;
   d_sts->stop();
 }

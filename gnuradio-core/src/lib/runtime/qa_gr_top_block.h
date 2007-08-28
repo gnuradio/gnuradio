@@ -35,7 +35,7 @@ class qa_gr_top_block : public CppUnit::TestCase
   CPPUNIT_TEST(t1_run);
   CPPUNIT_TEST(t2_start_stop_wait);
   CPPUNIT_TEST(t3_lock_unlock);
-  // CPPUNIT_TEST(t4_reconfigure);  triggers 'join never returns' bug
+  CPPUNIT_TEST(t4_reconfigure);  // triggers 'join never returns' bug
 
   CPPUNIT_TEST_SUITE_END();
 

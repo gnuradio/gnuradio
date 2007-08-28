@@ -167,7 +167,7 @@ void
 gr_top_block_impl::unlock()
 {
   omni_mutex_lock lock(d_reconf);
-  if (d_lock_count == 0)
+  if (d_lock_count <= 0)
     throw std::runtime_error("unpaired unlock() call");
 
   d_lock_count--;
