@@ -77,8 +77,10 @@ gr_hier_block2::unlock()
   d_detail->unlock();
 }
 
-void
-gr_hier_block2::flatten(gr_flat_flowgraph_sptr ffg)
+gr_flat_flowgraph_sptr
+gr_hier_block2::flatten() const
 {
-  d_detail->flatten(ffg);
+  gr_flat_flowgraph_sptr new_ffg = gr_make_flat_flowgraph();
+  d_detail->flatten_aux(new_ffg);
+  return new_ffg;
 }

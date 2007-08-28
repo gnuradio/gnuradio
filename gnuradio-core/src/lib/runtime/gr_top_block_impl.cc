@@ -63,7 +63,7 @@ runtime_sigint_handler(int signum)
 
 gr_top_block_impl::gr_top_block_impl(gr_top_block *owner) 
   : d_running(false),
-    d_ffg(gr_make_flat_flowgraph()),
+    d_ffg(),
     d_owner(owner),
     d_lock_count(0)
 {
@@ -86,8 +86,7 @@ gr_top_block_impl::start()
     throw std::runtime_error("already running");
 
   // Create new flat flow graph by flattening hierarchy
-  d_ffg->clear();
-  d_owner->flatten(d_ffg);
+  d_ffg = d_owner->flatten();
 
   // Validate new simple flow graph and wire it up
   d_ffg->validate();
@@ -196,11 +195,10 @@ gr_top_block_impl::restart()
   if (GR_TOP_BLOCK_IMPL_DEBUG)
     std::cout << "restart: threads stopped" << std::endl;
 
-  // Create new simple flow graph 
-  gr_flat_flowgraph_sptr new_ffg = gr_make_flat_flowgraph();
-  d_owner->flatten(new_ffg);
-  new_ffg->validate();
-  new_ffg->merge_connections(d_ffg);
+  // Create new simple flow graph
+  gr_flat_flowgraph_sptr new_ffg = d_owner->flatten();        
+  new_ffg->validate();		       // check consistency, sanity, etc
+  new_ffg->merge_connections(d_ffg);   // reuse buffers, etc
 
   if (GR_TOP_BLOCK_IMPL_DEBUG)
     std::cout << "restart: replacing old flow graph with new" << std::endl;

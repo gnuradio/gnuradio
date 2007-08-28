@@ -204,7 +204,7 @@ gr_hier_block2_detail::resolve_port(int port, bool is_input)
 }
 
 gr_endpoint
-gr_hier_block2_detail::resolve_endpoint(const gr_endpoint &endp, bool is_input)
+gr_hier_block2_detail::resolve_endpoint(const gr_endpoint &endp, bool is_input) const
 {
   // Check if endpoint is a leaf node
   if (boost::dynamic_pointer_cast<gr_block, gr_basic_block>(endp.block()))
@@ -225,7 +225,7 @@ gr_hier_block2_detail::resolve_endpoint(const gr_endpoint &endp, bool is_input)
 }
 
 void
-gr_hier_block2_detail::flatten(gr_flat_flowgraph_sptr sfg)
+gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
 {
   if (GR_HIER_BLOCK2_DETAIL_DEBUG)
     std::cout << "flattening " << d_owner->name() << std::endl;
@@ -248,7 +248,7 @@ gr_hier_block2_detail::flatten(gr_flat_flowgraph_sptr sfg)
   for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
     gr_hier_block2_sptr hier_block2(boost::dynamic_pointer_cast<gr_hier_block2, gr_basic_block>(*p));
     if (hier_block2)
-      hier_block2->d_detail->flatten(sfg);
+      hier_block2->d_detail->flatten_aux(sfg);
   }
 }
 

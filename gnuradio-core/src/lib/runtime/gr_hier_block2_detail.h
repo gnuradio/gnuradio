@@ -50,9 +50,9 @@ private:
     void connect_output(int my_port, int port, gr_basic_block_sptr block);
     void disconnect_input(int my_port, int port, gr_basic_block_sptr block);
     void disconnect_output(int my_port, int port, gr_basic_block_sptr block);
-    void flatten(gr_flat_flowgraph_sptr sfg);
+    void flatten_aux(gr_flat_flowgraph_sptr sfg) const;
     gr_endpoint resolve_port(int port, bool is_input);
-    gr_endpoint resolve_endpoint(const gr_endpoint &endp, bool is_input);
+    gr_endpoint resolve_endpoint(const gr_endpoint &endp, bool is_input) const;
     void lock();
     void unlock();
 

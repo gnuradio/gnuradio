@@ -65,7 +65,7 @@ public:
   virtual void lock();
   virtual void unlock();
 
-  void flatten(gr_flat_flowgraph_sptr ffg);
+  gr_flat_flowgraph_sptr flatten() const;
 };
 
 #endif /* INCLUDED_GR_HIER_BLOCK2_H */
