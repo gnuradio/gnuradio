@@ -445,27 +445,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = @top_srcdir@/gnuradio-core/src/lib \
-                         @top_srcdir@/gnuradio-core/src/tests \
-                         @top_srcdir@/gnuradio-core/doc/other \
-			 @top_srcdir@/gr-audio-alsa \
-			 @top_srcdir@/gr-audio-jack \
-			 @top_srcdir@/gr-audio-oss \
-			 @top_srcdir@/gr-audio-osx \
-			 @top_srcdir@/gr-audio-portaudio \
-			 @top_srcdir@/gr-comedi \
-			 @top_srcdir@/gr-cvsd-vocoder \
-			 @top_srcdir@/gr-gsm-fr-vocoder \
-			 @top_srcdir@/gr-pager \
-			 @top_srcdir@/gr-radar-mono \
-			 @top_srcdir@/gr-radio-astronomy \
-			 @top_srcdir@/gr-sounder \
-			 @top_srcdir@/gr-trellis \
-			 @top_srcdir@/gr-usrp \
-			 @top_srcdir@/gr-video-sdl \
-			 @top_srcdir@/mblock \
-			 @top_srcdir@/omnithread \
-			 @top_srcdir@/pmt
+INPUT                  = @top_srcdir@
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -509,6 +489,7 @@ EXCLUDE                = CVS .svn .libs .deps \
 			 @top_builddir@/gr-trellis/src/lib/trellis.cc \
 			 @top_builddir@/gr-usrp/src/usrp1.cc \
 			 @top_builddir@/gr-video-sdl/src/video_sdl.cc
+			 @top_srcdir@/usrp
 
 # The EXCLUDE_SYMLINKS tag can be used select whether or not files or 
 # directories that are symbolic links (a Unix filesystem feature) are excluded 
