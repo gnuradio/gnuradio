@@ -52,7 +52,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.panel = panel
         
         parser = OptionParser(option_class=eng_option)
-        parser.add_option("-w", "--which", type=int, default=0,
+        parser.add_option("-w", "--which", type="int", default=0,
                           help="select which USRP (0, 1, ...) default is %default",
 			  metavar="NUM")
         parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
