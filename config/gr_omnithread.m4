@@ -21,7 +21,8 @@ AC_DEFUN([GR_OMNITHREAD],
 [
   # Check first for POSIX
   ACX_PTHREAD(
-  [ ot_posix="yes"
+  [ AC_DEFINE(HAVE_PTHREAD,1,[Define if you have POSIX threads libraries and header files.])
+    ot_posix="yes"
     DEFINES="$DEFINES -DOMNITHREAD_POSIX=1"
   ],[
     # If no POSIX support found, then check for NT threads
