@@ -155,7 +155,7 @@ class test_sig_source (gr_unittest.TestCase):
         # convert it from normalized frequency to absolute frequency (Hz)
         dst_data = [i*(sampling_freq/(2*math.pi)) for i in dst_data]
 
-        self.assertFloatTuplesAlmostEqual (expected_result, dst_data, 4)
+        self.assertFloatTuplesAlmostEqual (expected_result, dst_data, 3)
 
 if __name__ == '__main__':
     gr_unittest.main ()
