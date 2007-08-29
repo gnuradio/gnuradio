@@ -89,4 +89,8 @@ public:
   gr_flat_flowgraph_sptr flatten() const;
 };
 
+inline gr_hier_block2_sptr make_hier_block2_sptr(gr_basic_block_sptr block) {
+  return boost::dynamic_pointer_cast<gr_hier_block2, gr_basic_block>(block);
+}
+
 #endif /* INCLUDED_GR_HIER_BLOCK2_H */
