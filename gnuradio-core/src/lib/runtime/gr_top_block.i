@@ -29,7 +29,8 @@ typedef boost::shared_ptr<gr_top_block> gr_top_block_sptr;
 // Hack to have a Python shim implementation of gr.top_block
 // that instantiates one of these and passes through calls
 %rename(top_block_swig) gr_make_top_block;
-gr_top_block_sptr gr_make_top_block(const std::string name);
+gr_top_block_sptr gr_make_top_block(const std::string name) 
+  throw (std::logic_error);
 
 class gr_top_block : public gr_hier_block2
 {

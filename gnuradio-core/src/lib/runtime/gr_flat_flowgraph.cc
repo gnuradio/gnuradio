@@ -128,7 +128,7 @@ gr_flat_flowgraph::connect_block_inputs(gr_basic_block_sptr block)
 {
   gr_block_sptr grblock = make_gr_block_sptr(block);
   if (!grblock)
-    throw std::runtime_error("found non-gr_block");
+    throw std::runtime_error("connect_block_inputs found non-gr_block");
   
   // Get its detail and edges that feed into it
   gr_block_detail_sptr detail = grblock->detail();
@@ -143,7 +143,7 @@ gr_flat_flowgraph::connect_block_inputs(gr_basic_block_sptr block)
     gr_basic_block_sptr src_block = e->src().block();
     gr_block_sptr src_grblock = make_gr_block_sptr(src_block);
     if (!src_grblock)
-      throw std::runtime_error("found non-gr_block");
+      throw std::runtime_error("connect_block_inputs found non-gr_block");
     gr_buffer_sptr src_buffer = src_grblock->detail()->output(src_port);
     
     if (GR_FLAT_FLOWGRAPH_DEBUG)

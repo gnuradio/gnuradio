@@ -27,7 +27,7 @@
 #include <gr_flowgraph.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
-#include <iostream>
+#include <sstream>
 
 #define GR_FLOWGRAPH_DEBUG 0
 
@@ -70,7 +70,9 @@ gr_flowgraph::disconnect(const gr_endpoint &src, const gr_endpoint &dst)
     }
   }
 
-  throw std::invalid_argument("edge to disconnect not found");
+  std::stringstream msg;
+  msg << "cannot disconnect edge " << gr_edge(src, dst) << ", not found";
+  throw std::invalid_argument(msg.str());
 }
 
 void
@@ -93,8 +95,13 @@ gr_flowgraph::validate()
     noutputs = used_ports.size();
     check_contiguity(*p, used_ports, false); // outputs
 
-    if (!((*p)->check_topology(ninputs, noutputs)))
-      throw std::runtime_error("check topology failed");
+    if (!((*p)->check_topology(ninputs, noutputs))) {
+      std::stringstream msg;
+      msg << "check topology failed on " << (*p)
+	  << " using ninputs=" << ninputs 
+	  << ", noutputs=" << noutputs;
+      throw std::runtime_error(msg.str());
+    }
   }
 }
 
@@ -109,10 +116,22 @@ gr_flowgraph::clear()
 void
 gr_flowgraph::check_valid_port(gr_io_signature_sptr sig, int port)
 {
-  if (port < 0)
-    throw std::invalid_argument("negative port number");
-  if (sig->max_streams() >= 0 && port >= sig->max_streams())
-    throw std::invalid_argument("port number exceeds max");
+  std::stringstream msg;
+
+  if (port < 0) {
+    msg << "negative port number " << port << " is invalid";
+    throw std::invalid_argument(msg.str());
+  }
+
+  int max = sig->max_streams();
+  if (max >= 0 && port >= max) {
+    msg << "port number " << port << " exceeds max of ";
+    if (max == 0)
+      msg << "(none)";
+    else
+      msg << max-1;
+    throw std::invalid_argument(msg.str());
+  }
 }
 
 void
@@ -120,8 +139,11 @@ gr_flowgraph::check_dst_not_used(const gr_endpoint &dst)
 {
   // A destination is in use if it is already on the edge list
   for (gr_edge_viter_t p = d_edges.begin(); p != d_edges.end(); p++)
-    if (p->dst() == dst)
-      throw std::invalid_argument("dst already in use");
+    if (p->dst() == dst) {
+      std::stringstream msg;
+      msg << "destination already in use by edge " << (*p);
+      throw std::invalid_argument(msg.str());
+    }
 }
 
 void
@@ -130,8 +152,12 @@ gr_flowgraph::check_type_match(const gr_endpoint &src, const gr_endpoint &dst)
   int src_size = src.block()->output_signature()->sizeof_stream_item(src.port());
   int dst_size = dst.block()->input_signature()->sizeof_stream_item(dst.port());
 
-  if (src_size != dst_size)
-    throw std::invalid_argument("itemsize mismatch between src and dst");
+  if (src_size != dst_size) {
+    std::stringstream msg;
+    msg << "itemsize mismatch: " << src << " using " << src_size
+        << ", " << dst << " using " << dst_size;
+    throw std::invalid_argument(msg.str());
+  }
 }
 
 gr_basic_block_vector_t
@@ -197,6 +223,8 @@ gr_flowgraph::check_contiguity(gr_basic_block_sptr block,
 			       const std::vector<int> &used_ports,
 			       bool check_inputs)
 {
+  std::stringstream msg;
+
   gr_io_signature_sptr sig =
     check_inputs ? block->input_signature() : block->output_signature();
 
@@ -206,14 +234,23 @@ gr_flowgraph::check_contiguity(gr_basic_block_sptr block,
   if (nports == 0) {
     if (min_ports == 0)
       return;
-    else
-      throw std::runtime_error("insufficient ports");
+    else {
+      msg << block << ": insufficient connected " 
+	  << (check_inputs ? "input ports " : "output ports ") 
+	  << "(" << min_ports+1 << " needed, " << nports+1 << " connected)";
+      throw std::runtime_error(msg.str());
+    }
   }
 
   if (used_ports[nports-1]+1 != nports) {
-    for (int i = 0; i < nports; i++)
-      if (used_ports[i] != i)
-	throw std::runtime_error("missing input assignment");
+    for (int i = 0; i < nports; i++) {
+      if (used_ports[i] != i) {
+	msg << block << ": missing connection " 
+	    << (check_inputs ? "to input port " : "from output port ")
+	    << i;
+	throw std::runtime_error(msg.str());
+      }
+    }
   }
 }
 

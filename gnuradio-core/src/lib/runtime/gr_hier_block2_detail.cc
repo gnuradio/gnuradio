@@ -26,7 +26,7 @@
 #include <gr_hier_block2_detail.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
-#include <iostream>
+#include <sstream>
 
 #define GR_HIER_BLOCK2_DETAIL_DEBUG 0
 
@@ -48,12 +48,14 @@ void
 gr_hier_block2_detail::connect(gr_basic_block_sptr src, int src_port, 
                                gr_basic_block_sptr dst, int dst_port)
 {
+  std::stringstream msg;
+  
   if (GR_HIER_BLOCK2_DETAIL_DEBUG)
     std::cout << "connecting: " << gr_endpoint(src, src_port)
               << " -> " << gr_endpoint(dst, dst_port) << std::endl;
 
   if (src.get() == dst.get())
-    throw std::invalid_argument("src and destination blocks cannot be the same");
+    throw std::invalid_argument("connect: src and destination blocks cannot be the same");
 
   gr_hier_block2_sptr src_block(boost::dynamic_pointer_cast<gr_hier_block2, gr_basic_block>(src));
   gr_hier_block2_sptr dst_block(boost::dynamic_pointer_cast<gr_hier_block2, gr_basic_block>(dst));
@@ -74,15 +76,21 @@ gr_hier_block2_detail::connect(gr_basic_block_sptr src, int src_port,
   int max_port;
   if (src.get() == d_owner) {
     max_port = src->input_signature()->max_streams();
-    if ((max_port != -1 && (src_port >= max_port)) || src_port < 0)
-      throw std::invalid_argument("source port out of range");
+    if ((max_port != -1 && (src_port >= max_port)) || src_port < 0) {
+      msg << "source port " << src_port << " out of range for " << src;
+      throw std::invalid_argument(msg.str());
+    }
+
     return connect_input(src_port, dst_port, dst);
   }
 
   if (dst.get() == d_owner) {
     max_port = dst->output_signature()->max_streams();
-    if ((max_port != -1 && (dst_port >= max_port)) || dst_port < 0)
-      throw std::invalid_argument("source port out of range");
+    if ((max_port != -1 && (dst_port >= max_port)) || dst_port < 0) {
+      msg << "destination port " << dst_port << " out of range for " << dst;
+      throw std::invalid_argument(msg.str());
+    }
+
     return connect_output(dst_port, src_port, src);
   }
 
@@ -101,7 +109,7 @@ gr_hier_block2_detail::disconnect(gr_basic_block_sptr src, int src_port,
               << " -> " << gr_endpoint(dst, dst_port) << std::endl;
 
   if (src.get() == dst.get())
-    throw std::invalid_argument("src and destination blocks cannot be the same");
+    throw std::invalid_argument("disconnect: source and destination blocks cannot be the same");
 
   gr_hier_block2_sptr src_block(boost::dynamic_pointer_cast<gr_hier_block2, gr_basic_block>(src));
   gr_hier_block2_sptr dst_block(boost::dynamic_pointer_cast<gr_hier_block2, gr_basic_block>(dst));
@@ -128,14 +136,22 @@ gr_hier_block2_detail::disconnect(gr_basic_block_sptr src, int src_port,
   d_fg->disconnect(src, src_port, dst, dst_port);
 }
 
+// FIXME: ticket:161 will be implemented here
 void
 gr_hier_block2_detail::connect_input(int my_port, int port, gr_basic_block_sptr block)
 {
-  if (my_port < 0 || my_port >= (signed)d_inputs.size())
-    throw std::invalid_argument("input port number out of range");
+  std::stringstream msg;
 
-  if (d_inputs[my_port].block())
-    throw std::invalid_argument("input port in use");
+  if (my_port < 0 || my_port >= (signed)d_inputs.size()) {
+    msg << "input port " << my_port << " out of range for " << block;
+    throw std::invalid_argument(msg.str());
+  }
+
+  if (d_inputs[my_port].block()) {
+    msg << "external input port " << my_port << " already wired to "
+        << d_inputs[my_port];
+    throw std::invalid_argument(msg.str());
+  }
 
   d_inputs[my_port] = gr_endpoint(block, port);
 }
@@ -143,11 +159,18 @@ gr_hier_block2_detail::connect_input(int my_port, int port, gr_basic_block_sptr 
 void
 gr_hier_block2_detail::connect_output(int my_port, int port, gr_basic_block_sptr block)
 {
-  if (my_port < 0 || my_port >= (signed)d_outputs.size())
-    throw std::invalid_argument("output port number out of range");
+  std::stringstream msg;
 
-  if (d_outputs[my_port].block())
-    throw std::invalid_argument("output port in use");
+  if (my_port < 0 || my_port >= (signed)d_outputs.size()) {
+    msg << "output port " << my_port << " out of range for " << block;
+    throw std::invalid_argument(msg.str());
+  }
+
+  if (d_outputs[my_port].block()) {
+    msg << "external output port " << my_port << " already connected from "
+        << d_outputs[my_port];
+    throw std::invalid_argument(msg.str());
+  }
 
   d_outputs[my_port] = gr_endpoint(block, port);
 }
@@ -155,11 +178,18 @@ gr_hier_block2_detail::connect_output(int my_port, int port, gr_basic_block_sptr
 void
 gr_hier_block2_detail::disconnect_input(int my_port, int port, gr_basic_block_sptr block)
 {
-  if (my_port < 0 || my_port >= (signed)d_inputs.size())
-    throw std::invalid_argument("input port number out of range");
+  std::stringstream msg;
 
-  if (d_inputs[my_port].block() != block)
-    throw std::invalid_argument("block not assigned to given input, can't disconnect");
+  if (my_port < 0 || my_port >= (signed)d_inputs.size()) {
+    msg << "input port number " << my_port << " out of range for " << block;
+    throw std::invalid_argument(msg.str());
+  }
+
+  if (d_inputs[my_port].block() != block) {
+    msg << "block " << block << " not assigned to input " 
+	<< my_port << ", can't disconnect";
+    throw std::invalid_argument(msg.str());
+  }
 
   d_inputs[my_port] = gr_endpoint();
 }
@@ -167,11 +197,18 @@ gr_hier_block2_detail::disconnect_input(int my_port, int port, gr_basic_block_sp
 void
 gr_hier_block2_detail::disconnect_output(int my_port, int port, gr_basic_block_sptr block)
 {
-  if (my_port < 0 || my_port >= (signed)d_outputs.size())
-    throw std::invalid_argument("input port number out of range");
+  std::stringstream msg;
 
-  if (d_outputs[my_port].block() != block)
-    throw std::invalid_argument("block not assigned to given output, can't disconnect");
+  if (my_port < 0 || my_port >= (signed)d_outputs.size()) {
+    msg << "output port number " << my_port << " out of range for " << block;
+    throw std::invalid_argument(msg.str());
+  }
+
+  if (d_outputs[my_port].block() != block) {
+    msg << "block " << block << " not assigned to output " 
+	<< my_port << ", can't disconnect";
+    throw std::invalid_argument(msg.str());
+  }
 
   d_outputs[my_port] = gr_endpoint();
 }
@@ -179,6 +216,8 @@ gr_hier_block2_detail::disconnect_output(int my_port, int port, gr_basic_block_s
 gr_endpoint
 gr_hier_block2_detail::resolve_port(int port, bool is_input)
 {
+  std::stringstream msg;
+
   if (GR_HIER_BLOCK2_DETAIL_DEBUG)
     std::cout << "Resolving port " << port << " as an "
 	      << (is_input ? "input" : "output")
@@ -187,18 +226,28 @@ gr_hier_block2_detail::resolve_port(int port, bool is_input)
   gr_endpoint result;
 
   if (is_input) {
-    if (port < 0 || port >= (signed)d_inputs.size())
-      throw std::runtime_error("input port number out of range");
+    if (port < 0 || port >= (signed)d_inputs.size()) {
+      msg << "resolve_port: input " << port << " is out of range";
+      throw std::runtime_error(msg.str());
+    }
+
     result = resolve_endpoint(d_inputs[port], true);
   }
   else {
-    if (port < 0 || port >= (signed)d_outputs.size())
-      throw std::runtime_error("output port number out of range");
+    if (port < 0 || port >= (signed)d_outputs.size()) {
+      msg << "resolve_port: output " << port << " is out of range";
+      throw std::runtime_error(msg.str());
+    }
+
     result = resolve_endpoint(d_outputs[port], false);
   }
 
-  if (!result.block())
-    throw std::runtime_error("unable to resolve port");
+  if (!result.block()) {
+    msg << "unable to resolve " 
+	<< (is_input ? "input port " : "output port ")
+        << port;
+    throw std::runtime_error(msg.str());
+  }
 
   return result;
 }
@@ -206,6 +255,8 @@ gr_hier_block2_detail::resolve_port(int port, bool is_input)
 gr_endpoint
 gr_hier_block2_detail::resolve_endpoint(const gr_endpoint &endp, bool is_input) const
 {
+  std::stringstream msg;
+
   // Check if endpoint is a leaf node
   if (boost::dynamic_pointer_cast<gr_block, gr_basic_block>(endp.block()))
     return endp;
@@ -220,8 +271,9 @@ gr_hier_block2_detail::resolve_endpoint(const gr_endpoint &endp, bool is_input) 
     return hier_block2->d_detail->resolve_port(endp.port(), is_input);
   }
 
-  // Shouldn't ever get here
-  throw std::runtime_error("block is not a valid gr_block or gr_hier_block2!");
+  msg << "unable to resolve" << (is_input ? " input " : " output ")
+      << "endpoint " << endp;
+  throw std::runtime_error(msg.str());
 }
 
 void
