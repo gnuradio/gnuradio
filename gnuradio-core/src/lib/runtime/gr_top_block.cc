@@ -46,6 +46,9 @@ gr_top_block::gr_top_block(const std::string &name)
   
 gr_top_block::~gr_top_block()
 {
+  stop();
+  wait();
+    
   delete d_impl;
 }
 

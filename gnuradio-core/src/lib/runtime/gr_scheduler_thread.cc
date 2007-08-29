@@ -54,15 +54,45 @@ void gr_scheduler_thread::start()
 void *
 gr_scheduler_thread::run_undetached(void *arg)
 {
-  // First code to run in new thread context
+  // This is the first code to run in the new thread context.
 
-  // Mask off SIGINT in this thread to gaurantee mainline thread gets signal
-#ifdef HAVE_SIGPROCMASK
+  /*
+   * In general, on a *nix system, any thread of a process can receive
+   * any asynchronous signal.
+   *
+   * http://www.serpentine.com/blog/threads-faq/mixing-threads-and-signals-unix/
+   * http://www.linuxjournal.com/article/2121
+   * 
+   * We really don't want to be handling asynchronous signals such
+   * as SIGINT and SIGHUP here.  We mask them off in the signal
+   * processing threads so that they'll get handled by the mainline
+   * thread.  We leave the synchronous signals SIGQUIT, SIGBUS,
+   * SIGILL, SIGSEGV etc alone
+   *
+   * FIXME? It might be better to mask them all off in the parent
+   * thread then dedicate a single thread to handling all signals
+   * using sigwait.
+   */
+#if defined(HAVE_PTHREAD_SIGMASK) || defined(HAVE_SIGPROCMASK)
   sigset_t old_set;
   sigset_t new_set;
+  int r;
   sigemptyset(&new_set);
   sigaddset(&new_set, SIGINT);
-  sigprocmask(SIG_BLOCK, &new_set, &old_set);
+  sigaddset(&new_set, SIGHUP);
+  sigaddset(&new_set, SIGPIPE);
+  sigaddset(&new_set, SIGALRM);
+  sigaddset(&new_set, SIGCHLD);
+
+#ifdef HAVE_PTHREAD_SIGMASK
+  r = pthread_sigmask(SIG_BLOCK, &new_set, &old_set);
+  if (r != 0)
+    perror("pthread_sigmask");
+#else
+  r = sigprocmask(SIG_BLOCK, &new_set, &old_set);
+  if (r != 0)
+    perror("sigprocmask");
+#endif
 #endif
   // Run the single-threaded scheduler
   d_sts->run();
@@ -72,7 +102,7 @@ gr_scheduler_thread::run_undetached(void *arg)
 void
 gr_scheduler_thread::stop()
 {
-  if (GR_SCHEDULER_THREAD_DEBUG)
+  if (0 && GR_SCHEDULER_THREAD_DEBUG)		// FIXME not safe to call from signal handler
     std::cout << "gr_scheduler_thread::stop() "
 	      << this << std::endl;
   d_sts->stop();

@@ -32,15 +32,19 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <string.h>
 
 #define GR_TOP_BLOCK_IMPL_DEBUG 0
 
 static gr_top_block_impl *s_impl = 0;
 
-// Make a vector of gr_block from a vector of gr_basic_block
-static
-gr_block_vector_t
-make_gr_block_vector(gr_basic_block_vector_t &blocks)
+/*!
+ * Make a vector of gr_block from a vector of gr_basic_block
+ *
+ * Pass-by-value to avoid problem with possible asynchronous modification
+ */
+static gr_block_vector_t
+make_gr_block_vector(gr_basic_block_vector_t blocks)
 {
   gr_block_vector_t result;
   for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
@@ -51,15 +55,20 @@ make_gr_block_vector(gr_basic_block_vector_t &blocks)
 }
 
 // FIXME: This prevents using more than one gr_top_block instance
+
 static void 
 runtime_sigint_handler(int signum)
 {
-  if (GR_TOP_BLOCK_IMPL_DEBUG)
-    std::cout << "SIGINT received, calling stop()" << std::endl;
+  if (GR_TOP_BLOCK_IMPL_DEBUG){
+    char *msg = "SIGINT received, calling stop()\n";
+    ::write(1, msg, strlen(msg));	// write is OK to call from signal handler
+  }
 
   if (s_impl)
     s_impl->stop();
 }
+
+// ----------------------------------------------------------------
 
 gr_top_block_impl::gr_top_block_impl(gr_top_block *owner) 
   : d_running(false),
@@ -67,6 +76,9 @@ gr_top_block_impl::gr_top_block_impl(gr_top_block *owner)
     d_owner(owner),
     d_lock_count(0)
 {
+  if (s_impl)
+    throw std::logic_error("gr_top_block_impl: multiple simultaneous gr_top_block's");
+
   s_impl = this;
 }
 
@@ -115,18 +127,22 @@ gr_top_block_impl::start_threads()
   d_running = true;
 }
 
+/*
+ * N.B. as currently implemented, it is possible that this may be
+ * invoked by the SIGINT handler which is fragile as hell...
+ */
 void
 gr_top_block_impl::stop()
 {
-  if (GR_TOP_BLOCK_IMPL_DEBUG)
-    std::cout << "stop: entered" << std::endl;
-
-  for (gr_scheduler_thread_viter_t p = d_threads.begin(); p != d_threads.end(); p++) {
-    if (GR_TOP_BLOCK_IMPL_DEBUG)
-      std::cout << "stop: stopping thread " << (*p) << std::endl;
-    (*p)->stop();
+  if (GR_TOP_BLOCK_IMPL_DEBUG){
+    char *msg = "stop: entered\n";
+    ::write(1, msg, strlen(msg));
   }
 
+  for (gr_scheduler_thread_viter_t p = d_threads.begin(); p != d_threads.end(); p++) {
+    if (*p)
+      (*p)->stop();
+  }
   d_running = false;
 }
 

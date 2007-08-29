@@ -130,7 +130,7 @@ AC_FUNC_SETVBUF_REVERSED
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([mmap select socket strcspn strerror strspn getpagesize sysconf])
 AC_CHECK_FUNCS([snprintf gettimeofday nanosleep sched_setscheduler])
-AC_CHECK_FUNCS([modf sqrt sigaction sigprocmask])
+AC_CHECK_FUNCS([modf sqrt sigaction sigprocmask pthread_sigmask])
 AC_CHECK_FUNCS([sched_setaffinity])
 
 AC_CHECK_LIB(m, sincos, [AC_DEFINE([HAVE_SINCOS],[1],[Define to 1 if your system has `sincos'.])])

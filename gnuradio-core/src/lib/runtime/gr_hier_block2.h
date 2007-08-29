@@ -60,9 +60,30 @@ public:
   
   void connect(gr_basic_block_sptr src, int src_port, 
 	       gr_basic_block_sptr dst, int dst_port);
+
   void disconnect(gr_basic_block_sptr src, int src_port,
 		  gr_basic_block_sptr dst, int dst_port);
+
+  /*!
+   * Lock a flowgraph in preparation for reconfiguration.  When an equal
+   * number of calls to lock() and unlock() have occurred, the flowgraph
+   * will be restarted automatically.
+   *
+   * N.B. lock() and unlock() cannot be called from a flowgraph thread
+   * (E.g., gr_block::work method) or deadlock will occur when
+   * reconfiguration happens.
+   */
   virtual void lock();
+
+  /*!
+   * Lock a flowgraph in preparation for reconfiguration.  When an equal
+   * number of calls to lock() and unlock() have occurred, the flowgraph
+   * will be restarted automatically.
+   *
+   * N.B. lock() and unlock() cannot be called from a flowgraph thread
+   * (E.g., gr_block::work method) or deadlock will occur when
+   * reconfiguration happens.
+   */
   virtual void unlock();
 
   gr_flat_flowgraph_sptr flatten() const;
