@@ -162,3 +162,7 @@ GLOB_SYMB(complex_dotprod_3dnowext):
 FUNC_TAIL(complex_dotprod_3dnowext)
 	.ident	"Hand coded x86_64 3DNow!Ext assembly"
 
+
+#if defined(__linux__) && defined(__ELF__)
+.section .note.GNU-stack,"",%progbits
+#endif

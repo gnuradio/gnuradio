@@ -165,3 +165,7 @@ GLOB_SYMB(float_dotprod_sse):
 
 FUNC_TAIL(float_dotprod_sse)
 	.ident	"Hand coded x86 SSE assembly"
+
+#if defined(__linux__) && defined(__ELF__)
+.section .note.GNU-stack,"",%progbits
+#endif

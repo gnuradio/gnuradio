@@ -54,3 +54,7 @@ GLOB_SYMB(cpuid_x86):
 FUNC_TAIL(cpuid_x86)
 	.ident	"Hand coded cpuid assembly"
 	
+
+#if defined(__linux__) && defined(__ELF__)
+.section .note.GNU-stack,"",%progbits
+#endif

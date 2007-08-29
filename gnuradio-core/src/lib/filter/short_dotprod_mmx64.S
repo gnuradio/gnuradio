@@ -99,3 +99,7 @@ GLOB_SYMB(short_dotprod_mmx):
 
 FUNC_TAIL(short_dotprod_mmx)
 	.ident	"Hand coded x86_64 MMX assembly"
+
+#if defined(__linux__) && defined(__ELF__)
+.section .note.GNU-stack,"",%progbits
+#endif

@@ -100,3 +100,7 @@ sse_float_dotprod:
 .Lfe1:
 	.size	 sse_float_dotprod,.Lfe1-sse_float_dotprod
 	.ident	"Hand coded x86 3DNow! assembly"
+
+#if defined(__linux__) && defined(__ELF__)
+.section .note.GNU-stack,"",%progbits
+#endif

@@ -177,3 +177,7 @@ GLOB_SYMB(fcomplex_dotprod_sse):
 
 FUNC_TAIL(fcomplex_dotprod_sse)
 	.ident	"Hand coded x86_64 SSE assembly"
+
+#if defined(__linux__) && defined(__ELF__)
+.section .note.GNU-stack,"",%progbits
+#endif
