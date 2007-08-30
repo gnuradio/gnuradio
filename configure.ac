@@ -49,14 +49,11 @@ if test "$user_set_cxxflags" != yes; then
   autoconf_default_CXXFLAGS="$CXXFLAGS"
   CXXFLAGS=""
   if test "$GXX" = yes; then
-    case "$host_os" in
-    	darwin*)
-	if test "$host_cpu" = i386; then
-	   swig_CXXFLAGS="-g1 -O1"
-	else
-	   # "-O1" breaks PPC-OSX for some reason
+    case "$host_cpu" in
+    	powerpc*)
+	   # "-O1" is broken on the PPC for some reason
+	   # (at least as of g++ 4.1.1)
 	   swig_CXXFLAGS="-g1 -O2"
-	fi	
 	;;
     	*) 
 	swig_CXXFLAGS="-g1 -O1"
