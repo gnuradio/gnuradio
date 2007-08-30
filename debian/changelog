@@ -1,0 +1,77 @@
+gnuradio (3.1.0svn) UNRELEASED; urgency=low
+
+  * fix build failure with gcc-4.3 by adding a #include, closes: #420896
+  * update copyright assertion on the debian/ contents, since I have
+    assigned my copyright to the FSF and now have upstream commit rights
+  * merge debian/ into upstream SVN repository
+  * add --disable-gr-qtgui (at least until we figure out qwt build deps!)
+  * add build dep on python-numpy
+  * conditionalize configure and clean targets to handle build from SVN
+
+ -- Bdale Garbee <bdale@gag.com>  Thu, 26 Jul 2007 18:07:52 -0600
+
+gnuradio (3.0.3-1) unstable; urgency=low
+
+  * new upstream version
+  * tweak gnuradio-doc package to eliminate spurious subdirectory level
+  * add a usrp-doc binary package, recommended by the usrp package, and 
+    include xmlto in build dependencies so usrp_guide.html gets generated, 
+    closes: #407368
+
+ -- Bdale Garbee <bdale@gag.com>  Sun, 11 Mar 2007 23:55:32 -0600
+
+gnuradio (3.0.2-2) unstable; urgency=high
+
+  * add run-time dependency on python-wxgtk2.6.  leaving urgency high since 
+    this would be a silly bug to release etch with if we can avoid it.
+
+ -- Bdale Garbee <bdale@gag.com>  Mon,  4 Dec 2006 15:35:53 -0700
+
+gnuradio (3.0.2-1) unstable; urgency=high
+
+  * new upstream version, fixes FTBFS issues
+
+ -- Bdale Garbee <bdale@gag.com>  Sun, 12 Nov 2006 14:52:33 -0800
+
+gnuradio (3.0-3) unstable; urgency=high
+
+  * put python-all-dev back in the build-depends list, closes: #398246
+  * move gr-wxgui conflicts/depends to python-gnuradio, closes: #396302
+  * fix up sections in control to match overrides
+
+ -- Bdale Garbee <bdale@gag.com>  Sun, 12 Nov 2006 10:59:58 -0800
+
+gnuradio (3.0-2) unstable; urgency=high
+
+  * reworked package dependencies so that the 'gnuradio' binary package no
+    longer depends on the pieces in contrib.  instead, the 'usrp' binary
+    package in contrib now depends on all the USRP-related pieces.  A user
+    who doesn't have a USRP board can just install 'gnuradio' and get all
+    the relevant pieces, a USRP user needs to install both 'gnuradio' and
+    'usrp'.  Closes: #394533
+  * improve consistency of references to 'GNU Radio' as upstream project name
+  * make the gnuradio package dependencies on python-gnuradio and python-usrp
+    be version specific on suggestion from Ramakrishnan Muthukrishnan
+
+ -- Bdale Garbee <bdale@gag.com>  Fri, 10 Nov 2006 00:39:38 -0800
+
+gnuradio (3.0-1) unstable; urgency=low
+
+  * new maintainer, new upstream version
+  * Restructuring source and binary packages to follow upstream changes, more
+    or less repackaging from scratch taking ideas from the previous packaging
+    by Ramakrishnan Muthukrishnan and Steinar H. Gunderson.  This single 
+    source package replaces all of: 
+        gnuradio-core
+        gnuradio-examples
+        gr-audio-alsa
+        gr-audio-jack
+        gr-audio-oss
+        gr-usrp
+        gr-wxgui
+        usrp
+    In addition, the 'gnuradio' binary package is a new meta-package that 
+    conveniently depends on everything gnuradio related to ease installation.
+
+ -- Bdale Garbee <bdale@gag.com>  Sun,  8 Oct 2006 13:28:21 -0600
+

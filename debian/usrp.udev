@@ -1,0 +1,8 @@
+# USRP without loaded firmware (FX2)
+BUS=="usb", SYSFS{idVendor}=="fffe", SYSFS{idProduct}=="0002", SYSFS{bcdDevice}=="0002", GROUP="usrp", RUN+="/usr/bin/usrper load_standard_bits"
+BUS=="usb", SYSFS{idVendor}=="fffe", SYSFS{idProduct}=="0002", SYSFS{bcdDevice}=="0004", GROUP="usrp", RUN+="/usr/bin/usrper load_standard_bits"
+
+# USRP with loaded firmware
+BUS=="usb", SYSFS{idVendor}=="fffe", SYSFS{idProduct}=="0002", SYSFS{bcdDevice}=="0102", GROUP="usrp"
+BUS=="usb", SYSFS{idVendor}=="fffe", SYSFS{idProduct}=="0002", SYSFS{bcdDevice}=="0104", GROUP="usrp"
+

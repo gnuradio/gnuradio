@@ -1,0 +1,56 @@
+#! /bin/sh
+
+set -e
+
+if [ "$1" != "configure" ]; then
+	exit 0
+fi
+
+#
+# The debhelper udev fragments are broken; they only check for -z "$2",
+# not for upgrades from versions without the udev script.
+#
+if [ -z "$2" ] || dpkg --compare-versions "$2" lt "0.10-3"; then
+    ln -sf ../usrp.rules /etc/udev/rules.d/z60_usrp.rules
+fi
+
+# Create usrp group.
+if ! getent group usrp >/dev/null; then
+    addgroup --system usrp
+fi
+
+#
+# Activate any unactivated USRPs that are plugged in at install time.
+# This is basically a duplication of the loop in /etc/hotplug/usb.rc,
+# but Md claims it's the best solution for synthesizing hotplug events
+# for the USRPs plugged in at installation time.
+#
+
+#
+# Don't bother doing this unless we have all the firmware we need, and
+# hotplugging working. (Rationale: If we don't have hotplug working,
+# this will not work next boot/plugin anyhow, so it would be very confusing
+# for the user to have it all work up _until_ the next boot/plugin.)
+#
+[ -r /usr/share/usrp/rev2/std_4rx_0tx.rbf ] || exit 0
+[ -x /sbin/hotplug ] || [ -x /sbin/udevd ] || exit 0
+
+# We need sysfs to do this.
+[ -d /sys/bus/usb/devices/ ] || exit 0
+
+# Go through all USB devices and find unconfigured USRPs (ie. FX2 chips).
+for device in /sys/bus/usb/devices/[0-9]*:*; do
+    devlink=$(readlink -f $device)
+    DEVPATH=${devlink#/sys}
+
+    [ -f $devlink/../idVendor ] || continue
+    PRODUCT="$(cat $devlink/../idVendor)/$(cat $devlink/../idProduct)/$(cat $devlink/../bcdDevice)"
+
+    if [ "$PRODUCT" = "fffe/0002/0002" ] || [ "$PRODUCT" = "fffe/0002/0004" ]; then
+        /usr/bin/usrper load_standard_bits
+    fi
+done
+
+#DEBHELPER#
+
+exit 0

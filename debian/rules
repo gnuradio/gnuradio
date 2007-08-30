@@ -1,0 +1,156 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+#
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+#
+# Modified to make a template file for a multi-binary package with separated
+# build-arch and build-indep targets  by Bill Allombert 2001
+
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	[ -f ./configure ] || ./bootstrap
+	CFLAGS="$(CFLAGS)" ./configure \
+		--prefix=/usr --mandir=\$${prefix}/share/man \
+		--infodir=\$${prefix}/share/info --enable-shared \
+		--enable-doxygen --enable-html-docs \
+		--sysconfdir=/etc --enable-all-components \
+		--disable-gr-audio-osx --disable-gr-audio-windows \
+		--disable-gr-qtgui
+	touch configure-stamp
+
+build: build-stamp
+build-stamp: configure-stamp 
+
+	$(MAKE) 
+	$(MAKE) check
+	touch $@
+
+update:
+	-test -r /usr/share/misc/config.sub && \
+		cp -f /usr/share/misc/config.sub config.sub
+	-test -r /usr/share/misc/config.guess && \
+		cp -f /usr/share/misc/config.guess config.guess
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+
+	if [ -f Makefile ]; \
+	then\
+		if [ -d .svn ]; \
+		then \
+			$(MAKE) maintainer-clean; \
+		else \
+			$(MAKE) distclean; \
+		fi; \
+	fi
+
+
+	dh_clean
+
+install:
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
+	install -m 0755 debian/usrp.hotplug \
+		$(CURDIR)/debian/usrp/etc/hotplug.d/usb/
+
+	: # make python scripts starting with '#!' executable
+	for i in `find debian -mindepth 2 -type f ! -perm 755`; do \
+	  if head -1 $$i | grep -q '^#!'; then \
+	    chmod 755 $$i; \
+	    echo "made executable: $$i"; \
+	  fi; \
+	done
+
+	dh_install --sourcedir=debian/tmp --list-missing
+
+	cp -r gnuradio-examples/python/* \
+		debian/gnuradio-examples/usr/share/gnuradio/
+	find debian/gnuradio-examples -type f -name Makefile\* -exec rm {} \;
+	find debian/gnuradio-examples -type d -name CVS -exec rm {} \;
+	find debian/gnuradio-examples -name \*.py -exec chmod +x {} \;
+
+#	mv debian/gnuradio/usr/bin/microtune.py \
+#		debian/gnuradio/usr/bin/microtune
+
+	mv debian/usrp/usr/bin/usrp_ra_receiver.py \
+		debian/usrp/usr/bin/usrp_ra_receiver
+	mv debian/usrp/usr/bin/usrp_psr_receiver.py \
+		debian/usrp/usr/bin/usrp_psr_receiver
+
+# Must not depend on anything. This is to be called by
+# binary-arch/binary-indep
+# in another 'make' thread.
+binary-common:
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs ChangeLog
+	dh_installdocs
+	dh_installexamples
+#	dh_installmenu
+#	dh_installdebconf	
+#	dh_installlogrotate	
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+	dh_pycentral
+	dh_python
+#	dh_installinit
+#	dh_installcron
+#	dh_installinfo
+	dh_installman
+	dh_link
+ifneq (,$(findstring -s,$(DH_OPTIONS)))
+	dh_strip --no-package=libgnuradio-core0c2a --no-package=libusrp0c2a
+	DH_OPTIONS= dh_strip --package=libgnuradio-core0c2a \
+		--dbg-package=libgnuradio-core0c2a-dbg
+	DH_OPTIONS= dh_strip --package=libusrp0c2a \
+		--dbg-package=libusrp0c2a-dbg
+else
+	dh_strip
+endif
+	dh_compress 
+#	dh_movefiles --sourcedir=debian/gnuradio
+	dh_fixperms
+#	dh_perl
+	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+# Build architecture independant packages using the common target.
+binary-indep: build install
+	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
+
+# Build architecture dependant packages using the common target.
+binary-arch: build install
+	$(MAKE) -f debian/rules DH_OPTIONS=-s binary-common
+
+binary: binary-arch binary-indep
+.PHONY: build clean binary-indep binary-arch binary install configure
