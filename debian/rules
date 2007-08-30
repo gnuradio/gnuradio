@@ -75,8 +75,8 @@ install:
 	dh_installdirs
 
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
-	install -m 0755 debian/usrp.hotplug \
-		$(CURDIR)/debian/usrp/etc/hotplug.d/usb/
+#	install -m 0755 debian/usrp.hotplug \
+#		$(CURDIR)/debian/usrp/etc/hotplug.d/usb/
 
 	: # make python scripts starting with '#!' executable
 	for i in `find debian -mindepth 2 -type f ! -perm 755`; do \
@@ -88,19 +88,19 @@ install:
 
 	dh_install --sourcedir=debian/tmp --list-missing
 
-	cp -r gnuradio-examples/python/* \
-		debian/gnuradio-examples/usr/share/gnuradio/
-	find debian/gnuradio-examples -type f -name Makefile\* -exec rm {} \;
-	find debian/gnuradio-examples -type d -name CVS -exec rm {} \;
-	find debian/gnuradio-examples -name \*.py -exec chmod +x {} \;
+#	cp -r gnuradio-examples/python/* \
+#		debian/gnuradio-examples/usr/share/gnuradio/
+#	find debian/gnuradio-examples -type f -name Makefile\* -exec rm {} \;
+#	find debian/gnuradio-examples -type d -name CVS -exec rm {} \;
+#	find debian/gnuradio-examples -name \*.py -exec chmod +x {} \;
 
 #	mv debian/gnuradio/usr/bin/microtune.py \
 #		debian/gnuradio/usr/bin/microtune
 
-	mv debian/usrp/usr/bin/usrp_ra_receiver.py \
-		debian/usrp/usr/bin/usrp_ra_receiver
-	mv debian/usrp/usr/bin/usrp_psr_receiver.py \
-		debian/usrp/usr/bin/usrp_psr_receiver
+#	mv debian/usrp/usr/bin/usrp_ra_receiver.py \
+#		debian/usrp/usr/bin/usrp_ra_receiver
+#	mv debian/usrp/usr/bin/usrp_psr_receiver.py \
+#		debian/usrp/usr/bin/usrp_psr_receiver
 
 # Must not depend on anything. This is to be called by
 # binary-arch/binary-indep

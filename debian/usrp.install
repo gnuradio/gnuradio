@@ -1,5 +1,0 @@
-usr/bin/usrper
-usr/bin/usrp_cal_dc_offset
-usr/bin/usrp_ra_receiver.py
-usr/bin/usrp_psr_receiver.py
-usr/share/usrp/rev*/*.ihx

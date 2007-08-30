@@ -1,4 +1,0 @@
-usr/include/usrp*
-usr/lib/libusrp*.la
-usr/lib/libusrp*.so
-usr/lib/pkgconfig/usrp.pc

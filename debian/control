@@ -8,192 +8,35 @@ Build-Depends-Indep: python-all-dev
 Standards-Version: 3.7.2
 XS-Python-Version: >= 2.3
 
-Package: gnuradio
+Package: libgnuradio-omnithread0c2a
+Section: libs
 Architecture: any
-Section: comm
-Depends: ${shlibs:Depends}, ${misc:Depends}, python, gnuradio-doc, libgnuradio-core0-dev, libgnuradio-core0c2a, libgnuradio-core0c2a-dbg, python-gnuradio (= ${Source-Version}), python-wxgtk2.6, gnuradio-examples
-Suggests: usrp
-Conflicts: gr-audio-alsa, gr-audio-oss, gr-audio-jack
-Replaces: gr-audio-alsa, gr-audio-oss, gr-audio-jack
-XB-Python-Version: ${python:Versions}
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts:  
+Replaces:  
+Recommends: 
+Suggests: 
 Description: Software Defined Radio
- This is a meta-package that depends on the various components of a complete
- installation of the GNU Radio softare defined radio system.
- .
- If you have a USRP, you probably also want to install the usrp package as
- suggested, which lives in contrib because the FPGA bitstrings require 
- non-free tools to build.
+ This package is a fork of the omniORB-4.0.1 threading library
+ for use with GNU Radio.
 
-Package: gnuradio-doc
-Section: doc
-Architecture: all
-Depends: ${shlibs:Depends}
-Description: Software Defined Radio
- This package contains the documentation for the GNU Radio software
- defined radio system.
-
-Package: libgnuradio-core0-dev
+Package: libgnuradio-omnithread0-dev
 Section: libdevel
 Architecture: any
-Depends: libgnuradio-core0c2a (= ${Source-Version})
+Depends: libgnuradio-omnithread0c2a (= ${Source-Version})
 Description: Software Defined Radio
- This library contains Signal Processing routines that implement
- the functionality of traditional radio receivers and transmitters.
- .
- The GNU Radio homepage is http://www.gnu.org/software/gnuradio
+ This package is a fork of the omniORB-4.0.1 threading library
+ for use with GNU Radio.
  .
  This package contains header files needed by developers.
 
 Package: libgnuradio-core0c2a
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libgnuradio-omnithread0c2a
 Conflicts:  libgnuradio-core0, libgnuradio-core0c2
 Replaces:  libgnuradio-core0, libgnuradio-core0c2
-Recommends: python-gnuradio
-Suggests: gnuradio-doc, gnuradio-examples
+Recommends: 
+Suggests:
 Description: Software Defined Radio
  This package contains the core GNU Radio libraries.
-
-Package: libgnuradio-core0c2a-dbg
-Section: libdevel
-Architecture: any
-Depends: libgnuradio-core0c2a (= ${Source-Version}), ${shlibs:Depends}
-Description: Software Defined Radio
- This package contains the debug symbols needed to debug programs that
- use the GNU Radio core libraries.
-
-Package: usrp
-Section: contrib/comm
-Architecture: any
-Depends: ${shlibs:Depends}, python, libusrp0-dev, libusrp0c2a-dbg, python-usrp (= ${Source-Version})
-Recommends: gnuradio, hotplug, usrp-doc, usrp-firmware
-XB-Python-Version: ${python:Versions}
-Description: control applications and firmware for the USRP
- The Universal Software Radio Peripheral (USRP) is an USB-connected,
- low-cost and open board. It features four high-speed analog-to-digital
- and digital-to-analog converters, an FPGA and a microcontroller. It's
- ideal for capturing or transmitting various signals, usually in
- combination with GNU Radio. The design schemas are available under a
- free license.  Visit ettus.com for more information on the USRP.
- .
- This package contains a tool for loading firmware and doing other
- simple administrative tasks for the USRP (usrper), as well as the
- actual firmware binaries for the microcontroller.  
- .
- This package also depends on all of the other USRP-related packages 
- so that installing this package will pull in all the pieces you might 
- want or need to successfully use the USRP with GNU Radio.
-
-Package: usrp-doc
-Section: doc
-Architecture: all
-Depends: ${shlibs:Depends}
-Description: Software Defined Radio with USRP
- This package contains the documentation for the USRP support that is
- part of the GNU Radio software defined radio system.
-
-Package: usrp-firmware
-Section: contrib/comm
-Architecture: all
-Recommends: usrp
-Description: control applications and firmware for the USRP
- The Universal Software Radio Peripheral (USRP) is an USB-connected,
- low-cost and open board. It features four high-speed analog-to-digital
- and digital-to-analog converters, an FPGA and a microcontroller. It's
- ideal for capturing or transmitting various signals, usually in
- combination with GNU Radio. The design schemas are available under a
- free license.
- .
- This package contains the basic FPGA bitstrings for normal USRP operation,
- which need non-free tools to build.
-
-Package: libusrp0-dev
-Provides: libusrp-dev
-Conflicts: libusrp-dev
-Section: contrib/libdevel
-Architecture: any
-Depends: libusrp0c2a (= ${Source-Version}), ${shlibs:Depends}
-Description: development library files for the USRP
- The Universal Software Radio Peripheral (USRP) is an USB-connected,
- low-cost and open board. It features four high-speed analog-to-digital
- and digital-to-analog converters, an FPGA and a microcontroller. It's
- ideal for capturing or transmitting various signals, usually in
- combination with GNU Radio. The design schemas are available under a
- free license.
- .
- This package contains development files for the client-side library.
-
-Package: libusrp0c2a
-Section: contrib/libs
-Architecture: any
-Depends: ${shlibs:Depends}
-Recommends: usrp
-Conflicts: libusrp0
-Replaces: libusrp0
-Description: client side library for the USRP
- The Universal Software Radio Peripheral (USRP) is an USB-connected,
- low-cost and open board. It features four high-speed analog-to-digital
- and digital-to-analog converters, an FPGA and a microcontroller. It's
- ideal for capturing or transmitting various signals, usually in
- combination with GNU Radio. The design schemas are available under a
- free license.
- .
- This package contains the client-side library, providing an easy interface
- for communicating with the USRP.
-
-Package: libusrp0c2a-dbg
-Priority: extra
-Section: contrib/libdevel
-Architecture: any
-Depends: libusrp0c2a (= ${Source-Version}), ${shlibs:Depends}
-Description: client side library debugging symbols for the USRP
- The Universal Software Radio Peripheral (USRP) is an USB-connected,
- low-cost and open board. It features four high-speed analog-to-digital
- and digital-to-analog converters, an FPGA and a microcontroller. It's
- ideal for capturing or transmitting various signals, usually in
- combination with GNU Radio. The design schemas are available under a
- free license.
- .
- This package contains the debug symbols needed to debug programs that
- use the USRP client-side library.
-
-Package: python-gnuradio
-Architecture: any
-Depends: ${python:Depends}, libgnuradio-core0c2a, python-numeric
-Conflicts: gr-wxgui
-Replaces: gr-wxgui
-Provides: ${python:Provides}
-Section: python
-XB-Python-Version: ${python:Versions}
-Description: Python bindings for GNU Radio
- This provides the module that enable one to use gnuradio from Python
- scripts.  You will need Python and gnuradio-dev installed to use this.
-
-Package: python-usrp
-Section: contrib/libs
-Architecture: any
-Depends: ${shlibs:Depends}, ${python:Depends}
-Replaces: python2.3-usrp
-Conflicts: python2.3-usrp
-Provides: ${python:Provides}
-XB-Python-Version: ${python:Versions}
-Description: Python binding for the USRP client side library
- The Universal Software Radio Peripheral (USRP) is an USB-connected,
- low-cost and open board. It features four high-speed analog-to-digital
- and digital-to-analog converters, an FPGA and a microcontroller. It's
- ideal for capturing or transmitting various signals, usually in
- combination with GNU Radio. The design schemas are available under a
- free license.
- .
- This package contains the Python bindings for the client-side library.
-
-Package: gnuradio-examples
-Architecture: all
-Depends: ${python:Depends}, libgnuradio-core0c2a, python-gnuradio
-XB-Python-Version: ${python:Versions}
-Description: Example programs to test and use GNU Radio
- This package contains Python programs which uses and tests
- the GNU Radio libraries. The examples include dialtone generation,
- complete FM receiver and many more exciting applications.
-

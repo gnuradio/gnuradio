@@ -1,1 +1,2 @@
-usr/lib/libgnuradio-core*.so.*
+usr/lib/libgnuradio-core.la
+usr/lib/libgnuradio-core.so.*

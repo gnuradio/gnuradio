@@ -1,4 +1,4 @@
-gnuradio (3.1.0svn) UNRELEASED; urgency=low
+gnuradio (3.0svn) UNRELEASED; urgency=low
 
   * fix build failure with gcc-4.3 by adding a #include, closes: #420896
   * update copyright assertion on the debian/ contents, since I have
