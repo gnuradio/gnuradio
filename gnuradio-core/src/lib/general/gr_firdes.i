@@ -40,7 +40,7 @@ class gr_firdes {
 	    double transition_width,	// Hz width of transition band
 	    win_type window = WIN_HAMMING,
 	    double beta = 6.76 		// used only with Kaiser
-	    ) throw(std::out_of_range, std::runtime_error);
+	    ) throw(std::out_of_range);
 
   /*!
    * \brief use "window method" to design a high-pass FIR filter
@@ -63,7 +63,7 @@ class gr_firdes {
 	     double transition_width,		// Hz width of transition band
 	     win_type window = WIN_HAMMING,
 	     double beta = 6.76			// used only with Kaiser
-	     ) throw(std::out_of_range, std::runtime_error); 
+	     ) throw(std::out_of_range); 
 
   /*!
    * \brief use "window method" to design a band-pass FIR filter
@@ -88,7 +88,7 @@ class gr_firdes {
 	     double transition_width,		// Hz width of transition band
 	     win_type window = WIN_HAMMING,
 	     double beta = 6.76			// used only with Kaiser
-	     ) throw(std::out_of_range, std::runtime_error); 
+	     ) throw(std::out_of_range); 
 
 
   /*!
@@ -115,7 +115,7 @@ class gr_firdes {
 	     double transition_width,		// Hz width of transition band
 	     win_type window = WIN_HAMMING,	// used only with Kaiser
 	     double beta = 6.76
-	     ) throw(std::out_of_range, std::runtime_error); 
+	     ) throw(std::out_of_range); 
 
 
   /*!
@@ -142,7 +142,7 @@ class gr_firdes {
 	       double transition_width,		// Hz width of transition band
 	       win_type window = WIN_HAMMING,   // used only with Kaiser
 	       double beta = 6.76
-	       ) throw(std::out_of_range, std::runtime_error);
+	       ) throw(std::out_of_range);
 
   /*!\brief design a Hilbert Transform Filter
    *
@@ -154,7 +154,7 @@ class gr_firdes {
   hilbert (unsigned int ntaps = 19,
 	   win_type windowtype = WIN_RECTANGULAR,
 	   double beta = 6.76
-	   ) throw(std::out_of_range, std::runtime_error);
+	   ) throw(std::out_of_range);
    
   /*!
    * \brief design a Root Cosine FIR Filter (do we need a window?)
@@ -190,5 +190,5 @@ class gr_firdes {
    * Return window given type, ntaps and optional beta.
    */
   static std::vector<float> gr_firdes::window (win_type type, int ntaps, double beta) 
-    throw(std::runtime_error, std::runtime_error);
+    throw(std::runtime_error);
 };

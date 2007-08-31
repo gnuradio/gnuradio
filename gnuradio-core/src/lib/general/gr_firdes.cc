@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -518,7 +518,7 @@ gr_firdes::window (win_type type, int ntaps, double beta)
 
 #endif
   default:
-    throw std::runtime_error ("not_implemented");
+    throw std::out_of_range ("gr_firdes:window: type out of range");
   }
 
   return taps;
