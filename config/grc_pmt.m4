@@ -22,6 +22,7 @@ AC_DEFUN([GRC_PMT],[
 
     AC_CONFIG_FILES([\
 	pmt/Makefile \
+	pmt/pmt.pc
 	pmt/doc/Makefile \
 	pmt/src/Makefile \
 	pmt/src/lib/Makefile \

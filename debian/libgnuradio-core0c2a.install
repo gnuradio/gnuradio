@@ -1,2 +1,4 @@
+etc/gnuradio/conf.d/gnuradio-core.conf
 usr/lib/libgnuradio-core.la
 usr/lib/libgnuradio-core.so.*
+usr/lib/pkgconfig/gnuradio-core.pc

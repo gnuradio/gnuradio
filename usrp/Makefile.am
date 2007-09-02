@@ -19,8 +19,16 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-EXTRA_DIST = usrp.pc.in usrp.iss.in usrp.inf
+EXTRA_DIST = \
+	usrp.pc.in \
+	usrp-inband.pc.in \
+	usrp.iss.in \
+	usrp.inf
+
 SUBDIRS = host firmware fpga doc
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = usrp.pc
+pkgconfig_DATA = \
+	usrp.pc \
+	usrp-inband.pc
+

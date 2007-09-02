@@ -49,9 +49,13 @@ libgromnithread_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
 libgromnithread_la_LIBADD =		\
 	$(PTHREAD_LIBS)
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = gnuradio-omnithread.pc
+
 # ... but this code also came with the package
 
 EXTRA_DIST =				\
+	gnuradio-omnithread.pc.in	\
 	mach.cc				\
 	nt.cc				\
 	posix.cc			\

@@ -22,6 +22,7 @@ AC_DEFUN([GRC_OMNITHREAD],[
 
     AC_CONFIG_FILES([ \
         omnithread/Makefile \
+	omnithread/gnuradio-omnithread.pc
     ])
     
     passed=yes

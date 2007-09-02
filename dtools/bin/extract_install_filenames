@@ -70,9 +70,9 @@ def main():
     (head, tail) = os.path.split(makefile_name)
     if head:
         # cd to directory that contained the original Makefile
-        cmd = 'cd %s; make -f %s extract_install_filenames' % (head, tmp_name)
+        cmd = 'cd %s; make -s -f %s extract_install_filenames' % (head, tmp_name)
     else:
-        cmd = 'make -f %s extract_install_filenames' % (tmp_name,)
+        cmd = 'make -s -f %s extract_install_filenames' % (tmp_name,)
         
     #print "cmd =", cmd
     make = os.popen(cmd, 'r')

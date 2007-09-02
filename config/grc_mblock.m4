@@ -22,6 +22,7 @@ AC_DEFUN([GRC_MBLOCK],[
 
     AC_CONFIG_FILES([\
 	mblock/Makefile \
+	mblock/mblock.pc \
 	mblock/doc/Makefile \
 	mblock/src/Makefile \
 	mblock/src/lib/Makefile \

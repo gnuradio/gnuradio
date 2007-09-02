@@ -24,32 +24,6 @@ else
 	CFLAGS += -O2
 endif
 
-configure: configure-stamp
-configure-stamp:
-	dh_testdir
-	[ -f ./configure ] || ./bootstrap
-	CFLAGS="$(CFLAGS)" ./configure \
-		--prefix=/usr --mandir=\$${prefix}/share/man \
-		--infodir=\$${prefix}/share/info --enable-shared \
-		--enable-doxygen --enable-html-docs \
-		--sysconfdir=/etc --enable-all-components \
-		--disable-gr-audio-osx --disable-gr-audio-windows \
-		--disable-gr-qtgui
-	touch configure-stamp
-
-build: build-stamp
-build-stamp: configure-stamp 
-
-	$(MAKE) 
-	$(MAKE) check
-	touch $@
-
-update:
-	-test -r /usr/share/misc/config.sub && \
-		cp -f /usr/share/misc/config.sub config.sub
-	-test -r /usr/share/misc/config.guess && \
-		cp -f /usr/share/misc/config.guess config.guess
-
 clean:
 	dh_testdir
 	dh_testroot
@@ -65,19 +39,49 @@ clean:
 		fi; \
 	fi
 
-
 	dh_clean
 
-install:
+update:
+	dh_testdir
+	-test -r /usr/share/misc/config.sub && \
+		cp -f /usr/share/misc/config.sub config.sub
+	-test -r /usr/share/misc/config.guess && \
+		cp -f /usr/share/misc/config.guess config.guess
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	[ -f ./configure ] || ./bootstrap
+	CFLAGS="$(CFLAGS)" ./configure \
+		--prefix=/usr --mandir=\$${prefix}/share/man \
+		--infodir=\$${prefix}/share/info --enable-shared \
+		--enable-doxygen --enable-html-docs \
+		--sysconfdir=/etc --enable-all-components \
+		--disable-gr-audio-osx --disable-gr-audio-windows \
+		--disable-gr-qtgui
+	touch configure-stamp
+
+extract: extract-stamp
+extract-stamp: configure-stamp
+	dh_testdir
+	debian/gen-install-files.sh 
+	touch $@
+
+build: build-stamp
+build-stamp: extract-stamp
+
+	$(MAKE) 
+	$(MAKE) check
+	touch $@
+
+install: install-stamp
+install-stamp: build-stamp
 	dh_testdir
 	dh_testroot
 	dh_clean -k
 	dh_installdirs
 
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
-#	install -m 0755 debian/usrp.hotplug \
-#		$(CURDIR)/debian/usrp/etc/hotplug.d/usb/
-
 	: # make python scripts starting with '#!' executable
 	for i in `find debian -mindepth 2 -type f ! -perm 755`; do \
 	  if head -1 $$i | grep -q '^#!'; then \
@@ -87,6 +91,9 @@ install:
 	done
 
 	dh_install --sourcedir=debian/tmp --list-missing
+
+#	install -m 0755 debian/usrp.hotplug \
+#		$(CURDIR)/debian/usrp/etc/hotplug.d/usb/
 
 #	cp -r gnuradio-examples/python/* \
 #		debian/gnuradio-examples/usr/share/gnuradio/
@@ -101,6 +108,8 @@ install:
 #		debian/usrp/usr/bin/usrp_ra_receiver
 #	mv debian/usrp/usr/bin/usrp_psr_receiver.py \
 #		debian/usrp/usr/bin/usrp_psr_receiver
+	touch $@
+
 
 # Must not depend on anything. This is to be called by
 # binary-arch/binary-indep
@@ -124,15 +133,7 @@ binary-common:
 #	dh_installinfo
 	dh_installman
 	dh_link
-ifneq (,$(findstring -s,$(DH_OPTIONS)))
-	dh_strip --no-package=libgnuradio-core0c2a --no-package=libusrp0c2a
-	DH_OPTIONS= dh_strip --package=libgnuradio-core0c2a \
-		--dbg-package=libgnuradio-core0c2a-dbg
-	DH_OPTIONS= dh_strip --package=libusrp0c2a \
-		--dbg-package=libusrp0c2a-dbg
-else
 	dh_strip
-endif
 	dh_compress 
 #	dh_movefiles --sourcedir=debian/gnuradio
 	dh_fixperms

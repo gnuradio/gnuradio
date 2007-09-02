@@ -23,6 +23,7 @@ AC_DEFUN([GRC_USRP],[
     AC_CONFIG_FILES([ \
 	usrp/Makefile \
 	usrp/usrp.pc \
+	usrp/usrp-inband.pc \
         usrp/usrp.iss \
         usrp/doc/Doxyfile \
         usrp/doc/Makefile \

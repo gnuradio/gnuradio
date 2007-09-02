@@ -1,0 +1,4 @@
+usr/lib/libpmt.la
+usr/lib/libpmt.so
+usr/lib/pkgconfig/pmt.pc
+usr/share/gnuradio/pmt*

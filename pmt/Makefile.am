@@ -21,5 +21,11 @@
 
 include $(top_srcdir)/Makefile.common
 
+EXTRA_DIST = \
+    pmt.pc.in
+
 SUBDIRS = src
 DIST_SUBDIRS = src doc
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = pmt.pc
