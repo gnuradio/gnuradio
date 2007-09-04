@@ -37,8 +37,7 @@ EXTRA_DIST = 					\
 	usrp_wfm_rcv_pll.py			\
 	usrp_wfm_rcv_sca.py			\
 	usrp_wfm_rcv2_nogui.py			\
-	usrp_wxapt_rcv.py			\
-	wfm_rcv_file.py
+	usrp_wxapt_rcv.py
 
 ourdatadir = $(exampledir)/usrp
 ourdata_DATA = $(EXTRA_DIST)
