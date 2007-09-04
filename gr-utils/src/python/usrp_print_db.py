@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,12 +20,23 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
+#!/usr/bin/env python
 
-EXTRA_DIST = \
-	README \
-	multi_usrp_oscope.py \
-	multi_usrp_rx_cfile.py
+from gnuradio import gr
+from gnuradio import usrp
+from optparse import OptionParser
+from usrpm import usrp_dbid
 
-ourdatadir = $(exampledir)/multi_usrp
-ourdata_DATA = $(EXTRA_DIST)
+u_source = usrp.source_c()
+u_sink = usrp.sink_c()
+
+subdev_Ar = usrp.selected_subdev(u_source, (0,0))
+subdev_Br = usrp.selected_subdev(u_source, (1,0))
+subdev_At = usrp.selected_subdev(u_sink, (0,0))
+subdev_Bt = usrp.selected_subdev(u_sink, (1,0))
+
+print "RX d'board %s" % (subdev_Ar.side_and_name(),)
+print "RX d'board %s" % (subdev_Br.side_and_name(),)
+print "TX d'board %s" % (subdev_At.side_and_name(),)
+print "TX d'board %s" % (subdev_Bt.side_and_name(),)
+

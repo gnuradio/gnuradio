@@ -218,6 +218,7 @@ GRC_GR_VIDEO_SDL
 GRC_GR_QTGUI
 GRC_GR_WXGUI
 GRC_GR_SOUNDER			dnl this must come after GRC_USRP
+GRC_GR_UTILS
 GRC_GNURADIO_EXAMPLES		dnl must come last
 
 # Each component is now either to be built, was skipped, or failed dependencies

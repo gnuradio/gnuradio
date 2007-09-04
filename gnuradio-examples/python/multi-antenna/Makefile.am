@@ -19,7 +19,12 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+include $(top_srcdir)/Makefile.common
+
 EXTRA_DIST = 		\
     multi_fft.py	\
     multi_file.py	\
     multi_scope.py
+
+ourdatadir = $(exampledir)/multi-antenna
+ourdata_DATA = $(EXTRA_DIST)

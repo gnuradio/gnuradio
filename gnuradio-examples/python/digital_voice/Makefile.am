@@ -19,6 +19,11 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+include $(top_srcdir)/Makefile.common
+
 EXTRA_DIST = 					\
 	encdec.py				\
 	cvsd_test.py
+
+ourdatadir = $(exampledir)/digital_voice
+ourdata_DATA = $(EXTRA_DIST)

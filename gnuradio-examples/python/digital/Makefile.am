@@ -19,6 +19,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+include $(top_srcdir)/Makefile.common
+
 EXTRA_DIST =			\
 	README			\
 	benchmark_rx.py		\
@@ -32,3 +34,6 @@ EXTRA_DIST =			\
 	transmit_path.py	\
 	tunnel.py		\
 	tx_voice.py		
+
+ourdatadir = $(exampledir)/digital
+ourdata_DATA = $(EXTRA_DIST)

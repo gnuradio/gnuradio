@@ -19,5 +19,25 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-SUBDIRS = apps audio channel-coding digital_voice digital multi-antenna \
-	  multi_usrp networking usrp hier ofdm
+include $(top_srcdir)/Makefile.common
+
+SUBDIRS = \
+    apps \
+    audio \
+    digital_voice \
+    digital \
+    multi-antenna \
+    multi_usrp \
+    networking \
+    usrp \
+    hier \
+    ofdm
+
+# Make example scripts with #! executable
+install-data-local:
+	for i in `find $(exampledir) -type f ! -perm 755`; do \
+	  if head -1 $$i | grep -q '^#!'; then \
+	    chmod 755 $$i; \
+	    echo "made executable: $$i"; \
+	  fi; \
+	done

@@ -21,7 +21,20 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = run_tests.in
+EXAMPLE_FILES = \
+    README \
+    btl-fsd.py \
+    fpll.py \
+    interp.py \
+    xlate.py \
+    viterbi-out.py
+    
+
+EXTRA_DIST = run_tests.in \
+	     $(EXAMPLE_FILES)
+
+ourdatadir = $(exampledir)/atsc
+ourdata_DATA = $(EXAMPLE_FILES)
 
 
 TESTS = 				\
@@ -31,3 +44,12 @@ TESTS = 				\
 noinst_PYTHON = 			\
 	atsc_utils.py			\
 	qa_atsc.py			
+
+# Make example scripts with #! executable
+install-data-local:
+	for i in `find $(ourdatadir) -type f ! -perm 755`; do \
+	  if head -1 $$i | grep -q '^#!'; then \
+	    chmod 755 $$i; \
+	    echo "made executable: $$i"; \
+	  fi; \
+	done

@@ -19,6 +19,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+include $(top_srcdir)/Makefile.common
+
 EXTRA_DIST = 					\
 		benchmark_ofdm.py		\
 		benchmark_ofdm_rx.py		\
@@ -28,3 +30,6 @@ EXTRA_DIST = 					\
 		pick_bitrate.py			\
 		receive_path.py			\
 		transmit_path.py
+
+ourdatadir = $(exampledir)/ofdm
+ourdata_DATA = $(EXTRA_DIST)

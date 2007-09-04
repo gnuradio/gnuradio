@@ -27,6 +27,8 @@ AC_DEFUN([GRC_GR_TRELLIS],[
 	gr-trellis/src/lib/Makefile \
 	gr-trellis/src/python/Makefile \
 	gr-trellis/src/python/run_tests \
+	gr-trellis/src/examples/Makefile \
+	gr-trellis/src/examples/fsm_files/Makefile
     ])
 
     passed=yes

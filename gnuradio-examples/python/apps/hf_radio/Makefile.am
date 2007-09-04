@@ -19,6 +19,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+include $(top_srcdir)/Makefile.common
+
 EXTRA_DIST = 	\
     hfir.sci	\
     input.py	\
@@ -32,3 +34,5 @@ EXTRA_DIST = 	\
     startup.py	\
     ui.py
 
+ourdatadir = $(exampledir)/hf_radio
+ourdata_DATA = $(EXTRA_DIST)

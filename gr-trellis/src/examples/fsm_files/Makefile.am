@@ -19,6 +19,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+include $(top_srcdir)/Makefile.common
+
 EXTRA_DIST =			\
 	awgn1o2_128.fsm		\
 	awgn1o2_16.fsm		\
@@ -35,3 +37,5 @@ EXTRA_DIST =			\
 	rep5.fsm		\
 	simple.fsm		
 
+ourdatadir = $(exampledir)/trellis/fsm_files
+ourdata_DATA = $(EXTRA_DIST)

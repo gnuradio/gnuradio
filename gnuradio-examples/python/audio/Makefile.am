@@ -19,16 +19,19 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+include $(top_srcdir)/Makefile.common
+
 EXTRA_DIST = 			\
 	audio_copy.py		\
 	audio_fft.py		\
 	audio_play.py		\
 	audio_to_file.py	\
-	dial_squelch.py		\
 	dial_tone.py		\
-	dialtone_v.py		\
 	mono_tone.py		\
 	multi_tone.py		\
 	noise.py		\
 	spectrum_inversion.py	\
 	test_resampler.py	
+
+ourdatadir = $(exampledir)/audio
+ourdata_DATA = $(EXTRA_DIST)

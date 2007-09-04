@@ -19,30 +19,14 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+include $(top_srcdir)/Makefile.common
+
 EXTRA_DIST = 					\
-	am_rcv.py				\
-	ayfabtu.py				\
-	benchmark_usb.py			\
-	flexrf_debug.py				\
-	flexrf_siggen.py			\
 	fm_tx_2_daughterboards.py		\
 	fm_tx4.py				\
 	max_power.py				\
-	siggen_min2.py				\
-	test_counting.py			\
-	test_dft_analysis.py			\
-	test_dft_synth.py			\
-	test_digital_loopback_counting.py	\
-	test_digital_loopback_lfsr.py		\
-	tvrx_am_rcv_gui.py			\
-	usrp_fft_old.py				\
-	usrp_fft.py				\
 	usrp_nbfm_ptt.py			\
 	usrp_nbfm_rcv.py			\
-	usrp_oscope.py				\
-	usrp_rx_cfile.py			\
-	usrp_rx_nogui.py			\
-	usrp_siggen.py				\
 	usrp_spectrum_sense.py			\
 	usrp_tv_rcv_nogui.py			\
 	usrp_tv_rcv.py				\
@@ -53,3 +37,6 @@ EXTRA_DIST = 					\
 	usrp_wfm_rcv2_nogui.py			\
 	usrp_wxapt_rcv.py			\
 	wfm_rcv_file.py
+
+ourdatadir = $(exampledir)/usrp
+ourdata_DATA = $(EXTRA_DIST)

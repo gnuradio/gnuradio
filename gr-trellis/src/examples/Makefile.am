@@ -19,6 +19,10 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+include $(top_srcdir)/Makefile.common
+
+SUBDIRS = fsm_files
+
 EXTRA_DIST =			\
         README			\
 	fsm_utils.py		\
@@ -36,6 +40,17 @@ EXTRA_DIST =			\
 	test_turbo_equalization1.py	\
 	test_turbo_equalization2.py	
 
-SUBDIRS = fsm_files
+
+ourdatadir = $(exampledir)/trellis
+ourdata_DATA = $(EXTRA_DIST)
+
+# Make example scripts with #! executable
+install-data-local:
+	for i in `find $(ourdatadir) -type f ! -perm 755`; do \
+	  if head -1 $$i | grep -q '^#!'; then \
+	    chmod 755 $$i; \
+	    echo "made executable: $$i"; \
+	  fi; \
+	done
 
 MOSTLYCLEANFILES = *.pyc

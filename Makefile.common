@@ -96,3 +96,6 @@ RM=$(RM_PROG) -f
 
 RUN_GUILE = GUILE_LOAD_PATH="@abs_top_srcdir@/pmt/src/scheme:@abs_top_srcdir@/mblock/src/scheme" @GUILE@ -e main -s
 COMPILE_MBH = $(RUN_GUILE) $(top_srcdir)/mblock/src/scheme/gnuradio/compile-mbh.scm
+
+# Base directory for example applications
+exampledir = $(datadir)/gnuradio/examples

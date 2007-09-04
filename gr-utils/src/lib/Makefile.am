@@ -1,5 +1,5 @@
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -18,13 +18,3 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 # 
-
-include $(top_srcdir)/Makefile.common
-
-EXTRA_DIST = \
-	README \
-	multi_usrp_oscope.py \
-	multi_usrp_rx_cfile.py
-
-ourdatadir = $(exampledir)/multi_usrp
-ourdata_DATA = $(EXTRA_DIST)

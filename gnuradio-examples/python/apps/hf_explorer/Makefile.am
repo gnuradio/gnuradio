@@ -19,8 +19,12 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+include $(top_srcdir)/Makefile.common
+
 EXTRA_DIST = 	\
     README 	\
     hfx2.py 	\
     hfx_help
 
+ourdatadir = $(exampledir)/hf_explorer
+ourdata_DATA = $(EXTRA_DIST)
