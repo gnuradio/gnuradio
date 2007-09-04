@@ -30,10 +30,12 @@ n2s = eng_notation.num_to_str
 #-----------------------------------------------------------------------
 FR_RADAR_MODE           = usrp.FR_USER_0    # Operational mode
 bmFR_RADAR_MODE_RESET   = 1 << 0	# bit 0: active high reset
-#bmFR_RADAR_MODE_LP     = 1 << 1	# bit 1: enable digital loopback
-#bmFR_RADAR_MODE_DR     = 1 << 2	# bit 2: enable on-board deramping
-#bmFR_RADAR_MODE_MD     = 1 << 3   	# bit 3: enable echo metadata
-#bmFR_RADAR_MODE_CHIRPS = 3 << 4   	# bit 4,5: number of chirp center frequencies
+bmFR_RADAR_TXSIDE       = 1 << 1        # bit 1: use TX side A or B
+#bmFR_RADAR_MODE_LP      = 1 << 2	# bit 2: enable digital loopback
+#bmFR_RADAR_MODE_DR      = 1 << 3	# bit 3: enable on-board deramping
+#bmFR_RADAR_MODE_MD      = 1 << 4   	# bit 4: enable echo metadata
+#bmFR_RADAR_MODE_CHIRPS  = 3 << 5   	# bit 5,6: number of chirp center frequencies
+bmFR_RADAR_DEBUG        = 1 << 7        # bit 7: enable debugging mode
 
 FR_RADAR_TON    = usrp.FR_USER_1	# 16-bit transmitter on time in clocks
 FR_RADAR_TSW    = usrp.FR_USER_2	# 16-bit transmitter switch time in clocks
@@ -46,28 +48,31 @@ FR_RADAR_FINCR  = usrp.FR_USER_7  	# 32-bit FTW increment per transmit clock
 # These are for phase II development
 #FR_RADAR_FREQ1N = usrp.FR_USER_8  # 24-bit N register for chirp #1
 #FR_RADAR_FREQ1R = usrp.FR_USER_9  # 24-bit R register for chirp #1
-#FR_RADAR_FREQ1C = usrp.FR_USER_10 # 24-bit control register for chirp #1
+#FR_RADAR_FREQ1C = usrp.FR_USER_10 # 24-bit C register for chirp #1
 #FR_RADAR_FREQ2N = usrp.FR_USER_11 # 24-bit N register for chirp #2
 #FR_RADAR_FREQ2R = usrp.FR_USER_12 # 24-bit R register for chirp #2
-#FR_RADAR_FREQ2C = usrp.FR_USER_13 # 24-bit control register for chirp #2
+#FR_RADAR_FREQ2C = usrp.FR_USER_13 # 24-bit C register for chirp #2
 #FR_RADAR_FREQ3N = usrp.FR_USER_14 # 24-bit N register for chirp #3
 #FR_RADAR_FREQ3R = usrp.FR_USER_15 # 24-bit R register for chirp #3
-#FR_RADAR_FREQ3C = usrp.FR_USER_16 # 24-bit control register for chirp #3
+#FR_RADAR_FREQ3C = usrp.FR_USER_16 # 24-bit C register for chirp #3
 #FR_RADAR_FREQ4N = usrp.FR_USER_17 # 24-bit N register for chirp #4
 #FR_RADAR_FREQ4R = usrp.FR_USER_18 # 24-bit R register for chirp #4
-#FR_RADAR_FREQ4C = usrp.FR_USER_19 # 24-bit control register for chirp #4
+#FR_RADAR_FREQ4C = usrp.FR_USER_19 # 24-bit C register for chirp #4
 
 #-----------------------------------------------------------------------
 # Transmitter object.  Uses usrp_sink, but only for a handle to the
 # FPGA registers.
 #-----------------------------------------------------------------------
 class radar_tx:
-    def __init__(self, verbose=False, debug=False):
+    def __init__(self, subdev_spec=None, verbose=False, debug=False):
+        self._subdev_spec = subdev_spec
 	self._verbose = verbose
 	self._debug = debug
-
         self._u = usrp.sink_s(fpga_filename='usrp_radar_mono.rbf')
-        self._subdev_spec = (0,0); # FPGA code only implements side A
+
+        if self._subdev_spec == None:
+            self._subdev_spec = usrp.pick_tx_subdevice(self._u)
+
         self._subdev = usrp.selected_subdev(self._u, self._subdev_spec)
 	self._subdev.set_lo_offset(0.0)
 	self._ton_ticks = 0
@@ -77,7 +82,7 @@ class radar_tx:
 	
         if self._verbose:
             print "Using", self._subdev.name(), "for radar transmitter."            
-
+	    
     def set_ton(self, ton):
 	self._ton_ticks = 2*(int(ton*64e6)/2)-1  # Even number, then subtract 1
 	if self._verbose:
@@ -105,8 +110,6 @@ class radar_tx:
 
     def set_amplitude(self, ampl):
 	self._amplitude = int(ampl*9946/100.0) # CORDIC gain correction
-        if self._debug:
-            print "Writing amplitude register with:", hex(self._amplitude)
         self._u._write_fpga_reg(FR_RADAR_AMPL, self._amplitude)
 
     def set_freq(self, center_freq, chirp_width):
@@ -132,41 +135,61 @@ class radar_tx:
     def stop(self):
 	self._subdev.set_enable(False)
 	self._u.stop()
+
+    def subdev_spec(self):
+        return self._subdev_spec
+    
+    def echo_length(self):
+        return self._tlook_ticks+1
+
+    def __del__(self):
+	del self._subdev # Avoid weak reference error
 	
 #-----------------------------------------------------------------------
 # Receiver object.  Uses usrp_source_c to receive echo records.
-# NOT IMPLEMENTED YET
 #-----------------------------------------------------------------------
-"""
-class radar_rx:
-    def __init__(self,gain=None,msgq=None,loopback=False,verbose=False,debug=False):
+class radar_rx():
+    def __init__(self, gain=None, subdev_spec=None, msgq=None, length=None,
+                 verbose=False, debug=False):
         self._gain = gain
+        self._subdev_spec = subdev_spec
         self._msgq = msgq
-	self._loopback = loopback
+        self._length = length
 	self._verbose = verbose
-	self._debug = debug
-		
+        self._debug = debug
+	self._length_set = False
+			
         self._fg = gr.flow_graph()
-        self._u = usrp.source_c(fpga_filename='usrp_radar.rbf')
-	if not self._loopback:
-            self._subdev_spec = (0,0) # FPGA only implements side A
-            self._u.set_mux(usrp.determine_rx_mux_value(self._u, self._subdev_spec))
-            self._subdev = usrp.selected_subdev(self._u, self._subdev_spec)
-            if self._verbose:
-	        print "Using", self._subdev.name(), "for radar receiver."
+        self._u = usrp.source_c(fpga_filename='usrp_radar_mono.rbf')
+        if self._subdev_spec == None:
+            self._subdev_spec = usrp.pick_rx_subdevice(self._u)
+        self._u.set_mux(usrp.determine_rx_mux_value(self._u, self._subdev_spec))
 
-        self.set_gain(self._gain)
+	if self._debug:
+	    self._usrp_sink = gr.file_sink(gr.sizeof_gr_complex, "usrp.dat")
+    	    self._fg.connect(self._u, self._usrp_sink)
+	
+        self._subdev = usrp.selected_subdev(self._u, self._subdev_spec)
+        self.set_gain(gain)
 
-        # need to compute length here
+        if self._verbose:
+            print "Using", self._subdev.name(), "for radar receiver."
+            print "Setting receiver gain to", self._gain
         
+    def set_echo_length(self, length):
+        # Only call once
+	if self._length_set is True:
+	    raise RuntimeError("Can only set echo length once.")
+	self._length = length
         self._vblen = gr.sizeof_gr_complex*self._length
-        if self._debug:
-            print "Generating echo vectors of length", self._length, "byte length", self._vblen
-            
-        self._s2v = gr.stream_to_vector(gr.sizeof_gr_complex, self._length)
+	self._s2v = gr.stream_to_vector(gr.sizeof_gr_complex, self._length)
         self._sink = gr.message_sink(self._vblen, self._msgq, True)
         self._fg.connect(self._u, self._s2v, self._sink)
-        
+	self._length_set = True
+        if self._verbose:
+            print "Receiving echo vectors of length", self._length, \
+                  "(samples)", self._vblen, "(bytes)"
+
     def tune(self, frequency):
         if self._verbose:
             print "Setting receiver frequency to", n2s(frequency)
@@ -176,74 +199,68 @@ class radar_rx:
 
     def set_gain(self, gain):
         self._gain = gain
-	if self._loopback:
-	    return
-	    
-        if self._gain is None:
+        if self._gain == None:
             # if no gain was specified, use the mid-point in dB
             g = self._subdev.gain_range()
             self._gain = float(g[0]+g[1])/2
-        if self._verbose:
-            print "Setting receiver gain to", gain
         self._subdev.set_gain(self._gain)
 
     def start(self):
-        if self._debug:
+        if self._verbose:
             print "Starting receiver flow graph."
         self._fg.start()
 
     def wait(self):
-        if self._debug:
+        if self._verbose:
             print "Waiting for threads..."
         self._fg.wait()
 
     def stop(self):
-        if self._debug:
+        if self._verbose:
             print "Stopping receiver flow graph."
         self._fg.stop()
         self.wait()
-        if self._debug:
+        if self._verbose:
             print "Receiver flow graph stopped."
-"""
 
 class radar:
-    def __init__(self,msgq=None,verbose=False,debug=False):
+    def __init__(self, msgq=None, tx_subdev_spec=None, rx_subdev_spec=None,
+                 gain=None, verbose=False, debug=False):
         self._msgq = msgq
         self._verbose = verbose
         self._debug = debug
 
 	self._mode = 0
-        self._trans = radar_tx(verbose=self._verbose, debug=self._debug)
+        self._trans = radar_tx(subdev_spec=tx_subdev_spec, verbose=self._verbose, debug=self._debug)
+        self._rcvr = radar_rx(gain=gain, msgq=self._msgq, subdev_spec=rx_subdev_spec, 
+			      verbose=self._verbose, debug=self._debug)
 	self.set_reset(True)
-		
+	self.set_tx_board(self._trans.subdev_spec())
+        self.set_debug(self._debug)
+        
     def _write_mode(self):
-        if self._debug:
-            print "Writing mode register with:", hex(self._mode)
         self._trans._u._write_fpga_reg(FR_RADAR_MODE, self._mode)
 
     def set_reset(self, value):
 	if value:
-            if self._debug:
-                print "Asserting reset."
 	    self._mode |= bmFR_RADAR_MODE_RESET
 	else:
-            if self._debug:
-                print "De-asserting reset."
 	    self._mode &= ~bmFR_RADAR_MODE_RESET
 	self._write_mode()
 
-    """
-    def set_loopback(self, value):
-	if value:
-            if self._verbose:
-                print "Enabling digital loopback."
-	    self._mode |= bmFR_RADAR_MODE_LP
+    def set_tx_board(self, tx_subdev_spec):
+	if tx_subdev_spec[0] == 1:
+	    self._mode |= bmFR_RADAR_TXSIDE
 	else:
-            if self._verbose:
-                print "Disabling digital loopback."
-	    self._mode &= ~bmFR_RADAR_MODE_LP
+	    self._mode &= ~bmFR_RADAR_TXSIDE
 	self._write_mode()
-    """
+	
+    def set_debug(self, value):
+	if value:
+	    self._mode |= bmFR_RADAR_DEBUG
+	else:
+	    self._mode &= ~bmFR_RADAR_DEBUG
+	self._write_mode()
     
     def set_ton(self, ton):
 	self._trans.set_ton(ton)
@@ -253,6 +270,7 @@ class radar:
 	
     def set_tlook(self, tlook):
 	self._trans.set_tlook(tlook)
+	self._rcvr.set_echo_length(self._trans.echo_length())
 	
     def set_prf(self, prf):
 	self._trans.set_prf(prf)
@@ -265,12 +283,12 @@ class radar:
         # set receiver center frequency
         
     def start(self):
-	self._trans.start()
 	self.set_reset(False)
+	self._trans.start()
+	self._rcvr.start()
 	
     def stop(self):
-	self.set_reset(True)
 	self._trans.stop()
+	self._rcvr.stop()
+	self.set_reset(True)
 
-    def __del__(self):
-        self.stop()

@@ -41,7 +41,6 @@ module radar_tb;
    wire [13:0] tx_dac_q;
 
    // ADC bus
-   reg         rx_strobe;
    reg [15:0]  rx_adc_i;
    reg [15:0]  rx_adc_q;
    
@@ -56,7 +55,7 @@ module radar_tb;
    radar uut
      (.clk_i(clk),.saddr_i(saddr),.sdata_i(sdata),.s_strobe_i(s_strobe),
       .tx_strobe_o(tx_strobe),.tx_dac_i_o(tx_dac_i),.tx_dac_q_o(tx_dac_q),
-      .rx_strobe_i(rx_strobe),.rx_adc_i_i(rx_adc_i),.rx_adc_q_i(rx_adc_q),
+      .rx_adc_i_i(rx_adc_i),.rx_adc_q_i(rx_adc_q),
       .rx_strobe_o(fifo_strobe),.rx_ech_i_o(fifo_i),.rx_ech_q_o(fifo_q));
 
    // Start up initialization
@@ -68,7 +67,6 @@ module radar_tb;
 	saddr = 0;
 	sdata = 0;
 	s_strobe = 0;
-	rx_strobe = 1;
 	rx_adc_i = 0;
 	rx_adc_q = 0;
 	mode = 0;
@@ -187,8 +185,8 @@ module radar_tb;
 
 	 #20 set_ton(320-1);	// 5us on time
 	 #20 set_tsw(26-1);	// 406ns switching time
-	 #20 set_tlook(320-1);  // 5us look time
-	 #20 set_tidle(3174-1); // 60us pulse period
+	 #20 set_tlook(640-1);  // 10us look time
+	 #20 set_tidle(2854-1); // 60us pulse period
 	 
 	 #20 set_ampl(16'd9946);
 	 #20 set_fstart(32'h80000000); // -16 to 16 MHz

@@ -22,43 +22,96 @@
 `include "../../../../usrp/firmware/include/fpga_regs_common.v"
 `include "../../../../usrp/firmware/include/fpga_regs_standard.v"
 
-module radar_rx(clk_i,rst_i,ena_i,strobe_i,saddr_i,sdata_i,s_strobe_i,
-		rx_in_i_i,rx_in_q_i,rx_i_o,rx_q_o,rx_strobe_o);
+module radar_rx(clk_i,rst_i,ena_i,dbg_i,
+		rx_in_i_i,rx_in_q_i,
+		rx_i_o,rx_q_o,rx_strobe_o);
    
    input clk_i;
    input rst_i;
    input ena_i;
-   input strobe_i;
-
-   input [6:0] saddr_i;
-   input [31:0] sdata_i;
-   input s_strobe_i;
-
+   input dbg_i;
+   
    input [15:0] rx_in_i_i;
    input [15:0] rx_in_q_i;
    
    output [15:0] rx_i_o;
    output [15:0] rx_q_o;
-   output rx_strobe_o;
+   output reg    rx_strobe_o;
 
-   // Just count up for debugging
-   reg [31:0] counter;
+   reg [15:0] count;
 
    always @(posedge clk_i)
-     begin
-	if (rst_i | ~ena_i)
-	  counter <= 32'b0;
-	else if (strobe_i & rx_strobe_o)
-	  counter <= counter + 32'b1;
-     end
+     if (rst_i | ~ena_i)
+       count <= 16'b0;
+     else
+       count <= count + 16'b1;
 
-   assign rx_i_o = ena_i ? counter[31:16] : 16'b0;
-   assign rx_q_o = ena_i ? counter[15:0] : 16'b0;
+   wire [31:0] fifo_data = dbg_i ? {count[15:0],16'hAA55} : {rx_in_i_i,rx_in_q_i};
+
+   // Need to buffer received samples as they come in at 32 bits per cycle
+   // but the rx_buffer.v fifo is only 16 bits wide.
+   //
+   reg         fifo_read;
+   wire [31:0] fifo_out;
+   wire        fifo_empty;
    
-   // Temporarily we duplicate what master_control.v did to generate decim_strobe
-   // so we can do receive debugging. Later we'll drive rx_strobe_o in bursts to
-   // load receiver data into the rx fifo.
-   strobe_gen rx_strobe_gen
-     ( .clock(clk_i),.reset(rst_i),.enable(ena_i),.rate(7),.strobe_in(strobe_i),.strobe(rx_strobe_o) );
+   fifo32_4k fifo(.clock(clk_i),.sclr(rst_i),
+		  .data(fifo_data),.wrreq(ena_i),
+		  .q(fifo_out),.rdreq(fifo_read),
+		  .empty(fifo_empty) );
+
+   `define ST_RD_IDLE     4'b0001
+   `define ST_RD_REQ      4'b0010
+   `define ST_WR_FIFO     4'b0100
+   `define ST_RD_DELAY    4'b1000
+
+   reg [3:0] state;
+   reg [3:0] delay;
+   
+   always @(posedge clk_i)
+     if (rst_i | ~ena_i)
+       begin
+	  state <= `ST_RD_IDLE;
+	  delay <= 4'd0;
+	  rx_strobe_o <= 1'b0;
+	  fifo_read <= 1'b0;
+       end
+     else
+       case (state)
+	 `ST_RD_IDLE:
+	   begin
+	      if (!fifo_empty)
+		begin
+		   fifo_read <= 1'b1;
+		   state <= `ST_RD_REQ;
+		end
+	   end
+
+	 `ST_RD_REQ:
+	   begin
+	      fifo_read <= 1'b0;
+	      rx_strobe_o <= 1'b1;
+	      state <= `ST_WR_FIFO;
+	   end
+
+	 `ST_WR_FIFO:
+	   begin
+	      rx_strobe_o <= 1'b0;
+	      state <= `ST_RD_DELAY;
+	   end
+
+	 `ST_RD_DELAY:
+	   if (delay == 7)
+	     begin
+		delay <= 0;
+		state <= `ST_RD_IDLE;
+	     end
+	   else
+	     delay <= delay + 1'b1;
+
+       endcase // case(state)
+   
+   assign rx_i_o = fifo_out[31:16];
+   assign rx_q_o = fifo_out[15:0];
    
 endmodule // radar_rx

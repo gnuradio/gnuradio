@@ -22,8 +22,8 @@
 `include "../lib/radar_config.vh"
 
 module radar(clk_i,saddr_i,sdata_i,s_strobe_i,
-	     tx_strobe_o,tx_dac_i_o,tx_dac_q_o,
-	     rx_strobe_i,rx_adc_i_i,rx_adc_q_i,
+	     tx_side_o,tx_strobe_o,tx_dac_i_o,tx_dac_q_o,
+	     rx_adc_i_i,rx_adc_q_i,
 	     rx_strobe_o,rx_ech_i_o,rx_ech_q_o);
 
    // System interface
@@ -33,12 +33,12 @@ module radar(clk_i,saddr_i,sdata_i,s_strobe_i,
    input 	 s_strobe_i;    // Configuration bus write
    
    // Transmit subsystem
+   output        tx_side_o;     // Transmitter slot
    output        tx_strobe_o;	// Generate an transmitter output sample
    output [13:0] tx_dac_i_o;	// I channel transmitter output to DAC
    output [13:0] tx_dac_q_o;    // Q channel transmitter output to DAC
-
+   
    // Receive subsystem
-   input         rx_strobe_i;	// Indicates receive sample ready from ADC
    input  [15:0] rx_adc_i_i;	// I channel input from ADC
    input  [15:0] rx_adc_q_i;	// Q channel input from ADC
    output 	 rx_strobe_o;	// Indicates output samples ready for Rx FIFO
@@ -47,6 +47,8 @@ module radar(clk_i,saddr_i,sdata_i,s_strobe_i,
 
    // Application control
    wire          reset;		// Master application reset
+   wire          tx_side;	// Transmitter slot
+   wire          debug_enabled; // Enable debugging mode; 	 
    wire 	 tx_enable;     // Transmitter enable
    wire 	 rx_enable;     // Receiver enable
    wire          tx_ctrl;       // Transmitter on control
@@ -59,7 +61,8 @@ module radar(clk_i,saddr_i,sdata_i,s_strobe_i,
 
    radar_control controller
      (.clk_i(clk_i),.saddr_i(saddr_i),.sdata_i(sdata_i),.s_strobe_i(s_strobe_i),
-      .reset_o(reset),.tx_strobe_o(tx_strobe_o),.tx_ctrl_o(tx_ctrl),.rx_ctrl_o(rx_ctrl),
+      .reset_o(reset),.tx_side_o(tx_side_o),.dbg_o(debug_enabled),
+      .tx_strobe_o(tx_strobe_o),.tx_ctrl_o(tx_ctrl),.rx_ctrl_o(rx_ctrl),
       .ampl_o(ampl),.fstart_o(fstart),.fincr_o(fincr));
 
    radar_tx transmitter
@@ -68,8 +71,8 @@ module radar(clk_i,saddr_i,sdata_i,s_strobe_i,
        .tx_i_o(tx_dac_i_o),.tx_q_o(tx_dac_q_o) );
    
    radar_rx receiver
-     ( .clk_i(clk_i),.rst_i(reset),.ena_i(rx_ctrl & 1'b0), // Disable receiver for now
-       .strobe_i(rx_strobe_i),.rx_in_i_i(rx_adc_i_i),.rx_in_q_i(rx_adc_q_i),
+     ( .clk_i(clk_i),.rst_i(reset),.ena_i(rx_ctrl),.dbg_i(debug_enabled),
+       .rx_in_i_i(rx_adc_i_i),.rx_in_q_i(rx_adc_q_i),
        .rx_strobe_o(rx_strobe_o),.rx_i_o(rx_ech_i_o),.rx_q_o(rx_ech_q_o) );
    
 endmodule // radar

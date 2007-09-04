@@ -31,6 +31,12 @@ n2s = eng_notation.num_to_str
 
 def main():
     parser = OptionParser(option_class=eng_option)
+    parser.add_option("-T", "--tx-subdev-spec", type="subdev", default=None,
+		      help="use transmitter board side A or B (default is first found)")
+    parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
+		      help="use receiver board side A or B (default is first found)")
+    parser.add_option("-g", "--gain", type="eng_float", default=None,
+                      help="set gain in dB (default is midpoint)")
     parser.add_option("-f", "--frequency", type="eng_float", default=0.0,
                       help="set transmitter center frequency to FREQ in Hz, default is %default", metavar="FREQ")
     parser.add_option("-w", "--chirp-width", type="eng_float", default=32e6,
@@ -51,8 +57,6 @@ def main():
                       help="enable debugging output, default is disabled")
 
     # NOT IMPLEMENTED
-    #parser.add_option("-g", "--gain", type="eng_float", default=None,
-    #                  help="set gain in dB (default is midpoint)")
     #parser.add_option("-l", "--loopback", action="store_true", default=False,
     #                  help="enable digital loopback, default is disabled")
     #parser.add_option("-F", "--filename", default=None,
@@ -74,7 +78,9 @@ def main():
     """
         
     msgq = gr.msg_queue()
-    s = radar(msgq=msgq,verbose=options.verbose,debug=options.debug)
+    s = radar(msgq=msgq, tx_subdev_spec=options.tx_subdev_spec,
+              rx_subdev_spec=options.rx_subdev_spec,gain=options.gain,
+	      verbose=options.verbose, debug=options.debug)
 
     s.set_ton(options.ton)
     s.set_tsw(options.tsw)
@@ -85,24 +91,22 @@ def main():
 
     s.start()
 
-    """
-    f = open(options.filename, "wb")
+    #f = open(options.filename, "wb")
     print "Enter CTRL-C to stop."
     try:
-        while (1):
-            msg = msgq.delete_head()
-            if msg.type() == 1:
-                break
-            rec = msg.to_string()
-            if options.debug:
-                print "Received echo vector of length", len(rec)
-		f.write(rec)
+	while 1:
+	    if not msgq.empty_p():
+                msg = msgq.delete_head()
+                if msg.type() == 1:
+                    break
+                echo = msg.to_string()
+                if options.debug:
+                    print "Received echo vector of length", len(echo)
+		#f.write(rec)
 		
     except KeyboardInterrupt:
         pass
-    """
 
-    raw_input("Press enter to stop transmitting.")
     s.stop()
         
 if __name__ == "__main__":

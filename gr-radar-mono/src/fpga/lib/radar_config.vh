@@ -23,7 +23,13 @@
 `include "../../../../usrp/firmware/include/fpga_regs_standard.v"
 
 `define FR_RADAR_MODE           `FR_USER_0
-`define bmFR_RADAR_MODE_RESET	32'h0001
+`define bmFR_RADAR_MODE_RESET	32'b1 << 0
+`define bmFR_RADAR_TXSIDE       32'b1 << 1
+`define bmFR_RADAR_LOOP         32'b1 << 2
+`define bmFR_RADAR_META         32'b1 << 3
+`define bmFR_RADAR_DERAMP       32'b1 << 4
+`define bmFR_RADAR_CHIRPS       32'b11 << 5
+`define bmFR_RADAR_DEBUG        32'b1 << 7
 
 `define FR_RADAR_TON            `FR_USER_1
 `define FR_RADAR_TSW            `FR_USER_2
@@ -32,4 +38,3 @@
 `define FR_RADAR_AMPL           `FR_USER_5
 `define FR_RADAR_FSTART         `FR_USER_6
 `define FR_RADAR_FINCR          `FR_USER_7
-

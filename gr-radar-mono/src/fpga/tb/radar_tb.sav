@@ -1,4 +1,4 @@
-*-24.712317 37100000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-24.808464 9235000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 @28
 radar_tb.clk
 radar_tb.ena
@@ -24,3 +24,11 @@ radar_tb.uut.tx_dac_q_o[13:0]
 @28
 radar_tb.uut.controller.tx_ctrl_o
 radar_tb.uut.controller.rx_ctrl_o
+@200
+-
+@28
+radar_tb.fifo_strobe
+@8025
+radar_tb.fifo_i[15:0]
+@22
+radar_tb.fifo_q[15:0]

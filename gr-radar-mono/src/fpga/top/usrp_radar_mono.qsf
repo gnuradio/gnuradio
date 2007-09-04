@@ -29,29 +29,7 @@
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 3.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "00:14:04  JULY 13, 2003"
 set_global_assignment -name LAST_QUARTUS_VERSION "7.1 SP1"
-set_global_assignment -name VERILOG_FILE usrp_radar_mono.v
-set_global_assignment -name VERILOG_FILE dacpll.v
-set_global_assignment -name VERILOG_FILE ../lib/cordic_nco.v
-set_global_assignment -name VERILOG_FILE ../lib/dac_interface.v
-set_global_assignment -name VERILOG_FILE ../lib/radar_control.v
-set_global_assignment -name VERILOG_FILE ../lib/radar_rx.v
-set_global_assignment -name VERILOG_FILE ../lib/radar_tx.v
-set_global_assignment -name VERILOG_FILE ../lib/radar.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/adc_interface.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/atr_delay.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/bidir_reg.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/clk_divider.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/cordic_stage.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/cordic.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/gen_sync.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/io_pins.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/master_control.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/rssi.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/rx_buffer.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/rx_dcoffset.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/serial_io.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/setting_reg.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/strobe_gen.v
+set_global_assignment -name MESSAGE_SUPPRESSION_RULE_FILE usrp_radar_mono.srf
 
 # Pin & Location Assignments
 # ==========================
@@ -349,7 +327,7 @@ set_global_assignment -name LOGICLOCK_INCREMENTAL_COMPILE_ASSIGNMENT OFF
 	# Classic Timing Assignments
 	# ==========================
 set_global_assignment -name DUTY_CYCLE 50 -section_id SCLK
-	set_global_assignment -name FMAX_REQUIREMENT "1 MHz" -section_id SCLK
+set_global_assignment -name FMAX_REQUIREMENT "1 MHz" -section_id SCLK
 
 # end CLOCK(SCLK)
 # ---------------
@@ -360,7 +338,7 @@ set_global_assignment -name DUTY_CYCLE 50 -section_id SCLK
 	# Classic Timing Assignments
 	# ==========================
 set_global_assignment -name DUTY_CYCLE 50 -section_id master_clk
-	set_global_assignment -name FMAX_REQUIREMENT "64 MHz" -section_id master_clk
+set_global_assignment -name FMAX_REQUIREMENT "64 MHz" -section_id master_clk
 
 # end CLOCK(master_clk)
 # ---------------------
@@ -371,31 +349,54 @@ set_global_assignment -name DUTY_CYCLE 50 -section_id master_clk
 	# Classic Timing Assignments
 	# ==========================
 set_global_assignment -name DUTY_CYCLE 50 -section_id usbclk
-	set_global_assignment -name FMAX_REQUIREMENT "48 MHz" -section_id usbclk
+set_global_assignment -name FMAX_REQUIREMENT "48 MHz" -section_id usbclk
 
 # end CLOCK(usbclk)
 # -----------------
 
-# ----------------------
+# -----------------------------
 # start ENTITY(usrp_radar_mono)
 
 	# Classic Timing Assignments
 	# ==========================
-	set_instance_assignment -name CLOCK_SETTINGS SCLK -to SCLK
-	set_instance_assignment -name CLOCK_SETTINGS usbclk -to usbclk
-	set_instance_assignment -name CLOCK_SETTINGS master_clk -to master_clk
+set_instance_assignment -name CLOCK_SETTINGS SCLK -to SCLK
+set_instance_assignment -name CLOCK_SETTINGS usbclk -to usbclk
+set_instance_assignment -name CLOCK_SETTINGS master_clk -to master_clk
 
 	# start DESIGN_PARTITION(Top)
 	# ---------------------------
 
 		# Incremental Compilation Assignments
 		# ===================================
-		set_instance_assignment -name PARTITION_HIERARCHY no_file_for_top_partition -to | -section_id Top
-		set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_instance_assignment -name PARTITION_HIERARCHY no_file_for_top_partition -to | -section_id Top
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 
 	# end DESIGN_PARTITION(Top)
 	# -------------------------
 
 # end ENTITY(usrp_radar_mono)
-# --------------------
-set_global_assignment -name MESSAGE_SUPPRESSION_RULE_FILE usrp_radar_mono.srf
+# ---------------------------
+set_global_assignment -name VERILOG_FILE usrp_radar_mono.v
+set_global_assignment -name VERILOG_FILE dacpll.v
+set_global_assignment -name VERILOG_FILE ../lib/cordic_nco.v
+set_global_assignment -name VERILOG_FILE ../lib/dac_interface.v
+set_global_assignment -name VERILOG_FILE ../lib/fifo32_4k.v
+set_global_assignment -name VERILOG_FILE ../lib/radar_control.v
+set_global_assignment -name VERILOG_FILE ../lib/radar_rx.v
+set_global_assignment -name VERILOG_FILE ../lib/radar_tx.v
+set_global_assignment -name VERILOG_FILE ../lib/radar.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/adc_interface.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/atr_delay.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/bidir_reg.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/clk_divider.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/cordic_stage.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/cordic.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/gen_sync.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/io_pins.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/master_control.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/rssi.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/rx_buffer.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/rx_dcoffset.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/serial_io.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/setting_reg.v
+set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/strobe_gen.v

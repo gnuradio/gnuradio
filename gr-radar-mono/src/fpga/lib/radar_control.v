@@ -22,7 +22,8 @@
 `include "../lib/radar_config.vh"
 
 module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,
-		     reset_o,tx_strobe_o,tx_ctrl_o,rx_ctrl_o,
+		     reset_o,tx_side_o,dbg_o,
+		     tx_strobe_o,tx_ctrl_o,rx_ctrl_o,
 		     ampl_o,fstart_o,fincr_o);
 
    // System interface
@@ -33,6 +34,8 @@ module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,
 
    // Control and configuration outputs
    output 	 reset_o;
+   output        tx_side_o;
+   output        dbg_o;
    output        tx_strobe_o;
    output        tx_ctrl_o;
    output        rx_ctrl_o;
@@ -42,8 +45,8 @@ module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,
    
    // Internal configuration
    wire 	 lp_ena;
-   wire 	 dr_ena;
    wire 	 md_ena;
+   wire 	 dr_ena;
    wire   [1:0]  chirps;
    wire   [15:0] t_on;
    wire   [15:0] t_sw;
@@ -51,9 +54,17 @@ module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,
    wire   [31:0] t_idle;
 
    // Configuration from host
+   wire [31:0] 	 mode;
    setting_reg #(`FR_RADAR_MODE)   sr_mode(.clock(clk_i),.reset(1'b0),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
-					   .out({chirps,md_ena,dr_ena,lp_ena,reset_o}));
-   				     
+					   .out(mode));
+   assign reset_o   = mode[0];
+   assign tx_side_o = mode[1];
+   assign lp_ena    = mode[2];
+   assign md_ena    = mode[3];
+   assign dr_ena    = mode[4];
+   assign chirps    = mode[6:5];
+   assign dbg_o     = mode[7];
+   
    setting_reg #(`FR_RADAR_TON)    sr_ton(.clock(clk_i),.reset(1'b0),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
 					  .out(t_on));
    
@@ -108,7 +119,7 @@ module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,
 		count <= 32'b0;
 	     end
 	   else
-	     count <= count + 24'b1;
+	     count <= count + 32'b1;
 
 	 `ST_LOOK:
 	   if (count == {16'b0,t_look})
@@ -123,7 +134,7 @@ module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,
 	   if (count == t_idle)
 	     begin
 		state <= `ST_ON;
-		count <= 24'b0;
+		count <= 32'b0;
 	     end
 	   else
 	     count <= count + 32'b1;
