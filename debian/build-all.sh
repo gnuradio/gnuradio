@@ -7,4 +7,6 @@ svn-buildpackage \
     -us \
     -rfakeroot
 
+cd ../build-area
+dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz
 

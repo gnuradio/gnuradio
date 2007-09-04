@@ -90,8 +90,6 @@ Description: Software Defined Radio
 Package: python-gnuradio-core
 Architecture: any
 Depends: ${python:Depends}, libgnuradio-core0c2a, python-numpy
-Conflicts: python-gnuradio 
-Replaces: python-gnuradio
 Provides: ${python:Provides}
 Section: python
 XB-Python-Version: ${python:Versions}
@@ -103,6 +101,7 @@ Package: python-gnuradio-audio-alsa
 Architecture: any
 Depends: ${python:Depends}, python-gnuradio-core, libasound2
 Section: python
+Provides: python-gnuradio-audio
 XB-Python-Version: ${python:Versions}
 Description: Python bindings for GNU Radio ALSA audio driver
  This package provides the Python interface to the GNU Radio ALSA
@@ -115,6 +114,7 @@ Depends: libusb-0.1-4
 Conflicts: libusrp0
 Replaces: libusrp0
 Suggests: usrp-doc
+Recommends: usrp-firmware
 Description: Client side library for the USRP
  The Universal Software Radio Peripheral (USRP) is an USB-connected,
  low-cost and open board. It features four high-speed analog-to-digital
@@ -224,6 +224,7 @@ Package: python-gnuradio-audio-jack
 Architecture: any
 Depends: ${python:Depends}, python-gnuradio-core, libjack0.100.0-0
 Section: python
+Provides: python-gnuradio-audio
 XB-Python-Version: ${python:Versions}
 Description: GNU Radio Python JACK Audio Driver
  This package provides the Python interface to the GNU Radio driver
@@ -233,6 +234,7 @@ Package: python-gnuradio-audio-oss
 Architecture: any
 Depends: ${python:Depends}, python-gnuradio-core
 Section: python
+Provides: python-gnuradio-audio
 XB-Python-Version: ${python:Versions}
 Description: GNU Radio Python OSS Audio Driver
  This package provides the Python interface to the GNU Radio driver
@@ -242,6 +244,7 @@ Package: python-gnuradio-audio-portaudio
 Architecture: any
 Depends: ${python:Depends}, python-gnuradio-core, libportaudio2
 Section: python
+Provides: python-gnuradio-audio
 XB-Python-Version: ${python:Versions}
 Description: GNU Radio Python PortAudio Driver
  This package provides the Python interface to the GNU Radio driver
@@ -288,6 +291,108 @@ Architecture: any
 Depends: ${python:Depends}, python-gnuradio-core, libsdl1.2debian
 Section: python
 XB-Python-Version: ${python:Versions}
-Description: GNU Radio Trellis-Coded Modulation library
- This package provides an implementation of trellis-coded modulation
+Description: GNU SDL Interface Library
+ This package provides an interface to the SDL rendering library
  for GNU Radio.
+
+Package: python-gnuradio-utils
+Architecture: any
+Depends: ${python:Depends}, python-gnuradio-usrp, python-gnuradio-wxgui
+Section: python
+XB-Python-Version: ${python:Versions}
+Description: GNU Radio Trellis-Coded Modulation library
+ This package provides commonly used utilities for GNU Radio
+
+Package: gnuradio-examples
+Architecture: any
+Depends: ${python:Depends}, python-gnuradio-core, python-gnuradio-usrp, python-gnuradio-wxgui, python-gnuradio-audio
+Section: comm
+XB-Python-Version: ${python:Versions}
+Description: GNU Radio Example Programs
+ This package provides examples of GNU Radio usage using Python
+
+Package: gnuradio-pager
+Architecture: any
+Depends: ${python:Depends}, python-gnuradio-core, python-gnuradio-usrp
+Section: comm
+XB-Python-Version: ${python:Versions}
+Description: GNU Radio FLEX Pager Decoder
+ This package provides a decoder for the FLEX paging protocol for GNU Radio
+
+Package: gnuradio-radio-astronomy
+Architecture: any
+Depends: ${python:Depends}, python-gnuradio-core, python-gnuradio-usrp, python-gnuradio-wxgui
+Section: comm
+XB-Python-Version: ${python:Versions}
+Description: GNU Radio Radio Astronomy Applications
+ This package provides radio astronomy applications for GNU Radio
+
+Package: gnuradio-radar-mono
+Architecture: any
+Depends: ${python:Depends}, python-gnuradio-core, python-gnuradio-usrp
+Recommends: gnuradio-radar-mono-firmware
+Section: comm
+XB-Python-Version: ${python:Versions}
+Description: GNU Radio Mono-static Radar Application
+ This package provides a mono-static radar application for GNU Radio
+
+Package: gnuradio-radar-mono-firmware
+Section: contrib/comm
+Architecture: all
+Description: GNU Radio Mono-static Radar Firmware
+ This package provides a mono-static radar application for GNU Radio
+ .
+ This package contains the FPGA bitstrings for the USRP, which require
+ non-free tools to build.
+
+Package: gnuradio-sounder
+Architecture: any
+Depends: ${python:Depends}, python-gnuradio-core, python-gnuradio-usrp
+Recommends: gnuradio-sounder-firmware
+Section: comm
+XB-Python-Version: ${python:Versions}
+Description: GNU Radio Channel Sounder Application
+ This package provides an RF channel sounder application for GNU Radio
+
+Package: gnuradio-sounder-firmware
+Section: contrib/comm
+Architecture: all
+Description: GNU Radio Channel Sounder Application
+ This package provides an RF channel sounder application for GNU Radio
+ .
+ This package contains the FPGA bitstrings for the USRP, which require
+ non-free tools to build.
+
+Package: python-gnuradio
+Section: python
+Architecture: all
+Depends: python-gnuradio-atsc, python-gnuradio-audio-alsa, python-gnuradio-audio-jack, python-gnuradio-audio-oss, python-gnuradio-audio-portaudio, python-gnuradio-comedi, python-gnuradio-core, python-gnuradio-cvsd-vocoder, python-gnuradio-gsm-fr-vocoder, python-gnuradio-trellis, python-gnuradio-usrp, python-gnuradio-utils, python-gnuradio-video-sdl, python-gnuradio-wxgui
+Description: Python Libraries for GNU Radio Components
+ This is a virtual package that depends upon all the Python components 
+ for GNU Radio.
+
+Package: gnuradio
+Section: comm
+Architecture: all
+Depends: gnuradio-doc, gnuradio-examples, python-gnuradio, gnuradio-pager, gnuradio-radar-mono, gnuradio-radio-astronomy, gnuradio-sounder
+Suggests: usrp
+Descripton: GNU Software Defined Radio
+ This is a virtual package that depends the entire GNU Radio collection of
+ components.  If you are using a USRP, you should also install the usrp package.
+
+Package: gnuradio-dev
+Section: libdevel
+Architecture: all
+Depends: libgnuradio-core0-dev, libgnuradio-omnithread0-dev, libmblock0-dev, libpmt0-dev
+Description: Development headers for GNU Radio C++ development
+ This is a virtual package that depends on all the development header packages
+ for the various GNU Radio components.  It is only needed if you intend to develop
+ custom GNU Radio signal processing blocks in C++.
+
+Package: usrp
+Section: comm
+Architecture: all
+Depends: libusrp0c2a, python-usrp, usrp-doc
+Description: The Univeral Software Radio Peripheral
+ This is a virtual package that depends on the entire USRP software collection. You will
+ still need to install package usrp-firmware, in contrib/comm, however.

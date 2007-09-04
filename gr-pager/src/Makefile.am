@@ -22,8 +22,9 @@
 include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = \
-    run_tests.in
-
+    run_tests.in \
+    $(bin_SCRIPTS)
+    
 TESTS = \
     run_tests
 
@@ -65,14 +66,11 @@ BUILT_SOURCES = \
     pager_swig.cc \
     pager_swig.py				
 
-# This gets pgr.py installed in the right place
+# This gets imported Python objects installed in the right place
 ourpython_PYTHON = \
     __init__.py \
     pager_swig.py \
-    flex_demod.py \
-    usrp_flex.py \
-    usrp_flex_all.py \
-    usrp_flex_band.py
+    flex_demod.py
         
 ourlib_LTLIBRARIES = _pager_swig.la
 

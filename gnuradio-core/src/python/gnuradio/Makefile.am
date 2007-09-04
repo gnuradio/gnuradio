@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = gr gru gruimpl blks blksimpl blks2 blksimpl2
+SUBDIRS = gr gru gruimpl blks blksimpl blks2 blksimpl2 vocoder
 
 grpython_PYTHON = 			\
 	__init__.py			\

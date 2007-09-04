@@ -62,7 +62,7 @@ configure-stamp:
 	touch configure-stamp
 
 extract: extract-stamp
-extract-stamp: configure-stamp
+extract-stamp: configure-stamp debian/gen-install-files.sh
 	dh_testdir
 	debian/gen-install-files.sh 
 	touch $@

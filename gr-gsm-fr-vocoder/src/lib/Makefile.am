@@ -56,7 +56,6 @@ BUILT_SOURCES = 			\
 
 # This gets gsm_full_rate.py installed in the right place
 ourpython_PYTHON =			\
-	__init__.py			\
 	gsm_full_rate.py
 
 ourlib_LTLIBRARIES = _gsm_full_rate.la

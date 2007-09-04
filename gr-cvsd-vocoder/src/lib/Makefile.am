@@ -54,7 +54,6 @@ BUILT_SOURCES = 			\
 
 # This gets cvsd_vocoder.py installed in the right place
 ourpython_PYTHON =			\
-	__init__.py			\
 	cvsd_vocoder.py
 
 ourlib_LTLIBRARIES = _cvsd_vocoder.la
