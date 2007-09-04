@@ -25,9 +25,11 @@ EXTRA_DIST = 					\
 	fm_tx_2_daughterboards.py		\
 	fm_tx4.py				\
 	max_power.py				\
+	usrp_benchmark_usb.py			\
 	usrp_nbfm_ptt.py			\
 	usrp_nbfm_rcv.py			\
 	usrp_spectrum_sense.py			\
+	usrp_test_loop_lfsr.py			\
 	usrp_tv_rcv_nogui.py			\
 	usrp_tv_rcv.py				\
 	usrp_wfm_rcv.py				\

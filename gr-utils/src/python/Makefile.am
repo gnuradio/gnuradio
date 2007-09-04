@@ -23,7 +23,6 @@ EXTRA_DIST = \
     $(bin_SCRIPTS)
 
 bin_SCRIPTS = \
-    usrp_benchmark_usb.py \
     usrp_fft.py \
     usrp_oscope.py \
     usrp_print_db.py \
@@ -31,5 +30,4 @@ bin_SCRIPTS = \
     usrp_rx_nogui.py \
     usrp_siggen.py \
     usrp_test_counting.py \
-    usrp_test_loop.py \
-    usrp_test_loop_lfsr.py
+    usrp_test_loopback.py
