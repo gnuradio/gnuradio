@@ -1,195 +1,217 @@
 module chan_fifo_reader 
-  ( input       reset,
-    input       tx_clock,
-    input       tx_strobe,
-    input       [31:0]adc_clock,
-    input       [3:0] samples_format,
-    input       [15:0] fifodata,
-    input       pkt_waiting,
-    output  reg rdreq,
-    output  reg skip,
-    output  reg [15:0]tx_q,
-    output  reg [15:0]tx_i,
-    output  reg overrun,
-    output  reg underrun) ;
-    
+  ( reset, tx_clock, tx_strobe, adc_time, samples_format,
+    fifodata, pkt_waiting, rdreq, skip, tx_q, tx_i,
+    underrun, tx_empty, debug, rssi, threshhold) ;
+
+    input   wire                     reset ;
+    input   wire                     tx_clock ;
+    input   wire                     tx_strobe ; //signal to output tx_i and tx_q
+    input   wire              [31:0] adc_time ; //current time
+    input   wire               [3:0] samples_format ;// not useful at this point
+    input   wire              [31:0] fifodata ; //the data input
+    input   wire                     pkt_waiting ; //signal the next packet is ready
+    output  reg                      rdreq ; //actually an ack to the current fifodata
+    output  reg                      skip ; //finish reading current packet
+    output  reg               [15:0] tx_q ; //top 16 bit output of fifodata
+    output  reg               [15:0] tx_i ; //bottom 16 bit output of fifodata
+    output  reg                      underrun ; 
+    output  reg                      tx_empty ; //cause 0 to be the output
+    input 	wire			  [31:0] rssi;
+    input	wire			  [31:0] threshhold;
+
+	output wire [14:0] debug;
+	assign debug = {reader_state, trash, skip, timestamp[4:0], adc_time[4:0]};
     // Should not be needed if adc clock rate < tx clock rate
-    `define JITTER        5
+    // Used only to debug
+    `define JITTER                   5
     
     //Samples format
     // 16 bits interleaved complex samples
-    `define QI16         4'b0
+    `define QI16                     4'b0
     
     // States
-   `define IDLE          4'd0
-   `define READ          4'd1
-   `define HEADER1       4'd2
-   `define HEADER2       4'd3
-   `define TIMESTAMP1    4'd4
-   `define TIMESTAMP2    4'd5
-   `define WAIT          4'd6
-   `define WAITSTROBE    4'd7
-   `define SENDWAIT      4'd8
-   `define SEND          4'd9
-   `define FEED          4'd10
-   `define DISCARD       4'd11
+    parameter IDLE           =     3'd0;    
+	parameter HEADER         =     3'd1;
+    parameter TIMESTAMP      =     3'd2;
+    parameter WAIT           =     3'd3;
+    parameter WAITSTROBE     =     3'd4;
+    parameter SEND           =     3'd5;
 
-   // State registers
-   reg[3:0] reader_state;
-   reg[3:0] reader_next_state;
+    // Header format
+    `define PAYLOAD                  8:2
+    `define ENDOFBURST               27
+    `define STARTOFBURST            28
+    `define RSSI_FLAG				 15
+	
+
+    /* State registers */
+    reg                        [2:0] reader_state;
+  
+    reg                        [6:0] payload_len;
+    reg                        [6:0] read_len;
+    reg                       [31:0] timestamp;
+    reg                              burst;
+	reg								 trash;
+	reg								 rssi_flag;
    
-   //Variables
-   reg[8:0] payload_len;
-   reg[8:0] read_len;
-   reg[31:0] timestamp;
-   reg burst;
-   reg qsample;
-   always @(posedge tx_clock)
-   begin
-       if (reset) 
+    always @(posedge tx_clock)
+    begin
+        if (reset) 
           begin
-             reader_state <= `IDLE;
-             reader_next_state <= `IDLE;
-             rdreq <= 0;
-             skip <= 0;
-             overrun <= 0;
-             underrun <= 0;
-             burst <= 0;
-             qsample <= 1;
-          end
+            reader_state <= IDLE;
+            rdreq <= 0;
+            skip <= 0;
+            underrun <= 0;
+            burst <= 0;
+            tx_empty <= 1;
+            tx_q <= 0;
+            tx_i <= 0;
+			trash <= 0;
+			rssi_flag <= 0;
+         end
        else 
-		 begin
-           reader_state = reader_next_state;
+		   begin
            case (reader_state)
-               `IDLE:
-                  begin
-                     if (pkt_waiting == 1)
-                       begin
-                          reader_next_state <= `READ;
-                          rdreq <= 1;
-                          underrun <= 0;
-                       end
-                     else if (burst == 1)
-                        underrun <= 1;
-                  end
-
-				// Just wait for the fifo data to arrive
-               `READ: 
-                  begin
-                     reader_next_state <= `HEADER1;
-                  end
-				
-				// First part of the header
-               `HEADER1:
-                  begin
-                     reader_next_state <= `HEADER2;
-                     
-                     //Check Start burst flag
-                     if (fifodata[3] == 1)
-                        burst <= 1;
-                        
-                     if (fifodata[4] == 1)
-                        burst <= 0;
-                  end
-
-				// Read payload length
-               `HEADER2:
-                  begin
-                     payload_len <= (fifodata & 16'h1FF);
-                     read_len <= 9'd0;
-                     reader_next_state <= `TIMESTAMP1;
-                  end
-
-               `TIMESTAMP1: 
-                  begin
-                     timestamp <= {fifodata, 16'b0};
-                     rdreq <= 0;
-                     reader_next_state <= `TIMESTAMP2;
-                  end
-				
-               `TIMESTAMP2:
-                  begin
-                     timestamp <= timestamp + fifodata;
-                     reader_next_state <= `WAIT;
-                  end
-				
-				// Decide if we wait, send or discard samples
-               `WAIT: 
-                  begin
-                   // Wait a little bit more
-                     if (timestamp > adc_clock + `JITTER)
-                        reader_next_state <= `WAIT;
-                   // Let's send it
-                   else if ((timestamp < adc_clock + `JITTER 
-                           && timestamp > adc_clock)
-                           || timestamp == 32'hFFFFFFFF)
-                      begin
-                         reader_next_state <= `WAITSTROBE;
-                      end
-                   // Outdated
-                   else if (timestamp < adc_clock)
-                      begin
-                         reader_next_state <= `DISCARD;
-                         skip <= 1;
+               IDLE:
+               begin
+				/*
+				 * reset all the variables and wait for a tx_strobe
+				 * it is assumed that the ram connected to this fifo_reader 
+				 * is a short hand fifo meaning that the header to the next packet
+				 * is already available to this fifo_reader when pkt_waiting is on
+				 */
+                   skip <=0;
+                   if (pkt_waiting == 1)
+                     begin
+                        reader_state <= HEADER;
+                        rdreq <= 1;
+                        underrun <= 0;
                      end
-                 end
-                 
-            // Wait for the transmit chain to be ready
-               `WAITSTROBE:
-                  begin
-                      // If end of payload...
-                     if (read_len == payload_len)
-                        begin
-                           reader_next_state <= `DISCARD;
-                           skip <= (payload_len < 508);
-                        end
-                          
-                      if (tx_strobe == 1)
-                         reader_next_state <= `SENDWAIT;
-                  end
-               
-               `SENDWAIT:
-                  begin
-                     rdreq <= 1;
-                     reader_next_state <= `SEND; 
-                  end
-               
-				// Send the samples to the tx_chain
-               `SEND:
-                  begin
-                     reader_next_state <= `WAITSTROBE; 
-                     rdreq <= 0;
-                     read_len <= read_len + 2;
-                     case(samples_format)
-                        `QI16:
-                           begin
-                              tx_q <= qsample ? fifodata : 16'bZ;
-                              tx_i <= ~qsample ? fifodata : 16'bZ;
-                              qsample <= ~ qsample;
-                           end  
-                        default:
-                           begin
-                               // Assume 16 bits complex samples by default
-                              $display ("Error unknown samples format");
-                              tx_q <= qsample ? fifodata : 16'bZ;
-                              tx_i <= ~qsample ? fifodata : 16'bZ;
-                              qsample <= ~ qsample;
-                           end 
-                     endcase
-                  end
+                   else if (burst == 1)
+                        underrun <= 1;
+                        
+                   if (tx_strobe == 1)
+                       tx_empty <= 1 ;
+               end
 
-               `DISCARD:
-                  begin
-                     skip <= 0;
-                     reader_next_state <= `IDLE;
-                  end
+				   /* Process header */
+               HEADER:
+               begin
+                   if (tx_strobe == 1)
+                       tx_empty <= 1 ;
+                   
+                   rssi_flag <= fifodata[`RSSI_FLAG]&fifodata[`STARTOFBURST];
+                   //Check Start/End burst flag
+                   if  (fifodata[`STARTOFBURST] == 1 
+                       && fifodata[`ENDOFBURST] == 1)
+                       burst <= 0;
+                   else if (fifodata[`STARTOFBURST] == 1)
+                       burst <= 1;
+                   else if (fifodata[`ENDOFBURST] == 1)
+                       burst <= 0;
+
+					if (trash == 1 && fifodata[`STARTOFBURST] == 0)
+					begin
+						skip <= 1;
+						reader_state <= IDLE;
+						rdreq <= 0;
+					end 
+                    else
+					begin   
+                   		payload_len <= fifodata[`PAYLOAD] ;
+                   		read_len <= 0;
+                        rdreq <= 1;
+						reader_state <= TIMESTAMP;
+					end
+               end
+
+               TIMESTAMP: 
+               begin
+                   timestamp <= fifodata;
+                   reader_state <= WAIT;
+                   if (tx_strobe == 1)
+                       tx_empty <= 1 ;
+                   rdreq <= 0;
+               end
+				
+				   // Decide if we wait, send or discard samples
+               WAIT: 
+               begin
+                   if (tx_strobe == 1)
+                       tx_empty <= 1 ;
+                          
+                   // Let's send it
+                   if ((timestamp <= adc_time + `JITTER 
+                             && timestamp > adc_time)
+                             || timestamp == 32'hFFFFFFFF)
+					begin
+						if (rssi <= threshhold || rssi_flag == 0)
+						  begin
+						    trash <= 0;
+                            reader_state <= WAITSTROBE; 
+                          end
+						else
+						    reader_state <= WAIT;
+					end
+                   // Wait a little bit more
+                   else if (timestamp > adc_time + `JITTER)
+                       reader_state <= WAIT; 
+                   // Outdated
+                   else if (timestamp < adc_time)
+                     begin
+						trash <= 1;
+                        reader_state <= IDLE;
+                        skip <= 1;
+                     end
+               end
+                 
+               // Wait for the transmit chain to be ready
+               WAITSTROBE:
+               begin
+                   // If end of payload...
+                   if (read_len == payload_len)
+                     begin
+                       reader_state <= IDLE;
+                       skip <= 1;
+                       if (tx_strobe == 1)
+                           tx_empty <= 1 ;
+                     end  
+                   else if (tx_strobe == 1)
+                     begin
+                       reader_state <= SEND;
+                       rdreq <= 1;
+                     end
+               end
+               
+				   // Send the samples to the tx_chain
+               SEND:
+               begin
+                   reader_state <= WAITSTROBE; 
+                   read_len <= read_len + 7'd1;
+                   tx_empty <= 0;
+                   rdreq <= 0;
+                   
+                   case(samples_format)
+                       `QI16:
+                        begin
+                            tx_i <= fifodata[15:0];
+                            tx_q <= fifodata[31:16];
+                        end
+                        
+                        // Assume 16 bits complex samples by default
+                        default:
+                        begin
+                            tx_i <= fifodata[15:0];
+                            tx_q <= fifodata[31:16];
+                        end 
+                   endcase
+               end
                
                default:
-                  begin
-                     $display ("Error unknown state");
-                     reader_state <= `IDLE;
-                     reader_next_state <= `IDLE;
-                  end
+               begin
+					//error handling
+                   reader_state <= IDLE;
+               end
            endcase
        end
    end

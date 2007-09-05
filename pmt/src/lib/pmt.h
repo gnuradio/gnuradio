@@ -598,6 +598,18 @@ pmt_t pmt_list3(pmt_t x1, pmt_t x2, pmt_t x3);
  */
 pmt_t pmt_list4(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4);
 
+/*!
+ * \brief Return a list of length 5 containing \p x1, \p x2, \p x3, \p x4, \p x5
+ */
+pmt_t pmt_list5(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4, pmt_t x5);
+
+/*!
+ * \brief Return a list of length 6 containing \p x1, \p x2, \p x3, \p x4, \p
+ * x5, \p x6
+ */
+pmt_t pmt_list6(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4, pmt_t x5, pmt_t x6);
+
+
 /*
  * ------------------------------------------------------------------------
  *			     read / write

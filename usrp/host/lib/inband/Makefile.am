@@ -22,46 +22,74 @@ include $(top_srcdir)/Makefile.common
 
 INCLUDES = 	\
 	$(DEFINES) $(OMNITHREAD_INCLUDES) $(PMT_INCLUDES) $(MBLOCK_INCLUDES) \
-	$(USRP_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES)
+	$(USRP_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES) \
+	-I$(srcdir)/../../apps
 
 TESTS = test_inband
 
 EXTRA_DIST =				\
-	usrp_server.mbh			
+	usrp_server.mbh			\
+	usrp_interface.mbh 
+
 
 lib_LTLIBRARIES = 			\
 	libusrp_inband.la		\
-	libusrp_inband-qa.la			
+	libusrp_inband-qa.la
 
 
 # ------------------------------------------------------------------------
 # Build the inband library
 
 BUILT_SOURCES =				\
-	usrp_server_mbh.cc
+	usrp_server_mbh.cc		\
+	usrp_interface_mbh.cc 
 
 usrp_server_mbh.cc : usrp_server.mbh
 	$(COMPILE_MBH) $(srcdir)/usrp_server.mbh usrp_server_mbh.cc
 
+usrp_interface_mbh.cc : usrp_interface.mbh
+	$(COMPILE_MBH) usrp_interface.mbh usrp_interface_mbh.cc
+
 libusrp_inband_la_SOURCES =		\
 	$(BUILT_SOURCES)		\
-	usrp_server.cc
+	../../apps/ui_sincos.c		\
+	usrp_inband_usb_packet.cc	\
+	usrp_rx.cc			\
+	usrp_rx_stub.cc			\
+	usrp_server.cc			\
+	usrp_tx.cc			\
+	usrp_tx_stub.cc			\
+	usrp_usb_interface.cc		
 
 libusrp_inband_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
 
 libusrp_inband_la_LIBADD =		\
 	$(MBLOCK_LA)			\
+	../legacy/libusrp.la  		\
 	-lstdc++
 
-
 include_HEADERS =			\
-	usrp_server.h			
+	usrp_inband_usb_packet.h 	\
+	usrp_rx.h			\
+	usrp_rx_stub.h			\
+	usrp_server.h			\
+	usrp_tx.h			\
+	usrp_tx_stub.h			\
+	usrp_usb_interface.h 		
 
 noinst_HEADERS =      			\
+	fake_usrp.h			\
 	qa_inband.h			\
 	qa_inband_packet_prims.h	\
 	qa_inband_usrp_server.h		\
-	usrp_inband_usb_packet.h	
+	symbols_usrp_channel.h		\
+	symbols_usrp_interface_cs.h	\
+	symbols_usrp_low_level_cs.h	\
+	symbols_usrp_rx.h		\
+	symbols_usrp_rx_cs.h		\
+	symbols_usrp_server_cs.h	\
+	symbols_usrp_tx.h		\
+	symbols_usrp_tx_cs.h		
 
 
 # ------------------------------------------------------------------------
@@ -79,17 +107,22 @@ libusrp_inband_qa_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
 libusrp_inband_qa_la_LIBADD =    	\
 	libusrp_inband.la		\
 	$(CPPUNIT_LIBS)			\
+	../legacy/libusrp.la		\
+	libusrp_inband.la		\
 	-lstdc++
 
 # ------------------------------------------------------------------------
 
 noinst_PROGRAMS =			\
-	test_inband
+	test_inband			\
+	test_usrp_inband
 
 test_inband_SOURCES = test_inband.cc
 test_inband_LDADD   = libusrp_inband-qa.la
 
+test_usrp_inband_SOURCES = test_usrp_inband.cc
+test_usrp_inband_LDADD = libusrp_inband-qa.la
+
 
 MOSTLYCLEANFILES = \
 	$(BUILT_SOURCES) *~ *.pyc
-

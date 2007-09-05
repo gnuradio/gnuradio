@@ -13,19 +13,18 @@
 --applicable agreement for further details.
 
 
-component fifo_512
-	PORT
-	(
-		aclr		: IN STD_LOGIC  := '0';
-		data		: IN STD_LOGIC_VECTOR (31 DOWNTO 0);
-		rdclk		: IN STD_LOGIC ;
-		rdreq		: IN STD_LOGIC ;
-		wrclk		: IN STD_LOGIC ;
-		wrreq		: IN STD_LOGIC ;
-		q		: OUT STD_LOGIC_VECTOR (31 DOWNTO 0);
-		rdempty		: OUT STD_LOGIC ;
-		rdfull		: OUT STD_LOGIC ;
-		wrempty		: OUT STD_LOGIC ;
-		wrfull		: OUT STD_LOGIC 
-	);
-end component;
+FUNCTION fifo_2kx16 
+(
+	aclr,
+	clock,
+	data[15..0],
+	rdreq,
+	wrreq
+)
+
+RETURNS (
+	empty,
+	full,
+	q[15..0],
+	usedw[10..0]
+);

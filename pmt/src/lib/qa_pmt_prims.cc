@@ -138,11 +138,17 @@ qa_pmt_prims::test_pairs()
   pmt_t s2 = pmt_string_to_symbol("s2");
   pmt_t s3 = pmt_string_to_symbol("s3");
 
+
+  CPPUNIT_ASSERT_EQUAL((size_t)0, pmt_length(PMT_NIL));
+  CPPUNIT_ASSERT_THROW(pmt_length(s1), pmt_wrong_type);
+  CPPUNIT_ASSERT_THROW(pmt_length(pmt_from_double(42)), pmt_wrong_type);
+
   pmt_t c1 = pmt_cons(s1, PMT_NIL);
   CPPUNIT_ASSERT(pmt_is_pair(c1));
   CPPUNIT_ASSERT(!pmt_is_pair(s1));
   CPPUNIT_ASSERT_EQUAL(s1, pmt_car(c1));
   CPPUNIT_ASSERT_EQUAL(PMT_NIL, pmt_cdr(c1));
+  CPPUNIT_ASSERT_EQUAL((size_t) 1, pmt_length(c1));
 
   pmt_t c3 = pmt_cons(s3, PMT_NIL);
   pmt_t c2 = pmt_cons(s2, c3);
@@ -150,7 +156,9 @@ qa_pmt_prims::test_pairs()
   CPPUNIT_ASSERT_EQUAL(c2, pmt_cdr(c1));
   pmt_set_car(c1, s3);
   CPPUNIT_ASSERT_EQUAL(s3, pmt_car(c1));
-
+  CPPUNIT_ASSERT_EQUAL((size_t)1, pmt_length(c3));
+  CPPUNIT_ASSERT_EQUAL((size_t)2, pmt_length(c2));
+  
   CPPUNIT_ASSERT_THROW(pmt_cdr(PMT_NIL), pmt_wrong_type);
   CPPUNIT_ASSERT_THROW(pmt_car(PMT_NIL), pmt_wrong_type);
   CPPUNIT_ASSERT_THROW(pmt_set_car(s1, PMT_NIL), pmt_wrong_type);
@@ -228,8 +236,6 @@ qa_pmt_prims::test_equivalence()
 void
 qa_pmt_prims::test_misc()
 {
-  CPPUNIT_ASSERT_THROW(pmt_length(PMT_NIL), pmt_wrong_type);
-
   pmt_t k0 = pmt_string_to_symbol("k0");
   pmt_t k1 = pmt_string_to_symbol("k1");
   pmt_t k2 = pmt_string_to_symbol("k2");

@@ -23,20 +23,18 @@
 
 #include <mb_mblock.h>
 #include <vector>
+#include <queue>
+#include <fstream>
+#include <usrp_inband_usb_packet.h>
+
+typedef usrp_inband_usb_packet transport_pkt;   // makes conversion to gigabit easy
 
 /*!
- * \brief Implements the lowest-level mblock interface to the USRP
+ * \brief Implements the lowest-level mblock usb_interface to the USRP
  */
 class usrp_server : public mb_mblock
 {
 public:
-
-  enum error_codes {
-    RQSTD_CAPACITY_UNAVAIL = 0,
-    CHANNEL_UNAVAIL = 1,
-    CHANNEL_INVALID = 2,
-    PERMISSION_DENIED = 3
-  };
 
   // our ports
   enum port_types {
@@ -46,19 +44,49 @@ public:
   static const int N_PORTS = 4;
   std::vector<mb_port_sptr> d_tx, d_rx;
   mb_port_sptr	d_cs;
+  mb_port_sptr	d_cs_usrp;
 
   static const int D_USB_CAPACITY = 32 * 1024 * 1024;
   static const int D_MAX_CHANNELS = 16;
   long d_ntx_chan;
   long d_nrx_chan;
 
-  struct channel_info {
-    long assigned_capacity;  // the capacity currently assignedby the channel
-    pmt_t owner;              // port ID of the owner of the channel
+  // Keep track of the request IDs
+  struct rid_info {
+    pmt_t owner;
+    long user_rid;
+
+    rid_info() {
+      owner = PMT_NIL;
+      user_rid = 0;
+    }
   };
 
-  struct channel_info d_chaninfo_tx[D_MAX_CHANNELS];
-  struct channel_info d_chaninfo_rx[D_MAX_CHANNELS];
+  static const long D_MAX_RID = 64;
+  std::vector<rid_info> d_rids;
+  
+  struct channel_info {
+    long assigned_capacity;   // the capacity currently assignedby the channel
+    pmt_t owner;              // port ID of the owner of the channel
+
+    channel_info() {
+      assigned_capacity = 0;
+      owner = PMT_NIL;
+    }
+  };
+
+  long d_rx_chan_mask;    // A bitmask representing the channels in the
+                          // receiving state
+
+  std::vector<struct channel_info> d_chaninfo_tx;
+  std::vector<struct channel_info> d_chaninfo_rx;
+
+  std::queue<mb_message_sptr> d_defer_queue;
+
+  bool d_defer;
+  bool d_opened;
+
+  bool d_fake_rx;
 
 public:
   usrp_server(mb_runtime *rt, const std::string &instance_name, pmt_t user_arg);
@@ -71,12 +99,21 @@ protected:
   static int max_capacity() { return D_USB_CAPACITY; }
 
 private:
-  void handle_cmd_allocate_channel(pmt_t port_id, pmt_t data);
-  void handle_cmd_deallocate_channel(pmt_t port_id, pmt_t data);
-  void handle_cmd_xmit_raw_frame(pmt_t data);
+  void handle_cmd_allocate_channel(mb_port_sptr port, std::vector<struct channel_info> &chan_info, pmt_t data);
+  void handle_cmd_deallocate_channel(mb_port_sptr port, std::vector<struct channel_info> &chan_info, pmt_t data);
+  void handle_cmd_xmit_raw_frame(mb_port_sptr port, std::vector<struct channel_info> &chan_info, pmt_t data);
+  void handle_cmd_to_control_channel(mb_port_sptr port, std::vector<struct channel_info> &chan_info, pmt_t data);
+  void handle_cmd_start_recv_raw_samples(mb_port_sptr port, std::vector<struct channel_info> &chan_info, pmt_t data);
+  void handle_cmd_stop_recv_raw_samples(mb_port_sptr port, std::vector<struct channel_info> &chan_info, pmt_t data);
   int rx_port_index(pmt_t port_id);
   int tx_port_index(pmt_t port_id);
   long current_capacity_allocation();
+  void recall_defer_queue();
+  void reset_channels();
+  void handle_response_usrp_read(pmt_t data);
+  bool check_valid(mb_port_sptr port, long channel, std::vector<struct channel_info> &chan_info, pmt_t signal_info);
+  void parse_control_pkt(pmt_t invocation_handle, transport_pkt *pkt);
+  long next_rid();
 };
 
 #endif /* INCLUDED_USRP_SERVER_H */

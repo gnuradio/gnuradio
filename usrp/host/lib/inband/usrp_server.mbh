@@ -40,9 +40,8 @@
 ;; mechanism to match asynchronous responses with the commands that
 ;; generated them.
 ;;
-;; status is either #t, indicating success, or a pair containing
-;; (status-code . message), where status-code is a symbol and message
-;; is a string.
+;; status is either #t, indicating success, or a symbol indicating an error.
+;; All symbol's names shall begin with %error-
 
 
 ;; ----------------------------------------------------------------
@@ -128,7 +127,7 @@
 
   (:incoming
 
-   (response-from-control-channel invocation-handle status list-of-subpackets)
+   (response-from-control-channel invocation-handle status list-of-subpackets timestamp)
 
    )
   )
@@ -248,9 +247,9 @@
   (:incoming
    (response-open invocation-handle status)
    (response-close invocation-handle status)
-   (response-max-capacity invocation-handle capacity)
-   (response-ntx-chan invocation-handle ntx-chan)
-   (response-nrx-chan invocation-handle nrx-chan)
-   (response-current-capacity-allocation invocation-handle capacity)
+   (response-max-capacity invocation-handle status capacity)
+   (response-ntx-chan invocation-handle status ntx-chan)
+   (response-nrx-chan invocation-handle status nrx-chan)
+   (response-current-capacity-allocation invocation-handle status capacity)
    )
   )

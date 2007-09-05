@@ -18,31 +18,26 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#ifndef INCLUDED_FAKE_USRP_H
+#define INCLUDED_FAKE_USRP_H
 
-#ifndef QA_INBAND_USRP_SERVER_H
-#define QA_INBAND_USRP_SERVER_H
+#include <usrp_inband_usb_packet.h>
+typedef usrp_inband_usb_packet transport_pkt;
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/TestCase.h>
+/*!
+ * \brief Implements a fake USRP for testing without hardware
+ */
+class fake_usrp
+{
+ public:
+  fake_usrp();
+  ~fake_usrp();
+  long write_bus(transport_pkt *pkts, long n_bytes);
 
-class qa_inband_usrp_server : public CppUnit::TestCase {
-
-  CPPUNIT_TEST_SUITE(qa_inband_usrp_server);
-  CPPUNIT_TEST(test_open_close);
-  CPPUNIT_TEST(test_chan_allocation);
-  CPPUNIT_TEST(test_chan_deallocation);
-  CPPUNIT_TEST(test_tx);
-  CPPUNIT_TEST(test_rx);
-  CPPUNIT_TEST(test_cs);
-  CPPUNIT_TEST_SUITE_END();
-
- private:
-  void test_chan_allocation();
-  void test_chan_deallocation();
-  void test_open_close();
-  void test_tx();
-  void test_rx();
-  void test_cs();
+ protected:
+  long data_block(transport_pkt *pkts, long n_bytes);
+  long control_block(transport_pkt *pkts, long n_bytes);
 };
 
-#endif /* INCLUDED_QA_INBAND_USRP_SERVER_H */
+#endif /* INCLUDED_FAKE_USRP_H */
+

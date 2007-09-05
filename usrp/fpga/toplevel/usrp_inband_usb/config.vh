@@ -1,4 +1,4 @@
-// -*- verilog -*-
+	// -*- verilog -*-
 //
 //  USRP - Universal Software Radio Peripheral
 //

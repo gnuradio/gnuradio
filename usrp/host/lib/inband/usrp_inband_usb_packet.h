@@ -24,6 +24,10 @@
 
 #include <usrp_bytesex.h>
 #include <mb_mblock.h>
+#include <pmt.h>
+#include <iostream>
+
+#include <symbols_usrp_low_level_cs.h>
 
 static const int USB_PKT_SIZE = 512;   // bytes
 static const int MAX_PAYLOAD = USB_PKT_SIZE-2*sizeof(uint32_t);
@@ -38,12 +42,28 @@ class usrp_inband_usb_packet {
 
 public:
 
+  enum opcodes {
+    OP_PING_FIXED         = 0x00,
+    OP_PING_FIXED_REPLY   = 0x01,
+    OP_WRITE_REG          = 0x02,
+    OP_WRITE_REG_MASKED   = 0x03,
+    OP_READ_REG           = 0x04,
+    OP_READ_REG_REPLY     = 0x05,
+    OP_I2C_WRITE          = 0x06,
+    OP_I2C_READ           = 0x07,
+    OP_I2C_READ_REPLY     = 0x08,
+    OP_SPI_WRITE          = 0x09,
+    OP_SPI_READ           = 0x0a,
+    OP_SPI_READ_REPLY     = 0x0b,
+    OP_DELAY              = 0x0c
+  };
+
   enum flags {
     FL_OVERRUN        = 0x80000000,
     FL_UNDERRUN       = 0x40000000,
     FL_DROPPED        = 0x20000000,
-    FL_END_OF_BURST   = 0x10000000,
-    FL_START_OF_BURST = 0x08000000,
+    FL_START_OF_BURST = 0x10000000,
+    FL_END_OF_BURST   = 0x08000000,
 
     FL_ALL_FLAGS      = 0xf8000000
   };
@@ -51,8 +71,8 @@ public:
   static const int FL_OVERRUN_SHIFT = 31;
   static const int FL_UNDERRUN_SHIFT = 30;
   static const int FL_DROPPED_SHIFT = 29;
-  static const int FL_END_OF_BURST_SHIFT = 28;
-  static const int FL_START_OF_BURST_SHIFT = 27;
+  static const int FL_END_OF_BURST_SHIFT = 27;
+  static const int FL_START_OF_BURST_SHIFT = 28;
   
   static const int RSSI_MASK = 0x3f;
   static const int RSSI_SHIFT = 21;
@@ -66,6 +86,50 @@ public:
   static const int PAYLOAD_LEN_MASK = 0x1ff;
   static const int PAYLOAD_LEN_SHIFT = 0;
 
+  // Fixed size for opcode and length fields
+  static const int CS_FIXED_LEN = 2;
+
+  static const int CS_OPCODE_MASK = 0xff;
+  static const int CS_OPCODE_SHIFT = 24;
+
+  static const int CS_LEN_MASK = 0xff;
+  static const int CS_LEN_SHIFT = 16;
+
+  static const int CS_RID_MASK = 0x3f;
+  static const int CS_RID_SHIFT = 10;
+
+  static const int CS_PING_LEN = 2;
+  static const int CS_PINGVAL_MASK = 0x3ff;
+  static const int CS_PINGVAL_SHIFT = 0;
+
+  static const int CS_WRITEREG_LEN = 6;
+  static const int CS_WRITEREGMASKED_LEN = 10;
+  static const int CS_READREG_LEN = 2;
+  static const int CS_READREGREPLY_LEN = 6;
+  static const int CS_REGNUM_MASK = 0x3ff;
+  static const int CS_REGNUM_SHIFT = 0;
+
+  static const int CS_DELAY_LEN = 2;
+  static const int CS_DELAY_MASK = 0xffff;
+  static const int CS_DELAY_SHIFT = 0;
+
+  static const int CS_I2CADDR_MASK = 0x7f;
+  static const int CS_I2CADDR_SHIFT = 0;
+
+  static const int CS_I2CREAD_LEN = 3;
+  static const int CS_I2CREADBYTES_MASK = 0x7f;
+  static const int CS_I2CREADBYTES_SHIFT = 24;
+
+  static const int CS_SPIOPT_MASK = 0xffff;
+  static const int CS_SPIOPT_SHIFT = 0;
+  static const int CS_SPIFORMAT_MASK = 0xff;
+  static const int CS_SPIFORMAT_SHIFT = 16;
+  static const int CS_SPIENABLES_MASK = 0xff;
+  static const int CS_SPIENABLES_SHIFT = 24;
+  static const int CS_SPIREAD_LEN = 7;
+  static const int CS_SPINBYTES_MASK = 0xff;
+  static const int CS_SPINBYTES_SHIFT = 24;
+
 public:
   
   void set_timestamp(uint32_t timestamp){
@@ -77,7 +141,7 @@ public:
     word0 |= 1<<FL_END_OF_BURST_SHIFT;
     d_word0 = host_to_usrp_u32(word0);
   }
-
+  
   void set_header(int flags, int chan, int tag, int payload_len){
     uint32_t word0 =  ((flags & FL_ALL_FLAGS)
                        | ((chan & CHAN_MASK) << CHAN_SHIFT)
@@ -144,6 +208,27 @@ public:
     return MAX_PAYLOAD;
   }
 
+  static int max_pkt_size() {
+    return USB_PKT_SIZE;
+  }
+
+  // C/S methods
+  bool align32();
+  bool cs_ping(long rid, long ping_val);
+  bool cs_ping_reply(long rid, long ping_val);
+  bool cs_write_reg(long reg_num, long val);
+  bool cs_write_reg_masked(long reg_num, long val, long mask);
+  bool cs_read_reg(long rid, long reg_num);
+  bool cs_read_reg_reply(long rid, long reg_num, long reg_val);
+  bool cs_delay(long ticks);
+  bool cs_i2c_write(long i2c_addr, uint8_t *i2c_data, size_t data_len);
+  bool cs_i2c_read(long rid, long i2c_addr, long n_bytes);
+  bool cs_i2c_read_reply(long rid, long i2c_addr, uint8_t *i2c_data, long i2c_data_len);
+  bool cs_spi_write(long enables, long format, long opt_header_bytes, uint8_t *spi_data, long spi_data_len);
+  bool cs_spi_read(long rid, long enables, long format, long opt_header_bytes, long n_bytes);
+  bool cs_spi_read_reply(long rid, uint8_t *spi_data, long spi_data_len);
+  int cs_len(int payload_offset);
+  pmt_t read_subpacket(int payload_offset);
 };
 
 #endif

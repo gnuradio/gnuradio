@@ -748,7 +748,19 @@ pmt_length(pmt_t x)
   if (x->is_uniform_vector())
     return _uniform_vector(x)->length();
 
-  // FIXME list length
+  if (x->is_pair() || x->is_null()) {
+    size_t length=0;
+    while (pmt_is_pair(x)){
+      length++;
+      x = pmt_cdr(x);
+    }
+    if (pmt_is_null(x))
+      return length;
+
+    // not a proper list
+    throw pmt_wrong_type("pmt_length", x);
+  }
+
   // FIXME dictionary length (number of entries)
 
   throw pmt_wrong_type("pmt_length", x);
@@ -935,6 +947,18 @@ pmt_t
 pmt_list4(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4)
 {
   return pmt_cons(x1, pmt_cons(x2, pmt_cons(x3, pmt_cons(x4, PMT_NIL))));
+}
+
+pmt_t
+pmt_list5(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4, pmt_t x5)
+{
+  return pmt_cons(x1, pmt_cons(x2, pmt_cons(x3, pmt_cons(x4, pmt_cons(x5, PMT_NIL)))));
+}
+
+pmt_t
+pmt_list6(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4, pmt_t x5, pmt_t x6)
+{
+  return pmt_cons(x1, pmt_cons(x2, pmt_cons(x3, pmt_cons(x4, pmt_cons(x5, pmt_cons(x6, PMT_NIL))))));
 }
 
 pmt_t

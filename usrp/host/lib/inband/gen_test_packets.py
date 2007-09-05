@@ -70,7 +70,7 @@ def gen_all_valid_packet_lengths_2_channels(output_file):
     lengths = gen_shuffled_lengths()
     npkts = len(lengths)                # number of packets we'll generator on each stream
     pkt_gen_0 = packet_sequence_generator(0, lengths)
-    pkt_gen_1 = packet_sequence_generator(1, gen_shuffled_lengths())
+    pkt_gen_1 = packet_sequence_generator(0x1f, gen_shuffled_lengths())
     pkt_gen = (pkt_gen_0, pkt_gen_1)
     
     which_gen = (npkts * [0]) + (npkts * [1])
@@ -83,5 +83,6 @@ def gen_all_valid_packet_lengths_2_channels(output_file):
     assert pkt_gen_1.next() == 16002    # 2*sum(1, 2, ..., 126) == 126 * 127
 
 if __name__ == '__main__':
+    random.seed(0)
     gen_all_valid_packet_lengths_1_channel(open("all_valid_packet_lengths_1_channel.dat", "w"))
     gen_all_valid_packet_lengths_2_channels(open("all_valid_packet_lengths_2_channels.dat", "w"))

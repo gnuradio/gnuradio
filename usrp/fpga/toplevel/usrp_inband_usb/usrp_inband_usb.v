@@ -19,7 +19,8 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 51 Franklin Street, Boston, MA  02110-1301  USA
 //
-`define IN_BAND
+`define TX_IN_BAND
+`define RX_IN_BAND
 
 `include "config.vh"
 `include "../../../firmware/include/fpga_regs_common.v"
@@ -115,6 +116,12 @@ module usrp_inband_usb
    reg [15:0] debug_counter;
    reg [15:0] loopback_i_0,loopback_q_0;
    
+
+   //Connection RX inband <-> TX inband
+   wire rx_WR;
+   wire [15:0] rx_databus;
+   wire rx_WR_done;
+   wire rx_WR_enabled;
    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    // Transmit Side
 `ifdef TX_ON
@@ -123,7 +130,17 @@ module usrp_inband_usb
    assign      bb_tx_i1 = ch2tx;
    assign      bb_tx_q1 = ch3tx;
    
-`ifdef IN_BAND
+wire [6:0] reg_addr;
+wire [31:0] reg_data_out;
+wire [31:0] reg_data_in;
+wire [1:0] reg_io_enable;
+wire [31:0] rssi_threshhold;
+register_io register_control
+(.clk(clk64),.reset(1'b0),.enable(reg_io_enable),.addr(reg_addr),.datain(reg_data_in),
+ .dataout(reg_data_out),.rssi_0(rssi_0), .rssi_1(rssi_1), .rssi_2(rssi_2), 
+ .rssi_3(rssi_3), .threshhold(rssi_threshhold));
+
+`ifdef TX_IN_BAND
  	tx_buffer_inband tx_buffer
      ( .usbclk(usbclk),.bus_reset(tx_bus_reset),.reset(tx_dsp_reset),
        .usbdata(usbdata),.WR(WR),.have_space(have_space),.tx_underrun(tx_underrun),
@@ -135,7 +152,17 @@ module usrp_inband_usb
        .txclk(clk64),.txstrobe(strobe_interp),
        .clear_status(clear_status),
        .tx_empty(tx_empty),
-       .debugbus(tx_debugbus) );
+	   .rx_WR(rx_WR),
+	   .rx_databus(rx_databus), 
+	   .rx_WR_done(rx_WR_done),
+	   .rx_WR_enabled(rx_WR_enabled),
+	   .reg_addr(reg_addr),
+	   .reg_data_out(reg_data_out),
+	   .reg_data_in(reg_data_in),
+	   .reg_io_enable(reg_io_enable),
+	   .debugbus(tx_debugbus),
+	   .rssi_0(rssi_0), .rssi_1(rssi_1), .rssi_2(rssi_2), 
+       .rssi_3(rssi_3), .threshhold(rssi_threshhold));
 `else
    tx_buffer tx_buffer
      ( .usbclk(usbclk),.bus_reset(tx_bus_reset),.reset(tx_dsp_reset),
@@ -147,8 +174,7 @@ module usrp_inband_usb
        .tx_i_3(),.tx_q_3(),
        .txclk(clk64),.txstrobe(strobe_interp),
        .clear_status(clear_status),
-       .tx_empty(tx_empty),
-       .debugbus(tx_debugbus) );
+       .tx_empty(tx_empty));
 `endif
 
  `ifdef TX_EN_0
@@ -226,7 +252,6 @@ module usrp_inband_usb
 
    wire [15:0] ddc0_in_i,ddc0_in_q,ddc1_in_i,ddc1_in_q,ddc2_in_i,ddc2_in_q,ddc3_in_i,ddc3_in_q;
    wire [31:0] rssi_0,rssi_1,rssi_2,rssi_3;
-   
    adc_interface adc_interface(.clock(clk64),.reset(rx_dsp_reset),.enable(1'b1),
 			       .serial_addr(serial_addr),.serial_data(serial_data),.serial_strobe(serial_strobe),
 			       .rx_a_a(rx_a_a),.rx_b_a(rx_b_a),.rx_a_b(rx_a_b),.rx_b_b(rx_b_b),
@@ -234,9 +259,9 @@ module usrp_inband_usb
 			       .ddc0_in_i(ddc0_in_i),.ddc0_in_q(ddc0_in_q),
 			       .ddc1_in_i(ddc1_in_i),.ddc1_in_q(ddc1_in_q),
 			       .ddc2_in_i(ddc2_in_i),.ddc2_in_q(ddc2_in_q),
-			       .ddc3_in_i(ddc3_in_i),.ddc3_in_q(ddc3_in_q),.rx_numchan(rx_numchan) );
-   
-   rx_buffer rx_buffer
+			       .ddc3_in_i(ddc3_in_i),.ddc3_in_q(ddc3_in_q),.rx_numchan(rx_numchan));
+   `ifdef RX_IN_BAND
+   rx_buffer_inband rx_buffer
      ( .usbclk(usbclk),.bus_reset(rx_bus_reset),.reset(rx_dsp_reset),
        .reset_regs(rx_dsp_reset),
        .usbdata(usbdata_out),.RD(RD),.have_pkt_rdy(have_pkt_rdy),.rx_overrun(rx_overrun),
@@ -248,7 +273,27 @@ module usrp_inband_usb
        .rxclk(clk64),.rxstrobe(hb_strobe),
        .clear_status(clear_status),
        .serial_addr(serial_addr),.serial_data(serial_data),.serial_strobe(serial_strobe),
-       .debugbus(rx_debugbus) );
+	   .rx_WR(rx_WR),
+	   .rx_databus(rx_databus),
+	   .rx_WR_done(rx_WR_done),
+	   .rx_WR_enabled(rx_WR_enabled),
+	   .debugbus(rx_debugbus),
+	   .rssi_0(rssi_0), .rssi_1(rssi_1), .rssi_2(rssi_2), .rssi_3(rssi_3));
+   `else
+   rx_buffer rx_buffer
+     ( .usbclk(usbclk),.bus_reset(rx_bus_reset),.reset(rx_dsp_reset),
+       .reset_regs(rx_dsp_reset),
+       .usbdata(usbdata_out),.RD(RD),.have_pkt_rdy(have_pkt_rdy),.rx_overrun(rx_overrun),
+       .channels(rx_numchan),
+       .ch_0(ch0rx),.ch_1(ch1rx),
+       .ch_2(ch2rx),.ch_3(ch3rx),
+       .ch_4(ch4rx),.ch_5(ch5rx),
+       .ch_6(ch6rx),.ch_7(ch7rx),
+       .rxclk(clk64),.rxstrobe(hb_strobe),
+       .clear_status(clear_status),
+       .serial_addr(serial_addr),.serial_data(serial_data),.serial_strobe(serial_strobe)/*,
+       .debugbus(rx_debugbus)*/);
+   `endif
    
  `ifdef RX_EN_0
    rx_chain #(`FR_RX_FREQ_0,`FR_RX_PHASE_0) rx_chain_0
@@ -305,7 +350,6 @@ module usrp_inband_usb
    assign      capabilities[3] =   `RX_CAP_HB;
    assign      capabilities[2:0] = `RX_CAP_NCHAN;
 
-
    serial_io serial_io
      ( .master_clk(clk64),.serial_clock(SCLK),.serial_data_in(SDI),
        .enable(SEN_FPGA),.reset(1'b0),.serial_data_out(SDO),
@@ -326,7 +370,7 @@ module usrp_inband_usb
        .rx_sample_strobe(rx_sample_strobe),.strobe_decim(strobe_decim),
        .tx_empty(tx_empty),
        //.debug_0(rx_a_a),.debug_1(ddc0_in_i),
-       .debug_0(rx_debugbus),.debug_1(ddc0_in_i),
+       .debug_0(tx_debugbus),.debug_1(tx_debugbus),
        .debug_2({rx_sample_strobe,strobe_decim,serial_strobe,serial_addr}),.debug_3({rx_dsp_reset,tx_dsp_reset,rx_bus_reset,tx_bus_reset,enable_rx,tx_underrun,rx_overrun,decim_rate}),
        .reg_0(reg_0),.reg_1(reg_1),.reg_2(reg_2),.reg_3(reg_3) );
    

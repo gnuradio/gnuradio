@@ -18,31 +18,36 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#ifndef INCLUDED_USRP_TX_H
+#define INCLUDED_USRP_TX_H
 
-#ifndef QA_INBAND_USRP_SERVER_H
-#define QA_INBAND_USRP_SERVER_H
+#include <mb_mblock.h>
+#include <fstream>
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/TestCase.h>
+class usrp_standard_tx;
 
-class qa_inband_usrp_server : public CppUnit::TestCase {
-
-  CPPUNIT_TEST_SUITE(qa_inband_usrp_server);
-  CPPUNIT_TEST(test_open_close);
-  CPPUNIT_TEST(test_chan_allocation);
-  CPPUNIT_TEST(test_chan_deallocation);
-  CPPUNIT_TEST(test_tx);
-  CPPUNIT_TEST(test_rx);
-  CPPUNIT_TEST(test_cs);
-  CPPUNIT_TEST_SUITE_END();
+/*!
+ * \brief Implements the low level usb interface to the USRP
+ */
+class usrp_tx : public mb_mblock
+{
+  mb_port_sptr		d_cs;
+  usrp_standard_tx     *d_utx;
+  
+  bool d_disk_write;
+  std::ofstream d_ofile;
+  std::ofstream d_cs_ofile;
+  
+ public:
+  usrp_tx(mb_runtime *rt, const std::string &instance_name, pmt_t user_arg);
+  ~usrp_tx();
+  void initial_transition();
+  void handle_message(mb_message_sptr msg);
 
  private:
-  void test_chan_allocation();
-  void test_chan_deallocation();
-  void test_open_close();
-  void test_tx();
-  void test_rx();
-  void test_cs();
+  void write(pmt_t data);
 };
+  
 
-#endif /* INCLUDED_QA_INBAND_USRP_SERVER_H */
+#endif /* INCLUDED_USRP_TX_H */
+

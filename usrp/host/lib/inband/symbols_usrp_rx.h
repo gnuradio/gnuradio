@@ -18,31 +18,19 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#ifndef INCLUDED_SYMBOLS_USRP_RX_H
+#define INCLUDED_SYMBOLS_USRP_RX_H
 
-#ifndef QA_INBAND_USRP_SERVER_H
-#define QA_INBAND_USRP_SERVER_H
+#include <pmt.h>
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/TestCase.h>
+// Outgoing
+static pmt_t s_cmd_start_recv_raw_samples = pmt_intern("cmd-start-recv-raw-samples");
+static pmt_t s_cmd_stop_recv_raw_samples = pmt_intern("cmd-stop-recv-raw-samples");
 
-class qa_inband_usrp_server : public CppUnit::TestCase {
+// Incoming
+static pmt_t s_response_recv_raw_samples = pmt_intern("response-recv-raw-samples");
 
-  CPPUNIT_TEST_SUITE(qa_inband_usrp_server);
-  CPPUNIT_TEST(test_open_close);
-  CPPUNIT_TEST(test_chan_allocation);
-  CPPUNIT_TEST(test_chan_deallocation);
-  CPPUNIT_TEST(test_tx);
-  CPPUNIT_TEST(test_rx);
-  CPPUNIT_TEST(test_cs);
-  CPPUNIT_TEST_SUITE_END();
+// Errors
+static pmt_t s_err_already_receiving = pmt_intern("err-already-receiving");
 
- private:
-  void test_chan_allocation();
-  void test_chan_deallocation();
-  void test_open_close();
-  void test_tx();
-  void test_rx();
-  void test_cs();
-};
-
-#endif /* INCLUDED_QA_INBAND_USRP_SERVER_H */
+#endif /* INCLUDED_SYMBOLS_USRP_RX_H */

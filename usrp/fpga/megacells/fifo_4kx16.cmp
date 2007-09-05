@@ -13,20 +13,17 @@
 --applicable agreement for further details.
 
 
-FUNCTION fifo_512 
-(
-	aclr,
-	data[31..0],
-	rdclk,
-	rdreq,
-	wrclk,
-	wrreq
-)
-
-RETURNS (
-	q[31..0],
-	rdempty,
-	rdfull,
-	wrempty,
-	wrfull
-);
+component fifo_4kx16
+	PORT
+	(
+		aclr		: IN STD_LOGIC ;
+		clock		: IN STD_LOGIC ;
+		data		: IN STD_LOGIC_VECTOR (15 DOWNTO 0);
+		rdreq		: IN STD_LOGIC ;
+		wrreq		: IN STD_LOGIC ;
+		empty		: OUT STD_LOGIC ;
+		full		: OUT STD_LOGIC ;
+		q		: OUT STD_LOGIC_VECTOR (15 DOWNTO 0);
+		usedw		: OUT STD_LOGIC_VECTOR (11 DOWNTO 0)
+	);
+end component;
