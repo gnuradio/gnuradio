@@ -74,11 +74,12 @@ GNURADIO_I = $(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
 
 # How to link in the USRP library from inside the tree
 USRP_INCLUDES = -I$(top_srcdir)/usrp/host/lib/legacy \
-		-I$(top_srcdir)/usrp/host/lib/inband \
 		-I$(top_srcdir)/usrp/firmware/include
-USRP_LA = \
-	$(top_builddir)/usrp/host/lib/legacy/libusrp.la        \
-	$(top_builddir)/usrp/host/lib/inband/libusrp_inband.la
+USRP_LA = $(top_builddir)/usrp/host/lib/legacy/libusrp.la
+
+# How to link in usrp-inband library from inside the tree
+USRP_INBAND_INCLUDES = 	-I$(top_srcdir)/usrp/host/lib/inband 
+USRP_INBAND_LA = $(top_builddir)/usrp/host/lib/inband/libusrp_inband.la
 
 # How to link the PMT library from inside the tree
 PMT_INCLUDES = -I$(top_srcdir)/pmt/src/lib

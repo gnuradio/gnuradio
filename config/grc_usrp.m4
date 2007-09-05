@@ -36,6 +36,7 @@ AC_DEFUN([GRC_USRP],[
         usrp/host/lib/legacy/std_paths.h \
         usrp/host/swig/Makefile \
         usrp/host/apps/Makefile \
+        usrp/host/apps-inband/Makefile \
         usrp/firmware/Makefile \
         usrp/firmware/include/Makefile \
         usrp/firmware/lib/Makefile \

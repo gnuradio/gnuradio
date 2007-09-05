@@ -21,9 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = 	\
-	$(DEFINES) $(OMNITHREAD_INCLUDES) $(PMT_INCLUDES) $(MBLOCK_INCLUDES) \
-	$(USRP_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES)
+INCLUDES = $(USRP_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES)
 
 
 bin_PROGRAMS =				\
@@ -32,20 +30,11 @@ bin_PROGRAMS =				\
 
 noinst_PROGRAMS =			\
 	check_order_quickly		\
-	test_usrp_inband_cs		\
-	test_usrp_inband_ping		\
-	test_usrp_inband_registers	\
-	test_usrp_inband_rx		\
-	test_usrp_inband_tx		\
-	test_usrp_inband_timestamps	\
 	test_usrp_standard_rx		\
-	test_usrp_standard_tx		\
-	read_packets
+	test_usrp_standard_tx		
 
 noinst_HEADERS =			\
-	time_stuff.h			\
-	ui_nco.h			\
-	ui_sincos.h			
+	time_stuff.h			
 
 noinst_PYTHON =				\
 	burn-db-eeprom			\
@@ -65,24 +54,3 @@ usrper_LDADD 			= $(USRP_LA)
 
 usrp_cal_dc_offset_SOURCES	= usrp_cal_dc_offset.cc
 usrp_cal_dc_offset_LDADD	= $(USRP_LA)
-
-test_usrp_inband_cs_SOURCES 	= test_usrp_inband_cs.cc time_stuff.c ui_sincos.c
-test_usrp_inband_cs_LDADD   	= $(USRP_LA)
-
-test_usrp_inband_ping_SOURCES 	= test_usrp_inband_ping.cc time_stuff.c
-test_usrp_inband_ping_LDADD   	= $(USRP_LA)
-
-test_usrp_inband_tx_SOURCES 	= test_usrp_inband_tx.cc time_stuff.c ui_sincos.c
-test_usrp_inband_tx_LDADD   	= $(USRP_LA)
-
-test_usrp_inband_timestamps_SOURCES 	= test_usrp_inband_timestamps.cc time_stuff.c ui_sincos.c
-test_usrp_inband_timestamps_LDADD   	= $(USRP_LA)
-
-test_usrp_inband_registers_SOURCES 	= test_usrp_inband_registers.cc time_stuff.c ui_sincos.c
-test_usrp_inband_registers_LDADD   	= $(USRP_LA)
-
-test_usrp_inband_rx_SOURCES 	= test_usrp_inband_rx.cc time_stuff.c ui_sincos.c
-test_usrp_inband_rx_LDADD   	= $(USRP_LA)
-
-read_packets_SOURCES = read_packets.cc
-read_packets_LDADD = $(USRP_LA)

@@ -23,7 +23,7 @@ include $(top_srcdir)/Makefile.common
 INCLUDES = 	\
 	$(DEFINES) $(OMNITHREAD_INCLUDES) $(PMT_INCLUDES) $(MBLOCK_INCLUDES) \
 	$(USRP_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES) \
-	-I$(srcdir)/../../apps
+	-I$(srcdir)/../../apps-inband
 
 TESTS = test_inband
 
@@ -52,7 +52,7 @@ usrp_interface_mbh.cc : usrp_interface.mbh
 
 libusrp_inband_la_SOURCES =		\
 	$(BUILT_SOURCES)		\
-	../../apps/ui_sincos.c		\
+	$(srcdir)/../../apps-inband/ui_sincos.c	\
 	usrp_inband_usb_packet.cc	\
 	usrp_rx.cc			\
 	usrp_rx_stub.cc			\
@@ -65,7 +65,7 @@ libusrp_inband_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
 
 libusrp_inband_la_LIBADD =		\
 	$(MBLOCK_LA)			\
-	../legacy/libusrp.la  		\
+	$(USRP_LA)	  		\
 	-lstdc++
 
 include_HEADERS =			\
@@ -103,12 +103,9 @@ libusrp_inband_qa_la_SOURCES =   	\
 # magic flags
 libusrp_inband_qa_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
 
-# link against c++ standard library
 libusrp_inband_qa_la_LIBADD =    	\
 	libusrp_inband.la		\
 	$(CPPUNIT_LIBS)			\
-	../legacy/libusrp.la		\
-	libusrp_inband.la		\
 	-lstdc++
 
 # ------------------------------------------------------------------------
