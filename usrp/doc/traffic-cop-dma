@@ -24,16 +24,21 @@ registers
 
 TC_DMA_SRC_{0,3} [WR] ("traffic cop DMA source, channel N")
 
+  (The {0,3} notation means there are four of these registers,
+   one for each channel, named TC_DMA_SRC_0, TC_DMA_SRC_1,
+   TC_DMA_SRC_2, TC_DMA_3.)
+
   Specifies where the writing port adapter writes info the buffer, and
   the maximum number of lines to write.
 
        5             9                  9                9  
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-  |   MBZ   |      start      |     end (max)   |       step      |
+  |0|  src  |      start      |     end (max)   |       step      |
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
+  src:   source port number.  E.g., 2 = ethernet MAC (the buffer writer)
   start: starting line number for transfer (32-bit lines)
-  end:   maximum number of lines to write
+  end:   index of last line to write.  I.e., start = 0, end = 0, xfers 1 line.
   step:  normally 1.
 
 
@@ -44,23 +49,24 @@ TC_DMA_DST_{0,3} [WR]
 
        5             9                  9                9  
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-  |   MBZ   |      start      |        MBZ      |       step      |
+  |0|  dst  |      start      |    end (max)    |       step      |
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
+  dst:   destination port number.  E.g., 1 = DSP pipeline (the buffer reader)
   start: starting line number tranfer (32-bit lines)
+  end:   Must be zero, unless a TC_DMA_CMD_SEND_0 or TC_DMA_CMD_SEND_1
+         cmd is written to TC_DMA_CTRL_{0,3} in which case this
+         specifies the index of the last line to send to the destination.
   step:  normally 1.
 
 
 TC_DMA_CTRL_{0,3} [WR]
 
-      4       4    1                  19                      4
+                            27                           1    4
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-  |  src  |  dst  |A|                 MBZ                 |  cmd  |
+  |                         MBZ                         |A|  cmd  |
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-  src:  source port number.  E.g., 2 = ethernet MAC (the buffer writer)
-
-  dst:  destination port number.  E.g., 1 = DSP pipeline (the buffer reader)
 
   A:    Set if "Host Approval" is required before beginning xfer to dst.
         Used to allow processor to inspect packet for s/w dispatch.  If set,
@@ -72,12 +78,14 @@ TC_DMA_CTRL_{0,3} [WR]
   cmd:  command
 
     TC_DMA_CMD_RESET	     0  // abort active tranfers now; reset to idle state
-    TC_DMA_CMD_START	     1  // begin transfers according to src, dst, A
+    TC_DMA_CMD_START	     1  // begin transfers according
     TC_DMA_CMD_STOP	     2  // stop transfers at completion of current buffer
     TC_DMA_CMD_APPROVE_0     3  // host approves xfer on even buffer, continue
     TC_DMA_CMD_APPROVE_1     4  // host approves xfer on odd buffer, continue
     TC_DMA_CMD_DROP_0	     5  // host naks xfer on even buffer, drop buffer and continue
     TC_DMA_CMD_DROP_1	     6  // host naks xfer on even buffer, drop buffer and continue
+    TC_DMA_CMD_SEND_0	     7  // copy buffer 0 to destination (processor init'd buffer)
+    TC_DMA_CMD_SEND_1	     8  // copy buffer 1 to destination (processor init'd buffer)
 
 
 TC_DMA_STATUS_{0,3} [RD]
@@ -109,7 +117,7 @@ requested number of lines have been written into the buffer.
 
 
 
-I also want a "global status register" that pulls the 4 flag bits
+I also want a "global status register" that pulls the N flag bits
 from each of the 4 status registers into a single word.  This should
 allow me to read a single word to figure out what to do.
 
@@ -117,12 +125,13 @@ allow me to read a single word to figure out what to do.
 TC_DMA_STATUS_GLOBAL [RD]
 
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-  |              MBZ              |flags3 |flags2 |flags1 |flags0 |
+  |     flags3    |     flags2    |     flags1    |     flags0    |
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-I'm sure I've missed something...
 
-What do you think?
+// some kind of registers to enable and ack interrupts
 
-Eric
+TC_DMA_INTR_EN  [WR]	  // enable particular interrupts
+TC_DMA_INTR_CLR [WR]	  // clear particular pending interrupts
+
