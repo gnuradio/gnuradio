@@ -186,7 +186,6 @@ Description: Software Defined Radio
 Package: python-usrp
 Architecture: any
 Depends: ${python:Depends}, libusrp0c2a
-Conflicts: python-gnuradio 
 Provides: ${python:Provides}
 Section: python
 XB-Python-Version: ${python:Versions}
