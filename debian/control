@@ -97,24 +97,13 @@ Description: Python bindings for GNU Radio core library
  This package provides the modules that enable one to use gnuradio 
  from Python scripts.
 
-Package: python-gnuradio-audio-alsa
-Architecture: any
-Depends: ${python:Depends}, python-gnuradio-core, libasound2
-Section: python
-Provides: python-gnuradio-audio
-XB-Python-Version: ${python:Versions}
-Description: Python bindings for GNU Radio ALSA audio driver
- This package provides the Python interface to the GNU Radio ALSA
- audio driver.
-
 Package: libusrp0c2a
 Section: libs
 Architecture: any
 Depends: libusb-0.1-4
 Conflicts: libusrp0
 Replaces: libusrp0
-Suggests: usrp-doc
-Recommends: usrp-firmware
+Suggests: usrp-doc, usrp-firmware
 Description: Client side library for the USRP
  The Universal Software Radio Peripheral (USRP) is an USB-connected,
  low-cost and open board. It features four high-speed analog-to-digital
@@ -146,8 +135,8 @@ Description: Client side library for the USRP
 Package: libusrp-inband0c2a
 Section: libs
 Architecture: any
-Depends: libusrp0c2a, libusb-0.1-4
-Suggests: usrp-doc
+Depends: libusrp0c2a
+Suggests: usrp-inband-firmware
 Description: Client side library for the USRP with in-band signaling
  The package is an alternative C++ interface to the USRP that implements
  an experimental in-band signaling method across the USB.
@@ -155,7 +144,7 @@ Description: Client side library for the USRP with in-band signaling
 Package: libusrp-inband0-dev
 Section: libdevel
 Architecture: any
-Depends: libmblock0-dev, libusb-dev
+Depends: libusrp0-dev
 Description: Client side library for the USRP with in-band signaling
  The package is an alternative C++ interface to the USRP that implements
  an experimental in-band signaling method across the USB.
@@ -218,6 +207,16 @@ Section: python
 XB-Python-Version: ${python:Versions}
 Description: GNU Radio ATSC Receiver
  This package provides a decoder for ATSC waveforms using GNU Radio.
+
+Package: python-gnuradio-audio-alsa
+Architecture: any
+Depends: ${python:Depends}, python-gnuradio-core, libasound2
+Section: python
+Provides: python-gnuradio-audio
+XB-Python-Version: ${python:Versions}
+Description: Python bindings for GNU Radio ALSA audio driver
+ This package provides the Python interface to the GNU Radio ALSA
+ audio driver.
 
 Package: python-gnuradio-audio-jack
 Architecture: any
@@ -304,7 +303,7 @@ Description: GNU Radio Trellis-Coded Modulation library
 
 Package: gnuradio-examples
 Architecture: any
-Depends: ${python:Depends}, python-gnuradio-core, python-gnuradio-usrp, python-gnuradio-wxgui, python-gnuradio-audio
+Depends: ${python:Depends}, python-gnuradio-usrp, python-gnuradio-wxgui, python-gnuradio-audio
 Section: comm
 XB-Python-Version: ${python:Versions}
 Description: GNU Radio Example Programs
@@ -312,7 +311,7 @@ Description: GNU Radio Example Programs
 
 Package: gnuradio-pager
 Architecture: any
-Depends: ${python:Depends}, python-gnuradio-core, python-gnuradio-usrp
+Depends: ${python:Depends}, python-gnuradio-usrp
 Section: comm
 XB-Python-Version: ${python:Versions}
 Description: GNU Radio FLEX Pager Decoder
@@ -320,7 +319,7 @@ Description: GNU Radio FLEX Pager Decoder
 
 Package: gnuradio-radio-astronomy
 Architecture: any
-Depends: ${python:Depends}, python-gnuradio-core, python-gnuradio-usrp, python-gnuradio-wxgui
+Depends: ${python:Depends}, python-gnuradio-usrp, python-gnuradio-wxgui
 Section: comm
 XB-Python-Version: ${python:Versions}
 Description: GNU Radio Radio Astronomy Applications
@@ -328,8 +327,8 @@ Description: GNU Radio Radio Astronomy Applications
 
 Package: gnuradio-radar-mono
 Architecture: any
-Depends: ${python:Depends}, python-gnuradio-core, python-gnuradio-usrp
-Recommends: gnuradio-radar-mono-firmware
+Depends: ${python:Depends}, python-gnuradio-usrp
+Suggests: gnuradio-radar-mono-firmware
 Section: comm
 XB-Python-Version: ${python:Versions}
 Description: GNU Radio Mono-static Radar Application
@@ -346,8 +345,8 @@ Description: GNU Radio Mono-static Radar Firmware
 
 Package: gnuradio-sounder
 Architecture: any
-Depends: ${python:Depends}, python-gnuradio-core, python-gnuradio-usrp
-Recommends: gnuradio-sounder-firmware
+Depends: ${python:Depends}, python-gnuradio-usrp
+Suggests: gnuradio-sounder-firmware
 Section: comm
 XB-Python-Version: ${python:Versions}
 Description: GNU Radio Channel Sounder Application
@@ -391,7 +390,7 @@ Description: Development headers for GNU Radio C++ development
 Package: usrp
 Section: comm
 Architecture: all
-Depends: libusrp0c2a, python-usrp, usrp-doc
+Depends: python-usrp, usrp-doc, usrp-firmware
 Description: The Univeral Software Radio Peripheral
  This is a virtual package that depends on the entire USRP software collection. You will
  still need to install package usrp-firmware, in contrib/comm, however.
