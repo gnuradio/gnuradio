@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -41,7 +41,7 @@ gr_map_bb::gr_map_bb (const std::vector<int> &map)
   for (int i = 0; i < 0x100; i++)
     d_map[i] = i;
 
-  unsigned int size = std::max((size_t) 0x100, map.size());
+  unsigned int size = std::min((size_t) 0x100, map.size());
   for (unsigned int i = 0; i < size; i++)
     d_map[i] = map[i];
 }
