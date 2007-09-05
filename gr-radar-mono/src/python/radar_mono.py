@@ -148,7 +148,7 @@ class radar_tx:
 #-----------------------------------------------------------------------
 # Receiver object.  Uses usrp_source_c to receive echo records.
 #-----------------------------------------------------------------------
-class radar_rx():
+class radar_rx:
     def __init__(self, gain=None, subdev_spec=None, msgq=None, length=None,
                  verbose=False, debug=False):
         self._gain = gain
