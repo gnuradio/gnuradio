@@ -35,6 +35,7 @@ noinst_PROGRAMS =			\
 	test_usrp_inband_rx		\
 	test_usrp_inband_tx		\
 	test_usrp_inband_timestamps	\
+	test_usrp_inband_underrun	\
 	read_packets
 
 noinst_HEADERS =			\
@@ -56,6 +57,9 @@ test_usrp_inband_timestamps_LDADD   	= $(USRP_LA) $(USRP_INBAND_LA)
 
 test_usrp_inband_registers_SOURCES 	= test_usrp_inband_registers.cc ui_sincos.c
 test_usrp_inband_registers_LDADD   	= $(USRP_LA) $(USRP_INBAND_LA)
+
+test_usrp_inband_underrun_SOURCES 	= test_usrp_inband_underrun.cc
+test_usrp_inband_underrun_LDADD   	= $(USRP_LA) $(USRP_INBAND_LA)
 
 test_usrp_inband_rx_SOURCES 	= test_usrp_inband_rx.cc ui_sincos.c
 test_usrp_inband_rx_LDADD   	= $(USRP_LA) $(USRP_INBAND_LA)

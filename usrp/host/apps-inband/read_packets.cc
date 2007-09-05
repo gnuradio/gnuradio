@@ -73,6 +73,12 @@ int main(int argc, char *argv[]) {
 //    if(pkt->carrier_sense())
 //      printf("\tcarrier sense\n");
 
+    if(pkt->underrun())
+      printf("\tunderrun\n");
+    
+    if(pkt->overrun())
+      printf("\toverrun\n");
+
     printf("\tchannel: \t0x%x\n", pkt->chan());
     printf("\ttimestamp: \t0x%x\n", pkt->timestamp());
     //printf("\ttimestamp: \t%u\n", pkt->timestamp());
