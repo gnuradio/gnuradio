@@ -156,7 +156,6 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         # We change center frequencies based on nhitlines and setitimer
         self.setifreq_timer = self.setitimer * (self.nhitlines * 5)
-        print "setifreq_timer", self.setifreq_timer
 
         # Create actual timer
         self.seti_then = time.time()
@@ -1050,7 +1049,8 @@ class app_flow_graph(stdgui.gui_flow_graph):
          self.myform['dcgain'].set_value(gain)
          self.cal_mult.set_k(gain*0.01)
          self.calib_coeff = gain
-         self.cal_offs.set_k(self.calib_offset*(self.calib_coeff*8000))
+         x = gain/100.0
+         self.cal_offs.set_k(self.calib_offset*(x*8000))
 
     def compute_notch_taps(self,notchlist):
          NOTCH_TAPS = 256
