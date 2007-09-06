@@ -6,7 +6,7 @@
 # 
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 3, or (at your option)
+# the Free Software Foundation; either version 2, or (at your option)
 # any later version.
 # 
 # GNU Radio is distributed in the hope that it will be useful,
@@ -24,7 +24,7 @@ from gnuradio import gr, gru, window
 from gnuradio.wxgui import stdgui
 import wx
 import gnuradio.wxgui.plot as plot
-import Numeric
+import numpy
 import os
 import threading
 import math    
@@ -32,11 +32,43 @@ import math
 default_fftsink_size = (640,240)
 default_fft_rate = gr.prefs().get_long('wxgui', 'fft_rate', 15)
 
-class ra_waterfallsink_base(object):
+def axis_design( x1, x2, nx ):
+    # Given start, end, and number of labels, return value of first label,
+    # increment between labels, number of unlabeled division between labels,
+    # and scale factor.
+
+    dx = abs( x2 - x1 )/float(nx+1)  # allow for space at each end
+    ldx = math.log10(dx)
+    l2 = math.log10(2.)
+    l5 = math.log10(5.)
+    le = math.floor(ldx)
+    lf = ldx - le
+    if lf < l2/2:
+        c = 1
+        dt = 10
+    elif lf < (l2+l5)/2:
+        c = 2
+        dt = 4
+    elif lf < (l5+1)/2:
+        c = 5
+        dt = 5
+    else:
+        c = 1
+        dt = 10
+        le += 1
+    inc = c*pow( 10., le )
+    first = math.ceil( x1/inc )*inc
+    scale = 1.
+    while ( abs(x1*scale) >= 1e5 ) or ( abs(x2*scale) >= 1e5 ):
+        scale *= 1e-3
+    return ( first, inc, dt, scale )
+    
+
+class waterfall_sink_base(object):
     def __init__(self, input_is_real=False, baseband_freq=0,
                  sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate,
-                 average=False, avg_alpha=None, title='', ofunc=None, xydfunc=None, scaling=100):
+                 average=False, avg_alpha=None, title='', ofunc=None, xydfunc=None):
 
         # initialize common attributes
         self.baseband_freq = baseband_freq
@@ -46,7 +78,6 @@ class ra_waterfallsink_base(object):
         self.average = average
         self.ofunc = ofunc
         self.xydfunc = xydfunc
-        self.scaling = scaling
         if avg_alpha is None:
             self.avg_alpha = 2.0 / fft_rate
         else:
@@ -54,6 +85,9 @@ class ra_waterfallsink_base(object):
         self.title = title
         self.input_is_real = input_is_real
         self.msgq = gr.msg_queue(2)         # queue up to 2 messages
+
+    def reconnect( self, fg ):
+        fg.connect( *self.block_list )
 
     def set_average(self, average):
         self.average = average
@@ -72,23 +106,21 @@ class ra_waterfallsink_base(object):
         self.sample_rate = sample_rate
         self._set_n()
 
-    def set_scaling(self,scaling):
-        self.scaling = scaling
-        return
-
     def _set_n(self):
         self.one_in_n.set_n(max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
         
-class ra_waterfallsink_f(gr.hier_block, ra_waterfallsink_base):
+class waterfall_sink_f(gr.hier_block, waterfall_sink_base):
     def __init__(self, fg, parent, baseband_freq=0,
-                 y_per_div=10, ref_level=50, sample_rate=1, fft_size=512,
+                 ref_level=0, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
-                 title='', scaling=100, size=default_fftsink_size, ofunc=None, xydfunc=None):
+                 title='', size=default_fftsink_size, report=None, span=40, ofunc=None, xydfunc=None):
 
-        ra_waterfallsink_base.__init__(self, input_is_real=True, baseband_freq=baseband_freq,
-                               sample_rate=sample_rate, fft_size=fft_size,
-                               fft_rate=fft_rate,
-                               average=average, avg_alpha=avg_alpha, title=title, ofunc=ofunc, xydfunc=xydfunc, scaling=scaling)
+        waterfall_sink_base.__init__(self, input_is_real=True,
+                                     baseband_freq=baseband_freq,
+                                     sample_rate=sample_rate,
+                                     fft_size=fft_size, fft_rate=fft_rate,
+                                     average=average, avg_alpha=avg_alpha,
+                                     title=title)
                                
         s2p = gr.serial_to_parallel(gr.sizeof_float, self.fft_size)
         self.one_in_n = gr.keep_one_in_n(gr.sizeof_float * self.fft_size,
@@ -100,27 +132,28 @@ class ra_waterfallsink_f(gr.hier_block, ra_waterfallsink_base):
         log = gr.nlog10_ff(20, self.fft_size, -20*math.log10(self.fft_size))
         sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
 
-        fg.connect (s2p, self.one_in_n, fft, c2mag, self.avg, log, sink)
+        self.block_list = (s2p, self.one_in_n, fft, c2mag, self.avg, log, sink)
+        self.reconnect( fg )
         gr.hier_block.__init__(self, fg, s2p, sink)
 
-        self.win = ra_waterfall_window(self, parent, size=size)
+        self.win = waterfall_window(self, parent, size=size, report=report,
+                                    ref_level=ref_level, span=span, ofunc=ofunc, xydfunc=xydfunc)
         self.set_average(self.average)
 
 
-class ra_waterfallsink_c(gr.hier_block, ra_waterfallsink_base):
+class waterfall_sink_c(gr.hier_block, waterfall_sink_base):
     def __init__(self, fg, parent, baseband_freq=0,
-                 y_per_div=10, ref_level=50, sample_rate=1, fft_size=512,
-                 fft_rate=default_fft_rate, average=False, 
-                 avg_alpha=None, scaling=100,
-                 title='', size=default_fftsink_size, ofunc=None, xydfunc=None):
+                 ref_level=0, sample_rate=1, fft_size=512,
+                 fft_rate=default_fft_rate, average=False, avg_alpha=None, 
+                 title='', size=default_fftsink_size, report=None, span=40, ofunc=None, xydfunc=None):
 
-        ra_waterfallsink_base.__init__(self, input_is_real=False, baseband_freq=baseband_freq,
-                                     sample_rate=sample_rate, fft_size=fft_size,
+        waterfall_sink_base.__init__(self, input_is_real=False,
+                                     baseband_freq=baseband_freq,
+                                     sample_rate=sample_rate,
+                                     fft_size=fft_size,
                                      fft_rate=fft_rate,
-                                     average=average, 
-                                     avg_alpha=avg_alpha, 
-                                     title=title, ofunc=ofunc, 
-                                     xydfunc=xydfunc, scaling=scaling)
+                                     average=average, avg_alpha=avg_alpha,
+                                     title=title)
 
         s2p = gr.serial_to_parallel(gr.sizeof_gr_complex, self.fft_size)
         self.one_in_n = gr.keep_one_in_n(gr.sizeof_gr_complex * self.fft_size,
@@ -133,10 +166,12 @@ class ra_waterfallsink_c(gr.hier_block, ra_waterfallsink_base):
         log = gr.nlog10_ff(20, self.fft_size, -20*math.log10(self.fft_size))
         sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
 
-        fg.connect(s2p, self.one_in_n, fft, c2mag, self.avg, log, sink)
+        self.block_list = (s2p, self.one_in_n, fft, c2mag, self.avg, log, sink)
+        self.reconnect( fg )
         gr.hier_block.__init__(self, fg, s2p, sink)
 
-        self.win = ra_waterfall_window(self, parent, size=size)
+        self.win = waterfall_window(self, parent, size=size, report=report,
+                                    ref_level=ref_level, span=span, ofunc=ofunc, xydfunc=xydfunc)
         self.set_average(self.average)
 
 
@@ -180,31 +215,50 @@ class input_watcher (threading.Thread):
                 start = itemsize * (nitems - 1)
                 s = s[start:start+itemsize]
 
-            complex_data = Numeric.fromstring (s, Numeric.Float32)
+            complex_data = numpy.fromstring (s, numpy.float32)
             de = DataEvent (complex_data)
             wx.PostEvent (self.event_receiver, de)
             del de
     
 
-class ra_waterfall_window (wx.Panel):
+class waterfall_window (wx.ScrolledWindow):
     def __init__ (self, fftsink, parent, id = -1,
                   pos = wx.DefaultPosition, size = wx.DefaultSize,
-                  style = wx.DEFAULT_FRAME_STYLE, name = ""):
-        wx.Panel.__init__(self, parent, id, pos, size, style, name)
+                  style = wx.DEFAULT_FRAME_STYLE, name = "", report=None,
+                  ref_level = 0, span = 50, ofunc=None, xydfunc=None):
+        wx.ScrolledWindow.__init__(self, parent, id, pos, size,
+                                   style|wx.HSCROLL, name)
+        self.parent = parent
+        self.SetCursor(wx.StockCursor(wx.CURSOR_IBEAM))
+        self.ref_level = ref_level
+        self.scale_factor = 256./span
+
+        self.ppsh = 128  # pixels per scroll, horizontal
+        self.SetScrollbars( self.ppsh, 0, fftsink.fft_size/self.ppsh, 0 )
 
         self.fftsink = fftsink
-        self.bm = wx.EmptyBitmap(1024, 512, -1)
+        self.size = size
+        self.report = report
+        self.ofunc = ofunc
+        self.xydfunc = xydfunc
 
-        self.scale_factor = self.fftsink.scaling
-        
         dc1 = wx.MemoryDC()
-        dc1.SelectObject(self.bm)
-        dc1.Clear()
+        dc1.SetFont( wx.SMALL_FONT )
+        self.h_scale = dc1.GetCharHeight() + 3
+        #self.bm_size = ( self.fftsink.fft_size, self.size[1] - self.h_scale )
+        self.im_size = ( self.fftsink.fft_size, self.size[1] - self.h_scale )
+        #self.bm = wx.EmptyBitmap( self.bm_size[0], self.bm_size[1], -1)
+        self.im = wx.EmptyImage( self.im_size[0], self.im_size[1], True )
+        self.im_cur = 0
 
-        self.pens = self.make_pens()
+        self.baseband_freq = None
+
+        self.make_pens()
 
         wx.EVT_PAINT( self, self.OnPaint )
         wx.EVT_CLOSE (self, self.on_close_window)
+        #wx.EVT_LEFT_UP(self, self.on_left_up)
+        #wx.EVT_LEFT_DOWN(self, self.on_left_down)
         EVT_DATA_EVENT (self, self.set_data)
         
         self.build_popup_menu()
@@ -213,12 +267,36 @@ class ra_waterfall_window (wx.Panel):
         self.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
         self.Bind(wx.EVT_MOTION, self.on_motion)
 
+        self.down_pos = None
+
         self.input_watcher = input_watcher(fftsink.msgq, fftsink.fft_size, self)
 
-
     def on_close_window (self, event):
-        print "ra_waterfall_window: on_close_window"
         self.keep_running = False
+
+    def on_left_down( self, evt ):
+        self.down_pos = evt.GetPosition()
+        self.down_time = evt.GetTimestamp()
+
+    def on_left_up( self, evt ):
+        if self.down_pos:
+            dt = ( evt.GetTimestamp() - self.down_time )/1000.
+            pph = self.fftsink.fft_size/float(self.fftsink.sample_rate)
+            dx =  evt.GetPosition()[0] - self.down_pos[0]
+            if dx != 0:
+                rt = pph/dx
+            else:
+                rt = 0
+            t = 'Down time: %f  Delta f: %f  Period: %f' % ( dt, dx/pph, rt )
+            print t
+            if self.report:
+                self.report(t)
+
+    def on_motion(self, event):
+        if self.xydfunc:
+            pos = event.GetPosition()
+            self.xydfunc(pos)
+
 
     def const_list(self,const,len):
         return [const] * len
@@ -245,21 +323,63 @@ class ra_waterfall_window (wx.Panel):
 
     def make_pens(self):
         (r,g,b) = self.make_colormap()
-        pens = []
-        for i in range(0,256):
-            colour = wx.Colour(r[i], g[i], b[i])
-            pens.append( wx.Pen(colour, 2, wx.SOLID))
-        return pens
+        self.rgb = numpy.transpose( numpy.array( (r,g,b) ).astype(numpy.int8) )
         
     def OnPaint(self, event):
-        dc = wx.PaintDC(self)
-        self.DoDrawing(dc)
+        dc = wx.BufferedPaintDC(self)
+        self.DoDrawing( dc )
 
-    def DoDrawing(self, dc=None):
+    def DoDrawing(self,dc):
+        w, h = self.GetClientSizeTuple()
+        w = min( w, self.fftsink.fft_size )
+        if w <= 0:
+            return
+
         if dc is None:
-            dc = wx.ClientDC(self)
-        dc.DrawBitmap(self.bm, 0, 0, False )
-    
+            dc = wx.BufferedDC( wx.ClientDC(self), (w,h) )
+
+        dc.SetBackground( wx.Brush( self.GetBackgroundColour(), wx.SOLID ) )
+        dc.Clear()
+
+        x, y = self.GetViewStart()
+        x *= self.ppsh
+
+        ih = min( h - self.h_scale, self.im_size[1] - self.im_cur )
+        r = wx.Rect( x, self.im_cur, w, ih )
+        bm = wx.BitmapFromImage( self.im.GetSubImage(r) )
+        dc.DrawBitmap( bm, 0, self.h_scale )
+        rem = min( self.im_size[1] - ih, h - ih - self.h_scale )
+        if( rem > 0 ):
+            r = wx.Rect( x, 0, w, rem )
+            bm = wx.BitmapFromImage( self.im.GetSubImage(r) )
+            dc.DrawBitmap( bm, 0, ih + self.h_scale )
+        
+        # Draw axis
+        if self.baseband_freq != self.fftsink.baseband_freq:
+            self.baseband_freq = self.fftsink.baseband_freq
+            t = self.fftsink.sample_rate*w/float(self.fftsink.fft_size)
+            self.ax_spec = axis_design( self.baseband_freq - t/2,
+                                        self.baseband_freq + t/2, 7 )
+        dc.SetFont( wx.SMALL_FONT )
+        fo = self.baseband_freq
+        po = self.fftsink.fft_size/2
+        pph = self.fftsink.fft_size/float(self.fftsink.sample_rate)
+        f = math.floor((fo-po/pph)/self.ax_spec[1])*self.ax_spec[1]
+        while True:
+            t = po + ( f - fo )*pph
+            s = str( f*self.ax_spec[3] )
+            e = dc.GetTextExtent( s )
+            if t - e[1]/2 >= x + w:
+                break
+            dc.DrawText( s, t - x - e[0]/2, 0 )
+            dc.DrawLine( t - x, e[1] - 1, t - x, self.h_scale )
+            dt = self.ax_spec[1]/self.ax_spec[2]*pph
+            for i in range(self.ax_spec[2]-1):
+                t += dt
+                if t >= x + w:
+                    break
+                dc.DrawLine( t - x, e[1] + 1, t - x, self.h_scale )
+            f += self.ax_spec[1]
 
     def const_list(self,const,len):
         a = [const]
@@ -291,12 +411,19 @@ class ra_waterfall_window (wx.Panel):
         dB = evt.data
         L = len (dB)
 
-        if (self.fftsink.ofunc != None):
-            self.fftsink.ofunc (evt.data, L)
+        if self.ofunc != None:
+            self.ofunc(evt.data, L)
+        #dc1 = wx.MemoryDC()
+        #dc1.SelectObject(self.bm)
 
-        dc1 = wx.MemoryDC()
-        dc1.SelectObject(self.bm)
-        dc1.Blit(0,1,1024,512,dc1,0,0,wx.COPY,False,-1,-1)
+        # Scroll existing bitmap
+        if 1:
+            #dc1.Blit(0,1,self.bm_size[0],self.bm_size[1]-1,dc1,0,0,
+            #         wx.COPY,False,-1,-1)
+            pass
+        else:
+            for i in range( self.bm_size[1]-1, 0, -1 ):
+                dc1.Blit( 0, i, self.bm_size[0], 1, dc1, 0, i-1 )
 
         x = max(abs(self.fftsink.sample_rate), abs(self.fftsink.baseband_freq))
         if x >= 1e9:
@@ -317,43 +444,28 @@ class ra_waterfall_window (wx.Panel):
             d_max = L/2
             p_width = 1
 
-        WATERFALL_WIDTH=1024
         scale_factor = self.scale_factor
-        x_positions = Numeric.zeros(WATERFALL_WIDTH, Numeric.Float64)
-        y_values = Numeric.zeros(WATERFALL_WIDTH, Numeric.Float64)
-        x_scale = L / WATERFALL_WIDTH
-        x_scale = int(x_scale)
+        dB -= self.ref_level
+        dB *= scale_factor
+        dB = dB.astype(numpy.int_).clip( min=0, max=255 )
         if self.fftsink.input_is_real:     # real fft
-           for x_pos in range(0, d_max):
-               value = int(dB[x_pos] * scale_factor)
-               value = min(255, max(0, value))
-               idx = int(x_pos/x_scale)
-               idx = min(WATERFALL_WIDTH-1,idx)
-               x_positions[idx] = idx
-               y_values[idx] = y_values[idx] + value
+            dB = numpy.array( ( dB[0:d_max][::-1], dB[0:d_max] ) )
         else:                               # complex fft
-           for x_pos in range(0, d_max):    # positive freqs
-               value = int(dB[x_pos] * scale_factor)
-               value = min(255, max(0, value))
-               idx = int((x_pos+d_max)/x_scale)
-               idx = min(WATERFALL_WIDTH-1,idx)
-               x_positions[idx] = idx
-               y_values[idx] = y_values[idx] + value
-           for x_pos in range(0 , d_max):   # negative freqs
-               value = int(dB[x_pos+d_max] * scale_factor)
-               value = min(255, max(0, value))
-               idx = int((x_pos)/x_scale)
-               idx = min(WATERFALL_WIDTH-1,idx)
-               x_positions[idx] = idx
-               y_values[idx] = y_values[idx] + value
+            dB = numpy.concatenate( ( dB[d_max:L], dB[0:d_max] ) )
 
-        for i in range(0,WATERFALL_WIDTH):
-            yv = y_values[i]/x_scale
-            yv = int(min(255,yv))
-            dc1.SetPen(self.pens[yv])
-            dc1.DrawRectangle(i*p_width, 0, p_width, 1)
+        dB = self.rgb[dB]
+        img = wx.ImageFromData( L, 1, dB.ravel().tostring() )
+        #bm = wx.BitmapFromImage( img )
+        #dc1.DrawBitmap( bm, 0, 0 )
+        ibuf = self.im.GetDataBuffer()
+        self.im_cur -= 1
+        if self.im_cur < 0:
+            self.im_cur = self.im_size[1] - 1
+        start = 3*self.im_cur*self.im_size[0]
+        ibuf[start:start+3*self.im_size[0]] = img.GetData()
 
-        self.DoDrawing (None)
+        #del dc1
+        self.DoDrawing(None)
 
     def on_average(self, evt):
         # print "on_average"
@@ -361,64 +473,98 @@ class ra_waterfall_window (wx.Panel):
 
     def on_right_click(self, event):
         menu = self.popup_menu
-        for id, pred in self.checkmarks.items():
-            item = menu.FindItemById(id)
-            item.Check(pred())
         self.PopupMenu(menu, event.GetPosition())
 
-    def on_motion(self, event):
-        if not self.fftsink.xydfunc == None:
-            pos = event.GetPosition()
-            self.fftsink.xydfunc(pos)
-
-    def on_scaling(self, evt):
-        Id = evt.GetId()
-        if Id == self.id_scaling_100:
-            self.fftsink.set_scaling(100)
-        elif Id == self.id_scaling_150:
-            self.fftsink.set_scaling(150)
-        elif Id == self.id_scaling_200:
-            self.fftsink.set_scaling(200)
-        elif Id == self.id_scaling_250:
-            self.fftsink.set_scaling(250)
-        elif Id == self.id_scaling_300:
-            self.fftsink.set_scaling(300)
 
     def build_popup_menu(self):
-        self.id_scaling_100 = wx.NewId()
-        self.id_scaling_150 = wx.NewId()
-        self.id_scaling_200 = wx.NewId()
-        self.id_scaling_250 = wx.NewId()
-        self.id_scaling_300 = wx.NewId()
-        self.id_average = wx.NewId()
-
-        self.Bind(wx.EVT_MENU, self.on_average, id=self.id_average)
-        self.Bind(wx.EVT_MENU, self.on_scaling, id=self.id_scaling_100)
-        self.Bind(wx.EVT_MENU, self.on_scaling, id=self.id_scaling_150)
-        self.Bind(wx.EVT_MENU, self.on_scaling, id=self.id_scaling_200)
-        self.Bind(wx.EVT_MENU, self.on_scaling, id=self.id_scaling_250)
-        self.Bind(wx.EVT_MENU, self.on_scaling, id=self.id_scaling_300)
-
+        id_ref_gain = wx.NewId()
+        self.Bind( wx.EVT_MENU, self.on_ref_gain, id=id_ref_gain )
 
         # make a menu
         menu = wx.Menu()
         self.popup_menu = menu
-        menu.AppendCheckItem(self.id_average, "Average")
-        menu.AppendCheckItem(self.id_scaling_100, "100 scale factor")
-        menu.AppendCheckItem(self.id_scaling_150, "150 scale factor")
-        menu.AppendCheckItem(self.id_scaling_200, "200 scale factor")
-        menu.AppendCheckItem(self.id_scaling_250, "250 scale factor")
-        menu.AppendCheckItem(self.id_scaling_300, "300 scale factor")
+        menu.Append( id_ref_gain, "Ref Level and Gain" )
+        self.rg_dialog = None
 
         self.checkmarks = {
-            self.id_average : lambda : self.fftsink.average,
-            self.id_scaling_100 : lambda : self.fftsink.scaling == 100,
-            self.id_scaling_150 : lambda : self.fftsink.scaling == 150,
-            self.id_scaling_200 : lambda : self.fftsink.scaling == 200,
-            self.id_scaling_250 : lambda : self.fftsink.scaling == 250,
-            self.id_scaling_300 : lambda : self.fftsink.scaling == 300,
+            #self.id_average : lambda : self.fftsink.average
             }
 
+    def on_ref_gain( self, evt ):
+        if self.rg_dialog == None:
+            self.rg_dialog = rg_dialog( self.parent, self.set_ref_gain,
+                                        ref=self.ref_level,
+                                        span=256./self.scale_factor )
+        self.rg_dialog.Show( True )
+
+    def set_ref_gain( self, ref, span ):
+        self.ref_level = ref
+        self.scale_factor = 256/span
+
+class rg_dialog( wx.Dialog ):
+    def __init__( self, parent, set_function, ref=0, span=256./5. ):
+        wx.Dialog.__init__( self, parent, -1, "Waterfall Settings" )
+        self.set_function = set_function
+        #status_bar = wx.StatusBar( self, -1 )
+
+        d_sizer = wx.BoxSizer( wx.VERTICAL )  # dialog sizer
+        f_sizer = wx.BoxSizer( wx.VERTICAL )  # form sizer
+        vs = 10
+
+        #f_sizer.Add( fn_sizer, 0, flag=wx.TOP, border=10 )
+
+        h_sizer = wx.BoxSizer( wx.HORIZONTAL )
+        self.ref = tab_item( self, "Ref Level:", 4, "dB" )
+        self.ref.ctrl.SetValue( "%d" % ref )
+        h_sizer.Add((0,0),1)
+        h_sizer.Add( self.ref, 0 )
+        h_sizer.Add((0,0),1)
+        self.span = tab_item( self, "Range:", 4, "dB" )
+        self.span.ctrl.SetValue( "%d" % span )
+        h_sizer.Add( self.span, 0 )
+        h_sizer.Add((0,0),1)
+        f_sizer.Add( h_sizer, 0, flag=wx.TOP|wx.EXPAND, border=vs )
+
+        d_sizer.Add((0,0),1)
+        d_sizer.Add( f_sizer, 0, flag=wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND )
+        d_sizer.Add((0,0),1)
+        d_sizer.Add((0,0),1)
+
+        button_sizer = wx.BoxSizer( wx.HORIZONTAL )
+        apply_button = wx.Button( self, -1, "Apply" )
+        apply_button.Bind( wx.EVT_BUTTON, self.apply_evt )
+        cancel_button = wx.Button( self, -1, "Cancel" )
+        cancel_button.Bind( wx.EVT_BUTTON, self.cancel_evt )
+        ok_button = wx.Button( self, -1, "OK" )
+        ok_button.Bind( wx.EVT_BUTTON, self.ok_evt )
+        button_sizer.Add((0,0),1)
+        button_sizer.Add( apply_button, 0,
+                          flag=wx.ALIGN_CENTER_HORIZONTAL )
+        button_sizer.Add((0,0),1)
+        button_sizer.Add( cancel_button, 0,
+                          flag=wx.ALIGN_CENTER_HORIZONTAL )
+        button_sizer.Add((0,0),1)
+        button_sizer.Add( ok_button, 0,
+                          flag=wx.ALIGN_CENTER_HORIZONTAL )
+        button_sizer.Add((0,0),1)
+        d_sizer.Add( button_sizer, 0,
+                     flag=wx.EXPAND|wx.ALIGN_CENTER|wx.BOTTOM, border=30 )
+        self.SetSizer( d_sizer )
+
+    def apply_evt( self, evt ):
+        self.do_apply()
+
+    def cancel_evt( self, evt ):
+        self.Show( False )
+
+    def ok_evt( self, evt ):
+        self.do_apply()
+        self.Show( False )
+
+    def do_apply( self ):
+        r = float( self.ref.ctrl.GetValue() )
+        g = float( self.span.ctrl.GetValue() )
+        self.set_function( r, g )
 
 def next_up(v, seq):
     """
@@ -441,6 +587,19 @@ def next_down(v, seq):
             return s
     return v
 
+# One of many copies that should be consolidated . . .
+def tab_item( parent, label, chars, units, style=wx.TE_RIGHT, value="" ):
+    s = wx.BoxSizer( wx.HORIZONTAL )
+    s.Add( wx.StaticText( parent, -1, label ), 0,
+           flag=wx.ALIGN_CENTER_VERTICAL )
+    s.ctrl = wx.TextCtrl( parent, -1, style=style, value=value )
+    s.ctrl.SetMinSize( ( (1.00+chars)*s.ctrl.GetCharWidth(),
+                                 1.25*s.ctrl.GetCharHeight() ) )
+    s.Add( s.ctrl, -1, flag=wx.LEFT, border=3 )
+    s.Add( wx.StaticText( parent, -1, units ), 0,
+           flag=wx.ALIGN_CENTER_VERTICAL|wx.LEFT, border=1 )
+    return s
+
 
 # ----------------------------------------------------------------
 #          	      Deprecated interfaces
@@ -450,9 +609,9 @@ def next_down(v, seq):
 #   block requires a single input stream of float
 #   win is a subclass of wxWindow
 
-def make_ra_waterfallsink_f(fg, parent, title, fft_size, input_rate):
+def make_waterfall_sink_f(fg, parent, title, fft_size, input_rate):
     
-    block = ra_waterfallsink_f(fg, parent, title=title, fft_size=fft_size,
+    block = waterfall_sink_f(fg, parent, title=title, fft_size=fft_size,
                              sample_rate=input_rate)
     return (block, block.win)
 
@@ -460,8 +619,8 @@ def make_ra_waterfallsink_f(fg, parent, title, fft_size, input_rate):
 #   block requires a single input stream of gr_complex
 #   win is a subclass of wxWindow
 
-def make_ra_waterfallsink_c(fg, parent, title, fft_size, input_rate):
-    block = ra_waterfallsink_c(fg, parent, title=title, fft_size=fft_size,
+def make_waterfall_sink_c(fg, parent, title, fft_size, input_rate):
+    block = waterfall_sink_c(fg, parent, title=title, fft_size=fft_size,
                              sample_rate=input_rate)
     return (block, block.win)
 
@@ -487,8 +646,10 @@ class test_app_flow_graph (stdgui.gui_flow_graph):
         # suck down all the CPU available.  Normally you wouldn't use these.
         thr1 = gr.throttle(gr.sizeof_gr_complex, input_rate)
 
-        sink1 = ra_waterfallsink_c (self, panel, title="Complex Data", fft_size=fft_size,
-                                  sample_rate=input_rate, baseband_freq=100e3)
+        sink1 = waterfall_sink_c (self, panel, title="Complex Data",
+                                  fft_size=fft_size,
+                                  sample_rate=input_rate, baseband_freq=0,
+                                  size=(600,144) )
         vbox.Add (sink1.win, 1, wx.EXPAND)
         self.connect (src1, thr1, sink1)
 
@@ -496,8 +657,8 @@ class test_app_flow_graph (stdgui.gui_flow_graph):
         src2 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 5.75e3, 1000)
         #src2 = gr.sig_source_f (input_rate, gr.GR_CONST_WAVE, 5.75e3, 1000)
         thr2 = gr.throttle(gr.sizeof_float, input_rate)
-        sink2 = ra_waterfallsink_f (self, panel, title="Real Data", fft_size=fft_size,
-                                  sample_rate=input_rate, baseband_freq=100e3)
+        sink2 = waterfall_sink_f (self, panel, title="Real Data", fft_size=fft_size,
+                                  sample_rate=input_rate, baseband_freq=0)
         vbox.Add (sink2.win, 1, wx.EXPAND)
         self.connect (src2, thr2, sink2)
 
