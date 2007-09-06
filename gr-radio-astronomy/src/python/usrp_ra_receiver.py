@@ -25,7 +25,7 @@ from gnuradio import usrp
 from usrpm import usrp_dbid
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
-from gnuradio.wxgui import stdgui, ra_fftsink, ra_stripchartsink, ra_waterfallsink, form, slider
+from gnuradio.wxgui import stdgui, ra_fftsink, ra_stripchartsink, ra_waterfallsink, form, slider, waterfallsink
 from optparse import OptionParser
 import wx
 import sys
@@ -84,6 +84,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         parser.add_option("-T", "--setibandwidth", type="eng_float", default=12500, help="Instantaneous SETI observing bandwidth--must be divisor of 250Khz")
         parser.add_option("-n", "--notches", action="store_true", default=False,
             help="Notches appear after all other arguments")
+        parser.add_option("-Q", "--seti_range", type="eng_float", default=1.0e6, help="Total scan width, in Hz for SETI scans")
         (options, args) = parser.parse_args()
 
         self.notches = Numeric.zeros(64,Numeric.Float64)
@@ -114,14 +115,6 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.setimode = options.setimode
         self.seticounter = 0
         self.setik = options.setik
-        # Because we force the input rate to be 250Khz, 12.5Khz is
-        #  exactly 1/20th of this, which makes building decimators
-        #  easier.
-        # This also allows larger FFTs to be used without totally-gobbling
-        #  CPU.  With an FFT size of 16384, for example, this bandwidth
-        #  yields a binwidth of 0.762Hz, and plenty of CPU left over
-        #  for other things, like the SETI analysis code.
-        #
         self.seti_fft_bandwidth = int(options.setibandwidth)
 
         # Calculate binwidth
@@ -132,7 +125,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         #  chirp at somewhere between 0.10Hz/sec and 0.25Hz/sec.
         #
         # upper_limit is the "worst case"--that is, the case for which we have
-        #  wait the longest to actually see any drift, due to the quantizing
+        #  to wait the longest to actually see any drift, due to the quantizing
         #  on FFT bins.
         upper_limit = binwidth / 0.10
         self.setitimer = int(upper_limit * 2.00)
@@ -142,25 +135,33 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.CHIRP_LOWER = 0.10 * self.setitimer
         self.CHIRP_UPPER = 0.25 * self.setitimer
 
-        # Reset hit counter to 0
+        # Reset hit counters to 0
         self.hitcounter = 0
-        # We scan through 1Mhz of bandwidth around the chosen center freq
-        self.seti_freq_range = 1.0e6
+        self.s1hitcounter = 0
+        self.s2hitcounter = 0
+        self.avgdelta = 0
+        # We scan through 2Mhz of bandwidth around the chosen center freq
+        self.seti_freq_range = options.seti_range
         # Calculate lower edge
         self.setifreq_lower = options.freq - (self.seti_freq_range/2)
         self.setifreq_current = options.freq
         # Calculate upper edge
         self.setifreq_upper = options.freq + (self.seti_freq_range/2)
 
-        # We change center frequencies every 10 self.setitimer intervals
-        self.setifreq_timer = self.setitimer * 10
+        # Maximum "hits" in a line
+        self.nhits = 20
+
+        # Number of lines for analysis
+        self.nhitlines = 4
+
+        # We change center frequencies based on nhitlines and setitimer
+        self.setifreq_timer = self.setitimer * (self.nhitlines * 5)
+        print "setifreq_timer", self.setifreq_timer
 
         # Create actual timer
         self.seti_then = time.time()
 
         # The hits recording array
-        self.nhits = 10
-        self.nhitlines = 3
         self.hits_array = Numeric.zeros((self.nhits,self.nhitlines), Numeric.Float64)
         self.hit_intensities = Numeric.zeros((self.nhits,self.nhitlines), Numeric.Float64)
         # Calibration coefficient and offset
@@ -172,9 +173,9 @@ class app_flow_graph(stdgui.gui_flow_graph):
             self.calib_offset = 750
 
         if self.calib_coeff < 1:
-            self.calib_offset = 1
+            self.calib_coeff = 1
         if self.calib_coeff > 100:
-            self.calib_offset = 100
+            self.calib_coeff = 100
 
         self.integ = options.integ
         self.avg_alpha = options.avg
@@ -227,7 +228,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         self.fft_outbuf = Numeric.zeros(self.fft_size, Numeric.Float64)
 
         #
-        # If SETI mode, only look at seti_fft_bandwidth (currently 12.5Khz)
+        # If SETI mode, only look at seti_fft_bandwidth
         #   at a time.
         #
         if (self.setimode):
@@ -257,9 +258,9 @@ class app_flow_graph(stdgui.gui_flow_graph):
                fft_rate=int(self.fft_rate), title="Spectral",  
                ofunc=self.fft_outfunc, xydfunc=self.xydfunc)
         else:
-            self.scope = ra_waterfallsink.ra_waterfallsink_c (self, panel,
+            self.scope = ra_waterfallsink.waterfall_sink_c (self, panel,
                 fft_size=int(self.fft_size), sample_rate=self.fft_input_rate,
-                fft_rate=int(self.fft_rate), title="Spectral", ofunc=self.fft_outfunc, xydfunc=self.xydfunc_waterfall)
+                fft_rate=int(self.fft_rate), title="Spectral", ofunc=self.fft_outfunc, size=(1100, 600), xydfunc=self.xydfunc, ref_level=0, span=10)
 
         # Set up ephemeris data
         self.locality = ephem.Observer()
@@ -337,8 +338,9 @@ class app_flow_graph(stdgui.gui_flow_graph):
             #
             # Continuum calibration stuff
             #
+            x = self.calib_coeff/100.0
             self.cal_mult = gr.multiply_const_ff(self.calib_coeff/100.0);
-            self.cal_offs = gr.add_const_ff(self.calib_offset*4000);
+            self.cal_offs = gr.add_const_ff(self.calib_offset*(x*8000));
 
             if self.use_notches == True:
                 self.compute_notch_taps(self.notches)
@@ -484,9 +486,10 @@ class app_flow_graph(stdgui.gui_flow_graph):
             parent=self.panel, sizer=vbox1, label="Current LMST", weight=1)
         vbox1.Add((4,0), 0, 0)
 
-        myform['spec_data'] = form.static_text_field(
-            parent=self.panel, sizer=vbox1, label="Spectral Cursor", weight=1)
-        vbox1.Add((4,0), 0, 0)
+        if self.setimode == False:
+            myform['spec_data'] = form.static_text_field(
+                parent=self.panel, sizer=vbox1, label="Spectral Cursor", weight=1)
+            vbox1.Add((4,0), 0, 0)
 
         vbox2 = wx.BoxSizer(wx.VERTICAL)
         if self.setimode == False:
@@ -498,8 +501,12 @@ class app_flow_graph(stdgui.gui_flow_graph):
                                            callback=self.set_gain)
 
         vbox2.Add((4,0), 0, 0)
+        if self.setimode == True:
+            max_savg = 100
+        else:
+            max_savg = 3000
         myform['average'] = form.slider_field(parent=self.panel, sizer=vbox2, 
-                    label="Spectral Averaging (FFT frames)", weight=1, min=1, max=3000, callback=self.set_averaging)
+                    label="Spectral Averaging (FFT frames)", weight=1, min=1, max=max_savg, callback=self.set_averaging)
 
         # Set up scan control button when in SETI mode
         if (self.setimode == True):
@@ -676,8 +683,13 @@ class app_flow_graph(stdgui.gui_flow_graph):
              s = s + "\nDet: " + str(sx)
          else:
              sx = "%2d" % self.hitcounter
+             s1 = "%2d" % self.s1hitcounter
+             s2 = "%2d" % self.s2hitcounter
+             sa = "%4.2f" % self.avgdelta
              sy = "%3.1f-%3.1f" % (self.CHIRP_LOWER, self.CHIRP_UPPER)
-             s = s + "\nHits: " + str(sx) + "\nCh lim: " + str(sy)
+             s = s + "\nHits: " + str(sx) + "\nS1:" + str(s1) + " S2:" + str(s2)
+             s = s + "\nAv D: " + str(sa) + "\nCh lim: " + str(sy)
+
          self.myform['lmst_high'].set_value(s)
 
          #
@@ -783,7 +795,11 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
             # Write those fields
             spectral_file.write("data:"+str(ephem.hours(sidtime))+" Dn="+str(inter)+",Fc="+str(fc)+",Bw="+str(bw)+",Av="+str(av))
-            spectral_file.write(" "+str(r)+"\n")
+            spectral_file.write (" [ ")
+            for r in data:
+                spectral_file.write(" "+str(r))
+
+            spectral_file.write(" ]\n")
             spectral_file.close()
             return(data)
     
@@ -821,8 +837,8 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         start_f = self.observing - (self.fft_input_rate/2)
         current_f = start_f
-        f_incr = self.fft_input_rate / l
         l = len(fftbuf)
+        f_incr = self.fft_input_rate / l
         hit = -1
 
         # -nyquist to DC
@@ -851,15 +867,21 @@ class app_flow_graph(stdgui.gui_flow_graph):
         if (len(hits) <= 0):
             return
 
+
         #
         # OK, so we have some hits in the FFT buffer
         #   They'll have a rather substantial gauntlet to run before
         #   being declared a real "hit"
         #
 
-        # Weed out buffers with an excessive number of strong signals
+        # Update stats
+        self.s1hitcounter = self.s1hitcounter + len(hits)
+
+        # Weed out buffers with an excessive number of
+        #   signals above Sigma
         if (len(hits) > self.nhits):
             return
+
 
         # Weed out FFT buffers with apparent multiple narrowband signals
         #   separated significantly in frequency.  This means that a
@@ -867,29 +889,46 @@ class app_flow_graph(stdgui.gui_flow_graph):
         #   has multiple, apparently-separate, signals isn't OK.
         #
         last = hits[0]
+        ns2 = 1
         for i in range(1,len(hits)):
-            if ((hits[i] - last) > (f_incr*2.0)):
+            if ((hits[i] - last) > (f_incr*3.0)):
                 return
             last = hits[i]
+            ns2 = ns2 + 1
+
+        self.s2hitcounter = self.s2hitcounter + ns2
 
         #
-        # Run through all three hit buffers, computing difference between
+        # Run through all available hit buffers, computing difference between
         #   frequencies found there, if they're all within the chirp limits
         #   declare a good hit
         #
-        good_hit = 0
         good_hit = False
+        f_ds = Numeric.zeros(self.nhitlines, Numeric.Float64)
+        avg_delta = 0
+        k = 0
         for i in range(0,min(len(hits),len(self.hits_array[:,0]))):
-            f_d1 = abs(self.hits_array[i,0] - hits[i])
-            f_d2 = abs(self.hits_array[i,1] - self.hits_array[i,0])
-            f_d3 = abs(self.hits_array[i,2] - self.hits_array[i,1])
-            if (self.seti_isahit ([f_d1, f_d2, f_d3])):
+            f_ds[0] = abs(self.hits_array[i,0] - hits[i])
+            for j in range(1,len(f_ds)):
+               f_ds[j] = abs(self.hits_array[i,j] - self.hits_array[i,0])
+               avg_delta = avg_delta + f_ds[j]
+               k = k + 1
+
+            if (self.seti_isahit (f_ds)):
                 good_hit = True
                 self.hitcounter = self.hitcounter + 1
                 break
 
+        if (avg_delta/k < (self.seti_fft_bandwidth/2)):
+            self.avgdelta = avg_delta / k
 
         # Save 'n shuffle hits
+        #  Old hit buffers percolate through the hit buffers
+        #  (there are self.nhitlines of these buffers)
+        #  and then drop off the end
+        #  A consequence is that while the nhitlines buffers are filling,
+        #  you can get some absurd values for self.avgdelta, because some
+        #  of the buffers are full of zeros
         for i in range(self.nhitlines,1):
             self.hits_array[:,i] = self.hits_array[:,i-1]
             self.hit_intensities[:,i] = self.hit_intensities[:,i-1]
@@ -944,6 +983,8 @@ class app_flow_graph(stdgui.gui_flow_graph):
         return
 
     def xydfunc(self,xyv):
+        if self.setimode == True:
+            return
         magn = int(Numeric.log10(self.observing))
         if (magn == 6 or magn == 7 or magn == 8):
             magn = 6
@@ -1002,12 +1043,14 @@ class app_flow_graph(stdgui.gui_flow_graph):
     def set_pd_offset(self,offs):
          self.myform['offset'].set_value(offs)
          self.calib_offset=offs
-         self.cal_offs.set_k(offs*4000)
+         x = self.calib_coeff / 100.0
+         self.cal_offs.set_k(offs*(x*8000))
 
     def set_pd_gain(self,gain):
          self.myform['dcgain'].set_value(gain)
          self.cal_mult.set_k(gain*0.01)
          self.calib_coeff = gain
+         self.cal_offs.set_k(self.calib_offset*(self.calib_coeff*8000))
 
     def compute_notch_taps(self,notchlist):
          NOTCH_TAPS = 256
