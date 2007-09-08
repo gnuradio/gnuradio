@@ -57,6 +57,8 @@ class app_flow_graph(stdgui.gui_flow_graph):
 			  metavar="NUM")
         parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
                           help="select USRP Rx side A or B (default=first one with a daughterboard)")
+        parser.add_option("-A", "--antenna", default=None,
+                          help="select Rx Antenna (only on RFX-series boards)")
         parser.add_option("-d", "--decim", type="int", default=16,
                           help="set fgpa decimation rate to DECIM [default=%default]")
         parser.add_option("-f", "--freq", type="eng_float", default=None,
@@ -121,6 +123,10 @@ class app_flow_graph(stdgui.gui_flow_graph):
             options.freq = float(r[0]+r[1])/2
 
         self.set_gain(options.gain)
+
+	if options.antenna is not None:
+            print "Selecting antenna %s" % (options.antenna,)
+            self.subdev.select_rx_antenna(options.antenna)
 
         if self.show_debug_info:
             self.myform['decim'].set_value(self.u.decim_rate())
