@@ -133,6 +133,8 @@ def main ():
                        help="set waveform frequency to FREQ [default=%default]")
     parser.add_option ("-a", "--amplitude", type="eng_float", default=16e3,
                        help="set waveform amplitude to AMPLITUDE [default=%default]", metavar="AMPL")
+    parser.add_option ("-g", "--gain", type="eng_float", default=None,
+                       help="set output gain to GAIN [default=%default]")
     parser.add_option ("-o", "--offset", type="eng_float", default=0,
                        help="set waveform offset to OFFSET [default=%default]")
     (options, args) = parser.parse_args ()
@@ -163,7 +165,10 @@ def main ():
     fg.subdev = usrp.selected_subdev(fg.u, options.tx_subdev_spec)
     print "Using TX d'board %s" % (fg.subdev.side_and_name(),)
     
-    fg.subdev.set_gain(fg.subdev.gain_range()[1])    # set max Tx gain
+    if options.gain is None:
+        fg.subdev.set_gain(fg.subdev.gain_range()[1])    # set max Tx gain
+    else:
+        fg.subdev.set_gain(options.gain)    # set max Tx gain
 
     if not fg.set_freq(options.rf_freq):
         sys.stderr.write('Failed to set RF frequency\n')
