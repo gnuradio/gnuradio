@@ -254,3 +254,10 @@ class db_base(object):
 	Should be overriden by daughterboards that care.
 	"""
 	return 0.0
+
+    def select_rx_antenna(self, which_antenna):
+	"""
+	Specify which antenna port to use for reception.
+	Should be overriden by daughterboards that care.
+	"""
+	pass
