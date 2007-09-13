@@ -372,14 +372,14 @@ set_instance_assignment -name CLOCK_SETTINGS master_clk -to master_clk
 set_instance_assignment -name PARTITION_HIERARCHY no_file_for_top_partition -to | -section_id Top
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name FITTER_AUTO_EFFORT_DESIRED_SLACK_MARGIN "100 ps"
+set_global_assignment -name VERILOG_FILE ../../megacells/fifo_4kx16_dc.v
+set_global_assignment -name VERILOG_FILE ../../megacells/fifo_1kx16.v
 set_global_assignment -name VERILOG_FILE ../../inband_lib/channel_demux.v
 set_global_assignment -name VERILOG_FILE ../../inband_lib/tx_packer.v
 set_global_assignment -name VERILOG_FILE ../../inband_lib/cmd_reader.v
-set_global_assignment -name VERILOG_FILE ../../megacells/fifo_2k_1clk.v
 set_global_assignment -name VERILOG_FILE ../../inband_lib/packet_builder.v
 set_global_assignment -name VERILOG_FILE ../../inband_lib/rx_buffer_inband.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/atr_delay.v
-set_global_assignment -name VERILOG_FILE ../../megacells/fifo_1k.v
 set_global_assignment -name VERILOG_FILE ../../inband_lib/tx_buffer_inband.v
 set_global_assignment -name VERILOG_FILE ../../inband_lib/chan_fifo_reader.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/cic_dec_shifter.v

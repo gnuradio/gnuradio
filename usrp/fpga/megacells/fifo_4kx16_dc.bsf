@@ -1,0 +1,117 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 1991-2006 Altera Corporation
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, Altera MegaCore Function License 
+Agreement, or other applicable license agreement, including, 
+without limitation, that your use is for the sole purpose of 
+programming logic devices manufactured by Altera and sold by 
+Altera or its authorized distributors.  Please refer to the 
+applicable agreement for further details.
+*/
+(header "symbol" (version "1.1"))
+(symbol
+	(rect 0 0 160 184)
+	(text "fifo_4kx16_dc" (rect 41 1 134 17)(font "Arial" (font_size 10)))
+	(text "inst" (rect 8 168 25 180)(font "Arial" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "data[15..0]" (rect 0 0 60 14)(font "Arial" (font_size 8)))
+		(text "data[15..0]" (rect 20 26 71 39)(font "Arial" (font_size 8)))
+		(line (pt 0 32)(pt 16 32)(line_width 3))
+	)
+	(port
+		(pt 0 56)
+		(input)
+		(text "wrreq" (rect 0 0 35 14)(font "Arial" (font_size 8)))
+		(text "wrreq" (rect 20 50 45 63)(font "Arial" (font_size 8)))
+		(line (pt 0 56)(pt 16 56)(line_width 1))
+	)
+	(port
+		(pt 0 72)
+		(input)
+		(text "wrclk" (rect 0 0 31 14)(font "Arial" (font_size 8)))
+		(text "wrclk" (rect 26 66 48 79)(font "Arial" (font_size 8)))
+		(line (pt 0 72)(pt 16 72)(line_width 1))
+	)
+	(port
+		(pt 0 104)
+		(input)
+		(text "rdreq" (rect 0 0 30 14)(font "Arial" (font_size 8)))
+		(text "rdreq" (rect 20 98 44 111)(font "Arial" (font_size 8)))
+		(line (pt 0 104)(pt 16 104)(line_width 1))
+	)
+	(port
+		(pt 0 120)
+		(input)
+		(text "rdclk" (rect 0 0 27 14)(font "Arial" (font_size 8)))
+		(text "rdclk" (rect 26 114 47 127)(font "Arial" (font_size 8)))
+		(line (pt 0 120)(pt 16 120)(line_width 1))
+	)
+	(port
+		(pt 0 160)
+		(input)
+		(text "aclr" (rect 0 0 21 14)(font "Arial" (font_size 8)))
+		(text "aclr" (rect 20 154 37 167)(font "Arial" (font_size 8)))
+		(line (pt 0 160)(pt 16 160)(line_width 1))
+	)
+	(port
+		(pt 160 40)
+		(output)
+		(text "wrfull" (rect 0 0 33 14)(font "Arial" (font_size 8)))
+		(text "wrfull" (rect 113 34 138 47)(font "Arial" (font_size 8)))
+		(line (pt 160 40)(pt 144 40)(line_width 1))
+	)
+	(port
+		(pt 160 72)
+		(output)
+		(text "wrusedw[11..0]" (rect 0 0 92 14)(font "Arial" (font_size 8)))
+		(text "wrusedw[11..0]" (rect 63 66 132 79)(font "Arial" (font_size 8)))
+		(line (pt 160 72)(pt 144 72)(line_width 3))
+	)
+	(port
+		(pt 160 96)
+		(output)
+		(text "q[15..0]" (rect 0 0 42 14)(font "Arial" (font_size 8)))
+		(text "q[15..0]" (rect 105 90 141 103)(font "Arial" (font_size 8)))
+		(line (pt 160 96)(pt 144 96)(line_width 3))
+	)
+	(port
+		(pt 160 120)
+		(output)
+		(text "rdempty" (rect 0 0 46 14)(font "Arial" (font_size 8)))
+		(text "rdempty" (rect 102 114 140 127)(font "Arial" (font_size 8)))
+		(line (pt 160 120)(pt 144 120)(line_width 1))
+	)
+	(port
+		(pt 160 136)
+		(output)
+		(text "rdusedw[11..0]" (rect 0 0 87 14)(font "Arial" (font_size 8)))
+		(text "rdusedw[11..0]" (rect 67 130 135 143)(font "Arial" (font_size 8)))
+		(line (pt 160 136)(pt 144 136)(line_width 3))
+	)
+	(drawing
+		(text "(ack)" (rect 51 99 72 111)(font "Arial" ))
+		(text "16 bits x 4096 words" (rect 58 156 144 168)(font "Arial" ))
+		(line (pt 16 16)(pt 144 16)(line_width 1))
+		(line (pt 144 16)(pt 144 168)(line_width 1))
+		(line (pt 144 168)(pt 16 168)(line_width 1))
+		(line (pt 16 168)(pt 16 16)(line_width 1))
+		(line (pt 16 84)(pt 144 84)(line_width 1))
+		(line (pt 16 148)(pt 144 148)(line_width 1))
+		(line (pt 16 66)(pt 22 72)(line_width 1))
+		(line (pt 22 72)(pt 16 78)(line_width 1))
+		(line (pt 16 114)(pt 22 120)(line_width 1))
+		(line (pt 22 120)(pt 16 126)(line_width 1))
+	)
+)

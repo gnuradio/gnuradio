@@ -126,7 +126,7 @@ test_usrp_inband_ping::test_usrp_inband_ping(mb_runtime *runtime, const std::str
                pmt_from_long(128));
 
   pmt_dict_set(usrp_dict,
-               pmt_intern("interp-rx"),
+               pmt_intern("decim-rx"),
                pmt_from_long(16));
   
   d_tx = define_port("tx0", "usrp-tx", false, mb_port::INTERNAL);

@@ -13,7 +13,7 @@
 --applicable agreement for further details.
 
 
-FUNCTION fifo_2kx16 
+FUNCTION fifo_1kx16 
 (
 	aclr,
 	clock,
@@ -23,8 +23,9 @@ FUNCTION fifo_2kx16
 )
 
 RETURNS (
+	almost_empty,
 	empty,
 	full,
 	q[15..0],
-	usedw[10..0]
+	usedw[9..0]
 );

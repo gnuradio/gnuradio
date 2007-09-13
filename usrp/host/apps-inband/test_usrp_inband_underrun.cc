@@ -129,7 +129,7 @@ test_usrp_inband_underrun::test_usrp_inband_underrun(mb_runtime *runtime, const 
   d_rx_chan(PMT_NIL),
   d_which_usrp(pmt_from_long(0)),
   d_state(INIT),
-  d_nsamples_to_send((long) 50e6),
+  d_nsamples_to_send((long) 20e6),
   d_nsamples_xmitted(0),
   d_nframes_xmitted(0),
   d_samples_per_frame(d_nsamples_to_send),	// full packet
@@ -145,16 +145,16 @@ test_usrp_inband_underrun::test_usrp_inband_underrun(mb_runtime *runtime, const 
   // Specify the RBF to use
   pmt_dict_set(usrp_dict,
                pmt_intern("rbf"),
-               pmt_intern("merge4.rbf"));
+               pmt_intern("nanocell9.rbf"));
 
   // Set TX and RX interpolations
   pmt_dict_set(usrp_dict,
                pmt_intern("interp-tx"),
-               pmt_from_long(16));
+               pmt_from_long(8));
 
   pmt_dict_set(usrp_dict,
-               pmt_intern("interp-rx"),
-               pmt_from_long(16));
+               pmt_intern("decim-rx"),
+               pmt_from_long(128));
   
   d_tx = define_port("tx0", "usrp-tx", false, mb_port::INTERNAL);
   d_rx = define_port("rx0", "usrp-rx", false, mb_port::INTERNAL);
@@ -265,7 +265,7 @@ test_usrp_inband_underrun::handle_message(mb_message_sptr msg)
           // If the RX has also been allocated already, we can continue
           if(!pmt_eqv(d_rx_chan, PMT_NIL)) {
             enter_receiving();
-            //enter_transmitting();
+            enter_transmitting();
           }
 
           return;
@@ -294,7 +294,7 @@ test_usrp_inband_underrun::handle_message(mb_message_sptr msg)
           // If the TX has also been allocated already, we can continue
           if(!pmt_eqv(d_tx_chan, PMT_NIL)) {
             enter_receiving();
-            //enter_transmitting();
+            enter_transmitting();
           }
 
           return;
@@ -409,6 +409,7 @@ test_usrp_inband_underrun::handle_message(mb_message_sptr msg)
             std::cout << "[TEST_USRP_INBAND_UNDERRUN] Successfully closed USRP\n";
 
           std::cout << "\nUnderruns: " << d_n_underruns << std::endl;
+          fflush(stdout);
 
           shutdown_all(PMT_T);
           return;
@@ -616,9 +617,9 @@ void
 test_usrp_inband_underrun::handle_xmit_response(pmt_t handle)
 {
   if (d_done_sending &&
-      pmt_to_long(handle) == (d_nframes_xmitted - 1)){
+    pmt_to_long(handle) == (d_nframes_xmitted - 1)){
     // We're done sending and have received all responses
-    //closing_channels();
+    closing_channels();
     return;
   }
 
@@ -637,14 +638,19 @@ test_usrp_inband_underrun::handle_recv_response(pmt_t dict)
   if(pmt_t underrun = pmt_dict_ref(dict, 
                                   pmt_intern("underrun"), 
                                   PMT_NIL)) {
-    if(pmt_eqv(underrun, PMT_T)) 
+    if(pmt_eqv(underrun, PMT_T)) {
       d_n_underruns++;
 
-    if(verbose)
-      std::cout << "[TEST_USRP_INBAND_UNDERRUN] Underrun\n";
+      if(verbose && 0)
+        std::cout << "[TEST_USRP_INBAND_UNDERRUN] Underrun\n";
+    }
+    else {
+    if(verbose && 0)
+      std::cout << "[TEST_USRP_INBAND_UNDERRUN] No underrun\n" << underrun <<std::endl;
+    }
   } else {
 
-    if(verbose)
+    if(verbose && 0)
       std::cout << "[TEST_USRP_INBAND_UNDERRUN] No underrun\n";
   }
   
@@ -663,6 +669,8 @@ void
 test_usrp_inband_underrun::closing_usrp()
 {
   d_state = CLOSING_USRP;
+
+  sleep(2);
 
   d_cs->send(s_cmd_close, pmt_list1(PMT_NIL));
 }

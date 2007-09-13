@@ -24,7 +24,7 @@
 #include <mb_mblock.h>
 #include <vector>
 #include "usrp_standard.h"
-#include "ui_nco.h"
+#include <ui_nco.h>
 #include <fstream>
 #include <queue>
 #include <usrp_inband_usb_packet.h>

@@ -106,7 +106,7 @@
 ;;   (op-ping-fixed-reply rid ping-value)
 ;;   (op-write-reg reg-number reg-value)
 ;;   (op-write-reg-masked reg-number reg-value mask-value)
-;;   (op-read-reg rid reg-number reg-value)
+;;   (op-read-reg rid reg-number)
 ;;   (op-read-reg-reply rid reg-number reg-value)
 ;;   (op-i2c-write i2c-addr u8-vec)
 ;;   (op-i2c-read rid i2c-addr nbytes)
@@ -144,7 +144,7 @@
 
   (:outgoing
 
-   (cmd-xmit-raw-frame invocation-handle channel samples timestamp)
+   (cmd-xmit-raw-frame invocation-handle channel samples timestamp properties)
 
    ;; The argument channel must be an integer.  It specifies the
    ;; channel on which the frame of samples will be be sent.

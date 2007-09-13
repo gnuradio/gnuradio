@@ -34,12 +34,12 @@
 #include <mb_msg_accepter.h>
 #include <mb_class_registry.h>
 #include <pmt.h>
-#include <ui_nco.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
 #include <iostream>
 
+#include <ui_nco.h>
 #include <symbols_usrp_server_cs.h>
 #include <symbols_usrp_channel.h>
 #include <symbols_usrp_low_level_cs.h>
@@ -143,7 +143,7 @@ test_usrp_inband_timestamps::test_usrp_inband_timestamps(mb_runtime *runtime, co
                pmt_from_long(128));
 
   pmt_dict_set(usrp_dict,
-               pmt_intern("interp-rx"),
+               pmt_intern("decim-rx"),
                pmt_from_long(16));
 
   // Specify the RBF to use

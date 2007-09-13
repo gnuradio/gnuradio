@@ -101,8 +101,8 @@ module channel_ram
 	                        
 	//packet_waiting is set to zero if rd_done_int is high
 	//because there is no guarantee that nb_packets will be pos.
-	assign packet_waiting = (nb_packets != 0) & (~rd_done_int);
-	
+	//assign packet_waiting = (nb_packets != 0) & (~rd_done_int);
+	assign packet_waiting = (nb_packets > 1) | ((nb_packets == 1)&(~rd_done_int));
 	always @(posedge txclk)
 		if (reset)
 			nb_packets <= 0;

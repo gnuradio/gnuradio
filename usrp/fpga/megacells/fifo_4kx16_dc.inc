@@ -13,18 +13,20 @@
 --applicable agreement for further details.
 
 
-FUNCTION fifo_4kx16 
+FUNCTION fifo_4kx16_dc 
 (
 	aclr,
-	clock,
 	data[15..0],
+	rdclk,
 	rdreq,
+	wrclk,
 	wrreq
 )
 
 RETURNS (
-	empty,
-	full,
 	q[15..0],
-	usedw[11..0]
+	rdempty,
+	rdusedw[11..0],
+	wrfull,
+	wrusedw[11..0]
 );

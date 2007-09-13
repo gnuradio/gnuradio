@@ -74,10 +74,10 @@ module usrp_inband_usb
    assign usbrdy[0] = have_space;
    assign usbrdy[1] = have_pkt_rdy;
 
-   wire   tx_underrun, rx_overrun;    
+   wire   rx_overrun;    
    wire   clear_status = FX2_1;
    assign FX2_2 = rx_overrun;
-   assign FX2_3 = tx_underrun;
+   assign FX2_3 = (tx_underrun == 0);
       
    wire [15:0] usbdata_out;
    
@@ -135,16 +135,20 @@ wire [31:0] reg_data_out;
 wire [31:0] reg_data_in;
 wire [1:0] reg_io_enable;
 wire [31:0] rssi_threshhold;
+wire [31:0] rssi_wait;
+
 register_io register_control
 (.clk(clk64),.reset(1'b0),.enable(reg_io_enable),.addr(reg_addr),.datain(reg_data_in),
  .dataout(reg_data_out),.rssi_0(rssi_0), .rssi_1(rssi_1), .rssi_2(rssi_2), 
- .rssi_3(rssi_3), .threshhold(rssi_threshhold));
+ .rssi_3(rssi_3), .threshhold(rssi_threshhold), .rssi_wait(rssi_wait));
+wire [1:0] tx_overrun;
+wire [1:0] tx_underrun;
 
 `ifdef TX_IN_BAND
  	tx_buffer_inband tx_buffer
      ( .usbclk(usbclk),.bus_reset(tx_bus_reset),.reset(tx_dsp_reset),
-       .usbdata(usbdata),.WR(WR),.have_space(have_space),.tx_underrun(tx_underrun),
-       .channels({tx_numchan,1'b0}),
+       .usbdata(usbdata),.WR(WR),.have_space(have_space),
+       .tx_underrun(tx_underrun),.channels({tx_numchan,1'b0}),
        .tx_i_0(ch0tx),.tx_q_0(ch1tx),
        .tx_i_1(ch2tx),.tx_q_1(ch3tx),
        .tx_i_2(),.tx_q_2(),
@@ -160,9 +164,9 @@ register_io register_control
 	   .reg_data_out(reg_data_out),
 	   .reg_data_in(reg_data_in),
 	   .reg_io_enable(reg_io_enable),
-	   .debugbus(tx_debugbus),
+	   .debugbus(),
 	   .rssi_0(rssi_0), .rssi_1(rssi_1), .rssi_2(rssi_2), 
-       .rssi_3(rssi_3), .threshhold(rssi_threshhold));
+       .rssi_3(rssi_3), .threshhold(rssi_threshhold), .rssi_wait(rssi_wait));
 `else
    tx_buffer tx_buffer
      ( .usbclk(usbclk),.bus_reset(tx_bus_reset),.reset(tx_dsp_reset),
@@ -277,8 +281,9 @@ register_io register_control
 	   .rx_databus(rx_databus),
 	   .rx_WR_done(rx_WR_done),
 	   .rx_WR_enabled(rx_WR_enabled),
-	   .debugbus(rx_debugbus),
-	   .rssi_0(rssi_0), .rssi_1(rssi_1), .rssi_2(rssi_2), .rssi_3(rssi_3));
+	   .debugbus(tx_debugbus),
+	   .rssi_0(rssi_0), .rssi_1(rssi_1), .rssi_2(rssi_2), .rssi_3(rssi_3),
+	   .tx_overrun(tx_overrun), .tx_underrun(tx_underrun));
    `else
    rx_buffer rx_buffer
      ( .usbclk(usbclk),.bus_reset(rx_bus_reset),.reset(rx_dsp_reset),
@@ -291,8 +296,7 @@ register_io register_control
        .ch_6(ch6rx),.ch_7(ch7rx),
        .rxclk(clk64),.rxstrobe(hb_strobe),
        .clear_status(clear_status),
-       .serial_addr(serial_addr),.serial_data(serial_data),.serial_strobe(serial_strobe)/*,
-       .debugbus(rx_debugbus)*/);
+       .serial_addr(serial_addr),.serial_data(serial_data),.serial_strobe(serial_strobe));
    `endif
    
  `ifdef RX_EN_0
@@ -371,7 +375,7 @@ register_io register_control
        .tx_empty(tx_empty),
        //.debug_0(rx_a_a),.debug_1(ddc0_in_i),
        .debug_0(tx_debugbus),.debug_1(tx_debugbus),
-       .debug_2({rx_sample_strobe,strobe_decim,serial_strobe,serial_addr}),.debug_3({rx_dsp_reset,tx_dsp_reset,rx_bus_reset,tx_bus_reset,enable_rx,tx_underrun,rx_overrun,decim_rate}),
+       .debug_2({rx_sample_strobe,strobe_decim,serial_strobe,serial_addr}),.debug_3({rx_dsp_reset,tx_dsp_reset,rx_bus_reset,tx_bus_reset,enable_rx,(tx_underrun == 0),rx_overrun,decim_rate}),
        .reg_0(reg_0),.reg_1(reg_1),.reg_2(reg_2),.reg_3(reg_3) );
    
    io_pins io_pins

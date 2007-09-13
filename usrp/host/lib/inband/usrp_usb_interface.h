@@ -47,7 +47,7 @@ class usrp_usb_interface : public mb_mblock
   bool d_fake_usrp;
 
   long d_interp_tx;
-  long d_interp_rx;
+  long d_decim_rx;
 
   long d_rf_freq;
 

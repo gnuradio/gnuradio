@@ -33,7 +33,8 @@ module rx_buffer_inband
 	output reg rx_WR_enabled,
 	//signal strength
 	input wire [31:0] rssi_0, input wire [31:0] rssi_1,
-	input wire [31:0] rssi_2, input wire [31:0] rssi_3
+	input wire [31:0] rssi_2, input wire [31:0] rssi_3,
+    input wire [1:0] tx_overrun, input wire [1:0] tx_underrun
     );
     
     parameter NUM_CHAN = 1;
@@ -102,7 +103,8 @@ module rx_buffer_inband
 	     .fifodata ( fifodata ),
 	     .have_space ( have_space ),
 		 .rssi_0(rssi_0), .rssi_1(rssi_1),
-		.rssi_2(rssi_2),.rssi_3(rssi_3), .debugbus(debug));
+		.rssi_2(rssi_2),.rssi_3(rssi_3), .debugbus(debug),
+    .overrun(tx_overrun), .underrun(tx_underrun));
 	 
 	 // Detect overrun
 	 always @(posedge rxclk)
@@ -135,29 +137,30 @@ module rx_buffer_inband
 
 	wire [15:0] dataout [0:NUM_CHAN];
 	wire [9:0]  usedw	[0:NUM_CHAN];
+	wire empty[0:NUM_CHAN];
 	
 	 generate for (i = 0 ; i < NUM_CHAN; i = i + 1)
      begin : generate_channel_fifos
 		wire rdreq;
 
 		assign rdreq = (rd_select == i) & chan_rdreq;
-		assign chan_empty[i] = usedw[i] < 10'd126;
-		
-        fifo_2kx16	rx_chan_fifo (
+		//assign chan_empty[i] = usedw[i] < 10'd126;
+        fifo_1kx16	rx_chan_fifo (
 	         .aclr ( reset ),
 	         .clock ( rxclk ),
 	         .data ( ch[i] ),
 	         .rdreq ( rdreq ),
 			 .wrreq ( ~rx_full[i] & rxstrobe),
-	         .empty (  ),
-	         .full ( rx_full[i] ),
+	         .empty (empty[i]),
+	         .full (rx_full[i]),
 	         .q ( dataout[i]),
-             .usedw ( usedw[i] )
+             .usedw ( usedw[i]),
+			 .almost_empty(chan_empty[i])
 		);
      end
      endgenerate
 	wire [7:0] debug;
-	 fifo_2kx16 rx_cmd_fifo (
+	 fifo_1kx16 rx_cmd_fifo (
 	         .aclr ( reset ),
 	         .clock ( rxclk ),
 	         .data ( rx_databus ),
@@ -171,5 +174,6 @@ module rx_buffer_inband
   	assign chan_empty[NUM_CHAN] = cmd_empty | rx_WR_enabled;
 	assign chan_fifodata 	= dataout[rd_select];
 	assign chan_usedw	  	= usedw[rd_select];
-    assign debugbus = {wrusedw, have_space, RD, read_count[8], rxclk};
+    assign debugbus = {rxstrobe, chan_rdreq, debug, 
+				rx_full[0], chan_empty[0], empty[0], have_space, RD, rxclk};
 endmodule

@@ -53,8 +53,8 @@ usrp_usb_interface::usrp_usb_interface(mb_runtime *rt, const std::string &instan
   : mb_mblock(rt, instance_name, user_arg),
   d_fpga_debug(false),
   d_fake_usrp(false),
-  d_interp_tx(16),
-  d_interp_rx(16),
+  d_interp_tx(128),
+  d_decim_rx(128),
   d_rf_freq(10e6),
   d_rbf("inband_tx_rx.rbf")
 {
@@ -87,11 +87,11 @@ usrp_usb_interface::usrp_usb_interface(mb_runtime *rt, const std::string &instan
     }
     
     // Read the RX interpolations
-    if(pmt_t interp_rx = pmt_dict_ref(usrp_dict, 
-                                      pmt_intern("interp-rx"), 
+    if(pmt_t decim_rx = pmt_dict_ref(usrp_dict, 
+                                      pmt_intern("decim-rx"), 
                                       PMT_NIL)) {
-      if(!pmt_eqv(interp_rx, PMT_NIL)) 
-        d_interp_rx = pmt_to_long(interp_rx);
+      if(!pmt_eqv(decim_rx, PMT_NIL)) 
+        d_decim_rx = pmt_to_long(decim_rx);
     }
 
     // Read the RBF
@@ -119,7 +119,7 @@ usrp_usb_interface::usrp_usb_interface(mb_runtime *rt, const std::string &instan
               << d_interp_tx << std::endl;
           
     std::cout << "[USRP_USB_INTERFACE] Setting RX interpolation to " 
-              << d_interp_rx << std::endl;
+              << d_decim_rx << std::endl;
 
     std::cout << "[USRP_USB_INTERFACE] Using TX interface: " 
               << tx_interface << "\n";
@@ -305,7 +305,7 @@ usrp_usb_interface::handle_cmd_open(pmt_t data)
 
   d_urx =
     usrp_standard_rx::make (which_usrp,
-			    d_interp_rx,		
+			    d_decim_rx,		
 			    1,		        // nchan
 			    -1,           // mux
 			    0,            // set blank mode to start

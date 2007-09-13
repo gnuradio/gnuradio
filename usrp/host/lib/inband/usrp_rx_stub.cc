@@ -33,7 +33,7 @@
 #include <fpga_regs_common.h>
 #include "usrp_standard.h"
 #include <stdio.h>
-#include "ui_nco.h"
+#include <ui_nco.h>
 #include <fstream>
 
 #include <symbols_usrp_rx_cs.h>

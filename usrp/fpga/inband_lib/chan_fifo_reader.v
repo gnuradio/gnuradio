@@ -1,7 +1,7 @@
 module chan_fifo_reader 
   ( reset, tx_clock, tx_strobe, adc_time, samples_format,
     fifodata, pkt_waiting, rdreq, skip, tx_q, tx_i,
-    underrun, tx_empty, debug, rssi, threshhold) ;
+    underrun, tx_empty, debug, rssi, threshhold, rssi_wait) ;
 
     input   wire                     reset ;
     input   wire                     tx_clock ;
@@ -18,6 +18,7 @@ module chan_fifo_reader
     output  reg                      tx_empty ; //cause 0 to be the output
     input 	wire			  [31:0] rssi;
     input	wire			  [31:0] threshhold;
+	input	wire			  [31:0] rssi_wait;
 
 	output wire [14:0] debug;
 	assign debug = {reader_state, trash, skip, timestamp[4:0], adc_time[4:0]};
@@ -41,18 +42,19 @@ module chan_fifo_reader
     `define PAYLOAD                  8:2
     `define ENDOFBURST               27
     `define STARTOFBURST            28
-    `define RSSI_FLAG				 15
+    `define RSSI_FLAG				 26
 	
 
     /* State registers */
     reg                        [2:0] reader_state;
-  
+	/* Local registers */  
     reg                        [6:0] payload_len;
     reg                        [6:0] read_len;
     reg                       [31:0] timestamp;
     reg                              burst;
 	reg								 trash;
 	reg								 rssi_flag;
+	reg						  [31:0] time_wait;
    
     always @(posedge tx_clock)
     begin
@@ -68,6 +70,7 @@ module chan_fifo_reader
             tx_i <= 0;
 			trash <= 0;
 			rssi_flag <= 0;
+			time_wait <= 0;
          end
        else 
 		   begin
@@ -81,13 +84,14 @@ module chan_fifo_reader
 				 * is already available to this fifo_reader when pkt_waiting is on
 				 */
                    skip <=0;
+				   time_wait <= 0;
                    if (pkt_waiting == 1)
                      begin
                         reader_state <= HEADER;
                         rdreq <= 1;
                         underrun <= 0;
                      end
-                   else if (burst == 1)
+                   if (burst == 1 && pkt_waiting == 0)
                         underrun <= 1;
                         
                    if (tx_strobe == 1)
@@ -139,9 +143,18 @@ module chan_fifo_reader
                begin
                    if (tx_strobe == 1)
                        tx_empty <= 1 ;
-                          
-                   // Let's send it
-                   if ((timestamp <= adc_time + `JITTER 
+                    
+                   time_wait <= time_wait + 32'd1;
+				   // Outdated
+                   if ((timestamp < adc_time) ||
+							(time_wait >= rssi_wait && rssi_wait != 0 && rssi_flag))
+                     begin
+						trash <= 1;
+                        reader_state <= IDLE;
+                        skip <= 1;
+                     end  
+                   // Let's send it					
+                   else if ((timestamp <= adc_time + `JITTER 
                              && timestamp > adc_time)
                              || timestamp == 32'hFFFFFFFF)
 					begin
@@ -153,16 +166,11 @@ module chan_fifo_reader
 						else
 						    reader_state <= WAIT;
 					end
+				   else
+						reader_state <= WAIT;
                    // Wait a little bit more
-                   else if (timestamp > adc_time + `JITTER)
-                       reader_state <= WAIT; 
-                   // Outdated
-                   else if (timestamp < adc_time)
-                     begin
-						trash <= 1;
-                        reader_state <= IDLE;
-                        skip <= 1;
-                     end
+                   //else if (timestamp > adc_time + `JITTER)
+                   //    reader_state <= WAIT;
                end
                  
                // Wait for the transmit chain to be ready
@@ -183,7 +191,7 @@ module chan_fifo_reader
                      end
                end
                
-				   // Send the samples to the tx_chain
+			   // Send the samples to the tx_chain
                SEND:
                begin
                    reader_state <= WAITSTROBE; 

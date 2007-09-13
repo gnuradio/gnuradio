@@ -1,18 +1,13 @@
 module tx_buffer_inband
   ( usbclk, bus_reset, reset, usbdata, WR, have_space, 
-    tx_underrun, channels, tx_i_0, tx_q_0, tx_i_1, tx_q_1,
+    channels, tx_i_0, tx_q_0, tx_i_1, tx_q_1,
     tx_i_2, tx_q_2, tx_i_3, tx_q_3, txclk, txstrobe,
     clear_status, tx_empty, debugbus, 
 	rx_databus, rx_WR, rx_WR_done, rx_WR_enabled, reg_io_enable,
 	reg_data_in, reg_data_out, reg_addr, rssi_0, rssi_1, rssi_2, 
-    rssi_3, threshhold
+    rssi_3, rssi_wait, threshhold, tx_underrun
    );
-
-	//CHAN_WIDTH is the width of the channel
-	//NUM_CHAN is the number of data channel (index from 0 to NUM_CHAN-1)
-	//index NUM_CHAN is reserved for command
 	
-	parameter CHAN_WIDTH = 		2 ;
     parameter NUM_CHAN	 =      2 ;
 	/* Debug paramters */
     parameter STROBE_RATE_0 =   8'd1 ;
@@ -37,9 +32,9 @@ module tx_buffer_inband
     input	wire		  [31:0]rssi_2;
     input	wire		  [31:0]rssi_3;
     input	wire		  [31:0]threshhold;
-
+	input	wire		  [31:0]rssi_wait;
+	
     output  wire                have_space ;
-    output  wire                tx_underrun ;
     output  wire                tx_empty ;
     output  wire         [15:0] tx_i_0 ;
     output  wire         [15:0] tx_q_0 ;
@@ -59,13 +54,14 @@ module tx_buffer_inband
     output  wire         [31:0] reg_data_in;
     output  wire         [6:0]  reg_addr;
     output  wire         [1:0]  reg_io_enable;
+	output	wire		 [NUM_CHAN-1:0] tx_underrun;
 
     /* To generate channel readers */
     genvar i ;
     
     /* These will eventually be external register */
     reg                  [31:0] adc_time ;
-    wire                  [7:0] txstrobe_rate [CHAN_WIDTH-1:0] ;
+    wire                  [7:0] txstrobe_rate [NUM_CHAN-1:0] ;
     wire				 [31:0] rssi [3:0];
     assign rssi[0] = rssi_0;
     assign rssi[1] = rssi_1;
@@ -82,33 +78,32 @@ module tx_buffer_inband
     /* Connections between tx_usb_fifo_reader and
        cnannel/command processing blocks */
     wire                 [31:0] tx_data_bus ;
-    wire           [CHAN_WIDTH:0] chan_WR ;
-    wire           [CHAN_WIDTH:0] chan_done ;
+    wire           [NUM_CHAN:0] chan_WR ;
+    wire           [NUM_CHAN:0] chan_done ;
     
     /* Connections between data block and the
        FX2/TX chains */
-    wire           [CHAN_WIDTH:0] chan_underrun ;
-    wire           [CHAN_WIDTH:0] chan_txempty ;
+    wire           [NUM_CHAN:0] chan_underrun ;
+    wire           [NUM_CHAN:0] chan_txempty ;
    
     /* Conections between tx_data_packet_fifo and
        its reader + strobe generator */
-    wire                 [31:0] chan_fifodata [CHAN_WIDTH:0] ;
-    wire                        chan_pkt_waiting [CHAN_WIDTH:0] ;
-    wire                        chan_rdreq [CHAN_WIDTH:0] ;
-    wire                        chan_skip [CHAN_WIDTH:0] ;
-    wire           [CHAN_WIDTH:0] chan_have_space ;
-    wire                        chan_txstrobe [CHAN_WIDTH-1:0] ;
+    wire                 [31:0] chan_fifodata [NUM_CHAN:0] ;
+    wire                        chan_pkt_waiting [NUM_CHAN:0] ;
+    wire                        chan_rdreq [NUM_CHAN:0] ;
+    wire                        chan_skip [NUM_CHAN:0] ;
+    wire           [NUM_CHAN:0] chan_have_space ;
+    wire                        chan_txstrobe [NUM_CHAN-1:0] ;
 
 	wire				[14:0]  debug;
     
     /* Outputs to transmit chains */
-    wire                 [15:0] tx_i [CHAN_WIDTH-1:0] ;
-    wire                 [15:0] tx_q [CHAN_WIDTH-1:0] ;
+    wire                 [15:0] tx_i [NUM_CHAN-1:0] ;
+    wire                 [15:0] tx_q [NUM_CHAN-1:0] ;
     
 	/* TODO: Figure out how to write this genericly */
     assign have_space = chan_have_space[0] & chan_have_space[1];
     assign tx_empty = chan_txempty[0] & chan_txempty[1] ;
-    assign tx_underrun = chan_underrun[0] | chan_underrun[1] ;
     assign tx_i_0 = chan_txempty[0] ? 16'b0 : tx_i[0] ;
     assign tx_q_0 = chan_txempty[0] ? 16'b0 : tx_q[0] ;
     assign tx_i_1 = chan_txempty[1] ? 16'b0 : tx_i[1] ;
@@ -153,6 +148,7 @@ module tx_buffer_inband
 	
     generate for (i = 0 ; i < NUM_CHAN; i = i + 1)
     begin : generate_channel_readers
+		assign tx_underrun[i] = chan_underrun[i];
         channel_ram tx_data_packet_fifo 
             (      .reset               (reset),
                    .txclk               (txclk), 
@@ -181,7 +177,8 @@ module tx_buffer_inband
                    .pkt_waiting         (chan_pkt_waiting[i]),
                    .tx_empty            (chan_txempty[i]),
                    .rssi				(rssi[i]),
-                   .threshhold			(threshhold)
+                   .threshhold			(threshhold),
+				   .rssi_wait			(rssi_wait)
             );	    
         
     end

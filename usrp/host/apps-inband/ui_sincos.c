@@ -26,7 +26,7 @@
 
 #define _GNU_SOURCE		// ask for GNU extensions if available
 
-#include <ui_sincos.h>
+#include "ui_sincos.h"
 #include <math.h>
 
 // ----------------------------------------------------------------

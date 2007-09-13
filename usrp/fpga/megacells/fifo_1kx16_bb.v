@@ -1,10 +1,10 @@
-// megafunction wizard: %LPM_FIFO+%
+// megafunction wizard: %FIFO%VBB%
 // GENERATION: STANDARD
 // VERSION: WM1.0
 // MODULE: scfifo 
 
 // ============================================================
-// File Name: fifo_2k_1clk.v
+// File Name: fifo_1kx16.v
 // Megafunction Name(s):
 // 			scfifo
 // ============================================================
@@ -13,7 +13,6 @@
 //
 // 5.1 Build 213 01/19/2006 SP 1 SJ Web Edition
 // ************************************************************
-
 
 //Copyright (C) 1991-2006 Altera Corporation
 //Your use of Altera Corporation's design tools, logic functions 
@@ -29,16 +28,13 @@
 //Altera or its authorized distributors.  Please refer to the 
 //applicable agreement for further details.
 
-
-// synopsys translate_off
-`timescale 1 ps / 1 ps
-// synopsys translate_on
-module fifo_2k_1clk (
+module fifo_1kx16 (
 	aclr,
 	clock,
 	data,
 	rdreq,
 	wrreq,
+	almost_empty,
 	empty,
 	full,
 	q,
@@ -49,58 +45,19 @@ module fifo_2k_1clk (
 	input	[15:0]  data;
 	input	  rdreq;
 	input	  wrreq;
+	output	  almost_empty;
 	output	  empty;
 	output	  full;
 	output	[15:0]  q;
 	output	[9:0]  usedw;
-
-	wire [9:0] sub_wire0;
-	wire  sub_wire1;
-	wire [15:0] sub_wire2;
-	wire  sub_wire3;
-	wire [9:0] usedw = sub_wire0[9:0];
-	wire  empty = sub_wire1;
-	wire [15:0] q = sub_wire2[15:0];
-	wire  full = sub_wire3;
-
-	scfifo	scfifo_component (
-				.rdreq (rdreq),
-				.aclr (aclr),
-				.clock (clock),
-				.wrreq (wrreq),
-				.data (data),
-				.usedw (sub_wire0),
-				.empty (sub_wire1),
-				.q (sub_wire2),
-				.full (sub_wire3)
-				// synopsys translate_off
-				,
-				.almost_empty (),
-				.sclr (),
-				.almost_full ()
-				// synopsys translate_on
-				);
-	defparam
-		scfifo_component.add_ram_output_register = "OFF",
-		scfifo_component.intended_device_family = "Cyclone",
-		scfifo_component.lpm_hint = "RAM_BLOCK_TYPE=M4K",
-		scfifo_component.lpm_numwords = 1024,
-		scfifo_component.lpm_showahead = "OFF",
-		scfifo_component.lpm_type = "scfifo",
-		scfifo_component.lpm_width = 16,
-		scfifo_component.lpm_widthu = 10,
-		scfifo_component.overflow_checking = "ON",
-		scfifo_component.underflow_checking = "ON",
-		scfifo_component.use_eab = "ON";
-
 
 endmodule
 
 // ============================================================
 // CNX file retrieval info
 // ============================================================
-// Retrieval info: PRIVATE: AlmostEmpty NUMERIC "0"
-// Retrieval info: PRIVATE: AlmostEmptyThr NUMERIC "-1"
+// Retrieval info: PRIVATE: AlmostEmpty NUMERIC "1"
+// Retrieval info: PRIVATE: AlmostEmptyThr NUMERIC "126"
 // Retrieval info: PRIVATE: AlmostFull NUMERIC "0"
 // Retrieval info: PRIVATE: AlmostFullThr NUMERIC "-1"
 // Retrieval info: PRIVATE: CLOCKS_ARE_SYNCHRONIZED NUMERIC "0"
@@ -128,6 +85,7 @@ endmodule
 // Retrieval info: PRIVATE: wsFull NUMERIC "1"
 // Retrieval info: PRIVATE: wsUsedW NUMERIC "0"
 // Retrieval info: CONSTANT: ADD_RAM_OUTPUT_REGISTER STRING "OFF"
+// Retrieval info: CONSTANT: ALMOST_EMPTY_VALUE NUMERIC "126"
 // Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone"
 // Retrieval info: CONSTANT: LPM_HINT STRING "RAM_BLOCK_TYPE=M4K"
 // Retrieval info: CONSTANT: LPM_NUMWORDS NUMERIC "1024"
@@ -139,6 +97,7 @@ endmodule
 // Retrieval info: CONSTANT: UNDERFLOW_CHECKING STRING "ON"
 // Retrieval info: CONSTANT: USE_EAB STRING "ON"
 // Retrieval info: USED_PORT: aclr 0 0 0 0 INPUT NODEFVAL aclr
+// Retrieval info: USED_PORT: almost_empty 0 0 0 0 OUTPUT NODEFVAL almost_empty
 // Retrieval info: USED_PORT: clock 0 0 0 0 INPUT NODEFVAL clock
 // Retrieval info: USED_PORT: data 0 0 16 0 INPUT NODEFVAL data[15..0]
 // Retrieval info: USED_PORT: empty 0 0 0 0 OUTPUT NODEFVAL empty
@@ -155,13 +114,14 @@ endmodule
 // Retrieval info: CONNECT: full 0 0 0 0 @full 0 0 0 0
 // Retrieval info: CONNECT: empty 0 0 0 0 @empty 0 0 0 0
 // Retrieval info: CONNECT: usedw 0 0 10 0 @usedw 0 0 10 0
+// Retrieval info: CONNECT: almost_empty 0 0 0 0 @almost_empty 0 0 0 0
 // Retrieval info: CONNECT: @aclr 0 0 0 0 aclr 0 0 0 0
 // Retrieval info: LIBRARY: altera_mf altera_mf.altera_mf_components.all
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_2k_1clk.v TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_2k_1clk.inc TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_2k_1clk.cmp TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_2k_1clk.bsf TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_2k_1clk_inst.v TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_2k_1clk_bb.v TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_2k_1clk_waveforms.html FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_2k_1clk_wave*.jpg FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_1kx16.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_1kx16.inc TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_1kx16.cmp TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_1kx16.bsf TRUE FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_1kx16_inst.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_1kx16_bb.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_1kx16_waveforms.html FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo_1kx16_wave*.jpg FALSE

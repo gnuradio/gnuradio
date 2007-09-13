@@ -64,8 +64,9 @@ public:
     FL_DROPPED        = 0x20000000,
     FL_START_OF_BURST = 0x10000000,
     FL_END_OF_BURST   = 0x08000000,
+    FL_CARRIER_SENSE  = 0x04000000,
 
-    FL_ALL_FLAGS      = 0xf8000000
+    FL_ALL_FLAGS      = 0xfc000000
   };
 
   static const int FL_OVERRUN_SHIFT = 31;

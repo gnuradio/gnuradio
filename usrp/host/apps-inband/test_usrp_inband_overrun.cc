@@ -66,6 +66,8 @@ class test_usrp_rx : public mb_mblock
 
   std::ofstream d_ofile;
 
+  long d_n_overruns;
+
   long d_samples_recvd;
   long d_samples_to_recv;
 
@@ -88,8 +90,9 @@ class test_usrp_rx : public mb_mblock
 
 test_usrp_rx::test_usrp_rx(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
   : mb_mblock(runtime, instance_name, user_arg),
+    d_n_overruns(0),
     d_samples_recvd(0),
-    d_samples_to_recv(5e6)
+    d_samples_to_recv(10e6)
 { 
   
   d_rx = define_port("rx0", "usrp-rx", false, mb_port::INTERNAL);
@@ -220,6 +223,7 @@ test_usrp_rx::handle_message(mb_message_sptr msg)
         status = pmt_nth(1, data);
 
         if (pmt_eq(status, PMT_T)){
+          std::cout << "\nOverruns: " << d_n_overruns << std::endl;
           fflush(stdout);
           shutdown_all(PMT_T);
           return;
@@ -260,7 +264,7 @@ test_usrp_rx::open_usrp()
   d_state = OPENING_USRP;
   
   if(verbose)
-    std::cout << "[TEST_USRP_INBAND_RX] Opening the USRP\n";
+    std::cout << "[TEST_USRP_INBAND_OVERRUN] Opening the USRP\n";
 }
 
 void
@@ -270,7 +274,7 @@ test_usrp_rx::close_usrp()
   d_state = CLOSING_USRP;
   
   if(verbose)
-    std::cout << "[TEST_USRP_INBAND_RX] Closing the USRP\n";
+    std::cout << "[TEST_USRP_INBAND_OVERRUN] Closing the USRP\n";
 }
 
 void
@@ -281,7 +285,7 @@ test_usrp_rx::allocate_channel()
   d_state = ALLOCATING_CHANNEL;
   
   if(verbose)
-    std::cout << "[TEST_USRP_INBAND_RX] Requesting RX channel allocation\n";
+    std::cout << "[TEST_USRP_INBAND_OVERRUN] Requesting RX channel allocation\n";
 }
 
 void
@@ -294,7 +298,7 @@ test_usrp_rx::enter_receiving()
                        d_rx_chan));
 
   if(verbose)
-    std::cout << "[TEST_USRP_INBAND_RX] Receiving...\n";
+    std::cout << "[TEST_USRP_INBAND_OVERRUN] Receiving...\n";
 }
 
 void
@@ -310,8 +314,27 @@ test_usrp_rx::handle_response_recv_raw_samples(pmt_t data)
 
   // Check for overrun
   if(!pmt_is_dict(properties)) {
-    std::cout << "[TEST_USRP_INBAND_RX] Recv samples dictionary is improper\n";
+    std::cout << "[TEST_USRP_INBAND_OVERRUN] Recv samples dictionary is improper\n";
     return;
+  }
+
+  if(pmt_t overrun = pmt_dict_ref(properties, 
+                                  pmt_intern("overrun"), 
+                                  PMT_NIL)) {
+    if(pmt_eqv(overrun, PMT_T)) {
+      d_n_overruns++;
+
+      if(verbose && 0)
+        std::cout << "[TEST_USRP_INBAND_OVERRUN] Underrun\n";
+    }
+    else {
+    if(verbose && 0)
+      std::cout << "[TEST_USRP_INBAND_OVERRUN] No overrun\n" << overrun <<std::endl;
+    }
+  } else {
+
+    if(verbose && 0)
+      std::cout << "[TEST_USRP_INBAND_OVERRUN] No overrun\n";
   }
 
   // Check if the number samples we have received meets the test
@@ -333,7 +356,7 @@ test_usrp_rx::enter_closing_channel()
   d_rx->send(s_cmd_deallocate_channel, pmt_list2(PMT_NIL, d_rx_chan));
   
   if(verbose)
-    std::cout << "[TEST_USRP_INBAND_RX] Deallocating RX channel\n";
+    std::cout << "[TEST_USRP_INBAND_OVERRUN] Deallocating RX channel\n";
 }
 
 REGISTER_MBLOCK_CLASS(test_usrp_rx);

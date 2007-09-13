@@ -119,7 +119,7 @@ usrp_rx::read_and_respond(pmt_t data)
       return;
     }
 
-    if(underrun)
+    if(underrun && verbose && 0)
       std::cout << "[usrp_rx] Underrun\n";
 
     d_cs->send(s_response_usrp_rx_read, 

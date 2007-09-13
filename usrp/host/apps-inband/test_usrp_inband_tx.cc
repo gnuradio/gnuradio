@@ -34,11 +34,11 @@
 #include <mb_msg_accepter.h>
 #include <mb_class_registry.h>
 #include <pmt.h>
-#include <ui_nco.h>
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
 
+#include <ui_nco.h>
 #include <symbols_usrp_server_cs.h>
 #include <symbols_usrp_channel.h>
 #include <symbols_usrp_low_level_cs.h>
@@ -121,7 +121,7 @@ test_usrp_tx::test_usrp_tx(mb_runtime *runtime, const std::string &instance_name
   // Specify the RBF to use
   pmt_dict_set(usrp_dict,
                pmt_intern("rbf"),
-               pmt_intern("boe3.rbf"));
+               pmt_intern("cs1.rbf"));
 
   // Set TX and RX interpolations
   pmt_dict_set(usrp_dict,
@@ -129,7 +129,7 @@ test_usrp_tx::test_usrp_tx(mb_runtime *runtime, const std::string &instance_name
                pmt_from_long(128));
 
   pmt_dict_set(usrp_dict,
-               pmt_intern("interp-rx"),
+               pmt_intern("decim-rx"),
                pmt_from_long(16));
   
   pmt_dict_set(usrp_dict,
@@ -298,13 +298,13 @@ test_usrp_tx::enter_transmitting()
   d_nsamples_xmitted = 0;
   
   // FIXME: carrier sense hack
-//  d_tx->send(s_cmd_to_control_channel,    // C/S packet
-//             pmt_list2(PMT_NIL,           // invoc handle
-//                       pmt_list1(
-//                            pmt_list2(s_op_write_reg, 
-//                                      pmt_list2(
-//                                      pmt_from_long(1), 
-//                                      pmt_from_long(0))))));
+  d_tx->send(s_cmd_to_control_channel,    // C/S packet
+             pmt_list2(PMT_NIL,           // invoc handle
+                       pmt_list1(
+                            pmt_list2(s_op_write_reg, 
+                                      pmt_list2(
+                                      pmt_from_long(1), 
+                                      pmt_from_long(21))))));
 
   build_and_send_next_frame();	// fire off 4 to start pipeline
   build_and_send_next_frame();
@@ -357,12 +357,18 @@ test_usrp_tx::build_and_send_next_frame()
     }
   }
 
+  pmt_t tx_properties = pmt_make_dict();
+  pmt_dict_set(tx_properties,
+               pmt_intern("carrier-sense"),
+               PMT_T);
+
   pmt_t timestamp = pmt_from_long(0xffffffff);	// NOW
   d_tx->send(s_cmd_xmit_raw_frame,
-	     pmt_list4(pmt_from_long(d_nframes_xmitted),  // invocation-handle
+	     pmt_list5(pmt_from_long(d_nframes_xmitted),  // invocation-handle
 		       d_tx_chan,			  // channel
 		       uvec,				  // the samples
-		       timestamp));
+		       timestamp,
+           tx_properties));
 
   d_nsamples_xmitted += nsamples_this_frame;
   d_nframes_xmitted++;

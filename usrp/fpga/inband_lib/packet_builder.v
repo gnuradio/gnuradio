@@ -15,7 +15,8 @@ module packet_builder #(parameter NUM_CHAN = 1)(
     output reg [15:0]fifodata,
     input have_space, 
 	input wire [31:0]rssi_0, input wire [31:0]rssi_1, input wire [31:0]rssi_2,
-	input wire [31:0]rssi_3, output wire [7:0] debugbus);
+	input wire [31:0]rssi_3, output wire [7:0] debugbus,
+	input [NUM_CHAN:0] overrun, input [NUM_CHAN:0] underrun);
     
     
     // States
@@ -45,12 +46,14 @@ module packet_builder #(parameter NUM_CHAN = 1)(
     reg [3:0] check_next;
 	wire [8:0] chan_used;
     wire [31:0] true_rssi;
+	wire [4:0] true_channel;
 
-	assign debugbus = {state, chan_empty[0], chan_empty[1], check_next[0],
+	assign debugbus = {state, chan_empty[0], underrun[0], check_next[0],
 						have_space, rd_select[0]};
 	assign chan_used = chan_usedw[8:0];
 	assign true_rssi = (rd_select[1]) ? ((rd_select[0]) ? rssi_3:rssi_2) :
-							((rd_select[0]) ? rssi_1:rssi_0);	
+							((rd_select[0]) ? rssi_1:rssi_0);
+	assign true_channel = (check_next == 4'd0 ? 5'h1f : {1'd0, check_next - 4'd1});	
     always @(posedge rxclk)
     begin
         if (reset)
@@ -64,6 +67,7 @@ module packet_builder #(parameter NUM_CHAN = 1)(
           end
         else case (state)
             `IDLE: begin
+				chan_rdreq <= #1 0;
 				if (have_space)
 				  begin
 					if(~chan_empty[check_next])
@@ -89,13 +93,12 @@ module packet_builder #(parameter NUM_CHAN = 1)(
             end
             
             `HEADER2: begin
-                fifodata[`CHAN] <= #1 (check_next == 4'd0 ? 5'h1f : {1'd0, check_next - 4'd1});
+                fifodata[`CHAN] <= #1 true_channel;
                 fifodata[`RSSI] <= #1 true_rssi[5:0];
                 fifodata[`BURST] <= #1 0;
                 fifodata[`DROPPED] <= #1 0;
-                fifodata[`UNDERRUN] <= #1 0;
-                fifodata[`OVERRUN] <= #1 0;
-                
+                fifodata[`UNDERRUN] <= #1 (check_next == 0) ? 1'b0 : underrun[true_channel];
+                fifodata[`OVERRUN] <= #1 (check_next == 0) ? 1'b0 : overrun[true_channel];
                 state <= #1 `TIMESTAMP;
             end
             
@@ -117,6 +120,7 @@ module packet_builder #(parameter NUM_CHAN = 1)(
                   begin
                     WR <= #1 0;
                     state <= #1 `IDLE;
+					chan_rdreq <= #1 0;
                   end
                 else if (read_length == payload_len - 4)
                     chan_rdreq <= #1 0;

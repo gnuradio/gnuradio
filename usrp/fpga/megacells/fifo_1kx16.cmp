@@ -13,7 +13,7 @@
 --applicable agreement for further details.
 
 
-component fifo_2kx16
+component fifo_1kx16
 	PORT
 	(
 		aclr		: IN STD_LOGIC ;
@@ -21,9 +21,10 @@ component fifo_2kx16
 		data		: IN STD_LOGIC_VECTOR (15 DOWNTO 0);
 		rdreq		: IN STD_LOGIC ;
 		wrreq		: IN STD_LOGIC ;
+		almost_empty		: OUT STD_LOGIC ;
 		empty		: OUT STD_LOGIC ;
 		full		: OUT STD_LOGIC ;
 		q		: OUT STD_LOGIC_VECTOR (15 DOWNTO 0);
-		usedw		: OUT STD_LOGIC_VECTOR (10 DOWNTO 0)
+		usedw		: OUT STD_LOGIC_VECTOR (9 DOWNTO 0)
 	);
 end component;

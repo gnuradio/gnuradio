@@ -53,6 +53,8 @@ usrp_server::usrp_server(mb_runtime *rt, const std::string &instance_name, pmt_t
   : mb_mblock(rt, instance_name, user_arg),
   d_fake_rx(false)
 {
+  if(verbose)
+    std::cout << "[USRP_SERVER] Initializing...\n";
 
   // Dictionary for arguments to all of the components
   pmt_t usrp_dict = user_arg;
@@ -596,11 +598,26 @@ void usrp_server::handle_cmd_xmit_raw_frame(mb_port_sptr port, std::vector<struc
   long channel = pmt_to_long(pmt_nth(1, data));
   const void *samples = pmt_uniform_vector_elements(pmt_nth(2, data), n_bytes);
   long timestamp = pmt_to_long(pmt_nth(3, data));
+  pmt_t properties = pmt_nth(4, data);
   
   // Ensure the channel is valid and the caller owns the port
   if(!check_valid(port, channel, chan_info,
                   pmt_list2(s_response_xmit_raw_frame, invocation_handle)))
     return;
+
+  // Read information from the properties of the packet
+  bool carrier_sense = false;
+  if(pmt_is_dict(properties)) {
+
+    // Check if carrier sense is enabled for the frame
+    if(pmt_t p_carrier_sense = pmt_dict_ref(properties, 
+                                            pmt_intern("carrier-sense"), 
+                                            PMT_NIL)) {
+      if(pmt_eqv(p_carrier_sense, PMT_T)) 
+        carrier_sense = true;
+    }
+  }
+
   
   // Determine the number of packets to allocate contiguous memory for
   // bursting over the USB and get a pointer to the memory to be used in
@@ -619,8 +636,16 @@ void usrp_server::handle_cmd_xmit_raw_frame(mb_port_sptr port, std::vector<struc
       std::min((long)(n_bytes-(n*max_payload_len)), (long)max_payload_len);
   
     if(n == 0) { // first packet gets start of burst flag and timestamp
-      pkts[n].set_header(pkts[n].FL_START_OF_BURST, channel, 0, payload_len);
+      
+      if(carrier_sense)
+        pkts[n].set_header(pkts[n].FL_START_OF_BURST 
+                           | pkts[n].FL_CARRIER_SENSE, 
+                           channel, 0, payload_len);
+      else
+        pkts[n].set_header(pkts[n].FL_START_OF_BURST, channel, 0, payload_len);
+
       pkts[n].set_timestamp(timestamp);
+    
     } else {
       pkts[n].set_header(0, channel, 0, payload_len);
       pkts[n].set_timestamp(0xffffffff);
@@ -635,7 +660,7 @@ void usrp_server::handle_cmd_xmit_raw_frame(mb_port_sptr port, std::vector<struc
 
   pkts[n_packets-1].set_end_of_burst(); // set the last packet's end of burst
 
-  if (verbose)
+  if (verbose && 0)
     std::cout << "[USRP_SERVER] Received raw frame invocation: " 
               << invocation_handle << std::endl;
     
