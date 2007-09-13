@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -51,6 +51,33 @@ gr_enable_realtime_scheduling()
       return RT_NO_PRIVS;
     else {
       perror ("sched_setscheduler: failed to set real time priority");
+      return RT_OTHER_ERROR;
+    }
+  }
+  //printf("SCHED_FIFO enabled with priority = %d\n", pri);
+  return RT_OK;
+}
+
+#elif defined(HAVE_PTHREAD_SETSCHEDPARAM)
+
+#include <pthread.h>
+
+gr_rt_status_t
+gr_enable_realtime_scheduling()
+{
+  int policy = SCHED_FIFO;
+  int pri = (sched_get_priority_max (policy) +
+	     sched_get_priority_min (policy)) / 2;
+  pthread_t this_thread = pthread_self ();  // this process
+  struct sched_param param;
+  memset (&param, 0, sizeof (param));
+  param.sched_priority = pri;
+  int result = pthread_setschedparam (this_thread, policy, &param);
+  if (result != 0) {
+    if (errno == EPERM)
+      return RT_NO_PRIVS;
+    else {
+      perror ("pthread_setschedparam: failed to set real time priority");
       return RT_OTHER_ERROR;
     }
   }

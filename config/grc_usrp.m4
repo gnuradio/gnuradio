@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -54,7 +54,7 @@ AC_DEFUN([GRC_USRP],[
     # These checks don't fail
     AC_C_BIGENDIAN
     AC_CHECK_HEADERS([byteswap.h linux/compiler.h])
-    AC_CHECK_FUNCS([getrusage sched_setscheduler])
+    AC_CHECK_FUNCS([getrusage sched_setscheduler pthread_setschedparam])
     AC_CHECK_FUNCS([sigaction snprintf])
 
     passed=yes
