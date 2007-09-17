@@ -25,11 +25,18 @@ from gnuradio.radar_mono import radar
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
-import sys
+import sys, time
 
 n2s = eng_notation.num_to_str
+logfile = None
 
+def process_echo(echo):
+    global logfile
+    #sys.stdout.write('.')
+    logfile.write(echo)
+        
 def main():
+    global logfile
     parser = OptionParser(option_class=eng_option)
     parser.add_option("-T", "--tx-subdev-spec", type="subdev", default=None,
 		      help="use transmitter board side A or B (default is first found)")
@@ -55,59 +62,37 @@ def main():
                       help="enable verbose output, default is disabled")
     parser.add_option("-D", "--debug", action="store_true", default=False,
                       help="enable debugging output, default is disabled")
+    parser.add_option("-F", "--filename", default=None,
+                      help="log received echos to file")
 
-    # NOT IMPLEMENTED
-    #parser.add_option("-l", "--loopback", action="store_true", default=False,
-    #                  help="enable digital loopback, default is disabled")
-    #parser.add_option("-F", "--filename", default=None,
-    #                  help="log received echos to file")
-		      
     (options, args) = parser.parse_args()
 
     if len(args) != 0:
         parser.print_help()
         sys.exit(1)
 
-    """
     if options.filename == None:
         print "Must supply filename for logging received data."
         sys.exit(1)
     else:
         if options.verbose:
             print "Logging echo records to file: ", options.filename
-    """
+
+    logfile = open(options.filename, 'wb')
         
-    msgq = gr.msg_queue()
-    s = radar(msgq=msgq, tx_subdev_spec=options.tx_subdev_spec,
-              rx_subdev_spec=options.rx_subdev_spec,gain=options.gain,
-	      verbose=options.verbose, debug=options.debug)
+    r = radar(options, process_echo)
 
-    s.set_ton(options.ton)
-    s.set_tsw(options.tsw)
-    s.set_tlook(options.tlook)
-    s.set_prf(options.prf)
-    s.set_amplitude(options.amplitude)
-    s.set_freq(options.frequency, options.chirp_width)
+    r.set_ton(options.ton)
+    r.set_tsw(options.tsw)
+    r.set_tlook(options.tlook)
+    r.set_prf(options.prf)
+    r.set_amplitude(options.amplitude)
+    r.set_freq(options.frequency, options.chirp_width)
 
-    s.start()
-
-    #f = open(options.filename, "wb")
-    print "Enter CTRL-C to stop."
-    try:
-	while 1:
-	    if not msgq.empty_p():
-                msg = msgq.delete_head()
-                if msg.type() == 1:
-                    break
-                echo = msg.to_string()
-                if options.debug:
-                    print "Received echo vector of length", len(echo)
-		#f.write(rec)
-		
-    except KeyboardInterrupt:
-        pass
-
-    s.stop()
-        
+    r.start()
+    raw_input("Press ENTER to stop.")
+    r.stop()
+    logfile.close()
+            
 if __name__ == "__main__":
     main()

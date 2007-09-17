@@ -27,6 +27,7 @@ AC_DEFUN([GRC_GR_RADAR_MONO],[
 	 gr-radar-mono/src/fpga/Makefile \
 	 gr-radar-mono/src/fpga/top/Makefile \
          gr-radar-mono/src/fpga/lib/Makefile \
+         gr-radar-mono/src/fpga/models/Makefile \
 	 gr-radar-mono/src/fpga/tb/Makefile \
 	 gr-radar-mono/src/lib/Makefile \
 	 gr-radar-mono/src/python/Makefile \

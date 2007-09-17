@@ -21,10 +21,9 @@
 
 `include "../lib/radar_config.vh"
 
-module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,
-		     reset_o,tx_side_o,dbg_o,
-		     tx_strobe_o,tx_ctrl_o,rx_ctrl_o,
-		     ampl_o,fstart_o,fincr_o);
+module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,reset_o,
+		     tx_side_o,dbg_o,tx_strobe_o,tx_ctrl_o,rx_ctrl_o,
+		     ampl_o,fstart_o,fincr_o,pulse_num_o);
 
    // System interface
    input         clk_i;		// Master clock @ 64 MHz
@@ -42,7 +41,8 @@ module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,
    output [15:0] ampl_o;
    output [31:0] fstart_o;
    output [31:0] fincr_o;
-   
+   output [15:0] pulse_num_o;
+
    // Internal configuration
    wire 	 lp_ena;
    wire 	 md_ena;
@@ -94,12 +94,14 @@ module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,
 
    reg [3:0]  state;
    reg [31:0] count;
-
+   reg [15:0] pulse_num_o;
+   
    always @(posedge clk_i)
      if (reset_o)
        begin
 	  state <= `ST_ON;
 	  count <= 32'b0;
+	  pulse_num_o <= 16'b0;
        end
      else
        case (state)
@@ -108,6 +110,7 @@ module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,
 	     begin
 	        state <= `ST_SW;
 	        count <= 32'b0;
+		pulse_num_o <= pulse_num_o + 16'b1;
 	     end
 	   else
 	     count <= count + 32'b1;

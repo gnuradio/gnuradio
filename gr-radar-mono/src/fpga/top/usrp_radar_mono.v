@@ -86,7 +86,7 @@ module usrp_radar_mono
 
    // TX
    wire        tx_sample_strobe;
-   wire        tx_empty;
+   wire        auto_tr;
    
    wire        serial_strobe;
    wire [6:0]  serial_addr;
@@ -145,7 +145,7 @@ module usrp_radar_mono
    radar radar_mono ( .clk_i(clk64),.saddr_i(serial_addr),.sdata_i(serial_data),.s_strobe_i(serial_strobe),
 	     .tx_side_o(tx_side),.tx_strobe_o(tx_sample_strobe),.tx_dac_i_o(tx_i),.tx_dac_q_o(tx_q),
 	     .rx_adc_i_i(rx_adc0_i),.rx_adc_q_i(rx_adc0_q),
-	     .rx_strobe_o(rx_strobe),.rx_ech_i_o(rx_buf_i),.rx_ech_q_o(rx_buf_q)
+	     .rx_strobe_o(rx_strobe),.rx_ech_i_o(rx_buf_i),.rx_ech_q_o(rx_buf_q),.auto_tr_o(auto_tr)
 	   );
    
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -155,7 +155,7 @@ module usrp_radar_mono
    assign capabilities[7]   = 0;  // `TX_CAP_HB;
    assign capabilities[6:4] = 1;  // `TX_CAP_NCHAN;
    assign capabilities[3]   = 0;  // `RX_CAP_HB;
-   assign capabilities[2:0] = 1;  // `RX_CAP_NCHAN;
+   assign capabilities[2:0] = 2;  // `RX_CAP_NCHAN;
 
    serial_io serial_io
      ( .master_clk(clk64),.serial_clock(SCLK),.serial_data_in(SDI),
@@ -175,7 +175,7 @@ module usrp_radar_mono
        .interp_rate(),.decim_rate(),
        .tx_sample_strobe(),.strobe_interp(),
        .rx_sample_strobe(),.strobe_decim(),
-       .tx_empty(tx_empty),
+       .tx_empty(auto_tr),
        .debug_0(),.debug_1(),
        .debug_2(),.debug_3(),
        .reg_0(reg_0),.reg_1(reg_1),.reg_2(reg_2),.reg_3(reg_3) );

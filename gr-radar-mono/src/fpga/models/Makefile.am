@@ -21,14 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = 			\
-		radar.v		\
-		radar_config.vh \
-		radar_control.v \
-		radar_tx.v	\
-		radar_rx.v	\
-		dac_interface.v	\
-		fifo32_4k.v	\
-		cordic_nco.v
+EXTRA_DIST = \
+	fifo_1clk.v
 
-MOSTLYCLEANFILES = *~ *.bak
+MOSTLYCLEANFILES = *~

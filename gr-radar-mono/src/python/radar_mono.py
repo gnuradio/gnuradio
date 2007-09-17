@@ -22,6 +22,7 @@
 
 from gnuradio import gr, usrp
 from gnuradio import eng_notation
+from gr import gr_threading as _threading
 
 n2s = eng_notation.num_to_str
 
@@ -63,11 +64,11 @@ FR_RADAR_FINCR  = usrp.FR_USER_7  	# 32-bit FTW increment per transmit clock
 # Transmitter object.  Uses usrp_sink, but only for a handle to the
 # FPGA registers.
 #-----------------------------------------------------------------------
-class radar_tx:
-    def __init__(self, subdev_spec=None, verbose=False, debug=False):
-        self._subdev_spec = subdev_spec
-	self._verbose = verbose
-	self._debug = debug
+class radar_tx(object):
+    def __init__(self, options):
+        self._subdev_spec = options.tx_subdev_spec
+	self._verbose = options.verbose
+	self._debug = options.debug
         self._u = usrp.sink_s(fpga_filename='usrp_radar_mono.rbf')
 
         if self._subdev_spec == None:
@@ -148,47 +149,26 @@ class radar_tx:
 #-----------------------------------------------------------------------
 # Receiver object.  Uses usrp_source_c to receive echo records.
 #-----------------------------------------------------------------------
-class radar_rx:
-    def __init__(self, gain=None, subdev_spec=None, msgq=None, length=None,
-                 verbose=False, debug=False):
-        self._gain = gain
-        self._subdev_spec = subdev_spec
-        self._msgq = msgq
-        self._length = length
-	self._verbose = verbose
-        self._debug = debug
+class radar_rx(gr.top_block):
+    def __init__(self, options, callback):
+	gr.top_block.__init__(self, "radar_rx")
+
+        self._subdev_spec = options.rx_subdev_spec
+        self._gain = options.gain
+	self._verbose = options.verbose
+        self._debug = options.debug
+        self._callback = callback
 	self._length_set = False
-			
-        self._fg = gr.flow_graph()
-        self._u = usrp.source_c(fpga_filename='usrp_radar_mono.rbf')
-        if self._subdev_spec == None:
-            self._subdev_spec = usrp.pick_rx_subdevice(self._u)
-        self._u.set_mux(usrp.determine_rx_mux_value(self._u, self._subdev_spec))
-
-	if self._debug:
-	    self._usrp_sink = gr.file_sink(gr.sizeof_gr_complex, "usrp.dat")
-    	    self._fg.connect(self._u, self._usrp_sink)
-	
-        self._subdev = usrp.selected_subdev(self._u, self._subdev_spec)
-        self.set_gain(gain)
-
-        if self._verbose:
-            print "Using", self._subdev.name(), "for radar receiver."
-            print "Setting receiver gain to", self._gain
-        
+	self._connected = False
+        self._msgq = gr.msg_queue()
+        self._watcher = _queue_watcher_thread(self._msgq, self._callback)
+	        
     def set_echo_length(self, length):
         # Only call once
 	if self._length_set is True:
 	    raise RuntimeError("Can only set echo length once.")
 	self._length = length
-        self._vblen = gr.sizeof_gr_complex*self._length
-	self._s2v = gr.stream_to_vector(gr.sizeof_gr_complex, self._length)
-        self._sink = gr.message_sink(self._vblen, self._msgq, True)
-        self._fg.connect(self._u, self._s2v, self._sink)
 	self._length_set = True
-        if self._verbose:
-            print "Receiving echo vectors of length", self._length, \
-                  "(samples)", self._vblen, "(bytes)"
 
     def tune(self, frequency):
         if self._verbose:
@@ -205,35 +185,61 @@ class radar_rx:
             self._gain = float(g[0]+g[1])/2
         self._subdev.set_gain(self._gain)
 
-    def start(self):
+    def begin(self):
+	if not self._connected:
+	    self._setup_connections()
+	    
         if self._verbose:
-            print "Starting receiver flow graph."
-        self._fg.start()
+            print "Starting receiver..."
+        self.start()
 
-    def wait(self):
+    def end(self):
         if self._verbose:
-            print "Waiting for threads..."
-        self._fg.wait()
+            print "Stopping receiver..."
+        self.stop()
+	self.wait()
+        if self._verbose:
+            print "Receiver stopped."
 
-    def stop(self):
-        if self._verbose:
-            print "Stopping receiver flow graph."
-        self._fg.stop()
-        self.wait()
-        if self._verbose:
-            print "Receiver flow graph stopped."
+    def _setup_usrp(self):
+        self._u = usrp.source_c(fpga_filename='usrp_radar_mono.rbf')
+        if self._subdev_spec == None:
+            self._subdev_spec = usrp.pick_rx_subdevice(self._u)
+        self._u.set_mux(usrp.determine_rx_mux_value(self._u, self._subdev_spec))
+        self._subdev = usrp.selected_subdev(self._u, self._subdev_spec)
 
-class radar:
-    def __init__(self, msgq=None, tx_subdev_spec=None, rx_subdev_spec=None,
-                 gain=None, verbose=False, debug=False):
-        self._msgq = msgq
-        self._verbose = verbose
-        self._debug = debug
+        if self._verbose:
+            print "Using", self._subdev.side_and_name(), "for radar receiver."
+            print "Setting receiver gain to", self._gain
+        self.set_gain(self._gain)
+	self._subdev.set_auto_tr(True)
+	self._subdev.set_atr_tx_delay(26) # TX CORDIC pipeline delay
+	self._subdev.set_atr_rx_delay(26)
+		
+    def _setup_connections(self):
+	if not self._length_set:
+	    raise RuntimeError("Echo length not set.")
+	self._setup_usrp()
+        self._vblen = gr.sizeof_gr_complex*self._length
+	self._s2v = gr.stream_to_vector(gr.sizeof_gr_complex, self._length)
+        self._sink = gr.message_sink(self._vblen, self._msgq, False)
+        self.connect(self._u, self._s2v, self._sink)
+
+        if self._verbose:
+            print "Generating echo vectors of length", self._length, \
+                  "(samples)", self._vblen, "(bytes)"
+
+	self._connected = True
+
+class radar(object):
+    def __init__(self, options, callback):
+	 
+        self._verbose = options.verbose
+        self._debug = options.debug
 
 	self._mode = 0
-        self._trans = radar_tx(subdev_spec=tx_subdev_spec, verbose=self._verbose, debug=self._debug)
-        self._rcvr = radar_rx(gain=gain, msgq=self._msgq, subdev_spec=rx_subdev_spec, 
-			      verbose=self._verbose, debug=self._debug)
+        self._trans = radar_tx(options)	
+        self._rcvr = radar_rx(options, callback)
 	self.set_reset(True)
 	self.set_tx_board(self._trans.subdev_spec())
         self.set_debug(self._debug)
@@ -285,10 +291,28 @@ class radar:
     def start(self):
 	self.set_reset(False)
 	self._trans.start()
-	self._rcvr.start()
+	self._rcvr.begin()
 	
     def stop(self):
+	self._rcvr.end()
 	self._trans.stop()
-	self._rcvr.stop()
 	self.set_reset(True)
+
+#-----------------------------------------------------------------------
+# Queue watcher.  Dispatches received echos to callback.
+#-----------------------------------------------------------------------
+class _queue_watcher_thread(_threading.Thread):
+    def __init__(self, msgq, callback):
+        _threading.Thread.__init__(self)
+        self.setDaemon(1)
+        self._msgq = msgq
+        self._callback = callback
+        self._keep_running = True
+        self.start()
+
+    def run(self):
+        while self._keep_running == True:
+            msg = self._msgq.delete_head()
+            if self._callback:
+                self._callback(msg.to_string())
 

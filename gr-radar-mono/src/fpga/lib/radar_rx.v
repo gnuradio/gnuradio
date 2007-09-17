@@ -22,9 +22,8 @@
 `include "../../../../usrp/firmware/include/fpga_regs_common.v"
 `include "../../../../usrp/firmware/include/fpga_regs_standard.v"
 
-module radar_rx(clk_i,rst_i,ena_i,dbg_i,
-		rx_in_i_i,rx_in_q_i,
-		rx_i_o,rx_q_o,rx_strobe_o);
+module radar_rx(clk_i,rst_i,ena_i,dbg_i,pulse_num_i,rx_in_i_i,
+		rx_in_q_i,rx_i_o,rx_q_o,rx_strobe_o);
    
    input clk_i;
    input rst_i;
@@ -33,11 +32,12 @@ module radar_rx(clk_i,rst_i,ena_i,dbg_i,
    
    input [15:0] rx_in_i_i;
    input [15:0] rx_in_q_i;
+   input [15:0] pulse_num_i;
    
    output [15:0] rx_i_o;
    output [15:0] rx_q_o;
    output reg    rx_strobe_o;
-
+   
    reg [15:0] count;
 
    always @(posedge clk_i)
@@ -46,71 +46,63 @@ module radar_rx(clk_i,rst_i,ena_i,dbg_i,
      else
        count <= count + 16'b1;
 
-   wire [31:0] fifo_data = dbg_i ? {count[15:0],16'hAA55} : {rx_in_i_i,rx_in_q_i};
+   wire [31:0] fifo_inp = dbg_i ? {count[15:0],pulse_num_i[15:0]} : {rx_in_i_i,rx_in_q_i};
 
-   // Need to buffer received samples as they come in at 32 bits per cycle
-   // but the rx_buffer.v fifo is only 16 bits wide.
-   //
-   reg         fifo_read;
+   // Buffer incoming samples every clock
    wire [31:0] fifo_out;
+   reg         fifo_ack;
    wire        fifo_empty;
-   
-   fifo32_4k fifo(.clock(clk_i),.sclr(rst_i),
-		  .data(fifo_data),.wrreq(ena_i),
-		  .q(fifo_out),.rdreq(fifo_read),
-		  .empty(fifo_empty) );
 
-   `define ST_RD_IDLE     4'b0001
-   `define ST_RD_REQ      4'b0010
-   `define ST_WR_FIFO     4'b0100
-   `define ST_RD_DELAY    4'b1000
-
-   reg [3:0] state;
-   reg [3:0] delay;
+// Use model if simulating, otherwise Altera Megacell
+`ifdef SIMULATION
+   fifo_1clk #(32, 4096) buffer(.clock(clk_i),.sclr(rst_i),
+				.data(fifo_inp),.wrreq(ena_i),
+				.rdreq(fifo_ack),.q(fifo_out),
+				.empty(fifo_empty));
+`else
+   fifo32_4k buffer(.clock(clk_i),.sclr(rst_i),
+		    .data(fifo_inp),.wrreq(ena_i),
+		    .rdreq(fifo_ack),.q(fifo_out),
+		    .empty(fifo_empty));
+`endif
    
+   // Write samples to rx_fifo every third clock
+   `define ST_FIFO_IDLE   3'b001
+   `define ST_FIFO_STROBE 3'b010
+   `define ST_FIFO_ACK    3'b100
+
+   reg [2:0]   state;
+
    always @(posedge clk_i)
-     if (rst_i | ~ena_i)
+     if (rst_i)
        begin
-	  state <= `ST_RD_IDLE;
-	  delay <= 4'd0;
+	  state <= `ST_FIFO_IDLE;
 	  rx_strobe_o <= 1'b0;
-	  fifo_read <= 1'b0;
+	  fifo_ack <= 1'b0;
        end
      else
        case (state)
-	 `ST_RD_IDLE:
-	   begin
-	      if (!fifo_empty)
-		begin
-		   fifo_read <= 1'b1;
-		   state <= `ST_RD_REQ;
-		end
-	   end
-
-	 `ST_RD_REQ:
-	   begin
-	      fifo_read <= 1'b0;
-	      rx_strobe_o <= 1'b1;
-	      state <= `ST_WR_FIFO;
-	   end
-
-	 `ST_WR_FIFO:
+	 `ST_FIFO_IDLE:
+	   if (!fifo_empty)
+	     begin
+		// Tell rx_fifo sample is ready
+		rx_strobe_o <= 1'b1;
+		state <= `ST_FIFO_STROBE;
+	     end
+	 `ST_FIFO_STROBE:
 	   begin
 	      rx_strobe_o <= 1'b0;
-	      state <= `ST_RD_DELAY;
+	      // Ack our FIFO
+	      fifo_ack <= 1'b1;
+	      state <= `ST_FIFO_ACK;
 	   end
-
-	 `ST_RD_DELAY:
-	   if (delay == 7)
-	     begin
-		delay <= 0;
-		state <= `ST_RD_IDLE;
-	     end
-	   else
-	     delay <= delay + 1'b1;
-
+	 `ST_FIFO_ACK:
+	   begin
+	      fifo_ack <= 1'b0;
+	      state <= `ST_FIFO_IDLE;
+	   end
        endcase // case(state)
-   
+
    assign rx_i_o = fifo_out[31:16];
    assign rx_q_o = fifo_out[15:0];
    

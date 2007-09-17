@@ -21,4 +21,4 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = lib top tb
+SUBDIRS = lib top tb models
