@@ -53,11 +53,10 @@ OFDM.
 from gnuradio import gr, gru, eng_notation, optfir
 from gnuradio import audio
 from gnuradio import usrp
-from gnuradio import blks
-from gnuradio.blksimpl.fm_emph import fm_deemph
+from gnuradio.blks2impl.fm_emph import fm_deemph
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
-from gnuradio.wxgui import stdgui, fftsink, form
+from gnuradio.wxgui import stdgui2, fftsink2, form
 from optparse import OptionParser
 from usrpm import usrp_dbid
 import sys
@@ -76,9 +75,9 @@ def pick_subdevice(u):
                                 usrp_dbid.BASIC_RX))
 
 
-class wfm_rx_sca_graph (stdgui.gui_flow_graph):
+class wfm_rx_sca_block (stdgui2.std_top_block):
     def __init__(self,frame,panel,vbox,argv):
-        stdgui.gui_flow_graph.__init__ (self,frame,panel,vbox,argv)
+        stdgui2.std_top_block.__init__ (self,frame,panel,vbox,argv)
 
         parser=OptionParser(option_class=eng_option)
         parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
@@ -179,7 +178,7 @@ class wfm_rx_sca_graph (stdgui.gui_flow_graph):
         self.audio_filter = gr.fir_filter_fff (audio_decimation, audio_coeffs)
 
 	# Create deemphasis block that is applied after SCA demodulation
-        self.deemph = fm_deemph (self, audio_rate, sca_tau)
+        self.deemph = fm_deemph (audio_rate, sca_tau)
 
         self.volume_control = gr.multiply_const_ff(self.vol)
 
@@ -228,27 +227,27 @@ class wfm_rx_sca_graph (stdgui.gui_flow_graph):
             return self.set_sca_freq(kv['sca_freq'])
 
         if 1:
-            self.src_fft = fftsink.fft_sink_c (self, self.panel, title="Data from USRP",
+            self.src_fft = fftsink2.fft_sink_c(self.panel, title="Data from USRP",
                                                fft_size=512, sample_rate=usrp_rate)
             self.connect (self.u, self.src_fft)
             vbox.Add (self.src_fft.win, 4, wx.EXPAND)
 
         if 1:
-            post_demod_fft = fftsink.fft_sink_f (self, self.panel, title="Post FM Demod",
-                                                fft_size=2048, sample_rate=demod_rate,
-                                                y_per_div=10, ref_level=0)
+            post_demod_fft = fftsink2.fft_sink_f(self.panel, title="Post FM Demod",
+                                                 fft_size=2048, sample_rate=demod_rate,
+                                                 y_per_div=10, ref_level=0)
             self.connect (self.fm_demod, post_demod_fft)
             vbox.Add (post_demod_fft.win, 4, wx.EXPAND)
 
         if 0:
-            post_demod_sca_fft = fftsink.fft_sink_f (self, self.panel, title="Post SCA Demod",
+            post_demod_sca_fft = fftsink2.fft_sink_f(self.panel, title="Post SCA Demod",
                                                 fft_size=1024, sample_rate=sca_demod_rate,
                                                 y_per_div=10, ref_level=0)
             self.connect (self.fm_demod_sca, post_demod_sca_fft)
             vbox.Add (post_demod_sca_fft.win, 4, wx.EXPAND)
 
         if 0:
-            post_deemph_fft = fftsink.fft_sink_f (self, self.panel, title="Post SCA Deemph",
+            post_deemph_fft = fftsink2.fft_sink_f (self.panel, title="Post SCA Deemph",
                                                   fft_size=512, sample_rate=audio_rate,
                                                   y_per_div=10, ref_level=-20)
             self.connect (self.deemph, post_deemph_fft)
@@ -395,5 +394,5 @@ class wfm_rx_sca_graph (stdgui.gui_flow_graph):
 
 
 if __name__ == '__main__':
-    app = stdgui.stdapp (wfm_rx_sca_graph, "USRP WFM SCA RX")
+    app = stdgui2.stdapp (wfm_rx_sca_block, "USRP WFM SCA RX")
     app.MainLoop ()

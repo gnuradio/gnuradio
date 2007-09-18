@@ -1,8 +1,29 @@
 #!/usr/bin/env python
+#
+# Copyright 2006,2007 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
-from gnuradio import gr, gru, usrp, optfir, audio, eng_notation, blks
+from gnuradio import gr, gru, usrp, optfir, audio, eng_notation, blks2
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
+import sys
 
 """
 This example application demonstrates receiving and demodulating 
@@ -47,12 +68,12 @@ blocks.
 
 # (usrp_decim, channel_decim, audio_decim, channel_pass, channel_stop, demod)
 demod_params = {
-		'AM'  : (250, 16, 1,  5000,   8000, blks.demod_10k0a3e_cf),
-		'FM'  : (250,  8, 4,  8000,   9000, blks.demod_20k0f3e_cf),
-		'WFM' : (250,  1, 8, 90000, 100000, blks.demod_200kf3e_cf)
+		'AM'  : (250, 16, 1,  5000,   8000, blks2.demod_10k0a3e_cf),
+		'FM'  : (250,  8, 4,  8000,   9000, blks2.demod_20k0f3e_cf),
+		'WFM' : (250,  1, 8, 90000, 100000, blks2.demod_200kf3e_cf)
 	       }
 
-class usrp_source_c(gr.hier_block):
+class usrp_src(gr.hier_block2):
     """
     Create a USRP source object supplying complex floats.
     
@@ -61,7 +82,11 @@ class usrp_source_c(gr.hier_block):
     Calibration value is the offset from the tuned frequency to 
     the actual frequency.       
     """
-    def __init__(self, fg, subdev_spec, decim, gain=None, calibration=0.0):
+    def __init__(self, subdev_spec, decim, gain=None, calibration=0.0):
+	gr.hier_block2.__init__(self, "usrp_src",
+				gr.io_signature(0, 0, 0),                    # Input signature
+				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+
 	self._decim = decim
         self._src = usrp.source_c()
         if subdev_spec is None:
@@ -77,7 +102,7 @@ class usrp_source_c(gr.hier_block):
 
         self._subdev.set_gain(gain)
         self._cal = calibration
-	gr.hier_block.__init__(self, fg, self._src, self._src)
+	self.connect(self._src, self)
 
     def tune(self, freq):
     	result = usrp.tune(self._src, 0, self._subdev, freq+self._cal)
@@ -86,20 +111,18 @@ class usrp_source_c(gr.hier_block):
     def rate(self):
 	return self._src.adc_rate()/self._decim
 
-class app_flow_graph(gr.flow_graph):
-    def __init__(self, options, args):
-	gr.flow_graph.__init__(self)
+class app_top_block(gr.top_block):
+    def __init__(self, options):
+	gr.top_block.__init__(self)
 	self.options = options
-	self.args = args
 
 	(usrp_decim, channel_decim, audio_decim, 
 	 channel_pass, channel_stop, demod) = demod_params[options.modulation]
 
-        USRP = usrp_source_c(self, 		    # Flow graph
-			    options.rx_subdev_spec, # Daugherboard spec
-	                    usrp_decim,     	    # IF decimation ratio
-			    options.gain, 	    # Receiver gain
-			    options.calibration)    # Frequency offset
+        USRP = usrp_src(options.rx_subdev_spec, # Daugherboard spec
+	                usrp_decim,     	# IF decimation ratio
+			options.gain, 	    	# Receiver gain
+			options.calibration)    # Frequency offset
 	USRP.tune(options.frequency)
 
 	if_rate = USRP.rate()
@@ -128,7 +151,7 @@ class app_flow_graph(gr.flow_graph):
 			1.0,               # Initial gain
 			1.0)		   # Maximum gain
 
-	DEMOD = demod(self, channel_rate, audio_decim)
+	DEMOD = demod(channel_rate, audio_decim)
 
 	# From RF to audio
         self.connect(USRP, CHAN, RFSQL, AGC, DEMOD)
@@ -145,7 +168,7 @@ class app_flow_graph(gr.flow_graph):
 	    out_lcm = gru.lcm(audio_rate, options.output_rate)
 	    out_interp = int(out_lcm // audio_rate)
 	    out_decim = int(out_lcm // options.output_rate)
-	    RSAMP = blks.rational_resampler_fff(self, out_interp, out_decim)
+	    RSAMP = blks2.rational_resampler_fff(out_interp, out_decim)
 	    self.connect(tail, RSAMP)
 	    tail = RSAMP 
 
@@ -155,7 +178,7 @@ class app_flow_graph(gr.flow_graph):
 	
 def main():
     parser = OptionParser(option_class=eng_option)
-    parser.add_option("-f", "--frequency", type="eng_float",
+    parser.add_option("-f", "--frequency", type="eng_float", default=None,
                       help="set receive frequency to Hz", metavar="Hz")
     parser.add_option("-R", "--rx-subdev-spec", type="subdev",
                       help="select USRP Rx side A or B", metavar="SUBDEV")
@@ -173,12 +196,16 @@ def main():
 		      help="set CTCSS squelch to FREQ", metavar="FREQ")
     (options, args) = parser.parse_args()
 
+    if options.frequency is None:
+	print "Must supply receive frequency with -f"
+	sys.exit(1)
+
     if options.frequency < 1e6:
 	options.frequency *= 1e6
 	
-    fg = app_flow_graph(options, args)
+    tb = app_top_block(options)
     try:
-        fg.run()
+        tb.run()
     except KeyboardInterrupt:
         pass
 

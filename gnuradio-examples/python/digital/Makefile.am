@@ -23,17 +23,22 @@ include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST =			\
 	README			\
+	benchmark_loopback.py   \
 	benchmark_rx.py		\
 	benchmark_tx.py		\
 	fusb_options.py		\
 	gen_whitener.py		\
 	pick_bitrate.py		\
 	receive_path.py		\
+	receive_path_lb.py	\
 	rx_voice.py		\
 	run_length.py		\
 	transmit_path.py	\
+	transmit_path_lb.py	\
 	tunnel.py		\
 	tx_voice.py		
 
 ourdatadir = $(exampledir)/digital
 ourdata_DATA = $(EXTRA_DIST)
+
+MOSTLYCLEANFILES = *.pyc *.pyo *~

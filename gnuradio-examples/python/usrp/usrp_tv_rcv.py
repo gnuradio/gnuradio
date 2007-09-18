@@ -1,4 +1,25 @@
 #!/usr/bin/env python
+#
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
+
 """
 Realtime capture and display of analog Tv stations.
 Can also use a file as source or sink
@@ -16,10 +37,9 @@ except:
   print "FYI: gr-video-sdl is not installed"
   print "realtime SDL video output window will not be available"
 from gnuradio import usrp
-from gnuradio import blks
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
-from gnuradio.wxgui import stdgui, fftsink, form
+from gnuradio.wxgui import stdgui2, fftsink2, form
 from optparse import OptionParser
 from usrpm import usrp_dbid
 import sys
@@ -45,9 +65,9 @@ def pick_subdevice(u):
                                 usrp_dbid.BASIC_RX))
 
 
-class tv_rx_graph (stdgui.gui_flow_graph):
+class tv_rx_block (stdgui2.std_top_block):
     def __init__(self,frame,panel,vbox,argv):
-        stdgui.gui_flow_graph.__init__ (self,frame,panel,vbox,argv)
+        stdgui2.std_top_block.__init__ (self,frame,panel,vbox,argv)
 
         usage="%prog: [options] [input_filename]. \n If you don't specify an input filename the usrp will be used as source\n " \
               "Make sure your input capture file containes interleaved shorts not complex floats"
@@ -391,5 +411,5 @@ class tv_rx_graph (stdgui.gui_flow_graph):
         
 
 if __name__ == '__main__':
-    app = stdgui.stdapp (tv_rx_graph, "USRP TV RX black-and-white")
+    app = stdgui2.stdapp (tv_rx_block, "USRP TV RX black-and-white")
     app.MainLoop ()

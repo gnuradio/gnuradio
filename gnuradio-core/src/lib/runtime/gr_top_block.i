@@ -46,6 +46,7 @@ public:
   void run();
   void lock();
   void unlock();
+  bool is_running();
 };
 
 %{

@@ -55,21 +55,21 @@ def run_test (usb_throughput, verbose):
     # print "tx_interp =", tx_interp, "rx_decim =", rx_decim
     assert (tx_interp == 2 * rx_decim)
     
-    fg = gr.flow_graph ()
+    tb = gr.top_block ()
 
     # Build the Tx pipeline
     data_src = gr.lfsr_32k_source_s ()
     src_head = gr.head (gr.sizeof_short, int (stream_length * 2))
     usrp_tx = usrp.sink_s (0, tx_interp)
-    fg.connect (data_src, src_head, usrp_tx)
+    tb.connect (data_src, src_head, usrp_tx)
 
     # and the Rx pipeline
     usrp_rx = usrp.source_s (0, rx_decim, 1, 0x32103210, usrp.FPGA_MODE_LOOPBACK)
     head = gr.head (gr.sizeof_short, stream_length)
     check = gr.check_lfsr_32k_s ()
-    fg.connect (usrp_rx, head, check)
+    tb.connect (usrp_rx, head, check)
 
-    fg.run ()
+    tb.run ()
 
     ntotal = check.ntotal ()
     nright = check.nright ()

@@ -20,15 +20,15 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, blks
+from gnuradio import gr, blks2
 from gnuradio import audio
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-class my_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
 
     def __init__(self):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         parser = OptionParser(option_class=eng_option)
         parser.add_option("-I", "--audio-input", type="string", default="",
@@ -42,10 +42,10 @@ class my_graph(gr.flow_graph):
 
         sample_rate = 8000
         src = audio.source(sample_rate, options.audio_input)
-        tx = blks.digital_voice_tx(self)
+        tx = blks2.digital_voice_tx(self)
         if_gain = gr.multiply_const_cc(10000)
         # channel simulator here...
-        rx = blks.digital_voice_rx(self)
+        rx = blks2.digital_voice_rx(self)
         dst = audio.sink(sample_rate, options.audio_output)
 
         self.connect(src, tx, if_gain, rx, dst)
@@ -53,6 +53,6 @@ class my_graph(gr.flow_graph):
 
 if __name__ == '__main__':
     try:
-        my_graph().run()
+        my_top_block().run()
     except KeyboardInterrupt:
         pass

@@ -86,14 +86,14 @@ def open_tun_interface(tun_device_filename):
 #                             the flow graph
 # /////////////////////////////////////////////////////////////////////////////
 
-class my_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
 
     def __init__(self, mod_class, demod_class,
                  rx_callback, options):
 
-        gr.flow_graph.__init__(self)
-        self.txpath = transmit_path(self, mod_class, options)
-        self.rxpath = receive_path(self, demod_class, rx_callback, options)
+        gr.top_block.__init__(self)
+        self.txpath = transmit_path(mod_class, options)
+        self.rxpath = receive_path(demod_class, rx_callback, options)
 
     def send_pkt(self, payload='', eof=False):
         return self.txpath.send_pkt(payload, eof)
@@ -123,10 +123,10 @@ class cs_mac(object):
     def __init__(self, tun_fd, verbose=False):
         self.tun_fd = tun_fd       # file descriptor for TUN/TAP interface
         self.verbose = verbose
-        self.fg = None             # flow graph (access to PHY)
+        self.tb = None             # top block (access to PHY)
 
-    def set_flow_graph(self, fg):
-        self.fg = fg
+    def set_top_block(self, tb):
+        self.tb = tb
 
     def phy_rx_callback(self, ok, payload):
         """
@@ -152,20 +152,20 @@ class cs_mac(object):
         while 1:
             payload = os.read(self.tun_fd, 10*1024)
             if not payload:
-                self.fg.send_pkt(eof=True)
+                self.tb.send_pkt(eof=True)
                 break
 
             if self.verbose:
                 print "Tx: len(payload) = %4d" % (len(payload),)
 
             delay = min_delay
-            while self.fg.carrier_sensed():
+            while self.tb.carrier_sensed():
                 sys.stderr.write('B')
                 time.sleep(delay)
                 if delay < 0.050:
                     delay = delay * 2       # exponential back-off
 
-            self.fg.send_pkt(payload)
+            self.tb.send_pkt(payload)
 
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -243,26 +243,26 @@ def main():
 
 
     # build the graph (PHY)
-    fg = my_graph(mods[options.modulation],
-                  demods[options.modulation],
-                  mac.phy_rx_callback,
-                  options)
+    tb = my_top_block(mods[options.modulation],
+                      demods[options.modulation],
+                      mac.phy_rx_callback,
+                      options)
 
-    mac.set_flow_graph(fg)    # give the MAC a handle for the PHY
+    mac.set_top_block(tb)    # give the MAC a handle for the PHY
 
-    if fg.txpath.bitrate() != fg.rxpath.bitrate():
+    if tb.txpath.bitrate() != tb.rxpath.bitrate():
         print "WARNING: Transmit bitrate = %sb/sec, Receive bitrate = %sb/sec" % (
-            eng_notation.num_to_str(fg.txpath.bitrate()),
-            eng_notation.num_to_str(fg.rxpath.bitrate()))
+            eng_notation.num_to_str(tb.txpath.bitrate()),
+            eng_notation.num_to_str(tb.rxpath.bitrate()))
              
     print "modulation:     %s"   % (options.modulation,)
     print "freq:           %s"      % (eng_notation.num_to_str(options.tx_freq))
-    print "bitrate:        %sb/sec" % (eng_notation.num_to_str(fg.txpath.bitrate()),)
-    print "samples/symbol: %3d" % (fg.txpath.samples_per_symbol(),)
-    #print "interp:         %3d" % (fg.txpath.interp(),)
-    #print "decim:          %3d" % (fg.rxpath.decim(),)
+    print "bitrate:        %sb/sec" % (eng_notation.num_to_str(tb.txpath.bitrate()),)
+    print "samples/symbol: %3d" % (tb.txpath.samples_per_symbol(),)
+    #print "interp:         %3d" % (tb.txpath.interp(),)
+    #print "decim:          %3d" % (tb.rxpath.decim(),)
 
-    fg.rxpath.set_carrier_threshold(options.carrier_threshold)
+    tb.rxpath.set_carrier_threshold(options.carrier_threshold)
     print "Carrier sense threshold:", options.carrier_threshold, "dB"
     
     print
@@ -275,12 +275,12 @@ def main():
     print
 
 
-    fg.start()    # Start executing the flow graph (runs in separate threads)
+    tb.start()    # Start executing the flow graph (runs in separate threads)
 
     mac.main_loop()    # don't expect this to return...
 
-    fg.stop()     # but if it does, tell flow graph to stop.
-    fg.wait()     # wait for it to finish
+    tb.stop()     # but if it does, tell flow graph to stop.
+    tb.wait()     # wait for it to finish
                 
 
 if __name__ == '__main__':

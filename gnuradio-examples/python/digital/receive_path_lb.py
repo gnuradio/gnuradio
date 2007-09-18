@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, blks
+from gnuradio import gr, gru, blks2
 from gnuradio import eng_notation
 import copy
 import sys
@@ -29,8 +29,12 @@ import sys
 #                              receive path
 # /////////////////////////////////////////////////////////////////////////////
 
-class receive_path(gr.hier_block):
-    def __init__(self, fg, demod_class, rx_callback, options):
+class receive_path(gr.hier_block2):
+    def __init__(self, demod_class, rx_callback, options):
+	gr.hier_block2.__init__(self, "receive_path",
+				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+				gr.io_signature(0, 0, 0))                    # Output signature
+
         
         options = copy.copy(options)    # make a copy so we can destructively modify
 
@@ -55,11 +59,10 @@ class receive_path(gr.hier_block):
         
         # receiver
         self.packet_receiver = \
-            blks.demod_pkts(fg,
-                            self._demod_class(fg, **demod_kwargs),
-                            access_code=None,
-                            callback=self._rx_callback,
-                            threshold=-1)
+            blks2.demod_pkts(self._demod_class(**demod_kwargs),
+                             access_code=None,
+                             callback=self._rx_callback,
+                             threshold=-1)
 
         # Carrier Sensing Blocks
         alpha = 0.001
@@ -70,13 +73,14 @@ class receive_path(gr.hier_block):
         if self._verbose:
             self._print_verbage()
 
+	# connect block input to channel filter
+	self.connect(self, self.channel_filter)
+
         # connect the channel input filter to the carrier power detector
-        fg.connect(self.channel_filter, self.probe)
+        self.connect(self.channel_filter, self.probe)
 
         # connect channel filter to the packet receiver
-        fg.connect(self.channel_filter, self.packet_receiver)
-
-        gr.hier_block.__init__(self, fg, self.channel_filter, None)
+        self.connect(self.channel_filter, self.packet_receiver)
 
     def bitrate(self):
         return self._bitrate

@@ -44,6 +44,27 @@ gr_hier_block2_detail::~gr_hier_block2_detail()
   d_owner = 0; // Don't use delete, we didn't allocate
 }
 
+void
+gr_hier_block2_detail::connect(gr_basic_block_sptr block)
+{
+  std::stringstream msg;
+
+  // Check if duplicate
+  if (std::find(d_blocks.begin(), d_blocks.end(), block) != d_blocks.end()) {
+    msg << "Block " << block << " already connected.";
+    throw std::invalid_argument(msg.str());
+  }
+
+  // Check if has inputs or outputs
+  if (block->input_signature()->max_streams() != 0 ||
+      block->output_signature()->max_streams() != 0) {
+    msg << "Block " << block << " must not have any input or output ports";
+    throw std::invalid_argument(msg.str());
+  }
+
+  d_blocks.push_back(block);
+}
+
 void 
 gr_hier_block2_detail::connect(gr_basic_block_sptr src, int src_port, 
                                gr_basic_block_sptr dst, int dst_port)
@@ -98,6 +119,21 @@ gr_hier_block2_detail::connect(gr_basic_block_sptr src, int src_port,
   d_fg->connect(src, src_port, dst, dst_port);
 
   // TODO: connects to NC
+}
+
+void
+gr_hier_block2_detail::disconnect(gr_basic_block_sptr block)
+{
+  for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
+    if (*p == block) {
+      d_blocks.erase(p);
+      return;
+    }
+  }
+
+  std::stringstream msg;
+  msg << "cannot disconnect block " << block << ", not found";
+  throw std::invalid_argument(msg.str());
 }
 
 void 
@@ -252,6 +288,15 @@ gr_hier_block2_detail::resolve_port(int port, bool is_input)
   return result;
 }
 
+void
+gr_hier_block2_detail::disconnect_all()
+{
+  d_fg->clear();
+  d_blocks.clear();
+  d_inputs.clear();
+  d_outputs.clear();
+}
+
 gr_endpoint
 gr_hier_block2_detail::resolve_endpoint(const gr_endpoint &endp, bool is_input) const
 {
@@ -294,7 +339,15 @@ gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
     sfg->connect(src_endp, dst_endp);
   }
 
-  gr_basic_block_vector_t blocks = d_fg->calc_used_blocks();
+  // Construct unique list of blocks used either in edges or
+  // by themselves.  I hate STL.
+  gr_basic_block_vector_t blocks, tmp = d_fg->calc_used_blocks();
+  std::insert_iterator<gr_basic_block_vector_t> inserter(blocks, blocks.begin());
+  std::vector<gr_basic_block_sptr>::const_iterator p; // Because flatten_aux is const
+  for (p = d_blocks.begin(); p != d_blocks.end(); p++) 
+    tmp.push_back(*p);
+  sort(tmp.begin(), tmp.end());
+  unique_copy(tmp.begin(), tmp.end(), inserter);
 
   // Recurse hierarchical children
   for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {

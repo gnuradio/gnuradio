@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -28,9 +28,9 @@ from optparse import OptionParser
 from gnuradio import gr, gru, eng_notation
 from gnuradio import usrp
 from gnuradio import audio
-from gnuradio import blks
+from gnuradio import blks2
 from gnuradio.eng_option import eng_option
-from gnuradio.wxgui import stdgui, fftsink, scopesink, slider, form
+from gnuradio.wxgui import stdgui2, fftsink2, scopesink2, slider, form
 from usrpm import usrp_dbid
 
 from numpy import convolve, array
@@ -43,9 +43,9 @@ from numpy import convolve, array
 #                           Control Stuff
 # ////////////////////////////////////////////////////////////////////////
 
-class ptt_graph(stdgui.gui_flow_graph):
+class ptt_block(stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
-        stdgui.gui_flow_graph.__init__ (self, frame, panel, vbox, argv)
+        stdgui2.std_top_block.__init__ (self, frame, panel, vbox, argv)
 
         self.frame = frame
         self.space_bar_pressed = False
@@ -73,8 +73,11 @@ class ptt_graph(stdgui.gui_flow_graph):
         if options.freq < 1e6:
             options.freq *= 1e6
             
-        self.txpath = transmit_path(self, options.tx_subdev_spec, options.audio_input)
-        self.rxpath = receive_path(self, options.rx_subdev_spec, options.rx_gain, options.audio_output)
+        self.txpath = transmit_path(options.tx_subdev_spec, options.audio_input)
+        self.rxpath = receive_path(options.rx_subdev_spec, options.rx_gain, options.audio_output)
+	self.connect(self.txpath)
+	self.connect(self.rxpath)
+
         self._build_gui(frame, panel, vbox, argv, options.no_gui)
 
         self.set_transmit(False)
@@ -142,29 +145,29 @@ class ptt_graph(stdgui.gui_flow_graph):
         panel.SetFocus()
 
         if 1 and not(no_gui):
-            rx_fft = fftsink.fft_sink_c (self, panel, title="Rx Input", fft_size=512,
+            rx_fft = fftsink2.fft_sink_c(panel, title="Rx Input", fft_size=512,
                                          sample_rate=self.rxpath.if_rate,
                                          ref_level=80, y_per_div=20)
             self.connect (self.rxpath.u, rx_fft)
             vbox.Add (rx_fft.win, 1, wx.EXPAND)
 
         if 1 and not(no_gui):
-            rx_fft = fftsink.fft_sink_c (self, panel, title="Post s/w DDC",
+            rx_fft = fftsink2.fft_sink_c(panel, title="Post s/w DDC",
                                          fft_size=512, sample_rate=self.rxpath.quad_rate,
                                          ref_level=80, y_per_div=20)
             self.connect (self.rxpath.ddc, rx_fft)
             vbox.Add (rx_fft.win, 1, wx.EXPAND)
 
         if 0 and not(no_gui):
-            foo = scopesink.scope_sink_f (self, panel, title="Squelch",
-                                               sample_rate=32000)
+            foo = scopesink2.scope_sink_f(panel, title="Squelch",
+                                    	  sample_rate=32000)
             self.connect (self.rxpath.fmrx.div, (foo,0))
             self.connect (self.rxpath.fmrx.gate, (foo,1))
             self.connect (self.rxpath.fmrx.squelch_lpf, (foo,2))
             vbox.Add (foo.win, 1, wx.EXPAND)
 
         if 0 and not(no_gui):
-            tx_fft = fftsink.fft_sink_c (self, panel, title="Tx Output",
+            tx_fft = fftsink2.fft_sink_c(panel, title="Tx Output",
                                          fft_size=512, sample_rate=self.txpath.usrp_rate)
             self.connect (self.txpath.amp, tx_fft)
             vbox.Add (tx_fft.win, 1, wx.EXPAND)
@@ -265,9 +268,12 @@ class ptt_graph(stdgui.gui_flow_graph):
 #                           Transmit Path
 # ////////////////////////////////////////////////////////////////////////
 
-class transmit_path(gr.hier_block):
-    def __init__(self, fg, subdev_spec, audio_input):
-
+class transmit_path(gr.hier_block2):
+    def __init__(self, subdev_spec, audio_input):
+	gr.hier_block2.__init__(self, "transmit_path",
+				gr.io_signature(0, 0, 0), # Input signature
+				gr.io_signature(0, 0, 0)) # Output signature
+				
         self.u = usrp.sink_c ()
 
         dac_rate = self.u.dac_rate();
@@ -298,11 +304,11 @@ class transmit_path(gr.hier_block):
         audio_taps = convolve(array(lpf),array(hpf))
         self.audio_filt = gr.fir_filter_fff(1,audio_taps)
 
-        self.pl = blks.ctcss_gen_f(fg, self.audio_rate,123.0)
+        self.pl = blks2.ctcss_gen_f(self.audio_rate,123.0)
         self.add_pl = gr.add_ff()
-        fg.connect(self.pl,(self.add_pl,1))
+        self.connect(self.pl,(self.add_pl,1))
 
-        self.fmtx = blks.nbfm_tx(fg, self.audio_rate, self.if_rate)
+        self.fmtx = blks2.nbfm_tx(self.audio_rate, self.if_rate)
         self.amp = gr.multiply_const_cc (self.normal_gain)
 
         # determine the daughterboard subdevice we're using
@@ -312,10 +318,8 @@ class transmit_path(gr.hier_block):
         self.subdev = usrp.selected_subdev(self.u, subdev_spec)
         print "TX using", self.subdev.name()
 
-        fg.connect(self.audio, self.audio_amp, self.audio_filt,
-                   (self.add_pl,0), self.fmtx, self.amp, self.u)
-        
-        gr.hier_block.__init__(self, fg, None, None)
+        self.connect(self.audio, self.audio_amp, self.audio_filt,
+                     (self.add_pl,0), self.fmtx, self.amp, self.u)
 
         self.set_gain(self.subdev.gain_range()[1])  # set max Tx gain
 
@@ -357,8 +361,11 @@ class transmit_path(gr.hier_block):
 #                           Receive Path
 # ////////////////////////////////////////////////////////////////////////
 
-class receive_path(gr.hier_block):
-    def __init__(self, fg, subdev_spec, gain, audio_output):
+class receive_path(gr.hier_block2):
+    def __init__(self, subdev_spec, gain, audio_output):
+	gr.hier_block2.__init__(self, "receive_path",
+				gr.io_signature(0, 0, 0), # Input signature
+				gr.io_signature(0, 0, 0)) # Output signature
 
         self.u = usrp.source_c ()
         adc_rate = self.u.adc_rate()
@@ -395,10 +402,10 @@ class receive_path(gr.hier_block):
                                                   self.if_rate)   # input sample rate
 
         # instantiate the guts of the single channel receiver
-        self.fmrx = blks.nbfm_rx(fg, audio_rate, self.quad_rate)
+        self.fmrx = blks2.nbfm_rx(audio_rate, self.quad_rate)
 
         # standard squelch block
-        self.squelch = blks.standard_squelch(fg, audio_rate)
+        self.squelch = blks2.standard_squelch(audio_rate)
 
         # audio gain / mute block
         self._audio_gain = gr.multiply_const_ff(1.0)
@@ -407,8 +414,7 @@ class receive_path(gr.hier_block):
         audio_sink = audio.sink (int(audio_rate), audio_output)
         
         # now wire it all together
-        fg.connect (self.u, self.ddc, self.fmrx, self.squelch, self._audio_gain, audio_sink)
-        gr.hier_block.__init__(self, fg, self.u, audio_sink)
+        self.connect (self.u, self.ddc, self.fmrx, self.squelch, self._audio_gain, audio_sink)
 
         if gain is None:
             # if no gain was specified, use the mid-point in dB
@@ -484,7 +490,7 @@ class receive_path(gr.hier_block):
 # ////////////////////////////////////////////////////////////////////////
 
 def main():
-    app = stdgui.stdapp(ptt_graph, "NBFM Push to Talk")
+    app = stdgui2.stdapp(ptt_block, "NBFM Push to Talk")
     app.MainLoop()
 
 if __name__ == '__main__':

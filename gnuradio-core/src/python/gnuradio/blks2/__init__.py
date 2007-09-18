@@ -27,11 +27,11 @@ import os.path
 # to manually update this file.
 
 for p in __path__:
-    filenames = glob.glob (os.path.join (p, "..", "blksimpl2", "*.py"))
+    filenames = glob.glob (os.path.join (p, "..", "blks2impl", "*.py"))
     for f in filenames:
         f = os.path.basename(f).lower()
         f = f[:-3]
         if f == '__init__':
             continue
         # print f
-        exec "from gnuradio.blksimpl2.%s import *" % (f,)
+        exec "from gnuradio.blks2impl.%s import *" % (f,)

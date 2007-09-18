@@ -52,6 +52,12 @@ gr_hier_block2::~gr_hier_block2()
 }
 
 void 
+gr_hier_block2::connect(gr_basic_block_sptr block)
+{
+  d_detail->connect(block);
+}
+
+void 
 gr_hier_block2::connect(gr_basic_block_sptr src, int src_port, 
                         gr_basic_block_sptr dst, int dst_port)
 {
@@ -59,10 +65,22 @@ gr_hier_block2::connect(gr_basic_block_sptr src, int src_port,
 }
 
 void 
+gr_hier_block2::disconnect(gr_basic_block_sptr block)
+{
+  d_detail->disconnect(block);
+}
+
+void 
 gr_hier_block2::disconnect(gr_basic_block_sptr src, int src_port, 
                            gr_basic_block_sptr dst, int dst_port)
 {
   d_detail->disconnect(src, src_port, dst, dst_port);
+}
+
+void
+gr_hier_block2::disconnect_all()
+{
+  d_detail->disconnect_all();
 }
 
 void

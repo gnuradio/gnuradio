@@ -25,10 +25,10 @@ from gnuradio import audio
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-class my_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
 
     def __init__(self):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         parser = OptionParser(option_class=eng_option)
         parser.add_option("-O", "--audio-output", type="string", default="",
@@ -50,6 +50,6 @@ class my_graph(gr.flow_graph):
 
 if __name__ == '__main__':
     try:
-        my_graph().run()
+        my_top_block().run()
     except KeyboardInterrupt:
         pass

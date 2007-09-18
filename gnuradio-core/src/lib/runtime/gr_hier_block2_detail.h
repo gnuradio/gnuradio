@@ -27,37 +27,37 @@
 
 class gr_hier_block2_detail : boost::noncopyable
 {
-private:
-    friend class gr_hier_block2;
-    friend class gr_runtime_impl;
-    
-    // Constructor--it's private, only friends can instantiate
-    gr_hier_block2_detail(gr_hier_block2 *owner);
-
-    // Private implementation data
-    gr_hier_block2 *d_owner;
-    gr_hier_block2_detail *d_parent_detail;
-    gr_flowgraph_sptr d_fg;
-    gr_endpoint_vector_t d_inputs;
-    gr_endpoint_vector_t d_outputs;
-
-    // Private implementation methods
-    void connect(gr_basic_block_sptr src, int src_port, 
-                 gr_basic_block_sptr dst, int dst_port);
-    void disconnect(gr_basic_block_sptr, int src_port, 
-                    gr_basic_block_sptr, int dst_port);
-    void connect_input(int my_port, int port, gr_basic_block_sptr block);
-    void connect_output(int my_port, int port, gr_basic_block_sptr block);
-    void disconnect_input(int my_port, int port, gr_basic_block_sptr block);
-    void disconnect_output(int my_port, int port, gr_basic_block_sptr block);
-    void flatten_aux(gr_flat_flowgraph_sptr sfg) const;
-    gr_endpoint resolve_port(int port, bool is_input);
-    gr_endpoint resolve_endpoint(const gr_endpoint &endp, bool is_input) const;
-    void lock();
-    void unlock();
-
 public:
-    ~gr_hier_block2_detail();
+  gr_hier_block2_detail(gr_hier_block2 *owner);
+  ~gr_hier_block2_detail();
+
+  void connect(gr_basic_block_sptr block);
+  void connect(gr_basic_block_sptr src, int src_port, 
+	       gr_basic_block_sptr dst, int dst_port);
+  void disconnect(gr_basic_block_sptr block);
+  void disconnect(gr_basic_block_sptr, int src_port, 
+		  gr_basic_block_sptr, int dst_port);
+  void disconnect_all();
+  void lock();
+  void unlock();
+  void flatten_aux(gr_flat_flowgraph_sptr sfg) const;
+
+private:
+  
+  // Private implementation data
+  gr_hier_block2 *d_owner;
+  gr_hier_block2_detail *d_parent_detail;
+  gr_flowgraph_sptr d_fg;
+  gr_endpoint_vector_t d_inputs;
+  gr_endpoint_vector_t d_outputs;
+  gr_basic_block_vector_t d_blocks;
+  
+  void connect_input(int my_port, int port, gr_basic_block_sptr block);
+  void connect_output(int my_port, int port, gr_basic_block_sptr block);
+  void disconnect_input(int my_port, int port, gr_basic_block_sptr block);
+  void disconnect_output(int my_port, int port, gr_basic_block_sptr block);
+  gr_endpoint resolve_port(int port, bool is_input);
+  gr_endpoint resolve_endpoint(const gr_endpoint &endp, bool is_input) const;
 };
 
 #endif /* INCLUDED_GR_HIER_BLOCK2_DETAIL_H */

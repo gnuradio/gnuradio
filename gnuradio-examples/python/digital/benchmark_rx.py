@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -38,12 +38,11 @@ import fusb_options
 #print os.getpid()
 #raw_input('Attach and press enter: ')
 
-
-class my_graph(gr.flow_graph):
-
-    def __init__(self, demod_class, rx_callback, options):
-        gr.flow_graph.__init__(self)
-        self.rxpath = receive_path(self, demod_class, rx_callback, options)
+class my_top_block(gr.top_block):
+    def __init__(self, demodulator, rx_callback, options):
+        gr.top_block.__init__(self)
+        self.rxpath = receive_path(demodulator, rx_callback, options) 
+        self.connect(self.rxpath)
 
 # /////////////////////////////////////////////////////////////////////////////
 #                                   main
@@ -98,14 +97,14 @@ def main():
 
 
     # build the graph
-    fg = my_graph(demods[options.modulation], rx_callback, options)
+    tb = my_top_block(demods[options.modulation], rx_callback, options)
 
     r = gr.enable_realtime_scheduling()
     if r != gr.RT_OK:
         print "Warning: Failed to enable realtime scheduling."
 
-    fg.start()        # start flow graph
-    fg.wait()         # wait for it to finish
+    tb.start()        # start flow graph
+    tb.wait()         # wait for it to finish
 
 if __name__ == '__main__':
     try:

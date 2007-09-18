@@ -11,11 +11,12 @@ from gnuradio import audio
 from gnuradio import usrp
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
+import sys
 
-class my_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
 
     def __init__(self):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         usage="%prog: [options] output_filename"
         parser = OptionParser(option_class=eng_option, usage=usage)
@@ -99,9 +100,12 @@ class my_graph(gr.flow_graph):
             sys.stderr.write('Failed to set frequency\n')
             raise SystemExit, 1
 
+    def __del__(self):
+	# Avoid weak reference error
+	del self.subdev
         
 if __name__ == '__main__':
     try:
-        my_graph().run()
+        my_top_block().run()
     except KeyboardInterrupt:
         pass

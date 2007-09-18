@@ -31,6 +31,7 @@ from gnuradio.vocoder import gsm_full_rate
 
 import random
 import struct
+import sys
 
 # from current dir
 from receive_path import receive_path
@@ -41,27 +42,30 @@ import fusb_options
 #raw_input('Attach and press enter')
 
 
-class audio_tx(gr.hier_block):
-    def __init__(self, fg, audio_output_dev):
+class audio_tx(gr.hier_block2):
+    def __init__(self, audio_output_dev):
+	gr.hier_block2.__init__(self, "audio_tx",
+				gr.io_signature(0, 0, 0), # Input signature
+				gr.io_signature(0, 0, 0)) # Output signature
+				
         self.packet_src = gr.message_source(33)
         voice_decoder = gsm_full_rate.decode_ps()
         s2f = gr.short_to_float ()
         sink_scale = gr.multiply_const_ff(1.0/32767.)
         audio_sink = audio.sink(8000, audio_output_dev)
-        fg.connect(self.packet_src, voice_decoder, s2f, sink_scale, audio_sink)
-        gr.hier_block.__init__(self, fg, self.packet_src, audio_sink)
+        self.connect(self.packet_src, voice_decoder, s2f, sink_scale, audio_sink)
         
     def msgq(self):
         return self.packet_src.msgq()
 
 
-class my_graph(gr.flow_graph):
-
+class my_top_block(gr.top_block):
     def __init__(self, demod_class, rx_callback, options):
-        gr.flow_graph.__init__(self)
-        self.rxpath = receive_path(self, demod_class, rx_callback, options)
-        self.audio_tx = audio_tx(self, options.audio_output)
-        
+        gr.top_block.__init__(self)
+        self.rxpath = receive_path(demod_class, rx_callback, options)
+        self.audio_tx = audio_tx(options.audio_output)
+	self.connect(self.rxpath)
+	self.connect(self.audio_tx)        
 
 # /////////////////////////////////////////////////////////////////////////////
 #                                   main
@@ -120,14 +124,13 @@ def main():
 
 
     # build the graph
-    fg = my_graph(demods[options.modulation], rx_callback, options)
+    tb = my_top_block(demods[options.modulation], rx_callback, options)
 
     r = gr.enable_realtime_scheduling()
     if r != gr.RT_OK:
         print "Warning: Failed to enable realtime scheduling."
 
-    fg.start()        # start flow graph
-    fg.wait()         # wait for it to finish
+    tb.run()
 
 if __name__ == '__main__':
     try:

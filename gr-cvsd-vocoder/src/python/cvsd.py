@@ -23,7 +23,7 @@
 from gnuradio import gr
 from gnuradio.vocoder import cvsd_vocoder
 
-class cvsd_encode(gr.hier_block):
+class cvsd_encode(gr.hier_block2):
     '''
     This is a wrapper for the CVSD encoder that performs interpolation and filtering
     necessary to work with the vocoding. It converts an incoming float (+-1) to a short, scales
@@ -33,11 +33,16 @@ class cvsd_encode(gr.hier_block):
     higher the interpolation rate are, the better the sound quality.
     '''
     
-    def __init__(self, fg, resample=8, bw=0.5):
+    def __init__(self, resample=8, bw=0.5):
         '''
         When using the CVSD vocoder, appropriate sampling rates are from 8k to 64k with resampling rates
         from 1 to 8. A rate of 8k with a resampling rate of 8 provides a good quality signal.
         '''
+
+	gr.hier_block2.__init__(self, "cvsd_encode",
+				gr.io_signature(1, 1, gr.sizeof_float), # Input signature
+				gr.io_signature(1, 1, gr.sizeof_char))  # Output signature
+
         scale_factor = 32000.0
         self.interp = resample
 
@@ -47,11 +52,10 @@ class cvsd_encode(gr.hier_block):
         f2s = gr.float_to_short()
         enc = cvsd_vocoder.encode_sb()
 
-        fg.connect(src_scale, interp, f2s, enc)
-        gr.hier_block.__init__(self, fg, src_scale, enc)
+        self.connect(self, src_scale, interp, f2s, enc, self)
 
 
-class cvsd_decode(gr.hier_block):
+class cvsd_decode(gr.hier_block2):
     '''
     This is a wrapper for the CVSD decoder that performs decimation and filtering
     necessary to work with the vocoding. It converts an incoming CVSD-encoded short to a float, decodes it
@@ -61,11 +65,15 @@ class cvsd_decode(gr.hier_block):
     higher the interpolation rate are, the better the sound quality.
     '''
 
-    def __init__(self, fg, resample=8, bw=0.5):
+    def __init__(self, resample=8, bw=0.5):
         '''
         When using the CVSD vocoder, appropriate sampling rates are from 8k to 64k with resampling rates
         from 1 to 8. A rate of 8k with a resampling rate of 8 provides a good quality signal.
         '''
+	gr.hier_block2.__init__(self, "cvsd_decode",
+				gr.io_signature(1, 1, gr.sizeof_char),  # Input signature
+				gr.io_signature(1, 1, gr.sizeof_float)) # Output signature
+
         scale_factor = 32000.0
         self.decim = resample
 
@@ -75,6 +83,5 @@ class cvsd_decode(gr.hier_block):
         decim = gr.fir_filter_fff(self.decim, taps)
         sink_scale = gr.multiply_const_ff(1.0/scale_factor)
 
-        fg.connect(dec, s2f, decim, sink_scale)
-        gr.hier_block.__init__(self, fg, dec, sink_scale)
+        self.connect(self, dec, s2f, decim, sink_scale, self)
 

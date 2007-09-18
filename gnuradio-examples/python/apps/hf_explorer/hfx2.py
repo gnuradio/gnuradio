@@ -80,7 +80,7 @@ AM_SYNC_DISPLAY = False
 
 import os, wx, sys, math
 import wx.lib.evtmgr as em
-from gnuradio.wxgui import powermate, fftsink
+from gnuradio.wxgui import powermate, fftsink2
 from gnuradio import gr, audio, eng_notation, usrp, gru
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -209,7 +209,7 @@ class MyFrame(wx.Frame):
         self.xdata = []
         self.ydata = []
 
-	self.fg = gr.flow_graph()
+	self.tb = gr.top_block()
 
         # radio variables, initial conditions
         self.frequency = self.usrp_center
@@ -260,7 +260,7 @@ class MyFrame(wx.Frame):
         # save radio data to a file
         if SAVE_RADIO_TO_FILE:
            file = gr.file_sink(gr.sizeof_short, options.radio_file)
-           self.fg.connect (self.src, file)
+           self.tb.connect (self.src, file)
 
 	# 2nd DDC
         xlate_taps = gr.firdes.low_pass ( \
@@ -273,11 +273,11 @@ class MyFrame(wx.Frame):
         s2f1 = gr.short_to_float()
         s2f2 = gr.short_to_float()
         src_f2c = gr.float_to_complex()
-        self.fg.connect(self.src,s2ss)
-        self.fg.connect((s2ss,0),s2f1)
-        self.fg.connect((s2ss,1),s2f2)
-        self.fg.connect(s2f1,(src_f2c,0))
-        self.fg.connect(s2f2,(src_f2c,1))
+        self.tb.connect(self.src,s2ss)
+        self.tb.connect((s2ss,0),s2f1)
+        self.tb.connect((s2ss,1),s2f2)
+        self.tb.connect(s2f1,(src_f2c,0))
+        self.tb.connect(s2f2,(src_f2c,1))
 
 
 	# Complex Audio filter
@@ -294,11 +294,11 @@ class MyFrame(wx.Frame):
         self.audio_filter = gr.fir_filter_ccc ( 1, audio_coeffs)
 
 	# Main +/- 16Khz spectrum display
-        self.fft = fftsink.fft_sink_c (self.fg, self.panel_2, fft_size=512, sample_rate=self.af_sample_rate, average=True, size=(640,240))
+        self.fft = fftsink2.fft_sink_c (self.panel_2, fft_size=512, sample_rate=self.af_sample_rate, average=True, size=(640,240))
 
 	# AM Sync carrier 
 	if AM_SYNC_DISPLAY:
-	   self.fft2 = fftsink.fft_sink_c (self.fg, self.panel_9, y_per_div=20, fft_size=512, sample_rate=self.af_sample_rate, average=True, size=(640,240))
+	   self.fft2 = fftsink.fft_sink_c (self.tb, self.panel_9, y_per_div=20, fft_size=512, sample_rate=self.af_sample_rate, average=True, size=(640,240))
 
         c2f = gr.complex_to_float()
 
@@ -342,30 +342,30 @@ class MyFrame(wx.Frame):
         self.scale = gr.multiply_const_ff(0.00001)
         dst = audio.sink(long(self.af_sample_rate))
 
-        self.fg.connect(src_f2c,self.xlate,self.fft)
-        self.fg.connect(self.xlate,self.audio_filter,self.sel_am,(am_det,0))
-	self.fg.connect(self.sel_am,pll,self.pll_carrier_scale,self.pll_carrier_filter,c2f3)
-	self.fg.connect((c2f3,0),phaser1,(f2c,0))
-	self.fg.connect((c2f3,1),phaser2,(f2c,1))
-	self.fg.connect(f2c,(am_det,1))
-	self.fg.connect(am_det,c2f2,(combine,0))
-	self.fg.connect(self.audio_filter,c2f,self.sel_sb,(combine,1))
+        self.tb.connect(src_f2c,self.xlate,self.fft)
+        self.tb.connect(self.xlate,self.audio_filter,self.sel_am,(am_det,0))
+	self.tb.connect(self.sel_am,pll,self.pll_carrier_scale,self.pll_carrier_filter,c2f3)
+	self.tb.connect((c2f3,0),phaser1,(f2c,0))
+	self.tb.connect((c2f3,1),phaser2,(f2c,1))
+	self.tb.connect(f2c,(am_det,1))
+	self.tb.connect(am_det,c2f2,(combine,0))
+	self.tb.connect(self.audio_filter,c2f,self.sel_sb,(combine,1))
 	if AM_SYNC_DISPLAY:
-	  self.fg.connect(self.pll_carrier_filter,self.fft2)
-	self.fg.connect(combine,self.scale)
-	self.fg.connect(self.scale,(sqr1,0))
-	self.fg.connect(self.scale,(sqr1,1))
-	self.fg.connect(sqr1, intr, offset, (agc, 1))
-	self.fg.connect(self.scale,(agc, 0))
-	self.fg.connect(agc,dst)
+	  self.tb.connect(self.pll_carrier_filter,self.fft2)
+	self.tb.connect(combine,self.scale)
+	self.tb.connect(self.scale,(sqr1,0))
+	self.tb.connect(self.scale,(sqr1,1))
+	self.tb.connect(sqr1, intr, offset, (agc, 1))
+	self.tb.connect(self.scale,(agc, 0))
+	self.tb.connect(agc,dst)
 
 	if SAVE_AUDIO_TO_FILE:
 	  f_out = gr.file_sink(gr.sizeof_short,options.audio_file)
 	  sc1 = gr.multiply_const_ff(64000)
 	  f2s1 = gr.float_to_short()
-	  self.fg.connect(agc,sc1,f2s1,f_out)
+	  self.tb.connect(agc,sc1,f2s1,f_out)
 
-        self.fg.start()
+        self.tb.start()
 
         # for mouse position reporting on fft display
         em.eventManager.Register(self.Mouse, wx.EVT_MOTION, self.fft.win)
@@ -482,7 +482,7 @@ class MyFrame(wx.Frame):
 
     # Menu exit
     def TimeToQuit(self, event):
-        self.fg.stop()
+        self.tb.stop()
         self.Close(True)
 
     # Powermate being turned

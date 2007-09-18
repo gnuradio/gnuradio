@@ -32,10 +32,13 @@ from transmit_path_lb import transmit_path
 from receive_path_lb import receive_path
 import fusb_options
 
-class awgn_channel(gr.hier_block):
-    def __init__(self, fg, sample_rate, noise_voltage, frequency_offset, seed=False):
-        self.input = gr.add_const_cc(0) # dummy input device
-        
+class awgn_channel(gr.hier_block2):
+    def __init__(self, sample_rate, noise_voltage, frequency_offset, seed=False):
+
+	gr.hier_block2.__init__(self, "awgn_channel",
+			        gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+				        
         # Create the Gaussian noise source
         if not seed:
             self.noise = gr.noise_source_c(gr.GR_GAUSSIAN, noise_voltage)
@@ -51,16 +54,15 @@ class awgn_channel(gr.hier_block):
         self.mixer = gr.multiply_cc()
 
         # Connect the components
-        fg.connect(self.input, (self.mixer, 0))
-        fg.connect(self.offset, (self.mixer, 1))
-        fg.connect(self.mixer, (self.adder, 0))
-        fg.connect(self.noise, (self.adder, 1))
+        self.connect(self, (self.mixer, 0))
+        self.connect(self.offset, (self.mixer, 1))
+        self.connect(self.mixer, (self.adder, 0))
+        self.connect(self.noise, (self.adder, 1))
+	self.connect(self.adder, self)
 
-        gr.hier_block.__init__(self, fg, self.input, self.adder)
-
-class my_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
     def __init__(self, mod_class, demod_class, rx_callback, options):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         channelon = True;
 
@@ -71,12 +73,12 @@ class my_graph(gr.flow_graph):
         noise_power = power_in_signal/SNR
         noise_voltage = math.sqrt(noise_power)
 
-        self.txpath = transmit_path(self, mod_class, options)
+        self.txpath = transmit_path(mod_class, options)
         self.throttle = gr.throttle(gr.sizeof_gr_complex, options.sample_rate)
-        self.rxpath = receive_path(self, demod_class, rx_callback, options)
+        self.rxpath = receive_path(demod_class, rx_callback, options)
 
         if channelon:
-            self.channel = awgn_channel(self, options.sample_rate, noise_voltage,
+            self.channel = awgn_channel(options.sample_rate, noise_voltage,
                                         frequency_offset, options.seed)
 
             if options.discontinuous:
@@ -121,7 +123,7 @@ def main():
         # print payload[2:len(payload)]
 
     def send_pkt(payload='', eof=False):
-        return fg.txpath.send_pkt(payload, eof)
+        return tb.txpath.send_pkt(payload, eof)
 
 
     mods = modulation_utils.type_1_mods()
@@ -171,8 +173,8 @@ def main():
         print "Warning: failed to enable realtime scheduling"
         
     # Create an instance of a hierarchical block
-    fg = my_graph(mods[options.modulation], demods[options.modulation], rx_callback, options)
-    fg.start()
+    tb = my_top_block(mods[options.modulation], demods[options.modulation], rx_callback, options)
+    tb.start()
 
     # generate and send packets
     nbytes = int(1e6 * options.megabytes)
@@ -187,7 +189,7 @@ def main():
         
     send_pkt(eof=True)
 
-    fg.wait()
+    tb.wait()
     
 if __name__ == '__main__':
     try:

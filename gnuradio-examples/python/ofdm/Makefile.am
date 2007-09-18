@@ -29,7 +29,12 @@ EXTRA_DIST = 					\
 		fusb_options.py			\
 		pick_bitrate.py			\
 		receive_path.py			\
-		transmit_path.py
+		transmit_path.py		\
+		ofdm_mod_demod_test.py		\
+		ofdm_sync.m			\
+		ofdm_sync_pn.m			\
+		plot_ofdm.m			\
+		tunnel.py	
 
 ourdatadir = $(exampledir)/ofdm
 ourdata_DATA = $(EXTRA_DIST)

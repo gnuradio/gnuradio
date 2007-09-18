@@ -41,7 +41,7 @@ $EXTRACT gnuradio-core/src/python/gnuradio/gr/Makefile grgrpython_PYTHON >>$NAME
 $EXTRACT gnuradio-core/src/python/gnuradio/blks/Makefile grblkspython_PYTHON >>$NAME
 $EXTRACT gnuradio-core/src/python/gnuradio/blks2/Makefile grblks2python_PYTHON >>$NAME
 $EXTRACT gnuradio-core/src/python/gnuradio/blksimpl/Makefile grblkspython_PYTHON >>$NAME
-$EXTRACT gnuradio-core/src/python/gnuradio/blksimpl2/Makefile grblkspython_PYTHON >>$NAME
+$EXTRACT gnuradio-core/src/python/gnuradio/blks2impl/Makefile grblkspython_PYTHON >>$NAME
 $EXTRACT gnuradio-core/src/python/gnuradio/gru/Makefile grblkspython_PYTHON >>$NAME
 $EXTRACT gnuradio-core/src/python/gnuradio/gruimpl/Makefile grupython_PYTHON >>$NAME
 $EXTRACT gnuradio-core/src/python/gnuradio/vocoder/Makefile grvocoderpython_PYTHON >>$NAME
@@ -203,10 +203,12 @@ touch $NAME
 $EXTRACT gnuradio-examples/python/apps/hf_explorer/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/apps/hf_radio/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/audio/Makefile ourdata_DATA >>$NAME
+$EXTRACT gnuradio-examples/python/dect/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/digital/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/digital_voice/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/multi-antenna/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/multi_usrp/Makefile ourdata_DATA >>$NAME
+$EXTRACT gnuradio-examples/python/network/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/ofdm/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/usrp/Makefile ourdata_DATA >>$NAME
 

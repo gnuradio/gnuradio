@@ -1,4 +1,24 @@
 #!/usr/bin/env python
+#
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
 """
 Transmit N simultaneous narrow band FM signals.
@@ -15,14 +35,14 @@ audio_to_file.py
 from gnuradio import gr, eng_notation
 from gnuradio import usrp
 from gnuradio import audio
-from gnuradio import blks
+from gnuradio import blks2
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 from usrpm import usrp_dbid
 import math
 import sys
 
-from gnuradio.wxgui import stdgui, fftsink
+from gnuradio.wxgui import stdgui2, fftsink2
 from gnuradio import tx_debug_gui
 import wx
 
@@ -30,12 +50,15 @@ import wx
 ########################################################
 # instantiate one transmit chain for each call
 
-class pipeline(gr.hier_block):
-    def __init__(self, fg, filename, lo_freq, audio_rate, if_rate):
+class pipeline(gr.hier_block2):
+    def __init__(self, filename, lo_freq, audio_rate, if_rate):
+
+        gr.hier_block2.__init__(self, "pipeline",
+                                gr.io_signature(0, 0, 0),                    # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
         src = gr.file_source (gr.sizeof_float, filename, True)
-        fmtx = blks.nbfm_tx (fg, audio_rate, if_rate,
-                             max_dev=5e3, tau=75e-6)
+        fmtx = blks2.nbfm_tx (audio_rate, if_rate, max_dev=5e3, tau=75e-6)
         
         # Local oscillator
         lo = gr.sig_source_c (if_rate,        # sample rate
@@ -45,17 +68,14 @@ class pipeline(gr.hier_block):
                               0)              # DC Offset
         mixer = gr.multiply_cc ()
     
-        fg.connect (src, fmtx, (mixer, 0))
-        fg.connect (lo, (mixer, 1))
-
-        gr.hier_block.__init__(self, fg, src, mixer)
+        self.connect (src, fmtx, (mixer, 0))
+        self.connect (lo, (mixer, 1))
 
 
-
-class fm_tx_graph (stdgui.gui_flow_graph):
+class fm_tx_block(stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
         MAX_CHANNELS = 7
-        stdgui.gui_flow_graph.__init__ (self, frame, panel, vbox, argv)
+        stdgui2.std_top_block.__init__ (self, frame, panel, vbox, argv)
 
         parser = OptionParser (option_class=eng_option)
         parser.add_option("-T", "--tx-subdev-spec", type="subdev", default=None,
@@ -119,9 +139,9 @@ class fm_tx_graph (stdgui.gui_flow_graph):
         step = 25e3
         offset = (0 * step, 1 * step, -1 * step, 2 * step, -2 * step, 3 * step, -3 * step)
         for i in range (options.nchannels):
-            t = pipeline (self, "audio-%d.dat" % (i % 4), offset[i],
-                          self.audio_rate, self.usrp_rate)
-            self.connect (t, (sum, i))
+            t = pipeline("audio-%d.dat" % (i % 4), offset[i],
+                         self.audio_rate, self.usrp_rate)
+            self.connect(t, (sum, i))
 
         gain = gr.multiply_const_cc (4000.0 / options.nchannels)
 
@@ -131,9 +151,9 @@ class fm_tx_graph (stdgui.gui_flow_graph):
 
         # plot an FFT to verify we are sending what we want
         if 1:
-            post_mod = fftsink.fft_sink_c(self, panel, title="Post Modulation",
-                                          fft_size=512, sample_rate=self.usrp_rate,
-                                          y_per_div=20, ref_level=40)
+            post_mod = fftsink2.fft_sink_c(panel, title="Post Modulation",
+                                           fft_size=512, sample_rate=self.usrp_rate,
+                                           y_per_div=20, ref_level=40)
             self.connect (sum, post_mod)
             vbox.Add (post_mod.win, 1, wx.EXPAND)
             
@@ -170,7 +190,7 @@ class fm_tx_graph (stdgui.gui_flow_graph):
         return False
 
 def main ():
-    app = stdgui.stdapp (fm_tx_graph, "Multichannel FM Tx")
+    app = stdgui2.stdapp(fm_tx_block, "Multichannel FM Tx", nstatus=1)
     app.MainLoop ()
 
 if __name__ == '__main__':

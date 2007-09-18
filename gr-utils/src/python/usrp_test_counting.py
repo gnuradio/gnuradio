@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -32,20 +32,20 @@ from gnuradio import usrp
 def build_graph ():
     rx_decim  = 32
     
-    fg = gr.flow_graph ()
+    tb = gr.top_block ()
     usrp_rx = usrp.source_s (0, rx_decim, 1, 0x32103210, usrp.FPGA_MODE_COUNTING)
     sink = gr.check_counting_s ()
-    fg.connect (usrp_rx, sink)
+    tb.connect (usrp_rx, sink)
 
     # file_sink = gr.file_sink (gr.sizeof_short, 'counting.dat')
-    # fg.connect (usrp_rx, file_sink)
+    # tb.connect (usrp_rx, file_sink)
 
-    return fg
+    return tb
     
 def main ():
-    fg = build_graph ()
+    tb = build_graph ()
     try:
-        fg.run()
+        tb.run()
     except KeyboardInterrupt:
         pass
 

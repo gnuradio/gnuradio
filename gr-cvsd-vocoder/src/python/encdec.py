@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, blks
+from gnuradio import gr, blks2
 from gnuradio import audio
 from gnuradio.vocoder import cvsd_vocoder
 
@@ -28,40 +28,42 @@ def build_graph():
     sample_rate = 8000
     scale_factor = 32000
     
-    fg = gr.flow_graph()
+    tb = gr.top_block()
     src = audio.source(sample_rate, "plughw:0,0")
     src_scale = gr.multiply_const_ff(scale_factor)
 
-    interp = blks.rational_resampler_fff(fg, 8, 1)
+    interp = blks2.rational_resampler_fff(8, 1)
     f2s = gr.float_to_short ()
 
     enc = cvsd_vocoder.encode_sb()
     dec = cvsd_vocoder.decode_bs()
 
     s2f = gr.short_to_float ()
-    decim = blks.rational_resampler_fff(fg, 1, 8)
+    decim = blks2.rational_resampler_fff(1, 8)
 
     sink_scale = gr.multiply_const_ff(1.0/scale_factor)
     sink = audio.sink(sample_rate, "plughw:0,0")
 
-    fg.connect(src, src_scale, interp, f2s, enc)
-    fg.connect(enc, dec, s2f, decim, sink_scale, sink)
+    tb.connect(src, src_scale, interp, f2s, enc)
+    tb.connect(enc, dec, s2f, decim, sink_scale, sink)
 
     if 0: # debug
-        fg.connect(src, gr.file_sink(gr.sizeof_float, "source.dat"))
-        fg.connect(src_scale, gr.file_sink(gr.sizeof_float, "src_scale.dat"))
-        fg.connect(interp, gr.file_sink(gr.sizeof_float, "interp.dat"))
-        fg.connect(f2s, gr.file_sink(gr.sizeof_short, "f2s.dat"))
-        fg.connect(enc, gr.file_sink(gr.sizeof_char,  "enc.dat"))
-        fg.connect(dec, gr.file_sink(gr.sizeof_short, "dec.dat"))
-        fg.connect(s2f, gr.file_sink(gr.sizeof_float, "s2f.dat"))
-        fg.connect(decim, gr.file_sink(gr.sizeof_float, "decim.dat"))
-        fg.connect(sink_scale, gr.file_sink(gr.sizeof_float, "sink_scale.dat"))
+        tb.conect(src, gr.file_sink(gr.sizeof_float, "source.dat"))
+        tb.conect(src_scale, gr.file_sink(gr.sizeof_float, "src_scale.dat"))
+        tb.conect(interp, gr.file_sink(gr.sizeof_float, "interp.dat"))
+        tb.conect(f2s, gr.file_sink(gr.sizeof_short, "f2s.dat"))
+        tb.conect(enc, gr.file_sink(gr.sizeof_char,  "enc.dat"))
+        tb.conect(dec, gr.file_sink(gr.sizeof_short, "dec.dat"))
+        tb.conect(s2f, gr.file_sink(gr.sizeof_float, "s2f.dat"))
+        tb.conect(decim, gr.file_sink(gr.sizeof_float, "decim.dat"))
+        tb.conect(sink_scale, gr.file_sink(gr.sizeof_float, "sink_scale.dat"))
         
-    return fg
+    return tb
 
 if __name__ == '__main__':
-    fg = build_graph()
-    fg.start()
-    raw_input ('Press Enter to exit: ')
-    fg.stop()
+    tb = build_graph()
+    print "Enter CTRL-C to stop"
+    try:
+	tb.run()
+    except KeyboardInterrupt:
+	pass

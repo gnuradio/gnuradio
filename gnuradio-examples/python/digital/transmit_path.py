@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, blks
+from gnuradio import gr, gru, blks2
 from gnuradio import usrp
 from gnuradio import eng_notation
 
@@ -33,11 +33,14 @@ from pick_bitrate import pick_tx_bitrate
 #                              transmit path
 # /////////////////////////////////////////////////////////////////////////////
 
-class transmit_path(gr.hier_block): 
-    def __init__(self, fg, modulator_class, options):
+class transmit_path(gr.hier_block2): 
+    def __init__(self, modulator_class, options):
         '''
         See below for what options should hold
         '''
+	gr.hier_block2.__init__(self, "transmit_path",
+                                gr.io_signature(0, 0, 0), # Input signature
+                                gr.io_signature(0, 0, 0)) # Output signature
 
         options = copy.copy(options)    # make a copy so we can destructively modify
 
@@ -77,12 +80,11 @@ class transmit_path(gr.hier_block):
     
         # transmitter
         self.packet_transmitter = \
-            blks.mod_pkts(fg,
-                          self._modulator_class(fg, **mod_kwargs),
-                          access_code=None,
-                          msgq_limit=4,
-                          pad_for_usrp=True,
-                          use_whitener_offset=options.use_whitener_offset)
+            blks2.mod_pkts(self._modulator_class(**mod_kwargs),
+                           access_code=None,
+                           msgq_limit=4,
+                           pad_for_usrp=True,
+                           use_whitener_offset=options.use_whitener_offset)
 
 
         # Set the USRP for maximum transmit gain
@@ -100,8 +102,7 @@ class transmit_path(gr.hier_block):
             self._print_verbage()
 
         # Create and setup transmit path flow graph
-        fg.connect(self.packet_transmitter, self.amp, self.u)
-        gr.hier_block.__init__(self, fg, None, None)
+        self.connect(self.packet_transmitter, self.amp, self.u)
 
     def _setup_usrp_sink(self):
         """

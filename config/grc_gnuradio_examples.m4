@@ -28,19 +28,12 @@ AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
         gnuradio-examples/python/apps/hf_radio/Makefile \
         gnuradio-examples/python/apps/Makefile \
         gnuradio-examples/python/audio/Makefile \
+	gnuradio-examples/python/dect/Makefile \
         gnuradio-examples/python/digital/Makefile \
         gnuradio-examples/python/digital_voice/Makefile \
-	gnuradio-examples/python/hier/Makefile \
-	gnuradio-examples/python/hier/audio/Makefile \
-	gnuradio-examples/python/hier/networking/Makefile \
-	gnuradio-examples/python/hier/digital/Makefile \
-	gnuradio-examples/python/hier/dect/Makefile \
-	gnuradio-examples/python/hier/ofdm/Makefile \
-	gnuradio-examples/python/hier/sounder/Makefile \
-	gnuradio-examples/python/hier/usrp/Makefile \
         gnuradio-examples/python/multi-antenna/Makefile \
         gnuradio-examples/python/multi_usrp/Makefile \
-        gnuradio-examples/python/networking/Makefile \
+        gnuradio-examples/python/network/Makefile \
 	gnuradio-examples/python/ofdm/Makefile \
         gnuradio-examples/python/usrp/Makefile \
     ])

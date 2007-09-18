@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -24,7 +24,7 @@ from gnuradio import gr, gru
 from gnuradio import usrp
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
-from gnuradio.wxgui import stdgui, fftsink, waterfallsink, scopesink, form, slider
+from gnuradio.wxgui import stdgui2, fftsink2, waterfallsink2, scopesink2, form, slider
 from optparse import OptionParser
 import wx
 import sys
@@ -44,9 +44,9 @@ def pick_subdevice(u):
     return (0, 0)
 
 
-class app_flow_graph(stdgui.gui_flow_graph):
+class app_top_block(stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
-        stdgui.gui_flow_graph.__init__(self)
+        stdgui2.std_top_block.__init__(self, frame, panel, vbox, argv)
 
         self.frame = frame
         self.panel = panel
@@ -100,11 +100,11 @@ class app_flow_graph(stdgui.gui_flow_graph):
 
         if options.waterfall:
             self.scope = \
-              waterfallsink.waterfall_sink_c (self, panel, fft_size=1024, sample_rate=input_rate)
+              waterfallsink2.waterfall_sink_c (panel, fft_size=1024, sample_rate=input_rate)
         elif options.oscilloscope:
-            self.scope = scopesink.scope_sink_c(self, panel, sample_rate=input_rate)
+            self.scope = scopesink2.scope_sink_c(panel, sample_rate=input_rate)
         else:
-            self.scope = fftsink.fft_sink_c (self, panel, fft_size=1024, sample_rate=input_rate)
+            self.scope = fftsink2.fft_sink_c (panel, fft_size=1024, sample_rate=input_rate)
 
         self.connect(self.u, self.scope)
 
@@ -253,7 +253,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         return ok
 
 def main ():
-    app = stdgui.stdapp(app_flow_graph, "USRP FFT", nstatus=1)
+    app = stdgui2.stdapp(app_top_block, "USRP FFT", nstatus=1)
     app.MainLoop()
 
 if __name__ == '__main__':

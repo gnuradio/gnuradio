@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -43,8 +43,11 @@ import fusb_options
 #raw_input('Attach and press enter')
 
 
-class audio_rx(gr.hier_block):
-    def __init__(self, fg, audio_input_dev):
+class audio_rx(gr.hier_block2):
+    def __init__(self, audio_input_dev):
+	gr.hier_block2.__init__(self, "audio_rx",
+				gr.io_signature(0, 0, 0), # Input signature
+				gr.io_signature(0, 0, 0)) # Output signature
         sample_rate = 8000
         src = audio.source(sample_rate, audio_input_dev)
         src_scale = gr.multiply_const_ff(32767)
@@ -52,20 +55,20 @@ class audio_rx(gr.hier_block):
         voice_coder = gsm_full_rate.encode_sp()
         self.packets_from_encoder = gr.msg_queue()
         packet_sink = gr.message_sink(33, self.packets_from_encoder, False)
-        fg.connect(src, src_scale, f2s, voice_coder, packet_sink)
-        gr.hier_block.__init__(self, fg, src, packet_sink)
+        self.connect(src, src_scale, f2s, voice_coder, packet_sink)
 
     def get_encoded_voice_packet(self):
         return self.packets_from_encoder.delete_head()
         
 
-class my_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
 
     def __init__(self, modulator_class, options):
-        gr.flow_graph.__init__(self)
-        self.txpath = transmit_path(self, modulator_class, options)
-        self.audio_rx = audio_rx(self, options.audio_input)
-
+        gr.top_block.__init__(self)
+        self.txpath = transmit_path(modulator_class, options)
+        self.audio_rx = audio_rx(options.audio_input)
+	self.connect(self.txpath)
+	self.connect(self.audio_rx)
 
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -75,7 +78,7 @@ class my_graph(gr.flow_graph):
 def main():
 
     def send_pkt(payload='', eof=False):
-        return fg.txpath.send_pkt(payload, eof)
+        return tb.txpath.send_pkt(payload, eof)
 
     def rx_callback(ok, payload):
         print "ok = %r, payload = '%s'" % (ok, payload)
@@ -115,14 +118,14 @@ def main():
 
 
     # build the graph
-    fg = my_graph(mods[options.modulation], options)
+    tb = my_top_block(mods[options.modulation], options)
 
     r = gr.enable_realtime_scheduling()
     if r != gr.RT_OK:
         print "Warning: failed to enable realtime scheduling"
 
 
-    fg.start()                       # start flow graph
+    tb.start()                       # start flow graph
 
     # generate and send packets
     nbytes = int(1e6 * options.megabytes)
@@ -130,7 +133,7 @@ def main():
     pktno = 0
 
     while nbytes == 0 or n < nbytes:
-        packet = fg.audio_rx.get_encoded_voice_packet()
+        packet = tb.audio_rx.get_encoded_voice_packet()
         s = packet.to_string()
         send_pkt(s)
         n += len(s)
@@ -138,12 +141,12 @@ def main():
         pktno += 1
         
     send_pkt(eof=True)
-    fg.wait()                       # wait for it to finish
-    fg.txpath.set_auto_tr(False)
+    tb.wait()                       # wait for it to finish
+    tb.txpath.set_auto_tr(False)
 
 
 if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        pass
+	pass

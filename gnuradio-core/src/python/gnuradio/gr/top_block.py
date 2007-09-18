@@ -51,13 +51,17 @@ class top_block(object):
     # in the original C++ class (gr_hier_block2), then they would all be inherited here
 
     def connect(self, *points):
-        '''connect requires two or more arguments that can be coerced to endpoints.
+        '''connect requires one or more arguments that can be coerced to endpoints.
         If more than two arguments are provided, they are connected together successively.
         '''
-        if len (points) < 2:
-            raise ValueError, ("connect requires at least two endpoints; %d provided." % (len (points),))
-        for i in range (1, len (points)):
-            self._connect(points[i-1], points[i])
+        if len (points) < 1:
+            raise ValueError, ("connect requires at least one endpoint; %d provided." % (len (points),))
+	else:
+	    if len(points) == 1:
+		self._tb.connect(points[0].basic_block())
+	    else:
+		for i in range (1, len (points)):
+        	    self._connect(points[i-1], points[i])
 
     def _connect(self, src, dst):
         (src_block, src_port) = self._coerce_endpoint(src)
@@ -75,13 +79,17 @@ class top_block(object):
                 raise ValueError("unable to coerce endpoint")
 
     def disconnect(self, *points):
-        '''connect requires two or more arguments that can be coerced to endpoints.
+        '''connect requires one or more arguments that can be coerced to endpoints.
         If more than two arguments are provided, they are disconnected successively.
         '''
-        if len (points) < 2:
+        if len (points) < 1:
             raise ValueError, ("disconnect requires at least two endpoints; %d provided." % (len (points),))
-        for i in range (1, len (points)):
-            self._disconnect(points[i-1], points[i])
+        else:
+            if len(points) == 1:
+                self._tb.disconnect(points[0].basic_block())
+            else:
+                for i in range (1, len (points)):
+                    self._disconnect(points[i-1], points[i])
 
     def _disconnect(self, src, dst):
         (src_block, src_port) = self._coerce_endpoint(src)

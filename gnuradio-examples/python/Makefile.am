@@ -22,16 +22,16 @@
 include $(top_srcdir)/Makefile.common
 
 SUBDIRS = \
-    apps \
-    audio \
-    digital_voice \
-    digital \
-    multi-antenna \
-    multi_usrp \
-    networking \
-    usrp \
-    hier \
-    ofdm
+	apps \
+	audio \
+	dect \
+	digital \
+	digital_voice \
+	multi-antenna \
+	multi_usrp \
+	network \
+	ofdm \
+	usrp
 
 # Make example scripts with #! executable
 install-data-local:

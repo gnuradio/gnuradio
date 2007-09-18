@@ -97,6 +97,11 @@ public:
    * reconfiguration happens.
    */
   virtual void unlock();
+
+  /*!
+   * Returns true if flowgraph is running
+   */
+  bool is_running();
 };
 
 #endif /* INCLUDED_GR_TOP_BLOCK_H */

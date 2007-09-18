@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,16 +20,16 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, blks
+from gnuradio import gr, gru, blks2
 from gnuradio import audio
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
 
-class my_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
 
     def __init__(self):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         parser = OptionParser(option_class=eng_option)
         parser.add_option("-O", "--audio-output", type="string", default="",
@@ -54,13 +54,13 @@ class my_graph(gr.flow_graph):
 
         ampl = 0.1
         src0 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 650, ampl)
-        rr = blks.rational_resampler_fff(self, interp, decim)
+        rr = blks2.rational_resampler_fff(interp, decim)
         dst = audio.sink (output_rate, options.audio_output)
         self.connect (src0, rr, (dst, 0))
 
 
 if __name__ == '__main__':
     try:
-        my_graph().run()
+        my_top_block().run()
     except KeyboardInterrupt:
         pass

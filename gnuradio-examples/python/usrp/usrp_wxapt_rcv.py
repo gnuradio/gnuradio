@@ -1,12 +1,32 @@
 #!/usr/bin/env python
+#
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
 from gnuradio import gr, gru, eng_notation, optfir
 from gnuradio import audio
 from gnuradio import usrp
-from gnuradio import blks
+from gnuradio import blks2
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
-from gnuradio.wxgui import stdgui, fftsink, form
+from gnuradio.wxgui import stdgui2, fftsink2, form
 from optparse import OptionParser
 from usrpm import usrp_dbid
 import sys
@@ -26,9 +46,9 @@ def pick_subdevice(u):
                                 usrp_dbid.BASIC_RX))
 
 
-class wxapt_rx_graph (stdgui.gui_flow_graph):
+class wxapt_rx_block (stdgui2.std_top_block):
     def __init__(self,frame,panel,vbox,argv):
-        stdgui.gui_flow_graph.__init__ (self,frame,panel,vbox,argv)
+        stdgui2.std_top_block.__init__ (self,frame,panel,vbox,argv)
 
         parser=OptionParser(option_class=eng_option)
         parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
@@ -84,7 +104,7 @@ class wxapt_rx_graph (stdgui.gui_flow_graph):
         #print len(chan_filt_coeffs)
         chan_filt = gr.fir_filter_ccf (chanfilt_decim, chan_filt_coeffs)
 
-        self.guts = blks.wfm_rcv (self, demod_rate, audio_decimation)
+        self.guts = blks2.wfm_rcv (demod_rate, audio_decimation)
 
         self.volume_control = gr.multiply_const_ff(self.vol)
 
@@ -127,20 +147,20 @@ class wxapt_rx_graph (stdgui.gui_flow_graph):
 
 
         if 1:
-            self.src_fft = fftsink.fft_sink_c (self, self.panel, title="Data from USRP",
+            self.src_fft = fftsink2.fft_sink_c (self.panel, title="Data from USRP",
                                                fft_size=512, sample_rate=usrp_rate)
             self.connect (self.u, self.src_fft)
             vbox.Add (self.src_fft.win, 4, wx.EXPAND)
 
         if 1:
-            post_deemph_fft = fftsink.fft_sink_f (self, self.panel, title="Post Deemph",
+            post_deemph_fft = fftsink2.fft_sink_f (self.panel, title="Post Deemph",
                                                   fft_size=512, sample_rate=demod_rate,
                                                   y_per_div=10, ref_level=-20)
             self.connect (self.guts.deemph, post_deemph_fft)
             vbox.Add (post_deemph_fft.win, 4, wx.EXPAND)
 
         if 1:
-            post_filt_fft = fftsink.fft_sink_f (self, self.panel, title="Post Filter", 
+            post_filt_fft = fftsink2.fft_sink_f (self.panel, title="Post Filter", 
                                                 fft_size=512, sample_rate=audio_rate,
                                                 y_per_div=10, ref_level=0)
             self.connect (self.guts.audio_filter, post_filt_fft)
@@ -264,5 +284,5 @@ class wxapt_rx_graph (stdgui.gui_flow_graph):
         
 
 if __name__ == '__main__':
-    app = stdgui.stdapp (wxapt_rx_graph, "USRP WXAPT RX")
+    app = stdgui2.stdapp (wxapt_rx_block, "USRP WXAPT RX")
     app.MainLoop ()

@@ -1,9 +1,29 @@
 #!/usr/bin/env python
+#
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
 from gnuradio import gr, gru, eng_notation, optfir
 from gnuradio import audio
 from gnuradio import usrp
-from gnuradio import blks
+from gnuradio import blks2
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 from usrpm import usrp_dbid
@@ -23,10 +43,10 @@ def pick_subdevice(u):
                                 usrp_dbid.BASIC_RX))
 
 
-class wfm_rx_graph (gr.flow_graph):
+class wfm_rx_block (gr.top_block):
 
     def __init__(self):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         parser=OptionParser(option_class=eng_option)
         parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
@@ -78,7 +98,7 @@ class wfm_rx_graph (gr.flow_graph):
         #print len(chan_filt_coeffs)
         chan_filt = gr.fir_filter_ccf (chanfilt_decim, chan_filt_coeffs)
 
-        self.guts = blks.wfm_rcv (self, demod_rate, audio_decimation)
+        self.guts = blks2.wfm_rcv (demod_rate, audio_decimation)
 
         self.volume_control = gr.multiply_const_ff(self.vol)
 
@@ -147,8 +167,8 @@ class wfm_rx_graph (gr.flow_graph):
 
     
 if __name__ == '__main__':
-    fg = wfm_rx_graph()
+    tb = wfm_rx_block()
     try:
-        fg.run()
+        tb.run()
     except KeyboardInterrupt:
         pass

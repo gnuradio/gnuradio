@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005, 2006, 2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, blks
+from gnuradio import gr, gru, blks2
 from gnuradio import eng_notation
 
 import copy
@@ -29,11 +29,14 @@ import sys
 #                              transmit path
 # /////////////////////////////////////////////////////////////////////////////
 
-class transmit_path(gr.hier_block):
-    def __init__(self, fg, modulator_class, options):
+class transmit_path(gr.hier_block2):
+    def __init__(self, modulator_class, options):
         '''
         See below for what options should hold
         '''
+	gr.hier_block2.__init__(self, "transmit_path",
+				gr.io_signature(0, 0, 0),                    # Input signature
+				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
         
         options = copy.copy(options)    # make a copy so we can destructively modify
 
@@ -48,12 +51,14 @@ class transmit_path(gr.hier_block):
         mod_kwargs = self._modulator_class.extract_kwargs_from_options(options)
     
         # transmitter
+	print self._modulator_class
+	print mod_kwargs
+	modulator = self._modulator_class(**mod_kwargs)
         self.packet_transmitter = \
-            blks.mod_pkts(fg,
-                          self._modulator_class(fg, **mod_kwargs),
-                          access_code=None,
-                          msgq_limit=4,
-                          pad_for_usrp=True)
+            blks2.mod_pkts(modulator,
+                           access_code=None,
+                           msgq_limit=4,
+                           pad_for_usrp=True)
 
         self.amp = gr.multiply_const_cc(1)
         self.set_tx_amplitude(self._tx_amplitude)
@@ -63,9 +68,7 @@ class transmit_path(gr.hier_block):
             self._print_verbage()
 
         # Connect components in the flowgraph
-        fg.connect(self.packet_transmitter, self.amp)
-
-        gr.hier_block.__init__(self, fg, None, self.amp)
+        self.connect(self.packet_transmitter, self.amp, self)
 
     def set_tx_amplitude(self, ampl):
         """

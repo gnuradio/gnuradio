@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -30,12 +30,12 @@ from gnuradio import usrp
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-def ramp_source (fg):
+def ramp_source ():
     period = 2**16
     src = gr.vector_source_s (range (-period/2, period/2, 1), True)
     return src
 
-def build_graph (tx_enable, rx_enable):
+def build_block (tx_enable, rx_enable):
     max_usb_rate = 8e6                  # 8 MS/sec
     dac_freq = 128e6
     adc_freq =  64e6
@@ -48,23 +48,23 @@ def build_graph (tx_enable, rx_enable):
     rx_mux = 0x00003210
     rx_decim = int ((adc_freq * rx_nchan) / (max_usb_rate/2)) # 32
     
-    fg = gr.flow_graph ()
+    tb = gr.top_block ()
 
     if tx_enable:
         tx_src0 = gr.sig_source_c (dac_freq/tx_interp, gr.GR_CONST_WAVE, 0, 16e3, 0)
         usrp_tx = usrp.sink_c (0, tx_interp, tx_nchan, tx_mux)
         usrp_tx.set_tx_freq (0, 10e6)
         usrp_tx.set_tx_freq (1,  9e6)
-        fg.connect (tx_src0, usrp_tx)
+        tb.connect (tx_src0, usrp_tx)
 
     if rx_enable:
         usrp_rx = usrp.source_c (0, rx_decim, rx_nchan, rx_mux)
         usrp_rx.set_rx_freq (0, 5.5e6)
         usrp_rx.set_rx_freq (1, 6.5e6)
         rx_dst0 = gr.null_sink (gr.sizeof_gr_complex)
-        fg.connect (usrp_rx, rx_dst0)
+        tb.connect (usrp_rx, rx_dst0)
 
-    return fg
+    return tb
     
 def main ():
     parser = OptionParser (option_class=eng_option)
@@ -73,11 +73,11 @@ def main ():
     parser.add_option ("-r", action="store_true", dest="rx_enable",
                        default=False, help="enable Rx path")
     (options, args) = parser.parse_args ()
-    fg = build_graph (options.tx_enable, options.rx_enable)
+    tb = build_block (options.tx_enable, options.rx_enable)
 
-    fg.start ()
+    tb.start ()
     raw_input ('Press Enter to quit: ')
-    fg.stop ()
+    tb.stop ()
 
 if __name__ == '__main__':
     main ()

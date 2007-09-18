@@ -53,6 +53,10 @@ class app_top_block(gr.top_block):
 	    if options.log:
 		self.connect((bank, i), gr.file_sink(gr.sizeof_gr_complex, 'chan_'+'%3.3f'%(freq/1e6)+'.dat'))
 
+    def __del__(self):
+	# Avoid weak-ref error
+	del self.subdev
+	
 def main():
     parser = OptionParser(option_class=eng_option)
     parser.add_option("-f", "--frequency", type="eng_float", default=929.5e6,

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -29,7 +29,7 @@ from gnuradio import gr
 from gnuradio import usrp
 
 
-def ramp_source (fg):
+def ramp_source (tb):
     period = 2**16
     src = gr.vector_source_s (range (-period/2, period/2, 1), True)
     return src
@@ -38,26 +38,26 @@ def build_graph ():
     tx_interp =  32       # tx should be twice rx
     rx_decim  =  16
     
-    fg = gr.flow_graph ()
+    tb = gr.top_block ()
 
-    data_src = ramp_source (fg)
+    data_src = ramp_source (tb)
     # usrp_tx = usrp.sink_s (0, tx_interp, 1, 0x98)
     usrp_tx = usrp.sink_s (0, tx_interp)
-    fg.connect (data_src, usrp_tx)
+    tb.connect (data_src, usrp_tx)
 
     usrp_rx = usrp.source_s (0, rx_decim, 1, 0x32103210, usrp.FPGA_MODE_LOOPBACK)
     sink = gr.check_counting_s ()
-    fg.connect (usrp_rx, sink)
+    tb.connect (usrp_rx, sink)
 
     # file_sink = gr.file_sink (gr.sizeof_short, "loopback.dat")
-    # fg.connect (usrp_rx, file_sink)
+    # tb.connect (usrp_rx, file_sink)
     
-    return fg
+    return tb
     
 def main ():
-    fg = build_graph ()
+    tb = build_graph ()
     try:
-        fg.run()
+        tb.run()
     except KeyboardInterrupt:
         pass
 

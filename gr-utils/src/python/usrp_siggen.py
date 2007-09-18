@@ -8,9 +8,9 @@ from optparse import OptionParser
 import sys
 
 
-class my_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
     def __init__ (self):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
         
         # controllable values
         self.interp = 64
@@ -148,36 +148,36 @@ def main ():
         parser.print_help()
         raise SystemExit
 
-    fg = my_graph()
-    fg.set_interpolator (options.interp)
-    fg.set_waveform_type (options.type)
-    fg.set_waveform_freq (options.waveform_freq)
-    fg.set_waveform_ampl (options.amplitude)
-    fg.set_waveform_offset (options.offset)
+    tb = my_top_block()
+    tb.set_interpolator (options.interp)
+    tb.set_waveform_type (options.type)
+    tb.set_waveform_freq (options.waveform_freq)
+    tb.set_waveform_ampl (options.amplitude)
+    tb.set_waveform_offset (options.offset)
 
     # determine the daughterboard subdevice we're using
     if options.tx_subdev_spec is None:
-        options.tx_subdev_spec = usrp.pick_tx_subdevice(fg.u)
+        options.tx_subdev_spec = usrp.pick_tx_subdevice(tb.u)
 
-    m = usrp.determine_tx_mux_value(fg.u, options.tx_subdev_spec)
+    m = usrp.determine_tx_mux_value(tb.u, options.tx_subdev_spec)
     #print "mux = %#04x" % (m,)
-    fg.u.set_mux(m)
-    fg.subdev = usrp.selected_subdev(fg.u, options.tx_subdev_spec)
-    print "Using TX d'board %s" % (fg.subdev.side_and_name(),)
+    tb.u.set_mux(m)
+    tb.subdev = usrp.selected_subdev(tb.u, options.tx_subdev_spec)
+    print "Using TX d'board %s" % (tb.subdev.side_and_name(),)
     
     if options.gain is None:
-        fg.subdev.set_gain(fg.subdev.gain_range()[1])    # set max Tx gain
+        tb.subdev.set_gain(fg.subdev.gain_range()[1])    # set max Tx gain
     else:
-        fg.subdev.set_gain(options.gain)    # set max Tx gain
+        tb.subdev.set_gain(options.gain)    # set max Tx gain
 
-    if not fg.set_freq(options.rf_freq):
+    if not tb.set_freq(options.rf_freq):
         sys.stderr.write('Failed to set RF frequency\n')
         raise SystemExit
     
-    fg.subdev.set_enable(True)                       # enable transmitter
+    tb.subdev.set_enable(True)                       # enable transmitter
 
     try:
-        fg.run()
+        tb.run()
     except KeyboardInterrupt:
         pass
 

@@ -36,20 +36,24 @@ gr_hier_block2_sptr gr_make_hier_block2(const std::string name,
 class gr_hier_block2 : public gr_basic_block
 {
 private:
-    gr_hier_block2(const std::string name,
-                   gr_io_signature_sptr input_signature,
-                   gr_io_signature_sptr output_signature);
-
+  gr_hier_block2(const std::string name,
+		 gr_io_signature_sptr input_signature,
+		 gr_io_signature_sptr output_signature);
+  
 public:
-    ~gr_hier_block2 ();
-
-    // Add a named block to the container
-    void connect(gr_basic_block_sptr src, int src_port,
-                 gr_basic_block_sptr dst, int dst_port)
-        throw (std::invalid_argument);
-    void disconnect(gr_basic_block_sptr src, int src_port,
-                    gr_basic_block_sptr dst, int dst_port)
-        throw (std::invalid_argument);
-    void lock();
-    void unlock();
+  ~gr_hier_block2 ();
+  
+  void connect(gr_basic_block_sptr block)
+    throw (std::invalid_argument);
+  void connect(gr_basic_block_sptr src, int src_port,
+	       gr_basic_block_sptr dst, int dst_port)
+    throw (std::invalid_argument);
+  void disconnect(gr_basic_block_sptr block)
+    throw (std::invalid_argument);
+  void disconnect(gr_basic_block_sptr src, int src_port,
+		  gr_basic_block_sptr dst, int dst_port)
+    throw (std::invalid_argument);
+  void disconnect_all();
+  void lock();
+  void unlock();
 };

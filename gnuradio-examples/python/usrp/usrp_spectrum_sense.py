@@ -1,9 +1,28 @@
 #!/usr/bin/env python
+#
+# Copyright 2005,2007 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
 from gnuradio import gr, gru, eng_notation, optfir, window
 from gnuradio import audio
 from gnuradio import usrp
-from gnuradio import blks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 from usrpm import usrp_dbid
@@ -16,9 +35,9 @@ class tune(gr.feval_dd):
     """
     This class allows C++ code to callback into python.
     """
-    def __init__(self, fg):
+    def __init__(self, tb):
         gr.feval_dd.__init__(self)
-        self.fg = fg
+        self.tb = tb
 
     def eval(self, ignore):
         """
@@ -36,7 +55,7 @@ class tune(gr.feval_dd):
             #
             # message on stderr.  Not exactly helpful ;)
 
-            new_freq = self.fg.set_next_freq()
+            new_freq = self.tb.set_next_freq()
             return new_freq
 
         except Exception, e:
@@ -55,10 +74,10 @@ class parse_msg(object):
         self.data = struct.unpack('%df' % (self.vlen,), t)
 
 
-class my_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
 
     def __init__(self):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         usage = "usage: %prog [options] min_freq max_freq"
         parser = OptionParser(option_class=eng_option, usage=usage)
@@ -213,12 +232,12 @@ class my_graph(gr.flow_graph):
         self.subdev.set_gain(gain)
 
 
-def main_loop(fg):
+def main_loop(tb):
     while 1:
 
         # Get the next message sent from the C++ code (blocking call).
         # It contains the center frequency and the mag squared of the fft
-        m = parse_msg(fg.msgq.delete_head())
+        m = parse_msg(tb.msgq.delete_head())
 
         # Print center freq so we know that something is happening...
         print m.center_freq
@@ -233,10 +252,10 @@ def main_loop(fg):
 
     
 if __name__ == '__main__':
-    fg = my_graph()
+    tb = my_top_block()
     try:
-        fg.start()              # start executing flow graph in another thread...
-        main_loop(fg)
+        tb.start()              # start executing flow graph in another thread...
+        main_loop(tb)
         
     except KeyboardInterrupt:
         pass

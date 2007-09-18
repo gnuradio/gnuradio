@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, blks
+from gnuradio import gr, blks2
 from gnuradio import audio
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -41,25 +41,21 @@ def main():
         parser.print_help()
         raise SystemExit, 1
 
-    fg = gr.flow_graph()
+    tb = gr.top_block()
 
     src = audio.source(int(options.sample_rate), options.audio_input)
-    tx = blks.cvsd_encode(fg, options.resample_rate)
+    tx = blks2.cvsd_encode(options.resample_rate)
 
     # todo: add noise
 
-    rx = blks.cvsd_decode(fg, options.resample_rate)
+    rx = blks2.cvsd_decode(options.resample_rate)
     dst = audio.sink(int(options.sample_rate), options.audio_output)
     
-    fg.connect(src, tx, rx, dst)    
+    tb.connect(src, tx, rx, dst)    
+    tb.run()
     
-    fg.start()
-
-    raw_input ('Press Enter to exit: ')
-    fg.stop()
-
-
 if __name__ == '__main__':
+    print "Enter CTRL-C to exit"
     try:
         main()
     except KeyboardInterrupt:

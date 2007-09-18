@@ -1,4 +1,24 @@
 #!/usr/bin/env python
+#
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
 """
 Transmit 2 signals, one out each daughterboard.
@@ -14,7 +34,7 @@ from gnuradio import gr
 from gnuradio.eng_notation import num_to_str, str_to_num
 from gnuradio import usrp
 from gnuradio import audio
-from gnuradio import blks
+from gnuradio import blks2
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 from usrpm import usrp_dbid
@@ -22,11 +42,14 @@ import math
 import sys
 
 
-class example_signal_0(gr.hier_block):
+class example_signal_0(gr.hier_block2):
     """
     Sinusoid at 600 Hz.
     """
-    def __init__(self, fg, sample_rate):
+    def __init__(self, sample_rate):
+        gr.hier_block2.__init__(self, "example_signal_0",
+                                gr.io_signature(0, 0, 0),                    # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
         src = gr.sig_source_c (sample_rate,    # sample rate
                                gr.GR_SIN_WAVE, # waveform type
@@ -34,14 +57,17 @@ class example_signal_0(gr.hier_block):
                                1.0,            # amplitude
                                0)              # DC Offset
     
-        gr.hier_block.__init__(self, fg, None, src)
+        self.connect(src, self)
 
 
-class example_signal_1(gr.hier_block):
+class example_signal_1(gr.hier_block2):
     """
     North American dial tone (350 + 440 Hz).
     """
-    def __init__(self, fg, sample_rate):
+    def __init__(self, sample_rate):
+        gr.hier_block2.__init__(self, "example_signal_1",
+                                gr.io_signature(0, 0, 0),                    # Input signature
+                                gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
         src0 = gr.sig_source_c (sample_rate,    # sample rate
                                 gr.GR_SIN_WAVE, # waveform type
@@ -55,17 +81,14 @@ class example_signal_1(gr.hier_block):
                                 1.0,            # amplitude
                                 0)              # DC Offset
         sum = gr.add_cc()
-        fg.connect(src0, (sum, 0))
-        fg.connect(src1, (sum, 1))
-        
-        gr.hier_block.__init__(self, fg, None, sum)
-    
+        self.connect(src0, (sum, 0))
+        self.connect(src1, (sum, 1))
+        self.connect(sum, self)
 
-
-class my_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
 
     def __init__(self):
-        gr.flow_graph.__init__ (self)
+        gr.top_block.__init__(self)
 
         usage="%prog: [options] side-A-tx-freq side-B-tx-freq"
         parser = OptionParser (option_class=eng_option, usage=usage)
@@ -108,8 +131,8 @@ class my_graph(gr.flow_graph):
         # ----------------------------------------------------------------
         # build two signal sources, interleave them, amplify and connect them to usrp
 
-        sig0 = example_signal_0(self, self.usrp_rate)
-        sig1 = example_signal_1(self, self.usrp_rate)
+        sig0 = example_signal_0(self.usrp_rate)
+        sig1 = example_signal_1(self.usrp_rate)
 
         intl = gr.interleave(gr.sizeof_gr_complex)
         self.connect(sig0, (intl, 0))
@@ -155,6 +178,6 @@ class my_graph(gr.flow_graph):
 
 if __name__ == '__main__':
     try:
-        my_graph().run()
+        my_top_block().run()
     except KeyboardInterrupt:
         pass

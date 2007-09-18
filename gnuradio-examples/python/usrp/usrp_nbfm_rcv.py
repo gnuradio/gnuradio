@@ -1,12 +1,32 @@
 #!/usr/bin/env python
+#
+# Copyright 2005,2007 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
 from gnuradio import gr, gru, eng_notation, optfir
 from gnuradio import audio
 from gnuradio import usrp
-from gnuradio import blks
+from gnuradio import blks2
 from gnuradio.eng_option import eng_option
 from gnuradio.wxgui import slider, powermate
-from gnuradio.wxgui import stdgui, fftsink, form
+from gnuradio.wxgui import stdgui2, fftsink2, form
 from optparse import OptionParser
 from usrpm import usrp_dbid
 import sys
@@ -18,9 +38,9 @@ import wx
 #                           Control Stuff
 #////////////////////////////////////////////////////////////////////////
 
-class my_graph (stdgui.gui_flow_graph):
+class my_top_block (stdgui2.std_top_block):
     def __init__(self,frame,panel,vbox,argv):
-        stdgui.gui_flow_graph.__init__ (self,frame,panel,vbox,argv)
+        stdgui2.std_top_block.__init__ (self,frame,panel,vbox,argv)
 
         parser=OptionParser(option_class=eng_option)
         parser.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
@@ -50,8 +70,9 @@ class my_graph (stdgui.gui_flow_graph):
         self.freq = 0
         self.freq_step = 25e3
 
-        self.rxpath = receive_path(self, options.rx_subdev_spec, options.gain, options.audio_output)
-
+        self.rxpath = receive_path(options.rx_subdev_spec, options.gain, options.audio_output)
+	self.connect(self.rxpath)
+	
         self._build_gui(vbox, options.no_gui)
 
         # set initial values
@@ -79,28 +100,27 @@ class my_graph (stdgui.gui_flow_graph):
 
         self.src_fft = None
         if 1 and not(no_gui):
-            self.src_fft = fftsink.fft_sink_c (self, self.panel, title="Data from USRP",
+            self.src_fft = fftsink2.fft_sink_c(self.panel, title="Data from USRP",
                                                fft_size=512, sample_rate=self.rxpath.if_rate,
                                                ref_level=80, y_per_div=20)
             self.connect (self.rxpath.u, self.src_fft)
             vbox.Add (self.src_fft.win, 4, wx.EXPAND)
-
         if 1 and not(no_gui):
-            rx_fft = fftsink.fft_sink_c (self, self.panel, title="Post s/w DDC",
+            rx_fft = fftsink2.fft_sink_c(self.panel, title="Post s/w DDC",
                                          fft_size=512, sample_rate=self.rxpath.quad_rate,
                                          ref_level=80, y_per_div=20)
             self.connect (self.rxpath.ddc, rx_fft)
             vbox.Add (rx_fft.win, 4, wx.EXPAND)
         
         if 1 and not(no_gui):
-            post_deemph_fft = fftsink.fft_sink_f (self, self.panel, title="Post Deemph",
+            post_deemph_fft = fftsink2.fft_sink_f(self.panel, title="Post Deemph",
                                                   fft_size=512, sample_rate=self.rxpath.audio_rate,
                                                   y_per_div=10, ref_level=-40)
             self.connect (self.rxpath.fmrx.deemph, post_deemph_fft)
             vbox.Add (post_deemph_fft.win, 4, wx.EXPAND)
 
         if 0:
-            post_filt_fft = fftsink.fft_sink_f (self, self.panel, title="Post Filter", 
+            post_filt_fft = fftsink2.fft_sink_f(self.panel, title="Post Filter", 
                                                 fft_size=512, sample_rate=audio_rate,
                                                 y_per_div=10, ref_level=-40)
             self.connect (self.guts.audio_filter, post_filt)
@@ -225,8 +245,11 @@ class my_graph (stdgui.gui_flow_graph):
 
 USE_SIMPLE_SQUELCH = False
 
-class receive_path(gr.hier_block):
-    def __init__(self, fg, subdev_spec, gain, audio_output):
+class receive_path(gr.hier_block2):
+    def __init__(self, subdev_spec, gain, audio_output):
+	gr.hier_block2.__init__(self, "receive_path",
+				gr.io_signature(0, 0, 0), # Input signature
+				gr.io_signature(0, 0, 0)) # Output signature
 
         self.u = usrp.source_c ()
         adc_rate = self.u.adc_rate()
@@ -266,10 +289,10 @@ class receive_path(gr.hier_block):
         if USE_SIMPLE_SQUELCH:
             self.squelch = gr.simple_squelch_cc(20)
         else:
-            self.squelch = blks.standard_squelch(fg, self.audio_rate)
+            self.squelch = blks2.standard_squelch(self.audio_rate)
 
         # instantiate the guts of the single channel receiver
-        self.fmrx = blks.nbfm_rx(fg, self.audio_rate, self.quad_rate)
+        self.fmrx = blks2.nbfm_rx(self.audio_rate, self.quad_rate)
 
         # audio gain / mute block
         self._audio_gain = gr.multiply_const_ff(1.0)
@@ -279,13 +302,11 @@ class receive_path(gr.hier_block):
         
         # now wire it all together
         if USE_SIMPLE_SQUELCH:
-            fg.connect (self.u, self.ddc, self.squelch, self.fmrx,
-                        self._audio_gain, audio_sink)
+            self.connect (self.u, self.ddc, self.squelch, self.fmrx,
+                          self._audio_gain, audio_sink)
         else:
-            fg.connect (self.u, self.ddc, self.fmrx, self.squelch,
-                        self._audio_gain, audio_sink)
-
-        gr.hier_block.__init__(self, fg, self.u, audio_sink)
+            self.connect (self.u, self.ddc, self.fmrx, self.squelch,
+                          self._audio_gain, audio_sink)
 
         if gain is None:
             # if no gain was specified, use the mid-point in dB
@@ -358,5 +379,5 @@ class receive_path(gr.hier_block):
 # ////////////////////////////////////////////////////////////////////////
 
 if __name__ == '__main__':
-    app = stdgui.stdapp (my_graph, "USRP NBFM RX")
+    app = stdgui2.stdapp (my_top_block, "USRP NBFM RX")
     app.MainLoop ()

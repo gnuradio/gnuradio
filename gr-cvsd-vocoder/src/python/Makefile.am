@@ -28,7 +28,7 @@ TESTS = 				\
 	run_tests
 
 
-grblkspythondir = $(grpythondir)/blksimpl
+grblkspythondir = $(grpythondir)/blks2impl
 
 grblkspython_PYTHON =		\
 	cvsd.py

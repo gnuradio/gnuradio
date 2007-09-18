@@ -53,6 +53,9 @@ public:
   // Unlock the top block at end of reconfiguration
   void unlock();
 
+  // Return true if flowgraph is running
+  bool is_running() const { return d_running; }
+  
 private:
     
   bool                           d_running;

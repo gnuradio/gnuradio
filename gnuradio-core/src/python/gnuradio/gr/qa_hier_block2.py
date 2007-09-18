@@ -187,5 +187,58 @@ class test_hier_block2(gr_unittest.TestCase):
 	hblock.run()
 	self.assertEquals(data, dst.data())
 
+    def test_021_connect_single(self):
+        hblock = gr.top_block("test_block")
+        blk = gr.hier_block2("block",
+                             gr.io_signature(0, 0, 0),
+                             gr.io_signature(0, 0, 0))
+        hblock.connect(blk)
+
+    def test_022_connect_single_with_ports(self):
+        hblock = gr.top_block("test_block")
+        blk = gr.hier_block2("block",
+                             gr.io_signature(1, 1, 1),
+                             gr.io_signature(1, 1, 1))
+        self.assertRaises(ValueError,
+                          lambda: hblock.connect(blk))
+
+    def test_023_connect_single_twice(self):
+        hblock = gr.top_block("test_block")
+        blk = gr.hier_block2("block",
+                             gr.io_signature(0, 0, 0),
+                             gr.io_signature(0, 0, 0))
+        hblock.connect(blk)
+        self.assertRaises(ValueError,
+                          lambda: hblock.connect(blk))
+
+    def test_024_disconnect_single(self):
+        hblock = gr.top_block("test_block")
+        blk = gr.hier_block2("block",
+                             gr.io_signature(0, 0, 0),
+                             gr.io_signature(0, 0, 0))
+        hblock.connect(blk)
+        hblock.disconnect(blk)
+
+    def test_025_disconnect_single_not_connected(self):
+        hblock = gr.top_block("test_block")
+        blk = gr.hier_block2("block",
+                             gr.io_signature(0, 0, 0),
+                             gr.io_signature(0, 0, 0))
+        self.assertRaises(ValueError,
+                          lambda: hblock.disconnect(blk))
+
+    def test_026_run_single(self):
+        expected_data = (1.0,)
+        tb = gr.top_block("top_block")
+        hb = gr.hier_block2("block",
+                            gr.io_signature(0, 0, 0),
+                            gr.io_signature(0, 0, 0))
+        src = gr.vector_source_f(expected_data)
+        dst = gr.vector_sink_f()
+        hb.connect(src, dst)
+        tb.connect(hb)
+        tb.run()
+        self.assertEquals(expected_data, dst.data())
+    
 if __name__ == "__main__":
     gr_unittest.main()

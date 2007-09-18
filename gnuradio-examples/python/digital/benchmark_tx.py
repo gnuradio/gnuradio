@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005, 2006 Free Software Foundation, Inc.
+# Copyright 2005, 2006, 2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -36,12 +36,11 @@ import fusb_options
 #print os.getpid()
 #raw_input('Attach and press enter')
 
-
-class my_graph(gr.flow_graph):
-    def __init__(self, modulator_class, options):
-        gr.flow_graph.__init__(self)
-        self.txpath = transmit_path(self, modulator_class, options)
-
+class my_top_block(gr.top_block):
+    def __init__(self, modulator, options):
+        gr.top_block.__init__(self)
+        self.txpath = transmit_path(modulator, options)
+        self.connect(self.txpath)
 
 # /////////////////////////////////////////////////////////////////////////////
 #                                   main
@@ -50,7 +49,7 @@ class my_graph(gr.flow_graph):
 def main():
 
     def send_pkt(payload='', eof=False):
-        return fg.txpath.send_pkt(payload, eof)
+        return tb.txpath.send_pkt(payload, eof)
 
     def rx_callback(ok, payload):
         print "ok = %r, payload = '%s'" % (ok, payload)
@@ -95,14 +94,14 @@ def main():
         source_file = open(options.from_file, 'r')
 
     # build the graph
-    fg = my_graph(mods[options.modulation], options)
+    tb = my_top_block(mods[options.modulation], options)
 
     r = gr.enable_realtime_scheduling()
     if r != gr.RT_OK:
         print "Warning: failed to enable realtime scheduling"
 
-    fg.start()                       # start flow graph
-
+    tb.start()                       # start flow graph
+        
     # generate and send packets
     nbytes = int(1e6 * options.megabytes)
     n = 0
@@ -126,7 +125,8 @@ def main():
         pktno += 1
         
     send_pkt(eof=True)
-    fg.wait()                       # wait for it to finish
+
+    tb.wait()                       # wait for it to finish
 
 if __name__ == '__main__':
     try:
