@@ -265,17 +265,17 @@ protected:
 class usrp1_source_base : public gr_sync_block {
  protected:
 
-  usrp1_sink_base (const std::string &name,
-		   gr_io_signature_sptr input_signature,
-		   int which_board,
-		   unsigned int interp_rate,
-		   int nchan,
-		   int mux,
-		   int fusb_block_size,
-		   int fusb_nblocks,
-		   const std::string fpga_filename,
-		   const std::string firmware_filename
-		   ) throw (std::runtime_error);
+  usrp1_source_base (const std::string &name,
+		     gr_io_signature_sptr input_signature,
+		     int which_board,
+		     unsigned int interp_rate,
+		     int nchan,
+		     int mux,
+		     int fusb_block_size,
+		     int fusb_nblocks,
+		     const std::string fpga_filename,
+		     const std::string firmware_filename
+		     ) throw (std::runtime_error);
 
   virtual int ninput_bytes_reqd_for_noutput_items (int noutput_items) = 0;
 
