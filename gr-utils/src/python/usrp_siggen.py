@@ -166,7 +166,7 @@ def main ():
     print "Using TX d'board %s" % (tb.subdev.side_and_name(),)
     
     if options.gain is None:
-        tb.subdev.set_gain(fg.subdev.gain_range()[1])    # set max Tx gain
+        tb.subdev.set_gain(tb.subdev.gain_range()[1])    # set max Tx gain
     else:
         tb.subdev.set_gain(options.gain)    # set max Tx gain
 
