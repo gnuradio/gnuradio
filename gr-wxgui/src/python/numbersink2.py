@@ -21,9 +21,8 @@
 # 
 
 from gnuradio import gr, gru, window
-from gnuradio.wxgui import stdgui
+from gnuradio.wxgui import stdgui2
 import wx
-#from wx import StaticText
 import gnuradio.wxgui.plot as plot
 import numpy
 import threading
@@ -96,70 +95,58 @@ class number_sink_base(object):
         self.base_value = base_value
         
 
-class number_sink_f(gr.hier_block, number_sink_base):
-    def __init__(self, fg, parent, unit='',base_value=0,minval=-100.0,maxval=100.0,factor=1.0,
-                 decimal_places=10, ref_level=50, sample_rate=1, #number_size=512,
+class number_sink_f(gr.hier_block2, number_sink_base):
+    def __init__(self, parent, unit='',base_value=0,minval=-100.0,maxval=100.0,factor=1.0,
+                 decimal_places=10, ref_level=50, sample_rate=1, 
                  number_rate=default_number_rate, average=False, avg_alpha=None,
                  label='', size=default_numbersink_size, peak_hold=False):
+
+	gr.hier_block2.__init__(self, "number_sink_f",
+				gr.io_signature(1, 1, gr.sizeof_float), # Input signature
+				gr.io_signature(0, 0, 0))               # Output signature
 
         number_sink_base.__init__(self, unit=unit, input_is_real=True, base_value=base_value,
                                minval=minval,maxval=maxval,factor=factor,
                                decimal_places=decimal_places, ref_level=ref_level,
-                               sample_rate=sample_rate, #number_size=number_size,
-                               number_rate=number_rate,
+                               sample_rate=sample_rate, number_rate=number_rate,
                                average=average, avg_alpha=avg_alpha, label=label,
                                peak_hold=peak_hold)
          
         number_size=1                      
-        #s2p = gr.stream_to_vector(gr.sizeof_float, number_size)
         one_in_n = gr.keep_one_in_n(gr.sizeof_float,
                                     max(1, int(sample_rate/number_rate)))
-
             
-        #c2mag = gr.complex_to_mag(number_size)
         self.avg = gr.single_pole_iir_filter_ff(1.0, number_size)
-
-        # FIXME  We need to add 3dB to all bins but the DC bin
-        #log = gr.nlog10_ff(20, number_size,
-        #                   -20*math.log10(number_size)-10*math.log10(power/number_size))
         sink = gr.message_sink(gr.sizeof_float , self.msgq, True)
+        self.connect(self, self.avg, one_in_n, sink)
 
-        #fg.connect (s2p, one_in_n, fft, c2mag, self.avg, log, sink)
-        fg.connect(self.avg,one_in_n,sink)
-        gr.hier_block.__init__(self, fg, self.avg, sink)
         self.win = number_window(self, parent, size=size,label=label)
         self.set_average(self.average)
 
-
-class number_sink_c(gr.hier_block, number_sink_base):
-    def __init__(self, fg, parent, unit='',base_value=0,minval=-100.0,maxval=100.0,factor=1.0,
-                 decimal_places=10, ref_level=50, sample_rate=1, #number_size=512,
+class number_sink_c(gr.hier_block2, number_sink_base):
+    def __init__(self, parent, unit='',base_value=0,minval=-100.0,maxval=100.0,factor=1.0,
+                 decimal_places=10, ref_level=50, sample_rate=1,
                  number_rate=default_number_rate, average=False, avg_alpha=None,
                  label='', size=default_numbersink_size, peak_hold=False):
 
+	gr.hier_block2.__init__(self, "number_sink_c",
+				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+				gr.io_signature(0, 0, 0))                    # Output signature
+
         number_sink_base.__init__(self, unit=unit, input_is_real=False, base_value=base_value,factor=factor,
                                minval=minval,maxval=maxval,decimal_places=decimal_places, ref_level=ref_level,
-                               sample_rate=sample_rate, #number_size=number_size,
-                               number_rate=number_rate,
+                               sample_rate=sample_rate, number_rate=number_rate,
                                average=average, avg_alpha=avg_alpha, label=label,
                                peak_hold=peak_hold)
 
         number_size=1                      
         one_in_n = gr.keep_one_in_n(gr.sizeof_gr_complex,
                                     max(1, int(sample_rate/number_rate)))
-
             
-        #c2mag = gr.complex_to_mag(number_size)
         self.avg = gr.single_pole_iir_filter_cc(1.0, number_size)
-
-        # FIXME  We need to add 3dB to all bins but the DC bin
-        #log = gr.nlog10_ff(20, number_size,
-        #                   -20*math.log10(number_size)-10*math.log10(power/number_size))
         sink = gr.message_sink(gr.sizeof_gr_complex , self.msgq, True)
+        self.connect(self, self.avg, one_in_n, sink)
 
-        #fg.connect (s2p, one_in_n, fft, c2mag, self.avg, log, sink)
-        fg.connect(self.avg,one_in_n,sink)
-        gr.hier_block.__init__(self, fg, self.avg, sink)
         self.win = number_window(self, parent, size=size,label=label)
         self.set_average(self.average)
 
@@ -214,39 +201,18 @@ class static_text_window (wx.StaticText): #plot.PlotCanvas):
     def __init__ (self, parent, numbersink,id = -1,label="number",
                   pos = wx.DefaultPosition, size = wx.DefaultSize,
                   style = wx.DEFAULT_FRAME_STYLE, name = ""):
-        #plot.PlotCanvas.__init__ (self, parent, id, pos, size, style, name)
         wx.StaticText.__init__(self, parent, id, label, pos, size, style, name)
-        #self.static_text=wx.StaticText( parent, id, label, pos, (size[0]/2,size[1]/2), style, name)
-        #gauge_style = wx.GA_HORIZONTAL
-        #self.gauge=wx.Gauge( parent, id, range=1000, pos=(pos[0],pos[1]+size[1]/2),size=(size[0]/2,size[1]/2), style=gauge_style,  name = "gauge")
-        #wx.BoxSizer.__init__ (self,wx.VERTICAL)
-        #self.Add (self.static_text, 0, wx.EXPAND)
-        #self.Add (self.gauge, 1, wx.EXPAND)
         self.parent=parent
         self.label=label
-        #self.y_range = None
         self.numbersink = numbersink
         self.peak_hold = False
         self.peak_vals = None
-
-        #self.SetEnableGrid (True)
-        # self.SetEnableZoom (True)
-        # self.SetBackgroundColour ('black')
-        
         self.build_popup_menu()
-        
-        #EVT_DATA_EVENT (self, self.set_data)
-        #wx.EVT_CLOSE (self, self.on_close_window)
-        #self.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
         self.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
-
-        #self.input_watcher = input_watcher(numbersink.msgq, numbersink.number_size, self)
-
 
     def on_close_window (self, event):
         print "number_window:on_close_window"
         self.keep_running = False
-
 
     def set_peak_hold(self, enable):
         self.peak_hold = enable
@@ -267,13 +233,8 @@ class static_text_window (wx.StaticText): #plot.PlotCanvas):
 
     def on_show_gauge(self, evt):
         # print "on_show_gauge"
-        #if evt.IsChecked():
         self.numbersink.set_show_gauge(evt.IsChecked())
         print evt.IsChecked()
-        #  print "show gauge"
-        #else:
-        #  self.parent.gauge.Hide()
-        #  print "hide gauge"
 
     def on_incr_ref_level(self, evt):
         # print "on_incr_ref_level"
@@ -287,11 +248,11 @@ class static_text_window (wx.StaticText): #plot.PlotCanvas):
 
     def on_incr_decimal_places(self, evt):
         # print "on_incr_decimal_places"
-        self.numbersink.set_decimal_places(self.numbersink.decimal_places+1) #next_up(self.numbersink.decimal_places, (1,2,5,10,20)))
+        self.numbersink.set_decimal_places(self.numbersink.decimal_places+1)
 
     def on_decr_decimal_places(self, evt):
         # print "on_decr_decimal_places"
-        self.numbersink.set_decimal_places(max(self.numbersink.decimal_places-1,0)) #next_down(self.numbersink.decimal_places, (1,2,5,10,20)))
+        self.numbersink.set_decimal_places(max(self.numbersink.decimal_places-1,0)) 
 
     def on_decimal_places(self, evt):
         # print "on_decimal_places"
@@ -308,7 +269,6 @@ class static_text_window (wx.StaticText): #plot.PlotCanvas):
             self.numbersink.set_decimal_places(6)
         elif Id == self.id_decimal_places_9:
             self.numbersink.set_decimal_places(9)
-
         
     def on_right_click(self, event):
         menu = self.popup_menu
@@ -317,9 +277,7 @@ class static_text_window (wx.StaticText): #plot.PlotCanvas):
             item.Check(pred())
         self.PopupMenu(menu, event.GetPosition())
 
-
     def build_popup_menu(self):
-        #self.id_hide_gauge = wx.NewId()
         self.id_show_gauge = wx.NewId()
         self.id_incr_ref_level = wx.NewId()
         self.id_decr_ref_level = wx.NewId()
@@ -349,13 +307,11 @@ class static_text_window (wx.StaticText): #plot.PlotCanvas):
         self.Bind(wx.EVT_MENU, self.on_decimal_places, id=self.id_decimal_places_6)
         self.Bind(wx.EVT_MENU, self.on_decimal_places, id=self.id_decimal_places_9)
 
-
         # make a menu
         menu = wx.Menu()
         self.popup_menu = menu
         menu.AppendCheckItem(self.id_average, "Average")
         menu.AppendCheckItem(self.id_peak_hold, "Peak Hold")
-        #menu.Append(self.id_hide_gauge, "Hide gauge")
         menu.AppendCheckItem(self.id_show_gauge, "Show gauge")
         menu.Append(self.id_incr_ref_level, "Incr Ref Level")
         menu.Append(self.id_decr_ref_level, "Decr Ref Level")
@@ -372,7 +328,7 @@ class static_text_window (wx.StaticText): #plot.PlotCanvas):
 
         self.checkmarks = {
             self.id_average : lambda : self.numbersink.average,
-            self.id_peak_hold : lambda : self.numbersink.peak_hold,#            self.id_hide_gauge : lambda : self.numbersink.hide_gauge,
+            self.id_peak_hold : lambda : self.numbersink.peak_hold,
             self.id_show_gauge : lambda : self.numbersink.show_gauge,
             self.id_decimal_places_0 : lambda : self.numbersink.decimal_places == 0,
             self.id_decimal_places_1 : lambda : self.numbersink.decimal_places == 1,
@@ -381,7 +337,6 @@ class static_text_window (wx.StaticText): #plot.PlotCanvas):
             self.id_decimal_places_6 : lambda : self.numbersink.decimal_places == 6,
             self.id_decimal_places_9 : lambda : self.numbersink.decimal_places == 9,
             }
-
 
 def next_up(v, seq):
     """
@@ -411,8 +366,6 @@ class number_window (plot.PlotCanvas):
                   pos = wx.DefaultPosition, size = wx.DefaultSize,
                   style = wx.DEFAULT_FRAME_STYLE, name = ""):
         plot.PlotCanvas.__init__ (self, parent, id, pos, size, style, name)
-        #wx.StaticText.__init__(self, parent, id, label, pos, (size[0]/2,size[1]/2), style, name)
-        #print 'parent',parent
         self.static_text=static_text_window( self, numbersink,id, label, pos, (size[0]/2,size[1]/2), style, name)
         gauge_style = wx.GA_HORIZONTAL
         vbox=wx.BoxSizer(wx.VERTICAL)
@@ -423,38 +376,25 @@ class number_window (plot.PlotCanvas):
           vbox.Add (self.gauge, 1, wx.EXPAND)
         else:
           self.gauge=wx.Gauge( self, id, range=1000, pos=(pos[0],pos[1]+size[1]/3),size=(size[0]/2,size[1]/3), style=gauge_style,  name = "gauge")
-          #hbox=wx.BoxSizer(wx.HORIZONTAL)
           self.gauge_imag=wx.Gauge( self, id, range=1000, pos=(pos[0],pos[1]+size[1]*2/3),size=(size[0]/2,size[1]/3), style=gauge_style,  name = "gauge_imag")
           vbox.Add (self.gauge, 1, wx.EXPAND)
           vbox.Add (self.gauge_imag, 1, wx.EXPAND)
-          #vbox.Add (hbox, 1, wx.EXPAND)
         self.sizer = vbox
         self.SetSizer (self.sizer)
         self.SetAutoLayout (True)
         self.sizer.Fit (self)
 
         self.label=label
-        #self.y_range = None
         self.numbersink = numbersink
         self.peak_hold = False
         self.peak_vals = None
-
-        #self.SetEnableGrid (True)
-        # self.SetEnableZoom (True)
-        # self.SetBackgroundColour ('black')
-        
-        #self.build_popup_menu()
         
         EVT_DATA_EVENT (self, self.set_data)
         wx.EVT_CLOSE (self, self.on_close_window)
-        #self.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
-        #self.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
-
         self.input_watcher = input_watcher(numbersink.msgq, numbersink.number_size, self)
 
-
     def on_close_window (self, event):
-        print "number_window:on_close_window"
+        # print "number_window:on_close_window"
         self.keep_running = False
 
     def set_show_gauge(self, enable):
@@ -489,7 +429,6 @@ class number_window (plot.PlotCanvas):
             real_value=numbers[0]*self.numbersink.factor + self.numbersink.base_value
             imag_value=numbers[1]*self.numbersink.factor + self.numbersink.base_value
             self.current_value=complex(real_value,imag_value)
-        #x = max(abs(self.numbersink.sample_rate), abs(self.numbersink.base_value))
         x = max(real_value, imag_value)
         if x >= 1e9:
             sf = 1e-9
@@ -503,14 +442,12 @@ class number_window (plot.PlotCanvas):
         else :
             sf = 1
             unit_prefix = ""
-        #self.update_y_range ()
         if self.numbersink.input_is_real:
           showtext = "%s: %.*f %s%s" % (self.label, self.numbersink.decimal_places,real_value*sf,unit_prefix,self.numbersink.unit)
         else:
           showtext = "%s: %.*f,%.*f %s%s" % (self.label, self.numbersink.decimal_places,real_value*sf,
                                                        self.numbersink.decimal_places,imag_value*sf,unit_prefix,self.numbersink.unit)
         self.static_text.SetLabel(showtext)
-        #print (int(float((real_value-self.numbersink.base_value)*1000.0/(self.numbersink.maxval-self.numbersink.minval)))+500)
         self.gauge.SetValue(int(float((real_value-self.numbersink.base_value)*1000.0/(self.numbersink.maxval-self.numbersink.minval)))+500)
         if not self.numbersink.input_is_real:
           self.gauge.SetValue(int(float((imag_value-self.numbersink.base_value)*1000.0/(self.numbersink.maxval-self.numbersink.minval)))+500)
@@ -533,81 +470,40 @@ class number_window (plot.PlotCanvas):
         self.numbersink.set_peak_hold(evt.IsChecked())
 
 
-
-
-
-
-
-
-
-
-# ----------------------------------------------------------------
-#          	      Deprecated interfaces
-# ----------------------------------------------------------------
-
-# returns (block, win).
-#   block requires a single input stream of float
-#   win is a subclass of wxWindow
-
-def make_number_sink_f(fg, parent, label, number_size, input_rate, ymin = 0, ymax=50):
-    
-    block = number_sink_f(fg, parent, label=label, number_size=number_size, sample_rate=input_rate,
-                       decimal_places=(ymax - ymin)/8, ref_level=ymax)
-    return (block, block.win)
-
-# returns (block, win).
-#   block requires a single input stream of gr_complex
-#   win is a subclass of wxWindow
-
-def make_number_sink_c(fg, parent, label, number_size, input_rate, ymin=0, ymax=50):
-    block = number_sink_c(fg, parent, label=label, number_size=number_size, sample_rate=input_rate,
-                       decimal_places=(ymax - ymin)/8, ref_level=ymax)
-    return (block, block.win)
-
-
 # ----------------------------------------------------------------
 # Standalone test app
 # ----------------------------------------------------------------
 
-class test_app_flow_graph (stdgui.gui_flow_graph):
+class test_app_flow_graph (stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
-        stdgui.gui_flow_graph.__init__ (self, frame, panel, vbox, argv)
-
-        #number_size = 256
+        stdgui2.std_top_block.__init__ (self, frame, panel, vbox, argv)
 
         # build our flow graph
         input_rate = 20.48e3
 
-        # Generate a complex sinusoid
-        src1 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 2e3, 1)
-        #src1 = gr.sig_source_c (input_rate, gr.GR_CONST_WAVE, 5.75e3, 1)
+        # Generate a real and complex sinusoids
+        src1 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 2e3, 1)
+        src2 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 2e3, 1)
 
         # We add these throttle blocks so that this demo doesn't
         # suck down all the CPU available.  Normally you wouldn't use these.
-        thr1 = gr.throttle(gr.sizeof_gr_complex, input_rate)
+        thr1 = gr.throttle(gr.sizeof_float, input_rate)
+        thr2 = gr.throttle(gr.sizeof_gr_complex, input_rate)
 
-        #sink1 = number_sink_c (self, panel, label="Complex Data", number_size=number_size,
-        #                    sample_rate=input_rate, base_value=100e3,
-        #                    ref_level=0, decimal_places=3)
-        #vbox.Add (sink1.win, 1, wx.EXPAND)
-        #self.connect (src1, thr1, sink1)
-
-        src2 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 2e3, 1)
-        #src2 = gr.sig_source_f (input_rate, gr.GR_CONST_WAVE, 5.75e3, 1)
-        thr2 = gr.throttle(gr.sizeof_float, input_rate)
-        sink2 = number_sink_f (self, panel, unit='Hz',label="Real Data", avg_alpha=0.001,#number_size=number_size*2,
+        sink1 = number_sink_f (panel, unit='Hz',label="Real Data", avg_alpha=0.001,
                             sample_rate=input_rate, base_value=100e3,
                             ref_level=0, decimal_places=3)
-        vbox.Add (sink2.win, 1, wx.EXPAND)
-        sink3 = number_sink_c (self, panel, unit='V',label="Complex Data", avg_alpha=0.001,#number_size=number_size*2,
+        vbox.Add (sink1.win, 1, wx.EXPAND)
+        sink2 = number_sink_c (panel, unit='V',label="Complex Data", avg_alpha=0.001,
                             sample_rate=input_rate, base_value=0,
                             ref_level=0, decimal_places=3)
-        vbox.Add (sink3.win, 1, wx.EXPAND)
+        vbox.Add (sink2.win, 1, wx.EXPAND)
+
+        self.connect (src1, thr1, sink1)
         self.connect (src2, thr2, sink2)
-        self.connect (src1, thr1, sink3)
+
 def main ():
-    app = stdgui.stdapp (test_app_flow_graph,
-                         "Number Sink Test App")
+    app = stdgui2.stdapp (test_app_flow_graph, "Number Sink Test App")
     app.MainLoop ()
 
 if __name__ == '__main__':

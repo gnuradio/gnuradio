@@ -42,4 +42,5 @@ ourpython_PYTHON =			\
 	slider.py			\
 	stdgui.py			\
 	stdgui2.py			\
-	numbersink.py		
+	numbersink.py			\
+	numbersink2.py
