@@ -28,7 +28,7 @@ EXTRA_DIST = 			\
 		radar_tx.v	\
 		radar_rx.v	\
 		dac_interface.v	\
-		fifo32_4k.v	\
+		fifo32_2k.v	\
 		cordic_nco.v
 
 MOSTLYCLEANFILES = *~ *.bak

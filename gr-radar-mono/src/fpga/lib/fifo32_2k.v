@@ -4,7 +4,7 @@
 // MODULE: scfifo 
 
 // ============================================================
-// File Name: fifo32_4k.v
+// File Name: fifo32_2k.v
 // Megafunction Name(s):
 // 			scfifo
 //
@@ -36,7 +36,7 @@
 // synopsys translate_off
 `timescale 1 ps / 1 ps
 // synopsys translate_on
-module fifo32_4k (
+module fifo32_2k (
 	clock,
 	data,
 	rdreq,
@@ -78,11 +78,11 @@ module fifo32_4k (
 	defparam
 		scfifo_component.add_ram_output_register = "OFF",
 		scfifo_component.intended_device_family = "Cyclone",
-		scfifo_component.lpm_numwords = 4096,
+		scfifo_component.lpm_numwords = 2048,
 		scfifo_component.lpm_showahead = "OFF",
 		scfifo_component.lpm_type = "scfifo",
 		scfifo_component.lpm_width = 32,
-		scfifo_component.lpm_widthu = 12,
+		scfifo_component.lpm_widthu = 11,
 		scfifo_component.overflow_checking = "OFF",
 		scfifo_component.underflow_checking = "OFF",
 		scfifo_component.use_eab = "ON";
@@ -99,7 +99,7 @@ endmodule
 // Retrieval info: PRIVATE: AlmostFullThr NUMERIC "-1"
 // Retrieval info: PRIVATE: CLOCKS_ARE_SYNCHRONIZED NUMERIC "0"
 // Retrieval info: PRIVATE: Clock NUMERIC "0"
-// Retrieval info: PRIVATE: Depth NUMERIC "4096"
+// Retrieval info: PRIVATE: Depth NUMERIC "2048"
 // Retrieval info: PRIVATE: Empty NUMERIC "1"
 // Retrieval info: PRIVATE: Full NUMERIC "0"
 // Retrieval info: PRIVATE: INTENDED_DEVICE_FAMILY STRING "Cyclone"
@@ -127,11 +127,11 @@ endmodule
 // Retrieval info: PRIVATE: wsUsedW NUMERIC "0"
 // Retrieval info: CONSTANT: ADD_RAM_OUTPUT_REGISTER STRING "OFF"
 // Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone"
-// Retrieval info: CONSTANT: LPM_NUMWORDS NUMERIC "4096"
+// Retrieval info: CONSTANT: LPM_NUMWORDS NUMERIC "2048"
 // Retrieval info: CONSTANT: LPM_SHOWAHEAD STRING "OFF"
 // Retrieval info: CONSTANT: LPM_TYPE STRING "scfifo"
 // Retrieval info: CONSTANT: LPM_WIDTH NUMERIC "32"
-// Retrieval info: CONSTANT: LPM_WIDTHU NUMERIC "12"
+// Retrieval info: CONSTANT: LPM_WIDTHU NUMERIC "11"
 // Retrieval info: CONSTANT: OVERFLOW_CHECKING STRING "OFF"
 // Retrieval info: CONSTANT: UNDERFLOW_CHECKING STRING "OFF"
 // Retrieval info: CONSTANT: USE_EAB STRING "ON"
@@ -150,12 +150,12 @@ endmodule
 // Retrieval info: CONNECT: empty 0 0 0 0 @empty 0 0 0 0
 // Retrieval info: CONNECT: @sclr 0 0 0 0 sclr 0 0 0 0
 // Retrieval info: LIBRARY: altera_mf altera_mf.altera_mf_components.all
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_4k.v TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_4k.inc FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_4k.cmp FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_4k.bsf FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_4k_inst.v FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_4k_bb.v FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_4k_waveforms.html TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_4k_wave*.jpg TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_2k.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_2k.inc FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_2k.cmp FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_2k.bsf FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_2k_inst.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_2k_bb.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_2k_waveforms.html FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL fifo32_2k_wave*.jpg FALSE
 // Retrieval info: LIB_FILE: altera_mf

@@ -45,8 +45,9 @@ FR_RADAR_TIDLE  = usrp.FR_USER_4	# 32-bit inter-pulse idle time
 FR_RADAR_AMPL   = usrp.FR_USER_5  	# 16-bit pulse amplitude (2s complement) into CORDIC
 FR_RADAR_FSTART = usrp.FR_USER_6  	# 32-bit FTW for chirp start frequency
 FR_RADAR_FINCR  = usrp.FR_USER_7  	# 32-bit FTW increment per transmit clock
+FR_RADAR_ATRDEL = usrp.FR_USER_8        # 16-bit TX delay in clocks, 16-bit RX delay in clocks
 
-# These are for phase II development
+# These are for phase II development (need to renumber)
 #FR_RADAR_FREQ1N = usrp.FR_USER_8  # 24-bit N register for chirp #1
 #FR_RADAR_FREQ1R = usrp.FR_USER_9  # 24-bit R register for chirp #1
 #FR_RADAR_FREQ1C = usrp.FR_USER_10 # 24-bit C register for chirp #1
@@ -153,6 +154,7 @@ class radar_rx(gr.top_block):
     def __init__(self, options, callback):
 	gr.top_block.__init__(self, "radar_rx")
 
+	self._u = None
         self._subdev_spec = options.rx_subdev_spec
         self._gain = options.gain
 	self._verbose = options.verbose
@@ -160,6 +162,7 @@ class radar_rx(gr.top_block):
         self._callback = callback
 	self._length_set = False
 	self._connected = False
+	self._frequency = 0.0
         self._msgq = gr.msg_queue()
         self._watcher = _queue_watcher_thread(self._msgq, self._callback)
 	        
@@ -173,9 +176,11 @@ class radar_rx(gr.top_block):
     def tune(self, frequency):
         if self._verbose:
             print "Setting receiver frequency to", n2s(frequency)
-        result = self._u.tune(0, self._subdev, frequency)
-        if result == False:
-            raise RuntimeError("Failed to set receiver frequency.")
+	self._frequency = frequency
+	if (self._u):
+            result = self._u.tune(0, self._subdev, frequency)
+	    if result == False:
+    	        raise RuntimeError("Failed to set receiver frequency.")
 
     def set_gain(self, gain):
         self._gain = gain
@@ -212,10 +217,8 @@ class radar_rx(gr.top_block):
             print "Using", self._subdev.side_and_name(), "for radar receiver."
             print "Setting receiver gain to", self._gain
         self.set_gain(self._gain)
-	self._subdev.set_auto_tr(True)
-	self._subdev.set_atr_tx_delay(26) # TX CORDIC pipeline delay
-	self._subdev.set_atr_rx_delay(26)
-		
+	self.tune(self._frequency)
+			
     def _setup_connections(self):
 	if not self._length_set:
 	    raise RuntimeError("Echo length not set.")
@@ -286,8 +289,13 @@ class radar(object):
 
     def set_freq(self, center_freq, chirp_width):
         self._trans.set_freq(center_freq, chirp_width)
-        # set receiver center frequency
-        
+	self._rcvr.tune(center_freq)
+	        
+    def set_atrdel(self, tx_delay, rx_delay):
+        if self._verbose:
+	    print "Setting TX delay of", tx_delay, "clocks, RX delay of", rx_delay
+        self._trans._u._write_fpga_reg(FR_RADAR_ATRDEL, tx_delay << 16 | rx_delay)
+
     def start(self):
 	self.set_reset(False)
 	self._trans.start()

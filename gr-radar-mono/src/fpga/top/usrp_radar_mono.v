@@ -86,7 +86,7 @@ module usrp_radar_mono
 
    // TX
    wire        tx_sample_strobe;
-   wire        auto_tr;
+   wire        io_tx_ena;
    
    wire        serial_strobe;
    wire [6:0]  serial_addr;
@@ -145,8 +145,24 @@ module usrp_radar_mono
    radar radar_mono ( .clk_i(clk64),.saddr_i(serial_addr),.sdata_i(serial_data),.s_strobe_i(serial_strobe),
 	     .tx_side_o(tx_side),.tx_strobe_o(tx_sample_strobe),.tx_dac_i_o(tx_i),.tx_dac_q_o(tx_q),
 	     .rx_adc_i_i(rx_adc0_i),.rx_adc_q_i(rx_adc0_q),
-	     .rx_strobe_o(rx_strobe),.rx_ech_i_o(rx_buf_i),.rx_ech_q_o(rx_buf_q),.auto_tr_o(auto_tr)
+	     .rx_strobe_o(rx_strobe),.rx_ech_i_o(rx_buf_i),.rx_ech_q_o(rx_buf_q),.io_tx_ena_o(io_tx_ena)
 	   );
+
+   // Route TX enable out to RFX transmit mixer enable
+   assign io_tx_a[5] = tx_side ? 1'bz : io_tx_ena;
+   assign io_tx_b[5] = tx_side ? io_tx_ena : 1'bz;
+
+   // Route opposite of TX enable out to RFX receive mixer
+   assign io_rx_a[5] = tx_side ? 1'bz : ~io_tx_ena;
+   assign io_rx_b[5] = tx_side ? ~io_tx_ena : 1'bz;
+   
+   // Route TX enable out to RX/TX switch
+   assign io_tx_a[6] = tx_side ? 1'bz : ~io_tx_ena;
+   assign io_tx_b[6] = tx_side ? ~io_tx_ena : 1'bz;
+
+   // Enable common RX/TX antenna
+   assign io_rx_a[6] = tx_side ? 1'bz : 1'b0;
+   assign io_rx_b[6] = tx_side ? 1'b0 : 1'bz;
    
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    // Control Functions
@@ -175,13 +191,18 @@ module usrp_radar_mono
        .interp_rate(),.decim_rate(),
        .tx_sample_strobe(),.strobe_interp(),
        .rx_sample_strobe(),.strobe_decim(),
-       .tx_empty(auto_tr),
+       .tx_empty(),
        .debug_0(),.debug_1(),
        .debug_2(),.debug_3(),
        .reg_0(reg_0),.reg_1(reg_1),.reg_2(reg_2),.reg_3(reg_3) );
+
+   wire [1:0] dummy_io = 2'bz;
    
    io_pins io_pins
-     (.io_0(io_tx_a),.io_1(io_rx_a),.io_2(io_tx_b),.io_3(io_rx_b),
+     (.io_0({io_tx_a[15:7],dummy_io,io_tx_a[4:0]}), // Don't connect pins used above
+      .io_1({io_rx_a[15:7],dummy_io,io_rx_a[4:0]}),
+      .io_2({io_tx_b[15:7],dummy_io,io_tx_b[4:0]}),
+      .io_3({io_rx_b[15:7],dummy_io,io_rx_b[4:0]}),
       .reg_0(reg_0),.reg_1(reg_1),.reg_2(reg_2),.reg_3(reg_3),
       .clock(clk64),.rx_reset(rx_dsp_reset),.tx_reset(tx_dsp_reset),
       .serial_addr(serial_addr),.serial_data(serial_data),.serial_strobe(serial_strobe));

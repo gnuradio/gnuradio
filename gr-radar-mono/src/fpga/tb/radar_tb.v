@@ -178,6 +178,15 @@ module radar_tb;
       end
    endtask // set_fincr
 
+   // Chirp frequency increment
+   task set_atrdel;
+      input [31:0] atrdel;
+
+      begin
+	 write_cfg_register(`FR_RADAR_ATRDEL, atrdel);
+      end
+   endtask // set_fincr
+
    // Test transmitter functionality
    task test_tx;
       begin
@@ -191,7 +200,7 @@ module radar_tb;
 	 #20 set_ampl(16'd9946);
 	 #20 set_fstart(32'h80000000); // -16 to 16 MHz
 	 #20 set_fincr (32'h0199999A);
-	 
+	 #20 set_atrdel(32'h00400046); // 64 TX clks, 70 RX clks	 
 	 #20 set_reset(0);
 	 #200000;
       end

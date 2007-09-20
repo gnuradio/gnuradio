@@ -23,8 +23,8 @@
 
 module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,reset_o,
 		     tx_side_o,dbg_o,tx_strobe_o,tx_ctrl_o,rx_ctrl_o,
-		     ampl_o,fstart_o,fincr_o,pulse_num_o);
-
+		     ampl_o,fstart_o,fincr_o,pulse_num_o,io_tx_ena_o);
+   
    // System interface
    input         clk_i;		// Master clock @ 64 MHz
    input  [6:0]  saddr_i;	// Configuration bus address
@@ -42,7 +42,8 @@ module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,reset_o,
    output [31:0] fstart_o;
    output [31:0] fincr_o;
    output [15:0] pulse_num_o;
-
+   output        io_tx_ena_o;
+   
    // Internal configuration
    wire 	 lp_ena;
    wire 	 md_ena;
@@ -52,7 +53,8 @@ module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,reset_o,
    wire   [15:0] t_sw;
    wire   [15:0] t_look;
    wire   [31:0] t_idle;
-
+   wire   [31:0] atrdel;
+   
    // Configuration from host
    wire [31:0] 	 mode;
    setting_reg #(`FR_RADAR_MODE)   sr_mode(.clock(clk_i),.reset(1'b0),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
@@ -86,6 +88,9 @@ module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,reset_o,
    setting_reg #(`FR_RADAR_FINCR)  sr_fincr(.clock(clk_i),.reset(1'b0),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
 					    .out(fincr_o));
 
+   setting_reg #(`FR_RADAR_ATRDEL)  sr_atrdel(.clock(clk_i),.reset(1'b0),.strobe(s_strobe_i),.addr(saddr_i),.in(sdata_i),
+					    .out(atrdel));
+   
    // Pulse state machine
    `define ST_ON   4'b0001
    `define ST_SW   4'b0010
@@ -152,5 +157,10 @@ module radar_control(clk_i,saddr_i,sdata_i,s_strobe_i,reset_o,
    assign tx_strobe_o = count[0]; // Drive DAC inputs at 32 MHz
    assign tx_ctrl_o = (state == `ST_ON);
    assign rx_ctrl_o = (state == `ST_LOOK);
+
+   // Create delayed version of tx_ctrl_o to drive mixers and TX/RX switch
+   atr_delay atr_delay(.clk_i(clk_i),.rst_i(reset_o),.ena_i(1'b1),.tx_empty_i(!tx_ctrl_o),
+		       .tx_delay_i(atrdel[27:16]),.rx_delay_i(atrdel[11:0]),
+		       .atr_tx_o(io_tx_ena_o));
    
 endmodule // radar_control

@@ -38,3 +38,4 @@
 `define FR_RADAR_AMPL           `FR_USER_5
 `define FR_RADAR_FSTART         `FR_USER_6
 `define FR_RADAR_FINCR          `FR_USER_7
+`define FR_RADAR_ATRDEL         `FR_USER_8

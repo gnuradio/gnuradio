@@ -380,7 +380,7 @@ set_global_assignment -name VERILOG_FILE usrp_radar_mono.v
 set_global_assignment -name VERILOG_FILE dacpll.v
 set_global_assignment -name VERILOG_FILE ../lib/cordic_nco.v
 set_global_assignment -name VERILOG_FILE ../lib/dac_interface.v
-set_global_assignment -name VERILOG_FILE ../lib/fifo32_4k.v
+set_global_assignment -name VERILOG_FILE ../lib/fifo32_2k.v
 set_global_assignment -name VERILOG_FILE ../lib/radar_control.v
 set_global_assignment -name VERILOG_FILE ../lib/radar_rx.v
 set_global_assignment -name VERILOG_FILE ../lib/radar_tx.v

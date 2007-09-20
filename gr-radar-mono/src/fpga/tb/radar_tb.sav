@@ -1,4 +1,4 @@
-*-24.712317 7100000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-24.712532 40200000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 @28
 radar_tb.clk
 radar_tb.ena
@@ -18,13 +18,14 @@ radar_tb.uut.transmitter.freq[31:0]
 radar_tb.tx_strobe
 @8420
 radar_tb.uut.tx_dac_i_o[13:0]
+@8421
 radar_tb.uut.tx_dac_q_o[13:0]
 @200
 -
 @28
+radar_tb.uut.io_tx_ena_o
 radar_tb.uut.controller.tx_ctrl_o
 radar_tb.uut.controller.rx_ctrl_o
-radar_tb.uut.auto_tr_o
 @200
 -
 @28
@@ -37,13 +38,5 @@ radar_tb.fifo_q[15:0]
 -
 @22
 radar_tb.uut.pulse_num[15:0]
-radar_tb.uut.receiver.count[15:0]
-@28
-radar_tb.uut.receiver.fifo_empty
-@22
-radar_tb.uut.receiver.fifo_inp[31:0]
-radar_tb.uut.receiver.fifo_out[31:0]
-@28
-radar_tb.uut.receiver.state[2:0]
 @200
 -

@@ -55,12 +55,12 @@ module radar_rx(clk_i,rst_i,ena_i,dbg_i,pulse_num_i,rx_in_i_i,
 
 // Use model if simulating, otherwise Altera Megacell
 `ifdef SIMULATION
-   fifo_1clk #(32, 4096) buffer(.clock(clk_i),.sclr(rst_i),
+   fifo_1clk #(32, 2048) buffer(.clock(clk_i),.sclr(rst_i),
 				.data(fifo_inp),.wrreq(ena_i),
 				.rdreq(fifo_ack),.q(fifo_out),
 				.empty(fifo_empty));
 `else
-   fifo32_4k buffer(.clock(clk_i),.sclr(rst_i),
+   fifo32_2k buffer(.clock(clk_i),.sclr(rst_i),
 		    .data(fifo_inp),.wrreq(ena_i),
 		    .rdreq(fifo_ack),.q(fifo_out),
 		    .empty(fifo_empty));

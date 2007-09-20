@@ -32,8 +32,8 @@ logfile = None
 
 def process_echo(echo):
     global logfile
-    #sys.stdout.write('.')
-    logfile.write(echo)
+    if logfile is not None:
+        logfile.write(echo)
         
 def main():
     global logfile
@@ -71,14 +71,10 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    if options.filename == None:
-        print "Must supply filename for logging received data."
-        sys.exit(1)
-    else:
+    if options.filename is not None:
         if options.verbose:
             print "Logging echo records to file: ", options.filename
-
-    logfile = open(options.filename, 'wb')
+	logfile = open(options.filename, 'wb')
         
     r = radar(options, process_echo)
 
@@ -88,11 +84,14 @@ def main():
     r.set_prf(options.prf)
     r.set_amplitude(options.amplitude)
     r.set_freq(options.frequency, options.chirp_width)
-
+    r.set_atrdel(64, 70) # TODO: parameterize
+    
     r.start()
     raw_input("Press ENTER to stop.")
     r.stop()
-    logfile.close()
+
+    if logfile is not None:
+        logfile.close()
             
 if __name__ == "__main__":
     main()
