@@ -190,8 +190,8 @@ $EXTRACT gr-video-sdl/src/Makefile ourlib_LTLIBRARIES >>$NAME
 $EXTRACT gr-video-sdl/src/Makefile ourlib_LTLIBRARIES | \
     sed -e 's/\.la$/.so/' >>$NAME
 
-# python-gnuradio-video-sdl
-NAME=debian/python-gnuradio-utils.install
+# gnuradio-utils
+NAME=debian/gnuradio-utils.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gr-utils/src/python/Makefile bin_SCRIPTS >>$NAME

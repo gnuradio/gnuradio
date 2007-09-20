@@ -1,2 +1,3 @@
 usr/lib
 usr/lib/pkgconfig
+etc/hotplug.d/usb

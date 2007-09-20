@@ -1,5 +1,6 @@
-gnuradio (3.0.svn) UNRELEASED; urgency=low
+gnuradio (3.0.svn) unstable; urgency=low
 
+  * add/split packages to cover entire GNU Radio distribution
   * fix build failure with gcc-4.3 by adding a #include, closes: #420896
   * update copyright assertion on the debian/ contents, since I have
     assigned my copyright to the FSF and now have upstream commit rights

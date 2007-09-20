@@ -1,17 +1,17 @@
 GNU Radio was re-packaged by Bdale Garbee <bdale@gag.com> to reflect
 upstream restructuring on Wed, 6 Sep 2006 16:02:03 -0600.  Much was
 learned and portions were taken from the previous Debian packages built 
-by Ramakrishnan Muthukrishnan and Steinar H. Gunderson
+by Ramakrishnan Muthukrishnan and Steinar H. Gunderson.
 
 GNU Radio was downloaded from http://www.gnu.org/software/gnuradio/
 
 Upstream Authors: 
 	Eric Blossom <eb@comsec.com>
 	Matt Ettus <matt@ettus.com>
-	Stephane Fillod <f8fce@free.fr>
-
+	Johnathan Corgan <jcorgan@corganenterprises.com>
+	
 See the AUTHORS file for a more complete list of contributors.
-The current upstream maintainer is Johnathan Corgan <jcorgan@aeinet.com>
+The current upstream maintainer is Johnathan Corgan.
 
 Copyright: 
 
@@ -24,4 +24,3 @@ on a Debian system at:
 The Debian packaging was created by Bdale Garbee <bdale@gag.com>, is
 (c) Copyright 2006 Hewlett-Packard Development Company, L.P., 
 and is made available under the terms of the GPL.
-

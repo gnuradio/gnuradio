@@ -27,7 +27,7 @@ endif
 clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp configure-stamp
+	rm -f build-stamp configure-stamp extract-stamp install-stamp
 
 	if [ -f Makefile ]; \
 	then\
@@ -90,24 +90,12 @@ install-stamp: build-stamp
 	  fi; \
 	done
 
-	dh_install --sourcedir=debian/tmp --list-missing
+	dh_install --sourcedir=debian/tmp
 
+# FIXME: Ubuntu vs. Debian (below)
 #	install -m 0755 debian/usrp.hotplug \
 #		$(CURDIR)/debian/usrp/etc/hotplug.d/usb/
 
-#	cp -r gnuradio-examples/python/* \
-#		debian/gnuradio-examples/usr/share/gnuradio/
-#	find debian/gnuradio-examples -type f -name Makefile\* -exec rm {} \;
-#	find debian/gnuradio-examples -type d -name CVS -exec rm {} \;
-#	find debian/gnuradio-examples -name \*.py -exec chmod +x {} \;
-
-#	mv debian/gnuradio/usr/bin/microtune.py \
-#		debian/gnuradio/usr/bin/microtune
-
-#	mv debian/usrp/usr/bin/usrp_ra_receiver.py \
-#		debian/usrp/usr/bin/usrp_ra_receiver
-#	mv debian/usrp/usr/bin/usrp_psr_receiver.py \
-#		debian/usrp/usr/bin/usrp_psr_receiver
 	touch $@
 
 
@@ -119,25 +107,11 @@ binary-common:
 	dh_testroot
 	dh_installchangelogs ChangeLog
 	dh_installdocs
-	dh_installexamples
-#	dh_installmenu
-#	dh_installdebconf	
-#	dh_installlogrotate	
-#	dh_installemacsen
-#	dh_installpam
-#	dh_installmime
 	dh_pycentral
-	dh_python
-#	dh_installinit
-#	dh_installcron
-#	dh_installinfo
-	dh_installman
 	dh_link
 	dh_strip
 	dh_compress 
-#	dh_movefiles --sourcedir=debian/gnuradio
 	dh_fixperms
-#	dh_perl
 	dh_makeshlibs
 	dh_installdeb
 	dh_shlibdeps
