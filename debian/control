@@ -210,7 +210,7 @@ Description: GNU Radio SDL Interface Library
 Package: python-gnuradio
 Section: python
 Architecture: all
-Depends: python-gnuradio-core, python-gnuradio-wxgui, python-gnuradio-alsa | python-gnuradio-audio, python-gnuradio-atsc, python-gnuradio-comedi, python-gnuradio-cvsd-vocoder, python-gnuradio-gsm-fr-vocoder, python-gnuradio-trellis, python-gnuradio-video-sdl
+Depends: python-gnuradio-core, python-gnuradio-wxgui, python-gnuradio-audio-alsa | python-gnuradio-audio, python-gnuradio-atsc, python-gnuradio-comedi, python-gnuradio-cvsd-vocoder, python-gnuradio-gsm-fr-vocoder, python-gnuradio-trellis, python-gnuradio-video-sdl
 Provides: ${python:Provides}
 XB-Python-Version: ${python:Versions}
 Description: Python Libraries for GNU Radio Components
