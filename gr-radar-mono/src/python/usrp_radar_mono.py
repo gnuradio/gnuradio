@@ -52,11 +52,11 @@ def main():
                       help="set waveform amplitude in % full scale, default is %default,")
     parser.add_option("",   "--ton", type="eng_float", default=5e-6,
 		      help="set pulse on period in seconds, default is %default,")
-    parser.add_option("",   "--tsw", type="eng_float", default=406.25e-9,
+    parser.add_option("",   "--tsw", type="eng_float", default=0.0,
 		      help="set transmitter switching period in seconds, default is %default,")
     parser.add_option("",   "--tlook", type="eng_float", default=5e-6,
 		      help="set receiver look time in seconds, default is %default,")
-    parser.add_option("",   "--prf", type="eng_float", default=10e3,
+    parser.add_option("",   "--prf", type="eng_float", default=100,
 		      help="set pulse repetition frequency in Hz, default is %default,")
     parser.add_option("-v", "--verbose", action="store_true", default=False,
                       help="enable verbose output, default is disabled")
@@ -84,7 +84,6 @@ def main():
     r.set_prf(options.prf)
     r.set_amplitude(options.amplitude)
     r.set_freq(options.frequency, options.chirp_width)
-    r.set_atrdel(64, 70) # TODO: parameterize
     
     r.start()
     raw_input("Press ENTER to stop.")

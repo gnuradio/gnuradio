@@ -26,6 +26,9 @@ from gr import gr_threading as _threading
 
 n2s = eng_notation.num_to_str
 
+txp_delay = 60 # Pipeline delay to turn on transmit mixer
+rxp_delay = 76 # Pipeline delay to turn off transmit mixer
+
 #-----------------------------------------------------------------------
 # FPGA Register Definitions
 #-----------------------------------------------------------------------
@@ -92,7 +95,7 @@ class radar_tx(object):
 	self._u._write_fpga_reg(FR_RADAR_TON, self._ton_ticks)
 
     def set_tsw(self, tsw):
-	self._tsw_ticks = 2*(int(tsw*64e6)/2)-1  # Even number, then subtract 1
+	self._tsw_ticks = 2*(int(tsw*64e6)/2)-1+rxp_delay  # Even number, then subtract 1
 	if self._verbose:
 	    print "Setting pulse switching time to", tsw, " sec ("+`self._tsw_ticks+1`+" ticks)"
 	self._u._write_fpga_reg(FR_RADAR_TSW, self._tsw_ticks)
@@ -246,7 +249,8 @@ class radar(object):
 	self.set_reset(True)
 	self.set_tx_board(self._trans.subdev_spec())
         self.set_debug(self._debug)
-        
+	self.set_atrdel()
+	        
     def _write_mode(self):
         self._trans._u._write_fpga_reg(FR_RADAR_MODE, self._mode)
 
@@ -291,7 +295,7 @@ class radar(object):
         self._trans.set_freq(center_freq, chirp_width)
 	self._rcvr.tune(center_freq)
 	        
-    def set_atrdel(self, tx_delay, rx_delay):
+    def set_atrdel(self, tx_delay=txp_delay, rx_delay=rxp_delay):
         if self._verbose:
 	    print "Setting TX delay of", tx_delay, "clocks, RX delay of", rx_delay
         self._trans._u._write_fpga_reg(FR_RADAR_ATRDEL, tx_delay << 16 | rx_delay)

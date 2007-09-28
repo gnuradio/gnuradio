@@ -153,8 +153,11 @@ module usrp_radar_mono
    assign io_tx_b[5] = tx_side ? io_tx_ena : 1'bz;
 
    // Route opposite of TX enable out to RFX receive mixer
-   assign io_rx_a[5] = tx_side ? 1'bz : ~io_tx_ena;
-   assign io_rx_b[5] = tx_side ? ~io_tx_ena : 1'bz;
+   //assign io_rx_a[5] = tx_side ? 1'bz : ~io_tx_ena;
+   //assign io_rx_b[5] = tx_side ? ~io_tx_ena : 1'bz;
+   assign io_rx_a[5] = 1'b1;
+   assign io_rx_b[5] = 1'b1;
+   
    
    // Route TX enable out to RX/TX switch
    assign io_tx_a[6] = tx_side ? 1'bz : ~io_tx_ena;
