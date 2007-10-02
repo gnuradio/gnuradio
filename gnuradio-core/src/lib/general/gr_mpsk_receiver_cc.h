@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2007 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -297,7 +297,7 @@ protected:
   static const unsigned int DLLEN = 8;
   
   //! delay line plus some length for overflow protection
-  gr_complex d_dl[2*DLLEN];
+  gr_complex d_dl[2*DLLEN] __attribute__ ((aligned(8)));
   
   //! index to delay line
   unsigned int d_dl_idx;

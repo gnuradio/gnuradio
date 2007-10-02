@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,6 +28,7 @@
 #include <assert.h>
 #include <malloc16.h>
 #include <iostream>
+#include <stdexcept>
 
 using std::cerr;
 using std::endl;
@@ -103,6 +104,8 @@ gr_fir_ccf_simd::filter (const gr_complex input[])
   if (ntaps () == 0)
     return 0.0;
 
+  if (((intptr_t) input & 0x7) != 0)
+    throw std::invalid_argument("gr_complex must be 8-byte aligned");
 
   // Round input data address down to 16 byte boundary
   // NB: depending on the alignment of input[], memory

@@ -1,5 +1,5 @@
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -34,6 +34,7 @@
 #include <qa_gr_firdes.h>
 #include <qa_dotprod.h>
 #include <qa_gri_mmse_fir_interpolator.h>
+#include <qa_gri_mmse_fir_interpolator_cc.h>
 
 CppUnit::TestSuite *
 qa_filter::suite ()
@@ -42,6 +43,7 @@ qa_filter::suite ()
 
   s->addTest (qa_dotprod_suite ());
   s->addTest (qa_gri_mmse_fir_interpolator::suite ());
+  s->addTest (qa_gri_mmse_fir_interpolator_cc::suite ());
   s->addTest (qa_gr_fir_fff::suite ());
   s->addTest (qa_gr_fir_ccc::suite ());
   s->addTest (qa_gr_fir_fcc::suite ());

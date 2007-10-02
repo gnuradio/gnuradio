@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -49,8 +49,10 @@ public:
 
   /*!
    * \brief compute a single interpolated output value.
-   * \p input must have ntaps() valid entries.
+   *
+   * \p input must have ntaps() valid entries and be 8-byte aligned.
    * input[0] .. input[ntaps() - 1] are referenced to compute the output value.
+   * \throws std::invalid_argument if input is not 8-byte aligned.
    *
    * \p mu must be in the range [0, 1] and specifies the fractional delay.
    *

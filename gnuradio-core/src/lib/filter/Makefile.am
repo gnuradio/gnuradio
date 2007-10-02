@@ -196,7 +196,8 @@ libfilter_qa_la_common_SOURCES = 	\
 	qa_gr_fir_fff.cc		\
 	qa_gr_fir_ccc.cc		\
 	qa_gr_fir_scc.cc		\
-	qa_gri_mmse_fir_interpolator.cc	
+	qa_gri_mmse_fir_interpolator.cc	\
+	qa_gri_mmse_fir_interpolator_cc.cc	
 
 if MD_CPU_generic
 libfilter_la_SOURCES = $(libfilter_la_common_SOURCES) $(generic_CODE)
@@ -281,7 +282,8 @@ noinst_HEADERS = 			\
 	qa_gr_fir_fff.h			\
 	qa_gr_fir_ccc.h			\
 	qa_gr_fir_scc.h			\
-	qa_gri_mmse_fir_interpolator.h	
+	qa_gri_mmse_fir_interpolator.h	\
+	qa_gri_mmse_fir_interpolator_cc.h	
 
 
 
