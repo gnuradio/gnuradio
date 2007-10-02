@@ -147,8 +147,8 @@ test_random_io (fir_maker_t maker)
       // arithmetic.
       
       for (int o = 0; o < ol; o++){
-	ASSERT_COMPLEXES_EQUAL (expected_output[o], actual_output[o],
-				abs (expected_output[o]) * ERR_DELTA);
+	CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected_output[o], actual_output[o],
+				       abs (expected_output[o]) * ERR_DELTA);
       }
 
       delete f1;

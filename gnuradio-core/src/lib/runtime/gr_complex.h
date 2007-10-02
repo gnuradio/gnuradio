@@ -38,7 +38,7 @@ inline bool is_complex (short x) { return false;}
 
 // this doesn't really belong here, but there are worse places for it...
 
-#define ASSERT_COMPLEXES_EQUAL(expected,actual,delta)			\
+#define CPPUNIT_ASSERT_COMPLEXES_EQUAL(expected,actual,delta)			\
   CPPUNIT_ASSERT_DOUBLES_EQUAL (expected.real(), actual.real(), delta);	\
   CPPUNIT_ASSERT_DOUBLES_EQUAL (expected.imag(), actual.imag(), delta);
 
