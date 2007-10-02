@@ -55,7 +55,7 @@ void
 qa_gri_mmse_fir_interpolator_cc::t1()
 {
   static const unsigned	N = 100;
-  gr_complex input[N + 10];
+  gr_complex input[N + 10] __attribute__ ((aligned (8)));
 
   for (unsigned i = 0; i < NELEM(input); i++)
     input[i] = test_fcn ((double) i);
