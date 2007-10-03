@@ -35,15 +35,16 @@ default_frame_decim = gr.prefs().get_long('wxgui', 'frame_decim', 1)
 class scope_sink_f(gr.hier_block2):
     def __init__(self, parent, title='', sample_rate=1,
                  size=default_scopesink_size, frame_decim=default_frame_decim,
-                 v_scale=default_v_scale, t_scale=None):
+                 v_scale=default_v_scale, t_scale=None, num_inputs=1):
 
         gr.hier_block2.__init__(self, "scope_sink_f",
-                                gr.io_signature(1, 1, gr.sizeof_float),
+                                gr.io_signature(num_inputs, num_inputs, gr.sizeof_float),
                                 gr.io_signature(0,0,0))
 
         msgq = gr.msg_queue(2)         # message queue that holds at most 2 messages
         self.guts = gr.oscope_sink_f(sample_rate, msgq)
-        self.connect(self, self.guts)
+        for i in range(num_inputs):        
+          self.connect((self, i), (self.guts, i))
 
         self.win = scope_window(win_info (msgq, sample_rate, frame_decim,
                                           v_scale, t_scale, self.guts, title), parent)
@@ -55,18 +56,19 @@ class scope_sink_f(gr.hier_block2):
 class scope_sink_c(gr.hier_block2):
     def __init__(self, parent, title='', sample_rate=1,
                  size=default_scopesink_size, frame_decim=default_frame_decim,
-                 v_scale=default_v_scale, t_scale=None):
+                 v_scale=default_v_scale, t_scale=None, num_inputs=1):
 
         gr.hier_block2.__init__(self, "scope_sink_c",
-                                gr.io_signature(1, 1, gr.sizeof_gr_complex),
+                                gr.io_signature(num_inputs, num_inputs, gr.sizeof_gr_complex),
                                 gr.io_signature(0,0,0))
 
         msgq = gr.msg_queue(2)         # message queue that holds at most 2 messages
-        self.c2f = gr.complex_to_float()
         self.guts = gr.oscope_sink_f(sample_rate, msgq)
-	self.connect(self, self.c2f)
-	self.connect((self.c2f, 0), (self.guts, 0))
-	self.connect((self.c2f, 1), (self.guts, 1))
+        for i in range(num_inputs):      
+	        c2f = gr.complex_to_float()  
+	        self.connect((self, i), c2f)
+	        self.connect((c2f, 0), (self.guts, 2*i+0))
+	        self.connect((c2f, 1), (self.guts, 2*i+1))
         
         self.win = scope_window(win_info(msgq, sample_rate, frame_decim,
                                          v_scale, t_scale, self.guts, title), parent)
@@ -74,6 +76,13 @@ class scope_sink_c(gr.hier_block2):
     def set_sample_rate(self, sample_rate):
         self.guts.set_sample_rate(sample_rate)
         self.win.info.set_sample_rate(sample_rate)
+
+class constellation_sink(scope_sink_c):
+    def __init__(self, parent, title='Constellation', sample_rate=1,
+                 size=default_scopesink_size, frame_decim=default_frame_decim):
+        scope_sink_c.__init__(self, parent=parent, title=title, sample_rate=sample_rate,
+                 size=size, frame_decim=frame_decim)
+        self.win.info.xy = True	#constellation mode
 
 # ========================================================================
 
@@ -146,7 +155,7 @@ class win_info (object):
                  'autorange', 'running']
 
     def __init__ (self, msgq, sample_rate, frame_decim, v_scale, t_scale,
-                  scopesink, title = "Oscilloscope"):
+                  scopesink, title = "Oscilloscope", xy=False):
         self.msgq = msgq
         self.sample_rate = sample_rate
         self.frame_decim = frame_decim
@@ -157,7 +166,7 @@ class win_info (object):
         self.v_scale_cursor = gru.seq_with_cursor(v_scale_list, initial_value = v_scale)
 
         self.marker = 'line'
-        self.xy = False
+        self.xy = xy
         if v_scale == None:        # 0 and None are both False, but 0 != None
             self.autorange = True
         else:
