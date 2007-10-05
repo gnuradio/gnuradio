@@ -1,6 +1,6 @@
 # -*- Outline -*-
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -201,3 +201,141 @@ ccache, a compiler cache, can really speed up your builds.
 See http://ccache.samba.org/
 
 Be sure to create links for gcc and g++
+
+
+* Standard command line options
+
+When writing programs that are executable from the command line,
+please follow these guidelines for command line argument names (short
+and long) and types of the arguments.  We list them below using the
+Python optparse syntax.  In general, the default value should be coded
+into the help string using the "... [default=%default]" syntax.
+
+** Mandatory options by gr_block
+
+*** USRP source
+
+Any program using a USRP source (usrp.source_*) shall include:
+
+  add_option("", "--which-usrp", type="intx", default=0,
+	     help="select which USRP to use [default=%default]")
+
+  add_option("-R", "--rx-subdev-spec", type="subdev", default=(0, 0),
+             help="select USRP Rx side A or B [default=A]")
+
+You are free to change the default if it makes sense in your application.
+
+
+*** USRP sink
+
+Any program using a USRP sink (usrp.sink_*) shall include:
+
+  add_option("", "--which-usrp", type="intx", default=0,
+	     help="select which USRP to use [default=%default]")
+
+  add_option("-T", "--tx-subdev-spec", type="subdev", default=(0, 0),
+             help="select USRP Tx side A or B [default=A]")
+
+You are free to change the default if it makes sense in your application.
+
+
+*** Audio source
+
+Any program using an audio source shall include:
+
+  add_option("-I", "--audio-input", type="string", default="",
+             help="pcm input device name.  E.g., hw:0,0 or /dev/dsp")
+
+The default must be "".  This allows an audio module-dependent default
+to be specified in the user preferences file.
+
+
+*** Audio sink
+
+  add_option("-O", "--audio-output", type="string", default="",
+             help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
+
+The default must be "".  This allows an audio module-dependent default
+to be specified in the user preferences file.
+
+
+** Standard options names by parameter
+
+Whenever you want an integer, use the "intx" type.  This allows the
+user to input decimal, hex or octal numbers.  E.g., 10, 012, 0xa.
+
+Whenever you want a float, use the "eng_float" type.  This allows the
+user to input numbers with SI suffixes.  E.g, 10000, 10k, 10M, 10m, 92.1M
+
+If your program allows the user to specify values for any of the
+following parameters, please use these options to specify them:
+
+
+To specify a frequency (typically an RF center frequency) use:
+
+  add_option("-f", "--freq", type="eng_float", default=<your-default-here>,
+             help="set frequency to FREQ [default=%default]")
+
+
+To specify a decimation factor use:
+
+  add_option("-d", "--decim", type="intx", default=<your-default-here>,
+             help="set decimation rate to DECIM [default=%default]")
+
+
+To specify an interpolation factor use:
+
+  add_option("-i", "--interp", type="intx", default=<your-default-here>,
+             help="set interpolation rate to INTERP [default=%default]")
+
+
+To specify a gain setting use:
+
+  add_option("-g", "--gain", type="eng_float", default=<your-default-here>,
+	     help="set gain in dB [default=%default]")
+
+
+If your application specifies both a tx and an rx gain, use:
+
+  add_option("", "--rx-gain", type="eng_float", default=<your-default-here>,
+	     help="set receive gain in dB [default=%default]")
+
+  add_option("", "--tx-gain", type="eng_float", default=<your-default-here>,
+	     help="set transmit gain in dB [default=%default]")
+
+
+To specify the number of channels of something use:
+
+  add_option("-n", "--nchannels", type="intx", default=1,
+             help="specify number of channels [default=%default]")
+
+
+To specify an output filename use:
+
+  add_option("-o", "--output-filename", type="string", default=<your-default-here>,
+             help="specify output-filename [default=%default]")
+
+
+To specify a rate use:
+
+  add_option("-r", "--bit-rate", type="eng_float", default=<your-default-here>,
+             help="specify bit-rate [default=%default]")
+     or
+
+  add_option("-r", "--sample-rate", type="eng_float", default=<your-default-here>,
+             help="specify sample-rate [default=%default]")
+  
+
+If your application has a verbose option, use:
+
+  add_option('-v', '--verbose', action="store_true", default=False,
+	     help="verbose output")
+
+
+If your application allows the user to specify the "fast USB" options, use: 
+
+  add_option("", "--fusb-block-size", type="intx", default=0,
+             help="specify fast usb block size [default=%default]")
+
+  add_option("", "--fusb-nblocks", type="intx", default=0,
+             help="specify number of fast usb blocks [default=%default]")
