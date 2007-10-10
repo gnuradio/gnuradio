@@ -44,7 +44,7 @@ libgromnithread_la_SOURCES =		\
 	nt.cc
 endif
 
-libgromnithread_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version 
+libgromnithread_la_LDFLAGS = $(NO_UNDEFINED) 
 
 libgromnithread_la_LIBADD =		\
 	$(PTHREAD_LIBS)

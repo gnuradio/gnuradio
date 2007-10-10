@@ -1,4 +1,4 @@
-gnuradio (3.0~svn) unstable; urgency=low
+gnuradio (3.0.svn) unstable; urgency=low
 
   * add/split packages to cover entire GNU Radio distribution
   * fix build failure with gcc-4.3 by adding a #include, closes: #420896

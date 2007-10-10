@@ -9,7 +9,7 @@ else
 fi
 
 sudo apt-get install \
-    autotools-dev doxygen $FFTW3DEV libasound2-dev \
+    build-essential autotools-dev doxygen $FFTW3DEV libasound2-dev \
     libboost-dev libcppunit-dev libjack0.100.0-dev libsdl1.2-dev \
     portaudio19-dev libtool libusb-dev pkg-config python python-all-dev \
     python-central python-numpy python-wxgtk2.6 sdcc swig xmlto

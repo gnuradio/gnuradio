@@ -106,11 +106,11 @@ $EXTRACT gr-audio-alsa/src/Makefile ourpython_PYTHON >>$NAME
 # They are only separate in this package for C++ only experimentation
 $EXTRACT gr-audio-alsa/src/Makefile lib_LTLIBRARIES >>$NAME
 $EXTRACT gr-audio-alsa/src/Makefile lib_LTLIBRARIES | \
-    sed -e 's/\.la$/.so/' >>$NAME
+    sed -e 's/\.la$/.so*/' >>$NAME
 #
 $EXTRACT gr-audio-alsa/src/Makefile ourlib_LTLIBRARIES >>$NAME
 $EXTRACT gr-audio-alsa/src/Makefile ourlib_LTLIBRARIES | \
-    sed -e 's/\.la$/.so/' >>$NAME
+    sed -e 's/\.la$/.so*/' >>$NAME
 
 # python-gnuradio-audio-jack
 NAME=debian/python-gnuradio-audio-jack.install

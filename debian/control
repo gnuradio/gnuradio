@@ -28,7 +28,7 @@ Description: GNU Radio Omnithreads Abstraction Library
 Package: libpmt0c2a
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, libgnuradio-omnithread0c2a
+Depends: ${shlibs:Depends}
 Description: GNU Radio Polymorphic Type Library
  This package implements polymorphic types.  These are similar 
  to lisp or Python data objects, and implement transparent
@@ -48,7 +48,7 @@ Description: GNU Radio Polymorphic Type Library
 Package: libmblock0c2a
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, libgnuradio-omnithread0c2a, libpmt0c2a
+Depends: ${shlibs:Depends}
 Description: GNU Radio Message Block Library
  This package provides the GNU Radio message block library.
 
@@ -64,7 +64,7 @@ Description: GNU Radio Message Block Library
 Package: libgnuradio-core0c2a
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, libgnuradio-omnithread0c2a
+Depends: ${shlibs:Depends}
 Conflicts:  libgnuradio-core0, libgnuradio-core0c2
 Replaces:  libgnuradio-core0, libgnuradio-core0c2
 Suggests: gnuradio-doc
@@ -228,7 +228,7 @@ Description: GNU Radio Example Programs
 Package: gnuradio
 Section: comm
 Architecture: all
-Depends: gnuradio-doc, python-gnuradio, gnuradio-examples
+Depends: gnuradio-doc, python-gnuradio, gnuradio-examples, gnuradio-utils
 Suggests: usrp
 Description: GNU Software Defined Radio
  This is a virtual package that depends the entire GNU Radio collection of
@@ -349,7 +349,7 @@ Description: GNU Radio Utilities
 Package: usrp
 Section: contrib/comm
 Architecture: all
-Depends: usrp-doc, usrp-firmware
+Depends: usrp-doc, usrp-firmware, libusrp0c2a
 Description: The Universal Software Radio Peripheral
  This is a virtual package that depends on the entire USRP software collection.
 

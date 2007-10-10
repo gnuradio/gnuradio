@@ -67,7 +67,7 @@ libpmt_la_SOURCES =			\
 	pmt_unv.cc			
 
 # magic flags
-libpmt_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
+libpmt_la_LDFLAGS = $(NO_UNDEFINED)
 
 # link the library against the c++ standard library
 libpmt_la_LIBADD = 			\
@@ -94,7 +94,7 @@ libpmt_qa_la_SOURCES =			\
 	qa_pmt_unv.cc			
 
 # magic flags
-libpmt_qa_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
+libpmt_qa_la_LDFLAGS = $(NO_UNDEFINED) -avoid version
 
 libpmt_qa_la_LIBADD = 			\
 	libpmt.la			\

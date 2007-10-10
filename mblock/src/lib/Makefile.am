@@ -66,7 +66,7 @@ libmblock_la_SOURCES =			\
 
 
 # magic flags
-libmblock_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
+libmblock_la_LDFLAGS = $(NO_UNDEFINED)
 
 # link the library against the c++ standard library
 libmblock_la_LIBADD = 			\

@@ -88,7 +88,7 @@ libgr_audio_alsa_la_LIBADD = 		\
 
 _audio_alsa_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
-libgr_audio_alsa_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
+libgr_audio_alsa_la_LDFLAGS = $(NO_UNDEFINED)
 
 audio_alsa.cc audio_alsa.py: $(LOCAL_IFILES) $(NON_LOCAL_IFILES)
 	$(SWIG) $(SWIGPYTHONARGS) -module audio_alsa -o audio_alsa.cc $(LOCAL_IFILES)
