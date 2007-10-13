@@ -1,3 +1,9 @@
+gnuradio (3.1.svn) unstable; urgency=low
+
+  * post release 3.1 trunk repository packages
+
+ -- Bdale Garbee <bdale@gag.com>  Sat, 13 Oct 2007 14:50:00 -0600
+
 gnuradio (3.0.svn) unstable; urgency=low
 
   * add/split packages to cover entire GNU Radio distribution

@@ -1,5 +1,5 @@
 dnl 
-dnl  Copyright 2004,2005 Free Software Foundation, Inc.
+dnl  Copyright 2004,2005,2007 Free Software Foundation, Inc.
 dnl  
 dnl  This file is part of GNU Radio
 dnl  
@@ -24,7 +24,7 @@ AC_PREREQ(2.57)
 AC_CONFIG_SRCDIR([src/lib/howto.i])
 AM_CONFIG_HEADER(config.h)
 AC_CANONICAL_TARGET([])
-AM_INIT_AUTOMAKE(gr-howto-write-a-block,3.0svn)
+AM_INIT_AUTOMAKE(gr-howto-write-a-block,3.1svn)
 
 GR_X86_64
 dnl LF_CONFIGURE_CC

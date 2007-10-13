@@ -22,7 +22,7 @@ AC_PREREQ(2.57)
 AM_CONFIG_HEADER(config.h)
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET([])
-AM_INIT_AUTOMAKE(gnuradio,3.0svn)
+AM_INIT_AUTOMAKE(gnuradio,3.1svn)
 AC_CONFIG_SRCDIR([gnuradio-core/src/lib/runtime/gr_vmcircbuf.cc])
 
 DEFINES=""
