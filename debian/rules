@@ -80,12 +80,11 @@ install-stamp: build-stamp
 	  fi; \
 	done
 
+	: # Deposit rule to allow group 'usrp' access to USRP hardware
+	install -m 0755 -D debian/libusrp0c2a.udev \
+		debian/tmp/etc/udev/rules.d/40-usrp.rules
+
 	dh_install --sourcedir=debian/tmp
-
-# FIXME: Ubuntu vs. Debian (below)
-#	install -m 0755 debian/usrp.hotplug \
-#		$(CURDIR)/debian/usrp/etc/hotplug.d/usb/
-
 	touch $@
 
 

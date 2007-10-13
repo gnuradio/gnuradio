@@ -1,0 +1,14 @@
+#! /bin/sh
+
+set -e
+
+if [ "$1" != "configure" ]; then
+	exit 0
+fi
+
+# Create usrp group for udev access
+if ! getent group usrp >/dev/null; then
+    addgroup --system usrp
+fi
+
+exit 0

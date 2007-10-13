@@ -1,0 +1,11 @@
+#! /bin/sh
+
+set -e
+
+if [ "$1" != "remove" ]; then
+	exit 0
+fi
+
+rm -f /etc/udev/rules.d/40-usrp.rules
+
+exit 0
