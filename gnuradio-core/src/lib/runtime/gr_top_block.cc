@@ -24,6 +24,7 @@
 #include "config.h"
 #endif
 
+#include <unistd.h>
 #include <gr_top_block.h>
 #include <gr_top_block_impl.h>
 #include <gr_io_signature.h>
