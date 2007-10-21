@@ -186,6 +186,9 @@ dnl Define where to find boost includes
 dnl defines BOOST_CFLAGS
 GR_REQUIRE_BOOST_INCLUDES
 
+# If this is being done from a subversion tree, create variables
+GR_SUBVERSION
+
 dnl Component specific configuration
 dnl The order of the GR_ macros determines the order of compilation
 AC_ARG_ENABLE(
@@ -229,6 +232,7 @@ AC_CONFIG_FILES([\
     Makefile \
     run_tests.sh
     config/Makefile
+    debian/changelog
 ])
 
 dnl run_tests.sh is created from run_tests.in.sh.  Make it executable.

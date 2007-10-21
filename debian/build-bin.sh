@@ -6,8 +6,6 @@ svn-buildpackage \
     --svn-dont-clean \
     --svn-dont-purge \
     --svn-reuse \
-    -uc \
-    -us \
     -nc \
     -rfakeroot
 

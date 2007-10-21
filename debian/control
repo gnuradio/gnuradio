@@ -1,7 +1,7 @@
 Source: gnuradio
 Section: comm
 Priority: optional
-Maintainer: Bdale Garbee <bdale@gag.com>
+Maintainer: Johnathan Corgan <jcorgan@corganenterprises.com>
 Build-Conflicts: automake1.8, automake1.9
 Build-Depends: debhelper (>= 5.0.37.2), autotools-dev, doxygen, fftw3-dev | libfftw3-dev, libasound2-dev, libboost-dev, libcppunit-dev, libjack0.100.0-dev, libsdl1.2-dev, portaudio19-dev, libtool, libusb-dev, pkg-config, python, python-all-dev, python-central (>= 0.5), python-numpy, python-wxgtk2.6, sdcc, swig, xmlto
 Standards-Version: 3.7.2
