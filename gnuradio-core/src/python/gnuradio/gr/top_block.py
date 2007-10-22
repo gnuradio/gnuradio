@@ -41,6 +41,12 @@ class top_block(object):
     def __getattr__(self, name):
 	return getattr(self._tb, name)
 
+    def start(self):
+    	self._tb.start()
+	
+    def stop(self):
+    	self._tb.stop()
+
     def run(self):
         top_block_run_unlocked(self._tb)
 
