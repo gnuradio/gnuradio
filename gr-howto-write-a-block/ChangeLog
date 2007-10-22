@@ -1,31 +1,5 @@
-2006-07-21  Eric Blossom  <eb@comsec.com>
-
-	* doc/howto-write-a-block.xml: clarified 1:1 i/o relationship
-	versus size of input and output items.  Thanks Jens!
-
-2005-07-02  Eric Blossom  <eb@comsec.com>
-
-	* config/gr_no_undefined.m4, config/gr_x86_64.m4: new, x86_64 support.
-	* config/gr_python.m4: backed out search for libpython, making
-	x86_64 work and breaking Cygwin/MinGW.
-	* configure.ac, src/lib/Makefile.am: mods for x86_64, $(NO_UNDEFINED)
-	
-2005-05-09  Stephane Fillod  <f8cfe@free.fr>
-
-        * config/gr_sysv_shm.m4: SysV shared memory not mandatory
-	* config/gr_pwin32.m4, config/gr_python.m4, config/lf_cxx.m4:
-	  fixes for Cygwin, MinGW
-
-2005-01-29  Eric Blossom  <eb@comsec.com>
-
-	* src/lib/Makefile.am: mods for SWIG 1.3.24
-
-2005-01-20  Eric Blossom  <eb@comsec.com>
-
-	* doc/howto-write-a-block.xml: made release 0.1
-
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2001,2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -44,3 +18,8 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 # 
+
+For the blow by blow changes for each file, please consult
+http://gnuradio.org/trac/timeline
+	
+It's got everything that used to be in here ;)
