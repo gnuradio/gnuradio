@@ -232,7 +232,6 @@ AC_CONFIG_FILES([\
     Makefile \
     run_tests.sh
     config/Makefile
-    debian/changelog
 ])
 
 dnl run_tests.sh is created from run_tests.in.sh.  Make it executable.
