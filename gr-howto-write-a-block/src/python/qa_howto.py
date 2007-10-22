@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,10 +26,10 @@ import howto
 class qa_howto (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_001_square_ff (self):
         src_data = (-3, 4, -5.5, 2, 3)
@@ -37,9 +37,9 @@ class qa_howto (gr_unittest.TestCase):
         src = gr.vector_source_f (src_data)
         sqr = howto.square_ff ()
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, sqr)
-        self.fg.connect (sqr, dst)
-        self.fg.run ()
+        self.tb.connect (src, sqr)
+        self.tb.connect (sqr, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data, 6)
 
@@ -49,9 +49,9 @@ class qa_howto (gr_unittest.TestCase):
         src = gr.vector_source_f (src_data)
         sqr = howto.square2_ff ()
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, sqr)
-        self.fg.connect (sqr, dst)
-        self.fg.run ()
+        self.tb.connect (src, sqr)
+        self.tb.connect (sqr, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data, 6)
         
