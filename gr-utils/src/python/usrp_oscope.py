@@ -30,6 +30,10 @@ from gnuradio.wxgui import stdgui2, scopesink2, form, slider
 from optparse import OptionParser
 import wx
 import sys
+try:
+  import usrp_dbid
+except:
+  from usrpm import usrp_dbid
 
 
 def pick_subdevice(u):
@@ -64,6 +68,10 @@ class app_top_block(stdgui2.std_top_block):
                           help="set gain in dB (default is midpoint)")
         parser.add_option("-8", "--width-8", action="store_true", default=False,
                           help="Enable 8-bit samples across USB")
+        parser.add_option("-C", "--basic-complex", action="store_true", default=False,
+                          help="Use both inputs of a basicRX or LFRX as a single Complex input channel")
+        parser.add_option("-D", "--basic-dualchan", action="store_true", default=False,
+                          help="Use both inputs of a basicRX or LFRX as seperate Real input channels")
         parser.add_option("-n", "--frame-decim", type="int", default=1,
                           help="set oscope frame decimation factor to n [default=1]")
         parser.add_option("-v", "--v-scale", type="eng_float", default=1000,
@@ -78,11 +86,13 @@ class app_top_block(stdgui2.std_top_block):
         self.show_debug_info = True
         
         # build the graph
-
-        self.u = usrp.source_c(decim_rate=options.decim)
+        if options.basic_dualchan:
+          self.num_inputs=2
+        else:
+          self.num_inputs=1
+        self.u = usrp.source_c(nchan=self.num_inputs,decim_rate=options.decim)
         if options.rx_subdev_spec is None:
             options.rx_subdev_spec = pick_subdevice(self.u)
-        self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
 
         if options.width_8:
             width = 8
@@ -94,14 +104,47 @@ class app_top_block(stdgui2.std_top_block):
             
         # determine the daughterboard subdevice we're using
         self.subdev = usrp.selected_subdev(self.u, options.rx_subdev_spec)
+        if (options.basic_complex  or options.basic_dualchan ):
+          if ((self.subdev.dbid()==usrp_dbid.BASIC_RX) or (self.subdev.dbid()==usrp_dbid.LF_RX)):
+            side = options.rx_subdev_spec[0]  # side A = 0, side B = 1
+            if options.basic_complex:
+              #force Basic_RX and LF_RX in complex mode (use both I and Q channel)
+              print "Receiver daughterboard forced in complex mode. Both inputs will combined to form a single complex channel."
+              self.dualchan=False
+              if side==0:
+                self.u.set_mux(0x00000010) #enable adc 0 and 1 to form a single complex input on side A
+              else: #side ==1
+                self.u.set_mux(0x00000032) #enable adc 3 and 2 to form a single complex input on side B
+            elif options.basic_dualchan:
+              #force Basic_RX and LF_RX in dualchan mode (use input A  for channel 0 and input B for channel 1)
+              print "Receiver daughterboard forced in dualchannel mode. Each input will be used to form a seperate channel."
+              self.dualchan=True
+              if side==0:
+                self.u.set_mux(gru.hexint(0xf0f0f1f0)) #enable adc 0, side A to form a real input on channel 0 and adc1,side A to form a real input on channel 1
+              else: #side ==1
+                self.u.set_mux(0xf0f0f3f2) #enable adc 2, side B to form a real input on channel 0 and adc3,side B to form a real input on channel 1 
+          else:
+            sys.stderr.write('options basic_dualchan or basic_complex is only supported for Basic Rx or LFRX at the moment\n')
+            sys.exit(1)
+        else:
+          self.dualchan=False
+          self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
 
         input_rate = self.u.adc_freq() / self.u.decim_rate()
 
         self.scope = scopesink2.scope_sink_c(panel, sample_rate=input_rate,
                                             frame_decim=options.frame_decim,
                                             v_scale=options.v_scale,
-                                            t_scale=options.t_scale)
-        self.connect(self.u, self.scope)
+                                            t_scale=options.t_scale,
+                                            num_inputs=self.num_inputs)
+        if self.dualchan:
+          # deinterleave two channels from FPGA
+          self.di = gr.deinterleave(gr.sizeof_gr_complex) 
+          self.connect(self.u,self.di) 
+          self.connect((self.di,0),(self.scope,0))
+          self.connect((self.di,1),(self.scope,1))
+        else:
+          self.connect(self.u, self.scope)
 
         self._build_gui(vbox)
 
@@ -113,9 +156,13 @@ class app_top_block(stdgui2.std_top_block):
             options.gain = float(g[0]+g[1])/2
 
         if options.freq is None:
-            # if no freq was specified, use the mid-point
-            r = self.subdev.freq_range()
-            options.freq = float(r[0]+r[1])/2
+            if ((self.subdev.dbid()==usrp_dbid.BASIC_RX) or (self.subdev.dbid()==usrp_dbid.LF_RX)):
+              #for Basic RX and LFRX if no freq is specified you probably want 0.0 Hz and not 45 GHz
+              options.freq=0.0
+            else:
+              # if no freq was specified, use the mid-point
+              r = self.subdev.freq_range()
+              options.freq = float(r[0]+r[1])/2
 
         self.set_gain(options.gain)
 
@@ -125,9 +172,15 @@ class app_top_block(stdgui2.std_top_block):
             self.myform['dbname'].set_value(self.subdev.name())
             self.myform['baseband'].set_value(0)
             self.myform['ddc'].set_value(0)
+            if self.num_inputs==2:
+              self.myform['baseband2'].set_value(0)
+              self.myform['ddc2'].set_value(0)              
                         
         if not(self.set_freq(options.freq)):
             self._set_status_msg("Failed to set initial frequency")
+        if self.num_inputs==2:
+          if not(self.set_freq2(options.freq)):
+            self._set_status_msg("Failed to set initial frequency for channel 2")          
 
 
     def _set_status_msg(self, msg):
@@ -137,7 +190,9 @@ class app_top_block(stdgui2.std_top_block):
 
         def _form_set_freq(kv):
             return self.set_freq(kv['freq'])
-            
+
+        def _form_set_freq2(kv):
+            return self.set_freq2(kv['freq2'])            
         vbox.Add(self.scope.win, 10, wx.EXPAND)
         
         # add control area at the bottom
@@ -147,8 +202,11 @@ class app_top_block(stdgui2.std_top_block):
         myform['freq'] = form.float_field(
             parent=self.panel, sizer=hbox, label="Center freq", weight=1,
             callback=myform.check_input_and_call(_form_set_freq, self._set_status_msg))
-
-        hbox.Add((5,0), 0, 0)
+        if self.num_inputs==2:
+          myform['freq2'] = form.float_field(
+              parent=self.panel, sizer=hbox, label="Center freq2", weight=1,
+              callback=myform.check_input_and_call(_form_set_freq2, self._set_status_msg))          
+          hbox.Add((5,0), 0, 0)
         g = self.subdev.gain_range()
         myform['gain'] = form.slider_field(parent=self.panel, sizer=hbox, label="Gain",
                                            weight=3,
@@ -201,6 +259,13 @@ class app_top_block(stdgui2.std_top_block):
         hbox.Add((5,0), 1)
         myform['ddc'] = form.static_float_field(
             parent=panel, sizer=hbox, label="DDC")
+        if self.num_inputs==2:
+          hbox.Add((1,0), 1)
+          myform['baseband2'] = form.static_float_field(
+              parent=panel, sizer=hbox, label="BB2")
+          hbox.Add((1,0), 1)
+          myform['ddc2'] = form.static_float_field(
+            parent=panel, sizer=hbox, label="DDC2")          
 
         hbox.Add((5,0), 0)
         vbox.Add(hbox, 0, wx.EXPAND)
@@ -225,6 +290,29 @@ class app_top_block(stdgui2.std_top_block):
             if self.show_debug_info:
                 self.myform['baseband'].set_value(r.baseband_freq)
                 self.myform['ddc'].set_value(r.dxc_freq)
+            return True
+
+        return False
+
+    def set_freq2(self, target_freq):
+        """
+        Set the center frequency of we're interested in for the second channel.
+
+        @param target_freq: frequency in Hz
+        @rypte: bool
+
+        Tuning is a two step process.  First we ask the front-end to
+        tune as close to the desired frequency as it can.  Then we use
+        the result of that operation and our target_frequency to
+        determine the value for the digital down converter.
+        """
+        r = usrp.tune(self.u, 1, self.subdev, target_freq)
+        
+        if r:
+            self.myform['freq2'].set_value(target_freq)     # update displayed value
+            if self.show_debug_info:
+                self.myform['baseband2'].set_value(r.baseband_freq)
+                self.myform['ddc2'].set_value(r.dxc_freq)
             return True
 
         return False
