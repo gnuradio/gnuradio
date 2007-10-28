@@ -60,9 +60,11 @@ class sounder_tx:
             if self._verbose:
                 print "Using", self._subdev.name(), "for sounder transmitter."            
         self.set_amplitude(ampl)
-        self._subdev.set_lo_offset(0.0)
+	if not self._loopback:
+          self._subdev.set_lo_offset(0.0)
         self._u.start()
-	self._subdev.set_enable(True)
+	if not self._loopback:
+	  self._subdev.set_enable(True)
 	    
     def tune(self, frequency):
         if self._verbose:
