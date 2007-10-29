@@ -30,10 +30,7 @@ from gnuradio.wxgui import stdgui2, scopesink2, form, slider
 from optparse import OptionParser
 import wx
 import sys
-try:
-  import usrp_dbid
-except:
-  from usrpm import usrp_dbid
+from usrpm import usrp_dbid
 
 
 def pick_subdevice(u):
