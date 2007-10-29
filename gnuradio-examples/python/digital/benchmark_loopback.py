@@ -183,7 +183,7 @@ def main():
     pkt_size = int(options.size)
 
     while n < nbytes:
-        send_pkt(struct.pack('!H', pktno) + (pkt_size - 2) * chr(pktno & 0xff))
+        send_pkt(struct.pack('!H', pktno & 0xffff) + (pkt_size - 2) * chr(pktno & 0xff))
         n += pkt_size
         pktno += 1
         

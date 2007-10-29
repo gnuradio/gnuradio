@@ -116,7 +116,7 @@ def main():
             if data == '':
                 break;
 
-        payload = struct.pack('!H', pktno) + data
+        payload = struct.pack('!H', pktno & 0xffff) + data
         send_pkt(payload)
         n += len(payload)
         sys.stderr.write('.')
