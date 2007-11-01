@@ -93,8 +93,7 @@ module usrp_std
    wire [2:0]  tx_numchan;
    
    wire [7:0]  interp_rate, decim_rate;
-   wire [15:0] rx_debugbus;
-   wire [31:0] tx_debugbus;
+   wire [31:0] tx_debugbus, rx_debugbus;
    
    wire        enable_tx, enable_rx;
    wire        tx_dsp_reset, rx_dsp_reset, tx_bus_reset, rx_bus_reset;
@@ -318,7 +317,7 @@ module usrp_std
        .tx_empty(tx_empty),
        //.debug_0(rx_a_a),.debug_1(ddc0_in_i),
        .debug_0(tx_debugbus[15:0]),.debug_1(tx_debugbus[31:16]),
-       .debug_2({rx_sample_strobe,strobe_decim,serial_strobe,serial_addr}),.debug_3({rx_dsp_reset,tx_dsp_reset,rx_bus_reset,tx_bus_reset,enable_rx,tx_underrun,rx_overrun,decim_rate}),
+       .debug_2(rx_debugbus[15:0]),.debug_3(rx_debugbus[31:16]),
        .reg_0(reg_0),.reg_1(reg_1),.reg_2(reg_2),.reg_3(reg_3) );
    
    io_pins io_pins
