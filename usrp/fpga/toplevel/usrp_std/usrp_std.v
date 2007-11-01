@@ -93,7 +93,8 @@ module usrp_std
    wire [2:0]  tx_numchan;
    
    wire [7:0]  interp_rate, decim_rate;
-   wire [15:0] tx_debugbus, rx_debugbus;
+   wire [15:0] rx_debugbus;
+   wire [31:0] tx_debugbus;
    
    wire        enable_tx, enable_rx;
    wire        tx_dsp_reset, rx_dsp_reset, tx_bus_reset, rx_bus_reset;
@@ -130,18 +131,17 @@ module usrp_std
    assign      bb_tx_q1 = ch3tx;
    
    tx_buffer tx_buffer
-     ( .usbclk(usbclk),.bus_reset(tx_bus_reset),.reset(tx_dsp_reset),
-       .usbdata(usbdata),.WR(WR),.have_space(have_space),.tx_underrun(tx_underrun),
+     ( .usbclk(usbclk), .bus_reset(tx_bus_reset),
+       .usbdata(usbdata),.WR(WR), .have_space(have_space),
+       .tx_underrun(tx_underrun), .clear_status(clear_status),
+       .txclk(clk64), .reset(tx_dsp_reset),
        .channels({tx_numchan,1'b0}),
        .tx_i_0(ch0tx),.tx_q_0(ch1tx),
        .tx_i_1(ch2tx),.tx_q_1(ch3tx),
-       .tx_i_2(),.tx_q_2(),
-       .tx_i_3(),.tx_q_3(),
-       .txclk(clk64),.txstrobe(strobe_interp),
-       .clear_status(clear_status),
+       .txstrobe(strobe_interp),
        .tx_empty(tx_empty),
        .debugbus(tx_debugbus) );
-
+   
  `ifdef TX_EN_0
    tx_chain tx_chain_0
      ( .clock(clk64),.reset(tx_dsp_reset),.enable(enable_tx),
@@ -317,7 +317,7 @@ module usrp_std
        .rx_sample_strobe(rx_sample_strobe),.strobe_decim(strobe_decim),
        .tx_empty(tx_empty),
        //.debug_0(rx_a_a),.debug_1(ddc0_in_i),
-       .debug_0(rx_debugbus),.debug_1(ddc0_in_i),
+       .debug_0(tx_debugbus[15:0]),.debug_1(tx_debugbus[31:16]),
        .debug_2({rx_sample_strobe,strobe_decim,serial_strobe,serial_addr}),.debug_3({rx_dsp_reset,tx_dsp_reset,rx_bus_reset,tx_bus_reset,enable_rx,tx_underrun,rx_overrun,decim_rate}),
        .reg_0(reg_0),.reg_1(reg_1),.reg_2(reg_2),.reg_3(reg_3) );
    

@@ -77,5 +77,6 @@ module fifo( data, wrreq, rdreq, rdclk, wrclk, aclr, q,
    assign rdempty = (rdusedw == 0);
    assign rdfull = (rdusedw == depth-1);
    
-endmodule // fifo_1c_1k
+endmodule // fifo
+
 

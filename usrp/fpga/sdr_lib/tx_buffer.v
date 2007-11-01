@@ -24,115 +24,147 @@
 // Fifo has 1024 or 2048 lines
 
 module tx_buffer
-  ( input usbclk,
+  ( // USB Side
+    input usbclk,
     input bus_reset,  // Used here for the 257-Hack to fix the FX2 bug
-    input reset,  // standard DSP-side reset
     input [15:0] usbdata,
     input wire WR,
-    output wire have_space,
+    output reg have_space,
     output reg tx_underrun,
+    input clear_status,
+
+    // DSP Side
+    input txclk,
+    input reset,  // standard DSP-side reset
     input wire [3:0] channels,
     output reg [15:0] tx_i_0,
     output reg [15:0] tx_q_0,
     output reg [15:0] tx_i_1,
     output reg [15:0] tx_q_1,
-    output reg [15:0] tx_i_2,
-    output reg [15:0] tx_q_2,
-    output reg [15:0] tx_i_3,
-    output reg [15:0] tx_q_3,
-    input txclk,
     input txstrobe,
-    input clear_status,
     output wire tx_empty,
-    output [11:0] debugbus
+    output [31:0] debugbus
     );
    
-   wire [11:0] txfifolevel;
-   reg [8:0] write_count;
-   wire tx_full;
-   wire [15:0] fifodata;
-   wire rdreq;
-
-   reg [3:0] load_next;
-
-   // DAC Side of FIFO
-   assign    rdreq = ((load_next != channels) & !tx_empty);
+   wire [11:0] 	  txfifolevel;
+   wire [15:0] 	  fifodata;
+   wire 	  rdreq;
+   reg [3:0] 	  phase;
+   wire 	  sop_f, iq_f;
+   reg 		  sop;
    
+   // USB Side of FIFO
+   reg [15:0] 	  usbdata_reg;
+   reg 		  wr_reg;
+   reg [8:0] 	  write_count;
+   
+   always @(posedge usbclk)
+     have_space <= (txfifolevel < (4092-256));  // be extra conservative
+   
+   always @(posedge usbclk)
+     begin
+	wr_reg <= WR;
+	usbdata_reg <= usbdata;
+     end
+   
+   always @(posedge usbclk)
+     if(bus_reset)
+       write_count <= 0;
+     else if(wr_reg)
+       write_count <= write_count + 1;
+     else
+       write_count <= 0;
+   
+   always @(posedge usbclk)
+     sop <= WR & ~wr_reg; // Edge detect
+   
+   // FIFO
+   fifo_4k_18 txfifo 
+     ( // USB Write Side
+       .data ( {sop,write_count[0],usbdata_reg} ),
+       .wrreq ( wr_reg & ~write_count[8] ),
+       .wrclk ( usbclk ),
+       .wrfull ( ),
+       .wrempty ( ),
+       .wrusedw ( txfifolevel ),
+       // DSP Read Side
+       .q ( {sop_f, iq_f, fifodata} ),			
+       .rdreq ( rdreq ),
+       .rdclk ( txclk ),
+       .rdfull ( ),
+       .rdempty ( tx_empty ),
+       .rdusedw (  ),
+       // Async, shared
+       .aclr ( reset ) );
+   
+   // DAC Side of FIFO
    always @(posedge txclk)
      if(reset)
        begin
-	  {tx_i_0,tx_q_0,tx_i_1,tx_q_1,tx_i_2,tx_q_2,tx_i_3,tx_q_3}
-	    <= #1 128'h0;
-	  load_next <= #1 4'd0;
+	  {tx_i_0,tx_q_0,tx_i_1,tx_q_1} <= 64'h0;
+	  phase <= 4'd0;
+       end
+     else if(phase == channels)
+       begin
+	  if(txstrobe)
+	    phase <= 4'd0;
        end
      else
-       if(load_next != channels)
+       if(~tx_empty)
 	 begin
-	    load_next <= #1 load_next + 4'd1;
-	    case(load_next)
-	      4'd0 : tx_i_0 <= #1 tx_empty ? 16'd0 : fifodata;
-	      4'd1 : tx_q_0 <= #1 tx_empty ? 16'd0 : fifodata;
-	      4'd2 : tx_i_1 <= #1 tx_empty ? 16'd0 : fifodata;
-	      4'd3 : tx_q_1 <= #1 tx_empty ? 16'd0 : fifodata;
-	      4'd4 : tx_i_2 <= #1 tx_empty ? 16'd0 : fifodata;
-	      4'd5 : tx_q_2 <= #1 tx_empty ? 16'd0 : fifodata;
-	      4'd6 : tx_i_3 <= #1 tx_empty ? 16'd0 : fifodata;
-	      4'd7 : tx_q_3 <= #1 tx_empty ? 16'd0 : fifodata;
-	    endcase // case(load_next)
-	 end // if (load_next != channels)
-       else if(txstrobe & (load_next == channels))
-	 begin
-	    load_next <= #1 4'd0;
+	    case(phase)
+	      4'd0 : tx_i_0 <= fifodata;
+	      4'd1 : tx_q_0 <= fifodata;
+	      4'd2 : tx_i_1 <= fifodata;
+	      4'd3 : tx_q_1 <= fifodata;
+	    endcase // case(phase)
+	    phase <= phase + 4'd1;
 	 end
-
-   // USB Side of FIFO
-   assign have_space = (txfifolevel <= (4095-256));
+      
+   assign    rdreq = ((phase != channels) & ~tx_empty);
+   
+   // Detect Underruns, cross clock domains
+   reg clear_status_dsp, tx_underrun_dsp;
+   always @(posedge txclk)
+     clear_status_dsp <= clear_status;
 
    always @(posedge usbclk)
-     if(bus_reset)        // Use bus reset because this is on usbclk
-       write_count <= #1 0;
-     else if(WR & ~write_count[8])
-       write_count <= #1 write_count + 9'd1;
-     else
-       write_count <= #1 WR ? write_count : 9'b0;
-
-   // Detect Underruns
+     tx_underrun <= tx_underrun_dsp;
+	    
    always @(posedge txclk)
      if(reset)
-       tx_underrun <= 1'b0;
-     else if(txstrobe & (load_next != channels))
-       tx_underrun <= 1'b1;
-     else if(clear_status)
-       tx_underrun <= 1'b0;
+       tx_underrun_dsp <= 1'b0;
+     else if(txstrobe & (phase != channels))
+       tx_underrun_dsp <= 1'b1;
+     else if(clear_status_dsp)
+       tx_underrun_dsp <= 1'b0;
 
-   // FIFO
-   fifo_4k txfifo 
-     ( .data ( usbdata ),
-       .wrreq ( WR & ~write_count[8] ),
-       .wrclk ( usbclk ),
-       
-       .q ( fifodata ),			
-       .rdreq ( rdreq ),
-       .rdclk ( txclk ),
-       
-       .aclr ( reset ),  // asynch, so we can use either
-       
-       .rdempty ( tx_empty ),
-       .rdusedw (  ),
-       .wrfull ( tx_full ),
-       .wrusedw ( txfifolevel )
-       );
+   // TX debug bus
+   // 
+   // 15:0  txclk  domain => TXA [15:0]
+   // 31:16 usbclk domain => RXA [15:0]
    
-   // Debugging Aids
-   assign debugbus[0] = WR;
-   assign debugbus[1] = have_space;
-   assign debugbus[2] = tx_empty;
-   assign debugbus[3] = tx_full;
-   assign debugbus[4] = tx_underrun;
-   assign debugbus[5] = write_count[8];
-   assign debugbus[6] = txstrobe;
-   assign debugbus[7] = rdreq;
-   assign debugbus[11:8] = load_next;
-   
+   assign debugbus[0]     = reset;
+   assign debugbus[1]     = txstrobe;
+   assign debugbus[2]     = rdreq;
+   assign debugbus[6:3]   = phase;
+   assign debugbus[7]     = tx_empty;
+   assign debugbus[8]     = tx_underrun_dsp;
+   assign debugbus[9]     = iq_f;
+   assign debugbus[10]    = sop_f;
+   assign debugbus[14:11] = 0;
+   assign debugbus[15]    = txclk;
+	  
+   assign debugbus[16]    = bus_reset;
+   assign debugbus[17]    = WR;
+   assign debugbus[18]    = wr_reg;
+   assign debugbus[19]    = have_space;
+   assign debugbus[20]    = write_count[8];
+   assign debugbus[21]    = write_count[0];
+   assign debugbus[22]    = sop;
+   assign debugbus[23]    = tx_underrun;
+   assign debugbus[30:24] = 0;
+   assign debugbus[31]    = usbclk;
+          
 endmodule // tx_buffer
 
