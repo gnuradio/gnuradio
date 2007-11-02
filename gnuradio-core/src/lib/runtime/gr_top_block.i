@@ -49,25 +49,18 @@ public:
   bool is_running();
 };
 
-%{
-class ensure_py_gil_state2 {
-    PyGILState_STATE	d_gstate;
-public:
-  ensure_py_gil_state2()  { d_gstate = PyGILState_Ensure(); }
-  ~ensure_py_gil_state2() { PyGILState_Release(d_gstate); }
-};
-%}
-
 %inline %{
 void top_block_run_unlocked(gr_top_block_sptr r) throw (std::runtime_error) 
 {
-    ensure_py_gil_state2 _lock;
+    Py_BEGIN_ALLOW_THREADS;		// release global interpreter lock
     r->run();
+    Py_END_ALLOW_THREADS;		// acquire global interpreter lock
 }
 
 void top_block_wait_unlocked(gr_top_block_sptr r) throw (std::runtime_error) 
 {
-    ensure_py_gil_state2 _lock;
+    Py_BEGIN_ALLOW_THREADS;		// release global interpreter lock
     r->wait();
+    Py_END_ALLOW_THREADS;		// acquire global interpreter lock
 }
 %}
