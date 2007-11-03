@@ -94,7 +94,9 @@ class my_top_block(gr.top_block):
         gr.top_block.__init__(self)
         self.txpath = transmit_path(mod_class, options)
         self.rxpath = receive_path(demod_class, rx_callback, options)
-
+	self.connect(self.txpath);
+	self.connect(self.rxpath);
+	
     def send_pkt(self, payload='', eof=False):
         return self.txpath.send_pkt(payload, eof)
 
