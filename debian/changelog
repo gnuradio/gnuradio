@@ -1,8 +1,9 @@
 gnuradio (3.1.svn-6824) unstable; urgency=low
 
   * post release 3.1 trunk repository packages
+  * see http://gnuradio.org/trac/wiki for stable branch
 
- -- Johnathan Corgan <jcorgan@corganenterprises.com>  Mon, 22 Oct 2007 10:37:00 -0800
+ -- Johnathan Corgan <jcorgan@corganenterprises.com>  Mon,  5 Nov 2007 18:12:00 -0800
 
 gnuradio (3.0.svn) unstable; urgency=low
 
