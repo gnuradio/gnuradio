@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = configure config.h.in config.guess config.sub depcomp py-compile
+EXTRA_DIST = configure config.h.in
 SUBDIRS = config src
 DIST_SUBDIRS = config src doc
 
