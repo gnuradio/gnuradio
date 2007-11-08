@@ -118,13 +118,12 @@ gr_clock_recovery_mm_ff::general_work (int noutput_items,
     d_last_sample = out[oo];
 
     d_omega = d_omega + d_gain_omega * mm_val;
-#if 0
+
     if (d_omega > d_max_omega)
       d_omega = d_max_omega;
     else if (d_omega < d_min_omega)
       d_omega = d_min_omega;
-#endif
-    d_omega = gr_branchless_clip(d_omega-d_omega_mid,d_omega_relative_limit);
+
     d_mu = d_mu + d_omega + d_gain_mu * mm_val;
 
     ii += (int) floor(d_mu);
