@@ -260,16 +260,19 @@ class fft_window (plot.PlotCanvas):
         if x >= 1e9:
             sf = 1e-9
             self.units = "GHz"
+	    self.format = "%3.6f"
         elif x >= 1e6:
             sf = 1e-6
             self.units = "MHz"
+	    self.format = "%3.3f"
         else:
             sf = 1e-3
             self.units = "kHz"
+	    self.format = "%3.3f"
 
         if self.fftsink.input_is_real:     # only plot 1/2 the points
             x_vals = ((numpy.arange (L/2)
-                       * (self.fftsink.sample_rate * sf / L))
+                      * (self.fftsink.sample_rate * sf / L))
                       + self.fftsink.baseband_freq * sf)
             self.points = numpy.zeros((len(x_vals), 2), numpy.float64)
             self.points[:,0] = x_vals
@@ -277,7 +280,7 @@ class fft_window (plot.PlotCanvas):
         else:
             # the "negative freqs" are in the second half of the array
             x_vals = ((numpy.arange (-L/2, L/2)
-                       * (self.fftsink.sample_rate * sf / L))
+                      * (self.fftsink.sample_rate * sf / L))
                       + self.fftsink.baseband_freq * sf)
             self.points = numpy.zeros((len(x_vals), 2), numpy.float64)
             self.points[:,0] = x_vals
@@ -364,7 +367,7 @@ class fft_window (plot.PlotCanvas):
         index = numpy.argmin(numpy.abs(x_vals-ux))
         x_val = x_vals[index]
         db_val = self.points[index, 1]
-        text = "%3.3f %s dB=%3.3f" % (x_val, self.units, db_val)
+        text = (self.format+" %s dB=%3.3f") % (x_val, self.units, db_val)
 
         # Display the tooltip
         tip = wx.ToolTip(text)
