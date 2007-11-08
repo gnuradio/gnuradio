@@ -90,6 +90,7 @@ Description: Software Defined Radio
 Package: python-gnuradio-core
 Architecture: any
 Depends: ${python:Depends}, ${shlibs:Depends}, python-numpy
+Conflicts: python-gnuradio (< 3.1)
 Provides: ${python:Provides}
 Section: python
 XB-Python-Version: ${python:Versions}
