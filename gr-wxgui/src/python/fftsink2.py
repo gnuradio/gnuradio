@@ -231,7 +231,8 @@ class fft_window (plot.PlotCanvas):
         # self.SetBackgroundColour ('black')
         
         self.build_popup_menu()
-        
+	self.set_baseband_freq(0.0)
+	        
         EVT_DATA_EVENT (self, self.set_data)
         wx.EVT_CLOSE (self, self.on_close_window)
         self.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
@@ -239,7 +240,25 @@ class fft_window (plot.PlotCanvas):
 	
         self.input_watcher = input_watcher(fftsink.msgq, fftsink.fft_size, self)
 
+    def set_scale(self, freq):
+	x = max(abs(self.fftsink.sample_rate), abs(self.fftsink.baseband_freq))	
+        if x >= 1e9:
+            self._scale_factor = 1e-9
+            self._units = "GHz"
+	    self._format = "%3.6f"
+        elif x >= 1e6:
+            self._scale_factor = 1e-6
+            self._units = "MHz"
+	    self._format = "%3.3f"
+        else:
+            self._scale_factor = 1e-3
+            self._units = "kHz"
+	    self._format = "%3.3f"
 
+    def set_baseband_freq(self, baseband_freq):
+	self.set_scale(baseband_freq)
+	self.fftsink.set_baseband_freq(baseband_freq)
+	
     def on_close_window (self, event):
         print "fft_window:on_close_window"
         self.keep_running = False
@@ -256,45 +275,30 @@ class fft_window (plot.PlotCanvas):
                 self.peak_vals = numpy.maximum(dB, self.peak_vals)
                 dB = self.peak_vals
 
-        x = max(abs(self.fftsink.sample_rate), abs(self.fftsink.baseband_freq))
-        if x >= 1e9:
-            sf = 1e-9
-            self.units = "GHz"
-	    self.format = "%3.6f"
-        elif x >= 1e6:
-            sf = 1e-6
-            self.units = "MHz"
-	    self.format = "%3.3f"
-        else:
-            sf = 1e-3
-            self.units = "kHz"
-	    self.format = "%3.3f"
-
         if self.fftsink.input_is_real:     # only plot 1/2 the points
-            x_vals = ((numpy.arange (L/2)
-                      * (self.fftsink.sample_rate * sf / L))
-                      + self.fftsink.baseband_freq * sf)
-            self.points = numpy.zeros((len(x_vals), 2), numpy.float64)
-            self.points[:,0] = x_vals
-            self.points[:,1] = dB[0:L/2]
+            x_vals = ((numpy.arange (L/2) * (self.fftsink.sample_rate 
+	               * self._scale_factor / L))
+                      + self.fftsink.baseband_freq * self._scale_factor)
+            self._points = numpy.zeros((len(x_vals), 2), numpy.float64)
+            self._points[:,0] = x_vals
+            self._points[:,1] = dB[0:L/2]
         else:
             # the "negative freqs" are in the second half of the array
             x_vals = ((numpy.arange (-L/2, L/2)
-                      * (self.fftsink.sample_rate * sf / L))
-                      + self.fftsink.baseband_freq * sf)
-            self.points = numpy.zeros((len(x_vals), 2), numpy.float64)
-            self.points[:,0] = x_vals
-            self.points[:,1] = numpy.concatenate ((dB[L/2:], dB[0:L/2]))
+                       * (self.fftsink.sample_rate * self._scale_factor / L))
+                      + self.fftsink.baseband_freq * self._scale_factor)
+            self._points = numpy.zeros((len(x_vals), 2), numpy.float64)
+            self._points[:,0] = x_vals
+            self._points[:,1] = numpy.concatenate ((dB[L/2:], dB[0:L/2]))
 
-
-        lines = plot.PolyLine (self.points, colour='BLUE')
-
+        lines = plot.PolyLine (self._points, colour='BLUE')
         graphics = plot.PlotGraphics ([lines],
                                       title=self.fftsink.title,
-                                      xLabel = self.units, yLabel = "dB")
+                                      xLabel = self._units, yLabel = "dB")
 
         self.Draw (graphics, xAxis=None, yAxis=self.y_range)
         self.update_y_range ()
+
 
     def set_peak_hold(self, enable):
         self.peak_hold = enable
@@ -345,7 +349,6 @@ class fft_window (plot.PlotCanvas):
         elif Id == self.id_y_per_div_20:
             self.fftsink.set_y_per_div(20)
 
-        
     def on_right_click(self, event):
         menu = self.popup_menu
         for id, pred in self.checkmarks.items():
@@ -356,7 +359,7 @@ class fft_window (plot.PlotCanvas):
     def evt_motion(self, event):
         # Clip to plotted values
         (ux, uy) = self.GetXY(event)      # Scaled position
-        x_vals = numpy.array(self.points[:,0])
+        x_vals = numpy.array(self._points[:,0])
         if ux < x_vals[0] or ux > x_vals[-1]:
             tip = self.GetToolTip()
             if tip:
@@ -364,10 +367,10 @@ class fft_window (plot.PlotCanvas):
             return
 
         # Get nearest X value (is there a better way)?
-        index = numpy.argmin(numpy.abs(x_vals-ux))
-        x_val = x_vals[index]
-        db_val = self.points[index, 1]
-        text = (self.format+" %s dB=%3.3f") % (x_val, self.units, db_val)
+        ind = numpy.argmin(numpy.abs(x_vals-ux))
+        x_val = x_vals[ind]
+        db_val = self._points[ind, 1]
+        text = (self._format+" %s dB=%3.3f") % (x_val, self._units, db_val)
 
         # Display the tooltip
         tip = wx.ToolTip(text)
