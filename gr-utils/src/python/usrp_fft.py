@@ -109,7 +109,8 @@ class app_top_block(stdgui2.std_top_block):
         self.connect(self.u, self.scope)
 
         self._build_gui(vbox)
-
+	self._setup_events()
+	
         # set initial values
 
         if options.gain is None:
@@ -254,6 +255,15 @@ class app_top_block(stdgui2.std_top_block):
             self.myform['fs@usb'].set_value(self.u.adc_freq() / self.u.decim_rate())
         return ok
 
+    def _setup_events(self):
+	if not self.options.waterfall and not self.options.oscilloscope:
+	    self.scope.win.Bind(wx.EVT_LEFT_DCLICK, self.evt_left_dclick)
+	    
+    def evt_left_dclick(self, event):
+	(ux, uy) = self.scope.win.GetXY(event)
+	target_freq = ux/self.scope.win._scale_factor
+	self.set_freq(target_freq)
+	
 def main ():
     app = stdgui2.stdapp(app_top_block, "USRP FFT", nstatus=1)
     app.MainLoop()
