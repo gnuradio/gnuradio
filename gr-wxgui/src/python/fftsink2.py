@@ -225,7 +225,7 @@ class fft_window (plot.PlotCanvas):
         self.fftsink = fftsink
         self.peak_hold = False
         self.peak_vals = None
-
+        
         self.SetEnableGrid (True)
         # self.SetEnableZoom (True)
         # self.SetBackgroundColour ('black')
@@ -235,7 +235,8 @@ class fft_window (plot.PlotCanvas):
         EVT_DATA_EVENT (self, self.set_data)
         wx.EVT_CLOSE (self, self.on_close_window)
         self.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
-
+        self.Bind(wx.EVT_MOTION, self.evt_motion)
+	
         self.input_watcher = input_watcher(fftsink.msgq, fftsink.fft_size, self)
 
 
@@ -258,36 +259,36 @@ class fft_window (plot.PlotCanvas):
         x = max(abs(self.fftsink.sample_rate), abs(self.fftsink.baseband_freq))
         if x >= 1e9:
             sf = 1e-9
-            units = "GHz"
+            self.units = "GHz"
         elif x >= 1e6:
             sf = 1e-6
-            units = "MHz"
+            self.units = "MHz"
         else:
             sf = 1e-3
-            units = "kHz"
+            self.units = "kHz"
 
         if self.fftsink.input_is_real:     # only plot 1/2 the points
             x_vals = ((numpy.arange (L/2)
                        * (self.fftsink.sample_rate * sf / L))
                       + self.fftsink.baseband_freq * sf)
-            points = numpy.zeros((len(x_vals), 2), numpy.float64)
-            points[:,0] = x_vals
-            points[:,1] = dB[0:L/2]
+            self.points = numpy.zeros((len(x_vals), 2), numpy.float64)
+            self.points[:,0] = x_vals
+            self.points[:,1] = dB[0:L/2]
         else:
             # the "negative freqs" are in the second half of the array
             x_vals = ((numpy.arange (-L/2, L/2)
                        * (self.fftsink.sample_rate * sf / L))
                       + self.fftsink.baseband_freq * sf)
-            points = numpy.zeros((len(x_vals), 2), numpy.float64)
-            points[:,0] = x_vals
-            points[:,1] = numpy.concatenate ((dB[L/2:], dB[0:L/2]))
+            self.points = numpy.zeros((len(x_vals), 2), numpy.float64)
+            self.points[:,0] = x_vals
+            self.points[:,1] = numpy.concatenate ((dB[L/2:], dB[0:L/2]))
 
 
-        lines = plot.PolyLine (points, colour='BLUE')
+        lines = plot.PolyLine (self.points, colour='BLUE')
 
         graphics = plot.PlotGraphics ([lines],
                                       title=self.fftsink.title,
-                                      xLabel = units, yLabel = "dB")
+                                      xLabel = self.units, yLabel = "dB")
 
         self.Draw (graphics, xAxis=None, yAxis=self.y_range)
         self.update_y_range ()
@@ -349,7 +350,28 @@ class fft_window (plot.PlotCanvas):
             item.Check(pred())
         self.PopupMenu(menu, event.GetPosition())
 
+    def evt_motion(self, event):
+        # Clip to plotted values
+        (ux, uy) = self.GetXY(event)      # Scaled position
+        x_vals = numpy.array(self.points[:,0])
+        if ux < x_vals[0] or ux > x_vals[-1]:
+            tip = self.GetToolTip()
+            if tip:
+                tip.Enable(False)
+            return
 
+        # Get nearest X value (is there a better way)?
+        index = numpy.argmin(numpy.abs(x_vals-ux))
+        x_val = x_vals[index]
+        db_val = self.points[index, 1]
+        text = "%3.3f %s dB=%3.3f" % (x_val, self.units, db_val)
+
+        # Display the tooltip
+        tip = wx.ToolTip(text)
+        tip.Enable(True)
+        tip.SetDelay(0)
+        self.SetToolTip(tip)
+        
     def build_popup_menu(self):
         self.id_incr_ref_level = wx.NewId()
         self.id_decr_ref_level = wx.NewId()
@@ -362,7 +384,7 @@ class fft_window (plot.PlotCanvas):
         self.id_y_per_div_20 = wx.NewId()
         self.id_average = wx.NewId()
         self.id_peak_hold = wx.NewId()
-
+	
         self.Bind(wx.EVT_MENU, self.on_average, id=self.id_average)
         self.Bind(wx.EVT_MENU, self.on_peak_hold, id=self.id_peak_hold)
         self.Bind(wx.EVT_MENU, self.on_incr_ref_level, id=self.id_incr_ref_level)
@@ -374,8 +396,7 @@ class fft_window (plot.PlotCanvas):
         self.Bind(wx.EVT_MENU, self.on_y_per_div, id=self.id_y_per_div_5)
         self.Bind(wx.EVT_MENU, self.on_y_per_div, id=self.id_y_per_div_10)
         self.Bind(wx.EVT_MENU, self.on_y_per_div, id=self.id_y_per_div_20)
-
-
+        
         # make a menu
         menu = wx.Menu()
         self.popup_menu = menu
