@@ -235,7 +235,7 @@ class app_top_block(stdgui2.std_top_block):
                 self.myform['baseband'].set_value(r.baseband_freq)
                 self.myform['ddc'].set_value(r.dxc_freq)
 	    if not self.options.waterfall and not self.options.oscilloscope:
-		self.scope.set_baseband_freq(target_freq)
+		self.scope.win.set_baseband_freq(target_freq)
     	    return True
 
         return False
@@ -264,9 +264,16 @@ class app_top_block(stdgui2.std_top_block):
 	if event.CmdDown():
 	    # Re-center on maximum power
 	    points = self.scope.win._points
-            ind = numpy.argmax(points[:,1])
+	    if self.scope.win.peak_hold:
+		if self.scope.win.peak_vals is not None:
+		    ind = numpy.argmax(self.scope.win.peak_vals)
+		else:
+		    ind = int(points.shape()[0]/2)
+	    else:
+        	ind = numpy.argmax(points[:,1])
             (freq, pwr) = points[ind]
 	    target_freq = freq/self.scope.win._scale_factor
+	    print ind, freq, pwr
             self.set_freq(target_freq)            
 	else:
 	    # Re-center on clicked frequency

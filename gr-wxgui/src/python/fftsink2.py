@@ -256,6 +256,8 @@ class fft_window (plot.PlotCanvas):
 	    self._format = "%3.3f"
 
     def set_baseband_freq(self, baseband_freq):
+	if self.peak_hold:
+	    self.peak_vals = None
 	self.set_scale(baseband_freq)
 	self.fftsink.set_baseband_freq(baseband_freq)
 	
