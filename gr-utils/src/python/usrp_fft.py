@@ -28,7 +28,7 @@ from gnuradio.wxgui import stdgui2, fftsink2, waterfallsink2, scopesink2, form, 
 from optparse import OptionParser
 import wx
 import sys
-
+import numpy
 
 def pick_subdevice(u):
     """
@@ -261,8 +261,18 @@ class app_top_block(stdgui2.std_top_block):
 	    
     def evt_left_dclick(self, event):
 	(ux, uy) = self.scope.win.GetXY(event)
-	target_freq = ux/self.scope.win._scale_factor
-	self.set_freq(target_freq)
+	if event.CmdDown():
+	    # Re-center on maximum power
+	    points = self.scope.win._points
+            ind = numpy.argmax(points[:,1])
+            (freq, pwr) = points[ind]
+	    target_freq = freq/self.scope.win._scale_factor
+            self.set_freq(target_freq)            
+	else:
+	    # Re-center on clicked frequency
+	    target_freq = ux/self.scope.win._scale_factor
+	    self.set_freq(target_freq)
+	    
 	
 def main ():
     app = stdgui2.stdapp(app_top_block, "USRP FFT", nstatus=1)
