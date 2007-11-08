@@ -75,7 +75,7 @@ class app_top_block(stdgui2.std_top_block):
         if len(args) != 0:
             parser.print_help()
             sys.exit(1)
-
+	self.options = options
         self.show_debug_info = True
         
         # build the graph
@@ -233,7 +233,9 @@ class app_top_block(stdgui2.std_top_block):
             if self.show_debug_info:
                 self.myform['baseband'].set_value(r.baseband_freq)
                 self.myform['ddc'].set_value(r.dxc_freq)
-            return True
+	    if not self.options.waterfall and not self.options.oscilloscope:
+		self.scope.set_baseband_freq(target_freq)
+    	    return True
 
         return False
 
