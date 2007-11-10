@@ -136,7 +136,7 @@ module rx_buffer
 	    phase <= 4'd1;
        end
      else if(~rx_full)
-       if(phase == channels)
+       if(phase == ((bitwidth == 5'd8) ? (channels>>1) : channels))
 	 phase <= 4'd0;
        else
 	 phase <= phase + 4'd1;
