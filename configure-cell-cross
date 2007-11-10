@@ -1,0 +1,53 @@
+#!/bin/bash
+
+#
+# Before trying to use this script, please follow the instructions at
+# http://gnuradio.org/trac/wiki/CrossCompilingForCell
+#
+
+scriptdir=`dirname $0`
+
+prefix=
+for arg in "$@"
+do
+  case $arg in
+    --prefix=*)
+      prefix=${arg#--prefix=}
+      ;;
+  esac
+done
+
+if test x$prefix = x
+then
+  echo "usage: $0 --prefix=PREFIX [configure options...]" 1>&2
+  exit 1
+fi
+
+
+arch=ppu
+cell_root=/mnt/cell-root
+python_version=2.5
+# compiler_includes="-I${cell_root}/usr/include -I${cell_root}/usr/local/include -I${cell_root}/usr/lib/gcc/ppu/4.1.1/include -I${cell_root}/usr/lib/gcc/ppu/4.1.1/include/c++"
+compiler_includes="-I${cell_root}/usr/include"
+
+$scriptdir/configure			    \
+    CC=${arch}32-gcc                        \
+    CXX=${arch}32-g++                       \
+    AR=${arch}-ar                           \
+    NM=${arch}-nm                           \
+    RANLIB=${arch}-ranlib                   \
+    STRIP=${arch}-strip                     \
+    F77=false                               \
+    CPPFLAGS="$compiler_includes"							\
+    LDFLAGS="-L${cell_root}/lib -L${cell_root}/usr/lib"                                 \
+    PYTHON_CPPFLAGS=-I${cell_root}/usr/include/python${python_version}                  \
+    PKG_CONFIG_PATH=${cell_root}/usr/lib/pkgconfig:${cell_root}/usr/local/lib/pkgconfig \
+    --host=powerpc64-unknown-linux-gnu	    \
+    --prefix=$prefix			    \
+    --with-pythondir=$prefix/lib/python${python_version}/site-packages
+
+
+# Hack the libtool script so that it doesn't code an --rpath flag into anything
+
+#sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+#sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool

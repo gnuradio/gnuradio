@@ -1,0 +1,9 @@
+GNU Radio may be compiled natively on the Sony PlayStation 3 if you're
+extremely patient.  It takes a _long_ time because there's only 256MB
+of RAM on board and you'll be doing a lot of paging.
+
+However, it is possible to cross compile GNU Radio -- from say a big
+x86_64 box running Fedora 7 -- and generate code for the PS3.
+
+Detailed instructions may be found at
+http://gnuradio.org/trac/wiki/CrossCompilingForCell

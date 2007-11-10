@@ -20,7 +20,10 @@ dnl Boston, MA 02110-1301, USA.
 # Create --enable-foo argument for named component, create variables as needed
 # $1 is component name
 AC_DEFUN([GRC_ENABLE],[
-    AC_ARG_ENABLE([$1],[  --enable-$1  Fail build if $1 fails configuration],[],
+    AC_ARG_ENABLE([$1],
+		  AC_HELP_STRING([--enable-$1],
+				 [Fail build if $1 fails configuration]),
+		  [],
                   [[enable_]m4_bpatsubst($1,-,_)=$enable_all_components])
 ])
 

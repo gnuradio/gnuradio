@@ -20,13 +20,23 @@ dnl Boston, MA 02110-1301, USA.
 AC_INIT
 AC_PREREQ(2.57)
 AM_CONFIG_HEADER(config.h)
-AC_CANONICAL_HOST
-AC_CANONICAL_TARGET([])
-AM_INIT_AUTOMAKE(gnuradio,3.1svn)
 AC_CONFIG_SRCDIR([gnuradio-core/src/lib/runtime/gr_vmcircbuf.cc])
+
+AC_CANONICAL_BUILD
+AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
+if test x$cross_compiling != xyes; then
+  AC_MSG_NOTICE([Configuring GNU Radio for cross compilation])
+else
+  AC_MSG_NOTICE([Configuring GNU Radio for native compilation])
+fi
+
+AM_INIT_AUTOMAKE(gnuradio,3.1svn)
+
 
 DEFINES=""
 AC_SUBST(DEFINES)
+
 
 dnl Remember if the user explicity set CXXFLAGS
 if test -n "${CXXFLAGS}"; then
@@ -96,10 +106,15 @@ GR_OMNITHREAD
 CFLAGS="${CFLAGS} $PTHREAD_CFLAGS"
 CXXFLAGS="${CXXFLAGS} $PTHREAD_CFLAGS"
 
-if test "x$CXX_FOR_BUILD" = x
+if test x$CXX_FOR_BUILD = x
 then
-  CXX_FOR_BUILD=${CXX}
+  if test x$cross_compiling = xno; then
+    CXX_FOR_BUILD=${CXX}
+  else
+    CXX_FOR_BUILD=g++
+  fi
 fi
+
 AC_SUBST(CXX_FOR_BUILD)
 
 dnl Check for SysV shm (mandatory)
@@ -176,8 +191,11 @@ GR_SET_MD_CPU
 
 dnl Define where to look for cppunit includes and libs
 dnl sets CPPUNIT_CFLAGS and CPPUNIT_LIBS
-AM_PATH_CPPUNIT([1.9.14],[],
-		[AC_MSG_ERROR([GNU Radio requires cppunit.  Stop])])
+dnl Try using pkg-config first, then fall back to cppunit-config.
+PKG_CHECK_EXISTS(cppunit,
+  [PKG_CHECK_MODULES(CPPUNIT, cppunit >= 1.9.14)],
+  [AM_PATH_CPPUNIT([1.9.14],[],
+		[AC_MSG_ERROR([GNU Radio requires cppunit.  Stop])])])
 
 CPPUNIT_INCLUDES=$CPPUNIT_CFLAGS
 AC_SUBST(CPPUNIT_INCLUDES)

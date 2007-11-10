@@ -1,0 +1,143 @@
+#!/usr/bin/env python
+
+"""
+This should only be run on a native Cell machine.  E.g., ps3, qs21, etc.
+
+It makes a few modifications to the file system and some pseudo shared libs
+so that cross compiling from a build machine over NFS works.  The changes
+do not harm local compilation.
+
+We create a symlink from /mnt/cell-root that points to /
+This allows the local and build machine to access the root filesystem
+using a common name, /mnt/cell-root.  This is required because
+configure hardcodes absolute paths into the generated Makefiles.
+
+There are some .so files that aren't really shared libraries, but rather are
+ascii linker scripts containing instructions to the linker.  Most of them
+contain a GROUP directive that includes hard-coded paths relative to /.
+We modify those files such that the hard-coded paths are relative to /mnt/cell-root
+instead of /.  This allows them to work locally and while cross compiling over NFS.
+
+E.g., /usr/lib/libc.so originally contains:
+
+    /* GNU ld script
+       Use the shared library, but some functions are only in
+       the static library, so try that secondarily.  */
+    OUTPUT_FORMAT(elf32-powerpc)
+    GROUP ( /lib/libc.so.6 /usr/lib/libc_nonshared.a  AS_NEEDED ( /lib/ld.so.1 ) )
+
+We modify it such that it reads:
+
+    /* GNU ld script
+       Use the shared library, but some functions are only in
+       the static library, so try that secondarily.  */
+    OUTPUT_FORMAT(elf32-powerpc)
+    GROUP ( /mnt/cell-root/lib/libc.so.6 /mnt/cell-root/usr/lib/libc_nonshared.a  AS_NEEDED ( /mnt/cell-root/lib/ld.so.1 ) )
+
+We backup <foo>.so to <foo>.so.original
+
+"""
+
+import os
+import os.path
+import sys
+import shutil
+import re
+
+cell_root_path = '/mnt/cell-root'
+
+def ensure_cell():
+    s = open('/proc/cpuinfo','r').read()
+    if s.find('Cell Broadband Engine') == -1:
+        sys.stderr.write('This program should only be run on Cell machines.\n')
+        raise SystemExit, 1
+
+def make_symlinks():
+    create_symlink_if_reqd(cell_root_path, "..")
+    create_symlink_if_reqd("/opt/cell/toolchain", "../../usr")
+    create_symlink_if_reqd("/opt/cell/sysroot", "../..")
+
+def symlink_exists_and_is_ok(path, contents):
+    return (os.path.islink(path) and os.readlink(path) == contents)
+
+def create_symlink_if_reqd(path, contents):
+    if symlink_exists_and_is_ok(path, contents):
+        return
+
+    if os.path.islink(path):
+        # Is a symlink but points wrong place
+        os.remove(path)
+        os.symlink(contents, path)
+        return
+
+    if os.path.isdir(path):
+        # if it's empty we'll remove it and create the link
+        try:
+            os.rmdir(path)
+        except:
+            # directory wasn't empty
+            sys.stderr.write("There's already something at %s.\n" % (path,))
+            sys.stderr.write("Please remove it or move it out of the way and try again.\n")
+            raise SystemExit, 1
+        os.symlink(contents, path)
+        return
+        
+    if os.path.exists(path):
+        # There's something here, return an error
+        sys.stderr.write("There's already something at %s.\n" % (path,))
+        sys.stderr.write("Please remove it or move it out of the way and try again.\n")
+        raise SystemExit, 1
+
+    # nothing there; go ahead and create the symlink
+    os.symlink(contents, path)
+
+
+def find_ascii_shared_libs():
+    cmd = "find /lib /lib64 /usr/lib /usr/lib64 -name '*.so' -type f -print 2>/dev/null | xargs file | grep -v ELF | cut -d: -f 1"
+    pipe = os.popen(cmd, 'r')
+    filenames = pipe.read().splitlines()
+    return filenames
+
+
+def make_backup_copy(src):
+    dst = src + '.original'
+    if not os.path.exists(dst):
+        shutil.copy2(src, dst)
+
+
+def edit_file(name):
+    def replace_group_body(mo):
+        pat = ' /(?!' + cell_root_path[1:] + ')'  # negative lookahead assertion
+        new = re.sub(pat, ' ' + cell_root_path + '/', mo.group(2))
+        return mo.group(1) + new + mo.group(3)
+        
+    f = open(name,'r')
+    s = f.read()
+    f.close()
+    
+    pat = re.compile(r'^( *GROUP *\()(.*)(\) *)$', re.M)
+    t = pat.sub(replace_group_body, s)
+
+    f = open(name,'w')
+    f.write(t)
+    f.close()
+
+
+def edit_ascii_shared_libs():
+    print "Please be patient, this takes awhile..."
+    filenames = find_ascii_shared_libs()
+    for f in filenames:
+        make_backup_copy(f)
+        edit_file(f)
+
+
+def main():
+    ensure_cell()
+    make_symlinks()
+    edit_ascii_shared_libs()
+
+
+if __name__ == '__main__':
+    main()
+    
+

@@ -27,7 +27,7 @@ AC_DEFUN([GRC_GR_AUDIO_OSS],[
     ])
 
     passed=yes
-    case $target in
+    case $host in
     	*-*-netbsd*)
     	    AC_HAVE_LIBRARY(ossaudio,[],
 	        [passed=no;AC_MSG_RESULT([gr-audio-oss requires library ossaudio, not found.])])

@@ -20,7 +20,8 @@ dnl Boston, MA 02110-1301, USA.
 AC_DEFUN([GR_FORTRAN],[
     dnl if you want to generate a different table of interpolator taps, you need fortran.
     dnl we default to off, since almost no one wants to do this.
-    AC_ARG_ENABLE(fortran, [  --enable-fortran        enable fortran (no)], [], [enable_fortran=no])
+    AC_ARG_ENABLE(fortran, AC_HELP_STRING([--enable-fortran],[enable fortran (no)]),
+		  [], [enable_fortran=no])
     AM_CONDITIONAL(ENABLE_FORTRAN, test "x$enable_fortran" = xyes)
 
     if test "x$enable_fortran" = xyes

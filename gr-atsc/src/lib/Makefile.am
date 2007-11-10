@@ -31,6 +31,7 @@ ourlibdir    = $(grpyexecdir)
 INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(CPPUNIT_INCLUDES)
 
 EXTRA_DIST =					\
+	atsci_viterbi_gen.cc			\
 	gen_encoder.py				\
 	qa_atsci_trellis_encoder_t1_input.dat	\
 	qa_atsci_trellis_encoder_t1_output.dat	\
@@ -190,14 +191,13 @@ grinclude_HEADERS =				\
 # programs we build but don't install
 # FIXME add test_atsc
 noinst_PROGRAMS = 				\
-	atsci_viterbi_gen			\
 	test_atsci				
 
 
-atsci_viterbi_gen_SOURCES = atsci_viterbi_gen.cc
+atsci_viterbi_gen$(EXEEXT): $(srcdir)/atsci_viterbi_gen.cc
+	$(CXX_FOR_BUILD) -O2 $(srcdir)/atsci_viterbi_gen.cc -o atsci_viterbi_gen$(EXEEXT)
 
 atsci_viterbi_mux.cc: atsci_viterbi_gen$(EXEEXT) 
-	$(MAKE) $(AM_MAKEFLAGS) CXX="$(CXX_FOR_BUILD)" atsci_viterbi_gen$(EXEEXT)
 	./atsci_viterbi_gen$(EXEEXT) -o atsci_viterbi_mux.cc
 
 
@@ -271,6 +271,6 @@ dist-hook:
 #  Cleanup
 # ------------------------------------------------------------------------
 
-CLEANFILES =	   atsci_viterbi_mux.cc
+CLEANFILES =	   atsci_viterbi_mux.cc atsci_viterbi_gen
 MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
 
