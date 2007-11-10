@@ -25,7 +25,6 @@
 
 #include <gr_block.h>
 #include <gr_complex.h>
-#include <gr_math.h>
 
 class gri_mmse_fir_interpolator_cc;
 

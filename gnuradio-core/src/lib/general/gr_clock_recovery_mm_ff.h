@@ -24,7 +24,6 @@
 #define	INCLUDED_GR_CLOCK_RECOVERY_MM_FF_H
 
 #include <gr_block.h>
-#include <gr_math.h>
 #include <stdio.h>
 
 class gri_mmse_fir_interpolator;
@@ -68,7 +67,6 @@ class gr_clock_recovery_mm_ff : public gr_block
     d_omega = omega;
     d_min_omega = omega*(1.0 - d_omega_relative_limit);
     d_max_omega = omega*(1.0 + d_omega_relative_limit);
-    d_omega_mid = 0.5*(d_min_omega+d_max_omega);
   }
 
 protected:
@@ -78,8 +76,7 @@ protected:
  private:
   float 			d_mu;		// fractional sample position [0.0, 1.0]
   float 			d_omega;	// nominal frequency
-  float				d_min_omega;	// minimum allowed omega 
-  float                         d_omega_mid; 	// average omega
+  float				d_min_omega;	// minimum allowed omega
   float				d_max_omega;	// maximum allowed omega
   float                         d_gain_omega;	// gain for adjusting omega
   float                         d_gain_mu;	// gain for adjusting mu

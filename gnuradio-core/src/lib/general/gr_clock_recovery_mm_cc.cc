@@ -151,19 +151,17 @@ gr_clock_recovery_mm_cc::general_work (int noutput_items,
       out[oo++] = d_p_0T;
       
       // limit mm_val
-
       if (mm_val > 1.0)
 	mm_val = 1.0;
       else if (mm_val < -1.0)
 	mm_val = -1.0;
-
+      
       d_omega = d_omega + d_gain_omega * mm_val;
-
       if (d_omega > d_max_omega)
 	d_omega = d_max_omega;
       else if (d_omega < d_min_omega)
 	d_omega = d_min_omega;
-
+      
       d_mu = d_mu + d_omega + d_gain_mu * mm_val;
       ii += (int)floor(d_mu);
       d_mu -= floor(d_mu);

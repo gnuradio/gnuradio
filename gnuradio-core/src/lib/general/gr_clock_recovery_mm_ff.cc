@@ -118,7 +118,6 @@ gr_clock_recovery_mm_ff::general_work (int noutput_items,
     d_last_sample = out[oo];
 
     d_omega = d_omega + d_gain_omega * mm_val;
-
     if (d_omega > d_max_omega)
       d_omega = d_max_omega;
     else if (d_omega < d_min_omega)
