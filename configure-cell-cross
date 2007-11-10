@@ -14,6 +14,10 @@ do
     --prefix=*)
       prefix=${arg#--prefix=}
       ;;
+    --help)
+      $scriptdir/configure --help
+      exit
+      ;;
   esac
 done
 
@@ -42,9 +46,9 @@ $scriptdir/configure			    \
     LDFLAGS="-L${cell_root}/lib -L${cell_root}/usr/lib"                                 \
     PYTHON_CPPFLAGS=-I${cell_root}/usr/include/python${python_version}                  \
     PKG_CONFIG_PATH=${cell_root}/usr/lib/pkgconfig:${cell_root}/usr/local/lib/pkgconfig \
-    --host=powerpc64-unknown-linux-gnu	    \
-    --prefix=$prefix			    \
-    --with-pythondir=$prefix/lib/python${python_version}/site-packages
+    --host=powerpc64-unknown-linux-gnu							\
+    --with-pythondir=$prefix/lib/python${python_version}/site-packages			\
+    "$@"
 
 
 # Hack the libtool script so that it doesn't code an --rpath flag into anything
