@@ -51,6 +51,7 @@ ourpython_PYTHON =			\
 	db_flexrf.py			\
 	db_flexrf_mimo.py		\
 	db_wbx.py			\
+	db_xcvr2450.py			\
 	db_instantiator.py		\
 	db_tv_rx.py			\
 	flexrf_debug_gui.py		\
