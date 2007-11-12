@@ -1,4 +1,4 @@
-Copyright (C) 1994, 1995, 1996, 1999, 2000, 2001, 2002 Free Software
+Copyright (C) 1994, 1995, 1996, 1999, 2000, 2001, 2002, 2007 Free Software
 Foundation, Inc.
 
    This file is free documentation; the Free Software Foundation gives
@@ -7,7 +7,14 @@ unlimited permission to copy, distribute and modify it.
 Basic Installation
 ==================
 
+See also the OS specific Build Guide at:
+  http://gnuradio.org/trac/wiki/BuildGuide
+
+Please read the README too ;)
+
+
    These are generic installation instructions.
+
 
    The `configure' shell script attempts to guess correct values for
 various system-dependent variables used during compilation.  It uses

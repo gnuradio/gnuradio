@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+# Copyright 2001,2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,8 +25,14 @@ Welcome to GNU Radio!
 As of August 3, 2006 we have restructured the GNU Radio build process
 and moved the source code repository from CVS to subversion.
 
+
 Please see http://gnuradio.org/trac for the wiki, bug tracking,
-and source code viewer.
+and source code viewer.  If you've got questions about GNU Radio, please
+subscribe to the discuss-gnuradio mailing list and post your questions
+there.  http://gnuradio.org/trac/wiki/MailingLists
+There is also a "Build Guide" in the wiki that contains OS specific
+recommendations.  See http://gnuradio.org/trac/wiki/BuildGuide
+
 
 The bleeding edge code can be found in our subversion repository at
 http://gnuradio.org/svn.  To checkout the latest, use this
@@ -242,14 +248,6 @@ installed version of python.
 You may want to add this to your shell init file (~/.bash_profile if
 you use bash).
 
-Note that on Fedora Core 4 and 5 when running on X86_64 machines,
-python is shippped with a strange (wrong) configuration that requires
-you to add both the lib64 and lib paths to your PYTHONPATH.
-E.g.,
-
-  $ export PYTHONPATH=/usr/local/lib64/python2.4/site-packages:/usr/local/lib/python2.4/site-packages
-
-[Don't complain to us, complain to the Fedora Core packagers.]
 
 
 Another handy trick if for example your fftw includes and libs are
