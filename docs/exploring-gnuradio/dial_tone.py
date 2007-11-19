@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -27,17 +27,17 @@ def build_graph ():
     sampling_freq = 32000
     ampl = 0.1
 
-    fg = gr.flow_graph ()
+    tb = gr.top_block ()
     src0 = gr.sig_source_f (sampling_freq, gr.GR_SIN_WAVE, 350, ampl)
     src1 = gr.sig_source_f (sampling_freq, gr.GR_SIN_WAVE, 440, ampl)
     dst = audio.sink (sampling_freq)
-    fg.connect (src0, (dst, 0))
-    fg.connect (src1, (dst, 1))
+    tb.connect (src0, (dst, 0))
+    tb.connect (src1, (dst, 1))
 
-    return fg
+    return tb
 
 if __name__ == '__main__':
-    fg = build_graph ()
-    fg.start ()
+    tb = build_graph ()
+    tb.start ()
     raw_input ('Press Enter to quit: ')
-    fg.stop ()
+    tb.stop ()
