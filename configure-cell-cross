@@ -49,6 +49,7 @@ $scriptdir/configure			    \
     --host=powerpc64-unknown-linux-gnu							\
     --with-pythondir=$prefix/lib/python${python_version}/site-packages			\
     --disable-gr-video-sdl \
+    --disable-gr-audio-portaudio \
     "$@"
 
 
