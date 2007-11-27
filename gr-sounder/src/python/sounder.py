@@ -90,7 +90,7 @@ class sounder_rx:
 	self._verbose = verbose
 	self._debug = debug
 		
-        self._fg = gr.flow_graph()
+        self._tb = gr.top_block()
         self._u = usrp.source_c(fpga_filename='usrp_sounder.rbf')
 	if not self._loopback:
             if self._subdev_spec == None:
@@ -110,7 +110,7 @@ class sounder_rx:
 	    print "Using smoothing alpha of", self._alpha
         self._lpf = gr.single_pole_iir_filter_cc(self._alpha, self._length)
         self._sink = gr.message_sink(self._vblen, self._msgq, True)
-        self._fg.connect(self._u, self._s2v, self._lpf, self._sink)
+        self._tb.connect(self._u, self._s2v, self._lpf, self._sink)
 
     def tune(self, frequency):
         if self._verbose:
@@ -135,17 +135,17 @@ class sounder_rx:
     def start(self):
         if self._debug:
             print "Starting receiver flow graph."
-        self._fg.start()
+        self._tb.start()
 
     def wait(self):
         if self._debug:
             print "Waiting for threads..."
-        self._fg.wait()
+        self._tb.wait()
 
     def stop(self):
         if self._debug:
             print "Stopping receiver flow graph."
-        self._fg.stop()
+        self._tb.stop()
         self.wait()
         if self._debug:
             print "Receiver flow graph stopped."

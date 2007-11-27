@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,7 +25,7 @@ from gnuradio import audio
 from gnuradio.vocoder import gsm_full_rate
 
 def build_graph():
-    fg = gr.flow_graph()
+    tb = gr.top_block()
     src = audio.source(8000)
     src_scale = gr.multiply_const_ff(32767)
     f2s = gr.float_to_short ()
@@ -34,11 +34,11 @@ def build_graph():
     s2f = gr.short_to_float ()
     sink_scale = gr.multiply_const_ff(1.0/32767.)
     sink = audio.sink(8000)
-    fg.connect(src, src_scale, f2s, enc, dec, s2f, sink_scale, sink)
-    return fg
+    tb.connect(src, src_scale, f2s, enc, dec, s2f, sink_scale, sink)
+    return tb
 
 if __name__ == '__main__':
-    fg = build_graph()
-    fg.start()
+    tb = build_graph()
+    tb.start()
     raw_input ('Press Enter to exit: ')
-    fg.stop()
+    tb.stop()

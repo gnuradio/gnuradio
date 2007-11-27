@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2003,2004,2005 Free Software Foundation, Inc.
+# Copyright 2003,2004,2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gru
-from gnuradio.wxgui import stdgui
+from gnuradio.wxgui import stdgui2
 import wx
 import gnuradio.wxgui.plot as plot
 import Numeric
@@ -67,14 +67,18 @@ class stripchart_sink_base(object):
     def set_autoscale(self, auto):
         self.autoscale = auto
 
-class stripchart_sink_f(gr.hier_block, stripchart_sink_base):
-    def __init__(self, fg, parent,
+class stripchart_sink_f(gr.hier_block2, stripchart_sink_base):
+    def __init__(self, parent,
                  y_per_div=10, ref_level=50, sample_rate=1,
                  title='', stripsize=4,
                  size=default_stripchartsink_size,xlabel="X", 
                  ylabel="Y", divbase=0.025,
                  parallel=False, scaling=1.0, autoscale=False):
 
+	gr.hier_block2.__init__(self, "stripchart_sink_f",
+				gr.io_signature(1, 1, gr.sizeof_float),
+				gr.io_signature(0, 0, 0))
+	
         stripchart_sink_base.__init__(self, input_is_real=True,
                                y_per_div=y_per_div, ref_level=ref_level,
                                sample_rate=sample_rate,
@@ -90,9 +94,7 @@ class stripchart_sink_f(gr.hier_block, stripchart_sink_base):
         else:
             one = gr.keep_one_in_n (gr.sizeof_float, 1)
             sink = gr.message_sink(gr.sizeof_float, self.msgq, True)
-        fg.connect (one, sink)
-
-        gr.hier_block.__init__(self, fg, one, sink)
+        self.connect (self, one, sink)
 
         self.win = stripchart_window(self, parent, size=size)
 

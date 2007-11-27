@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,7 +25,7 @@ from gnuradio import usrp
 from usrpm import usrp_dbid
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
-from gnuradio.wxgui import stdgui, ra_fftsink, ra_stripchartsink, ra_waterfallsink, form, slider, waterfallsink
+from gnuradio.wxgui import stdgui2, ra_fftsink, ra_stripchartsink, ra_waterfallsink, form, slider, waterfallsink
 from optparse import OptionParser
 import wx
 import sys
@@ -40,9 +40,9 @@ class continuum_calibration(gr.feval_dd):
         exec(str)
         return(x)
 
-class app_flow_graph(stdgui.gui_flow_graph):
+class app_flow_graph(stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
-        stdgui.gui_flow_graph.__init__(self)
+        stdgui2.std_top_block.__init__(self, frame, panel, vbox, argv)
 
         self.frame = frame
         self.panel = panel
@@ -1082,7 +1082,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
          self.notch_taps = FFT.inverse_fft(tmptaps)
 
 def main ():
-    app = stdgui.stdapp(app_flow_graph, "RADIO ASTRONOMY SPECTRAL/CONTINUUM RECEIVER: $Revision$", nstatus=1)
+    app = stdgui2.stdapp(app_flow_graph, "RADIO ASTRONOMY SPECTRAL/CONTINUUM RECEIVER: $Revision$", nstatus=1)
     app.MainLoop()
 
 if __name__ == '__main__':

@@ -26,10 +26,10 @@ import ra
 class qa_ra (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_000_(self):          # ensure that we can load the module
         pass

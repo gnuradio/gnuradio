@@ -26,10 +26,10 @@ import pager_swig
 class qa_pgr(gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
 if __name__ == '__main__':
     gr_unittest.main ()

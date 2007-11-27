@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2003,2004,2005 Free Software Foundation, Inc.
+# Copyright 2003,2004,2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gru, window
-from gnuradio.wxgui import stdgui
+from gnuradio.wxgui import stdgui2
 import wx
 import gnuradio.wxgui.plot as plot
 import numpy
@@ -94,12 +94,16 @@ class ra_fft_sink_base(object):
         self.baseband_freq = baseband_freq
         
 
-class ra_fft_sink_f(gr.hier_block, ra_fft_sink_base):
-    def __init__(self, fg, parent, baseband_freq=0,
-                 y_per_div=10, sc_y_per_div=0.5, sc_ref_level=40, ref_level=50,                  sample_rate=1, fft_size=512,
+class ra_fft_sink_f(gr.hier_block2, ra_fft_sink_base):
+    def __init__(self, parent, baseband_freq=0,
+                 y_per_div=10, sc_y_per_div=0.5, sc_ref_level=40, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=15, average=False, avg_alpha=None, title='',
                  size=default_ra_fftsink_size, peak_hold=False, ofunc=None,
                  xydfunc=None):
+	gr.hier_block2.__init__(self, "ra_fft_sink_f",
+				gr.io_signature(1, 1, gr.sizeof_float),
+				gr.io_signature(0, 0, 0))
+				
         ra_fft_sink_base.__init__(self, input_is_real=True, baseband_freq=baseband_freq,
                                y_per_div=y_per_div, sc_y_per_div=sc_y_per_div,
                                sc_ref_level=sc_ref_level, ref_level=ref_level,
@@ -120,18 +124,22 @@ class ra_fft_sink_f(gr.hier_block, ra_fft_sink_base):
         log = gr.nlog10_ff(20, fft_size, -20*math.log10(fft_size))
         sink = gr.message_sink(gr.sizeof_float * fft_size, self.msgq, True)
 
-        fg.connect (s2p, one_in_n, fft, c2mag, self.avg, log, sink)
-        gr.hier_block.__init__(self, fg, s2p, sink)
+        self.connect (self, s2p, one_in_n, fft, c2mag, self.avg, log, sink)
 
         self.win = fft_window(self, parent, size=size)
         self.set_average(self.average)
 
-class ra_fft_sink_c(gr.hier_block, ra_fft_sink_base):
-    def __init__(self, fg, parent, baseband_freq=0,
+class ra_fft_sink_c(gr.hier_block2, ra_fft_sink_base):
+    def __init__(self, parent, baseband_freq=0,
                  y_per_div=10, sc_y_per_div=0.5, sc_ref_level=40,
                  ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=15, average=False, avg_alpha=None, title='',
                  size=default_ra_fftsink_size, peak_hold=False, ofunc=None, xydfunc=None):
+
+	gr.hier_block2.__init__(self, "ra_fft_sink_c",
+				gr.io_signature(1, 1, gr.sizeof_gr_complex),
+				gr.io_signature(0, 0, 0))
+				
 
         ra_fft_sink_base.__init__(self, input_is_real=False, baseband_freq=baseband_freq,
                                y_per_div=y_per_div, sc_y_per_div=sc_y_per_div,
@@ -153,8 +161,7 @@ class ra_fft_sink_c(gr.hier_block, ra_fft_sink_base):
         log = gr.nlog10_ff(20, fft_size, -20*math.log10(fft_size))
         sink = gr.message_sink(gr.sizeof_float * fft_size, self.msgq, True)
 
-        fg.connect(s2p, one_in_n, fft, c2mag, self.avg, log, sink)
-        gr.hier_block.__init__(self, fg, s2p, sink)
+        self.connect(self, s2p, one_in_n, fft, c2mag, self.avg, log, sink)
 
         self.win = fft_window(self, parent, size=size)
         self.set_average(self.average)
@@ -444,36 +451,12 @@ def next_down(v, seq):
 
 
 # ----------------------------------------------------------------
-#          	      Deprecated interfaces
-# ----------------------------------------------------------------
-
-# returns (block, win).
-#   block requires a single input stream of float
-#   win is a subclass of wxWindow
-
-def make_ra_fft_sink_f(fg, parent, title, fft_size, input_rate, ymin = 0, ymax=50):
-    
-    block = ra_fft_sink_f(fg, parent, title=title, fft_size=fft_size, sample_rate=input_rate,
-                       y_per_div=(ymax - ymin)/8, ref_level=ymax)
-    return (block, block.win)
-
-# returns (block, win).
-#   block requires a single input stream of gr_complex
-#   win is a subclass of wxWindow
-
-def make_ra_fft_sink_c(fg, parent, title, fft_size, input_rate, ymin=0, ymax=50):
-    block = ra_fft_sink_c(fg, parent, title=title, fft_size=fft_size, sample_rate=input_rate,
-                       y_per_div=(ymax - ymin)/8, ref_level=ymax)
-    return (block, block.win)
-
-
-# ----------------------------------------------------------------
 # Standalone test app
 # ----------------------------------------------------------------
 
-class test_app_flow_graph (stdgui.gui_flow_graph):
+class test_app_flow_graph (stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
-        stdgui.gui_flow_graph.__init__ (self, frame, panel, vbox, argv)
+        stdgui2.std_top_block.__init__ (self, frame, panel, vbox, argv)
 
         fft_size = 256
 
@@ -488,7 +471,7 @@ class test_app_flow_graph (stdgui.gui_flow_graph):
         # suck down all the CPU available.  Normally you wouldn't use these.
         thr1 = gr.throttle(gr.sizeof_gr_complex, input_rate)
 
-        sink1 = ra_fft_sink_c (self, panel, title="Complex Data", fft_size=fft_size,
+        sink1 = ra_fft_sink_c (panel, title="Complex Data", fft_size=fft_size,
                             sample_rate=input_rate, baseband_freq=100e3,
                             ref_level=60, y_per_div=10)
         vbox.Add (sink1.win, 1, wx.EXPAND)
@@ -497,14 +480,14 @@ class test_app_flow_graph (stdgui.gui_flow_graph):
         src2 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 5.75e3, 1000)
         #src2 = gr.sig_source_f (input_rate, gr.GR_CONST_WAVE, 5.75e3, 1000)
         thr2 = gr.throttle(gr.sizeof_float, input_rate)
-        sink2 = ra_fft_sink_f (self, panel, title="Real Data", fft_size=fft_size*2,
+        sink2 = ra_fft_sink_f (panel, title="Real Data", fft_size=fft_size*2,
                             sample_rate=input_rate, baseband_freq=100e3,
                             ref_level=60, y_per_div=10)
         vbox.Add (sink2.win, 1, wx.EXPAND)
         self.connect (src2, thr2, sink2)
 
 def main ():
-    app = stdgui.stdapp (test_app_flow_graph,
+    app = stdgui2.stdapp (test_app_flow_graph,
                          "FFT Sink Test App")
     app.MainLoop ()
 

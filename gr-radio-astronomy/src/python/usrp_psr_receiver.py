@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -29,7 +29,7 @@
 #  and epoch folding analysis
 #
 #
-from gnuradio import gr, gru, blks, audio
+from gnuradio import gr, gru, blks2, audio
 from usrpm import usrp_dbid
 from gnuradio import usrp, optfir
 from gnuradio import eng_notation
@@ -46,9 +46,9 @@ import os
 import math
 
 
-class app_flow_graph(stdgui.gui_flow_graph):
+class app_flow_graph(stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
-        stdgui.gui_flow_graph.__init__(self)
+        stdgui2.std_top_block.__init__(self)
 
         self.frame = frame
         self.panel = panel
@@ -292,7 +292,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
         #
         # Create the appropriate FFT scope
         #
-        self.scope = ra_fftsink.ra_fft_sink_f (self, panel, 
+        self.scope = ra_fftsink.ra_fft_sink_f (panel, 
            fft_size=int(options.fft_size), sample_rate=PULSAR_MAX_FREQ*2,
            title="Post-detector spectrum",  
            ofunc=self.pulsarfunc, xydfunc=self.xydfunc, fft_rate=200)
@@ -366,7 +366,7 @@ class app_flow_graph(stdgui.gui_flow_graph):
             self.folder_comb = gr.fft_filter_ccc(1,bogtaps)
 
         # Rational resampler
-        self.folder_rr = blks.rational_resampler_fff(self, self.interp, self.decim)
+        self.folder_rr = blks2.rational_resampler_fff(self.interp, self.decim)
 
         # Epoch folder bandpass
         bogtaps = Numeric.zeros(1, Numeric.Float64)

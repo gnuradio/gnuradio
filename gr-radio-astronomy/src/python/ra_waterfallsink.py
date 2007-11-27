@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2003,2004,2005 Free Software Foundation, Inc.
+# Copyright 2003,2004,2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,7 @@
 # 
 
 from gnuradio import gr, gru, window
-from gnuradio.wxgui import stdgui
+from gnuradio.wxgui import stdgui2
 import wx
 import gnuradio.wxgui.plot as plot
 import numpy
@@ -86,9 +86,6 @@ class waterfall_sink_base(object):
         self.input_is_real = input_is_real
         self.msgq = gr.msg_queue(2)         # queue up to 2 messages
 
-    def reconnect( self, fg ):
-        fg.connect( *self.block_list )
-
     def set_average(self, average):
         self.average = average
         if average:
@@ -109,12 +106,16 @@ class waterfall_sink_base(object):
     def _set_n(self):
         self.one_in_n.set_n(max(1, int(self.sample_rate/self.fft_size/self.fft_rate)))
         
-class waterfall_sink_f(gr.hier_block, waterfall_sink_base):
-    def __init__(self, fg, parent, baseband_freq=0,
+class waterfall_sink_f(gr.hier_block2, waterfall_sink_base):
+    def __init__(self, parent, baseband_freq=0,
                  ref_level=0, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
                  title='', size=default_fftsink_size, report=None, span=40, ofunc=None, xydfunc=None):
 
+	gr.hier_block2.__init__(self, "waterfall_sink_f",
+				gr.io_signature(1, 1, gr.sizeof_float),
+				gr.io_signature(0, 0, 0))
+				
         waterfall_sink_base.__init__(self, input_is_real=True,
                                      baseband_freq=baseband_freq,
                                      sample_rate=sample_rate,
@@ -132,21 +133,22 @@ class waterfall_sink_f(gr.hier_block, waterfall_sink_base):
         log = gr.nlog10_ff(20, self.fft_size, -20*math.log10(self.fft_size))
         sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
 
-        self.block_list = (s2p, self.one_in_n, fft, c2mag, self.avg, log, sink)
-        self.reconnect( fg )
-        gr.hier_block.__init__(self, fg, s2p, sink)
-
+	self.connect(self, s2p, self.one_in_n, fft, c2mag, self.avg, log, sink)
         self.win = waterfall_window(self, parent, size=size, report=report,
                                     ref_level=ref_level, span=span, ofunc=ofunc, xydfunc=xydfunc)
         self.set_average(self.average)
 
 
-class waterfall_sink_c(gr.hier_block, waterfall_sink_base):
-    def __init__(self, fg, parent, baseband_freq=0,
+class waterfall_sink_c(gr.hier_block2, waterfall_sink_base):
+    def __init__(self, parent, baseband_freq=0,
                  ref_level=0, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None, 
                  title='', size=default_fftsink_size, report=None, span=40, ofunc=None, xydfunc=None):
 
+	gr.hier_block2.__init__(self, "waterfall_sink_c",
+				gr.io_signature(1, 1, gr.sizeof_gr_complex),
+				gr.io_signature(0, 0, 0))
+				
         waterfall_sink_base.__init__(self, input_is_real=False,
                                      baseband_freq=baseband_freq,
                                      sample_rate=sample_rate,
@@ -166,10 +168,7 @@ class waterfall_sink_c(gr.hier_block, waterfall_sink_base):
         log = gr.nlog10_ff(20, self.fft_size, -20*math.log10(self.fft_size))
         sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
 
-        self.block_list = (s2p, self.one_in_n, fft, c2mag, self.avg, log, sink)
-        self.reconnect( fg )
-        gr.hier_block.__init__(self, fg, s2p, sink)
-
+	self.connect(self, s2p, self.one_in_n, fft, c2mag, self.avg, log, sink)
         self.win = waterfall_window(self, parent, size=size, report=report,
                                     ref_level=ref_level, span=span, ofunc=ofunc, xydfunc=xydfunc)
         self.set_average(self.average)
@@ -602,36 +601,12 @@ def tab_item( parent, label, chars, units, style=wx.TE_RIGHT, value="" ):
 
 
 # ----------------------------------------------------------------
-#          	      Deprecated interfaces
-# ----------------------------------------------------------------
-
-# returns (block, win).
-#   block requires a single input stream of float
-#   win is a subclass of wxWindow
-
-def make_waterfall_sink_f(fg, parent, title, fft_size, input_rate):
-    
-    block = waterfall_sink_f(fg, parent, title=title, fft_size=fft_size,
-                             sample_rate=input_rate)
-    return (block, block.win)
-
-# returns (block, win).
-#   block requires a single input stream of gr_complex
-#   win is a subclass of wxWindow
-
-def make_waterfall_sink_c(fg, parent, title, fft_size, input_rate):
-    block = waterfall_sink_c(fg, parent, title=title, fft_size=fft_size,
-                             sample_rate=input_rate)
-    return (block, block.win)
-
-
-# ----------------------------------------------------------------
 # Standalone test app
 # ----------------------------------------------------------------
 
-class test_app_flow_graph (stdgui.gui_flow_graph):
+class test_app_flow_graph (stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
-        stdgui.gui_flow_graph.__init__ (self, frame, panel, vbox, argv)
+        stdgui2.std_top_block.__init__ (self, frame, panel, vbox, argv)
 
         fft_size = 512
 
@@ -646,7 +621,7 @@ class test_app_flow_graph (stdgui.gui_flow_graph):
         # suck down all the CPU available.  Normally you wouldn't use these.
         thr1 = gr.throttle(gr.sizeof_gr_complex, input_rate)
 
-        sink1 = waterfall_sink_c (self, panel, title="Complex Data",
+        sink1 = waterfall_sink_c (panel, title="Complex Data",
                                   fft_size=fft_size,
                                   sample_rate=input_rate, baseband_freq=0,
                                   size=(600,144) )
@@ -657,13 +632,13 @@ class test_app_flow_graph (stdgui.gui_flow_graph):
         src2 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 5.75e3, 1000)
         #src2 = gr.sig_source_f (input_rate, gr.GR_CONST_WAVE, 5.75e3, 1000)
         thr2 = gr.throttle(gr.sizeof_float, input_rate)
-        sink2 = waterfall_sink_f (self, panel, title="Real Data", fft_size=fft_size,
+        sink2 = waterfall_sink_f (panel, title="Real Data", fft_size=fft_size,
                                   sample_rate=input_rate, baseband_freq=0)
         vbox.Add (sink2.win, 1, wx.EXPAND)
         self.connect (src2, thr2, sink2)
 
 def main ():
-    app = stdgui.stdapp (test_app_flow_graph,
+    app = stdgui2.stdapp (test_app_flow_graph,
                          "Waterfall Sink Test App")
     app.MainLoop ()
 
