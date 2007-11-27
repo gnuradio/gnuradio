@@ -48,6 +48,7 @@ $scriptdir/configure			    \
     PKG_CONFIG_PATH=${cell_root}/usr/lib/pkgconfig:${cell_root}/usr/local/lib/pkgconfig \
     --host=powerpc64-unknown-linux-gnu							\
     --with-pythondir=$prefix/lib/python${python_version}/site-packages			\
+    --disable-gr-video-sdl \
     "$@"
 
 
