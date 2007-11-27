@@ -5,10 +5,10 @@ from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import sys
 
-class my_graph(gr.flow_graph):
+class my_graph(gr.top_block):
 
     def __init__(self):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         parser = OptionParser(option_class=eng_option)
         (options, args) = parser.parse_args ()
@@ -23,11 +23,11 @@ class my_graph(gr.flow_graph):
 
 if __name__ == '__main__':
     try:
-        fg = my_graph()
-        fg.run()
+        tb = my_graph()
+        tb.run()
         f = sys.stdout
         i = 0
-        for s in fg.dst.data():
+        for s in tb.dst.data():
             f.write("%3d, " % (s & 0xff,))
             f.write("%3d, " % ((s >> 8) & 0xff,))
             i = i+2
