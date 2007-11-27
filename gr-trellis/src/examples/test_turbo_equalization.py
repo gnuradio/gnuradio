@@ -9,7 +9,7 @@ import sys
 import fsm_utils
 
 
-def make_rx(fg,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,type):
+def make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,type):
     metrics_in = trellis.metrics_f(fi.O(),dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # data preprocessing to generate metrics for innner SISO
     scale = gr.multiply_const_ff(1.0/N0)
     gnd = gr.vector_source_f([0],True);
@@ -30,27 +30,27 @@ def make_rx(fg,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,typ
         siso_out.append( trellis.viterbi_s(fo,K,0,-1) ) # no soft outputs needed
 
     # connect first stage
-    fg.connect (gnd,inter[0])
-    fg.connect (metrics_in,scale)
-    fg.connect (scale,(siso_in[0],1))
+    tb.connect (gnd,inter[0])
+    tb.connect (metrics_in,scale)
+    tb.connect (scale,(siso_in[0],1))
 
     # connect the rest
     for it in range(IT):
       if it < IT-1:
-        fg.connect (metrics_in,(siso_in[it+1],1))
-        fg.connect (siso_in[it],deinter[it],(siso_out[it],1))
-        fg.connect (gnd,(siso_out[it],0))
-        fg.connect (siso_out[it],inter[it+1])
-        fg.connect (inter[it],(siso_in[it],0))
+        tb.connect (metrics_in,(siso_in[it+1],1))
+        tb.connect (siso_in[it],deinter[it],(siso_out[it],1))
+        tb.connect (gnd,(siso_out[it],0))
+        tb.connect (siso_out[it],inter[it+1])
+        tb.connect (inter[it],(siso_in[it],0))
       else:
-        fg.connect (siso_in[it],deinter[it],siso_out[it])
-        fg.connect (inter[it],(siso_in[it],0))
+        tb.connect (siso_in[it],deinter[it],siso_out[it])
+        tb.connect (inter[it],(siso_in[it],0))
    
     return (metrics_in,siso_out[IT-1])
 
 
 def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,tot_constellation,Es,N0,IT,seed):
-    fg = gr.flow_graph ()
+    tb = gr.top_block ()
 
     # TX
     src = gr.lfsr_32k_source_s()
@@ -67,17 +67,17 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,tot_constellat
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
     
     # RX
-    (head,tail) = make_rx(fg,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM) 
+    (head,tail) = make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM) 
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = gr.check_lfsr_32k_s(); 
     
-    fg.connect (src,src_head,s2fsmi,enc_out,inter,enc_in,mod)
-    fg.connect (mod,(add,0))
-    fg.connect (noise,(add,1))
-    fg.connect (add,head)
-    fg.connect (tail,fsmi2s,dst)
+    tb.connect (src,src_head,s2fsmi,enc_out,inter,enc_in,mod)
+    tb.connect (mod,(add,0))
+    tb.connect (noise,(add,1))
+    tb.connect (add,head)
+    tb.connect (tail,fsmi2s,dst)
     
-    fg.run()
+    tb.run()
 
     ntotal = dst.ntotal ()
     nright = dst.nright ()

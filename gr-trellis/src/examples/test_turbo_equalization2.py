@@ -9,7 +9,7 @@ import sys
 import random
 import fsm_utils
 
-def make_rx(fg,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,type):
+def make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,type):
     scale = gr.multiply_const_ff(math.sqrt(1.0/N0))
     gnd = gr.vector_source_f([0],True);
 
@@ -29,26 +29,26 @@ def make_rx(fg,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,typ
         siso_out.append( trellis.viterbi_s(fo,K,0,-1) ) # no soft outputs needed
 
     # connect first stage
-    fg.connect (gnd,inter[0])
-    fg.connect (scale,(siso_in[0],1))
+    tb.connect (gnd,inter[0])
+    tb.connect (scale,(siso_in[0],1))
 
     # connect the rest
     for it in range(IT):
       if it < IT-1:
-        fg.connect (scale,(siso_in[it+1],1))
-        fg.connect (siso_in[it],deinter[it],(siso_out[it],1))
-        fg.connect (gnd,(siso_out[it],0))
-        fg.connect (siso_out[it],inter[it+1])
-        fg.connect (inter[it],(siso_in[it],0))
+        tb.connect (scale,(siso_in[it+1],1))
+        tb.connect (siso_in[it],deinter[it],(siso_out[it],1))
+        tb.connect (gnd,(siso_out[it],0))
+        tb.connect (siso_out[it],inter[it+1])
+        tb.connect (inter[it],(siso_in[it],0))
       else:
-        fg.connect (siso_in[it],deinter[it],siso_out[it])
-        fg.connect (inter[it],(siso_in[it],0))
+        tb.connect (siso_in[it],deinter[it],siso_out[it])
+        tb.connect (inter[it],(siso_in[it],0))
 
     return (scale,siso_out[IT-1])
 
 
 def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constellation,Es,N0,IT,seed):
-    fg = gr.flow_graph ()
+    tb = gr.top_block ()
     L = len(channel)
 
     # TX
@@ -68,16 +68,16 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,channel,modulation,dimensiona
     noise = gr.noise_source_f(gr.GR_GAUSSIAN,math.sqrt(N0/2),seed)
     
     # RX
-    (head,tail) = make_rx(fg,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM) 
+    (head,tail) = make_rx(tb,fo,fi,dimensionality,tot_constellation,K,interleaver,IT,Es,N0,trellis.TRELLIS_MIN_SUM) 
     dst = gr.vector_sink_s(); 
     
-    fg.connect (src,enc_out,inter,mod)
-    fg.connect (mod,isi,(add,0))
-    fg.connect (noise,(add,1))
-    fg.connect (add,head)
-    fg.connect (tail,dst)
+    tb.connect (src,enc_out,inter,mod)
+    tb.connect (mod,isi,(add,0))
+    tb.connect (noise,(add,1))
+    tb.connect (add,head)
+    tb.connect (tail,dst)
     
-    fg.run()
+    tb.run()
 
     data = dst.data()
     ntotal = len(data)

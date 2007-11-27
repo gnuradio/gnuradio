@@ -10,7 +10,7 @@ import random
 import fsm_utils
 
 def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constellation,N0,seed):
-    fg = gr.flow_graph ()
+    tb = gr.top_block ()
     L = len(channel)
 
     # TX
@@ -37,14 +37,14 @@ def run_test (f,Kb,bitspersymbol,K,channel,modulation,dimensionality,tot_constel
     va = trellis.viterbi_combined_fs(f,K+L,0,0,dimensionality,tot_constellation,trellis.TRELLIS_EUCLIDEAN) # using viterbi_combined_fs instead of metrics_f/viterbi_s allows larger packet lengths because metrics_f is complaining for not being able to allocate large buffers. This is due to the large f.O() in this application...
     dst = gr.vector_sink_s()
 
-    fg.connect (src,mod)
-    fg.connect (mod,isi,(add,0))
-    fg.connect (noise,(add,1))
-    #fg.connect (add,metrics)
-    #fg.connect (metrics,va,dst)
-    fg.connect (add,skip,va,dst)
+    tb.connect (src,mod)
+    tb.connect (mod,isi,(add,0))
+    tb.connect (noise,(add,1))
+    #tb.connect (add,metrics)
+    #tb.connect (metrics,va,dst)
+    tb.connect (add,skip,va,dst)
 
-    fg.run()
+    tb.run()
 
     data = dst.data() 
     ntotal = len(data) - L

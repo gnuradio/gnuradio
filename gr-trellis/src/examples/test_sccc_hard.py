@@ -10,7 +10,7 @@ import random
 import fsm_utils
 
 def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
-    fg = gr.flow_graph ()
+    tb = gr.top_block ()
 
 
     # TX
@@ -35,13 +35,13 @@ def run_test (fo,fi,interleaver,Kb,bitspersymbol,K,dimensionality,constellation,
     fsmi2s = gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = gr.check_lfsr_32k_s()
     
-    fg.connect (src,src_head,s2fsmi,enc_out,inter,enc_in,mod)
-    fg.connect (mod,(add,0))
-    fg.connect (noise,(add,1))
-    fg.connect (add,metrics_in)
-    fg.connect (metrics_in,va_in,deinter,metrics_out,va_out,fsmi2s,dst)
+    tb.connect (src,src_head,s2fsmi,enc_out,inter,enc_in,mod)
+    tb.connect (mod,(add,0))
+    tb.connect (noise,(add,1))
+    tb.connect (add,metrics_in)
+    tb.connect (metrics_in,va_in,deinter,metrics_out,va_out,fsmi2s,dst)
 
-    fg.run()
+    tb.run()
     
     ntotal = dst.ntotal ()
     nright = dst.nright ()

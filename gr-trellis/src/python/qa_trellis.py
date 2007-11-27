@@ -26,10 +26,10 @@ import trellis
 class qa_trellis (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_001_fsm (self):
         I = 2

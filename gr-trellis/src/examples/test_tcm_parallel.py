@@ -9,7 +9,7 @@ import sys
 import fsm_utils
 
 def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed,P):
-    fg = gr.flow_graph ()
+    tb = gr.top_block ()
 
     # TX
     src = gr.lfsr_32k_source_s()
@@ -33,17 +33,17 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed,P):
     fsmi2s=gr.unpacked_to_packed_ss(bitspersymbol,gr.GR_MSB_FIRST) # pack FSM input symbols to shorts
     dst = gr.check_lfsr_32k_s()
 
-    fg.connect (src,src_head,s2fsmi,s2p)
+    tb.connect (src,src_head,s2fsmi,s2p)
     for i in range(P):
-        fg.connect ((s2p,i),(enc,i),(mod,i))
-        fg.connect ((mod,i),(add[i],0))
-        fg.connect (noise[i],(add[i],1))
-        fg.connect (add[i],(metrics,i))
-        fg.connect ((metrics,i),(va,i),(p2s,i))
-    fg.connect (p2s,fsmi2s,dst)
+        tb.connect ((s2p,i),(enc,i),(mod,i))
+        tb.connect ((mod,i),(add[i],0))
+        tb.connect (noise[i],(add[i],1))
+        tb.connect (add[i],(metrics,i))
+        tb.connect ((metrics,i),(va,i),(p2s,i))
+    tb.connect (p2s,fsmi2s,dst)
     
 
-    fg.run()
+    tb.run()
     
     # A bit of cheating: run the program once and print the 
     # final encoder state.

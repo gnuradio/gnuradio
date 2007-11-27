@@ -10,7 +10,7 @@ import random
 import fsm_utils
 
 def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
-    fg = gr.flow_graph ()
+    tb = gr.top_block ()
 
     # TX
     packet = [0]*Kb
@@ -40,16 +40,16 @@ def run_test (f,Kb,bitspersymbol,K,dimensionality,constellation,N0,seed):
     #dst = gr.check_lfsr_32k_s(); 
     
 
-    #fg.connect (src,src_head,s2fsmi,enc,mod)
-    fg.connect (src,b2s,s2fsmi,enc,mod)
-    fg.connect (mod,(add,0))
-    fg.connect (noise,(add,1))
-    fg.connect (add,metrics)
-    #fg.connect (metrics,va,fsmi2s,dst)
-    fg.connect (metrics,va,fsmi2s,s2b,dst)
+    #tb.connect (src,src_head,s2fsmi,enc,mod)
+    tb.connect (src,b2s,s2fsmi,enc,mod)
+    tb.connect (mod,(add,0))
+    tb.connect (noise,(add,1))
+    tb.connect (add,metrics)
+    #tb.connect (metrics,va,fsmi2s,dst)
+    tb.connect (metrics,va,fsmi2s,s2b,dst)
     
 
-    fg.run()
+    tb.run()
     
     # A bit of cheating: run the program once and print the 
     # final encoder state..
