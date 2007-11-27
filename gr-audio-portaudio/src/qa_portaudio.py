@@ -26,10 +26,10 @@ import audio_portaudio
 class qa_portaudio (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_000_nop (self):
         """Just see if we can import the module...

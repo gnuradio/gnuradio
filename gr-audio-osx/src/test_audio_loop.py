@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio.
 # 
@@ -25,10 +25,10 @@ from gnuradio import audio
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-class my_graph(gr.flow_graph):
+class my_graph(gr.top_block):
 
     def __init__(self):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         parser = OptionParser(option_class=eng_option)
         parser.add_option("-O", "--audio-output",
