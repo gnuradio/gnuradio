@@ -93,7 +93,7 @@ class parse_msg(object):
         assert(msg.length() == self.vlen * gr.sizeof_float)
         self.data = struct.unpack('%df' % (self.vlen,), msg.to_string())
 
-
+# FIXME: see ticket:199
 class xtest_bin_statistics(gr_unittest.TestCase):
 
     def setUp(self):

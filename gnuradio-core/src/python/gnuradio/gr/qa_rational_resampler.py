@@ -293,6 +293,6 @@ class test_rational_resampler (gr_unittest.TestCase):
 
 if __name__ == '__main__':
     pass
-    # Disabled, see ticket:210
+    # FIXME: Disabled, see ticket:210
     # gr_unittest.main()
         

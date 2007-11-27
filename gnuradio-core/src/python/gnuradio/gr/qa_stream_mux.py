@@ -167,5 +167,5 @@ class test_head (gr_unittest.TestCase):
 if __name__ == '__main__':
     pass
     # Note: disabled until segfault issue is resolved    
-    # See ticket:211
+    # FIXME: See ticket:211
     # gr_unittest.main ()
