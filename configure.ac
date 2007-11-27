@@ -25,7 +25,7 @@ AC_CONFIG_SRCDIR([gnuradio-core/src/lib/runtime/gr_vmcircbuf.cc])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
-if test x$cross_compiling != xyes; then
+if test x$cross_compiling != xno; then
   AC_MSG_NOTICE([Configuring GNU Radio for cross compilation])
 else
   AC_MSG_NOTICE([Configuring GNU Radio for native compilation])
