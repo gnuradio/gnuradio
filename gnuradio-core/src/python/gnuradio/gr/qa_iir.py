@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,10 +25,10 @@ from gnuradio import gr, gr_unittest
 class test_iir (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_iir_direct_001 (self):
         src_data = (1, 2, 3, 4, 5, 6, 7, 8)
@@ -38,9 +38,9 @@ class test_iir (gr_unittest.TestCase):
         src = gr.vector_source_f (src_data)
         op = gr.iir_filter_ffd (fftaps, fbtaps)
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
 
@@ -52,9 +52,9 @@ class test_iir (gr_unittest.TestCase):
         src = gr.vector_source_f (src_data)
         op = gr.iir_filter_ffd (fftaps, fbtaps)
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
 
@@ -66,9 +66,9 @@ class test_iir (gr_unittest.TestCase):
         src = gr.vector_source_f (src_data)
         op = gr.iir_filter_ffd (fftaps, fbtaps)
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
 
@@ -80,9 +80,9 @@ class test_iir (gr_unittest.TestCase):
         src = gr.vector_source_f (src_data)
         op = gr.iir_filter_ffd (fftaps, fbtaps)
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
 
@@ -94,9 +94,9 @@ class test_iir (gr_unittest.TestCase):
         src = gr.vector_source_f (src_data)
         op = gr.iir_filter_ffd (fftaps, fbtaps)
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
 
@@ -111,9 +111,9 @@ class test_iir (gr_unittest.TestCase):
         fbtaps = (0,  -1, 3)
         op.set_taps (fftaps, fbtaps)
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
 
@@ -128,9 +128,9 @@ class test_iir (gr_unittest.TestCase):
         fbtaps = (0, -1)
         op.set_taps (fftaps, fbtaps)
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
         
@@ -145,9 +145,9 @@ class test_iir (gr_unittest.TestCase):
         fbtaps = (0,0, -1,3)
         op.set_taps (fftaps, fbtaps)
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
         

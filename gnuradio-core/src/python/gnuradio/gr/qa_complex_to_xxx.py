@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,10 +26,10 @@ import math
 class test_complex_ops (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_complex_to_float_1 (self):
         src_data = (0, 1, -1, 3+4j, -3-4j, -3+4j)
@@ -37,9 +37,9 @@ class test_complex_ops (gr_unittest.TestCase):
         src = gr.vector_source_c (src_data)
         op = gr.complex_to_float ()
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()               # run the graph and wait for it to finish
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()               # run the graph and wait for it to finish
         actual_result = dst.data ()  # fetch the contents of the sink
         self.assertFloatTuplesAlmostEqual (expected_result, actual_result)
 
@@ -51,10 +51,10 @@ class test_complex_ops (gr_unittest.TestCase):
         op = gr.complex_to_float ()
         dst0 = gr.vector_sink_f ()
         dst1 = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect ((op, 0), dst0)
-        self.fg.connect ((op, 1), dst1)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect ((op, 0), dst0)
+        self.tb.connect ((op, 1), dst1)
+        self.tb.run ()
         actual_result = dst0.data ()
         self.assertFloatTuplesAlmostEqual (expected_result0, actual_result)
         actual_result = dst1.data ()
@@ -66,9 +66,9 @@ class test_complex_ops (gr_unittest.TestCase):
         src = gr.vector_source_c (src_data)
         op = gr.complex_to_real ()
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         actual_result = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, actual_result)
 
@@ -78,9 +78,9 @@ class test_complex_ops (gr_unittest.TestCase):
         src = gr.vector_source_c (src_data)
         op = gr.complex_to_imag ()
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         actual_result = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, actual_result,5)
 
@@ -90,9 +90,9 @@ class test_complex_ops (gr_unittest.TestCase):
         src = gr.vector_source_c (src_data)
         op = gr.complex_to_mag ()
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         actual_result = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, actual_result,5)
 
@@ -102,9 +102,9 @@ class test_complex_ops (gr_unittest.TestCase):
         src = gr.vector_source_c (src_data)
         op = gr.complex_to_mag_squared ()
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         actual_result = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, actual_result,5)
 
@@ -129,9 +129,9 @@ class test_complex_ops (gr_unittest.TestCase):
         src = gr.vector_source_c (src_data)
         op = gr.complex_to_arg ()
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         actual_result = dst.data ()
 
         self.assertFloatTuplesAlmostEqual (expected_result, actual_result, 5)

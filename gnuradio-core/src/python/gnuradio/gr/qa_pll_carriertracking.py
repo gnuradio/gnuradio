@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,10 +26,10 @@ import math
 class test_sig_source (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph()
+        self.tb = gr.top_block()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_pll_carriertracking (self):
         expected_result = ((1.00000238419+6.47922693275e-09j),
@@ -146,10 +146,10 @@ class test_sig_source (gr_unittest.TestCase):
         head = gr.head (gr.sizeof_gr_complex, int (freq))
         dst = gr.vector_sink_c ()
 
-        self.fg.connect (src, pll, head)
-        self.fg.connect (head, dst)
+        self.tb.connect (src, pll, head)
+        self.tb.connect (head, dst)
 
-        self.fg.run ()
+        self.tb.run ()
         dst_data = dst.data ()
 
         self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 5)

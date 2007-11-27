@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -28,15 +28,15 @@ test_output = False
 class test_sig_source (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     
     def test_001(self):
         ''' Test the complex AGC loop (single rate input) '''
-        fg = self.fg
+        tb = self.tb
 
         expected_result = (
             (100.000244140625+7.2191943445432116e-07j),
@@ -98,20 +98,20 @@ class test_sig_source (gr_unittest.TestCase):
 
         agc = gr.agc_cc(1e-3, 1, 1, 1000)
         
-        fg.connect (src1, head)
-        fg.connect (head, agc)
-        fg.connect (agc, dst1)
+        tb.connect (src1, head)
+        tb.connect (head, agc)
+        tb.connect (agc, dst1)
 
         if test_output == True:
-            fg.connect (agc, gr.file_sink(gr.sizeof_gr_complex, "test_agc_cc.dat"))
+            tb.connect (agc, gr.file_sink(gr.sizeof_gr_complex, "test_agc_cc.dat"))
 
-        fg.run ()
+        tb.run ()
         dst_data = dst1.data ()
         self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 4)
 
     def test_002(self):
         ''' Test the floating point AGC loop (single rate input) '''
-        fg = self.fg
+        tb = self.tb
 
         expected_result = (
             7.2191943445432116e-07,
@@ -173,20 +173,20 @@ class test_sig_source (gr_unittest.TestCase):
 
         agc = gr.agc_ff(1e-3, 1, 1, 1000)
         
-        fg.connect (src1, head)
-        fg.connect (head, agc)
-        fg.connect (agc, dst1)
+        tb.connect (src1, head)
+        tb.connect (head, agc)
+        tb.connect (agc, dst1)
 
         if test_output == True:
-            fg.connect (agc, gr.file_sink(gr.sizeof_float, "test_agc_ff.dat"))
+            tb.connect (agc, gr.file_sink(gr.sizeof_float, "test_agc_ff.dat"))
 
-        fg.run ()
+        tb.run ()
         dst_data = dst1.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, dst_data, 4)
 
     def test_003(self):
         ''' Test the complex AGC loop (attack and decay rate inputs) '''
-        fg = self.fg
+        tb = self.tb
 
         expected_result = \
                         ((100.000244140625+7.2191943445432116e-07j),
@@ -248,20 +248,20 @@ class test_sig_source (gr_unittest.TestCase):
 
         agc = gr.agc2_cc(1e-2, 1e-3, 1, 1, 1000)
         
-        fg.connect (src1, head)
-        fg.connect (head, agc)
-        fg.connect (agc, dst1)
+        tb.connect (src1, head)
+        tb.connect (head, agc)
+        tb.connect (agc, dst1)
 
         if test_output == True:
-            fg.connect (agc, gr.file_sink(gr.sizeof_gr_complex, "test_agc2_cc.dat"))
+            tb.connect (agc, gr.file_sink(gr.sizeof_gr_complex, "test_agc2_cc.dat"))
 
-        fg.run ()
+        tb.run ()
         dst_data = dst1.data ()
         self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 4)
 
     def test_004(self):
         ''' Test the floating point AGC loop (attack and decay rate inputs) '''
-        fg = self.fg
+        tb = self.tb
 
         expected_result = \
             (7.2191943445432116e-07,
@@ -323,21 +323,21 @@ class test_sig_source (gr_unittest.TestCase):
 
         agc = gr.agc2_ff(1e-2, 1e-3, 1, 1, 1000)
         
-        fg.connect (src1, head)
-        fg.connect (head, agc)
-        fg.connect (agc, dst1)
+        tb.connect (src1, head)
+        tb.connect (head, agc)
+        tb.connect (agc, dst1)
 
         if test_output == True:
-            fg.connect (agc, gr.file_sink(gr.sizeof_float, "test_agc2_ff.dat"))
+            tb.connect (agc, gr.file_sink(gr.sizeof_float, "test_agc2_ff.dat"))
 
-        fg.run ()
+        tb.run ()
         dst_data = dst1.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, dst_data, 4)
 
 
     def test_005(self):
         ''' Test the complex AGC loop (attack and decay rate inputs) '''
-        fg = self.fg
+        tb = self.tb
 
         expected_result = \
                         ((100.000244140625+7.2191943445432116e-07j),
@@ -399,14 +399,14 @@ class test_sig_source (gr_unittest.TestCase):
 
         agc = gr.agc2_cc(1e-2, 1e-3, 1, 1, 1000)
         
-        fg.connect (src1, head)
-        fg.connect (head, agc)
-        fg.connect (agc, dst1)
+        tb.connect (src1, head)
+        tb.connect (head, agc)
+        tb.connect (agc, dst1)
 
         if test_output == True:
-            fg.connect (agc, gr.file_sink(gr.sizeof_gr_complex, "test_agc2_cc.dat"))
+            tb.connect (agc, gr.file_sink(gr.sizeof_gr_complex, "test_agc2_cc.dat"))
 
-        fg.run ()
+        tb.run ()
         dst_data = dst1.data ()
         self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 4)
 
@@ -419,12 +419,12 @@ class test_sig_source (gr_unittest.TestCase):
         src = gr.vector_source_c(input_data)
         agc = gr.feedforward_agc_cc(16, 2.0)
         dst = gr.vector_sink_c ()
-        self.fg.connect (src, agc, dst)
+        self.tb.connect (src, agc, dst)
 
         if test_output == True:
-            self.fg.connect (agc, gr.file_sink(gr.sizeof_gr_complex, "test_feedforward_cc.dat"))
+            self.tb.connect (agc, gr.file_sink(gr.sizeof_gr_complex, "test_feedforward_cc.dat"))
 
-        self.fg.run ()
+        self.tb.run ()
         dst_data = dst.data ()
         #self.assertComplexTuplesAlmostEqual (expected_result, dst_data, 4)
 

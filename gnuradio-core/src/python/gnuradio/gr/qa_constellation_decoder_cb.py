@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,10 +26,10 @@ import math
 class test_head (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_constellation_decoder_cb (self):
         symbol_positions  = [1 + 0j, 0 + 1j , -1 + 0j, 0 - 1j]
@@ -39,9 +39,9 @@ class test_head (gr_unittest.TestCase):
         src = gr.vector_source_c (src_data)
         op = gr.constellation_decoder_cb (symbol_positions, symbol_values_out)
         dst = gr.vector_sink_b ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()               # run the graph and wait for it to finish
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()               # run the graph and wait for it to finish
         actual_result = dst.data ()  # fetch the contents of the sink
 	#print "actual result", actual_result
 	#print "expected result", expected_result

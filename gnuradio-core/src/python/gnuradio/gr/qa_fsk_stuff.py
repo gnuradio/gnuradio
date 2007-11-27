@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -29,10 +29,10 @@ def sincos(x):
 class test_bytes_to_syms (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_bytes_to_syms_001 (self):
         src_data = (0x01, 0x80, 0x03)
@@ -42,9 +42,9 @@ class test_bytes_to_syms (gr_unittest.TestCase):
         src = gr.vector_source_b (src_data)
         op = gr.bytes_to_syms ()
         dst = gr.vector_sink_f ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertEqual (expected_result, result_data)
 
@@ -63,9 +63,9 @@ class test_bytes_to_syms (gr_unittest.TestCase):
         src = gr.vector_source_b (src_data)
         op = gr.simple_framer (4)
         dst = gr.vector_sink_b ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertEqual (expected_result, result_data)
         

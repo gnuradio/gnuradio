@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -40,10 +40,10 @@ def calc_expected_result(src_data, n):
 class test_pipe_fittings(gr_unittest.TestCase):
 
     def setUp(self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown(self):
-        self.fg = None
+        self.tb = None
 
     def test_001(self):
         """
@@ -57,15 +57,15 @@ class test_pipe_fittings(gr_unittest.TestCase):
         #print "expected results: ", expected_results
         src = gr.vector_source_i(src_data)
         op = gr.stream_to_streams(gr.sizeof_int, n)
-        self.fg.connect(src, op)
+        self.tb.connect(src, op)
         
         dsts = []
         for i in range(n):
             dst = gr.vector_sink_i()
-            self.fg.connect((op, i), (dst, 0))
+            self.tb.connect((op, i), (dst, 0))
             dsts.append(dst)
 
-        self.fg.run()
+        self.tb.run()
 
         for d in range(n):
             self.assertEqual(expected_results[d], dsts[d].data())
@@ -84,12 +84,12 @@ class test_pipe_fittings(gr_unittest.TestCase):
         op2 = gr.streams_to_stream(gr.sizeof_int, n)
         dst = gr.vector_sink_i()
         
-        self.fg.connect(src, op1)
+        self.tb.connect(src, op1)
         for i in range(n):
-            self.fg.connect((op1, i), (op2, i))
-        self.fg.connect(op2, dst)
+            self.tb.connect((op1, i), (op2, i))
+        self.tb.connect(op2, dst)
         
-        self.fg.run()
+        self.tb.run()
         self.assertEqual(expected_results, dst.data())
         
     def test_003(self):
@@ -107,12 +107,12 @@ class test_pipe_fittings(gr_unittest.TestCase):
         op3 = gr.vector_to_stream(gr.sizeof_int, n)
         dst = gr.vector_sink_i()
         
-        self.fg.connect(src, op1)
+        self.tb.connect(src, op1)
         for i in range(n):
-            self.fg.connect((op1, i), (op2, i))
-        self.fg.connect(op2, op3, dst)
+            self.tb.connect((op1, i), (op2, i))
+        self.tb.connect(op2, op3, dst)
         
-        self.fg.run()
+        self.tb.run()
         self.assertEqual(expected_results, dst.data())
         
     def test_004(self):
@@ -130,12 +130,12 @@ class test_pipe_fittings(gr_unittest.TestCase):
         op3 = gr.streams_to_stream(gr.sizeof_int, n)
         dst = gr.vector_sink_i()
         
-        self.fg.connect(src, op1, op2)
+        self.tb.connect(src, op1, op2)
         for i in range(n):
-            self.fg.connect((op2, i), (op3, i))
-        self.fg.connect(op3, dst)
+            self.tb.connect((op2, i), (op3, i))
+        self.tb.connect(op3, dst)
         
-        self.fg.run()
+        self.tb.run()
         self.assertEqual(expected_results, dst.data())
 
 if __name__ == '__main__':

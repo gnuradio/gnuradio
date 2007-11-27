@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,21 +25,21 @@ from gnuradio import gr, gr_unittest
 class test_add_v_and_friends(gr_unittest.TestCase):
 
     def setUp(self):
-        self.fg = gr.flow_graph()
+        self.tb = gr.top_block()
 
     def tearDown(self):
-        self.fg = None
+        self.tb = None
 
     def help_ss(self, size, src_data, exp_data, op):
         for s in zip(range (len (src_data)), src_data):
             src = gr.vector_source_s(s[1])
 	    srcv = gr.stream_to_vector(gr.sizeof_short, size)
-	    self.fg.connect(src, srcv)
-            self.fg.connect(srcv, (op, s[0]))
+	    self.tb.connect(src, srcv)
+            self.tb.connect(srcv, (op, s[0]))
 	rhs = gr.vector_to_stream(gr.sizeof_short, size)
         dst = gr.vector_sink_s()
-        self.fg.connect(op, rhs, dst)
-        self.fg.run()
+        self.tb.connect(op, rhs, dst)
+        self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
 
@@ -47,12 +47,12 @@ class test_add_v_and_friends(gr_unittest.TestCase):
         for s in zip(range (len (src_data)), src_data):
             src = gr.vector_source_i(s[1])
 	    srcv = gr.stream_to_vector(gr.sizeof_int, size)
-	    self.fg.connect(src, srcv)
-            self.fg.connect(srcv, (op, s[0]))
+	    self.tb.connect(src, srcv)
+            self.tb.connect(srcv, (op, s[0]))
 	rhs = gr.vector_to_stream(gr.sizeof_int, size)
         dst = gr.vector_sink_i()
-        self.fg.connect(op, rhs, dst)
-        self.fg.run()
+        self.tb.connect(op, rhs, dst)
+        self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
 
@@ -60,12 +60,12 @@ class test_add_v_and_friends(gr_unittest.TestCase):
         for s in zip(range (len (src_data)), src_data):
             src = gr.vector_source_f(s[1])
 	    srcv = gr.stream_to_vector(gr.sizeof_float, size)
-	    self.fg.connect(src, srcv)
-            self.fg.connect(srcv, (op, s[0]))
+	    self.tb.connect(src, srcv)
+            self.tb.connect(srcv, (op, s[0]))
 	rhs = gr.vector_to_stream(gr.sizeof_float, size)
         dst = gr.vector_sink_f()
-        self.fg.connect(op, rhs, dst)
-        self.fg.run()
+        self.tb.connect(op, rhs, dst)
+        self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
 
@@ -73,12 +73,12 @@ class test_add_v_and_friends(gr_unittest.TestCase):
         for s in zip(range (len (src_data)), src_data):
             src = gr.vector_source_c(s[1])
 	    srcv = gr.stream_to_vector(gr.sizeof_gr_complex, size)
-	    self.fg.connect(src, srcv)
-            self.fg.connect(srcv, (op, s[0]))
+	    self.tb.connect(src, srcv)
+            self.tb.connect(srcv, (op, s[0]))
 	rhs = gr.vector_to_stream(gr.sizeof_gr_complex, size)
         dst = gr.vector_sink_c()
-        self.fg.connect(op, rhs, dst)
-        self.fg.run()
+        self.tb.connect(op, rhs, dst)
+        self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
 
@@ -87,8 +87,8 @@ class test_add_v_and_friends(gr_unittest.TestCase):
 	srcv = gr.stream_to_vector(gr.sizeof_short, len(src_data))
 	rhs = gr.vector_to_stream(gr.sizeof_short, len(src_data))
         dst = gr.vector_sink_s()
-        self.fg.connect(src, srcv, op, rhs, dst)
-        self.fg.run()
+        self.tb.connect(src, srcv, op, rhs, dst)
+        self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
 	
@@ -97,8 +97,8 @@ class test_add_v_and_friends(gr_unittest.TestCase):
 	srcv = gr.stream_to_vector(gr.sizeof_int, len(src_data))
 	rhs = gr.vector_to_stream(gr.sizeof_int, len(src_data))
         dst = gr.vector_sink_i()
-        self.fg.connect(src, srcv, op, rhs, dst)
-        self.fg.run()
+        self.tb.connect(src, srcv, op, rhs, dst)
+        self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
 	
@@ -107,8 +107,8 @@ class test_add_v_and_friends(gr_unittest.TestCase):
 	srcv = gr.stream_to_vector(gr.sizeof_float, len(src_data))
 	rhs = gr.vector_to_stream(gr.sizeof_float, len(src_data))
         dst = gr.vector_sink_f()
-        self.fg.connect(src, srcv, op, rhs, dst)
-        self.fg.run()
+        self.tb.connect(src, srcv, op, rhs, dst)
+        self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
 	
@@ -117,8 +117,8 @@ class test_add_v_and_friends(gr_unittest.TestCase):
 	srcv = gr.stream_to_vector(gr.sizeof_gr_complex, len(src_data))
 	rhs = gr.vector_to_stream(gr.sizeof_gr_complex, len(src_data))
         dst = gr.vector_sink_c()
-        self.fg.connect(src, srcv, op, rhs, dst)
-        self.fg.run()
+        self.tb.connect(src, srcv, op, rhs, dst)
+        self.tb.run()
         result_data = dst.data()
         self.assertEqual(exp_data, result_data)
 	

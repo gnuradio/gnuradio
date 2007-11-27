@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,10 +26,10 @@ import math
 class test_interleave (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_int_001 (self):
         lenx = 64
@@ -40,12 +40,12 @@ class test_interleave (gr_unittest.TestCase):
         op = gr.interleave (gr.sizeof_float)
         dst = gr.vector_sink_f ()
 
-        self.fg.connect (src0, (op, 0))
-        self.fg.connect (src1, (op, 1))
-        self.fg.connect (src2, (op, 2))
-        self.fg.connect (src3, (op, 3))
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src0, (op, 0))
+        self.tb.connect (src1, (op, 1))
+        self.tb.connect (src2, (op, 2))
+        self.tb.connect (src3, (op, 3))
+        self.tb.connect (op, dst)
+        self.tb.run ()
         expected_result = tuple (range (lenx))
         result_data = dst.data ()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
@@ -59,12 +59,12 @@ class test_interleave (gr_unittest.TestCase):
         dst2 = gr.vector_sink_f ()
         dst3 = gr.vector_sink_f ()
 
-        self.fg.connect (src, op)
-        self.fg.connect ((op, 0), dst0)
-        self.fg.connect ((op, 1), dst1)
-        self.fg.connect ((op, 2), dst2)
-        self.fg.connect ((op, 3), dst3)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect ((op, 0), dst0)
+        self.tb.connect ((op, 1), dst1)
+        self.tb.connect ((op, 2), dst2)
+        self.tb.connect ((op, 3), dst3)
+        self.tb.run ()
 
         expected_result0 = tuple (range (0, lenx, 4))
         expected_result1 = tuple (range (1, lenx, 4))

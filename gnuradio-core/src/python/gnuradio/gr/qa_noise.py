@@ -25,10 +25,10 @@ from gnuradio import gr, gr_unittest
 class test_noise_source(gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_001(self):
         # Just confirm that we can instantiate a noise source

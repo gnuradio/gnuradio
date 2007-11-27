@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -42,26 +42,26 @@ def reference_filter_ccc(dec, taps, input):
     """
     compute result using conventional fir filter
     """
-    fg = gr.flow_graph()
+    tb = gr.top_block()
     #src = gr.vector_source_c(((0,) * (len(taps) - 1)) + input)
     src = gr.vector_source_c(input)
     op = gr.fir_filter_ccc(dec, taps)
     dst = gr.vector_sink_c()
-    fg.connect(src, op, dst)
-    fg.run()
+    tb.connect(src, op, dst)
+    tb.run()
     return dst.data()
 
 def reference_filter_fff(dec, taps, input):
     """
     compute result using conventional fir filter
     """
-    fg = gr.flow_graph()
+    tb = gr.top_block()
     #src = gr.vector_source_f(((0,) * (len(taps) - 1)) + input)
     src = gr.vector_source_f(input)
     op = gr.fir_filter_fff(dec, taps)
     dst = gr.vector_sink_f()
-    fg.connect(src, op, dst)
-    fg.run()
+    tb.connect(src, op, dst)
+    tb.run()
     return dst.data()
 
 
@@ -75,10 +75,10 @@ def print_complex(x):
 class test_fft_filter(gr_unittest.TestCase):
 
     def setUp(self):
-        self.fg = gr.flow_graph ()
+	pass
 
     def tearDown(self):
-        self.fg = None
+	pass
 
     def assert_fft_ok2(self, expected_result, result_data):
         expected_result = expected_result[:len(result_data)]
@@ -94,14 +94,15 @@ class test_fft_filter(gr_unittest.TestCase):
     #    self.assertRaises (RuntimeError, gr.fft_filter_ccc, 2, (1,))
 
     def test_ccc_001(self):
+	tb = gr.top_block()
         src_data = (0,1,2,3,4,5,6,7)
         taps = (1,)
         expected_result = tuple([complex(x) for x in (0,1,2,3,4,5,6,7)])
         src = gr.vector_source_c(src_data)
         op = gr.fft_filter_ccc(1, taps)
         dst = gr.vector_sink_c()
-        self.fg.connect(src, op, dst)
-        self.fg.run()
+        tb.connect(src, op, dst)
+        tb.run()
         result_data = dst.data()
         #print 'expected:', expected_result
         #print 'results: ', result_data
@@ -109,14 +110,15 @@ class test_fft_filter(gr_unittest.TestCase):
         
 
     def test_ccc_002(self):
+	tb = gr.top_block()
         src_data = (0,1,2,3,4,5,6,7)
         taps = (2,)
         expected_result = tuple([2 * complex(x) for x in (0,1,2,3,4,5,6,7)])
         src = gr.vector_source_c(src_data)
         op = gr.fft_filter_ccc(1, taps)
         dst = gr.vector_sink_c()
-        self.fg.connect(src, op, dst)
-        self.fg.run()
+        tb.connect(src, op, dst)
+        tb.run()
         result_data = dst.data()
         #print 'expected:', expected_result
         #print 'results: ', result_data
@@ -135,10 +137,12 @@ class test_fft_filter(gr_unittest.TestCase):
             src = gr.vector_source_c(src_data)
             op = gr.fft_filter_ccc(1, taps)
             dst = gr.vector_sink_c()
-            self.fg.connect(src, op, dst)
-            self.fg.run()
+	    tb = gr.top_block()
+            tb.connect(src, op, dst)
+            tb.run()
             result_data = dst.data()
-
+	    del tb
+	    
             self.assert_fft_ok2(expected_result, result_data)
 
     def test_ccc_005(self):
@@ -155,9 +159,11 @@ class test_fft_filter(gr_unittest.TestCase):
             src = gr.vector_source_c(src_data)
             op = gr.fft_filter_ccc(dec, taps)
             dst = gr.vector_sink_c()
-            self.fg.connect(src, op, dst)
-            self.fg.run()
-            result_data = dst.data()
+            tb = gr.top_block()
+	    tb.connect(src, op, dst)
+            tb.run()
+            del tb
+	    result_data = dst.data()
 
             self.assert_fft_ok2(expected_result, result_data)
 
@@ -166,14 +172,15 @@ class test_fft_filter(gr_unittest.TestCase):
     # ----------------------------------------------------------------
 
     def test_fff_001(self):
+        tb = gr.top_block()
         src_data = (0,1,2,3,4,5,6,7)
         taps = (1,)
         expected_result = tuple([float(x) for x in (0,1,2,3,4,5,6,7)])
         src = gr.vector_source_f(src_data)
         op = gr.fft_filter_fff(1, taps)
         dst = gr.vector_sink_f()
-        self.fg.connect(src, op, dst)
-        self.fg.run()
+        tb.connect(src, op, dst)
+        tb.run()
         result_data = dst.data()
         #print 'expected:', expected_result
         #print 'results: ', result_data
@@ -181,14 +188,15 @@ class test_fft_filter(gr_unittest.TestCase):
         
 
     def test_fff_002(self):
+        tb = gr.top_block()
         src_data = (0,1,2,3,4,5,6,7)
         taps = (2,)
         expected_result = tuple([2 * float(x) for x in (0,1,2,3,4,5,6,7)])
         src = gr.vector_source_f(src_data)
         op = gr.fft_filter_fff(1, taps)
         dst = gr.vector_sink_f()
-        self.fg.connect(src, op, dst)
-        self.fg.run()
+        tb.connect(src, op, dst)
+        tb.run()
         result_data = dst.data()
         #print 'expected:', expected_result
         #print 'results: ', result_data
@@ -207,8 +215,9 @@ class test_fft_filter(gr_unittest.TestCase):
             src = gr.vector_source_f(src_data)
             op = gr.fft_filter_fff(1, taps)
             dst = gr.vector_sink_f()
-            self.fg.connect(src, op, dst)
-            self.fg.run()
+    	    tb = gr.top_block()
+            tb.connect(src, op, dst)
+            tb.run()
             result_data = dst.data()
 
             #print "src_len =", src_len, " ntaps =", ntaps
@@ -236,8 +245,9 @@ class test_fft_filter(gr_unittest.TestCase):
             src = gr.vector_source_f(src_data)
             op = gr.fft_filter_fff(1, taps)
             dst = gr.vector_sink_f()
-            self.fg.connect(src, op, dst)
-            self.fg.run()
+    	    tb = gr.top_block()
+            tb.connect(src, op, dst)
+            tb.run()
             result_data = dst.data()
 
             self.assert_fft_float_ok2(expected_result, result_data, abs_eps=2.0)
@@ -256,8 +266,9 @@ class test_fft_filter(gr_unittest.TestCase):
             src = gr.vector_source_f(src_data)
             op = gr.fft_filter_fff(dec, taps)
             dst = gr.vector_sink_f()
-            self.fg.connect(src, op, dst)
-            self.fg.run()
+    	    tb = gr.top_block()
+            tb.connect(src, op, dst)
+            tb.run()
             result_data = dst.data()
 
             self.assert_fft_float_ok2(expected_result, result_data)

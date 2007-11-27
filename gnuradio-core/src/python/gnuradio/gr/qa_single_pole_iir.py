@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,10 +25,10 @@ from gnuradio import gr, gr_unittest
 class test_single_pole_iir(gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_001(self):
         src_data = (0, 1000, 2000, 3000, 4000, 5000)
@@ -36,8 +36,8 @@ class test_single_pole_iir(gr_unittest.TestCase):
         src = gr.vector_source_f(src_data)
         op = gr.single_pole_iir_filter_ff (1.0)
         dst = gr.vector_sink_f()
-        self.fg.connect (src, op, dst)
-        self.fg.run()
+        self.tb.connect (src, op, dst)
+        self.tb.run()
         result_data = dst.data()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data)
 
@@ -47,8 +47,8 @@ class test_single_pole_iir(gr_unittest.TestCase):
         src = gr.vector_source_f(src_data)
         op = gr.single_pole_iir_filter_ff (0.125)
         dst = gr.vector_sink_f()
-        self.fg.connect (src, op, dst)
-        self.fg.run()
+        self.tb.connect (src, op, dst)
+        self.tb.run()
         result_data = dst.data()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data, 3)
 
@@ -61,8 +61,8 @@ class test_single_pole_iir(gr_unittest.TestCase):
         op = gr.single_pole_iir_filter_ff (0.125, block_size)
         p2s = gr.parallel_to_serial(gr.sizeof_float, block_size)
         dst = gr.vector_sink_f()
-        self.fg.connect (src, s2p, op, p2s, dst)
-        self.fg.run()
+        self.tb.connect (src, s2p, op, p2s, dst)
+        self.tb.run()
         result_data = dst.data()
         self.assertFloatTuplesAlmostEqual (expected_result, result_data, 3)
 

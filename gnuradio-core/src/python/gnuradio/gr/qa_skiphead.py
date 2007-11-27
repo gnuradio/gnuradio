@@ -25,11 +25,11 @@ from gnuradio import gr, gr_unittest
 class test_skiphead (gr_unittest.TestCase):
 
     def setUp(self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
         self.src_data = [int(x) for x in range(65536)]
 
     def tearDown(self):
-        self.fg = None
+        self.tb = None
 
     def test_skip_0(self):
         skip_cnt = 0
@@ -37,8 +37,8 @@ class test_skiphead (gr_unittest.TestCase):
         src1 = gr.vector_source_i (self.src_data)
         op = gr.skiphead (gr.sizeof_int, skip_cnt)
         dst1 = gr.vector_sink_i ()
-        self.fg.connect (src1, op, dst1)
-        self.fg.run ()
+        self.tb.connect (src1, op, dst1)
+        self.tb.run ()
         dst_data = dst1.data ()
         self.assertEqual (expected_result, dst_data)
     
@@ -48,8 +48,8 @@ class test_skiphead (gr_unittest.TestCase):
         src1 = gr.vector_source_i (self.src_data)
         op = gr.skiphead (gr.sizeof_int, skip_cnt)
         dst1 = gr.vector_sink_i ()
-        self.fg.connect (src1, op, dst1)
-        self.fg.run ()
+        self.tb.connect (src1, op, dst1)
+        self.tb.run ()
         dst_data = dst1.data ()
         self.assertEqual (expected_result, dst_data)
     
@@ -59,8 +59,8 @@ class test_skiphead (gr_unittest.TestCase):
         src1 = gr.vector_source_i (self.src_data)
         op = gr.skiphead (gr.sizeof_int, skip_cnt)
         dst1 = gr.vector_sink_i ()
-        self.fg.connect (src1, op, dst1)
-        self.fg.run ()
+        self.tb.connect (src1, op, dst1)
+        self.tb.run ()
         dst_data = dst1.data ()
         self.assertEqual (expected_result, dst_data)
     
@@ -70,8 +70,8 @@ class test_skiphead (gr_unittest.TestCase):
         src1 = gr.vector_source_i (self.src_data)
         op = gr.skiphead (gr.sizeof_int, skip_cnt)
         dst1 = gr.vector_sink_i ()
-        self.fg.connect (src1, op, dst1)
-        self.fg.run ()
+        self.tb.connect (src1, op, dst1)
+        self.tb.run ()
         dst_data = dst1.data ()
         self.assertEqual (expected_result, dst_data)
     
@@ -81,8 +81,8 @@ class test_skiphead (gr_unittest.TestCase):
         src1 = gr.vector_source_i (self.src_data)
         op = gr.skiphead (gr.sizeof_int, skip_cnt)
         dst1 = gr.vector_sink_i ()
-        self.fg.connect (src1, op, dst1)
-        self.fg.run ()
+        self.tb.connect (src1, op, dst1)
+        self.tb.run ()
         dst_data = dst1.data ()
         self.assertEqual (expected_result, dst_data)
 
@@ -92,8 +92,8 @@ class test_skiphead (gr_unittest.TestCase):
         src1 = gr.vector_source_i (self.src_data)
         op = gr.skiphead (gr.sizeof_int, skip_cnt)
         dst1 = gr.vector_sink_i ()
-        self.fg.connect (src1, op, dst1)
-        self.fg.run ()
+        self.tb.connect (src1, op, dst1)
+        self.tb.run ()
         dst_data = dst1.data ()
         self.assertEqual (expected_result, dst_data)
     

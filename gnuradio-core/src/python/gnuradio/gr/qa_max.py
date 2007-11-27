@@ -27,11 +27,11 @@ import math
 class test_sig_source (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
 
     def test_001(self):
@@ -45,8 +45,8 @@ class test_sig_source (gr_unittest.TestCase):
         dst = gr.vector_sink_f()
 
 
-        self.fg.connect(src, s2v, op, dst)
-        self.fg.run()
+        self.tb.connect(src, s2v, op, dst)
+        self.tb.run()
         result_data = dst.data()
         self.assertEqual(expected_result, result_data)
 

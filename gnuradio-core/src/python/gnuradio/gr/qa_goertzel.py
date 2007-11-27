@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,10 +26,10 @@ from math import pi, cos
 class test_goertzel(gr_unittest.TestCase):
 
     def setUp(self):
-        self.fg = gr.flow_graph()
+        self.tb = gr.top_block()
 
     def tearDown(self):
-        self.fg = None
+        self.tb = None
 
     def make_tone_data(self, rate, freq):
         return [cos(2*pi*x*freq/rate) for x in range(rate)]
@@ -38,8 +38,8 @@ class test_goertzel(gr_unittest.TestCase):
 	src = gr.vector_source_f(src_data, False)
         dft = gr.goertzel_fc(rate, rate, freq)
 	dst = gr.vector_sink_c()
-	self.fg.connect(src, dft, dst)
-	self.fg.run()
+	self.tb.connect(src, dft, dst)
+	self.tb.run()
 	return dst.data()	
 
     def test_001(self): # Measure single tone magnitude

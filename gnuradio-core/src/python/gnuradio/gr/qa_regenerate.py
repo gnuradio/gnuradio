@@ -26,13 +26,13 @@ import math
 class test_sig_source (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_regen1 (self):
-        fg = self.fg
+        tb = self.tb
         
         data = [0, 0, 0,
                 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -47,16 +47,16 @@ class test_sig_source (gr_unittest.TestCase):
         regen = gr.regenerate_bb(5, 2)
         dst = gr.vector_sink_b()
 
-        fg.connect (src, regen)
-        fg.connect (regen, dst)
-        fg.run ()
+        tb.connect (src, regen)
+        tb.connect (regen, dst)
+        tb.run ()
 
         dst_data = dst.data ()
         
         self.assertEqual (expected_result, dst_data)
 
     def test_regen2 (self):
-        fg = self.fg
+        tb = self.tb
         
         data = 200*[0,]
         data[9] = 1
@@ -77,9 +77,9 @@ class test_sig_source (gr_unittest.TestCase):
         regen = gr.regenerate_bb(10, 3)
         dst = gr.vector_sink_b()
 
-        fg.connect (src, regen)
-        fg.connect (regen, dst)
-        fg.run ()
+        tb.connect (src, regen)
+        tb.connect (regen, dst)
+        tb.run ()
 
         dst_data = dst.data ()
         

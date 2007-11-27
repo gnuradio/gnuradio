@@ -26,10 +26,10 @@ import random
 class test_unpack(gr_unittest.TestCase):
 
     def setUp(self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown(self):
-        self.fg = None
+        self.tb = None
 
     def test_001(self):
         src_data =         (1,0,1,1,0,1,1,0)
@@ -37,8 +37,8 @@ class test_unpack(gr_unittest.TestCase):
         src = gr.vector_source_b(src_data,False)
         op = gr.unpack_k_bits_bb(1)
         dst = gr.vector_sink_b()
-        self.fg.connect(src, op, dst)
-        self.fg.run()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
         self.assertEqual(expected_results, dst.data())
 
     def test_002(self):
@@ -47,8 +47,8 @@ class test_unpack(gr_unittest.TestCase):
         src = gr.vector_source_b(src_data,False)
         op = gr.unpack_k_bits_bb(2)
         dst = gr.vector_sink_b()
-        self.fg.connect(src, op, dst)
-        self.fg.run()
+        self.tb.connect(src, op, dst)
+        self.tb.run()
         self.assertEqual(expected_results, dst.data())
 
 

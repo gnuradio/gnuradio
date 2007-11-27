@@ -26,13 +26,13 @@ from pprint import pprint
 class testing (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def helper(self, v0, v1, fft_length, preamble):
-        fg = self.fg
+        tb = self.tb
         src0 = gr.vector_source_c(v0)
         src1 = gr.vector_source_b(v1)
         
@@ -46,12 +46,12 @@ class testing (gr_unittest.TestCase):
         dst0 = gr.vector_sink_c()
         dst1 = gr.vector_sink_b()
 
-        fg.connect(src0, s2v, (op, 0))
-        fg.connect(src1, (op, 1))
-        fg.connect((op, 0), v2s, dst0)
-        fg.connect((op, 1), dst1)
+        tb.connect(src0, s2v, (op, 0))
+        tb.connect(src1, (op, 1))
+        tb.connect((op, 0), v2s, dst0)
+        tb.connect((op, 1), dst1)
 
-        fg.run()
+        tb.run()
         r0 = dst0.data()
         r0v = []
         for i in range(len(r0)//fft_length):

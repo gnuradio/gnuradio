@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,14 +26,14 @@ import math
 class test_delay (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_000 (self):
         delta_t = 0
-        fg = self.fg
+        tb = self.tb
         src_data = [float(x) for x in range(0, 100)]
         expected_result = tuple(delta_t*[0.0] + src_data)
 
@@ -41,14 +41,14 @@ class test_delay (gr_unittest.TestCase):
         op = gr.delay(gr.sizeof_float, delta_t)
         dst = gr.vector_sink_f ()
 
-        fg.connect (src, op, dst)
-        fg.run ()
+        tb.connect (src, op, dst)
+        tb.run ()
         dst_data = dst.data ()
         self.assertEqual (expected_result, dst_data)
 
     def test_010 (self):
         delta_t = 10
-        fg = self.fg
+        tb = self.tb
         src_data = [float(x) for x in range(0, 100)]
         expected_result = tuple(delta_t*[0.0] + src_data[0:-delta_t])
 
@@ -56,8 +56,8 @@ class test_delay (gr_unittest.TestCase):
         op = gr.delay(gr.sizeof_float, delta_t)
         dst = gr.vector_sink_f ()
 
-        fg.connect (src, op, dst)
-        fg.run ()
+        tb.connect (src, op, dst)
+        tb.run ()
         dst_data = dst.data ()
         self.assertEqual (expected_result, dst_data)
 

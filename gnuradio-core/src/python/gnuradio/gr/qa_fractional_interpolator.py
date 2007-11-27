@@ -25,10 +25,10 @@ from gnuradio import gr, gr_unittest
 class test_fractional_resampler (gr_unittest.TestCase):
 
     def setUp(self):
-        self.fg = gr.flow_graph()
+        self.tb = gr.top_block()
 
     def tearDown(self):
-        self.fg = None
+        self.tb = None
 
     def test_000_make(self):
         op = gr.fractional_interpolator_ff(0.0, 1.0)

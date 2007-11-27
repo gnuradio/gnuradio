@@ -25,10 +25,10 @@ from gnuradio import gr, gr_unittest
 class test_glfsr_source(gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_000_make_b(self):
         src = gr.glfsr_source_b(16)
@@ -40,15 +40,17 @@ class test_glfsr_source(gr_unittest.TestCase):
                           lambda: gr.glfsr_source_b(0))
         self.assertRaises(RuntimeError,
                           lambda: gr.glfsr_source_b(33))
-        
+
     def test_002_correlation_b(self):
         for degree in range(1,11):                # Higher degrees take too long to correlate
             src = gr.glfsr_source_b(degree, False)
             b2f = gr.chunks_to_symbols_bf((-1.0,1.0), 1)
             dst = gr.vector_sink_f()
-            self.fg.connect(src, b2f, dst)
-            self.fg.run()
-
+	    del self.tb # Discard existing top block
+	    self.tb = gr.top_block()
+            self.tb.connect(src, b2f, dst)
+            self.tb.run()
+	    self.tb.disconnect_all()
             actual_result = dst.data()
             R = auto_correlate(actual_result)
             self.assertEqual(R[0], float(len(R))) # Auto-correlation peak at origin
@@ -65,20 +67,21 @@ class test_glfsr_source(gr_unittest.TestCase):
                           lambda: gr.glfsr_source_f(0))
         self.assertRaises(RuntimeError,
                           lambda: gr.glfsr_source_f(33))
-        
     def test_005_correlation_f(self):
         for degree in range(1,11):                # Higher degrees take too long to correlate
             src = gr.glfsr_source_f(degree, False)
             dst = gr.vector_sink_f()
-            self.fg.connect(src, dst)
-            self.fg.run()
+	    del self.tb # Discard existing top block
+	    self.tb = gr.top_block()
+            self.tb.connect(src, dst)
+            self.tb.run()
 
             actual_result = dst.data()
             R = auto_correlate(actual_result)
             self.assertEqual(R[0], float(len(R))) # Auto-correlation peak at origin
             for i in range(len(R)-1):
                 self.assertEqual(R[i+1], -1.0)    # Auto-correlation minimum everywhere else
-
+            
 def auto_correlate(data):
     l = len(data)
     R = [0,]*l

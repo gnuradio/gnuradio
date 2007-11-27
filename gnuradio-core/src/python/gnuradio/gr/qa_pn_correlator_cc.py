@@ -25,10 +25,10 @@ from gnuradio import gr, gr_unittest
 class test_pn_correlator_cc(gr_unittest.TestCase):
 
     def setUp(self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown(self):
-        self.fg = None
+        self.tb = None
 
     def test_000_make(self):
         c = gr.pn_correlator_cc(10)
@@ -41,8 +41,8 @@ class test_pn_correlator_cc(gr_unittest.TestCase):
         f2c = gr.float_to_complex()
         corr = gr.pn_correlator_cc(degree)
         dst = gr.vector_sink_c()
-        self.fg.connect(src, head, f2c, corr, dst)
-        self.fg.run()
+        self.tb.connect(src, head, f2c, corr, dst)
+        self.tb.run()
         data = dst.data()
         self.assertEqual(data[-1], (1.0+0j))
         

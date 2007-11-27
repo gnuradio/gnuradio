@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,10 +26,10 @@ import math
 class qa_filter_delay_fc (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_001_filter_delay_one_input (self):
 
@@ -96,7 +96,7 @@ class qa_filter_delay_fc (gr_unittest.TestCase):
                             (0.5877838134765625         +0.80908381938934326j), 
                             (3.218399768911695e-08      +1.0000815391540527j))            
             
-        fg = self.fg
+        tb = self.tb
 
         sampling_freq = 100
 
@@ -110,11 +110,11 @@ class qa_filter_delay_fc (gr_unittest.TestCase):
         taps = gr.firdes_hilbert (ntaps)
         hd = gr.filter_delay_fc (taps)
 
-        fg.connect (src1, head)
-        fg.connect (head, hd)
-        fg.connect (hd,dst2)
+        tb.connect (src1, head)
+        tb.connect (head, hd)
+        tb.connect (hd,dst2)
         
-        fg.run ()
+        tb.run ()
 
         # get output
         result_data = dst2.data ()
@@ -189,7 +189,7 @@ class qa_filter_delay_fc (gr_unittest.TestCase):
                             (3.218399768911695e-08      +1.0000815391540527j)) 
 
         
-        fg = self.fg
+        tb = self.tb
 
         sampling_freq = 100
         ntaps = 51
@@ -203,11 +203,11 @@ class qa_filter_delay_fc (gr_unittest.TestCase):
         taps = gr.firdes_hilbert (ntaps)
         hd = gr.filter_delay_fc (taps)
 
-        fg.connect (src1, head)
-        fg.connect (head, (hd,0))
-        fg.connect (head, (hd,1))
-        fg.connect (hd,dst2)
-        fg.run ()
+        tb.connect (src1, head)
+        tb.connect (head, (hd,0))
+        tb.connect (head, (hd,1))
+        tb.connect (hd,dst2)
+        tb.run ()
 
         # get output
         result_data = dst2.data ()
@@ -282,7 +282,7 @@ class qa_filter_delay_fc (gr_unittest.TestCase):
                                     (0.5877838134765625      +0.58783560991287231j), 
                                     (3.218399768911695e-08   +1.1920928955078125e-07j))
 
-        fg = self.fg
+        tb = self.tb
 
         sampling_freq = 100
         ntaps = 51
@@ -298,14 +298,14 @@ class qa_filter_delay_fc (gr_unittest.TestCase):
 
         dst2 = gr.vector_sink_c ()
 
-        fg.connect (src1, head1)
-        fg.connect (src2, head2)
+        tb.connect (src1, head1)
+        tb.connect (src2, head2)
         
-        fg.connect (head1, (hd,0))
-        fg.connect (head2, (hd,1))
-        fg.connect (hd, dst2)
+        tb.connect (head1, (hd,0))
+        tb.connect (head2, (hd,1))
+        tb.connect (hd, dst2)
 
-        fg.run ()
+        tb.run ()
 
         # get output
         result_data = dst2.data ()

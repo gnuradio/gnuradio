@@ -21,7 +21,6 @@
 # 
 
 from gnuradio import gr, gr_unittest
-import qa_basic_flow_graph
 
 
 def all_counts ():
@@ -35,11 +34,9 @@ def all_counts ():
 class test_message (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph()
         self.msgq = gr.msg_queue ()
 
     def tearDown (self):
-        self.fg = None
         self.msgq = None
         
     def leak_check (self, fct):
@@ -96,20 +93,22 @@ class test_message (gr_unittest.TestCase):
         input_data = (0,1,2,3,4,5,6,7,8,9)
         src = gr.vector_source_b(input_data)
         dst = gr.vector_sink_b()
-        self.fg.connect(src, dst)
-        self.fg.run()
+	tb = gr.top_block()
+        tb.connect(src, dst)
+        tb.run()
         self.assertEquals(input_data, dst.data())
 
     def test_301(self):
         src = gr.message_source(gr.sizeof_char)
         dst = gr.vector_sink_b()
-        self.fg.connect(src, dst)
+	tb = gr.top_block()
+        tb.connect(src, dst)
         src.msgq().insert_tail(gr.message_from_string('01234'))
         src.msgq().insert_tail(gr.message_from_string('5'))
         src.msgq().insert_tail(gr.message_from_string(''))
         src.msgq().insert_tail(gr.message_from_string('6789'))
         src.msgq().insert_tail(gr.message(1))                  # send EOF
-        self.fg.run()
+        tb.run()
         self.assertEquals(tuple(map(ord, '0123456789')), dst.data())
         
 

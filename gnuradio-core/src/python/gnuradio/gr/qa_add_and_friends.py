@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,38 +25,38 @@ from gnuradio import gr, gr_unittest
 class test_head (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def help_ii (self, src_data, exp_data, op):
         for s in zip (range (len (src_data)), src_data):
             src = gr.vector_source_i (s[1])
-            self.fg.connect (src, (op, s[0]))
+            self.tb.connect (src, (op, s[0]))
         dst = gr.vector_sink_i ()
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (op, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertEqual (exp_data, result_data)
 
     def help_ff (self, src_data, exp_data, op):
         for s in zip (range (len (src_data)), src_data):
             src = gr.vector_source_f (s[1])
-            self.fg.connect (src, (op, s[0]))
+            self.tb.connect (src, (op, s[0]))
         dst = gr.vector_sink_f ()
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (op, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertEqual (exp_data, result_data)
 
     def help_cc (self, src_data, exp_data, op):
         for s in zip (range (len (src_data)), src_data):
             src = gr.vector_source_c (s[1])
-            self.fg.connect (src, (op, s[0]))
+            self.tb.connect (src, (op, s[0]))
         dst = gr.vector_sink_c ()
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (op, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertEqual (exp_data, result_data)
 

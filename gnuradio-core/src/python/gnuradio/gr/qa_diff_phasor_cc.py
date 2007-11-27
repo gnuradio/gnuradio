@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,10 +26,10 @@ import math
 class test_complex_ops (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_diff_phasor_cc (self):
         src_data = (0+0j, 1+0j, -1+0j, 3+4j, -3-4j, -3+4j)
@@ -37,9 +37,9 @@ class test_complex_ops (gr_unittest.TestCase):
         src = gr.vector_source_c (src_data)
         op = gr.diff_phasor_cc ()
         dst = gr.vector_sink_c ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()               # run the graph and wait for it to finish
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()               # run the graph and wait for it to finish
         actual_result = dst.data ()  # fetch the contents of the sink
         self.assertComplexTuplesAlmostEqual (expected_result, actual_result)
 

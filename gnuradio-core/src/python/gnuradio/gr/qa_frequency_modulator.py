@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -30,10 +30,10 @@ def sincos(x):
 class test_frequency_modulator (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_fm_001 (self):
         pi = math.pi
@@ -44,9 +44,9 @@ class test_frequency_modulator (gr_unittest.TestCase):
         src = gr.vector_source_f (src_data)
         op = gr.frequency_modulator_fc (sensitivity)
         dst = gr.vector_sink_c ()
-        self.fg.connect (src, op)
-        self.fg.connect (op, dst)
-        self.fg.run ()
+        self.tb.connect (src, op)
+        self.tb.connect (op, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertComplexTuplesAlmostEqual (expected_result, result_data)
 

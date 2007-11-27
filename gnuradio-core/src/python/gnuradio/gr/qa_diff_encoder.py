@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -34,10 +34,10 @@ def make_random_int_tuple(L, min, max):
 class test_encoder (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
     def test_diff_encdec_000(self):
         random.seed(0)
@@ -48,8 +48,8 @@ class test_encoder (gr_unittest.TestCase):
         enc = gr.diff_encoder_bb(modulus)
         dec = gr.diff_decoder_bb(modulus)
         dst = gr.vector_sink_b()
-        self.fg.connect(src, enc, dec, dst)
-        self.fg.run()               # run the graph and wait for it to finish
+        self.tb.connect(src, enc, dec, dst)
+        self.tb.run()               # run the graph and wait for it to finish
         actual_result = dst.data()  # fetch the contents of the sink
         self.assertEqual(expected_result, actual_result)
 
@@ -62,8 +62,8 @@ class test_encoder (gr_unittest.TestCase):
         enc = gr.diff_encoder_bb(modulus)
         dec = gr.diff_decoder_bb(modulus)
         dst = gr.vector_sink_b()
-        self.fg.connect(src, enc, dec, dst)
-        self.fg.run()               # run the graph and wait for it to finish
+        self.tb.connect(src, enc, dec, dst)
+        self.tb.run()               # run the graph and wait for it to finish
         actual_result = dst.data()  # fetch the contents of the sink
         self.assertEqual(expected_result, actual_result)
 
@@ -76,8 +76,8 @@ class test_encoder (gr_unittest.TestCase):
         enc = gr.diff_encoder_bb(modulus)
         dec = gr.diff_decoder_bb(modulus)
         dst = gr.vector_sink_b()
-        self.fg.connect(src, enc, dec, dst)
-        self.fg.run()               # run the graph and wait for it to finish
+        self.tb.connect(src, enc, dec, dst)
+        self.tb.run()               # run the graph and wait for it to finish
         actual_result = dst.data()  # fetch the contents of the sink
         self.assertEqual(expected_result, actual_result)
 

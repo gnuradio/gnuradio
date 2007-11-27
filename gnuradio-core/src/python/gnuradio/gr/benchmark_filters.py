@@ -1,4 +1,24 @@
 #!/usr/bin/env python
+#
+# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
 import time
 import random
@@ -16,15 +36,15 @@ def make_random_complex_tuple(L):
 def benchmark(name, creator, dec, ntaps, total_test_size, block_size):
     block_size = 32768
 
-    fg = gr.flow_graph()
+    tb = gr.top_block()
     taps = make_random_complex_tuple(ntaps)
     src = gr.vector_source_c(make_random_complex_tuple(block_size), True)
     head = gr.head(gr.sizeof_gr_complex, int(total_test_size))
     op = creator(dec, taps)
     dst = gr.null_sink(gr.sizeof_gr_complex)
-    fg.connect(src, head, op, dst)
+    tb.connect(src, head, op, dst)
     start = time.time()
-    fg.run()
+    tb.run()
     stop = time.time()
     delta = stop - start
     print "%16s: taps: %4d  input: %4g, time: %6.3f  taps/sec: %10.4g" % (

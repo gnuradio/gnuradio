@@ -27,15 +27,15 @@ import math
 class test_sig_source (gr_unittest.TestCase):
 
     def setUp (self):
-        self.fg = gr.flow_graph ()
+        self.tb = gr.top_block ()
 
 
     def tearDown (self):
-        self.fg = None
+        self.tb = None
 
 
     def test_001(self):
-        fg = self.fg
+        tb = self.tb
 
         src1_data = (0,0.2,-0.3,0,12,0)
         src2_data = (0,0.0,3.0,0,10,0)
@@ -43,28 +43,28 @@ class test_sig_source (gr_unittest.TestCase):
 
         src1 = gr.vector_source_f (src1_data)
         s2v1 = gr.stream_to_vector(gr.sizeof_float, len(src1_data))
-        fg.connect( src1, s2v1 )
+        tb.connect( src1, s2v1 )
 
         src2 = gr.vector_source_f (src2_data)
         s2v2 = gr.stream_to_vector(gr.sizeof_float, len(src1_data))
-        fg.connect( src2, s2v2 )
+        tb.connect( src2, s2v2 )
 
         src3 = gr.vector_source_f (src3_data)
         s2v3 = gr.stream_to_vector(gr.sizeof_float, len(src1_data))
-        fg.connect( src3, s2v3 )
+        tb.connect( src3, s2v3 )
 
         dst1 = gr.vector_sink_s ()
         dst2 = gr.vector_sink_s ()
         argmax = gr.argmax_fs (len(src1_data))
 
-        fg.connect (s2v1, (argmax, 0))
-        fg.connect (s2v2, (argmax, 1))
-        fg.connect (s2v3, (argmax, 2))
+        tb.connect (s2v1, (argmax, 0))
+        tb.connect (s2v2, (argmax, 1))
+        tb.connect (s2v3, (argmax, 2))
 
-        fg.connect ((argmax,0), dst1)
-        fg.connect ((argmax,1), dst2)
+        tb.connect ((argmax,0), dst1)
+        tb.connect ((argmax,1), dst2)
 
-        fg.run ()
+        tb.run ()
         index = dst1.data ()
         source = dst2.data ()
         self.assertEqual ( index, (4,))
