@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2006 Free Software Foundation, Inc.
+# Copyright 2004,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -68,36 +68,41 @@ def depad_transport_stream(src):
     return depad_stream(src, atsc.sizeof_atsc_mpeg_packet, atsc.sizeof_atsc_mpeg_packet_pad)
 
 
-class vector_source_ts(gr.hier_block):
+class vector_source_ts(gr.hier_block2):
     """
     MPEG Transport stream source for testing.
     """
-    def __init__(self, fg, ts):
+    def __init__(self, ts):
         """
         Pad tranport stream packets to 256 bytes and reformat appropriately.
         
-        @param fg: flow graph
         @param ts: MPEG transport stream.
         @type  ts: sequence of ints in [0,255]; len(ts) % 188 == 0
         """
+				
         src = gr.vector_source_b(pad_transport_stream(ts))
         s2v = gr.stream_to_vector(gr.sizeof_char, atsc.sizeof_atsc_mpeg_packet)
-        fg.connect(src, s2v)
-        gr.hier_block.__init__(self, fg, None, s2v)
+
+	gr.hier_block2.__init__(self, "vector_source_ts",
+				gr.io_signature(0, 0, 0),
+				s2v.output_signature())
+        self.connect(src, s2v, self)
 
 
-class vector_sink_ts(gr.hier_block):
+class vector_sink_ts(gr.hier_block2):
     """
     MPEG Transport stream sink for testing.
     """
-    def __init__(self, fg):
+    def __init__(self):
         """
-        @param fg: flow graph
         """
+
         v2s = gr.vector_to_stream(gr.sizeof_char, atsc.sizeof_atsc_mpeg_packet)
         self.sink = gr.vector_sink_b()
-        fg.connect(v2s, self.sink)
-        gr.hier_block.__init__(self, fg, v2s, None)
+	gr.hier_block2.__init__(self, "vector_sink_ts",
+				v2s.input_signature(),
+				gr.io_signature(0, 0, 0))
+        self.connect(self, v2s, self.sink)
 
     def data(self):
         """
@@ -113,10 +118,10 @@ class vector_sink_ts(gr.hier_block):
 class qa_atsc(gr_unittest.TestCase):
 
     def setUp(self):
-        self.fg = gr.flow_graph()
+        self.tb = gr.top_block()
 
     def tearDown(self):
-        self.fg = None
+        self.tb = None
 
 
     # The tests are run in alphabetical order
@@ -128,12 +133,12 @@ class qa_atsc(gr_unittest.TestCase):
         src_data = make_transport_stream()
         expected_result = src_data
 
-        src = vector_source_ts(self.fg, src_data)
+        src = vector_source_ts(src_data)
         rand = atsc.randomizer()
         derand = atsc.derandomizer()
-        dst = vector_sink_ts(self.fg)
-        self.fg.connect(src, rand, derand, dst)
-        self.fg.run ()
+        dst = vector_sink_ts()
+        self.tb.connect(src, rand, derand, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertEqual (expected_result, result_data)
 
@@ -144,14 +149,14 @@ class qa_atsc(gr_unittest.TestCase):
         src_data = make_transport_stream()
         expected_result = src_data
 
-        src = vector_source_ts(self.fg, src_data)
+        src = vector_source_ts(src_data)
         rand = atsc.randomizer()
         rs_enc = atsc.rs_encoder()
         rs_dec = atsc.rs_decoder()
         derand = atsc.derandomizer()
-        dst = vector_sink_ts(self.fg)
-        self.fg.connect(src, rand, rs_enc, rs_dec, derand, dst)
-        self.fg.run ()
+        dst = vector_sink_ts()
+        self.tb.connect(src, rand, rs_enc, rs_dec, derand, dst)
+        self.tb.run ()
         result_data = dst.data ()
         self.assertEqual (expected_result, result_data)
 
@@ -164,16 +169,16 @@ class qa_atsc(gr_unittest.TestCase):
 	interleaver_delay = 52
         expected_result = src_data[0:len(src_data)-(interleaver_delay*atsc.ATSC_MPEG_PKT_LENGTH)]
 
-        src = vector_source_ts(self.fg, src_data)
+        src = vector_source_ts(src_data)
         rand = atsc.randomizer()
         rs_enc = atsc.rs_encoder()
 	inter = atsc.interleaver()
 	deinter = atsc.deinterleaver()
         rs_dec = atsc.rs_decoder()
         derand = atsc.derandomizer()
-        dst = vector_sink_ts(self.fg)
-        self.fg.connect(src, rand, rs_enc, inter, deinter, rs_dec, derand, dst)
-        self.fg.run ()
+        dst = vector_sink_ts()
+        self.tb.connect(src, rand, rs_enc, inter, deinter, rs_dec, derand, dst)
+        self.tb.run ()
         result_data = dst.data ()
 	result_data = result_data[(interleaver_delay*atsc.ATSC_MPEG_PKT_LENGTH):len(result_data)]
         self.assertEqual (expected_result, result_data)
@@ -190,7 +195,7 @@ class qa_atsc(gr_unittest.TestCase):
 	viterbi_delay = 12
         expected_result = src_data[0:len(src_data)-((interleaver_delay+viterbi_delay)*atsc.ATSC_MPEG_PKT_LENGTH)]
 
-        src = vector_source_ts(self.fg, src_data)
+        src = vector_source_ts(src_data)
         rand = atsc.randomizer()
         rs_enc = atsc.rs_encoder()
         inter = atsc.interleaver()
@@ -200,9 +205,9 @@ class qa_atsc(gr_unittest.TestCase):
         deinter = atsc.deinterleaver()
         rs_dec = atsc.rs_decoder()
         derand = atsc.derandomizer()
-        dst = vector_sink_ts(self.fg)
-	self.fg.connect(src, rand, rs_enc, inter, trellis, softds, viterbi, deinter, rs_dec, derand, dst)
-        self.fg.run ()
+        dst = vector_sink_ts()
+	self.tb.connect(src, rand, rs_enc, inter, trellis, softds, viterbi, deinter, rs_dec, derand, dst)
+        self.tb.run ()
         result_data = dst.data ()[((interleaver_delay+viterbi_delay)*atsc.ATSC_MPEG_PKT_LENGTH):len(dst.data())]
         self.assertEqual (expected_result, result_data)
 

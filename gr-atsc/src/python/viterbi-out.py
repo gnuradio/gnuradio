@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2006 Free Software Foundation, Inc.
+# Copyright 2004,2006,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -32,7 +32,7 @@ def main(args):
 	   sys.stderr.write ('usage: viterbi_out.py output_file\n')
 	   sys.exit (1)
 
-	fg = gr.flow_graph()
+	tb = gr.top_block()
 
         src = gr.file_source(atsc.sizeof_atsc_soft_data_segment, "/tmp/atsc_pipe_5")
 	viterbi = atsc.viterbi_decoder()
@@ -41,8 +41,8 @@ def main(args):
         derand = atsc.derandomizer()
 	depad = atsc.depad()
         dst = gr.file_sink(gr.sizeof_char,outfile)
-	fg.connect(src, viterbi, deinter, rs_dec, derand, depad, dst)
-        fg.run ()
+	tb.connect(src, viterbi, deinter, rs_dec, derand, depad, dst)
+        tb.run ()
 
         
 if __name__ == '__main__':

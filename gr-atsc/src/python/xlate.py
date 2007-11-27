@@ -1,6 +1,6 @@
 #!/usr/bin/env /usr/bin/python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -36,7 +36,7 @@ from gnuradio import gr
 def graph ():
     sampling_freq = 19200000
 
-    fg = gr.flow_graph ()
+    tb = gr.top_block ()
 
     src0 = gr.file_source (gr.sizeof_gr_complex,"/tmp/atsc_pipe_1")
 
@@ -46,9 +46,9 @@ def graph ():
     c2f = gr.complex_to_float()
     file = gr.file_sink(gr.sizeof_float,"/tmp/atsc_pipe_2")
 
-    fg.connect( src0, duc, c2f, file )
+    tb.connect( src0, duc, c2f, file )
 
-    fg.run()
+    tb.run()
 
 if __name__ == '__main__':
     graph ()

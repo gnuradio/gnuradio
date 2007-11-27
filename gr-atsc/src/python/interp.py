@@ -1,6 +1,6 @@
 #!/usr/bin/env /usr/bin/python
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -46,7 +46,7 @@ def graph (args):
 
     sampling_freq = 6400000
 
-    fg = gr.flow_graph ()
+    tb = gr.top_block ()
 
     src0 = gr.file_source (gr.sizeof_gr_complex,infile)
     src1 = gr.sig_source_c (sampling_freq, gr.GR_CONST_WAVE, 1, 0)
@@ -59,14 +59,14 @@ def graph (args):
 
     file = gr.file_sink(gr.sizeof_gr_complex,"/tmp/atsc_pipe_1")
 
-    fg.connect( src0, (interlv, 0) )
-    fg.connect( src1, (interlv, 1) )
-    fg.connect( src2, (interlv, 2) )
-    fg.connect( interlv, lp, file )
+    tb.connect( src0, (interlv, 0) )
+    tb.connect( src1, (interlv, 1) )
+    tb.connect( src2, (interlv, 2) )
+    tb.connect( interlv, lp, file )
 
-    fg.start()
+    tb.start()
     raw_input ('Head End: Press Enter to stop')
-    fg.stop()
+    tb.stop()
 
 if __name__ == '__main__':
     graph (sys.argv[1:])

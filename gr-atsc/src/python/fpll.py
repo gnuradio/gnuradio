@@ -25,7 +25,7 @@ import math
 
 def main():
 
-	fg = gr.flow_graph()
+	tb = gr.top_block()
 
         u = gr.file_source(gr.sizeof_float,"/tmp/atsc_pipe_2")
 
@@ -68,13 +68,13 @@ def main():
 	out = gr.file_sink(gr.sizeof_float,"/tmp/atsc_pipe_3")
 	# out = gr.file_sink(gr.sizeof_float,"/mnt/sata/atsc_data_float")
 
-        fg.connect(u, fpll, lp_filter)
-	fg.connect(lp_filter, iir)
-	fg.connect(lp_filter, (remove_dc,0))
-	fg.connect(iir, (remove_dc,1))
-	fg.connect(remove_dc, out)
+        tb.connect(u, fpll, lp_filter)
+	tb.connect(lp_filter, iir)
+	tb.connect(lp_filter, (remove_dc,0))
+	tb.connect(iir, (remove_dc,1))
+	tb.connect(remove_dc, out)
 
-	fg.run()
+	tb.run()
 
 
 if __name__ == '__main__':
