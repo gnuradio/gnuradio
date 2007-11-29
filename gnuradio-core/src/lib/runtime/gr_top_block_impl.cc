@@ -92,7 +92,7 @@ void
 gr_top_block_impl::start()
 {
   if (GR_TOP_BLOCK_IMPL_DEBUG)
-    std::cout << "start: entered" << std::endl;
+    std::cout << "start: entered " << this << std::endl;
 
   if (d_running)
     throw std::runtime_error("already running");
@@ -143,7 +143,6 @@ gr_top_block_impl::stop()
     if (*p)
       (*p)->stop();
   }
-  d_running = false;
 }
 
 void
@@ -165,6 +164,7 @@ gr_top_block_impl::wait()
   }
 
   d_threads.clear();
+  d_running = false;
 }
 
 // N.B. lock() and unlock() cannot be called from a flow graph thread or

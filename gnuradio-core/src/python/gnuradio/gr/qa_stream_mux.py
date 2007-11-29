@@ -165,7 +165,4 @@ class test_head (gr_unittest.TestCase):
         self.assertEqual (exp_data, result_data)
 
 if __name__ == '__main__':
-    pass
-    # Note: disabled until segfault issue is resolved    
-    # FIXME: See ticket:211
-    # gr_unittest.main ()
+    gr_unittest.main()

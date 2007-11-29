@@ -66,7 +66,7 @@ if test "$user_set_cxxflags" != yes; then
 	   swig_CXXFLAGS="-g1 -O2"
 	;;
     	*) 
-	swig_CXXFLAGS="-g1 -O1"
+	swig_CXXFLAGS="-g -O1"
 	;;
     esac
   fi
