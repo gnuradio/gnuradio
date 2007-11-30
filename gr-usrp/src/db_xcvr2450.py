@@ -327,7 +327,7 @@ class xcvr2450_tx(xcvr2450_base):
 
         Gain is controlled by a VGA in the output amplifier, not the PGA
         """
-        return (-56, 0, 0.1)
+        return (0, 63, 0.1)
 
     def set_gain(self, gain):
         """
@@ -336,7 +336,10 @@ class xcvr2450_tx(xcvr2450_base):
         @param gain:  gain in decibels
         @returns True/False
         """
-        maxgain = self.gain_range()[1]
+        gain = int(gain)
+        if (gain>gain_range()[1]) or (gain<gain_range()[0]):
+            raise ValueError, "TX Gain out of range."
+        
 
 class xcvr2450_rx(wbx_base):
     def __init__(self, usrp, which):
@@ -351,7 +354,7 @@ class xcvr2450_rx(wbx_base):
 
         self.bypass_adc_buffers(True)
 
-        self._lo_offset = -4e6
+        self._lo_offset = 0.0
 
     def __del__(self):
         # Power down
