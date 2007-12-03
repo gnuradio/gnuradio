@@ -106,20 +106,20 @@
  * FIFO/GPIF Auto Vector numbers
  */
 
-#define	FGV_EP2PF		0x80
-#define	FGV_EP4PF		0x84
-#define	FGV_EP6PF		0x88
-#define	FGV_EP8PF		0x8c
-#define	FGV_EP2EF		0x90
-#define	FGV_EP4EF		0x94
-#define	FGV_EP6EF		0x98
-#define	FGV_EP8EF		0x9c
-#define	FGV_EP2FF		0xa0
-#define	FGV_EP4FF		0xa4
-#define	FGV_EP6FF		0xa8
-#define	FGV_EP8FF		0xac
-#define	FGV_GPIFDONE		0xb0
-#define	FGV_GPIFWF		0xb4
+#define	FGV_EP2PF		0x00
+#define	FGV_EP4PF		0x04
+#define	FGV_EP6PF		0x08
+#define	FGV_EP8PF		0x0c
+#define	FGV_EP2EF		0x10
+#define	FGV_EP4EF		0x14
+#define	FGV_EP6EF		0x18
+#define	FGV_EP8EF		0x1c
+#define	FGV_EP2FF		0x20
+#define	FGV_EP4FF		0x24
+#define	FGV_EP6FF		0x28
+#define	FGV_EP8FF		0x2c
+#define	FGV_GPIFDONE		0x30
+#define	FGV_GPIFWF		0x34
 
 #define	FGV_MIN			FGV_EP2PF
 #define	FGV_MAX			FGV_GPIFWF
