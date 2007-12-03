@@ -44,7 +44,7 @@
 %include <shared_ptr.i>
 %include <stl.i>
 %include <std_complex.i>
-
+%include <std_except.i>
 
 typedef std::complex<float>		gr_complex;
 typedef std::complex<double>		gr_complexd;
