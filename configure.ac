@@ -127,6 +127,7 @@ AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(fcntl.h limits.h strings.h time.h sys/ioctl.h sys/time.h unistd.h)
 AC_CHECK_HEADERS(linux/ppdev.h sys/mman.h sys/select.h sys/types.h)
 AC_CHECK_HEADERS(sys/resource.h stdint.h sched.h signal.h sys/syscall.h)
+AC_CHECK_HEADERS(windows.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -168,6 +169,10 @@ inline static double exp10(double x)
 {
   return pow(10.0, x);
 }
+#endif
+
+#ifdef HAVE_WINDOWS_H
+#define NOMINMAX
 #endif
 ])
 
