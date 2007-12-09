@@ -143,18 +143,19 @@ gri_iir<i_type, o_type, tap_type>::filter (const i_type input)
   for (i = 1; i < m; i ++)
     acc += (d_fbtaps[i] * d_prev_output[latest_m + i]);
 
-  // store the values twice to avoid having to handle wrap-around in the loop
-  d_prev_output[latest_m] = acc;
-  d_prev_output[latest_m+m] = acc;
-  d_prev_input[latest_n] = input;
-  d_prev_input[latest_n+n] = input;
-
   latest_n--;
   latest_m--;
   if (latest_n < 0)
     latest_n += n;
   if (latest_m < 0)
     latest_m += m;
+
+  // store the values twice to avoid having to handle wrap-around in the loop
+  d_prev_output[latest_m] = acc;
+  d_prev_output[latest_m+m] = acc;
+  d_prev_input[latest_n] = input;
+  d_prev_input[latest_n+n] = input;
+
 
   d_latest_m = latest_m;
   d_latest_n = latest_n;
