@@ -31,7 +31,7 @@ import wx
 import sys
 import Numeric 
 import time
-import FFT
+import numpy.fft
 import ephem
 
 class continuum_calibration(gr.feval_dd):
@@ -1079,7 +1079,7 @@ class app_flow_graph(stdgui2.std_top_block):
                      break
                  tmptaps[idx] = complex(0.0, 0.0)
 
-         self.notch_taps = FFT.inverse_fft(tmptaps)
+         self.notch_taps = numpy.fft.ifft(tmptaps)
 
 def main ():
     app = stdgui2.stdapp(app_flow_graph, "RADIO ASTRONOMY SPECTRAL/CONTINUUM RECEIVER: $Revision$", nstatus=1)
