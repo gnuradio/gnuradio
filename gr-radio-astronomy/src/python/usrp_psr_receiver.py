@@ -39,7 +39,7 @@ from optparse import OptionParser
 import wx
 import sys
 import Numeric
-import FFT
+import numpy.fft
 import ephem
 import time
 import os
@@ -342,6 +342,7 @@ class app_flow_graph(stdgui2.std_top_block):
         #
         # Audio sink
         #
+        print "input_rate ", second_input_rate, "audiodev ", self.audiodev
         self.audio = audio.sink(second_input_rate, self.audiodev)
 
         #
@@ -1057,7 +1058,7 @@ class app_flow_graph(stdgui2.std_top_block):
             tmp[i] = complex(math.cos(phi), math.sin(phi))
             n += 1
         
-        self.disp_taps = FFT.inverse_fft(tmp)
+        self.disp_taps = numpy.fft.ifft(tmp)
         return(self.disp_taps)
 
     #
