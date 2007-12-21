@@ -309,7 +309,7 @@ class app_flow_graph(stdgui2.std_top_block):
         hz = "%5.3fHz " % self.pulse_freq
         per = "(%5.3f sec)" % (1.0/self.pulse_freq)
         sr = "%d sps" % (int(self.pulse_freq*self.folding))
-        self.chart = ra_stripchartsink.stripchart_sink_f (self, panel,
+        self.chart = ra_stripchartsink.stripchart_sink_f (panel,
                sample_rate=1,
                stripsize=self.folding*FOLD_MULT, parallel=True, title="Pulse Profiles: "+hz+per, 
                xlabel="Seconds @ "+sr, ylabel="Level", autoscale=True,

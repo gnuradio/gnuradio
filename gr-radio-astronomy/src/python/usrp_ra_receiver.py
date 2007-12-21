@@ -252,12 +252,12 @@ class app_flow_graph(stdgui2.std_top_block):
 
         # Set up FFT display
         if self.waterfall == False:
-           self.scope = ra_fftsink.ra_fft_sink_c (self, panel, 
+           self.scope = ra_fftsink.ra_fft_sink_c (panel, 
                fft_size=int(self.fft_size), sample_rate=self.fft_input_rate,
                fft_rate=int(self.fft_rate), title="Spectral",  
                ofunc=self.fft_outfunc, xydfunc=self.xydfunc)
         else:
-            self.scope = ra_waterfallsink.waterfall_sink_c (self, panel,
+            self.scope = ra_waterfallsink.waterfall_sink_c (panel,
                 fft_size=int(self.fft_size), sample_rate=self.fft_input_rate,
                 fft_rate=int(self.fft_rate), title="Spectral", ofunc=self.fft_outfunc, size=(1100, 600), xydfunc=self.xydfunc, ref_level=0, span=10)
 
@@ -272,7 +272,7 @@ class app_flow_graph(stdgui2.std_top_block):
         # Set up stripchart display
         self.stripsize = int(options.stripsize)
         if self.setimode == False:
-            self.chart = ra_stripchartsink.stripchart_sink_f (self, panel,
+            self.chart = ra_stripchartsink.stripchart_sink_f (panel,
                 stripsize=self.stripsize,
                 title="Continuum",
                 xlabel="LMST Offset (Seconds)",
