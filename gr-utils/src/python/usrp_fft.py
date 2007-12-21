@@ -69,6 +69,8 @@ class app_top_block(stdgui2.std_top_block):
                           help="Enable waterfall display")
         parser.add_option("-8", "--width-8", action="store_true", default=False,
                           help="Enable 8-bit samples across USB")
+        parser.add_option( "--no-hb", action="store_true", default=False,
+                          help="don't use halfband filter in usrp")
         parser.add_option("-S", "--oscilloscope", action="store_true", default=False,
                           help="Enable oscilloscope display")
         (options, args) = parser.parse_args()
@@ -79,8 +81,17 @@ class app_top_block(stdgui2.std_top_block):
         self.show_debug_info = True
         
         # build the graph
+        if options.no_hb or (options.decim<8):
+          #Min decimation of this firmware is 4. 
+          #contains 4 Rx paths without halfbands and 0 tx paths.
+          self.fpga_filename="std_4rx_0tx.rbf"
+          self.u = usrp.source_c(which=options.which, decim_rate=options.decim, fpga_filename=self.fpga_filename)
+        else:
+          #Min decimation of standard firmware is 8. 
+          #standard fpga firmware "std_2rxhb_2tx.rbf" 
+          #contains 2 Rx paths with halfband filters and 2 tx paths (the default)
+          self.u = usrp.source_c(which=options.which, decim_rate=options.decim)
 
-        self.u = usrp.source_c(which=options.which, decim_rate=options.decim)
         if options.rx_subdev_spec is None:
             options.rx_subdev_spec = pick_subdevice(self.u)
         self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
