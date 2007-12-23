@@ -128,7 +128,7 @@ typedef struct sched_param {
 /*	Function Prototypes */
 
 int pthread_create(pthread_t *thread, const pthread_attr_t *attr,
-								void *(*start_routine)(void*), void *arg);
+		   void *(*start_routine)(void*), void *arg);
 int pthread_detach(pthread_t thread);
 int pthread_join(pthread_t thread, void **value_ptr);
 void pthread_exit(void *value_ptr);
@@ -136,21 +136,21 @@ int pthread_attr_init(pthread_attr_t *attr);
 int pthread_attr_destroy(pthread_attr_t *attr);
 int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize);
 int pthread_attr_getstacksize(const pthread_attr_t *attr, 
-											size_t *stacksize);
+			      size_t *stacksize);
 int pthread_cond_init(pthread_cond_t *cond,
-								const pthread_condattr_t *attr);
+		      const pthread_condattr_t *attr);
 int pthread_cond_destroy(pthread_cond_t *cond);
 int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex);
 int pthread_cond_timedwait(pthread_cond_t *cond, 
-											pthread_mutex_t *mutex,
-											const struct timespec *abstime);
+			   pthread_mutex_t *mutex,
+			   const struct timespec *abstime);
 int pthread_cond_signal(pthread_cond_t *cond);
 int pthread_cond_broadcast(pthread_cond_t *cond);
 int pthread_key_create(pthread_key_t *key, void (*destructor)(void*));
 int pthread_key_delete(pthread_key_t key);
 int pthread_mutex_destroy(pthread_mutex_t *mutex);
 int pthread_mutex_init(pthread_mutex_t *mutex, 
-									const pthread_mutexattr_t *attr);
+		       const pthread_mutexattr_t *attr);
 int pthread_mutex_lock(pthread_mutex_t *mutex);
 int pthread_mutex_trylock(pthread_mutex_t *mutex);
 int pthread_mutex_unlock(pthread_mutex_t *mutex);
@@ -158,17 +158,17 @@ pthread_t pthread_self();
 int pthread_setspecific(pthread_key_t key, const void *value);
 void *pthread_getspecific(pthread_key_t key);
 int pthread_getschedparam(pthread_t thread, int *policy,
-											struct sched_param *param);
+			  struct sched_param *param);
 int pthread_setschedparam(pthread_t thread, int policy,
-										const struct sched_param *param);
+			  const struct sched_param *param);
 int pthread_attr_setschedparam(pthread_attr_t *attr, 
-												const struct sched_param *param);
+			       const struct sched_param *param);
 int pthread_attr_getschedparam(const pthread_attr_t *attr, 
-												struct sched_param *param);
+			       struct sched_param *param);
 
 int pthread_delay_np(const struct timespec *interval);
 int pthread_get_expiration_np(const struct timespec *delta,
-												struct timespec *abstime);
+			      struct timespec *abstime);
 
 # define SCHED_FIFO 1
 # define SCHED_RR 2
