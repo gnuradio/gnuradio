@@ -34,7 +34,7 @@ from usrpm import usrp_dbid
 from gnuradio import usrp, optfir
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
-from gnuradio.wxgui import stdgui, ra_fftsink, ra_stripchartsink, form, slider
+from gnuradio.wxgui import stdgui2, ra_fftsink, ra_stripchartsink, form, slider
 from optparse import OptionParser
 import wx
 import sys
@@ -48,7 +48,7 @@ import math
 
 class app_flow_graph(stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
-        stdgui2.std_top_block.__init__(self)
+        stdgui2.std_top_block.__init__(self, frame, panel, vbox, argv)
 
         self.frame = frame
         self.panel = panel
@@ -85,6 +85,7 @@ class app_flow_graph(stdgui2.std_top_block):
         parser.add_option("-B", "--divbase", type="eng_float", default=20, help="Y/Div menu base")
         parser.add_option("-I", "--division", type="eng_float", default=100, help="Y/Div")
         parser.add_option("-A", "--audio_source", default="plughw:0,0", help="Audio input device spec")
+        parser.add_option("-N", "--num_pulses", default=1, type="eng_float", help="Number of display pulses")
         (options, args) = parser.parse_args()
         if len(args) != 0:
             parser.print_help()
@@ -96,6 +97,7 @@ class app_flow_graph(stdgui2.std_top_block):
         self.divbase = options.divbase
         self.division = options.division
         self.audiodev = options.audio_source
+        self.mult = int(options.num_pulses)
 
         # Low-pass cutoff for post-detector filter
         # Set to 100Hz usually, since lots of pulsars fit in this
@@ -220,8 +222,8 @@ class app_flow_graph(stdgui2.std_top_block):
         self.interp = int(interp)
         self.decim = int(decim)
 
-        # So that we can view 4 pulses in the pulse viewer window
-        FOLD_MULT=1
+        # So that we can view N pulses in the pulse viewer window
+        FOLD_MULT=self.mult
 
         # determine the daughterboard subdevice we're using
         self.subdev = usrp.selected_subdev(self.u, options.rx_subdev_spec)
@@ -245,7 +247,7 @@ class app_flow_graph(stdgui2.std_top_block):
         #
         # We use this as a crude volume control for the audio output
         #
-        self.volume = gr.multiply_const_ff(10**(-1))
+        #self.volume = gr.multiply_const_ff(10**(-1))
         
 
         #
@@ -309,9 +311,10 @@ class app_flow_graph(stdgui2.std_top_block):
         hz = "%5.3fHz " % self.pulse_freq
         per = "(%5.3f sec)" % (1.0/self.pulse_freq)
         sr = "%d sps" % (int(self.pulse_freq*self.folding))
+        times = " %d Pulse Intervals" % self.mult
         self.chart = ra_stripchartsink.stripchart_sink_f (panel,
                sample_rate=1,
-               stripsize=self.folding*FOLD_MULT, parallel=True, title="Pulse Profiles: "+hz+per, 
+               stripsize=self.folding*FOLD_MULT, parallel=True, title="Pulse Profiles: "+hz+per+times, 
                xlabel="Seconds @ "+sr, ylabel="Level", autoscale=True,
                divbase=self.divbase, scaling=1.0/(self.folding*self.pulse_freq))
         self.chart.set_ref_level(self.reflevel)
@@ -342,8 +345,8 @@ class app_flow_graph(stdgui2.std_top_block):
         #
         # Audio sink
         #
-        print "input_rate ", second_input_rate, "audiodev ", self.audiodev
-        self.audio = audio.sink(second_input_rate, self.audiodev)
+        #print "input_rate ", second_input_rate, "audiodev ", self.audiodev
+        #self.audio = audio.sink(second_input_rate, self.audiodev)
 
         #
         # The three post-detector filters
@@ -403,9 +406,9 @@ class app_flow_graph(stdgui2.std_top_block):
             self.second, self.third, self.scope)
 
         # Connect audio output
-        self.connect(self.first, self.volume)
-        self.connect(self.volume, (self.audio, 0))
-        self.connect(self.volume, (self.audio, 1))
+        #self.connect(self.first, self.volume)
+        #self.connect(self.volume, (self.audio, 0))
+        #self.connect(self.volume, (self.audio, 1))
 
         # Connect epoch folder
         if self.enable_comb_filter == True:
@@ -454,7 +457,7 @@ class app_flow_graph(stdgui2.std_top_block):
             options.freq = float(r[0]+r[1])/2
 
         self.set_gain(options.gain)
-        self.set_volume(-10.0)
+        #self.set_volume(-10.0)
 
         if not(self.set_freq(options.freq)):
             self._set_status_msg("Failed to set initial frequency")
@@ -531,9 +534,9 @@ class app_flow_graph(stdgui2.std_top_block):
         myform['foldavg'] = form.slider_field(parent=self.panel, sizer=vbox2,
                     label="Folder Averaging", weight=1, min=1, max=20, callback=self.set_folder_averaging)
         vbox2.Add((6,0), 0, 0)
-        myform['volume'] = form.quantized_slider_field(parent=self.panel, sizer=vbox2,
-                    label="Audio Volume", weight=1, range=(-20, 0, 0.5), callback=self.set_volume)
-        vbox2.Add((6,0), 0, 0)
+        #myform['volume'] = form.quantized_slider_field(parent=self.panel, sizer=vbox2,
+                    #label="Audio Volume", weight=1, range=(-20, 0, 0.5), callback=self.set_volume)
+        #vbox2.Add((6,0), 0, 0)
         myform['DM'] = form.float_field(
             parent=self.panel, sizer=vbox2, label="DM", weight=1,
             callback=myform.check_input_and_call(_form_set_dm))
@@ -654,9 +657,9 @@ class app_flow_graph(stdgui2.std_top_block):
         self.subdev.set_gain(gain)
 
 
-    def set_volume(self, vol):
-        self.myform['volume'].set_value(vol)
-        self.volume.set_k((10**(vol/10))/8192)
+    #def set_volume(self, vol):
+        #self.myform['volume'].set_value(vol)
+        #self.volume.set_k((10**(vol/10))/8192)
 
     # Callback for spectral-averaging slider
     def set_averaging(self, avval):
@@ -1086,7 +1089,7 @@ class app_flow_graph(stdgui2.std_top_block):
         return(int(ntaps))
 
 def main ():
-    app = stdgui.stdapp(app_flow_graph, "RADIO ASTRONOMY PULSAR RECEIVER: $Revision$", nstatus=1)
+    app = stdgui2.stdapp(app_flow_graph, "RADIO ASTRONOMY PULSAR RECEIVER: $Revision$", nstatus=1)
     app.MainLoop()
 
 if __name__ == '__main__':
