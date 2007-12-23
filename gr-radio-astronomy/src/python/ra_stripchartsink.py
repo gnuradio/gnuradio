@@ -75,9 +75,15 @@ class stripchart_sink_f(gr.hier_block2, stripchart_sink_base):
                  ylabel="Y", divbase=0.025,
                  parallel=False, scaling=1.0, autoscale=False):
 
-	gr.hier_block2.__init__(self, "stripchart_sink_f",
+	if parallel == False:
+		gr.hier_block2.__init__(self, "stripchart_sink_f",
 				gr.io_signature(1, 1, gr.sizeof_float),
 				gr.io_signature(0, 0, 0))
+	else:
+		gr.hier_block2.__init__(self, "stripchart_sink_f",
+				gr.io_signature(1, 1, gr.sizeof_float*stripsize),
+				gr.io_signature(0, 0, 0))
+		
 	
         stripchart_sink_base.__init__(self, input_is_real=True,
                                y_per_div=y_per_div, ref_level=ref_level,
