@@ -20,20 +20,28 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = $(USRP_INCLUDES) $(OMNITHREAD_INCLUDES)
+common_INCLUDES = $(USRP_INCLUDES)
 
 lib_LTLIBRARIES = libusrp.la
 
 libusrp_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
 
-libusrp_la_LIBADD = 			\
+libusrp_la_common_LIBADD = 		\
 	$(USB_LIBS) 			\
-	../../misc/libmisc.la		
+	../../misc/libmisc.la
+
+# darwin fusb requires omnithreads
+if FUSB_TECH_darwin
+INCLUDES = $(common_INCLUDES) $(OMNITHREAD_INCLUDES)
+libusrp_la_LIBADD = $(libusrp_la_common_LIBADD) $(OMNITHREAD_LA)
+else
+INCLUDES = $(common_INCLUDES)
+libusrp_la_LIBADD = $(libusrp_la_common_LIBADD)
+endif
 
 EXTRA_DIST = 				\
 	std_paths.h.in			\
 	usrp_dbid.dat			
-
 
 BUILT_SOURCES = 			\
 	usrp_dbid.h			\
