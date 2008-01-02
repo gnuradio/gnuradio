@@ -32,7 +32,8 @@ typedef boost::shared_ptr<gr_ofdm_frame_sink> gr_ofdm_frame_sink_sptr;
 gr_ofdm_frame_sink_sptr 
 gr_make_ofdm_frame_sink (const std::vector<gr_complex> &sym_position, 
 			 const std::vector<unsigned char> &sym_value_out,
-			 gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
+			 gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
+			 float phase_gain=0.25, float freq_gain=0.25*0.25/4.0);
 
 /*!
  * \brief Takes an OFDM symbol in, demaps it into bits of 0's and 1's, packs
@@ -47,7 +48,8 @@ class gr_ofdm_frame_sink : public gr_sync_block
   friend gr_ofdm_frame_sink_sptr 
   gr_make_ofdm_frame_sink (const std::vector<gr_complex> &sym_position, 
 			   const std::vector<unsigned char> &sym_value_out,
-			   gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
+			   gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
+			   float phase_gain, float freq_gain);
 
  private:
   enum state_t {STATE_SYNC_SEARCH, STATE_HAVE_SYNC, STATE_HAVE_HEADER};
@@ -71,17 +73,26 @@ class gr_ofdm_frame_sink : public gr_sync_block
   int                d_packet_whitener_offset;  // offset into whitener string to use
   int		     d_packetlen_cnt;		// how many so far
 
+  gr_complex * d_derotated_output;  // Pointer to output stream to send deroated symbols out
+
   std::vector<gr_complex>    d_sym_position;
   std::vector<unsigned char> d_sym_value_out;
+  std::vector<gr_complex>    d_dfe;
   unsigned int d_nbits;
 
   unsigned char d_resid;
   unsigned int d_nresid;
+  float d_phase;
+  float d_freq;
+  float d_phase_gain;
+  float d_freq_gain;
+  float d_eq_gain;
 
  protected:
   gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
 		     const std::vector<unsigned char> &sym_value_out,
-		     gr_msg_queue_sptr target_queue, unsigned int occupied_tones);
+		     gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
+		     float phase_gain, float freq_gain);
 
   void enter_search();
   void enter_have_sync();

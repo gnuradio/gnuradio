@@ -20,22 +20,26 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr,ofdm_frame_sink);
 
-gr_ofdm_frame_sink_sptr 
-gr_make_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
-			const std::vector<unsigned char> &sym_value_out,
-			gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
-			float phase_gain=0.25, float freq_gain=0.25*0.25/4);
+GR_SWIG_BLOCK_MAGIC(gr,peak_detector2_fb)
+  
+  gr_peak_detector2_fb_sptr gr_make_peak_detector2_fb (float threshold_factor_rise = 7,
+						       int look_ahead = 1000,
+						       float alpha=0.001);
 
-class gr_ofdm_frame_sink : public gr_sync_block
+class gr_peak_detector2_fb : public gr_sync_block
 {
- protected:
-  gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
-		     const std::vector<unsigned char> &sym_value_out,
-		     gr_msg_queue_sptr target_queue, unsigned int occupied_tones,
-		     float phase_gain, float freq_gain);
-
- public:
-  ~gr_ofdm_frame_sink();
+private:
+  gr_peak_detector2_fb (float threshold_factor_rise, int look_ahead, float alpha);
+  
+public:
+  void set_threshold_factor_rise(float thr) { d_threshold_factor_rise = thr; }
+  void set_look_ahead(int look) { d_look_ahead = look; }
+  void set_alpha(int alpha) { d_avg_alpha = alpha; }
+  
+  float threshold_factor_rise() { return d_threshold_factor_rise; } 
+  int look_ahead() { return d_look_ahead; }
+  float alpha() { return d_avg_alpha; }
 };
+
+

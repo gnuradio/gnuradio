@@ -96,7 +96,7 @@ libgeneral_la_SOURCES = 		\
 	gr_nop.cc			\
 	gr_null_sink.cc			\
 	gr_null_source.cc		\
-	gr_ofdm_correlator.cc		\
+	gr_ofdm_frame_acquisition.cc	\
         gr_ofdm_cyclic_prefixer.cc      \
         gr_ofdm_demapper_vcb.cc         \
         gr_ofdm_mapper_bcv.cc           \
@@ -109,6 +109,7 @@ libgeneral_la_SOURCES = 		\
         gr_ofdm_sampler.cc              \
 	gr_pa_2x2_phase_combiner.cc	\
 	gr_packet_sink.cc		\
+	gr_peak_detector2_fb.cc		\
 	gr_phase_modulator_fc.cc	\
 	gr_pll_carriertracking_cc.cc	\
 	gr_pll_freqdet_cf.cc		\
@@ -239,7 +240,7 @@ grinclude_HEADERS = 			\
 	gr_nop.h			\
 	gr_null_sink.h			\
 	gr_null_source.h		\
-	gr_ofdm_correlator.h		\
+	gr_ofdm_frame_acquisition.h	\
         gr_ofdm_cyclic_prefixer.h       \
         gr_ofdm_demapper_vcb.h          \
         gr_ofdm_mapper_bcv.h            \
@@ -252,6 +253,7 @@ grinclude_HEADERS = 			\
 	gr_ofdm_sampler.h               \
 	gr_pa_2x2_phase_combiner.h	\
 	gr_packet_sink.h		\
+	gr_peak_detector2_fb.h		\
 	gr_phase_modulator_fc.h		\
 	gr_pll_carriertracking_cc.h	\
 	gr_pll_freqdet_cf.h		\
@@ -383,7 +385,7 @@ swiginclude_HEADERS =			\
 	gr_nop.i			\
 	gr_null_sink.i			\
 	gr_null_source.i		\
-	gr_ofdm_correlator.i		\
+	gr_ofdm_frame_acquisition.i	\
         gr_ofdm_cyclic_prefixer.i       \
         gr_ofdm_demapper_vcb.i          \
         gr_ofdm_mapper_bcv.i            \
@@ -396,6 +398,7 @@ swiginclude_HEADERS =			\
 	gr_ofdm_sampler.i               \
 	gr_pa_2x2_phase_combiner.i	\
 	gr_packet_sink.i		\
+	gr_peak_detector2_fb.i		\
 	gr_phase_modulator_fc.i		\
 	gr_pll_carriertracking_cc.i	\
 	gr_pll_freqdet_cf.i		\

@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, blks
+from gnuradio import gr, gru, blks2
 from gnuradio import usrp
 from gnuradio import eng_notation
 
@@ -30,19 +30,23 @@ import sys
 #                              transmit path
 # /////////////////////////////////////////////////////////////////////////////
 
-class transmit_path(gr.hier_block): 
-    def __init__(self, fg, options):
+class transmit_path(gr.hier_block2): 
+    def __init__(self, options):
         '''
         See below for what options should hold
         '''
 
+	gr.hier_block2.__init__(self, "transmit_path",
+				gr.io_signature(0, 0, 0), # Input signature
+				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+
         options = copy.copy(options)    # make a copy so we can destructively modify
 
-        self._verbose      = options.verbose
+        self._verbose      = options.verbose         # turn verbose mode on/off
         self._tx_amplitude = options.tx_amplitude    # digital amplitude sent to USRP
 
         self.ofdm_tx = \
-                     blks.ofdm_mod(fg, options, msgq_limit=4, pad_for_usrp=False)
+                     blks2.ofdm_mod(options, msgq_limit=4, pad_for_usrp=False)
 
         self.amp = gr.multiply_const_cc(1)
         self.set_tx_amplitude(self._tx_amplitude)
@@ -52,8 +56,7 @@ class transmit_path(gr.hier_block):
             self._print_verbage()
 
         # Create and setup transmit path flow graph
-        fg.connect(self.ofdm_tx, self.amp)
-        gr.hier_block.__init__(self, fg, None, self.amp)
+        self.connect(self.ofdm_tx, self.amp, self)
 
     def set_tx_amplitude(self, ampl):
         """

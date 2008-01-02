@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, blks
+from gnuradio import gr, gru, blks2
 from gnuradio import usrp
 from gnuradio import eng_notation
 import copy
@@ -33,8 +33,13 @@ from pick_bitrate import pick_rx_bitrate
 #                              receive path
 # /////////////////////////////////////////////////////////////////////////////
 
-class receive_path(gr.hier_block):
-    def __init__(self, fg, rx_callback, options):
+class receive_path(gr.hier_block2):
+    def __init__(self, rx_callback, options):
+
+	gr.hier_block2.__init__(self, "receive_path",
+				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+				gr.io_signature(0, 0, 0)) # Output signature
+
 
         options = copy.copy(options)    # make a copy so we can destructively modify
 
@@ -44,20 +49,20 @@ class receive_path(gr.hier_block):
 
         # receiver
         self.ofdm_rx = \
-                     blks.ofdm_demod(fg, options, callback=self._rx_callback)
+                     blks2.ofdm_demod(options, callback=self._rx_callback)
 
         # Carrier Sensing Blocks
         alpha = 0.001
         thresh = 30   # in dB, will have to adjust
         self.probe = gr.probe_avg_mag_sqrd_c(thresh,alpha)
-        fg.connect(self.ofdm_rx.ofdm_recv.chan_filt, self.probe)
+
+        self.connect(self, self.ofdm_rx)
+        self.connect(self.ofdm_rx, self.probe)
 
         # Display some information about the setup
         if self._verbose:
             self._print_verbage()
         
-        gr.hier_block.__init__(self, fg, self.ofdm_rx, None)
-
     def carrier_sensed(self):
         """
         Return True if we think carrier is present.

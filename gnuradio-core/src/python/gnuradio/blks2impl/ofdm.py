@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 #
 # Copyright 2006,2007 Free Software Foundation, Inc.
 # 
@@ -21,39 +21,40 @@
 # 
 
 import math
-from numpy import fft
 from gnuradio import gr, ofdm_packet_utils
 import gnuradio.gr.gr_threading as _threading
 import psk, qam
 
-from gnuradio.blksimpl.ofdm_receiver import ofdm_receiver
+from gnuradio.blks2impl.ofdm_receiver import ofdm_receiver
 
 
 # /////////////////////////////////////////////////////////////////////////////
 #                   mod/demod with packets as i/o
 # /////////////////////////////////////////////////////////////////////////////
 
-class ofdm_mod(gr.hier_block):
+class ofdm_mod(gr.hier_block2):
     """
     Modulates an OFDM stream. Based on the options fft_length, occupied_tones, and
     cp_length, this block creates OFDM symbols using a specified modulation option.
     
     Send packets by calling send_pkt
     """
-    def __init__(self, fg, options, msgq_limit=2, pad_for_usrp=True):
+    def __init__(self, options, msgq_limit=2, pad_for_usrp=True):
         """
 	Hierarchical block for sending packets
 
         Packets to be sent are enqueued by calling send_pkt.
         The output is the complex modulated signal at baseband.
 
-	@param fg: flow graph
-	@type fg: flow graph
         @param options: pass modulation options from higher layers (fft length, occupied tones, etc.)
         @param msgq_limit: maximum number of messages in message queue
         @type msgq_limit: int
         @param pad_for_usrp: If true, packets are padded such that they end up a multiple of 128 samples
         """
+
+	gr.hier_block2.__init__(self, "ofdm_mod",
+				gr.io_signature(0, 0, 0),       # Input signature
+				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
         self._pad_for_usrp = pad_for_usrp
         self._modulation = options.modulation
@@ -71,10 +72,10 @@ class ofdm_mod(gr.hier_block):
                 ksfreq[i] = 0
 
         # hard-coded known symbols
-        preambles = (ksfreq,
-                     known_symbols_4512_1[0:self._occupied_tones],
-                     known_symbols_4512_2[0:self._occupied_tones])
-        
+        preambles = (ksfreq,)
+#                     known_symbols_4512_1[0:self._occupied_tones],
+#                     known_symbols_4512_2[0:self._occupied_tones])
+                
         padded_preambles = list()
         for pre in preambles:
             padded = self._fft_length*[0,]
@@ -96,25 +97,29 @@ class ofdm_mod(gr.hier_block):
             rotated_const = map(lambda pt: pt * rot, qam.constellation[arity])
         #print rotated_const
         self._pkt_input = gr.ofdm_mapper_bcv(rotated_const, msgq_limit,
-                                                 options.occupied_tones, options.fft_length)
+                                             options.occupied_tones, options.fft_length)
         
         self.preambles = gr.ofdm_insert_preamble(self._fft_length, padded_preambles)
         self.ifft = gr.fft_vcc(self._fft_length, False, win, True)
         self.cp_adder = gr.ofdm_cyclic_prefixer(self._fft_length, symbol_length)
         self.scale = gr.multiply_const_cc(1.0 / math.sqrt(self._fft_length))
         
-        fg.connect((self._pkt_input, 0), (self.preambles, 0))
-        fg.connect((self._pkt_input, 1), (self.preambles, 1))
-        fg.connect(self.preambles, self.ifft, self.cp_adder, self.scale)
+        self.connect((self._pkt_input, 0), (self.preambles, 0))
+        self.connect((self._pkt_input, 1), (self.preambles, 1))
+        self.connect(self.preambles, self.ifft, self.cp_adder, self.scale, self)
         
         if options.verbose:
             self._print_verbage()
 
         if options.log:
-            fg.connect(self._pkt_input, gr.file_sink(gr.sizeof_gr_complex*options.fft_length,
-                                                     "ofdm_mapper_c.dat"))
-
-        gr.hier_block.__init__(self, fg, None, self.scale)
+            self.connect(self._pkt_input, gr.file_sink(gr.sizeof_gr_complex*options.fft_length,
+                                                       "ofdm_mapper_c.dat"))
+            self.connect(self.preambles, gr.file_sink(gr.sizeof_gr_complex*options.fft_length,
+                                                      "ofdm_preambles.dat"))
+            self.connect(self.ifft, gr.file_sink(gr.sizeof_gr_complex*options.fft_length,
+                                                 "ofdm_ifft_c.dat"))
+            self.connect(self.cp_adder, gr.file_sink(gr.sizeof_gr_complex,
+                                                     "ofdm_cp_adder_c.dat"))
 
     def send_pkt(self, payload='', eof=False):
         """
@@ -138,7 +143,7 @@ class ofdm_mod(gr.hier_block):
         Adds OFDM-specific options to the Options Parser
         """
         normal.add_option("-m", "--modulation", type="string", default="bpsk",
-                          help="set modulation type (bpsk or qpsk) [default=%default]")
+                          help="set modulation type (bpsk, qpsk, 8psk, qam{16,64}) [default=%default]")
         expert.add_option("", "--fft-length", type="intx", default=512,
                           help="set the number of FFT bins [default=%default]")
         expert.add_option("", "--occupied-tones", type="intx", default=200,
@@ -159,7 +164,7 @@ class ofdm_mod(gr.hier_block):
         print "CP length:       %3d"   % (self._cp_length)
 
 
-class ofdm_demod(gr.hier_block):
+class ofdm_demod(gr.hier_block2):
     """
     Demodulates a received OFDM stream. Based on the options fft_length, occupied_tones, and
     cp_length, this block performs synchronization, FFT, and demodulation of incoming OFDM
@@ -169,19 +174,22 @@ class ofdm_demod(gr.hier_block):
     app via the callback.
     """
 
-    def __init__(self, fg, options, callback=None):
+    def __init__(self, options, callback=None):
         """
 	Hierarchical block for demodulating and deframing packets.
 
 	The input is the complex modulated signal at baseband.
         Demodulated packets are sent to the handler.
 
-	@param fg: flow graph
-	@type fg: flow graph
         @param options: pass modulation options from higher layers (fft length, occupied tones, etc.)
         @param callback:  function of two args: ok, payload
         @type callback: ok: bool; payload: string
 	"""
+	gr.hier_block2.__init__(self, "ofdm_demod",
+				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
+				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
+
+
         self._rcvd_pktq = gr.msg_queue()          # holds packets from the PHY
 
         self._modulation = options.modulation
@@ -190,30 +198,19 @@ class ofdm_demod(gr.hier_block):
         self._cp_length = options.cp_length
         self._snr = options.snr
 
-
         # Use freq domain to get doubled-up known symbol for correlation in time domain
         ksfreq = known_symbols_4512_3[0:self._occupied_tones]
         for i in range(len(ksfreq)):
             if(i&1):
                 ksfreq[i] = 0        
 
-        zeros_on_left = int(math.ceil((self._fft_length - self._occupied_tones)/2.0))
-        zeros_on_right = self._fft_length - self._occupied_tones - zeros_on_left
-        ks0 = zeros_on_left*[0.0,]
-        ks0.extend(ksfreq)
-        ks0.extend(zeros_on_right*[0.0,])
-        
-        ks0time = fft.ifft(ks0)
-        # ADD SCALING FACTOR
-        ks0time = ks0time.tolist()
-
         # hard-coded known symbols
-        preambles = (ks0time,
-                     known_symbols_4512_1[0:self._occupied_tones],
-                     known_symbols_4512_2[0:self._occupied_tones])
+        preambles = (ksfreq,)
+                     #known_symbols_4512_1[0:self._occupied_tones],
+                     #known_symbols_4512_2[0:self._occupied_tones])
         
         symbol_length = self._fft_length + self._cp_length
-        self.ofdm_recv = ofdm_receiver(fg, self._fft_length, self._cp_length,
+        self.ofdm_recv = ofdm_receiver(self._fft_length, self._cp_length,
                                        self._occupied_tones, self._snr, preambles,
                                        options.log)
 
@@ -231,17 +228,26 @@ class ofdm_demod(gr.hier_block):
         #print rotated_const
         self.ofdm_demod = gr.ofdm_frame_sink(rotated_const, range(arity),
                                              self._rcvd_pktq,
-                                             self._occupied_tones)
-        
-        fg.connect((self.ofdm_recv, 0), (self.ofdm_demod, 0))
-        fg.connect((self.ofdm_recv, 1), (self.ofdm_demod, 1))
+                                             self._occupied_tones,
+                                             0.25, 0.25*.25/4.0)
+
+        self.connect(self, self.ofdm_recv)
+        self.connect((self.ofdm_recv, 0), (self.ofdm_demod, 0))
+        self.connect((self.ofdm_recv, 1), (self.ofdm_demod, 1))
+
+        # added output signature to work around bug, though it might not be a bad
+        # thing to export, anyway
+        self.connect(self.ofdm_recv.chan_filt, self)
+
+        if options.log:
+            self.connect(self.ofdm_demod, gr.file_sink(gr.sizeof_gr_complex*self._occupied_tones, "ofdm_frame_sink_c.dat"))
+        else:
+            self.connect(self.ofdm_demod, gr.null_sink(gr.sizeof_gr_complex*self._occupied_tones))
 
         if options.verbose:
             self._print_verbage()
             
-        gr.hier_block.__init__(self, fg, self.ofdm_recv, None)
         self._watcher = _queue_watcher_thread(self._rcvd_pktq, callback)
-
 
     def add_options(normal, expert):
         """

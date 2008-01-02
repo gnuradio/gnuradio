@@ -65,22 +65,26 @@ gr_ofdm_sampler::general_work (int noutput_items,
 
   gr_complex *optr = (gr_complex *) output_items[0];
 
-  int found=0;
+  int found=0, index=0;
 
   int i=d_fft_length-1;
 
-  while(!found && i<std::min(ninput_items[0],ninput_items[1]) ) {
-    if(trigger[i])
+  // FIXME: This is where we miss if the regeneration happens too soon.
+  //while(!found && i<std::min(ninput_items[0],ninput_items[1]) ) {
+  while(i<std::min(ninput_items[0],ninput_items[1]) ) {
+    if(trigger[i]) {
       found = 1;
+      index = i++;
+    }
     else
       i++;
   }
-
+  
   if(found) {
-    assert(i-d_fft_length+1 >= 0);
-    for(int j=i-d_fft_length+1;j<=i;j++)
+    assert(index-d_fft_length+1 >= 0);
+    for(int j=index - d_fft_length + 1; j <= index; j++)
       *optr++ = iptr[j];
-    consume_each(i-d_fft_length+2);
+    consume_each(index - d_fft_length + 2);
     //printf("OFDM Sampler found:  ninput_items: %d/%d   noutput_items: %d  consumed: %d   found: %d\n", 
     //   ninput_items[0], ninput_items[1], noutput_items, (i-d_fft_length+2), found);
   }

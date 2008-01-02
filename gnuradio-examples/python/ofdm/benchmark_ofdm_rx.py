@@ -20,21 +20,21 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, blks
+from gnuradio import gr, blks2
 from gnuradio import usrp
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
-import random, time, struct, sys
+import struct, sys
 
 # from current dir
 from receive_path import receive_path
 import fusb_options
 
-class usrp_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
     def __init__(self, callback, options):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         self._rx_freq            = options.rx_freq         # receiver's center frequency
         self._rx_gain            = options.rx_gain         # receiver's gain
@@ -61,10 +61,10 @@ class usrp_graph(gr.flow_graph):
         self.set_auto_tr(True)                 # enable Auto Transmit/Receive switching
 
         # Set up receive path
-        self.rxpath = receive_path(self, callback, options)
+        self.rxpath = receive_path(callback, options)
 
         self.connect(self.u, self.rxpath)
-
+        
     def _setup_usrp_source(self):
         self.u = usrp.source_c (fusb_block_size=self._fusb_block_size,
                                 fusb_nblocks=self._fusb_nblocks)
@@ -187,23 +187,23 @@ def main():
     parser.add_option("","--discontinuous", action="store_true", default=False,
                       help="enable discontinuous")
 
-    usrp_graph.add_options(parser, expert_grp)
+    my_top_block.add_options(parser, expert_grp)
     receive_path.add_options(parser, expert_grp)
-    blks.ofdm_mod.add_options(parser, expert_grp)
-    blks.ofdm_demod.add_options(parser, expert_grp)
+    blks2.ofdm_mod.add_options(parser, expert_grp)
+    blks2.ofdm_demod.add_options(parser, expert_grp)
     fusb_options.add_options(expert_grp)
 
     (options, args) = parser.parse_args ()
 
     # build the graph
-    fg = usrp_graph(rx_callback, options)
+    tb = my_top_block(rx_callback, options)
 
     r = gr.enable_realtime_scheduling()
     if r != gr.RT_OK:
         print "Warning: failed to enable realtime scheduling"
 
-    fg.start()                      # start flow graph
-    fg.wait()                       # wait for it to finish
+    tb.start()                      # start flow graph
+    tb.wait()                       # wait for it to finish
 
 if __name__ == '__main__':
     try:

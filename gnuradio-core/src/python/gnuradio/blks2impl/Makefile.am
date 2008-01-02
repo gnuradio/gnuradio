@@ -40,6 +40,12 @@ grblkspython_PYTHON =		\
 	cpm.py			\
 	nbfm_rx.py		\
 	nbfm_tx.py		\
+	ofdm.py			\
+	ofdm_receiver.py	\
+	ofdm_sync_fixed.py	\
+	ofdm_sync_pn.py		\
+	ofdm_sync_pnac.py	\
+	ofdm_sync_ml.py		\
 	pkt.py			\
 	psk.py			\
 	qam.py			\

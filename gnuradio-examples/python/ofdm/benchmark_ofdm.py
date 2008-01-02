@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, blks
+from gnuradio import gr, blks2
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -32,9 +32,9 @@ from transmit_path import transmit_path
 from receive_path import receive_path
 
 
-class my_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
     def __init__(self, callback, options):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         if not options.channel_off:
             SNR = 10.0**(options.snr/10.0)
@@ -67,22 +67,24 @@ class my_graph(gr.flow_graph):
 
         z = [0,]
         self.zeros = gr.vector_source_c(z, True)
-        self.txpath = transmit_path(self, options)
+        self.txpath = transmit_path(options)
 
-        self.mux = gr.stream_mux(gr.sizeof_gr_complex, stream_size)
+        #self.mux = gr.stream_mux(gr.sizeof_gr_complex, stream_size)
         self.throttle = gr.throttle(gr.sizeof_gr_complex, options.sample_rate)
-        self.channel = blks.channel_model(self, noise_voltage, frequency_offset,
-                                          options.clockrate_ratio, taps)
-        self.rxpath = receive_path(self, callback, options)
+        self.channel = blks2.channel_model(noise_voltage, frequency_offset,
+                                           options.clockrate_ratio, taps)
+        self.rxpath = receive_path(callback, options)
                 
-        self.connect(self.zeros, (self.mux,0))
-        self.connect(self.txpath, (self.mux,1))
-        self.connect(self.mux, self.throttle, self.channel, self.rxpath)
-
+        #self.connect(self.zeros, (self.mux,0))
+        #self.connect(self.txpath, (self.mux,1))
+        #self.connect(self.mux, self.throttle, self.channel, self.rxpath)
+        #self.connect(self.mux, self.throttle, self.rxpath)
+        self.connect(self.txpath, self.throttle, self.channel, self.rxpath)
+        
         if options.log:
             self.connect(self.txpath, gr.file_sink(gr.sizeof_gr_complex, "txpath.dat"))
-            self.connect(self.mux, gr.file_sink(gr.sizeof_gr_complex, "mux.dat"))
-            self.connect(self.channel, gr.file_sink(gr.sizeof_gr_complex, "channel.dat"))
+            #self.connect(self.mux, gr.file_sink(gr.sizeof_gr_complex, "mux.dat"))
+            #self.connect(self.channel, gr.file_sink(gr.sizeof_gr_complex, "channel.dat"))
             
 # /////////////////////////////////////////////////////////////////////////////
 #                                   main
@@ -95,7 +97,7 @@ def main():
     n_right = 0
         
     def send_pkt(payload='', eof=False):
-        return fg.txpath.send_pkt(payload, eof)
+        return tb.txpath.send_pkt(payload, eof)
         
     def rx_callback(ok, payload):
         global n_rcvd, n_right
@@ -139,19 +141,19 @@ def main():
 
     transmit_path.add_options(parser, expert_grp)
     receive_path.add_options(parser, expert_grp)
-    blks.ofdm_mod.add_options(parser, expert_grp)
-    blks.ofdm_demod.add_options(parser, expert_grp)
+    blks2.ofdm_mod.add_options(parser, expert_grp)
+    blks2.ofdm_demod.add_options(parser, expert_grp)
     
     (options, args) = parser.parse_args ()
        
     # build the graph
-    fg = my_graph(rx_callback, options)
+    tb = my_top_block(rx_callback, options)
     
     r = gr.enable_realtime_scheduling()
     #    if r != gr.RT_OK:
     #        print "Warning: failed to enable realtime scheduling"
-        
-    fg.start()                       # start flow graph
+    
+    tb.start()                       # start flow graph
     
     # generate and send packets
     nbytes = int(1e6 * options.megabytes)
@@ -173,7 +175,7 @@ def main():
         pktno += 1
         
     send_pkt(eof=True)
-    fg.wait()                       # wait for it to finish
+    tb.wait()                       # wait for it to finish
 
 
 if __name__ == '__main__':

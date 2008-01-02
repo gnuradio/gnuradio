@@ -20,22 +20,21 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_OFDM_CORRELATOR_H
-#define INCLUDED_GR_OFDM_CORRELATOR_H
+#ifndef INCLUDED_GR_OFDM_FRAME_ACQUISITION_H
+#define INCLUDED_GR_OFDM_FRAME_ACQUISITION_H
 
 
 #include <gr_block.h>
 #include <vector>
 
-class gr_ofdm_correlator;
-typedef boost::shared_ptr<gr_ofdm_correlator> gr_ofdm_correlator_sptr;
+class gr_ofdm_frame_acquisition;
+typedef boost::shared_ptr<gr_ofdm_frame_acquisition> gr_ofdm_frame_acquisition_sptr;
 
-gr_ofdm_correlator_sptr 
-gr_make_ofdm_correlator (unsigned int occupied_carriers, unsigned int fft_length,
-			 unsigned int cplen,
-			 const std::vector<gr_complex> &known_symbol1, 
-			 const std::vector<gr_complex> &known_symbol2,
-			 unsigned int max_fft_shift_len=10);
+gr_ofdm_frame_acquisition_sptr 
+gr_make_ofdm_frame_acquisition (unsigned int occupied_carriers, unsigned int fft_length,
+				unsigned int cplen,
+				const std::vector<gr_complex> &known_symbol, 
+				unsigned int max_fft_shift_len=10);
 
 /*!
  * \brief take a vector of complex constellation points in from an FFT
@@ -54,7 +53,7 @@ gr_make_ofdm_correlator (unsigned int occupied_carriers, unsigned int fft_length
  * distortion caused by the channel.
  */
 
-class gr_ofdm_correlator : public gr_block
+class gr_ofdm_frame_acquisition : public gr_block
 {
   /*! 
    * \brief Build an OFDM correlator and equalizer.
@@ -68,35 +67,33 @@ class gr_ofdm_correlator : public gr_block
    *                            for phase changes between symbols. 
    * \param max_fft_shift_len   Set's the maximum distance you can look between bins for correlation
    */
-  friend gr_ofdm_correlator_sptr
-  gr_make_ofdm_correlator (unsigned int occupied_carriers, unsigned int fft_length,
-			   unsigned int cplen,
-			   const std::vector<gr_complex> &known_symbol1, 
-			   const std::vector<gr_complex> &known_symbol2,
-			   unsigned int max_fft_shift_len);
+  friend gr_ofdm_frame_acquisition_sptr
+  gr_make_ofdm_frame_acquisition (unsigned int occupied_carriers, unsigned int fft_length,
+				  unsigned int cplen,
+				  const std::vector<gr_complex> &known_symbol, 
+				  unsigned int max_fft_shift_len);
   
- protected:
-  gr_ofdm_correlator (unsigned int occupied_carriers, unsigned int fft_length,
-		      unsigned int cplen,
-		      const std::vector<gr_complex> &known_symbol1, 
-		      const std::vector<gr_complex> &known_symbol2,
-		      unsigned int max_fft_shift_len);
+protected:
+  gr_ofdm_frame_acquisition (unsigned int occupied_carriers, unsigned int fft_length,
+			     unsigned int cplen,
+			     const std::vector<gr_complex> &known_symbol, 
+			     unsigned int max_fft_shift_len);
   
  private:
   unsigned char slicer(gr_complex x);
-  bool correlate(const gr_complex *previous, const gr_complex *current, int zeros_on_left);
-  void calculate_equalizer(const gr_complex *previous, 
-			   const gr_complex *current, int zeros_on_left);
+  bool correlate(const gr_complex *symbol, int zeros_on_left);
+  void calculate_equalizer(const gr_complex *symbol, int zeros_on_left);
   gr_complex coarse_freq_comp(int freq_delta, int count);
   
   unsigned int d_occupied_carriers;  // !< \brief number of subcarriers with data
   unsigned int d_fft_length;         // !< \brief length of FFT vector
   unsigned int d_cplen;              // !< \brief length of cyclic prefix in samples
   unsigned int d_freq_shift_len;     // !< \brief number of surrounding bins to look at for correlation
-  std::vector<gr_complex> d_known_symbol1, d_known_symbol2; // !< \brief known symbols at start of frame
-  std::vector<gr_complex> d_diff_corr_factor; // !< \brief factor used in correlation
+  std::vector<gr_complex> d_known_symbol; // !< \brief known symbols at start of frame
+  std::vector<float> d_known_phase_diff; // !< \brief factor used in correlation from known symbol
+  std::vector<float> d_symbol_phase_diff; // !< \brief factor used in correlation from received symbol
   std::vector<gr_complex> d_hestimate;  // !< channel estimate
-  signed int d_coarse_freq;             // !< \brief search distance in number of bins
+  int d_coarse_freq;             // !< \brief search distance in number of bins
   unsigned int d_phase_count;           // !< \brief accumulator for coarse freq correction
   float d_snr_est;                      // !< an estimation of the signal to noise ratio
 
@@ -110,7 +107,7 @@ class gr_ofdm_correlator : public gr_block
    */
   float snr() { return d_snr_est; }
 
-  ~gr_ofdm_correlator(void);
+  ~gr_ofdm_frame_acquisition(void);
   int general_work(int noutput_items,
 		   gr_vector_int &ninput_items,
 		   gr_vector_const_void_star &input_items,

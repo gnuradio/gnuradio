@@ -64,4 +64,17 @@ static inline float gr_fast_atan2f(gr_complex z)
   return gr_fast_atan2f(z.imag(), z.real()); 
 }
 
+
+/* This bounds x by +/- clip without a branch */
+
+static inline float gr_branchless_clip(float x, float clip)
+{
+  float x1 = fabsf(x+clip);
+  float x2 = fabsf(x-clip);
+  x1 -= x2;
+  return 0.5*x1;
+}
+
+
+
 #endif /* _GR_MATH_H_ */

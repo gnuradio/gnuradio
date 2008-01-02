@@ -26,8 +26,12 @@
 
 #include <gr_ofdm_frame_sink.h>
 #include <gr_io_signature.h>
+#include <gr_expj.h>
+#include <gr_math.h>
+#include <math.h>
 #include <cstdio>
 #include <stdexcept>
+#include <iostream>
 
 #define VERBOSE 0
 
@@ -55,6 +59,11 @@ gr_ofdm_frame_sink::enter_have_sync()
 
   d_header = 0;
   d_headerbytelen_cnt = 0;
+
+  // Resetting PLL
+  d_freq = 0.0;
+  d_phase = 0.0;
+  fill(d_dfe.begin(), d_dfe.end(), gr_complex(1.0,0.0));
 }
 
 inline void
@@ -96,7 +105,11 @@ unsigned int gr_ofdm_frame_sink::demapper(const gr_complex *in,
 					  unsigned char *out)
 {
   unsigned int i=0, bytes_produced=0;
+  gr_complex carrier;
 
+  carrier=gr_expj(d_phase);
+
+  gr_complex accum_error = 0.0;
   while(i < d_occupied_carriers) {
     if(d_nresid > 0) {
       d_partial_byte |= d_resid;
@@ -106,8 +119,23 @@ unsigned int gr_ofdm_frame_sink::demapper(const gr_complex *in,
     }
 
     while((d_byte_offset < 8) && (i < d_occupied_carriers)) {
-      //fprintf(stderr, "%f+j%f  = %d\n", in[i].real(), in[i].imag(), slicer(in[i])); 
-      unsigned char bits = slicer(in[i++]);
+      gr_complex sigrot = in[i]*carrier*d_dfe[i];
+      
+      if(d_derotated_output != NULL){
+	d_derotated_output[i] = sigrot;
+      }
+      
+      unsigned char bits = slicer(sigrot);
+
+      gr_complex closest_sym = d_sym_position[bits];
+      
+      accum_error += sigrot * conj(closest_sym);
+
+      // FIX THE FOLLOWING STATEMENT
+      if (norm(sigrot)> 0.001) d_dfe[i] +=  d_eq_gain*(closest_sym/sigrot-d_dfe[i]);
+      
+      i++;
+
       if((8 - d_byte_offset) >= d_nbits) {
 	d_partial_byte |= bits << (d_byte_offset);
 	d_byte_offset += d_nbits;
@@ -130,7 +158,18 @@ unsigned int gr_ofdm_frame_sink::demapper(const gr_complex *in,
       d_partial_byte = 0;
     }
   }
+  //std::cerr << "accum_error " << accum_error << std::endl;
 
+  float angle = arg(accum_error);
+
+  d_freq = d_freq - d_freq_gain*angle;
+  d_phase = d_phase + d_freq - d_phase_gain*angle;
+  if (d_phase >= 2*M_PI) d_phase -= 2*M_PI;
+  if (d_phase <0) d_phase += 2*M_PI;
+    
+  //if(VERBOSE)
+  //  std::cerr << angle << "\t" << d_freq << "\t" << d_phase << "\t" << std::endl;
+  
   return bytes_produced;
 }
 
@@ -138,24 +177,30 @@ unsigned int gr_ofdm_frame_sink::demapper(const gr_complex *in,
 gr_ofdm_frame_sink_sptr
 gr_make_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
 			const std::vector<unsigned char> &sym_value_out,
-			gr_msg_queue_sptr target_queue, unsigned int occupied_carriers)
+			gr_msg_queue_sptr target_queue, unsigned int occupied_carriers,
+			float phase_gain, float freq_gain)
 {
   return gr_ofdm_frame_sink_sptr(new gr_ofdm_frame_sink(sym_position, sym_value_out,
-							target_queue, occupied_carriers));
+							target_queue, occupied_carriers,
+							phase_gain, freq_gain));
 }
 
 
 gr_ofdm_frame_sink::gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
 				       const std::vector<unsigned char> &sym_value_out,
-				       gr_msg_queue_sptr target_queue, unsigned int occupied_carriers)
+				       gr_msg_queue_sptr target_queue, unsigned int occupied_carriers,
+				       float phase_gain, float freq_gain)
   : gr_sync_block ("ofdm_frame_sink",
 		   gr_make_io_signature2 (2, 2, sizeof(gr_complex)*occupied_carriers, sizeof(char)),
-		   gr_make_io_signature (0, 0, 0)),
+		   gr_make_io_signature (1, 1, sizeof(gr_complex)*occupied_carriers)),
     d_target_queue(target_queue), d_occupied_carriers(occupied_carriers), 
     d_byte_offset(0), d_partial_byte(0),
-    d_resid(0), d_nresid(0)
+    d_resid(0), d_nresid(0),d_phase(0),d_freq(0),d_phase_gain(phase_gain),d_freq_gain(freq_gain),
+    d_eq_gain(0.05)
 {
   d_bytes_out = new unsigned char[d_occupied_carriers];
+  d_dfe.resize(occupied_carriers);
+  fill(d_dfe.begin(), d_dfe.end(), gr_complex(1.0,0.0));
 
   set_sym_value_out(sym_position, sym_value_out);
   
@@ -179,7 +224,7 @@ gr_ofdm_frame_sink::set_sym_value_out(const std::vector<gr_complex> &sym_positio
 
   d_sym_position  = sym_position;
   d_sym_value_out = sym_value_out;
-  d_nbits = (unsigned long)(log10(d_sym_value_out.size()) / log10(2));
+  d_nbits = (unsigned long)ceil(log10(d_sym_value_out.size()) / log10(2.0));
 
   return true;
 }
@@ -194,12 +239,16 @@ gr_ofdm_frame_sink::work (int noutput_items,
   const char *sig = (const char *) input_items[1];
   unsigned int j = 0;
   unsigned int bytes=0;
+
+  // If the output is connected, send it the derotated symbols
+  if(output_items.size() >= 1)
+    d_derotated_output = (gr_complex *)output_items[0];
+  else
+    d_derotated_output = NULL;
   
   if (VERBOSE)
     fprintf(stderr,">>> Entering state machine\n");
-  
-  bytes = demapper(&in[0], d_bytes_out);
-  
+
   switch(d_state) {
       
   case STATE_SYNC_SEARCH:    // Look for flag indicating beginning of pkt
@@ -212,6 +261,10 @@ gr_ofdm_frame_sink::work (int noutput_items,
     break;
 
   case STATE_HAVE_SYNC:
+    // only demod after getting the preamble signal; otherwise, the 
+    // equalizer taps will screw with the PLL performance
+    bytes = demapper(&in[0], d_bytes_out);
+    
     if (VERBOSE) {
       if(sig[0])
 	printf("ERROR -- Found SYNC in HAVE_SYNC\n");
@@ -258,6 +311,8 @@ gr_ofdm_frame_sink::work (int noutput_items,
     break;
       
   case STATE_HAVE_HEADER:
+    bytes = demapper(&in[0], d_bytes_out);
+
     if (VERBOSE) {
       if(sig[0])
 	printf("ERROR -- Found SYNC in HAVE_HEADER at %d, length of %d\n", d_packetlen_cnt, d_packetlen);
@@ -288,6 +343,6 @@ gr_ofdm_frame_sink::work (int noutput_items,
     assert(0);
     
   } // switch
-  
+
   return 1;
 }

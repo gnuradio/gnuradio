@@ -93,7 +93,7 @@
 #include <gr_probe_avg_mag_sqrd_cf.h>
 #include <gr_probe_avg_mag_sqrd_f.h>
 #include <gr_probe_signal_f.h>
-#include <gr_ofdm_correlator.h>
+#include <gr_ofdm_frame_acquisition.h>
 #include <gr_ofdm_cyclic_prefixer.h>
 #include <gr_ofdm_bpsk_demapper.h>
 #include <gr_ofdm_mapper_bcv.h>
@@ -128,6 +128,7 @@
 #include <gr_bin_statistics_f.h>
 #include <gr_glfsr_source_b.h>
 #include <gr_glfsr_source_f.h>
+#include <gr_peak_detector2_fb.h>
 %}
 
 %include "gr_nop.i"
@@ -201,7 +202,7 @@
 %include "gr_probe_avg_mag_sqrd_cf.i"
 %include "gr_probe_avg_mag_sqrd_f.i"
 %include "gr_probe_signal_f.i"
-%include "gr_ofdm_correlator.i"
+%include "gr_ofdm_frame_acquisition.i"
 %include "gr_ofdm_cyclic_prefixer.i"
 %include "gr_ofdm_bpsk_demapper.i"
 %include "gr_ofdm_mapper_bcv.i"
@@ -236,3 +237,4 @@
 %include "gr_bin_statistics_f.i"
 %include "gr_glfsr_source_b.i"
 %include "gr_glfsr_source_f.i"
+%include "gr_peak_detector2_fb.i"

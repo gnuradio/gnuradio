@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, blks
+from gnuradio import gr, blks2
 from gnuradio import usrp
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
@@ -33,9 +33,9 @@ from transmit_path import transmit_path
 from pick_bitrate import pick_tx_bitrate
 import fusb_options
 
-class usrp_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
     def __init__(self, options):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         self._tx_freq            = options.tx_freq         # tranmitter's center frequency
         self._tx_subdev_spec     = options.tx_subdev_spec  # daughterboard to use
@@ -53,10 +53,10 @@ class usrp_graph(gr.flow_graph):
         # copy the final answers back into options for use by modulator
         #options.bitrate = self._bitrate
 
-        self.txpath = transmit_path(self, options)
+        self.txpath = transmit_path(options)
 
         self.connect(self.txpath, self.u)
-
+        
     def _setup_usrp_sink(self):
         """
         Creates a USRP sink, determines the settings for best bitrate,
@@ -167,7 +167,7 @@ def add_freq_option(parser):
 def main():
 
     def send_pkt(payload='', eof=False):
-        return fg.txpath.send_pkt(payload, eof)
+        return tb.txpath.send_pkt(payload, eof)
 
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
@@ -178,23 +178,23 @@ def main():
     parser.add_option("","--discontinuous", action="store_true", default=False,
                       help="enable discontinuous mode")
 
-    usrp_graph.add_options(parser, expert_grp)
+    my_top_block.add_options(parser, expert_grp)
     transmit_path.add_options(parser, expert_grp)
-    blks.ofdm_mod.add_options(parser, expert_grp)
-    blks.ofdm_demod.add_options(parser, expert_grp)
+    blks2.ofdm_mod.add_options(parser, expert_grp)
+    blks2.ofdm_demod.add_options(parser, expert_grp)
     fusb_options.add_options(expert_grp)
 
     (options, args) = parser.parse_args ()
 
     # build the graph
-    fg = usrp_graph(options)
-
+    tb = my_top_block(options)
+    
     r = gr.enable_realtime_scheduling()
     if r != gr.RT_OK:
         print "Warning: failed to enable realtime scheduling"
 
-    fg.start()                       # start flow graph
-
+    tb.start()                       # start flow graph
+    
     # generate and send packets
     nbytes = int(1e6 * options.megabytes)
     n = 0
@@ -210,7 +210,7 @@ def main():
         pktno += 1
         
     send_pkt(eof=True)
-    fg.wait()                       # wait for it to finish
+    tb.wait()                       # wait for it to finish
 
 if __name__ == '__main__':
     try:

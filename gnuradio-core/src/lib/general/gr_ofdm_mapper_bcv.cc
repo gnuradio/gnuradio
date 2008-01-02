@@ -54,8 +54,8 @@ gr_ofdm_mapper_bcv::gr_ofdm_mapper_bcv (const std::vector<gr_complex> &constella
 {
   if (!(d_occupied_carriers <= d_fft_length))
     throw std::invalid_argument("gr_ofdm_mapper_bcv: occupied carriers must be <= fft_length");
-
-  d_nbits = (unsigned long)(log10(d_constellation.size()) / log10(2));
+  
+  d_nbits = (unsigned long)ceil(log10(d_constellation.size()) / log10(2.0));
 }
 
 gr_ofdm_mapper_bcv::~gr_ofdm_mapper_bcv(void)

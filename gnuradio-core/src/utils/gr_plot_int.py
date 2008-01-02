@@ -27,7 +27,7 @@ from optparse import OptionParser
 matplotlib.interactive(True)
 matplotlib.use('TkAgg')
 
-class draw_fft:
+class draw_fft_c:
     def __init__(self, filename, options):
         self.hfile = open(filename, "r")
         self.block_length = options.block
@@ -60,45 +60,43 @@ class draw_fft:
         self.button_right = Button(self.button_right_axes, ">")
         self.button_right_callback = self.button_right.on_clicked(self.button_right_click)
 
-        self.xlim = self.sp_iq.get_xlim()
+        self.xlim = self.sp_f.get_xlim()
 
         self.manager = get_current_fig_manager()
         connect('key_press_event', self.click)
         show()
-
+        
     def get_data(self):
-        self.text_file_pos.set_text("File Position: %d" % (self.hfile.tell()//8))
-        self.iq = scipy.fromfile(self.hfile, dtype=scipy.complex64, count=self.block_length)
-        #print "Read in %d items" % len(self.iq)
-        if(len(self.iq) == 0):
+        self.text_file_pos.set_text("File Position: %d" % (self.hfile.tell()//4))
+        f = scipy.fromfile(self.hfile, dtype=scipy.int32, count=self.block_length)
+        #print "Read in %d items" % len(self.f)
+        if(len(f) == 0):
             print "End of File"
         else:
-            self.reals = [r.real for r in self.iq]
-            self.imags = [i.imag for i in self.iq]
-            self.time = [i*(1/self.sample_rate) for i in range(len(self.reals))]
-            
+            self.f = f
+            self.time = [i*(1/self.sample_rate) for i in range(len(self.f))]
+        
     def make_plots(self):
         # if specified on the command-line, set file pointer
-        self.hfile.seek(16*self.start, 1)
+        self.hfile.seek(8*self.start, 1)
 
         self.get_data()
         
         # Subplot for real and imaginary parts of signal
-        self.sp_iq = self.fig.add_subplot(2,1,1, position=[0.075, 0.14, 0.85, 0.67])
-        self.sp_iq.set_title(("I&Q"), fontsize=self.title_font_size, fontweight="bold")
-        self.sp_iq.set_xlabel("Time (s)", fontsize=self.label_font_size, fontweight="bold")
-        self.sp_iq.set_ylabel("Amplitude (V)", fontsize=self.label_font_size, fontweight="bold")
-        self.plot_iq = plot(self.time, self.reals, 'bo-', self.time, self.imags, 'ro-')
-        self.sp_iq.set_ylim([1.5*min([min(self.reals), min(self.imags)]),
-                             1.5*max([max(self.reals), max(self.imags)])])
-        
+        self.sp_f = self.fig.add_subplot(2,1,1, position=[0.075, 0.2, 0.875, 0.6])
+        self.sp_f.set_title(("Amplitude"), fontsize=self.title_font_size, fontweight="bold")
+        self.sp_f.set_xlabel("Time (s)", fontsize=self.label_font_size, fontweight="bold")
+        self.sp_f.set_ylabel("Amplitude (V)", fontsize=self.label_font_size, fontweight="bold")
+        self.plot_f = plot(self.time, self.f, 'bo-')
+        self.sp_f.set_ylim([1.5*min(self.f),
+                            1.5*max(self.f)])
+
         draw()
 
     def update_plots(self):
-        self.plot_iq[0].set_data([self.time, self.reals])
-        self.plot_iq[1].set_data([self.time, self.imags])
-        self.sp_iq.set_ylim([1.5*min([min(self.reals), min(self.imags)]),
-                             1.5*max([max(self.reals), max(self.imags)])])
+        self.plot_f[0].set_data([self.time, self.f])
+        self.sp_f.set_ylim([1.5*min(self.f),
+                            1.5*max(self.f)])
         draw()
         
     def click(self, event):
@@ -123,8 +121,8 @@ class draw_fft:
 
     def step_backward(self):
         # Step back in file position
-        if(self.hfile.tell() >= 16*self.block_length ):
-            self.hfile.seek(-16*self.block_length, 1)
+        if(self.hfile.tell() >= 8*self.block_length ):
+            self.hfile.seek(-8*self.block_length, 1)
         else:
             self.hfile.seek(-self.hfile.tell(),1)
         self.get_data()
@@ -141,7 +139,7 @@ def find(item_in, list_search):
 
 def main():
     usage="%prog: [options] input_filename"
-    description = "Takes a GNU Radio complex binary file and displays the I&Q data versus time. You can set the block size to specify how many points to read in at a time and the start position in the file. By default, the system assumes a sample rate of 1, so in time, each sample is plotted versus the sample number. To set a true time axis, set the sample rate (-R or --sample-rate) to the sample rate used when capturing the samples."
+    description = "Takes a GNU Radio floating point binary file and displays the samples versus time. You can set the block size to specify how many points to read in at a time and the start position in the file. By default, the system assumes a sample rate of 1, so in time, each sample is plotted versus the sample number. To set a true time axis, set the sample rate (-R or --sample-rate) to the sample rate used when capturing the samples."
 
     parser = OptionParser(conflict_handler="resolve", usage=usage, description=description)
     parser.add_option("-B", "--block", type="int", default=1000,
@@ -157,7 +155,7 @@ def main():
         raise SystemExit, 1
     filename = args[0]
 
-    dc = draw_fft(filename, options)
+    dc = draw_fft_c(filename, options)
 
 if __name__ == "__main__":
     try:
@@ -165,5 +163,3 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
     
-
-
