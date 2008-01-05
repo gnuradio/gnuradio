@@ -73,5 +73,8 @@
 "WBX LO TX"		0x0050
 "WBX LO RX"		0x0051
 
+"XCVR2450 Tx"		0x0060
+"XCVR2450 Rx"		0x0061
+
 "Experimental Tx"	0xfffe
 "Experimental Rx"	0xffff
