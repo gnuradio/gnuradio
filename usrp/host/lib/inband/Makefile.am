@@ -105,6 +105,7 @@ libusrp_inband_qa_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
 
 libusrp_inband_qa_la_LIBADD =    	\
 	libusrp_inband.la		\
+	$(PMT_LA)			\
 	$(CPPUNIT_LIBS)			\
 	-lstdc++
 
