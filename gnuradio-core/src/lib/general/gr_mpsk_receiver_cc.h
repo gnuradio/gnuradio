@@ -100,6 +100,7 @@ class gr_mpsk_receiver_cc : public gr_block
     d_omega = omega;
     d_min_omega = omega*(1.0 - d_omega_rel);
     d_max_omega = omega*(1.0 + d_omega_rel);
+    d_omega_mid = 0.5*(d_min_omega+d_max_omega);
   }
 
   //! (M&M) Sets value for mu gain factor
@@ -275,7 +276,7 @@ protected:
 
   // Members related to symbol timing
   float d_mu, d_gain_mu;
-  float d_omega, d_gain_omega, d_omega_rel, d_max_omega, d_min_omega;
+  float d_omega, d_gain_omega, d_omega_rel, d_max_omega, d_min_omega, d_omega_mid;
   gr_complex d_p_2T, d_p_1T, d_p_0T;
   gr_complex d_c_2T, d_c_1T, d_c_0T;
 

@@ -91,12 +91,12 @@ gr_mpsk_receiver_cc::gr_mpsk_receiver_cc (unsigned int M, float theta,
   switch(d_M) {
   case 2:  // optimized algorithms for BPSK
     d_phase_error_detector = &gr_mpsk_receiver_cc::phase_error_detector_generic; //bpsk;
-    d_decision = &gr_mpsk_receiver_cc::decision_generic; //bpsk;
+    d_decision = &gr_mpsk_receiver_cc::decision_bpsk;
     break;
 
   case 4: // optimized algorithms for QPSK
     d_phase_error_detector = &gr_mpsk_receiver_cc::phase_error_detector_generic; //qpsk;
-    d_decision = &gr_mpsk_receiver_cc::decision_generic; //qpsk;
+    d_decision = &gr_mpsk_receiver_cc::decision_qpsk;
     break;
 
   default: // generic algorithms for any M (power of 2?) but not pretty
@@ -145,31 +145,20 @@ float gr_mpsk_receiver_cc::phase_error_detector_generic(gr_complex sample) const
   return -arg(sample*conj(d_constellation[d_current_const_point]));
 }
 
-// FIXME add these back in an test difference in performance
 unsigned int
 gr_mpsk_receiver_cc::decision_bpsk(gr_complex sample) const
 {
-  unsigned int index = 0;
-
-  // Implements a 1-demensional slicer
-  if(sample.real() > 0)
-    index = 1;
-  return index;
+  return (gr_branchless_binary_slicer(sample.real()) ^ 1);
+  //return gr_binary_slicer(sample.real()) ^ 1;
 }
 
-// FIXME add these back in an test difference in performance
 unsigned int
 gr_mpsk_receiver_cc::decision_qpsk(gr_complex sample) const
 {
-  unsigned int index = 0;
+  unsigned int index;
 
-  // Implements a simple slicer function
-  if((sample.real() < 0) && (sample.imag() > 0))
-    index = 1;
-  else if((sample.real() < 0) && (sample.imag() < 0))
-    index = 2;
-  else
-    index = 3;
+  //index = gr_branchless_quad_0deg_slicer(sample);
+  index = gr_quad_0deg_slicer(sample);
   return index;
 }
 
@@ -211,11 +200,8 @@ gr_mpsk_receiver_cc::mm_sampler(const gr_complex symbol)
   d_phase += d_freq;  // increment the phase based on the frequency of the rotation
 
   // Keep phase clamped and not walk to infinity
-  while(d_phase>M_TWOPI)
-    d_phase -= M_TWOPI;
-  while(d_phase<-M_TWOPI)
-    d_phase += M_TWOPI;
-
+  d_phase = gr_branchless_clip(d_phase, M_TWOPI);
+  
   nco = gr_expj(d_phase+d_theta);   // get the NCO value for derotating the current sample
   sample = nco*symbol;      // get the downconverted symbol
   
@@ -247,20 +233,10 @@ gr_mpsk_receiver_cc::mm_error_tracking(gr_complex sample)
   y = (d_p_0T - d_p_2T) * conj(d_c_1T);
   u = y - x;
   mm_error = u.real();   // the error signal is in the real part
-  
-  // limit mm_val
-  if (mm_error > 1.0)
-    mm_error = 1.0;
-  else if (mm_error < -1.0)
-    mm_error = -1.0;
-  
+  mm_error = gr_branchless_clip(mm_error, 1.0); // limit mm_val
+    
   d_omega = d_omega + d_gain_omega * mm_error;  // update omega based on loop error
-
-  // make sure we don't walk away
-  if (d_omega > d_max_omega)
-    d_omega = d_max_omega;
-  else if (d_omega < d_min_omega)
-    d_omega = d_min_omega;
+  d_omega = d_omega_mid + gr_branchless_clip(d_omega-d_omega_mid, d_omega_rel);   // make sure we don't walk away
   
   d_mu += d_omega + d_gain_mu * mm_error;   // update mu based on loop error
   
@@ -280,26 +256,17 @@ gr_mpsk_receiver_cc::phase_error_tracking(gr_complex sample)
   // Make phase and frequency corrections based on sampled value
   phase_error = (*this.*d_phase_error_detector)(sample);
 
-  if (phase_error > 1)
-    phase_error = 1;
-  else if (phase_error < -1)
-    phase_error = -1;  
-
+  phase_error = gr_branchless_clip(phase_error, 1.0);
+    
   d_freq += d_beta*phase_error;             // adjust frequency based on error
   d_phase += d_freq + d_alpha*phase_error;  // adjust phase based on error
-  
+
   // Make sure we stay within +-2pi
-  while(d_phase>M_TWOPI)
-    d_phase -= M_TWOPI;
-  while(d_phase<-M_TWOPI)
-    d_phase += M_TWOPI;
+  d_phase = gr_branchless_clip(d_phase, M_TWOPI);
   
   // Limit the frequency range
-  if (d_freq > d_max_freq)
-    d_freq = d_max_freq;
-  else if (d_freq < d_min_freq)
-    d_freq = d_min_freq;
-
+  d_freq = gr_branchless_clip(d_freq, d_max_freq);
+  
 #if VERBOSE_COSTAS
   printf("cl: phase_error: %f  phase: %f  freq: %f  sample: %f+j%f  constellation: %f+j%f\n",
 	 phase_error, d_phase, d_freq, sample.real(), sample.imag(), 
@@ -318,7 +285,6 @@ gr_mpsk_receiver_cc::general_work (int noutput_items,
 
   int i=0, o=0;
 
-  //while(i < ninput_items[0]) {    
   while((o < noutput_items) && (i < ninput_items[0])) {
     while((d_mu > 1) && (i < ninput_items[0]))  {
       mm_sampler(in[i]);   // puts symbols into a buffer and adjusts d_mu

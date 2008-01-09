@@ -151,25 +151,14 @@ gr_clock_recovery_mm_cc::general_work (int noutput_items,
       out[oo++] = d_p_0T;
       
       // limit mm_val
-      if (mm_val > 1.0)
-	mm_val = 1.0;
-      else if (mm_val < -1.0)
-	mm_val = -1.0;
-      
+      gr_branchless_clip(mm_val,1.0);
       d_omega = d_omega + d_gain_omega * mm_val;
-      if (d_omega > d_max_omega)
-	d_omega = d_max_omega;
-      else if (d_omega < d_min_omega)
-	d_omega = d_min_omega;
-      
+      d_omega = d_omega_mid + gr_branchless_clip(d_omega-d_omega_mid, d_omega_relative_limit);   // make sure we don't walk away
+
       d_mu = d_mu + d_omega + d_gain_mu * mm_val;
       ii += (int)floor(d_mu);
       d_mu -= floor(d_mu);
-      
-      #if 0
-      printf("%f\t%f\n", d_omega, d_mu);
-      #endif
-      
+            
       // write the error signal to the second output
       foptr[oo-1] = gr_complex(d_mu,0);
       
@@ -195,16 +184,10 @@ gr_clock_recovery_mm_cc::general_work (int noutput_items,
       out[oo++] = d_p_0T;
       
       // limit mm_val
-      if (mm_val > 1.0)
-	mm_val = 1.0;
-      else if (mm_val < -1.0)
-	mm_val = -1.0;
+      gr_branchless_clip(mm_val,1.0);
       
       d_omega = d_omega + d_gain_omega * mm_val;
-      if (d_omega > d_max_omega)
-	d_omega = d_max_omega;
-      else if (d_omega < d_min_omega)
-	d_omega = d_min_omega;
+      d_omega = d_omega_mid + gr_branchless_clip(d_omega-d_omega_mid, d_omega_relative_limit);   // make sure we don't walk away
       
       d_mu = d_mu + d_omega + d_gain_mu * mm_val;
       ii += (int)floor(d_mu);

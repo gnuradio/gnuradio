@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -18,32 +19,24 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+#ifndef _QA_GR_MATH_H_
+#define _QA_GR_MATH_H_
 
-/*
- * This class gathers together all the test cases for the gr
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
 
-#include <qa_general.h>
-#include <qa_gr_firdes.h>
-#include <qa_gr_circular_file.h>
-#include <qa_gr_fxpt.h>
-#include <qa_gr_fxpt_nco.h>
-#include <qa_gr_fxpt_vco.h>
-#include <qa_gr_math.h>
+class qa_gr_math : public CppUnit::TestCase {
 
-CppUnit::TestSuite *
-qa_general::suite ()
-{
-  CppUnit::TestSuite	*s = new CppUnit::TestSuite ("general");
+  CPPUNIT_TEST_SUITE(qa_gr_math);
+  CPPUNIT_TEST(test_binary_slicer1);
+  CPPUNIT_TEST(test_quad_0deg_slicer1);
+  CPPUNIT_TEST(test_quad_45deg_slicer1);
+  CPPUNIT_TEST_SUITE_END();
 
-  s->addTest (qa_gr_firdes::suite ());
-  s->addTest (qa_gr_circular_file::suite ());
-  s->addTest (qa_gr_fxpt::suite ());
-  s->addTest (qa_gr_fxpt_nco::suite ());
-  s->addTest (qa_gr_fxpt_vco::suite ());
-  s->addTest (qa_gr_math::suite ());
-  
-  return s;
-}
+ private:
+  void test_binary_slicer1();
+  void test_quad_0deg_slicer1();
+  void test_quad_45deg_slicer1();
+};
+
+#endif /* _QA_GR_MATH_H_ */

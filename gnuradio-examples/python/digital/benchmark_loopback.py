@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, modulation_utils
+from gnuradio import gr, gru, modulation_utils, blks2
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -31,34 +31,6 @@ import random, time, struct, sys, math
 from transmit_path_lb import transmit_path
 from receive_path_lb import receive_path
 import fusb_options
-
-class awgn_channel(gr.hier_block2):
-    def __init__(self, sample_rate, noise_voltage, frequency_offset, seed=False):
-
-	gr.hier_block2.__init__(self, "awgn_channel",
-			        gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
-				        
-        # Create the Gaussian noise source
-        if not seed:
-            self.noise = gr.noise_source_c(gr.GR_GAUSSIAN, noise_voltage)
-        else:
-            rseed = int(time.time())
-            self.noise = gr.noise_source_c(gr.GR_GAUSSIAN, noise_voltage, rseed)
-
-        self.adder =  gr.add_cc()
-
-        # Create the frequency offset
-        self.offset = gr.sig_source_c(1, gr.GR_SIN_WAVE,
-                                      frequency_offset, 1.0, 0.0)
-        self.mixer = gr.multiply_cc()
-
-        # Connect the components
-        self.connect(self, (self.mixer, 0))
-        self.connect(self.offset, (self.mixer, 1))
-        self.connect(self.mixer, (self.adder, 0))
-        self.connect(self.noise, (self.adder, 1))
-	self.connect(self.adder, self)
 
 class my_top_block(gr.top_block):
     def __init__(self, mod_class, demod_class, rx_callback, options):
@@ -78,8 +50,7 @@ class my_top_block(gr.top_block):
         self.rxpath = receive_path(demod_class, rx_callback, options)
 
         if channelon:
-            self.channel = awgn_channel(options.sample_rate, noise_voltage,
-                                        frequency_offset, options.seed)
+            self.channel = blks2.channel_model(noise_voltage, frequency_offset, 1.01)
 
             if options.discontinuous:
                 z = 20000*[0,]

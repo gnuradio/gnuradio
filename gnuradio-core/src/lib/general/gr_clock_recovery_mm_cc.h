@@ -25,6 +25,7 @@
 
 #include <gr_block.h>
 #include <gr_complex.h>
+#include <gr_math.h>
 
 class gri_mmse_fir_interpolator_cc;
 
@@ -69,6 +70,7 @@ class gr_clock_recovery_mm_cc : public gr_block
     d_omega = omega;
     d_min_omega = omega*(1.0 - d_omega_relative_limit);
     d_max_omega = omega*(1.0 + d_omega_relative_limit);
+    d_omega_mid = 0.5*(d_min_omega+d_max_omega);
   }
 
 protected:
@@ -82,6 +84,7 @@ protected:
   float				d_min_omega;	        // minimum allowed omega
   float				d_max_omega;	        // maximum allowed omeg
   float				d_omega_relative_limit;	// used to compute min and max omega
+  float                         d_omega_mid;
   float                         d_gain_mu;
   gr_complex                    d_last_sample;
   gri_mmse_fir_interpolator_cc 	*d_interp;

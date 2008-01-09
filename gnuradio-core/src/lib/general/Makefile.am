@@ -169,7 +169,8 @@ libgeneral_qa_la_SOURCES = 		\
 	qa_gr_firdes.cc			\
 	qa_gr_fxpt.cc			\
 	qa_gr_fxpt_nco.cc		\
-	qa_gr_fxpt_vco.cc		
+	qa_gr_fxpt_vco.cc		\
+	qa_gr_math.cc
 
 
 
@@ -325,7 +326,8 @@ noinst_HEADERS = 			\
 	qa_gr_fxpt.h			\
 	qa_gr_fxpt_nco.h		\
 	qa_gr_fxpt_vco.h		\
-	sine_table.h			
+	sine_table.h			\
+	qa_gr_math.h
 
 swiginclude_HEADERS =			\
 	general.i			\
