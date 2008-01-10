@@ -151,7 +151,7 @@ gr_clock_recovery_mm_cc::general_work (int noutput_items,
       out[oo++] = d_p_0T;
       
       // limit mm_val
-      gr_branchless_clip(mm_val,1.0);
+      mm_val = gr_branchless_clip(mm_val,1.0);
       d_omega = d_omega + d_gain_omega * mm_val;
       d_omega = d_omega_mid + gr_branchless_clip(d_omega-d_omega_mid, d_omega_relative_limit);   // make sure we don't walk away
 
@@ -184,7 +184,7 @@ gr_clock_recovery_mm_cc::general_work (int noutput_items,
       out[oo++] = d_p_0T;
       
       // limit mm_val
-      gr_branchless_clip(mm_val,1.0);
+      mm_val = gr_branchless_clip(mm_val,1.0);
       
       d_omega = d_omega + d_gain_omega * mm_val;
       d_omega = d_omega_mid + gr_branchless_clip(d_omega-d_omega_mid, d_omega_relative_limit);   // make sure we don't walk away
