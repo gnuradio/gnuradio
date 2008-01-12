@@ -33,7 +33,7 @@
 # /////////////////////////////////////////////////////////////////////////////
 
 
-from gnuradio import gr, gru, blks
+from gnuradio import gr, gru, blks2
 from gnuradio import usrp
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
@@ -86,9 +86,9 @@ def open_tun_interface(tun_device_filename):
 #                             the flow graph
 # /////////////////////////////////////////////////////////////////////////////
 
-class usrp_graph(gr.flow_graph):
+class usrp_graph(gr.top_block):
     def __init__(self, callback, options):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         self._tx_freq            = options.tx_freq         # tranmitter's center frequency
         self._tx_subdev_spec     = options.tx_subdev_spec  # daughterboard to use
@@ -121,8 +121,8 @@ class usrp_graph(gr.flow_graph):
         # copy the final answers back into options for use by modulator
         #options.bitrate = self._bitrate
 
-        self.txpath = transmit_path(self, options)
-        self.rxpath = receive_path(self, callback, options)
+        self.txpath = transmit_path(options)
+        self.rxpath = receive_path(callback, options)
 
         self.connect(self.txpath, self.u_snk)
         self.connect(self.u_src, self.rxpath)
@@ -280,8 +280,8 @@ class cs_mac(object):
         self.verbose = verbose
         self.fg = None             # flow graph (access to PHY)
 
-    def set_flow_graph(self, fg):
-        self.fg = fg
+    def set_flow_graph(self, tb):
+        self.tb = tb
 
     def phy_rx_callback(self, ok, payload):
         """
@@ -307,20 +307,20 @@ class cs_mac(object):
         while 1:
             payload = os.read(self.tun_fd, 10*1024)
             if not payload:
-                self.fg.send_pkt(eof=True)
+                self.tb.send_pkt(eof=True)
                 break
 
             if self.verbose:
                 print "Tx: len(payload) = %4d" % (len(payload),)
 
             delay = min_delay
-            while self.fg.carrier_sensed():
+            while self.tb.carrier_sensed():
                 sys.stderr.write('B')
                 time.sleep(delay)
                 if delay < 0.050:
                     delay = delay * 2       # exponential back-off
 
-            self.fg.send_pkt(payload)
+            self.tb.send_pkt(payload)
 
 
 # /////////////////////////////////////////////////////////////////////////////
@@ -345,8 +345,8 @@ def main():
     usrp_graph.add_options(parser, expert_grp)
     transmit_path.add_options(parser, expert_grp)
     receive_path.add_options(parser, expert_grp)
-    blks.ofdm_mod.add_options(parser, expert_grp)
-    blks.ofdm_demod.add_options(parser, expert_grp)
+    blks2.ofdm_mod.add_options(parser, expert_grp)
+    blks2.ofdm_demod.add_options(parser, expert_grp)
 
     fusb_options.add_options(expert_grp)
 
@@ -391,9 +391,9 @@ def main():
 
 
     # build the graph (PHY)
-    fg = usrp_graph(mac.phy_rx_callback, options)
+    tb = usrp_graph(mac.phy_rx_callback, options)
 
-    mac.set_flow_graph(fg)    # give the MAC a handle for the PHY
+    mac.set_flow_graph(tb)    # give the MAC a handle for the PHY
 
     #if fg.txpath.bitrate() != fg.rxpath.bitrate():
     #    print "WARNING: Transmit bitrate = %sb/sec, Receive bitrate = %sb/sec" % (
@@ -407,7 +407,7 @@ def main():
     #print "interp:         %3d" % (fg.txpath.interp(),)
     #print "decim:          %3d" % (fg.rxpath.decim(),)
 
-    fg.rxpath.set_carrier_threshold(options.carrier_threshold)
+    tb.rxpath.set_carrier_threshold(options.carrier_threshold)
     print "Carrier sense threshold:", options.carrier_threshold, "dB"
     
     print
@@ -420,12 +420,12 @@ def main():
     print
 
 
-    fg.start()    # Start executing the flow graph (runs in separate threads)
+    tb.start()    # Start executing the flow graph (runs in separate threads)
 
     mac.main_loop()    # don't expect this to return...
 
-    fg.stop()     # but if it does, tell flow graph to stop.
-    fg.wait()     # wait for it to finish
+    tb.stop()     # but if it does, tell flow graph to stop.
+    tb.wait()     # wait for it to finish
                 
 
 if __name__ == '__main__':
