@@ -27,7 +27,10 @@
 #include <stdexcept>
 
 #define __INLINE__ inline
+
+#ifndef DO_DEBUG
 #define DO_DEBUG 0
+#endif
 
 #if DO_DEBUG
 #define DEBUG(X) do{X} while(0);
@@ -168,17 +171,17 @@ public:
     d_internal->lock ();
 // find an available node
     s_node_ptr l_node = d_available; 
-    DEBUG (fprintf (stderr, "w "));
+    DEBUG (fprintf (stderr, "w "););
     while (! l_node) {
-      DEBUG (fprintf (stderr, "x\n"));
+      DEBUG (fprintf (stderr, "x\n"););
       // the ioBlock condition will automatically unlock() d_internal
       d_ioBlock->wait ();
       // and lock() is here
-      DEBUG (fprintf (stderr, "y\n"));
+      DEBUG (fprintf (stderr, "y\n"););
       l_node = d_available;
     }
     DEBUG (fprintf (stderr, "::f_n_a_n: #u = %ld, node = %p\n",
-		    num_used(), l_node));
+		    num_used(), l_node););
 // remove this one from the current available list
     if (num_available () == 1) {
 // last one, just set available to NULL
@@ -201,7 +204,7 @@ public:
     if (!l_node) return;
     d_internal->lock ();
     DEBUG (fprintf (stderr, "::m_n_a: #u = %ld, node = %p\n",
-		    num_used(), l_node));
+		    num_used(), l_node););
 // remove this node from the inUse list
     if (num_used () == 1) {
 // last one, just set inUse to NULL
@@ -216,10 +219,10 @@ public:
       l_node->insert_before (d_available);
     d_n_used--;
 
-    DEBUG (fprintf (stderr, "s%ld ", d_n_used));
+    DEBUG (fprintf (stderr, "s%ld ", d_n_used););
 // signal the condition when new data arrives
     d_ioBlock->signal ();
-    DEBUG (fprintf (stderr, "t "));
+    DEBUG (fprintf (stderr, "t "););
 
 // unlock the mutex for thread safety
     d_internal->unlock ();

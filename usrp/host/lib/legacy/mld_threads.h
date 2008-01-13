@@ -37,7 +37,10 @@
 #include <stdexcept>
 
 #define __INLINE__ inline
+
+#ifndef DO_DEBUG
 #define DO_DEBUG 0
+#endif
 
 #if DO_DEBUG
 #define DEBUG(X) do{X} while(0);
@@ -182,7 +185,7 @@ public:
   __INLINE__ mld_mutex_ptr mutex () {return (d_mutex);};
 
   __INLINE__ void signal () {
-    DEBUG (fprintf (stderr, "a "));
+    DEBUG (fprintf (stderr, "a "););
 
 #ifdef _USE_OMNI_THREADS_
     d_condition->signal ();
@@ -193,11 +196,11 @@ public:
 	       "Error %d.\n", l_ret);
     }
 #endif
-    DEBUG (fprintf (stderr, "b "));
+    DEBUG (fprintf (stderr, "b "););
   };
 
   __INLINE__ void wait () {
-    DEBUG (fprintf (stderr, "c "));
+    DEBUG (fprintf (stderr, "c "););
 #ifdef _USE_OMNI_THREADS_
     d_condition->wait ();
 #else
@@ -207,7 +210,7 @@ public:
 	       "Error %d.\n", l_ret);
     }
 #endif
-    DEBUG (printf (stderr, "d "));
+    DEBUG (fprintf (stderr, "d "););
   };
 };
 

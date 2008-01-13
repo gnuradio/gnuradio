@@ -26,7 +26,9 @@
 #include "mld_threads.h"
 #include <stdexcept>
 
+#ifndef DO_DEBUG
 #define DO_DEBUG 0
+#endif
 
 #if DO_DEBUG
 #define DEBUG(X) do{X} while(0);
@@ -82,7 +84,7 @@ public:
     DEBUG (fprintf (stderr, "c_b(): buf len (items) = %ld, "
 		    "doWriteBlock = %s, doFullRead = %s\n", d_bufLen_I,
 		    (d_doWriteBlock ? "true" : "false"),
-		    (d_doFullRead ? "true" : "false")));
+		    (d_doFullRead ? "true" : "false")););
   };
 
   ~circular_buffer () {
@@ -150,7 +152,7 @@ public:
   int enqueue (T* buf, UInt32 bufLen_I) {
     DEBUG (fprintf (stderr, "enqueue: buf = %X, bufLen = %ld, #av_wr = %ld, "
 		    "#av_rd = %ld.\n", (unsigned int)buf, bufLen_I,
-		    d_n_avail_write_I, d_n_avail_read_I));
+		    d_n_avail_write_I, d_n_avail_read_I););
     if (bufLen_I > d_bufLen_I) {
       fprintf (stderr, "cannot add buffer longer (%ld"
 	       ") than instantiated length (%ld"
@@ -173,21 +175,21 @@ public:
     if (bufLen_I > d_n_avail_write_I) {
       if (d_doWriteBlock) {
 	while (bufLen_I > d_n_avail_write_I) {
-	  DEBUG (fprintf (stderr, "enqueue: #len > #a, waiting.\n"));
+	  DEBUG (fprintf (stderr, "enqueue: #len > #a, waiting.\n"););
 	  // wait will automatically unlock() the internal mutex
 	  d_writeBlock->wait ();
 	  // and lock() it here.
 	  if (d_doAbort) {
 	    d_internal->unlock ();
-	    DEBUG (fprintf (stderr, "enqueue: #len > #a, aborting.\n"));
+	    DEBUG (fprintf (stderr, "enqueue: #len > #a, aborting.\n"););
 	    return (2);
 	  }
-	  DEBUG (fprintf (stderr, "enqueue: #len > #a, done waiting.\n"));
+	  DEBUG (fprintf (stderr, "enqueue: #len > #a, done waiting.\n"););
 	}
       } else {
 	d_n_avail_read_I = d_bufLen_I - bufLen_I;
 	d_n_avail_write_I = bufLen_I;
-	DEBUG (fprintf (stderr, "circular_buffer::enqueue: overflow\n"));
+	DEBUG (fprintf (stderr, "circular_buffer::enqueue: overflow\n"););
 	retval = -1;
       }
     }
@@ -233,7 +235,7 @@ public:
   int dequeue (T* buf, UInt32* bufLen_I) {
     DEBUG (fprintf (stderr, "dequeue: buf = %X, *bufLen = %ld, #av_wr = %ld, "
 		    "#av_rd = %ld.\n", (unsigned int)buf, *bufLen_I,
-		    d_n_avail_write_I, d_n_avail_read_I));
+		    d_n_avail_write_I, d_n_avail_read_I););
     if (!bufLen_I)
       throw std::runtime_error ("circular_buffer::dequeue(): "
 				"input bufLen pointer is NULL.\n");
@@ -257,29 +259,29 @@ public:
     }
     if (d_doFullRead) {
       while (d_n_avail_read_I < l_bufLen_I) {
-	DEBUG (fprintf (stderr, "dequeue: #a < #len, waiting.\n"));
+	DEBUG (fprintf (stderr, "dequeue: #a < #len, waiting.\n"););
 	// wait will automatically unlock() the internal mutex
 	d_readBlock->wait ();
 	// and lock() it here.
 	if (d_doAbort) {
 	  d_internal->unlock ();
-	  DEBUG (fprintf (stderr, "dequeue: #a < #len, aborting.\n"));
+	  DEBUG (fprintf (stderr, "dequeue: #a < #len, aborting.\n"););
 	  return (2);
 	}
-	DEBUG (fprintf (stderr, "dequeue: #a < #len, done waiting.\n"));
+	DEBUG (fprintf (stderr, "dequeue: #a < #len, done waiting.\n"););
      }
     } else {
       while (d_n_avail_read_I == 0) {
-	DEBUG (fprintf (stderr, "dequeue: #a == 0, waiting.\n"));
+	DEBUG (fprintf (stderr, "dequeue: #a == 0, waiting.\n"););
 	// wait will automatically unlock() the internal mutex
 	d_readBlock->wait ();
 	// and lock() it here.
 	if (d_doAbort) {
 	  d_internal->unlock ();
-	  DEBUG (fprintf (stderr, "dequeue: #a == 0, aborting.\n"));
+	  DEBUG (fprintf (stderr, "dequeue: #a == 0, aborting.\n"););
 	  return (2);
 	}
-	DEBUG (fprintf (stderr, "dequeue: #a == 0, done waiting.\n"));
+	DEBUG (fprintf (stderr, "dequeue: #a == 0, done waiting.\n"););
       }
     }
     if (l_bufLen_I > d_n_avail_read_I)
