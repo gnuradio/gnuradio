@@ -278,7 +278,7 @@ class cs_mac(object):
     def __init__(self, tun_fd, verbose=False):
         self.tun_fd = tun_fd       # file descriptor for TUN/TAP interface
         self.verbose = verbose
-        self.fg = None             # flow graph (access to PHY)
+        self.tb = None             # top block (access to PHY)
 
     def set_flow_graph(self, tb):
         self.tb = tb
@@ -307,7 +307,7 @@ class cs_mac(object):
         while 1:
             payload = os.read(self.tun_fd, 10*1024)
             if not payload:
-                self.tb.send_pkt(eof=True)
+                self.tb.txpath.send_pkt(eof=True)
                 break
 
             if self.verbose:
@@ -320,7 +320,7 @@ class cs_mac(object):
                 if delay < 0.050:
                     delay = delay * 2       # exponential back-off
 
-            self.tb.send_pkt(payload)
+            self.tb.txpath.send_pkt(payload)
 
 
 # /////////////////////////////////////////////////////////////////////////////
