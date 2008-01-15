@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,6 +26,7 @@ from usrpm import usrp_dbid
 from gnuradio import usrp1              # usrp Rev 1 and later
 from gnuradio import gru
 from usrpm.usrp_fpga_regs import *
+import weakref
 
 FPGA_MODE_NORMAL   = usrp1.FPGA_MODE_NORMAL
 FPGA_MODE_LOOPBACK = usrp1.FPGA_MODE_LOOPBACK
@@ -380,10 +381,11 @@ def selected_subdev(u, subdev_spec):
     @param u: an instance of usrp.source_* or usrp.sink_*
     @param subdev_spec: return value from subdev option parser.  
     @type  subdev_spec: (side, subdev), where side is 0 or 1 and subdev is 0 or 1
-    @returns: an instance derived from db_base
+    @returns: an weakref to an instance derived from db_base
     """
     side, subdev = subdev_spec
-    return u.db[side][subdev]
+    # Note: This allows db to go out of scope at the right time
+    return weakref.proxy(u.db[side][subdev])
 
 
 def calc_dxc_freq(target_freq, baseband_freq, fs):
