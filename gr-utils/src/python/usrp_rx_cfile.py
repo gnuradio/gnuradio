@@ -100,10 +100,7 @@ class my_top_block(gr.top_block):
             sys.stderr.write('Failed to set frequency\n')
             raise SystemExit, 1
 
-    def __del__(self):
-	# Avoid weak reference error
-	del self.subdev
-        
+
 if __name__ == '__main__':
     try:
         my_top_block().run()
