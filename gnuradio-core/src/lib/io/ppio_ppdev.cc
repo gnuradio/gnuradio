@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2001,2003,2004 Free Software Foundation, Inc.
+ * Copyright 2001,2003,2004,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,10 +32,15 @@
 #include <errno.h>
 #include <stdio.h>
 #include <stdexcept>
-#ifdef HAVE_LINUX_PPDEV_H
+#if defined(HAVE_LINUX_PPDEV_H)
 #include <sys/ioctl.h>
 #include <linux/ppdev.h>
 #include <linux/parport.h>
+#include <sstream>
+#elif defined(HAVE_DEV_PPBUS_PPI_H)
+#include <sys/ioctl.h>
+#include <dev/ppbus/ppi.h>
+#include <dev/ppbus/ppbconf.h>
 #include <sstream>
 #else
 // #warn "ppio_ppdev is not functional on this platform"
@@ -53,59 +58,9 @@ static int CP_ACTIVE_LOW_BITS	= 0x0B;
 
 static int SP_ACTIVE_LOW_BITS	= 0x80;
 
-#ifndef HAVE_LINUX_PPDEV_H		// use stubs
+#if defined(HAVE_LINUX_PPDEV_H)
 
-ppio_ppdev::ppio_ppdev (int which)
-{
-  std::cerr << "ppio_ppdev: Not implemented on this platform\n";
-  throw std::runtime_error ("not implmeneted");
-}
-
-ppio_ppdev::~ppio_ppdev ()
-{
-}
-
-void 
-ppio_ppdev::write_data (unsigned char v)
-{
-}
-
-unsigned char
-ppio_ppdev::read_data ()
-{
-  return 0;
-}
-
-void 
-ppio_ppdev::write_control (unsigned char v)
-{
-}
-
-unsigned char
-ppio_ppdev::read_control ()
-{
-  return 0;
-}
-
-unsigned char
-ppio_ppdev::read_status ()
-{
-  return 0;
-}
-
-void
-ppio_ppdev::lock ()
-{
-}
-
-void
-ppio_ppdev::unlock ()
-{
-}
-
-#else		
-
-// The real code...
+// The real Linux code...
 
 ppio_ppdev::ppio_ppdev (int which)
 {
@@ -210,6 +165,151 @@ ppio_ppdev::unlock ()
     perror ("ppio_ppdev: PPRELEASE");
     throw std::runtime_error ("PPRELEASE");
   }
+}
+
+#elif defined(HAVE_DEV_PPBUS_PPI_H)
+
+// The real FreeBSD code... (Could work on other BSDs as well)
+
+ppio_ppdev::ppio_ppdev (int which)
+{
+  std::ostringstream filename;
+  filename << "/dev/ppi" << which;
+  const char *c_filename = filename.str().c_str();
+  if ((d_fd = open (c_filename, O_RDWR)) < 0){
+    int my_errno = errno;
+    perror (c_filename);
+    throw std::runtime_error ("open");
+  }
+
+#if 0
+  int mode = IEEE1284_MODE_COMPAT;
+  if (ioctl (d_fd, PPSETMODE, &mode) != 0){
+    perror ("ppio_ppdev: PPSETMODE");
+    close (d_fd);
+    throw std::runtime_error ("PPSETMODE");
+  }
+#endif
+}
+
+ppio_ppdev::~ppio_ppdev ()
+{
+  close (d_fd);
+}
+
+
+void 
+ppio_ppdev::write_data (unsigned char v)
+{
+  if (ioctl (d_fd, PPISDATA, &v) != 0){
+    perror ("ppio_ppdev: PPISDATA");
+    throw std::runtime_error ("PPISDATA");
+  }
+}
+
+unsigned char
+ppio_ppdev::read_data ()
+{
+  unsigned char v;
+
+  if (ioctl (d_fd, PPIGDATA, &v) != 0){
+    perror ("ppio_ppdev: PPIGDATA");
+    throw std::runtime_error ("PPIGDATA");
+  }
+  return v;
+}
+
+void 
+ppio_ppdev::write_control (unsigned char v)
+{
+  unsigned char ctrl = v ^ CP_ACTIVE_LOW_BITS;
+  if (ioctl (d_fd, PPISCTRL, &ctrl) != 0){
+    perror ("ppio_ppdev: PPISCTRL");
+    throw std::runtime_error ("PPISCTRL");
+  }
+}
+
+unsigned char
+ppio_ppdev::read_control ()
+{
+  unsigned char ctrl;
+  if (ioctl (d_fd, PPIGCTRL, &ctrl) != 0){
+    perror ("ppio_ppdev: PPIGCTRL");
+    throw std::runtime_error ("PPIGCTRL");
+  }
+
+  return ctrl ^ CP_ACTIVE_LOW_BITS;
+}
+
+unsigned char
+ppio_ppdev::read_status ()
+{
+  unsigned char status;
+  if (ioctl (d_fd, PPIGSTATUS, &status) != 0){
+    perror ("ppio_ppdev: PPIGSTATUS");
+    throw std::runtime_error ("PPIGSTATUS");
+  }
+  return status ^ SP_ACTIVE_LOW_BITS;
+}
+
+void
+ppio_ppdev::lock ()
+{
+}
+
+void
+ppio_ppdev::unlock ()
+{
+}
+#else
+/* Apparently, non real code */
+
+ppio_ppdev::ppio_ppdev (int which)
+{
+  std::cerr << "ppio_ppdev: Not implemented on this platform\n";
+  throw std::runtime_error ("not implmeneted");
+}
+
+ppio_ppdev::~ppio_ppdev ()
+{
+}
+
+void 
+ppio_ppdev::write_data (unsigned char v)
+{
+}
+
+unsigned char
+ppio_ppdev::read_data ()
+{
+  return 0;
+}
+
+void 
+ppio_ppdev::write_control (unsigned char v)
+{
+}
+
+unsigned char
+ppio_ppdev::read_control ()
+{
+  return 0;
+}
+
+unsigned char
+ppio_ppdev::read_status ()
+{
+  return 0;
+}
+
+void
+ppio_ppdev::lock ()
+{
+}
+
+void
+ppio_ppdev::unlock ()
+{
 }
 
 #endif

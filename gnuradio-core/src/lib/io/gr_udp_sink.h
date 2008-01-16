@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -27,6 +27,10 @@
 #include <omnithread.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <sys/socket.h>
+#if defined(HAVE_NETINET_IN_H)
+#include <netinet/in.h>
+#endif
 
 class gr_udp_sink;
 typedef boost::shared_ptr<gr_udp_sink> gr_udp_sink_sptr;
@@ -70,8 +74,8 @@ class gr_udp_sink : public gr_sync_block
   struct in_addr d_ip_dst;          // store the destination ip info
   unsigned short d_port_src;        // the port number to open for connections to this service
   unsigned short d_port_dst;        // port number of the remove system
-  sockaddr_in    d_sockaddr_src;    // store the source sockaddr data (formatted IP address and port number)
-  sockaddr_in    d_sockaddr_dst;    // store the destination sockaddr data (formatted IP address and port number)
+  struct sockaddr_in    d_sockaddr_src;    // store the source sockaddr data (formatted IP address and port number)
+  struct sockaddr_in    d_sockaddr_dst;    // store the destination sockaddr data (formatted IP address and port number)
 
  protected:
   /*!

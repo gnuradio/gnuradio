@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -27,6 +27,9 @@
 #include <omnithread.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#if defined(HAVE_NETINET_IN_H)
+#include <netinet/in.h>
+#endif
 
 class gr_udp_source;
 typedef boost::shared_ptr<gr_udp_source> gr_udp_source_sptr;
@@ -62,8 +65,7 @@ class gr_udp_source : public gr_sync_block
   int            d_socket_rcv;    // handle to socket retuned in the accept call
   struct in_addr d_ip_src;        // store the source IP address to use
   unsigned short d_port_src;      // the port number to open for connections to this service
-  sockaddr_in    d_sockaddr_src;  // store the source sockaddr data (formatted IP address and port number)
-
+  struct sockaddr_in    d_sockaddr_src;  // store the source sockaddr data (formatted IP address and port number)
   char *d_temp_buff;    // hold buffer between calls
   ssize_t d_residual;   // hold information about number of bytes stored in the temp buffer
   size_t d_temp_offset; // point to temp buffer location offset
