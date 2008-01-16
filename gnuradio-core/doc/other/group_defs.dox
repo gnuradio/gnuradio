@@ -1,6 +1,6 @@
 /*!
  * \defgroup block Signal Processing Blocks
- * These are the signal processing blocks, blah, blah blah...
+ * These are the signal processing blocks...
  * @{
  */
 
@@ -22,10 +22,53 @@
  * \defgroup converter Type Conversions
  */
 
+/*!
+ * \defgroup level Signal Level Control
+ */
+
+/*!
+ * \defgroup clock Signal Clock Synchronization
+ */
+
 /*! @} */
 
-/*! \defgroup filter_design Filter Design		*/
-/*! \defgroup filter_primitive Filter Primitives	*/
+/*! \defgroup filter_design Digital Filter Design		*/
+/*! \defgroup graphical Graphical Utilities		*/
 /*! \defgroup internal Implementation Details		*/
-/*! \defgroup qa Quality Assurance			*/
+/*! \defgroup hardware Hardware				*/
+/*! \defgroup encdec Voice Encoders and Decoders	*/
+/*! \defgroup coding Information Coding and Decoding			*/
+/*! \defgroup modulation Signal Modulation			*/
+/*! \defgroup demodulation Signal Demodulation			*/
+/*! \defgroup math	Mathmatics			*/
+/*! \defgroup tools Tools				*/
+/*! \defgroup misc Miscellaneous				*/
+/*!
+ * \defgroup applications Applications
+ * These are some applications build using gnuradio...
+ * @{
+ */
 
+/*!
+ * \defgroup radar Radar
+ * Radar Applications...
+ */
+
+/*!
+ * \defgroup atsc ATSC
+ * ATSC Applications...
+ */
+
+/*!
+ * \defgroup pager Pager 
+ * Pager Applications
+ */
+
+/*!
+ * \defgroup sounder	Sounder
+ * Channel Sounder
+ */
+
+/*! @} */
+
+/*! \defgroup usrp USRP	*/

@@ -22,10 +22,11 @@
 include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = \
-	tv-channel-frequencies		\
-	vector_docstub.h		\
-	shared_ptr_docstub.h		\
-	omnithread.html			\
-	omnithread.pdf			\
-	omnithread.ps			\
-	group_defs.dox			
+	doxypy.py \
+	group_defs.dox \
+	omnithread.html	\
+	omnithread.pdf \
+	omnithread.ps \
+	shared_ptr_docstub.h \
+	tv-channel-frequencies \
+	vector_docstub.h
