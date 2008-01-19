@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
-from gnuradio import gr, gru, blks
-from gnuradio.wxgui import stdgui, fftsink, slider
+from gnuradio import gr, gru, blks2
+from gnuradio.wxgui import stdgui2, fftsink2, slider
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import wx
 
-class test_graph (stdgui.gui_flow_graph):
+class test_graph (stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
-        stdgui.gui_flow_graph.__init__(self, frame, panel, vbox, argv)
+        stdgui2.std_top_block.__init__(self, frame, panel, vbox, argv)
 
         parser = OptionParser (option_class=eng_option)
         (options, args) = parser.parse_args ()
@@ -46,13 +46,13 @@ class test_graph (stdgui.gui_flow_graph):
                                   1.0/mpoints * 0.1,  # trans width
                                   gr.firdes.WIN_HANN)
         print len(taps)
-        analysis = blks.analysis_filterbank(self, mpoints, taps)
+        analysis = blks2.analysis_filterbank(mpoints, taps)
         
         self.connect(mixer, thr)
         self.connect(thr, analysis)
 
         for i in range(mpoints):
-            fft = fftsink.fft_sink_c(self, frame, fft_size=128,
+            fft = fftsink2.fft_sink_c(frame, fft_size=128,
                                      sample_rate=sample_rate/mpoints,
                                      fft_rate=5,
                                      title="Ch %d" % (i,))
@@ -65,7 +65,7 @@ class test_graph (stdgui.gui_flow_graph):
                                      
 
 def main ():
-    app = stdgui.stdapp (test_graph, "Test DFT filterbank")
+    app = stdgui2.stdapp (test_graph, "Test DFT filterbank")
     app.MainLoop ()
 
 if __name__ == '__main__':

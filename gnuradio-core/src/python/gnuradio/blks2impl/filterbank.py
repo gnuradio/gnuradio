@@ -107,7 +107,7 @@ class synthesis_filterbank(gr.hier_block2):
         for i in range(mpoints):
             self.connect((self, i), (self.ss2v, i))
             
-        self.connect(self.ss2v, self.ifft, self.v2ss, self)
+        self.connect(self.ss2v, self.ifft, self.v2ss)
 
         # build mpoints fir filters...
         for i in range(mpoints):
@@ -115,7 +115,8 @@ class synthesis_filterbank(gr.hier_block2):
             self.connect((self.v2ss, i), f)
             self.connect(f, (self.ss2s, i))
 
-
+	self.connect(self.ss2s, self)
+	
 class analysis_filterbank(gr.hier_block2):
     """
     Uniformly modulated polyphase DFT filter bank: analysis

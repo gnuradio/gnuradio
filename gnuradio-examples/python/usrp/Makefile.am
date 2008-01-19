@@ -25,6 +25,8 @@ EXTRA_DIST = 					\
 	fm_tx_2_daughterboards.py		\
 	fm_tx4.py				\
 	max_power.py				\
+	test_dft_analysis.py			\
+	test_dft_synth.py			\
 	usrp_benchmark_usb.py			\
 	usrp_nbfm_ptt.py			\
 	usrp_nbfm_rcv.py			\
