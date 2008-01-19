@@ -110,6 +110,7 @@ int
     set_history (d_proto_taps.size ());
     build_composite_fir ();
     d_updated = false;
+    return 0;		     // history requirements may have changed.
   }
 
   unsigned j = 0;
