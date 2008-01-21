@@ -552,15 +552,15 @@ class _400_common(_AD4360_common):
 #------------------------------------------------------------    
 class db_flexrf_2400_tx(_2400_common, flexrf_base_tx):
     def __init__(self, usrp, which):
-        self.power_on = ~POWER_UP
-        self.power_off = ~POWER_UP    # powering it off kills the serial bus
+        self.power_on = 0
+        self.power_off = 0    # powering it off kills the serial bus
         flexrf_base_tx.__init__(self, usrp, which)
         _2400_common.__init__(self)
         
 class db_flexrf_2400_rx(_2400_common, flexrf_base_rx):
     def __init__(self, usrp, which):
-        self.power_on = ~POWER_UP
-        self.power_off = ~POWER_UP   # Powering it off kills the serial bus
+        self.power_on = 0
+        self.power_off = 0   # Powering it off kills the serial bus
         flexrf_base_rx.__init__(self, usrp, which)
         _2400_common.__init__(self)
 
@@ -578,15 +578,15 @@ class db_flexrf_2400_rx(_2400_common, flexrf_base_rx):
 
 class db_flexrf_1200_tx(_1200_common, flexrf_base_tx):
     def __init__(self, usrp, which):
-        self.power_on = ~POWER_UP
-        self.power_off = ~POWER_UP    # powering it off kills the serial bus
+        self.power_on = 0
+        self.power_off = 0    # powering it off kills the serial bus
         flexrf_base_tx.__init__(self, usrp, which)
         _1200_common.__init__(self)
         
 class db_flexrf_1200_rx(_1200_common, flexrf_base_rx):
     def __init__(self, usrp, which):
-        self.power_on = ~POWER_UP
-        self.power_off = ~POWER_UP    # powering it off kills the serial bus
+        self.power_on = 0
+        self.power_off = 0    # powering it off kills the serial bus
         flexrf_base_rx.__init__(self, usrp, which)
         _1200_common.__init__(self)
 
@@ -604,15 +604,15 @@ class db_flexrf_1200_rx(_1200_common, flexrf_base_rx):
 
 class db_flexrf_1800_tx(_1800_common, flexrf_base_tx):
     def __init__(self, usrp, which):
-        self.power_on = ~POWER_UP
-        self.power_off = ~POWER_UP    # powering it off kills the serial bus
+        self.power_on = 0
+        self.power_off = 0    # powering it off kills the serial bus
         flexrf_base_tx.__init__(self, usrp, which)
         _1800_common.__init__(self)
         
 class db_flexrf_1800_rx(_1800_common, flexrf_base_rx):
     def __init__(self, usrp, which):
-        self.power_on = ~POWER_UP
-        self.power_off = ~POWER_UP    # powering it off kills the serial bus
+        self.power_on = 0
+        self.power_off = 0    # powering it off kills the serial bus
         flexrf_base_rx.__init__(self, usrp, which)
         _1800_common.__init__(self)
 
@@ -630,15 +630,15 @@ class db_flexrf_1800_rx(_1800_common, flexrf_base_rx):
 
 class db_flexrf_900_tx(_900_common, flexrf_base_tx):
     def __init__(self, usrp, which):
-        self.power_on = ~POWER_UP
-        self.power_off = ~POWER_UP    # powering it off kills the serial bus
+        self.power_on = 0
+        self.power_off = 0    # powering it off kills the serial bus
         flexrf_base_tx.__init__(self, usrp, which)
         _900_common.__init__(self)
         
 class db_flexrf_900_rx(_900_common, flexrf_base_rx):
     def __init__(self, usrp, which):
-        self.power_on = ~POWER_UP
-        self.power_off = ~POWER_UP    # powering it off kills the serial bus
+        self.power_on = 0
+        self.power_off = 0    # powering it off kills the serial bus
         flexrf_base_rx.__init__(self, usrp, which)
         _900_common.__init__(self)
 
@@ -657,14 +657,14 @@ class db_flexrf_900_rx(_900_common, flexrf_base_rx):
 class db_flexrf_400_tx(_400_common, flexrf_base_tx):
     def __init__(self, usrp, which):
         self.power_on = POWER_UP
-        self.power_off = ~POWER_UP
+        self.power_off = 0
         flexrf_base_tx.__init__(self, usrp, which)
         _400_common.__init__(self)
         
 class db_flexrf_400_rx(_400_common, flexrf_base_rx):
     def __init__(self, usrp, which):
         self.power_on = POWER_UP
-        self.power_off = ~POWER_UP
+        self.power_off = 0
         flexrf_base_rx.__init__(self, usrp, which)
         _400_common.__init__(self)
 
