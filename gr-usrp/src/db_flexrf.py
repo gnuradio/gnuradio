@@ -88,6 +88,9 @@ class flexrf_base(db_base.db_base):
     def __del__(self):
         #print "flexrf_base.__del__"
         self._u.write_io(self._which, self.power_off, POWER_UP)   # turn off power to board
+	# Power down VCO/PLL
+	self.PD = 3 
+	self._write_control(self._compute_control_reg())
         self._enable_refclk(False)                       # turn off refclk
         self.set_auto_tr(False)
 
@@ -410,14 +413,18 @@ class _AD4360_common(object):
         R = (self.R_RSV<<22) | (self.BSC<<20) | (self.TEST<<19) | (self.LDP<<18) \
             | (self.ABP<<16) | (self.R_DIV<<2)
         
-        control = (self.P<<22) | (self.PD<<20) | (self.CP2<<17) | (self.CP1<<14) | (self.PL<<12) \
-                  | (self.MTLD<<11) | (self.CPG<<10) | (self.CP3S<<9) | (self.PDP<<8) | \
-                  (self.MUXOUT<<5) | (self.CR<<4) | (self.PC<<2)
+        control = self._compute_control_reg()
 
         N = (self.DIVSEL<<23) | (self.DIV2<<22) | (self.CPGAIN<<21) | (self.B_DIV<<8) | \
             (self.N_RSV<<7) | (self.A_DIV<<2)
 
         return (R,control,N,actual_freq/self.freq_mult)
+
+    def _compute_control_reg(self):
+        control = (self.P<<22) | (self.PD<<20) | (self.CP2<<17) | (self.CP1<<14) | (self.PL<<12) \
+                  | (self.MTLD<<11) | (self.CPG<<10) | (self.CP3S<<9) | (self.PDP<<8) | \
+                  (self.MUXOUT<<5) | (self.CR<<4) | (self.PC<<2)
+	return control    
 
     def _refclk_divisor(self):
         """
