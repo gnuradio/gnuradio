@@ -26,6 +26,7 @@
 
 /*!
  * \brief public constructor for gr_hier_block2
+
  */
 gr_hier_block2_sptr gr_make_hier_block2(const std::string &name,
                                         gr_io_signature_sptr input_signature,
@@ -35,6 +36,7 @@ class gr_hier_block2_detail;
 
 /*!
  * \brief gr_hier_block2 - Hierarchical container class for gr_block's
+ * \ingroup internal
  *
  */
 class gr_hier_block2 : public gr_basic_block

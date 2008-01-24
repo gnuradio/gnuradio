@@ -26,6 +26,7 @@
 
 /*!
  * \brief base class for evaluating a function: double -> double
+ * \ingroup misc
  *
  * This class is designed to be subclassed in Python or C++
  * and is callable from both places.  It uses SWIG's
@@ -53,6 +54,7 @@ public:
 
 /*!
  * \brief base class for evaluating a function: complex -> complex
+ * \ingroup misc
  *
  * This class is designed to be subclassed in Python or C++
  * and is callable from both places.  It uses SWIG's
@@ -80,6 +82,7 @@ public:
 
 /*!
  * \brief base class for evaluating a function: long -> long
+ * \ingroup misc
  *
  * This class is designed to be subclassed in Python or C++
  * and is callable from both places.  It uses SWIG's
@@ -107,6 +110,7 @@ public:
 
 /*!
  * \brief base class for evaluating a function: void -> void
+ * \ingroup misc
  *
  * This class is designed to be subclassed in Python or C++
  * and is callable from both places.  It uses SWIG's

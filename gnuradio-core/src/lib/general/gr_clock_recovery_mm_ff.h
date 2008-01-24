@@ -39,7 +39,7 @@ gr_make_clock_recovery_mm_ff (float omega, float gain_omega, float mu, float gai
 
 /*!
  * \brief Mueller and Müller (M&M) based clock recovery block with float input, float output.
- * \ingroup block
+ * \ingroup clock
  *
  * This implements the Mueller and Müller (M&M) discrete-time error-tracking synchronizer.
  *

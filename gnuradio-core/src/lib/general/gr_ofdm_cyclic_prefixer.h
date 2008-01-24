@@ -36,7 +36,7 @@ gr_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
 /*!
  * \brief adds a cyclic prefix vector to an input size long ofdm
  * symbol(vector) and converts vector to a stream output_size long.
- * \ingroup block
+ * \ingroup synch
  */
 class gr_ofdm_cyclic_prefixer : public gr_sync_interpolator
 {

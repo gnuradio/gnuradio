@@ -30,6 +30,7 @@ typedef boost::shared_ptr<ppio_ppdev> ppio_ppdev_sptr;
 
 /*!
  * \brief access to parallel port bits using the linux ppdev interface
+ * \ingroup hardware
  */
 
 class ppio_ppdev : public ppio {

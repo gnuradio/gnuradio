@@ -32,7 +32,7 @@ gr_diff_decoder_bb_sptr gr_make_diff_decoder_bb (unsigned int modulus);
 
 /*!
  * \brief y[0] = (x[0] - x[-1]) % M
- * \ingroup block
+ * \ingroup coding
  *
  * Differential decoder
  */

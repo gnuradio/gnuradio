@@ -31,8 +31,8 @@ typedef boost::shared_ptr<gr_threshold_ff> gr_threshold_ff_sptr;
 gr_threshold_ff_sptr gr_make_threshold_ff (float lo, float hi, float initial_state=0);
 
 /*!
- * \brief 
- * \ingroup block
+ * \brief Please fix my documentation
+ * \ingroup misc
  */
 class gr_threshold_ff : public gr_sync_block
 {

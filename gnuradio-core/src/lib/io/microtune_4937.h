@@ -27,6 +27,7 @@
 
 /*!
  * \brief class for controlling microtune 4937 tuner module
+ * \ingroup hardware
  */
 class microtune_4937 : public microtune_xxxx {
 public:

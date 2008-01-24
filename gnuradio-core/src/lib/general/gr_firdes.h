@@ -29,6 +29,7 @@
 
 /*!
  * \brief Finite Impulse Response (FIR) filter design functions.
+ * \ingroup filter_design
  */
 
 class gr_firdes {

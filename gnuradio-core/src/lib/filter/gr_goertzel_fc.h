@@ -34,7 +34,7 @@ gr_goertzel_fc_sptr gr_make_goertzel_fc(int rate, int len, float freq);
 
 /*!
  * \brief Goertzel single-bin DFT calculation.
- * \ingroup filter
+ * \ingroup dft
  */
 class gr_goertzel_fc : public gr_sync_decimator
 {

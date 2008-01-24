@@ -28,7 +28,7 @@
 
 /*!
  * \brief copies the first N items to the output then signals done
- * \ingroup block
+ * \ingroup flow
  *
  * Useful for building test cases
  */

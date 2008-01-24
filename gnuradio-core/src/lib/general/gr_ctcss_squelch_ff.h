@@ -34,7 +34,7 @@ gr_make_ctcss_squelch_ff(int rate, float freq, float level=0.01, int len=0, int 
 
 /*!
  * \brief gate or zero output if ctcss tone not present
- * \ingroup block
+ * \ingroup level
  */
 class gr_ctcss_squelch_ff : public gr_squelch_base_ff
 {

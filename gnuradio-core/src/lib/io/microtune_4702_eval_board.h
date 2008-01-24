@@ -27,6 +27,7 @@
 
 /*!
  * \brief control microtune 4702 eval board
+ * \ingroup hardware
  */
 
 class microtune_4702_eval_board : public microtune_xxxx_eval_board {

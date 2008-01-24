@@ -33,6 +33,7 @@ gr_make_simple_squelch_cc (double threshold_db, double alpha = 0.0001);
 
 /*!
  * \brief simple squelch block based on average signal power and threshold in dB.
+ * \ingroup level
  */
 class gr_simple_squelch_cc : public gr_sync_block
 {

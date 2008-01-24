@@ -26,7 +26,8 @@
 #include <gr_types.h>
 
 /*!
- * \brief implements Goertzel single-bin DFT calculation
+ * \brief Implements Goertzel single-bin DFT calculation
+ * \ingroup dft
  */
 
 class gri_goertzel

@@ -34,6 +34,7 @@ enum { L_EXT = 0, L_BAND = 1, L_DDS0 = 2, L_DDS1 = 3 };
 /*!
  * \brief Very low level interface to SDR 1000 xcvr hardware
  * \sa sdr_1000.py for a higher level interface.
+ * \ingroup hardware
  */
 class sdr_1000_base {
   ppio_sptr	d_ppio;

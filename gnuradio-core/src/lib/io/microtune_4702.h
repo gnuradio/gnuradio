@@ -27,6 +27,7 @@
 
 /*!
  * \brief class for controlling microtune 4702 tuner module
+ * \ingroup hardware
  */
 
 class microtune_4702 : public microtune_xxxx   {

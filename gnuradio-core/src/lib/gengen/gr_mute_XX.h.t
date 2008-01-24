@@ -34,7 +34,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 /*!
  * \brief output = input or zero if muted.
- * \ingroup block
+ * \ingroup level
  */
 class @NAME@ : public gr_sync_block
 {

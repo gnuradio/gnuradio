@@ -28,6 +28,7 @@
 
 /*!
  *\brief Class representing a specific input or output graph endpoint
+ * \ingroup internal
  *
  */
 class gr_endpoint

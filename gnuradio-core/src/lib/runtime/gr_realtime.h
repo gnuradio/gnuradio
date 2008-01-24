@@ -32,6 +32,7 @@ typedef enum {
 
 /*!
  * \brief If possible, enable high-priority "real time" scheduling.
+ * \ingroup misc
  */
 gr_rt_status_t
 gr_enable_realtime_scheduling();

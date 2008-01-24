@@ -35,7 +35,7 @@ gr_make_pwr_squelch_cc(double db, double alpha = 0.0001, int ramp=0, bool gate=f
 
 /*!
  * \brief gate or zero output when input power below threshold
- * \ingroup block
+ * \ingroup level
  */
 class gr_pwr_squelch_cc : public gr_squelch_base_cc
 {

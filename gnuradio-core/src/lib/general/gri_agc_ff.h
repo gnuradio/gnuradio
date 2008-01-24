@@ -27,6 +27,7 @@
 
 /*!
  * \brief high performance Automatic Gain Control class
+ * \ingroup level
  *
  * Power is approximated by absolute value
  */

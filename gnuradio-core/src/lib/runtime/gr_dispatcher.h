@@ -34,6 +34,7 @@ gr_dispatcher_sptr gr_make_dispatcher();
 
 /*!
  * \brief invoke callbacks based on select.
+ * \ingroup internal
  *
  * \sa gr_select_handler
  */

@@ -30,19 +30,30 @@
  * \defgroup clock Signal Clock Synchronization
  */
 
+/*!
+ * \defgroup dft Fourier Transformation
+ */
+
+/*!
+ * \defgroup synch Synchronization
+ */
+
 /*! @} */
 
 /*! \defgroup filter_design Digital Filter Design		*/
 /*! \defgroup graphical Graphical Utilities		*/
-/*! \defgroup internal Implementation Details		*/
-/*! \defgroup hardware Hardware				*/
 /*! \defgroup encdec Voice Encoders and Decoders	*/
 /*! \defgroup coding Information Coding and Decoding			*/
 /*! \defgroup modulation Signal Modulation			*/
 /*! \defgroup demodulation Signal Demodulation			*/
+/*! \defgroup flow Samples Flow Control			*/
+
 /*! \defgroup math	Mathmatics			*/
 /*! \defgroup tools Tools				*/
 /*! \defgroup misc Miscellaneous				*/
+/*! \defgroup internal Implementation Details		*/
+
+/*! \defgroup base Misc Common Base Classes			*/
 /*!
  * \defgroup applications Applications
  * These are some applications build using gnuradio...
@@ -50,13 +61,13 @@
  */
 
 /*!
- * \defgroup radar Radar
- * Radar Applications...
+ * \defgroup atsc ATSC
+ * ATSC Applications...
  */
 
 /*!
- * \defgroup atsc ATSC
- * ATSC Applications...
+ * \defgroup radar Radar
+ * Radar Applications...
  */
 
 /*!
@@ -72,3 +83,4 @@
 /*! @} */
 
 /*! \defgroup usrp USRP	*/
+/*! \defgroup hardware Hardware				*/

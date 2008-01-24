@@ -39,7 +39,7 @@ gr_test_sptr gr_make_test (const std::string &name=std::string("gr_test"),
 
 /*!
  * \brief Test class for testing runtime system (setting up buffers and such.)
- * \ingroup block
+ * \ingroup misc
  *
  * This block does not do any usefull actual data processing.
  * It just exposes setting all standard block parameters using the contructor or public methods.

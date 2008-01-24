@@ -27,6 +27,7 @@
 
 /*!
  * \brief 3DNow! version of gr_fir_fcc
+ * \ingroup filter
  */
 class gr_fir_fcc_3dnow : public gr_fir_fcc_simd
 {
@@ -37,6 +38,7 @@ public:
 
 /*!
  * \brief SSE version of gr_fir_fcc
+ * \ingroup filter
  */
 class gr_fir_fcc_sse : public gr_fir_fcc_simd
 {

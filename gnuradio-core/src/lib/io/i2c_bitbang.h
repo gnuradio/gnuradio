@@ -28,6 +28,7 @@
 
 /*!
  * \brief class for controlling i2c bus
+ * \ingroup base
  */
 class i2c_bitbang : public i2c {
   friend i2c_sptr make_i2c_bitbang (i2c_bbio_sptr io);

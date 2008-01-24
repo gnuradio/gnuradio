@@ -35,7 +35,7 @@ gr_throttle_sptr gr_make_throttle(size_t itemsize, double samples_per_sec);
 
 /*!
  * \brief throttle flow of samples such that the average rate does not exceed samples_per_sec.
- * \ingroup block
+ * \ingroup flow
  *
  * input: one stream of itemsize; output: one stream of itemsize
  */

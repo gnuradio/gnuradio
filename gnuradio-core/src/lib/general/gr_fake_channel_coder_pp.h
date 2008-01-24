@@ -33,7 +33,7 @@ gr_make_fake_channel_encoder_pp(int input_vlen, int output_vlen);
 
 /*!
  * \brief pad packet with alternating 1,0 pattern.
- * \ingroup block
+ * \ingroup coding
  *
  * input: stream of byte vectors; output: stream of byte vectors
  */
@@ -65,7 +65,7 @@ gr_make_fake_channel_decoder_pp(int input_vlen, int output_vlen);
 
 /*!
  * \brief remove fake padding from packet
- * \ingroup block
+ * \ingroup coding
  *
  * input: stream of byte vectors; output: stream of byte vectors
  */

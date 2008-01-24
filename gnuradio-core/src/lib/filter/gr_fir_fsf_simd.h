@@ -26,6 +26,7 @@
 
 /*!
  * \brief common base class for SIMD versions of gr_fir_fsf
+ * \ingroup filter
  *
  * This base class handles alignment issues common to SSE and 3DNOW
  * subclasses.

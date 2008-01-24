@@ -31,6 +31,7 @@ typedef boost::shared_ptr<gr_select_handler> gr_select_handler_sptr;
 
 /*!
  * \brief Abstract handler for select based notification.
+ * \ingroup base
  *
  * \sa gr_dispatcher
  */

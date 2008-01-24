@@ -33,7 +33,7 @@ gr_make_stream_to_streams (size_t item_size, size_t nstreams);
 
 /*!
  * \brief convert a stream of items into a N streams of items
- * \ingroup block
+ * \ingroup converter
  *
  * Converts a stream of N items into N streams of 1 item.
  * Repeat ad infinitum.

@@ -30,6 +30,7 @@
 /*!
  * \brief Parks-McClellan FIR filter design.
  *
+ * \ingroup filter_design
  *
  * Calculates the optimal (in the Chebyshev/minimax sense) FIR filter
  * inpulse reponse given a set of band edges, the desired reponse on

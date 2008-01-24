@@ -29,6 +29,7 @@
 /*!
  * \brief concrete class that bit bangs eval board i2c bus using parallel port
  *
+ * \ingroup base
  * This class talks to the i2c bus on the microtune eval board using
  * the parallel port.  This works for both the 4937 and 4702 boards.
  */

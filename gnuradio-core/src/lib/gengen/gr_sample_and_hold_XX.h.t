@@ -34,7 +34,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 /*!
  * \brief sample and hold circuit
- * \ingroup block
+ * \ingroup level
  *
  * Samples the data stream (input stream 0) and holds the value
  * if the control signal is 1 (intput stream 1).

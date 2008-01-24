@@ -26,6 +26,7 @@
 
 /*!
  * \brief Base class for representing user preferences a la windows INI files.
+ * \ingroup misc
  *
  * The real implementation is in Python, and is accessable from C++
  * via the magic of SWIG directors.

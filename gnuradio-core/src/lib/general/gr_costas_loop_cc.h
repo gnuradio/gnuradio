@@ -28,10 +28,9 @@
 #include <stdexcept>
 #include <fstream>
 
-class gr_costas_loop_cc;
-typedef boost::shared_ptr<gr_costas_loop_cc> gr_costas_loop_cc_sptr;
 
 /*! \brief A Costas loop carrier recovery module.
+ * \ingroup clock
  *  
  *  The Costas loop locks to the center frequency of a signal and
  *  downconverts it to baseband. The second (order=2) order loop is
@@ -54,6 +53,10 @@ typedef boost::shared_ptr<gr_costas_loop_cc> gr_costas_loop_cc_sptr;
  * \param min_freq the minimum frequency deviation (normalized frequency) the loop can handle
  * \param order the loop order, either 2 or 4
  */
+class gr_costas_loop_cc;
+typedef boost::shared_ptr<gr_costas_loop_cc> gr_costas_loop_cc_sptr;
+
+
 gr_costas_loop_cc_sptr 
 gr_make_costas_loop_cc (float alpha, float beta,
 			float max_freq, float min_freq, 
@@ -63,7 +66,7 @@ gr_make_costas_loop_cc (float alpha, float beta,
 
 /*!
  * \brief Carrier tracking PLL for QPSK
- * \ingroup block
+ * \ingroup clock
  * input: complex; output: complex
  * <br>The Costas loop can have two output streams:
  *    stream 1 is the baseband I and Q;

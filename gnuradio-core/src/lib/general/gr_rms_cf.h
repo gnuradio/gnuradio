@@ -33,6 +33,7 @@ gr_make_rms_cf (double alpha = 0.0001);
 
 /*!
  * \brief RMS average power
+ * \ingroup math
  */
 class gr_rms_cf : public gr_sync_block
 {

@@ -35,7 +35,7 @@ gr_make_fft_vcc (int fft_size, bool forward, const std::vector<float> window, bo
 
 /*!
  * \brief Compute forward or reverse FFT.  complex vector in / complex vector out.
- * \ingroup block
+ * \ingroup dft
  */
 
 class gr_fft_vcc : public gr_sync_block

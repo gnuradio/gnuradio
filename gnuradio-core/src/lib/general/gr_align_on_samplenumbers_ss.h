@@ -25,13 +25,9 @@
 
 #include <gr_block.h>
 
-class gr_align_on_samplenumbers_ss;
-typedef boost::shared_ptr<gr_align_on_samplenumbers_ss> gr_align_on_samplenumbers_ss_sptr;
-
-gr_align_on_samplenumbers_ss_sptr gr_make_align_on_samplenumbers_ss (int nchan=2, int align_interval=128);
-
 /*!
  * \brief align several complex short (interleaved short) input channels with corresponding unsigned 32 bit sample_counters (provided as interleaved 16 bit values)
+ * \ingroup misc
  * \param number of complex_short input channels (including the 32 bit counting channel)
  * \param align_interval is after how much samples (minimally) the sample-alignement is refreshed. Default is 128.
  * A bigger value means less processing power but also requests more buffer space, which has a maximum.
@@ -46,6 +42,12 @@ gr_align_on_samplenumbers_ss_sptr gr_make_align_on_samplenumbers_ss (int nchan=2
  * This means that the first complex_short channel on every input is an interleaved 32 bit counter. 
  * The samples are aligned by dropping samples untill the samplenumbers match.
  */
+class gr_align_on_samplenumbers_ss;
+typedef boost::shared_ptr<gr_align_on_samplenumbers_ss> gr_align_on_samplenumbers_ss_sptr;
+
+gr_align_on_samplenumbers_ss_sptr gr_make_align_on_samplenumbers_ss (int nchan=2, int align_interval=128);
+
+
 
 
 class gr_align_on_samplenumbers_ss : public gr_block

@@ -31,6 +31,7 @@ typedef boost::shared_ptr<ppio> ppio_sptr;
 
 /*!
  * \brief abstract class that provides low level access to parallel port bits
+ * \ingroup hardware
  */
 
 class ppio {

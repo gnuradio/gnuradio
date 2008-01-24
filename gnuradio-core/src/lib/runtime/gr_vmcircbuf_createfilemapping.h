@@ -30,6 +30,7 @@
 #endif
 /*!
  * \brief concrete class to implement circular buffers with mmap and shm_open
+ * \ingroup base
  */
 class gr_vmcircbuf_createfilemapping : public gr_vmcircbuf
 {

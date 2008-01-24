@@ -29,6 +29,7 @@ typedef boost::shared_ptr<gr_msg_handler> gr_msg_handler_sptr;
 
 /*!
  * \brief abstract class of message handlers
+ * \ingroup base
  */
 class gr_msg_handler {
 public:

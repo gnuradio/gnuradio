@@ -30,6 +30,7 @@
 
 /*!
  * \brief base class template for Numerically Controlled Oscillator (NCO)
+ * \ingroup misc
  */
 
 

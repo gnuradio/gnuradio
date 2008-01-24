@@ -48,6 +48,7 @@
 
 /*!
  * \brief abstract error handler
+ * \ingroup base
  */
 class gr_error_handler {
 public:

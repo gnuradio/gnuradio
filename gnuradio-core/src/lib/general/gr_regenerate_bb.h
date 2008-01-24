@@ -32,7 +32,7 @@ gr_regenerate_bb_sptr gr_make_regenerate_bb (int period, unsigned int max_regen=
 
 /*!
  * \brief Detect the peak of a signal and repeat every period samples
- * \ingroup block
+ * \ingroup level
  *
  * If a peak is detected, this block outputs a 1 repeated every period samples 
  * until reset by detection of another 1 on the input or stopped after max_regen

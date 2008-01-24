@@ -28,6 +28,7 @@
 /*!
  * \brief Create an i/o signature
  *
+ * \ingroup internal
  * \param min_streams  specify minimum number of streams (>= 0)
  * \param max_streams  specify maximum number of streams (>= min_streams or -1 -> infinite)
  * \param sizeof_stream_item  specify the size of the items in each stream

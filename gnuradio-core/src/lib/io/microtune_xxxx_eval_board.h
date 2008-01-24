@@ -35,6 +35,7 @@ typedef boost::shared_ptr<i2c> i2c_sptr;
 
 /*!
  * \brief abstract class for controlling microtune xxxx eval board
+ * \ingroup hardware
  */
 class microtune_xxxx_eval_board {
 public:

@@ -34,6 +34,7 @@ gr_make_ofdm_insert_preamble(int fft_length,
 
 /*!
  * \brief insert "pre-modulated" preamble symbols before each payload.
+ * \ingroup synch
  *
  * <pre>
  * input 1: stream of vectors of gr_complex [fft_length]

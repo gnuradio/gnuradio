@@ -27,6 +27,7 @@
 
 /*!
  * \brief abstract class to implement doubly mapped virtual memory circular buffers
+ * \ingroup base
  */
 class gr_vmcircbuf {
  protected:

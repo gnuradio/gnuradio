@@ -32,7 +32,7 @@ gr_simple_framer_sptr gr_make_simple_framer (int payload_bytesize);
 
 /*!
  * \brief add sync field, seq number and command field to payload
- * \ingroup block
+ * \ingroup synch
  */
 class gr_simple_framer : public gr_block
 {

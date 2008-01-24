@@ -30,6 +30,7 @@ typedef boost::shared_ptr<i2c> i2c_sptr;
 
 /*!
  * \brief abstract class for controlling microtune {4937,4702} tuner modules
+ * \ingroup base
  */
 class microtune_xxxx {
 public:

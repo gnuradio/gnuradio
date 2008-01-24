@@ -27,12 +27,10 @@
 #include <gr_block.h>
 #include <vector>
 
-class gr_stream_mux;
-typedef boost::shared_ptr<gr_stream_mux> gr_stream_mux_sptr;
-
 /*!
  * \brief Creates a stream muxing block to multiplex many streams into
  * one with a specified format.
+ * \ingroup converter
  *
  * \param itemsize the item size of the stream
  * \param length   a vector (list/tuple) specifying the number of
@@ -42,6 +40,10 @@ typedef boost::shared_ptr<gr_stream_mux> gr_stream_mux_sptr;
  *                 indefinitely for the items.
  *
  */
+class gr_stream_mux;
+typedef boost::shared_ptr<gr_stream_mux> gr_stream_mux_sptr;
+
+
 
 gr_stream_mux_sptr 
 gr_make_stream_mux (size_t itemsize, const std::vector<int> &lengths);

@@ -28,7 +28,7 @@
 
 /*!
  * \brief Does nothing.  Used for testing only.
- * \ingroup block
+ * \ingroup misc
  */
 class gr_nop : public gr_block
 {

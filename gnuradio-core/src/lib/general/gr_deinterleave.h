@@ -32,7 +32,7 @@ gr_deinterleave_sptr gr_make_deinterleave (size_t itemsize);
 
 /*!
  * \brief deinterleave a single input into N outputs
- * \ingroup block
+ * \ingroup misc
  */
 class gr_deinterleave : public gr_sync_decimator
 {

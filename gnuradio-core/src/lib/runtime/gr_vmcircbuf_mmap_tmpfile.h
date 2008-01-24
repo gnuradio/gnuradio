@@ -27,6 +27,7 @@
 
 /*!
  * \brief concrete class to implement circular buffers with mmap and shm_open
+ * \ingroup base
  */
 class gr_vmcircbuf_mmap_tmpfile : public gr_vmcircbuf {
  public:

@@ -37,7 +37,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 /*!
  * \brief Detect the peak of a signal
- * \ingroup block
+ * \ingroup level
  *
  * If a peak is detected, this block outputs a 1, 
  * or it outputs 0's.

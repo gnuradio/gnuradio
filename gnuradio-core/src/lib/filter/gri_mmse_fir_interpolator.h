@@ -28,6 +28,7 @@ class gr_fir_fff;
 
 /*!
  * \brief Compute intermediate samples between signal samples x(k*Ts)
+ * \ingroup filter
  *
  * This implements a Mininum Mean Squared Error interpolator with 8 taps.
  * It is suitable for signals where the bandwidth of interest B = 1/(4*Ts)

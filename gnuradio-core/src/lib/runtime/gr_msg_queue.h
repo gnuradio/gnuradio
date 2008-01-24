@@ -32,6 +32,7 @@ gr_msg_queue_sptr gr_make_msg_queue(unsigned int limit=0);
 
 /*!
  * \brief thread-safe message queue
+ * \ingroup misc
  */
 class gr_msg_queue : public gr_msg_handler {
   omni_mutex		d_mutex;

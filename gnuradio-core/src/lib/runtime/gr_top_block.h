@@ -31,6 +31,7 @@ gr_top_block_sptr gr_make_top_block(const std::string &name);
 
 /*!
  *\brief Top-level hierarchical block representing a flowgraph
+ * \ingroup internal
  *
  */
 class gr_top_block : public gr_hier_block2

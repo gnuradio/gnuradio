@@ -28,6 +28,7 @@
 /*!
  *\brief Implementation details of gr_top_block
  *
+ * \ingroup internal
  * The actual implementation of gr_top_block. Separate class allows
  * decoupling of changes from dependent classes.
  *

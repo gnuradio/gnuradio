@@ -34,7 +34,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 /*!
  * \brief output = input + constant
- * \ingroup block
+ * \ingroup math
  */
 class @NAME@ : public gr_sync_block
 {

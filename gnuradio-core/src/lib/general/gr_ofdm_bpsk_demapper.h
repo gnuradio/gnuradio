@@ -37,6 +37,7 @@ gr_make_ofdm_bpsk_demapper (unsigned int occupied_carriers);
 /*!
  * \brief take a vector of complex constellation points in from an FFT
  * and demodulate to a stream of bits. Simple BPSK version.
+ * \ingroup demodulation
  */
 
 class gr_ofdm_bpsk_demapper : public gr_block

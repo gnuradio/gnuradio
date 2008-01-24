@@ -33,7 +33,11 @@ gr_constellation_decoder_cb_sptr
 	gr_make_constellation_decoder_cb (const std::vector<gr_complex> &sym_position,
 					  const std::vector<unsigned char> &sym_value_out);
 
-
+/*!
+ * \brief Constellation Decoder
+ * \ingroup coding
+ *
+ */
 class gr_constellation_decoder_cb : public gr_sync_block
 {
 

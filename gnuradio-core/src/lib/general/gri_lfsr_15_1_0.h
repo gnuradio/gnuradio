@@ -25,6 +25,7 @@
 
 /*!
  * \brief Linear Feedback Shift Register using primitive polynomial x^15 + x + 1
+ * \ingroup math
  *
  * Generates a maximal length pseudo-random sequence of length 2^15 - 1 bits.
  */

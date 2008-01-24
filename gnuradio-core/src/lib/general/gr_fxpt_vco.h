@@ -27,6 +27,7 @@
 
 /*!
  * \brief Voltage Controlled Oscillator (VCO)
+ * \ingroup misc
  */
 class gr_fxpt_vco {
   gr_int32	d_phase;

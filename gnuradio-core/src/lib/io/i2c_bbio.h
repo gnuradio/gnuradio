@@ -31,6 +31,7 @@ typedef boost::shared_ptr<i2c_bbio>	i2c_bbio_sptr;
 
 /*!
  * \brief abstract class that implements bit banging i/o for i2c bus.
+ * \ingroup base
  */
 class i2c_bbio {
  public:

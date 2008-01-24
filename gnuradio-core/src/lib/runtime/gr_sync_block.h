@@ -27,7 +27,7 @@
 
 /*!
  * \brief synchronous 1:1 input to output with history
- * \ingroup block
+ * \ingroup internal
  *
  * Override work to provide the signal processing implementation.
  */

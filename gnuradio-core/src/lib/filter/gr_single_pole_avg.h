@@ -26,6 +26,7 @@
 
 /*!
  * \brief class template for single pole moving average filter
+ * \ingroup filter
  */
 template<class o_type, class i_type, class tap_type> 
 class gr_single_pole_avg {

@@ -27,6 +27,7 @@
 
 /*!
  * \brief Numerically Controlled Oscillator (NCO)
+ * \ingroup misc
  */
 class gr_fxpt_nco {
   gr_int32	d_phase;

@@ -38,8 +38,9 @@ gr_message_sptr
 gr_make_message_from_string(const std::string s, long type = 0, double arg1 = 0, double arg2 = 0);
 
 /*!
- * \brief Message.
+ * \brief Message class.
  *
+ * \ingroup misc
  * The ideas and method names for adjustable message length were
  * lifted from the click modular router "Packet" class.
  */

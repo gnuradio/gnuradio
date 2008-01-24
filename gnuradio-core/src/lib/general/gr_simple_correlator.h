@@ -35,7 +35,7 @@ gr_simple_correlator_sptr gr_make_simple_correlator (int payload_bytesize);
 
 /*!
  * \brief inverse of gr_simple_framer (more or less)
- * \ingroup block
+ * \ingroup synch
  */
 class gr_simple_correlator : public gr_block
 {

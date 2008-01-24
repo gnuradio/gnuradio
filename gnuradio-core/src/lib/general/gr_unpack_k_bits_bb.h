@@ -32,7 +32,8 @@ gr_unpack_k_bits_bb_sptr gr_make_unpack_k_bits_bb (unsigned k);
 class gr_unpack_k_bits_bb;
 
 /*!
- * \brief Converts a byte with k relevent bits to k output bytes with 1 bit in the LSB
+ * \brief Converts a byte with k relevent bits to k output bytes with 1 bit in the LSB.
+ * \ingroup converter
  */
 class gr_unpack_k_bits_bb : public gr_sync_interpolator
 {

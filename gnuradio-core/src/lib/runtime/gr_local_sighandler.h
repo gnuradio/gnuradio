@@ -32,6 +32,7 @@
 /*!
  * \brief Get and set signal handler.
  *
+ * \ingroup internal
  * Constructor installs new handler, destructor reinstalls
  * original value.
  */

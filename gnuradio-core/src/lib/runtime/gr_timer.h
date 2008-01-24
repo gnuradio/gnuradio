@@ -33,6 +33,7 @@ typedef void (*gr_timer_hook)(gr_timer *, void *);
 /*!
  * \brief create a timeout.
  *
+ * \ingroup misc
  * gr_timer_hook is called when timer fires.
  */
 gr_timer_sptr gr_make_timer (gr_timer_hook, void *);

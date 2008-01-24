@@ -29,7 +29,7 @@
 
 /*!
  * \brief The abstract base class for all signal processing blocks.
- * \ingroup block
+ * \ingroup base
  *
  * Basic blocks are the bare abstraction of an entity that has a name
  * and a set of inputs and outputs.  These are never instantiated

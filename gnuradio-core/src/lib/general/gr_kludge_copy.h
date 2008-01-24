@@ -32,7 +32,7 @@ gr_kludge_copy_sptr gr_make_kludge_copy(size_t itemsize);
 
 /*!
  * \brief output[i] = input[i]
- * \ingroup block
+ * \ingroup misc
  *
  * This is a short term kludge to work around a problem with the hierarchical block impl.
  */

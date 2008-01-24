@@ -32,7 +32,7 @@ gr_phase_modulator_fc_sptr gr_make_phase_modulator_fc (double sensitivity);
 
 /*!
  * \brief Phase modulator block
- * \ingroup block 
+ * \ingroup modulation 
  * output=complex(cos(in*sensitivity),sin(in*sensitivity))
  */
 class gr_phase_modulator_fc : public gr_sync_block

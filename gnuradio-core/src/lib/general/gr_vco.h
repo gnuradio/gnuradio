@@ -30,6 +30,7 @@
 
 /*!
  * \brief base class template for Voltage Controlled Oscillator (VCO)
+ * \ingroup misc
  */
 
 //FIXME  Eventually generalize this to fixed point

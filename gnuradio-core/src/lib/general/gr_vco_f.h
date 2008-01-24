@@ -25,21 +25,22 @@
 #include <gr_sync_block.h>
 #include <gr_fxpt_vco.h>
 
-class gr_vco_f;
-typedef boost::shared_ptr<gr_vco_f> gr_vco_f_sptr;
-
 /*!
  * \brief VCO - Voltage controlled oscillator
+ * \ingroup misc
  *
  * \param sampling_rate		sampling rate (Hz)
  * \param sensitivity		units are radians/sec/volt
  * \param amplitude		output amplitude
  */
+class gr_vco_f;
+typedef boost::shared_ptr<gr_vco_f> gr_vco_f_sptr;
+
+
 gr_vco_f_sptr gr_make_vco_f(double sampling_rate, double sensitivity, double amplitude);
 
 /*!
  * \brief VCO - Voltage controlled oscillator
- * \ingroup block
  *
  * input: float stream of control voltages; output: float oscillator output
  */

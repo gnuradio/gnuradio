@@ -27,7 +27,7 @@
 
 /*!
  * \brief The abstract base class for all 'terminal' processing blocks.
- * \ingroup block
+ * \ingroup base
  *
  * A signal processing flow is constructed by creating a tree of 
  * hierarchical blocks, which at any level may also contain terminal nodes

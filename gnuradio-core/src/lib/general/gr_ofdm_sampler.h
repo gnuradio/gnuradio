@@ -32,7 +32,8 @@ gr_ofdm_sampler_sptr gr_make_ofdm_sampler (unsigned int fft_length,
 					   unsigned int symbol_length);
 
 /*!
- * \brief does the rest of the OFDM stuff (fixme)
+ * \brief does the rest of the OFDM stuff
+ * \ingroup misc
  */
 
 class gr_ofdm_sampler : public gr_block

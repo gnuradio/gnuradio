@@ -35,6 +35,7 @@ typedef gr_scheduler_thread_vector_t::iterator gr_scheduler_thread_viter_t;
 /*!
  *\brief A single thread of execution for the scheduler
  *
+ * \ingroup internal
  * This class implements a single thread that runs undetached, and
  * invokes the single-threaded block scheduler.  The runtime makes
  * one of these for each distinct partition of a flowgraph and runs

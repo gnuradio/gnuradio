@@ -27,6 +27,7 @@
 
 /*!
  * \brief pseudo random number generator
+ * \ingroup math
  */
 class gr_random {
 protected:

@@ -27,6 +27,7 @@
 
 /*!
  * \brief generate pseudo-random sequence of length 32768 bits.
+ * \ingroup math
  *
  * This is based on gri_lfsr_15_1_0 with an extra 0 added at the end
  * of the sequence.

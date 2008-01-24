@@ -39,6 +39,7 @@ gr_make_ofdm_bpsk_mapper (unsigned msgq_limit,
  * \brief take a message in and map to a vector of complex
  * constellation points suitable for IFFT input to be used in an ofdm
  * modulator.  Simple BPSK version.
+ * \ingroup modulation
  */
 
 class gr_ofdm_bpsk_mapper : public gr_sync_block

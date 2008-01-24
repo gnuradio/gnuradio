@@ -32,7 +32,7 @@ gr_interleave_sptr gr_make_interleave (size_t itemsize);
 
 /*!
  * \brief interleave N inputs to a single output
- * \ingroup block
+ * \ingroup misc
  */
 class gr_interleave : public gr_sync_interpolator
 {
