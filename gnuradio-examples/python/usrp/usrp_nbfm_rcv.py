@@ -273,8 +273,8 @@ class receive_path(gr.hier_block2):
         # Create filter to get actual channel we want
         chan_coeffs = gr.firdes.low_pass (1.0,                # gain
                                           self.if_rate,       # sampling rate
-                                          13e3,               # low pass cutoff freq
-                                          4e3,                # width of trans. band
+                                          8e3,               # low pass cutoff freq
+                                          2e3,                # width of trans. band
                                           gr.firdes.WIN_HANN) # filter type 
 
         print "len(rx_chan_coeffs) =", len(chan_coeffs)

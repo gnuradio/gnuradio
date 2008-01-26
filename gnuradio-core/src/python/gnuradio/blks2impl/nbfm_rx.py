@@ -75,8 +75,8 @@ class nbfm_rx(gr.hier_block2):
         audio_decim = quad_rate // audio_rate
         audio_taps = gr.firdes.low_pass (1.0,            # gain
                                          quad_rate,      # sampling rate
-                                         4.5e3,          # Audio LPF cutoff
-                                         2.5e3,          # Transition band
+                                         2.7e3,          # Audio LPF cutoff
+                                         0.5e3,          # Transition band
                                          gr.firdes.WIN_HAMMING)  # filter type
 
         print "len(audio_taps) =", len(audio_taps)
