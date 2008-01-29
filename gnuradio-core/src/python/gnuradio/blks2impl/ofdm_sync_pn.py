@@ -86,9 +86,9 @@ class ofdm_sync_pn(gr.hier_block2):
         self.sigmix = gr.multiply_cc()
 
         #ML measurements input to sampler block and detect
-        self.sub1 = gr.add_const_ff(-1)
-        self.pk_detect = gr.peak_detector_fb(0.20, 0.20, 30, 0.001)
-        #self.pk_detect = gr.peak_detector2_fb()
+        #self.sub1 = gr.add_const_ff(-1)
+        #self.pk_detect = gr.peak_detector_fb(0.20, 0.20, 30, 0.001)
+        self.pk_detect = gr.peak_detector2_fb(9)
         #self.pk_detect = gr.threshold_detector_fb(0.5)
         self.regen = gr.regenerate_bb(symbol_length)
 
@@ -123,7 +123,8 @@ class ofdm_sync_pn(gr.hier_block2):
         self.matched_filter = gr.fir_filter_fff(1,matched_filter_taps)
         self.connect(self.normalize, self.matched_filter)
         
-        self.connect(self.matched_filter, self.sub1, self.pk_detect)
+        #self.connect(self.matched_filter, self.sub1, self.pk_detect)
+        self.connect(self.matched_filter, self.pk_detect)
         self.connect(self.pk_detect, self.regen)
         self.connect(self.regen, (self.sampler,1))
         self.connect(self.pk_detect, (self.sample_and_hold,1))
