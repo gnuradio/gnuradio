@@ -101,7 +101,7 @@ class xcvr2450(object):
         self.frac_div = 0          # 0 = min, 65535 = max
         self.highband = 0          # 0 = freq <= 5.4e9, 1 = freq > 5.4e9
         self.five_gig = 0          # 0 = freq <= 3.e9, 1 = freq > 3e9
-        self.cp_current = 0        # 0 = 2mA, 1 = 4mA
+        self.cp_current = 1        # 0 = 2mA, 1 = 4mA
         self.ref_div = 4           # 1 to 7
         self.rssi_hbw = 0          # 0 = 2 MHz, 1 = 6 MHz
         self.txlpf_bw = 1          # 1 = 12 MHz, 2 = 18 MHz, 3 = 24 MHz
@@ -363,11 +363,11 @@ class xcvr2450(object):
     def set_freq(self, target_freq):
         if target_freq > 3e9:
             self.five_gig = 1
-            self.ref_div = 3
+            self.ref_div = 2
             scaler = 4.0/5.0
         else:
             self.five_gig = 0
-            self.ref_div = 4
+            self.ref_div = 2
             scaler = 4.0/3.0;
 
         if target_freq > 5.4e9:
@@ -376,7 +376,8 @@ class xcvr2450(object):
             self.highband = 0
 
         vco_freq = target_freq*scaler;
-        ref_clk = self.u.fpga_master_clock_freq()  # Assumes AD9515 is bypassed
+        #ref_clk = self.u.fpga_master_clock_freq()  # Assumes AD9515 is bypassed
+        ref_clk = 32e6   # AD9515 set up as div by 2
         phdet_freq = ref_clk/self.ref_div
         div = vco_freq/phdet_freq
         self.int_div = int(math.floor(div))
