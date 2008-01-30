@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,9 +20,19 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-import scipy
-from pylab import *
-from matplotlib.font_manager import fontManager, FontProperties
+try:
+    import scipy
+except ImportError:
+    print "Please install SciPy to run this script (http://www.scipy.org/)"
+    raise SystemExit, 1
+
+try:
+    from pylab import *
+    from matplotlib.font_manager import fontManager, FontProperties
+except ImportError:
+    print "Please install Matplotlib to run this script (http://matplotlib.sourceforge.net/)"
+    raise SystemExit, 1
+
 from optparse import OptionParser
 
 matplotlib.interactive(True)

@@ -20,7 +20,12 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-import scipy
+try:
+    import scipy
+except ImportError:
+    print "Please install SciPy to run this script (http://www.scipy.org/)"
+    raise SystemExit, 1
+
 from optparse import OptionParser
 from gr_plot_data import plot_data
 

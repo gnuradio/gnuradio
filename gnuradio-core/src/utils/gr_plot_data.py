@@ -20,8 +20,18 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-import scipy
-from pylab import *
+try:
+    import scipy
+except ImportError:
+    print "Please install SciPy to run this script (http://www.scipy.org/)"
+    raise SystemExit, 1
+
+try:
+    from pylab import *
+except ImportError:
+    print "Please install Matplotlib to run this script (http://matplotlib.sourceforge.net/)"
+    raise SystemExit, 1
+
 from optparse import OptionParser
 
 matplotlib.interactive(True)
