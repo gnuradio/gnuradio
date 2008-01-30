@@ -38,6 +38,8 @@ debug_using_gui = False                  # Must be set to True or False
 # TX IO Pins
 TX_POWER = (1 << 0)         # TX Side Power
 RX_TXN = (1 << 1)           # T/R antenna switch for TX/RX port
+TX_ENB_MIX = (1 << 2)       # Enable IQ mixer
+TX_ENB_VGA = (1 << 3)
 
 # RX IO Pins
 RX2_RX1N = (1 << 0)         # antenna switch between RX2 and TX/RX port
@@ -91,8 +93,8 @@ class wbx_base(db_base.db_base):
         self._rx_write_oe(int(PLL_ENABLE|MReset|SELA0|SELA1|SELB0|SELB1|RX2_RX1N|RXENABLE), 0x7fff)
         self._rx_write_io((PLL_ENABLE|MReset|0|RXENABLE), (PLL_ENABLE|MReset|RX2_RX1N|RXENABLE))
 
-        self._tx_write_oe((TX_POWER|RX_TXN), 0x7fff)
-        self._tx_write_io((0|RX_TXN), (TX_POWER|RX_TXN))  # TX off, TR switch set to RX
+        self._tx_write_oe((TX_POWER|RX_TXN|TX_ENB_MIX|TX_ENB_VGA), 0x7fff)
+        self._tx_write_io((0|RX_TXN), (TX_POWER|RX_TXN|TX_ENB_MIX|TX_ENB_VGA))  # TX off, TR switch set to RX
 
         self.spi_enable = (SPI_ENABLE_RX_A, SPI_ENABLE_RX_B)[which]
 
@@ -238,7 +240,7 @@ class wbx_base_tx(wbx_base):
 
     def __del__(self):
         # Power down and leave the T/R switch in the R position
-        self._u.write_io(self._which, (RX_TXN), (TX_POWER|RX_TXN))
+        self._u.write_io(self._which, (RX_TXN), (TX_POWER|RX_TXN|TX_ENB_MIX|TX_ENB_VGA))
         wbx_base.__del__(self)
 
     def set_auto_tr(self, on):
@@ -255,11 +257,13 @@ class wbx_base_tx(wbx_base):
         """
         Enable transmitter if on is True
         """
+        mask = RX_TXN|TX_ENB_MIX|TX_ENB_VGA
+        print "HERE!!!!"
         if on:
-            v = 0
+            self._u.write_io(self._which, TX_ENB_MIX|TX_ENB_VGA, mask)
         else:
-            v = RX_TXN
-        self._u.write_io(self._which, v, RX_TXN)
+            self._u.write_io(self._which, RX_TXN, mask)
+
 
     def set_lo_offset(self, offset):
 	"""
@@ -290,7 +294,7 @@ class wbx_base_rx(wbx_base):
 
         self.bypass_adc_buffers(True)
 
-        self._lo_offset = -4e6
+        self._lo_offset = 0.0
 
     def __del__(self):
         # Power down
@@ -364,7 +368,7 @@ class wbx_base_rx(wbx_base):
         """
         Return True if this is a quadrature device and ADC 0 is Q.
         """
-        return True	
+        return False
 
 # ----------------------------------------------------------------
 
@@ -383,8 +387,8 @@ class _ADF410X_common(object):
         # Function Register Common Values
         self.P = 0        # bits 23,22    0 = 8/9, 1 = 16/17, 2 = 32/33, 3 = 64/65
         self.PD2 = 0      # bit  21       Normal operation
-        self.CP2 = 7      # bits 20,19,18 CP Gain = 5mA
-        self.CP1 = 7      # bits 17,16,15 CP Gain = 5mA
+        self.CP2 = 4      # bits 20,19,18 CP Gain = 5mA
+        self.CP1 = 4      # bits 17,16,15 CP Gain = 5mA
         self.TC = 0       # bits 14-11    PFD Timeout
         self.FL = 0       # bit 10,9      Fastlock Disabled
         self.CP3S = 0     # bit 8         CP Enabled
@@ -495,8 +499,8 @@ class _lo_common(_ADF410X_common):
    
         # Band-specific C-Register values
         self.P = 0        # bits 23,22   0 = Div by 8/9
-        self.CP2 = 7      # bits 19:17
-        self.CP1 = 7      # bits 16:14
+        self.CP2 = 4      # bits 19:17
+        self.CP1 = 4      # bits 16:14
 
         # Band specifc N-Register Values
         self.DIVSEL = 0   # bit 23
