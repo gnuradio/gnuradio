@@ -36,6 +36,9 @@ class draw_fft_c:
         self.start = options.start
         self.sample_rate = options.sample_rate
 
+        self.datatype = scipy.complex64
+        self.sizeof_data = self.datatype().nbytes    # number of bytes per sample in file
+
         self.axis_font_size = 16
         self.label_font_size = 18
         self.title_font_size = 20
@@ -70,8 +73,8 @@ class draw_fft_c:
         show()
         
     def get_data(self):
-        self.text_file_pos.set_text("File Position: %d" % (self.hfile.tell()//8))
-        self.iq = scipy.fromfile(self.hfile, dtype=scipy.complex64, count=self.block_length)
+        self.text_file_pos.set_text("File Position: %d" % (self.hfile.tell()//self.sizeof_data))
+        self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
         #print "Read in %d items" % len(self.iq)
         if(len(self.iq) == 0):
             print "End of File"
@@ -100,7 +103,7 @@ class draw_fft_c:
         
     def make_plots(self):
         # if specified on the command-line, set file pointer
-        self.hfile.seek(16*self.start, 1)
+        self.hfile.seek(self.sizeof_data*self.start, 1)
 
         self.get_data()
         
@@ -175,8 +178,8 @@ class draw_fft_c:
 
     def step_backward(self):
         # Step back in file position
-        if(self.hfile.tell() >= 16*self.block_length ):
-            self.hfile.seek(-16*self.block_length, 1)
+        if(self.hfile.tell() >= 2*self.sizeof_data*self.block_length ):
+            self.hfile.seek(-2*self.sizeof_data*self.block_length, 1)
         else:
             self.hfile.seek(-self.hfile.tell(),1)
         self.get_data()

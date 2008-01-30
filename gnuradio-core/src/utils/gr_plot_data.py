@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -27,15 +27,20 @@ from optparse import OptionParser
 matplotlib.interactive(True)
 matplotlib.use('TkAgg')
 
-class draw_fft:
-    def __init__(self, filename, options):
-        self.hfile = open(filename, "r")
+class plot_data:
+    def __init__(self, datatype, filenames, options):
+        self.hfile = list()
+        self.legend_text = list()
+        for f in filenames:
+            self.hfile.append(open(f, "r"))
+            self.legend_text.append(f)
+
         self.block_length = options.block
         self.start = options.start
         self.sample_rate = options.sample_rate
 
-        self.datatype = scipy.complex64
-        self.sizeof_data = self.datatype().nbytes    # number of bytes per sample in file
+        self.datatype = datatype
+        self.sizeof_data = datatype().nbytes    # number of bytes per sample in file
 
         self.axis_font_size = 16
         self.label_font_size = 18
@@ -47,7 +52,6 @@ class draw_fft:
         rcParams['xtick.labelsize'] = self.axis_font_size
         rcParams['ytick.labelsize'] = self.axis_font_size
         
-        self.text_file     = figtext(0.10, 0.94, ("File: %s" % filename), weight="heavy", size=self.text_size)
         self.text_file_pos = figtext(0.10, 0.88, "File Position: ", weight="heavy", size=self.text_size)
         self.text_block    = figtext(0.40, 0.88, ("Block Size: %d" % self.block_length),
                                      weight="heavy", size=self.text_size)
@@ -63,45 +67,60 @@ class draw_fft:
         self.button_right = Button(self.button_right_axes, ">")
         self.button_right_callback = self.button_right.on_clicked(self.button_right_click)
 
-        self.xlim = self.sp_iq.get_xlim()
+        self.xlim = self.sp_f.get_xlim()
 
         self.manager = get_current_fig_manager()
         connect('key_press_event', self.click)
         show()
-
-    def get_data(self):
-        self.text_file_pos.set_text("File Position: %d" % (self.hfile.tell()//self.sizeof_data))
-        self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
-        #print "Read in %d items" % len(self.iq)
-        if(len(self.iq) == 0):
+        
+    def get_data(self, hfile):
+        self.text_file_pos.set_text("File Position: %d" % (hfile.tell()//self.sizeof_data))
+        f = scipy.fromfile(hfile, dtype=self.datatype, count=self.block_length)
+        #print "Read in %d items" % len(self.f)
+        if(len(f) == 0):
             print "End of File"
         else:
-            self.reals = [r.real for r in self.iq]
-            self.imags = [i.imag for i in self.iq]
-            self.time = [i*(1/self.sample_rate) for i in range(len(self.reals))]
-            
+            self.f = f
+            self.time = [i*(1/self.sample_rate) for i in range(len(self.f))]
+        
     def make_plots(self):
-        # if specified on the command-line, set file pointer
-        self.hfile.seek(self.sizeof_data*self.start, 1)
+        self.sp_f = self.fig.add_subplot(2,1,1, position=[0.075, 0.2, 0.875, 0.6])
+        self.sp_f.set_title(("Amplitude"), fontsize=self.title_font_size, fontweight="bold")
+        self.sp_f.set_xlabel("Time (s)", fontsize=self.label_font_size, fontweight="bold")
+        self.sp_f.set_ylabel("Amplitude (V)", fontsize=self.label_font_size, fontweight="bold")
+        self.plot_f = list()
 
-        self.get_data()
+        maxval = -1e12
+        minval = 1e12
+
+        for hf in self.hfile:
+            # if specified on the command-line, set file pointer
+            hf.seek(self.sizeof_data*self.start, 1)
+
+            self.get_data(hf)
         
-        # Subplot for real and imaginary parts of signal
-        self.sp_iq = self.fig.add_subplot(2,1,1, position=[0.075, 0.14, 0.85, 0.67])
-        self.sp_iq.set_title(("I&Q"), fontsize=self.title_font_size, fontweight="bold")
-        self.sp_iq.set_xlabel("Time (s)", fontsize=self.label_font_size, fontweight="bold")
-        self.sp_iq.set_ylabel("Amplitude (V)", fontsize=self.label_font_size, fontweight="bold")
-        self.plot_iq = plot(self.time, self.reals, 'bo-', self.time, self.imags, 'ro-')
-        self.sp_iq.set_ylim([1.5*min([min(self.reals), min(self.imags)]),
-                             1.5*max([max(self.reals), max(self.imags)])])
-        
+            # Subplot for real and imaginary parts of signal
+            self.plot_f += plot(self.time, self.f, 'o-')
+            maxval = max(maxval, max(self.f))
+            minval = min(minval, min(self.f))
+
+        self.sp_f.set_ylim([1.5*minval, 1.5*maxval])
+
+        self.leg = self.sp_f.legend(self.plot_f, self.legend_text)
+
         draw()
 
     def update_plots(self):
-        self.plot_iq[0].set_data([self.time, self.reals])
-        self.plot_iq[1].set_data([self.time, self.imags])
-        self.sp_iq.set_ylim([1.5*min([min(self.reals), min(self.imags)]),
-                             1.5*max([max(self.reals), max(self.imags)])])
+        maxval = -1e12
+        minval = 1e12
+        for hf,p in zip(self.hfile,self.plot_f):
+            self.get_data(hf)
+            p.set_data([self.time, self.f])
+            maxval = max(maxval, max(self.f))
+            minval = min(minval, min(self.f))
+
+        self.sp_f.set_ylim([1.5*minval, 1.5*maxval])
+        
         draw()
         
     def click(self, event):
@@ -121,16 +140,15 @@ class draw_fft:
         self.step_forward()
 
     def step_forward(self):
-        self.get_data()
         self.update_plots()
 
     def step_backward(self):
-        # Step back in file position
-        if(self.hfile.tell() >= 2*self.sizeof_data*self.block_length ):
-            self.hfile.seek(-2*self.sizeof_data*self.block_length, 1)
-        else:
-            self.hfile.seek(-self.hfile.tell(),1)
-        self.get_data()
+        for hf in self.hfile:
+            # Step back in file position
+            if(hf.tell() >= 2*self.sizeof_data*self.block_length ):
+                hf.seek(-2*self.sizeof_data*self.block_length, 1)
+            else:
+                hf.seek(-hf.tell(),1)
         self.update_plots()
         
             
@@ -143,8 +161,8 @@ def find(item_in, list_search):
     return False
 
 def main():
-    usage="%prog: [options] input_filename"
-    description = "Takes a GNU Radio complex binary file and displays the I&Q data versus time. You can set the block size to specify how many points to read in at a time and the start position in the file. By default, the system assumes a sample rate of 1, so in time, each sample is plotted versus the sample number. To set a true time axis, set the sample rate (-R or --sample-rate) to the sample rate used when capturing the samples."
+    usage="%prog: [options] input_filenames"
+    description = "This is just a test program for this class. It should really be called by gr_plot_<datatype>.py for a specific type of file data (float, int, byte, etc.)."
 
     parser = OptionParser(conflict_handler="resolve", usage=usage, description=description)
     parser.add_option("-B", "--block", type="int", default=1000,
@@ -155,12 +173,13 @@ def main():
                       help="Set the sampler rate of the data [default=%default]")
     
     (options, args) = parser.parse_args ()
-    if len(args) != 1:
+    if len(args) < 1:
         parser.print_help()
         raise SystemExit, 1
-    filename = args[0]
-
-    dc = draw_fft(filename, options)
+    filenames = args
+             
+    datatype=scipy.float32
+    dc = plot_data(datatype, filenames, options)
 
 if __name__ == "__main__":
     try:
@@ -168,5 +187,3 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
     
-
-
