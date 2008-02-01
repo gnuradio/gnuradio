@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # Copyright 2007,2008 Free Software Foundation, Inc.
 # 
@@ -161,39 +160,9 @@ class plot_data:
                 hf.seek(-hf.tell(),1)
         self.update_plots()
         
-            
 
-#FIXME: there must be a way to do this with a Python builtin
 def find(item_in, list_search):
-    for l in list_search:
-        if item_in == l:
-            return True
-    return False
-
-def main():
-    usage="%prog: [options] input_filenames"
-    description = "This is just a test program for this class. It should really be called by gr_plot_<datatype>.py for a specific type of file data (float, int, byte, etc.)."
-
-    parser = OptionParser(conflict_handler="resolve", usage=usage, description=description)
-    parser.add_option("-B", "--block", type="int", default=1000,
-                      help="Specify the block size [default=%default]")
-    parser.add_option("-s", "--start", type="int", default=0,
-                      help="Specify where to start in the file [default=%default]")
-    parser.add_option("-R", "--sample-rate", type="float", default=1.0,
-                      help="Set the sampler rate of the data [default=%default]")
-    
-    (options, args) = parser.parse_args ()
-    if len(args) < 1:
-        parser.print_help()
-        raise SystemExit, 1
-    filenames = args
-             
-    datatype=scipy.float32
-    dc = plot_data(datatype, filenames, options)
-
-if __name__ == "__main__":
     try:
-        main()
-    except KeyboardInterrupt:
-        pass
-    
+	return list_search.index(item_in) != None
+    except ValueError:
+	return False

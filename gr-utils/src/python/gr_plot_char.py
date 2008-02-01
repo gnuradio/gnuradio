@@ -27,11 +27,11 @@ except ImportError:
     raise SystemExit, 1
 
 from optparse import OptionParser
-from gr_plot_data import plot_data
+from gnuradio.plot_data import plot_data
 
 def main():
     usage="%prog: [options] input_filenames"
-    description = "Takes a GNU Radio short integer binary file and displays the samples versus time. You can set the block size to specify how many points to read in at a time and the start position in the file. By default, the system assumes a sample rate of 1, so in time, each sample is plotted versus the sample number. To set a true time axis, set the sample rate (-R or --sample-rate) to the sample rate used when capturing the samples."
+    description = "Takes a GNU Radio byte/char binary file and displays the samples versus time. You can set the block size to specify how many points to read in at a time and the start position in the file. By default, the system assumes a sample rate of 1, so in time, each sample is plotted versus the sample number. To set a true time axis, set the sample rate (-R or --sample-rate) to the sample rate used when capturing the samples."
 
     parser = OptionParser(conflict_handler="resolve", usage=usage, description=description)
     parser.add_option("-B", "--block", type="int", default=1000,
@@ -47,7 +47,7 @@ def main():
         raise SystemExit, 1
     filenames = args
 
-    datatype=scipy.int16
+    datatype=scipy.int8
     dc = plot_data(datatype, filenames, options)
 
 if __name__ == "__main__":

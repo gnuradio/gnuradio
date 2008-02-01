@@ -19,10 +19,26 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+include $(top_srcdir)/Makefile.common
+
 EXTRA_DIST = \
-    $(bin_SCRIPTS)
+    $(bin_SCRIPTS) \
+    README.plot
+
+ourpythondir = $(grpythondir)
+
+ourpython_PYTHON = \
+    plot_data.py
 
 bin_SCRIPTS = \
+    gr_plot_char.py \
+    gr_plot_const.py \
+    gr_plot_fft_c.py \
+    gr_plot_fft_f.py \
+    gr_plot_float.py \
+    gr_plot_int.py \
+    gr_plot_iq.py \
+    gr_plot_short.py \
     usrp_fft.py \
     usrp_oscope.py \
     usrp_print_db.py \
@@ -31,3 +47,5 @@ bin_SCRIPTS = \
     usrp_siggen.py \
     usrp_test_counting.py \
     usrp_test_loopback.py
+
+MOSTLYCLEANFILES = *~ *.pyc
