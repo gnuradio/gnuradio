@@ -40,12 +40,12 @@ private:
 public:
   ~gr_top_block();
 
-  void start();
+  void start() throw (std::runtime_error);
   void stop();
   void wait();
   void run();
   void lock();
-  void unlock();
+  void unlock() throw (std::runtime_error);
   bool is_running();
 };
 

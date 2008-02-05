@@ -77,7 +77,7 @@ gr_top_block_impl::gr_top_block_impl(gr_top_block *owner)
     d_lock_count(0)
 {
   if (s_impl)
-    throw std::logic_error("gr_top_block_impl: multiple simultaneous gr_top_block's");
+    throw std::logic_error("gr_top_block_impl: multiple simultaneous gr_top_blocks not allowed");
 
   s_impl = this;
 }
@@ -95,7 +95,7 @@ gr_top_block_impl::start()
     std::cout << "start: entered " << this << std::endl;
 
   if (d_running)
-    throw std::runtime_error("already running");
+    throw std::runtime_error("top block already running or wait() not called after previous stop()");
 
   // Create new flat flow graph by flattening hierarchy
   d_ffg = d_owner->flatten();
@@ -203,7 +203,7 @@ gr_top_block_impl::restart()
     std::cout << "restart: entered" << std::endl;
 
   if (!d_running)
-    throw std::runtime_error("not running");
+    throw std::runtime_error("top block is not running");
 
   // Stop scheduler threads and wait for completion
   stop();
