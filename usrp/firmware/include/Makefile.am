@@ -53,7 +53,7 @@ EXTRA_DIST = 			\
 	$(CODE_GENERATOR)
 
 fpga_regs_common.v: fpga_regs_common.h generate_regs.py 
-	PYTHONPATH=$(top_srcdir)/usrp/firmware/include $(PYTHON) $(srcdir)/generate_regs.py fpga_regs_common.h $@
+	PYTHONPATH=$(top_srcdir)/usrp/firmware/include $(PYTHON) $(srcdir)/generate_regs.py $(srcdir)/fpga_regs_common.h $@
 
 fpga_regs_standard.v: fpga_regs_standard.h generate_regs.py
-	PYTHONPATH=$(top_srcdir)/usrp/firmware/include $(PYTHON) $(srcdir)/generate_regs.py fpga_regs_standard.h $@
+	PYTHONPATH=$(top_srcdir)/usrp/firmware/include $(PYTHON) $(srcdir)/generate_regs.py $(srcdir)/fpga_regs_standard.h $@
