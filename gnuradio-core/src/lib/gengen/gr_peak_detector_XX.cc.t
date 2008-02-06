@@ -105,6 +105,6 @@ int
   }
   else {   // only return up to passing the threshold
     //printf("Leave in State 1, only produced %d of %d\n",peak_ind,noutput_items);
-    return peak_ind;
+    return peak_ind+1;
   }
 }

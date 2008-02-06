@@ -70,8 +70,7 @@ gr_ofdm_sampler::general_work (int noutput_items,
   int i=d_fft_length-1;
 
   // FIXME: This is where we miss if the regeneration happens too soon.
-  //while(!found && i<std::min(ninput_items[0],ninput_items[1]) ) {
-  while(i<std::min(ninput_items[0],ninput_items[1]) ) {
+  while(!found && i<std::min(ninput_items[0],ninput_items[1]) ) {
     if(trigger[i]) {
       found = 1;
       index = i++;
