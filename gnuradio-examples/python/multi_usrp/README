@@ -1,3 +1,9 @@
+#
+# N.B., these files have not been converted to top_block/hier_block2 because
+# those of doing the conversion don't have the setup to test this.
+# As a result, these programs will no longer run until updated.
+#
+
 Quick start multi-usrp:
 
 Unpack, build and install usrp, gnuradio-core and gr-usrp

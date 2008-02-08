@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -32,13 +32,10 @@ grgrpythondir = $(grpythondir)/gr
 
 grgrpython_PYTHON = 		\
 	__init__.py		\
-	basic_flow_graph.py	\
 	exceptions.py		\
-	flow_graph.py		\
 	gr_threading.py		\
 	gr_threading_23.py	\
 	gr_threading_24.py	\
-	hier_block.py		\
 	hier_block2.py		\
 	prefs.py		\
 	scheduler.py		\
@@ -50,7 +47,6 @@ noinst_PYTHON = 			\
 	qa_add_v_and_friends.py		\
 	qa_agc.py			\
 	qa_argmax.py			\
-	qa_basic_flow_graph.py		\
 	qa_bin_statistics.py		\
 	qa_cma_equalizer.py		\
 	qa_complex_to_xxx.py		\
@@ -62,7 +58,6 @@ noinst_PYTHON = 			\
 	qa_feval.py			\
 	qa_fft_filter.py		\
 	qa_filter_delay_fc.py		\
-	qa_flow_graph.py		\
 	qa_fractional_interpolator.py   \
 	qa_frequency_modulator.py	\
 	qa_fsk_stuff.py			\

@@ -17,10 +17,10 @@ import sys
 import time
 from gnuradio import usrp_multi
 
-class my_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
 
     def __init__(self):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         usage="%prog: [options] output_filename"
         parser = OptionParser(option_class=eng_option, usage=usage)
@@ -118,12 +118,12 @@ class my_graph(gr.flow_graph):
        
         
 if __name__ == '__main__':
-    fg=my_graph()
-    fg.start()
+    tb=my_top_block()
+    tb.start()
     #time.sleep(0.5)
-    fg.sync_usrps() 
+    tb.sync_usrps() 
     raw_input ('Press Enter to quit: ')
-    fg.stop()
+    tb.stop()
     #try:
     #    fg.start()
     #    fg.sync_usrps()

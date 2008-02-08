@@ -6,7 +6,7 @@ from gnuradio.eng_option import eng_option
 from gnuradio import eng_notation
 from gnuradio import optfir
 from optparse import OptionParser
-from gnuradio.wxgui import stdgui, fftsink, waterfallsink, scopesink, form, slider
+from gnuradio.wxgui import stdgui2, fftsink2, waterfallsink2, scopesink2, form, slider
 import wx
 from usrpm import usrp_dbid
 import time
@@ -16,10 +16,10 @@ import sys
 # required FPGA that can do 4 rx channels.
 
 
-class my_graph(stdgui.gui_flow_graph):
+class my_graph(stdgui2.std_top_block):
 
     def __init__(self, frame, panel, vbox, argv):
-        stdgui.gui_flow_graph.__init__(self)
+        stdgui2.std_top_block.__init__(self, frame, panel, vbox, argv)
 
         self.frame = frame
         self.panel = panel
@@ -89,9 +89,9 @@ class my_graph(stdgui.gui_flow_graph):
         #print len(chan_filt_coeffs)
 
         for i in range(nchan):
-            scope = fftsink.fft_sink_c(self, panel, sample_rate=input_rate/sw_decim,
-                                       title="Input %d" % (i,),
-                                       ref_level=80, y_per_div=20)
+            scope = fftsink2.fft_sink_c(panel, sample_rate=input_rate/sw_decim,
+                                        title="Input %d" % (i,),
+                                        ref_level=80, y_per_div=20)
             vbox.Add(scope.win, 10, wx.EXPAND)
 
             if options.filter:
@@ -121,7 +121,7 @@ class my_graph(stdgui.gui_flow_graph):
 
 
 def main ():
-    app = stdgui.stdapp(my_graph, "Multi Scope", nstatus=1)
+    app = stdgui2.stdapp(my_graph, "Multi Scope", nstatus=1)
     app.MainLoop()
 
 if __name__ == '__main__':

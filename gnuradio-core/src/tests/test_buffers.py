@@ -43,10 +43,10 @@ import sys
 #$ cat /proc/sys/kernel/shmmax
 #300000000
 
-class my_graph(gr.flow_graph):
+class my_graph(gr.top_block):
 
     def __init__(self, seconds,history,output_multiple):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         parser = OptionParser(option_class=eng_option)
         parser.add_option("-O", "--audio-output", type="string", default="",

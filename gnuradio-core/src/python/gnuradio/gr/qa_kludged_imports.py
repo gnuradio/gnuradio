@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -32,7 +32,7 @@ class test_head (gr_unittest.TestCase):
 
     def test_blks_import(self):
         # make sure that this somewhat magic import works
-        from gnuradio import blks
+        from gnuradio import blks2
 
     def test_gru_import(self):
         # make sure that this somewhat magic import works

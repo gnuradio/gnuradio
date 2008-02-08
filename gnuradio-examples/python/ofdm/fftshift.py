@@ -2,9 +2,9 @@
 
 from gnuradio import gr
 
-class my_graph(gr.flow_graph):
+class my_top_block(gr.top_block):
     def __init__(self):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         length = 101
 
@@ -32,9 +32,9 @@ class my_graph(gr.flow_graph):
         
 
 def main():
-    fg = my_graph()
-    fg.start()
-    fg.wait()
+    tb = my_top_block()
+    tb.start()
+    tb.wait()
 
 if __name__ == "__main__":
     try:

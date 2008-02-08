@@ -1,3 +1,10 @@
+# 2008-02-07
+# 
+# These files have not yet been update to use the new top_block/hier_block2
+# interfaces.  Until someone does that, this files will no longer run.
+# 
+
+
 The files in this directory implement a fairly simple HF radio that works
 with the basic rx daughter board on the USRP.
 

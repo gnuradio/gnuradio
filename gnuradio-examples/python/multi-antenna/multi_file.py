@@ -6,8 +6,6 @@ from gnuradio.eng_option import eng_option
 from gnuradio import eng_notation
 from gnuradio import optfir
 from optparse import OptionParser
-from gnuradio.wxgui import stdgui, fftsink, waterfallsink, scopesink, form, slider
-import wx
 from usrpm import usrp_dbid
 import time
 import os.path
@@ -16,10 +14,10 @@ import sys
 # required FPGA that can do 4 rx channels.
 
 
-class my_graph(gr.flow_graph):
+class my_graph(gr.top_block):
 
     def __init__(self):
-        gr.flow_graph.__init__(self)
+        gr.top_block.__init__(self)
 
         parser = OptionParser (option_class=eng_option)
         #parser.add_option("-S", "--subdev", type="subdev", default=(0, None),

@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2007,2008 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -43,8 +43,6 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
         gnuradio-core/src/python/Makefile \
         gnuradio-core/src/python/bin/Makefile \
         gnuradio-core/src/python/gnuradio/Makefile \
-        gnuradio-core/src/python/gnuradio/blks/Makefile \
-        gnuradio-core/src/python/gnuradio/blksimpl/Makefile \
         gnuradio-core/src/python/gnuradio/blks2/Makefile \
         gnuradio-core/src/python/gnuradio/blks2impl/Makefile \
         gnuradio-core/src/python/gnuradio/gr/Makefile \

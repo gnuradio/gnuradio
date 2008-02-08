@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004,2005,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -31,16 +31,11 @@ ourlibdir    = $(grpyexecdir)/wxgui
 ourpython_PYTHON =			\
 	__init__.py			\
 	form.py				\
-	fftsink.py			\
 	fftsink2.py			\
 	plot.py				\
 	powermate.py			\
-	scopesink.py			\
 	scopesink2.py			\
-	waterfallsink.py		\
 	waterfallsink2.py		\
 	slider.py			\
-	stdgui.py			\
 	stdgui2.py			\
-	numbersink.py			\
 	numbersink2.py

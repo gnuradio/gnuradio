@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2007 Free Software Foundation, Inc.
+# Copyright 2004,2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = gr gru gruimpl blks blksimpl blks2 blks2impl vocoder
+SUBDIRS = gr gru gruimpl blks2 blks2impl vocoder
 
 grpython_PYTHON = 			\
 	__init__.py			\
