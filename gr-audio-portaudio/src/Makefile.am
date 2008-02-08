@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -49,12 +49,13 @@ BUILT_SOURCES = 			\
 ourpython_PYTHON =			\
 	audio_portaudio.py
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(PORTAUDIO_CFLAGS)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
+	$(PORTAUDIO_CFLAGS) $(WITH_INCLUDES)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) -I/usr/include
+SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
+	-I/usr/include $(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
 
 ourlib_LTLIBRARIES = _audio_portaudio.la
-
 
 _audio_portaudio_la_SOURCES = 		\
 	audio_portaudio.cc		\
@@ -67,8 +68,7 @@ grinclude_HEADERS =			\
 	audio_portaudio_source.h		
 
 noinst_HEADERS = 			\
-	gri_portaudio.h			
-
+	gri_portaudio.h
 
 swiginclude_HEADERS = 			\
 	$(LOCAL_IFILES)
@@ -77,16 +77,15 @@ _audio_portaudio_la_LIBADD = 		\
 	$(PYTHON_LDFLAGS)		\
 	$(GNURADIO_CORE_LA)		\
 	$(PORTAUDIO_LIBS)		\
-	-lstdc++				
+	-lstdc++
 
 _audio_portaudio_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
 audio_portaudio.cc audio_portaudio.py: $(ALL_IFILES) audio_portaudio_sink.h audio_portaudio_source.h
 	$(SWIG) $(SWIGPYTHONARGS) -module audio_portaudio -o audio_portaudio.cc $(LOCAL_IFILES)
 
-
 noinst_PYTHON = 			\
-	qa_portaudio.py			
+	qa_portaudio.py
 
 MOSTLYCLEANFILES = \
 	$(BUILT_SOURCES) *~ *.pyc

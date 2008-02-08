@@ -1,5 +1,5 @@
 #
-# Copyright 2001 Free Software Foundation, Inc.
+# Copyright 2001,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 # list of programs run by "make check" and "make distcheck"
 

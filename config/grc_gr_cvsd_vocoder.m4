@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -29,6 +29,12 @@ AC_DEFUN([GRC_GR_CVSD_VOCODER],[
     ])
 
     passed=yes
+    # Don't do gr-cvsd-vocoder if gnuradio-core skipped
+    if test x$gnuradio_core_skipped = xyes; then
+        AC_MSG_RESULT([Component gr-cvsd-vocoder requires gnuradio-core, which is not being built or specified via pre-installed files.])
+	passed=no
+    fi
+
     GRC_BUILD_CONDITIONAL([gr-cvsd-vocoder],[
         dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_cvsd], [chmod +x gr-cvsd-vocoder/src/python/run_tests])

@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -27,6 +27,12 @@ AC_DEFUN([GRC_GR_AUDIO_PORTAUDIO],[
     ])
 
     passed=yes
+    # Don't do gr-audio-portaudio if gnuradio-core skipped
+    if test x$gnuradio_core_skipped = xyes; then
+        AC_MSG_RESULT([Component gr-audio-portaudio requires gnuradio-core, which is not being built or specified via pre-installed files.])
+	passed=no
+    fi
+    # Don't do gr-audio-portaudio if the 'portaudio' library is unavailable.
     PKG_CHECK_MODULES(PORTAUDIO, portaudio-2.0 >= 19,[],
         [passed=no;AC_MSG_RESULT([gr-audio-portaudio requires package portaudio, not found.])])
 

@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2003,2004,2006,2007 Free Software Foundation, Inc.
+# Copyright 2001,2003,2004,2006,2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,7 +22,7 @@
 include $(top_srcdir)/Makefile.common
 
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(WITH_INCLUDES)
 
 noinst_LTLIBRARIES = libio.la
 

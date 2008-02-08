@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2006 Free Software Foundation, Inc.
+# Copyright 2001,2006,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -30,4 +30,4 @@ EXTRA_DIST = \
 	README.hacking
 
 SUBDIRS = @build_dirs@
-DIST_SUBDIRS = @build_dirs@ @skipped_dirs@
+DIST_SUBDIRS = @build_dirs@ @skipped_dirs@ @with_dirs@

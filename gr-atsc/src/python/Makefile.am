@@ -28,7 +28,6 @@ EXAMPLE_FILES = \
     interp.py \
     xlate.py \
     viterbi-out.py
-    
 
 EXTRA_DIST = run_tests.in \
 	     $(EXAMPLE_FILES)
@@ -46,7 +45,7 @@ noinst_PYTHON = 			\
 	qa_atsc.py			
 
 # Make example scripts with #! executable
-install-data-local:
+install-data-local: install-ourdataDATA
 	for i in `find $(ourdatadir) -type f ! -perm 755`; do \
 	  if head -1 $$i | grep -q '^#!'; then \
 	    chmod 755 $$i; \

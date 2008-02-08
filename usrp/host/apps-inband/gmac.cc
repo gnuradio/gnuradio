@@ -31,7 +31,6 @@
 #include <mb_exception.h>
 #include <mb_msg_queue.h>
 #include <mb_message.h>
-#include <mb_mblock_impl.h>
 #include <mb_msg_accepter.h>
 #include <mb_class_registry.h>
 #include <pmt.h>

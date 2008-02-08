@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -19,18 +19,36 @@ dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_WXGUI],[
     GRC_ENABLE([gr-wxgui])
-
-    AC_CONFIG_FILES([ \
-	  gr-wxgui/Makefile \
-	  gr-wxgui/src/Makefile \
-	  gr-wxgui/src/python/Makefile \
-    ])
-
-    if ${PYTHON} -c 'import wx'; then
-	passed=yes
-    else
-	passed=no
+    GRC_WITH([gr-wxgui])
+    passed=no
+    if test x$with_gr_wxgui = xyes; then
+        if test x$enable_gr_wxgui = xyes; then
+	    AC_MSG_ERROR([Component gr-wxgui: Cannot use both --enable and --with])
+        else
+	    PKG_CHECK_MODULES(GR_WXGUI, gr-wxgui, passed=with,
+	    	   AC_MSG_RESULT([Component gr-wxgui: PKGCONFIG cannot find info]))
+	fi
     fi
-    
+    dnl if $passed = with, then "--with" worked; ignore the "--enable" stuff
+    dnl otherwise, $passed = no; check the "--enable" stuff
+    if test x$passed = xno; then
+        AC_CONFIG_FILES([ \
+	    gr-wxgui/Makefile \
+	    gr-wxgui/gr-wxgui.pc \
+	    gr-wxgui/src/Makefile \
+	    gr-wxgui/src/python/Makefile \
+        ])
+
+        passed=yes
+        # Don't do gr-wxgui if gnuradio-core skipped
+        if test x$gnuradio_core_skipped = xyes; then
+            AC_MSG_RESULT([Component gr-wxgui requires gnuradio-core, which is not being built or specified via pre-installed files.])
+            passed=no
+        fi
+        # Don't do gr-wxgui if wxPython is not available
+        if ! ${PYTHON} -c 'import wx'; then
+            passed=no
+        fi
+    fi
     GRC_BUILD_CONDITIONAL([gr-wxgui])
 ])

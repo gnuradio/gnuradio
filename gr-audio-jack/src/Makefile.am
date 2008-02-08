@@ -1,5 +1,5 @@
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -49,27 +49,25 @@ BUILT_SOURCES = 			\
 ourpython_PYTHON =			\
 	audio_jack.py
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES)
-
+SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
+	$(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
 
 ourlib_LTLIBRARIES = _audio_jack.la
-
 
 _audio_jack_la_SOURCES = 		\
 	audio_jack.cc			\
 	audio_jack_sink.cc		\
 	audio_jack_source.cc		\
-	gri_jack.cc			
+	gri_jack.cc
 
 grinclude_HEADERS =			\
 	audio_jack_sink.h		\
-	audio_jack_source.h		
+	audio_jack_source.h
 
 noinst_HEADERS = 			\
-	gri_jack.h			
-
+	gri_jack.h
 
 swiginclude_HEADERS = 			\
 	$(LOCAL_IFILES)
@@ -78,7 +76,7 @@ _audio_jack_la_LIBADD = 		\
 	$(PYTHON_LDFLAGS)		\
 	$(GNURADIO_CORE_LA)		\
 	$(JACK_LIBS)			\
-	-lstdc++				
+	-lstdc++
 
 _audio_jack_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
@@ -86,7 +84,7 @@ audio_jack.cc audio_jack.py: $(LOCAL_IFILES) $(NON_LOCAL_IFILES)
 	$(SWIG) $(SWIGPYTHONARGS) -module audio_jack -o audio_jack.cc $(LOCAL_IFILES)
 
 noinst_PYTHON = 			\
-	qa_jack.py			
+	qa_jack.py
 
 MOSTLYCLEANFILES = \
 	$(BUILT_SOURCES) *~ *.pyc

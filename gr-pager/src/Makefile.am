@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -24,7 +24,7 @@ include $(top_srcdir)/Makefile.common
 EXTRA_DIST = \
     run_tests.in \
     $(bin_SCRIPTS)
-    
+
 TESTS = \
     run_tests
 
@@ -32,7 +32,7 @@ bin_SCRIPTS = \
     usrp_flex.py \
     usrp_flex_all.py \
     usrp_flex_band.py
-    
+
 noinst_PYTHON = \
     qa_pager.py
 
@@ -43,9 +43,10 @@ noinst_PYTHON = \
 ourpythondir = $(grpythondir)/pager
 ourlibdir    = $(grpyexecdir)/pager
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES)
+SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
+	$(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
 
 ALL_IFILES = \
     $(LOCAL_IFILES) \

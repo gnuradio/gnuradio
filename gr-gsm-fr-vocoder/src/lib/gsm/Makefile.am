@@ -1,5 +1,5 @@
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -43,7 +43,8 @@ LTP_CUT	=
 
 OPTIONS = $(SASR) $(MULHACK) $(FAST) $(LTP_CUT)
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) -DNeedFunctionPrototypes=1 $(OPTIONS)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) -DNeedFunctionPrototypes=1 \
+	$(OPTIONS) $(WITH_INCLUDES)
 
 noinst_LTLIBRARIES = libgsm.la
 

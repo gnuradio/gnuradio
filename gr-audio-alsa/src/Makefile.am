@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -49,9 +49,10 @@ BUILT_SOURCES = 			\
 ourpython_PYTHON =			\
 	audio_alsa.py
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES)
+SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
+	$(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
 
 ourlib_LTLIBRARIES = _audio_alsa.la
 
@@ -63,15 +64,14 @@ _audio_alsa_la_SOURCES = 		\
 libgr_audio_alsa_la_SOURCES = 		\
 	audio_alsa_sink.cc		\
 	audio_alsa_source.cc		\
-	gri_alsa.cc			
+	gri_alsa.cc
 
 grinclude_HEADERS =			\
 	audio_alsa_sink.h		\
-	audio_alsa_source.h		
+	audio_alsa_source.h
 
 noinst_HEADERS = 			\
-	gri_alsa.h			
-
+	gri_alsa.h
 
 swiginclude_HEADERS = 			\
 	$(LOCAL_IFILES)
@@ -81,7 +81,7 @@ _audio_alsa_la_LIBADD = 		\
 	$(GNURADIO_CORE_LA)		\
 	$(ALSA_LIBS)			\
 	libgr_audio_alsa.la		\
-	-lstdc++				
+	-lstdc++
 
 libgr_audio_alsa_la_LIBADD = 		\
 	$(ALSA_LIBS)

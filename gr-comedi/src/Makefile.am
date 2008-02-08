@@ -1,5 +1,5 @@
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -49,9 +49,10 @@ BUILT_SOURCES = 			\
 ourpython_PYTHON =			\
 	comedi.py
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-SWIGCPPPYTHONARGS = -c++ -python $(PYTHON_CPPFLAGS) $(STD_DEFINES_AND_INCLUDES)
+SWIGCPPPYTHONARGS = -c++ -python $(PYTHON_CPPFLAGS) \
+	$(STD_DEFINES_AND_INCLUDES) $(WITH_SWIG_INCLUDES)
 #	-I$(swigincludedir) $(S-I$(grincludedir) -I$(comediincludedir)
 
 ourlib_LTLIBRARIES = _comedi.la

@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2004,2005,2006 Free Software Foundation, Inc.
+# Copyright 2001,2004,2005,2006,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -28,7 +28,8 @@ include $(top_srcdir)/Makefile.common
 ourpythondir = $(grpythondir)
 ourlibdir    = $(grpyexecdir)
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(CPPUNIT_INCLUDES)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
+	$(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 EXTRA_DIST =					\
 	atsci_viterbi_gen.cc			\
@@ -214,7 +215,7 @@ test_atsci_LDADD   =  		\
 # ------------------------------------------------------------------------
 
 SWIGCPPPYTHONARGS = -fvirtual -python -modern $(PYTHON_CPPFLAGS) \
-	$(STD_DEFINES_AND_INCLUDES)
+	$(STD_DEFINES_AND_INCLUDES) $(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
 
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\

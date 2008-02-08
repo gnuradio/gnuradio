@@ -1,5 +1,5 @@
 #
-# Copyright 2003,2006 Free Software Foundation, Inc.
+# Copyright 2003,2006,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,8 +21,8 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = $(USRP_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES)
-
+INCLUDES = $(USRP_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES) \
+	   $(WITH_INCLUDES)
 
 bin_PROGRAMS =				\
 	usrper				\

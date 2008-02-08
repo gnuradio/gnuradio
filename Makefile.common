@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 #
-# Copyright 2004,2006,2007 Free Software Foundation, Inc.
+# Copyright 2004,2006,2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,9 +23,9 @@
 AM_CXXFLAGS = @autoconf_default_CXXFLAGS@
 
 # includes
-grincludedir   = $(includedir)/gnuradio
+grincludedir = $(includedir)/gnuradio
 
-# swig includes 
+# swig includes
 swigincludedir = $(grincludedir)/swig
 
 # Install the gnuradio stuff in the appropriate subdirectory
@@ -42,52 +42,43 @@ grpyexecdir = $(pyexecdir)/gnuradio
 usrppythondir = $(pythondir)/usrpm
 usrppyexecdir = $(pyexecdir)/usrpm
 
+# when including for compilation from pre-installed libraries and such,
+# need to make sure those are put last on the compile command
+WITH_INCLUDES = @with_INCLUDES@
+WITH_SWIG_INCLUDES = @with_SWIG_INCLUDES@
 
 # swig flags
 SWIGPYTHONFLAGS = -fvirtual -python -modern
 
+# How to link in the top-level omnithreads library from inside the tree
+OMNITHREAD_INCLUDES = @omnithread_INCLUDES@
+OMNITHREAD_LA = @omnithread_LA@
+
 # Where to find gnuradio include files in the current build tree
 # top_srcdir for original stuff, top_builddir for generated files
-GNURADIO_INCLUDES = -I$(top_srcdir)/gnuradio-core/src/lib/runtime \
-		    -I$(top_srcdir)/gnuradio-core/src/lib/general \
-		    -I$(top_builddir)/gnuradio-core/src/lib/general \
-		    -I$(top_srcdir)/gnuradio-core/src/lib/gengen \
-		    -I$(top_builddir)/gnuradio-core/src/lib/gengen \
-		    -I$(top_srcdir)/gnuradio-core/src/lib/filter \
-		    -I$(top_builddir)/gnuradio-core/src/lib/filter \
-		    -I$(top_srcdir)/gnuradio-core/src/lib/reed-solomon \
-		    -I$(top_srcdir)/gnuradio-core/src/lib/io \
-		    -I$(top_srcdir)/gnuradio-core/src/lib/g72x \
-		    -I$(top_srcdir)/gnuradio-core/src/lib/swig \
-		    -I$(top_builddir)/gnuradio-core/src/lib/swig \
-	            $(FFTW3F_CFLAGS)
-
-# How to link in the top-level omnithreads library from inside the tree
-OMNITHREAD_INCLUDES = -I$(top_srcdir)/omnithread
-OMNITHREAD_LA = $(top_builddir)/omnithread/libgromnithread.la
+GNURADIO_INCLUDES = @gnuradio_core_INCLUDES@
 
 # How to link in GNU Radio core library from inside the tree
-GNURADIO_CORE_LA = $(top_builddir)/gnuradio-core/src/lib/libgnuradio-core.la
+GNURADIO_CORE_LA = @gnuradio_core_LA@
 
 # This is a dependency for many swig operations
-GNURADIO_I = $(top_srcdir)/gnuradio-core/src/lib/swig/gnuradio.i
+GNURADIO_I = @gnuradio_core_I@
 
 # How to link in the USRP library from inside the tree
-USRP_INCLUDES = -I$(top_srcdir)/usrp/host/lib/legacy \
-		-I$(top_srcdir)/usrp/firmware/include
-USRP_LA = $(top_builddir)/usrp/host/lib/legacy/libusrp.la
+USRP_INCLUDES = @usrp_INCLUDES@
+USRP_LA = @usrp_LA@
 
 # How to link in usrp-inband library from inside the tree
-USRP_INBAND_INCLUDES = 	-I$(top_srcdir)/usrp/host/lib/inband 
-USRP_INBAND_LA = $(top_builddir)/usrp/host/lib/inband/libusrp_inband.la
+USRP_INBAND_INCLUDES = @usrp_inband_INCLUDES@
+USRP_INBAND_LA = @usrp_inband_LA@
 
 # How to link the PMT library from inside the tree
-PMT_INCLUDES = -I$(top_srcdir)/pmt/src/lib
-PMT_LA = $(top_builddir)/pmt/src/lib/libpmt.la
+PMT_INCLUDES = @pmt_INCLUDES@
+PMT_LA = @pmt_LA@
 
 # How to link the mblock library from inside the tree
-MBLOCK_INCLUDES = -I$(top_srcdir)/mblock/src/lib
-MBLOCK_LA = $(top_builddir)/mblock/src/lib/libmblock.la
+MBLOCK_INCLUDES = @mblock_INCLUDES@
+MBLOCK_LA = @mblock_LA@
 
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.

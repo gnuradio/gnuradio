@@ -1,5 +1,5 @@
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio.
 # 
@@ -48,9 +48,10 @@ BUILT_SOURCES = 			\
 ourpython_PYTHON =			\
 	audio_osx.py
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-SWIGCPPPYTHONARGS = -python $(PYTHON_CPPFLAGS) $(STD_DEFINES_AND_INCLUDES)
+SWIGCPPPYTHONARGS = -python $(PYTHON_CPPFLAGS) $(STD_DEFINES_AND_INCLUDES) \
+	 $(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
 
 ourlib_LTLIBRARIES = _audio_osx.la
 

@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -30,6 +30,12 @@ AC_DEFUN([GRC_GR_ATSC],[
     ])
 
     passed=yes
+    # Don't do gr-atsc if gnuradio-core skipped
+    if test x$gnuradio_core_skipped = xyes; then
+        AC_MSG_RESULT([Component gr-atsc requires gnuradio-core, which is not being built or specified via pre-installed files.])
+	passed=no
+    fi
+
     GRC_BUILD_CONDITIONAL([gr-atsc],[
         dnl run_tests is created from run_tests.in.  Make it executable.
 	AC_CONFIG_COMMANDS([run_tests_atsc], [chmod +x gr-atsc/src/python/run_tests])

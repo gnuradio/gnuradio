@@ -1,5 +1,5 @@
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,7 +23,8 @@ include $(top_srcdir)/Makefile.common
 
 # For compiling within the GNU Radio build tree
 INCLUDES=$(STD_DEFINES_AND_INCLUDES) \
-         -I$(top_srcdir)/gr-audio-alsa/src 
+         -I$(top_srcdir)/gr-audio-alsa/src \
+	 $(WITH_INCLUDES)
 
 GR_AUDIO_ALSA_LA=$(top_builddir)/gr-audio-alsa/src/libgr_audio_alsa.la
 

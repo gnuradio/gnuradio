@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2004,2006,2007 Free Software Foundation, Inc.
+# Copyright 2001,2002,2004,2006,2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 noinst_LTLIBRARIES = libgeneral.la libgeneral-qa.la
 

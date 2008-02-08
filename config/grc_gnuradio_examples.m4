@@ -1,4 +1,4 @@
-# Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+# Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -39,5 +39,11 @@ AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
     ])
 
     passed=yes
+    # Don't do gnuradio-examples if gnuradio-core skipped
+    if test x$gnuradio_core_skipped = xyes; then
+        AC_MSG_RESULT([Component gnuradio-examples requires gnuradio-core, which is not being built or specified via pre-installed files.])
+        passed=no
+    fi
+
     GRC_BUILD_CONDITIONAL([gnuradio-examples])
 ])

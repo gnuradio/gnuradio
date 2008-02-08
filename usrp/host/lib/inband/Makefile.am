@@ -1,5 +1,5 @@
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,7 +23,7 @@ include $(top_srcdir)/Makefile.common
 INCLUDES = 	\
 	$(DEFINES) $(OMNITHREAD_INCLUDES) $(PMT_INCLUDES) $(MBLOCK_INCLUDES) \
 	$(USRP_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES) \
-	-I$(srcdir)/../../apps-inband
+	-I$(srcdir)/../../apps-inband $(WITH_INCLUDES)
 
 TESTS = test_inband
 
@@ -31,11 +31,9 @@ EXTRA_DIST =				\
 	usrp_server.mbh			\
 	usrp_interface.mbh 
 
-
 lib_LTLIBRARIES = 			\
 	libusrp_inband.la		\
 	libusrp_inband-qa.la
-
 
 # ------------------------------------------------------------------------
 # Build the inband library
@@ -75,7 +73,7 @@ include_HEADERS =			\
 	usrp_server.h			\
 	usrp_tx.h			\
 	usrp_tx_stub.h			\
-	usrp_usb_interface.h 		
+	usrp_usb_interface.h
 
 noinst_HEADERS =      			\
 	fake_usrp.h			\
@@ -89,8 +87,7 @@ noinst_HEADERS =      			\
 	symbols_usrp_rx_cs.h		\
 	symbols_usrp_server_cs.h	\
 	symbols_usrp_tx.h		\
-	symbols_usrp_tx_cs.h		
-
+	symbols_usrp_tx_cs.h
 
 # ------------------------------------------------------------------------
 # Build the qa code in its own library
@@ -98,7 +95,7 @@ noinst_HEADERS =      			\
 libusrp_inband_qa_la_SOURCES =   	\
 	qa_inband.cc			\
 	qa_inband_packet_prims.cc	\
-	qa_inband_usrp_server.cc	
+	qa_inband_usrp_server.cc
 
 # magic flags
 libusrp_inband_qa_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
@@ -120,7 +117,6 @@ test_inband_LDADD   = libusrp_inband-qa.la
 
 test_usrp_inband_SOURCES = test_usrp_inband.cc
 test_usrp_inband_LDADD = libusrp_inband-qa.la
-
 
 MOSTLYCLEANFILES = \
 	$(BUILT_SOURCES) *~ *.pyc

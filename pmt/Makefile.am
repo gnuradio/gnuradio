@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,8 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
-    pmt.pc.in
+EXTRA_DIST = pmt.pc.in
 
 SUBDIRS = src
 DIST_SUBDIRS = src doc

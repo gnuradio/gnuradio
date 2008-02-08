@@ -1,4 +1,4 @@
-dnl Copyright 2007 Free Software Foundation, Inc.
+dnl Copyright 2007,2008 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -35,14 +35,15 @@ AC_DEFUN([GRC_GR_RADAR_MONO],[
     ])
 
     passed=yes
-    # Don't do gr-radar-mono if usrp skipped
-    for dir in $skipped_dirs
-    do
-	if test x$dir = xusrp; then
-	    AC_MSG_RESULT([Component gr-radar-mono requires usrp, which is not being built.])
-	    passed=no
-	fi
-    done
+    # Don't do gr-radar-mono if usrp or gnuradio-core skipped
+    if test x$usrp_skipped = xyes; then
+        AC_MSG_RESULT([Component gr-radar-mono requires usrp, which is not being built or specified via pre-installed files.])
+        passed=no
+    fi
+    if test x$gnuradio_core_skipped = xyes; then
+        AC_MSG_RESULT([Component gr-radar-mono requires gnuradio-core, which is not being built or specified via pre-installed files.])
+	passed=no
+    fi
 
     GRC_BUILD_CONDITIONAL([gr-radar-mono],[
 	dnl run_tests is created from run_tests.in.  Make it executable.

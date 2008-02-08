@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -63,11 +63,14 @@ ourpython_PYTHON =			\
 
 INCLUDES = $(STD_DEFINES_AND_INCLUDES)  \
 	   $(PYTHON_CPPFLAGS) 		\
-	   $(USRP_INCLUDES)
+	   $(USRP_INCLUDES)		\
+	   $(WITH_INCLUDES)
 
 SWIGPYTHONARGS = $(SWIGPYTHONFLAGS)	     \
 		 $(STD_DEFINES_AND_INCLUDES) \
-		 $(USRP_INCLUDES)
+		 $(USRP_INCLUDES)	     \
+		 $(WITH_INCLUDES)            \
+		 $(WITH_SWIG_INCLUDES)
 
 grinclude_HEADERS =			\
 	usrp1_sink_base.h		\

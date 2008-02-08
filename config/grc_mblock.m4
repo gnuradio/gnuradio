@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -19,46 +19,57 @@ dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_MBLOCK],[
     GRC_ENABLE([mblock])
-
-    AC_CONFIG_FILES([\
-	mblock/Makefile \
-	mblock/mblock.pc \
-	mblock/doc/Makefile \
-	mblock/src/Makefile \
-	mblock/src/lib/Makefile \
-	mblock/src/scheme/Makefile \
-	mblock/src/scheme/gnuradio/Makefile \
-    ])
-
-    passed=yes
-    # Don't do mblock if omnithread skipped
-    # There *has* to be a better way to check if a value is in a string
-    for dir in $skipped_dirs
-    do
-	if test x$dir = xomnithread; then
-	    AC_MSG_RESULT([Component mblock requires omnithread, which is not being built.])
+    GRC_WITH([mblock])
+    passed=no
+    if test x$with_mblock = xyes; then
+        if test x$enable_mblock = xyes; then
+	    AC_MSG_ERROR([Component mblock: Cannot use both --enable and --with])
+        else
+	    PKG_CHECK_MODULES(MBLOCK, mblock, passed=with,
+	    	   AC_MSG_RESULT([Component mblock: PKGCONFIG cannot find info]))
+            if test x$passed = xwith; then
+                mblock_INCLUDES=`$PKG_CONFIG --cflags-only-I mblock`
+   	        mblock_LA=$MBLOCK_LIBS
+            fi
+	fi
+    fi
+    dnl if $passed = with, then "--with" worked; ignore the "--enable" stuff
+    dnl otherwise, $passed = no; check the "--enable" stuff
+    if test x$passed = xno; then
+        AC_CONFIG_FILES([\
+	    mblock/Makefile \
+	    mblock/mblock.pc \
+	    mblock/doc/Makefile \
+	    mblock/src/Makefile \
+	    mblock/src/lib/Makefile \
+	    mblock/src/scheme/Makefile \
+	    mblock/src/scheme/gnuradio/Makefile \
+	])
+	passed=yes
+	# Don't do mblock if omnithread or pmt skipped
+	if test x$omnithread_skipped = xyes; then
+	    AC_MSG_RESULT([Component mblock requires omnithread, which is not being built or specified via pre-installed files.])
 	    passed=no
 	fi
-    done
-
-    # Don't do mblock if pmt skipped
-    # There *has* to be a better way to check if a value is in a string
-    for dir in $skipped_dirs
-    do
-	if test x$dir = xpmt; then
-	    AC_MSG_RESULT([Component mblock requires pmt, which is not being built.])
+	if test x$pmt_skipped = xyes; then
+	    AC_MSG_RESULT([Component mblock requires pmt, which is not being built or specified via pre-installed files.])
 	    passed=no
 	fi
-    done
-
-    AC_PATH_PROG(GUILE,guile)
-    if test "$GUILE" = "" ; then
-      AC_MSG_RESULT([Component mblock requires guile, which was not found.])
-      passed=no
+	# Don't do mblock if guile not available
+	AC_PATH_PROG(GUILE,guile)
+	if test "$GUILE" = "" ; then
+	    AC_MSG_RESULT([Component mblock requires guile, which was not found.])
+	    passed=no
+	fi
+	mblock_INCLUDES="-I\${abs_top_srcdir}/mblock/src/lib"
+        mblock_LA="\${abs_top_builddir}/mblock/src/lib/libmblock.la"
     fi
 
     GRC_BUILD_CONDITIONAL([mblock],[
         dnl run_tests is created from run_tests.in.  Make it executable.
 	dnl AC_CONFIG_COMMANDS([run_tests_mblock], [chmod +x mblock/src/python/run_tests])
     ])
+
+    AC_SUBST([mblock_INCLUDES], [$mblock_INCLUDES])
+    AC_SUBST([mblock_LA], [$mblock_LA])
 ])

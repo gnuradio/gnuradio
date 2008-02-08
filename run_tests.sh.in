@@ -4,6 +4,12 @@
 # Second argument is absolute path to top of component build directory
 # Third argument is component source directory for qa tests
 
+# Absolute path to the top of the source directory
+abs_top_srcdir=@abs_top_srcdir@
+
+# Absolute path to the top of the build directory
+abs_top_builddir=@abs_top_builddir@
+
 # Where to find my swig generated shared library
 mylibdir=$2/src:$2/src/.libs:$2/src/lib:$2/src/lib/.libs
 
@@ -13,33 +19,106 @@ mysrcdir=$1/src:$1/src/lib
 # Where to find my hand written python modules
 mypydir=$1/src:$1/src/python
 
-# Where to find core's swig generated shared libraries
-grswigdir=@abs_top_builddir@/gnuradio-core/src/lib/swig
-grswigdir=$grswigdir:$grswigdir/.libs
-
-# Where to find core's hand generated swig glue
-grswigsrcdir=@abs_top_srcdir@/gnuradio-core/src/lib/swig
+# Where to find core's swig generated shared libraries,
+# and hand generated swig glue
+grswigdir=@gnuradio_core_SWIGDIRPATH@
 
 # Where to find core's python modules
-grpydir=@abs_top_srcdir@/gnuradio-core/src/python
+grpydir=@gnuradio_core_PYDIRPATH@
 
-# Construct search path for python modules
-PYTHONPATH="$mylibdir:$mysrcdir:$mypydir:$grswigdir:$grswigsrcdir:$grpydir:$PYTHONPATH"
+# Construct search path for python modules, if each exists
+for dir in $grswigdir $grpydir
+do
+    if [ "$dir" != "" ]
+    then
+	if [ "$PYTHONPATH" = "" ]
+	then
+	    PYTHONPATH="$dir"
+	else
+	    PYTHONPATH="$dir:$PYTHONPATH"
+	fi
+    fi
+done
+
+# Where to find pre-installed python modules
+withpydirs=@with_PYDIRPATH@
+
+# Add the 'with' dirs to the end of the python search path, if it exists
+if [ "$withpydirs" != "" ]
+then
+    PYTHONPATH="$PYTHONPATH:$withpydirs"
+fi
+
+# Add the "my" dirs to the absolute front of the python search path
+PYTHONPATH="$mylibdir:$mysrcdir:$mypydir:$PYTHONPATH"
 export PYTHONPATH
 
-# Where to find core's master library files and dependencies
-gromnidir=@abs_top_builddir@/omnithread
-gromnidir=$gromnidir:$gromnidir/.libs
-grcoredir=@abs_top_builddir@/gnuradio-core/src/lib
-grcoredir=$grcoredir:$grcoredir/.libs
-grlibdir=$gromnidir:$grcoredir
+# Where to find omnithread library files
+gromnidir=@omnithread_LIBDIRPATH@
 
-# For OS/X
-DYLD_LIBRARY_PATH=$grlibdir:$DYLD_LIBRARY_PATH
+# Where to find gnuradio core's library files
+grcoredir=@gnuradio_core_LIBDIRPATH@
+
+# Construct search path for python modules
+# Check each one to make sure it's not "" before adding
+grlibdir=""
+for dir in $gromnidir $grcoredir
+do
+    if [ "$dir" != "" ]
+    then
+	if [ "$grlibdir" = "" ]
+	then
+	    grlibdir="$dir"
+	else
+	    grlibdir="$dir:$grlibdir"
+	fi
+    fi
+done
+
+# Add the grlibdir paths to the front of any PATH variable
+if [ "$grlibdir" != "" ]
+then
+    # For OS/X
+    if [ "$DYLD_LIBRARY_PATH" = "" ]
+    then
+	DYLD_LIBRARY_PATH=$grlibdir
+    else
+	DYLD_LIBRARY_PATH=$grlibdir:$DYLD_LIBRARY_PATH
+    fi
+
+    # For Win32
+    if [ "$PATH" = "" ]
+    then
+	PATH=$grlibdir
+    else
+	PATH=$grlibdir:$PATH
+    fi
+fi
+
+# Where to find pre-installed libraries
+withlibdirs=@with_LIBDIRPATH@
+
+# Add the withdirs paths to the end of any PATH variable
+if [ "$withlibdirs" != "" ]
+then
+    # For OS/X
+    if [ "$DYLD_LIBRARY_PATH" = "" ]
+    then
+	DYLD_LIBRARY_PATH=$withlibdirs
+    else
+	DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$withlibdirs
+    fi
+
+    # For Win32
+    if [ "$PATH" = "" ]
+    then
+	PATH=$withlibdirs
+    else
+	PATH=$PATH:$withlibdirs
+    fi
+fi
+
 export DYLD_LIBRARY_PATH
-
-# For Win32
-PATH=$grlibdir:$PATH
 
 # Don't load user or system prefs
 GR_DONT_LOAD_PREFS=1

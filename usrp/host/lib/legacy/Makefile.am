@@ -1,7 +1,7 @@
 #
 #  USRP - Universal Software Radio Peripheral
 # 
-#  Copyright (C) 2003,2004,2006,2007 Free Software Foundation, Inc.
+#  Copyright (C) 2003,2004,2006,2007,2008 Free Software Foundation, Inc.
 # 
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -32,10 +32,10 @@ libusrp_la_common_LIBADD = 		\
 
 # darwin fusb requires omnithreads
 if FUSB_TECH_darwin
-INCLUDES = $(common_INCLUDES) $(OMNITHREAD_INCLUDES)
+INCLUDES = $(common_INCLUDES) $(OMNITHREAD_INCLUDES) $(WITH_INCLUDES)
 libusrp_la_LIBADD = $(libusrp_la_common_LIBADD) $(OMNITHREAD_LA)
 else
-INCLUDES = $(common_INCLUDES)
+INCLUDES = $(common_INCLUDES) $(WITH_INCLUDES)
 libusrp_la_LIBADD = $(libusrp_la_common_LIBADD)
 endif
 

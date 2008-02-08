@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2006 Free Software Foundation, Inc.
+# Copyright 2004,2006,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,8 +21,11 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = gr-wxgui.conf
+EXTRA_DIST = gr-wxgui.conf gr-wxgui.pc.in
 SUBDIRS = src
 
 etcdir = $(sysconfdir)/gnuradio/conf.d
 etc_DATA = gr-wxgui.conf
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = gr-wxgui.pc

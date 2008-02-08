@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -27,6 +27,13 @@ AC_DEFUN([GRC_GR_AUDIO_WINDOWS],[
     ])
 
     passed=yes
+    # Don't do gr-audio-windows if gnuradio-core skipped
+    if test x$gnuradio_core_skipped = xyes; then
+        AC_MSG_RESULT([Component gr-audio-windows requires gnuradio-core, which is not being built or specified via pre-installed files.])
+	passed=no
+    fi
+
+    # Don't do gr-audio-windows if the 'winmm' library isn't available.
     AC_HAVE_LIBRARY(winmm,[],
         [passed=no;AC_MSG_RESULT([gr-audio-windows requires library winmm, not found.])])
 

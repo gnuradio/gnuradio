@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2001,2003,2004,2005,2006,2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -28,12 +28,10 @@ include $(top_srcdir)/Makefile.common
 grgrpythondir = $(grpythondir)/gr
 grgrlibdir    = $(grpyexecdir)/gr
 
-
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) -I$(srcdir)
-
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) -I$(srcdir) \
+	 $(WITH_INCLUDES)
 
 EXTRA_DIST = gen-swig-bug-fix
-
 
 LOCAL_IFILES =				\
 	gnuradio.i			\
@@ -41,14 +39,10 @@ LOCAL_IFILES =				\
 	sw_general.i			\
 	sw_gengen.i			\
 	sw_filter.i			\
-	sw_io.i				
-
+	sw_io.i
 
 ALL_IFILES =				\
-	$(LOCAL_IFILES)			
-
-
-
+	$(LOCAL_IFILES)
 
 # ----------------------------------------------------------------
 # We've split the previously monstrous gnuradio_swig_python into
@@ -75,8 +69,8 @@ BUILT_SOURCES =				\
 	gnuradio_swig_py_io.h		\
 	gnuradio_swig_bug_workaround.h	
 
-
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(INCLUDES)
+SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(INCLUDES) $(WITH_SWIG_INCLUDES) \
+	$(WITH_INCLUDES)
 
 # ----------------------------------------------------------------
 # We break this up into 5 libraries...

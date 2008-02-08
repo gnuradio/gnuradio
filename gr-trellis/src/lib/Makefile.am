@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -28,9 +28,10 @@ include $(top_srcdir)/Makefile.common
 ourpythondir = $(grpythondir)
 ourlibdir    = $(grpyexecdir)
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES)
+SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
+	$(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
 
 # ----------------------------------------------------------------
 # these scripts generate trellis codes from template files

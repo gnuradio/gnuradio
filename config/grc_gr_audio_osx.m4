@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -19,16 +19,27 @@ dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_AUDIO_OSX],[
     GRC_ENABLE([gr-audio-osx])
-    
+
     AC_CONFIG_FILES([ \
 	gr-audio-osx/Makefile \
 	gr-audio-osx/src/Makefile \
 	gr-audio-osx/src/run_tests \
     ])
-    
+
     passed=yes
     MACOSX_AUDIOUNIT([],
         [passed=no;AC_MSG_RESULT([gr-audio-osx requires AudioUnit, not found.])])
+
+    # Don't do gr-audio-osx if omnithread skipped
+    if test x$omnithread_skipped = xyes; then
+        AC_MSG_RESULT([Component gr-audio-osx requires omnithread, which is not being built or specified via pre-installed files.])
+	passed=no
+    fi
+    # Don't do gr-audio-osx if gnuradio-core skipped
+    if test x$gnuradio_core_skipped = xyes; then
+        AC_MSG_RESULT([Component gr-audio-osx requires gnuradio-core, which is not being built or specified via pre-installed files.])
+	passed=no
+    fi
 
     GRC_BUILD_CONDITIONAL([gr-audio-osx],[
 	dnl run_tests is created from run_tests.in.  Make it executable.

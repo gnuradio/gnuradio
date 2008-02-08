@@ -1,5 +1,5 @@
 #
-# Copyright 2002 Free Software Foundation, Inc.
+# Copyright 2002,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,7 +25,7 @@ include $(top_srcdir)/Makefile.common
 # If you need the int versions too, please figure out how to add them *cleanly* to 
 # this Makefile.am.
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 TESTS = rstest
 

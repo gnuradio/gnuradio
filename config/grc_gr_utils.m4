@@ -1,4 +1,4 @@
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -29,22 +29,18 @@ AC_DEFUN([GRC_GR_UTILS],[
 
     passed=yes
     # Don't do gr-utils if gnuradio-core, usrp, or gr-wxgui skipped
-    # There *has* to be a better way to check if a value is in a string
-    for dir in $skipped_dirs
-    do
-	if test x$dir = xusrp; then
-	    AC_MSG_RESULT([Component gr-utils requires usrp, which is not being built.])
-	    passed=no
-	fi
-	if test x$dir = xgnuradio-core; then
-	    AC_MSG_RESULT([Component gr-utils requires gnuradio-core, which is not being built.])
-	    passed=no
-	fi
-	if test x$dir = xgr-wxgui; then
-	    AC_MSG_RESULT([Component gr-utils requires gr-wxgui, which is not being built.])
-	    passed=no
-	fi
-    done
+    if test x$gnuradio_core_skipped = xyes; then
+        AC_MSG_RESULT([Component gr-utils requires gnuradio-core, which is not being built or specified via pre-installed files.])
+        passed=no
+    fi
+    if test x$usrp_skipped = xyes; then
+        AC_MSG_RESULT([Component gr-utils requires usrp, which is not being built or specified via pre-installed files.])
+        passed=no
+    fi
+    if test x$gr_wxgui_skipped = xyes; then
+        AC_MSG_RESULT([Component gr-utils requires gr-wxgui, which is not being built or specified via pre-installed files.])
+        passed=no
+    fi
 
     GRC_BUILD_CONDITIONAL([gr-utils])
 ])

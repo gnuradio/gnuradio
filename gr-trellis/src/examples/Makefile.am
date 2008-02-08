@@ -45,7 +45,7 @@ ourdatadir = $(exampledir)/trellis
 ourdata_DATA = $(EXTRA_DIST)
 
 # Make example scripts with #! executable
-install-data-local:
+install-data-local: install-ourdataDATA
 	for i in `find $(ourdatadir) -type f ! -perm 755`; do \
 	  if head -1 $$i | grep -q '^#!'; then \
 	    chmod 755 $$i; \

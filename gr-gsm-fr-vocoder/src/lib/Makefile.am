@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004,2005,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -30,10 +30,10 @@ SUBDIRS = gsm .
 ourpythondir = $(grpythondir)/vocoder
 ourlibdir    = $(grpyexecdir)/vocoder
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES)
-
+SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
+	$(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
 
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\
@@ -42,9 +42,8 @@ ALL_IFILES = 				\
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
 
-
 LOCAL_IFILES = 				\
-	$(top_srcdir)/gr-gsm-fr-vocoder/src/lib/gsm_full_rate.i				
+	$(top_srcdir)/gr-gsm-fr-vocoder/src/lib/gsm_full_rate.i
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _howto shared library

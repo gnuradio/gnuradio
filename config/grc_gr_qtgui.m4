@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -26,8 +26,14 @@ AC_DEFUN([GRC_GR_QTGUI],[
 	  gr-qtgui/src/lib/Makefile \
     ])
 
-    # Check for package qt or qt-mt, set QT_CFLAGS and QT_LIBS
     passed=yes
+    # Don't do gr-qtgui if gnuradio-core skipped
+    if test x$gnuradio_core_skipped = xyes; then
+        AC_MSG_RESULT([Component gr-qtgui requires gnuradio-core, which is not being built or specified via pre-installed files.])
+	passed=no
+    fi
+
+    # Check for package qt or qt-mt, set QT_CFLAGS and QT_LIBS
     PKG_CHECK_MODULES(QT, qt >= 3.3,[],
     [passed=no;AC_MSG_RESULT([gr-qtgui requires libqt or libqt-mt, libqt not found. Checking for libqt-mt])])
 

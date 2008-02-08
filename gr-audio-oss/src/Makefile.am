@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -48,21 +48,21 @@ BUILT_SOURCES = 			\
 ourpython_PYTHON =			\
 	audio_oss.py
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES)
+SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
+	$(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
 
 ourlib_LTLIBRARIES = _audio_oss.la
 
 _audio_oss_la_SOURCES = 		\
 	audio_oss.cc			\
 	audio_oss_sink.cc		\
-	audio_oss_source.cc			
-
+	audio_oss_source.cc
 
 grinclude_HEADERS =			\
 	audio_oss_sink.h		\
-	audio_oss_source.h			
+	audio_oss_source.h	
 
 swiginclude_HEADERS = 			\
 	$(LOCAL_IFILES)
@@ -71,7 +71,7 @@ _audio_oss_la_LIBADD = 			\
 	$(PYTHON_LDFLAGS)		\
 	$(GNURADIO_CORE_LA)		\
 	$(OSS_LIBS)			\
-	-lstdc++				
+	-lstdc++
 
 _audio_oss_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 

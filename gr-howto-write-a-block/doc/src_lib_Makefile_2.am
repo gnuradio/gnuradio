@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -28,10 +28,10 @@ include $(top_srcdir)/Makefile.common
 ourpythondir = $(grpythondir)
 ourlibdir    = $(grpyexecdir)
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
 SWIGCPPPYTHONARGS = -noruntime -c++ -python $(PYTHON_CPPFLAGS) \
-	-I$(swigincludedir) -I$(grincludedir)
+	-I$(swigincludedir) -I$(grincludedir) $(WITH_SWIG_INCLUDES)
 
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\

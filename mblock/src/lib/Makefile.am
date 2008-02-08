@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2007 Free Software Foundation, Inc.
+# Copyright 2006,2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,8 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = $(DEFINES) $(OMNITHREAD_INCLUDES) $(PMT_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES)
+INCLUDES = $(DEFINES) $(OMNITHREAD_INCLUDES) $(PMT_INCLUDES) \
+	$(BOOST_CFLAGS) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 # disable test until we fix ticket:180
 # TESTS = test_mblock

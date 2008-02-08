@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2003,2004,2006,2007 Free Software Foundation, Inc.
+# Copyright 2001,2003,2004,2006,2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -27,7 +27,8 @@ ourlibdir    = $(usrppyexecdir)
 
 INCLUDES = $(USRP_INCLUDES) 		\
 	   $(PYTHON_CPPFLAGS) 		\
-	   -I$(srcdir)
+	   -I$(srcdir)			\
+	   $(WITH_INCLUDES)
 
 LOCAL_IFILES =				\
 	prims.i
@@ -52,7 +53,8 @@ ourpython_PYTHON = 			\
 	usrp_prims.py			
 
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(INCLUDES)
+SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(INCLUDES) $(WITH_SWIG_INCLUDES) \
+	$(WITH_INCLUDES)
 
 
 ourlib_LTLIBRARIES = 			\

@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2007,2008 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -73,7 +73,6 @@ if test "$user_set_cxxflags" != yes; then
 fi
 AC_SUBST(autoconf_default_CXXFLAGS)
 AC_SUBST(swig_CXXFLAGS)
-
 
 LF_SET_WARNINGS
 GR_SET_GPROF
@@ -247,17 +246,30 @@ GRC_GR_SOUNDER			dnl this must come after GRC_USRP
 GRC_GR_UTILS
 GRC_GNURADIO_EXAMPLES		dnl must come last
 
-# Each component is now either to be built, was skipped, or failed dependencies
+# Each component is now either to be built, was skipped, will be
+# included from pre-installed libraries and includes, or failed
+# dependencies.
 AC_SUBST([build_dirs], [$build_dirs])
 AC_SUBST([skipped_dirs], [$skipped_dirs])
- 
+AC_SUBST([with_dirs], [$with_dirs])
+
+# 'with' variables - the pre-installed libraries, includes, and paths
+# - must always come last in the lists, so they require special
+# treatment.
+AC_SUBST(with_INCLUDES)
+AC_SUBST(with_SWIG_INCLUDES)
+AC_SUBST(with_PYDIRPATH)
+AC_SUBST(with_SWIGDIRPATH)
+AC_SUBST(with_LIBDIRPATH)
+
+# Local files tweaked by AC
 AC_CONFIG_FILES([\
     Makefile \
-    run_tests.sh
-    config/Makefile
+    run_tests.sh \
+    config/Makefile \
 ])
 
-dnl run_tests.sh is created from run_tests.in.sh.  Make it executable.
+dnl run_tests.sh is created from run_tests.sh.in .  Make it executable.
 AC_CONFIG_COMMANDS([run_tests_build], [chmod +x run_tests.sh])
 
 AC_OUTPUT
@@ -279,6 +291,19 @@ if test "$skipped_dirs" != ""; then
     echo to build them or they didn\'t pass configuration checks:
     echo
     for dir in $skipped_dirs
+    do
+        echo $dir
+    done
+    echo
+    echo These components will not be built.
+    echo
+fi
+if test "$with_dirs" != ""; then
+    echo "*********************************************************************"
+    echo The following components will be included from pre-installed
+    echo libraries and includes:
+    echo
+    for dir in $with_dirs
     do
         echo $dir
     done
