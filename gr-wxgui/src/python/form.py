@@ -338,11 +338,11 @@ class form(dict):
 # ----------------------------------------------------------------
 
 import sys
-from gnuradio.wxgui import stdgui
+from gnuradio.wxgui import stdgui2
 
-class demo_app_flow_graph (stdgui.gui_flow_graph):
+class demo_app_flow_graph (stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
-        stdgui.gui_flow_graph.__init__ (self, frame, panel, vbox, argv)
+        stdgui2.std_top_block.__init__ (self, frame, panel, vbox, argv)
 
         self.frame = frame
         self.panel = panel
@@ -384,7 +384,7 @@ class demo_app_flow_graph (stdgui.gui_flow_graph):
 
             
 def main ():
-    app = stdgui.stdapp (demo_app_flow_graph, "wxgui form demo", nstatus=1)
+    app = stdgui2.stdapp(demo_app_flow_graph, "wxgui form demo", nstatus=1)
     app.MainLoop ()
 
 if __name__ == '__main__':
