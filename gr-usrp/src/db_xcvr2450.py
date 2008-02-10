@@ -395,6 +395,9 @@ class xcvr2450(object):
 
         ok = self.lock_detect()
         print "lock detect:", ok
+        if(not ok):
+            ok = self.lock_detect()
+            print "lock detect:", ok
         return (ok, actual_freq)
 
     def lock_detect(self):
@@ -490,7 +493,9 @@ class db_xcvr2450_tx(db_xcvr2450_base):
 
     def set_gain(self, gain):
         return self.xcvr.set_tx_gain(gain)
-        
+
+    def i_and_q_swapped(self):
+        return True
 
 class db_xcvr2450_rx(db_xcvr2450_base):
     def __init__(self, usrp, which):
