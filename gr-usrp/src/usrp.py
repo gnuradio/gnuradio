@@ -367,11 +367,15 @@ def determine_tx_mux_value(u, subdev_spec):
     # determine the value manually.
 
     side = subdev_spec[0]  # side A = 0, side B = 1
-
     if not(side in (0, 1)):
         raise ValueError, "Invalid subdev_spec: %r:" % (subdev_spec,)
 
-    return gru.hexint([0x0098, 0x9800][side])
+    db = u.db[side]
+
+    if(db[0].i_and_q_swapped()):
+        return gru.hexint([0x0089, 0x8900][side])
+    else:
+        return gru.hexint([0x0098, 0x9800][side])
 
 
 def selected_subdev(u, subdev_spec):

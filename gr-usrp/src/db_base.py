@@ -214,7 +214,8 @@ class db_base(object):
 
     def i_and_q_swapped(self):
         """
-        Return True if this is a quadrature device and ADC 0 is Q.
+        Return True if this is a quadrature device and (for RX) ADC 0 is Q
+        or (for TX) DAC 0 is Q
         """
         return False
 
