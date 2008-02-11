@@ -254,6 +254,10 @@ AC_SUBST([build_dirs], [$build_dirs])
 AC_SUBST([skipped_dirs], [$skipped_dirs])
 AC_SUBST([with_dirs], [$with_dirs])
 
+# fix for older autotools that don't define "abs_top_YYY" by default
+AC_SUBST(abs_top_srcdir)
+AC_SUBST(abs_top_builddir)
+
 # 'with' variables - the pre-installed libraries, includes, and paths
 # - must always come last in the lists, so they require special
 # treatment.
