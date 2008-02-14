@@ -32,15 +32,16 @@ default_fftsink_size = (640,240)
 default_fft_rate = gr.prefs().get_long('wxgui', 'fft_rate', 15)
 
 class fft_sink_base(object):
-    def __init__(self, input_is_real=False, baseband_freq=0, y_per_div=10, ref_level=50,
+    def __init__(self, input_is_real=False, baseband_freq=0, y_per_div=10, 
+                 y_divs=8, ref_level=50,
                  sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate,
                  average=False, avg_alpha=None, title='', peak_hold=False):
 
         # initialize common attributes
         self.baseband_freq = baseband_freq
-        self.y_divs = 8
         self.y_per_div=y_per_div
+        self.y_divs = y_divs
         self.ref_level = ref_level
         self.sample_rate = sample_rate
         self.fft_size = fft_size
@@ -91,7 +92,7 @@ class fft_sink_base(object):
 
 class fft_sink_f(gr.hier_block2, fft_sink_base):
     def __init__(self, parent, baseband_freq=0,
-                 y_per_div=10, ref_level=50, sample_rate=1, fft_size=512,
+                 y_per_div=10, y_divs=8, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
                  title='', size=default_fftsink_size, peak_hold=False):
 
@@ -100,7 +101,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
                                 gr.io_signature(0,0,0))
 
         fft_sink_base.__init__(self, input_is_real=True, baseband_freq=baseband_freq,
-                               y_per_div=y_per_div, ref_level=ref_level,
+                               y_per_div=y_per_div, y_divs=y_divs, ref_level=ref_level,
                                sample_rate=sample_rate, fft_size=fft_size,
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, title=title,
@@ -131,7 +132,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
 
 class fft_sink_c(gr.hier_block2, fft_sink_base):
     def __init__(self, parent, baseband_freq=0,
-                 y_per_div=10, ref_level=50, sample_rate=1, fft_size=512,
+                 y_per_div=10, y_divs=8, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
                  title='', size=default_fftsink_size, peak_hold=False):
 
@@ -140,7 +141,7 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
                                 gr.io_signature(0,0,0))
 
         fft_sink_base.__init__(self, input_is_real=False, baseband_freq=baseband_freq,
-                               y_per_div=y_per_div, ref_level=ref_level,
+                               y_per_div=y_per_div, y_divs=y_divs, ref_level=ref_level,
                                sample_rate=sample_rate, fft_size=fft_size,
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, title=title,
