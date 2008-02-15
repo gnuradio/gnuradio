@@ -115,7 +115,7 @@ class app_top_block(stdgui2.std_top_block):
         elif options.oscilloscope:
             self.scope = scopesink2.scope_sink_c(panel, sample_rate=input_rate)
         else:
-            self.scope = fftsink2.fft_sink_c (panel, fft_size=1024, sample_rate=input_rate)
+            self.scope = fftsink2.fft_sink_c (panel, fft_size=1024, sample_rate=input_rate, y_divs = 10)
 
         self.connect(self.u, self.scope)
 
