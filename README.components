@@ -70,32 +70,34 @@ CONF_DOC_ARGS="
 CONF_DISABLE_ALL="--disable-all-components"
 
 # We use % instead of ' ' to be able to iterate with /bin/sh's for.
+# This variable should list all possible arguments, in tsorted order.
 CONF_ENABLE_ARGS="
 --enable-omnithread
+--with-omnithread%--enable-gnuradio-core
 --with-omnithread%--enable-pmt
 --with-omnithread%--with-pmt%--enable-mblock
---with-omnithread%--enable-gnuradio-core
 --with-omnithread%--with-pmt%--with-mblock%--enable-usrp
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--with-usrp%--enable-gr-usrp
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-audio-alsa
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-audio-jack
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-audio-oss
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-audio-osx
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-audio-portaudio
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-audio-windows
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-atsc
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-comedi
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-cvsd-vocoder
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--with-usrp%--enable-gr-gpio
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-gsm-fr-vocoder
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-pager
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-radar-mono
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-radio-astronomy
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-trellis
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-video-sdl
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-wxgui
---with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--with-usrp%with-gr-wxgui%--enable-gr-utils
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-sounder
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--with-usrp%--with-gr-wxgui%--enable-gr-utils
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gnuradio-examples
-"
-
-# These are not used, but a list of what the script does not build.
-CONF_DISABLE_ARGS="
---enable-gr-comedi
---enable-gr-cvsd-vocoder
---enable-gr-gpio
---enable-gr-gsm-fr-vocoder
---enable-gr-pager
---enable-gr-radar-mono
---enable-gr-radio-astronomy
---enable-gr-trellis
---enable-gr-video-sdl
---enable-gr-sounder
 "
 
 seq=0
