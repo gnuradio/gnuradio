@@ -1,6 +1,6 @@
 #!/bin/sh
  
-# $Id:$
+# $Id$
 
 # Copyright 2008 Free Software Foundation.
 #
@@ -27,7 +27,9 @@ echo -n "README.components START "; date
 # Avoid using rm -rf with $PREFIX, which could be /.  Make a backup of
 # the old prefix.
 sudo rm -rf $PREFIX.old
-sudo mv $PREFIX $PREFIX.old
+if [ -d $PREFIX ]; then
+    sudo mv $PREFIX $PREFIX.old
+fi
 rm -rf BUILD.*
 
 # Bootstrap just once, rather than once per module.
@@ -73,12 +75,12 @@ CONF_ENABLE_ARGS="
 --with-omnithread%--enable-pmt
 --with-omnithread%--with-pmt%--enable-mblock
 --with-omnithread%--enable-gnuradio-core
---with-omnithread%--enable-usrp
+--with-omnithread%--with-pmt%--with-mblock%--enable-usrp
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--with-usrp%--enable-gr-usrp
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-audio-oss
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-atsc
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-wxgui
---with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-utils
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--with-usrp%with-gr-wxgui%--enable-gr-utils
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gnuradio-examples
 "
 
@@ -96,8 +98,7 @@ CONF_DISABLE_ARGS="
 --enable-gr-sounder
 "
 
-# start at 1 to reserve 0 for "./README.components > BUILD.000 2>&1 &" 
-seq=1
+seq=0
 for arg in $CONF_ENABLE_ARGS; do
 
     # Convert sequence numbers and arguments to usable values.
