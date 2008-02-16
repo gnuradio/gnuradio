@@ -60,20 +60,75 @@ protected:
 public:
   virtual ~gr_hier_block2();
   
+  /*!
+   * \brief Add a stand-alone (possibly hierarchical) block to internal graph
+   *
+   * This adds a gr-block or hierarchical block to the internal graph
+   * without wiring it to anything else.
+   */
   void connect(gr_basic_block_sptr block);
 
+  /*!
+   * \brief Add gr-blocks or hierarchical blocks to internal graph and wire together
+   *
+   * This adds (if not done earlier by another connect) a pair of gr-blocks or 
+   * hierarchical blocks to the internal flowgraph, and wires the specified output 
+   * port to the specified input port.
+   */
   void connect(gr_basic_block_sptr src, int src_port, 
 	       gr_basic_block_sptr dst, int dst_port);
 
+  /*!
+   * \brief Remove a gr-block or hierarchical block from the internal flowgraph.
+   *
+   * This removes a gr-block or hierarchical block from the internal flowgraph,
+   * disconnecting it from other blocks as needed.
+   *
+   */
   void disconnect(gr_basic_block_sptr block);
 
+  /*!
+   * \brief Disconnect a pair of gr-blocks or hierarchical blocks in internal
+   *        flowgraph.
+   *
+   * This disconnects the specified input port from the specified output port
+   * of a pair of gr-blocks or hierarchical blocks.
+   */
   void disconnect(gr_basic_block_sptr src, int src_port,
 		  gr_basic_block_sptr dst, int dst_port);
 
+  /*!
+   * \brief Disconnect all connections in the internal flowgraph.
+   *
+   * This call removes all output port to input port connections in the internal
+   * flowgraph.
+   */
   void disconnect_all();
+
+  /*!
+   * Lock a flowgraph in preparation for reconfiguration.  When an equal
+   * number of calls to lock() and unlock() have occurred, the flowgraph
+   * will be restarted automatically.
+   *
+   * N.B. lock() and unlock() cannot be called from a flowgraph thread
+   * (E.g., gr_block::work method) or deadlock will occur when
+   * reconfiguration happens.
+   */
   virtual void lock();
+
+  /*!
+   * Unlock a flowgraph in preparation for reconfiguration.  When an equal
+   * number of calls to lock() and unlock() have occurred, the flowgraph
+   * will be restarted automatically.
+   *
+   * N.B. lock() and unlock() cannot be called from a flowgraph thread
+   * (E.g., gr_block::work method) or deadlock will occur when
+   * reconfiguration happens.
+   */
   virtual void unlock();
 
+  // This is a public method for ease of code organization, but should be
+  // ignored by the user.
   gr_flat_flowgraph_sptr flatten() const;
 };
 

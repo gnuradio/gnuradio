@@ -30,16 +30,36 @@ from gnuradio_swig_python import hier_block2_swig
 # It also allows us to intercept method calls if needed
 #
 class hier_block2(object):
+    """
+    Python wrapper around the C++ hierarchical block implementation.
+    Provides convenience functions and allows proper Python subclassing.
+    """
+
     def __init__(self, name, input_signature, output_signature):
+        """
+        Create a hierarchical block with a given name and I/O signatures.
+        """
 	self._hb = hier_block2_swig(name, input_signature, output_signature)
 
     def __getattr__(self, name):
+        """
+        Pass-through member requests to the C++ object.
+        """
 	return getattr(self._hb, name)
 
     def connect(self, *points):
-        '''connect requires one or more arguments that can be coerced to endpoints.
-        If more than two arguments are provided, they are connected together successively.
-        '''
+        """
+        Connect two or more block endpoints.  An endpoint is either a (block, port)
+        tuple, or just a block type.  In the latter case, the port number is assumed
+        to be zero.
+
+        To connect the hierarchical block external inputs or outputs to internal block
+        inputs or outputs, use 'self' in the connect call.
+
+        If multiple arguments are provided, connect will attempt to wire them in series,
+        interpreting the endpoints as inputs or outputs as appropriate.
+        """
+
         if len (points) < 1:
             raise ValueError, ("connect requires at least one endpoint; %d provided." % (len (points),))
 	else:
@@ -65,9 +85,15 @@ class hier_block2(object):
                 raise ValueError("unable to coerce endpoint")
 
     def disconnect(self, *points):
-        '''connect requires one or more arguments that can be coerced to endpoints.
+        """
+        Disconnect two endpoints in the flowgraph.
+
+        To disconnect the hierarchical block external inputs or outputs to internal block
+        inputs or outputs, use 'self' in the connect call.
+
         If more than two arguments are provided, they are disconnected successively.
-        '''
+        """
+        
         if len (points) < 1:
             raise ValueError, ("disconnect requires at least two endpoints; %d provided." % (len (points),))
         else:

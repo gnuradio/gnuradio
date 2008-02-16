@@ -89,7 +89,7 @@ public:
   virtual void lock();
 
   /*!
-   * Lock a flowgraph in preparation for reconfiguration.  When an equal
+   * Unlock a flowgraph in preparation for reconfiguration.  When an equal
    * number of calls to lock() and unlock() have occurred, the flowgraph
    * will be restarted automatically.
    *
