@@ -1,0 +1,126 @@
+#!/bin/sh
+ 
+# $Id:$
+
+# Copyright 2008 Free Software Foundation.
+#
+# This script provides a way to build GNU Radio modules individually,
+# and both serves as an example of using the component build system
+# and provides a way to test that build system.  This script is
+# intended to be broadly portable; be careful when modifying not to
+# cause problems on systems that place dependencies in other than /usr
+#
+# Besides GNU Radio dependencies, this program requires sudo, with a
+# timer long enough to build each module (or no password requirement).
+#
+# Read the script thoroughly before running it; it will *remove*
+# /usr/gnuradio and repopulate it.
+
+set -x
+
+PREFIX=/usr/gnuradio
+
+echo -n "README.components START "; date
+
+# This file provides an example of how to build GNU Radio under pkgsrc.
+
+# Avoid using rm -rf with $PREFIX, which could be /.  Make a backup of
+# the old prefix.
+sudo rm -rf $PREFIX.old
+sudo mv $PREFIX $PREFIX.old
+rm -rf BUILD.*
+
+# Bootstrap just once, rather than once per module.
+./bootstrap
+
+# Determine where prereqs come from.
+export LDFLAGS=
+export CPPFLAGS=
+export PKG_CONFIG_PATH=
+if [ -d /usr/pkg ]; then
+    # pkgsrc
+    LDFLAGS="$LDFLAGS -L/usr/pkg/lib -R/usr/pkg/lib"
+    CPPFLAGS="$CPPFLAGS -I/usr/pkg/include"
+
+    # pkg-config is from pkgsrc, so already knows about /usr/pkg/lib/pkgconfig
+    PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$PREFIX/lib/pkgconfig"
+fi
+
+echo LDFLAGS ,$LDFLAGS,
+echo CPPFLAGS ,$CPPFLAGS,
+echo PKG_CONFIG_PATH ,$PKG_CONFIG_PATH,
+
+# Determine number of cpus and thus how many jobs to run.
+ncpus=1
+case x`uname` in
+    xNetBSD)
+	ncpus=`sysctl hw.ncpu|awk '{print $3}'`
+	;;
+esac
+jflag=-j`expr $ncpus \* 2`
+
+# These are currently ignored.
+CONF_DOC_ARGS="
+--enable-doxygen
+--enable-dot
+--enable-latex-docs
+"
+CONF_DISABLE_ALL="--disable-all-components"
+
+# We use % instead of ' ' to be able to iterate with /bin/sh's for.
+CONF_ENABLE_ARGS="
+--enable-omnithread
+--with-omnithread%--enable-pmt
+--with-omnithread%--with-pmt%--enable-mblock
+--with-omnithread%--enable-gnuradio-core
+--with-omnithread%--enable-usrp
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--with-usrp%--enable-gr-usrp
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-audio-oss
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-atsc
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-wxgui
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-utils
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gnuradio-examples
+"
+
+# These are not used, but a list of what the script does not build.
+CONF_DISABLE_ARGS="
+--enable-gr-comedi
+--enable-gr-cvsd-vocoder
+--enable-gr-gpio
+--enable-gr-gsm-fr-vocoder
+--enable-gr-pager
+--enable-gr-radar-mono
+--enable-gr-radio-astronomy
+--enable-gr-trellis
+--enable-gr-video-sdl
+--enable-gr-sounder
+"
+
+# start at 1 to reserve 0 for "./README.components > BUILD.000 2>&1 &" 
+seq=1
+for arg in $CONF_ENABLE_ARGS; do
+
+    # Convert sequence numbers and arguments to usable values.
+    seqprint=`printf "%03d" $seq`
+    argspace=`echo $arg | sed -e 's/%/ /g'`
+
+    echo "BUILDING WITH $argspace"
+
+    (
+    # configure with just one module
+    ./configure --prefix=$PREFIX $CONF_DISABLE_ALL $argspace &&
+
+    # build
+    make $jflag &&
+
+    # install
+    sudo make install &&
+
+    echo "SUCCEEDED $argspace"
+
+    ) > BUILD.$seqprint.$arg 2>&1
+
+    seq=`expr $seq + 1`
+done
+
+echo -n "README.components FINISH "; date
