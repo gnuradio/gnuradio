@@ -50,7 +50,7 @@ class hier_block2(object):
     def connect(self, *points):
         """
         Connect two or more block endpoints.  An endpoint is either a (block, port)
-        tuple, or just a block type.  In the latter case, the port number is assumed
+        tuple or a block instance.  In the latter case, the port number is assumed
         to be zero.
 
         To connect the hierarchical block external inputs or outputs to internal block
