@@ -36,6 +36,8 @@
 #include <gr_message_sink.h>
 #include <gr_udp_sink.h>
 #include <gr_udp_source.h>
+#include <gr_wavfile_sink.h>
+#include <gr_wavfile_source.h>
 
 %}
 
@@ -54,4 +56,6 @@
 %include "gr_message_sink.i"
 %include "gr_udp_sink.i"
 %include "gr_udp_source.i"
+%include "gr_wavfile_sink.i"
+%include "gr_wavfile_source.i"
 

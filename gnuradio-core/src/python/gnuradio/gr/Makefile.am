@@ -21,8 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = run_tests.in
-
+EXTRA_DIST = 			\
+	run_tests.in		\
+	test_16bit_1chunk.wav
 
 TESTS = 			\
 	run_tests

@@ -27,6 +27,7 @@ EXTRA_DIST = 			\
 	audio_play.py		\
 	audio_to_file.py	\
 	dial_tone.py		\
+	dial_tone_wav.py	\
 	mono_tone.py		\
 	multi_tone.py		\
 	noise.py		\

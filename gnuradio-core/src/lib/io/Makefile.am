@@ -53,7 +53,10 @@ libio_la_SOURCES = 			\
 	ppio_ppdev.cc			\
 	sdr_1000.cc			\
 	gr_udp_sink.cc			\
-	gr_udp_source.cc
+	gr_udp_source.cc                \
+	gr_wavfile_sink.cc              \
+	gr_wavfile_source.cc            \
+	gri_wavfile.cc
 
 grinclude_HEADERS = 			\
 	gr_file_sink.h			\
@@ -83,7 +86,12 @@ grinclude_HEADERS = 			\
 	ppio_ppdev.h			\
 	sdr_1000.h			\
 	gr_udp_sink.h			\
-	gr_udp_source.h
+	gr_udp_source.h                 \
+	gr_wavfile_source.h	        \
+	gr_wavfile_sink.h               \
+	gri_wavfile.h
+
+
 
 
 swiginclude_HEADERS =			\
@@ -102,4 +110,7 @@ swiginclude_HEADERS =			\
 	ppio.i				\
 	sdr_1000.i			\
 	gr_udp_sink.i			\
-	gr_udp_source.i
+	gr_udp_source.i                 \
+	gr_wavfile_source.i             \
+	gr_wavfile_sink.i
+
