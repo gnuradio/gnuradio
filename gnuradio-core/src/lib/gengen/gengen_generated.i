@@ -90,6 +90,9 @@
 #include <gr_vector_source_f.h>
 #include <gr_vector_source_i.h>
 #include <gr_vector_source_s.h>
+#include <gr_xor_bb.h>
+#include <gr_xor_ii.h>
+#include <gr_xor_ss.h>
 %}
 
 %include <gr_add_cc.i>
@@ -180,3 +183,6 @@
 %include <gr_vector_source_f.i>
 %include <gr_vector_source_i.i>
 %include <gr_vector_source_s.i>
+%include <gr_xor_bb.i>
+%include <gr_xor_ii.i>
+%include <gr_xor_ss.i>

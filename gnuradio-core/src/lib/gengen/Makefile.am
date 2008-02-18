@@ -94,7 +94,10 @@ CODE_GENERATOR = 			\
 	gr_vector_source_X.i.t		\
 	gr_vector_sink_X.cc.t		\
 	gr_vector_sink_X.h.t		\
-	gr_vector_sink_X.i.t		
+	gr_vector_sink_X.i.t		\
+	gr_xor_XX.cc.t			\
+	gr_xor_XX.h.t			\
+	gr_xor_XX.i.t
 
 # include $(srcdir)/Makefile.gen
 include Makefile.gen

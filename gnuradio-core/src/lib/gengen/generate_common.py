@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2006,2007 Free Software Foundation, Inc.
+# Copyright 2004,2006,2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -58,6 +58,7 @@ others = (
     ('gr_chunks_to_symbols_XX',     ('bf', 'bc', 'sf', 'sc', 'if', 'ic')),
     ('gr_unpacked_to_packed_XX',    ('bb','ss','ii')),
     ('gr_packed_to_unpacked_XX',    ('bb','ss','ii')),
+    ('gr_xor_XX',                   ('bb','ss','ii')),
     ('gr_sample_and_hold_XX',       ('bb','ss','ii','ff')),
     ('gr_argmax_XX',                ('fs','is','ss')),
     ('gr_max_XX',                   ('ff','ii','ss')),

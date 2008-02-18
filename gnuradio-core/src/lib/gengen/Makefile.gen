@@ -89,7 +89,10 @@ GENERATED_H = \
 	gr_vector_source_c.h \
 	gr_vector_source_f.h \
 	gr_vector_source_i.h \
-	gr_vector_source_s.h
+	gr_vector_source_s.h \
+	gr_xor_bb.h \
+	gr_xor_ii.h \
+	gr_xor_ss.h
 
 GENERATED_I = \
 	gr_add_cc.i \
@@ -179,7 +182,10 @@ GENERATED_I = \
 	gr_vector_source_c.i \
 	gr_vector_source_f.i \
 	gr_vector_source_i.i \
-	gr_vector_source_s.i
+	gr_vector_source_s.i \
+	gr_xor_bb.i \
+	gr_xor_ii.i \
+	gr_xor_ss.i
 
 GENERATED_CC = \
 	gr_add_cc.cc \
@@ -269,5 +275,8 @@ GENERATED_CC = \
 	gr_vector_source_c.cc \
 	gr_vector_source_f.cc \
 	gr_vector_source_i.cc \
-	gr_vector_source_s.cc
+	gr_vector_source_s.cc \
+	gr_xor_bb.cc \
+	gr_xor_ii.cc \
+	gr_xor_ss.cc
 
