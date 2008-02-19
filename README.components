@@ -95,8 +95,8 @@ CONF_ENABLE_ARGS="
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-trellis
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-video-sdl
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-wxgui
---with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-sounder
---with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--with-usrp%--with-gr-wxgui%--enable-gr-utils
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--with-usrp%--enable-gr-sounder
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--with-usrp%--with-gr-usrp%--with-gr-wxgui%--enable-gr-utils
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gnuradio-examples
 "
 
@@ -112,6 +112,9 @@ for arg in $CONF_ENABLE_ARGS; do
     (
     # configure with just one module
     ./configure --prefix=$PREFIX $CONF_DISABLE_ALL $argspace &&
+
+    # remove all prior objects
+    make clean &&
 
     # build
     make $jflag &&
