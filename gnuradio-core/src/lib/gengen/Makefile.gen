@@ -19,6 +19,9 @@ GENERATED_H = \
 	gr_add_vff.h \
 	gr_add_vii.h \
 	gr_add_vss.h \
+	gr_and_bb.h \
+	gr_and_ii.h \
+	gr_and_ss.h \
 	gr_argmax_fs.h \
 	gr_argmax_is.h \
 	gr_argmax_ss.h \
@@ -59,6 +62,12 @@ GENERATED_H = \
 	gr_noise_source_f.h \
 	gr_noise_source_i.h \
 	gr_noise_source_s.h \
+	gr_not_bb.h \
+	gr_not_ii.h \
+	gr_not_ss.h \
+	gr_or_bb.h \
+	gr_or_ii.h \
+	gr_or_ss.h \
 	gr_packed_to_unpacked_bb.h \
 	gr_packed_to_unpacked_ii.h \
 	gr_packed_to_unpacked_ss.h \
@@ -112,6 +121,9 @@ GENERATED_I = \
 	gr_add_vff.i \
 	gr_add_vii.i \
 	gr_add_vss.i \
+	gr_and_bb.i \
+	gr_and_ii.i \
+	gr_and_ss.i \
 	gr_argmax_fs.i \
 	gr_argmax_is.i \
 	gr_argmax_ss.i \
@@ -152,6 +164,12 @@ GENERATED_I = \
 	gr_noise_source_f.i \
 	gr_noise_source_i.i \
 	gr_noise_source_s.i \
+	gr_not_bb.i \
+	gr_not_ii.i \
+	gr_not_ss.i \
+	gr_or_bb.i \
+	gr_or_ii.i \
+	gr_or_ss.i \
 	gr_packed_to_unpacked_bb.i \
 	gr_packed_to_unpacked_ii.i \
 	gr_packed_to_unpacked_ss.i \
@@ -205,6 +223,9 @@ GENERATED_CC = \
 	gr_add_vff.cc \
 	gr_add_vii.cc \
 	gr_add_vss.cc \
+	gr_and_bb.cc \
+	gr_and_ii.cc \
+	gr_and_ss.cc \
 	gr_argmax_fs.cc \
 	gr_argmax_is.cc \
 	gr_argmax_ss.cc \
@@ -245,6 +266,12 @@ GENERATED_CC = \
 	gr_noise_source_f.cc \
 	gr_noise_source_i.cc \
 	gr_noise_source_s.cc \
+	gr_not_bb.cc \
+	gr_not_ii.cc \
+	gr_not_ss.cc \
+	gr_or_bb.cc \
+	gr_or_ii.cc \
+	gr_or_ss.cc \
 	gr_packed_to_unpacked_bb.cc \
 	gr_packed_to_unpacked_ii.cc \
 	gr_packed_to_unpacked_ss.cc \

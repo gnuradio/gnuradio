@@ -85,6 +85,77 @@ class test_head (gr_unittest.TestCase):
         self.help_ii ((src1_data, src2_data),
                       expected_result, op)
 
+    def test_and_ss (self):
+        src1_data =       (1,  2,  3,  0x5004,   0x1150)
+        src2_data =       (8,  2,  1 , 0x0508,   0x1105)
+        expected_result = (0,  2,  1,  0x0000,   0x1100)
+        op = gr.and_ss ()
+        self.help_ss ((src1_data, src2_data),
+                      expected_result, op)
+
+    def test_and_bb (self):
+        src1_data =       (1,  2, 2,  3,  0x04,   0x50)
+        src2_data =       (8,  2, 2,  1,  0x08,   0x05)
+        src3_data =       (8,  2, 1,  1,  0x08,   0x05)
+        expected_result = (0,  2, 0,  1,  0x00,   0x00)
+        op = gr.and_bb ()
+        self.help_bb ((src1_data, src2_data, src3_data),
+                      expected_result, op)
+
+    def test_and_ii (self):
+        src1_data =       (1,  2,  3,  0x50005004,   0x11001150)
+        src2_data =       (8,  2,  1 , 0x05000508,   0x11001105)
+        expected_result = (0,  2,  1,  0x00000000,   0x11001100)
+        op = gr.and_ii ()
+        self.help_ii ((src1_data, src2_data),
+                      expected_result, op)
+
+    def test_or_ss (self):
+        src1_data =       (1,  2,  3,  0x5004,   0x1150)
+        src2_data =       (8,  2,  1 , 0x0508,   0x1105)
+        expected_result = (9,  2,  3,  0x550C,   0x1155)
+        op = gr.or_ss ()
+        self.help_ss ((src1_data, src2_data),
+                      expected_result, op)
+
+    def test_or_bb (self):
+        src1_data =       (1,  2, 2,  3,  0x04,   0x50)
+        src2_data =       (8,  2, 2,  1 , 0x08,   0x05)
+        src3_data =       (8,  2, 1,  1 , 0x08,   0x05)
+        expected_result = (9,  2, 3,  3,  0x0C,   0x55)
+        op = gr.or_bb ()
+        self.help_bb ((src1_data, src2_data, src3_data),
+                      expected_result, op)
+
+    def test_or_ii (self):
+        src1_data =       (1,  2,  3,  0x50005004,   0x11001150)
+        src2_data =       (8,  2,  1 , 0x05000508,   0x11001105)
+        expected_result = (9,  2,  3,  0x5500550C,   0x11001155)
+        op = gr.or_ii ()
+        self.help_ii ((src1_data, src2_data),
+                      expected_result, op)
+
+    def test_not_ss (self):
+        src1_data =       (1,      2,      3,       0x5004,   0x1150)
+        expected_result = (~1,     ~2,      ~3,       ~0x5004,   ~0x1150)
+        op = gr.not_ss ()
+        self.help_ss ((((src1_data),)),
+                      expected_result, op)
+
+    def test_not_bb (self):
+        src1_data =       (1,     2,    2,     3,     0x04,   0x50)
+        expected_result = (0xFE,  0xFD, 0xFD,  0xFC,  0xFB,   0xAF)
+        op = gr.not_bb ()
+        self.help_bb (((src1_data), ),
+                      expected_result, op)
+
+    def test_not_ii (self):
+        src1_data =       (1,    2,  3,  0x50005004,   0x11001150)
+        expected_result = (~1 , ~2, ~3, ~0x50005004,  ~0x11001150)
+        op = gr.not_ii ()
+        self.help_ii (((src1_data),),
+                      expected_result, op)
+
 
 
 if __name__ == '__main__':

@@ -19,6 +19,9 @@
 #include <gr_add_vff.h>
 #include <gr_add_vii.h>
 #include <gr_add_vss.h>
+#include <gr_and_bb.h>
+#include <gr_and_ii.h>
+#include <gr_and_ss.h>
 #include <gr_argmax_fs.h>
 #include <gr_argmax_is.h>
 #include <gr_argmax_ss.h>
@@ -59,6 +62,12 @@
 #include <gr_noise_source_f.h>
 #include <gr_noise_source_i.h>
 #include <gr_noise_source_s.h>
+#include <gr_not_bb.h>
+#include <gr_not_ii.h>
+#include <gr_not_ss.h>
+#include <gr_or_bb.h>
+#include <gr_or_ii.h>
+#include <gr_or_ss.h>
 #include <gr_packed_to_unpacked_bb.h>
 #include <gr_packed_to_unpacked_ii.h>
 #include <gr_packed_to_unpacked_ss.h>
@@ -112,6 +121,9 @@
 %include <gr_add_vff.i>
 %include <gr_add_vii.i>
 %include <gr_add_vss.i>
+%include <gr_and_bb.i>
+%include <gr_and_ii.i>
+%include <gr_and_ss.i>
 %include <gr_argmax_fs.i>
 %include <gr_argmax_is.i>
 %include <gr_argmax_ss.i>
@@ -152,6 +164,12 @@
 %include <gr_noise_source_f.i>
 %include <gr_noise_source_i.i>
 %include <gr_noise_source_s.i>
+%include <gr_not_bb.i>
+%include <gr_not_ii.i>
+%include <gr_not_ss.i>
+%include <gr_or_bb.i>
+%include <gr_or_ii.i>
+%include <gr_or_ss.i>
 %include <gr_packed_to_unpacked_bb.i>
 %include <gr_packed_to_unpacked_ii.i>
 %include <gr_packed_to_unpacked_ss.i>
