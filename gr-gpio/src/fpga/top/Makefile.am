@@ -23,6 +23,14 @@ include $(top_srcdir)/Makefile.common
 
 datadir = $(prefix)/share/usrp
 
+datarev2dir = $(datadir)/rev2
+
+datarev4dir = $(datadir)/rev4
+
+datarev2_DATA = usrp_gpio.rbf
+
+datarev4_DATA = usrp_gpio.rbf
+
 RBFS = usrp_gpio.rbf
 
 EXTRA_DIST = \
@@ -34,23 +42,6 @@ EXTRA_DIST = \
 	usrp_gpio.qsf \
 	usrp_gpio.v   \
 	$(RBFS)
-
-install-data-local:
-	@for file in $(RBFS); do \
-		echo "$(INSTALL_DATA) -D $(srcdir)/$$file $(DESTDIR)$(datadir)/rev2/$$file"; \
-		$(INSTALL_DATA) -D $(srcdir)/$$file $(DESTDIR)$(datadir)/rev2/$$file; \
-		echo "$(INSTALL_DATA) -D $(srcdir)/$$file $(DESTDIR)$(datadir)/rev4/$$file"; \
-		$(INSTALL_DATA) -D $(srcdir)/$$file $(DESTDIR)$(datadir)/rev4/$$file; \
-	done
-
-uninstall-local:
-	@for file in $(RBFS); do \
-		echo "$(RM) $(DESTDIR)$(datadir)/rev2/$$file"; \
-		$(RM) $(DESTDIR)$(datadir)/rev2/$$file; \
-		echo "$(RM) $(DESTDIR)$(datadir)/rev4/$$file"; \
-		$(RM) $(DESTDIR)$(datadir)/rev4/$$file; \
-	done
-
 
 MOSTLYCLEANFILES = 	\
 	db/*		\
