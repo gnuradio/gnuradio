@@ -25,7 +25,7 @@ include $(top_srcdir)/Makefile.common
 # If you need the int versions too, please figure out how to add them *cleanly* to 
 # this Makefile.am.
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 TESTS = rstest
 

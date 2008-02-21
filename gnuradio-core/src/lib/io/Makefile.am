@@ -22,7 +22,7 @@
 include $(top_srcdir)/Makefile.common
 
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(WITH_INCLUDES)
 
 noinst_LTLIBRARIES = libio.la
 

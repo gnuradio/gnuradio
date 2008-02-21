@@ -28,7 +28,7 @@ include $(top_srcdir)/Makefile.common
 grgrpythondir = $(grpythondir)/gr
 grgrlibdir    = $(grpyexecdir)/gr
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) -I$(srcdir) \
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) -I$(srcdir) \
 	 $(WITH_INCLUDES)
 
 EXTRA_DIST = gen-swig-bug-fix
@@ -69,7 +69,7 @@ BUILT_SOURCES =				\
 	gnuradio_swig_py_io.h		\
 	gnuradio_swig_bug_workaround.h	
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(INCLUDES) $(WITH_SWIG_INCLUDES) \
+SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(AM_CPPFLAGS) $(WITH_SWIG_INCLUDES) \
 	$(WITH_INCLUDES)
 
 # ----------------------------------------------------------------

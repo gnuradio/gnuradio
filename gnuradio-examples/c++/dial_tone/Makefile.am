@@ -22,7 +22,7 @@
 include $(top_srcdir)/Makefile.common
 
 # For compiling within the GNU Radio build tree
-INCLUDES=$(STD_DEFINES_AND_INCLUDES) \
+AM_CPPFLAGS=$(STD_DEFINES_AND_INCLUDES) \
          -I$(top_srcdir)/gr-audio-alsa/src \
 	 $(WITH_INCLUDES)
 
@@ -31,10 +31,10 @@ GR_AUDIO_ALSA_LA=$(top_builddir)/gr-audio-alsa/src/libgr_audio_alsa.la
 # For compiling outside the tree, these will get fished out by pkgconfig
 
 noinst_PROGRAMS = dial_tone
-    
+
 noinst_HEADERS = \
     dial_tone.h
-        
+
 dial_tone_SOURCES = \
     dial_tone.cc	   \
     main.cc

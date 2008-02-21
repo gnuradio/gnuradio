@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = $(USRP_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES) \
+AM_CPPFLAGS = $(USRP_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES) \
 	   $(WITH_INCLUDES)
 
 bin_PROGRAMS =				\

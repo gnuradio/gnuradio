@@ -25,7 +25,7 @@ ourpythondir = $(usrppythondir)
 ourlibdir    = $(usrppyexecdir)
 
 
-INCLUDES = $(USRP_INCLUDES) 		\
+AM_CPPFLAGS = $(USRP_INCLUDES) 		\
 	   $(PYTHON_CPPFLAGS) 		\
 	   -I$(srcdir)			\
 	   $(WITH_INCLUDES)
@@ -53,7 +53,7 @@ ourpython_PYTHON = 			\
 	usrp_prims.py			
 
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(INCLUDES) $(WITH_SWIG_INCLUDES) \
+SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(AM_CPPFLAGS) $(WITH_SWIG_INCLUDES) \
 	$(WITH_INCLUDES)
 
 

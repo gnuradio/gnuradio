@@ -28,7 +28,7 @@ include $(top_srcdir)/Makefile.common
 ourpythondir = $(grpythondir)
 ourlibdir    = $(grpyexecdir)
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 	$(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 EXTRA_DIST =					\

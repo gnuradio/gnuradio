@@ -61,7 +61,7 @@ ourpython_PYTHON =			\
         usrp_multi.py			
 
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES)  \
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES)  \
 	   $(PYTHON_CPPFLAGS) 		\
 	   $(USRP_INCLUDES)		\
 	   $(WITH_INCLUDES)

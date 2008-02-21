@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = $(DEFINES) $(OMNITHREAD_INCLUDES) $(PMT_INCLUDES) \
+AM_CPPFLAGS = $(DEFINES) $(OMNITHREAD_INCLUDES) $(PMT_INCLUDES) \
 	$(BOOST_CFLAGS) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 # disable test until we fix ticket:180

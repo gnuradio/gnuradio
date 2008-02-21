@@ -32,10 +32,10 @@ libusrp_la_common_LIBADD = 		\
 
 # darwin fusb requires omnithreads
 if FUSB_TECH_darwin
-INCLUDES = $(common_INCLUDES) $(OMNITHREAD_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(common_INCLUDES) $(OMNITHREAD_INCLUDES) $(WITH_INCLUDES)
 libusrp_la_LIBADD = $(libusrp_la_common_LIBADD) $(OMNITHREAD_LA)
 else
-INCLUDES = $(common_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(common_INCLUDES) $(WITH_INCLUDES)
 libusrp_la_LIBADD = $(libusrp_la_common_LIBADD)
 endif
 

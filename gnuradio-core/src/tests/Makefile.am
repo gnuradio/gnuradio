@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 # list of programs run by "make check" and "make distcheck"
 

@@ -27,7 +27,7 @@ include $(top_srcdir)/Makefile.common
 # we should do some configure hacking to determine these on the fly
 OMNITHREAD_DEFINES = -DPthreadDraftVersion=10
 
-INCLUDES = $(DEFINES) $(OMNITHREAD_DEFINES) $(OMNITHREAD_INCLUDES) \
+AM_CPPFLAGS = $(DEFINES) $(OMNITHREAD_DEFINES) $(OMNITHREAD_INCLUDES) \
 	 $(WITH_INCLUDES)
 
 # we call it libgromnithread to avoid a collision with libomnithread on Debian

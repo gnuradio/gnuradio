@@ -20,7 +20,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-INCLUDES = 	\
+AM_CPPFLAGS = 	\
 	$(DEFINES) $(OMNITHREAD_INCLUDES) $(PMT_INCLUDES) $(MBLOCK_INCLUDES) \
 	$(USRP_INCLUDES) $(BOOST_CFLAGS) $(CPPUNIT_INCLUDES) \
 	-I$(srcdir)/../../apps-inband $(WITH_INCLUDES)

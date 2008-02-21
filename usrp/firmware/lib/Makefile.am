@@ -30,7 +30,7 @@ EXTRA_DIST = 		\
 
 
 DEFINES=
-INCLUDES=-I$(top_srcdir)/usrp/firmware/include
+FW_INCLUDES=-I$(top_srcdir)/usrp/firmware/include
 
 # with EA = 0, the FX2 implements a portion of the 8051 "external memory"
 # on chip.  This memory is mapped like this:
@@ -58,7 +58,7 @@ LIBOBJS = 		\
 all: libfx2.lib
 
 .c.rel:
-	$(XCC) $(INCLUDES) $(DEFINES) -c $< -o $@
+	$(XCC) $(FW_INCLUDES) $(DEFINES) -c $< -o $@
 
 $(LIBRARY): $(LIBOBJS)
 	-rm -f $(LIBRARY)

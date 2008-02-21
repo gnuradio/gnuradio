@@ -54,7 +54,7 @@ EXTRA_DIST =			\
 
 
 DEFINES=-DHAVE_USRP2
-INCLUDES=-I$(top_srcdir)/usrp/firmware/include \
+FW_INCLUDES=-I$(top_srcdir)/usrp/firmware/include \
          -I$(top_srcdir)/usrp/firmware/src/usrp2 \
 	 -I$(top_srcdir)/usrp/firmware/src/common \
 	 -I$(top_builddir)/usrp/firmware/src/common
@@ -91,7 +91,7 @@ noinst_SCRIPTS = 		\
 
 
 .c.rel:
-	$(XCC) $(INCLUDES) $(DEFINES) \
+	$(XCC) $(FW_INCLUDES) $(DEFINES) \
 		-c -o $@ `test -f '$<' || echo '$(srcdir)/'`$<
 
 .a51.rel:
