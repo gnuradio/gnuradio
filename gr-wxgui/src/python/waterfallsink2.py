@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2003,2004,2005,2007 Free Software Foundation, Inc.
+# Copyright 2003,2004,2005,2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -260,25 +260,6 @@ class waterfall_window (wx.Panel):
             a.append(const)
         return a
 
-    def make_colormap(self):
-        r = []
-        r.extend(self.const_list(0,96))
-        r.extend(range(0,255,4))
-        r.extend(self.const_list(255,64))
-        r.extend(range(255,128,-4))
-        
-        g = []
-        g.extend(self.const_list(0,32))
-        g.extend(range(0,255,4))
-        g.extend(self.const_list(255,64))
-        g.extend(range(255,0,-4))
-        g.extend(self.const_list(0,32))
-        
-        b = range(128,255,4)
-        b.extend(self.const_list(255,64))
-        b.extend(range(255,0,-4))
-        b.extend(self.const_list(0,96))
-        return (r,g,b)
 
     def set_data (self, evt):
         dB = evt.data
@@ -313,18 +294,18 @@ class waterfall_window (wx.Panel):
                value = int(dB[x_pos] * scale_factor)
                value = min(255, max(0, value))
                dc1.SetPen(self.pens[value])
-               dc1.DrawRectangle(x_pos*p_width, 0, p_width, 1) 
+               dc1.DrawRectangle(x_pos*p_width, 0, p_width, 2) 
         else:                               # complex fft
            for x_pos in range(0, d_max):    # positive freqs
                value = int(dB[x_pos] * scale_factor)
                value = min(255, max(0, value))
                dc1.SetPen(self.pens[value])
-               dc1.DrawRectangle(x_pos*p_width + d_max, 0, p_width, 1) 
+               dc1.DrawRectangle(x_pos*p_width + d_max, 0, p_width, 2) 
            for x_pos in range(0 , d_max):   # negative freqs
                value = int(dB[x_pos+d_max] * scale_factor)
                value = min(255, max(0, value))
                dc1.SetPen(self.pens[value])
-               dc1.DrawRectangle(x_pos*p_width, 0, p_width, 1) 
+               dc1.DrawRectangle(x_pos*p_width, 0, p_width, 2) 
 
         self.DoDrawing (None)
 
