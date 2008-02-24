@@ -3,7 +3,7 @@ Section: comm
 Priority: optional
 Maintainer: Johnathan Corgan <jcorgan@corganenterprises.com>
 Build-Conflicts: automake1.8, automake1.9
-Build-Depends: debhelper (>= 5.0.37.2), autotools-dev, doxygen, fftw3-dev | libfftw3-dev, libasound2-dev, libboost-dev, libcppunit-dev, libjack0.100.0-dev, libsdl1.2-dev, portaudio19-dev, libtool, libusb-dev, pkg-config, python, python-all-dev, python-central (>= 0.5), python-numpy, python-wxgtk2.6, sdcc, swig, xmlto
+Build-Depends: debhelper (>= 5.0.37.2), autotools-dev, doxygen, fftw3-dev | libfftw3-dev, libasound2-dev, libboost-dev, libcppunit-dev, libjack0.100.0-dev, libsdl1.2-dev, portaudio19-dev, libtool, libusb-dev, pkg-config, python, python-all-dev, python-central (>= 0.5), python-numpy, python-wxgtk2.8, sdcc, swig, xmlto
 Standards-Version: 3.7.2
 XS-Python-Version: >= 2.3
 
@@ -378,6 +378,23 @@ Section: contrib/comm
 XB-Python-Version: ${python:Versions}
 Description: GNU Radio Channel Sounder Application
  This package provides an RF channel sounder application for GNU Radio
+
+Package: gnuradio-gpio-firmware
+Section: contrib/comm
+Architecture: all
+Description: GNU Radio Streaming GPIO Application
+ This package provides streaming digital GPIO capabilities for GNU Radio
+ .
+ This package contains the custom FPGA bitstrings for the USRP, which 
+ require non-free tools to build.
+
+Package: gnuradio-gpio
+Architecture: any
+Depends: ${python:Depends}, ${shlibs:Depends}, python-gnuradio-usrp, gnuradio-gpio-firmware
+Section: contrib/comm
+XB-Python-Version: ${python:Versions}
+Description: GNU Radio Streaming Digital Application
+ This package provides a streaming digital GPIO capabilities for GNU Radio
 
 Package: gnuradio-radar-mono-firmware
 Section: contrib/comm
