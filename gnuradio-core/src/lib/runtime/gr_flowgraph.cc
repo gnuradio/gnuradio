@@ -124,7 +124,7 @@ gr_flowgraph::check_valid_port(gr_io_signature_sptr sig, int port)
   }
 
   int max = sig->max_streams();
-  if (max >= 0 && port >= max) {
+  if (max != gr_io_signature::IO_INFINITE && port >= max) {
     msg << "port number " << port << " exceeds max of ";
     if (max == 0)
       msg << "(none)";
@@ -230,16 +230,23 @@ gr_flowgraph::check_contiguity(gr_basic_block_sptr block,
 
   int nports = used_ports.size();
   int min_ports = sig->min_streams();
+  int max_ports = sig->max_streams();
 
-  if (nports == 0) {
-    if (min_ports == 0)
-      return;
-    else {
-      msg << block << ": insufficient connected " 
-	  << (check_inputs ? "input ports " : "output ports ") 
-	  << "(" << min_ports+1 << " needed, " << nports+1 << " connected)";
-      throw std::runtime_error(msg.str());
-    }
+  if (nports == 0 && min_ports == 0)
+    return;
+
+  if (nports < min_ports) {
+    msg << block << ": insufficient connected "
+       << (check_inputs ? "input ports " : "output ports ")
+       << "(" << min_ports << " needed, " << nports << " connected)";
+    throw std::runtime_error(msg.str());
+  }
+
+  if (nports > max_ports && max_ports != gr_io_signature::IO_INFINITE) {
+    msg << block << ": too many connected "
+       << (check_inputs ? "input ports " : "output ports ")
+       << "(" << max_ports << " allowed, " << nports << " connected)";
+    throw std::runtime_error(msg.str());
   }
 
   if (used_ports[nports-1]+1 != nports) {
