@@ -193,7 +193,7 @@ $EXTRACT gr-video-sdl/src/Makefile ourlib_LTLIBRARIES | \
 NAME=debian/gnuradio-utils.install
 rm -f $NAME
 touch $NAME
-$EXTRACT gr-utils/src/python/Makefile outpython_PYTHON >>$NAME
+$EXTRACT gr-utils/src/python/Makefile ourpython_PYTHON >>$NAME
 $EXTRACT gr-utils/src/python/Makefile bin_SCRIPTS >>$NAME
 
 # gnuradio-examples
