@@ -307,6 +307,7 @@ class waterfall_window (wx.Panel):
                dc1.SetPen(self.pens[value])
                dc1.DrawRectangle(x_pos*p_width, 0, p_width, 2) 
 
+	del dc1
         self.DoDrawing (None)
 
     def on_average(self, evt):
