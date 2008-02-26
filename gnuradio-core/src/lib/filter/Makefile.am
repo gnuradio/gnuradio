@@ -176,10 +176,6 @@ libfilter_la_common_SOURCES = 		\
 	gr_iir_filter_ffd.cc		\
 	gr_sincos.c			\
 	gr_single_pole_iir_filter_ff.cc	\
-	gr_single_pole_avg_filter_ff.cc	\
-	gr_single_pole_rec_filter_ff.cc	\
-	gr_single_zero_avg_filter_ff.cc	\
-	gr_single_zero_rec_filter_ff.cc	\
 	gr_single_pole_iir_filter_cc.cc	\
 	gri_goertzel.cc			\
 	gri_mmse_fir_interpolator.cc	\
@@ -238,17 +234,9 @@ grinclude_HEADERS = 			\
 	gr_iir_filter_ffd.h		\
 	gr_rotator.h			\
 	gr_sincos.h			\
-	gr_single_pole_avg.h		\
-	gr_single_pole_rec.h		\
 	gr_single_pole_iir.h		\
 	gr_single_pole_iir_filter_ff.h	\
-	gr_single_pole_avg_filter_ff.h	\
-	gr_single_pole_rec_filter_ff.h	\
-	gr_single_zero_avg_filter_ff.h	\
-	gr_single_zero_rec_filter_ff.h	\
-	gr_single_pole_iir_filter_cc.h	\
-	gr_single_zero_avg.h		\
-	gr_single_zero_rec.h		\
+	gr_single_pole_iir_filter_cc.h  \
 	gri_goertzel.h			\
 	gri_iir.h			\
 	gri_mmse_fir_interpolator.h	\
@@ -301,10 +289,6 @@ swiginclude_HEADERS =			\
 	gr_hilbert_fc.i			\
 	gr_iir_filter_ffd.i		\
 	gr_single_pole_iir_filter_ff.i	\
-	gr_single_pole_avg_filter_ff.i	\
-	gr_single_pole_rec_filter_ff.i	\
-	gr_single_zero_avg_filter_ff.i	\
-	gr_single_zero_rec_filter_ff.i	\
 	gr_single_pole_iir_filter_cc.i	\
 	$(GENERATED_I)
 
