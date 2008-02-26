@@ -35,7 +35,7 @@ class ofdm_sync_pn(gr.hier_block2):
         
 	gr.hier_block2.__init__(self, "ofdm_sync_pn",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-				gr.io_signature(1, 1, gr.sizeof_gr_complex*fft_length)) # Output signature
+				gr.io_signature2(2, 2, gr.sizeof_gr_complex*fft_length, gr.sizeof_char*fft_length)) # Output signature
 
         # FIXME: when converting to hier_block2's, the output signature
         # should be the output of the divider (the normalized peaks) and
@@ -89,11 +89,7 @@ class ofdm_sync_pn(gr.hier_block2):
         self.sub1 = gr.add_const_ff(-1)
         self.pk_detect = gr.peak_detector_fb(0.20, 0.20, 30, 0.001)
         #self.pk_detect = gr.peak_detector2_fb(9)
-        #self.pk_detect = gr.threshold_detector_fb(0.5)
-        self.regen = gr.regenerate_bb(symbol_length)
 
-        # FIXME: If sampler doesn't get proper input, it can completely
-        # stall the flowgraph.
         self.sampler = gr.ofdm_sampler(fft_length,symbol_length)
 
         self.connect(self, self.input)
@@ -125,19 +121,18 @@ class ofdm_sync_pn(gr.hier_block2):
         
         self.connect(self.matched_filter, self.sub1, self.pk_detect)
         #self.connect(self.matched_filter, self.pk_detect)
-        self.connect(self.pk_detect, self.regen)
-        self.connect(self.regen, (self.sampler,1))
+        self.connect(self.pk_detect, (self.sampler,1))
         self.connect(self.pk_detect, (self.sample_and_hold,1))
 
         # Set output from sampler
-        self.connect(self.sampler, (self,0))
+        self.connect((self.sampler,0), (self,0))
+        self.connect((self.sampler,1), (self,1))
 
         if logging:
             self.connect(self.matched_filter, gr.file_sink(gr.sizeof_float, "ofdm_sync_pn-mf_f.dat"))
             self.connect(self.normalize, gr.file_sink(gr.sizeof_float, "ofdm_sync_pn-theta_f.dat"))
             self.connect(self.angle, gr.file_sink(gr.sizeof_float, "ofdm_sync_pn-epsilon_f.dat"))
             self.connect(self.pk_detect, gr.file_sink(gr.sizeof_char, "ofdm_sync_pn-peaks_b.dat"))
-            self.connect(self.regen, gr.file_sink(gr.sizeof_char, "ofdm_sync_pn-regen_b.dat"))
             self.connect(self.sigmix, gr.file_sink(gr.sizeof_gr_complex, "ofdm_sync_pn-sigmix_c.dat"))
             self.connect(self.sampler, gr.file_sink(gr.sizeof_gr_complex*fft_length, "ofdm_sync_pn-sampler_c.dat"))
             self.connect(self.sample_and_hold, gr.file_sink(gr.sizeof_float, "ofdm_sync_pn-sample_and_hold_f.dat"))

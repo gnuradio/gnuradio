@@ -29,7 +29,8 @@ class gr_ofdm_sampler;
 typedef boost::shared_ptr<gr_ofdm_sampler> gr_ofdm_sampler_sptr;
 
 gr_ofdm_sampler_sptr gr_make_ofdm_sampler (unsigned int fft_length, 
-					   unsigned int symbol_length);
+					   unsigned int symbol_length,
+					   unsigned int timeout=100);
 
 /*!
  * \brief does the rest of the OFDM stuff
@@ -39,12 +40,19 @@ gr_ofdm_sampler_sptr gr_make_ofdm_sampler (unsigned int fft_length,
 class gr_ofdm_sampler : public gr_block
 {
   friend gr_ofdm_sampler_sptr gr_make_ofdm_sampler (unsigned int fft_length, 
-						    unsigned int symbol_length);
+						    unsigned int symbol_length,
+						    unsigned int timeout);
 
   gr_ofdm_sampler (unsigned int fft_length, 
-		   unsigned int symbol_length);
+		   unsigned int symbol_length,
+		   unsigned int timeout);
 
  private:
+  enum state_t {STATE_NO_SIG, STATE_PREAMBLE, STATE_FRAME};
+
+  state_t d_state;
+  unsigned int d_timeout_max;
+  unsigned int d_timeout;
   unsigned int d_fft_length;
   unsigned int d_symbol_length;
 

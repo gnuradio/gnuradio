@@ -48,7 +48,7 @@ gr_ofdm_frame_acquisition::gr_ofdm_frame_acquisition (unsigned occupied_carriers
 						      const std::vector<gr_complex> &known_symbol,
 						      unsigned int max_fft_shift_len)
   : gr_block ("ofdm_frame_acquisition",
-	      gr_make_io_signature  (1, 1, sizeof(gr_complex)*fft_length),
+	      gr_make_io_signature2 (2, 2, sizeof(gr_complex)*fft_length, sizeof(char)*fft_length),
 	      gr_make_io_signature2 (2, 2, sizeof(gr_complex)*occupied_carriers, sizeof(char))),
     d_occupied_carriers(occupied_carriers),
     d_fft_length(fft_length),
@@ -101,63 +101,33 @@ gr_ofdm_frame_acquisition::coarse_freq_comp(int freq_delta, int symbol_count)
   //return d_phase_lut[MAX_NUM_SYMBOLS * (d_freq_shift_len + freq_delta) + symbol_count];
 }
 
-bool
+void
 gr_ofdm_frame_acquisition::correlate(const gr_complex *symbol, int zeros_on_left)
 {
-  unsigned int i = 0;
-  int search_delta = 0;
-  bool found = false;
+  unsigned int i,j;
   
-  gr_complex h_sqrd = gr_complex(0.0,0.0);
-  float power = 0.0F;
-
   std::fill(d_symbol_phase_diff.begin(), d_symbol_phase_diff.end(), 0);
   for(i = 0; i < d_fft_length-2; i++) {
     d_symbol_phase_diff[i] = fabs(gr_fast_atan2f(symbol[i]) - gr_fast_atan2f(symbol[i+2]));
   }
 
-  
-  while(!found && ((unsigned)abs(search_delta) <= d_freq_shift_len)) {
-    h_sqrd = gr_complex(0.0,0.0);
-    power = 0.0F;
-    
-    //FIXME: power calculation doesn't really make sense 
-    for(i = 0; i < d_occupied_carriers; i++) {
-      h_sqrd += (d_known_phase_diff[i] * d_symbol_phase_diff[i+zeros_on_left+search_delta]);
-      power += d_known_phase_diff[i]*d_known_phase_diff[i];
+  // sweep through all possible/allowed frequency offsets and select the best
+  int index = 0;
+  float max = 0, sum=0;
+  for(i =  zeros_on_left - d_freq_shift_len; i < zeros_on_left + d_freq_shift_len; i++) {
+    sum = 0;
+    for(j = 0; j < d_occupied_carriers; j++) {
+      sum += (d_known_phase_diff[j] * d_symbol_phase_diff[i+j]);
     }
-    
-    if(VERBOSE) {
-      printf("bin %d\th_sqrd = ( %f, %f )\t power = %f\t real(h)/p = %f\t angle = %f\n",
-	     search_delta, h_sqrd.real(), h_sqrd.imag(), power, h_sqrd.real()/power, arg(h_sqrd));
-    }
-
-    //FIXME: these threshold values are arbitrary, although the decision metric is very good
-    // even at very low SNR
-    if((h_sqrd.real() > 0.95*power) && (h_sqrd.real() < 1.1*power)) {
-      found = true;
-      d_coarse_freq = search_delta;
-      d_phase_count = 1;
-     
-      //printf("bin %d\th_sqrd = ( %f, %f )\t power = %f\t real(h)/p = %f\t angle = %f\n",
-      //     search_delta, h_sqrd.real(), h_sqrd.imag(), power, h_sqrd.real()/power, arg(h_sqrd));
-
-      if(VERBOSE) {
-	printf("CORR: Found, bin %d\tdB\tcorr power fraction %f\n",
-	       search_delta, h_sqrd.real()/power);
-      }
-      break;
-    }
-    else {
-      if(search_delta <= 0)
-	search_delta = (-search_delta) + 2;
-      else
-	search_delta = -search_delta;
+    if(fabs(sum) > max) {
+      max = sum;
+      index = i;
     }
   }
-  return found;
+  
+  // set the coarse frequency offset relative to the edge of the occupied tones
+  d_coarse_freq = index - zeros_on_left;
 }
-
 
 void
 gr_ofdm_frame_acquisition::calculate_equalizer(const gr_complex *symbol, int zeros_on_left)
@@ -204,22 +174,22 @@ gr_ofdm_frame_acquisition::general_work(int noutput_items,
 					gr_vector_void_star &output_items)
 {
   const gr_complex *symbol = (const gr_complex *)input_items[0];
+  const char *signal_in = (const char *)input_items[1];
 
   gr_complex *out = (gr_complex *) output_items[0];
-  char *sig = (char *) output_items[1];
+  char *signal_out = (char *) output_items[1];
   
   int unoccupied_carriers = d_fft_length - d_occupied_carriers;
   int zeros_on_left = (int)ceil(unoccupied_carriers/2.0);
 
-  int found = 0;
-  found = correlate(symbol, zeros_on_left);
-  if(found) {
+  if(signal_in[0]) {
     d_phase_count = 1;
+    correlate(symbol, zeros_on_left);
     calculate_equalizer(symbol, zeros_on_left);
-    sig[0] = 1;
+    signal_out[0] = 1;
   }
   else {
-    sig[0] = 0;
+    signal_out[0] = 0;
   } 
 
   for(unsigned int i = 0; i < d_occupied_carriers; i++) {

@@ -81,7 +81,7 @@ protected:
   
  private:
   unsigned char slicer(gr_complex x);
-  bool correlate(const gr_complex *symbol, int zeros_on_left);
+  void correlate(const gr_complex *symbol, int zeros_on_left);
   void calculate_equalizer(const gr_complex *symbol, int zeros_on_left);
   gr_complex coarse_freq_comp(int freq_delta, int count);
   

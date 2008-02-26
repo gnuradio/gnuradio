@@ -99,7 +99,9 @@ class ofdm_receiver(gr.hier_block2):
                                                         cp_length, ks[0])
 
         self.connect(self, self.chan_filt)
-        self.connect(self.chan_filt, self.ofdm_sync, self.fft_demod, (self.ofdm_frame_acq,0))
+        self.connect(self.chan_filt, self.ofdm_sync)
+        self.connect((self.ofdm_sync,0), self.fft_demod, (self.ofdm_frame_acq,0))
+        self.connect((self.ofdm_sync,1), (self.ofdm_frame_acq,1))
         self.connect((self.ofdm_frame_acq,0), (self,0))
         self.connect((self.ofdm_frame_acq,1), (self,1))
 
