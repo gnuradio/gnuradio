@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -138,9 +138,9 @@ gr_test::general_work (int noutput_items,
          }       
        }
      } 
-     //Now copy input to output untill max ninputs or max noutputs is reached
+     //Now copy input to output until max ninputs or max noutputs is reached
      int common_nports=std::min(ninputs,noutputs); 
-     if(d_sizeof_output_item==d_sizeof_input_item);    
+     if(d_sizeof_output_item==d_sizeof_input_item)   
        for (int i = 0; i < common_nports; i++)
        {
          memcpy(output_items[i],input_items[i],noutput_items*d_sizeof_input_item);
