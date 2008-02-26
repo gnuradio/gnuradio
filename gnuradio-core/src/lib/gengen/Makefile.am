@@ -80,6 +80,9 @@ CODE_GENERATOR = 			\
 	gr_peak_detector_XX.cc.t	\
 	gr_peak_detector_XX.h.t		\
 	gr_peak_detector_XX.i.t		\
+	gr_sample_and_hold_XX.cc.t	\
+	gr_sample_and_hold_XX.h.t	\
+	gr_sample_and_hold_XX.i.t	\
 	gr_sig_source_X.cc.t		\
 	gr_sig_source_X.h.t		\
 	gr_sig_source_X.i.t		\
