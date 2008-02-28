@@ -61,7 +61,8 @@ class app_top_block(stdgui2.std_top_block):
         elif options.oscilloscope:
             self.scope = scopesink2.scope_sink_f(panel, sample_rate=sample_rate)
         else:
-            self.scope = fftsink2.fft_sink_f (panel, fft_size=1024, sample_rate=sample_rate, fft_rate=30)
+            self.scope = fftsink2.fft_sink_f (panel, fft_size=1024, sample_rate=sample_rate, fft_rate=30,
+					      ref_scale=1.0, ref_level=0, y_divs=12)
 
 	self.src = audio.source (sample_rate, options.audio_input)
 

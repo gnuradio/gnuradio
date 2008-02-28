@@ -91,7 +91,7 @@ class fft_sink_base(object):
         
 
 class fft_sink_f(gr.hier_block2, fft_sink_base):
-    def __init__(self, parent, baseband_freq=0,
+    def __init__(self, parent, baseband_freq=0, ref_scale=1.0,
                  y_per_div=10, y_divs=8, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
                  title='', size=default_fftsink_size, peak_hold=False):
@@ -122,7 +122,10 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
 
         # FIXME  We need to add 3dB to all bins but the DC bin
         self.log = gr.nlog10_ff(20, self.fft_size,
-                               -20*math.log10(self.fft_size)-10*math.log10(power/self.fft_size))
+                               -20*math.log10(self.fft_size)		# Adjust for number of bins
+			       -10*math.log10(power/self.fft_size)	# Adjust for windowing loss
+			       -20*math.log10(ref_scale))		# Adjust for reference scale
+			       
         self.sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
 	self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
 
@@ -131,7 +134,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
 
 
 class fft_sink_c(gr.hier_block2, fft_sink_base):
-    def __init__(self, parent, baseband_freq=0,
+    def __init__(self, parent, baseband_freq=0, ref_scale=1.0,
                  y_per_div=10, y_divs=8, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
                  title='', size=default_fftsink_size, peak_hold=False):
@@ -162,7 +165,10 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
 
         # FIXME  We need to add 3dB to all bins but the DC bin
         self.log = gr.nlog10_ff(20, self.fft_size,
-                                -20*math.log10(self.fft_size)-10*math.log10(power/self.fft_size))
+                                -20*math.log10(self.fft_size)		# Adjust for number of bins
+				-10*math.log10(power/self.fft_size)	# Adjust for windowing loss
+				-20*math.log10(ref_scale))		# Adjust for reference scale
+				
         self.sink = gr.message_sink(gr.sizeof_float * self.fft_size, self.msgq, True)
 	self.connect(self, self.s2p, self.one_in_n, self.fft, self.c2mag, self.avg, self.log, self.sink)
 

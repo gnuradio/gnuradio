@@ -102,7 +102,7 @@ class my_top_block (stdgui2.std_top_block):
         if 1 and not(no_gui):
             self.src_fft = fftsink2.fft_sink_c(self.panel, title="Data from USRP",
                                                fft_size=512, sample_rate=self.rxpath.if_rate,
-                                               ref_level=80, y_per_div=20)
+                                               ref_scale=32768.0, ref_level=0, y_per_div=10, y_divs=12)
             self.connect (self.rxpath.u, self.src_fft)
             vbox.Add (self.src_fft.win, 4, wx.EXPAND)
         if 1 and not(no_gui):

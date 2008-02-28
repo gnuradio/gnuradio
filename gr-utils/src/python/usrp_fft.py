@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005,2007 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -115,7 +115,8 @@ class app_top_block(stdgui2.std_top_block):
         elif options.oscilloscope:
             self.scope = scopesink2.scope_sink_c(panel, sample_rate=input_rate)
         else:
-            self.scope = fftsink2.fft_sink_c (panel, fft_size=1024, sample_rate=input_rate, y_divs = 10)
+            self.scope = fftsink2.fft_sink_c (panel, fft_size=1024, sample_rate=input_rate, 
+					      ref_scale=32768.0, ref_level=0.0, y_divs = 10)
 
         self.connect(self.u, self.scope)
 

@@ -150,7 +150,8 @@ class wfm_rx_block (stdgui2.std_top_block):
 
         if 1:
             self.src_fft = fftsink2.fft_sink_c(self.panel, title="Data from USRP",
-                                               fft_size=512, sample_rate=usrp_rate)
+                                               fft_size=512, sample_rate=usrp_rate,
+					       ref_scale=32768.0, ref_level=0, y_divs=12)
             self.connect (self.u, self.src_fft)
             vbox.Add (self.src_fft.win, 4, wx.EXPAND)
 
