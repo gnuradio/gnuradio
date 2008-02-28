@@ -10,6 +10,9 @@ abs_top_srcdir=@abs_top_srcdir@
 # Absolute path to the top of the build directory
 abs_top_builddir=@abs_top_builddir@
 
+# current QA srcdir
+export srcdir=$3
+
 # Where to find my swig generated shared library
 mylibdir=$2/src:$2/src/.libs:$2/src/lib:$2/src/lib/.libs
 

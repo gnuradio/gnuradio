@@ -25,6 +25,8 @@ from gnuradio import gr, gr_unittest
 import os
 from os.path import getsize
 
+g_in_file = os.path.join (os.getenv ("srcdir"), "test_16bit_1chunk.wav")
+
 class qa_wavefile(gr_unittest.TestCase):
 
     def setUp (self):
@@ -34,12 +36,12 @@ class qa_wavefile(gr_unittest.TestCase):
         self.tb = None
 
     def test_001_checkwavread (self):
-	wf = gr.wavfile_source("./test_16bit_1chunk.wav")
+	wf = gr.wavfile_source(g_in_file)
 	self.assertEqual(wf.sample_rate(), 8000)
 
     # disabled.  Fails on PPC
     def xtest_002_checkwavcopy (self):
-	infile  = "test_16bit_1chunk.wav"
+	infile  = g_in_file
 	outfile = "test_out.wav"
 
 	wf_in  = gr.wavfile_source(infile)
