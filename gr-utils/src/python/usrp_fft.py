@@ -75,6 +75,8 @@ class app_top_block(stdgui2.std_top_block):
                           help="Enable oscilloscope display")
 	parser.add_option("", "--avg-alpha", type="eng_float", default=1e-1,
 			  help="Set fftsink averaging factor, default=[%default]")
+	parser.add_option("", "--ref-scale", type="eng_float", default=13490.0,
+			  help="Set dBFS=0dB input value, default=[%default]")
         (options, args) = parser.parse_args()
         if len(args) != 0:
             parser.print_help()
@@ -118,7 +120,7 @@ class app_top_block(stdgui2.std_top_block):
             self.scope = scopesink2.scope_sink_c(panel, sample_rate=input_rate)
         else:
             self.scope = fftsink2.fft_sink_c (panel, fft_size=1024, sample_rate=input_rate, 
-					      ref_scale=32768.0, ref_level=0.0, y_divs = 10,
+					      ref_scale=options.ref_scale, ref_level=0.0, y_divs = 10,
 					      avg_alpha=options.avg_alpha)
 
         self.connect(self.u, self.scope)
