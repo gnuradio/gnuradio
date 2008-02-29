@@ -95,6 +95,7 @@ CONF_ENABLE_ARGS="
 --with-omnithread%--with-pmt%--enable-mblock
 --with-omnithread%--with-pmt%--with-mblock%--enable-usrp
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--with-usrp%--enable-gr-usrp
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-msdd6000
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-audio-alsa
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-audio-jack
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-audio-oss
