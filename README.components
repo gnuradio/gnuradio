@@ -18,7 +18,10 @@
 
 set -x
 
-PREFIX=/opt/gnuradio
+# Do not use /opt, because many systems do not have /opt and that
+# risks running out of space in /.  Probably this needs OS-specific
+# overrides.
+PREFIX=/usr/gnuradio
 
 echo -n "README.components START "; date
 
@@ -90,7 +93,7 @@ CONF_ENABLE_ARGS="
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--with-usrp%--enable-gr-gpio
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-gsm-fr-vocoder
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-pager
---with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-radar-mono
+--with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--with-usrp%--enable-gr-radar-mono
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-radio-astronomy
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-trellis
 --with-omnithread%--with-gnuradio-core%--with-pmt%--with-mblock%--enable-gr-video-sdl
