@@ -52,11 +52,12 @@ CODE_GENERATOR = 				\
 	trellis_viterbi_X.h.t			\
 	trellis_viterbi_X.i.t
 
-include Makefile.gen
+include $(srcdir)/Makefile.gen
 
-$(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
+$(srcdir)/Makefile.gen $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
 	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python \
 		srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
+	touch $(srcdir)/Makefile.in
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _trellis shared library

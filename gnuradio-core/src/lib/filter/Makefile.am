@@ -62,15 +62,11 @@ CODE_GENERATOR = 					\
 	gr_freq_xlating_fir_filter_XXX.h.t		\
 	gr_freq_xlating_fir_filter_XXX.i.t
 
+include $(srcdir)/Makefile.gen
 
-
-# include $(srcdir)/Makefile.gen
-include Makefile.gen
-
-
-$(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
+$(srcdir)/Makefile.gen $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
 	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
-
+	touch $(srcdir)/Makefile.in
 
 BUILT_SOURCES = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC)
 

@@ -111,13 +111,11 @@ CODE_GENERATOR = 			\
 	gr_not_XX.h.t			\
 	gr_not_XX.i.t
 
-# include $(srcdir)/Makefile.gen
-include Makefile.gen
+include $(srcdir)/Makefile.gen
 
-
-$(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
+$(srcdir)/Makefile.gen $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
 	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
-
+	touch $(srcdir)/Makefile.in
 
 BUILT_SOURCES = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC)
 
