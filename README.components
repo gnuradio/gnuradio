@@ -4,24 +4,38 @@
 
 # Copyright 2008 Free Software Foundation.
 #
+# DO NOT RUN THIS SCRIPT UNTIL YOU UNDERSTAND IT!!!  IT WILL REMOVE
+# FILES ON YOUR SYSTEM.
+#
+# Read the script thoroughly before running it; it will *remove*
+# /usr/local/gnuradio and repopulate it.
+#
 # This script provides a way to build GNU Radio modules individually,
 # and both serves as an example of using the component build system
-# and provides a way to test that build system.  This script is
-# intended to be broadly portable; be careful when modifying not to
-# cause problems on systems that place dependencies in other than /usr
+# and provides a way to test the build system.  When run, it will
+# build and install each GNU Radio module in turn, using the
+# just-installed modules as prerequisites.  It places the output of
+# each build in a separate file BUILD.NNN.options, so that one can do
+# 'tail -f BUILD.*' to see which components were successfully built.
+
+# This script is intended to be broadly portable; be careful when
+# modifying not to cause problems on systems that place dependencies
+# in other than /usr
 #
 # Besides GNU Radio dependencies, this program requires sudo, with a
 # timer long enough to build each module (or no password requirement).
 #
-# Read the script thoroughly before running it; it will *remove*
-# /usr/gnuradio and repopulate it.
 
 set -x
 
 # Do not use /opt, because many systems do not have /opt and that
-# risks running out of space in /.  Probably this needs OS-specific
-# overrides.
-PREFIX=/usr/gnuradio
+# risks running out of space in /.  /usr/local/gnuradio is believed to
+# be reasonable on all of *BSD and GNU/Linux.  Probably this needs
+# OS-specific overrides.
+PREFIX=/usr/local/gnuradio
+
+echo "ABOUT TO COMPLETELY REMOVE $PREFIX in 10 SECONDS!"
+sleep 10
 
 echo -n "README.components START "; date
 
