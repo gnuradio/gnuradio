@@ -5,7 +5,7 @@ includedir=@includedir@
 
 Name: usrp
 Description: USRP C++ Interface with in-band signaling
-Requires: libusb mblock pmt usrp gnuradio-omnithread
+Requires: mblock pmt gnuradio-omnithread libusb
 Version: @VERSION@
-Libs: -L${libdir} -lusrp-inband -lusrp -lmblock -lpmt -lgromnithread -lusb
+Libs: -L${libdir} -lusrp-inband -lusrp
 Cflags: -I${includedir} @DEFINES@

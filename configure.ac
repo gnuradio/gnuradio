@@ -33,10 +33,16 @@ fi
 
 AM_INIT_AUTOMAKE(gnuradio,3.1svn)
 
+dnl add ${prefix}/lib/pkgconfig to the head of the PKG_CONFIG_PATH
+if test [x]${PKG_CONFIG_PATH} = x; then
+    PKG_CONFIG_PATH=${prefix}/lib/pkgconfig
+else
+    PKG_CONFIG_PATH=${prefix}/lib/pkgconfig:${PKG_CONFIG_PATH}
+fi
+export PKG_CONFIG_PATH
 
 DEFINES=""
 AC_SUBST(DEFINES)
-
 
 dnl Remember if the user explicity set CXXFLAGS
 if test -n "${CXXFLAGS}"; then
@@ -61,8 +67,8 @@ if test "$user_set_cxxflags" != yes; then
   if test "$GXX" = yes; then
     case "$host_cpu" in
     	powerpc*)
-	   # "-O1" is broken on the PPC for some reason
-	   # (at least as of g++ 4.1.1)
+	   dnl "-O1" is broken on the PPC for some reason
+	   dnl (at least as of g++ 4.1.1)
 	   swig_CXXFLAGS="-g1 -O2"
 	;;
     	*) 
@@ -101,7 +107,6 @@ AC_CHECK_LIB(socket,socket)
 
 dnl check for threads (mandatory)
 GR_OMNITHREAD
-#AC_SUBST(PTHREAD_CFLAGS)
 CFLAGS="${CFLAGS} $PTHREAD_CFLAGS"
 CXXFLAGS="${CXXFLAGS} $PTHREAD_CFLAGS"
 
@@ -202,6 +207,9 @@ PKG_CHECK_EXISTS(cppunit,
   [AM_PATH_CPPUNIT([1.9.14],[],
 		[AC_MSG_ERROR([GNU Radio requires cppunit.  Stop])])])
 
+dnl see if GUILE is installed
+AC_PATH_PROG(GUILE,guile)
+
 CPPUNIT_INCLUDES=$CPPUNIT_CFLAGS
 AC_SUBST(CPPUNIT_INCLUDES)
 
@@ -209,14 +217,29 @@ dnl Define where to find boost includes
 dnl defines BOOST_CFLAGS
 GR_REQUIRE_BOOST_INCLUDES
 
-# If this is being done from a subversion tree, create variables
+dnl If this is being done from a subversion tree, create variables
 GR_SUBVERSION
 
 dnl Component specific configuration
 dnl The order of the GR_ macros determines the order of compilation
+dnl For -any- checks on $enable_all_components
+dnl use the following guildlines:
+dnl   yes : --enable-all-components was specified, so error out if any
+dnl         components do not pass configuration checks.
+dnl   no  : --disable-all-components was specified, so try to build the
+dnl         --enable'd components, and error out if any do not pass
+dnl         configuration checks.
+dnl   ""  : this option was not specified on the command line; try to
+dnl         build all components that are not --with'd, but don't
+dnl         error out if any component does not pass configuration checks.
+dnl
+dnl For each --enable-foo component, if that flag is not specified on
+dnl the command line, the related variable $enable_foo will be set to
+dnl $enable_all_components .
+
 AC_ARG_ENABLE(
     [all-components],
-    [  --enable-all-components Build all components or stop on failed dependencies]
+    [  --enable-all-components Build all configurable components (default), or stop on failed dependencies]
 )
 
 build_dirs="config"
@@ -244,7 +267,7 @@ GRC_GR_TRELLIS
 GRC_GR_VIDEO_SDL
 GRC_GR_WXGUI
 GRC_GR_SOUNDER			dnl this must come after GRC_USRP
-GRC_GR_UTILS
+GRC_GR_UTILS                    dnl this must come after GRC_GR_WXGUI
 GRC_GNURADIO_EXAMPLES		dnl must come last
 
 # Each component is now either to be built, was skipped, will be

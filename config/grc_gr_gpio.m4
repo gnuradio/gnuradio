@@ -18,31 +18,24 @@ dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_GPIO],[
-    GRC_ENABLE([gr-gpio])
+    GRC_ENABLE(gr-gpio)
+
+    dnl Don't do gr-gpio if usrp skipped
+    GRC_CHECK_DEPENDENCY(gr-gpio, usrp)
 
     AC_CONFIG_FILES([ \
-	 gr-gpio/Makefile \
-	 gr-gpio/src/Makefile \
-	 gr-gpio/src/fpga/Makefile \
-	 gr-gpio/src/fpga/include/Makefile \
-	 gr-gpio/src/fpga/top/Makefile \
-         gr-gpio/src/fpga/lib/Makefile \
-	 gr-gpio/src/lib/Makefile \
-	 gr-gpio/src/python/Makefile \
-         gr-gpio/src/python/run_tests
+        gr-gpio/Makefile \
+        gr-gpio/src/Makefile \
+        gr-gpio/src/fpga/Makefile \
+        gr-gpio/src/fpga/include/Makefile \
+        gr-gpio/src/fpga/top/Makefile \
+        gr-gpio/src/fpga/lib/Makefile \
+        gr-gpio/src/lib/Makefile \
+        gr-gpio/src/python/Makefile \
+        gr-gpio/src/python/run_tests
     ])
 
-    passed=yes
-    # Don't do gr-gpio if usrp skipped
-    for dir in $skipped_dirs
-    do
-	if test x$dir = xusrp; then
-	    AC_MSG_RESULT([Component gr-gpio requires usrp, which is not being built.])
-	    passed=no
-	fi
-    done
-
-    GRC_BUILD_CONDITIONAL([gr-gpio],[
+    GRC_BUILD_CONDITIONAL(gr-gpio,[
 	dnl run_tests is created from run_tests.in.  Make it executable.
 	AC_CONFIG_COMMANDS([run_tests_gpio], [chmod +x gr-gpio/src/python/run_tests])
     ])

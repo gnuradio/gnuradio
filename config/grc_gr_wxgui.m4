@@ -18,37 +18,30 @@ dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_WXGUI],[
-    GRC_ENABLE([gr-wxgui])
-    GRC_WITH([gr-wxgui])
-    passed=no
-    if test x$with_gr_wxgui = xyes; then
-        if test x$enable_gr_wxgui = xyes; then
-	    AC_MSG_ERROR([Component gr-wxgui: Cannot use both --enable and --with])
-        else
-	    PKG_CHECK_MODULES(GR_WXGUI, gr-wxgui, passed=with,
-	    	   AC_MSG_RESULT([Component gr-wxgui: PKGCONFIG cannot find info]))
-	fi
-    fi
-    dnl if $passed = with, then "--with" worked; ignore the "--enable" stuff
-    dnl otherwise, $passed = no; check the "--enable" stuff
-    if test x$passed = xno; then
-        AC_CONFIG_FILES([ \
-	    gr-wxgui/Makefile \
-	    gr-wxgui/gr-wxgui.pc \
-	    gr-wxgui/src/Makefile \
-	    gr-wxgui/src/python/Makefile \
-        ])
+    GRC_ENABLE(gr-wxgui)
 
-        passed=yes
-        # Don't do gr-wxgui if gnuradio-core skipped
-        if test x$gnuradio_core_skipped = xyes; then
-            AC_MSG_RESULT([Component gr-wxgui requires gnuradio-core, which is not being built or specified via pre-installed files.])
-            passed=no
-        fi
-        # Don't do gr-wxgui if wxPython is not available
+    GRC_WITH(gr-wxgui)
+
+    dnl Don't do gr-wxgui if gnuradio-core skipped
+    GRC_CHECK_DEPENDENCY(gr-wxgui, gnuradio-core)
+
+    dnl If execution gets to here, $passed will be:
+    dnl   with : if the --with code didn't error out
+    dnl   yes  : if the --enable code passed muster and all dependencies are met
+    dnl   no   : otherwise
+    if test $passed = yes; then
+        dnl Don't do gr-wxgui if wxPython is not available
         if ! ${PYTHON} -c 'import wx'; then
             passed=no
         fi
     fi
-    GRC_BUILD_CONDITIONAL([gr-wxgui])
+
+    AC_CONFIG_FILES([ \
+        gr-wxgui/Makefile \
+        gr-wxgui/gr-wxgui.pc \
+        gr-wxgui/src/Makefile \
+        gr-wxgui/src/python/Makefile \
+    ])
+
+    GRC_BUILD_CONDITIONAL(gr-wxgui)
 ])

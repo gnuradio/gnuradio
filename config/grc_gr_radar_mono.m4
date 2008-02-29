@@ -18,34 +18,27 @@ dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_RADAR_MONO],[
-    GRC_ENABLE([gr-radar-mono])
+    GRC_ENABLE(gr-radar-mono)
+
+    dnl Don't do gr-radar-mono if usrp or gnuradio-core skipped
+    GRC_CHECK_DEPENDENCY(gr-radar-mono, usrp)
+    GRC_CHECK_DEPENDENCY(gr-radar-mono, gnuradio-core)
 
     AC_CONFIG_FILES([ \
-	 gr-radar-mono/Makefile \
-	 gr-radar-mono/doc/Makefile \
-	 gr-radar-mono/src/Makefile \
-	 gr-radar-mono/src/fpga/Makefile \
-	 gr-radar-mono/src/fpga/top/Makefile \
-         gr-radar-mono/src/fpga/lib/Makefile \
-         gr-radar-mono/src/fpga/models/Makefile \
-	 gr-radar-mono/src/fpga/tb/Makefile \
-	 gr-radar-mono/src/lib/Makefile \
-	 gr-radar-mono/src/python/Makefile \
-         gr-radar-mono/src/python/run_tests
+        gr-radar-mono/Makefile \
+        gr-radar-mono/doc/Makefile \
+        gr-radar-mono/src/Makefile \
+        gr-radar-mono/src/fpga/Makefile \
+        gr-radar-mono/src/fpga/top/Makefile \
+        gr-radar-mono/src/fpga/lib/Makefile \
+        gr-radar-mono/src/fpga/models/Makefile \
+        gr-radar-mono/src/fpga/tb/Makefile \
+        gr-radar-mono/src/lib/Makefile \
+        gr-radar-mono/src/python/Makefile \
+        gr-radar-mono/src/python/run_tests
     ])
 
-    passed=yes
-    # Don't do gr-radar-mono if usrp or gnuradio-core skipped
-    if test x$usrp_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-radar-mono requires usrp, which is not being built or specified via pre-installed files.])
-        passed=no
-    fi
-    if test x$gnuradio_core_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-radar-mono requires gnuradio-core, which is not being built or specified via pre-installed files.])
-	passed=no
-    fi
-
-    GRC_BUILD_CONDITIONAL([gr-radar-mono],[
+    GRC_BUILD_CONDITIONAL(gr-radar-mono,[
 	dnl run_tests is created from run_tests.in.  Make it executable.
 	AC_CONFIG_COMMANDS([run_tests_radar_mono], [chmod +x gr-radar-mono/src/python/run_tests])
     ])

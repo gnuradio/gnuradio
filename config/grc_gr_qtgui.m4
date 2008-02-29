@@ -18,33 +18,30 @@ dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_QTGUI],[
-    GRC_ENABLE([gr-qtgui])
+    GRC_ENABLE(gr-qtgui)
+
+    dnl Don't do gr-qtgui if gnuradio-core skipped
+    GRC_CHECK_DEPENDENCY(gr-qtgui, gnuradio-core)
+
+    dnl If execution gets to here, $passed will be:
+    dnl   with : if the --with code didn't error out
+    dnl   yes  : if the --enable code passed muster and all dependencies are met
+    dnl   no   : otherwise
+    if test $passed = yes; then
+	dnl Check for package qt or qt-mt, set QT_CFLAGS and QT_LIBS
+        PKG_CHECK_MODULES(QT, qt >= 3.3, [], [
+      	    PKG_CHECK_MODULES(QT, qt-mt >= 3.3, [],
+	        [passed=no;AC_MSG_RESULT([gr-qtgui requires libqt or libqt-mt, neither found.])])])
+
+        dnl Fetch QWT variables
+        GR_QWT([], [passed=no])
+    fi
 
     AC_CONFIG_FILES([ \
-	  gr-qtgui/Makefile \
-	  gr-qtgui/src/Makefile \
-	  gr-qtgui/src/lib/Makefile \
+        gr-qtgui/Makefile \
+        gr-qtgui/src/Makefile \
+        gr-qtgui/src/lib/Makefile \
     ])
 
-    passed=yes
-    # Don't do gr-qtgui if gnuradio-core skipped
-    if test x$gnuradio_core_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-qtgui requires gnuradio-core, which is not being built or specified via pre-installed files.])
-	passed=no
-    fi
-
-    # Check for package qt or qt-mt, set QT_CFLAGS and QT_LIBS
-    PKG_CHECK_MODULES(QT, qt >= 3.3,[],
-    [passed=no;AC_MSG_RESULT([gr-qtgui requires libqt or libqt-mt, libqt not found. Checking for libqt-mt])])
-
-    if test x$passed == xno; then
-	passed=yes
-	PKG_CHECK_MODULES(QT, qt-mt >= 3.3,[],
-    	[passed=no;AC_MSG_RESULT([gr-qtgui requires libqt or libqt-mt, neither found.])])
-    fi
-
-    # Fetch QWT variables
-    GR_QWT([], [passed=no])
-
-    GRC_BUILD_CONDITIONAL([gr-qtgui],[])
+    GRC_BUILD_CONDITIONAL(gr-qtgui)
 ])

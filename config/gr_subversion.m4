@@ -31,6 +31,6 @@ AC_DEFUN([GR_SUBVERSION],[
 	    SVNDATE=`$SVN info . | grep 'Last Changed Date' | cut -f 4-6 -d ' '`
 	fi
 
-	AC_SUBST([SVNVERSION],[$SVNVERSION])
-	AC_SUBST([SVNDATE],[$SVNDATE])
+	AC_SUBST(SVNVERSION)
+	AC_SUBST(SVNDATE)
 ])

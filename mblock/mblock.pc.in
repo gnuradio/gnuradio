@@ -5,7 +5,7 @@ includedir=@includedir@
 
 Name: mblock
 Description: The GNU Radio message block library
-Requires: gnuradio-omnithread pmt
+Requires: pmt gnuradio-omnithread
 Version: @VERSION@
-Libs: -L${libdir} -lmblock -lgromnithread -lpmt
-Cflags: -I${includedir} @DEFINES@ @PTHREAD_CFLAGS@
+Libs: -L${libdir} -lmblock
+Cflags: -I${includedir} @DEFINES@

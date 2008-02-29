@@ -18,7 +18,7 @@
 
 set -x
 
-PREFIX=/usr/gnuradio
+PREFIX=/opt/gnuradio
 
 echo -n "README.components START "; date
 

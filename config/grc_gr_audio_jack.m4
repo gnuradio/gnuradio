@@ -18,26 +18,28 @@ dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_AUDIO_JACK],[
-    GRC_ENABLE([gr-audio-jack])
+    GRC_ENABLE(gr-audio-jack)
+
+    dnl Don't do gr-audio-jack if gnuradio-core skipped
+    GRC_CHECK_DEPENDENCY(gr-audio-jack, gnuradio-core)
+
+    dnl If execution gets to here, $passed will be:
+    dnl   with : if the --with code didn't error out
+    dnl   yes  : if the --enable code passed muster and all dependencies are met
+    dnl   no   : otherwise
+    if test $passed = yes; then
+        dnl Don't do gr-audio-jack if in 'jack' isn't installed
+        PKG_CHECK_MODULES(JACK, jack >= 0.8, [],
+            [passed=no;AC_MSG_RESULT([gr-audio-jack requires package jack, not found.])])
+    fi
 
     AC_CONFIG_FILES([ \
-	gr-audio-jack/Makefile \
+        gr-audio-jack/Makefile \
         gr-audio-jack/src/Makefile \
-	gr-audio-jack/src/run_tests \
+        gr-audio-jack/src/run_tests \
     ])
 
-    passed=yes
-    # Don't do gr-audio-jack if gnuradio-core skipped
-    if test x$gnuradio_core_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-audio-jack requires gnuradio-core, which is not being built or specified via pre-installed files.])
-	passed=no
-    fi
-    # Don't do gr-audio-jack if in 'jack' isn't installed
-    PKG_CHECK_MODULES(JACK, jack >= 0.8,[],
-        [passed=no;AC_MSG_RESULT([gr-audio-jack requires package jack, not found.])])
-
-    GRC_BUILD_CONDITIONAL([gr-audio-jack],[
-	AC_SUBST(JACK_LIBS)
+    GRC_BUILD_CONDITIONAL(gr-audio-jack,[
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_jack], [chmod +x gr-audio-jack/src/run_tests])
     ])

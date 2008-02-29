@@ -18,26 +18,19 @@ dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_USRP],[
-    GRC_ENABLE([gr-usrp])
+    GRC_ENABLE(gr-usrp)
+
+    dnl Don't do gr-usrp if usrp or gnuradio-core skipped
+    GRC_CHECK_DEPENDENCY(gr-usrp, usrp)
+    GRC_CHECK_DEPENDENCY(gr-usrp, gnuradio-core)
 
     AC_CONFIG_FILES([ \
-	 gr-usrp/Makefile \
-	 gr-usrp/src/Makefile \
-	 gr-usrp/src/run_tests \
+        gr-usrp/Makefile \
+        gr-usrp/src/Makefile \
+        gr-usrp/src/run_tests \
     ])
 
-    passed=yes
-    # Don't do gr-usrp if usrp or gnuradio-core skipped
-    if test x$usrp_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-usrp requires usrp, which is not being built or specified via pre-installed files.])
-        passed=no
-    fi
-    if test x$gnuradio_core_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-usrp requires gnuradio-core, which is not being built or specified via pre-installed files.])
-	passed=no
-    fi
-
-    GRC_BUILD_CONDITIONAL([gr-usrp],[
+    GRC_BUILD_CONDITIONAL(gr-usrp,[
 	dnl run_tests is created from run_tests.in.  Make it executable.
 	AC_CONFIG_COMMANDS([run_tests_usrp], [chmod +x gr-usrp/src/run_tests])
     ])

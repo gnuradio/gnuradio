@@ -18,30 +18,36 @@ dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_AUDIO_OSX],[
-    GRC_ENABLE([gr-audio-osx])
+    GRC_ENABLE(gr-audio-osx)
+
+    dnl Don't do gr-audio-osx if omnithread or gnuradio-core skipped
+    GRC_CHECK_DEPENDENCY(gr-audio-osx, omnithread)
+    GRC_CHECK_DEPENDENCY(gr-audio-osx, gnuradio-core)
+
+    dnl If execution gets to here, $passed will be:
+    dnl   with : if the --with code didn't error out
+    dnl   yes  : if the --enable code passed muster and all dependencies are met
+    dnl   no   : otherwise
+    if test $passed = yes; then
+        case "$host_os" in
+          darwin*)
+              MACOSX_AUDIOUNIT([],
+                  [passed=no;AC_MSG_RESULT([gr-audio-osx requires AudioUnit, not found.])])
+              ;;
+          *)
+              AC_MSG_RESULT([gr-audio-osx will build on Mac OS X and Darwin only.])
+              passed=no
+              ;;
+        esac
+    fi
 
     AC_CONFIG_FILES([ \
-	gr-audio-osx/Makefile \
-	gr-audio-osx/src/Makefile \
-	gr-audio-osx/src/run_tests \
+        gr-audio-osx/Makefile \
+        gr-audio-osx/src/Makefile \
+        gr-audio-osx/src/run_tests \
     ])
 
-    passed=yes
-    MACOSX_AUDIOUNIT([],
-        [passed=no;AC_MSG_RESULT([gr-audio-osx requires AudioUnit, not found.])])
-
-    # Don't do gr-audio-osx if omnithread skipped
-    if test x$omnithread_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-audio-osx requires omnithread, which is not being built or specified via pre-installed files.])
-	passed=no
-    fi
-    # Don't do gr-audio-osx if gnuradio-core skipped
-    if test x$gnuradio_core_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-audio-osx requires gnuradio-core, which is not being built or specified via pre-installed files.])
-	passed=no
-    fi
-
-    GRC_BUILD_CONDITIONAL([gr-audio-osx],[
+    GRC_BUILD_CONDITIONAL(gr-audio-osx,[
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_osx], [chmod +x gr-audio-osx/src/run_tests])
     ])

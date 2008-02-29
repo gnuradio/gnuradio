@@ -18,29 +18,19 @@
 # Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_UTILS],[
-    GRC_ENABLE([gr-utils])
+    GRC_ENABLE(gr-utils)
+
+    dnl Don't do gr-utils if gnuradio-core, usrp, or gr-wxgui skipped
+    GRC_CHECK_DEPENDENCY(gr-utils, gnuradio-core)
+    GRC_CHECK_DEPENDENCY(gr-utils, usrp)
+    GRC_CHECK_DEPENDENCY(gr-utils, gr-wxgui)
 
     AC_CONFIG_FILES([ \
         gr-utils/Makefile \
-	gr-utils/src/Makefile \
-	gr-utils/src/lib/Makefile \
-	gr-utils/src/python/Makefile \
+        gr-utils/src/Makefile \
+        gr-utils/src/lib/Makefile \
+        gr-utils/src/python/Makefile \
     ])
 
-    passed=yes
-    # Don't do gr-utils if gnuradio-core, usrp, or gr-wxgui skipped
-    if test x$gnuradio_core_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-utils requires gnuradio-core, which is not being built or specified via pre-installed files.])
-        passed=no
-    fi
-    if test x$usrp_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-utils requires usrp, which is not being built or specified via pre-installed files.])
-        passed=no
-    fi
-    if test x$gr_wxgui_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-utils requires gr-wxgui, which is not being built or specified via pre-installed files.])
-        passed=no
-    fi
-
-    GRC_BUILD_CONDITIONAL([gr-utils])
+    GRC_BUILD_CONDITIONAL(gr-utils)
 ])

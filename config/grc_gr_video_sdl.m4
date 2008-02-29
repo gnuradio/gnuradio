@@ -20,26 +20,28 @@ dnl Boston, MA 02110-1301, USA.
 AC_DEFUN([GRC_GR_VIDEO_SDL],[
     GRC_ENABLE([gr-video-sdl])
 
-    AC_CONFIG_FILES([ \
-	gr-video-sdl/Makefile \
-	gr-video-sdl/src/Makefile \
-	gr-video-sdl/src/run_tests \
-    ])
-    
-    passed=yes
-    # Don't do gr-video-sdl if gnuradio-core skipped
-    if test x$gnuradio_core_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-video-sdl requires gnuradio-core, which is not being built or specified via pre-installed files.])
-	passed=no
-    fi
-    # Don't do gr-video-sdl if the SDL library is unavailable.
-    SDL_VERSION=1.2.0
-    AM_PATH_SDL($SDL_VERSION,[],
-        [passed=no;AC_MSG_RESULT([gr-video-sdl requires library sdl, not found or failed test.])])
+    dnl Don't do gr-video-sdl if gnuradio-core skipped
+    GRC_CHECK_DEPENDENCY(gr-video-sdl, gnuradio-core)
 
-    GRC_BUILD_CONDITIONAL([gr-video-sdl],[
-	AC_SUBST(SDL_CFLAGS)
-	AC_SUBST(SDL_LIBS)
+    dnl If execution gets to here, $passed will be:
+    dnl   with : if the --with code didn't error out
+    dnl   yes  : if the --enable code passed muster and all dependencies are met
+    dnl   no   : otherwise
+    if test $passed = yes; then
+        dnl Don't do gr-video-sdl if the SDL library is unavailable.
+	PKG_CHECK_MODULES(SDL, sdl >= 1.2.0, [],
+          [SDL_VERSION=1.2.0
+           AM_PATH_SDL($SDL_VERSION, [], [
+             passed=no;AC_MSG_RESULT([gr-video-sdl requires library sdl, not found or failed test.])])])
+    fi
+
+    AC_CONFIG_FILES([ \
+        gr-video-sdl/Makefile \
+        gr-video-sdl/src/Makefile \
+        gr-video-sdl/src/run_tests \
+    ])
+
+    GRC_BUILD_CONDITIONAL(gr-video-sdl,[
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_sdl], [chmod +x gr-video-sdl/src/run_tests])
     ])

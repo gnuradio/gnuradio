@@ -18,27 +18,23 @@ dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_TRELLIS],[
-    GRC_ENABLE([gr-trellis])
+    GRC_ENABLE(gr-trellis)
+
+    dnl Don't do gr-trellis if gnuradio-core skipped
+    GRC_CHECK_DEPENDENCY(gr-trellis, gnuradio-core)
 
     AC_CONFIG_FILES([\
-	gr-trellis/Makefile \
-	gr-trellis/doc/Makefile \
-	gr-trellis/src/Makefile \
-	gr-trellis/src/lib/Makefile \
-	gr-trellis/src/python/Makefile \
-	gr-trellis/src/python/run_tests \
-	gr-trellis/src/examples/Makefile \
-	gr-trellis/src/examples/fsm_files/Makefile
+        gr-trellis/Makefile \
+        gr-trellis/doc/Makefile \
+        gr-trellis/src/Makefile \
+        gr-trellis/src/lib/Makefile \
+        gr-trellis/src/python/Makefile \
+        gr-trellis/src/python/run_tests \
+        gr-trellis/src/examples/Makefile \
+        gr-trellis/src/examples/fsm_files/Makefile
     ])
 
-    passed=yes
-    # Don't do gr-trellis if gnuradio-core skipped
-    if test x$gnuradio_core_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-trellis requires gnuradio-core, which is not being built or specified via pre-installed files.])
-	passed=no
-    fi
-
-    GRC_BUILD_CONDITIONAL([gr-trellis],[
+    GRC_BUILD_CONDITIONAL(gr-trellis,[
         dnl run_tests is created from run_tests.in.  Make it executable.
 	AC_CONFIG_COMMANDS([run_tests_gr_trellis], [chmod +x gr-trellis/src/python/run_tests])
     ])

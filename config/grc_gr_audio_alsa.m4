@@ -18,26 +18,28 @@ dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_AUDIO_ALSA],[
-    GRC_ENABLE([gr-audio-alsa])
+    GRC_ENABLE(gr-audio-alsa)
+
+    dnl Don't do gr-audio-alsa if gnuradio-core skipped
+    GRC_CHECK_DEPENDENCY(gr-audio-alsa, gnuradio-core)
+
+    dnl If execution gets to here, $passed will be:
+    dnl   with : if the --with code didn't error out
+    dnl   yes  : if the --enable code passed muster and all dependencies are met
+    dnl   no   : otherwise
+    if test $passed = yes; then
+        dnl Don't do gr-audio-alsa if the 'alsa' package is not installed.
+        PKG_CHECK_MODULES(ALSA, alsa >= 0.9,[],
+            [passed=no;AC_MSG_RESULT([gr-audio-alsa requires package alsa, not found.])])
+    fi
 
     AC_CONFIG_FILES([ \
-	gr-audio-alsa/Makefile \
-	gr-audio-alsa/src/Makefile \
-	gr-audio-alsa/src/run_tests \
+        gr-audio-alsa/Makefile \
+        gr-audio-alsa/src/Makefile \
+        gr-audio-alsa/src/run_tests \
     ])
 
-    passed=yes
-    # Don't do gr-audio-alsa if gnuradio-core skipped
-    if test x$gnuradio_core_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-audio-osx requires gnuradio-core, which is not being built or specified via pre-installed files.])
-	passed=no
-    fi
-    # Don't do gr-audio-alsa if the 'alsa' package is not installed.
-    PKG_CHECK_MODULES(ALSA, alsa >= 0.9,[],
-        [passed=no;AC_MSG_RESULT([gr-audio-alsa requires package alsa, not found.])])
-
-    GRC_BUILD_CONDITIONAL([gr-audio-alsa],[
-	AC_SUBST(ALSA_LIBS)
+    GRC_BUILD_CONDITIONAL(gr-audio-alsa,[
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_alsa], [chmod +x gr-audio-alsa/src/run_tests])
     ])

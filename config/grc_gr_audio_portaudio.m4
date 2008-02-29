@@ -18,26 +18,28 @@ dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_AUDIO_PORTAUDIO],[
-    GRC_ENABLE([gr-audio-portaudio])
+    GRC_ENABLE(gr-audio-portaudio)
+
+    dnl Don't do gr-audio-portaudio if gnuradio-core skipped
+    GRC_CHECK_DEPENDENCY(gr-audio-portaudio, gnuradio-core)
+
+    dnl If execution gets to here, $passed will be:
+    dnl   with : if the --with code didn't error out
+    dnl   yes  : if the --enable code passed muster and all dependencies are met
+    dnl   no   : otherwise
+    if test $passed = yes; then
+        dnl Don't do gr-audio-portaudio if the 'portaudio' library is unavailable.
+        PKG_CHECK_MODULES(PORTAUDIO, portaudio-2.0 >= 19,[],
+            [passed=no;AC_MSG_RESULT([gr-audio-portaudio requires package portaudio, not found.])])
+    fi
 
     AC_CONFIG_FILES([ \
-	gr-audio-portaudio/Makefile \
-	gr-audio-portaudio/src/Makefile \
-	gr-audio-portaudio/src/run_tests \
+        gr-audio-portaudio/Makefile \
+        gr-audio-portaudio/src/Makefile \
+        gr-audio-portaudio/src/run_tests \
     ])
 
-    passed=yes
-    # Don't do gr-audio-portaudio if gnuradio-core skipped
-    if test x$gnuradio_core_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-audio-portaudio requires gnuradio-core, which is not being built or specified via pre-installed files.])
-	passed=no
-    fi
-    # Don't do gr-audio-portaudio if the 'portaudio' library is unavailable.
-    PKG_CHECK_MODULES(PORTAUDIO, portaudio-2.0 >= 19,[],
-        [passed=no;AC_MSG_RESULT([gr-audio-portaudio requires package portaudio, not found.])])
-
-    GRC_BUILD_CONDITIONAL([gr-audio-portaudio],[
-	AC_SUBST(PORTAUDIO_LIBS)
+    GRC_BUILD_CONDITIONAL(gr-audio-portaudio,[
 	dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_portaudio], [chmod +x gr-audio-portaudio/src/run_tests])
     ])

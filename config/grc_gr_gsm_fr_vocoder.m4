@@ -18,25 +18,21 @@ dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_GSM_FR_VOCODER],[
-    GRC_ENABLE([gr-gsm-fr-vocoder])
+    GRC_ENABLE(gr-gsm-fr-vocoder)
+
+    dnl Don't do gr-gsm-fr-vocoder if gnuradio-core skipped
+    GRC_CHECK_DEPENDENCY(gr-gsm-fr-vocoder, gnuradio-core)
 
     AC_CONFIG_FILES([\
-	gr-gsm-fr-vocoder/Makefile \
-	gr-gsm-fr-vocoder/src/Makefile \
-	gr-gsm-fr-vocoder/src/lib/Makefile \
-	gr-gsm-fr-vocoder/src/lib/gsm/Makefile \
-	gr-gsm-fr-vocoder/src/python/Makefile \
-	gr-gsm-fr-vocoder/src/python/run_tests \
+        gr-gsm-fr-vocoder/Makefile \
+        gr-gsm-fr-vocoder/src/Makefile \
+        gr-gsm-fr-vocoder/src/lib/Makefile \
+        gr-gsm-fr-vocoder/src/lib/gsm/Makefile \
+        gr-gsm-fr-vocoder/src/python/Makefile \
+        gr-gsm-fr-vocoder/src/python/run_tests \
     ])
 
-    passed=yes
-    # Don't do gr-gsm-fr-vocoder if gnuradio-core skipped
-    if test x$gnuradio_core_skipped = xyes; then
-        AC_MSG_RESULT([Component gr-gsm-fr-vocoder requires gnuradio-core, which is not being built or specified via pre-installed files.])
-	passed=no
-    fi
-
-    GRC_BUILD_CONDITIONAL([gr-gsm-fr-vocoder],[
+    GRC_BUILD_CONDITIONAL(gr-gsm-fr-vocoder,[
         dnl run_tests is created from run_tests.in.  Make it executable.
         AC_CONFIG_COMMANDS([run_tests_gsm], [chmod +x gr-gsm-fr-vocoder/src/python/run_tests])
     ])

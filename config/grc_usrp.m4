@@ -18,110 +18,45 @@ dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_USRP],[
-    GRC_ENABLE([usrp])
-    GRC_WITH([usrp])
-    passed=no
-    if test x$with_usrp = xyes; then
-        if test x$enable_usrp = xyes; then
-	    AC_MSG_ERROR([Component usrp: Cannot use both --enable and --with])
-        else
-	    # the following is required, for whatever reason; ignore the output
-	    USRP_SET_FUSB_TECHNIQUE([],[passed=no;AC_MSG_RESULT([Unable to set fast USB technique.])])
-    	    passed=no
-	    # on to the regular routine
-	    PKG_CHECK_MODULES(USRP, usrp, passed=with,
-	    	    AC_MSG_RESULT([Component usrp: PKGCONFIG cannot find info]))
-            if test x$passed = xwith; then
-                usrp_INCLUDES=`$PKG_CONFIG --cflags-only-I usrp`
-   	        usrp_LA=$USRP_LIBS
-	        passed=no
-	        PKG_CHECK_MODULES(USRP_INBAND, usrp-inband, passed=with,
-	    	    AC_MSG_RESULT([Component usrp-inband: PKGCONFIG cannot find info]))
-                if test x$passed = xwith; then
-                    usrp_inband_INCLUDES=`$PKG_CONFIG --cflags-only-I usrp-inband`
-   	            usrp_inband_LA=$USRP_INBAND_LIBS
-		fi
-            fi
-	fi
-    fi
-    dnl if $passed = with, then "--with" worked; ignore the "--enable" stuff
-    dnl otherwise, $passed = no; check the "--enable" stuff
-    if test x$passed = xno; then
-        AC_CONFIG_FILES([ \
-    	    usrp/Makefile \
-    	    usrp/usrp.pc \
-    	    usrp/usrp-inband.pc \
-            usrp/usrp.iss \
-            usrp/doc/Doxyfile \
-            usrp/doc/Makefile \
-            usrp/doc/other/Makefile \
-            usrp/host/Makefile \
-            usrp/host/misc/Makefile \
-            usrp/host/lib/Makefile \
-            usrp/host/lib/inband/Makefile \
-            usrp/host/lib/legacy/Makefile \
-            usrp/host/lib/legacy/std_paths.h \
-            usrp/host/swig/Makefile \
-            usrp/host/apps/Makefile \
-            usrp/host/apps-inband/Makefile \
-            usrp/firmware/Makefile \
-            usrp/firmware/include/Makefile \
-            usrp/firmware/lib/Makefile \
-            usrp/firmware/src/Makefile \
-            usrp/firmware/src/common/Makefile \
-            usrp/firmware/src/usrp2/Makefile \
-            usrp/fpga/Makefile \
-            usrp/fpga/rbf/Makefile \
-        ])
+    GRC_ENABLE(usrp)
 
-        # gnulib.
-        # FIXME: this needs to fail gracefully and continue, not implemented yet
+    GRC_WITH(usrp, [GRC_WITH_PKG_CONFIG_CHECK(usrp-inband)])
+
+    dnl Don't do usrp if omnithread, mblock, or pmt skipped
+    GRC_CHECK_DEPENDENCY(usrp, omnithread)
+    GRC_CHECK_DEPENDENCY(usrp, mblock)
+    GRC_CHECK_DEPENDENCY(usrp, pmt)
+
+    dnl Make sure the fast usb technique is set, OS dependent.
+    dnl This is always performed, since it puts out CLI flags.
+    USRP_SET_FUSB_TECHNIQUE(${enable_usrp})
+
+    dnl If execution gets to here, $passed will be:
+    dnl   with : if the --with code didn't error out
+    dnl   yes  : if the --enable code passed muster and all dependencies are met
+    dnl   no   : otherwise
+    if test $passed = yes; then
+        dnl gnulib.
+        dnl FIXME: this needs to fail gracefully and continue, not implemented yet
         UTILS_FUNC_MKSTEMP
 
-        # These checks don't fail
+        dnl These checks don't fail
         AC_C_BIGENDIAN
         AC_CHECK_HEADERS([byteswap.h linux/compiler.h])
         AC_CHECK_FUNCS([getrusage sched_setscheduler pthread_setschedparam])
         AC_CHECK_FUNCS([sigaction snprintf])
 
-	# There are 2 pkg-config files; the one for usrp requires omnithread
-	# for Darwin only.
-	case "$host_os" in
-	    darwin*)
-	        # for usrp.pc.in
-	        usrp_darwin_omnithread_pc_requires="gnuradio-omnithread"
-	        usrp_darwin_omnithread_pc_la="-lgromnithread"
-      		;;
-	    *)
-	        # for usrp.pc.in (blanks)
-	        usrp_darwin_omnithread_pc_requires=""
-	        usrp_darwin_omnithread_pc_la=""
-	        ;;
-        esac
-        passed=yes
-	# Don't do usrp if omnithread, mblock, or pmt skipped
-	if test x$omnithread_skipped = xyes; then
-	     AC_MSG_RESULT([Component usrp requires omnithread, which is not being built or specified via pre-installed files.])
-	    passed=no
-	fi
-        if test x$mblock_skipped = xyes; then
-            AC_MSG_RESULT([Component usrp requires mblock, which is not being built or specified via pre-installed files.])
-            passed=no
-        fi
-        if test x$pmt_skipped = xyes; then
-            AC_MSG_RESULT([Component usrp requires pmt, which is not being built or specified via pre-installed files.])
-            passed=no
-        fi
-	# Don't do mblock if guile not available (inband requires it)
-	AC_PATH_PROG(GUILE,guile)
-	if test "$GUILE" = "" ; then
-	    AC_MSG_RESULT([Component mblock requires guile, which was not found.])
-	    passed=no
-	fi
-        USRP_LIBUSB([],[passed=no;AC_MSG_RESULT([Unable to configure USB dependency.])])
-        USRP_SET_FUSB_TECHNIQUE([],[passed=no;AC_MSG_RESULT([Unable to set fast USB technique.])])
-        USRP_SDCC([2.4.0],[],[passed=no;AC_MSG_RESULT([Unable to find firmware compiler.])])
+	dnl Don't do usrp if guile not available (inband requires it)
+	GRC_CHECK_GUILE(usrp)
 
+	dnl Make sure libusb is installed; required for legacy USB
+        USRP_LIBUSB([],[passed=no;AC_MSG_RESULT([Unable to find dependency libusb.])])
+
+	dnl Make sure SDCC >= 2.4.0 is available.
+        USRP_SDCC([2.4.0],[],[passed=no;AC_MSG_RESULT([Unable to find firmware compiler SDCC.])])
+    fi
+    if test $passed != with; then
+	dnl how and where to find INCLUDES and LA
 	usrp_INCLUDES="-I\${abs_top_srcdir}/usrp/host/lib/legacy \
 		-I\${abs_top_srcdir}/usrp/firmware/include"
         usrp_LA="\${abs_top_builddir}/usrp/host/lib/legacy/libusrp.la"
@@ -129,12 +64,49 @@ AC_DEFUN([GRC_USRP],[
 	usrp_inband_LA="\${abs_top_builddir}/usrp/host/lib/inband/libusrp_inband.la"
     fi
 
-    GRC_BUILD_CONDITIONAL([usrp])
-
-    AC_SUBST(usrp_INCLUDES)
-    AC_SUBST(usrp_LA)
+    dnl Include the usrp-inband INCLUDES and LA
     AC_SUBST(usrp_inband_INCLUDES)
     AC_SUBST(usrp_inband_LA)
+
+    dnl There are 2 pkg-config files (usrp, and usrp-inband); the one
+    dnl for usrp requires omnithread for Darwin only.  Create a variable
+    dnl for just the usrp.pc.in case.
+    case "$host_os" in
+      darwin*)
+        usrp_darwin_omnithread_pc_requires="gnuradio-omnithread"
+        ;;
+      *) dnl (blanks)
+        usrp_darwin_omnithread_pc_requires=""
+        ;;
+    esac
     AC_SUBST(usrp_darwin_omnithread_pc_requires)
-    AC_SUBST(usrp_darwin_omnithread_pc_la)
+
+    AC_CONFIG_FILES([ \
+	usrp/Makefile \
+	usrp/usrp.pc \
+	usrp/usrp-inband.pc \
+        usrp/usrp.iss \
+        usrp/doc/Doxyfile \
+        usrp/doc/Makefile \
+        usrp/doc/other/Makefile \
+        usrp/host/Makefile \
+        usrp/host/misc/Makefile \
+        usrp/host/lib/Makefile \
+        usrp/host/lib/inband/Makefile \
+        usrp/host/lib/legacy/Makefile \
+        usrp/host/lib/legacy/std_paths.h \
+        usrp/host/swig/Makefile \
+        usrp/host/apps/Makefile \
+        usrp/host/apps-inband/Makefile \
+        usrp/firmware/Makefile \
+        usrp/firmware/include/Makefile \
+        usrp/firmware/lib/Makefile \
+        usrp/firmware/src/Makefile \
+        usrp/firmware/src/common/Makefile \
+        usrp/firmware/src/usrp2/Makefile \
+        usrp/fpga/Makefile \
+        usrp/fpga/rbf/Makefile \
+    ])
+
+    GRC_BUILD_CONDITIONAL(usrp)
 ])
