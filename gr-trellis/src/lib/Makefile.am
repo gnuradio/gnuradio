@@ -54,10 +54,35 @@ CODE_GENERATOR = 				\
 
 include $(srcdir)/Makefile.gen
 
-$(srcdir)/Makefile.gen $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
-	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python \
-		srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
+
+# Ensure parallel does the right thing.
+# http://sources.redhat.com/automake/automake.html#Multiple-Outputs
+
+generate-stamp: $(CODE_GENERATOR)
+	@rm -f generate-tmp
+	@touch generate-tmp
+	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
 	touch $(srcdir)/Makefile.in
+	@mv -f generate-tmp $@
+
+$(srcdir)/Makefile.gen $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): generate-stamp
+## Recover from the removal of $@
+	@if test -f $@; then :; else \
+               trap 'rm -rf generate-lock generate-stamp' 1 2 13 15; \
+               if mkdir generate-lock 2>/dev/null; then \
+## This code is being executed by the first process.
+                 rm -f generate-stamp; \
+                 $(MAKE) $(AM_MAKEFLAGS) generate-stamp; \
+                 rmdir generate-lock; \
+               else \
+## This code is being executed by the follower processes.
+## Wait until the first process is done.
+                 while test -d generate-lock; do sleep 1; done; \
+## Succeed if and only if the first process succeeded.
+                 test -f generate-stamp; exit $$?; \
+               fi; \
+             fi
+
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _trellis shared library

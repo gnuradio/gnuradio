@@ -46,8 +46,34 @@ GENERATED_CC =				\
 	qa_pmt_unv.cc			
 
 
-$(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): $(CODE_GENERATOR)
+
+# Ensure parallel does the right thing.
+# http://sources.redhat.com/automake/automake.html#Multiple-Outputs
+
+generate-stamp: $(CODE_GENERATOR)
+	@rm -f generate-tmp
+	@touch generate-tmp
 	PYTHONPATH=$(top_srcdir)/pmt/src/lib srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_unv.py
+	@mv -f generate-tmp $@
+
+$(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): generate-stamp
+## Recover from the removal of $@
+	@if test -f $@; then :; else \
+               trap 'rm -rf generate-lock generate-stamp' 1 2 13 15; \
+               if mkdir generate-lock 2>/dev/null; then \
+## This code is being executed by the first process.
+                 rm -f generate-stamp; \
+                 $(MAKE) $(AM_MAKEFLAGS) generate-stamp; \
+                 rmdir generate-lock; \
+               else \
+## This code is being executed by the follower processes.
+## Wait until the first process is done.
+                 while test -d generate-lock; do sleep 1; done; \
+## Succeed if and only if the first process succeeded.
+                 test -f generate-stamp; exit $$?; \
+               fi; \
+             fi
+
 
 pmt_serial_tags.h: $(srcdir)/../scheme/gnuradio/gen-serial-tags.scm $(srcdir)/../scheme/gnuradio/pmt-serial-tags.scm
 	$(RUN_GUILE) $(srcdir)/../scheme/gnuradio/gen-serial-tags.scm $(srcdir)/../scheme/gnuradio/pmt-serial-tags.scm pmt_serial_tags.h
