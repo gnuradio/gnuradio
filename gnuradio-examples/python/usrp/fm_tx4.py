@@ -70,7 +70,7 @@ class pipeline(gr.hier_block2):
     
         self.connect (src, fmtx, (mixer, 0))
         self.connect (lo, (mixer, 1))
-
+	self.connect (mixer, self)
 
 class fm_tx_block(stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
