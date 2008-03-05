@@ -62,20 +62,21 @@ CODE_GENERATOR = 					\
 	gr_freq_xlating_fir_filter_XXX.h.t		\
 	gr_freq_xlating_fir_filter_XXX.i.t
 
-include $(srcdir)/Makefile.gen
+include Makefile.gen
 
-# Ensure parallel does the right thing.
+# Ensure parallel make does the right thing.
 # http://sources.redhat.com/automake/automake.html#Multiple-Outputs
+
+STAMPS = generate-stamp
 
 generate-stamp: $(CODE_GENERATOR)
 	@rm -f generate-tmp
 	@touch generate-tmp
 	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
-	touch $(srcdir)/Makefile.in
 	@mv -f generate-tmp $@
 
 
-$(srcdir)/Makefile.gen $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): generate-stamp
+$(GENERATED_H) $(GENERATED_I) $(GENERATED_CC) filter_generated.i: generate-stamp
 ## Recover from the removal of $@
 	@if test -f $@; then :; else \
                trap 'rm -rf generate-lock generate-stamp' 1 2 13 15; \
@@ -94,7 +95,7 @@ $(srcdir)/Makefile.gen $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): generate-s
              fi
 
 
-BUILT_SOURCES = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC)
+BUILT_SOURCES = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC) filter_generated.i
 
 
 # ----------------------------------------------------------------
@@ -180,7 +181,8 @@ EXTRA_libfilter_la_SOURCES =		\
 EXTRA_DIST = 					\
 	3dnow_float_dotprod_really_simple.S	\
 	3dnow_float_dotprod_simple.S		\
-	$(CODE_GENERATOR)
+	$(CODE_GENERATOR)			\
+	$(STAMPS)
 
 
 # work around automake deficiency
@@ -315,4 +317,4 @@ swiginclude_HEADERS =			\
 	$(GENERATED_I)
 
 
-CLEANFILES = $(BUILT_SOURCES) *.pyc
+CLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc

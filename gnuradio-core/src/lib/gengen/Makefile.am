@@ -111,20 +111,21 @@ CODE_GENERATOR = 			\
 	gr_not_XX.h.t			\
 	gr_not_XX.i.t
 
-include $(srcdir)/Makefile.gen
+include Makefile.gen
 
-# Ensure parallel does the right thing.
+# Ensure parallel make does the right thing.
 # http://sources.redhat.com/automake/automake.html#Multiple-Outputs
+
+STAMPS = generate-stamp
 
 generate-stamp: $(CODE_GENERATOR)
 	@rm -f generate-tmp
 	@touch generate-tmp
 	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
-	touch $(srcdir)/Makefile.in
 	@mv -f generate-tmp $@
 
 
-$(srcdir)/Makefile.gen $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): generate-stamp
+$(GENERATED_H) $(GENERATED_I) $(GENERATED_CC) gengen_generated.i : generate-stamp
 ## Recover from the removal of $@
 	@if test -f $@; then :; else \
                trap 'rm -rf generate-lock generate-stamp' 1 2 13 15; \
@@ -143,12 +144,13 @@ $(srcdir)/Makefile.gen $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): generate-s
              fi
 
 
-BUILT_SOURCES = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC)
+BUILT_SOURCES = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC) gengen_generated.i
 
 # ----------------------------------------------------------------
 
 EXTRA_DIST = 				\
-	$(CODE_GENERATOR)		
+	$(CODE_GENERATOR)		\
+	$(STAMPS)
 
 libgengen_la_SOURCES = 			\
 	$(GENERATED_CC)			
@@ -169,4 +171,4 @@ swiginclude_HEADERS =			\
 	gengen.i			\
 	gengen_generated.i		
 
-CLEANFILES = $(BUILT_SOURCES) *.pyc
+CLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc

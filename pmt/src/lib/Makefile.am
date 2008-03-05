@@ -47,8 +47,10 @@ GENERATED_CC =				\
 
 
 
-# Ensure parallel does the right thing.
+# Ensure parallel make does the right thing.
 # http://sources.redhat.com/automake/automake.html#Multiple-Outputs
+
+STAMPS = generate-stamp
 
 generate-stamp: $(CODE_GENERATOR)
 	@rm -f generate-tmp
@@ -83,7 +85,9 @@ BUILT_SOURCES = $(GENERATED_H) $(GENERATED_CC) pmt_serial_tags.h
 # ----------------------------------------------------------------
 
 EXTRA_DIST = 				\
-	$(CODE_GENERATOR)		
+	$(CODE_GENERATOR)		\
+	$(STAMPS)
+
 
 # These are the source files that go into the pmt shared library
 libpmt_la_SOURCES =			\
@@ -140,4 +144,4 @@ test_pmt_SOURCES = test_pmt.cc
 test_pmt_LDADD   = $(LIBPMTQA)
 
 
-CLEANFILES = $(BUILT_SOURCES) *.pyc
+CLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc

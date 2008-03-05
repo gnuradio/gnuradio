@@ -52,20 +52,21 @@ CODE_GENERATOR = 				\
 	trellis_viterbi_X.h.t			\
 	trellis_viterbi_X.i.t
 
-include $(srcdir)/Makefile.gen
+include Makefile.gen
 
 
-# Ensure parallel does the right thing.
+# Ensure parallel make does the right thing.
 # http://sources.redhat.com/automake/automake.html#Multiple-Outputs
+
+STAMPS = generate-stamp
 
 generate-stamp: $(CODE_GENERATOR)
 	@rm -f generate-tmp
 	@touch generate-tmp
 	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
-	touch $(srcdir)/Makefile.in
 	@mv -f generate-tmp $@
 
-$(srcdir)/Makefile.gen $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): generate-stamp
+$(GENERATED_H) $(GENERATED_I) $(GENERATED_CC) trellis_generated.i : generate-stamp
 ## Recover from the removal of $@
 	@if test -f $@; then :; else \
                trap 'rm -rf generate-lock generate-stamp' 1 2 13 15; \
@@ -96,7 +97,8 @@ BUILT_SOURCES = \
 	$(GENERATED_H)		\
 	$(GENERATED_I)		\
 	$(GENERATED_CC)		\
-	$(swig_built_sources)
+	$(swig_built_sources)	\
+	trellis_generated.i	
 
 ALL_IFILES = 			\
 	$(LOCAL_IFILES)		\
@@ -109,7 +111,9 @@ LOCAL_IFILES = 			\
 	$(top_srcdir)/gr-trellis/src/lib/trellis.i			
 
 EXTRA_DIST = 			\
-	$(CODE_GENERATOR)
+	$(CODE_GENERATOR)	\
+	$(STAMPS)
+
 
 # This gets trellis.py installed in the right place
 ourpython_PYTHON =		\
