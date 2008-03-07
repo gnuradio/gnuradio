@@ -78,6 +78,7 @@ class draw_constellation:
         self.manager = get_current_fig_manager()
         connect('draw_event', self.zoom)
         connect('key_press_event', self.click)
+        connect('button_press_event', self.mouse_button_callback)
         show()
 
     def get_data(self):
@@ -103,17 +104,25 @@ class draw_constellation:
         self.sp_iq.set_title(("I&Q"), fontsize=self.title_font_size, fontweight="bold")
         self.sp_iq.set_xlabel("Time (s)", fontsize=self.label_font_size, fontweight="bold")
         self.sp_iq.set_ylabel("Amplitude (V)", fontsize=self.label_font_size, fontweight="bold")
-        self.plot_iq = plot(self.time, self.reals, 'bo-', self.time, self.imags, 'ro-')
-        self.sp_iq.axis([min(self.time), max(self.time),
-                         1.5*min([min(self.reals), min(self.imags)]),
-                         1.5*max([max(self.reals), max(self.imags)])])
+        self.plot_iq  = self.sp_iq.plot(self.time, self.reals, 'bo-', self.time, self.imags, 'ro-')
 
         # Subplot for constellation plot
         self.sp_const = self.fig.add_subplot(2,2,1, position=[0.575, 0.2, 0.4, 0.6])
         self.sp_const.set_title(("Constellation"), fontsize=self.title_font_size, fontweight="bold")
         self.sp_const.set_xlabel("Inphase", fontsize=self.label_font_size, fontweight="bold")
         self.sp_const.set_ylabel("Qaudrature", fontsize=self.label_font_size, fontweight="bold")
-        self.plot_const = plot(self.reals, self.imags, 'bo')
+        self.plot_const  = self.sp_const.plot(self.reals, self.imags, 'bo')
+
+        # Add plots to mark current location of point between time and constellation plots
+        self.indx = 0
+        self.plot_iq += self.sp_iq.plot([self.time[self.indx],], [self.reals[self.indx],], 'mo', ms=8)
+        self.plot_iq += self.sp_iq.plot([self.time[self.indx],], [self.imags[self.indx],], 'mo', ms=8)
+        self.plot_const += self.sp_const.plot([self.reals[self.indx],], [self.imags[self.indx],], 'mo', ms=12)
+
+        # Adjust axis
+        self.sp_iq.axis([min(self.time), max(self.time),
+                         1.5*min([min(self.reals), min(self.imags)]),
+                         1.5*max([max(self.reals), max(self.imags)])])
         self.sp_const.axis([-2, 2, -2, 2])
 
         draw()
@@ -144,12 +153,22 @@ class draw_constellation:
     def click(self, event):
         forward_valid_keys = [" ", "down", "right"]
         backward_valid_keys = ["up", "left"]
+        trace_forward_valid_keys = [">",]
+        trace_backward_valid_keys = ["<",]
 
         if(find(event.key, forward_valid_keys)):
             self.step_forward()
             
         elif(find(event.key, backward_valid_keys)):
             self.step_backward()
+
+        elif(find(event.key, trace_forward_valid_keys)):
+            self.indx = min(self.indx+1, len(self.time)-1)
+            self.set_trace(self.indx)
+
+        elif(find(event.key, trace_backward_valid_keys)):
+            self.indx = max(0, self.indx-1)
+            self.set_trace(self.indx)
 
     def button_left_click(self, event):
         self.step_backward()
@@ -169,7 +188,23 @@ class draw_constellation:
             self.hfile.seek(-self.hfile.tell(),1)
         self.get_data()
         self.update_plots()
+    
         
+    def mouse_button_callback(self, event):
+        x, y = event.xdata, event.ydata
+        
+        if x is not None and y is not None:
+            if(event.inaxes == self.sp_iq):
+                self.indx = searchsorted(self.time, [x])
+                self.set_trace(self.indx)
+                
+
+    def set_trace(self, indx):
+        self.plot_iq[2].set_data(self.time[indx], self.reals[indx])
+        self.plot_iq[3].set_data(self.time[indx], self.imags[indx])
+        self.plot_const[1].set_data(self.reals[indx], self.imags[indx])
+        draw()
+
             
 def find(item_in, list_search):
     try:
