@@ -23,6 +23,15 @@ dnl
 #
 # Test for presence of subversion, and create variables for 
 # current repository version and last changed date.
+#
+# TODO: Fix the following problems in this code:
+#
+# 1. Remove use of non-standard program which (3.0BSD, not specified
+# by POSIX.
+#
+# 2. When operating on distribution tarballs (which do not have
+# subversion metadata) on machines that have subversion, do not
+# produce error message.
 
 AC_DEFUN([GR_SUBVERSION],[
     	AC_CHECK_PROG([SVN],[svn],[`which svn`])
