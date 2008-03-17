@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003 Free Software Foundation, Inc.
+ * Copyright 2003, 2008 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -23,9 +23,15 @@
 #ifndef _RANDOM_H_
 #define _RANDOM_H_
 
-// we use this because some systems (solaris) define RAND_MAX as 32767
+// While rand(3) specifies RAND_MAX, random(3) says that the output
+// ranges from 0 to 2^31-1 but does not specify a macro to denote
+// this.  We define RANDOM_MAX for cleanliness.  We must omit the
+// definition for systems that have made the same choice.  (Note that
+// random(3) is from 4.2BSD, and not specified by POSIX.)
 
-static const int RANDOM_MAX = 2147483647;
+#ifndef RANDOM_MAX
+static const int RANDOM_MAX = 2147483647; // 2^31-1
+#endif /* RANDOM_MAX */
 
 #include <stdlib.h>
 
