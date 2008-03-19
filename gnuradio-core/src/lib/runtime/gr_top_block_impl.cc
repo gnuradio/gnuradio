@@ -33,6 +33,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <string.h>
+#include <unistd.h>
 
 #define GR_TOP_BLOCK_IMPL_DEBUG 0
 
