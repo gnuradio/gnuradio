@@ -95,7 +95,7 @@ $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC) filter_generated.i: generate-stamp
              fi
 
 
-BUILT_SOURCES = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC) filter_generated.i
+BUILT_SOURCES = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC)
 
 
 # ----------------------------------------------------------------

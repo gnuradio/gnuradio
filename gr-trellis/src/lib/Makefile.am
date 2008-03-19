@@ -97,8 +97,7 @@ BUILT_SOURCES = \
 	$(GENERATED_H)		\
 	$(GENERATED_I)		\
 	$(GENERATED_CC)		\
-	$(swig_built_sources)	\
-	trellis_generated.i	
+	$(swig_built_sources)	
 
 ALL_IFILES = 			\
 	$(LOCAL_IFILES)		\

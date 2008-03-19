@@ -144,7 +144,7 @@ $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC) gengen_generated.i : generate-stam
              fi
 
 
-BUILT_SOURCES = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC) gengen_generated.i
+BUILT_SOURCES = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC)
 
 # ----------------------------------------------------------------
 
