@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2003,2004,2005,2006,2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -122,7 +122,8 @@ class number_sink_f(gr.hier_block2, number_sink_base):
 
         self.win = number_window(self, parent, size=size,label=label)
         self.set_average(self.average)
-
+	self.set_peak_hold(self.peak_hold)
+	
 class number_sink_c(gr.hier_block2, number_sink_base):
     def __init__(self, parent, unit='',base_value=0,minval=-100.0,maxval=100.0,factor=1.0,
                  decimal_places=10, ref_level=50, sample_rate=1,
@@ -149,6 +150,7 @@ class number_sink_c(gr.hier_block2, number_sink_base):
 
         self.win = number_window(self, parent, size=size,label=label)
         self.set_average(self.average)
+	self.set_peak_hold(self.peak_hold)
 
 
 # ------------------------------------------------------------------------
