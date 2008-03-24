@@ -19,6 +19,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#if defined(HAVE_CONFIG_H)
+#include <config.h>
+#endif
 #include "gc_job_manager.h"
 #include "mb_time.h"
 #include <getopt.h>
@@ -135,6 +138,10 @@ run_test(unsigned int nspes, unsigned int usecs, unsigned int dma_size, int getp
       gbi = 0;
 
     all_jds[i] = mgr->alloc_job_desc();
+    if (all_jds[i] == 0){
+      fprintf(stderr, "alloc_job_desc() returned 0\n");
+      return;
+    }
     init_jd(all_jds[i], usecs, &getbuf[gbi], &putbuf[gbi], dma_size, getput_mask);
     gbi += dma_size;
   }
@@ -176,7 +183,10 @@ run_test(unsigned int nspes, unsigned int usecs, unsigned int dma_size, int getp
 	}
 	else {
 	  ncompleted++;
-	  // printf("ncompleted = %7d\n", ncompleted);
+	  if (jds[ci][i]->status != JS_OK){
+	    printf("js_status = %d, job_id = %d, ncompleted = %d\n",
+		   jds[ci][i]->status, jds[ci][i]->sys.job_id, ncompleted);
+	  }
 	  if (nsubmitted < njobs){		    // submit another one
 	    if (mgr->submit_job(jds[ci][i])){
 	      jds[ci^1][njds[ci^1]++] = jds[ci][i];  // remember for next iter

@@ -19,7 +19,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#define ENABLE_GC_LOGGING 	// define to enable logging
+// #define ENABLE_GC_LOGGING 	// define to enable logging
 
 #include <spu_intrinsics.h>
 #include <spu_mfcio.h>

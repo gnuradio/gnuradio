@@ -19,6 +19,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#if defined(HAVE_CONFIG_H)
+#include <config.h>
+#endif
 #include "gc_job_manager.h"
 #include "mb_time.h"
 #include <getopt.h>
