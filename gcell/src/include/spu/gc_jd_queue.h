@@ -35,12 +35,14 @@ __GC_BEGIN_DECLS
  *
  * \param[in]  q is EA address of queue structure.
  * \param[out] item_ea is EA address of item at head of queue.
+ * \param[in]  jd_tag is the tag to use to get the LS copy of the item.
  * \param[out] item is local store copy of item at head of queue.
  * \returns false if the queue is empty, otherwise returns true
  *   and sets \p item_ea and DMA's job descriptor into \p item
  */
 bool
-gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea, gc_job_desc_t *item);
+gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea,
+		    int jd_tag, gc_job_desc_t *item);
 
 
 /*!

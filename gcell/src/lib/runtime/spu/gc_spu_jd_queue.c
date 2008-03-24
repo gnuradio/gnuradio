@@ -26,7 +26,8 @@
 extern int gc_sys_tag;
 
 bool
-gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea, gc_job_desc_t *item)
+gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea,
+		    int jd_tag, gc_job_desc_t *item)
 {
   gc_jd_queue_t	local_q;
 
@@ -61,8 +62,12 @@ gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea, gc_job_desc_t *item)
 
   // copy in job descriptor at head of queue
   *item_ea = local_q.head;
-  mfc_get(item, local_q.head, sizeof(gc_job_desc_t), gc_sys_tag, 0, 0);
-  mfc_write_tag_mask(1 << gc_sys_tag);	// the tag we're interested in
+  
+  // We must use the fence with the jd_tag to ensure that any
+  // previously initiated put of a job desc is locally ordered before
+  // the get of the new one.
+  mfc_getf(item, local_q.head, sizeof(gc_job_desc_t), jd_tag, 0, 0);
+  mfc_write_tag_mask(1 << jd_tag);	// the tag we're interested in
   mfc_read_tag_status_all();		// wait for DMA to complete
 
   local_q.head = item->sys.next;

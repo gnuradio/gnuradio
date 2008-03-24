@@ -542,9 +542,6 @@ process_job(gc_eaddr_t jd_ea, gc_job_desc_t *jd)
   int tag = ci_tags + ci_idx;			// use the current completion tag
   mfc_put(jd, jd_ea, sizeof(*jd), tag, 0, 0);
 
-  mfc_sync(tag);	// FIXME this makes it work, but is expensive
-
-  
   // Tell PPE we're done with the job.
   //
   // We queue these up until we run out of room, or until we can send
@@ -593,7 +590,7 @@ main_loop(void)
 	// by somebody doing something to the queue.  Go look and see
 	// if there's anything for us.
 	//
-	if (gc_jd_queue_dequeue(spu_args.queue, &jd_ea, &jd))
+	if (gc_jd_queue_dequeue(spu_args.queue, &jd_ea, ci_tags + ci_idx, &jd))
 	  process_job(jd_ea, &jd);
 
 	gc_jd_queue_getllar(spu_args.queue);	// get a new reservation
@@ -608,7 +605,7 @@ main_loop(void)
 #else
 
     // try to get a job from the job queue 
-    if (gc_jd_queue_dequeue(spu_args.queue, &jd_ea, &jd)){
+    if (gc_jd_queue_dequeue(spu_args.queue, &jd_ea, ci_tags + ci_idx, &jd)){
       total_jobs++;
       gc_log_write2(GCL_SS_SYS, 0x10, jd.sys.job_id, total_jobs);
 
