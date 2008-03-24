@@ -25,6 +25,7 @@ include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = \
 	configure \
+	configure-cell-cross \
 	config.h.in \
 	run_tests.sh.in \
 	README.hacking

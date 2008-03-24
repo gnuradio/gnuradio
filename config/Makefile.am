@@ -31,6 +31,7 @@ m4macros = \
 	cppunit.m4 \
 	gr_boost.m4 \
 	grc_build.m4 \
+	grc_gcell.m4 \
 	grc_gnuradio_core.m4 \
 	grc_gnuradio_examples.m4 \
 	grc_gr_atsc.m4 \

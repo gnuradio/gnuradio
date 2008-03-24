@@ -25,11 +25,6 @@ AC_CONFIG_SRCDIR([gnuradio-core/src/lib/runtime/gr_vmcircbuf.cc])
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
-if test x$cross_compiling != xno; then
-  AC_MSG_NOTICE([Configuring GNU Radio for cross compilation])
-else
-  AC_MSG_NOTICE([Configuring GNU Radio for native compilation])
-fi
 
 AM_INIT_AUTOMAKE(gnuradio,3.1svn)
 
@@ -244,9 +239,10 @@ AC_ARG_ENABLE(
 
 build_dirs="config"
 GRC_OMNITHREAD			dnl must come before gnuradio-core and mblock
-GRC_GNURADIO_CORE
 GRC_PMT
 GRC_MBLOCK			dnl this must come after GRC_PMT
+GRC_GCELL
+GRC_GNURADIO_CORE
 GRC_USRP
 GRC_GR_USRP			dnl this must come after GRC_USRP
 GRC_GR_MSDD6000

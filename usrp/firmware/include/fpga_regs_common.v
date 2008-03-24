@@ -1,5 +1,5 @@
 //
-// This file is machine generated from fpga_regs_common.h
+// This file is machine generated from ./fpga_regs_common.h
 // Do not edit by hand; your edits will be overwritten.
 //
 

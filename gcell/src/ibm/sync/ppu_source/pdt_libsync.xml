@@ -1,0 +1,184 @@
+<pdtGroup name="LIBSYNC" id="0x03" version="3.0">
+	<!-- PPE events -->
+	<subGroup  name="PPE_MUTEX" id="0xFE03">
+		<recordType name="PPE_MUTEX_INIT" description="PPE: mutex lock init" id="0x0003" type="event">
+			<include href="/usr/share/pdt/config/pdt_ppe_event_header.xml"/>
+			<physicalField name="lock"  description="Lock address" type="long" toString="0x%x" visible="true"/>
+			<physicalField name="empty3"   description="empty slot 3" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty4"   description="empty slot 4" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty5"   description="empty slot 5" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty6"   description="empty slot 6" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty7"   description="empty slot 7" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty8"   description="empty slot 8" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty9"   description="empty slot 9" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty10"   description="empty slot 10" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty11"   description="empty slot 11" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty12"   description="empty slot 12" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty13"   description="empty slot 13" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty14"   description="empty slot 14" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty15"   description="empty slot 15" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty16"   description="empty slot 16" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty17"   description="empty slot 17" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty18"   description="empty slot 18" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty19"   description="empty slot 19" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty20"   description="empty slot 20" type="int" toString="0x%x" visible="false"/>
+		</recordType>	
+		<recordType name="PPE_MUTEX_LOCK" description="PPE: acquire a mutex lock" id="0x0103"  type="interval">
+			<include href="/usr/share/pdt/config/pdt_ppe_event_header.xml"/>
+			<physicalField name="lock" description="Lock address" type="long" toString="0x%x" visible="true"/>
+			<physicalField name="miss"   description="Missed" type="int" toString="0x%x" visible="true"/>
+			<physicalField name="empty4"   description="empty slot 4" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty5"   description="empty slot 5" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty6"   description="empty slot 6" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty7"   description="empty slot 7" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty8"   description="empty slot 8" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty9"   description="empty slot 9" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty10"   description="empty slot 10" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty11"   description="empty slot 11" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty12"   description="empty slot 12" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty13"   description="empty slot 13" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty14"   description="empty slot 14" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty15"   description="empty slot 15" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty16"   description="empty slot 16" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty17"   description="empty slot 17" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty18"   description="empty slot 18" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty19"   description="empty slot 19" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty20"   description="empty slot 20" type="int" toString="0x%x" visible="false"/>
+		</recordType>
+		<recordType name="PPE_MUTEX_TRYLOCK" description="PPE: try to acquire a lock" id="0x0203"  type="event">
+			<include href="/usr/share/pdt/config/pdt_ppe_event_header.xml"/>
+			<physicalField name="lock" description="Lock address" type="long" toString="0x%x" visible="true"/>
+			<physicalField  name="ret" description="Try lock return code" type="int" toString="0x%x" visible="true"/>
+			<physicalField name="empty4"   description="empty slot 4" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty5"   description="empty slot 5" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty6"   description="empty slot 6" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty7"   description="empty slot 7" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty8"   description="empty slot 8" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty9"   description="empty slot 9" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty10"   description="empty slot 10" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty11"   description="empty slot 11" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty12"   description="empty slot 12" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty13"   description="empty slot 13" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty14"   description="empty slot 14" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty15"   description="empty slot 15" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty16"   description="empty slot 16" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty17"   description="empty slot 17" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty18"   description="empty slot 18" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty19"   description="empty slot 19" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty20"   description="empty slot 20" type="int" toString="0x%x" visible="false"/>
+		</recordType>	
+		<recordType name="PPE_MUTEX_UNLOCK" description="PPE: unlock a mutex lock" id="0x0303"  type="event">
+			<include href="/usr/share/pdt/config/pdt_ppe_event_header.xml"/>
+			<physicalField  name="lock" description="Lock address" type="long" toString="0x%x" visible="true"/>
+			<physicalField name="empty3"   description="empty slot 3" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty4"   description="empty slot 4" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty5"   description="empty slot 5" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty6"   description="empty slot 6" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty7"   description="empty slot 7" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty8"   description="empty slot 8" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty9"   description="empty slot 9" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty10"   description="empty slot 10" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty11"   description="empty slot 11" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty12"   description="empty slot 12" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty13"   description="empty slot 13" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty14"   description="empty slot 14" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty15"   description="empty slot 15" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty16"   description="empty slot 16" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty17"   description="empty slot 17" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty18"   description="empty slot 18" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty19"   description="empty slot 19" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty20"   description="empty slot 20" type="int" toString="0x%x" visible="false"/>
+		</recordType>
+	</subGroup>
+	<!-- SPE events -->
+	<subGroup  name="SPE_MUTEX" id="0xFD03">
+		<recordType name="SPE_MUTEX_INIT" description="SPE: mutex lock init" id="0x0403"  type="event">
+			<include href="/usr/share/pdt/config/pdt_spe_event_header.xml"/>
+			<physicalField  name="lock"  description="Lock address" type="long" toString="0x%x" visible="true"/>
+			<physicalField name="empty3"   description="empty slot 3" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty4"   description="empty slot 4" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty5"   description="empty slot 5" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty6"   description="empty slot 6" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty7"   description="empty slot 7" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty8"   description="empty slot 8" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty9"   description="empty slot 9" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty10"   description="empty slot 10" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty11"   description="empty slot 11" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty12"   description="empty slot 12" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty13"   description="empty slot 13" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty14"   description="empty slot 14" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty15"   description="empty slot 15" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty16"   description="empty slot 16" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty17"   description="empty slot 17" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty18"   description="empty slot 18" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty19"   description="empty slot 19" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty20"   description="empty slot 20" type="int" toString="0x%x" visible="false"/>
+		</recordType>	
+		<recordType name="SPE_MUTEX_LOCK" description="SPE: acquire a mutex lock" id="0x0503"  type="interval">
+			<include href="/usr/share/pdt/config/pdt_spe_event_header.xml"/>
+			<physicalField name="lock" description="Lock address" type="long" toString="0x%x" visible="true"/>
+			<physicalField name="miss"   description="Missed" type="int" toString="0x%x" visible="true"/>
+			<physicalField name="empty4"   description="empty slot 4" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty5"   description="empty slot 5" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty6"   description="empty slot 6" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty7"   description="empty slot 7" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty8"   description="empty slot 8" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty9"   description="empty slot 9" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty10"   description="empty slot 10" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty11"   description="empty slot 11" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty12"   description="empty slot 12" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty13"   description="empty slot 13" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty14"   description="empty slot 14" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty15"   description="empty slot 15" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty16"   description="empty slot 16" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty17"   description="empty slot 17" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty18"   description="empty slot 18" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty19"   description="empty slot 19" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty20"   description="empty slot 20" type="int" toString="0x%x" visible="false"/>
+		</recordType>
+		<recordType name="SPE_MUTEX_TRYLOCK" description="SPE: try to acquire a mutex lock" id="0x0603"  type="event">
+			<include href="/usr/share/pdt/config/pdt_spe_event_header.xml"/>
+			<physicalField  name="lock" description="Lock address" type="long" toString="0x%x" visible="true"/>
+			<physicalField  name="ret_val" description="Try lock return code" type="int" toString="0x%x" visible="true"/>
+			<physicalField name="empty4"   description="empty slot 4" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty5"   description="empty slot 5" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty6"   description="empty slot 6" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty7"   description="empty slot 7" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty8"   description="empty slot 8" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty9"   description="empty slot 9" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty10"   description="empty slot 10" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty11"   description="empty slot 11" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty12"   description="empty slot 12" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty13"   description="empty slot 13" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty14"   description="empty slot 14" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty15"   description="empty slot 15" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty16"   description="empty slot 16" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty17"   description="empty slot 17" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty18"   description="empty slot 18" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty19"   description="empty slot 19" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty20"   description="empty slot 20" type="int" toString="0x%x" visible="false"/>
+		</recordType>	
+		<recordType name="SPE_MUTEX_UNLOCK" description="SPE: unlock a mutex lock" id="0x0703"  type="event">
+			<include href="/usr/share/pdt/config/pdt_spe_event_header.xml"/>
+			<physicalField  name="lock" description="Lock address" type="long" toString="0x%x" visible="true"/>
+			<physicalField name="empty3"   description="empty slot 3" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty4"   description="empty slot 4" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty5"   description="empty slot 5" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty6"   description="empty slot 6" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty7"   description="empty slot 7" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty8"   description="empty slot 8" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty9"   description="empty slot 9" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty10"   description="empty slot 10" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty11"   description="empty slot 11" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty12"   description="empty slot 12" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty13"   description="empty slot 13" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty14"   description="empty slot 14" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty15"   description="empty slot 15" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty16"   description="empty slot 16" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty17"   description="empty slot 17" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty18"   description="empty slot 18" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty19"   description="empty slot 19" type="int" toString="0x%x" visible="false"/>
+			<physicalField name="empty20"   description="empty slot 20" type="int" toString="0x%x" visible="false"/>
+		</recordType>	
+	</subGroup>
+</pdtGroup>

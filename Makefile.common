@@ -42,6 +42,14 @@ grpyexecdir = $(pyexecdir)/gnuradio
 usrppythondir = $(pythondir)/usrpm
 usrppyexecdir = $(pyexecdir)/usrpm
 
+# gcell includes
+gcellincludedir = $(includedir)/gcell
+gcellspuincludedir = $(includedir)/gcell/spu
+
+# Cell spu libs
+libspudir = $(libdir)spu
+
+
 # when including for compilation from pre-installed libraries and such,
 # need to make sure those are put last on the compile command
 WITH_INCLUDES = @with_INCLUDES@
@@ -79,6 +87,14 @@ PMT_LA = @pmt_LA@
 # How to link the mblock library from inside the tree
 MBLOCK_INCLUDES = @mblock_INCLUDES@
 MBLOCK_LA = @mblock_LA@
+
+# How to link the gcell library from inside the tree (the PPU part)
+GCELL_INCLUDES = @gcell_INCLUDES@
+GCELL_LA = @gcell_LA@
+
+# How to link the gcell library from inside the tree (the SPU part)
+GCELL_SPU_INCLUDES = @gcell_spu_INCLUDES@
+GCELL_SPU_LA = @gcell_spu_LA@
 
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.
