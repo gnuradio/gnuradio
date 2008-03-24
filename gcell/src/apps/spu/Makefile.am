@@ -30,3 +30,5 @@ noinst_PROGRAMS = \
 
 benchmark_procs_SOURCES = benchmark_procs.c
 benchmark_procs_LDADD = $(GCELL_SPU_LA)
+benchmark_procs_DEPENDENCIES = $(GCELL_SPU_LA)
+
