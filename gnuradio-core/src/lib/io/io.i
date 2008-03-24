@@ -22,6 +22,10 @@
 
 %{
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <gr_file_sink.h>
 #include <gr_file_source.h>
 #include <gr_file_descriptor_sink.h>

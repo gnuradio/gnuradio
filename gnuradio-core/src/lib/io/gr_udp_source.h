@@ -25,8 +25,13 @@
 
 #include <gr_sync_block.h>
 #include <omnithread.h>
+#if defined(HAVE_SOCKET)
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#elif defined(HAVE_WINDOWS_H)
+#include <winsock2.h>
+#include <windows.h>
+#endif
 #if defined(HAVE_NETINET_IN_H)
 #include <netinet/in.h>
 #endif

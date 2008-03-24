@@ -26,7 +26,14 @@
 #include <gr_udp_sink.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
+#if defined(HAVE_SOCKET)
 #include <netdb.h>
+typedef void* optval_t;
+#else
+#define SHUT_RDWR 2
+#define inet_aton(N,A) ( (A)->s_addr = inet_addr(N), ( (A)->s_addr != INADDR_NONE ) )
+typedef char* optval_t;
+#endif
 
 #define SNK_VERBOSE 0
 
@@ -112,7 +119,7 @@ gr_udp_sink::open()
 
   // Turn on reuse address
   int opt_val = true;
-  if(setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, (void*)&opt_val, sizeof(int)) == -1) {
+  if(setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, (optval_t)&opt_val, sizeof(int)) == -1) {
     perror("SO_REUSEADDR");
     throw std::runtime_error("can't set socket option SO_REUSEADDR");
   }
@@ -121,7 +128,7 @@ gr_udp_sink::open()
   linger lngr;
   lngr.l_onoff  = 1;
   lngr.l_linger = 0;
-  if(setsockopt(d_socket, SOL_SOCKET, SO_LINGER, (void*)&lngr, sizeof(linger)) == -1) {
+  if(setsockopt(d_socket, SOL_SOCKET, SO_LINGER, (optval_t)&lngr, sizeof(linger)) == -1) {
     perror("SO_LINGER");
     throw std::runtime_error("can't set socket option SO_LINGER");
   }
