@@ -36,15 +36,17 @@ except ImportError:
     except ImportError:
 	pass
     
-_dlopenflags = sys.getdlopenflags()
-sys.setdlopenflags(_dlopenflags|_RTLD_GLOBAL)
+if _RTLD_GLOBAL != 0:
+    _dlopenflags = sys.getdlopenflags()
+    sys.setdlopenflags(_dlopenflags|_RTLD_GLOBAL)
 
 from gnuradio_swig_python import *
 from exceptions import *
 from hier_block2 import *
 from top_block import *
 
-sys.setdlopenflags(_dlopenflags)             # Restore original flags
+if _RTLD_GLOBAL != 0:
+    sys.setdlopenflags(_dlopenflags)             # Restore original flags
 
 # create a couple of aliases
 serial_to_parallel = stream_to_vector
