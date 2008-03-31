@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -110,16 +110,19 @@ unsigned int gr_ofdm_frame_sink::demapper(const gr_complex *in,
   carrier=gr_expj(d_phase);
 
   gr_complex accum_error = 0.0;
-  while(i < d_occupied_carriers) {
+  //while(i < d_occupied_carriers) {
+  while(i < d_subcarrier_map.size()) {
     if(d_nresid > 0) {
       d_partial_byte |= d_resid;
       d_byte_offset += d_nresid;
       d_nresid = 0;
       d_resid = 0;
     }
-
-    while((d_byte_offset < 8) && (i < d_occupied_carriers)) {
-      gr_complex sigrot = in[i]*carrier*d_dfe[i];
+    
+    //while((d_byte_offset < 8) && (i < d_occupied_carriers)) {
+    while((d_byte_offset < 8) && (i < d_subcarrier_map.size())) {
+      //gr_complex sigrot = in[i]*carrier*d_dfe[i];
+      gr_complex sigrot = in[d_subcarrier_map[i]]*carrier*d_dfe[i];
       
       if(d_derotated_output != NULL){
 	d_derotated_output[i] = sigrot;
@@ -198,6 +201,59 @@ gr_ofdm_frame_sink::gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_positi
     d_resid(0), d_nresid(0),d_phase(0),d_freq(0),d_phase_gain(phase_gain),d_freq_gain(freq_gain),
     d_eq_gain(0.05)
 {
+  std::string carriers = "FE7F";
+
+  // A bit hacky to fill out carriers to occupied_carriers length
+  int diff = (d_occupied_carriers - 4*carriers.length()); 
+  while(diff > 7) {
+    carriers.insert(0, "f");
+    carriers.insert(carriers.length(), "f");
+    diff -= 8;
+  }
+  
+  // if there's extras left to be processed
+  // divide remaining to put on either side of current map
+  // all of this is done to stick with the concept of a carrier map string that
+  // can be later passed by the user, even though it'd be cleaner to just do this
+  // on the carrier map itself
+  int diff_left=0;
+  int diff_right=0;
+
+  // dictionary to convert from integers to ascii hex representation
+  char abc[16] = {'0', '1', '2', '3', '4', '5', '6', '7', 
+		  '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+  if(diff > 0) {
+    char c[2] = {0,0};
+
+    diff_left = (int)ceil((float)diff/2.0f);  // number of carriers to put on the left side
+    c[0] = abc[((1 << diff_left) - 1)];       // convert to bits and move to ASCI integer
+    carriers.insert(0, c);
+    
+    diff_right = diff - diff_left;	      // number of carriers to put on the right side
+    c[0] = abc[(0xF^(1 << diff_left) - 1)];   // convert to bits and move to ASCI integer
+    carriers.insert(carriers.length(), c);
+  }
+
+  // It seemed like such a good idea at the time...
+  // because we are only dealing with the occupied_carriers
+  // at this point, the diff_left in the following compensates
+  // for any offset from the 0th carrier introduced
+  unsigned int i,j,k;
+  for(i = 0; i < (d_occupied_carriers/4)+diff_left; i++) {
+    char c = carriers[i];
+    for(j = 0; j < 4; j++) {
+      k = (strtol(&c, NULL, 16) >> (3-j)) & 0x1;
+      if(k) {
+	d_subcarrier_map.push_back(4*i + j - diff_left);
+      }
+    }
+  }
+  
+  // make sure we stay in the limit currently imposed by the occupied_carriers
+  if(d_subcarrier_map.size() > d_occupied_carriers) {
+    throw std::invalid_argument("gr_ofdm_mapper_bcv: subcarriers allocated exceeds size of occupied carriers");
+  }
+
   d_bytes_out = new unsigned char[d_occupied_carriers];
   d_dfe.resize(occupied_carriers);
   fill(d_dfe.begin(), d_dfe.end(), gr_complex(1.0,0.0));

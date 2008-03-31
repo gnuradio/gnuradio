@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -103,7 +103,6 @@ gr_ofdm_sampler::general_work (int noutput_items,
     
   case(STATE_FRAME):
     // use this state when we have processed a preamble and are getting the rest of the frames
-    //FIXME: add a timeout clause here to enter state STATE_NO_SIG after so many times here
     //FIXME: we could also have a power squelch system here to enter STATE_NO_SIG if no power is received
 
     // skip over fft length history and cyclic prefix
@@ -113,6 +112,7 @@ gr_ofdm_sampler::general_work (int noutput_items,
     }
 
     if(d_timeout-- == 0) {
+      printf("TIMEOUT\n");
       d_state = STATE_NO_SIG;
     }
 

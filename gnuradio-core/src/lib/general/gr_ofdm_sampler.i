@@ -24,7 +24,7 @@ GR_SWIG_BLOCK_MAGIC(gr,ofdm_sampler)
 
   gr_ofdm_sampler_sptr gr_make_ofdm_sampler (unsigned int fft_length, 
 					     unsigned int symbol_length,
-					     unsigned int timeout=100);
+					     unsigned int timeout=1000);
 
 class gr_ofdm_sampler : public gr_sync_block
 {

@@ -69,6 +69,8 @@ class gr_ofdm_mapper_bcv : public gr_sync_block
   unsigned char d_resid;
   unsigned int d_nresid;
 
+  std::vector<int> d_subcarrier_map;
+
   int randsym();
 
  public:

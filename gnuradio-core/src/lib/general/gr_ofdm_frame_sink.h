@@ -88,6 +88,8 @@ class gr_ofdm_frame_sink : public gr_sync_block
   float d_freq_gain;
   float d_eq_gain;
 
+  std::vector<int> d_subcarrier_map;
+
  protected:
   gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_position, 
 		     const std::vector<unsigned char> &sym_value_out,

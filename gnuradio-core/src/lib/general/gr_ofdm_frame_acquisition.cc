@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006, 2007 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -66,7 +66,7 @@ gr_ofdm_frame_acquisition::gr_ofdm_frame_acquisition (unsigned occupied_carriers
 
   std::fill(d_known_phase_diff.begin(), d_known_phase_diff.end(), 0);
   for(i = 0; i < d_known_symbol.size()-2; i+=2) {
-    d_known_phase_diff[i] = fabs(gr_fast_atan2f(d_known_symbol[i]) - gr_fast_atan2f(d_known_symbol[i+2]));
+    d_known_phase_diff[i] = norm(d_known_symbol[i] - d_known_symbol[i+2]);
   }
   
   d_phase_lut = new gr_complex[(2*d_freq_shift_len+1) * MAX_NUM_SYMBOLS];
@@ -108,7 +108,7 @@ gr_ofdm_frame_acquisition::correlate(const gr_complex *symbol, int zeros_on_left
   
   std::fill(d_symbol_phase_diff.begin(), d_symbol_phase_diff.end(), 0);
   for(i = 0; i < d_fft_length-2; i++) {
-    d_symbol_phase_diff[i] = fabs(gr_fast_atan2f(symbol[i]) - gr_fast_atan2f(symbol[i+2]));
+    d_symbol_phase_diff[i] = norm(symbol[i] - symbol[i+2]);
   }
 
   // sweep through all possible/allowed frequency offsets and select the best
@@ -119,7 +119,7 @@ gr_ofdm_frame_acquisition::correlate(const gr_complex *symbol, int zeros_on_left
     for(j = 0; j < d_occupied_carriers; j++) {
       sum += (d_known_phase_diff[j] * d_symbol_phase_diff[i+j]);
     }
-    if(fabs(sum) > max) {
+    if(sum > max) {
       max = sum;
       index = i;
     }
