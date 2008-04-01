@@ -40,7 +40,7 @@ sink = None
 
 
 known_modules = (
-    'audio_alsa', 'audio_oss', 'audio_osx', 'audio_jack', 'audio_portaudio')
+    'audio_alsa', 'audio_oss', 'audio_osx', 'audio_jack', 'audio_portaudio', 'audio_windows')
 
 
 def try_import(name):
