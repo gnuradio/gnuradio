@@ -109,6 +109,7 @@ protected:
   
   int readsock(int sockfd, unsigned char* buf, int nbytes);
   
+  void  write_request_packet(unsigned int number_samples);
   void* make_request_packet(unsigned int& size, unsigned int number_samples);
   
   unsigned long set_fft_size (int channel, unsigned long fft_size);

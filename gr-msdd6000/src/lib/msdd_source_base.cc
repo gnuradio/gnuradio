@@ -183,7 +183,7 @@ msdd_source_base::open()
   omni_mutex_lock l(pimpl->d_mutex);   // hold mutex for duration of this function
   // create socket
   MSDD_DEBUG2("MSDD: Before socket ")
-  pimpl->d_socket = socket(PF_INET, SOCK_STREAM, 0);
+  pimpl->d_socket = socket(PF_INET, SOCK_DGRAM, 0);
   if(pimpl->d_socket == -1) {
     perror("socket open");
     throw std::runtime_error("can't open socket");
@@ -221,8 +221,11 @@ msdd_source_base::open()
     perror("socket bind");
     throw std::runtime_error("can't bind socket");
   }
-
   MSDD_DEBUG2("MSDD: Socket open")
+
+  // Turn streaming service on
+  write_request_packet(pimpl->d_desired_sample_size);
+  
   pimpl->d_updated = true;
   return pimpl->d_socket != 0;
 }
@@ -251,6 +254,9 @@ bool
 msdd_source_base::close()
 {
   omni_mutex_lock l(pimpl->d_mutex);   // hold mutex for duration of this function
+
+  //This should turn off UDP streaming but does not yet work
+  //write_request_packet(0);
   
   if (pimpl->d_socket){
     shutdown(pimpl->d_socket, SHUT_RDWR);
@@ -299,6 +305,20 @@ msdd_source_base::stop()
   return msdd_source_base::close();
 }
 
+void
+msdd_source_base::write_request_packet(unsigned int number_samples)
+{
+  unsigned int packet_size;
+  void* request_packet = msdd_source_base::make_request_packet(packet_size, number_samples);
+  int result_nbytes = ::write(pimpl->d_socket, request_packet, packet_size);
+  MSDD_DEBUG2("MSDD: wrote control command: " << result_nbytes)
+
+  // receive ack
+  result_nbytes = ::read (pimpl->d_socket, (unsigned char*) request_packet, packet_size);
+  MSDD_DEBUG2("MSDD: response: " << result_nbytes)
+}
+
+
 void* 
 msdd_source_base::make_request_packet(unsigned int& size, unsigned int number_samples) {
   switch (pimpl->d_msdd_command_type) {
@@ -333,7 +353,7 @@ msdd_source_base::Impl::make_request_fft_packet(msdd_request_fft_packet& packet)
 void 
 msdd_source_base::Impl::make_request_iq_packet(msdd_request_iq_packet& packet, unsigned int number_samples) 
 {
-  packet.command_type = SAMPLES_REALTIME;  // FFT samples Command
+  packet.command_type = SAMPLES_REALTIME;  // IQ samples Command
   packet.foo0x18 = 0x18; // magic number
   packet.center_freq_mhz = d_rx_freq;
   packet.offset_freq_hz = 0;
@@ -352,8 +372,6 @@ msdd_source_base::work (int noutput_items,
   int output_items_produced;
   int bytes_read;
   
-  unsigned int packet_size;
-  
   MSDD_DEBUG("MSDD: requested items: " << noutput_items)
   int noutput_items_desired = std::min (noutput_items, (int) pimpl->d_desired_sample_size);
   MSDD_DEBUG("MSDD: desired items: " << noutput_items_desired)
@@ -364,22 +382,11 @@ msdd_source_base::work (int noutput_items,
       ninput_bytes_reqd_for_noutput_items (noutput_items_desired - output_index) :
       ninput_bytes_reqd_for_noutput_items (msdd_source_base::fft_points());
     
-    void* request_packet = msdd_source_base::make_request_packet(packet_size, noutput_items_desired);
-    
     nbytes = std::min (nbytes, OUTPUT_MAX);
     MSDD_DEBUG2("MSDD: payload sizes: nbytes1: " << nbytes )
-      
-    // send request
-    int result_nbytes = ::write(pimpl->d_socket, request_packet, packet_size);
-    //assert (result_nbytes == sizeof(msdd_request_packet));
-    
-    // receive ack
-    result_nbytes = ::read (pimpl->d_socket, (unsigned char*) request_packet, packet_size);
-    MSDD_DEBUG2("MSDD: response: " << result_nbytes)
-    //assert (result_nbytes == sizeof(msdd_request_packet));
     
     // receive payload
-    result_nbytes = msdd_source_base::readsock (pimpl->d_socket, pimpl->d_temp_buff.get(), nbytes);
+    int result_nbytes = msdd_source_base::readsock (pimpl->d_socket, pimpl->d_temp_buff.get(), nbytes);
     MSDD_DEBUG("MSDD: reading bytes: " << nbytes << " received: " << result_nbytes)
     if (result_nbytes > (int) nbytes){
       // fprintf (stderr, "msdd_source: overrun\n");
@@ -452,6 +459,9 @@ msdd_source_base::set_decim_rate (unsigned int rate)
     result = false;
   }
   
+  // Resubmit the control to update the decimation rate
+  write_request_packet(pimpl->d_desired_sample_size);
+
   return result;
 }
 //
@@ -478,6 +488,9 @@ msdd_source_base::set_rx_freq (int channel, double freq)
     pimpl->d_rx_freq = (unsigned long) freq / 1000000;
     result = true;
   }
+
+  // Resubmit the control to update the RX frequency
+  write_request_packet(pimpl->d_desired_sample_size);
   
   return result;
 }
@@ -514,6 +527,9 @@ msdd_source_base::set_fft_size (int channel, unsigned long fft_size)
     pimpl->d_fft_points = S32768;
     break;        
   }
+
+  // Resubmit the control to update the FFT size
+  write_request_packet(pimpl->d_desired_sample_size);
   
   return msdd_source_base::fft_points();
 }
@@ -635,6 +651,10 @@ msdd_source_base::set_pga (int which, double gain)
 {
   if (gain >= PGA_MIN & gain <= PGA_MAX) {
     pimpl->d_gain = gain;
+
+    // Resubmit the control to update the PGA gain
+    write_request_packet(pimpl->d_desired_sample_size);
+
     return true;
   }
   return false;
@@ -809,6 +829,10 @@ bool msdd_source_base::set_desired_packet_size (int which, unsigned long packet_
   if (pimpl->d_desired_sample_size < 2^32) { // FIXME: find maximum sample request for MSDD check if greater than 
     pimpl->d_desired_sample_size = packet_size;
   }
+
+  // Resubmit the control to update the packet size
+  write_request_packet(pimpl->d_desired_sample_size);
+
   return result;
 }
 
