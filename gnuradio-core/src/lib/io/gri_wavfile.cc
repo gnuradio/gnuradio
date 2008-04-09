@@ -71,7 +71,7 @@ host_to_wav(uint16_t x)
 static inline int16_t
 host_to_wav(int16_t x)
 {
-  return bswap_32(x);
+  return bswap_16(x);
 }
 
 static inline uint32_t
@@ -89,7 +89,7 @@ wav_to_host(uint16_t x)
 static inline int16_t
 wav_to_host(int16_t x)
 {
-  return bswap_32(x);
+  return bswap_16(x);
 }
 
 #else

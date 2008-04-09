@@ -39,8 +39,7 @@ class qa_wavefile(gr_unittest.TestCase):
 	wf = gr.wavfile_source(g_in_file)
 	self.assertEqual(wf.sample_rate(), 8000)
 
-    # disabled.  Fails on PPC
-    def xtest_002_checkwavcopy (self):
+    def test_002_checkwavcopy (self):
 	infile  = g_in_file
 	outfile = "test_out.wav"
 
