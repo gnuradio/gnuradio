@@ -33,6 +33,6 @@ EXTRA_DIST = 				\
 	spectrum_inversion_pa.py	\
 	test_resampler_pa.py	
 
-ourdatadir = $(exampledir)/audio
+ourdatadir = $(exampledir)/audio_portaudio
 ourdata_DATA = $(EXTRA_DIST)
 
