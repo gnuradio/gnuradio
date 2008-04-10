@@ -37,6 +37,7 @@ AC_DEFUN([GRC_GR_AUDIO_PORTAUDIO],[
         gr-audio-portaudio/Makefile \
         gr-audio-portaudio/src/Makefile \
         gr-audio-portaudio/src/run_tests \
+	gr-audio-portaudio/src/python/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-audio-portaudio,[

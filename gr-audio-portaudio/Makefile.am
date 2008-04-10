@@ -22,6 +22,7 @@
 include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = gr-audio-portaudio.conf
+
 SUBDIRS = src
 
 etcdir = $(sysconfdir)/gnuradio/conf.d
