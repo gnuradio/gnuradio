@@ -50,6 +50,20 @@ class test_sig_source (gr_unittest.TestCase):
         result_data = dst.data()
         self.assertEqual(expected_result, result_data)
 
+    def test_002(self):
+
+	src_data=(-100,-99,-98,-97,-96,-1)
+	expected_result = (float(max(src_data)), )
+
+	src = gr.vector_source_f(src_data)
+	s2v = gr.stream_to_vector(gr.sizeof_float, len(src_data))
+	op = gr.max_ff( len(src_data) )
+	dst = gr.vector_sink_f()
+
+	self.tb.connect(src, s2v, op, dst)
+	self.tb.run()
+	result_data = dst.data()
+	self.assertEqual(expected_result, result_data)
 
 if __name__ == '__main__':
     gr_unittest.main ()

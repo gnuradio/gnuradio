@@ -54,7 +54,7 @@ int
 	
 	for (int i=0; i<noutput_items; i++) {
 
-		@I_TYPE@ max = 0;
+	        @I_TYPE@ max = ((@I_TYPE@ *) input_items[0])[i*d_vlen];
 		
 		for (int j=0; j < (int) d_vlen; j++ ) {
 			for (int k=0; k<ninputs; k++) {
