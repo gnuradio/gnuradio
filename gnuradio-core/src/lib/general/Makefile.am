@@ -127,6 +127,7 @@ libgeneral_la_SOURCES = 		\
 	gr_random.cc			\
 	gr_regenerate_bb.cc		\
 	gr_remez.cc			\
+	gr_repeat.cc			\
 	gr_reverse.cc			\
 	gr_rms_cf.cc			\
 	gr_rms_ff.cc			\
@@ -272,6 +273,7 @@ grinclude_HEADERS = 			\
 	gr_random.h			\
 	gr_regenerate_bb.h		\
 	gr_remez.h			\
+	gr_repeat.h			\
 	gr_reverse.h			\
 	gr_rms_cf.h			\
 	gr_rms_ff.h			\
@@ -419,6 +421,7 @@ swiginclude_HEADERS =			\
 	gr_remez.i			\
 	gr_rms_cf.i			\
 	gr_rms_ff.i			\
+	gr_repeat.i			\
 	gr_short_to_float.i		\
 	gr_simple_correlator.i		\
 	gr_simple_framer.i		\
