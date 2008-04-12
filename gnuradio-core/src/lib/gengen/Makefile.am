@@ -53,6 +53,9 @@ CODE_GENERATOR = 			\
 	gr_divide_XX.cc.t		\
 	gr_divide_XX.h.t		\
 	gr_divide_XX.i.t		\
+	gr_integrate_XX.cc.t		\
+	gr_integrate_XX.h.t		\
+	gr_integrate_XX.i.t		\
 	gr_max_XX.cc.t			\
 	gr_max_XX.h.t			\
 	gr_max_XX.i.t			\

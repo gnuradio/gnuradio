@@ -35,6 +35,10 @@ GENERATED_H = \
 	gr_divide_ff.h \
 	gr_divide_ii.h \
 	gr_divide_ss.h \
+	gr_integrate_cc.h \
+	gr_integrate_ff.h \
+	gr_integrate_ii.h \
+	gr_integrate_ss.h \
 	gr_max_ff.h \
 	gr_max_ii.h \
 	gr_max_ss.h \
@@ -137,6 +141,10 @@ GENERATED_I = \
 	gr_divide_ff.i \
 	gr_divide_ii.i \
 	gr_divide_ss.i \
+	gr_integrate_cc.i \
+	gr_integrate_ff.i \
+	gr_integrate_ii.i \
+	gr_integrate_ss.i \
 	gr_max_ff.i \
 	gr_max_ii.i \
 	gr_max_ss.i \
@@ -239,6 +247,10 @@ GENERATED_CC = \
 	gr_divide_ff.cc \
 	gr_divide_ii.cc \
 	gr_divide_ss.cc \
+	gr_integrate_cc.cc \
+	gr_integrate_ff.cc \
+	gr_integrate_ii.cc \
+	gr_integrate_ss.cc \
 	gr_max_ff.cc \
 	gr_max_ii.cc \
 	gr_max_ss.cc \

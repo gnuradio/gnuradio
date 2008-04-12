@@ -35,6 +35,10 @@
 #include <gr_divide_ff.h>
 #include <gr_divide_ii.h>
 #include <gr_divide_ss.h>
+#include <gr_integrate_cc.h>
+#include <gr_integrate_ff.h>
+#include <gr_integrate_ii.h>
+#include <gr_integrate_ss.h>
 #include <gr_max_ff.h>
 #include <gr_max_ii.h>
 #include <gr_max_ss.h>
@@ -137,6 +141,10 @@
 %include <gr_divide_ff.i>
 %include <gr_divide_ii.i>
 %include <gr_divide_ss.i>
+%include <gr_integrate_cc.i>
+%include <gr_integrate_ff.i>
+%include <gr_integrate_ii.i>
+%include <gr_integrate_ss.i>
 %include <gr_max_ff.i>
 %include <gr_max_ii.i>
 %include <gr_max_ss.i>
