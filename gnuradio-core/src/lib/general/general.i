@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2005,2006,2007 Free Software Foundation, Inc.
+ * Copyright 2004,2005,2006,2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -130,6 +130,7 @@
 #include <gr_glfsr_source_f.h>
 #include <gr_peak_detector2_fb.h>
 #include <gr_repeat.h>
+#include <gr_cpfsk_bc.h>
 %}
 
 %include "gr_nop.i"
@@ -240,3 +241,4 @@
 %include "gr_glfsr_source_f.i"
 %include "gr_peak_detector2_fb.i"
 %include "gr_repeat.i"
+%include "gr_cpfsk_bc.i"

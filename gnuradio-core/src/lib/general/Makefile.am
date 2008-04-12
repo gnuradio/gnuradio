@@ -55,6 +55,7 @@ libgeneral_la_SOURCES = 		\
 	gr_correlate_access_code_bb.cc	\
 	gr_costas_loop_cc.cc		\
 	gr_count_bits.cc		\
+	gr_cpfsk_bc.cc			\
 	gr_crc32.cc			\
 	gr_ctcss_squelch_ff.cc		\
 	gr_dd_mpsk_sync_cc.cc		\
@@ -197,7 +198,8 @@ grinclude_HEADERS = 			\
 	gr_correlate_access_code_bb.h	\
 	gr_costas_loop_cc.h		\
 	gr_count_bits.h			\
-	gr_crc32.h			\
+	gr_cpfsk_bc.h			\
+    	gr_crc32.h			\
 	gr_ctcss_squelch_ff.h		\
 	gr_dd_mpsk_sync_cc.h		\
 	gr_diff_decoder_bb.h		\
@@ -352,6 +354,7 @@ swiginclude_HEADERS =			\
 	gr_constellation_decoder_cb.i	\
 	gr_correlate_access_code_bb.i	\
 	gr_costas_loop_cc.i		\
+	gr_cpfsk_bc.i			\
 	gr_crc32.i			\
 	gr_ctcss_squelch_ff.i		\
 	gr_dd_mpsk_sync_cc.i		\
