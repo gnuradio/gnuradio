@@ -35,6 +35,7 @@ grupython_PYTHON = 			\
 	os_read_exactly.py		\
 	sdr_1000.py			\
 	seq_with_cursor.py		\
-	socket_stuff.py			
+	socket_stuff.py			\
+	daemon.py
 
 CLEANFILES = *.pyc
