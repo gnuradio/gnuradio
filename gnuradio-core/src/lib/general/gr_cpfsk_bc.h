@@ -29,8 +29,8 @@ typedef boost::shared_ptr<gr_cpfsk_bc> gr_cpfsk_bc_sptr;
 gr_cpfsk_bc_sptr gr_make_cpfsk_bc(float k, float ampl, int samples_per_sym);
 
 /*!
- * \brief Perform continuous phase 2-level frequncy modulation on an input stream
- * of unpacked bits.
+ * \brief Perform continuous phase 2-level frequency shift keying modulation 
+ * on an input stream of unpacked bits.
  * \ingroup modulation
  *
  * \param k                     modulation index
