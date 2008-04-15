@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -24,21 +24,16 @@ import math
 from gnuradio import gr
 
 class ofdm_sync_ml(gr.hier_block2):
-    def __init__(self, fft_length, cp_length, snr, logging):
+    def __init__(self, fft_length, cp_length, snr, kstime, logging):
         ''' Maximum Likelihood OFDM synchronizer:
         J. van de Beek, M. Sandell, and P. O. Borjesson, "ML Estimation
         of Time and Frequency Offset in OFDM Systems," IEEE Trans.
         Signal Processing, vol. 45, no. 7, pp. 1800-1805, 1997.
         '''
 
-        # FIXME: change the output signature
-        # should be the output of the divider (the normalized peaks) and
-        # the angle value out of the sample and hold block
-        # move sampler out of this block
-
 	gr.hier_block2.__init__(self, "ofdm_sync_ml",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-				gr.io_signature(1, 1, gr.sizeof_gr_complex*fft_length)) # Output signature
+                                gr.io_signature2(2, 2, gr.sizeof_float, gr.sizeof_char)) # Output signature
 
         self.input = gr.add_const_cc(0)
 
@@ -92,19 +87,9 @@ class ofdm_sync_ml(gr.hier_block2):
         self.connect(self.moving_sum_filter,(self.diff,1))
 
         #ML measurements input to sampler block and detect
-        nco_sensitivity = -1.0/fft_length
         self.f2c = gr.float_to_complex()
-        self.sampler = gr.ofdm_sampler(fft_length,symbol_length)
         self.pk_detect = gr.peak_detector_fb(0.2, 0.25, 30, 0.0005)
-        #self.pk_detect = gr.peak_detector2_fb()
         self.sample_and_hold = gr.sample_and_hold_ff()
-        self.nco = gr.frequency_modulator_fc(nco_sensitivity)
-        self.sigmix = gr.multiply_cc()
-
-        # Mix the signal with an NCO controlled by the sync loop
-        self.connect(self.input, (self.sigmix,0))
-        self.connect(self.nco, (self.sigmix,1))
-        self.connect(self.sigmix, (self.sampler,0))
 
         # use the sync loop values to set the sampler and the NCO
         #     self.diff = theta
@@ -112,20 +97,47 @@ class ofdm_sync_ml(gr.hier_block2):
                           
         self.connect(self.diff, self.pk_detect)
 
+        # The DPLL corrects for timing differences between CP correlations
         use_dpll = 1
         if use_dpll:
             self.dpll = gr.dpll_bb(float(symbol_length),0.01)
             self.connect(self.pk_detect, self.dpll)
-            self.connect(self.dpll, (self.sampler,1))
             self.connect(self.dpll, (self.sample_and_hold,1))
         else:
-            self.connect(self.pk_detect, (self.sampler,1))
             self.connect(self.pk_detect, (self.sample_and_hold,1))
             
         self.connect(self.angle, (self.sample_and_hold,0))
-        self.connect(self.sample_and_hold, self.nco)
 
-        self.connect(self.sampler, self)
+        ################################
+        # correlate against known symbol
+        # This gives us the same timing signal as the PN sync block only on the preamble
+        # we don't use the signal generated from the CP correlation because we don't want
+        # to readjust the timing in the middle of the packet or we ruin the equalizer settings.
+        kstime = [k.conjugate() for k in kstime]
+        kstime.reverse()
+        self.kscorr = gr.fir_filter_ccc(1, kstime)
+        self.corrmag = gr.complex_to_mag_squared()
+
+        # The output signature of the correlation has a few spikes because the rest of the
+        # system uses the repeated preamble symbol. It needs to work that generically if 
+        # anyone wants to use this against a WiMAX-like signal since it, too, repeats
+        # This slicing against a threshold will __not__ work over the air unless the 
+        # received power is at just the right point. It __does__ work under the normal
+        # conditions of the loopback model.
+        self.slice = gr.threshold_ff(700000, 700000, 0)
+        self.f2b = gr.float_to_char()
+        
+        self.connect(self.input, self.kscorr, self.corrmag, self.slice)
+        self.connect(self.kscorr, gr.file_sink(gr.sizeof_gr_complex, "kscorr.dat"))
+        self.connect(self.corrmag, gr.file_sink(gr.sizeof_float, "kscorrmag.dat"))
+        self.connect(self.slice, gr.file_sink(gr.sizeof_float, "kspeak.dat"))
+
+        # Set output signals
+        #    Output 0: fine frequency correction value
+        #    Output 1: timing signal
+        self.connect(self.sample_and_hold, (self,0))
+        self.connect(self.slice, self.f2b, (self,1))
+
 
         if logging:
             self.connect(self.diff, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-theta_f.dat"))
@@ -134,9 +146,6 @@ class ofdm_sync_ml(gr.hier_block2):
             if use_dpll:
                 self.connect(self.dpll, gr.file_sink(gr.sizeof_char, "ofdm_sync_ml-dpll_b.dat"))
 
-            self.connect(self.sigmix, gr.file_sink(gr.sizeof_gr_complex, "ofdm_sync_ml-sigmix_c.dat"))
-            self.connect(self.sampler, gr.file_sink(gr.sizeof_gr_complex*fft_length, "ofdm_sync_ml-sampler_c.dat"))
             self.connect(self.sample_and_hold, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-sample_and_hold_f.dat"))
-            self.connect(self.nco, gr.file_sink(gr.sizeof_gr_complex, "ofdm_sync_ml-nco_c.dat"))
             self.connect(self.input, gr.file_sink(gr.sizeof_gr_complex, "ofdm_sync_ml-input_c.dat"))
 
