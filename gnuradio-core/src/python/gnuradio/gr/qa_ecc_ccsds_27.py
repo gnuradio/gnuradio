@@ -30,7 +30,7 @@ class test_ccsds_27 (gr_unittest.TestCase):
     def tearDown (self):
         self.tb = None
 
-    def test_ccsds_27 (self):
+    def xtest_ccsds_27 (self):
         src_data = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 	expected = (0, 0, 0, 0, 1, 2, 3, 4, 5, 6)
         src = gr.vector_source_b(src_data)
