@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006, 2007 Free Software Foundation, Inc.
+# Copyright 2006, 2007, 2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -62,7 +62,7 @@ class ofdm_receiver(gr.hier_block2):
 	gr.hier_block2.__init__(self, "ofdm_receiver",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
                                 gr.io_signature2(2, 2, gr.sizeof_gr_complex*occupied_tones, gr.sizeof_char)) # Output signature
-
+        
         bw = (float(occupied_tones) / float(fft_length)) / 2.0
         tb = bw*0.08
         chan_coeffs = gr.firdes.low_pass (1.0,                     # gain
@@ -75,39 +75,56 @@ class ofdm_receiver(gr.hier_block2):
         win = [1 for i in range(fft_length)]
 
         zeros_on_left = int(math.ceil((fft_length - occupied_tones)/2.0))
-        zeros_on_right = fft_length - occupied_tones - zeros_on_left
-        ks0 = zeros_on_left*[0.0,]
-        ks0.extend(ks[0])
-        ks0.extend(zeros_on_right*[0.0,])
+        ks0 = fft_length*[0,]
+        ks0[zeros_on_left : zeros_on_left + occupied_tones] = ks[0]
         
+        ks0 = fft.ifftshift(ks0)
         ks0time = fft.ifft(ks0)
         # ADD SCALING FACTOR
         ks0time = ks0time.tolist()
-        
+
         SYNC = "pn"
         if SYNC == "ml":
-            self.ofdm_sync = ofdm_sync_ml(fft_length, cp_length, snr, logging)
+            nco_sensitivity = -1.0/fft_length                             # correct for fine frequency
+            self.ofdm_sync = ofdm_sync_ml(fft_length, cp_length, snr, ks0time, logging)
         elif SYNC == "pn":
+            nco_sensitivity = -2.0/fft_length                             # correct for fine frequency
             self.ofdm_sync = ofdm_sync_pn(fft_length, cp_length, logging)
         elif SYNC == "pnac":
+            nco_sensitivity = -2.0/fft_length                             # correct for fine frequency
             self.ofdm_sync = ofdm_sync_pnac(fft_length, cp_length, ks0time)
         elif SYNC == "fixed":
+            nco_sensitivity = -2.0/fft_length                             # correct for fine frequency
             self.ofdm_sync = ofdm_sync_fixed(fft_length, cp_length, logging)
-                        
+
+        # Set up blocks
+
+        self.nco = gr.frequency_modulator_fc(nco_sensitivity)         # generate a signal proportional to frequency error of sync block
+        self.sigmix = gr.multiply_cc()
+        self.sampler = gr.ofdm_sampler(fft_length, fft_length+cp_length)
         self.fft_demod = gr.fft_vcc(fft_length, True, win, True)
         self.ofdm_frame_acq = gr.ofdm_frame_acquisition(occupied_tones, fft_length,
                                                         cp_length, ks[0])
 
-        self.connect(self, self.chan_filt)
-        self.connect(self.chan_filt, self.ofdm_sync)
-        self.connect((self.ofdm_sync,0), self.fft_demod, (self.ofdm_frame_acq,0))
-        self.connect((self.ofdm_sync,1), (self.ofdm_frame_acq,1))
-        self.connect((self.ofdm_frame_acq,0), (self,0))
-        self.connect((self.ofdm_frame_acq,1), (self,1))
+        self.connect(self, self.chan_filt)                            # filter the input channel
+        self.connect(self.chan_filt, self.ofdm_sync)                  # into the synchronization alg.
+        self.connect((self.ofdm_sync,0), self.nco, (self.sigmix,1))   # use sync freq. offset output to derotate input signal
+        self.connect(self.chan_filt, (self.sigmix,0))                 # signal to be derotated
+        self.connect(self.sigmix, (self.sampler,0))                   # sample off timing signal detected in sync alg
+        self.connect((self.ofdm_sync,1), (self.sampler,1))            # timing signal to sample at
+
+        self.connect((self.sampler,0), self.fft_demod)                # send derotated sampled signal to FFT
+        self.connect(self.fft_demod, (self.ofdm_frame_acq,0))         # find frame start and equalize signal
+        self.connect((self.sampler,1), (self.ofdm_frame_acq,1))       # send timing signal to signal frame start
+        self.connect((self.ofdm_frame_acq,0), (self,0))               # finished with fine/coarse freq correction,
+        self.connect((self.ofdm_frame_acq,1), (self,1))               # frame and symbol timing, and equalization
 
         if logging:
-            self.connect(self.chan_filt, gr.file_sink(gr.sizeof_gr_complex, "chan_filt_c.dat"))
-            self.connect(self.fft_demod, gr.file_sink(gr.sizeof_gr_complex*fft_length, "fft_out_c.dat"))
+            self.connect(self.chan_filt, gr.file_sink(gr.sizeof_gr_complex, "ofdm_receiver-chan_filt_c.dat"))
+            self.connect(self.fft_demod, gr.file_sink(gr.sizeof_gr_complex*fft_length, "ofdm_receiver-fft_out_c.dat"))
             self.connect(self.ofdm_frame_acq,
-                         gr.file_sink(gr.sizeof_gr_complex*occupied_tones, "ofdm_frame_acq_c.dat"))
-            self.connect((self.ofdm_frame_acq,1), gr.file_sink(1, "found_corr_b.dat"))
+                         gr.file_sink(gr.sizeof_gr_complex*occupied_tones, "ofdm_receiver-frame_acq_c.dat"))
+            self.connect((self.ofdm_frame_acq,1), gr.file_sink(1, "ofdm_receiver-found_corr_b.dat"))
+            self.connect(self.sampler, gr.file_sink(gr.sizeof_gr_complex*fft_length, "ofdm_receiver-sampler_c.dat"))
+            self.connect(self.sigmix, gr.file_sink(gr.sizeof_gr_complex, "ofdm_receiver-sigmix_c.dat"))
+            self.connect(self.nco, gr.file_sink(gr.sizeof_gr_complex, "ofdm_receiver-nco_c.dat"))
