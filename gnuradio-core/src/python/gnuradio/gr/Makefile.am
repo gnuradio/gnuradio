@@ -49,6 +49,7 @@ noinst_PYTHON = 			\
 	qa_agc.py			\
 	qa_argmax.py			\
 	qa_bin_statistics.py		\
+	qa_ecc_ccsds27.py		\
 	qa_cma_equalizer.py		\
 	qa_complex_to_xxx.py		\
 	qa_constellation_decoder_cb.py  \

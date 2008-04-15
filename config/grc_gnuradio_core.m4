@@ -46,6 +46,7 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/filter \
 -I\${abs_top_builddir}/gnuradio-core/src/lib/filter \
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/reed-solomon \
+-I\${abs_top_srcdir}/gnuradio-core/src/lib/viterbi \
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/io \
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/g72x \
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/swig \
@@ -90,6 +91,7 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
         gnuradio-core/src/lib/io/Makefile \
         gnuradio-core/src/lib/missing/Makefile \
         gnuradio-core/src/lib/reed-solomon/Makefile \
+        gnuradio-core/src/lib/viterbi/Makefile \
         gnuradio-core/src/lib/runtime/Makefile \
         gnuradio-core/src/lib/swig/Makefile \
         gnuradio-core/src/python/Makefile \

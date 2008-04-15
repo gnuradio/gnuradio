@@ -24,7 +24,7 @@ include $(top_srcdir)/Makefile.common
 ## Process this file with automake to produce Makefile.in
 
 # We've got to build . before swig
-SUBDIRS = missing runtime filter general gengen g72x reed-solomon io . swig
+SUBDIRS = missing runtime filter viterbi general gengen g72x reed-solomon io . swig
 
 # generate libgnuradio-core.la from the convenience libraries in subdirs
 
@@ -39,6 +39,7 @@ libgnuradio_core_qa_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 \
 libgnuradio_core_la_LIBADD  = 		\
 	filter/libfilter.la		\
 	g72x/libccitt.la		\
+	viterbi/libviterbi.la		\
 	general/libgeneral.la		\
 	gengen/libgengen.la		\
 	io/libio.la			\

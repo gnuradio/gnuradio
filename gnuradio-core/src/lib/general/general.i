@@ -131,6 +131,8 @@
 #include <gr_peak_detector2_fb.h>
 #include <gr_repeat.h>
 #include <gr_cpfsk_bc.h>
+#include <gr_encode_ccsds_27_bb.h>
+#include <gr_decode_ccsds_27_fb.h>
 %}
 
 %include "gr_nop.i"
@@ -242,3 +244,5 @@
 %include "gr_peak_detector2_fb.i"
 %include "gr_repeat.i"
 %include "gr_cpfsk_bc.i"
+%include "gr_encode_ccsds_27_bb.i"
+%include "gr_decode_ccsds_27_fb.i"

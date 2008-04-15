@@ -59,12 +59,14 @@ libgeneral_la_SOURCES = 		\
 	gr_crc32.cc			\
 	gr_ctcss_squelch_ff.cc		\
 	gr_dd_mpsk_sync_cc.cc		\
+	gr_decode_ccsds_27_fb.cc	\
 	gr_deinterleave.cc		\
 	gr_delay.cc			\
 	gr_diff_decoder_bb.cc		\
 	gr_diff_encoder_bb.cc		\
 	gr_diff_phasor_cc.cc		\
 	gr_dpll_bb.cc			\
+	gr_encode_ccsds_27_bb.cc	\
 	gr_fake_channel_coder_pp.cc	\
 	gr_fast_atan2f.cc		\
 	gr_feedforward_agc_cc.cc	\
@@ -174,8 +176,6 @@ libgeneral_qa_la_SOURCES = 		\
 	qa_gr_fxpt_vco.cc		\
 	qa_gr_math.cc
 
-
-
 grinclude_HEADERS = 			\
 	gr_agc_cc.h                 	\
 	gr_agc_ff.h                 	\
@@ -199,15 +199,17 @@ grinclude_HEADERS = 			\
 	gr_costas_loop_cc.h		\
 	gr_count_bits.h			\
 	gr_cpfsk_bc.h			\
-    	gr_crc32.h			\
+	gr_crc32.h			\
 	gr_ctcss_squelch_ff.h		\
 	gr_dd_mpsk_sync_cc.h		\
+	gr_decode_ccsds_27_fb.h		\
 	gr_diff_decoder_bb.h		\
 	gr_diff_encoder_bb.h		\
 	gr_deinterleave.h		\
 	gr_delay.h			\
 	gr_diff_phasor_cc.h		\
 	gr_dpll_bb.h			\
+	gr_encode_ccsds_27_bb.h		\
 	gr_expj.h			\
 	gr_fake_channel_coder_pp.h	\
 	gr_feedforward_agc_cc.h		\
@@ -358,12 +360,14 @@ swiginclude_HEADERS =			\
 	gr_crc32.i			\
 	gr_ctcss_squelch_ff.i		\
 	gr_dd_mpsk_sync_cc.i		\
+	gr_decode_ccsds_27_fb.i		\
 	gr_diff_decoder_bb.i		\
 	gr_diff_encoder_bb.i		\
 	gr_diff_phasor_cc.i		\
 	gr_dpll_bb.i			\
 	gr_deinterleave.i		\
 	gr_delay.i			\
+	gr_encode_ccsds_27_bb.i		\
 	gr_fake_channel_coder_pp.i	\
 	gr_feedforward_agc_cc.i		\
 	gr_feval.i			\
