@@ -25,28 +25,23 @@ from numpy import fft
 from gnuradio import gr
 
 class ofdm_sync_pnac(gr.hier_block2):
-    def __init__(self, fft_length, cp_length, ks):
+    def __init__(self, fft_length, cp_length, kstime, logging=False):
         
-        # FIXME: change the output signature
-        # should be the output of the divider (the normalized peaks) and
-        # the angle value out of the sample and hold block
-        # move sampler out of this block
-
 	gr.hier_block2.__init__(self, "ofdm_sync_pnac",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-				gr.io_signature(1, 1, gr.sizeof_gr_complex*fft_length)) # Output signature
+                                gr.io_signature2(2, 2, gr.sizeof_float, gr.sizeof_char)) # Output signature
 
             
         self.input = gr.add_const_cc(0)
 
         symbol_length = fft_length + cp_length
 
-        # PN Sync
+        # PN Sync with cross-correlation input
 
-        # autocorrelate with the known symbol
-        ks = ks[0:fft_length//2]
-        ks.reverse()
-        self.crosscorr_filter = gr.fir_filter_ccc(1, ks)
+        # cross-correlate with the known symbol
+        kstime = [k.conjugate() for k in kstime[0:fft_length//2]]
+        kstime.reverse()
+        self.crosscorr_filter = gr.fir_filter_ccc(1, kstime)
         self.connect(self.crosscorr_filter, gr.file_sink(gr.sizeof_gr_complex, "crosscorr.dat"))
         
         # Create a delay line
@@ -62,7 +57,7 @@ class ofdm_sync_pnac(gr.hier_block2):
 
         # Create a moving sum filter for the input
         self.inputmag2 = gr.complex_to_mag_squared()
-        movingsum2_taps = [1.0 for i in range(fft_length/2)]
+        movingsum2_taps = [1.0 for i in range(fft_length//2)]
         self.inputmovingsum = gr.fir_filter_fff(1,movingsum2_taps)
         self.square = gr.multiply_ff()
         self.normalize = gr.divide_ff()
@@ -73,19 +68,16 @@ class ofdm_sync_pnac(gr.hier_block2):
 
         self.sample_and_hold = gr.sample_and_hold_ff()
 
-        # Mix the signal with an NCO controlled by the sync loop
-        nco_sensitivity = -1.0/fft_length
-        self.nco = gr.frequency_modulator_fc(nco_sensitivity)
-        self.sigmix = gr.multiply_cc()
-
         #ML measurements input to sampler block and detect
         self.sub1 = gr.add_const_ff(-1)
-        self.pk_detect = gr.peak_detector_fb(0.2, 0.25, 30, 0.0005)
-
-        self.sampler = gr.ofdm_sampler(fft_length,symbol_length)
+        self.pk_detect = gr.peak_detector_fb(0.20, 0.20, 30, 0.001)
 
         self.connect(self, self.input)
+
+        # Cross-correlate input signal with known preamble
         self.connect(self.input, self.crosscorr_filter)
+
+        # use the output of the cross-correlation as input to Schmidl&Cox
         self.connect(self.crosscorr_filter, self.delay)
         self.connect(self.crosscorr_filter, (self.corr,0))
         self.connect(self.delay, self.conjg)
@@ -94,38 +86,28 @@ class ofdm_sync_pnac(gr.hier_block2):
         self.connect(self.moving_sum_filter, self.c2mag)
         self.connect(self.moving_sum_filter, self.angle)
         self.connect(self.angle, (self.sample_and_hold,0))
-        self.connect(self.sample_and_hold, self.nco)
 
-        self.connect(self.input, (self.sigmix,0))
-        self.connect(self.nco, (self.sigmix,1))
-        self.connect(self.sigmix, (self.sampler,0))
-
-        self.connect(self.input, self.inputmag2, self.inputmovingsum)
+        # Get the power of the input signal to normalize the output of the correlation
+        self.connect(self.crosscorr_filter, self.inputmag2, self.inputmovingsum)
         self.connect(self.inputmovingsum, (self.square,0))
         self.connect(self.inputmovingsum, (self.square,1))
         self.connect(self.square, (self.normalize,1))
         self.connect(self.c2mag, (self.normalize,0))
+
         self.connect(self.normalize, self.sub1, self.pk_detect)
-
-        self.connect(self.pk_detect, (self.sampler,1))
         self.connect(self.pk_detect, (self.sample_and_hold,1))
-            
-        self.connect(self.sampler, self)
 
-        if 1:
-            self.connect(self.normalize, gr.file_sink(gr.sizeof_float,
-                                                      "ofdm_sync_pnac-theta_f.dat"))
-            self.connect(self.angle, gr.file_sink(gr.sizeof_float,
-                                                  "ofdm_sync_pnac-epsilon_f.dat"))
-            self.connect(self.pk_detect, gr.file_sink(gr.sizeof_char,
-                                                      "ofdm_sync_pnac-peaks_b.dat"))
-            self.connect(self.sigmix, gr.file_sink(gr.sizeof_gr_complex,
-                                                   "ofdm_sync_pnac-sigmix_c.dat"))
-            self.connect(self.sampler, gr.file_sink(gr.sizeof_gr_complex*fft_length,
-                                                    "ofdm_sync_pnac-sampler_c.dat"))
-            self.connect(self.sample_and_hold, gr.file_sink(gr.sizeof_float,
-                                                            "ofdm_sync_pnac-sample_and_hold_f.dat"))
-            self.connect(self.nco, gr.file_sink(gr.sizeof_gr_complex,
-                                                "ofdm_sync_pnac-nco_c.dat"))
-            self.connect(self.input, gr.file_sink(gr.sizeof_gr_complex,
-                                                  "ofdm_sync_pnac-input_c.dat"))
+        # Set output signals
+        #    Output 0: fine frequency correction value
+        #    Output 1: timing signal
+        self.connect(self.sample_and_hold, (self,0))
+        self.connect(self.pk_detect, (self,1))
+
+        if logging:
+            self.connect(self.c2mag, gr.file_sink(gr.sizeof_float, "ofdm_sync_pnac-theta_f.dat"))
+            self.connect(self.normalize, gr.file_sink(gr.sizeof_float, "ofdm_sync_pnac-normalized_f.dat"))
+            self.connect(self.sub1, gr.file_sink(gr.sizeof_float, "ofdm_sync_pnac-sub1_f.dat"))
+            self.connect(self.angle, gr.file_sink(gr.sizeof_float, "ofdm_sync_pnac-epsilon_f.dat"))
+            self.connect(self.pk_detect, gr.file_sink(gr.sizeof_char, "ofdm_sync_pnac-peaks_b.dat"))
+            self.connect(self.sample_and_hold, gr.file_sink(gr.sizeof_float, "ofdm_sync_pnac-sample_and_hold_f.dat"))
+            self.connect(self.input, gr.file_sink(gr.sizeof_gr_complex, "ofdm_sync_pnac-input_c.dat"))

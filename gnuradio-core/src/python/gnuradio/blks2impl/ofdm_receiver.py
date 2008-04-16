@@ -92,7 +92,7 @@ class ofdm_receiver(gr.hier_block2):
             self.ofdm_sync = ofdm_sync_pn(fft_length, cp_length, logging)
         elif SYNC == "pnac":
             nco_sensitivity = -2.0/fft_length                             # correct for fine frequency
-            self.ofdm_sync = ofdm_sync_pnac(fft_length, cp_length, ks0time)
+            self.ofdm_sync = ofdm_sync_pnac(fft_length, cp_length, ks0time, logging)
         elif SYNC == "fixed":
             nco_sensitivity = -2.0/fft_length                             # correct for fine frequency
             self.ofdm_sync = ofdm_sync_fixed(fft_length, cp_length, logging)
