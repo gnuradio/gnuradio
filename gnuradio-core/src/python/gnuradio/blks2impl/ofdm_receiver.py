@@ -93,9 +93,12 @@ class ofdm_receiver(gr.hier_block2):
         elif SYNC == "pnac":
             nco_sensitivity = -2.0/fft_length                             # correct for fine frequency
             self.ofdm_sync = ofdm_sync_pnac(fft_length, cp_length, ks0time, logging)
-        elif SYNC == "fixed":
+        elif SYNC == "fixed":                                             # for testing only; do not user over the air
+            self.chan_filt = gr.multiply_const_cc(1.0)                    # remove filter and filter delay for this
+            nsymbols = 18                                                 # enter the number of symbols per packet
+            freq_offset = 0.0                                             # if you use a frequency offset, enter it here
             nco_sensitivity = -2.0/fft_length                             # correct for fine frequency
-            self.ofdm_sync = ofdm_sync_fixed(fft_length, cp_length, logging)
+            self.ofdm_sync = ofdm_sync_fixed(fft_length, cp_length, nsymbols, freq_offset, logging)
 
         # Set up blocks
 
