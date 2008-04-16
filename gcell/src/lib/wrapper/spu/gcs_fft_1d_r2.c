@@ -18,16 +18,22 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_GC_SPU_CONFIG_H
-#define INCLUDED_GC_SPU_CONFIG_H
 
-#include <gc_job_desc.h>
+#include <gc_declare_proc.h>
+#include <libfft.h>
 
-#define CACHE_LINE_SIZE	     128	      // in bytes
-#define	GC_SPU_BUFSIZE_BASE  (40 * 1024)      //  must be multiple of CACHE_LINE_SIZE
-#define	GC_SPU_BUFSIZE (GC_SPU_BUFSIZE_BASE + MAX_ARGS_EA * CACHE_LINE_SIZE)
+static void
+gcs_fft_1d_r2(const gc_job_direct_args_t *input,
+	      gc_job_direct_args_t *output __attribute__((unused)),
+	      const gc_job_ea_args_t *eaa)
+{
+  vector float *out = (vector float *) eaa->arg[0].ls_addr;
+  vector float *in = (vector float *) eaa->arg[1].ls_addr;
+  vector float *W = (vector float *) eaa->arg[2].ls_addr;
+  int log2_fft_length = input->arg[0].u32;
+  int forward = input->arg[1].u32;	// non-zero if forward xform (FIXME use)
 
-#define NGETBUFS	1	// single buffer job arg gets
-#define	NPUTBUFS	2	// double buffer job arg puts
+  fft_1d_r2(out, in, W, log2_fft_length);
+}
 
-#endif /* INCLUDED_GC_SPU_CONFIG_H */
+GC_DECLARE_PROC(gcs_fft_1d_r2, "fft_1d_r2");

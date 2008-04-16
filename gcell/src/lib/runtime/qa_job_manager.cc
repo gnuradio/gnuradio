@@ -29,7 +29,8 @@
 
 #include <malloc.h>
 
-extern spe_program_handle_t gcell_qa;	// handle to embedded SPU executable w/ QA routines
+// handle to embedded SPU executable w/ QA routines
+extern spe_program_handle_t gcell_runtime_qa;
 
 #if 0
 static void
@@ -173,23 +174,21 @@ qa_job_manager::t15()
 void
 qa_job_manager::t1_body()
 {
-  gc_job_manager *mgr;
+  gc_job_manager_sptr mgr;
   gc_jm_options opts;
-  opts.program_handle = &gcell_qa;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
   mgr = gc_make_job_manager(&opts);
-  delete mgr;
 }
 
 void
 qa_job_manager::t2_body()
 {
-  gc_job_manager *mgr = 0;
+  gc_job_manager_sptr mgr;
   gc_jm_options opts;
-  opts.program_handle = &gcell_qa;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
   opts.nspes = 100;
   opts.gang_schedule = false;
   mgr = gc_make_job_manager(&opts);
-  delete mgr;
 }
 
 void
@@ -200,13 +199,12 @@ qa_job_manager::t3_body()
   // cppunit.  cppunit is the prime suspect.
 
 #if 0
-  gc_job_manager *mgr = 0;
+  gc_job_manager_sptr mgr;
   gc_jm_options opts;
-  opts.program_handle = &gcell_qa;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
   opts.nspes = 100;
   opts.gang_schedule = true;
   CPPUNIT_ASSERT_THROW(mgr = gc_make_job_manager(&opts), std::out_of_range);
-  delete mgr;
 #endif
 }
 
@@ -222,9 +220,9 @@ init_jd(gc_job_desc *jd, gc_proc_id_t proc_id)
 void
 qa_job_manager::t4_body()
 {
-  gc_job_manager *mgr;
+  gc_job_manager_sptr mgr;
   gc_jm_options opts;
-  opts.program_handle = &gcell_qa;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
   opts.nspes = 1;
   mgr = gc_make_job_manager(&opts);
   //mgr->set_debug(-1);
@@ -232,8 +230,8 @@ qa_job_manager::t4_body()
   gc_job_desc *jds[NJOBS];
   bool done[NJOBS];
 
-  gc_proc_id_t gcp_no_such = mgr->lookup_proc("--no-such-proc-name--");
-  CPPUNIT_ASSERT_EQUAL(GCP_UNKNOWN_PROC, gcp_no_such);
+  gc_proc_id_t gcp_no_such;
+  CPPUNIT_ASSERT_THROW(gcp_no_such = mgr->lookup_proc("--no-such-proc-name--"), gc_unknown_proc);
 
   gc_proc_id_t gcp_qa_nop = mgr->lookup_proc("qa_nop");
   CPPUNIT_ASSERT(gcp_qa_nop != GCP_UNKNOWN_PROC);
@@ -256,16 +254,14 @@ qa_job_manager::t4_body()
   for (int i = 0; i < NJOBS; i++){
     mgr->free_job_desc(jds[i]);
   }
-
-  delete mgr;
 }
 
 void
 qa_job_manager::t5_body()
 {
-  gc_job_manager *mgr;
+  gc_job_manager_sptr mgr;
   gc_jm_options opts;
-  opts.program_handle = &gcell_qa;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
   opts.nspes = 0;	// use them all
   mgr = gc_make_job_manager(&opts);
   //mgr->set_debug(-1);
@@ -293,16 +289,14 @@ qa_job_manager::t5_body()
   for (int i = 0; i < NJOBS; i++){
     mgr->free_job_desc(jds[i]);
   }
-
-  delete mgr;
 }
 
 void
 qa_job_manager::t6_body()
 {
-  gc_job_manager *mgr;
+  gc_job_manager_sptr mgr;
   gc_jm_options opts;
-  opts.program_handle = &gcell_qa;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
   opts.nspes = 1;	
   mgr = gc_make_job_manager(&opts);
   gc_proc_id_t gcp_qa_nop = mgr->lookup_proc("qa_nop");
@@ -330,7 +324,6 @@ qa_job_manager::t6_body()
   }
 
   mgr->free_job_desc(jd);
-  delete mgr;
 }
 
 static int
@@ -344,7 +337,7 @@ sum_shorts(short *p, int nshorts)
 }
 
 static void
-test_sum_shorts(gc_job_manager *mgr, short *buf, int nshorts)
+test_sum_shorts(gc_job_manager_sptr mgr, short *buf, int nshorts)
 {
   gc_job_desc *jd = mgr->alloc_job_desc();
   gc_proc_id_t gcp_qa_sum_shorts = mgr->lookup_proc("qa_sum_shorts");
@@ -379,9 +372,9 @@ static short short_buf[NS] _AL128;	// for known alignment
 void
 qa_job_manager::t7_body()
 {
-  gc_job_manager *mgr;
+  gc_job_manager_sptr mgr;
   gc_jm_options opts;
-  opts.program_handle = &gcell_qa;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
   opts.nspes = 1;
   mgr = gc_make_job_manager(&opts);
 
@@ -400,8 +393,6 @@ qa_job_manager::t7_body()
   for (int offset = 0; offset <= 64; offset++){
     test_sum_shorts(mgr, &short_buf[offset], ea_args_maxsize/sizeof(short));
   }
-
-  delete mgr;
 }
 
 //
@@ -410,9 +401,9 @@ qa_job_manager::t7_body()
 void
 qa_job_manager::t8_body()
 {
-  gc_job_manager *mgr;
+  gc_job_manager_sptr mgr;
   gc_jm_options opts;
-  opts.program_handle = &gcell_qa;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
   opts.nspes = 1;
   mgr = gc_make_job_manager(&opts);
   gc_job_desc *jd = mgr->alloc_job_desc();
@@ -433,7 +424,6 @@ qa_job_manager::t8_body()
   }
 
   mgr->free_job_desc(jd);
-  delete mgr;
 }
 
 //
@@ -444,9 +434,9 @@ qa_job_manager::t9_body()
 {
   static const int N = 127;
   static const int M = 201;
-  gc_job_manager *mgr;
+  gc_job_manager_sptr mgr;
   gc_jm_options opts;
-  opts.program_handle = &gcell_qa;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
   opts.nspes = 1;
   mgr = gc_make_job_manager(&opts);
   gc_job_desc *jd = mgr->alloc_job_desc();
@@ -474,7 +464,6 @@ qa_job_manager::t9_body()
   }
 
   mgr->free_job_desc(jd);
-  delete mgr;
 }
 
 static bool
@@ -510,7 +499,7 @@ confirm_seq(const unsigned char *buf, size_t len, unsigned char v)
 }
 
 static void
-test_put_seq(gc_job_manager *mgr, int offset, int len, int starting_val)
+test_put_seq(gc_job_manager_sptr mgr, int offset, int len, int starting_val)
 {
   gc_job_desc *jd = mgr->alloc_job_desc();
   gc_proc_id_t gcp_qa_put_seq = mgr->lookup_proc("qa_put_seq");
@@ -556,9 +545,9 @@ test_put_seq(gc_job_manager *mgr, int offset, int len, int starting_val)
 void
 qa_job_manager::t10_body()
 {
-  gc_job_manager *mgr;
+  gc_job_manager_sptr mgr;
   gc_jm_options opts;
-  opts.program_handle = &gcell_qa;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
   opts.nspes = 1;
   mgr = gc_make_job_manager(&opts);
 
@@ -576,8 +565,6 @@ qa_job_manager::t10_body()
   for (int offset = 0; offset <= 64; offset++){
     test_put_seq(mgr, offset, ea_args_maxsize, starting_val++);
   }
-
-  delete mgr;
 }
 
 //
@@ -586,9 +573,9 @@ qa_job_manager::t10_body()
 void
 qa_job_manager::t11_body()
 {
-  gc_job_manager *mgr;
+  gc_job_manager_sptr mgr;
   gc_jm_options opts;
-  opts.program_handle = &gcell_qa;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
   opts.nspes = 1;
   mgr = gc_make_job_manager(&opts);
   gc_job_desc *jd = mgr->alloc_job_desc();
@@ -611,7 +598,6 @@ qa_job_manager::t11_body()
   }
 
   mgr->free_job_desc(jd);
-  delete mgr;
 }
 
 //
@@ -622,9 +608,9 @@ qa_job_manager::t12_body()
 {
   static const int N = 127;
   static const int M = 201;
-  gc_job_manager *mgr;
+  gc_job_manager_sptr mgr;
   gc_jm_options opts;
-  opts.program_handle = &gcell_qa;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
   opts.nspes = 1;
   mgr = gc_make_job_manager(&opts);
   gc_job_desc *jd = mgr->alloc_job_desc();
@@ -662,7 +648,6 @@ qa_job_manager::t12_body()
   }
 
   mgr->free_job_desc(jd);
-  delete mgr;
 }
 
 //
@@ -671,9 +656,9 @@ qa_job_manager::t12_body()
 void
 qa_job_manager::t13_body()
 {
-  gc_job_manager *mgr;
+  gc_job_manager_sptr mgr;
   gc_jm_options opts;
-  opts.program_handle = &gcell_qa;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
   opts.nspes = 1;
   mgr = gc_make_job_manager(&opts);
 
@@ -720,8 +705,6 @@ qa_job_manager::t13_body()
     CPPUNIT_ASSERT(ok);
   }
   mgr->free_job_desc(jd);
-
-  delete mgr;
 }
 
 /*
@@ -743,9 +726,9 @@ qa_job_manager::t14_body()
 
   memset(buf, 0xff, LEN_PER_JOB * NJOBS);
 
-  gc_job_manager *mgr;
+  gc_job_manager_sptr mgr;
   gc_jm_options opts;
-  opts.program_handle = &gcell_qa;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
   opts.nspes = 1;
   mgr = gc_make_job_manager(&opts);
 
@@ -788,11 +771,19 @@ qa_job_manager::t14_body()
   // cleanup
   for (int i = 0; i < NJOBS; i++)
     mgr->free_job_desc(jd[i]);
-
-  delete mgr;
 }
 
 void
 qa_job_manager::t15_body()
 {
+  gc_jm_options opts;
+  opts.program_handle = gc_program_handle_from_address(&gcell_runtime_qa);
+  opts.nspes = 1;
+  gc_job_manager_sptr mgr = gc_make_job_manager(&opts);
+
+  gc_job_manager::set_singleton(mgr);
+
+  CPPUNIT_ASSERT(gc_job_manager::singleton());
+  mgr.reset();
+  CPPUNIT_ASSERT_THROW(gc_job_manager::singleton(), boost::bad_weak_ptr);
 }

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -18,16 +18,26 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_GC_SPU_CONFIG_H
-#define INCLUDED_GC_SPU_CONFIG_H
 
-#include <gc_job_desc.h>
+/*
+ * This class gathers together all the test cases for the lib
+ * directory into a single test suite.  As you create new test cases,
+ * add them here.
+ */
 
-#define CACHE_LINE_SIZE	     128	      // in bytes
-#define	GC_SPU_BUFSIZE_BASE  (40 * 1024)      //  must be multiple of CACHE_LINE_SIZE
-#define	GC_SPU_BUFSIZE (GC_SPU_BUFSIZE_BASE + MAX_ARGS_EA * CACHE_LINE_SIZE)
+#include <qa_gcell_runtime.h>
+#include <qa_jd_stack.h>
+#include <qa_jd_queue.h>
+#include <qa_job_manager.h>
 
-#define NGETBUFS	1	// single buffer job arg gets
-#define	NPUTBUFS	2	// double buffer job arg puts
+CppUnit::TestSuite *
+qa_gcell_runtime::suite()
+{
+  CppUnit::TestSuite	*s = new CppUnit::TestSuite("runtime");
 
-#endif /* INCLUDED_GC_SPU_CONFIG_H */
+  s->addTest(qa_jd_stack::suite());
+  s->addTest(qa_jd_queue::suite());
+  s->addTest(qa_job_manager::suite());
+
+  return s;
+}

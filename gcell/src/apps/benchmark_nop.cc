@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -57,10 +57,10 @@ run_test(unsigned int nspes, unsigned int usecs, int njobs)
   bool done[NJDS];
   
   gc_jm_options opts;
-  opts.program_handle = &benchmark_procs;
+  opts.program_handle = gc_program_handle_from_address(&benchmark_procs);
   opts.nspes = nspes;
   opts.gang_schedule = true;
-  gc_job_manager *mgr = gc_make_job_manager(&opts);
+  gc_job_manager_sptr mgr = gc_make_job_manager(&opts);
 
   if ((gcp_benchmark_udelay = mgr->lookup_proc("benchmark_udelay")) == GCP_UNKNOWN_PROC){
     fprintf(stderr, "lookup_proc: failed to find \"benchmark_udelay\"\n");
@@ -127,8 +127,6 @@ run_test(unsigned int nspes, unsigned int usecs, int njobs)
   printf("nspes: %2d  udelay: %4d  elapsed_time: %7.3f  njobs: %g  speedup: %6.3f\n",
 	 mgr->nspes(), usecs, delta, (double) njobs,
 	 njobs * usecs * 1e-6 / delta);
-
-  delete mgr;
 }
 
 int

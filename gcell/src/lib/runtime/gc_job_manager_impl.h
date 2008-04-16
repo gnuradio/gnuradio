@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -29,7 +29,6 @@
 #include "gc_spu_args.h"
 #include <libspe2.h>
 #include <vector>
-#include <boost/shared_ptr.hpp>
 #include <boost/scoped_array.hpp>
 
 typedef boost::shared_ptr<spe_gang_context> spe_gang_context_sptr;
@@ -169,7 +168,7 @@ private:
   void sync_logfiles();
   void unmap_logfiles();
 
-  friend gc_job_manager *gc_make_job_manager(const gc_jm_options *options);
+  friend gc_job_manager_sptr gc_make_job_manager(const gc_jm_options *options);
   
   gc_job_manager_impl(const gc_jm_options *options = 0);
 

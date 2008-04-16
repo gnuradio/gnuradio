@@ -20,7 +20,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = spu runtime general procs .
+SUBDIRS = spu runtime general wrapper .
 
 # generate libgcell.la from the convenience libraries in subdirs
 
@@ -34,11 +34,13 @@ libgcell_qa_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
 
 libgcell_la_LIBADD = \
 	runtime/libruntime.la \
+	wrapper/libwrapper.la \
 	-lspe2 \
 	$(OMNITHREAD_LA)
 
 libgcell_qa_la_LIBADD = \
 	runtime/libruntime-qa.la \
+	wrapper/libwrapper-qa.la \
 	$(CPPUNIT_LIBS)
 
 

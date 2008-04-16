@@ -20,5 +20,4 @@
 
 include $(top_srcdir)/Makefile.common
 
-# SUBDIRS = spu .
 

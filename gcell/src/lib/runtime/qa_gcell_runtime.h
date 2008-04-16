@@ -18,26 +18,18 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#ifndef INCLUDED_QA_GCELL_RUNTIME_H
+#define INCLUDED_QA_GCELL_RUNTIME_H
 
-/*
- * This class gathers together all the test cases for the lib
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+#include <cppunit/TestSuite.h>
 
-#include <qa_lib.h>
-#include <qa_jd_stack.h>
-#include <qa_jd_queue.h>
-#include <qa_job_manager.h>
+//! collect all the tests for the runtime directory
 
-CppUnit::TestSuite *
-qa_lib::suite()
-{
-  CppUnit::TestSuite	*s = new CppUnit::TestSuite("lib");
+class qa_gcell_runtime {
+public:
+  //! return suite of tests
+  static CppUnit::TestSuite *suite();
+};
 
-  s->addTest(qa_jd_stack::suite());
-  s->addTest(qa_jd_queue::suite());
-  s->addTest(qa_job_manager::suite());
 
-  return s;
-}
+#endif /* INCLUDED_QA_GCELL_RUNTIME_H */

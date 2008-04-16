@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,11 +24,17 @@
 #endif
 #include "gc_job_manager.h"
 #include "gc_job_manager_impl.h"
+#include <boost/weak_ptr.hpp>
+#include <stdio.h>
 
-gc_job_manager *
+
+static boost::weak_ptr<gc_job_manager> s_singleton;
+
+
+gc_job_manager_sptr
 gc_make_job_manager(const gc_jm_options *options)
 {
-  return new gc_job_manager_impl(options);
+  return gc_job_manager_sptr(new gc_job_manager_impl(options));
 }
 
 gc_job_manager::gc_job_manager(const gc_jm_options *options)
@@ -51,4 +57,104 @@ int
 gc_job_manager::debug()
 {
   return 0;
+}
+
+void 
+gc_job_manager::set_singleton(gc_job_manager_sptr mgr)
+{
+  s_singleton = mgr;
+}
+
+gc_job_manager_sptr 
+gc_job_manager::singleton()
+{
+  return gc_job_manager_sptr(s_singleton);
+}
+
+// ------------------------------------------------------------------------
+
+
+// custom deleter
+class spe_program_handle_deleter {
+public:
+  void operator()(spe_program_handle_t *program) {
+    if (program){
+      int r = spe_image_close(program);
+      if (r != 0){
+	perror("spe_image_close");
+      }
+    }
+  }
+};
+
+// nop custom deleter
+class nop_spe_program_handle_deleter {
+public:
+  void operator()(spe_program_handle_t *program) {
+  }
+};
+
+spe_program_handle_sptr 
+gc_program_handle_from_filename(const std::string &filename)
+{
+  return spe_program_handle_sptr(spe_image_open(filename.c_str()),
+				 spe_program_handle_deleter());
+}
+
+
+spe_program_handle_sptr 
+gc_program_handle_from_address(spe_program_handle_t *handle)
+{
+  return spe_program_handle_sptr(handle, nop_spe_program_handle_deleter());
+}
+
+const std::string
+gc_job_status_string(gc_job_status_t status)
+{
+  switch(status){
+  case JS_OK:			return "JS_OK";
+  case JS_SHUTTING_DOWN:	return "JS_SHUTTING_DOWN";
+  case JS_TOO_MANY_CLIENTS:	return "JS_TOO_MANY_CLIENTS";
+  case JS_UNKNOWN_PROC:		return "JS_UNKNOWN_PROC";
+  case JS_BAD_DIRECTION:	return "JS_BAD_DIRECTION";
+  case JS_BAD_EAH:		return "JS_BAD_EAH";
+  case JS_BAD_N_DIRECT:		return "JS_BAD_N_DIRECT";
+  case JS_BAD_N_EA:		return "JS_BAD_N_EA";
+  case JS_ARGS_TOO_LONG:	return "JS_ARGS_TOO_LONG";
+  case JS_BAD_JUJU:		return "JS_BAD_JUJU";
+  case JS_BAD_JOB_DESC:		return "JS_BAD_JOB_DESC";
+  default:
+    char buf[100];
+    snprintf(buf, sizeof(buf), "unknown gc_job_status_t (%d)\n", status);
+    return buf;
+  }
+}
+
+/*
+ * exception classes
+ */
+
+gc_exception::gc_exception(const std::string &msg)
+  : runtime_error(msg)
+{
+}
+
+gc_unknown_proc::gc_unknown_proc(const std::string &msg)
+  : gc_exception("gc_unknown_proc: " + msg)
+{
+}
+
+gc_bad_alloc::gc_bad_alloc(const std::string &msg)
+  : gc_exception("gc_bad_alloc: " + msg)
+{
+}
+
+gc_bad_align::gc_bad_align(const std::string &msg)
+  : gc_exception("gc_bad_align: " + msg)
+{
+}
+
+gc_bad_submit::gc_bad_submit(const std::string &name, gc_job_status_t status)
+  : gc_exception("gc_bad_submit(" + name + "): " + gc_job_status_string(status))
+{
 }

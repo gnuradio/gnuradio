@@ -55,13 +55,13 @@ AC_DEFUN([GRC_GCELL],[
 	gcell_INCLUDES="-I\${abs_top_srcdir}/gcell/src/include \
 		 -I\${abs_top_srcdir}/gcell/src/lib/runtime \
 		 -I\${abs_top_srcdir}/gcell/src/lib/general \
-		 -I\${abs_top_srcdir}/gcell/src/lib/procs"
+		 -I\${abs_top_srcdir}/gcell/src/lib/wrapper"
         gcell_LA="\${abs_top_builddir}/gcell/src/lib/libgcell.la"
 	gcell_spu_INCLUDES="-I\${abs_top_srcdir}/gcell/src/include/spu \
 		 -I\${abs_top_srcdir}/gcell/src/include \
 		 -I\${abs_top_srcdir}/gcell/src/lib/runtime/spu \
 		 -I\${abs_top_srcdir}/gcell/src/lib/general/spu \
-		 -I\${abs_top_srcdir}/gcell/src/lib/procs/spu"
+		 -I\${abs_top_srcdir}/gcell/src/lib/wrapper/spu"
 	gcell_spu_LA="\${abs_top_builddir}/gcell/src/lib/spu/libgcell_spu.a"
 	AC_SUBST(gcell_spu_INCLUDES)
 	AC_SUBST(gcell_spu_LA)
@@ -76,7 +76,7 @@ AC_DEFUN([GRC_GCELL],[
         gcell/src/lib/Makefile \
         gcell/src/lib/spu/Makefile \
         gcell/src/lib/general/Makefile \
-        gcell/src/lib/procs/Makefile \
+        gcell/src/lib/wrapper/Makefile \
         gcell/src/lib/runtime/Makefile \
         gcell/src/apps/Makefile \
 	gcell/src/apps/spu/Makefile \

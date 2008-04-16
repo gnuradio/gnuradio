@@ -18,16 +18,18 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_GC_SPU_CONFIG_H
-#define INCLUDED_GC_SPU_CONFIG_H
 
-#include <gc_job_desc.h>
+#include <libfft.h>
+#include <fft_1d_r2.h>
+#include <assert.h>
 
-#define CACHE_LINE_SIZE	     128	      // in bytes
-#define	GC_SPU_BUFSIZE_BASE  (40 * 1024)      //  must be multiple of CACHE_LINE_SIZE
-#define	GC_SPU_BUFSIZE (GC_SPU_BUFSIZE_BASE + MAX_ARGS_EA * CACHE_LINE_SIZE)
+/*
+ * invoke the inline version
+ */
+void 
+fft_1d_r2(vector float *out, vector float *in, vector float *W, int log2_size)
+{
+  assert((1 << log2_size) <= MAX_FFT_1D_SIZE);
 
-#define NGETBUFS	1	// single buffer job arg gets
-#define	NPUTBUFS	2	// double buffer job arg puts
-
-#endif /* INCLUDED_GC_SPU_CONFIG_H */
+  _fft_1d_r2(out, in, W, log2_size);
+}

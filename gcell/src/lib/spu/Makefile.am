@@ -57,23 +57,28 @@ runtime_spu_noinst_headers = \
 
 general_srcdir = $(srcdir)/../general/spu
 
-general_spu_sources =
+general_spu_sources = \
+	$(general_srcdir)/fft_1d_r2.c
 
-general_spu_headers =
+general_spu_headers = \
+	$(general_srcdir)/libfft.h
 
-general_spu_noinst_headers =
+general_spu_noinst_headers = \
+	$(general_srcdir)/fft_1d.h \
+	$(general_srcdir)/fft_1d_r2.h 
 
 
 # ----------------------------------------------------------------
-# files in the lib/procs/spu directory
+# files in the lib/wrapper/spu directory
 
-procs_srcdir = $(srcdir)/../proc/spu
+wrapper_srcdir = $(srcdir)/../wrapper/spu
 
-procs_spu_sources =
+wrapper_spu_sources = \
+	$(wrapper_srcdir)/gcs_fft_1d_r2.c
 
-procs_spu_headers =
+wrapper_spu_headers =
 
-procs_spu_noinst_headers =
+wrapper_spu_noinst_headers =
 
 # ----------------------------------------------------------------
 # build the library from the files in the three directories
@@ -81,23 +86,29 @@ procs_spu_noinst_headers =
 libgcell_spu_a_SOURCES = \
 	$(runtime_spu_sources) \
 	$(general_spu_sources) \
-	$(procs_spu_sources)
+	$(wrapper_spu_sources)
 
 gcellspuinclude_HEADERS = \
 	$(runtime_spu_headers) \
 	$(general_spu_headers) \
-	$(procs_spu_headers)
+	$(wrapper_spu_headers)
 
 noinst_HEADERS = \
 	$(runtime_spu_noinst_headers) \
 	$(general_spu_noinst_headers) \
-	$(procs_spu_noinst_headers)
+	$(wrapper_spu_noinst_headers)
 
 # ----------------------------------------------------------------
-# SPU executable containing QA code
+# SPU executables 
 
 noinst_PROGRAMS = \
-	gcell_qa
+	gcell_all \
+	gcell_runtime_qa
 
-gcell_qa_SOURCES = $(runtime_srcdir)/gcell_qa.c
-gcell_qa_LDADD = libgcell_spu.a
+# all known gcell procs (at least until they get too big)
+gcell_all_SOURCES = $(wrapper_spu_sources)
+gcell_all_LDADD = libgcell_spu.a
+
+# just the QA code required for testing the runtime
+gcell_runtime_qa_SOURCES = $(runtime_srcdir)/gcell_runtime_qa.c
+gcell_runtime_qa_LDADD = libgcell_spu.a

@@ -18,16 +18,31 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_GC_SPU_CONFIG_H
-#define INCLUDED_GC_SPU_CONFIG_H
+#ifndef INCLUDED_QA_GCP_FFT_1D_R2_H
+#define INCLUDED_QA_GCP_FFT_1D_R2_H
 
-#include <gc_job_desc.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
+#include <gc_job_manager.h>
 
-#define CACHE_LINE_SIZE	     128	      // in bytes
-#define	GC_SPU_BUFSIZE_BASE  (40 * 1024)      //  must be multiple of CACHE_LINE_SIZE
-#define	GC_SPU_BUFSIZE (GC_SPU_BUFSIZE_BASE + MAX_ARGS_EA * CACHE_LINE_SIZE)
+class qa_gcp_fft_1d_r2 : public CppUnit::TestCase {
 
-#define NGETBUFS	1	// single buffer job arg gets
-#define	NPUTBUFS	2	// double buffer job arg puts
+  CPPUNIT_TEST_SUITE(qa_gcp_fft_1d_r2);
+  CPPUNIT_TEST(t1);
+  CPPUNIT_TEST(t2);
+  CPPUNIT_TEST(t3);
+  CPPUNIT_TEST(t4);
+  CPPUNIT_TEST_SUITE_END();
 
-#endif /* INCLUDED_GC_SPU_CONFIG_H */
+ private:
+  void t1();
+  void t2();
+  void t3();
+  void t4();
+
+  void test(gc_job_manager_sptr mgr, int log2_fft_size, bool forward);
+};
+
+
+
+#endif /* INCLUDED_QA_GCP_FFT_1D_R2_H */

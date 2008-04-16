@@ -18,16 +18,18 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_GC_SPU_CONFIG_H
-#define INCLUDED_GC_SPU_CONFIG_H
+#ifndef INCLUDED_QA_GCELL_WRAPPER_H
+#define INCLUDED_QA_GCELL_WRAPPER_H
 
-#include <gc_job_desc.h>
+#include <cppunit/TestSuite.h>
 
-#define CACHE_LINE_SIZE	     128	      // in bytes
-#define	GC_SPU_BUFSIZE_BASE  (40 * 1024)      //  must be multiple of CACHE_LINE_SIZE
-#define	GC_SPU_BUFSIZE (GC_SPU_BUFSIZE_BASE + MAX_ARGS_EA * CACHE_LINE_SIZE)
+//! collect all the tests for the wrapper directory
 
-#define NGETBUFS	1	// single buffer job arg gets
-#define	NPUTBUFS	2	// double buffer job arg puts
+class qa_gcell_wrapper {
+public:
+  //! return suite of tests
+  static CppUnit::TestSuite *suite();
+};
 
-#endif /* INCLUDED_GC_SPU_CONFIG_H */
+
+#endif /* INCLUDED_QA_GCELL_WRAPPER_H */

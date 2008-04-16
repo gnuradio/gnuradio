@@ -21,8 +21,8 @@
 
 #include <cppunit/TextTestRunner.h>
 
-#include <qa_lib.h>
-
+#include <qa_gcell_runtime.h>
+#include <qa_gcell_wrapper.h>
 
 int 
 main(int argc, char **argv)
@@ -30,7 +30,8 @@ main(int argc, char **argv)
   
   CppUnit::TextTestRunner	runner;
 
-  runner.addTest(qa_lib::suite());
+  runner.addTest(qa_gcell_runtime::suite());
+  runner.addTest(qa_gcell_wrapper::suite());
   
   bool was_successful = runner.run("", false);
 

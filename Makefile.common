@@ -96,6 +96,9 @@ GCELL_LA = @gcell_LA@
 GCELL_SPU_INCLUDES = @gcell_spu_INCLUDES@
 GCELL_SPU_LA = @gcell_spu_LA@
 
+# libtool aware wrapper for ppu-embedspu
+GCELL_EMBEDSPU_LIBTOOL = @abs_top_srcdir@/gcell/src/lib/runtime/gcell-embedspu-libtool
+
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.
 STD_DEFINES_AND_INCLUDES=$(DEFINES) $(OMNITHREAD_INCLUDES) $(GNURADIO_INCLUDES) $(BOOST_CFLAGS)

@@ -18,18 +18,22 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_QA_LIB_H
-#define INCLUDED_QA_LIB_H
 
-#include <cppunit/TestSuite.h>
+/*
+ * This class gathers together all the test cases for the lib
+ * directory into a single test suite.  As you create new test cases,
+ * add them here.
+ */
 
-//! collect all the tests for the lib directory
+#include <qa_gcell_wrapper.h>
+#include <qa_gcp_fft_1d_r2.h>
 
-class qa_lib {
-public:
-  //! return suite of tests
-  static CppUnit::TestSuite *suite();
-};
+CppUnit::TestSuite *
+qa_gcell_wrapper::suite()
+{
+  CppUnit::TestSuite	*s = new CppUnit::TestSuite("wrapper");
 
+  s->addTest(qa_gcp_fft_1d_r2::suite());
 
-#endif /* INCLUDED_QA_LIB_H */
+  return s;
+}

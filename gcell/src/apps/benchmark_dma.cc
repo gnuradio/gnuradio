@@ -121,11 +121,11 @@ run_test(unsigned int nspes, unsigned int usecs, unsigned int dma_size, int getp
   }
 
   gc_jm_options opts;
-  opts.program_handle = &benchmark_procs;
+  opts.program_handle = gc_program_handle_from_address(&benchmark_procs);
   opts.nspes = nspes;
   //opts.enable_logging = true;
   //opts.log2_nlog_entries = 13;
-  gc_job_manager *mgr = gc_make_job_manager(&opts);
+  gc_job_manager_sptr mgr = gc_make_job_manager(&opts);
 
   if ((gcp_benchmark_udelay = mgr->lookup_proc("benchmark_udelay")) == GCP_UNKNOWN_PROC){
     fprintf(stderr, "lookup_proc: failed to find \"benchmark_udelay\"\n");
@@ -211,8 +211,6 @@ run_test(unsigned int nspes, unsigned int usecs, unsigned int dma_size, int getp
 	   (double) njobs * dma_size / delta * (getput_mask == BENCHMARK_GET_PUT ? 2.0 : 1.0));
 
   }
-
-  delete mgr;
 }
 
 static void

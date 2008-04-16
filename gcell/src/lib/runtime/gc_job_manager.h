@@ -23,17 +23,52 @@
 #define INCLUDED_GC_JOB_MANAGER_H
 
 #include <boost/utility.hpp>
+#include <boost/shared_ptr.hpp>
 #include <vector>
 #include <string>
+#include <stdexcept>
 #include <libspe2.h>
 #include "gc_job_desc.h"
 
 class gc_job_manager;
+typedef boost::shared_ptr<gc_job_manager> gc_job_manager_sptr;
+typedef boost::shared_ptr<spe_program_handle_t> spe_program_handle_sptr;
 
-enum gc_wait_mode {
-  GC_WAIT_ANY,
-  GC_WAIT_ALL,
-};
+/*!
+ * \brief Return a boost::shared_ptr to an spe_program_handle_t
+ *
+ * \param filename is the name of the SPE ELF executable to open.
+ *
+ * Calls spe_image_open to open the file.  If successful returns a
+ * boost::shared_ptr that will call spe_image_close when it's time to
+ * free the object.
+ *
+ * Returns the equivalent of the NULL pointer if the file cannot be
+ * opened, or if it's not an SPE ELF object file.
+ *
+ * \sa gc_program_handle_from_address
+ */
+spe_program_handle_sptr 
+gc_program_handle_from_filename(const std::string &filename);
+
+/*!
+ * \brief Return a boost::shared_ptr to an spe_program_handle_t
+ *
+ * \param handle is a non-zero pointer to an embedded SPE image.
+ *
+ * If successful returns a boost::shared_ptr that does nothing when
+ * it's time to free the object.
+ *
+ * \sa gc_program_handle_from_filename
+ */
+spe_program_handle_sptr 
+gc_program_handle_from_address(spe_program_handle_t *handle);
+
+/*!
+ * \brief map gc_job_status_t into a string
+ */
+const std::string
+gc_job_status_string(gc_job_status_t status);
 
 /*
  * \brief Options that configure the job_manager.
@@ -46,23 +81,59 @@ struct gc_jm_options {
   bool gang_schedule;		    // shall we gang schedule?
   bool use_affinity;		    // shall we try for affinity (FIXME not implmented)
   bool enable_logging;		    // shall we log SPE events?
-  uint32_t log2_nlog_entries;    	 // log2 of number of log entries (default is 12 == 4k)
-  spe_program_handle_t *program_handle;  // program to load into SPEs
+  uint32_t log2_nlog_entries;    	   // log2 of number of log entries (default is 12 == 4k)
+  spe_program_handle_sptr program_handle;  // program to load into SPEs
 
   gc_jm_options() :
     max_jobs(0), max_client_threads(0), nspes(0),
     gang_schedule(true), use_affinity(false),
-    enable_logging(false), log2_nlog_entries(12),
-    program_handle(0)
+    enable_logging(false), log2_nlog_entries(12)
   {
   }
 };
 
+enum gc_wait_mode {
+  GC_WAIT_ANY,
+  GC_WAIT_ALL,
+};
+
+/*
+ * exception classes
+ */
+class gc_exception : public std::runtime_error
+{
+public:
+  gc_exception(const std::string &msg);
+};
+
+class gc_unknown_proc : public gc_exception
+{
+public:
+  gc_unknown_proc(const std::string &msg);
+};
+
+class gc_bad_alloc : public gc_exception
+{
+public:
+  gc_bad_alloc(const std::string &msg);
+};
+
+class gc_bad_align : public gc_exception
+{
+public:
+  gc_bad_align(const std::string &msg);
+};
+
+class gc_bad_submit : public gc_exception
+{
+public:
+  gc_bad_submit(const std::string &name, gc_job_status_t status);
+};
 
 /*
  * \brief Create an instance of the job manager
  */
-gc_job_manager *
+gc_job_manager_sptr
 gc_make_job_manager(const gc_jm_options *options = 0);
 
 
@@ -92,7 +163,7 @@ public:
 
   /*!
    * \brief Return a pointer to a properly aligned job descriptor,
-   * or zero if none are available.
+   * or throws gc_bad_alloc if there are none available.
    */
   virtual gc_job_desc *alloc_job_desc() = 0;
 
@@ -139,6 +210,8 @@ public:
    * A thread may only wait for jobs which it submitted.
    *
    * \returns number of jobs completed, or -1 if error.
+   * The caller must examine the status field of each job to confirm
+   * successful completion of the job.
    */
   virtual int
   wait_jobs(unsigned int njobs,
@@ -154,7 +227,7 @@ public:
 
   /*!
    * Return gc_proc_id_t associated with spu procedure \p proc_name if one
-   * exists, otherwise return GCP_UNKNOWN_PROC.
+   * exists, otherwise throws gc_unknown_proc.
    */
   virtual gc_proc_id_t lookup_proc(const std::string &proc_name) = 0;
   
@@ -162,6 +235,27 @@ public:
    * Return a vector of all known spu procedure names.
    */
   virtual std::vector<std::string> proc_names() = 0;
+
+  /*!
+   * \brief Set the singleton gc_job_manager instance.
+   * \param mgr is the job manager instance.
+   *
+   * The singleton is weakly held, thus the caller must maintain
+   * a reference to the mgr for the duration.  (If we held the
+   * manager strongly, the destructor would never be called, and the
+   * resources (SPEs) would not be returned.)  Bottom line: the
+   * caller is responsible for life-time management.
+   */
+  static void set_singleton(gc_job_manager_sptr mgr);
+
+  /*!
+   * \brief Retrieve the singleton gc_job_manager instance.
+   *
+   * Returns the singleton gc_job_manager instance or raises
+   * boost::bad_weak_ptr if the singleton is empty.
+   */
+  static gc_job_manager_sptr singleton();
+
 
   virtual void set_debug(int debug);
   virtual int debug();

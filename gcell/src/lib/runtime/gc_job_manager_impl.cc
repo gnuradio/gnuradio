@@ -65,19 +65,6 @@ public:
   }
 };
 
-// custom deleter
-class spe_program_handle_deleter {
-public:
-  void operator()(spe_program_handle_t *program) {
-    if (program){
-      int r = spe_image_close(program);
-      if (r != 0){
-	perror("spe_image_close");
-      }
-    }
-  }
-};
-
 
 // custom deleter of anything that can be freed with "free"
 class free_deleter {
@@ -150,7 +137,7 @@ gc_job_manager_impl::gc_job_manager_impl(const gc_jm_options *options)
   if (d_options.max_client_threads == 0)
     d_options.max_client_threads = DEFAULT_MAX_CLIENT_THREADS;
 
-  if (d_options.program_handle == 0){
+  if (!d_options.program_handle){
     fprintf(stderr, "gc_job_manager: options->program_handle must be non-zero\n");
     throw std::runtime_error("gc_job_manager: options->program_handle must be non-zero");
   }
@@ -236,7 +223,7 @@ gc_job_manager_impl::gc_job_manager_impl(const gc_jm_options *options)
 
   // get a handle to the spe program
 
-  spe_program_handle_t *spe_image = d_options.program_handle;
+  spe_program_handle_t *spe_image = d_options.program_handle.get();
 
   // fish proc_def table out of SPE ELF file
 
@@ -431,8 +418,12 @@ gc_job_manager_impl::bv_isclr(unsigned long *bv, unsigned int bitno)
 gc_job_desc *
 gc_job_manager_impl::alloc_job_desc()
 {
-  // stack is lock free, thus safe to call from any thread
-  return gc_jd_stack_pop(d_free_list);
+  // stack is lock free, and safe to call from any thread
+  gc_job_desc *jd = gc_jd_stack_pop(d_free_list);
+  if (jd == 0)
+    throw gc_bad_alloc("alloc_job_desc: none available");
+
+  return jd;
 }
 
 void
@@ -557,7 +548,7 @@ bool
 gc_job_manager_impl::wait_job(gc_job_desc *jd)
 {
   bool done;
-  return wait_jobs(1, &jd, &done, GC_WAIT_ANY) == 1;
+  return wait_jobs(1, &jd, &done, GC_WAIT_ANY) == 1 && jd->status == JS_OK;
 }
 
 int
@@ -1246,7 +1237,7 @@ gc_job_manager_impl::lookup_proc(const std::string &proc_name)
     if (proc_name == d_proc_def[i].name)
       return i;
 
-  return GCP_UNKNOWN_PROC;
+  throw gc_unknown_proc(proc_name);
 }
 
 std::vector<std::string>
