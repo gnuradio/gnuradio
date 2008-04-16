@@ -150,10 +150,7 @@ qa_gcp_fft_1d_r2::test(gc_job_manager_sptr mgr, int log2_fft_size, bool forward)
   std::complex<float> *cell_out = (std::complex<float> *) cell_out_void.get();
   std::complex<float> *cell_twiddle = (std::complex<float> *) cell_twiddle_void.get();
 
-  if (forward)
-    gcp_fft_1d_r2_forward_twiddle(log2_fft_size, cell_twiddle);
-  else
-    gcp_fft_1d_r2_reverse_twiddle(log2_fft_size, cell_twiddle);
+  gcp_fft_1d_r2_twiddle(log2_fft_size, cell_twiddle);
 
   srandom(1);		// we want reproducibility
 
@@ -206,6 +203,5 @@ qa_gcp_fft_1d_r2::test(gc_job_manager_sptr mgr, int log2_fft_size, bool forward)
   fprintf(stdout, "%s fft_size = %4d  max_rel_error = %e\n",
 	  forward ? "fwd" : "rev", fft_size, max_rel);
 
-  // CPPUNIT_ASSERT(max_rel <= 1e-4);
-
+  CPPUNIT_ASSERT(max_rel <= 5e-3);
 }

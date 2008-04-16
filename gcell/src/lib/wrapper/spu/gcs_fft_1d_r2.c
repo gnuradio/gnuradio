@@ -22,6 +22,18 @@
 #include <gc_declare_proc.h>
 #include <libfft.h>
 
+/*
+ * v is really vector complex<float>
+ */
+static void
+conjugate_vector(vector float *v, int nelements)
+{
+  vector float k = {1, -1, 1, -1};
+  int i;
+  for (i = 0; i < nelements; i++)
+    v[i] *= k;
+}
+
 static void
 gcs_fft_1d_r2(const gc_job_direct_args_t *input,
 	      gc_job_direct_args_t *output __attribute__((unused)),
@@ -31,9 +43,16 @@ gcs_fft_1d_r2(const gc_job_direct_args_t *input,
   vector float *in = (vector float *) eaa->arg[1].ls_addr;
   vector float *W = (vector float *) eaa->arg[2].ls_addr;
   int log2_fft_length = input->arg[0].u32;
-  int forward = input->arg[1].u32;	// non-zero if forward xform (FIXME use)
+  int forward = input->arg[1].u32;	// non-zero if forward xform
 
-  fft_1d_r2(out, in, W, log2_fft_length);
+  if (forward){
+    fft_1d_r2(out, in, W, log2_fft_length);
+  }
+  else {
+    conjugate_vector(in, 1 << (log2_fft_length - 1));
+    fft_1d_r2(out, in, W, log2_fft_length);
+    conjugate_vector(out, 1 << (log2_fft_length - 1));
+  }
 }
 
 GC_DECLARE_PROC(gcs_fft_1d_r2, "fft_1d_r2");

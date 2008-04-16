@@ -89,7 +89,7 @@ gcp_fft_1d_r2_submit(gc_job_manager_sptr mgr,
 }
 
 void
-gcp_fft_1d_r2_forward_twiddle(unsigned int log2_fft_length, std::complex<float> *W)
+gcp_fft_1d_r2_twiddle(unsigned int log2_fft_length, std::complex<float> *W)
 {
   unsigned int n = 1 << log2_fft_length;
 
@@ -99,18 +99,4 @@ gcp_fft_1d_r2_forward_twiddle(unsigned int log2_fft_length, std::complex<float> 
     W[i].real() =  cos(i * 2*M_PI/n);
     W[n/4 - i].imag() = -W[i].real();
   }
-}
-
-
-void
-gcp_fft_1d_r2_reverse_twiddle(unsigned int log2_fft_length, std::complex<float> *W)
-{
-  // FIXME this is wrong/insufficient.  inverse is still incorrect
-
-  // reverse factors are the conjugate of the forward factors
-  gcp_fft_1d_r2_forward_twiddle(log2_fft_length, W);
-
-  unsigned int n = 1 << log2_fft_length;
-  for (unsigned i=0; i < n/4; i++)
-    W[i] = conj(W[i]);
 }

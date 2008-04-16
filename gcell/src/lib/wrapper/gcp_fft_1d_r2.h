@@ -28,7 +28,7 @@
  * \brief Submit a job that computes the forward or reverse FFT.
  *
  * \param mgr is the job manager instance
- * \param log2_fft_length is the log2 of the fft_length (4 <= x <= 13).
+ * \param log2_fft_length is the log2 of the fft_length (4 <= x <= 12).
  * \param forward is true to compute the forward xform
  * \param out is the fft_length output from FFT (must be 16-byte aligned).
  * \param in is the fft_length input to FFT (must be 16-byte aligned).
@@ -46,21 +46,12 @@ gcp_fft_1d_r2_submit(gc_job_manager_sptr mgr,
 		     const std::complex<float> *W);
 
 /*!
- * \brief Compute twiddle factors for forward transform.
+ * \brief Compute twiddle factors 
  *
  * \param log2_fft_length is the log2 of the fft_length.
  * \param W is fft_length/4 twiddle factor output (must be 16-byte aligned).
  */
 void
-gcp_fft_1d_r2_forward_twiddle(unsigned int log2_fft_length, std::complex<float> *W);
-
-/*!
- * \brief Compute twiddle factors for reverse transform.
- *
- * \param log2_fft_length is the log2 of the fft_length.
- * \param W is fft_length/4 twiddle factor output (must be 16-byte aligned).
- */
-void
-gcp_fft_1d_r2_reverse_twiddle(unsigned int log2_fft_length, std::complex<float> *W);
+gcp_fft_1d_r2_twiddle(unsigned int log2_fft_length, std::complex<float> *W);
 
 #endif /* INCLUDED_GCP_FFT_1D_R2_H */
