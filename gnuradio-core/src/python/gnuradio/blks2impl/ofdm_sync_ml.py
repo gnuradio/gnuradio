@@ -98,7 +98,7 @@ class ofdm_sync_ml(gr.hier_block2):
         self.connect(self.diff, self.pk_detect)
 
         # The DPLL corrects for timing differences between CP correlations
-        use_dpll = 1
+        use_dpll = 0
         if use_dpll:
             self.dpll = gr.dpll_bb(float(symbol_length),0.01)
             self.connect(self.pk_detect, self.dpll)
@@ -117,21 +117,29 @@ class ofdm_sync_ml(gr.hier_block2):
         kstime.reverse()
         self.kscorr = gr.fir_filter_ccc(1, kstime)
         self.corrmag = gr.complex_to_mag_squared()
+        self.div = gr.divide_ff()
 
         # The output signature of the correlation has a few spikes because the rest of the
         # system uses the repeated preamble symbol. It needs to work that generically if 
-        # anyone wants to use this against a WiMAX-like signal since it, too, repeats
-        # This slicing against a threshold will __not__ work over the air unless the 
-        # received power is at just the right point. It __does__ work under the normal
-        # conditions of the loopback model.
-        self.slice = gr.threshold_ff(700000, 700000, 0)
+        # anyone wants to use this against a WiMAX-like signal since it, too, repeats.
+        # The output theta of the correlator above is multiplied with this correlation to
+        # identify the proper peak and remove other products in this cross-correlation
+        self.threshold_factor = 0.1
+        self.slice = gr.threshold_ff(self.threshold_factor, self.threshold_factor, 0)
         self.f2b = gr.float_to_char()
+        self.b2f = gr.char_to_float()
+        self.mul = gr.multiply_ff()
         
-        self.connect(self.input, self.kscorr, self.corrmag, self.slice)
-        self.connect(self.kscorr, gr.file_sink(gr.sizeof_gr_complex, "kscorr.dat"))
-        self.connect(self.corrmag, gr.file_sink(gr.sizeof_float, "kscorrmag.dat"))
-        self.connect(self.slice, gr.file_sink(gr.sizeof_float, "kspeak.dat"))
-
+        # Normalize the power of the corr output by the energy. This is not really needed
+        # and could be removed for performance, but it makes for a cleaner signal.
+        # if this is removed, the threshold value needs adjustment.
+        self.connect(self.input, self.kscorr, self.corrmag, (self.div,0))
+        self.connect(self.moving_sum_filter, (self.div,1))
+        
+        self.connect(self.div, (self.mul,0))
+        self.connect(self.pk_detect, self.b2f, (self.mul,1))
+        self.connect(self.mul, self.slice)
+        
         # Set output signals
         #    Output 0: fine frequency correction value
         #    Output 1: timing signal
@@ -140,8 +148,14 @@ class ofdm_sync_ml(gr.hier_block2):
 
 
         if logging:
+            self.connect(self.moving_sum_filter, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-energy_f.dat"))
             self.connect(self.diff, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-theta_f.dat"))
             self.connect(self.angle, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-epsilon_f.dat"))
+            self.connect(self.corrmag, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-corrmag_f.dat"))
+            self.connect(self.kscorr, gr.file_sink(gr.sizeof_gr_complex, "ofdm_sync_ml-kscorr_c.dat"))
+            self.connect(self.div, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-div_f.dat"))
+            self.connect(self.mul, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-mul_f.dat"))
+            self.connect(self.slice, gr.file_sink(gr.sizeof_float, "ofdm_sync_ml-slice_f.dat"))
             self.connect(self.pk_detect, gr.file_sink(gr.sizeof_char, "ofdm_sync_ml-peaks_b.dat"))
             if use_dpll:
                 self.connect(self.dpll, gr.file_sink(gr.sizeof_char, "ofdm_sync_ml-dpll_b.dat"))
