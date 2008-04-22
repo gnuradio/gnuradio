@@ -80,7 +80,7 @@ qa_gcp_fft_1d_r2::t1()
 #endif
 }
 
-// test reverse FFT
+// test inverse FFT
 void
 qa_gcp_fft_1d_r2::t2()
 {
@@ -101,11 +101,13 @@ qa_gcp_fft_1d_r2::t2()
 void
 qa_gcp_fft_1d_r2::t3()
 {
+  // FIXME Test fwd and inv with windowing option
 }
 
 void
 qa_gcp_fft_1d_r2::t4()
 {
+  // FIXME Test fwd and inv with shift option
 }
 
 static inline float
@@ -178,14 +180,12 @@ qa_gcp_fft_1d_r2::test(gc_job_manager_sptr mgr, int log2_fft_size, bool forward)
 
   // ------------------------------------------------------------------------
   // compute the answer on the cell
-  gc_job_desc *jd = gcp_fft_1d_r2_submit(mgr, log2_fft_size, forward,
-					 cell_out, cell_in, cell_twiddle);
-  if (!mgr->wait_job(jd)){
+  gc_job_desc_sptr jd = gcp_fft_1d_r2_submit(mgr, log2_fft_size, forward, false,
+					     cell_out, cell_in, cell_twiddle, 0);
+  if (!mgr->wait_job(jd.get())){
     fprintf(stderr, "wait_job failed: %s\n", gc_job_status_string(jd->status).c_str());
-    mgr->free_job_desc(jd);
     CPPUNIT_ASSERT(0);
   }
-  mgr->free_job_desc(jd);
 
   // ------------------------------------------------------------------------
   // compute the maximum of the relative error

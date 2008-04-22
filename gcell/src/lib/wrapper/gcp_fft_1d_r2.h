@@ -25,25 +25,32 @@
 #include <complex>
 
 /*!
- * \brief Submit a job that computes the forward or reverse FFT.
+ * \brief Submit a job that computes the forward or inverse FFT.
  *
  * \param mgr is the job manager instance
  * \param log2_fft_length is the log2 of the fft_length (4 <= x <= 12).
- * \param forward is true to compute the forward xform
+ * \param forward is true to compute the forward transform, else the inverse.
+ * \param shift indicates if an "fftshift" should be applied to the output data
  * \param out is the fft_length output from FFT (must be 16-byte aligned).
  * \param in is the fft_length input to FFT (must be 16-byte aligned).
- * \param W is fft_length/4 twiddle factor input to FFT (must be 16-byte aligned).
+ * \param twiddle is fft_length/4 twiddle factor input to FFT (must be 16-byte aligned).
+ * \param window is the window to be applied to the input data.
+ *    The window length must be either 0 or fft_length (must be 16-byte aligned).
  *
- * Returns a job descriptor which should be passed to wait_job*.
+ * Returns a shared_ptr to a job descriptor which should be passed to wait_job*.
  * Throws an exception in the event of a problem.
+ * This uses the FFTW conventions for scaling.  That is, neither the forward nor inverse
+ * are scaled by 1/fft_length.
  */
-gc_job_desc *
+gc_job_desc_sptr
 gcp_fft_1d_r2_submit(gc_job_manager_sptr mgr,
 		     unsigned int log2_fft_length,
 		     bool forward,
+		     bool shift,
 		     std::complex<float> *out,
 		     const std::complex<float> *in,
-		     const std::complex<float> *W);
+		     const std::complex<float> *twiddle,
+		     const float *window);
 
 /*!
  * \brief Compute twiddle factors 

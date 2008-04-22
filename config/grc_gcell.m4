@@ -65,6 +65,11 @@ AC_DEFUN([GRC_GCELL],[
 	gcell_spu_LA="\${abs_top_builddir}/gcell/src/lib/spu/libgcell_spu.a"
 	AC_SUBST(gcell_spu_INCLUDES)
 	AC_SUBST(gcell_spu_LA)
+
+        dnl kludge up initial swig dependency files
+        AC_CONFIG_COMMANDS([swig_gcell_deps], [
+            touch gr-gcell/src/gcell.d
+        ])
     fi
 
     AC_CONFIG_FILES([ \

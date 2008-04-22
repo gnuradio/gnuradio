@@ -32,6 +32,7 @@ dist_bin_SCRIPTS = gcell-embedspu-libtool
 noinst_LTLIBRARIES = libruntime.la libruntime-qa.la
 
 libruntime_la_SOURCES = \
+	gc_aligned_alloc.cc \
 	gc_job_manager.cc \
 	gc_job_manager_impl.cc \
 	gc_jd_queue.c \
@@ -46,6 +47,7 @@ libruntime_qa_la_SOURCES = \
 
 
 gcellinclude_HEADERS = \
+	gc_aligned_alloc.h \
 	gc_job_manager.h
 
 noinst_HEADERS = \

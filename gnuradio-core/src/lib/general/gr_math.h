@@ -29,6 +29,12 @@
 
 #include <gr_complex.h>
 
+static inline bool
+gr_is_power_of_2(long x)
+{
+  return x != 0 && (x & (x-1)) == 0;
+}
+
 long gr_gcd (long m, long n);
 
 // returns a non-zero value if value is "not-a-number" (NaN), and 0 otherwise

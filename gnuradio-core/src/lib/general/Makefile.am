@@ -72,6 +72,7 @@ libgeneral_la_SOURCES = 		\
 	gr_feedforward_agc_cc.cc	\
 	gr_feval.cc			\
 	gr_fft_vcc.cc			\
+	gr_fft_vcc_fftw.cc		\
 	gr_fft_vfc.cc			\
 	gr_firdes.cc			\
 	gr_float_to_char.cc		\
@@ -215,6 +216,7 @@ grinclude_HEADERS = 			\
 	gr_feedforward_agc_cc.h		\
 	gr_feval.h			\
 	gr_fft_vcc.h			\
+	gr_fft_vcc_fftw.h		\
 	gr_fft_vfc.h			\
 	gr_firdes.h			\
 	gr_float_to_char.h		\

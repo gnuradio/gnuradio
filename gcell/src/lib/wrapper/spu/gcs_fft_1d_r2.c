@@ -21,6 +21,7 @@
 
 #include <gc_declare_proc.h>
 #include <libfft.h>
+#include <assert.h>
 
 /*
  * v is really vector complex<float>
@@ -35,24 +36,59 @@ conjugate_vector(vector float *v, int nelements)
 }
 
 static void
-gcs_fft_1d_r2(const gc_job_direct_args_t *input,
-	      gc_job_direct_args_t *output __attribute__((unused)),
-	      const gc_job_ea_args_t *eaa)
+gcs_fwd_fft_1d_r2(const gc_job_direct_args_t *input,
+		  gc_job_direct_args_t *output __attribute__((unused)),
+		  const gc_job_ea_args_t *eaa)
 {
-  vector float *out = (vector float *) eaa->arg[0].ls_addr;
-  vector float *in = (vector float *) eaa->arg[1].ls_addr;
-  vector float *W = (vector float *) eaa->arg[2].ls_addr;
-  int log2_fft_length = input->arg[0].u32;
-  int forward = input->arg[1].u32;	// non-zero if forward xform
+  vector float *out = (vector float *) eaa->arg[0].ls_addr;	// complex
+  vector float *in = (vector float *) eaa->arg[1].ls_addr;	// complex
+  vector float *twiddle = (vector float *) eaa->arg[2].ls_addr;	// complex
+  vector float *window = (vector float *) eaa->arg[3].ls_addr;	// float
 
-  if (forward){
-    fft_1d_r2(out, in, W, log2_fft_length);
+  int log2_fft_length = input->arg[0].u32;
+  int shift = input->arg[1].u32;	// non-zero if we should apply fftshift
+
+  if (eaa->arg[3].get_size){	// apply window
+    // FIXME pointwise multiply in *= window
+    assert(0);
   }
-  else {
-    conjugate_vector(in, 1 << (log2_fft_length - 1));
-    fft_1d_r2(out, in, W, log2_fft_length);
-    conjugate_vector(out, 1 << (log2_fft_length - 1));
+
+  fft_1d_r2(out, in, twiddle, log2_fft_length);
+
+  if (shift){
+    // FIXME apply "fftshift" to output data in-place
+    assert(0);
   }
 }
 
-GC_DECLARE_PROC(gcs_fft_1d_r2, "fft_1d_r2");
+GC_DECLARE_PROC(gcs_fwd_fft_1d_r2, "fwd_fft_1d_r2");
+
+static void
+gcs_inv_fft_1d_r2(const gc_job_direct_args_t *input,
+		  gc_job_direct_args_t *output __attribute__((unused)),
+		  const gc_job_ea_args_t *eaa)
+{
+  vector float *out = (vector float *) eaa->arg[0].ls_addr;	// complex
+  vector float *in = (vector float *) eaa->arg[1].ls_addr;	// complex
+  vector float *twiddle = (vector float *) eaa->arg[2].ls_addr;	// complex
+  vector float *window = (vector float *) eaa->arg[3].ls_addr;	// float
+
+  int log2_fft_length = input->arg[0].u32;
+  int shift = input->arg[1].u32;	// non-zero if we should apply fftshift
+
+  if (eaa->arg[3].get_size){	// apply window
+    // FIXME pointwise multiply in *= window
+    assert(0);
+  }
+
+  if (shift){
+    // FIXME apply "fftshift" to input data in-place
+    assert(0);
+  }
+
+  conjugate_vector(in, 1 << (log2_fft_length - 1));
+  fft_1d_r2(out, in, twiddle, log2_fft_length);
+  conjugate_vector(out, 1 << (log2_fft_length - 1));
+}
+
+GC_DECLARE_PROC(gcs_inv_fft_1d_r2, "inv_fft_1d_r2");

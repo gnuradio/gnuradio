@@ -20,16 +20,38 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(gr, fft_vcc)
+#ifndef INCLUDED_GR_FFT_VCC_FFTW_H
+#define INCLUDED_GR_FFT_VCC_FFTW_H
 
-gr_fft_vcc_sptr 
-gr_make_fft_vcc (int fft_size, bool forward, const std::vector<float> window, bool shift=false);
+#include <gr_fft_vcc.h>
 
-class gr_fft_vcc : public gr_sync_block
+class gri_fft_complex;
+
+gr_fft_vcc_sptr
+gr_make_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &window, bool shift=false);
+
+/*!
+ * \brief Compute forward or reverse FFT.  complex vector in / complex vector out.
+ * \ingroup dft
+ *
+ * Concrete class that uses FFTW.
+ */
+class gr_fft_vcc_fftw : public gr_fft_vcc
 {
- protected:
-  gr_fft_vcc (int fft_size, bool forward, const std::vector<float> &window, bool shift);
+  friend gr_fft_vcc_sptr
+  gr_make_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &window, bool shift);
+
+  gri_fft_complex *d_fft;
+
+  gr_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &window, bool shift);
 
  public:
-  bool set_window(const std::vector<float> &window);
+  ~gr_fft_vcc_fftw ();
+
+  int work (int noutput_items,
+	    gr_vector_const_void_star &input_items,
+	    gr_vector_void_star &output_items);
 };
+
+
+#endif /* INCLUDED_GR_FFT_VCC_FFTW_H */

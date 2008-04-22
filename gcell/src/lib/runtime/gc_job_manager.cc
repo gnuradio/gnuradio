@@ -31,6 +31,19 @@
 static boost::weak_ptr<gc_job_manager> s_singleton;
 
 
+// custom deleter of gc_job_desc allocated via alloc_job_desc_sptr
+class job_desc_deleter {
+  gc_job_manager_sptr	d_mgr;
+public:
+  job_desc_deleter(gc_job_manager_sptr mgr) : d_mgr(mgr) {}
+
+  void operator()(gc_job_desc *jd) {
+    d_mgr->free_job_desc(jd);
+  }
+};
+
+
+
 gc_job_manager_sptr
 gc_make_job_manager(const gc_jm_options *options)
 {
@@ -70,6 +83,19 @@ gc_job_manager::singleton()
 {
   return gc_job_manager_sptr(s_singleton);
 }
+
+gc_job_desc_sptr 
+gc_job_manager::make_jd_sptr(gc_job_manager_sptr mgr, gc_job_desc *jd)
+{
+  return gc_job_desc_sptr(jd, job_desc_deleter(mgr));
+}
+
+gc_job_desc_sptr 
+gc_job_manager::alloc_job_desc(gc_job_manager_sptr mgr)
+{
+  return make_jd_sptr(mgr, mgr->alloc_job_desc());
+}
+
 
 // ------------------------------------------------------------------------
 

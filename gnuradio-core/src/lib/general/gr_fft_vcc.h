@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,40 +25,36 @@
 
 #include <gr_sync_block.h>
 
-class gri_fft_complex;
-
 class gr_fft_vcc;
 typedef boost::shared_ptr<gr_fft_vcc> gr_fft_vcc_sptr;
 
 gr_fft_vcc_sptr
-gr_make_fft_vcc (int fft_size, bool forward, const std::vector<float> window, bool shift=false);
+gr_make_fft_vcc (int fft_size, bool forward, const std::vector<float> &window, bool shift=false);
 
 /*!
  * \brief Compute forward or reverse FFT.  complex vector in / complex vector out.
  * \ingroup dft
+ *
+ * Abstract base class
  */
-
 class gr_fft_vcc : public gr_sync_block
 {
+protected:
   friend gr_fft_vcc_sptr
-  gr_make_fft_vcc (int fft_size, bool forward, const std::vector<float> window, bool shift);
+  gr_make_fft_vcc (int fft_size, bool forward, const std::vector<float> &window, bool shift);
 
-  unsigned int	   d_fft_size;
+  unsigned int	       d_fft_size;
   std::vector<float>   d_window;
-  gri_fft_complex *d_fft;
   bool d_forward;
   bool d_shift;
 
-  gr_fft_vcc (int fft_size, bool forward, const std::vector<float> window, bool shift);
+  gr_fft_vcc (const std::string &name, int fft_size, bool forward,
+	      const std::vector<float> &window, bool shift);
 
  public:
   ~gr_fft_vcc ();
 
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
-  bool set_window(const std::vector<float> window);
+  bool set_window(const std::vector<float> &window);
 };
-
 
 #endif /* INCLUDED_GR_FFT_VCC_H */

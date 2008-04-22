@@ -25,7 +25,7 @@
 #include <gc_job_manager_impl.h>
 #include <gc_mbox.h>
 #include <gc_proc_def_utils.h>
-
+#include <gc_aligned_alloc.h>
 #include <stdio.h>
 #include <stdexcept>
 #include <stdlib.h>
@@ -83,23 +83,6 @@ static void
 client_key_destructor(void *p)
 {
   ((gc_client_thread_info *) p)->d_free = 1;
-}
-
-/*
- * Return pointer to cache-aligned chunk of storage of size size bytes.
- * Throw if can't allocate memory.  The storage should be freed
- * with "free" when done.  The memory is initialized to zero.
- */
-static void *
-aligned_alloc(size_t size, size_t alignment = CACHE_LINE_SIZE)
-{
-  void *p = 0;
-  if (posix_memalign(&p, alignment, size) != 0){
-    perror("posix_memalign");
-    throw std::runtime_error("memory");
-  }
-  memset(p, 0, size);		// zero the memory
-  return p;
 }
 
 static bool
@@ -196,7 +179,7 @@ gc_job_manager_impl::gc_job_manager_impl(const gc_jm_options *options)
   // ----------------------------------------------------------------
   // initalize the job queue
   
-  d_queue = (gc_jd_queue_t *) aligned_alloc(sizeof(gc_jd_queue_t));
+  d_queue = (gc_jd_queue_t *) gc_aligned_alloc(sizeof(gc_jd_queue_t), CACHE_LINE_SIZE);
   _d_queue_boost =
     boost::shared_ptr<void>((void *) d_queue, free_deleter());
   gc_jd_queue_init(d_queue);
@@ -208,15 +191,15 @@ gc_job_manager_impl::gc_job_manager_impl(const gc_jm_options *options)
   // 1 spu_arg struct for each SPE
   assert(sizeof(gc_spu_args_t) % 16 == 0);
   d_spu_args =
-    (gc_spu_args_t *) aligned_alloc(MAX_SPES * sizeof(gc_spu_args_t), 16);
+    (gc_spu_args_t *) gc_aligned_alloc(MAX_SPES * sizeof(gc_spu_args_t), 16);
   _d_spu_args_boost =
     boost::shared_ptr<void>((void *) d_spu_args, free_deleter());
 
   // 2 completion info structs for each SPE (we double buffer them)
   assert(sizeof(gc_comp_info_t) % CACHE_LINE_SIZE == 0);
   d_comp_info =
-    (gc_comp_info_t *) aligned_alloc(2 * MAX_SPES * sizeof(gc_comp_info_t),
-				     CACHE_LINE_SIZE);
+    (gc_comp_info_t *) gc_aligned_alloc(2 * MAX_SPES * sizeof(gc_comp_info_t),
+					CACHE_LINE_SIZE);
   _d_comp_info_boost =
     boost::shared_ptr<void>((void *) d_comp_info, free_deleter());
 
@@ -269,7 +252,7 @@ gc_job_manager_impl::gc_job_manager_impl(const gc_jm_options *options)
   // ----------------------------------------------------------------
   // initalize the free list of job descriptors
   
-  d_free_list = (gc_jd_stack_t *) aligned_alloc(sizeof(gc_jd_stack_t));
+  d_free_list = (gc_jd_stack_t *) gc_aligned_alloc(sizeof(gc_jd_stack_t), CACHE_LINE_SIZE);
   // This ensures that the memory associated with d_free_list is
   // automatically freed in the destructor or if an exception occurs
   // here in the constructor.
@@ -283,7 +266,7 @@ gc_job_manager_impl::gc_job_manager_impl(const gc_jm_options *options)
   }
 
   // Initialize the array of job descriptors.
-  d_jd = (gc_job_desc_t *) aligned_alloc(sizeof(d_jd[0]) * d_options.max_jobs);
+  d_jd = (gc_job_desc_t *) gc_aligned_alloc(sizeof(d_jd[0]) * d_options.max_jobs, CACHE_LINE_SIZE);
   _d_jd_boost = boost::shared_ptr<void>((void *) d_jd, free_deleter());
 
 
@@ -317,7 +300,7 @@ gc_job_manager_impl::gc_job_manager_impl(const gc_jm_options *options)
 
   // allocate all bitvectors in a single cache-aligned chunk
   size_t nlongs = d_bvlen * d_options.max_client_threads;
-  void *p = aligned_alloc(nlongs * sizeof(unsigned long));
+  void *p = gc_aligned_alloc(nlongs * sizeof(unsigned long), CACHE_LINE_SIZE);
   _d_all_bitvectors = boost::shared_ptr<void>(p, free_deleter());
 
   // Now point the gc_client_thread_info bitvectors into this storage

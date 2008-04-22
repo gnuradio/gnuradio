@@ -33,6 +33,7 @@
 class gc_job_manager;
 typedef boost::shared_ptr<gc_job_manager> gc_job_manager_sptr;
 typedef boost::shared_ptr<spe_program_handle_t> spe_program_handle_sptr;
+typedef boost::shared_ptr<gc_job_desc> gc_job_desc_sptr;
 
 /*!
  * \brief Return a boost::shared_ptr to an spe_program_handle_t
@@ -86,8 +87,17 @@ struct gc_jm_options {
 
   gc_jm_options() :
     max_jobs(0), max_client_threads(0), nspes(0),
-    gang_schedule(true), use_affinity(false),
+    gang_schedule(false), use_affinity(false),
     enable_logging(false), log2_nlog_entries(12)
+  {
+  }
+
+  gc_jm_options(spe_program_handle_sptr program_handle_,
+		unsigned int nspes_ = 0) :
+    max_jobs(0), max_client_threads(0), nspes(nspes_),
+    gang_schedule(false), use_affinity(false),
+    enable_logging(false), log2_nlog_entries(12),
+    program_handle(program_handle_)
   {
   }
 };
@@ -236,6 +246,11 @@ public:
    */
   virtual std::vector<std::string> proc_names() = 0;
 
+  virtual void set_debug(int debug);
+  virtual int debug();
+
+  /* ----- static methods ----- */
+
   /*!
    * \brief Set the singleton gc_job_manager instance.
    * \param mgr is the job manager instance.
@@ -256,9 +271,15 @@ public:
    */
   static gc_job_manager_sptr singleton();
 
+  /*!
+   * \brief return a boost::shared_ptr to a job descriptor.
+   */
+  static gc_job_desc_sptr make_jd_sptr(gc_job_manager_sptr mgr, gc_job_desc *jd);
 
-  virtual void set_debug(int debug);
-  virtual int debug();
+  /*!
+   * \brief allocate a job descriptor and return a boost::shared_ptr to it.
+   */
+  static gc_job_desc_sptr alloc_job_desc(gc_job_manager_sptr mgr);
 };
 
 
