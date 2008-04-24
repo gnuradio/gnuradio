@@ -282,7 +282,6 @@ class fft_window (plot.PlotCanvas):
                 self.peak_vals = dB
             else:
                 self.peak_vals = numpy.maximum(dB, self.peak_vals)
-                dB = self.peak_vals
 
         if self.fftsink.input_is_real:     # only plot 1/2 the points
             x_vals = ((numpy.arange (L/2) * (self.fftsink.sample_rate 
@@ -291,6 +290,10 @@ class fft_window (plot.PlotCanvas):
             self._points = numpy.zeros((len(x_vals), 2), numpy.float64)
             self._points[:,0] = x_vals
             self._points[:,1] = dB[0:L/2]
+	    if self.peak_hold:
+		self._peak_points = numpy.zeros((len(x_vals), 2), numpy.float64)
+		self._peak_points[:,0] = x_vals
+		self._peak_points[:,1] = self.peak_vals[0:L/2]
         else:
             # the "negative freqs" are in the second half of the array
             x_vals = ((numpy.arange (-L/2, L/2)
@@ -299,9 +302,16 @@ class fft_window (plot.PlotCanvas):
             self._points = numpy.zeros((len(x_vals), 2), numpy.float64)
             self._points[:,0] = x_vals
             self._points[:,1] = numpy.concatenate ((dB[L/2:], dB[0:L/2]))
+	    if self.peak_hold:
+		self._peak_points = numpy.zeros((len(x_vals), 2), numpy.float64)
+		self._peak_points[:,0] = x_vals
+		self._peak_points[:,1] = numpy.concatenate ((self.peak_vals[L/2:], self.peak_vals[0:L/2]))
 
-        lines = plot.PolyLine (self._points, colour='BLUE')
-        graphics = plot.PlotGraphics ([lines],
+        lines = [plot.PolyLine (self._points, colour='BLUE'),]
+	if self.peak_hold:
+	    lines.append(plot.PolyLine (self._peak_points, colour='GREEN'))
+
+        graphics = plot.PlotGraphics (lines,
                                       title=self.fftsink.title,
                                       xLabel = self._units, yLabel = "dB")
 
