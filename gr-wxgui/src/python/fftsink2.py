@@ -66,14 +66,12 @@ class fft_sink_base(object):
         self.average = average
         if average:
             self.avg.set_taps(self.avg_alpha)
-            self.set_peak_hold(False)
         else:
             self.avg.set_taps(1.0)
-
+	self.win.peak_vals = None
+	
     def set_peak_hold(self, enable):
         self.peak_hold = enable
-        if enable:
-            self.set_average(False)
         self.win.set_peak_hold(enable)
 
     def set_avg_alpha(self, avg_alpha):
