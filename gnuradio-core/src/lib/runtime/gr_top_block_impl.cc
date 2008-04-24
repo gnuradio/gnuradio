@@ -215,10 +215,18 @@ gr_top_block_impl::restart()
   // Create new simple flow graph
   gr_flat_flowgraph_sptr new_ffg = d_owner->flatten();        
   new_ffg->validate();		       // check consistency, sanity, etc
+
+  if (GR_TOP_BLOCK_IMPL_DEBUG) {
+      std::cout << std::endl << "*** Existing flat flowgraph @" << d_ffg << ":" << std::endl;
+      d_ffg->dump();
+  }
   new_ffg->merge_connections(d_ffg);   // reuse buffers, etc
 
-  if (GR_TOP_BLOCK_IMPL_DEBUG)
-    std::cout << "restart: replacing old flow graph with new" << std::endl;
+  if (GR_TOP_BLOCK_IMPL_DEBUG) {
+    std::cout << std::endl << "*** New flat flowgraph after merge @" << new_ffg << ":" << std::endl;
+    new_ffg->dump();
+  }
+  
   d_ffg = new_ffg;
 
   start_threads();

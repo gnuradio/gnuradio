@@ -53,12 +53,13 @@ public:
   // Merge applicable connections from existing flat flowgraph
   void merge_connections(gr_flat_flowgraph_sptr sfg);
 
+  void dump();
+
 private:
   gr_flat_flowgraph();
 
   static const unsigned int s_fixed_buffer_size = GR_FIXED_BUFFER_SIZE;
-  gr_block_detail_sptr allocate_block_detail(gr_basic_block_sptr block, 
-					     gr_block_detail_sptr old_detail=gr_block_detail_sptr());
+  gr_block_detail_sptr allocate_block_detail(gr_basic_block_sptr block);
   gr_buffer_sptr allocate_buffer(gr_basic_block_sptr block, int port);
   void connect_block_inputs(gr_basic_block_sptr block);
 };

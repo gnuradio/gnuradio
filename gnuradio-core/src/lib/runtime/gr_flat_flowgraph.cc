@@ -62,7 +62,7 @@ gr_flat_flowgraph::setup_connections()
 }
 
 gr_block_detail_sptr
-gr_flat_flowgraph::allocate_block_detail(gr_basic_block_sptr block, gr_block_detail_sptr old_detail)
+gr_flat_flowgraph::allocate_block_detail(gr_basic_block_sptr block)
 {
   int ninputs = calc_used_ports(block, true).size();
   int noutputs = calc_used_ports(block, false).size();
@@ -71,21 +71,10 @@ gr_flat_flowgraph::allocate_block_detail(gr_basic_block_sptr block, gr_block_det
   if (GR_FLAT_FLOWGRAPH_DEBUG)
     std::cout << "Creating block detail for " << block << std::endl;
 
-  // Re-use or allocate output buffers
   for (int i = 0; i < noutputs; i++) {
-    gr_buffer_sptr buffer;
-
-    if (!old_detail || i >= old_detail->noutputs()) {
-      if (GR_FLAT_FLOWGRAPH_DEBUG)
-	std::cout << "Allocating new buffer for output " << i << std::endl;
-      buffer = allocate_buffer(block, i);
-    }
-    else {
-      if (GR_FLAT_FLOWGRAPH_DEBUG)
-	std::cout << "Reusing old buffer for output " << i << std::endl;
-      buffer = old_detail->output(i);
-    }
-
+    gr_buffer_sptr buffer = allocate_buffer(block, i);
+    if (GR_FLAT_FLOWGRAPH_DEBUG)
+      std::cout << "Allocated buffer for output " << block << ":" << i << std::endl;
     detail->set_output(i, buffer);
   }
 
@@ -156,35 +145,66 @@ gr_flat_flowgraph::connect_block_inputs(gr_basic_block_sptr block)
 void
 gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
 {
-  std::map<gr_block_sptr, gr_block_detail_sptr> old_details;
-
-  // Allocate or reuse output buffers
+  // Allocate block details if needed.  Only new blocks that aren't pruned out
+  // by flattening will need one; existing blocks still in the new flowgraph will
+  // already have one.
   for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
     gr_block_sptr block = make_gr_block_sptr(*p);
-
-    gr_block_detail_sptr old_detail = block->detail();
-    block->set_detail(allocate_block_detail(block, old_detail));
-
-    // Save old detail for use in next step
-    old_details[block] = old_detail;
+    
+    if (!block->detail()) {
+      if (GR_FLAT_FLOWGRAPH_DEBUG)
+        std::cout << "merge: allocating new detail for block " << (*p) << std::endl;
+        block->set_detail(allocate_block_detail(block));
+    }
+    else
+      if (GR_FLAT_FLOWGRAPH_DEBUG)
+        std::cout << "merge: reusing original detail for block " << (*p) << std::endl;
   }
 
+  // Calculate the old edges that will be going away, and clear the buffer readers
+  // on the RHS.
+  for (gr_edge_viter_t old_edge = old_ffg->d_edges.begin(); old_edge != old_ffg->d_edges.end(); old_edge++) {
+    if (GR_FLAT_FLOWGRAPH_DEBUG)
+      std::cout << "merge: testing old edge " << (*old_edge) << "...";
+      
+    gr_edge_viter_t new_edge;
+    for (new_edge = d_edges.begin(); new_edge != d_edges.end(); new_edge++)
+      if (new_edge->src() == old_edge->src() &&
+	  new_edge->dst() == old_edge->dst())
+	break;
+
+    if (new_edge == d_edges.end()) { // not found in new edge list
+      if (GR_FLAT_FLOWGRAPH_DEBUG)
+	std::cout << "not in new edge list" << std::endl;
+      // zero the buffer reader on RHS of old edge
+      gr_block_sptr block(make_gr_block_sptr(old_edge->dst().block()));
+      int port = old_edge->dst().port();
+      block->detail()->set_input(port, gr_buffer_reader_sptr());
+    }
+    else {
+      if (GR_FLAT_FLOWGRAPH_DEBUG)
+	std::cout << "found in new edge list" << std::endl;
+    }
+  }  
+
+  // Now connect inputs to outputs, reusing old buffer readers if they exist
   for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
     gr_block_sptr block = make_gr_block_sptr(*p);
 
     if (GR_FLAT_FLOWGRAPH_DEBUG)
-      std::cout << "merge: testing " << (*p) << "...";
+      std::cout << "merge: merging " << (*p) << "...";
     
     if (old_ffg->has_block_p(*p)) {
       // Block exists in old flow graph
       if (GR_FLAT_FLOWGRAPH_DEBUG)
 	std::cout << "used in old flow graph" << std::endl;
       gr_block_detail_sptr detail = block->detail();
-
+	
       // Iterate through the inputs and see what needs to be done
-      for (int i = 0; i < detail->ninputs(); i++) {
+      int ninputs = calc_used_ports(block, true).size(); // Might be different now
+      for (int i = 0; i < ninputs; i++) {
 	if (GR_FLAT_FLOWGRAPH_DEBUG)
-	  std::cout << "Checking input " << i << "...";
+	  std::cout << "Checking input " << block << ":" << i << "...";
 	gr_edge edge = calc_upstream_edge(*p, i);
 
 	// Fish out old buffer reader and see if it matches correct buffer from edge list
@@ -192,16 +212,13 @@ gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
 	gr_block_detail_sptr src_detail = src_block->detail();
 	gr_buffer_sptr src_buffer = src_detail->output(edge.src().port());
 	gr_buffer_reader_sptr old_reader;
-	gr_block_detail_sptr old_detail = old_details[block];
-	if (old_detail && i < old_detail->ninputs())
-	  old_reader = old_detail->input(i);
+	if (i < detail->ninputs()) // Don't exceed what the original detail has 
+	  old_reader = detail->input(i);
 	
 	// If there's a match, use it
 	if (old_reader && (src_buffer == old_reader->buffer())) {
 	  if (GR_FLAT_FLOWGRAPH_DEBUG)
-	    std::cout << "matched" << std::endl;
-	  detail->set_input(i, old_reader);
-
+	    std::cout << "matched, reusing" << std::endl;
 	}
 	else {
 	  if (GR_FLAT_FLOWGRAPH_DEBUG)
@@ -218,6 +235,37 @@ gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
 	std::cout << "new block" << std::endl;
       connect_block_inputs(block);
     }
+
+    // Now deal with the fact that the block details might have changed numbers of 
+    // inputs and outputs vs. in the old flowgraph.
   }  
 }
 
+void gr_flat_flowgraph::dump()
+{
+  for (gr_edge_viter_t e = d_edges.begin(); e != d_edges.end(); e++)
+     std::cout << " edge: " << (*e) << std::endl;
+
+  for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
+    std::cout << " block: " << (*p) << std::endl;
+    gr_block_detail_sptr detail = make_gr_block_sptr(*p)->detail();
+    std::cout << "  detail @" << detail << ":" << std::endl;
+     
+    int ni = detail->ninputs();
+    int no = detail->noutputs();
+    for (int i = 0; i < no; i++) {
+      gr_buffer_sptr buffer = detail->output(i);
+      std::cout << "   output " << i << ": " << buffer 
+                << " space=" << buffer->space_available() << std::endl;
+    }
+
+    for (int i = 0; i < ni; i++) {
+      gr_buffer_reader_sptr reader = detail->input(i);
+      std::cout << "   reader " <<  i << ": " << reader
+                << " reading from buffer=" << reader->buffer()
+		<< " avail=" << reader->items_available() << " items"
+		<< std::endl;
+    }
+  }
+
+}
