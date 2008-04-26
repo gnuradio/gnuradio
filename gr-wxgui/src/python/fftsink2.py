@@ -374,7 +374,10 @@ class fft_window (plot.PlotCanvas):
         self.PopupMenu(menu, event.GetPosition())
 
     def evt_motion(self, event):
-        # Clip to plotted values
+        if not hasattr(self, "_points"):
+	    return # Got here before first window data update
+	    
+	# Clip to plotted values
         (ux, uy) = self.GetXY(event)      # Scaled position
         x_vals = numpy.array(self._points[:,0])
         if ux < x_vals[0] or ux > x_vals[-1]:
