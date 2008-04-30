@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,8 +28,6 @@
 #include <gr_io_signature.h>
 #include <atsc_types.h>
 
-static const int INTR = ATSC_MPEG_PKT_LENGTH;
-
 atsc_depad_sptr
 atsc_make_depad()
 {
@@ -38,43 +36,26 @@ atsc_make_depad()
 
 atsc_depad::atsc_depad()
   : gr_sync_interpolator("atsc_depad",
-		  gr_make_io_signature(1, 1, sizeof(atsc_mpeg_packet)),
-		  gr_make_io_signature(1, 1, sizeof(unsigned char)),
-		  INTR)
+			 gr_make_io_signature(1, 1, sizeof(atsc_mpeg_packet)),
+			 gr_make_io_signature(1, 1, sizeof(unsigned char)),
+			 ATSC_MPEG_PKT_LENGTH)
 {
   reset();
 }
 
-void
-atsc_depad::forecast (int noutput_items, gr_vector_int &ninput_items_required)
-{
-  unsigned ninputs = ninput_items_required.size();
-  for (unsigned i = 0; i < ninputs; i++) 
-    ninput_items_required[i] = noutput_items / ATSC_MPEG_PKT_LENGTH;
-}
-
-
 int
 atsc_depad::work (int noutput_items,
-		       gr_vector_const_void_star &input_items,
-		       gr_vector_void_star &output_items)
+		  gr_vector_const_void_star &input_items,
+		  gr_vector_void_star &output_items)
 {
   const atsc_mpeg_packet *in = (const atsc_mpeg_packet *) input_items[0];
   unsigned char *out = (unsigned char *) output_items[0];
 
-  // size with padding (256)
-  unsigned int ATSC_MPEG_PKT = sizeof(atsc_mpeg_packet);
   unsigned int i;
 
-  for (i = 0; i < noutput_items/ATSC_MPEG_PKT + 1; i++){
-    for (int j = 0; j < ATSC_MPEG_PKT_LENGTH; j++)
-	out[i * ATSC_MPEG_PKT_LENGTH + j] = in[i * ATSC_MPEG_PKT].data[j];
-
+  for (i = 0; i < noutput_items/ATSC_MPEG_PKT_LENGTH; i++){
+    memcpy(&out[i * ATSC_MPEG_PKT_LENGTH], in[i].data, ATSC_MPEG_PKT_LENGTH);
   }
 
   return i * ATSC_MPEG_PKT_LENGTH;
 }
-
-
-
-

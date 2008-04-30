@@ -30,8 +30,7 @@ typedef boost::shared_ptr<atsc_depad> atsc_depad_sptr;
 atsc_depad_sptr atsc_make_depad();
 
 /*!
- * \brief depad mpeg ts packets from 256 byte atsc_mpeg_packet
- * to 188 byte char
+ * \brief depad mpeg ts packets from 256 byte atsc_mpeg_packet to 188 byte char
  * \ingroup atsc
  *
  * input: atsc_mpeg_packet; output: unsigned char
@@ -43,7 +42,6 @@ class atsc_depad : public gr_sync_interpolator
   atsc_depad();
 
 public:
-  void forecast (int noutput_items, gr_vector_int &ninput_items_required);
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
