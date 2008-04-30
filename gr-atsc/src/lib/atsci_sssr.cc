@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -97,6 +97,7 @@ static const int	SYMBOL_INDEX_OFFSET = 3;
 static const int	MIN_SEG_LOCK_CORRELATION_VALUE = 5;
 
 atsci_sssr::atsci_sssr ()
+  : d_debug_fp(0)
 {
   reset ();
   
@@ -189,6 +190,7 @@ static const double	LOOP_FILTER_TAP = 0.00025;	// 0.0005 works
 static const double	ADJUSTMENT_GAIN = 1.0e-5 / (10 * ATSC_DATA_SEGMENT_LENGTH);
   
 atsci_interpolator::atsci_interpolator (double nominal_ratio_of_rx_clock_to_symbol_freq)
+  : d_debug_fp(0)
 {
 // Tweaked ratio from 1.8 to 1.78 to support input rate of 19.2MHz
   assert (nominal_ratio_of_rx_clock_to_symbol_freq >= 1.78);
