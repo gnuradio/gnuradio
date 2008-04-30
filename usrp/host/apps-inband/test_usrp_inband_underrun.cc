@@ -127,7 +127,7 @@ test_usrp_inband_underrun::test_usrp_inband_underrun(mb_runtime *runtime, const 
   d_rx_chan(PMT_NIL),
   d_which_usrp(pmt_from_long(0)),
   d_state(INIT),
-  d_nsamples_to_send((long) 20e6),
+  d_nsamples_to_send((long) 27e6),
   d_nsamples_xmitted(0),
   d_nframes_xmitted(0),
   d_samples_per_frame(d_nsamples_to_send),	// full packet
@@ -143,12 +143,12 @@ test_usrp_inband_underrun::test_usrp_inband_underrun(mb_runtime *runtime, const 
   // Specify the RBF to use
   pmt_dict_set(usrp_dict,
                pmt_intern("rbf"),
-               pmt_intern("nanocell9.rbf"));
+               pmt_intern("inband_1rxhb_1tx.rbf"));
 
   // Set TX and RX interpolations
   pmt_dict_set(usrp_dict,
                pmt_intern("interp-tx"),
-               pmt_from_long(8));
+               pmt_from_long(64));
 
   pmt_dict_set(usrp_dict,
                pmt_intern("decim-rx"),
@@ -667,8 +667,6 @@ void
 test_usrp_inband_underrun::closing_usrp()
 {
   d_state = CLOSING_USRP;
-
-  sleep(2);
 
   d_cs->send(s_cmd_close, pmt_list1(PMT_NIL));
 }

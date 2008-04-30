@@ -4,14 +4,11 @@ EXTRA_DIST =                                         \
 	inband_lib/channel_demux.v                   \
 	inband_lib/channel_ram.v                     \
 	inband_lib/cmd_reader.v                      \
-	inband_lib/data_packet_fifo.v                \
 	inband_lib/packet_builder.v                  \
 	inband_lib/register_io.v                     \
 	inband_lib/rx_buffer_inband.v                \
 	inband_lib/tx_buffer_inband.v                \
 	inband_lib/tx_packer.v                       \
-	inband_lib/usb_fifo_reader.v                 \
-	inband_lib/usb_fifo_writer.v                 \
 	inband_lib/usb_packet_fifo.v                 \
 	megacells/accum32.bsf                        \
 	megacells/accum32.cmp                        \

@@ -26,6 +26,8 @@
 
 class usrp_standard_rx;
 
+extern bool usrp_rx_stop;   // used to communicate a 'stop' to the RX stub
+
 /*!
  * \brief Implements the low level usb interface to the USRP
  */
@@ -35,7 +37,9 @@ class usrp_rx : public mb_mblock
   usrp_standard_rx     *d_urx;
   
   bool d_disk_write;
-  std::ofstream d_ofile;
+  bool d_disk_write_pkt;
+  std::ofstream d_ofile0;
+  std::ofstream d_ofile1;
   std::ofstream d_cs_ofile;
   
  public:

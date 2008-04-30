@@ -31,6 +31,7 @@
 
 static const int USB_PKT_SIZE = 512;   // bytes
 static const int MAX_PAYLOAD = USB_PKT_SIZE-2*sizeof(uint32_t);
+static const int CONTROL_CHAN = 0x1f;
 
 class usrp_inband_usb_packet {
   //
@@ -149,6 +150,10 @@ public:
                        | ((tag & TAG_MASK) << TAG_SHIFT)
                        | ((payload_len & PAYLOAD_LEN_MASK) << PAYLOAD_LEN_SHIFT));
     d_word0 = host_to_usrp_u32(word0);
+  }
+
+  void incr_header_len(int val) {
+    set_header(flags(), chan(), tag(), payload_len() + val);
   }
   
   uint32_t timestamp() const {

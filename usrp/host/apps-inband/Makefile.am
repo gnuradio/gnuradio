@@ -30,45 +30,30 @@ AM_CPPFLAGS = 	\
 bin_PROGRAMS =				
 
 noinst_PROGRAMS =			\
-	test_usrp_inband_cs		\
 	test_usrp_inband_ping		\
 	test_usrp_inband_registers	\
 	test_usrp_inband_rx		\
+	test_usrp_inband_2rx		\
 	test_usrp_inband_tx		\
+	test_usrp_inband_2tx		\
 	test_usrp_inband_timestamps	\
 	test_usrp_inband_overrun	\
 	test_usrp_inband_underrun	\
-	test_gmac_tx			\
 	read_packets
 
 noinst_HEADERS =			\
 	ui_nco.h			\
-	ui_sincos.h			\
-	gmac.h				\
-	gmac_symbols.h			
+	ui_sincos.h	
 
-
-EXTRA_DIST =				\
-	gmac.mbh
-
-#------------------------------------------------------------------
-# Build gmac sources
-
-BUILT_SOURCES =				\
-	gmac_mbh.cc
-
-gmac_mbh.cc : gmac.mbh
-	$(COMPILE_MBH) $(srcdir)/gmac.mbh gmac_mbh.cc
-
-
-test_usrp_inband_cs_SOURCES 	= test_usrp_inband_cs.cc ui_sincos.c
-test_usrp_inband_cs_LDADD   	= $(USRP_LA) $(USRP_INBAND_LA)
 
 test_usrp_inband_ping_SOURCES 	= test_usrp_inband_ping.cc 
 test_usrp_inband_ping_LDADD   	= $(USRP_LA) $(USRP_INBAND_LA)
 
 test_usrp_inband_tx_SOURCES 	= test_usrp_inband_tx.cc ui_sincos.c
 test_usrp_inband_tx_LDADD   	= $(USRP_LA) $(USRP_INBAND_LA)
+
+test_usrp_inband_2tx_SOURCES 	= test_usrp_inband_2tx.cc ui_sincos.c
+test_usrp_inband_2tx_LDADD   	= $(USRP_LA) $(USRP_INBAND_LA)
 
 test_usrp_inband_timestamps_SOURCES 	= test_usrp_inband_timestamps.cc ui_sincos.c
 test_usrp_inband_timestamps_LDADD   	= $(USRP_LA) $(USRP_INBAND_LA)
@@ -85,8 +70,8 @@ test_usrp_inband_underrun_LDADD   	= $(USRP_LA) $(USRP_INBAND_LA)
 test_usrp_inband_rx_SOURCES 	= test_usrp_inband_rx.cc ui_sincos.c
 test_usrp_inband_rx_LDADD   	= $(USRP_LA) $(USRP_INBAND_LA)
 
-test_gmac_tx_SOURCES 	= test_gmac_tx.cc gmac.cc gmac_mbh.cc ui_sincos.c
-test_gmac_tx_LDADD   	= $(USRP_LA) $(USRP_INBAND_LA)
+test_usrp_inband_2rx_SOURCES 	= test_usrp_inband_2rx.cc ui_sincos.c
+test_usrp_inband_2rx_LDADD   	= $(USRP_LA) $(USRP_INBAND_LA)
 
 read_packets_SOURCES = read_packets.cc
 read_packets_LDADD = $(USRP_LA) $(USRP_INBAND_LA)

@@ -34,6 +34,7 @@ class qa_inband_usrp_server : public CppUnit::TestCase {
   CPPUNIT_TEST(test_tx);
   CPPUNIT_TEST(test_rx);
   CPPUNIT_TEST(test_cs);
+  CPPUNIT_TEST(test_rid);
   CPPUNIT_TEST_SUITE_END();
 
  private:
@@ -43,6 +44,7 @@ class qa_inband_usrp_server : public CppUnit::TestCase {
   void test_tx();
   void test_rx();
   void test_cs();
+  void test_rid();
 };
 
 #endif /* INCLUDED_QA_INBAND_USRP_SERVER_H */

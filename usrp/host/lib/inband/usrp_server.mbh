@@ -202,7 +202,7 @@
 
   (:incoming
 
-   (response-recv-raw-samples invocation-handle status samples timestamp properties)
+   (response-recv-raw-samples invocation-handle status samples timestamp channel properties)
 
    ;; samples is a uniform numeric vector.  The contents of the sample
    ;; vector is treated as opaque and is passed from the FPGA

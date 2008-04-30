@@ -97,8 +97,6 @@ module usrp_inband_usb
    // Tri-state bus macro
    bustri bustri( .data(usbdata_out),.enabledt(OE),.tridata(usbdata) );
 
-   assign      clk64 = master_clk;
-
    wire [15:0] ch0tx,ch1tx,ch2tx,ch3tx; //,ch4tx,ch5tx,ch6tx,ch7tx;
    wire [15:0] ch0rx,ch1rx,ch2rx,ch3rx,ch4rx,ch5rx,ch6rx,ch7rx;
    
@@ -129,19 +127,7 @@ module usrp_inband_usb
    assign      bb_tx_q0 = ch1tx;
    assign      bb_tx_i1 = ch2tx;
    assign      bb_tx_q1 = ch3tx;
-   
-wire [6:0] reg_addr;
-wire [31:0] reg_data_out;
-wire [31:0] reg_data_in;
-wire [1:0] reg_io_enable;
-wire [31:0] rssi_threshhold;
-wire [31:0] rssi_wait;
 
-register_io register_control
-(.clk(clk64),.reset(1'b0),.enable(reg_io_enable),.addr(reg_addr),.datain(reg_data_in),
- .dataout(reg_data_out),.rssi_0(rssi_0), .rssi_1(rssi_1), .rssi_2(rssi_2), 
- .rssi_3(rssi_3), .threshhold(rssi_threshhold), .rssi_wait(rssi_wait));
-wire [1:0] tx_overrun;
 wire [1:0] tx_underrun;
 
 `ifdef TX_IN_BAND
@@ -164,9 +150,15 @@ wire [1:0] tx_underrun;
 	   .reg_data_out(reg_data_out),
 	   .reg_data_in(reg_data_in),
 	   .reg_io_enable(reg_io_enable),
-	   .debugbus(),
+	   .debugbus(rx_debugbus),
 	   .rssi_0(rssi_0), .rssi_1(rssi_1), .rssi_2(rssi_2), 
-       .rssi_3(rssi_3), .threshhold(rssi_threshhold), .rssi_wait(rssi_wait));
+       .rssi_3(rssi_3), .threshhold(rssi_threshhold), .rssi_wait(rssi_wait),
+	   .stop(stop), .stop_time(stop_time));
+
+  `ifdef TX_DUAL
+    defparam tx_buffer.NUM_CHAN=2;
+  `endif
+
 `else
    tx_buffer tx_buffer
      ( .usbclk(usbclk),.bus_reset(tx_bus_reset),.reset(tx_dsp_reset),
@@ -276,14 +268,18 @@ wire [1:0] tx_underrun;
        .ch_6(ch6rx),.ch_7(ch7rx),
        .rxclk(clk64),.rxstrobe(hb_strobe),
        .clear_status(clear_status),
-       .serial_addr(serial_addr),.serial_data(serial_data),.serial_strobe(serial_strobe),
 	   .rx_WR(rx_WR),
 	   .rx_databus(rx_databus),
 	   .rx_WR_done(rx_WR_done),
 	   .rx_WR_enabled(rx_WR_enabled),
 	   .debugbus(tx_debugbus),
 	   .rssi_0(rssi_0), .rssi_1(rssi_1), .rssi_2(rssi_2), .rssi_3(rssi_3),
-	   .tx_overrun(tx_overrun), .tx_underrun(tx_underrun));
+	   .tx_underrun(tx_underrun));
+    
+    `ifdef RX_DUAL
+      defparam rx_buffer.NUM_CHAN=2;
+    `endif
+
    `else
    rx_buffer rx_buffer
      ( .usbclk(usbclk),.bus_reset(rx_bus_reset),.reset(rx_dsp_reset),
@@ -357,10 +353,51 @@ wire [1:0] tx_underrun;
    serial_io serial_io
      ( .master_clk(clk64),.serial_clock(SCLK),.serial_data_in(SDI),
        .enable(SEN_FPGA),.reset(1'b0),.serial_data_out(SDO),
-       .serial_addr(serial_addr),.serial_data(serial_data),.serial_strobe(serial_strobe),
+       .serial_addr(addr_db),.serial_data(data_db),.serial_strobe(strobe_db),
        .readback_0({io_rx_a,io_tx_a}),.readback_1({io_rx_b,io_tx_b}),.readback_2(capabilities),.readback_3(32'hf0f0931a),
        .readback_4(rssi_0),.readback_5(rssi_1),.readback_6(rssi_2),.readback_7(rssi_3)
        );
+
+   wire [6:0] reg_addr;
+   wire [31:0] reg_data_out;
+   wire [31:0] reg_data_in;
+   wire [1:0] reg_io_enable;
+   wire [31:0] rssi_threshhold;
+   wire [31:0] rssi_wait;
+   wire [6:0] addr_wr;
+   wire [31:0] data_wr;
+   wire strobe_wr;
+   wire [6:0] addr_db;
+   wire [31:0] data_db;
+   wire strobe_db;
+   assign serial_strobe = strobe_db | strobe_wr;
+   assign serial_addr = (strobe_db)? (addr_db) : (addr_wr);
+   assign serial_data = (strobe_db)? (data_db) : (data_wr);	
+   //assign serial_strobe = strobe_wr;
+   //assign serial_data = data_wr;
+   //assign serial_addr = addr_wr;
+
+   register_io register_control
+    (.clk(clk64),.reset(1'b0),.enable(reg_io_enable),.addr(reg_addr),.datain(reg_data_in),
+     .dataout(reg_data_out), .addr_wr(addr_wr), .data_wr(data_wr), .strobe_wr(strobe_wr),
+     .rssi_0(rssi_0), .rssi_1(rssi_1), .rssi_2(rssi_2), 
+     .rssi_3(rssi_3), .threshhold(rssi_threshhold), .rssi_wait(rssi_wait),
+	 .reg_0(reg_0),.reg_1(reg_1),.reg_2(reg_2),.reg_3(reg_3),
+     .debug_en(debug_en), .misc(settings), 
+	 .txmux({dac3mux,dac2mux,dac1mux,dac0mux,tx_realsignals,tx_numchan}));
+   
+   
+   //implementing freeze mode
+   reg [15:0] timestop;
+   wire stop;
+   wire [15:0] stop_time;
+   assign	clk64 = (timestop == 0) ? master_clk : 0;
+   always @(posedge master_clk)
+		if (timestop[15:0] != 0)
+			timestop <= timestop - 16'd1;
+		else if (stop)
+			timestop <= stop_time;
+						
 
    wire [15:0] reg_0,reg_1,reg_2,reg_3;
    master_control master_control
@@ -374,8 +411,8 @@ wire [1:0] tx_underrun;
        .rx_sample_strobe(rx_sample_strobe),.strobe_decim(strobe_decim),
        .tx_empty(tx_empty),
        //.debug_0(rx_a_a),.debug_1(ddc0_in_i),
-       .debug_0(tx_debugbus),.debug_1(tx_debugbus),
-       .debug_2({rx_sample_strobe,strobe_decim,serial_strobe,serial_addr}),.debug_3({rx_dsp_reset,tx_dsp_reset,rx_bus_reset,tx_bus_reset,enable_rx,(tx_underrun == 0),rx_overrun,decim_rate}),
+       .debug_0(rx_debugbus),.debug_1(ddc0_in_i),
+       .debug_2({rx_sample_strobe,strobe_decim,serial_strobe,serial_addr}),.debug_3({rx_dsp_reset,tx_dsp_reset,rx_bus_reset,tx_bus_reset,enable_rx,tx_underrun,rx_overrun,decim_rate}),
        .reg_0(reg_0),.reg_1(reg_1),.reg_2(reg_2),.reg_3(reg_3) );
    
    io_pins io_pins

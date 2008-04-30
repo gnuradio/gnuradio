@@ -118,7 +118,7 @@ test_usrp_inband_registers::test_usrp_inband_registers(mb_runtime *runtime, cons
   // Specify the RBF to use
   pmt_dict_set(usrp_dict,
                pmt_intern("rbf"),
-               pmt_intern("boe2.rbf"));
+               pmt_intern("inband_1rxhb_1tx.rbf"));
 
   // Set TX and RX interpolations
   pmt_dict_set(usrp_dict,

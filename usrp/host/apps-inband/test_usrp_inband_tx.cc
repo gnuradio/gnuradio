@@ -42,7 +42,7 @@
 #include <symbols_usrp_low_level_cs.h>
 #include <symbols_usrp_tx.h>
 
-static bool verbose = false;
+static bool verbose = true;
 
 class test_usrp_tx : public mb_mblock
 {
@@ -89,11 +89,9 @@ class test_usrp_tx : public mb_mblock
 
 test_usrp_tx::test_usrp_tx(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
   : mb_mblock(runtime, instance_name, user_arg),
-    d_state(INIT), d_nsamples_to_send((long) 40e6),
+    d_state(INIT), d_nsamples_to_send((long) 80e6),
     d_nsamples_xmitted(0),
     d_nframes_xmitted(0),
-    //d_samples_per_frame((long)(126)),
-    //d_samples_per_frame((long)(126 * 3.5)),	// non-full packet
     d_samples_per_frame((long)(126 * 4)),	// full packet
     d_done_sending(false),
     d_amplitude(16384)
@@ -119,17 +117,13 @@ test_usrp_tx::test_usrp_tx(mb_runtime *runtime, const std::string &instance_name
   // Specify the RBF to use
   pmt_dict_set(usrp_dict,
                pmt_intern("rbf"),
-               pmt_intern("cs1.rbf"));
+               pmt_intern("inband_1rxhb_1tx.rbf"));
 
   // Set TX and RX interpolations
   pmt_dict_set(usrp_dict,
                pmt_intern("interp-tx"),
-               pmt_from_long(128));
+               pmt_from_long(64));
 
-  pmt_dict_set(usrp_dict,
-               pmt_intern("decim-rx"),
-               pmt_from_long(16));
-  
   pmt_dict_set(usrp_dict,
                pmt_intern("rf-freq"),
                pmt_from_long(10e6));
@@ -176,12 +170,12 @@ test_usrp_tx::handle_message(mb_message_sptr msg)
     if (pmt_eq(event, s_response_open)){
       status = pmt_nth(1, data);
       if (pmt_eq(status, PMT_T)){
-	allocate_channel();
-	return;
+        allocate_channel();
+        return;
       }
       else {
-	error_msg = "failed to open usrp:";
-	goto bail;
+        error_msg = "failed to open usrp:";
+        goto bail;
       }
     }
     goto unhandled;
@@ -192,12 +186,12 @@ test_usrp_tx::handle_message(mb_message_sptr msg)
       d_tx_chan = pmt_nth(2, data);
 
       if (pmt_eq(status, PMT_T)){
-	enter_transmitting();
-	return;
+        enter_transmitting();
+        return;
       }
       else {
-	error_msg = "failed to allocate channel:";
-	goto bail;
+        error_msg = "failed to allocate channel:";
+        goto bail;
       }
     }
     goto unhandled;
@@ -208,12 +202,12 @@ test_usrp_tx::handle_message(mb_message_sptr msg)
       status = pmt_nth(1, data);
 
       if (pmt_eq(status, PMT_T)){
-	handle_xmit_response(handle);
-	return;
+        handle_xmit_response(handle);
+        return;
       }
       else {
-	error_msg = "bad response-xmit-raw-frame:";
-	goto bail;
+        error_msg = "bad response-xmit-raw-frame:";
+        goto bail;
       }
     }
     goto unhandled;
@@ -223,12 +217,12 @@ test_usrp_tx::handle_message(mb_message_sptr msg)
       status = pmt_nth(1, data);
 
       if (pmt_eq(status, PMT_T)){
-	close_usrp();
-	return;
+        close_usrp();
+        return;
       }
       else {
-	error_msg = "failed to deallocate channel:";
-	goto bail;
+        error_msg = "failed to deallocate channel:";
+        goto bail;
       }
     }
     goto unhandled;
@@ -238,12 +232,12 @@ test_usrp_tx::handle_message(mb_message_sptr msg)
       status = pmt_nth(1, data);
 
       if (pmt_eq(status, PMT_T)){
-	shutdown_all(PMT_T);
-	return;
+        shutdown_all(PMT_T);
+        return;
       }
       else {
-	error_msg = "failed to close USRP:";
-	goto bail;
+        error_msg = "failed to close USRP:";
+        goto bail;
       }
     }
     goto unhandled;
@@ -272,6 +266,9 @@ test_usrp_tx::open_usrp()
 
   d_cs->send(s_cmd_open, pmt_list2(PMT_NIL, which_usrp));
   d_state = OPENING_USRP;
+  
+  if(verbose)
+    std::cout << "[TEST_USRP_INBAND_TX] Opening the USRP\n";
 }
 
 void
@@ -279,6 +276,9 @@ test_usrp_tx::close_usrp()
 {
   d_cs->send(s_cmd_close, pmt_list1(PMT_NIL));
   d_state = CLOSING_USRP;
+  
+  if(verbose)
+    std::cout << "[TEST_USRP_INBAND_TX] Closing the USRP\n";
 }
 
 void
@@ -287,6 +287,9 @@ test_usrp_tx::allocate_channel()
   long capacity = (long) 16e6;
   d_tx->send(s_cmd_allocate_channel, pmt_list2(PMT_T, pmt_from_long(capacity)));
   d_state = ALLOCATING_CHANNEL;
+  
+  if(verbose)
+    std::cout << "[TEST_USRP_INBAND_TX] Requesting TX channel allocation\n";
 }
 
 void
@@ -295,15 +298,9 @@ test_usrp_tx::enter_transmitting()
   d_state = TRANSMITTING;
   d_nsamples_xmitted = 0;
   
-  // FIXME: carrier sense hack
-  d_tx->send(s_cmd_to_control_channel,    // C/S packet
-             pmt_list2(PMT_NIL,           // invoc handle
-                       pmt_list1(
-                            pmt_list2(s_op_write_reg, 
-                                      pmt_list2(
-                                      pmt_from_long(1), 
-                                      pmt_from_long(21))))));
-
+  if(verbose)
+    std::cout << "[TEST_USRP_INBAND_TX] Transmitting...\n";
+  
   build_and_send_next_frame();	// fire off 4 to start pipeline
   build_and_send_next_frame();
   build_and_send_next_frame();
@@ -356,9 +353,6 @@ test_usrp_tx::build_and_send_next_frame()
   }
 
   pmt_t tx_properties = pmt_make_dict();
-  pmt_dict_set(tx_properties,
-               pmt_intern("carrier-sense"),
-               PMT_T);
 
   pmt_t timestamp = pmt_from_long(0xffffffff);	// NOW
   d_tx->send(s_cmd_xmit_raw_frame,
@@ -371,7 +365,7 @@ test_usrp_tx::build_and_send_next_frame()
   d_nsamples_xmitted += nsamples_this_frame;
   d_nframes_xmitted++;
 
-  if(verbose)
+  if(verbose && 0)
     std::cout << "[TEST_USRP_INBAND_TX] Transmitted frame\n";
 }
 
@@ -394,6 +388,9 @@ test_usrp_tx::enter_closing_channel()
   d_state = CLOSING_CHANNEL;
   
   d_tx->send(s_cmd_deallocate_channel, pmt_list2(PMT_NIL, d_tx_chan));
+  
+  if(verbose)
+    std::cout << "[TEST_USRP_INBAND_tX] Deallocating TX channel\n";
 }
 
 REGISTER_MBLOCK_CLASS(test_usrp_tx);

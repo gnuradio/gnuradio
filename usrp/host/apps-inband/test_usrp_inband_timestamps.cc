@@ -147,7 +147,7 @@ test_usrp_inband_timestamps::test_usrp_inband_timestamps(mb_runtime *runtime, co
   // Specify the RBF to use
   pmt_dict_set(usrp_dict,
                pmt_intern("rbf"),
-               pmt_intern("tmac5.rbf"));
+               pmt_intern("inband_1rxhb_1tx.rbf"));
 
   define_component("server", "usrp_server", usrp_dict);
 

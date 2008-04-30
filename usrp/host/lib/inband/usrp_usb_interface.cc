@@ -47,12 +47,16 @@ static pmt_t s_shutdown = pmt_intern("%shutdown");
 static const bool verbose = false;
 
 
-
-// need to take number of TX and RX channels as parameter
+/*!
+ * \brief Initializes the USB interface m-block.
+ *
+ * The \p user_arg should be a PMT dictionary which can contain optional
+ * arguments for the block, such as the decimatoin and interpolation rate.
+ */
 usrp_usb_interface::usrp_usb_interface(mb_runtime *rt, const std::string &instance_name, pmt_t user_arg)
   : mb_mblock(rt, instance_name, user_arg),
-  d_fpga_debug(false),
   d_fake_usrp(false),
+  d_rx_reading(false),
   d_interp_tx(128),
   d_decim_rx(128),
   d_rf_freq(10e6),
@@ -86,7 +90,7 @@ usrp_usb_interface::usrp_usb_interface(mb_runtime *rt, const std::string &instan
         d_interp_tx = pmt_to_long(interp_tx);
     }
     
-    // Read the RX interpolations
+    // Read the RX decimation rate
     if(pmt_t decim_rx = pmt_dict_ref(usrp_dict, 
                                       pmt_intern("decim-rx"), 
                                       PMT_NIL)) {
@@ -134,8 +138,8 @@ usrp_usb_interface::usrp_usb_interface(mb_runtime *rt, const std::string &instan
   d_tx_cs = define_port("tx_cs", "usrp-tx-cs", false, mb_port::INTERNAL);	
 
   // Connect to TX and RX
-  define_component("tx", tx_interface, PMT_F);
-  define_component("rx", rx_interface, PMT_F);
+  define_component("tx", tx_interface, usrp_dict);
+  define_component("rx", rx_interface, usrp_dict);
   connect("self", "rx_cs", "rx", "cs");
   connect("self", "tx_cs", "tx", "cs");
   
@@ -146,8 +150,6 @@ usrp_usb_interface::usrp_usb_interface(mb_runtime *rt, const std::string &instan
   d_utx = NULL;
   d_urx = NULL;
   
-  d_fpga_debug=true;   // WARNING: DO NOT ENABLE WITH D'BOARDS OTHER THAN BASIC TX/RX
-
 }
 
 usrp_usb_interface::~usrp_usb_interface() 
@@ -161,6 +163,10 @@ usrp_usb_interface::initial_transition()
 
 }
 
+/*!
+ * \brief Handles all incoming signals to the block from the lowest m-blocks
+ * which read/write to the bus, or the higher m-block which is the USRP server.
+ */
 void
 usrp_usb_interface::handle_message(mb_message_sptr msg)
 {
@@ -256,6 +262,13 @@ usrp_usb_interface::handle_message(mb_message_sptr msg)
   std::cout << "[USRP_USB_INTERFACE] unhandled msg: " << msg << std::endl;
 }
 
+/*!
+ * \brief Called by the handle_message() method when the incoming signal is to
+ * open a USB connection to the USRP (cmd-usrp-open).
+ *
+ * The \p data parameter is a PMT list, where the elements are an invocation
+ * handle and the USRP number.
+ */
 void
 usrp_usb_interface::handle_cmd_open(pmt_t data)
 {
@@ -290,9 +303,17 @@ usrp_usb_interface::handle_cmd_open(pmt_t data)
     return;
   }
 
-  if(!d_utx->set_tx_freq (0,d_rf_freq)) {  // try setting center freq to 0
+  if(!d_utx->set_tx_freq (0,d_rf_freq) || !d_utx->set_tx_freq(1,d_rf_freq)) {  // try setting center freq to 0
     if (verbose)
       std::cout << "[USRP_USB_INTERFACE] Failed to set center frequency on TX\n";
+    reply_data = pmt_list2(invocation_handle, PMT_F);
+    d_cs->send(s_response_usrp_open, reply_data);
+    return;
+  }
+
+  if(!d_utx->set_mux(0xBA98)) {
+    if (verbose)
+      std::cout << "[USRP_USB_INTERFACE] Failed to set TX mux\n";
     reply_data = pmt_list2(invocation_handle, PMT_F);
     d_cs->send(s_response_usrp_open, reply_data);
     return;
@@ -321,33 +342,44 @@ usrp_usb_interface::handle_cmd_open(pmt_t data)
     return;
   }
 
-  if(!d_urx->set_rx_freq (0, d_rf_freq)) {
+  if(!d_urx->set_rx_freq (0, -d_rf_freq) || !d_urx->set_rx_freq(1, -d_rf_freq)) {
     if (verbose)
       std::cout << "[usrp_server] Failed to set center frequency on RX\n";
     reply_data = pmt_list2(invocation_handle, PMT_F);
     d_cs->send(s_response_usrp_open, reply_data);
     return;
   }
-
-  if(d_fpga_debug) {
-    d_utx->_write_fpga_reg(FR_DEBUG_EN,0xf);
-    d_utx->_write_oe(0, 0xffff, 0xffff);
-    d_urx->_write_oe(0, 0xffff, 0xffff);
-    d_utx->_write_oe(1, 0xffff, 0xffff);
-    d_urx->_write_oe(1, 0xffff, 0xffff);
-
-//    while(1){
-//      for(int i=0; i<0xffff; i++) 
-//        d_urx->write_io(0, i, 0xffff);
-//    }
-  }
   
+  // Two channels ... this really needs to end up being set correctly by
+  // querying for what dboards are connected
+  if(!d_urx->set_mux(0x32103210)) {
+    if (verbose)
+      std::cout << "[USRP_USB_INTERFACE] Failed to set RX mux\n";
+    reply_data = pmt_list2(invocation_handle, PMT_F);
+    d_cs->send(s_response_usrp_open, reply_data);
+    return;
+  }
+
   if (verbose)
     std::cout << "[USRP_USB_INTERFACE] Setup RX channel\n";
+    
+//  d_utx->_write_fpga_reg(FR_DEBUG_EN,0xf);
+//  d_utx->_write_oe(0, 0xffff, 0xffff);
+//  d_urx->_write_oe(0, 0xffff, 0xffff);
+//  d_utx->_write_oe(1, 0xffff, 0xffff);
+//  d_urx->_write_oe(1, 0xffff, 0xffff);
 
   d_cs->send(s_response_usrp_open, pmt_list2(invocation_handle, PMT_T));
 }
 
+/*!
+ * \brief Called by the handle_message() method when the incoming signal is to
+ * write data to the USB bus (cmd-usrp-write). 
+ *
+ * The \p data parameter is a PMT list containing 3 mandatory elements in the
+ * following order: an invocation handle, channel, and a uniform vector
+ * representation of the packets.
+ */
 void
 usrp_usb_interface::handle_cmd_write(pmt_t data)
 {
@@ -366,6 +398,13 @@ usrp_usb_interface::handle_cmd_write(pmt_t data)
   return;
 }
 
+/*!
+ * \brief Called by the handle_message() method when the incoming signal is to
+ * start reading data from the USB bus (cmd-usrp-start-reading).
+ *
+ * The \p data parameter is a PMT list with a single element: an invocation
+ * handle which can be returned with the response.
+ */
 void
 usrp_usb_interface::handle_cmd_start_reading(pmt_t data)
 {
@@ -381,9 +420,18 @@ usrp_usb_interface::handle_cmd_start_reading(pmt_t data)
 
   d_rx_cs->send(s_cmd_usrp_rx_start_reading, pmt_list2(PMT_NIL, rx_handle));
 
+  d_rx_reading = true;
+
   return;
 }
 
+/*!
+ * \brief Called by the handle_message() method when the incoming signal is to
+ * stop reading data from the USB bus (cmd-usrp-stop-reading).
+ *
+ * The \p data parameter is a PMT list with a single element: an invocation
+ * handle which can be returned with the response.
+ */
 void
 usrp_usb_interface::handle_cmd_stop_reading(pmt_t data)
 {
@@ -392,21 +440,39 @@ usrp_usb_interface::handle_cmd_stop_reading(pmt_t data)
   if(!d_fake_usrp) {
     if(verbose)
       std::cout << "[USRP_USB_INTERFACE] Stopping RX...\n";
+    usrp_rx_stop = true;
+
+    // Used to allow a read() being called by a lower layer to complete before
+    // stopping, else there can be partial data left on the bus and can generate
+    // errors.
+    while(usrp_rx_stop) {usleep(1);}
     d_urx->stop();
   }
   else {
     if(verbose)
       std::cout << "[USRP_USB_INTERFACE] Stopping fake RX...\n";
-    usrp_rx_stop = true;  // extern to communicate with stub to wait
+    usrp_rx_stop_stub = true;  // extern to communicate with stub to wait
   }
+
+  d_rx_reading = false;
 
   return;
 }
 
+/*!
+ * \brief Called by the handle_message() method when the incoming signal is to
+ * close the USB connection to the USRP.
+ *
+ * The \p data parameter is a PMT list with a single element: an invocation
+ * handle which can be returned with the response.
+ */
 void
 usrp_usb_interface::handle_cmd_close(pmt_t data)
 {
   pmt_t invocation_handle = pmt_nth(0, data);
+
+  if(d_rx_reading)
+    handle_cmd_stop_reading(PMT_NIL);
 
   if(d_fake_usrp) {
     d_cs->send(s_response_usrp_close, pmt_list2(invocation_handle, PMT_T));

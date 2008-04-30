@@ -1,24 +1,24 @@
 module channel_demux
- #(parameter NUM_CHAN = 2, parameter CHAN_WIDTH = 2) (     //usb Side
-			input [31:0]usbdata_final,
-			input WR_final, 
-			
-			// TX Side
-			input reset,
-			input txclk,
-			output reg [CHAN_WIDTH:0] WR_channel,
-			output reg [31:0] ram_data,
-			output reg [CHAN_WIDTH:0] WR_done_channel );
-/* Parse header and forward to ram */
-	reg [2:0]reader_state;
-	reg [4:0]channel ;
-	reg [6:0]read_length ;
+ #(parameter NUM_CHAN = 2) (     //usb Side
+   input [31:0]usbdata_final,
+   input WR_final, 
+   // TX Side
+   input reset,
+   input txclk,
+   output reg [NUM_CHAN:0] WR_channel,
+   output reg [31:0] ram_data,
+   output reg [NUM_CHAN:0] WR_done_channel );
+   /* Parse header and forward to ram */
+	
+    reg [2:0]reader_state;
+    reg [4:0]channel ;
+    reg [6:0]read_length ;
 	
 	 // States
-    parameter IDLE		=	3'd0;
-    parameter HEADER	=	3'd1;
-    parameter WAIT		=	3'd2;
-    parameter FORWARD	=	3'd3;
+    parameter IDLE      =    3'd0;
+    parameter HEADER    =    3'd1;
+    parameter WAIT      =    3'd2;
+    parameter FORWARD   =    3'd3;
 	
 	`define CHANNEL 20:16
 	`define PKT_SIZE 127
@@ -27,7 +27,7 @@ module channel_demux
 							NUM_CHAN : (usbdata_final[`CHANNEL]);
 	
 	always @(posedge txclk)
-	begin
+	  begin
 	    if (reset)
 	      begin
 	       reader_state <= IDLE;

@@ -301,6 +301,20 @@ qa_pmt_prims::test_io()
   CPPUNIT_ASSERT_EQUAL(std::string("k0"), pmt_write_string(k0));
 }
 
+void
+qa_pmt_prims::test_lists()
+{
+  pmt_t s0 = pmt_intern("s0");
+  pmt_t s1 = pmt_intern("s1");
+  pmt_t s2 = pmt_intern("s2");
+  pmt_t s3 = pmt_intern("s3");
+
+  pmt_t l1 = pmt_list4(s0, s1, s2, s3);
+  pmt_t l2 = pmt_list3(s0, s1, s2);
+  pmt_t l3 = pmt_list_add(l2, s3);
+  CPPUNIT_ASSERT(pmt_equal(l1, l3));
+}
+
 // ------------------------------------------------------------------------
 
 // class foo is used in test_any below.

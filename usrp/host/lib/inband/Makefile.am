@@ -76,7 +76,6 @@ include_HEADERS =			\
 	usrp_usb_interface.h
 
 noinst_HEADERS =      			\
-	fake_usrp.h			\
 	qa_inband.h			\
 	qa_inband_packet_prims.h	\
 	qa_inband_usrp_server.h		\
@@ -109,14 +108,10 @@ libusrp_inband_qa_la_LIBADD =    	\
 # ------------------------------------------------------------------------
 
 noinst_PROGRAMS =			\
-	test_inband			\
-	test_usrp_inband
+	test_inband
 
 test_inband_SOURCES = test_inband.cc
 test_inband_LDADD   = libusrp_inband-qa.la
-
-test_usrp_inband_SOURCES = test_usrp_inband.cc
-test_usrp_inband_LDADD = libusrp_inband-qa.la
 
 MOSTLYCLEANFILES = \
 	$(BUILT_SOURCES) *~ *.pyc

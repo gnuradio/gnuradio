@@ -32,10 +32,13 @@ ROUNDUP(size_t x, size_t stride)
   return ((((x) + (stride) - 1)/(stride)) * (stride));
 }
 
-pmt_pool::pmt_pool(size_t itemsize, size_t alignment, size_t allocation_size)
-  : d_itemsize(ROUNDUP(itemsize, alignment)),
+pmt_pool::pmt_pool(size_t itemsize, size_t alignment,
+		   size_t allocation_size, size_t max_items)
+  : d_cond(&d_mutex),
+    d_itemsize(ROUNDUP(itemsize, alignment)),
     d_alignment(alignment),
     d_allocation_size(std::max(allocation_size, 16 * itemsize)),
+    d_max_items(max_items), d_n_items(0),
     d_freelist(0)
 {
 }
@@ -53,9 +56,15 @@ pmt_pool::malloc()
   omni_mutex_lock l(d_mutex);
   item *p;
 
+  if (d_max_items != 0){
+    while (d_n_items >= d_max_items)
+      d_cond.wait();
+  }
+
   if (d_freelist){	// got something?
     p = d_freelist;
     d_freelist = p->d_next;
+    d_n_items++;
     return p;
   }
 
@@ -79,6 +88,7 @@ pmt_pool::malloc()
   // now return the first one
   p = d_freelist;
   d_freelist = p->d_next;
+  d_n_items++;
   return p;
 }
 
@@ -93,4 +103,7 @@ pmt_pool::free(void *foo)
   item *p = (item *) foo;
   p->d_next = d_freelist;
   d_freelist = p;
+  d_n_items--;
+  if (d_max_items != 0)
+    d_cond.signal();
 }

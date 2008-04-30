@@ -86,7 +86,7 @@ module fifo_1kx16 (
 				);
 	defparam
 		scfifo_component.add_ram_output_register = "OFF",
-		scfifo_component.almost_empty_value = 126,
+		scfifo_component.almost_empty_value = 504,
 		scfifo_component.intended_device_family = "Cyclone",
 		scfifo_component.lpm_hint = "RAM_BLOCK_TYPE=M4K",
 		scfifo_component.lpm_numwords = 1024,
@@ -105,7 +105,7 @@ endmodule
 // CNX file retrieval info
 // ============================================================
 // Retrieval info: PRIVATE: AlmostEmpty NUMERIC "1"
-// Retrieval info: PRIVATE: AlmostEmptyThr NUMERIC "126"
+// Retrieval info: PRIVATE: AlmostEmptyThr NUMERIC "504"
 // Retrieval info: PRIVATE: AlmostFull NUMERIC "0"
 // Retrieval info: PRIVATE: AlmostFullThr NUMERIC "-1"
 // Retrieval info: PRIVATE: CLOCKS_ARE_SYNCHRONIZED NUMERIC "0"
@@ -133,7 +133,7 @@ endmodule
 // Retrieval info: PRIVATE: wsFull NUMERIC "1"
 // Retrieval info: PRIVATE: wsUsedW NUMERIC "0"
 // Retrieval info: CONSTANT: ADD_RAM_OUTPUT_REGISTER STRING "OFF"
-// Retrieval info: CONSTANT: ALMOST_EMPTY_VALUE NUMERIC "126"
+// Retrieval info: CONSTANT: ALMOST_EMPTY_VALUE NUMERIC "504"
 // Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone"
 // Retrieval info: CONSTANT: LPM_HINT STRING "RAM_BLOCK_TYPE=M4K"
 // Retrieval info: CONSTANT: LPM_NUMWORDS NUMERIC "1024"

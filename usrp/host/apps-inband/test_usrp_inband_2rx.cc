@@ -25,10 +25,12 @@
 
 #include <mb_mblock.h>
 #include <mb_runtime.h>
+#include <mb_runtime_nop.h>		// QA only
 #include <mb_protocol_class.h>
 #include <mb_exception.h>
 #include <mb_msg_queue.h>
 #include <mb_message.h>
+#include <mb_mblock_impl.h>
 #include <mb_msg_accepter.h>
 #include <mb_class_registry.h>
 #include <pmt.h>
@@ -49,7 +51,7 @@ class test_usrp_rx : public mb_mblock
 {
   mb_port_sptr 	d_rx;
   mb_port_sptr 	d_cs;
-  pmt_t		d_rx_chan;	// returned tx channel handle
+  pmt_t		d_rx_chan0, d_rx_chan1;
 
   enum state_t {
     INIT,
@@ -63,8 +65,6 @@ class test_usrp_rx : public mb_mblock
   state_t	d_state;
 
   std::ofstream d_ofile;
-
-  long d_n_overruns;
 
   long d_samples_recvd;
   long d_samples_to_recv;
@@ -88,25 +88,32 @@ class test_usrp_rx : public mb_mblock
 
 test_usrp_rx::test_usrp_rx(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
   : mb_mblock(runtime, instance_name, user_arg),
-    d_n_overruns(0),
+    d_rx_chan0(PMT_NIL), d_rx_chan1(PMT_NIL),
     d_samples_recvd(0),
-    d_samples_to_recv(10e6)
+    d_samples_to_recv(20e6)
 { 
-  
   d_rx = define_port("rx0", "usrp-rx", false, mb_port::INTERNAL);
   d_cs = define_port("cs", "usrp-server-cs", false, mb_port::INTERNAL);
   
   // Pass a dictionary to usrp_server which specifies which interface to use, the stub or USRP
   pmt_t usrp_dict = pmt_make_dict();
+  
+  // To test the application without a USRP
+  bool fake_usrp_p = false;
+  if(fake_usrp_p) {
+    pmt_dict_set(usrp_dict, 
+                 pmt_intern("fake-usrp"),
+		             PMT_T);
+  }
 
   // Specify the RBF to use
   pmt_dict_set(usrp_dict,
                pmt_intern("rbf"),
-               pmt_intern("inband_1rxhb_1tx.rbf"));
+               pmt_intern("inband_2rxhb_2tx.rbf"));
 
   pmt_dict_set(usrp_dict,
                pmt_intern("decim-rx"),
-               pmt_from_long(128));
+               pmt_from_long(64));
 
   define_component("server", "usrp_server", usrp_dict);
 
@@ -159,16 +166,20 @@ test_usrp_rx::handle_message(mb_message_sptr msg)
     case ALLOCATING_CHANNEL:
       if (pmt_eq(event, s_response_allocate_channel)){
         status = pmt_nth(1, data);
-        d_rx_chan = pmt_nth(2, data);
+        if(pmt_eqv(d_rx_chan0, PMT_NIL))
+          d_rx_chan0 = pmt_nth(2, data);
+        else
+          d_rx_chan1 = pmt_nth(2, data);
 
-        if (pmt_eq(status, PMT_T)){
+        if (pmt_eq(status, PMT_T) && !pmt_eqv(d_rx_chan1, PMT_NIL)){
           enter_receiving();
           return;
         }
-        else {
+        else if(pmt_eq(status, PMT_F)){
           error_msg = "failed to allocate channel:";
           goto bail;
         }
+        return;
       }
       goto unhandled;
 
@@ -221,7 +232,6 @@ test_usrp_rx::handle_message(mb_message_sptr msg)
         status = pmt_nth(1, data);
 
         if (pmt_eq(status, PMT_T)){
-          std::cout << "\nOverruns: " << d_n_overruns << std::endl;
           fflush(stdout);
           shutdown_all(PMT_T);
           return;
@@ -262,17 +272,18 @@ test_usrp_rx::open_usrp()
   d_state = OPENING_USRP;
   
   if(verbose)
-    std::cout << "[TEST_USRP_INBAND_OVERRUN] Opening the USRP\n";
+    std::cout << "[TEST_USRP_INBAND_RX] Opening the USRP\n";
 }
 
 void
 test_usrp_rx::close_usrp()
 {
+
   d_cs->send(s_cmd_close, pmt_list1(PMT_NIL));
   d_state = CLOSING_USRP;
   
   if(verbose)
-    std::cout << "[TEST_USRP_INBAND_OVERRUN] Closing the USRP\n";
+    std::cout << "[TEST_USRP_INBAND_RX] Closing the USRP\n";
 }
 
 void
@@ -280,10 +291,11 @@ test_usrp_rx::allocate_channel()
 {
   long capacity = (long) 16e6;
   d_rx->send(s_cmd_allocate_channel, pmt_list2(PMT_T, pmt_from_long(capacity)));
+  d_rx->send(s_cmd_allocate_channel, pmt_list2(PMT_T, pmt_from_long(capacity)));
   d_state = ALLOCATING_CHANNEL;
   
   if(verbose)
-    std::cout << "[TEST_USRP_INBAND_OVERRUN] Requesting RX channel allocation\n";
+    std::cout << "[TEST_USRP_INBAND_RX] Requesting RX channel allocation\n";
 }
 
 void
@@ -293,10 +305,14 @@ test_usrp_rx::enter_receiving()
 
   d_rx->send(s_cmd_start_recv_raw_samples,
              pmt_list2(PMT_F,
-                       d_rx_chan));
+                       d_rx_chan0));
+  
+  d_rx->send(s_cmd_start_recv_raw_samples,
+             pmt_list2(PMT_F,
+                       d_rx_chan1));
 
   if(verbose)
-    std::cout << "[TEST_USRP_INBAND_OVERRUN] Receiving...\n";
+    std::cout << "[TEST_USRP_INBAND_RX] Receiving...\n";
 }
 
 void
@@ -313,32 +329,14 @@ test_usrp_rx::handle_response_recv_raw_samples(pmt_t data)
 
   // Check for overrun
   if(!pmt_is_dict(properties)) {
-    std::cout << "[TEST_USRP_INBAND_OVERRUN] Recv samples dictionary is improper\n";
+    std::cout << "[TEST_USRP_INBAND_RX] Recv samples dictionary is improper\n";
     return;
-  }
-
-  if(pmt_t overrun = pmt_dict_ref(properties, 
-                                  pmt_intern("overrun"), 
-                                  PMT_NIL)) {
-    if(pmt_eqv(overrun, PMT_T)) {
-      d_n_overruns++;
-
-      if(verbose && 0)
-        std::cout << "[TEST_USRP_INBAND_OVERRUN] Underrun\n";
-    }
-    else {
-    if(verbose && 0)
-      std::cout << "[TEST_USRP_INBAND_OVERRUN] No overrun\n" << overrun <<std::endl;
-    }
-  } else {
-
-    if(verbose && 0)
-      std::cout << "[TEST_USRP_INBAND_OVERRUN] No overrun\n";
   }
 
   // Check if the number samples we have received meets the test
   if(d_samples_recvd >= d_samples_to_recv) {
-    d_rx->send(s_cmd_stop_recv_raw_samples, pmt_list2(PMT_NIL, d_rx_chan));
+    d_rx->send(s_cmd_stop_recv_raw_samples, pmt_list2(PMT_NIL, d_rx_chan0));
+    d_rx->send(s_cmd_stop_recv_raw_samples, pmt_list2(PMT_NIL, d_rx_chan1));
     enter_closing_channel();
     return;
   }
@@ -349,13 +347,12 @@ void
 test_usrp_rx::enter_closing_channel()
 {
   d_state = CLOSING_CHANNEL;
-  
-  sleep(2);
-  
-  d_rx->send(s_cmd_deallocate_channel, pmt_list2(PMT_NIL, d_rx_chan));
+
+  d_rx->send(s_cmd_deallocate_channel, pmt_list2(PMT_NIL, d_rx_chan0));
+  d_rx->send(s_cmd_deallocate_channel, pmt_list2(PMT_NIL, d_rx_chan1));
   
   if(verbose)
-    std::cout << "[TEST_USRP_INBAND_OVERRUN] Deallocating RX channel\n";
+    std::cout << "[TEST_USRP_INBAND_RX] Deallocating RX channel\n";
 }
 
 REGISTER_MBLOCK_CLASS(test_usrp_rx);
@@ -366,10 +363,9 @@ REGISTER_MBLOCK_CLASS(test_usrp_rx);
 int
 main (int argc, char **argv)
 {
-  // handle any command line args here
-
   mb_runtime_sptr rt = mb_make_runtime();
   pmt_t result = PMT_NIL;
 
   rt->run("top", "test_usrp_rx", PMT_F, &result);
+
 }

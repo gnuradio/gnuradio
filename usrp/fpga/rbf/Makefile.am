@@ -26,8 +26,12 @@ datadir = $(prefix)/share/usrp
 rbfs = 				\
 	rev2/std_2rxhb_2tx.rbf	\
 	rev2/std_4rx_0tx.rbf	\
+	rev2/inband_1rxhb_1tx.rbf	\
+	rev2/inband_2rxhb_2tx.rbf	\
 	rev4/std_2rxhb_2tx.rbf	\
 	rev4/std_4rx_0tx.rbf    \
+	rev4/inband_1rxhb_1tx.rbf	\
+	rev4/inband_2rxhb_2tx.rbf	\
 	rev2/multi_2rxhb_2tx.rbf	\
 	rev4/multi_2rxhb_2tx.rbf		
 

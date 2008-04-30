@@ -87,23 +87,30 @@ class test_usrp_rx : public mb_mblock
 test_usrp_rx::test_usrp_rx(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg)
   : mb_mblock(runtime, instance_name, user_arg),
     d_samples_recvd(0),
-    d_samples_to_recv(5e6)
+    d_samples_to_recv(20e6)
 { 
-  
   d_rx = define_port("rx0", "usrp-rx", false, mb_port::INTERNAL);
   d_cs = define_port("cs", "usrp-server-cs", false, mb_port::INTERNAL);
   
   // Pass a dictionary to usrp_server which specifies which interface to use, the stub or USRP
   pmt_t usrp_dict = pmt_make_dict();
+  
+  // To test the application without a USRP
+  bool fake_usrp_p = false;
+  if(fake_usrp_p) {
+    pmt_dict_set(usrp_dict, 
+                 pmt_intern("fake-usrp"),
+		             PMT_T);
+  }
 
   // Specify the RBF to use
   pmt_dict_set(usrp_dict,
                pmt_intern("rbf"),
-               pmt_intern("nanocell9.rbf"));
+               pmt_intern("inband_1rxhb_1tx.rbf"));
 
   pmt_dict_set(usrp_dict,
                pmt_intern("decim-rx"),
-               pmt_from_long(128));
+               pmt_from_long(64));
 
   define_component("server", "usrp_server", usrp_dict);
 
@@ -264,6 +271,7 @@ test_usrp_rx::open_usrp()
 void
 test_usrp_rx::close_usrp()
 {
+
   d_cs->send(s_cmd_close, pmt_list1(PMT_NIL));
   d_state = CLOSING_USRP;
   
@@ -302,7 +310,8 @@ test_usrp_rx::handle_response_recv_raw_samples(pmt_t data)
   pmt_t status = pmt_nth(1, data);
   pmt_t v_samples = pmt_nth(2, data);
   pmt_t timestamp = pmt_nth(3, data);
-  pmt_t properties = pmt_nth(4, data);
+  pmt_t channel = pmt_nth(4, data);
+  pmt_t properties = pmt_nth(5, data);
 
   d_samples_recvd += pmt_length(v_samples) / 4;
 
@@ -325,9 +334,7 @@ void
 test_usrp_rx::enter_closing_channel()
 {
   d_state = CLOSING_CHANNEL;
-  
-  sleep(2);
-  
+
   d_rx->send(s_cmd_deallocate_channel, pmt_list2(PMT_NIL, d_rx_chan));
   
   if(verbose)
@@ -342,10 +349,9 @@ REGISTER_MBLOCK_CLASS(test_usrp_rx);
 int
 main (int argc, char **argv)
 {
-  // handle any command line args here
-
   mb_runtime_sptr rt = mb_make_runtime();
   pmt_t result = PMT_NIL;
 
   rt->run("top", "test_usrp_rx", PMT_F, &result);
+
 }

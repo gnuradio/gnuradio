@@ -386,14 +386,6 @@ fusb_ephandle_linux::stop ()
 {
   if (!d_started)
     return true;
-  
-  d_devhandle->_cancel_pending_rqsts (this);
-  d_devhandle->_reap (false);
-
-
-  usbdevfs_urb *urb;
-  while ((urb = completed_list_get ()) != 0)
-    free_list_add (urb);
 
   if (d_write_work_in_progress){
     free_list_add (d_write_work_in_progress);
@@ -407,11 +399,19 @@ fusb_ephandle_linux::stop ()
     d_read_buffer_end = 0;
   }
 
-  if (d_free_list.size () != (unsigned) d_nblocks)
-    fprintf (stderr, "d_free_list.size () = %d, d_nblocks = %d\n",
-	     d_free_list.size (), d_nblocks);
-    
-  assert (d_free_list.size () == (unsigned) d_nblocks);
+  d_devhandle->_cancel_pending_rqsts (this);
+  d_devhandle->_reap (false);
+
+  while (1){
+    usbdevfs_urb *urb;
+    while ((urb = completed_list_get ()) != 0)
+      free_list_add (urb);
+
+    if (d_free_list.size () == (unsigned) d_nblocks)
+      break;
+
+    d_devhandle->_reap(true);
+  }
 
   d_started = false;
   return true;

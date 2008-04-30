@@ -27,7 +27,7 @@
 # ========================
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 3.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "00:14:04  JULY 13, 2003"
-set_global_assignment -name LAST_QUARTUS_VERSION "5.1 SP1"
+set_global_assignment -name LAST_QUARTUS_VERSION "7.2 SP2"
 
 # Pin & Location Assignments
 # ==========================
@@ -392,7 +392,6 @@ set_global_assignment -name VERILOG_FILE ../../sdr_lib/hb/ram16_2sum.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/hb/coeff_rom.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/hb/halfband_decim.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/hb/mac.v
-set_global_assignment -name VERILOG_FILE ../../sdr_lib/hb/coeff_ram.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/tx_chain.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/rx_dcoffset.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/adc_interface.v
@@ -420,3 +419,5 @@ set_global_assignment -name VERILOG_FILE ../../sdr_lib/strobe_gen.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/sign_extend.v
 set_global_assignment -name VERILOG_FILE ../../inband_lib/channel_ram.v
 set_global_assignment -name VERILOG_FILE ../../inband_lib/register_io.v
+set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
+set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"

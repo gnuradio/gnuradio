@@ -103,7 +103,7 @@ usrp_tx_stub::write(pmt_t data)
   for(long i=0; i<n_packets; i++) {
 
     if(d_disk_write) {
-      if(pkts[i].chan() == 0x1f)
+      if(pkts[i].chan() == CONTROL_CHAN)
         d_cs_ofile.write((const char *)&pkts[i], transport_pkt::max_pkt_size());
       else
         d_ofile.write((const char *)&pkts[i], transport_pkt::max_pkt_size());
@@ -112,7 +112,7 @@ usrp_tx_stub::write(pmt_t data)
       d_ofile.flush();
     }
 
-    if(pkts[i].chan() == 0x1f)
+    if(pkts[i].chan() == CONTROL_CHAN)
       parse_cs(invocation_handle, pkts[i]);
   }
 
@@ -140,7 +140,7 @@ usrp_tx_stub::parse_cs(pmt_t invocation_handle, transport_pkt pkt)
   transport_pkt *q_pkt =
     (transport_pkt *) pmt_u8vector_writeable_elements(v_pkt, ignore);
       
-  q_pkt->set_header(0, 0x1f, 0, 0);
+  q_pkt->set_header(0, CONTROL_CHAN, 0, 0);
   q_pkt->set_timestamp(0xffffffff);
 
   // We dispatch based on the control packet type, however we can extract the

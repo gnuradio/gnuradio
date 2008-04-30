@@ -42,9 +42,9 @@ class usrp_usb_interface : public mb_mblock
   long d_ntx_chan;
   long d_nrx_chan;
 
-  long d_fpga_debug;
-
   bool d_fake_usrp;
+
+  bool d_rx_reading;
 
   long d_interp_tx;
   long d_decim_rx;

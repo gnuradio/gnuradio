@@ -95,7 +95,7 @@ applicable agreement for further details.
 	)
 	(drawing
 		(text "16 bits x 1024 words" (rect 58 132 144 144)(font "Arial" ))
-		(text "almost_empty < 126" (rect 58 122 144 134)(font "Arial" ))
+		(text "almost_empty < 504" (rect 58 122 144 134)(font "Arial" ))
 		(line (pt 16 16)(pt 144 16)(line_width 1))
 		(line (pt 144 16)(pt 144 144)(line_width 1))
 		(line (pt 144 144)(pt 16 144)(line_width 1))

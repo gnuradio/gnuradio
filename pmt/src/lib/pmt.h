@@ -609,6 +609,11 @@ pmt_t pmt_list5(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4, pmt_t x5);
  */
 pmt_t pmt_list6(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4, pmt_t x5, pmt_t x6);
 
+/*!
+ * \brief Return \p list with \p item added to it.
+ */
+pmt_t pmt_list_add(pmt_t list, pmt_t item);
+
 
 /*
  * ------------------------------------------------------------------------

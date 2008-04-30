@@ -51,6 +51,13 @@ public:
   long d_ntx_chan;
   long d_nrx_chan;
 
+  pmt_t d_usrp_dict;
+
+  bool d_fpga_debug;
+  
+  long d_interp_tx;
+  long d_decim_rx;
+
   // Keep track of the request IDs
   struct rid_info {
     pmt_t owner;
@@ -114,6 +121,11 @@ private:
   bool check_valid(mb_port_sptr port, long channel, std::vector<struct channel_info> &chan_info, pmt_t signal_info);
   void parse_control_pkt(pmt_t invocation_handle, transport_pkt *pkt);
   long next_rid();
+  void initialize_registers();
+  void set_register(long reg, long val);
+  void read_register(long reg);
+  void check_register_initialization();
+  void reset_all_registers();
 };
 
 #endif /* INCLUDED_USRP_SERVER_H */

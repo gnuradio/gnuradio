@@ -31,8 +31,11 @@
 
 typedef usrp_inband_usb_packet transport_pkt;
 
-extern bool usrp_rx_stop;   // used to communicate a 'stop' to the RX stub
+extern bool usrp_rx_stop_stub;   // used to communicate a 'stop' to the RX stub
 extern std::queue<pmt_t> d_cs_queue;
+
+static pmt_t s_timeout = pmt_intern("%timeout");
+static pmt_t s_done = pmt_intern("done");
 
 /*!
  * \brief Implements the low level usb interface to the USRP
@@ -45,6 +48,10 @@ class usrp_rx_stub : public mb_mblock
   usrp_standard_rx* d_urx;
   
   long		d_samples_per_frame;
+  long    d_decim_rx;
+
+  mb_time d_t0;
+  double d_delta_t;
   
   // for generating sine wave output
   ui_nco<float,float>	d_nco;
@@ -61,8 +68,9 @@ class usrp_rx_stub : public mb_mblock
   void handle_message(mb_message_sptr msg);
 
  private:
-  void read_and_respond(pmt_t data);
+  void read_and_respond();
   void read_data();
+  void start_packet_timer();
  
 };
   

@@ -38,10 +38,13 @@ class pmt_pool {
   };
   
   omni_mutex	      d_mutex;
+  omni_condition      d_cond;
   
   size_t	      d_itemsize;
   size_t	      d_alignment;
   size_t	      d_allocation_size;
+  size_t	      d_max_items;
+  size_t	      d_n_items;
   item	       	     *d_freelist;
   std::vector<char *> d_allocations;
 
@@ -50,8 +53,11 @@ public:
    * \param itemsize size in bytes of the items to be allocated.
    * \param alignment alignment in bytes of all objects to be allocated (must be power-of-2).
    * \param allocation_size number of bytes to allocate at a time from the underlying allocator.
+   * \param max_items is the maximum number of items to allocate.  If this number is exceeded,
+   *	      the allocate blocks.  0 implies no limit.
    */
-  pmt_pool(size_t itemsize, size_t alignment = 16, size_t allocation_size = 4096);
+  pmt_pool(size_t itemsize, size_t alignment = 16,
+	   size_t allocation_size = 4096, size_t max_items = 0);
   ~pmt_pool();
 
   void *malloc();

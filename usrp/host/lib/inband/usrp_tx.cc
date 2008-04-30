@@ -66,6 +66,10 @@ usrp_tx::initial_transition()
   
 }
 
+/*!
+ * \brief Handles incoming signals to to the m-block, wihch should only ever be
+ * a single message: cmd-usrp-tx-write.
+ */
 void
 usrp_tx::handle_message(mb_message_sptr msg)
 {
@@ -82,6 +86,14 @@ usrp_tx::handle_message(mb_message_sptr msg)
   }
 }
 
+/*!
+ * \brief Performs the actual writing of data to the USB bus, called by
+ * handle_message() when a cmd-usrp-tx-write signal is received.
+ *
+ * The \p data parameter is a PMT list which contains three mandatory elements,
+ * in the following order: an invocation handle, a channel, and a uniform vector
+ * of memory which contains the packets to be written to the bus.
+ */
 void
 usrp_tx::write(pmt_t data)
 {
@@ -121,7 +133,7 @@ usrp_tx::write(pmt_t data)
   for(int i=0; i < n_packets; i++) {
     
     if(d_disk_write) {
-      if(pkts[i].chan() == 0x1f)
+      if(pkts[i].chan() == CONTROL_CHAN)
         d_cs_ofile.write((const char *)&pkts[i], transport_pkt::max_pkt_size());
       else
         d_ofile.write((const char *)&pkts[i], transport_pkt::max_pkt_size());

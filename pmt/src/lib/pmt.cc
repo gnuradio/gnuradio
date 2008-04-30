@@ -963,6 +963,12 @@ pmt_list6(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4, pmt_t x5, pmt_t x6)
 }
 
 pmt_t
+pmt_list_add(pmt_t list, pmt_t item)
+{
+  return pmt_reverse(pmt_cons(item, pmt_reverse(list)));
+}
+
+pmt_t
 pmt_caar(pmt_t pair)
 {
   return (pmt_car(pmt_car(pair)));
