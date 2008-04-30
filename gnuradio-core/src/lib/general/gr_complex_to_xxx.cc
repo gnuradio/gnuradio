@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -51,7 +51,7 @@ gr_complex_to_float::work (int noutput_items,
 {
   const gr_complex *in = (const gr_complex *) input_items[0];
   float *out0 = (float *) output_items[0];
-  float *out1 = (float *) output_items[1];
+  float* out1;
   int noi = noutput_items * d_vlen;
 
   switch (output_items.size ()){
@@ -62,6 +62,7 @@ gr_complex_to_float::work (int noutput_items,
     break;
 
   case 2:
+    out1 = (float *) output_items[1];
     for (int i = 0; i < noi; i++){
       out0[i] = in[i].real ();
       out1[i] = in[i].imag ();
