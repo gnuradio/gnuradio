@@ -30,6 +30,7 @@
 #include <assert.h>
 #include <stdexcept>
 #include <gr_count_bits.h>
+#include <string.h>
 
 
 static const int THRESHOLD = 3;

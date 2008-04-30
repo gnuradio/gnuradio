@@ -34,6 +34,7 @@
 #include <assert.h>
 #include <math.h>
 #include <ad9862.h>
+#include <string.h>
 
 using namespace ad9862;
 

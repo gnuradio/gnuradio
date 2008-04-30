@@ -24,6 +24,7 @@
 #endif
 
 #include <stdio.h>
+#include <string.h>
 #include <iostream>
 #include <usrp_inband_usb_packet.h>
 #include <mb_mblock.h>

@@ -23,6 +23,7 @@
 #include <qa_atsci_randomizer.h>
 
 #include <cppunit/TestAssert.h>
+#include <string.h>
 
 static unsigned int expected_initial_states[] = {
   0x018f,

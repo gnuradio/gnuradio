@@ -61,6 +61,7 @@ gr_enable_realtime_scheduling()
 #elif defined(HAVE_PTHREAD_SETSCHEDPARAM)
 
 #include <pthread.h>
+#include <stdio.h>
 
 gr_rt_status_t
 gr_enable_realtime_scheduling()

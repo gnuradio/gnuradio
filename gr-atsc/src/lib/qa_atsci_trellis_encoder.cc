@@ -30,6 +30,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #define	NELEM(x) (sizeof (x) / sizeof (x[0]))
 

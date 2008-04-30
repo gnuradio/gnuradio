@@ -28,6 +28,7 @@
 #include <gr_io_signature.h>
 #include <assert.h>
 #include <stdexcept>
+#include <string.h>
 
 //define ALIGN_ADVANCED_IMPLEMENTATION to have an alternative implementation of the align algoritm which exactly follows the align_interval spec.
 //It is more resource intensive, less tested and probably not needed

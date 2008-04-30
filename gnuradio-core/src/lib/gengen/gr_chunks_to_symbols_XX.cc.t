@@ -30,6 +30,7 @@
 #include <gr_io_signature.h>
 #include <assert.h>
 #include <iostream>
+#include <string.h>
 
 @SPTR_NAME@
 gr_make_@BASE_NAME@ (const std::vector<@O_TYPE@> &symbol_table, const int D)

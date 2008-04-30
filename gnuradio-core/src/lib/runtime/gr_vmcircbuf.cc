@@ -28,6 +28,7 @@
 #include <stdexcept>
 #include <gr_preferences.h>
 #include <stdio.h>
+#include <string.h>
 #include <gr_local_sighandler.h>
 
 // all the factories we know about

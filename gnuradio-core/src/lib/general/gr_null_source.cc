@@ -26,6 +26,7 @@
 
 #include <gr_null_source.h>
 #include <gr_io_signature.h>
+#include <string.h>
 
 gr_null_source::gr_null_source (size_t sizeof_stream_item)
   : gr_sync_block ("null_source",

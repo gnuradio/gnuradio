@@ -26,6 +26,7 @@
 
 #include <gr_delay.h>
 #include <gr_io_signature.h>
+#include <string.h>
 
 gr_delay_sptr
 gr_make_delay (size_t itemsize, int delay)

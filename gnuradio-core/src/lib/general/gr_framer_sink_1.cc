@@ -28,6 +28,7 @@
 #include <gr_io_signature.h>
 #include <cstdio>
 #include <stdexcept>
+#include <string.h>
 
 #define VERBOSE 0
 

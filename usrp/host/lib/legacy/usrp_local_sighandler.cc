@@ -32,6 +32,7 @@
 #include <usrp_local_sighandler.h>
 #include <stdexcept>
 #include <stdio.h>
+#include <string.h>
 
 usrp_local_sighandler::usrp_local_sighandler (int signum,
 					      void (*new_handler)(int))

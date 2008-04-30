@@ -30,6 +30,7 @@
 #include <atsci_single_viterbi.h>
 #include <qa_atsci_single_viterbi.h>
 #include <random.h>
+#include <string.h>
 
 
 static const int NTRIALS     =   50;

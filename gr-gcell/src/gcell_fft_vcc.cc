@@ -32,6 +32,7 @@
 #include <math.h>
 #include <assert.h>
 #include <stdexcept>
+#include <string.h>
 
 
 #define MIN_FFT_SIZE	  32

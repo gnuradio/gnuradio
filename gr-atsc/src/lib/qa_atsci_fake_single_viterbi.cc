@@ -29,6 +29,7 @@
 #include <atsci_fake_single_viterbi.h>
 #include <qa_atsci_fake_single_viterbi.h>
 #include <random.h>
+#include <string.h>
 
 
 static const int NTRIALS     =   50;

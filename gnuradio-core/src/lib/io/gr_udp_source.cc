@@ -27,6 +27,8 @@
 #include <gr_io_signature.h>
 #include <stdexcept>
 #include <errno.h>
+#include <stdio.h>
+#include <string.h>
 #if defined(HAVE_SOCKET)
 #include <netdb.h>
 typedef void* optval_t;

@@ -41,7 +41,6 @@
 #include <gr_pagesize.h>
 #include <gr_tmp_path.h>
 
-
 gr_vmcircbuf_mmap_tmpfile::gr_vmcircbuf_mmap_tmpfile (int size)
   : gr_vmcircbuf (size)
 {

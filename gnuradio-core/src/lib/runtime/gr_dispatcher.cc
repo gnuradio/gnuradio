@@ -27,6 +27,7 @@
 #include <gr_dispatcher.h>
 #include <math.h>
 #include <errno.h>
+#include <stdio.h>
 
 #ifdef HAVE_SELECT
 #  ifdef HAVE_SYS_SELECT_H

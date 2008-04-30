@@ -23,6 +23,7 @@
 #include <atsci_trellis_encoder.h>
 #include <assert.h>
 #include <stdio.h>
+#include <string.h>
 
 static const int DIBITS_PER_BYTE = 4;
 

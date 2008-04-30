@@ -47,6 +47,7 @@ typedef	gr_complex	acc_type;
 #include <cppunit/TestAssert.h>
 #include <random.h>
 #include <malloc16.h>
+#include <string.h>
 
 using std::vector;
 

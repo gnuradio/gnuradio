@@ -25,6 +25,7 @@
 #endif
 #include <gr_skiphead.h>
 #include <gr_io_signature.h>
+#include <string.h>
 
 gr_skiphead::gr_skiphead (size_t itemsize, size_t nitems_to_skip)
   : gr_block ("skiphead",

@@ -28,6 +28,7 @@
 
 #include <@NAME@.h>
 #include <gr_io_signature.h>
+#include <string.h>
 
 @SPTR_NAME@
 gr_make_@BASE_NAME@ (float threshold_factor_rise,

@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <errno.h>
+#include <string.h>
 
 #include <malloc.h>
 

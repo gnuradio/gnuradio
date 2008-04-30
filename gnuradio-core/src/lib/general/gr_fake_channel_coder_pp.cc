@@ -28,6 +28,7 @@
 #include <gr_io_signature.h>
 #include <string.h>
 #include <stdexcept>
+#include <string.h>
 
 static const int PAD_VAL = 0xAA;
 

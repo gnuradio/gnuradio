@@ -33,6 +33,7 @@
 #include <fcntl.h>
 #include <stdexcept>
 #include <gr_count_bits.h>
+#include <string.h>
 
 #define VERBOSE 0
 

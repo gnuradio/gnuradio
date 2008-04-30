@@ -27,6 +27,7 @@
 #include <gr_local_sighandler.h>
 #include <stdexcept>
 #include <stdio.h>
+#include <string.h>
 
 
 gr_local_sighandler::gr_local_sighandler (int signum,

@@ -27,6 +27,7 @@
 #include <trellis_permutation.h>
 #include <gr_io_signature.h>
 #include <iostream>
+#include <string.h>
 
 trellis_permutation_sptr 
 trellis_make_permutation (int K, const std::vector<int> &TABLE, int SYMS_PER_BLOCK, size_t NBYTES_INOUT)

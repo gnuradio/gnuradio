@@ -7,6 +7,7 @@
 
 #include "malloc16.h"
 #include <string.h>
+#include <strings.h>
 
 void *malloc16Align(int size){
   void *p;

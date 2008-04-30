@@ -31,6 +31,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdexcept>
+#include <stdio.h>
 
 // win32 (mingw/msvc) specific
 #ifdef HAVE_IO_H

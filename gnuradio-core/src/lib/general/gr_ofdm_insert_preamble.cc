@@ -27,6 +27,7 @@
 #include <gr_io_signature.h>
 #include <stdexcept>
 #include <iostream>
+#include <string.h>
 
 gr_ofdm_insert_preamble_sptr
 gr_make_ofdm_insert_preamble(int fft_length,

@@ -31,16 +31,16 @@
 
 template<unsigned int k> static inline int gr_log2_const() { assert(0); return 0; }
 
-template<> static inline int gr_log2_const<1>()   { return 0; }
-template<> static inline int gr_log2_const<2>()   { return 1; }
-template<> static inline int gr_log2_const<4>()   { return 2; }
-template<> static inline int gr_log2_const<8>()   { return 3; }
-template<> static inline int gr_log2_const<16>()  { return 4; }
-template<> static inline int gr_log2_const<32>()  { return 5; }
-template<> static inline int gr_log2_const<64>()  { return 6; }
-template<> static inline int gr_log2_const<128>() { return 7; }
-template<> static inline int gr_log2_const<256>() { return 8; }
-template<> static inline int gr_log2_const<512>() { return 9; }
-template<> static inline int gr_log2_const<1024>(){ return 10; }
+template<> inline int gr_log2_const<1>()   { return 0; }
+template<> inline int gr_log2_const<2>()   { return 1; }
+template<> inline int gr_log2_const<4>()   { return 2; }
+template<> inline int gr_log2_const<8>()   { return 3; }
+template<> inline int gr_log2_const<16>()  { return 4; }
+template<> inline int gr_log2_const<32>()  { return 5; }
+template<> inline int gr_log2_const<64>()  { return 6; }
+template<> inline int gr_log2_const<128>() { return 7; }
+template<> inline int gr_log2_const<256>() { return 8; }
+template<> inline int gr_log2_const<512>() { return 9; }
+template<> inline int gr_log2_const<1024>(){ return 10; }
 
 #endif /* INCLUDED_GR_LOG2_CONST_H */

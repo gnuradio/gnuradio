@@ -33,6 +33,7 @@
 #include <stdexcept>
 #include <gri_portaudio.h>
 #include <omnithread.h>
+#include <string.h>
 
 #define	LOGGING 0		// define to 0 or 1
 

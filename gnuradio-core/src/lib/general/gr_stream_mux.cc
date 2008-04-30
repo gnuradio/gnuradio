@@ -26,6 +26,7 @@
 
 #include <gr_stream_mux.h>
 #include <gr_io_signature.h>
+#include <string.h>
 
 #define VERBOSE 0
 

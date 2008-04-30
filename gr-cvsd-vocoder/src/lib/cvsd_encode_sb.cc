@@ -31,6 +31,7 @@
 
 #include <cvsd_encode_sb.h>
 #include <gr_io_signature.h>
+#include <limits.h>
 
 /*
  * Create a new instance of cvsd_encode_sb and return

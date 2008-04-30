@@ -26,6 +26,7 @@
 
 #include <gr_streams_to_vector.h>
 #include <gr_io_signature.h>
+#include <string.h>
 
 gr_streams_to_vector_sptr
 gr_make_streams_to_vector (size_t item_size, size_t nstreams)

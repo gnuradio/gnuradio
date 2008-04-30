@@ -27,6 +27,7 @@
 #include <atsc_bit_timing_loop.h>
 #include <gr_io_signature.h>
 #include <atsc_consts.h>
+#include <string.h>
 
 // Input rate changed from 20MHz to 19.2 to support usrp at 3 * 6.4MHz
 float input_rate = 19.2e6;

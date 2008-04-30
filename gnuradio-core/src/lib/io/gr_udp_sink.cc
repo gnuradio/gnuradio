@@ -28,6 +28,7 @@
 #include <stdexcept>
 #if defined(HAVE_SOCKET)
 #include <netdb.h>
+#include <stdio.h>
 typedef void* optval_t;
 #else
 #define SHUT_RDWR 2

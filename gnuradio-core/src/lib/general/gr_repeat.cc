@@ -26,6 +26,7 @@
 
 #include <gr_repeat.h>
 #include <gr_io_signature.h>
+#include <string.h>
 
 gr_repeat_sptr 
 gr_make_repeat(size_t itemsize, int interp)

@@ -33,6 +33,7 @@
 #include <gr_firdes.h>
 
 #include <iostream>
+#include <string.h>
 
 gr_fft_filter_fff_sptr gr_make_fft_filter_fff (int decimation, const std::vector<float> &taps)
 {

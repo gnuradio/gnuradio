@@ -28,6 +28,7 @@
 #include <usrp_bytesex.h>
 #include <iostream>
 #include <stdio.h>
+#include <string.h>
 
 bool usrp_inband_usb_packet::align32()
 {

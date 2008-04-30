@@ -32,6 +32,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdexcept>
+#include <stdio.h>
 
 
 gr_file_descriptor_sink::gr_file_descriptor_sink (size_t itemsize, int fd)

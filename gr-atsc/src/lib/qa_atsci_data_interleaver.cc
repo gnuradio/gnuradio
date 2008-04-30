@@ -22,6 +22,7 @@
 
 #include <cppunit/TestAssert.h>
 #include <qa_atsci_data_interleaver.h>
+#include <string.h>
 
 
 /*!

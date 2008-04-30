@@ -29,6 +29,7 @@
 #include <gri_fft.h>
 #include <math.h>
 #include <stdexcept>
+#include <string.h>
 
 
 // FIXME after this is working, change to use native real to complex fft.

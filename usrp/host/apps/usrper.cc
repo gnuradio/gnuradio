@@ -30,6 +30,7 @@
 
 #include "usrp_prims.h"
 #include "usrp_spi_defs.h"
+#include <string.h>
 
 char *prog_name;
 

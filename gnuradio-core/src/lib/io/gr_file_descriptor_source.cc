@@ -32,6 +32,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdexcept>
+#include <stdio.h>
+#include <string.h>
 
 
 gr_file_descriptor_source::gr_file_descriptor_source (size_t itemsize,

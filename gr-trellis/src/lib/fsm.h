@@ -24,6 +24,7 @@
 #define INCLUDED_TRELLIS_FSM_H
 
 #include <vector>
+#include <iosfwd>
 
 /*!
  * \brief  FSM class

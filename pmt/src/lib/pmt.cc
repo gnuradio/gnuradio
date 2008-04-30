@@ -28,6 +28,7 @@
 #include "pmt_int.h"
 #include <stdio.h>
 #include <pmt_pool.h>
+#include <string.h>
 
 static const int CACHE_LINE_SIZE = 64;		// good guess
 

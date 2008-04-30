@@ -28,6 +28,7 @@
 #include <gr_io_signature.h>
 #include <stdexcept>
 #include <iostream>
+#include <string.h>
 
 gr_test_sptr gr_make_test (const std::string &name,
         int min_inputs, int max_inputs, unsigned int sizeof_input_item,

@@ -38,6 +38,7 @@
 #include <gr_firdes.h>
 
 #include <iostream>
+#include <string.h>
 
 gr_fft_filter_ccc_sptr gr_make_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps)
 {

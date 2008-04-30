@@ -26,6 +26,7 @@
 
 #include <gr_peak_detector2_fb.h>
 #include <gr_io_signature.h>
+#include <string.h>
 
 gr_peak_detector2_fb_sptr
 gr_make_peak_detector2_fb (float threshold_factor_rise,

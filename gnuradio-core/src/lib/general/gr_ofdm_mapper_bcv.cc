@@ -28,6 +28,7 @@
 #include <gr_ofdm_mapper_bcv.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
+#include <string.h>
 
 gr_ofdm_mapper_bcv_sptr
 gr_make_ofdm_mapper_bcv (const std::vector<gr_complex> &constellation, unsigned int msgq_limit, 

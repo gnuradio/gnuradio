@@ -25,6 +25,7 @@
 #include <gc_aligned_alloc.h>
 #include <stdlib.h>
 #include <stdexcept>
+#include <string.h>
 
 // custom deleter of anything that can be freed with "free"
 class free_deleter {

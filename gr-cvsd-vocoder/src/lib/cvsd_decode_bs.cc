@@ -31,6 +31,7 @@
 
 #include <cvsd_decode_bs.h>
 #include <gr_io_signature.h>
+#include <limits.h>
 
 /*
  * Create a new instance of cvsd_decode_bs and return

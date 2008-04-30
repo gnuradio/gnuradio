@@ -26,6 +26,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <cmath>
+#include <stdlib.h>
 #include "base.h"
 #include "fsm.h"
 

@@ -22,6 +22,7 @@
 
 #include <atsci_reed_solomon.h>
 #include <assert.h>
+#include <string.h>
 
 extern "C" {
 #include "rs.h"

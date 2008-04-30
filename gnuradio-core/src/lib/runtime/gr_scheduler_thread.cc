@@ -26,6 +26,7 @@
 
 #include <gr_scheduler_thread.h>
 #include <iostream>
+#include <stdio.h>
 
 #ifdef HAVE_SIGNAL_H
 #include <signal.h>

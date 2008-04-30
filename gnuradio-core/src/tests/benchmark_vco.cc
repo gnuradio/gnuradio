@@ -30,6 +30,7 @@
 #include <unistd.h>
 #include <gr_vco.h>
 #include <gr_fxpt_vco.h>
+#include <string.h>
 
 #define ITERATIONS	5000000
 #define BLOCK_SIZE	(10 * 1000)	// fits in cache

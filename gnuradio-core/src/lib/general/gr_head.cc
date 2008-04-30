@@ -25,6 +25,7 @@
 #endif
 #include <gr_head.h>
 #include <gr_io_signature.h>
+#include <string.h>
 
 gr_head::gr_head (size_t sizeof_stream_item, int nitems)
   : gr_sync_block ("head",

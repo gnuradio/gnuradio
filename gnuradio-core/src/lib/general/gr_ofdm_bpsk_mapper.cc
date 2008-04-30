@@ -27,6 +27,7 @@
 #include <gr_ofdm_bpsk_mapper.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
+#include <string.h>
 
 gr_ofdm_bpsk_mapper_sptr
 gr_make_ofdm_bpsk_mapper (unsigned int msgq_limit, 

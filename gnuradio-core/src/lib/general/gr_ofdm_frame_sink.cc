@@ -32,6 +32,7 @@
 #include <cstdio>
 #include <stdexcept>
 #include <iostream>
+#include <string.h>
 
 #define VERBOSE 0
 

@@ -39,6 +39,8 @@
 #include <stdlib.h>
 
 #include <algorithm>
+#include <stdio.h>
+#include <string.h>
 
 static const int HEADER_SIZE = 4096;
 static const int HEADER_MAGIC = 0xEB021026;

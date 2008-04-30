@@ -29,6 +29,7 @@
 #include <stdarg.h>
 #include <stdexcept>
 #include <boost/weak_ptr.hpp>
+#include <string.h>
 
 
 /*

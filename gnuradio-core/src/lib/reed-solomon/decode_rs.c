@@ -8,6 +8,7 @@
 #endif
 
 #include <string.h>
+#include <strings.h>
 
 #define NULL ((void *)0)
 #define	min(a,b)	((a) < (b) ? (a) : (b))

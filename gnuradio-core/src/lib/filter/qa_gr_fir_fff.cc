@@ -32,6 +32,7 @@
 #include <cmath>
 #include <cppunit/TestAssert.h>
 #include <random.h>
+#include <string.h>
 
 using std::vector;
 

@@ -62,6 +62,7 @@ static char *default_firmware_filename = "std.ihx";
 static char *default_fpga_filename     = "std_2rxhb_2tx.rbf";
 
 #include "std_paths.h"
+#include <stdio.h>
 
 static char *
 find_file (const char *filename, int hw_rev)

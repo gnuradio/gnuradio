@@ -26,6 +26,7 @@
 
 #include <interleaver_fifo.h>
 #include <string.h>
+#include <strings.h>
 
 /*!
  * \brief template class for interleaver fifo

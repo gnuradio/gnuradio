@@ -26,6 +26,7 @@
 #include <qa_inband_packet_prims.h>
 #include <cppunit/TestAssert.h>
 #include <stdio.h>
+#include <string.h>
 #include <usrp_inband_usb_packet.h>             // will change on gigabit crossover
 
 typedef usrp_inband_usb_packet transport_pkt;

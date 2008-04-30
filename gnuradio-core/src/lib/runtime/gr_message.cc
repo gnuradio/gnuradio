@@ -25,6 +25,7 @@
 #endif
 #include <gr_message.h>
 #include <assert.h>
+#include <string.h>
 
 static long s_ncurrently_allocated = 0;
 

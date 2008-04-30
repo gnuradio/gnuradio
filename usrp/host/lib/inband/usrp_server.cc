@@ -28,6 +28,7 @@
 #include <mb_class_registry.h>
 #include <vector>
 #include <usrp_usb_interface.h>
+#include <string.h>
 
 #include <symbols_usrp_server_cs.h>
 #include <symbols_usrp_channel.h>
@@ -35,6 +36,7 @@
 #include <symbols_usrp_rx.h>
 #include <symbols_usrp_low_level_cs.h>
 #include <symbols_usrp_interface_cs.h>
+
 static pmt_t s_shutdown = pmt_intern("%shutdown");
 
 typedef usrp_inband_usb_packet transport_pkt;   // makes conversion to gigabit easy

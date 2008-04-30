@@ -26,6 +26,7 @@
 
 #include <gr_bin_statistics_f.h>
 #include <gr_io_signature.h>
+#include <string.h>
 
 gr_bin_statistics_f_sptr
 gr_make_bin_statistics_f(unsigned int vlen,

@@ -28,6 +28,7 @@
 #include <gr_io_signature.h>
 #include <gri_fft.h>
 #include <math.h>
+#include <string.h>
 
 gr_fft_vcc_sptr
 gr_make_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &window, bool shift)

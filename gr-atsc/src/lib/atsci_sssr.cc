@@ -27,6 +27,7 @@
 #include <assert.h>
 #include <atsci_diag_output.h>
 #include <gr_math.h>
+#include <stdio.h>
 
 /*
  * ----------------------------------------------------------------

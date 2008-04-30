@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <atsci_reed_solomon.h>
 #include <qa_atsci_reed_solomon.h>
+#include <string.h>
 
 
 static const int NROOTS      =   20;

@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>	// random, posix_memalign
 #include <algorithm>
+#include <string.h>
 
 typedef boost::shared_ptr<void> void_sptr;
 

@@ -28,6 +28,7 @@
 #include <cppunit/TestAssert.h>
 #include <assert.h>
 #include <iostream>
+#include <string.h>
 
 using std::cerr;
 using std::endl;

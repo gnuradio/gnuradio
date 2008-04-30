@@ -32,6 +32,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdexcept>
+#include <string.h>
 
 
 // public constructor that returns a shared_ptr

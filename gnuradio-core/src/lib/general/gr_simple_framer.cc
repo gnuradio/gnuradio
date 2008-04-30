@@ -29,6 +29,7 @@
 #include <gr_io_signature.h>
 #include <assert.h>
 #include <stdexcept>
+#include <string.h>
 
 
 gr_simple_framer_sptr

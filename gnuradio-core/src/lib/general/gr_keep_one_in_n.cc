@@ -26,6 +26,7 @@
 
 #include <gr_keep_one_in_n.h>
 #include <gr_io_signature.h>
+#include <string.h>
 
 gr_keep_one_in_n_sptr
 gr_make_keep_one_in_n (size_t item_size, int n)

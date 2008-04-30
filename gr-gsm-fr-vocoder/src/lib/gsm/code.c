@@ -19,6 +19,7 @@
 #include	"private.h"
 #include	"gsm.h"
 #include	"proto.h"
+#include <string.h>
 
 /* 
  *  4.2 FIXED POINT IMPLEMENTATION OF THE RPE-LTP CODER 

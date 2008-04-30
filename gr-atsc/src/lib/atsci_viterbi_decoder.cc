@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <cmath>
 #include "atsci_viterbi_mux.cc"
+#include <string.h>
 
 
 /* How many separate Trellis encoders / Viterbi decoders run in parallel */
