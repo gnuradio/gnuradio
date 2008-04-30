@@ -65,7 +65,9 @@ libgr_gcell_la_LDFLAGS = $(NO_UNDEFINED)
 ourlib_LTLIBRARIES = _gcell.la
 
 LOCAL_IFILES = \
-	$(top_srcdir)/gr-gcell/src/gcell.i
+	$(srcdir)/gc_job_manager.i \
+	$(srcdir)/gcell.i \
+	$(srcdir)/gcell_fft_vcc.i
 
 NON_LOCAL_IFILES = \
 	$(GNURADIO_I)
@@ -114,7 +116,7 @@ gcell.cc : gcell.i $(GNURADIO_I)
 
 
 noinst_PYTHON =  \
-	qa_gcell.py
+	qa_fft.py
 
 # ----------------------------------------------------------------
 
