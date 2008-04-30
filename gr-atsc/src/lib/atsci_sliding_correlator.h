@@ -19,11 +19,10 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-#include <string>
-#include <string.h>
-
 #ifndef _ATSC_SLIDING_CORRELATOR_H_
 #define _ATSC_SLIDING_CORRELATOR_H_
+
+#include <string.h>
 
 extern const unsigned char atsc_pn511[511];
 extern const unsigned char atsc_pn63[63];
