@@ -23,9 +23,6 @@
 #include <gc_declare_proc.h>
 #include <string.h>
 
-#define _UNUSED __attribute__((unused))
-
-
 static void
 benchmark_udelay(const gc_job_direct_args_t *input,
 		 gc_job_direct_args_t *output _UNUSED,

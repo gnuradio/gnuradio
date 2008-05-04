@@ -58,15 +58,19 @@ runtime_spu_noinst_headers = \
 general_srcdir = $(srcdir)/../general/spu
 
 general_spu_sources = \
-	$(general_srcdir)/fft_1d_r2.c
+	$(general_srcdir)/fft_1d_r2.c \
+	$(general_srcdir)/memset.S
 
 general_spu_headers = \
 	$(general_srcdir)/libfft.h
 
 general_spu_noinst_headers = \
 	$(general_srcdir)/fft_1d.h \
-	$(general_srcdir)/fft_1d_r2.h 
+	$(general_srcdir)/fft_1d_r2.h
 
+# The QA code for (usually) non-PPE visible support routines in lib/general/spu
+general_spu_qa_sources = \
+	$(general_srcdir)/qa_memset.c
 
 # ----------------------------------------------------------------
 # files in the lib/wrapper/spu directory
@@ -99,16 +103,27 @@ noinst_HEADERS = \
 	$(wrapper_spu_noinst_headers)
 
 # ----------------------------------------------------------------
-# SPU executables 
+# build some SPU executables
 
 noinst_PROGRAMS = \
 	gcell_all \
-	gcell_runtime_qa
+	gcell_runtime_qa \
+	gcell_general_qa
 
-# all known gcell procs (at least until they get too big)
+#
+# All known non-QA gcell procs (at least until they get too big).
+#
 gcell_all_SOURCES = $(wrapper_spu_sources)
 gcell_all_LDADD = libgcell_spu.a
 
-# just the QA code required for testing the runtime
+#
+# The QA code required for testing the runtime.
+#
 gcell_runtime_qa_SOURCES = $(runtime_srcdir)/gcell_runtime_qa.c
 gcell_runtime_qa_LDADD = libgcell_spu.a
+
+#
+# The QA code required for testing the SPE support routines in lib/general/spu
+#
+gcell_general_qa_SOURCES = $(general_spu_qa_sources)
+gcell_general_qa_LDADD = libgcell_spu.a

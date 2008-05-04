@@ -20,12 +20,13 @@
  */
 
 /*
- * This class gathers together all the test cases for the lib
+ * This class gathers together all the test cases for the lib/wrapper
  * directory into a single test suite.  As you create new test cases,
  * add them here.
  */
 
 #include <qa_gcell_wrapper.h>
+#include <qa_gcell_general.h>
 #include <qa_gcp_fft_1d_r2.h>
 
 CppUnit::TestSuite *
@@ -33,6 +34,7 @@ qa_gcell_wrapper::suite()
 {
   CppUnit::TestSuite	*s = new CppUnit::TestSuite("wrapper");
 
+  s->addTest(qa_gcell_general::suite());
   s->addTest(qa_gcp_fft_1d_r2::suite());
 
   return s;

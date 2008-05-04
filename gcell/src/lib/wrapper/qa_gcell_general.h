@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,27 +19,22 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef INCLUDED_COMPILER_H
-#define INCLUDED_COMPILER_H
+#ifndef INCLUDED_QA_GCELL_GENERAL_H
+#define INCLUDED_QA_GCELL_GENERAL_H
 
-/*!
- * \brief Compiler specific hackery.  These are for GCC.
- */
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
 
-#define _AL8   __attribute__((aligned (8)))
-#define _AL16  __attribute__((aligned (16)))
-#define _AL128 __attribute__((aligned (128)))
+class qa_gcell_general : public CppUnit::TestCase {
 
-#define _UNUSED __attribute__((unused))
+  CPPUNIT_TEST_SUITE(qa_gcell_general);
+  CPPUNIT_TEST(test_memset);
+  CPPUNIT_TEST_SUITE_END();
 
-#ifndef likely
-#define likely(x)       __builtin_expect(!!(x), 1)
-#define unlikely(x)     __builtin_expect(!!(x), 0)
-#endif
+ private:
+  void test_memset();
 
-#ifndef offsetof
-#define offsetof(TYPE, MEMBER)  __builtin_offsetof (TYPE, MEMBER)
-#endif
+  bool generic_test_body(const std::string &proc_name);
+};
 
-
-#endif /* INCLUDED_COMPILER_H */
+#endif /* INCLUDED_QA_GCELL_GENERAL_H */

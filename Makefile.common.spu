@@ -27,7 +27,8 @@ include $(top_srcdir)/Makefile.common
 
 AR=spu-ar
 RANLIB=spu-ranlib
-CC=spu-cc
+CC=spu-gcc
+CCAS = spu-gcc
 LD=spu-ld
 
 C_WARNINGS = \

@@ -24,10 +24,6 @@
 #include <string.h>
 
 
-#define _UNUSED __attribute__((unused))
-
-// FIXME move these out of here; only for QA usage
-
 static void
 qa_nop(const gc_job_direct_args_t *input _UNUSED,
        gc_job_direct_args_t *output _UNUSED,
