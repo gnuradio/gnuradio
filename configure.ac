@@ -152,6 +152,7 @@ AC_CHECK_LIB(m, sinf, [AC_DEFINE([HAVE_SINF],[1],[Define to 1 if your system has
 AC_CHECK_LIB(m, cosf, [AC_DEFINE([HAVE_COSF],[1],[Define to 1 if your system has `cosf'.])])
 AC_CHECK_LIB(m, trunc, [AC_DEFINE([HAVE_TRUNC],[1],[Define to 1 if your system has `trunc'.])])
 AC_CHECK_LIB(m, exp10, [AC_DEFINE([HAVE_EXP10],[1],[Define to 1 if your system has 'exp10'.])])
+AC_CHECK_LIB(m, log2, [AC_DEFINE([HAVE_LOG2],[1],[Define to 1 if your system has 'log2'.])])
 #AC_FUNC_MKTIME
 
 AH_BOTTOM([

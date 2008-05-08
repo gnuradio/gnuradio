@@ -30,6 +30,10 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 /* Symbols are offset-binary, with 128 corresponding to an erased (no
  * information) symbol
  */
@@ -40,6 +44,12 @@
 
 /* Normal function integrated from -Inf to x. Range: 0-1 */
 #define	normal(x)	(0.5 + 0.5*erf((x)/M_SQRT2))
+
+/* Logarithm base 2 */ 
+double log2(double);		/* declaration seems to be missing from some math.h's */
+#if !defined(HAVE_LOG2)
+#define log2(x) (log(x)*M_LOG2E)
+#endif
 
 /* Generate log-likelihood metrics for 8-bit soft quantized channel
  * assuming AWGN and BPSK
