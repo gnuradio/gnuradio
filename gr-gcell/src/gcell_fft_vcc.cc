@@ -45,7 +45,7 @@ is_power_of_2(int x)
 }
 
 static int 
-log2(int x)	// x is an exact power of 2
+int_log2(int x)	// x is an exact power of 2
 {
   for (int i = 0; i < 32; i++)
     if (x == (1 << i))
@@ -88,7 +88,7 @@ gcell_fft_vcc::gcell_fft_vcc (int fft_size, bool forward,
     throw std::invalid_argument("fft_size too big to use window");
   }
 
-  d_log2_fft_size = log2(fft_size);
+  d_log2_fft_size = int_log2(fft_size);
   d_mgr = gc_job_manager::singleton();		// grab the singleton job manager
   d_twiddle_boost = gc_aligned_alloc_sptr(sizeof(std::complex<float>) * fft_size/4, 128);
   d_twiddle = (std::complex<float>*) d_twiddle_boost.get();
