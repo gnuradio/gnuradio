@@ -57,8 +57,9 @@ class qa_wavefile(gr_unittest.TestCase):
 	in_f  = file(infile,  'rb')
 	out_f = file(outfile, 'rb')
 
-	in_data  = in_f.read(getsize(infile))
-	out_data = out_f.read(getsize(outfile))
+	in_data  = in_f.read()
+	out_data = out_f.read()
+        out_f.close()
 	os.remove(outfile)
 	
 	self.assertEqual(in_data, out_data)
