@@ -41,9 +41,6 @@
 /* Normal function integrated from -Inf to x. Range: 0-1 */
 #define	normal(x)	(0.5 + 0.5*erf((x)/M_SQRT2))
 
-/* Logarithm base 2 */
-#define	log2(x)	(log(x)*M_LOG2E)
-
 /* Generate log-likelihood metrics for 8-bit soft quantized channel
  * assuming AWGN and BPSK
  */
