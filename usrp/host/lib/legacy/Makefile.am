@@ -24,7 +24,7 @@ common_INCLUDES = $(USRP_INCLUDES)
 
 lib_LTLIBRARIES = libusrp.la
 
-libusrp_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
+libusrp_la_common_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
 
 libusrp_la_common_LIBADD = 		\
 	$(USB_LIBS) 			\
@@ -34,9 +34,11 @@ libusrp_la_common_LIBADD = 		\
 if FUSB_TECH_darwin
 AM_CPPFLAGS = $(common_INCLUDES) $(OMNITHREAD_INCLUDES) $(WITH_INCLUDES)
 libusrp_la_LIBADD = $(libusrp_la_common_LIBADD) $(OMNITHREAD_LA)
+libusrp_la_LDFLAGS = $(libusrp_la_common_LDFLAGS) -framework CoreFoundation
 else
 AM_CPPFLAGS = $(common_INCLUDES) $(WITH_INCLUDES)
 libusrp_la_LIBADD = $(libusrp_la_common_LIBADD)
+libusrp_la_LDFLAGS = $(libusrp_la_common_LDFLAGS)
 endif
 
 EXTRA_DIST = 				\
