@@ -7,10 +7,12 @@ station frequency from the fcc video database, and decimation of 10.
 2) Capture data - adjust gain (-g) frequency (-f) and which side
 the tvrx is on to fit your local setup:
 
-usrp_rx_cfile.py -R B -d 10 -g 65 -f 503e6 atsc_data_6-4m_complex 
+usrp_rx_cfile.py -s -R B -d 10 -g 65 -f 503e6 atsc_data_6-4m_complex 
 
 You probably still need fast disks to take the data, like a raid-0 set of
-striped sata drives. Make sure there are no or very few Ou overruns.
+striped sata drives. Make sure there are no or very few Ou overruns. Saving
+the raw usrp data in 'short' form halves the disk space/bus bandwidth that
+the usual complex form uses.
 
 3) Make pipes:
 
@@ -22,7 +24,7 @@ mkfifo /tmp/atsc_pipe_5
 
 4) In seperate windows run processes:
 
-./interp.py <input rf data at 6.4Msps>
+./interp_short.py <input rf data at 6.4Msps>
 ./xlate.py
 ./fpll.py
 ./btl-fsd.py
