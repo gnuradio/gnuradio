@@ -44,25 +44,16 @@ def graph (args):
 	sys.stderr.write('usage: interp.py input_file\n')
 	sys.exit (1)
 
-    sampling_freq = 6400000
-
     tb = gr.top_block ()
 
     src0 = gr.file_source (gr.sizeof_gr_complex,infile)
-    src1 = gr.sig_source_c (sampling_freq, gr.GR_CONST_WAVE, 1, 0)
-    src2 = gr.sig_source_c (sampling_freq, gr.GR_CONST_WAVE, 1, 0)
-
-    interlv = gr.interleave(gr.sizeof_gr_complex)
 
     lp_coeffs = gr.firdes.low_pass ( 3, 19.2e6, 3.2e6, .5e6, gr.firdes.WIN_HAMMING )
-    lp = gr.fir_filter_ccf ( 1, lp_coeffs )
+    lp = gr.interp_fir_filter_ccf ( 1, lp_coeffs )
 
     file = gr.file_sink(gr.sizeof_gr_complex,"/tmp/atsc_pipe_1")
 
-    tb.connect( src0, (interlv, 0) )
-    tb.connect( src1, (interlv, 1) )
-    tb.connect( src2, (interlv, 2) )
-    tb.connect( interlv, lp, file )
+    tb.connect( src0, lp, file )
 
     tb.start()
     raw_input ('Head End: Press Enter to stop')

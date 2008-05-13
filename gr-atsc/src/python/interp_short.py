@@ -27,7 +27,7 @@
 #                   -f <center of tv signal channel freq>
 #                   -g <appropriate gain for best signal / noise>
 #                   -s output shorts
-@
+#
 # All this module does is multiply the sample rate by 3, from 6.4e6 to
 # 19.2e6 complex samples / sec, then lowpass filter with a cutoff of 3.2MHz
 # and a transition band width of .5MHz.  Center of the tv channels is
@@ -45,8 +45,6 @@ def graph (args):
 	sys.stderr.write('usage: interp.py input_file\n')
 	sys.exit (1)
 
-    sampling_freq = 6400000
-
     tb = tb.top_block ()
 
     srcf = gr.file_source (gr.sizeof_short,infile)
@@ -55,13 +53,9 @@ def graph (args):
     s2f2 = gr.short_to_float()
     src0 = gr.float_to_complex()
 
-    src1 = gr.sig_source_c (sampling_freq, gr.GR_CONST_WAVE, 1, 0)
-    src2 = gr.sig_source_c (sampling_freq, gr.GR_CONST_WAVE, 1, 0)
-
-    interlv = gr.interleave(gr.sizeof_gr_complex)
 
     lp_coeffs = gr.firdes.low_pass ( 3, 19.2e6, 3.2e6, .5e6, gr.firdes.WIN_HAMMING )
-    lp = gr.fir_filter_ccf ( 1, lp_coeffs )
+    lp = gr.interp_fir_filter_ccf ( 3, lp_coeffs )
 
     file = gr.file_sink(gr.sizeof_gr_complex,"/tmp/atsc_pipe_1")
 
@@ -70,9 +64,7 @@ def graph (args):
     tb.connect( (s2ss, 1), s2f2)
     tb.connect( s2f1, (src0,0) )
     tb.connect( s2f2, (src0,1) )
-    tb.connect( src0, (interlv, 0) )
-    tb.connect( src1, (interlv, 1) )
-    tb.connect( src2, (interlv, 2) )
+    tb.connect( src0, lp, file)
     tb.connect( interlv, lp, file )
 
     tb.start()
