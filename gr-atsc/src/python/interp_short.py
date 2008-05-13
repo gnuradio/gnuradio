@@ -47,7 +47,7 @@ def graph (args):
 
     sampling_freq = 6400000
 
-    fg = gr.flow_graph ()
+    tb = tb.top_block ()
 
     srcf = gr.file_source (gr.sizeof_short,infile)
     s2ss = gr.stream_to_streams(gr.sizeof_short,2)
@@ -65,19 +65,19 @@ def graph (args):
 
     file = gr.file_sink(gr.sizeof_gr_complex,"/tmp/atsc_pipe_1")
 
-    fg.connect( srcf, s2ss )
-    fg.connect( (s2ss, 0), s2f1)
-    fg.connect( (s2ss, 1), s2f2)
-    fg.connect( s2f1, (src0,0) )
-    fg.connect( s2f2, (src0,1) )
-    fg.connect( src0, (interlv, 0) )
-    fg.connect( src1, (interlv, 1) )
-    fg.connect( src2, (interlv, 2) )
-    fg.connect( interlv, lp, file )
+    tb.connect( srcf, s2ss )
+    tb.connect( (s2ss, 0), s2f1)
+    tb.connect( (s2ss, 1), s2f2)
+    tb.connect( s2f1, (src0,0) )
+    tb.connect( s2f2, (src0,1) )
+    tb.connect( src0, (interlv, 0) )
+    tb.connect( src1, (interlv, 1) )
+    tb.connect( src2, (interlv, 2) )
+    tb.connect( interlv, lp, file )
 
-    fg.start()
+    tb.start()
     raw_input ('Head End: Press Enter to stop')
-    fg.stop()
+    tb.stop()
 
 if __name__ == '__main__':
     graph (sys.argv[1:])
