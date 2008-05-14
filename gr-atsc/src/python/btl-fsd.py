@@ -22,6 +22,9 @@
 
 from gnuradio import gr
 from gnuradio import atsc
+import os
+
+print os.getpid()
 
 tb = gr.top_block()
 
@@ -35,12 +38,8 @@ out_data = gr.file_sink(atsc.sizeof_atsc_soft_data_segment,"/tmp/atsc_pipe_5")
 inp = gr.file_source(gr.sizeof_float,"/tmp/atsc_pipe_3")
 
 tb.connect(inp,btl)
-tb.connect((btl,0),(fsc,0))
-tb.connect((btl,1),(fsc,1))
-tb.connect((fsc,0),(eq,0))
-tb.connect((fsc,1),(eq,1))
-tb.connect((eq,0),(fsd,0))
-tb.connect((eq,1),(fsd,1))
+tb.connect((btl,0),(fsc,0),(eq,0),(fsd,0))
+tb.connect((btl,1),(fsc,1),(eq,1),(fsd,1))
 tb.connect(fsd,out_data)
 
 tb.run()

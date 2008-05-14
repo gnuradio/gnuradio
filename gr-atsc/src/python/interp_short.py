@@ -34,9 +34,11 @@
 # then at 0 with edges at -3.2MHz and 3.2MHz.
 
 from gnuradio import gr
-import sys
+import sys, os
 
 def graph (args):
+
+    print os.getpid()
 
     nargs = len (args)
     if nargs == 1:
@@ -45,7 +47,7 @@ def graph (args):
 	sys.stderr.write('usage: interp.py input_file\n')
 	sys.exit (1)
 
-    tb = tb.top_block ()
+    tb = gr.top_block ()
 
     srcf = gr.file_source (gr.sizeof_short,infile)
     s2ss = gr.stream_to_streams(gr.sizeof_short,2)
@@ -60,12 +62,9 @@ def graph (args):
     file = gr.file_sink(gr.sizeof_gr_complex,"/tmp/atsc_pipe_1")
 
     tb.connect( srcf, s2ss )
-    tb.connect( (s2ss, 0), s2f1)
-    tb.connect( (s2ss, 1), s2f2)
-    tb.connect( s2f1, (src0,0) )
-    tb.connect( s2f2, (src0,1) )
+    tb.connect( (s2ss, 0), s2f1, (src0,0) )
+    tb.connect( (s2ss, 1), s2f2, (src0,1) )
     tb.connect( src0, lp, file)
-    tb.connect( interlv, lp, file )
 
     tb.start()
     raw_input ('Head End: Press Enter to stop')

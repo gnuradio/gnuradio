@@ -21,9 +21,11 @@
 # 
 
 from gnuradio import gr, atsc
-import sys
+import sys, os
 
 def main(args):
+
+	print os.getpid()
 
 	nargs = len (args)
 	if nargs == 1:

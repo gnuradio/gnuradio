@@ -32,8 +32,10 @@
 # Input complex -3.2 to 3.2Mhz, output float 2.55 to 8.95Mhz.
 
 from gnuradio import gr
+import os
 
 def graph ():
+    print os.getpid()
     sampling_freq = 19200000
 
     tb = gr.top_block ()

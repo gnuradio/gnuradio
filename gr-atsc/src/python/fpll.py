@@ -21,9 +21,11 @@
 # 
 
 from gnuradio import gr, atsc
-import math
+import math, os
 
 def main():
+
+	print os.getpid()
 
 	tb = gr.top_block()
 
