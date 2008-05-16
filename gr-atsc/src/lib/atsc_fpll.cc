@@ -29,7 +29,7 @@
 #include <atsc_consts.h>
 #include <algorithm>
 #include "fpll_btloop_coupling.h"
-
+#include <gr_math.h>
 
 atsc_fpll_sptr
 atsc_make_fpll()
@@ -66,7 +66,7 @@ atsc_fpll::atsc_fpll()
 void
 atsc_fpll::initialize ()
 {
-  float Fs = 20e6;
+  float Fs = 19.2e6;
 
   float alpha = 1 - exp(-1.0 / Fs / 5e-6);
 
@@ -106,7 +106,8 @@ atsc_fpll::work (int noutput_items,
 
     // phase detector
 
-    float x = atan2 (filtered_Q, filtered_I);
+    // float x = atan2 (filtered_Q, filtered_I);
+    float x = gr_fast_atan2f(filtered_Q, filtered_I);
 
     // avoid slamming filter with big transitions
 
