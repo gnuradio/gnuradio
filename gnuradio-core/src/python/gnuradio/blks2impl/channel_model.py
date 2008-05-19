@@ -52,11 +52,11 @@ class channel_model(gr.hier_block2):
         self.connect(self.noise_adder, self)
 	
         
-    def set_noise_voltage(noise_voltage):
+    def set_noise_voltage(self, noise_voltage):
         self.noise.set_amplitude(noise_voltage)
         
-    def set_frequency_offset(frequency_offset):
+    def set_frequency_offset(self, frequency_offset):
         self.freq_offset.set_frequency(frequency_offset)
      
-    def set_taps(taps):
+    def set_taps(self, taps):
         self.multipath.set_taps(taps)
