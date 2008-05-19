@@ -38,8 +38,10 @@ LB_PA_OFF = (1 << 14)       # 2.4GHz PA, 1 = off, 0 = on
 ANTSEL_TX1_RX2 = (1 << 13)  # 1 = Ant 1 to TX, Ant 2 to RX
 ANTSEL_TX2_RX1 = (1 << 12)    # 1 = Ant 2 to TX, Ant 1 to RX
 TX_EN = (1 << 11)           # 1 = TX on, 0 = TX off
-TX_OE_MASK = HB_PA_OFF|LB_PA_OFF|ANTSEL_TX1_RX2|ANTSEL_TX2_RX1|TX_EN
-TX_SAFE_IO = HB_PA_OFF|LB_PA_OFF|ANTSEL_TX1_RX2
+AD9515DIV = (1 << 4)        # 1 = Div  by 3, 0 = Div by 2
+
+TX_OE_MASK = HB_PA_OFF|LB_PA_OFF|ANTSEL_TX1_RX2|ANTSEL_TX2_RX1|TX_EN|AD9515DIV
+TX_SAFE_IO = HB_PA_OFF|LB_PA_OFF|ANTSEL_TX1_RX2|AD9515DIV
 
 # RX IO Pins
 LOCKDET = (1 << 15)         # This is an INPUT!!!
@@ -347,8 +349,8 @@ class xcvr2450(object):
         tx_pa_sel = (HB_PA_OFF, LB_PA_OFF)[self.five_gig]
         io_rx_while_rx = EN|rx_hp|RX_EN
         io_rx_while_tx = EN|rx_hp
-        io_tx_while_rx = HB_PA_OFF|LB_PA_OFF|rx_antsel
-        io_tx_while_tx = tx_pa_sel|tx_antsel|TX_EN
+        io_tx_while_rx = HB_PA_OFF|LB_PA_OFF|rx_antsel|AD9515DIV
+        io_tx_while_tx = tx_pa_sel|tx_antsel|TX_EN|AD9515DIV
         self.rx_set_atr_rxval(io_rx_while_rx)
         self.rx_set_atr_txval(io_rx_while_tx)
         self.tx_set_atr_rxval(io_tx_while_rx)
@@ -363,21 +365,26 @@ class xcvr2450(object):
     def set_freq(self, target_freq):
         if target_freq > 3e9:
             self.five_gig = 1
-            self.ref_div = 2
+            self.ref_div = 1
+            self.ad9515_div = 3
             scaler = 4.0/5.0
         else:
             self.five_gig = 0
-            self.ref_div = 2
+            self.ref_div = 1
+            self.ad9515_div = 3
             scaler = 4.0/3.0;
 
-        if target_freq > 5.4e9:
+        if target_freq > 5.25e9:
             self.highband = 1
         else:
             self.highband = 0
 
         vco_freq = target_freq*scaler;
         #ref_clk = self.u.fpga_master_clock_freq()  # Assumes AD9515 is bypassed
-        ref_clk = 32e6   # AD9515 set up as div by 2
+        sys_clk = 64e6
+        #sys_clk = 75e6
+        ref_clk = sys_clk / self.ad9515_div
+        
         phdet_freq = ref_clk/self.ref_div
         div = vco_freq/phdet_freq
         self.int_div = int(math.floor(div))
@@ -395,9 +402,9 @@ class xcvr2450(object):
 
         ok = self.lock_detect()
         print "lock detect:", ok
-        if(not ok):
-            ok = self.lock_detect()
-            print "lock detect:", ok
+        #if(not ok):
+        #    ok = self.lock_detect()
+        #    print "lock detect:", ok
         return (ok, actual_freq)
 
     def lock_detect(self):
