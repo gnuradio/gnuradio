@@ -24,6 +24,7 @@ ACLOCAL_AMFLAGS = -I config
 include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = \
+	bootstrap \
 	configure \
 	configure-cell-cross \
 	config.h.in \
