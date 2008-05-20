@@ -79,7 +79,7 @@ AC_CHECK_FUNCS([])
 dnl Check for Mingw support
 GR_PWIN32
 
-PKG_CHECK_MODULES(GNURADIO_CORE, gnuradio-core >= 2)
+PKG_CHECK_MODULES(GNURADIO_CORE, gnuradio-core >= 3)
 LIBS="$LIBS $GNURADIO_CORE_LIBS"
 
 dnl Define where to find boost includes
