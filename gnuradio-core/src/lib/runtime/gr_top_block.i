@@ -47,6 +47,7 @@ public:
   void lock();
   void unlock() throw (std::runtime_error);
   bool is_running();
+  void dump();
 };
 
 %inline %{

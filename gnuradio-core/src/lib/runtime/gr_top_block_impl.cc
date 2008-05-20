@@ -231,3 +231,10 @@ gr_top_block_impl::restart()
 
   start_threads();
 }
+
+void
+gr_top_block_impl::dump()
+{
+  if (d_ffg)
+    d_ffg->dump();
+}

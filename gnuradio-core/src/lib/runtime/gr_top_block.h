@@ -100,6 +100,11 @@ public:
   virtual void unlock();
 
   /*!
+   * Displays flattened flowgraph edges and block connectivity
+   */
+  void dump();
+
+  /*!
    * Returns true if flowgraph is running
    */
   bool is_running();

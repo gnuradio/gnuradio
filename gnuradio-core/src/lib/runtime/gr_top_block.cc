@@ -90,6 +90,12 @@ gr_top_block::unlock()
   d_impl->unlock();
 }
 
+void
+gr_top_block::dump()
+{
+  d_impl->dump();
+}
+
 bool
 gr_top_block::is_running()
 {
