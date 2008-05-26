@@ -32,6 +32,7 @@ class @NAME@ : public gr_sync_block {
   @NAME@ ();
 
  public:
+  void clear() {d_data.clear();}
   std::vector<@TYPE@> data () const;
 };
 

@@ -28,6 +28,8 @@ GR_SWIG_BLOCK_MAGIC(gr,@BASE_NAME@);
 gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat = false);
 
 class @NAME@ : public gr_sync_block {
+ public:
+  void rewind() {d_offset=0;}
  private:
   @NAME@ (const std::vector<@TYPE@> &data);
 };

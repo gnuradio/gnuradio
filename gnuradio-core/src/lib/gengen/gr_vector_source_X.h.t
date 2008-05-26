@@ -46,6 +46,7 @@ class @NAME@ : public gr_sync_block {
   @NAME@ (const std::vector<@TYPE@> &data, bool repeat);
 
  public:
+  void rewind() {d_offset=0;}
   virtual int work (int noutput_items,
 		    gr_vector_const_void_star &input_items,
 		    gr_vector_void_star &output_items);
