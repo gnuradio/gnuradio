@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -36,13 +36,31 @@ __GC_BEGIN_DECLS
  *
  * FIXME make it lock free ;)  For now, use a spin lock.
  */
-typedef struct gc_jd_queue
+
+typedef struct gc_jd_q_links
 {
   gc_eaddr_t	head _AL16;
   gc_eaddr_t	tail _AL16;
-  uint32_t	mutex;		// libsync mutex (spin lock)
-} gc_jd_queue_t;
+} gc_jd_q_links_t;
 
+typedef struct gc_jd_q_mutex
+{
+  uint32_t	mutex;		// libsync mutex (spin lock)
+  uint32_t	_pad[31];	// pad to cache line so we can use putlluc on SPE
+} _AL128 gc_jd_q_mutex_t;
+
+typedef struct gc_jd_q_flag
+{
+  uint32_t	flag;		// host writes this after enqueuing
+  uint32_t	_pad[31];	// pad to cache line
+} _AL128 gc_jd_q_flag_t;
+
+typedef struct gc_jd_queue
+{
+  gc_jd_q_links_t	l;
+  gc_jd_q_mutex_t	m;
+  gc_jd_q_flag_t	f;
+} _AL128 gc_jd_queue_t;
 
 __GC_END_DECLS
 

@@ -25,11 +25,30 @@
 
 extern int gc_sys_tag;
 
+/*
+ * ea must be 128-byte aligned, the mutex is in the first int32_t, and
+ * it must be safe to write the remaining 124 bytes with anything at
+ * all.
+ */
+static __inline void _fast_mutex_unlock(mutex_ea_t ea)
+{
+  char _tmp[256];
+  vector signed int *buf
+    = (vector signed int *) ALIGN(_tmp, 128);	// get cache-aligned buffer
+
+  buf[0] = spu_splats(0);	// the value that unlocks the mutex
+
+  mfc_putlluc(buf, ea, 0, 0);	// unconditional put, no reservation reqd
+  spu_readch(MFC_RdAtomicStat);
+}
+
+
+
 bool
 gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea,
 		    int jd_tag, gc_job_desc_t *item)
 {
-  gc_jd_queue_t	local_q;
+  gc_jd_q_links_t	local_q;
 
   // Before aquiring the lock, see if it's possible that there's
   // something in the queue.  Checking in this way makes it easier
@@ -37,7 +56,7 @@ gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea,
   // the lock unless there is something in the queue.
 
   // copy in the queue structure
-  mfc_get(&local_q, q, sizeof(gc_jd_queue_t), gc_sys_tag, 0, 0);
+  mfc_get(&local_q, q, sizeof(local_q), gc_sys_tag, 0, 0);
   mfc_write_tag_mask(1 << gc_sys_tag);	// the tag we're interested in
   mfc_read_tag_status_all();		// wait for DMA to complete
 
@@ -48,15 +67,15 @@ gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea,
   // When we peeked, head was non-zero.  Now grab the
   // lock and do it for real.
 
-  _mutex_lock(q + offsetof(gc_jd_queue_t, mutex));
+  _mutex_lock(q + offsetof(gc_jd_queue_t, m.mutex));
 
   // copy in the queue structure
-  mfc_get(&local_q, q, sizeof(gc_jd_queue_t), gc_sys_tag, 0, 0);
+  mfc_get(&local_q, q, sizeof(local_q), gc_sys_tag, 0, 0);
   mfc_write_tag_mask(1 << gc_sys_tag);	// the tag we're interested in
   mfc_read_tag_status_all();		// wait for DMA to complete
 
   if (local_q.head == 0){		// empty
-    _mutex_unlock(q + offsetof(gc_jd_queue_t, mutex));
+    _fast_mutex_unlock(q + offsetof(gc_jd_queue_t, m.mutex));
     return false;
   }
 
@@ -77,7 +96,7 @@ gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea,
 
 
   // copy the queue structure back out
-  mfc_put(&local_q, q, sizeof(gc_jd_queue_t), gc_sys_tag, 0, 0);
+  mfc_put(&local_q, q, sizeof(local_q), gc_sys_tag, 0, 0);
   mfc_write_tag_mask(1 << gc_sys_tag);	// the tag we're interested in
   mfc_read_tag_status_all();		// wait for DMA to complete
 
@@ -89,7 +108,7 @@ gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea,
   // a normal DMA, and that a putlluc is better than a putllc if
   // you can use it.
 
-  _mutex_unlock(q + offsetof(gc_jd_queue_t, mutex));
+  _fast_mutex_unlock(q + offsetof(gc_jd_queue_t, m.mutex));
   return true;
 }
 
@@ -97,12 +116,12 @@ gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea,
 void
 gc_jd_queue_getllar(gc_eaddr_t q)
 {
-  // get reservation that includes the tail of the queue
-  gc_eaddr_t	tail = q + offsetof(gc_jd_queue_t, tail);
+  // get reservation that includes the flag in the queue
+  gc_eaddr_t	ea = q + offsetof(gc_jd_queue_t, f.flag);
     
   char _tmp[256];
   char *buf = (char *) ALIGN(_tmp, 128);	// get cache-aligned buffer
 
-  mfc_getllar(buf, ALIGN128_EA(tail), 0, 0);
+  mfc_getllar(buf, ALIGN128_EA(ea), 0, 0);
   spu_readch(MFC_RdAtomicStat);
 }
