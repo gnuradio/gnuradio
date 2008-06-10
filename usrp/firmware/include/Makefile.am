@@ -21,14 +21,14 @@
 
 include_HEADERS = 		\
 	usrp_i2c_addr.h		\
-	usrp_spi_defs.h		
+	usrp_spi_defs.h	        \
+	fpga_regs_common.h	\
+	fpga_regs_standard.h
 
 
 noinst_HEADERS =		\
 	delay.h			\
-	fpga_regs_common.h	\
 	fpga_regs_common.v	\
-	fpga_regs_standard.h	\
 	fpga_regs_standard.v	\
 	fpga_regs0.h		\
 	fx2regs.h		\
