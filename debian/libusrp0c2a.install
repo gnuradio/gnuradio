@@ -1,4 +1,4 @@
 usr/lib/libusrp.la
-usr/lib/libusrp.so.*
+usr/lib/libusrp.so*
 usr/lib/pkgconfig/usrp.pc
 etc/udev/rules.d/40-usrp.rules
