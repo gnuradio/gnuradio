@@ -91,7 +91,7 @@ noinst_PYTHON = 			\
 	qa_single_pole_iir.py		\
 	qa_single_pole_iir_cc.py	\
 	qa_skiphead.py			\
-	qa_unpack_k_bits.py		
-
+	qa_unpack_k_bits.py		\
+	qa_repeat.py
 
 CLEANFILES = *.pyc

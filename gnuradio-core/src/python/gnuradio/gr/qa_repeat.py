@@ -32,8 +32,11 @@ class test_repeat (gr_unittest.TestCase):
         self.tb = None
 
     def test_001_float(self):
-	src_data = [1.0, 2.0, 3.0]
-	dst_data = [1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0]
+	src_data = [n*1.0 for n in range(100)];
+	dst_data = []
+	for n in range(100):
+	    dst_data += [1.0*n, 1.0*n, 1.0*n]
+	    
 	src = gr.vector_source_f(src_data)
 	rpt = gr.repeat(gr.sizeof_float, 3)
 	dst = gr.vector_sink_f()
