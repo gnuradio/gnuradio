@@ -62,7 +62,7 @@ gr_repeat::work(int noutput_items,
       out += d_itemsize;
     }
 
-    i += d_itemsize;
+    in += d_itemsize;
   }
 
   return noutput_items;
