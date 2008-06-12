@@ -23,10 +23,12 @@
 from gnuradio import gr, gru, window
 from gnuradio.wxgui import stdgui2
 import wx
-import gnuradio.wxgui.plot as plot
+import plot
 import numpy
 import threading
 import math    
+
+DIV_LEVELS = (1, 2, 5, 10, 20)
 
 default_fftsink_size = (640,240)
 default_fft_rate = gr.prefs().get_long('wxgui', 'fft_rate', 15)
@@ -220,49 +222,47 @@ class input_watcher (threading.Thread):
             wx.PostEvent (self.event_receiver, de)
             del de
 
-class LabelText(wx.StaticText):
-    """Label text class for uniform labels among all controls."""
-    
-    def __init__(self, window, label):
-        wx.StaticText.__init__(self, window, -1, str(label))
-        font = self.GetFont()
-        font.SetWeight(wx.FONTWEIGHT_BOLD)
-        font.SetUnderlined(True)
-        self.SetFont(font)
-
-DIV_LEVELS = (1, 2, 5, 10, 20)
-
 class control_panel(wx.Panel):
+    
+    class LabelText(wx.StaticText):    
+        def __init__(self, window, label):
+            wx.StaticText.__init__(self, window, -1, label)
+            font = self.GetFont()
+            font.SetWeight(wx.FONTWEIGHT_BOLD)
+            font.SetUnderlined(True)
+            self.SetFont(font)
+    
     def __init__(self, parent):
         self.parent = parent
         wx.Panel.__init__(self, parent, -1, style=wx.SIMPLE_BORDER)    
         control_box = wx.BoxSizer(wx.VERTICAL)
         
         #checkboxes for average and peak hold
-        control_box.Add(LabelText(self, 'Options'), 0, wx.ALIGN_CENTER)
+        control_box.AddSpacer(2)
+        control_box.Add(self.LabelText(self, 'Options'), 0, wx.ALIGN_CENTER)
         self.average_check_box = wx.CheckBox(parent=self, style=wx.CHK_2STATE, label="Average")
-        self.average_check_box.SetValue(parent.fftsink.average)
         self.average_check_box.Bind(wx.EVT_CHECKBOX, parent.on_average)
         control_box.Add(self.average_check_box, 0, wx.EXPAND)
         self.peak_hold_check_box = wx.CheckBox(parent=self, style=wx.CHK_2STATE, label="Peak Hold")
-        self.peak_hold_check_box.SetValue(parent.fftsink.peak_hold)
         self.peak_hold_check_box.Bind(wx.EVT_CHECKBOX, parent.on_peak_hold) 
         control_box.Add(self.peak_hold_check_box, 0, wx.EXPAND)
        
         #radio buttons for div size
-        control_box.Add(LabelText(self, 'Set dB/div'), 0, wx.ALIGN_CENTER)
+        control_box.AddSpacer(2)
+        control_box.Add(self.LabelText(self, 'Set dB/div'), 0, wx.ALIGN_CENTER)
         radio_box = wx.BoxSizer(wx.VERTICAL)
         self.radio_buttons = list()
         for y_per_div in DIV_LEVELS:
             radio_button = wx.RadioButton(self, -1, "%d dB/div"%y_per_div)
-            radio_button.SetValue(parent.fftsink.y_per_div == y_per_div)
             radio_button.Bind(wx.EVT_RADIOBUTTON, self.on_radio_button_change)
             self.radio_buttons.append(radio_button)
             radio_box.Add(radio_button, 0, wx.ALIGN_LEFT)
         control_box.Add(radio_box, 0, wx.EXPAND)
         
         #ref lvl buttons
-        control_box.Add(LabelText(self, 'Adj Ref Lvl'), 0, wx.ALIGN_CENTER)
+        control_box.AddSpacer(2)
+        control_box.Add(self.LabelText(self, 'Adj Ref Lvl'), 0, wx.ALIGN_CENTER)
+        control_box.AddSpacer(1)
         button_box = wx.BoxSizer(wx.HORIZONTAL)        
         self.ref_plus_button = wx.Button(self, -1, '+', style=wx.BU_EXACTFIT)
         self.ref_plus_button.Bind(wx.EVT_BUTTON, parent.on_incr_ref_level)
@@ -273,6 +273,21 @@ class control_panel(wx.Panel):
         control_box.Add(button_box, 0, wx.ALIGN_CENTER)
         #set sizer
         self.SetSizerAndFit(control_box)
+        #update
+        self.update()
+        
+    def update(self):
+        """!
+        Read the state of the fft plot settings and update the control panel.
+        """
+        #update checkboxes
+        self.average_check_box.SetValue(self.parent.fftsink.average)
+        self.peak_hold_check_box.SetValue(self.parent.fftsink.peak_hold)
+        #update radio buttons    
+        try:
+            index = list(DIV_LEVELS).index(self.parent.fftsink.y_per_div)
+            self.radio_buttons[index].SetValue(True)
+        except: pass
         
     def on_radio_button_change(self, evt):
         selected_radio_button = filter(lambda rb: rb.GetValue(), self.radio_buttons)[0] 
@@ -380,10 +395,9 @@ class fft_window (wx.Panel):
         graphics = plot.PlotGraphics (lines,
                                       title=self.fftsink.title,
                                       xLabel = self._units, yLabel = "dB")
-
-        self.plot.Draw (graphics, xAxis=None, yAxis=self.y_range)
+        self.x_range = x_vals[0], x_vals[-1]
+        self.plot.Draw (graphics, xAxis=self.x_range, yAxis=self.y_range)
         self.update_y_range ()
-
 
     def set_peak_hold(self, enable):
         self.peak_hold = enable
@@ -397,10 +411,12 @@ class fft_window (wx.Panel):
     def on_average(self, evt):
         # print "on_average"
         self.fftsink.set_average(evt.IsChecked())
+        self.control_panel.update()
 
     def on_peak_hold(self, evt):
         # print "on_peak_hold"
         self.fftsink.set_peak_hold(evt.IsChecked())
+        self.control_panel.update()
 
     def on_incr_ref_level(self, evt):
         # print "on_incr_ref_level"
@@ -414,11 +430,13 @@ class fft_window (wx.Panel):
 
     def on_incr_y_per_div(self, evt):
         # print "on_incr_y_per_div"
-        self.fftsink.set_y_per_div(next_up(self.fftsink.y_per_div, (1,2,5,10,20)))
+        self.fftsink.set_y_per_div(next_up(self.fftsink.y_per_div, DIV_LEVELS))
+        self.control_panel.update()
 
     def on_decr_y_per_div(self, evt):
         # print "on_decr_y_per_div"
-        self.fftsink.set_y_per_div(next_down(self.fftsink.y_per_div, (1,2,5,10,20)))
+        self.fftsink.set_y_per_div(next_down(self.fftsink.y_per_div, DIV_LEVELS))
+        self.control_panel.update()
 
     def on_y_per_div(self, evt):
         # print "on_y_per_div"
@@ -433,6 +451,7 @@ class fft_window (wx.Panel):
             self.fftsink.set_y_per_div(10)
         elif Id == self.id_y_per_div_20:
             self.fftsink.set_y_per_div(20)
+        self.control_panel.update()
 
     def on_right_click(self, event):
         menu = self.popup_menu
@@ -564,7 +583,7 @@ class test_app_block (stdgui2.std_top_block):
 
         sink1 = fft_sink_c (panel, title="Complex Data", fft_size=fft_size,
                             sample_rate=input_rate, baseband_freq=100e3,
-                            ref_level=0, y_per_div=20)
+                            ref_level=0, y_per_div=20, y_divs=10)
         vbox.Add (sink1.win, 1, wx.EXPAND)
 
         self.connect(src1, thr1, sink1)
@@ -574,7 +593,7 @@ class test_app_block (stdgui2.std_top_block):
         thr2 = gr.throttle(gr.sizeof_float, input_rate)
         sink2 = fft_sink_f (panel, title="Real Data", fft_size=fft_size*2,
                             sample_rate=input_rate, baseband_freq=100e3,
-                            ref_level=0, y_per_div=20)
+                            ref_level=0, y_per_div=20, y_divs=10)
         vbox.Add (sink2.win, 1, wx.EXPAND)
 
         self.connect(src2, thr2, sink2)
