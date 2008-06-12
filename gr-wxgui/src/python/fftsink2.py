@@ -310,7 +310,6 @@ class fft_window (wx.Panel):
         main_box.Add (self.control_panel, 0, wx.EXPAND)
         self.SetSizerAndFit(main_box)
         
-        self.y_range = None
         self.peak_hold = False
         self.peak_vals = None
         
@@ -395,18 +394,15 @@ class fft_window (wx.Panel):
         graphics = plot.PlotGraphics (lines,
                                       title=self.fftsink.title,
                                       xLabel = self._units, yLabel = "dB")
-        self.x_range = x_vals[0], x_vals[-1]
-        self.plot.Draw (graphics, xAxis=self.x_range, yAxis=self.y_range)
-        self.update_y_range ()
+        x_range = x_vals[0], x_vals[-1]
+        ymax = self.fftsink.ref_level
+        ymin = self.fftsink.ref_level - self.fftsink.y_per_div * self.fftsink.y_divs
+        y_range = ymin, ymax
+        self.plot.Draw (graphics, xAxis=x_range, yAxis=y_range, step=self.fftsink.y_per_div)        
 
     def set_peak_hold(self, enable):
         self.peak_hold = enable
         self.peak_vals = None
-
-    def update_y_range (self):
-        ymax = self.fftsink.ref_level
-        ymin = self.fftsink.ref_level - self.fftsink.y_per_div * self.fftsink.y_divs
-        self.y_range = self.plot._axisInterval ('min', ymin, ymax)
 
     def on_average(self, evt):
         # print "on_average"

@@ -767,7 +767,7 @@ class PlotCanvas(wx.Window):
     def GetXUseScopeTicks(self):
         return self._xUseScopeTicks
 
-    def Draw(self, graphics, xAxis = None, yAxis = None, dc = None):
+    def Draw(self, graphics, xAxis = None, yAxis = None, dc = None, step=None):
         """Draw objects in graphics with specified x and y axis.
         graphics- instance of PlotGraphics with list of PolyXXX objects
         xAxis - tuple with (min, max) axis range to view
@@ -829,7 +829,7 @@ class PlotCanvas(wx.Window):
             xticks = None
             xTextExtent= (0,0) # No text for ticks
         if self._ySpec is not 'none':
-            yticks = self._ticks(yAxis[0], yAxis[1])
+            yticks = self._ticks(yAxis[0], yAxis[1], step)
             yTextExtentBottom= dc.GetTextExtent(yticks[0][1])
             yTextExtentTop   = dc.GetTextExtent(yticks[-1][1])
             yTextExtent= (max(yTextExtentBottom[0],yTextExtentTop[0]),
@@ -1277,7 +1277,7 @@ class PlotCanvas(wx.Window):
                                     pt[1]-0.5*h)
                 text = 0    # axis values not drawn on right side
 
-    def _ticks(self, lower, upper):
+    def _ticks(self, lower, upper, step=None):
         ideal = (upper-lower)/7.
         log = _numpy.log10(ideal)
         power = _numpy.floor(log)
@@ -1298,9 +1298,12 @@ class PlotCanvas(wx.Window):
         else:
             digits = -int(power)
             format = '%'+`digits+2`+'.'+`digits`+'f'
+        #force grid when step is not None
+        if step is not None: grid = step
         ticks = []
         t = -grid*_numpy.floor(-lower/grid)
         while t <= upper:
+            if t == -0: t = 0 #remove neg zero condition
             ticks.append( (t, format % (t,)) )
             t = t + grid
         return ticks
