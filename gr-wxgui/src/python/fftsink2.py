@@ -238,7 +238,7 @@ class control_panel(wx.Panel):
         control_box = wx.BoxSizer(wx.VERTICAL)
         
         #checkboxes for average and peak hold
-        control_box.AddSpacer(2)
+        control_box.AddStretchSpacer()
         control_box.Add(self.LabelText(self, 'Options'), 0, wx.ALIGN_CENTER)
         self.average_check_box = wx.CheckBox(parent=self, style=wx.CHK_2STATE, label="Average")
         self.average_check_box.Bind(wx.EVT_CHECKBOX, parent.on_average)
@@ -248,7 +248,7 @@ class control_panel(wx.Panel):
         control_box.Add(self.peak_hold_check_box, 0, wx.EXPAND)
        
         #radio buttons for div size
-        control_box.AddSpacer(2)
+        control_box.AddStretchSpacer()
         control_box.Add(self.LabelText(self, 'Set dB/div'), 0, wx.ALIGN_CENTER)
         radio_box = wx.BoxSizer(wx.VERTICAL)
         self.radio_buttons = list()
@@ -260,9 +260,9 @@ class control_panel(wx.Panel):
         control_box.Add(radio_box, 0, wx.EXPAND)
         
         #ref lvl buttons
-        control_box.AddSpacer(2)
+        control_box.AddStretchSpacer()
         control_box.Add(self.LabelText(self, 'Adj Ref Lvl'), 0, wx.ALIGN_CENTER)
-        control_box.AddSpacer(1)
+        control_box.AddSpacer(2)
         button_box = wx.BoxSizer(wx.HORIZONTAL)        
         self.ref_plus_button = wx.Button(self, -1, '+', style=wx.BU_EXACTFIT)
         self.ref_plus_button.Bind(wx.EVT_BUTTON, parent.on_incr_ref_level)
@@ -271,6 +271,7 @@ class control_panel(wx.Panel):
         self.ref_minus_button.Bind(wx.EVT_BUTTON, parent.on_decr_ref_level)
         button_box.Add(self.ref_minus_button, 0, wx.ALIGN_CENTER)
         control_box.Add(button_box, 0, wx.ALIGN_CENTER)
+        control_box.AddStretchSpacer()
         #set sizer
         self.SetSizerAndFit(control_box)
         #update
