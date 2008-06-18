@@ -41,7 +41,7 @@ AC_PATH_PROG([RM_PROG], [rm])
 AC_LIBTOOL_WIN32_DLL
 AC_ENABLE_SHARED	dnl do build shared libraries
 AC_DISABLE_STATIC	dnl don't build static libraries
-AC_PROG_LIBTOOL
+m4_ifdef([LT_INIT],[LT_INIT],[AC_PROG_LIBTOOL])
 
 dnl Locate python, SWIG, etc
 GR_NO_UNDEFINED
