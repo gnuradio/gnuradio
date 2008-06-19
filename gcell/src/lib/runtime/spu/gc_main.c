@@ -31,6 +31,7 @@
 #include "gc_jd_queue.h"
 #include "gc_delay.h"
 #include "gc_declare_proc.h"
+#include "gc_random.h"
 #include "spu_buffers.h"
 #include <string.h>
 #include <assert.h>
@@ -195,6 +196,8 @@ backoff_reset(void)
   backoff = _backoff_start;
 }
 
+#if 0
+
 static void
 backoff_delay(void)
 {
@@ -203,6 +206,25 @@ backoff_delay(void)
   // capped exponential backoff
   backoff = ((backoff << 1) + 1) & _backoff_cap;
 }
+
+#else
+
+#define RANDOM_WEIGHT	0.2
+
+static void
+backoff_delay(void)
+{
+  gc_cdelay(backoff);
+
+  backoff = ((backoff << 1) + 1);
+  if (backoff > _backoff_cap)
+    backoff = _backoff_cap;
+
+  float r = (RANDOM_WEIGHT * (2.0 * (gc_uniform_deviate() - 0.5)));
+  backoff = backoff * (1.0 + r);
+}
+
+#endif
 
 // ------------------------------------------------------------------------
 
@@ -565,9 +587,15 @@ main_loop(void)
   gc_eaddr_t		jd_ea;
   int			total_jobs = 0;
 
+#if (USE_LLR_LOST_EVENT)
   // setup events
   spu_writech(SPU_WrEventMask, MFC_LLR_LOST_EVENT);
-  gc_jd_queue_getllar(spu_args.queue);	// get a line reservation on the queue
+
+  // prime the pump
+  while (gc_jd_queue_dequeue(spu_args.queue, &jd_ea, ci_tags + ci_idx, &jd))
+    process_job(jd_ea, &jd);
+  // we're now holding a lock-line reservation
+#endif
 
   while (1){
 
@@ -590,10 +618,8 @@ main_loop(void)
 	// by somebody doing something to the queue.  Go look and see
 	// if there's anything for us.
 	//
-	if (gc_jd_queue_dequeue(spu_args.queue, &jd_ea, ci_tags + ci_idx, &jd))
+	while (gc_jd_queue_dequeue(spu_args.queue, &jd_ea, ci_tags + ci_idx, &jd))
 	  process_job(jd_ea, &jd);
-
-	gc_jd_queue_getllar(spu_args.queue);	// get a new reservation
       }
 
       //
@@ -668,6 +694,8 @@ main(unsigned long long spe_id __attribute__((unused)),
 
   // initialize pointer to procedure entry table
   gc_proc_def = (gc_proc_def_t *) spu_args.proc_def_ls_addr;
+
+  gc_set_seed(spu_args.spu_idx);
 
   // initialize logging
   _gc_log_init(spu_args.log);

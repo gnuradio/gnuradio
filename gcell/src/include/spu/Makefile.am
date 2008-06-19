@@ -22,4 +22,5 @@ include $(top_srcdir)/Makefile.common
 
 gcellspuinclude_HEADERS = \
 	gc_delay.h \
-	gc_jd_queue.h
+	gc_jd_queue.h \
+	gc_random.h

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -18,35 +18,23 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#include <gc_random.h>
 
-#ifndef INCLUDED_GC_JD_QUEUE_DATA_H
-#define INCLUDED_GC_JD_QUEUE_DATA_H
+static int last_val = 0;
 
-#include "gc_types.h"
-#include "gc_job_desc.h"
+#define	M  714025	// values from Numerical Recipes in C, 1988
+#define A    4096
+#define C  150889
 
-__GC_BEGIN_DECLS
-
-/*!
- * \brief (Lock free someday...) queue for job descriptors
- *
- * This is the main data structure shared between PPEs and SPEs.
- * It is used to enqueue work for SPEs.  SPEs or PPEs may enqueue
- * work.  SPE's dequeue from here.
- *
- * FIXME make it lock free ;)  For now, use a spin lock.
- *
- * (Fills a single cache line)
- */
-typedef struct gc_jd_queue
+void 
+gc_set_seed(int seed)
 {
-  gc_eaddr_t	head  _AL16;
-  gc_eaddr_t	tail  _AL16;
-  uint32_t	mutex _AL16;		// libsync mutex (spin lock)
-} _AL128 gc_jd_queue_t;
+  last_val = ((unsigned int) seed) % M;
+}
 
-__GC_END_DECLS
-
-#endif /* INCLUDED_GC_JD_QUEUE_DATA_H */
-
-
+float
+gc_uniform_deviate(void)
+{
+  last_val = (last_val * A + C) % M;
+  return (float) last_val / (float) M;
+}

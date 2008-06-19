@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -18,35 +18,15 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-#ifndef INCLUDED_GC_JD_QUEUE_DATA_H
-#define INCLUDED_GC_JD_QUEUE_DATA_H
-
-#include "gc_types.h"
-#include "gc_job_desc.h"
-
-__GC_BEGIN_DECLS
+#ifndef INCLUDED_GC_RANDOM_H
+#define INCLUDED_GC_RANDOM_H
 
 /*!
- * \brief (Lock free someday...) queue for job descriptors
- *
- * This is the main data structure shared between PPEs and SPEs.
- * It is used to enqueue work for SPEs.  SPEs or PPEs may enqueue
- * work.  SPE's dequeue from here.
- *
- * FIXME make it lock free ;)  For now, use a spin lock.
- *
- * (Fills a single cache line)
+ * \brief Return a uniformly distributed value in the range [0, 1.0)
+ * (Linear congruential generator. YMMV. Caveat emptor.)
  */
-typedef struct gc_jd_queue
-{
-  gc_eaddr_t	head  _AL16;
-  gc_eaddr_t	tail  _AL16;
-  uint32_t	mutex _AL16;		// libsync mutex (spin lock)
-} _AL128 gc_jd_queue_t;
 
-__GC_END_DECLS
+float gc_uniform_deviate(void);
+void gc_set_seed(int seed);
 
-#endif /* INCLUDED_GC_JD_QUEUE_DATA_H */
-
-
+#endif /* INCLUDED_GC_RANDOM_H */

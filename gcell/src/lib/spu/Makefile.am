@@ -44,7 +44,9 @@ runtime_spu_sources = \
 	$(runtime_srcdir)/gc_spu_jd_queue.c \
 	$(runtime_srcdir)/spu_buffers.c \
 	$(runtime_srcdir)/gc_logging.c \
-	$(runtime_srcdir)/gc_main.c
+	$(runtime_srcdir)/gc_main.c \
+	$(runtime_srcdir)/gc_random.c
+
 
 runtime_spu_headers =
 

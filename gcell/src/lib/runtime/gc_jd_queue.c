@@ -28,10 +28,9 @@
 void 
 gc_jd_queue_init(gc_jd_queue_t *q)
 {
-  _mutex_init(ptr_to_ea(&q->m.mutex));
-  q->l.head = 0;
-  q->l.tail = 0;
-  q->f.flag = 0;
+  _mutex_init(ptr_to_ea(&q->mutex));
+  q->head = 0;
+  q->tail = 0;
   smp_wmb();
 }
   
@@ -39,44 +38,41 @@ void
 gc_jd_queue_enqueue(gc_jd_queue_t *q, gc_job_desc_t *item)
 {
   item->sys.next = 0;
-  _mutex_lock(ptr_to_ea(&q->m.mutex));
+  _mutex_lock(ptr_to_ea(&q->mutex));
   smp_rmb();		// import barrier
 
-  if (q->l.tail == 0){    // currently empty
-    q->l.tail = q->l.head = jdp_to_ea(item);
+  if (q->tail == 0){    // currently empty
+    q->tail = q->head = jdp_to_ea(item);
   }
   else {		// not empty, append
-    ea_to_jdp(q->l.tail)->sys.next = jdp_to_ea(item);
-    q->l.tail = jdp_to_ea(item);
+    ea_to_jdp(q->tail)->sys.next = jdp_to_ea(item);
+    q->tail = jdp_to_ea(item);
   }
 
   smp_wmb();		// orders stores above before clearing of mutex
-  _mutex_unlock(ptr_to_ea(&q->m.mutex));
-
-  // let SPE's know we wrote something if they've got a lock-line reservation
-  q->f.flag = 1;
+  _mutex_unlock(ptr_to_ea(&q->mutex));
 }
 
 gc_job_desc_t *
 gc_jd_queue_dequeue(gc_jd_queue_t *q)
 {
-  _mutex_lock(ptr_to_ea(&q->m.mutex));
+  _mutex_lock(ptr_to_ea(&q->mutex));
   smp_rmb();		// import barrier
   
-  gc_eaddr_t item_ea = q->l.head;
+  gc_eaddr_t item_ea = q->head;
   if (item_ea == 0){	// empty
-    _mutex_unlock(ptr_to_ea(&q->m.mutex));
+    _mutex_unlock(ptr_to_ea(&q->mutex));
     return 0;
   }
 
-  q->l.head = ea_to_jdp(item_ea)->sys.next;
-  if (q->l.head == 0)	// now emtpy
-    q->l.tail = 0;
+  q->head = ea_to_jdp(item_ea)->sys.next;
+  if (q->head == 0)	// now emtpy
+    q->tail = 0;
 
   gc_job_desc_t *item = ea_to_jdp(item_ea);
   item->sys.next = 0;
 
   smp_wmb();		// orders stores above before clearing of mutex
-  _mutex_unlock(ptr_to_ea(&q->m.mutex));
+  _mutex_unlock(ptr_to_ea(&q->mutex));
   return item;
 }

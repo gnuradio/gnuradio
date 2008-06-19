@@ -39,19 +39,13 @@ __GC_BEGIN_DECLS
  * \param[out] item is local store copy of item at head of queue.
  * \returns false if the queue is empty, otherwise returns true
  *   and sets \p item_ea and DMA's job descriptor into \p item
+ *
+ * If return is false, we're holding a lock-line reservation that
+ * covers the queue.
  */
 bool
 gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea,
 		    int jd_tag, gc_job_desc_t *item);
-
-
-/*!
- * \brief Get a line reservation on the queue
- *
- * \param[in]  q is EA address of queue structure.
- */
-void
-gc_jd_queue_getllar(gc_eaddr_t q);
 
 __GC_END_DECLS
 

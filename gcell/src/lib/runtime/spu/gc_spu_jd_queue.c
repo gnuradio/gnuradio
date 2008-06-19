@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,106 +22,91 @@
 #include "gc_jd_queue.h"
 #include "mutex_lock.h"
 #include "mutex_unlock.h"
+#include "gc_delay.h"
+#include "gc_random.h"
+
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
 
 extern int gc_sys_tag;
 
-/*
- * ea must be 128-byte aligned, the mutex is in the first int32_t, and
- * it must be safe to write the remaining 124 bytes with anything at
- * all.
- */
-static __inline void _fast_mutex_unlock(mutex_ea_t ea)
+#define	INITIAL_BACKOFF	   32.0
+#define MAX_BACKOFF	16384.0
+#define	RANDOM_WEIGHT	    0.2
+
+static float
+next_backoff(float backoff)
 {
-  char _tmp[256];
-  vector signed int *buf
-    = (vector signed int *) ALIGN(_tmp, 128);	// get cache-aligned buffer
+  // exponential with random
+  float t = backoff * 2.0;
+  if (t > MAX_BACKOFF)
+    t = MAX_BACKOFF;
 
-  buf[0] = spu_splats(0);	// the value that unlocks the mutex
+  float r = (RANDOM_WEIGHT * (2.0 * (gc_uniform_deviate() - 0.5)));
+  t = t * (1.0 + r);
 
-  mfc_putlluc(buf, ea, 0, 0);	// unconditional put, no reservation reqd
-  spu_readch(MFC_RdAtomicStat);
+  return t;
 }
-
-
 
 bool
 gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea,
 		    int jd_tag, gc_job_desc_t *item)
 {
-  gc_jd_q_links_t	local_q;
+  int	status;
+  char 	_tmp[256];
+  gc_jd_queue_t *local_q =
+    (gc_jd_queue_t *) ALIGN(_tmp, 128);		// get cache-aligned buffer
+  
+  float backoff = next_backoff(INITIAL_BACKOFF);
 
-  // Before aquiring the lock, see if it's possible that there's
-  // something in the queue.  Checking in this way makes it easier
-  // for the PPE to insert things, since we're not contending for
-  // the lock unless there is something in the queue.
+  do {
+    // Copy the queue structure in and get a lock line reservation.
+    // (The structure is 128-byte aligned and completely fills a cache-line)
 
-  // copy in the queue structure
-  mfc_get(&local_q, q, sizeof(local_q), gc_sys_tag, 0, 0);
-  mfc_write_tag_mask(1 << gc_sys_tag);	// the tag we're interested in
-  mfc_read_tag_status_all();		// wait for DMA to complete
+    mfc_getllar(local_q, q, 0, 0);
+    spu_readch(MFC_RdAtomicStat);
 
-  if (local_q.head == 0){		// empty
-    return false;
-  }
+    if (local_q->mutex != 0)		// somebody else has it locked
+      return false;
 
-  // When we peeked, head was non-zero.  Now grab the
-  // lock and do it for real.
+    if (local_q->head == 0)		// the queue is empty
+      return false;
 
-  _mutex_lock(q + offsetof(gc_jd_queue_t, m.mutex));
+    // Try to acquire the lock
 
-  // copy in the queue structure
-  mfc_get(&local_q, q, sizeof(local_q), gc_sys_tag, 0, 0);
-  mfc_write_tag_mask(1 << gc_sys_tag);	// the tag we're interested in
-  mfc_read_tag_status_all();		// wait for DMA to complete
+    local_q->mutex = 1;
+    mfc_putllc(local_q, q, 0, 0);
+    status = spu_readch(MFC_RdAtomicStat);
 
-  if (local_q.head == 0){		// empty
-    _fast_mutex_unlock(q + offsetof(gc_jd_queue_t, m.mutex));
-    return false;
-  }
+    if (status != 0){
+      gc_cdelay((int) backoff);
+      backoff = next_backoff(backoff);
+    }
 
+  } while (status != 0);
+
+  // we're now holding the lock
+    
   // copy in job descriptor at head of queue
-  *item_ea = local_q.head;
+  *item_ea = local_q->head;
   
   // We must use the fence with the jd_tag to ensure that any
   // previously initiated put of a job desc is locally ordered before
   // the get of the new one.
-  mfc_getf(item, local_q.head, sizeof(gc_job_desc_t), jd_tag, 0, 0);
+  mfc_getf(item, local_q->head, sizeof(gc_job_desc_t), jd_tag, 0, 0);
   mfc_write_tag_mask(1 << jd_tag);	// the tag we're interested in
   mfc_read_tag_status_all();		// wait for DMA to complete
 
-  local_q.head = item->sys.next;
+  local_q->head = item->sys.next;
   item->sys.next = 0;
-  if (local_q.head == 0)		// now empty?
-    local_q.tail = 0;
+  if (local_q->head == 0)		// now empty?
+    local_q->tail = 0;
 
+  // Copy the queue struct back out and unlock the mutex in one fell swoop.
+  // We use the unconditional put since it's faster and we own the lock.
 
-  // copy the queue structure back out
-  mfc_put(&local_q, q, sizeof(local_q), gc_sys_tag, 0, 0);
-  mfc_write_tag_mask(1 << gc_sys_tag);	// the tag we're interested in
-  mfc_read_tag_status_all();		// wait for DMA to complete
-
-  // Q: FIXME do we need to order stores in EA or can we just clear the
-  // local copy of the mutex above and blast it out, removing the need
-  // for this explicit unlock?
-  //
-  // A: Manual says it's better to use an atomic op rather than
-  // a normal DMA, and that a putlluc is better than a putllc if
-  // you can use it.
-
-  _fast_mutex_unlock(q + offsetof(gc_jd_queue_t, m.mutex));
-  return true;
-}
-
-
-void
-gc_jd_queue_getllar(gc_eaddr_t q)
-{
-  // get reservation that includes the flag in the queue
-  gc_eaddr_t	ea = q + offsetof(gc_jd_queue_t, f.flag);
-    
-  char _tmp[256];
-  char *buf = (char *) ALIGN(_tmp, 128);	// get cache-aligned buffer
-
-  mfc_getllar(buf, ALIGN128_EA(ea), 0, 0);
+  local_q->mutex = 0;
+  mfc_putlluc(local_q, q, 0, 0);
   spu_readch(MFC_RdAtomicStat);
+
+  return true;
 }
