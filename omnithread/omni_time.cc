@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,35 +22,35 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <mb_time.h>
+#include <omni_time.h>
 #include <omnithread.h>
 #include <math.h>
 #include <assert.h>
 
 
-mb_time::mb_time(double real_secs)
+omni_time::omni_time(double real_secs)
 {
   double floor_secs = floor(real_secs);
   d_secs = (long) floor_secs;
   d_nsecs = (long) ((real_secs - floor_secs) * 1e9);	  // always positive
 }
 
-mb_time
-mb_time::time(const mb_time &delta_t)
+omni_time
+omni_time::time(const omni_time &delta_t)
 {
   unsigned long	abs_sec, abs_nsec;
   unsigned long rel_sec  = delta_t.d_secs;
   unsigned long rel_nsec = delta_t.d_nsecs;
   
   omni_thread::get_time(&abs_sec, &abs_nsec, rel_sec, rel_nsec);
-  return mb_time(abs_sec, abs_nsec);
+  return omni_time(abs_sec, abs_nsec);
 }
 
 
-mb_time
-operator+(const mb_time &x, const mb_time &y)
+omni_time
+operator+(const omni_time &x, const omni_time &y)
 {
-  mb_time r(x.d_secs + y.d_secs, x.d_nsecs + y.d_nsecs);
+  omni_time r(x.d_secs + y.d_secs, x.d_nsecs + y.d_nsecs);
   while (r.d_nsecs >= 1000000000){
     r.d_nsecs -= 1000000000;
     r.d_secs++;
@@ -58,12 +58,12 @@ operator+(const mb_time &x, const mb_time &y)
   return r;
 }
 
-mb_time
-operator-(const mb_time &x, const mb_time &y)
+omni_time
+operator-(const omni_time &x, const omni_time &y)
 {
   // assert(!(x < y));
 
-  mb_time r(x.d_secs - y.d_secs, x.d_nsecs - y.d_nsecs);
+  omni_time r(x.d_secs - y.d_secs, x.d_nsecs - y.d_nsecs);
   while (r.d_nsecs < 0){
     r.d_nsecs += 1000000000;
     r.d_secs--;
@@ -71,14 +71,14 @@ operator-(const mb_time &x, const mb_time &y)
   return r;
 }
 
-mb_time
-operator+(const mb_time &x, double y)
+omni_time
+operator+(const omni_time &x, double y)
 {
-  return x + mb_time(y);
+  return x + omni_time(y);
 }
 
-mb_time
-operator-(const mb_time &x, double y)
+omni_time
+operator-(const omni_time &x, double y)
 {
-  return x - mb_time(y);
+  return x - omni_time(y);
 }

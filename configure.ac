@@ -240,10 +240,10 @@ AC_ARG_ENABLE(
 
 build_dirs="config"
 GRC_OMNITHREAD			dnl must come before gnuradio-core and mblock
-GRC_PMT
-GRC_MBLOCK			dnl this must come after GRC_PMT
 GRC_GCELL
 GRC_GNURADIO_CORE
+GRC_PMT
+GRC_MBLOCK			dnl this must come after GRC_PMT
 GRC_USRP
 GRC_GR_USRP			dnl this must come after GRC_USRP
 GRC_GR_GCELL			dnl this must come after GRC_GCELL and GRC_GNURADIO_CORE

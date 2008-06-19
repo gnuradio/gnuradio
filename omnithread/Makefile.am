@@ -37,11 +37,13 @@ lib_LTLIBRARIES = libgromnithread.la
 
 if OMNITHREAD_POSIX
 libgromnithread_la_SOURCES =		\
+	omni_time.cc \
 	posix.cc
 endif
 
 if OMNITHREAD_NT
 libgromnithread_la_SOURCES =		\
+	omni_time.cc \
 	nt.cc
 endif
 
@@ -67,6 +69,7 @@ EXTRA_DIST =				\
 
 grinclude_HEADERS =			\
 	omnithread.h			\
+	omni_time.h			\
 	ot_mach.h			\
 	ot_nt.h				\
 	ot_posix.h			\

@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 #include "gc_job_manager.h"
-#include "mb_time.h"
+#include <omni_time.h>
 #include <getopt.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -73,7 +73,7 @@ run_test(unsigned int nspes, unsigned int usecs, int njobs)
     init_jd(all_jds[i], usecs);
   }
 
-  mb_time t_start = mb_time::time();
+  omni_time t_start = omni_time::time();
 
   ci = 0;
   njds[0] = 0;
@@ -122,7 +122,7 @@ run_test(unsigned int nspes, unsigned int usecs, int njobs)
   }
 
   // stop timing
-  mb_time t_stop = mb_time::time();
+  omni_time t_stop = omni_time::time();
   double delta = (t_stop - t_start).double_time();
   printf("nspes: %2d  udelay: %4d  elapsed_time: %7.3f  njobs: %g  speedup: %6.3f\n",
 	 mgr->nspes(), usecs, delta, (double) njobs,

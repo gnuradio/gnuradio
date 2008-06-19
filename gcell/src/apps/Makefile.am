@@ -22,7 +22,7 @@ include $(top_srcdir)/Makefile.common
 
 SUBDIRS = spu .
 
-AM_CPPFLAGS = $(DEFINES) $(OMNITHREAD_INCLUDES) $(MBLOCK_INCLUDES) \
+AM_CPPFLAGS = $(DEFINES) $(OMNITHREAD_INCLUDES) \
 	$(GCELL_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 
@@ -41,7 +41,7 @@ test_all_SOURCES = test_all.cc
 test_all_LDADD = $(GCELL_QA_LA) $(GCELL_LA)
 
 benchmark_dma_SOURCES = benchmark_dma.cc
-benchmark_dma_LDADD = spu/benchmark_procs $(GCELL_LA) $(MBLOCK_LA)
+benchmark_dma_LDADD = spu/benchmark_procs $(GCELL_LA)
 
 benchmark_nop_SOURCES = benchmark_nop.cc
-benchmark_nop_LDADD = spu/benchmark_procs $(GCELL_LA) $(MBLOCK_LA)
+benchmark_nop_LDADD = spu/benchmark_procs $(GCELL_LA)

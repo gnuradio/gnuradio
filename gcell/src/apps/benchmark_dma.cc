@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 #include "gc_job_manager.h"
-#include "mb_time.h"
+#include <omni_time.h>
 #include <getopt.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -148,7 +148,7 @@ run_test(unsigned int nspes, unsigned int usecs, unsigned int dma_size, int getp
 
   for (int iter = 0; iter < 1; iter++){
 
-    mb_time t_start = mb_time::time();
+    omni_time t_start = omni_time::time();
 
     nsubmitted = 0;
     ncompleted = 0;
@@ -203,7 +203,7 @@ run_test(unsigned int nspes, unsigned int usecs, unsigned int dma_size, int getp
     }
 
     // stop timing
-    mb_time t_stop = mb_time::time();
+    omni_time t_stop = omni_time::time();
 
     double delta = (t_stop - t_start).double_time();
     printf("nspes: %2d  udelay: %4d  elapsed_time: %7.3f  dma_size: %5d  dma_throughput: %7.3e\n",

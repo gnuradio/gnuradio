@@ -21,10 +21,8 @@ AC_DEFUN([GRC_GCELL],[
     GRC_ENABLE(gcell)
     dnl GRC_WITH(gcell)
 
-    dnl Don't do gcell if omnithread or mblock skipped
-    dnl (The mblock dependency should be refactored, we're just using some timing utilities)
+    dnl Don't do gcell if omnithread skipped
     GRC_CHECK_DEPENDENCY(gcell, omnithread)
-    GRC_CHECK_DEPENDENCY(gcell, mblock)
 
     dnl If execution gets to here, $passed will be:
     dnl   with : if the --with code didn't error out

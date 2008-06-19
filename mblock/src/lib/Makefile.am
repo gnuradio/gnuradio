@@ -61,7 +61,6 @@ libmblock_la_SOURCES =			\
 	mb_runtime_base.cc		\
 	mb_runtime_nop.cc		\
 	mb_runtime_thread_per_block.cc	\
-	mb_time.cc			\
 	mb_timer_queue.cc		\
 	mb_util.cc			\
 	mb_worker.cc			
