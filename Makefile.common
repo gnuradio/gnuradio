@@ -73,6 +73,10 @@ GNURADIO_CORE_LA = @gnuradio_core_LA@
 GNURADIO_I = @gnuradio_core_I@
 
 # How to link in the USRP library from inside the tree
+GRUEL_INCLUDES = @gruel_INCLUDES@
+GRUEL_LA = @gruel_LA@
+
+# How to link in the USRP library from inside the tree
 USRP_INCLUDES = @usrp_INCLUDES@
 USRP_LA = @usrp_LA@
 
