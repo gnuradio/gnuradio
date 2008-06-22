@@ -37,6 +37,7 @@ AC_DEFUN([GRC_GRUEL],[
         gruel/src/Makefile \
         gruel/src/include/Makefile \
         gruel/src/include/gruel/Makefile \
+	gruel/src/include/gruel/inet.h \
         gruel/src/lib/Makefile \
     ])
 

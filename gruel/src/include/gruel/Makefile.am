@@ -21,7 +21,11 @@
 
 include $(top_srcdir)/Makefile.common
 
+BUILT_SOURCES = \
+	inet.h
+
 gruelincludedir = $(prefix)/include/gruel
 
 gruelinclude_HEADERS = \
+	$(BUILT_SOURCES) \
 	realtime.h

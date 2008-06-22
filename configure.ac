@@ -128,13 +128,16 @@ AC_CHECK_HEADERS(linux/ppdev.h dev/ppbus/ppi.h sys/mman.h sys/select.h sys/types
 AC_CHECK_HEADERS(sys/resource.h stdint.h sched.h signal.h sys/syscall.h)
 AC_CHECK_HEADERS(netinet/in.h)
 AC_CHECK_HEADERS(windows.h)
+AC_CHECK_HEADER(byteswap.h, [GR_HAVE_BYTESWAP=1],[GR_HAVE_BYTESWAP=0])
+AC_SUBST(GR_HAVE_BYTESWAP)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_C_INLINE
 AC_TYPE_SIZE_T
 AC_HEADER_TIME
-AC_C_BIGENDIAN
+AC_C_BIGENDIAN([GR_ARCH_BIGENDIAN=1],[GR_ARCH_BIGENDIAN=0])
+AC_SUBST(GR_ARCH_BIGENDIAN)
 AC_STRUCT_TM
 
 dnl Checks for library functions.
