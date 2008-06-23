@@ -21,7 +21,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, usrp, optfir, eng_notation, blks, pager
+from gnuradio import gr, gru, usrp, optfir, eng_notation, pager
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import time, os, sys
