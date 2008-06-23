@@ -103,7 +103,7 @@ GLOB_SYMB(complex_dotprod_sse):
 	shr	$2, %rdx		# n_2_complex_blocks / 4
 	movaps	%xmm5, %xmm7 
 
-	je	.cleanup		# if zero, take short path
+	je	.Lcleanup		# if zero, take short path
 
 	# finish setup and loop priming
 
@@ -186,7 +186,7 @@ GLOB_SYMB(complex_dotprod_sse):
 	# At this point, xmm4 contains 2x2 partial sums.  We need
 	# to compute a "horizontal complex add" across xmm4.  
 	
-.cleanup:				# xmm4 = r1 i2 r3 i4
+.Lcleanup:				# xmm4 = r1 i2 r3 i4
 	movhlps	%xmm4, %xmm0		# xmm0 = ?? ?? r1 r2
 	addps	%xmm4, %xmm0		# xmm0 = ?? ?? r1+r3 i2+i4
 	movlps	%xmm0, (%rcx)		# store low 2x32 bits (complex) to memory

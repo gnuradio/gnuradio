@@ -97,7 +97,7 @@ GLOB_SYMB(float_dotprod_sse):
 	movaps	%xmm5, %xmm7 
 
 	shrl	$2, %ecx		# n_4_float_blocks / 4
-	je	.cleanup		# if zero, take short path
+	je	.Lcleanup		# if zero, take short path
 
 	# finish setup and loop priming
 
@@ -150,7 +150,7 @@ GLOB_SYMB(float_dotprod_sse):
 	# to compute a "horizontal add" across xmm4.  
 	# This is a fairly nasty operation...
 	
-.cleanup:				# xmm4 = d1 d2 d3 d4
+.Lcleanup:				# xmm4 = d1 d2 d3 d4
 	xorps	%xmm0, %xmm0		# xmm0 = 0 0 0 0  (may be unnecessary)
 	movhlps	%xmm4, %xmm0		# xmm0 = 0 0 d1 d2
 	addps	%xmm4, %xmm0		# xmm0 = d1 d2 d1+d3 d2+d4
