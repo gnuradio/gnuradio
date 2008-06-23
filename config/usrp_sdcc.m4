@@ -60,7 +60,7 @@ AC_DEFUN([USRP_SDCC],
 			AC_MSG_RESULT([$sdcc_major_version.$sdcc_minor_version.$sdcc_micro_version])
 		else
 			sdccok=no
-			AC_MSG_RESULT([USRP requires sdcc >= $sdcc_version_min. sdcc not found. See http://sdcc.sf.net"])
+			AC_MSG_RESULT([USRP requires sdcc >= $sdcc_version_min. sdcc not found. See http://sdcc.sf.net])
 		fi
 
 		AC_SUBST(XCC)
