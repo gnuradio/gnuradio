@@ -93,7 +93,7 @@ GLOB_SYMB(complex_dotprod_3dnowext):
 	#
 	
 	.p2align 4
-.loop1:	
+.complex_dotprod_3dnowext_loop1:	
 	pfmul	0(%edx), %mm0
 	pfadd	%mm2, %mm6
 
@@ -125,7 +125,7 @@ GLOB_SYMB(complex_dotprod_3dnowext):
 
 .L1_test:
 	decl	%ecx
-	jge	.loop1
+	jge	.complex_dotprod_3dnowext_loop1
 
 	# We've handled the bulk of multiplies up to here.
 	# Now accumulate the final two additions and see if original

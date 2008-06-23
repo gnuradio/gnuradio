@@ -72,7 +72,7 @@ sse_float_dotprod:
 	pxor	%mm5, %mm5		# mm5 = 0 0 
 
 	.p2align 4
-.loop1:
+.3dnow_float_dotprod_simple_loop1:
 	movq	0(%eax), %mm0
 	movq	8(%eax), %mm1
 	
@@ -85,7 +85,7 @@ sse_float_dotprod:
 	addl	$16, %edx
 	addl	$16, %eax
 	decl	%ecx
-	jne	.loop1
+	jne	.3dnow_float_dotprod_simple_loop1
 	
 	# at this point mm4 and mm5 contain partial sums
 

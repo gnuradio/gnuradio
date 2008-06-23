@@ -81,7 +81,7 @@ GLOB_SYMB(complex_dotprod_sse):
 	jmp	.L1_test
 
 	.p2align 4
-.loop1:	
+.complex_dotprod_sse_loop1:	
 
 	pxor    %mm0, %mm0
 	punpcklwd       0(%eax), %mm0
@@ -95,7 +95,7 @@ GLOB_SYMB(complex_dotprod_sse):
 	addps	%xmm0, %xmm4
 .L1_test:	
 	decl	%ecx
-	jge	.loop1
+	jge	.complex_dotprod_sse_loop1
 
 	
 	# set up for primary loop which is unrolled 4 times
@@ -129,7 +129,7 @@ GLOB_SYMB(complex_dotprod_sse):
 	# hence enter loop at top
 
 	.p2align 4
-.loop2:
+.complex_dotprod_sse_loop2:
 	mulps	(%edx), %xmm0
 	addps	%xmm2, %xmm6
 
@@ -169,7 +169,7 @@ GLOB_SYMB(complex_dotprod_sse):
 	addl	$0x40, %edx
 	addl	$0x10, %eax
 	decl	%ecx
-	jne	.loop2
+	jne	.complex_dotprod_sse_loop2
 
 	# OK, now we've done with all the multiplies, but
 	# we still need to handle the unaccumulated

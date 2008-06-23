@@ -85,7 +85,7 @@ GLOB_SYMB(ccomplex_dotprod_sse):
 	#
 	
 	.p2align 4
-.loop1:	
+.ccomplex_dotprod_sse64_loop1:	
 
 # complex prod: C += A * B,  w/ temp Z & Y (or B), xmmPN=$0x8000000080000000
 #
@@ -141,7 +141,7 @@ GLOB_SYMB(ccomplex_dotprod_sse):
 
 .L1_test:
 	dec	%rax
-	jge	.loop1
+	jge	.ccomplex_dotprod_sse64_loop1
 
 	# We've handled the bulk of multiplies up to here.
 	# Let's sse if original n_2_ccomplex_blocks was odd.

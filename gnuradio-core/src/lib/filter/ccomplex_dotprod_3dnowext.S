@@ -89,7 +89,7 @@ GLOB_SYMB(ccomplex_dotprod_3dnowext):
 	#
 	
 	.p2align 4
-.loop1:	
+.ccomplex_dotprod_3dnowext_loop1:	
 
 # complex prod: C += A * B,  w/ temp Z
 #
@@ -144,7 +144,7 @@ GLOB_SYMB(ccomplex_dotprod_3dnowext):
 
 .L1_test:
 	decl	%ecx
-	jge	.loop1
+	jge	.ccomplex_dotprod_3dnowext_loop1
 
 	# We've handled the bulk of multiplies up to here.
 	# Let's see if original n_2_ccomplex_blocks was odd.

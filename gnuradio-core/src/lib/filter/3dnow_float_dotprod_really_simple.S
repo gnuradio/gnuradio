@@ -72,14 +72,14 @@ sse_float_dotprod:
 	shll	$1, %ecx		# count * 2
 
 	.p2align 4
-.loop1:
+.3dnow_float_dotprod_really_simple_loop1:
 	movq	(%eax), %mm0
 	pfmul	(%edx), %mm0
 	pfadd	%mm0, %mm4
 	addl	$8, %edx
 	addl	$8, %eax
 	decl	%ecx
-	jne	.loop1
+	jne	.3dnow_float_dotprod_really_simple_loop1
 	
 	# at this point mm4 contains partial sums
 
