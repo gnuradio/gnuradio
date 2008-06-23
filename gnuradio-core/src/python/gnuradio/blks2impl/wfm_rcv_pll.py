@@ -112,7 +112,6 @@ class wfm_rcv_pll(gr.hier_block2):
             #print "stereo dsbsc filter ", stereo_dsbsc_filter_coeffs
             # construct overlap add filter system from coefficients for stereo carrier
 
-            self.stereo_carrier_filter = gr.fir_filter_fcc(audio_decimation, stereo_carrier_filter_coeffs)
 	    self.rds_signal_filter = gr.fir_filter_fcc(audio_decimation, stereo_rds_filter_coeffs)
 
 
