@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,9 +26,9 @@
 #include <gr_scheduler_thread.h>
 
 /*!
- *\brief Implementation details of gr_top_block
- *
+ *\brief Abstract implementation details of gr_top_block
  * \ingroup internal
+ *
  * The actual implementation of gr_top_block. Separate class allows
  * decoupling of changes from dependent classes.
  *
@@ -37,22 +37,22 @@ class gr_top_block_impl
 {
 public:
   gr_top_block_impl(gr_top_block *owner);
-  ~gr_top_block_impl();
+  virtual ~gr_top_block_impl();
 
   // Create and start scheduler threads
-  void start();
+  virtual void start();
 
   // Signal scheduler threads to stop
-  void stop();
+  virtual void stop() = 0;
 
   // Wait for scheduler threads to exit
-  void wait();
+  virtual void wait() = 0;
 
   // Lock the top block to allow reconfiguration
-  void lock();
+  virtual void lock();
 
   // Unlock the top block at end of reconfiguration
-  void unlock();
+  virtual void unlock();
 
   // Dump the flowgraph to stdout
   void dump();
@@ -60,19 +60,25 @@ public:
   // Return true if flowgraph is running
   bool is_running() const { return d_running; }
   
-private:
+protected:
     
+  gr_top_block                  *d_owner;
   bool                           d_running;
   gr_flat_flowgraph_sptr         d_ffg;
-  gr_scheduler_thread_vector_t   d_threads;
-  gr_top_block                  *d_owner;
+
+  omni_mutex                     d_reconf;	// protects d_lock_count
   int                            d_lock_count;
-  omni_mutex                     d_reconf;
 
-  std::vector<gr_basic_block_vector_t> d_graphs;
+  virtual void start_threads() = 0;
+  virtual void restart();
 
-  void start_threads();
-  void restart();
+/*!
+ * Make a vector of gr_block from a vector of gr_basic_block
+ *
+ * Pass-by-value to avoid problem with possible asynchronous modification
+ */
+  static gr_block_vector_t make_gr_block_vector(gr_basic_block_vector_t blocks);
+
 };
 
 #endif /* INCLUDED_GR_TOP_BLOCK_IMPL_H */

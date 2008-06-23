@@ -55,6 +55,7 @@ libruntime_la_SOURCES = 			\
 	gr_sync_interpolator.cc			\
 	gr_top_block.cc				\
 	gr_top_block_impl.cc			\
+	gr_top_block_impl_sts.cc		\
 	gr_tmp_path.cc				\
 	gr_vmcircbuf.cc				\
 	gr_vmcircbuf_mmap_shm_open.cc		\
@@ -102,6 +103,7 @@ grinclude_HEADERS = 				\
 	gr_sync_interpolator.h			\
 	gr_top_block.h				\
 	gr_top_block_impl.h			\
+	gr_top_block_impl_sts.h			\
 	gr_timer.h				\
 	gr_tmp_path.h				\
 	gr_types.h				\

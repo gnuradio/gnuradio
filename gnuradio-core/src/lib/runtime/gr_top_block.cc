@@ -27,6 +27,7 @@
 #include <unistd.h>
 #include <gr_top_block.h>
 #include <gr_top_block_impl.h>
+#include <gr_top_block_impl_sts.h>
 #include <gr_io_signature.h>
 #include <iostream>
 
@@ -42,7 +43,7 @@ gr_top_block::gr_top_block(const std::string &name)
 		   gr_make_io_signature(0,0,0))
   
 {
-  d_impl = new gr_top_block_impl(this);
+  d_impl = new gr_top_block_impl_sts(this);
 }
   
 gr_top_block::~gr_top_block()
