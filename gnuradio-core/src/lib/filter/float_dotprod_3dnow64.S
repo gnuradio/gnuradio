@@ -85,7 +85,7 @@ GLOB_SYMB(float_dotprod_3dnow):
 	#
 	
 	.p2align 4
-.float_dotprod_3dnow64_loop1:	
+.Loop1:	
 	pfmul	0(%rdi), %mm0
 	pfadd	%mm2, %mm6
 	movq	16(%rsi), %mm2
@@ -106,7 +106,7 @@ GLOB_SYMB(float_dotprod_3dnow):
 	add	$32, %rsi
 .L1_test:
 	dec	%rax
-	jge	.float_dotprod_3dnow64_loop1
+	jge	.Loop1
 
 	# We've handled the bulk of multiplies up to here.
 	# Now accumulate the final two additions and see if original
