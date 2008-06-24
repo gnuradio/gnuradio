@@ -85,8 +85,6 @@ gr_top_block_impl_sts::start_threads()
       std::cout << "start_threads: starting " << thread << std::endl;
     thread->start();
   }
-
-  d_running = true;
 }
 
 /*

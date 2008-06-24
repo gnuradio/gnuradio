@@ -96,9 +96,3 @@ gr_top_block::dump()
 {
   d_impl->dump();
 }
-
-bool
-gr_top_block::is_running()
-{
-  return d_impl->is_running();
-}

@@ -49,16 +49,13 @@ public:
   virtual void wait() = 0;
 
   // Lock the top block to allow reconfiguration
-  virtual void lock();
+  void lock();
 
   // Unlock the top block at end of reconfiguration
-  virtual void unlock();
+  void unlock();
 
   // Dump the flowgraph to stdout
   void dump();
-
-  // Return true if flowgraph is running
-  bool is_running() const { return d_running; }
   
 protected:
     
@@ -70,7 +67,6 @@ protected:
   int                            d_lock_count;
 
   virtual void start_threads() = 0;
-  virtual void restart();
 
 /*!
  * Make a vector of gr_block from a vector of gr_basic_block
@@ -79,6 +75,8 @@ protected:
  */
   static gr_block_vector_t make_gr_block_vector(gr_basic_block_vector_t blocks);
 
+private:
+  void restart();
 };
 
 #endif /* INCLUDED_GR_TOP_BLOCK_IMPL_H */

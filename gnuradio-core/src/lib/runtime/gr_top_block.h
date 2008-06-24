@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -103,11 +103,6 @@ public:
    * Displays flattened flowgraph edges and block connectivity
    */
   void dump();
-
-  /*!
-   * Returns true if flowgraph is running
-   */
-  bool is_running();
 };
 
 #endif /* INCLUDED_GR_TOP_BLOCK_H */

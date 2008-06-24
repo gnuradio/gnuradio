@@ -57,7 +57,10 @@ gr_top_block_impl::start()
     std::cout << "start: entered " << this << std::endl;
 
   if (d_running)
-    throw std::runtime_error("top block already running or wait() not called after previous stop()");
+    throw std::runtime_error("top_block::start: top block already running or wait() not called after previous stop()");
+
+  if (d_lock_count > 0)
+    throw std::runtime_error("top_block::start: can't call start with flow graph locked");
 
   // Create new flat flow graph by flattening hierarchy
   d_ffg = d_owner->flatten();
@@ -68,6 +71,7 @@ gr_top_block_impl::start()
 
   // Execute scheduler threads
   start_threads();
+  d_running = true;
 }
 
 
@@ -86,8 +90,10 @@ void
 gr_top_block_impl::unlock()
 {
   omni_mutex_lock lock(d_reconf);
-  if (d_lock_count <= 0)
+  if (d_lock_count <= 0){
+    d_lock_count = 0;		// fix it, then complain
     throw std::runtime_error("unpaired unlock() call");
+  }
 
   d_lock_count--;
   if (GR_TOP_BLOCK_IMPL_DEBUG)
@@ -107,7 +113,7 @@ gr_top_block_impl::restart()
     std::cout << "restart: entered" << std::endl;
 
   if (!d_running)
-    throw std::runtime_error("top block is not running");
+    return;		// nothing to do
 
   // Stop scheduler threads and wait for completion
   stop();
@@ -133,6 +139,7 @@ gr_top_block_impl::restart()
   d_ffg = new_ffg;
 
   start_threads();
+  d_running = true;
 }
 
 void

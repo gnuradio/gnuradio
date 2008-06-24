@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -46,7 +46,6 @@ public:
   void run();
   void lock();
   void unlock() throw (std::runtime_error);
-  bool is_running();
   void dump();
 };
 

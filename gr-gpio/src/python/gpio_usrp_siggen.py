@@ -90,26 +90,25 @@ class my_top_block(gr.top_block):
         # self.file_sink = gr.file_sink (gr.sizeof_gr_complex, "siggen.dat")
 
     def _configure_graph (self, type):
-        was_running = self.is_running ()
-        if was_running:
-            self.stop ()
-        self.disconnect_all ()
-        if type == gr.GR_SIN_WAVE:
-            self.connect (self.siggen, self.u)
-            # self.connect (self.siggen, self.file_sink)
-            self.siggen.set_waveform (type)
-            self.src = self.siggen
-        elif type == gr.GR_UNIFORM or type == gr.GR_GAUSSIAN:
-            self.connect (self.noisegen, self.u)
-            self.noisegen.set_type (type)
-            self.src = self.noisegen
-        elif type == gr.GR_CONST_WAVE:
-            self.connect (self.vecgen, self.u)
-            self.src = self.vecgen
-        else:
-            raise ValueError, type
-        if was_running:
-            self.start ()
+        try:
+            self.lock()
+            self.disconnect_all ()
+            if type == gr.GR_SIN_WAVE:
+                self.connect (self.siggen, self.u)
+                # self.connect (self.siggen, self.file_sink)
+                self.siggen.set_waveform (type)
+                self.src = self.siggen
+            elif type == gr.GR_UNIFORM or type == gr.GR_GAUSSIAN:
+                self.connect (self.noisegen, self.u)
+                self.noisegen.set_type (type)
+                self.src = self.noisegen
+            elif type == gr.GR_CONST_WAVE:
+                self.connect (self.vecgen, self.u)
+                self.src = self.vecgen
+            else:
+                raise ValueError, type
+        finally:
+            self.unlock()
 
     def set_freq(self, target_freq):
         """
