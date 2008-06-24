@@ -54,6 +54,8 @@ ourpython_PYTHON =			\
 	db_xcvr2450.py			\
 	db_instantiator.py		\
 	db_tv_rx.py			\
+	db_dtt754.py			\
+	db_dtt768.py			\
 	flexrf_debug_gui.py		\
 	tx_debug_gui.py			\
 	usrp.py				\

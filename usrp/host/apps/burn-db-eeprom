@@ -36,6 +36,8 @@ daughterboards = {
     'tvrx'            : (None,                      (TV_RX, 0x0000)),
     'tvrx2'           : (None,                      (TV_RX_REV_2, 0x0000)),
     'tvrx3'           : (None,                      (TV_RX_REV_3, 0x0000)),
+    'dtt754'          : (None,                      (DTT754, 0x0000)),
+    'dtt768'          : (None,                      (DTT768, 0x0000)),
     'rfx400'          : ((FLEX_400_TX, 0x0000),     (FLEX_400_RX, 0x0000)),
     'rfx900'          : ((FLEX_900_TX, 0x0000),     (FLEX_900_RX, 0x0000)),
     'rfx1200'         : ((FLEX_1200_TX, 0x0000),    (FLEX_1200_RX, 0x0000)),
