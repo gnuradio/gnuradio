@@ -35,7 +35,7 @@ class draw_constellation:
     def __init__(self, options):
         derot_file = "ofdm_frame_sink_c.dat"
         acq_file = "ofdm_frame_acq_c.dat"
-        fft_file = "fft_out_c.dat"
+        fft_file = "ofdm_receiver-fft_out_c.dat"
 
         self.h_derot_file = open(derot_file, "r")
         self.h_acq_file = open(acq_file, "r")
