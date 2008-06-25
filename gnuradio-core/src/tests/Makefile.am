@@ -32,7 +32,9 @@ TESTS = test_all
 
 #Test program to test setting up buffers using gr_test which can be run manually
 EXTRA_DIST = 				\
-	test_buffers.py
+	test_buffers.py \
+	benchmark_dotprod
+
 
 noinst_PROGRAMS		= 	\
 	benchmark_dotprod_fff	\
