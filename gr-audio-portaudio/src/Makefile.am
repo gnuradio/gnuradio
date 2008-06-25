@@ -21,9 +21,6 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = python
-
-
 # Install this stuff so that it ends up as the gnuradio.audio_portaudio module
 # This usually ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio
