@@ -649,7 +649,7 @@ pmt_t usrp_inband_usb_packet::read_subpacket(int payload_offset) {
       size_t i2c_data_len;
       pmt_t i2c_data  = pmt_make_u8vector(len - 2, 0);   // skip rid+mbz+addr = 2 bytes
       uint8_t *w_data  = 
-          (uint8_t *) pmt_u8vector_writeable_elements(i2c_data, i2c_data_len);
+          (uint8_t *) pmt_u8vector_writable_elements(i2c_data, i2c_data_len);
 
       memcpy(w_data, d_payload + payload_offset + 4, i2c_data_len);  // skip first word
 
@@ -664,7 +664,7 @@ pmt_t usrp_inband_usb_packet::read_subpacket(int payload_offset) {
       size_t spi_data_len;
       pmt_t spi_data  = pmt_make_u8vector(len - 2, 0);   // skip rid+mbz+addr = 2 bytes
       uint8_t *w_data  = 
-          (uint8_t *) pmt_u8vector_writeable_elements(spi_data, spi_data_len);
+          (uint8_t *) pmt_u8vector_writable_elements(spi_data, spi_data_len);
 
       memcpy(w_data, d_payload + payload_offset + 4, spi_data_len);  // skip first word
 
@@ -719,9 +719,9 @@ pmt_t usrp_inband_usb_packet::read_subpacket(int payload_offset) {
       // The length includes an extra 2 bytes for storing the mbz and addr
       pmt_t i2c_data    = pmt_make_u8vector(len-2, 0);
 
-      // Get a writeable address to copy the data from the packet
+      // Get a writable address to copy the data from the packet
       size_t ignore;
-      uint8_t *w_data = (uint8_t *) pmt_u8vector_writeable_elements(i2c_data, ignore);
+      uint8_t *w_data = (uint8_t *) pmt_u8vector_writable_elements(i2c_data, ignore);
       memcpy(w_data, d_payload + payload_offset + 4, len-2);
 
       
@@ -753,7 +753,7 @@ pmt_t usrp_inband_usb_packet::read_subpacket(int payload_offset) {
       size_t spi_data_len;
       pmt_t spi_data  = pmt_make_u8vector(len - 6, 0);   // skip rid+mbz+addr = 2 bytes
       uint8_t *w_data  = 
-          (uint8_t *) pmt_u8vector_writeable_elements(spi_data, spi_data_len);
+          (uint8_t *) pmt_u8vector_writable_elements(spi_data, spi_data_len);
 
       memcpy(w_data, d_payload + payload_offset + 8, spi_data_len);  // skip first 2 words
 

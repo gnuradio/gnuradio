@@ -105,7 +105,7 @@ usrp_tx::write(pmt_t data)
   size_t n_bytes;
   bool underrun;  // this will need to go, as it is taken care of in the packet headers
 
-  transport_pkt *pkts = (transport_pkt *) pmt_u8vector_writeable_elements(v_packets, n_bytes);
+  transport_pkt *pkts = (transport_pkt *) pmt_u8vector_writable_elements(v_packets, n_bytes);
 
   int ret = d_utx->write (pkts, n_bytes, &underrun);
   

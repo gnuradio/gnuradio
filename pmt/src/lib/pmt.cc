@@ -508,11 +508,11 @@ pmt_uniform_vector_elements(pmt_t vector, size_t &len)
 }
 
 void *
-pmt_uniform_vector_writeable_elements(pmt_t vector, size_t &len)
+pmt_uniform_vector_writable_elements(pmt_t vector, size_t &len)
 {
   if (!vector->is_uniform_vector())
-    throw pmt_wrong_type("pmt_uniform_vector_writeable_elements", vector);
-  return _uniform_vector(vector)->uniform_writeable_elements(len);
+    throw pmt_wrong_type("pmt_uniform_vector_writable_elements", vector);
+  return _uniform_vector(vector)->uniform_writable_elements(len);
 }
 
 ////////////////////////////////////////////////////////////////////////////

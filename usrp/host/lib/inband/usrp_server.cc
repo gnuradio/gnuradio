@@ -721,7 +721,7 @@ void usrp_server::handle_cmd_xmit_raw_frame(
   pmt_t v_packets = pmt_make_u8vector(sizeof(transport_pkt) * n_packets, 0);
 
   transport_pkt *pkts =
-    (transport_pkt *) pmt_u8vector_writeable_elements(v_packets, psize);
+    (transport_pkt *) pmt_u8vector_writable_elements(v_packets, psize);
 
   for(int n=0; n < n_packets; n++) {
 
@@ -824,7 +824,7 @@ void usrp_server::handle_cmd_to_control_channel(
   new_packet:
     // This code needs to become "smart" and only make a new packet when full
     pmt_t v_packet = pmt_make_u8vector(sizeof(transport_pkt), 0);
-    transport_pkt *pkt = (transport_pkt *) pmt_u8vector_writeable_elements(v_packet, psize);
+    transport_pkt *pkt = (transport_pkt *) pmt_u8vector_writable_elements(v_packet, psize);
     payload_len = 0;
     
     pkt->set_header(0, channel, 0, payload_len);
@@ -981,7 +981,7 @@ void usrp_server::handle_cmd_to_control_channel(
 
       // Get a readable address to the data which also gives us the length
       size_t data_len;
-      uint8_t *i2c_data = (uint8_t *) pmt_u8vector_writeable_elements(data, data_len);
+      uint8_t *i2c_data = (uint8_t *) pmt_u8vector_writable_elements(data, data_len);
 
       // Make the USB packet
       if(!pkt->cs_i2c_write(i2c_addr, i2c_data, data_len))
@@ -1039,7 +1039,7 @@ void usrp_server::handle_cmd_to_control_channel(
 
       // Get a readable address to the data which also gives us the length
       size_t data_len;
-      uint8_t *spi_data = (uint8_t *) pmt_u8vector_writeable_elements(data, data_len);
+      uint8_t *spi_data = (uint8_t *) pmt_u8vector_writable_elements(data, data_len);
 
       // Make the USB packet
       if(!pkt->cs_spi_write(enables, format, opt, spi_data, data_len))
@@ -1252,7 +1252,7 @@ usrp_server::handle_response_usrp_read(pmt_t data)
   }
 
   // Extract the packet and return appropriately
-  transport_pkt *pkt = (transport_pkt *) pmt_u8vector_writeable_elements(v_pkt, n_bytes);
+  transport_pkt *pkt = (transport_pkt *) pmt_u8vector_writable_elements(v_pkt, n_bytes);
 
   // The channel is used to find the port to pass the samples on
   long channel = pkt->chan();
@@ -1273,7 +1273,7 @@ usrp_server::handle_response_usrp_read(pmt_t data)
     return; // Don't know where to send the sample... possibility on abrupt close
     
   pmt_t v_samples = pmt_make_u8vector(payload_len, 0);
-  uint8_t *samples = pmt_u8vector_writeable_elements(v_samples, ignore);
+  uint8_t *samples = pmt_u8vector_writable_elements(v_samples, ignore);
   
   memcpy(samples, pkt->payload(), payload_len);
 
@@ -1814,7 +1814,7 @@ usrp_server::set_register(long reg, long val)
   long payload_len = 0;
 
   pmt_t v_packet = pmt_make_u8vector(sizeof(transport_pkt), 0);
-  transport_pkt *pkt = (transport_pkt *) pmt_u8vector_writeable_elements(v_packet, psize);
+  transport_pkt *pkt = (transport_pkt *) pmt_u8vector_writable_elements(v_packet, psize);
   
   pkt->set_header(0, CONTROL_CHAN, 0, payload_len);
   pkt->set_timestamp(0xffffffff);
@@ -1844,7 +1844,7 @@ usrp_server::read_register(long reg)
   long payload_len = 0;
 
   pmt_t v_packet = pmt_make_u8vector(sizeof(transport_pkt), 0);
-  transport_pkt *pkt = (transport_pkt *) pmt_u8vector_writeable_elements(v_packet, psize);
+  transport_pkt *pkt = (transport_pkt *) pmt_u8vector_writable_elements(v_packet, psize);
   
   pkt->set_header(0, CONTROL_CHAN, 0, payload_len);
   pkt->set_timestamp(0xffffffff);

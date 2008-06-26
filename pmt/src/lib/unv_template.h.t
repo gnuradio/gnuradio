@@ -17,7 +17,7 @@ public:
   @TYPE@ ref(size_t k) const;
   void set(size_t k, @TYPE@ x);
   const @TYPE@ *elements(size_t &len);
-  @TYPE@ *writeable_elements(size_t &len);
+  @TYPE@ *writable_elements(size_t &len);
   const void *uniform_elements(size_t &len);
-  void *uniform_writeable_elements(size_t &len);
+  void *uniform_writable_elements(size_t &len);
 };

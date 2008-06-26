@@ -95,7 +95,7 @@ usrp_tx_stub::write(pmt_t data)
 
   size_t n_bytes;
 
-  transport_pkt *pkts = (transport_pkt *) pmt_u8vector_writeable_elements(v_packets, n_bytes);
+  transport_pkt *pkts = (transport_pkt *) pmt_u8vector_writable_elements(v_packets, n_bytes);
   long n_packets = static_cast<long>(std::ceil(n_bytes / (double)transport_pkt::max_pkt_size()));
   
   // Parse the packets looking for C/S packets and dump them to a disk if
@@ -138,7 +138,7 @@ usrp_tx_stub::parse_cs(pmt_t invocation_handle, transport_pkt pkt)
   pmt_t v_pkt = pmt_make_u8vector(sizeof(transport_pkt), 0);
   
   transport_pkt *q_pkt =
-    (transport_pkt *) pmt_u8vector_writeable_elements(v_pkt, ignore);
+    (transport_pkt *) pmt_u8vector_writable_elements(v_pkt, ignore);
       
   q_pkt->set_header(0, CONTROL_CHAN, 0, 0);
   q_pkt->set_timestamp(0xffffffff);
@@ -261,7 +261,7 @@ usrp_tx_stub::parse_cs(pmt_t invocation_handle, transport_pkt pkt)
       // Create data to place as a response, filled with 0xff
       size_t ignore;
       pmt_t i2c_data = pmt_make_u8vector(i2c_bytes, 0xff);
-      uint8_t *w_data = (uint8_t *) pmt_u8vector_writeable_elements(i2c_data, ignore);
+      uint8_t *w_data = (uint8_t *) pmt_u8vector_writable_elements(i2c_data, ignore);
 
       // Generate a reply and put it in the queue for the RX stub to read
       if(!q_pkt->cs_i2c_read_reply(rid, i2c_addr, w_data, i2c_bytes))
@@ -304,7 +304,7 @@ usrp_tx_stub::parse_cs(pmt_t invocation_handle, transport_pkt pkt)
       // Create data to place as a fake response
       size_t ignore;
       pmt_t spi_data = pmt_make_u8vector(n_bytes, 0xff);
-      uint8_t *w_data = (uint8_t *) pmt_u8vector_writeable_elements(spi_data, ignore);
+      uint8_t *w_data = (uint8_t *) pmt_u8vector_writable_elements(spi_data, ignore);
 
       // Generate a reply and put it in the queue for the RX stub to read
       if(!q_pkt->cs_spi_read_reply(rid, w_data, n_bytes))

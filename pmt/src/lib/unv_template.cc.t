@@ -47,7 +47,7 @@ pmt_@TAG@vector::elements(size_t &len)
 }
 
 @TYPE@ *
-pmt_@TAG@vector::writeable_elements(size_t &len)
+pmt_@TAG@vector::writable_elements(size_t &len)
 {
   len = length();
   return &d_v[0];
@@ -61,7 +61,7 @@ pmt_@TAG@vector::uniform_elements(size_t &len)
 }
 
 void*
-pmt_@TAG@vector::uniform_writeable_elements(size_t &len)
+pmt_@TAG@vector::uniform_writable_elements(size_t &len)
 {
   len = length() * sizeof(@TYPE@);
   return &d_v[0];
@@ -110,9 +110,9 @@ pmt_@TAG@vector_elements(pmt_t vector, size_t &len)
 }
 
 @TYPE@ *
-pmt_@TAG@vector_writeable_elements(pmt_t vector, size_t &len)
+pmt_@TAG@vector_writable_elements(pmt_t vector, size_t &len)
 {
   if (!vector->is_@TAG@vector())
-    throw pmt_wrong_type("pmt_@TAG@vector_writeable_elements", vector);
-  return _@TAG@vector(vector)->writeable_elements(len);
+    throw pmt_wrong_type("pmt_@TAG@vector_writable_elements", vector);
+  return _@TAG@vector(vector)->writable_elements(len);
 }

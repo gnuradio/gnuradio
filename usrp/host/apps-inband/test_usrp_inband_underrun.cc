@@ -571,7 +571,7 @@ test_usrp_inband_underrun::build_and_send_next_frame()
   size_t nshorts = 2 * nsamples_this_frame;	// 16-bit I & Q
   pmt_t uvec = pmt_make_s16vector(nshorts, 0);
   size_t ignore;
-  int16_t *samples = pmt_s16vector_writeable_elements(uvec, ignore);
+  int16_t *samples = pmt_s16vector_writable_elements(uvec, ignore);
 
   // fill in the complex sinusoid
 

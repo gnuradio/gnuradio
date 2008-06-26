@@ -26,7 +26,7 @@ qa_pmt_unv::test_@TAG@vector()
   CPPUNIT_ASSERT_EQUAL(s1, rd[1]);
   CPPUNIT_ASSERT_EQUAL(s2, rd[2]);
 
-  @TYPE@ *wr = pmt_@TAG@vector_writeable_elements(v1, len);
+  @TYPE@ *wr = pmt_@TAG@vector_writable_elements(v1, len);
   CPPUNIT_ASSERT_EQUAL(len, N);
   wr[0] = @TYPE@(0);
   CPPUNIT_ASSERT_EQUAL(@TYPE@(0), wr[0]);

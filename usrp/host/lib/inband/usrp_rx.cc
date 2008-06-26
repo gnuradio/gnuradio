@@ -130,7 +130,7 @@ usrp_rx::read_and_respond(pmt_t data)
 
     pmt_t v_pkt = pmt_make_u8vector(pkt_size, 0);
     transport_pkt *pkt = 
-      (transport_pkt *) pmt_u8vector_writeable_elements(v_pkt, ignore);
+      (transport_pkt *) pmt_u8vector_writable_elements(v_pkt, ignore);
 
     n_read = d_urx->read(pkt, pkt_size, &underrun);
 

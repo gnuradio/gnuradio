@@ -165,7 +165,7 @@ usrp_rx_stub::read_and_respond()
   long n_bytes = nshorts*2;
   pmt_t uvec = pmt_make_s16vector(nshorts, 0);
   size_t ignore;
-  int16_t *samples = pmt_s16vector_writeable_elements(uvec, ignore);
+  int16_t *samples = pmt_s16vector_writable_elements(uvec, ignore);
 
   // fill in the complex sinusoid
 
@@ -192,7 +192,7 @@ usrp_rx_stub::read_and_respond()
 
   pmt_t v_pkt = pmt_make_u8vector(sizeof(transport_pkt), 0);
   transport_pkt *pkt =
-    (transport_pkt *) pmt_u8vector_writeable_elements(v_pkt, ignore);
+    (transport_pkt *) pmt_u8vector_writable_elements(v_pkt, ignore);
 
   pkt->set_header(0, channel, 0, n_bytes);
   pkt->set_timestamp(0xffffffff);

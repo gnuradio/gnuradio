@@ -215,7 +215,7 @@ class pmt_uniform_vector : public pmt_base
 public:
   bool is_uniform_vector() const { return true; }
   virtual const void *uniform_elements(size_t &len) = 0;
-  virtual void *uniform_writeable_elements(size_t &len) = 0;
+  virtual void *uniform_writable_elements(size_t &len) = 0;
   virtual size_t length() const = 0;
 };
 
