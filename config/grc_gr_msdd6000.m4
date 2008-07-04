@@ -22,10 +22,7 @@ AC_DEFUN([GRC_GR_MSDD6000],[
 
     AC_CONFIG_FILES([\
 	gr-msdd6000/Makefile \
-	gr-msdd6000/src/Makefile \
-	gr-msdd6000/src/lib/Makefile \
-	gr-msdd6000/src/python/Makefile
-	gr-msdd6000/src/python/run_tests
+	gr-msdd6000/src/Makefile
     ])
 
     dnl Don't do gr-msdd6000 if gnuradio-core skipped
@@ -33,6 +30,6 @@ AC_DEFUN([GRC_GR_MSDD6000],[
 
     GRC_BUILD_CONDITIONAL([gr-msdd6000],[
         dnl run_tests is created from run_tests.in.  Make it executable.
-	AC_CONFIG_COMMANDS([run_tests_msdd6000], [chmod +x gr-msdd6000/src/python/run_tests])
+	AC_CONFIG_COMMANDS([run_tests_msdd6000], [chmod +x gr-msdd6000/src/run_tests])
     ])
 ])

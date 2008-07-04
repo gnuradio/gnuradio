@@ -1,0 +1,53 @@
+Softronics/GR Driver Info
+
+Jul 9, 2008
+TJO
+
+
+Tools / Waveforms
+	
+	- non_gr_snapshot_tool
+		simple tool to capture
+		fixed length snapshots to a file
+		compile with make and run 
+		with ./cap4
+		edit client5.cc variables to 
+		set parameters.
+
+		./plot_psd.py <cap file>
+		and
+		./spectrogram.py <cap file>
+	
+		may be used for analysis
+
+	- python-examples/new_msdd/fft.py
+		A clone of the original usrp_fft.py
+		adapted to work with the new msdd.source_simple
+		source block.
+		run ./new_msdd_fft.py -W 
+		for waterfall mode.
+		
+
+GNU Radio Blocks,
+
+	- msdd.source_simple
+		this block produces a stream of
+		interleaved complex shorts and 
+		currently works with FAPP.LDR
+		
+		if you want complex floats,
+		put a gr.interleaved_short_to_complex()
+		block immidiately following.
+
+	
+	- msdd.source_s / source_c / source_base
+		These were written with the
+		old TCP based app.ldr protocol
+		and will no longer work.
+		data was never streamed
+		without discontinuities
+		through this method.
+
+
+
+

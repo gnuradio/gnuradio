@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006 Free Software Foundation, Inc.
+# Copyright 2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -18,7 +18,7 @@
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
 # 
-CCFLAGS = -g
+
 include $(top_srcdir)/Makefile.common
 
 # Install this stuff so that it ends up as the gnuradio.howto module
@@ -28,20 +28,33 @@ include $(top_srcdir)/Makefile.common
 ourpythondir = $(grpythondir)
 ourlibdir    = $(grpyexecdir)
 
-INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(SWIGGRFLAGS)
+#EXTRA_DIST = run_tests.in
+
+#TESTS = run_tests
+
+
+#INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
+	$(WITH_INCLUDES)
+
+
+SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
+	-I/usr/include $(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
+
+NON_LOCAL_IFILES =			\
+	$(GNURADIO_I)
+
+
+LOCAL_IFILES = 				\
+	$(top_srcdir)/gr-msdd6000/src/msdd.i				
+
 
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\
 	$(NON_LOCAL_IFILES)		
 
-NON_LOCAL_IFILES =			\
-	$(GNURADIO_CORE_INCLUDEDIR)/swig/gnuradio.i
-
-
-LOCAL_IFILES = 				\
-	$(top_srcdir)/src/msdd/msdd.i				
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _howto shared library
