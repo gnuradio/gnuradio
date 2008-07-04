@@ -98,8 +98,9 @@ grinclude_HEADERS =			\
 	msdd_source_base.h		\
 	msdd_source_c.h			\
 	msdd_source_simple.h			\
-	msdd_source_s.h			
-
+	msdd_source_s.h		\
+	msdd_buffer_copy_behaviors.h \
+	msdd6000.h
 
 
 # These swig headers get installed in ${prefix}/include/gnuradio/swig
