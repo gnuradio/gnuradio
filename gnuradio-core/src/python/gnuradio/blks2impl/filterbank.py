@@ -38,7 +38,7 @@ class synthesis_filterbank(gr.hier_block2):
     """
     Uniformly modulated polyphase DFT filter bank: synthesis
 
-    See http://cnx.rice.edu/content/m10424/latest
+    See http://cnx.org/content/m10424/latest
     """
     def __init__(self, mpoints, taps=None):
         """
@@ -121,7 +121,7 @@ class analysis_filterbank(gr.hier_block2):
     """
     Uniformly modulated polyphase DFT filter bank: analysis
 
-    See http://cnx.rice.edu/content/m10424/latest
+    See http://cnx.org/content/m10424/latest
     """
     def __init__(self, mpoints, taps=None):
         """
