@@ -38,7 +38,7 @@ class stream_to_vector_decimator(gr.hier_block2):
 	self._vec_len = vec_len
 	self._sample_rate = sample_rate
 	
-	gr.hier_block2.__init__(self, "stream_decimator_block",
+	gr.hier_block2.__init__(self, "stream_to_vector_decimator",
 				gr.io_signature(1, 1, item_size),         # Input signature
 				gr.io_signature(1, 1, item_size*vec_len)) # Output signature
 
