@@ -38,6 +38,7 @@ grblkspython_PYTHON =		\
 	fm_emph.py		\
 	gmsk.py			\
 	cpm.py			\
+	logpwrfft.py		\
 	nbfm_rx.py		\
 	nbfm_tx.py		\
 	ofdm.py			\
