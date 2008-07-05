@@ -93,7 +93,7 @@ class logpwrfft_f(_logpwrfft_base):
 	"""!
 	Create an fft block chain, with real input.
 	"""
-	_name = "fft_chain_f"
+	_name = "logpwrfft_f"
 	_item_size = gr.sizeof_float
 	_fft_block = (gr.fft_vfc, )
 
@@ -101,7 +101,7 @@ class logpwrfft_c(_logpwrfft_base):
 	"""!
 	Create an fft block chain, with complex input.
 	"""
-	_name = "fft_chain_c"
+	_name = "logpwrfft_c"
 	_item_size = gr.sizeof_gr_complex
 	_fft_block = (gr.fft_vcc, )
 
