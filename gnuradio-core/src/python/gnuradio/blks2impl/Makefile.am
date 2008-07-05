@@ -55,6 +55,7 @@ grblkspython_PYTHON =		\
 	qam256.py		\
 	rational_resampler.py	\
 	standard_squelch.py	\
+	stream_to_vector_decimator.py \
 	wfm_rcv.py		\
 	wfm_rcv_pll.py		\
 	wfm_tx.py		
