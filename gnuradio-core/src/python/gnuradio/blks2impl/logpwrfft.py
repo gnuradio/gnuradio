@@ -88,6 +88,18 @@ class _logpwrfft_base(gr.hier_block2):
 	self._avg_alpha = avg_alpha
 	self.set_average(self._average)
 
+    def average(self):
+	"""!
+	Return whether or not averaging is being performed.
+	"""
+	return self._average
+	
+    def avg_alpha(self):
+	"""!
+	Return averaging filter constant.
+	"""
+	return self._avg_alpha
+
 
 class logpwrfft_f(_logpwrfft_base):
 	"""!
