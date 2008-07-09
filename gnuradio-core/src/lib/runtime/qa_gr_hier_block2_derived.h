@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,23 +20,22 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_QA_GR_HIER_BLOCK2_H
-#define INCLUDED_QA_GR_HIER_BLOCK2_H
+#ifndef INCLUDED_QA_GR_HIER_BLOCK2_DERIVED_H
+#define INCLUDED_QA_GR_HIER_BLOCK2_DERIVED_H
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/TestCase.h>
 #include <stdexcept>
 
-class qa_gr_hier_block2 : public CppUnit::TestCase 
+// Declare a QA test case
+class qa_gr_hier_block2_derived : public CppUnit::TestCase 
 {
-    CPPUNIT_TEST_SUITE(qa_gr_hier_block2);
-
-    CPPUNIT_TEST(test_make);
-        
-    CPPUNIT_TEST_SUITE_END();
+  CPPUNIT_TEST_SUITE(qa_gr_hier_block2_derived);
+  CPPUNIT_TEST(test_1);
+  CPPUNIT_TEST_SUITE_END();
 
 private:
-    void test_make();
+  void test_1();
 };
 
-#endif /* INCLUDED_QA_GR_HIER_BLOCK2_H */
+#endif /* INCLUDED_QA_GR_HIER_BLOCK2_DERIVED_H */

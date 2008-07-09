@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,6 +24,7 @@
 #define INCLUDED_GR_BASIC_BLOCK_H
 
 #include <gr_runtime_types.h>
+#include <gr_sptr_magic.h>
 #include <boost/enable_shared_from_this.hpp>
 #include <string>
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -51,7 +51,7 @@ private:
    * \brief Private implementation details of gr_hier_block2
    */
   gr_hier_block2_detail *d_detail;
-  
+    
 protected: 
   gr_hier_block2(const std::string &name,
 		 gr_io_signature_sptr input_signature,
@@ -60,6 +60,22 @@ protected:
 public:
   virtual ~gr_hier_block2();
   
+  /*!
+   * \brief typedef for object returned from self().
+   *
+   * This type is only guaranteed to be passable to connect and disconnect.
+   * No other assumptions should be made about it.
+   */
+  typedef gr_basic_block_sptr	opaque_self;
+
+  /*!
+   * \brief Return an object, representing the current block, which can be passed to connect.
+   *
+   * The returned object may only be used as an argument to connect or disconnect.
+   * Any other use of self() results in unspecified (erroneous) behavior.
+   */
+  opaque_self self();
+
   /*!
    * \brief Add a stand-alone (possibly hierarchical) block to internal graph
    *
@@ -132,7 +148,7 @@ public:
   gr_flat_flowgraph_sptr flatten() const;
 };
 
-inline gr_hier_block2_sptr make_hier_block2_sptr(gr_basic_block_sptr block) {
+inline gr_hier_block2_sptr cast_to_hier_block2_sptr(gr_basic_block_sptr block) {
   return boost::dynamic_pointer_cast<gr_hier_block2, gr_basic_block>(block);
 }
 

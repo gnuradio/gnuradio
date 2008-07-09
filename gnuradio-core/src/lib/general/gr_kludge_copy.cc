@@ -31,7 +31,7 @@
 gr_kludge_copy_sptr
 gr_make_kludge_copy(size_t itemsize)
 {
-  return gr_kludge_copy_sptr(new gr_kludge_copy(itemsize));
+  return gnuradio::get_initial_sptr(new gr_kludge_copy(itemsize));
 }
 
 gr_kludge_copy::gr_kludge_copy(size_t itemsize)

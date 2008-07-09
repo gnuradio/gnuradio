@@ -34,7 +34,7 @@
 gr_top_block_sptr 
 gr_make_top_block(const std::string &name)
 {
-  return gr_top_block_sptr(new gr_top_block(name));
+  return gnuradio::get_initial_sptr(new gr_top_block(name));
 }
 
 gr_top_block::gr_top_block(const std::string &name)

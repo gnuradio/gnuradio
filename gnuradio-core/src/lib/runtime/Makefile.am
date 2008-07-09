@@ -50,6 +50,7 @@ libruntime_la_SOURCES = 			\
 	gr_realtime.cc				\
 	gr_scheduler_thread.cc			\
 	gr_single_threaded_scheduler.cc		\
+	gr_sptr_magic.cc			\
 	gr_sync_block.cc			\
 	gr_sync_decimator.cc			\
 	gr_sync_interpolator.cc			\
@@ -67,6 +68,7 @@ libruntime_la_SOURCES = 			\
 libruntime_qa_la_SOURCES = 			\
 	qa_gr_block.cc				\
 	qa_gr_hier_block2.cc			\
+	qa_gr_hier_block2_derived.cc		\
 	qa_gr_buffer.cc				\
 	qa_gr_flowgraph.cc			\
 	qa_gr_top_block.cc			\
@@ -98,6 +100,7 @@ grinclude_HEADERS = 				\
 	gr_scheduler_thread.h			\
 	gr_select_handler.h			\
 	gr_single_threaded_scheduler.h		\
+	gr_sptr_magic.h				\
 	gr_sync_block.h				\
 	gr_sync_decimator.h			\
 	gr_sync_interpolator.h			\
@@ -117,6 +120,7 @@ noinst_HEADERS = 				\
 	qa_gr_block.h				\
 	qa_gr_flowgraph.h			\
 	qa_gr_hier_block2.h			\
+	qa_gr_hier_block2_derived.h		\
 	qa_gr_buffer.h				\
 	qa_gr_io_signature.h			\
 	qa_gr_top_block.h			\

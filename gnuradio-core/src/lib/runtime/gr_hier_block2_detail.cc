@@ -78,8 +78,8 @@ gr_hier_block2_detail::connect(gr_basic_block_sptr src, int src_port,
   if (src.get() == dst.get())
     throw std::invalid_argument("connect: src and destination blocks cannot be the same");
 
-  gr_hier_block2_sptr src_block(make_hier_block2_sptr(src));
-  gr_hier_block2_sptr dst_block(make_hier_block2_sptr(dst));
+  gr_hier_block2_sptr src_block(cast_to_hier_block2_sptr(src));
+  gr_hier_block2_sptr dst_block(cast_to_hier_block2_sptr(dst));
 
   if (src_block && src.get() != d_owner) {
     if (GR_HIER_BLOCK2_DETAIL_DEBUG)
@@ -147,8 +147,8 @@ gr_hier_block2_detail::disconnect(gr_basic_block_sptr src, int src_port,
   if (src.get() == dst.get())
     throw std::invalid_argument("disconnect: source and destination blocks cannot be the same");
 
-  gr_hier_block2_sptr src_block(make_hier_block2_sptr(src));
-  gr_hier_block2_sptr dst_block(make_hier_block2_sptr(dst));
+  gr_hier_block2_sptr src_block(cast_to_hier_block2_sptr(src));
+  gr_hier_block2_sptr dst_block(cast_to_hier_block2_sptr(dst));
 
   if (src_block && src.get() != d_owner) {
     if (GR_HIER_BLOCK2_DETAIL_DEBUG)
@@ -307,7 +307,7 @@ gr_hier_block2_detail::resolve_endpoint(const gr_endpoint &endp, bool is_input) 
     return endp;
   
   // Check if endpoint is a hierarchical block
-  gr_hier_block2_sptr hier_block2(make_hier_block2_sptr(endp.block()));
+  gr_hier_block2_sptr hier_block2(cast_to_hier_block2_sptr(endp.block()));
   if (hier_block2) {
     if (GR_HIER_BLOCK2_DETAIL_DEBUG)
       std::cout << "Resolving endpoint " << endp << " as an " 
@@ -351,7 +351,7 @@ gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
 
   // Recurse hierarchical children
   for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
-    gr_hier_block2_sptr hier_block2(make_hier_block2_sptr(*p));
+    gr_hier_block2_sptr hier_block2(cast_to_hier_block2_sptr(*p));
     if (hier_block2)
       hier_block2->d_detail->flatten_aux(sfg);
   }

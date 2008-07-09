@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,11 +31,13 @@
 
 #define GR_HIER_BLOCK2_DEBUG 0
 
-gr_hier_block2_sptr gr_make_hier_block2(const std::string &name, 
-                                        gr_io_signature_sptr input_signature,
-                                        gr_io_signature_sptr output_signature)
+
+gr_hier_block2_sptr
+gr_make_hier_block2(const std::string &name, 
+                    gr_io_signature_sptr input_signature,
+                    gr_io_signature_sptr output_signature)
 {
-  return gr_hier_block2_sptr(new gr_hier_block2(name, input_signature, output_signature));
+  return gnuradio::get_initial_sptr(new gr_hier_block2(name, input_signature, output_signature));
 }
 
 gr_hier_block2::gr_hier_block2(const std::string &name,
@@ -44,12 +46,21 @@ gr_hier_block2::gr_hier_block2(const std::string &name,
   : gr_basic_block(name, input_signature, output_signature),
     d_detail(new gr_hier_block2_detail(this))
 {
+  // This bit of magic ensures that self() works in the constructors of derived classes.
+  gnuradio::detail::sptr_magic::create_and_stash_initial_sptr(this);
 }
 
 gr_hier_block2::~gr_hier_block2()
 {
   delete d_detail;
 }
+
+gr_hier_block2::opaque_self
+gr_hier_block2::self()
+{
+  return shared_from_this();
+}
+
 
 void 
 gr_hier_block2::connect(gr_basic_block_sptr block)
