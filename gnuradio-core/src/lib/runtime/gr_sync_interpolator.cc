@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -50,7 +50,7 @@ gr_sync_interpolator::fixed_rate_noutput_to_ninput(int noutput_items)
 }
 
 int
-gr_sync_interpolator::fixed_rate_ninput_to_noutout(int ninput_items)
+gr_sync_interpolator::fixed_rate_ninput_to_noutput(int ninput_items)
 {
   return std::max(0, ninput_items - (int)history() + 1) * interpolation();
 }

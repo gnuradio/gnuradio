@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -60,7 +60,7 @@ class gr_sync_interpolator : public gr_sync_block
 
   // derived classes should override work
 
-  int fixed_rate_ninput_to_noutout(int ninput);
+  int fixed_rate_ninput_to_noutput(int ninput);
   int fixed_rate_noutput_to_ninput(int noutput);
 };
 
