@@ -39,6 +39,7 @@ bin_SCRIPTS = \
     gr_plot_int.py \
     gr_plot_iq.py \
     gr_plot_short.py \
+    lsusrp \
     usrp_fft.py \
     usrp_oscope.py \
     usrp_print_db.py \
