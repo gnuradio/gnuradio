@@ -25,9 +25,14 @@ MAX_USRPS = 8
 from gnuradio import usrp
 from optparse import OptionParser
 
-def disp_usrp(which):
+def disp_usrp(which, serial=None):
     u_source = usrp.source_c(which=which)
     u_sink = usrp.sink_c(which=which)
+    u_serial = u_source.serial_number()
+    
+    if serial is not None:
+        if serial != u_serial:
+            raise ValueError
 	
     print "USRP", which, "serial number", u_source.serial_number()
     subdev_A_rx = usrp.selected_subdev(u_source, (0,0))
@@ -44,10 +49,17 @@ if __name__ == "__main__":
     parser.add_option("-w", "--which", type="int", default=None,
                       help="select which USRP (0, 1, ...) default is all found",
 		      metavar="NUM")
+    parser.add_option("-s", "--serial", default=None,
+                      help="select USRP by serial number",
+		      metavar="SER")
     (options, args) = parser.parse_args()
     if len(args) > 0:
 	print parser.print_help()
 	raise SystemExit, 1
+
+    if options.serial is not None and options.which is not None:
+       print "Use of --which or --serial is exclusive"
+       raise SystemExit, 1
 
     if options.which is not None:
 	try:	
@@ -57,7 +69,7 @@ if __name__ == "__main__":
     else:
 	for n in range(MAX_USRPS):
 	    try:
-		disp_usrp(n)
+		disp_usrp(n, options.serial)
 	    except:
 		pass
 
