@@ -1,24 +1,9 @@
-Softronics/GR Driver Info
+This block implements an interface between the Softronics MSDD6000 and GR
 
-Jul 9, 2008
-TJO
-
+Jul 13, 2008
 
 Tools / Waveforms
 	
-	- non_gr_snapshot_tool
-		simple tool to capture
-		fixed length snapshots to a file
-		compile with make and run 
-		with ./cap4
-		edit client5.cc variables to 
-		set parameters.
-
-		./plot_psd.py <cap file>
-		and
-		./spectrogram.py <cap file>
-	
-		may be used for analysis
 
 	- python-examples/new_msdd/fft.py
 		A clone of the original usrp_fft.py
@@ -47,7 +32,3 @@ GNU Radio Blocks,
 		data was never streamed
 		without discontinuities
 		through this method.
-
-
-
-
