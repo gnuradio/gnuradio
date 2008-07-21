@@ -52,6 +52,7 @@ reg_roots = [
     'gr_add_const_vXX',
     'gr_multiply_const_vXX',
     'gr_integrate_XX',
+    'gr_moving_average_XX',
     ]
 
 # other blocks

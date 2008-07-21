@@ -42,6 +42,10 @@
 #include <gr_max_ff.h>
 #include <gr_max_ii.h>
 #include <gr_max_ss.h>
+#include <gr_moving_average_cc.h>
+#include <gr_moving_average_ff.h>
+#include <gr_moving_average_ii.h>
+#include <gr_moving_average_ss.h>
 #include <gr_multiply_cc.h>
 #include <gr_multiply_const_cc.h>
 #include <gr_multiply_const_ff.h>
@@ -148,6 +152,10 @@
 %include <gr_max_ff.i>
 %include <gr_max_ii.i>
 %include <gr_max_ss.i>
+%include <gr_moving_average_cc.i>
+%include <gr_moving_average_ff.i>
+%include <gr_moving_average_ii.i>
+%include <gr_moving_average_ss.i>
 %include <gr_multiply_cc.i>
 %include <gr_multiply_const_cc.i>
 %include <gr_multiply_const_ff.i>

@@ -112,7 +112,10 @@ CODE_GENERATOR = 			\
 	gr_or_XX.i.t      		\
 	gr_not_XX.cc.t			\
 	gr_not_XX.h.t			\
-	gr_not_XX.i.t
+	gr_not_XX.i.t			\
+	gr_moving_average_XX.cc.t	\
+	gr_moving_average_XX.h.t	\
+	gr_moving_average_XX.i.t
 
 include Makefile.gen
 
