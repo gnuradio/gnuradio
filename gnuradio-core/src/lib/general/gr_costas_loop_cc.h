@@ -95,7 +95,7 @@ class gr_costas_loop_cc : public gr_sync_block
    */
   float phase_detector_4(gr_complex sample) const;    // for QPSK
 
-  /*! \breif the phase detector circuit for second-order loops
+  /*! \brief the phase detector circuit for second-order loops
    *  \param a complex sample
    *  \return the phase error
    */
@@ -106,6 +106,26 @@ class gr_costas_loop_cc : public gr_sync_block
 
 public:
 
+  /*! \brief set the first order gain
+   *  \param alpha
+   */
+  void set_alpha(float alpha);
+
+  /*! \brief get the first order gain
+   * 
+   */
+  float alpha() const { return d_alpha; }
+  
+  /*! \brief set the second order gain
+   *  \param beta
+   */
+  void set_beta(float beta);
+
+  /*! \brief get the second order gain
+   * 
+   */
+  float beta() const { return d_beta; }
+  
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);

@@ -85,6 +85,18 @@ gr_costas_loop_cc::phase_detector_2(gr_complex sample) const
   return (sample.real()*sample.imag());
 }
 
+void
+gr_costas_loop_cc::set_alpha(float alpha)
+{
+  d_alpha = alpha;
+}
+
+void
+gr_costas_loop_cc::set_beta(float beta)
+{
+  d_beta = beta;
+}
+
 int
 gr_costas_loop_cc::work (int noutput_items,
 			 gr_vector_const_void_star &input_items,

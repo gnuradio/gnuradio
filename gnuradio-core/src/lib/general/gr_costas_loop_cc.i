@@ -34,4 +34,11 @@ class gr_costas_loop_cc : public gr_sync_block
  private:
   gr_costas_loop_cc (float alpha, float beta,
 		     float max_freq, float min_freq, int order);
+
+ public:
+   void set_alpha(float alpha);
+   float alpha();
+   void set_beta(float beta);
+   float beta();
+   
 };
