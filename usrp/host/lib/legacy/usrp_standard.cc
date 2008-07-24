@@ -239,9 +239,17 @@ usrp_standard_rx::make (int which_board,
 bool
 usrp_standard_rx::set_decim_rate(unsigned int rate)
 {
-  if ((rate & 0x1) || rate < 4 || rate > 256){
-    fprintf (stderr, "usrp_standard_rx::set_decim_rate: rate must be EVEN and in [4, 256]\n");
-    return false;
+  if (has_rx_halfband()){
+    if ((rate & 0x1) || rate < 4 || rate > 256){
+      fprintf (stderr, "usrp_standard_rx::set_decim_rate: rate must be EVEN and in [4, 256]\n");
+      return false;
+    }
+  }
+  else {
+    if (rate < 4 || rate > 128){
+      fprintf (stderr, "usrp_standard_rx::set_decim_rate: rate must be in [4, 128]\n");
+      return false;
+    }
   }
 
   d_decim_rate = rate;
