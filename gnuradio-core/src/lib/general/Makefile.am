@@ -87,6 +87,7 @@ libgeneral_la_SOURCES = 		\
 	gr_head.cc			\
 	gr_interleave.cc		\
 	gr_interleaved_short_to_complex.cc \
+	gr_iqcomp_cc.cc			\
 	gr_keep_one_in_n.cc		\
 	gr_kludge_copy.cc		\
 	gr_lfsr_32k_source_s.cc		\
@@ -233,6 +234,7 @@ grinclude_HEADERS = 			\
 	gr_head.h			\
 	gr_interleave.h			\
 	gr_interleaved_short_to_complex.h \
+	gr_iqcomp_cc.h			\
 	gr_keep_one_in_n.h		\
 	gr_kludge_copy.h		\
 	gr_lfsr_32k_source_s.h		\
@@ -387,6 +389,7 @@ swiginclude_HEADERS =			\
 	gr_head.i			\
 	gr_interleave.i 		\
 	gr_interleaved_short_to_complex.i \
+	gr_iqcomp_cc.i			\
 	gr_keep_one_in_n.i		\
 	gr_kludge_copy.i		\
 	gr_lfsr_32k_source_s.i		\
