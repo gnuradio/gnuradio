@@ -35,10 +35,13 @@
 //`include "../include/common_config_1rxhb_1tx.vh"
 
 // Uncomment this for 2 rx channels (w/ halfband) & 2 transmit channels
-//  `include "../include/common_config_2rxhb_2tx.vh"
+//`include "../include/common_config_2rxhb_2tx.vh"
 
 // Uncomment this for 2 rx channels (w/ halfband) & 2 transmit channels with digital output (lsb of I and Q) on gpio pins
-  `include "../include/common_config_2rxhb_2txdig.vh"
+//`include "../include/common_config_2rxhb_2tx_dig.vh"
+
+// Uncomment this for 2 rx channels (w/o halfband, but w/integrator) & 2 tx channels, with streaming GPIO
+  `include "../include/common_config_2rxint_2tx_dig.vh"
 
 // Uncomment this for 4 rx channels (w/o halfband) & 0 transmit channels
 //`include "../include/common_config_4rx_0tx.vh"

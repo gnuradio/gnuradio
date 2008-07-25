@@ -375,6 +375,9 @@ set_global_assignment -name VERILOG_FILE ../lib/gpio_input.v
 set_global_assignment -name VERILOG_FILE ../lib/io_pins.v
 set_global_assignment -name VERILOG_FILE ../lib/rx_chain_dig.v
 set_global_assignment -name VERILOG_FILE ../lib/tx_chain_dig.v
+set_global_assignment -name VERILOG_FILE ../lib/integrator.v
+set_global_assignment -name VERILOG_FILE ../lib/integ_shifter.v
+set_global_assignment -name VERILOG_FILE ../lib/rx_chain.v
 set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/atr_delay.v
 set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/cic_dec_shifter.v
 set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/rssi.v
@@ -394,7 +397,6 @@ set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/adc_inter
 set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/setting_reg.v
 set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/bidir_reg.v
 set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/cic_int_shifter.v
-set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/rx_chain.v
 set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/gen_sync.v
 set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/master_control.v
 set_global_assignment -name VERILOG_FILE ../../../../usrp/fpga/sdr_lib/rx_buffer.v

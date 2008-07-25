@@ -21,18 +21,6 @@
 
 include $(top_srcdir)/Makefile.common
 
-datadir = $(prefix)/share/usrp
-
-datarev2dir = $(datadir)/rev2
-
-datarev4dir = $(datadir)/rev4
-
-datarev2_DATA = usrp_gpio.rbf
-
-datarev4_DATA = usrp_gpio.rbf
-
-RBFS = usrp_gpio.rbf
-
 EXTRA_DIST = \
 	config.vh    \
 	usrp_gpio.csf \
@@ -40,8 +28,7 @@ EXTRA_DIST = \
 	usrp_gpio.psf \
 	usrp_gpio.qpf \
 	usrp_gpio.qsf \
-	usrp_gpio.v   \
-	$(RBFS)
+	usrp_gpio.v
 
 MOSTLYCLEANFILES = 	\
 	db/*		\

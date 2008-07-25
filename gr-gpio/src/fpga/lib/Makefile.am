@@ -25,4 +25,7 @@ EXTRA_DIST = 		\
     gpio_input.v 	\
     io_pins.v		\
     rx_chain_dig.v 	\
-    tx_chain_dig.v
+    tx_chain_dig.v      \
+    integrator.v        \
+    integ_shifter.v     \
+    rx_chain.v

@@ -19,5 +19,19 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-SUBDIRS = include lib top rbf
+include $(top_srcdir)/Makefile.common
 
+RBFS = \
+	std_2rxhb_2tx_dig.rbf \
+	std_2rxint_2tx_dig.rbf
+
+datadir = $(prefix)/share/usrp
+datarev2dir = $(datadir)/rev2
+datarev4dir = $(datadir)/rev4
+
+datarev2_DATA = $(RBFS)
+
+datarev4_DATA = $(RBFS)
+
+EXTRA_DIST = \
+	$(RBFS)

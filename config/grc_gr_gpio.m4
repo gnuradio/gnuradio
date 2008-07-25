@@ -30,6 +30,7 @@ AC_DEFUN([GRC_GR_GPIO],[
         gr-gpio/src/fpga/include/Makefile \
         gr-gpio/src/fpga/top/Makefile \
         gr-gpio/src/fpga/lib/Makefile \
+	gr-gpio/src/fpga/rbf/Makefile \
         gr-gpio/src/lib/Makefile \
         gr-gpio/src/python/Makefile \
         gr-gpio/src/python/run_tests

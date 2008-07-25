@@ -20,5 +20,6 @@
 # 
 
 EXTRA_DIST = \
-    common_config_2rxhb_2txdig.vh \
+    common_config_2rxhb_2tx_dig.vh \
+    common_config_2rxint_2tx_dig.vh \
     common_config_bottom.vh
