@@ -129,14 +129,6 @@ AC_CHECK_HEADERS(sys/resource.h stdint.h sched.h signal.h sys/syscall.h)
 AC_CHECK_HEADERS(netinet/in.h)
 AC_CHECK_HEADERS(windows.h)
 
-dnl Allow creating autoconf independent header files for bytesex routines
-AC_CHECK_HEADER(arpa/inet.h, [GR_HAVE_ARPA_INET=1],[GR_HAVE_ARPA_INET=0])
-AC_CHECK_HEADER(netinet/in.h, [GR_HAVE_NETINET_IN=1],[GR_HAVE_NETINET_IN=0])
-AC_CHECK_HEADER(byteswap.h, [GR_HAVE_BYTESWAP=1],[GR_HAVE_BYTESWAP=0])
-AC_SUBST(GR_HAVE_ARPA_INET)
-AC_SUBST(GR_HAVE_NETINET_IN)
-AC_SUBST(GR_HAVE_BYTESWAP)
-
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_C_INLINE

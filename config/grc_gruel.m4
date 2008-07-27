@@ -41,5 +41,13 @@ AC_DEFUN([GRC_GRUEL],[
         gruel/src/lib/Makefile \
     ])
 
+    dnl Allow creating autoconf independent header files for bytesex routines
+    AC_CHECK_HEADER(arpa/inet.h, [GR_HAVE_ARPA_INET=1],[GR_HAVE_ARPA_INET=0])
+    AC_CHECK_HEADER(netinet/in.h, [GR_HAVE_NETINET_IN=1],[GR_HAVE_NETINET_IN=0])
+    AC_CHECK_HEADER(byteswap.h, [GR_HAVE_BYTESWAP=1],[GR_HAVE_BYTESWAP=0])
+    AC_SUBST(GR_HAVE_ARPA_INET)
+    AC_SUBST(GR_HAVE_NETINET_IN)
+    AC_SUBST(GR_HAVE_BYTESWAP)
+
     GRC_BUILD_CONDITIONAL(gruel,[])
 ])
