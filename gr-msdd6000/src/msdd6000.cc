@@ -1,14 +1,60 @@
-#include "msdd6000.h"
+/* -*- c++ -*- */
+/*
+ * Copyright 2008 Free Software Foundation, Inc.
+ * 
+ * This file is part of GNU Radio
+ * 
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ * 
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+#include <msdd6000.h>
 
 #include <stdio.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
 #include <string.h>
 #include <unistd.h>
 
-void optimize_socket(int socket);
+#ifdef HAVE_ARPA_INET_H
+#include <arpa/inet.h>
+#endif
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
+#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
+#endif
 
-MSDD6000::MSDD6000(char* addr){
+#define DEBUG(A)	printf("=debug=> %s\n", A)
+
+static void 
+optimize_socket(int socket);
+
+/*
+ * Holds types that need autoconf help.  They're here and not in the .h file because
+ * here we've got access to config.h
+ */
+class MSDD6000::detail {
+public:
+  struct sockaddr_in d_sockaddr;
+};
+
+
+MSDD6000::MSDD6000(char* addr)
+  : d_detail(new MSDD6000::detail())
+{
 	d_sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_IP);
 	
 	optimize_socket(d_sock);
@@ -16,11 +62,13 @@ MSDD6000::MSDD6000(char* addr){
 	
 	// set up remote sockaddr
 //	int s = inet_aton(addr, &d_adx); 
-	d_sockaddr.sin_family = AF_INET;
-	d_sockaddr.sin_port = htons(10000);
-	int s = inet_aton(addr, &d_sockaddr.sin_addr);
+	d_detail->d_sockaddr.sin_family = AF_INET;
+	d_detail->d_sockaddr.sin_port = htons(10000);
+	int s = inet_aton(addr, &d_detail->d_sockaddr.sin_addr);
 	
 	// set up local sockaddr
+	struct in_addr d_myadx;
+	struct sockaddr_in d_mysockaddr;
 	short int port = 10010;
 	d_myadx.s_addr = INADDR_ANY;
 	d_mysockaddr.sin_family = AF_INET;
@@ -37,21 +85,22 @@ MSDD6000::MSDD6000(char* addr){
 }
 
 
-void optimize_socket(int socket){
+static void
+optimize_socket(int socket){
 #define BANDWIDTH	1000000000/8
 #define DELAY		0.5
 	int ret;
 
-	int sock_buf_size = 2*BANDWIDTH*DELAY;
+	int sock_buf_size = static_cast<int>(2*BANDWIDTH*DELAY);
 	char textbuf[512];
-	sprintf(textbuf, "%d", sock_buf_size);
+	snprintf(textbuf, sizeof(textbuf), "%d", sock_buf_size);
 	printf("sock_buf_size = %d\n", sock_buf_size);
 	
-	ret = setsockopt( socket, SOL_SOCKET, SO_SNDBUF,
-                   (char *)&sock_buf_size, sizeof(sock_buf_size) );
+	ret = setsockopt(socket, SOL_SOCKET, SO_SNDBUF,
+			 &sock_buf_size, sizeof(sock_buf_size));
 
-	ret = setsockopt( socket, SOL_SOCKET, SO_RCVBUF,
-                   (char *)&sock_buf_size, sizeof(sock_buf_size) );
+	ret = setsockopt(socket, SOL_SOCKET, SO_RCVBUF,
+			 &sock_buf_size, sizeof(sock_buf_size));
 	
 	int uid = getuid();
 	if(uid!=0){
@@ -61,17 +110,24 @@ void optimize_socket(int socket){
 
 
 	// SET UP SOME SYSTEM WIDE TCP SOCKET PARAMETERS
+	// FIXME seems like kind of a big hammer.  Are you sure you need this?
 	FILE* fd = fopen("/proc/sys/net/core/netdev_max_backlog", "w");
-	fwrite("10000", 1, strlen("10000"), fd);
-	fclose(fd);
+	if (fd){
+	  fwrite("10000", 1, strlen("10000"), fd);
+	  fclose(fd);
+	}
 
 	fd = fopen("/proc/sys/net/core/rmem_max", "w");
-	fwrite(textbuf, 1, strlen(textbuf), fd);
-	fclose(fd);
+	if (fd){
+	  fwrite(textbuf, 1, strlen(textbuf), fd);
+	  fclose(fd);
+	}
 
 	fd = fopen("/proc/sys/net/core/wmem_max", "w");
-	fwrite(textbuf, 1, strlen(textbuf), fd);
-	fclose(fd);
+	if (fd){
+	  fwrite(textbuf, 1, strlen(textbuf), fd);
+	  fclose(fd);
+	}
 
 	// just incase these were rejected before because of max sizes...
 
@@ -134,7 +190,8 @@ void MSDD6000::send_request(float freq_mhz, float rf_attn, float ddc_gain, float
 	sprintf(buff, "%f %f %f %f %f\n",freq_mhz, rf_attn, ddc_gain, ddc_dec, ddc_offset_hz);
 	printf("sending: %s\n", buff);
         int flags = 0;
-	sendto( d_sock, buff, strlen(buff)+1, flags, (const sockaddr*)&d_sockaddr, sizeof(d_sockaddr));
+	sendto( d_sock, buff, strlen(buff)+1, flags,
+		(const sockaddr*)&(d_detail->d_sockaddr), sizeof(d_detail->d_sockaddr));
 	}
 
 

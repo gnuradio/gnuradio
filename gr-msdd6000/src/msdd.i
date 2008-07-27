@@ -52,11 +52,6 @@ class msdd_source_base : public gr_sync_block {
          ) throw (std::runtime_error);
 
   /*!
-   * \brief return number of msdd input bytes required to produce noutput items.
-   */
-  int ninput_bytes_reqd_for_noutput_items (int noutput_items) = 0;
-
-  /*!
    * \brief number of bytes in a low-level sample
    */
   unsigned int sizeof_basic_sample() const;
@@ -224,8 +219,6 @@ class msdd_source_s : public msdd_source_base {
           unsigned short port_src
       ) throw (std::runtime_error);
 
- virtual int ninput_bytes_reqd_for_noutput_items (int noutput_items);
- 
  public:
   ~msdd_source_s ();
 };
@@ -249,8 +242,6 @@ class msdd_source_c : public msdd_source_base {
           unsigned short port_src
       ) throw (std::runtime_error);
 
- virtual int ninput_bytes_reqd_for_noutput_items (int noutput_items);
- 
  public:
   ~msdd_source_c ();
 };
@@ -276,7 +267,6 @@ class msdd_source_simple : public gr_sync_block {
  
   public:
     ~msdd_source_c(); 
-  int ninput_bytes_reqd_for_noutput_items (int noutput_items) = 0;
   int work (int noutput_items,
       gr_vector_const_void_star &input_items,
       gr_vector_void_star &output_items);

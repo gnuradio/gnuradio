@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,20 +24,27 @@
 //#define MSDD_DEBUG2_TRUE
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
 #include <msdd_source_base.h>
 #include <gr_io_signature.h>
 #include <assert.h>
-#include <netdb.h>
 #include <omnithread.h>
 #include <stdexcept>
+#include <iostream>
+#ifdef HAVE_NETDB_H
+#include <netdb.h>
+#endif
+#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
+#endif
+#ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
+#endif
+
 
 #ifdef MSDD_DEBUG_TRUE
-#include <iostream>
 #define MSDD_DEBUG(x) std::cout << x << std::endl;
 #else
 #define MSDD_DEBUG(x)
@@ -45,13 +52,11 @@
 
 
 #ifdef MSDD_DEBUG2_TRUE
-#include <iostream>
 #define MSDD_DEBUG2(x) std::cout << x << std::endl;
 #else
 #define MSDD_DEBUG2(x)
 #endif
 
-#include <iostream>
 
 namespace {
 	const int OUTPUT_MAX((1 << 15)*8);

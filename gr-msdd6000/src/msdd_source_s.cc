@@ -21,8 +21,10 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
+#include <msdd_source_s.h>
+#include <gr_io_signature.h>
 
 #define MSDD_DEBUG2_TRUE
 
@@ -33,8 +35,6 @@
 #define MSDD_DEBUG2(x)
 #endif
 
-#include <msdd_source_s.h>
-#include <gr_io_signature.h>
 
 namespace {
 	static const int NBASIC_SAMPLES_PER_ITEM = 1;

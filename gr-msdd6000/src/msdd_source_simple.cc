@@ -1,16 +1,29 @@
+/* -*- c++ -*- */
+/*
+ * Copyright 2008 Free Software Foundation, Inc.
+ * 
+ * This file is part of GNU Radio
+ * 
+ * GNU Radio is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ * 
+ * GNU Radio is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
-#include <vector>
 #include <msdd_source_simple.h>
 #include <gr_io_signature.h>
-#include <gr_sync_block.h>
-
-#ifndef FALSE
-#define FALSE 	(0==1)
-#define TRUE	(0==0)
-#endif
 
 
 msdd_source_simple_sptr
@@ -24,11 +37,16 @@ msdd_source_simple::msdd_source_simple (
 	            const char *src, 
 	            unsigned short port_src) 
 		: gr_sync_block("MSDD_SOURCE_SIMPLE",
-			gr_make_io_signature (0,0,0),
-			gr_make_io_signature (1, 1, sizeof (short)))
+				gr_make_io_signature (0,0,0),
+				gr_make_io_signature (1, 1, sizeof (short))),
+                  rcv(new MSDD6000((char*) src)), d_lastseq(0)
 {
-	rcv = new MSDD6000((char*)src);
 }
+
+msdd_source_simple::~msdd_source_simple ()
+{
+}
+
 
 int
 msdd_source_simple::work (int noutput_items,
@@ -45,6 +63,7 @@ msdd_source_simple::work (int noutput_items,
 
 	int seq = *((int*) &buffer[2]);
 	
+	// FIXME get rid of these magic 366's!
 	if(d_lastseq == -366){
 		// not started case
 		if(seq == 0){
@@ -78,8 +97,9 @@ msdd_source_simple::work (int noutput_items,
 
 bool msdd_source_simple::set_decim_rate(unsigned int rate)
 {
-	rcv->set_decim(log2(rate));
-	return TRUE;
+	// FIXME seems buggy.  How about a floor or ceil?
+        rcv->set_decim((int) log2(rate));
+	return true;
 }
 
 
@@ -87,7 +107,7 @@ bool msdd_source_simple::set_rx_freq(int channel, double freq)
 {
 	long new_fc = (long)freq;
 	rcv->set_fc( new_fc/1000000, new_fc%1000000);
-	return TRUE;
+	return true;
 }
 
 
@@ -95,33 +115,25 @@ bool msdd_source_simple::set_pga(int which, double gain)
 {
 	if(gain < 0 || gain > 10){
 		printf("GAIN IS OUTSIDE ACCEPTABLE RANGE!\n");
-		return FALSE;
+		return false;
 	}
 	// ok i lied this is not really a pga, its decimation gain
 	rcv->set_ddc_gain((int)gain);
-	return TRUE;
-}
-
-
-msdd_source_simple::~msdd_source_simple ()
-{
-	delete rcv;
+	return true;
 }
 
 
 bool msdd_source_simple::start()
 {
 	rcv->start();
+	return true;
 }
 
 
 bool msdd_source_simple::stop()
 {
 	rcv->stop();
-}
-
-int msdd_source_simple::ninput_bytes_reqd_for_noutput_items(int out){
-	return 0;
+	return true;
 }
 
 long msdd_source_simple::adc_freq(){
@@ -129,7 +141,7 @@ long msdd_source_simple::adc_freq(){
 }
 
 int msdd_source_simple::decim_rate(){
-	return pow(2, rcv->d_decim);
+	return 1 << rcv->d_decim;
 }
 
 
@@ -146,4 +158,3 @@ std::vector<float> msdd_source_simple::freq_range(){
 	r.push_back(6.0*1000*1000*1000);
 	return r;
 }
-
