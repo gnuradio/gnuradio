@@ -150,7 +150,6 @@ def tune(u, chan, subdev, target_freq):
     if rx_p:
         residual_freq = dxc_freq - u.rx_freq(chan)
     else:
-        # FIXME 50-50 chance this has the wrong sign...
         residual_freq = dxc_freq - u.tx_freq(chan)
 
     return tune_result(baseband_freq, dxc_freq, residual_freq, inverted)
