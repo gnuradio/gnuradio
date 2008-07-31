@@ -85,7 +85,7 @@ static inline float gr_clip(float x, float clip)
   float y;
   if(x > clip)
     y = clip;
-  else if(x < clip)
+  else if(x < -clip)
     y = -clip;
   return y;
 }
