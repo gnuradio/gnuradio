@@ -27,54 +27,54 @@ class stream_to_vector_decimator(gr.hier_block2):
     """
 
     def __init__(self, item_size, sample_rate, vec_rate, vec_len):
-	"""!
-	Create the block chain.
-	@param item_size the number of bytes per sample
-	@param sample_rate the rate of incoming samples
-	@param vec_rate the rate of outgoing vectors (same units as sample_rate)
-	@param vec_len the length of the outgoing vectors in items
-	"""
-	self._vec_rate = vec_rate
-	self._vec_len = vec_len
-	self._sample_rate = sample_rate
-	
-	gr.hier_block2.__init__(self, "stream_to_vector_decimator",
-				gr.io_signature(1, 1, item_size),         # Input signature
-				gr.io_signature(1, 1, item_size*vec_len)) # Output signature
+        """!
+        Create the block chain.
+        @param item_size the number of bytes per sample
+        @param sample_rate the rate of incoming samples
+        @param vec_rate the rate of outgoing vectors (same units as sample_rate)
+        @param vec_len the length of the outgoing vectors in items
+        """
+        self._vec_rate = vec_rate
+        self._vec_len = vec_len
+        self._sample_rate = sample_rate
 
-	s2v = gr.stream_to_vector(item_size, vec_len)
-	self.one_in_n = gr.keep_one_in_n(item_size*vec_len, 1)
-	self._update_decimator()
-	self.connect(self, s2v, self.one_in_n, self)
+        gr.hier_block2.__init__(self, "stream_to_vector_decimator",
+                                gr.io_signature(1, 1, item_size),         # Input signature
+                                gr.io_signature(1, 1, item_size*vec_len)) # Output signature
+
+        s2v = gr.stream_to_vector(item_size, vec_len)
+        self.one_in_n = gr.keep_one_in_n(item_size*vec_len, 1)
+        self._update_decimator()
+        self.connect(self, s2v, self.one_in_n, self)
 
     def set_sample_rate(self, sample_rate):
-	"""!
-	Set the new sampling rate and update the decimator.
-	@param sample_rate the new rate
-	"""
-	self._sample_rate = sample_rate
-	self._update_decimator()
+        """!
+        Set the new sampling rate and update the decimator.
+        @param sample_rate the new rate
+        """
+        self._sample_rate = sample_rate
+        self._update_decimator()
 
     def set_vec_rate(self, vec_rate):
-	"""!
-	Set the new vector rate and update the decimator.
-	@param vec_rate the new rate
-	"""
-	self._vec_rate = vec_rate
-	self._update_decimator()
-	
+        """!
+        Set the new vector rate and update the decimator.
+        @param vec_rate the new rate
+        """
+        self._vec_rate = vec_rate
+        self._update_decimator()
+
     def _update_decimator(self):
-	self._decim = max(1, int(self._sample_rate/self._vec_len/self._vec_rate))
-	self.one_in_n.set_n(self._decim)
+        self._decim = max(1, int(self._sample_rate/self._vec_len/self._vec_rate))
+        self.one_in_n.set_n(self._decim)
 
     def sample_rate(self):
-	"""!
-	Returns configured sample rate.
-	"""
-	return self._sample_rate
-	
+        """!
+        Returns configured sample rate.
+        """
+        return self._sample_rate
+
     def frame_rate(self):
-	"""!
-	Returns actual frame rate
-	"""
-	return self._sample_rate/self._vec_len/self._decim
+        """!
+        Returns actual frame rate
+        """
+        return self._sample_rate/self._vec_len/self._decim
