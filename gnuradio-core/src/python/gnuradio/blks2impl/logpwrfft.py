@@ -59,7 +59,9 @@ class _logpwrfft_base(gr.hier_block2):
                                  -10*math.log10(window_power/fft_size) # Adjust for windowing loss
                                  -20*math.log10(ref_scale/2))          # Adjust for reference scale
         self.connect(self, self._sd, fft, c2mag, self._avg, self._log, self)
-        self.set_average(False)
+
+        self._average = average
+        self._avg_alpha = avg_alpha
         self.set_avg_alpha(avg_alpha)
         self.set_average(average)
 
