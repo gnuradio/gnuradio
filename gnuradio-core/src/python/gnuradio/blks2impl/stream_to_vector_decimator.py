@@ -63,9 +63,23 @@ class stream_to_vector_decimator(gr.hier_block2):
         self._vec_rate = vec_rate
         self._update_decimator()
 
-    def _update_decimator(self):
-        self._decim = max(1, int(self._sample_rate/self._vec_len/self._vec_rate))
+    def set_decimation(self, decim):
+        """!
+        Set the decimation parameter directly.
+        @param decim the new decimation
+        """
+        self._decim = max(1, int(round(decim)))
         self.one_in_n.set_n(self._decim)
+
+    def _update_decimator(self):
+        self._decim = max(1, int(round(self._sample_rate/self._vec_len/self._vec_rate)))
+        self.one_in_n.set_n(self._decim)
+
+    def decimation(self):
+        """!
+        Returns the actual decimation.
+        """
+        return self._decim
 
     def sample_rate(self):
         """!

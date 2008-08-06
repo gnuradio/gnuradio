@@ -65,6 +65,13 @@ class _logpwrfft_base(gr.hier_block2):
         self.set_avg_alpha(avg_alpha)
         self.set_average(average)
 
+    def set_decimation(self, decim):
+        """!
+        Set the decimation on stream decimator.
+        @param decim the new decimation
+        """
+        self._sd.set_decimation(decim)
+
     def set_sample_rate(self, sample_rate):
         """!
         Set the new sampling rate
@@ -96,6 +103,18 @@ class _logpwrfft_base(gr.hier_block2):
         Return the current sample rate.
         """
         return self._sd.sample_rate()
+
+    def decimation(self):
+        """!
+        Return the current decimation.
+        """
+        return self._sd.decimation()
+
+    def frame_rate(self):
+        """!
+        Return the current frame rate.
+        """
+        return self._sd.frame_rate()
 
     def average(self):
         """!
