@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -27,6 +27,10 @@ struct gr_cpu {
   static bool has_mmx ();
   static bool has_sse ();
   static bool has_sse2 ();
+  static bool has_sse3 ();
+  static bool has_ssse3 ();
+  static bool has_sse4_1 ();
+  static bool has_sse4_2 ();
   static bool has_3dnow ();
   static bool has_3dnowext ();
 };
