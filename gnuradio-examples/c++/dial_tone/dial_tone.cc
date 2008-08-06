@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -27,7 +27,7 @@
 // Shared pointer constructor
 dial_tone_sptr make_dial_tone()
 {
-    return dial_tone_sptr(new dial_tone());
+  return gnuradio::get_initial_sptr(new dial_tone());
 }
 
 // Hierarchical block constructor, with no inputs or outputs
