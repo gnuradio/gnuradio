@@ -48,6 +48,20 @@ gr_flowgraph::~gr_flowgraph()
 {
 }
 
+// FIXME: move to libgruel as a utility function
+template<class T>
+static
+std::vector<T>
+unique_vector(std::vector<T> v)
+{
+  std::vector<T> result;
+  std::insert_iterator<std::vector<T> > inserter(result, result.begin());
+  
+  sort(v.begin(), v.end());
+  unique_copy(v.begin(), v.end(), inserter);
+  return result;
+}
+
 void
 gr_flowgraph::connect(const gr_endpoint &src, const gr_endpoint &dst)
 {
@@ -163,8 +177,7 @@ gr_flowgraph::check_type_match(const gr_endpoint &src, const gr_endpoint &dst)
 gr_basic_block_vector_t
 gr_flowgraph::calc_used_blocks()
 {
-  gr_basic_block_vector_t tmp, result;
-  std::insert_iterator<gr_basic_block_vector_t> inserter(result, result.begin());
+  gr_basic_block_vector_t tmp;
 
   // Collect all blocks in the edge list
   for (gr_edge_viter_t p = d_edges.begin(); p != d_edges.end(); p++) {
@@ -172,17 +185,13 @@ gr_flowgraph::calc_used_blocks()
     tmp.push_back(p->dst().block());
   }
 
-  // Return vector of unique blocks
-  sort(tmp.begin(), tmp.end());
-  unique_copy(tmp.begin(), tmp.end(), inserter);
-  return result;
+  return unique_vector<gr_basic_block_sptr>(tmp);
 }
 
 std::vector<int>
 gr_flowgraph::calc_used_ports(gr_basic_block_sptr block, bool check_inputs)
 {
-  std::vector<int> tmp, result;
-  std::insert_iterator<std::vector<int> > inserter(result, result.begin());
+  std::vector<int> tmp;
 
   // Collect all seen ports 
   gr_edge_vector_t edges = calc_connections(block, check_inputs);
@@ -193,10 +202,7 @@ gr_flowgraph::calc_used_ports(gr_basic_block_sptr block, bool check_inputs)
       tmp.push_back(p->src().port());
   }
 
-  // Return vector of unique values
-  std::sort(tmp.begin(), tmp.end());
-  std::unique_copy(tmp.begin(), tmp.end(), inserter);
-  return result;
+  return unique_vector<int>(tmp);
 }
 
 gr_edge_vector_t
@@ -264,33 +270,25 @@ gr_flowgraph::check_contiguity(gr_basic_block_sptr block,
 gr_basic_block_vector_t
 gr_flowgraph::calc_downstream_blocks(gr_basic_block_sptr block, int port)
 {
-  gr_basic_block_vector_t tmp, result;
-  std::insert_iterator<gr_basic_block_vector_t> inserter(result, result.begin());
+  gr_basic_block_vector_t tmp;
 
   for (gr_edge_viter_t p = d_edges.begin(); p != d_edges.end(); p++)
     if (p->src() == gr_endpoint(block, port))
       tmp.push_back(p->dst().block());
 
-  // Remove duplicates
-  sort(tmp.begin(), tmp.end());
-  unique_copy(tmp.begin(), tmp.end(), inserter);
-  return result;
+  return unique_vector<gr_basic_block_sptr>(tmp);
 }
 
 gr_basic_block_vector_t
 gr_flowgraph::calc_downstream_blocks(gr_basic_block_sptr block)
 {
-  gr_basic_block_vector_t tmp, result;
-  std::insert_iterator<gr_basic_block_vector_t> inserter(result, result.begin());
+  gr_basic_block_vector_t tmp;
 
   for (gr_edge_viter_t p = d_edges.begin(); p != d_edges.end(); p++)
     if (p->src().block() == block)
       tmp.push_back(p->dst().block());
 
-  // Remove duplicates
-  sort(tmp.begin(), tmp.end());
-  unique_copy(tmp.begin(), tmp.end(), inserter);
-  return result;
+  return unique_vector<gr_basic_block_sptr>(tmp);
 }
 
 gr_edge_vector_t
@@ -386,22 +384,17 @@ gr_flowgraph::reachable_dfs_visit(gr_basic_block_sptr block, gr_basic_block_vect
 gr_basic_block_vector_t 
 gr_flowgraph::calc_adjacent_blocks(gr_basic_block_sptr block, gr_basic_block_vector_t &blocks)
 {
-  gr_basic_block_vector_t tmp, result;
-  std::insert_iterator<gr_basic_block_vector_t> inserter(result, result.begin());
+  gr_basic_block_vector_t tmp;
     
   // Find any blocks that are inputs or outputs
   for (gr_edge_viter_t p = d_edges.begin(); p != d_edges.end(); p++) {
-
     if (p->src().block() == block)
       tmp.push_back(p->dst().block());
     if (p->dst().block() == block)
       tmp.push_back(p->src().block());
   }    
 
-  // Remove duplicates
-  sort(tmp.begin(), tmp.end());
-  unique_copy(tmp.begin(), tmp.end(), inserter);
-  return result;
+  return unique_vector<gr_basic_block_sptr>(tmp);
 }
 
 gr_basic_block_vector_t
