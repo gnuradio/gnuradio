@@ -98,6 +98,11 @@ public:
     virtual bool check_topology(int ninputs, int noutputs) { return true; }
 };
 
+inline bool operator<(gr_basic_block_sptr lhs, gr_basic_block_sptr rhs)
+{
+  return lhs->unique_id() < rhs->unique_id();
+}
+
 typedef std::vector<gr_basic_block_sptr> gr_basic_block_vector_t;
 typedef std::vector<gr_basic_block_sptr>::iterator gr_basic_block_viter_t;
 
