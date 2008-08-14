@@ -21,6 +21,8 @@
 
 include $(top_srcdir)/Makefile.common
 
+SUBDIRS = plotter
+
 # Install this stuff so that it ends up as the gnuradio.wxgui module
 # This usually ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio/wxgui
@@ -30,12 +32,27 @@ ourlibdir    = $(grpyexecdir)/wxgui
 
 ourpython_PYTHON =			\
 	__init__.py			\
+	common.py			\
+	constants.py			\
+	constsink_gl.py			\
+	const_window.py			\
 	form.py				\
 	fftsink2.py			\
+	fftsink_nongl.py		\
+	fftsink_gl.py			\
+	fft_window.py			\
+	numbersink2.py			\
+	number_window.py		\
 	plot.py				\
 	powermate.py			\
+	pubsub.py			\
 	scopesink2.py			\
+	scopesink_nongl.py		\
+	scopesink_gl.py			\
+	scope_window.py			\
 	waterfallsink2.py		\
+	waterfallsink_nongl.py		\
+	waterfallsink_gl.py		\
+	waterfall_window.py		\
 	slider.py			\
-	stdgui2.py			\
-	numbersink2.py
+	stdgui2.py

@@ -19,27 +19,5 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from gnuradio import gr
-
-p = gr.prefs()
-style = p.get_string('wxgui', 'style', 'auto')
-
-# In 3.2 we'll change 'auto' to mean 'gl' if possible, then fallback
-if style == 'auto':
-    style = 'nongl'
-
-if style == 'nongl':
-    from waterfallsink_nongl import waterfall_sink_f, waterfall_sink_c
-elif style == 'gl':
-    try:
-        import wx
-        wx.glcanvas.GLCanvas
-    except AttributeError:
-        raise RuntimeError("wxPython doesn't support glcanvas")
-
-    try:
-        from OpenGL.GL import *
-    except ImportError:
-        raise RuntimeError("Unable to import OpenGL. Are Python wrappers for OpenGL installed?")
-
-    from waterfallsink_gl import waterfall_sink_f, waterfall_sink_c
+from channel_plotter import channel_plotter
+from waterfall_plotter import waterfall_plotter

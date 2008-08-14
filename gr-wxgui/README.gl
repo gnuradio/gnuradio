@@ -1,0 +1,20 @@
+To use the OpenGL versions of the graphical display sinks, you must ensure
+that you have Python wrappers for OpenGL installed and are using a version
+of wxPython that supports it.  Then you must enable this mode by creating or
+editing an entry in the GNU Radio preferences file at:
+
+~/.gnuradio/config.conf
+
+[wxgui]
+style=gl
+
+
+The style parameter accepts 'nongl', 'gl', and 'auto', and defaults to 'auto'.
+
+'nongl' forces the use of the non-GL (current) sinks.  
+
+'gl' forces the use of the new GL based sinks, and will raise an exception if the
+appropriate GL support does not exist.
+
+'auto' currently equates to 'nongl'; however, in release 3.2, this will change to
+use GL if possible and if not, fallback to the non-GL versions.

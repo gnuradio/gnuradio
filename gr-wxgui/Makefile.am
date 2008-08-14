@@ -21,7 +21,12 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = gr-wxgui.conf gr-wxgui.pc.in
+EXTRA_DIST = \
+    gr-wxgui.conf \
+    gr-wxgui.pc.in \
+    README \
+    README.gl
+    
 SUBDIRS = src
 
 etcdir = $(sysconfdir)/gnuradio/conf.d

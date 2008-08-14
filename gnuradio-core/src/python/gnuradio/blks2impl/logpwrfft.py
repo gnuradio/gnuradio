@@ -72,6 +72,13 @@ class _logpwrfft_base(gr.hier_block2):
         """
         self._sd.set_decimation(decim)
 
+    def set_vec_rate(self, vec_rate):
+        """!
+        Set the vector rate on stream decimator.
+        @param vec_rate the new vector rate
+        """
+        self._sd.set_vec_rate(vec_rate)
+
     def set_sample_rate(self, sample_rate):
         """!
         Set the new sampling rate

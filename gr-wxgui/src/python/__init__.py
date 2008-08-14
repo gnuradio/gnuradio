@@ -1,1 +1,2 @@
-# make this directory a package
+import plotter
+
