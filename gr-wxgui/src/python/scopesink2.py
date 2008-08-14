@@ -29,7 +29,7 @@ if style == 'auto':
     style = 'nongl'
 
 if style == 'nongl':
-    from scopesink_nongl import scope_sink_f, scope_sink_c
+    from scopesink_nongl import scope_sink_f, scope_sink_c, constellation_sink
 elif style == 'gl':
     try:
         import wx.glcanvas
@@ -41,4 +41,4 @@ elif style == 'gl':
     except ImportError:
         raise RuntimeError("Unable to import OpenGL. Are Python wrappers for OpenGL installed?")
 
-    from scopesink_gl import scope_sink_f, scope_sink_c
+    from scopesink_gl import scope_sink_f, scope_sink_c, constellation_sink

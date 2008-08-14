@@ -129,9 +129,9 @@ class scope_sink_c(_scope_sink_base):
 
 #backwards compadible wrapper (maybe only grc uses this)
 class constellation_sink(scope_sink_c):
-	def __init__(self, **kwargs):
-		kwargs['xy_mode'] = True
-		scope_sink_c.__init__(self, **kwargs)
+	def __init__(self, *args, **kwargs):
+		scope_sink_c.__init__(self, *args, **kwargs)
+		self.set_scope_xy_mode(True)
 
 # ----------------------------------------------------------------
 # Stand-alone test application
