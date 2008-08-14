@@ -32,9 +32,8 @@ if style == 'nongl':
     from waterfallsink_nongl import waterfall_sink_f, waterfall_sink_c
 elif style == 'gl':
     try:
-        import wx
-        wx.glcanvas.GLCanvas
-    except AttributeError:
+        import wx.glcanvas
+    except ImportError:
         raise RuntimeError("wxPython doesn't support glcanvas")
 
     try:
