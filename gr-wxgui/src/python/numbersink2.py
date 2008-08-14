@@ -118,6 +118,8 @@ class _number_sink_base(gr.hier_block2, common.prop_setter):
 		for attr in filter(lambda a: a.startswith('set_'), dir(self.win)):
 			setattr(self, attr, getattr(self.win, attr))
 		self._register_set_prop(self.controller, SAMPLE_RATE_KEY)
+		#backwards compadibility
+		self.set_show_gauge = self.win.show_gauges
 
 	def get_average(self): return self._average
 	def set_average(self, average):

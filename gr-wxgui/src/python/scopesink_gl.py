@@ -114,6 +114,10 @@ class _scope_sink_base(gr.hier_block2, common.prop_setter):
 		for attr in filter(lambda a: a.startswith('set_'), dir(self.win)):
 			setattr(self, attr, getattr(self.win, attr))
 		self._register_set_prop(self.controller, SAMPLE_RATE_KEY)
+		#backwards compadibility
+		self.win.set_format_line = lambda: setter(self.win, MARKER_KEY, None)
+		self.win.set_format_dot = lambda: setter(self.win, MARKER_KEY, 2.0)
+		self.win.set_format_plus =  lambda: setter(self.win, MARKER_KEY, 3.0)
 
 class scope_sink_f(_scope_sink_base):
 	_item_size = gr.sizeof_float

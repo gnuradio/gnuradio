@@ -46,7 +46,7 @@ MARKER_TYPES = (
 	('Dot Large', 3.0),
 	('Line Link', None),
 )
-DEFAULT_MARKER_TYPE = MARKER_TYPES[1][1]
+DEFAULT_MARKER_TYPE = 2.0
 
 ##################################################
 # Constellation window control panel

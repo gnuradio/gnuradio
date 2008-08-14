@@ -25,9 +25,9 @@ import math
 import wx
 
 class prop_setter(object):
-	def _register_set_prop(self, controller, control_key, init=None):
+	def _register_set_prop(self, controller, control_key, *args):
 		def set_method(value): controller[control_key] = value
-		if init is not None: set_method(init)
+		if args: set_method(args[0])
 		setattr(self, 'set_%s'%control_key, set_method)
 
 ##################################################

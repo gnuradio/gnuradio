@@ -58,6 +58,13 @@ CHANNEL_COLOR_SPECS = (
 	(1, 0, 1),
 )
 AUTORANGE_UPDATE_RATE = 0.5 #sec
+MARKER_TYPES = (
+	('Dot Small', 1.0),
+	('Dot Medium', 2.0),
+	('Dot Large', 3.0),
+	('Line Link', None),
+)
+DEFAULT_MARKER_TYPE = None
 
 ##################################################
 # Scope window control panel
@@ -175,7 +182,11 @@ class control_panel(wx.Panel):
 		#autorange check box
 		self.autorange_check_box = common.CheckBoxController(self, 'Autorange', parent, AUTORANGE_KEY)
 		control_box.Add(self.autorange_check_box, 0, wx.ALIGN_LEFT)
-		#run/stop
+		#marker
+		control_box.AddStretchSpacer()
+		self.marker_chooser = common.DropDownController(self, 'Marker', MARKER_TYPES, parent, MARKER_KEY)
+		control_box.Add(self.marker_chooser, 0, wx.EXPAND)
+		#xy mode
 		control_box.AddStretchSpacer()
 		self.scope_xy_mode_button = common.ToggleButtonController(self, parent, SCOPE_XY_MODE_KEY, 'Scope Mode', 'X:Y Mode')
 		parent.subscribe(SCOPE_XY_MODE_KEY, self._on_scope_xy_mode)
@@ -258,6 +269,7 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		#check num inputs
 		assert num_inputs <= len(CHANNEL_COLOR_SPECS)
 		#setup
+		self.sampleses = None
 		self.ext_controller = controller
 		self.num_inputs = num_inputs
 		self.sample_rate_key = sample_rate_key
@@ -303,6 +315,7 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		self._register_set_prop(self, TRIGGER_CHANNEL_KEY, 0)
 		self._register_set_prop(self, TRIGGER_MODE_KEY, 1)
 		self._register_set_prop(self, TRIGGER_LEVEL_KEY, None)
+		self._register_set_prop(self, MARKER_KEY, DEFAULT_MARKER_TYPE)
 		#register events
 		self.ext_controller.subscribe(msg_key, self.handle_msg)
 		for key in (
@@ -314,6 +327,7 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 			SCOPE_Y_CHANNEL_KEY,
 			AUTORANGE_KEY,
 			AC_COUPLE_KEY,
+			MARKER_KEY,
 		): self.subscribe(key, self.update_grid)
 		#initial update, dont do this here, wait for handle_msg #HACK
 		#self.update_grid()
@@ -344,6 +358,7 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		Handle the cached samples from the scope input.
 		Perform ac coupling, triggering, and auto ranging.
 		"""
+		if not self.sampleses: return
 		sampleses = self.sampleses
 		#trigger level (must do before ac coupling)
 		self.ext_controller[self.scope_trigger_channel_key] = self[TRIGGER_CHANNEL_KEY]
@@ -382,6 +397,7 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 				channel='XY',
 				samples=(x_samples, y_samples),
 				color_spec=CHANNEL_COLOR_SPECS[0],
+				marker=self[MARKER_KEY],
 			)
 			#turn off each waveform
 			for i, samples in enumerate(sampleses):
@@ -421,6 +437,7 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 						channel='Ch%d'%(i+1),
 						samples=samples[:num_samps],
 						color_spec=CHANNEL_COLOR_SPECS[i],
+						marker=self[MARKER_KEY],
 					)
 			#turn XY channel off
 			self.plotter.set_waveform(
