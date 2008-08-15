@@ -30,7 +30,7 @@
  * \ingroup misc
  */
 class gr_fxpt_nco {
-  gr_int32	d_phase;
+  gr_uint32	d_phase;
   gr_int32	d_phase_inc;
 
 public:
