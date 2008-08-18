@@ -32,6 +32,9 @@ class qa_gr_firdes : public CppUnit::TestCase {
   CPPUNIT_TEST (t2);
   CPPUNIT_TEST (t3);
   CPPUNIT_TEST (t4);
+  CPPUNIT_TEST (t5);
+  CPPUNIT_TEST (t6);
+  CPPUNIT_TEST (t7);
   CPPUNIT_TEST_SUITE_END ();
 
  private:
@@ -39,6 +42,9 @@ class qa_gr_firdes : public CppUnit::TestCase {
   void t2 ();
   void t3 ();
   void t4 ();
+  void t5 ();
+  void t6 ();
+  void t7 ();
 
 };
 

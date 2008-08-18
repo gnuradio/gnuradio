@@ -51,6 +51,53 @@ static double Izero(double x)
 //
 
 vector<float>
+gr_firdes::low_pass_2(double gain,
+		      double sampling_freq,    // Hz
+		      double cutoff_freq,      // Hz BEGINNING of transition band
+		      double transition_width, // Hz width of transition band
+		      double attenuation_dB,   // attenuation dB
+		      win_type window_type,
+		      double beta)             // used only with Kaiser
+{
+  sanity_check_1f (sampling_freq, cutoff_freq, transition_width);
+
+  int ntaps = compute_ntaps_windes (sampling_freq, transition_width,
+				    attenuation_dB);
+
+  // construct the truncated ideal impulse response
+  // [sin(x)/x for the low pass case]
+
+  vector<float> taps(ntaps);
+  vector<float> w = window (window_type, ntaps, beta);
+
+  int M = (ntaps - 1) / 2;
+  double fwT0 = 2 * M_PI * cutoff_freq / sampling_freq;
+  for (int n = -M; n <= M; n++){
+    if (n == 0)
+      taps[n + M] = fwT0 / M_PI * w[n + M];
+    else {
+      // a little algebra gets this into the more familiar sin(x)/x form
+      taps[n + M] =  sin (n * fwT0) / (n * M_PI) * w[n + M];
+    }
+  }
+  
+  // find the factor to normalize the gain, fmax.
+  // For low-pass, gain @ zero freq = 1.0
+  
+  double fmax = taps[0 + M];
+  for (int n = 1; n <= M; n++)
+    fmax += 2 * taps[n + M];
+
+  gain /= fmax;	// normalize
+
+  for (int i = 0; i < ntaps; i++)
+    taps[i] *= gain;
+
+
+  return taps;
+}
+
+vector<float>
 gr_firdes::low_pass (double gain,
 		     double sampling_freq,
 		     double cutoff_freq,	// Hz center of transition band
@@ -74,7 +121,7 @@ gr_firdes::low_pass (double gain,
 
   for (int n = -M; n <= M; n++){
     if (n == 0)
- taps[n + M] = fwT0 / M_PI * w[n + M];
+      taps[n + M] = fwT0 / M_PI * w[n + M];
     else {
       // a little algebra gets this into the more familiar sin(x)/x form
       taps[n + M] =  sin (n * fwT0) / (n * M_PI) * w[n + M];
@@ -96,22 +143,24 @@ gr_firdes::low_pass (double gain,
   return taps;
 }
 
+
 //
 //	=== High Pass ===
 //
 
 vector<float>
-gr_firdes::high_pass (double gain,
-		      double sampling_freq,
-		      double cutoff_freq,	// Hz center of transition band
-		      double transition_width,	// Hz width of transition band
-		      win_type window_type,
-		      double beta)		// used only with Kaiser
+gr_firdes::high_pass_2 (double gain,
+                      double sampling_freq,
+                      double cutoff_freq,       // Hz center of transition band
+                      double transition_width,  // Hz width of transition band
+		      double attenuation_dB,   // attenuation dB
+                      win_type window_type,
+                      double beta)              // used only with Kaiser
 {
   sanity_check_1f (sampling_freq, cutoff_freq, transition_width);
 
-  int ntaps = compute_ntaps (sampling_freq, transition_width,
-			     window_type, beta);
+  int ntaps = compute_ntaps_windes (sampling_freq, transition_width,
+				    attenuation_dB);
 
   // construct the truncated ideal impulse response times the window function
 
@@ -129,13 +178,111 @@ gr_firdes::high_pass (double gain,
       taps[n + M] =  -sin (n * fwT0) / (n * M_PI) * w[n + M];
     }
   }
-  
+
   // find the factor to normalize the gain, fmax.
   // For high-pass, gain @ fs/2 freq = 1.0
-  
+
   double fmax = taps[0 + M];
   for (int n = 1; n <= M; n++)
     fmax += 2 * taps[n + M] * cos (n * M_PI);
+
+  gain /= fmax; // normalize
+
+  for (int i = 0; i < ntaps; i++)
+    taps[i] *= gain;
+
+
+  return taps;
+}
+
+
+vector<float>
+gr_firdes::high_pass (double gain,
+                      double sampling_freq,
+                      double cutoff_freq,       // Hz center of transition band
+                      double transition_width,  // Hz width of transition band
+                      win_type window_type,
+                      double beta)              // used only with Kaiser
+{
+  sanity_check_1f (sampling_freq, cutoff_freq, transition_width);
+
+  int ntaps = compute_ntaps (sampling_freq, transition_width,
+                             window_type, beta);
+
+  // construct the truncated ideal impulse response times the window function
+
+  vector<float> taps(ntaps);
+  vector<float> w = window (window_type, ntaps, beta);
+
+  int M = (ntaps - 1) / 2;
+  double fwT0 = 2 * M_PI * cutoff_freq / sampling_freq;
+
+  for (int n = -M; n <= M; n++){
+    if (n == 0)
+      taps[n + M] = (1 - (fwT0 / M_PI)) * w[n + M];
+    else {
+      // a little algebra gets this into the more familiar sin(x)/x form
+      taps[n + M] =  -sin (n * fwT0) / (n * M_PI) * w[n + M];
+    }
+  }
+
+  // find the factor to normalize the gain, fmax.
+  // For high-pass, gain @ fs/2 freq = 1.0
+
+  double fmax = taps[0 + M];
+  for (int n = 1; n <= M; n++)
+    fmax += 2 * taps[n + M] * cos (n * M_PI);
+
+  gain /= fmax; // normalize
+
+  for (int i = 0; i < ntaps; i++)
+    taps[i] *= gain;
+
+  return taps;
+}
+
+//
+//      === Band Pass ===
+//
+
+vector<float>
+gr_firdes::band_pass_2 (double gain,
+		      double sampling_freq,
+		      double low_cutoff_freq,	// Hz center of transition band
+		      double high_cutoff_freq,	// Hz center of transition band
+		      double transition_width,	// Hz width of transition band
+		      double attenuation_dB,   // attenuation dB
+		      win_type window_type,
+		      double beta)		// used only with Kaiser
+{
+  sanity_check_2f (sampling_freq,
+		   low_cutoff_freq,
+		   high_cutoff_freq, transition_width);
+
+  int ntaps = compute_ntaps_windes (sampling_freq, transition_width,
+				    attenuation_dB);
+
+  vector<float> taps(ntaps);
+  vector<float> w = window (window_type, ntaps, beta);
+
+  int M = (ntaps - 1) / 2;
+  double fwT0 = 2 * M_PI * low_cutoff_freq / sampling_freq;
+  double fwT1 = 2 * M_PI * high_cutoff_freq / sampling_freq;
+
+  for (int n = -M; n <= M; n++){
+    if (n == 0)
+      taps[n + M] = (fwT1 - fwT0) / M_PI * w[n + M];
+    else {
+      taps[n + M] =  (sin (n * fwT1) - sin (n * fwT0)) / (n * M_PI) * w[n + M];
+    }
+  }
+  
+  // find the factor to normalize the gain, fmax.
+  // For band-pass, gain @ center freq = 1.0
+  
+  double fmax = taps[0 + M];
+  for (int n = 1; n <= M; n++)
+    fmax += 2 * taps[n + M] * cos (n * (fwT0 + fwT1) * 0.5);
 
   gain /= fmax;	// normalize
 
@@ -145,9 +292,6 @@ gr_firdes::high_pass (double gain,
   return taps;
 }
 
-//
-//	=== Band Pass ===
-//
 
 vector<float>
 gr_firdes::band_pass (double gain,
@@ -202,6 +346,47 @@ gr_firdes::band_pass (double gain,
 //
 
 vector<gr_complex>
+gr_firdes::complex_band_pass_2 (double gain,
+		      double sampling_freq,
+		      double low_cutoff_freq,	// Hz center of transition band
+		      double high_cutoff_freq,	// Hz center of transition band
+		      double transition_width,	// Hz width of transition band
+		      double attenuation_dB,      // attenuation dB
+		      win_type window_type,
+		      double beta)		// used only with Kaiser
+{
+  sanity_check_2f_c (sampling_freq,
+		   low_cutoff_freq,
+		   high_cutoff_freq, transition_width);
+
+  int ntaps = compute_ntaps_windes (sampling_freq, transition_width,
+				    attenuation_dB);
+
+
+
+  vector<gr_complex> taps(ntaps);
+  vector<float> lptaps(ntaps);
+  vector<float> w = window (window_type, ntaps, beta);
+
+  lptaps = low_pass_2(gain,sampling_freq,(high_cutoff_freq - low_cutoff_freq)/2,transition_width,attenuation_dB,window_type,beta);
+
+  gr_complex *optr = &taps[0];
+  float *iptr = &lptaps[0];
+  float freq = M_PI * (high_cutoff_freq + low_cutoff_freq)/sampling_freq;
+  float phase=0;
+  if (lptaps.size() & 01) {
+      phase = - freq * ( lptaps.size() >> 1 );
+  } else phase = - freq/2.0 * ((1 + 2*lptaps.size()) >> 1);
+  for(unsigned int i=0;i<lptaps.size();i++) {
+      *optr++ = gr_complex(*iptr * cos(phase),*iptr * sin(phase));
+      iptr++, phase += freq;
+  }
+  
+  return taps;
+}
+
+
+vector<gr_complex>
 gr_firdes::complex_band_pass (double gain,
 		      double sampling_freq,
 		      double low_cutoff_freq,	// Hz center of transition band
@@ -240,10 +425,58 @@ gr_firdes::complex_band_pass (double gain,
   return taps;
 }
 
-
 //
 //	=== Band Reject ===
 //
+
+vector<float>
+gr_firdes::band_reject_2 (double gain,
+  		        double sampling_freq,
+		        double low_cutoff_freq,	 // Hz center of transition band
+		        double high_cutoff_freq, // Hz center of transition band
+		        double transition_width, // Hz width of transition band
+		        double attenuation_dB,   // attenuation dB
+		        win_type window_type,
+		        double beta)		 // used only with Kaiser
+{
+  sanity_check_2f (sampling_freq,
+		   low_cutoff_freq,
+		   high_cutoff_freq, transition_width);
+
+  int ntaps = compute_ntaps_windes (sampling_freq, transition_width,
+				    attenuation_dB);
+
+  // construct the truncated ideal impulse response times the window function
+
+  vector<float> taps(ntaps);
+  vector<float> w = window (window_type, ntaps, beta);
+
+  int M = (ntaps - 1) / 2;
+  double fwT0 = 2 * M_PI * low_cutoff_freq / sampling_freq;
+  double fwT1 = 2 * M_PI * high_cutoff_freq / sampling_freq;
+
+  for (int n = -M; n <= M; n++){
+    if (n == 0)
+      taps[n + M] = 1.0 + ((fwT0 - fwT1) / M_PI * w[n + M]);
+    else {
+      taps[n + M] =  (sin (n * fwT0) - sin (n * fwT1)) / (n * M_PI) * w[n + M];
+    }
+  }
+  
+  // find the factor to normalize the gain, fmax.
+  // For band-reject, gain @ zero freq = 1.0
+  
+  double fmax = taps[0 + M];
+  for (int n = 1; n <= M; n++)
+    fmax += 2 * taps[n + M];
+
+  gain /= fmax;	// normalize
+
+  for (int i = 0; i < ntaps; i++)
+    taps[i] *= gain;
+
+  return taps;
+}
 
 vector<float>
 gr_firdes::band_reject (double gain,
@@ -426,6 +659,19 @@ static const float width_factor[5] = {   // indexed by win_type
   //2.0                   // WIN_KAISER  (guesstimate compromise)
   10.0			// WIN_KAISER
 };
+
+int
+gr_firdes::compute_ntaps_windes(double sampling_freq,
+			         double transition_width, // this is frequency, not relative frequency
+			   	 double attenuation_dB)
+{
+  // Based on formula from Multirate Signal Processing for
+  // Communications Systems, fredric j harris
+  int ntaps = (int)(attenuation_dB*sampling_freq/(22.0*transition_width));
+  if ((ntaps & 1) == 0)	// if even...
+    ntaps++;		// ...make odd
+  return ntaps;
+}
 
 int
 gr_firdes::compute_ntaps (double sampling_freq,

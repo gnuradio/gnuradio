@@ -68,6 +68,15 @@ class gr_firdes {
 	    win_type window = WIN_HAMMING,
 	    double beta = 6.76);		// used only with Kaiser
 
+  static std::vector<float>
+  low_pass_2 (double gain,
+	    double sampling_freq,
+	    double cutoff_freq,		// Hz beginning transition band
+	    double transition_width,	// Hz width of transition band
+	    double attenuation_dB,   // attenuation dB
+	    win_type window = WIN_HAMMING,
+	    double beta = 6.76);		// used only with Kaiser
+
   /*!
    * \brief use "window method" to design a high-pass FIR filter
    *
@@ -87,6 +96,15 @@ class gr_firdes {
 	     double sampling_freq,
 	     double cutoff_freq,		// Hz center of transition band
 	     double transition_width,		// Hz width of transition band
+	     win_type window = WIN_HAMMING,
+	     double beta = 6.76);		// used only with Kaiser
+
+  static std::vector<float>
+  high_pass_2 (double gain,
+	     double sampling_freq,
+	     double cutoff_freq,		// Hz center of transition band
+	     double transition_width,		// Hz width of transition band
+	     double attenuation_dB,   // attenuation dB
 	     win_type window = WIN_HAMMING,
 	     double beta = 6.76);		// used only with Kaiser
 
@@ -114,6 +132,15 @@ class gr_firdes {
 	     win_type window = WIN_HAMMING,
 	     double beta = 6.76);		// used only with Kaiser
 
+  static std::vector<float>
+  band_pass_2 (double gain,
+	     double sampling_freq,
+	     double low_cutoff_freq,		// Hz beginning transition band
+	     double high_cutoff_freq,		// Hz beginning transition band
+	     double transition_width,		// Hz width of transition band
+	     double attenuation_dB,   // attenuation dB
+	     win_type window = WIN_HAMMING,
+	     double beta = 6.76);		// used only with Kaiser
 
   /*!
    * \brief use "window method" to design a complex band-pass FIR filter
@@ -140,6 +167,16 @@ class gr_firdes {
 	     win_type window = WIN_HAMMING,
 	     double beta = 6.76);		// used only with Kaiser
 
+  static std::vector<gr_complex>
+  complex_band_pass_2 (double gain,
+	     double sampling_freq,
+	     double low_cutoff_freq,		// Hz beginning transition band
+	     double high_cutoff_freq,		// Hz beginning transition band
+	     double transition_width,		// Hz width of transition band
+	     double attenuation_dB,             // attenuation dB
+	     win_type window = WIN_HAMMING,
+	     double beta = 6.76);		// used only with Kaiser
+
 
   /*!
    * \brief use "window method" to design a band-reject FIR filter
@@ -163,6 +200,16 @@ class gr_firdes {
 	       double low_cutoff_freq,		// Hz center of transition band
 	       double high_cutoff_freq,		// Hz center of transition band
 	       double transition_width,		// Hz width of transition band
+	       win_type window = WIN_HAMMING,
+	       double beta = 6.76);		// used only with Kaiser
+
+  static std::vector<float>
+  band_reject_2 (double gain,
+	       double sampling_freq,
+	       double low_cutoff_freq,		// Hz beginning transition band
+	       double high_cutoff_freq,		// Hz beginning transition band
+	       double transition_width,		// Hz width of transition band
+	       double attenuation_dB,           // attenuation dB
 	       win_type window = WIN_HAMMING,
 	       double beta = 6.76);		// used only with Kaiser
 
@@ -221,6 +268,10 @@ private:
   static int compute_ntaps (double sampling_freq,
 			    double transition_width,
 			    win_type window_type, double beta);
+
+  static int compute_ntaps_windes (double sampling_freq,
+				   double transition_width,
+				   double attenuation_dB);
 };
 
 #endif
