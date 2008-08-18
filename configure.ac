@@ -249,7 +249,8 @@ GRC_MBLOCK			dnl this must come after GRC_PMT
 GRC_USRP
 GRC_GR_USRP			dnl this must come after GRC_USRP
 GRC_GR_GCELL			dnl this must come after GRC_GCELL and GRC_GNURADIO_CORE
-dnl GRC_GR_MSDD6000		dnl disabled until component is fixed (ticket:252)
+GRC_GR_MSDD6000		dnl disabled until component is fixed (ticket:252)
+GRC_GR_CLASSIFY
 GRC_GR_AUDIO_ALSA
 GRC_GR_AUDIO_JACK
 GRC_GR_AUDIO_OSS
