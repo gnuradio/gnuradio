@@ -25,12 +25,9 @@ p = gr.prefs()
 style = p.get_string('wxgui', 'style', 'auto')
 
 # In 3.2 we'll change 'auto' to mean 'gl' if possible, then fallback
-if style == 'auto':
-    style = 'nongl'
+# Currently, anything other than 'gl' means 'nongl'
 
-if style == 'nongl':
-    from fftsink_nongl import fft_sink_f, fft_sink_c
-elif style == 'gl':
+if style == 'gl':
     try:
         import wx.glcanvas
     except ImportError:
@@ -42,3 +39,6 @@ elif style == 'gl':
         raise RuntimeError("Unable to import OpenGL. Are Python wrappers for OpenGL installed?")
 
     from fftsink_gl import fft_sink_f, fft_sink_c
+
+else:
+    from fftsink_nongl import fft_sink_f, fft_sink_c
