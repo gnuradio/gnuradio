@@ -34,12 +34,6 @@ import time
 import numpy.fft
 import ephem
 
-class continuum_calibration(gr.feval_dd):
-    def eval(self, x):
-        str = globals()["calibration_codelet"]
-        exec(str)
-        return(x)
-
 class app_flow_graph(stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
         stdgui2.std_top_block.__init__(self, frame, panel, vbox, argv)
@@ -82,29 +76,15 @@ class app_flow_graph(stdgui2.std_top_block):
         parser.add_option("-S", "--setimode", action="store_true", default=False, help="Enable SETI processing of spectral data")
         parser.add_option("-K", "--setik", type="eng_float", default=1.5, help="K value for SETI analysis")
         parser.add_option("-T", "--setibandwidth", type="eng_float", default=12500, help="Instantaneous SETI observing bandwidth--must be divisor of 250Khz")
-        parser.add_option("-n", "--notches", action="store_true", default=False,
-            help="Notches appear after all other arguments")
         parser.add_option("-Q", "--seti_range", type="eng_float", default=1.0e6, help="Total scan width, in Hz for SETI scans")
+        parser.add_option("-Z", "--dual_mode", action="store_true",
+            default=False, help="Dual-polarization mode")
+        parser.add_option("-I", "--interferometer", action="store_true", default=False, help="Interferometer mode")
         (options, args) = parser.parse_args()
 
-        self.notches = Numeric.zeros(64,Numeric.Float64)
-        if len(args) != 0 and options.notches == False:
-            parser.print_help()
-            sys.exit(1)
-
-        if len(args) == 0 and options.notches != False:
-            parser.print_help()
-            sys.exit()
-
-        self.use_notches = options.notches
-
-        # Get notch locations
-        j = 0
-        for i in args:
-            self.notches[j] = float(i)
-            j = j+1
-
-        self.notch_count = j
+        #if (len(args) == 0):
+            #parser.print_help()
+            #sys.exit()
 
         self.show_debug_info = True
 
@@ -184,23 +164,42 @@ class app_flow_graph(stdgui2.std_top_block):
         # Set initial values for datalogging timed-output
         self.continuum_then = time.time()
         self.spectral_then = time.time()
+        
+        self.dual_mode = options.dual_mode
       
         # build the graph
 
+        self.subdev = [(0, 0), (0,0)]
         #
         # If SETI mode, we always run at maximum USRP decimation
         #
         if (self.setimode):
             options.decim = 256
-
-        self.u = usrp.source_c(decim_rate=options.decim)
-        self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
+        if (self.dual_mode == False):
+            self.u = usrp.source_c(decim_rate=options.decim)
+            self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
+            # determine the daughterboard subdevice we're using
+            self.subdev[0] = usrp.selected_subdev(self.u, options.rx_subdev_spec)
+            self.subdev[1] = self.subdev[0]
+            self.cardtype = self.subdev[0].dbid()
+        else:
+        	self.u=usrp.source_c(decim_rate=options.decim, nchan=2)
+        	self.subdev[0] = usrp.selected_subdev(self.u, (0, 0))
+        	self.subdev[1] = usrp.selected_subdev(self.u, (1, 0))
+        	self.cardtype = self.subdev[0].dbid()
+        	self.u.set_mux(0x32103210)
+        
+        
+        #
+        # Set 8-bit mode
+        #
+        width = 8
+        shift = 8
+        format = self.u.make_format(width, shift)
+        r = self.u.set_format(format)
+        
         # Set initial declination
         self.decln = options.decln
-
-        # determine the daughterboard subdevice we're using
-        self.subdev = usrp.selected_subdev(self.u, options.rx_subdev_spec)
-        self.cardtype = self.subdev.dbid()
 
         input_rate = self.u.adc_freq() / self.u.decim_rate()
 
@@ -270,11 +269,14 @@ class app_flow_graph(stdgui2.std_top_block):
         self.sunstate = "??"
 
         # Set up stripchart display
+        tit = "Continuum"
+        if (self.dual_mode != False):
+        	tit = "H+V Continuum"
         self.stripsize = int(options.stripsize)
         if self.setimode == False:
             self.chart = ra_stripchartsink.stripchart_sink_f (panel,
                 stripsize=self.stripsize,
-                title="Continuum",
+                title=tit,
                 xlabel="LMST Offset (Seconds)",
                 scaling=1.0, ylabel=options.ylabel,
                 divbase=options.divbase)
@@ -289,32 +291,12 @@ class app_flow_graph(stdgui2.std_top_block):
         else:
             self.observing = options.observing
 
+        # Remember our input bandwidth
         self.bw = input_rate
 
-        # We setup the first two integrators to produce a fixed integration
-        # Down to 1Hz, with output at 1 samples/sec
-        N = input_rate/5000
-
-        # Second stage runs on decimated output of first
-        M = (input_rate/N)
-
-        # Create taps for first integrator
-        t = range(0,N-1)
-        tapsN = []
-        for i in t:
-             tapsN.append(1.0/N)
-
-        # Create taps for second integrator
-        t = range(0,M-1)
-        tapsM = []
-        for i in t:
-            tapsM.append(1.0/M)
-
         #
-        # The 3rd integrator is variable, and user selectable at runtime
-        # This integrator doesn't decimate, but is used to set the
-        #  final integration time based on the constant 1Hz input samples
-        # The strip chart is fed at a constant 1Hz rate as a result
+        # 
+        # The strip chart is fed at a constant 1Hz rate
         #
 
         #
@@ -322,56 +304,88 @@ class app_flow_graph(stdgui2.std_top_block):
         #
 
         if self.setimode == False:
-            # The three integrators--two FIR filters, and an IIR final filter
-            self.integrator1 = gr.fir_filter_fff (N, tapsN)
-            self.integrator2 = gr.fir_filter_fff (M, tapsM)
-            self.integrator3 = gr.single_pole_iir_filter_ff(1.0)
-    
-            # The detector
-            self.detector = gr.complex_to_mag_squared()
+            # The IIR integration filter for post-detection
+            self.integrator = gr.single_pole_iir_filter_ff(1.0)
+            self.integrator.set_taps (1.0/self.bw)
 
+            if (self.dual_mode == False):
+                # The detector
+            	self.detector = gr.complex_to_mag_squared()
     
             # Signal probe
-            self.probe = gr.probe_signal_f();
+            self.probe = gr.probe_signal_f()
     
             #
             # Continuum calibration stuff
             #
             x = self.calib_coeff/100.0
-            self.cal_mult = gr.multiply_const_ff(self.calib_coeff/100.0);
-            self.cal_offs = gr.add_const_ff(self.calib_offset*(x*8000));
-
-            if self.use_notches == True:
-                self.compute_notch_taps(self.notches)
-                self.notch_filt = gr.fft_filter_ccc(1, self.notch_taps)
+            self.cal_mult = gr.multiply_const_ff(self.calib_coeff/100.0)
+            self.cal_offs = gr.add_const_ff(self.calib_offset*(x*8000))
+            
+            #
+            # Mega decimator after IIR filter
+            #
+            self.keepn = gr.keep_one_in_n(gr.sizeof_float, self.bw)
 
         #
         # Start connecting configured modules in the receive chain
         #
+        
+        
+        #
+        # Handle dual-polarization mode
+        #
+        if (self.dual_mode == False):
+        	self.head = self.u
+        	self.shead = self.u
+        	
+        else:
+        	self.di = gr.deinterleave(gr.sizeof_gr_complex)
+        	self.addchans = gr.add_cc ()
+        	self.h_power = gr.complex_to_mag_squared()
+        	self.v_power = gr.complex_to_mag_squared()
+        	self.connect (self.u, self.di)
+        	
+        	#
+        	# For spectral, adding the two channels works, assuming no gross
+        	#   phase or amplitude error
+        	self.connect ((self.di, 0), (self.addchans, 0))
+        	self.connect ((self.di, 1), (self.addchans, 1))
+        	
+        	#
+        	# Connect heads of spectral and total-power chains
+        	#
+        	self.head = self.di
+        	self.shead = self.addchans
+        	
+        	#
+        	# For dual-polarization mode, we compute the sum of the
+        	#   powers on each channel, after they've been detected
+        	#
+        	self.detector = gr.add_ff()
 
         # The scope--handle SETI mode
         if (self.setimode == False):
-            if (self.use_notches == True):
-                self.connect(self.u, self.notch_filt, self.scope)
-            else:
-                self.connect(self.u, self.scope)
+            self.connect(self.shead, self.scope)
         else:
-            if (self.use_notches == True):
-                self.connect(self.u, self.notch_filt, 
-                    self.fft_bandpass, self.scope)
-            else:
-                self.connect(self.u, self.fft_bandpass, self.scope)
+            self.connect(self.shead, self.fft_bandpass, self.scope)
 
-        if self.setimode == False:
-            if (self.use_notches == True):
-                self.connect(self.notch_filt, self.detector, 
-                    self.integrator1, self.integrator2,
-                    self.integrator3, self.cal_mult, self.cal_offs, self.chart)
+        if (self.setimode == False):
+            if (self.dual_mode == False):
+                self.connect(self.head, self.detector, 
+                    self.integrator, self.keepn, self.cal_mult, self.cal_offs, self.chart)
             else:
-                self.connect(self.u, self.detector, 
-                    self.integrator1, self.integrator2,
-                    self.integrator3, self.cal_mult, self.cal_offs, self.chart)
-    
+            	#
+            	# In dual-polarization mode, we compute things a little differently
+            	# In effect, we have two radiometer chains, terminating in an adder
+            	#
+                self.connect((self.di, 0), self.h_power)
+                self.connect((self.di, 1), self.v_power)
+                self.connect(self.h_power, (self.detector, 0))
+                self.connect(self.v_power, (self.detector, 1))
+                self.connect(self.detector,
+                    self.integrator, self.keepn, self.cal_mult, self.cal_offs, self.chart)
+
             #  current instantaneous integrated detector value
             self.connect(self.cal_offs, self.probe)
 
@@ -407,12 +421,12 @@ class app_flow_graph(stdgui2.std_top_block):
 
         if options.gain is None:
             # if no gain was specified, use the mid-point in dB
-            g = self.subdev.gain_range()
+            g = self.subdev[0].gain_range()
             options.gain = float(g[0]+g[1])/2
 
         if options.freq is None:
             # if no freq was specified, use the mid-point
-            r = self.subdev.freq_range()
+            r = self.subdev[0].freq_range()
             options.freq = float(r[0]+r[1])/2
 
         # Set the initial gain control
@@ -427,16 +441,19 @@ class app_flow_graph(stdgui2.std_top_block):
 
         # RF hardware information
         self.myform['decim'].set_value(self.u.decim_rate())
-        self.myform['fs@usb'].set_value(self.u.adc_freq() / self.u.decim_rate())
-        self.myform['dbname'].set_value(self.subdev.name())
+        self.myform['USB BW'].set_value(self.u.adc_freq() / self.u.decim_rate())
+        if (self.dual_mode == True):
+            self.myform['dbname'].set_value(self.subdev[0].name()+'/'+self.subdev[1].name())
+        else:
+        	self.myform['dbname'].set_value(self.subdev[0].name())
 
         # Set analog baseband filtering, if DBS_RX
         if self.cardtype in (usrp_dbid.DBS_RX, usrp_dbid.DBS_RX_REV_2_1):
             lbw = (self.u.adc_freq() / self.u.decim_rate()) / 2
             if lbw < 1.0e6:
                 lbw = 1.0e6
-            self.subdev.set_bw(lbw)
-
+            self.subdev[0].set_bw(lbw)
+            self.subdev[1].set_bw(lbw)
         # Start the timer for the LMST display and datalogging
         self.lmst_timer.Start(1000)
 
@@ -493,7 +510,7 @@ class app_flow_graph(stdgui2.std_top_block):
         vbox2 = wx.BoxSizer(wx.VERTICAL)
         if self.setimode == False:
             vbox3 = wx.BoxSizer(wx.VERTICAL)
-        g = self.subdev.gain_range()
+        g = self.subdev[0].gain_range()
         myform['gain'] = form.slider_field(parent=self.panel, sizer=vbox2, label="RF Gain",
                                            weight=1,
                                            min=int(g[0]), max=int(g[1]),
@@ -576,8 +593,8 @@ class app_flow_graph(stdgui2.std_top_block):
             parent=panel, sizer=hbox, label="Decim")
 
         hbox.Add((5,0), 1)
-        myform['fs@usb'] = form.static_float_field(
-            parent=panel, sizer=hbox, label="Fs@USB")
+        myform['USB BW'] = form.static_float_field(
+            parent=panel, sizer=hbox, label="USB BW")
 
         hbox.Add((5,0), 1)
         myform['dbname'] = form.static_text_field(
@@ -612,7 +629,8 @@ class app_flow_graph(stdgui2.std_top_block):
         # Everything except BASIC_RX should support usrp.tune()
         #
         if not (self.cardtype == usrp_dbid.BASIC_RX):
-            r = usrp.tune(self.u, 0, self.subdev, target_freq)
+            r = usrp.tune(self.u, self.subdev[0]._which, self.subdev[0], target_freq)
+            r = usrp.tune(self.u, self.subdev[1]._which, self.subdev[1], target_freq)
         else:
             r = self.u.set_rx_freq(0, target_freq)
             f = self.u.rx_freq(0)
@@ -633,10 +651,6 @@ class app_flow_graph(stdgui2.std_top_block):
             self.myform['baseband'].set_value(r.baseband_freq)
             self.myform['ddc'].set_value(r.dxc_freq)
 
-            if self.use_notches == True:
-                self.compute_notch_taps(self.notches)
-                self.notch_filt.set_taps(self.notch_taps)
-
             return True
 
         return False
@@ -647,7 +661,8 @@ class app_flow_graph(stdgui2.std_top_block):
 
     def set_gain(self, gain):
         self.myform['gain'].set_value(gain)     # update displayed value
-        self.subdev.set_gain(gain)
+        self.subdev[0].set_gain(gain)
+        self.subdev[1].set_gain(gain)
         self.gain = gain
 
     def set_averaging(self, avval):
@@ -658,7 +673,7 @@ class app_flow_graph(stdgui2.std_top_block):
 
     def set_integration(self, integval):
         if self.setimode == False:
-            self.integrator3.set_taps(1.0/integval)
+            self.integrator.set_taps(1.0/((integval)*(self.bw/2)))
         self.myform['integration'].set_value(integval)
         self.integ = integval
 
