@@ -49,11 +49,14 @@ class _plotter_base(wx.glcanvas.GLCanvas):
 	def __init__(self, parent):
 		"""!
 		Create a new plotter base.
-		Initialize GL and register events.
+		Initialize the GLCanvas with double buffering.
+		Initialize various plotter flags.
+		Bind the paint and size events.
 		@param parent the parent widgit
 		"""
 		self._semaphore = threading.Semaphore(1)
-		wx.glcanvas.GLCanvas.__init__(self, parent, -1)
+		attribList = (wx.glcanvas.WX_GL_DOUBLEBUFFER, wx.glcanvas.WX_GL_RGBA)
+		wx.glcanvas.GLCanvas.__init__(self, parent, attribList=attribList)
 		self.changed(False)
 		self._gl_init_flag = False
 		self._resized_flag = True
@@ -86,7 +89,6 @@ class _plotter_base(wx.glcanvas.GLCanvas):
 		if self._resized_flag:
 			self.lock()
 			self.width, self.height = self.GetSize()
-			glViewport(0, 0, self.width, self.height)
 			glMatrixMode(GL_PROJECTION)
 			glLoadIdentity()
 			glOrtho(0, self.width, self.height, 0, 1, 0)
