@@ -28,7 +28,8 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
 	gnuradio_core_PYDIRPATH=$pythondir
     ])
 
-    dnl Don't do gnuradio-core if omnithread skipped
+    dnl Don't do gnuradio-core if gruel or omnithread skipped
+    GRC_CHECK_DEPENDENCY(gnuradio-core, gruel)
     GRC_CHECK_DEPENDENCY(gnuradio-core, omnithread)
 
     dnl If execution gets to here, $passed will be:

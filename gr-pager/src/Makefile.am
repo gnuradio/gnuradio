@@ -71,8 +71,9 @@ BUILT_SOURCES = \
 ourpython_PYTHON = \
     __init__.py \
     pager_swig.py \
+    pager_utils.py \
     flex_demod.py
-        
+
 ourlib_LTLIBRARIES = _pager_swig.la
 
 # These are the source files that go into the shared library

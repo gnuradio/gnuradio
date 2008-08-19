@@ -23,7 +23,11 @@
 #ifndef INCLUDED_GR_TOP_BLOCK_IMPL_H
 #define INCLUDED_GR_TOP_BLOCK_IMPL_H
 
-#include <gr_scheduler_thread.h>
+#include <gr_scheduler.h>
+#include <boost/thread.hpp>
+
+typedef boost::mutex			gr_mutex; 	// FIXME move these elsewhere
+typedef boost::lock_guard<boost::mutex>	gr_lock_guard;
 
 /*!
  *\brief Abstract implementation details of gr_top_block
@@ -37,16 +41,16 @@ class gr_top_block_impl
 {
 public:
   gr_top_block_impl(gr_top_block *owner);
-  virtual ~gr_top_block_impl();
+  ~gr_top_block_impl();
 
   // Create and start scheduler threads
-  virtual void start();
+  void start();
 
   // Signal scheduler threads to stop
-  virtual void stop() = 0;
+  void stop();
 
   // Wait for scheduler threads to exit
-  virtual void wait() = 0;
+  void wait();
 
   // Lock the top block to allow reconfiguration
   void lock();
@@ -59,22 +63,16 @@ public:
   
 protected:
     
+  enum tb_state { IDLE, RUNNING };
+
   gr_top_block                  *d_owner;
-  bool                           d_running;
   gr_flat_flowgraph_sptr         d_ffg;
+  gr_scheduler_sptr		 d_scheduler;
 
-  omni_mutex                     d_reconf;	// protects d_lock_count
+  gr_mutex                       d_mutex;	// protects d_state and d_lock_count
+  tb_state			 d_state;
   int                            d_lock_count;
-
-  virtual void start_threads() = 0;
-
-/*!
- * Make a vector of gr_block from a vector of gr_basic_block
- *
- * Pass-by-value to avoid problem with possible asynchronous modification
- */
-  static gr_block_vector_t make_gr_block_vector(gr_basic_block_vector_t blocks);
-
+  
 private:
   void restart();
 };

@@ -52,7 +52,7 @@ t0_body ()
   int	nitems = 4000 / sizeof (int);
   int	counter = 0;
 
-  gr_buffer_sptr buf (gr_make_buffer (nitems, sizeof (int)));
+  gr_buffer_sptr buf(gr_make_buffer(nitems, sizeof (int), gr_block_sptr()));
 
   int last_sa;
   int sa;
@@ -87,8 +87,8 @@ t1_body ()
   int	write_counter = 0;
   int	read_counter = 0;
 
-  gr_buffer_sptr buf (gr_make_buffer (nitems, sizeof (int)));
-  gr_buffer_reader_sptr r1 (gr_buffer_add_reader (buf, 0));
+  gr_buffer_sptr buf(gr_make_buffer(nitems, sizeof (int), gr_block_sptr()));
+  gr_buffer_reader_sptr r1 (gr_buffer_add_reader (buf, 0, gr_block_sptr()));
   
 
   int sa;
@@ -162,8 +162,8 @@ t2_body ()
   
   int	nitems = (64 * (1L << 10)) / sizeof (int);	// 64K worth of ints
 
-  gr_buffer_sptr buf (gr_make_buffer (nitems, sizeof (int)));
-  gr_buffer_reader_sptr r1 (gr_buffer_add_reader (buf, 0));
+  gr_buffer_sptr buf(gr_make_buffer (nitems, sizeof (int), gr_block_sptr()));
+  gr_buffer_reader_sptr r1 (gr_buffer_add_reader (buf, 0, gr_block_sptr()));
 
   int	read_counter = 0;
   int	write_counter = 0;
@@ -229,7 +229,7 @@ t3_body ()
   int	nitems = (64 * (1L << 10)) / sizeof (int);
 
   static const int N = 5;
-  gr_buffer_sptr buf (gr_make_buffer (nitems, sizeof (int)));
+  gr_buffer_sptr buf(gr_make_buffer(nitems, sizeof (int), gr_block_sptr()));
   gr_buffer_reader_sptr 	reader[N];
   int			read_counter[N];
   int			write_counter = 0;
@@ -237,7 +237,7 @@ t3_body ()
 
   for (int i = 0; i < N; i++){
     read_counter[i] = 0;
-    reader[i] = gr_buffer_add_reader (buf, 0);
+    reader[i] = gr_buffer_add_reader (buf, 0, gr_block_sptr());
   }
 
   for (int lc = 0; lc < 1000; lc++){

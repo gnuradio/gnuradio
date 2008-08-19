@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(GRUEL_INCLUDES) $(WITH_INCLUDES)
 
 noinst_LTLIBRARIES = libruntime.la libruntime-qa.la
 
@@ -35,6 +35,7 @@ libruntime_la_SOURCES = 			\
 	gr_flat_flowgraph.cc			\
 	gr_block.cc				\
 	gr_block_detail.cc			\
+	gr_block_executor.cc			\
 	gr_hier_block2.cc			\
 	gr_hier_block2_detail.cc		\
 	gr_buffer.cc				\
@@ -48,16 +49,19 @@ libruntime_la_SOURCES = 			\
 	gr_pagesize.cc				\
 	gr_preferences.cc			\
 	gr_realtime.cc				\
-	gr_scheduler_thread.cc			\
+	gr_scheduler.cc				\
+	gr_scheduler_sts.cc			\
+	gr_scheduler_tpb.cc			\
 	gr_single_threaded_scheduler.cc		\
 	gr_sptr_magic.cc			\
 	gr_sync_block.cc			\
 	gr_sync_decimator.cc			\
 	gr_sync_interpolator.cc			\
+	gr_tmp_path.cc				\
 	gr_top_block.cc				\
 	gr_top_block_impl.cc			\
-	gr_top_block_impl_sts.cc		\
-	gr_tmp_path.cc				\
+	gr_tpb_detail.cc			\
+	gr_tpb_thread_body.cc			\
 	gr_vmcircbuf.cc				\
 	gr_vmcircbuf_mmap_shm_open.cc		\
 	gr_vmcircbuf_mmap_tmpfile.cc		\
@@ -82,6 +86,7 @@ grinclude_HEADERS = 				\
 	gr_flat_flowgraph.h			\
 	gr_block.h				\
 	gr_block_detail.h			\
+	gr_block_executor.h			\
 	gr_hier_block2.h			\
 	gr_hier_block2_detail.h			\
 	gr_buffer.h				\
@@ -97,7 +102,9 @@ grinclude_HEADERS = 				\
 	gr_preferences.h			\
 	gr_realtime.h				\
 	gr_runtime_types.h			\
-	gr_scheduler_thread.h			\
+	gr_scheduler.h				\
+	gr_scheduler_sts.h			\
+	gr_scheduler_tpb.h			\
 	gr_select_handler.h			\
 	gr_single_threaded_scheduler.h		\
 	gr_sptr_magic.h				\
@@ -106,7 +113,8 @@ grinclude_HEADERS = 				\
 	gr_sync_interpolator.h			\
 	gr_top_block.h				\
 	gr_top_block_impl.h			\
-	gr_top_block_impl_sts.h			\
+	gr_tpb_detail.h				\
+	gr_tpb_thread_body.h			\
 	gr_timer.h				\
 	gr_tmp_path.h				\
 	gr_types.h				\

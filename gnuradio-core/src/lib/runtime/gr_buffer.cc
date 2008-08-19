@@ -77,10 +77,10 @@ minimum_buffer_items (long type_size, long page_size)
 }
 
 
-gr_buffer::gr_buffer (int nitems, size_t sizeof_item)
+gr_buffer::gr_buffer (int nitems, size_t sizeof_item, gr_block_sptr link)
   : d_base (0), d_bufsize (0), d_vmcircbuf (0),
-    d_sizeof_item (sizeof_item), d_write_index (0),
-    d_done (false)
+    d_sizeof_item (sizeof_item), d_link(link),
+    d_write_index (0), d_done (false)
 {
   if (!allocate_buffer (nitems, sizeof_item))
     throw std::bad_alloc ();
@@ -89,9 +89,9 @@ gr_buffer::gr_buffer (int nitems, size_t sizeof_item)
 }
 
 gr_buffer_sptr 
-gr_make_buffer (int nitems, size_t sizeof_item)
+gr_make_buffer (int nitems, size_t sizeof_item, gr_block_sptr link)
 {
-  return gr_buffer_sptr (new gr_buffer (nitems, sizeof_item));
+  return gr_buffer_sptr (new gr_buffer (nitems, sizeof_item, link));
 }
 
 gr_buffer::~gr_buffer ()
@@ -146,7 +146,7 @@ gr_buffer::allocate_buffer (int nitems, size_t sizeof_item)
 
 
 int
-gr_buffer::space_available () const
+gr_buffer::space_available ()
 {
   if (d_readers.empty ())
     return d_bufsize - 1;	// See comment below
@@ -175,18 +175,27 @@ gr_buffer::write_pointer ()
 void
 gr_buffer::update_write_pointer (int nitems)
 {
+  scoped_lock	guard(*mutex());
   d_write_index = index_add (d_write_index, nitems);
 }
 
+void
+gr_buffer::set_done (bool done)
+{
+  scoped_lock	guard(*mutex());
+  d_done = done;
+}
+
 gr_buffer_reader_sptr
-gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload)
+gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload, gr_block_sptr link)
 {
   if (nzero_preload < 0)
     throw std::invalid_argument("gr_buffer_add_reader: nzero_preload must be >= 0");
 
   gr_buffer_reader_sptr r (new gr_buffer_reader (buf,
 						 buf->index_sub(buf->d_write_index,
-								nzero_preload)));
+								nzero_preload),
+						 link));
   buf->d_readers.push_back (r.get ());
 
   return r;
@@ -214,8 +223,9 @@ gr_buffer_ncurrently_allocated ()
 
 // ----------------------------------------------------------------------------
 
-gr_buffer_reader::gr_buffer_reader (gr_buffer_sptr buffer, unsigned int read_index)
-  : d_buffer (buffer), d_read_index (read_index)
+gr_buffer_reader::gr_buffer_reader(gr_buffer_sptr buffer, unsigned int read_index,
+				   gr_block_sptr link)
+  : d_buffer(buffer), d_read_index(read_index), d_link(link)
 {
   s_buffer_reader_count++;
 }
@@ -241,6 +251,7 @@ gr_buffer_reader::read_pointer ()
 void
 gr_buffer_reader::update_read_pointer (int nitems)
 {
+  scoped_lock	guard(*mutex());
   d_read_index = d_buffer->index_add (d_read_index, nitems);
 }
 

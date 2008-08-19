@@ -17,7 +17,8 @@ tar tzf $tarball  \
 find . \( -name '*.h' -o -name '*.py' -o -name '*.v' -o -name '*.vh' \) -print \
   | grep -v ./$path | sort >/tmp/build-h-files
 
-comm -23 /tmp/build-h-files /tmp/tarball-h-files
+comm -23 /tmp/build-h-files /tmp/tarball-h-files \
+ | grep -Ev '(GrAtsc|_swig_|limbo|config\.h|std_paths\.h)'
 
 # rm /tmp/tarball-h-files /tmp/build-h-files
 

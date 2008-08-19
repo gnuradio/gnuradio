@@ -214,9 +214,13 @@ class gr_block : public gr_basic_block {
 typedef std::vector<gr_block_sptr> gr_block_vector_t;
 typedef std::vector<gr_block_sptr>::iterator gr_block_viter_t;
 
-inline gr_block_sptr make_gr_block_sptr(gr_basic_block_sptr p)
+inline gr_block_sptr cast_to_block_sptr(gr_basic_block_sptr p)
 {
   return boost::dynamic_pointer_cast<gr_block, gr_basic_block>(p);
 }
+
+
+std::ostream&
+operator << (std::ostream& os, const gr_block *m);
 
 #endif /* INCLUDED_GR_BLOCK_H */

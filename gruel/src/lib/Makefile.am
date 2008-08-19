@@ -21,19 +21,21 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(DEFINES) $(BOOST_CFLAGS) $(GRUEL_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(DEFINES) $(BOOST_CPPFLAGS) $(GRUEL_INCLUDES) $(WITH_INCLUDES)
 
 lib_LTLIBRARIES = libgruel.la
 
+# magic flags
+libgruel_la_LDFLAGS = $(NO_UNDEFINED) $(BOOST_LDFLAGS) -version-info 0:0:0
+
 # These are the source files that go into the gruel shared library
 libgruel_la_SOURCES = \
-	realtime.cc
+	realtime.cc \
+	thread_body_wrapper.cc \
+	thread_group.cc
 
-# magic flags
-libgruel_la_LDFLAGS = $(NO_UNDEFINED)
-
-# link the library against the c++ standard library
 libgruel_la_LIBADD = \
+	$(BOOST_THREAD_LIB)
 	-lstdc++			
 
 noinst_HEADERS =

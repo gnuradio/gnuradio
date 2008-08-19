@@ -122,6 +122,9 @@ public:
   // Return vector of connected blocks
   gr_basic_block_vector_t calc_used_blocks();
 
+  // Return toplogically sorted vector of blocks.  All the sources come first.
+  gr_basic_block_vector_t topological_sort(gr_basic_block_vector_t &blocks);
+
   // Return vector of vectors of disjointly connected blocks, topologically
   // sorted.
   std::vector<gr_basic_block_vector_t> partition();
@@ -149,7 +152,6 @@ private:
   gr_basic_block_vector_t calc_reachable_blocks(gr_basic_block_sptr block, gr_basic_block_vector_t &blocks);
   void reachable_dfs_visit(gr_basic_block_sptr block, gr_basic_block_vector_t &blocks);
   gr_basic_block_vector_t calc_adjacent_blocks(gr_basic_block_sptr block, gr_basic_block_vector_t &blocks);
-  gr_basic_block_vector_t topological_sort(gr_basic_block_vector_t &blocks);
   gr_basic_block_vector_t sort_sources_first(gr_basic_block_vector_t &blocks);
   bool source_p(gr_basic_block_sptr block);
   void topological_dfs_visit(gr_basic_block_sptr block, gr_basic_block_vector_t &output);

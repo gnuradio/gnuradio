@@ -29,7 +29,8 @@ EXTRA_DIST = \
 	configure-cell-cross \
 	config.h.in \
 	run_tests.sh.in \
-	README.hacking
+	README.hacking \
+	README.building-boost
 
 SUBDIRS = @build_dirs@
 DIST_SUBDIRS = @build_dirs@ @skipped_dirs@ @with_dirs@

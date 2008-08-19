@@ -47,9 +47,11 @@ noinst_PROGRAMS		= 	\
 	benchmark_vco		\
 	test_runtime		\
 	test_general		\
-	test_all		\
 	test_filter		\
 	test_vmcircbuf
+
+bin_PROGRAMS = \
+	test_all
 
 
 noinst_SCRIPTS = \

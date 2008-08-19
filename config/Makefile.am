@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2006 Free Software Foundation, Inc.
+# Copyright 2001,2006,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -27,9 +27,22 @@ m4datadir = $(datadir)/aclocal
 # List your m4 macros here
 m4macros = \
 	acx_pthread.m4 \
+	ax_boost_base.m4 \
+	ax_boost_date_time.m4 \
+	ax_boost_filesystem.m4 \
+	ax_boost_iostreams.m4 \
+	ax_boost_program_options.m4 \
+	ax_boost_python.m4 \
+	ax_boost_regex.m4 \
+	ax_boost_serialization.m4 \
+	ax_boost_signals.m4 \
+	ax_boost_system.m4 \
+	ax_boost_test_exec_monitor.m4 \
+	ax_boost_thread.m4 \
+	ax_boost_unit_test_framework.m4 \
+	ax_boost_wserialization.m4 \
 	bnv_have_qt.m4 \
 	cppunit.m4 \
-	gr_boost.m4 \
 	grc_build.m4 \
 	grc_gcell.m4 \
 	grc_gnuradio_core.m4 \
@@ -64,6 +77,7 @@ m4macros = \
 	gr_doxygen.m4 \
 	gr_fortran.m4 \
 	gr_gprof.m4 \
+	gr_lib64.m4 \
 	gr_libgnuradio_core_extra_ldflags.m4 \
 	gr_no_undefined.m4 \
 	gr_omnithread.m4 \
@@ -75,7 +89,6 @@ m4macros = \
 	gr_subversion.m4 \
 	gr_swig.m4 \
 	gr_sysv_shm.m4 \
-	gr_x86_64.m4 \
 	lf_cc.m4 \
 	lf_cxx.m4 \
 	lf_warnings.m4 \

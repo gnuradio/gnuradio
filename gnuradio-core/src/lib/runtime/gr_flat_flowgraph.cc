@@ -33,6 +33,11 @@
 
 #define GR_FLAT_FLOWGRAPH_DEBUG 0
 
+// 32Kbyte buffer size between blocks
+#define GR_FIXED_BUFFER_SIZE (32*(1L<<10))
+
+static const unsigned int s_fixed_buffer_size = GR_FIXED_BUFFER_SIZE;
+
 gr_flat_flowgraph_sptr
 gr_make_flat_flowgraph()
 {
@@ -54,7 +59,7 @@ gr_flat_flowgraph::setup_connections()
 
   // Assign block details to blocks
   for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++)
-    make_gr_block_sptr(*p)->set_detail(allocate_block_detail(*p));
+    cast_to_block_sptr(*p)->set_detail(allocate_block_detail(*p));
 
   // Connect inputs to outputs for each block
   for(gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++)
@@ -84,11 +89,15 @@ gr_flat_flowgraph::allocate_block_detail(gr_basic_block_sptr block)
 gr_buffer_sptr
 gr_flat_flowgraph::allocate_buffer(gr_basic_block_sptr block, int port)
 {
-  gr_block_sptr grblock = make_gr_block_sptr(block);
+  gr_block_sptr grblock = cast_to_block_sptr(block);
   if (!grblock)
     throw std::runtime_error("allocate_buffer found non-gr_block");
   int item_size = block->output_signature()->sizeof_stream_item(port);
-  int nitems = s_fixed_buffer_size/item_size;
+
+  // *2 because we're now only filling them 1/2 way in order to
+  // increase the available parallelism when using the TPB scheduler.
+  // (We're double buffering, where we used to single buffer)
+  int nitems = s_fixed_buffer_size * 2 / item_size;
 
   // Make sure there are at least twice the output_multiple no. of items
   if (nitems < 2*grblock->output_multiple())	// Note: this means output_multiple()
@@ -99,7 +108,7 @@ gr_flat_flowgraph::allocate_buffer(gr_basic_block_sptr block, int port)
   gr_basic_block_vector_t blocks = calc_downstream_blocks(block, port);
 
   for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
-    gr_block_sptr dgrblock = make_gr_block_sptr(*p);
+    gr_block_sptr dgrblock = cast_to_block_sptr(*p);
     if (!dgrblock)
       throw std::runtime_error("allocate_buffer found non-gr_block");
 
@@ -109,13 +118,13 @@ gr_flat_flowgraph::allocate_buffer(gr_basic_block_sptr block, int port)
     nitems = std::max(nitems, static_cast<int>(2*(decimation*multiple+history)));
   }
 
-  return gr_make_buffer(nitems, item_size);
+  return gr_make_buffer(nitems, item_size, grblock);
 }
 
 void
 gr_flat_flowgraph::connect_block_inputs(gr_basic_block_sptr block)
 {
-  gr_block_sptr grblock = make_gr_block_sptr(block);
+  gr_block_sptr grblock = cast_to_block_sptr(block);
   if (!grblock)
     throw std::runtime_error("connect_block_inputs found non-gr_block");
   
@@ -130,7 +139,7 @@ gr_flat_flowgraph::connect_block_inputs(gr_basic_block_sptr block)
     int dst_port = e->dst().port();
     int src_port = e->src().port();
     gr_basic_block_sptr src_block = e->src().block();
-    gr_block_sptr src_grblock = make_gr_block_sptr(src_block);
+    gr_block_sptr src_grblock = cast_to_block_sptr(src_block);
     if (!src_grblock)
       throw std::runtime_error("connect_block_inputs found non-gr_block");
     gr_buffer_sptr src_buffer = src_grblock->detail()->output(src_port);
@@ -138,7 +147,7 @@ gr_flat_flowgraph::connect_block_inputs(gr_basic_block_sptr block)
     if (GR_FLAT_FLOWGRAPH_DEBUG)
       std::cout << "Setting input " << dst_port << " from edge " << (*e) << std::endl;
 
-    detail->set_input(dst_port, gr_buffer_add_reader(src_buffer, grblock->history()-1));
+    detail->set_input(dst_port, gr_buffer_add_reader(src_buffer, grblock->history()-1, grblock));
   }
 }
 
@@ -149,7 +158,7 @@ gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
   // by flattening will need one; existing blocks still in the new flowgraph will
   // already have one.
   for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
-    gr_block_sptr block = make_gr_block_sptr(*p);
+    gr_block_sptr block = cast_to_block_sptr(*p);
     
     if (!block->detail()) {
       if (GR_FLAT_FLOWGRAPH_DEBUG)
@@ -177,7 +186,7 @@ gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
       if (GR_FLAT_FLOWGRAPH_DEBUG)
 	std::cout << "not in new edge list" << std::endl;
       // zero the buffer reader on RHS of old edge
-      gr_block_sptr block(make_gr_block_sptr(old_edge->dst().block()));
+      gr_block_sptr block(cast_to_block_sptr(old_edge->dst().block()));
       int port = old_edge->dst().port();
       block->detail()->set_input(port, gr_buffer_reader_sptr());
     }
@@ -189,7 +198,7 @@ gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
 
   // Now connect inputs to outputs, reusing old buffer readers if they exist
   for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
-    gr_block_sptr block = make_gr_block_sptr(*p);
+    gr_block_sptr block = cast_to_block_sptr(*p);
 
     if (GR_FLAT_FLOWGRAPH_DEBUG)
       std::cout << "merge: merging " << (*p) << "...";
@@ -208,7 +217,7 @@ gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
 	gr_edge edge = calc_upstream_edge(*p, i);
 
 	// Fish out old buffer reader and see if it matches correct buffer from edge list
-	gr_block_sptr src_block = make_gr_block_sptr(edge.src().block());
+	gr_block_sptr src_block = cast_to_block_sptr(edge.src().block());
 	gr_block_detail_sptr src_detail = src_block->detail();
 	gr_buffer_sptr src_buffer = src_detail->output(edge.src().port());
 	gr_buffer_reader_sptr old_reader;
@@ -225,7 +234,7 @@ gr_flat_flowgraph::merge_connections(gr_flat_flowgraph_sptr old_ffg)
 	    std::cout << "needs a new reader" << std::endl;
 
 	  // Create new buffer reader and assign
-	  detail->set_input(i, gr_buffer_add_reader(src_buffer, block->history()-1));
+	  detail->set_input(i, gr_buffer_add_reader(src_buffer, block->history()-1, block));
 	}
       }
     }
@@ -248,7 +257,7 @@ void gr_flat_flowgraph::dump()
 
   for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
     std::cout << " block: " << (*p) << std::endl;
-    gr_block_detail_sptr detail = make_gr_block_sptr(*p)->detail();
+    gr_block_detail_sptr detail = cast_to_block_sptr(*p)->detail();
     std::cout << "  detail @" << detail << ":" << std::endl;
      
     int ni = detail->ninputs();
@@ -268,4 +277,15 @@ void gr_flat_flowgraph::dump()
     }
   }
 
+}
+
+gr_block_vector_t
+gr_flat_flowgraph::make_block_vector(gr_basic_block_vector_t &blocks)
+{
+  gr_block_vector_t result;
+  for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
+    result.push_back(cast_to_block_sptr(*p));
+  }
+
+  return result;
 }

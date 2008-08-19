@@ -9,6 +9,7 @@ import time
 class app_top_block(gr.top_block):
     def __init__(self, options, queue):
 	gr.top_block.__init__(self, "usrp_flex_all")
+        self.subdev = None
 
         if options.from_file is not None:
             self.src = gr.file_source(gr.sizeof_gr_complex, options.from_file)
@@ -57,6 +58,7 @@ class app_top_block(gr.top_block):
 	# Avoid weak-ref error
 	del self.subdev
 	
+
 def main():
     parser = OptionParser(option_class=eng_option)
     parser.add_option("-f", "--frequency", type="eng_float", default=929.5e6,
@@ -81,25 +83,22 @@ def main():
     queue = gr.msg_queue()
     tb = app_top_block(options, queue)
 
+    runner = pager.top_block_runner(tb)
     try:
-        tb.start()
 	while 1:
 	    if not queue.empty_p():
 		msg = queue.delete_head() # Blocking read
 		page = join(split(msg.to_string(), chr(128)), '|')
-		disp = []
-		for n in range(len(page)):
-		    if ord(page[n]) < 32:
-			disp.append('.')
-		    else:
-			disp.append(page[n])
-		print join(disp, '')
-						
+                s = pager.make_printable(page)
+                print s
+            elif runner.done:
+                break
 	    else:
-		time.sleep(1)
+		time.sleep(0.05)
 
     except KeyboardInterrupt:
         tb.stop()
+        runner = None
     
 if __name__ == "__main__":
     main()

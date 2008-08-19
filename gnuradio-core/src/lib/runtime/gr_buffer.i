@@ -26,14 +26,14 @@ typedef boost::shared_ptr<gr_buffer> gr_buffer_sptr;
 %rename(buffer) gr_make_buffer;
 %ignore gr_buffer;
 
-gr_buffer_sptr gr_make_buffer (int nitems, size_t sizeof_item);
+gr_buffer_sptr gr_make_buffer (int nitems, size_t sizeof_item, gr_block_sptr link);
 
 class gr_buffer {
  public:
   ~gr_buffer ();
 
  private:
-  gr_buffer (int nitems, size_t sizeof_item);
+  gr_buffer (int nitems, size_t sizeof_item, gr_block_sptr link);
 };
   
 
@@ -43,7 +43,7 @@ typedef boost::shared_ptr<gr_buffer_reader> gr_buffer_reader_sptr;
 %ignore gr_buffer_reader;
 
 %rename(buffer_add_reader) gr_buffer_add_reader;
-gr_buffer_reader_sptr gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload);
+gr_buffer_reader_sptr gr_buffer_add_reader (gr_buffer_sptr buf, int nzero_preload, gr_block_sptr link);
 
 class gr_buffer_reader {
  public:
@@ -51,7 +51,7 @@ class gr_buffer_reader {
 
  private:
   friend class gr_buffer;
-  gr_buffer_reader (gr_buffer_sptr buffer, unsigned int read_index);
+  gr_buffer_reader (gr_buffer_sptr buffer, unsigned int read_index, gr_block_sptr link);
 };
 
 

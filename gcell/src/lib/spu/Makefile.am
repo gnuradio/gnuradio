@@ -64,6 +64,7 @@ general_spu_sources = \
 	$(general_srcdir)/memset.S
 
 general_spu_headers = \
+	$(general_srcdir)/gc_spu_macs.h \
 	$(general_srcdir)/libfft.h
 
 general_spu_noinst_headers = \

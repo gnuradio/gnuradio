@@ -33,6 +33,7 @@ struct gr_cpu {
   static bool has_sse4_2 ();
   static bool has_3dnow ();
   static bool has_3dnowext ();
+  static bool has_altivec ();
 };
 
 #endif /* _GR_CPU_H_ */

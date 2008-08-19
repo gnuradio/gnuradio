@@ -22,6 +22,33 @@
 from gnuradio_swig_python import top_block_swig, \
     top_block_wait_unlocked, top_block_run_unlocked
 
+#import gnuradio.gr.gr_threading as _threading
+import gr_threading as _threading
+
+
+#
+# There is no problem that can't be solved with an additional
+# level of indirection...
+#
+# This kludge allows ^C to interrupt top_block.run and top_block.wait
+#
+class _top_block_waiter(_threading.Thread):
+    def __init__(self, tb):
+        _threading.Thread.__init__(self)
+        self.setDaemon(1)
+        self.tb = tb
+        self.event = _threading.Event()
+        self.start()
+
+    def run(self):
+        top_block_wait_unlocked(self.tb)
+        self.event.set()
+
+    def wait(self):
+        while not self.event.isSet():
+            self.event.wait(0.100)
+
+
 #
 # This hack forces a 'has-a' relationship to look like an 'is-a' one.
 #
@@ -48,10 +75,12 @@ class top_block(object):
     	self._tb.stop()
 
     def run(self):
-        top_block_run_unlocked(self._tb)
+        self.start()
+        self.wait()
 
     def wait(self):
-        top_block_wait_unlocked(self._tb)
+        _top_block_waiter(self._tb).wait()
+
 
     # FIXME: these are duplicated from hier_block2.py; they should really be implemented
     # in the original C++ class (gr_hier_block2), then they would all be inherited here

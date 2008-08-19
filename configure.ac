@@ -29,7 +29,7 @@ AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE(gnuradio,3.1svn)
 
 dnl add ${prefix}/lib/pkgconfig to the head of the PKG_CONFIG_PATH
-if test [x]${PKG_CONFIG_PATH} = x; then
+if test x${PKG_CONFIG_PATH} = x; then
     PKG_CONFIG_PATH=${prefix}/lib/pkgconfig
 else
     PKG_CONFIG_PATH=${prefix}/lib/pkgconfig:${PKG_CONFIG_PATH}
@@ -44,9 +44,9 @@ if test -n "${CXXFLAGS}"; then
   user_set_cxxflags=yes
 fi
 
-GR_X86_64		dnl check for lib64 suffix
 LF_CONFIGURE_CC
 LF_CONFIGURE_CXX
+GR_LIB64		dnl check for lib64 suffix after choosing compilers
 
 dnl The three macros above are known to override CXXFLAGS if the user
 dnl didn't specify them.  Though I'm sure somebody thought this was
@@ -100,10 +100,10 @@ AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
 dnl Checks for libraries.
 AC_CHECK_LIB(socket,socket)
 
-dnl check for threads (mandatory)
+dnl check for omnithreads (will soon be removed)
 GR_OMNITHREAD
-CFLAGS="${CFLAGS} $PTHREAD_CFLAGS"
-CXXFLAGS="${CXXFLAGS} $PTHREAD_CFLAGS"
+CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
+CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
 
 if test x$CXX_FOR_BUILD = x
 then
@@ -204,15 +204,39 @@ PKG_CHECK_EXISTS(cppunit,
   [AM_PATH_CPPUNIT([1.9.14],[],
 		[AC_MSG_ERROR([GNU Radio requires cppunit.  Stop])])])
 
-dnl see if GUILE is installed
-AC_PATH_PROG(GUILE,guile)
-
 CPPUNIT_INCLUDES=$CPPUNIT_CFLAGS
 AC_SUBST(CPPUNIT_INCLUDES)
 
-dnl Define where to find boost includes
-dnl defines BOOST_CFLAGS
-GR_REQUIRE_BOOST_INCLUDES
+dnl see if GUILE is installed
+AC_PATH_PROG(GUILE,guile)
+
+dnl
+dnl We require the boost headers, thread lib and date_time lib.
+dnl AX_BOOST_BASE finds the headers and the lib dir (-L<foo>)
+dnl
+dnl calls AC_SUBST(BOOST_CPPFLAGS), AC_SUBST(BOOST_LDFLAGS) and defines HAVE_BOOST
+AX_BOOST_BASE([1.35])
+
+dnl calls AC_SUBST(BOOST_THREAD_LIB), AC_SUBST(BOOST_CXXFLAGS) and defines HAVE_BOOST_THREAD
+AX_BOOST_THREAD
+CXXFLAGS="$CXXFLAGS $BOOST_CXXFLAGS"       dnl often picks up a -pthread or something similar
+CFLAGS="$CFLAGS $BOOST_CXXFLAGS"           dnl often picks up a -pthread or something similar
+
+dnl
+dnl all the rest of these call AC_SUBST(BOOST_<foo>_LIB) and define HAVE_BOOST_<foo>
+dnl
+AX_BOOST_DATE_TIME
+dnl AX_BOOST_FILESYSTEM
+dnl AX_BOOST_IOSTREAMS
+dnl AX_BOOST_PROGRAM_OPTIONS
+dnl AX_BOOST_REGEX
+dnl AX_BOOST_SERIALIZATION
+dnl AX_BOOST_SIGNALS
+dnl AX_BOOST_SYSTEM
+dnl AX_BOOST_TEST_EXEC_MONITOR
+dnl AX_BOOST_UNIT_TEST_FRAMEWORK
+dnl AX_BOOST_WSERIALIZATION
+
 
 dnl If this is being done from a subversion tree, create variables
 GR_SUBVERSION

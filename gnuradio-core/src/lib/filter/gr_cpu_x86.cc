@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2008 Free Software Foundation, Inc.
+ * Copyright 2002 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -85,35 +85,6 @@ gr_cpu::has_sse2 ()
 }
 
 bool
-gr_cpu::has_sse3 ()
-{
-  unsigned int ecx = cpuid_ecx (1);	// standard features
-  return (ecx & (1 << 0)) != 0;
-}
-
-bool
-gr_cpu::has_ssse3 ()
-{
-  unsigned int ecx = cpuid_ecx (1);	// standard features
-  return (ecx & (1 << 9)) != 0;
-}
-
-bool
-gr_cpu::has_sse4_1 ()
-{
-  unsigned int ecx = cpuid_ecx (1);	// standard features
-  return (ecx & (1 << 19)) != 0;
-}
-
-bool
-gr_cpu::has_sse4_2 ()
-{
-  unsigned int ecx = cpuid_ecx (1);	// standard features
-  return (ecx & (1 << 20)) != 0;
-}
-
-
-bool
 gr_cpu::has_3dnow ()
 {
   unsigned int extended_fct_count = cpuid_eax (0x80000000);
@@ -133,4 +104,10 @@ gr_cpu::has_3dnowext ()
 
   unsigned int extended_features = cpuid_edx (0x80000001);
   return (extended_features & (1 << 30)) != 0;
+}
+
+bool
+gr_cpu::has_altivec ()
+{
+  return false;
 }

@@ -31,8 +31,7 @@ fi
 arch=ppu
 cell_root=/mnt/cell-root
 python_version=2.5
-# compiler_includes="-I${cell_root}/usr/include -I${cell_root}/usr/local/include -I${cell_root}/usr/lib/gcc/ppu/4.1.1/include -I${cell_root}/usr/lib/gcc/ppu/4.1.1/include/c++"
-compiler_includes="-I${cell_root}/usr/include"
+compiler_includes="-isystem ${cell_root}/usr/include"
 
 $scriptdir/configure			    \
     CC=${arch}32-gcc                        \

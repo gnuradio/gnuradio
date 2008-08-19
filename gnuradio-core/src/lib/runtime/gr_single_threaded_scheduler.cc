@@ -28,6 +28,7 @@
 #include <gr_block.h>
 #include <gr_block_detail.h>
 #include <gr_buffer.h>
+#include <boost/thread.hpp>
 #include <iostream>
 #include <limits>
 #include <assert.h>
@@ -43,14 +44,6 @@
 #endif
 
 static int which_scheduler  = 0;
-
-
-std::ostream&
-operator << (std::ostream& os, const gr_block *m)
-{
-  os << "<gr_block " << m->name() << " (" << m->unique_id() << ")>";
-  return os;
-}
 
 gr_single_threaded_scheduler_sptr
 gr_make_single_threaded_scheduler (const std::vector<gr_block_sptr> &blocks)
@@ -161,6 +154,9 @@ gr_single_threaded_scheduler::main_loop ()
 
   nalive = d_blocks.size ();
   while (d_enabled && nalive > 0){
+
+    if (boost::this_thread::interruption_requested())
+      break;
 
     gr_block		*m = d_blocks[bi].get ();
     gr_block_detail	*d = m->detail().get ();

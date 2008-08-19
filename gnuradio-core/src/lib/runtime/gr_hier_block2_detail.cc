@@ -303,7 +303,7 @@ gr_hier_block2_detail::resolve_endpoint(const gr_endpoint &endp, bool is_input) 
   std::stringstream msg;
 
   // Check if endpoint is a leaf node
-  if (make_gr_block_sptr(endp.block()))
+  if (cast_to_block_sptr(endp.block()))
     return endp;
   
   // Check if endpoint is a hierarchical block

@@ -42,13 +42,13 @@ qa_filter::suite ()
   CppUnit::TestSuite	*s = new CppUnit::TestSuite ("filter");
 
   s->addTest (qa_dotprod_suite ());
-  s->addTest (qa_gri_mmse_fir_interpolator::suite ());
-  s->addTest (qa_gri_mmse_fir_interpolator_cc::suite ());
   s->addTest (qa_gr_fir_fff::suite ());
   s->addTest (qa_gr_fir_ccc::suite ());
   s->addTest (qa_gr_fir_fcc::suite ());
   s->addTest (qa_gr_fir_scc::suite ());
   s->addTest (qa_gr_fir_ccf::suite ());
+  s->addTest (qa_gri_mmse_fir_interpolator::suite ());
+  s->addTest (qa_gri_mmse_fir_interpolator_cc::suite ());
 
   return s;
 }

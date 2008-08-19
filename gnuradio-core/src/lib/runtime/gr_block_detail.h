@@ -24,6 +24,7 @@
 #define INCLUDED_GR_BLOCK_DETAIL_H
 
 #include <gr_runtime_types.h>
+#include <gr_tpb_detail.h>
 #include <stdexcept>
 
 /*!
@@ -34,7 +35,6 @@
  * of almost all users of GNU Radio.  This decoupling also means that
  * we can make changes to the guts without having to recompile everything.
  */
-
 class gr_block_detail {
  public:
   ~gr_block_detail ();
@@ -73,7 +73,13 @@ class gr_block_detail {
    */
   void consume_each (int how_many_items);
 
+  /*!
+   * \brief Tell the scheduler \p how_many_items were produced on each output stream.
+   */
   void produce_each (int how_many_items);
+
+
+  gr_tpb_detail			     d_tpb;	// used by thread-per-block scheduler
 
   // ----------------------------------------------------------------------------
 
@@ -84,7 +90,10 @@ class gr_block_detail {
   std::vector<gr_buffer_sptr>	     d_output;
   bool                               d_done;
 
+
   gr_block_detail (unsigned int ninputs, unsigned int noutputs);
+
+  friend class gr_tpb_detail;
 
   friend gr_block_detail_sptr
   gr_make_block_detail (unsigned int ninputs, unsigned int noutputs);

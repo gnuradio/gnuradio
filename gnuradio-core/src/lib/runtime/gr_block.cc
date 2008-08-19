@@ -110,3 +110,11 @@ gr_block::fixed_rate_noutput_to_ninput(int noutput)
 {
   throw std::runtime_error("Unimplemented");
 }
+
+std::ostream&
+operator << (std::ostream& os, const gr_block *m)
+{
+  os << "<gr_block " << m->name() << " (" << m->unique_id() << ")>";
+  return os;
+}
+

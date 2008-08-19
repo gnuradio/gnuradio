@@ -26,9 +26,6 @@
 #include <gr_flowgraph.h>
 #include <gr_block.h>
 
-// 32Kbyte buffer size between blocks
-#define GR_FIXED_BUFFER_SIZE (32*(1L<<10))
-
 // Create a shared pointer to a heap allocated gr_flat_flowgraph
 // (types defined in gr_runtime_types.h)
 gr_flat_flowgraph_sptr gr_make_flat_flowgraph();
@@ -55,10 +52,14 @@ public:
 
   void dump();
 
+  /*!
+   * Make a vector of gr_block from a vector of gr_basic_block
+   */
+  static gr_block_vector_t make_block_vector(gr_basic_block_vector_t &blocks);
+
 private:
   gr_flat_flowgraph();
 
-  static const unsigned int s_fixed_buffer_size = GR_FIXED_BUFFER_SIZE;
   gr_block_detail_sptr allocate_block_detail(gr_basic_block_sptr block);
   gr_buffer_sptr allocate_buffer(gr_basic_block_sptr block, int port);
   void connect_block_inputs(gr_basic_block_sptr block);

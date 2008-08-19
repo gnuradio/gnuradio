@@ -160,27 +160,24 @@ def main():
     # Flow graph emits pages into message queue
     queue = gr.msg_queue()
     tb = app_top_block(options, queue)
+    runner = pager.top_block_runner(tb)
     
     try:
-        tb.start()
 	while 1:
 	    if not queue.empty_p():
 		msg = queue.delete_head() # Blocking read
 		page = join(split(msg.to_string(), chr(128)), '|')
-		disp = []
-		for n in range(len(page)):
-		    if ord(page[n]) < 32:
-			disp.append('.')
-		    else:
-			disp.append(page[n])
-		print join(disp, '')
+                s = pager.make_printable(page)
+                print s
 		tb.adjust_freq()
-										
+            elif runner.done:
+                break
 	    else:
 		time.sleep(1)
 
     except KeyboardInterrupt:
         tb.stop()
+        runner = None
 
 if __name__ == "__main__":
     main()

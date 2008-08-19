@@ -143,7 +143,7 @@ ref_dotprod (const i_type input[], const tap_type taps[], int ntaps)
 static void
 test_random_io (fir_maker_t maker)  
 {
-  const int	MAX_TAPS	= 9;
+  const int	MAX_TAPS	= 32;
   const int	OUTPUT_LEN	= 17;
   const int	INPUT_LEN	= MAX_TAPS + OUTPUT_LEN;
 
@@ -187,7 +187,7 @@ test_random_io (fir_maker_t maker)
       
       for (int o = 0; o < ol; o++){
 	CPPUNIT_ASSERT_DOUBLES_EQUAL (expected_output[o], actual_output[o],
-			    fabs (expected_output[o]) * 1e-4);
+				      fabs (expected_output[o]) * 9e-3);
       }
 
       delete f1;

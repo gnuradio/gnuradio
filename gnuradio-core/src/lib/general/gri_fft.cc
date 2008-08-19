@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003 Free Software Foundation, Inc.
+ * Copyright 2003,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,6 +28,11 @@
 #include <stdio.h>
 #include <cassert>
 #include <stdexcept>
+#include <boost/thread.hpp>
+
+typedef boost::mutex::scoped_lock scoped_lock;
+static boost::mutex  s_planning_mutex;
+
 
 static char *
 wisdom_filename ()
@@ -80,6 +85,9 @@ gri_fftw_export_wisdom ()
 
 gri_fft_complex::gri_fft_complex (int fft_size, bool forward)
 {
+  // Hold global mutex during plan construction and destruction.
+  scoped_lock	lock(s_planning_mutex);
+
   assert (sizeof (fftwf_complex) == sizeof (gr_complex));
   
   if (fft_size <= 0)
@@ -96,10 +104,6 @@ gri_fft_complex::gri_fft_complex (int fft_size, bool forward)
     throw std::runtime_error ("fftwf_malloc");
   }
 
-  // FIXME If there's ever a chance that the planning functions
-  // will be called in multiple threads, we've got to ensure single
-  // threaded access.  They are not thread-safe.
-  
   gri_fftw_import_wisdom ();	// load prior wisdom from disk
   d_plan = fftwf_plan_dft_1d (fft_size,
 			      reinterpret_cast<fftwf_complex *>(d_inbuf), 
@@ -116,6 +120,9 @@ gri_fft_complex::gri_fft_complex (int fft_size, bool forward)
 
 gri_fft_complex::~gri_fft_complex ()
 {
+  // Hold global mutex during plan construction and destruction.
+  scoped_lock	lock(s_planning_mutex);
+
   fftwf_destroy_plan ((fftwf_plan) d_plan);
   fftwf_free (d_inbuf);
   fftwf_free (d_outbuf);
@@ -131,6 +138,9 @@ gri_fft_complex::execute ()
 
 gri_fft_real_fwd::gri_fft_real_fwd (int fft_size)
 {
+  // Hold global mutex during plan construction and destruction.
+  scoped_lock	lock(s_planning_mutex);
+
   assert (sizeof (fftwf_complex) == sizeof (gr_complex));
   
   if (fft_size <= 0)
@@ -147,10 +157,6 @@ gri_fft_real_fwd::gri_fft_real_fwd (int fft_size)
     throw std::runtime_error ("fftwf_malloc");
   }
 
-  // FIXME If there's ever a chance that the planning functions
-  // will be called in multiple threads, we've got to ensure single
-  // threaded access.  They are not thread-safe.
-  
   gri_fftw_import_wisdom ();	// load prior wisdom from disk
   d_plan = fftwf_plan_dft_r2c_1d (fft_size,
 				  d_inbuf,
@@ -166,6 +172,9 @@ gri_fft_real_fwd::gri_fft_real_fwd (int fft_size)
 
 gri_fft_real_fwd::~gri_fft_real_fwd ()
 {
+  // Hold global mutex during plan construction and destruction.
+  scoped_lock	lock(s_planning_mutex);
+
   fftwf_destroy_plan ((fftwf_plan) d_plan);
   fftwf_free (d_inbuf);
   fftwf_free (d_outbuf);

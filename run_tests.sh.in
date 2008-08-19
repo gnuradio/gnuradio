@@ -138,8 +138,15 @@ export GR_DONT_LOAD_PREFS
 ok=yes
 for file in $3/qa_*.py
 do
-  if ! @PYTHON@ $file
+  # echo $file
+  @PYTHON@ $file
+  r=$?
+  if [ $r -ne 0 ]
   then
+    if [ $r -ge 128 ]		# killed by a signal
+    then
+      exit $r
+    fi
     ok=no
   fi  
 done

@@ -22,7 +22,7 @@
 include $(top_srcdir)/Makefile.common
 
 AM_CPPFLAGS = $(DEFINES) $(OMNITHREAD_INCLUDES) $(PMT_INCLUDES) \
-	$(BOOST_CFLAGS) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
+	$(BOOST_CPPFLAGS) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 # disable test until we fix ticket:180
 # TESTS = test_mblock

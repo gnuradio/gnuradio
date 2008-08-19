@@ -27,6 +27,7 @@ SUBDIRS = \
 	dect \
 	digital \
 	digital_voice \
+	mp-sched \
 	multi-antenna \
 	multi_usrp \
 	network \

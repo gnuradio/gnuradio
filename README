@@ -185,12 +185,12 @@ Provides a high performance array type for Python.
 http://numpy.scipy.org
 http://sourceforge.net/project/showfiles.php?group_id=1369&package_id=175103
 
-(6) The Boost C++ Libraries	http://www.boost.org
 
-We use the Smart Pointer library.  Most systems already have the boost
-libraries available.  In the unlikely event that yours doesn't,
-download the source and follow the build instructions.  They're
-different from the normal ./configure && make
+(6) The Boost C++ Libraries (1.35 or later)  http://www.boost.org
+
+We use Smart Pointers, the thread library and a bunch of other boost stuff.
+If your system doesn't have boost 1.35 or later, see README.building-boost
+for additional info.
 
 
 (7) cppunit 1.9.14 or later.	http://cppunit.sourceforge.net

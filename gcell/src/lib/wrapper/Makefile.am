@@ -62,7 +62,8 @@ gcellinclude_HEADERS = \
 
 noinst_HEADERS = \
 	qa_gcell_general.h \
-	qa_gcell_wrapper.h
+	qa_gcell_wrapper.h \
+	qa_gcp_fft_1d_r2.h
 
 
 CLEANFILES = gcell_all.lo gcell_general_qa.lo

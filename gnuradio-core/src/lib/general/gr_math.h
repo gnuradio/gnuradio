@@ -174,4 +174,48 @@ static inline unsigned int gr_branchless_quad_45deg_slicer(gr_complex x)
   return gr_branchless_quad_45deg_slicer(x.real(), x.imag());
 }
 
+/*!
+ * \param x any value
+ * \param pow2 must be a power of 2
+ * \returns \p x rounded down to a multiple of \p pow2.
+ */
+static inline size_t
+gr_p2_round_down(size_t x, size_t pow2)
+{
+  return x & -pow2;
+}
+
+/*!
+ * \param x any value
+ * \param pow2 must be a power of 2
+ * \returns \p x rounded up to a multiple of \p pow2.
+ */
+static inline size_t
+gr_p2_round_up(size_t x, size_t pow2)
+{
+  return gr_p2_round_down(x + pow2 - 1, pow2);
+}
+
+/*!
+ * \param x any value
+ * \param pow2 must be a power of 2
+ * \returns \p x modulo \p pow2.
+ */
+static inline size_t
+gr_p2_modulo(size_t x, size_t pow2)
+{
+  return x & (pow2 - 1);
+}
+
+/*!
+ * \param x any value
+ * \param pow2 must be a power of 2
+ * \returns \p pow2 - (\p x modulo \p pow2).
+ */
+static inline size_t
+gr_p2_modulo_neg(size_t x, size_t pow2)
+{
+  return pow2 - gr_p2_modulo(x, pow2);
+}
+
 #endif /* _GR_MATH_H_ */

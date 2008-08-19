@@ -117,7 +117,7 @@ generic_qa_CODE =			\
 x86_CODE = 				\
 	sysconfig_x86.cc		\
 	gr_fir_sysconfig_x86.cc		\
-	gr_cpu.cc			\
+	gr_cpu_x86.cc			\
 	gr_fir_ccc_simd.cc		\
 	gr_fir_ccc_x86.cc		\
 	gr_fir_fff_simd.cc		\
@@ -166,6 +166,18 @@ x86_qa_CODE = 				\
 	qa_complex_dotprod_x86.cc	\
 	qa_ccomplex_dotprod_x86.cc	
 
+powerpc_CODE = \
+	sysconfig_powerpc.cc \
+	gr_fir_sysconfig_powerpc.cc \
+	gr_cpu_powerpc.cc \
+	gr_fir_fff_altivec.cc \
+	gr_altivec.c \
+	dotprod_fff_altivec.c
+
+powerpc_qa_CODE = \
+	qa_dotprod_powerpc.cc
+
+
 #
 # include each <foo>_CODE entry here...
 #
@@ -175,7 +187,9 @@ EXTRA_libfilter_la_SOURCES =		\
 	$(x86_CODE)			\
 	$(x86_SUBCODE)			\
 	$(x86_64_SUBCODE)		\
-	$(x86_qa_CODE)
+	$(x86_qa_CODE)			\
+	$(powerpc_CODE)			\
+	$(powerpc_qa_CODE)
 
 
 EXTRA_DIST = 					\
@@ -234,6 +248,11 @@ endif
 libfilter_qa_la_SOURCES = $(libfilter_qa_la_common_SOURCES) $(x86_qa_CODE)
 endif
 
+if MD_CPU_powerpc
+libfilter_la_SOURCES = $(libfilter_la_common_SOURCES) $(powerpc_CODE)
+libfilter_qa_la_SOURCES = $(libfilter_qa_la_common_SOURCES) $(powerpc_qa_CODE)
+endif
+
 
 grinclude_HEADERS = 			\
 	$(GENERATED_H)			\
@@ -245,12 +264,14 @@ grinclude_HEADERS = 			\
 	float_dotprod_generic.h		\
 	float_dotprod_x86.h		\
 	gr_adaptive_fir_ccf.h		\
+	gr_altivec.h			\
 	gr_cma_equalizer_cc.h		\
 	gr_cpu.h			\
 	gr_fft_filter_ccc.h		\
 	gr_fft_filter_fff.h		\
 	gr_filter_delay_fc.h		\
 	gr_fir_sysconfig_x86.h		\
+	gr_fir_sysconfig_powerpc.h	\
 	gr_fractional_interpolator_ff.h	\
 	gr_fractional_interpolator_cc.h	\
 	gr_goertzel_fc.h		\
@@ -272,6 +293,7 @@ grinclude_HEADERS = 			\
 
 noinst_HEADERS = 			\
 	assembly.h			\
+	dotprod_fff_altivec.h		\
 	gr_fir_scc_simd.h		\
 	gr_fir_scc_x86.h		\
 	gr_fir_fcc_simd.h		\
@@ -280,6 +302,7 @@ noinst_HEADERS = 			\
 	gr_fir_ccf_x86.h		\
 	gr_fir_ccc_simd.h		\
 	gr_fir_ccc_x86.h		\
+	gr_fir_fff_altivec.h		\
 	gr_fir_fff_simd.h		\
 	gr_fir_fff_x86.h		\
 	gr_fir_fsf_simd.h		\

@@ -1,5 +1,5 @@
 dnl
-dnl Copyright 2003 Free Software Foundation, Inc.
+dnl Copyright 2003,2008 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -28,10 +28,10 @@ AC_DEFUN([GR_SET_MD_CPU],[
 
   AC_MSG_CHECKING([for machine dependent speedups])
   case "$cf_with_md_cpu" in
-   x86 | i[[3-7]]86)	MD_CPU=x86	MD_SUBCPU=x86	;;
-   x86_64)		MD_CPU=x86	MD_SUBCPU=x86_64	;;
-#  sparc)       MD_CPU=sparc	 ;;
-   *)           MD_CPU=generic   ;;
+   x86 | i[[3-7]]86)	MD_CPU=x86	MD_SUBCPU=x86 ;;
+   x86_64)		MD_CPU=x86	MD_SUBCPU=x86_64 ;;
+   powerpc*)            MD_CPU=powerpc ;;
+   *)           	MD_CPU=generic ;;
   esac
   AC_MSG_RESULT($MD_CPU)
   AC_SUBST(MD_CPU)
@@ -39,5 +39,6 @@ AC_DEFUN([GR_SET_MD_CPU],[
 
   AM_CONDITIONAL(MD_CPU_x86,     test "$MD_CPU" = "x86")
   AM_CONDITIONAL(MD_SUBCPU_x86_64,  test "$MD_SUBCPU" = "x86_64")
+  AM_CONDITIONAL(MD_CPU_powerpc, test "$MD_CPU" = "powerpc")
   AM_CONDITIONAL(MD_CPU_generic, test "$MD_CPU" = "generic")
 ])
