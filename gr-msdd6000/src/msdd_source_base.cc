@@ -33,6 +33,7 @@
 #include <omnithread.h>
 #include <stdexcept>
 #include <iostream>
+#include <limits.h>
 #ifdef HAVE_NETDB_H
 #include <netdb.h>
 #endif
@@ -640,7 +641,7 @@ msdd_source_base::set_verbose (bool verbose)
 bool
 msdd_source_base::set_pga (int which, double gain)
 {
-	if (gain >= PGA_MIN & gain <= PGA_MAX) {
+	if (gain >= PGA_MIN && gain <= PGA_MAX) {
 	  pimpl->d_gain = gain;
 		return true;
 	}
@@ -813,8 +814,10 @@ msdd_source_base::serial_number()
 bool msdd_source_base::set_desired_packet_size (int which, unsigned long packet_size) {
   bool result(false);
   
-  if (pimpl->d_desired_sample_size < 2^32) { // FIXME: find maximum sample request for MSDD check if greater than 
+  //if (pimpl->d_desired_sample_size < 2^32) { // FIXME: find maximum sample request for MSDD check if greater than 
+  if (pimpl->d_desired_sample_size < LONG_MAX) { // FIXME: find maximum sample request for MSDD check if greater than 
     pimpl->d_desired_sample_size = packet_size;
+    result = true;
   }
   return result;
 }
