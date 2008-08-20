@@ -79,12 +79,23 @@ class app_flow_graph(stdgui2.std_top_block):
 		parser.add_option("-Z", "--dual_mode", action="store_true",
 			default=False, help="Dual-polarization mode")
 		parser.add_option("-I", "--interferometer", action="store_true", default=False, help="Interferometer mode")
+		parser.add_option("-D", "--switch_mode", action="store_true", default=False, help="Dicke Switching mode")
+		parser.add_option("-P", "--reference_divisor", type="eng_float", default=1.0, help="Reference Divisor")
+		parser.add_option("-U", "--ref_fifo", default="@@@@")
 		(options, args) = parser.parse_args()
 
 		self.setimode = options.setimode
 		self.dual_mode = options.dual_mode
 		self.interferometer = options.interferometer
 		self.normal_mode = False
+		self.switch_mode = options.switch_mode
+		self.switch_state = 0
+		self.reference_divisor = options.reference_divisor
+		self.ref_fifo = options.ref_fifo
+		
+		if (self.ref_fifo != "@@@@"):
+			self.ref_fifo_file = open (self.ref_fifo, "w")
+		
 		modecount = 0
 		for modes in (self.dual_mode, self.interferometer):
 			if (modes == True):
@@ -102,12 +113,20 @@ class app_flow_graph(stdgui2.std_top_block):
 		if (self.setimode == True and self.interferometer == True):
 			print "can't pick both --setimode and --interferometer"
 			sys.exit(1)
+			
+		if (self.setimode == True and self.switch_mode == True):
+			print "can't pick both --setimode and --switch_mode"
+			sys.exit(1)
+		
+		if (self.interferometer == True and self.switch_mode == True):
+			print "can't pick both --interferometer and --switch_mode"
+			sys.exit(1)
 		
 		if (modecount == 0):
 			self.normal_mode = True
 
 		self.show_debug_info = True
-
+		
 		# Pick up waterfall option
 		self.waterfall = options.waterfall
 
@@ -410,6 +429,8 @@ class app_flow_graph(stdgui2.std_top_block):
 			
 		# Start the timer for the LMST display and datalogging
 		self.lmst_timer.Start(1000)
+		if (self.switch_mode == True):
+			self.other_timer.Start(330)
 
 
 	def _set_status_msg(self, msg):
@@ -522,7 +543,7 @@ class app_flow_graph(stdgui2.std_top_block):
 		self._build_subpanel(vbox)
 
 		self.lmst_timer = wx.PyTimer(self.lmst_timeout)
-		#self.lmst_timeout()
+		self.other_timer = wx.PyTimer(self.other_timeout)
 
 
 	def _build_subpanel(self, vbox_arg):
@@ -680,6 +701,32 @@ class app_flow_graph(stdgui2.std_top_block):
 			 #	 frequency.
 			 self.hits_array[:,:] = 0.0
 			 self.hit_intensities[:,:] = 0.0
+	
+	def other_timeout(self):
+		if (self.switch_state == 0):
+			self.switch_state = 1
+			
+		elif (self.switch_state == 1):
+			self.switch_state = 0
+			
+		if (self.switch_state == 0):
+			self.mute.set_n(1)
+			self.cmute.set_n(int(1.0e9))
+			
+		elif (self.switch_state == 1):
+			self.mute.set_n(int(1.0e9))
+			self.cmute.set_n(1)
+			
+		if (self.ref_fifo != "@@@@"):
+			self.ref_fifo_file.write(str(self.switch_state)+"\n")
+			self.ref_fifo_file.flush()
+
+		self.avg_reference_value = self.cprobe.level()
+			
+		#
+		# Set reference value
+		#
+		self.reference_level.set_k(-1.0 * (self.avg_reference_value/self.reference_divisor))
 
 	def fft_outfunc(self,data,l):
 		self.fft_outbuf=data
@@ -1055,25 +1102,47 @@ class app_flow_graph(stdgui2.std_top_block):
 	#
 	def setup_radiometer_common(self):
 		# The IIR integration filter for post-detection
-			self.integrator = gr.single_pole_iir_filter_ff(1.0)
-			self.integrator.set_taps (1.0/self.bw)
-	
-			# Signal probe
-			self.probe = gr.probe_signal_f()
-	
-			#
-			# Continuum calibration stuff
-			#
-			x = self.calib_coeff/100.0
-			self.cal_mult = gr.multiply_const_ff(self.calib_coeff/100.0)
-			self.cal_offs = gr.add_const_ff(self.calib_offset*(x*8000))
-			
-			#
-			# Mega decimator after IIR filter
-			#
-			self.keepn = gr.keep_one_in_n(gr.sizeof_float, self.bw)
+		self.integrator = gr.single_pole_iir_filter_ff(1.0)
+		self.integrator.set_taps (1.0/self.bw)
+
+		# Signal probe
+		self.probe = gr.probe_signal_f()
+
+		#
+		# Continuum calibration stuff
+		#
+		x = self.calib_coeff/100.0
+		self.cal_mult = gr.multiply_const_ff(self.calib_coeff/100.0)
+		self.cal_offs = gr.add_const_ff(self.calib_offset*(x*8000))
 		
-	
+		#
+		# Mega decimator after IIR filter
+		#
+		if (self.switch_mode == False):
+			self.keepn = gr.keep_one_in_n(gr.sizeof_float, self.bw)
+		else:
+			self.keepn = gr.keep_one_in_n(gr.sizeof_float, int(self.bw/2))
+		
+		#
+		# For the Dicke-switching scheme
+		#
+		self.switch = gr.multiply_const_ff(1.0)
+		
+		#
+		if (self.switch_mode == True):
+			self.vector = gr.vector_sink_f()
+			self.swkeep = gr.keep_one_in_n(gr.sizeof_float, int(self.bw/3))
+			self.mute = gr.keep_one_in_n(gr.sizeof_float, 1)
+			self.cmute = gr.keep_one_in_n(gr.sizeof_float, int(1.0e9))
+			self.cintegrator = gr.single_pole_iir_filter_ff(1.0/(self.bw/2))	
+			self.cprobe = gr.probe_signal_f()
+		else:
+			self.mute = gr.multiply_const_ff(1.0)
+			
+			
+		self.avg_reference_value = 0.0
+		self.reference_level = gr.add_const_ff(0.0)
+		
 	#
 	# Setup ordinary single-channel radiometer mode
 	#	 
@@ -1084,14 +1153,21 @@ class app_flow_graph(stdgui2.std_top_block):
 		
 		if setimode == False:
 			self.detector = gr.complex_to_mag_squared()
-			self.setup_radiometer_common()		
-			
+			self.setup_radiometer_common()	
 			self.connect(self.shead, self.scope)
 
-			self.connect(self.head, self.detector, 
+			self.connect(self.head, self.detector, self.mute, self.reference_level,
 				self.integrator, self.keepn, self.cal_mult, self.cal_offs, self.chart)
 				
 			self.connect(self.cal_offs, self.probe)
+			
+			#
+			# Add a side-chain detector chain, with a different integrator, for sampling
+			#   The reference channel data
+			# This is used to derive the offset value for self.reference_level, used above
+			#
+			if (self.switch_mode == True):		
+				self.connect(self.detector, self.cmute, self.cintegrator, self.swkeep, self.cprobe)
 			
 		return
 	
@@ -1128,6 +1204,7 @@ class app_flow_graph(stdgui2.std_top_block):
 			#	powers on each channel, after they've been detected
 			#
 			self.detector = gr.add_ff()
+			
 			#
 			# In dual-polarization mode, we compute things a little differently
 			# In effect, we have two radiometer chains, terminating in an adder
@@ -1136,10 +1213,18 @@ class app_flow_graph(stdgui2.std_top_block):
 			self.connect((self.di, 1), self.v_power)
 			self.connect(self.h_power, (self.detector, 0))
 			self.connect(self.v_power, (self.detector, 1))
-			self.connect(self.detector,
+			self.connect(self.detector, self.mute, self.reference_level,
 				self.integrator, self.keepn, self.cal_mult, self.cal_offs, self.chart)
 			self.connect(self.cal_offs, self.probe)
 			self.connect(self.shead, self.scope)
+			
+			#
+			# Add a side-chain detector chain, with a different integrator, for sampling
+			#   The reference channel data
+			# This is used to derive the offset value for self.reference_level, used above
+			#
+			if (self.switch_mode == True):
+				self.connect(self.detector, self.cmute, self.cintegrator, self.swkeep, self.cprobe)			
 		return
 	
 	#
@@ -1163,7 +1248,7 @@ class app_flow_graph(stdgui2.std_top_block):
 		#
 		# Multiplier (correlator) to complex-to-float, followed by integrator, etc
 		#
-		self.connect(self.corr, self.c2f, self.integrator, self.keepn, self.cal_mult, self.cal_offs, self.chart)
+		self.connect(self.corr, self.c2f, self.switch, self.integrator, self.keepn, self.cal_mult, self.cal_offs, self.chart)
 		
 		#
 		# FFT scope gets only 1 channel
