@@ -1,4 +1,4 @@
-dnl Copyright 2003,2008 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -17,32 +17,16 @@ dnl along with GNU Radio; see the file COPYING.  If not, write to
 dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
-AC_DEFUN([USRP_LIBUSB], [
-    libusbok=yes
-    PKG_CHECK_MODULES(USB, libusb, [], [
-        AC_LANG_PUSH(C)
+AC_DEFUN([GR_FORTRAN],[
+    dnl if you want to generate a different table of interpolator taps, you need fortran.
+    dnl we default to off, since almost no one wants to do this.
+    AC_ARG_ENABLE(fortran, AC_HELP_STRING([--enable-fortran],[enable fortran (no)]),
+		  [], [enable_fortran=no])
+    AM_CONDITIONAL(ENABLE_FORTRAN, test "x$enable_fortran" = xyes)
 
-	AC_CHECK_HEADERS([usb.h], [], [libusbok=no; AC_MSG_RESULT([USRP requires libusb. usb.h not found. See http://libusb.sf.net])])
-
-	save_LIBS="$LIBS"
-	case "$host_os" in
-	  darwin*)
-	    LIBS="$LIBS -lIOKit"
-            ;;
-	  *) ;;
-        esac
-
-	AC_SEARCH_LIBS(usb_bulk_write, [usb], [USB_LIBS="$LIBS"], [libusbok=no; AC_MSG_RESULT([USRP requires libusb. usb_bulk_write not found. See http://libusb.sf.net])])
-
-        LIBS="$save_LIBS"
-
-        AC_LANG_POP
-    ])
-
-    if test x$libusbok = xyes; then
-        AC_SUBST(USB_LIBS)
-	ifelse([$1], , :, [$1])
-    else
-        ifelse([$2], , :, [$2])
+    if test "x$enable_fortran" = xyes
+    then
+        AC_PROG_F77
+        AC_F77_LIBRARY_LDFLAGS
     fi
 ])

@@ -1,5 +1,5 @@
 dnl
-dnl Copyright 2005 Free Software Foundation, Inc.
+dnl Copyright 2007 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -19,21 +19,18 @@ dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 dnl 
 
-# GR_X86_64()
+# GR_SUBVERSION()
 #
-# Checks to see if we're on a x86_64 machine, and if so, ensure
-# that libdir ends in "64"
-#
-AC_DEFUN([GR_X86_64],[
-  AC_REQUIRE([AC_CANONICAL_HOST])
-  if test "$host_cpu" = "x86_64"; then
-    AC_MSG_CHECKING([libdir for lib64 suffix])
-    t=${libdir##*/lib}
-    if test "$t" != 64 && test -d /lib64 && ! test -L /lib64; then
-      libdir=${libdir}64
-      AC_MSG_RESULT([no. Setting libdir to $libdir])
-    else
-      AC_MSG_RESULT([yes])
-    fi
-  fi
+# Test for presence of subversion, and create variables for 
+# current repository version and last changed date.
+
+AC_DEFUN([GR_SUBVERSION],[
+    	AC_PATH_PROG([SVN],[svn])
+	if test "$SVN" != "" -a -d .svn ; then
+	    SVNVERSION=`$SVN info . | grep '^Revision' | cut -f 2- -d ' '`
+	    SVNDATE=`$SVN info . | grep 'Last Changed Date' | cut -f 4-6 -d ' '`
+	fi
+
+	AC_SUBST(SVNVERSION)
+	AC_SUBST(SVNDATE)
 ])

@@ -1,6 +1,7 @@
 # pkg.m4 - Macros to locate and utilise pkg-config.            -*- Autoconf -*-
 # 
 # Copyright © 2004 Scott James Remnant <scott@netsplit.com>.
+# Copyright © 2008 Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -96,8 +97,14 @@ fi[]dnl
 #
 # E.g.,
 #   PKG_CHECK_MODULES(GSTUFF, gtk+-2.0 >= 1.3 glib = 1.3.4, action-if, action-not)
-#   defines GSTUFF_LIBS, GSTUFF_CFLAGS, see pkg-config man page
-#   also defines GSTUFF_PKG_ERRORS on error
+#   defines:
+#
+#     GSTUFF_LIBS
+#     GSTUFF_CFLAGS
+#     GSTUFF_INCLUDEDIR
+#     GSTUFF_CPPFLAGS    # the -I, -D and -U's out of CFLAGS
+#
+# see pkg-config man page also defines GSTUFF_PKG_ERRORS on error
 #
 # Note that if there is a possibility the first call to
 # PKG_CHECK_MODULES might not happen, you should be sure to include an
@@ -108,6 +115,7 @@ AC_DEFUN([PKG_CHECK_MODULES],
 [AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
 AC_ARG_VAR([$1][_CFLAGS], [C compiler flags for $1, overriding pkg-config])dnl
 AC_ARG_VAR([$1][_LIBS], [linker flags for $1, overriding pkg-config])dnl
+AC_ARG_VAR([$1][_INCLUDEDIR], [includedir for $1, overriding pkg-config])dnl
 
 pkg_failed=no
 AC_MSG_CHECKING([for $1])
@@ -120,6 +128,9 @@ then
 else
   _PKG_CONFIG([$1][_LIBS], [libs --static], [$2])
 fi
+
+_PKG_CONFIG([$1][_INCLUDEDIR], [variable=includedir], [$2])
+
 
 m4_define([_PKG_TEXT], [Alternatively, you may set the environment variables $1[]_CFLAGS
 and $1[]_LIBS to avoid the need to call pkg-config.
@@ -160,6 +171,17 @@ To get pkg-config, see <http://pkg-config.freedesktop.org/>.])],
 else
 	$1[]_CFLAGS=$pkg_cv_[]$1[]_CFLAGS
 	$1[]_LIBS=$pkg_cv_[]$1[]_LIBS
+	$1[]_INCLUDEDIR=$pkg_cv_[]$1[]_INCLUDEDIR
+
+	$1[]_CPPFLAGS=""
+	for flag in $$1[]_CFLAGS; do
+	  case $flag in
+          -I* | -D* | -U*) $1[]_CPPFLAGS="$$1[]_CPPFLAGS $flag" ;;
+          esac
+        done
+	pkg_cv_[]$1[]_CPPFLAGS=$$1[]_CPPFLAGS
+	AC_SUBST($1[]_CPPFLAGS)
+
         AC_MSG_RESULT([yes])
 	ifelse([$3], , :, [$3])
 fi[]dnl

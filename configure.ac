@@ -28,14 +28,6 @@ AC_CANONICAL_TARGET
 
 AM_INIT_AUTOMAKE(gnuradio,3.1svn)
 
-dnl add ${prefix}/lib/pkgconfig to the head of the PKG_CONFIG_PATH
-if test x${PKG_CONFIG_PATH} = x; then
-    PKG_CONFIG_PATH=${prefix}/lib/pkgconfig
-else
-    PKG_CONFIG_PATH=${prefix}/lib/pkgconfig:${PKG_CONFIG_PATH}
-fi
-export PKG_CONFIG_PATH
-
 DEFINES=""
 AC_SUBST(DEFINES)
 
@@ -75,6 +67,16 @@ fi
 AC_SUBST(autoconf_default_CXXFLAGS)
 AC_SUBST(swig_CXXFLAGS)
 
+
+dnl add ${prefix}/lib${gr_libdir_suffix}/pkgconfig to the head of the PKG_CONFIG_PATH
+if test x${PKG_CONFIG_PATH} = x; then
+    PKG_CONFIG_PATH=${prefix}/lib${gr_libdir_suffix}/pkgconfig
+else
+    PKG_CONFIG_PATH=${prefix}/lib${gr_libdir_suffix}/pkgconfig:${PKG_CONFIG_PATH}
+fi
+export PKG_CONFIG_PATH
+
+
 LF_SET_WARNINGS
 GR_SET_GPROF
 GR_SET_PROF
@@ -105,6 +107,7 @@ GR_OMNITHREAD
 CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
 CXXFLAGS="$CXXFLAGS $PTHREAD_CFLAGS"
 
+dnl Set the c++ compiler that we use for the build system when cross compiling
 if test x$CXX_FOR_BUILD = x
 then
   if test x$cross_compiling = xno; then
@@ -113,7 +116,6 @@ then
     CXX_FOR_BUILD=g++
   fi
 fi
-
 AC_SUBST(CXX_FOR_BUILD)
 
 dnl Check for SysV shm (mandatory)

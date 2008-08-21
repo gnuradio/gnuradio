@@ -1,6 +1,6 @@
 # Check for Omnithread (pthread/NT) thread support.             -*- Autoconf -*-
 
-# Copyright 2003 Free Software Foundation, Inc.
+# Copyright 2003,2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,8 +21,9 @@ AC_DEFUN([GR_OMNITHREAD],
 [
   # Check first for POSIX
   ACX_PTHREAD(
-  [ ot_posix="yes"
-    AC_DEFINE(OMNITHREAD_POSIX,[1],[Define to 1 to enable pthread])
+  [ AC_DEFINE(HAVE_PTHREAD,1,[Define if you have POSIX threads libraries and header files.])
+    ot_posix="yes"
+    DEFINES="$DEFINES -DOMNITHREAD_POSIX=1"
   ],[
     # If no POSIX support found, then check for NT threads
     AC_MSG_CHECKING([for NT threads])
@@ -34,7 +35,7 @@ AC_DEFUN([GR_OMNITHREAD],
       ],
       [ 
         ot_nt="yes"
-	AC_DEFINE(OMNITHREAD_NT,[1],[Define to 1 to enable NT thread])
+        DEFINES="$DEFINES -DOMNITHREAD_NT=1"
       ],
       [AC_MSG_FAILURE([GNU Radio requires POSIX threads.  pthreads not found.])]
     )
