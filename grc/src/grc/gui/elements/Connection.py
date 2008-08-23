@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.elements.Connection
 #The graphical connection for input/output ports.
-#@author Josh Blum
 
 import Utils
 from Element import Element

@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc_gnuradio.utils.expr_utils
 #Utility functions to comprehend variable expressions.
-#@author Josh Blum
 
 import string
 VAR_CHARS = string.letters + string.digits + '_'

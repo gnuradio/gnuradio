@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.elements.FlowGraph
 #A flow graph structure for storing signal blocks and their connections.
-#@author Josh Blum
 
 from grc import Preferences
 from grc import Utils

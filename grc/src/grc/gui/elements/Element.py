@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 ##@package grc.gui.elements.Element
 #Base class for graphical elements such as:
 #signal blocks, input sockets, output sockets and connections.
-#@author Josh Blum
 
 import Colors
 import pygtk

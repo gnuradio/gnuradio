@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.elements.Port
 #The graphical input/output sockets of the signal block.
-#@author Josh Blum
 
 from Element import Element
 from grc.Constants import *

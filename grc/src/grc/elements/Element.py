@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.elements.Element
 #The base class for all elements.
-#@author Josh Blum
 
 class Element(object):
 

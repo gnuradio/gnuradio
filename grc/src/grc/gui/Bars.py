@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.Bars
 #Create the GUI's toolbar and menubar
-#@author Josh Blum
 
 from grc.Actions import *
 import pygtk

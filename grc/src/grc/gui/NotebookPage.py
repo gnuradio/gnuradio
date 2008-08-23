@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.NotebookPage
 #A page in the notebook, represents an individual flow graph.
-#@author Josh Blum
 
 from grc.Actions import *
 import pygtk

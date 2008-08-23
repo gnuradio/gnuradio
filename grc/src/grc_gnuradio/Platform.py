@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc_gnuradio.Platform
 #Gnuradio python specific platform.
-#@author Josh Blum
 
 import os
 from grc.Constants import FLOW_GRAPH_FILE_EXTENSION

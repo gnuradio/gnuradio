@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.ParamsDialog
 #A dialog for editing a block's parameters.
-#@author Josh Blum
 
 import pygtk
 pygtk.require('2.0')

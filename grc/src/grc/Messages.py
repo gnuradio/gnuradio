@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package Messages
 #Handle all of the system messages and error reports.
-#@author Josh Blum
 
 from Constants import VERSION
 import traceback

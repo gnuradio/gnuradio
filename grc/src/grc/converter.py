@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.converter
 #convert old flow graph file format to new format
-#@author Josh Blum
 
 from grc.Constants import FLOW_GRAPH_DTD
 from grc import ParseXML, Utils

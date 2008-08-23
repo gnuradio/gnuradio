@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package StateCache
 #Stores the flow graph states to drive the undo/redo and save interface.
-#@author Josh Blum
 
 from Actions import FLOW_GRAPH_UNDO, FLOW_GRAPH_REDO, get_action_from_name
 

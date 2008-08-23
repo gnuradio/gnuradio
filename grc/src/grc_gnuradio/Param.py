@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc_gnuradio.Param
 #Flow graph block parameters.
-#@author Josh Blum
 
 from utils import expr_utils
 from grc.elements.Param import Param as _Param

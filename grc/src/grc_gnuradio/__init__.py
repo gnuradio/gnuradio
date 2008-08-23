@@ -18,4 +18,3 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc_gnuradio 
 #gnuradio overloaded elements and supplemental python modules
-#@author Josh Blum

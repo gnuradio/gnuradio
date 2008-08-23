@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.elements.Platform
 #Graphical platform to turn an existing platform into a gui platform.
-#@author Josh Blum
 
 from FlowGraph import FlowGraph
 from Connection import Connection

@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.elements.Port
 #Flow graph block port (source or sink).
-#@author Josh Blum
 
 from grc import Utils
 from grc.elements.Element import Element

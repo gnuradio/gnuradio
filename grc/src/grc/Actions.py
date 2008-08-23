@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 ##@package Actions
 #Global actions for gui elements to communicate state changes to the action handler.
 #Use gtk.stock_list_ids() to get a list of possible stock ids (for toolbar/menu icons)
-#@author Josh Blum
 
 import pygtk
 pygtk.require('2.0')

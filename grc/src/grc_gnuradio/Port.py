@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc_gnuradio.Port
 #Flow graph block port (source or sink).
-#@author Josh Blum
 
 from grc.elements.Port import Port as _Port
 from grc import Utils

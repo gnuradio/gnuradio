@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.MainWindow
 #The main window, containing all windows, tool bars, and menu bars.
-#@author Josh Blum
 
 from grc.Constants import *
 from grc.Actions import *

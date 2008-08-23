@@ -21,7 +21,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 #A connection exists between 2 ports.
 #One port must be input, one output.
 #The port decided whether it can have the connection.
-#@author Josh Blum
 
 from grc.elements.Connection import Connection as _Connection
 

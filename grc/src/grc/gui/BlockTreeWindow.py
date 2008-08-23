@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.BlockTreeWindow
 #The block selection panel gives the user a tree selection to choose a block.
-#@author Josh Blum
 
 from grc.Constants import *
 import pygtk

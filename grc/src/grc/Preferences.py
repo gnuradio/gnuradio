@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.Preferences
 #Holds global paramerences
-#@author Josh Blum
 
 from Constants import HOME_DIR, FLOW_GRAPH_DTD
 import ParseXML

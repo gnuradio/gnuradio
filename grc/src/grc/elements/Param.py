@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 ##@package grc.elements.Param
 #Flow graph block parameters.
 #And options for enum type paramater.
-#@author Josh Blum
 
 from grc import Utils
 from grc.Utils import odict

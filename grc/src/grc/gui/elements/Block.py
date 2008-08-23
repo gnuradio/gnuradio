@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.elements.Block
 #The graphical signal block.
-#@author Josh Blum
 
 from grc import Preferences
 from Element import Element

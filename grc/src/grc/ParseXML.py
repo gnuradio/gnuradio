@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.ParseXML
 #Parse xml files to nested data and vice-versa.
-#@author Josh Blum
 
 from lxml import etree
 from Utils import odict

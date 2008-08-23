@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui
 #GTK based classes go into this package.
-#@author Josh Blum
 
 #only import the modules that need external access
 from MainWindow import MainWindow

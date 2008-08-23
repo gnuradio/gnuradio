@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.elements.Param
 #GTK objects for handling input and the signal block parameter class.
-#@author Josh Blum
 
 import Utils
 from Element import Element

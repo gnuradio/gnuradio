@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package ActionHandler
 #ActionHandler builds the interface and handles most of the user inputs.
-#@author Josh Blum
 
 import os
 import signal

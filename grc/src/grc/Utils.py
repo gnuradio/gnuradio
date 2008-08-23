@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.Utils
 #Utility methods and classes.
-#@author Josh Blum
 
 from UserDict import DictMixin
 

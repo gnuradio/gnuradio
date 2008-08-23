@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.Dialogs
 #Misc dialogs.
-#@author Josh Blum
 
 import pygtk
 pygtk.require('2.0')

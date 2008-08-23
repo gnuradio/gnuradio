@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 ##@package grc.gui.elements.Utils
 #Shared functions for flow graph elements.
-#@author Josh Blum
 
 def get_angle_from_coordinates((x1,y1), (x2,y2)):
 	"""!
