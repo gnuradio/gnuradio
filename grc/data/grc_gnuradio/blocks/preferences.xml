@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Global Preferences:
+##	This block should not appear in the tree.
+###################################################
+ -->
+<block>
+	<name>Preferences</name>
+	<key>preferences</key>
+	<make></make>
+	<!-- Hidden Prefs -->
+	<param>
+		<name>Prefs File</name>
+		<key>prefs_file</key>
+		<value>.grc</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>File Open</name>
+		<key>file_open</key>
+		<value></value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Files Open</name>
+		<key>files_open</key>
+		<value></value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Window Size</name>
+		<key>window_size</key>
+		<value>800, 600</value>
+		<type>int_vector</type>
+	</param>
+	<!-- Snap to Grid -->
+	<param>
+		<name>Snap to Grid</name>
+		<key>snap_to_grid</key>
+		<value>off</value>
+		<type>enum</type>
+		<option>
+			<name>Off</name>
+			<key>off</key>
+		</option>
+		<option>
+			<name>On</name>
+			<key>on</key>
+		</option>
+	</param>
+	<param>
+		<name>Grid Size</name>
+		<key>grid_size</key>
+		<value>20</value>
+		<type>enum</type>
+		<option>
+			<name>10 pixels</name>
+			<key>10</key>
+		</option>
+		<option>
+			<name>20 pixels</name>
+			<key>20</key>
+		</option>
+		<option>
+			<name>50 pixels</name>
+			<key>50</key>
+		</option>
+		<option>
+			<name>100 pixels</name>
+			<key>100</key>
+		</option>
+	</param>
+	<param>
+		<name>Show Grid</name>
+		<key>show_grid</key>
+		<value>hide</value>
+		<type>enum</type>
+		<option>
+			<name>Show</name>
+			<key>show</key>
+		</option>
+		<option>
+			<name>Hide</name>
+			<key>hide</key>
+		</option>
+	</param>
+	<!-- Appearance Prefs -->
+	<param>
+		<name>Show Reports Window</name>
+		<key>show_reports</key>
+		<value>show</value>
+		<type>enum</type>
+		<option>
+			<name>Show</name>
+			<key>show</key>
+		</option>
+		<option>
+			<name>Hide</name>
+			<key>hide</key>
+		</option>
+	</param>
+	<param>
+		<name>Show Params Labels</name>
+		<key>show_params</key>
+		<value>show</value>
+		<type>enum</type>
+		<option>
+			<name>Show</name>
+			<key>show</key>
+		</option>
+		<option>
+			<name>Hide</name>
+			<key>hide</key>
+		</option>
+	</param>
+	<param>
+		<name>Show ID Label</name>
+		<key>show_id</key>
+		<value>show</value>
+		<type>enum</type>
+		<option>
+			<name>Show</name>
+			<key>show</key>
+		</option>
+		<option>
+			<name>Hide</name>
+			<key>hide</key>
+		</option>
+	</param>
+	<!-- Misc Prefs -->
+	<param>
+		<name>Restore Open Files</name>
+		<key>restore_files</key>
+		<value>yes</value>
+		<type>enum</type>
+		<option>
+			<name>Yes</name>
+			<key>yes</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>no</key>
+		</option>
+	</param>
+</block>

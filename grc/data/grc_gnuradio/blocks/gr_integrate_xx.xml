@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Integrate
+###################################################
+ -->
+<block>
+	<name>Integrate</name>
+	<key>gr_integrate_xx</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.integrate_$(type.fcn)($decim)</make>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:cc</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:ff</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:ii</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:ss</opt>
+		</option>
+	</param>
+	<param>
+		<name>Decimation</name>
+		<key>decim</key>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+</block>

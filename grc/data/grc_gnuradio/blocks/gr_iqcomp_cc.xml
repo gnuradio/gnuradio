@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##IQ Comp
+###################################################
+ -->
+<block>
+	<name>IQ Comp</name>
+	<key>gr_iqcomp_cc</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.iqcomp_cc($mu)</make>
+	<param>
+		<name>Mu</name>
+		<key>mu</key>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

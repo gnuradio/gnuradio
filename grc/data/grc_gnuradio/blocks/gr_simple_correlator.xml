@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Simple Correlator
+###################################################
+ -->
+<block>
+	<name>Simple Correlator</name>
+	<key>gr_simple_correlator</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.simple_correlator($payload_bytesize)</make>
+	<param>
+		<name>Payload Byte Size</name>
+		<key>payload_bytesize</key>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

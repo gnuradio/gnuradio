@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Variable Chooser: a grc variable with multiple choices
+###################################################
+ -->
+<block>
+	<name>Variable Chooser</name>
+	<key>variable_chooser</key>
+	<make>$(choices)[$value_index]
+_$(id)_control = grc_wxgui.$(chooser_type)_control(
+	window=self.GetWin(),
+	callback=self.set_$(id),
+		#if $label.eval
+	label=$label,
+		#else
+	label=&quot;$id&quot;,
+		#end if
+	index=$value_index,
+	choices=$choices,
+	labels=$labels,
+)
+#set $grid_pos = $grid_pos.eval
+#if not grid_pos
+self.Add(_$(id)_control)
+#else
+self.GridAdd(_$(id)_control, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+#end if</make>
+	<param>
+		<name>Label</name>
+		<key>label</key>
+		<value></value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Value Index</name>
+		<key>value_index</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Choices</name>
+		<key>choices</key>
+		<value>[1, 2, 3]</value>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Labels</name>
+		<key>labels</key>
+		<value>[]</value>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Chooser Type</name>
+		<key>chooser_type</key>
+		<value>drop_down</value>
+		<type>enum</type>
+		<option>
+			<name>Drop Down</name>
+			<key>drop_down</key>
+		</option>
+		<option>
+			<name>Radio Buttons Horizontal</name>
+			<key>radio_buttons_horizontal</key>
+		</option>
+		<option>
+			<name>Radio Buttons Vertical</name>
+			<key>radio_buttons_vertical</key>
+		</option>
+		<option>
+			<name>Button</name>
+			<key>button</key>
+		</option>
+	</param>
+	<param>
+		<name>Grid Position</name>
+		<key>grid_pos</key>
+		<value></value>
+		<type>grid_pos</type>
+	</param>
+	<check>$value_index in range(len($choices))</check>
+	<check>not $labels or len($labels) == len($choices)</check>
+	<doc>
+This block creates a variable with a drop down, radio buttons, or a button. \
+Leave the label blank to use the variable id as the label. \
+The value index is the index of a particular choice, \
+which defines the default choice when the flow graph starts. \
+The choices must be a list of possible values. \
+Leave labels empty to use the choices as the labels.
+
+Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+	</doc>
+</block>

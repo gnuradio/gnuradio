@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##USRP Simple Source
+###################################################
+ -->
+<block>
+	<name>USRP Source</name>
+	<key>usrp_simple_source_x</key>
+	<import>from grc_gnuradio import usrp as grc_usrp</import>
+	<make>grc_usrp.simple_source_$(type.fcn)(
+	number=$number,
+	subdev_spec=$subdev_spec,
+	frequency=$frequency,
+	decimation=$decimation,
+	gain=$gain,
+#if $mux.eval == hex(0)
+	mux=None,
+#else
+	mux=$mux,
+#end if
+	auto_tr=$auto_tr,
+	rx_ant=$rx_ant,
+)</make>
+	<callback>set_decim_rate($decimation)</callback>
+	<callback>set_frequency($frequency)</callback>
+	<callback>set_gain($gain)</callback>
+	<param>
+		<name>Output Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:c</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:s</opt>
+		</option>
+	</param>
+	<param>
+		<name>Unit Number</name>
+		<key>number</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Subdev Spec</name>
+		<key>subdev_spec</key>
+		<value>auto</value>
+		<type>enum</type>
+		<option>
+			<name>Auto</name>
+			<key>None</key>
+		</option>
+		<option>
+			<name>Side A:0</name>
+			<key>(0, 0)</key>
+		</option>
+		<option>
+			<name>Side B:0</name>
+			<key>(1, 0)</key>
+		</option>
+		<option>
+			<name>Side A:1</name>
+			<key>(0, 1)</key>
+		</option>
+		<option>
+			<name>Side B:1</name>
+			<key>(1, 1)</key>
+		</option>
+	</param>
+	<param>
+		<name>Frequency</name>
+		<key>frequency</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Decimation</name>
+		<key>decimation</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Gain</name>
+		<key>gain</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Mux</name>
+		<key>mux</key>
+		<value>0x0</value>
+		<type>hex</type>
+	</param>
+	<param>
+		<name>Auto T/R</name>
+		<key>auto_tr</key>
+		<value>None</value>
+		<type>enum</type>
+		<option>
+			<name>Ignore</name>
+			<key>None</key>
+		</option>
+		<option>
+			<name>Enable</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Disable</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>RX Antenna</name>
+		<key>rx_ant</key>
+		<value>None</value>
+		<type>enum</type>
+		<option>
+			<name>Ignore</name>
+			<key>None</key>
+		</option>
+		<option>
+			<name>TX/RX</name>
+			<key>&quot;TX/RX&quot;</key>
+		</option>
+		<option>
+			<name>RX2</name>
+			<key>&quot;RX2&quot;</key>
+		</option>
+	</param>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+	<doc>
+The USRP source outputs 64 Megasamples per second / decimation.
+
+--- Flex RF specific ---
+The "Auto TR" and "RX Antenna" settings are flex rf specific and should be left at "Ignore" unless this is a flex rf board.
+
+If enabled, "Auto Transmit/Receive Switching" handles the preference for transmit packets vs receive packets. \
+By default, "Auto TR" is disabled.
+
+The "Receive Antenna Setting" selects one of the SMA connectors as the data source. \
+By default, 'TX/RX' is selected.
+	</doc>
+</block>

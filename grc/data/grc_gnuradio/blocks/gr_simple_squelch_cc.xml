@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Simple Squelch
+###################################################
+ -->
+<block>
+	<name>Simple Squelch</name>
+	<key>gr_simple_squelch_cc</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.simple_squelch_cc($threshold, $alpha)</make>
+	<callback>set_threshold($threshold)</callback>
+	<callback>set_alpha($alpha)</callback>
+	<param>
+		<name>Threshold (dB)</name>
+		<key>threshold</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

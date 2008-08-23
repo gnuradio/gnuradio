@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##USRP Simple Sink
+###################################################
+ -->
+<block>
+	<name>USRP Sink</name>
+	<key>usrp_simple_sink_x</key>
+	<import>from grc_gnuradio import usrp as grc_usrp</import>
+	<make>grc_usrp.simple_sink_$(type.fcn)(
+	number=$number,
+	subdev_spec=$subdev_spec,
+	frequency=$frequency,
+	interpolation=$interpolation,
+	gain=$gain,
+#if $mux.eval == hex(0)
+	mux=None,
+#else
+	mux=$mux,
+#end if
+	auto_tr=$auto_tr,
+	tx_enb=$tx_enb,
+)</make>
+	<callback>set_interp_rate($interpolation)</callback>
+	<callback>set_frequency($frequency)</callback>
+	<callback>set_gain($gain)</callback>
+	<param>
+		<name>Input Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:c</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:s</opt>
+		</option>
+	</param>
+	<param>
+		<name>Unit Number</name>
+		<key>number</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Subdev Spec</name>
+		<key>subdev_spec</key>
+		<value>auto</value>
+		<type>enum</type>
+		<option>
+			<name>Auto</name>
+			<key>None</key>
+		</option>
+		<option>
+			<name>Side A</name>
+			<key>(0, 0)</key>
+		</option>
+		<option>
+			<name>Side B</name>
+			<key>(1, 0)</key>
+		</option>
+	</param>
+	<param>
+		<name>Frequency</name>
+		<key>frequency</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Interpolation</name>
+		<key>interpolation</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Gain</name>
+		<key>gain</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Mux</name>
+		<key>mux</key>
+		<value>0x0</value>
+		<type>hex</type>
+	</param>
+	<param>
+		<name>Auto T/R</name>
+		<key>auto_tr</key>
+		<value>None</value>
+		<type>enum</type>
+		<option>
+			<name>Ignore</name>
+			<key>None</key>
+		</option>
+		<option>
+			<name>Enable</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Disable</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>TX Enable</name>
+		<key>tx_enb</key>
+		<value>None</value>
+		<type>enum</type>
+		<option>
+			<name>Ignore</name>
+			<key>None</key>
+		</option>
+		<option>
+			<name>Enable</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Disable</name>
+			<key>False</key>
+		</option>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<doc>
+The USRP sink inputs 128 Megasamples per second / interpolation.
+
+--- Flex RF specific ---
+The "Auto TR" and "TX Enable" settings are flex rf specific and should be left at "Ignore" unless this is a flex rf board.
+
+If enabled, "Auto Transmit/Receive Switching" handles the preference for transmit packets vs receive packets. \
+By default, "Auto TR" is disabled.
+
+The "Transmit Enable" configures the transmitter to be on or off. \
+Do not leave this unconfigured.
+	</doc>
+</block>

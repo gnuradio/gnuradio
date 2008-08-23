@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##MPSK Sync
+###################################################
+ -->
+<block>
+	<name>MPSK Sync</name>
+	<key>gr_mpsk_sync_cc</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.mpsk_sync_cc($alpha, $beta, $max_freq, $min_freq, $ref_phase, $omega, $gain_omega, $mu, $gain_mu)</make>
+	<callback>set_mu($mu)</callback>
+	<callback>set_gain_mu($gain_mu)</callback>
+	<callback>set_omega($omega)</callback>
+	<callback>set_gain_omega($gain_omega)</callback>
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Beta</name>
+		<key>beta</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Max Freq</name>
+		<key>max_freq</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Min Freq</name>
+		<key>min_freq</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Reference Phase</name>
+		<key>ref_phase</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Omega</name>
+		<key>omega</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Gain Omega</name>
+		<key>gain_omega</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Mu</name>
+		<key>mu</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Gain Mu</name>
+		<key>gain_mu</key>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

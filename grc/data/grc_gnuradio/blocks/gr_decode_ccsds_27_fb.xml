@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Decode CCSDS 27
+###################################################
+ -->
+<block>
+	<name>Decode CCSDS 27</name>
+	<key>gr_decode_ccsds_27_fb</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.decode_ccsds_27_fb()</make>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

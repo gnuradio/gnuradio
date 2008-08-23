@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##IIR Filter
+###################################################
+ -->
+<block>
+	<name>IIR Filter</name>
+	<key>gr_iir_filter_ffd</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.iir_filter_ffd($fftaps, $fbtaps)</make>
+	<callback>set_taps($fftaps, $fbtaps)</callback>
+	<param>
+		<name>Feed-forward Taps</name>
+		<key>fftaps</key>
+		<type>real_vector</type>
+	</param>
+	<param>
+		<name>Feedback Taps</name>
+		<key>fbtaps</key>
+		<type>real_vector</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
+</block>

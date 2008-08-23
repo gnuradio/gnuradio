@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Variable Sink: Custom blks2 block
+###################################################
+ -->
+<block>
+	<name>Variable Sink</name>
+	<key>variable_sink</key>
+	<import>from grc_gnuradio import blks2 as grc_blks2</import>
+	<make>grc_blks2.queue_sink_$(type.fcn)($vlen)
+grc_blks2.queue_sink_thread(self.$id, set_$(variable))</make>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:c</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:f</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:i</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:s</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>fcn:b</opt>
+		</option>
+	</param>
+	<param>
+		<name>Variable</name>
+		<key>variable</key>
+		<value></value>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$vlen &gt; 0</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<doc>
+Read samples from the input stream and write each sample to the variable.
+
+The variable must be the id of an existing variable block.
+	</doc>
+</block>

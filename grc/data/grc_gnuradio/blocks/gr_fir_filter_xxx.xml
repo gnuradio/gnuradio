@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Decimating FIR Filter
+###################################################
+ -->
+<block>
+	<name>Decimating FIR Filter</name>
+	<key>gr_fir_filter_xxx</key>
+	<import>from gnuradio import gr</import>
+	<import>from gnuradio.gr import firdes</import>
+	<make>gr.fir_filter_$(type)($decim, $taps)</make>
+	<callback>set_taps($taps)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex->Complex (Complex Taps)</name>
+			<key>ccc</key>
+			<opt>input:complex</opt>
+			<opt>output:complex</opt>
+			<opt>taps:complex_vector</opt>
+		</option>
+		<option>
+			<name>Complex->Complex (Real Taps)</name>
+			<key>ccf</key>
+			<opt>input:complex</opt>
+			<opt>output:complex</opt>
+			<opt>taps:real_vector</opt>
+		</option>
+		<option>
+			<name>Float->Complex (Complex Taps)</name>
+			<key>fcc</key>
+			<opt>input:float</opt>
+			<opt>output:complex</opt>
+			<opt>taps:complex_vector</opt>
+		</option>
+		<option>
+			<name>Float->Float (Real Taps)</name>
+			<key>fff</key>
+			<opt>input:float</opt>
+			<opt>output:float</opt>
+			<opt>taps:real_vector</opt>
+		</option>
+		<option>
+			<name>Float->Short (Real Taps)</name>
+			<key>fsf</key>
+			<opt>input:float</opt>
+			<opt>output:short</opt>
+			<opt>taps:real_vector</opt>
+		</option>
+		<option>
+			<name>Short->Complex (Complex Taps)</name>
+			<key>scc</key>
+			<opt>input:short</opt>
+			<opt>output:complex</opt>
+			<opt>taps:complex_vector</opt>
+		</option>
+	</param>
+	<param>
+		<name>Decimation</name>
+		<key>decim</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<type>$type.taps</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type.input</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type.output</type>
+	</source>
+</block>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Parameter block: a grc variable with key, value
+###################################################
+ -->
+<block>
+	<name>Parameter</name>
+	<key>parameter</key>
+	<make>$value</make>
+	<param>
+		<name>Label</name>
+		<key>label</key>
+		<value></value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Value</name>
+		<key>value</key>
+		<value>0</value>
+		<type>raw</type>
+	</param>
+	<doc>
+This block represents a parameter to the flow graph, \
+used when the flow graph is instantiated as a hier block.
+
+The paramater value cannot depend on any variables.
+
+Leave the label blank to use the parameter id as the label.
+	</doc>
+</block>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Simple Framer
+###################################################
+ -->
+<block>
+	<name>Simple Framer</name>
+	<key>gr_simple_framer</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.simple_framer($payload_bytesize)</make>
+	<param>
+		<name>Payload Byte Size</name>
+		<key>payload_bytesize</key>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

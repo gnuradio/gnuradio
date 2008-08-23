@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Stream to Vector Decimator
+###################################################
+ -->
+<block>
+	<name>Stream to Vec Decim</name>
+	<key>blks2_stream_to_vector_decimator</key>
+	<import>from gnuradio import blks2</import>
+	<make>blks2.stream_to_vector_decimator(
+	item_size=$type.size,
+	sample_rate=$sample_rate,
+	vec_rate=$vec_rate,
+	vec_len=$vlen,
+)</make>
+	<callback>set_sample_rate($sample_rate)</callback>
+	<callback>set_vec_rate($vec_rate)</callback>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:gr.sizeof_gr_complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>size:gr.sizeof_float</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>size:gr.sizeof_int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>size:gr.sizeof_short</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>size:gr.sizeof_char</opt>
+		</option>
+	</param>
+	<param>
+		<name>Sample Rate</name>
+		<key>sample_rate</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Vec Rate</name>
+		<key>vec_rate</key>
+		<value>30</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1024</value>
+		<type>int</type>
+	</param>
+	<check>$vlen &gt;= 1</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</source>
+</block>

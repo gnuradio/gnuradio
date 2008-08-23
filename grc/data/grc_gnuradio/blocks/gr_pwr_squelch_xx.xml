@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Power Squelch
+###################################################
+ -->
+<block>
+	<name>Power Squelch</name>
+	<key>gr_pwr_squelch_xx</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.pwr_squelch_$(type.fcn)($threshold, $alpha, $ramp, $gate)</make>
+	<callback>set_threshold($threshold)</callback>
+	<callback>set_alpha($alpha)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:cc</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:ff</opt>
+		</option>
+	</param>
+	<param>
+		<name>Threshold (dB)</name>
+		<key>threshold</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Ramp</name>
+		<key>ramp</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Gate</name>
+		<key>gate</key>
+		<type>enum</type>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+		</option>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+</block>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Float to Unsigned Char:
+###################################################
+ -->
+<block>
+	<name>Float To UChar</name>
+	<key>gr_float_to_uchar</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.float_to_uchar()</make>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

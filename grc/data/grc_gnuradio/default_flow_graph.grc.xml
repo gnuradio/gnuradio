@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Default Flow Graph:
+##	include an options block and a variable for sample rate
+###################################################
+ -->
+<flow_graph>
+	<block>
+		<key>options</key>
+		<param>
+			<key>id</key>
+			<value>top_block</value>
+		</param>
+		<param>
+			<key>_coordinate</key>
+			<value>(10, 10)</value>
+		</param>
+		<param>
+			<key>_rotation</key>
+			<value>0</value>
+		</param>
+	</block>
+	<block>
+		<key>variable</key>
+		<param>
+			<key>id</key>
+			<value>samp_rate</value>
+		</param>
+		<param>
+			<key>value</key>
+			<value>32000</value>
+		</param>
+		<param>
+			<key>_coordinate</key>
+			<value>(10, 170)</value>
+		</param>
+		<param>
+			<key>_rotation</key>
+			<value>0</value>
+		</param>
+	</block>
+</flow_graph>

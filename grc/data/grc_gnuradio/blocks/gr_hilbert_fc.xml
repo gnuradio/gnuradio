@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Hilbert
+###################################################
+ -->
+<block>
+	<name>Hilbert</name>
+	<key>gr_hilbert_fc</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.hilbert_fc($num_taps)</make>
+	<param>
+		<name>Num Taps</name>
+		<key>num_taps</key>
+		<value>64</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

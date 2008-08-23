@@ -1,0 +1,44 @@
+"""
+Copyright 2008 Free Software Foundation, Inc.
+This file is part of GNU Radio
+
+GNU Radio Companion is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+GNU Radio Companion is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+"""
+##@package grc_gnuradio.Constants
+#Global constants for grc gnuradio package
+#@author Josh Blum
+
+import os
+import sys
+import stat
+
+PYEXEC = '@PYTHONW@'
+
+#setup paths
+DOCS_DIR = os.path.join('@docdir@', 'xml')
+DATA_DIR = '@datadir@'
+BLOCKS_DIR = '@blocksdir@'
+HIER_BLOCKS_LIB_DIR = os.path.join(os.path.expanduser('~'), '.grc_gnuradio')
+
+#file creation modes
+TOP_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IXGRP | stat.S_IROTH
+HIER_BLOCK_FILE_MODE = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IWGRP | stat.S_IROTH
+
+#data files
+FLOW_GRAPH_TEMPLATE = os.path.join(DATA_DIR, 'flow_graph.tmpl')
+BLOCK_DTD = os.path.join(DATA_DIR, 'block.dtd')
+BLOCK_TREE = os.path.join(DATA_DIR, 'block_tree.xml')
+DEFAULT_FLOW_GRAPH = os.path.join(DATA_DIR, 'default_flow_graph.grc.xml')
+

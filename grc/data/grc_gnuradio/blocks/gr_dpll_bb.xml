@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Detect Peak
+###################################################
+ -->
+<block>
+	<name>Detect Peak</name>
+	<key>gr_dpll_bb</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.dpll_bb($period, $gain)</make>
+	<param>
+		<name>Period</name>
+		<key>period</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Gain</name>
+		<key>gain</key>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

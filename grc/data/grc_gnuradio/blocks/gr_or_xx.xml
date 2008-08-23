@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Logical Or Block
+###################################################
+ -->
+<block>
+	<name>Or</name>
+	<key>gr_or_xx</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.or_$(type.fcn)()</make>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:ii</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:ss</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>fcn:bb</opt>
+		</option>
+	</param>
+	<param>
+		<name>Num Inputs</name>
+		<key>num_inputs</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	<check>$num_inputs &gt;= 2</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<nports>$num_inputs</nports>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+</block>

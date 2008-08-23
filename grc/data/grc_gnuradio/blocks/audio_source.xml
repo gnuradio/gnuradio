@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Audio Source
+###################################################
+ -->
+<block>
+	<name>Audio Source</name>
+	<key>audio_source</key>
+	<import>from gnuradio import audio</import>
+	<make>audio.source($samp_rate, $device_name, $ok_to_block)</make>
+	<param>
+		<name>Sample Rate</name>
+		<key>samp_rate</key>
+		<value>32000</value>
+		<type>enum</type>
+		<option>
+			<name>16KHz</name>
+			<key>16000</key>
+		</option>
+		<option>
+			<name>22.05KHz</name>
+			<key>22050</key>
+		</option>
+		<option>
+			<name>24KHz</name>
+			<key>24000</key>
+		</option>
+		<option>
+			<name>32KHz</name>
+			<key>32000</key>
+		</option>
+		<option>
+			<name>44.1KHz</name>
+			<key>44100</key>
+		</option>
+		<option>
+			<name>48KHz</name>
+			<key>48000</key>
+		</option>
+	</param>
+	<param>
+		<name>Device Name</name>
+		<key>device_name</key>
+		<value></value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>OK to Block</name>
+		<key>ok_to_block</key>
+		<value>True</value>
+		<type>enum</type>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Num Outputs</name>
+		<key>num_outputs</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>0 &lt; $num_outputs</check>
+	<source>
+		<name>out</name>
+		<type>float</type>
+		<nports>$num_outputs</nports>
+	</source>
+	<doc>
+Not all sampling rates will be supported by your hardware.
+
+Leave the device name blank to choose deafult audio device. \
+Audio device names may look like hw:0,0
+
+The audio source can have multiple outputs depending upon your hardware. \
+For example, set the outputs to 2 for stereo audio.
+	</doc>
+</block>

@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##AGC
+###################################################
+ -->
+<block>
+	<name>AGC</name>
+	<key>gr_agc_xx</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.agc_$(type.fcn)($rate, $reference, $gain, $max_gain)</make>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:cc</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:ff</opt>
+		</option>
+	</param>
+	<param>
+		<name>Rate</name>
+		<key>rate</key>
+		<value>1e-4</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Reference</name>
+		<key>reference</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Gain</name>
+		<key>gain</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Max Gain</name>
+		<key>max_gain</key>
+		<value>0.0</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+	</source>
+</block>

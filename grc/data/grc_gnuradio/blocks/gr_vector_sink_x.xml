@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Vector sink
+###################################################
+ -->
+<block>
+	<name>Vector Sink</name>
+	<key>gr_vector_sink_x</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.vector_sink_$(type.fcn)()</make>
+	<param>
+		<name>Input Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:c</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:f</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>fcn:i</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>fcn:s</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>fcn:b</opt>
+		</option>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+</block>

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Wav File Sink
+###################################################
+ -->
+<block>
+	<name>Wav File Sink</name>
+	<key>gr_wavfile_sink</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.wavfile_sink($file, $nchan, $samp_rate, $bits_per_sample)</make>
+	<param>
+		<name>File</name>
+		<key>file</key>
+		<value></value>
+		<type>file_save</type>
+	</param>
+	<param>
+		<name>N Channels</name>
+		<key>nchan</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Sample Rate</name>
+		<key>samp_rate</key>
+		<value>samp_rate</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Bits per Sample</name>
+		<key>bits_per_sample</key>
+		<value>8</value>
+		<type>int</type>
+	</param>
+	<check>1 &lt;= $nchan</check>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+		<nports>$nchan</nports>
+	</sink>
+</block>

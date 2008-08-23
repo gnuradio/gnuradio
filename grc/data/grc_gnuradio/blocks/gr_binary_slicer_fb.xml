@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Binary Slicer
+###################################################
+ -->
+<block>
+	<name>Binary Slicer</name>
+	<key>gr_binary_slicer_fb</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.binary_slicer_fb()</make>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

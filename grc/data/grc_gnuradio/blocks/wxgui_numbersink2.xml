@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Number Sink
+###################################################
+ -->
+<block>
+	<name>Number Sink</name>
+	<key>wxgui_numbersink2</key>
+	<import>from gnuradio.wxgui import numbersink2</import>
+	<make>numbersink2.$(type.fcn)(
+	self.GetWin(),
+	unit=$units,
+	base_value=$base_value,
+	minval=$min_value,
+	maxval=$max_value,
+	factor=$factor,
+	decimal_places=$decimal_places,
+	ref_level=$ref_level,
+	sample_rate=$samp_rate,
+	number_rate=$number_rate,
+	average=$options.average,
+#if $avg_alpha.eval == 0
+	avg_alpha=None,
+#else
+	avg_alpha=$avg_alpha,
+#end if
+	label=$title,
+	peak_hold=$options.peak_hold,
+)
+self.$(id).set_show_gauge($show_gauge)
+#set $grid_pos = $grid_pos.eval
+#if not grid_pos
+self.Add(self.$(id).win)
+#else
+self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+#end if</make>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<value>complex</value>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:number_sink_c</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:number_sink_f</opt>
+		</option>
+	</param>
+	<param>
+		<name>Title</name>
+		<key>title</key>
+		<value>Number Plot</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Units</name>
+		<key>units</key>
+		<value>Units</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Sample Rate</name>
+		<key>samp_rate</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Base Value</name>
+		<key>base_value</key>
+		<value>0.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Min Value</name>
+		<key>min_value</key>
+		<value>-100</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Max Value</name>
+		<key>max_value</key>
+		<value>100</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Factor</name>
+		<key>factor</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Decimal Places</name>
+		<key>decimal_places</key>
+		<value>10</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Reference Level</name>
+		<key>ref_level</key>
+		<value>50</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Number Rate</name>
+		<key>number_rate</key>
+		<value>15</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Average Alpha</name>
+		<key>avg_alpha</key>
+		<value>0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Options</name>
+		<key>options</key>
+		<value>none</value>
+		<type>enum</type>
+		<option>
+			<name>None</name>
+			<key>none</key>
+			<opt>peak_hold:False</opt>
+			<opt>average:False</opt>
+		</option>
+		<option>
+			<name>Average</name>
+			<key>average</key>
+			<opt>peak_hold:False</opt>
+			<opt>average:True</opt>
+		</option>
+		<option>
+			<name>Peak Hold</name>
+			<key>peak_hold</key>
+			<opt>peak_hold:True</opt>
+			<opt>average:False</opt>
+		</option>
+	</param>
+	<param>
+		<name>Show Gauge</name>
+		<key>show_gauge</key>
+		<value>True</value>
+		<type>enum</type>
+		<option>
+			<name>Show</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Hide</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Grid Position</name>
+		<key>grid_pos</key>
+		<value></value>
+		<type>grid_pos</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<doc>
+Set Average Alpha to 0 for automatic setting.
+
+Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+	</doc>
+</block>

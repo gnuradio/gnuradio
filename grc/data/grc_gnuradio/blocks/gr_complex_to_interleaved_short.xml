@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Complex to Interleaved Short:
+###################################################
+ -->
+<block>
+	<name>Complex To IShort</name>
+	<key>gr_complex_to_interleaved_short</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.complex_to_interleaved_short()</make>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>short</type>
+	</source>
+</block>

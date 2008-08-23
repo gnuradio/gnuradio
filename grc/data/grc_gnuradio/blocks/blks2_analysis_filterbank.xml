@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Analysis Filterbank
+###################################################
+ -->
+<block>
+	<name>Analysis Filterbank</name>
+	<key>blks2_analysis_filterbank</key>
+	<import>from gnuradio import blks2</import>
+	<make>blks2.analysis_filterbank(mpoints=$mpoints, taps=$taps)</make>
+	<param>
+		<name>MPoints</name>
+		<key>mpoints</key>
+		<value>3</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<type>complex_vector</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+		<nports>$mpoints</nports>
+	</source>
+</block>

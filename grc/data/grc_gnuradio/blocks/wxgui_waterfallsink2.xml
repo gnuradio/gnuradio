@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Waterfall Sink
+###################################################
+ -->
+<block>
+	<name>Waterfall Sink</name>
+	<key>wxgui_waterfallsink2</key>
+	<import>from gnuradio.wxgui import waterfallsink2</import>
+	<make>waterfallsink2.$(type.fcn)(
+	self.GetWin(),
+	baseband_freq=$baseband_freq,
+	y_per_div=$y_per_div,
+	ref_level=$ref_level,
+	sample_rate=$samp_rate,
+	fft_size=$fft_size,
+	fft_rate=$fft_rate,
+	average=$options.average,
+#if $avg_alpha.eval == 0
+	avg_alpha=None,
+#else
+	avg_alpha=$avg_alpha,
+#end if
+	title=$title,
+)
+#set $grid_pos = $grid_pos.eval
+#if not grid_pos
+self.Add(self.$(id).win)
+#else
+self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+#end if</make>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<value>complex</value>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:waterfall_sink_c</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:waterfall_sink_f</opt>
+		</option>
+	</param>
+	<param>
+		<name>Title</name>
+		<key>title</key>
+		<value>Waterfall Plot</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Sample Rate</name>
+		<key>samp_rate</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Baseband Freq</name>
+		<key>baseband_freq</key>
+		<value>0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Y per Div</name>
+		<key>y_per_div</key>
+		<value>10</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Reference Level</name>
+		<key>ref_level</key>
+		<value>50</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>FFT Size</name>
+		<key>fft_size</key>
+		<value>512</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>FFT Rate</name>
+		<key>fft_rate</key>
+		<value>15</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Average Alpha</name>
+		<key>avg_alpha</key>
+		<value>0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Options</name>
+		<key>options</key>
+		<value>none</value>
+		<type>enum</type>
+		<option>
+			<name>None</name>
+			<key>none</key>
+			<opt>average:False</opt>
+		</option>
+		<option>
+			<name>Average</name>
+			<key>average</key>
+			<opt>average:True</opt>
+		</option>
+	</param>
+	<param>
+		<name>Grid Position</name>
+		<key>grid_pos</key>
+		<value></value>
+		<type>grid_pos</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<doc>
+Set Average Alpha to 0 for automatic setting.
+
+Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+	</doc>
+</block>

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##GMSK Demod
+###################################################
+ -->
+<block>
+	<name>GMSK Demod</name>
+	<key>blks2_gmsk_demod</key>
+	<import>from gnuradio import blks2</import>
+	<make>blks2.gmsk_demod(
+	samples_per_symbol=$samples_per_symbol,
+	gain_mu=$gain_mu,
+	mu=$mu,
+	omega_relative_limit=$omega_relative_limit,
+	freq_error=$freq_error,
+)</make>
+	<param>
+		<name>Samples/Symbol</name>
+		<key>samples_per_symbol</key>
+		<value>2</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Gain Mu</name>
+		<key>gain_mu</key>
+		<value>0.175</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Mu</name>
+		<key>mu</key>
+		<value>0.5</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Omega Relative Limit</name>
+		<key>omega_relative_limit</key>
+		<value>0.005</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Freq Error</name>
+		<key>freq_error</key>
+		<value>0.0</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

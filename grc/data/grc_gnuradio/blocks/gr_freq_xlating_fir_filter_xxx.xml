@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Frequency Xlating Filter
+###################################################
+ -->
+<block>
+	<name>Frequency Xlating FIR Filter</name>
+	<key>gr_freq_xlating_fir_filter_xxx</key>
+	<import>from gnuradio import gr</import>
+	<import>from gnuradio.gr import firdes</import>
+	<make>gr.freq_xlating_fir_filter_$(type)($decim, $taps, $center_freq, $samp_rate)</make>
+	<callback>set_taps($taps)</callback>
+	<callback>set_center_freq($center_freq)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex->Complex (Complex Taps)</name>
+			<key>ccc</key>
+			<opt>input:complex</opt>
+			<opt>output:complex</opt>
+			<opt>taps:complex_vector</opt>
+		</option>
+		<option>
+			<name>Complex->Complex (Real Taps)</name>
+			<key>ccf</key>
+			<opt>input:complex</opt>
+			<opt>output:complex</opt>
+			<opt>taps:real_vector</opt>
+		</option>
+		<option>
+			<name>Float->Complex (Complex Taps)</name>
+			<key>fcc</key>
+			<opt>input:float</opt>
+			<opt>output:complex</opt>
+			<opt>taps:complex_vector</opt>
+		</option>
+		<option>
+			<name>Float->Complex (Real Taps)</name>
+			<key>fcf</key>
+			<opt>input:float</opt>
+			<opt>output:complex</opt>
+			<opt>taps:real_vector</opt>
+		</option>
+		<option>
+			<name>Short->Complex (Complex Taps)</name>
+			<key>scc</key>
+			<opt>input:short</opt>
+			<opt>output:complex</opt>
+			<opt>taps:complex_vector</opt>
+		</option>
+		<option>
+			<name>Short->Complex (Real Taps)</name>
+			<key>scf</key>
+			<opt>input:short</opt>
+			<opt>output:complex</opt>
+			<opt>taps:real_vector</opt>
+		</option>
+	</param>
+	<param>
+		<name>Decimation</name>
+		<key>decim</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<type>$type.taps</type>
+	</param>
+	<param>
+		<name>Center Frequency</name>
+		<key>center_freq</key>
+		<value>0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Sample Rate</name>
+		<key>samp_rate</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type.input</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type.output</type>
+	</source>
+</block>

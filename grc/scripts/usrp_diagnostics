@@ -1,0 +1,121 @@
+#!/usr/bin/env python
+"""
+Copyright 2008 Free Software Foundation, Inc.
+This file is part of GNU Radio
+
+GNU Radio Companion is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+GNU Radio Companion is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+"""
+##@package Graphics.USRPDiagnostics
+#A dialog for querying USRP subdevices. USRP interfacing methods encapsulated here.
+#@author Josh Blum
+
+from gnuradio import usrp
+import os
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+from grc.gui.Dialogs import TextDisplay
+
+from grc_gnuradio.Platform import Platform
+platform = Platform(block_paths_internal_only=['usrp_diagnostics.xml'])
+
+from grc.gui.elements.Platform import Platform
+platform = Platform(platform)
+
+flow_graph = platform.get_new_flow_graph()
+block = flow_graph.get_new_block('usrp_diagnostics')
+
+##all params
+usrp_number_param = block.get_param('usrp_number')
+usrp_type_param = block.get_param('usrp_type')
+side_subdev_param = block.get_param('side_subdev')
+
+class USRPDiagnosticsWindow(gtk.Window):
+	"""
+	The main window for USRP Dignostics.
+	"""
+
+	def delete_event(self, widget, event, data=None): return False
+
+	def destroy(self, widget, data=None): gtk.main_quit()
+
+	def __init__(self):
+		"""
+		USRPDiagnosticsWindow contructor.
+		Create a new gtk Dialog with a close button, USRP input paramaters, and output labels.
+		"""
+		gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
+		#quit signals
+		self.connect("delete_event", self.delete_event)
+		self.connect("destroy", self.destroy)
+		#set the title
+		self.set_title('USRP Diagnostics')
+		#create decorative frame
+		frame = gtk.Frame()
+		self.add(frame)
+		#create vbox for storage
+		vbox = gtk.VBox()
+		frame.add(vbox)
+		vbox.pack_start(usrp_number_param.get_input_object(), False)
+		vbox.pack_start(usrp_type_param.get_input_object(), False)
+		vbox.pack_start(side_subdev_param.get_input_object(), False)
+		self.diagnose_button = gtk.Button('Query')
+		self.diagnose_button.connect('clicked', self._diagnose_usrp)
+		vbox.pack_start(self.diagnose_button, False)
+		#Create a text box for USRP queries
+		self.query_buffer = TextDisplay()
+		self.query_buffer.set_text('Press "Query" to retrieve USRP information...')
+		vbox.pack_start(self.query_buffer)
+		self.show_all()
+
+	def _diagnose_usrp(self, widget=None):
+		"""Query the USRP device and copy the results into the query text box."""
+		type = usrp_type_param.evaluate()
+		if type == 'rx':	#for the rx query, use the source and rx methods
+			make = usrp.source_c
+			get_mux = usrp.determine_rx_mux_value
+		elif type == 'tx':	#for the tx query, use the sink and tx methods
+			make = usrp.sink_c
+			get_mux = usrp.determine_tx_mux_value
+		try:
+			u = make(usrp_number_param.evaluate())
+			subdev_spec = eval(side_subdev_param.evaluate())
+			subdev = usrp.selected_subdev(u, subdev_spec)#get the subdev
+			msg = ">>> USRP Query\n"
+			msg = "%s\nName:\n\t%s\n"%(msg, str(subdev.name()))
+			msg = "%s\nAutomated Mux:\n\t0x%08x\n"%(msg, 0xFFFFFFFFL & long(get_mux(u, subdev_spec))) #ensure that the value is displayed as: 8 nibbles, unsigned, hex
+			msg = "%s\nConverter Rate:\n\t%s\n"%(msg, u.converter_rate())
+			msg = "%s\nUses Quadrature:\n\t%s\n"%(msg, str(subdev.is_quadrature()))
+			gain_min, gain_max, gain_step = subdev.gain_range()
+			msg = "%s\nGain Range (min, max, step size):\n\t%s\n\t%s\n\t%s\n"%(msg, gain_min, gain_max, gain_step)
+			freq_min, freq_max, freq_step = subdev.freq_range()
+			msg = "%s\nFreq Range (min, max, step size):\n\t%s\n\t%s\n\t%s\n"%(msg, freq_min, freq_max, freq_step)
+			self.query_buffer.set_text(msg)
+		except Exception, e:	#display the error message
+			self.query_buffer.set_text('''\
+>>> Error\n%s
+
+If the USRP cannot be found, make sure that the USRP is plugged-in and restart this program. \
+If the problem persists, there may be a problem with you gnuradio installation or USB 2.0.
+'''%str(e))
+
+#enter the mainloop
+gtk.gdk.threads_init()
+gtk.gdk.threads_enter()
+USRPDiagnosticsWindow()
+gtk.main()
+gtk.gdk.threads_leave()

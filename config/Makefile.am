@@ -47,6 +47,7 @@ m4macros = \
 	grc_gcell.m4 \
 	grc_gnuradio_core.m4 \
 	grc_gnuradio_examples.m4 \
+	grc_grc.m4 \
 	grc_gr_atsc.m4 \
 	grc_gr_audio_alsa.m4 \
 	grc_gr_audio_jack.m4 \

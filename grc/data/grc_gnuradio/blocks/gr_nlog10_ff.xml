@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Log10 Block:
+##	float in/ float out
+###################################################
+ -->
+<block>
+	<name>Log10</name>
+	<key>gr_nlog10_ff</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.nlog10_ff($n, $vlen, $k)</make>
+	<param>
+		<name>n</name>
+		<key>n</key>
+		<value>1</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>k</name>
+		<key>k</key>
+		<value>0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$vlen >= 1</check>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+		<vlen>$vlen</vlen>
+	</source>
+</block>

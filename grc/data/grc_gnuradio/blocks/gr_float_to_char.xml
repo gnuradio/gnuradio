@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Float to Char:
+###################################################
+ -->
+<block>
+	<name>Float To Char</name>
+	<key>gr_float_to_char</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.gr_float_to_char()</make>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

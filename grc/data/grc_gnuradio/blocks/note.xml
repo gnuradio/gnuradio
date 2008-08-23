@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Note Block (dummy)
+###################################################
+ -->
+<block>
+	<name>Note</name>
+	<key>note</key>
+	<make></make>
+	<param>
+		<name>Note</name>
+		<key>note</key>
+		<value></value>
+		<type>string</type>
+	</param>
+</block>

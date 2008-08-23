@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Multiply Const Block:
+##	all types, 1 output, 1 input & const
+###################################################
+ -->
+<block>
+	<name>Multiply Const</name>
+	<key>gr_multiply_const_vxx</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.multiply_const_v$(type.fcn)($const)</make>
+	<callback>set_k($const)</callback>
+	<param>
+		<name>IO Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>const_type:complex_vector</opt>
+			<opt>fcn:cc</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>const_type:real_vector</opt>
+			<opt>fcn:ff</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>const_type:int_vector</opt>
+			<opt>fcn:ii</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>const_type:int_vector</opt>
+			<opt>fcn:ss</opt>
+		</option>
+	</param>
+	<param>
+		<name>Constant</name>
+		<key>const</key>
+		<value>0</value>
+		<type>$type.const_type</type>
+	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>len($const) == $vlen</check>
+	<check>$vlen &gt; 0</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</source>
+</block>

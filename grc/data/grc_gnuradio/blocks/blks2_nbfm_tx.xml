@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##NBFM Transmit
+###################################################
+ -->
+<block>
+	<name>NBFM Transmit</name>
+	<key>blks2_nbfm_tx</key>
+	<import>from gnuradio import blks2</import>
+	<make>blks2.nbfm_tx(
+	audio_rate=$audio_rate,
+	quad_rate=$quad_rate,
+	tau=$tau,
+	max_dev=$max_dev,
+)</make>
+	<param>
+		<name>Audio Rate</name>
+		<key>audio_rate</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Quadrature Rate</name>
+		<key>quad_rate</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Tau</name>
+		<key>tau</key>
+		<value>75e-6</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Max Deviation</name>
+		<key>max_dev</key>
+		<value>5e3</value>
+		<type>real</type>
+	</param>
+	<check>$quad_rate%$audio_rate == 0</check>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

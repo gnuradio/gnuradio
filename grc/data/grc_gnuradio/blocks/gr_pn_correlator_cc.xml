@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##PN Correlator
+###################################################
+ -->
+<block>
+	<name>PN Correlator</name>
+	<key>gr_pn_correlator_cc</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.pn_correlator_cc($degree, $mask, $seed)</make>
+	<param>
+		<name>Degree</name>
+		<key>degree</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Mask</name>
+		<key>mask</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Seed</name>
+		<key>seed</key>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

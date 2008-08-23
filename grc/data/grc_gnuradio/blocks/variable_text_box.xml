@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Variable Text Box: a grc variable with key, value
+###################################################
+ -->
+<block>
+	<name>Variable Text Box</name>
+	<key>variable_text_box</key>
+	<make>$value
+_$(id)_control = grc_wxgui.text_box_control(
+	window=self.GetWin(),
+	callback=self.set_$(id),
+		#if $label.eval
+	label=$label,
+		#else
+	label=&quot;$id&quot;,
+		#end if
+	value=$id,
+)
+#set $grid_pos = $grid_pos.eval
+#if not grid_pos
+self.Add(_$(id)_control)
+#else
+self.GridAdd(_$(id)_control, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+#end if</make>
+	<param>
+		<name>Label</name>
+		<key>label</key>
+		<value></value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Default Value</name>
+		<key>value</key>
+		<value>0</value>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Grid Position</name>
+		<key>grid_pos</key>
+		<value></value>
+		<type>grid_pos</type>
+	</param>
+	<doc>
+This block creates a variable with a text box. \
+Leave the label blank to use the variable id as the label.
+
+Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+	</doc>
+</block>

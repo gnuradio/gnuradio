@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Differential Encoder
+###################################################
+ -->
+<block>
+	<name>Differential Encoder</name>
+	<key>gr_diff_encoder_bb</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.diff_encoder_bb($modulus)</make>
+	<param>
+		<name>Modulus</name>
+		<key>modulus</key>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##GMSK Mod
+###################################################
+ -->
+<block>
+	<name>GMSK Mod</name>
+	<key>blks2_gmsk_mod</key>
+	<import>from gnuradio import blks2</import>
+	<make>blks2.gmsk_mod(
+	samples_per_symbol=$samples_per_symbol,
+	bt=$bt,
+)</make>
+	<param>
+		<name>Samples/Symbol</name>
+		<key>samples_per_symbol</key>
+		<value>2</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>BT</name>
+		<key>bt</key>
+		<value>0.35</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>

@@ -1,0 +1,154 @@
+"""
+Copyright 2007 Free Software Foundation, Inc.
+This file is part of GNU Radio
+
+GNU Radio Companion is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+GNU Radio Companion is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+"""
+##@package grc.gui.BlockTreeWindow
+#The block selection panel gives the user a tree selection to choose a block.
+#@author Josh Blum
+
+from grc.Constants import *
+import pygtk
+pygtk.require('2.0')
+import gtk
+import gobject
+
+NAME_INDEX = 0
+KEY_INDEX = 1
+
+class BlockTreeWindow(gtk.VBox):
+	"""The block selection panel."""
+
+	def __init__(self, platform, get_flow_graph):
+		"""!
+		BlockTreeWindow constructor.
+		Create a tree view of the possible blocks in the platform.
+		The tree view nodes will be category names, the leaves will be block names.
+		A mouse double click or button press action will trigger the add block event.
+		@param platform the particular platform will all block prototypes
+		@param get_flow_graph get the selected flow graph
+		"""
+		gtk.VBox.__init__(self)
+		self.platform = platform
+		self.get_flow_graph = get_flow_graph
+		#make the tree model for holding blocks
+		self.treestore = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+		self.treeview = gtk.TreeView(self.treestore)
+		self.treeview.set_enable_search(False) #disable pop up search box
+		self.treeview.add_events(gtk.gdk.BUTTON_PRESS_MASK)
+		self.treeview.connect('button_press_event', self._handle_mouse_button_press)
+		selection = self.treeview.get_selection()
+		selection.set_mode('single')
+		selection.connect('changed', self._handle_selection_change)
+		renderer = gtk.CellRendererText()
+		column = gtk.TreeViewColumn('Blocks', renderer, text=NAME_INDEX)
+		self.treeview.append_column(column)
+		#make the scrolled window to hold the tree view
+		scrolled_window = gtk.ScrolledWindow()
+		scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		scrolled_window.add_with_viewport(self.treeview)
+		scrolled_window.set_size_request(BLOCK_SELECTION_WINDOW_WIDTH, -1)
+		self.pack_start(scrolled_window)
+		#add button
+		self.add_button = gtk.Button(None, 'gtk-add')
+		self.add_button.connect('clicked', self._handle_add_button)
+		self.pack_start(self.add_button, False)
+		#map categories to iters
+		self.categories = dict()
+		self.categories[tuple()] = None
+		#add blocks and categories
+		self.platform.load_block_tree(self)
+		#initialize
+		self._update_add_button()
+
+	############################################################
+	## Block Tree Methods
+	############################################################
+	def add_block(self, category, block=None):
+		"""!
+		Add a block with category to this selection window.
+		Add only the category when block is None.
+		@param category the category string
+		@param block the block object or None
+		"""
+		#rectify category
+		category = filter(lambda x: x, category.split('/'))
+		#add category and all sub categories
+		for i in range(len(category)):
+			sub_category = tuple(category[:i+1])
+			if sub_category not in self.categories.keys():
+				iter = self.treestore.insert_before(self.categories[tuple(category[:i])], None)
+				self.treestore.set_value(iter, NAME_INDEX, '[ %s ]'%category[i])
+				self.treestore.set_value(iter, KEY_INDEX, '')
+				self.categories[sub_category] = iter
+		#add block
+		if block is None: return
+		iter = self.treestore.insert_before(self.categories[tuple(category)], None)
+		self.treestore.set_value(iter, NAME_INDEX, block.get_name())
+		self.treestore.set_value(iter, KEY_INDEX, block.get_key())
+
+	############################################################
+	## Helper Methods
+	############################################################
+	def _get_selected_block_key(self):
+		"""!
+		Get the currently selected block key.
+		@return the key of the selected block or a empty string
+		"""
+		selection = self.treeview.get_selection()
+		treestore, iter = selection.get_selected()
+		return iter and treestore.get_value(iter, KEY_INDEX) or ''
+
+	def _update_add_button(self):
+		"""!
+		Update the add button's sensitivity.
+		The button should be active only if a block is selected.
+		"""
+		key = self._get_selected_block_key()
+		self.add_button.set_sensitive(bool(key))
+
+	def _add_selected_block(self):
+		"""!
+		Add the selected block with the given key to the flow graph.
+		"""
+		key = self._get_selected_block_key()
+		if key: self.get_flow_graph().add_new_block(key)
+
+	############################################################
+	## Event Handlers
+	############################################################
+	def _handle_mouse_button_press(self, widget, event):
+		"""!
+		Handle the mouse button press.
+		If a left double click is detected, call add selected block.
+		"""
+		if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+			self._add_selected_block()
+
+	def _handle_selection_change(self, selection):
+		"""!
+		Handle a selection change in the tree view.
+		If a selection changes, set the add button sensitive.
+		"""
+		self._update_add_button()
+
+	def _handle_add_button(self, widget):
+		"""!
+		Handle the add button clicked signal.
+		Call add selected block.
+		"""
+		self._add_selected_block()
+

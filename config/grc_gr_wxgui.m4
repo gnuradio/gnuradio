@@ -19,7 +19,6 @@ dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([GRC_GR_WXGUI],[
     GRC_ENABLE(gr-wxgui)
-
     GRC_WITH(gr-wxgui)
 
     dnl Don't do gr-wxgui if gnuradio-core skipped
@@ -30,8 +29,12 @@ AC_DEFUN([GRC_GR_WXGUI],[
     dnl   yes  : if the --enable code passed muster and all dependencies are met
     dnl   no   : otherwise
     if test $passed = yes; then
-        dnl Don't do gr-wxgui if wxPython is not available
         if ! ${PYTHON} -c 'import wx'; then
+            AC_MSG_RESULT([gr-wxgui requires wxPython, not found.])
+            passed=no
+        fi
+        if ! ${PYTHON} -c 'import numpy'; then
+            AC_MSG_RESULT([gr-wxgui requires numpy (Numeric Python), not found.])
             passed=no
         fi
     fi

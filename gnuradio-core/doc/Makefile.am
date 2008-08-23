@@ -23,7 +23,6 @@ include $(top_srcdir)/Makefile.common
 
 SUBDIRS = other xml
 
-man3dir = $(mandir)/man3
 docdir  = $(prefix)/share/doc/@PACKAGE@-@VERSION@
 
 EXTRA_DIST = 
@@ -38,20 +37,6 @@ html/index.html:
 prep:
 	mkdir -p html
 
-#install-data-local:
-#	$(mkinstalldirs) $(DESTDIR)$(man3dir)
-#	@for i in ./man/man3/*.3; do \
-#		inst=`basename $$i | sed 's/_/:/g'`; \
-#		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(man3dir)/$$inst"; \
-#		$(INSTALL_DATA) $$i $(DESTDIR)$(man3dir)/$$inst; \
-#	done
-#	$(mkinstalldirs) $(DESTDIR)$(docdir)
-##	@for i in ../README ../ChangeLog @PACKAGE@.ps @PACKAGE@.pdf; do \
-##		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(docdir)"; \
-##		$(INSTALL_DATA) $$i $(DESTDIR)$(docdir); \
-##	done
-#	cp -r html $(docdir)
-
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(docdir)
 	@for i in $(top_srcdir)/README $(top_srcdir)/README.hacking; do \
@@ -59,6 +44,7 @@ install-data-local:
 		$(INSTALL_DATA) $$i $(DESTDIR)$(docdir); \
 	done
 	cp -r html $(DESTDIR)$(docdir)
+	cp -r xml $(DESTDIR)$(docdir)
 
 uninstall-local:
 	@for i in README README.hacking; do \
@@ -66,6 +52,7 @@ uninstall-local:
 		$(RM) $(DESTDIR)$(docdir)/$$i; \
 	done
 	$(RM) -fr $(DESTDIR)$(docdir)/html
+	$(RM) -fr $(DESTDIR)$(docdir)/xml
 
 clean-local:
 	$(RM) -fr latex html man

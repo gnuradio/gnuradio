@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Short to Float:
+###################################################
+ -->
+<block>
+	<name>Short To Float</name>
+	<key>gr_short_to_float</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.short_to_float()</make>
+	<sink>
+		<name>in</name>
+		<type>short</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
+</block>
