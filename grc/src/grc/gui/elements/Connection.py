@@ -113,26 +113,21 @@ class Connection(Element):
 
 		#add the horizontal and vertical lines in this connection
 		if abs(source.get_connector_direction() - sink.get_connector_direction()) == 180:
-			W = abs(x1 - x2)
-			H = abs(y1 - y2)
-			midX = (x1+x2)/2
-			midY = (y1+y2)/2
-			sW = x1 - x2
-			if source.get_connector_direction() == 0: sW = sW * -1
-			sH = y1 - y2
-			if source.get_connector_direction() == 270: sH = sH * -1
-			if ((W>H or sW<0) and self.is_horizontal(source.get_connector_direction())) or \
-				(W>=H and sH>=0 and self.is_vertical(source.get_connector_direction())):
-				self.add_line((x1,y1),(x1,midY))
-				self.add_line((x1,midY),(x2,midY))
-				self.add_line((x2,y2),(x2,midY))
-			elif (H>=W and sW>=0 and self.is_horizontal(source.get_connector_direction())) or \
-				((H>W or sH<0) and self.is_vertical(source.get_connector_direction())):
-				self.add_line((x1,y1),(midX,y1))
-				self.add_line((midX,y1),(midX,y2))
-				self.add_line((x2,y2),(midX,y2))
+			#2 possible point sets to create a 3-line connector
+			mid_x, mid_y = (x1 + x2)/2, (y1 + y2)/2
+			points = [((mid_x, y1), (mid_x, y2)), ((x1, mid_y), (x2, mid_y))]
+			#source connector -> points[0][0] should be in the direction of source (if possible)
+			if Utils.get_angle_from_coordinates((x1, y1), points[0][0]) != source.get_connector_direction(): points.reverse()
+			#points[0][0] -> sink connector should not be in the direction of sink
+			if Utils.get_angle_from_coordinates(points[0][0], (x2, y2)) == sink.get_connector_direction(): points.reverse()
+			#points[0][0] -> source connector should not be in the direction of source
+			if Utils.get_angle_from_coordinates(points[0][0], (x1, y1)) == source.get_connector_direction(): points.reverse()
+			#create 3-line connector
+			self.add_line((x1, y1), points[0][0])
+			self.add_line(points[0][0], points[0][1])
+			self.add_line((x2, y2), points[0][1])
 		else:
-			#2 possible points to create a right-angled bend between the connectors
+			#2 possible points to create a right-angled connector
 			points = [(x1, y2), (x2, y1)]
 			#source connector -> points[0] should be in the direction of source (if possible)
 			if Utils.get_angle_from_coordinates((x1, y1), points[0]) != source.get_connector_direction(): points.reverse()
