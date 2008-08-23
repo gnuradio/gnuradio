@@ -230,6 +230,7 @@ libfilter_qa_la_common_SOURCES = 	\
 	qa_gr_fir_fff.cc		\
 	qa_gr_fir_ccc.cc		\
 	qa_gr_fir_scc.cc		\
+	qa_gr_rotator.cc		\
 	qa_gri_mmse_fir_interpolator.cc	\
 	qa_gri_mmse_fir_interpolator_cc.cc	
 
@@ -317,6 +318,7 @@ noinst_HEADERS = 			\
 	qa_gr_fir_fff.h			\
 	qa_gr_fir_ccc.h			\
 	qa_gr_fir_scc.h			\
+	qa_gr_rotator.h			\
 	qa_gri_mmse_fir_interpolator.h	\
 	qa_gri_mmse_fir_interpolator_cc.h	
 

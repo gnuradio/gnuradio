@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003 Free Software Foundation, Inc.
+ * Copyright 2003,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,21 +28,24 @@
 class gr_rotator {
   gr_complex	d_phase;
   gr_complex	d_phase_incr;
+  unsigned int	d_counter;
 
  public:
-  gr_rotator () : d_phase (1), d_phase_incr (0) { }
+  gr_rotator () : d_phase (1), d_phase_incr (1), d_counter(0) { }
 
-  void set_phase (gr_complex phase)     { d_phase = phase; }
-  void set_phase_incr (gr_complex incr) { d_phase_incr = incr; }
+  void set_phase (gr_complex phase)     { d_phase = phase / abs(phase); }
+  void set_phase_incr (gr_complex incr) { d_phase_incr = incr / abs(incr); }
 
   gr_complex rotate (gr_complex in){
-    d_phase *= d_phase_incr;	// incr our phase (complex mult == add phases)
+    d_counter++;
 
-    d_phase /= abs(d_phase);	// ensure multiplication is rotation
-				// FIXME.  This is expensive.  Maybe workaround using
-				// double precision complex???
+    gr_complex z = in * d_phase;    // rotate in by phase
+    d_phase *= d_phase_incr;	    // incr our phase (complex mult == add phases)
 
-    return in * d_phase;	// rotate in by phase
+    if ((d_counter % 512) == 0)
+      d_phase /= abs(d_phase);	    // Normalize to ensure multiplication is rotation
+
+    return z;
   }
 
 };
