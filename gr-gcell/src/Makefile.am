@@ -93,6 +93,7 @@ _gcell_la_LIBADD = \
 
 _gcell_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
+_gcell_la_CXXFLAGS = @swig_CXXFLAGS@
 
 swiginclude_HEADERS = \
 	$(LOCAL_IFILES)

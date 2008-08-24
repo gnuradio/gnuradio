@@ -77,6 +77,8 @@ _audio_windows_la_LIBADD = 		\
 _audio_windows_la_LDFLAGS = -no-undefined -module -avoid-version \
 			     $(LIBGNURADIO_CORE_EXTRA_LDFLAGS)
 
+_audio_windows_la_CXXFLAGS = @swig_CXXFLAGS@
+
 audio_windows.cc audio_windows.py: $(LOCAL_IFILES)
 	$(SWIG) $(SWIGCPPPYTHONARGS) -module audio_windows -o audio_windows.cc $(LOCAL_IFILES)
 

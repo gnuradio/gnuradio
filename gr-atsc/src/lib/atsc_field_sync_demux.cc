@@ -52,8 +52,8 @@ atsc_field_sync_demux::atsc_field_sync_demux()
 		  gr_make_io_signature(2, 2, sizeof(float)),
 		  gr_make_io_signature(1, 1, sizeof(atsc_soft_data_segment))),
 		  d_locked(false), d_in_field2(true), d_segment_number(0),
-		  d_next_input(0), d_lost_index(0), d_inputs0_size(0),
-		  d_inputs0_index(0), d_consume(0)
+		  d_next_input(0), d_lost_index(0), d_inputs0_index(0), 
+                  d_inputs0_size(0), d_consume(0)
 {
   reset();
 }
@@ -102,7 +102,7 @@ atsc_field_sync_demux::work (int noutput_items,
 
   assert(sizeof(float) == sizeof(atsc::syminfo));
 
-  int  ii = 0;         // input index
+  unsigned int  ii = 0;         // input index
 
   // Are we in sync?
   if (!tag_is_seg_sync_or_field_sync (input_tags[0])){      // No ...
@@ -155,7 +155,7 @@ atsc_field_sync_demux::work (int noutput_items,
 
   while (k < noutput_items){
 
-    if (d_inputs0_size - ii <  ATSC_DATA_SEGMENT_LENGTH){
+    if (d_inputs0_size - ii <  static_cast<unsigned int>(ATSC_DATA_SEGMENT_LENGTH)){
       // We're out of input data.
       cerr << "atsc_field_sync_demux: ran out of input data\n";
       d_next_input += ii;       // update for forecast

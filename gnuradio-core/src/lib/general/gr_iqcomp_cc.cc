@@ -40,7 +40,8 @@ gr_iqcomp_cc::gr_iqcomp_cc (float mu)
 		   gr_make_io_signature (1, 1, sizeof (gr_complex))),
     d_mu (mu)
 {
-  float d_wi=0.0, d_wq=0.0;
+  d_wi=0.0;
+  d_wq=0.0;
 }
 
 int
@@ -49,7 +50,7 @@ gr_iqcomp_cc::work (int noutput_items,
 		   gr_vector_void_star &output_items)
 {
   const gr_complex *iptr = (gr_complex *) input_items[0];
-  gr_complex *optr = (gr_complex *) output_items[0];
+  // gr_complex *optr = (gr_complex *) output_items[0];
 
   for(int i = 0 ; i < noutput_items ; i++) {
     float i_out = iptr[i].real() - iptr[i].imag() * d_wq;

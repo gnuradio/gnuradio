@@ -38,7 +38,7 @@ static const int	NFBTAPS = 192;
 // the length of the field sync pattern that we know unequivocally
 static const int KNOWN_FIELD_SYNC_LENGTH = 4 + 511 + 3 * 63;
 
-static const float *get_data_seg_sync_training_sequence (int offset);
+// static const float *get_data_seg_sync_training_sequence (int offset);
 static int          get_field_sync_training_sequence_length (int offset);
 static const float *get_field_sync_training_sequence (int which_field, int offset);
 
@@ -339,13 +339,14 @@ init_field_sync_common (float *p, int mask)
   assert (i == KNOWN_FIELD_SYNC_LENGTH);
 }
 
-
+#if 0
 static const float *
 get_data_seg_sync_training_sequence (int offset)
 {
   static const float training_data[4] = { +5, -5, -5, +5 };
   return &training_data[offset];
 }
+#endif
 
 static int    
 get_field_sync_training_sequence_length (int offset)

@@ -51,7 +51,7 @@ atsc_depad::work (int noutput_items,
   const atsc_mpeg_packet *in = (const atsc_mpeg_packet *) input_items[0];
   unsigned char *out = (unsigned char *) output_items[0];
 
-  unsigned int i;
+  int i;
 
   for (i = 0; i < noutput_items/ATSC_MPEG_PKT_LENGTH; i++){
     memcpy(&out[i * ATSC_MPEG_PKT_LENGTH], in[i].data, ATSC_MPEG_PKT_LENGTH);

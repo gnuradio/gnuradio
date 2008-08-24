@@ -151,18 +151,20 @@ void gr_ofdm_qam_mapper::make_constellation()
   d_constellation_map[15] = gr_complex(3, 3);
 
   coeff = sqrt(31.0)/2.0;
-  for(i = 0; i < d_constellation_map.size(); i++) {
+  for(i = 0; i < static_cast<int>(d_constellation_map.size()); i++) {
     d_constellation_map[i] /= coeff;
     printf("const[%d]: %f + j%f\n", i, d_constellation_map[i].real(), d_constellation_map[i].imag());
   }
 }
 
+#if 0
 static float
 randombit()
 {
   int r = rand()&1;
   return (float)(-1 + 2*r);
 }
+#endif
 
 int
 gr_ofdm_qam_mapper::work(int noutput_items,

@@ -143,6 +143,8 @@ _trellis_la_LIBADD = 			\
 	$(GNURADIO_CORE_LA)		\
 	-lstdc++
 
+_trellis_la_CXXFLAGS = @swig_CXXFLAGS@
+
 trellis.cc trellis.py: $(ALL_IFILES) $(grinclude_HEADERS)
 	$(SWIG) $(SWIGPYTHONARGS) -module trellis -o trellis.cc $(LOCAL_IFILES)
 

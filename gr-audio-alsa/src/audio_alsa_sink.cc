@@ -138,7 +138,8 @@ audio_alsa_sink::audio_alsa_sink (int sampling_rate,
   // Specify the access methods we implement
   // For now, we only handle RW_INTERLEAVED...
   snd_pcm_access_mask_t *access_mask;
-  snd_pcm_access_mask_alloca (&access_mask);
+  snd_pcm_access_mask_t **access_mask_ptr = &access_mask; // FIXME: workaround for compiler warning
+  snd_pcm_access_mask_alloca (access_mask_ptr);
   snd_pcm_access_mask_none (access_mask);
   snd_pcm_access_mask_set (access_mask, SND_PCM_ACCESS_RW_INTERLEAVED);
   // snd_pcm_access_mask_set (access_mask, SND_PCM_ACCESS_RW_NONINTERLEAVED);

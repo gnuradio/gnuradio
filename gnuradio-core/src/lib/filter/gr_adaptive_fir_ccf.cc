@@ -27,7 +27,7 @@
 #include <gr_adaptive_fir_ccf.h>
 #include <gr_io_signature.h>
 
-gr_adaptive_fir_ccf::gr_adaptive_fir_ccf(char *name, int decimation, const std::vector<float> &taps)
+gr_adaptive_fir_ccf::gr_adaptive_fir_ccf(const char *name, int decimation, const std::vector<float> &taps)
   : gr_sync_decimator (name,
 		       gr_make_io_signature (1, 1, sizeof(gr_complex)),
 		       gr_make_io_signature (1, 1, sizeof(gr_complex)),

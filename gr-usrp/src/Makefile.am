@@ -108,6 +108,7 @@ _usrp1_la_LIBADD = 			\
 
 _usrp1_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
+_usrp1_la_CXXFLAGS = @swig_CXXFLAGS@
 
 usrp1.cc usrp1.py: usrp1.i $(NON_LOCAL_IFILES) $(LOCAL_IFILES)
 	$(SWIG) $(SWIGPYTHONARGS) -module usrp1 -o usrp1.cc $(LOCAL_IFILES)

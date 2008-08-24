@@ -80,6 +80,8 @@ _audio_jack_la_LIBADD = 		\
 
 _audio_jack_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
+_audio_jack_la_CXXFLAGS = @swig_CXXFLAGS@
+
 audio_jack.cc audio_jack.py: $(LOCAL_IFILES) $(NON_LOCAL_IFILES)
 	$(SWIG) $(SWIGPYTHONARGS) -module audio_jack -o audio_jack.cc $(LOCAL_IFILES)
 

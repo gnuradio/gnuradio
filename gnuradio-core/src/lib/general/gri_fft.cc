@@ -37,7 +37,7 @@ static boost::mutex  s_planning_mutex;
 static char *
 wisdom_filename ()
 {
-  static char *filename = ".gr_fftw_wisdom";
+  static const char *filename = ".gr_fftw_wisdom";
 
   char	*home = getenv ("HOME");
   if (home){

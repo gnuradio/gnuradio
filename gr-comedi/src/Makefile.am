@@ -82,6 +82,8 @@ _comedi_la_LIBADD = 		\
 
 _comedi_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
+_comedi_la_CXXFLAGS = @swig_CXXFLAGS@
+
 comedi.cc comedi.py: $(LOCAL_IFILES)
 	$(SWIG) $(SWIGCPPPYTHONARGS) -module comedi -o comedi.cc $(LOCAL_IFILES)
 

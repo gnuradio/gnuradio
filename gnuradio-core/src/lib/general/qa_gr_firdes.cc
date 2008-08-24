@@ -33,6 +33,7 @@
 
 using std::vector;
 
+#if 0
 static void
 print_taps (std::ostream &s, vector<float> &v)
 {
@@ -41,6 +42,7 @@ print_taps (std::ostream &s, vector<float> &v)
     printf ("tap[%2d] = %16.7e\n", i, v[i]);
   }
 }
+#endif
 
 static void
 check_symmetry (vector<float> &v)

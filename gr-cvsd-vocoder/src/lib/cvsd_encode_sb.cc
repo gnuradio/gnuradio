@@ -63,12 +63,8 @@ cvsd_encode_sb::cvsd_encode_sb (short min_step, short max_step, double step_deca
     d_stepsize(min_step)
 
 {
-  assert(d_pos_accum_max <= SHRT_MAX);
-  assert(d_neg_accum_max >= -SHRT_MAX);
   assert(d_K <= 32);
   assert(d_J <= d_K);
-
-  // nothing else required in this example
 }
 
 

@@ -73,6 +73,8 @@ _cvsd_vocoder_la_LIBADD = 	\
 	$(GNURADIO_CORE_LA)	\
 	-lstdc++			
 
+_cvsd_vocoder_la_CXXFLAGS = @swig_CXXFLAGS@
+
 cvsd_vocoder.cc cvsd_vocoder.py: cvsd_vocoder.i $(ALL_IFILES)
 	$(SWIG) $(SWIGPYTHONARGS) -module cvsd_vocoder -o cvsd_vocoder.cc $(LOCAL_IFILES)
 

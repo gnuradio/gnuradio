@@ -46,7 +46,7 @@ protected:
   virtual void update_tap(float &tap, const gr_complex &in) = 0;
   
 public:
-  gr_adaptive_fir_ccf(char *name, int decimation, const std::vector<float> &taps);
+  gr_adaptive_fir_ccf(const char *name, int decimation, const std::vector<float> &taps);
   void set_taps(const std::vector<float> &taps);
 
   int work(int noutput_items,

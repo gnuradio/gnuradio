@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-static char *std_paths[] = {
+static const char *std_paths[] = {
   "@prefix@/share/usrp",
   "/usr/local/share/usrp",
   0

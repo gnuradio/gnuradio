@@ -81,6 +81,8 @@ _audio_portaudio_la_LIBADD = 		\
 
 _audio_portaudio_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
+_audio_portaudio_la_CXXFLAGS = @swig_CXXFLAGS@
+
 audio_portaudio.cc audio_portaudio.py: $(ALL_IFILES) audio_portaudio_sink.h audio_portaudio_source.h
 	$(SWIG) $(SWIGPYTHONARGS) -module audio_portaudio -o audio_portaudio.cc $(LOCAL_IFILES)
 

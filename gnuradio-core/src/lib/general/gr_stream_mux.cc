@@ -86,7 +86,7 @@ gr_stream_mux::general_work(int noutput_items,
     if(VERBOSE) {
       printf("mux: nouput_items: %d   d_stream: %d\n", noutput_items, d_stream);
       for(size_t i = 0; i < d_lengths.size(); i++)
-	printf("\tninput_items[%d]: %d\n", i, ninput_items[i]);
+	printf("\tninput_items[%zu]: %d\n", i, ninput_items[i]);
     }
 
     while (1) {

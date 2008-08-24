@@ -79,6 +79,8 @@ _audio_osx_la_LIBADD = 			\
 
 _audio_osx_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version -framework AudioUnit -framework CoreAudio -framework AudioToolbox
 
+_audio_osx_la_CXXFLAGS = @swig_CXXFLAGS@
+
 audio_osx.cc audio_osx.py: $(ALL_IFILES)
 	$(SWIG) $(SWIGCPPPYTHONARGS) -module audio_osx -o audio_osx.cc $(LOCAL_IFILES)
 

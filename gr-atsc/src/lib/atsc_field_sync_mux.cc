@@ -162,7 +162,7 @@ atsc_field_sync_mux::work (int noutput_items,
   atsc_data_segment *out = (atsc_data_segment *) output_items[0];
 
   unsigned int index = 0;
-  for (unsigned int outdex = 0; outdex < noutput_items; outdex++){
+  for (int outdex = 0; outdex < noutput_items; outdex++){
 
     assert (in[index].pli.regular_seg_p ());
 

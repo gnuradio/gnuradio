@@ -69,6 +69,7 @@ noinst_HEADERS =
 _usrp_prims_la_LIBADD  = $(USRP_LA) -lstdc++ $(PYTHON_LDFLAGS)
 _usrp_prims_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
+_usrp_prims_la_CXXFLAGS = @swig_CXXFLAGS@
 
 prims.cc usrp_prims.py : prims.i ../../firmware/include/fpga_regs_common.h ../../firmware/include/fpga_regs_standard.h
 	$(SWIG) $(SWIGPYTHONARGS) -module usrp_prims -o prims.cc prims.i

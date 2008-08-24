@@ -66,6 +66,7 @@ gr_fft_filter_ccc::~gr_fft_filter_ccc ()
   delete d_invfft;
 }
 
+#if 0
 static void 
 print_vector_complex(const std::string label, const std::vector<gr_complex> &x)
 {
@@ -74,6 +75,7 @@ print_vector_complex(const std::string label, const std::vector<gr_complex> &x)
     std::cout << x[i] << " ";
   std::cout << "\n";
 }
+#endif
 
 void
 gr_fft_filter_ccc::set_taps (const std::vector<gr_complex> &taps)

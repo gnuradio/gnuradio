@@ -75,6 +75,8 @@ _audio_oss_la_LIBADD = 			\
 
 _audio_oss_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
+_audio_oss_la_CXXFLAGS = @swig_CXXFLAGS@
+
 audio_oss.cc audio_oss.py: $(LOCAL_IFILES) $(NON_LOCAL_IFILES)
 	$(SWIG) $(SWIGPYTHONARGS) -module audio_oss -o audio_oss.cc $(LOCAL_IFILES)
 

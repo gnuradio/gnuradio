@@ -61,10 +61,8 @@ atsc_pad::work (int noutput_items,
 {
   const unsigned char *in = (const unsigned char *) input_items[0];
   atsc_mpeg_packet *out = (atsc_mpeg_packet *) output_items[0];
-
-  // size with padding (256)
-  unsigned int ATSC_MPEG_PKT = sizeof(atsc_mpeg_packet);
-  unsigned int i;
+  
+  int i;
 
   for (i = 0; i < noutput_items; i++){
     for (int j = 0; j < ATSC_MPEG_PKT_LENGTH; j++)

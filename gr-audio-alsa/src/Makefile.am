@@ -90,6 +90,8 @@ _audio_alsa_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
 libgr_audio_alsa_la_LDFLAGS = $(NO_UNDEFINED)
 
+_audio_alsa_la_CXXFLAGS = @swig_CXXFLAGS@
+
 audio_alsa.cc audio_alsa.py: $(LOCAL_IFILES) $(NON_LOCAL_IFILES)
 	$(SWIG) $(SWIGPYTHONARGS) -module audio_alsa -o audio_alsa.cc $(LOCAL_IFILES)
 

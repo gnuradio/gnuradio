@@ -88,7 +88,7 @@ atsc_bit_timing_loop::work (int noutput_items,
   // We are tasked with producing output.size output samples.
   // We will consume approximately 2 * output.size input samples.
 
-  unsigned int  k;              // output index
+  int  k;              // output index
 
   float         interp_sample;
   int           symbol_index;

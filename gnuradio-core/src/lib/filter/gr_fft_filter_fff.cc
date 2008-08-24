@@ -58,6 +58,7 @@ gr_fft_filter_fff::~gr_fft_filter_fff ()
   delete d_invfft;
 }
 
+#if 0
 static void 
 print_vector_complex(const std::string label, const std::vector<gr_complex> &x)
 {
@@ -75,6 +76,7 @@ print_vector_float(const std::string label, const std::vector<float> &x)
     std::cout << x[i] << " ";
   std::cout << "\n";
 }
+#endif
 
 void
 gr_fft_filter_fff::set_taps (const std::vector<float> &taps)

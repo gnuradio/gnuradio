@@ -58,8 +58,8 @@ static const int hash_slot_addr[2] = {
   USRP_HASH_SLOT_1_ADDR
 };
 
-static char *default_firmware_filename = "std.ihx";
-static char *default_fpga_filename     = "std_2rxhb_2tx.rbf";
+static const char *default_firmware_filename = "std.ihx";
+static const char *default_fpga_filename     = "std_2rxhb_2tx.rbf";
 
 #include "std_paths.h"
 #include <stdio.h>
@@ -67,7 +67,7 @@ static char *default_fpga_filename     = "std_2rxhb_2tx.rbf";
 static char *
 find_file (const char *filename, int hw_rev)
 {
-  char **sp = std_paths;
+  const char **sp = std_paths;
   static char path[1000];
   char *s;
 

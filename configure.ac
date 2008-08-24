@@ -40,6 +40,13 @@ LF_CONFIGURE_CC
 LF_CONFIGURE_CXX
 GR_LIB64		dnl check for lib64 suffix after choosing compilers
 
+cxx_warnings_as_errors=""
+AC_ARG_ENABLE(
+    [warnings-as-errors],
+    [--enable-warnings-as-errors Treat compiler warnings as errors],
+    [cxx_warnings_as_errors="-Werror"]    
+)
+
 dnl The three macros above are known to override CXXFLAGS if the user
 dnl didn't specify them.  Though I'm sure somebody thought this was
 dnl a good idea, it makes it hard to use other than -g -O2 when compiling
@@ -50,16 +57,16 @@ dnl the output of swig use use -O1 if we're using g++.
 dnl See Makefile.common for the rest of the magic.
 if test "$user_set_cxxflags" != yes; then
   autoconf_default_CXXFLAGS="$CXXFLAGS"
-  CXXFLAGS=""
+  CXXFLAGS=$cxx_warnings_as_errors
   if test "$GXX" = yes; then
     case "$host_cpu" in
     	powerpc*)
 	   dnl "-O1" is broken on the PPC for some reason
 	   dnl (at least as of g++ 4.1.1)
-	   swig_CXXFLAGS="-g1 -O2"
+	   swig_CXXFLAGS="-g1 -O2 -fno-strict-aliasing"
 	;;
     	*) 
-	swig_CXXFLAGS="-g -O1"
+	swig_CXXFLAGS="-g -O1 -fno-strict-aliasing"
 	;;
     esac
   fi
@@ -246,7 +253,7 @@ GR_SUBVERSION
 dnl Component specific configuration
 dnl The order of the GR_ macros determines the order of compilation
 dnl For -any- checks on $enable_all_components
-dnl use the following guildlines:
+dnl use the following guidelines:
 dnl   yes : --enable-all-components was specified, so error out if any
 dnl         components do not pass configuration checks.
 dnl   no  : --disable-all-components was specified, so try to build the

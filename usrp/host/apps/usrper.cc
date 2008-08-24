@@ -71,12 +71,14 @@ usage ()
   exit (1);
 }
 
+#if 0
 static void
 die (const char *msg)
 {
   fprintf (stderr, "%s (die): %s\n", prog_name, msg);
   exit (1);
 }
+#endif
 
 static int 
 hexval (char ch)
