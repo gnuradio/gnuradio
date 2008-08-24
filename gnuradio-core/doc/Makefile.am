@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = other xml
+SUBDIRS = other xml-swig
 
 docdir  = $(prefix)/share/doc/@PACKAGE@-@VERSION@
 
@@ -36,6 +36,7 @@ html/index.html:
 
 prep:
 	mkdir -p html
+	mkdir -p xml
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(docdir)
