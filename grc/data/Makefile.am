@@ -19,6 +19,6 @@
 # Boston, MA 02110-1301, USA.
 #
 
-include $(top_srcdir)/grc/Makefile.common
+include $(top_srcdir)/grc/Makefile.inc
 
 SUBDIRS = grc grc_gnuradio

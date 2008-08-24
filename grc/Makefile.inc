@@ -23,19 +23,6 @@ include $(top_srcdir)/Makefile.common
 
 grc_data_prefix = @datadir@/${PACKAGE}/grc
 grc_examples_prefix = @datadir@/${PACKAGE}/examples/grc
-
 grc_data_dir = $(grc_data_prefix)/grc
 grc_gnuradio_data_dir = $(grc_data_prefix)/grc_gnuradio
 grc_gnuradio_blocks_dir = $(grc_data_prefix)/grc_gnuradio/blocks
-
-install-data-local:
-	$(mkinstalldirs) $(datadir)
-	$(foreach file, $(EXTRA_DIST), \
-		$(INSTALL_DATA) $(srcdir)/$(file) $(datadir)/$(file); \
-	)
-
-uninstall-local:
-	$(foreach file, $(EXTRA_DIST), \
-		$(RM) $(datadir)/$(file); \
-	)
-	$(RM) -fr $(datadir)

@@ -19,14 +19,19 @@
 # Boston, MA 02110-1301, USA.
 #
 
-include $(top_srcdir)/grc/Makefile.common
+include $(top_srcdir)/grc/Makefile.inc
 
 SUBDIRS = blocks
 
-datadir = $(grc_gnuradio_data_dir)
+ourdatadir = $(grc_gnuradio_data_dir)
 
-EXTRA_DIST = \
+DATA_FILES = \
 	block.dtd \
 	block_tree.xml \
 	default_flow_graph.grc.xml \
 	flow_graph.tmpl
+
+ourdata_DATA = $(DATA_FILES)
+
+EXTRA_DIST = $(DATA_FILES)
+

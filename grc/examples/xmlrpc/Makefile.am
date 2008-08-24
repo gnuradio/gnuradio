@@ -19,12 +19,16 @@
 # Boston, MA 02110-1301, USA.
 #
 
-include $(top_srcdir)/grc/Makefile.common
+include $(top_srcdir)/grc/Makefile.inc
 
-datadir = $(grc_examples_prefix)/xmlrpc
+ourdatadir = $(grc_examples_prefix)/xmlrpc
 
-EXTRA_DIST = \
+DATA_FILES = \
 	readme.txt \
 	xmlrpc_client.grc \
-	xmlrpc_client_script.py\ 
+	xmlrpc_client_script.py\
 	xmlrpc_server.grc
+
+ourdata_DATA = $(DATA_FILES)
+
+EXTRA_DIST = $(DATA_FILES)

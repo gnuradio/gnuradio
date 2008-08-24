@@ -19,8 +19,12 @@
 # Boston, MA 02110-1301, USA.
 #
 
-include $(top_srcdir)/grc/Makefile.common
+include $(top_srcdir)/grc/Makefile.inc
 
-datadir = $(grc_examples_prefix)/audio
+ourdatadir = $(grc_examples_prefix)/audio
 
-EXTRA_DIST = dial_tone.grc
+DATA_FILES = dial_tone.grc
+
+ourdata_DATA = $(DATA_FILES)
+
+EXTRA_DIST = $(DATA_FILES)

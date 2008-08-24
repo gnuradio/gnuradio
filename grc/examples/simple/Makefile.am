@@ -19,8 +19,12 @@
 # Boston, MA 02110-1301, USA.
 #
 
-include $(top_srcdir)/grc/Makefile.common
+include $(top_srcdir)/grc/Makefile.inc
 
-datadir = $(grc_examples_prefix)/simple
+ourdatadir = $(grc_examples_prefix)/simple
 
-EXTRA_DIST = ber_simulation.grc
+DATA_FILES = ber_simulation.grc
+
+ourdata_DATA = $(DATA_FILES)
+
+EXTRA_DIST = $(DATA_FILES)

@@ -19,11 +19,11 @@
 # Boston, MA 02110-1301, USA.
 #
 
-include $(top_srcdir)/grc/Makefile.common
+include $(top_srcdir)/grc/Makefile.inc
 
-datadir = $(grc_gnuradio_blocks_dir)
+ourdatadir = $(grc_gnuradio_blocks_dir)
 
-EXTRA_DIST = \
+DATA_FILES = \
 	audio_sink.xml \
 	audio_source.xml \
 	band_pass_filter.xml \
@@ -204,3 +204,7 @@ EXTRA_DIST = \
 	wxgui_waterfallsink2.xml \
 	xmlrpc_client.xml \
 	xmlrpc_server.xml
+
+ourdata_DATA = $(DATA_FILES)
+
+EXTRA_DIST = $(DATA_FILES)

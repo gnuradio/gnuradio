@@ -19,10 +19,14 @@
 # Boston, MA 02110-1301, USA.
 #
 
-include $(top_srcdir)/grc/Makefile.common
+include $(top_srcdir)/grc/Makefile.inc
 
-datadir = $(grc_examples_prefix)/usrp
+ourdatadir = $(grc_examples_prefix)/usrp
 
-EXTRA_DIST = \
+DATA_FILES = \
 	usrp_two_tone_loopback.grc \
 	usrp_wbfm_receive.grc
+
+ourdata_DATA = $(DATA_FILES)
+
+EXTRA_DIST = $(DATA_FILES)

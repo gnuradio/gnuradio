@@ -19,13 +19,17 @@
 # Boston, MA 02110-1301, USA.
 #
 
-include $(top_srcdir)/grc/Makefile.common
+include $(top_srcdir)/grc/Makefile.inc
 
-datadir = $(grc_data_dir)
+ourdatadir = $(grc_data_dir)
 
-EXTRA_DIST = \
+DATA_FILES = \
 	block_tree.dtd \
 	flow_graph.dtd \
 	grc-icon-256.png \
 	grc-icon-256.svg \
 	grc-icon-32.png
+
+ourdata_DATA = $(DATA_FILES)
+
+EXTRA_DIST = $(DATA_FILES)
