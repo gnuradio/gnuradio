@@ -56,4 +56,5 @@ uninstall-local:
 	$(RM) -fr $(DESTDIR)$(docdir)/xml
 
 clean-local:
-	$(RM) -fr latex html man
+	$(RM) -fr latex html man xml
+
