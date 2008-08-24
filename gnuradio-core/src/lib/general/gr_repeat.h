@@ -28,7 +28,7 @@ class gr_repeat;
 
 typedef boost::shared_ptr<gr_repeat> gr_repeat_sptr;
 
-gr_repeat_sptr gr_make_repeat(size_t itemsize, int decim);
+gr_repeat_sptr gr_make_repeat(size_t itemsize, int interp);
 
 /*!
  * \brief Repeat a sample 'interp' times in output stream
