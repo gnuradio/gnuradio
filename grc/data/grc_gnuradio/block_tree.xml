@@ -180,6 +180,7 @@
 		<block>gr_frequency_modulator_fc</block>
 		<block>gr_phase_modulator_fc</block>
 		<block>gr_quadrature_demod_cf</block>
+		<block>gr_cpfsk_bc</block>
 
 		<block>gr_diff_phasor_cc</block>
 		<block>gr_constellation_decoder_cb</block>

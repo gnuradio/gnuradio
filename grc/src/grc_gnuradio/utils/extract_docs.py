@@ -29,15 +29,18 @@ DOXYGEN_DETAILDESC_GR_XPATH = '/doxygen/compounddef/detaileddescription'
 DOXYGEN_BRIEFDESC_BLKS2_XPATH = '/doxygen/compounddef/sectiondef[@kind="public-func"]/memberdef/briefdescription'
 DOXYGEN_DETAILDESC_BLKS2_XPATH = '/doxygen/compounddef/sectiondef[@kind="public-func"]/memberdef/detaileddescription'
 
-def extract_txt(xml):
+def extract_txt(xml, parent_text=None):
 	"""!
 	Recursivly pull the text out of an xml tree.
 	@param xml the xml tree
+	@param parent_text the text of the parent element
 	@return a string
 	"""
 	text = xml.text or ''
-	if not len(xml): return text
-	return ''.join([text] + map(extract_txt, xml))
+	tail = parent_text and xml.tail or ''
+	return text + ''.join(
+		map(lambda x: extract_txt(x, text), xml)
+	) + tail
 
 def is_match(key, file):
 	"""!

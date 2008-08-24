@@ -1,28 +1,30 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##GMSK Mod
+##CPFSK
 ###################################################
  -->
 <block>
-	<name>GMSK Mod</name>
-	<key>blks2_gmsk_mod</key>
-	<import>from gnuradio import blks2</import>
-	<make>blks2.gmsk_mod(
-	samples_per_symbol=$samples_per_symbol,
-	bt=$bt,
-)</make>
+	<name>CPFSK</name>
+	<key>gr_cpfsk_bc</key>
+	<import>from gnuradio import gr</import>
+	<make>cpfsk_bc($k, $amplitude, $samples_per_symbol)</make>
+	<callback>set_amplitude($amplitude)</callback>
+	<param>
+		<name>K</name>
+		<key>k</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Amplitude</name>
+		<key>amplitude</key>
+		<type>real</type>
+	</param>
 	<param>
 		<name>Samples/Symbol</name>
 		<key>samples_per_symbol</key>
 		<value>2</value>
 		<type>int</type>
-	</param>
-	<param>
-		<name>BT</name>
-		<key>bt</key>
-		<value>0.35</value>
-		<type>real</type>
 	</param>
 	<sink>
 		<name>in</name>

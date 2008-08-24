@@ -77,6 +77,7 @@ EXTRA_DIST = \
 	gr_constellation_decoder_cb.xml \
 	gr_correlate_access_code_bb.xml \
 	gr_costas_loop_cc.xml \
+	gr_cpfsk_bc.xml \
 	gr_dd_mpsk_sync_cc.xml \
 	gr_decode_ccsds_27_fb.xml \
 	gr_deinterleave.xml \

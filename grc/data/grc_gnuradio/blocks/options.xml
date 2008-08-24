@@ -48,14 +48,17 @@ import wx
 		<option>
 			<name>WX GUI</name>
 			<key>wx_gui</key>
+			<opt>hide_category:all</opt>
 		</option>
 		<option>
 			<name>No GUI</name>
 			<key>no_gui</key>
+			<opt>hide_category:all</opt>
 		</option>
 		<option>
 			<name>Hier Block</name>
 			<key>hb</key>
+			<opt>hide_category:</opt>
 		</option>
 	</param>
 	<param>
@@ -63,6 +66,7 @@ import wx
 		<key>category</key>
 		<value>Custom</value>
 		<type>string</type>
+		<hide>$generate_options.hide_category</hide>
 	</param>
 	<check>len($window_size) == 2</check>
 	<check>300 &lt;= $(window_size)[0] &lt;= 2048</check>

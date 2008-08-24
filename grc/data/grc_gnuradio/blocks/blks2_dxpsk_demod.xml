@@ -38,7 +38,7 @@
 		<name>Samples/Symbol</name>
 		<key>samples_per_symbol</key>
 		<value>2</value>
-		<type>real</type>
+		<type>int</type>
 	</param>
 	<param>
 		<name>Excess BW</name>
