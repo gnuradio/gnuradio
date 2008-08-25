@@ -59,13 +59,16 @@ export PYTHONPATH
 # Where to find omnithread library files
 gromnidir=@omnithread_LIBDIRPATH@
 
+# Where to find gruel library files
+grueldir=@gruel_LIBDIRPATH@
+
 # Where to find gnuradio core's library files
 grcoredir=@gnuradio_core_LIBDIRPATH@
 
 # Construct search path for python modules
 # Check each one to make sure it's not "" before adding
 grlibdir=""
-for dir in $gromnidir $grcoredir
+for dir in $gromnidir $grcoredir $grueldir
 do
     if [ "$dir" != "" ]
     then

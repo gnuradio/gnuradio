@@ -26,9 +26,10 @@ AC_DEFUN([GRC_GRUEL],[
     dnl   yes  : if the --enable code passed muster and all dependencies are met
     dnl   no   : otherwise
     if test $passed != with; then
-	dnl how and where to find INCLUDES and LA
+	dnl how and where to find INCLUDES and LA and such
 	gruel_INCLUDES="-I\${abs_top_srcdir}/gruel/src/include"
         gruel_LA="\${abs_top_builddir}/gruel/src/lib/libgruel.la"
+	gruel_LIBDIRPATH="\${abs_top_builddir}/gruel/src/lib:\${abs_top_builddir}/gruel/src/lib/.libs"
     fi
 
     AC_CONFIG_FILES([\
