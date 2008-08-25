@@ -87,6 +87,7 @@ m4macros = \
 	gr_require_mc4020.m4 \
 	gr_scripting.m4 \
 	gr_set_md_cpu.m4 \
+	gr_standalone.m4 \
 	gr_subversion.m4 \
 	gr_swig.m4 \
 	gr_sysv_shm.m4 \
