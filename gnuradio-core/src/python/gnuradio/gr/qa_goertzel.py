@@ -49,7 +49,7 @@ class test_goertzel(gr_unittest.TestCase):
 	src_data = self.make_tone_data(rate, freq)
 	expected_result = 0.5
 	actual_result = abs(self.transform(src_data, rate, bin)[0])
-	self.assertAlmostEqual(expected_result, actual_result, places=5)
+	self.assertAlmostEqual(expected_result, actual_result, places=4)
 
     def test_002(self): # Measure off frequency magnitude
 	rate = 8000
@@ -58,7 +58,7 @@ class test_goertzel(gr_unittest.TestCase):
 	src_data = self.make_tone_data(rate, freq)
 	expected_result = 0.0
 	actual_result = abs(self.transform(src_data, rate, bin)[0])
-	self.assertAlmostEqual(expected_result, actual_result, places=5)
+	self.assertAlmostEqual(expected_result, actual_result, places=4)
 
 if __name__ == '__main__':
     gr_unittest.main()
