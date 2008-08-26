@@ -49,72 +49,38 @@ class Connection(Element):
 		self._source_rot = None
 		self._sink_coor = None
 		self._source_coor = None
-
-		sink = self.get_sink()
-		source = self.get_source()
-
 		#get the source coordinate
-		x1, y1 = 0, 0
-		connector_length = source.get_connector_length()
-		if source.get_rotation() == 0:
-			x1 = 0 + connector_length
-		elif source.get_rotation() == 90:
-			y1 = 0 - connector_length
-		elif source.get_rotation() == 180:
-			x1 = 0 - connector_length
-		elif source.get_rotation() == 270:
-			y1 = 0 + connector_length
-		self.x1, self.y1 = x1, y1
-
+		connector_length = self.get_source().get_connector_length()
+		self.x1, self.y1 = Utils.get_rotated_coordinate((connector_length, 0), self.get_source().get_rotation())
 		#get the sink coordinate
-		x2, y2 = 0, 0
-		connector_length = sink.get_connector_length() + CONNECTOR_ARROW_HEIGHT
-		if sink.get_rotation() == 0:
-			x2 = 0 - connector_length
-		elif sink.get_rotation() == 90:
-			y2 = 0 + connector_length
-		elif sink.get_rotation() == 180:
-			x2 = 0 + connector_length
-		elif sink.get_rotation() == 270:
-			y2 = 0 - connector_length
-		self.x2, self.y2 = x2, y2
-
+		connector_length = self.get_sink().get_connector_length() + CONNECTOR_ARROW_HEIGHT
+		self.x2, self.y2 = Utils.get_rotated_coordinate((-connector_length, 0), self.get_sink().get_rotation())
 		#build the arrow
-		if sink.get_rotation() == 0:
-			self.arrow = [(0, 0), (0-CONNECTOR_ARROW_HEIGHT, 0-CONNECTOR_ARROW_BASE/2), (0-CONNECTOR_ARROW_HEIGHT, 0+CONNECTOR_ARROW_BASE/2)]
-		elif sink.get_rotation() == 90:
-			self.arrow = [(0, 0), (0-CONNECTOR_ARROW_BASE/2, 0+CONNECTOR_ARROW_HEIGHT), (0+CONNECTOR_ARROW_BASE/2, 0+CONNECTOR_ARROW_HEIGHT)]
-		elif sink.get_rotation() == 180:
-			self.arrow = [(0, 0), (0+CONNECTOR_ARROW_HEIGHT, 0-CONNECTOR_ARROW_BASE/2), (0+CONNECTOR_ARROW_HEIGHT, 0+CONNECTOR_ARROW_BASE/2)]
-		elif sink.get_rotation() == 270:
-			self.arrow = [(0, 0), (0-CONNECTOR_ARROW_BASE/2, 0-CONNECTOR_ARROW_HEIGHT), (0+CONNECTOR_ARROW_BASE/2, 0-CONNECTOR_ARROW_HEIGHT)]
-
+		self.arrow = [(0, 0),
+			Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, -CONNECTOR_ARROW_BASE/2), self.get_sink().get_rotation()),
+			Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE/2), self.get_sink().get_rotation()),
+		]
 		self._update_after_move()
 
 	def _update_after_move(self):
 		"""Calculate coordinates."""
-
 		self.clear()
-
 		#source connector
 		source = self.get_source()
 		X, Y = source.get_connector_coordinate()
 		x1, y1 = self.x1 + X, self.y1 + Y
 		self.add_line((x1, y1), (X, Y))
-
 		#sink connector
 		sink = self.get_sink()
 		X, Y = sink.get_connector_coordinate()
 		x2, y2 = self.x2 + X, self.y2 + Y
 		self.add_line((x2, y2), (X, Y))
-
 		#adjust arrow
 		self._arrow = [(x+X, y+Y) for x,y in self.arrow]
-
 		#add the horizontal and vertical lines in this connection
 		if abs(source.get_connector_direction() - sink.get_connector_direction()) == 180:
 			#2 possible point sets to create a 3-line connector
-			mid_x, mid_y = (x1 + x2)/2, (y1 + y2)/2
+			mid_x, mid_y = (x1 + x2)/2.0, (y1 + y2)/2.0
 			points = [((mid_x, y1), (mid_x, y2)), ((x1, mid_y), (x2, mid_y))]
 			#source connector -> points[0][0] should be in the direction of source (if possible)
 			if Utils.get_angle_from_coordinates((x1, y1), points[0][0]) != source.get_connector_direction(): points.reverse()
@@ -123,9 +89,10 @@ class Connection(Element):
 			#points[0][0] -> source connector should not be in the direction of source
 			if Utils.get_angle_from_coordinates(points[0][0], (x1, y1)) == source.get_connector_direction(): points.reverse()
 			#create 3-line connector
-			self.add_line((x1, y1), points[0][0])
-			self.add_line(points[0][0], points[0][1])
-			self.add_line((x2, y2), points[0][1])
+			p1, p2 = map(int, points[0][0]), map(int, points[0][1])
+			self.add_line((x1, y1), p1)
+			self.add_line(p1, p2)
+			self.add_line((x2, y2), p2)
 		else:
 			#2 possible points to create a right-angled connector
 			points = [(x1, y2), (x2, y1)]

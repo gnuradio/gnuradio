@@ -24,6 +24,7 @@ from grc import Utils
 from grc.Constants import *
 from grc.Actions import *
 import Colors
+import Utils
 from grc.gui.ParamsDialog import ParamsDialog
 from Element import Element
 from grc.elements import FlowGraph as _FlowGraph
@@ -266,15 +267,13 @@ class FlowGraph(Element):
 		"""
 		if not self.get_selected_blocks(): return False
 		#determine the number of degrees to rotate
-		direction = {DIR_LEFT: 90, DIR_RIGHT:270}[direction]
-		cos_r = {0: 1, 90: 0, 180: -1, 270: 0}[direction]
-		sin_r = {0: 0, 90: 1, 180: 0, 270: -1}[direction]
+		rotation = {DIR_LEFT: 90, DIR_RIGHT:270}[direction]
 		#initialize min and max coordinates
 		min_x, min_y = self.get_selected_block().get_coordinate()
 		max_x, max_y = self.get_selected_block().get_coordinate()
 		#rotate each selected block, and find min/max coordinate
 		for selected_block in self.get_selected_blocks():
-			selected_block.rotate(direction)
+			selected_block.rotate(rotation)
 			#update the min/max coordinate
 			x, y = selected_block.get_coordinate()
 			min_x, min_y = min(min_x, x), min(min_y, y)
@@ -284,9 +283,8 @@ class FlowGraph(Element):
 		#rotate the blocks around the center point
 		for selected_block in self.get_selected_blocks():
 			x, y = selected_block.get_coordinate()
-			x, y = x - ctr_x, y - ctr_y
-			x, y = (x*cos_r + y*sin_r + ctr_x, -x*sin_r + y*cos_r + ctr_y)
-			selected_block.set_coordinate((x, y))
+			x, y = Utils.get_rotated_coordinate((x - ctr_x, y - ctr_y), rotation)
+			selected_block.set_coordinate((x + ctr_x, y + ctr_y))
 		return True
 
 	def remove_selected(self):

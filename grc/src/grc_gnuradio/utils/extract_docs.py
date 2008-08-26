@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 ##@package grc_gnuradio.utils.extract_docs
 #Extract documentation from the gnuradio doxygen files.
 
-from grc_gnuradio.Constants import *
+from grc_gnuradio.Constants import DOCS_DIR
 from lxml import etree
 import os
 
