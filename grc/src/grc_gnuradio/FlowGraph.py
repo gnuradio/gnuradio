@@ -23,7 +23,6 @@ from utils import expr_utils
 from grc.elements.FlowGraph import FlowGraph as _FlowGraph
 from Block import Block
 from Connection import Connection
-import traceback
 
 class FlowGraph(_FlowGraph):
 
@@ -81,23 +80,21 @@ class FlowGraph(_FlowGraph):
 		Exclude paramterized variables.
 		@return a sorted list of variable blocks in order of dependency (indep -> dep)
 		"""
-		try:
-			variables = filter(lambda b: b.get_key() in (
-				'variable', 'variable_slider', 'variable_chooser', 'variable_text_box'
-			), self.get_enabled_blocks())
-			#map var id to variable block
-			id2var = dict([(var.get_id(), var) for var in variables])
-			#map var id to variable code
-			#variable code is a concatenation of all param code (without the id param)
-			id2expr = dict([(var.get_id(), 
-				' '.join([param.to_code() for param in filter(lambda p: p.get_key() != 'id',var.get_params())])
-			) for var in variables])
-			#sort according to dependency
-			sorted_ids = expr_utils.sort_variables(id2expr)
-			#create list of sorted variable blocks
-			variables = [id2var[id] for id in sorted_ids]
-			return variables
-		except: traceback.print_exc()
+		variables = filter(lambda b: b.get_key() in (
+			'variable', 'variable_slider', 'variable_chooser', 'variable_text_box'
+		), self.get_enabled_blocks())
+		#map var id to variable block
+		id2var = dict([(var.get_id(), var) for var in variables])
+		#map var id to variable code
+		#variable code is a concatenation of all param code (without the id param)
+		id2expr = dict([(var.get_id(), 
+			' '.join([param.to_code() for param in filter(lambda p: p.get_key() != 'id', var.get_params())])
+		) for var in variables])
+		#sort according to dependency
+		sorted_ids = expr_utils.sort_variables(id2expr)
+		#create list of sorted variable blocks
+		variables = [id2var[id] for id in sorted_ids]
+		return variables
 
 	def get_parameters(self):
 		"""!

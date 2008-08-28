@@ -227,7 +227,8 @@ class Param(_Param):
 		"""
 		#run init tasks in evaluate
 		if not self._init:
-			self.evaluate()
+			try: self.evaluate()
+			except: pass
 			self._init = True
 		v = self.get_value()
 		t = self.get_type()
