@@ -7,7 +7,7 @@
 <block>
 	<name>Xor</name>
 	<key>gr_xor_xx</key>
-	<import>from gnuradio impxort gr</import>
+	<import>from gnuradio import gr</import>
 	<make>gr.xor_$(type.fcn)()</make>
 	<param>
 		<name>IO Type</name>
