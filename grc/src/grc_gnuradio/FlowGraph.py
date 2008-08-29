@@ -24,6 +24,22 @@ from grc.elements.FlowGraph import FlowGraph as _FlowGraph
 from Block import Block
 from Connection import Connection
 
+def get_variable_code(variable):
+	"""!
+	Get the code representation for a variable.
+	Normally this is the value parameter.
+	For the variable chooser, use the index and choices.
+	Avoid using the to_code method of the variables,
+	as this forces evaluation before the variables are evaluated.
+	@param variable the variable block
+	@return the code string
+	"""
+	if variable.get_key() == 'variable_chooser':
+		choices = variable.get_param('choices').get_value()
+		value_index = variable.get_param('value_index').get_value()
+		return "(%s)[%s]"%(choices, value_index)
+	return variable.get_param('value').get_value()
+
 class FlowGraph(_FlowGraph):
 
 	def _get_io_signature(self, pad_key):
@@ -87,9 +103,7 @@ class FlowGraph(_FlowGraph):
 		id2var = dict([(var.get_id(), var) for var in variables])
 		#map var id to variable code
 		#variable code is a concatenation of all param code (without the id param)
-		id2expr = dict([(var.get_id(), 
-			' '.join([param.to_code() for param in filter(lambda p: p.get_key() != 'id', var.get_params())])
-		) for var in variables])
+		id2expr = dict([(var.get_id(), get_variable_code(var)) for var in variables])
 		#sort according to dependency
 		sorted_ids = expr_utils.sort_variables(id2expr)
 		#create list of sorted variable blocks
@@ -130,12 +144,7 @@ class FlowGraph(_FlowGraph):
 			#load variables
 			for variable in self.get_variables():
 				try:
-					if variable.get_key() == 'variable_chooser':
-						choices = variable.get_param('choices').to_code()
-						value_index = variable.get_param('value_index').to_code()
-						e = eval("%s[%s]"%(choices, value_index), n, n)
-					else:
-						e = eval(variable.get_param('value').to_code(), n, n)
+					e = eval(get_variable_code(variable), n, n)
 					n[variable.get_id()] = e
 				except: pass
 			#make namespace public

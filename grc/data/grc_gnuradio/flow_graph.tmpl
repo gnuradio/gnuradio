@@ -5,6 +5,7 @@
 ##@param imports the import statements
 ##@param flow_graph the flow_graph
 ##@param variables the variable blocks
+##@param controls the variables with gui controls
 ##@param parameters the paramater blocks
 ##@param blocks the signal blocks
 ##@param connections the connections
@@ -83,7 +84,7 @@ class $(class_name)(gr.hier_block2):
 ########################################################
 ##Create Variables
 ##	Set the variable to a property of self.
-##	Write the variable make, and indent with 2 tabs.
+##	Write the first line of the variable make.
 ########################################################
 #if $variables
 
@@ -92,9 +93,23 @@ class $(class_name)(gr.hier_block2):
 		$DIVIDER
 #end if
 #for $var in $variables
-	#set $code = '\n\t\t'.join($var.get_make().splitlines())
-		$var.get_id() = $code
-		self.$var.get_id() = $var.get_id()
+	#set $code = $var.get_make().splitlines()[0]
+		self.$var.get_id() = $var.get_id() = $code
+#end for
+########################################################
+##Create Controls
+##	Write the variable make (excluding first line).
+##	Indent each line with 2 tabs.
+########################################################
+#if $controls
+
+		$DIVIDER
+		# Controls
+		$DIVIDER
+#end if
+#for $ctrl in $controls
+	#set $code = '\n\t\t'.join($ctrl.get_make().splitlines()[1:])
+		$code
 #end for
 ########################################################
 ##Create Blocks

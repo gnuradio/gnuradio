@@ -76,6 +76,8 @@ class Generator(object):
 		imports = self._flow_graph.get_imports()
 		variables = self._flow_graph.get_variables()
 		parameters = self._flow_graph.get_parameters()
+		#list of variables with controls
+		controls = filter(lambda v: v.get_key().startswith('variable_'), variables)
 		#list of blocks not including variables and imports and parameters and disabled
 		blocks = sorted(self._flow_graph.get_enabled_blocks(), lambda x, y: cmp(x.get_id(), y.get_id()))
 		blocks = filter(lambda b: b not in (imports + parameters + variables), blocks)
@@ -117,6 +119,7 @@ class Generator(object):
 			'imports': imports,
 			'flow_graph': self._flow_graph,
 			'variables': variables,
+			'controls': controls,
 			'parameters': parameters,
 			'blocks': blocks,
 			'connections': connections,
