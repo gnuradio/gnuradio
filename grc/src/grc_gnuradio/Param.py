@@ -226,9 +226,9 @@ class Param(_Param):
 		@return a string representing the code
 		"""
 		#run init tasks in evaluate
+		#such as setting flags
 		if not self._init:
-			try: self.evaluate()
-			except: pass
+			self.evaluate()
 			self._init = True
 		v = self.get_value()
 		t = self.get_type()
