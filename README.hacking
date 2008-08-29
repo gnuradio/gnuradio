@@ -1,6 +1,6 @@
 # -*- Outline -*-
 #
-# Copyright 2004,2007 Free Software Foundation, Inc.
+# Copyright 2004,2007,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,9 +20,19 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-
 Random notes on coding conventions, some explanations about why things
 aren't done differently, etc, etc,
+
+
+* Boost 1.35
+
+Until boost 1.35 or later is common in distributions, you'll need to
+build boost from source yourself.  See README.building-boost.
+
+Also, when running make distcheck you'll need to provide the
+DISTCHECK_CONFIGURE_FLAGS.  E.g.,
+
+  $ make distcheck DISTCHECK_CONFIGURE_FLAGS=--with-boost=/opt/boost_1_36_0
 
 
 * C++ and Python
