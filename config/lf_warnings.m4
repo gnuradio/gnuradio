@@ -97,32 +97,32 @@ EOF
 ])
 
 # ----------------------------------------------------------------------
-# Provide the configure script with an --with-warnings option that
-# turns on warnings. Call this command AFTER you have configured ALL your
+# Enable compiler warnings.  Conditionally enable -Werror.
+# Call this command AFTER you have configured ALL your
 # compilers. 
 # ----------------------------------------------------------------------
 
 AC_DEFUN([LF_SET_WARNINGS],[
-  dnl Check for --with-warnings
-  AC_MSG_CHECKING([whether user wants warnings])
-  AC_ARG_WITH(warnings,
-              [  --with-warnings         Turn on warnings],
-              [ lf_warnings=yes ], [ lf_warnings=no ])
-  lf_warnings=yes # hard code for now -eb
-  AC_MSG_RESULT($lf_warnings)
-  
+  lf_warnings_as_errors=""
+  AC_ARG_ENABLE([warnings-as-errors],
+    AC_HELP_STRING([--enable-warnings-as-errors], [Treat compiler warnings as errors (no)]),
+    [case "$enableval" in 
+      (no) ;;
+      (yes) lf_warnings_as_errors="-Werror" ;;
+      (*) AC_MSG_ERROR([Invalid argument ($enableval) to --enable-warnings-as-errors]) ;;
+     esac],
+    [])
+     
   dnl Warnings for the two main compilers
-  cc_warning_flags="-Wall"
-  cxx_warning_flags="-Wall -Woverloaded-virtual"
-  if test $lf_warnings = yes
+  dnl add -Wextra when you're got time to fix a bunch of them ;-)
+  cc_warning_flags="-Wall $lf_warnings_as_errors"
+  cxx_warning_flags="-Wall -Woverloaded-virtual $lf_warnings_as_errors"
+  if test -n "${CC}"
   then
-    if test -n "${CC}"
-    then
-      LF_CHECK_CC_FLAG($cc_warning_flags)
-    fi
-    if test -n "${CXX}" 
-    then
-      LF_CHECK_CXX_FLAG($cxx_warning_flags)
-    fi
+    LF_CHECK_CC_FLAG($cc_warning_flags)
+  fi
+  if test -n "${CXX}" 
+  then
+    LF_CHECK_CXX_FLAG($cxx_warning_flags)
   fi
 ])

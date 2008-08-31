@@ -40,13 +40,6 @@ LF_CONFIGURE_CC
 LF_CONFIGURE_CXX
 GR_LIB64		dnl check for lib64 suffix after choosing compilers
 
-cxx_warnings_as_errors=""
-AC_ARG_ENABLE(
-    [warnings-as-errors],
-    [--enable-warnings-as-errors Treat compiler warnings as errors],
-    [cxx_warnings_as_errors="-Werror"]    
-)
-
 dnl The three macros above are known to override CXXFLAGS if the user
 dnl didn't specify them.  Though I'm sure somebody thought this was
 dnl a good idea, it makes it hard to use other than -g -O2 when compiling
@@ -57,16 +50,15 @@ dnl the output of swig use use -O1 if we're using g++.
 dnl See Makefile.common for the rest of the magic.
 if test "$user_set_cxxflags" != yes; then
   autoconf_default_CXXFLAGS="$CXXFLAGS"
-  CXXFLAGS=$cxx_warnings_as_errors
   if test "$GXX" = yes; then
     case "$host_cpu" in
     	powerpc*)
 	   dnl "-O1" is broken on the PPC for some reason
 	   dnl (at least as of g++ 4.1.1)
-	   swig_CXXFLAGS="-g1 -O2 -Wno-strict-aliasing"
+	   swig_CXXFLAGS="-g1 -O2 -Wno-strict-aliasing -Wno-parentheses"
 	;;
     	*) 
-	swig_CXXFLAGS="-g -O1 -Wno-strict-aliasing"
+	swig_CXXFLAGS="-g -O1 -Wno-strict-aliasing -Wno-parentheses"
 	;;
     esac
   fi
@@ -84,7 +76,6 @@ fi
 export PKG_CONFIG_PATH
 
 
-LF_SET_WARNINGS
 GR_SET_GPROF
 GR_SET_PROF
 AM_PROG_AS
@@ -335,6 +326,11 @@ AC_CONFIG_FILES([\
 
 dnl run_tests.sh is created from run_tests.sh.in .  Make it executable.
 AC_CONFIG_COMMANDS([run_tests_build], [chmod +x run_tests.sh])
+
+dnl Enable warnings as the last thing before generating output, since
+dnl this may add -Werror to CFLAGS which can cause various configure
+dnl checks to fail.
+LF_SET_WARNINGS
 
 AC_OUTPUT
 
