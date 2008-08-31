@@ -25,8 +25,8 @@
 /* Single token vector data types for the PowerPC SIMD/Vector Multi-media 
    eXtension */
 
-#ifndef _VEC_TYPES_H_
-#define _VEC_TYPES_H_	1
+#ifndef INCLUDED_GR_VEC_TYPES_H
+#define INCLUDED_GR_VEC_TYPES_H
 
 #define qword		__vector unsigned char
 
@@ -51,4 +51,4 @@
 
 #define vec_double2	__vector bool int
 
-#endif /* _VEC_TYPES_H_ */
+#endif /* INCLUDED_GR_VEC_TYPES_H */
