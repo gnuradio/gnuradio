@@ -331,7 +331,7 @@ gr_align_on_samplenumbers_ss::general_work (int noutput_items,
     x_high16bits = uin[d_nchan*2];
     x_low16bits = uin[d_nchan*2+1];
     unsigned int ucounter_begin2 = x_high16bits<<16 | x_low16bits;
-    if((d_state[i].ucounter_begin+1)!=(ucounter_begin2))
+    if((d_state[i].ucounter_begin+1)!=(ucounter_begin2)){
       if(ucounter_begin2==0)
       {
 #ifdef DEBUG_TOCONSUME
@@ -342,6 +342,7 @@ gr_align_on_samplenumbers_ss::general_work (int noutput_items,
       {
         ePrintf("Error: counter not continuous.\n ucounter_begin[%i]=%i +1 !=  ucounter_begin2=%i\n",i,d_state[i].ucounter_begin,ucounter_begin2);
       }
+    }
       
     //diff_comp[i]=ucounter[i]-ucounter[0];
     //diff_min=std::min(diff[i],diff_min);

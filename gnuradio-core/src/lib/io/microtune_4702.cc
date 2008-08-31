@@ -151,7 +151,7 @@ microtune_4702::set_RF_freq (double target_freq, double *p_actual_freq)
   buf[0] = ((divisor & 0x07f00) >> 8) & 0xff;	// DB1
   buf[1] = divisor & 0xff;		// DB2
   buf[2] = control_byte_1 (d_prescaler, d_reference_divider);
-  buf[2] = (buf[2]|(((divisor & 0x18000) >> 10)) & 0xff);
+  buf[2] = buf[2] | (((divisor & 0x18000) >> 10) & 0xff);
   buf[3] = control_byte_2 (target_freq);
 
   printf ("%x\n", PLL_I2C_ADDR);
