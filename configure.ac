@@ -63,10 +63,10 @@ if test "$user_set_cxxflags" != yes; then
     	powerpc*)
 	   dnl "-O1" is broken on the PPC for some reason
 	   dnl (at least as of g++ 4.1.1)
-	   swig_CXXFLAGS="-g1 -O2 -fno-strict-aliasing"
+	   swig_CXXFLAGS="-g1 -O2 -Wno-strict-aliasing"
 	;;
     	*) 
-	swig_CXXFLAGS="-g -O1 -fno-strict-aliasing"
+	swig_CXXFLAGS="-g -O1 -Wno-strict-aliasing"
 	;;
     esac
   fi
