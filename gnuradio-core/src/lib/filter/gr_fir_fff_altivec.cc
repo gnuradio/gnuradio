@@ -62,7 +62,7 @@ gr_fir_fff_altivec::set_taps(const std::vector<float> &inew_taps)
     d_aligned_taps = 0;
   }
   void *p;
-  int r = posix_memalign(&p,  sizeof(vector float), d_naligned_taps * sizeof(d_aligned_taps[0]));
+  int r = posix_memalign(&p,  sizeof(vec_float4), d_naligned_taps * sizeof(d_aligned_taps[0]));
   if (r != 0){
     throw std::bad_alloc();
   }

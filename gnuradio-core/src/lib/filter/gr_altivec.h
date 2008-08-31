@@ -21,7 +21,25 @@
 #ifndef INCLUDED_GR_ALTIVEC_H
 #define INCLUDED_GR_ALTIVEC_H
 
+/*
+ * N.B., always use "vec_float4" et al. instead of "vector float" to
+ * ensure portability across the various powerpc compilers.  Some of
+ * them treat "vector" as a context specific keyword, some don't.
+ * Avoid the problem by always using the defines in vec_types.h
+ * (included below)
+ */
+
 #include <altivec.h>
+#undef bool		// repair namespace pollution
+#undef vector		// repair namespace pollution
+
+#ifdef HAVE_VEC_TYPES_H
+#include <vec_types.h>		// use system version if we've got it
+#else
+#include <gr_vec_types.h>	// fall back to our local copy
+#endif
+#undef qword		// repair namespace pollution
+
 #include <stddef.h>
 #include <stdio.h>
 
@@ -29,23 +47,23 @@
 extern "C" {
 #endif
 
-#define VS             sizeof(vector float)
-#define FLOATS_PER_VEC (sizeof(vector float)/sizeof(float))
+#define VS             sizeof(vec_float4)
+#define FLOATS_PER_VEC (sizeof(vec_float4)/sizeof(float))
 
 union v_float_u {
-  vector float	v;
+  vec_float4	v;
   float		f[FLOATS_PER_VEC];
 };
 
-void gr_print_vector_float(FILE *fp, vector float v);
-void gr_pvf(FILE *fp, const char *label, vector float v);
+void gr_print_vector_float(FILE *fp, vec_float4 v);
+void gr_pvf(FILE *fp, const char *label, vec_float4 v);
 
 static inline float
-horizontal_add_f(vector float v)
+horizontal_add_f(vec_float4 v)
 {
   union v_float_u u;
-  vector float	  t0 = vec_add(v, vec_sld(v, v, 8));
-  vector float	  t1 = vec_add(t0, vec_sld(t0, t0, 4));
+  vec_float4	  t0 = vec_add(v, vec_sld(v, v, 8));
+  vec_float4	  t1 = vec_add(t0, vec_sld(t0, t0, 4));
   u.v = t1;
   return u.f[0];
 }

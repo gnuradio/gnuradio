@@ -283,6 +283,7 @@ grinclude_HEADERS = 			\
 	gr_single_pole_iir.h		\
 	gr_single_pole_iir_filter_ff.h	\
 	gr_single_pole_iir_filter_cc.h  \
+	gr_vec_types.h			\
 	gri_goertzel.h			\
 	gri_iir.h			\
 	gri_mmse_fir_interpolator.h	\

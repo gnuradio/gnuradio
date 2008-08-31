@@ -22,7 +22,7 @@
 #include <gr_altivec.h>
 
 void
-gr_print_vector_float(FILE *fp, vector float v)
+gr_print_vector_float(FILE *fp, vec_float4 v)
 {
   union v_float_u	u;
   u.v = v;
@@ -30,7 +30,7 @@ gr_print_vector_float(FILE *fp, vector float v)
 }
   
 void
-gr_pvf(FILE *fp, const char *label, vector float v)
+gr_pvf(FILE *fp, const char *label, vec_float4 v)
 {
   fprintf(fp, "%s = ", label);
   gr_print_vector_float(fp, v);

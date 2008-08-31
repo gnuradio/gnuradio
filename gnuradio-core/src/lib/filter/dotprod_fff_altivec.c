@@ -61,8 +61,8 @@ dotprod_fff_altivec(const float *a, const float *b, size_t n)
 float
 dotprod_fff_altivec(const float *_a, const float *_b, size_t n)
 {
-  const vector float *a = (const vector float *) _a;
-  const vector float *b = (const vector float *) _b;
+  const vec_float4 *a = (const vec_float4 *) _a;
+  const vec_float4 *b = (const vec_float4 *) _b;
 
   static const size_t UNROLL_CNT = 4;
 
@@ -73,15 +73,15 @@ dotprod_fff_altivec(const float *_a, const float *_b, size_t n)
   // printf("n = %zd, loop_cnt = %zd, nleft = %zd\n", n, loop_cnt, nleft);
 
   // Used with vperm to build a* from p*
-  vector unsigned char lvsl_a = vec_lvsl(0, _a);
+  vec_uchar16 lvsl_a = vec_lvsl(0, _a);
 
-  vector float p0, p1, p2, p3;
-  vector float a0, a1, a2, a3;
-  vector float b0, b1, b2, b3;
-  vector float acc0 = {0, 0, 0, 0};
-  vector float acc1 = {0, 0, 0, 0};
-  vector float acc2 = {0, 0, 0, 0};
-  vector float acc3 = {0, 0, 0, 0};
+  vec_float4 p0, p1, p2, p3;
+  vec_float4 a0, a1, a2, a3;
+  vec_float4 b0, b1, b2, b3;
+  vec_float4 acc0 = {0, 0, 0, 0};
+  vec_float4 acc1 = {0, 0, 0, 0};
+  vec_float4 acc2 = {0, 0, 0, 0};
+  vec_float4 acc3 = {0, 0, 0, 0};
 
   // wind in
 

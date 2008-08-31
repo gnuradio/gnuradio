@@ -137,6 +137,7 @@ AC_CHECK_HEADERS(linux/ppdev.h dev/ppbus/ppi.h sys/mman.h sys/select.h sys/types
 AC_CHECK_HEADERS(sys/resource.h stdint.h sched.h signal.h sys/syscall.h)
 AC_CHECK_HEADERS(netinet/in.h)
 AC_CHECK_HEADERS(windows.h)
+AC_CHECK_HEADERS(vec_types.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
