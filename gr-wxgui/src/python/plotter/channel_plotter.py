@@ -107,6 +107,7 @@ class channel_plotter(grid_plotter_base):
 		for channel in reversed(sorted(self._channels.keys())):
 			samples = self._channels[channel][SAMPLES_KEY]
 			num_samps = len(samples)
+			if not num_samps: continue
 			#use opengl to scale the waveform
 			glPushMatrix()
 			glTranslatef(self.padding_left, self.padding_top, 0)
@@ -128,7 +129,7 @@ class channel_plotter(grid_plotter_base):
 			glColor3f(*self._channels[channel][COLOR_SPEC_KEY])
 			marker = self._channels[channel][MARKERY_KEY]
 			if marker: glPointSize(marker)
-			glVertexPointer(2, GL_FLOAT, 0, points)
+			glVertexPointerf(points)
 			glDrawArrays(marker is None and GL_LINE_STRIP or GL_POINTS, 0, len(points))
 			glPopMatrix()
 
