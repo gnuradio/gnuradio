@@ -152,10 +152,10 @@ class waterfall_plotter(grid_plotter_base):
 		glEnable(GL_TEXTURE_2D)
 		glPushMatrix()
 		#matrix scaling
-		glTranslatef(self.padding_left+1, self.padding_top, 0)
+		glTranslatef(self.padding_left, self.padding_top, 0)
 		glScalef(
-			float(self.width-self.padding_left-self.padding_right-1),
-			float(self.height-self.padding_top-self.padding_bottom-1),
+			float(self.width-self.padding_left-self.padding_right),
+			float(self.height-self.padding_top-self.padding_bottom),
 			1.0,
 		)
 		#draw texture with wrapping

@@ -54,7 +54,7 @@ class _plotter_base(wx.glcanvas.GLCanvas):
 		Bind the paint and size events.
 		@param parent the parent widgit
 		"""
-		self._semaphore = threading.Semaphore(1)
+		self._global_lock = threading.Lock()
 		attribList = (wx.glcanvas.WX_GL_DOUBLEBUFFER, wx.glcanvas.WX_GL_RGBA)
 		wx.glcanvas.GLCanvas.__init__(self, parent, attribList=attribList)
 		self.changed(False)
@@ -64,8 +64,8 @@ class _plotter_base(wx.glcanvas.GLCanvas):
 		self.Bind(wx.EVT_PAINT, self._on_paint)
 		self.Bind(wx.EVT_SIZE, self._on_size)
 
-	def lock(self): self._semaphore.acquire(True)
-	def unlock(self): self._semaphore.release()
+	def lock(self): self._global_lock.acquire()
+	def unlock(self): self._global_lock.release()
 
 	def _on_size(self, event):
 		"""!
@@ -244,12 +244,13 @@ class grid_plotter_base(_plotter_base):
 		# Draw Border
 		##################################################
 		glColor3f(*GRID_LINE_COLOR_SPEC)
-		glBegin(GL_LINE_LOOP)
-		glVertex3f(self.padding_left, self.padding_top, 0)
-		glVertex3f(self.width - self.padding_right, self.padding_top, 0)
-		glVertex3f(self.width - self.padding_right, self.height - self.padding_bottom, 0)
-		glVertex3f(self.padding_left, self.height - self.padding_bottom, 0)
-		glEnd()
+		self._draw_rect(
+			self.padding_left,
+			self.padding_top,
+			self.width - self.padding_right - self.padding_left,
+			self.height - self.padding_top - self.padding_bottom,
+			fill=False,
+		)
 		##################################################
 		# Draw Grid X
 		##################################################
