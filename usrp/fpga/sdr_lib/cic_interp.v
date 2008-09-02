@@ -45,11 +45,12 @@ module cic_interp(clock,reset,enable,rate,strobe_in,strobe_out,signal_in,signal_
 
    sign_extend #(bw,bw+maxbitgain) 
       ext_input (.in(signal_in),.out(signal_in_ext));
-   
+
+   wire    clear_me = reset | ~enable;
    //FIXME Note that this section has pipe and diff reversed
    // It still works, but is confusing
    always @(posedge clock)
-     if(reset)
+     if(clear_me)
        for(i=0;i<N;i=i+1)
 	 integrator[i] <= #1 0;
      else if (enable & strobe_out)
@@ -61,7 +62,7 @@ module cic_interp(clock,reset,enable,rate,strobe_in,strobe_out,signal_in,signal_
        end
    
    always @(posedge clock)
-     if(reset)
+     if(clear_me)
        begin
 	  for(i=0;i<N;i=i+1)
 	    begin
