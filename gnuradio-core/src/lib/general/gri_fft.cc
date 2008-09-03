@@ -28,11 +28,15 @@
 #include <stdio.h>
 #include <cassert>
 #include <stdexcept>
-#include <boost/thread.hpp>
 
-typedef boost::mutex::scoped_lock scoped_lock;
-static boost::mutex  s_planning_mutex;
 
+boost::mutex &
+gri_fft_planner::mutex()
+{
+  static boost::mutex  s_planning_mutex;
+
+  return s_planning_mutex;
+}
 
 static char *
 wisdom_filename ()
@@ -86,7 +90,7 @@ gri_fftw_export_wisdom ()
 gri_fft_complex::gri_fft_complex (int fft_size, bool forward)
 {
   // Hold global mutex during plan construction and destruction.
-  scoped_lock	lock(s_planning_mutex);
+  gri_fft_planner::scoped_lock	lock(gri_fft_planner::mutex());
 
   assert (sizeof (fftwf_complex) == sizeof (gr_complex));
   
@@ -121,7 +125,7 @@ gri_fft_complex::gri_fft_complex (int fft_size, bool forward)
 gri_fft_complex::~gri_fft_complex ()
 {
   // Hold global mutex during plan construction and destruction.
-  scoped_lock	lock(s_planning_mutex);
+  gri_fft_planner::scoped_lock	lock(gri_fft_planner::mutex());
 
   fftwf_destroy_plan ((fftwf_plan) d_plan);
   fftwf_free (d_inbuf);
@@ -139,7 +143,7 @@ gri_fft_complex::execute ()
 gri_fft_real_fwd::gri_fft_real_fwd (int fft_size)
 {
   // Hold global mutex during plan construction and destruction.
-  scoped_lock	lock(s_planning_mutex);
+  gri_fft_planner::scoped_lock	lock(gri_fft_planner::mutex());
 
   assert (sizeof (fftwf_complex) == sizeof (gr_complex));
   
@@ -173,7 +177,7 @@ gri_fft_real_fwd::gri_fft_real_fwd (int fft_size)
 gri_fft_real_fwd::~gri_fft_real_fwd ()
 {
   // Hold global mutex during plan construction and destruction.
-  scoped_lock	lock(s_planning_mutex);
+  gri_fft_planner::scoped_lock	lock(gri_fft_planner::mutex());
 
   fftwf_destroy_plan ((fftwf_plan) d_plan);
   fftwf_free (d_inbuf);

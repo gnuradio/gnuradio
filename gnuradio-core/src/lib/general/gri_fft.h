@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003 Free Software Foundation, Inc.
+ * Copyright 2003,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -27,12 +27,25 @@
  */
 
 #include <gr_complex.h>
+#include <boost/thread.hpp>
+
+/*!
+ * \brief Export reference to planner mutex for those apps that
+ * want to use FFTW w/o using the gri_fftw* classes.
+ */
+class gri_fft_planner {
+public:
+  typedef boost::mutex::scoped_lock scoped_lock;
+  /*!
+   * Return reference to planner mutex
+   */
+  static boost::mutex &mutex();
+};
 
 /*!
  * \brief FFT: complex in, complex out
  * \ingroup dft
  */
-
 class gri_fft_complex {
   int	      d_fft_size;
   gr_complex *d_inbuf;
