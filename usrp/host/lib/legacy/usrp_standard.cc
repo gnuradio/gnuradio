@@ -459,7 +459,7 @@ usrp_standard_rx::make_format(int width, int shift, bool want_q, bool bypass_hal
 {
   unsigned int format = 
     (((width << bmFR_RX_FORMAT_WIDTH_SHIFT) & bmFR_RX_FORMAT_WIDTH_MASK)
-     | (shift << bmFR_RX_FORMAT_SHIFT_SHIFT) & bmFR_RX_FORMAT_SHIFT_MASK);
+     | ((shift << bmFR_RX_FORMAT_SHIFT_SHIFT) & bmFR_RX_FORMAT_SHIFT_MASK));
 
   if (want_q)
     format |= bmFR_RX_FORMAT_WANT_Q;
