@@ -176,7 +176,8 @@ libgeneral_qa_la_SOURCES = 		\
 	qa_gr_fxpt.cc			\
 	qa_gr_fxpt_nco.cc		\
 	qa_gr_fxpt_vco.cc		\
-	qa_gr_math.cc
+	qa_gr_math.cc			\
+	qa_gri_lfsr.cc
 
 grinclude_HEADERS = 			\
 	gr_agc_cc.h                 	\
