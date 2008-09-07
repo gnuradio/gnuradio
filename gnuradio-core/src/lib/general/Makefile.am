@@ -337,7 +337,7 @@ noinst_HEADERS = 			\
 	qa_gr_fxpt.h			\
 	qa_gr_fxpt_nco.h		\
 	qa_gr_fxpt_vco.h		\
-	qa_gri_lsfr.h                   \
+	qa_gri_lfsr.h                   \
 	sine_table.h			\
 	qa_gr_math.h
 
