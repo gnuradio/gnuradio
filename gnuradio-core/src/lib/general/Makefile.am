@@ -319,6 +319,7 @@ grinclude_HEADERS = 			\
 	gri_float_to_char.h		\
 	gri_float_to_short.h		\
 	gri_float_to_uchar.h		\
+	gri_lfsr.h			\
 	gri_glfsr.h			\
 	gri_interleaved_short_to_complex.h \
 	gri_lfsr_15_1_0.h		\
