@@ -48,7 +48,7 @@ class _chooser_control_base(_control_base):
 	"""House a drop down or radio buttons for variable control."""
 
 	def __init__(self, window, callback, label='Label', index=0, choices=[0], labels=[]):
-		"""!
+		"""
 		Chooser contructor.
 		Create the slider, text box, and label.
 		@param window the wx parent window
@@ -68,14 +68,14 @@ class _chooser_control_base(_control_base):
 		self._init()
 
   	def _handle_changed(self, event=None):
-		"""!
+		"""
 		A change is detected. Call the callback.
 		"""
 		try: self.call()
 		except Exception, e: print >> sys.stderr, 'Error in exec callback from handle changed.\n', e
 
 	def get_value(self):
-		"""!
+		"""
 		Update the chooser.
 		@return one of the possible choices
 		"""
@@ -83,7 +83,7 @@ class _chooser_control_base(_control_base):
 		return self.choices[self.index]
 
 ##############################################################################################
-#	Button Control
+# Button Control
 ##############################################################################################
 class button_control(_chooser_control_base):
 	"""House a button for variable control."""
@@ -98,7 +98,7 @@ class button_control(_chooser_control_base):
 		self.button.SetLabel(self.labels[self.index])
 
 ##############################################################################################
-#	Drop Down Control
+# Drop Down Control
 ##############################################################################################
 class drop_down_control(_chooser_control_base):
 	"""House a drop down for variable control."""
@@ -113,7 +113,7 @@ class drop_down_control(_chooser_control_base):
 		self.index = self.drop_down.GetSelection()
 
 ##############################################################################################
-#	Radio Buttons Control
+# Radio Buttons Control
 ##############################################################################################
 class _radio_buttons_control_base(_chooser_control_base):
 	"""House radio buttons for variable control."""
@@ -147,13 +147,13 @@ class radio_buttons_vertical_control(_radio_buttons_control_base):
 	radio_button_align = wx.ALIGN_LEFT
 
 ##############################################################################################
-#	Slider Control
+# Slider Control
 ##############################################################################################
 class _slider_control_base(_control_base):
 	"""House a Slider and a Text Box for variable control."""
 
 	def __init__(self, window, callback, label='Label', value=50, min=0, max=100, num_steps=100):
-		"""!
+		"""
 		Slider contructor.
 		Create the slider, text box, and label.
 		@param window the wx parent window
@@ -191,14 +191,14 @@ class _slider_control_base(_control_base):
 		self.text_box.SetValue(str(self._value))
 
 	def get_value(self):
-		"""!
+		"""
 		Get the current set value.
 		@return the value (float)
 		"""
 		return self._value
 
 	def _set_slider_value(self, real_value):
-		"""!
+		"""
 		Translate the real numerical value into a slider value and,
 		write the value to the slider.
 		@param real_value the numeric value the slider should represent
@@ -207,7 +207,7 @@ class _slider_control_base(_control_base):
 		self.slider.SetValue(slider_value)
 
 	def _handle_scroll(self, event=None):
-		"""!
+		"""
 		A scroll event is detected. Read the slider, call the callback.
 		"""
 		slider_value = self.slider.GetValue()
@@ -218,7 +218,7 @@ class _slider_control_base(_control_base):
 		except Exception, e: print >> sys.stderr, 'Error in exec callback from handle scroll.\n', e
 
 	def _handle_enter(self, event=None):
-		"""!
+		"""
 		An enter key was pressed. Read the text box, call the callback.
 		"""
 		new_value = float(self.text_box.GetValue())
@@ -237,13 +237,13 @@ class slider_vertical_control(_slider_control_base):
 	slider_size = 20, 200
 
 ##############################################################################################
-#	Text Box Control
+# Text Box Control
 ##############################################################################################
 class text_box_control(_control_base):
 	"""House a Text Box for variable control."""
 
 	def __init__(self, window, callback, label='Label', value=50):
-		"""!
+		"""
 		Text box contructor.
 		Create the text box, and label.
 		@param window the wx parent window
@@ -264,14 +264,14 @@ class text_box_control(_control_base):
 		self.text_box.SetValue(str(value))
 
 	def get_value(self):
-		"""!
+		"""
 		Get the current set value.
 		@return the value (float)
 		"""
 		return self._value
 
 	def _handle_enter(self, event=None):
-		"""!
+		"""
 		An enter key was pressed. Read the text box, call the callback.
 		If the text cannot be evaluated, do not try callback.
 		"""

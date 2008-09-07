@@ -22,11 +22,11 @@ import sys
 from gnuradio import usrp, gr
 
 ####################################################################
-#	Helper Functions
+# Helper Functions
 ####################################################################
 
 def _set_frequency(u, which, subdev, frequency, verbose=False):
-	"""!
+	"""
 	Set the carrier frequency for the given subdevice.
 	@param u the usrp source/sink
 	@param which specifies the DDC/DUC number
@@ -44,7 +44,7 @@ def _set_frequency(u, which, subdev, frequency, verbose=False):
 	else: print >> sys.stderr, 'Error calling tune on subdevice.'
 
 def _setup_rx_subdev(u, subdev_spec, ddc, gain, frequency, auto_tr=None, rx_ant=None):
-	"""!
+	"""
 	Setup a usrp receive subdevice by setting gain and frequency.
 	Add the gain and frequency callbacks to the flow graph.
 	FlexRF: Handle auto transmit/receive and set the receive antenna.
@@ -65,7 +65,7 @@ def _setup_rx_subdev(u, subdev_spec, ddc, gain, frequency, auto_tr=None, rx_ant=
 	return subdev
 
 def _setup_tx_subdev(u, subdev_spec, gain, frequency, auto_tr=None, tx_enb=None):
-	"""!
+	"""
 	Setup a usrp receive subdevice by setting gain and frequency.
 	Add the gain and frequency callbacks to the flow graph.
 	FlexRF: Handle auto transmit/receive and enable the transmitter.
@@ -94,7 +94,7 @@ constructor_to_size = {
 
 ####################################################################
 ####################################################################
-#	Simple USRP Base Classes
+# Simple USRP Base Classes
 ####################################################################
 ####################################################################
 
@@ -102,7 +102,7 @@ class _simple_usrp(object):
 	"""A single usrp source/sink base class."""
 
 	def __init__(self, u, subdev, which):
-		"""!
+		"""
 		Create a simple usrp base class.
 		@param u the usrp object
 		@param subdev the subdevice object
@@ -113,41 +113,41 @@ class _simple_usrp(object):
 		self._which = which
 
 	def get_u(self):
-		"""!
+		"""
 		Get the underlying usrp object.
 		@return the usrp source/sink object.
 		"""
 		return self._u
 
 	def get_subdev(self):
-		"""!
+		"""
 		Get the underlying subdevice.
 		@return the subdev object.
 		"""
 		return self._subdev
 
 	def set_frequency(self, frequency):
-		"""!
+		"""
 		Set the frequency of the subdevice.
 		@param frequency the frequency to tune
 		"""
 		_set_frequency(self.get_u(), self._which, self.get_subdev(), frequency)
 
 	def set_gain(self, gain):
-		"""!
+		"""
 		Set the gain of the subdevice.
 		@param gain the gain to set
 		"""
 		self.get_subdev().set_gain(gain)
 
 ####################################################################
-#	Simple USRP Source
+# Simple USRP Source
 ####################################################################
 class _simple_source(gr.hier_block2, _simple_usrp):
 	"""A single usrp source of IO type short or complex."""
 
 	def __init__(self, number, subdev_spec, frequency, decimation, gain, mux=None, auto_tr=None, rx_ant=None):
-		"""!
+		"""
 		USRP simple source contructor.
 		@param number the unit number
 		@param subdev_spec the sub-device specification tuple
@@ -181,13 +181,13 @@ class simple_source_c(_simple_source): constructor = usrp.source_c
 class simple_source_s(_simple_source): constructor = usrp.source_s
 
 ####################################################################
-#	Simple USRP Sink
+# Simple USRP Sink
 ####################################################################
 class _simple_sink(gr.hier_block2, _simple_usrp):
 	"""A single usrp sink of IO type short or complex."""
 
 	def __init__(self, number, subdev_spec, frequency, interpolation, gain, mux=None, auto_tr=None, tx_enb=None):
-		"""!
+		"""
 		USRP simple sink contructor.
 		@param number the unit number
 		@param subdev_spec the sub-device specification tuple
@@ -222,7 +222,7 @@ class simple_sink_s(_simple_sink): constructor = usrp.sink_s
 
 ####################################################################
 ####################################################################
-#	Dual USRP Base Classes
+# Dual USRP Base Classes
 ####################################################################
 ####################################################################
 
@@ -230,7 +230,7 @@ class _dual_usrp(object):
 	"""A dual usrp source/sink base class."""
 
 	def __init__(self, u, subdev_a, subdev_b, which_a, which_b):
-		"""!
+		"""
 		Create a dual usrp base class.
 		@param u the usrp object
 		@param subdev_a the subdevice object side a
@@ -245,62 +245,62 @@ class _dual_usrp(object):
 		self._which_b = which_b
 
 	def get_u(self):
-		"""!
+		"""
 		Get the underlying usrp object.
 		@return the usrp source/sink object.
 		"""
 		return self._u
 
 	def get_subdev_a(self):
-		"""!
+		"""
 		Get the underlying subdevice.
 		@return the subdev object.
 		"""
 		return self._subdev_a
 
 	def get_subdev_b(self):
-		"""!
+		"""
 		Get the underlying subdevice.
 		@return the subdev object.
 		"""
 		return self._subdev_b
 
 	def set_frequency_a(self, frequency):
-		"""!
+		"""
 		Set the frequency of the subdevice.
 		@param frequency the frequency to tune
 		"""
 		_set_frequency(self.get_u(), self._which_a, self.get_subdev_a(), frequency)
 
 	def set_frequency_b(self, frequency):
-		"""!
+		"""
 		Set the frequency of the subdevice.
 		@param frequency the frequency to tune
 		"""
 		_set_frequency(self.get_u(), self._which_b, self.get_subdev_b(), frequency)
 
 	def set_gain_a(self, gain):
-		"""!
+		"""
 		Set the gain of the subdevice.
 		@param gain the gain to set
 		"""
 		self.get_subdev_a().set_gain(gain)
 
 	def set_gain_b(self, gain):
-		"""!
+		"""
 		Set the gain of the subdevice.
 		@param gain the gain to set
 		"""
 		self.get_subdev_b().set_gain(gain)
 
 ####################################################################
-#	Dual USRP Source
+# Dual USRP Source
 ####################################################################
 class _dual_source(gr.hier_block2, _dual_usrp):
 	"""A dual usrp source of IO type short or complex."""
 
 	def __init__(self, number, frequency_a, frequency_b, decimation, gain_a, gain_b, mux=0x3210, auto_tr=None, rx_ant_a=None, rx_ant_b=None):
-		"""!
+		"""
 		USRP dual source contructor.
 		@param number the unit number
 		@param frequency_a the frequency to tune side a
@@ -337,13 +337,13 @@ class dual_source_c(_dual_source): constructor = usrp.source_c
 class dual_source_s(_dual_source): constructor = usrp.source_s
 
 ####################################################################
-#	Dual USRP Sink
+# Dual USRP Sink
 ####################################################################
 class _dual_sink(gr.hier_block2, _dual_usrp):
 	"""A dual usrp sink of IO type short or complex."""
 
 	def __init__(self, number, frequency_a, frequency_b, interpolation, gain_a, gain_b, mux=0xba98, auto_tr=None, tx_enb_a=None, tx_enb_b=None):
-		"""!
+		"""
 		USRP dual sink contructor.
 		@param number the unit number
 		@param subdev_spec the sub-device specification tuple
@@ -376,4 +376,3 @@ class _dual_sink(gr.hier_block2, _dual_usrp):
 
 class dual_sink_c(_dual_sink): constructor = usrp.sink_c
 class dual_sink_s(_dual_sink): constructor = usrp.sink_s
-

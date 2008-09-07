@@ -21,33 +21,11 @@
 
 include $(top_srcdir)/grc/Makefile.inc
 
-SUBDIRS = blks2 usrp utils wxgui
+SUBDIRS = \
+	blks2 \
+	usrp \
+	wxgui
 
-ourpythondir = $(pythondir)/grc_gnuradio
+ourpythondir = $(grc_gnuradio_prefix)
 
-ourpython_PYTHON = \
-	__init__.py \
-	Constants.py \
-	Block.py \
-	Connection.py \
-	FlowGraph.py \
-	Generator.py \
-	Platform.py \
-	Param.py \
-	Port.py
-
-docdir = $(prefix)/share/doc/@PACKAGE@-@VERSION@
-
-BUILT_SOURCES = Constants.py
-
-Constants.py: Makefile $(srcdir)/Constants.py.in
-	sed \
-		-e 's|@PYTHONW[@]|$(PYTHONW)|g' \
-		-e 's|@datadir[@]|$(grc_gnuradio_data_dir)|g' \
-		-e 's|@blocksdir[@]|$(grc_gnuradio_blocks_dir)|g' \
-		-e 's|@docdir[@]|$(docdir)|g' \
-	$(srcdir)/Constants.py.in > $@
-
-EXTRA_DIST = Constants.py.in
-
-MOSTLYCLEANFILES = $(BUILT_SOURCES)
+ourpython_PYTHON = __init__.py

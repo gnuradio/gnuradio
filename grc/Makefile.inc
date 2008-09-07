@@ -20,9 +20,10 @@
 #
 
 include $(top_srcdir)/Makefile.common
-
-grc_data_prefix = @datadir@/${PACKAGE}/grc
-grc_examples_prefix = @datadir@/${PACKAGE}/examples/grc
-grc_data_dir = $(grc_data_prefix)/grc
-grc_gnuradio_data_dir = $(grc_data_prefix)/grc_gnuradio
-grc_gnuradio_blocks_dir = $(grc_data_prefix)/grc_gnuradio/blocks
+grc_gnuradio_prefix = $(pythondir)/grc_gnuradio
+grc_src_prefix = $(pythondir)/gnuradio/grc
+grc_data_prefix = $(datadir)/$(PACKAGE)/grc
+grc_examples_prefix = $(exampledir)/grc
+grc_base_data_dir = $(grc_data_prefix)/platforms/base
+grc_python_data_dir = $(grc_data_prefix)/platforms/python
+grc_python_blocks_dir = $(grc_data_prefix)/platforms/python/blocks

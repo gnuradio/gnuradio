@@ -21,8 +21,6 @@
 
 include $(top_srcdir)/Makefile.common
 
-docdir=$(prefix)/share/doc/@PACKAGE@-@VERSION@
-
 HTML_FILES =
 
 if HAS_XMLTO
@@ -52,18 +50,18 @@ gr-trellis.html : gr-trellis.xml
 	./make_numbered_listing.py $<
 
 install-data-local:
-	mkdir -p $(DESTDIR)$(docdir)/html
+	mkdir -p $(DESTDIR)$(gr_docdir)/html
 	@for i in $(HTML_FILES); do \
-		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(docdir)/html"; \
-		$(INSTALL_DATA) $$i $(DESTDIR)$(docdir)/html; \
+		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(gr_docdir)/html"; \
+		$(INSTALL_DATA) $$i $(DESTDIR)$(gr_docdir)/html; \
 	done
 
 uninstall-local:
 	@for i in $(HTML_FILES); do \
-		echo "$(RM) $(DESTDIR)$(docdir)/$$i;"; \
-		$(RM) $(DESTDIR)$(docdir)/$$i; \
+		echo "$(RM) $(DESTDIR)$(gr_docdir)/$$i;"; \
+		$(RM) $(DESTDIR)$(gr_docdir)/$$i; \
 	done
-	$(RM) -fr $(DESTDIR)$(docdir)/html
+	$(RM) -fr $(DESTDIR)$(gr_docdir)/html
 
 clean-local:
 	$(RM) -fr $(HTML_FILES) *~

@@ -116,3 +116,6 @@ COMPILE_MBH = $(RUN_GUILE) $(top_srcdir)/mblock/src/scheme/gnuradio/compile-mbh.
 
 # Base directory for example applications
 exampledir = $(datadir)/gnuradio/examples
+
+# Base directory for documentation
+gr_docdir = $(docdir)-$(VERSION)

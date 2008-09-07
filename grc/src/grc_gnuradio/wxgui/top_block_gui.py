@@ -28,7 +28,7 @@ class top_block_gui(gr.top_block):
 	"""gr top block with wx gui app and grid sizer."""
 
 	def __init__(self, title='', size=default_gui_size, icon=None):
-		"""!
+		"""
 		Initialize the gr top block.
 		Create the wx gui elements.
 		@param title the main window title
@@ -48,21 +48,21 @@ class top_block_gui(gr.top_block):
 		self._wx_vbox = wx.BoxSizer(wx.VERTICAL)
 
 	def GetWin(self):
-		"""!
+		"""
 		Get the window for wx elements to fit within.
 		@return the wx frame
 		"""
 		return self._wx_frame
 
 	def Add(self, win):
-		"""!
+		"""
 		Add a window to the wx vbox.
 		@param win the wx window
 		"""
 		self._wx_vbox.Add(win, 0, wx.EXPAND)
 
 	def GridAdd(self, win, row, col, row_span=1, col_span=1):
-		"""!
+		"""
 		Add a window to the wx grid at the given position.
 		@param win the wx window
 		@param row the row specification (integer >= 0)
@@ -73,7 +73,7 @@ class top_block_gui(gr.top_block):
 		self._wx_grid.Add(win, wx.GBPosition(row, col), wx.GBSpan(row_span, col_span), wx.EXPAND)
 
 	def Run(self):
-		"""!
+		"""
 		Setup the wx gui elements.
 		Start the gr top block.
 		Block with the wx main loop.
@@ -96,4 +96,3 @@ class top_block_gui(gr.top_block):
 		gr.top_block.start(self)
 		#blocking main loop
 		self._wx_app.MainLoop()
-

@@ -1,0 +1,44 @@
+"""
+Copyright 2008 Free Software Foundation, Inc.
+This file is part of GNU Radio
+
+GNU Radio Companion is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+GNU Radio Companion is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+"""
+
+import os
+
+##The current version of this code
+VERSION = '@VERSION@'
+
+##Location of external data files.
+DATA_DIR = '@datadir@'
+
+##DTD validator for saved flow graphs.
+FLOW_GRAPH_DTD = os.path.join(DATA_DIR, 'flow_graph.dtd')
+
+##The default file extension for flow graphs.
+FLOW_GRAPH_FILE_EXTENSION = '.grc'
+
+##The default file extension for saving flow graph snap shots.
+IMAGE_FILE_EXTENSION = '.png'
+
+##The default path for the open/save dialogs.
+DEFAULT_FILE_PATH = os.getcwd()
+
+##The default icon for the gtk windows.
+PY_GTK_ICON = os.path.join(DATA_DIR, 'grc-icon-256.png')
+
+##The users home directory.
+HOME_DIR = os.path.expanduser('~')

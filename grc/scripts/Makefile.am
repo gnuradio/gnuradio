@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/grc/Makefile.inc
 
 EXTRA_DIST = $(bin_SCRIPTS)
 

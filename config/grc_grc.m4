@@ -52,27 +52,30 @@ AC_DEFUN([GRC_GRC],[
     AC_SUBST(PYTHONW)
 
     AC_CONFIG_FILES([ \
-        grc/Makefile \
-        grc/data/Makefile \
-        grc/data/grc/Makefile \
-        grc/data/grc_gnuradio/Makefile \
-        grc/data/grc_gnuradio/blocks/Makefile \
-        grc/src/Makefile \
-        grc/src/grc/Makefile \
-        grc/src/grc/gui/Makefile \
-        grc/src/grc/gui/elements/Makefile \
-        grc/src/grc/elements/Makefile \
         grc/src/grc_gnuradio/Makefile \
+        grc/src/grc_gnuradio/wxgui/Makefile \
         grc/src/grc_gnuradio/blks2/Makefile \
         grc/src/grc_gnuradio/usrp/Makefile \
-        grc/src/grc_gnuradio/utils/Makefile \
-        grc/src/grc_gnuradio/wxgui/Makefile \
-        grc/scripts/Makefile \
+        grc/src/Makefile \
+        grc/src/platforms/Makefile \
+        grc/src/platforms/base/Makefile \
+        grc/src/platforms/python/Makefile \
+        grc/src/platforms/python/utils/Makefile \
+        grc/src/platforms/gui/Makefile \
+        grc/src/utils/Makefile \
+        grc/src/gui/Makefile \
         grc/examples/Makefile \
+        grc/examples/xmlrpc/Makefile \
+        grc/examples/usrp/Makefile \
         grc/examples/audio/Makefile \
         grc/examples/simple/Makefile \
-        grc/examples/usrp/Makefile \
-        grc/examples/xmlrpc/Makefile \
+        grc/Makefile \
+        grc/data/Makefile \
+        grc/data/platforms/Makefile \
+        grc/data/platforms/base/Makefile \
+        grc/data/platforms/python/Makefile \
+        grc/data/platforms/python/blocks/Makefile \
+        grc/scripts/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(grc)

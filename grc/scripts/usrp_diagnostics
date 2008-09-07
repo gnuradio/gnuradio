@@ -17,9 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
-##@package Graphics.USRPDiagnostics
-#A dialog for querying USRP subdevices. USRP interfacing methods encapsulated here.
-#@author Josh Blum
 
 from gnuradio import usrp
 import os
@@ -28,12 +25,12 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-from grc.gui.Dialogs import TextDisplay
+from gnuradio.grc.gui.Dialogs import TextDisplay
 
-from grc_gnuradio.Platform import Platform
+from gnuradio.grc.platforms.python.Platform import Platform
 platform = Platform(block_paths_internal_only=['usrp_diagnostics.xml'])
 
-from grc.gui.elements.Platform import Platform
+from gnuradio.grc.platforms.gui.Platform import Platform
 platform = Platform(platform)
 
 flow_graph = platform.get_new_flow_graph()

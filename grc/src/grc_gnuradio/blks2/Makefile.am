@@ -19,9 +19,9 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
+include $(top_srcdir)/grc/Makefile.inc
 
-ourpythondir = $(pythondir)/grc_gnuradio/blks2
+ourpythondir = $(grc_gnuradio_prefix)/blks2
 
 ourpython_PYTHON = \
 	__init__.py \

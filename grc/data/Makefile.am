@@ -21,4 +21,4 @@
 
 include $(top_srcdir)/grc/Makefile.inc
 
-SUBDIRS = grc grc_gnuradio
+SUBDIRS = platforms
