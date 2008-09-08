@@ -98,6 +98,16 @@ class gri_lfsr
     return bit;
   }
 
+  /*!
+   * Rotate the register through x number of bits
+   * where we are just throwing away the results to get queued up correctly
+   */
+  void pre_shift(int num){
+    for(int i=0; i<num; i++){
+      next_bit();
+    }
+  }
+
   int mask() const { return d_mask; }
 };
 
