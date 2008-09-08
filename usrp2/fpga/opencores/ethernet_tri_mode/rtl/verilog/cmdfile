@@ -1,0 +1,7 @@
+-y .
+-y TECH
+-y MAC_tx
+-y MAC_rx
+-y RMON
+-y miim
++incdir+rtl/verilog

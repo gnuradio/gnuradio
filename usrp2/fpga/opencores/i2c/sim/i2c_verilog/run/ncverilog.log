@@ -1,0 +1,118 @@
+ncverilog: v03.40.(b001): (c) Copyright 1995 - 2001 Cadence Design Systems, Inc.
+ncverilog: v03.40.(b001): Started on Jun 15, 2002 at 13:36:36
+ncverilog
+	+access+rwc
+	+linedebug
+	+define+"WAVES"
+	+incdir+../../../../bench/verilog
+	+incdir+../../../../rtl/verilog
+	+libext+.v
+	-y
+	/tools/synopsys/dw/sim_ver/
+	../../../../rtl/verilog/i2c_master_bit_ctrl.v
+	../../../../rtl/verilog/i2c_master_byte_ctrl.v
+	../../../../rtl/verilog/i2c_master_top.v
+	../../../../bench/verilog/i2c_slave_model.v
+	../../../../bench/verilog/wb_master_model.v
+	../../../../bench/verilog/tst_bench_top.v
+
+ncverilog: *W,BADPRF: The +linedebug option may have an adverse performance impact.
+file: ../../../../rtl/verilog/i2c_master_bit_ctrl.v
+	module worklib.i2c_master_bit_ctrl:v (up-to-date)
+		errors: 0, warnings: 0
+file: ../../../../rtl/verilog/i2c_master_byte_ctrl.v
+	module worklib.i2c_master_byte_ctrl:v (up-to-date)
+		errors: 0, warnings: 0
+file: ../../../../rtl/verilog/i2c_master_top.v
+	module worklib.i2c_master_top:v (up-to-date)
+		errors: 0, warnings: 0
+file: ../../../../bench/verilog/i2c_slave_model.v
+	module worklib.i2c_slave_model:v (up-to-date)
+		errors: 0, warnings: 0
+file: ../../../../bench/verilog/wb_master_model.v
+	module worklib.wb_master_model:v (up-to-date)
+		errors: 0, warnings: 0
+file: ../../../../bench/verilog/tst_bench_top.v
+	module worklib.tst_bench_top:v
+		errors: 0, warnings: 0
+ncvlog: *W,LIBNOU: Library "/tools/synopsys/dw/sim_ver/" given but not used.
+	Total errors/warnings found outside modules and primitives:
+		errors: 0, warnings: 1
+		Caching library 'worklib' ....... Done
+	Elaborating the design hierarchy:
+	Building instance overlay tables: .................... Done
+	Generating native compiled code:
+		worklib.tst_bench_top:v <0x7fb52c98>
+			streams:  12, words: 59009
+	Loading native compiled code:     .................... Done
+	Building instance specific data structures.
+	Design hierarchy summary:
+		                  Instances  Unique
+		Modules:                  6       6
+		Primitives:               2       1
+		Registers:               68      68
+		Scalar wires:            48       -
+		Expanded wires:          36       2
+		Vectored wires:           6       -
+		Always blocks:           23      23
+		Initial blocks:           3       3
+		Cont. assignments:       28      28
+		Pseudo assignments:      11      14
+		Simulation timescale:  10ps
+	Writing initial simulation snapshot: worklib.tst_bench_top:v
+Loading snapshot worklib.tst_bench_top:v .................... Done
+ncsim> source /cds/tools/inca/files/ncsimrc
+ncsim> run
+INFO: Signal dump enabled ...
+
+
+
+status:                    0 Testbench started
+
+
+
+INFO: WISHBONE MASTER MODEL INSTANTIATED (tst_bench_top.u0)
+
+status:                19500 done reset
+status:                23600 programmed registers
+status:                25600 verified registers
+status:                27600 enabled core
+status:                30600 generate 'start', write cmd a0 (slave address+write)
+status:              2582600 tip==0
+status:              2585600 write slave memory address 01
+status:              4877600 tip==0
+status:              4880600 write data a5
+status:              7172600 tip==0
+status:              7175600 write next data 5a, generate 'stop'
+status:              9467600 tip==0
+status:             19467600 wait 100us
+status:             19470600 generate 'start', write cmd a0 (slave address+write)
+status:             22014600 tip==0
+status:             22017600 write slave address 01
+status:             24309600 tip==0
+status:             24312600 generate 'repeated start', write cmd a1 (slave address+read)
+status:             26858600 tip==0
+status:             26860600 read + ack
+status:             29154600 tip==0
+status:             29158600 read + ack
+status:             31448600 tip==0
+status:             31452600 read + ack
+status:             33744600 tip==0
+status:             33746600 received xx from 3rd read address
+status:             33748600 read + nack
+status:             36038600 tip==0
+status:             36040600 received xx from 4th read address
+status:             36043600 generate 'start', write cmd a0 (slave address+write). Check invalid address
+status:             38589600 tip==0
+status:             38592600 write slave memory address 10
+status:             40884600 tip==0
+status:             40884600 Check for nack
+status:             40886600 generate 'stop'
+status:             40888600 tip==0
+
+
+status:             43388600 Testbench done
+Simulation stopped via $stop(1) at time 433886 NS + 0
+/mnt/pooh/projects/I2C/bench/verilog/tst_bench_top.v:427 			$stop;
+ncsim> exit
+ncverilog: v03.40.(b001): Exiting on Jun 15, 2002 at 13:47:48  (total: 00:11:12)

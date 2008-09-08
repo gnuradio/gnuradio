@@ -1,0 +1,111 @@
+Note: This Changes file is being maintained since 25.5.2001.
+
+29.07.2002
+~~~~~~~~~~
+Reverted to have uart_defines.v file to be included in the verilog
+files. It seems that it's been a bad idea in the first place.
+
+22.07.2002
+~~~~~~~~~~
+Notice that this file hasn't been updated for a while so not all changed are present.
+
+Bug Fixes:
+ * Possible loss of sync and bad reception of stop bit on slow baud rates fixed.
+  Problem reported by Kenny.Tung.
+ * Bad (or lack of ) loopback handling fixed. Reported by Cherry Withers.
+
+Improvements:
+ * Made FIFO's as general inferrable memory where possible. 
+ So on FPGA they should be inferred as RAM (Distributed RAM on Xilinx).
+ This saves about 1/3 of the Slice count and reduces P&R and synthesis times.
+
+ * Added optional baudrate output (baud_o). 
+ This is identical to BAUDOUT* signal on 16550 chip. 
+ It outputs 16xbit_clock_rate - the divided clock.
+ It's disabled by default. Define UART_HAS_BAUDRATE_OUTPUT to use.
+
+Note:
+ The uart_defines.v file is no longer included in the source files.
+ So keep this in mind when doing simulation. Add it manually.
+ I've done this, so that you could you your own define files for
+ different configurations. I need this for the IrDA core I develop.
+ You can just uncomment the `includes if you want the old behaviour.
+ The uart_fifo.v file is no longer used. Intead uart_rfifo.v and uart_tfifo.v
+ file are now present. Also raminfr.v in the new inferred ram module.
+
+ Check the new core and I hope you'll like it.
+
+10.08.2001
+~~~~~~~~~~
+* Modified naming of top signals and defines to be unique and easy to integrate
+* Changed the directory structure of the core to new structure as described in OpenCores 
+  coding guidelines. !!!
+* Fixed (I hope) the detection of break condition  
+* Added top level parameters for data width and address line width
+
+23.06.2001
+~~~~~~~~~~
+
+* With the help of Bob Kirstein another two bugs were fixed:
+   1. Trasmitter was sending stop bit two 16xclock cycle slonger than needed.
+   2. Receiver was losing 1 16xclock cycle on each character and went out of sync.
+
+* Major change: 
+    I have modified the divisor latch register to be 16-bit long instead of 32 as I thought was
+    necessary for higher speed systems. Thanks to Rick Wright for pointing this out.
+    So now, DL3 and DL4 register bytes are not used.
+    Documentation is updated to follow this change.
+
+* Note that more than 1 stop bit in a byte i snot implemented.
+
+2.05.2001
+~~~~~~~~~
+
+* Fixed transmitter and receiver - the start and the stop bits were sent and received complemented.
+  Big thanks go to Bob Kirstein for pointing this out to me.
+
+
+31.05.2001
+~~~~~~~~~~
+
+* Minor changes in register reading code
+* Changed FCR to be 2 bits wide (reset bits are not needed) and instead enabled the rx_reset and tx_reset
+   signals which I forgot to implement.
+* Changed defines for FCR.
+* Cleaned ports that were not connected in top-level.
+* Changed the code to have only one FIFO module instead of two to overcome versioning problem on the cost of
+   some additional gate count. UART_RX_FIFO was modified a little and renamed to UART_FIFO.
+* UART_RX_FIFO.v and UART_TX_FIFO.v files removed from the project.
+* Changes to receiver and transmitter modules concerning FIFO handling.
+* Commented out `include "UART_defines" in all files but UART_top.v and test bench.
+* Modified test bench a little for a little better check.
+
+
+29.05.2001
+~~~~~~~~~~
+
+* Fixed: Line Control Register block didn't have wb_rst_i in its sensitivity list
+* Fixed: Modem Status Register block didn't have wb_rst_i in its sensitivity list and didn't set reset value
+* Fixed rf_pop, lsr_mask, msi_reset and threi_clear not being synthesizable in release 1.7. (Thanks 
+	to Pavel Korenski for pointing this to me)
+
+
+27.05.2001
+~~~~~~~~~~
+
+Thanks to Rick Wright for pointing me many of my bugs.
+
+* Fixed the rf_pop and lsr_mask flags not being deasserted.
+* Fixed Time-Out interrupt not being masked by bit 0 in IER
+* Fixed interrupt logic not being masked by IER
+* Fixed bit 0 (interrupt pending) of IIR being set incorrectly
+* Fixed Modem Status Register bits 3:0 handling (didn't work as should have)
+* Fixed modem status interrupt to be related to bits [3:0] (deltas) instead of the bits 7:4 of MSR.
+   This way the interrupt is cleared upon reading from the MSR.
+* Fixed THRE interrupt not being reset by reading IIR
+* Changed Receiver and Transmitter FIFO, so that they do not use the FIFO_inc.v file because of problems
+  with #include command.
+* Removed FIFO_inc.v from CVS tree.
+
+* Updated specifications .pdf file
+

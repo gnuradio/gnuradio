@@ -1,0 +1,1 @@
+ncverilog -f ../bin/nc.scr  &

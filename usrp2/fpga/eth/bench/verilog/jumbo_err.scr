@@ -1,0 +1,40 @@
+// This test performs transmission & reception of several Jumbo-frame of ~2Kbytes
+// In one of the frames an error is injected to allow analysis of how the
+// MAC Rx interface reacts to errors in long packets
+
+// Read from register 24 to confirm that Rx CRC check is enabled
+03 00 18 00 01 ff ff
+
+// Set speed to 1000 Mbps
+01 00 22 00 04
+
+// Setup Tx and Rx MAC addresses and type field to "IP"
+// Set Tx Data at offset 0, length 14 to 123456789ABC CBA987654321 0800
+10 00 00 00 0E 12 34 56 78 9A BC CB A9 87 65 43 21 08 00
+
+// Transmit a 2049-byte frame 2 times - and expect them to be received again!
+20 08 02 00 02
+
+// Wait (indefinitely) for missing Rx packets
+22 00 00 
+
+// Transmit a 2049-byte frame 1 time - but expect to receive it with error!
+25 08 02 00 01
+
+// Delay 256 NOPs to time the error injection to be late in the packet
+0F 01 00
+
+// Inject a single bit error in the packet (data bit 0)
+23 01 00
+
+// Wait (indefinitely) for missing Rx packets
+22 00 00 
+
+// Transmit a 2049-byte frame 2 times - and expect them to be received again!
+20 08 01 00 02
+
+// Wait (indefinitely) for missing Rx packets
+22 00 00 
+
+// Halt
+FF

@@ -1,0 +1,12 @@
+# Output products list for <fifo_xlnx_2Kx36_2clk>
+fifo_xlnx_2Kx36_2clk.asy
+fifo_xlnx_2Kx36_2clk.ngc
+fifo_xlnx_2Kx36_2clk.sym
+fifo_xlnx_2Kx36_2clk.v
+fifo_xlnx_2Kx36_2clk.veo
+fifo_xlnx_2Kx36_2clk.vhd
+fifo_xlnx_2Kx36_2clk.vho
+fifo_xlnx_2Kx36_2clk.xco
+fifo_xlnx_2Kx36_2clk_fifo_generator_v4_3_xst_1.ngc_xst.xrpt
+fifo_xlnx_2Kx36_2clk_flist.txt
+fifo_xlnx_2Kx36_2clk_xmdf.tcl

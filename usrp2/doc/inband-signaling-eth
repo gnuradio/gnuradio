@@ -1,0 +1,390 @@
+#
+# Copyright 2007 Free Software Foundation, Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+
+FIXME Needless to say, this is _very much_ a work in progress
+
+
+
+This file specifies the format of ethernet packets used for in-band data
+transmission and signaling on the USRP2.
+
+IN packets are sent towards the host.
+OUT packets are sent away from the host.
+
+The layout is 32-bits wide.  All data is transmitted in BIG-endian
+format across the ethernet.
+
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Chan   |                     mbz                       |I|S|E|
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                           Timestamp                           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   +                                                               +
+   |                            Payload                            |
+   .                                                               .
+   .                                                               .
+   .                                                               .
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+
+  mbz   Must be Zero: these bits must be zero in both IN and OUT packets.
+
+  I	Send Immediately. Set on Tx data that should be transmitted now.
+	FIXME: change definition to honor 0xffffffff timestamp.
+
+  S     Start of Burst Flag:  Set in an OUT packet if the data is the
+        first segment of what is logically a continuous burst of data.
+        Must be zero in IN packets.
+
+  E     End of Burst Flag:  Set in an OUT packet if the data is the
+        last segment of what is logically a continuous burst of data.
+        Must be zero in IN packets.  Underruns are not reported
+        when the FPGA runs out of samples between bursts.
+
+
+  Chan  5-bit logical channel number.  Channel number 0x1f is reserved
+        for control information.  See "Control Channel" below.  Other
+        channels are "data channels."  Each data channel is logically
+        independent of the others.  A data channel payload field
+        contains a sequence of homogeneous samples.  The format of the
+        samples is determined by the configuration associated with the
+        given channel.  It is often the case that the payload field
+        contains 32-bit complex samples, each containing 16-bit real
+        and imaginary components.
+
+  Timestamp: 32-bit timestamp.
+
+	FIXME: update to reflect that the time is measured at the
+	time the samples inserted into or pulled out of the 
+	DSP pipeline, not the A/D time.  Using A/D time is problematic
+	because of group delay through filtering, etc.
+
+	On IN packets, the timestamp indicates the time at which the
+	first sample of the packet was produced by the A/D converter(s)
+        for that channel.  On OUT packets, the timestamp specifies the
+        time at which the first sample in the packet should go out the
+        D/A converter(s) for that channel.  If a packet reaches the
+	head of the transmit queue, and the current time is later than
+	the timestamp, an error is assumed to have occurred and the
+	packet is discarded.  As a special case, the timestamp
+	0xffffffff is interpreted as "Now".
+
+	The time base is a free running 32-bit counter that is
+	incremented by the A/D sample-clock.
+
+  Payload: Variable length field.  Length is specified by the
+        length of the containing ethernet frame.
+
+
+// FIXME need to revisit this stuff
+
+  O     Overrun Flag: set in an IN packet if an overrun condition was
+        detected.  Must be zero in OUT packets.  Overrun occurs when
+        the FPGA has data to transmit to the host and there is no
+        buffer space available.  This generally indicates a problem on
+        the host.  Either it is not keeping up, or it has configured
+        the FPGA to transmit data at a higher rate than the transport
+        (USB) can support.
+
+  U     Underrun Flag: set in an IN packet if an underrun condition
+        was detected.  Must be zero in OUT packets.  Underrun occurs
+        when the FPGA runs out of samples, and it's not between
+        bursts.  See the "End of Burst flag" below.
+
+  D     Dropped Packet Flag: Set in an IN packet if the FPGA
+	discarded an OUT packet because its timestamp had already
+	passed.
+
+
+  RSSI  6-bit Received Strength Signal Indicator:  Must be zero in OUT
+        packets.  In IN packets, indicates RSSI as reported by front end.
+	FIXME The format and interpretation are to be determined.
+
+
+  Tag   4-bit tag for matching IN packets with OUT packets.
+        [FIXME, write more...]
+
+
+
+"Data Channel" payload format:
+-------------------------------
+
+If Chan != 0x1f, the packet is a "data packet" and the payload is a
+sequence of homogeneous samples.  The format of the samples is
+determined by the configuration associated with the given channel.  
+It is often the case that the payload field contains 32-bit complex
+samples, each containing 16-bit real and imaginary components.
+
+
+"Control Channel" payload format:
+---------------------------------
+
+If Chan == 0x1f, the packet is a "control packet".  The control channel
+payload consists of a sequence of 0 or more sub-packets.
+
+Each sub-packet starts on a 32-bit boundary, and consists of an 8-bit
+Opcode field, an 8-bit Length field, Length bytes of arguments, and 0,
+1, 2 or 3 bytes of padding to align the tail of the sub-packet to
+a 32-bit boundary.
+
+Control channel packets shall be processed at the head of the queue,
+and shall observe the timestamp semantics described above.
+
+
+General sub-packet format:
+--------------------------
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-//-+-+-+-+-+-+-+-+
+   |     Opcode    |    Length     |        <length bytes> ...    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-//-+-+-+-+-+-+-+-+
+
+
+Specific sub-packet formats:
+----------------------------
+
+  RID: 8-bit Request-ID. Copied from request sub-packet into corresponding
+       reply sub-packet.  RID allows the host to match requests and replies.
+
+  Reg Number: 8-bit Register Number.
+
+
+
+Identify:
+
+    Opcode:	OP_ID
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       2       |       RID     |      mbz      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+Identify Reply:
+
+    Opcode:	OP_ID_REPLY
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |      50       |      RID      |      mbz      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Mac Addr 0   |  Mac Addr 1   |  Mac Addr 2   |  Mac Addr 3   |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Mac Addr 4   |  Mac Addr 5   | H/W rev major | H/W rev minor |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   | Serial Num 0  | Serial Num 1  | Serial Num 2  | Serial Num 3  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   | Serial Num 4  | Serial Num 5  | Serial Num 6  | Serial Num 7  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   +                                                               +
+   |                                                               |
+   +                         FPGA MD5SUM                           +
+   |                                                               |
+   +                                                               +
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   +                                                               +
+   |                                                               |
+   +                          S/W MD5SUM                           +
+   |                                                               |
+   +                                                               +
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+Write Register:
+
+    Opcode:	OP_WRITE_REG
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       6       |      mbz      |   Reg Number  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Register Value                         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+Write Register Masked:
+
+    Opcode:	OP_WRITE_REG_MASKED
+
+    REG[Num] = (REG[Num] & ~Mask) | (Value & Mask)
+
+    That is, only the register bits that correspond to 1's in the
+    mask are written with the new value.
+
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |      10       |      mbz      |   Reg Number  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                         Register Value                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                           Mask Value                          |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+Read Register:
+
+    Opcode:	OP_READ_REG
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       2       |      RID      |   Reg Number  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+Read Register Reply:
+
+    Opcode:	OP_READ_REG_REPLY
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       6       |      RID      |   Reg Number  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Register Value                         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+// FIXME these may not be implemented...
+
+I2C Write:
+
+    Opcode:	OP_I2C_WRITE
+    I2C Addr:   7-bit I2C address
+    Data:	The bytes to write to the I2C bus
+    Length:     Length of Data + 2
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |    Length     |      RID      |    I2C Addr   |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    Data ...			                           .
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+I2C Write Reply:
+
+    Opcode:	OP_I2C_WRITE_REPLY
+    Length:     2
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       2       |      RID      |      OK       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+OK is 1 if successful, else 0.
+
+
+I2C Read:
+
+    Opcode:	OP_I2C_READ
+    I2C Addr:	7-bit I2C address
+    Nbytes:	Number of bytes to read from I2C bus
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       3       |      RID      |    I2C Addr   |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Nbytes    |              unspecified padding              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+I2C Read Reply:
+
+    Opcode:	OP_I2C_READ_REPLY
+    I2C Addr:	7-bit I2C address
+    Data:	Length - 2 bytes of data read from I2C bus.
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |     Length    |      RID      |      OK       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    Data ...			                           .
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+OK is 1 if successful, else 0
+
+
+SPI Write:
+
+    Opcode:	      OP_SPI_WRITE
+    Enables:	      Which SPI enables to assert (mask)
+    Format:	      Specifies format of SPI data and Opt Header Bytes
+    Opt Header Bytes: 2-byte field containing optional Tx bytes; see Format
+    Data:	      The bytes to write to the SPI bus
+    Length:	      Length of Data + 6
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |     Length    |      RID      |      mbz      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    Enables    |    Format     |        Opt Header Bytes       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    Data ...			                           .
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+SPI Write Reply:
+
+    Opcode:	OP_SPI_WRITE_REPLY
+    Length:     2
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       2       |      RID      |      OK       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+OK is 1 if successful, else 0.
+
+
+SPI Read:
+
+    Opcode:	      OP_SPI_READ
+    Enables:	      Which SPI enables to assert (mask)
+    Format:	      Specifies format of SPI data and Opt Header Bytes
+    Opt Header Bytes: 2-byte field containing optional Tx bytes; see Format
+    Nbytes:	      Number of bytes to read from SPI bus.
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       7       |      RID      |      mbz      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    Enables    |    Format     |        Opt Header Bytes       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Nbytes    |              unspecified padding              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+SPI Read Reply:
+
+    Opcode:   OP_SPI_READ_REPLY
+    Data:     Length - 2 bytes of data read from SPI bus.
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |     Length    |    RID    |        mbz        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    Data ...			                           .
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+Delay:
+
+    Opcode:	OP_DELAY
+    Ticks:	16-bit unsigned delay count
+
+    Delay Ticks clock ticks before executing next operation.
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     Opcode    |       2       |            Ticks              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+

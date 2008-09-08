@@ -1,0 +1,95 @@
+echo "Baseline 1000"
+iverilog -y .. -o test_hbd -DRATE=1000 test_hbd.v  ; ./test_hbd >golden
+diff golden really_golden
+
+echo
+echo "Test 100"
+iverilog -y .. -o test_hbd -DRATE=100 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 50"
+iverilog -y .. -o test_hbd -DRATE=50 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 40"
+iverilog -y .. -o test_hbd -DRATE=40 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 30"
+iverilog -y .. -o test_hbd -DRATE=30 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 25"
+iverilog -y .. -o test_hbd -DRATE=25 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 20"
+iverilog -y .. -o test_hbd -DRATE=20 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 19"
+iverilog -y .. -o test_hbd -DRATE=19 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 18"
+iverilog -y .. -o test_hbd -DRATE=18 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 17"
+iverilog -y .. -o test_hbd -DRATE=17 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 16"
+iverilog -y .. -o test_hbd -DRATE=16 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 15"
+iverilog -y .. -o test_hbd -DRATE=15 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 14"
+iverilog -y .. -o test_hbd -DRATE=14 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 13"
+iverilog -y .. -o test_hbd -DRATE=13 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 12"
+iverilog -y .. -o test_hbd -DRATE=12 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 11"
+iverilog -y .. -o test_hbd -DRATE=11 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 10"
+iverilog -y .. -o test_hbd -DRATE=10 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 9"
+iverilog -y .. -o test_hbd -DRATE=9 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 8"
+iverilog -y .. -o test_hbd -DRATE=8 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 7"
+iverilog -y .. -o test_hbd -DRATE=7 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 6"
+iverilog -y .. -o test_hbd -DRATE=6 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 5"
+iverilog -y .. -o test_hbd -DRATE=5 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 4"
+iverilog -y .. -o test_hbd -DRATE=4 test_hbd.v  ; ./test_hbd >output ; diff output golden
+
+echo
+echo "Test 3"
+iverilog -y .. -o test_hbd -DRATE=3 test_hbd.v  ; ./test_hbd >output ; diff output golden

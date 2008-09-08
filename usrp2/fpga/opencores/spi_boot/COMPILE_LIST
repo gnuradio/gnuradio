@@ -1,0 +1,33 @@
+
+Compile list for the spi_boot core
+==================================
+Version: $Date: 2005/04/14 21:26:22 $
+
+bench/vhdl/tb.vhd
+rtl/vhdl/spi_boot_pack-p.vhd
+bench/vhdl/tb_pack-p.vhd
+bench/vhdl/tb_elem.vhd
+rtl/vhdl/chip-e.vhd
+rtl/vhdl/chip-full-a.vhd
+rtl/vhdl/spi_boot.vhd
+rtl/vhdl/spi_counter.vhd
+rtl/vhdl/spi_counter-c.vhd
+rtl/vhdl/spi_boot-c.vhd
+rtl/vhdl/chip-full-c.vhd
+bench/vhdl/card.vhd
+bench/vhdl/card-c.vhd
+bench/vhdl/tb_elem-full-c.vhd
+rtl/vhdl/chip-mmc-a.vhd
+rtl/vhdl/chip-mmc-c.vhd
+bench/vhdl/tb_elem-mmc-c.vhd
+rtl/vhdl/chip-sd-a.vhd
+rtl/vhdl/chip-sd-c.vhd
+bench/vhdl/tb_elem-sd-c.vhd
+rtl/vhdl/chip-minimal-a.vhd
+rtl/vhdl/chip-minimal-c.vhd
+bench/vhdl/tb_elem-minimal-c.vhd
+bench/vhdl/tb-c.vhd
+bench/vhdl/tb_rl.vhd
+rtl/vhdl/sample/ram_loader.vhd
+rtl/vhdl/sample/ram_loader-c.vhd
+bench/vhdl/tb_rl-c.vhd

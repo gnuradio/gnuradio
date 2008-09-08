@@ -1,0 +1,528 @@
+VERSION=1.15
+HEADER
+FILE="readWriteSDBlock.asf"
+FID=4788d213
+LANGUAGE=VERILOG
+ENTITY="readWriteSDBlock"
+FRAMES=ON
+FREEOID=575
+"LIBRARIES=//////////////////////////////////////////////////////////////////////\n////                                                              ////\n//// readWriteSDBlock.v                             ////\n////                                                              ////\n//// This file is part of the spiMaster opencores effort.\n//// <http://www.opencores.org/cores//>                           ////\n////                                                              ////\n//// Module Description:                                          ////\n////  parameterized dual clock domain fifo. \n////  fifo depth is restricted to 2^ADDR_WIDTH\n////  No protection against over runs and under runs.\n//// \n////                                                              ////\n//// To Do:                                                       ////\n//// \n////                                                              ////\n//// Author(s):                                                   ////\n//// - Steve Fielding, sfielding@base2designs.com                 ////\n////                                                              ////\n//////////////////////////////////////////////////////////////////////\n////                                                              ////\n//// Copyright (C) 2004 Steve Fielding and OPENCORES.ORG          ////\n////                                                              ////\n//// This source file may be used and distributed without         ////\n//// restriction provided that this copyright statement is not    ////\n//// removed from the file and that any derivative work contains  ////\n//// the original copyright notice and the associated disclaimer. ////\n////                                                              ////\n//// This source file is free software; you can redistribute it   ////\n//// and/or modify it under the terms of the GNU Lesser General   ////\n//// Public License as published by the Free Software Foundation; ////\n//// either version 2.1 of the License, or (at your option) any   ////\n//// later version.                                               ////\n////                                                              ////\n//// This source is distributed in the hope that it will be       ////\n//// useful, but WITHOUT ANY WARRANTY; without even the implied   ////\n//// warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR      ////\n//// PURPOSE. See the GNU Lesser General Public License for more  ////\n//// details.                                                     ////\n////                                                              ////\n//// You should have received a copy of the GNU Lesser General    ////\n//// Public License along with this source; if not, download it   ////\n//// from <http://www.opencores.org/lgpl.shtml>                   ////\n////                                                              ////\n//////////////////////////////////////////////////////////////////////\n//\n`include \"timescale.v\"\n`include \"spiMaster_defines.v\"\n"
+END
+BUNDLES
+B T "Declarations" 0,0,255 0 0 1 255,255,255 0 3125 0 0000 1  "Arial" 0
+B T "Conditions" 0,0,0 0 0 0 255,255,255 0 3125 0 0110 1  "Arial" 0
+B F "States" 0,0,0 0 0 1 0,255,0 1 3527 1480 0000 1  "Arial" 0
+B T "Actions" 0,0,0 0 0 1 255,255,255 0 3125 0 0000 1  "Arial" 0
+B T "Labels" 0,0,0 0 0 0 255,255,255 0 3125 0 0000 1  "Arial" 0
+B L "Transitions" 0,0,0 0 0 1 0,0,0 1 3527 1480 0000 1  "Arial" 0
+B F "Ports" 0,0,0 0 0 1 0,255,255 1 3527 1480 0000 1  "Arial" 0
+B L "Errors" 255,0,0 0 3 1 255,255,255 1 3527 1480 0000 1  "Arial" 0
+B T "State Labels" 0,0,0 0 0 0 255,255,255 0 3125 0 0000 1  "Arial" 4
+B F "Current State" 255,255,0 0 0 1 255,255,0 1 3527 1480 0000 1  "Arial" 0
+B T "Comments" 157,157,157 0 0 1 255,255,255 0 3527 1480 0000 1  "Arial" 0
+B L "Info" 0,255,0 0 3 1 255,255,255 1 3527 1480 0000 1  "Arial" 0
+END
+INSTHEADER 1
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 5000,5000 10000,10000
+END
+INSTHEADER 84
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+INSTHEADER 118
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+INSTHEADER 130
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+INSTHEADER 169
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+INSTHEADER 224
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+INSTHEADER 302
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+INSTHEADER 327
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+INSTHEADER 337
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+INSTHEADER 389
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+INSTHEADER 415
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+OBJECTS
+W 559 170 0 278 558 BEZIER "Transitions" | 159514,250710 169909,244734 184439,233702 194834,227726
+S 558 170 229376 ELLIPSE "States" | 199680,223395 6500 6500
+L 557 558 0 TEXT "State Labels" | 199680,223395 1 0 0 "DEL\n/47/"
+A 556 315 4 TEXT "Actions" | 131150,199900 1 0 0 "sendCmdReq <= 1'b0;"
+A 555 105 4 TEXT "Actions" | 131275,200525 1 0 0 "sendCmdReq <= 1'b0;"
+I 554 0 130 Builtin Signal | 33764,246565 "" ""
+L 553 554 0 TEXT "Labels" | 36764,246565 1 0 0 "locRespByte[7:0]"
+I 552 0 130 Builtin Signal | 160575,273050 "" ""
+L 551 552 0 TEXT "Labels" | 163575,273050 1 0 0 "timeOutCnt[11:0]"
+I 548 0 130 Builtin InPort | 32700,254660 "" ""
+L 547 548 0 TEXT "Labels" | 38700,254660 1 0 0 "blockAddr[31:0]"
+I 546 0 130 Builtin Signal | 161380,256608 "" ""
+L 545 546 0 TEXT "Labels" | 164380,256608 1 0 0 "delCnt2[7:0]"
+I 544 0 130 Builtin Signal | 161114,261928 "" ""
+W 287 170 3 273 278 BEZIER "Transitions" | 153140,203509 147585,209132 136504,218759 133963,224585\
+                                           131423,230411 132372,242472 134709,246197 137046,249923\
+                                           143477,251737 147677,253159
+C 283 275 0 TEXT "Conditions" | 163404,220919 1 0 0 "rxDataRdy == 1'b1"
+L 282 273 0 TEXT "State Labels" | 158403,199697 1 0 0 "CHK_RESP\n/20/"
+L 281 280 0 TEXT "State Labels" | 155702,223714 1 0 0 "REQ_RESP_FIN\n/22/"
+S 280 170 106496 ELLIPSE "States" | 155702,223714 6500 6500
+L 279 278 0 TEXT "State Labels" | 154080,254276 1 0 0 "REQ_RESP_ST\n/21/"
+S 278 170 102400 ELLIPSE "States" | 154080,254276 6500 6500
+I 277 170 0 Builtin Exit | 145690,169066
+A 276 275 16 TEXT "Actions" | 150887,216503 1 0 0 "locRespByte <= rxDataIn;"
+W 275 170 0 280 273 BEZIER "Transitions" | 156440,217258 156900,213346 157290,210028 157662,206152
+S 273 170 98304 ELLIPSE "States" | 158403,199697 6500 6500
+G 1 0 0 TEXT 0,0,0 0 0 0 255,255,255 0 3527 1480 0000 1  "Arial" 0 | 110650,276400 1 0 0 "Module: readWriteSDBlock"
+A 5 0 1 TEXT "Actions" | 30400,266400 1 0 0 "-- diagram ACTION"
+F 6 0 512 72 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,27210 212900,223210
+L 7 6 0 TEXT "Labels" | 32996,218270 1 0 0 "rwBlkSt"
+A 574 348 16 TEXT "Actions" | 112284,154324 1 0 0 "locRespByte <= rxDataIn;"
+A 573 374 16 TEXT "Actions" | 60519,153465 1 0 0 "timeOutCnt <= timeOutCnt + 1'b1;\ndelCnt1 <= 8'h00;"
+A 572 239 16 TEXT "Actions" | 42138,190870 1 0 0 "timeOutCnt <= timeOutCnt + 1'b1;"
+A 571 235 16 TEXT "Actions" | 97926,168996 1 0 0 "locRespByte <= rxDataIn;"
+A 570 380 4 TEXT "Actions" | 118523,190933 1 0 0 "txDataWen <= 1'b0;\nrxDataRdyClr <= 1'b0;"
+C 569 459 0 TEXT "Conditions" | 151001,57686 1 0 0 "txDataEmpty == 1'b1"
+C 568 456 0 TEXT "Conditions" | 82775,122525 1 0 0 "loopCnt == 9'b000000000"
+C 566 296 0 TEXT "Conditions" | 164031,44934 1 0 0 "txDataEmpty == 1'b1"
+I 565 0 2 Builtin InPort | 116956,228328 "" ""
+L 564 565 0 TEXT "Labels" | 122956,228328 1 0 0 "txDataEmpty"
+A 563 562 16 TEXT "Actions" | 167684,228749 1 0 0 "txDataWen <= 1'b0;\nrxDataRdyClr <= 1'b0;"
+W 562 170 0 558 280 BEZIER "Transitions" | 193184,223621 184656,223621 170729,223805 162201,223805
+A 560 559 16 TEXT "Actions" | 163700,256139 1 0 0 "txDataOut <= 8'hff;\ntxDataWen <= 1'b1;\ntimeOutCnt <= timeOutCnt + 1'b1;\nrxDataRdyClr <= 1'b1;"
+L 303 302 0 TEXT "State Labels" | 155866,114847 1 0 0 "RD_CMD"
+S 302 6 110596 ELLIPSE 0,0,0 0 0 1 0,255,255 1 | 155866,114847 6500 6500
+W 301 6 0 169 224 BEZIER "Transitions" | 116491,60040 116453,54383 116661,57097 116661,51812
+W 300 6 0 130 169 BEZIER "Transitions" | 116096,82088 116419,75091 116419,77840 116311,72556
+W 299 6 0 84 130 BEZIER "Transitions" | 115210,103426 115637,98573 116012,99639 116012,95047
+W 298 6 0 128 84 BEZIER "Transitions" | 114213,168601 114343,164295 115365,122584 115190,116371
+W 297 6 0 82 128 BEZIER "Transitions" | 112965,189035 113095,186752 113278,183816 113408,181533
+W 296 170 0 204 278 BEZIER "Transitions" | 153459,62290 160628,57734 172959,48292 179659,46684\
+                                           186359,45076 198821,47756 201970,53652 205119,59548\
+                                           205253,80452 198486,92679 191719,104907 164517,132913\
+                                           153797,143566 143077,154219 127399,168825 124585,181588\
+                                           121771,194352 126193,230800 129007,242190 131821,253580\
+                                           138655,262692 141703,264836 144752,266980 150112,266444\
+                                           151686,265539 153261,264635 153717,262299 154186,260758
+A 295 291 16 TEXT "Actions" | 160354,178019 1 0 0 "writeError <= `WRITE_DATA_ERROR;"
+C 294 291 0 TEXT "Conditions" | 162436,185390 1 0 0 "timeOutCnt == `WR_RESP_TOUT"
+I 293 170 0 Builtin Link | 189438,166068
+L 292 293 0 TEXT "Labels" | 195438,166068 1 0 0 "WT_REQ"
+W 291 170 1 273 293 BEZIER "Transitions" | 162433,194598 169133,187027 182738,171639 189438,164068
+C 290 288 0 TEXT "Conditions" | 126676,185877 1 0 0 "locRespByte[4:0] == 5'h5"
+W 288 170 2 273 277 BEZIER "Transitions" | 156465,193495 155043,188346 148800,175094 145760,171065
+I 319 304 0 Builtin Link | 156420,111673
+I 318 304 0 Builtin Exit | 144032,98711
+A 317 305 4 TEXT "Actions" | 129068,241820 1 0 0 "cmdByte <= 8'h51; //CMD17 Block Read\ndataByte1 <= blockAddr[31:24];\ndataByte2 <= blockAddr[23:16];\ndataByte3 <= blockAddr[15:8];\ndataByte4 <= blockAddr[7:0];\ncheckSumByte <= 8'hff;\nsendCmdReq <= 1'b1;"
+L 316 315 0 TEXT "State Labels" | 113784,198353 1 0 0 "DEL\n/25/"
+S 315 304 122880 ELLIPSE "States" | 113784,198353 6500 6500
+L 314 313 0 TEXT "State Labels" | 113242,173421 1 0 0 "WT_FIN\n/24/"
+S 313 304 118784 ELLIPSE "States" | 113242,173421 6500 6500
+W 312 304 0 305 315 BEZIER "Transitions" | 113342,219069 113342,214801 113400,209100 113400,204832
+W 311 304 0 315 313 BEZIER "Transitions" | 113290,191878 113155,188152 113070,183636 112935,179910
+W 310 304 0 307 305 BEZIER "Transitions" | 74238,246230 83316,241623 99061,233757 108139,229150
+C 309 308 0 TEXT "Conditions" | 118993,167630 1 0 0 "sendCmdRdy == 1'b1"
+W 308 304 0 313 327 BEZIER "Transitions" | 116637,167879 123539,156637 117794,149336 126648,141321
+I 307 304 0 Builtin Entry | 70580,246230
+L 306 305 0 TEXT "State Labels" | 113556,225558 1 0 0 "SEND_CMD\n/23/"
+S 305 304 114688 ELLIPSE "States" | 113556,225558 6500 6500
+H 304 302 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,276400
+A 335 334 16 TEXT "Actions" | 134500,139322 1 0 0 "spiCS_n <= 1'b0;\nreadWriteSDBlockRdy <= 1'b0;\nreadError <= `READ_NO_ERROR;"
+W 334 6 0 128 302 BEZIER "Transitions" | 119969,172153 128545,167673 154370,136857 153592,120935
+A 333 298 16 TEXT "Actions" | 76094,136596 1 0 0 "spiCS_n <= 1'b0;\nreadWriteSDBlockRdy <= 1'b0;\nwriteError <= `WRITE_NO_ERROR;"
+A 332 128 4 TEXT "Actions" | 66248,183412 1 0 0 "spiCS_n <= 1'b1;\nreadWriteSDBlockRdy <= 1'b1;\ncmdByte <= 8'h00;\ndataByte1 <= 8'h00;\ndataByte2 <= 8'h00;\ndataByte3 <= 8'h00;\ndataByte4 <= 8'h00;\ncheckSumByte <= 8'h00;"
+W 331 328 0 329 330 BEZIER "Transitions" | 100205,182880 103344,179877 105196,169695 108335,166692
+I 330 328 0 Builtin Exit | 110928,166692
+I 329 328 0 Builtin Entry | 96520,182880
+S 327 304 126980 ELLIPSE 0,0,0 0 0 1 255,0,0 1 | 128874,139185 3156 3017
+L 326 327 0 TEXT "State Labels" | 128942,138847 1 0 0 "J2"
+W 325 304 3 327 318 BEZIER "Transitions" | 129847,136319 133174,127641 137870,107389 141197,98711
+A 323 321 16 TEXT "Actions" | 139238,127895 1 0 0 "readError <= `READ_CMD_ERROR;"
+C 322 321 0 TEXT "Conditions" | 137153,138885 1 0 0 "respTout == 1'b1 || respByte != 8'h00"
+W 321 304 2 327 319 BEZIER "Transitions" | 131177,137123 136826,130398 150771,116398 156420,109673
+L 320 319 0 TEXT "Labels" | 162420,111673 1 0 0 "WT_REQ"
+H 328 327 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,276400
+S 351 338 139264 ELLIPSE "States" | 106026,166550 6500 6500
+W 350 338 0 368 369 BEZIER "Transitions" | 67549,239359 76627,234752 86180,250238 95258,245631
+C 349 348 0 TEXT "Conditions" | 111780,160832 1 0 0 "rxDataRdy == 1'b1"
+W 348 338 0 351 346 BEZIER "Transitions" | 109408,161002 116386,149688 110826,148678 118545,137753
+L 347 346 0 TEXT "State Labels" | 122076,132298 1 0 0 "CHK_LOOP\n/26/"
+S 346 338 135168 ELLIPSE "States" | 122076,132298 6500 6500
+H 338 337 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,276400
+S 337 6 131076 ELLIPSE 0,0,0 0 0 1 0,255,255 1 | 155556,94377 6500 6500
+L 336 337 0 TEXT "State Labels" | 155556,94377 1 0 0 "RD_TOKEN"
+I 74 0 2 Builtin InPort | 195700,267632 "" ""
+L 73 74 0 TEXT "Labels" | 201700,267632 1 0 0 "rst"
+I 72 0 3 Builtin InPort | 195700,272800 "" ""
+L 71 72 0 TEXT "Labels" | 201700,272800 1 0 0 "clk"
+L 367 359 0 TEXT "State Labels" | 106340,218687 1 0 0 "SEND_CMD\n/28/"
+L 366 365 0 TEXT "State Labels" | 53406,179998 1 0 0 "DEL2\n/29/"
+S 365 338 147456 ELLIPSE "States" | 53406,179998 6500 6500
+W 364 338 3 346 361 BEZIER "Transitions" | 123583,125978 114391,113159 121643,95942 132878,90341
+I 361 338 0 Builtin Exit | 135456,90208
+A 360 359 4 TEXT "Actions" | 121852,234949 1 0 0 "txDataOut <= 8'hff;\ntxDataWen <= 1'b1;\nrxDataRdyClr <= 1'b1;"
+S 359 338 143360 ELLIPSE "States" | 106340,218687 6500 6500
+L 352 351 0 TEXT "State Labels" | 106026,166550 1 0 0 "WT_FIN\n/27/"
+L 81 82 0 TEXT "State Labels" | 113220,195514 1 0 0 "ST_RW_SD\n/0/"
+S 82 6 0 ELLIPSE "States" | 113220,195514 6500 6500
+L 83 84 0 TEXT "State Labels" | 115395,109896 1 0 0 "WR_CMD"
+S 84 6 4100 ELLIPSE 0,0,0 0 0 1 0,255,255 1 | 115395,109896 6500 6500
+H 85 84 0 RECT 0,0,0 0 0 1 255,255,255 0 | 27860,28670 212360,276670
+S 92 85 8192 ELLIPSE "States" | 113016,225828 6500 6500
+L 93 92 0 TEXT "State Labels" | 113016,225828 1 0 0 "SEND_CMD\n/1/"
+I 94 85 0 Builtin Entry | 70040,246500
+W 383 338 2 346 385 BEZIER "Transitions" | 128455,133541 138850,135296 180442,141646 191036,142273
+W 382 338 0 380 351 BEZIER "Transitions" | 105524,186872 105457,182130 105515,177755 105448,173013
+W 381 338 0 359 380 BEZIER "Transitions" | 105523,212247 105320,208453 105367,203608 105164,199814
+S 380 338 155648 ELLIPSE "States" | 105765,193344 6500 6500
+L 379 380 0 TEXT "State Labels" | 105765,193344 1 0 0 "DEL1\n/31/"
+C 377 374 0 TEXT "Conditions" | 32353,125947 1 0 0 "locRespByte != 8'hfe && timeOutCnt != `ONE_HUNDRED_MS"
+C 376 375 0 TEXT "Conditions" | 37395,199964 1 0 0 "delCnt1 == `MAX_8_BIT"
+W 375 338 1 365 359 BEZIER "Transitions" | 55933,185983 60073,191941 68179,216209 76636,218125\
+                                           85094,220041 90522,226339 93570,226372 96618,226406\
+                                           99403,224529 101638,223174
+W 374 338 1 346 365 BEZIER "Transitions" | 116959,136304 87922,130964 55868,158884 57051,176025
+A 373 365 4 TEXT "Actions" | 64312,187877 1 0 0 "delCnt1 <= delCnt1 + 1'b1;\ndelCnt2 <= 8'h00;"
+L 372 369 0 TEXT "State Labels" | 101285,243200 1 0 0 "INIT_LOOP\n/30/"
+W 371 338 0 369 359 BEZIER "Transitions" | 101997,236742 102942,232760 103652,228930 104597,224948
+A 370 369 4 TEXT "Actions" | 114245,248870 1 0 0 "timeOutCnt <= 12'h000;"
+S 369 338 151552 ELLIPSE "States" | 101285,243200 6500 6500
+I 368 338 0 Builtin Entry | 63364,239359
+W 98 85 0 103 118 BEZIER "Transitions" | 116097,168149 122999,156907 117254,149606 126108,141591
+C 99 98 0 TEXT "Conditions" | 118453,167900 1 0 0 "sendCmdRdy == 1'b1"
+W 100 85 0 94 92 BEZIER "Transitions" | 73698,246500 82776,241893 98521,234027 107599,229420
+W 101 85 0 105 103 BEZIER "Transitions" | 112750,192148 112615,188422 112530,183906 112395,180180
+W 102 85 0 92 105 BEZIER "Transitions" | 112802,219339 112802,215071 112860,209370 112860,205102
+S 103 85 12288 ELLIPSE "States" | 112702,173691 6500 6500
+L 104 103 0 TEXT "State Labels" | 112702,173691 1 0 0 "WT_FIN\n/2/"
+S 105 85 16384 ELLIPSE "States" | 113244,198623 6500 6500
+L 106 105 0 TEXT "State Labels" | 113244,198623 1 0 0 "DEL\n/3/"
+A 107 92 4 TEXT "Actions" | 128528,242090 1 0 0 "cmdByte <= 8'h58; //CMD24 Block Write\ndataByte1 <= blockAddr[31:24];\ndataByte2 <= blockAddr[23:16];\ndataByte3 <= blockAddr[15:8];\ndataByte4 <= blockAddr[7:0];\ncheckSumByte <= 8'hff;\nsendCmdReq <= 1'b1;"
+I 108 85 0 Builtin Exit | 143492,98981
+I 109 85 0 Builtin Link | 155880,111943
+L 110 109 0 TEXT "Labels" | 161880,111943 1 0 0 "WT_REQ"
+W 111 85 2 118 109 BEZIER "Transitions" | 130637,137393 136286,130668 150231,116668 155880,109943
+A 387 383 16 TEXT "Actions" | 144060,138060 1 0 0 "readError <= `READ_TOKEN_ERROR;"
+C 386 383 0 TEXT "Conditions" | 128229,146101 1 0 0 "timeOutCnt == `ONE_HUNDRED_MS"
+I 385 338 0 Builtin Link | 190990,144650
+L 384 385 0 TEXT "Labels" | 196990,144650 1 0 0 "WT_REQ"
+C 112 111 0 TEXT "Conditions" | 136613,139155 1 0 0 "respTout == 1'b1 || respByte != 8'h00"
+A 113 111 16 TEXT "Actions" | 138698,128165 1 0 0 "writeError <= `WRITE_CMD_ERROR;"
+W 116 85 3 118 108 BEZIER "Transitions" | 129307,136589 132634,127911 137330,107659 140657,98981
+L 117 118 0 TEXT "State Labels" | 128402,139117 1 0 0 "J1"
+S 118 85 20484 ELLIPSE 0,0,0 0 0 1 255,0,0 1 | 128334,139455 3156 3017
+H 119 118 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,276400
+I 122 119 0 Builtin Entry | 96520,182880
+I 123 119 0 Builtin Exit | 110928,166692
+W 126 119 0 122 123 BEZIER "Transitions" | 100205,182880 103344,179877 105196,169695 108335,166692
+L 127 128 0 TEXT "State Labels" | 114166,175079 1 0 0 "WT_REQ\n/4/"
+L 388 389 0 TEXT "State Labels" | 155343,73929 1 0 0 "RD_DATA"
+S 389 6 159748 ELLIPSE 0,0,0 0 0 1 0,255,255 1 | 155343,73929 6500 6500
+H 390 389 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,276400
+S 128 6 24576 ELLIPSE "States" | 114166,175079 6500 6500
+L 129 130 0 TEXT "State Labels" | 116508,88574 1 0 0 "WR_TOKEN"
+S 130 6 28676 ELLIPSE 0,0,0 0 0 1 0,255,255 1 | 116508,88574 6500 6500
+H 131 130 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,276400
+W 138 131 0 144 141 BEZIER "Transitions" | 93143,232118 93346,228934 95399,216673 95425,213277
+A 139 138 16 TEXT "Actions" | 83596,226272 1 0 0 "txDataOut <= 8'hff;\ntxDataWen <= 1'b1;"
+C 140 138 0 TEXT "Conditions" | 95421,232225 1 0 0 "txDataFull == 1'b0"
+S 141 131 32768 ELLIPSE "States" | 95726,206806 6500 6500
+L 142 141 0 TEXT "State Labels" | 95726,206806 1 0 0 "FF1_FIN\n/5/"
+A 143 141 4 TEXT "Actions" | 105171,209122 1 0 0 "txDataWen <= 1'b0;"
+L 400 401 0 TEXT "State Labels" | 77852,226948 1 0 0 "ST_LOOP\n/32/"
+S 401 390 163840 ELLIPSE "States" | 77852,226948 6500 6500
+A 402 401 4 TEXT "Actions" | 95196,229658 1 0 0 "txDataWen <= 1'b1;\ntxDataOut <= 8'hff;\nloopCnt <= loopCnt + 1'b1;"
+L 403 404 0 TEXT "State Labels" | 78936,199306 1 0 0 "WT_DATA\n/33/"
+S 404 390 167936 ELLIPSE "States" | 78936,199306 6500 6500
+W 406 390 0 401 404 BEZIER "Transitions" | 77695,220483 77762,216960 78169,209653 78270,205764
+A 408 404 4 TEXT "Actions" | 97364,200119 1 0 0 "txDataWen <= 1'b0;"
+L 409 410 0 TEXT "State Labels" | 81375,162450 1 0 0 "CHK_LOOP\n/34/"
+S 410 390 172032 ELLIPSE "States" | 81375,162450 6500 6500
+W 411 390 0 404 410 BEZIER "Transitions" | 79226,192822 79632,188351 80587,173613 80938,168928
+C 412 411 0 TEXT "Conditions" | 81955,194246 1 0 0 "rxDataRdy == 1'b1"
+A 413 411 16 TEXT "Actions" | 74786,189659 1 0 0 "rxFifoWen <= 1'b1;\nrxDataRdyClr <= 1'b1;\nrxFifoData <= rxDataIn;"
+L 414 415 0 TEXT "State Labels" | 83004,136975 1 0 0 "J1"
+S 415 390 176132 ELLIPSE 0,0,0 0 0 1 255,0,0 1 | 83043,136396 3569 3569
+S 144 131 36864 ELLIPSE "States" | 92762,238598 6500 6500
+L 145 144 0 TEXT "State Labels" | 92762,238598 1 0 0 "FF1_ST\n/6/"
+I 146 131 0 Builtin Entry | 51952,266176
+S 147 131 40960 ELLIPSE "States" | 101439,148824 6500 6500
+A 148 147 4 TEXT "Actions" | 110884,151140 1 0 0 "txDataWen <= 1'b0;"
+L 149 147 0 TEXT "State Labels" | 101439,148824 1 0 0 "FF2_FIN\n/7/"
+W 150 131 0 153 147 BEZIER "Transitions" | 98856,174136 99059,170952 101112,158691 101138,155295
+C 151 150 0 TEXT "Conditions" | 101134,174243 1 0 0 "txDataFull == 1'b0"
+A 152 150 16 TEXT "Actions" | 89309,168290 1 0 0 "txDataOut <= 8'hff;\ntxDataWen <= 1'b1;"
+S 153 131 45056 ELLIPSE "States" | 98475,180616 6500 6500
+L 154 153 0 TEXT "State Labels" | 98475,180616 1 0 0 "FF2_ST\n/8/"
+S 155 131 49152 ELLIPSE "States" | 107423,92248 6500 6500
+A 156 155 4 TEXT "Actions" | 116868,94564 1 0 0 "txDataWen <= 1'b0;"
+L 157 155 0 TEXT "State Labels" | 107423,92248 1 0 0 "FE_FIN\n/9/"
+W 158 131 0 161 155 BEZIER "Transitions" | 104840,117560 105043,114376 107096,102115 107122,98719
+C 159 158 0 TEXT "Conditions" | 107118,117667 1 0 0 "txDataFull == 1'b0"
+H 416 415 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,276400
+I 419 416 0 Builtin Entry | 126004,141930
+I 420 416 0 Builtin Exit | 144780,121920
+W 423 416 0 419 420 BEZIER "Transitions" | 129826,141930 134057,136743 137819,127107 142050,121920
+W 424 390 0 410 415 BEZIER "Transitions" | 81407,156099 81677,152387 82370,143719 82390,139900
+A 425 424 16 TEXT "Actions" | 80070,154260 1 0 0 "rxDataRdyClr <= 1'b0;\nrxFifoWen <= 1'b0;"
+I 426 390 0 Builtin Entry | 42810,270090
+L 427 428 0 TEXT "State Labels" | 97350,266040 1 0 0 "CLR_RX\n/35/"
+S 428 390 180224 ELLIPSE "States" | 97350,266040 6500 6500
+W 429 390 0 426 428 BEZIER "Transitions" | 46995,270090 55230,269685 82688,267193 90992,267387
+A 430 429 16 TEXT "Actions" | 55533,269709 1 0 0 "rxDataRdyClr <= 1'b1;"
+W 431 390 0 428 401 BEZIER "Transitions" | 94484,260209 90569,252717 84564,240304 80649,232812
+A 160 158 16 TEXT "Actions" | 95293,111714 1 0 0 "txDataOut <= 8'hfe;\ntxDataWen <= 1'b1;"
+S 161 131 53248 ELLIPSE "States" | 104459,124040 6500 6500
+L 162 161 0 TEXT "State Labels" | 104459,124040 1 0 0 "FE_ST\n/10/"
+W 163 131 0 146 144 BEZIER "Transitions" | 55624,266176 64736,260940 79060,248435 88172,243199
+W 164 131 0 141 153 BEZIER "Transitions" | 95785,200373 96397,196089 96746,191299 97358,187015
+I 165 131 0 Builtin Exit | 140624,67616
+W 166 131 0 147 161 BEZIER "Transitions" | 101803,142336 102279,138596 102801,134171 103277,130431
+W 167 131 0 155 165 BEZIER "Transitions" | 112534,88234 120218,83134 130356,72716 138040,67616
+L 168 169 0 TEXT "State Labels" | 116501,66078 1 0 0 "WR_DATA"
+S 169 6 229380 ELLIPSE 0,0,0 0 0 1 0,255,255 1 | 116501,66078 6500 6500
+H 170 169 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,276400
+A 432 431 16 TEXT "Actions" | 85200,253080 1 0 0 "rxDataRdyClr <= 1'b0;\nloopCnt <= 9'b000000000;"
+W 433 390 2 415 401 BEZIER "Transitions" | 79771,137821 72144,141736 57457,148725 53070,158681\
+                                           48683,168637 46387,200633 47433,211027 48480,221422\
+                                           54960,231008 58470,232695 61980,234383 68385,231511\
+                                           72165,230094
+W 440 390 0 451 441 BEZIER "Transitions" | 138130,91528 138333,88344 140386,76083 140412,72687
+S 441 390 184320 ELLIPSE "States" | 140713,66216 6500 6500
+L 442 441 0 TEXT "State Labels" | 140713,66216 1 0 0 "CS_FIN2\n/36/"
+S 443 390 188416 ELLIPSE "States" | 75739,66216 6500 6500
+A 444 443 4 TEXT "Actions" | 85184,68532 1 0 0 "txDataWen <= 1'b0;"
+L 445 443 0 TEXT "State Labels" | 75739,66216 1 0 0 "CS_FIN1\n/37/"
+W 446 390 0 449 443 BEZIER "Transitions" | 73156,91528 73359,88344 75412,76083 75438,72687
+C 447 446 0 TEXT "Conditions" | 75434,91635 1 0 0 "txDataFull == 1'b0"
+S 177 170 61440 ELLIPSE "States" | 78305,137464 6500 6500
+A 178 177 4 TEXT "Actions" | 87750,139780 1 0 0 "txDataWen <= 1'b0;"
+L 179 177 0 TEXT "State Labels" | 78305,137464 1 0 0 "D_FIN\n/11/"
+W 180 170 0 183 177 BEZIER "Transitions" | 75722,162776 75925,159592 77978,147331 78004,143935
+C 181 180 0 TEXT "Conditions" | 78000,162883 1 0 0 "txDataFull == 1'b0"
+A 182 180 16 TEXT "Actions" | 66175,156930 1 0 0 "txDataOut <= txFifoData;\ntxDataWen <= 1'b1;"
+S 183 170 65536 ELLIPSE "States" | 75341,169256 6500 6500
+L 184 183 0 TEXT "State Labels" | 75341,169256 1 0 0 "D_ST\n/12/"
+L 187 188 0 TEXT "State Labels" | 72867,227889 1 0 0 "RD_FIFO1\n/13/"
+S 188 170 69632 ELLIPSE "States" | 72867,227889 6500 6500
+L 189 190 0 TEXT "State Labels" | 73959,201135 1 0 0 "RD_FIFO2\n/14/"
+S 190 170 73728 ELLIPSE "States" | 73959,201135 6500 6500
+A 191 188 4 TEXT "Actions" | 80895,230061 1 0 0 "txFifoRen <= 1'b1;\nloopCnt <= loopCnt + 1'b1;"
+A 448 446 16 TEXT "Actions" | 63609,85682 1 0 0 "txDataOut <= 8'hff;\ntxDataWen <= 1'b1;"
+S 449 390 192512 ELLIPSE "States" | 72775,98008 6500 6500
+L 450 449 0 TEXT "State Labels" | 72775,98008 1 0 0 "CS_ST1\n/38/"
+S 451 390 196608 ELLIPSE "States" | 137749,98008 6500 6500
+L 452 451 0 TEXT "State Labels" | 137749,98008 1 0 0 "CS_ST2\n/39/"
+A 453 440 16 TEXT "Actions" | 128583,85682 1 0 0 "txDataOut <= 8'hff;\ntxDataWen <= 1'b1;"
+C 454 440 0 TEXT "Conditions" | 140408,91635 1 0 0 "txDataFull == 1'b0"
+A 455 441 4 TEXT "Actions" | 150158,68532 1 0 0 "txDataWen <= 1'b0;"
+W 456 390 1 415 449 BEZIER "Transitions" | 82185,132936 79630,124866 76715,112427 74160,104357
+W 457 390 0 443 451 BEZIER "Transitions" | 78514,60339 82952,55834 89399,47074 95182,45998\
+                                           100965,44922 115223,49631 117845,56120 120468,62609\
+                                           116702,83861 117071,91594 117441,99328 122688,109012\
+                                           125276,109920 127865,110828 131449,106344 134004,103318
+I 458 390 0 Builtin Exit | 161625,43107
+W 459 390 0 441 458 BEZIER "Transitions" | 144285,60786 148925,56213 153892,47680 158532,43107
+W 460 6 0 302 337 BEZIER "Transitions" | 155788,108419 155653,104081 155771,105011 155438,100848
+W 461 6 0 337 389 BEZIER "Transitions" | 155952,87899 155619,83040 155938,84926 155805,80404
+W 462 6 0 389 128 BEZIER "Transitions" | 160766,72622 181673,64668 193592,81881 194705,86831\
+                                         195819,91782 193010,106602 196539,114884 200068,123167\
+                                         183067,150177 177992,160070 172917,169964 164106,188182\
+                                         156924,189345 149743,190509 134447,187583 129526,185887\
+                                         124606,184192 121267,181269 119073,179341
+W 463 6 0 224 128 BEZIER "Transitions" | 112148,42964 96171,38095 88076,46646 81324,48345\
+                                         74572,50044 62626,66620 61422,77634 60219,88648\
+                                         53118,140235 53550,154499 53982,168763 75928,188049\
+                                         79879,189622 83830,191195 94548,186386 97872,185422\
+                                         101197,184458 106213,181091 109338,179429
+A 192 190 4 TEXT "Actions" | 82521,204408 1 0 0 "txFifoRen <= 1'b0;"
+L 193 194 0 TEXT "State Labels" | 72048,257646 1 0 0 "LOOP_INIT\n/15/"
+S 194 170 77824 ELLIPSE "States" | 72048,257646 6500 6500
+A 195 194 4 TEXT "Actions" | 89247,259284 1 0 0 "loopCnt <= 9'b000000000;"
+S 196 170 81920 ELLIPSE "States" | 80801,98549 6500 6500
+L 197 196 0 TEXT "State Labels" | 80801,98549 1 0 0 "CS_ST1\n/16/"
+W 198 170 0 196 201 BEZIER "Transitions" | 81182,92069 81385,88885 83438,76624 83464,73228
+A 199 198 16 TEXT "Actions" | 71635,86223 1 0 0 "txDataOut <= 8'hff;\ntxDataWen <= 1'b1;"
+C 200 198 0 TEXT "Conditions" | 83460,92176 1 0 0 "txDataFull == 1'b0"
+S 201 170 86016 ELLIPSE "States" | 83765,66757 6500 6500
+L 202 201 0 TEXT "State Labels" | 83765,66757 1 0 0 "CS_FIN1\n/17/"
+A 203 201 4 TEXT "Actions" | 93210,69073 1 0 0 "txDataWen <= 1'b0;"
+S 204 170 90112 ELLIPSE "States" | 148739,66757 6500 6500
+A 205 204 4 TEXT "Actions" | 158184,69073 1 0 0 "txDataWen <= 1'b0;\ntimeOutCnt <= 12'h000;"
+L 206 204 0 TEXT "State Labels" | 148739,66757 1 0 0 "CS_FIN2\n/18/"
+W 207 170 0 210 204 BEZIER "Transitions" | 146156,92069 146359,88885 148412,76624 148438,73228
+C 464 334 0 TEXT "Conditions" | 94994,146397 1 0 0 "readWriteSDBlockReq == `READ_SD_BLOCK"
+C 465 298 0 TEXT "Conditions" | 55739,152492 1 0 0 "readWriteSDBlockReq == `WRITE_SD_BLOCK"
+I 475 6 0 Builtin Reset | 49660,206134
+W 476 6 0 475 82 BEZIER "Transitions" | 49660,206134 64556,204256 92040,199052 106936,197174
+C 477 476 0 TEXT "Conditions" | 62428,209528 1 0 0 "rst == 1'b1"
+L 478 479 0 TEXT "Labels" | 122230,269291 1 0 0 "readWriteSDBlockReq[1:0]"
+I 479 0 130 Builtin InPort | 116230,269291 "" ""
+L 223 224 0 TEXT "State Labels" | 116398,45340 1 0 0 "WR_BUSY"
+C 208 207 0 TEXT "Conditions" | 148434,92176 1 0 0 "txDataFull == 1'b0"
+A 209 207 16 TEXT "Actions" | 136609,86223 1 0 0 "txDataOut <= 8'hff;\ntxDataWen <= 1'b1;"
+S 210 170 94208 ELLIPSE "States" | 145775,98549 6500 6500
+L 211 210 0 TEXT "State Labels" | 145775,98549 1 0 0 "CS_ST2\n/19/"
+W 212 170 1 177 196 BEZIER "Transitions" | 78835,130988 79312,123617 80043,112406 80520,105035
+C 213 212 0 TEXT "Conditions" | 81603,129336 1 0 0 "loopCnt == 9'b000000000"
+W 214 170 0 194 188 BEZIER "Transitions" | 72189,251169 72121,246119 72460,239413 72392,234363
+W 215 170 0 188 190 BEZIER "Transitions" | 72773,221428 73182,217197 73251,211851 73660,207620
+W 216 170 0 190 183 BEZIER "Transitions" | 74343,194648 74411,189188 74887,181191 74955,175731
+W 217 170 2 177 188 BEZIER "Transitions" | 71806,137461 65254,138211 53484,138960 49969,147866\
+                                           46455,156772 45498,190898 45396,201715 45294,212532\
+                                           45840,221679 48843,224169 51846,226660 60640,227203\
+                                           66373,227612
+W 218 170 0 201 210 BEZIER "Transitions" | 87098,61178 91397,57971 97506,51735 102658,50541\
+                                           107811,49347 119823,50985 122894,57434 125965,63884\
+                                           126239,88045 127637,96576 129036,105107 134361,115072\
+                                           136749,115515 139137,115959 142020,108931 144135,104836
+I 221 170 0 Builtin Entry | 39834,267201
+W 222 170 0 221 194 BEZIER "Transitions" | 43519,267201 49798,265427 59580,261403 65859,259629
+L 480 481 0 TEXT "Labels" | 120083,264098 1 0 0 "readWriteSDBlockRdy"
+I 481 0 2 Builtin OutPort | 114083,264098 "" ""
+L 482 483 0 TEXT "Labels" | 120083,259063 1 0 0 "spiCS_n"
+I 483 0 2 Builtin OutPort | 114083,259063 "" ""
+I 484 0 130 Builtin OutPort | 69013,272215 "" ""
+L 485 484 0 TEXT "Labels" | 75013,272215 1 0 0 "cmdByte[7:0]"
+I 486 0 130 Builtin OutPort | 68768,267735 "" ""
+L 487 486 0 TEXT "Labels" | 74768,267735 1 0 0 "dataByte1[7:0]"
+I 488 0 130 Builtin OutPort | 68965,262525 "" ""
+L 489 488 0 TEXT "Labels" | 74965,262525 1 0 0 "dataByte2[7:0]"
+I 490 0 130 Builtin OutPort | 69212,257832 "" ""
+L 491 490 0 TEXT "Labels" | 75212,257832 1 0 0 "dataByte3[7:0]"
+I 492 0 130 Builtin OutPort | 69212,253139 "" ""
+L 493 492 0 TEXT "Labels" | 75212,253139 1 0 0 "dataByte4[7:0]"
+I 494 0 130 Builtin OutPort | 69088,248199 "" ""
+L 495 494 0 TEXT "Labels" | 75088,248199 1 0 0 "checkSumByte[7:0]"
+W 239 225 1 237 241 BEZIER "Transitions" | 110570,148995 94430,151147 64068,154038 55628,162847\
+                                           47189,171657 45708,202593 49575,212814 53442,223036\
+                                           70390,232990 77013,235243 83637,237496 90160,236699\
+                                           94934,236229
+L 238 237 0 TEXT "State Labels" | 117061,148658 1 0 0 "CHK_FIN\n/40/"
+S 237 225 200704 ELLIPSE "States" | 117061,148658 6500 6500
+C 236 235 0 TEXT "Conditions" | 106765,177192 1 0 0 "rxDataRdy == 1'b1"
+W 235 225 0 232 237 BEZIER "Transitions" | 104393,177362 111371,166048 105811,165038 113530,154113
+W 234 225 0 240 268 BEZIER "Transitions" | 62534,255719 71612,251112 81165,266598 90243,261991
+L 233 232 0 TEXT "State Labels" | 101011,182910 1 0 0 "WT_FIN1\n/41/"
+S 232 225 204800 ELLIPSE "States" | 101011,182910 6500 6500
+H 225 224 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,276400
+S 224 6 57348 ELLIPSE 0,0,0 0 0 1 0,255,255 1 | 116398,45340 6500 6500
+I 496 0 2 Builtin OutPort | 69306,243719 "" ""
+L 497 496 0 TEXT "Labels" | 75306,243719 1 0 0 "sendCmdReq"
+I 498 0 2 Builtin InPort | 71520,238553 "" ""
+L 499 498 0 TEXT "Labels" | 77520,238553 1 0 0 "sendCmdRdy"
+I 500 0 130 Builtin InPort | 71328,234058 "" ""
+L 501 500 0 TEXT "Labels" | 77328,234058 1 0 0 "respByte[7:0]"
+I 502 0 2 Builtin InPort | 150168,237862 "" ""
+L 503 502 0 TEXT "Labels" | 156168,237862 1 0 0 "rxDataRdy"
+I 504 0 2 Builtin InPort | 117135,232948 "" ""
+L 505 504 0 TEXT "Labels" | 123135,232948 1 0 0 "txDataFull"
+I 506 0 2 Builtin OutPort | 114678,237589 "" ""
+L 507 506 0 TEXT "Labels" | 120678,237589 1 0 0 "txDataWen"
+I 508 0 130 Builtin InPort | 149895,241957 "" ""
+L 509 508 0 TEXT "Labels" | 155895,241957 1 0 0 "rxDataIn[7:0]"
+I 510 0 130 Builtin OutPort | 114678,242230 "" ""
+L 511 510 0 TEXT "Labels" | 120678,242230 1 0 0 "txDataOut[7:0]"
+L 527 528 0 TEXT "Labels" | 190950,242120 1 0 0 "rxFifoData[7:0]"
+I 526 0 2 Builtin OutPort | 185220,246980 "" ""
+L 525 526 0 TEXT "Labels" | 191220,246980 1 0 0 "rxFifoWen"
+I 524 0 130 Builtin InPort | 187380,252110 "" ""
+L 523 524 0 TEXT "Labels" | 193380,252110 1 0 0 "txFifoData[7:0]"
+I 522 0 2 Builtin OutPort | 184950,256970 "" ""
+L 521 522 0 TEXT "Labels" | 190950,256970 1 0 0 "txFifoRen"
+W 248 225 2 237 251 BEZIER "Transitions" | 121126,143587 165099,138575 140782,115097 127863,106694
+A 249 248 16 TEXT "Actions" | 144590,131826 1 0 0 "writeError <= `WRITE_BUSY_ERROR;"
+C 250 248 0 TEXT "Conditions" | 128858,147492 1 0 0 "timeOutCnt == `TWO_FIFTY_MS"
+C 255 254 0 TEXT "Conditions" | 114470,200483 1 0 0 "delCnt1 == `MAX_8_BIT"
+W 254 225 1 243 232 BEZIER "Transitions" | 151179,193271 142375,193953 126550,195706 120373,194853\
+                                           114197,194000 109072,189975 105523,187587
+W 253 225 0 241 243 BEZIER "Transitions" | 101358,228597 101904,225390 102458,220616 103686,217545\
+                                           104915,214475 108737,208604 114128,207171 119520,205738\
+                                           137266,205875 142862,205499 148458,205124 153100,203486\
+                                           154430,202496 155761,201507 156185,199858 156526,198698
+A 252 241 4 TEXT "Actions" | 116837,251309 1 0 0 "txDataOut <= 8'hff;\ntxDataWen <= 1'b1;\nrxDataRdyClr <= 1'b1;\ndelCnt1 <= 8'h00;"
+I 251 225 0 Builtin Exit | 130441,106568
+C 247 239 0 TEXT "Conditions" | 32326,147044 1 0 0 "locRespByte == 8'h00 && timeOutCnt != `TWO_FIFTY_MS"
+W 245 225 3 237 251 BEZIER "Transitions" | 118568,142338 109376,129519 116628,112302 127863,106701
+L 244 243 0 TEXT "State Labels" | 157604,192293 1 0 0 "DEL1\n/42/"
+S 243 225 208896 ELLIPSE "States" | 157604,192293 6500 6500
+L 242 241 0 TEXT "State Labels" | 101325,235047 1 0 0 "SEND_CMD1\n/43/"
+S 241 225 212992 ELLIPSE "States" | 101325,235047 6500 6500
+I 240 225 0 Builtin Entry | 58349,255719
+I 512 0 2 Builtin OutPort | 147984,233494 "" ""
+L 513 512 0 TEXT "Labels" | 153984,233494 1 0 0 "rxDataRdyClr"
+L 514 515 0 TEXT "Labels" | 77500,229855 1 0 0 "respTout"
+I 515 0 2 Builtin InPort | 71500,229855 "" ""
+A 516 82 4 TEXT "Actions" | 160072,222273 1 0 0 "readWriteSDBlockRdy <= 1'b0;\nspiCS_n <= 1'b1;\nreadError <= 1'b0;\nwriteError <= 1'b0;\ntxDataOut <= 8'h00;\ntxDataWen <= 1'b0;\nrxDataRdyClr <= 1'b0;\ncmdByte <= 8'h00;\ndataByte1 <= 8'h00;\ndataByte2 <= 8'h00;\ndataByte3 <= 8'h00;\ndataByte4 <= 8'h00;\ncheckSumByte <= 8'h00;\nsendCmdReq <= 1'b0;\nloopCnt <= 8'h00;\ndelCnt1 <= 8'h00;\ndelCnt2 <= 8'h00;\nreadError <= `READ_NO_ERROR;\nwriteError <= `WRITE_NO_ERROR;\ntxFifoRen <= 1'b0;\nrxFifoWen <= 1'b0;\nrxFifoData <= 8'h00;\ntimeOutCnt <= 12'h000;\nlocRespByte <= 8'h00;"
+L 517 518 0 TEXT "Labels" | 120142,254523 1 0 0 "readError[1:0]"
+I 518 0 130 Builtin OutPort | 114142,254523 "" ""
+L 519 520 0 TEXT "Labels" | 119971,249897 1 0 0 "writeError[1:0]"
+I 520 0 130 Builtin OutPort | 113971,249897 "" ""
+L 543 544 0 TEXT "Labels" | 164114,261928 1 0 0 "delCnt1[7:0]"
+C 542 541 0 TEXT "Conditions" | 31702,154694 1 0 0 "delCnt2 == 8'hff"
+W 541 338 0 537 365 BEZIER "Transitions" | 45749,147689 44744,152468 35773,163628 34769,167402\
+                                           33765,171176 35012,179071 36950,181044 38889,183018\
+                                           44071,182291 47325,182291
+W 539 338 2 365 537 BEZIER "Transitions" | 51640,173745 51294,168275 56598,148666 56246,142125
+A 538 537 4 TEXT "Actions" | 36466,135651 1 0 0 "delCnt2 <= delCnt2 + 1'b1;"
+S 537 338 225280 ELLIPSE "States" | 49762,142576 6500 6500
+L 536 537 0 TEXT "State Labels" | 49762,142576 1 0 0 "DEL3\n/46/"
+C 535 534 0 TEXT "Conditions" | 154260,170964 1 0 0 "delCnt2 == 8'hff"
+W 534 225 0 530 243 BEZIER "Transitions" | 179888,172413 174851,172206 165921,171447 162609,173482\
+                                           159297,175518 158039,181622 156452,185900
+A 533 530 4 TEXT "Actions" | 166680,162960 1 0 0 "delCnt2 <= delCnt2 + 1'b1;"
+W 531 225 2 243 530 BEZIER "Transitions" | 163308,189179 168294,185855 176215,180648 181201,177324
+S 530 225 217088 ELLIPSE "States" | 186323,173323 6500 6500
+L 529 530 0 TEXT "State Labels" | 186323,173323 1 0 0 "DEL2\n/44/"
+I 528 0 130 Builtin OutPort | 184950,242120 "" ""
+A 270 268 4 TEXT "Actions" | 109230,265230 1 0 0 "timeOutCnt <= 12'h000;"
+W 269 225 0 268 241 BEZIER "Transitions" | 96982,253102 97927,249120 98637,245290 99582,241308
+S 268 225 221184 ELLIPSE "States" | 96270,259560 6500 6500
+L 267 268 0 TEXT "State Labels" | 96270,259560 1 0 0 "INIT_LOOP\n/45/"
+I 264 0 130 Builtin Signal | 161063,266638 "" ""
+L 263 264 0 TEXT "Labels" | 164063,266638 1 0 0 "loopCnt[8:0]"
+A 259 243 4 TEXT "Actions" | 166374,212237 1 0 0 "txDataWen <= 1'b0;\nrxDataRdyClr <= 1'b0;\ndelCnt1 <= delCnt1 + 1'b1;\ndelCnt2 <= 8'h00;"
+END

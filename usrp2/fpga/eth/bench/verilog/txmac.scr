@@ -1,0 +1,93 @@
+// Read from register 24 to confirm that Rx CRC check is enabled
+03 00 18 00 01 ff ff
+
+// Set speed to 1000 Mbps
+01 00 22 00 04
+
+// Write MAC address 12 35 56 78 9A BC to Rx Address buffer
+01 00 10 00 00
+01 00 0f 00 12
+01 00 11 00 01
+01 00 11 00 00
+01 00 10 00 01
+01 00 0f 00 34
+01 00 11 00 01
+01 00 11 00 00
+01 00 10 00 02
+01 00 0f 00 56
+01 00 11 00 01
+01 00 11 00 00
+01 00 10 00 03
+01 00 0f 00 78
+01 00 11 00 01
+01 00 11 00 00
+01 00 10 00 04
+01 00 0f 00 9A
+01 00 11 00 01
+01 00 11 00 00
+01 00 10 00 05
+01 00 0f 00 BC
+01 00 11 00 01
+01 00 11 00 00
+
+// Write 1 to register 14, MAC_rx_add_chk_en
+// This turns on the Rx Destination MAC address filter
+01 00 0e 00 01
+
+// Setup Tx and Rx MAC addresses and type field to "IP"
+// Set Tx Data at offset 0, length 14 to 123456789ABC CBA987654321 0800
+// (i.e. Destination MAC address is 123456789ABC matching the above)
+10 00 00 00 0E 12 34 56 78 9A BC CB A9 87 65 43 21 08 00
+
+// Setup Alternate Tx and Rx MAC addresses and type field to "IP"
+// Set Tx Data at offset 0, length 14 to 123456789ABC 112233445566 0800
+// (i.e. Destination MAC address is 123456789ABC matching the above)
+11 00 00 00 0E 12 34 56 78 9A BC 11 22 33 44 55 66 08 00
+
+// Transmit a 60-byte frame 3 times - and expect them to be received again!
+20 00 3C 00 03
+
+// Wait (indefinitely) for missing Rx packets
+22 00 00 
+
+// Write MAC address 11 22 33 44 55 66 to Tx MAC Source Address buffer
+01 00 09 00 00
+01 00 08 00 11
+01 00 0a 00 01
+01 00 0a 00 00
+01 00 09 00 01
+01 00 08 00 22
+01 00 0a 00 01
+01 00 0a 00 00
+01 00 09 00 02
+01 00 08 00 33
+01 00 0a 00 01
+01 00 0a 00 00
+01 00 09 00 03
+01 00 08 00 44
+01 00 0a 00 01
+01 00 0a 00 00
+01 00 09 00 04
+01 00 08 00 55
+01 00 0a 00 01
+01 00 0a 00 00
+01 00 09 00 05
+01 00 08 00 66
+01 00 0a 00 01
+01 00 0a 00 00
+
+// Transmit a 60 byte frame 3 times - and expect them to be received again!
+20 00 3C 00 03
+
+// Wait (indefinitely) for missing Rx packets
+22 00 00 
+
+// Write 1 to register 7, MAC_tx_add_en
+// This turns on the Tx Source MAC address replacement mechanism
+01 00 07 00 01
+
+// Transmit a 60 byte frame 3 times - and expect them to be received again with Alternate header!
+26 00 3C 00 03
+
+// Wait (indefinitely) for missing Rx packets
+22 00 00 

@@ -1,0 +1,116 @@
+#!/usr/bin/env python
+
+import sys
+from optparse import OptionParser
+
+SECTOR_SIZE = 512                 # bytes
+MAX_FILE_SIZE =  1 * (2**20)      # maximum number of bytes we'll burn to a slot
+
+FPGA_OFFSET = 0                   # offset in flash to fpga image
+FIRMWARE_OFFSET = 1 * (2**20)     # offset in flash to firmware image
+
+def read_file_data(filename):
+    f = open(filename, "rb")
+    file_data = f.read(MAX_FILE_SIZE)
+    t = len(file_data) % SECTOR_SIZE
+    if t != 0:
+        file_data += (SECTOR_SIZE - t)*chr(0)  # pad to an even sector size w/ zeros
+    return file_data
+
+
+def write_flash(offset, filename, devname):
+    file_data = read_file_data(filename)
+    dev = open(devname, "wb")
+    dev.seek(offset, 0)                 # seek to absolute byte offset
+    dev.write(file_data)
+    dev.flush()
+    dev.close()
+    return True
+
+
+def verify_flash(offset, filename, devname):
+    file_data = read_file_data(filename)
+    dev = open(devname, "rb")
+    dev.seek(offset, 0)                 # seek to absolute byte offset
+    dev_data = dev.read(len(file_data))
+    if len(dev_data) != len(file_data):
+        sys.stderr.write("short read on device %s\n" % (devname,))
+        return False
+
+    if file_data == dev_data:
+        return True
+
+    # doesn't match
+    nwrong = 0
+    for i in range(len(file_data)):
+        if dev_data[i] != file_data[i]:
+            sys.stderr.write("mismatch at offset %7d.  Expected 0x%02x, got 0x%02x\n" % (
+                i, ord(file_data[i]), ord(dev_data[i])))
+            nwrong += 1
+            if nwrong > 16:
+                sys.stderr.write("> 16 errors, stopping comparison\n")
+                break
+    return False
+
+def read_flash(offset, filename, devname):
+    dev = open(devname, "rb")
+    dev.seek(offset, 0)                 # seek to absolute byte offset
+    dev_data = dev.read(MAX_FILE_SIZE)
+    dev.close()
+    open(filename, "wb").write(dev_data)
+
+    
+def main():
+    parser = OptionParser(usage="%prog: [options] filename")
+    parser.add_option("-w", "--write", action="store_const", const="write", dest="mode",
+                      help="write FILE to TARGET slot")
+    parser.add_option("-v", "--verify",  action="store_const", const="verify", dest="mode",
+                      help="verify FILE against TARGET slot")
+    parser.add_option("-r", "--read",  action="store_const", const="read", dest="mode",
+                      help="read TARGET slot, write to FILE")
+    parser.add_option("-t", "--target", type="choice", choices=("fpga", "s/w"), default="s/w",
+                      help="select TARGET slot from: fpga, s/w [default=%default]")
+    parser.add_option("", "--dev", default=None,
+                      help="specify flash device file, e.g., /dev/sdb.  Be careful!")
+    parser.set_defaults(target="s/w", mode=None)
+
+    (options, args) = parser.parse_args()
+    if len(args) != 1:
+        parser.print_help()
+        raise SystemExit
+
+    filename = args[0]
+
+    if options.mode is None:
+        sys.stderr.write("specify mode with -w, -v or -r\n")
+        parser.print_help()
+        raise SystemExit
+
+    if options.dev is None:
+        sys.stderr.write("specify the device file with --dev\n")
+        parser.print_help()
+        raise SystemExit
+
+    offset = { "fpga" : FPGA_OFFSET, "s/w" : FIRMWARE_OFFSET }[options.target]
+    
+    if options.mode == "write":
+        r = (write_flash(offset, filename, options.dev)
+             and verify_flash(offset, filename, options.dev))
+    elif options.mode == "verify":
+        r = verify_flash(offset, filename, options.dev)
+    elif options.mode == "read":
+        r = read_flash(offset, filename, options.dev)
+    else:
+        raise NotImplemented
+
+    if not r:
+        raise SystemExit, 1
+
+
+if __name__ == "__main__":
+    main()
+
+    
+
+
+    

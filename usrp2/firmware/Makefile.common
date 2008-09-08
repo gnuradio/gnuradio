@@ -1,0 +1,59 @@
+# -*- Makefile -*-
+#
+# Copyright 2007 Free Software Foundation, Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+STD_INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/lib
+
+#HAL_IO = -DHAL_IO_USES_DBOARD_PINS 
+HAL_IO = -DHAL_IO_USES_UART 
+
+AM_CPPFLAGS = $(HAL_IO) $(STD_INCLUDES)
+
+STD_CFLAGS = -O2 -g -Wall -Werror-implicit-function-declaration -mxl-soft-div -msoft-float
+
+#AM_CFLAGS = $(STD_CFLAGS) -mxl-soft-mul
+AM_CFLAGS = $(STD_CFLAGS) -mxl-soft-mul    -mxl-barrel-shift
+#AM_CFLAGS = $(STD_CFLAGS) -mno-xl-soft-mul
+#AM_CFLAGS = $(STD_CFLAGS) -mno-xl-soft-mul -mxl-barrel-shift
+
+
+LINKER_SCRIPT = $(top_srcdir)/lib/microblaze.ld
+#AM_LDFLAGS = -Wl,-T$(LINKER_SCRIPT) -Wl,-defsym -Wl,_STACK_SIZE=1024
+#AM_LDFLAGS = -Wl,-T$(LINKER_SCRIPT) -Wl,-Map -Wl,$@.map
+AM_LDFLAGS = -Wl,-T$(LINKER_SCRIPT)
+
+
+%.bin : %
+	mb-objcopy -O binary $< $@
+
+%.dump : %
+	mb-objdump -DSC $< > $@
+
+%.rom : %.bin
+	hexdump -v -e'1/1 "%.2X\n"' $< > $@
+
+
+.PRECIOUS : %.bin
+
+
+BINS =  $(noinst_PROGRAMS:=.bin)
+ROMS =  $(noinst_PROGRAMS:=.rom)
+DUMPS = $(noinst_PROGRAMS:=.dump)
+
+noinst_DATA = $(BINS) $(ROMS) $(DUMPS)
+
+CLEANFILES = $(ROMS) $(DUMPS) $(BINS)

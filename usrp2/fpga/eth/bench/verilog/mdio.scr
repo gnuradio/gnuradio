@@ -1,0 +1,52 @@
+// Read from register 24 to confirm that Rx CRC check is enabled
+03 00 18 00 01 ff ff
+
+// Set speed to 1000 Mbps
+01 00 22 00 04
+
+// Set MDIO clock (MDC) divider to 4 to speed up test
+01 00 23 00 04
+03 00 23 00 04 ff ff
+
+// Check default (reset) values in new (added) MDIO registers
+//03 00 23 00 64 ff ff
+03 00 24 00 00 ff ff
+03 00 25 00 00 ff ff
+03 00 26 00 00 ff ff
+03 00 27 00 00 ff ff
+03 00 28 00 00 ff ff
+
+// Set RGAD=0x00 (all zeroes), FIAD=0x1f (all ones), check it
+// - these values allows easy recognition in the waveform
+01 00 25 00 1f
+03 00 25 00 1f ff ff
+
+// Now start the read operation by writing a 1 to the MIICOMMAND[1] - RSTAT
+01 00 24 00 02
+03 00 24 00 02 ff ff
+
+// Delay for 768 NOP
+0F 03 00
+
+// Check that the read operation has completed
+03 00 28 00 00 ff ff
+
+// Set RGAD=0x1f (all ones), FIAD=0x00 (all zeroes), check it
+// - these values allows easy recognition in the waveform
+01 00 25 1f 00
+03 00 25 1f 00 ff ff
+// Set MIITX_DATA = 0xAAAA, check it
+01 00 26 AA AA
+03 00 26 AA AA ff ff
+// Check MIISTATUS - must still be zero
+03 00 28 00 00 ff ff
+
+// Now start the write operation by writing a 1 to the MIICOMMAND[2] - WCTRLDATA
+01 00 24 00 04
+03 00 24 00 04 ff ff
+
+// Delay for 768 NOP
+0F 03 00
+
+// Check that the write operation has completed
+03 00 28 00 00 ff ff

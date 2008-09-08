@@ -1,0 +1,108 @@
+#!/bin/csh -f
+
+set current_par = 0
+set output_waveform = 0
+while ( $current_par < $# )
+    @ current_par = $current_par + 1
+    case wave:
+        @ output_waveform = 1
+        breaksw
+    default:
+        echo 'Unknown option "'$argv[$current_par]'"!'
+        exit
+        breaksw
+    endsw
+end
+
+echo "TEST: spi"
+
+#echo "-CDSLIB ./cds.lib"               > ncvlog.args
+#echo "-HDLVAR ./hdl.var"              >> ncvlog.args
+echo "-MESSAGES"                       > ncvlog.args
+echo "-INCDIR ../../../bench/verilog" >> ncvlog.args
+echo "-INCDIR ../../../rtl/verilog"   >> ncvlog.args
+echo "-NOCOPYRIGHT"                   >> ncvlog.args
+echo "-UPDATE"                        >> ncvlog.args
+echo "-LOGFILE ncvlog.log"            >> ncvlog.args
+
+foreach filename ( `cat ./rtl.fl` )
+    echo "../../../rtl/verilog/"$filename >> ncvlog.args
+end
+
+foreach filename ( `cat ./sim.fl` )
+    echo "../../../bench/verilog/"$filename >> ncvlog.args
+end
+
+ncvlog -f ncvlog.args
+if ($status != 0) then
+  echo "STATUS: failed"
+  exit
+endif
+
+
+echo "-MESSAGES"                             > ncelab.args
+echo "-NOCOPYRIGHT"                         >> ncelab.args
+#echo "-CDSLIB ./cds.lib"                    >> ncelab.args
+#echo "-HDLVAR ./hdl.var"                    >> ncelab.args
+echo "-LOGFILE ncelab.log"                  >> ncelab.args
+echo "-SNAPSHOT worklib.tb_spi_top:v"       >> ncelab.args
+echo "-NOTIMINGCHECKS"                      >> ncelab.args
+echo "-ACCESS +RWC"                         >> ncelab.args
+echo "tb_spi_top"                           >> ncelab.args
+
+ncelab -f ncelab.args
+if ($status != 0) then
+  echo "STATUS: failed"
+  exit
+endif
+
+
+echo "-MESSAGES"                   > ncsim.args
+echo "-NOCOPYRIGHT"               >> ncsim.args
+#echo "-CDSLIB ./cds.lib"          >> ncsim.args
+#echo "-HDLVAR ./hdl.var"          >> ncsim.args
+echo "-INPUT ncsim.tcl"           >> ncsim.args
+echo "-LOGFILE ncsim.log"         >> ncsim.args
+echo "worklib.tb_spi_top:v"       >> ncsim.args
+
+if ( $output_waveform ) then
+    echo "database -open waves -shm -into ../out/wav"                         > ./ncsim.tcl
+    echo "probe -create -database waves -shm tb_spi_top -all -depth all"      >> ./ncsim.tcl
+    echo "stop -create -time 25000000 -relative"                              >> ./ncsim.tcl
+    echo "run"                                                                >> ./ncsim.tcl
+else
+    echo "stop -create -time 25000000 -relative"                              >> ./ncsim.tcl
+    echo "run"  > ./ncsim.tcl
+endif
+
+echo "exit" >> ncsim.tcl
+
+ncsim -LICQUEUE -f ./ncsim.args
+
+set exit_line_nb = `sed -n '/exit/=' < ./ncsim.log`
+
+set dead_line_nb = 0
+
+if ( $exit_line_nb ) then
+
+  @ dead_line_nb = $exit_line_nb - 1
+  set exit_line=`sed -n $exit_line_nb's/exit/&/gp' < ./ncsim.log`
+  set dead_line=`sed -n $dead_line_nb's/report/&/gp' < ./ncsim.log`
+
+  if ( "$dead_line" == "report (deaddead)" ) then
+    if ( "$exit_line" == "exit (00000000)"   ) then
+      echo "STATUS: passed"  #|tee -a ./run_sim.log 2>&1
+    else
+      echo "STATUS: failed"  #|tee -a ./run_sim.log 2>&1
+    endif
+  else
+    echo "STATUS: failed"
+  endif
+
+endif
+
+exit
+
+
+
+

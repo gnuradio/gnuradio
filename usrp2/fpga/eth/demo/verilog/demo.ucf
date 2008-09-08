@@ -1,0 +1,52 @@
+NET "Reset_n"          LOC = "C15"; // PushButton #4
+NET "Clk_100M"         LOC = "B15";
+NET "Clk_125M"         LOC = "A16"; // GMII only
+
+NET "RS232_TXD"        LOC = "A9";
+NET "RS232_RXD"        LOC = "F1";
+
+NET "USB_TXD"          LOC = "D1";
+NET "USB_RXD"          LOC = "A8";
+
+NET "PHY_RESET_n"      LOC = "E25";
+
+NET "PHY_RXC"          LOC = "B13";
+NET "PHY_RXD<0>"       LOC = "D16";
+NET "PHY_RXD<1>"       LOC = "C16";
+NET "PHY_RXD<2>"       LOC = "D15";
+NET "PHY_RXD<3>"       LOC = "D14";
+NET "PHY_RXD<4>"       LOC = "E14";
+NET "PHY_RXD<5>"       LOC = "F14";
+NET "PHY_RXD<6>"       LOC = "F11";
+NET "PHY_RXD<7>"       LOC = "F12";
+NET "PHY_RXDV"         LOC = "F13";
+NET "PHY_RXER"         LOC = "E13";
+
+NET "PHY_GTX_CLK"      LOC = "C26"; // GMII only
+NET "PHY_TXC"          LOC = "A10";
+NET "PHY_TXD<0>"       LOC = "H26";
+NET "PHY_TXD<1>"       LOC = "H24";
+NET "PHY_TXD<2>"       LOC = "G26";
+NET "PHY_TXD<3>"       LOC = "G24";
+NET "PHY_TXD<4>"       LOC = "F26";
+NET "PHY_TXD<5>"       LOC = "F24";
+NET "PHY_TXD<6>"       LOC = "E26";
+NET "PHY_TXD<7>"       LOC = "E24";
+NET "PHY_TXEN"         LOC = "D26";
+NET "PHY_TXER"         LOC = "D24";
+
+NET "PHY_COL"          LOC = "B24";
+NET "PHY_CRS"          LOC = "D25";
+
+NET "PHY_MDC"          LOC = "G25";
+NET "PHY_MDIO"         LOC = "H25";
+
+NET "LED<1>"           LOC = "D13"; // LED #1-4
+NET "LED<2>"           LOC = "D12";
+NET "LED<3>"           LOC = "C11";
+NET "LED<4>"           LOC = "D11";
+
+NET "Clk_100M" PERIOD = 10.000 ; # 100  MHz
+NET "Clk_125M" PERIOD = 8.000  ; # 125  MHz
+NET "PHY_RXC"  PERIOD = 8.000  ; # 125  MHz
+NET "PHY_TXC"  PERIOD = 8.000  ; # 125  MHz

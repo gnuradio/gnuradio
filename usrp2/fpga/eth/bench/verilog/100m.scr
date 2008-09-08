@@ -1,0 +1,38 @@
+// This tests just runs a few packets at 10/100 Mbps and 1 Gbps instead of only the usual 1 Gbps
+
+// Read from register 24 to confirm that Rx CRC check is enabled
+03 00 18 00 01 ff ff
+
+// Set speed to 1000 Mbps for a starter
+01 00 22 00 04
+
+// Setup Tx and Rx MAC addresses and type field to "IP"
+// Set Tx Data at offset 0, length 14 to 123456789ABC CBA987654321 0800
+10 00 00 00 0E 12 34 56 78 9A BC CB A9 87 65 43 21 08 00
+
+// Transmit a 1000-byte frame 1 time - and expect it to be received again!
+20 03 E8 00 01
+
+// Wait (indefinitely) for missing Rx packets
+22 00 00 
+
+// Set speed to 100 Mbps - this is 10x slower!
+01 00 22 00 02
+
+// Transmit a 1000-byte frame 1 time - and expect it to be received again!
+20 03 E8 00 01
+
+// Wait (indefinitely) for missing Rx packets
+22 00 00 
+
+// Set speed to 10 Mbps - this is yet another 10x slower!
+01 00 22 00 01
+
+// Transmit a 1000-byte frame 1 time - and expect it to be received again!
+20 03 E8 00 01
+
+// Wait (indefinitely) for missing Rx packets
+22 00 00 
+
+// Halt
+FF

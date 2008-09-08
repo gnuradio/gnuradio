@@ -1,0 +1,5 @@
+The path to happiness:
+
+make clean
+make
+./u2_sim +rom=../../firmware/eth_test.rom -lxt2

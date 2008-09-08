@@ -1,0 +1,11 @@
+All the subdirectories of this directory contain code from the OpenCores
+project, checked out directly from the OpenCores CVS server.  You can update
+any directory to the latest OpenCores code by doing "cvs up" in that.
+This is not recommended unless you know what you are doing.  
+
+
+Each directory contains its own copyright and licensing information.  We 
+believe that we have the right to distribute all of these files in the form
+in which we provide them.  If this is not the case, please notify Matt Ettus,
+matt@ettus.com.
+

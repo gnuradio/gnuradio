@@ -1,0 +1,121 @@
+VERSION=1.15
+HEADER
+FILE="readWriteSPIWireData.asf"
+FID=4788d213
+LANGUAGE=VERILOG
+ENTITY="readWriteSPIWireData"
+FRAMES=ON
+FREEOID=95
+"LIBRARIES=//////////////////////////////////////////////////////////////////////\n////                                                              ////\n//// readWriteSPIWireData.v                      ////\n////                                                              ////\n//// This file is part of the spiMaster opencores effort.\n//// <http://www.opencores.org/cores//>                           ////\n////                                                              ////\n//// Module Description:                                          ////\n////  parameterized dual clock domain fifo. \n////  fifo depth is restricted to 2^ADDR_WIDTH\n////  No protection against over runs and under runs.\n//// \n////                                                              ////\n//// To Do:                                                       ////\n//// \n////                                                              ////\n//// Author(s):                                                   ////\n//// - Steve Fielding, sfielding@base2designs.com                 ////\n////                                                              ////\n//////////////////////////////////////////////////////////////////////\n////                                                              ////\n//// Copyright (C) 2004 Steve Fielding and OPENCORES.ORG          ////\n////                                                              ////\n//// This source file may be used and distributed without         ////\n//// restriction provided that this copyright statement is not    ////\n//// removed from the file and that any derivative work contains  ////\n//// the original copyright notice and the associated disclaimer. ////\n////                                                              ////\n//// This source file is free software; you can redistribute it   ////\n//// and/or modify it under the terms of the GNU Lesser General   ////\n//// Public License as published by the Free Software Foundation; ////\n//// either version 2.1 of the License, or (at your option) any   ////\n//// later version.                                               ////\n////                                                              ////\n//// This source is distributed in the hope that it will be       ////\n//// useful, but WITHOUT ANY WARRANTY; without even the implied   ////\n//// warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR      ////\n//// PURPOSE. See the GNU Lesser General Public License for more  ////\n//// details.                                                     ////\n////                                                              ////\n//// You should have received a copy of the GNU Lesser General    ////\n//// Public License along with this source; if not, download it   ////\n//// from <http://www.opencores.org/lgpl.shtml>                   ////\n////                                                              ////\n//////////////////////////////////////////////////////////////////////\n//\n`include \"timescale.v\"\n`include \"spiMaster_defines.v\"\n"
+END
+BUNDLES
+B T "Declarations" 0,0,255 0 0 1 255,255,255 0 3125 0 0000 1  "Arial" 0
+B T "Conditions" 0,0,0 0 0 0 255,255,255 0 3125 0 0110 1  "Arial" 0
+B F "States" 0,0,0 0 0 1 0,255,0 1 3527 1480 0000 1  "Arial" 0
+B T "Actions" 0,0,0 0 0 1 255,255,255 0 3125 0 0000 1  "Arial" 0
+B T "Labels" 0,0,0 0 0 0 255,255,255 0 3125 0 0000 1  "Arial" 0
+B L "Transitions" 0,0,0 0 0 1 0,0,0 1 3527 1480 0000 1  "Arial" 0
+B F "Ports" 0,0,0 0 0 1 0,255,255 1 3527 1480 0000 1  "Arial" 0
+B L "Errors" 255,0,0 0 3 1 255,255,255 1 3527 1480 0000 1  "Arial" 0
+B T "State Labels" 0,0,0 0 0 0 255,255,255 0 3125 0 0000 1  "Arial" 4
+B F "Current State" 255,255,0 0 0 1 255,255,0 1 3527 1480 0000 1  "Arial" 0
+B T "Comments" 157,157,157 0 0 1 255,255,255 0 3527 1480 0000 1  "Arial" 0
+B L "Info" 0,255,0 0 3 1 255,255,255 1 3527 1480 0000 1  "Arial" 0
+END
+INSTHEADER 1
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 5000,5000 10000,10000
+END
+INSTHEADER 57
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+OBJECTS
+G 1 0 0 TEXT 0,0,0 0 0 0 255,255,255 0 3527 1480 0000 1  "Arial" 0 | 110650,276400 1 0 0 "Module: readWriteSPIWireData"
+A 5 0 1 TEXT "Actions" | 30673,274317 1 0 0 "-- diagram ACTION"
+F 6 0 512 72 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,246400
+L 7 6 0 TEXT "Labels" | 31400,243400 1 0 0 "rwSPISt"
+L 8 9 0 TEXT "Labels" | 167524,266756 1 0 0 "txDataFull"
+I 9 0 2 Builtin InPort | 161524,266756 "" ""
+L 10 11 0 TEXT "Labels" | 165076,262648 1 0 0 "txDataFullClr"
+I 11 0 2 Builtin OutPort | 159076,262648 "" ""
+L 12 13 0 TEXT "Labels" | 122918,264250 1 0 0 "rxDataRdySet"
+I 13 0 2 Builtin OutPort | 116918,264250 "" ""
+L 14 15 0 TEXT "Labels" | 167406,271658 1 0 0 "txDataIn[7:0]"
+I 15 0 130 Builtin InPort | 161406,271658 "" ""
+L 16 17 0 TEXT "Labels" | 123072,269174 1 0 0 "rxDataOut[7:0]"
+I 17 0 130 Builtin OutPort | 117072,269174 "" ""
+L 18 19 0 TEXT "State Labels" | 110704,231360 1 0 0 "WT_TX_DATA\n/0/"
+S 19 6 0 ELLIPSE "States" | 110704,231360 6500 6500
+L 20 21 0 TEXT "State Labels" | 112226,189022 1 0 0 "CLK_HI\n/1/"
+S 21 6 4096 ELLIPSE "States" | 112226,189022 6500 6500
+W 22 6 0 19 21 BEZIER "Transitions" | 110470,224884 110707,219468 110980,207626 111395,195467
+C 23 22 0 TEXT "Conditions" | 116947,226592 1 0 0 "txDataFull == 1'b1"
+A 24 22 16 TEXT "Actions" | 104644,222649 1 0 0 "txDataShiftReg <= txDataIn;\nrxDataShiftReg <= 8'h00;\nbitCnt <= 4'h0;\nclkDelayCnt <= 8'h00;\ntxDataFullClr <= 1'b1;\ntxDataEmpty <= 1'b0;"
+L 25 26 0 TEXT "Labels" | 85178,260017 1 0 0 "txDataShiftReg[7:0]"
+I 26 0 130 Builtin Signal | 82178,260017 "" ""
+L 27 28 0 TEXT "Labels" | 85450,264368 1 0 0 "bitCnt[3:0]"
+I 28 0 130 Builtin Signal | 82450,264368 "" ""
+L 29 30 0 TEXT "Labels" | 45301,255946 1 0 0 "clkDelay[7:0]"
+I 30 0 130 Builtin InPort | 39301,255946 "" ""
+L 31 32 0 TEXT "Labels" | 85178,269538 1 0 0 "clkDelayCnt[7:0]"
+I 32 0 130 Builtin Signal | 82178,269538 "" ""
+L 33 34 0 TEXT "State Labels" | 112064,143714 1 0 0 "CLK_LO\n/2/"
+S 34 6 8192 ELLIPSE "States" | 112064,143714 6500 6500
+W 35 6 0 21 34 BEZIER "Transitions" | 111477,182571 110721,178461 111926,154930 111406,150180
+A 36 35 16 TEXT "Actions" | 117201,173770 1 0 0 "spiClkOut <= 1'b0;\nspiDataOut <= txDataShiftReg[7];\ntxDataShiftReg <= {txDataShiftReg[6:0], 1'b0};\nclkDelayCnt <= 8'h00;"
+A 40 34 4 TEXT "Actions" | 129744,145618 1 0 0 "clkDelayCnt <= clkDelayCnt + 1'b1;"
+C 41 39 0 TEXT "Conditions" | 113864,136917 1 0 0 "bitCnt == 4'h8"
+W 39 6 1 34 57 BEZIER "Transitions" | 112175,137251 112384,130999 112714,101841 111797,94879
+W 50 6 2 34 21 BEZIER "Transitions" | 108826,149348 101042,157950 83708,154801 80796,161835\
+                                      77884,168870 77971,186684 79172,191015 80374,195346\
+                                      85000,196884 88570,197360 92140,197836 101831,194594\
+                                      106220,191507
+A 51 50 16 TEXT "Actions" | 41615,180095 1 0 0 "spiClkOut <= 1'b1;\nbitCnt <= bitCnt + 1'b1;\nclkDelayCnt <= 8'h00;\nrxDataShiftReg <= {rxDataShiftReg[6:0], spiDataIn};"
+C 52 50 0 TEXT "Conditions" | 69697,159224 1 0 0 "clkDelayCnt == clkDelay"
+A 53 21 4 TEXT "Actions" | 129906,194545 1 0 0 "clkDelayCnt <= clkDelayCnt + 1'b1;\ntxDataFullClr <= 1'b0;\nrxDataRdySet <= 1'b0;"
+C 54 35 0 TEXT "Conditions" | 112616,182259 1 0 0 "clkDelayCnt == clkDelay"
+L 56 57 0 TEXT "State Labels" | 112441,91219 1 0 0 "J1"
+S 57 6 12292 ELLIPSE 0,0,0 0 0 1 255,0,0 1 | 111975,91295 3595 3595
+H 58 57 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,276400
+I 61 58 0 Builtin Entry | 96520,182880
+I 62 58 0 Builtin Exit | 123838,149654
+W 63 58 0 61 62 BEZIER "Transitions" | 100327,182880 105881,175159 115604,157376 121159,149654
+A 55 39 16 TEXT "Actions" | 101170,118509 1 0 0 "rxDataRdySet <= 1'b1;\nrxDataOut <= rxDataShiftReg;"
+A 79 78 4 TEXT "Actions" | 172448,235984 1 0 0 "bitCnt <= 4'h0;\nclkDelayCnt <= 8'h00;\ntxDataFullClr <= 1'b0;\nrxDataRdySet <= 1'b0;\ntxDataShiftReg <= 8'h00;\nrxDataShiftReg <= 8'h00;\nrxDataOut <= 8'h00;\nspiDataOut <= 1'b0;\nspiClkOut <= 1'b0;\ntxDataEmpty <= 1'b0;"
+S 78 6 16384 ELLIPSE "States" | 163200,234352 6500 6500
+L 77 78 0 TEXT "State Labels" | 163200,234352 1 0 0 "ST_RW_WIRE\n/3/"
+C 75 70 0 TEXT "Conditions" | 67748,241498 1 0 0 "rst == 1'b1"
+I 74 0 2 Builtin InPort | 195700,267632 "" ""
+L 73 74 0 TEXT "Labels" | 201700,267632 1 0 0 "rst"
+I 72 0 3 Builtin InPort | 195700,272800 "" ""
+L 71 72 0 TEXT "Labels" | 201700,272800 1 0 0 "clk"
+W 70 6 0 69 78 BEZIER "Transitions" | 53584,240424 67019,243331 142652,244275 157000,236303
+I 69 6 0 Builtin Reset | 53584,240424
+W 65 6 1 57 21 BEZIER "Transitions" | 108870,93105 102326,112538 73109,121258 64708,125153\
+                                      56308,129049 47906,146800 45670,157910 43435,169021\
+                                      42893,195716 46449,203811 50006,211907 64777,217599\
+                                      73008,216616 81239,215634 100244,201596 107791,193773
+C 66 65 0 TEXT "Conditions" | 72805,108285 1 0 0 "txDataFull == 1'b1"
+W 67 6 2 57 19 BEZIER "Transitions" | 108779,92940 102622,102639 71923,91036 67388,98354\
+                                      62853,105673 50345,122275 43604,135689 36864,149103\
+                                      35643,196122 41029,209502 46416,222883 69180,229387\
+                                      78123,230877 87066,232368 97753,231428 104224,231859
+A 68 65 16 TEXT "Actions" | 47229,151610 1 0 0 "txDataShiftReg <= txDataIn;\nbitCnt <= 3'b000;\nclkDelayCnt <= 8'h00;\ntxDataFullClr <= 1'b1;"
+L 88 87 0 TEXT "Labels" | 85310,255376 1 0 0 "rxDataShiftReg[7:0]"
+I 87 0 130 Builtin Signal | 82310,255376 "" ""
+I 86 0 2 Builtin OutPort | 37191,270020 "" ""
+L 85 86 0 TEXT "Labels" | 43191,270020 1 0 0 "spiClkOut"
+I 84 0 2 Builtin InPort | 39102,260465 "" ""
+L 83 84 0 TEXT "Labels" | 45102,260465 1 0 0 "spiDataIn"
+I 82 0 2 Builtin OutPort | 37191,265379 "" ""
+L 81 82 0 TEXT "Labels" | 43191,265379 1 0 0 "spiDataOut"
+W 80 6 0 78 19 BEZIER "Transitions" | 156735,233684 145855,233140 128082,232022 117202,231478
+A 92 19 4 TEXT "Actions" | 71554,227603 1 0 0 "rxDataRdySet <= 1'b0;\ntxDataEmpty <= 1'b1;"
+L 93 94 0 TEXT "Labels" | 165150,258150 1 0 0 "txDataEmpty"
+I 94 0 2 Builtin OutPort | 159150,258150 "" ""
+END

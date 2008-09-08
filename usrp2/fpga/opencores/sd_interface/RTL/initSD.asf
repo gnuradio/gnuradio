@@ -1,0 +1,226 @@
+VERSION=1.15
+HEADER
+FILE="initSD.asf"
+FID=4788d213
+LANGUAGE=VERILOG
+ENTITY="initSD"
+FRAMES=ON
+FREEOID=430
+"LIBRARIES=//////////////////////////////////////////////////////////////////////\n////                                                              ////\n//// initSD.v                                                 ////\n////                                                              ////\n//// This file is part of the spiMaster opencores effort.\n//// <http://www.opencores.org/cores//>                           ////\n////                                                              ////\n//// Module Description:                                          ////\n////  parameterized dual clock domain fifo. \n////  fifo depth is restricted to 2^ADDR_WIDTH\n////  No protection against over runs and under runs.\n//// \n////                                                              ////\n//// To Do:                                                       ////\n//// \n////                                                              ////\n//// Author(s):                                                   ////\n//// - Steve Fielding, sfielding@base2designs.com                 ////\n////                                                              ////\n//////////////////////////////////////////////////////////////////////\n////                                                              ////\n//// Copyright (C) 2004 Steve Fielding and OPENCORES.ORG          ////\n////                                                              ////\n//// This source file may be used and distributed without         ////\n//// restriction provided that this copyright statement is not    ////\n//// removed from the file and that any derivative work contains  ////\n//// the original copyright notice and the associated disclaimer. ////\n////                                                              ////\n//// This source file is free software; you can redistribute it   ////\n//// and/or modify it under the terms of the GNU Lesser General   ////\n//// Public License as published by the Free Software Foundation; ////\n//// either version 2.1 of the License, or (at your option) any   ////\n//// later version.                                               ////\n////                                                              ////\n//// This source is distributed in the hope that it will be       ////\n//// useful, but WITHOUT ANY WARRANTY; without even the implied   ////\n//// warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR      ////\n//// PURPOSE. See the GNU Lesser General Public License for more  ////\n//// details.                                                     ////\n////                                                              ////\n//// You should have received a copy of the GNU Lesser General    ////\n//// Public License along with this source; if not, download it   ////\n//// from <http://www.opencores.org/lgpl.shtml>                   ////\n////                                                              ////\n//////////////////////////////////////////////////////////////////////\n//\n`include \"timescale.v\"\n`include \"spiMaster_defines.v\"\n"
+END
+BUNDLES
+B T "Declarations" 0,0,255 0 0 1 255,255,255 0 3125 0 0000 1  "Arial" 0
+B T "Conditions" 0,0,0 0 0 0 255,255,255 0 3125 0 0110 1  "Arial" 0
+B F "States" 0,0,0 0 0 1 0,255,0 1 3527 1480 0000 1  "Arial" 0
+B T "Actions" 0,0,0 0 0 1 255,255,255 0 3125 0 0000 1  "Arial" 0
+B T "Labels" 0,0,0 0 0 0 255,255,255 0 3125 0 0000 1  "Arial" 0
+B L "Transitions" 0,0,0 0 0 1 0,0,0 1 3527 1480 0000 1  "Arial" 0
+B F "Ports" 0,0,0 0 0 1 0,255,255 1 3527 1480 0000 1  "Arial" 0
+B L "Errors" 255,0,0 0 3 1 255,255,255 1 3527 1480 0000 1  "Arial" 0
+B T "State Labels" 0,0,0 0 0 0 255,255,255 0 3125 0 0000 1  "Arial" 4
+B F "Current State" 255,255,0 0 0 1 255,255,0 1 3527 1480 0000 1  "Arial" 0
+B T "Comments" 157,157,157 0 0 1 255,255,255 0 3527 1480 0000 1  "Arial" 0
+B L "Info" 0,255,0 0 3 1 255,255,255 1 3527 1480 0000 1  "Arial" 0
+END
+INSTHEADER 1
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 5000,5000 10000,10000
+END
+INSTHEADER 141
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+INSTHEADER 168
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+INSTHEADER 322
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+OBJECTS
+S 286 169 24576 ELLIPSE "States" | 105808,239248 6500 6500
+L 285 286 0 TEXT "State Labels" | 105808,239248 1 0 0 "SEND_CMD\n/4/"
+I 284 169 0 Builtin Entry | 62832,259920
+G 1 0 0 TEXT 0,0,0 0 0 0 255,255,255 0 3527 1480 0000 1  "Arial" 0 | 110650,276400 1 0 0 "Module: initSD"
+A 5 0 1 TEXT "Actions" | 30400,266400 1 0 0 "-- diagram ACTION"
+F 6 0 512 72 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,212603
+L 7 6 0 TEXT "Labels" | 31673,209974 1 0 0 "initSDSt"
+W 303 169 1 300 286 BEZIER "Transitions" | 115053,153196 98913,155348 68551,158239 60111,167048\
+                                           51672,175858 50191,206794 54058,217015 57925,227237\
+                                           74873,237191 81496,239444 88120,241697 94643,240900\
+                                           99417,240430
+S 300 169 36864 ELLIPSE "States" | 121544,152859 6500 6500
+L 299 300 0 TEXT "State Labels" | 121544,152859 1 0 0 "CHK_FIN\n/7/"
+C 298 297 0 TEXT "Conditions" | 111248,181393 1 0 0 "sendCmdRdy == 1'b1"
+W 297 169 0 292 300 BEZIER "Transitions" | 108876,181563 115854,170249 110294,169239 118013,158314
+W 295 169 0 284 286 BEZIER "Transitions" | 66490,259920 75568,255313 91313,247447 100391,242840
+W 294 169 0 290 292 BEZIER "Transitions" | 105542,205568 105407,201842 105322,197326 105187,193600
+W 293 169 0 286 290 BEZIER "Transitions" | 105594,232759 105594,228491 105652,222790 105652,218522
+S 292 169 32768 ELLIPSE "States" | 105494,187111 6500 6500
+L 291 292 0 TEXT "State Labels" | 105494,187111 1 0 0 "WT_FIN\n/6/"
+S 290 169 28672 ELLIPSE "States" | 106036,212043 6500 6500
+L 289 290 0 TEXT "State Labels" | 106036,212043 1 0 0 "DEL\n/5/"
+A 288 286 4 TEXT "Actions" | 121320,255510 1 0 0 "cmdByte <= 8'h40; //CMD0\ndataByte1 <= 8'h00;\ndataByte2 <= 8'h00;\ndataByte3 <= 8'h00;\ndataByte4 <= 8'h00;\ncheckSumByte <= 8'h95;\nsendCmdReq <= 1'b1;\nloopCnt <= loopCnt + 1'b1;\nspiCS_n <= 1'b0;"
+I 319 169 0 Builtin Exit | 136284,112401
+I 318 169 0 Builtin Link | 148672,125363
+L 317 318 0 TEXT "Labels" | 154672,125363 1 0 0 "WT_INIT_REQ"
+C 316 310 0 TEXT "Conditions" | 131001,148174 1 0 0 "respTout == 1'b1 || respByte != 8'h01"
+A 313 312 16 TEXT "Actions" | 106611,116426 1 0 0 "loopCnt <= 8'h00;"
+W 312 6 0 141 168 BEZIER "Transitions" | 111141,120168 111512,114462 111940,106474 111681,102457
+A 311 310 16 TEXT "Actions" | 132446,138965 1 0 0 "initError <= `INIT_CMD0_ERROR;"
+W 310 169 2 300 318 BEZIER "Transitions" | 125449,147664 131098,140939 143023,130088 148672,123363
+C 304 303 0 TEXT "Conditions" | 36809,151245 1 0 0 "(respTout == 1'b1 || respByte != 8'h01) && loopCnt != 8'hff"
+L 335 334 0 TEXT "State Labels" | 100580,187111 1 0 0 "WT_FIN\n/8/"
+S 334 349 45056 ELLIPSE "States" | 100580,187111 6500 6500
+W 331 349 0 325 323 BEZIER "Transitions" | 61576,259920 70654,255313 86399,247447 95477,242840
+W 330 349 0 334 327 BEZIER "Transitions" | 103962,181563 110940,170249 105380,169239 113099,158314
+C 329 330 0 TEXT "Conditions" | 106334,181393 1 0 0 "sendCmdRdy == 1'b1"
+L 328 327 0 TEXT "State Labels" | 116630,152859 1 0 0 "CHK_FIN\n/9/"
+S 327 349 49152 ELLIPSE "States" | 116630,152859 6500 6500
+W 326 349 1 327 323 BEZIER "Transitions" | 110139,153196 93999,155348 63637,158239 55197,167048\
+                                           46758,175858 45277,206794 49144,217015 53011,227237\
+                                           69959,237191 76582,239444 83206,241697 89729,240900\
+                                           94503,240430
+I 325 349 0 Builtin Entry | 57918,259920
+L 324 323 0 TEXT "State Labels" | 100894,239248 1 0 0 "SEND_CMD\n/10/"
+S 323 349 53248 ELLIPSE "States" | 100894,239248 6500 6500
+S 322 6 40964 ELLIPSE 0,0,0 0 0 1 0,255,255 1 | 112467,68151 6500 6500
+A 321 297 16 TEXT "Actions" | 108930,174030 1 0 0 "spiCS_n <= 1'b1;"
+W 320 169 3 300 319 BEZIER "Transitions" | 123051,146539 126378,137861 129956,121079 133283,112401
+S 351 349 57344 ELLIPSE "States" | 157173,196494 6500 6500
+L 350 351 0 TEXT "State Labels" | 157173,196494 1 0 0 "DEL1\n/11/"
+L 348 322 0 TEXT "State Labels" | 112467,68151 1 0 0 "INIT"
+W 347 349 3 327 339 BEZIER "Transitions" | 118137,146539 108945,133720 116197,116503 127432,110902
+A 346 330 16 TEXT "Actions" | 104016,174030 1 0 0 "spiCS_n <= 1'b1;"
+C 345 326 0 TEXT "Conditions" | 31895,151245 1 0 0 "(respTout == 1'b1 || respByte != 8'h00) && loopCnt != 8'hff"
+W 344 349 2 327 339 BEZIER "Transitions" | 120695,147788 164668,142776 140351,119298 127432,110895
+A 343 344 16 TEXT "Actions" | 144159,136027 1 0 0 "initError <= `INIT_CMD1_ERROR;"
+C 342 344 0 TEXT "Conditions" | 128427,151693 1 0 0 "respTout == 1'b1 || respByte != 8'h00"
+I 339 349 0 Builtin Exit | 130010,110769
+A 338 323 4 TEXT "Actions" | 116406,255510 1 0 0 "cmdByte <= 8'h41; //CMD1\ndataByte1 <= 8'h00;\ndataByte2 <= 8'h00;\ndataByte3 <= 8'h00;\ndataByte4 <= 8'h00;\ncheckSumByte <= 8'hff;\nsendCmdReq <= 1'b1;\nloopCnt <= loopCnt + 1'b1;\nspiCS_n <= 1'b0;\ndelCnt1 <= 10'h000;"
+H 349 322 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,276400
+I 74 0 2 Builtin InPort | 195700,267632 "" ""
+L 73 74 0 TEXT "Labels" | 201700,267632 1 0 0 "rst"
+I 72 0 3 Builtin InPort | 195700,272800 "" ""
+L 71 72 0 TEXT "Labels" | 201700,272800 1 0 0 "clk"
+I 366 0 130 Builtin OutPort | 86503,262498 "" ""
+L 365 366 0 TEXT "Labels" | 92503,262498 1 0 0 "cmdByte[7:0]"
+L 367 368 0 TEXT "Labels" | 92258,258018 1 0 0 "dataByte1[7:0]"
+W 363 6 0 322 102 BEZIER "Transitions" | 107085,71794 94246,83115 68667,103061 63765,115078\
+                                         58864,127095 64936,152522 71324,159511 77712,166500\
+                                         95428,168622 105168,169887
+W 362 6 0 168 322 BEZIER "Transitions" | 111422,89512 111675,84705 111722,79427 111975,74620
+W 361 349 0 323 351 BEZIER "Transitions" | 100927,232798 101473,229591 102027,224817 103255,221746\
+                                           104484,218676 108306,212805 113697,211372 119089,209939\
+                                           136835,210076 142431,209700 148027,209325 152669,207687\
+                                           153999,206697 155330,205708 155754,204059 156095,202899
+C 360 359 0 TEXT "Conditions" | 114039,204684 1 0 0 "delCnt1 == `TWO_MS"
+W 359 349 1 351 334 BEZIER "Transitions" | 150748,197472 141944,198154 126119,199907 119942,199054\
+                                           113766,198201 108641,194176 105092,191788
+C 358 357 0 TEXT "Conditions" | 157694,164664 1 0 0 "delCnt2 == 8'hff"
+W 357 349 0 353 351 BEZIER "Transitions" | 163535,169133 171628,167736 181061,162846 187169,163119\
+                                           193277,163392 202696,170901 204880,177350 207064,183799\
+                                           206381,202091 201331,206561 196281,211032 176760,210621\
+                                           171096,209359 165432,208097 162592,204050 161023,201730
+W 356 349 2 351 353 BEZIER "Transitions" | 158302,190095 158438,187775 158562,182275 158679,179771
+A 355 351 4 TEXT "Actions" | 166182,199224 1 0 0 "delCnt1 <= delCnt1 + 1'b1;\ndelCnt2 <= 8'h00;\nsendCmdReq <= 1'b0;"
+A 354 353 4 TEXT "Actions" | 166728,176565 1 0 0 "delCnt2 <= delCnt2 + 1'b1;"
+S 353 349 61440 ELLIPSE "States" | 158538,173289 6500 6500
+L 352 353 0 TEXT "State Labels" | 158538,173289 1 0 0 "DEL2\n/12/"
+L 95 96 0 TEXT "Labels" | 155940,273023 1 0 0 "SDInitRdy"
+I 368 0 130 Builtin OutPort | 86258,258018 "" ""
+I 371 0 130 Builtin OutPort | 86455,252808 "" ""
+L 372 371 0 TEXT "Labels" | 92455,252808 1 0 0 "dataByte2[7:0]"
+I 373 0 130 Builtin OutPort | 86702,248115 "" ""
+L 374 373 0 TEXT "Labels" | 92702,248115 1 0 0 "dataByte3[7:0]"
+I 375 0 130 Builtin OutPort | 86702,243422 "" ""
+L 376 375 0 TEXT "Labels" | 92702,243422 1 0 0 "dataByte4[7:0]"
+L 383 384 0 TEXT "Labels" | 43326,249254 1 0 0 "delCnt1[9:0]"
+I 382 0 2 Builtin InPort | 89010,228836 "" ""
+L 381 382 0 TEXT "Labels" | 95010,228836 1 0 0 "sendCmdRdy"
+I 380 0 2 Builtin OutPort | 86796,234002 "" ""
+L 379 380 0 TEXT "Labels" | 92796,234002 1 0 0 "sendCmdReq"
+I 378 0 130 Builtin OutPort | 86578,238482 "" ""
+L 377 378 0 TEXT "Labels" | 92578,238482 1 0 0 "checkSumByte[7:0]"
+I 111 0 2 Builtin OutPort | 142296,249682 "" ""
+L 110 109 0 TEXT "Labels" | 150753,245041 1 0 0 "txDataFull"
+I 109 0 2 Builtin InPort | 144753,245041 "" ""
+W 106 6 0 102 141 BEZIER "Transitions" | 111478,164116 111546,159885 111249,139164 110939,132984
+W 105 6 0 100 102 BEZIER "Transitions" | 111805,187037 111601,183898 111568,180194 111364,177055
+S 102 6 4096 ELLIPSE "States" | 111630,170580 6500 6500
+L 101 102 0 TEXT "State Labels" | 111630,170580 1 0 0 "WT_INIT_REQ\n/1/"
+S 100 6 0 ELLIPSE "States" | 112176,193512 6500 6500
+L 99 100 0 TEXT "State Labels" | 112176,193512 1 0 0 "START\n/0/"
+I 96 0 2 Builtin OutPort | 149940,273023 "" ""
+L 97 98 0 TEXT "Labels" | 158664,268382 1 0 0 "SDInitReq"
+I 98 0 2 Builtin InPort | 152664,268382 "" ""
+I 399 0 130 Builtin InPort | 179837,253714 "" ""
+L 398 399 0 TEXT "Labels" | 185837,253714 1 0 0 "spiClkDelayIn[7:0]"
+I 397 0 130 Builtin OutPort | 150335,263636 "" ""
+L 396 397 0 TEXT "Labels" | 156335,263636 1 0 0 "initError[1:0]"
+I 395 0 2 Builtin OutPort | 142620,234260 "" ""
+L 394 395 0 TEXT "Labels" | 148620,234260 1 0 0 "spiCS_n"
+I 391 0 130 Builtin InPort | 88818,224341 "" ""
+L 390 391 0 TEXT "Labels" | 94818,224341 1 0 0 "respByte[7:0]"
+C 389 388 0 TEXT "Conditions" | 64133,197548 1 0 0 "rst == 1'b1"
+W 388 6 0 387 100 BEZIER "Transitions" | 49555,202550 64193,201024 91216,196545 105854,195019
+I 387 6 0 Builtin Reset | 49555,202550
+I 386 0 130 Builtin Signal | 40326,244334 "" ""
+L 385 386 0 TEXT "Labels" | 43326,244334 1 0 0 "delCnt2[7:0]"
+I 384 0 130 Builtin Signal | 40326,249254 "" ""
+C 123 106 0 TEXT "Conditions" | 112795,161807 1 0 0 "SDInitReq == 1'b1"
+L 118 117 0 TEXT "Labels" | 148296,254323 1 0 0 "txDataOut[7:0]"
+I 117 0 130 Builtin OutPort | 142296,254323 "" ""
+L 112 111 0 TEXT "Labels" | 148296,249682 1 0 0 "txDataWen"
+L 392 393 0 TEXT "Labels" | 94804,219488 1 0 0 "respTout"
+I 393 0 2 Builtin InPort | 88804,219488 "" ""
+I 405 0 2 Builtin InPort | 123780,223280 "" ""
+L 404 405 0 TEXT "Labels" | 129780,223280 1 0 0 "rxDataRdy"
+I 403 0 2 Builtin OutPort | 121620,218480 "" ""
+L 402 403 0 TEXT "Labels" | 127620,218480 1 0 0 "rxDataRdyClr"
+S 401 142 65536 ELLIPSE "States" | 119702,164354 6500 6500
+L 400 401 0 TEXT "State Labels" | 119702,164354 1 0 0 "WT_DATA_EMPTY\n/13/"
+L 135 136 0 TEXT "Labels" | 92903,270215 1 0 0 "spiClkDelayOut[7:0]"
+I 136 0 130 Builtin OutPort | 86903,270215 "" ""
+A 137 100 4 TEXT "Actions" | 166381,206571 1 0 0 "spiClkDelayOut <= spiClkDelayIn;\nSDInitRdy <= 1'b0;\nspiCS_n <= 1'b1;\ninitError <= `INIT_NO_ERROR;\ntxDataOut <= 8'h00;\ntxDataWen <= 1'b0;\ncmdByte <= 8'h00;\ndataByte1 <= 8'h00;\ndataByte2 <= 8'h00;\ndataByte3 <= 8'h00;\ndataByte4 <= 8'h00;\ncheckSumByte <= 8'h00;\nsendCmdReq <= 1'b0;\nloopCnt <= 8'h00;\ndelCnt1 <= 10'h000;\ndelCnt2 <= 8'h00;\nrxDataRdyClr <= 1'b0;"
+A 138 102 4 TEXT "Actions" | 122260,190788 1 0 0 "SDInitRdy <= 1'b1;\nspiClkDelayOut <= spiClkDelayIn;\ncmdByte <= 8'h00;\ndataByte1 <= 8'h00;\ndataByte2 <= 8'h00;\ndataByte3 <= 8'h00;\ndataByte4 <= 8'h00;\ncheckSumByte <= 8'h00;"
+A 139 106 16 TEXT "Actions" | 102988,155532 1 0 0 "SDInitRdy <= 1'b0;\nloopCnt <= 8'h00;\nspiClkDelayOut <= `SLOW_SPI_CLK;\ninitError <= `INIT_NO_ERROR;"
+L 140 141 0 TEXT "State Labels" | 111114,126510 1 0 0 "CLK_SEQ"
+S 141 6 8196 ELLIPSE 0,0,0 0 0 1 0,255,255 1 | 111114,126510 6500 6500
+H 142 141 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,276400
+A 425 290 4 TEXT "Actions" | 124357,213854 1 0 0 "sendCmdReq <= 1'b0;"
+I 421 142 0 Builtin Exit | 134364,140858
+I 145 142 0 Builtin Entry | 63487,251949
+S 149 142 12288 ELLIPSE "States" | 82209,235260 6500 6500
+L 150 149 0 TEXT "State Labels" | 82209,235260 1 0 0 "SEND_FF\n/2/"
+S 151 142 16384 ELLIPSE "States" | 83028,207141 6500 6500
+L 152 151 0 TEXT "State Labels" | 83028,207141 1 0 0 "CHK_FIN\n/3/"
+W 153 142 0 149 151 BEZIER "Transitions" | 82316,228817 82452,225541 82726,217079 82876,213607
+C 154 153 0 TEXT "Conditions" | 86589,230362 1 0 0 "txDataFull == 1'b0"
+A 155 153 16 TEXT "Actions" | 85757,225151 1 0 0 "txDataOut <= 8'hff;\ntxDataWen <= 1'b1;\nloopCnt <= loopCnt + 1'b1;"
+A 156 151 4 TEXT "Actions" | 101046,207687 1 0 0 "txDataWen <= 1'b0;"
+L 426 427 0 TEXT "Labels" | 150400,240650 1 0 0 "txDataEmpty"
+I 427 0 2 Builtin InPort | 144400,240650 "" ""
+W 428 142 0 401 421 BEZIER "Transitions" | 123115,158823 126115,154198 128614,145483 131614,140858
+C 429 428 0 TEXT "Conditions" | 127025,156275 1 0 0 "txDataEmpty == 1'b1"
+W 162 142 0 145 149 BEZIER "Transitions" | 67172,251949 70925,248810 74553,243594 78306,240455
+W 164 142 1 151 401 BEZIER "Transitions" | 85234,201030 86934,197154 103559,165433 113217,164792
+C 165 164 0 TEXT "Conditions" | 91028,195541 1 0 0 "loopCnt == `SD_INIT_START_SEQ_LEN"
+W 166 142 2 151 149 BEZIER "Transitions" | 76635,205968 69903,206580 58140,206268 54570,210178\
+                                           51000,214088 50184,228504 53380,232380 56576,236256\
+                                           69005,235825 75805,236369
+L 167 168 0 TEXT "State Labels" | 111972,95982 1 0 0 "RESET"
+S 168 6 20484 ELLIPSE 0,0,0 0 0 1 0,255,255 1 | 111972,95982 6500 6500
+H 169 168 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,276400
+L 191 192 0 TEXT "Labels" | 43350,253948 1 0 0 "loopCnt[7:0]"
+I 192 0 130 Builtin Signal | 40350,253948 "" ""
+END

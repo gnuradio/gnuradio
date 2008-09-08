@@ -1,0 +1,141 @@
+VERSION=1.15
+HEADER
+FILE="spiCtrl.asf"
+FID=4788d213
+LANGUAGE=VERILOG
+ENTITY="spiCtrl"
+FRAMES=ON
+FREEOID=187
+"LIBRARIES=//////////////////////////////////////////////////////////////////////\n////                                                              ////\n//// spiCtrl.v                                                 ////\n////                                                              ////\n//// This file is part of the spiMaster opencores effort.\n//// <http://www.opencores.org/cores//>                           ////\n////                                                              ////\n//// Module Description:                                          ////\n////  parameterized dual clock domain fifo. \n////  fifo depth is restricted to 2^ADDR_WIDTH\n////  No protection against over runs and under runs.\n//// \n////                                                              ////\n//// To Do:                                                       ////\n//// \n////                                                              ////\n//// Author(s):                                                   ////\n//// - Steve Fielding, sfielding@base2designs.com                 ////\n////                                                              ////\n//////////////////////////////////////////////////////////////////////\n////                                                              ////\n//// Copyright (C) 2008 Steve Fielding and OPENCORES.ORG          ////\n////                                                              ////\n//// This source file may be used and distributed without         ////\n//// restriction provided that this copyright statement is not    ////\n//// removed from the file and that any derivative work contains  ////\n//// the original copyright notice and the associated disclaimer. ////\n////                                                              ////\n//// This source file is free software; you can redistribute it   ////\n//// and/or modify it under the terms of the GNU Lesser General   ////\n//// Public License as published by the Free Software Foundation; ////\n//// either version 2.1 of the License, or (at your option) any   ////\n//// later version.                                               ////\n////                                                              ////\n//// This source is distributed in the hope that it will be       ////\n//// useful, but WITHOUT ANY WARRANTY; without even the implied   ////\n//// warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR      ////\n//// PURPOSE. See the GNU Lesser General Public License for more  ////\n//// details.                                                     ////\n////                                                              ////\n//// You should have received a copy of the GNU Lesser General    ////\n//// Public License along with this source; if not, download it   ////\n//// from <http://www.opencores.org/lgpl.shtml>                   ////\n////                                                              ////\n//////////////////////////////////////////////////////////////////////\n//\n`include \"timescale.v\"\n`include \"spiMaster_defines.v\"\n"
+END
+BUNDLES
+B T "Declarations" 0,0,255 0 0 1 255,255,255 0 3125 0 0000 1  "Arial" 0
+B T "Conditions" 0,0,0 0 0 0 255,255,255 0 3125 0 0110 1  "Arial" 0
+B F "States" 0,0,0 0 0 1 0,255,0 1 3527 1480 0000 1  "Arial" 0
+B T "Actions" 0,0,0 0 0 1 255,255,255 0 3125 0 0000 1  "Arial" 0
+B T "Labels" 0,0,0 0 0 0 255,255,255 0 3125 0 0000 1  "Arial" 0
+B L "Transitions" 0,0,0 0 0 1 0,0,0 1 3527 1480 0000 1  "Arial" 0
+B F "Ports" 0,0,0 0 0 1 0,255,255 1 3527 1480 0000 1  "Arial" 0
+B L "Errors" 255,0,0 0 3 1 255,255,255 1 3527 1480 0000 1  "Arial" 0
+B T "State Labels" 0,0,0 0 0 0 255,255,255 0 3125 0 0000 1  "Arial" 4
+B F "Current State" 255,255,0 0 0 1 255,255,0 1 3527 1480 0000 1  "Arial" 0
+B T "Comments" 157,157,157 0 0 1 255,255,255 0 3527 1480 0000 1  "Arial" 0
+B L "Info" 0,255,0 0 3 1 255,255,255 1 3527 1480 0000 1  "Arial" 0
+END
+INSTHEADER 1
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 5000,5000 10000,10000
+END
+INSTHEADER 99
+PAGE 25400,25400 215900,279400
+UPPERLEFT 0,0
+GRID=OFF
+GRIDSIZE 0,0 10000,10000
+END
+OBJECTS
+G 1 0 0 TEXT 0,0,0 0 0 0 255,255,255 0 3527 1480 0000 1  "Arial" 0 | 110650,276400 1 0 0 "Module: spiCtrl"
+A 5 0 1 TEXT "Actions" | 30673,274317 1 0 0 "-- diagram ACTION"
+F 6 0 512 72 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,232796
+L 7 6 0 TEXT "Labels" | 32486,211363 1 0 0 "spiCtrlSt"
+L 8 9 0 TEXT "Labels" | 166432,268121 1 0 0 "spiTransCtrl"
+I 9 0 2 Builtin InPort | 160432,268121 "" ""
+L 10 11 0 TEXT "Labels" | 164257,264286 1 0 0 "spiTransSts"
+I 11 0 2 Builtin OutPort | 158257,264286 "" ""
+L 14 15 0 TEXT "Labels" | 166314,272204 1 0 0 "spiTransType[1:0]"
+I 15 0 130 Builtin InPort | 160314,272204 "" ""
+S 78 6 0 ELLIPSE "States" | 117132,210174 6500 6500
+L 77 78 0 TEXT "State Labels" | 117132,210174 1 0 0 "ST_S_CTRL\n/0/"
+C 75 70 0 TEXT "Conditions" | 64251,212776 1 0 0 "rst == 1'b1"
+I 74 0 2 Builtin InPort | 195973,268451 "" ""
+L 73 74 0 TEXT "Labels" | 201973,268451 1 0 0 "rst"
+I 72 0 3 Builtin InPort | 195700,272800 "" ""
+L 71 72 0 TEXT "Labels" | 201700,272800 1 0 0 "clk"
+W 70 6 0 69 78 BEZIER "Transitions" | 55625,209356 74109,218718 92075,219949 111473,213370
+I 69 6 0 Builtin Reset | 54670,208387
+I 92 0 2 Builtin InPort | 99404,245269 "" ""
+L 91 92 0 TEXT "Labels" | 105404,245269 1 0 0 "SDInitRdy"
+I 90 0 2 Builtin OutPort | 97222,240694 "" ""
+L 89 90 0 TEXT "Labels" | 103222,240694 1 0 0 "SDInitReq"
+L 95 96 0 TEXT "State Labels" | 61517,181659 1 0 0 "WT_S_CTRL_REQ\n/1/"
+S 96 6 4096 ELLIPSE "States" | 61517,181659 6500 6500
+W 97 6 0 78 96 BEZIER "Transitions" | 111858,206376 102862,186278 81827,184985 67818,183250
+L 98 99 0 TEXT "State Labels" | 61244,155715 1 0 0 "J1"
+S 99 6 8196 ELLIPSE 0,0,0 0 0 1 255,0,0 1 | 61335,155624 3871 3871
+W 100 6 0 96 99 BEZIER "Transitions" | 61562,175246 61630,170469 58461,163807 60148,158618
+C 101 100 0 TEXT "Conditions" | 62422,174791 1 0 0 "spiTransCtrl == `TRANS_START"
+A 102 100 16 TEXT "Actions" | 58411,169566 1 0 0 "spiTransSts <= `TRANS_BUSY;"
+H 103 99 0 RECT 0,0,0 0 0 1 255,255,255 0 | 28400,28400 212900,276400
+I 106 103 0 Builtin Entry | 96520,182880
+I 107 103 0 Builtin Exit | 144780,121920
+W 108 103 0 106 107 BEZIER "Transitions" | 100342,182880 105892,175161 136499,129639 142050,121920
+L 110 111 0 TEXT "State Labels" | 138174,125339 1 0 0 "DIR_ACC\n/3/"
+S 111 6 16384 ELLIPSE "States" | 138174,125339 6500 6500
+W 113 6 0 99 111 BEZIER "Transitions" | 61166,151770 61234,146806 61130,137919 61640,134485\
+                                        62150,131051 64054,127243 73166,126223 82278,125203\
+                                        114404,125351 131676,125215
+C 115 113 0 TEXT "Conditions" | 67726,131051 1 0 0 "spiTransType == `DIRECT_ACCESS"
+L 120 121 0 TEXT "Labels" | 46442,250017 1 0 0 "txDataWen"
+I 121 0 2 Builtin OutPort | 40442,250017 "" ""
+A 123 113 16 TEXT "Actions" | 94110,126699 1 0 0 "txDataWen <= 1'b1;\nspiCS_n <= 1'b0;"
+A 125 111 4 TEXT "Actions" | 125118,137851 1 0 0 "txDataWen <= 1'b0;"
+L 126 127 0 TEXT "State Labels" | 164014,125067 1 0 0 "WT_FIN1\n/2/"
+S 127 6 12288 ELLIPSE "States" | 164014,125067 6500 6500
+W 128 6 0 111 127 BEZIER "Transitions" | 144619,124502 150739,124502 151363,124352 157533,124582
+W 136 6 0 127 96 BEZIER "Transitions" | 162717,131431 160337,140339 156330,157231 149122,163725\
+                                        141914,170219 117842,178379 106656,180181 95470,181983\
+                                        78345,181829 68009,181353
+C 137 136 0 TEXT "Conditions" | 156126,140571 1 0 0 "rxDataRdy == 1'b1"
+A 138 136 16 TEXT "Actions" | 144158,151179 1 0 0 "rxDataRdyClr <= 1'b1;\nspiCS_n <= 1'b1;"
+A 139 96 4 TEXT "Actions" | 42430,197963 1 0 0 "rxDataRdyClr <= 1'b0;\nspiTransSts <= `TRANS_NOT_BUSY;"
+L 140 141 0 TEXT "State Labels" | 138990,98683 1 0 0 "INIT\n/4/"
+S 141 6 20480 ELLIPSE "States" | 138990,98683 6500 6500
+W 142 6 0 99 141 BEZIER "Transitions" | 60786,151798 60378,142958 58886,126563 58818,120307\
+                                        58750,114051 59294,106707 60280,104225 61266,101743\
+                                        64666,99159 74118,98581 83570,98003 115288,98421\
+                                        132492,98557
+C 144 142 0 TEXT "Conditions" | 66910,103851 1 0 0 "spiTransType == `INIT_SD"
+A 146 142 16 TEXT "Actions" | 93022,99499 1 0 0 "SDInitReq <= 1'b1;"
+L 147 148 0 TEXT "State Labels" | 163742,99499 1 0 0 "WT_FIN2\n/5/"
+S 148 6 24576 ELLIPSE "States" | 163742,99499 6500 6500
+W 149 6 0 141 148 BEZIER "Transitions" | 145474,99128 150302,99196 152415,99360 157243,99428
+A 150 141 4 TEXT "Actions" | 122126,110651 1 0 0 "SDInitReq <= 1'b0;"
+W 151 6 0 148 96 BEZIER "Transitions" | 168589,103829 172805,107705 180470,114663 182272,121531\
+                                        184074,128399 182850,148119 177444,156007 172038,163895\
+                                        151638,175727 141812,179059 131986,182391 113082,183887\
+                                        103562,183887 94042,183887 77595,182762 68007,182014
+C 152 151 0 TEXT "Conditions" | 162382,115003 1 0 0 "SDInitRdy == 1'b1"
+L 153 154 0 TEXT "State Labels" | 139806,74203 1 0 0 "RW\n/6/"
+S 154 6 28672 ELLIPSE "States" | 139806,74203 6500 6500
+L 155 156 0 TEXT "State Labels" | 165374,73931 1 0 0 "WT_FIN3\n/7/"
+S 156 6 32768 ELLIPSE "States" | 165374,73931 6500 6500
+W 161 6 0 99 154 BEZIER "Transitions" | 60982,151777 60302,133009 58070,97323 58546,87327\
+                                        59022,77331 62286,74883 71942,74271 81598,73659\
+                                        115628,74049 133308,74049
+W 162 6 0 99 154 BEZIER "Transitions" | 61169,151767 60217,127151 57526,79507 57832,66587\
+                                        58138,53667 62998,56357 73205,49463 83413,42570\
+                                        122689,61354 133487,72683
+W 163 6 0 154 156 BEZIER "Transitions" | 146246,75076 150598,74736 154569,75047 158921,74707
+C 165 161 0 TEXT "Conditions" | 65006,80459 1 0 0 "spiTransType == `RW_WRITE_SD_BLOCK"
+C 166 162 0 TEXT "Conditions" | 61742,61486 1 0 0 "spiTransType == `RW_READ_SD_BLOCK"
+A 167 161 16 TEXT "Actions" | 64462,75019 1 0 0 "readWriteSDBlockReq <= `WRITE_SD_BLOCK;"
+A 168 162 16 TEXT "Actions" | 60862,54842 1 0 0 "readWriteSDBlockReq <= `READ_SD_BLOCK;"
+A 169 154 4 TEXT "Actions" | 103358,87803 1 0 0 "readWriteSDBlockReq <= `NO_BLOCK_REQ;"
+W 170 6 0 156 96 BEZIER "Transitions" | 171013,77161 178425,82737 192778,92291 196144,105313\
+                                        199510,118335 198150,159271 192336,170967 186522,182663\
+                                        164626,188511 153678,189531 142730,190551 120834,188783\
+                                        109886,187661 98938,186539 78902,183914 67954,182554
+C 171 170 0 TEXT "Conditions" | 168638,86715 1 0 0 "readWriteSDBlockRdy == 1'b1"
+L 172 173 0 TEXT "Labels" | 46441,240515 1 0 0 "rxDataRdyClr"
+I 173 0 2 Builtin OutPort | 40441,240515 "" ""
+L 176 177 0 TEXT "Labels" | 133432,244833 1 0 0 "readWriteSDBlockReq[1:0]"
+I 177 0 130 Builtin OutPort | 127432,244833 "" ""
+L 178 179 0 TEXT "Labels" | 48477,245479 1 0 0 "rxDataRdy"
+I 179 0 2 Builtin InPort | 42477,245479 "" ""
+L 182 183 0 TEXT "Labels" | 135468,240330 1 0 0 "readWriteSDBlockRdy"
+I 183 0 2 Builtin InPort | 129468,240330 "" ""
+A 184 78 4 TEXT "Actions" | 131510,229116 1 0 0 "readWriteSDBlockReq <= `NO_BLOCK_REQ;\ntxDataWen <= 1'b0;\nSDInitReq <= 1'b0;\nrxDataRdyClr <= 1'b0;\nspiTransSts <= `TRANS_NOT_BUSY;\nspiCS_n <= 1'b1;"
+L 185 186 0 TEXT "Labels" | 165711,256531 1 0 0 "spiCS_n"
+I 186 0 2 Builtin OutPort | 159711,256531 "" ""
+END

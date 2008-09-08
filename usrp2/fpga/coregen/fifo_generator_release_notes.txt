@@ -1,0 +1,160 @@
+COPYRIGHT (c) 2006, 2007 XILINX, INC.
+ALL RIGHTS RESERVED
+
+Core name            : FIFO Generator 
+Version              : v4.1
+Release Date         : August 8, 2007
+File                 : fifo_generator_release_notes.txt
+
+Revision History
+Date     By            Version   Change Description
+========================================================================
+09/2006  Xilinx, Inc.  3.2       Initial creation.
+02/2007  Xilinx, Inc.  3.3       Revised for v3.3.
+02/2007  Xilinx, Inc.  3.3       Revised for v3.3 rev 1.
+08/2007  Xilinx, Inc.  3.4       Revised for v4.1.
+========================================================================
+
+INTRODUCTION
+RELEASE NOTES
+  1. General Core Design
+    1.1 Enhancements
+    1.2 Resolved Issues
+    1.3 Outstanding Issues
+  2. General Simulation
+    2.1 Enhancements
+    2.2 Resolved Issues
+    2.3 Outstanding Issues
+  3. Documentation
+    3.1 Enhancements
+    3.2 Resolved Issues
+    3.3 Outstanding Issues
+OTHER GENERAL INFORMATION
+TECHNICAL SUPPORT
+
+========================================================================
+
+INTRODUCTION
+============
+Thank you using the FIFO Generator core from Xilinx!  
+In order to obtain the latest core updates and documentation, 
+please visit the Intellectual Property page located at:
+http://www.xilinx.com/ipcenter/index.htm
+This document contains the release notes for FIFO Generator v4.1
+which includes enhancements, resolved issues and outstanding known
+issues.  For release notes and known issues for CORE Generator 9.2i IP
+Update 1 and FIFO Generator v4.1 please see Answer Record 25222.
+
+RELEASE NOTES
+=============
+This section lists any enhancements, resolved issues and outstanding
+known issues.
+
+
+1. General Core Design
+  1.1 Enhancements
+    1.1.1 Error Correction Checking (ECC) feature support for 
+          Virtex-5 block RAM FIFO configurations
+
+    1.1.2 Full range data count widths now supported for non-symmetric
+          aspect ratio configurations
+
+    1.1.3 Option to define asynchronous reset value for full condition 
+          flags (FULL, ALMOST_FULL, PROG_FULL).  Applies to block RAM, 
+          distributed RAM and shift RAM-based FIFO configurations only
+
+    1.1.4 Support added for use embedded output registers in block RAM
+          FIFO configurations (Virtex-4 and Virtex-5 only)
+
+  1.2 Resolved Issues
+    1.2.1 Coregen GUI - For built-in FIFOs,  GUI reports incorrect
+          number of built-in FIFO primitives used.
+          Change request: 4433738
+
+    1.2.2 Programmable full flag is always asserted even when FIFO is 
+          empty due to incorrect threshold setting.
+          Change request: 435835
+    
+    1.2.3 "ERROR:LIT:250 - Pins WEA0, WEA1, WEA2, WEA3 of RAMB16 symbol
+          .. , these pins should be connected to the same signal" occur
+          during MAP when targeting Virtex-4 and Virtex-5.
+          Change request: 338260
+
+    1.2.4 Write Data Count and Read Data Count overestimate the number
+          of words written or read when core is configured with this 
+          combination of options: First-Word-Fall-Through(FWFT),
+          accurate data count using extra logic, non-symmetric port
+          aspect ratio.
+          Change request: 436886
+
+   1.2.5  SBITERR and DBITERR outputs are not driven in behavior
+          models.
+          Change request: 433637
+
+   1.2.6  Maximum programmable empty threshold negate value is 
+          incorrect.
+          Change request: 433921
+
+   1.2.7  Programmable full flag behavior is incorrect when the 
+          core is configured with this combination of options:
+          FWFT, non-symmetric port aspect ratio, single or 
+          multiple programmable full threshold input port.
+          Change request: 435874
+
+   1.2.8  Programmable empty flag stuck high when the core is
+          configured with this combination of options: block or
+          distributed RAM FIFO, single or multiple programmable 
+          empty threshold input port.
+          Change request: 443569
+
+  1.3 Outstanding Issues
+    1.3.1 "WARNING:Ngdbuild:452 - logical net 
+          'u1/BU2/prog_*_thresh_assert<*>' has no driver" occur during 
+          NgdBuild although programmable empty or full is not selected.          
+          Warnings can be safely ignored.
+          Change request: 431975
+
+2. General Simulation
+  2.1 Enhancements
+      None at this time.
+
+  2.2 Resolved Issues
+      None at this time.
+
+  2.3 Outstanding Issues
+    2.3.1 Ncelab warnings during Verilog structural and timing simulations 
+          in ncsim for Virtex5 Block RAM FIFOs. 
+          The simulations will be successful, but there will be warnings 
+          similar to the following in the log file: "memory index out of 
+          declared bounds" in simprims_ver_virtex5_source.v or 
+          unisims_ver_virtex5_source.v.  Cadence does not want to fix this 
+          issue. These warning messages can safely be ignored.
+          Change request: 423374, 423375
+
+3. Documentation
+  3.1 Enhancements
+    3.1.1 Added clarification on FIFO flag latency.
+  
+    3.1.1 Added clarification on actual FIFO depth.    
+
+  3.2 Resolved Issues
+      None at this time.
+      
+  3.3 Outstanding Issues
+      None at this time.
+
+
+TECHNICAL SUPPORT
+=================
+The fastest method for obtaining specific technical support for the 
+FIFO Generator core is through the http://support.xilinx.com/
+website. Questions are routed to a team of engineers with specific
+expertise in using the FIFO Generator core.  Xilinx will provide
+technical support for use of this product as described in the FIFO 
+Generator Datasheet. Xilinx cannot guarantee timing, functionality, 
+or support of this product for designs that do not follow these 
+guidelines.
+
+
+
+

@@ -1,0 +1,104 @@
+
+---------------------------------------------------------------------------
+- Initialization of UART.
+---------------------------------------------------------------------------
+
+Time:                  200    (testbench_utilities.do_reset)
+*N, RESET signal asynchronously set.
+Time:                  200    (testbench_utilities.disable_clk_generators)
+*N, Following clocks are DISABLED:
+Time:                  200    (testbench_utilities.disable_clk_generators)
+*N, - WB_clk
+Time:                  200    (testbench_utilities.disable_clk_generators)
+*N, - RX_clk
+Time:                  200    (testbench_utilities.disable_clk_generators)
+*N, - TX_clk
+Time:                  200    (testbench_utilities.disable_clk_generators)
+*N, - TX_clk_divided
+Time:                  200    (testbench_utilities.set_device_tx_rx_clk_divisor)
+*N, UART DEVICE TX/RX clock divisor: 1000.
+Time:                  200    (testbench_utilities.set_wb_clock_period)
+*N, WB & UART DEVICE TX/RX clock period: 64.
+Time:                  200    (testbench_utilities.enable_clk_generators)
+*N, Following clocks are ENABLED:
+Time:                  200    (testbench_utilities.enable_clk_generators)
+*N, - WB_clk
+Time:                  200    (testbench_utilities.enable_clk_generators)
+*N, - RX_clk
+Time:                  200    (testbench_utilities.enable_clk_generators)
+*N, - TX_clk
+Time:                  200    (testbench_utilities.enable_clk_generators)
+*N, - TX_clk_divided
+Time:                11100    (testbench_utilities.release_reset)
+*N, RESET signal released synchronously to WB clk.
+Time:                11100    (uart_wb_utilities.write_dlr)
+*N, DLAB in LC Register is going to be 1.
+Time:                11100    (uart_wb_utilities.write_dlr)
+*N, Current LCR = 3.
+Time:                11100    (uart_wb_utilities.write_lcr)
+*N, WRITING UART's LC Register.
+Time:               101000    (uart_wb_utilities.write_lcr)
+*N, Write LCR = 83.
+Time:               101000    (uart_wb_utilities.write_dlr)
+*N, WRITING UART's DL Register [15:8].
+Time:               161000    (uart_wb_utilities.write_dlr)
+*N, Write DLR [15:8] = 10.
+Time:               161000    (uart_wb_utilities.write_dlr)
+*N, WRITING UART's DL Register [ 7:0].
+Time:               281000    (uart_wb_utilities.write_dlr)
+*N, Write DLR [ 7:0] = 0.
+Time:               281000    (uart_wb_utilities.write_dlr)
+*N, DLAB in LC Register is going to be 0.
+Time:               281000    (uart_wb_utilities.write_lcr)
+*N, WRITING UART's LC Register.
+Time:               371000    (uart_wb_utilities.write_lcr)
+*N, Write LCR = 3.
+Time:               371000    (uart_wb_utilities.write_ier)
+*N, WRITING UART's IE Register.
+Time:               411000    (uart_wb_utilities.write_ier)
+*N, Write IER = 7.
+Time:               411000    (uart_wb_utilities.write_fcr)
+*N, WRITING UART's FC Register.
+Time:               511000    (uart_wb_utilities.write_fcr)
+*N, Write FCR = c0.
+Time:               511000    (uart_wb_utilities.write_lcr)
+*N, WRITING UART's LC Register.
+Time:               621000    (uart_wb_utilities.write_lcr)
+*N, Write LCR = 3.
+Time:               621000    (uart_device_utilities.set_rx_length)
+*N, SETTING RX CHAR length.
+Time:               621000    (uart_device_utilities.set_rx_length)
+*N, Length: 8.
+Time:               621000    (uart_device_utilities.disable_rx_parity)
+*N, DISABLING RX CHAR parity.
+Time:               621000    (uart_device_utilities.set_rx_second_stop_bit)
+*N, SETTING RX CHAR 1 stop bit.
+Time:               621000    (uart_device_utilities.set_tx_length)
+*N, SETTING TX CHAR length.
+Time:               621000    (uart_device_utilities.set_tx_length)
+*N, Length: 8.
+Time:               621000    (uart_device_utilities.disable_tx_parity)
+*N, DISABLING TX CHAR parity.
+Time:               621000    (uart_device_utilities.correct_tx_parity)
+*N, DISABLING WRONG parity generation.
+Time:               621000    (uart_device_utilities.correct_tx_frame)
+*N, DISABLING WRONG frame generation.
+Time:               621000    (uart_device_utilities.generate_tx_glitch)
+*N, DISABLING 1 TIME glitch generation with CLKs delay.
+Time:               621000    (uart_device_utilities.generate_tx_glitch)
+*N, CLKs delay from start bit edge: 0.
+
+---------------------------------------------------------------------------
+- Interrupt test.
+---------------------------------------------------------------------------
+
+Time:               621000    (testbench_utilities.wait_for_num_of_wb_clk)
+*N, Waiting for following number of WB CLK periods:
+Time:               621000    (testbench_utilities.wait_for_num_of_wb_clk)
+*N, Waiting for following number of WB CLK periods: 450000.
+Time:               701000    (uart_wb_utilities.write_char)
+*N, Write TRR = aa.
+Time:           5734501000    (testbench.write_tx_shift_reg_read_tx_fifo)
+*N, TX FIFO is empty!
+Time:           5734521200    (testbench.tx_fifo_status_changing)
+*E, Bit 5 of LSR register not '1'!

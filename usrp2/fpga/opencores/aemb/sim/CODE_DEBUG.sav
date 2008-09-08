@@ -1,0 +1,16 @@
+[size] 1400 971
+[pos] -1 -1
+*-5.188574 2727 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+@28
+testbench.dut.dwb_we_o
+@22
+testbench.dut.dwb_sel_o[3:0]
+testbench.dut.dwb_adr_o[15:0]
+@28
+testbench.dut.sys_clk_i
+@22
+testbench.dut.dwb_dat_o[31:0]
+@821
+testbench.dut.dwb_dat_i[31:0]
+@22
+testbench.dut.dwb_dat_i[31:0]

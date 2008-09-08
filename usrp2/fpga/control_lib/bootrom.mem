@@ -1,0 +1,26 @@
+00000C000F03
+101400000000
+    //  SPI: Set Divider to div by 2
+//  Both clk sel choose ext ref (0), both are enabled (1), turn off SERDES, ADCs, turn on leds
+1018_0000_0001    //  SPI: Choose AD9510
+1010_0000_3418    //  SPI: Auto-slave select, interrupt when done, TX_NEG, 24-bit word
+1000_0000_0010    //  SPI: AD9510 A:0 D:10  Set up AD9510 SPI
+1010_0000_3518    //  SPI: SEND IT Auto-slave select, interrupt when done, TX_NEG, 24-bit word
+ffff_ffff_ffff  // terminate
+#//  First 16 bits are address, last 32 are data
+#//  First 4 bits of address select which slave
+//		 6'd01 : addr_data = {13'h45,8'h00};   // CLK2 drives distribution, everything on
+//		 6'd02 : addr_data = {13'h3D,8'h80};   // Turn on output 1, normal levels
+//		 6'd03 : addr_data = {13'h4B,8'h80};   // Bypass divider 1 (div by 1)
+//		 6'd04 : addr_data = {13'h08,8'h47};   // POS PFD, Dig LK Det, Charge Pump normal	
+//		 6'd05 : addr_data = {13'h09,8'h70};   // Max Charge Pump current
+//		 6'd06 : addr_data = {13'h0A,8'h04};   // Normal operation, Prescalar Div by 2, PLL On
+//		 6'd07 : addr_data = {13'h0B,8'h00};   // RDIV MSB (6 bits)
+//		 6'd08 : addr_data = {13'h0C,8'h01};   // RDIV LSB (8 bits), Div by 1
+//		 6'd09 : addr_data = {13'h0D,8'h00};   // Everything normal, Dig Lock Det
+//		 6'd10 : addr_data = {13'h07,8'h00};	// Disable LOR detect - LOR causes failure...
+//		 6'd11 : addr_data = {13'h04,8'h00};	// A Counter = Don't Care
+//		 6'd12 : addr_data = {13'h05,8'h00};	// B Counter MSB = 0
+//		 6'd13 : addr_data = {13'h06,8'h05};   // B Counter LSB = 5
+ //      default : addr_data = {13'h5A,8'h01}; // Register Update
+// @ 55        // Jump to new address 8'h55

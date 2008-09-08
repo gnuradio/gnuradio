@@ -1,0 +1,56 @@
+[size] 1400 967
+[pos] -1 -1
+*-46.395245 2565000000000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] hb_dec_tb.
+@420
+hb_dec_tb.data_in[17:0]
+@28
+hb_dec_tb.strobe_in
+hb_dec_tb.strobe_out
+hb_dec_tb.uut.write_even
+@22
+hb_dec_tb.uut.addr_even[3:0]
+@420
+hb_dec_tb.uut.data_even[17:0]
+hb_dec_tb.uut.data_odd_a[17:0]
+hb_dec_tb.uut.data_odd_b[17:0]
+hb_dec_tb.uut.data_odd_c[17:0]
+hb_dec_tb.uut.data_odd_d[17:0]
+@28
+hb_dec_tb.uut.write_odd
+@420
+hb_dec_tb.uut.prod1[35:0]
+hb_dec_tb.uut.prod2[35:0]
+@24
+hb_dec_tb.uut.phase[2:0]
+@28
+hb_dec_tb.uut.stb_in
+hb_dec_tb.uut.stb_out
+@420
+hb_dec_tb.uut.sum2[17:0]
+hb_dec_tb.uut.stb_out_pre[15:0]
+@28
+hb_dec_tb.uut.do_acc
+hb_dec_tb.uut.clear
+@420
+hb_dec_tb.uut.sum1[17:0]
+hb_dec_tb.uut.coeff1[17:0]
+hb_dec_tb.uut.prod1[35:0]
+hb_dec_tb.uut.prod2[35:0]
+hb_dec_tb.uut.final_sum[17:0]
+hb_dec_tb.uut.coeff2[17:0]
+hb_dec_tb.uut.sum_of_prod[21:0]
+hb_dec_tb.data_out[17:0]
+@28
+hb_dec_tb.uut.do_acc
+hb_dec_tb.uut.clear
+@24
+hb_dec_tb.uut.addr_odd_a[3:0]
+hb_dec_tb.uut.addr_odd_b[3:0]
+hb_dec_tb.uut.addr_odd_c[3:0]
+hb_dec_tb.uut.addr_odd_d[3:0]
+@28
+hb_dec_tb.uut.write_odd
+hb_dec_tb.uut.write_even
+@22
+hb_dec_tb.uut.data_even[17:0]

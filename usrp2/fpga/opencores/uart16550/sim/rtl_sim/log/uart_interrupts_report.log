@@ -1,0 +1,23 @@
+
+---------------------------------------------------------------------------
+
+Initialization of UART.
+    PASSED!
+      Simulation Time:               621000
+
+---------------------------------------------------------------------------
+
+Interrupt test.
+    FAILED!
+    Failure message: Bit 5 of LSR register not '1'!.
+      Simulation Time:           5734521200
+
+---------------------------------------------------------------------------
+
+TEST CASE execution summary:
+Number of tests PASSED=1
+Number of tests FAILED=1
+  Simulation End Time:           5834521200
+
+---------------------------------------------------------------------------
+

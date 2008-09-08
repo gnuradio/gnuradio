@@ -1,0 +1,18 @@
+# My stuff
+-y .
+-y ../u2_basic
+-y ../control_lib
+-y ../sdr_lib
+
+# Models
+-y ../models
+
+# Open Cores
+-y ../opencores/spi/rtl/verilog
++incdir+../opencores/spi/rtl/verilog
+-y ../opencores/wb_conbus/rtl/verilog
++incdir+../opencores/wb_conbus/rtl/verilog
+-y ../opencores/i2c/rtl/verilog
++incdir+../opencores/i2c/rtl/verilog
+-y ../opencores/aemb/rtl/verilog
+-y ../opencores/simple_gpio/rtl

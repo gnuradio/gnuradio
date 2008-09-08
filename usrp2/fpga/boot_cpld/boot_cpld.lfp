@@ -1,0 +1,5 @@
+# begin LFP file C:\cygwin\home\matt\u2f\boot_cpld\boot_cpld.lfp
+designfile boot_cpld.v
+parttype xc9572xl-vq44-10
+bus_delimiter 0;
+set_busdelim_onsave 1;

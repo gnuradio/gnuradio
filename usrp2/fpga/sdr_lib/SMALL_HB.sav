@@ -1,0 +1,40 @@
+[size] 1400 967
+[pos] -1 -1
+*-11.608687 1834 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] small_hb_dec_tb.
+[treeopen] small_hb_dec_tb.uut.
+@28
+small_hb_dec_tb.uut.clk
+small_hb_dec_tb.uut.phase
+@10421
+small_hb_dec_tb.uut.data_in[17:0]
+@420
+small_hb_dec_tb.uut.d1[17:0]
+small_hb_dec_tb.uut.d2[17:0]
+small_hb_dec_tb.uut.d3[17:0]
+small_hb_dec_tb.uut.d4[17:0]
+small_hb_dec_tb.uut.d5[17:0]
+small_hb_dec_tb.uut.d6[17:0]
+small_hb_dec_tb.uut.coeff[17:0]
+small_hb_dec_tb.uut.sum[17:0]
+small_hb_dec_tb.uut.prod[35:0]
+small_hb_dec_tb.uut.accum_rnd[17:0]
+@28
+small_hb_dec_tb.uut.stb_in
+@420
+small_hb_dec_tb.uut.final_sum[17:0]
+@28
+small_hb_dec_tb.uut.go
+small_hb_dec_tb.uut.go_d1
+small_hb_dec_tb.uut.go_d2
+small_hb_dec_tb.uut.go_d3
+small_hb_dec_tb.uut.go_d4
+small_hb_dec_tb.uut.stb_out
+@420
+small_hb_dec_tb.uut.data_out[17:0]
+small_hb_dec_tb.uut.prod[35:0]
+small_hb_dec_tb.uut.accum_rnd[17:0]
+small_hb_dec_tb.uut.final_sum[17:0]
+@10421
+small_hb_dec_tb.uut.round_acc.out[17:0]
+small_hb_dec_tb.uut.data_out[17:0]

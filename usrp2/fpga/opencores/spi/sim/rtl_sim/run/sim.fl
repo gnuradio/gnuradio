@@ -1,0 +1,3 @@
+tb_spi_top.v
+wb_master_model.v
+spi_slave_model.v

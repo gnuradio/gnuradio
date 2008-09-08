@@ -1,0 +1,62 @@
+#!/bin/sh
+# $Id: gccrom,v 1.13 2008/01/19 16:42:54 sybreon Exp $
+
+# Compile using C++ pre-processor
+mb-g++ -g -Wl,-defsym -Wl,_HEAP_SIZE=0x800 -mxl-soft-div -msoft-float -mxl-barrel-shift -mno-xl-soft-mul -mno-clearbss $@ -o rom.elf -lc_m_bs -lm_m_bs && \
+
+# Create a text listing of the compiled code
+mb-objdump -DSC rom.elf > rom.dump && \
+
+# Convert the ELF file to an SREC file
+mb-objcopy -O srec rom.elf rom.srec && \
+
+# Generate a Verilog VMEM file from the SREC file
+srec_cat rom.srec -o ../sim/dump.vmem -vmem 32 && \
+
+# Cleanup code
+rm rom.srec && \
+
+# Say Cheeze!
+echo "ROM generated"
+
+# $Log: gccrom,v $
+# Revision 1.13  2008/01/19 16:42:54  sybreon
+# Uses multiplier + barrel shifter as default.
+#
+# Revision 1.12  2007/12/11 00:44:32  sybreon
+# Modified for AEMB2
+#
+# Revision 1.11  2007/11/30 17:09:27  sybreon
+# Minor code cleanup.
+#
+# Revision 1.10  2007/11/20 18:35:34  sybreon
+# Generate VMEM instead of HEX dumps of programme.
+#
+# Revision 1.9  2007/11/18 19:41:46  sybreon
+# Minor simulation fixes.
+#
+# Revision 1.8  2007/11/09 20:52:37  sybreon
+# Added some compilation optimisations.
+#
+# Revision 1.7  2007/11/04 05:16:25  sybreon
+# Added -msoft-float and -mxl-soft-div compiler flags.
+#
+# Revision 1.6  2007/11/02 03:25:46  sybreon
+# New EDK 3.2 compatible design with optional barrel-shifter and multiplier.
+# Fixed various minor data hazard bugs.
+# Code compatible with -O0/1/2/3/s generated code.
+#
+# Revision 1.5  2007/10/22 19:14:38  sybreon
+# Recommended to compile code with -O2/3/s
+#
+# Revision 1.4  2007/04/30 15:57:31  sybreon
+# Modified compilation sequence.
+#
+# Revision 1.3  2007/04/25 22:15:06  sybreon
+# Added support for 8-bit and 16-bit data types.
+#
+# Revision 1.2  2007/04/04 06:14:39  sybreon
+# Minor changes
+#
+# Revision 1.1  2007/03/09 17:41:56  sybreon
+# initial import

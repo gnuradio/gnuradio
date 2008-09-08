@@ -1,0 +1,170 @@
+
+README for the spi_boot core
+============================
+Version: $Date: 2005/04/14 21:32:58 $
+
+
+Description
+-----------
+
+The SD/MMC Bootloader is a CPLD design that manages configuration and
+bootstrapping of FPGAs. It is able to retrieve the required data from
+SecureDigital (SD) cards or MultiMediaCards (MMC) and manages the FPGA
+configuration process. SD cards as well as MMCs are operated in SPI mode which
+is part of both standards thus eliminating the need for dedicated
+implementations. The SD/MMC Bootloader fits both. Beyond configuration, this
+core supports a bootstrapping strategy where multiple images are stored on one
+single memory card.
+For example consider a system completely based on SRAM. The bootloader
+provides the initial configuration data from the first image to the FPGA. This
+image contains a design which pulls the next image from the memory card and
+transfers this data to SRAM. In the third step the final FPGA design is loaded
+from the third image.
+These images are clustered in sets which can be selected by external switches
+for example. Several configuration sets can be stored on one memory card
+allowing you to provide a number of applications which are downloaded quickly
+to the FPGA.
+The schematic (rev. B) shows how the core can be used with an FPGA board. I
+use it to configure/boot the Xilinx Spartan IIe on BurchED's B5-X300
+board. SV2 fits the "SERIAL MODE" connector on this board but you will have to
+add a separate wire from R6 to attach INIT. Please check the proper use of the
+pull-up resistors for your specific board.
+
+
+Features
+--------
+
+* Configuration mode: configures SRAM based FPGAs via slave serial mode
+  (Xilinx and Altera)
+* Data mode: provides stored data over a simple synchronous serial interface
+* Broad compatability using SPI mode
+    + SecureDigital cards using dedicated initialization command
+    + MultiMediaCards (see below)
+* Operation triggerd by power-up or card insertion
+* Multiple configuration sets stored on on single memory card
+
+
+Compatability
+-------------
+
+These cards have been tested with the SD/MMC Bootloader:
+
+  * Hama 64 MB SD
+  * SanDisk 128 MB SD
+  * SanDisk 64 MB MMC
+  * Panasonic 32 MB SD 
+
+Some MMC might fail with this core as not all cards support CMD18
+(READ_MULTIPLE_BLOCK). Please consult the data sheet of your specific
+model. In case your MMC does not implement CMD18 you might want to have a look
+at the FPGA MMC-Card Config project.
+
+
+Tools
+-----
+
+Downloading the configuration data to the card is a straight forward
+process. The images have to be written starting at dedicated locations. For
+the provided toplevel designs, these locations are multiples of 256 K. I.e. 0,
+0x40000, 0x80000 and so forth.
+
+dd (part of the GNU coreutils) serves this purpose:
+$ dd if=ram_loader.bin of=/dev/sdX bs=512
+$ dd if=pongrom_6.bin of=/dev/sdX bs=512 seek=512
+$ dd if=pacman.bin of=/dev/sdX bs=512 seek=1024
+
+The name of the device node depends on how the card reader is attached to the
+kernel. For Linux systems this is most often something like /dev/sdX with X
+ranging from a-z. Please note that it is essential to use the device without
+any trailing numbers as they refer to partitions leading to wrong offsets for
+data written to the card.
+All this works perfectly for my Spartan IIe device as this FPGA expects the
+configuration data as it is delivered from the card: Consecutive bytes each
+with its most significant bit first. Altera devices like the FLEX family are
+different here. They expect the bytes with least significant bit
+first. Therefore, the configuration data has to be swapped bitwise before it
+is written to the card.
+
+
+Verification
+------------
+
+The spi_boot core comes with a simple testbench that simulates an SD/MMC
+card. All four implementations of the core are verified there in parallel
+while transferring the data for several sets.
+You should normally not need to run the testbench. But in case you modified
+the VHDL code the testbench gives some hints if the design has been broken.
+
+
+Directory Structure
+-------------------
+
+The core's directory structure follows the proposal of OpenCores.org.
+
+spi_boot
+ |
+ \--+-- doc                 : Documentation
+    |    |
+    |    \-- src            : Source files of documentation
+    |
+    +-- rtl
+    |    |
+    |    \-- vhdl           : VHDL code containing the RTL description
+    |                         of the core.
+    |
+    +-- bench
+    |    |
+    |    \-- vhdl           : VHDL testbench code.
+    |
+    \-- sim
+         |
+         \-- rtl_sim        : Directory for running simulations.
+
+
+RAM Loader
+----------
+
+Directory rtl/vhdl/ram_loader contains the sample design which loads the next
+image from the card and stores its contents to external asynchronous
+RAM. After reading 64 KB it triggers a new configuration process for the final
+FPGA design.
+Refer to the code for the mechanisms involved.
+
+
+Compiling the VHDL Code
+-----------------------
+
+VHDL compilation and simulation tasks take place inside in sim/rtl_sim
+directory. The project setup supports only the GHDL simulator (see
+http://ghdl.free.fr).
+
+To compile the code simply type at the shell
+
+$ make
+
+This should result in a file called tb_behav_c0 which can be executed as any
+other executable.
+
+The basic simple sequence list can be found in COMPILE_LIST. This can be
+useful to quickly set up the analyze stage of any compiler or
+synthesizer. Especially when synthesizing the code, you want to skip the VHDL
+configurations in *-c.vhd and everything below the bench/ directory.
+
+
+References
+----------
+
+  * SanDisk SD Card Product Manual
+    http://www.sandisk.com/pdf/oem/ProdManualSDCardv1.9.pdf
+
+  * SanDisk MMC Product Manual
+    http://www.sandisk.com/pdf/oem/manual-rs-mmcv1.0.pdf
+
+  * Toshiba SD Card Specification
+    http://i.cmpnet.com/chipcenter/memory/images/prod055.pdf
+
+  * BurchED
+    http://burched.biz/
+
+  * FPGA MMC-Card Config project
+    http://www.opencores.org/projects.cgi/web/mmcfpgaconfig/overview

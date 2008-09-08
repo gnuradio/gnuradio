@@ -1,0 +1,20 @@
+# Date: Mon Feb  4 20:12:22 2008
+SET addpads = False
+SET asysymbol = False
+SET busformat = BusFormatAngleBracketNotRipped
+SET createndf = False
+SET designentry = Verilog
+SET device = xc3s1500
+SET devicefamily = spartan3
+SET flowvendor = Other
+SET formalverification = False
+SET foundationsym = False
+SET implementationfiletype = Ngc
+SET package = fg456
+SET removerpms = False
+SET simulationfiles = Behavioral
+SET speedgrade = -5
+SET verilogsim = True
+SET vhdlsim = False
+SET workingdirectory = /home/matt/coregen/tmp
+

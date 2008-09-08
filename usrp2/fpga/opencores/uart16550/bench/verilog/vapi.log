@@ -1,0 +1,117 @@
+//////////////////////////////////////////////////////////////////////
+////                                                              ////
+////  vapi.log                                                    ////
+////                                                              ////
+////                                                              ////
+////  This file is part of the "UART 16550 compatible" project    ////
+////  http://www.opencores.org/projects/uart16550/                ////
+////                                                              ////
+////  Documentation related to this project:                      ////
+////  http://www.opencores.org/projects/uart16550/                ////
+////                                                              ////
+////  Projects compatibility:                                     ////
+////  - WISHBONE                                                  ////
+////  RS232 Protocol                                              ////
+////  16550D uart (mostly supported)                              ////
+////                                                              ////
+////  Overview (main Features):                                   ////
+////  Device interface for testing purposes                       ////
+////                                                              ////
+////  Known problems (limits):                                    ////
+////                                                              ////
+////  To Do:                                                      ////
+////  Nothing.                                                    ////
+////                                                              ////
+////  Author(s):                                                  ////
+////      - Igor Mohor (igorm@opencores.org)                      ////
+////                                                              ////
+////  Created and updated:   (See log for the revision history)   ////
+////                                                              ////
+////                                                              ////
+//////////////////////////////////////////////////////////////////////
+////                                                              ////
+//// Copyright (C) 2001 Authors                                   ////
+////                                                              ////
+//// This source file may be used and distributed without         ////
+//// restriction provided that this copyright statement is not    ////
+//// removed from the file and that any derivative work contains  ////
+//// the original copyright notice and the associated disclaimer. ////
+////                                                              ////
+//// This source file is free software; you can redistribute it   ////
+//// and/or modify it under the terms of the GNU Lesser General   ////
+//// Public License as published by the Free Software Foundation; ////
+//// either version 2.1 of the License, or (at your option) any   ////
+//// later version.                                               ////
+////                                                              ////
+//// This source is distributed in the hope that it will be       ////
+//// useful, but WITHOUT ANY WARRANTY; without even the implied   ////
+//// warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR      ////
+//// PURPOSE.  See the GNU Lesser General Public License for more ////
+//// details.                                                     ////
+////                                                              ////
+//// You should have received a copy of the GNU Lesser General    ////
+//// Public License along with this source; if not, download it   ////
+//// from http://www.opencores.org/lgpl.shtml                     ////
+////                                                              ////
+//////////////////////////////////////////////////////////////////////
+//
+// CVS Revision History
+//
+// $Log: vapi.log,v $
+// Revision 1.1  2002/01/25 08:54:56  mohor
+// UART PHY added. Files are fully operational, working on HW.
+//
+//
+//
+//
+//
+
+
+001000020 // devisor 0x32
+002000300 // rx lcr 8n1
+
+// Receive
+10000034a // Receive J
+100000361 // Receive a
+100000363 // Receive c
+10000030a // Receive \n
+
+// Send
+000000371 // Transmit q - switching to interrupt mode
+100000353 // Receive S
+100000377 // Receive w
+10000030a // Receive \n
+006000020 // wait 32 tx cycles
+000000331 // Transmit 1
+000000332 // Transmit 2
+000000333 // Transmit 3
+000000334 // Transmit 4
+000000335 // Transmit 5
+000000336 // Transmit 6
+000000337 // Transmit 7
+000000338 // Transmit 8
+000000339 // Transmit 9
+000000361 // Transmit a
+000000362 // Transmit b
+000000363 // Transmit c
+000000364 // Transmit d
+000000365 // Transmit e
+000000366 // Transmit f
+006000040 // wait 64 tx cycles
+100000331 // Receive 1
+100000332 // Receive 2
+100000333 // Receive 3
+100000334 // Receive 4
+100000335 // Receive 5
+100000336 // Receive 6
+100000337 // Receive 7
+100000338 // Receive 8
+100000339 // Receive 9
+100000341 // Receive A
+100000342 // Receive B
+100000343 // Receive C
+100000344 // Receive D
+100000345 // Receive E
+100000346 // Receive F
+
+200000000 // Exit simulation

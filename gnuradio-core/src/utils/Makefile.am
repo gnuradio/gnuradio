@@ -39,6 +39,7 @@ EXTRA_DIST = 			\
 	read_float_binary.m 	\
 	read_int_binary.m	\
 	read_short_binary.m	\
+	read_cshort_binary.m 	\
 	single_pole_iir.m	\
 	write_float_binary.m	\
 	write_short_binary.m
