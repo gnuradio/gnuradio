@@ -227,11 +227,11 @@ gr_ofdm_frame_sink::gr_ofdm_frame_sink(const std::vector<gr_complex> &sym_positi
     char c[2] = {0,0};
 
     diff_left = (int)ceil((float)diff/2.0f);  // number of carriers to put on the left side
-    c[0] = abc[((1 << diff_left) - 1)];       // convert to bits and move to ASCI integer
+    c[0] = abc[(1 << diff_left) - 1];         // convert to bits and move to ASCI integer
     carriers.insert(0, c);
     
     diff_right = diff - diff_left;	      // number of carriers to put on the right side
-    c[0] = abc[(0xF^(1 << diff_left) - 1)];   // convert to bits and move to ASCI integer
+    c[0] = abc[0xF^((1 << diff_right) - 1)];  // convert to bits and move to ASCI integer
     carriers.insert(carriers.length(), c);
   }
 

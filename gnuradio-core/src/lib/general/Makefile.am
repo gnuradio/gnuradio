@@ -105,10 +105,6 @@ libgeneral_la_SOURCES = 		\
         gr_ofdm_cyclic_prefixer.cc      \
         gr_ofdm_demapper_vcb.cc         \
         gr_ofdm_mapper_bcv.cc           \
-        gr_ofdm_bpsk_demapper.cc        \
-        gr_ofdm_bpsk_mapper.cc          \
-        gr_ofdm_qpsk_mapper.cc          \
-        gr_ofdm_qam_mapper.cc	        \
 	gr_ofdm_frame_sink.cc		\
 	gr_ofdm_insert_preamble.cc	\
         gr_ofdm_sampler.cc              \
@@ -255,10 +251,6 @@ grinclude_HEADERS = 			\
         gr_ofdm_cyclic_prefixer.h       \
         gr_ofdm_demapper_vcb.h          \
         gr_ofdm_mapper_bcv.h            \
-        gr_ofdm_bpsk_mapper.h           \
-        gr_ofdm_qpsk_mapper.h		\
-        gr_ofdm_qam_mapper.h		\
-        gr_ofdm_bpsk_demapper.h         \
         gr_ofdm_frame_sink.h		\
 	gr_ofdm_insert_preamble.h	\
 	gr_ofdm_sampler.h               \
@@ -408,10 +400,6 @@ swiginclude_HEADERS =			\
         gr_ofdm_cyclic_prefixer.i       \
         gr_ofdm_demapper_vcb.i          \
         gr_ofdm_mapper_bcv.i            \
-        gr_ofdm_bpsk_demapper.i         \
-        gr_ofdm_bpsk_mapper.i           \
-        gr_ofdm_qpsk_mapper.i	        \
-        gr_ofdm_qam_mapper.i	        \
         gr_ofdm_frame_sink.i		\
 	gr_ofdm_insert_preamble.i	\
 	gr_ofdm_sampler.i               \

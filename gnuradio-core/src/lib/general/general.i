@@ -95,11 +95,7 @@
 #include <gr_probe_signal_f.h>
 #include <gr_ofdm_frame_acquisition.h>
 #include <gr_ofdm_cyclic_prefixer.h>
-#include <gr_ofdm_bpsk_demapper.h>
 #include <gr_ofdm_mapper_bcv.h>
-#include <gr_ofdm_bpsk_mapper.h>
-#include <gr_ofdm_qpsk_mapper.h>
-#include <gr_ofdm_qam_mapper.h>
 #include <gr_ofdm_frame_sink.h>
 #include <gr_ofdm_insert_preamble.h>
 #include <gr_ofdm_sampler.h>
@@ -208,11 +204,7 @@
 %include "gr_probe_signal_f.i"
 %include "gr_ofdm_frame_acquisition.i"
 %include "gr_ofdm_cyclic_prefixer.i"
-%include "gr_ofdm_bpsk_demapper.i"
 %include "gr_ofdm_mapper_bcv.i"
-%include "gr_ofdm_bpsk_mapper.i"
-%include "gr_ofdm_qpsk_mapper.i"
-%include "gr_ofdm_qam_mapper.i"
 %include "gr_ofdm_frame_sink.i"
 %include "gr_ofdm_insert_preamble.i"
 %include "gr_ofdm_sampler.i"
