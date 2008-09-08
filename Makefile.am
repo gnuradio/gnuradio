@@ -33,4 +33,4 @@ EXTRA_DIST = \
 	README.building-boost
 
 SUBDIRS = @build_dirs@ $(subdirs)
-DIST_SUBDIRS = @build_dirs@ @skipped_dirs@ @with_dirs@
+DIST_SUBDIRS = @build_dirs@ @skipped_dirs@ @with_dirs@ $(subdirs)

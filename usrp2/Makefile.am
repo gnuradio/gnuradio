@@ -21,3 +21,20 @@
 include $(top_srcdir)/Makefile.common
 
 SUBDIRS = host
+
+# KLUDGE ALERT!
+#
+# This kludge gets the files the host code needs into the tarball even if
+# we're not building the firmware.
+#
+if !BUILDING_USRP2_FIRMWARE
+EXTRA_DIST = \
+    firmware/include/usrp2_cdefs.h \
+    firmware/include/usrp2_cdefs.h \
+    firmware/include/usrp2_eth_packet.h \
+    firmware/include/usrp2_fpga_regs.h \
+    firmware/include/usrp2_i2c_addr.h \
+    firmware/include/usrp2_mac_addr.h \
+    firmware/include/usrp2_mimo_config.h \
+    firmware/include/usrp2_types.h
+endif

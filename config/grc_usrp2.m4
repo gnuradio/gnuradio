@@ -25,14 +25,14 @@ AC_DEFUN([GRC_USRP2],[
     GRC_CHECK_DEPENDENCY(usrp2, omnithread)
 
     dnl USRP2 host code only works on Linux at the moment
-    AC_MSG_CHECKING([whether host_cpu is linux*])
+    AC_MSG_CHECKING([whether host_os is linux*])
     case "$host_os" in
       linux*)
-	AC_MSG_RESULT("yes")
+	AC_MSG_RESULT([yes])
         ;;
       *)
-	AC_MSG_RESULT("no")
-	echo "USRP2 requires Linux host OS, not found"
+	AC_MSG_RESULT([no])
+	AC_MSG_NOTICE([USRP2 currently requires Linux host OS, not found])
         passed="no"
         ;;
     esac
@@ -47,7 +47,10 @@ AC_DEFUN([GRC_USRP2],[
 	if test $MB_GCC = yes; then
 	    dnl Adds usrp2/firmware to $(subdirs), hierarchical build
 	    AC_CONFIG_SUBDIRS([usrp2/firmware])
+	else
+	    AC_MSG_WARN([usrp2/firmware is not being built])
 	fi
+	AM_CONDITIONAL([BUILDING_USRP2_FIRMWARE],[test $MB_GCC = yes])
 
 	dnl Needed for usrp2_socket_opener
 	AC_CHECK_HEADERS(arpa/inet.h byteswap.h linux/if_packet.h sys/socket.h sys/un.h)
