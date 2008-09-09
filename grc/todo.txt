@@ -1,0 +1,41 @@
+##################################################
+# Blocks
+##################################################
+-optparse block
+-ofdm wrappers
+-controlled step block
+-throttle with sink only (source is nulled)
+-simplify simple usrp
+
+##################################################
+# Features
+##################################################
+-param editor, expand entry boxes in focus
+-change param dialog to panel within main window
+-command line option for additional block wrappers
+-hotkeys in action descriptions
+-log slider gui control
+-icons for certain blocks, + for add
+-zoom in/out (cairo vector graphics)
+-search for blocks
+
+##################################################
+# Problems
+##################################################
+-auto generate hier library
+-auto clean hier library
+-add hier blocks to tree without restart?
+-dont hide vlen controller when vlen > 1
+
+##################################################
+# External
+##################################################
+-simple usrp
+-tune_result in usrp.py needs __str__ method
+-global wxgui controls and top block window
+
+##################################################
+# Documentation
+##################################################
+-notes on throttle
+-how to add a block wrapper
