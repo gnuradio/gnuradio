@@ -21,10 +21,12 @@
 		<option>
 			<name>Bit Error Rate</name>
 			<key>&quot;BER&quot;</key>
+			<opt>hide_bps:</opt>
 		</option>
 		<option>
 			<name>Symbol Error Rate</name>
 			<key>&quot;SER&quot;</key>
+			<opt>hide_bps:all</opt>
 		</option>
 	</param>
 	<param>
@@ -38,6 +40,7 @@
 		<key>bits_per_symbol</key>
 		<value>2</value>
 		<type>int</type>
+		<hide>$type.hide_bps</hide>
 	</param>
 	<sink>
 		<name>ref</name>

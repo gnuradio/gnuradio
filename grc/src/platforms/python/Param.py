@@ -39,19 +39,21 @@ class Param(_Param):
 	def get_hide(self):
 		"""
 		Get the hide value from the base class.
-		If hide was empty, and this is a type controller, set hide to part.
-		If hide was empty, and this is an id of a non variable, set hide to part.
+		Hide the ID parameter for most blocks. Exceptions below.
+		If the parameter controls a port type, vlen, or nports, return part.
+		These parameters are redundant to display in the flow graph view.
 		@return hide the hide property string
 		"""
 		hide = _Param.get_hide(self)
-		#hide IO controlling params
-		if not hide and self.get_key() in (
-			'type', 'vlen', 'num_inputs', 'num_outputs'
-		): hide = 'part'
+		if hide: return hide
 		#hide ID in non variable blocks
-		elif not hide and self.get_key() == 'id' and self.get_parent().get_key() not in (
+		if self.get_key() == 'id' and self.get_parent().get_key() not in (
 			'variable', 'variable_slider', 'variable_chooser', 'variable_text_box', 'parameter', 'options'
-		): hide = 'part'
+		): return 'part'
+		#hide port controllers
+		if self.get_key() in ' '.join(map(
+			lambda p: ' '.join([p._type, p._vlen, p._nports]), self.get_parent().get_ports())
+		): return 'part'
 		return hide
 
 	def evaluate(self):

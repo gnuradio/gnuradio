@@ -134,10 +134,9 @@ class Block(Element):
 		desc = pango.FontDescription(BLOCK_FONT)
 		layout.set_font_description(desc)
 		self.label_width, self.label_height = layout.get_pixel_size()
-		#display the params (except for the special params id and position)
+		#display the params
 		if Preferences.show_params():
 			for param in filter(lambda p: p.get_hide() not in ('all', 'part'), self.get_params()):
-				if not Preferences.show_id() and param.get_key() == 'id': continue
 				layout = param.get_layout()
 				layouts.append(layout)
 				w,h = layout.get_pixel_size()

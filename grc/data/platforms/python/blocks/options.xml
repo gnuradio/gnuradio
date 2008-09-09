@@ -39,6 +39,7 @@ import wx
 		<key>window_size</key>
 		<value>1280, 1024</value>
 		<type>int_vector</type>
+		<hide>part</hide>
 	</param>
 	<param>
 		<name>Generate Options</name>

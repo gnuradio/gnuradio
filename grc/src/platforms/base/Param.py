@@ -188,8 +188,6 @@ class Param(Element):
 
 	def is_enum(self): return self._type == 'enum'
 
-	def is_type_dependent(self): return '$' in self._type
-
 	##############################################
 	# Access Options
 	##############################################

@@ -114,20 +114,6 @@
 			<key>hide</key>
 		</option>
 	</param>
-	<param>
-		<name>Show ID Label</name>
-		<key>show_id</key>
-		<value>show</value>
-		<type>enum</type>
-		<option>
-			<name>Show</name>
-			<key>show</key>
-		</option>
-		<option>
-			<name>Hide</name>
-			<key>hide</key>
-		</option>
-	</param>
 	<!-- Misc Prefs -->
 	<param>
 		<name>Restore Open Files</name>

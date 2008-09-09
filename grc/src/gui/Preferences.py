@@ -55,7 +55,6 @@ class _Preferences(object):
 		self.file_open_param = self._prefs_block.get_param('file_open')
 		self.files_open_param = self._prefs_block.get_param('files_open')
 		self.show_params_param = self._prefs_block.get_param('show_params')
-		self.show_id_param = self._prefs_block.get_param('show_id')
 
 	def save(self):
 		try: ParseXML.to_file({'block': self._prefs_block.export_data()}, self._prefs_file_path)
@@ -77,9 +76,8 @@ Snap to Grid forces the upper right corner of the signal block to align with a g
 				'''
 Show or hide the reports window at the bottom of the main window.
 Show or hide all paramater labels in the signal blocks.
-Show or hide the ID label in the signal blocks.
 ''',
-				[self.show_reports_param, self.show_params_param, self.show_id_param],
+				[self.show_reports_param, self.show_params_param],
 			),
 			(
 				'Misc',
@@ -125,6 +123,3 @@ def show_grid():
 
 def show_params():
 	return _get_prefs().show_params_param.get_value() == 'show'
-
-def show_id():
-	return _get_prefs().show_id_param.get_value() == 'show'

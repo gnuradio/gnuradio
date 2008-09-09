@@ -187,21 +187,22 @@ class FlowGraph(Element):
 		"""
 		changed = False
 		for selected_block in self.get_selected_blocks():
-			for child in selected_block.get_params() + selected_block.get_ports():
-				#find a param that controls a type
-				type_param = None
-				for param in selected_block.get_params():
-					if not type_param and param.is_enum(): type_param = param
-					if param.is_enum() and param.get_key() in child._type: type_param = param
-				if type_param:
-					#try to increment the enum by direction
-					try:
-						keys = type_param.get_option_keys()
-						old_index = keys.index(type_param.get_value())
-						new_index = (old_index + direction + len(keys))%len(keys)
-						type_param.set_value(keys[new_index])
-						changed = True
-					except: pass
+			type_param = None
+			for param in filter(lambda p: p.is_enum(), selected_block.get_params()):
+				children = param.get_parent().get_ports() + param.get_parent().get_params()
+				#priority to the type controller
+				if param.get_key() in ' '.join(map(lambda p: p._type, children)): type_param = param
+				#use param if type param is unset
+				if not type_param: type_param = param
+			if type_param:
+				#try to increment the enum by direction
+				try:
+					keys = type_param.get_option_keys()
+					old_index = keys.index(type_param.get_value())
+					new_index = (old_index + direction + len(keys))%len(keys)
+					type_param.set_value(keys[new_index])
+					changed = True
+				except: pass
 		return changed
 
 	def port_controller_modify_selected(self, direction):
@@ -212,7 +213,7 @@ class FlowGraph(Element):
 		"""
 		changed = False
 		for selected_block in self.get_selected_blocks():
-			for ports in (selected_block.get_sources(), selected_block.get_sinks()):
+			for ports in selected_block.get_ports():
 				if ports and hasattr(ports[0], 'get_nports') and ports[0].get_nports():
 					#find the param that controls port0
 					for param in selected_block.get_params():
