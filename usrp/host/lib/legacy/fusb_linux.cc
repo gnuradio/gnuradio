@@ -246,7 +246,7 @@ fusb_devhandle_linux::_cancel_urb (usbdevfs_urb *urb)
  * If any transactions are reaped return true.
  *
  * If ok_to_block_p is true, then this will block until at least one
- * transaction completes.
+ * transaction completes or an unrecoverable error occurs.
  */
 bool
 fusb_devhandle_linux::_reap (bool ok_to_block_p)
@@ -290,7 +290,8 @@ void
 fusb_devhandle_linux::_wait_for_completion ()
 {
   while (!d_pending_rqsts.empty ())
-    _reap (true);
+    if (!_reap(true))
+      break;
 }
 // ------------------------------------------------------------------------
 // 			     end point handle
@@ -410,7 +411,8 @@ fusb_ephandle_linux::stop ()
     if (d_free_list.size () == (unsigned) d_nblocks)
       break;
 
-    d_devhandle->_reap(true);
+    if (!d_devhandle->_reap(true))
+      break;
   }
 
   d_started = false;
@@ -440,6 +442,8 @@ fusb_ephandle_linux::write(const void *buffer, int nbytes)
   while (n < nbytes){
 
     usbdevfs_urb *urb = get_write_work_in_progress();
+    if (!urb)
+      return -1;
     assert(urb->actual_length == 0);
     int m = std::min(nbytes - n, MAX_BLOCK_SIZE);
     urb->buffer = src;
@@ -474,6 +478,8 @@ fusb_ephandle_linux::write (const void *buffer, int nbytes)
   while (n < nbytes){
 
     usbdevfs_urb *urb = get_write_work_in_progress ();
+    if (!urb)
+      return -1;
     unsigned char *dst = (unsigned char *) urb->buffer;
     int m = std::min (nbytes - n, urb->buffer_length - urb->actual_length);
 
@@ -516,7 +522,8 @@ fusb_ephandle_linux::get_write_work_in_progress ()
     // The free list is empty.  Tell the device handle to reap.
     // Anything it reaps for us will end up on our completed list.
 
-    d_devhandle->_reap (true);
+    if (!d_devhandle->_reap (true))
+      return 0;
   }
 }
 
@@ -606,19 +613,17 @@ fusb_ephandle_linux::reload_read_buffer ()
   while (1){
 
     while ((urb = completed_list_get ()) == 0)
-      d_devhandle->_reap (true);
+      if (!d_devhandle->_reap (true))
+	return false;
 
     // check result of completed read
 
     if (urb->status != 0){
-      // We've got a problem.
-      // Report the problem and resubmit.
+      // We've got a problem. Report it and fail.
       fprintf (stderr, "fusb: (rd status %d) %s\n", urb->status, strerror (-urb->status));
       urb->actual_length = 0;
-      if (!submit_urb (urb))
-	return false;
-
-      continue;
+      free_list_add (urb);
+      return false;
     }
 
     // we've got a happy urb, full of data...
