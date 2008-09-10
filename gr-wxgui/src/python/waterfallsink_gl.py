@@ -32,7 +32,7 @@ from constants import *
 # Waterfall sink block (wrapper for old wxgui)
 ##################################################
 class _waterfall_sink_base(gr.hier_block2, common.prop_setter):
-	"""!
+	"""
 	An fft block with real/complex inputs and a gui window.
 	"""
 

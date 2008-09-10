@@ -34,7 +34,7 @@ class prop_setter(object):
 # Input Watcher Thread
 ##################################################
 class input_watcher(threading.Thread):
-	"""!
+	"""
 	Input watcher thread runs forever.
 	Read messages from the message queue.
 	Forward messages to the message handler.
@@ -54,7 +54,7 @@ class input_watcher(threading.Thread):
 # WX Shared Classes
 ##################################################
 class LabelText(wx.StaticText):
-	"""!
+	"""
 	Label text to give the wx plots a uniform look.
 	Get the default label text and set the font bold.
 	"""
@@ -65,11 +65,11 @@ class LabelText(wx.StaticText):
 		self.SetFont(font)
 
 class IncrDecrButtons(wx.BoxSizer):
-	"""!
+	"""
 	A horizontal box sizer with a increment and a decrement button.
 	"""
 	def __init__(self, parent, on_incr, on_decr):
-		"""!
+		"""
 		@param parent the parent window
 		@param on_incr the event handler for increment
 		@param on_decr the event handler for decrement
@@ -114,7 +114,7 @@ class CheckBoxController(wx.CheckBox):
 		self._controller[self._control_key] = bool(e.IsChecked())
 
 class LogSliderController(wx.BoxSizer):
-	"""!
+	"""
 	Log slider controller with display label and slider.
 	Gives logarithmic scaling to slider operation.
 	"""
@@ -146,12 +146,12 @@ class LogSliderController(wx.BoxSizer):
 			self._label.Disable()
 
 class DropDownController(wx.BoxSizer):
-	"""!
+	"""
 	Drop down controller with label and chooser.
 	Srop down selection from a set of choices.
 	"""
 	def __init__(self, parent, label, choices, controller, control_key, size=(-1, -1)):
-		"""!
+		"""
 		@param parent the parent window
 		@param label the label for the drop down
 		@param choices a list of tuples -> (label, value)
@@ -185,7 +185,7 @@ class DropDownController(wx.BoxSizer):
 # Shared Functions
 ##################################################
 def get_exp(num):
-	"""!
+	"""
 	Get the exponent of the number in base 10.
 	@param num the floating point number
 	@return the exponent as an integer
@@ -194,7 +194,7 @@ def get_exp(num):
 	return int(math.floor(math.log10(abs(num))))
 
 def get_clean_num(num):
-	"""!
+	"""
 	Get the closest clean number match to num with bases 1, 2, 5.
 	@param num the number
 	@return the closest number
@@ -207,7 +207,7 @@ def get_clean_num(num):
 	return sign*nums[numpy.argmin(numpy.abs(nums - abs(num)))]
 
 def get_clean_incr(num):
-	"""!
+	"""
 	Get the next higher clean number with bases 1, 2, 5.
 	@param num the number
 	@return the next higher number
@@ -225,7 +225,7 @@ def get_clean_incr(num):
 	}[coeff]*(10**exp)
 
 def get_clean_decr(num):
-	"""!
+	"""
 	Get the next lower clean number with bases 1, 2, 5.
 	@param num the number
 	@return the next lower number
@@ -243,7 +243,7 @@ def get_clean_decr(num):
 	}[coeff]*(10**exp)
 
 def get_min_max(samples):
-	"""!
+	"""
 	Get the minimum and maximum bounds for an array of samples.
 	@param samples the array of real values
 	@return a tuple of min, max
@@ -256,7 +256,7 @@ def get_min_max(samples):
 	return min, max
 
 def get_si_components(num):
-	"""!
+	"""
 	Get the SI units for the number.
 	Extract the coeff and exponent of the number.
 	The exponent will be a multiple of 3.
@@ -281,7 +281,7 @@ def get_si_components(num):
 	return coeff, exp, prefix
 
 def label_format(num):
-	"""!
+	"""
 	Format a floating point number into a presentable string.
 	If the number has an small enough exponent, use regular decimal.
 	Otherwise, format the number with floating point notation.

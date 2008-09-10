@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-"""!
+"""
 Abstract GNU Radio publisher/subscriber interface
 
 This is a proof of concept implementation, will likely change significantly.

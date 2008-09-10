@@ -32,7 +32,7 @@ from constants import *
 # FFT sink block (wrapper for old wxgui)
 ##################################################
 class _fft_sink_base(gr.hier_block2, common.prop_setter):
-	"""!
+	"""
 	An fft block with real/complex inputs and a gui window.
 	"""
 

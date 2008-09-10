@@ -42,12 +42,12 @@ DEFAULT_GAUGE_RANGE = 1000
 # Number window control panel
 ##################################################
 class control_panel(wx.Panel):
-	"""!
+	"""
 	A control panel with wx widgits to control the averaging.
 	"""
 
 	def __init__(self, parent):
-		"""!
+		"""
 		Create a new control panel.
 		@param parent the wx parent window
 		"""
@@ -136,7 +136,7 @@ class number_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		self.ext_controller.subscribe(msg_key, self.handle_msg)
 
 	def show_gauges(self, show_gauge):
-		"""!
+		"""
 		Show or hide the gauges.
 		If this is real, never show the imaginary gauge.
 		@param show_gauge true to show
@@ -147,7 +147,7 @@ class number_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		else: self.gauge_imag.Hide()
 
 	def handle_msg(self, msg):
-		"""!
+		"""
 		Handle a message from the message queue.
 		Convert the string based message into a float or complex.
 		If more than one number was read, only take the last number.

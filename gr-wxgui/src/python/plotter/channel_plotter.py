@@ -41,7 +41,7 @@ MARKERY_KEY = 'marker'
 class channel_plotter(grid_plotter_base):
 
 	def __init__(self, parent):
-		"""!
+		"""
 		Create a new channel plotter.
 		"""
 		#init
@@ -50,14 +50,14 @@ class channel_plotter(grid_plotter_base):
 		self.enable_legend(False)
 
 	def _gl_init(self):
-		"""!
+		"""
 		Run gl initialization tasks.
 		"""
 		glEnableClientState(GL_VERTEX_ARRAY)
 		self._grid_compiled_list_id = glGenLists(1)
 
 	def enable_legend(self, enable=None):
-		"""!
+		"""
 		Enable/disable the legend.
 		@param enable true to enable
 		@return the enable state when None
@@ -69,7 +69,7 @@ class channel_plotter(grid_plotter_base):
 		self.unlock()
 
 	def draw(self):
-		"""!
+		"""
 		Draw the grid and waveforms.
 		"""
 		self.lock()
@@ -100,7 +100,7 @@ class channel_plotter(grid_plotter_base):
 		self.unlock()
 
 	def _draw_waveforms(self):
-		"""!
+		"""
 		Draw the waveforms for each channel.
 		Scale the waveform data to the grid using gl matrix operations.
 		"""
@@ -134,7 +134,7 @@ class channel_plotter(grid_plotter_base):
 			glPopMatrix()
 
 	def _populate_point_label(self, x_val, y_val):
-		"""!
+		"""
 		Get the text the will populate the point label.
 		Give X and Y values for the current point.
 		Give values for the channel at the X coordinate.
@@ -164,7 +164,7 @@ class channel_plotter(grid_plotter_base):
 		return label_str
 
 	def _draw_legend(self):
-		"""!
+		"""
 		Draw the legend in the upper right corner.
 		For each channel, draw a rectangle out of the channel color,
 		and overlay the channel text on top of the rectangle.
@@ -189,7 +189,7 @@ class channel_plotter(grid_plotter_base):
 			x_off -= w + 4*LEGEND_BOX_PADDING
 
 	def set_waveform(self, channel, samples, color_spec, marker=None):
-		"""!
+		"""
 		Set the waveform for a given channel.
 		@param channel the channel key
 		@param samples the waveform samples

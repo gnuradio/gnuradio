@@ -32,7 +32,7 @@ from constants import *
 # Constellation sink block (wrapper for old wxgui)
 ##################################################
 class const_sink_c(gr.hier_block2, common.prop_setter):
-	"""!
+	"""
 	A constellation block with a gui window.
 	"""
 

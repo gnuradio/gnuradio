@@ -22,12 +22,12 @@
 from gnuradio import gr
 
 class stream_to_vector_decimator(gr.hier_block2):
-    """!
+    """
     Convert the stream to a vector, decimate the vector stream to achieve the vector rate.
     """
 
     def __init__(self, item_size, sample_rate, vec_rate, vec_len):
-        """!
+        """
         Create the block chain.
         @param item_size the number of bytes per sample
         @param sample_rate the rate of incoming samples
@@ -48,7 +48,7 @@ class stream_to_vector_decimator(gr.hier_block2):
         self.connect(self, s2v, self.one_in_n, self)
 
     def set_sample_rate(self, sample_rate):
-        """!
+        """
         Set the new sampling rate and update the decimator.
         @param sample_rate the new rate
         """
@@ -56,7 +56,7 @@ class stream_to_vector_decimator(gr.hier_block2):
         self._update_decimator()
 
     def set_vec_rate(self, vec_rate):
-        """!
+        """
         Set the new vector rate and update the decimator.
         @param vec_rate the new rate
         """
@@ -64,7 +64,7 @@ class stream_to_vector_decimator(gr.hier_block2):
         self._update_decimator()
 
     def set_decimation(self, decim):
-        """!
+        """
         Set the decimation parameter directly.
         @param decim the new decimation
         """
@@ -76,19 +76,19 @@ class stream_to_vector_decimator(gr.hier_block2):
         self.one_in_n.set_n(self._decim)
 
     def decimation(self):
-        """!
+        """
         Returns the actual decimation.
         """
         return self._decim
 
     def sample_rate(self):
-        """!
+        """
         Returns configured sample rate.
         """
         return self._sample_rate
 
     def frame_rate(self):
-        """!
+        """
         Returns actual frame rate
         """
         return self._sample_rate/self._vec_len/self._decim

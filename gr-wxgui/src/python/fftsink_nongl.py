@@ -278,7 +278,7 @@ class control_panel(wx.Panel):
         self.update()
         
     def update(self):
-        """!
+        """
         Read the state of the fft plot settings and update the control panel.
         """
         #update checkboxes

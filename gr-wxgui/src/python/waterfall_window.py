@@ -50,12 +50,12 @@ COLOR_MODES = (
 # Waterfall window control panel
 ##################################################
 class control_panel(wx.Panel):
-	"""!
+	"""
 	A control panel with wx widgits to control the plotter and fft block chain.
 	"""
 
 	def __init__(self, parent):
-		"""!
+		"""
 		Create a new control panel.
 		@param parent the wx parent window
 		"""
@@ -214,7 +214,7 @@ class waterfall_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		self.update_grid()
 
 	def autoscale(self, *args):
-		"""!
+		"""
 		Autoscale the waterfall plot to the last frame.
 		Set the dynamic range and reference level.
 		Does not affect the current data in the waterfall.
@@ -231,7 +231,7 @@ class waterfall_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		self.set_dynamic_range(peak_level - noise_floor)
 
 	def handle_msg(self, msg):
-		"""!
+		"""
 		Handle the message from the fft sink message queue.
 		If complex, reorder the fft samples so the negative bins come first.
 		If real, keep take only the positive bins.
@@ -255,7 +255,7 @@ class waterfall_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		self.plotter.update()
 
 	def update_grid(self, *args):
-		"""!
+		"""
 		Update the plotter grid.
 		This update method is dependent on the variables below.
 		Determine the x and y axis grid parameters.

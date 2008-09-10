@@ -32,7 +32,7 @@ from constants import *
 # Number sink block (wrapper for old wxgui)
 ##################################################
 class _number_sink_base(gr.hier_block2, common.prop_setter):
-	"""!
+	"""
 	An decimator block with a number window display
 	"""
 

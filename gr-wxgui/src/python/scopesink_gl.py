@@ -32,7 +32,7 @@ from constants import *
 # Scope sink block (wrapper for old wxgui)
 ##################################################
 class _scope_sink_base(gr.hier_block2, common.prop_setter):
-	"""!
+	"""
 	A scope block with a gui window.
 	"""
 

@@ -24,12 +24,12 @@ from stream_to_vector_decimator import stream_to_vector_decimator
 import math
 
 class _logpwrfft_base(gr.hier_block2):
-    """!
+    """
     Create a log10(abs(fft)) stream chain, with real or complex input.
     """
 
     def __init__(self, sample_rate, fft_size, ref_scale, frame_rate, avg_alpha, average):
-        """!
+        """
         Create an log10(abs(fft)) stream chain.
         Provide access to the setting the filter and sample rate.
         @param sample_rate        Incoming stream sample rate
@@ -66,28 +66,28 @@ class _logpwrfft_base(gr.hier_block2):
         self.set_average(average)
 
     def set_decimation(self, decim):
-        """!
+        """
         Set the decimation on stream decimator.
         @param decim the new decimation
         """
         self._sd.set_decimation(decim)
 
     def set_vec_rate(self, vec_rate):
-        """!
+        """
         Set the vector rate on stream decimator.
         @param vec_rate the new vector rate
         """
         self._sd.set_vec_rate(vec_rate)
 
     def set_sample_rate(self, sample_rate):
-        """!
+        """
         Set the new sampling rate
         @param sample_rate the new rate
         """
         self._sd.set_sample_rate(sample_rate)
 
     def set_average(self, average):
-        """!
+        """
         Set the averaging filter on/off.
         @param average true to set averaging on
         """
@@ -98,7 +98,7 @@ class _logpwrfft_base(gr.hier_block2):
             self._avg.set_taps(1.0)
 
     def set_avg_alpha(self, avg_alpha):
-        """!
+        """
         Set the average alpha and set the taps if average was on.
         @param avg_alpha the new iir filter tap
         """
@@ -106,37 +106,37 @@ class _logpwrfft_base(gr.hier_block2):
         self.set_average(self._average)
 
     def sample_rate(self):
-        """!
+        """
         Return the current sample rate.
         """
         return self._sd.sample_rate()
 
     def decimation(self):
-        """!
+        """
         Return the current decimation.
         """
         return self._sd.decimation()
 
     def frame_rate(self):
-        """!
+        """
         Return the current frame rate.
         """
         return self._sd.frame_rate()
 
     def average(self):
-        """!
+        """
         Return whether or not averaging is being performed.
         """
         return self._average
 
     def avg_alpha(self):
-        """!
+        """
         Return averaging filter constant.
         """
         return self._avg_alpha
 
 class logpwrfft_f(_logpwrfft_base):
-        """!
+        """
         Create an fft block chain, with real input.
         """
         _name = "logpwrfft_f"
@@ -144,7 +144,7 @@ class logpwrfft_f(_logpwrfft_base):
         _fft_block = (gr.fft_vfc, )
 
 class logpwrfft_c(_logpwrfft_base):
-        """!
+        """
         Create an fft block chain, with complex input.
         """
         _name = "logpwrfft_c"

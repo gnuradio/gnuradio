@@ -52,11 +52,11 @@ DEFAULT_MARKER_TYPE = 2.0
 # Constellation window control panel
 ##################################################
 class control_panel(wx.Panel):
-	"""!
+	"""
 	A control panel with wx widgits to control the plotter.
 	"""
 	def __init__(self, parent):
-		"""!
+		"""
 		Create a new control panel.
 		@param parent the wx parent window
 		"""
@@ -152,7 +152,7 @@ class const_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		self.update_grid()
 
 	def handle_msg(self, msg):
-		"""!
+		"""
 		Plot the samples onto the complex grid.
 		@param msg the array of complex samples
 		"""

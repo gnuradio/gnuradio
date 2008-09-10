@@ -42,12 +42,12 @@ POINT_LABEL_PADDING = 3
 # OpenGL WX Plotter Canvas
 ##################################################
 class _plotter_base(wx.glcanvas.GLCanvas):
-	"""!
+	"""
 	Plotter base class for all plot types.
 	"""
 
 	def __init__(self, parent):
-		"""!
+		"""
 		Create a new plotter base.
 		Initialize the GLCanvas with double buffering.
 		Initialize various plotter flags.
@@ -68,14 +68,14 @@ class _plotter_base(wx.glcanvas.GLCanvas):
 	def unlock(self): self._global_lock.release()
 
 	def _on_size(self, event):
-		"""!
+		"""
 		Flag the resize event.
 		The paint event will handle the actual resizing.
 		"""
 		self._resized_flag = True
 
 	def _on_paint(self, event):
-		"""!
+		"""
 		Respond to paint events, call update.
 		Initialize GL if this is the first paint event.
 		"""
@@ -101,7 +101,7 @@ class _plotter_base(wx.glcanvas.GLCanvas):
 		self.draw()
 
 	def update(self):
-		"""!
+		"""
 		Force a paint event.
 		Record the timestamp.
 		"""
@@ -111,7 +111,7 @@ class _plotter_base(wx.glcanvas.GLCanvas):
 	def clear(self): glClear(GL_COLOR_BUFFER_BIT)
 
 	def changed(self, state=None):
-		"""!
+		"""
 		Set the changed flag if state is not None.
 		Otherwise return the changed flag.
 		"""
@@ -140,7 +140,7 @@ class grid_plotter_base(_plotter_base):
 		self.Bind(wx.EVT_LEAVE_WINDOW, self._on_leave_window)
 
 	def _on_motion(self, event):
-		"""!
+		"""
 		Mouse motion, record the position X, Y.
 		"""
 		self.lock()
@@ -150,7 +150,7 @@ class grid_plotter_base(_plotter_base):
 		self.unlock()
 
 	def _on_leave_window(self, event):
-		"""!
+		"""
 		Mouse leave window, set the position to None.
 		"""
 		self.lock()
@@ -159,7 +159,7 @@ class grid_plotter_base(_plotter_base):
 		self.unlock()
 
 	def enable_point_label(self, enable=None):
-		"""!
+		"""
 		Enable/disable the point label.
 		@param enable true to enable
 		@return the enable state when None
@@ -171,7 +171,7 @@ class grid_plotter_base(_plotter_base):
 		self.unlock()
 
 	def set_title(self, title):
-		"""!
+		"""
 		Set the title.
 		@param title the title string
 		"""
@@ -181,7 +181,7 @@ class grid_plotter_base(_plotter_base):
 		self.unlock()
 
 	def set_x_label(self, x_label, x_units=''):
-		"""!
+		"""
 		Set the x label and units.
 		@param x_label the x label string
 		@param x_units the x units string
@@ -193,7 +193,7 @@ class grid_plotter_base(_plotter_base):
 		self.unlock()
 
 	def set_y_label(self, y_label, y_units=''):
-		"""!
+		"""
 		Set the y label and units.
 		@param y_label the y label string
 		@param y_units the y units string
@@ -205,7 +205,7 @@ class grid_plotter_base(_plotter_base):
 		self.unlock()
 
 	def set_x_grid(self, x_min, x_max, x_step, x_scalar=1.0):
-		"""!
+		"""
 		Set the x grid parameters.
 		@param x_min the left-most value
 		@param x_max the right-most value
@@ -221,7 +221,7 @@ class grid_plotter_base(_plotter_base):
 		self.unlock()
 
 	def set_y_grid(self, y_min, y_max, y_step, y_scalar=1.0):
-		"""!
+		"""
 		Set the y grid parameters.
 		@param y_min the bottom-most value
 		@param y_max the top-most value
@@ -237,7 +237,7 @@ class grid_plotter_base(_plotter_base):
 		self.unlock()
 
 	def _draw_grid(self):
-		"""!
+		"""
 		Draw the border, grid, title, and units.
 		"""
 		##################################################
@@ -306,7 +306,7 @@ class grid_plotter_base(_plotter_base):
 		)
 
 	def _get_tick_label(self, tick):
-		"""!
+		"""
 		Format the tick value and create a gl text.
 		@param tick the floating point tick value
 		@return the tick label text
@@ -315,7 +315,7 @@ class grid_plotter_base(_plotter_base):
 		return gltext.Text(tick_str, font_size=TICK_TEXT_FONT_SIZE)
 
 	def _get_ticks(self, min, max, step, scalar):
-		"""!
+		"""
 		Determine the positions for the ticks.
 		@param min the lower bound
 		@param max the upper bound
@@ -337,7 +337,7 @@ class grid_plotter_base(_plotter_base):
 		return [i*step*scalar for i in range(start, stop+1)]
 
 	def _draw_line(self, coor1, coor2):
-		"""!
+		"""
 		Draw a line from coor1 to coor2.
 		@param corr1 a tuple of x, y, z
 		@param corr2 a tuple of x, y, z
@@ -348,7 +348,7 @@ class grid_plotter_base(_plotter_base):
 		glEnd()
 
 	def _draw_rect(self, x, y, width, height, fill=True):
-		"""!
+		"""
 		Draw a rectangle on the x, y plane.
 		X and Y are the top-left corner.
 		@param x the left position of the rectangle
@@ -365,7 +365,7 @@ class grid_plotter_base(_plotter_base):
 		glEnd()
 
 	def _draw_point_label(self):
-		"""!
+		"""
 		Draw the point label for the last mouse motion coordinate.
 		The mouse coordinate must be an X, Y tuple.
 		The label will be drawn at the X, Y coordinate.

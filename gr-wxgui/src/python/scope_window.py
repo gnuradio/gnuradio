@@ -70,11 +70,11 @@ DEFAULT_MARKER_TYPE = None
 # Scope window control panel
 ##################################################
 class control_panel(wx.Panel):
-	"""!
+	"""
 	A control panel with wx widgits to control the plotter and scope block.
 	"""
 	def __init__(self, parent):
-		"""!
+		"""
 		Create a new control panel.
 		@param parent the wx parent window
 		"""
@@ -333,7 +333,7 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		#self.update_grid()
 
 	def handle_msg(self, msg):
-		"""!
+		"""
 		Handle the message from the scope sink message queue.
 		Plot the list of arrays of samples onto the grid.
 		Each samples array gets its own channel.
@@ -354,7 +354,7 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		self.frame_rate_ts = time.time()
 
 	def handle_samples(self):
-		"""!
+		"""
 		Handle the cached samples from the scope input.
 		Perform ac coupling, triggering, and auto ranging.
 		"""
@@ -449,7 +449,7 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		self.plotter.update()
 
 	def update_grid(self, *args):
-		"""!
+		"""
 		Update the grid to reflect the current settings:
 		xy divisions, xy offset, xy mode setting
 		"""

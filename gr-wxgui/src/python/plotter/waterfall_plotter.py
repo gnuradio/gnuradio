@@ -38,7 +38,7 @@ PADDING = 35, 60, 40, 60 #top, right, bottom, left
 ceil_log2 = lambda x: 2**int(math.ceil(math.log(x)/math.log(2)))
 
 def _get_rbga(red_pts, green_pts, blue_pts, alpha_pts=[(0, 0), (1, 0)]):
-	"""!
+	"""
 	Get an array of 256 rgba values where each index maps to a color.
 	The scaling for red, green, blue, alpha are specified in piece-wise functions.
 	The piece-wise functions consist of a set of x, y coordinates.
@@ -87,7 +87,7 @@ COLORS = {
 ##################################################
 class waterfall_plotter(grid_plotter_base):
 	def __init__(self, parent):
-		"""!
+		"""
 		Create a new channel plotter.
 		"""
 		#init
@@ -103,14 +103,14 @@ class waterfall_plotter(grid_plotter_base):
 		self.set_color_mode(COLORS.keys()[0])
 
 	def _gl_init(self):
-		"""!
+		"""
 		Run gl initialization tasks.
 		"""
 		self._grid_compiled_list_id = glGenLists(1)
 		self._waterfall_texture = glGenTextures(1)
 
 	def draw(self):
-		"""!
+		"""
 		Draw the grid and waveforms.
 		"""
 		self.lock()
@@ -133,7 +133,7 @@ class waterfall_plotter(grid_plotter_base):
 		self.unlock()
 
 	def _draw_waterfall(self):
-		"""!
+		"""
 		Draw the waterfall from the texture.
 		The texture is circularly filled and will wrap around.
 		Use matrix modeling to shift and scale the texture onto the coordinate plane.
@@ -176,7 +176,7 @@ class waterfall_plotter(grid_plotter_base):
 		glDisable(GL_TEXTURE_2D)
 
 	def _populate_point_label(self, x_val, y_val):
-		"""!
+		"""
 		Get the text the will populate the point label.
 		Give the X value for the current point.
 		@param x_val the current x value
@@ -186,7 +186,7 @@ class waterfall_plotter(grid_plotter_base):
 		return '%s: %s %s'%(self.x_label, common.label_format(x_val), self.x_units)
 
 	def _draw_legend(self):
-		"""!
+		"""
 		Draw the color scale legend.
 		"""
 		if not self._color_mode: return
@@ -213,7 +213,7 @@ class waterfall_plotter(grid_plotter_base):
 			txt.draw_text(wx.Point(x, y))
 
 	def _resize_texture(self, flag=None):
-		"""!
+		"""
 		Create the texture to fit the fft_size X num_lines.
 		@param flag the set/unset or update flag
 		"""
@@ -230,7 +230,7 @@ class waterfall_plotter(grid_plotter_base):
 		self._resize_texture_flag = False
 
 	def set_color_mode(self, color_mode):
-		"""!
+		"""
 		Set the color mode.
 		New samples will be converted to the new color mode.
 		Old samples will not be recolorized.
@@ -244,7 +244,7 @@ class waterfall_plotter(grid_plotter_base):
 		self.unlock()
 
 	def set_num_lines(self, num_lines):
-		"""!
+		"""
 		Set number of lines.
 		Powers of two only.
 		@param num_lines the new number of lines
@@ -256,7 +256,7 @@ class waterfall_plotter(grid_plotter_base):
 		self.unlock()
 
 	def set_samples(self, samples, minimum, maximum):
-		"""!
+		"""
 		Set the samples to the waterfall.
 		Convert the samples to color data.
 		@param samples the array of floats
