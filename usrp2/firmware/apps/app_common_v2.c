@@ -28,6 +28,7 @@
 #include "print_rmon_regs.h"
 #include "db.h"
 #include "clocks.h"
+#include "u2_init.h"
 #include <string.h>
 
 volatile bool link_is_up = false;	// eth handler sets this
@@ -117,7 +118,7 @@ op_id_cmd(const op_generic_t *p,
   r->len = sizeof(op_id_reply_t);
   r->rid = p->rid;
   r->addr = *ethernet_mac_addr();
-  r->hw_rev = 0x0000;	// FIXME
+  r->hw_rev = (u2_hw_rev_major << 8) | u2_hw_rev_minor;
   // r->fpga_md5sum = ;	// FIXME
   // r->sw_md5sum = ;	// FIXME
 

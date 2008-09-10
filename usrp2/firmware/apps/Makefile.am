@@ -33,6 +33,7 @@ noinst_PROGRAMS = \
 	rcv_eth_packets \
 	rx_only_v2 \
 	read_dbids \
+	set_hw_rev \
 	test1 \
 	test_db_spi \
 	test_i2c \

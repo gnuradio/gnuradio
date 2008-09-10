@@ -30,8 +30,20 @@
 #include "ad9777.h"
 #include "clocks.h"
 #include "db.h"
+#include "usrp2_i2c_addr.h"
 
 //#include "nonstdio.h"
+
+unsigned char u2_hw_rev_major;
+unsigned char u2_hw_rev_minor;
+
+static inline void
+get_hw_rev(void)
+{
+  bool ok = eeprom_read(I2C_ADDR_MBOARD, MBOARD_REV_LSB, &u2_hw_rev_minor, 1);
+  ok &= eeprom_read(I2C_ADDR_MBOARD, MBOARD_REV_MSB, &u2_hw_rev_major, 1);
+}
+
 
 /*
  * We ought to arrange for this to be called before main, but for now,
@@ -85,6 +97,8 @@ u2_init(void)
   lsdac_init();	    // low-speed DACs
   db_init();	    // daughterboard init
   
+  get_hw_rev();
+
   hal_enable_ints();
 
   // flash all leds to let us know board is alive

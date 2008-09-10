@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2008 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,15 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef INCLUDED_U2_INIT_H
-#define INCLUDED_U2_INIT_H
+#include <u2_init.h>
+#include <nonstdio.h>
+#include <i2c.h>
+#include <usrp2_i2c_addr.h>
 
-extern unsigned char u2_hw_rev_major;
-extern unsigned char u2_hw_rev_minor;
+#define HW_REV_MAJOR 0
+#define HW_REV_MINOR 3
 
-/*!
- * one-time init
- */
-int u2_init(void);
+int
+main(void)
+{
+  u2_init();
 
-#endif /* INCLUDED_U2_INIT_H */
+  putstr("\nset_hw_rev\n");
+
+  bool ok = true;
+  unsigned char maj = HW_REV_MAJOR;
+  unsigned char min = HW_REV_MINOR;
+  ok = eeprom_write(I2C_ADDR_MBOARD, MBOARD_REV_MSB, &maj, 1);
+  ok &= eeprom_write(I2C_ADDR_MBOARD, MBOARD_REV_LSB, &min, 1);
+
+  if (ok)
+    printf("OK: set h/w rev to %d.%d\n", HW_REV_MAJOR, HW_REV_MINOR);
+  else
+    printf("FAILED to set h/w rev to %d.%d\n", HW_REV_MAJOR, HW_REV_MINOR);
+}
