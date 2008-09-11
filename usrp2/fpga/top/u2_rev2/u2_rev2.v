@@ -362,6 +362,8 @@ module u2_rev2
 		     .cpld_din          (cpld_din),
 		     .cpld_clk          (cpld_clk),
 		     .cpld_detached     (cpld_detached),
+		     .por               (~POR),
+		     .config_success    (config_success),
 		     .adc_a		(adc_a_reg2),
 		     .adc_ovf_a		(adc_ovf_a_reg2),
 		     .adc_on_a		(adc_on_a),

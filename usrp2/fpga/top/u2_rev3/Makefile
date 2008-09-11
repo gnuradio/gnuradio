@@ -87,6 +87,8 @@ control_lib/simple_uart.v \
 control_lib/simple_uart_tx.v \
 control_lib/simple_uart_rx.v \
 control_lib/oneshot_2clk.v \
+control_lib/sd_spi.v \
+control_lib/sd_spi_wb.v \
 coregen/fifo_xlnx_2Kx36_2clk.v \
 coregen/fifo_xlnx_2Kx36_2clk.xco \
 coregen/fifo_xlnx_512x36_2clk.v \

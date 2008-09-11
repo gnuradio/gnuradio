@@ -87,6 +87,8 @@ control_lib/simple_uart.v \
 control_lib/simple_uart_tx.v \
 control_lib/simple_uart_rx.v \
 control_lib/oneshot_2clk.v \
+control_lib/sd_spi.v \
+control_lib/sd_spi_wb.v \
 coregen/fifo_xlnx_2Kx36_2clk.v \
 coregen/fifo_xlnx_2Kx36_2clk.xco \
 coregen/fifo_xlnx_512x36_2clk.v \
@@ -190,18 +192,8 @@ export SYNTHESIZE_PROPERTIES := \
 "Use Synchronous Reset" Auto \
 "Use Synchronous Set" Auto
 
-#export TRANSLATE_PROPERTIES := \
-#"Macro Search Path" "$(SOURCE_ROOT)coregen/"
-#export TRANSLATE_PROPERTIES := \
-#"Macro Search Path" "$(shell pwd)/../../coregen/"
 export TRANSLATE_PROPERTIES := \
-"Macro Search Path" "../../coregen/"
-
-QUICK_MAP_PROPERTIES := \
-"Allow Logic Optimization Across Hierarchy" TRUE \
-"Map to Input Functions" 4 \
-"Optimization Strategy (Cover Mode)" Speed \
-"Pack I/O Registers/Latches into IOBs" "For Inputs and Outputs"
+"Macro Search Path" "$(shell pwd)/../../coregen/"
 
 export MAP_PROPERTIES := \
 "Allow Logic Optimization Across Hierarchy" TRUE \
@@ -247,9 +239,6 @@ synth:
 
 bin:
 	PROCESS_RUN="Generate Programming File" $(XTCLSH) $(ISE_HELPER)		
-
-quick:
-	PROCESS_RUN="Generate Programming File" MAP_PROPERTIES='$(QUICK_MAP_PROPERTIES)' $(XTCLSH) $(ISE_HELPER)		
 
 clean:
 	rm -rf $(BUILD_DIR)

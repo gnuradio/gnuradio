@@ -67,8 +67,10 @@ module u2_core
    input cpld_din,
    input cpld_clk,
    input cpld_detached,
-   //input por,
-   //output config_success,
+   input cpld_misc,
+   input cpld_init_b,
+   input por,
+   output config_success,
    
    // ADC
    input [13:0] adc_a,
@@ -160,19 +162,19 @@ module u2_core
    parameter 	aw = 16;  // Address bus width, for byte addressibility, 16 = 64K byte memory space
    parameter 	sw = 4;   // Select width -- 32-bit data bus with 8-bit granularity.  
    
-   wire [dw-1:0] m0_dat_o, m1_dat_o, m0_dat_i, m1_dat_i;
+   wire [dw-1:0] m0_dat_o, m0_dat_i;
    wire [dw-1:0] s0_dat_o, s1_dat_o, s0_dat_i, s1_dat_i, s2_dat_o, s3_dat_o, s2_dat_i, s3_dat_i,
 		 s4_dat_o, s5_dat_o, s4_dat_i, s5_dat_i, s6_dat_o, s7_dat_o, s6_dat_i, s7_dat_i,
 		 s8_dat_o, s9_dat_o, s8_dat_i, s9_dat_i, s10_dat_o, s10_dat_i, s11_dat_i, s11_dat_o,
-		 s12_dat_i, s12_dat_o;
-   wire [aw-1:0] m0_adr,m1_adr,s0_adr,s1_adr,s2_adr,s3_adr,s4_adr,s5_adr,s6_adr,s7_adr,s8_adr,s9_adr,s10_adr,s11_adr,s12_adr;
-   wire [sw-1:0] m0_sel,m1_sel,s0_sel,s1_sel,s2_sel,s3_sel,s4_sel,s5_sel,s6_sel,s7_sel,s8_sel,s9_sel,s10_sel,s11_sel,s12_sel;
-   wire 	 m0_ack,m1_ack,s0_ack,s1_ack,s2_ack,s3_ack,s4_ack,s5_ack,s6_ack,s7_ack,s8_ack,s9_ack,s10_ack,s11_ack,s12_ack;
-   wire 	 m0_stb,m1_stb,s0_stb,s1_stb,s2_stb,s3_stb,s4_stb,s5_stb,s6_stb,s7_stb,s8_stb,s9_stb,s10_stb,s11_stb,s12_stb;
-   wire 	 m0_cyc,m1_cyc,s0_cyc,s1_cyc,s2_cyc,s3_cyc,s4_cyc,s5_cyc,s6_cyc,s7_cyc,s8_cyc,s9_cyc,s10_cyc,s11_cyc,s12_cyc;
-   wire 	 m0_err,m1_err,s0_err,s1_err,s2_err,s3_err,s4_err,s5_err,s6_err,s7_err,s8_err,s9_err,s10_err,s11_err,s12_err;
-   wire 	 m0_rty,m1_rty,s0_rty,s1_rty,s2_rty,s3_rty,s4_rty,s5_rty,s6_rty,s7_rty,s8_rty,s9_rty,s10_rty,s11_rty,s12_rty;
-   wire 	 m0_we,m1_we,s0_we,s1_we,s2_we,s3_we,s4_we,s5_we,s6_we,s7_we,s8_we,s9_we,s10_we,s11_we,s12_we;
+		 s12_dat_i, s12_dat_o, s13_dat_i, s13_dat_o;
+   wire [aw-1:0] m0_adr,s0_adr,s1_adr,s2_adr,s3_adr,s4_adr,s5_adr,s6_adr,s7_adr,s8_adr,s9_adr,s10_adr,s11_adr,s12_adr, s13_adr;
+   wire [sw-1:0] m0_sel,s0_sel,s1_sel,s2_sel,s3_sel,s4_sel,s5_sel,s6_sel,s7_sel,s8_sel,s9_sel,s10_sel,s11_sel,s12_sel, s13_sel;
+   wire 	 m0_ack,s0_ack,s1_ack,s2_ack,s3_ack,s4_ack,s5_ack,s6_ack,s7_ack,s8_ack,s9_ack,s10_ack,s11_ack,s12_ack, s13_ack;
+   wire 	 m0_stb,s0_stb,s1_stb,s2_stb,s3_stb,s4_stb,s5_stb,s6_stb,s7_stb,s8_stb,s9_stb,s10_stb,s11_stb,s12_stb, s13_stb;
+   wire 	 m0_cyc,s0_cyc,s1_cyc,s2_cyc,s3_cyc,s4_cyc,s5_cyc,s6_cyc,s7_cyc,s8_cyc,s9_cyc,s10_cyc,s11_cyc,s12_cyc, s13_cyc;
+   wire 	 m0_err,s0_err,s1_err,s2_err,s3_err,s4_err,s5_err,s6_err,s7_err,s8_err,s9_err,s10_err,s11_err,s12_err, s13_err;
+   wire 	 m0_rty,s0_rty,s1_rty,s2_rty,s3_rty,s4_rty,s5_rty,s6_rty,s7_rty,s8_rty,s9_rty,s10_rty,s11_rty,s12_rty, s13_rty;
+   wire 	 m0_we,s0_we,s1_we,s2_we,s3_we,s4_we,s5_we,s6_we,s7_we,s8_we,s9_we,s10_we,s11_we,s12_we,s13_we;
    
    wb_1master #(.s0_addr_w(1),.s0_addr(1'b0),.s1_addr_w(2),.s1_addr(2'b10),
 		.s215_addr_w(6),.s2_addr(6'b1100_00),.s3_addr(6'b1100_01),.s4_addr(6'b1100_10),
@@ -209,7 +211,8 @@ module u2_core
       .s11_dat_i(s11_dat_i),.s11_ack_i(s11_ack),.s11_err_i(s11_err),.s11_rty_i(s11_rty),
       .s12_dat_o(s12_dat_o),.s12_adr_o(s12_adr),.s12_sel_o(s12_sel),.s12_we_o(s12_we),.s12_cyc_o(s12_cyc),.s12_stb_o(s12_stb),
       .s12_dat_i(s12_dat_i),.s12_ack_i(s12_ack),.s12_err_i(s12_err),.s12_rty_i(s12_rty),
-      .s13_dat_i(0),.s13_ack_i(0),.s13_err_i(0),.s13_rty_i(0),
+      .s13_dat_o(s13_dat_o),.s13_adr_o(s13_adr),.s13_sel_o(s13_sel),.s13_we_o(s13_we),.s13_cyc_o(s13_cyc),.s13_stb_o(s13_stb),
+      .s13_dat_i(s13_dat_i),.s13_ack_i(s13_ack),.s13_err_i(s13_err),.s13_rty_i(s13_rty),
       .s14_dat_i(0),.s14_ack_i(0),.s14_err_i(0),.s14_rty_i(0),
       .s15_dat_i(0),.s15_ack_i(0),.s15_err_i(0),.s15_rty_i(0)  );
    
@@ -220,7 +223,7 @@ module u2_core
 			   .wb_rst_o(wb_rst),
 			   .ram_loader_done_i(ram_loader_done));
 
-   //assign 	 config_success = ram_loader_done;
+   assign 	 config_success = ram_loader_done;
    
    // ///////////////////////////////////////////////////////////////////
    // RAM Loader
@@ -521,7 +524,18 @@ module u2_core
       .int_o(pps_int) );
    assign 	 s12_err = 0;
    assign 	 s12_rty = 0;
-   
+
+   // /////////////////////////////////////////////////////////////////////////
+   // SD Card Reader / Writer, Slave #13
+
+   sd_spi_wb sd_spi_wb
+     (.clk(wb_clk),.rst(wb_rst),
+      .sd_clk(sd_clk),.sd_csn(sd_csn),.sd_mosi(sd_mosi),.sd_miso(sd_miso),
+      .wb_cyc_i(s13_cyc),.wb_stb_i(s13_stb),.wb_we_i(s13_we),
+      .wb_adr_i(s13_adr[3:2]),.wb_dat_i(s13_dat_o),.wb_dat_o(s13_dat_i),
+      .wb_ack_o(s13_ack) );
+   assign 	 s13_err = 0;
+   assign 	 s13_rty = 0;
    // /////////////////////////////////////////////////////////////////////////
    // DSP
    wire [31:0] 	 sample_rx, sample_tx;
@@ -596,7 +610,15 @@ module u2_core
    // Debug Pins
 
    // FIFO Level Debugging
-   reg [31:0] host_to_dsp_fifo, dsp_to_host_fifo, eth_mac_debug;
+   reg [31:0] host_to_dsp_fifo, dsp_to_host_fifo, eth_mac_debug, serdes_to_dsp_fifo, dsp_to_serdes_fifo;
+
+   always @(posedge dsp_clk)
+     serdes_to_dsp_fifo <= { {ser_rx_full,ser_rx_empty,ser_rx_occ[13:0]},
+			   {dsp_tx_full,dsp_tx_empty,dsp_tx_occ[13:0]} };
+
+   always @(posedge dsp_clk)
+     dsp_to_serdes_fifo <= { {ser_tx_full,ser_tx_empty,ser_tx_occ[13:0]},
+			  {dsp_rx_full,dsp_rx_empty,dsp_rx_occ[13:0]} };
 
    always @(posedge dsp_clk)
      host_to_dsp_fifo <= { {eth_rx_full,eth_rx_empty,eth_rx_occ[13:0]},
@@ -607,8 +629,7 @@ module u2_core
 			  {dsp_rx_full,dsp_rx_empty,dsp_rx_occ[13:0]} };
 
    always @(posedge dsp_clk)
-     eth_mac_debug <= {
-		      // {eth_tx_full2, eth_tx_empty2, eth_tx_occ2[13:0]},
+     eth_mac_debug <= {// {eth_tx_full2, eth_tx_empty2, eth_tx_occ2[13:0]},
 		      // {underrun, overrun, debug_mac0[13:0] },
 		       {debug_txc[15:0]},
 		       {eth_rx_full2, eth_rx_empty2, eth_rx_occ2[13:0]} };
@@ -617,7 +638,8 @@ module u2_core
    setting_reg #(.my_addr(5)) sr_debug (.clk(wb_clk),.rst(wb_rst),.strobe(set_stb),.addr(set_addr),
 					.in(set_data),.out(debug_mux),.changed());
 
-   assign     debug = debug_mux ? host_to_dsp_fifo : dsp_to_host_fifo;
+   //assign     debug = debug_mux ? host_to_dsp_fifo : dsp_to_host_fifo;
+   //assign     debug = debug_mux ? serdes_to_dsp_fifo : dsp_to_serdes_fifo;
    
    // Assign various commonly used debug buses.
    /*
@@ -672,7 +694,13 @@ module u2_core
    //assign      debug = debug_tx_dsp;
    //assign      debug = debug_serdes0;
    
-   assign      debug_gpio_0 = 0; // debug_serdes1;
-   assign      debug_gpio_1 = eth_mac_debug; 
-   
+   assign      debug_gpio_0 = 0; //debug_serdes0;
+   assign      debug_gpio_1 = 0; //debug_serdes1;
+
+   assign      debug={{3'b0, wb_clk, wb_rst, dsp_rst, por, config_success},
+		      {8'b0},
+		      {3'b0,ram_loader_ack, ram_loader_stb, ram_loader_we,ram_loader_rst,ram_loader_done },
+		      {cpld_start,cpld_mode,cpld_done,cpld_din,cpld_clk,cpld_detached,cpld_misc,cpld_init_b} };
+
+   //assign      debug = {dac_a,dac_b};
 endmodule // u2_core

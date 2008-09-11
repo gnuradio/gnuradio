@@ -162,8 +162,10 @@ module u2_rev3
 
    // reset the watchdog continuously
    reg [15:0] 	wd;
+   wire 	config_success;
+   
    always @(posedge wb_clk)
-     if(POR)
+     if(~config_success)
        wd <= 0;
      else
        wd <= wd + 1;
@@ -375,6 +377,10 @@ module u2_rev3
 		     .cpld_din          (cpld_din),
 		     .cpld_clk          (cpld_clk),
 		     .cpld_detached     (cpld_detached),
+		     .cpld_misc         (cpld_misc),
+		     .cpld_init_b       (cpld_init_b),
+		     .por               (~POR),
+		     .config_success    (config_success),
 		     .adc_a		(adc_a_reg2),
 		     .adc_ovf_a		(adc_ovf_a_reg2),
 		     .adc_on_a		(adc_on_a),
