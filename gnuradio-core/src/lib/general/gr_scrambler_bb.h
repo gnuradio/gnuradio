@@ -31,7 +31,9 @@ typedef boost::shared_ptr<gr_scrambler_bb> gr_scrambler_bb_sptr;
 gr_scrambler_bb_sptr gr_make_scrambler_bb(int mask, int seed, int len);
 
 /*!
- * \brief Scramble an input stream using an LFSR
+ * Scramble an input stream using an LFSR.  This block works on the LSB only
+ * of the input data stream, i.e., on an "unpacked binary" stream, and 
+ * produces the same format on its output.
  * 
  * \param mask     Polynomial mask for LFSR
  * \param seed     Initial shift register contents

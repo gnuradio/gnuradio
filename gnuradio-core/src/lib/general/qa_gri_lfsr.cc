@@ -58,7 +58,7 @@ void
 qa_gri_lfsr::test_scrambler()
 {
   // CCSDS 7-bit scrambler
-  int mask = 0x8A; // 1+x^4+X^6 
+  int mask = 0x8A;
   int seed = 0x7F;
   int length = 7;
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -73,7 +73,7 @@
  *  next_bit_descramble(unsigned char input) - Descramble an input stream
  *
  *      Perform one cycle of the LFSR.  The output bit is taken from 
- *      the modulo-2 sum of the masked shift register and the input LSB.
+ *      the modulo 2 sum of the masked shift register and the input LSB.
  *      The shift register MSB is assigned from the LSB of the input.
  *
  * See http://en.wikipedia.org/wiki/Scrambler for operation of these

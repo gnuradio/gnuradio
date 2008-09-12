@@ -31,7 +31,9 @@ typedef boost::shared_ptr<gr_descrambler_bb> gr_descrambler_bb_sptr;
 gr_descrambler_bb_sptr gr_make_descrambler_bb(int mask, int seed, int len);
 
 /*!
- * \brief Descramble an input stream using an LFSR
+ * Descramble an input stream using an LFSR.  This block works on the LSB only
+ * of the input data stream, i.e., on an "unpacked binary" stream, and
+ * produces the same format on its output.
  * 
  * \param mask     Polynomial mask for LFSR
  * \param seed     Initial shift register contents
