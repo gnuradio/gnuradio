@@ -19,24 +19,13 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef _QA_GRI_LFSR_H_
-#define _QA_GRI_LFSR_H_
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/TestCase.h>
+GR_SWIG_BLOCK_MAGIC(gr,scrambler_bb);
 
-class qa_gri_lfsr : public CppUnit::TestCase {
+gr_scrambler_bb_sptr gr_make_scrambler_bb(int mask, int seed, int len);
 
-  CPPUNIT_TEST_SUITE(qa_gri_lfsr);
-  CPPUNIT_TEST(test_lfsr);
-  CPPUNIT_TEST(test_scrambler);
-  CPPUNIT_TEST(test_descrambler);
-  CPPUNIT_TEST_SUITE_END();
-
- private:
-  void test_lfsr();
-  void test_scrambler();
-  void test_descrambler();
+class gr_scrambler_bb : public gr_sync_block
+{
+private:
+  gr_scrambler_bb(int mask, int seed, int len);
 };
-
-#endif /* _QA_GRI_LFSR_H_ */

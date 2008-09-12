@@ -58,14 +58,28 @@
  *
  *
  *
- *  next_bit() - performs once cycle of the lfsr,
- *               generating the new high order bit from the mask
- *               and returning the low order bit which has been
- *               shifted out of the register.
+ *  next_bit() - Standard LFSR operation
+ * 
+ *      Perform one cycle of the LFSR.  The output bit is taken from
+ *      the shift register LSB.  The shift register MSB is assigned from
+ *      the modulo 2 sum of the masked shift register.
+ *             
+ *  next_bit_scramble(unsigned char input) - Scramble an input stream
+ * 
+ *      Perform one cycle of the LFSR.  The output bit is taken from
+ *      the shift register LSB.  The shift register MSB is assigned from
+ *      the modulo 2 sum of the masked shift register and the input LSB.
  *
+ *  next_bit_descramble(unsigned char input) - Descramble an input stream
+ *
+ *      Perform one cycle of the LFSR.  The output bit is taken from 
+ *      the modulo-2 sum of the masked shift register and the input LSB.
+ *      The shift register MSB is assigned from the LSB of the input.
+ *
+ * See http://en.wikipedia.org/wiki/Scrambler for operation of these
+ * last two functions (see multiplicative scrambler.)
  *
  */
-
 
 class gri_lfsr
 {
@@ -92,11 +106,26 @@ class gri_lfsr
   }
 
   unsigned char next_bit() {
-    unsigned char bit = d_shift_register & 1;
+    unsigned char output = d_shift_register & 1;
     unsigned char newbit = popCount( d_shift_register & d_mask )%2;
     d_shift_register = ((d_shift_register>>1) | (newbit<<d_shift_register_length));
-    return bit;
+    return output;
   }
+
+  unsigned char next_bit_scramble(unsigned char input) {
+    unsigned char output = d_shift_register & 1;
+    unsigned char newbit = (popCount( d_shift_register & d_mask )%2)^(input & 1);
+    d_shift_register = ((d_shift_register>>1) | (newbit<<d_shift_register_length));
+    return output;
+  }
+
+  unsigned char next_bit_descramble(unsigned char input) {
+    unsigned char output = (popCount( d_shift_register & d_mask )%2)^(input & 1);
+    unsigned char newbit = input & 1;
+    d_shift_register = ((d_shift_register>>1) | (newbit<<d_shift_register_length));
+    return output;
+  }
+
 
   /*!
    * Rotate the register through x number of bits

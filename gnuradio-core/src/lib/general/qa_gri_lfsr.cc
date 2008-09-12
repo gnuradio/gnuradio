@@ -54,3 +54,87 @@ qa_gri_lfsr::test_lfsr ()
   CPPUNIT_ASSERT_THROW(gri_lfsr(mask, seed, 32), std::invalid_argument);
 }
 
+void
+qa_gri_lfsr::test_scrambler()
+{
+  // CCSDS 7-bit scrambler
+  int mask = 0x8A; // 1+x^4+X^6 
+  int seed = 0x7F;
+  int length = 7;
+
+  gri_lfsr scrambler(mask, seed, length);
+
+  // Impulse (1 and 126 more zeroes)
+  unsigned char src[] = 
+    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0 }; // flush bits
+  
+  // Impulse response (including leading bits)
+  unsigned char expected[] =
+    { 1, 1, 1, 1, 1, 1, 1, 
+      0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 
+      0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 
+      0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 
+      0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 
+      1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 
+      0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 
+      1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 
+      1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, };
+
+  int len = sizeof(src);
+  unsigned char actual[len];
+
+  for (int i = 0; i < len; i++)
+    actual[i] = scrambler.next_bit_scramble(src[i]);
+
+  CPPUNIT_ASSERT(memcmp(expected, actual, len) == 0);
+}
+
+void
+qa_gri_lfsr::test_descrambler()
+{
+  // CCSDS 7-bit scrambler
+  int mask = 0x8A;
+  int seed = 0x7F;
+  int length = 7;
+
+  gri_lfsr descrambler(mask, seed, length);
+
+  // Scrambled sequence (impulse response)
+  unsigned char src[] =
+    { 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 
+      0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 
+      0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 
+      0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 
+      1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 
+      0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 
+      1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 
+      1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0 }; 
+
+  // Original (garbage while synchronizing, them impulse)
+  unsigned char expected[] = 
+    { 0, 1, 0, 0, 1, 0,
+      1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  
+  int len = sizeof(src);
+  unsigned char actual[len];
+
+  for (int i = 0; i < len; i++)
+    actual[i] = descrambler.next_bit_descramble(src[i]);
+
+  CPPUNIT_ASSERT(memcmp(expected, actual, len) == 0);
+}
