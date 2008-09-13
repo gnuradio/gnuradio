@@ -165,7 +165,9 @@ libgeneral_la_SOURCES = 		\
 	malloc16.c			\
 	gr_unpack_k_bits_bb.cc		\
 	gr_descrambler_bb.cc		\
-	gr_scrambler_bb.cc
+	gr_scrambler_bb.cc		\
+	gr_probe_mpsk_snr_c.cc		\
+	gr_probe_density_b.cc
 
 libgeneral_qa_la_SOURCES = 		\
 	qa_general.cc			\
@@ -324,8 +326,9 @@ grinclude_HEADERS = 			\
 	random.h			\
 	gr_unpack_k_bits_bb.h		\
 	gr_descrambler_bb.h		\
-	gr_scrambler_bb.h
-
+	gr_scrambler_bb.h		\
+	gr_probe_mpsk_snr_c.h		\
+	gr_probe_density_b.h
 
 noinst_HEADERS = 			\
 	qa_general.h			\
@@ -454,7 +457,9 @@ swiginclude_HEADERS =			\
 	gri_agc2_cc.i			\
 	gri_agc2_ff.i			\
 	gr_descrambler_bb.i		\
-	gr_scrambler_bb.i
+	gr_scrambler_bb.i		\
+	gr_probe_mpsk_snr_c.i		\
+	gr_probe_density_b.i
 
 
 CLEANFILES = $(BUILT_SOURCES) *.pyc

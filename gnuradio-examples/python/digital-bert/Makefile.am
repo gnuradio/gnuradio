@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2007 Free Software Foundation, Inc.
+# Copyright 2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,25 +21,13 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = \
-	apps \
-	audio \
-	dect \
-	digital \
-	digital-bert \
-	digital_voice \
-	mp-sched \
-	multi-antenna \
-	multi_usrp \
-	network \
-	ofdm \
-	usrp
+EXTRA_DIST =			\
+	benchmark_rx.py		\
+	benchmark_tx.py		\
+	receive_path.py		\
+	transmit_path.py
 
-# Make example scripts with #! executable
-install-data-local:
-	for i in `find $(exampledir) -type f ! -perm 755`; do \
-	  if head -1 $$i | grep -q '^#!'; then \
-	    chmod 755 $$i; \
-	    echo "made executable: $$i"; \
-	  fi; \
-	done
+ourdatadir = $(exampledir)/digital-bert
+ourdata_DATA = $(EXTRA_DIST)
+
+MOSTLYCLEANFILES = *.pyc *.pyo *~

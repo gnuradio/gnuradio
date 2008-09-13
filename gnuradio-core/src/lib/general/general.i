@@ -131,6 +131,8 @@
 #include <gr_decode_ccsds_27_fb.h>
 #include <gr_descrambler_bb.h>
 #include <gr_scrambler_bb.h>
+#include <gr_probe_mpsk_snr_c.h>
+#include <gr_probe_density_b.h>
 %}
 
 %include "gr_nop.i"
@@ -242,3 +244,5 @@
 %include "gr_decode_ccsds_27_fb.i"
 %include "gr_descrambler_bb.i"
 %include "gr_scrambler_bb.i"
+%include "gr_probe_mpsk_snr_c.i"
+%include "gr_probe_density_b.i"
