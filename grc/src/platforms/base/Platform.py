@@ -56,32 +56,32 @@ class Platform(_Element):
 		self._blocks = dict()
 		self._blocks_n = dict()
 		for block_path in self._block_paths:
-			if os.path.isfile(block_path): self._load_block(block_path)
+			if os.path.isfile(block_path): self._load_blocks(block_path)
 			elif os.path.isdir(block_path):
 				for dirpath, dirnames, filenames in os.walk(block_path):
 					for filename in filter(lambda f: f.endswith('.xml'), filenames):
-						self._load_block(os.path.join(dirpath, filename))
+						self._load_blocks(os.path.join(dirpath, filename))
 
 	def get_prefs_block(self): return self.get_new_flow_graph().get_new_block('preferences')
 
-	def _load_block(self, f):
+	def _load_blocks(self, f):
 		"""
-		Load the block wrapper from the file path.
-		The block wrapper must pass validation, and have a unique block key.
+		Load the block wrappers from the file path.
+		The block wrapper must pass validation.
 		If any of the checks fail, exit with error.
 		@param f the file path
 		"""
 		try: ParseXML.validate_dtd(f, self._block_dtd)
 		except ParseXML.XMLSyntaxError, e: self._exit_with_error('Block definition "%s" failed: \n\t%s'%(f, e))
-		n = ParseXML.from_file(f)['block']
-		block = self.Block(self._flow_graph, n)
-		key = block.get_key()
-		#test against repeated keys
-		try: assert(key not in self.get_block_keys())
-		except AssertionError: self._exit_with_error('Key "%s" already exists in blocks'%key)
-		#store the block
-		self._blocks[key] = block
-		self._blocks_n[key] = n
+		for n in utils.listify(ParseXML.from_file(f), 'block'):
+			block = self.Block(self._flow_graph, n)
+			key = block.get_key()
+			#test against repeated keys
+			try: assert(key not in self.get_block_keys())
+			except AssertionError: self._exit_with_error('Key "%s" already exists in blocks'%key)
+			#store the block
+			self._blocks[key] = block
+			self._blocks_n[key] = n
 
 	def load_block_tree(self, block_tree):
 		"""

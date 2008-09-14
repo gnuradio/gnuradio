@@ -23,13 +23,11 @@ include $(top_srcdir)/grc/Makefile.inc
 
 ourdatadir = $(grc_base_data_dir)
 
-DATA_FILES = \
+ourdata_DATA = \
 	block_tree.dtd \
 	flow_graph.dtd \
 	grc-icon-256.png \
 	grc-icon-256.svg \
 	grc-icon-32.png
 
-ourdata_DATA = $(DATA_FILES)
-
-EXTRA_DIST = $(DATA_FILES)
+EXTRA_DIST = $(ourdata_DATA)

@@ -25,13 +25,11 @@ SUBDIRS = blocks
 
 ourdatadir = $(grc_python_data_dir)
 
-DATA_FILES = \
+ourdata_DATA = \
 	block.dtd \
 	block_tree.xml \
 	default_flow_graph.grc.xml \
 	flow_graph.tmpl
 
-ourdata_DATA = $(DATA_FILES)
-
-EXTRA_DIST = $(DATA_FILES)
+EXTRA_DIST = $(ourdata_DATA)
 

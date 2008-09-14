@@ -23,7 +23,7 @@ include $(top_srcdir)/grc/Makefile.inc
 
 ourdatadir = $(grc_python_blocks_dir)
 
-DATA_FILES = \
+ourdata_DATA = \
 	audio_sink.xml \
 	audio_source.xml \
 	band_pass_filter.xml \
@@ -205,6 +205,4 @@ DATA_FILES = \
 	xmlrpc_client.xml \
 	xmlrpc_server.xml
 
-ourdata_DATA = $(DATA_FILES)
-
-EXTRA_DIST = $(DATA_FILES)
+EXTRA_DIST = $(ourdata_DATA)
