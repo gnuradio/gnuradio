@@ -41,21 +41,22 @@ class receive_path(gr.hier_block2):
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
                                 gr.io_signature(0, 0, 0))                    # Output signature
 
-        sps = int(if_rate/symbol_rate)
-        print "IF sample rate:", n2s(if_rate)
+        self._if_rate = if_rate
+        self._sps = int(self._if_rate/symbol_rate)
+        print "IF sample rate:", n2s(self._if_rate)
         print "Symbol rate:", n2s(symbol_rate)
-        print "Samples/symbol:", sps
+        print "Samples/symbol:", self._sps
         print "RRC bandwidth:", excess_bw
         
         # Create AGC to scale input to unity
         self._agc = gr.agc_cc(1e-5, 1.0, 1.0, 1.0)
 
 	# Create RRC with specified excess bandwidth
-	taps = gr.firdes.root_raised_cosine(1.0,       # Gain
-					    sps,       # Sampling rate
-					    1.0,       # Symbol rate
-					    excess_bw, # Roll-off factor
-					    11*sps)    # Number of taps
+	taps = gr.firdes.root_raised_cosine(1.0,          # Gain
+					    self._sps,    # Sampling rate
+					    1.0,          # Symbol rate
+					    excess_bw,    # Roll-off factor
+					    11*self._sps) # Number of taps
 
 	self._rrc = gr.fir_filter_ccf(1, taps)
         
@@ -73,7 +74,7 @@ class receive_path(gr.hier_block2):
 
         # Create a M&M bit synchronization retiming block
         mm_mu = 0.5
-        mm_omega = sps
+        mm_omega = self._sps
 
         print "MM gain mu:", mm_gain_mu
         print "MM gain omega:", mm_gain_omega
@@ -103,14 +104,15 @@ class receive_path(gr.hier_block2):
         self.connect(self, self._agc, self._rrc, self._costas, self._mm, 
                      self._c2r, self._slicer, self._descrambler, self._ber)
 
+    def frequency_offset(self):
+        return self._costas.freq()*self._if_rate/(2*math.pi)
+
+    def timing_offset(self):
+        return self._mm.omega()/self._sps-1.0
+
     def snr(self):
         return self._snr_probe.snr()
 
-    def signal_mean(self):
-        return self._snr_probe.signal_mean()
-        
-    def noise_variance(self):
-        return self._snr_probe.noise_variance()
-
     def ber(self):
         return (1.0-self._ber.density())/3.0
+

@@ -40,5 +40,5 @@ class gr_costas_loop_cc : public gr_sync_block
    float alpha();
    void set_beta(float beta);
    float beta();
-   
+   float freq();   
 };

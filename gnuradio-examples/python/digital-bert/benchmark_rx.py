@@ -39,8 +39,8 @@ class status_thread(_threading.Thread):
 
     def run(self):
         while not self.done:
-            print "Magnitude: %5.3f  Variance: %5.3f  Estimated SNR: %4.1f dB  BER: %g" % (
-                tb.mag(), tb.var(), tb.snr(), tb.ber())
+            print "Freq. Offset: %5.0f Hz  Timing Offset: %5.1f ppm  Estimated SNR: %4.1f dB  BER: %g" % (
+                tb.frequency_offset(), tb.timing_offset()*1e6, tb.snr(), tb.ber())
             try:
                 time.sleep(1.0)
             except KeyboardInterrupt:
@@ -104,6 +104,12 @@ class rx_bpsk_block(gr.top_block):
 
     def ber(self):
         return self._receiver.ber()
+
+    def frequency_offset(self):
+        return self._receiver.frequency_offset()
+        
+    def timing_offset(self):
+        return self._receiver.timing_offset()
             
 def get_options():
     parser = OptionParser(option_class=eng_option)
@@ -122,17 +128,17 @@ def get_options():
                       help="Select USRP decimation rate (default=%default)")
     parser.add_option("", "--excess-bw", type="eng_float", default=0.35,
                       help="Select RRC excess bandwidth (default=%default)")
-    parser.add_option("", "--costas-alpha", type="eng_float", default=0.2,
+    parser.add_option("", "--costas-alpha", type="eng_float", default=0.05,
                       help="set Costas loop 1st order gain, (default=%default)")
-    parser.add_option("", "--costas-beta", type="eng_float", default=0.01,
+    parser.add_option("", "--costas-beta", type="eng_float", default=0.00025,
                       help="set Costas loop 2nd order gain, (default=%default)")
-    parser.add_option("", "--costas-max", type="eng_float", default=0.005,
+    parser.add_option("", "--costas-max", type="eng_float", default=0.05,
                       help="set Costas loop max freq (rad/sample) (default=%default)")
-    parser.add_option("", "--mm-gain-mu", type="eng_float", default=0.2,
+    parser.add_option("", "--mm-gain-mu", type="eng_float", default=0.001,
                       help="set M&M loop 1st order gain, (default=%default)")
-    parser.add_option("", "--mm-gain-omega", type="eng_float", default=0.01,
+    parser.add_option("", "--mm-gain-omega", type="eng_float", default=0.000001,
                       help="set M&M loop 2nd order gain, (default=%default)")
-    parser.add_option("", "--mm-omega-limit", type="eng_float", default=0.005,
+    parser.add_option("", "--mm-omega-limit", type="eng_float", default=0.0001,
                       help="set M&M max timing error, (default=%default)")
 
 		      
