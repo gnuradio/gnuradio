@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from .. platforms.base.Constants import FLOW_GRAPH_DTD
 import ParseXML
+from .. import utils
 from .. utils import odict
 from lxml import etree
 import difflib
@@ -51,8 +52,8 @@ def _get_params(block):
 	@param block the old block
 	@retun a list of params
 	"""
-	params = Utils.exists_or_else(block, 'params', {}) or {}
-	params = Utils.listify(params, 'param')
+	params = utils.exists_or_else(block, 'params', {}) or {}
+	params = utils.listify(params, 'param')
 	return params
 
 def _convert_id(id):
@@ -104,12 +105,12 @@ def convert(file_path, platform):
 	try: window_height = min(3*int(old_n['window_height'])/2, 2048)
 	except: window_height = 2048
 	window_size = '%d, %d'%(window_width, window_height)
-	variables = Utils.exists_or_else(old_n, 'vars', {}) or {}
-	variables = Utils.listify(variables, 'var')
-	blocks = Utils.exists_or_else(old_n, 'signal_blocks', {}) or {}
-	blocks = Utils.listify(blocks, 'signal_block')
-	connections = Utils.exists_or_else(old_n, 'connections', {}) or {}
-	connections = Utils.listify(connections, 'connection')
+	variables = utils.exists_or_else(old_n, 'vars', {}) or {}
+	variables = utils.listify(variables, 'var')
+	blocks = utils.exists_or_else(old_n, 'signal_blocks', {}) or {}
+	blocks = utils.listify(blocks, 'signal_block')
+	connections = utils.exists_or_else(old_n, 'connections', {}) or {}
+	connections = utils.listify(connections, 'connection')
 	#initialize new nested data
 	new_n = odict()
 	new_n['block'] = list()
@@ -148,9 +149,9 @@ def convert(file_path, platform):
 	for variable in variables:
 		key = variable['key']
 		value = variable['value']
-		minimum = Utils.exists_or_else(variable, 'min', '')
-		maximum = Utils.exists_or_else(variable, 'max', '')
-		step = Utils.exists_or_else(variable, 'step', '')
+		minimum = utils.exists_or_else(variable, 'min', '')
+		maximum = utils.exists_or_else(variable, 'max', '')
+		step = utils.exists_or_else(variable, 'step', '')
 		x = x + 150
 		coor = '(%d, %d)'%(x, 10)
 		var_block = odict()
@@ -188,10 +189,10 @@ def convert(file_path, platform):
 		if tag in ('Note', 'About'): continue
 		id = _convert_id(block['id'])
 		coor = '(%s, %s + 100)'%(
-			Utils.exists_or_else(block, 'x_coordinate', '0'),
-			Utils.exists_or_else(block, 'y_coordinate', '0'),
+			utils.exists_or_else(block, 'x_coordinate', '0'),
+			utils.exists_or_else(block, 'y_coordinate', '0'),
 		)
-		rot = Utils.exists_or_else(block, 'rotation', '0')
+		rot = utils.exists_or_else(block, 'rotation', '0')
 		params = _get_params(block)
 		#new block
 		new_block = odict()
