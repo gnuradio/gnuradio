@@ -23,6 +23,7 @@
 #include <qa_gri_lfsr.h>
 #include <cppunit/TestAssert.h>
 #include <stdio.h>
+#include <string.h>
 
 void
 qa_gri_lfsr::test_lfsr ()
