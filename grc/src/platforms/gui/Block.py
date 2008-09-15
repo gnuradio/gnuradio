@@ -23,8 +23,7 @@ import Utils
 import Colors
 from ... gui.Constants import BORDER_PROXIMITY_SENSITIVITY
 from Constants import \
-	BLOCK_FONT, LABEL_PADDING_WIDTH, \
-	LABEL_PADDING_HEIGHT, PORT_HEIGHT, \
+	BLOCK_FONT, BLOCK_LABEL_PADDING, \
 	PORT_SEPARATION, LABEL_SEPARATION, \
 	PORT_BORDER_SEPARATION, POSSIBLE_ROTATIONS
 import pygtk
@@ -116,12 +115,15 @@ class Block(Element):
 		self.bg_color = self.get_enabled() and Colors.BG_COLOR or Colors.DISABLED_BG_COLOR
 		self.clear()
 		self._create_labels()
-		self.W = self.label_width + 2*LABEL_PADDING_WIDTH
-		max_ports = max(len(self.get_sinks()), len(self.get_sources()), 1)
-		self.H = max(self.label_height+2*LABEL_PADDING_HEIGHT, 2*PORT_BORDER_SEPARATION + max_ports*PORT_HEIGHT + (max_ports-1)*PORT_SEPARATION)
-		if self.is_horizontal(): self.add_area((0,0),(self.W,self.H))
-		elif self.is_vertical(): self.add_area((0,0),(self.H,self.W))
-		map(lambda p: p.update(), self.get_sinks() + self.get_sources())
+		self.W = self.label_width + 2*BLOCK_LABEL_PADDING
+		self.H = max(*(
+			[self.label_height+2*BLOCK_LABEL_PADDING] + [2*PORT_BORDER_SEPARATION + \
+			sum([port.H + PORT_SEPARATION for port in ports]) - PORT_SEPARATION
+			for ports in (self.get_sources(), self.get_sinks())]
+		))
+		if self.is_horizontal(): self.add_area((0, 0), (self.W, self.H))
+		elif self.is_vertical(): self.add_area((0, 0), (self.H, self.W))
+		map(lambda p: p.update(), self.get_ports())
 
 	def _create_labels(self):
 		"""Create the labels for the signal block."""
@@ -164,6 +166,7 @@ class Block(Element):
 			self.vertical_label = vimage = gtk.gdk.Image(gtk.gdk.IMAGE_NORMAL, pixmap.get_visual(), height, width)
 			for i in range(width):
 				for j in range(height): vimage.put_pixel(j, width-i-1, image.get_pixel(i, j))
+		map(lambda p: p._create_labels(), self.get_ports())
 
 	def draw(self, window):
 		"""
@@ -176,9 +179,9 @@ class Block(Element):
 		#draw label image
 		gc = self.get_gc()
 		if self.is_horizontal():
-			window.draw_image(gc, self.horizontal_label, 0, 0, x+LABEL_PADDING_WIDTH, y+(self.H-self.label_height)/2, -1, -1)
+			window.draw_image(gc, self.horizontal_label, 0, 0, x+BLOCK_LABEL_PADDING, y+(self.H-self.label_height)/2, -1, -1)
 		elif self.is_vertical():
-			window.draw_image(gc, self.vertical_label, 0, 0, x+(self.H-self.label_height)/2, y+LABEL_PADDING_WIDTH, -1, -1)
+			window.draw_image(gc, self.vertical_label, 0, 0, x+(self.H-self.label_height)/2, y+BLOCK_LABEL_PADDING, -1, -1)
 		#draw ports
 		map(lambda p: p.draw(window), self.get_ports())
 

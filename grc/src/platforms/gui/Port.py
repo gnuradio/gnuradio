@@ -19,9 +19,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from Element import Element
 from Constants import \
-	PORT_HEIGHT, PORT_SEPARATION, \
-	PORT_WIDTH, CONNECTOR_EXTENSION_MINIMAL, \
-	CONNECTOR_EXTENSION_INCREMENT, PORT_FONT
+	PORT_SEPARATION, CONNECTOR_EXTENSION_MINIMAL, \
+	CONNECTOR_EXTENSION_INCREMENT, PORT_FONT, \
+	PORT_LABEL_PADDING, PORT_MIN_WIDTH
 import Colors
 import pygtk
 pygtk.require('2.0')
@@ -42,63 +42,65 @@ class Port(Element):
 	def update(self):
 		"""Create new areas and labels for the port."""
 		self.clear()
-		self.BG_color = Colors.get_color(self.get_color())
-		self._create_labels()
 		#get current rotation
 		rotation = self.get_rotation()
 		#get all sibling ports
 		if self.is_source(): ports = self.get_parent().get_sources()
 		elif self.is_sink(): ports = self.get_parent().get_sinks()
+		#get the max width
+		self.W = max([port.W for port in ports] + [PORT_MIN_WIDTH])
 		#get a numeric index for this port relative to its sibling ports
 		index = ports.index(self)
 		length = len(ports)
 		#reverse the order of ports	for these rotations
 		if rotation in (180, 270): index = length-index-1
-		offset = (self.get_parent().H - length*PORT_HEIGHT - (length-1)*PORT_SEPARATION)/2
+		offset = (self.get_parent().H - length*self.H - (length-1)*PORT_SEPARATION)/2
 		#create areas and connector coordinates
 		if (self.is_sink() and rotation == 0) or (self.is_source() and rotation == 180):
-			x = -1*PORT_WIDTH
-			y = (PORT_SEPARATION+PORT_HEIGHT)*index+offset
-			self.add_area((x, y), (PORT_WIDTH, PORT_HEIGHT))
-			self._connector_coordinate = (x-1, y+PORT_HEIGHT/2)
+			x = -1*self.W
+			y = (PORT_SEPARATION+self.H)*index+offset
+			self.add_area((x, y), (self.W, self.H))
+			self._connector_coordinate = (x-1, y+self.H/2)
 		elif (self.is_source() and rotation == 0) or (self.is_sink() and rotation == 180):
 			x = self.get_parent().W
-			y = (PORT_SEPARATION+PORT_HEIGHT)*index+offset
-			self.add_area((x, y), (PORT_WIDTH, PORT_HEIGHT))
-			self._connector_coordinate = (x+1+PORT_WIDTH, y+PORT_HEIGHT/2)
+			y = (PORT_SEPARATION+self.H)*index+offset
+			self.add_area((x, y), (self.W, self.H))
+			self._connector_coordinate = (x+1+self.W, y+self.H/2)
 		elif (self.is_source() and rotation == 90) or (self.is_sink() and rotation == 270):
-			y = -1*PORT_WIDTH
-			x = (PORT_SEPARATION+PORT_HEIGHT)*index+offset
-			self.add_area((x, y), (PORT_HEIGHT, PORT_WIDTH))
-			self._connector_coordinate = (x+PORT_HEIGHT/2, y-1)
+			y = -1*self.W
+			x = (PORT_SEPARATION+self.H)*index+offset
+			self.add_area((x, y), (self.H, self.W))
+			self._connector_coordinate = (x+self.H/2, y-1)
 		elif (self.is_sink() and rotation == 90) or (self.is_source() and rotation == 270):
 			y = self.get_parent().W
-			x = (PORT_SEPARATION+PORT_HEIGHT)*index+offset
-			self.add_area((x, y), (PORT_HEIGHT, PORT_WIDTH))
-			self._connector_coordinate = (x+PORT_HEIGHT/2, y+1+PORT_WIDTH)
+			x = (PORT_SEPARATION+self.H)*index+offset
+			self.add_area((x, y), (self.H, self.W))
+			self._connector_coordinate = (x+self.H/2, y+1+self.W)
 		#the connector length
 		self._connector_length = CONNECTOR_EXTENSION_MINIMAL + CONNECTOR_EXTENSION_INCREMENT*index
 
 	def _create_labels(self):
 		"""Create the labels for the socket."""
+		self.BG_color = Colors.get_color(self.get_color())
 		#create the layout
 		layout = gtk.DrawingArea().create_pango_layout(self.get_name())
 		desc = pango.FontDescription(PORT_FONT)
 		layout.set_font_description(desc)
-		w,h = self.w,self.h = layout.get_pixel_size()
+		self.w, self.h = layout.get_pixel_size()
+		self.W, self.H = 2*PORT_LABEL_PADDING+self.w, 2*PORT_LABEL_PADDING+self.h
 		#create the pixmap
-		pixmap = gtk.gdk.Pixmap(self.get_parent().get_parent().get_window(), w, h, -1)
+		pixmap = gtk.gdk.Pixmap(self.get_parent().get_parent().get_window(), self.w, self.h, -1)
 		gc = pixmap.new_gc()
 		gc.foreground = self.BG_color
-		pixmap.draw_rectangle(gc, True, 0, 0, w, h)
+		pixmap.draw_rectangle(gc, True, 0, 0, self.w, self.h)
 		gc.foreground = Colors.TXT_COLOR
 		pixmap.draw_layout(gc, 0, 0, layout)
 		#create the images
-		self.horizontal_label = image = pixmap.get_image(0, 0, w, h)
+		self.horizontal_label = image = pixmap.get_image(0, 0, self.w, self.h)
 		if self.is_vertical():
-			self.vertical_label = vimage = gtk.gdk.Image(gtk.gdk.IMAGE_NORMAL, pixmap.get_visual(), h, w)
-			for i in range(w):
-				for j in range(h): vimage.put_pixel(j, w-i-1, image.get_pixel(i, j))
+			self.vertical_label = vimage = gtk.gdk.Image(gtk.gdk.IMAGE_NORMAL, pixmap.get_visual(), self.h, self.w)
+			for i in range(self.w):
+				for j in range(self.h): vimage.put_pixel(j, self.w-i-1, image.get_pixel(i, j))
 
 	def draw(self, window):
 		"""
@@ -111,9 +113,9 @@ class Port(Element):
 		X,Y = self.get_coordinate()
 		(x,y),(w,h) = self.areas_dict[self.get_rotation()][0] #use the first area's sizes to place the labels
 		if self.is_horizontal():
-			window.draw_image(gc, self.horizontal_label, 0, 0, x+X+(PORT_WIDTH-self.w)/2, y+Y+(PORT_HEIGHT-self.h)/2, -1, -1)
+			window.draw_image(gc, self.horizontal_label, 0, 0, x+X+(self.W-self.w)/2, y+Y+(self.H-self.h)/2, -1, -1)
 		elif self.is_vertical():
-			window.draw_image(gc, self.vertical_label, 0, 0, x+X+(PORT_HEIGHT-self.h)/2, y+Y+(PORT_WIDTH-self.w)/2, -1, -1)
+			window.draw_image(gc, self.vertical_label, 0, 0, x+X+(self.H-self.h)/2, y+Y+(self.W-self.w)/2, -1, -1)
 
 	def get_connector_coordinate(self):
 		"""

@@ -213,7 +213,7 @@ class FlowGraph(Element):
 		"""
 		changed = False
 		for selected_block in self.get_selected_blocks():
-			for ports in selected_block.get_ports():
+			for ports in (selected_block.get_sinks(), selected_block.get_sources()):
 				if ports and hasattr(ports[0], 'get_nports') and ports[0].get_nports():
 					#find the param that controls port0
 					for param in selected_block.get_params():
