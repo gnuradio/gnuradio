@@ -148,7 +148,10 @@ class Param(Element):
 		if self.is_enum(): value = self.get_option_keys()[int(value)]
 		self.set_value(value)
 		#set the markup on the label, red for errors in corresponding data type.
-		name = '<span font_desc="%s">%s</span>'%(PARAM_LABEL_FONT, Utils.xml_encode(self.get_name()))
+		name = '<span font_desc="%s">%s</span>'%(
+			PARAM_LABEL_FONT,
+			Utils.xml_encode(self.get_name()),
+		)
 		#special markups if param is involved in a callback
 		if hasattr(self.get_parent(), 'get_callbacks') and \
 			filter(lambda c: self.get_key() in c, self.get_parent()._callbacks):
@@ -165,7 +168,10 @@ class Param(Element):
 		#set the color
 		self.input.set_color(self.get_color())
 		#set the tooltip
-		if self.input.tp: self.input.tp.set_tip(self.input.entry, 'Type: %s\nKey: %s\n%s'%(self.get_type(), self.get_key(), tip))
+		if self.input.tp: self.input.tp.set_tip(
+			self.input.entry,
+			'Key: %s\nType: %s\n%s'%(self.get_key(), self.get_type(), tip),
+		)
 		#execute the external callback
 		if self.callback: self.callback(self)
 
@@ -189,10 +195,10 @@ class Param(Element):
 		def to_str(var):
 			if isinstance(var, str): return var
 			elif isinstance(var, complex):
-				if var.imag == var.real == 0: return '0' #value is zero
+				if var == 0: return '0' #value is zero
 				elif var.imag == 0: return '%s'%float_to_str(var.real) #value is real
 				elif var.real == 0: return '%sj'%float_to_str(var.imag) #value is imaginary
-				elif var.imag < 0: return '%s-%sj'%(float_to_str(var.real), float_to_str(var.imag*-1))
+				elif var.imag < 0: return '%s-%sj'%(float_to_str(var.real), float_to_str(abs(var.imag)))
 				else: return '%s+%sj'%(float_to_str(var.real), float_to_str(var.imag))
 			elif isinstance(var, float): return float_to_str(var)
 			elif isinstance(var, int): return '%d'%var
