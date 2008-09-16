@@ -210,7 +210,7 @@ class wfm_rx_block (stdgui2.std_top_block):
 
         if 0:
             self.scope = scopesink2.scope_sink_f(self.panel, sample_rate=demod_rate)
-            self.connect (self.guts.fm_demod_a,self.scope)
+            self.connect (self.guts.fm_demod,self.scope)
             vbox.Add (self.scope.win,4,wx.EXPAND)
         
         # control area form at bottom
