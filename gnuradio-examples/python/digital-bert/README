@@ -37,9 +37,9 @@ demodulate the signal, so not all valid decimation rates will work.
 
 The baseband signal from the USRP is first passed through an AGC to
 establish an average power of 1.0.  It is then passed through a matched
-filter (another RRC), a Costas phase-locked loop, and an M&M bit timing
-recovery loop.  The resulting constellation has an SNR estimation probe
-attached, and is then sliced into a bit stream.
+filter (another RRC), a Costas phase-locked loop, and a Mueller and
+Muller bit timing recovery loop.  The resulting constellation has an SNR
+estimation probe attached, and is then sliced into a bit stream.
 
 The recovered bits are then passed through a 7-bit descrambler.  If
 there are no channel errors, the all 1s sequence is recovered. In the 
@@ -52,8 +52,9 @@ channel BER is measured by dividing the 0s density by three.  This
 measurement is inaccurate at high BER rates (>10%) as the error 0s
 begin to overlap.
 
-The benchmark script will, once per second, output the mean symbol power,
-the average noise variance, the estimated SNR, and the average BER.
+The benchmark script will, once per second, output the Costas loop
+frequency offset, the recovered timing error, the estimated SNR, and the
+average BER.
 
 NOTE: The particular SNR estimator used is inaccurate below about 7dB,
 and will report erroneously high values even for random noise.
