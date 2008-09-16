@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from utils import expr_utils
 from .. base.Param import Param as _Param
+import Constants
 import os
 
 class Param(_Param):
@@ -35,6 +36,29 @@ class Param(_Param):
 		'id',
 		'grid_pos', 'import',
 	]
+
+	def get_color(self):
+		"""
+		Get the color that represents this param's type.
+		@return a hex color code.
+		"""
+		try:
+			return {
+				#number types
+				'complex': Constants.COMPLEX_COLOR_SPEC,
+				'real': Constants.FLOAT_COLOR_SPEC,
+				'int': Constants.INT_COLOR_SPEC,
+				#vector types
+				'complex_vector': Constants.COMPLEX_VECTOR_COLOR_SPEC,
+				'real_vector': Constants.FLOAT_VECTOR_COLOR_SPEC,
+				'int_vector': Constants.INT_VECTOR_COLOR_SPEC,
+				#special
+				'hex': Constants.INT_COLOR_SPEC,
+				'string': Constants.BYTE_VECTOR_COLOR_SPEC,
+				'id': '#DDDDDD',
+				'grid_pos': Constants.INT_VECTOR_COLOR_SPEC,
+			}[self.get_type()]
+		except: return _Param.get_color(self)
 
 	def get_hide(self):
 		"""
@@ -67,7 +91,7 @@ class Param(_Param):
 		def eval_string(v):
 			try:
 				e = self.get_parent().get_parent().evaluate(v)
-				assert(isinstance(e, str))
+				assert isinstance(e, str)
 				return e
 			except:
 				self._stringify_flag = True

@@ -21,21 +21,25 @@
 			<name>Complex</name>
 			<key>complex</key>
 			<opt>fcn:c</opt>
+			<opt>offset_type:complex</opt>
 		</option>
 		<option>
 			<name>Float</name>
 			<key>float</key>
 			<opt>fcn:f</opt>
+			<opt>offset_type:real</opt>
 		</option>
 		<option>
 			<name>Int</name>
 			<key>int</key>
 			<opt>fcn:i</opt>
+			<opt>offset_type:int</opt>
 		</option>
 		<option>
 			<name>Short</name>
 			<key>short</key>
 			<opt>fcn:s</opt>
+			<opt>offset_type:int</opt>
 		</option>
 	</param>
 	<param>
@@ -90,7 +94,7 @@
 		<name>Offset</name>
 		<key>offset</key>
 		<value>0</value>
-		<type>complex</type>
+		<type>$type.offset_type</type>
 	</param>
 	<source>
 		<name>out</name>

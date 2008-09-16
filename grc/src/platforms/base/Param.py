@@ -163,6 +163,8 @@ class Param(Element):
 		"""
 		raise NotImplementedError
 
+	def get_color(self): return '#FFFFFF'
+
 	def __str__(self): return 'Param - %s(%s)'%(self.get_name(), self.get_key())
 
 	def is_param(self): return True

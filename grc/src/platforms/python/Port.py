@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from .. base.Port import Port as _Port
 from ... import utils
+import Constants
 
 class Port(_Port):
 
@@ -82,18 +83,18 @@ class Port(_Port):
 		try:
 			if self.get_vlen() == 1:
 				return {#vlen is 1
-					'complex': '#3399FF',
-					'float': '#FF8C69',
-					'int': '#00FF99',
-					'short': '#FFFF66',
-					'byte': '#FF66FF',
+					'complex': Constants.COMPLEX_COLOR_SPEC,
+					'float': Constants.FLOAT_COLOR_SPEC,
+					'int': Constants.INT_COLOR_SPEC,
+					'short': Constants.SHORT_COLOR_SPEC,
+					'byte': Constants.BYTE_COLOR_SPEC,
 				}[self.get_type()]
 			return {#vlen is non 1
-				'complex': '#3399AA',
-				'float': '#CC8C69',
-				'int': '#00CC99',
-				'short': '#CCCC33',
-				'byte': '#CC66CC',
+				'complex': Constants.COMPLEX_VECTOR_COLOR_SPEC,
+				'float': Constants.FLOAT_VECTOR_COLOR_SPEC,
+				'int': Constants.INT_VECTOR_COLOR_SPEC,
+				'short': Constants.SHORT_VECTOR_COLOR_SPEC,
+				'byte': Constants.BYTE_VECTOR_COLOR_SPEC,
 			}[self.get_type()]
 		except: return _Port.get_color(self)
 

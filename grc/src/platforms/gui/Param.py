@@ -43,6 +43,7 @@ class InputParam(gtk.HBox):
 		self.pack_start(self.label, False)
 		self.set_markup = lambda m: self.label.set_markup(m)
 		self.tp = None
+	def set_color(self, color): pass
 
 class EntryParam(InputParam):
 	"""Provide an entry box for strings and numbers."""
@@ -58,6 +59,7 @@ class EntryParam(InputParam):
 		self.tp = gtk.Tooltips()
 		self.tp.set_tip(self.entry, '')
 		self.tp.enable()
+	def set_color(self, color): self.entry.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
 
 class FileParam(EntryParam):
 	"""Provide an entry box for filename and a button to browse for a file."""
@@ -153,15 +155,17 @@ class Param(Element):
 			name = '<span underline="low">%s</span>'%name
 		if not self.is_valid():
 			self.input.set_markup('<span foreground="red">%s</span>'%name)
-			tip = '- ' + '\n- '.join(self.get_error_messages())
+			tip = 'Error: ' + ' '.join(self.get_error_messages())
 		else:
 			self.input.set_markup(name)
-			tip = self.evaluate()
+			tip = 'Value: %s'%str(self.evaluate())
 		#hide/show
 		if self.get_hide() == 'all': self.input.hide_all()
 		else: self.input.show_all()
+		#set the color
+		self.input.set_color(self.get_color())
 		#set the tooltip
-		if self.input.tp: self.input.tp.set_tip(self.input.entry, str(tip))
+		if self.input.tp: self.input.tp.set_tip(self.input.entry, 'Type: %s\nKey: %s\n%s'%(self.get_type(), self.get_key(), tip))
 		#execute the external callback
 		if self.callback: self.callback(self)
 
