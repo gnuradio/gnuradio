@@ -75,7 +75,7 @@ module u2_rev3
    input cpld_clk,     // AB14 serial clock
    input cpld_detached,// V11 unused
    output cpld_init_b,  // W12 unused dual purpose
-   input cpld_misc,  // Y12 unused
+   output cpld_misc,  // Y12 
 
    // Watchdog interface
    input POR,

@@ -67,7 +67,7 @@ module u2_core
    input cpld_din,
    input cpld_clk,
    input cpld_detached,
-   input cpld_misc,
+   output cpld_misc,
    input cpld_init_b,
    input por,
    output config_success,
@@ -224,6 +224,21 @@ module u2_core
 			   .ram_loader_done_i(ram_loader_done));
 
    assign 	 config_success = ram_loader_done;
+   reg 		 takeover = 0;
+
+   wire 	 cpld_start_int, cpld_mode_int, cpld_done_int;
+   
+   always @(posedge wb_clk)
+     if(ram_loader_done)
+       takeover = 1;
+   assign 	 cpld_misc = ~takeover;
+
+   wire 	 sd_clk, sd_csn, sd_mosi, sd_miso;
+   
+   assign 	 sd_miso = cpld_din;
+   assign 	 cpld_start = takeover ? sd_clk	: cpld_start_int;
+   assign 	 cpld_mode = takeover ? sd_csn : cpld_mode_int;
+   assign 	 cpld_done = takeover ? sd_mosi : cpld_done_int;
    
    // ///////////////////////////////////////////////////////////////////
    // RAM Loader
@@ -238,9 +253,9 @@ module u2_core
 		 // CPLD Interface
 		 .cfg_clk_i(cpld_clk),
 		 .cfg_data_i(cpld_din),
-		 .start_o(cpld_start),
-		 .mode_o(cpld_mode),
-		 .done_o(cpld_done),
+		 .start_o(cpld_start_int),
+		 .mode_o(cpld_mode_int),
+		 .done_o(cpld_done_int),
 		 .detached_i(cpld_detached),
 		 // Wishbone Interface
 		 .wb_dat_o(ram_loader_dat),.wb_adr_o(ram_loader_adr),
@@ -697,10 +712,15 @@ module u2_core
    assign      debug_gpio_0 = 0; //debug_serdes0;
    assign      debug_gpio_1 = 0; //debug_serdes1;
 
-   assign      debug={{3'b0, wb_clk, wb_rst, dsp_rst, por, config_success},
-		      {8'b0},
-		      {3'b0,ram_loader_ack, ram_loader_stb, ram_loader_we,ram_loader_rst,ram_loader_done },
-		      {cpld_start,cpld_mode,cpld_done,cpld_din,cpld_clk,cpld_detached,cpld_misc,cpld_init_b} };
+//   assign      debug={{3'b0, wb_clk, wb_rst, dsp_rst, por, config_success},
+	//	      {8'b0},
+		//      {3'b0,ram_loader_ack, ram_loader_stb, ram_loader_we,ram_loader_rst,ram_loader_done },
+		  //    {cpld_start,cpld_mode,cpld_done,cpld_din,cpld_clk,cpld_detached,cpld_misc,cpld_init_b} };
 
    //assign      debug = {dac_a,dac_b};
+
+   assign      debug = {{ram_loader_done, takeover, 6'd0},
+			{1'b0, cpld_start_int, cpld_mode_int, cpld_done_int, sd_clk, sd_csn, sd_miso, sd_mosi},
+			{8'd0},
+			{cpld_start, cpld_mode, cpld_done, cpld_din, cpld_misc, cpld_detached, cpld_clk, cpld_init_b}};
 endmodule // u2_core
