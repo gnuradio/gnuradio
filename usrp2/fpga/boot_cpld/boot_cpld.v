@@ -46,7 +46,8 @@ module boot_cpld
    wire [3:0] 	 set_sel = 4'd0;
    
    assign 	 CPLD_CLK = CFG_CCLK;
-   assign 	 DEBUG[8:0] = { CLK_25MHZ, SD_nCS, SD_CLK, SD_Din, CFG_CCLK, CFG_PROG_B, CFG_INIT_B, CFG_DONE, CFG_Din};
+   assign 	 DEBUG[8:0] = { CLK_25MHZ, SD_nCS, SD_CLK, SD_Din, SD_Dout, 
+				START, MODE, DONE, CPLD_misc};
 
    // Handle cutover to FPGA control of SD
    wire 	 fpga_takeover = ~CPLD_misc;
@@ -56,7 +57,7 @@ module boot_cpld
    assign 	 SD_nCS = fpga_takeover ? MODE : SD_nCS_int;
    assign 	 SD_Din = fpga_takeover ? DONE : SD_Din_int;
    assign 	 CFG_Din = fpga_takeover ? SD_Dout : CFG_Din_int;
-   
+
    spi_boot #(.width_set_sel_g(4),  // How many sets (16)
 	      .width_bit_cnt_g(6),  // Block length (12 is faster, 6 is minimum)
 	      .width_img_cnt_g(2),  // How many images per set
