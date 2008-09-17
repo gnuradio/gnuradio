@@ -42,6 +42,6 @@ Constants.py: Makefile $(srcdir)/Constants.py.in
 		-e 's|@datadir[@]|$(grc_base_data_dir)|g' \
 	$(srcdir)/Constants.py.in > $@
 
-EXTRA_DIST = Constants.py.in
+EXTRA_DIST = $(srcdir)/Constants.py.in
 
 MOSTLYCLEANFILES = $(BUILT_SOURCES)
