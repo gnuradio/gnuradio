@@ -106,8 +106,7 @@ u2_init(void)
   mdelay(100);
   hal_set_leds(0x1f, 0x1f);
   mdelay(100);
-  hal_set_leds(0x0, 0x1f);
-  mdelay(100);
+  hal_set_leds(0x1, 0x1f);  // Leave the first one on
 
 #if 0
   // test register readback
