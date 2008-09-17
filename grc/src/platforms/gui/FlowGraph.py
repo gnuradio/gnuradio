@@ -27,6 +27,7 @@ from ... gui.Actions import \
 	BLOCK_PARAM_MODIFY, BLOCK_MOVE
 import Colors
 import Utils
+from ... import utils
 from ... gui.ParamsDialog import ParamsDialog
 from Element import Element
 from .. base import FlowGraph as _FlowGraph
@@ -61,19 +62,6 @@ class FlowGraph(Element):
 		#selected ports
 		self._old_selected_port = None
 		self._new_selected_port = None
-
-	def _get_unique_id(self, base_id=''):
-		"""
-		Get a unique id starting with the base id.
-		@param base_id the id starts with this and appends a count
-		@return a unique id
-		"""
-		index = -1
-		while True:
-			id = (index < 0) and base_id or '%s%d'%(base_id, index)
-			index = index + 1
-			#make sure that the id is not used by another block
-			if not filter(lambda b: b.get_id() == id, self.get_blocks()): return id
 
 ###########################################################################
 # Access Drawing Area
@@ -155,7 +143,7 @@ class FlowGraph(Element):
 			block = self.get_new_block(block_key)
 			selected.add(block)
 			#set params
-			params_n = Utils.listify(block_n, 'param')
+			params_n = utils.listify(block_n, 'param')
 			for param_n in params_n:
 				param_key = param_n['key']
 				param_value = param_n['value']

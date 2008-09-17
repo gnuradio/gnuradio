@@ -39,6 +39,19 @@ class FlowGraph(Element):
 		#inital blank import
 		self.import_data({'flow_graph': {}})
 
+	def _get_unique_id(self, base_id=''):
+		"""
+		Get a unique id starting with the base id.
+		@param base_id the id starts with this and appends a count
+		@return a unique id
+		"""
+		index = 0
+		while True:
+			id = '%s_%d'%(base_id, index)
+			index = index + 1
+			#make sure that the id is not used by another block
+			if not filter(lambda b: b.get_id() == id, self.get_blocks()): return id
+
 	def __str__(self): return 'FlowGraph - "%s"'%self.get_option('name')
 
 	def get_option(self, key):
