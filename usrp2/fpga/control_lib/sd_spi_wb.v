@@ -34,6 +34,10 @@ module sd_spi_wb
    reg [7:0]  clkdiv;
    wire       ready;
    reg 	      ack_d1;
+
+   reg 	      cs_reg;
+   assign     sd_csn = ~cs_reg;  // FIXME
+   
    always @(posedge clk)
      if(rst) ack_d1 <= 0;
      else ack_d1 <= wb_ack_o;
@@ -51,8 +55,14 @@ module sd_spi_wb
      endcase // case(wb_adr_i)
 
    always @(posedge clk)
-     if(wb_we_i & wb_stb_i & wb_cyc_i & wb_ack_o)
+     if(rst)
+       begin
+	  clkdiv <= 200;
+	  cs_reg <= 0;
+       end
+     else if(wb_we_i & wb_stb_i & wb_cyc_i & wb_ack_o)
        case(wb_adr_i)
+	 ADDR_STATUS : cs_reg <= wb_dat_i;
 	 ADDR_CLKDIV : clkdiv <= wb_dat_i;
        endcase // case(wb_adr_i)
 
