@@ -37,6 +37,7 @@ noinst_PROGRAMS = \
 	test1 \
 	test_db_spi \
 	test_i2c \
+	test_sd \
 	test_phy_comm \
 	test_lsadc \
 	test_lsdac \

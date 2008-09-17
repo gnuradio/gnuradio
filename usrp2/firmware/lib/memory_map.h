@@ -569,7 +569,7 @@ typedef struct {
 #define SDSPI_BASE  0xEC00
 
 typedef struct {
-  volatile uint32_t status;
+  volatile uint32_t status;  // Write a 1 or 0 for controlling CS
   volatile uint32_t clkdiv;
   volatile uint32_t send_dat;
   volatile uint32_t receive_dat;

@@ -49,6 +49,7 @@ libu2fw_a_SOURCES = \
 	print_fxpt.c \
 	print_buffer.c \
 	printf.c \
+	sd.c \
 	spi.c \
 	u2_init.c	
 
@@ -79,6 +80,7 @@ noinst_HEADERS = \
 	nonstdio.h \
 	pic.h \
 	print_rmon_regs.h \
+	sd.h \
 	spi.h \
 	stdint.h \
 	stdio.h \
