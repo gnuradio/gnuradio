@@ -47,6 +47,15 @@ module boot_cpld
    
    assign 	 CPLD_CLK = CFG_CCLK;
    assign 	 DEBUG[8:0] = { CLK_25MHZ, SD_nCS, SD_CLK, SD_Din, CFG_CCLK, CFG_PROG_B, CFG_INIT_B, CFG_DONE, CFG_Din};
+
+   // Handle cutover to FPGA control of SD
+   wire 	 fpga_takeover = ~CPLD_misc;
+   wire 	 SD_CLK_int, SD_nCS_int, SD_Din_int, CFG_Din_int;
+
+   assign 	 SD_CLK = fpga_takeover ? START : SD_CLK_int;
+   assign 	 SD_nCS = fpga_takeover ? MODE : SD_nCS_int;
+   assign 	 SD_Din = fpga_takeover ? DONE : SD_Din_int;
+   assign 	 CFG_Din = fpga_takeover ? SD_Dout : CFG_Din_int;
    
    spi_boot #(.width_set_sel_g(4),  // How many sets (16)
 	      .width_bit_cnt_g(6),  // Block length (12 is faster, 6 is minimum)
@@ -61,10 +70,10 @@ module boot_cpld
 	      .reset_i(POR),
 	      
 	      // To SD Card
-	      .spi_clk_o(SD_CLK), 
-	      .spi_cs_n_o(SD_nCS),
+	      .spi_clk_o(SD_CLK_int), 
+	      .spi_cs_n_o(SD_nCS_int),
 	      .spi_data_in_i(SD_Dout), 
-	      .spi_data_out_o(SD_Din), 
+	      .spi_data_out_o(SD_Din_int), 
 	      .spi_en_outs_o(en_outs), 
 	      
 	      // Data Port
@@ -79,7 +88,7 @@ module boot_cpld
 	      .cfg_init_n_i(CFG_INIT_B), 
 	      .cfg_done_i(CFG_DONE), 
 	      .cfg_clk_o(CFG_CCLK), 
-	      .cfg_dat_o(CFG_Din)
+	      .cfg_dat_o(CFG_Din_int)
 	      );
    
 endmodule // boot_cpld
