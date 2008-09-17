@@ -28,7 +28,7 @@ ourdatadir = $(grc_python_data_dir)
 ourdata_DATA = \
 	block.dtd \
 	block_tree.xml \
-	default_flow_graph.grc.xml \
+	default_flow_graph.grc \
 	flow_graph.tmpl
 
 EXTRA_DIST = $(ourdata_DATA)

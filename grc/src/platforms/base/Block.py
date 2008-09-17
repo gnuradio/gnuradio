@@ -146,11 +146,11 @@ class Block(Element):
 		All checks must evaluate to true.
 		"""
 		if not self.get_enabled(): return
-		for c in self.get_params() + self.get_sinks() + self.get_sources():
+		for c in self.get_params() + self.get_sinks() + self.get_sources() + self.get_connections():
 			try: assert(c.is_valid())
 			except AssertionError:
 				for msg in c.get_error_messages():
-					self._add_error_message('%s: %s'%(c, msg))
+					self._add_error_message('>>> %s:\n\t%s'%(c, msg))
 
 	def __str__(self): return 'Block - %s - %s(%s)'%(self.get_id(), self.get_name(), self.get_key())
 

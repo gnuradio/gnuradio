@@ -86,7 +86,7 @@ class ParamsDialog(gtk.Dialog):
 		"""
 		if self.block.is_valid(): self._error_messages_box.hide()
 		else: self._error_messages_box.show()
-		messages = '\n'.join(self.block.get_error_messages())
+		messages = '\n\n'.join(self.block.get_error_messages())
 		self._error_messages_text_display.set_text(messages)
 
 	def _handle_key_press(self, widget, event):

@@ -44,7 +44,13 @@ class Connection(Element):
 		self._source = source
 		self._sink = sink
 
-	def __str__(self): return 'Connection (%s -> %s)'%(self.get_source(), self.get_sink())
+	def __str__(self):
+		return 'Connection (\n\t%s\n\t\t%s\n\t%s\n\t\t%s\n)'%(
+			self.get_source().get_parent(),
+			self.get_source(),
+			self.get_sink().get_parent(),
+			self.get_sink(),
+		)
 
 	def is_connection(self): return True
 

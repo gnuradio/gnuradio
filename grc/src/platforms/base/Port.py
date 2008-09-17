@@ -48,7 +48,7 @@ class Port(Element):
 		The port must be non-empty and type must a possible type.
 		"""
 		try: assert(not self.is_empty())
-		except AssertionError: self._add_error_message('is empty.')
+		except AssertionError: self._add_error_message('Port is not connected.')
 		try: assert(self.get_type() in self.TYPES)
 		except AssertionError: self._add_error_message('Type "%s" is not a possible type.'%self.get_type())
 
