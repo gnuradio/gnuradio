@@ -46,6 +46,7 @@ class _Preferences(object):
 			self._prefs_block.import_data(n['block'])
 		except: Messages.send_fail_load_preferences(self._prefs_file_path)
 		##all params
+		self.window_prefix_param = self._prefs_block.get_param('window_prefix')
 		self.snap_to_grid_param = self._prefs_block.get_param('snap_to_grid')
 		self.grid_size_param = self._prefs_block.get_param('grid_size')
 		self.show_grid_param = self._prefs_block.get_param('show_grid')
@@ -91,6 +92,9 @@ Restore previously opened files on start-up.
 ###########################################################################
 # Special methods for specific program functionalities
 ###########################################################################
+
+def window_prefix():
+	return _get_prefs().window_prefix_param.get_value()
 
 def window_size(size=None):
 	if size: _get_prefs().window_size_param.set_value(size)

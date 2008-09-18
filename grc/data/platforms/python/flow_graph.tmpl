@@ -42,13 +42,13 @@ $imp
 #set $param_str = ', '.join(['self'] + ['%s=%s'%(param.get_id(), param.get_make()) for param in $parameters])
 #if $generate_options == 'wx_gui'
 	#from gnuradio.grc.platforms.base.Constants import DATA_DIR
-	#from gnuradio.grc.gui.Constants import MAIN_WINDOW_PREFIX
+	#from gnuradio.grc.gui import Preferences
 class $(class_name)(grc_wxgui.top_block_gui):
 
 	def __init__($param_str):
 		grc_wxgui.top_block_gui.__init__(
 			self,
-			title="$MAIN_WINDOW_PREFIX - Executing: $flow_graph.get_option('title')",
+			title="$Preferences.window_prefix() - Executing: $flow_graph.get_option('title')",
 			icon="$(os.path.join($DATA_DIR, 'grc-icon-32.png'))",
 		)
 #elif $generate_options == 'no_gui'

@@ -20,9 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import pygtk
 pygtk.require('2.0')
 import gtk
-from Constants import \
-	MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT, \
-	MAIN_WINDOW_PREFIX
+from Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT
 from .. platforms.base.Constants import VERSION
 import Preferences
 
@@ -88,20 +86,21 @@ class AboutDialog(gtk.AboutDialog):
 		"""AboutDialog constructor."""
 		gtk.AboutDialog.__init__(self)
 		self.set_version(VERSION)
-		self.set_name(MAIN_WINDOW_PREFIX)
+		self.set_name('GNU Radio Companion')
 		self.set_license(__doc__)
-		self.set_copyright('Copyright 2008 Free Software Foundation, Inc.')
+		self.set_copyright(__doc__.strip().splitlines()[0])
 		self.set_website('http://gnuradio.org/trac/wiki/GNURadioCompanion')
 		self.set_comments("""\
 Thank you to all those from the mailing list who tested GNU Radio Companion and offered advice.
---
+-----
 Special Thanks:
 A. Brinton Cooper -> starting the project
+Patrick Mulligan -> starting the project
 CER Technology Fellowship Grant -> initial funding
 William R. Kenan Jr. Fund -> usrp & computers
 Patrick Strasser -> the GRC icon
 Achilleas Anastasopoulos -> trellis support
---""")
+-----""")
 		self.run()
 		self.destroy()
 

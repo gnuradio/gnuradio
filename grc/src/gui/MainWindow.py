@@ -19,8 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from Constants import \
 	MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, \
-	NEW_FLOGRAPH_TITLE, MAIN_WINDOW_PREFIX, \
-	REPORTS_WINDOW_HEIGHT
+	NEW_FLOGRAPH_TITLE, REPORTS_WINDOW_HEIGHT
 from .. platforms.base.Constants import FLOW_GRAPH_FILE_EXTENSION
 from Actions import APPLICATION_QUIT, FLOW_GRAPH_KILL
 import pygtk
@@ -241,7 +240,7 @@ class MainWindow(gtk.Window):
 		"""
 		if self.get_page():
 			title = ''.join((
-					MAIN_WINDOW_PREFIX,
+					Preferences.window_prefix(),
 					' - Editing: ',
 					(self.get_page().get_file_path() or NEW_FLOGRAPH_TITLE),
 					(self.get_page().get_saved() and ' ' or '*'), #blank must be non empty

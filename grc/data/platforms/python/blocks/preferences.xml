@@ -17,6 +17,12 @@
 		<type>string</type>
 	</param>
 	<param>
+		<name>Window Prefix</name>
+		<key>window_prefix</key>
+		<value>GRC</value>
+		<type>string</type>
+	</param>
+	<param>
 		<name>File Open</name>
 		<key>file_open</key>
 		<value></value>

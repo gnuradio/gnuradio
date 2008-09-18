@@ -45,7 +45,7 @@ register_messenger(sys.stdout.write)
 # Special functions for specific program functionalities
 ###########################################################################
 def send_init():
-	send("""<<< Welcome to GRC %s >>>\n"""%VERSION)
+	send("""<<< Welcome to GNU Radio Companion %s >>>\n"""%VERSION)
 
 def send_page_switch(file_path):
 	send('\nShowing: "%s"\n'%file_path)
