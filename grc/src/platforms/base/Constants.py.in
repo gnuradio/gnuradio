@@ -19,7 +19,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os
 
-##The current version of this code
+##The package name.
+PACKAGE = '@PACKAGE@'
+
+##The current version.
 VERSION = '@VERSION@'
 
 ##Location of external data files.

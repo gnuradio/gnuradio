@@ -38,6 +38,7 @@ BUILT_SOURCES = Constants.py
 
 Constants.py: Makefile $(srcdir)/Constants.py.in
 	sed \
+		-e 's|@PACKAGE[@]|$(PACKAGE)|g' \
 		-e 's|@VERSION[@]|$(VERSION)|g' \
 		-e 's|@datadir[@]|$(grc_base_data_dir)|g' \
 	$(srcdir)/Constants.py.in > $@

@@ -21,7 +21,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 from Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT
-from .. platforms.base.Constants import VERSION
+from .. platforms.base.Constants import PACKAGE, VERSION
 import Preferences
 
 class TextDisplay(gtk.TextView):
@@ -85,8 +85,8 @@ class AboutDialog(gtk.AboutDialog):
 	def __init__(self):
 		"""AboutDialog constructor."""
 		gtk.AboutDialog.__init__(self)
+		self.set_name(PACKAGE)
 		self.set_version(VERSION)
-		self.set_name('GNU Radio Companion')
 		self.set_license(__doc__)
 		self.set_copyright(__doc__.strip().splitlines()[0])
 		self.set_website('http://gnuradio.org/trac/wiki/GNURadioCompanion')

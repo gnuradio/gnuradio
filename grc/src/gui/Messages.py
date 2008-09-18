@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from .. platforms.base.Constants import VERSION
+from .. platforms.base.Constants import PACKAGE, VERSION
 import traceback
 import sys
 
@@ -45,7 +45,7 @@ register_messenger(sys.stdout.write)
 # Special functions for specific program functionalities
 ###########################################################################
 def send_init():
-	send("""<<< Welcome to GNU Radio Companion %s >>>\n"""%VERSION)
+	send("""<<< Welcome to %s %s >>>\n"""%(PACKAGE, VERSION))
 
 def send_page_switch(file_path):
 	send('\nShowing: "%s"\n'%file_path)
