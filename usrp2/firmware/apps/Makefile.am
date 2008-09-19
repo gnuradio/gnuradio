@@ -46,6 +46,7 @@ noinst_PROGRAMS = \
 	tx_only_v2 \
 	tx_standalone \
 	txrx \
+	factory_test \
 	serdes_txrx \
 	sd_gentest \
 	sd_bounce
@@ -57,6 +58,7 @@ noinst_PROGRAMS = \
 rx_only_v2_SOURCES = rx_only_v2.c app_common_v2.c
 tx_only_v2_SOURCES = tx_only_v2.c app_common_v2.c
 txrx_SOURCES = txrx.c app_common_v2.c
+factory_test_SOURCES = factory_test.c app_common_v2.c
 eth_serdes_SOURCES = eth_serdes.c app_passthru_v2.c
 serdes_txrx_SOURCES = serdes_txrx.c app_common_v2.c
 
