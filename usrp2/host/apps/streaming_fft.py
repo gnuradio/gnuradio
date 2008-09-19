@@ -64,7 +64,7 @@ def main():
         gain_clause = '-g ' + options.gain
 
     # FIXME: restore -F
-    cmd = "sudo %s/rx_streaming_samples -s -e %s -f %g -d %d %s -o /proc/self/fd/1 | %s/stdin_int32_fft.py %s -f %g -d %d" % (
+    cmd = "%s/rx_streaming_samples -s -e %s -f %g -d %d %s -o /proc/self/fd/1 | %s/stdin_int32_fft.py %s -f %g -d %d" % (
         path, options.eth, options.freq, options.decim, gain_clause,
         path, display_type, options.freq, options.decim)
 
