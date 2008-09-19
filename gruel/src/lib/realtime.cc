@@ -45,6 +45,13 @@ namespace gruel {
     int pri = (sched_get_priority_max (policy) + sched_get_priority_min (policy)) / 2;
     int pid = 0;  // this process
 
+    if (0){
+      fprintf(stderr, "sched_setscheduler version\n");
+      fprintf(stderr, "pri_min(SCHED_FIFO) = %d\n", sched_get_priority_min(SCHED_FIFO));
+      fprintf(stderr, "pri_max(SCHED_FIFO) = %d\n", sched_get_priority_max(SCHED_FIFO));
+      fprintf(stderr, "pri = %d\n", pri);
+    }
+
     struct sched_param param;
     memset(&param, 0, sizeof(param));
     param.sched_priority = pri;
@@ -75,8 +82,15 @@ namespace gruel {
   enable_realtime_scheduling()
   {
     int policy = SCHED_FIFO;
-    int pri = (sched_get_priority_max (policy) +
-               sched_get_priority_min (policy)) / 2;
+    int pri = (sched_get_priority_max (policy) + sched_get_priority_min (policy)) / 2;
+
+    if (0){
+      fprintf(stderr, "pthread_setschedparam version\n");
+      fprintf(stderr, "pri_min(SCHED_FIFO) = %d\n", sched_get_priority_min(SCHED_FIFO));
+      fprintf(stderr, "pri_max(SCHED_FIFO) = %d\n", sched_get_priority_max(SCHED_FIFO));
+      fprintf(stderr, "pri = %d\n", pri);
+    }
+
     pthread_t this_thread = pthread_self ();  // this process
     struct sched_param param;
     memset (&param, 0, sizeof (param));
