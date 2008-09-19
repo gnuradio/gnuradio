@@ -31,11 +31,11 @@ libgruel_la_LDFLAGS = $(NO_UNDEFINED) $(BOOST_LDFLAGS) -version-info 0:0:0
 # These are the source files that go into the gruel shared library
 libgruel_la_SOURCES = \
 	realtime.cc \
+	sys_pri.cc \
 	thread_body_wrapper.cc \
 	thread_group.cc
 
 libgruel_la_LIBADD = \
 	$(BOOST_THREAD_LIB)
-	-lstdc++			
 
 noinst_HEADERS =

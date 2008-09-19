@@ -29,5 +29,6 @@ gruelincludedir = $(prefix)/include/gruel
 gruelinclude_HEADERS = \
 	$(BUILT_SOURCES) \
 	realtime.h \
+	sys_pri.h \
 	thread_body_wrapper.h \
 	thread_group.h

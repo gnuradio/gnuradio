@@ -30,66 +30,48 @@
 #include <sched.h>
 #endif
 
+#include <algorithm>
+#include <math.h>
 #include <string.h>
 #include <errno.h>
 #include <stdio.h>
 
-#if defined(HAVE_SCHED_SETSCHEDULER)
+#if defined(HAVE_PTHREAD_SETSCHEDPARAM) || defined(HAVE_SCHED_SETSCHEDULER)
+#include <pthread.h>
 
 namespace gruel {
 
-  rt_status_t
-  enable_realtime_scheduling()
+  /*!
+   * Rescale our virtual priority so that it maps to the middle 1/2 of
+   * the priorities given by min_real_pri and max_real_pri.
+   */
+  static int
+  rescale_virtual_pri(int virtual_pri, int min_real_pri, int max_real_pri)
   {
-    int policy = SCHED_FIFO;
-    int pri = (sched_get_priority_max (policy) + sched_get_priority_min (policy)) / 2;
-    int pid = 0;  // this process
-
-    if (0){
-      fprintf(stderr, "sched_setscheduler version\n");
-      fprintf(stderr, "pri_min(SCHED_FIFO) = %d\n", sched_get_priority_min(SCHED_FIFO));
-      fprintf(stderr, "pri_max(SCHED_FIFO) = %d\n", sched_get_priority_max(SCHED_FIFO));
-      fprintf(stderr, "pri = %d\n", pri);
-    }
-
-    struct sched_param param;
-    memset(&param, 0, sizeof(param));
-    param.sched_priority = pri;
-    int result = sched_setscheduler(pid, policy, &param);
-    if (result != 0){
-      if (errno == EPERM)
-        return RT_NO_PRIVS;
-      else {
-        perror ("sched_setscheduler: failed to set real time priority");
-        return RT_OTHER_ERROR;
-      }
-    }
-    
-    //printf("SCHED_FIFO enabled with priority = %d\n", pri);
-    return RT_OK;
+    float rmin = min_real_pri + (0.25 * (max_real_pri - min_real_pri));
+    float rmax = min_real_pri + (0.75 * (max_real_pri - min_real_pri));
+    float m = (rmax - rmin) / (rt_priority_max() - rt_priority_min());
+    float y = m * (virtual_pri - rt_priority_min()) + rmin;
+    int   y_int = static_cast<int>(rint(y));
+    return std::max(min_real_pri, std::min(max_real_pri, y_int));
   }
 
-} // namespace gruel
+}  // namespace gruel
 
-#elif defined(HAVE_PTHREAD_SETSCHEDPARAM)
+#endif
 
-#include <pthread.h>
-#include <stdio.h>
+
+#if defined(HAVE_PTHREAD_SETSCHEDPARAM)
 
 namespace gruel {
 
   rt_status_t
-  enable_realtime_scheduling()
+  enable_realtime_scheduling(rt_sched_param p)
   {
-    int policy = SCHED_FIFO;
-    int pri = (sched_get_priority_max (policy) + sched_get_priority_min (policy)) / 2;
-
-    if (0){
-      fprintf(stderr, "pthread_setschedparam version\n");
-      fprintf(stderr, "pri_min(SCHED_FIFO) = %d\n", sched_get_priority_min(SCHED_FIFO));
-      fprintf(stderr, "pri_max(SCHED_FIFO) = %d\n", sched_get_priority_max(SCHED_FIFO));
-      fprintf(stderr, "pri = %d\n", pri);
-    }
+    int policy = p.policy == RT_SCHED_FIFO ? SCHED_FIFO : SCHED_RR;
+    int min_real_pri = sched_get_priority_min(policy);
+    int max_real_pri = sched_get_priority_min(policy);
+    int pri = rescale_virtual_pri(p.priority, min_real_pri, max_real_pri);
 
     pthread_t this_thread = pthread_self ();  // this process
     struct sched_param param;
@@ -110,14 +92,45 @@ namespace gruel {
   }
 } // namespace gruel
 
-// #elif // could try negative niceness
+
+#elif defined(HAVE_SCHED_SETSCHEDULER)
+
+namespace gruel {
+
+  rt_status_t
+  enable_realtime_scheduling(rt_sched_param p)
+  {
+    int policy = p.policy == RT_SCHED_FIFO ? SCHED_FIFO : SCHED_RR;
+    int min_real_pri = sched_get_priority_min(policy);
+    int max_real_pri = sched_get_priority_min(policy);
+    int pri = rescale_virtual_pri(p.priority, min_real_pri, max_real_pri);
+
+    int pid = 0;  // this process
+    struct sched_param param;
+    memset(&param, 0, sizeof(param));
+    param.sched_priority = pri;
+    int result = sched_setscheduler(pid, policy, &param);
+    if (result != 0){
+      if (errno == EPERM)
+        return RT_NO_PRIVS;
+      else {
+        perror ("sched_setscheduler: failed to set real time priority");
+        return RT_OTHER_ERROR;
+      }
+    }
+    
+    //printf("SCHED_FIFO enabled with priority = %d\n", pri);
+    return RT_OK;
+  }
+
+} // namespace gruel
 
 #else
 
 namespace gruel {
 
   rt_status_t
-  enable_realtime_scheduling()
+  enable_realtime_scheduling(rt_sched_param p)
   {
     return RT_NOT_IMPLEMENTED;
   }
