@@ -23,6 +23,7 @@
 #include "usrp2_thread.h"
 #include "usrp2_impl.h"
 #include <gruel/realtime.h>
+#include <gruel/sys_pri.h>
 #include <iostream>
 
 #define USRP2_THREAD_DEBUG 1
@@ -50,7 +51,7 @@ namespace usrp2 {
   void *
   usrp2_thread::run_undetached(void *arg)
   {
-    if (gruel::enable_realtime_scheduling() != gruel::RT_OK)
+    if (gruel::enable_realtime_scheduling(gruel::sys_pri::usrp2_backend()) != gruel::RT_OK)
       std::cerr << "usrp2: failed to enable realtime scheduling" << std::endl;    
 
     // This is the first code to run in the new thread context.
