@@ -33,6 +33,7 @@ AC_DEFUN([GRC_USRP2],[
       *)
 	AC_MSG_RESULT([no])
 	AC_MSG_NOTICE([USRP2 currently requires Linux host OS, not found])
+	AM_CONDITIONAL([BUILDING_USRP2_FIRMWARE],[0])
         passed="no"
         ;;
     esac
