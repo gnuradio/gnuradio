@@ -173,7 +173,7 @@ swiginclude_HEADERS = 			\
 	trellis_siso_combined_f.i	\
 	trellis_generated.i
 
-CLEANFILES = $(BUILT_SOURCES) *.pyc
+CLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc
 
 # Don't distribute output of swig
 dist-hook:
