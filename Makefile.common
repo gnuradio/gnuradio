@@ -105,7 +105,7 @@ GCELL_EMBEDSPU_LIBTOOL = @abs_top_srcdir@/gcell/src/lib/runtime/gcell-embedspu-l
 
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.
-STD_DEFINES_AND_INCLUDES=$(DEFINES) $(BOOST_CPPFLAGS) $(OMNITHREAD_INCLUDES) $(GNURADIO_INCLUDES)
+STD_DEFINES_AND_INCLUDES=$(DEFINES) $(BOOST_CPPFLAGS) $(OMNITHREAD_INCLUDES) $(GNURADIO_INCLUDES) $(GRUEL_INCLUDES)
 
 # Fix for BSD make not defining $(RM).  We define it now in configure.ac
 # using AM_PATH_PROG, but now here have to add a -f to be like GNU make
