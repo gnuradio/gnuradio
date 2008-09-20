@@ -23,18 +23,14 @@
 #ifndef INCLUDED_GR_REALTIME_H
 #define INCLUDED_GR_REALTIME_H
 
-typedef enum {
-  RT_OK = 0,
-  RT_NOT_IMPLEMENTED,
-  RT_NO_PRIVS,
-  RT_OTHER_ERROR
-} gr_rt_status_t;
+#include <gruel/realtime.h>
+
+typedef gruel::rt_status_t gr_rt_status_t;
 
 /*!
  * \brief If possible, enable high-priority "real time" scheduling.
  * \ingroup misc
  */
-gr_rt_status_t
-gr_enable_realtime_scheduling();
+gr_rt_status_t gr_enable_realtime_scheduling();
 
 #endif /* INCLUDED_GR_REALTIME_H */

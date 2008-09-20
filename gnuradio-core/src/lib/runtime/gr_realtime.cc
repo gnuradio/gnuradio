@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,75 +25,8 @@
 #endif
 #include <gr_realtime.h>
 
-#ifdef HAVE_SCHED_H
-#include <sched.h>
-#endif
-
-#include <string.h>
-#include <errno.h>
-#include <stdio.h>
-
-#if defined(HAVE_SCHED_SETSCHEDULER)
-
 gr_rt_status_t
 gr_enable_realtime_scheduling()
 {
-  int policy = SCHED_FIFO;
-  int pri = (sched_get_priority_max (policy) + sched_get_priority_min (policy)) / 2;
-  int pid = 0;  // this process
-
-  struct sched_param param;
-  memset(&param, 0, sizeof(param));
-  param.sched_priority = pri;
-  int result = sched_setscheduler(pid, policy, &param);
-  if (result != 0){
-    if (errno == EPERM)
-      return RT_NO_PRIVS;
-    else {
-      perror ("sched_setscheduler: failed to set real time priority");
-      return RT_OTHER_ERROR;
-    }
-  }
-  //printf("SCHED_FIFO enabled with priority = %d\n", pri);
-  return RT_OK;
+  return gruel::enable_realtime_scheduling();
 }
-
-#elif defined(HAVE_PTHREAD_SETSCHEDPARAM)
-
-#include <pthread.h>
-#include <stdio.h>
-
-gr_rt_status_t
-gr_enable_realtime_scheduling()
-{
-  int policy = SCHED_FIFO;
-  int pri = (sched_get_priority_max (policy) +
-	     sched_get_priority_min (policy)) / 2;
-  pthread_t this_thread = pthread_self ();  // this process
-  struct sched_param param;
-  memset (&param, 0, sizeof (param));
-  param.sched_priority = pri;
-  int result = pthread_setschedparam (this_thread, policy, &param);
-  if (result != 0) {
-    if (errno == EPERM)
-      return RT_NO_PRIVS;
-    else {
-      perror ("pthread_setschedparam: failed to set real time priority");
-      return RT_OTHER_ERROR;
-    }
-  }
-  //printf("SCHED_FIFO enabled with priority = %d\n", pri);
-  return RT_OK;
-}
-
-// #elif // could try negative niceness
-
-#else
-
-gr_rt_status_t
-gr_enable_realtime_scheduling()
-{
-  return RT_NOT_IMPLEMENTED;
-}
-
-#endif
