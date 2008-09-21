@@ -353,6 +353,7 @@ typedef struct {
   volatile uint32_t	leds;
   volatile uint32_t	phy_ctrl;	// LSB is reset line to eth phy
   volatile uint32_t	debug_mux_ctrl;
+  volatile uint32_t     ram_page;       // FIXME should go somewhere else...
 } output_regs_t;
 
 #define SERDES_ENABLE 8
@@ -576,6 +577,15 @@ typedef struct {
 } sdspi_regs_t;
 
 #define sdspi_regs ((sdspi_regs_t *) SDSPI_BASE)
+
+///////////////////////////////////////////////////
+// External RAM interface, Slave 14
+//   Pages are 1K.  Page is 10 bits, set by a control register
+//    output_regs->ram_page
+
+#define EXTRAM_BASE 0xF000
+#define extram ((volatile uint32_t *) EXTRAM_BASE)
+
 
 ///////////////////////////////////////////////////
 
