@@ -21,7 +21,7 @@ module extram_wb
    wire     write_acc = stb_i & cyc_i & we_i;
    wire     acc = stb_i & cyc_i;
 
-   assign   RAM_CLK = wb_clk;   // 50 MHz for now, eventually should be 200 MHz
+   assign   RAM_CLK = ~wb_clk;   // 50 MHz for now, eventually should be 200 MHz
    assign   RAM_LDn = 0;        // No burst for now
    assign   RAM_CENn = 0;       // Use CE1n as our main CE
 
@@ -63,12 +63,12 @@ module extram_wb
      else
        case(RAM_state)
 	 RAM_idle :
-	   if(read_acc)
+	   if(read_acc & ~ack_o)
 	     begin
 		RAM_state <= RAM_read_1;
 		myOE <= 0; RAM_OE <= 0; RAM_WE <= 0; RAM_EN <= 1; RAM_A0_reg <= 0;
 	     end
-	   else if(write_acc)
+	   else if(write_acc & ~ack_o)
 	     begin
 		RAM_state <= RAM_write_1;
 		myOE <= 0; RAM_OE <= 0; RAM_WE <= 1; RAM_EN <= 1; RAM_A0_reg <= 0;
@@ -100,7 +100,7 @@ module extram_wb
 	 RAM_write_1 : 
 	   begin
 	      RAM_state <= RAM_write_2;
-	      myOE <= 0; RAM_OE <= 0; RAM_WE <= 1; RAM_EN <= 1; RAM_A0_reg <= 1;
+	      myOE <= 1; RAM_OE <= 0; RAM_WE <= 1; RAM_EN <= 1; RAM_A0_reg <= 1;
 	   end
 	 RAM_write_2 : 
 	   begin
@@ -126,7 +126,7 @@ module extram_wb
    assign     RAM_CE1n = ~RAM_EN;    // Active low     (RAM_state != RAM_idle);
    
    assign     RAM_D[17:16] = 2'bzz;
-   assign     RAM_D[15:0] = myOE ? ((RAM_state==RAM_write_3)?ram_out[15:0]:ram_out[31:16]) 
+   assign     RAM_D[15:0] = myOE ? ((RAM_state==RAM_write_2)?ram_out[15:0]:ram_out[31:16]) 
 	      : 16'bzzzz_zzzz_zzzz_zzzz;
 
    always @(posedge wb_clk)
