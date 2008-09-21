@@ -227,7 +227,7 @@ module single_u2_sim();
 	  $finish;
        end
    
-   u2_core #(.RAM_SIZE(24576))
+   u2_core #(.RAM_SIZE(32768))
             u2_core(.dsp_clk		(dsp_clk),
 		     .wb_clk            (wb_clk),
 		     .clock_ready	(clock_ready),
@@ -271,6 +271,8 @@ module single_u2_sim();
 		     .cpld_din		(cpld_din),
 		     .cpld_clk		(cpld_clk),
 		     .cpld_detached	(cpld_detached),
+		     .cpld_init_b       (1),
+		     .por               (0),
 		     .adc_a		(adc_a[13:0]),
 		     .adc_ovf_a		(adc_ovf_a),
 		     .adc_on_a		(adc_on_a),
