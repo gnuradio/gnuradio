@@ -29,11 +29,12 @@ import numpy
 import time
 import pubsub
 from constants import *
+from gnuradio import gr #for gr.prefs
 
 ##################################################
 # Constants
 ##################################################
-DEFAULT_FRAME_RATE = 30
+DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'scope_rate', 30)
 DEFAULT_WIN_SIZE = (600, 300)
 DEFAULT_V_SCALE = 1000
 TRIGGER_MODES = (

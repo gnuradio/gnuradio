@@ -27,6 +27,7 @@ import numpy
 import wx
 import pubsub
 from constants import *
+from gnuradio import gr #for gr.prefs
 
 ##################################################
 # Constants
@@ -34,7 +35,7 @@ from constants import *
 NEG_INF = float('-inf')
 SLIDER_STEPS = 100
 AVG_ALPHA_MIN_EXP, AVG_ALPHA_MAX_EXP = -3, 0
-DEFAULT_NUMBER_RATE = 5
+DEFAULT_NUMBER_RATE = gr.prefs().get_long('wxgui', 'number_rate', 5)
 DEFAULT_WIN_SIZE = (300, 300)
 DEFAULT_GAUGE_RANGE = 1000
 

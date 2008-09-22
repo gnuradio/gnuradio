@@ -29,6 +29,7 @@ import numpy
 import math
 import pubsub
 from constants import *
+from gnuradio import gr #for gr.prefs
 
 ##################################################
 # Constants
@@ -36,9 +37,9 @@ from constants import *
 SLIDER_STEPS = 200
 ALPHA_MIN_EXP, ALPHA_MAX_EXP = -6, -0.301
 GAIN_MU_MIN_EXP, GAIN_MU_MAX_EXP = -6, -0.301
-DEFAULT_FRAME_RATE = 5
+DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'const_rate', 5)
 DEFAULT_WIN_SIZE = (500, 400)
-DEFAULT_CONST_SIZE = 2048
+DEFAULT_CONST_SIZE = gr.prefs().get_long('wxgui', 'const_size', 2048)
 CONST_PLOT_COLOR_SPEC = (0, 0, 1)
 MARKER_TYPES = (
 	('Dot Small', 1.0),

@@ -29,6 +29,7 @@ import numpy
 import math
 import pubsub
 from constants import *
+from gnuradio import gr #for gr.prefs
 
 ##################################################
 # Constants
@@ -36,7 +37,7 @@ from constants import *
 SLIDER_STEPS = 100
 AVG_ALPHA_MIN_EXP, AVG_ALPHA_MAX_EXP = -3, 0
 DEFAULT_WIN_SIZE = (600, 300)
-DEFAULT_FRAME_RATE = 30
+DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'fft_rate', 30)
 DIV_LEVELS = (1, 2, 5, 10, 20)
 FFT_PLOT_COLOR_SPEC = (0, 0, 1)
 PEAK_VALS_COLOR_SPEC = (0, 1, 0)

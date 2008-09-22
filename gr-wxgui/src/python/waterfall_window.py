@@ -29,13 +29,14 @@ import numpy
 import math
 import pubsub
 from constants import *
+from gnuradio import gr #for gr.prefs
 
 ##################################################
 # Constants
 ##################################################
 SLIDER_STEPS = 100
 AVG_ALPHA_MIN_EXP, AVG_ALPHA_MAX_EXP = -3, 0
-DEFAULT_FRAME_RATE = 30
+DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'waterfall_rate', 30)
 DEFAULT_WIN_SIZE = (600, 300)
 DIV_LEVELS = (1, 2, 5, 10, 20)
 MIN_DYNAMIC_RANGE, MAX_DYNAMIC_RANGE = 10, 200
