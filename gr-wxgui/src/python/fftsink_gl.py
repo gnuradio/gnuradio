@@ -46,7 +46,7 @@ class _fft_sink_base(gr.hier_block2, common.prop_setter):
 		ref_level=50,
 		sample_rate=1,
 		fft_size=512,
-		fft_rate=gr.prefs().get_long('wxgui', 'fft_rate', fft_window.DEFAULT_FRAME_RATE),
+		fft_rate=fft_window.DEFAULT_FRAME_RATE,
 		average=False,
 		avg_alpha=None,
 		title='',
