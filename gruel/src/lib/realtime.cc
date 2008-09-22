@@ -70,19 +70,20 @@ namespace gruel {
   {
     int policy = p.policy == RT_SCHED_FIFO ? SCHED_FIFO : SCHED_RR;
     int min_real_pri = sched_get_priority_min(policy);
-    int max_real_pri = sched_get_priority_min(policy);
+    int max_real_pri = sched_get_priority_max(policy);
     int pri = rescale_virtual_pri(p.priority, min_real_pri, max_real_pri);
 
-    pthread_t this_thread = pthread_self ();  // this process
     struct sched_param param;
     memset (&param, 0, sizeof (param));
     param.sched_priority = pri;
-    int result = pthread_setschedparam (this_thread, policy, &param);
+    int result = pthread_setschedparam (pthread_self(), policy, &param);
     if (result != 0) {
-      if (errno == EPERM)
+      if (result == EPERM)	// N.B., return value, not errno
         return RT_NO_PRIVS;
       else {
-        perror ("pthread_setschedparam: failed to set real time priority");
+	fprintf(stderr,
+		"pthread_setschedparam: failed to set real time priority: %s\n",
+		strerror(result));
         return RT_OTHER_ERROR;
       }
     }
@@ -102,7 +103,7 @@ namespace gruel {
   {
     int policy = p.policy == RT_SCHED_FIFO ? SCHED_FIFO : SCHED_RR;
     int min_real_pri = sched_get_priority_min(policy);
-    int max_real_pri = sched_get_priority_min(policy);
+    int max_real_pri = sched_get_priority_max(policy);
     int pri = rescale_virtual_pri(p.priority, min_real_pri, max_real_pri);
 
     int pid = 0;  // this process
