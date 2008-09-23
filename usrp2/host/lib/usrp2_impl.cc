@@ -856,6 +856,10 @@ namespace usrp2 {
       iov[1].iov_base = const_cast<uint32_t *>(&items[n]);
       iov[1].iov_len = i * sizeof(uint32_t);
 
+      size_t total = iov[0].iov_len + iov[1].iov_len;
+      if (total < 64)
+	fprintf(stderr, "usrp2::tx_raw: FIXME: short packet: %zd items (%zd bytes)\n", i, total);
+
       if (d_eth_buf->tx_framev(iov, 2) != eth_buffer::EB_OK){
 	return false;
       }

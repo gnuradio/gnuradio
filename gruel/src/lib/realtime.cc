@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -73,6 +73,9 @@ namespace gruel {
     int max_real_pri = sched_get_priority_max(policy);
     int pri = rescale_virtual_pri(p.priority, min_real_pri, max_real_pri);
 
+    // FIXME check hard and soft limits with getrlimit, and limit the value we ask for.
+    // fprintf(stderr, "pthread_setschedparam: policy = %d, pri = %d\n", policy, pri);
+
     struct sched_param param;
     memset (&param, 0, sizeof (param));
     param.sched_priority = pri;
@@ -105,6 +108,9 @@ namespace gruel {
     int min_real_pri = sched_get_priority_min(policy);
     int max_real_pri = sched_get_priority_max(policy);
     int pri = rescale_virtual_pri(p.priority, min_real_pri, max_real_pri);
+
+    // FIXME check hard and soft limits with getrlimit, and limit the value we ask for.
+    // fprintf(stderr, "sched_setscheduler: policy = %d, pri = %d\n", policy, pri);
 
     int pid = 0;  // this process
     struct sched_param param;
