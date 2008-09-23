@@ -171,7 +171,7 @@ namespace usrp2 {
      */
 
     /*!
-     * Set receiver gain
+     * Set transmitter gain
      */
     bool set_tx_gain(double gain);
 

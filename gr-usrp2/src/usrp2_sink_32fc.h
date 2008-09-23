@@ -29,19 +29,28 @@ class usrp2_sink_32fc;
 typedef boost::shared_ptr<usrp2_sink_32fc> usrp2_sink_32fc_sptr;
 
 usrp2_sink_32fc_sptr
-usrp2_make_sink_32fc() throw (std::runtime_error);
+usrp2_make_sink_32fc(const std::string &ifc="eth0",
+		     const std::string &mac="")
+  throw (std::runtime_error);
 
-class usrp2_sink_32fc : public usrp2_sink_base {
+class usrp2_sink_32fc : public usrp2_sink_base 
+{
 private:
-
   friend usrp2_sink_32fc_sptr
-  usrp2_make_sink_32fc() throw (std::runtime_error);
-
+  usrp2_make_sink_32fc(const std::string &ifc,
+		       const std::string &mac) 
+    throw (std::runtime_error);
+  
 protected:
-  usrp2_sink_32fc() throw (std::runtime_error);
+  usrp2_sink_32fc(const std::string &ifc, const std::string &mac) 
+    throw (std::runtime_error);
 
 public:
   ~usrp2_sink_32fc();
+
+  int work(int noutput_items,
+	   gr_vector_const_void_star &input_items,
+	   gr_vector_void_star &output_items);
 };
 
 #endif /* INCLUDED_USRP2_SINK_32FC_H */

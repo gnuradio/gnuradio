@@ -20,40 +20,51 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_USRP2_SINK_BASE_H
-#define INCLUDED_USRP2_SINK_BASE_H
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <usrp2_base.h>
+#include <gr_io_signature.h>
+#include <iostream>
 
-/*!
- * Base class for all USRP2 transmit blocks
- */
-class usrp2_sink_base : public usrp2_base 
+usrp2_base::usrp2_base(const char *name,
+		       gr_io_signature_sptr input_signature,
+		       gr_io_signature_sptr output_signature,
+		       const std::string &ifc,
+		       const std::string &mac) 
+  throw (std::runtime_error)
+  : gr_sync_block(name,
+		  input_signature,
+		  output_signature),
+    d_u2(usrp2::usrp2::sptr())
 {
-protected:
-  usrp2_sink_base(const char *name,
-		  gr_io_signature_sptr input_signature,
-		  const std::string &ifc,
-		  const std::string &mac)
-    throw (std::runtime_error);
+  d_u2 = usrp2::usrp2::make(ifc, mac);
+  if (!d_u2)
+    throw std::runtime_error("Unable to initialize USRP2!");
+}
 
-public:
-  ~usrp2_sink_base();
+usrp2_base::~usrp2_base ()
+{
+  // NOP
+}
 
-  /*!
-   * \brief Set transmitter gain
-   */
-  bool set_gain(double gain);
+std::string
+usrp2_base::mac_addr() const
+{
+  return d_u2->mac_addr();
+}
 
-  /*!
-   * \brief Set transmitter center frequency
-   */
-  bool set_center_freq(double frequency, usrp2::tune_result *tr);
-   
-  /*!
-   * \brief Set transmit interpolation rate
-   */
-  bool set_interp(int interp_factor);
-};
+bool
+usrp2_base::start()
+{
+  // Default implementation is NOP
+  return true;
+}
 
-#endif /* INCLUDED_USRP2_SINK_BASE_H */
+bool
+usrp2_base::stop()
+{
+  // Default implementation is NOP
+  return true;
+}

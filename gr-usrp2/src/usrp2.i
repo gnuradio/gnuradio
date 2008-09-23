@@ -23,61 +23,45 @@
 %feature("autodoc", "1");		// generate python docstrings
 
 %include "exception.i"
-%import "gnuradio.i"				// the common stuff
+%import "gnuradio.i"			// the common stuff
 
 %{
 #include <gnuradio_swig_bug_workaround.h>
-//#include "usrp2_sink_32fc.h"
 #include "usrp2_source_16sc.h"
 #include "usrp2_source_32fc.h"
+#include "usrp2_sink_16sc.h"
+#include "usrp2_sink_32fc.h"
 %}
 
 %include <usrp2/tune_result.h>
 
-#if 0
 // ----------------------------------------------------------------
 
-class usrp2_sink_base : public gr_sync_block {
-
+class usrp2_base : public gr_sync_block 
+{
 protected:
-  usrp2_sink_base(const std::string &name,
-		  gr_io_signature_sptr input_signature) 
-    throw (std::runtime_error);
+  usrp2_base() throw (std::runtime_error);
 
 public:
-  ~usrp2_sink_base();
+  ~usrp2_base();
 
+  std::string mac_addr() const;
 };
 
 // ----------------------------------------------------------------
 
-GR_SWIG_BLOCK_MAGIC(usrp2,sink_32fc)
-
-usrp2_sink_32fc_sptr
-usrp2_make_sink_32fc() throw (std::runtime_error);
-
-class usrp2_sink_32fc : public usrp2_sink_base {
-
+class usrp2_source_base : public usrp2_base 
+{
 protected:
-  usrp2_sink_32fc();
-
-public:
-  ~usrp2_sink_32fc();
-
-};
-#endif
-
-// ----------------------------------------------------------------
-
-class usrp2_source_base : public gr_sync_block {
-
-protected:
-  usrp2_source_base(const char *name,
-		    gr_io_signature_sptr output_signature) 
-    throw (std::runtime_error);
+  usrp2_source_base() throw (std::runtime_error);
 
 public:
   ~usrp2_source_base();
+
+  bool set_gain(double gain);
+  %rename(_real_set_center_freq) set_center_freq;
+  bool set_center_freq(double frequency, usrp2::tune_result *r);
+  bool set_decim(int decimation_factor);
 };
 
 // ----------------------------------------------------------------
@@ -85,23 +69,17 @@ public:
 GR_SWIG_BLOCK_MAGIC(usrp2,source_32fc)
 
 usrp2_source_32fc_sptr
-usrp2_make_source_32fc(const std::string ifc, const std::string mac) 
+usrp2_make_source_32fc(const std::string ifc="eth0", 
+                       const std::string mac="") 
   throw (std::runtime_error);
 
-class usrp2_source_32fc : public usrp2_source_base {
-
+class usrp2_source_32fc : public usrp2_source_base 
+{
 protected:
   usrp2_source_32fc(const std::string &ifc, const std::string &mac);
 
 public:
   ~usrp2_source_32fc();
-
-  bool set_gain(double gain);
-  %rename(_real_set_center_freq) set_center_freq;
-  bool set_center_freq(double frequency, usrp2::tune_result *r);
-  bool set_decim(int decimation_factor);
-
-  std::string mac_addr();
 };
 
 // ----------------------------------------------------------------
@@ -109,23 +87,71 @@ public:
 GR_SWIG_BLOCK_MAGIC(usrp2,source_16sc)
 
 usrp2_source_16sc_sptr
-usrp2_make_source_16sc(const std::string ifc, const std::string mac) 
+usrp2_make_source_16sc(const std::string ifc="eth0", 
+		       const std::string mac="") 
   throw (std::runtime_error);
 
-class usrp2_source_16sc : public usrp2_source_base {
-
+class usrp2_source_16sc : public usrp2_source_base 
+{
 protected:
   usrp2_source_16sc(const std::string &ifc, const std::string &mac);
 
 public:
   ~usrp2_source_16sc();
 
+  std::string mac_addr();
+};
+
+// ----------------------------------------------------------------
+
+class usrp2_sink_base : public usrp2_base 
+{
+protected:
+  usrp2_sink_base() throw (std::runtime_error);
+
+public:
+  ~usrp2_sink_base();
+
   bool set_gain(double gain);
   %rename(_real_set_center_freq) set_center_freq;
   bool set_center_freq(double frequency, usrp2::tune_result *r);
-  bool set_decim(int decimation_factor);
+  bool set_interp(int interp_factor);
+};
 
-  std::string mac_addr();
+// ----------------------------------------------------------------
+
+GR_SWIG_BLOCK_MAGIC(usrp2,sink_32fc)
+
+usrp2_sink_32fc_sptr
+usrp2_make_sink_32fc(const std::string ifc="eth0", 
+		     const std::string mac="") 
+  throw (std::runtime_error);
+
+class usrp2_sink_32fc : public usrp2_sink_base 
+{
+protected:
+  usrp2_sink_32fc(const std::string &ifc, const std::string &mac);
+
+public:
+  ~usrp2_sink_32fc();
+};
+
+// ----------------------------------------------------------------
+
+GR_SWIG_BLOCK_MAGIC(usrp2,sink_16sc)
+
+usrp2_sink_16sc_sptr
+usrp2_make_sink_16sc(const std::string ifc="eth0", 
+		     const std::string mac="") 
+  throw (std::runtime_error);
+
+class usrp2_sink_16sc : public usrp2_sink_base 
+{
+protected:
+  usrp2_sink_16sc(const std::string &ifc, const std::string &mac);
+
+public:
+  ~usrp2_sink_16sc();
 };
 
 // ----------------------------------------------------------------
@@ -143,4 +169,6 @@ def __set_center_freq(self, freq):
 
 usrp2_source_32fc_sptr.set_center_freq = __set_center_freq
 usrp2_source_16sc_sptr.set_center_freq = __set_center_freq
+usrp2_sink_32fc_sptr.set_center_freq = __set_center_freq
+usrp2_sink_16sc_sptr.set_center_freq = __set_center_freq
 %}

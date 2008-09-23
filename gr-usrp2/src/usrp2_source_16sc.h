@@ -33,8 +33,8 @@ usrp2_make_source_16sc(const std::string &ifc="eth0",
 		       const std::string &mac="")
   throw (std::runtime_error);
 
-class usrp2_source_16sc : public usrp2_source_base {
-
+class usrp2_source_16sc : public usrp2_source_base
+{
 private:
   friend usrp2_source_16sc_sptr
   usrp2_make_source_16sc(const std::string &ifc,

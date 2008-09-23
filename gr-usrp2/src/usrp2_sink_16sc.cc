@@ -24,48 +24,48 @@
 #include "config.h"
 #endif
 
-#include <usrp2_sink_32fc.h>
+#include <usrp2_sink_16sc.h>
 #include <usrp2/metadata.h>
 #include <gr_io_signature.h>
 #include <iostream>
 
-usrp2_sink_32fc_sptr
-usrp2_make_sink_32fc(const std::string &ifc, const std::string &mac_addr) 
+usrp2_sink_16sc_sptr
+usrp2_make_sink_16sc(const std::string &ifc, const std::string &mac_addr) 
   throw (std::runtime_error)
 {
-  return usrp2_sink_32fc_sptr(new usrp2_sink_32fc(ifc, mac_addr));
+  return usrp2_sink_16sc_sptr(new usrp2_sink_16sc(ifc, mac_addr));
 }
 
-usrp2_sink_32fc::usrp2_sink_32fc(const std::string &ifc, const std::string &mac_addr) 
+usrp2_sink_16sc::usrp2_sink_16sc(const std::string &ifc, const std::string &mac_addr) 
   throw (std::runtime_error)
-  : usrp2_sink_base("usrp2_sink_32fc",
-		    gr_make_io_signature(1, 1, sizeof(gr_complex)),
+  : usrp2_sink_base("usrp2_sink_16sc",
+		    gr_make_io_signature(1, 1, sizeof(std::complex<int16_t>)),
 		    ifc, mac_addr)
 {
   // NOP
 }
 
-usrp2_sink_32fc::~usrp2_sink_32fc()
+usrp2_sink_16sc::~usrp2_sink_16sc()
 {
   // NOP
 }
 
 int
-usrp2_sink_32fc::work(int noutput_items,
+usrp2_sink_16sc::work(int noutput_items,
 		      gr_vector_const_void_star &input_items,
 		      gr_vector_void_star &output_items)
 {
-  gr_complex *in = (gr_complex *)input_items[0];
+  std::complex<int16_t> *in = (std::complex<int16_t> *)input_items[0];
 
   usrp2::tx_metadata metadata;
   metadata.timestamp = -1;
   metadata.send_now = 1;
   metadata.start_of_burst = 1;
 
-  bool ok = d_u2->tx_complex_float(0,  // FIXME: someday, streams will have channel numbers
+  bool ok = d_u2->tx_complex_int16(0,  // FIXME: someday, streams will have channel numbers
 				   in, noutput_items, &metadata);
   if (!ok)
-    std::cerr << "usrp2_sink_32fc: tx_complex_float failed" << std::endl;
+    std::cerr << "usrp2_sink_16sc: tx_complex_int16 failed" << std::endl;
 
   return noutput_items;
 }

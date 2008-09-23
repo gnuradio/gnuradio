@@ -29,8 +29,6 @@
 #include <gr_io_signature.h>
 #include <iostream>
 
-#define USRP2_SOURCE_32FC_DEBUG 0
-
 usrp2_source_32fc_sptr
 usrp2_make_source_32fc(const std::string &ifc, const std::string &mac_addr) 
   throw (std::runtime_error)
@@ -56,9 +54,6 @@ usrp2_source_32fc::work(int noutput_items,
 			gr_vector_const_void_star &input_items,
 			gr_vector_void_star &output_items)
 {
-  if (USRP2_SOURCE_32FC_DEBUG)
-    printf("work: noutput_items=%i\n", noutput_items);
-  
   gr_complex *out = (gr_complex *)output_items[0];
 
   rx_32fc_handler::sptr handler = rx_32fc_handler::make(noutput_items, USRP2_MIN_RX_SAMPLES, out);
@@ -67,11 +62,5 @@ usrp2_source_32fc::work(int noutput_items,
   if (!ok)
     std::cerr << "usrp2::rx_samples() failed" << std::endl;
 
-  int j = handler->nsamples();
-  int f = handler->nframes();
-  
-  if (USRP2_SOURCE_32FC_DEBUG)
-    printf("work: produced=%i items from %i frames\n\n", j, f);  
-    
-  return j;
+  return handler->nsamples();
 }

@@ -26,24 +26,42 @@
 
 #include <usrp2_sink_base.h>
 #include <gr_io_signature.h>
+#include <iostream>
 
-usrp2_sink_base::usrp2_sink_base(const std::string &name,
-				 gr_io_signature_sptr input_signature) 
+#define USRP2_SINK_BASE_DEBUG 0
+
+usrp2_sink_base::usrp2_sink_base(const char *name,
+				 gr_io_signature_sptr input_signature,
+				 const std::string &ifc,
+				 const std::string &mac) 
   throw (std::runtime_error)
-  : gr_sync_block(name,
-		  input_signature,
-		  gr_make_io_signature(0, 0, 0))
+  : usrp2_base(name,
+               input_signature,
+	       gr_make_io_signature(0, 0, 0),
+	       ifc, mac)
 {
+  // NOP
 }
 
 usrp2_sink_base::~usrp2_sink_base ()
 {
+  // NOP
 }
 
-int
-usrp2_sink_base::work(int noutput_items,
-		      gr_vector_const_void_star &input_items,
-		      gr_vector_void_star &output_items)
+bool
+usrp2_sink_base::set_gain(double gain)
 {
-  return noutput_items;
+  return d_u2->set_tx_gain(gain);
+}
+
+bool
+usrp2_sink_base::set_center_freq(double frequency, usrp2::tune_result *tr)
+{
+  return d_u2->set_tx_center_freq(frequency, tr);
+}
+
+bool
+usrp2_sink_base::set_interp(int interp_factor)
+{
+  return d_u2->set_tx_interp(interp_factor);
 }

@@ -28,25 +28,22 @@
 #include <gr_io_signature.h>
 #include <iostream>
 
-#define USRP2_SOURCE_BASE_DEBUG 0
-
 usrp2_source_base::usrp2_source_base(const char *name,
 				     gr_io_signature_sptr output_signature,
 				     const std::string &ifc,
 				     const std::string &mac) 
   throw (std::runtime_error)
-  : gr_sync_block(name,
-		  gr_make_io_signature(0, 0, 0),
-		  output_signature),
-    d_u2(usrp2::usrp2::sptr())
+  : usrp2_base(name,
+               gr_make_io_signature(0, 0, 0),
+	       output_signature,
+	       ifc, mac)
 {
-  d_u2 = usrp2::usrp2::make(ifc, mac);
-  if (!d_u2)
-    throw std::runtime_error("Unable to initialize USRP2!");
+  // NOP
 }
 
 usrp2_source_base::~usrp2_source_base ()
 {
+  // NOP
 }
 
 bool
@@ -67,26 +64,14 @@ usrp2_source_base::set_decim(int decimation_factor)
   return d_u2->set_rx_decim(decimation_factor);
 }
 
-std::string
-usrp2_source_base::mac_addr()
-{
-  return d_u2->mac_addr();
-}
-
 bool
 usrp2_source_base::start()
 {
-  if (USRP2_SOURCE_BASE_DEBUG)
-    printf("usrp2_source_base::start()\n");
-
   return d_u2->start_rx_streaming(0); // FIXME: someday sources will have channel #s
 }
 
 bool
 usrp2_source_base::stop()
 {
-  if (USRP2_SOURCE_BASE_DEBUG)
-    printf("usrp2_source_base::stop()\n");
-
   return d_u2->stop_rx_streaming(0); // FIXME: someday sources will have channel #s
 }

@@ -38,25 +38,26 @@ lib_LTLIBRARIES = libgr-usrp2.la
 libgr_usrp2_la_SOURCES = \
 	rx_16sc_handler.cc \
 	rx_32fc_handler.cc \
+	usrp2_base.cc \
 	usrp2_source_base.cc \
 	usrp2_source_16sc.cc \
-	usrp2_source_32fc.cc
-#	usrp2_source_16sc.cc
-#	usrp2_sink_base.cc
-#	usrp2_sink_32fc.cc
-#	usrp2_sink_16sc.cc
+	usrp2_source_32fc.cc \
+	usrp2_sink_base.cc \
+	usrp2_sink_16sc.cc \
+	usrp2_sink_32fc.cc
 
 libgr_usrp2_la_LIBADD = \
 	$(USRP2_LA) \
 	$(GNURADIO_CORE_LA) 
 
 grinclude_HEADERS = \
+	usrp2_base.h \
 	usrp2_source_base.h \
 	usrp2_source_32fc.h \
-        usrp2_source_16sc.h
-#	usrp2_sink_base.h \
-#	usrp2_sink_32fc.h \
-#	usrp2_sink_16sc.h
+	usrp2_source_16sc.h \
+	usrp2_sink_base.h \
+	usrp2_sink_16sc.h \
+	usrp2_sink_32fc.h
 
 noinst_HEADERS = \
 	rx_16sc_handler.h \
