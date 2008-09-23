@@ -49,6 +49,7 @@ bin_SCRIPTS = \
     usrp_test_counting.py \
     usrp_test_loopback.py \
     usrp2_fft.py \
-    usrp2_rx_cfile.py
-
+    usrp2_rx_cfile.py \
+    usrp2_siggen.py
+    
 MOSTLYCLEANFILES = *~ *.pyc
