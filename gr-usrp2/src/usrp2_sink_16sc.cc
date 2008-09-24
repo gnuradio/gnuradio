@@ -64,8 +64,10 @@ usrp2_sink_16sc::work(int noutput_items,
 
   bool ok = d_u2->tx_16sc(0,  // FIXME: someday, streams will have channel numbers
 			  in, noutput_items, &metadata);
-  if (!ok)
+  if (!ok){
     std::cerr << "usrp2_sink_16sc: tx_complex_int16 failed" << std::endl;
+    return -1;	// say we're done
+  }
 
   return noutput_items;
 }

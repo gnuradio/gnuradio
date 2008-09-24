@@ -64,8 +64,10 @@ usrp2_sink_32fc::work(int noutput_items,
 
   bool ok = d_u2->tx_32fc(0,  // FIXME: someday, streams will have channel numbers
 			  in, noutput_items, &metadata);
-  if (!ok)
+  if (!ok){
     std::cerr << "usrp2_sink_32fc: tx_32fc failed" << std::endl;
+    return -1;	// say we're done
+  }
 
   return noutput_items;
 }
