@@ -21,11 +21,12 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
 #include <rx_32fc_handler.h>
 
 rx_32fc_handler::~rx_32fc_handler()
 {
+  // NOP
 }

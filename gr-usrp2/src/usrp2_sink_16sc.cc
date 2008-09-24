@@ -21,7 +21,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
 #include <usrp2_sink_16sc.h>
@@ -62,10 +62,10 @@ usrp2_sink_16sc::work(int noutput_items,
   metadata.send_now = 1;
   metadata.start_of_burst = 1;
 
-  bool ok = d_u2->tx_16sc(0,  // FIXME: someday, streams will have channel numbers
+  bool ok = d_u2->tx_16sc(0,  // FIXME: use channel number instead of 0
 			  in, noutput_items, &metadata);
   if (!ok){
-    std::cerr << "usrp2_sink_16sc: tx_complex_int16 failed" << std::endl;
+    std::cerr << "usrp2_sink_16sc: tx_16sc failed" << std::endl;
     return -1;	// say we're done
   }
 

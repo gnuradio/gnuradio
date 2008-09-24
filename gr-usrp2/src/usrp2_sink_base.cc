@@ -21,14 +21,12 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
 #include <usrp2_sink_base.h>
 #include <gr_io_signature.h>
 #include <iostream>
-
-#define USRP2_SINK_BASE_DEBUG 0
 
 usrp2_sink_base::usrp2_sink_base(const char *name,
 				 gr_io_signature_sptr input_signature,

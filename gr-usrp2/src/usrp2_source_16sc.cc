@@ -21,7 +21,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
 #include <usrp2_source_16sc.h>
@@ -47,6 +47,7 @@ usrp2_source_16sc::usrp2_source_16sc(const std::string &ifc, const std::string &
 
 usrp2_source_16sc::~usrp2_source_16sc()
 {
+  // NOP
 }
 
 int
@@ -58,7 +59,7 @@ usrp2_source_16sc::work(int noutput_items,
 
   rx_16sc_handler::sptr handler = rx_16sc_handler::make(noutput_items, USRP2_MIN_RX_SAMPLES, out);
 
-  bool ok = d_u2->rx_samples(0, handler.get());
+  bool ok = d_u2->rx_samples(0, handler.get()); // FIXME: channel number instead of 0
   if (!ok){
     std::cerr << "usrp2::rx_samples() failed" << std::endl;
     return -1;	// say we're done

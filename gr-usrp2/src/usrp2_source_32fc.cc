@@ -47,6 +47,7 @@ usrp2_source_32fc::usrp2_source_32fc(const std::string &ifc, const std::string &
 
 usrp2_source_32fc::~usrp2_source_32fc()
 {
+  // NOP
 }
 
 int
@@ -58,7 +59,7 @@ usrp2_source_32fc::work(int noutput_items,
 
   rx_32fc_handler::sptr handler = rx_32fc_handler::make(noutput_items, USRP2_MIN_RX_SAMPLES, out);
 
-  bool ok = d_u2->rx_samples(0, handler.get());
+  bool ok = d_u2->rx_samples(0, handler.get()); // FIXME: channel number instead of 0
   if (!ok){
     std::cerr << "usrp2::rx_samples() failed" << std::endl;
     return -1;	// say we're done

@@ -21,11 +21,12 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#include "config.h"
+#include <config.h>
 #endif
 
 #include <rx_16sc_handler.h>
 
 rx_16sc_handler::~rx_16sc_handler()
 {
+  // NOP
 }

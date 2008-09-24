@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_USRP2_SOURCE_C_H
-#define INCLUDED_USRP2_SOURCE_C_H
+#ifndef INCLUDED_USRP2_SOURCE_16SC_H
+#define INCLUDED_USRP2_SOURCE_16SC_H
 
 #include <usrp2_source_base.h>
 

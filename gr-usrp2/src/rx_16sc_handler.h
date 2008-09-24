@@ -26,8 +26,6 @@
 #include <usrp2/rx_nop_handler.h>
 #include <usrp2/copiers.h>
 
-#define RX_16SC_HANDLER_DEBUG 0
-
 class rx_16sc_handler : public usrp2::rx_nop_handler
 {
   std::complex<int16_t> *d_dest;
@@ -43,30 +41,20 @@ public:
   // Factory function to return a shared pointer to a new instance
   static sptr make(uint64_t max_samples, uint64_t max_quantum, std::complex<int16_t> *dest) 
   {
-    if (RX_16SC_HANDLER_DEBUG)
-      printf("rx_16sc_handler: max_samples=%li max_quantum=%li\n", max_samples, max_quantum);
-      
     return sptr(new rx_16sc_handler(max_samples, max_quantum, dest));
   }
 
   // Invoked by USRP2 API when samples are available
   bool operator()(const uint32_t *items, size_t nitems, const usrp2::rx_metadata *metadata)
   {
-    if (RX_16SC_HANDLER_DEBUG)
-      printf("rx_16sc_handler: called with items=%zu ", nitems);
-
     // Copy/reformat/endian swap USRP2 data to destination buffer
     usrp2::copy_u2_16sc_to_host_16sc(nitems, items, d_dest);
     d_dest += nitems;
 
     // FIXME: do something with metadata
 
-    // Determine if there is room to be called again
-    bool ok = rx_nop_handler::operator()(items, nitems, metadata);
-    if (RX_16SC_HANDLER_DEBUG)
-      printf("ok to call again=%i\n", ok);
-
-    return ok;
+    // Call parent to determine if there is room to be called again
+    return rx_nop_handler::operator()(items, nitems, metadata);
   }
 
   ~rx_16sc_handler();
