@@ -62,14 +62,14 @@ install_sig_handler(int signum,
 
 // FIXME make this a template
 
-class complex_16_file_writer : public usrp2::rx_nop_handler
+class file_writer_16sc : public usrp2::rx_nop_handler
 {
   FILE	       *d_fp;
   std::string	d_filename;
   
 public:
 
-  complex_16_file_writer(const std::string &filename, uint64_t max_samples)
+  file_writer_16sc(const std::string &filename, uint64_t max_samples)
     : usrp2::rx_nop_handler(max_samples), d_filename(filename)
   {
     d_fp = fopen(filename.c_str(), "wb");
@@ -79,7 +79,7 @@ public:
     }
   }
 
-  ~complex_16_file_writer();
+  ~file_writer_16sc();
 
   bool 
   operator()(const uint32_t *items, size_t nitems, const usrp2::rx_metadata *metadata)
@@ -89,7 +89,7 @@ public:
     size_t host_nitems = nitems;
     std::complex<int16_t> host_items[host_nitems];
 
-    usrp2::copy_u2_complex_16_to_host_complex_16(nitems, items, host_items);
+    usrp2::copy_u2_16sc_to_host_16sc(nitems, items, host_items);
 
     size_t n = 0;
     while (n < host_nitems){
@@ -107,21 +107,21 @@ public:
   }
 };
 
-complex_16_file_writer::~complex_16_file_writer()
+file_writer_16sc::~file_writer_16sc()
 {
   fclose(d_fp);
 }
 
 // ------------------------------------------------------------------------
 
-class complex_float_file_writer : public usrp2::rx_nop_handler
+class file_writer_32fc : public usrp2::rx_nop_handler
 {
   FILE	       *d_fp;
   std::string	d_filename;
   
 public:
 
-  complex_float_file_writer(const std::string &filename, uint64_t max_samples)
+  file_writer_32fc(const std::string &filename, uint64_t max_samples)
     : usrp2::rx_nop_handler(max_samples), d_filename(filename)
   {
     d_fp = fopen(filename.c_str(), "wb");
@@ -131,7 +131,7 @@ public:
     }
   }
 
-  ~complex_float_file_writer();
+  ~file_writer_32fc();
 
   bool 
   operator()(const uint32_t *items, size_t nitems, const usrp2::rx_metadata *metadata)
@@ -141,7 +141,7 @@ public:
     size_t host_nitems = nitems;
     std::complex<float> host_items[host_nitems];
 
-    usrp2::copy_u2_complex_16_to_host_complex_float(nitems, items, host_items);
+    usrp2::copy_u2_16sc_to_host_32fc(nitems, items, host_items);
 
     size_t n = 0;
     while (n < host_nitems){
@@ -159,7 +159,7 @@ public:
   }
 };
 
-complex_float_file_writer::~complex_float_file_writer()
+file_writer_32fc::~file_writer_32fc()
 {
   fclose(d_fp);
 }
@@ -278,9 +278,9 @@ main(int argc, char **argv)
 
   if (output_filename){
     if (output_shorts)
-      handler = usrp2::rx_nop_handler::sptr(new complex_16_file_writer(output_filename, nsamples));
+      handler = usrp2::rx_nop_handler::sptr(new file_writer_16sc(output_filename, nsamples));
     else
-      handler = usrp2::rx_nop_handler::sptr(new complex_float_file_writer(output_filename, nsamples));
+      handler = usrp2::rx_nop_handler::sptr(new file_writer_32fc(output_filename, nsamples));
   }
   else
     handler = usrp2::rx_nop_handler::sptr(new usrp2::rx_nop_handler(nsamples));

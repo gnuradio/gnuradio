@@ -773,21 +773,21 @@ namespace usrp2 {
   }
 
   bool
-  usrp2::impl::tx_complex_float(unsigned int channel,
-				const std::complex<float> *samples,
-				size_t nsamples,
-				const tx_metadata *metadata)
+  usrp2::impl::tx_32fc(unsigned int channel,
+		       const std::complex<float> *samples,
+		       size_t nsamples,
+		       const tx_metadata *metadata)
   {
     uint32_t items[nsamples];
-    copy_host_complex_float_to_u2_complex_16(nsamples, samples, items);
+    copy_host_32fc_to_u2_16sc(nsamples, samples, items);
     return tx_raw(channel, items, nsamples, metadata);
   }
 
   bool
-  usrp2::impl::tx_complex_int16(unsigned int channel,
-				const std::complex<int16_t> *samples,
-				size_t nsamples,
-				const tx_metadata *metadata)
+  usrp2::impl::tx_16sc(unsigned int channel,
+		       const std::complex<int16_t> *samples,
+		       size_t nsamples,
+		       const tx_metadata *metadata)
   {
 #ifdef WORDS_BIGENDIAN
 
@@ -800,7 +800,7 @@ namespace usrp2 {
 #else
 
     uint32_t items[nsamples];
-    copy_host_complex_16_to_u2_complex_16(nsamples, samples, items);
+    copy_host_16sc_to_u2_16sc(nsamples, samples, items);
     return tx_raw(channel, items, nsamples, metadata);
 
 #endif

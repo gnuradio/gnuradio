@@ -253,7 +253,7 @@ main(int argc, char **argv)
 
     // FIXME if r < 9, pad to 9 for minimum packet size constraint
 
-    if (!u2->tx_complex_int16(0, samples, r, &md)){
+    if (!u2->tx_16sc(0, samples, r, &md)){
       fprintf(stderr, "tx_complex_int16 failed\n");
       break;
     }

@@ -250,21 +250,21 @@ namespace usrp2 {
   }
   
   bool
-  usrp2::tx_complex_float(unsigned int channel,
-			  const std::complex<float> *samples,
-			  size_t nsamples,
-			  const tx_metadata *metadata)
+  usrp2::tx_32fc(unsigned int channel,
+		 const std::complex<float> *samples,
+		 size_t nsamples,
+		 const tx_metadata *metadata)
   {
-    return d_impl->tx_complex_float(channel, samples, nsamples, metadata);
+    return d_impl->tx_32fc(channel, samples, nsamples, metadata);
   }
 
   bool
-  usrp2::tx_complex_int16(unsigned int channel,
-			  const std::complex<int16_t> *samples,
-			  size_t nsamples,
-			  const tx_metadata *metadata)
+  usrp2::tx_16sc(unsigned int channel,
+		 const std::complex<int16_t> *samples,
+		 size_t nsamples,
+		 const tx_metadata *metadata)
   {
-    return d_impl->tx_complex_int16(channel, samples, nsamples, metadata);
+    return d_impl->tx_16sc(channel, samples, nsamples, metadata);
   }
 
   bool

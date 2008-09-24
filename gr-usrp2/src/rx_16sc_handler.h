@@ -56,7 +56,7 @@ public:
       printf("rx_16sc_handler: called with items=%zu ", nitems);
 
     // Copy/reformat/endian swap USRP2 data to destination buffer
-    usrp2::copy_u2_complex_16_to_host_complex_16(nitems, items, d_dest);
+    usrp2::copy_u2_16sc_to_host_16sc(nitems, items, d_dest);
     d_dest += nitems;
 
     // FIXME: do something with metadata

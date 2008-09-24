@@ -45,9 +45,9 @@ namespace usrp2 {
    * ----------------------------------------------------------------
    */
   void 
-  copy_u2_complex_16_to_host_complex_16(size_t nitems,
-					const uint32_t *items,
-					std::complex<int16_t> *host_items)
+  copy_u2_16sc_to_host_16sc(size_t nitems,
+			    const uint32_t *items,
+			    std::complex<int16_t> *host_items)
   {
 #ifdef WORDS_BIGENDIAN
 
@@ -72,9 +72,9 @@ namespace usrp2 {
    * endian swap if required and map [-32768, 32767] -> [1.0, +1.0)
    */
   void 
-  copy_u2_complex_16_to_host_complex_float(size_t nitems,
-					   const uint32_t *items,
-					   std::complex<float> *host_items)
+  copy_u2_16sc_to_host_32fc(size_t nitems,
+			    const uint32_t *items,
+			    std::complex<float> *host_items)
   {
     for (size_t i = 0; i < nitems; i++){
       uint32_t t = ntohx(items[i]);
@@ -90,9 +90,9 @@ namespace usrp2 {
    * ----------------------------------------------------------------
    */
   void 
-  copy_host_complex_16_to_u2_complex_16(size_t nitems,
-					const std::complex<int16_t> *host_items,
-					uint32_t *items)
+  copy_host_16sc_to_u2_16sc(size_t nitems,
+			    const std::complex<int16_t> *host_items,
+			    uint32_t *items)
   {
 #ifdef WORDS_BIGENDIAN
 
@@ -118,9 +118,9 @@ namespace usrp2 {
   }
 
   void 
-  copy_host_complex_float_to_u2_complex_16(size_t nitems,
-					   const std::complex<float> *host_items,
-					   uint32_t *items)
+  copy_host_32fc_to_u2_16sc(size_t nitems,
+			    const std::complex<float> *host_items,
+			    uint32_t *items)
   {
     for (size_t i = 0; i < nitems; i++){
       int16_t re = clip_and_scale(host_items[i].real());

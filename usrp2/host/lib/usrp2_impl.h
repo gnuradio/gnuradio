@@ -112,15 +112,15 @@ namespace usrp2 {
     bool set_tx_interp(int interpolation_factor);
     bool set_tx_scale_iq(int scale_i, int scale_q);
 
-    bool tx_complex_float(unsigned int channel,
-			  const std::complex<float> *samples,
-			  size_t nsamples,
-			  const tx_metadata *metadata);
+    bool tx_32fc(unsigned int channel,
+		 const std::complex<float> *samples,
+		 size_t nsamples,
+		 const tx_metadata *metadata);
 
-    bool tx_complex_int16(unsigned int channel,
-			  const std::complex<int16_t> *samples,
-			  size_t nsamples,
-			  const tx_metadata *metadata);
+    bool tx_16sc(unsigned int channel,
+		 const std::complex<int16_t> *samples,
+		 size_t nsamples,
+		 const tx_metadata *metadata);
 
     bool tx_raw(unsigned int channel,
 		const uint32_t *items,

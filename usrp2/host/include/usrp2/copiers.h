@@ -33,14 +33,14 @@ namespace usrp2 {
    */
 
   void 
-  copy_u2_complex_16_to_host_complex_16(size_t nitems,
-					const uint32_t *items,
-					std::complex<int16_t> *host_items);
+  copy_u2_16sc_to_host_16sc(size_t nitems,
+			    const uint32_t *items,
+			    std::complex<int16_t> *host_items);
 
   void 
-  copy_u2_complex_16_to_host_complex_float(size_t nitems,
-					   const uint32_t *items,
-					   std::complex<float> *host_items);
+  copy_u2_16sc_to_host_32fc(size_t nitems,
+			    const uint32_t *items,
+			    std::complex<float> *host_items);
 
   /*
    * ----------------------------------------------------------------
@@ -49,14 +49,14 @@ namespace usrp2 {
    */
 
   void 
-  copy_host_complex_16_to_u2_complex_16(size_t nitems,
-					const std::complex<int16_t> *host_items,
-					uint32_t *items);
+  copy_host_16sc_to_u2_16sc(size_t nitems,
+			    const std::complex<int16_t> *host_items,
+			    uint32_t *items);
 
   void 
-  copy_host_complex_float_to_u2_complex_16(size_t nitems,
-					   const std::complex<float> *host_items,
-					   uint32_t *items);
+  copy_host_32fc_to_u2_16sc(size_t nitems,
+			    const std::complex<float> *host_items,
+			    uint32_t *items);
 }
 
 

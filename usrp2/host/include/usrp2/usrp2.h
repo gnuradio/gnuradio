@@ -205,14 +205,18 @@ namespace usrp2 {
      * \brief transmit complex<float> samples to USRP2
      *
      * \param channel specifies the channel to send them to
-     * \param samples are the samples to transmit
+     * \param samples are the samples to transmit.  They should be in the range [-1.0, +1.0]
      * \param nsamples is the number of samples to transmit
      * \param metadata provides the timestamp and flags
+     *
+     * The complex<float> samples are converted to the appropriate 
+     * "on the wire" representation, depending on the current USRP2
+     * configuration.  Typically, this is big-endian 16-bit I & Q.
      */
-    bool tx_complex_float(unsigned int channel,
-			  const std::complex<float> *samples,
-			  size_t nsamples,
-			  const tx_metadata *metadata);
+    bool tx_32fc(unsigned int channel,
+		 const std::complex<float> *samples,
+		 size_t nsamples,
+		 const tx_metadata *metadata);
 
     /*!
      * \brief transmit complex<int16_t> samples to USRP2
@@ -221,11 +225,15 @@ namespace usrp2 {
      * \param samples are the samples to transmit
      * \param nsamples is the number of samples to transmit
      * \param metadata provides the timestamp and flags
+     *
+     * The complex<int16_t> samples are converted to the appropriate
+     * "on the wire" representation, depending on the current USRP2
+     * configuration.  Typically, this is big-endian 16-bit I & Q.
      */
-    bool tx_complex_int16(unsigned int channel,
-			  const std::complex<int16_t> *samples,
-			  size_t nsamples,
-			  const tx_metadata *metadata);
+    bool tx_16sc(unsigned int channel,
+		 const std::complex<int16_t> *samples,
+		 size_t nsamples,
+		 const tx_metadata *metadata);
 
     /*!
      * \brief transmit raw uint32_t data items to USRP2
@@ -233,7 +241,7 @@ namespace usrp2 {
      * The caller is responsible for ensuring that the items are
      * formatted appropriately for the USRP2 and its configuration.
      * This method is used primarily by the system itself.  Users
-     * should call tx_complex_float or tx_complex_16 instead.
+     * should call tx_32fc or tx_16sc instead.
      *
      * \param channel specifies the channel to send them to
      * \param items are the data items to transmit
