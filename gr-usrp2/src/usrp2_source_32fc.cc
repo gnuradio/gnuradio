@@ -33,7 +33,7 @@ usrp2_source_32fc_sptr
 usrp2_make_source_32fc(const std::string &ifc, const std::string &mac_addr) 
   throw (std::runtime_error)
 {
-  return usrp2_source_32fc_sptr(new usrp2_source_32fc(ifc, mac_addr));
+  return gnuradio::get_initial_sptr(new usrp2_source_32fc(ifc, mac_addr));
 }
 
 usrp2_source_32fc::usrp2_source_32fc(const std::string &ifc, const std::string &mac_addr) 

@@ -33,7 +33,7 @@ usrp2_sink_32fc_sptr
 usrp2_make_sink_32fc(const std::string &ifc, const std::string &mac_addr) 
   throw (std::runtime_error)
 {
-  return usrp2_sink_32fc_sptr(new usrp2_sink_32fc(ifc, mac_addr));
+  return gnuradio::get_initial_sptr(new usrp2_sink_32fc(ifc, mac_addr));
 }
 
 usrp2_sink_32fc::usrp2_sink_32fc(const std::string &ifc, const std::string &mac_addr) 
