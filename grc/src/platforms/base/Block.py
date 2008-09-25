@@ -158,8 +158,6 @@ class Block(Element):
 
 	def is_block(self): return True
 
-	def get_doc(self): return self._doc
-
 	def get_name(self): return self._name
 
 	def get_key(self): return self._key
