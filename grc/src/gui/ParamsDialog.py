@@ -58,36 +58,46 @@ class ParamsDialog(gtk.Dialog):
 		scrolled_window.add_with_viewport(vbox)
 		self.vbox.pack_start(scrolled_window, True)
 		#Error Messages for the block
-		self._error_messages_box = err_box = gtk.VBox()
-		self._error_messages_text_display = TextDisplay('')
-		err_box.pack_start(gtk.Label(''), False, False, 7) #spacing
-		err_box.pack_start(get_title_label('Error Messages'), False)
-		err_box.pack_start(self._error_messages_text_display, False)
+		self._error_box = gtk.VBox()
+		self._error_messages_text_display = TextDisplay()
+		self._error_box.pack_start(gtk.Label(), False, False, 7) #spacing
+		self._error_box.pack_start(get_title_label('Error Messages'), False)
+		self._error_box.pack_start(self._error_messages_text_display, False)
+		#Docs for the block
+		self._docs_box = err_box = gtk.VBox()
+		self._docs_text_display = TextDisplay()
+		self._docs_box.pack_start(gtk.Label(), False, False, 7) #spacing
+		self._docs_box.pack_start(get_title_label('Documentation'), False)
+		self._docs_box.pack_start(self._docs_text_display, False)
 		#Add all the parameters
 		for param in self.block.get_params():
 			vbox.pack_start(param.get_input_object(self._handle_changed), False)
-		vbox.pack_start(err_box, False)
-		#Done adding parameters
-		if self.block.get_doc():
-			vbox.pack_start(gtk.Label(''), False, False, 7) #spacing
-			vbox.pack_start(get_title_label('Documentation'), False)
-			#Create the text box to display notes about the block
-			vbox.pack_start(TextDisplay(self.block.get_doc()), False)
+		#Add the error and docs box
+		vbox.pack_start(self._error_box, False)
+		vbox.pack_start(self._docs_box, False)
+		#connect and show
 		self.connect('key_press_event', self._handle_key_press)
 		self.show_all()
 		#initial update
 		for param in self.block.get_params(): param.update()
-		self._update_error_messages()
+		self._update()
 
-	def _update_error_messages(self):
+	def _update(self):
 		"""
-		Update the error messages in the error messages box.
+		Update the error messages box.
 		Hide the box if there are no errors.
+		Update the documentation block.
+		Hide the box if there are no docs.
 		"""
-		if self.block.is_valid(): self._error_messages_box.hide()
-		else: self._error_messages_box.show()
+		#update the errors box
+		if self.block.is_valid(): self._error_box.hide()
+		else: self._error_box.show()
 		messages = '\n\n'.join(self.block.get_error_messages())
 		self._error_messages_text_display.set_text(messages)
+		#update the docs box
+		if self.block.get_doc(): self._docs_box.show()
+		else: self._docs_box.hide()
+		self._docs_text_display.set_text(self.block.get_doc())
 
 	def _handle_key_press(self, widget, event):
 		"""
@@ -106,13 +116,14 @@ class ParamsDialog(gtk.Dialog):
 		the variable param will need an external update.
 		@param param the graphical parameter that initiated the callback
 		"""
-		self._update_error_messages()
 		#update dependent params
 		if param.is_enum():
 			for other_param in param.get_parent().get_params():
 				if param.get_key() is not other_param.get_key() and (
 				param.get_key() in other_param._type or \
 				param.get_key() in other_param._hide): other_param.update()
+		#update
+		self._update()
 		return True
 
 	def run(self):
