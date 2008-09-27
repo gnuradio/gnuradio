@@ -25,6 +25,7 @@ import Actions
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gobject
 import Preferences
 from threading import Thread
 import Messages
@@ -34,6 +35,8 @@ from .. platforms.gui.Platform import Platform
 from MainWindow import MainWindow
 from Dialogs import PreferencesDialog, AboutDialog, HotKeysDialog
 from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveImageFileDialog
+
+gobject.threads_init()
 
 class ActionHandler:
 	"""
@@ -67,7 +70,6 @@ class ActionHandler:
 		self.init_file_paths = file_paths
 		self.handle_states(Actions.APPLICATION_INITIALIZE)
 		#enter the mainloop
-		gtk.gdk.threads_init()
 		gtk.main()
 
 	def _handle_key_press(self, widget, event):
@@ -407,6 +409,7 @@ class ActionHandler:
 
 class ExecFlowGraphThread(Thread):
 	"""Execute the flow graph as a new process and wait on it to finish."""
+
 	def __init__ (self, action_handler):
 		"""
 		ExecFlowGraphThread constructor.
@@ -430,16 +433,19 @@ class ExecFlowGraphThread(Thread):
 			Messages.send_end_exec()
 
 	def run(self):
-		"""Wait on the flow graph."""
+		"""
+		Wait on the executing process by reading from its stdout.
+		Use gobject.idle_add when calling functions that modify gtk objects.
+		"""
 		#handle completion
 		r = "\n"
 		while(r):
-			gtk.gdk.threads_enter()
-			Messages.send_verbose_exec(r)
-			gtk.gdk.threads_leave()
+			gobject.idle_add(Messages.send_verbose_exec, r)
 			r = os.read(self.p.stdout.fileno(), 1024)
-		gtk.gdk.threads_enter()
+		gobject.idle_add(self.done)
+
+	def done(self):
+		"""Perform end of execution tasks."""
 		Messages.send_end_exec()
 		self.page.set_pid(None)
 		self.update_exec_stop()
-		gtk.gdk.threads_leave()
