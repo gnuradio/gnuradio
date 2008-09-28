@@ -41,15 +41,18 @@ $imp
 #set $class_name = $flow_graph.get_option('id')
 #set $param_str = ', '.join(['self'] + ['%s=%s'%(param.get_id(), param.get_make()) for param in $parameters])
 #if $generate_options == 'wx_gui'
-	#from gnuradio.grc.platforms.base.Constants import DATA_DIR
 	#from gnuradio.grc.gui import Preferences
+	#import gtk
+	#set $icon = gtk.IconTheme().lookup_icon('gnuradio-grc', 32, 0)
 class $(class_name)(grc_wxgui.top_block_gui):
 
 	def __init__($param_str):
 		grc_wxgui.top_block_gui.__init__(
 			self,
 			title="$Preferences.window_prefix() - Executing: $flow_graph.get_option('title')",
-			icon="$(os.path.join($DATA_DIR, 'grc-icon-32.png'))",
+	#if $icon
+			icon="$icon.get_filename()",
+	#end if
 		)
 #elif $generate_options == 'no_gui'
 class $(class_name)(gr.top_block):

@@ -25,7 +25,4 @@ ourdatadir = $(grc_base_data_dir)
 
 dist_ourdata_DATA = \
 	block_tree.dtd \
-	flow_graph.dtd \
-	grc-icon-256.png \
-	grc-icon-256.svg \
-	grc-icon-32.png
+	flow_graph.dtd

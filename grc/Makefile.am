@@ -24,5 +24,6 @@ include $(top_srcdir)/grc/Makefile.inc
 SUBDIRS = \
 	data \
 	examples \
+	freedesktop \
 	scripts \
 	src

@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from .. platforms.base.Constants import HOME_DIR, FLOW_GRAPH_DTD
+from .. platforms.base.Constants import FLOW_GRAPH_DTD
 from .. utils import ParseXML
 import Messages
 import os
@@ -38,7 +38,7 @@ class _Preferences(object):
 		#get prefs block
 		self._prefs_block = platform.get_prefs_block()
 		#prefs file path
-		self._prefs_file_path = os.path.join(HOME_DIR, self._prefs_block.get_param('prefs_file').get_value())
+		self._prefs_file_path = os.path.join(os.path.expanduser('~'), self._prefs_block.get_param('prefs_file').get_value())
 		#load
 		try:
 			ParseXML.validate_dtd(self._prefs_file_path, FLOW_GRAPH_DTD)

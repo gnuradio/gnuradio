@@ -76,6 +76,7 @@ AC_DEFUN([GRC_GRC],[
         grc/data/platforms/python/Makefile \
         grc/data/platforms/python/blocks/Makefile \
         grc/scripts/Makefile \
+        grc/freedesktop/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(grc)

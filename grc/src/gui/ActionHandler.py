@@ -18,9 +18,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
-import signal
-from .. platforms.base.Constants import PY_GTK_ICON, IMAGE_FILE_EXTENSION
-from Constants import DIR_LEFT, DIR_RIGHT
+import signal 
+from Constants import DIR_LEFT, DIR_RIGHT, IMAGE_FILE_EXTENSION
 import Actions
 import pygtk
 pygtk.require('2.0')
@@ -54,7 +53,9 @@ class ActionHandler:
 		"""
 		self.clipboard = None
 		platform = Platform(platform)
-		if PY_GTK_ICON: gtk.window_set_default_icon_from_file(PY_GTK_ICON)
+		#setup icon using icon theme
+		try: gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
+		except: pass
 		for action in Actions.ACTIONS_LIST: action.connect('activate', self._handle_actions)
 		#setup the main window
 		self.main_window = MainWindow(self.handle_states, platform)

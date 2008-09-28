@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=USRP Diagnostics
+Exec=usrp_diagnostics
+Categories=Development;
+Icon=gnuradio-grc

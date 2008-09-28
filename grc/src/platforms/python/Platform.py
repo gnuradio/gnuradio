@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
-from .. base.Constants import FLOW_GRAPH_FILE_EXTENSION
 from .. base.Platform import Platform as _Platform
 from FlowGraph import FlowGraph as _FlowGraph
 from Connection import Connection as _Connection

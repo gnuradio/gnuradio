@@ -25,6 +25,7 @@ import gtk
 import pango
 import gobject
 from Constants import PARAM_LABEL_FONT, PARAM_FONT
+from ... gui.Constants import DEFAULT_FILE_PATH
 from os import path
 
 ######################################################################################################

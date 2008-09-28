@@ -19,8 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from Constants import \
 	MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, \
-	NEW_FLOGRAPH_TITLE, REPORTS_WINDOW_HEIGHT
-from .. platforms.base.Constants import FLOW_GRAPH_FILE_EXTENSION
+	NEW_FLOGRAPH_TITLE, REPORTS_WINDOW_HEIGHT, \
+	FLOW_GRAPH_FILE_EXTENSION
 from Actions import APPLICATION_QUIT, FLOW_GRAPH_KILL
 import pygtk
 pygtk.require('2.0')

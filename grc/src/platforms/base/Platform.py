@@ -26,7 +26,7 @@ from Connection import Connection as _Connection
 from Block import Block as _Block
 from Port import Port as _Port
 from Param import Param as _Param
-from Constants import DATA_DIR
+from Constants import BLOCK_TREE_DTD
 
 class Platform(_Element):
 
@@ -102,7 +102,7 @@ class Platform(_Element):
 				block_tree.add_block(parent, self.get_block(block_key))
 		#load the block tree
 		f = self._block_tree
-		try: ParseXML.validate_dtd(f, os.path.join(DATA_DIR, 'block_tree.dtd'))
+		try: ParseXML.validate_dtd(f, BLOCK_TREE_DTD)
 		except ParseXML.XMLSyntaxError, e: self._exit_with_error('Block tree "%s" failed: \n\t%s'%(f, e))
 		#add all blocks in the tree
 		load_category(ParseXML.from_file(f)['cat'])

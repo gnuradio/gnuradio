@@ -17,10 +17,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-##The name for new/unsaved flow graphs
+import os
+
+##default path for the open/save dialogs
+DEFAULT_FILE_PATH = os.getcwd()
+
+##file extensions
+FLOW_GRAPH_FILE_EXTENSION = '.grc'
+IMAGE_FILE_EXTENSION = '.png'
+
+##name for new/unsaved flow graphs
 NEW_FLOGRAPH_TITLE = 'untitled'
 
-##Rotation constants
+##rotation constants
 DIR_LEFT = 'left'
 DIR_RIGHT = 'right'
 

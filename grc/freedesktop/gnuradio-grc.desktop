@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=GRC
+Exec=grc %F
+Categories=Development;
+MimeType=application/gnuradio-grc;
+Icon=gnuradio-grc

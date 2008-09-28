@@ -21,10 +21,9 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 from Dialogs import MessageDialogHelper
-from Constants import NEW_FLOGRAPH_TITLE
-from .. platforms.base.Constants import \
+from Constants import \
 	DEFAULT_FILE_PATH, FLOW_GRAPH_FILE_EXTENSION, \
-	IMAGE_FILE_EXTENSION
+	IMAGE_FILE_EXTENSION, NEW_FLOGRAPH_TITLE
 from os import path
 
 OPEN_FLOW_GRAPH = 'open flow graph'

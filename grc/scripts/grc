@@ -18,7 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from gnuradio.grc.platforms.base.Constants import VERSION, FLOW_GRAPH_FILE_EXTENSION
+from gnuradio.grc.gui.Constants import FLOW_GRAPH_FILE_EXTENSION
+from gnuradio.grc.platforms.base.Constants import VERSION
 from optparse import OptionParser
 
 if __name__ == "__main__":

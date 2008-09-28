@@ -19,29 +19,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os
 
-##The package name.
+#package and version constants
 PACKAGE = '@PACKAGE@'
-
-##The current version.
 VERSION = '@VERSION@'
 
-##Location of external data files.
+#setup paths
 DATA_DIR = '@datadir@'
-
-##DTD validator for saved flow graphs.
 FLOW_GRAPH_DTD = os.path.join(DATA_DIR, 'flow_graph.dtd')
-
-##The default file extension for flow graphs.
-FLOW_GRAPH_FILE_EXTENSION = '.grc'
-
-##The default file extension for saving flow graph snap shots.
-IMAGE_FILE_EXTENSION = '.png'
-
-##The default path for the open/save dialogs.
-DEFAULT_FILE_PATH = os.getcwd()
-
-##The default icon for the gtk windows.
-PY_GTK_ICON = os.path.join(DATA_DIR, 'grc-icon-256.png')
-
-##The users home directory.
-HOME_DIR = os.path.expanduser('~')
+BLOCK_TREE_DTD = os.path.join(DATA_DIR, 'block_tree.dtd')
