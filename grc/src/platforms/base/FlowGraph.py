@@ -52,7 +52,7 @@ class FlowGraph(Element):
 			#make sure that the id is not used by another block
 			if not filter(lambda b: b.get_id() == id, self.get_blocks()): return id
 
-	def __str__(self): return 'FlowGraph - "%s"'%self.get_option('name')
+	def __str__(self): return 'FlowGraph - %s(%s)'%(self.get_option('title'), self.get_option('id'))
 
 	def get_option(self, key):
 		"""
