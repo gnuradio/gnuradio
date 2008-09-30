@@ -1,5 +1,5 @@
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,16 +21,16 @@
 
 import math
 from gnuradio import gr, gru
-from gnuradio.gr import hier_block_base
+from gnuradio.gr import hier_block2
 from gnuradio import usrp
-from gnuradio import usrp1              # usrp Rev 1 and later
-from gnuradio import blks
 from usrpm import usrp_prims
 import sys
 
 
 class multi_source_align(object):
-    def __init__(self, fg, master_serialno,decim,nchan=2,pga_gain=0.0,cordic_freq=0.0,mux=None,align_interval=-1):
+    def __init__(self, fg, master_serialno, decim, nchan=2, pga_gain=0.0,
+                 cordic_freq=0.0, mux=None, align_interval=-1,
+                 fpga_filename="multi_2rxhb_2tx.rbf"):
         """
         Align multiple sources (usrps) using samplenumbers in the first channel.
 
@@ -59,8 +59,8 @@ class multi_source_align(object):
         if mux is None:
           mux=self.get_default_mux()  #Note that all channels have shifted left because of the added 32 bit counter channel
         
-        u1 = usrp.source_s (1, decim, nchan, gru.hexint(mux), mode,fpga_filename="multi_2rxhb_2tx.rbf" )
-        u0 = usrp.source_s (0, decim, nchan, gru.hexint(mux), mode,fpga_filename="multi_2rxhb_2tx.rbf" )
+        u1 = usrp.source_s (1, decim, nchan, gru.hexint(mux), mode,fpga_filename=fpga_filename )
+        u0 = usrp.source_s (0, decim, nchan, gru.hexint(mux), mode,fpga_filename=fpga_filename )
         print 'usrp[0] serial',u0.serial_number()
         print 'usrp[1] serial',u1.serial_number()
         #default, choose the second found usrp as master (which is usually the usrp which was first plugged in)
@@ -82,10 +82,10 @@ class multi_source_align(object):
               print errorstring
               raise ValueError, errorstring
           else: #default, just choose the first found usrp as master
-            um_index=0
-            um=u0
-            us_index=1
-            us=u1
+            um_index=1
+            um=u1
+            us_index=0
+            us=u0
 
         self.usrp_master=um
         self.usrp_slave=us
