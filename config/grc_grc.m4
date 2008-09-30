@@ -22,6 +22,8 @@ AC_DEFUN([GRC_GRC],[
 
     GRC_CHECK_DEPENDENCY(grc, gr-wxgui)
 
+    AC_CHECK_PROG(XDG_UTILS,xdg-mime,freedesktop,)
+
     dnl ########################################
     dnl # test python dependencies
     dnl ########################################

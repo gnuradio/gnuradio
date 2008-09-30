@@ -21,9 +21,8 @@
 
 include $(top_srcdir)/grc/Makefile.inc
 
-SUBDIRS = \
+SUBDIRS = $(XDG_UTILS) \
 	data \
 	examples \
-	freedesktop \
 	scripts \
 	src

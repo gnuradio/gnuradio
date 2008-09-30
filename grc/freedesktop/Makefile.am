@@ -24,28 +24,26 @@ include $(top_srcdir)/grc/Makefile.inc
 sizes = 32 48 64 128 256
 
 install-data-local:
-	if test -s "`which xdg-mime`"; then \
-		for size in $(sizes); do \
-			xdg-icon-resource install --context mimetypes --theme gnome --mode system --size $${size} $(srcdir)/grc-icon-$${size}.png application-gnuradio-grc; \
-			xdg-icon-resource install --context mimetypes --mode system --size $${size} $(srcdir)/grc-icon-$${size}.png application-gnuradio-grc; \
-			xdg-icon-resource install --context apps --mode system --size $${size} $(srcdir)/grc-icon-$${size}.png gnuradio-grc; \
-		done; \
-		xdg-mime install --mode system $(srcdir)/gnuradio-grc.xml; \
-		xdg-desktop-menu install --mode system $(srcdir)/gnuradio-grc.desktop; \
-		xdg-desktop-menu install --mode system $(srcdir)/gnuradio-usrp_diagnostics.desktop; \
-	fi
+	for size in $(sizes); do \
+		xdg-icon-resource install --context mimetypes --theme gnome --mode system --size $${size} $(srcdir)/grc-icon-$${size}.png application-gnuradio-grc; \
+		xdg-icon-resource install --context mimetypes --mode system --size $${size} $(srcdir)/grc-icon-$${size}.png application-gnuradio-grc; \
+		xdg-icon-resource install --context apps --theme gnome --mode system --size $${size} $(srcdir)/grc-icon-$${size}.png gnuradio-grc; \
+		xdg-icon-resource install --context apps --mode system --size $${size} $(srcdir)/grc-icon-$${size}.png gnuradio-grc; \
+	done
+	xdg-mime install --mode system $(srcdir)/gnuradio-grc.xml
+	xdg-desktop-menu install --mode system $(srcdir)/gnuradio-grc.desktop
+	xdg-desktop-menu install --mode system $(srcdir)/gnuradio-usrp_diagnostics.desktop
 
 uninstall-local:
-	if test -s "`which xdg-mime`"; then \
-		for size in $(sizes); do \
-			xdg-icon-resource uninstall --context mimetypes --theme gnome --mode system --size $${size} application-gnuradio-grc; \
-			xdg-icon-resource uninstall --context mimetypes --mode system --size $${size} application-gnuradio-grc; \
-			xdg-icon-resource uninstall --context apps --mode system --size $${size} gnuradio-grc; \
-		done; \
-		xdg-mime uninstall --mode system $(srcdir)/gnuradio-grc.xml; \
-		xdg-desktop-menu uninstall --mode system $(srcdir)/gnuradio-grc.desktop; \
-		xdg-desktop-menu uninstall --mode system $(srcdir)/gnuradio-usrp_diagnostics.desktop; \
-	fi
+	for size in $(sizes); do \
+		xdg-icon-resource uninstall --context mimetypes --theme gnome --mode system --size $${size} application-gnuradio-grc; \
+		xdg-icon-resource uninstall --context mimetypes --mode system --size $${size} application-gnuradio-grc; \
+		xdg-icon-resource uninstall --context apps --theme gnome --mode system --size $${size} gnuradio-grc; \
+		xdg-icon-resource uninstall --context apps --mode system --size $${size} gnuradio-grc; \
+	done
+	xdg-mime uninstall --mode system $(srcdir)/gnuradio-grc.xml
+	xdg-desktop-menu uninstall --mode system $(srcdir)/gnuradio-grc.desktop
+	xdg-desktop-menu uninstall --mode system $(srcdir)/gnuradio-usrp_diagnostics.desktop
 
 EXTRA_DIST = \
 	$(srcdir)/grc-icon-256.png \
