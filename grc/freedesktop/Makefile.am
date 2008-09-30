@@ -25,6 +25,7 @@ sizes = 32 48 64 128 256
 
 install-data-local:
 	for size in $(sizes); do \
+		xdg-icon-resource install --context mimetypes --theme gnome --mode system --size $${size} $(srcdir)/grc-icon-$${size}.png application-gnuradio-grc; \
 		xdg-icon-resource install --context mimetypes --mode system --size $${size} $(srcdir)/grc-icon-$${size}.png application-gnuradio-grc; \
 		xdg-icon-resource install --context apps --mode system --size $${size} $(srcdir)/grc-icon-$${size}.png gnuradio-grc; \
 	done
@@ -34,6 +35,7 @@ install-data-local:
 
 uninstall-local:
 	for size in $(sizes); do \
+		xdg-icon-resource uninstall --context mimetypes --theme gnome --mode system --size $${size} application-gnuradio-grc; \
 		xdg-icon-resource uninstall --context mimetypes --mode system --size $${size} application-gnuradio-grc; \
 		xdg-icon-resource uninstall --context apps --mode system --size $${size} gnuradio-grc; \
 	done
