@@ -21,8 +21,13 @@
 
 include $(top_srcdir)/grc/Makefile.inc
 
-SUBDIRS = $(XDG_UTILS) \
+SUBDIRS = \
 	data \
 	examples \
 	scripts \
 	src
+
+## append freedesktop to the list of subdirs when xdg utils are present
+if XDG_UTILS
+SUBDIRS += freedesktop
+endif
