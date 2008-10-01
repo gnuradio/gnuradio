@@ -81,13 +81,13 @@ class wfm_rx_block (stdgui2.std_top_block):
         self.u = usrp.source_c()                    # usrp is data source
 
         adc_rate = self.u.adc_rate()                # 64 MS/s
-        usrp_decim = 200
+        usrp_decim = 160
         self.u.set_decim_rate(usrp_decim)
-        usrp_rate = adc_rate / usrp_decim           # 320 kS/s
+        usrp_rate = adc_rate / usrp_decim           #  400 kS/s
         chanfilt_decim = 1
         demod_rate = usrp_rate / chanfilt_decim
         audio_decimation = 10
-        audio_rate = demod_rate / audio_decimation  # 32 kHz
+        audio_rate = 6*demod_rate / audio_decimation/5  # 48 kHz
 
         if options.rx_subdev_spec is None:
             options.rx_subdev_spec = pick_subdevice(self.u)
@@ -96,14 +96,16 @@ class wfm_rx_block (stdgui2.std_top_block):
         self.subdev = usrp.selected_subdev(self.u, options.rx_subdev_spec)
 
 
-        chan_filt_coeffs = optfir.low_pass (1,           # gain
+        chan_filt_coeffs = gr.firdes.low_pass_2     (1,         # gain
                                             usrp_rate,   # sampling rate
-                                            80e3,        # passband cutoff
-                                            115e3,       # stopband cutoff
-                                            0.1,         # passband ripple
+                                            90e3,        # passband cutoff
+                                            30e3,        # transition bandwidth
                                             60)          # stopband attenuation
-        #print len(chan_filt_coeffs)
+#        print len(chan_filt_coeffs)
         chan_filt = gr.fir_filter_ccf (chanfilt_decim, chan_filt_coeffs)
+
+        self.rchan_sample = blks2.rational_resampler_fff(6,5)
+        self.lchan_sample = blks2.rational_resampler_fff(6,5)
 
 
         #self.guts = blks2.wfm_rcv (demod_rate, audio_decimation)
@@ -120,8 +122,9 @@ class wfm_rx_block (stdgui2.std_top_block):
         
         # now wire it all together
         self.connect (self.u, chan_filt, self.guts)
-        self.connect ((self.guts, 0), self.volume_control_l, (audio_sink, 0))
-        self.connect ((self.guts, 1), self.volume_control_r, (audio_sink, 1))
+        self.connect((self.guts, 0), self.lchan_sample,self.volume_control_l,(audio_sink,0))
+        self.connect((self.guts, 1), self.rchan_sample,self.volume_control_r,(audio_sink,1))
+
         try:
           self.guts.stereo_carrier_pll_recovery.squelch_enable(True)
         except:
