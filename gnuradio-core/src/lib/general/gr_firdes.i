@@ -43,6 +43,31 @@ class gr_firdes {
 	    ) throw(std::out_of_range);
 
   /*!
+   * \brief use "window method" to design a low-pass FIR filter
+   *  using alternative design criteria
+   * \p gain:			overall gain of filter (typically 1.0)
+   * \p sampling_freq:		sampling freq (Hz)
+   * \p cutoff_freq:		center of transition band (Hz)
+   * \p transition_width:	width of transition band (Hz).
+   *				The normalized width of the transition
+   *				band is what sets the number of taps
+   *				required.  Narrow --> more taps
+   * \p attenuation_dB          The required stop band attenuation in dB
+   * \p window_type: 		What kind of window to use. Determines
+   *				maximum attenuation and passband ripple.
+   * \p beta:			parameter for Kaiser window
+   */
+  static std::vector<float>
+  low_pass_2 (double gain,
+	    double sampling_freq,
+	    double cutoff_freq,		// Hz center of transition band
+	    double transition_width,	// Hz width of transition band
+	    double attenuation_dB,       // out of band attenuation
+	    win_type window = WIN_HAMMING,
+	    double beta = 6.76 		// used only with Kaiser
+	    ) throw(std::out_of_range);
+
+  /*!
    * \brief use "window method" to design a high-pass FIR filter
    *
    * \p gain:			overall gain of filter (typically 1.0)

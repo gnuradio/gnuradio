@@ -68,6 +68,21 @@ class gr_firdes {
 	    win_type window = WIN_HAMMING,
 	    double beta = 6.76);		// used only with Kaiser
 
+  /*!
+   * \brief use "window method" to design a low-pass FIR filter
+   *
+   * \p gain:			overall gain of filter (typically 1.0)
+   * \p sampling_freq:		sampling freq (Hz)
+   * \p cutoff_freq:		center of transition band (Hz)
+   * \p transition_width:	width of transition band (Hz).
+   * \p attenuation_dB          required stopband attenuation
+   *				The normalized width of the transition
+   *				band is what sets the number of taps
+   *				required.  Narrow --> more taps
+   * \p window_type: 		What kind of window to use. Determines
+   *				maximum attenuation and passband ripple.
+   * \p beta:			parameter for Kaiser window
+   */
   static std::vector<float>
   low_pass_2 (double gain,
 	    double sampling_freq,
