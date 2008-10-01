@@ -39,7 +39,7 @@ class wfm_rcv_pll(gr.hier_block2):
 	gr.hier_block2.__init__(self, "wfm_rcv_pll",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
 				gr.io_signature(1, 2, gr.sizeof_float))      # Output signature
-        bandwidth = 200e3
+        bandwidth = 180e3
         audio_rate = demod_rate / audio_decimation
 
 
