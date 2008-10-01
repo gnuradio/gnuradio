@@ -1,5 +1,5 @@
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2008 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,20 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+ACLOCAL_AMFLAGS = -I config
+
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = include lib apps 
+EXTRA_DIST = \
+	bootstrap \
+	configure \
+	configure.gnu
+
+
+SUBDIRS = config 
+
+if BUILDING_USRP2_FIRMWARE
+SUBDIRS += include lib apps
+endif
+
 

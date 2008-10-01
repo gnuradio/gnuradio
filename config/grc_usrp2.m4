@@ -20,6 +20,9 @@ dnl Boston, MA 02110-1301, USA.
 AC_DEFUN([GRC_USRP2],[
     GRC_ENABLE(usrp2)
 
+    dnl firmware uses a subsidiary configure.ac
+    AC_CONFIG_SUBDIRS([usrp2/firmware])
+
     dnl Don't do usrp if omnithread or gruel is skipped
     GRC_CHECK_DEPENDENCY(usrp2, gruel)
     GRC_CHECK_DEPENDENCY(usrp2, omnithread)
@@ -33,7 +36,6 @@ AC_DEFUN([GRC_USRP2],[
       *)
 	AC_MSG_RESULT([no])
 	AC_MSG_NOTICE([USRP2 currently requires Linux host OS, not found])
-	AM_CONDITIONAL([BUILDING_USRP2_FIRMWARE],[0])
         passed="no"
         ;;
     esac
@@ -43,16 +45,6 @@ AC_DEFUN([GRC_USRP2],[
     dnl   yes  : if the --enable code passed muster and all dependencies are met
     dnl   no   : otherwise
     if test $passed = yes; then
-	dnl Only do firmware if mb-gcc can be found
-	AC_CHECK_PROG([MB_GCC],[mb-gcc],[yes],[no])
-	if test $MB_GCC = yes; then
-	    dnl Adds usrp2/firmware to $(subdirs), hierarchical build
-	    AC_CONFIG_SUBDIRS([usrp2/firmware])
-	else
-	    AC_MSG_WARN([usrp2/firmware is not being built])
-	fi
-	AM_CONDITIONAL([BUILDING_USRP2_FIRMWARE],[test $MB_GCC = yes])
-
 	dnl Needed for usrp2_socket_opener
 	AC_CHECK_HEADERS(arpa/inet.h byteswap.h linux/if_packet.h sys/socket.h sys/un.h)
 	AC_CHECK_MEMBERS([struct msghdr.msg_control,
