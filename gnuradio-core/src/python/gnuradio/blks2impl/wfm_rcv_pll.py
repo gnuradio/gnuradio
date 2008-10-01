@@ -39,7 +39,7 @@ class wfm_rcv_pll(gr.hier_block2):
 	gr.hier_block2.__init__(self, "wfm_rcv_pll",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
 				gr.io_signature(1, 2, gr.sizeof_float))      # Output signature
-        bandwidth = 180e3
+        bandwidth = 250e3
         audio_rate = demod_rate / audio_decimation
 
 
@@ -49,7 +49,7 @@ class wfm_rcv_pll(gr.hier_block2):
         # input: complex; output: float
         alpha = 0.25*bandwidth * math.pi / demod_rate
         beta = alpha * alpha / 4.0
-        max_freq = 2.0*math.pi*100e3/demod_rate
+        max_freq = 2.0*math.pi*90e3/demod_rate
             
         self.fm_demod = gr.pll_freqdet_cf (alpha,beta,max_freq,-max_freq)
 

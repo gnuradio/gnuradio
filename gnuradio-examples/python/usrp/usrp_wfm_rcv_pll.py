@@ -81,13 +81,13 @@ class wfm_rx_block (stdgui2.std_top_block):
         self.u = usrp.source_c()                    # usrp is data source
 
         adc_rate = self.u.adc_rate()                # 64 MS/s
-        usrp_decim = 160
+        usrp_decim = 200
         self.u.set_decim_rate(usrp_decim)
-        usrp_rate = adc_rate / usrp_decim           #  400 kS/s
+        usrp_rate = adc_rate / usrp_decim           #  320 kS/s
         chanfilt_decim = 1
         demod_rate = usrp_rate / chanfilt_decim
         audio_decimation = 10
-        audio_rate = 6*demod_rate / audio_decimation/5  # 48 kHz
+        audio_rate = 3*demod_rate / audio_decimation/2  # 48 kHz
 
         if options.rx_subdev_spec is None:
             options.rx_subdev_spec = pick_subdevice(self.u)
@@ -100,12 +100,13 @@ class wfm_rx_block (stdgui2.std_top_block):
                                             usrp_rate,   # sampling rate
                                             90e3,        # passband cutoff
                                             30e3,        # transition bandwidth
-                                            60)          # stopband attenuation
-#        print len(chan_filt_coeffs)
+                                            70,          # stopband attenuation
+                                            gr.firdes.WIN_BLACKMAN)
+        print len(chan_filt_coeffs)
         chan_filt = gr.fir_filter_ccf (chanfilt_decim, chan_filt_coeffs)
 
-        self.rchan_sample = blks2.rational_resampler_fff(6,5)
-        self.lchan_sample = blks2.rational_resampler_fff(6,5)
+        self.rchan_sample = blks2.rational_resampler_fff(3,2)
+        self.lchan_sample = blks2.rational_resampler_fff(3,2)
 
 
         #self.guts = blks2.wfm_rcv (demod_rate, audio_decimation)
