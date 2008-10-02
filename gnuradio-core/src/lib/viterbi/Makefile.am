@@ -17,7 +17,6 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-INCLUDES = -Wall -Werror
 LIBS = -lm
 
 noinst_LTLIBRARIES = libviterbi.la
