@@ -45,13 +45,14 @@ noinst_PROGRAMS		= 	\
 	benchmark_dotprod_ccf	\
 	benchmark_nco		\
 	benchmark_vco		\
+	test_all		\
 	test_runtime		\
 	test_general		\
 	test_filter		\
 	test_vmcircbuf
 
-bin_PROGRAMS = \
-	test_all
+#bin_PROGRAMS = \
+#	test_all
 
 
 noinst_SCRIPTS = \
