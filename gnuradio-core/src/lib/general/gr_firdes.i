@@ -49,6 +49,7 @@ class gr_firdes {
    * \p sampling_freq:		sampling freq (Hz)
    * \p cutoff_freq:		center of transition band (Hz)
    * \p transition_width:	width of transition band (Hz).
+   * \p attenuation_dB          out of band attenuation
    *				The normalized width of the transition
    *				band is what sets the number of taps
    *				required.  Narrow --> more taps
