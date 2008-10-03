@@ -1,0 +1,43 @@
+#!/bin/sh
+##################################################
+# setup grc on a freedesktop platform
+# $1 should be install or uninstall
+# $2 is the optional path to the files
+# when $2 is unspecified, the path is:
+# @SRCDIR@
+##################################################
+
+ICON_SIZES="32 48 64 128 256"
+if [ -n "$2" ]; then
+	SRCDIR="$2"
+else
+	SRCDIR="@SRCDIR@"
+fi
+
+case "$1" in
+'install')
+	for size in ${ICON_SIZES}; do \
+		xdg-icon-resource install --context mimetypes --theme gnome --size ${size} ${SRCDIR}/grc-icon-${size}.png application-gnuradio-grc; \
+		xdg-icon-resource install --context mimetypes --size ${size} ${SRCDIR}/grc-icon-${size}.png application-gnuradio-grc; \
+		xdg-icon-resource install --context apps --theme gnome --size ${size} ${SRCDIR}/grc-icon-${size}.png gnuradio-grc; \
+		xdg-icon-resource install --context apps --size ${size} ${SRCDIR}/grc-icon-${size}.png gnuradio-grc; \
+	done
+	xdg-mime install ${SRCDIR}/gnuradio-grc.xml
+	xdg-desktop-menu install ${SRCDIR}/gnuradio-grc.desktop
+	xdg-desktop-menu install ${SRCDIR}/gnuradio-usrp_diagnostics.desktop
+	;;
+'uninstall')
+	for size in ${ICON_SIZES}; do \
+		xdg-icon-resource uninstall --context mimetypes --theme gnome --size ${size} application-gnuradio-grc; \
+		xdg-icon-resource uninstall --context mimetypes --size ${size} application-gnuradio-grc; \
+		xdg-icon-resource uninstall --context apps --theme gnome --size ${size} gnuradio-grc; \
+		xdg-icon-resource uninstall --context apps --size ${size} gnuradio-grc; \
+	done
+	xdg-mime uninstall ${SRCDIR}/gnuradio-grc.xml
+	xdg-desktop-menu uninstall gnuradio-grc.desktop
+	xdg-desktop-menu uninstall gnuradio-usrp_diagnostics.desktop
+	;;
+*)
+	echo "Usage: $0 [install|uninstall]"
+	;;
+esac

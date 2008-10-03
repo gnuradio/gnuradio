@@ -21,36 +21,26 @@
 
 include $(top_srcdir)/grc/Makefile.inc
 
-sizes = 32 48 64 128 256
+ourdatadir = $(grc_data_prefix)/freedesktop
+dist_ourdata_DATA = \
+	grc-icon-256.png \
+	grc-icon-128.png \
+	grc-icon-64.png \
+	grc-icon-48.png \
+	grc-icon-32.png \
+	gnuradio-grc.xml \
+	gnuradio-grc.desktop \
+	gnuradio-usrp_diagnostics.desktop
 
-install-data-local:
-	for size in $(sizes); do \
-		xdg-icon-resource install --context mimetypes --theme gnome --mode system --size $${size} $(srcdir)/grc-icon-$${size}.png application-gnuradio-grc; \
-		xdg-icon-resource install --context mimetypes --mode system --size $${size} $(srcdir)/grc-icon-$${size}.png application-gnuradio-grc; \
-		xdg-icon-resource install --context apps --theme gnome --mode system --size $${size} $(srcdir)/grc-icon-$${size}.png gnuradio-grc; \
-		xdg-icon-resource install --context apps --mode system --size $${size} $(srcdir)/grc-icon-$${size}.png gnuradio-grc; \
-	done
-	xdg-mime install --mode system $(srcdir)/gnuradio-grc.xml
-	xdg-desktop-menu install --mode system $(srcdir)/gnuradio-grc.desktop
-	xdg-desktop-menu install --mode system $(srcdir)/gnuradio-usrp_diagnostics.desktop
+dist_bin_SCRIPTS = grc_setup_freedesktop
+BUILT_SOURCES = grc_setup_freedesktop
+grc_setup_freedesktop: Makefile $(srcdir)/grc_setup_freedesktop.in
+	sed -e 's|@SRCDIR[@]|$(ourdatadir)|g' $(srcdir)/grc_setup_freedesktop.in > $@
 
-uninstall-local:
-	for size in $(sizes); do \
-		xdg-icon-resource uninstall --context mimetypes --theme gnome --mode system --size $${size} application-gnuradio-grc; \
-		xdg-icon-resource uninstall --context mimetypes --mode system --size $${size} application-gnuradio-grc; \
-		xdg-icon-resource uninstall --context apps --theme gnome --mode system --size $${size} gnuradio-grc; \
-		xdg-icon-resource uninstall --context apps --mode system --size $${size} gnuradio-grc; \
-	done
-	xdg-mime uninstall --mode system $(srcdir)/gnuradio-grc.xml
-	xdg-desktop-menu uninstall --mode system $(srcdir)/gnuradio-grc.desktop
-	xdg-desktop-menu uninstall --mode system $(srcdir)/gnuradio-usrp_diagnostics.desktop
+EXTRA_DIST = $(srcdir)/grc_setup_freedesktop.in
+MOSTLYCLEANFILES = $(BUILT_SOURCES)
 
-EXTRA_DIST = \
-	$(srcdir)/grc-icon-256.png \
-	$(srcdir)/grc-icon-128.png \
-	$(srcdir)/grc-icon-64.png \
-	$(srcdir)/grc-icon-48.png \
-	$(srcdir)/grc-icon-32.png \
-	$(srcdir)/gnuradio-grc.xml \
-	$(srcdir)/gnuradio-grc.desktop \
-	$(srcdir)/gnuradio-usrp_diagnostics.desktop
+install-data-hook: grc_setup_freedesktop
+	grc_setup_freedesktop install
+uninstall-hook: grc_setup_freedesktop
+	sh grc_setup_freedesktop uninstall .
