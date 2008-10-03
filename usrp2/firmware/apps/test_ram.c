@@ -47,7 +47,6 @@ int
 main(void)
 {
   int i,j,k;
-  unsigned char buf[512];
 
   u2_init();
   //hal_uart_init();

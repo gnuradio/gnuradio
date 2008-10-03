@@ -40,4 +40,6 @@ main(void)
     printf("OK: set h/w rev to %d.%d\n", HW_REV_MAJOR, HW_REV_MINOR);
   else
     printf("FAILED to set h/w rev to %d.%d\n", HW_REV_MAJOR, HW_REV_MINOR);
+
+  return 0;
 }

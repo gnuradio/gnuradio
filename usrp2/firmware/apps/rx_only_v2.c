@@ -101,8 +101,6 @@ u2_mac_addr_t host_mac_addr;
 
 
 void link_changed_callback(int speed);
-static volatile bool link_is_up = false;	// eth handler sets this
-
 
 void
 start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p)
