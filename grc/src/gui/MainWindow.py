@@ -21,7 +21,9 @@ from Constants import \
 	MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, \
 	NEW_FLOGRAPH_TITLE, REPORTS_WINDOW_HEIGHT, \
 	FLOW_GRAPH_FILE_EXTENSION
-from Actions import APPLICATION_QUIT, FLOW_GRAPH_KILL
+from Actions import \
+	APPLICATION_QUIT, FLOW_GRAPH_KILL, \
+	FLOW_GRAPH_SAVE
 import pygtk
 pygtk.require('2.0')
 import gtk

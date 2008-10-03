@@ -43,4 +43,4 @@ MOSTLYCLEANFILES = $(BUILT_SOURCES)
 install-data-hook: grc_setup_freedesktop
 	grc_setup_freedesktop install
 uninstall-hook: grc_setup_freedesktop
-	sh grc_setup_freedesktop uninstall .
+	bash $(srcdir)/grc_setup_freedesktop uninstall $(srcdir)

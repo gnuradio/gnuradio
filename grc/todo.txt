@@ -16,8 +16,9 @@
 -hotkeys in action descriptions
 -log slider gui control
 -icons for certain blocks, + for add
--zoom in/out (cairo vector graphics)
+-zoom in/out (cairo vector graphics) (use scroll wheel as control)
 -search for blocks
+-click and drag on whitespace to scroll
 
 ##################################################
 # Problems
