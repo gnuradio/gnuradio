@@ -44,7 +44,6 @@ get_hw_rev(void)
   ok &= eeprom_read(I2C_ADDR_MBOARD, MBOARD_REV_MSB, &u2_hw_rev_major, 1);
 }
 
-
 /*
  * We ought to arrange for this to be called before main, but for now,
  * we require that the user's main call u2_init as the first thing...

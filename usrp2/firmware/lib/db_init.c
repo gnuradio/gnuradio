@@ -211,19 +211,13 @@ calc_dxc_freq(u2_fxpt_freq_t target_freq, u2_fxpt_freq_t baseband_freq,
   u2_fxpt_freq_t fs = U2_DOUBLE_TO_FXPT_FREQ(100e6);	// converter sample rate
   u2_fxpt_freq_t delta = target_freq - baseband_freq;
 
+#if 0
   printf("calc_dxc_freq\n");
   printf("  fs       = "); print_fxpt_freq(fs); newline();
   printf("  target   = "); print_fxpt_freq(target_freq); newline();
   printf("  baseband = "); print_fxpt_freq(baseband_freq); newline();
   printf("  delta    = "); print_fxpt_freq(delta); newline();
-  
-#if 0
-  printf("--- printed as uint64_t ---\n");
-  printf("  fs       = "); print_uint64(fs); newline();
-  printf("  target   = "); print_uint64(target_freq); newline();
-  printf("  baseband = "); print_uint64(baseband_freq); newline();
-  printf("  delta    = "); print_uint64(delta); newline();
-#endif
+#endif  
 
   if (delta >= 0){
     while (delta > fs)
@@ -301,17 +295,17 @@ compute_freq_control_word(u2_fxpt_freq_t target_freq, u2_fxpt_freq_t *actual_fre
   //   master = 100e6;
   //   v = (int) rint(target_freq / master_freq) * pow(2.0, 32.0);
 
-  printf("compute_freq_control_word\n");
-  printf("  target_freq = "); print_fxpt_freq(target_freq); newline();
+  //printf("compute_freq_control_word\n");
+  //printf("  target_freq = "); print_fxpt_freq(target_freq); newline();
 
   int32_t master_freq = 100000000;	// 100M
 
   int32_t v = ((target_freq << 12)) / master_freq;
-  printf("  fcw = %d\n", v);
+  //printf("  fcw = %d\n", v);
 
   *actual_freq = (v * (int64_t) master_freq) >> 12;
 
-  printf("  actual = "); print_fxpt_freq(*actual_freq); newline();
+  //printf("  actual = "); print_fxpt_freq(*actual_freq); newline();
 
   return v;
 }

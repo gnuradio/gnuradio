@@ -22,6 +22,7 @@ noinst_LIBRARIES = \
 
 
 libu2fw_a_SOURCES = \
+	abort.c \
 	ad9510.c \
 	ad9777.c \
 	buffer_pool.c \
@@ -34,6 +35,7 @@ libu2fw_a_SOURCES = \
 	eeprom.c \
 	ethernet.c \
 	eth_mac.c \
+	exit.c \
 	hal_io.c \
 	hal_uart.c \
 	i2c.c \
