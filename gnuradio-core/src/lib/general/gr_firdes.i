@@ -51,9 +51,10 @@ class gr_firdes {
    * \p transition_width:	width of transition band (Hz).
    * \p attenuation_dB          out of band attenuation
    *				The normalized width of the transition
-   *				band is what sets the number of taps
+   *				band and the required stop band
+   *                            attenuation is what sets the number of taps
    *				required.  Narrow --> more taps
-   * \p attenuation_dB          The required stop band attenuation in dB
+   *                            More attenuation --> more taps
    * \p window_type: 		What kind of window to use. Determines
    *				maximum attenuation and passband ripple.
    * \p beta:			parameter for Kaiser window
@@ -82,6 +83,7 @@ class gr_firdes {
    *				maximum attenuation and passband ripple.
    * \p beta:			parameter for Kaiser window
    */
+
   static std::vector<float>
   high_pass (double gain,
 	     double sampling_freq,
@@ -90,6 +92,34 @@ class gr_firdes {
 	     win_type window = WIN_HAMMING,
 	     double beta = 6.76			// used only with Kaiser
 	     ) throw(std::out_of_range); 
+
+  /*!
+   * \brief use "window method" to design a high-pass FIR filter
+   *
+   * \p gain:			overall gain of filter (typically 1.0)
+   * \p sampling_freq:		sampling freq (Hz)
+   * \p cutoff_freq:		center of transition band (Hz)
+   * \p transition_width:	width of transition band (Hz).
+   * \p attenuation_dB          out of band attenuation
+   *				The normalized width of the transition
+   *				band and the required stop band
+   *                            attenuation is what sets the number of taps
+   *				required.  Narrow --> more taps
+   *                            More attenuation --> more taps
+   * \p window_type: 		What kind of window to use. Determines
+   *				maximum attenuation and passband ripple.
+   * \p beta:			parameter for Kaiser window
+   */
+
+  static std::vector<float>
+  high_pass_2 (double gain,
+	     double sampling_freq,
+	     double cutoff_freq,		// Hz center of transition band
+	     double transition_width,		// Hz width of transition band
+	     double attenuation_dB,             // out of band attenuation dB
+	     win_type window = WIN_HAMMING,
+	     double beta = 6.76);		// used only with Kaiser
+
 
   /*!
    * \brief use "window method" to design a band-pass FIR filter
@@ -106,6 +136,7 @@ class gr_firdes {
    *				maximum attenuation and passband ripple.
    * \p beta:			parameter for Kaiser window
    */
+
   static std::vector<float>
   band_pass (double gain,
 	     double sampling_freq,
@@ -116,6 +147,35 @@ class gr_firdes {
 	     double beta = 6.76			// used only with Kaiser
 	     ) throw(std::out_of_range); 
 
+
+  /*!
+   * \brief use "window method" to design a band-pass FIR filter
+   *
+   * \p gain:			overall gain of filter (typically 1.0)
+   * \p sampling_freq:		sampling freq (Hz)
+   * \p low_cutoff_freq:	center of transition band (Hz)
+   * \p high_cutoff_freq:	center of transition band (Hz)
+   * \p transition_width:	width of transition band (Hz).
+   * \p attenuation_dB          out of band attenuation
+   *				The normalized width of the transition
+   *				band and the required stop band
+   *                            attenuation is what sets the number of taps
+   *				required.  Narrow --> more taps
+   *                            More attenuation --> more taps
+   * \p window_type: 		What kind of window to use. Determines
+   *				maximum attenuation and passband ripple.
+   * \p beta:			parameter for Kaiser window
+   */
+
+  static std::vector<float>
+  band_pass_2 (double gain,
+	     double sampling_freq,
+	     double low_cutoff_freq,		// Hz beginning transition band
+	     double high_cutoff_freq,		// Hz beginning transition band
+	     double transition_width,		// Hz width of transition band
+	     double attenuation_dB,             // out of band attenuation dB
+	     win_type window = WIN_HAMMING,
+	     double beta = 6.76);		// used only with Kaiser
 
   /*!
    * \brief use "window method" to design a band-reject FIR filter
@@ -145,6 +205,35 @@ class gr_firdes {
 
 
   /*!
+   * \brief use "window method" to design a complex band-pass FIR filter
+   *
+   * \p gain:			overall gain of filter (typically 1.0)
+   * \p sampling_freq:		sampling freq (Hz)
+   * \p low_cutoff_freq:	center of transition band (Hz)
+   * \p high_cutoff_freq:	center of transition band (Hz)
+   * \p transition_width:	width of transition band (Hz).
+   * \p attenuation_dB          out of band attenuation
+   *				The normalized width of the transition
+   *				band and the required stop band
+   *                            attenuation is what sets the number of taps
+   *				required.  Narrow --> more taps
+   *                            More attenuation --> more taps
+   * \p window_type: 		What kind of window to use. Determines
+   *				maximum attenuation and passband ripple.
+   * \p beta:			parameter for Kaiser window
+   */
+
+  static std::vector<gr_complex>
+  complex_band_pass_2 (double gain,
+	     double sampling_freq,
+	     double low_cutoff_freq,		// Hz beginning transition band
+	     double high_cutoff_freq,		// Hz beginning transition band
+	     double transition_width,		// Hz width of transition band
+	     double attenuation_dB,             // out of band attenuation dB
+	     win_type window = WIN_HAMMING,
+	     double beta = 6.76);		// used only with Kaiser
+
+  /*!
    * \brief use "window method" to design a band-reject FIR filter
    *
    * \p gain:			overall gain of filter (typically 1.0)
@@ -169,6 +258,36 @@ class gr_firdes {
 	       win_type window = WIN_HAMMING,   // used only with Kaiser
 	       double beta = 6.76
 	       ) throw(std::out_of_range);
+
+
+  /*!
+   * \brief use "window method" to design a band-reject FIR filter
+   *
+   * \p gain:			overall gain of filter (typically 1.0)
+   * \p sampling_freq:		sampling freq (Hz)
+   * \p low_cutoff_freq:	center of transition band (Hz)
+   * \p high_cutoff_freq:	center of transition band (Hz)
+   * \p transition_width:	width of transition band (Hz).
+   * \p attenuation_dB          out of band attenuation
+   *				The normalized width of the transition
+   *				band and the required stop band
+   *                            attenuation is what sets the number of taps
+   *				required.  Narrow --> more taps
+   *                            More attenuation --> more taps
+   * \p window_type: 		What kind of window to use. Determines
+   *				maximum attenuation and passband ripple.
+   * \p beta:			parameter for Kaiser window
+   */
+
+  static std::vector<float>
+  band_reject_2 (double gain,
+	       double sampling_freq,
+	       double low_cutoff_freq,		// Hz beginning transition band
+	       double high_cutoff_freq,		// Hz beginning transition band
+	       double transition_width,		// Hz width of transition band
+	       double attenuation_dB,           // out of band attenuation dB
+	       win_type window = WIN_HAMMING,
+	       double beta = 6.76);		// used only with Kaiser
 
   /*!\brief design a Hilbert Transform Filter
    *

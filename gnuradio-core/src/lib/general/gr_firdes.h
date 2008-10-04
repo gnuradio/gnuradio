@@ -77,12 +77,15 @@ class gr_firdes {
    * \p transition_width:	width of transition band (Hz).
    * \p attenuation_dB          required stopband attenuation
    *				The normalized width of the transition
-   *				band is what sets the number of taps
+   *				band and the required stop band
+   *                            attenuation is what sets the number of taps
    *				required.  Narrow --> more taps
+   *                            More attenuatin --> more taps
    * \p window_type: 		What kind of window to use. Determines
    *				maximum attenuation and passband ripple.
    * \p beta:			parameter for Kaiser window
    */
+
   static std::vector<float>
   low_pass_2 (double gain,
 	    double sampling_freq,
@@ -124,8 +127,10 @@ class gr_firdes {
    * \p transition_width:	width of transition band (Hz).
    * \p attenuation_dB          out of band attenuation
    *				The normalized width of the transition
-   *				band is what sets the number of taps
+   *				band and the required stop band
+   *                            attenuation is what sets the number of taps
    *				required.  Narrow --> more taps
+   *                            More attenuation --> more taps
    * \p window_type: 		What kind of window to use. Determines
    *				maximum attenuation and passband ripple.
    * \p beta:			parameter for Kaiser window
@@ -174,12 +179,15 @@ class gr_firdes {
    * \p transition_width:	width of transition band (Hz).
    * \p attenuation_dB          out of band attenuation
    *				The normalized width of the transition
-   *				band is what sets the number of taps
+   *				band and the required stop band
+   *                            attenuation is what sets the number of taps
    *				required.  Narrow --> more taps
+   *                            More attenuation --> more taps
    * \p window_type: 		What kind of window to use. Determines
    *				maximum attenuation and passband ripple.
    * \p beta:			parameter for Kaiser window
    */
+
   static std::vector<float>
   band_pass_2 (double gain,
 	     double sampling_freq,
@@ -225,8 +233,10 @@ class gr_firdes {
    * \p transition_width:	width of transition band (Hz).
    * \p attenuation_dB          out of band attenuation
    *				The normalized width of the transition
-   *				band is what sets the number of taps
+   *				band and the required stop band
+   *                            attenuation is what sets the number of taps
    *				required.  Narrow --> more taps
+   *                            More attenuation --> more taps
    * \p window_type: 		What kind of window to use. Determines
    *				maximum attenuation and passband ripple.
    * \p beta:			parameter for Kaiser window
@@ -277,8 +287,10 @@ class gr_firdes {
    * \p transition_width:	width of transition band (Hz).
    * \p attenuation_dB          out of band attenuation
    *				The normalized width of the transition
-   *				band is what sets the number of taps
+   *				band and the required stop band
+   *                            attenuation is what sets the number of taps
    *				required.  Narrow --> more taps
+   *                            More attenuation --> more taps
    * \p window_type: 		What kind of window to use. Determines
    *				maximum attenuation and passband ripple.
    * \p beta:			parameter for Kaiser window
