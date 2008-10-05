@@ -1,0 +1,91 @@
+diff -urN orig/Xilinx_EDK_GNU_10.1i/mb/srcs/gcc-4.1.1_libgcc_noinline_udivmoddi4.patch new/Xilinx_EDK_GNU_10.1i/mb/srcs/gcc-4.1.1_libgcc_noinline_udivmoddi4.patch
+--- /dev/null	1969-12-31 16:00:00.000000000 -0800
++++ new/Xilinx_EDK_GNU_10.1i/mb/srcs/gcc-4.1.1_libgcc_noinline_udivmoddi4.patch	2008-10-05 08:49:06.000000000 -0700
+@@ -0,0 +1,31 @@
++--- gcc-orig/gcc/libgcc2.h	2005-09-09 01:39:18.000000000 -0700
+++++ gcc/gcc/libgcc2.h		2008-10-04 11:14:11.000000000 -0700
++@@ -272,7 +272,7 @@
++ extern DWtype __moddi3 (DWtype, DWtype);
++ 
++ /* __udivmoddi4 is static inline when building other libgcc2 portions.  */
++-#if (!defined (L_udivdi3) && !defined (L_divdi3) && \
+++#if 0 && (!defined (L_udivdi3) && !defined (L_divdi3) && \
++      !defined (L_umoddi3) && !defined (L_moddi3))
++ extern UDWtype __udivmoddi4 (UDWtype, UDWtype, UDWtype *);
++ #endif
++--- gcc-orig/gcc/libgcc2.c	2005-09-27 10:11:39.000000000 -0700
+++++ gcc/gcc/libgcc2.c		2008-10-04 11:16:18.000000000 -0700
++@@ -644,7 +644,7 @@
++ 
++ #if (defined (L_udivdi3) || defined (L_divdi3) || \
++      defined (L_umoddi3) || defined (L_moddi3))
++-#define L_udivmoddi4
+++//#define L_udivmoddi4
++ #endif
++ 
++ #ifdef L_clz
++@@ -816,7 +816,7 @@
++ 
++ #if (defined (L_udivdi3) || defined (L_divdi3) || \
++      defined (L_umoddi3) || defined (L_moddi3))
++-static inline __attribute__ ((__always_inline__))
+++//static inline __attribute__ ((__always_inline__))
++ #endif
++ UDWtype
++ __udivmoddi4 (UDWtype n, UDWtype d, UDWtype *rp)
+diff -urN orig/Xilinx_EDK_GNU_10.1i/mb/srcs/gcc-patches new/Xilinx_EDK_GNU_10.1i/mb/srcs/gcc-patches
+--- orig/Xilinx_EDK_GNU_10.1i/mb/srcs/gcc-patches	2008-01-30 11:58:58.000000000 -0800
++++ new/Xilinx_EDK_GNU_10.1i/mb/srcs/gcc-patches	2008-10-05 08:50:02.000000000 -0700
+@@ -84,3 +84,4 @@
+ gcc             gcc-4.1.1_mb_usmul.patch        Add usmulsi3_highpart pattern to MB
+ gcc             gcc-4.1.1_sections_cleanup.patch Cleanup section assignments in GCC
+ gcc             gcc-4.1.1_mb_nomergestr.patch   Don't use merged string sections
++gcc		gcc-4.1.1_libgcc_noinline_udivmoddi4.patch	 Don't inline udivmoddi4
+diff -urN orig/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14.0_libgloss.patch new/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14.0_libgloss.patch
+--- orig/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14.0_libgloss.patch	2008-01-29 15:42:56.000000000 -0800
++++ new/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14.0_libgloss.patch	2008-10-05 08:47:12.000000000 -0700
+@@ -232,7 +232,7 @@
+ +all: ${CRT} ${OBJS}
+  
+  install: ${CRT}
+- 	@for crt in ${CRT}; do\
++ 	@for crt in ${CRT}; do \
+ diff -urNp --exclude '*.swp' newlib-orig/libgloss/microblaze/open.c newlib/libgloss/microblaze/open.c
+ --- newlib-orig/libgloss/microblaze/open.c	1969-12-31 16:00:00.000000000 -0800
+ +++ newlib/libgloss/microblaze/open.c	2007-05-07 19:07:04.000000000 -0700
+diff -urN orig/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14.0_libgloss_more_funcs.patch new/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14.0_libgloss_more_funcs.patch
+--- orig/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14.0_libgloss_more_funcs.patch	2008-01-29 15:42:56.000000000 -0800
++++ new/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14.0_libgloss_more_funcs.patch	2008-10-05 08:47:12.000000000 -0700
+@@ -1007,7 +1007,7 @@
+ @@ -71,7 +71,7 @@ all: ${CRT} ${LIB}
+  
+  install: ${CRT} ${LIB}
+- 	@for crt in ${CRT}; do\
++ 	@for crt in ${CRT}; do \
+ -  	$(INSTALL_PROGRAM) $${crt} $(DESTDIR)$(tooldir)/lib${MULTISUBDIR}/$${crt}; \
+ +	$(INSTALL_PROGRAM) $${crt} $(DESTDIR)$(tooldir)/lib${MULTISUBDIR}/$${crt}; \
+  	done
+diff -urN orig/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14.0_libmb.patch new/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14.0_libmb.patch
+--- orig/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14.0_libmb.patch	2008-01-29 15:42:56.000000000 -0800
++++ new/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14.0_libmb.patch	2008-10-05 08:47:12.000000000 -0700
+@@ -25,7 +25,7 @@
+  
+ -install: ${CRT}
+ +install: ${CRT} ${LIB}
+- 	@for crt in ${CRT}; do\
++ 	@for crt in ${CRT}; do \
+    	$(INSTALL_PROGRAM) $${crt} $(DESTDIR)$(tooldir)/lib${MULTISUBDIR}/$${crt}; \
+  	done
+ +	$(INSTALL_PROGRAM) ${LIB} $(DESTDIR)$(tooldir)/lib${MULTISUBDIR}
+diff -urN orig/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14_crt.patch new/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14_crt.patch
+--- orig/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14_crt.patch	2008-01-29 15:42:56.000000000 -0800
++++ new/Xilinx_EDK_GNU_10.1i/mb/srcs/newlib-1.14_crt.patch	2008-10-05 08:47:12.000000000 -0700
+@@ -619,7 +619,7 @@
+ +all: ${CRT} 
+ +
+ +install: ${CRT}
+-+	@for crt in ${CRT}; do\
+++	@for crt in ${CRT}; do \
+ +  	$(INSTALL_PROGRAM) $${crt} $(DESTDIR)$(tooldir)/lib${MULTISUBDIR}/$${crt}; \
+ +	done
+ +
