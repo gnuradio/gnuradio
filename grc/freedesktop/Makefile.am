@@ -22,6 +22,7 @@
 include $(top_srcdir)/grc/Makefile.inc
 
 ourdatadir = $(grc_data_prefix)/freedesktop
+
 dist_ourdata_DATA = \
 	grc-icon-256.png \
 	grc-icon-128.png \
@@ -33,14 +34,16 @@ dist_ourdata_DATA = \
 	gnuradio-usrp_diagnostics.desktop
 
 dist_bin_SCRIPTS = grc_setup_freedesktop
-BUILT_SOURCES = grc_setup_freedesktop
-grc_setup_freedesktop: Makefile $(srcdir)/grc_setup_freedesktop.in
-	sed -e 's|@SRCDIR[@]|$(ourdatadir)|g' $(srcdir)/grc_setup_freedesktop.in > $@
+
+grc_setup_freedesktop: Makefile grc_setup_freedesktop.in
+	$(SED) -e 's|@SRCDIR[@]|$(ourdatadir)|g' $(srcdir)/$@.in > $@
 
 EXTRA_DIST = $(srcdir)/grc_setup_freedesktop.in
-MOSTLYCLEANFILES = $(BUILT_SOURCES)
+
+MOSTLYCLEANFILES = grc_setup_freedesktop
 
 install-data-hook: grc_setup_freedesktop
-	grc_setup_freedesktop install
+	bash $(srcdir)/grc_setup_freedesktop install $(srcdir)
+
 uninstall-hook: grc_setup_freedesktop
 	bash $(srcdir)/grc_setup_freedesktop uninstall $(srcdir)

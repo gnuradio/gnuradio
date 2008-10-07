@@ -97,6 +97,8 @@ GR_SCRIPTING
 AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
 AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
 
+AC_PROG_SED
+
 dnl Checks for libraries.
 AC_CHECK_LIB(socket,socket)
 
@@ -297,7 +299,7 @@ GRC_GR_WXGUI
 GRC_GR_SOUNDER			dnl this must come after GRC_USRP
 GRC_GR_UTILS                    dnl this must come after GRC_GR_WXGUI
 GRC_GNURADIO_EXAMPLES		dnl must come after all GRC_GR_*
-dnl GRC_GRC			dnl breaks the build at r9698 ticket:298
+GRC_GRC
 
 # Each component is now either to be built, was skipped, will be
 # included from pre-installed libraries and includes, or failed

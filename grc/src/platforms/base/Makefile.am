@@ -34,15 +34,13 @@ ourpython_PYTHON = \
 	Port.py \
 	__init__.py
 
-BUILT_SOURCES = Constants.py
-
-Constants.py: Makefile $(srcdir)/Constants.py.in
-	sed \
+Constants.py: Makefile Constants.py.in
+	$(SED) \
 		-e 's|@PACKAGE[@]|$(PACKAGE)|g' \
 		-e 's|@VERSION[@]|$(VERSION)|g' \
 		-e 's|@datadir[@]|$(grc_base_data_dir)|g' \
-	$(srcdir)/Constants.py.in > $@
+	$(srcdir)/$@.in > $@
 
 EXTRA_DIST = $(srcdir)/Constants.py.in
 
-MOSTLYCLEANFILES = $(BUILT_SOURCES)
+MOSTLYCLEANFILES = Constants.py
