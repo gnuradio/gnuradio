@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Probe Density
+###################################################
+ -->
+<block>
+	<name>Probe Density</name>
+	<key>gr_probe_density_b</key>
+	<import>from gnuradio import gr</import>
+	<import>import threading</import>
+	<import>import time</import>
+	<make>gr.probe_density_b($alpha)
+def _$(id)_run():
+	while True:
+		time.sleep($update_interval)
+		print "$(id) Density:", self.$(id).density()
+threading.Thread(target=_$(id)_run).start()</make>
+	<callback>set_alpha($alpha)</callback>
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Update Interval (s)</name>
+		<key>update_interval</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+</block>

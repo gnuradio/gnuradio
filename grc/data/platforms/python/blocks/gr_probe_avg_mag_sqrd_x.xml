@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Probe Average Magnitude Squared
+###################################################
+ -->
+<block>
+	<name>Probe Avg Mag^2</name>
+	<key>gr_probe_avg_mag_sqrd_x</key>
+	<import>from gnuradio import gr</import>
+	<import>import threading</import>
+	<import>import time</import>
+	<make>gr.probe_avg_mag_sqrd_$(type)($threshold, $alpha)
+def _$(id)_run():
+	while True:
+		time.sleep($update_interval)
+		print "$(id) Level:", self.$(id).level()
+threading.Thread(target=_$(id)_run).start()</make>
+	<callback>set_alpha($alpha)</callback>
+	<callback>set_threshold($threshold)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>c</key>
+			<opt>input:complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>f</key>
+			<opt>input:float</opt>
+		</option>
+	</param>
+	<param>
+		<name>Threshold (dB)</name>
+		<key>threshold</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Update Interval (s)</name>
+		<key>update_interval</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type.input</type>
+	</sink>
+</block>

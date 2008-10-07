@@ -237,6 +237,13 @@
 		<block>gr_descrambler_bb</block>
 	</cat>
 	<cat>
+		<name>Probes</name>
+		<block>gr_probe_avg_mag_sqrd_x</block>
+		<block>gr_probe_density_b</block>
+		<block>gr_probe_mpsk_snr_c</block>
+		<block>gr_probe_signal_f</block>
+	</cat>
+	<cat>
 		<name>USRP</name>
 		<block>usrp_simple_source_x</block>
 		<block>usrp_simple_sink_x</block>

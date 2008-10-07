@@ -8,7 +8,7 @@
 	<name>Float To Char</name>
 	<key>gr_float_to_char</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.gr_float_to_char()</make>
+	<make>gr.float_to_char()</make>
 	<sink>
 		<name>in</name>
 		<type>float</type>

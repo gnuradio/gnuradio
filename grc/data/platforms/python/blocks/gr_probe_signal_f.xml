@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Probe Signal
+###################################################
+ -->
+<block>
+	<name>Probe Signal</name>
+	<key>gr_probe_signal_f</key>
+	<import>from gnuradio import gr</import>
+	<import>import threading</import>
+	<import>import time</import>
+	<make>gr.probe_signal_f()
+def _$(id)_run():
+	while True:
+		time.sleep($update_interval)
+		print "$(id) Level:", self.$(id).level()
+threading.Thread(target=_$(id)_run).start()</make>
+	<param>
+		<name>Update Interval (s)</name>
+		<key>update_interval</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+</block>

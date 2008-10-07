@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Probe MPSK SNR
+###################################################
+ -->
+<block>
+	<name>Probe MPSK SNR</name>
+	<key>gr_probe_mpsk_snr_c</key>
+	<import>from gnuradio import gr</import>
+	<import>import threading</import>
+	<import>import time</import>
+	<make>gr.probe_mpsk_snr_c($alpha)
+def _$(id)_run():
+	while True:
+		time.sleep($update_interval)
+		print "$(id) Signal Mean:", self.$(id).signal_mean()
+		print "$(id) Noise Variance:", self.$(id).noise_variance()
+		print "$(id) SNR:", self.$(id).snr()
+threading.Thread(target=_$(id)_run).start()</make>
+	<callback>set_alpha($alpha)</callback>
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Update Interval (s)</name>
+		<key>update_interval</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+</block>
