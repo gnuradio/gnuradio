@@ -28,4 +28,4 @@ do
 done
 
 
-`dirname $0`/configure $args --host=mb
+`dirname $0`/configure CFLAGS='-O2' $args --host=mb
