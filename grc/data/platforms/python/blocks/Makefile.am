@@ -82,6 +82,7 @@ dist_ourdata_DATA = \
 	gr_decode_ccsds_27_fb.xml \
 	gr_deinterleave.xml \
 	gr_delay.xml \
+	gr_descrambler_bb.xml \
 	gr_diff_decoder_bb.xml \
 	gr_diff_encoder_bb.xml \
 	gr_diff_phasor_cc.xml \
@@ -143,6 +144,7 @@ dist_ourdata_DATA = \
 	gr_repeat.xml \
 	gr_rms_xx.xml \
 	gr_sample_and_hold_xx.xml \
+	gr_scrambler_bb.xml \
 	gr_short_to_float.xml \
 	gr_sig_source_x.xml \
 	gr_simple_correlator.xml \
