@@ -42,5 +42,5 @@ Constants.py: Makefile Constants.py.in
 	$(srcdir)/$@.in > $@
 
 EXTRA_DIST = $(srcdir)/Constants.py.in
-
-MOSTLYCLEANFILES = Constants.py
+BUILT_SOURCES = Constants.py
+MOSTLYCLEANFILES = $(BUILT_SOURCES)

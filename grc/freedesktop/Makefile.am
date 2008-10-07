@@ -39,11 +39,17 @@ grc_setup_freedesktop: Makefile grc_setup_freedesktop.in
 	$(SED) -e 's|@SRCDIR[@]|$(ourdatadir)|g' $(srcdir)/$@.in > $@
 
 EXTRA_DIST = $(srcdir)/grc_setup_freedesktop.in
+BUILT_SOURCES = grc_setup_freedesktop
+MOSTLYCLEANFILES = $(BUILT_SOURCES)
 
-MOSTLYCLEANFILES = grc_setup_freedesktop
+install-data-hook:
+	@printf "\n*** GRC Post-Install Message ***\
+	\nTo install icons, mime type, and menu items\
+	\nfor a freedesktop.org system (Gnome/KDE/Xfce):\
+	\n  >>> sudo grc_setup_freedesktop install\n\n"
 
-install-data-hook: grc_setup_freedesktop
-	bash $(srcdir)/grc_setup_freedesktop install $(srcdir)
-
-uninstall-hook: grc_setup_freedesktop
-	bash $(srcdir)/grc_setup_freedesktop uninstall $(srcdir)
+uninstall-hook:
+	@printf "\n*** GRC Post-Uninstall Message ***\
+	\nTo uninstall icons, mime type, and menu items\
+	\nfor a freedesktop.org system (Gnome/KDE/Xfce):\
+	\n  >>> sudo grc_setup_freedesktop uninstall\n\n"
