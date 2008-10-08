@@ -42,6 +42,7 @@ module serdes_rx
      output xon_rcvd, output xoff_rcvd,
 
      output [15:0] fifo_occupied, output fifo_full, output fifo_empty,
+     output reg serdes_link_up,
      output [31:0] debug
      );
 
@@ -336,18 +337,16 @@ module serdes_rx
 
    assign      wr_dat_o = line_o;
 
-   /*
-   assign debug = { { fifo_space[15:8] },
-		    { fifo_space[7:0] },
-		    { 2'd0, error_i, sop_i, eop_i, error_o, sop_o, eop_o },
-		    { full, empty, write, read, xfer_active, state[2:0] } };
+   wire        slu = ~({2'b11,K_ERROR}=={ser_rkmsb,ser_rklsb,ser_r});
+   reg [3:0]   slu_reg;
+   
+   always @(posedge clk)
+     if(rst) slu_reg <= 0;
+     else slu_reg <= {slu_reg[2:0],slu};
 
-   assign      debug = { { xoff_rcvd,xon_rcvd,sop_i,eop_i,error_i,state[2:0] },
-			 { odd, wait_here, write_pre, write_d, write, full, chosen_data[17:16]},
-			 { chosen_data[15:8] },
-			 { chosen_data[7:0] } };
-   */
-
+   always @(posedge clk)
+     serdes_link_up <= &slu_reg[3:1];
+   
    assign      debug = { full, empty, odd, xfer_active, sop_i, eop_i, error_i, state[2:0] };
    
 endmodule // serdes_rx

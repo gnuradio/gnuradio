@@ -16,6 +16,8 @@ module serdes
 
      output [15:0] tx_occupied, output tx_full, output tx_empty,
      output [15:0] rx_occupied, output rx_full, output rx_empty,
+
+     output serdes_link_up,
      
      output [31:0] debug0, 
      output [31:0] debug1);
@@ -40,7 +42,7 @@ module serdes
       .wr_ready_i(wr_ready_i),.wr_full_i(wr_full_i),
       .fifo_space(fifo_space), .xon_rcvd(xon_rcvd), .xoff_rcvd(xoff_rcvd),
       .fifo_occupied(rx_occupied),.fifo_full(rx_full),.fifo_empty(rx_empty),
-      .debug(debug_rx) );
+      .serdes_link_up(serdes_link_up), .debug(debug_rx) );
 
    serdes_fc_tx serdes_fc_tx
      (.clk(clk),.rst(rst),

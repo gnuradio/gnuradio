@@ -3,7 +3,7 @@
 // ////////////////////////////////////////////////////////////////////////////////
 
 module u2_core
-  #(parameter RAM_SIZE=16384)
+  #(parameter RAM_SIZE=32768)
   (// Clocks
    input dsp_clk,
    input wb_clk,
@@ -123,7 +123,7 @@ module u2_core
    output [18:0] RAM_A,
    output RAM_CE1n,
    output RAM_CENn,
-   input RAM_CLK,
+   output RAM_CLK,
    output RAM_WEn,
    output RAM_OEn,
    output RAM_LDn,
@@ -156,25 +156,27 @@ module u2_core
    wire 	ser_rx_full, ser_tx_full, dsp_rx_full, dsp_tx_full, eth_rx_full, eth_tx_full, eth_rx_full2;
    wire 	ser_rx_empty, ser_tx_empty, dsp_rx_empty, dsp_tx_empty, eth_rx_empty, eth_tx_empty, eth_rx_empty2;
 	
+   wire 	serdes_link_up;
+   
    // ///////////////////////////////////////////////////////////////////////////////////////////////
    // Wishbone Single Master INTERCON
-   parameter 	dw = 32;  // Data bus width
-   parameter 	aw = 16;  // Address bus width, for byte addressibility, 16 = 64K byte memory space
-   parameter 	sw = 4;   // Select width -- 32-bit data bus with 8-bit granularity.  
+   localparam 	dw = 32;  // Data bus width
+   localparam 	aw = 16;  // Address bus width, for byte addressibility, 16 = 64K byte memory space
+   localparam	sw = 4;   // Select width -- 32-bit data bus with 8-bit granularity.  
    
    wire [dw-1:0] m0_dat_o, m0_dat_i;
    wire [dw-1:0] s0_dat_o, s1_dat_o, s0_dat_i, s1_dat_i, s2_dat_o, s3_dat_o, s2_dat_i, s3_dat_i,
 		 s4_dat_o, s5_dat_o, s4_dat_i, s5_dat_i, s6_dat_o, s7_dat_o, s6_dat_i, s7_dat_i,
 		 s8_dat_o, s9_dat_o, s8_dat_i, s9_dat_i, s10_dat_o, s10_dat_i, s11_dat_i, s11_dat_o,
-		 s12_dat_i, s12_dat_o, s13_dat_i, s13_dat_o;
-   wire [aw-1:0] m0_adr,s0_adr,s1_adr,s2_adr,s3_adr,s4_adr,s5_adr,s6_adr,s7_adr,s8_adr,s9_adr,s10_adr,s11_adr,s12_adr, s13_adr;
-   wire [sw-1:0] m0_sel,s0_sel,s1_sel,s2_sel,s3_sel,s4_sel,s5_sel,s6_sel,s7_sel,s8_sel,s9_sel,s10_sel,s11_sel,s12_sel, s13_sel;
-   wire 	 m0_ack,s0_ack,s1_ack,s2_ack,s3_ack,s4_ack,s5_ack,s6_ack,s7_ack,s8_ack,s9_ack,s10_ack,s11_ack,s12_ack, s13_ack;
-   wire 	 m0_stb,s0_stb,s1_stb,s2_stb,s3_stb,s4_stb,s5_stb,s6_stb,s7_stb,s8_stb,s9_stb,s10_stb,s11_stb,s12_stb, s13_stb;
-   wire 	 m0_cyc,s0_cyc,s1_cyc,s2_cyc,s3_cyc,s4_cyc,s5_cyc,s6_cyc,s7_cyc,s8_cyc,s9_cyc,s10_cyc,s11_cyc,s12_cyc, s13_cyc;
-   wire 	 m0_err,s0_err,s1_err,s2_err,s3_err,s4_err,s5_err,s6_err,s7_err,s8_err,s9_err,s10_err,s11_err,s12_err, s13_err;
-   wire 	 m0_rty,s0_rty,s1_rty,s2_rty,s3_rty,s4_rty,s5_rty,s6_rty,s7_rty,s8_rty,s9_rty,s10_rty,s11_rty,s12_rty, s13_rty;
-   wire 	 m0_we,s0_we,s1_we,s2_we,s3_we,s4_we,s5_we,s6_we,s7_we,s8_we,s9_we,s10_we,s11_we,s12_we,s13_we;
+		 s12_dat_i, s12_dat_o, s13_dat_i, s13_dat_o, s14_dat_i, s14_dat_o;
+   wire [aw-1:0] m0_adr,s0_adr,s1_adr,s2_adr,s3_adr,s4_adr,s5_adr,s6_adr,s7_adr,s8_adr,s9_adr,s10_adr,s11_adr,s12_adr, s13_adr, s14_adr;
+   wire [sw-1:0] m0_sel,s0_sel,s1_sel,s2_sel,s3_sel,s4_sel,s5_sel,s6_sel,s7_sel,s8_sel,s9_sel,s10_sel,s11_sel,s12_sel, s13_sel, s14_sel;
+   wire 	 m0_ack,s0_ack,s1_ack,s2_ack,s3_ack,s4_ack,s5_ack,s6_ack,s7_ack,s8_ack,s9_ack,s10_ack,s11_ack,s12_ack, s13_ack, s14_ack;
+   wire 	 m0_stb,s0_stb,s1_stb,s2_stb,s3_stb,s4_stb,s5_stb,s6_stb,s7_stb,s8_stb,s9_stb,s10_stb,s11_stb,s12_stb, s13_stb, s14_stb;
+   wire 	 m0_cyc,s0_cyc,s1_cyc,s2_cyc,s3_cyc,s4_cyc,s5_cyc,s6_cyc,s7_cyc,s8_cyc,s9_cyc,s10_cyc,s11_cyc,s12_cyc, s13_cyc, s14_cyc;
+   wire 	 m0_err,s0_err,s1_err,s2_err,s3_err,s4_err,s5_err,s6_err,s7_err,s8_err,s9_err,s10_err,s11_err,s12_err, s13_err, s14_err;
+   wire 	 m0_rty,s0_rty,s1_rty,s2_rty,s3_rty,s4_rty,s5_rty,s6_rty,s7_rty,s8_rty,s9_rty,s10_rty,s11_rty,s12_rty, s13_rty, s14_rty;
+   wire 	 m0_we,s0_we,s1_we,s2_we,s3_we,s4_we,s5_we,s6_we,s7_we,s8_we,s9_we,s10_we,s11_we,s12_we,s13_we, s14_we;
    
    wb_1master #(.s0_addr_w(1),.s0_addr(1'b0),.s1_addr_w(2),.s1_addr(2'b10),
 		.s215_addr_w(6),.s2_addr(6'b1100_00),.s3_addr(6'b1100_01),.s4_addr(6'b1100_10),
@@ -213,7 +215,8 @@ module u2_core
       .s12_dat_i(s12_dat_i),.s12_ack_i(s12_ack),.s12_err_i(s12_err),.s12_rty_i(s12_rty),
       .s13_dat_o(s13_dat_o),.s13_adr_o(s13_adr),.s13_sel_o(s13_sel),.s13_we_o(s13_we),.s13_cyc_o(s13_cyc),.s13_stb_o(s13_stb),
       .s13_dat_i(s13_dat_i),.s13_ack_i(s13_ack),.s13_err_i(s13_err),.s13_rty_i(s13_rty),
-      .s14_dat_i(0),.s14_ack_i(0),.s14_err_i(0),.s14_rty_i(0),
+      .s14_dat_o(s14_dat_o),.s14_adr_o(s14_adr),.s14_sel_o(s14_sel),.s14_we_o(s14_we),.s14_cyc_o(s14_cyc),.s14_stb_o(s14_stb),
+      .s14_dat_i(s14_dat_i),.s14_ack_i(s14_ack),.s14_err_i(s14_err),.s14_rty_i(s14_rty),
       .s15_dat_i(0),.s15_ack_i(0),.s15_err_i(0),.s15_rty_i(0)  );
    
    //////////////////////////////////////////////////////////////////////////////////////////
@@ -476,10 +479,10 @@ module u2_core
    // /////////////////////////////////////////////////////////////////////////
    // Interrupt Controller, Slave #8
 
-   wire [8:0] 	 irq={{6'b0,uart_tx_int, uart_rx_int},
+   wire [15:0] 	 irq={{5'b0, serdes_link_up, uart_tx_int, uart_rx_int},
 		      {pps_int,overrun,underrun,PHY_INTn,i2c_int,spi_int,timer_int,buffer_int}};
    
-   simple_pic #(.is(9),.dwidth(32)) simple_pic
+   simple_pic #(.is(16),.dwidth(32)) simple_pic
      (.clk_i(wb_clk),.rst_i(wb_rst),.cyc_i(s8_cyc),.stb_i(s8_stb),.adr_i(s8_adr[3:2]),
       .we_i(s8_we),.dat_i(s8_dat_o),.dat_o(s8_dat_i),.ack_o(s8_ack),.int_o(proc_int),
       .irq(irq) );
@@ -605,22 +608,42 @@ module u2_core
       .wr_ready_i(wr0_ready),.wr_full_i(wr0_full),
       .tx_occupied(ser_tx_occ),.tx_full(ser_tx_full),.tx_empty(ser_tx_empty),
       .rx_occupied(ser_rx_occ),.rx_full(ser_rx_full),.rx_empty(ser_rx_empty),
-      .debug0(debug_serdes0), .debug1(debug_serdes1) );
+      .serdes_link_up(serdes_link_up),.debug0(debug_serdes0), .debug1(debug_serdes1) );
 
    // ///////////////////////////////////////////////////////////////////////////////////
    // External RAM Interface
 
-   extram_interface extram_interface
-     (.clk(dsp_clk),.rst(dsp_rst),
-      .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
-      .rd_dat_i(rd3_dat),.rd_read_o(rd3_read),.rd_done_o(rd3_done),.rd_error_o(rd3_error),
-      .rd_sop_i(rd3_sop),.rd_eop_i(rd3_eop),
-      .wr_dat_o(wr3_dat),.wr_write_o(wr3_write),.wr_done_o(wr3_done),.wr_error_o(wr3_error),
-      .wr_ready_i(wr3_ready),.wr_full_i(wr3_full),
-      .RAM_D(RAM_D),.RAM_A(RAM_A),.RAM_CE1n(RAM_CE1n),.RAM_CENn(RAM_CENn),
-      .RAM_CLK(RAM_CLK),.RAM_WEn(RAM_WEn),.RAM_OEn(RAM_OEn),.RAM_LDn(RAM_LDn) );
+   localparam PAGE_SIZE = 10;  // PAGE SIZE is in bytes, 10 = 1024 bytes
 
-  
+   wire [15:0] bus2ram, ram2bus;
+   wire [15:0] bridge_adr;
+   wire [1:0]  bridge_sel;
+   wire        bridge_stb, bridge_cyc, bridge_we, bridge_ack;
+   
+   wire [19:0] page;
+   wire [19:0] wb_ram_adr = {page[19:PAGE_SIZE],bridge_adr[PAGE_SIZE-1:0]};
+   setting_reg #(.my_addr(6)) sr_page (.clk(wb_clk),.rst(wb_rst),.strobe(set_stb),.addr(set_addr),
+				       .in(set_data),.out(page),.changed());
+
+   wb_bridge_16_32 bridge
+     (.wb_clk(wb_clk),.wb_rst(wb_rst),
+      .A_cyc_i(s14_cyc),.A_stb_i(s14_stb),.A_we_i(s14_we),.A_sel_i(s14_sel),
+      .A_adr_i(s14_adr),.A_dat_i(s14_dat_o),.A_dat_o(s14_dat_i),.A_ack_o(s14_ack),
+      .B_cyc_o(bridge_cyc),.B_stb_o(bridge_stb),.B_we_o(bridge_we),.B_sel_o(bridge_sel),
+      .B_adr_o(bridge_adr),.B_dat_o(bus2ram),.B_dat_i(ram2bus),.B_ack_i(bridge_ack));
+
+   wb_zbt16_b wb_zbt16_b
+     (.clk(wb_clk),.rst(wb_rst),
+      .wb_adr_i(wb_ram_adr),.wb_dat_i(bus2ram),.wb_dat_o(ram2bus),.wb_sel_i(bridge_sel),
+      .wb_cyc_i(bridge_cyc),.wb_stb_i(bridge_stb),.wb_ack_o(bridge_ack),.wb_we_i(bridge_we),
+      .sram_clk(RAM_CLK),.sram_a(RAM_A),.sram_d(RAM_D[15:0]),.sram_we(RAM_WEn),
+      .sram_bw(),.sram_adv(RAM_LDn),.sram_ce(RAM_CENn),.sram_oe(RAM_OEn),
+      .sram_mode(),.sram_zz() );
+
+   assign      s14_err = 0; assign s14_rty = 0;
+   assign      RAM_CE1n = 0;
+   assign      RAM_D[17:16] = 2'bzz;
+   
    // /////////////////////////////////////////////////////////////////////////////////////////
    // Debug Pins
 
