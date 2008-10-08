@@ -7,19 +7,15 @@
 <block>
 	<name>Probe Avg Mag^2</name>
 	<key>gr_probe_avg_mag_sqrd_x</key>
-	<import>from gnuradio import gr</import>
-	<import>import threading</import>
-	<import>import time</import>
-	<make>gr.probe_avg_mag_sqrd_$(type)($threshold, $alpha)
-def _$(id)_run():
-	while True:
-		time.sleep($update_interval)
-		print "$(id) Level:", self.$(id).level()
-_$(id)_thread = threading.Thread(target=_$(id)_run)
-_$(id)_thread.setDaemon(True)
-_$(id)_thread.start()</make>
+	<import>from grc_gnuradio import blks2 as grc_blks2</import>
+	<make>grc_blks2.probe_avg_mag_sqrd_$(type)(
+	threshold=$threshold,
+	alpha=$alpha,
+	probe_rate=$probe_rate,
+)</make>
 	<callback>set_alpha($alpha)</callback>
 	<callback>set_threshold($threshold)</callback>
+	<callback>set_probe_rate($probe_rate)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -38,21 +34,27 @@ _$(id)_thread.start()</make>
 	<param>
 		<name>Threshold (dB)</name>
 		<key>threshold</key>
+		<value>0</value>
 		<type>real</type>
 	</param>
 	<param>
 		<name>Alpha</name>
 		<key>alpha</key>
+		<value>1</value>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Update Interval (s)</name>
-		<key>update_interval</key>
-		<value>1.0</value>
+		<name>Probe Rate</name>
+		<key>probe_rate</key>
+		<value>10</value>
 		<type>real</type>
 	</param>
 	<sink>
 		<name>in</name>
 		<type>$type.input</type>
 	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
 </block>

@@ -140,7 +140,7 @@ class _queue_source_base(gr.hier_block2):
 			gr.io_signature(0, 0, 0), # Input signature
 			gr.io_signature(1, 1, self._item_size*self._vlen) # Output signature
 		)
-		#create message sink
+		#create message source
 		message_source = gr.message_source(self._item_size*self._vlen, 1)
 		self._msgq = message_source.msgq()
 		#connect

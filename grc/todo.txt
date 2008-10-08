@@ -6,7 +6,6 @@
 -controlled step block
 -throttle with sink only (source is nulled)
 -simplify simple usrp
--probe blocks needs better polling mechanism
 
 ##################################################
 # Features
@@ -20,7 +19,7 @@
 -zoom in/out (cairo vector graphics) (use scroll wheel as control)
 -search for blocks
 -click and drag on whitespace to scroll
--expand preferences, allow for custome prefs, prefs dialog should infer structure
+-expand preferences, allow for custom prefs, prefs dialog should infer structure
 
 ##################################################
 # Problems
@@ -29,7 +28,9 @@
 -auto clean hier library
 -add hier blocks to tree without restart?
 -dont hide vlen controller when vlen > 1
--dont generate py files in cwd, add preference for user to choose
+-dont generate py files in .grc file dir
+-save/restore cwd
+-check for .grc file readonly, ro message in window, no save option
 
 ##################################################
 # External

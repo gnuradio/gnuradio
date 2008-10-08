@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # Copyright 2008 Free Software Foundation, Inc.
 #

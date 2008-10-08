@@ -102,7 +102,7 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 	<param>
 		<name>Reference Level</name>
 		<key>ref_level</key>
-		<value>50</value>
+		<value>0</value>
 		<type>real</type>
 	</param>
 	<param>

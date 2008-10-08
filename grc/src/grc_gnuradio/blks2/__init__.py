@@ -25,3 +25,4 @@ from queue import queue_source_c, queue_source_f, queue_source_i, queue_source_s
 from selector import selector, valve
 from packet import packet_encoder, packet_decoder
 from error_rate import error_rate
+from probe import probe_avg_mag_sqrd_c, probe_avg_mag_sqrd_f, probe_density_b, probe_mpsk_snr_c

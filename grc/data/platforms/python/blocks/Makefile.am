@@ -141,7 +141,6 @@ dist_ourdata_DATA = \
 	gr_probe_avg_mag_sqrd_x.xml \
 	gr_probe_density_b.xml \
 	gr_probe_mpsk_snr_c.xml \
-	gr_probe_signal_f.xml \
 	gr_pwr_squelch_xx.xml \
 	gr_quadrature_demod_cf.xml \
 	gr_rational_resampler_base_xxx.xml \

@@ -7,33 +7,49 @@
 <block>
 	<name>Probe MPSK SNR</name>
 	<key>gr_probe_mpsk_snr_c</key>
-	<import>from gnuradio import gr</import>
-	<import>import threading</import>
-	<import>import time</import>
-	<make>gr.probe_mpsk_snr_c($alpha)
-def _$(id)_run():
-	while True:
-		time.sleep($update_interval)
-		print "$(id) Signal Mean:", self.$(id).signal_mean()
-		print "$(id) Noise Variance:", self.$(id).noise_variance()
-		print "$(id) SNR:", self.$(id).snr()
-_$(id)_thread = threading.Thread(target=_$(id)_run)
-_$(id)_thread.setDaemon(True)
-_$(id)_thread.start()</make>
+	<import>from grc_gnuradio import blks2 as grc_blks2</import>
+	<make>grc_blks2.probe_mpsk_snr_c(
+	type="$type",
+	alpha=$alpha,
+	probe_rate=$probe_rate,
+)</make>
 	<callback>set_alpha($alpha)</callback>
+	<callback>set_probe_rate($probe_rate)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>SNR</name>
+			<key>snr</key>
+		</option>
+		<option>
+			<name>Signal Mean</name>
+			<key>signal_mean</key>
+		</option>
+		<option>
+			<name>Noise Variance</name>
+			<key>noise_variance</key>
+		</option>
+	</param>
 	<param>
 		<name>Alpha</name>
 		<key>alpha</key>
+		<value>1</value>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Update Interval (s)</name>
-		<key>update_interval</key>
-		<value>1.0</value>
+		<name>Probe Rate</name>
+		<key>probe_rate</key>
+		<value>10</value>
 		<type>real</type>
 	</param>
 	<sink>
 		<name>in</name>
 		<type>complex</type>
 	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
 </block>
