@@ -81,7 +81,8 @@ class Generator(object):
 		controls = filter(lambda v: v.get_key().startswith('variable_'), variables)
 		#list of blocks not including variables and imports and parameters and disabled
 		blocks = sorted(self._flow_graph.get_enabled_blocks(), lambda x, y: cmp(x.get_id(), y.get_id()))
-		blocks = filter(lambda b: b not in (imports + parameters + variables), blocks)
+		probes = filter(lambda b: b.get_key().startswith('probe_'), blocks) #ensure probes are last in the block list
+		blocks = filter(lambda b: b not in (imports + parameters + variables + probes), blocks) + probes
 		#list of connections where each endpoint is enabled
 		connections = self._flow_graph.get_enabled_connections()
 		#list of variable names

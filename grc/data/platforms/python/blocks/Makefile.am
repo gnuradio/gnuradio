@@ -184,6 +184,7 @@ dist_ourdata_DATA = \
 	pad_source.xml \
 	parameter.xml \
 	preferences.xml \
+	probe_function.xml \
 	random_source_x.xml \
 	trellis_encoder_xx.xml \
 	trellis_metrics_x.xml \

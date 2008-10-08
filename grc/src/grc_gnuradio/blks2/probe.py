@@ -24,17 +24,19 @@ import threading
 import numpy
 import time
 
-class _probe_base(gr.hier_block2, threading.Thread):
+#######################################################################################
+## Probe: Function
+#######################################################################################
+class probe_function(gr.hier_block2, threading.Thread):
 	"""
-	A hier2 block with float output and probe input.
-	The thread polls the prope for values and writes to a message source.
+	The thread polls the function for values and writes to a message source.
 	"""
 
-	def __init__(self, probe_block, probe_callback, probe_rate):
+	def __init__(self, probe_callback, probe_rate):
 		#init hier block
 		gr.hier_block2.__init__(
-			self, 'probe',
-			gr.io_signature(1, 1, probe_block.input_signature().sizeof_stream_items()[0]),
+			self, 'probe_function',
+			gr.io_signature(0, 0, 0),
 			gr.io_signature(1, 1, gr.sizeof_float),
 		)
 		self._probe_callback = probe_callback
@@ -43,7 +45,6 @@ class _probe_base(gr.hier_block2, threading.Thread):
 		message_source = gr.message_source(gr.sizeof_float, 1)
 		self._msgq = message_source.msgq()
 		#connect
-		self.connect(self, probe_block)
 		self.connect(message_source, self)
 		#setup thread
 		threading.Thread.__init__(self)
@@ -62,6 +63,21 @@ class _probe_base(gr.hier_block2, threading.Thread):
 
 	def set_probe_rate(self, probe_rate):
 		self._probe_rate = probe_rate
+
+class _probe_base(gr.hier_block2):
+	def __init__(self, probe_block, probe_callback, probe_rate):
+		#init hier block
+		gr.hier_block2.__init__(
+			self, 'probe',
+			gr.io_signature(1, 1, probe_block.input_signature().sizeof_stream_items()[0]),
+			gr.io_signature(1, 1, gr.sizeof_float),
+		)
+		probe_function_block = probe_function(probe_callback, probe_rate)
+		#forward callbacks
+		self.set_probe_rate = probe_function_block.set_probe_rate
+		#connect
+		self.connect(self, probe_block)
+		self.connect(probe_function_block, self)
 
 #######################################################################################
 ## Probe: Average Magnitude Squared

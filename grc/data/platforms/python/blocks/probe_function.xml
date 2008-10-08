@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Probe Function
+###################################################
+ -->
+<block>
+	<name>Probe Function</name>
+	<key>probe_function</key>
+	<import>from grc_gnuradio import blks2 as grc_blks2</import>
+	<make>grc_blks2.probe_function(
+	probe_callback=self.$(block_id.eval).$(function_name.eval),
+	probe_rate=$probe_rate,
+)</make>
+	<callback>set_probe_rate($probe_rate)</callback>
+	<param>
+		<name>Block ID</name>
+		<key>block_id</key>
+		<value>my_block_0</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Function Name</name>
+		<key>function_name</key>
+		<value>get_number</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Probe Rate</name>
+		<key>probe_rate</key>
+		<value>10</value>
+		<type>real</type>
+	</param>
+	<source>
+		<name>out</name>
+		<type>float</type>
+	</source>
+	<doc>
+Polls a function of an arbitrary block and writes the value to the output port. \
+The block id is the id of another block in the flow graph. \
+The function name is the name of a function in the said block. \
+The function should take no arguments and return a floating point or integer number.
+	</doc>
+</block>

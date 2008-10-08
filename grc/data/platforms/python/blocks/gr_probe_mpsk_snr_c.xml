@@ -9,7 +9,7 @@
 	<key>gr_probe_mpsk_snr_c</key>
 	<import>from grc_gnuradio import blks2 as grc_blks2</import>
 	<make>grc_blks2.probe_mpsk_snr_c(
-	type="$type",
+	type=&quot;$type&quot;,
 	alpha=$alpha,
 	probe_rate=$probe_rate,
 )</make>

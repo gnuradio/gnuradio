@@ -6,6 +6,8 @@
 -controlled step block
 -throttle with sink only (source is nulled)
 -simplify simple usrp
+-numbersink: update wrapper for newer api
+-probe: also non-float outputs
 
 ##################################################
 # Features

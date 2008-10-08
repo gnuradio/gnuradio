@@ -241,6 +241,7 @@
 		<block>gr_probe_avg_mag_sqrd_x</block>
 		<block>gr_probe_density_b</block>
 		<block>gr_probe_mpsk_snr_c</block>
+		<block>probe_function</block>
 	</cat>
 	<cat>
 		<name>USRP</name>
