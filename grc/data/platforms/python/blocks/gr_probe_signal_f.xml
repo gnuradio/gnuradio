@@ -15,7 +15,9 @@ def _$(id)_run():
 	while True:
 		time.sleep($update_interval)
 		print "$(id) Level:", self.$(id).level()
-threading.Thread(target=_$(id)_run).start()</make>
+_$(id)_thread = threading.Thread(target=_$(id)_run)
+_$(id)_thread.setDaemon(True)
+_$(id)_thread.start()</make>
 	<param>
 		<name>Update Interval (s)</name>
 		<key>update_interval</key>

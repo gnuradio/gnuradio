@@ -17,7 +17,9 @@ def _$(id)_run():
 		print "$(id) Signal Mean:", self.$(id).signal_mean()
 		print "$(id) Noise Variance:", self.$(id).noise_variance()
 		print "$(id) SNR:", self.$(id).snr()
-threading.Thread(target=_$(id)_run).start()</make>
+_$(id)_thread = threading.Thread(target=_$(id)_run)
+_$(id)_thread.setDaemon(True)
+_$(id)_thread.start()</make>
 	<callback>set_alpha($alpha)</callback>
 	<param>
 		<name>Alpha</name>

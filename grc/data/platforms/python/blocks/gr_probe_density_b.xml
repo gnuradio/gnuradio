@@ -15,7 +15,9 @@ def _$(id)_run():
 	while True:
 		time.sleep($update_interval)
 		print "$(id) Density:", self.$(id).density()
-threading.Thread(target=_$(id)_run).start()</make>
+_$(id)_thread = threading.Thread(target=_$(id)_run)
+_$(id)_thread.setDaemon(True)
+_$(id)_thread.start()</make>
 	<callback>set_alpha($alpha)</callback>
 	<param>
 		<name>Alpha</name>
