@@ -135,6 +135,7 @@ class number_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		self._register_set_prop(self, RUNNING_KEY, True)
 		#register events
 		self.ext_controller.subscribe(msg_key, self.handle_msg)
+		self.Connect(wx.ID_ANY, wx.ID_ANY, common.EVT_DATA, self.update)
 
 	def show_gauges(self, show_gauge):
 		"""
@@ -149,11 +150,19 @@ class number_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 
 	def handle_msg(self, msg):
 		"""
+		Post this message into a data event.
+		Allow wx to handle the event to avoid threading issues.
+		@param msg the incoming numbersink data
+		"""
+		wx.PostEvent(self, common.DataEvent(msg))
+
+	def update(self, event):
+		"""
 		Handle a message from the message queue.
 		Convert the string based message into a float or complex.
 		If more than one number was read, only take the last number.
 		Perform peak hold operations, set the gauges and display.
-		@param msg the number sample as a character array
+		@param event event.data is the number sample as a character array
 		"""
 		if not self[RUNNING_KEY]: return
 		#set gauge
@@ -164,12 +173,12 @@ class number_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 			gauge.SetValue(gauge_val)
 		format_string = "%%.%df"%self.decimal_places
 		if self.real:
-			sample = numpy.fromstring(msg, numpy.float32)[-1]
+			sample = numpy.fromstring(event.data, numpy.float32)[-1]
 			if self[PEAK_HOLD_KEY]: sample = self.peak_val_real = max(self.peak_val_real, sample)
 			label_text = "%s %s"%(format_string%sample, self.units)
 			set_gauge_value(self.gauge_real, sample)
 		else:
-			sample = numpy.fromstring(msg, numpy.complex64)[-1]
+			sample = numpy.fromstring(event.data, numpy.complex64)[-1]
 			if self[PEAK_HOLD_KEY]:
 				self.peak_val_real = max(self.peak_val_real, sample.real)
 				self.peak_val_imag = max(self.peak_val_imag, sample.imag)

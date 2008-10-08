@@ -24,6 +24,12 @@ import numpy
 import math
 import wx
 
+EVT_DATA = wx.NewEventType()
+class DataEvent(wx.PyEvent):
+	def __init__(self, data):
+		wx.PyEvent.__init__(self, wx.NewId(), EVT_DATA)
+		self.data = data
+
 class prop_setter(object):
 	def _register_set_prop(self, controller, control_key, *args):
 		def set_method(value): controller[control_key] = value
