@@ -135,6 +135,15 @@ class NotebookPage(gtk.HBox):
 		"""
 		return self._flow_graph
 
+	def get_read_only(self):
+		"""
+		Get the read-only state of the file.
+		Always false for empty path.
+		@return true for read-only
+		"""
+		if not self.get_file_path(): return False
+		return not os.access(self.get_file_path(), os.W_OK)
+
 	def get_file_path(self):
 		"""
 		Get the file path for the flow graph.

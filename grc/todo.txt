@@ -32,7 +32,6 @@
 -dont hide vlen controller when vlen > 1
 -dont generate py files in .grc file dir
 -save/restore cwd
--check for .grc file readonly, ro message in window, no save option
 
 ##################################################
 # External

@@ -328,7 +328,10 @@ class ActionHandler:
 		elif state == Actions.FLOW_GRAPH_CLOSE:
 			self.main_window.close_page()
 		elif state == Actions.FLOW_GRAPH_SAVE:
-			if not self.get_page().get_file_path(): self.handle_states(Actions.FLOW_GRAPH_SAVE_AS)
+			#read-only or undefines file path, do save-as
+			if self.get_page().get_read_only() or not self.get_page().get_file_path():
+				self.handle_states(Actions.FLOW_GRAPH_SAVE_AS)
+			#otherwise try to save
 			else:
 				try:
 					ParseXML.to_file(self.get_flow_graph().export_data(), self.get_page().get_file_path())
@@ -338,12 +341,12 @@ class ActionHandler:
 					self.get_page().set_saved(False)
 		elif state == Actions.FLOW_GRAPH_SAVE_AS:
 			file_path = SaveFlowGraphFileDialog(self.get_page().get_file_path()).run()
-			if file_path != None:
+			if file_path is not None:
 				self.get_page().set_file_path(file_path)
 				self.handle_states(Actions.FLOW_GRAPH_SAVE)
 		elif state == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
 			file_path = SaveImageFileDialog(self.get_page().get_file_path()).run()
-			if file_path != None:
+			if file_path is not None:
 				pixmap = self.get_flow_graph().get_drawing_area().pixmap
 				width, height = pixmap.get_size()
 				pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, 0, 8, width, height)

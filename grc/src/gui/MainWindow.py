@@ -246,6 +246,7 @@ class MainWindow(gtk.Window):
 					' - Editing: ',
 					(self.get_page().get_file_path() or NEW_FLOGRAPH_TITLE),
 					(self.get_page().get_saved() and ' ' or '*'), #blank must be non empty
+					(self.get_page().get_read_only() and ' (read-only)' or ''),
 				)
 			)
 		else: title = MAIN_WINDOW_PREFIX + ' - Editor '
@@ -262,6 +263,7 @@ class MainWindow(gtk.Window):
 			page.set_text(''.join((
 						(title or NEW_FLOGRAPH_TITLE),
 						(page.get_saved() and ' ' or '*'), #blank must be non empty
+						(page.get_read_only() and ' (ro)' or ''),
 					)
 				)
 			)
