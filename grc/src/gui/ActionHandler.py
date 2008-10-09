@@ -328,7 +328,7 @@ class ActionHandler:
 		elif state == Actions.FLOW_GRAPH_CLOSE:
 			self.main_window.close_page()
 		elif state == Actions.FLOW_GRAPH_SAVE:
-			#read-only or undefines file path, do save-as
+			#read-only or undefined file path, do save-as
 			if self.get_page().get_read_only() or not self.get_page().get_file_path():
 				self.handle_states(Actions.FLOW_GRAPH_SAVE_AS)
 			#otherwise try to save

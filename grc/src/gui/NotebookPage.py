@@ -142,7 +142,8 @@ class NotebookPage(gtk.HBox):
 		@return true for read-only
 		"""
 		if not self.get_file_path(): return False
-		return not os.access(self.get_file_path(), os.W_OK)
+		return os.path.exists(self.get_file_path()) and \
+		not os.access(self.get_file_path(), os.W_OK)
 
 	def get_file_path(self):
 		"""
