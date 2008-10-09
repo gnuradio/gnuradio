@@ -32,6 +32,6 @@ AC_DEFUN([GRC_GR_MSDD6000],[
 
     GRC_BUILD_CONDITIONAL([gr-msdd6000],[
         dnl run_tests is created from run_tests.in.  Make it executable.
-	AC_CONFIG_COMMANDS([run_tests_msdd6000], [chmod +x gr-msdd6000/src/run_tests])
+	dnl AC_CONFIG_COMMANDS([run_tests_msdd6000], [chmod +x gr-msdd6000/src/run_tests])
     ])
 ])
