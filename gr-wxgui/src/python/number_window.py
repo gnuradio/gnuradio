@@ -135,7 +135,7 @@ class number_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		self._register_set_prop(self, RUNNING_KEY, True)
 		#register events
 		self.ext_controller.subscribe(msg_key, self.handle_msg)
-		self.Connect(wx.ID_ANY, wx.ID_ANY, common.EVT_DATA, self.update)
+		self.Bind(common.EVT_DATA, self.update)
 
 	def show_gauges(self, show_gauge):
 		"""

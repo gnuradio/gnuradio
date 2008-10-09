@@ -24,17 +24,20 @@ import numpy
 import math
 import wx
 
-EVT_DATA = wx.NewEventType()
-class DataEvent(wx.PyEvent):
-	def __init__(self, data):
-		wx.PyEvent.__init__(self, wx.NewId(), EVT_DATA)
-		self.data = data
-
 class prop_setter(object):
 	def _register_set_prop(self, controller, control_key, *args):
 		def set_method(value): controller[control_key] = value
 		if args: set_method(args[0])
 		setattr(self, 'set_%s'%control_key, set_method)
+
+##################################################
+# Custom Data Event
+##################################################
+EVT_DATA = wx.PyEventBinder(wx.NewEventType())
+class DataEvent(wx.PyEvent):
+	def __init__(self, data):
+		wx.PyEvent.__init__(self, wx.NewId(), EVT_DATA.typeId)
+		self.data = data
 
 ##################################################
 # Input Watcher Thread
