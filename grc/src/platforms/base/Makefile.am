@@ -35,7 +35,7 @@ ourpython_PYTHON = \
 	__init__.py
 
 Constants.py: Makefile Constants.py.in
-	$(SED) \
+	sed \
 		-e 's|@PACKAGE[@]|$(PACKAGE)|g' \
 		-e 's|@VERSION[@]|$(VERSION)|g' \
 		-e 's|@datadir[@]|$(grc_base_data_dir)|g' \

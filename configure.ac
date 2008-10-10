@@ -97,8 +97,6 @@ GR_SCRIPTING
 AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
 AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
 
-AC_PROG_SED
-
 dnl Checks for libraries.
 AC_CHECK_LIB(socket,socket)
 

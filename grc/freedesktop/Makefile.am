@@ -36,7 +36,7 @@ dist_ourdata_DATA = \
 dist_bin_SCRIPTS = grc_setup_freedesktop
 
 grc_setup_freedesktop: Makefile grc_setup_freedesktop.in
-	$(SED) -e 's|@SRCDIR[@]|$(ourdatadir)|g' $(srcdir)/$@.in > $@
+	sed -e 's|@SRCDIR[@]|$(ourdatadir)|g' $(srcdir)/$@.in > $@
 
 EXTRA_DIST = $(srcdir)/grc_setup_freedesktop.in
 BUILT_SOURCES = grc_setup_freedesktop

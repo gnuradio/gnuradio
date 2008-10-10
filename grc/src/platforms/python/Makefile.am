@@ -37,7 +37,7 @@ ourpython_PYTHON = \
 	__init__.py
 
 Constants.py: Makefile Constants.py.in
-	$(SED) \
+	sed \
 		-e 's|@PYTHONW[@]|$(PYTHONW)|g' \
 		-e 's|@datadir[@]|$(grc_python_data_dir)|g' \
 		-e 's|@blocksdir[@]|$(grc_python_blocks_dir)|g' \
