@@ -168,6 +168,7 @@ class waterfall_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 	):
 		pubsub.pubsub.__init__(self)
 		#setup
+		self.samples = list()
 		self.ext_controller = controller
 		self.real = real
 		self.fft_size = fft_size
@@ -220,6 +221,7 @@ class waterfall_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		Set the dynamic range and reference level.
 		Does not affect the current data in the waterfall.
 		"""
+		if not len(self.samples): return
 		#get the peak level (max of the samples)
 		peak_level = numpy.max(self.samples)
 		#get the noise floor (averge the smallest samples)

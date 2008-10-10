@@ -149,6 +149,7 @@ class fft_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		#ensure y_per_div
 		if y_per_div not in DIV_LEVELS: y_per_div = DIV_LEVELS[0]
 		#setup
+		self.samples = list()
 		self.ext_controller = controller
 		self.real = real
 		self.fft_size = fft_size
@@ -197,6 +198,7 @@ class fft_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		Autoscale the fft plot to the last frame.
 		Set the dynamic range and reference level.
 		"""
+		if not len(self.samples): return
 		#get the peak level (max of the samples)
 		peak_level = numpy.max(self.samples)
 		#get the noise floor (averge the smallest samples)
