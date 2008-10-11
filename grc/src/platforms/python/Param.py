@@ -20,7 +20,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from utils import expr_utils
 from .. base.Param import Param as _Param
 import Constants
+import numpy
 import os
+
+#define types, native python + numpy
+VECTOR_TYPES = (tuple, list, set, numpy.ndarray)
+COMPLEX_TYPES = [complex, numpy.complex, numpy.complex64, numpy.complex128]
+REAL_TYPES = [float, numpy.float, numpy.float32, numpy.float64]
+INT_TYPES = [int, long, numpy.int, numpy.int8, numpy.int16, numpy.int32, numpy.uint64,
+	numpy.uint, numpy.uint8, numpy.uint16, numpy.uint32, numpy.uint64]
+#cast to tuple for isinstance, concat subtypes
+COMPLEX_TYPES = tuple(COMPLEX_TYPES + REAL_TYPES + INT_TYPES)
+REAL_TYPES = tuple(REAL_TYPES + INT_TYPES)
+INT_TYPES = tuple(INT_TYPES)
 
 class Param(_Param):
 
@@ -114,52 +126,55 @@ class Param(_Param):
 			#raise an exception if the data is invalid
 			if t == 'raw': return e
 			elif t == 'complex':
-				try: assert(isinstance(e, (complex, float, int, long)))
+				try: assert(isinstance(e, COMPLEX_TYPES))
 				except AssertionError:
 					self._add_error_message('Expression "%s" is invalid for type complex.'%str(e))
 					raise Exception
 				return e
 			elif t == 'real':
-				try: assert(isinstance(e, (float, int, long)))
+				try: assert(isinstance(e, REAL_TYPES))
 				except AssertionError:
 					self._add_error_message('Expression "%s" is invalid for type real.'%str(e))
 					raise Exception
 				return e
 			elif t == 'int':
-				try: assert(isinstance(e, (int, long)))
+				try: assert(isinstance(e, INT_TYPES))
 				except AssertionError:
 					self._add_error_message('Expression "%s" is invalid for type integer.'%str(e))
 					raise Exception
 				return e
+			#########################
+			# Numeric Vector Types
+			#########################
 			elif t == 'complex_vector':
-				if not isinstance(e, (tuple, list, set)):
+				if not isinstance(e, VECTOR_TYPES):
 					self._lisitify_flag = True
 					e = [e]
 				try:
 					for ei in e:
-						assert(isinstance(ei, (complex, float, int, long)))
+						assert(isinstance(ei, COMPLEX_TYPES))
 				except AssertionError:
 					self._add_error_message('Expression "%s" is invalid for type complex vector.'%str(e))
 					raise Exception
 				return e
 			elif t == 'real_vector':
-				if not isinstance(e, (tuple, list, set)):
+				if not isinstance(e, VECTOR_TYPES):
 					self._lisitify_flag = True
 					e = [e]
 				try:
 					for ei in e:
-						assert(isinstance(ei, (float, int, long)))
+						assert(isinstance(ei, REAL_TYPES))
 				except AssertionError:
 					self._add_error_message('Expression "%s" is invalid for type real vector.'%str(e))
 					raise Exception
 				return e
 			elif t == 'int_vector':
-				if not isinstance(e, (tuple, list, set)):
+				if not isinstance(e, VECTOR_TYPES):
 					self._lisitify_flag = True
 					e = [e]
 				try:
 					for ei in e:
-						assert(isinstance(ei, (int, long)))
+						assert(isinstance(ei, INT_TYPES))
 				except AssertionError:
 					self._add_error_message('Expression "%s" is invalid for type integer vector.'%str(e))
 					raise Exception

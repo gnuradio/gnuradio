@@ -4,9 +4,7 @@
 -optparse block
 -ofdm wrappers
 -controlled step block
--throttle with sink only (source is nulled)
 -simplify simple usrp
--numbersink: update wrapper for newer api
 -probe: also non-float outputs
 
 ##################################################
@@ -22,6 +20,7 @@
 -search for blocks
 -click and drag on whitespace to scroll
 -expand preferences, allow for custom prefs, prefs dialog should infer structure
+-drag connection to delete it
 
 ##################################################
 # Problems
