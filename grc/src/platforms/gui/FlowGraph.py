@@ -155,6 +155,8 @@ class FlowGraph(Element):
 				block.get_param(param_key).set_value(param_value)
 			#move block to offset coordinate
 			block.move((x_off, y_off))
+		#update before creating connections
+		self.update()
 		#create connections
 		for connection_n in connections_n:
 			source = old_id2block[connection_n['source_block_id']].get_source(connection_n['source_key'])

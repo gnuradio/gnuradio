@@ -32,6 +32,8 @@
 -dont hide vlen controller when vlen > 1
 -dont generate py files in .grc file dir
 -save/restore cwd
+-special connection validation rules for disabled blocks
+-threads dont die on exit in probe and queue module
 
 ##################################################
 # External

@@ -9,7 +9,7 @@
 	<key>variable_sink</key>
 	<import>from grc_gnuradio import blks2 as grc_blks2</import>
 	<make>grc_blks2.queue_sink_$(type.fcn)($vlen)
-grc_blks2.queue_sink_thread(self.$id, set_$(variable))</make>
+grc_blks2.queue_sink_thread(self.$id, self.set_$(variable))</make>
 	<param>
 		<name>Type</name>
 		<key>type</key>

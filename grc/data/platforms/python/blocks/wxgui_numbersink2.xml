@@ -27,8 +27,8 @@
 #end if
 	label=$title,
 	peak_hold=$options.peak_hold,
+	show_gauge=$show_gauge,
 )
-self.$(id).set_show_gauge($show_gauge)
 #set $grid_pos = $grid_pos.eval
 #if not grid_pos
 self.Add(self.$(id).win)
