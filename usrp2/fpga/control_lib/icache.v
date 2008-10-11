@@ -11,7 +11,8 @@ module icache
      output iwb_ack_o,
      input [31:0] iram_dat_i,
      output [AWIDTH-1:0] iram_adr_o,
-     output iram_en_o );
+     output iram_en_o,
+     input flush);
 
    localparam TAGWIDTH = AWIDTH-CWIDTH-2;
    reg 	      stb_d1, ack_d1, miss_d1;
@@ -28,7 +29,7 @@ module icache
    // Write into cache
    integer 	      i;
    always @(posedge wb_clk_i)
-     if(wb_rst_i)
+     if(wb_rst_i | flush)
        for(i=0;i<(1<<CWIDTH);i=i+1)
 	 ivalid[i] <= 0;
      else

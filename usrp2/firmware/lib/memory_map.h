@@ -354,6 +354,7 @@ typedef struct {
   volatile uint32_t	phy_ctrl;	// LSB is reset line to eth phy
   volatile uint32_t	debug_mux_ctrl;
   volatile uint32_t     ram_page;       // FIXME should go somewhere else...
+  volatile uint32_t     flush_icache;   // Flush the icache
 } output_regs_t;
 
 #define SERDES_ENABLE 8
@@ -482,6 +483,8 @@ typedef struct {
 #define	IRQ_PPS		7	// pulse per second
 #define	IRQ_UART_RX	8
 #define	IRQ_UART_TX	9
+#define	IRQ_SERDES	10
+#define	IRQ_CLKSTATUS	11
 
 #define IRQ_TO_MASK(x) (1 << (x))
 
@@ -495,7 +498,8 @@ typedef struct {
 #define PIC_PPS_INT   	  IRQ_TO_MASK(IRQ_PPS)
 #define PIC_UART_RX_INT   IRQ_TO_MASK(IRQ_UART_RX)
 #define PIC_UART_TX_INT   IRQ_TO_MASK(IRQ_UART_TX)
-
+#define PIC_SERDES        IRQ_TO_MASK(IRQ_SERDES)
+#define PIC_CLKSTATUS     IRQ_TO_MASK(IRQ_CLKSTATUS)
 
 typedef struct {
   volatile uint32_t edge_enable; // mask: 1 -> edge triggered, 0 -> level

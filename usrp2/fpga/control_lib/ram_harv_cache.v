@@ -25,7 +25,9 @@ module ram_harv_cache
      input dwb_we_i,
      output dwb_ack_o,
      input dwb_stb_i,
-     input [3:0] dwb_sel_i );
+     input [3:0] dwb_sel_i,
+
+     input flush_icache );
 
    wire [31:0] 	 iram_dat, dram_dat_i, dram_dat_o;
    wire [AWIDTH-1:0] iram_adr, dram_adr;
@@ -60,7 +62,8 @@ module ram_harv_cache
      icache(.wb_clk_i(wb_clk_i),.wb_rst_i(wb_rst_i),
 	    .iwb_adr_i(iwb_adr_i),.iwb_stb_i(iwb_stb_i),
 	    .iwb_dat_o(iwb_dat_o),.iwb_ack_o(iwb_ack_o),
-	    .iram_dat_i(iram_dat),.iram_adr_o(iram_adr),.iram_en_o(iram_en) );
+	    .iram_dat_i(iram_dat),.iram_adr_o(iram_adr),.iram_en_o(iram_en),
+	    .flush(flush_icache));
 
    // RAM loader
    assign 	 ram_loader_ack_o = ram_loader_stb_i;

@@ -62,7 +62,6 @@ control_lib/cascadefifo2.v \
 control_lib/dcache.v \
 control_lib/decoder_3_8.v \
 control_lib/dpram32.v \
-control_lib/extram_interface.v \
 control_lib/fifo_2clock.v \
 control_lib/fifo_2clock_casc.v \
 control_lib/gray2bin.v \

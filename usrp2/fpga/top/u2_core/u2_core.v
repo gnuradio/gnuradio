@@ -283,6 +283,7 @@ module u2_core
    // Dual Ported RAM -- D-Port is Slave #0 on main Wishbone
    // I-port connects directly to processor and ram loader
 
+   wire 	 flush_icache;
    ram_harv_cache #(.AWIDTH(15),.RAM_SIZE(RAM_SIZE),.ICWIDTH(7),.DCWIDTH(6))
      sys_ram(.wb_clk_i(wb_clk),.wb_rst_i(wb_rst),
 	     
@@ -295,10 +296,14 @@ module u2_core
 	     .iwb_dat_o(iwb_dat), .iwb_ack_o(iwb_ack),
 	     
 	     .dwb_adr_i(s0_adr[14:0]), .dwb_dat_i(s0_dat_o), .dwb_dat_o(s0_dat_i),
-	     .dwb_we_i(s0_we), .dwb_ack_o(s0_ack), .dwb_stb_i(s0_stb), .dwb_sel_i(s0_sel));
+	     .dwb_we_i(s0_we), .dwb_ack_o(s0_ack), .dwb_stb_i(s0_stb), .dwb_sel_i(s0_sel),
+	     .flush_icache(flush_icache));
    
    assign 	 s0_err = 1'b0;
    assign 	 s0_rty = 1'b0;
+
+   setting_reg #(.my_addr(7)) sr_icache (.clk(wb_clk),.rst(wb_rst),.strobe(set_stb),.addr(set_addr),
+					 .in(set_data),.out(),.changed(flush_icache));
 
    // Buffer Pool, slave #1
    wire 	 rd0_read, rd0_sop, rd0_error, rd0_done, rd0_eop;
@@ -388,7 +393,7 @@ module u2_core
       
       .word00(status_b0),.word01(status_b1),.word02(status_b2),.word03(status_b3),
       .word04(status_b4),.word05(status_b5),.word06(status_b6),.word07(status_b7),
-      .word08(status),.word09({sim_mode,27'b0,clock_divider[3:0]}),.word10({30'b0,clk_func,clk_status}),
+      .word08(status),.word09({sim_mode,27'b0,clock_divider[3:0]}),.word10(32'b0),
       .word11(32'b0),.word12(32'b0),.word13(32'b0),.word14(32'b0),.word15(32'b0)
       );
 
@@ -479,7 +484,7 @@ module u2_core
    // /////////////////////////////////////////////////////////////////////////
    // Interrupt Controller, Slave #8
 
-   wire [15:0] 	 irq={{5'b0, serdes_link_up, uart_tx_int, uart_rx_int},
+   wire [15:0] 	 irq={{4'b0, clk_status, serdes_link_up, uart_tx_int, uart_rx_int},
 		      {pps_int,overrun,underrun,PHY_INTn,i2c_int,spi_int,timer_int,buffer_int}};
    
    simple_pic #(.is(16),.dwidth(32)) simple_pic
