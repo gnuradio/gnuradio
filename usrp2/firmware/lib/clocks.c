@@ -59,7 +59,6 @@ clocks_init(void)
   // ETH phy clock
   ad9510_write_reg(0x41, 0x01); // Turn off output 5 (phy_clk)
   ad9510_write_reg(0x53, 0x80); // Bypass divider
-  ad9510_write_reg(0x5A, 0x01); // Update Regs
 
   // Enable clock to ADCs and DACs
   ad9510_write_reg(0x3F, 0x00); // Turn on output 3 (DAC CLK), normal levels
