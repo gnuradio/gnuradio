@@ -28,5 +28,4 @@ ourpython_PYTHON = \
 	error_rate.py \
 	packet.py \
 	probe.py \
-	queue.py \
 	selector.py
