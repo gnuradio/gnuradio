@@ -148,7 +148,7 @@ def main ():
     parser.add_option ("--uniform", dest="type", action="store_const", const=gr.GR_UNIFORM,
                        help="generate Uniform random output")
 
-    parser.add_option ("-w", "--waveform-freq", type="eng_float", default=100e3,
+    parser.add_option ("-w", "--waveform-freq", type="eng_float", default=0,
                        help="set waveform frequency to FREQ [default=%default]")
     parser.add_option ("-a", "--amplitude", type="eng_float", default=16e3,
                        help="set waveform amplitude to AMPLITUDE [default=%default]", metavar="AMPL")

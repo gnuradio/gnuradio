@@ -105,7 +105,7 @@ def get_options():
                       help="set frequency to FREQ", metavar="FREQ")
     parser.add_option("-v", "--verbose", action="store_true", default=False,
                       help="verbose output")
-    parser.add_option("-w", "--waveform-freq", type="eng_float", default=100e3,
+    parser.add_option("-w", "--waveform-freq", type="eng_float", default=0,
                       help="set waveform frequency to FREQ [default=%default]")
     parser.add_option("-a", "--amplitude", type="eng_float", default=0.5,
                       help="set waveform amplitude to AMPLITUDE (0-1.0) [default=%default]", metavar="AMPL")
