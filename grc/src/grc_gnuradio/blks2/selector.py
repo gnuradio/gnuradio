@@ -25,7 +25,7 @@ class selector(gr.hier_block2):
 	"""A hier2 block with N inputs and M outputs, where data is only forwarded through input n to output m."""
 	def __init__(self, item_size, num_inputs, num_outputs, input_index, output_index):
 		"""
-		SelectorHelper constructor.
+		Selector constructor.
 		@param item_size the size of the gr data stream in bytes
 		@param num_inputs the number of inputs (integer)
 		@param num_outputs the number of outputs (integer)
@@ -38,9 +38,9 @@ class selector(gr.hier_block2):
 			gr.io_signature(num_outputs, num_outputs, item_size),
 		)
 		#terminator blocks for unused inputs and outputs
-		self.input_terminators = [gr.null_sink(item_size)] * num_inputs
-		self.output_terminators = [gr.head(item_size, 0)] * num_outputs
-		self.copy = None
+		self.input_terminators = [gr.null_sink(item_size) for i in range(num_inputs)]
+		self.output_terminators = [gr.head(item_size, 0) for i in range(num_outputs)]
+		self.copy = gr.kludge_copy(item_size)
 		#connections
 		for i in range(num_inputs): self.connect((self, i), self.input_terminators[i])
 		for i in range(num_outputs): self.connect(gr.null_source(item_size), self.output_terminators[i], (self, i))
@@ -65,7 +65,6 @@ class selector(gr.hier_block2):
 		if self._indexes_valid():
 			self.disconnect((self, self.input_index), self.input_terminators[self.input_index])
 			self.disconnect(self.output_terminators[self.output_index], (self, self.output_index))
-			self.copy = gr.skiphead(self.item_size, 0)
 			self.connect((self, self.input_index), self.copy)
 			self.connect(self.copy, (self, self.output_index))
 			self.connect(self.output_terminators[self.output_index], self.input_terminators[self.input_index])
@@ -79,8 +78,6 @@ class selector(gr.hier_block2):
 			self.disconnect((self, self.input_index), self.copy)
 			self.disconnect(self.copy, (self, self.output_index))
 			self.disconnect(self.output_terminators[self.output_index], self.input_terminators[self.input_index])
-			del self.copy
-			self.copy = None
 			self.connect((self, self.input_index), self.input_terminators[self.input_index])
 			self.connect(self.output_terminators[self.output_index], (self, self.output_index))
 
