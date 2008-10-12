@@ -18,10 +18,6 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from queue import queue_sink_thread
-from queue import queue_sink_c, queue_sink_f, queue_sink_i, queue_sink_s, queue_sink_b
-from queue import queue_source_c, queue_source_f, queue_source_i, queue_source_s, queue_source_b
-
 from selector import selector, valve
 from packet import packet_encoder, packet_decoder
 from error_rate import error_rate
