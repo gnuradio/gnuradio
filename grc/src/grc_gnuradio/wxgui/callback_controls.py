@@ -152,7 +152,7 @@ class radio_buttons_vertical_control(_radio_buttons_control_base):
 class _slider_control_base(_control_base):
 	"""House a Slider and a Text Box for variable control."""
 
-	def __init__(self, window, callback, label='Label', value=50, min=0, max=100, num_steps=100):
+	def __init__(self, window, callback, label='Label', value=50, min=0, max=100, num_steps=100, slider_length=200):
 		"""
 		Slider contructor.
 		Create the slider, text box, and label.
@@ -163,12 +163,14 @@ class _slider_control_base(_control_base):
 		@param min the min
 		@param max the max
 		@param num_steps the number of steps
+		@param slider_length the length of the slider bar in pixels
 		"""
 		#initialize
 		_control_base.__init__(self, window, callback)
 		self.min = float(min)
 		self.max = float(max)
 		self.num_steps = int(num_steps)
+		self.slider_length = slider_length
 		#create gui elements
 		label_text_sizer = wx.BoxSizer(self.label_text_orientation) #label and text box container
 		label_text = LabelText(self.get_window(), '%s: '%str(label))
@@ -178,7 +180,7 @@ class _slider_control_base(_control_base):
 			label_text_sizer.Add(obj, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL)
 		self.Add(label_text_sizer, 0, wx.ALIGN_CENTER)
 		#make the slider
-		self.slider = slider = wx.Slider(self.get_window(), -1, size=wx.Size(*self.slider_size), style=self.slider_style)
+		self.slider = slider = wx.Slider(self.get_window(), -1, size=wx.Size(*self.get_slider_size()), style=self.slider_style)
 		try: slider.SetRange(0, num_steps)
 		except Exception, e:
 			print >> sys.stderr, 'Error in set slider range: "%s".'%e
@@ -230,11 +232,11 @@ class _slider_control_base(_control_base):
 class slider_horizontal_control(_slider_control_base):
 	label_text_orientation = wx.HORIZONTAL
 	slider_style = wx.SL_HORIZONTAL
-	slider_size = 200, 20
+	def get_slider_size(self): return self.slider_length, 20
 class slider_vertical_control(_slider_control_base):
 	label_text_orientation = wx.VERTICAL
 	slider_style = wx.SL_VERTICAL
-	slider_size = 20, 200
+	def get_slider_size(self): return 20, self.slider_length
 
 ##############################################################################################
 # Text Box Control

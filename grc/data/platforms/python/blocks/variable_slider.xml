@@ -20,6 +20,7 @@ _$(id)_control = grc_wxgui.slider_$(slider_type)_control(
 	min=$min,
 	max=$max,
 	num_steps=$num_steps,
+	slider_length=$slider_length,
 )
 #set $grid_pos = $grid_pos.eval
 #if not grid_pos
@@ -56,8 +57,16 @@ self.GridAdd(_$(id)_control, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<key>num_steps</key>
 		<value>100</value>
 		<type>int</type>
+		<hide>part</hide>
 	</param>
-		<param>
+	<param>
+		<name>Slider Length (px)</name>
+		<key>slider_length</key>
+		<value>200</value>
+		<type>int</type>
+		<hide>part</hide>
+	</param>
+	<param>
 		<name>Slider Type</name>
 		<key>slider_type</key>
 		<value>horizontal</value>

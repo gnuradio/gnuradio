@@ -77,6 +77,7 @@ class Param(_Param):
 		Get the hide value from the base class.
 		Hide the ID parameter for most blocks. Exceptions below.
 		If the parameter controls a port type, vlen, or nports, return part.
+		If the parameter is an empty grid position, return part.
 		These parameters are redundant to display in the flow graph view.
 		@return hide the hide property string
 		"""
@@ -90,6 +91,8 @@ class Param(_Param):
 		if self.get_key() in ' '.join(map(
 			lambda p: ' '.join([p._type, p._vlen, p._nports]), self.get_parent().get_ports())
 		): return 'part'
+		#hide empty grid positions
+		if self.get_key() == 'grid_pos' and not self.get_value(): return 'part'
 		return hide
 
 	def evaluate(self):

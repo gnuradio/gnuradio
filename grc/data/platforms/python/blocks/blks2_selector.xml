@@ -16,8 +16,8 @@
 	input_index=$input_index,
 	output_index=$output_index,
 )</make>
-	<callback>set_input_index($input_index)</callback>
-	<callback>set_output_index($output_index)</callback>
+	<callback>set_input_index(int($input_index))</callback>
+	<callback>set_output_index(int($output_index))</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
