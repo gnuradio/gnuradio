@@ -46,7 +46,7 @@ void clocks_mimo_config(int flags);
 /*!
  * \brief Enable or disable test clock (extra clock signal)
  */
-void clocks_enable_test_clk(bool enable);
+void clocks_enable_test_clk(bool enable, int divisor);
 
 /*!
  * \brief Enable or disable clock to Rx daughterboard

@@ -52,7 +52,7 @@ clocks_init(void)
 
   // Set up other clocks
 
-  clocks_enable_test_clk(false);
+  clocks_enable_test_clk(false, 0);
   clocks_enable_tx_dboard(false, 0);
   clocks_enable_rx_dboard(false, 0);
 
@@ -128,54 +128,55 @@ clocks_mimo_config(int flags)
   ad9510_write_reg(0x5A, 0x01); // Update Regs
 }
 
-void
-clocks_enable_test_clk(bool enable)
+int inline
+clocks_gen_div(int divisor)
 {
-  if (enable){
-    ad9510_write_reg(0x3C, 0x08); // Turn on output 0 -- Test output
-    ad9510_write_reg(0x49, 0x80); // Bypass divider 0
-  }
-  else {
-    ad9510_write_reg(0x3C, 0x02); // Turn off output 0 
-  }
-  ad9510_write_reg(0x5A, 0x01); // Update Regs
+  int L,H;
+  L = (divisor>>1)-1;
+  H = divisor-L-2;
+  return (L<<4)|H;
 }
 
+#define CLOCK_OUT_EN 0x08
+#define CLOCK_OUT_DIS_CMOS 0x01
+#define CLOCK_OUT_DIS_PECL 0x02
+#define CLOCK_DIV_DIS 0x80
+#define CLOCK_DIV_EN 0x00
+
+void 
+clocks_enable_XXX_clk(bool enable, int divisor, int reg_en, int reg_div, int val_off)
+{
+  if(enable) {
+    ad9510_write_reg(reg_en,CLOCK_OUT_EN);     // Turn on output, normal levels
+    if(divisor>1) {
+      ad9510_write_reg(reg_div,clocks_gen_div(divisor)); // Set divisor
+      ad9510_write_reg(reg_div+1,CLOCK_DIV_EN);   // Enable divider
+    }
+    else {
+      ad9510_write_reg(reg_div+1,CLOCK_DIV_DIS);  // Disable Divider
+    }
+  }
+  else {
+    ad9510_write_reg(reg_en,val_off);  // Power off output (val different for PECL/CMOS)
+    ad9510_write_reg(reg_div+1,CLOCK_DIV_DIS);  // Bypass Divider to power it down
+  }
+  ad9510_write_reg(0x5A, 0x01);  // Update Regs
+}
+
+void
+clocks_enable_test_clk(bool enable, int divisor)
+{
+  clocks_enable_XXX_clk(enable,divisor,0x3C,0x48,CLOCK_OUT_DIS_PECL);
+}
 
 void
 clocks_enable_rx_dboard(bool enable, int divisor)
 {
-  if (enable){
-    ad9510_write_reg(0x43, 0x08); // enable output 7 (db_rx_clk), CMOS
-
-    if (divisor == 0){
-      ad9510_write_reg(0x57, 0x80); // Bypass Div #7, 100 MHz clock
-    }
-    else {
-      // FIXME Matt, do something with divisor...
-    }
-  }
-  else {
-    ad9510_write_reg(0x43, 0x01); // Turn off output 7 (db_rx_clk)
-  }
-  ad9510_write_reg(0x5A, 0x01); // Update Regs
+  clocks_enable_XXX_clk(enable,divisor,0x43,0x56,CLOCK_OUT_DIS_CMOS);
 }
-
 
 void
 clocks_enable_tx_dboard(bool enable, int divisor)
 {
-  if (enable){
-    ad9510_write_reg(0x42, 0x08);    // enable output 6 (db_tx_clk), CMOS
-    if (divisor == 0) {
-      ad9510_write_reg(0x55, 0x80);  // Bypass Div #6, 100 MHz clock
-    }
-    else {
-      // FIXME Matt, do something with divisor
-    }
-  }
-  else {
-    ad9510_write_reg(0x42, 0x01); // Turn off output 6 (db_tx_clk)
-  }
-  ad9510_write_reg(0x5A, 0x01); // Update Regs
+  clocks_enable_XXX_clk(enable,divisor,0x42,0x54,CLOCK_OUT_DIS_CMOS);
 }

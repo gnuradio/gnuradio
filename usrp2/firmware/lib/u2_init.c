@@ -66,7 +66,7 @@ u2_init(void)
   // set up the default clocks
   clocks_init();
 
-  // clocks_enable_test_clk(true);
+  // clocks_enable_test_clk(true,1);
 
   // Enable ADCs
   output_regs->adc_ctrl = ADC_CTRL_ON;

@@ -35,7 +35,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "clocks.h"
 
 #define FW_SETS_SEQNO	1	// define to 0 or 1 (FIXME must be 1 for now)
 
