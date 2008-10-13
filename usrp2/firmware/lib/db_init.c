@@ -129,8 +129,8 @@ lookup_dboard(int i2c_addr, struct db_base *default_db, char *msg)
     return default_db;
   }
   else if ((db = lookup_dbid(dbid)) == 0){
-    return default_db;
     printf("No daugherboard code for dbid = 0x%x\n", dbid);
+    return default_db;
   }
   return db;
 }
