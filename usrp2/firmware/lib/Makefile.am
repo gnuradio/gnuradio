@@ -35,6 +35,7 @@ libu2fw_a_SOURCES = \
 	eeprom.c \
 	ethernet.c \
 	eth_mac.c \
+	_exit.c \
 	exit.c \
 	hal_io.c \
 	hal_uart.c \
