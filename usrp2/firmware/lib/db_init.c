@@ -180,19 +180,77 @@ set_gpio_mode(int bank, struct db_base *db)
   }
 }
 
+static int
+determine_tx_mux_value(struct db_base *db)
+{
+  if (db->i_and_q_swapped)
+    return 0x01;
+  else
+    return 0x10;
+}
+
+static int
+determine_rx_mux_value(struct db_base *db)
+{
+#define	ADC0 0x0
+#define	ADC1 0x1
+#define ZERO 0x2
+  
+  static int truth_table[8] = {
+    /* swap_iq, uses */
+    /* 0, 0x0 */    (ZERO << 2) | ZERO,		// N/A
+    /* 0, 0x1 */    (ZERO << 2) | ADC0,
+    /* 0, 0x2 */    (ZERO << 2) | ADC1,
+    /* 0, 0x3 */    (ADC1 << 2) | ADC0,
+    /* 1, 0x0 */    (ZERO << 2) | ZERO,		// N/A
+    /* 1, 0x1 */    (ZERO << 2) | ADC0,
+    /* 1, 0x2 */    (ZERO << 2) | ADC1,
+    /* 1, 0x3 */    (ADC0 << 2) | ADC1,
+  };
+
+  int	subdev0_uses;
+  int	subdev1_uses;
+  int	uses;
+
+  if (db->is_quadrature)
+    subdev0_uses = 0x3;		// uses A/D 0 and 1
+  else
+    subdev0_uses = 0x1;		// uses A/D 0 only
+
+  // FIXME second subdev on Basic Rx, LF RX
+  // if subdev2 exists
+  // subdev1_uses = 0x2;
+  subdev1_uses = 0;
+
+  uses = subdev0_uses;
+
+  int swap_iq = db->i_and_q_swapped & 0x1;
+  int index = (swap_iq << 2) | uses;
+
+  return truth_table[index];
+}
+
+
 void
 db_init(void)
 {
+  int	m;
 
   tx_dboard = lookup_dboard(I2C_ADDR_TX_A, &db_basic_tx, "Tx");
   //printf("db_init: tx dbid = 0x%x\n", tx_dboard->dbid);
   set_gpio_mode(GPIO_TX_BANK, tx_dboard);
   tx_dboard->init(tx_dboard);
+  m = determine_tx_mux_value(tx_dboard);
+  dsp_tx_regs->tx_mux = m;
+  printf("tx_mux = 0x%x\n", m);
 
   rx_dboard = lookup_dboard(I2C_ADDR_RX_A, &db_basic_rx, "Rx");
   //printf("db_init: rx dbid = 0x%x\n", rx_dboard->dbid);
   set_gpio_mode(GPIO_RX_BANK, rx_dboard);
   rx_dboard->init(rx_dboard);
+  m = determine_rx_mux_value(rx_dboard);
+  dsp_rx_regs->rx_mux = m;
+  printf("rx_mux = 0x%x\n", m);
 }
 
 /*!
