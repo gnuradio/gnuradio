@@ -290,16 +290,15 @@ calc_dxc_freq(u2_fxpt_freq_t target_freq, u2_fxpt_freq_t baseband_freq,
     }
   }
   else {
-    while (delta < -fs){
+    while (delta < -fs)
       delta += fs;
-      if (delta >= -fs/2){	// non-inverted region
-	*dxc_freq = -delta;
-	*inverted = false;
-      }
-      else {			// inverted region
-	*dxc_freq = delta + fs;
-	*inverted = true;
-      }
+    if (delta >= -fs/2){	// non-inverted region
+      *dxc_freq = -delta;
+      *inverted = false;
+    }
+    else {			// inverted region
+      *dxc_freq = delta + fs;
+      *inverted = true;
     }
   }
 }
