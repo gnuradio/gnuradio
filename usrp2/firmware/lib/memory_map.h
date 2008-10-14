@@ -378,6 +378,41 @@ typedef struct {
   volatile uint32_t     interp_rate;
   volatile uint32_t     clear_state;	// clears out state machine, fifos,
                                         //   NOT freq, scale, interp
+  /*!
+   * \brief output mux configuration.
+   *
+   * <pre>
+   *     3                   2                   1                       
+   *   1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0
+   *  +-------------------------------+-------+-------+-------+-------+
+   *  |                                               | DAC1  |  DAC0 |
+   *  +-------------------------------+-------+-------+-------+-------+
+   * 
+   *  There are N DUCs (1 now) with complex inputs and outputs.
+   *  There are two DACs.
+   * 
+   *  Each 4-bit DACx field specifies the source for the DAC
+   *  Each subfield is coded like this: 
+   * 
+   *     3 2 1 0
+   *    +-------+
+   *    |   N   |
+   *    +-------+
+   * 
+   *  N specifies which DUC output is connected to this DAC.
+   * 
+   *   N   which interp output
+   *  ---  -------------------
+   *   0   DUC 0 I
+   *   1   DUC 0 Q
+   *   2   DUC 1 I
+   *   3   DUC 1 Q
+   *
+   * The default value is 0x10
+   * </pre>
+   */
+  volatile uint32_t	tx_mux;
+
 } dsp_tx_regs_t;
   
 #define dsp_tx_regs ((dsp_tx_regs_t *) DSP_TX_BASE)
@@ -401,6 +436,29 @@ typedef struct {
                                         // otherwise it is automatic 
   volatile uint32_t     dcoffset_q;     // Bit 31 high sets fixed offset mode, using lower 14 bits
   volatile uint32_t     adc_mux;        // 4 bits -- lowest 2 for adc_i, next for adc_q
+
+  /*!
+   * \brief input mux configuration.
+   *
+   * This determines which ADC (or constant zero) is connected to 
+   * each DDC input.  There are N DDCs (1 now).  Each has two inputs.
+   *
+   * <pre>
+   * Mux value:
+   *
+   *    3                   2                   1                       
+   *  1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0
+   * +-------+-------+-------+-------+-------+-------+-------+-------+
+   * |                                               |Q1 |I1 |Q0 |I0 |
+   * +-------+-------+-------+-------+-------+-------+-------+-------+
+   *
+   * Each 2-bit I field is either 00 (A/D A), 01 (A/D B) or 1X (const zero)
+   * Each 2-bit Q field is either 00 (A/D A), 01 (A/D B) or 1X (const zero)
+   *
+   * The default value is 0x44444444
+   * </pre>
+   */
+  volatile uint32_t	rx_mux;
 
 } dsp_rx_regs_t;
   

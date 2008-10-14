@@ -86,6 +86,10 @@ u2_init(void)
   ad9777_write_reg(11, 0);	// Q dac offset
   ad9777_write_reg(12, 0);
   
+  // Initial values for tx and rx mux registers
+  dsp_tx_regs->tx_mux = 0x10;
+  dsp_rx_regs->rx_mux = 0x44444444;
+
   // Set up serdes
   output_regs->serdes_ctrl = (SERDES_ENABLE | SERDES_RXEN);
 
