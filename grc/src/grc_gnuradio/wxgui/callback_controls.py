@@ -263,9 +263,8 @@ class text_box_control(_control_base):
 		for obj in (label_text, text_box): #fill the container with label and text entry box
 			label_text_sizer.Add(obj, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL)
 		self.Add(label_text_sizer, 0, wx.ALIGN_CENTER)
-		#set the value, detect string mode
+		#detect string mode
 		self._string_mode = isinstance(value, str)
-		self.text_box.SetValue(str(value))
 
 	def get_value(self):
 		"""
@@ -280,7 +279,8 @@ class text_box_control(_control_base):
 		If the text cannot be evaluated, do not try callback.
 		Do not evaluate the text box value in string mode.
 		"""
-		if self._string_mode: self._value = self.text_box.GetValue()
+		if self._string_mode:
+			self._value = str(self.text_box.GetValue())
 		else:
 			try: self._value = eval(self.text_box.GetValue())
 			except Exception, e:
