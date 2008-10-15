@@ -56,17 +56,26 @@ module dsp_core_rx
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out(muxctrl),.changed());
 
+   // The TVRX connects to what is called adc_b, thus A and B are
+   // swapped throughout the design.
+   //
+   // In the interest of expediency and keeping the s/w sane, we just remap them here.
+   // The I & Q fields are mapped the same:
+   // 0 -> "the real A" (as determined by the TVRX)
+   // 1 -> "the real B"
+   // 2 -> const zero
+   
    always @(posedge clk)
-     case(muxctrl[1:0])
-       0: adc_i <= adc_a_ofs;
-       1: adc_i <= adc_b_ofs;
+     case(muxctrl[1:0])		// The I mapping
+       0: adc_i <= adc_b_ofs;	// "the real A"
+       1: adc_i <= adc_a_ofs;
        2: adc_i <= 0;
        default: adc_i <= 0;
      endcase // case(muxctrl[1:0])
           
    always @(posedge clk)
-     case(muxctrl[3:2])
-       0: adc_q <= adc_b_ofs;
+     case(muxctrl[3:2])		// The Q mapping
+       0: adc_q <= adc_b_ofs;	// "the real A"
        1: adc_q <= adc_a_ofs;
        2: adc_q <= 0;
        default: adc_q <= 0;

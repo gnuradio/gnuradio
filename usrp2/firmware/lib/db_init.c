@@ -180,8 +180,8 @@ set_gpio_mode(int bank, struct db_base *db)
   }
 }
 
-static int
-determine_tx_mux_value(struct db_base *db)
+static int __attribute__((unused))
+determine_tx_mux_value(struct db_base *db) 
 {
   if (db->i_and_q_swapped)
     return 0x01;
@@ -240,9 +240,9 @@ db_init(void)
   //printf("db_init: tx dbid = 0x%x\n", tx_dboard->dbid);
   set_gpio_mode(GPIO_TX_BANK, tx_dboard);
   tx_dboard->init(tx_dboard);
-  m = determine_tx_mux_value(tx_dboard);
-  dsp_tx_regs->tx_mux = m;
-  printf("tx_mux = 0x%x\n", m);
+  //m = determine_tx_mux_value(tx_dboard);
+  //dsp_tx_regs->tx_mux = m;
+  //printf("tx_mux = 0x%x\n", m);
 
   rx_dboard = lookup_dboard(I2C_ADDR_RX_A, &db_basic_rx, "Rx");
   //printf("db_init: rx dbid = 0x%x\n", rx_dboard->dbid);

@@ -185,7 +185,7 @@ tvrx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc)
   printf("N_DIV = %d, actual_freq = %d, actual_lo_freq = %d\n",
 	 N_DIV, u2_fxpt_freq_round_to_int(actual_freq),u2_fxpt_freq_round_to_int(actual_freq));
 
-  char buf[4];
+  unsigned char buf[4];
   buf[0] = (N_DIV>>8) & 0xff;
   buf[1] = N_DIV & 0xff;
   buf[2] = control_byte_1;
@@ -200,7 +200,7 @@ tvrx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc)
 bool
 tvrx_set_gain(struct db_base *dbb, u2_fxpt_gain_t gain)
 {
-  struct db_tvrx_dummy *db = (struct db_tvrx_dummy *) dbb;
+  //struct db_tvrx_dummy *db = (struct db_tvrx_dummy *) dbb;
   int rfgain;
   int ifgain;
   if(gain>U2_DOUBLE_TO_FXPT_GAIN(95.0))
@@ -235,6 +235,6 @@ tvrx_set_gain(struct db_base *dbb, u2_fxpt_gain_t gain)
 bool
 tvrx_lock_detect(struct db_base *dbb)
 {
-  struct db_tvrx_dummy *db = (struct db_tvrx_dummy *) dbb;
+  // struct db_tvrx_dummy *db = (struct db_tvrx_dummy *) dbb;
   return true;
 }

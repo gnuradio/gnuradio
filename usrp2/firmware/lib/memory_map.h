@@ -411,7 +411,7 @@ typedef struct {
    * The default value is 0x10
    * </pre>
    */
-  volatile uint32_t	tx_mux;
+  //volatile uint32_t	tx_mux;		// FIXME this register is currently unimplemented
 
 } dsp_tx_regs_t;
   
@@ -435,7 +435,6 @@ typedef struct {
   volatile uint32_t     dcoffset_i;     // Bit 31 high sets fixed offset mode, using lower 14 bits,
                                         // otherwise it is automatic 
   volatile uint32_t     dcoffset_q;     // Bit 31 high sets fixed offset mode, using lower 14 bits
-  volatile uint32_t     adc_mux;        // 4 bits -- lowest 2 for adc_i, next for adc_q
 
   /*!
    * \brief input mux configuration.
@@ -449,16 +448,16 @@ typedef struct {
    *    3                   2                   1                       
    *  1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0
    * +-------+-------+-------+-------+-------+-------+-------+-------+
-   * |                                               |Q1 |I1 |Q0 |I0 |
+   * |                                                       |Q0 |I0 |
    * +-------+-------+-------+-------+-------+-------+-------+-------+
    *
    * Each 2-bit I field is either 00 (A/D A), 01 (A/D B) or 1X (const zero)
    * Each 2-bit Q field is either 00 (A/D A), 01 (A/D B) or 1X (const zero)
    *
-   * The default value is 0x44444444
+   * The default value is 0x4
    * </pre>
    */
-  volatile uint32_t	rx_mux;
+  volatile uint32_t     rx_mux;        // called adc_mux in dsp_core_rx.v
 
 } dsp_rx_regs_t;
   
