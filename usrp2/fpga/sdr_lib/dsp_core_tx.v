@@ -19,7 +19,7 @@ module dsp_core_tx
    wire [31:0] phase_inc;
    reg [31:0]  phase;
    wire [7:0]  interp_rate;
-
+   wire [3:0]  dacmux_a, dacmux_b;
    wire        enable_hb1, enable_hb2;
 
    setting_reg #(.my_addr(`DSP_CORE_TX_BASE+0)) sr_0
@@ -33,6 +33,10 @@ module dsp_core_tx
    setting_reg #(.my_addr(`DSP_CORE_TX_BASE+2)) sr_2
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out({enable_hb1, enable_hb2, interp_rate}),.changed());
+
+   setting_reg #(.my_addr(`DSP_CORE_TX_BASE+4)) sr_4
+     (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
+      .in(set_data),.out({dacmux_b,dacmux_a}),.changed());
 
    // Strobes are all now delayed by 1 cycle for timing reasons
    wire        strobe_cic_pre, strobe_hb1_pre, strobe_hb2_pre;
@@ -122,11 +126,19 @@ module dsp_core_tx
       );
    
    always @(posedge clk)
-     dac_a <= prod_i[28:13];
+     case(dacmux_a)
+       0 : dac_a <= prod_i[28:13];
+       1 : dac_a <= prod_q[28:13];
+       default : dac_a <= 0;
+     endcase // case(dacmux_a)
    
    always @(posedge clk)
-     dac_b <= prod_q[28:13];
-
+     case(dacmux_b)
+       0 : dac_b <= prod_i[28:13];
+       1 : dac_b <= prod_q[28:13];
+       default : dac_b <= 0;
+     endcase // case(dacmux_b)
+   
    assign      debug = {strobe_cic, strobe_hb1, strobe_hb2,run};
 
 endmodule // dsp_core

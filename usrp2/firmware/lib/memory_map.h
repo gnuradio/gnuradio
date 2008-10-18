@@ -407,11 +407,12 @@ typedef struct {
    *   1   DUC 0 Q
    *   2   DUC 1 I
    *   3   DUC 1 Q
-   *
+   *   F   All Zeros
+   *   
    * The default value is 0x10
    * </pre>
    */
-  //volatile uint32_t	tx_mux;		// FIXME this register is currently unimplemented
+  volatile uint32_t	tx_mux;		// FIXME this register is currently unimplemented
 
 } dsp_tx_regs_t;
   
