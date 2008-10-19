@@ -19,8 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from Constants import \
 	MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, \
-	NEW_FLOGRAPH_TITLE, REPORTS_WINDOW_HEIGHT, \
-	FLOW_GRAPH_FILE_EXTENSION
+	NEW_FLOGRAPH_TITLE, REPORTS_WINDOW_HEIGHT
 from Actions import \
 	APPLICATION_QUIT, FLOW_GRAPH_KILL, \
 	FLOW_GRAPH_SAVE
@@ -253,13 +252,8 @@ class MainWindow(gtk.Window):
 		gtk.Window.set_title(self, title)
 		#set tab titles
 		for page in self._get_pages():
-			title = os.path.basename(page.get_file_path())
-			#strip file extension #TEMP
-			if title.endswith('.xml'):
-				title = title[0:-len('.xml')]
-			#strip file extension
-			if title.endswith(FLOW_GRAPH_FILE_EXTENSION):
-				title = title[0:-len(FLOW_GRAPH_FILE_EXTENSION)]
+			#get filename and strip out file extension
+			title = os.path.splitext(os.path.basename(page.get_file_path()))[0]
 			page.set_text(''.join((
 						(title or NEW_FLOGRAPH_TITLE),
 						(page.get_saved() and ' ' or '*'), #blank must be non empty
