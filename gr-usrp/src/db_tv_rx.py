@@ -60,7 +60,7 @@ def control_byte_2(target_freq, shutdown_tx_PGA):
     return c
 
 class db_tv_rx(db_base.db_base):
-    def __init__(self, usrp, which, first_IF, second_IF):
+    def __init__(self, usrp, which, first_IF, second_IF, inverted):
         """
         Control Microtune 4937 based USRP daughterboard.
         
@@ -77,10 +77,10 @@ class db_tv_rx(db_base.db_base):
         self._second_IF = second_IF
         self._reference_divisor = 640
         self._fast_tuning = False
-        self._inverted = False      # FIXME get rid of this
+        self._inverted = inverted
         
-        g = self.gain_range()                  # initialize gain
-        self.set_gain(float(g[0]+g[1]) / 2)
+        g = self.gain_range()                  
+        self.set_gain(float(g[0]+g[1]) / 2)  # default gain is halfscale
 
         self.bypass_adc_buffers(False)
         
@@ -187,12 +187,12 @@ class db_tv_rx(db_base.db_base):
 
 # With MT4937DI5-3x7702 with second downconversion
 db_instantiator.add(usrp_dbid.TV_RX,
-                    lambda usrp, which : (db_tv_rx(usrp, which, 43.75e6, 5.75e6),))
+                    lambda usrp, which : (db_tv_rx(usrp, which, 43.75e6, 5.75e6, False),))
 
 # With MT4937DI5-3x8680, and 3x8769 without second downconversion
 db_instantiator.add(usrp_dbid.TV_RX_REV_2,
-                    lambda usrp, which : (db_tv_rx(usrp, which, 44e6, 20e6),))
+                    lambda usrp, which : (db_tv_rx(usrp, which, 44e6, 44e6, True),))
 
 # With MT4937DI5-3x7901 without second downconversion, basically the same as tvrx2
 db_instantiator.add(usrp_dbid.TV_RX_REV_3,
-                    lambda usrp, which : (db_tv_rx(usrp, which, 44e6, 20e6),))
+                    lambda usrp, which : (db_tv_rx(usrp, which, 44e6, 44e6, True),))
