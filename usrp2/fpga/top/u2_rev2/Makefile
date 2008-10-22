@@ -62,7 +62,6 @@ control_lib/cascadefifo2.v \
 control_lib/dcache.v \
 control_lib/decoder_3_8.v \
 control_lib/dpram32.v \
-control_lib/extram_interface.v \
 control_lib/fifo_2clock.v \
 control_lib/fifo_2clock_casc.v \
 control_lib/gray2bin.v \
@@ -89,6 +88,7 @@ control_lib/simple_uart_rx.v \
 control_lib/oneshot_2clk.v \
 control_lib/sd_spi.v \
 control_lib/sd_spi_wb.v \
+control_lib/wb_bridge_16_32.v \
 coregen/fifo_xlnx_2Kx36_2clk.v \
 coregen/fifo_xlnx_2Kx36_2clk.xco \
 coregen/fifo_xlnx_512x36_2clk.v \
@@ -120,6 +120,7 @@ eth/rtl/verilog/flow_ctrl_tx.v \
 eth/rtl/verilog/miim/eth_clockgen.v \
 eth/rtl/verilog/miim/eth_outputcontrol.v \
 eth/rtl/verilog/miim/eth_shiftreg.v \
+extram/wb_zbt16_b.v \
 opencores/8b10b/decode_8b10b.v \
 opencores/8b10b/encode_8b10b.v \
 opencores/aemb/rtl/verilog/aeMB_bpcu.v \
