@@ -132,6 +132,9 @@ namespace usrp2 {
      */
     bool set_rx_decim(int decimation_factor);
 
+    //! Return current decimation factor
+    int rx_decim();
+
     /*!
      * Set receiver IQ magnitude scaling
      */
@@ -213,6 +216,9 @@ namespace usrp2 {
      * Set transmitter sample rate interpolation
      */
     bool set_tx_interp(int interpolation_factor);
+
+    //! Return current interpolation factor
+    int tx_interp();
 
     /*!
      * Set transmit IQ magnitude scaling

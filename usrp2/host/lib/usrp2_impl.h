@@ -80,6 +80,8 @@ namespace usrp2 {
     db_info	   d_tx_db_info;
     db_info	   d_rx_db_info;
 
+    int		   d_tx_interp;		// shadow tx interp 
+    int		   d_rx_decim;		// shadow rx decim
 
     void inc_enqueued() {
       omni_mutex_lock l(d_enqueued_mutex);
@@ -123,6 +125,7 @@ namespace usrp2 {
     double rx_freq_min() { return d_rx_db_info.freq_min; }
     double rx_freq_max() { return d_rx_db_info.freq_max; }
     bool set_rx_decim(int decimation_factor);
+    int rx_decim() { return d_rx_decim; }
     bool set_rx_scale_iq(int scale_i, int scale_q);
     bool start_rx_streaming(unsigned int channel, unsigned int items_per_frame);
     bool rx_samples(unsigned int channel, rx_sample_handler *handler);
@@ -140,6 +143,7 @@ namespace usrp2 {
     double tx_freq_min() { return d_tx_db_info.freq_min; }
     double tx_freq_max() { return d_tx_db_info.freq_max; }
     bool set_tx_interp(int interpolation_factor);
+    int tx_interp() { return d_tx_interp; }
     bool set_tx_scale_iq(int scale_i, int scale_q);
 
     bool tx_32fc(unsigned int channel,

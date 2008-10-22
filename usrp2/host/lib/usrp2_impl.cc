@@ -130,7 +130,7 @@ namespace usrp2 {
       d_rx_seqno(-1), d_tx_seqno(0), d_next_rid(0),
       d_num_rx_frames(0), d_num_rx_missing(0), d_num_rx_overruns(0), d_num_rx_bytes(0), 
       d_num_enqueued(0), d_enqueued_mutex(), d_bg_pending_cond(&d_enqueued_mutex),
-      d_channel_rings(NCHANS)
+      d_channel_rings(NCHANS), d_tx_interp(0), d_rx_decim(0)
   {
     if (!d_eth_buf->open(ifc, htons(U2_ETHERTYPE)))
       throw std::runtime_error("Unable to register USRP2 protocol");
@@ -179,6 +179,13 @@ namespace usrp2 {
     if (!set_rx_gain((rx_gain_min() + rx_gain_max()) / 2))
       std::cerr << "usrp2::ctor set_rx_gain failed\n";
 
+    // default interp and decim
+    if (!set_tx_interp(12))
+      std::cerr << "usrp2::ctor set_tx_interp failed\n";
+
+    if (!set_rx_decim(12))
+      std::cerr << "usrp2::ctor set_rx_decim failed\n";
+      
     // set workable defaults for scaling
     if (!set_rx_scale_iq(DEFAULT_RX_SCALE, DEFAULT_RX_SCALE))
       std::cerr << "usrp2::ctor set_rx_scale_iq failed\n";
@@ -524,6 +531,8 @@ namespace usrp2 {
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
+    if (success)
+      d_rx_decim = decimation_factor;
     return success;
   }
   
@@ -761,6 +770,8 @@ namespace usrp2 {
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
+    if (success)
+      d_tx_interp = interpolation_factor;
     return success;
   }
   
