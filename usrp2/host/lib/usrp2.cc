@@ -210,6 +210,12 @@ namespace usrp2 {
     return d_impl->set_rx_decim(decimation_factor);
   }
   
+  int
+  usrp2::rx_decim()
+  {
+    return d_impl->rx_decim();
+  }
+
   bool
   usrp2::set_rx_scale_iq(int scale_i, int scale_q)
   {
@@ -297,6 +303,12 @@ namespace usrp2 {
     return d_impl->set_tx_interp(interpolation_factor);
   }
   
+  int
+  usrp2::tx_interp()
+  {
+    return d_impl->tx_interp();
+  }
+
   bool
   usrp2::set_tx_scale_iq(int scale_i, int scale_q)
   {
