@@ -36,6 +36,19 @@ namespace usrp2 {
   class pending_reply;
   class ring;
 
+  //! High-level d'board info
+  struct db_info {
+    int		dbid;
+    double	freq_min;		// Hz
+    double	freq_max;		// Hz
+    double	gain_min;		// dB
+    double	gain_max;		// dB
+    double	gain_step_size;		// dB
+
+    db_info() : dbid(-1), freq_min(0), freq_max(0),
+		gain_min(0), gain_max(0), gain_step_size(0) {}
+  };
+
   class usrp2::impl : private data_handler
   {
     static const size_t NRIDS = 256;
@@ -47,7 +60,6 @@ namespace usrp2 {
     usrp2_thread  *d_bg_thread;
     volatile bool  d_bg_running; // TODO: multistate if needed
     
-    int            d_rx_decim;
     int            d_rx_seqno;
     int            d_tx_seqno;
     int            d_next_rid;
@@ -64,6 +76,10 @@ namespace usrp2 {
     pending_reply *d_pending_replies[NRIDS]; // indexed by 8-bit reply id
 
     std::vector<ring_sptr>   d_channel_rings; // indexed by 5-bit channel number
+
+    db_info	   d_tx_db_info;
+    db_info	   d_rx_db_info;
+
 
     void inc_enqueued() {
       omni_mutex_lock l(d_enqueued_mutex);
@@ -87,6 +103,7 @@ namespace usrp2 {
     virtual data_handler::result operator()(const void *base, size_t len);
     data_handler::result handle_control_packet(const void *base, size_t len);
     data_handler::result handle_data_packet(const void *base, size_t len);
+    bool dboard_info();
 
   public:
     impl(const std::string &ifc, props *p);
@@ -95,10 +112,16 @@ namespace usrp2 {
     void bg_loop();
 
     std::string mac_addr() const { return d_addr; } // FIXME: convert from u2_mac_addr_t
-    bool burn_mac_addr(const std::string &new_addr);
+
+    // Rx
 
     bool set_rx_gain(double gain);
+    double rx_gain_min() { return d_rx_db_info.gain_min; }
+    double rx_gain_max() { return d_rx_db_info.gain_max; }
+    double rx_gain_db_per_step() { return d_rx_db_info.gain_step_size; }
     bool set_rx_center_freq(double frequency, tune_result *result);
+    double rx_freq_min() { return d_rx_db_info.freq_min; }
+    double rx_freq_max() { return d_rx_db_info.freq_max; }
     bool set_rx_decim(int decimation_factor);
     bool set_rx_scale_iq(int scale_i, int scale_q);
     bool start_rx_streaming(unsigned int channel, unsigned int items_per_frame);
@@ -107,8 +130,15 @@ namespace usrp2 {
     unsigned int rx_overruns() const { return d_num_rx_overruns; }
     unsigned int rx_missing() const { return d_num_rx_missing; }
 
+    // Tx
+
     bool set_tx_gain(double gain);
+    double tx_gain_min() { return d_tx_db_info.gain_min; }
+    double tx_gain_max() { return d_tx_db_info.gain_max; }
+    double tx_gain_db_per_step() { return d_tx_db_info.gain_step_size; }
     bool set_tx_center_freq(double frequency, tune_result *result);
+    double tx_freq_min() { return d_tx_db_info.freq_min; }
+    double tx_freq_max() { return d_tx_db_info.freq_max; }
     bool set_tx_interp(int interpolation_factor);
     bool set_tx_scale_iq(int scale_i, int scale_q);
 
@@ -126,6 +156,19 @@ namespace usrp2 {
 		const uint32_t *items,
 		size_t nitems,
 		const tx_metadata *metadata);
+
+    // misc
+
+    bool config_mimo(int flags);
+    bool fpga_master_clock_freq(long *freq);
+    bool adc_rate(long *rate);
+    bool dac_rate(long *rate);
+    bool tx_daughterboard_id(int *dbid);
+    bool rx_daughterboard_id(int *dbid);
+
+    // low level
+
+    bool burn_mac_addr(const std::string &new_addr);
   };
   
 } // namespace usrp2

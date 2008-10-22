@@ -181,6 +181,8 @@ typedef struct {
 #define	OP_STOP_RX_REPLY	     (OP_STOP_RX | OP_REPLY_BIT)
 #define	OP_CONFIG_MIMO	       	     8
 #define OP_CONFIG_MIMO_REPLY	     (OP_CONFIG_MIMO | OP_REPLY_BIT)
+#define	OP_DBOARD_INFO		     9
+#define	OP_DBOARD_INFO_REPLY	     (OP_DBOARD_INFO | OP_REPLY_BIT)
 
 
 //#define OP_WRITE_REG	         xx	// not implemented
@@ -199,7 +201,7 @@ typedef struct {
  *
  * Used by:
  *  OP_EOP, OP_BURN_MAC_ADDR_REPLY, OP_START_RX_STREAMING_REPLY,
- *  OP_STOP_RX_REPLY
+ *  OP_STOP_RX_REPLY, OP_DBOARD_INFO
  */
 typedef struct {
   uint8_t	opcode;
@@ -346,6 +348,36 @@ typedef struct {
   uint8_t	rid;
   uint8_t	flags;	// from usrp_mimo_config.h
 } op_config_mimo_t;
+
+
+/*!
+ * \brief High-level information about daughterboards
+ */
+typedef struct {
+  int32_t	dbid;		//< d'board ID (-1 none, -2 invalid eeprom)
+  uint32_t	freq_min_hi;	//< high 32-bits of 64-bit fxpt_freq (Q44.20)
+  uint32_t	freq_min_lo;	//< low  32-bits of 64-bit fxpt_freq (Q44.20)
+  uint32_t	freq_max_hi;	//< high 32-bits of 64-bit fxpt_freq (Q44.20)
+  uint32_t	freq_max_lo;	//< low  32-bits of 64-bit fxpt_freq (Q44.20)
+  uint16_t	gain_min;	//< min gain that can be set. fxpt_db (Q9.7)
+  uint16_t	gain_max;	//< max gain that can be set. fxpt_db (Q9.7)
+  uint16_t	gain_step_size;	//< fxpt_db (Q9.7)
+} u2_db_info_t;
+
+
+/*!
+ * \brief Reply to d'board info request
+ */
+typedef struct {
+  uint8_t	opcode;
+  uint8_t	len;
+  uint8_t	rid;
+  uint8_t	ok;		// request was successful (bool)
+
+  u2_db_info_t	tx_db_info;
+  u2_db_info_t	rx_db_info;
+} _AL4 op_dboard_info_reply_t;
+
 
 
 /*

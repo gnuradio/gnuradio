@@ -160,13 +160,6 @@ namespace usrp2 {
     return d_impl->mac_addr();
   }
 
-  bool
-  usrp2::burn_mac_addr(const std::string &new_addr)
-  {
-    return d_impl->burn_mac_addr(new_addr);
-  }
-
-
   // Receive
 
   bool 
@@ -175,12 +168,42 @@ namespace usrp2 {
     return d_impl->set_rx_gain(gain);
   }
   
+  double
+  usrp2::rx_gain_min()
+  {
+    return d_impl->rx_gain_min();
+  }
+
+  double
+  usrp2::rx_gain_max()
+  {
+    return d_impl->rx_gain_max();
+  }
+
+  double
+  usrp2::rx_gain_db_per_step()
+  {
+    return d_impl->rx_gain_db_per_step();
+  }
+
   bool
   usrp2::set_rx_center_freq(double frequency, tune_result *result)
   {
     return d_impl->set_rx_center_freq(frequency, result);
   }
   
+  double
+  usrp2::rx_freq_min()
+  {
+    return d_impl->rx_freq_min();
+  }
+
+  double
+  usrp2::rx_freq_max()
+  {
+    return d_impl->rx_freq_max();
+  }
+
   bool
   usrp2::set_rx_decim(int decimation_factor)
   {
@@ -231,12 +254,43 @@ namespace usrp2 {
     return d_impl->set_tx_gain(gain);
   }
   
+  double
+  usrp2::tx_gain_min()
+  {
+    return d_impl->tx_gain_min();
+  }
+
+  double
+  usrp2::tx_gain_max()
+  {
+    return d_impl->tx_gain_max();
+  }
+
+  double
+  usrp2::tx_gain_db_per_step()
+  {
+    return d_impl->tx_gain_db_per_step();
+  }
+
   bool
   usrp2::set_tx_center_freq(double frequency, tune_result *result)
   {
     return d_impl->set_tx_center_freq(frequency, result);
   }
   
+  double
+  usrp2::tx_freq_min()
+  {
+    return d_impl->tx_freq_min();
+  }
+
+  double
+  usrp2::tx_freq_max()
+  {
+    return d_impl->tx_freq_max();
+  }
+
+
   bool
   usrp2::set_tx_interp(int interpolation_factor)
   {
@@ -275,6 +329,54 @@ namespace usrp2 {
   {
     return d_impl->tx_raw(channel, items, nitems, metadata);
   }
+
+  // miscellaneous methods
+
+  bool
+  usrp2::config_mimo(int flags)
+  {
+    return d_impl->config_mimo(flags);
+  }
+
+  bool
+  usrp2::fpga_master_clock_freq(long *freq)
+  {
+    return d_impl->fpga_master_clock_freq(freq);
+  }
+
+  bool
+  usrp2::adc_rate(long *rate)
+  {
+    return d_impl->adc_rate(rate);
+  }
+
+  bool
+  usrp2::dac_rate(long *rate)
+  {
+    return d_impl->dac_rate(rate);
+  }
+
+  bool
+  usrp2::tx_daughterboard_id(int *dbid)
+  {
+    return d_impl->tx_daughterboard_id(dbid);
+  }
+
+  bool
+  usrp2::rx_daughterboard_id(int *dbid)
+  {
+    return d_impl->rx_daughterboard_id(dbid);
+  }
+  
+
+  // low level methods
+
+  bool
+  usrp2::burn_mac_addr(const std::string &new_addr)
+  {
+    return d_impl->burn_mac_addr(new_addr);
+  }
+
 
 } // namespace usrp2
 

@@ -68,6 +68,9 @@ namespace usrp2 {
     case OP_CONFIG_TX_REPLY_V2: return "OP_CONFIG_TX_REPLY_V2";
     case OP_START_RX_STREAMING: return "OP_START_RX_STREAMING";
     case OP_STOP_RX: return "OP_STOP_RX";
+    case OP_CONFIG_MIMO: return "OP_CONFIG_MIMO";
+    case OP_DBOARD_INFO: return "OP_DBOARD_INFO";
+    case OP_DBOARD_INFO_REPLY: return "OP_DBOARD_INFO_REPLY";
 #if 0
     case OP_WRITE_REG: return "OP_WRITE_REG";
     case OP_WRITE_REG_MASKED: return "OP_WRITE_REG_MASKED";
@@ -105,9 +108,13 @@ namespace usrp2 {
     md->word0 = u2p_word0(fh);
     md->timestamp = u2p_timestamp(fh);
 
+    // FIXME when we've got more info
     // md->start_of_burst = (md->word0 & XXX) != 0;
     // md->end_of_burst =   (md->word0 & XXX) != 0;
     // md->rx_overrun =     (md->word0 & XXX) != 0;
+    md->start_of_burst = 0;
+    md->end_of_burst =   0;
+    md->rx_overrun =     0;
 
     *items = (uint32_t *)(&fh[1]);
     size_t nbytes = payload_len_in_bytes - sizeof(u2_fixed_hdr_t);
@@ -120,7 +127,7 @@ namespace usrp2 {
 
   usrp2::impl::impl(const std::string &ifc, props *p)
     : d_eth_buf(new eth_buffer()), d_pf(0), d_bg_thread(0), d_bg_running(false),
-      d_rx_decim(0), d_rx_seqno(-1), d_tx_seqno(0), d_next_rid(0),
+      d_rx_seqno(-1), d_tx_seqno(0), d_next_rid(0),
       d_num_rx_frames(0), d_num_rx_missing(0), d_num_rx_overruns(0), d_num_rx_bytes(0), 
       d_num_enqueued(0), d_enqueued_mutex(), d_bg_pending_cond(&d_enqueued_mutex),
       d_channel_rings(NCHANS)
@@ -141,6 +148,36 @@ namespace usrp2 {
 
     d_bg_thread = new usrp2_thread(this);
     d_bg_thread->start();
+
+    if (!dboard_info())		// we're hosed
+      throw std::runtime_error("Unable to retrieve daughterboard info");
+
+    if (0){
+      int dbid;
+
+      tx_daughterboard_id(&dbid);
+      fprintf(stderr, "Tx dboard 0x%x\n", dbid);
+      fprintf(stderr, "  freq_min = %g\n", tx_freq_min());
+      fprintf(stderr, "  freq_max = %g\n", tx_freq_max());
+      fprintf(stderr, "  gain_min = %g\n", tx_gain_min());
+      fprintf(stderr, "  gain_max = %g\n", tx_gain_max());
+      fprintf(stderr, "  gain_db_per_step = %g\n", tx_gain_db_per_step());
+
+      rx_daughterboard_id(&dbid);
+      fprintf(stderr, "Rx dboard 0x%x\n", dbid);
+      fprintf(stderr, "  freq_min = %g\n", rx_freq_min());
+      fprintf(stderr, "  freq_max = %g\n", rx_freq_max());
+      fprintf(stderr, "  gain_min = %g\n", rx_gain_min());
+      fprintf(stderr, "  gain_max = %g\n", rx_gain_max());
+      fprintf(stderr, "  gain_db_per_step = %g\n", rx_gain_db_per_step());
+    }
+
+    // default gains to mid point
+    if (!set_tx_gain((tx_gain_min() + tx_gain_max()) / 2))
+      std::cerr << "usrp2::ctor set_tx_gain failed\n";
+
+    if (!set_rx_gain((rx_gain_min() + rx_gain_max()) / 2))
+      std::cerr << "usrp2::ctor set_rx_gain failed\n";
 
     // set workable defaults for scaling
     if (!set_rx_scale_iq(DEFAULT_RX_SCALE, DEFAULT_RX_SCALE))
@@ -408,33 +445,6 @@ namespace usrp2 {
       return data_handler::RELEASE;	// discard, no room in channel ring
     }  	
     return data_handler::RELEASE;
-  }
-
-
-  // ----------------------------------------------------------------
-  // 			   misc commands
-  // ----------------------------------------------------------------
-
-  bool
-  usrp2::impl::burn_mac_addr(const std::string &new_addr)
-  {
-    op_burn_mac_addr_cmd cmd;
-    op_generic_t reply;
-
-    memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
-    cmd.op.opcode = OP_BURN_MAC_ADDR;
-    cmd.op.len = sizeof(cmd.op);
-    cmd.op.rid = d_next_rid++;
-    if (!parse_mac_addr(new_addr, &cmd.op.addr))
-      return false;
-
-    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, 4*DEF_CMD_TIMEOUT))
-      return false;
-
-    bool success = (ntohx(reply.ok) == 1);
-    return success;
   }
 
 
@@ -868,6 +878,134 @@ namespace usrp2 {
     }
 
     return true;
+  }
+
+  // ----------------------------------------------------------------
+  // 			   misc commands
+  // ----------------------------------------------------------------
+
+  bool
+  usrp2::impl::config_mimo(int flags)
+  {
+    op_config_mimo_cmd cmd;
+    op_generic_t reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_CONFIG_MIMO;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+    
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+      return false;
+
+    return ntohx(reply.ok) == 1;
+  }
+
+  bool
+  usrp2::impl::fpga_master_clock_freq(long *freq)
+  {
+    *freq = 100000000L;		// 100 MHz
+    return true;
+  }
+
+  bool
+  usrp2::impl::adc_rate(long *rate)
+  {
+    return fpga_master_clock_freq(rate);
+  }
+
+  bool
+  usrp2::impl::dac_rate(long *rate)
+  {
+    return fpga_master_clock_freq(rate);
+  }
+
+  bool
+  usrp2::impl::tx_daughterboard_id(int *dbid)
+  {
+    *dbid = d_tx_db_info.dbid;
+    return true;
+  }
+
+  bool
+  usrp2::impl::rx_daughterboard_id(int *dbid)
+  {
+    *dbid = d_rx_db_info.dbid;
+    return true;
+  }
+
+
+  // ----------------------------------------------------------------
+  // 			low-level commands
+  // ----------------------------------------------------------------
+
+  bool
+  usrp2::impl::burn_mac_addr(const std::string &new_addr)
+  {
+    op_burn_mac_addr_cmd cmd;
+    op_generic_t reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_BURN_MAC_ADDR;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+    if (!parse_mac_addr(new_addr, &cmd.op.addr))
+      return false;
+
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd(&cmd, sizeof(cmd), &p, 4*DEF_CMD_TIMEOUT))
+      return false;
+
+    bool success = (ntohx(reply.ok) == 1);
+    return success;
+  }
+
+  static void
+  fill_dboard_info(db_info *dst, const u2_db_info_t *src)
+  {
+    dst->dbid = ntohl(src->dbid);
+
+    dst->freq_min =
+      u2_fxpt_freq_to_double(u2_fxpt_freq_from_hilo(ntohl(src->freq_min_hi), 
+						    ntohl(src->freq_min_lo)));
+    dst->freq_max =
+      u2_fxpt_freq_to_double(u2_fxpt_freq_from_hilo(ntohl(src->freq_max_hi), 
+						    ntohl(src->freq_max_lo)));
+
+    dst->gain_min = u2_fxpt_gain_to_double(ntohs(src->gain_min));
+    dst->gain_max = u2_fxpt_gain_to_double(ntohs(src->gain_max));
+    dst->gain_step_size = u2_fxpt_gain_to_double(ntohs(src->gain_step_size));
+  }
+
+  bool
+  usrp2::impl::dboard_info()
+  {
+    op_dboard_info_cmd  	cmd;
+    op_dboard_info_reply_t	reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_DBOARD_INFO;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+    
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+      return false;
+
+    bool success = (ntohx(reply.ok) == 1);
+    if (success){
+      fill_dboard_info(&d_tx_db_info, &reply.tx_db_info);
+      fill_dboard_info(&d_rx_db_info, &reply.rx_db_info);
+    }
+    return success;
   }
 
 

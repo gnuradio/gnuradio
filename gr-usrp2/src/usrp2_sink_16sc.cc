@@ -62,7 +62,7 @@ usrp2_sink_16sc::work(int noutput_items,
   metadata.send_now = 1;
   metadata.start_of_burst = 1;
 
-  bool ok = d_u2->tx_16sc(0,  // FIXME: use channel number instead of 0
+  bool ok = d_u2->tx_16sc(0,  // FIXME: someday, streams will have channel numbers
 			  in, noutput_items, &metadata);
   if (!ok){
     std::cerr << "usrp2_sink_16sc: tx_16sc failed" << std::endl;

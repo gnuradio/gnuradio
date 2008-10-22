@@ -26,8 +26,14 @@
 //#include <iosfwd>
 #include <usrp2/rx_sample_handler.h>
 #include <usrp2/tune_result.h>
-#include <usrp2/rx_sample_handler.h>
 
+
+/*
+ * N.B., The interfaces described here are still in flux.
+ *
+ * We will keep all the code in the tree up-to-date with regard to changes
+ * here, but reserve the right to change this on a whim.
+ */
 
 namespace usrp2 {
 
@@ -89,14 +95,6 @@ namespace usrp2 {
      */
     std::string mac_addr();
 
-    /*!
-     * Burn new mac address into EEPROM on USRP2
-     *
-     * \param new_addr  Network mac address, e.g., "01:23:45:67:89:ab" or "89:ab".
-     *                  If \p addr is HH:HH, it's treated as if it were 00:50:c2:85:HH:HH
-     */
-    bool burn_mac_addr(const std::string &new_addr);
-
     /*
      * ----------------------------------------------------------------
      * Rx configuration and control
@@ -105,13 +103,29 @@ namespace usrp2 {
 
     /*!
      * Set receiver gain
+     * \param gain in dB (more or less)
      */
     bool set_rx_gain(double gain);
+
+    //! return minimum Rx gain 
+    double rx_gain_min();
+
+    //! return maximum Rx gain 
+    double rx_gain_max();
+
+    //! return Rx gain db_per_step
+    double rx_gain_db_per_step();
 
     /*!
      * Set receiver center frequency
      */
     bool set_rx_center_freq(double frequency, tune_result *result);
+
+    //! return minimum Rx center frequency
+    double rx_freq_min();
+
+    //! return maximum Rx center frequency
+    double rx_freq_max();
 
     /*!
      * Set receiver sample rate decimation
@@ -175,10 +189,25 @@ namespace usrp2 {
      */
     bool set_tx_gain(double gain);
 
+    //! return minimum Tx gain 
+    double tx_gain_min();
+
+    //! return maximum Tx gain 
+    double tx_gain_max();
+
+    //! return Tx gain db_per_step
+    double tx_gain_db_per_step();
+
     /*!
      * Set transmitter center frequency
      */
     bool set_tx_center_freq(double frequency, tune_result *result);
+
+    //! return minimum Tx center frequency
+    double tx_freq_min();
+
+    //! return maximum Tx center frequency
+    double tx_freq_max();
 
     /*!
      * Set transmitter sample rate interpolation
@@ -253,7 +282,11 @@ namespace usrp2 {
 		size_t nitems,
 		const tx_metadata *metadata);
 
-    // ----------------------------------------------------------------
+    /*
+     * ----------------------------------------------------------------
+     *  miscellaneous methods
+     * ----------------------------------------------------------------
+     */
 
     /*!
      * \brief MIMO configuration
@@ -273,6 +306,122 @@ namespace usrp2 {
      * </pre>
      */
     bool config_mimo(int flags);
+
+
+    //! Get frequency of master oscillator in Hz
+    bool fpga_master_clock_freq(long *freq);
+
+    // Get Sampling rate of A/D converter in Hz
+    bool adc_rate(long *rate);
+
+    // Get Sampling rate of D/A converter in Hz
+    bool dac_rate(long *rate);
+
+    /*!
+     * \brief Get Tx daughterboard ID
+     *
+     * \param[out] dbid returns the daughterboard id.
+     *
+     * daughterboard id >= 0 if successful, -1 if no daugherboard installed,
+     * -2 if invalid EEPROM on daughterboard.
+     */
+    bool tx_daughterboard_id(int *dbid);
+
+    /*!
+     * \brief Get Rx daughterboard ID
+     *
+     * \param[out] dbid returns the daughterboard id.
+     *
+     * daughterboard id >= 0 if successful, -1 if no daugherboard installed,
+     * -2 if invalid EEPROM on daughterboard.
+     */
+    bool rx_daughterboard_id(int *dbid);
+
+    /*
+     * ----------------------------------------------------------------
+     *  Low level methods
+     * ----------------------------------------------------------------
+     */
+
+    /*!
+     * Burn new mac address into EEPROM on USRP2
+     *
+     * \param new_addr  Network mac address, e.g., "01:23:45:67:89:ab" or "89:ab".
+     *                  If \p addr is HH:HH, it's treated as if it were 00:50:c2:85:HH:HH
+     */
+    bool burn_mac_addr(const std::string &new_addr);
+
+
+#if 0	// not yet implemented
+    /*!
+     * \brief Write EEPROM on motherboard or any daughterboard.
+     * \param i2c_addr		I2C bus address of EEPROM
+     * \param eeprom_offset	byte offset in EEPROM to begin writing
+     * \param buf		the data to write
+     * \returns true iff sucessful
+     */
+    bool write_eeprom (int i2c_addr, int eeprom_offset, const std::string &buf);
+
+    /*!
+     * \brief Read EEPROM on motherboard or any daughterboard.
+     * \param i2c_addr		I2C bus address of EEPROM
+     * \param eeprom_offset	byte offset in EEPROM to begin reading
+     * \param len		number of bytes to read
+     * \returns the data read if successful, else a zero length string.
+     */
+    std::string read_eeprom (int i2c_addr, int eeprom_offset, int len);
+
+    /*!
+     * \brief Write to I2C peripheral
+     * \param i2c_addr		I2C bus address (7-bits)
+     * \param buf		the data to write
+     * \returns true iff successful
+     * Writes are limited to a maximum of of 64 bytes.
+     */
+    bool write_i2c (int i2c_addr, const std::string &buf);
+
+    /*!
+     * \brief Read from I2C peripheral
+     * \param i2c_addr		I2C bus address (7-bits)
+     * \param len		number of bytes to read
+     * \returns the data read if successful, else a zero length string.
+     * Reads are limited to a maximum of 64 bytes.
+     */
+    std::string read_i2c (int i2c_addr, int len);
+
+    /*!
+     * \brief Write data to SPI bus peripheral.
+     *
+     * \param optional_header	0,1 or 2 bytes to write before buf.
+     * \param enables		bitmask of peripherals to write. See usrp_spi_defs.h
+     * \param format		transaction format.  See usrp_spi_defs.h SPI_FMT_*
+     * \param buf		the data to write
+     * \returns true iff successful
+     * Writes are limited to a maximum of 64 bytes.
+     *
+     * If \p format specifies that optional_header bytes are present, they are
+     * written to the peripheral immediately prior to writing \p buf.
+     */
+    bool write_spi (int optional_header, int enables, int format, const std::string &buf);
+
+    /*
+     * \brief Read data from SPI bus peripheral.
+     *
+     * \param optional_header	0,1 or 2 bytes to write before buf.
+     * \param enables		bitmask of peripheral to read. See usrp_spi_defs.h
+     * \param format		transaction format.  See usrp_spi_defs.h SPI_FMT_*
+     * \param len		number of bytes to read.  Must be in [0,64].
+     * \returns the data read if sucessful, else a zero length string.
+     *
+     * Reads are limited to a maximum of 64 bytes.
+     *
+     * If \p format specifies that optional_header bytes are present, they
+     * are written to the peripheral first.  Then \p len bytes are read from
+     * the peripheral and returned.
+     */
+    std::string read_spi (int optional_header, int enables, int format, int len);
+#endif
+
 
     class impl;		// implementation details
 

@@ -53,12 +53,26 @@ namespace usrp2 {
     op_generic_t      eop;
   };
 
+  struct op_config_mimo_cmd
+  {
+    u2_eth_packet_t   h;
+    op_config_mimo_t  op;
+    op_generic_t      eop;
+  };
+
   struct op_burn_mac_addr_cmd 
   {
     u2_eth_packet_t    h;
     op_burn_mac_addr_t op;
     op_generic_t       eop;
   };
+
+  struct op_dboard_info_cmd {
+    u2_eth_packet_t h;
+    op_generic_t    op;
+    op_generic_t    eop;
+  };
+
 
   /*!
    * Control mechanism to allow API calls to block waiting for reply packets

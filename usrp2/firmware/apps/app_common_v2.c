@@ -27,6 +27,7 @@
 #include "nonstdio.h"
 #include "print_rmon_regs.h"
 #include "db.h"
+#include "db_base.h"
 #include "clocks.h"
 #include "u2_init.h"
 #include <string.h>
@@ -279,6 +280,38 @@ read_time_cmd(const op_generic_t *p,
   return r->len;
 }
 
+static void
+fill_db_info(u2_db_info_t *p, const struct db_base *db)
+{
+  p->dbid = db->dbid;
+  p->freq_min_hi = u2_fxpt_freq_hi(db->freq_min);
+  p->freq_min_lo = u2_fxpt_freq_lo(db->freq_min);
+  p->freq_max_hi = u2_fxpt_freq_hi(db->freq_max);
+  p->freq_max_lo = u2_fxpt_freq_lo(db->freq_max);
+  p->gain_min = db->gain_min;
+  p->gain_max = db->gain_max;
+  p->gain_step_size = db->gain_step_size;
+}
+
+static size_t
+dboard_info_cmd(const op_generic_t *p,
+		void *reply_payload, size_t reply_payload_space)
+{
+  op_dboard_info_reply_t *r = (op_dboard_info_reply_t *) reply_payload;
+  if (reply_payload_space < sizeof(*r))		
+    return 0;					// no room
+
+  r->opcode = OP_DBOARD_INFO_REPLY;
+  r->len = sizeof(*r);
+  r->rid = p->rid;
+  r->ok = true;
+
+  fill_db_info(&r->tx_db_info, tx_dboard);
+  fill_db_info(&r->rx_db_info, rx_dboard);
+
+  return r->len;
+}
+
 static size_t
 generic_reply(const op_generic_t *p,
 	      void *reply_payload, size_t reply_payload_space,
@@ -372,6 +405,10 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
 
     case OP_READ_TIME:
       subpktlen = read_time_cmd(gp, reply_payload, reply_payload_space);
+      break;
+
+    case OP_DBOARD_INFO:
+      subpktlen = dboard_info_cmd(gp, reply_payload, reply_payload_space);
       break;
 
     default:
