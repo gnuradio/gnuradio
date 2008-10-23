@@ -75,7 +75,7 @@ module u2_rev2
    input cpld_clk,     // AB14 serial clock
    input cpld_detached,// V11 unused
    output cpld_init_b,  // W12 unused dual purpose
-   input cpld_misc,  // Y12 unused
+   output cpld_misc,  // Y12 
    
    // ADC
    input [13:0] adc_a,
@@ -362,6 +362,8 @@ module u2_rev2
 		     .cpld_din          (cpld_din),
 		     .cpld_clk          (cpld_clk),
 		     .cpld_detached     (cpld_detached),
+		     .cpld_misc         (cpld_misc),
+		     .cpld_init_b       (cpld_init_b),
 		     .por               (~POR),
 		     .config_success    (config_success),
 		     .adc_a		(adc_a_reg2),
