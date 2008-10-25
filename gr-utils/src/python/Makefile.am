@@ -33,6 +33,7 @@ ourpython_PYTHON = \
 bin_SCRIPTS = \
     gr_plot_char.py \
     gr_plot_const.py \
+    gr_plot_fft.py \
     gr_plot_fft_c.py \
     gr_plot_fft_f.py \
     gr_plot_float.py \
