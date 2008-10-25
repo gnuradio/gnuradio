@@ -3,7 +3,7 @@
 # wrapper to setup cross-compilation of firmware
 #
 
-for v in CC CXX AR NM RANLIB STRIP F77 CFLAGS CXXFLAGS CPPFLAGS LDFLAGS 
+for v in CC CPP CXX AR NM RANLIB STRIP F77 CFLAGS CXXFLAGS CPPFLAGS LDFLAGS 
 do
   unset $v
 done
@@ -13,6 +13,7 @@ for t in "$@"
 do
   case "$t" in
       (CC=*)       ;;
+      (CPP=*)       ;;
       (CXX=*)      ;;
       (AR=*)       ;;
       (NM=*)       ;;
