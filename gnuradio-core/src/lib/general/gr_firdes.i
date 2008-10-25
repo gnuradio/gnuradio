@@ -34,7 +34,8 @@ class gr_firdes {
     WIN_HANN = 1,	// max attenuation 44 dB
     WIN_BLACKMAN = 2,	// max attenuation 74 dB
     WIN_RECTANGULAR = 3,
-    WIN_KAISER = 4      // max attenuation variable with beta, google it
+    WIN_KAISER = 4,     // max attenuation variable with beta, google it
+    WIN_BLACKMAN_hARRIS = 5,
   };
 
   // ... class methods ...

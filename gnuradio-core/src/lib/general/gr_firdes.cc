@@ -739,6 +739,12 @@ gr_firdes::window (win_type type, int ntaps, double beta)
       taps[n] = 0.42 - 0.50 * cos ((2*M_PI * n) / (M-1)) - 0.08 * cos ((4*M_PI * n) / (M-1));
     break;
 
+  case WIN_BLACKMAN_hARRIS:
+    for (int n = -ntaps/2; n < ntaps/2; n++)
+      taps[n+ntaps/2] = 0.35875 + 0.48829*cos((2*M_PI * n) / (float)M) + 
+	0.14128*cos((4*M_PI * n) / (float)M) + 0.01168*cos((6*M_PI * n) / (float)M);
+    break;
+
 #if 0
   case WIN_KAISER:
     for (int n = 0; n < ntaps; n++)

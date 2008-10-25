@@ -1,5 +1,5 @@
 dnl
-dnl Copyright 2007 Free Software Foundation, Inc.
+dnl Copyright 2007,2008 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -29,12 +29,17 @@ dnl
 
 AC_DEFUN([GR_QWT],
 [
+    dnl QWT Library Version
+    QWT_LIBRARY1=-lqwt-qt4
+    QWT_LIBRARY2=-lqwt
+
     dnl Save the environment
     AC_LANG_PUSH(C++)
     qwt_save_CPPFLAGS="$CPPFLAGS"
     qwt_save_LIBS="$LIBS"
     libqwt_ok=yes
 
+    dnl QWT Info
     dnl Allow user to specify where QWT files are
     AC_ARG_WITH([qwt-libdir],
 		[  --with-qwt-libdir=path  Prefix where QWT library is installed (optional)],
@@ -43,41 +48,89 @@ AC_DEFUN([GR_QWT],
     AC_ARG_WITH([qwt-incdir],
 		[  --with-qwt-incdir=path  Prefix where QWT include files are (optional)],
 		[qwt_incdir="$withval"], [qwt_incdir=""])
-
-    dnl Create QWT_CFLAGS based on user input
-    AC_MSG_CHECKING(QWT_CFLAGS)
-    if test "$qwt_incdir" != "" ; then
-	QWT_CFLAGS="$QWT_CFLAGS -I$qwt_incdir"
-    fi
-    AC_MSG_RESULT($QWT_CFLAGS)
-    
-    dnl Set CPPFLAGS so C++ tests can operate
-    CPPFLAGS="$CPPFLAGS $QT_CFLAGS $QWT_CFLAGS"
+    AC_ARG_WITH([qwt-lib],
+		[  --with-qwt-lib=library  QWT library name (optional)],
+		[qwt_lib="$withval"], [qwt_lib=""])
 
     dnl Check for presence of header files
-    AC_CHECK_HEADERS([qwt.h], 
-		     [],
-		     [libqwt_ok=no;AC_MSG_RESULT([cannot find usable qwt headers])]
-    )
+    dnl if not user-specified, try the first include dir (Ubuntu), then
+    dnl try the second include dir (Fedora)
+    CPPFLAGS="$CPPFLAGS $QTCORE_CFLAGS"
 
-    dnl Set QWT_LIBS based on user input
-    AC_MSG_CHECKING(QWT_LIBS)
-    QWT_LIBS="$QWT_LIBS -lqwt"
-    if test "$qwt_libdir" != "" ; then
-	QWT_LIBS="-L$qwt_libdir $QWT_LIBS"
+    dnl if not set by user
+    if test "$qwt_incdir" = "" ; then
+        dnl check qwt/qwt.h (as in Fedora)
+        AC_CHECK_HEADER(
+            [qwt/qwt.h],
+	    [qwt_qwt_h=yes],
+            [qwt_qwt_h=no]
+        )
+        dnl If it was found, set the flags and move on
+        if test "$qwt_qwt_h" = "yes" ; then
+            QWT_CFLAGS="$QWT_CFLAGS -I/usr/include/qwt"
+        else
+            dnl otherwise, check qwt-qt4/qwt.h (as in Ubuntu)
+            AC_CHECK_HEADER(
+                [qwt-qt4/qwt.h],
+                [qwt_qt4_qwt_h=yes],
+                [qwt_qt4_qwt_h=no]
+            )
+            dnl if it was found, set the flags and move on
+            if test "$qwt_qt4_qwt_h" = "yes" ; then
+                QWT_CFLAGS="$QWT_CFLAGS -I/usr/include/qwt-qt4"
+            else
+                dnl otherwise, qwt.h wasn't found, so set the flag to no
+                libqwt_ok=no
+            fi
+        fi
+    else
+	dnl Using the user-specified include directory
+	QWT_CFLAGS="$QWT_CFLAGS -I$qwt_incdir"
+        AC_CHECK_HEADER(
+            [$qwt_incdir/qwt.h],
+	    [],
+	    [libqwt_ok=no])
     fi
-    AC_MSG_RESULT($QWT_LIBS)
 
-    dnl Set LIBS so C++ link test can operate
-    LIBS="$QWT_LIBS $QT_LIBS $LIBS"
+    dnl Don't bother going on if we can't find the headers
+    if test "$libqwt_ok" = "yes" ; then
 
-    dnl Check that library files can be linked in
-    dnl This references an arbitrary static class method 
-    AC_TRY_LINK([#include <qwt_text.h>],
-		[QwtTextEngine const *te = QwtText::textEngine(QwtText::AutoText)],
-		[],
-                [libqwt_ok=no;AC_MSG_RESULT([unable to link QWT library])]
-    )
+        dnl Check for QWT library (qwt or qwt-qt4)
+
+        dnl User-defined QWT library path
+        if test "$qwt_libdir" != "" ; then
+            QWT_LIBS="-L$qwt_libdir $QWT_LIBS"
+        fi
+
+        dnl temporarily set these so the AC_CHECK_LIB works
+        CPPFLAGS="$CPPFLAGS $QWT_CFLAGS"
+        LIBS="$qwt_save_LIBS $QT_LIBS $QWT_LIBS -lqwt"
+
+        dnl If the user specified a qwt library name, use it here
+        if test "$qwt_lib" != "" ; then
+            AC_CHECK_LIB([$qwt_lib], [main], [libqwt_ok=yes], [libqwt_ok=no])
+
+        else            
+            dnl Check for 'main' in libqwt (Fedora)
+            AC_CHECK_LIB([qwt], [main], [libqwt_ok=yes], [libqwt_ok=no])
+
+            dnl If library found properly, set the flag and move on
+            if test "$libqwt_ok" = "yes" ; then
+                QWT_LIBS="$QWT_LIBS -lqwt"
+            else
+                dnl Otherwise, check for 'main' in libqwt-qt4 (Ubuntu)
+                LIBS="$qwt_save_LIBS $QT_LIBS $QWT_LIBS -lqwt-qt4"
+                AC_CHECK_LIB([qwt-qt4], [main], [libqwt_ok=yes], [libqwt_ok=no])
+                if test "$libqwt_ok" = "yes" ; then
+                    QWT_LIBS="$QWT_LIBS -lqwt-qt4"
+                else
+                    AC_MSG_RESULT([Could not link to libqwt.so])
+                fi
+            fi
+        fi
+    else
+        AC_MSG_RESULT([Could not find qwt headers])
+    fi
 
     dnl Restore saved variables
     LIBS="$qwt_save_LIBS"
