@@ -36,6 +36,9 @@ bin_SCRIPTS = \
     gr_plot_fft.py \
     gr_plot_fft_c.py \
     gr_plot_fft_f.py \
+    gr_plot_psd.py \
+    gr_plot_psd_c.py \
+    gr_plot_psd_f.py \
     gr_plot_float.py \
     gr_plot_int.py \
     gr_plot_iq.py \
