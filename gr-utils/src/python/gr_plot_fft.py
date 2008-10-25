@@ -87,8 +87,8 @@ class gr_plot_fft:
         show()
         
     def get_data(self):
-        position = self.hfile.tell()/self.sizeof_data
-        self.text_file_pos.set_text("File Position: %d" % (position))
+        self.position = self.hfile.tell()/self.sizeof_data
+        self.text_file_pos.set_text("File Position: %d" % (self.position))
         self.iq = scipy.fromfile(self.hfile, dtype=self.datatype, count=self.block_length)
         #print "Read in %d items" % len(self.iq)
         if(len(self.iq) == 0):
@@ -97,8 +97,8 @@ class gr_plot_fft:
             self.iq_fft = self.dofft(self.iq)
             
             tstep = 1.0 / self.sample_rate
-            self.time = [tstep*position + tstep*(position + i) for i in xrange(len(self.iq))]
-            
+            self.time = [tstep*(self.position + i) for i in xrange(len(self.iq))]
+
             self.freq = self.calc_freq(self.time, self.sample_rate)
 
     def dofft(self, iq):
@@ -160,15 +160,15 @@ class gr_plot_fft:
         self.draw_time()
         self.draw_fft()
 
+        self.xlim = self.sp_iq.get_xlim()
         draw()
         
     def zoom(self, event):
         newxlim = self.sp_iq.get_xlim()
-        #if(newxlim != self.xlim):
-        if(0):
+        if(newxlim != self.xlim):
             self.xlim = newxlim
-            xmin = max(0, int(ceil(self.sample_rate*self.xlim[0])))
-            xmax = min(int(ceil(self.sample_rate*self.xlim[1])), len(self.iq))
+            xmin = max(0, int(ceil(self.sample_rate*(self.xlim[0] - self.position))))
+            xmax = min(int(ceil(self.sample_rate*(self.xlim[1] - self.position))), len(self.iq))
 
             iq = self.iq[xmin : xmax]
             time = self.time[xmin : xmax]
