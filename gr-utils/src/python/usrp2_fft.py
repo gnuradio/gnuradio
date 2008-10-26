@@ -68,8 +68,7 @@ class app_top_block(stdgui2.std_top_block):
         self.u = usrp2.source_32fc(options.interface, options.mac_addr)
         self.u.set_decim(options.decim)
         
-        #input_rate = self.u.adc_freq() / self.u.decim_rate()
-        input_rate = 100e6/options.decim
+        input_rate = self.u.adc_rate() / self.u.decim()
         
         if options.waterfall:
             self.scope = \
@@ -90,15 +89,13 @@ class app_top_block(stdgui2.std_top_block):
 
         if options.gain is None:
             # if no gain was specified, use the mid-point in dB
-            #g = self.subdev.gain_range()
-            #options.gain = float(g[0]+g[1])/2
-            options.gain = 0
+            g = self.u.gain_range()
+            options.gain = float(g[0]+g[1])/2
 
         if options.freq is None:
             # if no freq was specified, use the mid-point
-            #r = self.subdev.freq_range()
-            #options.freq = float(r[0]+r[1])/2
-            options.freq = 0
+            r = self.u.freq_range()
+            options.freq = float(r[0]+r[1])/2
             
         self.set_gain(options.gain)
 
@@ -107,13 +104,13 @@ class app_top_block(stdgui2.std_top_block):
         #    self.subdev.select_rx_antenna(options.antenna)
 
         if self.show_debug_info:
-            self.myform['decim'].set_value(options.decim)
-            self.myform['fs@usb'].set_value(100e6/options.decim) #self.u.adc_freq() / self.u.decim_rate())
-            #self.myform['dbname'].set_value(self.subdev.name())
+            self.myform['decim'].set_value(self.u.decim())
+            self.myform['fs@gbe'].set_value(input_rate)
+            self.myform['dbname'].set_value("0x%04X" % (self.u.daughterboard_id(),)) # FIXME: add text name
             self.myform['baseband'].set_value(0)
             self.myform['ddc'].set_value(0)
 
-        if not(self.u.set_center_freq(options.freq)):
+        if not(self.set_freq(options.freq)):
             self._set_status_msg("Failed to set initial frequency")
 
     def _set_status_msg(self, msg):
@@ -135,8 +132,10 @@ class app_top_block(stdgui2.std_top_block):
             callback=myform.check_input_and_call(_form_set_freq, self._set_status_msg))
 
         hbox.Add((5,0), 0, 0)
-        #g = self.subdev.gain_range()
-        g = [0, 100, 1] #FIXME
+        g = self.u.gain_range()
+	if self.u.daughterboard_id() == 0x0003: # FIXME: get range right in firmware for TVRX
+	  g[1] = 104
+	  
         myform['gain'] = form.slider_field(parent=self.panel, sizer=hbox, label="Gain",
                                            weight=3,
                                            min=int(g[0]), max=int(g[1]),
@@ -174,8 +173,8 @@ class app_top_block(stdgui2.std_top_block):
             callback=myform.check_input_and_call(_form_set_decim, self._set_status_msg))
 
         hbox.Add((5,0), 1)
-        myform['fs@usb'] = form.static_float_field(
-            parent=panel, sizer=hbox, label="Fs@USB")
+        myform['fs@gbe'] = form.static_float_field(
+            parent=panel, sizer=hbox, label="Fs@GbE")
 
         hbox.Add((5,0), 1)
         myform['dbname'] = form.static_text_field(
@@ -226,12 +225,11 @@ class app_top_block(stdgui2.std_top_block):
         ok = self.u.set_decim(decim)
         if not ok:
             print "set_decim failed"
-        #input_rate = self.u.adc_freq() / self.u.decim_rate()
-        input_rate = 100e6/decim # FIXME
+        input_rate = self.u.adc_rate() / self.u.decim()
         self.scope.set_sample_rate(input_rate)
         if self.show_debug_info:  # update displayed values
-            self.myform['decim'].set_value(decim) #self.u.decim_rate())
-            self.myform['fs@usb'].set_value(input_rate) #self.u.adc_freq() / self.u.decim_rate())
+            self.myform['decim'].set_value(self.u.decim())
+            self.myform['fs@gbe'].set_value(input_rate)
         return ok
 
     def _setup_events(self):
