@@ -54,6 +54,11 @@ public:
   std::string mac_addr() const;
   
   /*!
+   * \brief Get USRP2 master clock rate
+   */
+  bool fpga_master_clock_freq(long *freq) const;
+
+  /*!
    * \brief Called by scheduler when starting flowgraph
    */
   virtual bool start();

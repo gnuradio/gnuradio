@@ -23,7 +23,6 @@
 #include <boost/utility.hpp>
 #include <vector>
 #include <complex>
-//#include <iosfwd>
 #include <usrp2/rx_sample_handler.h>
 #include <usrp2/tune_result.h>
 

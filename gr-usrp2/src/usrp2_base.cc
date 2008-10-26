@@ -56,6 +56,12 @@ usrp2_base::mac_addr() const
 }
 
 bool
+usrp2_base::fpga_master_clock_freq(long *freq) const
+{
+  return d_u2->fpga_master_clock_freq(freq);
+}
+
+bool
 usrp2_base::start()
 {
   // Default implementation is NOP

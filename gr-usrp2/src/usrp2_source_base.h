@@ -56,6 +56,66 @@ public:
   bool set_decim(int decimation_factor);
 
   /*!
+   * \brief Set receive IQ scale factors
+   */
+  bool set_scale_iq(int scale_i, int scale_q);
+
+  /*!
+   * \brief Get receive decimation rate
+   */
+  int decim();
+
+  /*!
+   * \brief Get the ADC sample rate
+   */
+  bool adc_rate(long *rate);
+
+  /*!
+   * \brief Returns minimum Rx gain 
+   */
+  double gain_min();
+
+  /*!
+   * \brief Returns maximum Rx gain 
+   */
+  double gain_max();
+  
+  /*!
+   * \brief Returns Rx gain db_per_step
+   */
+  double gain_db_per_step();
+  
+  /*!
+   * \brief Returns minimum Rx center frequency
+   */
+  double freq_min();
+
+  /*!
+   * \brief Returns maximum Rx center frequency
+   */
+  double freq_max();
+  
+  /*!
+   * \brief Get Rx daughterboard ID
+   *
+   * \param[out] dbid returns the daughterboard id.
+   *
+   * daughterboard id >= 0 if successful, -1 if no daugherboard installed,
+   * -2 if invalid EEPROM on daughterboard.
+   */
+  bool daughterboard_id(int *dbid);
+
+  /*!
+   * \brief Returns number of receiver overruns
+   */
+  unsigned int overruns();
+
+  /*!
+   * \brief Returns number of missing sequence numbers
+   */
+  unsigned int missing();
+
+  /*!
    * \brief Called by scheduler when starting flowgraph
    */
   virtual bool start();

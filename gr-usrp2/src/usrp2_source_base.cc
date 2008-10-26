@@ -64,6 +64,72 @@ usrp2_source_base::set_decim(int decimation_factor)
   return d_u2->set_rx_decim(decimation_factor);
 }
 
+bool 
+usrp2_source_base::set_scale_iq(int scale_i, int scale_q)
+{
+  return d_u2->set_rx_scale_iq(scale_i, scale_q);
+}
+
+int
+usrp2_source_base::decim()
+{
+  return d_u2->rx_decim();
+}
+
+bool
+usrp2_source_base::adc_rate(long *rate)
+{
+  return d_u2->adc_rate(rate);
+}
+
+double
+usrp2_source_base::gain_min()
+{
+  return d_u2->rx_gain_min();
+}
+
+double
+usrp2_source_base::gain_max()
+{
+  return d_u2->rx_gain_max();
+}
+
+double
+usrp2_source_base::gain_db_per_step()
+{
+  return d_u2->rx_gain_db_per_step();
+}
+  
+double
+usrp2_source_base::freq_min()
+{
+  return d_u2->rx_freq_min();
+}
+
+double
+usrp2_source_base::freq_max()
+{
+  return d_u2->rx_freq_max();
+}
+
+bool
+usrp2_source_base::daughterboard_id(int *dbid)
+{
+  return d_u2->rx_daughterboard_id(dbid);
+}
+
+unsigned int
+usrp2_source_base::overruns()
+{
+  return d_u2->rx_overruns();
+}
+
+unsigned int
+usrp2_source_base::missing()
+{
+  return d_u2->rx_missing();
+}
+
 bool
 usrp2_source_base::start()
 {

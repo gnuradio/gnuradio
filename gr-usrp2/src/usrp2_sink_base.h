@@ -54,6 +54,56 @@ public:
    * \brief Set transmit interpolation rate
    */
   bool set_interp(int interp_factor);
+
+  /*!
+   * \brief Set transmit IQ scale factors
+   */
+  bool set_scale_iq(int scale_i, int scale_q);
+
+  /*!
+   * \brief Get transmit interpolation rate
+   */
+  int interp();
+
+  /*!
+   * \brief Get DAC sample rate in Hz 
+   */
+  bool dac_rate(long *rate);
+
+  /*!
+   * \brief Returns minimum Tx gain 
+   */
+  double gain_min();
+
+  /*!
+   * \brief Returns maximum Tx gain 
+   */
+  double gain_max();
+  
+  /*!
+   * \brief Returns Tx gain db_per_step
+   */
+  double gain_db_per_step();
+
+  /*!
+   * \brief Returns minimum Tx center frequency
+   */
+  double freq_min();
+
+  /*!
+   * \brief Returns maximum Tx center frequency
+   */
+  double freq_max();
+
+  /*!
+   * \brief Get Tx daughterboard ID
+   *
+   * \param[out] dbid returns the daughterboard id.
+   *
+   * daughterboard id >= 0 if successful, -1 if no daugherboard installed,
+   * -2 if invalid EEPROM on daughterboard.
+   */
+  bool daughterboard_id(int *dbid);
 };
 
 #endif /* INCLUDED_USRP2_SINK_BASE_H */

@@ -63,3 +63,57 @@ usrp2_sink_base::set_interp(int interp_factor)
 {
   return d_u2->set_tx_interp(interp_factor);
 }
+
+bool 
+usrp2_sink_base::set_scale_iq(int scale_i, int scale_q)
+{
+  return d_u2->set_tx_scale_iq(scale_i, scale_q);
+}
+
+int
+usrp2_sink_base::interp()
+{
+  return d_u2->tx_interp();
+}
+
+bool
+usrp2_sink_base::dac_rate(long *rate)
+{
+  return d_u2->dac_rate(rate);
+}
+
+double
+usrp2_sink_base::gain_min()
+{
+  return d_u2->tx_gain_min();
+}
+
+double
+usrp2_sink_base::gain_max()
+{
+  return d_u2->tx_gain_max();
+}
+
+double
+usrp2_sink_base::gain_db_per_step()
+{
+  return d_u2->tx_gain_db_per_step();
+}
+  
+double
+usrp2_sink_base::freq_min()
+{
+  return d_u2->tx_freq_min();
+}
+
+double
+usrp2_sink_base::freq_max()
+{
+  return d_u2->tx_freq_max();
+}
+
+bool
+usrp2_sink_base::daughterboard_id(int *dbid)
+{
+  return d_u2->tx_daughterboard_id(dbid);
+}
