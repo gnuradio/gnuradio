@@ -142,9 +142,9 @@ struct db_rfx_400_rx db_rfx_400_rx = {
   .base.used_pins = 0x00FF,
   .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(400e6),
   .base.freq_max = U2_DOUBLE_TO_FXPT_FREQ(500e6),
-  //.base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(xxx),
+  .base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(0),
+  .base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(45),
+  .base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(0.022),
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
@@ -203,9 +203,9 @@ struct db_rfx_900_rx db_rfx_900_rx = {
   .base.used_pins = 0x00FF,
   .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(800e6),
   .base.freq_max = U2_DOUBLE_TO_FXPT_FREQ(1000e6),
-  //.base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(xxx),
+  .base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(0),
+  .base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(70),
+  .base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(0.034),
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
@@ -264,9 +264,9 @@ struct db_rfx_1200_rx db_rfx_1200_rx = {
   .base.used_pins = 0x00FF,
   .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(1150e6),
   .base.freq_max = U2_DOUBLE_TO_FXPT_FREQ(1350e6),
-  //.base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(xxx),
+  .base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(0),
+  .base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(70),
+  .base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(0.034),
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
@@ -325,9 +325,9 @@ struct db_rfx_1800_rx db_rfx_1800_rx = {
   .base.used_pins = 0x00FF,
   .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(1600e6),
   .base.freq_max = U2_DOUBLE_TO_FXPT_FREQ(2000e6),
-  //.base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(xxx),
+  .base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(0),
+  .base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(70),
+  .base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(0.034),
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
@@ -387,9 +387,9 @@ struct db_rfx_2400_rx db_rfx_2400_rx = {
   .base.used_pins = 0x00FF,
   .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(2300e6),
   .base.freq_max = U2_DOUBLE_TO_FXPT_FREQ(2700e6),
-  //.base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(xxx),
+  .base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(0),
+  .base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(70),
+  .base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(0.034),
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
@@ -458,7 +458,6 @@ rfx_init_rx(struct db_base *dbb)
 
   // test gain
   dbb->set_gain(dbb,U2_DOUBLE_TO_FXPT_GAIN(45.0));
-  printf("set the gain\n");
   return true;
 }
 
@@ -487,7 +486,7 @@ rfx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc)
   mdelay(10);
   spi_transact(SPI_TXONLY,db->common.spi_mask,N,24,SPIF_PUSH_FALL);
 
-  printf("A = %d, B = %d, N_DIV = %d\n",A, B, N_DIV);
+  //printf("A = %d, B = %d, N_DIV = %d\n",A, B, N_DIV);
   *dc = (N_DIV * phdet_freq) / db->common.freq_mult;
   return true;
 }
@@ -509,7 +508,7 @@ rfx_set_gain_rx(struct db_base *dbb, u2_fxpt_gain_t gain)
   int offset_q8 = (int)(1.2/3.3*4096*(1<<15));  
   int slope_q8 = (int)(-1.0/45.0*4096/3.3*256); 
   int dacword = ((slope_q8 * gain) + offset_q8)>>15;
-  printf("DACWORD %d\n",dacword);
+  //printf("DACWORD %d\n",dacword);
   lsdac_write_rx(1,dacword);
   return true;
   /*

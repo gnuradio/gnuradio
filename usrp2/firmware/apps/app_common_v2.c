@@ -506,10 +506,12 @@ void
 print_tune_result(char *msg, bool tune_ok,
 		  u2_fxpt_freq_t target_freq, struct tune_result *r)
 {
+#if 0
   printf("db_tune %s %s\n", msg, tune_ok ? "true" : "false");
   putstr("  target_freq   "); print_fxpt_freq(target_freq); newline();
   putstr("  baseband_freq "); print_fxpt_freq(r->baseband_freq); newline();
   putstr("  dxc_freq      "); print_fxpt_freq(r->dxc_freq); newline();
   putstr("  residual_freq "); print_fxpt_freq(r->residual_freq); newline();
   printf("  inverted      %s\n", r->inverted ? "true" : "false");
+#endif
 }

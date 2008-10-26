@@ -83,9 +83,9 @@ struct db_tvrx1 db_tvrx1 = {
   .base.used_pins = 0x0000,
   .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(50e6),
   .base.freq_max = U2_DOUBLE_TO_FXPT_FREQ(860e6),
-  //.base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(xxx),
+  .base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(0),
+  .base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(95),
+  .base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(1),
   .base.is_quadrature = false,
   .base.i_and_q_swapped = false,
   .base.spectrum_inverted = false,
@@ -110,9 +110,9 @@ struct db_tvrx2 db_tvrx2 = {
   .base.used_pins = 0x0000,
   .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(50e6),
   .base.freq_max = U2_DOUBLE_TO_FXPT_FREQ(860e6),
-  //.base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(xxx),
+  .base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(0),
+  .base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(95),
+  .base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(1),
   .base.is_quadrature = false,
   .base.i_and_q_swapped = false,
   .base.spectrum_inverted = true,
@@ -137,9 +137,9 @@ struct db_tvrx3 db_tvrx3 = {
   .base.used_pins = 0x0000,
   .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(50e6),
   .base.freq_max = U2_DOUBLE_TO_FXPT_FREQ(860e6),
-  //.base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(xxx),
-  //.base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(xxx),
+  .base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(0),
+  .base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(95),
+  .base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(1),
   .base.is_quadrature = false,
   .base.i_and_q_swapped = false,
   .base.spectrum_inverted = true,
@@ -182,8 +182,10 @@ tvrx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc)
   if(N_DIV > 32767)
     return false;
 
-  printf("N_DIV = %d, actual_freq = %d, actual_lo_freq = %d\n",
-	 N_DIV, u2_fxpt_freq_round_to_int(actual_freq),u2_fxpt_freq_round_to_int(actual_freq));
+  if (0)
+    printf("N_DIV = %d, actual_freq = %d, actual_lo_freq = %d\n",
+	   N_DIV, u2_fxpt_freq_round_to_int(actual_freq),
+	   u2_fxpt_freq_round_to_int(actual_lo_freq));
 
   unsigned char buf[4];
   buf[0] = (N_DIV>>8) & 0xff;
@@ -227,7 +229,9 @@ tvrx_set_gain(struct db_base *dbb, u2_fxpt_gain_t gain)
   lsdac_write_rx(0,rfdac);
   lsdac_write_rx(1,ifdac);
 
-  printf("Setting gain %d, rf %d, if %d\n",gain,rfdac,ifdac);
+  if (0)
+    printf("Setting gain %d, rf %d, if %d\n",gain,rfdac,ifdac);
+
   return true;
 }
 

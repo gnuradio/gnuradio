@@ -123,6 +123,10 @@ lookup_dboard(int i2c_addr, struct db_base *default_db, char *msg)
 {
   struct db_base *db;
   int dbid = read_dboard_eeprom(i2c_addr);
+
+  // FIXME removing this printf has the system hang if there are two d'boards
+  // installed.  (I think the problem is in i2c_read/write or the way
+  // I kludge the zero-byte write to set the read address in eeprom_read.)
   printf("%s dbid: 0x%x\n", msg, dbid);
 
   if (dbid < 0){	// there was some kind of problem.  Treat as Basic Tx
@@ -250,7 +254,7 @@ db_init(void)
   rx_dboard->init(rx_dboard);
   m = determine_rx_mux_value(rx_dboard);
   dsp_rx_regs->rx_mux = m;
-  printf("rx_mux = 0x%x\n", m);
+  //printf("rx_mux = 0x%x\n", m);
 }
 
 /*!
