@@ -38,9 +38,8 @@ class siggen_top_block(gr.top_block):
 
         # Set the Tx daughterboard gain as requested
         if options.gain is None:
-            #g = self._u.gain_range()
-            #options.gain = float(g[0]+g[1])/2
-            options.gain = 0 # Until gain range is implemented
+            g = self._u.gain_range()
+            options.gain = float(g[0]+g[1])/2
         self._u.set_gain(options.gain)
 
         # Tune the USRP2 FPGA and daughterboard to the requested center frequency
@@ -49,8 +48,7 @@ class siggen_top_block(gr.top_block):
             sys.stderr.write('Failed to set center frequency\n')
             raise SystemExit, 1
 
-        #eth_rate = self._u.dac_rate()/self._u.interp_rate()
-        eth_rate = 100e6/options.interp # FIXME
+        eth_rate = self._u.dac_rate()/self._u.interp()
         
         # Create a source for the requested waveform type
         if options.type == gr.GR_SIN_WAVE or options.type == gr.GR_CONST_WAVE:

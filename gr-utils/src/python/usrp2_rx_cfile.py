@@ -22,8 +22,8 @@
 
 """
 Read samples from the USRP2 and write to file formatted as binary
-outputs single precision complex float values or complex short values (interleaved 16 bit signed short integers).
-
+outputs single precision complex float values or complex short values 
+(interleaved 16 bit signed short integers).
 """
 
 from gnuradio import gr, eng_notation
@@ -52,9 +52,9 @@ class rx_cfile_block(gr.top_block):
 
         # Set receive daughterboard gain
         if options.gain is None:
-            #g = self._u.gain_range()
-            #options.gain = float(g[0]+g[1])/2
-            options.gain = 0 # Until gain range is implemented
+            g = self._u.gain_range()
+            options.gain = float(g[0]+g[1])/2
+	    print "Using mid-point gain of", options.gain, "(", g[0], "-", g[1], ")"
         self._u.set_gain(options.gain)
 
         # Set receive frequency
@@ -63,7 +63,7 @@ class rx_cfile_block(gr.top_block):
             sys.stderr.write('Failed to set center frequency\n')
             raise SystemExit, 1
 
-        # Create head block if needed wire it up
+        # Create head block if needed and wire it up
         if options.nsamples is None:
             self.connect(self._u, self._sink)
         else:
@@ -74,13 +74,12 @@ class rx_cfile_block(gr.top_block):
 
             self.connect(self._u, self._head, self._sink)
 
-        #input_rate = self.u.adc_freq() / self.u.decim_rate()
-        input_rate = 100e6/options.decim
+        input_rate = self._u.adc_rate()/self._u.decim()
         
         if options.verbose:
             print "Network interface:", options.interface
             print "USRP2 address:", self._u.mac_addr()
-            #print "Using RX d'board %s" % (self._u.rx_name(),)
+            print "Using RX d'board id 0x%04X" % (self._u.daughterboard_id(),)
             print "Rx gain:", options.gain
             print "Rx baseband frequency:", n2s(tr.baseband_freq)
             print "Rx DDC frequency:", n2s(tr.dxc_freq)
