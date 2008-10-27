@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -52,17 +52,17 @@ gr_stretch_ff::work(int noutput_items,
   for (int count = 0; count < noutput_items; count++) {
     float vmax = in[0] - d_lo;
 
-    for (int i = 1; i < d_vlen; i++) {
+    for (unsigned int i = 1; i < d_vlen; i++) {
       float vtmp = in[i] - d_lo;
       if (vtmp > vmax)
 	vmax = vtmp;
     }
     
     if (vmax != 0.0)
-      for (int i = 0; i < d_vlen; i++)
+      for (unsigned int i = 0; i < d_vlen; i++)
 	out[i] = d_lo * (1.0 - (in[i] - d_lo) / vmax);
     else
-      for (int i = 0; i < d_vlen; i++)
+      for (unsigned int i = 0; i < d_vlen; i++)
 	out[i] = in[i];
 
     in  += d_vlen;

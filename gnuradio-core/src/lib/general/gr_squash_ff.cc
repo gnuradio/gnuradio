@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -49,9 +49,9 @@ gr_squash_ff::gr_squash_ff(const std::vector<float> &igrid,
   d_igrid = (double *) malloc(d_inum * sizeof(double));
   d_iwork = (double *) malloc(d_inum * sizeof(double));
   d_ogrid = (double *) malloc(d_onum * sizeof(double));
-  for (int i = 0; i < d_inum; i++)
+  for (unsigned int i = 0; i < d_inum; i++)
     d_igrid[i] = igrid[i];
-  for (int i = 0; i < d_onum; i++)
+  for (unsigned int i = 0; i < d_onum; i++)
     d_ogrid[i] = ogrid[i];
 
   d_accel = gsl_interp_accel_alloc();
@@ -77,12 +77,12 @@ gr_squash_ff::work(int noutput_items,
 
   for (int count = 0; count < noutput_items; count++) {
 
-    for (int i = 0; i < d_inum; i++)
+    for (unsigned int i = 0; i < d_inum; i++)
       d_iwork[i] = in[i];
 
     gsl_spline_init(d_spline, d_igrid, d_iwork, d_inum);
     
-    for (int i = 0; i < d_onum; i++)
+    for (unsigned int i = 0; i < d_onum; i++)
       out[i] = gsl_spline_eval(d_spline, d_ogrid[i], d_accel);
 
     in  += d_inum;
