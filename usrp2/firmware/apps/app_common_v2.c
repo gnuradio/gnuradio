@@ -40,7 +40,6 @@ dbsm_t *ac_could_be_sending_to_eth;
 
 static unsigned char exp_seqno __attribute__((unused)) = 0;
 
-
 static bool
 burn_mac_addr(const op_burn_mac_addr_t *p)
 {
@@ -145,10 +144,17 @@ config_tx_v2_cmd(const op_config_tx_v2_t *p,
   }
 
   if (p->valid & CFGV_FREQ){
+    bool was_streaming = is_streaming();
+    if (was_streaming)
+      stop_rx_cmd();
+    
     u2_fxpt_freq_t f = u2_fxpt_freq_from_hilo(p->freq_hi, p->freq_lo);
     bool tune_ok = db_tune(tx_dboard, f, &tune_result);
     ok &= tune_ok;
     print_tune_result("Tx", tune_ok, f, &tune_result);
+
+    if (was_streaming)
+      restart_streaming();
   }
 
   if (p->valid & CFGV_INTERP_DECIM){
@@ -212,10 +218,17 @@ config_rx_v2_cmd(const op_config_rx_v2_t *p,
   }
 
   if (p->valid & CFGV_FREQ){
+    bool was_streaming = is_streaming();
+    if (was_streaming)
+      stop_rx_cmd();
+    
     u2_fxpt_freq_t f = u2_fxpt_freq_from_hilo(p->freq_hi, p->freq_lo);
     bool tune_ok = db_tune(rx_dboard, f, &tune_result);
     ok &= tune_ok;
     print_tune_result("Rx", tune_ok, f, &tune_result);
+
+    if (was_streaming)
+      restart_streaming();
   }
 
   if (p->valid & CFGV_INTERP_DECIM){

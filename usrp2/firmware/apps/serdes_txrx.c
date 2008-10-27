@@ -124,11 +124,12 @@ static unsigned int streaming_items_per_frame = 0;
 static int          streaming_frame_count = 0;
 #define FRAMES_PER_CMD	1000
 
+bool is_streaming(void){ return streaming_p; }
 
 // ----------------------------------------------------------------
 
 
-static void
+void
 restart_streaming(void)
 {
   // setup RX DSP regs
