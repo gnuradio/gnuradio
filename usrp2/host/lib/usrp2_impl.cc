@@ -130,7 +130,8 @@ namespace usrp2 {
       d_rx_seqno(-1), d_tx_seqno(0), d_next_rid(0),
       d_num_rx_frames(0), d_num_rx_missing(0), d_num_rx_overruns(0), d_num_rx_bytes(0), 
       d_num_enqueued(0), d_enqueued_mutex(), d_bg_pending_cond(&d_enqueued_mutex),
-      d_channel_rings(NCHANS), d_tx_interp(0), d_rx_decim(0)
+      d_channel_rings(NCHANS), d_tx_interp(0), d_rx_decim(0),
+      d_rx_str_p(false), d_rx_str_channel(0), d_rx_str_items_per_frame(0)
   {
     if (!d_eth_buf->open(ifc, htons(U2_ETHERTYPE)))
       throw std::runtime_error("Unable to register USRP2 protocol");
@@ -480,6 +481,7 @@ namespace usrp2 {
   bool
   usrp2::impl::set_rx_center_freq(double frequency, tune_result *result)
   {
+    //without_streaming	s(this);
     op_config_rx_v2_cmd cmd;
     op_config_rx_reply_v2_t reply;
 
@@ -597,6 +599,11 @@ namespace usrp2 {
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
+    if (success){
+      d_rx_str_p = true;
+      d_rx_str_channel = channel;
+      d_rx_str_items_per_frame = items_per_frame;
+    }
     return success;
   }
   
@@ -639,8 +646,12 @@ namespace usrp2 {
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
-    if (success)
+    if (success){
       d_channel_rings[channel].reset();
+      d_rx_str_p = false;
+      d_rx_str_channel = 0;
+      d_rx_str_items_per_frame = 0;
+    }
 
     return success;
   }
@@ -719,6 +730,7 @@ namespace usrp2 {
   bool
   usrp2::impl::set_tx_center_freq(double frequency, tune_result *result)
   {
+    //without_streaming	s(this);
     op_config_tx_v2_cmd cmd;
     op_config_tx_reply_v2_t reply;
 

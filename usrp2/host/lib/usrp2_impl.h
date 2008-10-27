@@ -26,6 +26,7 @@
 #include "control.h"
 #include "ring.h"
 #include <string>
+#include <iostream>
 
 namespace usrp2 {
   
@@ -83,6 +84,13 @@ namespace usrp2 {
     int		   d_tx_interp;		// shadow tx interp 
     int		   d_rx_decim;		// shadow rx decim
 
+    // FIXME KLUDGE: shadow rx streaming state
+    bool	   d_rx_str_p;		// Is the rx streaming?
+    unsigned int   d_rx_str_channel;
+    unsigned int   d_rx_str_items_per_frame;
+
+    friend struct without_streaming;
+
     void inc_enqueued() {
       omni_mutex_lock l(d_enqueued_mutex);
       d_num_enqueued++;
@@ -106,6 +114,7 @@ namespace usrp2 {
     data_handler::result handle_control_packet(const void *base, size_t len);
     data_handler::result handle_data_packet(const void *base, size_t len);
     bool dboard_info();
+
 
   public:
     impl(const std::string &ifc, props *p);
@@ -175,6 +184,30 @@ namespace usrp2 {
     bool burn_mac_addr(const std::string &new_addr);
   };
   
+
+  struct without_streaming {
+    usrp2::impl *d_impl;
+    bool	 d_was_streaming;
+
+    without_streaming(usrp2::impl *p)
+      : d_impl(p), d_was_streaming(p->d_rx_str_p)
+    {
+      if (d_was_streaming){
+	std::cerr << "without_streaming: stopping streaming\n";
+	d_impl->stop_rx_streaming(d_impl->d_rx_str_channel);
+      }
+    }
+
+    ~without_streaming()
+    {
+      if (d_was_streaming){
+	std::cerr << "without_streaming: re-starting streaming\n";
+	d_impl->start_rx_streaming(d_impl->d_rx_str_channel, d_impl->d_rx_str_items_per_frame);
+      }
+    }
+  };
+
+
 } // namespace usrp2
 
 #endif /* INCLUDED_USRP2_IMPL_H */
