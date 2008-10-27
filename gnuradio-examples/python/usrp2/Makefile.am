@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2007 Free Software Foundation, Inc.
+# Copyright 2004,2005 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,26 +21,8 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = \
-	apps \
-	audio \
-	dect \
-	digital \
-	digital-bert \
-	digital_voice \
-	mp-sched \
-	multi-antenna \
-	multi_usrp \
-	network \
-	ofdm \
-	usrp \
-	usrp2
+EXTRA_DIST = \
+	usrp2_wfm_rcv.py
 
-# Make example scripts with #! executable
-install-data-local:
-	for i in `find $(exampledir) -type f ! -perm 755`; do \
-	  if head -1 $$i | grep -q '^#!'; then \
-	    chmod 755 $$i; \
-	    echo "made executable: $$i"; \
-	  fi; \
-	done
+ourdatadir = $(exampledir)/usrp2
+ourdata_DATA = $(EXTRA_DIST)

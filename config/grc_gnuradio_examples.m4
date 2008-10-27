@@ -41,6 +41,7 @@ AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
    	gnuradio-examples/python/network/Makefile \
    	gnuradio-examples/python/ofdm/Makefile \
    	gnuradio-examples/python/usrp/Makefile \
+	gnuradio-examples/python/usrp2/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(gnuradio-examples)

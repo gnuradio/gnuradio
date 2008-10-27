@@ -72,7 +72,7 @@ class app_top_block(stdgui2.std_top_block):
         
         if options.waterfall:
             self.scope = \
-              waterfallsink2.waterfall_sink_c (panel, fft_size=1024, sample_rate=input_rate)
+              waterfallsink2.waterfall_sink_c (panel, fft_size=2048, sample_rate=input_rate)
         elif options.oscilloscope:
             self.scope = scopesink2.scope_sink_c(panel, sample_rate=input_rate)
         else:
