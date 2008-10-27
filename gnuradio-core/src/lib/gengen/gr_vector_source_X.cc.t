@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,16 +28,20 @@
 #include <@NAME@.h>
 #include <algorithm>
 #include <gr_io_signature.h>
+#include <stdexcept>
 
 
-@NAME@::@NAME@ (const std::vector<@TYPE@> &data, bool repeat)
+@NAME@::@NAME@ (const std::vector<@TYPE@> &data, bool repeat, int vlen)
   : gr_sync_block ("@BASE_NAME@",
 	       gr_make_io_signature (0, 0, 0),
-	       gr_make_io_signature (1, 1, sizeof (@TYPE@))),
+	       gr_make_io_signature (1, 1, sizeof (@TYPE@) * vlen)),
     d_data (data),
     d_repeat (repeat),
-    d_offset (0)
+    d_offset (0),
+    d_vlen (vlen)
 {
+  if ((data.size() % vlen) != 0)
+    throw std::invalid_argument("data length must be a multiple of vlen");
 }
 
 int
@@ -54,7 +58,7 @@ int
     if (size == 0)
       return -1;
     
-    for (int i = 0; i < noutput_items; i++){
+    for (int i = 0; i < noutput_items*d_vlen; i++){
       optr[i] = d_data[offset++];
       if (offset >= size)
 	offset = 0;
@@ -68,18 +72,18 @@ int
       return -1;			// Done!
 
     unsigned n = std::min ((unsigned) d_data.size () - d_offset,
-			   (unsigned) noutput_items);
+			   (unsigned) noutput_items*d_vlen);
     for (unsigned i = 0; i < n; i++)
       optr[i] = d_data[d_offset + i];
 
     d_offset += n;
-    return n;
+    return n/d_vlen;
   }
 }
 
 @NAME@_sptr
-gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat)
+gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat, int vlen)
 {
-  return @NAME@_sptr (new @NAME@ (data, repeat));
+  return @NAME@_sptr (new @NAME@ (data, repeat, vlen));
 }
 

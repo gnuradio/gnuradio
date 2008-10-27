@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,11 +25,12 @@
 GR_SWIG_BLOCK_MAGIC(gr,@BASE_NAME@);
 
 @NAME@_sptr
-gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat = false);
+gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat = false, int vlen = 1)
+  throw(std::invalid_argument);
 
 class @NAME@ : public gr_sync_block {
  public:
   void rewind() {d_offset=0;}
  private:
-  @NAME@ (const std::vector<@TYPE@> &data);
+  @NAME@ (const std::vector<@TYPE@> &data, int vlen);
 };

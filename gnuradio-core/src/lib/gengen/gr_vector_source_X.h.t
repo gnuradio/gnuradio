@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -37,13 +37,14 @@ typedef boost::shared_ptr<@NAME@> @NAME@_sptr;
 
 class @NAME@ : public gr_sync_block {
   friend @NAME@_sptr 
-  gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat = false);
+  gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat, int vlen);
 
   std::vector<@TYPE@>	d_data;
   bool			d_repeat;
   unsigned int		d_offset;
+  int			d_vlen;
 
-  @NAME@ (const std::vector<@TYPE@> &data, bool repeat);
+  @NAME@ (const std::vector<@TYPE@> &data, bool repeat, int vlen);
 
  public:
   void rewind() {d_offset=0;}
@@ -53,6 +54,6 @@ class @NAME@ : public gr_sync_block {
 };
 
 @NAME@_sptr
-gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat);
+gr_make_@BASE_NAME@ (const std::vector<@TYPE@> &data, bool repeat = false, int vlen = 1);
 
 #endif

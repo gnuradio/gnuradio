@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@ class @NAME@;
 typedef boost::shared_ptr<@NAME@> @NAME@_sptr;
 
 @NAME@_sptr
-gr_make_@BASE_NAME@ ();
+gr_make_@BASE_NAME@ (int vlen = 1);
 
 
 /*!
@@ -40,9 +40,10 @@ gr_make_@BASE_NAME@ ();
  */
 
 class @NAME@ : public gr_sync_block {
-  friend @NAME@_sptr gr_make_@BASE_NAME@ ();
+  friend @NAME@_sptr gr_make_@BASE_NAME@ (int vlen);
   std::vector<@TYPE@>	d_data;
-  @NAME@ ();
+  int			d_vlen;
+  @NAME@ (int vlen);
 
  public:
   virtual int work (int noutput_items,
