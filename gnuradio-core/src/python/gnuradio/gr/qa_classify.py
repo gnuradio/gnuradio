@@ -1,9 +1,29 @@
 #!/usr/bin/env python
+#
+# Copyright 2008 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
 import numpy
 from gnuradio import gr, gr_unittest
 import copy
-import pygsl.wavelet as wavelet
+#import pygsl.wavelet as wavelet # FIXME: pygsl not checked for in config
 import math
 
 
@@ -99,33 +119,33 @@ class qa_classify(gr_unittest.TestCase):
         sum /= float(len(src_data))
         assert sum < 1e-6
 
-    def test_004_(self):
-
-        n = 256
-        o = 4
-        ws = wavelet.workspace(n)
-        w = wavelet.daubechies(o)
-
-        a = numpy.arange(n)
-        b = numpy.sin(a*numpy.pi/16.0)
-        c = w.transform_forward(b, ws)
-        d = w.transform_inverse(c, ws)
-
-        src = gr.vector_source_f(b, False, n)
-        wv = gr.wavelet_ff(n, o, True)
-
-        dst = gr.vector_sink_f(n)
-        self.tb.connect(src, wv)
-        self.tb.connect(wv, dst)
-        self.tb.run()
-        e = dst.data()
-
-        sum = 0
-        for (u, v) in zip(c, e):
-            w = u - v
-            sum += w * w
-        sum /= float(len(c))
-        assert sum < 1e-6
+#    def test_004_(self): # FIXME: requires pygsl
+#
+#        n = 256
+#        o = 4
+#        ws = wavelet.workspace(n)
+#        w = wavelet.daubechies(o)
+#
+#        a = numpy.arange(n)
+#        b = numpy.sin(a*numpy.pi/16.0)
+#        c = w.transform_forward(b, ws)
+#        d = w.transform_inverse(c, ws)
+#
+#        src = gr.vector_source_f(b, False, n)
+#        wv = gr.wavelet_ff(n, o, True)
+#
+#        dst = gr.vector_sink_f(n)
+#        self.tb.connect(src, wv)
+#        self.tb.connect(wv, dst)
+#        self.tb.run()
+#        e = dst.data()
+#
+#        sum = 0
+#        for (u, v) in zip(c, e):
+#            w = u - v
+#            sum += w * w
+#        sum /= float(len(c))
+#        assert sum < 1e-6
 
     def test_005_(self):
 
