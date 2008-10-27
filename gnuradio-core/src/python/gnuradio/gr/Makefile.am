@@ -49,6 +49,7 @@ noinst_PYTHON = 			\
 	qa_agc.py			\
 	qa_argmax.py			\
 	qa_bin_statistics.py		\
+	qa_classify.py			\
 	qa_cma_equalizer.py		\
 	qa_complex_to_xxx.py		\
 	qa_constellation_decoder_cb.py  \
@@ -93,4 +94,5 @@ noinst_PYTHON = 			\
 	qa_skiphead.py			\
 	qa_unpack_k_bits.py		\
 	qa_repeat.py                    \
-	qa_scrambler.py
+	qa_scrambler.py			\
+	qa_vector_sink_source.py	

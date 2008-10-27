@@ -36,6 +36,15 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
     dnl   with : if the --with code didn't error out
     dnl   yes  : if the --enable code passed muster and all dependencies are met
     dnl   no   : otherwise
+    if test $passed = yes; then	
+	dnl look for fast CBLAS for GSL, but don't complain if not found
+	ACX_CBLAS([],[])
+        dnl check for GSL
+	PKG_CHECK_MODULES(GSL, gsl >= 1.10,
+	    [], dnl FIXME remove -lgslcblas from GSL_LIBS if we found a better CBLAS_LIBS above
+	    [passed=no;AC_MSG_RESULT([gnuradio-core requires package gsl, not found.])])
+    fi
+
     if test $passed != with; then
 	dnl how and where to find INCLUDES and LA and such
         gnuradio_core_INCLUDES="\
@@ -52,7 +61,8 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/g72x \
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/swig \
 -I\${abs_top_builddir}/gnuradio-core/src/lib/swig \
-\$(FFTW3F_CFLAGS)"
+\$(FFTW3F_CFLAGS) \
+\$(GSL_CFLAGS)"
         gnuradio_core_LA="\${abs_top_builddir}/gnuradio-core/src/lib/libgnuradio-core.la"
 	gnuradio_core_I="\${abs_top_srcdir}/gnuradio-core/src/lib/swig/gnuradio.i"
 	gnuradio_core_LIBDIRPATH="\${abs_top_builddir}/gnuradio-core/src/lib:\${abs_top_builddir}/gnuradio-core/src/lib/.libs"

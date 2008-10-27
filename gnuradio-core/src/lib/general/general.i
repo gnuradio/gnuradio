@@ -133,6 +133,12 @@
 #include <gr_scrambler_bb.h>
 #include <gr_probe_mpsk_snr_c.h>
 #include <gr_probe_density_b.h>
+#include <gr_rail_ff.h>
+#include <gr_squash_ff.h>
+#include <gr_stretch_ff.h>
+#include <gr_wavelet_ff.h>
+#include <gr_wvps_ff.h>
+
 %}
 
 %include "gr_nop.i"
@@ -246,3 +252,8 @@
 %include "gr_scrambler_bb.i"
 %include "gr_probe_mpsk_snr_c.i"
 %include "gr_probe_density_b.i"
+%include "gr_rail_ff.i"
+%include "gr_squash_ff.i"
+%include "gr_stretch_ff.i"
+%include "gr_wavelet_ff.i"
+%include "gr_wvps_ff.i"

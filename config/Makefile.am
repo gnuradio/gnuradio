@@ -26,6 +26,7 @@ m4datadir = $(datadir)/aclocal
 
 # List your m4 macros here
 m4macros = \
+	acx_cblas.m4 \
 	acx_pthread.m4 \
 	ax_boost_base.m4 \
 	ax_boost_date_time.m4 \

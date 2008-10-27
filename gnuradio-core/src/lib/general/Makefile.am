@@ -125,6 +125,7 @@ libgeneral_la_SOURCES = 		\
 	gr_pwr_squelch_cc.cc		\
 	gr_pwr_squelch_ff.cc		\
 	gr_quadrature_demod_cf.cc	\
+	gr_rail_ff.cc			\
 	gr_random.cc			\
 	gr_regenerate_bb.cc		\
 	gr_remez.cc			\
@@ -137,6 +138,7 @@ libgeneral_la_SOURCES = 		\
 	gr_simple_framer.cc		\
 	gr_simple_squelch_cc.cc		\
 	gr_skiphead.cc			\
+	gr_squash_ff.cc			\
 	gr_squelch_base_cc.cc		\
 	gr_squelch_base_ff.cc		\
 	gr_stream_mux.cc		\
@@ -144,6 +146,7 @@ libgeneral_la_SOURCES = 		\
 	gr_stream_to_vector.cc		\
 	gr_streams_to_stream.cc		\
 	gr_streams_to_vector.cc		\
+	gr_stretch_ff.cc		\
         gr_test.cc                      \
 	gr_threshold_ff.cc		\
 	gr_throttle.cc			\
@@ -151,6 +154,8 @@ libgeneral_la_SOURCES = 		\
 	gr_vco_f.cc			\
 	gr_vector_to_stream.cc		\
 	gr_vector_to_streams.cc		\
+	gr_wavelet_ff.cc		\
+	gr_wvps_ff.cc			\
 	gri_add_const_ss_generic.cc	\
 	gri_char_to_float.cc		\
 	gri_debugger_hook.cc		\
@@ -275,6 +280,7 @@ grinclude_HEADERS = 			\
 	gr_pwr_squelch_cc.h		\
 	gr_pwr_squelch_ff.h		\
 	gr_quadrature_demod_cf.h	\
+	gr_rail_ff.h			\
 	gr_random.h			\
 	gr_regenerate_bb.h		\
 	gr_remez.h			\
@@ -287,6 +293,7 @@ grinclude_HEADERS = 			\
 	gr_simple_framer.h		\
 	gr_simple_framer_sync.h		\
 	gr_simple_squelch_cc.h		\
+	gr_squash_ff.h			\
 	gr_skiphead.h			\
 	gr_squelch_base_cc.h		\
 	gr_squelch_base_ff.h		\
@@ -295,6 +302,7 @@ grinclude_HEADERS = 			\
 	gr_stream_to_vector.h		\
 	gr_streams_to_stream.h		\
 	gr_streams_to_vector.h		\
+	gr_stretch_ff.h			\
         gr_test_types.h			\
         gr_test.h			\
 	gr_threshold_ff.h		\
@@ -304,6 +312,8 @@ grinclude_HEADERS = 			\
 	gr_vco_f.h			\
 	gr_vector_to_stream.h		\
 	gr_vector_to_streams.h		\
+	gr_wavelet_ff.h			\
+	gr_wvps_ff.h			\
 	gri_add_const_ss.h		\
 	gri_agc_cc.h			\
 	gri_agc_ff.h			\
@@ -427,6 +437,7 @@ swiginclude_HEADERS =			\
 	gr_pwr_squelch_cc.i		\
 	gr_pwr_squelch_ff.i		\
 	gr_quadrature_demod_cf.i	\
+	gr_rail_ff.i			\
 	gr_regenerate_bb.i		\
 	gr_remez.i			\
 	gr_rms_cf.i			\
@@ -437,6 +448,7 @@ swiginclude_HEADERS =			\
 	gr_simple_framer.i		\
 	gr_simple_squelch_cc.i		\
 	gr_skiphead.i			\
+	gr_squash_ff.i			\
 	gr_squelch_base_cc.i		\
 	gr_squelch_base_ff.i		\
 	gr_stream_mux.i			\
@@ -444,6 +456,7 @@ swiginclude_HEADERS =			\
 	gr_stream_to_vector.i		\
 	gr_streams_to_stream.i		\
 	gr_streams_to_vector.i		\
+	gr_stretch_ff.i			\
         gr_test.i			\
 	gr_threshold_ff.i		\
 	gr_throttle.i			\
@@ -452,6 +465,8 @@ swiginclude_HEADERS =			\
 	gr_vector_to_stream.i		\
 	gr_vector_to_streams.i		\
 	gr_unpack_k_bits_bb.i		\
+	gr_wavelet_ff.i			\
+	gr_wvps_ff.i			\
 	gri_agc_cc.i			\
 	gri_agc_ff.i			\
 	gri_agc2_cc.i			\
