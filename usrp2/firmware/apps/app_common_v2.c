@@ -123,8 +123,6 @@ op_id_cmd(const op_generic_t *p,
   // r->fpga_md5sum = ;	// FIXME
   // r->sw_md5sum = ;	// FIXME
 
-  // FIXME Add d'board info, including dbid, min/max gain, min/max freq
-
   return r->len;
 }
 

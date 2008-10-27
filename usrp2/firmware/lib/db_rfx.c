@@ -447,6 +447,10 @@ rfx_init_tx(struct db_base *dbb)
 {
   //struct db_rfx_dummy *db = (struct db_rfx_dummy *) dbb;
   clocks_enable_tx_dboard(true, 0);
+
+  // Set the freq now to get the one time 10ms delay out of the way.
+  u2_fxpt_freq_t	dc;
+  dbb->set_freq(dbb, dbb->freq_min, &dc);
   return true;
 }
 
@@ -458,12 +462,19 @@ rfx_init_rx(struct db_base *dbb)
 
   // test gain
   dbb->set_gain(dbb,U2_DOUBLE_TO_FXPT_GAIN(45.0));
+
+  // Set the freq now to get the one time 10ms delay out of the way.
+  u2_fxpt_freq_t	dc;
+  dbb->set_freq(dbb, dbb->freq_min, &dc);
+
   return true;
 }
 
 bool
 rfx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc)
 {
+  static unsigned char first = true;
+
   *dc = 0;
   struct db_rfx_dummy *db = (struct db_rfx_dummy *) dbb;
   //u2_fxpt_freq_t desired_n = db->common.freq_mult*freq/phdet_freq;
@@ -483,7 +494,10 @@ rfx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc)
 
   spi_transact(SPI_TXONLY,db->common.spi_mask,R,24,SPIF_PUSH_FALL);
   spi_transact(SPI_TXONLY,db->common.spi_mask,C,24,SPIF_PUSH_FALL);
-  mdelay(10);
+  if (first){
+    first = false;
+    mdelay(10);
+  }
   spi_transact(SPI_TXONLY,db->common.spi_mask,N,24,SPIF_PUSH_FALL);
 
   //printf("A = %d, B = %d, N_DIV = %d\n",A, B, N_DIV);

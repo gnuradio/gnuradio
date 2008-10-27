@@ -23,7 +23,6 @@
 #include <hal_io.h>
 #include <ad9510.h>
 #include <stdio.h>
-#include <mdelay.h>
 
 bool tvrx_init(struct db_base *db);
 bool tvrx_set_freq(struct db_base *db, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc);
