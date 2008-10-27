@@ -177,50 +177,48 @@ dbsm_process_helper(dbsm_t *sm, int buf_this)
 {
   int buf_other = buf_this ^ 1;
 
-  if (1){
-    bp_clear_buf(buf_this);
+  bp_clear_buf(buf_this);
 
-    if (buffer_state[buf_this] == BS_FILLING){
-      buffer_state[buf_this] = BS_FULL;
-      //
-      // does s/w handle this packet?
-      //
-      if (sm->inspect(sm, buf_this)){
-	// s/w handled the packet; refill the buffer
-	dbsm_receive_to_buf(sm, buf_this);
-	buffer_state[buf_this] = BS_FILLING;
-      }
-
-      else {	// s/w didn't handle this; pass it on
-
-	if(buffer_state[buf_other] == BS_EMPTY){
-	  dbsm_receive_to_buf(sm, buf_other);
-	  buffer_state[buf_other] = BS_FILLING;
-	}
-	else
-	  sm->rx_idle = true;
-
-	if (sm->tx_idle){
-	  sm->tx_idle = false;
-	  dbsm_send_from_buf(sm, buf_this);
-	  buffer_state[buf_this] = BS_EMPTYING;
-	}
-      }
+  if (buffer_state[buf_this] == BS_FILLING){
+    buffer_state[buf_this] = BS_FULL;
+    //
+    // does s/w handle this packet?
+    //
+    if (sm->inspect(sm, buf_this)){
+      // s/w handled the packet; refill the buffer
+      dbsm_receive_to_buf(sm, buf_this);
+      buffer_state[buf_this] = BS_FILLING;
     }
-    else {  // buffer was emptying
-      buffer_state[buf_this] = BS_EMPTY;
-      if (sm->rx_idle){
-	sm->rx_idle = false;
-	dbsm_receive_to_buf(sm, buf_this);
-	buffer_state[buf_this] = BS_FILLING;
-      }
-      if (buffer_state[buf_other] == BS_FULL){
-	dbsm_send_from_buf(sm, buf_other);
-	buffer_state[buf_other] = BS_EMPTYING;
+
+    else {	// s/w didn't handle this; pass it on
+
+      if(buffer_state[buf_other] == BS_EMPTY){
+	dbsm_receive_to_buf(sm, buf_other);
+	buffer_state[buf_other] = BS_FILLING;
       }
       else
-	sm->tx_idle = true;
+	sm->rx_idle = true;
+
+      if (sm->tx_idle){
+	sm->tx_idle = false;
+	dbsm_send_from_buf(sm, buf_this);
+	buffer_state[buf_this] = BS_EMPTYING;
+      }
     }
+  }
+  else {  // buffer was emptying
+    buffer_state[buf_this] = BS_EMPTY;
+    if (sm->rx_idle){
+      sm->rx_idle = false;
+      dbsm_receive_to_buf(sm, buf_this);
+      buffer_state[buf_this] = BS_FILLING;
+    }
+    if (buffer_state[buf_other] == BS_FULL){
+      dbsm_send_from_buf(sm, buf_other);
+      buffer_state[buf_other] = BS_EMPTYING;
+    }
+    else
+      sm->tx_idle = true;
   }
 }
 
