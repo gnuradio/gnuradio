@@ -133,10 +133,10 @@ class app_top_block(stdgui2.std_top_block):
 
         hbox.Add((5,0), 0, 0)
         g = self.u.gain_range()
-	if self.u.daughterboard_id() == 0x0003: # FIXME: get range right in firmware for TVRX
-	  g[1] = 104
-	  
-        myform['gain'] = form.slider_field(parent=self.panel, sizer=hbox, label="Gain",
+
+	# some configurations don't have gain control
+	if g[1] > g[0]:
+    	    myform['gain'] = form.slider_field(parent=self.panel, sizer=hbox, label="Gain",
                                            weight=3,
                                            min=int(g[0]), max=int(g[1]),
                                            callback=self.set_gain)
@@ -218,7 +218,8 @@ class app_top_block(stdgui2.std_top_block):
         return False
 
     def set_gain(self, gain):
-        self.myform['gain'].set_value(gain)     # update displayed value
+	if self.myform.has_key('gain'):
+    	    self.myform['gain'].set_value(gain)     # update displayed value
         self.u.set_gain(gain)
 
     def set_decim(self, decim):
