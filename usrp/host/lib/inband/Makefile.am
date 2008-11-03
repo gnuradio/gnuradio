@@ -32,8 +32,8 @@ EXTRA_DIST =				\
 	usrp_interface.mbh 
 
 lib_LTLIBRARIES = 			\
-	libusrp_inband.la		\
-	libusrp_inband-qa.la
+	libusrp-inband.la		\
+	libusrp-inband-qa.la
 
 # ------------------------------------------------------------------------
 # Build the inband library
@@ -100,7 +100,7 @@ libusrp_inband_qa_la_SOURCES =   	\
 libusrp_inband_qa_la_LDFLAGS = $(NO_UNDEFINED) -avoid-version
 
 libusrp_inband_qa_la_LIBADD =    	\
-	libusrp_inband.la		\
+	libusrp-inband.la		\
 	$(PMT_LA)			\
 	$(CPPUNIT_LIBS)			\
 	-lstdc++
@@ -111,7 +111,7 @@ noinst_PROGRAMS =			\
 	test_inband
 
 test_inband_SOURCES = test_inband.cc
-test_inband_LDADD   = libusrp_inband-qa.la
+test_inband_LDADD   = libusrp-inband-qa.la
 
 MOSTLYCLEANFILES = \
 	$(BUILT_SOURCES) *~ *.pyc

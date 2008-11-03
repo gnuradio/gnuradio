@@ -1,4 +1,4 @@
-gnuradio (3.1.svn-7817) unstable; urgency=low
+gnuradio (3.1.svn) unstable; urgency=low
 
   * post release 3.1 trunk repository packages
   * see http://gnuradio.org/trac/wiki for stable branch

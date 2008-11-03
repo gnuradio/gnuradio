@@ -26,7 +26,7 @@ AM_CPPFLAGS=$(STD_DEFINES_AND_INCLUDES) \
          -I$(top_srcdir)/gr-audio-alsa/src \
 	 $(WITH_INCLUDES)
 
-GR_AUDIO_ALSA_LA=$(top_builddir)/gr-audio-alsa/src/libgr_audio_alsa.la
+GR_AUDIO_ALSA_LA=$(top_builddir)/gr-audio-alsa/src/libgnuradio-audio-alsa.la
 
 # For compiling outside the tree, these will get fished out by pkgconfig
 

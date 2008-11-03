@@ -2,8 +2,8 @@
 
 EXTRACT=dtools/bin/extract_install_filenames
 
-# libgnuradio-core0-dev
-NAME=debian/libgnuradio-core0-dev.install
+# libgnuradio-core-dev
+NAME=debian/libgnuradio-core-dev.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gnuradio-core/src/lib/filter/Makefile grinclude_HEADERS >>$NAME
@@ -20,13 +20,17 @@ $EXTRACT gnuradio-core/src/lib/runtime/Makefile grinclude_HEADERS >>$NAME
 $EXTRACT gnuradio-core/src/lib/runtime/Makefile swiginclude_HEADERS >>$NAME
 $EXTRACT gnuradio-core/src/lib/swig/Makefile grinclude_HEADERS >>$NAME
 $EXTRACT gnuradio-core/src/lib/swig/Makefile swiginclude_HEADERS >>$NAME
+echo usr/lib/libgnuradio-core.so >>$NAME
+echo usr/lib/pkgconfig/gnuradio-core.pc >>$NAME
 
-# libmblock0-dev
-NAME=debian/libmblock0-dev.install
+# libmblock-dev
+NAME=debian/libmblock-dev.install
 rm -f $NAME
 touch $NAME
 $EXTRACT mblock/src/lib/Makefile include_HEADERS >>$NAME
 $EXTRACT mblock/src/lib/Makefile swiginclude_HEADERS >>$NAME
+echo usr/lib/libmblock.so >>$NAME
+echo usr/lib/pkgconfig/mblock.pc >>$NAME
 
 # python-gnuradio-core
 NAME=debian/python-gnuradio-core.install
@@ -44,18 +48,22 @@ $EXTRACT gnuradio-core/src/python/gnuradio/gru/Makefile grblkspython_PYTHON >>$N
 $EXTRACT gnuradio-core/src/python/gnuradio/gruimpl/Makefile grupython_PYTHON >>$NAME
 $EXTRACT gnuradio-core/src/python/gnuradio/vocoder/Makefile grvocoderpython_PYTHON >>$NAME
 
-# libusrp0-dev
-NAME=debian/libusrp0-dev.install
+# libusrp-dev
+NAME=debian/libusrp-dev.install
 rm -f $NAME
 touch $NAME
 $EXTRACT usrp/host/lib/legacy/Makefile include_HEADERS >>$NAME
 $EXTRACT usrp/firmware/include/Makefile include_HEADERS >>$NAME
+echo usr/lib/libusrp.so >>$NAME
+echo usr/lib/pkgconfig/usrp.pc >>$NAME
 
-# libusrp-inband0-dev
-NAME=debian/libusrp-inband0-dev.install
+# libusrp-inband-dev
+NAME=debian/libusrp-inband-dev.install
 rm -f $NAME
 touch $NAME
 $EXTRACT usrp/host/lib/inband/Makefile include_HEADERS >>$NAME
+echo usr/lib/libusrp-inband.so >>$NAME
+echo usr/lib/pkgconfig/usrp-inband.pc >>$NAME
 
 # python-usrp
 NAME=debian/python-usrp.install
@@ -82,6 +90,7 @@ rm -f $NAME
 touch $NAME
 echo etc/gnuradio/conf.d/gr-wxgui.conf >>$NAME
 $EXTRACT gr-wxgui/src/python/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT gr-wxgui/src/python/plotter/Makefile ourpython_PYTHON >>$NAME
 $EXTRACT gr-wxgui/Makefile pkgconfig_DATA >>$NAME
 
 # python-gnuradio-atsc
@@ -95,23 +104,34 @@ $EXTRACT gr-atsc/src/lib/Makefile ourlib_LTLIBRARIES | \
     sed -e 's/\.la$/.so/' >>$NAME
 $EXTRACT gr-atsc/src/python/Makefile ourdata_DATA >>$NAME
 
+# libgnuradio-audio-alsa
+NAME=debian/libgnuradio-audio-alsa.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-audio-alsa/src/Makefile lib_LTLIBRARIES >>$NAME
+$EXTRACT gr-audio-alsa/src/Makefile lib_LTLIBRARIES | \
+    sed -e 's/\.la$/.so.*/' >>$NAME
+echo etc/gnuradio/conf.d/gr-audio-alsa.conf >>$NAME
+
+# libgnuradio-audio-alsa-dev
+NAME=debian/libgnuradio-audio-alsa-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-audio-alsa/src/Makefile grinclude_HEADERS >>$NAME
+echo usr/lib/libgnuradio-audio-alsa.so >>$NAME
+echo usr/lib/pkgconfig/gr-audio-alsa.pc >>$NAME
+
 # python-gnuradio-audio-alsa
 NAME=debian/python-gnuradio-audio-alsa.install
 rm -f $NAME
 touch $NAME
-echo etc/gnuradio/conf.d/gr-audio-alsa.conf >>$NAME
 $EXTRACT gr-audio-alsa/src/Makefile ourpython_PYTHON >>$NAME
-# Note: these will migrate to libgnuradio-audio-alsa in 3.2
-# They are only separate in this package for C++ only experimentation
-$EXTRACT gr-audio-alsa/src/Makefile lib_LTLIBRARIES >>$NAME
-$EXTRACT gr-audio-alsa/src/Makefile lib_LTLIBRARIES | \
-    sed -e 's/\.la$/.so*/' >>$NAME
-#
 $EXTRACT gr-audio-alsa/src/Makefile ourlib_LTLIBRARIES >>$NAME
 $EXTRACT gr-audio-alsa/src/Makefile ourlib_LTLIBRARIES | \
     sed -e 's/\.la$/.so*/' >>$NAME
 
 # python-gnuradio-audio-jack
+# TODO: break out libgnuradio-audio-jack
 NAME=debian/python-gnuradio-audio-jack.install
 rm -f $NAME
 touch $NAME
@@ -122,6 +142,7 @@ $EXTRACT gr-audio-jack/src/Makefile ourlib_LTLIBRARIES | \
     sed -e 's/\.la$/.so/' >>$NAME
 
 # python-gnuradio-audio-oss
+# TODO: break out libgnuradio-audio-oss
 NAME=debian/python-gnuradio-audio-oss.install
 rm -f $NAME
 touch $NAME
@@ -132,6 +153,7 @@ $EXTRACT gr-audio-oss/src/Makefile ourlib_LTLIBRARIES | \
     sed -e 's/\.la$/.so/' >>$NAME
 
 # python-gnuradio-audio-portaudio
+# TODO: break out libgnuradio-audio-portaudio
 NAME=debian/python-gnuradio-audio-portaudio.install
 rm -f $NAME
 touch $NAME
@@ -142,15 +164,16 @@ $EXTRACT gr-audio-portaudio/src/Makefile ourlib_LTLIBRARIES | \
     sed -e 's/\.la$/.so/' >>$NAME
 
 # python-gnuradio-comedi
-NAME=debian/python-gnuradio-comedi.install
-rm -f $NAME
-touch $NAME
-$EXTRACT gr-comedi/src/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT gr-comedi/src/Makefile ourlib_LTLIBRARIES >>$NAME
-$EXTRACT gr-comedi/src/Makefile ourlib_LTLIBRARIES | \
-    sed -e 's/\.la$/.so/' >>$NAME
+#NAME=debian/python-gnuradio-comedi.install
+#rm -f $NAME
+#touch $NAME
+#$EXTRACT gr-comedi/src/Makefile ourpython_PYTHON >>$NAME
+#$EXTRACT gr-comedi/src/Makefile ourlib_LTLIBRARIES >>$NAME
+#$EXTRACT gr-comedi/src/Makefile ourlib_LTLIBRARIES | \
+#    sed -e 's/\.la$/.so/' >>$NAME
 
 # python-gnuradio-cvsd-vocoder
+# TODO: break out libgnuradio-cvsd-vocoder
 NAME=debian/python-gnuradio-cvsd-vocoder.install
 rm -f $NAME
 touch $NAME
@@ -161,6 +184,7 @@ $EXTRACT gr-cvsd-vocoder/src/lib/Makefile ourlib_LTLIBRARIES | \
     sed -e 's/\.la$/.so/' >>$NAME
 
 # python-gnuradio-gsm-fr-vocoder
+# TODO: break out libgnuradio-gsm-fr-vocoder
 NAME=debian/python-gnuradio-gsm-fr-vocoder.install
 rm -f $NAME
 touch $NAME
@@ -170,6 +194,7 @@ $EXTRACT gr-gsm-fr-vocoder/src/lib/Makefile ourlib_LTLIBRARIES | \
     sed -e 's/\.la$/.so/' >>$NAME
 
 # python-gnuradio-trellis
+# TODO: break out libgnuradio-trellis
 NAME=debian/python-gnuradio-trellis.install
 rm -f $NAME
 touch $NAME
@@ -181,6 +206,7 @@ $EXTRACT gr-trellis/src/examples/Makefile ourdata_DATA >>$NAME
 $EXTRACT gr-trellis/src/examples/fsm_files/Makefile ourdata_DATA >>$NAME
 
 # python-gnuradio-video-sdl
+# TODO: break out libgnuradio-video-sdl
 NAME=debian/python-gnuradio-video-sdl.install
 rm -f $NAME
 touch $NAME
@@ -203,14 +229,16 @@ touch $NAME
 $EXTRACT gnuradio-examples/python/apps/hf_explorer/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/apps/hf_radio/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/audio/Makefile ourdata_DATA >>$NAME
-$EXTRACT gnuradio-examples/python/dect/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/digital/Makefile ourdata_DATA >>$NAME
+$EXTRACT gnuradio-examples/python/digital-bert/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/digital_voice/Makefile ourdata_DATA >>$NAME
+$EXTRACT gnuradio-examples/python/mp-sched/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/multi-antenna/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/multi_usrp/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/network/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/ofdm/Makefile ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/usrp/Makefile ourdata_DATA >>$NAME
+$EXTRACT gnuradio-examples/python/usrp2/Makefile ourdata_DATA >>$NAME
 
 # gnuradio-gpio
 NAME=debian/gnuradio-gpio.install
@@ -221,6 +249,8 @@ $EXTRACT gr-gpio/src/python/Makefile ourpython_PYTHON >>$NAME
 $EXTRACT gr-gpio/src/lib/Makefile ourlib_LTLIBRARIES >>$NAME
 $EXTRACT gr-gpio/src/lib/Makefile ourlib_LTLIBRARIES |
     sed -e 's/\.la$/.so/' >>$NAME
+echo usr/share/usrp/rev2/std_2rxhb_2tx_dig.rbf >> $NAME
+echo usr/share/usrp/rev4/std_2rxint_2tx_dig.rbf >> $NAME
 
 # gnuradio-pager
 NAME=debian/gnuradio-pager.install
@@ -250,6 +280,8 @@ rm -f $NAME
 touch $NAME
 $EXTRACT gr-radar-mono/src/python/Makefile ourpython_PYTHON >>$NAME
 $EXTRACT gr-radar-mono/src/python/Makefile bin_SCRIPTS >>$NAME
+echo usr/share/usrp/rev2/usrp_radar_mono.rbf >>$NAME
+echo usr/share/usrp/rev4/usrp_radar_mono.rbf >>$NAME
 
 # gnuradio-sounder
 NAME=debian/gnuradio-sounder.install
@@ -257,3 +289,5 @@ rm -f $NAME
 touch $NAME
 $EXTRACT gr-sounder/src/python/Makefile ourpython_PYTHON >>$NAME
 $EXTRACT gr-sounder/src/python/Makefile bin_SCRIPTS >>$NAME
+echo usr/share/usrp/rev2/usrp_sounder.rbf
+echo usr/share/usrp/rev4/usrp_sounder.rbf

@@ -48,7 +48,8 @@ configure-stamp:
 		--enable-doxygen --enable-html-docs \
 		--sysconfdir=/etc --enable-all-components \
 		--disable-gr-audio-osx --disable-gr-audio-windows \
-		--disable-gr-qtgui
+		--disable-gr-qtgui --disable-gcell --disable-gr-gcell \
+		--disable-gr-comedi --disable-usrp2-firmware
 	touch configure-stamp
 
 extract: extract-stamp
@@ -81,7 +82,7 @@ install-stamp: build-stamp
 	done
 
 	: # Deposit rule to allow group 'usrp' access to USRP hardware
-	install -m 0755 -D debian/libusrp0c2a.udev \
+	install -m 0644 -D debian/libusrp.udev \
 		debian/tmp/etc/udev/rules.d/40-usrp.rules
 
 	dh_install --sourcedir=debian/tmp

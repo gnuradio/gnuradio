@@ -29,18 +29,9 @@ AC_DEFUN([GRC_GRC],[
     dnl # test python dependencies
     dnl ########################################
     if test $passed = yes; then
-        if ! ${PYTHON} -c 'import Cheetah'; then
-            AC_MSG_RESULT([grc requires the Python Cheetah templates installed, not found.])
-            passed=no
-        fi
-        if ! ${PYTHON} -c 'import pygtk'; then
-            AC_MSG_RESULT([grc requires Python GTK wrappers installed, not found.])
-            passed=no
-        fi
-        if ! ${PYTHON} -c 'import lxml'; then
-            AC_MSG_RESULT([grc requires libxml2 and libxslt wrappers (lxml), not found.])
-            passed=no
-        fi
+	PYTHON_CHECK_MODULE([Cheetah],[Python Cheetah templates],[],[passed=no])
+	PYTHON_CHECK_MODULE([pygtk],[Python GTK wrappers],[],[passed=no])
+	PYTHON_CHECK_MODULE([lxml],[Python XML wrappers],[],[passed=no])
     fi
 
     dnl ########################################

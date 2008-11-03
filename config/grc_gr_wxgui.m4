@@ -29,14 +29,8 @@ AC_DEFUN([GRC_GR_WXGUI],[
     dnl   yes  : if the --enable code passed muster and all dependencies are met
     dnl   no   : otherwise
     if test $passed = yes; then
-        if ! ${PYTHON} -c 'import wx'; then
-            AC_MSG_RESULT([gr-wxgui requires wxPython, not found.])
-            passed=no
-        fi
-        if ! ${PYTHON} -c 'import numpy'; then
-            AC_MSG_RESULT([gr-wxgui requires numpy (Numeric Python), not found.])
-            passed=no
-        fi
+	PYTHON_CHECK_MODULE([wx],[Python wxWidgets wrappers],[],[passed=no])
+	PYTHON_CHECK_MODULE([numpy],[Numeric Python extensions],[],[passed=no])
     fi
 
     AC_CONFIG_FILES([ \

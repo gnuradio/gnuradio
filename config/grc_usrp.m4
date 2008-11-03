@@ -61,7 +61,7 @@ AC_DEFUN([GRC_USRP],[
 		-I\${abs_top_srcdir}/usrp/firmware/include"
         usrp_LA="\${abs_top_builddir}/usrp/host/lib/legacy/libusrp.la"
 	usrp_inband_INCLUDES="-I\${abs_top_srcdir}/usrp/host/lib/inband"
-	usrp_inband_LA="\${abs_top_builddir}/usrp/host/lib/inband/libusrp_inband.la"
+	usrp_inband_LA="\${abs_top_builddir}/usrp/host/lib/inband/libusrp-inband.la"
     fi
 
     dnl Include the usrp-inband INCLUDES and LA

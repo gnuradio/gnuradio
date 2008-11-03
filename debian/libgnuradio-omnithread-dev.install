@@ -1,0 +1,5 @@
+usr/include/gnuradio/omni_time.h
+usr/include/gnuradio/omnithread.h
+usr/include/gnuradio/ot_posix.h
+usr/lib/pkgconfig/gnuradio-omnithread.pc
+usr/lib/libgromnithread.so

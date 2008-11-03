@@ -1,0 +1,3 @@
+usr/include/gruel/*
+usr/lib/libgruel.so
+usr/lib/pkgconfig/gruel.pc

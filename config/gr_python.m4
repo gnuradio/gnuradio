@@ -126,3 +126,29 @@ print path
 	    AC_SUBST(PYTHON_LDFLAGS)
 	fi
 ])
+
+# PYTHON_CHECK_MODULE
+#
+# Determines if a particular Python module can be imported
+#
+# $1 - module name
+# $2 - module description
+# $3 - action if found
+# $4 - action if not found
+
+AC_DEFUN([PYTHON_CHECK_MODULE],[
+    AC_MSG_CHECKING([for $2]) 
+    python_cmd='import sys
+try:
+    import $1
+except:
+    sys.exit(1)'
+
+    if ! $PYTHON -c "$python_cmd" ; then
+	AC_MSG_RESULT([no])
+	$4
+    else
+	AC_MSG_RESULT([yes])
+	$3
+    fi
+])

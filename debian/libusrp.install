@@ -1,3 +1,6 @@
+usr/lib/libusrp.la
+usr/lib/libusrp.so.*
+etc/udev/rules.d/40-usrp.rules
 usr/share/usrp/rev2/multi_2rxhb_2tx.rbf
 usr/share/usrp/rev2/std.ihx
 usr/share/usrp/rev2/std_2rxhb_2tx.rbf
