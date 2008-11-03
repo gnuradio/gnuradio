@@ -84,6 +84,9 @@ namespace gruel {
    * an non-blocking infinite loop and you enable realtime scheduling,
    * it's possible to hang the system.
    */
+
+  // NOTE: If you change this, you need to change the code in 
+  // gnuradio-core/src/lib/runtime/gr_realtime.i, see note there.
   rt_status_t
   enable_realtime_scheduling(rt_sched_param = rt_sched_param());
 
