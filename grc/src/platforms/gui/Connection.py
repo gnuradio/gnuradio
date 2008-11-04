@@ -59,6 +59,8 @@ class Connection(Element):
 			Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE/2), self.get_sink().get_rotation()),
 		]
 		self._update_after_move()
+		if self.is_valid(): self._foreground = Colors.FG_COLOR
+		else: self._foreground = Colors.ERROR_COLOR
 
 	def _update_after_move(self):
 		"""Calculate coordinates."""
@@ -123,7 +125,6 @@ class Connection(Element):
 		fg_color = self.get_enabled() and Colors.FG_COLOR or Colors.DISABLED_FG_COLOR
 		Element.draw(self, window, FG_color=fg_color)
 		gc = self.get_gc()
-		if self.is_valid(): gc.foreground = Colors.FG_COLOR
-		else: gc.foreground = Colors.ERROR_COLOR
+		gc.foreground = self._foreground
 		#draw arrow on sink port
 		window.draw_polygon(gc, True, self._arrow)
