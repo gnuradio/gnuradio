@@ -56,19 +56,16 @@ class Block(Element):
 		@param n the nested odict
 		@return block a new block
 		"""
+		#build the block
+		Element.__init__(self, flow_graph)
 		#grab the data
-		name = n['name']
-		key = n['key']
-		category = utils.exists_or_else(n, 'category', '')
 		params = utils.listify(n, 'param')
 		sources = utils.listify(n, 'source')
 		sinks = utils.listify(n, 'sink')
-		#build the block
-		Element.__init__(self, flow_graph)
-		#store the data
-		self._name = name
-		self._key = key
-		self._category = category
+		self._name = n['name']
+		self._key = n['key']
+		self._category = utils.exists_or_else(n, 'category', '')
+		self._block_wrapper_path = n['block_wrapper_path']
 		#create the param objects
 		self._params = odict()
 		#add the id param
@@ -155,18 +152,13 @@ class Block(Element):
 	def __str__(self): return 'Block - %s - %s(%s)'%(self.get_id(), self.get_name(), self.get_key())
 
 	def get_id(self): return self.get_param('id').get_value()
-
 	def is_block(self): return True
-
 	def get_name(self): return self._name
-
 	def get_key(self): return self._key
-
 	def get_category(self): return self._category
-
 	def get_doc(self): return ''
-
 	def get_ports(self): return self.get_sources() + self.get_sinks()
+	def get_block_wrapper_path(self): return self._block_wrapper_path
 
 	##############################################
 	# Access Params

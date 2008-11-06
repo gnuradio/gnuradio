@@ -74,6 +74,8 @@ class Platform(_Element):
 		try: ParseXML.validate_dtd(f, self._block_dtd)
 		except ParseXML.XMLSyntaxError, e: self._exit_with_error('Block definition "%s" failed: \n\t%s'%(f, e))
 		for n in utils.listify(ParseXML.from_file(f), 'block'):
+			#inject block wrapper path
+			n['block_wrapper_path'] = f
 			block = self.Block(self._flow_graph, n)
 			key = block.get_key()
 			#test against repeated keys
