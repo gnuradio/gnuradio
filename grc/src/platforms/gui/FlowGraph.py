@@ -24,7 +24,8 @@ from ... gui.Constants import \
 	MOTION_DETECT_REDRAWING_SENSITIVITY
 from ... gui.Actions import \
 	ELEMENT_CREATE, ELEMENT_SELECT, \
-	BLOCK_PARAM_MODIFY, BLOCK_MOVE
+	BLOCK_PARAM_MODIFY, BLOCK_MOVE, \
+	ELEMENT_DELETE
 import Colors
 import Utils
 from ... import utils
@@ -63,9 +64,9 @@ class FlowGraph(Element):
 		self._old_selected_port = None
 		self._new_selected_port = None
 
-###########################################################################
-# Access Drawing Area
-###########################################################################
+	###########################################################################
+	# Access Drawing Area
+	###########################################################################
 	def get_drawing_area(self): return self.drawing_area
 	def get_gc(self): return self.get_drawing_area().gc
 	def get_pixmap(self): return self.get_drawing_area().pixmap
@@ -545,7 +546,10 @@ class FlowGraph(Element):
 			elif pos-adj_val < SCROLL_PROXIMITY_SENSITIVITY:
 				adj.set_value(adj_val-SCROLL_DISTANCE)
 				adj.emit('changed')
-		#move the selected element and record the new coordinate
+		#remove the connection if selected in drag event
+		if len(self.get_selected_elements()) == 1 and self.get_selected_element().is_connection():
+			self.handle_states(ELEMENT_DELETE)
+		#move the selected elements and record the new coordinate
 		X, Y = self.get_coordinate()
 		if not self.get_ctrl_mask(): self.move_selected((int(x - X), int(y - Y)))
 		self.draw()

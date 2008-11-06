@@ -122,7 +122,7 @@ class HotKeysDialog(gtk.Dialog):
 			('Paste Block', 'Ctrl + v'),
 			('Undo Change', 'Ctrl + z'),
 			('Redo Change', 'Ctrl + y'),
-			('Delete Block', 'Delete'),
+			('Delete Element', 'Delete'),
 			('Modify Parameters', 'Enter'),
 			('Rotate Block', 'Right'),
 			('Rotate Block', 'Left'),
