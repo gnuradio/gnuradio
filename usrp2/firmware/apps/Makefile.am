@@ -41,7 +41,6 @@ noinst_PROGRAMS = \
 	test_phy_comm \
 	test_lsadc \
 	test_lsdac \
-	test_serdes \
 	timer_test \
 	tx_standalone \
 	txrx \
