@@ -20,7 +20,7 @@
 -search for blocks
 -click and drag on whitespace to scroll
 -expand preferences, allow for custom prefs, prefs dialog should infer structure
--drag connection to delete it
+-gui grid editor for configuring grid params/placing wxgui plots and controls
 
 ##################################################
 # Problems
@@ -32,7 +32,8 @@
 -dont generate py files in .grc file dir
 -save/restore cwd
 -special connection validation rules for disabled blocks
--threads dont die on exit in probe and queue module
+-threads dont die on exit in probe and variable sink
+-overloaded gui classes for each platform, move param input objects into overloaded
 
 ##################################################
 # External

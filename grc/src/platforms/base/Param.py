@@ -20,6 +20,55 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from ... import utils
 from ... utils import odict
 from Element import Element
+import pygtk
+pygtk.require('2.0')
+import gtk
+import gobject
+
+class InputParam(gtk.HBox):
+	"""The base class for an input parameter inside the input parameters dialog."""
+
+	def __init__(self, param, _handle_changed):
+		gtk.HBox.__init__(self)
+		self.param = param
+		self._handle_changed = _handle_changed
+		self.label = gtk.Label('') #no label, markup is added by set_markup
+		self.label.set_size_request(150, -1)
+		self.pack_start(self.label, False)
+		self.set_markup = lambda m: self.label.set_markup(m)
+		self.tp = None
+	def set_color(self, color): pass
+
+class EntryParam(InputParam):
+	"""Provide an entry box for strings and numbers."""
+
+	def __init__(self, *args, **kwargs):
+		InputParam.__init__(self, *args, **kwargs)
+		self.entry = input = gtk.Entry()
+		input.set_text(self.param.get_value())
+		input.connect('changed', self._handle_changed)
+		self.pack_start(input, True)
+		self.get_text = input.get_text
+		#tool tip
+		self.tp = gtk.Tooltips()
+		self.tp.set_tip(self.entry, '')
+		self.tp.enable()
+	def set_color(self, color): self.entry.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
+
+class EnumParam(InputParam):
+	"""Provide an entry box for Enum types with a drop down menu."""
+
+	def __init__(self, *args, **kwargs):
+		InputParam.__init__(self, *args, **kwargs)
+		input = gtk.ComboBox(gtk.ListStore(gobject.TYPE_STRING))
+		cell = gtk.CellRendererText()
+		input.pack_start(cell, True)
+		input.add_attribute(cell, 'text', 0)
+		for option in self.param.get_options(): input.append_text(option.get_name())
+		input.set_active(int(self.param.get_option_keys().index(self.param.get_value())))
+		input.connect("changed", self._handle_changed)
+		self.pack_start(input, False)
+		self.get_text = lambda: str(input.get_active())	#the get text parses the selected index to a string
 
 class Option(Element):
 
@@ -164,15 +213,10 @@ class Param(Element):
 		raise NotImplementedError
 
 	def get_color(self): return '#FFFFFF'
-
 	def __str__(self): return 'Param - %s(%s)'%(self.get_name(), self.get_key())
-
 	def is_param(self): return True
-
 	def get_name(self): return self._name
-
 	def get_key(self): return self._key
-
 	def get_hide(self): return self.get_parent().resolve_dependencies(self._hide)
 
 	def get_value(self):
@@ -187,8 +231,15 @@ class Param(Element):
 		self._value = str(value) #must be a string
 
 	def get_type(self): return self.get_parent().resolve_dependencies(self._type)
-
 	def is_enum(self): return self._type == 'enum'
+
+	def get_input_class(self):
+		"""
+		Get the graphical gtk class to represent this parameter.
+		@return gtk input class
+		"""
+		if self.is_enum(): return EnumParam
+		return EntryParam
 
 	##############################################
 	# Access Options

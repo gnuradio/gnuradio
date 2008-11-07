@@ -23,97 +23,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import pango
-import gobject
 from Constants import PARAM_LABEL_FONT, PARAM_FONT
-from ... gui.Constants import DEFAULT_FILE_PATH
-from os import path
-
-######################################################################################################
-# gtk objects for handling input
-######################################################################################################
-
-class InputParam(gtk.HBox):
-	"""The base class for an input parameter inside the input parameters dialog."""
-
-	def __init__(self, param, _handle_changed):
-		gtk.HBox.__init__(self)
-		self.param = param
-		self._handle_changed = _handle_changed
-		self.label = gtk.Label('') #no label, markup is added by set_markup
-		self.label.set_size_request(150, -1)
-		self.pack_start(self.label, False)
-		self.set_markup = lambda m: self.label.set_markup(m)
-		self.tp = None
-	def set_color(self, color): pass
-
-class EntryParam(InputParam):
-	"""Provide an entry box for strings and numbers."""
-
-	def __init__(self, *args, **kwargs):
-		InputParam.__init__(self, *args, **kwargs)
-		self.entry = input = gtk.Entry()
-		input.set_text(self.param.get_value())
-		input.connect('changed', self._handle_changed)
-		self.pack_start(input, True)
-		self.get_text = input.get_text
-		#tool tip
-		self.tp = gtk.Tooltips()
-		self.tp.set_tip(self.entry, '')
-		self.tp.enable()
-	def set_color(self, color): self.entry.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
-
-class FileParam(EntryParam):
-	"""Provide an entry box for filename and a button to browse for a file."""
-
-	def __init__(self, *args, **kwargs):
-		EntryParam.__init__(self, *args, **kwargs)
-		input = gtk.Button('...')
-		input.connect('clicked', self._handle_clicked)
-		self.pack_start(input, False)
-
-	def _handle_clicked(self, widget=None):
-		"""
-		If the button was clicked, open a file dialog in open/save format.
-		Replace the text in the entry with the new filename from the file dialog.
-		"""
-		file_path = self.param.is_valid() and self.param.evaluate() or ''
-		#bad file paths will be redirected to default
-		if not path.exists(path.dirname(file_path)): file_path = DEFAULT_FILE_PATH
-		if self.param.get_type() == 'file_open':
-			file_dialog = gtk.FileChooserDialog('Open a Data File...', None,
-				gtk.FILE_CHOOSER_ACTION_OPEN, ('gtk-cancel',gtk.RESPONSE_CANCEL,'gtk-open',gtk.RESPONSE_OK))
-		elif self.param.get_type() == 'file_save':
-			file_dialog = gtk.FileChooserDialog('Save a Data File...', None,
-				gtk.FILE_CHOOSER_ACTION_SAVE, ('gtk-cancel',gtk.RESPONSE_CANCEL, 'gtk-save',gtk.RESPONSE_OK))
-			file_dialog.set_do_overwrite_confirmation(True)
-			file_dialog.set_current_name(path.basename(file_path)) #show the current filename
-		file_dialog.set_current_folder(path.dirname(file_path)) #current directory
-		file_dialog.set_select_multiple(False)
-		file_dialog.set_local_only(True)
-		if gtk.RESPONSE_OK == file_dialog.run(): #run the dialog
-			file_path = file_dialog.get_filename() #get the file path
-			self.entry.set_text(file_path)
-			self._handle_changed()
-		file_dialog.destroy() #destroy the dialog
-
-class EnumParam(InputParam):
-	"""Provide an entry box for Enum types with a drop down menu."""
-
-	def __init__(self, *args, **kwargs):
-		InputParam.__init__(self, *args, **kwargs)
-		input = gtk.ComboBox(gtk.ListStore(gobject.TYPE_STRING))
-		cell = gtk.CellRendererText()
-		input.pack_start(cell, True)
-		input.add_attribute(cell, 'text', 0)
-		for option in self.param.get_options(): input.append_text(option.get_name())
-		input.set_active(int(self.param.get_option_keys().index(self.param.get_value())))
-		input.connect("changed", self._handle_changed)
-		self.pack_start(input, False)
-		self.get_text = lambda: str(input.get_active())	#the get text parses the selected index to a string
-
-######################################################################################################
-# A Flow Graph Parameter
-######################################################################################################
 
 class Param(Element):
 	"""The graphical parameter."""
@@ -123,29 +33,26 @@ class Param(Element):
 		Called when an external change occurs.
 		Update the graphical input by calling the change handler.
 		"""
-		if hasattr(self, 'input'): self._handle_changed()
+		if hasattr(self, '_input'): self._handle_changed()
 
 	def get_input_object(self, callback=None):
 		"""
-		Get the graphical gtk class to represent this parameter.
+		Get the graphical gtk object to represent this parameter.
 		Create the input object with this data type and the handle changed method.
 		@param callback a function of one argument(this param) to be called from the change handler
 		@return gtk input object
 		"""
-		self.callback = callback
-		if self.is_enum(): input = EnumParam
-		elif self.get_type() in ('file_open', 'file_save'): input = FileParam
-		else: input = EntryParam
-		self.input = input(self, self._handle_changed)
-		if not callback: self.update()
-		return self.input
+		self._callback = callback
+		self._input = self.get_input_class()(self, self._handle_changed)
+		if not self._callback: self.update()
+		return self._input
 
 	def _handle_changed(self, widget=None):
 		"""
 		When the input changes, write the inputs to the data type.
 		Finish by calling the exteral callback.
 		"""
-		value = self.input.get_text()
+		value = self._input.get_text()
 		if self.is_enum(): value = self.get_option_keys()[int(value)]
 		self.set_value(value)
 		#set the markup on the label, red for errors in corresponding data type.
@@ -158,23 +65,23 @@ class Param(Element):
 			filter(lambda c: self.get_key() in c, self.get_parent()._callbacks):
 			name = '<span underline="low">%s</span>'%name
 		if not self.is_valid():
-			self.input.set_markup('<span foreground="red">%s</span>'%name)
+			self._input.set_markup('<span foreground="red">%s</span>'%name)
 			tip = 'Error: ' + ' '.join(self.get_error_messages())
 		else:
-			self.input.set_markup(name)
+			self._input.set_markup(name)
 			tip = 'Value: %s'%str(self.evaluate())
 		#hide/show
-		if self.get_hide() == 'all': self.input.hide_all()
-		else: self.input.show_all()
+		if self.get_hide() == 'all': self._input.hide_all()
+		else: self._input.show_all()
 		#set the color
-		self.input.set_color(self.get_color())
+		self._input.set_color(self.get_color())
 		#set the tooltip
-		if self.input.tp: self.input.tp.set_tip(
-			self.input.entry,
+		if self._input.tp: self._input.tp.set_tip(
+			self._input.entry,
 			'Key: %s\nType: %s\n%s'%(self.get_key(), self.get_type(), tip),
 		)
 		#execute the external callback
-		if self.callback: self.callback(self)
+		if self._callback: self._callback(self)
 
 	def get_markup(self):
 		"""
@@ -214,7 +121,7 @@ class Param(Element):
 				dt_str = ', '.join(map(to_str, data))
 			else: dt_str = to_str(data)	#other types
 			#truncate
-			max_len = max(42 - len(self.get_name()), 3)
+			max_len = max(27 - len(self.get_name()), 3)
 			if len(dt_str) > max_len:
 				dt_str = dt_str[:max_len-3] + '...'
 			return '<b>%s:</b> %s'%(Utils.xml_encode(self.get_name()), Utils.xml_encode(dt_str))

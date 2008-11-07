@@ -18,10 +18,49 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from utils import expr_utils
-from .. base.Param import Param as _Param
+from .. base.Param import Param as _Param, EntryParam
 import Constants
 import numpy
 import os
+import pygtk
+pygtk.require('2.0')
+import gtk
+
+class FileParam(EntryParam):
+	"""Provide an entry box for filename and a button to browse for a file."""
+
+	def __init__(self, *args, **kwargs):
+		EntryParam.__init__(self, *args, **kwargs)
+		input = gtk.Button('...')
+		input.connect('clicked', self._handle_clicked)
+		self.pack_start(input, False)
+
+	def _handle_clicked(self, widget=None):
+		"""
+		If the button was clicked, open a file dialog in open/save format.
+		Replace the text in the entry with the new filename from the file dialog.
+		"""
+		#get the paths
+		file_path = self.param.is_valid() and self.param.evaluate() or ''
+		(dirname, basename) = os.path.isfile(file_path) and os.path.split(file_path) or (file_path, '')
+		if not os.path.exists(dirname): dirname = os.getcwd() #fix bad paths
+		#build the dialog
+		if self.param.get_type() == 'file_open':
+			file_dialog = gtk.FileChooserDialog('Open a Data File...', None,
+				gtk.FILE_CHOOSER_ACTION_OPEN, ('gtk-cancel',gtk.RESPONSE_CANCEL,'gtk-open',gtk.RESPONSE_OK))
+		elif self.param.get_type() == 'file_save':
+			file_dialog = gtk.FileChooserDialog('Save a Data File...', None,
+				gtk.FILE_CHOOSER_ACTION_SAVE, ('gtk-cancel',gtk.RESPONSE_CANCEL, 'gtk-save',gtk.RESPONSE_OK))
+			file_dialog.set_do_overwrite_confirmation(True)
+			file_dialog.set_current_name(basename) #show the current filename
+		file_dialog.set_current_folder(dirname) #current directory
+		file_dialog.set_select_multiple(False)
+		file_dialog.set_local_only(True)
+		if gtk.RESPONSE_OK == file_dialog.run(): #run the dialog
+			file_path = file_dialog.get_filename() #get the file path
+			self.entry.set_text(file_path)
+			self._handle_changed()
+		file_dialog.destroy() #destroy the dialog
 
 #define types, native python + numpy
 VECTOR_TYPES = (tuple, list, set, numpy.ndarray)
@@ -48,6 +87,10 @@ class Param(_Param):
 		'id',
 		'grid_pos', 'import',
 	]
+
+	def get_input_class(self):
+		if self.get_type() in ('file_open', 'file_save'): return FileParam
+		return _Param.get_input_class(self)
 
 	def get_color(self):
 		"""
