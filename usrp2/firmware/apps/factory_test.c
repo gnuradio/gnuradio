@@ -37,6 +37,7 @@
 #include <string.h>
 #include <i2c.h>
 #include <usrp2_i2c_addr.h>
+#include <clocks.h>
 
 #define HW_REV_MAJOR 3
 #define HW_REV_MINOR 0
@@ -277,10 +278,13 @@ main(void)
   print_mac_addr(ethernet_mac_addr()->addr);
   newline();
 
+  output_regs->led_src = 0x7;  // make bottom 3 controlled by HW
+
   ethernet_register_link_changed_callback(link_changed_callback);
   ethernet_init();
 
-
+  clocks_enable_tx_dboard(true,1);
+  clocks_mimo_config(MC_WE_LOCK_TO_SMA);
 #if 0
   // make bit 15 of Tx gpio's be a s/w output
   hal_gpio_set_sel(GPIO_TX_BANK, 15, 's');
