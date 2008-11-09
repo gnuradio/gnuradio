@@ -355,6 +355,7 @@ typedef struct {
   volatile uint32_t	debug_mux_ctrl;
   volatile uint32_t     ram_page;       // FIXME should go somewhere else...
   volatile uint32_t     flush_icache;   // Flush the icache
+  volatile uint32_t     led_src;        // HW or SW control for LEDs
 } output_regs_t;
 
 #define SERDES_ENABLE 8
