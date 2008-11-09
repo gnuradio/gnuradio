@@ -52,22 +52,48 @@ main(void)
   //hal_uart_init();
   //puts("\ntest_ram\n");
   
-  output_regs->ram_page = 0;
+  output_regs->ram_page = 1<<10;
 
-  //puts("r[0]=DEADBEEF\n");
   extram[0] = 0xDEADBEEF;
   extram[1] = 0xF00D1234;
   extram[7] = 0x76543210;
-  puts("RD\n");
+
+  output_regs->ram_page = 2<<10;
+  extram[7] = 0x55555555;
+  extram[1] = 0xaaaaaaaa;
+  extram[0] = 0xeeeeeeee;
+
+  output_regs->ram_page = 1<<10;
+
   i = extram[0];
   k = extram[1];
   j = extram[7];
-  //puts("r0=");
+
+  if((i != 0xDEADBEEF)||(j!=0x76543210)||(k!=0xF00D1234)) {
+    puts("RAM FAIL1!\n");
+    puthex32_nl(i);
+    puthex32_nl(j);
+    puthex32_nl(k);
+    hal_finish();
+    return 0;
+  }
   
-  puthex32_nl(i);
-  puthex32_nl(k);
-  puthex32_nl(j);
-  puts("Done");
+  output_regs->ram_page = 2<<10;
+
+  j = extram[7];
+  k = extram[1];
+  i = extram[0];
+
+  if((i != 0xeeeeeeee)||(j!=0x55555555)||(k!=0xaaaaaaaa)) {
+    puts("RAM FAIL2!\n");
+    puthex32_nl(i);
+    puthex32_nl(j);
+    puthex32_nl(k);
+    hal_finish();
+    return 0;
+  }
+
+  puts("RAM Passes Tests\n");
   hal_finish();
   return 0;
 }
