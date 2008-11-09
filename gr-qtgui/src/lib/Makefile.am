@@ -21,9 +21,6 @@
 
 include $(top_srcdir)/Makefile.common
 
-#SUBDIRS=qtspectrum
-#DIST_SUBDIRS=qtspectrum
-
 # Install this stuff so that it ends up as the gnuradio.qtgui module
 # This usually ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio/qtgui
@@ -51,15 +48,24 @@ LOCAL_IFILES = 				\
 # The second is the python wrapper that loads the shared library
 # and knows how to call our extensions.
 
-BUILT_SOURCES = 				\
-	qtgui.cc				\
-	qtgui.py				\
+# Only include these files in the build if qtgui passes configure checks
+# This is mostly to help make distcheck pass
+if BUILD_QT
+QMAKE_SOURCES = 				\
 	spectrumdisplayform_moc.cc		\
 	FrequencyDisplayPlot_moc.cc	 	\
 	TimeDomainDisplayPlot_moc.cc		\
 	WaterfallDisplayPlot_moc.cc		\
 	Waterfall3DDisplayPlot_moc.cc		\
-	spectrumdisplayform_ui.h		
+	spectrumdisplayform_ui.h
+endif
+
+EXTRA_DIST = spectrumdisplayform.ui
+
+BUILT_SOURCES = 				\
+	qtgui.cc				\
+	qtgui.py				\
+	$(QMAKE_SOURCES)
 
 # This gets qtgui.py installed in the right place
 ourpython_PYTHON =			\
@@ -82,12 +88,7 @@ libqtgui_la_SOURCES = 	\
 	SpectrumGUIClass.cc			\
 	spectrumUpdateEvents.cc			\
 	plot_waterfall.cc			\
-	spectrumdisplayform.ui			\
-	spectrumdisplayform_moc.cc		\
-	FrequencyDisplayPlot_moc.cc	 	\
-	TimeDomainDisplayPlot_moc.cc		\
-	WaterfallDisplayPlot_moc.cc		\
-	Waterfall3DDisplayPlot_moc.cc		\
+	$(QMAKE_SOURCES)			\
 	qtgui_sink_c.cc				\
 	qtgui_sink_f.cc
 
@@ -111,11 +112,19 @@ grinclude_HEADERS =			\
 	qtgui_sink_c.h			\
 	qtgui_sink_f.h
 
+if BUILD_QT
 %_moc.cc : %.h
 	$(QT_MOC_EXEC) -DQT_SHARED -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB $< -o $@
 
 %_ui.h : %.ui
 	$(QT_UIC_EXEC) $< -o $@
+else
+%_moc.cc : %.h
+	touch $@
+
+%_ui.h : %.ui
+	touch $@
+endif
 
 # magic flags
 _qtgui_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
@@ -143,8 +152,6 @@ swiginclude_HEADERS = 			\
 
 
 MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
-
-#EXTRA_DIST=qtspectrum/GNUmakefile
 
 # Don't distribute output of swig
 dist-hook:

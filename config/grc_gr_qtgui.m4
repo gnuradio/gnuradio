@@ -78,6 +78,12 @@ AC_DEFUN([GRC_GR_QTGUI],[
 	AC_SUBST(QT_UIC_EXEC)
     fi
 
+    if test "$passed" = "no"; then
+        AM_CONDITIONAL(BUILD_QT, false)
+    else
+	AM_CONDITIONAL(BUILD_QT, true)
+    fi
+
     AC_CONFIG_FILES([ \
         gr-qtgui/Makefile \
         gr-qtgui/src/Makefile \
