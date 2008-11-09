@@ -427,11 +427,25 @@ module u2_core
 				      .in(set_data),.out(serdes_outs),.changed());
    setting_reg #(.my_addr(2)) sr_adc (.clk(wb_clk),.rst(wb_rst),.strobe(set_stb),.addr(set_addr),
 				      .in(set_data),.out(adc_outs),.changed());
-   setting_reg #(.my_addr(3)) sr_led (.clk(wb_clk),.rst(wb_rst),.strobe(set_stb),.addr(set_addr),
-				      .in(set_data),.out(leds),.changed());
    setting_reg #(.my_addr(4)) sr_phy (.clk(wb_clk),.rst(wb_rst),.strobe(set_stb),.addr(set_addr),
 				      .in(set_data),.out(phy_reset),.changed());
 
+   // /////////////////////////////////////////////////////////////////////////
+   //  LEDS
+   //    register 8 determines whether leds are controlled by SW or not
+   //    1 = controlled by HW, 0 = by SW
+   //    In Rev3 there are only 6 leds, and the highest one is on the ETH connector
+   
+   wire [7:0] 	 led_src, led_sw;
+   wire [7:0] 	 led_hw = {pps_in,clk_status,serdes_link_up};
+   
+   setting_reg #(.my_addr(3)) sr_led (.clk(wb_clk),.rst(wb_rst),.strobe(set_stb),.addr(set_addr),
+				      .in(set_data),.out(led_sw),.changed());
+   setting_reg #(.my_addr(8)) sr_led_src (.clk(wb_clk),.rst(wb_rst),.strobe(set_stb),.addr(set_addr),
+					  .in(set_data),.out(led_src),.changed());
+
+   assign 	 leds = (led_src & led_hw) | (~led_src & led_sw);
+   
    // /////////////////////////////////////////////////////////////////////////
    // Ethernet MAC  Slave #6
    
