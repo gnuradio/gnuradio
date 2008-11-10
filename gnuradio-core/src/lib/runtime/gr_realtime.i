@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%rename(enable_realtime_scheduling) gruel::enable_realtime_scheduling;
+%rename(enable_realtime_scheduling) gr_enable_realtime_scheduling;
 
 // NOTE: This is duplicated from gruel/src/include/gruel/gr_realtime.h,
 //       and must be kept in sync with it.  This is the least evil workaround
@@ -28,6 +28,17 @@
 //       installed from binary packages into the standard system directories.
 //       Otherwise, they can't find #include <gruel/gr_realtime.h>, since
 //       pkg-config strips -I/usr/include from the --cflags path.
+
+namespace gruel {
+
+  typedef enum {
+    RT_OK = 0,
+    RT_NOT_IMPLEMENTED,
+    RT_NO_PRIVS,
+    RT_OTHER_ERROR
+  } rt_status_t;
+
+}
 
 typedef gruel::rt_status_t gr_rt_status_t;
 gr_rt_status_t gr_enable_realtime_scheduling();
