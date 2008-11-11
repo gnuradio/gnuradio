@@ -64,7 +64,7 @@ class app_top_block(stdgui2.std_top_block):
         parser.add_option("-f", "--freq", type="eng_float", default=None,
                           help="set frequency to FREQ", metavar="FREQ")
         parser.add_option("-g", "--gain", type="eng_float", default=None,
-                          help="set gain in dB (default is midpoint)")
+                          help="set gain in dB [default is midpoint]")
         parser.add_option("-W", "--waterfall", action="store_true", default=False,
                           help="Enable waterfall display")
         parser.add_option("-8", "--width-8", action="store_true", default=False,
@@ -74,11 +74,11 @@ class app_top_block(stdgui2.std_top_block):
         parser.add_option("-S", "--oscilloscope", action="store_true", default=False,
                           help="Enable oscilloscope display")
 	parser.add_option("", "--avg-alpha", type="eng_float", default=1e-1,
-			  help="Set fftsink averaging factor, default=[%default]")
+			  help="Set fftsink averaging factor, [default=%default]")
 	parser.add_option("", "--ref-scale", type="eng_float", default=13490.0,
-			  help="Set dBFS=0dB input value, default=[%default]")
+			  help="Set dBFS=0dB input value, [default=%default]")
         parser.add_option("", "--fft-size", type="int", default=1024,
-                          help="Set FFT frame size");
+                          help="Set FFT frame size, [default=%default]");
 
         (options, args) = parser.parse_args()
         if len(args) != 0:
