@@ -274,7 +274,7 @@ class xcvr2450(object):
                      chr((v >>  8) & 0xff),
                      chr(v & 0xff)))
         self.u._write_spi(0, self.spi_enable, self.spi_format, s)
-        print "xcvr2450: Setting reg %d to %06X" % ((v&15), v)
+        #print "xcvr2450: Setting reg %d to %06X" % ((v&15), v)
 
     # --------------------------------------------------------------------
     # These methods control the GPIO bus.  Since the board has to access
@@ -356,8 +356,8 @@ class xcvr2450(object):
         self.tx_set_atr_rxval(io_tx_while_rx)
         self.tx_set_atr_txval(io_tx_while_tx)
         
-        print "GPIO: RXRX=%04X RXTX=%04X TXRX=%04X TXTX=%04X" % (
-            io_rx_while_rx, io_rx_while_tx, io_tx_while_rx, io_tx_while_tx)
+        #print "GPIO: RXRX=%04X RXTX=%04X TXRX=%04X TXTX=%04X" % (
+            #io_rx_while_rx, io_rx_while_tx, io_tx_while_rx, io_tx_while_tx)
 
     # --------------------------------------------------------------------
     # These methods set control the high-level operating parameters.
@@ -374,15 +374,13 @@ class xcvr2450(object):
             self.ad9515_div = 3
             scaler = 4.0/3.0;
 
-        if target_freq > 5.25e9:
+        if target_freq > 5.275e9:
             self.highband = 1
         else:
             self.highband = 0
 
         vco_freq = target_freq*scaler;
-        #ref_clk = self.u.fpga_master_clock_freq()  # Assumes AD9515 is bypassed
-        sys_clk = 64e6
-        #sys_clk = 75e6
+        sys_clk = self.u.fpga_master_clock_freq()  # Usually 64e6
         ref_clk = sys_clk / self.ad9515_div
         
         phdet_freq = ref_clk/self.ref_div
@@ -391,9 +389,9 @@ class xcvr2450(object):
         self.frac_div = int((div-self.int_div)*65536.0)
         actual_freq = phdet_freq*(self.int_div+(self.frac_div/65536.0))/scaler
 
-        print "RF=%s VCO=%s R=%d PHD=%s DIV=%3.5f I=%3d F=%5d ACT=%s" % (
-            n2s(target_freq), n2s(vco_freq), self.ref_div, n2s(phdet_freq),
-            div, self.int_div, self.frac_div, n2s(actual_freq))
+        #print "RF=%s VCO=%s R=%d PHD=%s DIV=%3.5f I=%3d F=%5d ACT=%s" % (
+        #    n2s(target_freq), n2s(vco_freq), self.ref_div, n2s(phdet_freq),
+        #    div, self.int_div, self.frac_div, n2s(actual_freq))
 
         self.set_gpio()
         self.set_reg_int_divider()
@@ -401,10 +399,25 @@ class xcvr2450(object):
         self.set_reg_bandselpll()
 
         ok = self.lock_detect()
-        print "lock detect:", ok
         #if(not ok):
         #    ok = self.lock_detect()
-        #    print "lock detect:", ok
+        #    if ok:
+        #        print "lock detect on 2nd try %f" % (target_freq,)
+
+        if(not ok):
+            if (target_freq > 5.275e9) and (target_freq <= 5.35e9):
+                self.highband = 0
+                self.set_reg_bandselpll()
+                ok = self.lock_detect()
+                print "swap to 0 at %f, ok %d" % (target_freq,ok)
+            if (target_freq >= 5.25e9) and (target_freq <= 5.275e9):
+                self.highband = 1
+                self.set_reg_bandselpll()
+                ok = self.lock_detect()
+                print "swap to 1 at %f, ok %d" % (target_freq,ok)
+                
+        if(not ok):
+            print "Fail %f" % (target_freq,)
         return (ok, actual_freq)
 
     def lock_detect(self):
