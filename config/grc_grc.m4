@@ -26,12 +26,23 @@ AC_DEFUN([GRC_GRC],[
     AM_CONDITIONAL(XDG_UTILS, $XDG_UTILS)
 
     dnl ########################################
+    dnl # test python version
+    dnl ########################################
+    AC_MSG_CHECKING([for Python version 2.5])
+    if test `${PYTHON} -c "import sys; print sys.version.split()[[0]] >= '2.5'"` = 'True'; then
+        AC_MSG_RESULT([yes])
+    else
+        AC_MSG_RESULT([no])
+        passed=no
+    fi
+
+    dnl ########################################
     dnl # test python dependencies
     dnl ########################################
     if test $passed = yes; then
-	PYTHON_CHECK_MODULE([Cheetah],[Python Cheetah templates],[],[passed=no])
-	PYTHON_CHECK_MODULE([pygtk],[Python GTK wrappers],[],[passed=no])
-	PYTHON_CHECK_MODULE([lxml],[Python XML wrappers],[],[passed=no])
+        PYTHON_CHECK_MODULE([Cheetah],[Python Cheetah templates],[],[passed=no])
+        PYTHON_CHECK_MODULE([pygtk],[Python GTK wrappers],[],[passed=no])
+        PYTHON_CHECK_MODULE([lxml],[Python XML wrappers],[],[passed=no])
     fi
 
     dnl ########################################
