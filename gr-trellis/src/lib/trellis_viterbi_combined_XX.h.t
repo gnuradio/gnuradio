@@ -82,6 +82,7 @@ public:
   std::vector<@I_TYPE@> TABLE () const { return d_TABLE; }
   trellis_metric_type_t TYPE () const { return d_TYPE; }
   //std::vector<int> trace () const { return d_trace; }
+  void set_TABLE (const std::vector<@I_TYPE@> &table);
   void forecast (int noutput_items,
                  gr_vector_int &ninput_items_required);
   int general_work (int noutput_items,

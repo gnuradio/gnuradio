@@ -40,6 +40,7 @@ public:
   fsm(const char *name);
   fsm(int k, int n, const std::vector<int> &G);
   fsm(int mod_size, int ch_length);
+  fsm(const fsm &FSM1, const fsm &FSM2);
   int I () const { return d_I; }
   int S () const { return d_S; }
   int O () const { return d_O; }

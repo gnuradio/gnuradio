@@ -54,7 +54,10 @@ trellis_make_@BASE_NAME@ (int O, int D,  const std::vector<@I_TYPE@> &TABLE, tre
   set_output_multiple ((int)d_O);
 }
 
-
+void @NAME@::set_TABLE (const std::vector<@I_TYPE@> &table)
+{
+  d_TABLE = table;
+}
 
 
 void

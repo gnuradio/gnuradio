@@ -240,6 +240,35 @@ fsm::fsm(int mod_size, int ch_length)
 
 
 //######################################################################
+//# Automatically generate an FSM specification describing the 
+//# the joint trellis of fsm1 and fsm2
+//######################################################################
+fsm::fsm(const fsm &FSM1, const fsm &FSM2)
+{
+  d_I=FSM1.I()*FSM2.I();
+  d_S=FSM1.S()*FSM2.S();
+  d_O=FSM1.O()*FSM2.O();
+
+  d_NS.resize(d_I*d_S);
+  d_OS.resize(d_I*d_S);
+
+  for(int s=0;s<d_S;s++) {
+    for(int i=0;i<d_I;i++) {
+      int s1=s/FSM2.S();
+      int s2=s%FSM2.S();
+      int i1=i/FSM2.I();
+      int i2=i%FSM2.I();
+      d_NS[s*d_I+i] = FSM1.NS()[s1 * FSM1.I() + i1] * FSM2.S() + FSM2.NS()[s2 * FSM2.I() + i2];
+      d_OS[s*d_I+i] = FSM1.OS()[s1 * FSM1.I() + i1] * FSM2.O() + FSM2.OS()[s2 * FSM2.I() + i2];
+    }
+  }
+
+  generate_PS_PI();
+  generate_TM();
+}
+
+
+//######################################################################
 //# generate the PS and PI tables for later use
 //######################################################################
 void fsm::generate_PS_PI()

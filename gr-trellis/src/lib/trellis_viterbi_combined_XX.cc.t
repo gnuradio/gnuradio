@@ -71,6 +71,11 @@ trellis_make_@BASE_NAME@ (
 }
 
 
+void @NAME@::set_TABLE(const std::vector<@I_TYPE@> &table) 
+{
+  d_TABLE = table;
+}
+
 void
 @NAME@::forecast (int noutput_items, gr_vector_int &ninput_items_required)
 {

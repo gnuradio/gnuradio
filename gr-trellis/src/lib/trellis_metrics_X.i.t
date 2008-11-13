@@ -35,5 +35,6 @@ public:
   int O () const { return d_O; }
   int D () const { return d_D; }
   trellis_metric_type_t TYPE () const { return d_TYPE; }
+  void set_TABLE (const std::vector<@I_TYPE@> &table);
   std::vector<@I_TYPE@> TABLE () const { return d_TABLE; }
 };

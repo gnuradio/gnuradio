@@ -55,4 +55,5 @@ public:
     std::vector<@I_TYPE@> TABLE () const { return d_TABLE; }
     trellis_metric_type_t TYPE () const { return d_TYPE; }
     //std::vector<short> trace () const { return d_trace; }
+    void set_TABLE (const std::vector<@I_TYPE@> &table);
 };
