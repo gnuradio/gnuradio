@@ -76,7 +76,7 @@
 	</sink>
 	<source>
 		<name>out</name>
-		<type>$type.io</type>
+		<type>float</type>
 	</source>
 	<doc>
 Generate metrics required for Viterbi or SISO algorithms.

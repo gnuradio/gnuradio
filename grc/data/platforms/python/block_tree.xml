@@ -129,6 +129,9 @@
 		<block>gr_pn_correlator_cc</block>
 		<block>gr_simple_correlator</block>
 		<block>gr_simple_framer</block>
+
+		<block>blks2_packet_decoder</block>
+		<block>blks2_packet_encoder</block>
 	</cat>
 	<cat>
 		<name>Level Controls</name>
@@ -224,9 +227,6 @@
 			<block>trellis_viterbi_combined_xx</block>
 			<block>trellis_viterbi_x</block>
 		</cat>
-
-		<block>blks2_packet_decoder</block>
-		<block>blks2_packet_encoder</block>
 
 		<block>gr_encode_ccsds_27_bb</block>
 		<block>gr_decode_ccsds_27_fb</block>

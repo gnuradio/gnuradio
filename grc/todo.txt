@@ -6,6 +6,7 @@
 -controlled step block
 -simplify simple usrp
 -probe: also non-float outputs
+-RFID, ATSC
 
 ##################################################
 # Features
@@ -21,6 +22,8 @@
 -click and drag on whitespace to scroll
 -expand preferences, allow for custom prefs, prefs dialog should infer structure
 -gui grid editor for configuring grid params/placing wxgui plots and controls
+-grid param chooser gui
+-histogram plot
 
 ##################################################
 # Problems

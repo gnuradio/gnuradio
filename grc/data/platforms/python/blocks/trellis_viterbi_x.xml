@@ -53,7 +53,7 @@
 	</param>
 	<sink>
 		<name>in</name>
-		<type>$type.io</type>
+		<type>float</type>
 	</sink>
 	<source>
 		<name>out</name>
