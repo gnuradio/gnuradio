@@ -188,7 +188,7 @@ class gr_plot_psd:
         
     def zoom(self, event):
         newxlim = self.sp_iq.get_xlim()
-        if(newxlim != self.xlim):
+        if(newxlim.all() != self.xlim.all()):
             self.xlim = newxlim
             xmin = max(0, int(ceil(self.sample_rate*(self.xlim[0] - self.position))))
             xmax = min(int(ceil(self.sample_rate*(self.xlim[1] - self.position))), len(self.iq))
