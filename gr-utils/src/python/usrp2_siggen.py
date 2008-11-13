@@ -60,6 +60,24 @@ class siggen_top_block(gr.top_block):
             
         elif options.type == gr.GR_GAUSSIAN or options.type == gr.GR_UNIFORM:
             self._src = gr.noise_source_c(options.type, options.amplitude)
+        elif options.type == "2tone":
+            self._src1 = gr.sig_source_c(eth_rate,
+                                         gr.GR_SIN_WAVE,
+                                         options.waveform_freq,
+                                         options.amplitude,
+                                         0)
+            if(options.waveform2_freq is None):
+                w2freq = -options.waveform_freq
+            else:
+                w2freq = options.waveform2_freq
+            self._src2 = gr.sig_source_c(eth_rate,
+                                         gr.GR_SIN_WAVE,
+                                         w2freq,
+                                         options.amplitude,
+                                         0)
+            self._src = gr.add_cc()
+            self.connect(self._src1,(self._src,0))
+            self.connect(self._src2,(self._src,1))
         else:
             sys.stderr.write('Unknown waveform type\n')
             raise SystemExit, 1
@@ -105,6 +123,8 @@ def get_options():
                       help="verbose output")
     parser.add_option("-w", "--waveform-freq", type="eng_float", default=0,
                       help="set waveform frequency to FREQ [default=%default]")
+    parser.add_option("-x", "--waveform2-freq", type="eng_float", default=None,
+                      help="set waveform frequency to FREQ [default=%default]")
     parser.add_option("-a", "--amplitude", type="eng_float", default=0.5,
                       help="set waveform amplitude to AMPLITUDE (0-1.0) [default=%default]", metavar="AMPL")
     parser.add_option("--offset", type="eng_float", default=0,
@@ -117,7 +137,9 @@ def get_options():
                       help="generate Gaussian random output")
     parser.add_option("--uniform", dest="type", action="store_const", const=gr.GR_UNIFORM,
                       help="generate Uniform random output")
-
+    parser.add_option("--2tone", dest="type", action="store_const", const="2tone",
+                      help="generate Two Tone signal for IMD testing")
+                      
     (options, args) = parser.parse_args ()
     if len(args) != 0:
         parser.print_help()
