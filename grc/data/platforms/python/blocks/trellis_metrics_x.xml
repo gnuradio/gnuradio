@@ -9,6 +9,7 @@
 	<key>trellis_metrics_x</key>
 	<import>from gnuradio import trellis</import>
 	<make>trellis.metrics_$(type)($card, $dim, $table, $metric_type)</make>
+	<callback>set_TABLE($table)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
