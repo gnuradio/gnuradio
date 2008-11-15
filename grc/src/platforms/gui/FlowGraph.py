@@ -140,7 +140,6 @@ class FlowGraph(Element):
 		for block_n in blocks_n:
 			block_key = block_n['key']
 			if block_key == 'options': continue
-			block_id = self._get_unique_id(block_key)
 			block = self.get_new_block(block_key)
 			selected.add(block)
 			#set params
@@ -151,7 +150,9 @@ class FlowGraph(Element):
 				#setup id parameter
 				if param_key == 'id':
 					old_id2block[param_value] = block
-					param_value = block_id
+					#if the block id is not unique, get a new block id
+					if param_value in [block.get_id() for block in self.get_blocks()]:
+						param_value = self._get_unique_id(param_value)
 				#set value to key
 				block.get_param(param_key).set_value(param_value)
 			#move block to offset coordinate
