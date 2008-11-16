@@ -99,6 +99,12 @@ u2_fxpt_gain_to_double(u2_fxpt_gain_t fx)
   return ((double) fx) * 1.0/(1 << U2_FPG_RP);
 }
 
+static inline int
+u2_fxpt_gain_round_to_int(u2_fxpt_gain_t fx)
+{ 
+  return (int)((fx+(1<<(U2_FPG_RP-1)))>>U2_FPG_RP);
+}
+
 
 __U2_END_DECLS
 
