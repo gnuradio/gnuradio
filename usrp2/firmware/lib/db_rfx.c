@@ -525,35 +525,6 @@ rfx_set_gain_rx(struct db_base *dbb, u2_fxpt_gain_t gain)
   //printf("DACWORD %d\n",dacword);
   lsdac_write_rx(1,dacword);
   return true;
-  /*
-    def set_gain(self, gain):
-        """
-        Set the gain.
-
-        @param gain:  gain in decibels
-        @returns True/False
-        """
-        maxgain = self.gain_range()[1] - self._u.pga_max()
-        mingain = self.gain_range()[0]
-        if gain > maxgain:
-            pga_gain = gain-maxgain
-            assert pga_gain <= self._u.pga_max()
-            agc_gain = maxgain
-        else:
-            pga_gain = 0
-            agc_gain = gain
-        V_maxgain = .2
-        V_mingain = 1.2
-        V_fullscale = 3.3
-        dac_value = (agc_gain*(V_maxgain-V_mingain)/(maxgain-mingain) + V_mingain)*4096/V_fullscale
-        assert dac_value>=0 and dac_value<4096
-        return self._u.write_aux_dac(self._which, 0, int(dac_value)) and \
-               self._set_pga(int(pga_gain))
-
-    def gain_range(self):
-        return (self._u.pga_min(), self._u.pga_max() + 70, 0.05) -- For 900-2400
-        return (self._u.pga_min(), self._u.pga_max() + 45, 0.035) -- For 400
-  */
 }
 
 
