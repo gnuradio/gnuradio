@@ -517,10 +517,10 @@ rfx_set_gain_rx(struct db_base *dbb, u2_fxpt_gain_t gain)
 {
   struct db_rfx_dummy *db = (struct db_rfx_dummy *) dbb;
 
-  u2_fxpt_gain_t MAXGAIN = U2_DOUBLE_TO_FXPT_GAIN(70.0);
-
   int offset_q8 = (int)(1.2/3.3*4096*(1<<15));  
-  int slope_q8 = (int)(-1.0/45.0*4096/3.3*256); 
+  int range_q15 = (int)(-1.0*4096/3.3*256*128);
+  int slope_q8 = range_q15/db->base.gain_max;
+
   int dacword = ((slope_q8 * gain) + offset_q8)>>15;
   //printf("DACWORD %d\n",dacword);
   lsdac_write_rx(1,dacword);
