@@ -42,6 +42,7 @@ class receive_path(gr.hier_block2):
 
         options = copy.copy(options)    # make a copy so we can destructively modify
 
+        self._which              = options.which           # the USRP board attached
         self._verbose            = options.verbose
         self._rx_freq            = options.rx_freq         # receiver's center frequency
         self._rx_gain            = options.rx_gain         # receiver's gain
@@ -124,7 +125,8 @@ class receive_path(gr.hier_block2):
         self.connect(self.u, self.chan_filt, self.packet_receiver)
 
     def _setup_usrp_source(self):
-        self.u = usrp.source_c (fusb_block_size=self._fusb_block_size,
+        self.u = usrp.source_c (self._which,
+                                fusb_block_size=self._fusb_block_size,
                                 fusb_nblocks=self._fusb_nblocks)
         adc_rate = self.u.adc_rate()
 
@@ -213,6 +215,8 @@ class receive_path(gr.hier_block2):
         if not normal.has_option("--bitrate"):
             normal.add_option("-r", "--bitrate", type="eng_float", default=None,
                               help="specify bitrate.  samples-per-symbol and interp/decim will be derived.")
+        normal.add_option("-w", "--which", type="int", default=0,
+                          help="select USRP board [default=%default]")
         normal.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
                           help="select USRP Rx side A or B")
         normal.add_option("", "--rx-gain", type="eng_float", default=None, metavar="GAIN",

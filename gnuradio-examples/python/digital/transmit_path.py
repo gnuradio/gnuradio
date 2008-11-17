@@ -44,6 +44,7 @@ class transmit_path(gr.hier_block2):
 
         options = copy.copy(options)    # make a copy so we can destructively modify
 
+        self._which              = options.which           # the USRP board attached
         self._verbose            = options.verbose
         self._tx_freq            = options.tx_freq         # tranmitter's center frequency
         self._tx_amplitude       = options.tx_amplitude    # digital amplitude sent to USRP
@@ -109,7 +110,8 @@ class transmit_path(gr.hier_block2):
         Creates a USRP sink, determines the settings for best bitrate,
         and attaches to the transmitter's subdevice.
         """
-        self.u = usrp.sink_c(fusb_block_size=self._fusb_block_size,
+        self.u = usrp.sink_c(self._which,
+                             fusb_block_size=self._fusb_block_size,
                              fusb_nblocks=self._fusb_nblocks)
         dac_rate = self.u.dac_rate();
 
@@ -189,6 +191,8 @@ class transmit_path(gr.hier_block2):
         if not normal.has_option('--bitrate'):
             normal.add_option("-r", "--bitrate", type="eng_float", default=None,
                               help="specify bitrate.  samples-per-symbol and interp/decim will be derived.")
+        normal.add_option("-w", "--which", type="int", default=0,
+                          help="select USRP board [default=%default]")
         normal.add_option("-T", "--tx-subdev-spec", type="subdev", default=None,
                           help="select USRP Tx side A or B")
         normal.add_option("", "--tx-amplitude", type="eng_float", default=12000, metavar="AMPL",
