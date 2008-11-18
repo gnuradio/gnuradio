@@ -96,7 +96,7 @@
 		</option>
 	</param>
 	<param>
-		<name>RX Antenna B</name>
+		<name>RX Antenna A</name>
 		<key>rx_ant_a</key>
 		<value>None</value>
 		<type>enum</type>
