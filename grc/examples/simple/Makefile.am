@@ -23,8 +23,4 @@ include $(top_srcdir)/grc/Makefile.inc
 
 ourdatadir = $(grc_examples_prefix)/simple
 
-DATA_FILES = ber_simulation.grc
-
-ourdata_DATA = $(DATA_FILES)
-
-EXTRA_DIST = $(DATA_FILES)
+dist_ourdata_DATA = ber_simulation.grc

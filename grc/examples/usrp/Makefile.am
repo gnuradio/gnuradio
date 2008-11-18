@@ -23,10 +23,6 @@ include $(top_srcdir)/grc/Makefile.inc
 
 ourdatadir = $(grc_examples_prefix)/usrp
 
-DATA_FILES = \
+dist_ourdata_DATA = \
 	usrp_two_tone_loopback.grc \
 	usrp_wbfm_receive.grc
-
-ourdata_DATA = $(DATA_FILES)
-
-EXTRA_DIST = $(DATA_FILES)

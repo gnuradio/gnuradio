@@ -74,6 +74,7 @@ AC_DEFUN([GRC_GRC],[
         grc/examples/usrp/Makefile \
         grc/examples/audio/Makefile \
         grc/examples/simple/Makefile \
+        grc/examples/trellis/Makefile \
         grc/Makefile \
         grc/data/Makefile \
         grc/data/platforms/Makefile \

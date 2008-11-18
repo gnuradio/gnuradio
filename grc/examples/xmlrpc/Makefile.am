@@ -23,12 +23,8 @@ include $(top_srcdir)/grc/Makefile.inc
 
 ourdatadir = $(grc_examples_prefix)/xmlrpc
 
-DATA_FILES = \
+dist_ourdata_DATA = \
 	readme.txt \
 	xmlrpc_client.grc \
 	xmlrpc_client_script.py\
 	xmlrpc_server.grc
-
-ourdata_DATA = $(DATA_FILES)
-
-EXTRA_DIST = $(DATA_FILES)

@@ -23,8 +23,6 @@ include $(top_srcdir)/grc/Makefile.inc
 
 ourdatadir = $(grc_examples_prefix)/trellis
 
-DATA_FILES = interference_cancellation.grc
-
-ourdata_DATA = $(DATA_FILES)
-
-EXTRA_DIST = $(DATA_FILES)
+dist_ourdata_DATA = \
+	readme.txt \
+	interference_cancellation.grc
