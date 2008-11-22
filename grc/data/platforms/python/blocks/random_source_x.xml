@@ -40,7 +40,7 @@
 	<param>
 		<name>Maximum</name>
 		<key>max</key>
-		<value>1</value>
+		<value>2</value>
 		<type>int</type>
 	</param>
 	<param>
@@ -69,5 +69,7 @@
 	</source>
 	<doc>
 Generate num samples of random numbers of [min, max). Repeat samples if specified.
+
+Ex: With min=0 and max=2, the sequence 01110101... will be generated.
 	</doc>
 </block>
