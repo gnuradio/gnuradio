@@ -90,12 +90,12 @@ gr_mpsk_receiver_cc::gr_mpsk_receiver_cc (unsigned int M, float theta,
   // Select a phase detector and a decision maker for the modulation order
   switch(d_M) {
   case 2:  // optimized algorithms for BPSK
-    d_phase_error_detector = &gr_mpsk_receiver_cc::phase_error_detector_generic; //bpsk;
+    d_phase_error_detector = &gr_mpsk_receiver_cc::phase_error_detector_bpsk; //bpsk;
     d_decision = &gr_mpsk_receiver_cc::decision_bpsk;
     break;
 
   case 4: // optimized algorithms for QPSK
-    d_phase_error_detector = &gr_mpsk_receiver_cc::phase_error_detector_generic; //qpsk;
+    d_phase_error_detector = &gr_mpsk_receiver_cc::phase_error_detector_qpsk; //qpsk;
     d_decision = &gr_mpsk_receiver_cc::decision_qpsk;
     break;
 
@@ -104,8 +104,6 @@ gr_mpsk_receiver_cc::gr_mpsk_receiver_cc (unsigned int M, float theta,
     d_decision = &gr_mpsk_receiver_cc::decision_generic;
     break;
   }
-
-  set_history(3);			// ensure 2 extra input sample is available
 }
 
 gr_mpsk_receiver_cc::~gr_mpsk_receiver_cc ()
@@ -119,24 +117,21 @@ gr_mpsk_receiver_cc::forecast(int noutput_items, gr_vector_int &ninput_items_req
   unsigned ninputs = ninput_items_required.size();
   for (unsigned i=0; i < ninputs; i++)
     ninput_items_required[i] = (int) ceil((noutput_items * d_omega) + d_interp->ntaps());
-  //ninput_items_required[i] = (int)(d_omega);
-
 }
 
 // FIXME add these back in an test difference in performance
 float
 gr_mpsk_receiver_cc::phase_error_detector_qpsk(gr_complex sample) const
 {
-  float phase_error = ((sample.real()>0 ? 1.0 : -1.0) * sample.imag() -
-		       (sample.imag()>0 ? 1.0 : -1.0) * sample.real());
+  float phase_error = -((sample.real()>0 ? 1.0 : -1.0) * sample.imag() -
+			(sample.imag()>0 ? 1.0 : -1.0) * sample.real());
   return -phase_error;
 }
 
-// FIXME add these back in an test difference in performance
 float
 gr_mpsk_receiver_cc::phase_error_detector_bpsk(gr_complex sample) const
 {
-  return (sample.real()*sample.imag());
+  return -(sample.real()*sample.imag());
 }
 
 float gr_mpsk_receiver_cc::phase_error_detector_generic(gr_complex sample) const
@@ -200,7 +195,10 @@ gr_mpsk_receiver_cc::mm_sampler(const gr_complex symbol)
   d_phase += d_freq;  // increment the phase based on the frequency of the rotation
 
   // Keep phase clamped and not walk to infinity
-  d_phase = gr_branchless_clip(d_phase, M_TWOPI);
+  while(d_phase > M_TWOPI)
+    d_phase -= M_TWOPI;
+  while(d_phase < -M_TWOPI)
+    d_phase += M_TWOPI;
   
   nco = gr_expj(d_phase+d_theta);   // get the NCO value for derotating the current sample
   sample = nco*symbol;      // get the downconverted symbol
@@ -262,7 +260,10 @@ gr_mpsk_receiver_cc::phase_error_tracking(gr_complex sample)
   d_phase += d_freq + d_alpha*phase_error;  // adjust phase based on error
 
   // Make sure we stay within +-2pi
-  d_phase = gr_branchless_clip(d_phase, M_TWOPI);
+  while(d_phase > M_TWOPI)
+    d_phase -= M_TWOPI;
+  while(d_phase < -M_TWOPI)
+    d_phase += M_TWOPI;
   
   // Limit the frequency range
   d_freq = gr_branchless_clip(d_freq, d_max_freq);

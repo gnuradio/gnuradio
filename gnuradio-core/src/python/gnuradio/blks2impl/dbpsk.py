@@ -255,8 +255,8 @@ class dbpsk_demod(gr.hier_block2):
         self._mm_omega = self._samples_per_symbol
         self._mm_gain_omega = .25 * self._mm_gain_mu * self._mm_gain_mu
         self._costas_beta  = 0.25 * self._costas_alpha * self._costas_alpha
-        fmin = -0.025
-        fmax = 0.025
+        fmin = -0.1
+        fmax = 0.1
         
         self.receiver=gr.mpsk_receiver_cc(arity, 0,
                                          self._costas_alpha, self._costas_beta,
