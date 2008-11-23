@@ -82,7 +82,7 @@ static inline float gr_branchless_clip(float x, float clip)
 
 static inline float gr_clip(float x, float clip)
 {
-  float y;
+  float y = x;
   if(x > clip)
     y = clip;
   else if(x < -clip)
