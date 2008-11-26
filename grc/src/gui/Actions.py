@@ -22,7 +22,7 @@ pygtk.require('2.0')
 import gtk
 
 ######################################################################################################
-# States
+# Action Names
 ######################################################################################################
 APPLICATION_INITIALIZE = 'app init'
 APPLICATION_QUIT = 'app quit'
@@ -56,13 +56,39 @@ FLOW_GRAPH_EXEC = 'flow graph exec'
 FLOW_GRAPH_KILL = 'flow graph kill'
 FLOW_GRAPH_SCREEN_CAPTURE = 'flow graph screen capture'
 ABOUT_WINDOW_DISPLAY = 'about window display'
-HOTKEYS_WINDOW_DISPLAY = 'hotkeys window display'
 PREFS_WINDOW_DISPLAY = 'prefs window display'
+
+######################################################################################################
+# Action Key Map
+######################################################################################################
+_actions_key_map = {
+	#action name: (key name, mask)
+	FLOW_GRAPH_NEW: ('n', gtk.gdk.CONTROL_MASK),
+	FLOW_GRAPH_OPEN: ('o', gtk.gdk.CONTROL_MASK),
+	FLOW_GRAPH_SAVE: ('s', gtk.gdk.CONTROL_MASK),
+	FLOW_GRAPH_CLOSE: ('w', gtk.gdk.CONTROL_MASK),
+	APPLICATION_QUIT: ('q', gtk.gdk.CONTROL_MASK),
+	FLOW_GRAPH_UNDO: ('z', gtk.gdk.CONTROL_MASK),
+	FLOW_GRAPH_REDO: ('y', gtk.gdk.CONTROL_MASK),
+	ELEMENT_DELETE: ('Delete', 0),
+	BLOCK_ROTATE_LEFT: ('Left', 0),
+	BLOCK_ROTATE_RIGHT: ('Right', 0),
+	BLOCK_PARAM_MODIFY: ('Return', 0),
+	BLOCK_ENABLE: ('e', 0),
+	BLOCK_DISABLE: ('d', 0),
+	BLOCK_CUT: ('x', gtk.gdk.CONTROL_MASK),
+	BLOCK_COPY: ('c', gtk.gdk.CONTROL_MASK),
+	BLOCK_PASTE: ('v', gtk.gdk.CONTROL_MASK),
+	FLOW_GRAPH_GEN: ('F5', 0),
+	FLOW_GRAPH_EXEC: ('F6', 0),
+	FLOW_GRAPH_KILL: ('F7', 0),
+	FLOW_GRAPH_SCREEN_CAPTURE: ('Print', 0),
+}
 
 ######################################################################################################
 # Actions
 ######################################################################################################
-ACTIONS_LIST = (
+_actions_list = (
 	gtk.Action(FLOW_GRAPH_NEW, '_New', 'Create a new flow graph', 'gtk-new'),
 	gtk.Action(FLOW_GRAPH_OPEN, '_Open', 'Open an existing flow graph', 'gtk-open'),
 	gtk.Action(FLOW_GRAPH_SAVE, '_Save', 'Save the current flow graph', 'gtk-save'),
@@ -82,15 +108,14 @@ ACTIONS_LIST = (
 	gtk.Action(BLOCK_PASTE, '_Paste', 'Paste', 'gtk-paste'),
 	gtk.Action(PREFS_WINDOW_DISPLAY, '_Preferences', 'Configure Preferences', 'gtk-preferences'),
 	gtk.Action(ABOUT_WINDOW_DISPLAY, '_About', 'About this program', 'gtk-about'),
-	gtk.Action(HOTKEYS_WINDOW_DISPLAY, '_HotKeys', 'Hot Keys', 'gtk-info'),
 	gtk.Action(FLOW_GRAPH_GEN, '_Generate', 'Generate the flow graph', 'gtk-convert'),
 	gtk.Action(FLOW_GRAPH_EXEC, '_Execute', 'Execute the flow graph', 'gtk-execute'),
 	gtk.Action(FLOW_GRAPH_KILL, '_Kill', 'Kill the flow graph', 'gtk-stop'),
 	gtk.Action(FLOW_GRAPH_SCREEN_CAPTURE, 'S_creen Capture', 'Create a screen capture of the flow graph', 'gtk-print'),
 )
+def get_all_actions(): return _actions_list
 
-ACTIONS_DICT = dict((action.get_name(), action) for action in ACTIONS_LIST)
-
+_actions_dict = dict((action.get_name(), action) for action in _actions_list)
 def get_action_from_name(action_name):
 	"""
 	Retrieve the action from the action list.
@@ -99,5 +124,16 @@ def get_action_from_name(action_name):
 	@throw KeyError bad action name
 	@return a gtk action object
 	"""
-	if ACTIONS_DICT.has_key(action_name): return ACTIONS_DICT[action_name]
+	if _actions_dict.has_key(action_name): return _actions_dict[action_name]
 	raise KeyError('Action Name: "%s" does not exist'%action_name)
+
+_accel_group = gtk.AccelGroup()
+def get_accel_group(): return _accel_group
+
+#load the actions key map
+#set the accelerator group, and accelerator path
+#register the key and mod with the accelerator path
+for action_name, (key_name, mod) in _actions_key_map.iteritems():
+	get_action_from_name(action_name).set_accel_group(get_accel_group())
+	get_action_from_name(action_name).set_accel_path('<main>/'+action_name)
+	gtk.accel_map_add_entry('<main>/'+action_name, gtk.gdk.keyval_from_name(key_name),mod)

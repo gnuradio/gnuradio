@@ -91,7 +91,6 @@ MENU_BAR_LIST = (
 	]),
 	(gtk.Action('Help', '_Help', None, None), [
 		Actions.ABOUT_WINDOW_DISPLAY,
-		Actions.HOTKEYS_WINDOW_DISPLAY,
 	]),
 )
 

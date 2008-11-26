@@ -32,7 +32,7 @@ from .. utils import ParseXML
 import random
 from .. platforms.gui.Platform import Platform
 from MainWindow import MainWindow
-from Dialogs import PreferencesDialog, AboutDialog, HotKeysDialog
+from Dialogs import PreferencesDialog, AboutDialog
 from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveImageFileDialog
 
 gobject.threads_init()
@@ -56,7 +56,7 @@ class ActionHandler:
 		#setup icon using icon theme
 		try: gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
 		except: pass
-		for action in Actions.ACTIONS_LIST: action.connect('activate', self._handle_actions)
+		for action in Actions.get_all_actions(): action.connect('activate', self._handle_actions)
 		#setup the main window
 		self.main_window = MainWindow(self.handle_states, platform)
 		self.main_window.connect('delete_event', self._quit)
@@ -77,72 +77,26 @@ class ActionHandler:
 		"""
 		Handle key presses from the keyboard.
 		Translate key combos into actions.
-		Key combinations that do not include special keys, such as ctrl or Fcn*,
-		Also, require that the flow graph has mouse focus when choosing to handle keys.
-		@return true if the flow graph is in active use
+		@return false to let the accelerators handle the key action
 		"""
-		keyname = gtk.gdk.keyval_name(event.keyval)
-		ctrl = event.state & gtk.gdk.CONTROL_MASK
-		alt = event.state & gtk.gdk.MOD1_MASK
-		shift = event.state & gtk.gdk.SHIFT_MASK
-		#################### save/open/new/close ###############################
-		if ctrl and keyname == 's':
-			self.handle_states(Actions.FLOW_GRAPH_SAVE)
-		elif ctrl and keyname == 'o':
-			self.handle_states(Actions.FLOW_GRAPH_OPEN)
-		elif ctrl and keyname == 'n':
-			self.handle_states(Actions.FLOW_GRAPH_NEW)
-		elif ctrl and keyname == 'q':
-			self.handle_states(Actions.FLOW_GRAPH_CLOSE)
-		#################### Cut/Copy/Paste ###############################
-		elif self.get_focus_flag() and ctrl and keyname == 'x': #mouse focus
-			self.handle_states(Actions.BLOCK_CUT)
-		elif self.get_focus_flag() and ctrl and keyname == 'c': #mouse focus
-			self.handle_states(Actions.BLOCK_COPY)
-		elif self.get_focus_flag() and ctrl and keyname == 'v': #mouse focus
-			self.handle_states(Actions.BLOCK_PASTE)
-		#################### Undo/Redo ###############################
-		elif ctrl and keyname == 'z':
-			self.handle_states(Actions.FLOW_GRAPH_UNDO)
-		elif ctrl and keyname == 'y':
-			self.handle_states(Actions.FLOW_GRAPH_REDO)
-		#################### Delete ###############################
-		elif self.get_focus_flag() and keyname == 'Delete':	#mouse focus
-			self.handle_states(Actions.ELEMENT_DELETE)
-		#################### Params	###############################
-		elif self.get_focus_flag() and keyname == 'Return':	#mouse focus
-			self.handle_states(Actions.BLOCK_PARAM_MODIFY)
-		#################### Rotate ###############################
-		elif self.get_focus_flag() and keyname == 'Right': #mouse focus
-			self.handle_states(Actions.BLOCK_ROTATE_RIGHT)
-		elif self.get_focus_flag() and keyname == 'Left': #mouse focus
-			self.handle_states(Actions.BLOCK_ROTATE_LEFT)
-		#################### Enable/Disable ###############################
-		elif self.get_focus_flag() and keyname == 'e': #mouse focus
-			self.handle_states(Actions.BLOCK_ENABLE)
-		elif self.get_focus_flag() and keyname == 'd': #mouse focus
-			self.handle_states(Actions.BLOCK_DISABLE)
-		#################### Data Type ###############################
-		elif self.get_focus_flag() and keyname == 'Down': #mouse focus
-			self.handle_states(Actions.BLOCK_INC_TYPE)
-		elif self.get_focus_flag() and keyname == 'Up': #mouse focus
-			self.handle_states(Actions.BLOCK_DEC_TYPE)
-		#################### Port Controllers ###############################
-		elif self.get_focus_flag() and keyname in ('equal','plus', 'KP_Add'): #mouse focus
-			self.handle_states(Actions.PORT_CONTROLLER_INC)
-		elif self.get_focus_flag() and keyname in ('minus', 'KP_Subtract'): #mouse focus
-			self.handle_states(Actions.PORT_CONTROLLER_DEC)
-		#################### Gen/Exec/Stop/Print ###############################
-		elif keyname == 'F5':
-			self.handle_states(Actions.FLOW_GRAPH_GEN)
-		elif keyname == 'F6':
-			self.handle_states(Actions.FLOW_GRAPH_EXEC)
-		elif keyname == 'F7':
-			self.handle_states(Actions.FLOW_GRAPH_KILL)
-		elif keyname == 'Print':
-			self.handle_states(Actions.FLOW_GRAPH_SCREEN_CAPTURE)
-		#propagate this if the fg is not in focus or nothing is selected
-		return self.get_focus_flag() and self.get_flow_graph().is_selected()
+		if self.get_focus_flag() and self.get_flow_graph().is_selected():
+			try:
+				self.handle_states({
+					'Left': Actions.BLOCK_ROTATE_LEFT,
+					'Right': Actions.BLOCK_ROTATE_RIGHT,
+					'Up': Actions.BLOCK_DEC_TYPE,
+					'Down': Actions.BLOCK_INC_TYPE,
+					'equal': Actions.PORT_CONTROLLER_INC,
+					'plus': Actions.PORT_CONTROLLER_INC,
+					'KP_Add': Actions.PORT_CONTROLLER_INC,
+					'minus': Actions.PORT_CONTROLLER_DEC,
+					'KP_Subtract': Actions.PORT_CONTROLLER_DEC,
+				}[gtk.gdk.keyval_name(event.keyval)])
+				return True
+			#focus + selection: always return false for accelerator to handle
+			except: return False
+		#no focus + selection: only allow accelerator to handle when a mod is used
+		return not event.state
 
 	def _quit(self, window, event):
 		"""
@@ -177,14 +131,13 @@ class ActionHandler:
 		# Initalize/Quit
 		##################################################
 		if state == Actions.APPLICATION_INITIALIZE:
-			for action in Actions.ACTIONS_LIST: action.set_sensitive(False) #set all actions disabled
+			for action in Actions.get_all_actions(): action.set_sensitive(False) #set all actions disabled
 			# enable a select few actions
 			for action in (
 				Actions.APPLICATION_QUIT, Actions.FLOW_GRAPH_NEW,
 				Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
 				Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
-				Actions.HOTKEYS_WINDOW_DISPLAY, Actions.PREFS_WINDOW_DISPLAY,
-				Actions.FLOW_GRAPH_SCREEN_CAPTURE,
+				Actions.PREFS_WINDOW_DISPLAY, Actions.FLOW_GRAPH_SCREEN_CAPTURE,
 			): Actions.get_action_from_name(action).set_sensitive(True)
 			if not self.init_file_paths and Preferences.restore_files():
 				self.init_file_paths = Preferences.files_open()
@@ -288,8 +241,6 @@ class ActionHandler:
 			self.get_flow_graph().update()
 		elif state == Actions.ABOUT_WINDOW_DISPLAY:
 			AboutDialog()
-		elif state == Actions.HOTKEYS_WINDOW_DISPLAY:
-			HotKeysDialog()
 		##################################################
 		# Param Modifications
 		##################################################

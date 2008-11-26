@@ -22,7 +22,7 @@ from Constants import \
 	NEW_FLOGRAPH_TITLE, REPORTS_WINDOW_HEIGHT
 from Actions import \
 	APPLICATION_QUIT, FLOW_GRAPH_KILL, \
-	FLOW_GRAPH_SAVE
+	FLOW_GRAPH_SAVE, get_accel_group
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -55,6 +55,7 @@ class MainWindow(gtk.Window):
 		hbox = gtk.HBox()
 		self.add(vbox)
 		#create the menu bar and toolbar
+		self.add_accel_group(get_accel_group())
 		vbox.pack_start(Bars.MenuBar(), False)
 		vbox.pack_start(Bars.Toolbar(), False)
 		#setup scrolled window
