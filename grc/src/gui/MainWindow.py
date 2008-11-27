@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from Constants import \
 	MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, \
-	NEW_FLOGRAPH_TITLE, REPORTS_WINDOW_HEIGHT
+	NEW_FLOGRAPH_TITLE
 from Actions import \
 	APPLICATION_QUIT, FLOW_GRAPH_KILL, \
 	FLOW_GRAPH_SAVE, get_accel_group
@@ -71,31 +71,27 @@ class MainWindow(gtk.Window):
 		self.notebook.set_show_border(False)
 		self.notebook.set_scrollable(True) #scroll arrows for page tabs
 		self.notebook.connect('switch-page', self._handle_page_change)
-		fg_and_report_box = gtk.VBox(False, 0)
-		fg_and_report_box.pack_start(self.notebook, False, False, 0)
-		fg_and_report_box.pack_start(self.scrolled_window)
-		hbox.pack_start(fg_and_report_box)
+		#setup containers
+		flow_graph_box = gtk.VBox(False, 0)
+		self.flow_graph_vpaned = gtk.VPaned()
+		flow_graph_box.pack_start(self.notebook, False, False, 0)
+		flow_graph_box.pack_start(self.scrolled_window)
+		self.flow_graph_vpaned.pack1(flow_graph_box)
+		hbox.pack_start(self.flow_graph_vpaned)
 		vbox.pack_start(hbox)
-		#create the side windows
-		side_box = gtk.VBox()
-		hbox.pack_start(side_box, False)
-		side_box.pack_start(BlockTreeWindow(platform, self.get_flow_graph)) #allow resize, selection window can have more space
+		hbox.pack_start(BlockTreeWindow(platform, self.get_flow_graph), False) #dont allow resize
 		#create the reports window
 		self.text_display = TextDisplay()
 		#house the reports in a scrolled window
 		self.reports_scrolled_window = gtk.ScrolledWindow()
-		self.reports_scrolled_window.set_size_request(-1, REPORTS_WINDOW_HEIGHT)
 		self.reports_scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 		self.reports_scrolled_window.add_with_viewport(self.text_display)
-		fg_and_report_box.pack_end(self.reports_scrolled_window, False) #dont allow resize, fg should get all the space
-		#show all but the main window container and the reports window
-		vbox.show_all()
-		self.notebook.hide()
-		self._show_reports_window(False)
-		# load preferences and show the main window
+		self.flow_graph_vpaned.pack2(self.reports_scrolled_window, False) #dont allow resize
+		#load preferences and show the main window
 		Preferences.load(platform)
 		self.resize(*Preferences.window_size())
-		self.show()#show after resize in preferences
+		self.flow_graph_vpaned.set_position(Preferences.reports_window_position())
+		self.show_all()
 
 	############################################################
 	# Event Handlers
@@ -137,15 +133,6 @@ class MainWindow(gtk.Window):
 		vadj = self.reports_scrolled_window.get_vadjustment()
 		vadj.set_value(vadj.upper)
 		vadj.emit('changed')
-
-	def _show_reports_window(self, show):
-		"""
-		Show the reports window when show is True.
-		Hide the reports window when show is False.
-		@param show boolean flag
-		"""
-		if show: self.reports_scrolled_window.show()
-		else: self.reports_scrolled_window.hide()
 
 	############################################################
 	# Pages: create and close
@@ -202,6 +189,7 @@ class MainWindow(gtk.Window):
 		Preferences.files_open(open_files)
 		Preferences.file_open(open_file)
 		Preferences.window_size(self.get_size())
+		Preferences.reports_window_position(self.flow_graph_vpaned.get_position())
 		Preferences.save()
 		return True
 
@@ -262,8 +250,6 @@ class MainWindow(gtk.Window):
 					)
 				)
 			)
-		#reports window
-		self._show_reports_window(Preferences.show_reports_window())
 		#show/hide notebook tabs
 		if len(self._get_pages()) > 1: self.notebook.show()
 		else: self.notebook.hide()

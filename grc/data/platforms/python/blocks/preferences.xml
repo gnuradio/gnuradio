@@ -37,7 +37,6 @@
 	<param>
 		<name>Window Size</name>
 		<key>window_size</key>
-		<value>800, 600</value>
 		<type>int_vector</type>
 	</param>
 	<!-- Snap to Grid -->
@@ -93,20 +92,6 @@
 	</param>
 	<!-- Appearance Prefs -->
 	<param>
-		<name>Show Reports Window</name>
-		<key>show_reports</key>
-		<value>show</value>
-		<type>enum</type>
-		<option>
-			<name>Show</name>
-			<key>show</key>
-		</option>
-		<option>
-			<name>Hide</name>
-			<key>hide</key>
-		</option>
-	</param>
-	<param>
 		<name>Show Params Labels</name>
 		<key>show_params</key>
 		<value>show</value>
@@ -134,5 +119,10 @@
 			<name>No</name>
 			<key>no</key>
 		</option>
+	</param>
+	<param>
+		<name>Reports Window Position</name>
+		<key>reports_window_position</key>
+		<type>string</type>
 	</param>
 </block>

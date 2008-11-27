@@ -39,8 +39,6 @@ MIN_WINDOW_HEIGHT = 400
 ##dialog constraints
 MIN_DIALOG_WIDTH = 500
 MIN_DIALOG_HEIGHT = 500
-##static height of reports window
-REPORTS_WINDOW_HEIGHT = 100
 ##static width of block selection window
 BLOCK_SELECTION_WINDOW_WIDTH = 200
 

@@ -50,7 +50,7 @@ class _Preferences(object):
 		self.snap_to_grid_param = self._prefs_block.get_param('snap_to_grid')
 		self.grid_size_param = self._prefs_block.get_param('grid_size')
 		self.show_grid_param = self._prefs_block.get_param('show_grid')
-		self.show_reports_param = self._prefs_block.get_param('show_reports')
+		self.reports_window_position_param = self._prefs_block.get_param('reports_window_position')
 		self.restore_files_param = self._prefs_block.get_param('restore_files')
 		self.window_size_param = self._prefs_block.get_param('window_size')
 		self.file_open_param = self._prefs_block.get_param('file_open')
@@ -75,10 +75,9 @@ Snap to Grid forces the upper right corner of the signal block to align with a g
 			(
 				'Appearance',
 				'''
-Show or hide the reports window at the bottom of the main window.
 Show or hide all paramater labels in the signal blocks.
 ''',
-				[self.show_reports_param, self.show_params_param],
+				[self.show_params_param],
 			),
 			(
 				'Misc',
@@ -113,8 +112,11 @@ def files_open(files=None):
 	if files is not None: _get_prefs().files_open_param.set_value('\n'.join(files))
 	else: return _get_prefs().files_open_param.get_value().split('\n')
 
-def show_reports_window():
-	return _get_prefs().show_reports_param.get_value() == 'show'
+def reports_window_position(pos=None):
+	if pos is not None: _get_prefs().reports_window_position_param.set_value('%d'%pos)
+	else:
+		try: return int(_get_prefs().reports_window_position_param.get_value()) or 1 #greater than 0
+		except: return -1
 
 def get_grid_size():
 	return int(_get_prefs().grid_size_param.get_value())
