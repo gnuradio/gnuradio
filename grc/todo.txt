@@ -14,7 +14,6 @@
 -param editor, expand entry boxes in focus
 -change param dialog to panel within main window
 -command line option for additional block wrappers
--hotkeys in action descriptions
 -log slider gui control
 -icons for certain blocks, + for add
 -zoom in/out (cairo vector graphics) (use scroll wheel as control)

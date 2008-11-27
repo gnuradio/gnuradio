@@ -46,6 +46,17 @@ AC_DEFUN([GRC_GRC],[
     fi
 
     dnl ########################################
+    dnl # test gtk version
+    dnl ########################################
+    AC_MSG_CHECKING([for GTK version >= 2.10.0])
+    if test `${PYTHON} -c "import gtk; print gtk.pygtk_version >= (2, 10, 0)"` = 'True'; then
+        AC_MSG_RESULT([yes])
+    else
+        AC_MSG_RESULT([no])
+        passed=no
+    fi
+
+    dnl ########################################
     dnl # platform dependency pythonw
     dnl ########################################
     dnl FIXME: move this test to Python config m4
