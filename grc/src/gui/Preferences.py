@@ -51,6 +51,7 @@ class _Preferences(object):
 		self.grid_size_param = self._prefs_block.get_param('grid_size')
 		self.show_grid_param = self._prefs_block.get_param('show_grid')
 		self.reports_window_position_param = self._prefs_block.get_param('reports_window_position')
+		self.blocks_window_position_param = self._prefs_block.get_param('blocks_window_position')
 		self.restore_files_param = self._prefs_block.get_param('restore_files')
 		self.window_size_param = self._prefs_block.get_param('window_size')
 		self.file_open_param = self._prefs_block.get_param('file_open')
@@ -116,6 +117,12 @@ def reports_window_position(pos=None):
 	if pos is not None: _get_prefs().reports_window_position_param.set_value('%d'%pos)
 	else:
 		try: return int(_get_prefs().reports_window_position_param.get_value()) or 1 #greater than 0
+		except: return -1
+
+def blocks_window_position(pos=None):
+	if pos is not None: _get_prefs().blocks_window_position_param.set_value('%d'%pos)
+	else:
+		try: return int(_get_prefs().blocks_window_position_param.get_value()) or 1 #greater than 0
 		except: return -1
 
 def get_grid_size():

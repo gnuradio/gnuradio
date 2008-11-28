@@ -39,8 +39,9 @@ MIN_WINDOW_HEIGHT = 400
 ##dialog constraints
 MIN_DIALOG_WIDTH = 500
 MIN_DIALOG_HEIGHT = 500
-##static width of block selection window
-BLOCK_SELECTION_WINDOW_WIDTH = 200
+##default sizes
+DEFAULT_BLOCKS_WINDOW_WIDTH = 100
+DEFAULT_REPORTS_WINDOW_WIDTH = 100
 
 ##How close can the mouse get to the window border before mouse events are ignored.
 BORDER_PROXIMITY_SENSITIVITY = 50

@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Constants import BLOCK_SELECTION_WINDOW_WIDTH
+from Constants import DEFAULT_BLOCKS_WINDOW_WIDTH
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -57,7 +57,7 @@ class BlockTreeWindow(gtk.VBox):
 		scrolled_window = gtk.ScrolledWindow()
 		scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 		scrolled_window.add_with_viewport(self.treeview)
-		scrolled_window.set_size_request(BLOCK_SELECTION_WINDOW_WIDTH, -1)
+		scrolled_window.set_size_request(DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
 		self.pack_start(scrolled_window)
 		#add button
 		self.add_button = gtk.Button(None, 'gtk-add')

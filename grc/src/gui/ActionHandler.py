@@ -75,8 +75,12 @@ class ActionHandler:
 
 	def _handle_key_press(self, widget, event):
 		"""
-		Handle key presses from the keyboard.
-		Translate key combos into actions.
+		Handle key presses from the keyboard and translate key combos into actions.
+		This key press handler is called before the gtk accelerators kick in.
+		This handler ensures that key presses without a mod mask, only pass to the accelerators
+		if the flow graph is in focus and something is selected.
+		This function also handles keys that accelerators refuse to handle: left/right,
+		and keys that are not registered with an accelerator: +/-.
 		@return false to let the accelerators handle the key action
 		"""
 		if self.get_focus_flag() and self.get_flow_graph().is_selected():

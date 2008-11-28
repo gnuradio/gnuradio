@@ -123,7 +123,7 @@ class Param(Element):
 			#truncate
 			max_len = max(27 - len(self.get_name()), 3)
 			if len(dt_str) > max_len:
-				dt_str = dt_str[:max_len-3] + '...'
+				dt_str = dt_str[:max_len/2 -3] + '...' + dt_str[-max_len/2:]
 			return '<b>%s:</b> %s'%(Utils.xml_encode(self.get_name()), Utils.xml_encode(dt_str))
 		else: return '<span foreground="red"><b>%s:</b> error</span>'%Utils.xml_encode(self.get_name())
 

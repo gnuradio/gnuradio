@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from Constants import \
 	MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, \
-	NEW_FLOGRAPH_TITLE
+	NEW_FLOGRAPH_TITLE, DEFAULT_REPORTS_WINDOW_WIDTH
 from Actions import \
 	APPLICATION_QUIT, FLOW_GRAPH_KILL, \
 	FLOW_GRAPH_SAVE, get_accel_group
@@ -52,12 +52,13 @@ class MainWindow(gtk.Window):
 		self.handle_states = handle_states
 		gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
 		vbox = gtk.VBox()
-		hbox = gtk.HBox()
+		self.hpaned = gtk.HPaned()
 		self.add(vbox)
 		#create the menu bar and toolbar
 		self.add_accel_group(get_accel_group())
 		vbox.pack_start(Bars.MenuBar(), False)
 		vbox.pack_start(Bars.Toolbar(), False)
+		vbox.pack_start(self.hpaned)
 		#setup scrolled window
 		self.scrolled_window = gtk.ScrolledWindow()
 		self.scrolled_window.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
@@ -77,20 +78,21 @@ class MainWindow(gtk.Window):
 		flow_graph_box.pack_start(self.notebook, False, False, 0)
 		flow_graph_box.pack_start(self.scrolled_window)
 		self.flow_graph_vpaned.pack1(flow_graph_box)
-		hbox.pack_start(self.flow_graph_vpaned)
-		vbox.pack_start(hbox)
-		hbox.pack_start(BlockTreeWindow(platform, self.get_flow_graph), False) #dont allow resize
+		self.hpaned.pack1(self.flow_graph_vpaned)
+		self.hpaned.pack2(BlockTreeWindow(platform, self.get_flow_graph), False) #dont allow resize
 		#create the reports window
 		self.text_display = TextDisplay()
 		#house the reports in a scrolled window
 		self.reports_scrolled_window = gtk.ScrolledWindow()
 		self.reports_scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 		self.reports_scrolled_window.add_with_viewport(self.text_display)
+		self.reports_scrolled_window.set_size_request(-1, DEFAULT_REPORTS_WINDOW_WIDTH)
 		self.flow_graph_vpaned.pack2(self.reports_scrolled_window, False) #dont allow resize
 		#load preferences and show the main window
 		Preferences.load(platform)
 		self.resize(*Preferences.window_size())
 		self.flow_graph_vpaned.set_position(Preferences.reports_window_position())
+		self.hpaned.set_position(Preferences.blocks_window_position())
 		self.show_all()
 
 	############################################################
@@ -190,6 +192,7 @@ class MainWindow(gtk.Window):
 		Preferences.file_open(open_file)
 		Preferences.window_size(self.get_size())
 		Preferences.reports_window_position(self.flow_graph_vpaned.get_position())
+		Preferences.blocks_window_position(self.hpaned.get_position())
 		Preferences.save()
 		return True
 
