@@ -120,7 +120,7 @@ class FileDialog(FileDialogHelper):
 		if self.type in (SAVE_FLOW_GRAPH, SAVE_IMAGE):
 			filename = self.get_filename()
 			for extension, filter in (
-				(FLOW_GRAPH_FILE_EXTENSION, get_flow_graph_files_filter()),
+				(Preferences.file_extension(), get_flow_graph_files_filter()),
 				(IMAGE_FILE_EXTENSION, get_image_files_filter()),
 			): #append the missing file extension if the filter matches
 				if filename[len(filename)-len(extension):] != extension \
