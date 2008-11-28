@@ -90,7 +90,7 @@ class MainWindow(gtk.Window):
 		self.flow_graph_vpaned.pack2(self.reports_scrolled_window, False) #dont allow resize
 		#load preferences and show the main window
 		Preferences.load(platform)
-		self.resize(*Preferences.window_size())
+		self.resize(*Preferences.main_window_size())
 		self.flow_graph_vpaned.set_position(Preferences.reports_window_position())
 		self.hpaned.set_position(Preferences.blocks_window_position())
 		self.show_all()
@@ -190,7 +190,7 @@ class MainWindow(gtk.Window):
 		#save state before closing
 		Preferences.files_open(open_files)
 		Preferences.file_open(open_file)
-		Preferences.window_size(self.get_size())
+		Preferences.main_window_size(self.get_size())
 		Preferences.reports_window_position(self.flow_graph_vpaned.get_position())
 		Preferences.blocks_window_position(self.hpaned.get_position())
 		Preferences.save()
@@ -231,16 +231,14 @@ class MainWindow(gtk.Window):
 		Show/hide the reports window.
 		@param title the window title
 		"""
-		if self.get_page():
-			title = ''.join((
-					Preferences.window_prefix(),
-					' - Editing: ',
-					(self.get_page().get_file_path() or NEW_FLOGRAPH_TITLE),
-					(self.get_page().get_saved() and ' ' or '*'), #blank must be non empty
-					(self.get_page().get_read_only() and ' (read-only)' or ''),
-				)
+		title = ''.join((
+				self._platform.get_name(),
+				' - Editing: ',
+				(self.get_page().get_file_path() or NEW_FLOGRAPH_TITLE),
+				(self.get_page().get_saved() and ' ' or '*'), #blank must be non empty
+				(self.get_page().get_read_only() and ' (read-only)' or ''),
 			)
-		else: title = MAIN_WINDOW_PREFIX + ' - Editor '
+		)
 		gtk.Window.set_title(self, title)
 		#set tab titles
 		for page in self._get_pages():

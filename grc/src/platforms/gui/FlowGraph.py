@@ -17,7 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from ... gui import Preferences
 from ... gui.Constants import \
 	DIR_LEFT, DIR_RIGHT, \
 	SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE, \
@@ -302,15 +301,6 @@ class FlowGraph(Element):
 			#draw the background
 			self.get_gc().foreground = Colors.BACKGROUND_COLOR
 			self.get_pixmap().draw_rectangle(self.get_gc(), True, 0, 0, W, H)
-			#draw grid (depends on prefs)
-			if Preferences.show_grid():
-				grid_size = Preferences.get_grid_size()
-				points = list()
-				for i in range(W/grid_size):
-					for j in range(H/grid_size):
-						points.append((i*grid_size, j*grid_size))
-				self.get_gc().foreground = Colors.TXT_COLOR
-				self.get_pixmap().draw_points(self.get_gc(), points)
 			#draw multi select rectangle
 			if self.mouse_pressed and (not self.get_selected_elements() or self.get_ctrl_mask()):
 				#coordinates
@@ -507,16 +497,6 @@ class FlowGraph(Element):
 		self.time = 0
 		self.mouse_pressed = False
 		if self.element_moved:
-			if Preferences.snap_to_grid():
-				grid_size = Preferences.get_grid_size()
-				X,Y = self.get_selected_element().get_coordinate()
-				deltaX = X%grid_size
-				if deltaX < grid_size/2: deltaX = -1 * deltaX
-				else: deltaX = grid_size - deltaX
-				deltaY = Y%grid_size
-				if deltaY < grid_size/2: deltaY = -1 * deltaY
-				else: deltaY = grid_size - deltaY
-				self.move_selected((deltaX, deltaY))
 			self.handle_states(BLOCK_MOVE)
 			self.element_moved = False
 		self.update_selected_elements()

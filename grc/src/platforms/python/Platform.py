@@ -52,8 +52,8 @@ class Platform(_Platform):
 		#init
 		_Platform.__init__(
 			self,
-			name='GNURadio Python',
-			key='gnuradio_python',
+			name='GRC',
+			key='grc',
 			block_paths=block_paths,
 			block_dtd=BLOCK_DTD,
 			block_tree=BLOCK_TREE,

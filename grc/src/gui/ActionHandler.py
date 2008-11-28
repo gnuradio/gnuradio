@@ -32,7 +32,7 @@ from .. utils import ParseXML
 import random
 from .. platforms.gui.Platform import Platform
 from MainWindow import MainWindow
-from Dialogs import PreferencesDialog, AboutDialog
+from Dialogs import AboutDialog
 from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveImageFileDialog
 
 gobject.threads_init()
@@ -77,13 +77,13 @@ class ActionHandler:
 		"""
 		Handle key presses from the keyboard and translate key combos into actions.
 		This key press handler is called before the gtk accelerators kick in.
-		This handler ensures that key presses without a mod mask, only pass to the accelerators
-		if the flow graph is in focus and something is selected.
+		This handler ensures that key presses without a mod mask,
+		only pass to the accelerators if the flow graph is in focus.
 		This function also handles keys that accelerators refuse to handle: left/right,
 		and keys that are not registered with an accelerator: +/-.
 		@return false to let the accelerators handle the key action
 		"""
-		if self.get_focus_flag() and self.get_flow_graph().is_selected():
+		if self.get_focus_flag():
 			try:
 				self.handle_states({
 					'Left': Actions.BLOCK_ROTATE_LEFT,
@@ -97,9 +97,9 @@ class ActionHandler:
 					'KP_Subtract': Actions.PORT_CONTROLLER_DEC,
 				}[gtk.gdk.keyval_name(event.keyval)])
 				return True
-			#focus + selection: always return false for accelerator to handle
+			#focus: always return false for accelerator to handle
 			except: return False
-		#no focus + selection: only allow accelerator to handle when a mod is used
+		#no focus: only allow accelerator to handle when a mod is used
 		return not event.state
 
 	def _quit(self, window, event):
@@ -141,9 +141,9 @@ class ActionHandler:
 				Actions.APPLICATION_QUIT, Actions.FLOW_GRAPH_NEW,
 				Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
 				Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
-				Actions.PREFS_WINDOW_DISPLAY, Actions.FLOW_GRAPH_SCREEN_CAPTURE,
+				Actions.FLOW_GRAPH_SCREEN_CAPTURE,
 			): Actions.get_action_from_name(action).set_sensitive(True)
-			if not self.init_file_paths and Preferences.restore_files():
+			if not self.init_file_paths:
 				self.init_file_paths = Preferences.files_open()
 			if not self.init_file_paths: self.init_file_paths = ['']
 			for file_path in self.init_file_paths:
@@ -240,9 +240,6 @@ class ActionHandler:
 		##################################################
 		# Window stuff
 		##################################################
-		elif state == Actions.PREFS_WINDOW_DISPLAY:
-			PreferencesDialog()
-			self.get_flow_graph().update()
 		elif state == Actions.ABOUT_WINDOW_DISPLAY:
 			AboutDialog()
 		##################################################

@@ -41,27 +41,6 @@ class TextDisplay(gtk.TextView):
 		self.set_cursor_visible(False)
 		self.set_wrap_mode(gtk.WRAP_WORD_CHAR)
 
-class PreferencesDialog(gtk.Dialog):
-	"""A dialog box to display the preferences."""
-
-	def __init__(self):
-		"""PreferencesDialog constructor."""
-		gtk.Dialog.__init__(self, buttons=('gtk-close', gtk.RESPONSE_CLOSE))
-		self.set_title("Preferences")
-		self.set_size_request(MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
-		notebook = gtk.Notebook()
-		for title,desc,params in Preferences.get_preferences():
-			vbox = gtk.VBox()
-			vbox.pack_start(gtk.Label(''), False) #blank label for spacing
-			for param in params: vbox.pack_start(param.get_input_object(), False)
-			desc = desc.strip('\n')
-			if desc: vbox.pack_start(TextDisplay(desc), False, padding=5)
-			notebook.append_page(vbox, gtk.Label(title))
-		self.vbox.pack_start(notebook, True)
-		self.show_all()
-		self.run()
-		self.destroy()
-
 def MessageDialogHelper(type, buttons, title=None, markup=None):
 	"""
 	Create a modal message dialog and run it.

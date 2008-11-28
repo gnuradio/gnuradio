@@ -86,9 +86,6 @@ MENU_BAR_LIST = (
 		Actions.FLOW_GRAPH_EXEC,
 		Actions.FLOW_GRAPH_KILL,
 	]),
-	(gtk.Action('Options', '_Options', None, None), [
-		Actions.PREFS_WINDOW_DISPLAY,
-	]),
 	(gtk.Action('Help', '_Help', None, None), [
 		Actions.ABOUT_WINDOW_DISPLAY,
 	]),

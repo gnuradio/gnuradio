@@ -23,7 +23,6 @@ import os
 DEFAULT_FILE_PATH = os.getcwd()
 
 ##file extensions
-FLOW_GRAPH_FILE_EXTENSION = '.grc'
 IMAGE_FILE_EXTENSION = '.png'
 
 ##name for new/unsaved flow graphs

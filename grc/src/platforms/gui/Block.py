@@ -17,7 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from ... gui import Preferences
 from Element import Element
 import Utils
 import Colors
@@ -137,13 +136,12 @@ class Block(Element):
 		layout.set_font_description(desc)
 		self.label_width, self.label_height = layout.get_pixel_size()
 		#display the params
-		if Preferences.show_params():
-			for param in filter(lambda p: p.get_hide() not in ('all', 'part'), self.get_params()):
-				layout = param.get_layout()
-				layouts.append(layout)
-				w,h = layout.get_pixel_size()
-				self.label_width = max(w, self.label_width)
-				self.label_height = self.label_height + h + LABEL_SEPARATION
+		for param in filter(lambda p: p.get_hide() not in ('all', 'part'), self.get_params()):
+			layout = param.get_layout()
+			layouts.append(layout)
+			w,h = layout.get_pixel_size()
+			self.label_width = max(w, self.label_width)
+			self.label_height = self.label_height + h + LABEL_SEPARATION
 		width = self.label_width
 		height = self.label_height
 		#setup the pixmap

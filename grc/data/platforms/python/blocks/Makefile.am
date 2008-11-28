@@ -183,7 +183,6 @@ dist_ourdata_DATA = \
 	pad_sink.xml \
 	pad_source.xml \
 	parameter.xml \
-	preferences.xml \
 	probe_function.xml \
 	random_source_x.xml \
 	trellis_encoder_xx.xml \

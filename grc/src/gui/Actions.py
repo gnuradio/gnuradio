@@ -56,7 +56,6 @@ FLOW_GRAPH_EXEC = 'flow graph exec'
 FLOW_GRAPH_KILL = 'flow graph kill'
 FLOW_GRAPH_SCREEN_CAPTURE = 'flow graph screen capture'
 ABOUT_WINDOW_DISPLAY = 'about window display'
-PREFS_WINDOW_DISPLAY = 'prefs window display'
 
 ######################################################################################################
 # Action Key Map
@@ -106,7 +105,6 @@ _actions_list = (
 	gtk.Action(BLOCK_CUT, 'Cu_t', 'Cut', 'gtk-cut'),
 	gtk.Action(BLOCK_COPY, '_Copy', 'Copy', 'gtk-copy'),
 	gtk.Action(BLOCK_PASTE, '_Paste', 'Paste', 'gtk-paste'),
-	gtk.Action(PREFS_WINDOW_DISPLAY, '_Preferences', 'Configure Preferences', 'gtk-preferences'),
 	gtk.Action(ABOUT_WINDOW_DISPLAY, '_About', 'About this program', 'gtk-about'),
 	gtk.Action(FLOW_GRAPH_GEN, '_Generate', 'Generate the flow graph', 'gtk-convert'),
 	gtk.Action(FLOW_GRAPH_EXEC, '_Execute', 'Execute the flow graph', 'gtk-execute'),

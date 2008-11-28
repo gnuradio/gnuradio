@@ -22,8 +22,9 @@ pygtk.require('2.0')
 import gtk
 from Dialogs import MessageDialogHelper
 from Constants import \
-	DEFAULT_FILE_PATH, FLOW_GRAPH_FILE_EXTENSION, \
-	IMAGE_FILE_EXTENSION, NEW_FLOGRAPH_TITLE
+	DEFAULT_FILE_PATH, IMAGE_FILE_EXTENSION, \
+	NEW_FLOGRAPH_TITLE
+import Preferences
 from os import path
 
 OPEN_FLOW_GRAPH = 'open flow graph'
@@ -31,20 +32,26 @@ SAVE_FLOW_GRAPH = 'save flow graph'
 SAVE_IMAGE = 'save image'
 
 ##the filter for flow graph files
-FLOW_GRAPH_FILE_FILTER = gtk.FileFilter()
-FLOW_GRAPH_FILE_FILTER.set_name('GRC Files')
-FLOW_GRAPH_FILE_FILTER.add_pattern('*'+FLOW_GRAPH_FILE_EXTENSION)
-FLOW_GRAPH_FILE_FILTER.add_pattern('*.xml') #TEMP
+def get_flow_graph_files_filter():
+	filter = gtk.FileFilter()
+	filter.set_name('Flow Graph Files')
+	filter.add_pattern('*'+Preferences.file_extension())
+	filter.add_pattern('*.xml') #TEMP
+	return filter
 
 ##the filter for image files
-IMAGE_FILE_FILTER = gtk.FileFilter()
-IMAGE_FILE_FILTER.set_name('Image Files')
-IMAGE_FILE_FILTER.add_pattern('*'+IMAGE_FILE_EXTENSION)
+def get_image_files_filter():
+	filter = gtk.FileFilter()
+	filter.set_name('Image Files')
+	filter.add_pattern('*'+IMAGE_FILE_EXTENSION)
+	return filter
 
 ##the filter for all files
-ALL_FILE_FILTER = gtk.FileFilter()
-ALL_FILE_FILTER.set_name('All Files')
-ALL_FILE_FILTER.add_pattern('*')
+def get_all_files_filter():
+	filter = gtk.FileFilter()
+	filter.set_name('All Files')
+	filter.add_pattern('*')
+	return filter
 
 class FileDialogHelper(gtk.FileChooserDialog):
 	"""
@@ -64,7 +71,7 @@ class FileDialogHelper(gtk.FileChooserDialog):
 		gtk.FileChooserDialog.__init__(self, title, None, action, ('gtk-cancel', gtk.RESPONSE_CANCEL, ok_stock, gtk.RESPONSE_OK))
 		self.set_select_multiple(False)
 		self.set_local_only(True)
-		self.add_filter(ALL_FILE_FILTER)
+		self.add_filter(get_all_files_filter())
 
 class FileDialog(FileDialogHelper):
 	"""A dialog box to save or open flow graph files. This is a base class, do not use."""
@@ -74,18 +81,18 @@ class FileDialog(FileDialogHelper):
 		FileDialog constructor.
 		@param current_file_path the current directory or path to the open flow graph
 		"""
-		if not current_file_path: current_file_path = path.join(DEFAULT_FILE_PATH, NEW_FLOGRAPH_TITLE + FLOW_GRAPH_FILE_EXTENSION)
+		if not current_file_path: current_file_path = path.join(DEFAULT_FILE_PATH, NEW_FLOGRAPH_TITLE + Preferences.file_extension())
 		if self.type == OPEN_FLOW_GRAPH:
 			FileDialogHelper.__init__(self, gtk.FILE_CHOOSER_ACTION_OPEN, 'Open a Flow Graph from a File...')
-			self.add_and_set_filter(FLOW_GRAPH_FILE_FILTER)
+			self.add_and_set_filter(get_flow_graph_files_filter())
 			self.set_select_multiple(True)
 		elif self.type == SAVE_FLOW_GRAPH:
 			FileDialogHelper.__init__(self, gtk.FILE_CHOOSER_ACTION_SAVE, 'Save a Flow Graph to a File...')
-			self.add_and_set_filter(FLOW_GRAPH_FILE_FILTER)
+			self.add_and_set_filter(get_flow_graph_files_filter())
 			self.set_current_name(path.basename(current_file_path)) #show the current filename
 		elif self.type == SAVE_IMAGE:
 			FileDialogHelper.__init__(self, gtk.FILE_CHOOSER_ACTION_SAVE, 'Save a Flow Graph Screen Shot...')
-			self.add_and_set_filter(IMAGE_FILE_FILTER)
+			self.add_and_set_filter(get_image_files_filter())
 			current_file_path = current_file_path + IMAGE_FILE_EXTENSION
 			self.set_current_name(path.basename(current_file_path)) #show the current filename
 		self.set_current_folder(path.dirname(current_file_path)) #current directory
@@ -113,8 +120,8 @@ class FileDialog(FileDialogHelper):
 		if self.type in (SAVE_FLOW_GRAPH, SAVE_IMAGE):
 			filename = self.get_filename()
 			for extension, filter in (
-				(FLOW_GRAPH_FILE_EXTENSION, FLOW_GRAPH_FILE_FILTER),
-				(IMAGE_FILE_EXTENSION, IMAGE_FILE_FILTER),
+				(FLOW_GRAPH_FILE_EXTENSION, get_flow_graph_files_filter()),
+				(IMAGE_FILE_EXTENSION, get_image_files_filter()),
 			): #append the missing file extension if the filter matches
 				if filename[len(filename)-len(extension):] != extension \
 					and filter == self.get_filter(): filename += extension
