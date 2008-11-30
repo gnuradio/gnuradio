@@ -119,12 +119,12 @@ class FileDialog(FileDialogHelper):
 		#############################################
 		if self.type in (SAVE_FLOW_GRAPH, SAVE_IMAGE):
 			filename = self.get_filename()
-			for extension, filter in (
-				(Preferences.file_extension(), get_flow_graph_files_filter()),
-				(IMAGE_FILE_EXTENSION, get_image_files_filter()),
-			): #append the missing file extension if the filter matches
-				if filename[len(filename)-len(extension):] != extension \
-					and filter == self.get_filter(): filename += extension
+			extension = {
+				SAVE_FLOW_GRAPH: Preferences.file_extension(),
+				SAVE_IMAGE: IMAGE_FILE_EXTENSION,
+			}[self.type]
+			#append the missing file extension if the filter matches
+			if path.splitext(filename)[1].lower() != extension: filename += extension
 			self.set_current_name(path.basename(filename)) #show the filename with extension
 			if path.exists(filename): #ask the user to confirm overwrite
 				if MessageDialogHelper(
