@@ -231,7 +231,7 @@ class Param(Element):
 		self._value = str(value) #must be a string
 
 	def get_type(self): return self.get_parent().resolve_dependencies(self._type)
-	def is_enum(self): return self._type == 'enum'
+	def is_enum(self): return bool(self.get_options())
 
 	def get_input_class(self):
 		"""
