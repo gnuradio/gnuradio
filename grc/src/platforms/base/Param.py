@@ -158,12 +158,7 @@ class Param(Element):
 			#store the option
 			self._options[key] = option
 		#test the enum options
-		if self._options or self.is_enum():
-			#test against bad combos of type and enum
-			try: assert(self._options)
-			except AssertionError: self._exit_with_error('At least one option must exist when type "enum" is set.')
-			try: assert(self.is_enum())
-			except AssertionError: self._exit_with_error('Type "enum" must be set when options are present.')
+		if self.is_enum():
 			#test against options with identical keys
 			try: assert(len(set(self.get_option_keys())) == len(self._options))
 			except AssertionError: self._exit_with_error('Options keys "%s" are not unique.'%self.get_option_keys())
