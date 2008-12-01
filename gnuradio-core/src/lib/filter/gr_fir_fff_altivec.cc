@@ -23,12 +23,12 @@
 #include <config.h>
 #endif
 #include <gr_fir_fff_altivec.h>
-#include <stdlib.h>
 #include <stdexcept>
 #include <assert.h>
 #include <gr_math.h>
 #include <gr_altivec.h>
 #include <dotprod_fff_altivec.h>
+#include "posix_memalign.h"
 
 gr_fir_fff_altivec::gr_fir_fff_altivec()
   : gr_fir_fff_generic(),

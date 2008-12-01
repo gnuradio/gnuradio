@@ -1,5 +1,5 @@
 #
-# Copyright 2003,2004 Free Software Foundation, Inc.
+# Copyright 2003,2004,2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,13 +21,18 @@
 
 include $(top_srcdir)/Makefile.common
 
+AM_CPPFLAGS = $(GNURADIO_INCLUDES) $(WITH_INCLUDES)
+
 EXTRA_DIST = 			\
 	getopt.h 		\
 	getopt.c 		\
 	gettimeofday.c 		\
-	usleep.c
+	posix_memalign.cc	\
+	posix_memalign.h	\
+	usleep.c		
 
 noinst_LTLIBRARIES = libmissing.la
 
 libmissing_la_SOURCES = 	\
-	bug_work_around_8.cc	
+	bug_work_around_8.cc	\
+	posix_memalign.cc	

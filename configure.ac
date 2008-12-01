@@ -141,6 +141,7 @@ AC_STRUCT_TM
 
 dnl Checks for library functions.
 AC_FUNC_ALLOCA
+GR_CHECK_MEMALIGN
 AC_FUNC_SETVBUF_REVERSED
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([mmap select socket strcspn strerror strspn getpagesize sysconf])
