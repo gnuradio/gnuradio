@@ -15,8 +15,8 @@ module longfifo
      input clear,
      output full,
      output empty,
-     output [15:0] space,
-     output [15:0] occupied);
+     output reg [15:0] space,
+     output reg [15:0] occupied);
 
    // Read side states
    localparam 	  EMPTY = 0;
@@ -26,12 +26,6 @@ module longfifo
    reg [SIZE-1:0] wr_addr, rd_addr;
    reg [1:0] 	  read_state;
 
-   wire [SIZE-1:0] fullness = wr_addr - rd_addr;  // Approximate, for simulation only
-   assign occupied = {{16-SIZE{1'b0}},fullness};
-
-   wire [SIZE-1:0] free_space = rd_addr - wr_addr - 2;  // Approximate, for SERDES flow control
-   assign space = {{16-SIZE{1'b0}},free_space};
-	  
    reg 	  empty_reg, full_reg;
    always @(posedge clk)
      if(rst)
@@ -43,7 +37,7 @@ module longfifo
 
    ram_2port #(.DWIDTH(WIDTH),.AWIDTH(SIZE))
      ram (.clka(clk),
-	  .ena(1),
+	  .ena(1'b1),
 	  .wea(write),
 	  .addra(wr_addr),
 	  .dia(datain),
@@ -118,5 +112,39 @@ module longfifo
 
    // assign full = ((rd_addr - 1) == wr_addr);
    assign full = full_reg;
+
+   //////////////////////////////////////////////
+   // space and occupied are for diagnostics only
+   // not guaranteed exact
+
+   localparam NUMLINES = (1<<SIZE)-2;
+   always @(posedge clk)
+     if(rst)
+       space <= NUMLINES;
+     else if(clear)
+       space <= NUMLINES;
+     else if(read & ~write)
+       space <= space + 1;
+     else if(write & ~read)
+       space <= space - 1;
+   
+   always @(posedge clk)
+     if(rst)
+       occupied <= 0;
+     else if(clear)
+       occupied <= 0;
+     else if(read & ~write)
+       occupied <= occupied - 1;
+     else if(write & ~read)
+       occupied <= occupied + 1;
+   
+   /*
+   wire [SIZE-1:0] fullness = wr_addr - rd_addr;  // Approximate, for simulation only
+   assign occupied = {{16-SIZE{1'b0}},fullness};
+
+   wire [SIZE-1:0] free_space = rd_addr - wr_addr - 2;  // Approximate, for SERDES flow control
+   assign space = {{16-SIZE{1'b0}},free_space};
+    */  
+
    
 endmodule // longfifo

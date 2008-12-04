@@ -9,8 +9,8 @@ module shortfifo
      input clear,
      output reg full,
      output reg empty,
-     output [4:0] space,
-     output [4:0] occupied);
+     output reg [4:0] space,
+     output reg [4:0] occupied);
    
    reg [3:0] 	  a;
    genvar 	  i;
@@ -57,7 +57,31 @@ module shortfifo
 
    // NOTE will fail if you write into a full fifo or read from an empty one
 
-   assign space = full ? 0 : empty ? 16 : 15-a;
-   assign occupied = empty ? 0 : full ? 16 : a+1;
+   //////////////////////////////////////////////////////////////
+   // space and occupied are used for diagnostics, not 
+   // guaranteed correct
    
+   //assign space = full ? 0 : empty ? 16 : 15-a;
+   //assign occupied = empty ? 0 : full ? 16 : a+1;
+
+   always @(posedge clk)
+     if(rst)
+       space <= 16;
+     else if(clear)
+       space <= 16;
+     else if(read & ~write)
+       space <= space + 1;
+     else if(write & ~read)
+       space <= space - 1;
+   
+   always @(posedge clk)
+     if(rst)
+       occupied <= 0;
+     else if(clear)
+       occupied <= 0;
+     else if(read & ~write)
+       occupied <= occupied - 1;
+     else if(write & ~read)
+       occupied <= occupied + 1;
+      
 endmodule // shortfifo
