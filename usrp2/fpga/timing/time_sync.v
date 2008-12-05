@@ -18,6 +18,7 @@ module time_sync
    wire        tick_free_run;
    reg 	       tick_int_enable, tick_source, external_sync;
    reg [31:0]  tick_interval;
+   reg 	       sync_on_next_pps;
    
    // Generate master time
    always @(posedge sys_clk_i)
@@ -25,6 +26,8 @@ module time_sync
        master_time <= 0;
      else if(external_sync & sync_rcvd)
        master_time <= master_time_rcvd + delta_time;
+     else if(pps_ext & sync_on_next_pps)
+       master_time <= 0;
      else
        master_time <= master_time + 1;
    assign      master_time_o = master_time;
@@ -42,7 +45,10 @@ module time_sync
       .exp_pps_in(exp_pps_in) );
 
    assign     ack_o = stb_i;
-
+   wire       wb_write = cyc_i & stb_i & we_i;
+   wire       wb_read = cyc_i & stb_i & ~we_i;
+   wire       wb_acc = cyc_i & stb_i;
+   
    always @(posedge wb_clk_i)
      if(rst_i)
        begin
@@ -52,17 +58,30 @@ module time_sync
 	  tick_interval <= 100000-1;  // default to 1K times per second
 	  delta_time <= 0;
        end
-     else if(stb_i & we_i)
-       if(adr_i[2:0] == 2)
-	 delta_time <= dat_i;
-       else if(adr_i[2:0] == 1)
-	 tick_interval <= dat_i;
-       else
-	 begin
-	    tick_source <= dat_i[0];
-	    tick_int_enable <= dat_i[1];
-	    external_sync <= dat_i[2];
-	 end
+     else if(wb_write)
+       case(adr_i[2:0])
+	 3'd0 :
+	   begin
+	      tick_source <= dat_i[0];
+	      tick_int_enable <= dat_i[1];
+	      external_sync <= dat_i[2];
+	   end
+	 3'd1 :
+	   tick_interval <= dat_i;
+	 3'd2 :
+	   delta_time <= dat_i;
+	 3'd3 :
+	   ;
+	 // Do nothing here, this is to arm the sync_on_next
+       endcase // case(adr_i[2:0])
+
+   always @(posedge sys_clk_i)
+     if(rst_i)
+       sync_on_next_pps <= 0;
+     else if(pps_ext)
+       sync_on_next_pps <= 0;
+     else if(wb_write & (adr_i[2:0] == 3))
+       sync_on_next_pps <= 0;
    
    always @(posedge sys_clk_i)
      if(internal_tick)

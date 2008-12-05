@@ -622,6 +622,7 @@ typedef struct {
   volatile uint32_t tick_control;
   volatile uint32_t tick_interval;
   volatile uint32_t delta_time;
+  volatile uint32_t sync_on_next_pps;
 } timesync_regs_t;
 
 #define timesync_regs ((timesync_regs_t *) TIMESYNC_BASE)
