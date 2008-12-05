@@ -54,6 +54,11 @@ void hal_uart_get_config(hal_uart_config_t *c);
  */
 void hal_uart_putc(int ch);
 
+/*!
+ * \brief Enqueue \p ch for output over serial port, silent fail if queue is full
+ */
+void hal_uart_putc_nowait(int ch);
+
 /*
  * \brief Blocking read of next char from serial port
  */

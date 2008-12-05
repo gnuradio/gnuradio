@@ -57,6 +57,16 @@ hal_uart_putc(int ch)
   u->txchar = ch;
 }
 
+void
+hal_uart_putc_nowait(int ch)
+{
+  if (ch == '\n')		// FIXME for now map \n -> \r\n
+    hal_uart_putc('\r');
+
+  if(u->txlevel)   // If fifo has space
+    u->txchar = ch;
+}
+
 int
 hal_uart_getc(void)
 {
