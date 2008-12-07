@@ -43,38 +43,31 @@
 
 #define BUFSIZE 128
 
-int
-main(void)
+int test_ram()
 {
   int i,j,k;
-
-  u2_init();
-  //hal_uart_init();
-  //puts("\ntest_ram\n");
-  
   output_regs->ram_page = 1<<10;
-
+  
   extram[0] = 0xDEADBEEF;
   extram[1] = 0xF00D1234;
   extram[7] = 0x76543210;
-
+  
   output_regs->ram_page = 2<<10;
   extram[7] = 0x55555555;
   extram[1] = 0xaaaaaaaa;
   extram[0] = 0xeeeeeeee;
-
+  
   output_regs->ram_page = 1<<10;
-
+  
   i = extram[0];
   k = extram[1];
   j = extram[7];
-
+  
   if((i != 0xDEADBEEF)||(j!=0x76543210)||(k!=0xF00D1234)) {
     puts("RAM FAIL1!\n");
     puthex32_nl(i);
     puthex32_nl(j);
     puthex32_nl(k);
-    hal_finish();
     return 0;
   }
   
@@ -89,11 +82,23 @@ main(void)
     puthex32_nl(i);
     puthex32_nl(j);
     puthex32_nl(k);
-    hal_finish();
     return 0;
   }
+  return 1;
+}
 
-  puts("RAM Passes Tests\n");
+int
+main(void)
+{
+
+  u2_init();
+  puts("\ntest_ram\n");
+  int success = test_ram();
+  if(success)
+    puts("RAM Passed Tests\n");
+  else
+    puts("RAM Failed\n");
+
   hal_finish();
   return 0;
 }
