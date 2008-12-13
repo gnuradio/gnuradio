@@ -84,7 +84,9 @@ module dsp_core_rx
    always @(posedge clk)
      if(rst)
        phase <= 0;
-     else if(run)
+     else if(~run)
+       phase <= 0;
+     else
        phase <= phase + phase_inc;
 
    MULT18X18S mult_i

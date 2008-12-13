@@ -58,11 +58,13 @@ module dsp_core_tx
    always @(posedge clk) strobe_hb2 <= strobe_hb2_pre;
    always @(posedge clk) strobe_cic <= strobe_cic_pre;
 
-   // DDC
+   // NCO
    always @(posedge clk)
      if(rst)
        phase <= 0;
-     else if(run)
+     else if(~run)
+       phase <= 0;
+     else
        phase <= phase + phase_inc;
    
    wire        signed [17:0] da, db;
