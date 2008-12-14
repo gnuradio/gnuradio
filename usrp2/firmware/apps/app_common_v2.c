@@ -180,7 +180,7 @@ config_tx_v2_cmd(const op_config_tx_v2_t *p,
       interp = interp >> 1;
     }
     
-    if (p->interp < MIN_INTERP || p->interp > MAX_INTERP)
+    if (interp < MIN_INTERP || interp > MAX_INTERP)
       ok = false;
     else {
       dsp_tx_regs->interp_rate = (hb1<<9) | (hb2<<8) | interp;
