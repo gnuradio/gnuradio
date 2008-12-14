@@ -157,6 +157,7 @@ module u2_core
    wire 	ser_rx_empty, ser_tx_empty, dsp_rx_empty, dsp_tx_empty, eth_rx_empty, eth_tx_empty, eth_rx_empty2;
 	
    wire 	serdes_link_up;
+   wire 	epoch;
    
    // ///////////////////////////////////////////////////////////////////////////////////////////////
    // Wishbone Single Master INTERCON
@@ -437,7 +438,7 @@ module u2_core
    //    In Rev3 there are only 6 leds, and the highest one is on the ETH connector
    
    wire [7:0] 	 led_src, led_sw;
-   wire [7:0] 	 led_hw = {pps_in,clk_status,serdes_link_up};
+   wire [7:0] 	 led_hw = {clk_status,serdes_link_up};
    
    setting_reg #(.my_addr(3)) sr_led (.clk(wb_clk),.rst(wb_rst),.strobe(set_stb),.addr(set_addr),
 				      .in(set_data),.out(led_sw),.changed());
@@ -552,13 +553,23 @@ module u2_core
    // //////////////////////////////////////////////////////////////////////////
    // Time Sync, Slave #12 
 
+   reg 		 pps_posedge, pps_negedge, pps_pos_d1, pps_neg_d1;
+   always @(negedge dsp_clk) pps_negedge <= pps_in;
+   always @(posedge dsp_clk) pps_posedge <= pps_in;
+   always @(posedge dsp_clk) pps_pos_d1 <= pps_posedge;
+   always @(posedge dsp_clk) pps_neg_d1 <= pps_negedge;   
+   
+   wire 	 pps_o;
    time_sync time_sync
      (.wb_clk_i(wb_clk),.rst_i(wb_rst),
       .cyc_i(s12_cyc),.stb_i(s12_stb),.adr_i(s12_adr[4:2]),
       .we_i(s12_we),.dat_i(s12_dat_o),.dat_o(s12_dat_i),.ack_o(s12_ack),
       .sys_clk_i(dsp_clk),.master_time_o(master_time),
-      .pps_in(pps_in),.exp_pps_in(exp_pps_in),.exp_pps_out(exp_pps_out),
-      .int_o(pps_int) );
+      //.pps_posedge(pps_posedge),.pps_negedge(pps_negedge),
+      .pps_in(pps_negedge),
+      .exp_pps_in(exp_pps_in),.exp_pps_out(exp_pps_out),
+      //.int_o(pps_int),.epoch_o(epoch),.pps_o(pps_o) );
+      .int_o(pps_int));
    assign 	 s12_err = 0;
    assign 	 s12_rty = 0;
 
@@ -665,47 +676,83 @@ module u2_core
    
    // /////////////////////////////////////////////////////////////////////////////////////////
    // Debug Pins
-
+   
    // FIFO Level Debugging
-   reg [31:0] host_to_dsp_fifo, dsp_to_host_fifo, eth_mac_debug, serdes_to_dsp_fifo, dsp_to_serdes_fifo;
-
+   reg [31:0]  host_to_dsp_fifo,dsp_to_host_fifo,eth_mac_debug,serdes_to_dsp_fifo,dsp_to_serdes_fifo;
+   
    always @(posedge dsp_clk)
      serdes_to_dsp_fifo <= { {ser_rx_full,ser_rx_empty,ser_rx_occ[13:0]},
-			   {dsp_tx_full,dsp_tx_empty,dsp_tx_occ[13:0]} };
+			     {dsp_tx_full,dsp_tx_empty,dsp_tx_occ[13:0]} };
 
    always @(posedge dsp_clk)
      dsp_to_serdes_fifo <= { {ser_tx_full,ser_tx_empty,ser_tx_occ[13:0]},
-			  {dsp_rx_full,dsp_rx_empty,dsp_rx_occ[13:0]} };
-
+			     {dsp_rx_full,dsp_rx_empty,dsp_rx_occ[13:0]} };
+   
    always @(posedge dsp_clk)
      host_to_dsp_fifo <= { {eth_rx_full,eth_rx_empty,eth_rx_occ[13:0]},
 			   {dsp_tx_full,dsp_tx_empty,dsp_tx_occ[13:0]} };
-
+   
    always @(posedge dsp_clk)
      dsp_to_host_fifo <= { {eth_tx_full,eth_tx_empty,eth_tx_occ[13:0]},
-			  {dsp_rx_full,dsp_rx_empty,dsp_rx_occ[13:0]} };
-
-   always @(posedge dsp_clk)
-     eth_mac_debug <= {// {eth_tx_full2, eth_tx_empty2, eth_tx_occ2[13:0]},
-		      // {underrun, overrun, debug_mac0[13:0] },
-		       {debug_txc[15:0]},
-		       {eth_rx_full2, eth_rx_empty2, eth_rx_occ2[13:0]} };
+			   {dsp_rx_full,dsp_rx_empty,dsp_rx_occ[13:0]} };
    
-   wire       debug_mux;
+   always @(posedge dsp_clk)
+     eth_mac_debug <= { { GMII_TX_EN, GMII_RX_DV, debug_txc[13:0]},
+			{eth_rx_full2, eth_rx_empty2, eth_rx_occ2[13:0]} };
+   
+   wire        debug_mux;
    setting_reg #(.my_addr(5)) sr_debug (.clk(wb_clk),.rst(wb_rst),.strobe(set_stb),.addr(set_addr),
 					.in(set_data),.out(debug_mux),.changed());
 
    //assign     debug = debug_mux ? host_to_dsp_fifo : dsp_to_host_fifo;
    //assign     debug = debug_mux ? serdes_to_dsp_fifo : dsp_to_serdes_fifo;
    
-   // Assign various commonly used debug buses.
-   /*
-   wire [31:0] debug_rx_1 = {uart_tx_o,GMII_TX_EN,strobe_rx,overrun,proc_int,buffer_int,timer_int,GMII_RX_DV,
-			     irq[7:0],
-			     GMII_RXD,
-			     GMII_TXD};
+   assign      debug_clk[0] = wb_clk;
+   assign      debug_clk[1] = dsp_clk;	
    
-   wire [31:0] debug_rx_2 = { 5'd0, s8_we, s8_stb, s8_ack, debug_rx[23:0] };
+   assign      debug = 0; 
+   assign      debug_gpio_0={{8'b0},
+			     {8'b0},
+			     {8'b0},
+			     {1'b0,pps_o,pps_int,epoch,pps_pos_d1,pps_posedge,pps_neg_d1,pps_negedge}};
+   assign      debug_gpio_1 = 0;
+   
+endmodule // u2_core
+
+//assign      debug = {{strobe_rx,/*adc_ovf_a*/ 1'b0,adc_a},
+//		{run_rx,/*adc_ovf_b*/ 1'b0,adc_b}};
+
+//assign      debug = debug_tx_dsp;
+//assign      debug = debug_serdes0;
+
+//assign      debug_gpio_0 = 0; //debug_serdes0;
+//assign      debug_gpio_1 = 0; //debug_serdes1;
+
+//   assign      debug={{3'b0, wb_clk, wb_rst, dsp_rst, por, config_success},
+//	      {8'b0},
+//      {3'b0,ram_loader_ack, ram_loader_stb, ram_loader_we,ram_loader_rst,ram_loader_done },
+//    {cpld_start,cpld_mode,cpld_done,cpld_din,cpld_clk,cpld_detached,cpld_misc,cpld_init_b} };
+
+//assign      debug = {dac_a,dac_b};
+
+/*
+ assign      debug = {{ram_loader_done, takeover, 6'd0},
+ {1'b0, cpld_start_int, cpld_mode_int, cpld_done_int, sd_clk, sd_csn, sd_miso, sd_mosi},
+ {8'd0},
+ {cpld_start, cpld_mode, cpld_done, cpld_din, cpld_misc, cpld_detached, cpld_clk, cpld_init_b}}; */
+
+/*assign      debug = host_to_dsp_fifo;
+ assign      debug_gpio_0 = eth_mac_debug;
+ assign      debug_gpio_1 = 0;
+ */
+// Assign various commonly used debug buses.
+/*
+ wire [31:0] debug_rx_1 = {uart_tx_o,GMII_TX_EN,strobe_rx,overrun,proc_int,buffer_int,timer_int,GMII_RX_DV,
+ irq[7:0],
+ GMII_RXD,
+ GMII_TXD};
+ 
+ wire [31:0] debug_rx_2 = { 5'd0, s8_we, s8_stb, s8_ack, debug_rx[23:0] };
    
    wire [31:0] debug_time =  {uart_tx_o, 7'b0,
 			      irq[7:0],
@@ -741,28 +788,3 @@ module u2_core
       
     */
       
-   // Choose actual debug buses
-   assign      debug_clk[0] = wb_clk;
-   assign      debug_clk[1] = dsp_clk;	
-   
-   //assign      debug = {{strobe_rx,/*adc_ovf_a*/ 1'b0,adc_a},
-   	//		{run_rx,/*adc_ovf_b*/ 1'b0,adc_b}};
-
-   //assign      debug = debug_tx_dsp;
-   //assign      debug = debug_serdes0;
-   
-   assign      debug_gpio_0 = 0; //debug_serdes0;
-   assign      debug_gpio_1 = 0; //debug_serdes1;
-
-//   assign      debug={{3'b0, wb_clk, wb_rst, dsp_rst, por, config_success},
-	//	      {8'b0},
-		//      {3'b0,ram_loader_ack, ram_loader_stb, ram_loader_we,ram_loader_rst,ram_loader_done },
-		  //    {cpld_start,cpld_mode,cpld_done,cpld_din,cpld_clk,cpld_detached,cpld_misc,cpld_init_b} };
-
-   //assign      debug = {dac_a,dac_b};
-
-   assign      debug = {{ram_loader_done, takeover, 6'd0},
-			{1'b0, cpld_start_int, cpld_mode_int, cpld_done_int, sd_clk, sd_csn, sd_miso, sd_mosi},
-			{8'd0},
-			{cpld_start, cpld_mode, cpld_done, cpld_din, cpld_misc, cpld_detached, cpld_clk, cpld_init_b}};
-endmodule // u2_core
