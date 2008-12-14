@@ -97,7 +97,7 @@ send_reply(unsigned char *reply, size_t reply_len)
   }
 
   if (0){
-    printf("sending_reply to port %d, len = %d\n", cpu_tx_buf_dest_port, reply_len);
+    printf("sending_reply to port %d, len = %d\n", cpu_tx_buf_dest_port, (int)reply_len);
     print_buffer(buffer_ram(CPU_TX_BUF), reply_len/4);
   }
 
@@ -433,6 +433,7 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
     case OP_SYNC_TO_PPS:
       subpktlen = generic_reply(gp, reply_payload, reply_payload_space,
 				sync_to_pps((op_generic_t *) payload));
+      break;
 
     default:
       printf("app_common_v2: unhandled opcode = %d\n", gp->opcode);
