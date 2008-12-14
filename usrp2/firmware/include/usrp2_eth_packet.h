@@ -183,6 +183,8 @@ typedef struct {
 #define OP_CONFIG_MIMO_REPLY	     (OP_CONFIG_MIMO | OP_REPLY_BIT)
 #define	OP_DBOARD_INFO		     9
 #define	OP_DBOARD_INFO_REPLY	     (OP_DBOARD_INFO | OP_REPLY_BIT)
+#define	OP_SYNC_TO_PPS               10
+#define	OP_SYNC_TO_PPS_REPLY	     (OP_SYNC_TO_PPS | OP_REPLY_BIT)
 
 
 //#define OP_WRITE_REG	         xx	// not implemented

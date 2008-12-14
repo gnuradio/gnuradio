@@ -389,6 +389,11 @@ namespace usrp2 {
     return d_impl->burn_mac_addr(new_addr);
   }
 
+  bool
+  usrp2::sync_to_pps()
+  {
+    return d_impl->sync_to_pps();
+  }
 
 } // namespace usrp2
 

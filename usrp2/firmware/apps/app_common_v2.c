@@ -47,6 +47,14 @@ burn_mac_addr(const op_burn_mac_addr_t *p)
 }
 
 static bool
+sync_to_pps(const op_generic_t *p)
+{
+  timesync_regs->sync_on_next_pps = 1;
+  putstr("SYNC to PPS\n");
+  return true;
+}
+
+static bool
 config_mimo_cmd(const op_config_mimo_t *p)
 {
   clocks_mimo_config(p->flags);
@@ -421,6 +429,10 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
     case OP_DBOARD_INFO:
       subpktlen = dboard_info_cmd(gp, reply_payload, reply_payload_space);
       break;
+
+    case OP_SYNC_TO_PPS:
+      subpktlen = generic_reply(gp, reply_payload, reply_payload_space,
+				sync_to_pps((op_generic_t *) payload));
 
     default:
       printf("app_common_v2: unhandled opcode = %d\n", gp->opcode);

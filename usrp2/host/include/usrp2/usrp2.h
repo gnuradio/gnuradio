@@ -356,6 +356,10 @@ namespace usrp2 {
      */
     bool burn_mac_addr(const std::string &new_addr);
 
+    /*!
+     * Reset master time to 0 at next PPS rising edge
+     */
+    bool sync_to_pps();
 
 #if 0	// not yet implemented
     /*!

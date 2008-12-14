@@ -71,6 +71,7 @@ namespace usrp2 {
     case OP_CONFIG_MIMO: return "OP_CONFIG_MIMO";
     case OP_DBOARD_INFO: return "OP_DBOARD_INFO";
     case OP_DBOARD_INFO_REPLY: return "OP_DBOARD_INFO_REPLY";
+    case OP_SYNC_TO_PPS: return "OP_SYNC_TO_PPS";
 #if 0
     case OP_WRITE_REG: return "OP_WRITE_REG";
     case OP_WRITE_REG_MASKED: return "OP_WRITE_REG_MASKED";
@@ -1019,5 +1020,26 @@ namespace usrp2 {
     return success;
   }
 
+
+  bool
+  usrp2::impl::sync_to_pps()
+  {
+    op_config_mimo_cmd cmd;
+    op_generic_t reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_SYNC_TO_PPS;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+    
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+      return false;
+
+    return ntohx(reply.ok) == 1;
+  }
 
 } // namespace usrp2

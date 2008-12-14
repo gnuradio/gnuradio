@@ -173,6 +173,7 @@ namespace usrp2 {
     // low level
 
     bool burn_mac_addr(const std::string &new_addr);
+    bool sync_to_pps();
   };
   
 } // namespace usrp2
