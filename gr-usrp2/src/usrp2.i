@@ -48,6 +48,7 @@ public:
   std::string mac_addr() const;
   %rename(_real_fpga_master_clock_freq) fpga_master_clock_freq;
   bool fpga_master_clock_freq(long *freq);
+  bool sync_to_pps();
 };
 
 // ----------------------------------------------------------------

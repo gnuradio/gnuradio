@@ -62,6 +62,12 @@ usrp2_base::fpga_master_clock_freq(long *freq) const
 }
 
 bool
+usrp2_base::sync_to_pps()
+{
+  return d_u2->sync_to_pps();
+}
+
+bool
 usrp2_base::start()
 {
   // Default implementation is NOP

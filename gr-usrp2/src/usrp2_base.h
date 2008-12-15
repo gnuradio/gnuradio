@@ -59,6 +59,11 @@ public:
   bool fpga_master_clock_freq(long *freq) const;
 
   /*!
+   * \brief Set master time to 0 at next PPS rising edge
+   */
+  bool sync_to_pps();
+
+  /*!
    * \brief Called by scheduler when starting flowgraph
    */
   virtual bool start();
