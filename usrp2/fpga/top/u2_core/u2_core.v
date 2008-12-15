@@ -565,11 +565,9 @@ module u2_core
       .cyc_i(s12_cyc),.stb_i(s12_stb),.adr_i(s12_adr[4:2]),
       .we_i(s12_we),.dat_i(s12_dat_o),.dat_o(s12_dat_i),.ack_o(s12_ack),
       .sys_clk_i(dsp_clk),.master_time_o(master_time),
-      //.pps_posedge(pps_posedge),.pps_negedge(pps_negedge),
-      .pps_in(pps_negedge),
+      .pps_posedge(pps_posedge),.pps_negedge(pps_negedge),
       .exp_pps_in(exp_pps_in),.exp_pps_out(exp_pps_out),
-      //.int_o(pps_int),.epoch_o(epoch),.pps_o(pps_o) );
-      .int_o(pps_int));
+      .int_o(pps_int),.epoch_o(epoch),.pps_o(pps_o) );
    assign 	 s12_err = 0;
    assign 	 s12_rty = 0;
 
@@ -710,11 +708,11 @@ module u2_core
    assign      debug_clk[0] = wb_clk;
    assign      debug_clk[1] = dsp_clk;	
    
-   assign      debug = 0; 
+   assign      debug = 0; //master_time; 
    assign      debug_gpio_0={{8'b0},
 			     {8'b0},
-			     {8'b0},
-			     {1'b0,pps_o,pps_int,epoch,pps_pos_d1,pps_posedge,pps_neg_d1,pps_negedge}};
+			     {4'b0,strobe_rx,run_rx,strobe_tx,run_tx},
+			     {s12_ack,pps_o,pps_int,epoch,pps_pos_d1,pps_posedge,pps_neg_d1,pps_negedge}};
    assign      debug_gpio_1 = 0;
    
 endmodule // u2_core

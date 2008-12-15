@@ -5,8 +5,11 @@ module time_sync
    input cyc_i, input stb_i, input [2:0] adr_i,
    input we_i, input [31:0] dat_i, output [31:0] dat_o, output ack_o,
    input sys_clk_i, output [31:0] master_time_o,
-   input pps_in, input exp_pps_in, output exp_pps_out,
-   output reg int_o );
+   input pps_posedge, input pps_negedge, 
+   input exp_pps_in, output exp_pps_out,
+   output reg int_o,
+   output reg epoch_o,
+   output reg pps_o );
    
    wire [31:0] master_time_rcvd;
    reg [31:0]  master_time;
@@ -19,6 +22,7 @@ module time_sync
    reg 	       tick_int_enable, tick_source, external_sync;
    reg [31:0]  tick_interval;
    reg 	       sync_on_next_pps;
+   reg 	       pps_edge;
    
    // Generate master time
    always @(posedge sys_clk_i)
@@ -57,6 +61,7 @@ module time_sync
 	  external_sync <= 0;
 	  tick_interval <= 100000-1;  // default to 1K times per second
 	  delta_time <= 0;
+	  pps_edge <= 0;
        end
      else if(wb_write)
        case(adr_i[2:0])
@@ -65,6 +70,7 @@ module time_sync
 	      tick_source <= dat_i[0];
 	      tick_int_enable <= dat_i[1];
 	      external_sync <= dat_i[2];
+	      pps_edge <= dat_i[3];
 	   end
 	 3'd1 :
 	   tick_interval <= dat_i;
@@ -81,7 +87,7 @@ module time_sync
      else if(pps_ext)
        sync_on_next_pps <= 0;
      else if(wb_write & (adr_i[2:0] == 3))
-       sync_on_next_pps <= 0;
+       sync_on_next_pps <= 1;
    
    always @(posedge sys_clk_i)
      if(internal_tick)
@@ -109,11 +115,14 @@ module time_sync
    reg 	      pps_in_d1, pps_in_d2;
    always @(posedge sys_clk_i)
      begin
-	pps_in_d1 <= pps_in;
+	pps_in_d1 <= pps_edge ? pps_posedge : pps_negedge;
 	pps_in_d2 <= pps_in_d1;
      end
    assign pps_ext = pps_in_d1 & ~pps_in_d2;
 
+   always @(posedge sys_clk_i)
+     pps_o <= pps_ext;
+   
    // Need to register this?
    reg 	  internal_tick_d1;
    always @(posedge sys_clk_i) internal_tick_d1 <= internal_tick;
@@ -121,9 +130,15 @@ module time_sync
    always @(posedge wb_clk_i)
      if(rst_i)
        int_o <= 0;
-     else if(tick_int_enable & (internal_tick | internal_tick_d1))
+/*
+      else if(tick_int_enable & (internal_tick | internal_tick_d1))
        int_o <= 1;
      else
        int_o <= 0;
-   
+*/
+   always @(posedge sys_clk_i)
+     if(rst_i)
+       epoch_o <= 0;
+     else
+       epoch_o <= (master_time_o[27:0] == 0);
 endmodule // time_sync
