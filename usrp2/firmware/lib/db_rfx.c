@@ -72,7 +72,8 @@ struct db_rfx_common {
   unsigned char CP1;
   unsigned char CP2;
   int freq_mult;
-  int spi_mask;
+  int spi_mask;  
+  u2_fxpt_freq_t freq_offset;
 };
 
 struct db_rfx_dummy {
@@ -162,7 +163,8 @@ struct db_rfx_400_rx db_rfx_400_rx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_RX_DB,
-  .common.freq_mult = 2
+  .common.freq_mult = 2,
+  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(0)
 };
 
 
@@ -193,7 +195,8 @@ struct db_rfx_400_tx db_rfx_400_tx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_TX_DB,
-  .common.freq_mult = 2
+  .common.freq_mult = 2,
+  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6)
 };
 
 struct db_rfx_900_rx db_rfx_900_rx = {
@@ -223,7 +226,8 @@ struct db_rfx_900_rx db_rfx_900_rx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_RX_DB,
-  .common.freq_mult = 2
+  .common.freq_mult = 2,
+  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(0)
 };
 
 
@@ -254,7 +258,8 @@ struct db_rfx_900_tx db_rfx_900_tx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_TX_DB,
-  .common.freq_mult = 2
+  .common.freq_mult = 2,
+  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6)
 };
 
 struct db_rfx_1200_rx db_rfx_1200_rx = {
@@ -284,7 +289,8 @@ struct db_rfx_1200_rx db_rfx_1200_rx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_RX_DB,
-  .common.freq_mult = 2
+  .common.freq_mult = 2,
+  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(0)
 };
 
 
@@ -315,7 +321,8 @@ struct db_rfx_1200_tx db_rfx_1200_tx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_TX_DB,
-  .common.freq_mult = 2
+  .common.freq_mult = 2,
+  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6)
 };
 
 struct db_rfx_1800_rx db_rfx_1800_rx = {
@@ -345,7 +352,8 @@ struct db_rfx_1800_rx db_rfx_1800_rx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_RX_DB,
-  .common.freq_mult = 1
+  .common.freq_mult = 1,
+  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(0)
 };
 
 
@@ -376,7 +384,8 @@ struct db_rfx_1800_tx db_rfx_1800_tx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_TX_DB,
-  .common.freq_mult = 1
+  .common.freq_mult = 1,  
+  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6)
 };
 
 
@@ -407,7 +416,8 @@ struct db_rfx_2400_rx db_rfx_2400_rx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_RX_DB,
-  .common.freq_mult = 1
+  .common.freq_mult = 1,
+  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(0)
 };
 
 
@@ -438,7 +448,8 @@ struct db_rfx_2400_tx db_rfx_2400_tx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_TX_DB,
-  .common.freq_mult = 1
+  .common.freq_mult = 1,
+  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6)
 };
 
 
@@ -477,9 +488,7 @@ rfx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc)
 
   *dc = 0;
   struct db_rfx_dummy *db = (struct db_rfx_dummy *) dbb;
-  //u2_fxpt_freq_t desired_n = db->common.freq_mult*freq/phdet_freq;
-  //int N_DIV = u2_fxpt_freq_round_to_int(desired_n);
-  u2_fxpt_freq_t desired_n = ((1LL<<20) * db->common.freq_mult*freq)/phdet_freq;
+  u2_fxpt_freq_t desired_n = ((1LL<<20)*db->common.freq_mult*(freq+db->common.freq_offset))/phdet_freq;
   int N_DIV = u2_fxpt_freq_round_to_int(desired_n);
   int B = N_DIV/PRESCALER;
   int A = N_DIV - PRESCALER*B;
