@@ -25,6 +25,7 @@ from gnuradio import usrp2
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import sys
+import math
 
 n2s = eng_notation.num_to_str
 
@@ -78,6 +79,19 @@ class siggen_top_block(gr.top_block):
             self._src = gr.add_cc()
             self.connect(self._src1,(self._src,0))
             self.connect(self._src2,(self._src,1))
+        elif options.type == "sweep":
+            # rf freq is center frequency
+            # waveform_freq is total swept width
+            # waveform2_freq is sweep rate
+            #  will sweep from (rf_freq-waveform_freq/2) to (rf_freq+waveform_freq/2)
+            self._src1 = gr.sig_source_f(eth_rate,
+                                         gr.GR_TRI_WAVE,
+                                         options.waveform2_freq,
+                                         1.0,  # options.waveform_freq,
+                                         -0.5)
+            self._src2 = gr.frequency_modulator_fc(options.waveform_freq*2*math.pi/eth_rate)
+            self._src = gr.multiply_const_cc(options.amplitude)
+            self.connect(self._src1,self._src2,self._src)
         else:
             sys.stderr.write('Unknown waveform type\n')
             raise SystemExit, 1
@@ -139,6 +153,8 @@ def get_options():
                       help="generate Uniform random output")
     parser.add_option("--2tone", dest="type", action="store_const", const="2tone",
                       help="generate Two Tone signal for IMD testing")
+    parser.add_option("--sweep", dest="type", action="store_const", const="sweep",
+                      help="generate a swept sine wave")
                       
     (options, args) = parser.parse_args ()
     if len(args) != 0:
