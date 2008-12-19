@@ -17,6 +17,8 @@
 
 AC_DEFUN([GR_CHECK_MEMALIGN],
 [
+  AC_REQUIRE([AC_CANONICAL_HOST])
+
   # Check for allocing memory alignment functions
   # If 'posix_memalign' is available, use it solely.
   AC_CHECK_FUNCS([posix_memalign],,[
