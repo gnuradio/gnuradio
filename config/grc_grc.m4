@@ -48,12 +48,14 @@ AC_DEFUN([GRC_GRC],[
     dnl ########################################
     dnl # test gtk version
     dnl ########################################
-    AC_MSG_CHECKING([for GTK version >= 2.10.0])
-    if test `${PYTHON} -c "import gtk; print gtk.pygtk_version >= (2, 10, 0)"` = 'True'; then
-        AC_MSG_RESULT([yes])
-    else
-        AC_MSG_RESULT([no])
-        passed=no
+    if test $passed = yes; then
+        AC_MSG_CHECKING([for GTK version >= 2.10.0])
+        if test `${PYTHON} -c "import gtk; print gtk.pygtk_version >= (2, 10, 0)"` = 'True'; then
+            AC_MSG_RESULT([yes])
+        else
+            AC_MSG_RESULT([no])
+            passed=no
+        fi
     fi
 
     dnl ########################################
