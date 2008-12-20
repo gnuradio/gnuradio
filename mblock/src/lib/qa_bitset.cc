@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,10 +22,10 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <mb_mblock.h>
-#include <mb_protocol_class.h>
-#include <mb_message.h>
-#include <mb_class_registry.h>
+#include <mblock/mblock.h>
+#include <mblock/protocol_class.h>
+#include <mblock/message.h>
+#include <mblock/class_registry.h>
 #include <iostream>
 #include <sstream>
 #include <bitset>

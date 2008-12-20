@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,7 +21,7 @@
 #ifndef INCLUDED_MB_MESSAGE_H
 #define INCLUDED_MB_MESSAGE_H
 
-#include <mb_common.h>
+#include <mblock/common.h>
 #include <iosfwd>
 
 #define MB_MESSAGE_LOCAL_ALLOCATOR 0	// define to 0 or 1

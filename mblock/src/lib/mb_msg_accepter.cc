@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 
-#include <mb_msg_accepter.h>
+#include <mblock/msg_accepter.h>
 
 mb_msg_accepter::~mb_msg_accepter()
 {

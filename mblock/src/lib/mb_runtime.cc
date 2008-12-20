@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 
-#include <mb_runtime.h>
+#include <mblock/runtime.h>
 #include <mb_runtime_thread_per_block.h>
 
 mb_runtime_sptr

@@ -21,7 +21,7 @@
 #ifndef INCLUDED_MB_MSG_ACCEPTER_SMP_H
 #define INCLUDED_MB_MSG_ACCEPTER_SMP_H
 
-#include <mb_msg_accepter.h>
+#include <mblock/msg_accepter.h>
 
 /*!
  * \brief Concrete message acceptor that does an mb_msg_queue insertion

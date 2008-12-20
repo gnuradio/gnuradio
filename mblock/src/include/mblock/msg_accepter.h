@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,7 +21,7 @@
 #ifndef INCLUDED_MB_MSG_ACCEPTER_H
 #define INCLUDED_MB_MSG_ACCEPTER_H
 
-#include <mb_common.h>
+#include <mblock/common.h>
 
 /*!
  * \brief Abstract class that accepts messages

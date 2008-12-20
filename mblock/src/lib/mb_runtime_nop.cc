@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,9 +23,9 @@
 #include <config.h>
 #endif
 #include <mb_runtime_nop.h>
-#include <mb_mblock.h>
-#include <mb_class_registry.h>
-#include <mb_exception.h>
+#include <mblock/mblock.h>
+#include <mblock/class_registry.h>
+#include <mblock/exception.h>
 
 mb_runtime_sptr 
 mb_make_runtime_nop()

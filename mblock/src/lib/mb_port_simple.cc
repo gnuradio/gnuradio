@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,9 +24,9 @@
 #endif
 
 #include <mb_port_simple.h>
-#include <mb_msg_accepter.h>
-#include <mb_exception.h>
-#include <mb_mblock.h>
+#include <mblock/msg_accepter.h>
+#include <mblock/exception.h>
+#include <mblock/mblock.h>
 #include <mb_mblock_impl.h>
 #include <assert.h>
 #include <mbi_runtime_lock.h>

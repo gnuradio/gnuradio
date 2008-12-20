@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,8 +23,8 @@
 #include <config.h>
 #endif
 
-#include <mb_port.h>
-#include <mb_protocol_class.h>
+#include <mblock/port.h>
+#include <mblock/protocol_class.h>
 
 mb_port::mb_port(mb_mblock *mblock,
 		 const std::string &port_name,

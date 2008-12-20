@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,10 +24,10 @@
 #endif
 #include <mb_worker.h>
 #include <mb_runtime_thread_per_block.h>
-#include <mb_exception.h>
-#include <mb_mblock.h>
+#include <mblock/exception.h>
+#include <mblock/mblock.h>
 #include <mb_gettid.h>
-#include <mb_msg_accepter.h>
+#include <mblock/msg_accepter.h>
 #include <iostream>
 #ifdef HAVE_SCHED_H
 #include <sched.h>

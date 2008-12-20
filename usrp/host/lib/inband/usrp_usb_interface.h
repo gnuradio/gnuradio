@@ -21,7 +21,7 @@
 #ifndef INCLUDED_USRP_USB_INTERFACE_H
 #define INCLUDED_USRP_USB_INTERFACE_H
 
-#include <mb_mblock.h>
+#include <mblock/mblock.h>
 #include <vector>
 #include "usrp_standard.h"
 

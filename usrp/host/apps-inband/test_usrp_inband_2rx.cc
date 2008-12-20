@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,16 +23,16 @@
 #include <config.h>
 #endif
 
-#include <mb_mblock.h>
-#include <mb_runtime.h>
+#include <mblock/mblock.h>
+#include <mblock/runtime.h>
 #include <mb_runtime_nop.h>		// QA only
-#include <mb_protocol_class.h>
-#include <mb_exception.h>
-#include <mb_msg_queue.h>
-#include <mb_message.h>
+#include <mblock/protocol_class.h>
+#include <mblock/exception.h>
+#include <mblock/msg_queue.h>
+#include <mblock/message.h>
 #include <mb_mblock_impl.h>
-#include <mb_msg_accepter.h>
-#include <mb_class_registry.h>
+#include <mblock/msg_accepter.h>
+#include <mblock/class_registry.h>
 #include <pmt.h>
 #include <stdio.h>
 #include <string.h>

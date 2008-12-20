@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,7 +22,7 @@
 #ifndef INCLUDED_MBI_RUNTIME_LOCK_H
 #define INCLUDED_MBI_RUNTIME_LOCK_H
 
-#include <mb_runtime.h>
+#include <mblock/runtime.h>
 #include <mb_mblock_impl.h>
 #include <boost/utility.hpp>
 

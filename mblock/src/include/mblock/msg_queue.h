@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,9 +21,9 @@
 #ifndef INCLUDED_MB_MSG_QUEUE_H
 #define INCLUDED_MB_MSG_QUEUE_H
 
-#include <mb_common.h>
+#include <mblock/common.h>
 #include <omnithread.h>
-#include <mb_time.h>
+#include <mblock/time.h>
 
 /*!
  * \brief priority queue for mblock messages

@@ -22,7 +22,8 @@
 include $(top_srcdir)/Makefile.common
 
 AM_CPPFLAGS = $(DEFINES) $(OMNITHREAD_INCLUDES) $(PMT_INCLUDES) \
-	$(BOOST_CPPFLAGS) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
+	$(BOOST_CPPFLAGS) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES) \
+	$(MBLOCK_INCLUDES)
 
 # disable test until we fix ticket:180
 # TESTS = test_mblock
@@ -75,25 +76,11 @@ libmblock_la_LIBADD = 			\
 	$(PMT_LA)			\
 	-lstdc++			
 
-include_HEADERS =			\
-	mb_class_registry.h		\
-	mb_common.h			\
-	mb_exception.h			\
+noinst_HEADERS =			\
 	mb_gettid.h			\
-	mb_mblock.h			\
-	mb_message.h			\
-	mb_msg_accepter.h		\
 	mb_msg_accepter_msgq.h		\
-	mb_msg_queue.h			\
-	mb_port.h			\
 	mb_port_simple.h		\
-	mb_protocol_class.h		\
-	mb_runtime.h			\
-	mb_time.h			\
-	mb_util.h			
-
-
-noinst_HEADERS = 			\
+	mb_util.h			\
 	mb_connection.h			\
 	mb_endpoint.h			\
 	mb_mblock_impl.h		\

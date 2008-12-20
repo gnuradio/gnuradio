@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,7 +23,7 @@
 #define INCLUDED_USRP_INBAND_USB_PACKET_H_
 
 #include <usrp_bytesex.h>
-#include <mb_mblock.h>
+#include <mblock/mblock.h>
 #include <pmt.h>
 #include <iostream>
 

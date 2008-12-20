@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,11 +22,11 @@
 #ifndef INCLUDED_MB_TIMER_QUEUE_H
 #define INCLUDED_MB_TIMER_QUEUE_H
 
-#include <mb_time.h>
+#include <mblock/time.h>
 #include <vector>
 #include <queue>
 #include <pmt.h>
-#include <mb_msg_accepter.h>
+#include <mblock/msg_accepter.h>
 
 class mb_timeout {
 public:

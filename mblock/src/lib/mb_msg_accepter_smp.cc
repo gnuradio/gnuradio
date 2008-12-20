@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,10 +23,10 @@
 #include <config.h>
 #endif
 #include <mb_msg_accepter_smp.h>
-#include <mb_common.h>
-#include <mb_mblock.h>
+#include <mblock/common.h>
+#include <mblock/mblock.h>
 #include <mb_mblock_impl.h>
-#include <mb_message.h>
+#include <mblock/message.h>
 
 mb_msg_accepter_smp::mb_msg_accepter_smp(mb_mblock_sptr mblock, pmt_t port_name)
   : d_mb(mblock), d_port_name(port_name)

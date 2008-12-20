@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,7 +21,7 @@
 #ifndef INCLUDED_MB_CLASS_REGISTRY_H
 #define INCLUDED_MB_CLASS_REGISTRY_H
 
-#include <mb_common.h>
+#include <mblock/common.h>
 
 //! conceptually, pointer to constructor
 typedef mb_mblock_sptr (*mb_mblock_maker_t)(mb_runtime *runtime,

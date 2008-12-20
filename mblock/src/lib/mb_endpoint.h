@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,7 +23,7 @@
 #define INCLUDED_MB_ENDPOINT_H
 
 #include <string>
-#include <mb_port.h>
+#include <mblock/port.h>
 
 /*!
  * \brief Endpoint specification for connection

@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2006,2008 Free Software Foundation, Inc.
+# Copyright 2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,4 +19,19 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-SUBDIRS = include lib scheme
+include $(top_srcdir)/Makefile.common
+
+mbincludedir = $(includedir)/mblock
+
+mbinclude_HEADERS = \
+	common.h \
+	class_registry.h \
+	exception.h \
+	mblock.h \
+	message.h \
+	msg_accepter.h \
+	msg_queue.h \
+	port.h \
+	protocol_class.h \
+	runtime.h \
+	time.h

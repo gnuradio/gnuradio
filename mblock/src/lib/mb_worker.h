@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,8 +23,8 @@
 #define INCLUDED_MB_WORKER_H
 
 #include <omnithread.h>
-#include <mb_common.h>
-#include <mb_class_registry.h>
+#include <mblock/common.h>
+#include <mblock/class_registry.h>
 
 
 class mb_worker;

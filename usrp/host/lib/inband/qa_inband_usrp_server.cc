@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,10 +28,10 @@
 #include <cppunit/TestAssert.h>
 #include <stdio.h>
 #include <usrp_server.h>
-#include <mb_mblock.h>
-#include <mb_runtime.h>
-#include <mb_protocol_class.h>
-#include <mb_class_registry.h>
+#include <mblock/mblock.h>
+#include <mblock/runtime.h>
+#include <mblock/protocol_class.h>
+#include <mblock/class_registry.h>
 #include <vector>
 #include <iostream>
 #include <pmt.h>

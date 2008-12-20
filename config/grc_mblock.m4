@@ -36,7 +36,7 @@ AC_DEFUN([GRC_MBLOCK],[
     fi
     if test $passed != with; then
 	dnl how and where to find INCLUDES and LA
-	mblock_INCLUDES="-I\${abs_top_srcdir}/mblock/src/lib"
+	mblock_INCLUDES="-I\${abs_top_srcdir}/mblock/src/include"
         mblock_LA="\${abs_top_builddir}/mblock/src/lib/libmblock.la"
     fi
 
@@ -45,6 +45,8 @@ AC_DEFUN([GRC_MBLOCK],[
         mblock/mblock.pc \
         mblock/doc/Makefile \
         mblock/src/Makefile \
+	mblock/src/include/Makefile \
+	mblock/src/include/mblock/Makefile \
         mblock/src/lib/Makefile \
         mblock/src/scheme/Makefile \
         mblock/src/scheme/gnuradio/Makefile \

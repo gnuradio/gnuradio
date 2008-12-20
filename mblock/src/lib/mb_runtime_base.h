@@ -22,9 +22,9 @@
 #ifndef INCLUDED_MB_RUNTIME_BASE_H
 #define INCLUDED_MB_RUNTIME_BASE_H
 
-#include <mb_runtime.h>
+#include <mblock/runtime.h>
 #include <omnithread.h>
-#include <mb_time.h>
+#include <mblock/time.h>
 
 /*
  * \brief This is the runtime class used by the implementation.

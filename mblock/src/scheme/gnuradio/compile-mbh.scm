@@ -3,7 +3,7 @@
 !#
 ;; -*-scheme-*-
 ;;
-;; Copyright 2007 Free Software Foundation, Inc.
+;; Copyright 2007,2008 Free Software Foundation, Inc.
 ;; 
 ;; This file is part of GNU Radio
 ;; 
@@ -180,7 +180,7 @@
 		  (format o-port "// protocol-classes: ~{~a ~}~%" (map car protocol-classes))
 		  (format o-port "//~%")
 
-		  (format o-port "#include <mb_protocol_class.h>~%")
+		  (format o-port "#include <mblock/protocol_class.h>~%")
 		  (format o-port "#include <unistd.h>~%")
 		  (format o-port
 			  "static const char~%protocol_class_init_data[~d] = {~%  "

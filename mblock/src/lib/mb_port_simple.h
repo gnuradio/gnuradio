@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,7 +21,7 @@
 #ifndef INCLUDED_MB_PORT_SIMPLE_H
 #define INCLUDED_MB_PORT_SIMPLE_H
 
-#include <mb_port.h>
+#include <mblock/port.h>
 
 /*!
  * \brief Concrete port realization

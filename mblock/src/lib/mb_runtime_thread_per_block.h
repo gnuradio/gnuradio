@@ -23,7 +23,7 @@
 
 #include <mb_runtime_base.h>
 #include <mb_worker.h>
-#include <mb_msg_queue.h>
+#include <mblock/msg_queue.h>
 #include <mb_timer_queue.h>
 
 /*!

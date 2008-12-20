@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,10 +23,10 @@
 #include <config.h>
 #endif
 
-#include <mb_mblock.h>
+#include <mblock/mblock.h>
 #include <mb_mblock_impl.h>
-#include <mb_runtime.h>
-#include <mb_exception.h>
+#include <mblock/runtime.h>
+#include <mblock/exception.h>
 #include <iostream>
 
 

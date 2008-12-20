@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,8 +22,8 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <mb_msg_queue.h>
-#include <mb_message.h>
+#include <mblock/msg_queue.h>
+#include <mblock/message.h>
 
 
 mb_msg_queue::mb_msg_queue()

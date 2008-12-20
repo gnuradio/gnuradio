@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,7 +21,7 @@
 #ifndef INCLUDED_USRP_TX_H
 #define INCLUDED_USRP_TX_H
 
-#include <mb_mblock.h>
+#include <mblock/mblock.h>
 #include <fstream>
 
 class usrp_standard_tx;

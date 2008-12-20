@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,8 +21,8 @@
 #ifndef INCLUDED_MB_MSG_ACCEPTER_MSGQ_H
 #define INCLUDED_MB_MSG_ACCEPTER_MSGQ_H
 
-#include <mb_msg_accepter.h>
-#include <mb_msg_queue.h>
+#include <mblock/msg_accepter.h>
+#include <mblock/msg_queue.h>
 
 /*!
  * \brief Concrete class that accepts messages and inserts them into a message queue.

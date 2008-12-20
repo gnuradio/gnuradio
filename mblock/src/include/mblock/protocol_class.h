@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,7 +21,7 @@
 #ifndef INCLUDED_MB_PROTOCOL_CLASS_H
 #define INCLUDED_MB_PROTOCOL_CLASS_H
 
-#include <mb_common.h>
+#include <mblock/common.h>
 
 /*!
  * \brief construct a protocol_class

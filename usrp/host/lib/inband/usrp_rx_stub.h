@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,7 +21,7 @@
 #ifndef INCLUDED_USRP_RX_STUB_H
 #define INCLUDED_USRP_RX_STUB_H
 
-#include <mb_mblock.h>
+#include <mblock/mblock.h>
 #include <vector>
 #include "usrp_standard.h"
 #include <ui_nco.h>

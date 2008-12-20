@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,10 +21,10 @@
 #ifndef INCLUDED_MB_MBLOCK_H
 #define INCLUDED_MB_MBLOCK_H
 
-#include <mb_common.h>
-#include <mb_message.h>
-#include <mb_port.h>
-#include <mb_time.h>
+#include <mblock/common.h>
+#include <mblock/message.h>
+#include <mblock/port.h>
+#include <mblock/time.h>
 
 
 /*!

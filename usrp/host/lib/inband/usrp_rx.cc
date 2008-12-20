@@ -29,7 +29,7 @@
 #include <iostream>
 #include <vector>
 #include <usb.h>
-#include <mb_class_registry.h>
+#include <mblock/class_registry.h>
 #include <usrp_inband_usb_packet.h>
 #include <fpga_regs_common.h>
 #include <stdio.h>

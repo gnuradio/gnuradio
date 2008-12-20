@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 
-#include <mb_protocol_class.h>
+#include <mblock/protocol_class.h>
 #include <iostream>
 
 static pmt_t s_ALL_PROTOCOL_CLASSES = PMT_NIL;

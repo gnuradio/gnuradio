@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,7 +25,7 @@
 #include <usrp_server.h>
 #include <iostream>
 #include <usrp_inband_usb_packet.h>
-#include <mb_class_registry.h>
+#include <mblock/class_registry.h>
 #include <vector>
 #include <usrp_usb_interface.h>
 #include <string.h>

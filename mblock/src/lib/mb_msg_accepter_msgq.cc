@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 #include <mb_msg_accepter_msgq.h>
-#include <mb_message.h>
+#include <mblock/message.h>
 
 pmt_t s_sys_port = pmt_intern("%sys-port");
 
