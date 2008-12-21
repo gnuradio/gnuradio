@@ -759,9 +759,11 @@ class app_flow_graph(stdgui2.std_top_block):
 		if (now - self.continuum_then > 20):
 			self.sun.compute(self.locality)
 			enow = ephem.now()
+			sunset = self.locality.next_setting(self.sun)
+			sunrise = self.locality.next_rising(self.sun)
 			sun_insky = "Down"
 			self.sunstate = "Dn"
-			if ((self.sun.rise_time < enow) and (enow < self.sun.set_time)):
+			if ((sunrise < enow) and (enow < sunset)):
 			   sun_insky = "Up"
 			   self.sunstate = "Up"
 			self.continuum_then = now
