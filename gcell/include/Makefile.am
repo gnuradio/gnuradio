@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,9 +20,5 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = include lib apps ibm
+SUBDIRS = gcell
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = \
-	gcell.pc \
-	gcell_spu.pc

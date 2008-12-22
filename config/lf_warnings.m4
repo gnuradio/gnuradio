@@ -115,7 +115,7 @@ AC_DEFUN([LF_SET_WARNINGS],[
      
   dnl Warnings for the two main compilers
   dnl add -Wextra when you're got time to fix a bunch of them ;-)
-  cc_warning_flags="-Wall $lf_warnings_as_errors"
+  cc_warning_flags="-Wall -Werror-implicit-function-declaration $lf_warnings_as_errors"
   cxx_warning_flags="-Wall -Woverloaded-virtual $lf_warnings_as_errors"
   if test -n "${CC}"
   then

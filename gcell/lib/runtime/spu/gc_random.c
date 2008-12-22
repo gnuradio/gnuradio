@@ -18,20 +18,23 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#include <gcell/spu/gc_random.h>
 
-%feature("autodoc","1");
+static int last_val = 0;
 
-//%include "exception.i"
-%import "gnuradio.i"				// the common stuff
+#define	M  714025	// values from Numerical Recipes in C, 1988
+#define A    4096
+#define C  150889
 
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-//#include <stdexcept>
+void 
+gc_set_seed(int seed)
+{
+  last_val = ((unsigned int) seed) % M;
+}
 
-#include <gcell/gc_job_manager.h>
-#include <gcell_fft_vcc.h>  
-
-%}
-
-%include "gc_job_manager.i"
-%include "gcell_fft_vcc.i"
+float
+gc_uniform_deviate(void)
+{
+  last_val = (last_val * A + C) % M;
+  return (float) last_val / (float) M;
+}

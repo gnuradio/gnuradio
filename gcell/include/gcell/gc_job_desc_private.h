@@ -1,6 +1,6 @@
-/* -*- c++ -*- */
+/* -*- c -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,19 +19,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-%feature("autodoc","1");
+#ifndef INCLUDED_GCELL_GC_JOB_DESC_PRIVATE_H
+#define INCLUDED_GCELL_GC_JOB_DESC_PRIVATE_H
 
-//%include "exception.i"
-%import "gnuradio.i"				// the common stuff
+// #include <libsync.h>
 
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-//#include <stdexcept>
+/*!
+ * \brief Implementation details we'd like to hide from the user.
+ */
+typedef struct gc_job_desc_private
+{
+  gc_eaddr_t	next;		    // used to implement job queue and free list
+  uint16_t	job_id;
+  uint16_t	client_id;
+  uint32_t	direction_union;    // union of all gc_job_ea_arg.direction fields
+} gc_job_desc_private_t;
 
-#include <gcell/gc_job_manager.h>
-#include <gcell_fft_vcc.h>  
+#endif /* INCLUDED_GCELL_GC_JOB_PRIVATE_H */
 
-%}
-
-%include "gc_job_manager.i"
-%include "gcell_fft_vcc.i"

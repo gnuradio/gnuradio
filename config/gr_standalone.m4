@@ -70,6 +70,17 @@ m4_define([GR_STANDALONE],
   GR_NO_UNDEFINED	dnl do we need the -no-undefined linker flag
   GR_SCRIPTING		dnl Locate python, SWIG, etc
 
+  AC_ARG_WITH([python],
+    AC_HELP_STRING([--with-python], [Should we use python? [[default=yes]]]),
+    [case "$with_python" in
+      (no | yes) ;;
+      (*) AC_MSG_ERROR([Invalid argument ($with_python) to --with-python]) ;;
+     esac],
+    [with_python=yes])
+
+  AM_CONDITIONAL([USE_PYTHON], [test "$with_python" = yes])
+
+
   dnl Set the c++ compiler that we use for the build system when cross compiling
   if test "x$CXX_FOR_BUILD" = x
   then
@@ -93,6 +104,13 @@ m4_define([GR_STANDALONE],
   AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
   AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
 
+  dnl Define where to look for cppunit includes and libs
+  dnl sets CPPUNIT_CFLAGS and CPPUNIT_LIBS
+  dnl Try using pkg-config first, then fall back to cppunit-config.
+  PKG_CHECK_EXISTS(cppunit,
+    [PKG_CHECK_MODULES(CPPUNIT, cppunit >= 1.9.14)],
+    [AM_PATH_CPPUNIT([1.9.14],[],
+		     [AC_MSG_ERROR([GNU Radio requires cppunit.  Stop])])])
+
   PKG_CHECK_MODULES(GNURADIO_CORE, gnuradio-core >= 3)
-  LIBS="$LIBS $GNURADIO_CORE_LIBS"
 ])

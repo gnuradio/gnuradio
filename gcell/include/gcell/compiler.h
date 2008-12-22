@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,19 +19,27 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-%feature("autodoc","1");
+#ifndef INCLUDED_GCELL_COMPILER_H
+#define INCLUDED_GCELL_COMPILER_H
 
-//%include "exception.i"
-%import "gnuradio.i"				// the common stuff
+/*!
+ * \brief Compiler specific hackery.  These are for GCC.
+ */
 
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-//#include <stdexcept>
+#define _AL8   __attribute__((aligned (8)))
+#define _AL16  __attribute__((aligned (16)))
+#define _AL128 __attribute__((aligned (128)))
 
-#include <gcell/gc_job_manager.h>
-#include <gcell_fft_vcc.h>  
+#define _UNUSED __attribute__((unused))
 
-%}
+#ifndef likely
+#define likely(x)       __builtin_expect(!!(x), 1)
+#define unlikely(x)     __builtin_expect(!!(x), 0)
+#endif
 
-%include "gc_job_manager.i"
-%include "gcell_fft_vcc.i"
+#ifndef offsetof
+#define offsetof(TYPE, MEMBER)  __builtin_offsetof (TYPE, MEMBER)
+#endif
+
+
+#endif /* INCLUDED_GCELL_COMPILER_H */

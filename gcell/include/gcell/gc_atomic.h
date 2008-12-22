@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -18,20 +18,12 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#ifndef INCLUDED_GCELL_GC_ATOMIC_H
+#define INCLUDED_GCELL_GC_ATOMIC_H
 
-%feature("autodoc","1");
+#include <stdint.h>
 
-//%include "exception.i"
-%import "gnuradio.i"				// the common stuff
+typedef uint32_t	gc_atomic_t;
 
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-//#include <stdexcept>
 
-#include <gcell/gc_job_manager.h>
-#include <gcell_fft_vcc.h>  
-
-%}
-
-%include "gc_job_manager.i"
-%include "gcell_fft_vcc.i"
+#endif /* INCLUDED_GCELL_GC_ATOMIC_H */

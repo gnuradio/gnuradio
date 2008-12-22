@@ -19,19 +19,17 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-%feature("autodoc","1");
+#include <gcell/spu/libfft.h>
+#include <gcell/spu/fft_1d_r2.h>
+#include <assert.h>
 
-//%include "exception.i"
-%import "gnuradio.i"				// the common stuff
+/*
+ * invoke the inline version
+ */
+void 
+fft_1d_r2(vector float *out, vector float *in, vector float *W, int log2_size)
+{
+  assert((1 << log2_size) <= MAX_FFT_1D_SIZE);
 
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-//#include <stdexcept>
-
-#include <gcell/gc_job_manager.h>
-#include <gcell_fft_vcc.h>  
-
-%}
-
-%include "gc_job_manager.i"
-%include "gcell_fft_vcc.i"
+  _fft_1d_r2(out, in, W, log2_size);
+}

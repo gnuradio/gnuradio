@@ -18,20 +18,16 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#ifndef INCLUDED_GCELL_GC_SPU_CONFIG_H
+#define INCLUDED_GCELL_GC_SPU_CONFIG_H
 
-%feature("autodoc","1");
+#include <gcell/gc_job_desc.h>
 
-//%include "exception.i"
-%import "gnuradio.i"				// the common stuff
+#define CACHE_LINE_SIZE	     128	      // in bytes
+#define	GC_SPU_BUFSIZE_BASE  (40 * 1024)      //  must be multiple of CACHE_LINE_SIZE
+#define	GC_SPU_BUFSIZE (GC_SPU_BUFSIZE_BASE + MAX_ARGS_EA * CACHE_LINE_SIZE)
 
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-//#include <stdexcept>
+#define NGETBUFS	1	// single buffer job arg gets
+#define	NPUTBUFS	2	// double buffer job arg puts
 
-#include <gcell/gc_job_manager.h>
-#include <gcell_fft_vcc.h>  
-
-%}
-
-%include "gc_job_manager.i"
-%include "gcell_fft_vcc.i"
+#endif /* INCLUDED_GCELL_GC_SPU_CONFIG_H */

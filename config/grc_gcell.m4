@@ -50,40 +50,30 @@ AC_DEFUN([GRC_GCELL],[
 
     if test $passed != with; then
 	dnl how and where to find INCLUDES and LA
-	gcell_INCLUDES="-I\${abs_top_srcdir}/gcell/src/include \
-		 -I\${abs_top_srcdir}/gcell/src/lib/runtime \
-		 -I\${abs_top_srcdir}/gcell/src/lib/general \
-		 -I\${abs_top_srcdir}/gcell/src/lib/wrapper"
-        gcell_LA="\${abs_top_builddir}/gcell/src/lib/libgcell.la"
-	gcell_spu_INCLUDES="-I\${abs_top_srcdir}/gcell/src/include/spu \
-		 -I\${abs_top_srcdir}/gcell/src/include \
-		 -I\${abs_top_srcdir}/gcell/src/lib/runtime/spu \
-		 -I\${abs_top_srcdir}/gcell/src/lib/general/spu \
-		 -I\${abs_top_srcdir}/gcell/src/lib/wrapper/spu"
-	gcell_spu_LA="\${abs_top_builddir}/gcell/src/lib/spu/libgcell_spu.a"
+	gcell_INCLUDES="-I\${abs_top_srcdir}/gcell/include"
+        gcell_LA="\${abs_top_builddir}/gcell/lib/libgcell.la"
+	gcell_spu_INCLUDES="-I\${abs_top_srcdir}/gcell/include"
+	gcell_spu_LA="\${abs_top_builddir}/gcell/lib/spu/libgcell_spu.a"
 	AC_SUBST(gcell_spu_INCLUDES)
 	AC_SUBST(gcell_spu_LA)
 
-        dnl kludge up initial swig dependency files
-        AC_CONFIG_COMMANDS([swig_gcell_deps], [
-            touch gr-gcell/src/gcell.d
-        ])
     fi
 
     AC_CONFIG_FILES([ \
         gcell/Makefile \
         gcell/gcell.pc \
-        gcell/src/Makefile \
-        gcell/src/include/Makefile \
-        gcell/src/include/spu/Makefile \
-        gcell/src/lib/Makefile \
-        gcell/src/lib/spu/Makefile \
-        gcell/src/lib/general/Makefile \
-        gcell/src/lib/wrapper/Makefile \
-        gcell/src/lib/runtime/Makefile \
-        gcell/src/apps/Makefile \
-	gcell/src/apps/spu/Makefile \
-	gcell/src/ibm/Makefile \
+        gcell/gcell_spu.pc \
+	gcell/include/Makefile \
+        gcell/include/gcell/Makefile \
+        gcell/include/gcell/spu/Makefile \
+        gcell/lib/Makefile \
+        gcell/lib/spu/Makefile \
+        gcell/lib/general/Makefile \
+        gcell/lib/wrapper/Makefile \
+        gcell/lib/runtime/Makefile \
+        gcell/apps/Makefile \
+	gcell/apps/spu/Makefile \
+	gcell/ibm/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(gcell)

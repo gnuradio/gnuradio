@@ -18,20 +18,31 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#ifndef INCLUDED_QA_GCP_FFT_1D_R2_H
+#define INCLUDED_QA_GCP_FFT_1D_R2_H
 
-%feature("autodoc","1");
-
-//%include "exception.i"
-%import "gnuradio.i"				// the common stuff
-
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-//#include <stdexcept>
-
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
 #include <gcell/gc_job_manager.h>
-#include <gcell_fft_vcc.h>  
 
-%}
+class qa_gcp_fft_1d_r2 : public CppUnit::TestCase {
 
-%include "gc_job_manager.i"
-%include "gcell_fft_vcc.i"
+  CPPUNIT_TEST_SUITE(qa_gcp_fft_1d_r2);
+  CPPUNIT_TEST(t1);
+  CPPUNIT_TEST(t2);
+  CPPUNIT_TEST(t3);
+  CPPUNIT_TEST(t4);
+  CPPUNIT_TEST_SUITE_END();
+
+ private:
+  void t1();
+  void t2();
+  void t3();
+  void t4();
+
+  void test(gc_job_manager_sptr mgr, int log2_fft_size, bool forward);
+};
+
+
+
+#endif /* INCLUDED_QA_GCP_FFT_1D_R2_H */

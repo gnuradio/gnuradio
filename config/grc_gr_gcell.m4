@@ -31,6 +31,12 @@ AC_DEFUN([GRC_GR_GCELL],[
         gr-gcell/src/run_tests \
     ])
 
+    dnl kludge up initial swig dependency files
+    AC_CONFIG_COMMANDS([swig_gcell_deps], [
+        touch gr-gcell/src/gcell.d
+    ])
+
+
     GRC_BUILD_CONDITIONAL(gr-gcell,[
 	dnl run_tests is created from run_tests.in.  Make it executable.
 	AC_CONFIG_COMMANDS([run_tests_gcell], [chmod +x gr-gcell/src/run_tests])

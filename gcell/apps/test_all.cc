@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,19 +19,21 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-%feature("autodoc","1");
+#include <cppunit/TextTestRunner.h>
 
-//%include "exception.i"
-%import "gnuradio.i"				// the common stuff
+#include "../lib/runtime/qa_gcell_runtime.h"
+#include "../lib/wrapper/qa_gcell_wrapper.h"
 
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-//#include <stdexcept>
+int 
+main(int argc, char **argv)
+{
+  
+  CppUnit::TextTestRunner	runner;
 
-#include <gcell/gc_job_manager.h>
-#include <gcell_fft_vcc.h>  
+  runner.addTest(qa_gcell_runtime::suite());
+  runner.addTest(qa_gcell_wrapper::suite());
+  
+  bool was_successful = runner.run("", false);
 
-%}
-
-%include "gc_job_manager.i"
-%include "gcell_fft_vcc.i"
+  return was_successful ? 0 : 1;
+}

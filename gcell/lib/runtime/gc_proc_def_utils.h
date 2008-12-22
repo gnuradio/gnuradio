@@ -18,20 +18,25 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#ifndef INCLUDED_GC_PROC_DEF_UTILS_H
+#define INCLUDED_GC_PROC_DEF_UTILS_H
 
-%feature("autodoc","1");
+#include <gcell/gc_declare_proc.h>
+#include <libspe2.h>
 
-//%include "exception.i"
-%import "gnuradio.i"				// the common stuff
+/*!
+ * \brief find the gc_proc_def table in the SPE program
+ *
+ * \param[in]  program is the handle to the loaded SPE program
+ * \param[out] table points to the table, if it's found
+ * \param[out] nentries is set to the number of entries in the table.
+ * \param[out] ls_addr is set to the Local Store address of the table
+ *
+ * \returns true if successful, else false
+ */
+bool
+gcpd_find_table(spe_program_handle_t *program,
+		struct gc_proc_def **table, int *nentries, uint32_t *ls_addr);
 
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-//#include <stdexcept>
 
-#include <gcell/gc_job_manager.h>
-#include <gcell_fft_vcc.h>  
-
-%}
-
-%include "gc_job_manager.i"
-%include "gcell_fft_vcc.i"
+#endif /* INCLUDED_GC_PROC_DEF_UTILS_H */

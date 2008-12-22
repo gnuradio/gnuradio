@@ -20,9 +20,28 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = include lib apps ibm
+SUBDIRS = spu .
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = \
-	gcell.pc \
-	gcell_spu.pc
+AM_CPPFLAGS = $(DEFINES) $(OMNITHREAD_INCLUDES) \
+	$(GCELL_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
+
+
+GCELL_QA_LA = $(top_builddir)/gcell/lib/libgcell-qa.la
+
+TESTS = test_all
+
+
+bin_PROGRAMS = \
+	test_all \
+	benchmark_dma \
+	benchmark_nop
+
+
+test_all_SOURCES = test_all.cc
+test_all_LDADD = $(GCELL_QA_LA) $(GCELL_LA)
+
+benchmark_dma_SOURCES = benchmark_dma.cc
+benchmark_dma_LDADD = spu/benchmark_procs $(GCELL_LA)
+
+benchmark_nop_SOURCES = benchmark_nop.cc
+benchmark_nop_LDADD = spu/benchmark_procs $(GCELL_LA)

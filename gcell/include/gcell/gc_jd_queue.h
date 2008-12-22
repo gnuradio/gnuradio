@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2007 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,19 +19,34 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-%feature("autodoc","1");
+#ifndef INCLUDED_GCELL_GC_JD_QUEUE_H
+#define INCLUDED_GCELL_GC_JD_QUEUE_H
 
-//%include "exception.i"
-%import "gnuradio.i"				// the common stuff
+#include <gcell/gc_jd_queue_data.h>
 
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-//#include <stdexcept>
+__GC_BEGIN_DECLS
 
-#include <gcell/gc_job_manager.h>
-#include <gcell_fft_vcc.h>  
+/*!
+ * \brief Initialize the queue to empty.
+ */
+void 
+gc_jd_queue_init(gc_jd_queue_t *q);
+  
 
-%}
+/*!
+ * \brief Add \p item to the tail of \p q.
+ */
+void 
+gc_jd_queue_enqueue(gc_jd_queue_t *q, gc_job_desc_t *item);
 
-%include "gc_job_manager.i"
-%include "gcell_fft_vcc.i"
+
+/*!
+ * \brief Remove and return item at head of queue, or 0 if queue is empty
+ */
+gc_job_desc_t *
+gc_jd_queue_dequeue(gc_jd_queue_t *q);
+
+__GC_END_DECLS
+
+
+#endif /* INCLUDED_GCELL_GC_JD_QUEUE_H */

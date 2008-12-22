@@ -18,20 +18,15 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#ifndef INCLUDED_GCELL_SPU_GC_RANDOM_H
+#define INCLUDED_GCELL_SPU_GC_RANDOM_H
 
-%feature("autodoc","1");
+/*!
+ * \brief Return a uniformly distributed value in the range [0, 1.0)
+ * (Linear congruential generator. YMMV. Caveat emptor.)
+ */
 
-//%include "exception.i"
-%import "gnuradio.i"				// the common stuff
+float gc_uniform_deviate(void);
+void gc_set_seed(int seed);
 
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-//#include <stdexcept>
-
-#include <gcell/gc_job_manager.h>
-#include <gcell_fft_vcc.h>  
-
-%}
-
-%include "gc_job_manager.i"
-%include "gcell_fft_vcc.i"
+#endif /* INCLUDED_GCELL_SPU_GC_RANDOM_H */

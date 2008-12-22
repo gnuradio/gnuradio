@@ -19,19 +19,37 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-%feature("autodoc","1");
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+#include <gcell/gc_aligned_alloc.h>
+#include <stdlib.h>
+#include <stdexcept>
+#include <string.h>
 
-//%include "exception.i"
-%import "gnuradio.i"				// the common stuff
+// custom deleter of anything that can be freed with "free"
+class free_deleter {
+public:
+  void operator()(void *p) {
+    free(p);
+  }
+};
 
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-//#include <stdexcept>
+void *
+gc_aligned_alloc(size_t size, size_t alignment)
+{
+  void *p = 0;
+  if (posix_memalign(&p, alignment, size) != 0){
+    perror("posix_memalign");
+    throw std::runtime_error("memory");
+  }
+  memset(p, 0, size);		// zero the memory
+  return p;
+}
 
-#include <gcell/gc_job_manager.h>
-#include <gcell_fft_vcc.h>  
-
-%}
-
-%include "gc_job_manager.i"
-%include "gcell_fft_vcc.i"
+boost::shared_ptr<void>
+gc_aligned_alloc_sptr(size_t size, size_t alignment)
+{
+  return boost::shared_ptr<void>(gc_aligned_alloc(size, alignment),
+				 free_deleter());
+}

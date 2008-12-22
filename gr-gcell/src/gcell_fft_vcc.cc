@@ -26,9 +26,9 @@
 
 #include <gcell_fft_vcc.h>
 #include <gr_io_signature.h>
-#include <gc_job_manager.h>
-#include <gc_aligned_alloc.h>
-#include <gcp_fft_1d_r2.h>
+#include <gcell/gc_job_manager.h>
+#include <gcell/gc_aligned_alloc.h>
+#include <gcell/gcp_fft_1d_r2.h>
 #include <math.h>
 #include <assert.h>
 #include <stdexcept>

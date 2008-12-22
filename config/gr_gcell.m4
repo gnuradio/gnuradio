@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2008 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -18,11 +18,19 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-include $(top_srcdir)/Makefile.common
+AC_DEFUN([GR_GCELL],[
+  passed=yes
+  PKG_CHECK_MODULES(GCELL, gcell >= 3.1, [],
+    [passed=no; AC_MSG_RESULT([gcell not found])])
+  PKG_CHECK_MODULES(GCELL_SPU, gcell_spu >= 3.1, [],
+    [passed=no; AC_MSG_RESULT([gcell_spu not found])])
 
-SUBDIRS = include lib apps ibm
+  GCELL_EMBEDSPU_LIBTOOL=
+  if test $passed = yes; then
+    GCELL_EMBEDSPU_LIBTOOL=`$PKG_CONFIG --variable=gcell_embedspu_libtool gcell 2>/dev/null`
+    AC_DEFINE(HAVE_GCELL,[1],[Define if you have gcell installed])
+  fi
+  AC_SUBST([GCELL_EMBEDSPU_LIBTOOL])
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = \
-	gcell.pc \
-	gcell_spu.pc
+  AM_CONDITIONAL([HAVE_GCELL], [test "$passed" = "yes"])
+])

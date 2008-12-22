@@ -33,7 +33,7 @@ primes = (2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,
 class test_fft_filter(gr_unittest.TestCase):
 
     def setUp(self):
-        ph = gcell.program_handle_from_filename("../../gcell/src/lib/spu/gcell_all")
+        ph = gcell.program_handle_from_filename("../../gcell/lib/spu/gcell_all")
         opts = gcell.jm_options(ph, 1)
         self.mgr = gcell.job_manager(opts)
         gcell.set_singleton(self.mgr)

@@ -20,9 +20,23 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = include lib apps ibm
+SUBDIRS = spu
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = \
-	gcell.pc \
-	gcell_spu.pc
+gcellinclude_HEADERS = \
+	compiler.h \
+	gc_aligned_alloc.h \
+	gc_atomic.h \
+	gc_cdefs.h \
+	gc_declare_proc.h \
+	gc_job_manager.h \
+	gc_jd_queue_data.h \
+	gc_jd_queue.h \
+	gc_jd_stack.h \
+	gc_job_desc.h \
+	gc_job_desc_private.h \
+	gc_logging.h \
+	gc_mbox.h \
+	gc_spu_args.h \
+	gc_types.h \
+	gcp_fft_1d_r2.h \
+	memory_barrier.h

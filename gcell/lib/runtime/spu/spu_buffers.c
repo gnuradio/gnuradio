@@ -19,19 +19,17 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-%feature("autodoc","1");
+#include "spu_buffers.h"
+#include <gcell/compiler.h>
 
-//%include "exception.i"
-%import "gnuradio.i"				// the common stuff
+static unsigned char _getbuf[NGETBUFS][GC_SPU_BUFSIZE] _AL128;
+static unsigned char _putbuf[NPUTBUFS][GC_SPU_BUFSIZE] _AL128;
 
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-//#include <stdexcept>
+unsigned char *_gci_getbuf[NGETBUFS] = {
+  _getbuf[0]
+};
 
-#include <gcell/gc_job_manager.h>
-#include <gcell_fft_vcc.h>  
-
-%}
-
-%include "gc_job_manager.i"
-%include "gcell_fft_vcc.i"
+unsigned char *_gci_putbuf[NPUTBUFS] = {
+  _putbuf[0],
+  _putbuf[1]
+};

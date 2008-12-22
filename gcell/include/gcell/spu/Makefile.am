@@ -20,9 +20,11 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = include lib apps ibm
-
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = \
-	gcell.pc \
-	gcell_spu.pc
+gcellspuinclude_HEADERS = \
+	fft_1d.h \
+	fft_1d_r2.h \
+	gc_delay.h \
+	gc_jd_queue.h \
+	gc_random.h \
+	gc_spu_macs.h \
+	libfft.h

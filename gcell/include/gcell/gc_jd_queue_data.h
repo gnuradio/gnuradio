@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,19 +19,34 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-%feature("autodoc","1");
+#ifndef INCLUDED_GCELL_GC_JD_QUEUE_DATA_H
+#define INCLUDED_GCELL_GC_JD_QUEUE_DATA_H
 
-//%include "exception.i"
-%import "gnuradio.i"				// the common stuff
+#include <gcell/gc_types.h>
+#include <gcell/gc_job_desc.h>
 
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-//#include <stdexcept>
+__GC_BEGIN_DECLS
 
-#include <gcell/gc_job_manager.h>
-#include <gcell_fft_vcc.h>  
+/*!
+ * \brief (Lock free someday...) queue for job descriptors
+ *
+ * This is the main data structure shared between PPEs and SPEs.
+ * It is used to enqueue work for SPEs.  SPEs or PPEs may enqueue
+ * work.  SPE's dequeue from here.
+ *
+ * FIXME make it lock free ;)  For now, use a spin lock.
+ *
+ * (Fills a single cache line)
+ */
+typedef struct gc_jd_queue
+{
+  gc_eaddr_t	head  _AL16;
+  gc_eaddr_t	tail  _AL16;
+  uint32_t	mutex _AL16;		// libsync mutex (spin lock)
+} _AL128 gc_jd_queue_t;
 
-%}
+__GC_END_DECLS
 
-%include "gc_job_manager.i"
-%include "gcell_fft_vcc.i"
+#endif /* INCLUDED_GCELL_GC_JD_QUEUE_DATA_H */
+
+
