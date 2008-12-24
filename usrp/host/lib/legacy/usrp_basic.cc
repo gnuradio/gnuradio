@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2004 Free Software Foundation, Inc.
+ * Copyright 2003,2004,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,7 +28,9 @@
 #include "usrp_prims.h"
 #include "usrp_interfaces.h"
 #include "fpga_regs_common.h"
+#include "fpga_regs_standard.h"
 #include "fusb.h"
+#include "db_boards.h"
 #include <usb.h>
 #include <stdexcept>
 #include <assert.h>
@@ -110,7 +112,7 @@ usrp_basic::usrp_basic (int which_board,
   : d_udh (0),
     d_usb_data_rate (16000000),	// SWAG, see below
     d_bytes_per_poll ((int) (POLLING_INTERVAL * d_usb_data_rate)),
-    d_verbose (false)
+    d_verbose (false), d_db(2)
 {
   /*
    * SWAG: Scientific Wild Ass Guess.
@@ -154,10 +156,63 @@ usrp_basic::usrp_basic (int which_board,
   _write_fpga_reg (FR_DEBUG_EN, 0);	// disable debug outputs
 }
 
+void
+usrp_basic::shutdown_daughterboards()
+{
+  // nuke d'boards before we close down USB in ~usrp_basic
+  // shutdown() will do any board shutdown while the USRP can still
+  // be talked to
+  for(size_t i = 0; i < d_db.size(); i++) 
+    for(size_t j = 0; j < d_db[i].size(); j++) 
+      d_db[i][j]->shutdown();
+}
+
 usrp_basic::~usrp_basic ()
 {
+  // shutdown_daughterboards();		// call from ~usrp_basic_{tx,rx}
+
+  d_db.resize(0); // forget db shared ptrs
+
   if (d_udh)
     usb_close (d_udh);
+}
+
+void
+usrp_basic::init_db(usrp_basic_sptr u)
+{
+  if (u.get() != this)
+    throw std::invalid_argument("u is not this");
+
+  d_db[0] = instantiate_dbs(d_dbid[0], u, 0);
+  d_db[1] = instantiate_dbs(d_dbid[1], u, 1);
+}
+
+std::vector<db_base_sptr> 
+usrp_basic::db(int which_side)
+{
+  which_side &= 0x1;	// clamp it to avoid any reporting any errors
+  return d_db[which_side];
+}
+
+bool
+usrp_basic::is_valid(const usrp_subdev_spec &ss)
+{
+  if (ss.side < 0 || ss.side > 1)
+    return false;
+
+  if (ss.subdev < 0 || ss.subdev >= d_db[ss.side].size())
+    return false;
+
+  return true;
+}
+
+db_base_sptr
+usrp_basic::selected_subdev(const usrp_subdev_spec &ss)
+{
+  if (!is_valid(ss))
+    throw std::invalid_argument("invalid subdev_spec");
+
+  return d_db[ss.side][ss.subdev];
 }
 
 bool
@@ -180,22 +235,22 @@ usrp_basic::set_usb_data_rate (int usb_data_rate)
 }
 
 bool
-usrp_basic::write_aux_dac (int slot, int which_dac, int value)
+usrp_basic::_write_aux_dac (int slot, int which_dac, int value)
 {
   return usrp_write_aux_dac (d_udh, slot, which_dac, value);
 }
 
 bool
-usrp_basic::read_aux_adc (int slot, int which_adc, int *value)
+usrp_basic::_read_aux_adc (int slot, int which_adc, int *value)
 {
   return usrp_read_aux_adc (d_udh, slot, which_adc, value);
 }
 
 int
-usrp_basic::read_aux_adc (int slot, int which_adc)
+usrp_basic::_read_aux_adc (int slot, int which_adc)
 {
   int	value;
-  if (!read_aux_adc (slot, which_adc, &value))
+  if (!_read_aux_adc (slot, which_adc, &value))
     return READ_FAILED;
 
   return value;
@@ -250,22 +305,22 @@ usrp_basic::serial_number()
 // ----------------------------------------------------------------
 
 bool
-usrp_basic::set_adc_offset (int which, int offset)
+usrp_basic::set_adc_offset (int which_adc, int offset)
 {
-  if (which < 0 || which > 3)
+  if (which_adc < 0 || which_adc > 3)
     return false;
 
-  return _write_fpga_reg (FR_ADC_OFFSET_0 + which, offset);
+  return _write_fpga_reg (FR_ADC_OFFSET_0 + which_adc, offset);
 }
 
 bool
-usrp_basic::set_dac_offset (int which, int offset, int offset_pin)
+usrp_basic::set_dac_offset (int which_dac, int offset, int offset_pin)
 {
-  if (which < 0 || which > 3)
+  if (which_dac < 0 || which_dac > 3)
     return false;
 
-  int which_codec = which >> 1;
-  int tx_a = (which & 0x1) == 0;
+  int which_codec = which_dac >> 1;
+  int tx_a = (which_dac & 0x1) == 0;
   int lo = ((offset & 0x3) << 6) | (offset_pin & 0x1);
   int hi = (offset >> 2);
   bool ok;
@@ -282,13 +337,13 @@ usrp_basic::set_dac_offset (int which, int offset, int offset_pin)
 }
 
 bool
-usrp_basic::set_adc_buffer_bypass (int which, bool bypass)
+usrp_basic::set_adc_buffer_bypass (int which_adc, bool bypass)
 {
-  if (which < 0 || which > 3)
+  if (which_adc < 0 || which_adc > 3)
     return false;
 
-  int codec = which >> 1;
-  int reg = (which & 1) == 0 ? REG_RX_A : REG_RX_B;
+  int codec = which_adc >> 1;
+  int reg = (which_adc & 1) == 0 ? REG_RX_A : REG_RX_B;
 
   unsigned char cur_rx;
   unsigned char cur_pwr_dn;
@@ -302,16 +357,23 @@ usrp_basic::set_adc_buffer_bypass (int which, bool bypass)
 
   if (bypass){
     cur_rx |= RX_X_BYPASS_INPUT_BUFFER;
-    cur_pwr_dn |= ((which & 1) == 0) ? RX_PWR_DN_BUF_A : RX_PWR_DN_BUF_B;
+    cur_pwr_dn |= ((which_adc & 1) == 0) ? RX_PWR_DN_BUF_A : RX_PWR_DN_BUF_B;
   }
   else {
     cur_rx &= ~RX_X_BYPASS_INPUT_BUFFER;
-    cur_pwr_dn &= ~(((which & 1) == 0) ? RX_PWR_DN_BUF_A : RX_PWR_DN_BUF_B);
+    cur_pwr_dn &= ~(((which_adc & 1) == 0) ? RX_PWR_DN_BUF_A : RX_PWR_DN_BUF_B);
   }
 
   ok &= _write_9862 (codec, reg, cur_rx);
   ok &= _write_9862 (codec, REG_RX_PWR_DN, cur_pwr_dn);
   return ok;
+}
+
+bool
+usrp_basic::set_dc_offset_cl_enable(int bits, int mask)
+{
+  return _write_fpga_reg(FR_DC_OFFSET_CL_EN, 
+			 (d_fpga_shadows[FR_DC_OFFSET_CL_EN] & ~mask) | (bits & mask));
 }
 
 // ----------------------------------------------------------------
@@ -413,10 +475,277 @@ usrp_basic::_read_spi (int optional_header, int enables, int format, int len)
 
 
 bool
-usrp_basic::_set_led (int which, bool on)
+usrp_basic::_set_led (int which_led, bool on)
 {
-  return usrp_set_led (d_udh, which, on);
+  return usrp_set_led (d_udh, which_led, on);
 }
+
+bool
+usrp_basic::write_atr_tx_delay(int value)
+{
+  return _write_fpga_reg(FR_ATR_TX_DELAY, value);
+}
+
+bool
+usrp_basic::write_atr_rx_delay(int value)
+{
+  return _write_fpga_reg(FR_ATR_RX_DELAY, value);
+}
+
+/*
+ * ----------------------------------------------------------------
+ * Routines to access and control daughterboard specific i/o
+ * ----------------------------------------------------------------
+ */
+static int
+slot_id_to_oe_reg (int slot_id)
+{
+  static int reg[4]  = { FR_OE_0, FR_OE_1, FR_OE_2, FR_OE_3 };
+  assert (0 <= slot_id && slot_id < 4);
+  return reg[slot_id];
+}
+
+static int
+slot_id_to_io_reg (int slot_id)
+{
+  static int reg[4]  = { FR_IO_0, FR_IO_1, FR_IO_2, FR_IO_3 };
+  assert (0 <= slot_id && slot_id < 4);
+  return reg[slot_id];
+}
+
+static int
+slot_id_to_refclk_reg(int slot_id)
+{
+  static int reg[4]  = { FR_TX_A_REFCLK, FR_RX_A_REFCLK, FR_TX_B_REFCLK, FR_RX_B_REFCLK };
+  assert (0 <= slot_id && slot_id < 4);
+  return reg[slot_id];
+}
+
+static int
+slot_id_to_atr_mask_reg(int slot_id)
+{
+  static int reg[4]  = { FR_ATR_MASK_0, FR_ATR_MASK_1, FR_ATR_MASK_2, FR_ATR_MASK_3 };
+  assert (0 <= slot_id && slot_id < 4);
+  return reg[slot_id];
+}
+
+static int
+slot_id_to_atr_txval_reg(int slot_id)
+{
+  static int reg[4]  = { FR_ATR_TXVAL_0, FR_ATR_TXVAL_1, FR_ATR_TXVAL_2, FR_ATR_TXVAL_3 };
+  assert (0 <= slot_id && slot_id < 4);
+  return reg[slot_id];
+}
+
+static int
+slot_id_to_atr_rxval_reg(int slot_id)
+{
+  static int reg[4]  = { FR_ATR_RXVAL_0, FR_ATR_RXVAL_1, FR_ATR_RXVAL_2, FR_ATR_RXVAL_3 };
+  assert (0 <= slot_id && slot_id < 4);
+  return reg[slot_id];
+}
+
+static int
+to_slot(txrx_t txrx, int which_side)
+{
+  // TX_A = 0
+  // RX_A = 1
+  // TX_B = 2
+  // RX_B = 3
+  return ((which_side & 0x1) << 1) | ((txrx & 0x1) == C_RX);
+}
+
+bool
+usrp_basic::common_set_pga(txrx_t txrx, int which_amp, double gain)
+{
+  if (which_amp < 0 || which_amp > 3)
+    return false;
+
+  gain = std::min(common_pga_max(txrx),
+		  std::max(common_pga_min(txrx), gain));
+
+  int codec = which_amp >> 1;	
+  int int_gain = (int) rint((gain - common_pga_min(txrx)) / common_pga_db_per_step(txrx));
+
+  if (txrx == C_TX){		// 0 and 1 are same, as are 2 and 3
+    return _write_9862(codec, REG_TX_PGA, int_gain);
+  }
+  else {
+    int reg = (which_amp & 1) == 0 ? REG_RX_A : REG_RX_B;
+
+    // read current value to get input buffer bypass flag.
+    unsigned char cur_rx;
+    if (!_read_9862(codec, reg, &cur_rx))
+      return false;
+
+    cur_rx = (cur_rx & RX_X_BYPASS_INPUT_BUFFER) | (int_gain & 0x7f);
+    return _write_9862(codec, reg, cur_rx);
+  }
+}
+
+double
+usrp_basic::common_pga(txrx_t txrx, int which_amp) const
+{
+  if (which_amp < 0 || which_amp > 3)
+    return READ_FAILED;
+
+  if (txrx == C_TX){
+    int codec = which_amp >> 1;
+    unsigned char v;
+    bool ok = _read_9862 (codec, REG_TX_PGA, &v);
+    if (!ok)
+      return READ_FAILED;
+
+    return (pga_db_per_step() * v) + pga_min();
+  }
+  else {
+    int codec = which_amp >> 1;
+    int reg = (which_amp & 1) == 0 ? REG_RX_A : REG_RX_B;
+    unsigned char v;
+    bool ok = _read_9862 (codec, reg, &v);
+    if (!ok)
+      return READ_FAILED;
+
+    return (pga_db_per_step() * (v & 0x1f)) + pga_min();
+  }
+}
+
+double
+usrp_basic::common_pga_min(txrx_t txrx) const
+{
+  if (txrx == C_TX)
+    return -20.0;
+  else
+    return   0.0;
+}
+
+double
+usrp_basic::common_pga_max(txrx_t txrx) const
+{
+  if (txrx == C_TX)
+    return   0.0;
+  else
+    return  20.0;
+}
+
+double
+usrp_basic::common_pga_db_per_step(txrx_t txrx) const
+{
+  if (txrx == C_TX)
+    return  20.0 / 255;
+  else
+    return  20.0 / 20;
+}
+
+bool
+usrp_basic::_common_write_oe(txrx_t txrx, int which_side, int value, int mask)
+{
+  if (! (0 <= which_side && which_side <= 1))
+    return false;
+
+  return _write_fpga_reg(slot_id_to_oe_reg(to_slot(txrx, which_side)),
+			 (mask << 16) | (value & 0xffff));
+}
+
+bool
+usrp_basic::common_write_io(txrx_t txrx, int which_side, int value, int mask)
+{
+  if (! (0 <= which_side && which_side <= 1))
+    return false;
+
+  return _write_fpga_reg(slot_id_to_io_reg(to_slot(txrx, which_side)),
+			 (mask << 16) | (value & 0xffff));
+}
+
+bool
+usrp_basic::common_read_io(txrx_t txrx, int which_side, int *value)
+{
+  if (! (0 <= which_side && which_side <= 1))
+    return false;
+
+  int t;
+  int reg = which_side + 1;	// FIXME, *very* magic number (fix in serial_io.v)
+  bool ok = _read_fpga_reg(reg, &t);
+  if (!ok)
+    return false;
+
+  if (txrx == C_TX){
+    *value = t & 0xffff;		// FIXME, more magic
+    return true;
+  }
+  else {
+    *value = (t >> 16) & 0xffff;	// FIXME, more magic
+    return true;
+  }
+}
+
+int
+usrp_basic::common_read_io(txrx_t txrx, int which_side)
+{
+  int	value;
+  if (!common_read_io(txrx, which_side, &value))
+    return READ_FAILED;
+  return value;
+}
+
+bool
+usrp_basic::common_write_refclk(txrx_t txrx, int which_side, int value)
+{
+  if (! (0 <= which_side && which_side <= 1))
+    return false;
+
+  return _write_fpga_reg(slot_id_to_refclk_reg(to_slot(txrx, which_side)),
+			 value);
+}
+
+bool
+usrp_basic::common_write_atr_mask(txrx_t txrx, int which_side, int value)
+{
+  if (! (0 <= which_side && which_side <= 1))
+    return false;
+
+  return _write_fpga_reg(slot_id_to_atr_mask_reg(to_slot(txrx, which_side)),
+			 value);
+}
+
+bool
+usrp_basic::common_write_atr_txval(txrx_t txrx, int which_side, int value)
+{
+  if (! (0 <= which_side && which_side <= 1))
+    return false;
+
+  return _write_fpga_reg(slot_id_to_atr_txval_reg(to_slot(txrx, which_side)),
+			 value);
+}
+
+bool
+usrp_basic::common_write_atr_rxval(txrx_t txrx, int which_side, int value)
+{
+  if (! (0 <= which_side && which_side <= 1))
+    return false;
+
+  return _write_fpga_reg(slot_id_to_atr_rxval_reg(to_slot(txrx, which_side)),
+			 value);
+}
+
+bool
+usrp_basic::common_write_aux_dac(txrx_t txrx, int which_side, int which_dac, int value)
+{
+  return _write_aux_dac(to_slot(txrx, which_side), which_dac, value);
+}
+
+bool
+usrp_basic::common_read_aux_adc(txrx_t txrx, int which_side, int which_adc, int *value)
+{
+  return _read_aux_adc(to_slot(txrx, which_side), which_adc, value);
+}
+
+int
+usrp_basic::common_read_aux_adc(txrx_t txrx, int which_side, int which_adc)
+{
+  return _read_aux_adc(to_slot(txrx, which_side), which_adc);
+}
+
 
 ////////////////////////////////////////////////////////////////
 //
@@ -467,6 +796,9 @@ usrp_basic_rx::usrp_basic_rx (int which_board, int fusb_block_size, int fusb_nbl
 
   probe_rx_slots (false);
 
+  //d_db[0] = instantiate_dbs(d_dbid[0], this, 0);
+  //d_db[1] = instantiate_dbs(d_dbid[1], this, 1);
+
   // check fusb buffering parameters
 
   if (fusb_block_size < 0 || fusb_block_size > FUSB_BLOCK_SIZE)
@@ -485,12 +817,12 @@ usrp_basic_rx::usrp_basic_rx (int which_board, int fusb_block_size, int fusb_nbl
   d_ephandle = d_devhandle->make_ephandle (USRP_RX_ENDPOINT, true,
 					   fusb_block_size, fusb_nblocks);
 
-  _write_fpga_reg(FR_ATR_MASK_1, 0);	// zero Rx side Auto Transmit/Receive regs
-  _write_fpga_reg(FR_ATR_TXVAL_1, 0);
-  _write_fpga_reg(FR_ATR_RXVAL_1, 0);
-  _write_fpga_reg(FR_ATR_MASK_3, 0);
-  _write_fpga_reg(FR_ATR_TXVAL_3, 0);
-  _write_fpga_reg(FR_ATR_RXVAL_3, 0);
+  write_atr_mask(0, 0);		// zero Rx A Auto Transmit/Receive regs
+  write_atr_txval(0, 0);
+  write_atr_rxval(0, 0);
+  write_atr_mask(1, 0);		// zero Rx B Auto Transmit/Receive regs
+  write_atr_txval(1, 0);
+  write_atr_rxval(1, 0);
 }
 
 static unsigned char rx_fini_regs[] = {
@@ -511,6 +843,8 @@ usrp_basic_rx::~usrp_basic_rx ()
   if (!usrp_9862_write_many_all (d_udh, rx_fini_regs, sizeof (rx_fini_regs))){
     fprintf (stderr, "usrp_basic_rx: failed to fini AD9862 RX regs\n");
   }
+
+  shutdown_daughterboards();
 }
 
 
@@ -656,61 +990,6 @@ usrp_basic_rx::restore_rx (bool on)
     set_rx_enable (on);
 }
 
-bool
-usrp_basic_rx::set_pga (int which, double gain)
-{
-  if (which < 0 || which > 3)
-    return false;
-
-  gain = std::max (pga_min (), gain);
-  gain = std::min (pga_max (), gain);
-
-  int codec = which >> 1;
-  int reg = (which & 1) == 0 ? REG_RX_A : REG_RX_B;
-
-  // read current value to get input buffer bypass flag.
-  unsigned char cur_rx;
-  if (!_read_9862 (codec, reg, &cur_rx))
-    return false;
-
-  int int_gain = (int) rint ((gain - pga_min ()) / pga_db_per_step());
-
-  cur_rx = (cur_rx & RX_X_BYPASS_INPUT_BUFFER) | (int_gain & 0x7f);
-  return _write_9862 (codec, reg, cur_rx);
-}
-
-double
-usrp_basic_rx::pga (int which) const
-{
-  if (which < 0 || which > 3)
-    return READ_FAILED;
-
-  int codec = which >> 1;
-  int reg = (which & 1) == 0 ? REG_RX_A : REG_RX_B;
-  unsigned char v;
-  bool ok = _read_9862 (codec, reg, &v);
-  if (!ok)
-    return READ_FAILED;
-
-  return (pga_db_per_step() * (v & 0x1f)) + pga_min();
-}
-
-static int
-slot_id_to_oe_reg (int slot_id)
-{
-  static int reg[4]  = { FR_OE_0, FR_OE_1, FR_OE_2, FR_OE_3 };
-  assert (0 <= slot_id && slot_id < 4);
-  return reg[slot_id];
-}
-
-static int
-slot_id_to_io_reg (int slot_id)
-{
-  static int reg[4]  = { FR_IO_0, FR_IO_1, FR_IO_2, FR_IO_3 };
-  assert (0 <= slot_id && slot_id < 4);
-  return reg[slot_id];
-}
-
 void
 usrp_basic_rx::probe_rx_slots (bool verbose)
 {
@@ -760,79 +1039,103 @@ usrp_basic_rx::probe_rx_slots (bool verbose)
 }
 
 bool
-usrp_basic_rx::_write_oe (int which_dboard, int value, int mask)
+usrp_basic_rx::set_pga (int which_amp, double gain)
 {
-  if (! (0 <= which_dboard && which_dboard <= 1))
-    return false;
+  return common_set_pga(C_RX, which_amp, gain);
+}
 
-  return _write_fpga_reg (slot_id_to_oe_reg (dboard_to_slot (which_dboard)),
-			  (mask << 16) | (value & 0xffff));
+double
+usrp_basic_rx::pga(int which_amp) const
+{
+  return common_pga(C_RX, which_amp);
+}
+
+double
+usrp_basic_rx::pga_min() const
+{
+  return common_pga_min(C_RX);
+}
+
+double
+usrp_basic_rx::pga_max() const
+{
+  return common_pga_max(C_RX);
+}
+
+double
+usrp_basic_rx::pga_db_per_step() const
+{
+  return common_pga_db_per_step(C_RX);
 }
 
 bool
-usrp_basic_rx::write_io (int which_dboard, int value, int mask)
+usrp_basic_rx::_write_oe (int which_side, int value, int mask)
 {
-  if (! (0 <= which_dboard && which_dboard <= 1))
-    return false;
-
-  return _write_fpga_reg (slot_id_to_io_reg (dboard_to_slot (which_dboard)),
-			  (mask << 16) | (value & 0xffff));
+  return _common_write_oe(C_RX, which_side, value, mask);
 }
 
 bool
-usrp_basic_rx::read_io (int which_dboard, int *value)
+usrp_basic_rx::write_io (int which_side, int value, int mask)
 {
-  if (! (0 <= which_dboard && which_dboard <= 1))
-    return false;
+  return common_write_io(C_RX, which_side, value, mask);
+}
 
-  int t;
-  int reg = which_dboard + 1;	// FIXME, *very* magic number (fix in serial_io.v)
-  bool ok = _read_fpga_reg (reg, &t);
-  if (!ok)
-    return false;
-
-  *value = (t >> 16) & 0xffff;	// FIXME, more magic
-  return true;
+bool
+usrp_basic_rx::read_io (int which_side, int *value)
+{
+  return common_read_io(C_RX, which_side, value);
 }
 
 int
-usrp_basic_rx::read_io (int which_dboard)
+usrp_basic_rx::read_io (int which_side)
 {
-  int	value;
-  if (!read_io (which_dboard, &value))
-    return READ_FAILED;
-  return value;
+  return common_read_io(C_RX, which_side);
 }
 
 bool
-usrp_basic_rx::write_aux_dac (int which_dboard, int which_dac, int value)
+usrp_basic_rx::write_refclk(int which_side, int value)
 {
-  return usrp_basic::write_aux_dac (dboard_to_slot (which_dboard),
-				    which_dac, value);
+  return common_write_refclk(C_RX, which_side, value);
 }
 
 bool
-usrp_basic_rx::read_aux_adc (int which_dboard, int which_adc, int *value)
+usrp_basic_rx::write_atr_mask(int which_side, int value)
 {
-  return usrp_basic::read_aux_adc (dboard_to_slot (which_dboard),
-				   which_adc, value);
+  return common_write_atr_mask(C_RX, which_side, value);
+}
+
+bool
+usrp_basic_rx::write_atr_txval(int which_side, int value)
+{
+  return common_write_atr_txval(C_RX, which_side, value);
+}
+
+bool
+usrp_basic_rx::write_atr_rxval(int which_side, int value)
+{
+  return common_write_atr_rxval(C_RX, which_side, value);
+}
+
+bool
+usrp_basic_rx::write_aux_dac (int which_side, int which_dac, int value)
+{
+  return common_write_aux_dac(C_RX, which_side, which_dac, value);
+}
+
+bool
+usrp_basic_rx::read_aux_adc (int which_side, int which_adc, int *value)
+{
+  return common_read_aux_adc(C_RX, which_side, which_adc, value);
 }
 
 int
-usrp_basic_rx::read_aux_adc (int which_dboard, int which_adc)
+usrp_basic_rx::read_aux_adc (int which_side, int which_adc)
 {
-  return usrp_basic::read_aux_adc (dboard_to_slot (which_dboard), which_adc);
+  return common_read_aux_adc(C_RX, which_side, which_adc);
 }
 
 int
 usrp_basic_rx::block_size () const { return d_ephandle->block_size(); }
-
-bool
-usrp_basic_rx::set_dc_offset_cl_enable(int bits, int mask)
-{
-  return _write_fpga_reg(FR_DC_OFFSET_CL_EN, 
-			 (d_fpga_shadows[FR_DC_OFFSET_CL_EN] & ~mask) | (bits & mask));
-}
 
 ////////////////////////////////////////////////////////////////
 //
@@ -902,6 +1205,9 @@ usrp_basic_tx::usrp_basic_tx (int which_board, int fusb_block_size, int fusb_nbl
 
   probe_tx_slots (false);
 
+  //d_db[0] = instantiate_dbs(d_dbid[0], this, 0);
+  //d_db[1] = instantiate_dbs(d_dbid[1], this, 1);
+
   // check fusb buffering parameters
 
   if (fusb_block_size < 0 || fusb_block_size > FUSB_BLOCK_SIZE)
@@ -920,12 +1226,12 @@ usrp_basic_tx::usrp_basic_tx (int which_board, int fusb_block_size, int fusb_nbl
   d_ephandle = d_devhandle->make_ephandle (USRP_TX_ENDPOINT, false,
 					   fusb_block_size, fusb_nblocks);
 
-  _write_fpga_reg(FR_ATR_MASK_0, 0); // zero Tx side Auto Transmit/Receive regs
-  _write_fpga_reg(FR_ATR_TXVAL_0, 0);
-  _write_fpga_reg(FR_ATR_RXVAL_0, 0);
-  _write_fpga_reg(FR_ATR_MASK_2, 0);
-  _write_fpga_reg(FR_ATR_TXVAL_2, 0);
-  _write_fpga_reg(FR_ATR_RXVAL_2, 0);
+  write_atr_mask(0, 0);		// zero Tx A Auto Transmit/Receive regs
+  write_atr_txval(0, 0);
+  write_atr_rxval(0, 0);
+  write_atr_mask(1, 0);		// zero Tx B Auto Transmit/Receive regs
+  write_atr_txval(1, 0);
+  write_atr_rxval(1, 0);
 }
 
 
@@ -945,6 +1251,8 @@ usrp_basic_tx::~usrp_basic_tx ()
   if (!usrp_9862_write_many_all (d_udh, tx_fini_regs, sizeof (tx_fini_regs))){
     fprintf (stderr, "usrp_basic_tx: failed to fini AD9862 TX regs\n");
   }
+
+  shutdown_daughterboards();
 }
 
 bool
@@ -1094,37 +1402,6 @@ usrp_basic_tx::restore_tx (bool on)
     set_tx_enable (on);
 }
 
-bool
-usrp_basic_tx::set_pga (int which, double gain)
-{
-  if (which < 0 || which > 3)
-    return false;
-
-  gain = std::max (pga_min (), gain);
-  gain = std::min (pga_max (), gain);
-
-  int codec = which >> 1;	// 0 and 1 are same, as are 2 and 3
-
-  int int_gain = (int) rint ((gain - pga_min ()) / pga_db_per_step());
-
-  return _write_9862 (codec, REG_TX_PGA, int_gain);
-}
-
-double
-usrp_basic_tx::pga (int which) const
-{
-  if (which < 0 || which > 3)
-    return READ_FAILED;
-
-  int codec = which >> 1;
-  unsigned char v;
-  bool ok = _read_9862 (codec, REG_TX_PGA, &v);
-  if (!ok)
-    return READ_FAILED;
-
-  return (pga_db_per_step() * v) + pga_min();
-}
-
 void
 usrp_basic_tx::probe_tx_slots (bool verbose)
 {
@@ -1174,68 +1451,99 @@ usrp_basic_tx::probe_tx_slots (bool verbose)
 }
 
 bool
-usrp_basic_tx::_write_oe (int which_dboard, int value, int mask)
+usrp_basic_tx::set_pga (int which_amp, double gain)
 {
-  if (! (0 <= which_dboard && which_dboard <= 1))
-    return false;
+  return common_set_pga(C_TX, which_amp, gain);
+}
 
-  return _write_fpga_reg (slot_id_to_oe_reg (dboard_to_slot (which_dboard)),
-			  (mask << 16) | (value & 0xffff));
+double
+usrp_basic_tx::pga (int which_amp) const
+{
+  return common_pga(C_TX, which_amp);
+}
+
+double
+usrp_basic_tx::pga_min() const
+{
+  return common_pga_min(C_TX);
+}
+
+double
+usrp_basic_tx::pga_max() const
+{
+  return common_pga_max(C_TX);
+}
+
+double
+usrp_basic_tx::pga_db_per_step() const
+{
+  return common_pga_db_per_step(C_TX);
 }
 
 bool
-usrp_basic_tx::write_io (int which_dboard, int value, int mask)
+usrp_basic_tx::_write_oe (int which_side, int value, int mask)
 {
-  if (! (0 <= which_dboard && which_dboard <= 1))
-    return false;
-
-  return _write_fpga_reg (slot_id_to_io_reg (dboard_to_slot (which_dboard)),
-			  (mask << 16) | (value & 0xffff));
+  return _common_write_oe(C_TX, which_side, value, mask);
 }
 
 bool
-usrp_basic_tx::read_io (int which_dboard, int *value)
+usrp_basic_tx::write_io (int which_side, int value, int mask)
 {
-  if (! (0 <= which_dboard && which_dboard <= 1))
-    return false;
+  return common_write_io(C_TX, which_side, value, mask);
+}
 
-  int t;
-  int reg = which_dboard + 1;	// FIXME, *very* magic number (fix in serial_io.v)
-  bool ok = _read_fpga_reg (reg, &t);
-  if (!ok)
-    return false;
-
-  *value = t & 0xffff;		// FIXME, more magic
-  return true;
+bool
+usrp_basic_tx::read_io (int which_side, int *value)
+{
+  return common_read_io(C_TX, which_side, value);
 }
 
 int
-usrp_basic_tx::read_io (int which_dboard)
+usrp_basic_tx::read_io (int which_side)
 {
-  int	value;
-  if (!read_io (which_dboard, &value))
-    return READ_FAILED;
-  return value;
+  return common_read_io(C_TX, which_side);
 }
 
 bool
-usrp_basic_tx::write_aux_dac (int which_dboard, int which_dac, int value)
+usrp_basic_tx::write_refclk(int which_side, int value)
 {
-  return usrp_basic::write_aux_dac (dboard_to_slot (which_dboard),
-				    which_dac, value);
+  return common_write_refclk(C_TX, which_side, value);
 }
 
 bool
-usrp_basic_tx::read_aux_adc (int which_dboard, int which_adc, int *value)
+usrp_basic_tx::write_atr_mask(int which_side, int value)
 {
-  return usrp_basic::read_aux_adc (dboard_to_slot (which_dboard),
-				   which_adc, value);
+  return common_write_atr_mask(C_TX, which_side, value);
+}
+
+bool
+usrp_basic_tx::write_atr_txval(int which_side, int value)
+{
+  return common_write_atr_txval(C_TX, which_side, value);
+}
+
+bool
+usrp_basic_tx::write_atr_rxval(int which_side, int value)
+{
+  return common_write_atr_rxval(C_TX, which_side, value);
+}
+
+bool
+usrp_basic_tx::write_aux_dac (int which_side, int which_dac, int value)
+{
+  return common_write_aux_dac(C_TX, which_side, which_dac, value);
+}
+
+bool
+usrp_basic_tx::read_aux_adc (int which_side, int which_adc, int *value)
+{
+  return common_read_aux_adc(C_TX, which_side, which_adc, value);
 }
 
 int
-usrp_basic_tx::read_aux_adc (int which_dboard, int which_adc)
+usrp_basic_tx::read_aux_adc (int which_side, int which_adc)
 {
-  return usrp_basic::read_aux_adc (dboard_to_slot (which_dboard), which_adc);
+  return common_read_aux_adc(C_TX, which_side, which_adc);
 }
 
 int

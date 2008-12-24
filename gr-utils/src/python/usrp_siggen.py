@@ -118,7 +118,7 @@ class my_top_block(gr.top_block):
         the result of that operation and our target_frequency to
         determine the value for the digital up converter.
         """
-        r = self.u.tune(self.subdev._which, self.subdev, target_freq)
+        r = self.u.tune(self.subdev.which(), self.subdev, target_freq)
         if r:
             #print "r.baseband_freq =", eng_notation.num_to_str(r.baseband_freq)
             #print "r.dxc_freq      =", eng_notation.num_to_str(r.dxc_freq)
@@ -199,6 +199,7 @@ def main ():
         tb.run()
     except KeyboardInterrupt:
         pass
+
 
 if __name__ == '__main__':
     main ()

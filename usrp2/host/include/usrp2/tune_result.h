@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INCLUDED_TUNE_RESULT_H
-#define INCLUDED_TUNE_RESULT_H
+#ifndef INCLUDED_USRP2_TUNE_RESULT_H
+#define INCLUDED_USRP2_TUNE_RESULT_H
 
 namespace usrp2 {
 
@@ -36,10 +36,11 @@ namespace usrp2 {
     // is the spectrum inverted?
     bool spectrum_inverted;
 
-    tune_result()
-      : baseband_freq(0), dxc_freq(0), residual_freq(0), spectrum_inverted(false) {}
+    tune_result(double baseband=0, double dxc=0, double residual=0, bool inverted=false)
+      : baseband_freq(baseband), dxc_freq(dxc),
+	residual_freq(residual), spectrum_inverted(inverted) {}
   };
 
 } // namespace usrp2
 
-#endif /* INCLUDED_TUNE_RESULT_H */
+#endif /* INCLUDED_USRP2_TUNE_RESULT_H */

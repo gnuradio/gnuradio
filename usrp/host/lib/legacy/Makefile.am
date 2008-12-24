@@ -32,11 +32,11 @@ libusrp_la_common_LIBADD = 		\
 
 # darwin fusb requires omnithreads
 if FUSB_TECH_darwin
-AM_CPPFLAGS = $(common_INCLUDES) $(OMNITHREAD_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(common_INCLUDES) $(OMNITHREAD_INCLUDES) $(BOOST_CPPFLAGS) $(WITH_INCLUDES)
 libusrp_la_LIBADD = $(libusrp_la_common_LIBADD) $(OMNITHREAD_LA)
 libusrp_la_LDFLAGS = $(libusrp_la_common_LDFLAGS) -framework CoreFoundation
 else
-AM_CPPFLAGS = $(common_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(common_INCLUDES) $(BOOST_CPPFLAGS) $(WITH_INCLUDES)
 libusrp_la_LIBADD = $(libusrp_la_common_LIBADD)
 libusrp_la_LDFLAGS = $(libusrp_la_common_LDFLAGS)
 endif
@@ -104,7 +104,20 @@ libusrp_la_common_SOURCES = 		\
 	usrp_dbid.cc			\
 	usrp_local_sighandler.cc	\
 	usrp_prims.cc			\
-	usrp_standard.cc
+	usrp_standard.cc		\
+	db_boards.cc			\
+	db_base.cc			\
+	db_basic.cc			\
+	db_tv_rx.cc			\
+	db_flexrf.cc			\
+	db_flexrf_mimo.cc		\
+	db_dbs_rx.cc			\
+	db_xcvr2450.cc			\
+	db_dtt754.cc			\
+	db_dtt768.cc			\
+	db_util.cc
+
+#	db_wbx.cc
 
 
 if FUSB_TECH_generic
@@ -128,22 +141,37 @@ libusrp_la_SOURCES = $(libusrp_la_common_SOURCES) $(ra_wb_CODE)
 endif
 
 include_HEADERS = 			\
+	db_base.h			\
 	usrp_basic.h			\
 	usrp_bytesex.h			\
 	usrp_config.h			\
 	usrp_dbid.h			\
 	usrp_prims.h			\
 	usrp_slots.h			\
-	usrp_standard.h			
+	usrp_standard.h			\
+	usrp_subdev_spec.h		\
+	usrp_tune_result.h		
 
 noinst_HEADERS =			\
 	ad9862.h			\
+	db_base_impl.h			\
+	db_basic.h			\
+	db_boards.h			\
+	db_dbs_rx.h			\
+	db_dtt754.h			\
+	db_dtt768.h			\
+	db_flexrf.h			\
+	db_flexrf_mimo.h		\
+	db_tv_rx.h			\
+	db_util.h			\
+	db_wbx.h			\
+	db_xcvr2450.h			\
 	fusb.h				\
 	fusb_darwin.h			\
-	fusb_win32.h			\
 	fusb_generic.h			\
 	fusb_linux.h			\
 	fusb_ra_wb.h			\
+	fusb_win32.h			\
 	md5.h				\
 	rate_to_regval.h		\
 	usrp_local_sighandler.h		
@@ -158,6 +186,8 @@ noinst_PYTHON =				\
 
 usrp_dbid.py usrp_dbid.h usrp_dbid.cc: gen_usrp_dbid.py usrp_dbid.dat
 	PYTHONPATH=$(top_srcdir)/usrp/src srcdir=$(srcdir) $(PYTHON) $(srcdir)/gen_usrp_dbid.py $(srcdir)/usrp_dbid.dat
+
+swiginclude_HEADERS = db_base.i
 
 MOSTLYCLEANFILES = \
 	$(BUILT_SOURCES) *~ *.pyc

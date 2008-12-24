@@ -182,8 +182,8 @@ class usrp_graph(gr.top_block):
         the result of that operation and our target_frequency to
         determine the value for the digital up converter.
         """
-        r_snk = self.u_snk.tune(self.subdev._which, self.subdev, target_freq)
-        r_src = self.u_src.tune(self.subdev._which, self.subdev, target_freq)
+        r_snk = self.u_snk.tune(self.subdev.which(), self.subdev, target_freq)
+        r_src = self.u_src.tune(self.subdev.which(), self.subdev, target_freq)
         if r_snk and r_src:
             return True
 

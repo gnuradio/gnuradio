@@ -112,7 +112,7 @@ class my_top_block(gr.top_block):
         self.usrp_rate = self.dac_rate / self.usrp_interp    # 320 kS/s
 
         # we're using both daughterboard slots, thus subdev is a 2-tuple
-        self.subdev = (self.u.db[0][0], self.u.db[1][0])
+        self.subdev = (self.u.db(0, 0), self.u.db(1, 0))
         print "Using TX d'board %s" % (self.subdev[0].side_and_name(),)
         print "Using TX d'board %s" % (self.subdev[1].side_and_name(),)
         
@@ -161,7 +161,7 @@ class my_top_block(gr.top_block):
         """
 
         print "Tuning side %s to %sHz" % (("A", "B")[side], num_to_str(target_freq))
-        r = self.u.tune(self.subdev[side]._which, self.subdev[side], target_freq)
+        r = self.u.tune(self.subdev[side].which(), self.subdev[side], target_freq)
         if r:
             print "  r.baseband_freq =", num_to_str(r.baseband_freq)
             print "  r.dxc_freq      =", num_to_str(r.dxc_freq)

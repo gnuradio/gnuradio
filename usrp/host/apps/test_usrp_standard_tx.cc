@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2004 Free Software Foundation, Inc.
+ * Copyright 2003,2004,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -42,7 +42,7 @@
 
 char *prog_name;
 
-static bool test_output (usrp_standard_tx *utx, int max_bytes, double ampl,
+static bool test_output (usrp_standard_tx_sptr utx, int max_bytes, double ampl,
 			 bool dc_p, bool counting_p);
 
 static void
@@ -210,7 +210,7 @@ main (int argc, char **argv)
   }
 #endif
 
-  usrp_standard_tx *utx;
+  usrp_standard_tx_sptr utx;
 
   utx = usrp_standard_tx::make (which_board,
 				interp,
@@ -226,7 +226,7 @@ main (int argc, char **argv)
     die ("utx->set_tx_freq");
     
   if (dump_regs_p)
-    do_dump_codec_regs (utx);
+    do_dump_codec_regs (utx.get());
   
   
   fflush (stdout);
@@ -236,14 +236,12 @@ main (int argc, char **argv)
 
   test_output (utx, max_bytes, ampl, dc_p, counting_p);
 
-  delete utx;
-
   return 0;
 }
 
 
 static bool
-test_output (usrp_standard_tx *utx, int max_bytes, double ampl,
+test_output (usrp_standard_tx_sptr utx, int max_bytes, double ampl,
 	     bool dc_p, bool counting_p)
 {
   static const int BUFSIZE = utx->block_size();

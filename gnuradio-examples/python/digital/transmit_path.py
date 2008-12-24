@@ -141,7 +141,7 @@ class transmit_path(gr.hier_block2):
         the result of that operation and our target_frequency to
         determine the value for the digital up converter.
         """
-        r = self.u.tune(self.subdev._which, self.subdev, target_freq)
+        r = self.u.tune(self.subdev.which(), self.subdev, target_freq)
         if r:
             return True
 

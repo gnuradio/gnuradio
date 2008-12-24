@@ -56,7 +56,8 @@ WITH_INCLUDES = @with_INCLUDES@
 WITH_SWIG_INCLUDES = @with_SWIG_INCLUDES@
 
 # swig flags
-SWIGPYTHONFLAGS = -fvirtual -python -modern
+# -w511 turns off keyword argument warning
+SWIGPYTHONFLAGS = -fvirtual -python -modern -keyword -w511
 
 # How to link in the top-level omnithreads library from inside the tree
 OMNITHREAD_INCLUDES = @omnithread_INCLUDES@

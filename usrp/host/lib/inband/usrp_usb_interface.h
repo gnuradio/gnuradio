@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,8 +32,8 @@ class usrp_usb_interface : public mb_mblock
 {
  public:
 
-  usrp_standard_tx* d_utx;
-  usrp_standard_rx* d_urx;
+  usrp_standard_tx_sptr d_utx;
+  usrp_standard_rx_sptr d_urx;
   
   mb_port_sptr	d_cs;
   mb_port_sptr  d_rx_cs;

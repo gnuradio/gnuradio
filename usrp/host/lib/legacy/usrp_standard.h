@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,10 +24,18 @@
 #define INCLUDED_USRP_STANDARD_H
 
 #include <usrp_basic.h>
+#include <boost/shared_ptr.hpp>
+#include <usrp_tune_result.h>
+
+class usrp_standard_tx;
+class usrp_standard_rx;
+
+typedef boost::shared_ptr<usrp_standard_tx> usrp_standard_tx_sptr;
+typedef boost::shared_ptr<usrp_standard_rx> usrp_standard_rx_sptr;
 
 class usrp_standard_common
 {
-  int			d_fpga_caps;		// capability register val
+  int	d_fpga_caps;		// capability register val
 
 protected:
   usrp_standard_common(usrp_basic *parent);
@@ -56,6 +64,18 @@ public:
    * This will be 0, 1, or 2.
    */
   int nducs() const;
+
+  /*!
+   * \brief Calculate the frequency to use for setting the digital up or down converter.
+   *
+   * \param target_freq is the desired RF frequency (Hz).
+   * \param baseband_freq is the RF frequency that corresponds to DC in the IF coming from the d'board.
+   * \param  fs is the sampling frequency.
+   * \param[out] dxc_freq the frequency to program into the DDC (or DUC).
+   * \param[out] inverted is true if we're operating in an inverted Nyquist zone.
+   */
+  static void calc_dxc_freq(double target_freq, double baseband_freq, double fs,
+			    double *dxc_freq, bool *inverted);
 };
 
 /*!
@@ -63,7 +83,7 @@ public:
  *
  * Assumes digital down converter in FPGA
  */
-class usrp_standard_rx : public usrp_basic_rx, usrp_standard_common
+class usrp_standard_rx : public usrp_basic_rx, public usrp_standard_common
 {
  private:
   static const int	MAX_CHAN = 4;
@@ -99,23 +119,23 @@ class usrp_standard_rx : public usrp_basic_rx, usrp_standard_common
   ~usrp_standard_rx ();
 
   /*!
-   * \brief invokes constructor, returns instance or 0 if trouble
+   * \brief invokes constructor, returns shared_ptr or shared_ptr equivalent of 0 if trouble
    *
    * \param which_board	     Which USRP board on usb (not particularly useful; use 0)
    * \param fusb_block_size  fast usb xfer block size.  Must be a multiple of 512. 
    *                         Use zero for a reasonable default.
    * \param fusb_nblocks     number of fast usb URBs to allocate.  Use zero for a reasonable default. 
    */
-  static usrp_standard_rx *make (int which_board,
-				 unsigned int decim_rate,
-				 int nchan = 1,
-				 int mux = -1,
-				 int mode = 0,
-				 int fusb_block_size = 0,
-				 int fusb_nblocks = 0,
-				 const std::string fpga_filename = "",
-				 const std::string firmware_filename = ""
-				 );
+  static usrp_standard_rx_sptr make(int which_board,
+				    unsigned int decim_rate,
+				    int nchan = 1,
+				    int mux = -1,
+				    int mode = 0,
+				    int fusb_block_size = 0,
+				    int fusb_nblocks = 0,
+				    const std::string fpga_filename = "",
+				    const std::string firmware_filename = ""
+				    );
   /*!
    * \brief Set decimator rate.  \p rate MUST BE EVEN and in [8, 256].
    *
@@ -153,6 +173,12 @@ class usrp_standard_rx : public usrp_basic_rx, usrp_standard_common
    * </pre>
    */
   bool set_mux  (int mux);
+
+  /*!
+   * Determine the appropriate Rx mux value as a function of the subdevice choosen
+   * and the characteristics of the respective daughterboard.
+   */
+  int determine_rx_mux_value(const usrp_subdev_spec &ss);
 
   /*!
    * \brief set the frequency of the digital down converter.
@@ -214,6 +240,22 @@ class usrp_standard_rx : public usrp_basic_rx, usrp_standard_common
   static bool format_want_q(unsigned int format);
   static bool format_bypass_halfband(unsigned int format);
 
+  /*!
+   * \brief High-level "tune" method.  Works for the single channel case.
+   *
+   * This method adjusts both the daughterboard LO and the DDC so that
+   * target_freq ends up at DC in the complex baseband samples.
+   *
+   * \param chan  which DDC channel we're controlling (almost always 0).
+   * \param db    the daughterboard we're controlling.
+   * \param target_freq the RF frequency we want at DC in the complex baseband.
+   * \param[out] tune_result details how the hardware was configured.
+   *
+   * \returns true iff everything was successful.
+   */
+  bool tune(int chan, db_base_sptr db, double target_freq, usrp_tune_result *result);
+  
+
   // ACCESSORS
   unsigned int decim_rate () const;
   double rx_freq (int channel) const;
@@ -233,7 +275,7 @@ class usrp_standard_rx : public usrp_basic_rx, usrp_standard_common
  *
  * Uses digital upconverter (coarse & fine modulators) in AD9862...
  */
-class usrp_standard_tx : public usrp_basic_tx, usrp_standard_common
+class usrp_standard_tx : public usrp_basic_tx, public usrp_standard_common
 {
  public:
   enum coarse_mod_t {
@@ -274,22 +316,22 @@ class usrp_standard_tx : public usrp_basic_tx, usrp_standard_common
   ~usrp_standard_tx ();
 
   /*!
-   * \brief invokes constructor, returns instance or 0 if trouble
+   * \brief invokes constructor, returns shared_ptr or shared_ptr equivalent of 0 if trouble
    *
    * \param which_board	     Which USRP board on usb (not particularly useful; use 0)
    * \param fusb_block_size  fast usb xfer block size.  Must be a multiple of 512. 
    *                         Use zero for a reasonable default.
    * \param fusb_nblocks     number of fast usb URBs to allocate.  Use zero for a reasonable default. 
    */
-  static usrp_standard_tx *make (int which_board,
-				 unsigned int interp_rate,
-				 int nchan = 1,
-				 int mux = -1,
-				 int fusb_block_size = 0,
-				 int fusb_nblocks = 0,
-				 const std::string fpga_filename = "",
-				 const std::string firmware_filename = ""
-				 );
+  static usrp_standard_tx_sptr make(int which_board,
+				    unsigned int interp_rate,
+				    int nchan = 1,
+				    int mux = -1,
+				    int fusb_block_size = 0,
+				    int fusb_nblocks = 0,
+				    const std::string fpga_filename = "",
+				    const std::string firmware_filename = ""
+				    );
 
   /*!
    * \brief Set interpolator rate.  \p rate must be in [4, 512] and a multiple of 4.
@@ -343,6 +385,12 @@ class usrp_standard_tx : public usrp_basic_tx, usrp_standard_common
   bool set_mux  (int mux);
 
   /*!
+   * Determine the appropriate Tx mux value as a function of the subdevice choosen
+   * and the characteristics of the respective daughterboard.
+   */
+  int determine_tx_mux_value(const usrp_subdev_spec &ss);
+
+  /*!
    * \brief set the frequency of the digital up converter.
    *
    * \p channel must be in the range [0,1].  \p freq is the center
@@ -357,6 +405,22 @@ class usrp_standard_tx : public usrp_basic_tx, usrp_standard_common
   double tx_freq (int channel) const;
   int nchannels () const;
   int mux () const;
+
+  /*!
+   * \brief High-level "tune" method.  Works for the single channel case.
+   *
+   * This method adjusts both the daughterboard LO and the DUC so that
+   * DC in the complex baseband samples ends up at RF target_freq.
+   *
+   * \param chan  which DUC channel we're controlling (usually == which_side).
+   * \param db    the daughterboard we're controlling.
+   * \param target_freq the RF frequency we want our baseband translated to.
+   * \param[out] tune_result details how the hardware was configured.
+   *
+   * \returns true iff everything was successful.
+   */
+  bool tune(int chan, db_base_sptr db, double target_freq, usrp_tune_result *result);
+
 
   // called in base class to derived class order
   bool start ();

@@ -40,9 +40,9 @@ def pick_subdevice(u):
     If there's a daughterboard on B, select B.
     Otherwise, select A.
     """
-    if u.db[0][0].dbid() >= 0:       # dbid is < 0 if there's no d'board or a problem
+    if u.db(0, 0).dbid() >= 0:       # dbid is < 0 if there's no d'board or a problem
         return (0, 0)
-    if u.db[1][0].dbid() >= 0:
+    if u.db(0, 0).dbid() >= 0:
         return (1, 0)
     return (0, 0)
 

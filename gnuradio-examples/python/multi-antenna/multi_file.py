@@ -54,9 +54,9 @@ class my_graph(gr.top_block):
             sw_decim = 1
 
         self.u = usrp.source_c(0, options.decim, fpga_filename="std_4rx_0tx.rbf")
-        if self.u.nddc() < nchan:
+        if self.u.nddcs() < nchan:
             sys.stderr.write('This code requires an FPGA build with %d DDCs.  This FPGA has only %d.\n' % (
-                nchan, self.u.nddc()))
+                nchan, self.u.nddcs()))
             raise SystemExit
                              
         if not self.u.set_nchannels(nchan):
@@ -68,11 +68,11 @@ class my_graph(gr.top_block):
         sink_data_rate = input_rate/sw_decim
         print "Scope data rate = %s" % (eng_notation.num_to_str(sink_data_rate),)
 
-        self.subdev = self.u.db[0] + self.u.db[1]
+        self.subdev = self.u.db(0) + self.u.db(1)
 
         if (len(self.subdev) != 4 or
-            self.u.db[0][0].dbid() != usrp_dbid.BASIC_RX or
-            self.u.db[1][0].dbid() != usrp_dbid.BASIC_RX):
+            self.u.db(0, 0).dbid() != usrp_dbid.BASIC_RX or
+            self.u.db(1, 0).dbid() != usrp_dbid.BASIC_RX):
             sys.stderr.write('This code requires a Basic Rx board on Sides A & B\n')
             sys.exit(1)
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2006 Free Software Foundation, Inc.
+ * Copyright 2003,2006,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -44,7 +44,7 @@
 
 char *prog_name;
 
-static bool test_input  (usrp_standard_rx *urx, int max_bytes, FILE *fp);
+static bool test_input  (usrp_standard_rx_sptr urx, int max_bytes, FILE *fp);
 
 static void
 set_progname (char *path)
@@ -189,7 +189,7 @@ main (int argc, char **argv)
     mode |= usrp_standard_rx::FPGA_MODE_COUNTING;
 
 
-  usrp_standard_rx *urx = 
+  usrp_standard_rx_sptr urx = 
     usrp_standard_rx::make (which_board, decim, 1, -1, mode,
 			    fusb_block_size, fusb_nblocks);
 
@@ -214,14 +214,12 @@ main (int argc, char **argv)
   if (fp)
     fclose (fp);
 
-  delete urx;
-
   return 0;
 }
 
 
 static bool
-test_input  (usrp_standard_rx *urx, int max_bytes, FILE *fp)
+test_input  (usrp_standard_rx_sptr urx, int max_bytes, FILE *fp)
 {
   int		   fd = -1;
   static const int BUFSIZE = urx->block_size();

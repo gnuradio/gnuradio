@@ -26,8 +26,10 @@ AC_DEFUN([GRC_GR_USRP],[
 
     AC_CONFIG_FILES([ \
         gr-usrp/Makefile \
+	gr-usrp/gnuradio-usrp.pc \
         gr-usrp/src/Makefile \
         gr-usrp/src/run_tests \
+	gr-usrp/apps/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-usrp,[

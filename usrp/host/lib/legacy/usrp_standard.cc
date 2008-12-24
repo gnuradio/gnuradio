@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -42,6 +42,168 @@ static const int DEFAULT_CAPS_VAL = ((2 << bmFR_RB_CAPS_NDUC_SHIFT)
 using namespace ad9862;
 
 #define NELEM(x) (sizeof (x) / sizeof (x[0]))
+
+
+void
+usrp_standard_common::calc_dxc_freq(double target_freq, double baseband_freq, double fs,
+				    double *dxc_freq, bool *inverted)
+{
+  /*
+    Calculate the frequency to use for setting the digital up or down converter.
+    
+    @param target_freq: desired RF frequency (Hz)
+    @param baseband_freq: the RF frequency that corresponds to DC in the IF.
+    @param fs: converter sample rate
+    
+    @returns: 2-tuple (ddc_freq, inverted) where ddc_freq is the value
+      for the ddc and inverted is True if we're operating in an inverted
+      Nyquist zone.
+  */
+
+#if 0
+    printf("calc_dxc_freq:\n");
+    printf("  target   = %f\n", target_freq);
+    printf("  baseband = %f\n", baseband_freq);
+    printf("  fs       = %f\n", fs);
+#endif
+
+  double delta = target_freq - baseband_freq;
+    
+  if(delta >= 0) {
+    while(delta > fs) {
+      delta -= fs;
+    }
+    if(delta <= fs/2) {		// non-inverted region
+      *dxc_freq = -delta;	
+      *inverted = false;
+    }
+    else {     			// inverted region
+      *dxc_freq = delta - fs;
+      *inverted = true;
+    }
+  }
+  else {
+    while(delta < -fs) {
+      delta += fs;
+    }
+    if(delta >= -fs/2) {
+      *dxc_freq = -delta;	// non-inverted region
+      *inverted = false;
+    }
+    else {			// inverted region
+      *dxc_freq = delta + fs;
+      *inverted = true;
+    }
+  }
+
+#if 0
+    printf("  dxc_freq  = %f\n", *dxc_freq);
+    printf("  inverted  = %s\n", *inverted ? "true" : "false");
+#endif
+}
+
+
+/* 
+ * Real lambda expressions would be _so_ much easier...
+ */
+class dxc_control {
+public:
+  virtual bool is_tx() = 0;
+  virtual bool set_dxc_freq(double dxc_freq) = 0;
+  virtual double dxc_freq() = 0;
+};
+
+class ddc_control : public dxc_control {
+  usrp_standard_rx     *d_u;
+  int			d_chan;
+
+public:
+  ddc_control(usrp_standard_rx *u, int chan)
+    : d_u(u), d_chan(chan) {}
+  
+  bool is_tx(){ return false; }
+  bool set_dxc_freq(double dxc_freq){ return d_u->set_rx_freq(d_chan, dxc_freq); }
+  double dxc_freq(){ return d_u->rx_freq(d_chan); }
+};
+
+class duc_control : public dxc_control {
+  usrp_standard_tx     *d_u;
+  int			d_chan;
+
+public:
+  duc_control(usrp_standard_tx *u, int chan)
+    : d_u(u), d_chan(chan) {}
+  
+  bool is_tx(){ return true; }
+  bool set_dxc_freq(double dxc_freq){ return d_u->set_tx_freq(d_chan, dxc_freq); }
+  double dxc_freq() { return d_u->tx_freq(d_chan); }
+};
+
+
+/*!
+ * \brief Tune such that target_frequency ends up at DC in the complex baseband
+ *
+ * \param db		the daughterboard to use
+ * \param target_freq	the center frequency we want at baseband (DC)
+ * \param fs 		the sample rate
+ * \param dxc		DDC or DUC access and control object
+ * \param[out] result	details of what we did
+ *
+ * \returns true iff operation was successful
+ *
+ * Tuning is a two step process.  First we ask the front-end to
+ * tune as close to the desired frequency as it can.  Then we use
+ * the result of that operation and our target_frequency to
+ * determine the value for the digital down converter.
+ */
+static bool
+tune_a_helper(db_base_sptr db, double target_freq, double fs,
+	      dxc_control &dxc, usrp_tune_result *result)
+{
+  bool inverted = false;
+  double dxc_freq;
+  double actual_dxc_freq;
+
+  // Ask the d'board to tune as closely as it can to target_freq
+#if 0
+  bool ok = db->set_freq(target_freq, &result->baseband_freq);
+#else
+  bool ok;
+  {
+    freq_result_t fr = db->set_freq(target_freq);
+    ok = fr.ok;
+    result->baseband_freq = fr.baseband_freq;
+  }
+#endif
+
+  // Calculate the DDC setting that will downconvert the baseband from the
+  // daughterboard to our target frequency.
+  usrp_standard_common::calc_dxc_freq(target_freq, result->baseband_freq, fs,
+				      &dxc_freq, &inverted);
+
+  // If the spectrum is inverted, and the daughterboard doesn't do
+  // quadrature downconversion, we can fix the inversion by flipping the
+  // sign of the dxc_freq...  (This only happens using the basic_rx board)
+  
+  if(db->spectrum_inverted())
+    inverted = !inverted;
+  
+  if(inverted && !db->is_quadrature()){
+    dxc_freq = -dxc_freq;
+    inverted = !inverted;
+  }
+  
+  if (dxc.is_tx())		// down conversion versus up conversion
+    dxc_freq = -dxc_freq;
+
+  ok &= dxc.set_dxc_freq(dxc_freq);
+  actual_dxc_freq = dxc.dxc_freq();
+  
+  result->dxc_freq = dxc_freq;
+  result->residual_freq = dxc_freq - actual_dxc_freq;
+  result->inverted = inverted;
+  return ok;
+}
 
 
 static unsigned int
@@ -210,7 +372,7 @@ usrp_standard_rx::stop ()
   return ok;
 }
 
-usrp_standard_rx *
+usrp_standard_rx_sptr
 usrp_standard_rx::make (int which_board,
 			unsigned int decim_rate,
 			int nchan, int mux, int mode,
@@ -219,21 +381,18 @@ usrp_standard_rx::make (int which_board,
 			const std::string firmware_filename
 			)
 {
-  usrp_standard_rx *u = 0;
-  
   try {
-    u = new usrp_standard_rx (which_board, decim_rate,
-			      nchan, mux, mode,
-			      fusb_block_size, fusb_nblocks,
-			      fpga_filename, firmware_filename);
+    usrp_standard_rx_sptr u = 
+      usrp_standard_rx_sptr(new usrp_standard_rx(which_board, decim_rate,
+						 nchan, mux, mode,
+						 fusb_block_size, fusb_nblocks,
+						 fpga_filename, firmware_filename));
+    u->init_db(u);
     return u;
   }
   catch (...){
-    delete u;
-    return 0;
+    return usrp_standard_rx_sptr();
   }
-
-  return u;
 }
 
 bool
@@ -371,6 +530,112 @@ usrp_standard_rx::write_hw_mux_reg ()
   return ok;
 }
 
+int
+usrp_standard_rx::determine_rx_mux_value(const usrp_subdev_spec &ss)
+{
+  /*
+    Determine appropriate Rx mux value as a function of the subdevice choosen and the
+    characteristics of the respective daughterboard.
+    
+    @param u:           instance of USRP source
+    @param subdev_spec: return value from subdev option parser.  
+    @type  subdev_spec: (side, subdev), where side is 0 or 1 and subdev is 0 or 1
+    @returns:           the Rx mux value
+  
+    Figure out which A/D's to connect to the DDC.
+    
+    Each daughterboard consists of 1 or 2 subdevices.  (At this time,
+    all but the Basic Rx have a single subdevice.  The Basic Rx
+    has two independent channels, treated as separate subdevices).
+    subdevice 0 of a daughterboard may use 1 or 2 A/D's.  We determine this
+    by checking the is_quadrature() method.  If subdevice 0 uses only a single
+    A/D, it's possible that the daughterboard has a second subdevice, subdevice 1,
+    and it uses the second A/D.
+    
+    If the card uses only a single A/D, we wire a zero into the DDC Q input.
+    
+    (side, 0) says connect only the A/D's used by subdevice 0 to the DDC.
+    (side, 1) says connect only the A/D's used by subdevice 1 to the DDC.
+  */
+
+  struct truth_table_element
+  {
+    int          d_side;
+    int 	 d_uses;
+    bool         d_swap_iq;
+    unsigned int d_mux_val;
+
+    truth_table_element(int side, unsigned int uses, bool swap_iq, unsigned int mux_val=0)
+      : d_side(side), d_uses(uses), d_swap_iq(swap_iq), d_mux_val(mux_val){}
+      
+    bool operator==(const truth_table_element &in)
+    {
+      return (d_side == in.d_side && d_uses == in.d_uses && d_swap_iq == in.d_swap_iq);
+    }
+
+    unsigned int mux_val() { return d_mux_val; }
+  };
+
+
+  if (!is_valid(ss))
+    throw std::invalid_argument("subdev_spec");
+
+
+  // This is a tuple of length 1 or 2 containing the subdevice
+  // classes for the selected side.
+  std::vector<db_base_sptr> db = this->db(ss.side);
+  
+  unsigned int subdev0_uses, subdev1_uses, uses;
+
+  // compute bitmasks of used A/D's
+  
+  if(db[0]->is_quadrature())
+    subdev0_uses = 0x3;               // uses A/D 0 and 1
+  else
+    subdev0_uses = 0x1;               // uses A/D 0 only
+
+  if(db.size() > 1)                   // more than 1 subdevice?
+    subdev1_uses = 0x2;               // uses A/D 1 only
+  else
+    subdev1_uses = 0x0;               // uses no A/D (doesn't exist)
+  
+  if(ss.subdev == 0)
+    uses = subdev0_uses;
+  else if(ss.subdev == 1)
+    uses = subdev1_uses;
+  else
+    throw std::invalid_argument("subdev_spec");
+
+  if(uses == 0){
+    throw std::runtime_error("Daughterboard doesn't have a subdevice 1");
+  }
+  
+  bool swap_iq = db[0]->i_and_q_swapped();
+  
+  truth_table_element truth_table[8] = {
+    // (side, uses, swap_iq) : mux_val
+    truth_table_element(0, 0x1, false, 0xf0f0f0f0),
+    truth_table_element(0, 0x2, false, 0xf0f0f0f1),
+    truth_table_element(0, 0x3, false, 0x00000010),
+    truth_table_element(0, 0x3, true,  0x00000001),
+    truth_table_element(1, 0x1, false, 0xf0f0f0f2),
+    truth_table_element(1, 0x2, false, 0xf0f0f0f3),
+    truth_table_element(1, 0x3, false, 0x00000032),
+    truth_table_element(1, 0x3, true,  0x00000023)
+  };
+  size_t nelements = sizeof(truth_table)/sizeof(truth_table[0]);
+  
+  truth_table_element target(ss.side, uses, swap_iq, 0);
+  
+  size_t i;
+  for(i = 0; i < nelements; i++){
+    if (truth_table[i] == target)
+      return truth_table[i].mux_val();
+  }
+  throw std::runtime_error("internal error");
+}
+
+
 
 bool
 usrp_standard_rx::set_rx_freq (int channel, double freq)
@@ -379,7 +644,7 @@ usrp_standard_rx::set_rx_freq (int channel, double freq)
     return false;
 
   unsigned int v =
-    compute_freq_control_word_fpga (adc_freq(),
+    compute_freq_control_word_fpga (adc_rate(),
 				    freq, &d_rx_freq[channel],
 				    d_verbose);
 
@@ -493,6 +758,14 @@ usrp_standard_rx::format_bypass_halfband(unsigned int format)
   return (format & bmFR_RX_FORMAT_BYPASS_HB) != 0;
 }
 
+bool
+usrp_standard_rx::tune(int chan, db_base_sptr db, double target_freq, usrp_tune_result *result)
+{
+  ddc_control dxc(this, chan);
+  return tune_a_helper(db, target_freq, converter_rate(), dxc, result);
+}
+
+
 //////////////////////////////////////////////////////////////////
 
 
@@ -589,7 +862,7 @@ usrp_standard_tx::stop ()
   return ok;
 }
 
-usrp_standard_tx *
+usrp_standard_tx_sptr
 usrp_standard_tx::make (int which_board,
 			unsigned int interp_rate,
 			int nchan, int mux,
@@ -598,20 +871,17 @@ usrp_standard_tx::make (int which_board,
 			const std::string firmware_filename
 			)
 {
-  usrp_standard_tx *u = 0;
-  
   try {
-    u = new usrp_standard_tx (which_board, interp_rate, nchan, mux,
-			      fusb_block_size, fusb_nblocks,
-			      fpga_filename, firmware_filename);
+    usrp_standard_tx_sptr u  = 
+      usrp_standard_tx_sptr(new usrp_standard_tx(which_board, interp_rate, nchan, mux,
+						 fusb_block_size, fusb_nblocks,
+						 fpga_filename, firmware_filename));
+    u->init_db(u);
     return u;
   }
   catch (...){
-    delete u;
-    return 0;
+    return usrp_standard_tx_sptr();
   }
-
-  return u;
 }
 
 bool
@@ -668,6 +938,39 @@ usrp_standard_tx::write_hw_mux_reg ()
   return ok;
 }
 
+int
+usrp_standard_tx::determine_tx_mux_value(const usrp_subdev_spec &ss)
+{
+  /*
+    Determine appropriate Tx mux value as a function of the subdevice choosen.
+
+    @param u:           instance of USRP source
+    @param subdev_spec: return value from subdev option parser.  
+    @type  subdev_spec: (side, subdev), where side is 0 or 1 and subdev is 0
+    @returns:           the Rx mux value
+  
+    This is simpler than the rx case.  Either you want to talk
+    to side A or side B.  If you want to talk to both sides at once,
+    determine the value manually.
+  */
+
+  if (!is_valid(ss))
+    throw std::invalid_argument("subdev_spec");
+
+  std::vector<db_base_sptr> db = this->db(ss.side);
+  
+  if(db[0]->i_and_q_swapped()) {
+    unsigned int mask[2] = {0x0089, 0x8900};
+    return mask[ss.side];
+  }
+  else {
+    unsigned int mask[2] = {0x0098, 0x9800};
+    return mask[ss.side];
+  }
+}
+
+
+
 #ifdef USE_FPGA_TX_CORDIC
 
 bool
@@ -679,7 +982,7 @@ usrp_standard_tx::set_tx_freq (int channel, double freq)
   // This assumes we're running the 4x on-chip interpolator.
 
   unsigned int v =
-    compute_freq_control_word_fpga (dac_freq () / 4,
+    compute_freq_control_word_fpga (dac_rate () / 4,
 				    freq, &d_tx_freq[channel],
 				    d_verbose);
 
@@ -700,17 +1003,17 @@ usrp_standard_tx::set_tx_freq (int channel, double freq)
   coarse_mod_t	cm;
   double	coarse;
 
-  assert (dac_freq () == 128000000);
+  assert (dac_rate () == 128000000);
 
   if (freq < -44e6)		// too low
     return false;
   else if (freq < -24e6){	// [-44, -24)
     cm = CM_NEG_FDAC_OVER_4;
-    coarse = -dac_freq () / 4;
+    coarse = -dac_rate () / 4;
   }
   else if (freq < -8e6){	// [-24, -8)
     cm = CM_NEG_FDAC_OVER_8;
-    coarse = -dac_freq () / 8;
+    coarse = -dac_rate () / 8;
   }
   else if (freq < 8e6){		// [-8, 8)
     cm = CM_OFF;
@@ -718,11 +1021,11 @@ usrp_standard_tx::set_tx_freq (int channel, double freq)
   }
   else if (freq < 24e6){	// [8, 24)
     cm = CM_POS_FDAC_OVER_8;
-    coarse = dac_freq () / 8;
+    coarse = dac_rate () / 8;
   }
   else if (freq <= 44e6){	// [24, 44]
     cm = CM_POS_FDAC_OVER_4;
-    coarse = dac_freq () / 4;
+    coarse = dac_rate () / 4;
   }
   else				// too high
     return false;
@@ -738,7 +1041,7 @@ usrp_standard_tx::set_tx_freq (int channel, double freq)
   // (This is required to use the fine modulator.)
 
   unsigned int v =
-    compute_freq_control_word_9862 (dac_freq () / 4,
+    compute_freq_control_word_9862 (dac_rate () / 4,
 				    fine, &d_tx_freq[channel], d_verbose);
 
   d_tx_freq[channel] += coarse;		// adjust actual
@@ -836,4 +1139,11 @@ usrp_standard_tx::coarse_modulator (int channel) const
     return CM_OFF;
 
   return d_coarse_mod[channel];
+}
+
+bool
+usrp_standard_tx::tune(int chan, db_base_sptr db, double target_freq, usrp_tune_result *result)
+{
+  duc_control dxc(this, chan);
+  return tune_a_helper(db, target_freq, converter_rate(), dxc, result);
 }

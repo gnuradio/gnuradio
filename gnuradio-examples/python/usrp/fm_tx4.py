@@ -43,7 +43,7 @@ import math
 import sys
 
 from gnuradio.wxgui import stdgui2, fftsink2
-from gnuradio import tx_debug_gui
+#from gnuradio import tx_debug_gui
 import wx
 
 
@@ -84,8 +84,8 @@ class fm_tx_block(stdgui2.std_top_block):
                            help="set Tx frequency to FREQ [required]", metavar="FREQ")
         parser.add_option("-n", "--nchannels", type="int", default=4,
                            help="number of Tx channels [1,4]")
-        parser.add_option("","--debug", action="store_true", default=False,
-                          help="Launch Tx debugger")
+        #parser.add_option("","--debug", action="store_true", default=False,
+        #                  help="Launch Tx debugger")
         (options, args) = parser.parse_args ()
 
         if len(args) != 0:
@@ -158,9 +158,9 @@ class fm_tx_block(stdgui2.std_top_block):
             vbox.Add (post_mod.win, 1, wx.EXPAND)
             
 
-        if options.debug:
-            self.debugger = tx_debug_gui.tx_debug_gui(self.subdev)
-            self.debugger.Show(True)
+        #if options.debug:
+        #    self.debugger = tx_debug_gui.tx_debug_gui(self.subdev)
+        #    self.debugger.Show(True)
 
 
     def set_freq(self, target_freq):
@@ -177,7 +177,7 @@ class fm_tx_block(stdgui2.std_top_block):
         any residual_freq to the s/w freq translater.
         """
 
-        r = self.u.tune(self.subdev._which, self.subdev, target_freq)
+        r = self.u.tune(self.subdev.which(), self.subdev, target_freq)
         if r:
             print "r.baseband_freq =", eng_notation.num_to_str(r.baseband_freq)
             print "r.dxc_freq      =", eng_notation.num_to_str(r.dxc_freq)

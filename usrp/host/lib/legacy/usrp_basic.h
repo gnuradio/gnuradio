@@ -1,6 +1,7 @@
+
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2004 Free Software Foundation, Inc.
+ * Copyright 2003,2004,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -39,24 +40,30 @@
 #ifndef INCLUDED_USRP_BASIC_H
 #define INCLUDED_USRP_BASIC_H
 
+#include <db_base.h>
 #include <usrp_slots.h>
 #include <string>
+#include <vector>
+#include <boost/utility.hpp>
+#include <usrp_subdev_spec.h>
 
 struct usb_dev_handle;
 class  fusb_devhandle;
 class  fusb_ephandle;
 
-/*!
- * \brief base class for usrp operations
- */
-class usrp_basic
-{
-private:
-  // NOT IMPLEMENTED
-  usrp_basic (const usrp_basic &rhs);			// no copy constructor
-  usrp_basic &operator= (const usrp_basic &rhs);	// no assignment operator
+enum txrx_t {
+  C_RX = 0,
+  C_TX = 1
+};
 
-  
+/*!
+ * \brief abstract base class for usrp operations
+ */
+class usrp_basic : boost::noncopyable
+{
+protected:
+  void shutdown_daughterboards();
+
 protected:
   struct usb_dev_handle	*d_udh;
   int			 d_usb_data_rate;	// bytes/sec
@@ -65,6 +72,22 @@ protected:
 
   static const int	 MAX_REGS = 128;
   unsigned int		 d_fpga_shadows[MAX_REGS];
+
+  int			 d_dbid[2];		// daughterboard ID's (side A, side B)
+
+  /*!
+   * Shared pointers to subclasses of db_base.
+   *
+   * The outer vector is of length 2 (0 = side A, 1 = side B).  The
+   * inner vectors are of length 1, 2 or 3 depending on the number of
+   * subdevices implemented by the daugherboard.  At this time, only
+   * the Basic Rx and LF Rx implement more than 1 subdevice.
+   */
+  std::vector< std::vector<db_base_sptr> > d_db;
+
+  //! One time call, made only only from usrp_standard_*::make after shared_ptr is created.
+  void init_db(usrp_basic_sptr u);
+
 
   usrp_basic (int which_board,
 	      struct usb_dev_handle *open_interface (struct usb_device *dev),
@@ -92,7 +115,7 @@ protected:
    * \param value	[0,4095]
    * \returns true iff successful
    */
-  bool write_aux_dac (int slot, int which_dac, int value);
+  bool _write_aux_dac (int slot, int which_dac, int value);
 
   /*!
    * \brief Read auxiliary analog to digital converter.
@@ -102,7 +125,7 @@ protected:
    * \param value	return 12-bit value [0,4095]
    * \returns true iff successful
    */
-  bool read_aux_adc (int slot, int which_adc, int *value);
+  bool _read_aux_adc (int slot, int which_adc, int *value);
 
   /*!
    * \brief Read auxiliary analog to digital converter.
@@ -111,10 +134,45 @@ protected:
    * \param which_adc	[0,1]
    * \returns value in the range [0,4095] if successful, else READ_FAILED.
    */
-  int read_aux_adc (int slot, int which_adc);
+  int _read_aux_adc (int slot, int which_adc);
+
 
 public:
   virtual ~usrp_basic ();
+
+
+  /*!
+   * Return a vector of vectors that contain shared pointers
+   * to the daughterboard instance(s) associated with the specified side.
+   *
+   * It is an error to use the returned objects after the usrp_basic
+   * object has been destroyed.
+   */
+  std::vector<std::vector<db_base_sptr> > db() const { return d_db; }
+
+  /*!
+   * Return a vector of size >= 1 that contains shared pointers
+   * to the daughterboard instance(s) associated with the specified side.
+   *
+   * \param which_side	[0,1] which daughterboard
+   *
+   * It is an error to use the returned objects after the usrp_basic
+   * object has been destroyed.
+   */
+  std::vector<db_base_sptr> db(int which_side);
+ 
+  /*!
+   * \brief is the subdev_spec valid?
+   */
+  bool is_valid(const usrp_subdev_spec &ss);
+
+  /*!
+   * \brief given a subdev_spec, return the corresponding daughterboard object.
+   * \throws std::invalid_ argument if ss is invalid.
+   *
+   * \param ss specifies the side and subdevice
+   */
+  db_base_sptr selected_subdev(const usrp_subdev_spec &ss);
 
   /*!
    * \brief return frequency of master oscillator on USRP
@@ -172,7 +230,7 @@ public:
    * \param which	which ADC[0,3]: 0 = RX_A I, 1 = RX_A Q...
    * \param offset	16-bit value to subtract from raw ADC input.
    */
-  bool set_adc_offset (int which, int offset);
+  bool set_adc_offset (int which_adc, int offset);
 
   /*!
    * \brief Set DAC offset correction
@@ -181,16 +239,37 @@ public:
    * \param offset_pin	1-bit value.  If 0 offset applied to -ve differential pin;
    *                                  If 1 offset applied to +ve differential pin.
    */
-  bool set_dac_offset (int which, int offset, int offset_pin);
+  bool set_dac_offset (int which_dac, int offset, int offset_pin);
 
   /*!
    * \brief Control ADC input buffer
-   * \param which 	which ADC[0,3]
+   * \param which_adc 	which ADC[0,3]
    * \param bypass	if non-zero, bypass input buffer and connect input
    *	                directly to switched cap SHA input of RxPGA.
    */
-  bool set_adc_buffer_bypass (int which, bool bypass);
+  bool set_adc_buffer_bypass (int which_adc, bool bypass);
 
+  /*!
+   * \brief Enable/disable automatic DC offset removal control loop in FPGA
+   *
+   * \param bits  which control loops to enable
+   * \param mask  which \p bits to pay attention to
+   *
+   * If the corresponding bit is set, enable the automatic DC
+   * offset correction control loop.
+   *
+   * <pre>
+   * The 4 low bits are significant:
+   *
+   *   ADC0 = (1 << 0)
+   *   ADC1 = (1 << 1)
+   *   ADC2 = (1 << 2)
+   *   ADC3 = (1 << 3)
+   * </pre>
+   *
+   * By default the control loop is enabled on all ADC's.
+   */
+  bool set_dc_offset_cl_enable(int bits, int mask);
 
   /*!
    * \brief return the usrp's serial number.
@@ -199,12 +278,376 @@ public:
    */
   std::string serial_number();
 
+  /*!
+   * \brief Return daughterboard ID for given side [0,1].
+   *
+   * \param which_side	[0,1] which daughterboard
+   *
+   * \return daughterboard id >= 0 if successful
+   * \return -1 if no daugherboard
+   * \return -2 if invalid EEPROM on daughterboard
+   */
+  virtual int daughterboard_id (int which_side) const = 0;
+
+  /*!
+   * \brief Clock ticks to delay rising of T/R signal
+   * \sa write_atr_mask, write_atr_txval, write_atr_rxval
+   */
+  bool write_atr_tx_delay(int value);
+
+  /*!
+   * \brief Clock ticks to delay falling edge of T/R signal
+   * \sa write_atr_mask, write_atr_txval, write_atr_rxval
+   */
+  bool write_atr_rx_delay(int value);
+
+
+  // ================================================================
+  // Routines to access and control daughterboard specific i/o
+  //
+  // Those with a common_ prefix access either the Tx or Rx side depending
+  // on the txrx parameter.  Those without the common_ prefix are virtual
+  // and are overriden in usrp_basic_rx and usrp_basic_tx to access the
+  // the Rx or Tx sides automatically.  We provide the common_ versions
+  // for those daughterboards such as the WBX and XCVR2450 that share
+  // h/w resources (such as the LO) between the Tx and Rx sides.
+
+  // ----------------------------------------------------------------
+  // BEGIN common_  daughterboard control functions
+
+  /*!
+   * \brief Set Programmable Gain Amplifier(PGA)
+   *
+   * \param txrx	Tx or Rx?
+   * \param which_amp	which amp [0,3]
+   * \param gain_in_db	gain value(linear in dB)
+   *
+   * gain is rounded to closest setting supported by hardware.
+   *
+   * \returns true iff sucessful.
+   *
+   * \sa pga_min(), pga_max(), pga_db_per_step()
+   */
+  bool common_set_pga(txrx_t txrx, int which_amp, double gain_in_db);
+
+  /*!
+   * \brief Return programmable gain amplifier gain setting in dB.
+   *
+   * \param txrx	Tx or Rx?
+   * \param which_amp	which amp [0,3]
+   */
+  double common_pga(txrx_t txrx, int which_amp) const;
+
+  /*!
+   * \brief Return minimum legal PGA gain in dB.
+   * \param txrx	Tx or Rx?
+   */
+  double common_pga_min(txrx_t txrx) const;
+
+  /*!
+   * \brief Return maximum legal PGA gain in dB.
+   * \param txrx	Tx or Rx?
+   */
+  double common_pga_max(txrx_t txrx) const;
+
+  /*!
+   * \brief Return hardware step size of PGA(linear in dB).
+   * \param txrx	Tx or Rx?
+   */
+  double common_pga_db_per_step(txrx_t txrx) const;
+
+  /*!
+   * \brief Write direction register(output enables) for pins that go to daughterboard.
+   *
+   * \param txrx	Tx or Rx?
+   * \param which_side	[0,1] which size
+   * \param value	value to write into register
+   * \param mask	which bits of value to write into reg
+   *
+   * Each d'board has 16-bits of general purpose i/o.
+   * Setting the bit makes it an output from the FPGA to the d'board.
+   *
+   * This register is initialized based on a value stored in the
+   * d'board EEPROM.  In general, you shouldn't be using this routine
+   * without a very good reason.  Using this method incorrectly will
+   * kill your USRP motherboard and/or daughterboard.
+   */
+  bool _common_write_oe(txrx_t txrx, int which_side, int value, int mask);
+
+  /*!
+   * \brief Write daughterboard i/o pin value
+   *
+   * \param txrx	Tx or Rx?
+   * \param which_side	[0,1] which d'board
+   * \param value	value to write into register
+   * \param mask	which bits of value to write into reg
+   */
+  bool common_write_io(txrx_t txrx, int which_side, int value, int mask);
+
+  /*!
+   * \brief Read daughterboard i/o pin value
+   *
+   * \param txrx	Tx or Rx?
+   * \param which_side	[0,1] which d'board
+   * \param value	output
+   */
+  bool common_read_io(txrx_t txrx, int which_side, int *value);
+
+  /*!
+   * \brief Read daughterboard i/o pin value
+   *
+   * \param txrx	Tx or Rx?
+   * \param which_side	[0,1] which d'board
+   * \returns register value if successful, else READ_FAILED
+   */
+  int common_read_io(txrx_t txrx, int which_side);
+
+  /*!
+   * \brief Write daughterboard refclk config register
+   *
+   * \param txrx	Tx or Rx?
+   * \param which_side	[0,1] which d'board
+   * \param value	value to write into register, see below
+   *
+   * <pre>
+   * Control whether a reference clock is sent to the daughterboards,
+   * and what frequency.  The refclk is sent on d'board i/o pin 0.
+   * 
+   *     3                   2                   1                       
+   *   1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0
+   *  +-----------------------------------------------+-+------------+
+   *  |             Reserved (Must be zero)           |E|   DIVISOR  |
+   *  +-----------------------------------------------+-+------------+
+   * 
+   *  Bit 7  -- 1 turns on refclk, 0 allows IO use
+   *  Bits 6:0 Divider value
+   * </pre>
+   */
+  bool common_write_refclk(txrx_t txrx, int which_side, int value);
+
+  /*!
+   * \brief Automatic Transmit/Receive switching
+   * <pre>
+   *
+   * If automatic transmit/receive (ATR) switching is enabled in the
+   * FR_ATR_CTL register, the presence or absence of data in the FPGA
+   * transmit fifo selects between two sets of values for each of the 4
+   * banks of daughterboard i/o pins.
+   *
+   * Each daughterboard slot has 3 16-bit registers associated with it:
+   *   FR_ATR_MASK_*, FR_ATR_TXVAL_* and FR_ATR_RXVAL_*
+   *
+   * FR_ATR_MASK_{0,1,2,3}: 
+   *
+   *   These registers determine which of the daugherboard i/o pins are
+   *   affected by ATR switching.  If a bit in the mask is set, the
+   *   corresponding i/o bit is controlled by ATR, else it's output
+   *   value comes from the normal i/o pin output register:
+   *   FR_IO_{0,1,2,3}.
+   *
+   * FR_ATR_TXVAL_{0,1,2,3}:
+   * FR_ATR_RXVAL_{0,1,2,3}:
+   *
+   *   If the Tx fifo contains data, then the bits from TXVAL that are
+   *   selected by MASK are output.  Otherwise, the bits from RXVAL that
+   *   are selected by MASK are output.
+   * </pre>
+   */
+  bool common_write_atr_mask(txrx_t txrx, int which_side, int value);
+  bool common_write_atr_txval(txrx_t txrx, int which_side, int value);
+  bool common_write_atr_rxval(txrx_t txrx, int which_side, int value);
+
+  /*!
+   * \brief Write auxiliary digital to analog converter.
+   *
+   * \param txrx	Tx or Rx?
+   * \param which_side	[0,1] which d'board
+   *    		N.B., SLOT_TX_A and SLOT_RX_A share the same AUX DAC's.
+   *          		SLOT_TX_B and SLOT_RX_B share the same AUX DAC's.
+   * \param which_dac	[2,3] TX slots must use only 2 and 3.
+   * \param value	[0,4095]
+   * \returns true iff successful
+   */
+  bool common_write_aux_dac(txrx_t txrx, int which_side, int which_dac, int value);
+
+  /*!
+   * \brief Read auxiliary analog to digital converter.
+   *
+   * \param txrx	Tx or Rx?
+   * \param which_side	[0,1] which d'board
+   * \param which_adc	[0,1]
+   * \param value	return 12-bit value [0,4095]
+   * \returns true iff successful
+   */
+  bool common_read_aux_adc(txrx_t txrx, int which_side, int which_adc, int *value);
+
+  /*!
+   * \brief Read auxiliary analog to digital converter.
+   *
+   * \param txrx	Tx or Rx?
+   * \param which_side	[0,1] which d'board
+   * \param which_adc	[0,1]
+   * \returns value in the range [0,4095] if successful, else READ_FAILED.
+   */
+  int common_read_aux_adc(txrx_t txrx, int which_side, int which_adc);
+
+  // END common_ daughterboard control functions
+  // ----------------------------------------------------------------
+  // BEGIN virtual daughterboard control functions
+
+  /*!
+   * \brief Set Programmable Gain Amplifier (PGA)
+   *
+   * \param which_amp	which amp [0,3]
+   * \param gain_in_db	gain value (linear in dB)
+   *
+   * gain is rounded to closest setting supported by hardware.
+   *
+   * \returns true iff sucessful.
+   *
+   * \sa pga_min(), pga_max(), pga_db_per_step()
+   */
+  virtual bool set_pga (int which_amp, double gain_in_db) = 0;
+
+  /*!
+   * \brief Return programmable gain amplifier gain setting in dB.
+   *
+   * \param which_amp	which amp [0,3]
+   */
+  virtual double pga (int which_amp) const = 0;
+
+  /*!
+   * \brief Return minimum legal PGA gain in dB.
+   */
+  virtual double pga_min () const = 0;
+
+  /*!
+   * \brief Return maximum legal PGA gain in dB.
+   */
+  virtual double pga_max () const = 0;
+
+  /*!
+   * \brief Return hardware step size of PGA (linear in dB).
+   */
+  virtual double pga_db_per_step () const = 0;
+
+  /*!
+   * \brief Write direction register (output enables) for pins that go to daughterboard.
+   *
+   * \param which_side	[0,1] which size
+   * \param value	value to write into register
+   * \param mask	which bits of value to write into reg
+   *
+   * Each d'board has 16-bits of general purpose i/o.
+   * Setting the bit makes it an output from the FPGA to the d'board.
+   *
+   * This register is initialized based on a value stored in the
+   * d'board EEPROM.  In general, you shouldn't be using this routine
+   * without a very good reason.  Using this method incorrectly will
+   * kill your USRP motherboard and/or daughterboard.
+   */
+  virtual bool _write_oe (int which_side, int value, int mask) = 0;
+
+  /*!
+   * \brief Write daughterboard i/o pin value
+   *
+   * \param which_side	[0,1] which d'board
+   * \param value	value to write into register
+   * \param mask	which bits of value to write into reg
+   */
+  virtual bool write_io (int which_side, int value, int mask) = 0;
+
+  /*!
+   * \brief Read daughterboard i/o pin value
+   *
+   * \param which_side	[0,1] which d'board
+   * \param value	output
+   */
+  virtual bool read_io (int which_side, int *value) = 0;
+
+  /*!
+   * \brief Read daughterboard i/o pin value
+   *
+   * \param which_side	[0,1] which d'board
+   * \returns register value if successful, else READ_FAILED
+   */
+  virtual int read_io (int which_side) = 0;
+
+  /*!
+   * \brief Write daughterboard refclk config register
+   *
+   * \param which_side	[0,1] which d'board
+   * \param value	value to write into register, see below
+   *
+   * <pre>
+   * Control whether a reference clock is sent to the daughterboards,
+   * and what frequency.  The refclk is sent on d'board i/o pin 0.
+   * 
+   *     3                   2                   1                       
+   *   1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0
+   *  +-----------------------------------------------+-+------------+
+   *  |             Reserved (Must be zero)           |E|   DIVISOR  |
+   *  +-----------------------------------------------+-+------------+
+   * 
+   *  Bit 7  -- 1 turns on refclk, 0 allows IO use
+   *  Bits 6:0 Divider value
+   * </pre>
+   */
+  virtual bool write_refclk(int which_side, int value) = 0;
+
+  virtual bool write_atr_mask(int which_side, int value) = 0;
+  virtual bool write_atr_txval(int which_side, int value) = 0;
+  virtual bool write_atr_rxval(int which_side, int value) = 0;
+
+  /*!
+   * \brief Write auxiliary digital to analog converter.
+   *
+   * \param which_side	[0,1] which d'board
+   *    		N.B., SLOT_TX_A and SLOT_RX_A share the same AUX DAC's.
+   *          		SLOT_TX_B and SLOT_RX_B share the same AUX DAC's.
+   * \param which_dac	[2,3] TX slots must use only 2 and 3.
+   * \param value	[0,4095]
+   * \returns true iff successful
+   */
+  virtual bool write_aux_dac (int which_side, int which_dac, int value) = 0;
+
+  /*!
+   * \brief Read auxiliary analog to digital converter.
+   *
+   * \param which_side	[0,1] which d'board
+   * \param which_adc	[0,1]
+   * \param value	return 12-bit value [0,4095]
+   * \returns true iff successful
+   */
+  virtual bool read_aux_adc (int which_side, int which_adc, int *value) = 0;
+
+  /*!
+   * \brief Read auxiliary analog to digital converter.
+   *
+   * \param which_side	[0,1] which d'board
+   * \param which_adc	[0,1]
+   * \returns value in the range [0,4095] if successful, else READ_FAILED.
+   */
+  virtual int read_aux_adc (int which_side, int which_adc) = 0;
+
+  /*!
+   * \brief returns current fusb block size
+   */
+  virtual int block_size() const = 0;
+
+  /*!
+   * \brief returns A/D or D/A converter rate in Hz
+   */
+  virtual long converter_rate() const = 0;
+
+  // END virtual daughterboard control functions
+
   // ----------------------------------------------------------------
   // Low level implementation routines.
   // You probably shouldn't be using these...
   //
 
-  bool _set_led (int which, bool on);
+  bool _set_led (int which_led, bool on);
 
   /*!
    * \brief Write FPGA register.
@@ -228,7 +671,6 @@ public:
    * \returns register value if successful, else READ_FAILED
    */
   int  _read_fpga_reg (int regno);
-
 
   /*!
    * \brief Write FPGA register with mask.
@@ -324,8 +766,6 @@ private:
   bool			 d_rx_enable;
 
 protected:
-  int			 d_dbid[2];		// Rx daughterboard ID's
-
   /*!
    * \param which_board	     Which USRP board on usb (not particularly useful; use 0)
    * \param fusb_block_size  fast usb xfer block size.  Must be a multiple of 512. 
@@ -346,7 +786,6 @@ protected:
   void restore_rx (bool on);	// conditional set
 
   void probe_rx_slots (bool verbose);
-  int  dboard_to_slot (int dboard) { return (dboard << 1) | 1; }
 
 public:
   ~usrp_basic_rx ();
@@ -358,6 +797,8 @@ public:
    * \param fusb_block_size  fast usb xfer block size.  Must be a multiple of 512. 
    *                         Use zero for a reasonable default.
    * \param fusb_nblocks     number of fast usb URBs to allocate.  Use zero for a reasonable default. 
+   * \param fpga_filename    name of file that contains image to load into FPGA
+   * \param firmware_filename	name of file that contains image to load into FX2
    */
   static usrp_basic_rx *make (int which_board,
 			      int fusb_block_size=0,
@@ -365,8 +806,6 @@ public:
 			      const std::string fpga_filename = "",
 			      const std::string firmware_filename = ""
 			      );
-
-  // MANIPULATORS
 
   /*!
    * \brief tell the fpga the rate rx samples are coming from the A/D's
@@ -389,161 +828,32 @@ public:
    */
   int read (void *buf, int len, bool *overrun);
 
-  // ACCESSORS
 
   //! sampling rate of A/D converter
   virtual long converter_rate() const { return fpga_master_clock_freq(); } // 64M
   long adc_rate() const { return converter_rate(); }
-  long adc_freq() const { return converter_rate(); }   //!< deprecated method name
+  int daughterboard_id (int which_side) const { return d_dbid[which_side & 0x1]; }
 
-  /*!
-   * \brief Return daughterboard ID for given Rx daughterboard slot [0,1].
-   *
-   * \param which_dboard	[0,1] which Rx daughterboard
-   *
-   * \return daughterboard id >= 0 if successful
-   * \return -1 if no daugherboard
-   * \return -2 if invalid EEPROM on daughterboard
-   */
-  int daughterboard_id (int which_dboard) const { return d_dbid[which_dboard & 0x1]; }
+  bool set_pga (int which_amp, double gain_in_db);
+  double pga (int which_amp) const;
+  double pga_min () const;
+  double pga_max () const;
+  double pga_db_per_step () const;
 
-  // ----------------------------------------------------------------
-  // routines for controlling the Programmable Gain Amplifier
-  /*!
-   * \brief Set Programmable Gain Amplifier (PGA)
-   *
-   * \param which	which A/D [0,3]
-   * \param gain_in_db	gain value (linear in dB)
-   *
-   * gain is rounded to closest setting supported by hardware.
-   *
-   * \returns true iff sucessful.
-   *
-   * \sa pga_min(), pga_max(), pga_db_per_step()
-   */
-  bool set_pga (int which, double gain_in_db);
+  bool _write_oe (int which_side, int value, int mask);
+  bool write_io (int which_side, int value, int mask);
+  bool read_io (int which_side, int *value);
+  int read_io (int which_side);
+  bool write_refclk(int which_side, int value);
+  bool write_atr_mask(int which_side, int value);
+  bool write_atr_txval(int which_side, int value);
+  bool write_atr_rxval(int which_side, int value);
 
-  /*!
-   * \brief Return programmable gain amplifier gain setting in dB.
-   *
-   * \param which	which A/D [0,3]
-   */
-  double pga (int which) const;
+  bool write_aux_dac (int which_side, int which_dac, int value);
+  bool read_aux_adc (int which_side, int which_adc, int *value);
+  int  read_aux_adc (int which_side, int which_adc);
 
-  /*!
-   * \brief Return minimum legal PGA gain in dB.
-   */
-  double pga_min () const { return 0.0; }
-
-  /*!
-   * \brief Return maximum legal PGA gain in dB.
-   */
-  double pga_max () const { return 20.0; }
-
-  /*!
-   * \brief Return hardware step size of PGA (linear in dB).
-   */
-  double pga_db_per_step () const { return 20.0 / 20; }
-
-  /*!
-   * \brief Write direction register (output enables) for pins that go to daughterboard.
-   *
-   * \param which_dboard	[0,1] which d'board
-   * \param value		value to write into register
-   * \param mask		which bits of value to write into reg
-   *
-   * Each d'board has 16-bits of general purpose i/o.
-   * Setting the bit makes it an output from the FPGA to the d'board.
-   *
-   * This register is initialized based on a value stored in the
-   * d'board EEPROM.  In general, you shouldn't be using this routine
-   * without a very good reason.  Using this method incorrectly will
-   * kill your USRP motherboard and/or daughterboard.
-   */
-  bool _write_oe (int which_dboard, int value, int mask);
-
-  /*!
-   * \brief Write daughterboard i/o pin value
-   *
-   * \param which_dboard	[0,1] which d'board
-   * \param value		value to write into register
-   * \param mask		which bits of value to write into reg
-   */
-  bool write_io (int which_dboard, int value, int mask);
-
-  /*!
-   * \brief Read daughterboard i/o pin value
-   *
-   * \param which_dboard	[0,1] which d'board
-   * \param value		output
-   */
-  bool read_io (int which_dboard, int *value);
-
-  /*!
-   * \brief Read daughterboard i/o pin value
-   *
-   * \param which_dboard	[0,1] which d'board
-   * \returns register value if successful, else READ_FAILED
-   */
-  int read_io (int which_dboard);
-
-  /*!
-   * \brief Write auxiliary digital to analog converter.
-   *
-   * \param which_dboard	[0,1] which d'board
-   *    			N.B., SLOT_TX_A and SLOT_RX_A share the same AUX DAC's.
-   *          			SLOT_TX_B and SLOT_RX_B share the same AUX DAC's.
-   * \param which_dac		[2,3] TX slots must use only 2 and 3.
-   * \param value		[0,4095]
-   * \returns true iff successful
-   */
-  bool write_aux_dac (int which_board, int which_dac, int value);
-
-  /*!
-   * \brief Read auxiliary analog to digital converter.
-   *
-   * \param which_dboard	[0,1] which d'board
-   * \param which_adc		[0,1]
-   * \param value		return 12-bit value [0,4095]
-   * \returns true iff successful
-   */
-  bool read_aux_adc (int which_dboard, int which_adc, int *value);
-
-  /*!
-   * \brief Read auxiliary analog to digital converter.
-   *
-   * \param which_dboard	[0,1] which d'board
-   * \param which_adc		[0,1]
-   * \returns value in the range [0,4095] if successful, else READ_FAILED.
-   */
-  int read_aux_adc (int which_dboard, int which_adc);
-
-  /*!
-   * \brief returns current fusb block size
-   */
   int block_size() const;
-
-  /*!
-   * \brief Enable/disable automatic DC offset removal control loop in FPGA
-   *
-   * \param bits  which control loops to enable
-   * \param mask  which \p bits to pay attention to
-   *
-   * If the corresponding bit is set, enable the automatic DC
-   * offset correction control loop.
-   *
-   * <pre>
-   * The 4 low bits are significant:
-   *
-   *   ADC0 = (1 << 0)
-   *   ADC1 = (1 << 1)
-   *   ADC2 = (1 << 2)
-   *   ADC3 = (1 << 3)
-   * </pre>
-   *
-   * By default the control loop is enabled on all ADC's.
-   */
-  bool set_dc_offset_cl_enable(int bits, int mask);
 
   // called in base class to derived class order
   bool start ();
@@ -563,13 +873,13 @@ private:
   bool			 d_tx_enable;
 
  protected:
-  int			 d_dbid[2];		// Tx daughterboard ID's
-
   /*!
    * \param which_board	     Which USRP board on usb (not particularly useful; use 0)
    * \param fusb_block_size  fast usb xfer block size.  Must be a multiple of 512.
    *                         Use zero for a reasonable default.
    * \param fusb_nblocks     number of fast usb URBs to allocate.  Use zero for a reasonable default.
+   * \param fpga_filename    name of file that contains image to load into FPGA
+   * \param firmware_filename	name of file that contains image to load into FX2
    */
   usrp_basic_tx (int which_board,
 		 int fusb_block_size=0,
@@ -585,7 +895,6 @@ private:
   void restore_tx (bool on);	// conditional set
 
   void probe_tx_slots (bool verbose);
-  int  dboard_to_slot (int dboard) { return (dboard << 1) | 0; }
 
 public:
 
@@ -598,13 +907,13 @@ public:
    * \param fusb_block_size  fast usb xfer block size.  Must be a multiple of 512. 
    *                         Use zero for a reasonable default.
    * \param fusb_nblocks     number of fast usb URBs to allocate.  Use zero for a reasonable default. 
+   * \param fpga_filename    name of file that contains image to load into FPGA
+   * \param firmware_filename	name of file that contains image to load into FX2
    */
   static usrp_basic_tx *make (int which_board, int fusb_block_size=0, int fusb_nblocks=0,
 			      const std::string fpga_filename = "",
 			      const std::string firmware_filename = ""
 			      );
-
-  // MANIPULATORS
 
   /*!
    * \brief tell the fpga the rate tx samples are going to the D/A's
@@ -634,138 +943,30 @@ public:
    */
   void wait_for_completion ();
 
-  // ACCESSORS
-
   //! sampling rate of D/A converter
   virtual long converter_rate() const { return fpga_master_clock_freq () * 2; } // 128M
   long dac_rate() const { return converter_rate(); }
-  long dac_freq() const { return converter_rate(); }	//!< deprecated method name
+  int daughterboard_id (int which_side) const { return d_dbid[which_side & 0x1]; }
 
-  /*!
-   * \brief Return daughterboard ID for given Tx daughterboard slot [0,1].
-   *
-   * \return daughterboard id >= 0 if successful
-   * \return -1 if no daugherboard
-   * \return -2 if invalid EEPROM on daughterboard
-   */
-  int daughterboard_id (int which_dboard) const { return d_dbid[which_dboard & 0x1]; }
+  bool set_pga (int which_amp, double gain_in_db);
+  double pga (int which_amp) const;
+  double pga_min () const;
+  double pga_max () const;
+  double pga_db_per_step () const;
 
-  // ----------------------------------------------------------------
-  // routines for controlling the Programmable Gain Amplifier
-  /*!
-   * \brief Set Programmable Gain Amplifier (PGA)
-   *
-   * \param which	which D/A [0,3]
-   * \param gain_in_db	gain value (linear in dB)
-   *
-   * gain is rounded to closest setting supported by hardware.
-   * Note that DAC 0 and DAC 1 share a gain setting as do DAC 2 and DAC 3.
-   * Setting DAC 0 affects DAC 1 and vice versa.  Same with DAC 2 and DAC 3.
-   *
-   * \returns true iff sucessful.
-   *
-   * \sa pga_min(), pga_max(), pga_db_per_step()
-   */
-  bool set_pga (int which, double gain_in_db);
+  bool _write_oe (int which_side, int value, int mask);
+  bool write_io (int which_side, int value, int mask);
+  bool read_io (int which_side, int *value);
+  int read_io (int which_side);
+  bool write_refclk(int which_side, int value);
+  bool write_atr_mask(int which_side, int value);
+  bool write_atr_txval(int which_side, int value);
+  bool write_atr_rxval(int which_side, int value);
 
-  /*!
-   * \brief Return programmable gain amplifier gain in dB.
-   *
-   * \param which	which D/A [0,3]
-   */
-  double pga (int which) const;
+  bool write_aux_dac (int which_side, int which_dac, int value);
+  bool read_aux_adc (int which_side, int which_adc, int *value);
+  int read_aux_adc (int which_side, int which_adc);
 
-  /*!
-   * \brief Return minimum legal PGA gain in dB.
-   */
-  double pga_min () const { return -20.0; }
-
-  /*!
-   * \brief Return maximum legal PGA gain in dB.
-   */
-  double pga_max () const { return 0.0; }
-
-  /*!
-   * \brief Return hardware step size of PGA (linear in dB).
-   */
-  double pga_db_per_step () const { return 20.0/255; }
-
-  /*!
-   * \brief Write direction register (output enables) for pins that go to daughterboard.
-   *
-   * \param which_dboard	[0,1] which d'board
-   * \param value		value to write into register
-   * \param mask		which bits of value to write into reg
-   *
-   * Each d'board has 16-bits of general purpose i/o.
-   * Setting the bit makes it an output from the FPGA to the d'board.
-   *
-   * This register is initialized based on a value stored in the
-   * d'board EEPROM.  In general, you shouldn't be using this routine
-   * without a very good reason.  Using this method incorrectly will
-   * kill your USRP motherboard and/or daughterboard.
-   */
-  bool _write_oe (int which_dboard, int value, int mask);
-
-  /*!
-   * \brief Write daughterboard i/o pin value
-   *
-   * \param which_dboard	[0,1] which d'board
-   * \param value		value to write into register
-   * \param mask		which bits of value to write into reg
-   */
-  bool write_io (int which_dboard, int value, int mask);
-
-  /*!
-   * \brief Read daughterboard i/o pin value
-   *
-   * \param which_dboard	[0,1] which d'board
-   * \param value		return value
-   */
-  bool read_io (int which_dboard, int *value);
-
-  /*!
-   * \brief Read daughterboard i/o pin value
-   *
-   * \param which_dboard	[0,1] which d'board
-   * \returns register value if successful, else READ_FAILED
-   */
-  int read_io (int which_dboard);
-
-  /*!
-   * \brief Write auxiliary digital to analog converter.
-   *
-   * \param which_dboard	[0,1] which d'board
-   *    			N.B., SLOT_TX_A and SLOT_RX_A share the same AUX DAC's.
-   *          			SLOT_TX_B and SLOT_RX_B share the same AUX DAC's.
-   * \param which_dac		[2,3] TX slots must use only 2 and 3.
-   * \param value		[0,4095]
-   * \returns true iff successful
-   */
-  bool write_aux_dac (int which_board, int which_dac, int value);
-
-  /*!
-   * \brief Read auxiliary analog to digital converter.
-   *
-   * \param which_dboard	[0,1] which d'board
-   * \param which_adc		[0,1]
-   * \param value		return 12-bit value [0,4095]
-   * \returns true iff successful
-   */
-  bool read_aux_adc (int which_dboard, int which_adc, int *value);
-
-  /*!
-   * \brief Read auxiliary analog to digital converter.
-   *
-   * \param which_dboard	[0,1] which d'board
-   * \param which_adc		[0,1]
-   * \returns value in the range [0,4095] if successful, else READ_FAILED.
-   */
-  int read_aux_adc (int which_dboard, int which_adc);
-
-  /*!
-   * \brief returns current fusb block size
-   */
   int block_size() const;
 
   // called in base class to derived class order

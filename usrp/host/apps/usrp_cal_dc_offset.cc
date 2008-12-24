@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -43,7 +43,7 @@ char *prog_name;
 
 
 static void 
-run_cal(usrp_standard_rx *u, int which_side, int decim, bool verbose_p)
+run_cal(usrp_standard_rx_sptr u, int which_side, int decim, bool verbose_p)
 {
   static const int BUFSIZE = u->block_size();
   static const int N = BUFSIZE/sizeof (short);
@@ -213,11 +213,11 @@ main (int argc, char **argv)
   usrp_local_sighandler sigquit (SIGQUIT, usrp_local_sighandler::throw_signal);
 #endif
 
-  usrp_standard_rx *urx =
+  usrp_standard_rx_sptr urx =
     usrp_standard_rx::make(which_board, decim,
 			   nchannels, mux, mode,
 			   fusb_block_size, fusb_nblocks);
-  if (urx == 0)
+  if (!urx)
     die("usrp_standard_rx::make");
 
   try {
@@ -236,7 +236,5 @@ main (int argc, char **argv)
   catch(...){
     fprintf (stderr, "usrp_cal_dc_offset: caught something\n");
   }
-
-  delete urx;
 }
 

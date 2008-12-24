@@ -14,7 +14,7 @@ $ cd boost_1_36_0
 
 $ BOOST_PREFIX=/opt/boost_1_36_0
 
-$ ./configure --prefix=$BOOST_PREFIX --with-libraries=thread,date_time
+$ ./configure --prefix=$BOOST_PREFIX --with-libraries=thread,date_time,program_options
 $ make
 $ make install
 

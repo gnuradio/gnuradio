@@ -143,13 +143,9 @@ usrp_usb_interface::usrp_usb_interface(mb_runtime *rt, const std::string &instan
   connect("self", "rx_cs", "rx", "cs");
   connect("self", "tx_cs", "tx", "cs");
   
-  // FIX ME: the code should query the FPGA to retrieve the number of channels and such
+  // FIXME: the code should query the FPGA to retrieve the number of channels and such
   d_ntx_chan = 2;
   d_nrx_chan = 2;
-
-  d_utx = NULL;
-  d_urx = NULL;
-  
 }
 
 usrp_usb_interface::~usrp_usb_interface() 
@@ -394,8 +390,6 @@ usrp_usb_interface::handle_cmd_write(pmt_t data)
                           channel,
                           pkts,
                           tx_handle));
-
-  return;
 }
 
 /*!
@@ -482,14 +476,13 @@ usrp_usb_interface::handle_cmd_close(pmt_t data)
   if (verbose)
     std::cout << "[USRP_USB_INTERFACE] Handling close request for USRP\n";
 
-  delete d_utx;
-  d_utx = 0;
-
-  delete d_urx;
-  d_urx = 0;
+  d_utx.reset();
+  d_urx.reset();
 
   d_cs->send(s_response_usrp_close, pmt_list2(invocation_handle, PMT_T));
 
+  // FIXME This seems like a _very_ strange place to be calling shutdown_all.
+  // That decision should be left to high-level code, not low-level code like this.
   shutdown_all(PMT_T);
 }
 

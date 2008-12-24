@@ -337,7 +337,7 @@ class transmit_path(gr.hier_block2):
         determine the value for the digital up converter.  Finally, we feed
         any residual_freq to the s/w freq translater.
         """
-        r = self.u.tune(self.subdev._which, self.subdev, target_freq)
+        r = self.u.tune(self.subdev.which(), self.subdev, target_freq)
         if r:
             # Use residual_freq in s/w freq translator
             return True

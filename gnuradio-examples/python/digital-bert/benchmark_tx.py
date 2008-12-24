@@ -60,7 +60,7 @@ class tx_bpsk_block(gr.top_block):
 	    subdev_spec = usrp.pick_tx_subdevice(self._usrp)
 	self._usrp.set_mux(usrp.determine_tx_mux_value(self._usrp, subdev_spec))
 	self._subdev = usrp.selected_subdev(self._usrp, subdev_spec)
-	tr = usrp.tune(self._usrp, self._subdev._which, self._subdev, freq)
+	tr = usrp.tune(self._usrp, self._subdev.which(), self._subdev, freq)
         if not (tr):
             print "Failed to tune to center frequency!"
         else:

@@ -21,5 +21,11 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = README_MULTI_USRP.txt
-SUBDIRS = src
+EXTRA_DIST = \
+	README_MULTI_USRP.txt \
+	gnuradio-usrp.pc.in
+
+SUBDIRS = src apps
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = gnuradio-usrp.pc

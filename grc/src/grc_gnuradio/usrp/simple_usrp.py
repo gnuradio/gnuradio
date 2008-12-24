@@ -79,7 +79,7 @@ def _setup_tx_subdev(u, subdev_spec, gain, frequency, auto_tr=None, tx_enb=None)
 	"""
 	subdev = usrp.selected_subdev(u, subdev_spec)#get the subdev
 	subdev.set_gain(gain)
-	_set_frequency(u, subdev._which, subdev, frequency, verbose=True)
+	_set_frequency(u, subdev.which(), subdev, frequency, verbose=True)
 	if auto_tr is not None: subdev.set_auto_tr(auto_tr)
 	if tx_enb is not None: subdev.set_enable(tx_enb)
 	return subdev
@@ -162,10 +162,10 @@ class _simple_source(gr.hier_block2, _simple_usrp):
 		gr.hier_block2.__init__(
 			self, 'usrp_simple_source',
 			gr.io_signature(0, 0, 0),
-			gr.io_signature(1, 1, constructor_to_size[self.constructor]),
+			gr.io_signature(1, 1, constructor_to_size[self.constructor[0]]),
 		)
 		#create usrp object
-		u = self.constructor(number, nchan=1)
+		u = self.constructor[0](number, nchan=1)
 		if subdev_spec is None: subdev_spec = usrp.pick_rx_subdevice(u)
 		u.set_decim_rate(decimation)
 		if mux is None: mux = usrp.determine_rx_mux_value(u, subdev_spec)
@@ -177,8 +177,8 @@ class _simple_source(gr.hier_block2, _simple_usrp):
 
 	def set_decim_rate(self, decim): self.get_u().set_decim_rate(int(decim))
 
-class simple_source_c(_simple_source): constructor = usrp.source_c
-class simple_source_s(_simple_source): constructor = usrp.source_s
+class simple_source_c(_simple_source): constructor = (usrp.source_c, )
+class simple_source_s(_simple_source): constructor = (usrp.source_s, )
 
 ####################################################################
 # Simple USRP Sink
@@ -201,24 +201,24 @@ class _simple_sink(gr.hier_block2, _simple_usrp):
 		#initialize hier2 block
 		gr.hier_block2.__init__(
 			self, 'usrp_simple_sink',
-			gr.io_signature(1, 1, constructor_to_size[self.constructor]),
+			gr.io_signature(1, 1, constructor_to_size[self.constructor[0]]),
 			gr.io_signature(0, 0, 0),
 		)
 		#create usrp object
-		u = self.constructor(number, nchan=1)
+		u = self.constructor[0](number, nchan=1)
 		if subdev_spec is None: subdev_spec = usrp.pick_tx_subdevice(u)
 		u.set_interp_rate(interpolation)
 		if mux is None: mux = usrp.determine_tx_mux_value(u, subdev_spec)
 		u.set_mux(mux)
 		subdev = _setup_tx_subdev(u, subdev_spec, gain, frequency, auto_tr, tx_enb)
-		_simple_usrp.__init__(self, u, subdev, subdev._which)
+		_simple_usrp.__init__(self, u, subdev, subdev.which())
 		#connect
 		self.connect(self, u)
 
 	def set_interp_rate(self, interp): self.get_u().set_interp_rate(int(interp))
 
-class simple_sink_c(_simple_sink): constructor = usrp.sink_c
-class simple_sink_s(_simple_sink): constructor = usrp.sink_s
+class simple_sink_c(_simple_sink): constructor = (usrp.sink_c, )
+class simple_sink_s(_simple_sink): constructor = (usrp.sink_s, )
 
 ####################################################################
 ####################################################################
@@ -317,17 +317,17 @@ class _dual_source(gr.hier_block2, _dual_usrp):
 		gr.hier_block2.__init__(
 			self, 'usrp_dual_source',
 			gr.io_signature(0, 0, 0),
-			gr.io_signature(2, 2, constructor_to_size[self.constructor]),
+			gr.io_signature(2, 2, constructor_to_size[self.constructor[0]]),
 		)
 		#create usrp object
-		u = self.constructor(number, nchan=2)
+		u = self.constructor[0](number, nchan=2)
 		u.set_decim_rate(decimation)
 		u.set_mux(mux)
 		subdev_a = _setup_rx_subdev(u, (0, 0), 0, gain_a, frequency_a, auto_tr, rx_ant_a)
 		subdev_b = _setup_rx_subdev(u, (1, 0), 1, gain_b, frequency_b, auto_tr, rx_ant_b)
 		_dual_usrp.__init__(self, u, subdev_a, subdev_b, 0, 1)
 		#connect
-		deinter = gr.deinterleave(constructor_to_size[self.constructor])
+		deinter = gr.deinterleave(constructor_to_size[self.constructor[0]])
 		self.connect(u, deinter)
 		for i in range(2): self.connect((deinter, i), (self, i))
 
@@ -357,18 +357,18 @@ class _dual_sink(gr.hier_block2, _dual_usrp):
 		#initialize hier2 block
 		gr.hier_block2.__init__(
 			self, 'usrp_dual_sink',
-			gr.io_signature(2, 2, constructor_to_size[self.constructor]),
+			gr.io_signature(2, 2, constructor_to_size[self.constructor[0]]),
 			gr.io_signature(0, 0, 0),
 		)
 		#create usrp object
-		u = self.constructor(number, nchan=2)
+		u = self.constructor[0](number, nchan=2)
 		u.set_interp_rate(interpolation)
 		u.set_mux(mux)
 		subdev_a = _setup_tx_subdev(u, (0, 0), gain_a, frequency_a, auto_tr, tx_enb_a)
 		subdev_b = _setup_tx_subdev(u, (1, 0), gain_b, frequency_b, auto_tr, tx_enb_b)
-		_dual_usrp.__init__(self, u, subdev_a, subdev_b, subdev_a._which, subdev_b._which)
+		_dual_usrp.__init__(self, u, subdev_a, subdev_b, subdev_a.which(), subdev_b.which())
 		#connect
-		inter = gr.interleave(constructor_to_size[self.constructor])
+		inter = gr.interleave(constructor_to_size[self.constructor[0]])
 		self.connect(inter, u)
 		for i in range(2): self.connect((self, i), (inter, i))
 
