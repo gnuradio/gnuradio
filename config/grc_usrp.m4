@@ -58,7 +58,8 @@ AC_DEFUN([GRC_USRP],[
     if test $passed != with; then
 	dnl how and where to find INCLUDES and LA
 	usrp_INCLUDES="-I\${abs_top_srcdir}/usrp/host/lib/legacy \
-		-I\${abs_top_srcdir}/usrp/firmware/include"
+		-I\${abs_top_srcdir}/usrp/firmware/include \
+		-I\${abs_top_builddir}/usrp/host/lib/legacy"
         usrp_LA="\${abs_top_builddir}/usrp/host/lib/legacy/libusrp.la"
 	usrp_inband_INCLUDES="-I\${abs_top_srcdir}/usrp/host/lib/inband"
 	usrp_inband_LA="\${abs_top_builddir}/usrp/host/lib/inband/libusrp-inband.la"
