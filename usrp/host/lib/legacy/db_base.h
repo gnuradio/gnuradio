@@ -106,6 +106,7 @@ public:
   virtual bool set_auto_tr(bool on);
   virtual bool select_rx_antenna(int which_antenna);
   virtual bool select_rx_antenna(const std::string &which_antenna);
+  virtual bool set_bw(float bw);
 };
 
 

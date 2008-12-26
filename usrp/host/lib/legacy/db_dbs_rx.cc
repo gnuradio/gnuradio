@@ -150,12 +150,15 @@ db_dbs_rx::_set_fdac(int fdac)
   _send_reg(3);
 }
 
-struct bw_t
+bool
 db_dbs_rx::set_bw (float bw)
 {
-  assert(bw>=1e6 && bw<=33e6);
+  if (bw < 1e6 || bw > 33e6) {
+    fprintf(stderr, "db_dbs_rx::set_bw: bw (=%f) must be between 1e6 and 33e6 inclusive\n", bw);
+    return false;
+  }
 
-  struct bw_t ret = {0, 0, 0};
+  // struct bw_t ret = {0, 0, 0};
   int m_max, m_min, m_test, fdac_test;
   if(bw >= 4e6)
     m_max = int(std::min(31, (int)floor(_refclk_freq()/1e6)));
@@ -178,14 +181,16 @@ db_dbs_rx::set_bw (float bw)
     _set_m(m_test);
     _set_fdac(fdac_test);
 
-    ret.m = d_m;
-    ret.fdac = d_fdac;
-    ret.div = _refclk_freq()/d_m*(4+0.145*d_fdac);
+    //ret.m = d_m;
+    //ret.fdac = d_fdac;
+    //ret.div = _refclk_freq()/d_m*(4+0.145*d_fdac);
   }
   else {
-    fprintf(stderr, "Failed to set bw\n");
+    fprintf(stderr, "db_dbs_rx::set_bw: failed\n");
+    return false;
   }
-  return ret;
+
+  return true;
 }
 
 // Gain setting

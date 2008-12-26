@@ -237,6 +237,13 @@ db_base::_refclk_divisor()
   throw std::runtime_error("_reflck_divisor() called from base class\n");;
 }
 
+bool
+db_base::set_bw(float bw)
+{
+  // Set baseband bandwidth (board specific)
+  // Should be overriden by boards that implement variable IF filtering (e.g., DBSRX)
+  return false;
+}
 
 std::ostream &operator<<(std::ostream &os, db_base &x)
 {

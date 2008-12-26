@@ -25,11 +25,13 @@
 #include <db_base.h>
 #include <vector>
 
+#if 0
 struct bw_t {
   int m;
   int fdac;
   float div;
 };
+#endif
 
 class db_dbs_rx : public db_base
 {
@@ -45,7 +47,6 @@ private:
   void _send_reg(int regno);
   void _set_m(int m);
   void _set_fdac(int fdac);
-  bw_t set_bw(float bw);
   void _set_dl(int dl);
   void _set_gc2(int gc2);
   void _set_gc1(int gc1);
@@ -76,6 +77,7 @@ public:
   struct freq_result_t set_freq(double freq);
   bool  set_gain(float gain);
   bool  is_quadrature();
+  bool  set_bw(float bw);
 };
 
 #endif

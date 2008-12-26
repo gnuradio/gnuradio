@@ -42,7 +42,7 @@ public:
   
   bool is_quadrature();
   bool spectrum_inverted();
-  void set_bw(float bw);
+  bool set_bw(float bw);
 
 private:
   void _set_rfagc(float gain);

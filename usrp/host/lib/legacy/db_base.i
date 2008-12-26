@@ -82,6 +82,7 @@ class db_base
   virtual bool set_auto_tr(bool on);
   virtual bool select_rx_antenna(int which_antenna);
   virtual bool select_rx_antenna(const std::string &antenna);
+  virtual bool set_bw(float bw);
 };
 
 // Create templates for db's, vectors of db's, and vector of vectors of db's

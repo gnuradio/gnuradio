@@ -266,7 +266,7 @@ db_dtt754::spectrum_inverted()
   return d_inverted;
 }
 
-void
+bool
 db_dtt754::set_bw(float bw)
 {
   /*
@@ -275,6 +275,8 @@ db_dtt754::set_bw(float bw)
 
   d_bw = bw;
   set_freq(d_freq);
+
+  return true; // FIXME: propagate set_freq result
 }
 
 void
