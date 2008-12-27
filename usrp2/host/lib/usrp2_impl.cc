@@ -72,12 +72,9 @@ namespace usrp2 {
     case OP_DBOARD_INFO: return "OP_DBOARD_INFO";
     case OP_DBOARD_INFO_REPLY: return "OP_DBOARD_INFO_REPLY";
     case OP_SYNC_TO_PPS: return "OP_SYNC_TO_PPS";
-#if 0
-    case OP_WRITE_REG: return "OP_WRITE_REG";
-    case OP_WRITE_REG_MASKED: return "OP_WRITE_REG_MASKED";
-    case OP_READ_REG: return "OP_READ_REG";
-    case OP_READ_REG_REPLY: return "OP_READ_REG_REPLY";
-#endif
+    case OP_PEEK: return "OP_PEEK";
+    case OP_PEEK_REPLY: return "OP_PEEK_REPLY";
+
     default:
       char buf[64];
       snprintf(buf, sizeof(buf), "<unknown opcode: %d>", opcode);
@@ -1024,8 +1021,8 @@ namespace usrp2 {
   bool
   usrp2::impl::sync_to_pps()
   {
-    op_config_mimo_cmd cmd;
-    op_generic_t reply;
+    op_generic_cmd cmd;
+    op_generic_t   reply;
 
     memset(&cmd, 0, sizeof(cmd));
     init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
@@ -1040,6 +1037,49 @@ namespace usrp2 {
       return false;
 
     return ntohx(reply.ok) == 1;
+  }
+
+  std::vector<uint8_t>
+  usrp2::impl::peek(uint32_t addr, uint32_t len)
+  {
+    std::vector<uint8_t> result; // zero sized on error return
+    // fprintf(stderr, "usrp2::peek: addr=%08X len=%u\n", addr, len);
+
+    if (addr % 4 != 0) {
+      fprintf(stderr, "usrp2::peek: addr (=%08X) must be 32-bit word aligned\n", addr); 
+      return result;
+    }
+
+    if (len < 4 || len % 4 != 0) {
+      fprintf(stderr, "usrp2::peek: len (=%u) must be an integral multiple of 4\n", len);
+      return result;
+    }
+
+    op_peek_cmd   cmd;
+    op_generic_t *reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_PEEK;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+
+    cmd.op.addr = htonl(addr);
+    cmd.op.bytes = htonl(len);
+
+    reply = (op_generic_t *)malloc(sizeof(*reply)+len);
+    pending_reply p(cmd.op.rid, reply, sizeof(*reply)+len);
+    if (transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT)) {
+      uint32_t bytes = reply->len-sizeof(*reply);
+      uint8_t *data = (uint8_t *)(reply)+sizeof(*reply);
+      for (unsigned int i = 0; i < bytes; i++)
+	result.push_back(data[i]);
+    }
+
+    free(reply);
+    return result;
   }
 
 } // namespace usrp2

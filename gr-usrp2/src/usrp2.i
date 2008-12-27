@@ -24,6 +24,7 @@
 
 %include "exception.i"
 %import "gnuradio.i"			// the common stuff
+%import <stdint.i>     
 
 %{
 #include <gnuradio_swig_bug_workaround.h>
@@ -34,6 +35,8 @@
 %}
 
 %include <usrp2/tune_result.h>
+
+%template(uint8_t_vector) std::vector<uint8_t>;
 
 // ----------------------------------------------------------------
 
@@ -49,6 +52,7 @@ public:
   %rename(_real_fpga_master_clock_freq) fpga_master_clock_freq;
   bool fpga_master_clock_freq(long *freq);
   bool sync_to_pps();
+  std::vector<uint8_t> peek(uint32_t addr, uint32_t len);
 };
 
 // ----------------------------------------------------------------

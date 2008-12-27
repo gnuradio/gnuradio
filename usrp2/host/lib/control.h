@@ -23,6 +23,13 @@
 #include <usrp2_eth_packet.h>
 
 namespace usrp2 {
+
+  struct op_generic_cmd {
+    u2_eth_packet_t h;
+    op_generic_t    op;
+    op_generic_t    eop;
+  };
+
   /*!
    * OP_CONFIG_RX_V2 command packet
    */
@@ -73,6 +80,11 @@ namespace usrp2 {
     op_generic_t    eop;
   };
 
+  struct op_peek_cmd {
+    u2_eth_packet_t h;
+    op_peek_t       op;
+    op_generic_t    eop;
+  };
 
   /*!
    * Control mechanism to allow API calls to block waiting for reply packets

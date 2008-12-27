@@ -174,6 +174,7 @@ namespace usrp2 {
 
     bool burn_mac_addr(const std::string &new_addr);
     bool sync_to_pps();
+    std::vector<uint8_t> peek(uint32_t addr, uint32_t len);
   };
   
 } // namespace usrp2

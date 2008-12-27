@@ -332,6 +332,30 @@ dboard_info_cmd(const op_generic_t *p,
 }
 
 static size_t
+peek_cmd(const op_peek_t *p,
+	 void *reply_payload, size_t reply_payload_space)
+{
+  op_generic_t *r = (op_generic_t *) reply_payload;
+
+  putstr("peek: addr="); puthex32(p->addr);
+  printf(" bytes=%u\n", p->bytes);
+
+  if (reply_payload_space < (sizeof(*r) + p->bytes)) {
+    putstr("peek: insufficient reply packet space\n");
+    return 0;			// FIXME do partial read?
+  }
+
+  r->opcode = OP_PEEK_REPLY;
+  r->len = sizeof(*r)+p->bytes;
+  r->rid = p->rid;
+  r->ok = true;
+
+  memcpy_wa(reply_payload+sizeof(*r), p->addr, p->bytes);
+
+  return r->len;
+}
+
+static size_t
 generic_reply(const op_generic_t *p,
 	      void *reply_payload, size_t reply_payload_space,
 	      bool ok)
@@ -433,6 +457,10 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
     case OP_SYNC_TO_PPS:
       subpktlen = generic_reply(gp, reply_payload, reply_payload_space,
 				sync_to_pps((op_generic_t *) payload));
+      break;
+
+    case OP_PEEK:
+      subpktlen = peek_cmd((op_peek_t *)payload, reply_payload, reply_payload_space);
       break;
 
     default:

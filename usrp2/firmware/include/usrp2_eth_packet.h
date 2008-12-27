@@ -185,12 +185,8 @@ typedef struct {
 #define	OP_DBOARD_INFO_REPLY	     (OP_DBOARD_INFO | OP_REPLY_BIT)
 #define	OP_SYNC_TO_PPS               10
 #define	OP_SYNC_TO_PPS_REPLY	     (OP_SYNC_TO_PPS | OP_REPLY_BIT)
-
-
-//#define OP_WRITE_REG	         xx	// not implemented
-//#define OP_WRITE_REG_MASKED    xx
-//#define OP_READ_REG	         xx
-//#define OP_READ_REG_REPLY      xx
+#define OP_PEEK                      11
+#define OP_PEEK_REPLY                (OP_PEEK | OP_REPLY_BIT)
 
 /*
  * All subpackets are a multiple of 4 bytes long.
@@ -203,7 +199,7 @@ typedef struct {
  *
  * Used by:
  *  OP_EOP, OP_BURN_MAC_ADDR_REPLY, OP_START_RX_STREAMING_REPLY,
- *  OP_STOP_RX_REPLY, OP_DBOARD_INFO
+ *  OP_STOP_RX_REPLY, OP_DBOARD_INFO, OP_SYNC_TO_PPS
  */
 typedef struct {
   uint8_t	opcode;
@@ -380,7 +376,17 @@ typedef struct {
   u2_db_info_t	rx_db_info;
 } _AL4 op_dboard_info_reply_t;
 
-
+/*!
+ * \brief Read from Wishbone memory
+ */
+typedef struct {
+  uint8_t       opcode;
+  uint8_t	len;
+  uint8_t	rid;
+  uint8_t	mbz;
+  uint32_t      addr;
+  uint32_t      bytes;
+} _AL4 op_peek_t;
 
 /*
  * ================================================================
@@ -399,6 +405,7 @@ typedef union {
   op_config_tx_v2_t		op_config_tx_v2;
   op_config_tx_reply_v2_t	op_config_tx_reply_v2;
   op_config_mimo_t 		op_config_mimo;
+  op_peek_t                     op_peek;
 
 } u2_subpkt_t;
 

@@ -67,6 +67,12 @@ usrp2_base::sync_to_pps()
   return d_u2->sync_to_pps();
 }
 
+std::vector<uint8_t>
+usrp2_base::peek(uint32_t addr, uint32_t len)
+{
+  return d_u2->peek(addr, len);
+}
+
 bool
 usrp2_base::start()
 {
