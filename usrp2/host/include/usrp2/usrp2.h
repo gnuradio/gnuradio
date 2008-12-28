@@ -365,7 +365,7 @@ namespace usrp2 {
      * Read memory from Wishbone bus as 32-bit words.  Handles endian swapping if needed.
      *
      * \param addr      32-bit aligned address.  Only the lower 16-bits are significant.
-     * \param len       Number of 32-bit words
+     * \param words     Number of 32-bit words
      * 
      * \returns         Vector of 32-bit read values
      *
