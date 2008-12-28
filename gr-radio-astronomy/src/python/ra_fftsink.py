@@ -233,6 +233,7 @@ class fft_window (plot.PlotCanvas):
         EVT_DATA_EVENT (self, self.set_data)
         wx.EVT_CLOSE (self, self.on_close_window)
         self.Bind(wx.EVT_RIGHT_UP, self.on_right_click)
+        self.Bind(wx.EVT_LEFT_UP, self.on_left_click)
         self.Bind(wx.EVT_MOTION, self.on_motion)
 
         self.input_watcher = input_watcher(ra_fftsink.msgq, ra_fftsink.fft_size, self)
@@ -368,7 +369,12 @@ class fft_window (plot.PlotCanvas):
     def on_motion(self, event):
         if not self.ra_fftsink.xydfunc == None:
             xy = self.GetXY(event)
-            self.ra_fftsink.xydfunc (xy)
+            self.ra_fftsink.xydfunc (0,xy)
+	
+    def on_left_click(self,event):
+        if not self.ra_fftsink.xydfunc == None:
+            xy = self.GetXY(event)
+            self.ra_fftsink.xydfunc (1,xy)
 
     def build_popup_menu(self):
         self.id_incr_ref_level = wx.NewId()

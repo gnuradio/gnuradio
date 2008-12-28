@@ -82,6 +82,8 @@ class app_flow_graph(stdgui2.std_top_block):
 		parser.add_option("-D", "--switch_mode", action="store_true", default=False, help="Dicke Switching mode")
 		parser.add_option("-P", "--reference_divisor", type="eng_float", default=1.0, help="Reference Divisor")
 		parser.add_option("-U", "--ref_fifo", default="@@@@")
+		parser.add_option("-n", "--notches", action="store_true", 
+		    default=False, help="Notch frequencies after all other args")
 		(options, args) = parser.parse_args()
 
 		self.setimode = options.setimode
@@ -92,6 +94,16 @@ class app_flow_graph(stdgui2.std_top_block):
 		self.switch_state = 0
 		self.reference_divisor = options.reference_divisor
 		self.ref_fifo = options.ref_fifo
+		
+		self.NOTCH_TAPS = 16
+		self.notches = Numeric.zeros(self.NOTCH_TAPS,Numeric.Float64)
+		# Get notch locations
+		j = 0
+		for i in args:
+			self.notches[j] = float(i)
+			j = j + 1
+		
+		self.use_notches = options.notches
 		
 		if (self.ref_fifo != "@@@@"):
 			self.ref_fifo_file = open (self.ref_fifo, "w")
@@ -245,7 +257,7 @@ class app_flow_graph(stdgui2.std_top_block):
 		self.decln = options.decln
 
 		input_rate = self.u.adc_freq() / self.u.decim_rate()
-
+		self.bw = input_rate
 		#
 		# Set prefix for data files
 		#
@@ -339,7 +351,7 @@ class app_flow_graph(stdgui2.std_top_block):
 
 		# Remember our input bandwidth
 		self.bw = input_rate
-
+		
 		#
 		# 
 		# The strip chart is fed at a constant 1Hz rate
@@ -350,13 +362,13 @@ class app_flow_graph(stdgui2.std_top_block):
 		#
 		
 		if (self.dual_mode == True):
-			self.setup_dual (self.setimode)
+			self.setup_dual (self.setimode,self.use_notches)
 			
 		if (self.interferometer == True):
-			self.setup_interferometer(self.setimode)
+			self.setup_interferometer(self.setimode,self.use_notches)
 				
 		if (self.normal_mode == True):
-			self.setup_normal(self.setimode)
+			self.setup_normal(self.setimode,self.use_notches)
 			
 		if (self.setimode == True):
 			self.setup_seti()
@@ -424,8 +436,8 @@ class app_flow_graph(stdgui2.std_top_block):
 			lbw = (self.u.adc_freq() / self.u.decim_rate()) / 2
 			if lbw < 1.0e6:
 				lbw = 1.0e6
-			self.subdev[0].set_bw(lbw)
-			self.subdev[1].set_bw(lbw)
+			#self.subdev[0].set_bw(lbw)
+			#self.subdev[1].set_bw(lbw)
 			
 		# Start the timer for the LMST display and datalogging
 		self.lmst_timer.Start(1000)
@@ -604,8 +616,8 @@ class app_flow_graph(stdgui2.std_top_block):
 		# Everything except BASIC_RX should support usrp.tune()
 		#
 		if not (self.cardtype == usrp_dbid.BASIC_RX):
-			r = usrp.tune(self.u, self.subdev[0]._which, self.subdev[0], target_freq)
-			r = usrp.tune(self.u, self.subdev[1]._which, self.subdev[1], target_freq)
+			r = usrp.tune(self.u, self.subdev[0].which(), self.subdev[0], target_freq)
+			r = usrp.tune(self.u, self.subdev[1].which(), self.subdev[1], target_freq)
 		else:
 			r = self.u.set_rx_freq(0, target_freq)
 			f = self.u.rx_freq(0)
@@ -625,6 +637,14 @@ class app_flow_graph(stdgui2.std_top_block):
 
 			self.myform['baseband'].set_value(r.baseband_freq)
 			self.myform['ddc'].set_value(r.dxc_freq)
+			
+			if (self.use_notches):
+				self.compute_notch_taps(self.notches)
+				if self.dual_mode == False and self.interferometer == False:
+					self.notch_filt.set_taps(self.notch_taps)
+				else:
+					self.notch_filt1.set_taps(self.notch_taps)
+					self.notch_filt2.set_taps(self.notch_taps)
 
 			return True
 
@@ -999,25 +1019,51 @@ class app_flow_graph(stdgui2.std_top_block):
 		hits_file.close()
 		return
 
-	def xydfunc(self,xyv):
+	def xydfunc(self,func,xyv):
 		if self.setimode == True:
 			return
 		magn = int(Numeric.log10(self.observing))
 		if (magn == 6 or magn == 7 or magn == 8):
 			magn = 6
 		dfreq = xyv[0] * pow(10.0,magn)
-		ratio = self.observing / dfreq
-		vs = 1.0 - ratio
-		vs *= 299792.0
-		if magn >= 9:
-		   xhz = "Ghz"
-		elif magn >= 6:
-		   xhz = "Mhz"
-		elif magn <= 5:
-		   xhz =  "Khz"
-		s = "%.6f%s\n%.3fdB" % (xyv[0], xhz, xyv[1])
-		s2 = "\n%.3fkm/s" % vs
-		self.myform['spec_data'].set_value(s+s2)
+		if func == 0:
+			ratio = self.observing / dfreq
+			vs = 1.0 - ratio
+			vs *= 299792.0
+			if magn >= 9:
+			   xhz = "Ghz"
+			elif magn >= 6:
+			   xhz = "Mhz"
+			elif magn <= 5:
+			   xhz =  "Khz"
+			s = "%.6f%s\n%.3fdB" % (xyv[0], xhz, xyv[1])
+			s2 = "\n%.3fkm/s" % vs
+			self.myform['spec_data'].set_value(s+s2)
+		else:
+			tmpnotches = Numeric.zeros(self.NOTCH_TAPS,Numeric.Float64)
+			delfreq = -1
+			if self.use_notches == True:
+				for i in range(0,len(self.notches)):
+					if abs(self.notches[i] - dfreq) <= (self.bw/self.NOTCH_TAPS):
+						delfreq = i
+						break
+				j = 0
+				for i in range(0,len(self.notches)):
+					if (i != delfreq):
+						tmpnotches[j] = self.notches[i]
+						j = j + 1
+				if (delfreq == -1):
+					for i in range(0,len(tmpnotches)):
+						if (int(tmpnotches[i]) == 0):
+							tmpnotches[i] = dfreq
+							break
+				self.notches = tmpnotches
+				self.compute_notch_taps(self.notches)
+				if self.dual_mode == False and self.interferometer == False:
+					self.notch_filt.set_taps(self.notch_taps)
+				else:
+					self.notch_filt1.set_taps(self.notch_taps)
+					self.notch_filt2.set_taps(self.notch_taps)
 
 	def xydfunc_waterfall(self,pos):
 		lower = self.observing - (self.seti_fft_bandwidth / 2)
@@ -1071,29 +1117,30 @@ class app_flow_graph(stdgui2.std_top_block):
 		 self.cal_offs.set_k(self.calib_offset*(x*8000))
 
 	def compute_notch_taps(self,notchlist):
-		 NOTCH_TAPS = 256
-		 tmptaps = Numeric.zeros(NOTCH_TAPS,Numeric.Complex64)
-		 binwidth = self.bw / NOTCH_TAPS
+		 tmptaps = Numeric.zeros(self.NOTCH_TAPS,Numeric.Complex64)
+		 binwidth = self.bw / self.NOTCH_TAPS
  
-		 for i in range(0,NOTCH_TAPS):
+		 for i in range(0,self.NOTCH_TAPS):
 			 tmptaps[i] = complex(1.0,0.0)
  
 		 for i in notchlist:
 			 diff = i - self.observing
-			 if i == 0:
+			 if int(i) == 0:
 				 break
 			 if (diff > 0):
 				 idx = diff / binwidth
+				 idx = round(idx)
 				 idx = int(idx)
-				 if (idx < 0 or idx > (NOTCH_TAPS/2)):
+				 if (idx < 0 or idx > (self.NOTCH_TAPS/2)):
 					 break
 				 tmptaps[idx] = complex(0.0, 0.0)
 
 			 if (diff < 0):
 				 idx = -diff / binwidth
-				 idx = (NOTCH_TAPS/2) - idx
-				 idx = int(idx+(NOTCH_TAPS/2))
-				 if (idx < 0 or idx > (NOTCH_TAPS)):
+				 idx = round(idx)
+				 idx = (self.NOTCH_TAPS/2) - idx
+				 idx = int(idx+(self.NOTCH_TAPS/2))
+				 if (idx < 0 or idx > (self.NOTCH_TAPS)):
 					 break
 				 tmptaps[idx] = complex(0.0, 0.0)
 
@@ -1102,10 +1149,19 @@ class app_flow_graph(stdgui2.std_top_block):
 	#
 	# Setup common pieces of radiometer mode
 	#
-	def setup_radiometer_common(self):
+	def setup_radiometer_common(self,n):
 		# The IIR integration filter for post-detection
 		self.integrator = gr.single_pole_iir_filter_ff(1.0)
 		self.integrator.set_taps (1.0/self.bw)
+		
+		if (self.use_notches == True):
+			self.compute_notch_taps(self.notches)
+			if (n == 2):
+				self.notch_filt1 = gr.fft_filter_ccc(1, self.notch_taps)
+				self.notch_filt2 = gr.fft_filter_ccc(1, self.notch_taps)
+			else:
+				self.notch_filt = gr.fft_filter_ccc(1, self.notch_taps)
+
 
 		# Signal probe
 		self.probe = gr.probe_signal_f()
@@ -1128,7 +1184,7 @@ class app_flow_graph(stdgui2.std_top_block):
 		#
 		# For the Dicke-switching scheme
 		#
-		self.switch = gr.multiply_const_ff(1.0)
+		#self.switch = gr.multiply_const_ff(1.0)
 		
 		#
 		if (self.switch_mode == True):
@@ -1150,16 +1206,25 @@ class app_flow_graph(stdgui2.std_top_block):
 	#	 
 	def setup_normal(self, setimode):
 		
+		self.setup_radiometer_common(1)
+		
 		self.head = self.u
-		self.shead = self.u
+		if (self.use_notches == True):
+			self.shead = self.notch_filt
+		else:
+			self.shead = self.u
 		
 		if setimode == False:
+				
 			self.detector = gr.complex_to_mag_squared()
-			self.setup_radiometer_common()	
 			self.connect(self.shead, self.scope)
 
-			self.connect(self.head, self.detector, self.mute, self.reference_level,
-				self.integrator, self.keepn, self.cal_mult, self.cal_offs, self.chart)
+			if (self.use_notches == False):
+				self.connect(self.head, self.detector, self.mute, self.reference_level,
+					self.integrator, self.keepn, self.cal_mult, self.cal_offs, self.chart)
+			else:
+				self.connect(self.head, self.notch_filt, self.detector, self.mute, self.reference_level,
+					self.integrator, self.keepn, self.cal_mult, self.cal_offs, self.chart)
 				
 			self.connect(self.cal_offs, self.probe)
 			
@@ -1176,7 +1241,9 @@ class app_flow_graph(stdgui2.std_top_block):
 	#
 	# Setup dual-channel (two antenna, usual orthogonal polarity probes in the same waveguide)
 	#
-	def setup_dual(self, setimode):
+	def setup_dual(self, setimode,notches):
+		
+		self.setup_radiometer_common(2)
 		
 		self.di = gr.deinterleave(gr.sizeof_gr_complex)
 		self.addchans = gr.add_cc ()
@@ -1185,22 +1252,27 @@ class app_flow_graph(stdgui2.std_top_block):
 		self.v_power = gr.complex_to_mag_squared()
 		self.connect (self.u, self.di)
 		
-		#
-		# For spectral, adding the two channels works, assuming no gross
-		#	phase or amplitude error
-		self.connect ((self.di, 0), (self.addchans, 0))
-		self.connect ((self.di, 1), (self.addchans, 1))
+		if (self.use_notches == True):
+			self.connect((self.di, 0), self.notch_filt1, (self.addchans, 0))
+			self.connect((self.di, 1), self.notch_filt2, (self.addchans, 1))
+		else:
+			#
+			# For spectral, adding the two channels works, assuming no gross
+			#	phase or amplitude error
+			self.connect ((self.di, 0), (self.addchans, 0))
+			self.connect ((self.di, 1), (self.addchans, 1))
 		
 		#
 		# Connect heads of spectral and total-power chains
 		#
-		self.head = self.di
+		if (self.use_notches == False):
+			self.head = self.di
+		else:
+			self.head = (self.notch_filt1, self.notch_filt2)
+			
 		self.shead = self.addchans
 		
 		if (setimode == False):
-			
-			self.setup_radiometer_common()
-		
 			#
 			# For dual-polarization mode, we compute the sum of the
 			#	powers on each channel, after they've been detected
@@ -1211,8 +1283,12 @@ class app_flow_graph(stdgui2.std_top_block):
 			# In dual-polarization mode, we compute things a little differently
 			# In effect, we have two radiometer chains, terminating in an adder
 			#
-			self.connect((self.di, 0), self.h_power)
-			self.connect((self.di, 1), self.v_power)
+			if self.use_notches == True:
+				self.connect(self.notch_filt1, self.h_power)
+				self.connect(self.notch_filt2, self.v_power)
+			else:
+				self.connect((self.head, 0), self.h_power)
+				self.connect((self.head, 1), self.v_power)
 			self.connect(self.h_power, (self.detector, 0))
 			self.connect(self.v_power, (self.detector, 1))
 			self.connect(self.detector, self.mute, self.reference_level,
@@ -1233,7 +1309,7 @@ class app_flow_graph(stdgui2.std_top_block):
 	# Setup correlating interferometer mode
 	#
 	def setup_interferometer(self, setimode):
-		self.setup_radiometer_common()
+		self.setup_radiometer_common(2)
 		
 		self.di = gr.deinterleave(gr.sizeof_gr_complex)
 		self.connect (self.u, self.di)
@@ -1244,13 +1320,17 @@ class app_flow_graph(stdgui2.std_top_block):
 		
 		# Channel 0 to multiply port 0
 		# Channel 1 to multiply port 1
-		self.connect((self.di, 0), (self.corr, 0))
-		self.connect((self.di, 1), (self.corr, 1))
+		if (self.use_notches == False):
+			self.connect((self.di, 0), (self.corr, 0))
+			self.connect((self.di, 1), (self.corr, 1))
+		else:
+			self.connect((self.di, 0), self.notch_filt1, (self.corr, 0))
+			self.connect((self.di, 1), self.notch_filt2, (self.corr, 0))
 		
 		#
 		# Multiplier (correlator) to complex-to-float, followed by integrator, etc
 		#
-		self.connect(self.corr, self.c2f, self.switch, self.integrator, self.keepn, self.cal_mult, self.cal_offs, self.chart)
+		self.connect(self.corr, self.c2f, self.integrator, self.keepn, self.cal_mult, self.cal_offs, self.chart)
 		
 		#
 		# FFT scope gets only 1 channel
