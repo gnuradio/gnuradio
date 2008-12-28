@@ -36,7 +36,7 @@
 
 %include <usrp2/tune_result.h>
 
-%template(uint8_t_vector) std::vector<uint8_t>;
+%template(uint32_t_vector) std::vector<uint32_t>;
 
 // ----------------------------------------------------------------
 
@@ -52,7 +52,7 @@ public:
   %rename(_real_fpga_master_clock_freq) fpga_master_clock_freq;
   bool fpga_master_clock_freq(long *freq);
   bool sync_to_pps();
-  std::vector<uint8_t> peek(uint32_t addr, uint32_t len);
+  std::vector<uint32_t> peek32(uint32_t addr, uint32_t words);
 };
 
 // ----------------------------------------------------------------

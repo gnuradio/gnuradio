@@ -67,10 +67,10 @@ usrp2_base::sync_to_pps()
   return d_u2->sync_to_pps();
 }
 
-std::vector<uint8_t>
-usrp2_base::peek(uint32_t addr, uint32_t len)
+std::vector<uint32_t>
+usrp2_base::peek32(uint32_t addr, uint32_t words)
 {
-  return d_u2->peek(addr, len);
+  return d_u2->peek32(addr, words);
 }
 
 bool

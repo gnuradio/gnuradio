@@ -63,11 +63,10 @@ public:
    */
   bool sync_to_pps();
 
-
   /*!
-   * \brief Read memory from Wishbone bus
+   * \brief Read memory from Wishbone bus as words
    */
-  std::vector<uint8_t> peek(uint32_t addr, uint32_t len);
+  std::vector<uint32_t> peek32(uint32_t addr, uint32_t words);
 
   /*!
    * \brief Called by scheduler when starting flowgraph

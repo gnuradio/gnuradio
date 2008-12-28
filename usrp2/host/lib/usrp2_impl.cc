@@ -1039,24 +1039,26 @@ namespace usrp2 {
     return ntohx(reply.ok) == 1;
   }
 
-  std::vector<uint8_t>
-  usrp2::impl::peek(uint32_t addr, uint32_t len)
+  std::vector<uint32_t>
+  usrp2::impl::peek32(uint32_t addr, uint32_t words)
   {
-    std::vector<uint8_t> result; // zero sized on error return
-    // fprintf(stderr, "usrp2::peek: addr=%08X len=%u\n", addr, len);
+    std::vector<uint32_t> result; // zero sized on error return
+    // fprintf(stderr, "usrp2::peek: addr=%08X words=%u\n", addr, words);
 
     if (addr % 4 != 0) {
       fprintf(stderr, "usrp2::peek: addr (=%08X) must be 32-bit word aligned\n", addr); 
       return result;
     }
 
-    if (len < 4 || len % 4 != 0) {
-      fprintf(stderr, "usrp2::peek: len (=%u) must be an integral multiple of 4\n", len);
+    if (words == 0)
       return result;
-    }
 
     op_peek_cmd   cmd;
     op_generic_t *reply;
+
+    int wlen = sizeof(uint32_t);
+    int rlen = sizeof(op_generic_t);
+    size_t bytes = words*wlen;
 
     memset(&cmd, 0, sizeof(cmd));
     init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
@@ -1067,15 +1069,15 @@ namespace usrp2 {
     cmd.eop.len = sizeof(cmd.eop);
 
     cmd.op.addr = htonl(addr);
-    cmd.op.bytes = htonl(len);
+    cmd.op.bytes = htonl(bytes);
 
-    reply = (op_generic_t *)malloc(sizeof(*reply)+len);
-    pending_reply p(cmd.op.rid, reply, sizeof(*reply)+len);
+    reply = (op_generic_t *)malloc(rlen+bytes);
+    pending_reply p(cmd.op.rid, reply, rlen+bytes);
     if (transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT)) {
-      uint32_t bytes = reply->len-sizeof(*reply);
-      uint8_t *data = (uint8_t *)(reply)+sizeof(*reply);
-      for (unsigned int i = 0; i < bytes; i++)
-	result.push_back(data[i]);
+      uint32_t nwords = (reply->len-rlen)/sizeof(uint32_t);
+      uint32_t *data = (uint32_t *)(reply+rlen/wlen);
+      for (unsigned int i = 0; i < nwords; i++)
+	result.push_back(ntohl(data[i]));
     }
 
     free(reply);

@@ -395,10 +395,10 @@ namespace usrp2 {
     return d_impl->sync_to_pps();
   }
 
-  std::vector<uint8_t>
-  usrp2::peek(uint32_t addr, uint32_t len)
+  std::vector<uint32_t>
+  usrp2::peek32(uint32_t addr, uint32_t words)
   {
-    return d_impl->peek(addr, len);
+    return d_impl->peek32(addr, words);
   }
 
 } // namespace usrp2

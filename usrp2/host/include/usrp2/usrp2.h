@@ -362,18 +362,18 @@ namespace usrp2 {
     bool sync_to_pps();
 
     /*!
-     * Read memory from Wishbone bus
+     * Read memory from Wishbone bus as 32-bit words.  Handles endian swapping if needed.
      *
      * \param addr      32-bit aligned address.  Only the lower 16-bits are significant.
-     * \param len       Number of bytes to read, must be positive and multiple of 4.
+     * \param len       Number of 32-bit words
      * 
-     * \returns         Vector of 8-bit read values
+     * \returns         Vector of 32-bit read values
      *
      * WARNING: Attempts to read memory from addresses that do not correspond to RAM or
      * memory-mapped peripherals may cause the USRP2 to hang, requiring a power cycle.
      * 
      */
-    std::vector<uint8_t> peek(uint32_t addr, uint32_t len);
+    std::vector<uint32_t> peek32(uint32_t addr, uint32_t words);
 
 
 #if 0	// not yet implemented
