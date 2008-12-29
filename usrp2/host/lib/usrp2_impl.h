@@ -27,6 +27,8 @@
 #include "ring.h"
 #include <string>
 
+#define MAX_SUBPKT_LEN 252
+
 namespace usrp2 {
   
   class eth_buffer;
@@ -175,6 +177,7 @@ namespace usrp2 {
     bool burn_mac_addr(const std::string &new_addr);
     bool sync_to_pps();
     std::vector<uint32_t> peek32(uint32_t addr, uint32_t words);
+    bool poke32(uint32_t addr, const std::vector<uint32_t> &data);
   };
   
 } // namespace usrp2

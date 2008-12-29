@@ -1084,4 +1084,67 @@ namespace usrp2 {
     return result;
   }
 
+  bool
+  usrp2::impl::poke32(uint32_t addr, const std::vector<uint32_t> &data)
+  {
+    if (addr % 4 != 0) {
+      fprintf(stderr, "usrp2::poke32: addr (=%08X) must be 32-bit word aligned\n", addr); 
+      return false;
+    }
+
+    int plen = sizeof(op_poke_cmd);
+    int wlen = sizeof(uint32_t);
+    int max_words = (MAX_SUBPKT_LEN-plen)/wlen;
+    int words = data.size();
+
+    if (words > max_words) {
+      fprintf(stderr, "usrp2::poke32: write size (=%u) exceeds maximum of %u words\n",
+	      words, max_words);
+      return false;
+    }
+
+    //fprintf(stderr, "usrp2::poke32: addr=%08X words=%u\n", addr, words);
+
+    if (words == 0)
+      return true; // NOP
+
+    op_poke_cmd  *cmd;
+    op_generic_t *eop;
+
+    // Allocate, clear, and initialize command packet
+    int bytes = words*wlen;
+    int l = plen+bytes+sizeof(*eop); // op_poke_cmd+data+eop
+    cmd = (op_poke_cmd *)malloc(l);
+    //fprintf(stderr, "cmd=%p l=%i\n", cmd, l);
+    memset(cmd, 0, l);
+    init_etf_hdrs(&cmd->h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd->op.opcode = OP_POKE;
+    cmd->op.len = sizeof(cmd->op)+bytes;
+    cmd->op.rid = d_next_rid++;
+    cmd->op.addr = htonl(addr);
+
+    // Copy data from vector into packet space
+    uint32_t *dest = (uint32_t *)((uint8_t *)cmd+plen);
+    for (unsigned int i = 0; i < words; i++) {
+      //fprintf(stderr, "%03i@%p\n", i, dest);
+      *dest++ = htonl(data[i]);
+    }
+
+    // Write end-of-packet subpacket
+    eop = (op_generic_t *)dest;
+    eop->opcode = OP_EOP;
+    eop->len = sizeof(*eop);
+    //fprintf(stderr, "eop=%p len=%i\n", eop, eop->len);
+
+    // Send command to device and retrieve reply
+    bool ok = false;
+    op_generic_t reply;
+    pending_reply p(cmd->op.rid, &reply, sizeof(reply));
+    if (transmit_cmd(cmd, l, &p, DEF_CMD_TIMEOUT))
+      ok = (ntohx(reply.ok) == 1);
+
+    free(cmd);
+    return ok;
+  }
+
 } // namespace usrp2

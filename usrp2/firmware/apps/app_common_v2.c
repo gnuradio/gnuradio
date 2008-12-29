@@ -350,9 +350,22 @@ peek_cmd(const op_peek_t *p,
   r->rid = p->rid;
   r->ok = true;
 
-  memcpy_wa(reply_payload+sizeof(*r), p->addr, p->bytes);
+  memcpy_wa(reply_payload+sizeof(*r), (void *)p->addr, p->bytes);
 
   return r->len;
+}
+
+static bool
+poke_cmd(const op_poke_t *p)
+{
+  int bytes = p->len - sizeof(*p);
+  putstr("poke: addr="); puthex32(p->addr);
+  printf(" bytes=%u\n", bytes);
+
+  uint8_t *src = (uint8_t *)p + sizeof(*p);
+  memcpy_wa((void *)p->addr, src, bytes);
+
+  return true;
 }
 
 static size_t
@@ -461,6 +474,11 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
 
     case OP_PEEK:
       subpktlen = peek_cmd((op_peek_t *)payload, reply_payload, reply_payload_space);
+      break;
+
+    case OP_POKE:
+      subpktlen = generic_reply(gp, reply_payload, reply_payload_space,
+				poke_cmd((op_poke_t *)payload));
       break;
 
     default:

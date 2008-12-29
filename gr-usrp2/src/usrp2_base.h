@@ -69,6 +69,11 @@ public:
   std::vector<uint32_t> peek32(uint32_t addr, uint32_t words);
 
   /*!
+   * \brief Write memory to Wishbone bus as words
+   */
+  bool poke32(uint32_t addr, const std::vector<uint32_t> &data);
+
+  /*!
    * \brief Called by scheduler when starting flowgraph
    */
   virtual bool start();

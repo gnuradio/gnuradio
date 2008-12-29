@@ -74,6 +74,12 @@ usrp2_base::peek32(uint32_t addr, uint32_t words)
 }
 
 bool
+usrp2_base::poke32(uint32_t addr, const std::vector<uint32_t> &data)
+{
+  return d_u2->poke32(addr, data);
+}
+
+bool
 usrp2_base::start()
 {
   // Default implementation is NOP

@@ -53,6 +53,7 @@ public:
   bool fpga_master_clock_freq(long *freq);
   bool sync_to_pps();
   std::vector<uint32_t> peek32(uint32_t addr, uint32_t words);
+  bool poke32(uint32_t addr, const std::vector<uint32_t> &data);
 };
 
 // ----------------------------------------------------------------

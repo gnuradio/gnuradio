@@ -401,6 +401,12 @@ namespace usrp2 {
     return d_impl->peek32(addr, words);
   }
 
+  bool
+  usrp2::poke32(uint32_t addr, const std::vector<uint32_t> &data)
+  {
+    return d_impl->poke32(addr, data);
+  }
+
 } // namespace usrp2
 
 

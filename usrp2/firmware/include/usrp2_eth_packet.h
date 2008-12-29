@@ -187,6 +187,8 @@ typedef struct {
 #define	OP_SYNC_TO_PPS_REPLY	     (OP_SYNC_TO_PPS | OP_REPLY_BIT)
 #define OP_PEEK                      11
 #define OP_PEEK_REPLY                (OP_PEEK | OP_REPLY_BIT)
+#define OP_POKE                      12
+#define OP_POKE_REPLY                (OP_POKE | OP_REPLY_BIT)
 
 /*
  * All subpackets are a multiple of 4 bytes long.
@@ -388,6 +390,18 @@ typedef struct {
   uint32_t      bytes;
 } _AL4 op_peek_t;
 
+/*!
+ * \brief Write to Wishbone memory
+ */
+typedef struct {
+  uint8_t       opcode;
+  uint8_t	len;
+  uint8_t	rid;
+  uint8_t	mbz;
+  uint32_t      addr;
+  // Words follow here
+} _AL4 op_poke_t;
+
 /*
  * ================================================================
  *             union of all of subpacket types
@@ -406,6 +420,7 @@ typedef union {
   op_config_tx_reply_v2_t	op_config_tx_reply_v2;
   op_config_mimo_t 		op_config_mimo;
   op_peek_t                     op_peek;
+  op_poke_t                     op_poke;
 
 } u2_subpkt_t;
 

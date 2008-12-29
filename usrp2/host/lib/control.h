@@ -86,6 +86,13 @@ namespace usrp2 {
     op_generic_t    eop;
   };
 
+  struct op_poke_cmd {
+    u2_eth_packet_t h;
+    op_poke_t       op;
+    // words to write go here
+    // eop must be dynamically written here
+  };
+
   /*!
    * Control mechanism to allow API calls to block waiting for reply packets
    */    

@@ -375,6 +375,19 @@ namespace usrp2 {
      */
     std::vector<uint32_t> peek32(uint32_t addr, uint32_t words);
 
+    /*!
+     * Write memory to Wishbone bus as 32-bit words.  Handles endian swapping if needed.
+     *
+     * \param addr      32-bit aligned address.  Only the lower 16-bits are significant
+     * \param data      Vector of 32-bit values to write.
+     *
+     * \returns true iff successful
+     *
+     * WARNING: Attempts to read memory from addresses that do not correspond to RAM or
+     * memory-mapped peripherals may cause the USRP2 to hang, requiring a power cycle.
+     * 
+     */
+    bool poke32(uint32_t addr, const std::vector<uint32_t> &data);
 
 #if 0	// not yet implemented
     /*!
