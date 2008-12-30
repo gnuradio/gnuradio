@@ -362,13 +362,13 @@ class app_flow_graph(stdgui2.std_top_block):
 		#
 		
 		if (self.dual_mode == True):
-			self.setup_dual (self.setimode,self.use_notches)
+			self.setup_dual (self.setimode)
 			
 		if (self.interferometer == True):
-			self.setup_interferometer(self.setimode,self.use_notches)
+			self.setup_interferometer(self.setimode)
 				
 		if (self.normal_mode == True):
-			self.setup_normal(self.setimode,self.use_notches)
+			self.setup_normal(self.setimode)
 			
 		if (self.setimode == True):
 			self.setup_seti()
@@ -1127,6 +1127,8 @@ class app_flow_graph(stdgui2.std_top_block):
 			 diff = i - self.observing
 			 if int(i) == 0:
 				 break
+			 if (i < (self.observing - self.bw/2) or i > (self.observing + self.bw/2)):
+				 continue
 			 if (diff > 0):
 				 idx = diff / binwidth
 				 idx = round(idx)
@@ -1241,7 +1243,7 @@ class app_flow_graph(stdgui2.std_top_block):
 	#
 	# Setup dual-channel (two antenna, usual orthogonal polarity probes in the same waveguide)
 	#
-	def setup_dual(self, setimode,notches):
+	def setup_dual(self, setimode):
 		
 		self.setup_radiometer_common(2)
 		
