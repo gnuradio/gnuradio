@@ -20,7 +20,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from lxml import etree
 from .. utils import odict
 
-XMLSyntaxError = etree.XMLSyntaxError
+class XMLSyntaxError(Exception):
+	def __init__(self, error_log):
+		self._error_log = error_log
+	def __str__(self):
+		return '\n'.join(map(str, self._error_log.filter_from_errors()))
 
 def validate_dtd(xml_file, dtd_file=None):
 	"""
@@ -29,16 +33,14 @@ def validate_dtd(xml_file, dtd_file=None):
 	@param dtd_file the optional dtd file
 	@throws Exception validation fails
 	"""
-	if dtd_file:
-		dtd = etree.DTD(dtd_file)
-		xml = etree.parse(xml_file)
-		if not dtd.validate(xml.getroot()):
-			raise XMLSyntaxError, '\n'.join(map(str, dtd.error_log.filter_from_errors()))
-	else:
-		parser = etree.XMLParser(dtd_validation=True)
-		xml = etree.parse(xml_file, parser=parser)
-		if parser.error_log:
-			raise XMLSyntaxError, '\n'.join(map(str, parser.error_log.filter_from_errors()))
+	#perform parsing, use dtd validation if dtd file is not specified
+	parser = etree.XMLParser(dtd_validation=not dtd_file)
+	xml = etree.parse(xml_file, parser=parser)
+	if parser.error_log: raise XMLSyntaxError(parser.error_log)
+	#perform dtd validation if the dtd file is specified
+	if not dtd_file: return
+	dtd = etree.DTD(dtd_file)
+	if not dtd.validate(xml.getroot()): raise XMLSyntaxError(dtd.error_log)
 
 def from_file(xml_file):
 	"""
