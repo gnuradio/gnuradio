@@ -436,8 +436,8 @@ class app_flow_graph(stdgui2.std_top_block):
 			lbw = (self.u.adc_freq() / self.u.decim_rate()) / 2
 			if lbw < 1.0e6:
 				lbw = 1.0e6
-			#self.subdev[0].set_bw(lbw)
-			#self.subdev[1].set_bw(lbw)
+			self.subdev[0].set_bw(lbw)
+			self.subdev[1].set_bw(lbw)
 			
 		# Start the timer for the LMST display and datalogging
 		self.lmst_timer.Start(1000)
@@ -1044,7 +1044,7 @@ class app_flow_graph(stdgui2.std_top_block):
 			delfreq = -1
 			if self.use_notches == True:
 				for i in range(0,len(self.notches)):
-					if abs(self.notches[i] - dfreq) <= (self.bw/self.NOTCH_TAPS):
+					if abs(self.notches[i] - dfreq) < ((self.bw/self.NOTCH_TAPS)/2):
 						delfreq = i
 						break
 				j = 0
