@@ -370,8 +370,8 @@ typedef struct {
 
 // --- dsp tx regs ---
 
-#define MIN_INTERP	1
-#define	MAX_INTERP    128
+#define MIN_CIC_INTERP	1
+#define	MAX_CIC_INTERP  128
 
 typedef struct {
   volatile int32_t	freq;
@@ -423,8 +423,8 @@ typedef struct {
 
 #define T_NOW (-1)
 
-#define	MIN_DECIM	1
-#define	MAX_DECIM     128
+#define	MIN_CIC_DECIM	1
+#define	MAX_CIC_DECIM   128
 
 typedef struct {
   volatile int32_t	freq;

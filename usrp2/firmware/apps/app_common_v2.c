@@ -180,7 +180,7 @@ config_tx_v2_cmd(const op_config_tx_v2_t *p,
       interp = interp >> 1;
     }
     
-    if (interp < MIN_INTERP || interp > MAX_INTERP)
+    if (interp < MIN_CIC_INTERP || interp > MAX_CIC_INTERP)
       ok = false;
     else {
       dsp_tx_regs->interp_rate = (hb1<<9) | (hb2<<8) | interp;
@@ -254,7 +254,7 @@ config_rx_v2_cmd(const op_config_rx_v2_t *p,
       decim = decim >> 1;
     }
     
-    if (decim < MIN_DECIM || decim > MAX_DECIM)
+    if (decim < MIN_CIC_DECIM || decim > MAX_CIC_DECIM)
       ok = false;
     else {
       dsp_rx_regs->decim_rate = (hb1<<9) | (hb2<<8) | decim;
