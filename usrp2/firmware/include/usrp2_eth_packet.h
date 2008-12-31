@@ -194,7 +194,7 @@ typedef struct {
  * All subpackets are a multiple of 4 bytes long.
  * All subpackets start with an 8-bit opcode, an 8-bit len and an 8-bit rid.
  */
-
+#define MAX_SUBPKT_LEN 252
 
 /*!
  * \brief Generic request and reply packet

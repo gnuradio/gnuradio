@@ -340,7 +340,8 @@ peek_cmd(const op_peek_t *p,
   putstr("peek: addr="); puthex32(p->addr);
   printf(" bytes=%u\n", p->bytes);
 
-  if (reply_payload_space < (sizeof(*r) + p->bytes)) {
+  if ((reply_payload_space < (sizeof(*r) + p->bytes)) ||
+      p->bytes > MAX_SUBPKT_LEN - sizeof(op_generic_t)) {
     putstr("peek: insufficient reply packet space\n");
     return 0;			// FIXME do partial read?
   }
