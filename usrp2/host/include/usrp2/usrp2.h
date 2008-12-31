@@ -219,6 +219,11 @@ namespace usrp2 {
     //! Return current interpolation factor
     int tx_interp();
 
+    /*
+     * \brief Calculate default scale_iq for given interpolation rate
+     */
+    void default_tx_scale_iq(int interpolation_factor, int *scale_i, int *scale_q);
+
     /*!
      * Set transmit IQ magnitude scaling
      */

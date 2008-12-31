@@ -64,6 +64,12 @@ usrp2_sink_base::set_interp(int interp_factor)
   return d_u2->set_tx_interp(interp_factor);
 }
 
+void
+usrp2_sink_base::default_scale_iq(int interp_factor, int *scale_i, int *scale_q)
+{
+  return d_u2->default_tx_scale_iq(interp_factor, scale_i, scale_q);
+}
+
 bool 
 usrp2_sink_base::set_scale_iq(int scale_i, int scale_q)
 {

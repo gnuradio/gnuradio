@@ -309,6 +309,12 @@ namespace usrp2 {
     return d_impl->tx_interp();
   }
 
+  void
+  usrp2::default_tx_scale_iq(int interpolation_factor, int *scale_i, int *scale_q)
+  {
+    d_impl->default_tx_scale_iq(interpolation_factor, scale_i, scale_q);
+  }
+
   bool
   usrp2::set_tx_scale_iq(int scale_i, int scale_q)
   {

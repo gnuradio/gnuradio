@@ -137,6 +137,8 @@ public:
   bool set_interp(int interp_factor);
   bool set_scale_iq(int scale_i, int scale_q);
   int interp();
+  %rename(_real_default_tx_scale_iq) default_scale_iq;
+  void default_scale_iq(int interp, int *scale_i, int *scale_q);
   %rename(_real_dac_rate) dac_rate;
   bool dac_rate(long *rate);
   double gain_min();
@@ -257,7 +259,7 @@ def __freq_range(self):
           self.freq_max()]
 
 def __daughterboard_id(self):
-  dbid = make_int_ptr();
+  dbid = make_int_ptr()
   r = self._real_daughterboard_id(dbid)
   if r:
     result = deref_int_ptr(dbid)
@@ -265,6 +267,12 @@ def __daughterboard_id(self):
     result = None
   free_int_ptr(dbid)
   return result
+
+def __default_tx_scale_iq(self, interp):
+  scale_i = make_int_ptr()
+  scale_q = make_int_ptr()
+  self._real_default_tx_scale_iq(interp, scale_i, scale_q)
+  return (deref_int_ptr(scale_i), deref_int_ptr(scale_q))
 
 usrp2_source_32fc_sptr.set_center_freq = __set_center_freq
 usrp2_source_16sc_sptr.set_center_freq = __set_center_freq
@@ -295,5 +303,8 @@ usrp2_source_32fc_sptr.daughterboard_id = __daughterboard_id
 usrp2_source_16sc_sptr.daughterboard_id = __daughterboard_id
 usrp2_sink_32fc_sptr.daughterboard_id = __daughterboard_id
 usrp2_sink_16sc_sptr.daughterboard_id = __daughterboard_id
+
+usrp2_sink_32fc_sptr.default_scale_iq = __default_tx_scale_iq
+usrp2_sink_16sc_sptr.default_scale_iq = __default_tx_scale_iq
 
 %}

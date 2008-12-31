@@ -56,6 +56,11 @@ public:
   bool set_interp(int interp_factor);
 
   /*!
+   * \brief Calculate default scale_iq for given interpolation factor
+   */
+  void default_scale_iq(int interpolation_factor, int *scale_i, int *scale_q);
+
+  /*!
    * \brief Set transmit IQ scale factors
    */
   bool set_scale_iq(int scale_i, int scale_q);

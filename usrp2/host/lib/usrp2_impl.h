@@ -146,6 +146,7 @@ namespace usrp2 {
     double tx_freq_max() { return d_tx_db_info.freq_max; }
     bool set_tx_interp(int interpolation_factor);
     int tx_interp() { return d_tx_interp; }
+    void default_tx_scale_iq(int interpolation_factor, int *scale_i, int *scale_q);
     bool set_tx_scale_iq(int scale_i, int scale_q);
 
     bool tx_32fc(unsigned int channel,

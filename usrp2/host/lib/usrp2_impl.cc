@@ -46,7 +46,6 @@
 #endif
 
 static const int DEFAULT_RX_SCALE = 1024;
-static const int DEFAULT_TX_SCALE = 3000;
 
 namespace usrp2 {
 
@@ -187,9 +186,6 @@ namespace usrp2 {
     // set workable defaults for scaling
     if (!set_rx_scale_iq(DEFAULT_RX_SCALE, DEFAULT_RX_SCALE))
       std::cerr << "usrp2::ctor set_rx_scale_iq failed\n";
-
-    if (!set_tx_scale_iq(DEFAULT_TX_SCALE, DEFAULT_TX_SCALE))
-      std::cerr << "usrp2::ctor set_tx_scale_iq failed\n";
   }
   
   usrp2::impl::~impl()
@@ -768,11 +764,42 @@ namespace usrp2 {
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
-    if (success)
+    if (success) {
       d_tx_interp = interpolation_factor;
+
+      // Auto-set TX scaling based on interpolation rate
+      int scale_i, scale_q;
+      default_tx_scale_iq(d_tx_interp, &scale_i, &scale_q);
+      return set_tx_scale_iq(scale_i, scale_q);
+    }
+
     return success;
   }
   
+  void
+  usrp2::impl::default_tx_scale_iq(int interpolation_factor, int *scale_i, int *scale_q)
+  {
+    // Calculate CIC interpolation (i.e., without halfband interpolators)
+    int i = interpolation_factor;
+    if (i > 128)
+      i = i >> 1;
+    if (i > 128)
+      i = i >> 1;
+
+    // Calculate dsp_core_tx gain absent scale multipliers
+    float gain = (1.65*i*i*i)/(4096*pow(2, ceil(log2(i*i*i))));
+    
+    // Calculate closest multiplier constant to reverse gain
+    int scale = (int)rint(1.0/gain);
+    // fprintf(stderr, "if=%i i=%i gain=%f scale=%i\n", interpolation_factor, i, gain, scale);
+
+    // Both I and Q are identical in this case
+    if (scale_i)
+      *scale_i = scale;
+    if (scale_q)
+      *scale_q = scale;
+  }
+
   bool
   usrp2::impl::set_tx_scale_iq(int scale_i, int scale_q)
   {
