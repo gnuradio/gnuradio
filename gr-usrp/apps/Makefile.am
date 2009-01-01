@@ -33,6 +33,11 @@ GR_USRP_LA=$(top_builddir)/gr-usrp/src/libgnuradio-usrp.la
 
 # For compiling outside the tree, these will get fished out by pkgconfig
 
+LDADD = \
+	$(BOOST_LDFLAGS) \
+	$(BOOST_PROGRAM_OPTIONS_LIB) \
+	$(GR_USRP_LA)
+
 noinst_PROGRAMS = \
 	usrp_rx_cfile \
 	usrp_siggen
@@ -44,15 +49,7 @@ noinst_HEADERS = 	\
 usrp_rx_cfile_SOURCES = 	\
     usrp_rx_cfile.cc
 
-usrp_rx_cfile_LDADD = \
-	$(BOOST_PROGRAM_OPTIONS_LIB) \
-	$(GR_USRP_LA)
-
 usrp_siggen_SOURCES = 	\
     usrp_siggen.cc
-
-usrp_siggen_LDADD = \
-	$(BOOST_PROGRAM_OPTIONS_LIB) \
-	$(GR_USRP_LA)
 
 MOSTLYCLEANFILES = *~
