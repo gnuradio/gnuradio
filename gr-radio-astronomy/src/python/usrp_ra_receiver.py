@@ -95,7 +95,7 @@ class app_flow_graph(stdgui2.std_top_block):
 		self.reference_divisor = options.reference_divisor
 		self.ref_fifo = options.ref_fifo
 		
-		self.NOTCH_TAPS = 16
+		self.NOTCH_TAPS = 128
 		self.notches = Numeric.zeros(self.NOTCH_TAPS,Numeric.Float64)
 		# Get notch locations
 		j = 0
@@ -228,14 +228,14 @@ class app_flow_graph(stdgui2.std_top_block):
 			options.decim = 256
 
 		if (self.dual_mode == False and self.interferometer == False):
-			self.u = usrp.source_c(decim_rate=options.decim)
+			self.u = usrp.source_c(decim_rate=options.decim,fusb_block_size=8192)
 			self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
 			# determine the daughterboard subdevice we're using
 			self.subdev[0] = usrp.selected_subdev(self.u, options.rx_subdev_spec)
 			self.subdev[1] = self.subdev[0]
 			self.cardtype = self.subdev[0].dbid()
 		else:
-			self.u=usrp.source_c(decim_rate=options.decim, nchan=2)
+			self.u=usrp.source_c(decim_rate=options.decim, nchan=2,fusb_block_size=8192)
 			self.subdev[0] = usrp.selected_subdev(self.u, (0, 0))
 			self.subdev[1] = usrp.selected_subdev(self.u, (1, 0))
 			self.cardtype = self.subdev[0].dbid()
@@ -362,13 +362,13 @@ class app_flow_graph(stdgui2.std_top_block):
 		#
 		
 		if (self.dual_mode == True):
-			self.setup_dual (self.setimode)
+			self.setup_dual (self.setimode,self.use_notches)
 			
 		if (self.interferometer == True):
-			self.setup_interferometer(self.setimode)
+			self.setup_interferometer(self.setimode,self.use_notches)
 				
 		if (self.normal_mode == True):
-			self.setup_normal(self.setimode)
+			self.setup_normal(self.setimode,self.use_notches)
 			
 		if (self.setimode == True):
 			self.setup_seti()
@@ -1044,7 +1044,7 @@ class app_flow_graph(stdgui2.std_top_block):
 			delfreq = -1
 			if self.use_notches == True:
 				for i in range(0,len(self.notches)):
-					if abs(self.notches[i] - dfreq) < ((self.bw/self.NOTCH_TAPS)/2):
+					if abs(self.notches[i] - dfreq) < ((self.bw/self.NOTCH_TAPS)/2.0):
 						delfreq = i
 						break
 				j = 0
@@ -1127,7 +1127,7 @@ class app_flow_graph(stdgui2.std_top_block):
 			 diff = i - self.observing
 			 if int(i) == 0:
 				 break
-			 if (i < (self.observing - self.bw/2) or i > (self.observing + self.bw/2)):
+			 if ((i < (self.observing - self.bw/2)) or (i > (self.observing + self.bw/2))):
 				 continue
 			 if (diff > 0):
 				 idx = diff / binwidth
@@ -1142,7 +1142,7 @@ class app_flow_graph(stdgui2.std_top_block):
 				 idx = round(idx)
 				 idx = (self.NOTCH_TAPS/2) - idx
 				 idx = int(idx+(self.NOTCH_TAPS/2))
-				 if (idx < 0 or idx > (self.NOTCH_TAPS)):
+				 if (idx < 0 or idx >= (self.NOTCH_TAPS)):
 					 break
 				 tmptaps[idx] = complex(0.0, 0.0)
 
@@ -1243,7 +1243,7 @@ class app_flow_graph(stdgui2.std_top_block):
 	#
 	# Setup dual-channel (two antenna, usual orthogonal polarity probes in the same waveguide)
 	#
-	def setup_dual(self, setimode):
+	def setup_dual(self, setimode,notches):
 		
 		self.setup_radiometer_common(2)
 		
