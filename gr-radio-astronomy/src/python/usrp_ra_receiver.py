@@ -1044,7 +1044,7 @@ class app_flow_graph(stdgui2.std_top_block):
 			delfreq = -1
 			if self.use_notches == True:
 				for i in range(0,len(self.notches)):
-					if abs(self.notches[i] - dfreq) < ((self.bw/self.NOTCH_TAPS)/2.0):
+					if self.notches[i] != 0 and abs(self.notches[i] - dfreq) < ((self.bw/self.NOTCH_TAPS)/2.0):
 						delfreq = i
 						break
 				j = 0
