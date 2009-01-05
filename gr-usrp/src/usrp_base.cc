@@ -83,6 +83,12 @@ usrp_base::fpga_master_clock_freq() const
 }
 
 void
+usrp_base::set_fpga_master_clock_freq(long master_clock)
+{
+  d_usrp_basic->set_fpga_master_clock_freq(master_clock);
+}
+
+void
 usrp_base::set_verbose (bool verbose)
 {  
   d_usrp_basic->set_verbose (verbose);

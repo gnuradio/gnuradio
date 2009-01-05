@@ -98,7 +98,16 @@ public:
   /*!
    * \brief return frequency of master oscillator on USRP
    */
-  long  fpga_master_clock_freq() const;
+  long fpga_master_clock_freq() const;
+
+  /*!
+   * Tell API that the master oscillator on the USRP is operating at a non-standard 
+   * fixed frequency. This is only needed for custom USRP hardware modified to 
+   * operate at a different frequency from the default factory configuration. This
+   * function must be called prior to any other API function.
+   * \param master_clock USRP2 FPGA master clock frequency in Hz (10..64 MHz)
+   */
+  void set_fpga_master_clock_freq (long master_clock);
 
   void set_verbose (bool on);
 

@@ -1,4 +1,3 @@
-
 /* -*- c++ -*- */
 /*
  * Copyright 2003,2004,2008 Free Software Foundation, Inc.
@@ -69,6 +68,7 @@ protected:
   int			 d_usb_data_rate;	// bytes/sec
   int			 d_bytes_per_poll;	// how often to poll for overruns
   bool			 d_verbose;
+  long                   d_fpga_master_clock_freq;
 
   static const int	 MAX_REGS = 128;
   unsigned int		 d_fpga_shadows[MAX_REGS];
@@ -177,7 +177,16 @@ public:
   /*!
    * \brief return frequency of master oscillator on USRP
    */
-  long  fpga_master_clock_freq () const { return 64000000; }
+  long fpga_master_clock_freq () const { return d_fpga_master_clock_freq; }
+
+  /*!
+   * Tell API that the master oscillator on the USRP is operating at a non-standard 
+   * fixed frequency. This is only needed for custom USRP hardware modified to 
+   * operate at a different frequency from the default factory configuration. This
+   * function must be called prior to any other API function.
+   * \param master_clock USRP2 FPGA master clock frequency in Hz (10..64 MHz)
+   */
+  void set_fpga_master_clock_freq (long master_clock) { d_fpga_master_clock_freq = master_clock; }
 
   /*!
    * \returns usb data rate in bytes/sec

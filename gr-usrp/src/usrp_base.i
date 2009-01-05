@@ -38,7 +38,8 @@ public:
   db_base_sptr db(int which_side, int which_dev);
   %rename (_real_selected_subdev) selected_subdev;
   db_base_sptr selected_subdev(usrp_subdev_spec ss);
-  long  fpga_master_clock_freq() const;
+  long fpga_master_clock_freq() const;
+  void set_fpga_master_clock_freq(long master_clock);
   void set_verbose (bool on);
   static const int READ_FAILED = -99999;
   bool write_eeprom (int i2c_addr, int eeprom_offset, const std::string buf);

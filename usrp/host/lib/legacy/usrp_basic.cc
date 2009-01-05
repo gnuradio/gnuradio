@@ -112,7 +112,7 @@ usrp_basic::usrp_basic (int which_board,
   : d_udh (0),
     d_usb_data_rate (16000000),	// SWAG, see below
     d_bytes_per_poll ((int) (POLLING_INTERVAL * d_usb_data_rate)),
-    d_verbose (false), d_db(2)
+    d_verbose (false), d_fpga_master_clock_freq(64000000), d_db(2)
 {
   /*
    * SWAG: Scientific Wild Ass Guess.
