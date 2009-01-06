@@ -38,6 +38,14 @@
  * \defgroup synch Synchronization
  */
 
+/*!
+ * \defgroup packet Packetization
+ */
+
+/*!
+ * \defgroup logic Logical
+ */
+
 /*! @} */
 
 /*! \defgroup filter_design Digital Filter Design		*/
@@ -83,4 +91,5 @@
 /*! @} */
 
 /*! \defgroup usrp USRP	*/
+/*! \defgroup usrp2 USRP2	*/
 /*! \defgroup hardware Hardware				*/
