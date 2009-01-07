@@ -50,7 +50,7 @@ AC_DEFUN([GRC_GRC],[
     dnl ########################################
     if test $passed = yes; then
         AC_MSG_CHECKING([for GTK version >= 2.10.0])
-        if test `${PYTHON} -c "import gtk; print gtk.pygtk_version >= (2, 10, 0)"` = 'True'; then
+        if test `${PYTHON} -c "import gtk; print gtk.pygtk_version >= (2, 10, 0)" 2> /dev/null` = 'True'; then
             AC_MSG_RESULT([yes])
         else
             AC_MSG_RESULT([no])
