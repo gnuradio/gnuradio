@@ -607,7 +607,7 @@ _get_or_make_xcvr2450(usrp_basic_sptr usrp, int which)
     }
   }
   
-  if(itr != _xcvr2450_inst.end()) {
+  if(itr == _xcvr2450_inst.end()) {
     printf("Creating new xcvr2450 instance\n");
     inst = xcvr2450_sptr(new xcvr2450(usrp, which));
     _xcvr2450_inst.push_back(inst);
