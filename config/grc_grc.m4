@@ -28,8 +28,9 @@ AC_DEFUN([GRC_GRC],[
     dnl ########################################
     dnl # test python version
     dnl ########################################
-    AC_MSG_CHECKING([for Python version 2.5])
-    if test `${PYTHON} -c "import sys; print sys.version.split()[[0]] >= '2.5'"` = 'True'; then
+    AC_MSG_CHECKING([for Python version >= 2.5])
+    result=`${PYTHON} -c "import sys; print sys.version.split()[[0]] >= '2.5'"`
+    if test "$result" = "True"; then
         AC_MSG_RESULT([yes])
     else
         AC_MSG_RESULT([no])
@@ -41,16 +42,17 @@ AC_DEFUN([GRC_GRC],[
     dnl ########################################
     if test $passed = yes; then
         PYTHON_CHECK_MODULE([Cheetah],[Python Cheetah templates],[],[passed=no])
-        PYTHON_CHECK_MODULE([pygtk],[Python GTK wrappers],[],[passed=no])
         PYTHON_CHECK_MODULE([lxml],[Python XML wrappers],[],[passed=no])
+        PYTHON_CHECK_MODULE([pygtk],[Python GTK wrappers],[],[passed=no])
     fi
 
     dnl ########################################
     dnl # test gtk version
     dnl ########################################
     if test $passed = yes; then
-        AC_MSG_CHECKING([for GTK version >= 2.10.0])
-        if test `${PYTHON} -c "import gtk; print gtk.pygtk_version >= (2, 10, 0)" 2> /dev/null` = 'True'; then
+        AC_MSG_CHECKING([for Python GTK version >= 2.10.0])
+        result=`${PYTHON} -c "import gtk; print gtk.pygtk_version >= (2, 10, 0)" 2> /dev/null`
+        if test "$result" = "True"; then
             AC_MSG_RESULT([yes])
         else
             AC_MSG_RESULT([no])
