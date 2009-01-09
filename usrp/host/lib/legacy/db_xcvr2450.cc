@@ -649,7 +649,7 @@ db_xcvr2450_base::set_freq(double target_freq)
    * ok is True or False and indicates success or failure,
    * actual_baseband_freq is the RF frequency that corresponds to DC in the IF.
    */
-  return d_xcvr->set_freq(target_freq);
+  return d_xcvr->set_freq(target_freq+d_lo_offset);
 }
 
 bool
@@ -682,6 +682,7 @@ db_xcvr2450_base::freq_max()
 db_xcvr2450_tx::db_xcvr2450_tx(usrp_basic_sptr usrp, int which)
   : db_xcvr2450_base(usrp, which)
 {
+  set_lo_offset(4.25e6);
   //printf("db_xcvr2450_tx::db_xcvr2450_tx\n");
 }
 
@@ -730,7 +731,7 @@ db_xcvr2450_rx::db_xcvr2450_rx(usrp_basic_sptr usrp, int which)
    * @param usrp: instance of usrp.source_c
    * @param which: 0 or 1 corresponding to side RX_A or RX_B respectively.
    */
-  
+  set_lo_offset(4.25e6);
   //printf("db_xcvr2450_rx:d_xcvr_2450_rx\n");
 }
 
