@@ -95,6 +95,7 @@ xcvr2450::xcvr2450(usrp_basic_sptr _usrp, int which)
   tx_set_atr_txval(TX_SAFE_IO);
   tx_set_atr_rxval(TX_SAFE_IO);
   tx_set_atr_mask(TX_OE_MASK);
+
   rx_write_io(RX_SAFE_IO, RX_OE_MASK);
   rx_write_oe(RX_OE_MASK, ~0);
   rx_set_atr_rxval(RX_SAFE_IO);
@@ -273,9 +274,9 @@ xcvr2450::tx_write_oe(int value, int mask)
 {
   int reg;
   if(d_which)
-    reg = FR_OE_0;
-  else
     reg = FR_OE_2;
+  else
+    reg = FR_OE_0;
   return usrp()->_write_fpga_reg(reg, (mask << 16) | value);
 }
    
@@ -284,9 +285,9 @@ xcvr2450::tx_write_io(int value, int mask)
 {
   int reg;
   if(d_which)
-    reg = FR_IO_0;
-  else
     reg = FR_IO_2;
+  else
+    reg = FR_IO_0;
   return usrp()->_write_fpga_reg(reg, (mask << 16) | value);
 }
 
@@ -295,9 +296,9 @@ xcvr2450::tx_read_io()
 {
   int val;
   if(d_which)
-    val = FR_RB_IO_RX_A_IO_TX_A;
-  else
     val = FR_RB_IO_RX_B_IO_TX_B;
+  else
+    val = FR_RB_IO_RX_A_IO_TX_A;
   int t = usrp()->_read_fpga_reg(val);
   return t & 0xffff;
 }
@@ -307,9 +308,9 @@ xcvr2450::rx_write_oe(int value, int mask)
 {
   int reg;
   if(d_which)
-    reg = FR_OE_1;
-  else
     reg = FR_OE_3;
+  else
+    reg = FR_OE_1;
   return usrp()->_write_fpga_reg(reg, (mask << 16) | value);
 }
 
@@ -318,9 +319,9 @@ xcvr2450::rx_write_io(int value, int mask)
 {
   int reg;
   if(d_which)
-    reg = FR_IO_1;
-  else
     reg = FR_IO_3;
+  else
+    reg = FR_IO_1;
   return usrp()->_write_fpga_reg(reg, (mask << 16) | value);
 }
 
@@ -329,9 +330,9 @@ xcvr2450::rx_read_io()
 {
   int val;
   if(d_which)
-    val = FR_RB_IO_RX_A_IO_TX_A;
-  else
     val = FR_RB_IO_RX_B_IO_TX_B;
+  else
+    val = FR_RB_IO_RX_A_IO_TX_A;
   int t = usrp()->_read_fpga_reg(val);
   return (t >> 16) & 0xffff;
 }
@@ -341,9 +342,9 @@ xcvr2450::tx_set_atr_mask(int v)
 {
   int reg;
   if(d_which)
-    reg = FR_ATR_MASK_0;
-  else
     reg = FR_ATR_MASK_2;
+  else
+    reg = FR_ATR_MASK_0;
   return usrp()->_write_fpga_reg(reg, v);
 }
 
@@ -352,9 +353,9 @@ xcvr2450::tx_set_atr_txval(int v)
 {
   int reg;
   if(d_which)
-    reg = FR_ATR_TXVAL_0;
-  else
     reg = FR_ATR_TXVAL_2;
+  else
+    reg = FR_ATR_TXVAL_0;
   return usrp()->_write_fpga_reg(reg, v);
 }
 
@@ -363,9 +364,9 @@ xcvr2450::tx_set_atr_rxval(int v)
 {
   int reg;
   if(d_which)
-    reg = FR_ATR_RXVAL_0;
-  else
     reg = FR_ATR_RXVAL_2;
+  else
+    reg = FR_ATR_RXVAL_0;
   return usrp()->_write_fpga_reg(reg, v);
 }
 
@@ -374,9 +375,9 @@ xcvr2450::rx_set_atr_mask(int v)
 {
   int reg;
   if(d_which)
-    reg = FR_ATR_MASK_1;
-  else
     reg = FR_ATR_MASK_3;
+  else
+    reg = FR_ATR_MASK_1;
   return usrp()->_write_fpga_reg(reg, v);
 }
 
@@ -385,9 +386,9 @@ xcvr2450::rx_set_atr_txval(int v)
 {
   int reg;
   if(d_which)
-    reg = FR_ATR_TXVAL_1;
-  else
     reg = FR_ATR_TXVAL_3;
+  else
+    reg = FR_ATR_TXVAL_1;
   return usrp()->_write_fpga_reg(reg, v);
 }
 
@@ -396,9 +397,9 @@ xcvr2450::rx_set_atr_rxval(int v)
 {
   int reg;
   if(d_which)
-    reg = FR_ATR_RXVAL_1;
-  else
     reg = FR_ATR_RXVAL_3;
+  else
+    reg = FR_ATR_RXVAL_1;
   return usrp()->_write_fpga_reg(reg, v);
 }
 
@@ -418,24 +419,24 @@ xcvr2450::set_gpio()
   
   int rx_hp, tx_antsel, rx_antsel, tx_pa_sel;
   if(d_rx_hp_pin)
-    rx_hp = 0;
-  else
     rx_hp = RX_HP;
+  else
+    rx_hp = 0;
   
   if(d_tx_ant)
-    tx_antsel = ANTSEL_TX1_RX2;
-  else
     tx_antsel = ANTSEL_TX2_RX1;
+  else
+    tx_antsel = ANTSEL_TX1_RX2;
 
   if(d_rx_ant)
-    rx_antsel = ANTSEL_TX1_RX2;
-  else
     rx_antsel = ANTSEL_TX2_RX1;
+  else
+    rx_antsel = ANTSEL_TX1_RX2;
 
   if(d_five_gig)
-    tx_pa_sel = HB_PA_OFF;
-  else
     tx_pa_sel = LB_PA_OFF;
+  else
+    tx_pa_sel = HB_PA_OFF;
 
   int io_rx_while_rx = EN|rx_hp|RX_EN;
   int io_rx_while_tx = EN|rx_hp;
@@ -446,8 +447,8 @@ xcvr2450::set_gpio()
   tx_set_atr_rxval(io_tx_while_rx);
   tx_set_atr_txval(io_tx_while_tx);
         
-  //printf("GPIO: RXRX=%04X RXTX=%04X TXRX=%04X TXTX=%04X",
-  //  io_rx_while_rx, io_rx_while_tx, io_tx_while_rx, io_tx_while_tx);
+  //printf("GPIO: RXRX=%04X RXTX=%04X TXRX=%04X TXTX=%04X\n",
+  //       io_rx_while_rx, io_rx_while_tx, io_tx_while_rx, io_tx_while_tx);
 }
   
 
@@ -488,7 +489,7 @@ xcvr2450::set_freq(double target_freq)
   d_frac_div = int((div-d_int_div)*65536.0);
   double actual_freq = phdet_freq*(d_int_div+(d_frac_div/65536.0))/scaler;
   
-  //printf("RF=%f VCO=%f R=%d PHD=%f DIV=%3.5f I=%3d F=%5d ACT=%f",
+  //printf("RF=%f VCO=%f R=%d PHD=%f DIV=%3.5f I=%3d F=%5d ACT=%f\n",
   //	 target_freq, vco_freq, d_ref_div, phdet_freq,
   //	 div, d_int_div, d_frac_div, actual_freq);
 
@@ -505,16 +506,16 @@ xcvr2450::set_freq(double target_freq)
       d_highband = 0;
       set_reg_bandselpll();
       args.ok = lock_detect();
-      printf("swap to 0 at %f, ok %d\n", target_freq, args.ok);
+      //printf("swap to 0 at %f, ok %d\n", target_freq, args.ok);
     }
     if((target_freq >= 5.25e9) && (target_freq <= 5.275e9)) {
       d_highband = 1;
       set_reg_bandselpll();
       args.ok = lock_detect();
-      printf("swap to 1 at %f, ok %d\n", target_freq, args.ok);
+      //printf("swap to 1 at %f, ok %d\n", target_freq, args.ok);
     }
     if(!args.ok){
-      printf("Fail %f\n", target_freq);
+      //printf("Fail %f\n", target_freq);
     }
   }
   return args;
@@ -601,14 +602,14 @@ _get_or_make_xcvr2450(usrp_basic_sptr usrp, int which)
 
   for(itr = _xcvr2450_inst.begin(); itr != _xcvr2450_inst.end(); itr++) {
     if(*(*itr) == key) {
-      printf("Using existing xcvr2450 instance\n");
+      //printf("Using existing xcvr2450 instance\n");
       inst = *itr;
       break;
     }
   }
   
   if(itr == _xcvr2450_inst.end()) {
-    printf("Creating new xcvr2450 instance\n");
+    //printf("Creating new xcvr2450 instance\n");
     inst = xcvr2450_sptr(new xcvr2450(usrp, which));
     _xcvr2450_inst.push_back(inst);
   }
@@ -681,7 +682,7 @@ db_xcvr2450_base::freq_max()
 db_xcvr2450_tx::db_xcvr2450_tx(usrp_basic_sptr usrp, int which)
   : db_xcvr2450_base(usrp, which)
 {
-  printf("db_xcvr2450_tx::db_xcvr2450_tx\n");
+  //printf("db_xcvr2450_tx::db_xcvr2450_tx\n");
 }
 
 db_xcvr2450_tx::~db_xcvr2450_tx()
@@ -730,7 +731,7 @@ db_xcvr2450_rx::db_xcvr2450_rx(usrp_basic_sptr usrp, int which)
    * @param which: 0 or 1 corresponding to side RX_A or RX_B respectively.
    */
   
-  printf("db_xcvr2450_rx:d_xcvr_2450_rx\n");
+  //printf("db_xcvr2450_rx:d_xcvr_2450_rx\n");
 }
 
 db_xcvr2450_rx::~db_xcvr2450_rx()
