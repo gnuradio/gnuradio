@@ -193,7 +193,7 @@ tune_a_helper(db_base_sptr db, double target_freq, double fs,
     inverted = !inverted;
   }
   
-  if (dxc.is_tx())		// down conversion versus up conversion
+  if (dxc.is_tx() && !db->i_and_q_swapped())		// down conversion versus up conversion
     dxc_freq = -dxc_freq;
 
   ok &= dxc.set_dxc_freq(dxc_freq);
