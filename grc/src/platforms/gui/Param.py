@@ -118,7 +118,8 @@ class Param(Element):
 			if self.is_enum():
 				dt_str = self.get_option(self.get_value()).get_name()
 			elif isinstance(data, (list, tuple, set)): #vector types
-				dt_str = ', '.join(map(to_str, data))
+				if len(data) > 8: dt_str = self.get_value() #large vectors use code
+				else: dt_str = ', '.join(map(to_str, data)) #small vectors use eval
 			else: dt_str = to_str(data)	#other types
 			#truncate
 			max_len = max(27 - len(self.get_name()), 3)

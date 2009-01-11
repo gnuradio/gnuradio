@@ -40,6 +40,22 @@ def get_variable_code(variable):
 
 class FlowGraph(_FlowGraph):
 
+	_eval_cache = dict()
+	def _eval(self, code, namespace):
+		"""
+		Evaluate the code with the given namespace.
+		@param code a string with python code
+		@param namespace a dict representing the namespace
+		@return the resultant object
+		"""
+		#check cache
+		if self._eval_cache.has_key(code) and self._eval_cache[code][0] == namespace:
+			return self._eval_cache[code][1]
+		#evaluate
+		result = eval(code, namespace, namespace)
+		self._eval_cache[code] = (namespace.copy(), result)
+		return result
+
 	def _get_io_signature(self, pad_key):
 		"""
 		Get an io signature for this flow graph.
@@ -135,18 +151,18 @@ class FlowGraph(_FlowGraph):
 			np = dict()
 			for parameter in self.get_parameters():
 				try:
-					e = eval(parameter.get_param('value').to_code(), n, n)
+					e = self._eval(parameter.get_param('value').to_code(), n)
 					np[parameter.get_id()] = e
 				except: pass
 			n.update(np) #merge param namespace
 			#load variables
 			for variable in self.get_variables():
 				try:
-					e = eval(get_variable_code(variable), n, n)
+					e = self._eval(get_variable_code(variable), n)
 					n[variable.get_id()] = e
 				except: pass
 			#make namespace public
 			self.n = n
 		#evaluate
-		e = eval(expr, self.n, self.n)
+		e = self._eval(expr, self.n)
 		return e
