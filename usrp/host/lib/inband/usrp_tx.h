@@ -23,8 +23,7 @@
 
 #include <mblock/mblock.h>
 #include <fstream>
-
-class usrp_standard_tx;
+#include "usrp_standard.h"
 
 /*!
  * \brief Implements the low level usb interface to the USRP
@@ -32,7 +31,7 @@ class usrp_standard_tx;
 class usrp_tx : public mb_mblock
 {
   mb_port_sptr		d_cs;
-  usrp_standard_tx     *d_utx;
+  usrp_standard_tx_sptr     d_utx;
   
   bool d_disk_write;
   std::ofstream d_ofile;

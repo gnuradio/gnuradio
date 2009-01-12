@@ -100,7 +100,7 @@ usrp_tx::write(pmt_t data)
   pmt_t invocation_handle = pmt_nth(0, data);
   pmt_t channel = pmt_nth(1, data);
   pmt_t v_packets = pmt_nth(2, data);
-  d_utx = boost::any_cast<usrp_standard_tx *>(pmt_any_ref(pmt_nth(3, data)));
+  d_utx = boost::any_cast<usrp_standard_tx_sptr>(pmt_any_ref(pmt_nth(3, data)));
 
   size_t n_bytes;
   bool underrun;  // this will need to go, as it is taken care of in the packet headers

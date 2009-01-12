@@ -119,8 +119,9 @@ usrp_rx::read_and_respond(pmt_t data)
 
   // Need the handle to the RX port to send responses, this is passed
   // by the USRP interface m-block
+  pmt_t handle = pmt_nth(1, data);
   d_urx = 
-    boost::any_cast<usrp_standard_rx *>(pmt_any_ref(pmt_nth(1, data)));
+    boost::any_cast<usrp_standard_rx_sptr>(pmt_any_ref(handle));
 
   if(verbose)
     std::cout << "[usrp_rx] Waiting for packets..\n";

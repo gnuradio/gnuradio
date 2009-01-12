@@ -23,8 +23,7 @@
 
 #include <mblock/mblock.h>
 #include <fstream>
-
-class usrp_standard_rx;
+#include "usrp_standard.h"
 
 extern bool usrp_rx_stop;   // used to communicate a 'stop' to the RX stub
 
@@ -34,7 +33,7 @@ extern bool usrp_rx_stop;   // used to communicate a 'stop' to the RX stub
 class usrp_rx : public mb_mblock
 {
   mb_port_sptr		d_cs;
-  usrp_standard_rx     *d_urx;
+  usrp_standard_rx_sptr     d_urx;
   
   bool d_disk_write;
   bool d_disk_write_pkt;
