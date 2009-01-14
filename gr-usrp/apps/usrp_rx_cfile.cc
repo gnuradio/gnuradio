@@ -131,7 +131,7 @@ usrp_rx_cfile::usrp_rx_cfile(int which, usrp_subdev_spec spec,
     
   /* Set the USRP/dboard frequency */
   usrp_tune_result r;
-  bool ok = usrp->tune(subdev->which(), subdev, freq, &r);
+  bool ok = usrp->tune(0, subdev, freq, &r); //DDC 0
   
   if(!ok) {
     throw std::runtime_error("Could not set frequency.");
