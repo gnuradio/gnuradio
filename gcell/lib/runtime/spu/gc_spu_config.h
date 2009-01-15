@@ -1,6 +1,6 @@
-/* -*- c++ -*- */
+/* -*- c -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,10 +24,16 @@
 #include <gcell/gc_job_desc.h>
 
 #define CACHE_LINE_SIZE	     128	      // in bytes
-#define	GC_SPU_BUFSIZE_BASE  (40 * 1024)      //  must be multiple of CACHE_LINE_SIZE
+
+#if 1
+# define	GC_SPU_BUFSIZE_BASE  (40 * 1024)      //  must be multiple of CACHE_LINE_SIZE
+#else
+# define	GC_SPU_BUFSIZE_BASE  (20 * 1024)      //  must be multiple of CACHE_LINE_SIZE
+#endif
+
 #define	GC_SPU_BUFSIZE (GC_SPU_BUFSIZE_BASE + MAX_ARGS_EA * CACHE_LINE_SIZE)
 
-#define NGETBUFS	1	// single buffer job arg gets
-#define	NPUTBUFS	2	// double buffer job arg puts
+#define NGETBUFS	1	// gets are single buffered
+#define NPUTBUFS	2	// puts are double buffered
 
 #endif /* INCLUDED_GCELL_GC_SPU_CONFIG_H */

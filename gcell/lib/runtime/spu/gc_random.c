@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,9 +22,9 @@
 
 static int last_val = 0;
 
-#define	M  714025	// values from Numerical Recipes in C, 1988
-#define A    4096
-#define C  150889
+# define M  259200	// values from Numerical Recipes in C, 1988
+# define A    7141
+# define C   54773
 
 void 
 gc_set_seed(int seed)
@@ -32,9 +32,13 @@ gc_set_seed(int seed)
   last_val = ((unsigned int) seed) % M;
 }
 
+/*
+ * Return a uniformly distributed value in the range [0, 1.0)
+ * (Linear congruential generator. YMMV. Caveat emptor.)
+ */
 float
 gc_uniform_deviate(void)
 {
   last_val = (last_val * A + C) % M;
-  return (float) last_val / (float) M;
+  return (float) last_val * (1.0f / (float) M);
 }

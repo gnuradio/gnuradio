@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,6 +30,12 @@
 
 __GC_BEGIN_DECLS
 
+typedef enum {
+  GCQ_OK,		// Got an item
+  GCQ_EMPTY,		// Q is empty
+  GCQ_LOCKED,		// Somebody else has the queue locked
+} gc_dequeue_status_t;
+
 /*!
  * \brief Remove and return item at head of queue.
  *
@@ -40,10 +46,10 @@ __GC_BEGIN_DECLS
  * \returns false if the queue is empty, otherwise returns true
  *   and sets \p item_ea and DMA's job descriptor into \p item
  *
- * If return is false, we're holding a lock-line reservation that
+ * If return is not GCQ_OK, we're holding a lock-line reservation that
  * covers the queue.
  */
-bool
+gc_dequeue_status_t
 gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea,
 		    int jd_tag, gc_job_desc_t *item);
 

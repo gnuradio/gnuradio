@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -49,6 +49,10 @@
 #define ROUND_UP(x, p2) (((x)+((p2)-1)) & ~((p2)-1))
 
 
+//#define OUT_MBOX_CHANNEL SPU_WrOutIntrMbox
+#define OUT_MBOX_CHANNEL SPU_WrOutMbox
+
+#define	CHECK_QUEUE_ON_MSG	0	// define to 0 or 1
 #define USE_LLR_LOST_EVENT	0	// define to 0 or 1
 
 int			gc_sys_tag;	// tag for misc DMA operations
@@ -101,7 +105,7 @@ wait_for_ppe_to_be_done_with_comp_info(int idx)
     if (p->in_use == 0)
       return;
 
-    gc_udelay(5);
+    gc_udelay(1);
 
   } while (1);
 }
@@ -143,7 +147,7 @@ flush_completion_info(void)
 		put_in_progress, ci_idx, comp_info.ncomplete, total_complete);
 
   // send PPE a message
-  spu_writech(SPU_WrOutIntrMbox, MK_MBOX_MSG(OP_JOBS_DONE, ci_idx));
+  spu_writech(OUT_MBOX_CHANNEL, MK_MBOX_MSG(OP_JOBS_DONE, ci_idx));
 
   ci_idx ^= 0x1;	// switch buffers
   comp_info.in_use = 1;
@@ -152,6 +156,7 @@ flush_completion_info(void)
 
 // ------------------------------------------------------------------------
 
+
 static unsigned int backoff;		// current backoff value in clock cycles
 static unsigned int _backoff_start;
 static unsigned int _backoff_cap;
@@ -159,6 +164,8 @@ static unsigned int _backoff_cap;
 /*
  * For 3.2 GHz SPE
  *
+ * 10	 1023 cycles    320 ns
+ * 11    2047 cycle     640 ns
  * 12    4095 cycles    1.3 us
  * 13    8191 cycles    2.6 us
  * 14   16383 cycles    5.1 us
@@ -173,13 +180,15 @@ static unsigned int _backoff_cap;
 static unsigned char log2_backoff_start[16] = {
 // 1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16
 // -------------------------------------------------------------
-  12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14, 15, 15, 15, 16, 16
+//12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14, 15, 15, 15, 16, 16
+  11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11
 };
   
 static unsigned char log2_backoff_cap[16] = {
 // 1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16
 // -------------------------------------------------------------
-  17, 17, 17, 18, 18, 18, 18, 19, 19, 19, 19, 20, 20, 20, 21, 21
+//17, 17, 17, 18, 18, 18, 18, 19, 19, 19, 19, 20, 20, 20, 21, 21
+  13, 14, 14, 14, 14, 15, 15, 15, 15, 15, 16, 16, 16, 16, 16, 16
 };
   
 static void
@@ -191,24 +200,14 @@ backoff_init(void)
   backoff = _backoff_start;
 }
 
+#if !CHECK_QUEUE_ON_MSG
+
 static void 
 backoff_reset(void)
 {
   backoff = _backoff_start;
 }
 
-#if 0
-
-static void
-backoff_delay(void)
-{
-  gc_cdelay(backoff);
-
-  // capped exponential backoff
-  backoff = ((backoff << 1) + 1) & _backoff_cap;
-}
-
-#else
 
 #define RANDOM_WEIGHT	0.2
 
@@ -217,15 +216,17 @@ backoff_delay(void)
 {
   gc_cdelay(backoff);
 
+  // capped exponential backoff
   backoff = ((backoff << 1) + 1);
   if (backoff > _backoff_cap)
     backoff = _backoff_cap;
 
+  // plus some randomness
   float r = (RANDOM_WEIGHT * (2.0 * (gc_uniform_deviate() - 0.5)));
   backoff = backoff * (1.0 + r);
 }
 
-#endif
+#endif	// !CHECK_QUEUE_ON_MSG
 
 // ------------------------------------------------------------------------
 
@@ -600,6 +601,7 @@ main_loop(void)
 
   while (1){
 
+#if !CHECK_QUEUE_ON_MSG
 #if (USE_LLR_LOST_EVENT)
 
     if (unlikely(spu_readchcnt(SPU_RdEventStat))){
@@ -619,7 +621,7 @@ main_loop(void)
 	// by somebody doing something to the queue.  Go look and see
 	// if there's anything for us.
 	//
-	while (gc_jd_queue_dequeue(spu_args.queue, &jd_ea, ci_tags + ci_idx, &jd))
+	while (gc_jd_queue_dequeue(spu_args.queue, &jd_ea, ci_tags + ci_idx, &jd) == GCQ_OK)
 	  process_job(jd_ea, &jd);
       }
 
@@ -632,7 +634,7 @@ main_loop(void)
 #else
 
     // try to get a job from the job queue 
-    if (gc_jd_queue_dequeue(spu_args.queue, &jd_ea, ci_tags + ci_idx, &jd)){
+    if (gc_jd_queue_dequeue(spu_args.queue, &jd_ea, ci_tags + ci_idx, &jd) == GCQ_OK){
       total_jobs++;
       gc_log_write2(GCL_SS_SYS, 0x10, jd.sys.job_id, total_jobs);
 
@@ -645,17 +647,45 @@ main_loop(void)
       backoff_delay();
 
 #endif
+#endif
 
     // any msgs for us?
 
     if (unlikely(spu_readchcnt(SPU_RdInMbox))){
       int msg = spu_readch(SPU_RdInMbox);
       // printf("spu[%d] mbox_msg: 0x%08x\n", spu_args.spu_idx, msg);
+#if CHECK_QUEUE_ON_MSG
+      if (MBOX_MSG_OP(msg) == OP_CHECK_QUEUE){
+
+	while (1){
+	  //int delay = (int)(3200.0 * gc_uniform_deviate());	// uniformly in [0, 1.0us]
+	  //gc_cdelay(delay);
+
+	  gc_dequeue_status_t s =
+	    gc_jd_queue_dequeue(spu_args.queue, &jd_ea, ci_tags + ci_idx, &jd);
+
+	  if (s == GCQ_OK){
+	    total_jobs++;
+	    gc_log_write2(GCL_SS_SYS, 0x10, jd.sys.job_id, total_jobs);
+
+	    process_job(jd_ea, &jd); 
+
+	    gc_log_write2(GCL_SS_SYS, 0x11, jd.sys.job_id, total_jobs);
+	  }
+	  else if (s == GCQ_EMPTY){
+	    break;
+	  }
+	  else {	// GCQ_LOCKED -- keep trying
+	  }
+	}
+      }
+      else 
+#endif
       if (MBOX_MSG_OP(msg) == OP_EXIT){
 	flush_completion_info();
 	return;
       }
-      if (MBOX_MSG_OP(msg) == OP_GET_SPU_BUFSIZE){
+      else if (MBOX_MSG_OP(msg) == OP_GET_SPU_BUFSIZE){
 	spu_writech(SPU_WrOutIntrMbox, MK_MBOX_MSG(OP_SPU_BUFSIZE, GC_SPU_BUFSIZE_BASE));
       }
     }
@@ -663,7 +693,7 @@ main_loop(void)
     // If we've got job completion info for the PPE and we can send a
     // message without blocking, do it.
 
-    if (comp_info.ncomplete != 0 && spu_readchcnt(SPU_WrOutIntrMbox) != 0){
+    if (comp_info.ncomplete != 0 && spu_readchcnt(OUT_MBOX_CHANNEL) != 0){
       gc_log_write0(GCL_SS_SYS, 0x12);
       flush_completion_info();
     }
@@ -680,13 +710,6 @@ main(unsigned long long spe_id __attribute__((unused)),
   get_tag  = mfc_tag_reserve();
   ci_tags  = mfc_multi_tag_reserve(2);
   put_tags = mfc_multi_tag_reserve(2);
-
-#if 0  
-  printf("gc_sys_tag = %d\n", gc_sys_tag);
-  printf("get_tag    = %d\n", get_tag);
-  printf("ci_tags    = %d\n", ci_tags);
-  printf("put_tags   = %d\n", put_tags);
-#endif
 
   // dma the args in
   mfc_get(&spu_args, argp, sizeof(spu_args), gc_sys_tag, 0, 0);

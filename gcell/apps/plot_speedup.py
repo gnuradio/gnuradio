@@ -36,6 +36,7 @@ class plot_data(object):
 
 
         self.markers = {
+              5 : 'x',
              10 : 'o',
              50 : 's',
             100 : '^',

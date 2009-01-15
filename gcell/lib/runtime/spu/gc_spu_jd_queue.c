@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -29,8 +29,14 @@
 
 extern int gc_sys_tag;
 
+// keep track of stats
+int jdq_ok;
+int jdq_empty;
+int jdq_locked;
+
+
 #define	INITIAL_BACKOFF	   32.0
-#define MAX_BACKOFF	16384.0
+#define MAX_BACKOFF	 8192.0		/* 2.6us */
 #define	RANDOM_WEIGHT	    0.2
 
 static float
@@ -47,7 +53,7 @@ next_backoff(float backoff)
   return t;
 }
 
-bool
+gc_dequeue_status_t
 gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea,
 		    int jd_tag, gc_job_desc_t *item)
 {
@@ -65,11 +71,15 @@ gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea,
     mfc_getllar(local_q, q, 0, 0);
     spu_readch(MFC_RdAtomicStat);
 
-    if (local_q->mutex != 0)		// somebody else has it locked
-      return false;
+    if (local_q->mutex != 0){		// somebody else has it locked
+      jdq_locked++;
+      return GCQ_LOCKED;
+    }
 
-    if (local_q->head == 0)		// the queue is empty
-      return false;
+    if (local_q->head == 0){		// the queue is empty
+      jdq_empty++;
+      return GCQ_EMPTY;
+    }
 
     // Try to acquire the lock
 
@@ -108,5 +118,6 @@ gc_jd_queue_dequeue(gc_eaddr_t q, gc_eaddr_t *item_ea,
   mfc_putlluc(local_q, q, 0, 0);
   spu_readch(MFC_RdAtomicStat);
 
-  return true;
+  jdq_ok++;
+  return GCQ_OK;
 }

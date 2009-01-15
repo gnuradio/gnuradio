@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -27,7 +27,7 @@
 
 #include <qa_gcell_wrapper.h>
 #include <qa_gcell_general.h>
-#include <qa_gcp_fft_1d_r2.h>
+//#include <qa_gcp_fft_1d_r2.h>
 
 CppUnit::TestSuite *
 qa_gcell_wrapper::suite()
@@ -35,7 +35,7 @@ qa_gcell_wrapper::suite()
   CppUnit::TestSuite	*s = new CppUnit::TestSuite("wrapper");
 
   s->addTest(qa_gcell_general::suite());
-  s->addTest(qa_gcp_fft_1d_r2::suite());
+  //s->addTest(qa_gcp_fft_1d_r2::suite());
 
   return s;
 }

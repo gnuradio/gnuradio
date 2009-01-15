@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -41,12 +41,13 @@
 
 #define OP_EXIT			0x0	// exit now
 #define	OP_GET_SPU_BUFSIZE	0x1 
+#define	OP_CHECK_QUEUE		0x2
 
 // SPE to PPE (sent via SPE Write Outbound Interrupt Mailbox)
 
-#define OP_JOBS_DONE		0x2	// arg is 0 or 1, indicating which
+#define OP_JOBS_DONE		0x3	// arg is 0 or 1, indicating which
 					//   gc_completion_info_t contains the info
-#define	OP_SPU_BUFSIZE	        0x3	// arg is max number of bytes
+#define	OP_SPU_BUFSIZE	        0x4	// arg is max number of bytes
 
 
 #endif /* INCLUDED_GCELL_GC_MBOX_H */

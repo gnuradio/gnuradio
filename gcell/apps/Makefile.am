@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -34,7 +34,8 @@ TESTS = test_all
 bin_PROGRAMS = \
 	test_all \
 	benchmark_dma \
-	benchmark_nop
+	benchmark_nop \
+	benchmark_roundtrip
 
 
 test_all_SOURCES = test_all.cc
@@ -45,3 +46,6 @@ benchmark_dma_LDADD = spu/benchmark_procs $(GCELL_LA)
 
 benchmark_nop_SOURCES = benchmark_nop.cc
 benchmark_nop_LDADD = spu/benchmark_procs $(GCELL_LA)
+
+benchmark_roundtrip_SOURCES = benchmark_roundtrip.cc
+benchmark_roundtrip_LDADD = spu/benchmark_procs $(GCELL_LA)

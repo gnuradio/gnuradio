@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -48,12 +48,15 @@ libwrapper_la_LIBADD = \
 
 libwrapper_qa_la_SOURCES = \
 	qa_gcell_general.cc \
-	qa_gcell_wrapper.cc \
-	qa_gcp_fft_1d_r2.cc
+	qa_gcell_wrapper.cc
+
+# FFTW now depends on gcell, don't create circular dependency :-)
+#	qa_gcp_fft_1d_r2.cc
 
 libwrapper_qa_la_LIBADD = \
-	gcell_general_qa.lo \
-	-lfftw3f
+	gcell_general_qa.lo
+
+#	-lfftw3f
 
 # Headers
 

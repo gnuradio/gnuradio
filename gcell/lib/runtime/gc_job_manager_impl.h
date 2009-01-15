@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -44,14 +44,15 @@ enum worker_state {
 };
 
 struct worker_ctx {
-  volatile worker_state	state;
-  unsigned int		spe_idx;  	// [0, nspes-1]
-  spe_context_ptr_t	spe_ctx;
-  pthread_t		thread;
-  gc_spu_args_t		*spu_args;	// pointer to 16-byte aligned struct
+  volatile worker_state	  state;
+  unsigned int		  spe_idx;  	// [0, nspes-1]
+  spe_context_ptr_t	  spe_ctx;
+  spe_spu_control_area_t *spe_ctrl;
+  pthread_t		  thread;
+  gc_spu_args_t		 *spu_args;	// pointer to 16-byte aligned struct
 
   worker_ctx()
-    : state(WS_FREE), spe_idx(0), spe_ctx(0),
+    : state(WS_FREE), spe_idx(0), spe_ctx(0), spe_ctrl(0),
       thread(0), spu_args(0) {}
   ~worker_ctx();
 };
@@ -62,6 +63,12 @@ enum evt_handler_state {
   EHS_SHUTTING_DOWN,	// in process of shutting down everything
   EHS_WAITING_FOR_WORKERS_TO_DIE,
   EHS_DEAD,		// thread is dead
+};
+
+enum job_completer_state {
+  JCS_INIT,		// being initialized
+  JCS_RUNNING,		// thread is running
+  JCS_DEAD,		// thread is dead
 };
 
 struct spe_event_handler {
@@ -107,6 +114,16 @@ class gc_job_manager_impl : public gc_job_manager
   volatile bool		 	d_shutdown_requested;
   spe_event_handler	 d_spe_event_handler;
   
+  // used to coordinate communication w/ the job completer thread
+  omni_mutex		 d_jc_mutex;
+  omni_condition	 d_jc_cond;
+  pthread_t		 d_jc_thread;		// the job completion thread
+  volatile job_completer_state	d_jc_state;
+  int		      	 d_jc_njobs_active;	// # of jobs submitted but not yet reaped
+
+  // round robin notification of spes
+  int			 d_ntell;		// # of spes to tell
+  unsigned int		 d_tell_start;		// which one to start with
 
   // All of the job descriptors are hung off of here.
   // We allocate them all in a single cache aligned chunk.
@@ -150,12 +167,17 @@ class gc_job_manager_impl : public gc_job_manager
 
 public:
   void event_handler_loop();	// really private
+  void job_completer_loop();	// really private
 
 private:
   bool send_all_spes(uint32_t msg);
   bool send_spe(unsigned int spe, uint32_t msg);
   void print_event(spe_event_unit_t *evt);
   void handle_event(spe_event_unit_t *evt);
+  bool incr_njobs_active();
+  void decr_njobs_active(int n);
+  void tell_spes_to_check_queue();
+  void poll_for_job_completion();
 
   // bitvector ops
   void bv_zero(unsigned long *bv);
