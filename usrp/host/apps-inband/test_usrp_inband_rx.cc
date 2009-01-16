@@ -112,6 +112,11 @@ test_usrp_rx::test_usrp_rx(mb_runtime *runtime, const std::string &instance_name
                pmt_intern("decim-rx"),
                pmt_from_long(64));
 
+//  If unspecified, chooses center frequency from range
+//  pmt_dict_set(usrp_dict,
+//               pmt_intern("rf-freq"),
+//               pmt_from_long(10e6));
+
   define_component("server", "usrp_server", usrp_dict);
 
   connect("self", "rx0", "server", "rx0");

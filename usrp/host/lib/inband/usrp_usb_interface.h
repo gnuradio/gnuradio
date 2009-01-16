@@ -34,6 +34,9 @@ class usrp_usb_interface : public mb_mblock
 
   usrp_standard_tx_sptr d_utx;
   usrp_standard_rx_sptr d_urx;
+
+  boost::shared_ptr<usrp_basic> d_ub_tx;
+  boost::shared_ptr<usrp_basic> d_ub_rx;
   
   mb_port_sptr	d_cs;
   mb_port_sptr  d_rx_cs;
@@ -49,7 +52,7 @@ class usrp_usb_interface : public mb_mblock
   long d_interp_tx;
   long d_decim_rx;
 
-  long d_rf_freq;
+  double d_rf_freq;
 
   std::string d_rbf;
 
@@ -58,6 +61,9 @@ class usrp_usb_interface : public mb_mblock
   ~usrp_usb_interface();
   void initial_transition();
   void handle_message(mb_message_sptr msg);
+  usrp_subdev_spec pick_rx_subdevice();
+  usrp_subdev_spec pick_tx_subdevice();
+  usrp_subdev_spec pick_subdev(boost::shared_ptr<usrp_basic> d_usrp_basic, std::vector<int> candidates);
 
  private:
   void handle_cmd_open(pmt_t data);

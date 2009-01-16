@@ -124,9 +124,10 @@ test_usrp_tx::test_usrp_tx(mb_runtime *runtime, const std::string &instance_name
                pmt_intern("interp-tx"),
                pmt_from_long(64));
 
-  pmt_dict_set(usrp_dict,
-               pmt_intern("rf-freq"),
-               pmt_from_long(10e6));
+//  If unspecified, chooses center frequency from range
+//  pmt_dict_set(usrp_dict,
+//               pmt_intern("rf-freq"),
+//               pmt_from_long(10e6));
 
   define_component("server", "usrp_server", usrp_dict);
 

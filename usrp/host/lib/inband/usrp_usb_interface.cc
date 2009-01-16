@@ -36,6 +36,7 @@
 #include "usrp_tx.h"
 #include "usrp_standard.h"
 #include <stdio.h>
+#include <usrp_dbid.h>
 
 typedef usrp_inband_usb_packet transport_pkt;
 
@@ -59,7 +60,7 @@ usrp_usb_interface::usrp_usb_interface(mb_runtime *rt, const std::string &instan
   d_rx_reading(false),
   d_interp_tx(128),
   d_decim_rx(128),
-  d_rf_freq(10e6),
+  d_rf_freq(-1),
   d_rbf("inband_tx_rx.rbf")
 {
   // Dictionary for arguments to all of the components
@@ -299,17 +300,51 @@ usrp_usb_interface::handle_cmd_open(pmt_t data)
     return;
   }
 
-  if(!d_utx->set_tx_freq (0,d_rf_freq) || !d_utx->set_tx_freq(1,d_rf_freq)) {  // try setting center freq to 0
-    if (verbose)
-      std::cout << "[USRP_USB_INTERFACE] Failed to set center frequency on TX\n";
-    reply_data = pmt_list2(invocation_handle, PMT_F);
-    d_cs->send(s_response_usrp_open, reply_data);
-    return;
+  // Perform TX daughterboard tuning
+  double target_freq;
+  unsigned int mux;
+  int tgain, rgain;
+  float input_rate;
+  bool ok;
+  usrp_tune_result r;
+
+  // Cast to usrp_basic and then detect daughterboards
+  d_ub_tx = d_utx;
+  usrp_subdev_spec tspec = pick_tx_subdevice();
+  db_base_sptr tsubdev = d_ub_tx->selected_subdev(tspec);
+
+  // Set the TX mux value
+  mux = d_utx->determine_tx_mux_value(tspec);
+  d_utx->set_mux(mux);
+  
+  // Set the TX gain and determine rate
+  tgain = tsubdev->gain_max();
+  tsubdev->set_gain(tgain);
+  input_rate = d_ub_tx->converter_rate() / d_utx->interp_rate();
+
+  // Perform the actual tuning, if no frequency specified then pick
+  if(d_rf_freq==-1)
+    target_freq = tsubdev->freq_min()+((tsubdev->freq_max()-tsubdev->freq_min())/2.0);
+  else 
+    target_freq = d_rf_freq;
+  ok = d_utx->tune(tsubdev->which(), tsubdev, target_freq, &r);
+  tsubdev->set_enable(true);
+  
+  if(verbose) {
+    printf("TX Subdevice name is %s\n", tsubdev->name().c_str());
+    printf("TX Subdevice freq range: (%g, %g)\n",
+       tsubdev->freq_min(), tsubdev->freq_max());
+    printf("mux: %#08x\n",  mux);
+    printf("target_freq:     %f\n", target_freq);
+    printf("ok:              %s\n", ok ? "true" : "false");
+    printf("r.baseband_freq: %f\n", r.baseband_freq);
+    printf("r.dxc_freq:      %f\n", r.dxc_freq);
+    printf("r.residual_freq: %f\n", r.residual_freq);
+    printf("r.inverted:      %d\n", r.inverted);
   }
 
-  if(!d_utx->set_mux(0xBA98)) {
-    if (verbose)
-      std::cout << "[USRP_USB_INTERFACE] Failed to set TX mux\n";
+  if(!ok) {
+    std::cerr << "[USRP_USB_INTERFACE] Failed to set center frequency on TX\n";
     reply_data = pmt_list2(invocation_handle, PMT_F);
     d_cs->send(s_response_usrp_open, reply_data);
     return;
@@ -337,20 +372,39 @@ usrp_usb_interface::handle_cmd_open(pmt_t data)
     d_cs->send(s_response_usrp_open, reply_data);
     return;
   }
+  
+  // Cast to usrp_basic and then detect daughterboards
+  d_ub_rx = d_urx;
+  usrp_subdev_spec rspec = pick_rx_subdevice();
+  db_base_sptr rsubdev = d_ub_rx->selected_subdev(rspec);
 
-  if(!d_urx->set_rx_freq (0, -d_rf_freq) || !d_urx->set_rx_freq(1, -d_rf_freq)) {
-    if (verbose)
-      std::cout << "[usrp_server] Failed to set center frequency on RX\n";
-    reply_data = pmt_list2(invocation_handle, PMT_F);
-    d_cs->send(s_response_usrp_open, reply_data);
-    return;
+  // Set the RX mux value
+  mux = d_urx->determine_rx_mux_value(rspec);
+  d_urx->set_mux(mux);
+  
+  // Set the TX gain and determine rate
+  rgain = rsubdev->gain_max();
+  rsubdev->set_gain(rgain);
+  input_rate = d_ub_rx->converter_rate() / d_urx->decim_rate();
+
+  ok = d_urx->tune(rsubdev->which(), rsubdev, target_freq, &r);
+  rsubdev->set_enable(true);
+  
+  if(verbose) {
+    printf("RX Subdevice name is %s\n", rsubdev->name().c_str());
+    printf("RX Subdevice freq range: (%g, %g)\n",
+       rsubdev->freq_min(), rsubdev->freq_max());
+    printf("mux: %#08x\n",  mux);
+    printf("target_freq:     %f\n", target_freq);
+    printf("ok:              %s\n", ok ? "true" : "false");
+    printf("r.baseband_freq: %f\n", r.baseband_freq);
+    printf("r.dxc_freq:      %f\n", r.dxc_freq);
+    printf("r.residual_freq: %f\n", r.residual_freq);
+    printf("r.inverted:      %d\n", r.inverted);
   }
   
-  // Two channels ... this really needs to end up being set correctly by
-  // querying for what dboards are connected
-  if(!d_urx->set_mux(0x32103210)) {
-    if (verbose)
-      std::cout << "[USRP_USB_INTERFACE] Failed to set RX mux\n";
+  if(!ok) {
+    std::cerr << "[USRP_USB_INTERFACE] Failed to set center frequency on RX\n";
     reply_data = pmt_list2(invocation_handle, PMT_F);
     d_cs->send(s_response_usrp_open, reply_data);
     return;
@@ -484,6 +538,62 @@ usrp_usb_interface::handle_cmd_close(pmt_t data)
   // FIXME This seems like a _very_ strange place to be calling shutdown_all.
   // That decision should be left to high-level code, not low-level code like this.
   shutdown_all(PMT_T);
+}
+
+usrp_subdev_spec
+usrp_usb_interface::pick_rx_subdevice()
+{
+  int dbids[] = {
+    USRP_DBID_FLEX_400_RX,
+    USRP_DBID_FLEX_900_RX,
+    USRP_DBID_FLEX_1200_RX,
+    USRP_DBID_FLEX_2400_RX,
+    USRP_DBID_TV_RX,
+    USRP_DBID_TV_RX_REV_2,
+    USRP_DBID_DBS_RX,
+    USRP_DBID_DBS_RX_REV_2_1,
+    USRP_DBID_BASIC_RX
+  };
+
+  std::vector<int> candidates(dbids, dbids+(sizeof(dbids)/sizeof(int)));
+  return pick_subdev(d_ub_rx, candidates);
+}
+
+usrp_subdev_spec
+usrp_usb_interface::pick_tx_subdevice()
+{
+  int dbids[] = {
+    USRP_DBID_FLEX_400_TX,
+    USRP_DBID_FLEX_900_TX,
+    USRP_DBID_FLEX_1200_TX,
+    USRP_DBID_FLEX_2400_TX,
+    USRP_DBID_BASIC_TX
+  };
+
+  std::vector<int> candidates(dbids, dbids+(sizeof(dbids)/sizeof(int)));
+  return pick_subdev(d_ub_tx, candidates);
+}
+
+usrp_subdev_spec
+usrp_usb_interface::pick_subdev(boost::shared_ptr<usrp_basic> d_usrp_basic, std::vector<int> candidates)
+{
+  int dbid0 = d_usrp_basic->selected_subdev(usrp_subdev_spec(0, 0))->dbid();
+  int dbid1 = d_usrp_basic->selected_subdev(usrp_subdev_spec(1, 0))->dbid();
+
+  for (int i = 0; i < candidates.size(); i++) {
+    int dbid = candidates[i];
+    if (dbid0 == dbid)
+      return usrp_subdev_spec(0, 0);
+    if (dbid1 == dbid)
+      return usrp_subdev_spec(1, 0);
+  }
+
+  if (dbid0 >= 0)
+    return usrp_subdev_spec(0, 0);
+  if (dbid1 >= 0)
+    return usrp_subdev_spec(1, 0);
+
+  throw std::runtime_error("No suitable daughterboard found!");
 }
 
 
