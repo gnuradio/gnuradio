@@ -73,7 +73,12 @@ include_HEADERS =			\
 	usrp_server.h			\
 	usrp_tx.h			\
 	usrp_tx_stub.h			\
-	usrp_usb_interface.h \
+	usrp_usb_interface.h
+
+noinst_HEADERS =      			\
+	qa_inband.h			\
+	qa_inband_packet_prims.h	\
+	qa_inband_usrp_server.h		\
 	symbols_usrp_channel.h		\
 	symbols_usrp_interface_cs.h	\
 	symbols_usrp_low_level_cs.h	\
@@ -82,11 +87,6 @@ include_HEADERS =			\
 	symbols_usrp_server_cs.h	\
 	symbols_usrp_tx.h		\
 	symbols_usrp_tx_cs.h
-
-noinst_HEADERS =      			\
-	qa_inband.h			\
-	qa_inband_packet_prims.h	\
-	qa_inband_usrp_server.h		
 
 # ------------------------------------------------------------------------
 # Build the qa code in its own library

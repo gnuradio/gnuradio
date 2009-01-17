@@ -112,7 +112,7 @@ usrp_usb_interface::usrp_usb_interface(mb_runtime *rt, const std::string &instan
                                 pmt_intern("rf-freq"), 
                                 PMT_NIL)) {
       if(!pmt_eqv(rf_freq, PMT_NIL)) 
-        d_rf_freq = pmt_to_double(rf_freq);
+        d_rf_freq = pmt_to_long(rf_freq);
     }
   }
   
