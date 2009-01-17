@@ -337,6 +337,7 @@ usrp_usb_interface::handle_cmd_open(pmt_t data)
     printf("mux: %#08x\n",  mux);
     printf("target_freq:     %f\n", target_freq);
     printf("ok:              %s\n", ok ? "true" : "false");
+    printf("gain:            %d\n", tgain);
     printf("r.baseband_freq: %f\n", r.baseband_freq);
     printf("r.dxc_freq:      %f\n", r.dxc_freq);
     printf("r.residual_freq: %f\n", r.residual_freq);
@@ -382,8 +383,8 @@ usrp_usb_interface::handle_cmd_open(pmt_t data)
   mux = d_urx->determine_rx_mux_value(rspec);
   d_urx->set_mux(mux);
   
-  // Set the TX gain and determine rate
-  rgain = rsubdev->gain_max();
+  // Set the RX gain and determine rate
+  rgain = rsubdev->gain_max()/2.0;
   rsubdev->set_gain(rgain);
   input_rate = d_ub_rx->converter_rate() / d_urx->decim_rate();
 
@@ -397,6 +398,7 @@ usrp_usb_interface::handle_cmd_open(pmt_t data)
     printf("mux: %#08x\n",  mux);
     printf("target_freq:     %f\n", target_freq);
     printf("ok:              %s\n", ok ? "true" : "false");
+    printf("gain:            %d\n", rgain);
     printf("r.baseband_freq: %f\n", r.baseband_freq);
     printf("r.dxc_freq:      %f\n", r.dxc_freq);
     printf("r.residual_freq: %f\n", r.residual_freq);
