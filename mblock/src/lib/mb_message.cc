@@ -27,7 +27,7 @@
 #include <pmt_pool.h>
 
 static const int CACHE_LINE_SIZE = 64;	// good guess
-static const int MAX_MESSAGES =  1024;	// KLUDGE max number of messages in sys
+static const int MAX_MESSAGES =  0;	// KLUDGE max number of messages in sys
 					//   0 -> no limit
 #if MB_MESSAGE_LOCAL_ALLOCATOR
 

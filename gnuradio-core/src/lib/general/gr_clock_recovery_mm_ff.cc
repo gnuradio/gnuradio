@@ -130,7 +130,7 @@ gr_clock_recovery_mm_ff::general_work (int noutput_items,
     }
   }
 
-  consume_each (ii);
+//  consume_each (ii);
 
-  return noutput_items;
+  return ii; //noutput_items;
 }
