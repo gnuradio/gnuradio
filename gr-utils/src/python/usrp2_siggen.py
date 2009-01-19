@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -173,6 +173,14 @@ if __name__ == '__main__':
     options = get_options()
     tb = siggen_top_block(options)
     
+    # Attempt to enable realtime scheduling
+    r = gr.enable_realtime_scheduling()
+    if r == gr.RT_OK:
+        realtime = True
+    else:
+        realtime = False
+        print "Note: failed to enable realtime scheduling"
+
     try:
         tb.run()
     except KeyboardInterrupt:
