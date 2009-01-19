@@ -100,7 +100,7 @@ main(int argc, char **argv)
   double freq = 0;
   int32_t interp = 32;
   int32_t samples_per_frame = MAX_SAMPLES;
-  int32_t scale = 3000;
+  int32_t scale = -1;
   double gain = GAIN_NOT_SET;
   
   int    ch;
@@ -225,11 +225,12 @@ main(int argc, char **argv)
     return 1;
   }
 
-  if (!u2->set_tx_scale_iq(scale, scale)){
-    std::cerr << "set_tx_scale_iq failed\n";
-    return 1;
+  if (scale != -1){
+    if (!u2->set_tx_scale_iq(scale, scale)){
+      std::cerr << "set_tx_scale_iq failed\n";
+      return 1;
+    }
   }
-
 
   usrp2::tx_metadata	md;
   md.timestamp = -1;
