@@ -103,15 +103,21 @@ module dsp_core_tx
 		  .signal_in(hb2_q),.signal_out(q_interp));
 
    assign      strobe = strobe_hb1;
-		   
-   cordic #(.bitwidth(18),.zwidth(16))
+
+   localparam  cwidth = 24;  // was 18
+   localparam  zwidth = 24;  // was 16
+
+   wire [cwidth-1:0] da_c, db_c;
+   
+   cordic_z24 #(.bitwidth(cwidth))
      cordic(.clock(clk), .reset(rst), .enable(run),
-	    .xi(i_interp),.yi(q_interp),.zi(phase[31:16]),
-	    .xo(da),.yo(db),.zo() );
+	    .xi({i_interp,{(cwidth-18){1'b0}}}),.yi({q_interp,{(cwidth-18){1'b0}}}),
+	    .zi(phase[31:32-zwidth]),
+	    .xo(da_c),.yo(db_c),.zo() );
    
    MULT18X18S MULT18X18S_inst 
      (.P(prod_i),    // 36-bit multiplier output
-      .A(da),    // 18-bit multiplier input
+      .A(da_c[cwidth-1:cwidth-18]),    // 18-bit multiplier input
       .B({{2{scale_i[15]}},scale_i}),    // 18-bit multiplier input
       .C(clk),    // Clock input
       .CE(1),  // Clock enable input
@@ -120,7 +126,7 @@ module dsp_core_tx
    
    MULT18X18S MULT18X18S_inst_2 
      (.P(prod_q),    // 36-bit multiplier output
-      .A(db),    // 18-bit multiplier input
+      .A(db_c[cwidth-1:cwidth-18]),    // 18-bit multiplier input
       .B({{2{scale_q[15]}},scale_q}),    // 18-bit multiplier input
       .C(clk),    // Clock input
       .CE(1),  // Clock enable input
