@@ -107,9 +107,10 @@ module dsp_core_rx
       .R(rst)     // Synchronous reset input
       ); 
 
-   cordic #(.bitwidth(24))
+   
+   cordic_z24 #(.bitwidth(24))
      cordic(.clock(clk), .reset(rst), .enable(run),
-	    .xi(prod_i[23:0]),. yi(prod_q[23:0]), .zi(phase[31:16]),
+	    .xi(prod_i[23:0]),. yi(prod_q[23:0]), .zi(phase[31:8]),
 	    .xo(i_cordic),.yo(q_cordic),.zo() );
 
    cic_strober cic_strober(.clock(clk),.reset(rst),.enable(run),.rate(cic_decim_rate),
