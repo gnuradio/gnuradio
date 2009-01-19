@@ -197,6 +197,8 @@ dist_ourdata_DATA = \
 	usrp_dual_source_x.xml \
 	usrp_simple_sink_x.xml \
 	usrp_simple_source_x.xml \
+	usrp2_sink_xxxx.xml \
+	usrp2_source_xxxx.xml \
 	variable.xml \
 	variable_chooser.xml \
 	variable_sink.xml \

@@ -8,7 +8,7 @@
 	<name>XMLRPC Client</name>
 	<key>xmlrpc_client</key>
 	<import>import xmlrpclib</import>
-	<make>xmlrpclib.Server(&quot;http://$(addr.eval):$(port)&quot;)</make>
+	<make>xmlrpclib.Server('http://$(addr.eval):$(port)')</make>
 	<callback>$(callback.eval)($variable)</callback>
 	<param>
 		<name>Address</name>

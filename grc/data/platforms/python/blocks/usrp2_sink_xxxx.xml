@@ -1,64 +1,53 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##USRP Simple Sink
+##USRP2 Sink
 ###################################################
  -->
 <block>
-	<name>USRP Sink</name>
-	<key>usrp_simple_sink_x</key>
-	<import>from grc_gnuradio import usrp as grc_usrp</import>
-	<make>grc_usrp.simple_sink_$(type.fcn)(
-	number=$number,
-	subdev_spec=$subdev_spec,
-	frequency=$frequency,
-	interpolation=$interpolation,
-	gain=$gain,
-	mux=$mux,
-	auto_tr=$auto_tr,
-	tx_enb=$tx_enb,
-)</make>
+	<name>USRP2 Sink</name>
+	<key>usrp2_sink_xxxx</key>
+	<import>from gnuradio import usrp2</import>
+	<make>usrp2.sink_$(type.fcn)($interface, $mac_addr)
+self.$(id).set_interp_rate($interpolation)
+self.$(id).set_frequency($frequency)
+self.$(id).set_gain($gain)
+#if $auto_tr.eval
+self.$(id).set_auto_tr($auto_tr)
+#end if
+#if $tx_enb.eval
+self.$(id).set_enable($tx_enb)
+#end if
+</make>
 	<callback>set_interp_rate($interpolation)</callback>
 	<callback>set_frequency($frequency)</callback>
 	<callback>set_gain($gain)</callback>
 	<param>
-		<name>Input Type</name>
+		<name>Output Type</name>
 		<key>type</key>
 		<type>enum</type>
 		<option>
 			<name>Complex</name>
 			<key>complex</key>
-			<opt>fcn:c</opt>
+			<opt>fcn:32fc</opt>
 		</option>
 		<option>
 			<name>Short</name>
 			<key>short</key>
-			<opt>fcn:s</opt>
+			<opt>fcn:16sc</opt>
 		</option>
 	</param>
 	<param>
-		<name>Unit Number</name>
-		<key>number</key>
-		<value>0</value>
-		<type>int</type>
+		<name>Interface</name>
+		<key>interface</key>
+		<value>eth0</value>
+		<type>string</type>
 	</param>
 	<param>
-		<name>Subdev Spec</name>
-		<key>subdev_spec</key>
-		<value>auto</value>
-		<type>enum</type>
-		<option>
-			<name>Auto</name>
-			<key>None</key>
-		</option>
-		<option>
-			<name>Side A</name>
-			<key>(0, 0)</key>
-		</option>
-		<option>
-			<name>Side B</name>
-			<key>(1, 0)</key>
-		</option>
+		<name>MAC Addr</name>
+		<key>mac_addr</key>
+		<value>00:50:C2:85:3x:xx</value>
+		<type>string</type>
 	</param>
 	<param>
 		<name>Frequency</name>
@@ -76,21 +65,14 @@
 		<type>real</type>
 	</param>
 	<param>
-		<name>Mux</name>
-		<key>mux</key>
-		<value>0x0</value>
-		<type>hex</type>
-		<hide>part</hide>
-	</param>
-	<param>
 		<name>Auto T/R</name>
 		<key>auto_tr</key>
-		<value>None</value>
+		<value></value>
 		<type>enum</type>
 		<hide>$auto_tr.hide</hide>
 		<option>
 			<name>Ignore</name>
-			<key>None</key>
+			<key></key>
 			<opt>hide:part</opt>
 		</option>
 		<option>
@@ -107,12 +89,12 @@
 	<param>
 		<name>TX Enable</name>
 		<key>tx_enb</key>
-		<value>None</value>
+		<value></value>
 		<type>enum</type>
 		<hide>$tx_enb.hide</hide>
 		<option>
 			<name>Ignore</name>
-			<key>None</key>
+			<key></key>
 			<opt>hide:part</opt>
 		</option>
 		<option>
@@ -131,7 +113,7 @@
 		<type>$type</type>
 	</sink>
 	<doc>
-The USRP sink inputs 128 Megasamples per second / interpolation.
+The USRP2 sink inputs 100 Megasamples per second / interpolation.
 
 --- Flex RF specific ---
 The "Auto TR" and "TX Enable" settings are flex rf specific and should be left at "Ignore" unless this is a flex rf board.

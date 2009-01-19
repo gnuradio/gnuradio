@@ -74,25 +74,30 @@
 	<param>
 		<name>Mux</name>
 		<key>mux</key>
-		<value>0xba98</value>
+		<value>0x0</value>
 		<type>hex</type>
+		<hide>part</hide>
 	</param>
 	<param>
 		<name>Auto T/R</name>
 		<key>auto_tr</key>
 		<value>None</value>
 		<type>enum</type>
+		<hide>$auto_tr.hide</hide>
 		<option>
 			<name>Ignore</name>
 			<key>None</key>
+			<opt>hide:part</opt>
 		</option>
 		<option>
 			<name>Enable</name>
 			<key>True</key>
+			<opt>hide:none</opt>
 		</option>
 		<option>
 			<name>Disable</name>
 			<key>False</key>
+			<opt>hide:none</opt>
 		</option>
 	</param>
 	<param>
@@ -100,17 +105,21 @@
 		<key>tx_enb_a</key>
 		<value>None</value>
 		<type>enum</type>
+		<hide>$tx_enb_a.hide</hide>
 		<option>
 			<name>Ignore</name>
 			<key>None</key>
+			<opt>hide:part</opt>
 		</option>
 		<option>
 			<name>Enable</name>
 			<key>True</key>
+			<opt>hide:none</opt>
 		</option>
 		<option>
 			<name>Disable</name>
 			<key>False</key>
+			<opt>hide:none</opt>
 		</option>
 	</param>
 	<param>
@@ -118,17 +127,21 @@
 		<key>tx_enb_b</key>
 		<value>None</value>
 		<type>enum</type>
+		<hide>$tx_enb_b.hide</hide>
 		<option>
 			<name>Ignore</name>
 			<key>None</key>
+			<opt>hide:part</opt>
 		</option>
 		<option>
 			<name>Enable</name>
 			<key>True</key>
+			<opt>hide:none</opt>
 		</option>
 		<option>
 			<name>Disable</name>
 			<key>False</key>
+			<opt>hide:none</opt>
 		</option>
 	</param>
 	<sink>

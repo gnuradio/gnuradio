@@ -146,7 +146,7 @@ class _simple_usrp(object):
 class _simple_source(gr.hier_block2, _simple_usrp):
 	"""A single usrp source of IO type short or complex."""
 
-	def __init__(self, number, subdev_spec, frequency, decimation, gain, mux=None, auto_tr=None, rx_ant=None):
+	def __init__(self, number, subdev_spec, frequency, decimation, gain, mux=0x0, auto_tr=None, rx_ant=None):
 		"""
 		USRP simple source contructor.
 		@param number the unit number
@@ -168,7 +168,7 @@ class _simple_source(gr.hier_block2, _simple_usrp):
 		u = self.constructor[0](number, nchan=1)
 		if subdev_spec is None: subdev_spec = usrp.pick_rx_subdevice(u)
 		u.set_decim_rate(decimation)
-		if mux is None: mux = usrp.determine_rx_mux_value(u, subdev_spec)
+		if not mux: mux = usrp.determine_rx_mux_value(u, subdev_spec)
 		u.set_mux(mux)
 		subdev = _setup_rx_subdev(u, subdev_spec, 0, gain, frequency, auto_tr, rx_ant)
 		_simple_usrp.__init__(self, u, subdev, 0)
@@ -186,7 +186,7 @@ class simple_source_s(_simple_source): constructor = (usrp.source_s, )
 class _simple_sink(gr.hier_block2, _simple_usrp):
 	"""A single usrp sink of IO type short or complex."""
 
-	def __init__(self, number, subdev_spec, frequency, interpolation, gain, mux=None, auto_tr=None, tx_enb=None):
+	def __init__(self, number, subdev_spec, frequency, interpolation, gain, mux=0x0, auto_tr=None, tx_enb=None):
 		"""
 		USRP simple sink contructor.
 		@param number the unit number
@@ -208,7 +208,7 @@ class _simple_sink(gr.hier_block2, _simple_usrp):
 		u = self.constructor[0](number, nchan=1)
 		if subdev_spec is None: subdev_spec = usrp.pick_tx_subdevice(u)
 		u.set_interp_rate(interpolation)
-		if mux is None: mux = usrp.determine_tx_mux_value(u, subdev_spec)
+		if not mux: mux = usrp.determine_tx_mux_value(u, subdev_spec)
 		u.set_mux(mux)
 		subdev = _setup_tx_subdev(u, subdev_spec, gain, frequency, auto_tr, tx_enb)
 		_simple_usrp.__init__(self, u, subdev, subdev.which())
@@ -299,7 +299,7 @@ class _dual_usrp(object):
 class _dual_source(gr.hier_block2, _dual_usrp):
 	"""A dual usrp source of IO type short or complex."""
 
-	def __init__(self, number, frequency_a, frequency_b, decimation, gain_a, gain_b, mux=0x3210, auto_tr=None, rx_ant_a=None, rx_ant_b=None):
+	def __init__(self, number, frequency_a, frequency_b, decimation, gain_a, gain_b, mux=0x0, auto_tr=None, rx_ant_a=None, rx_ant_b=None):
 		"""
 		USRP dual source contructor.
 		@param number the unit number
@@ -322,6 +322,7 @@ class _dual_source(gr.hier_block2, _dual_usrp):
 		#create usrp object
 		u = self.constructor[0](number, nchan=2)
 		u.set_decim_rate(decimation)
+		if not mux: mux = 0x3210
 		u.set_mux(mux)
 		subdev_a = _setup_rx_subdev(u, (0, 0), 0, gain_a, frequency_a, auto_tr, rx_ant_a)
 		subdev_b = _setup_rx_subdev(u, (1, 0), 1, gain_b, frequency_b, auto_tr, rx_ant_b)
@@ -342,7 +343,7 @@ class dual_source_s(_dual_source): constructor = usrp.source_s
 class _dual_sink(gr.hier_block2, _dual_usrp):
 	"""A dual usrp sink of IO type short or complex."""
 
-	def __init__(self, number, frequency_a, frequency_b, interpolation, gain_a, gain_b, mux=0xba98, auto_tr=None, tx_enb_a=None, tx_enb_b=None):
+	def __init__(self, number, frequency_a, frequency_b, interpolation, gain_a, gain_b, mux=0x0, auto_tr=None, tx_enb_a=None, tx_enb_b=None):
 		"""
 		USRP dual sink contructor.
 		@param number the unit number
@@ -363,6 +364,7 @@ class _dual_sink(gr.hier_block2, _dual_usrp):
 		#create usrp object
 		u = self.constructor[0](number, nchan=2)
 		u.set_interp_rate(interpolation)
+		if not mux: mux = 0xba98
 		u.set_mux(mux)
 		subdev_a = _setup_tx_subdev(u, (0, 0), gain_a, frequency_a, auto_tr, tx_enb_a)
 		subdev_b = _setup_tx_subdev(u, (1, 0), gain_b, frequency_b, auto_tr, tx_enb_b)

@@ -249,6 +249,8 @@
 		<block>usrp_simple_sink_x</block>
 		<block>usrp_dual_source_x</block>
 		<block>usrp_dual_sink_x</block>
+		<block>usrp2_source_xxxx</block>
+		<block>usrp2_sink_xxxx</block>
 	</cat>
 	<cat>
 		<name>Variables</name>

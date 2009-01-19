@@ -74,25 +74,30 @@
 	<param>
 		<name>Mux</name>
 		<key>mux</key>
-		<value>0x3210</value>
+		<value>0x0</value>
 		<type>hex</type>
+		<hide>part</hide>
 	</param>
 	<param>
 		<name>Auto T/R</name>
 		<key>auto_tr</key>
 		<value>None</value>
 		<type>enum</type>
+		<hide>$auto_tr.hide</hide>
 		<option>
 			<name>Ignore</name>
 			<key>None</key>
+			<opt>hide:part</opt>
 		</option>
 		<option>
 			<name>Enable</name>
 			<key>True</key>
+			<opt>hide:none</opt>
 		</option>
 		<option>
 			<name>Disable</name>
 			<key>False</key>
+			<opt>hide:none</opt>
 		</option>
 	</param>
 	<param>
@@ -100,17 +105,21 @@
 		<key>rx_ant_a</key>
 		<value>None</value>
 		<type>enum</type>
+		<hide>$rx_ant_a.hide</hide>
 		<option>
 			<name>Ignore</name>
 			<key>None</key>
+			<opt>hide:part</opt>
 		</option>
 		<option>
 			<name>TX/RX</name>
-			<key>&quot;TX/RX&quot;</key>
+			<key>'TX/RX'</key>
+			<opt>hide:none</opt>
 		</option>
 		<option>
 			<name>RX2</name>
-			<key>&quot;RX2&quot;</key>
+			<key>'RX2'</key>
+			<opt>hide:none</opt>
 		</option>
 	</param>
 	<param>
@@ -118,17 +127,21 @@
 		<key>rx_ant_b</key>
 		<value>None</value>
 		<type>enum</type>
+		<hide>$rx_ant_b.hide</hide>
 		<option>
 			<name>Ignore</name>
 			<key>None</key>
+			<opt>hide:part</opt>
 		</option>
 		<option>
 			<name>TX/RX</name>
-			<key>&quot;TX/RX&quot;</key>
+			<key>'TX/RX'</key>
+			<opt>hide:none</opt>
 		</option>
 		<option>
 			<name>RX2</name>
-			<key>&quot;RX2&quot;</key>
+			<key>'RX2'</key>
+			<opt>hide:none</opt>
 		</option>
 	</param>
 	<source>

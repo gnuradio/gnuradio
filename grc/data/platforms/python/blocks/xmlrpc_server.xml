@@ -33,7 +33,7 @@ Ex: If the variable is called freq, the function provided by the server will be 
 Example client in python:
 
 import xmlrpclib
-s = xmlrpclib.Server(&quot;http://localhost:8080&quot;)
+s = xmlrpclib.Server('http://localhost:8080')
 s.set_freq(5000)
 	</doc>
 </block>

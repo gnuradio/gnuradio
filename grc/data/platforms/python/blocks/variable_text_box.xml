@@ -14,7 +14,7 @@ _$(id)_control = grc_wxgui.text_box_control(
 		#if $label.eval
 	label=$label,
 		#else
-	label=&quot;$id&quot;,
+	label='$id',
 		#end if
 	value=$id,
 )

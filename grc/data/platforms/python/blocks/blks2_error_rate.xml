@@ -20,12 +20,12 @@
 		<type>enum</type>
 		<option>
 			<name>Bit Error Rate</name>
-			<key>&quot;BER&quot;</key>
+			<key>'BER'</key>
 			<opt>hide_bps:</opt>
 		</option>
 		<option>
 			<name>Symbol Error Rate</name>
-			<key>&quot;SER&quot;</key>
+			<key>'SER'</key>
 			<opt>hide_bps:all</opt>
 		</option>
 	</param>
