@@ -154,6 +154,7 @@ sdr_lib/cic_strober.v \
 sdr_lib/clip.v \
 sdr_lib/clip_reg.v \
 sdr_lib/cordic.v \
+sdr_lib/cordic_z24.v \
 sdr_lib/cordic_stage.v \
 sdr_lib/dsp_core_rx.v \
 sdr_lib/dsp_core_tx.v \
