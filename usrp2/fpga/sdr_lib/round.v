@@ -20,7 +20,7 @@
 //
 
 // Rounding "macro"
-// Keeps the topmost bits, does proper 2s comp rounding - round to zero
+// Keeps the topmost bits, does proper 2s comp round to zero (unbiased truncation)
 
 module round
   #(parameter bits_in=0,
