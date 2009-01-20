@@ -130,10 +130,18 @@ class Param(_Param):
 		if self.get_key() == 'id' and self.get_parent().get_key() not in (
 			'variable', 'variable_slider', 'variable_chooser', 'variable_text_box', 'parameter', 'options'
 		): return 'part'
-		#hide port controllers
+		#hide port controllers for type and nports
 		if self.get_key() in ' '.join(map(
-			lambda p: ' '.join([p._type, p._vlen, p._nports]), self.get_parent().get_ports())
+			lambda p: ' '.join([p._type, p._nports]), self.get_parent().get_ports())
 		): return 'part'
+		#hide port controllers for vlen, when == 1
+		if self.get_key() in ' '.join(map(
+			lambda p: p._vlen, self.get_parent().get_ports())
+		):
+			try:
+				assert int(self.evaluate()) == 1
+				return 'part'
+			except: pass
 		#hide empty grid positions
 		if self.get_key() == 'grid_pos' and not self.get_value(): return 'part'
 		return hide

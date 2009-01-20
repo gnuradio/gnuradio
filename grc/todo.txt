@@ -15,7 +15,6 @@
 -change param dialog to panel within main window
 -command line option for additional block wrappers
 -log slider gui control
--icons for certain blocks, + for add
 -zoom in/out (cairo vector graphics) (use scroll wheel as control)
 -search for blocks
 -click and drag on whitespace to scroll
@@ -29,7 +28,6 @@
 -auto generate hier library
 -auto clean hier library
 -add hier blocks to tree without restart?
--dont hide vlen controller when vlen > 1
 -dont generate py files in .grc file dir
 -save/restore cwd
 -special connection validation rules for disabled blocks
