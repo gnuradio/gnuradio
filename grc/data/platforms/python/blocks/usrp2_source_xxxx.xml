@@ -40,13 +40,13 @@ self.$(id).select_rx_antenna($rx_ant)
 	<param>
 		<name>Interface</name>
 		<key>interface</key>
-		<value>eth0</value>
+		<value></value>
 		<type>string</type>
 	</param>
 	<param>
 		<name>MAC Addr</name>
 		<key>mac_addr</key>
-		<value>00:50:C2:85:3x:xx</value>
+		<value></value>
 		<type>string</type>
 	</param>
 	<param>
@@ -114,6 +114,10 @@ self.$(id).select_rx_antenna($rx_ant)
 	</source>
 	<doc>
 The USRP2 source outputs 100 Megasamples per second / decimation.
+
+To use the default ethernet device, leave interface blank. \
+For systems with only 1 USRP2, you may leave the mac address blank. \
+For multi-USRP2 systems, specify the mac address in the form 00:50:C2:85:3x:xx.
 
 --- Flex RF specific ---
 The "Auto TR" and "RX Antenna" settings are flex rf specific and should be left at "Ignore" unless this is a flex rf board.
