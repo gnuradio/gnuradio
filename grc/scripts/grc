@@ -18,6 +18,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+import pygtk
+pygtk.require('2.0')
+import gtk
+
 from gnuradio.grc.platforms.base.Constants import VERSION
 from optparse import OptionParser
 
@@ -35,5 +39,8 @@ and you are welcome to redistribute it.
 	(options, args) = parser.parse_args()
 	from gnuradio.grc.platforms.python.Platform import Platform
 	from gnuradio.grc.gui.ActionHandler import ActionHandler
+	#setup icon using icon theme
+	try: gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
+	except: pass
 	ActionHandler(args, Platform())
 

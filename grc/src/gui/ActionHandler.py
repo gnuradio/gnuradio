@@ -53,9 +53,6 @@ class ActionHandler:
 		"""
 		self.clipboard = None
 		platform = Platform(platform)
-		#setup icon using icon theme
-		try: gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
-		except: pass
 		for action in Actions.get_all_actions(): action.connect('activate', self._handle_actions)
 		#setup the main window
 		self.main_window = MainWindow(self.handle_states, platform)

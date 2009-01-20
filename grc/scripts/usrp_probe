@@ -109,9 +109,13 @@ If the USRP cannot be found, make sure that the USRP is plugged-in and restart t
 If the problem persists, there may be a problem with you gnuradio installation or USB 2.0.
 '''%str(e))
 
-#enter the mainloop
-gtk.gdk.threads_init()
-gtk.gdk.threads_enter()
-USRPProbeWindow()
-gtk.main()
-gtk.gdk.threads_leave()
+if __name__ == '__main__':
+	#setup icon using icon theme
+	try: gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
+	except: pass
+	#enter the mainloop
+	gtk.gdk.threads_init()
+	gtk.gdk.threads_enter()
+	USRPProbeWindow()
+	gtk.main()
+	gtk.gdk.threads_leave()
