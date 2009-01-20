@@ -1,0 +1,159 @@
+#!/usr/bin/env python
+"""
+Copyright 2009 Free Software Foundation, Inc.
+This file is part of GNU Radio
+
+GNU Radio Companion is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+GNU Radio Companion is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+"""
+
+from gnuradio import usrp2
+import subprocess
+import os
+
+import pygtk
+pygtk.require('2.0')
+import gtk
+import gobject
+
+from gnuradio.grc.gui.Dialogs import TextDisplay
+
+from gnuradio.grc.platforms.python.Platform import Platform
+platform = Platform(block_paths_internal_only=['usrp2_probe.xml'])
+
+from gnuradio.grc.platforms.gui.Platform import Platform
+platform = Platform(platform)
+
+flow_graph = platform.get_new_flow_graph()
+block = flow_graph.get_new_block('usrp2_probe')
+
+##all params
+usrp_interface_param = block.get_param('interface')
+usrp_type_param = block.get_param('type')
+
+class USRP2ProbeWindow(gtk.Window):
+	"""
+	The main window for USRP Dignostics.
+	"""
+
+	def delete_event(self, widget, event, data=None): return False
+
+	def destroy(self, widget, data=None): gtk.main_quit()
+
+	def __init__(self):
+		"""
+		USRP2ProbeWindow contructor.
+		Create a new gtk Dialog with a close button, USRP2 input paramaters, and output labels.
+		"""
+		self.usrp2_macs = list()
+		gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
+		#quit signals
+		self.connect("delete_event", self.delete_event)
+		self.connect("destroy", self.destroy)
+		#set the title
+		self.set_title('USRP2 Probe')
+		#create decorative frame
+		frame = gtk.Frame()
+		self.add(frame)
+		#create vbox for storage
+		vbox = gtk.VBox()
+		frame.add(vbox)
+		vbox.pack_start(usrp_interface_param.get_input_object(), False)
+		vbox.pack_start(usrp_type_param.get_input_object(), False)
+		#make the tree model for holding mac addrs
+		self.treestore = gtk.TreeStore(gobject.TYPE_STRING)
+		self.treeview = gtk.TreeView(self.treestore)
+		self.treeview.set_enable_search(False) #disable pop up search box
+		self.treeview.add_events(gtk.gdk.BUTTON_PRESS_MASK)
+		self.treeview.connect('button_press_event', self._handle_selection)
+		selection = self.treeview.get_selection()
+		selection.set_mode('single')
+		selection.connect('changed', self._handle_selection)
+		renderer = gtk.CellRendererText()
+		column = gtk.TreeViewColumn('Select a USRP2 MAC Address', renderer, text=0)
+		self.treeview.append_column(column)
+		vbox.pack_start(self.treeview, False)
+		#create probe button
+		self.probe_button = gtk.Button('Probe')
+		self.probe_button.connect('clicked', self._probe_usrp2)
+		vbox.pack_start(self.probe_button, False)
+		#Create a text box for USRP queries
+		self.query_buffer = TextDisplay()
+		self.query_buffer.set_text(block.get_doc())
+		vbox.pack_start(self.query_buffer)
+		self.show_all()
+		self.treeview.hide()
+
+	def _probe_usrp2(self, widget=None):
+		"""Probe the USRP2 device and copy the results into the query text box."""
+		#call find usrps
+		args = ['find_usrps']
+		interface = usrp_interface_param.evaluate()
+		if interface: args.extend(['-e', interface])
+		p = subprocess.Popen(args=args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False, universal_newlines=True)
+		msg = p.stdout.read()
+		#extract mac addrs
+		self.usrp2_macs = map(lambda l: l.split()[0], filter(lambda l: l.count(':') >= 5, msg.strip().splitlines()))
+		#set the tree store with the mac addrs
+		self.treestore.clear()
+		for usrp2_mac in self.usrp2_macs:
+			self.treestore.append(None, (usrp2_mac,))
+		#set the text with the error message for 0 found, hide the list
+		#when only 1 usrp2, auto handle selection, hide the list
+		#for multiple usrp2, show the list
+		if not self.usrp2_macs:
+			self.treeview.hide()
+			self.query_buffer.set_text(msg)
+		elif len(self.usrp2_macs) == 1:
+			self.treeview.hide()
+			self.query_buffer.set_text('')
+			self._handle_selection()
+		else:
+			self.treeview.show()
+			self.query_buffer.set_text('')
+
+	def _handle_selection(self, *args, **kwargs):
+		"""A selection change or click occured."""
+		#get the mac addr
+		selection = self.treeview.get_selection()
+		treestore, iter = selection.get_selected()
+		mac_addr = iter and treestore.get_value(iter, 0) or ''
+		if not mac_addr and len(self.usrp2_macs) > 1:
+			return #no empty mac addrs for when multiple found
+		#make the usrp2 object
+		make, rate_attr = {
+			'rx': (usrp2.source_32fc, 'adc_rate'),
+			'tx': (usrp2.sink_32fc, 'dac_rate'),
+		}[usrp_type_param.evaluate()]
+		try:
+			u = make(usrp_interface_param.evaluate(), mac_addr)
+			msg = ">>> USRP2 Probe\n"
+			msg = "%s\nMAC Addr:\n\t%s\n"%(msg, u.mac_addr())
+			msg = "%s\nName (ID):\n\t%s\n"%(msg, u.daughterboard_id())
+			msg = "%s\nConverter Rate:\n\t%s Hz\n"%(msg, getattr(u, rate_attr)())
+			gain_min, gain_max, gain_step = u.gain_range()
+			msg = "%s\nGain Range (min, max, step size):\n\t%s\n\t%s\n\t%s\n"%(msg, gain_min, gain_max, gain_step)
+			freq_min, freq_max = u.freq_range()
+			msg = "%s\nFreq Range (min, max):\n\t%s Hz\n\t%s Hz\n"%(msg, freq_min, freq_max)
+			self.query_buffer.set_text(msg)
+		except Exception, e: #display the error message
+			self.query_buffer.set_text('>>> Error\n%s'%str(e))
+
+if __name__ == '__main__':
+	#setup icon using icon theme
+	try: gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
+	except: pass
+	#enter the mainloop
+	USRP2ProbeWindow()
+	gtk.main()

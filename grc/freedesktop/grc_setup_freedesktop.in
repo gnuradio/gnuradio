@@ -8,6 +8,7 @@
 ##################################################
 
 ICON_SIZES="32 48 64 128 256"
+MENU_ITEMS="grc usrp2_probe usrp_probe"
 if [ -n "$2" ]; then
 	SRCDIR="$2"
 else
@@ -27,8 +28,9 @@ case "$1" in
 	echo "Install mime type"
 	xdg-mime install ${SRCDIR}/gnuradio-grc.xml
 	echo "Install menu items"
-	xdg-desktop-menu install ${SRCDIR}/gnuradio-grc.desktop
-	xdg-desktop-menu install ${SRCDIR}/gnuradio-usrp_probe.desktop
+	for menu_item in ${MENU_ITEMS}; do \
+		xdg-desktop-menu install ${SRCDIR}/gnuradio-${menu_item}.desktop; \
+	done
 	echo "Done!"
 	echo ""
 	;;
@@ -44,8 +46,9 @@ case "$1" in
 	echo "Uninstall mime type"
 	xdg-mime uninstall ${SRCDIR}/gnuradio-grc.xml
 	echo "Uninstall menu items"
-	xdg-desktop-menu uninstall gnuradio-grc.desktop
-	xdg-desktop-menu uninstall gnuradio-usrp_probe.desktop
+	for menu_item in ${MENU_ITEMS}; do \
+		xdg-desktop-menu uninstall gnuradio-${menu_item}.desktop; \
+	done
 	echo "Done!"
 	echo ""
 	;;

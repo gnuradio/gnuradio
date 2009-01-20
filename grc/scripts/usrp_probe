@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -68,12 +68,12 @@ class USRPProbeWindow(gtk.Window):
 		frame.add(vbox)
 		vbox.pack_start(usrp_number_param.get_input_object(), False)
 		vbox.pack_start(usrp_dboard_param.get_input_object(), False)
-		self.diagnose_button = gtk.Button('Probe')
-		self.diagnose_button.connect('clicked', self._probe_usrp)
-		vbox.pack_start(self.diagnose_button, False)
+		self.probe_button = gtk.Button('Probe')
+		self.probe_button.connect('clicked', self._probe_usrp)
+		vbox.pack_start(self.probe_button, False)
 		#Create a text box for USRP queries
 		self.query_buffer = TextDisplay()
-		self.query_buffer.set_text('Press "Probe" to retrieve USRP information...')
+		self.query_buffer.set_text(block.get_doc())
 		vbox.pack_start(self.query_buffer)
 		self.show_all()
 
@@ -114,8 +114,5 @@ if __name__ == '__main__':
 	try: gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
 	except: pass
 	#enter the mainloop
-	gtk.gdk.threads_init()
-	gtk.gdk.threads_enter()
 	USRPProbeWindow()
 	gtk.main()
-	gtk.gdk.threads_leave()

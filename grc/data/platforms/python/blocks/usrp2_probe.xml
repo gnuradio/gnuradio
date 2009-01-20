@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##USRP2 Probe:
+##	This block should not appear in the tree.
+###################################################
+ -->
+<block>
+	<name>USRP2 Probe</name>
+	<key>usrp2_probe</key>
+	<make></make>
+	<param>
+		<name>Interface</name>
+		<key>interface</key>
+		<value>eth0</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<value>rx</value>
+		<type>enum</type>
+		<option>
+			<name>RX</name>
+			<key>rx</key>
+		</option>
+		<option>
+			<name>TX</name>
+			<key>tx</key>
+		</option>
+	</param>
+	<doc>Press "Probe" to retrieve USRP2 information...</doc>
+</block>

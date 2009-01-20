@@ -36,4 +36,5 @@
 			<key>tx_b</key>
 		</option>
 	</param>
+	<doc>Press "Probe" to retrieve USRP information...</doc>
 </block>

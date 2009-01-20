@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=USRP2 Probe
+Exec=usrp2_probe
+Categories=Development;
+Icon=gnuradio-grc
