@@ -28,7 +28,7 @@ case "$1" in
 	xdg-mime install ${SRCDIR}/gnuradio-grc.xml
 	echo "Install menu items"
 	xdg-desktop-menu install ${SRCDIR}/gnuradio-grc.desktop
-	xdg-desktop-menu install ${SRCDIR}/gnuradio-usrp_diagnostics.desktop
+	xdg-desktop-menu install ${SRCDIR}/gnuradio-usrp_probe.desktop
 	echo "Done!"
 	echo ""
 	;;
@@ -45,7 +45,7 @@ case "$1" in
 	xdg-mime uninstall ${SRCDIR}/gnuradio-grc.xml
 	echo "Uninstall menu items"
 	xdg-desktop-menu uninstall gnuradio-grc.desktop
-	xdg-desktop-menu uninstall gnuradio-usrp_diagnostics.desktop
+	xdg-desktop-menu uninstall gnuradio-usrp_probe.desktop
 	echo "Done!"
 	echo ""
 	;;

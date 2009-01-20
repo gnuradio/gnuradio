@@ -21,4 +21,4 @@
 
 include $(top_srcdir)/grc/Makefile.inc
 
-dist_bin_SCRIPTS = grc usrp_diagnostics
+dist_bin_SCRIPTS = grc usrp_probe

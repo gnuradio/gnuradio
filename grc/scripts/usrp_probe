@@ -28,20 +28,19 @@ import gtk
 from gnuradio.grc.gui.Dialogs import TextDisplay
 
 from gnuradio.grc.platforms.python.Platform import Platform
-platform = Platform(block_paths_internal_only=['usrp_diagnostics.xml'])
+platform = Platform(block_paths_internal_only=['usrp_probe.xml'])
 
 from gnuradio.grc.platforms.gui.Platform import Platform
 platform = Platform(platform)
 
 flow_graph = platform.get_new_flow_graph()
-block = flow_graph.get_new_block('usrp_diagnostics')
+block = flow_graph.get_new_block('usrp_probe')
 
 ##all params
-usrp_number_param = block.get_param('usrp_number')
-usrp_type_param = block.get_param('usrp_type')
-side_subdev_param = block.get_param('side_subdev')
+usrp_number_param = block.get_param('number')
+usrp_dboard_param = block.get_param('dboard')
 
-class USRPDiagnosticsWindow(gtk.Window):
+class USRPProbeWindow(gtk.Window):
 	"""
 	The main window for USRP Dignostics.
 	"""
@@ -52,7 +51,7 @@ class USRPDiagnosticsWindow(gtk.Window):
 
 	def __init__(self):
 		"""
-		USRPDiagnosticsWindow contructor.
+		USRPProbeWindow contructor.
 		Create a new gtk Dialog with a close button, USRP input paramaters, and output labels.
 		"""
 		gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
@@ -60,7 +59,7 @@ class USRPDiagnosticsWindow(gtk.Window):
 		self.connect("delete_event", self.delete_event)
 		self.connect("destroy", self.destroy)
 		#set the title
-		self.set_title('USRP Diagnostics')
+		self.set_title('USRP Probe')
 		#create decorative frame
 		frame = gtk.Frame()
 		self.add(frame)
@@ -68,31 +67,31 @@ class USRPDiagnosticsWindow(gtk.Window):
 		vbox = gtk.VBox()
 		frame.add(vbox)
 		vbox.pack_start(usrp_number_param.get_input_object(), False)
-		vbox.pack_start(usrp_type_param.get_input_object(), False)
-		vbox.pack_start(side_subdev_param.get_input_object(), False)
-		self.diagnose_button = gtk.Button('Query')
-		self.diagnose_button.connect('clicked', self._diagnose_usrp)
+		vbox.pack_start(usrp_dboard_param.get_input_object(), False)
+		self.diagnose_button = gtk.Button('Probe')
+		self.diagnose_button.connect('clicked', self._probe_usrp)
 		vbox.pack_start(self.diagnose_button, False)
 		#Create a text box for USRP queries
 		self.query_buffer = TextDisplay()
-		self.query_buffer.set_text('Press "Query" to retrieve USRP information...')
+		self.query_buffer.set_text('Press "Probe" to retrieve USRP information...')
 		vbox.pack_start(self.query_buffer)
 		self.show_all()
 
-	def _diagnose_usrp(self, widget=None):
-		"""Query the USRP device and copy the results into the query text box."""
-		type = usrp_type_param.evaluate()
-		if type == 'rx':	#for the rx query, use the source and rx methods
+	def _probe_usrp(self, widget=None):
+		"""Probe the USRP device and copy the results into the query text box."""
+		dboard = usrp_dboard_param.evaluate()
+		side = {'a': 0, 'b': 1}[dboard[-1]]
+		if dboard.startswith('rx'): #for the rx query, use the source and rx methods
 			make = usrp.source_c
 			get_mux = usrp.determine_rx_mux_value
-		elif type == 'tx':	#for the tx query, use the sink and tx methods
+		elif dboard.startswith('tx'): #for the tx query, use the sink and tx methods
 			make = usrp.sink_c
 			get_mux = usrp.determine_tx_mux_value
 		try:
 			u = make(usrp_number_param.evaluate())
-			subdev_spec = eval(side_subdev_param.evaluate())
-			subdev = usrp.selected_subdev(u, subdev_spec)#get the subdev
-			msg = ">>> USRP Query\n"
+			subdev_spec = (side, 0)
+			subdev = usrp.selected_subdev(u, subdev_spec) #get the subdev
+			msg = ">>> USRP Probe\n"
 			msg = "%s\nName:\n\t%s\n"%(msg, str(subdev.name()))
 			msg = "%s\nAutomated Mux:\n\t0x%08x\n"%(msg, 0xFFFFFFFFL & long(get_mux(u, subdev_spec))) #ensure that the value is displayed as: 8 nibbles, unsigned, hex
 			msg = "%s\nConverter Rate:\n\t%s\n"%(msg, u.converter_rate())
@@ -102,7 +101,7 @@ class USRPDiagnosticsWindow(gtk.Window):
 			freq_min, freq_max, freq_step = subdev.freq_range()
 			msg = "%s\nFreq Range (min, max, step size):\n\t%s\n\t%s\n\t%s\n"%(msg, freq_min, freq_max, freq_step)
 			self.query_buffer.set_text(msg)
-		except Exception, e:	#display the error message
+		except Exception, e: #display the error message
 			self.query_buffer.set_text('''\
 >>> Error\n%s
 
@@ -113,6 +112,6 @@ If the problem persists, there may be a problem with you gnuradio installation o
 #enter the mainloop
 gtk.gdk.threads_init()
 gtk.gdk.threads_enter()
-USRPDiagnosticsWindow()
+USRPProbeWindow()
 gtk.main()
 gtk.gdk.threads_leave()

@@ -31,7 +31,7 @@ dist_ourdata_DATA = \
 	grc-icon-32.png \
 	gnuradio-grc.xml \
 	gnuradio-grc.desktop \
-	gnuradio-usrp_diagnostics.desktop
+	gnuradio-usrp_probe.desktop
 
 dist_bin_SCRIPTS = grc_setup_freedesktop
 
