@@ -104,11 +104,10 @@ class USRP2ProbeWindow(gtk.Window):
 		p = subprocess.Popen(args=args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False, universal_newlines=True)
 		msg = p.stdout.read()
 		#extract mac addrs
-		self.usrp2_macs = map(lambda l: l.split()[0], filter(lambda l: l.count(':') >= 5, msg.strip().splitlines()))
+		self.usrp2_macs = sorted(map(lambda l: l.split()[0], filter(lambda l: l.count(':') >= 5, msg.strip().splitlines())))
 		#set the tree store with the mac addrs
 		self.treestore.clear()
-		for usrp2_mac in self.usrp2_macs:
-			self.treestore.append(None, (usrp2_mac,))
+		for usrp2_mac in self.usrp2_macs: self.treestore.append(None, (usrp2_mac,))
 		#set the text with the error message for 0 found, hide the list
 		#when only 1 usrp2, auto handle selection, hide the list
 		#for multiple usrp2, show the list
