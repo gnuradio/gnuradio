@@ -8,9 +8,15 @@
 	<name>USRP2 Sink</name>
 	<key>usrp2_sink_xxxx</key>
 	<import>from gnuradio import usrp2</import>
-	<make>usrp2.sink_$(type.fcn)($interface, $mac_addr)
-self.$(id).set_interp_rate($interpolation)
-self.$(id).set_frequency($frequency)
+	<make>#if not $interface.eval and not $mac_addr.eval
+usrp2.sink_$(type.fcn)()
+#elif not $mac_addr.eval
+usrp2.sink_$(type.fcn)($interface)
+#else
+usrp2.sink_$(type.fcn)($interface, $mac_addr)
+#end if
+self.$(id).set_interp($interpolation)
+self.$(id).set_center_freq($frequency)
 self.$(id).set_gain($gain)
 #if $auto_tr.eval
 self.$(id).set_auto_tr($auto_tr)
@@ -19,8 +25,8 @@ self.$(id).set_auto_tr($auto_tr)
 self.$(id).set_enable($tx_enb)
 #end if
 </make>
-	<callback>set_interp_rate($interpolation)</callback>
-	<callback>set_frequency($frequency)</callback>
+	<callback>set_interp($interpolation)</callback>
+	<callback>set_center_freq($frequency)</callback>
 	<callback>set_gain($gain)</callback>
 	<param>
 		<name>Output Type</name>

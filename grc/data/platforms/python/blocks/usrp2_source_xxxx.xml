@@ -8,9 +8,15 @@
 	<name>USRP2 Source</name>
 	<key>usrp2_source_xxxx</key>
 	<import>from gnuradio import usrp2</import>
-	<make>usrp2.source_$(type.fcn)($interface, $mac_addr)
-self.$(id).set_decim_rate($decimation)
-self.$(id).set_frequency($frequency)
+	<make>#if not $interface.eval and not $mac_addr.eval
+usrp2.source_$(type.fcn)()
+#elif not $mac_addr.eval
+usrp2.source_$(type.fcn)($interface)
+#else
+usrp2.source_$(type.fcn)($interface, $mac_addr)
+#end if
+self.$(id).set_decim($decimation)
+self.$(id).set_center_freq($frequency)
 self.$(id).set_gain($gain)
 #if $auto_tr.eval
 self.$(id).set_auto_tr($auto_tr)
@@ -19,8 +25,8 @@ self.$(id).set_auto_tr($auto_tr)
 self.$(id).select_rx_antenna($rx_ant)
 #end if
 </make>
-	<callback>set_decim_rate($decimation)</callback>
-	<callback>set_frequency($frequency)</callback>
+	<callback>set_decim($decimation)</callback>
+	<callback>set_center_freq($frequency)</callback>
 	<callback>set_gain($gain)</callback>
 	<param>
 		<name>Output Type</name>

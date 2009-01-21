@@ -12,7 +12,7 @@
 	<param>
 		<name>Interface</name>
 		<key>interface</key>
-		<value>eth0</value>
+		<value></value>
 		<type>string</type>
 	</param>
 	<param>

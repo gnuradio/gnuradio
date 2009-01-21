@@ -135,8 +135,11 @@ class USRP2ProbeWindow(gtk.Window):
 			'rx': (usrp2.source_32fc, 'adc_rate'),
 			'tx': (usrp2.sink_32fc, 'dac_rate'),
 		}[usrp_type_param.evaluate()]
+		interface = usrp_interface_param.evaluate()
 		try:
-			u = make(usrp_interface_param.evaluate(), mac_addr)
+			if not interface and not mac_addr: u = make()
+			elif not mac_addr: u = make(interface)
+			else: u = make(interface, mac_addr)
 			msg = ">>> USRP2 Probe\n"
 			msg = "%s\nMAC Addr:\n\t%s\n"%(msg, u.mac_addr())
 			msg = "%s\nName (ID):\n\t%s\n"%(msg, u.daughterboard_id())
