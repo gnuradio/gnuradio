@@ -19,10 +19,13 @@ dnl  the Free Software Foundation, Inc., 51 Franklin Street,
 dnl  Boston, MA 02110-1301, USA.
 dnl 
 
+AC_INIT(gr-howto-write-a-block,3.2svn)
+AC_PREREQ(2.57)
+AC_CONFIG_AUX_DIR([.])	
+
 dnl This is kind of non-standard, but it sure shortens up this file :-)
 m4_include([config/gr_standalone.m4])
-
-GR_STANDALONE(gr-howto-write-a-block,3.1.svn)
+GR_STANDALONE
 
 dnl Check for any libraries you need
 dnl AC_CHECK_LIBRARY

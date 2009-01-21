@@ -28,10 +28,7 @@ dnl get called too late to be useful.
 
 m4_define([GR_STANDALONE],
 [
-  AC_INIT([$1],[$2])
-  AC_PREREQ(2.57)
   AC_CONFIG_SRCDIR([config/gr_standalone.m4])
-  AC_CONFIG_AUX_DIR([.])	
   AM_CONFIG_HEADER(config.h)
 
   AC_CANONICAL_BUILD
