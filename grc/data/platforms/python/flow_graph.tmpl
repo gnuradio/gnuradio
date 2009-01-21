@@ -18,10 +18,10 @@
 #set $DIVIDER = '#'*50
 $DIVIDER
 # Gnuradio Python Flow Graph
-$('# Title: %s'%$flow_graph.get_option('title'))
-$('# Author: %s'%$flow_graph.get_option('author'))
-$('# Description: %s'%$flow_graph.get_option('description'))
-$('# Generated: %s'%time.ctime())
+# Title: $flow_graph.get_option('title')
+# Author: $flow_graph.get_option('author')
+# Description: $flow_graph.get_option('description')
+# Generated: $time.ctime()
 $DIVIDER
 
 ########################################################
@@ -126,7 +126,7 @@ class $(class_name)(gr.hier_block2):
 #end if
 #for $blk in filter(lambda b: b.get_make(), $blocks)
 	#set $code = '\n\t\t'.join($blk.get_make().splitlines())
-		$("self.%s = %s"%($blk.get_id(), $code))
+		self.$blk.get_id() = $code
 #end for
 ########################################################
 ##Create Connections
@@ -152,13 +152,7 @@ class $(class_name)(gr.hier_block2):
 	#else
 		#set $sink_name = 'self.' + $sink.get_parent().get_id()
 	#end if
-		$("self.connect((%s, %s), (%s, %s))"%(
-				$source_name,
-				$source.get_key(),
-				$sink_name,
-				$sink.get_key(),
-			)
-		)
+		self.connect(($source_name, $source.get_key()), ($sink_name, $sink.get_key()))
 #end for
 
 ########################################################
