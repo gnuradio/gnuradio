@@ -82,7 +82,7 @@ class app_flow_graph(stdgui2.std_top_block):
 		parser.add_option("-D", "--switch_mode", action="store_true", default=False, help="Dicke Switching mode")
 		parser.add_option("-P", "--reference_divisor", type="eng_float", default=1.0, help="Reference Divisor")
 		parser.add_option("-U", "--ref_fifo", default="@@@@")
-		parser.add_option("-h", "--notch_taps", type="int", default=64, help="Number of notch taps")
+		parser.add_option("-k", "--notch_taps", type="int", default=64, help="Number of notch taps")
 		parser.add_option("-n", "--notches", action="store_true", 
 		    default=False, help="Notch frequencies after all other args")
 		(options, args) = parser.parse_args()
