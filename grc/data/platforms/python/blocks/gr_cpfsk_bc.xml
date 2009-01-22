@@ -8,7 +8,7 @@
 	<name>CPFSK</name>
 	<key>gr_cpfsk_bc</key>
 	<import>from gnuradio import gr</import>
-	<make>cpfsk_bc($k, $amplitude, $samples_per_symbol)</make>
+	<make>gr.cpfsk_bc($k, $amplitude, $samples_per_symbol)</make>
 	<callback>set_amplitude($amplitude)</callback>
 	<param>
 		<name>K</name>
