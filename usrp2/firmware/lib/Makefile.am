@@ -90,6 +90,6 @@ noinst_HEADERS = \
 	u2_init.h \
 	usrp2_bytesex.h \
         wb16550.h
-        
+
 EXTRA_DIST = \
         microblaze.ld

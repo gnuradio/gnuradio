@@ -168,6 +168,9 @@ main(void)
 {
   u2_init();
 
+  output_regs->led_src = 0x3;		// h/w controls bottom two bits
+  clocks_enable_test_clk(true, 1);
+
   putstr("\neth <-> serdes\n");
 
   ethernet_register_link_changed_callback(link_changed_callback);

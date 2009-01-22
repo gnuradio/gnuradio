@@ -366,6 +366,16 @@ typedef struct {
 #define	ADC_CTRL_ON	0x0F
 #define	ADC_CTRL_OFF	0x00
 
+// crazy order that matches the labels on the case
+
+#define	LED_A		(1 << 4)
+#define	LED_B		(1 << 1)
+#define	LED_C		(1 << 3)
+#define	LED_D		(1 << 0)
+#define	LED_E		(1 << 2)
+//      LED_F		// controlled by CPLD
+#define	LED_RJ45	(1 << 5)
+
 #define output_regs ((output_regs_t *) MISC_OUTPUT_BASE)
 
 // --- dsp tx regs ---

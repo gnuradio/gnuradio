@@ -153,6 +153,12 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
       subpktlen = op_id_cmd(gp, reply_payload, reply_payload_space);
       handled_it = true;
       break;
+
+    default:
+      if (0){
+	printf("\npassing on %d\n", gp->opcode);
+      }
+      break;
     }
 
     int t = (gp->len + 3) & ~3;		// bump to a multiple of 4
@@ -239,6 +245,6 @@ void
 link_changed_callback(int speed)
 {
   link_is_up = speed != 0;
-  hal_set_leds(link_is_up ? 0x10 : 0x0, 0x10);
+  hal_set_leds(link_is_up ? LED_RJ45 : 0x0, LED_RJ45);
   printf("\neth link changed: speed = %d\n", speed);
 }

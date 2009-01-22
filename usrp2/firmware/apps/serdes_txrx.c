@@ -1,5 +1,5 @@
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -246,7 +246,14 @@ fw_sets_seqno_inspector(dbsm_t *sm, int buf_this)	// returns false
 inline static void
 buffer_irq_handler(unsigned irq)
 {
+  // hal_toggle_leds(LED_A);
+
   uint32_t  status = buffer_pool_status->status;
+
+  if (0 && (status & ~BPS_IDLE_ALL)){
+    putstr("status = ");
+    puthex32_nl(status);
+  }
 
   dbsm_process_status(&dsp_tx_sm, status);
   dbsm_process_status(&dsp_rx_sm, status);
@@ -257,14 +264,19 @@ main(void)
 {
   u2_init();
 
+  output_regs->led_src = 0x3;		// h/w controls bottom two bits
+  clocks_enable_test_clk(true, 1);
+
   putstr("\nSERDES TxRx\n");
 
   cpu_tx_buf_dest_port = PORT_SERDES;
 
-  ethernet_register_link_changed_callback(link_changed_callback);
-  ethernet_init();
+  // ethernet_register_link_changed_callback(link_changed_callback);
+  // ethernet_init();
 
   clocks_mimo_config(MC_WE_LOCK_TO_MIMO);
+
+  // puts("post clocks_mimo_config");
 
 #if 0
   // make bit 15 of Tx gpio's be a s/w output
@@ -272,7 +284,7 @@ main(void)
   hal_gpio_set_ddr(GPIO_TX_BANK, 0x8000, 0x8000);
 #endif
 
-#if 1
+#if 0
   output_regs->debug_mux_ctrl = 1;
   hal_gpio_set_sels(GPIO_TX_BANK, "0000000000000000");
   hal_gpio_set_sels(GPIO_RX_BANK, "0000000000000000");
@@ -288,6 +300,8 @@ main(void)
 	    eth_pkt_inspector);
 
 
+  //output_regs->flush_icache = 1;
+ 
   // initialize double buffering state machine for DSP RX -> Ethernet
 
   if (FW_SETS_SEQNO){
@@ -301,6 +315,8 @@ main(void)
 	      dbsm_nop_inspector);
   }
 
+  // puts("post dbsm_init's");
+
   // tell app_common that this dbsm could be sending to the ethernet
   ac_could_be_sending_to_eth = &dsp_rx_sm;
 
@@ -308,8 +324,12 @@ main(void)
   // program tx registers
   setup_tx();
 
+  // puts("post setup_tx");
+
   // kick off the state machine
   dbsm_start(&dsp_tx_sm);
+
+  // puts("post dbsm_start");
 
   //int which = 0;
 
