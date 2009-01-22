@@ -1,4 +1,4 @@
-/* $Id: aeMB_sim.v,v 1.1 2007/12/23 20:40:45 sybreon Exp $
+/* $Id: aeMB_sim.v,v 1.2 2008/06/06 09:36:02 sybreon Exp $
 **
 ** AEMB EDK 3.2 Compatible Core
 ** Copyright (C) 2004-2007 Shawn Tan Ser Ngiap <shawn.tan@aeste.net>
@@ -104,7 +104,9 @@ module aeMB_sim (/*AUTOARG*/
    wire [DW-1:0] 	dwb_adr = {dwb_adr_o,2'd0};   
    wire [1:0] 		wBRA = {cpu.rBRA, cpu.rDLY};   
    wire [3:0] 		wMSR = {cpu.xecu.rMSR_BIP, cpu.xecu.rMSR_C, cpu.xecu.rMSR_IE, cpu.xecu.rMSR_BE};
-   
+
+
+   `ifdef AEMB_SIM_KERNEL
    always @(posedge cpu.gclk) begin
       if (cpu.gena) begin
 	 
@@ -293,6 +295,7 @@ module aeMB_sim (/*AUTOARG*/
       end // if (cpu.gena)
       
    end // always @ (posedge cpu.gclk)
+   `endif //  `ifdef AEMB_SIM_KERNEL
    
    // synopsys translate_on
    
@@ -300,6 +303,9 @@ endmodule // aeMB_sim
 
 /* 
  $Log: aeMB_sim.v,v $
+ Revision 1.2  2008/06/06 09:36:02  sybreon
+ single thread design
+
  Revision 1.1  2007/12/23 20:40:45  sybreon
  Abstracted simulation kernel (aeMB_sim) to split simulation models from synthesis models.
  
