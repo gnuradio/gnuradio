@@ -179,7 +179,16 @@ class $(class_name)(gr.hier_block2):
 ########################################################
 #if $generate_options != 'hb'
 if __name__ == '__main__':
-	tb = $(class_name)()
+	parser = OptionParser()
+	#set $args = list()
+	#for $param in $parameters
+		#if $param.get_param('type').get_value()
+	parser.add_option("--$param.get_id()", dest="$param.get_id()", type="$param.get_param('type').get_value()", default=$param.get_make())
+			#silent $args.append('%s=options.%s'%($param.get_id(), $param.get_id()))
+		#end if
+	#end for
+	(options, args) = parser.parse_args()
+	tb = $(class_name)($(', '.join($args)))
 	#if $generate_options == 'wx_gui'
 	tb.Run()
 	#elif $generate_options == 'no_gui'

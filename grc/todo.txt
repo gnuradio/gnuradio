@@ -1,7 +1,6 @@
 ##################################################
 # Blocks
 ##################################################
--optparse block
 -ofdm wrappers
 -controlled step block
 -simplify simple usrp
