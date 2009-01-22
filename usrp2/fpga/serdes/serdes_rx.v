@@ -337,7 +337,8 @@ module serdes_rx
 
    assign      wr_dat_o = line_o;
 
-   wire        slu = ~({2'b11,K_ERROR,K_ERROR}=={ser_rkmsb,ser_rklsb,ser_r});
+   wire        slu = ~(({2'b11,K_ERROR,K_ERROR}=={ser_rkmsb,ser_rklsb,ser_r}) ||
+		       ({2'b11,K_LOS,K_LOS}=={ser_rkmsb,ser_rklsb,ser_r}));
    reg [3:0]   slu_reg;
    
    always @(posedge clk)
