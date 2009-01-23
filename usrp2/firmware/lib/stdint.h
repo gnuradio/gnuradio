@@ -1,6 +1,6 @@
 /* -*- c -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 #ifndef INCLUDED_STDINT_H
 #define INCLUDED_STDINT_H
 
-typedef char		int8_t;
+typedef signed char	int8_t;
 typedef unsigned char	uint8_t;
 typedef short		int16_t;
 typedef unsigned short	uint16_t;
