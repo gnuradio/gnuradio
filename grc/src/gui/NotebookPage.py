@@ -45,6 +45,7 @@ class NotebookPage(gtk.HBox):
 		self.main_window = main_window
 		self.set_file_path(file_path)
 		file_path = file_path or flow_graph.get_parent().get_default_flow_graph()
+		open(file_path, 'r') #test open
 		############################################################
 		from .. utils import converter
 		converter.convert(file_path, flow_graph.get_parent())

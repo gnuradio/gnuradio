@@ -32,7 +32,6 @@
 -special connection validation rules for disabled blocks
 -threads dont die on exit in probe and variable sink
 -overloaded gui classes for each platform, move param input objects into overloaded
--proper error handling when file DNE -> currently dtd check fails first
 
 ##################################################
 # External

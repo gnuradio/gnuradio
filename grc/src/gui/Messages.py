@@ -59,11 +59,11 @@ def send_error_load(error):
 	traceback.print_exc()
 
 def send_end_load():
-	send(">>> Done\n")
+	send('>>> Done\n')
 
 def send_fail_load(error):
-	send('Parser Error: %s\n'%error)
-	send(">>> Failue\n")
+	send('Error: %s\n'%error)
+	send('>>> Failue\n')
 	traceback.print_exc()
 
 ################# functions for generating flow graphs	########################################
@@ -72,7 +72,7 @@ def send_start_gen(file_path):
 
 def send_fail_gen(error):
 	send('Generate Error: %s\n'%error)
-	send(">>> Failue\n")
+	send('>>> Failue\n')
 	traceback.print_exc()
 
 ################# functions for executing flow graphs	########################################
@@ -83,7 +83,7 @@ def send_verbose_exec(verbose):
 	send(verbose)
 
 def send_end_exec():
-	send("\n>>> Done\n")
+	send('\n>>> Done\n')
 
 ################# functions for saving flow graphs	########################################
 def send_fail_save(file_path):
