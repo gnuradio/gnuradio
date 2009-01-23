@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2009 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -24,5 +24,7 @@ include $(top_srcdir)/grc/Makefile.inc
 ourdatadir = $(grc_examples_prefix)/usrp
 
 dist_ourdata_DATA = \
+	usrp2_const_wave.grc \
+	usrp2_fft.grc \
 	usrp_two_tone_loopback.grc \
 	usrp_wbfm_receive.grc
