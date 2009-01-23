@@ -25,9 +25,17 @@
 #include "buffer_pool.h"
 #include "bool.h"
 #include "nonstdio.h"
-#include "buffer_state.h"
 #include <stdlib.h>
 
+typedef enum {
+  BS_EMPTY,
+  BS_FILLING,
+  BS_FULL,
+  BS_EMPTYING,
+} buffer_state_t;
+
+static buffer_state_t buffer_state[NBUFFERS];
+static unsigned char  buffer_dst[NBUFFERS];	// 0 or 1
 static uint32_t last_send_ctrl[NBUFFERS];
 
 void

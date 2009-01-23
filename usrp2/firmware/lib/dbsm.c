@@ -25,8 +25,16 @@
 #include "buffer_pool.h"
 #include "bool.h"
 #include "nonstdio.h"
-#include "buffer_state.h"
 #include <stdlib.h>
+
+typedef enum {
+  BS_EMPTY,
+  BS_FILLING,
+  BS_FULL,
+  BS_EMPTYING,
+} buffer_state_t;
+
+static buffer_state_t buffer_state[NBUFFERS];
 
 bool
 dbsm_nop_inspector(dbsm_t *sm, int buf_this)
