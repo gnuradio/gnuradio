@@ -25,7 +25,9 @@ libu2fw_a_SOURCES = \
 	abort.c \
 	ad9510.c \
 	ad9777.c \
+	bsm12.c \
 	buffer_pool.c \
+	buffer_state.c \
 	clocks.c \
 	db_basic.c \
 	db_init.c \
@@ -62,7 +64,9 @@ noinst_HEADERS = \
 	ad9777.h \
 	ad9777_regs.h \
 	bool.h \
+	bsm12.h \
 	buffer_pool.h \
+	buffer_state.h \
 	clocks.h \
 	db.h \
 	db_base.h \
