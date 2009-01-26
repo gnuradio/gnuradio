@@ -63,7 +63,7 @@ class Generator(object):
 		@return a popen object
 		"""
 		#execute
-		cmds = [PYEXEC, self.get_file_path()]
+		cmds = [PYEXEC, '-u', self.get_file_path()] #-u is unbuffered stdio
 		if self._generate_options == 'no_gui':
 			cmds = ['xterm', '-e'] + cmds
 		p = subprocess.Popen(args=cmds, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False, universal_newlines=True)
@@ -90,7 +90,7 @@ class Generator(object):
 		#list of callbacks (prepend self.)
 		callbacks = [
 			expr_utils.expr_prepend(cb, var_ids, 'self.')
-			for cb in sum([block.get_callbacks() for block in self._flow_graph.get_blocks()], [])
+			for cb in sum([block.get_callbacks() for block in self._flow_graph.get_enabled_blocks()], [])
 		]
 		#map var id to the expression (prepend self.)
 		var_id2expr = dict(
