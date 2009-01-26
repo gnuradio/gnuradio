@@ -49,14 +49,14 @@ self.$(id).set_gain($gain)</make>
 		<type>string</type>
 	</param>
 	<param>
-		<name>Frequency</name>
-		<key>frequency</key>
-		<type>real</type>
-	</param>
-	<param>
 		<name>Decimation</name>
 		<key>decimation</key>
 		<type>int</type>
+	</param>
+	<param>
+		<name>Frequency</name>
+		<key>frequency</key>
+		<type>real</type>
 	</param>
 	<param>
 		<name>Gain</name>
