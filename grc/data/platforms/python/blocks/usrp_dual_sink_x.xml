@@ -8,22 +8,34 @@
 	<name>USRP Dual Sink</name>
 	<key>usrp_dual_sink_x</key>
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
-	<make>grc_usrp.dual_sink_$(type.fcn)(
-	number=$number,
-	frequency_a=$frequency_a,
-	frequency_b=$frequency_b,
-	interpolation=$interpolation,
-	gain_a=$gain_a,
-	gain_b=$gain_b,
-	mux=$mux,
-	auto_tr=$auto_tr,
-	tx_enb_a=$tx_enb_a,
-	tx_enb_b=$tx_enb_b,
-)</make>
+	<make>grc_usrp.dual_sink_$(type.fcn)(number=$number)
+self.$(id).set_interp_rate($interpolation)
+self.$(id).set_frequency_a($frequency_a, verbose=True)
+self.$(id).set_frequency_b($frequency_b, verbose=True)
+self.$(id).set_gain_a($gain_a)
+self.$(id).set_gain_b($gain_b)
+##################################################
+## Flex RF A
+##################################################
+#if $tx_enb_a.eval
+self.$(id).set_enable_a($tx_enb_a)
+#end if
+#if $auto_tr_a.eval and $tx_enb_a.eval
+self.$(id).set_auto_tr_a($auto_tr_a)
+#end if
+##################################################
+## Flex RF B
+##################################################
+#if $tx_enb_b.eval
+self.$(id).set_enable_b($tx_enb_b)
+#end if
+#if $auto_tr_b.eval and $tx_enb_b.eval
+self.$(id).set_auto_tr_b($auto_tr_b)
+#end if</make>
 	<callback>set_interp_rate($interpolation)</callback>
 	<callback>set_frequency_a($frequency_a)</callback>
-	<callback>set_gain_a($gain_a)</callback>
 	<callback>set_frequency_b($frequency_b)</callback>
+	<callback>set_gain_a($gain_a)</callback>
 	<callback>set_gain_b($gain_b)</callback>
 	<param>
 		<name>Input Type</name>
@@ -47,6 +59,11 @@
 		<type>int</type>
 	</param>
 	<param>
+		<name>Interpolation</name>
+		<key>interpolation</key>
+		<type>int</type>
+	</param>
+	<param>
 		<name>Frequency A</name>
 		<key>frequency_a</key>
 		<type>real</type>
@@ -55,11 +72,6 @@
 		<name>Frequency B</name>
 		<key>frequency_b</key>
 		<type>real</type>
-	</param>
-	<param>
-		<name>Interpolation</name>
-		<key>interpolation</key>
-		<type>int</type>
 	</param>
 	<param>
 		<name>Gain A</name>
@@ -71,44 +83,20 @@
 		<key>gain_b</key>
 		<type>real</type>
 	</param>
-	<param>
-		<name>Mux</name>
-		<key>mux</key>
-		<value>0x0</value>
-		<type>hex</type>
-		<hide>part</hide>
-	</param>
-	<param>
-		<name>Auto T/R</name>
-		<key>auto_tr</key>
-		<value>None</value>
-		<type>enum</type>
-		<hide>$auto_tr.hide</hide>
-		<option>
-			<name>Ignore</name>
-			<key>None</key>
-			<opt>hide:part</opt>
-		</option>
-		<option>
-			<name>Enable</name>
-			<key>True</key>
-			<opt>hide:none</opt>
-		</option>
-		<option>
-			<name>Disable</name>
-			<key>False</key>
-			<opt>hide:none</opt>
-		</option>
-	</param>
+<!--
+###################################################
+## Flex RF A
+###################################################
+ -->
 	<param>
 		<name>TX Enable A</name>
 		<key>tx_enb_a</key>
-		<value>None</value>
+		<value></value>
 		<type>enum</type>
 		<hide>$tx_enb_a.hide</hide>
 		<option>
-			<name>Ignore</name>
-			<key>None</key>
+			<name>Unconfigured</name>
+			<key></key>
 			<opt>hide:part</opt>
 		</option>
 		<option>
@@ -123,14 +111,38 @@
 		</option>
 	</param>
 	<param>
+		<name>Auto T/R A</name>
+		<key>auto_tr_a</key>
+		<value></value>
+		<type>enum</type>
+		<hide>#if $tx_enb_a.eval then 'none' else 'all'#</hide>
+		<option>
+			<name>Auto</name>
+			<key></key>
+		</option>
+		<option>
+			<name>Enable</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Disable</name>
+			<key>False</key>
+		</option>
+	</param>
+<!--
+###################################################
+## Flex RF B
+###################################################
+ -->
+	<param>
 		<name>TX Enable B</name>
 		<key>tx_enb_b</key>
-		<value>None</value>
+		<value></value>
 		<type>enum</type>
 		<hide>$tx_enb_b.hide</hide>
 		<option>
-			<name>Ignore</name>
-			<key>None</key>
+			<name>Unconfigured</name>
+			<key></key>
 			<opt>hide:part</opt>
 		</option>
 		<option>
@@ -142,6 +154,25 @@
 			<name>Disable</name>
 			<key>False</key>
 			<opt>hide:none</opt>
+		</option>
+	</param>
+	<param>
+		<name>Auto T/R B</name>
+		<key>auto_tr_b</key>
+		<value></value>
+		<type>enum</type>
+		<hide>#if $tx_enb_b.eval then 'none' else 'all'#</hide>
+		<option>
+			<name>Auto</name>
+			<key></key>
+		</option>
+		<option>
+			<name>Enable</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Disable</name>
+			<key>False</key>
 		</option>
 	</param>
 	<sink>
@@ -155,13 +186,10 @@
 	<doc>
 The USRP sink inputs 128 Megasamples per second / interpolation.
 
---- Flex RF specific ---
-The "Auto TR" and "TX Enable" settings are flex rf specific and should be left at "Ignore" unless this is a flex rf board.
-
-If enabled, "Auto Transmit/Receive Switching" handles the preference for transmit packets vs receive packets. \
-By default, "Auto TR" is disabled.
-
-The "Transmit Enable" configures the transmitter to be on or off. \
+Flex RF boards only: The "Transmit Enable" configures the transmitter to be on or off. \
 Do not leave this unconfigured.
+
+Flex RF boards only: If enabled, "Auto Transmit/Receive Switching" handles the preference for transmit packets vs receive packets. \
+By default, "Auto TR" is disabled.
 	</doc>
 </block>

@@ -8,22 +8,28 @@
 	<name>USRP Dual Source</name>
 	<key>usrp_dual_source_x</key>
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
-	<make>grc_usrp.dual_source_$(type.fcn)(
-	number=$number,
-	frequency_a=$frequency_a,
-	frequency_b=$frequency_b,
-	decimation=$decimation,
-	gain_a=$gain_a,
-	gain_b=$gain_b,
-	mux=$mux,
-	auto_tr=$auto_tr,
-	rx_ant_a=$rx_ant_a,
-	rx_ant_b=$rx_ant_b,
-)</make>
+	<make>grc_usrp.dual_source_$(type.fcn)(number=$number, side_a='$rx_ant_a.side', rx_ant_a='$rx_ant_a.rx_ant', side_b='$rx_ant_b.side', rx_ant_b='$rx_ant_b.rx_ant')
+self.$(id).set_decim_rate($decimation)
+self.$(id).set_frequency_a($frequency_a, verbose=True)
+self.$(id).set_frequency_b($frequency_b, verbose=True)
+self.$(id).set_gain_a($gain_a)
+self.$(id).set_gain_b($gain_b)
+##################################################
+## Flex RF A
+##################################################
+#if $auto_tr_a.eval and $rx_ant_a.flex
+self.$(id).set_auto_tr_a($auto_tr_a)
+#end if
+##################################################
+## Flex RF B
+##################################################
+#if $auto_tr_b.eval and $rx_ant_b.flex
+self.$(id).set_auto_tr_b($auto_tr_b)
+#end if</make>
 	<callback>set_decim_rate($decimation)</callback>
 	<callback>set_frequency_a($frequency_a)</callback>
-	<callback>set_gain_a($gain_a)</callback>
 	<callback>set_frequency_b($frequency_b)</callback>
+	<callback>set_gain_a($gain_a)</callback>
 	<callback>set_gain_b($gain_b)</callback>
 	<param>
 		<name>Output Type</name>
@@ -47,6 +53,11 @@
 		<type>int</type>
 	</param>
 	<param>
+		<name>Decimation</name>
+		<key>decimation</key>
+		<type>int</type>
+	</param>
+	<param>
 		<name>Frequency A</name>
 		<key>frequency_a</key>
 		<type>real</type>
@@ -55,11 +66,6 @@
 		<name>Frequency B</name>
 		<key>frequency_b</key>
 		<type>real</type>
-	</param>
-	<param>
-		<name>Decimation</name>
-		<key>decimation</key>
-		<type>int</type>
 	</param>
 	<param>
 		<name>Gain A</name>
@@ -71,77 +77,132 @@
 		<key>gain_b</key>
 		<type>real</type>
 	</param>
+<!--
+###################################################
+## Flex RF A
+###################################################
+ -->
 	<param>
-		<name>Mux</name>
-		<key>mux</key>
-		<value>0x0</value>
-		<type>hex</type>
-		<hide>part</hide>
+		<name>RX Antenna A</name>
+		<key>rx_ant_a</key>
+		<type>enum</type>
+		<option>
+			<name>Side A, RXA</name>
+			<key>A_RXA</key>
+			<opt>side:A</opt>
+			<opt>rx_ant:RXA</opt>
+			<opt>flex:</opt>
+		</option>
+		<option>
+			<name>Side A, RXB</name>
+			<key>A_RXB</key>
+			<opt>side:A</opt>
+			<opt>rx_ant:RXB</opt>
+			<opt>flex:</opt>
+		</option>
+		<option>
+			<name>Side A, TX/RX</name>
+			<key>A_TXRX</key>
+			<opt>side:A</opt>
+			<opt>rx_ant:TX/RX</opt>
+			<opt>flex:1</opt>
+		</option>
+		<option>
+			<name>Side A, RX2</name>
+			<key>A_RX2</key>
+			<opt>side:A</opt>
+			<opt>rx_ant:RX2</opt>
+			<opt>flex:1</opt>
+		</option>
+		<option>
+			<name>Side B, RXA</name>
+			<key>B_RXA</key>
+			<opt>side:B</opt>
+			<opt>rx_ant:RXA</opt>
+			<opt>flex:</opt>
+		</option>
 	</param>
 	<param>
-		<name>Auto T/R</name>
-		<key>auto_tr</key>
-		<value>None</value>
+		<name>Auto T/R A</name>
+		<key>auto_tr_a</key>
+		<value></value>
 		<type>enum</type>
-		<hide>$auto_tr.hide</hide>
+		<hide>#if $rx_ant_a.flex then 'none' else 'all'#</hide>
 		<option>
-			<name>Ignore</name>
-			<key>None</key>
-			<opt>hide:part</opt>
+			<name>Auto</name>
+			<key></key>
 		</option>
 		<option>
 			<name>Enable</name>
 			<key>True</key>
-			<opt>hide:none</opt>
 		</option>
 		<option>
 			<name>Disable</name>
 			<key>False</key>
-			<opt>hide:none</opt>
 		</option>
 	</param>
-	<param>
-		<name>RX Antenna A</name>
-		<key>rx_ant_a</key>
-		<value>None</value>
-		<type>enum</type>
-		<hide>$rx_ant_a.hide</hide>
-		<option>
-			<name>Ignore</name>
-			<key>None</key>
-			<opt>hide:part</opt>
-		</option>
-		<option>
-			<name>TX/RX</name>
-			<key>'TX/RX'</key>
-			<opt>hide:none</opt>
-		</option>
-		<option>
-			<name>RX2</name>
-			<key>'RX2'</key>
-			<opt>hide:none</opt>
-		</option>
-	</param>
+<!--
+###################################################
+## Flex RF B
+###################################################
+ -->
 	<param>
 		<name>RX Antenna B</name>
 		<key>rx_ant_b</key>
-		<value>None</value>
 		<type>enum</type>
-		<hide>$rx_ant_b.hide</hide>
 		<option>
-			<name>Ignore</name>
-			<key>None</key>
-			<opt>hide:part</opt>
+			<name>Side B, RXA</name>
+			<key>B_RXA</key>
+			<opt>side:B</opt>
+			<opt>rx_ant:RXA</opt>
+			<opt>flex:</opt>
 		</option>
 		<option>
-			<name>TX/RX</name>
-			<key>'TX/RX'</key>
-			<opt>hide:none</opt>
+			<name>Side B, RXB</name>
+			<key>B_RXB</key>
+			<opt>side:B</opt>
+			<opt>rx_ant:RXB</opt>
+			<opt>flex:</opt>
 		</option>
 		<option>
-			<name>RX2</name>
-			<key>'RX2'</key>
-			<opt>hide:none</opt>
+			<name>Side B, TX/RX</name>
+			<key>B_TXRX</key>
+			<opt>side:B</opt>
+			<opt>rx_ant:TX/RX</opt>
+			<opt>flex:1</opt>
+		</option>
+		<option>
+			<name>Side B, RX2</name>
+			<key>B_RX2</key>
+			<opt>side:B</opt>
+			<opt>rx_ant:RX2</opt>
+			<opt>flex:1</opt>
+		</option>
+		<option>
+			<name>Side A, RXB</name>
+			<key>A_RXB</key>
+			<opt>side:A</opt>
+			<opt>rx_ant:RXB</opt>
+			<opt>flex:</opt>
+		</option>
+	</param>
+	<param>
+		<name>Auto T/R B</name>
+		<key>auto_tr_b</key>
+		<value></value>
+		<type>enum</type>
+		<hide>#if $rx_ant_b.flex then 'none' else 'all'#</hide>
+		<option>
+			<name>Auto</name>
+			<key></key>
+		</option>
+		<option>
+			<name>Enable</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Disable</name>
+			<key>False</key>
 		</option>
 	</param>
 	<source>
@@ -155,13 +216,12 @@
 	<doc>
 The USRP source outputs 64 Megasamples per second / decimation.
 
---- Flex RF specific ---
-The "Auto TR" and "RX Antenna" settings are flex rf specific and should be left at "Ignore" unless this is a flex rf board.
-
-If enabled, "Auto Transmit/Receive Switching" handles the preference for transmit packets vs receive packets. \
-By default, "Auto TR" is disabled.
-
 The "Receive Antenna Setting" selects one of the SMA connectors as the data source. \
-By default, 'TX/RX' is selected.
+Flex RF boards use the "TX/RX" and "RX2" settings. \
+Basic RX and LFRX use the "RXA" and "RXB" settings. \
+All other boards use the "RXA" setting.
+
+Flex RF boards only: If enabled, "Auto Transmit/Receive Switching" handles the preference for transmit packets vs receive packets. \
+By default, "Auto TR" is disabled.
 	</doc>
 </block>

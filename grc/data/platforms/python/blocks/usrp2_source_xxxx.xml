@@ -17,14 +17,7 @@ usrp2.source_$(type.fcn)($interface, $mac_addr)
 #end if
 self.$(id).set_decim($decimation)
 self.$(id).set_center_freq($frequency)
-self.$(id).set_gain($gain)
-#if $auto_tr.eval
-self.$(id).set_auto_tr($auto_tr)
-#end if
-#if $rx_ant.eval
-self.$(id).select_rx_antenna($rx_ant)
-#end if
-</make>
+self.$(id).set_gain($gain)</make>
 	<callback>set_decim($decimation)</callback>
 	<callback>set_center_freq($frequency)</callback>
 	<callback>set_gain($gain)</callback>
@@ -70,50 +63,6 @@ self.$(id).select_rx_antenna($rx_ant)
 		<key>gain</key>
 		<type>real</type>
 	</param>
-	<param>
-		<name>Auto T/R</name>
-		<key>auto_tr</key>
-		<value></value>
-		<type>enum</type>
-		<hide>$auto_tr.hide</hide>
-		<option>
-			<name>Ignore</name>
-			<key></key>
-			<opt>hide:part</opt>
-		</option>
-		<option>
-			<name>Enable</name>
-			<key>True</key>
-			<opt>hide:none</opt>
-		</option>
-		<option>
-			<name>Disable</name>
-			<key>False</key>
-			<opt>hide:none</opt>
-		</option>
-	</param>
-	<param>
-		<name>RX Antenna</name>
-		<key>rx_ant</key>
-		<value></value>
-		<type>enum</type>
-		<hide>$rx_ant.hide</hide>
-		<option>
-			<name>Ignore</name>
-			<key></key>
-			<opt>hide:part</opt>
-		</option>
-		<option>
-			<name>TX/RX</name>
-			<key>'TX/RX'</key>
-			<opt>hide:none</opt>
-		</option>
-		<option>
-			<name>RX2</name>
-			<key>'RX2'</key>
-			<opt>hide:none</opt>
-		</option>
-	</param>
 	<source>
 		<name>out</name>
 		<type>$type</type>
@@ -124,14 +73,5 @@ The USRP2 source outputs 100 Megasamples per second / decimation.
 To use the default ethernet device, leave interface blank. \
 For systems with only 1 USRP2, you may leave the mac address blank. \
 For multi-USRP2 systems, specify the mac address in the form 00:50:C2:85:3x:xx.
-
---- Flex RF specific ---
-The "Auto TR" and "RX Antenna" settings are flex rf specific and should be left at "Ignore" unless this is a flex rf board.
-
-If enabled, "Auto Transmit/Receive Switching" handles the preference for transmit packets vs receive packets. \
-By default, "Auto TR" is disabled.
-
-The "Receive Antenna Setting" selects one of the SMA connectors as the data source. \
-By default, 'TX/RX' is selected.
 	</doc>
 </block>

@@ -3,7 +3,6 @@
 ##################################################
 -ofdm wrappers
 -controlled step block
--simplify simple usrp
 -probe: also non-float outputs
 -RFID, ATSC
 
@@ -37,7 +36,6 @@
 # External
 ##################################################
 -simple usrp
--tune_result in usrp.py needs __str__ method
 -global wxgui controls and top block window
 
 ##################################################

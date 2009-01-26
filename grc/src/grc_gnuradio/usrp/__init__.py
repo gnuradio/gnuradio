@@ -18,7 +18,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
-from simple_usrp import simple_source_c, simple_source_s
-from simple_usrp import dual_source_c, dual_source_s
-from simple_usrp import simple_sink_c, simple_sink_s
-from simple_usrp import dual_sink_c, dual_sink_s
+from simple_usrp import \
+	simple_source_c, simple_source_s, \
+	simple_sink_c, simple_sink_s
+from dual_usrp import \
+	dual_source_c, dual_source_s, \
+	dual_sink_c, dual_sink_s

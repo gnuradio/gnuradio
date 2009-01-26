@@ -25,4 +25,6 @@ ourpythondir = $(grc_gnuradio_prefix)/usrp
 
 ourpython_PYTHON = \
 	__init__.py \
+	common.py \
+	dual_usrp.py \
 	simple_usrp.py
