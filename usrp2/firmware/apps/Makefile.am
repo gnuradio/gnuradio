@@ -66,8 +66,7 @@ mimo_tx_slave_SOURCES = mimo_tx_slave.c app_common_v2.c
 noinst_HEADERS = \
         app_common_v2.h \
         app_passthru_v2.h \
-        mimo_app_common_v2.h \
-        mimo_app_passthru_v2.h
+        mimo_app_common_v2.h
 
 
 MOSTLYCLEANFILES = *.map
