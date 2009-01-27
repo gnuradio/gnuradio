@@ -56,7 +56,7 @@ usrp_guide.html: usrp_guide.xml
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(docdir)
-	@for i in $(top_srcdir)/usrp/README $(top_srcdir)/usrp/ChangeLog; do \
+	@for i in $(top_srcdir)/usrp/README ; do \
 		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(docdir)"; \
 		$(INSTALL_DATA) $$i $(DESTDIR)$(docdir); \
 	done

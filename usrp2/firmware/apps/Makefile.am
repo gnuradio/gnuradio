@@ -61,3 +61,5 @@ serdes_txrx_SOURCES = serdes_txrx.c app_common_v2.c
 noinst_HEADERS = \
         app_common_v2.h \
         app_passthru_v2.h
+
+MOSTLYCLEANFILES = *.map
