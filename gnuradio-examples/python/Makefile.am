@@ -24,7 +24,6 @@ include $(top_srcdir)/Makefile.common
 SUBDIRS = \
 	apps \
 	audio \
-	dect \
 	digital \
 	digital-bert \
 	digital_voice \
