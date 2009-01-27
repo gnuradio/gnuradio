@@ -47,7 +47,10 @@ noinst_PROGRAMS = \
 	factory_test \
 	serdes_txrx \
 	sd_gentest \
-	sd_bounce
+	sd_bounce \
+	mimo_tx \
+	mimo_tx_slave
+
 
 
 # tx_drop_SOURCES = tx_drop.c app_common.c
@@ -57,6 +60,8 @@ txrx_SOURCES = txrx.c app_common_v2.c
 factory_test_SOURCES = factory_test.c app_common_v2.c
 eth_serdes_SOURCES = eth_serdes.c app_passthru_v2.c
 serdes_txrx_SOURCES = serdes_txrx.c app_common_v2.c
+mimo_tx_SOURCES = mimo_tx.c mimo_app_common_v2.c
+mimo_tx_slave_SOURCES = mimo_tx_slave.c app_common_v2.c
 
 noinst_HEADERS = \
         app_common_v2.h \

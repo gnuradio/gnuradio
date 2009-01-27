@@ -21,7 +21,7 @@
 
 #include "bool.h"
 #include "usrp2_eth_packet.h"
-#include "dbsm.h"
+#include "bsm12.h"
 #include "memory_map.h"
 #include "hal_io.h"
 #include <stddef.h>
@@ -33,22 +33,31 @@
 
 extern volatile bool link_is_up;	// eth handler sets this
 
-
 // If there's a dbsm that sends to the ethernet, put it's address here
 extern dbsm_t *ac_could_be_sending_to_eth;
 
+extern int cpu_tx_buf_dest_port;
 
 void set_reply_hdr(u2_eth_packet_t *reply_pkt, u2_eth_packet_t const *cmd_pkt);
 
 /*
  * Called when an ethernet packet is received.
- * Return true if we handled it here, otherwise
- * it'll be passed on to the DSP Tx pipe
  */
-bool eth_pkt_inspector(dbsm_t *sm, int bufno);
+int eth_pkt_inspector(bsm12_t *sm, int bufno);
+
 
 void link_changed_callback(int speed);
 
-bool handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len);
+void
+print_tune_result(char *msg, bool tune_ok,
+		  u2_fxpt_freq_t target_freq, struct tune_result *r);
+
+
+void start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p);
+void stop_rx_cmd(void);
+void restart_streaming(void);
+bool is_streaming(void);
+
+void handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len);
 
 #endif /* INCLUDED_APP_COMMON_H */

@@ -27,7 +27,7 @@
 #include <stddef.h>
 #include <db.h>
 
-#define CPU_TX_BUF 	1	// cpu -> eth
+#define CPU_TX_BUF 	7	// cpu -> eth
 
 #define	_AL4 __attribute__((aligned (4)))
 
