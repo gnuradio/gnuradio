@@ -29,6 +29,7 @@ libu2fw_a_SOURCES = \
 	buffer_pool.c \
 	clocks.c \
 	db_basic.c \
+	db_dbsrx.c \
 	db_init.c \
 	db_rfx.c \
 	db_tvrx.c \

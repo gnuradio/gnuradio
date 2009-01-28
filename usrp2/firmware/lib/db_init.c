@@ -48,6 +48,7 @@ extern struct db_base db_rfx_2400_rx;
 extern struct db_base db_tvrx1;
 extern struct db_base db_tvrx2;
 extern struct db_base db_tvrx3;
+extern struct db_base db_dbsrx;
 
 struct db_base *all_dboards[] = {
   &db_basic_tx,
@@ -67,6 +68,7 @@ struct db_base *all_dboards[] = {
   &db_tvrx1,
   &db_tvrx2,
   &db_tvrx3,
+  &db_dbsrx,
   0
 };
 
