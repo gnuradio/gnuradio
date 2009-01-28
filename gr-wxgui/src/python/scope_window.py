@@ -411,8 +411,8 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 			#autorange
 			if self[AUTORANGE_KEY] and time.time() - self.autorange_ts > AUTORANGE_UPDATE_RATE:
 				bounds = [common.get_min_max(samples) for samples in sampleses]
-				y_min = numpy.min(*[bound[0] for bound in bounds])
-				y_max = numpy.max(*[bound[1] for bound in bounds])
+				y_min = numpy.min([bound[0] for bound in bounds])
+				y_max = numpy.max([bound[1] for bound in bounds])
 				#adjust the y per div
 				y_per_div = common.get_clean_num((y_max-y_min)/self[Y_DIVS_KEY])
 				if y_per_div != self[Y_PER_DIV_KEY]: self.set_y_per_div(y_per_div)

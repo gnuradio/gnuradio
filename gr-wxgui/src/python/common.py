@@ -259,7 +259,7 @@ def get_min_max(samples):
 	"""
 	scale_factor = 3
 	mean = numpy.average(samples)
-	rms = scale_factor*((numpy.sum((samples-mean)**2)/len(samples))**.5)
+	rms = numpy.max([scale_factor*((numpy.sum((samples-mean)**2)/len(samples))**.5), .1])
 	min = mean - rms
 	max = mean + rms
 	return min, max
