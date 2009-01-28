@@ -55,6 +55,7 @@ dist_ourdata_DATA = \
 	blks2_wfm_rcv.xml \
 	blks2_wfm_rcv_pll.xml \
 	blks2_wfm_tx.xml \
+	const_source_x.xml \
 	gr_add_const_vxx.xml \
 	gr_add_vxx.xml \
 	gr_agc2_xx.xml \
