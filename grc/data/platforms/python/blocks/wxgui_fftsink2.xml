@@ -33,6 +33,7 @@ self.Add(self.$(id).win)
 self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
 #end if</make>
 	<callback>set_baseband_freq($baseband_freq)</callback>
+	<callback>set_sample_rate($samp_rate)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
