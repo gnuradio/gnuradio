@@ -20,11 +20,7 @@
 	sample_rate=$samp_rate,
 	number_rate=$number_rate,
 	average=$options.average,
-#if $avg_alpha.eval == 0
-	avg_alpha=None,
-#else
-	avg_alpha=$avg_alpha,
-#end if
+	avg_alpha=#if $avg_alpha.eval then $avg_alpha else 'None'#,
 	label=$title,
 	peak_hold=$options.peak_hold,
 	show_gauge=$show_gauge,

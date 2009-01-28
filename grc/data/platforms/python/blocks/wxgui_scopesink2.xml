@@ -14,11 +14,7 @@
 	title=$title,
 	sample_rate=$samp_rate,
 	frame_decim=$frame_decim,
-#if $v_scale.eval == 0
-	v_scale=None,
-#else
-	v_scale=$v_scale,
-#end if
+	v_scale=#if $v_scale.eval then $v_scale else 'None'#,
 	t_scale=$t_scale,
 	num_inputs=$num_inputs,
 )

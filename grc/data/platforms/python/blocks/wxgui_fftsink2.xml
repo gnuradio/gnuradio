@@ -18,11 +18,7 @@
 	fft_size=$fft_size,
 	fft_rate=$fft_rate,
 	average=$average,
-#if $avg_alpha.eval == 0
-	avg_alpha=None,
-#else
-	avg_alpha=$avg_alpha,
-#end if
+	avg_alpha=#if $avg_alpha.eval then $avg_alpha else 'None'#,
 	title=$title,
 	peak_hold=$peak_hold,
 )

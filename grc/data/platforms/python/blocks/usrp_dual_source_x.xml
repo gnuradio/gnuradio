@@ -205,6 +205,7 @@ self.$(id).set_auto_tr_b($auto_tr_b)
 			<key>False</key>
 		</option>
 	</param>
+	<check>'$rx_ant_a' != '$rx_ant_b'</check>
 	<source>
 		<name>Aout</name>
 		<type>$type</type>
