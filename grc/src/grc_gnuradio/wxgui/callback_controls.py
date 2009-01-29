@@ -20,6 +20,7 @@
 
 import wx
 import sys
+from gnuradio import eng_notation
 
 class LabelText(wx.StaticText):
 	"""Label text class for uniform labels among all controls."""
@@ -43,6 +44,8 @@ class _control_base(wx.BoxSizer):
 	def call(self): return self.callback(self.get_value())
 
 	def get_value(self): raise NotImplementedError
+
+	def set_value(self): raise NotImplementedError
 
 class _chooser_control_base(_control_base):
 	"""House a drop down or radio buttons for variable control."""
@@ -184,13 +187,11 @@ class _slider_control_base(_control_base):
 		try: slider.SetRange(0, num_steps)
 		except Exception, e:
 			print >> sys.stderr, 'Error in set slider range: "%s".'%e
-			sys.exit(-1)
+			exit(-1)
 		slider.Bind(wx.EVT_SCROLL, self._handle_scroll) #bind the scrolling event
 		self.Add(slider, 0, wx.ALIGN_CENTER)
 		#init slider and text box
-		self._value = value
-		self._set_slider_value(self._value) #sets the slider's value
-		self.text_box.SetValue(str(self._value))
+		self.set_value(value)
 
 	def get_value(self):
 		"""
@@ -199,14 +200,28 @@ class _slider_control_base(_control_base):
 		"""
 		return self._value
 
-	def _set_slider_value(self, real_value):
+	def set_value(self, value):
 		"""
-		Translate the real numerical value into a slider value and,
-		write the value to the slider.
-		@param real_value the numeric value the slider should represent
+		Set the current set value.
+		@param value the value (float)
 		"""
-		slider_value = (float(real_value) - self.min)*self.num_steps/(self.max - self.min)
+		self._value = value
+		self._update_slider()
+		self._update_text_box()
+
+	def _update_slider(self):
+		"""
+		Translate the real numerical value into a slider value.
+		"""
+		slider_value = (float(self.get_value()) - self.min)*self.num_steps/(self.max - self.min)
 		self.slider.SetValue(slider_value)
+
+	def _update_text_box(self):
+		"""
+		Update the text box value.
+		Convert the value into engineering notation.
+		"""
+		self.text_box.SetValue(eng_notation.num_to_str(self.get_value()))
 
 	def _handle_scroll(self, event=None):
 		"""
@@ -214,8 +229,7 @@ class _slider_control_base(_control_base):
 		"""
 		slider_value = self.slider.GetValue()
 		new_value = slider_value*(self.max - self.min)/self.num_steps + self.min
-		self.text_box.SetValue(str(new_value))
-		self._value = new_value
+		self.set_value(new_value)
 		try: self.call()
 		except Exception, e: print >> sys.stderr, 'Error in exec callback from handle scroll.\n', e
 
@@ -223,9 +237,8 @@ class _slider_control_base(_control_base):
 		"""
 		An enter key was pressed. Read the text box, call the callback.
 		"""
-		new_value = float(self.text_box.GetValue())
-		self._set_slider_value(new_value)
-		self._value = new_value
+		new_value = eng_notation.str_to_num(self.text_box.GetValue())
+		self.set_value(new_value)
 		try: self.call()
 		except Exception, e: print >> sys.stderr, 'Error in exec callback from handle enter.\n', e
 
