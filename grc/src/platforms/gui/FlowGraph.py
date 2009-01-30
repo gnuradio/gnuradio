@@ -436,12 +436,12 @@ class FlowGraph(Element):
 		"""
 		selected_elements = None
 		if self.mouse_pressed:
-			new_selection = self.what_is_selected(self.get_coordinate())
+			new_selections = self.what_is_selected(self.get_coordinate())
 			#update the selections if the new selection is not in the current selections
 			#allows us to move entire selected groups of elements
 			if self.get_ctrl_mask() or not (
-				new_selection and new_selection[0] in self.get_selected_elements()
-			): selected_elements = new_selection
+				new_selections and new_selections[0] in self.get_selected_elements()
+			): selected_elements = new_selections
 		else: #called from a mouse release
 			if not self.element_moved and (not self.get_selected_elements() or self.get_ctrl_mask()):
 				selected_elements = self.what_is_selected(self.get_coordinate(), self.press_coor)
@@ -482,6 +482,7 @@ class FlowGraph(Element):
 		self.set_coordinate(coordinate)
 		self.time = 0
 		self.mouse_pressed = True
+		if double_click: self.unselect()
 		self.update_selected_elements()
 		#double click detected, bring up params dialog if possible
 		if double_click and self.get_selected_block():
