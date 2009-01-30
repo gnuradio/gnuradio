@@ -67,7 +67,7 @@ struct db_xcvr2450_common {
   int d_pabias_delay, d_pabias; //rx_rf_gain, rx_bb_gain;//, d_txgain;
   //int d_rx_rf_gain, d_rx_bb_gain;
 
-  int d_reg_standby, d_reg_int_divider, d_reg_frac_divider, d_reg_bandselpll;
+  int d_reg_standby;//, d_reg_int_divider, d_reg_frac_divider, d_reg_bandselpll;
   int d_reg_cal, dsend_reg, d_reg_lpf, d_reg_rxrssi_ctrl, d_reg_txlin_gain;
   int d_reg_pabias;//, d_reg_rxgain;//, d_reg_txgain;
 
@@ -147,7 +147,7 @@ struct db_xcvr2450_tx db_xcvr2450_tx = {
 };
 
 /**************************************************
- * Registers
+ * Set Registers
  **************************************************/
 void
 send_reg(struct db_xcvr2450_dummy *db, int v){
@@ -166,6 +166,94 @@ void
 set_reg_rxgain(struct db_xcvr2450_dummy *db, int rx_bb_gain, int rx_rf_gain){
   int reg_rxgain = ( (rx_rf_gain<<9) | (rx_bb_gain<<4) | 11);
   send_reg(db, reg_rxgain);
+}
+
+void
+set_reg_int_divider(struct db_xcvr2450_dummy *db){
+  int reg_int_divider = (((db->common.d_frac_div & 0x03)<<16) | 
+    (db->common.d_int_div<<4) | 3);
+  send_reg(db, reg_int_divider);
+}
+
+void
+set_reg_frac_divider(struct db_xcvr2450_dummy *db){
+  int reg_frac_divider = ((db->common.d_frac_div & 0xfffc)<<2) | 4;
+  send_reg(db, reg_frac_divider);
+}
+
+void
+set_reg_bandselpll(struct db_xcvr2450_dummy *db){
+  int reg_bandselpll = ((db->common.d_mimo<<17) |
+    (1<<16) |
+    (1<<15) |
+    (1<<11) |
+    (db->common.d_highband<<10) |
+    (db->common.d_cp_current<<9) |
+    (db->common.d_ref_div<<5) |
+    (db->common.d_five_gig<<4) | 5);
+  send_reg(db, reg_bandselpll);
+}
+
+/**************************************************
+ * GPIO
+ **************************************************/
+void
+set_gpio(struct db_xcvr2450_dummy *db){
+  // We calculate four values:
+  //
+  // io_rx_while_rx: what to drive onto io_rx_* when receiving
+  // io_rx_while_tx: what to drive onto io_rx_* when transmitting
+  // io_tx_while_rx: what to drive onto io_tx_* when receiving
+  // io_tx_while_tx: what to drive onto io_tx_* when transmitting
+  //
+  // B1-B7 is ignored as gain is set serially for now.
+  
+  int rx_hp, tx_antsel, rx_antsel, tx_pa_sel;
+  if(db->common.d_rx_hp_pin)
+    rx_hp = RX_HP;
+  else
+    rx_hp = 0;
+  
+  if(db->common.d_tx_ant)
+    tx_antsel = ANTSEL_TX2_RX1;
+  else
+    tx_antsel = ANTSEL_TX1_RX2;
+
+  if(db->common.d_rx_ant)
+    rx_antsel = ANTSEL_TX2_RX1;
+  else
+    rx_antsel = ANTSEL_TX1_RX2;
+
+  if(db->common.d_five_gig)
+    tx_pa_sel = LB_PA_OFF;
+  else
+    tx_pa_sel = HB_PA_OFF;
+
+  int io_rx_while_rx = EN|rx_hp|RX_EN;
+  int io_rx_while_tx = EN|rx_hp;
+  int io_tx_while_rx = HB_PA_OFF|LB_PA_OFF|rx_antsel|AD9515DIV;
+  int io_tx_while_tx = tx_pa_sel|tx_antsel|TX_EN|AD9515DIV;
+  //rx_set_atr_rxval(io_rx_while_rx); //TODO write to fpga regs?
+  //rx_set_atr_txval(io_rx_while_tx);
+  //tx_set_atr_rxval(io_tx_while_rx);
+  //tx_set_atr_txval(io_tx_while_tx);
+        
+  printf("GPIO: RXRX=%04X RXTX=%04X TXRX=%04X TXTX=%04X\n",
+         io_rx_while_rx, io_rx_while_tx, io_tx_while_rx, io_tx_while_tx);
+}
+
+/**************************************************
+ * Read register
+ **************************************************/
+int
+rx_read_io(){
+  //int val;
+  //if(d_which)
+  //  val = FR_RB_IO_RX_B_IO_TX_B;
+  //else
+  //  val = FR_RB_IO_RX_A_IO_TX_A;
+  int t = 0;//usrp()->_read_fpga_reg(val);
+  return (t >> 16) & 0xffff;
 }
 
 /**************************************************
@@ -239,6 +327,26 @@ xcvr2450_init(struct db_base *dbb){
 }
 
 /**************************************************
+ * Lock detect
+ **************************************************/
+bool
+lock_detect(){
+  /*
+    @returns: the value of the VCO/PLL lock detect bit.
+    @rtype: 0 or 1
+  */
+  if(rx_read_io() & LOCKDET) {
+    return true;
+  }
+  else {      // Give it a second chance
+    if(rx_read_io() & LOCKDET)
+      return true;
+    else
+      return false;
+  }
+}
+
+/**************************************************
  * Set the freq
  **************************************************/
 bool
@@ -291,33 +399,32 @@ xcvr2450_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc){
     u2_fxpt_freq_round_to_int(freq), u2_fxpt_freq_round_to_int(vco_freq),
     db->common.d_ref_div, u2_fxpt_freq_round_to_int(phdet_freq),
     db->common.d_int_div, u2_fxpt_freq_round_to_int(*dc));
-/*
-  set_gpio();
-  set_reg_int_divider();
-  set_reg_frac_divider();
-  set_reg_bandselpll();
 
-  args.ok = lock_detect();
-  args.baseband_freq = actual_freq;
+  set_gpio(db);
+  set_reg_int_divider(db);
+  set_reg_frac_divider(db);
+  set_reg_bandselpll(db);
 
-  if(args.ok) {
-    if((target_freq > 5.275e9) && (target_freq <= 5.35e9)) {
-      d_highband = 0;
-      set_reg_bandselpll();
-      args.ok = lock_detect();
-      //printf("swap to 0 at %f, ok %d\n", target_freq, args.ok);
+  bool ok = lock_detect();
+
+  if(ok) {
+    if((freq > U2_DOUBLE_TO_FXPT_FREQ(5.275e9)) && (freq <= U2_DOUBLE_TO_FXPT_FREQ(5.35e9))) {
+      db->common.d_highband = 0;
+      set_reg_bandselpll(db);
+      ok = lock_detect();
+      printf("swap to 0 at %d, ok %d\n", u2_fxpt_freq_round_to_int(freq), ok);
     }
-    if((target_freq >= 5.25e9) && (target_freq <= 5.275e9)) {
-      d_highband = 1;
-      set_reg_bandselpll();
-      args.ok = lock_detect();
-      //printf("swap to 1 at %f, ok %d\n", target_freq, args.ok);
+    if((freq >= U2_DOUBLE_TO_FXPT_FREQ(5.25e9)) && (freq <= U2_DOUBLE_TO_FXPT_FREQ(5.275e9))) {
+      db->common.d_highband = 1;
+      set_reg_bandselpll(db);
+      ok = lock_detect();
+      printf("swap to 1 at %d, ok %d\n", u2_fxpt_freq_round_to_int(freq), ok);
     }
-    if(!args.ok){
-      //printf("Fail %f\n", target_freq);
+    if(!ok){
+      printf("Fail %d\n", u2_fxpt_freq_round_to_int(freq));
     }
-  }*/
-  return true;
+  }
+  return ok;
 }
 
 /**************************************************
