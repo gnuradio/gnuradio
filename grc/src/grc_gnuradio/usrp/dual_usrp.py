@@ -43,34 +43,32 @@ class _dual_source(gr.hier_block2):
 			gr.io_signature(2, 2, self._get_io_size()),
 		)
 		#create usrp object
-		self._u = self._get_usrp_constructor()(number, nchan=2)
+		self._make_usrp(number, nchan=2)
 		#get the mux for output A
 		subdev_spec_a = common.to_spec(side_a, rx_ant_a)
-		self._subdev_a = usrp.selected_subdev(self._u, subdev_spec_a)
-		mux_a = usrp.determine_rx_mux_value(self._u, subdev_spec_a)
+		self._subdev_a = usrp.selected_subdev(self._get_u(), subdev_spec_a)
+		mux_a = usrp.determine_rx_mux_value(self._get_u(), subdev_spec_a)
 		#get the mux for output B
 		subdev_spec_b = common.to_spec(side_b, rx_ant_b)
-		self._subdev_b = usrp.selected_subdev(self._u, subdev_spec_b)
-		mux_b = usrp.determine_rx_mux_value(self._u, subdev_spec_b)
+		self._subdev_b = usrp.selected_subdev(self._get_u(), subdev_spec_b)
+		mux_b = usrp.determine_rx_mux_value(self._get_u(), subdev_spec_b)
 		#move the lower byte of the mux b into the second byte of the mux a
-		self._u.set_mux(((mux_b & 0xff) << 8) | (mux_a - (mux_a & 0xff00)))
+		self._get_u().set_mux(((mux_b & 0xff) << 8) | (mux_a - (mux_a & 0xff00)))
 		#connect
 		deinter = gr.deinterleave(self._get_io_size())
-		self.connect(self._u, deinter)
+		self.connect(self._get_u(), deinter)
 		for i in range(2): self.connect((deinter, i), (self, i))
 
-	def set_decim_rate(self, decim): self._u.set_decim_rate(int(decim))
+	def set_decim_rate(self, decim): self._get_u().set_decim_rate(int(decim))
 	def set_frequency_a(self, frequency, verbose=False):
-		common.set_frequency(
-			u=self._u,
+		self._set_frequency(
 			which=0, #ddc0
 			subdev=self._subdev_a,
 			frequency=frequency,
 			verbose=verbose,
 		)
 	def set_frequency_b(self, frequency, verbose=False):
-		common.set_frequency(
-			u=self._u,
+		self._set_frequency(
 			which=1, #ddc1
 			subdev=self._subdev_b,
 			frequency=frequency,
@@ -102,34 +100,32 @@ class _dual_sink(gr.hier_block2):
 			gr.io_signature(0, 0, 0),
 		)
 		#create usrp object
-		self._u = self._get_usrp_constructor()(number, nchan=2)
+		self._make_usrp(number, nchan=2)
 		#get the mux for side A
 		subdev_spec_a = common.to_spec('A')
-		self._subdev_a = usrp.selected_subdev(self._u, subdev_spec_a)
-		mux_a = usrp.determine_tx_mux_value(self._u, subdev_spec_a)
+		self._subdev_a = usrp.selected_subdev(self._get_u(), subdev_spec_a)
+		mux_a = usrp.determine_tx_mux_value(self._get_u(), subdev_spec_a)
 		#get the mux for side B
 		subdev_spec_b = common.to_spec('B')
-		self._subdev_b = usrp.selected_subdev(self._u, subdev_spec_b)
-		mux_b = usrp.determine_tx_mux_value(self._u, subdev_spec_b)
+		self._subdev_b = usrp.selected_subdev(self._get_u(), subdev_spec_b)
+		mux_b = usrp.determine_tx_mux_value(self._get_u(), subdev_spec_b)
 		#set the mux
-		self._u.set_mux(mux_a | mux_b)
+		self._get_u().set_mux(mux_a | mux_b)
 		#connect
 		inter = gr.interleave(self._get_io_size())
-		self.connect(inter, self._u)
+		self.connect(inter, self._get_u())
 		for i in range(2): self.connect((self, i), (inter, i))
 
-	def set_interp_rate(self, interp): self._u.set_interp_rate(int(interp))
+	def set_interp_rate(self, interp): self._get_u().set_interp_rate(int(interp))
 	def set_frequency_a(self, frequency, verbose=False):
-		common.set_frequency(
-			u=self._u,
+		self._set_frequency(
 			which=self._subdev_a.which(),
 			subdev=self._subdev_a,
 			frequency=frequency,
 			verbose=verbose,
 		)
 	def set_frequency_b(self, frequency, verbose=False):
-		common.set_frequency(
-			u=self._u,
+		self._set_frequency(
 			which=self._subdev_b.which(),
 			subdev=self._subdev_b,
 			frequency=frequency,

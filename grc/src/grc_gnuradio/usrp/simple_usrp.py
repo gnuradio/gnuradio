@@ -41,18 +41,17 @@ class _simple_source(gr.hier_block2):
 			gr.io_signature(1, 1, self._get_io_size()),
 		)
 		#create usrp object
-		self._u = self._get_usrp_constructor()(number, nchan=1)
+		self._make_usrp(number, nchan=1)
 		subdev_spec = common.to_spec(side, rx_ant)
-		self._u.set_mux(usrp.determine_rx_mux_value(self._u, subdev_spec))
-		self._subdev = usrp.selected_subdev(self._u, subdev_spec)
+		self._get_u().set_mux(usrp.determine_rx_mux_value(self._get_u(), subdev_spec))
+		self._subdev = usrp.selected_subdev(self._get_u(), subdev_spec)
 		if common.is_flex(rx_ant): self._subdev.select_rx_antenna(rx_ant)
 		#connect
-		self.connect(self._u, self)
+		self.connect(self._get_u(), self)
 
-	def set_decim_rate(self, decim): self._u.set_decim_rate(int(decim))
+	def set_decim_rate(self, decim): self._get_u().set_decim_rate(int(decim))
 	def set_frequency(self, frequency, verbose=False):
-		common.set_frequency(
-			u=self._u,
+		self._set_frequency(
 			which=0, #ddc0
 			subdev=self._subdev,
 			frequency=frequency,
@@ -83,17 +82,16 @@ class _simple_sink(gr.hier_block2):
 			gr.io_signature(0, 0, 0),
 		)
 		#create usrp object
-		self._u = self._get_usrp_constructor()(number, nchan=1)
+		self._make_usrp(number, nchan=1)
 		subdev_spec = common.to_spec(side)
-		self._u.set_mux(usrp.determine_tx_mux_value(self._u, subdev_spec))
-		self._subdev = usrp.selected_subdev(self._u, subdev_spec)
+		self._get_u().set_mux(usrp.determine_tx_mux_value(self._get_u(), subdev_spec))
+		self._subdev = usrp.selected_subdev(self._get_u(), subdev_spec)
 		#connect
-		self.connect(self, self._u)
+		self.connect(self, self._get_u())
 
-	def set_interp_rate(self, interp): self._u.set_interp_rate(int(interp))
+	def set_interp_rate(self, interp): self._get_u().set_interp_rate(int(interp))
 	def set_frequency(self, frequency, verbose=False):
-		common.set_frequency(
-			u=self._u,
+		self._set_frequency(
 			which=self._subdev.which(),
 			subdev=self._subdev,
 			frequency=frequency,

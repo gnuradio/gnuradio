@@ -9,6 +9,9 @@
 	<key>usrp_dual_sink_x</key>
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
 	<make>grc_usrp.dual_sink_$(type.fcn)(number=$number)
+#if $format.eval
+self.$(id).set_format(width=$format.width, shift=$format.shift)
+#end if
 self.$(id).set_interp_rate($interpolation)
 self.$(id).set_frequency_a($frequency_a, verbose=True)
 self.$(id).set_frequency_b($frequency_b, verbose=True)
@@ -45,11 +48,32 @@ self.$(id).set_auto_tr_b($auto_tr_b)
 			<name>Complex</name>
 			<key>complex</key>
 			<opt>fcn:c</opt>
+			<opt>bits8:</opt>
 		</option>
 		<option>
 			<name>Short</name>
 			<key>short</key>
 			<opt>fcn:s</opt>
+			<opt>bits8:</opt>
+		</option>
+	</param>
+	<param>
+		<name>Format</name>
+		<key>format</key>
+		<value></value>
+		<type>enum</type>
+		<hide>#if $format.eval then '' else 'part'#</hide>
+		<option>
+			<name>16 Bits (Default)</name>
+			<key></key>
+			<opt>width:16</opt>
+			<opt>shift:0</opt>
+		</option>
+		<option>
+			<name>8 Bits, Shift 8</name>
+			<key>w8_s8</key>
+			<opt>width:8</opt>
+			<opt>shift:8</opt>
 		</option>
 	</param>
 	<param>

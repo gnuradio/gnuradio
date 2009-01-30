@@ -22,39 +22,40 @@ import sys
 from gnuradio import usrp, gr
 
 ##################################################
-# Set frequency function w/ verbose option
+# USRP base class with common methods
 ##################################################
-def set_frequency(u, which, subdev, frequency, verbose=False):
-	"""
-	Set the carrier frequency for the given subdevice.
-	@param u the usrp source/sink
-	@param which specifies the DDC/DUC number
-	@param frequency the carrier frequency in Hz
-	@param verbose if true, print usrp tuning information
-	"""
-	r = u.tune(which, subdev, frequency)
-	if not verbose: return
-	print subdev.side_and_name()
-	if r:
-		print "\tr.baseband_frequency =", r.baseband_freq
-		print "\tr.dxc_frequency =", r.dxc_freq
-		print "\tr.residual_frequency =", r.residual_freq
-		print "\tr.inverted =", r.inverted, "\n"
-	else: print >> sys.stderr, 'Error calling tune on subdevice.'
+class usrp_helper(object):
+	def _make_usrp(self, *args, **kwargs): self._u = self._usrp_args[0](*args, **kwargs)
+	def _get_u(self): return self._u
+	def _get_io_size(self): return self._usrp_args[1]
+	def _set_frequency(self, which, subdev, frequency, verbose=False):
+		"""
+		Set the carrier frequency for the given subdevice.
+		@param which specifies the DDC/DUC number
+		@param frequency the carrier frequency in Hz
+		@param verbose if true, print usrp tuning information
+		"""
+		r = self._get_u().tune(which, subdev, frequency)
+		if not verbose: return
+		print subdev.side_and_name()
+		if r:
+			print "\tr.baseband_frequency =", r.baseband_freq
+			print "\tr.dxc_frequency =", r.dxc_freq
+			print "\tr.residual_frequency =", r.residual_freq
+			print "\tr.inverted =", r.inverted, "\n"
+		else: print >> sys.stderr, 'Error calling tune on subdevice.'
+	def set_format(self, width, shift): self._get_u().set_format(self._get_u().make_format(width, shift))
 
 ##################################################
 # Classes to associate usrp constructor w/ io size
 ##################################################
-class usrp_helper(object):
-	def _get_usrp_constructor(self): return self._usrp_args[0]
-	def _get_io_size(self): return self._usrp_args[1]
 class usrp_source_c(usrp_helper): _usrp_args = (usrp.source_c, gr.sizeof_gr_complex)
 class usrp_source_s(usrp_helper): _usrp_args = (usrp.source_s, gr.sizeof_short)
 class usrp_sink_c(usrp_helper): _usrp_args = (usrp.sink_c, gr.sizeof_gr_complex)
 class usrp_sink_s(usrp_helper): _usrp_args = (usrp.sink_s, gr.sizeof_short)
 
 ##################################################
-# RX antenna definitions and helpers
+# Side spec and antenna spec functions
 ##################################################
 def is_flex(rx_ant): return rx_ant.upper() in ('TX/RX', 'RX2')
 def to_spec(side, rx_ant='RXA'):
