@@ -33,6 +33,7 @@ libu2fw_a_SOURCES = \
 	db_init.c \
 	db_rfx.c \
 	db_tvrx.c \
+	db_xcvr2450.c \
 	dbsm.c \
 	eeprom.c \
 	ethernet.c \
