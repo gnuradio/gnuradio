@@ -55,8 +55,6 @@ bool xcvr2450_set_gain_tx(struct db_base *db, u2_fxpt_gain_t gain);
 bool xcvr2450_set_tx_enable(struct db_base *db, bool on);
 
 struct db_xcvr2450_common {
-  //int d_spi_format, d_spi_enable;
-  
   int d_mimo, d_int_div, d_frac_div, d_highband, d_five_gig;
   int d_cp_current, d_ref_div, d_rssi_hbw;
   int d_txlpf_bw, d_rxlpf_bw, d_rxlpf_fine, d_rxvga_ser;
@@ -64,15 +62,9 @@ struct db_xcvr2450_common {
   int d_rx_hp_pin, d_rx_hpf, d_rx_ant;
   int d_tx_ant, d_txvga_ser, d_tx_driver_lin;
   int d_tx_vga_lin, d_tx_upconv_lin, d_tx_bb_gain;
-  int d_pabias_delay, d_pabias; //rx_rf_gain, rx_bb_gain;//, d_txgain;
-  //int d_rx_rf_gain, d_rx_bb_gain;
-
-  int d_reg_standby;//, d_reg_int_divider, d_reg_frac_divider, d_reg_bandselpll;
-  int d_reg_cal, dsend_reg, d_reg_lpf, d_reg_rxrssi_ctrl, d_reg_txlin_gain;
-  int d_reg_pabias;//, d_reg_rxgain;//, d_reg_txgain;
-
+  int d_pabias_delay, d_pabias;
+  int d_rx_rf_gain, d_rx_bb_gain, d_txgain;
   int d_ad9515_div;
-
   int spi_mask;
 };
 
@@ -157,14 +149,14 @@ send_reg(struct db_xcvr2450_dummy *db, int v){
 }
 
 void
-set_reg_txgain(struct db_xcvr2450_dummy *db, int txgain){
-  int reg_txgain = (txgain<<4) | 12;
+set_reg_txgain(struct db_xcvr2450_dummy *db){
+  int reg_txgain = (db->common.d_txgain<<4) | 12;
   send_reg(db, reg_txgain);
 }
 
 void
-set_reg_rxgain(struct db_xcvr2450_dummy *db, int rx_bb_gain, int rx_rf_gain){
-  int reg_rxgain = ( (rx_rf_gain<<9) | (rx_bb_gain<<4) | 11);
+set_reg_rxgain(struct db_xcvr2450_dummy *db){
+  int reg_rxgain = ( (db->common.d_rx_rf_gain<<9) | (db->common.d_rx_bb_gain<<4) | 11);
   send_reg(db, reg_rxgain);
 }
 
@@ -192,6 +184,65 @@ set_reg_bandselpll(struct db_xcvr2450_dummy *db){
     (db->common.d_ref_div<<5) |
     (db->common.d_five_gig<<4) | 5);
   send_reg(db, reg_bandselpll);
+}
+
+void
+set_reg_standby(struct db_xcvr2450_dummy *db){
+  int reg_standby = ((db->common.d_mimo<<17) | 
+		   (1<<16)      | 
+		   (1<<6)       | 
+		   (1<<5)       | 
+		   (1<<4)       | 2);
+  send_reg(db, reg_standby);
+}
+
+void
+set_reg_cal(struct db_xcvr2450_dummy *db){
+  // FIXME do calibration
+  int reg_cal = (1<<14)|6;
+  send_reg(db, reg_cal);
+}
+
+void
+set_reg_lpf(struct db_xcvr2450_dummy *db){
+  int reg_lpf = (
+     (db->common.d_rssi_hbw<<15)  |
+     (db->common.d_txlpf_bw<<10)  |
+     (db->common.d_rxlpf_bw<<9)   |
+     (db->common.d_rxlpf_fine<<4) | 7);
+  send_reg(db, reg_lpf);
+}
+
+void
+set_reg_rxrssi_ctrl(struct db_xcvr2450_dummy *db){
+  int reg_rxrssi_ctrl = (
+       (db->common.d_rxvga_ser<<16)  |
+       (db->common.d_rssi_range<<15) |
+       (db->common.d_rssi_mode<<14)  |
+       (db->common.d_rssi_mux<<12)   |
+       (1<<9)             |
+       (db->common.d_rx_hpf<<6)      |
+       (1<<4)  | 8);
+  send_reg(db, reg_rxrssi_ctrl);
+}
+
+void
+set_reg_txlin_gain(struct db_xcvr2450_dummy *db){
+  int reg_txlin_gain = (
+      (db->common.d_txvga_ser<<14)     |
+      (db->common.d_tx_driver_lin<<12) |
+      (db->common.d_tx_vga_lin<<10)    |
+      (db->common.d_tx_upconv_lin<<6)  |
+      (db->common.d_tx_bb_gain<<4)     | 9);
+  send_reg(db, reg_txlin_gain);
+}
+
+void
+set_reg_pabias(struct db_xcvr2450_dummy *db){
+  int reg_pabias = (
+      (db->common.d_pabias_delay<<10) |
+      (db->common.d_pabias<<4)        | 10);
+  send_reg(db, reg_pabias);
 }
 
 /**************************************************
@@ -289,10 +340,10 @@ xcvr2450_init(struct db_base *dbb){
   db->common.d_tx_bb_gain = 3;    // 0=maxgain-5dB, 1=max-3dB, 2=max-1.5dB, 3=max
   db->common.d_pabias_delay = 15; // 0 = 0, 15 = 7uS
   db->common.d_pabias = 0;        // 0 = 0 uA, 63 = 315uA
-  //db->common.d_rx_rf_gain = 0;    // 0 = 0dB, 1 = 0dB, 2 = 15dB, 3 = 30dB
-  //db->common.d_rx_bb_gain = 16;   // 0 = min, 31 = max (0 - 62 dB)
+  db->common.d_rx_rf_gain = 0;    // 0 = 0dB, 1 = 0dB, 2 = 15dB, 3 = 30dB
+  db->common.d_rx_bb_gain = 16;   // 0 = min, 31 = max (0 - 62 dB)
 
-  //db->common.d_txgain = 63;       // 0 = min, 63 = max
+  db->common.d_txgain = 63;       // 0 = min, 63 = max
   
   /*
   // Initialize GPIO and ATR
@@ -307,21 +358,20 @@ xcvr2450_init(struct db_base *dbb){
   rx_set_atr_rxval(RX_SAFE_IO);
   rx_set_atr_txval(RX_SAFE_IO);
   rx_set_atr_mask(RX_OE_MASK);
-        
+  */      
   // Initialize chipset
   // TODO: perform reset sequence to ensure power up defaults
-  set_reg_standby();
-  set_reg_bandselpll();
-  set_reg_cal();
-  set_reg_lpf();
-  set_reg_rxrssi_ctrl();
-  set_reg_txlin_gain();
-  set_reg_pabias();
-  set_reg_rxgain();
-  set_reg_txgain();
+  set_reg_standby(db);
+  set_reg_bandselpll(db);
+  set_reg_cal(db);
+  set_reg_lpf(db);
+  set_reg_rxrssi_ctrl(db);
+  set_reg_txlin_gain(db);
+  set_reg_pabias(db);
+  set_reg_rxgain(db);
+  set_reg_txgain(db);
   //FIXME: set_freq(2.45e9);
-  */
-  
+
   db->base.set_gain(dbb, (db->base.gain_max - db->base.gain_min)/2); //set mid-range gain
   return true;
 }
@@ -437,22 +487,21 @@ xcvr2450_set_gain_rx(struct db_base *dbb, u2_fxpt_gain_t gain){
   if(!(gain >= db->base.gain_min && gain <= db->base.gain_max)) {
     return false;
   }
-  int rx_rf_gain = 0, rx_bb_gain = 0;
   // Split the gain between RF and baseband
   // This is experimental, not prescribed
   if(gain < U2_DOUBLE_TO_FXPT_GAIN(30.0)) {
-    rx_rf_gain = 0; // 0 dB RF gain
-    rx_bb_gain = gain/U2_DOUBLE_TO_FXPT_GAIN(2.0);
+    db->common.d_rx_rf_gain = 0; // 0 dB RF gain
+    db->common.d_rx_bb_gain = gain/U2_DOUBLE_TO_FXPT_GAIN(2.0);
   }
   else if(gain >= U2_DOUBLE_TO_FXPT_GAIN(30.0) && gain < U2_DOUBLE_TO_FXPT_GAIN(61.0)) {
-    rx_rf_gain = 2; // 15 dB RF gain
-    rx_bb_gain = (gain-U2_DOUBLE_TO_FXPT_GAIN(15.0))/U2_DOUBLE_TO_FXPT_GAIN(2.0);
+    db->common.d_rx_rf_gain = 2; // 15 dB RF gain
+    db->common.d_rx_bb_gain = (gain-U2_DOUBLE_TO_FXPT_GAIN(15.0))/U2_DOUBLE_TO_FXPT_GAIN(2.0);
   }
   else if(gain >= U2_DOUBLE_TO_FXPT_GAIN(61.0)) {
-    rx_rf_gain = 3; // 30.5 dB RF gain
-    rx_bb_gain = (gain-U2_DOUBLE_TO_FXPT_GAIN(30.5))/U2_DOUBLE_TO_FXPT_GAIN(2.0);
+    db->common.d_rx_rf_gain = 3; // 30.5 dB RF gain
+    db->common.d_rx_bb_gain = (gain-U2_DOUBLE_TO_FXPT_GAIN(30.5))/U2_DOUBLE_TO_FXPT_GAIN(2.0);
   }
-  set_reg_rxgain(db, rx_bb_gain, rx_rf_gain);
+  set_reg_rxgain(db);
   return true;
 }
 
@@ -467,8 +516,8 @@ xcvr2450_set_gain_tx(struct db_base *dbb, u2_fxpt_gain_t gain){
     return false;
   }
   //scale for register and set
-  int txgain = gain/db->base.gain_step_size;
-  set_reg_txgain(db, txgain);
+  db->common.d_txgain = gain/db->base.gain_step_size;
+  set_reg_txgain(db);
   return true;
 }
 
