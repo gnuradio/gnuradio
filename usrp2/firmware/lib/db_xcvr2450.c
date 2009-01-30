@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <memory_map.h>
 #include <db_base.h>
 #include <stdio.h>
 #include <spi.h>
@@ -237,11 +238,91 @@ xcvr2450_init(struct db_base *dbb){
   return true;
 }
 
+/**************************************************
+ * Set the freq
+ **************************************************/
 bool
-xcvr2450_set_freq(struct db_base *db, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc){
+xcvr2450_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc){
+  struct db_xcvr2450_dummy *db = (struct db_xcvr2450_dummy *) dbb;
+  //ensure gain in within range
+  if(!(freq >= db->base.freq_min && freq <= db->base.freq_max)) {
+    return false;
+  }
+  
+  
+  u2_fxpt_freq_t vco_freq;
+
+  if(freq > U2_DOUBLE_TO_FXPT_FREQ(3e9)) {
+    db->common.d_five_gig = 1;
+    db->common.d_ref_div = 1;
+    db->common.d_ad9515_div = 3;
+    //scaler = U2_DOUBLE_TO_FXPT_FREQ(4.0/5.0);
+    vco_freq = (4*freq)/5;
+  }
+  else {
+    db->common.d_five_gig = 0;
+    db->common.d_ref_div = 1;
+    db->common.d_ad9515_div = 3;
+    //scaler = U2_DOUBLE_TO_FXPT_FREQ(4.0/3.0);
+    vco_freq = (4*freq)/3;
+  }
+
+  if(freq > U2_DOUBLE_TO_FXPT_FREQ(5.27e9)) {
+    db->common.d_highband = 1;
+  }
+  else {
+    db->common.d_highband = 0;
+  }
+
+  //double vco_freq = target_freq*scaler;
+  //double sys_clk = usrp()->fpga_master_clock_freq();  // Usually 64e6 
+  u2_fxpt_freq_t ref_clk = U2_DOUBLE_TO_FXPT_FREQ(MASTER_CLK_RATE)/db->common.d_ad9515_div;
+  u2_fxpt_freq_t phdet_freq = ref_clk/db->common.d_ref_div;
+  
+  //double div = vco_freq/phdet_freq;
+ // d_int_div = int(floor(div));
+ // d_frac_div = int((div-d_int_div)*65536.0);
+ // double actual_freq = phdet_freq*(d_int_div+(d_frac_div/65536.0))/scaler;
+  db->common.d_int_div = vco_freq/phdet_freq;
+  *dc = db->common.d_int_div*phdet_freq*freq/vco_freq;
+ 
+  
+  printf("RF=%d VCO=%d RefDiv=%d Phdet=%d Div=%d ActualRF=%d\n",
+    u2_fxpt_freq_round_to_int(freq), u2_fxpt_freq_round_to_int(vco_freq),
+    db->common.d_ref_div, u2_fxpt_freq_round_to_int(phdet_freq),
+    db->common.d_int_div, u2_fxpt_freq_round_to_int(*dc));
+/*
+  set_gpio();
+  set_reg_int_divider();
+  set_reg_frac_divider();
+  set_reg_bandselpll();
+
+  args.ok = lock_detect();
+  args.baseband_freq = actual_freq;
+
+  if(args.ok) {
+    if((target_freq > 5.275e9) && (target_freq <= 5.35e9)) {
+      d_highband = 0;
+      set_reg_bandselpll();
+      args.ok = lock_detect();
+      //printf("swap to 0 at %f, ok %d\n", target_freq, args.ok);
+    }
+    if((target_freq >= 5.25e9) && (target_freq <= 5.275e9)) {
+      d_highband = 1;
+      set_reg_bandselpll();
+      args.ok = lock_detect();
+      //printf("swap to 1 at %f, ok %d\n", target_freq, args.ok);
+    }
+    if(!args.ok){
+      //printf("Fail %f\n", target_freq);
+    }
+  }*/
   return true;
 }
 
+/**************************************************
+ * Set RX Gain
+ **************************************************/
 bool
 xcvr2450_set_gain_rx(struct db_base *dbb, u2_fxpt_gain_t gain){
   struct db_xcvr2450_dummy *db = (struct db_xcvr2450_dummy *) dbb;
@@ -268,6 +349,9 @@ xcvr2450_set_gain_rx(struct db_base *dbb, u2_fxpt_gain_t gain){
   return true;
 }
 
+/**************************************************
+ * Set TX Gain
+ **************************************************/
 bool
 xcvr2450_set_gain_tx(struct db_base *dbb, u2_fxpt_gain_t gain){
   struct db_xcvr2450_dummy *db = (struct db_xcvr2450_dummy *) dbb;
