@@ -48,13 +48,11 @@ self.$(id).set_auto_tr_b($auto_tr_b)
 			<name>Complex</name>
 			<key>complex</key>
 			<opt>fcn:c</opt>
-			<opt>bits8:</opt>
 		</option>
 		<option>
 			<name>Short</name>
 			<key>short</key>
 			<opt>fcn:s</opt>
-			<opt>bits8:</opt>
 		</option>
 	</param>
 	<param>
