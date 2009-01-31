@@ -41,7 +41,7 @@
 #include "sd.h"
 
 #define HW_REV_MAJOR 3
-#define HW_REV_MINOR 0
+#define HW_REV_MINOR 1
 
 #define FW_SETS_SEQNO	1	// define to 0 or 1 (FIXME must be 1 for now)
 
