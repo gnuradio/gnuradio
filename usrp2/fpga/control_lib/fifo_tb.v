@@ -125,6 +125,8 @@ module fifo_tb();
 	write <= 1;
 	@(posedge clk);
 	@(posedge clk);
+	@(posedge clk);
+	@(posedge clk);
 	read <= 1;
 	repeat (5)
 	  @(posedge clk);
