@@ -58,6 +58,8 @@ class app_top_block(stdgui2.std_top_block):
 			  help="Set fftsink averaging factor, default=[%default]")
 	parser.add_option("", "--ref-scale", type="eng_float", default=1.0,
 			  help="Set dBFS=0dB input value, default=[%default]")
+        parser.add_option("--fft-size", type="int", default=1024,
+                          help="Set number of FFT bins [default=%default]")
         (options, args) = parser.parse_args()
         if len(args) != 0:
             parser.print_help()
@@ -76,8 +78,12 @@ class app_top_block(stdgui2.std_top_block):
         elif options.oscilloscope:
             self.scope = scopesink2.scope_sink_c(panel, sample_rate=input_rate)
         else:
-            self.scope = fftsink2.fft_sink_c (panel, fft_size=1024, sample_rate=input_rate, 
-					      ref_scale=options.ref_scale, ref_level=0.0, y_divs = 10,
+            self.scope = fftsink2.fft_sink_c (panel,
+                                              fft_size=options.fft_size,
+                                              sample_rate=input_rate, 
+					      ref_scale=options.ref_scale,
+                                              ref_level=20.0,
+                                              y_divs = 12,
 					      avg_alpha=options.avg_alpha)
 
         self.connect(self.u, self.scope)
