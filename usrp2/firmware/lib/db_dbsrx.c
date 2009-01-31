@@ -282,7 +282,7 @@ db_dbsrx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc){
     vco=6;
   else
     vco=7;
-  printf("Chose VCO %d\n",vco);  
+  printf("Initial VCO choice %d\n",vco);  
   _set_osc(db, vco);
   
 
@@ -319,6 +319,7 @@ db_dbsrx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc){
   else {
     _set_cp(db, 3);
   }
+  printf("Final VCO choice %d\n",vco);  
 
   *dc = db->common.d_n * REFCLK_FREQ / (2<<db->common.d_r_reg);
   return true;
