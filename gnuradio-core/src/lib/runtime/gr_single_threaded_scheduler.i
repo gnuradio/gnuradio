@@ -42,11 +42,10 @@ class gr_single_threaded_scheduler {
   gr_single_threaded_scheduler (const std::vector<gr_block_sptr> &modules);
 };
 
-%inline {
+%inline %{
   void sts_pyrun (gr_single_threaded_scheduler_sptr s) {
     Py_BEGIN_ALLOW_THREADS;		// release global interpreter lock
     s->run ();
     Py_END_ALLOW_THREADS;		// acquire global interpreter lock
   }
-}
-
+%}

@@ -22,7 +22,7 @@
 
 class gr_adaptive_fir_ccf : public gr_sync_decimator
 {
-private:
+protected:
   gr_adaptive_fir_ccf(char *name, int decimation, const std::vector<float> &taps);
 
 public:

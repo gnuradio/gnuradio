@@ -39,7 +39,7 @@ class gr_msg_queue : public gr_msg_handler {
   int			d_count;
 
 public:
-  gr_msg_queue();
+  gr_msg_queue(unsigned int limit);
   ~gr_msg_queue();
 
   //! Generic msg_handler method: insert the message.
@@ -87,7 +87,7 @@ public:
  * functions into the gr.msg_queue wrapper class, so that everything
  * appears normal.  (An evil laugh is heard in the distance...)
  */
-%inline {
+%inline %{
   gr_message_sptr gr_py_msg_queue__delete_head(gr_msg_queue_sptr q) {
     gr_message_sptr msg;
     Py_BEGIN_ALLOW_THREADS;		// release global interpreter lock
@@ -101,7 +101,7 @@ public:
     q->insert_tail(msg);		// possibly blocking call
     Py_END_ALLOW_THREADS;		// acquire global interpreter lock
   }
-}
+%}
 
 // smash in new python delete_head and insert_tail methods...
 %pythoncode %{

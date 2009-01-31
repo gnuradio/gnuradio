@@ -44,9 +44,10 @@ protected:
 
   // Override to calculate new weight from old, corresponding input
   virtual void update_tap(float &tap, const gr_complex &in) = 0;
-  
-public:
+
   gr_adaptive_fir_ccf(const char *name, int decimation, const std::vector<float> &taps);
+
+public:
   void set_taps(const std::vector<float> &taps);
 
   int work(int noutput_items,
