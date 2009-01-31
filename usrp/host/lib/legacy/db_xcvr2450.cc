@@ -22,6 +22,13 @@
 #include <db_base_impl.h>
 #include <cmath>
 
+#if 0
+#define LO_OFFSET 4.25e6
+#else
+#define LO_OFFSET 0
+#define NO_LO_OFFSET
+#endif
+
 
 /* ------------------------------------------------------------------------
  *  A few comments about the XCVR2450:
@@ -63,8 +70,8 @@ xcvr2450::xcvr2450(usrp_basic_sptr _usrp, int which)
   d_frac_div = 0;      // 0 = min, 65535 = max
   d_highband = 0;      // 0 = freq <= 5.4e9, 1 = freq > 5.4e9
   d_five_gig = 0;      // 0 = freq <= 3.e9, 1 = freq > 3e9
-  d_cp_current = 0;    // 0 = 2mA, 1 = 4mA
-  d_ref_div = 4;       // 1 to 7
+  d_cp_current = 1;    // 0 = 2mA, 1 = 4mA
+  d_ref_div = 1;       // 1 to 7
   d_rssi_hbw = 0;      // 0 = 2 MHz, 1 = 6 MHz
   d_txlpf_bw = 1;      // 1 = 12 MHz, 2 = 18 MHz, 3 = 24 MHz
   d_rxlpf_bw = 1;      // 0 = 7.5 MHz, 1 = 9.5 MHz, 2 = 14 MHz, 3 = 18 MHz
@@ -165,6 +172,15 @@ xcvr2450::set_reg_frac_divider()
 void
 xcvr2450::set_reg_bandselpll()
 {
+  d_reg_bandselpll = ((d_mimo<<17)      |
+		      (1<<16)           |
+		      (1<<15)           |
+		      (0<<11)           |
+		      (d_highband<<10)  |
+		      (d_cp_current<<9) |
+		      (d_ref_div<<5)    |
+		      (d_five_gig<<4)   | 5);
+  send_reg(d_reg_bandselpll);
   d_reg_bandselpll = ((d_mimo<<17)      |
 		      (1<<16)           |
 		      (1<<15)           |
@@ -461,18 +477,16 @@ xcvr2450::set_freq(double target_freq)
 
   if(target_freq > 3e9) {
     d_five_gig = 1;
-    d_ref_div = 1;
     d_ad9515_div = 3;
     scaler = 4.0/5.0;
   }
   else {
     d_five_gig = 0;
-    d_ref_div = 1;
     d_ad9515_div = 3;
     scaler = 4.0/3.0;
   }
 
-  if(target_freq > 5.27e9) {
+  if(target_freq > 5.408e9) {
     d_highband = 1;
   }
   else {
@@ -499,24 +513,14 @@ xcvr2450::set_freq(double target_freq)
   set_reg_bandselpll();
 
   args.ok = lock_detect();
+#ifdef NO_LO_OFFSET
+  args.baseband_freq = target_freq;
+#else
   args.baseband_freq = actual_freq;
+#endif
 
-  if(args.ok) {
-    if((target_freq > 5.275e9) && (target_freq <= 5.35e9)) {
-      d_highband = 0;
-      set_reg_bandselpll();
-      args.ok = lock_detect();
-      //printf("swap to 0 at %f, ok %d\n", target_freq, args.ok);
-    }
-    if((target_freq >= 5.25e9) && (target_freq <= 5.275e9)) {
-      d_highband = 1;
-      set_reg_bandselpll();
-      args.ok = lock_detect();
-      //printf("swap to 1 at %f, ok %d\n", target_freq, args.ok);
-    }
-    if(!args.ok){
-      //printf("Fail %f\n", target_freq);
-    }
+  if(!args.ok){
+    printf("Fail %f\n", target_freq);
   }
   return args;
 }
@@ -682,7 +686,7 @@ db_xcvr2450_base::freq_max()
 db_xcvr2450_tx::db_xcvr2450_tx(usrp_basic_sptr usrp, int which)
   : db_xcvr2450_base(usrp, which)
 {
-  set_lo_offset(4.25e6);
+  set_lo_offset(LO_OFFSET);
   //printf("db_xcvr2450_tx::db_xcvr2450_tx\n");
 }
 
@@ -731,7 +735,7 @@ db_xcvr2450_rx::db_xcvr2450_rx(usrp_basic_sptr usrp, int which)
    * @param usrp: instance of usrp.source_c
    * @param which: 0 or 1 corresponding to side RX_A or RX_B respectively.
    */
-  set_lo_offset(4.25e6);
+  set_lo_offset(LO_OFFSET);
   //printf("db_xcvr2450_rx:d_xcvr_2450_rx\n");
 }
 
