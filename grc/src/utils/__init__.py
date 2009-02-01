@@ -46,6 +46,32 @@ class odict(DictMixin):
 		copy_dict._keys = list(self._keys)
 		return copy_dict
 
+	def insert_after(self, pos_key, key, val):
+		"""
+		Insert the new key, value entry after the entry given by the position key.
+		If the positional key is None, insert at the end.
+		@param pos_key the positional key
+		@param key the key for the new entry
+		@param val the value for the new entry
+		"""
+		index = (pos_key is None) and len(self._keys) or self._keys.index(pos_key)
+		assert key not in self._keys
+		self._keys.insert(index+1, key)
+		self._data[key] = val
+
+	def insert_before(self, pos_key, key, val):
+		"""
+		Insert the new key, value entry before the entry given by the position key.
+		If the positional key is None, insert at the begining.
+		@param pos_key the positional key
+		@param key the key for the new entry
+		@param val the value for the new entry
+		"""
+		index = (pos_key is not None) and self._keys.index(pos_key) or 0 
+		assert key not in self._keys
+		self._keys.insert(index, key)
+		self._data[key] = val
+
 def exists_or_else(d, key, alt):
 	if d.has_key(key): return d[key]
 	else: return alt
