@@ -37,7 +37,7 @@ flow_graph = platform.get_new_flow_graph()
 block = flow_graph.get_new_block('usrp_probe')
 
 ##all params
-usrp_number_param = block.get_param('number')
+usrp_which_param = block.get_param('which')
 usrp_dboard_param = block.get_param('dboard')
 
 class USRPProbeWindow(gtk.Window):
@@ -66,7 +66,7 @@ class USRPProbeWindow(gtk.Window):
 		#create vbox for storage
 		vbox = gtk.VBox()
 		frame.add(vbox)
-		vbox.pack_start(usrp_number_param.get_input_object(), False)
+		vbox.pack_start(usrp_which_param.get_input_object(), False)
 		vbox.pack_start(usrp_dboard_param.get_input_object(), False)
 		self.probe_button = gtk.Button('Probe')
 		self.probe_button.connect('clicked', self._probe_usrp)
@@ -88,7 +88,7 @@ class USRPProbeWindow(gtk.Window):
 			make = usrp.sink_c
 			get_mux = usrp.determine_tx_mux_value
 		try:
-			u = make(usrp_number_param.evaluate())
+			u = make(which=usrp_which_param.evaluate())
 			subdev_spec = (side, 0)
 			subdev = usrp.selected_subdev(u, subdev_spec) #get the subdev
 			msg = ">>> USRP Probe\n"

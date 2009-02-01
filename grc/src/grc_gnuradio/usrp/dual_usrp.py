@@ -27,10 +27,10 @@ from gnuradio import gr, usrp
 class _dual_source(gr.hier_block2):
 	"""A dual usrp source of IO type short or complex."""
 
-	def __init__(self, number, side_a='A', rx_ant_a='RXA', side_b='B', rx_ant_b='RXA'):
+	def __init__(self, which, side_a='A', rx_ant_a='RXA', side_b='B', rx_ant_b='RXA'):
 		"""
 		USRP dual source contructor.
-		@param number the unit number
+		@param which the unit number
 		@param side_a A or B
 		@param rx_ant_a the antenna choice
 		@param side_b A or B
@@ -43,7 +43,7 @@ class _dual_source(gr.hier_block2):
 			gr.io_signature(2, 2, self._get_io_size()),
 		)
 		#create usrp object
-		self._make_usrp(number, nchan=2)
+		self._make_usrp(which=which, nchan=2)
 		#get the mux for output A
 		subdev_spec_a = common.to_spec(side_a, rx_ant_a)
 		self._subdev_a = usrp.selected_subdev(self._get_u(), subdev_spec_a)
@@ -62,14 +62,14 @@ class _dual_source(gr.hier_block2):
 	def set_decim_rate(self, decim): self._get_u().set_decim_rate(int(decim))
 	def set_frequency_a(self, frequency, verbose=False):
 		self._set_frequency(
-			which=0, #ddc0
+			chan=0, #ddc0
 			subdev=self._subdev_a,
 			frequency=frequency,
 			verbose=verbose,
 		)
 	def set_frequency_b(self, frequency, verbose=False):
 		self._set_frequency(
-			which=1, #ddc1
+			chan=1, #ddc1
 			subdev=self._subdev_b,
 			frequency=frequency,
 			verbose=verbose,
@@ -88,10 +88,10 @@ class dual_source_s(_dual_source, common.usrp_source_s): pass
 class _dual_sink(gr.hier_block2):
 	"""A dual usrp sink of IO type short or complex."""
 
-	def __init__(self, number):
+	def __init__(self, which):
 		"""
 		USRP simple sink contructor.
-		@param number the unit number
+		@param which the unit number
 		"""
 		#initialize hier2 block
 		gr.hier_block2.__init__(
@@ -100,7 +100,7 @@ class _dual_sink(gr.hier_block2):
 			gr.io_signature(0, 0, 0),
 		)
 		#create usrp object
-		self._make_usrp(number, nchan=2)
+		self._make_usrp(which=which, nchan=2)
 		#get the mux for side A
 		subdev_spec_a = common.to_spec('A')
 		self._subdev_a = usrp.selected_subdev(self._get_u(), subdev_spec_a)
@@ -119,14 +119,14 @@ class _dual_sink(gr.hier_block2):
 	def set_interp_rate(self, interp): self._get_u().set_interp_rate(int(interp))
 	def set_frequency_a(self, frequency, verbose=False):
 		self._set_frequency(
-			which=self._subdev_a.which(),
+			chan=self._subdev_a.which(),
 			subdev=self._subdev_a,
 			frequency=frequency,
 			verbose=verbose,
 		)
 	def set_frequency_b(self, frequency, verbose=False):
 		self._set_frequency(
-			which=self._subdev_b.which(),
+			chan=self._subdev_b.which(),
 			subdev=self._subdev_b,
 			frequency=frequency,
 			verbose=verbose,

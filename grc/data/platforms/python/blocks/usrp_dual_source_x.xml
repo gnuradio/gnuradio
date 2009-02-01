@@ -8,7 +8,7 @@
 	<name>USRP Dual Source</name>
 	<key>usrp_dual_source_x</key>
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
-	<make>grc_usrp.dual_source_$(type.fcn)(number=$number, side_a='$rx_ant_a.side', rx_ant_a='$rx_ant_a.rx_ant', side_b='$rx_ant_b.side', rx_ant_b='$rx_ant_b.rx_ant')
+	<make>grc_usrp.dual_source_$(type.fcn)(which=$which, side_a='$rx_ant_a.side', rx_ant_a='$rx_ant_a.rx_ant', side_b='$rx_ant_b.side', rx_ant_b='$rx_ant_b.rx_ant')
 #if $format.eval
 self.$(id).set_format(width=$format.width, shift=$format.shift)
 #end if
@@ -70,7 +70,7 @@ self.$(id).set_auto_tr_b($auto_tr_b)
 	</param>
 	<param>
 		<name>Unit Number</name>
-		<key>number</key>
+		<key>which</key>
 		<value>0</value>
 		<type>int</type>
 	</param>

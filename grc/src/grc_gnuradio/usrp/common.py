@@ -28,14 +28,14 @@ class usrp_helper(object):
 	def _make_usrp(self, *args, **kwargs): self._u = self._usrp_args[0](*args, **kwargs)
 	def _get_u(self): return self._u
 	def _get_io_size(self): return self._usrp_args[1]
-	def _set_frequency(self, which, subdev, frequency, verbose=False):
+	def _set_frequency(self, chan, subdev, frequency, verbose=False):
 		"""
 		Set the carrier frequency for the given subdevice.
-		@param which specifies the DDC/DUC number
+		@param chan specifies the DDC/DUC number
 		@param frequency the carrier frequency in Hz
 		@param verbose if true, print usrp tuning information
 		"""
-		r = self._get_u().tune(which, subdev, frequency)
+		r = self._get_u().tune(chan, subdev, frequency)
 		if not verbose: return
 		print subdev.side_and_name()
 		if r:

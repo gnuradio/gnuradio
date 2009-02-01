@@ -27,13 +27,15 @@ from gnuradio import gr, usrp
 class _simple_source(gr.hier_block2):
 	"""A single usrp source of IO type short or complex."""
 
-	def __init__(self, number, side='A', rx_ant='RXA'):
+	def __init__(self, which, side='A', rx_ant='RXA', no_hb=False):
 		"""
 		USRP simple source contructor.
-		@param number the unit number
+		@param which the unit number
 		@param side the usrp side A or B
 		@param rx_ant the antenna choice
+		@param no_hb disable half band filters
 		"""
+		self._no_hb = no_hb
 		#initialize hier2 block
 		gr.hier_block2.__init__(
 			self, 'usrp_simple_source',
@@ -41,7 +43,8 @@ class _simple_source(gr.hier_block2):
 			gr.io_signature(1, 1, self._get_io_size()),
 		)
 		#create usrp object
-		self._make_usrp(number, nchan=1)
+		if self._no_hb: self._make_usrp(which=which, nchan=1, fpga_filename="std_4rx_0tx.rbf")
+		else: self._make_usrp(which=which, nchan=1)
 		subdev_spec = common.to_spec(side, rx_ant)
 		self._get_u().set_mux(usrp.determine_rx_mux_value(self._get_u(), subdev_spec))
 		self._subdev = usrp.selected_subdev(self._get_u(), subdev_spec)
@@ -49,10 +52,13 @@ class _simple_source(gr.hier_block2):
 		#connect
 		self.connect(self._get_u(), self)
 
-	def set_decim_rate(self, decim): self._get_u().set_decim_rate(int(decim))
+	def set_decim_rate(self, decim):
+		self._get_u().set_decim_rate(int(decim))
+		if self._no_hb: #set the BW to half the sample rate
+			self._subdev.set_bw(self._get_u().converter_rate()/decim/2)
 	def set_frequency(self, frequency, verbose=False):
 		self._set_frequency(
-			which=0, #ddc0
+			chan=0, #ddc0
 			subdev=self._subdev,
 			frequency=frequency,
 			verbose=verbose,
@@ -69,10 +75,10 @@ class simple_source_s(_simple_source, common.usrp_source_s): pass
 class _simple_sink(gr.hier_block2):
 	"""A single usrp sink of IO type short or complex."""
 
-	def __init__(self, number, side='A'):
+	def __init__(self, which, side='A'):
 		"""
 		USRP simple sink contructor.
-		@param number the unit number
+		@param which the unit number
 		@param side the usrp side A or B
 		"""
 		#initialize hier2 block
@@ -82,7 +88,7 @@ class _simple_sink(gr.hier_block2):
 			gr.io_signature(0, 0, 0),
 		)
 		#create usrp object
-		self._make_usrp(number, nchan=1)
+		self._make_usrp(which=which, nchan=1)
 		subdev_spec = common.to_spec(side)
 		self._get_u().set_mux(usrp.determine_tx_mux_value(self._get_u(), subdev_spec))
 		self._subdev = usrp.selected_subdev(self._get_u(), subdev_spec)
@@ -92,7 +98,7 @@ class _simple_sink(gr.hier_block2):
 	def set_interp_rate(self, interp): self._get_u().set_interp_rate(int(interp))
 	def set_frequency(self, frequency, verbose=False):
 		self._set_frequency(
-			which=self._subdev.which(),
+			chan=self._subdev.which(),
 			subdev=self._subdev,
 			frequency=frequency,
 			verbose=verbose,

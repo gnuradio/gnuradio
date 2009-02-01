@@ -8,7 +8,7 @@
 	<name>USRP Sink</name>
 	<key>usrp_simple_sink_x</key>
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
-	<make>grc_usrp.simple_sink_$(type.fcn)(number=$number, side='$side')
+	<make>grc_usrp.simple_sink_$(type.fcn)(which=$which, side='$side')
 #if $format.eval
 self.$(id).set_format(width=$format.width, shift=$format.shift)
 #end if
@@ -60,7 +60,7 @@ self.$(id).set_auto_tr($auto_tr)
 	</param>
 	<param>
 		<name>Unit Number</name>
-		<key>number</key>
+		<key>which</key>
 		<value>0</value>
 		<type>int</type>
 	</param>

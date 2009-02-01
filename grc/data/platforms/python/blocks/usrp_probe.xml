@@ -10,8 +10,8 @@
 	<key>usrp_probe</key>
 	<make></make>
 	<param>
-		<name>USRP Number</name>
-		<key>number</key>
+		<name>Unit Number</name>
+		<key>which</key>
 		<value>0</value>
 		<type>int</type>
 	</param>
