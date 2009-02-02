@@ -16,19 +16,7 @@ self.$(id).set_decim_rate($decimation)
 self.$(id).set_frequency_a($frequency_a, verbose=True)
 self.$(id).set_frequency_b($frequency_b, verbose=True)
 self.$(id).set_gain_a($gain_a)
-self.$(id).set_gain_b($gain_b)
-##################################################
-## Flex RF A
-##################################################
-#if $auto_tr_a.eval and $rx_ant_a.flex
-self.$(id).set_auto_tr_a($auto_tr_a)
-#end if
-##################################################
-## Flex RF B
-##################################################
-#if $auto_tr_b.eval and $rx_ant_b.flex
-self.$(id).set_auto_tr_b($auto_tr_b)
-#end if</make>
+self.$(id).set_gain_b($gain_b)</make>
 	<callback>set_decim_rate($decimation)</callback>
 	<callback>set_frequency_a($frequency_a)</callback>
 	<callback>set_frequency_b($frequency_b)</callback>
@@ -101,7 +89,7 @@ self.$(id).set_auto_tr_b($auto_tr_b)
 	</param>
 <!--
 ###################################################
-## Flex RF A
+## Antenna A
 ###################################################
  -->
 	<param>
@@ -144,28 +132,9 @@ self.$(id).set_auto_tr_b($auto_tr_b)
 			<opt>flex:</opt>
 		</option>
 	</param>
-	<param>
-		<name>Auto T/R A</name>
-		<key>auto_tr_a</key>
-		<value></value>
-		<type>enum</type>
-		<hide>#if $rx_ant_a.flex then 'none' else 'all'#</hide>
-		<option>
-			<name>Auto</name>
-			<key></key>
-		</option>
-		<option>
-			<name>Enable</name>
-			<key>True</key>
-		</option>
-		<option>
-			<name>Disable</name>
-			<key>False</key>
-		</option>
-	</param>
 <!--
 ###################################################
-## Flex RF B
+## Antenna B
 ###################################################
  -->
 	<param>
@@ -206,25 +175,6 @@ self.$(id).set_auto_tr_b($auto_tr_b)
 			<opt>side:A</opt>
 			<opt>rx_ant:RXB</opt>
 			<opt>flex:</opt>
-		</option>
-	</param>
-	<param>
-		<name>Auto T/R B</name>
-		<key>auto_tr_b</key>
-		<value></value>
-		<type>enum</type>
-		<hide>#if $rx_ant_b.flex then 'none' else 'all'#</hide>
-		<option>
-			<name>Auto</name>
-			<key></key>
-		</option>
-		<option>
-			<name>Enable</name>
-			<key>True</key>
-		</option>
-		<option>
-			<name>Disable</name>
-			<key>False</key>
 		</option>
 	</param>
 	<check>'$rx_ant_a' != '$rx_ant_b'</check>

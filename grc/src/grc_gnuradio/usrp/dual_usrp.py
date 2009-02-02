@@ -76,8 +76,6 @@ class _dual_source(gr.hier_block2):
 		)
 	def set_gain_a(self, gain): self._subdev_a.set_gain(gain)
 	def set_gain_b(self, gain): self._subdev_b.set_gain(gain)
-	def set_auto_tr_a(self, auto_tr): self._subdev_a.set_auto_tr(auto_tr)
-	def set_auto_tr_b(self, auto_tr): self._subdev_b.set_auto_tr(auto_tr)
 
 class dual_source_c(_dual_source, common.usrp_source_c): pass
 class dual_source_s(_dual_source, common.usrp_source_s): pass

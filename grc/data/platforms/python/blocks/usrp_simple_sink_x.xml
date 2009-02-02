@@ -15,11 +15,11 @@ self.$(id).set_format(width=$format.width, shift=$format.shift)
 self.$(id).set_interp_rate($interpolation)
 self.$(id).set_frequency($frequency, verbose=True)
 self.$(id).set_gain($gain)
-#if $tx_enb.eval
-self.$(id).set_enable($tx_enb)
+#if $transmit.tx_enb
+self.$(id).set_enable(True)
 #end if
-#if $auto_tr.eval and $tx_enb.eval
-self.$(id).set_auto_tr($auto_tr)
+#if $transmit.auto_tr
+self.$(id).set_auto_tr(True)
 #end if</make>
 	<callback>set_interp_rate($interpolation)</callback>
 	<callback>set_frequency($frequency)</callback>
@@ -94,44 +94,28 @@ self.$(id).set_auto_tr($auto_tr)
 		</option>
 	</param>
 	<param>
-		<name>TX Enable</name>
-		<key>tx_enb</key>
+		<name>Transmit</name>
+		<key>transmit</key>
 		<value></value>
 		<type>enum</type>
-		<hide>$tx_enb.hide</hide>
+		<hide>#if $transmit.tx_enb then 'none' else 'part'#</hide>
 		<option>
 			<name>Unconfigured</name>
 			<key></key>
-			<opt>hide:part</opt>
+			<opt>tx_enb:</opt>
+			<opt>auto_tr:</opt>
 		</option>
 		<option>
 			<name>Enable</name>
-			<key>True</key>
-			<opt>hide:none</opt>
+			<key>tx_enb</key>
+			<opt>tx_enb:1</opt>
+			<opt>auto_tr:</opt>
 		</option>
 		<option>
-			<name>Disable</name>
-			<key>False</key>
-			<opt>hide:none</opt>
-		</option>
-	</param>
-	<param>
-		<name>Auto T/R</name>
-		<key>auto_tr</key>
-		<value></value>
-		<type>enum</type>
-		<hide>#if $tx_enb.eval then 'none' else 'all'#</hide>
-		<option>
-			<name>Auto</name>
-			<key></key>
-		</option>
-		<option>
-			<name>Enable</name>
-			<key>True</key>
-		</option>
-		<option>
-			<name>Disable</name>
-			<key>False</key>
+			<name>Auto T/R</name>
+			<key>auto_tr</key>
+			<opt>tx_enb:1</opt>
+			<opt>auto_tr:1</opt>
 		</option>
 	</param>
 	<sink>
@@ -141,10 +125,8 @@ self.$(id).set_auto_tr($auto_tr)
 	<doc>
 The USRP sink inputs 128 Megasamples per second / interpolation.
 
-Flex RF boards only: The "Transmit Enable" configures the transmitter to be on or off. \
-Do not leave this unconfigured.
-
-Flex RF boards only: If enabled, "Auto Transmit/Receive Switching" handles the preference for transmit packets vs receive packets. \
-By default, "Auto TR" is disabled.
+Flex RF boards only: The "Transmit Setting" must be configured. \
+When set to "Enable" the transmitter is always on. \
+When set to "Auto Transmit/Receive", the transmitter is disabled while receiving.
 	</doc>
 </block>

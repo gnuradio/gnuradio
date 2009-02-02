@@ -64,7 +64,6 @@ class _simple_source(gr.hier_block2):
 			verbose=verbose,
 		)
 	def set_gain(self, gain): self._subdev.set_gain(gain)
-	def set_auto_tr(self, auto_tr): self._subdev.set_auto_tr(auto_tr)
 
 class simple_source_c(_simple_source, common.usrp_source_c): pass
 class simple_source_s(_simple_source, common.usrp_source_s): pass

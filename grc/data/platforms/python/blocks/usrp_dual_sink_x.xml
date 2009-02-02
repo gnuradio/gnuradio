@@ -20,20 +20,20 @@ self.$(id).set_gain_b($gain_b)
 ##################################################
 ## Flex RF A
 ##################################################
-#if $tx_enb_a.eval
-self.$(id).set_enable_a($tx_enb_a)
+#if $transmit_a.tx_enb
+self.$(id).set_enable_a(True)
 #end if
-#if $auto_tr_a.eval and $tx_enb_a.eval
-self.$(id).set_auto_tr_a($auto_tr_a)
+#if $transmit_a.auto_tr
+self.$(id).set_auto_tr_a(True)
 #end if
 ##################################################
 ## Flex RF B
 ##################################################
-#if $tx_enb_b.eval
-self.$(id).set_enable_b($tx_enb_b)
+#if $transmit_b.tx_enb
+self.$(id).set_enable_b(True)
 #end if
-#if $auto_tr_b.eval and $tx_enb_b.eval
-self.$(id).set_auto_tr_b($auto_tr_b)
+#if $transmit_b.auto_tr
+self.$(id).set_auto_tr_b(True)
 #end if</make>
 	<callback>set_interp_rate($interpolation)</callback>
 	<callback>set_frequency_a($frequency_a)</callback>
@@ -111,44 +111,28 @@ self.$(id).set_auto_tr_b($auto_tr_b)
 ###################################################
  -->
 	<param>
-		<name>TX Enable A</name>
-		<key>tx_enb_a</key>
+		<name>Transmit A</name>
+		<key>transmit_a</key>
 		<value></value>
 		<type>enum</type>
-		<hide>$tx_enb_a.hide</hide>
+		<hide>#if $transmit_a.tx_enb then 'none' else 'part'#</hide>
 		<option>
 			<name>Unconfigured</name>
 			<key></key>
-			<opt>hide:part</opt>
+			<opt>tx_enb:</opt>
+			<opt>auto_tr:</opt>
 		</option>
 		<option>
 			<name>Enable</name>
-			<key>True</key>
-			<opt>hide:none</opt>
+			<key>tx_enb</key>
+			<opt>tx_enb:1</opt>
+			<opt>auto_tr:</opt>
 		</option>
 		<option>
-			<name>Disable</name>
-			<key>False</key>
-			<opt>hide:none</opt>
-		</option>
-	</param>
-	<param>
-		<name>Auto T/R A</name>
-		<key>auto_tr_a</key>
-		<value></value>
-		<type>enum</type>
-		<hide>#if $tx_enb_a.eval then 'none' else 'all'#</hide>
-		<option>
-			<name>Auto</name>
-			<key></key>
-		</option>
-		<option>
-			<name>Enable</name>
-			<key>True</key>
-		</option>
-		<option>
-			<name>Disable</name>
-			<key>False</key>
+			<name>Auto T/R</name>
+			<key>auto_tr</key>
+			<opt>tx_enb:1</opt>
+			<opt>auto_tr:1</opt>
 		</option>
 	</param>
 <!--
@@ -157,44 +141,28 @@ self.$(id).set_auto_tr_b($auto_tr_b)
 ###################################################
  -->
 	<param>
-		<name>TX Enable B</name>
-		<key>tx_enb_b</key>
+		<name>Transmit B</name>
+		<key>transmit_b</key>
 		<value></value>
 		<type>enum</type>
-		<hide>$tx_enb_b.hide</hide>
+		<hide>#if $transmit_b.tx_enb then 'none' else 'part'#</hide>
 		<option>
 			<name>Unconfigured</name>
 			<key></key>
-			<opt>hide:part</opt>
+			<opt>tx_enb:</opt>
+			<opt>auto_tr:</opt>
 		</option>
 		<option>
 			<name>Enable</name>
-			<key>True</key>
-			<opt>hide:none</opt>
+			<key>tx_enb</key>
+			<opt>tx_enb:1</opt>
+			<opt>auto_tr:</opt>
 		</option>
 		<option>
-			<name>Disable</name>
-			<key>False</key>
-			<opt>hide:none</opt>
-		</option>
-	</param>
-	<param>
-		<name>Auto T/R B</name>
-		<key>auto_tr_b</key>
-		<value></value>
-		<type>enum</type>
-		<hide>#if $tx_enb_b.eval then 'none' else 'all'#</hide>
-		<option>
-			<name>Auto</name>
-			<key></key>
-		</option>
-		<option>
-			<name>Enable</name>
-			<key>True</key>
-		</option>
-		<option>
-			<name>Disable</name>
-			<key>False</key>
+			<name>Auto T/R</name>
+			<key>auto_tr</key>
+			<opt>tx_enb:1</opt>
+			<opt>auto_tr:1</opt>
 		</option>
 	</param>
 	<sink>
@@ -208,10 +176,8 @@ self.$(id).set_auto_tr_b($auto_tr_b)
 	<doc>
 The USRP sink inputs 128 Megasamples per second / interpolation.
 
-Flex RF boards only: The "Transmit Enable" configures the transmitter to be on or off. \
-Do not leave this unconfigured.
-
-Flex RF boards only: If enabled, "Auto Transmit/Receive Switching" handles the preference for transmit packets vs receive packets. \
-By default, "Auto TR" is disabled.
+Flex RF boards only: The "Transmit Setting" must be configured. \
+When set to "Enable" the transmitter is always on. \
+When set to "Auto Transmit/Receive", the transmitter is disabled while receiving.
 	</doc>
 </block>
