@@ -227,9 +227,16 @@ class app_flow_graph(stdgui2.std_top_block):
 		#
 		if (self.setimode):
 			options.decim = 256
+		
+		if (self.dual_mode == True and self.decim <= 4):
+			print "Cannot use decim <= 4 with dual_mode"
+			sys.exit(1)
 
 		if (self.dual_mode == False and self.interferometer == False):
-			self.u = usrp.source_c(decim_rate=options.decim,fusb_block_size=8192)
+			if (options.decim > 4):
+				self.u = usrp.source_c(decim_rate=options.decim,fusb_block_size=8192)
+			else:
+				self.u = usrp.source_c(decim_rate=options.decim,fusb_block_size=8192, fpga_filename="std_4rx_0tx.rbf")
 			self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
 			# determine the daughterboard subdevice we're using
 			self.subdev[0] = usrp.selected_subdev(self.u, options.rx_subdev_spec)
