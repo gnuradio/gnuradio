@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2003,2004,2005,2006,2007,2008 Free Software Foundation, Inc.
+# Copyright 2001,2003,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -69,9 +69,6 @@ BUILT_SOURCES =				\
 	gnuradio_swig_py_io.h		\
 	gnuradio_swig_bug_workaround.h	
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(AM_CPPFLAGS) $(WITH_SWIG_INCLUDES) \
-	$(WITH_INCLUDES)
-
 # ----------------------------------------------------------------
 # We break this up into 5 libraries...
 
@@ -126,8 +123,8 @@ _gnuradio_swig_py_runtime_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
 
 gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime.h: gnuradio_swig_py_runtime.cc
 
-gnuradio_swig_py_runtime.cc : gnuradio.i
-	if $(SWIG) $(SWIGPYTHONARGS) -MMD -MF gnuradio_swig_py_runtime.Td -module gnuradio_swig_py_runtime -o gnuradio_swig_py_runtime.cc gnuradio.i ;\
+gnuradio_swig_py_runtime.cc : $(srcdir)/gnuradio.i
+	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) -MMD -MF gnuradio_swig_py_runtime.Td -module gnuradio_swig_py_runtime -o gnuradio_swig_py_runtime.cc $(srcdir)/gnuradio.i ;\
 	then if test $(host_os) = mingw32; \
 	     then sed 's,\\\\,/,g' <gnuradio_swig_py_runtime.Td >gnuradio_swig_py_runtime.d; rm -f gnuradio_swig_py_runtime.Td; \
 	     else mv -f gnuradio_swig_py_runtime.Td gnuradio_swig_py_runtime.d; fi \
@@ -157,8 +154,8 @@ _gnuradio_swig_py_general_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
 
 gnuradio_swig_py_general.py gnuradio_swig_py_general.h: gnuradio_swig_py_general.cc
 
-gnuradio_swig_py_general.cc : sw_general.i
-	if $(SWIG) $(SWIGPYTHONARGS) -MMD -MF gnuradio_swig_py_general.Td -module gnuradio_swig_py_general -o gnuradio_swig_py_general.cc sw_general.i ;\
+gnuradio_swig_py_general.cc : $(srcdir)/sw_general.i
+	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) -MMD -MF gnuradio_swig_py_general.Td -module gnuradio_swig_py_general -o gnuradio_swig_py_general.cc $(srcdir)/sw_general.i ;\
 	then if test $(host_os) = mingw32; \
 	     then sed 's,\\\\,/,g' <gnuradio_swig_py_general.Td >gnuradio_swig_py_general.d; rm -f gnuradio_swig_py_general.Td; \
 	     else mv -f gnuradio_swig_py_general.Td gnuradio_swig_py_general.d; fi \
@@ -188,8 +185,8 @@ _gnuradio_swig_py_gengen_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
 
 gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen.h: gnuradio_swig_py_gengen.cc
 
-gnuradio_swig_py_gengen.cc : sw_gengen.i
-	if $(SWIG) $(SWIGPYTHONARGS) -MMD -MF gnuradio_swig_py_gengen.Td -module gnuradio_swig_py_gengen -o gnuradio_swig_py_gengen.cc sw_gengen.i ;\
+gnuradio_swig_py_gengen.cc : $(srcdir)/sw_gengen.i
+	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) -MMD -MF gnuradio_swig_py_gengen.Td -module gnuradio_swig_py_gengen -o gnuradio_swig_py_gengen.cc $(srcdir)/sw_gengen.i ;\
 	then if test $(host_os) = mingw32; \
 	     then sed 's,\\\\,/,g' <gnuradio_swig_py_gengen.Td >gnuradio_swig_py_gengen.d; rm -f gnuradio_swig_py_gengen.Td; \
 	     else mv -f gnuradio_swig_py_gengen.Td gnuradio_swig_py_gengen.d; fi \
@@ -219,8 +216,8 @@ _gnuradio_swig_py_filter_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
 
 gnuradio_swig_py_filter.py gnuradio_swig_py_filter.h: gnuradio_swig_py_filter.cc
 
-gnuradio_swig_py_filter.cc : sw_filter.i
-	if $(SWIG) $(SWIGPYTHONARGS) -MMD -MF gnuradio_swig_py_filter.Td -module gnuradio_swig_py_filter -o gnuradio_swig_py_filter.cc sw_filter.i ;\
+gnuradio_swig_py_filter.cc : $(srcdir)/sw_filter.i
+	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) -MMD -MF gnuradio_swig_py_filter.Td -module gnuradio_swig_py_filter -o gnuradio_swig_py_filter.cc $(srcdir)/sw_filter.i ;\
 	then if test $(host_os) = mingw32; \
 	     then sed 's,\\\\,/,g' <gnuradio_swig_py_filter.Td >gnuradio_swig_py_filter.d; rm -f gnuradio_swig_py_filter.Td; \
 	     else mv -f gnuradio_swig_py_filter.Td gnuradio_swig_py_filter.d; fi \
@@ -250,8 +247,8 @@ _gnuradio_swig_py_io_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
 
 gnuradio_swig_py_io.py gnuradio_swig_py_io.h: gnuradio_swig_py_io.cc
 
-gnuradio_swig_py_io.cc : sw_io.i
-	if $(SWIG) $(SWIGPYTHONARGS) -MMD -MF gnuradio_swig_py_io.Td -module gnuradio_swig_py_io -o gnuradio_swig_py_io.cc sw_io.i ;\
+gnuradio_swig_py_io.cc : $(srcdir)/sw_io.i
+	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) -MMD -MF gnuradio_swig_py_io.Td -module gnuradio_swig_py_io -o gnuradio_swig_py_io.cc $(srcdir)/sw_io.i ;\
 	then if test $(host_os) = mingw32; \
 	     then sed 's,\\\\,/,g' <gnuradio_swig_py_io.Td >gnuradio_swig_py_io.d; rm -f gnuradio_swig_py_io.Td; \
 	     else mv -f gnuradio_swig_py_io.Td gnuradio_swig_py_io.d; fi \

@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2008 Free Software Foundation, Inc.
+# Copyright 2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio.
 # 
@@ -32,7 +32,7 @@ EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
 LOCAL_IFILES = 				\
-	$(top_srcdir)/gr-audio-osx/src/audio_osx.i				
+	$(srcdir)/audio_osx.i				
 
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
@@ -49,9 +49,6 @@ ourpython_PYTHON =			\
 	audio_osx.py
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
-
-SWIGCPPPYTHONARGS = -python $(PYTHON_CPPFLAGS) $(STD_DEFINES_AND_INCLUDES) \
-	 $(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
 
 ourlib_LTLIBRARIES = _audio_osx.la
 
@@ -82,7 +79,8 @@ _audio_osx_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version -framework AudioU
 _audio_osx_la_CXXFLAGS = @swig_CXXFLAGS@
 
 audio_osx.cc audio_osx.py: $(ALL_IFILES)
-	$(SWIG) $(SWIGCPPPYTHONARGS) -module audio_osx -o audio_osx.cc $(LOCAL_IFILES)
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module audio_osx \
+		-o audio_osx.cc $(LOCAL_IFILES)
 
 noinst_PYTHON = qa_osx.py test_audio_loop.py
 

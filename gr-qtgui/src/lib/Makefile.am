@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -31,9 +31,6 @@ ourlibdir    = $(grpyexecdir)/qtgui
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
               $(QT_INCLUDES) -I. $(WITH_INCLUDES)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
-	$(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
-
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\
 	$(NON_LOCAL_IFILES)		
@@ -42,7 +39,7 @@ NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
 
 LOCAL_IFILES = 				\
-	$(top_srcdir)/gr-qtgui/src/lib/qtgui.i
+	$(srcdir)/qtgui.i
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the shared library
@@ -143,8 +140,9 @@ libqtgui_la_LIBADD = 		\
 	-lstdc++		\
 	$(QT_LIBS)
 
-qtgui.cc qtgui.py: qtgui.i $(ALL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module qtgui -o qtgui.cc $(LOCAL_IFILES)
+qtgui.cc qtgui.py: $(ALL_IFILES)
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module qtgui \
+		-o qtgui.cc $(LOCAL_IFILES)
 
 # These swig headers get installed in ${prefix}/include/gnuradio/swig
 swiginclude_HEADERS = 			\

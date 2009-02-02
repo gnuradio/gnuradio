@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2008 Free Software Foundation, Inc.
+# Copyright 2005,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -33,7 +33,7 @@ EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
 LOCAL_IFILES = 				\
-	$(top_srcdir)/gr-comedi/src/comedi.i				
+	$(srcdir)/comedi.i				
 
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
@@ -50,10 +50,6 @@ ourpython_PYTHON =			\
 	comedi.py
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
-
-SWIGCPPPYTHONARGS = -c++ -python $(PYTHON_CPPFLAGS) \
-	$(STD_DEFINES_AND_INCLUDES) $(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
-#	-I$(swigincludedir) $(S-I$(grincludedir) -I$(comediincludedir)
 
 ourlib_LTLIBRARIES = _comedi.la
 
@@ -84,9 +80,9 @@ _comedi_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
 _comedi_la_CXXFLAGS = @swig_CXXFLAGS@
 
-comedi.cc comedi.py: $(LOCAL_IFILES)
-	$(SWIG) $(SWIGCPPPYTHONARGS) -module comedi -o comedi.cc $(LOCAL_IFILES)
-
+comedi.cc comedi.py: $(ALL_IFILES)
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module comedi \
+		-o comedi.cc $(LOCAL_IFILES)
 
 noinst_PYTHON = 		\
 	qa_comedi.py			

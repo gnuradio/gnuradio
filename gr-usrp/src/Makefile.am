@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -107,15 +107,12 @@ _usrp_swig_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
 _usrp_swig_la_CXXFLAGS = @swig_CXXFLAGS@
 
-SWIGPYTHONARGS = \
-	$(SWIGPYTHONFLAGS) \
-	$(STD_DEFINES_AND_INCLUDES) \
-	$(USRP_INCLUDES) \
-	$(WITH_INCLUDES) \
-	$(WITH_SWIG_INCLUDES)
+# Special swig arguments
+LOCAL_SWIG_DEFINES_AND_INCLUDES = $(USRP_INCLUDES)
 
 usrp_swig.cc usrp_swig.py: $(ALL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module usrp_swig -o usrp_swig.cc $(srcdir)/usrp.i
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module usrp_swig \
+		-o usrp_swig.cc $(srcdir)/usrp.i
 
 noinst_PYTHON =	\
 	qa_usrp.py			

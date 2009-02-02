@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -45,19 +45,16 @@ ourlibdir    = $(grpyexecdir)/pager
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
-	$(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
-
 ALL_IFILES = \
     $(LOCAL_IFILES) \
     $(NON_LOCAL_IFILES)	\
-    pager_flex_frame.i
+    $(srcdir)/pager_flex_frame.i
 
 NON_LOCAL_IFILES = \
     $(GNURADIO_I)
 
 LOCAL_IFILES = \
-    $(top_srcdir)/gr-pager/src/pager.i
+    $(srcdir)/pager.i
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _howto shared library
@@ -99,7 +96,8 @@ _pager_swig_la_LIBADD = \
     -lstdc++			
 
 pager_swig.cc pager_swig.py: $(ALL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module pager_swig -o pager_swig.cc $(LOCAL_IFILES)
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module pager_swig \
+		-o pager_swig.cc $(LOCAL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = \

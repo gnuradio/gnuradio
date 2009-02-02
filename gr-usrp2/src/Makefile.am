@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -88,17 +88,13 @@ BUILT_SOURCES = usrp2.cc usrp2.py
 # Install the SWIG python output
 ourpython_PYTHON = usrp2.py
 
-# Arguments to the swig wrapper generator
-SWIGPYTHONARGS = \
-	$(STD_DEFINES_AND_INCLUDES) \
-	$(SWIGPYTHONFLAGS) \
-	$(USRP2_INCLUDES) \
-	$(WITH_INCLUDES) \
-	$(WITH_SWIG_INCLUDES)
+# Special swig arguments
+LOCAL_SWIG_DEFINES_AND_INCLUDES = $(USRP2_INCLUDES)
 
 # Invoke SWIG wrapper generator
 usrp2.cc usrp2.py: $(ALL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module usrp2 -o usrp2.cc $(LOCAL_IFILES)
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module usrp2 \
+		-o usrp2.cc $(LOCAL_IFILES)
 
 # Create the Python shared library
 ourlib_LTLIBRARIES = _usrp2.la

@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -32,10 +32,11 @@ TESTS = run_tests
 ourpythondir = $(grpythondir)
 ourlibdir    = $(grpyexecdir)
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(GCELL_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(GCELL_INCLUDES) \
+	$(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) $(GCELL_INCLUDES) \
-	$(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
+# Special swig arguments
+LOCAL_SWIG_DEFINES_AND_INCLUDES = $(GCELL_INCLUDES)
 
 # ----------------------------------------------------------------
 #                        The C++ blocks
@@ -98,8 +99,9 @@ _gcell_la_CXXFLAGS = @swig_CXXFLAGS@
 swiginclude_HEADERS = \
 	$(LOCAL_IFILES)
 
-#gcell.cc gcell.py: $(LOCAL_IFILES) $(NON_LOCAL_IFILES)
-#	$(SWIG) $(SWIGPYTHONARGS) -module gcell -o gcell.cc $(LOCAL_IFILES)
+#gcell.cc gcell.py: $(ALL_IFILES)
+#	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module gcell \
+#		-o gcell.cc $(LOCAL_IFILES)
 
 # KLUDGE: Force runtime include of gcell.d dependency file.
 # This is not guaranteed to be portable, but will probably work.
@@ -108,8 +110,9 @@ swiginclude_HEADERS = \
 
 gcell.py gcell.h: gcell.cc
 
-gcell.cc : gcell.i $(GNURADIO_I)
-	if $(SWIG) $(SWIGPYTHONARGS) -MMD -MF gcell.Td -module gcell -o gcell.cc $(srcdir)/gcell.i ;\
+gcell.cc : $(srcdir)/gcell.i $(GNURADIO_I)
+	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) -MMD -MF gcell.Td -module gcell \
+		-o gcell.cc $(srcdir)/gcell.i ;\
 	then if test $(host_os) = mingw32; \
 	     then sed 's,\\\\,/,g' <gcell.Td >gcell.d; rm -f gcell.Td; \
 	     else mv -f gcell.Td gcell.d; fi \

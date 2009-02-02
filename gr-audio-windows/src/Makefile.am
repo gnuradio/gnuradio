@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -32,7 +32,7 @@ EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
 LOCAL_IFILES = 				\
-	$(top_srcdir)/gr-audio-windows/src/audio_windows.i				
+	$(srcdir)/audio_windows.i				
 
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
@@ -49,9 +49,6 @@ ourpython_PYTHON =			\
 	audio_windows.py
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
-
-SWIGCPPPYTHONARGS = -python $(PYTHON_CPPFLAGS) $(STD_DEFINES_AND_INCLUDES) \
-	 $(WITH_SWIG_INCLUDES)
 
 ourlib_LTLIBRARIES = _audio_windows.la
 
@@ -79,9 +76,9 @@ _audio_windows_la_LDFLAGS = -no-undefined -module -avoid-version \
 
 _audio_windows_la_CXXFLAGS = @swig_CXXFLAGS@
 
-audio_windows.cc audio_windows.py: $(LOCAL_IFILES)
-	$(SWIG) $(SWIGCPPPYTHONARGS) -module audio_windows -o audio_windows.cc $(LOCAL_IFILES)
-
+audio_windows.cc audio_windows.py: $(ALL_IFILES)
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module audio_windows \
+		-o audio_windows.cc $(LOCAL_IFILES)
 
 noinst_PYTHON = qa_audio_windows.py
 

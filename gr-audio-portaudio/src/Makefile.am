@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2008 Free Software Foundation, Inc.
+# Copyright 2004,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -33,7 +33,7 @@ EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
 LOCAL_IFILES = 				\
-	$(top_srcdir)/gr-audio-portaudio/src/audio_portaudio.i
+	$(srcdir)/audio_portaudio.i
 
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
@@ -51,9 +51,6 @@ ourpython_PYTHON =			\
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 	$(PORTAUDIO_CFLAGS) $(WITH_INCLUDES)
-
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
-	-I/usr/include $(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
 
 ourlib_LTLIBRARIES = _audio_portaudio.la
 
@@ -84,7 +81,8 @@ _audio_portaudio_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 _audio_portaudio_la_CXXFLAGS = @swig_CXXFLAGS@
 
 audio_portaudio.cc audio_portaudio.py: $(ALL_IFILES) audio_portaudio_sink.h audio_portaudio_source.h
-	$(SWIG) $(SWIGPYTHONARGS) -module audio_portaudio -o audio_portaudio.cc $(LOCAL_IFILES)
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module audio_portaudio \
+		-o audio_portaudio.cc $(LOCAL_IFILES)
 
 noinst_PYTHON = 			\
 	qa_portaudio.py

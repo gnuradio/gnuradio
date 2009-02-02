@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -51,8 +51,6 @@ ourpython_PYTHON =			\
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(SDL_CFLAGS) \
 	$(WITH_INCLUDES)
 
-SWIGCPPPYTHONARGS = -fvirtual -python -modern $(PYTHON_CPPFLAGS) $(STD_DEFINES_AND_INCLUDES) $(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
-
 ourlib_LTLIBRARIES = _video_sdl.la
 
 _video_sdl_la_SOURCES = 		\
@@ -77,8 +75,8 @@ _video_sdl_la_LIBADD = 			\
 _video_sdl_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
 video_sdl.cc video_sdl.py: $(ALL_IFILES)
-	$(SWIG) $(SWIGCPPPYTHONARGS) -module video_sdl -o video_sdl.cc $(LOCAL_IFILES)
-
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module video_sdl \
+		-o video_sdl.cc $(LOCAL_IFILES)
 
 noinst_PYTHON = qa_video_sdl.py
 

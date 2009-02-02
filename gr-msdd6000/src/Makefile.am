@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -39,17 +39,11 @@ ourlibdir    = $(grpyexecdir)
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 	$(WITH_INCLUDES)
 
-
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
-	-I/usr/include $(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
-
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
 
-
 LOCAL_IFILES = 				\
-	$(top_srcdir)/gr-msdd6000/src/msdd.i				
-
+	$(srcdir)/msdd.i
 
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\
@@ -90,8 +84,9 @@ _msdd_la_LIBADD = 			\
 	-lstdc++
 # -L/usr/lib/libfftw3f.so.3.1.2
 
-msdd.cc msdd.py: $(LOCAL_IFILES) $(ALL_IFILES) 
-	$(SWIG) $(SWIGPYTHONARGS) -module msdd -o msdd.cc $(LOCAL_IFILES)
+msdd.cc msdd.py: $(ALL_IFILES) 
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module msdd \
+		-o msdd.cc $(LOCAL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\

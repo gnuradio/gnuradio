@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -30,7 +30,7 @@ ourlibdir    = $(grpyexecdir)
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(SWIGGRFLAGS)
+SWIG_PYTHON_ARGS = $(SWIG_PYTHON_FLAGS) $(SWIGGRFLAGS)
 
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\
@@ -41,7 +41,7 @@ NON_LOCAL_IFILES =			\
 
 
 LOCAL_IFILES = 				\
-	$(top_srcdir)/src/lib/howto.i				
+	$(srcdir)/howto.i				
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _howto shared library
@@ -72,8 +72,9 @@ _howto_la_LIBADD = 			\
 	$(PYTHON_LDFLAGS)		\
 	-lstdc++			
 
-howto.cc howto.py: $(LOCAL_IFILES) $(ALL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module howto -o howto.cc $(LOCAL_IFILES)
+howto.cc howto.py: $(ALL_IFILES)
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module howto \
+		-o howto.cc $(LOCAL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\

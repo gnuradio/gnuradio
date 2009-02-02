@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2003,2004,2006,2007,2008 Free Software Foundation, Inc.
+# Copyright 2001,2003,2004,2006,2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -52,10 +52,8 @@ ourpython_PYTHON = 			\
 	usrp_fpga_regs.py		\
 	usrp_prims.py			
 
-
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(AM_CPPFLAGS) $(WITH_SWIG_INCLUDES) \
-	$(WITH_INCLUDES)
-
+# special SWIG flags
+LOCAL_SWIG_DEFINES_AND_INCLUDES = $(USRP_INCLUDES)
 
 ourlib_LTLIBRARIES = 			\
 	_usrp_prims.la
@@ -71,9 +69,9 @@ _usrp_prims_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
 _usrp_prims_la_CXXFLAGS = @swig_CXXFLAGS@
 
-prims.cc usrp_prims.py : prims.i ../../firmware/include/fpga_regs_common.h ../../firmware/include/fpga_regs_standard.h
-	$(SWIG) $(SWIGPYTHONARGS) -module usrp_prims -o prims.cc prims.i
-
+prims.cc usrp_prims.py : $(srcdir)/prims.i ../../firmware/include/fpga_regs_common.h ../../firmware/include/fpga_regs_standard.h
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module usrp_prims \
+		-o prims.cc $(srcdir)/prims.i
 
 MOSTLYCLEANFILES = \
 	prims.cc usrp_prims.py *~ *.pyc

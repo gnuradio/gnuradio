@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2004,2005,2006,2008 Free Software Foundation, Inc.
+# Copyright 2001,2004,2005,2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -214,9 +214,6 @@ test_atsci_LDADD   =  		\
 #  It builds the atsc module which we'll load into python
 # ------------------------------------------------------------------------
 
-SWIGCPPPYTHONARGS = -fvirtual -python -modern $(PYTHON_CPPFLAGS) \
-	$(STD_DEFINES_AND_INCLUDES) $(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
-
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\
 	$(NON_LOCAL_IFILES)		
@@ -225,7 +222,7 @@ NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
 
 LOCAL_IFILES = 				\
-	$(top_srcdir)/gr-atsc/src/lib/atsc.i				
+	$(srcdir)/atsc.i				
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _atsc shared library
@@ -256,8 +253,9 @@ _atsc_la_LIBADD = 			\
 	libatsc.la			\
 	-lstdc++			
 
-atsc.cc atsc.py: atsc.i $(ALL_IFILES)
-	$(SWIG) $(SWIGCPPPYTHONARGS) -module atsc -o atsc.cc $(LOCAL_IFILES)
+atsc.cc atsc.py: $(ALL_IFILES)
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module atsc \
+		-o atsc.cc $(LOCAL_IFILES)
 
 # These swig headers get installed in ${prefix}/include/gnuradio/swig
 swiginclude_HEADERS = 			\

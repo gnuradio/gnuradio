@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,8 +22,7 @@
 
 %feature("autodoc", "1");		// generate python docstrings
 
-%include "exception.i"
-%import "gnuradio.i"			// the common stuff
+%import(module="gnuradio_swig_py_runtime") "gnuradio.i"	// the common stuff
 %import <stdint.i>     
 
 %{

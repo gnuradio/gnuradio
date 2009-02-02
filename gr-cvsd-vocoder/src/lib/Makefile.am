@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -30,9 +30,6 @@ ourlibdir    = $(grpyexecdir)/vocoder
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
-	$(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
-
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\
 	$(NON_LOCAL_IFILES)		
@@ -41,7 +38,7 @@ NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
 
 LOCAL_IFILES = 				\
-	$(top_srcdir)/gr-cvsd-vocoder/src/lib/cvsd_vocoder.i
+	$(srcdir)/cvsd_vocoder.i
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _howto shared library
@@ -75,8 +72,9 @@ _cvsd_vocoder_la_LIBADD = 	\
 
 _cvsd_vocoder_la_CXXFLAGS = @swig_CXXFLAGS@
 
-cvsd_vocoder.cc cvsd_vocoder.py: cvsd_vocoder.i $(ALL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module cvsd_vocoder -o cvsd_vocoder.cc $(LOCAL_IFILES)
+cvsd_vocoder.cc cvsd_vocoder.py: $(ALL_IFILES)
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module cvsd_vocoder \
+		-o cvsd_vocoder.cc $(LOCAL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\

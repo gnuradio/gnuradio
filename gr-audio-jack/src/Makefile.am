@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2008 Free Software Foundation, Inc.
+# Copyright 2005,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -33,7 +33,7 @@ EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
 LOCAL_IFILES = 				\
-	$(top_srcdir)/gr-audio-jack/src/audio_jack.i				
+	$(srcdir)/audio_jack.i				
 
 NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
@@ -50,9 +50,6 @@ ourpython_PYTHON =			\
 	audio_jack.py
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
-
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
-	$(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
 
 ourlib_LTLIBRARIES = _audio_jack.la
 
@@ -82,8 +79,9 @@ _audio_jack_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 
 _audio_jack_la_CXXFLAGS = @swig_CXXFLAGS@
 
-audio_jack.cc audio_jack.py: $(LOCAL_IFILES) $(NON_LOCAL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module audio_jack -o audio_jack.cc $(LOCAL_IFILES)
+audio_jack.cc audio_jack.py: $(ALL_IFILES)
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module audio_jack \
+		-o audio_jack.cc $(LOCAL_IFILES)
 
 noinst_PYTHON = 			\
 	qa_jack.py

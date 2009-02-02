@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2007,2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -29,9 +29,6 @@ ourpythondir = $(grpythondir)
 ourlibdir    = $(grpyexecdir)
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
-
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
-	$(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
 
 # ----------------------------------------------------------------
 # these scripts generate trellis codes from template files
@@ -107,7 +104,7 @@ NON_LOCAL_IFILES =		\
 	$(GNURADIO_I)	
 
 LOCAL_IFILES = 			\
-	$(top_srcdir)/gr-trellis/src/lib/trellis.i			
+	$(srcdir)/trellis.i			
 
 EXTRA_DIST = 			\
 	$(CODE_GENERATOR)	\
@@ -146,7 +143,8 @@ _trellis_la_LIBADD = 			\
 _trellis_la_CXXFLAGS = @swig_CXXFLAGS@
 
 trellis.cc trellis.py: $(ALL_IFILES) $(grinclude_HEADERS)
-	$(SWIG) $(SWIGPYTHONARGS) -module trellis -o trellis.cc $(LOCAL_IFILES)
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module trellis \
+		-o trellis.cc $(LOCAL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\

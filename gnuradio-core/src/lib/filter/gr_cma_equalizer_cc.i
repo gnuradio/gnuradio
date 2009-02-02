@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,7 +22,9 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,cma_equalizer_cc)
 
-%include <gr_adaptive_fir_ccf.i>
+// retrieve info on the base class, without generating wrappers since
+// the base class has a pure virual method.
+%import "gr_adaptive_fir_ccf.i"
 
 gr_cma_equalizer_cc_sptr gr_make_cma_equalizer_cc(int num_taps, float modulus, float mu);
 

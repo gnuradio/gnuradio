@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -32,9 +32,6 @@ ourlibdir    = $(grpyexecdir)/vocoder
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-SWIGPYTHONARGS = $(SWIGPYTHONFLAGS) $(STD_DEFINES_AND_INCLUDES) \
-	$(WITH_SWIG_INCLUDES) $(WITH_INCLUDES)
-
 ALL_IFILES = 				\
 	$(LOCAL_IFILES)			\
 	$(NON_LOCAL_IFILES)		
@@ -43,7 +40,7 @@ NON_LOCAL_IFILES =			\
 	$(GNURADIO_I)
 
 LOCAL_IFILES = 				\
-	$(top_srcdir)/gr-gsm-fr-vocoder/src/lib/gsm_full_rate.i
+	$(srcdir)/gsm_full_rate.i
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _howto shared library
@@ -77,8 +74,9 @@ _gsm_full_rate_la_LIBADD = 	\
 	$(GNURADIO_CORE_LA)	\
 	-lstdc++			
 
-gsm_full_rate.cc gsm_full_rate.py: gsm_full_rate.i $(ALL_IFILES)
-	$(SWIG) $(SWIGPYTHONARGS) -module gsm_full_rate -o gsm_full_rate.cc $(LOCAL_IFILES)
+gsm_full_rate.cc gsm_full_rate.py: $(ALL_IFILES)
+	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module gsm_full_rate \
+		-o gsm_full_rate.cc $(LOCAL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\

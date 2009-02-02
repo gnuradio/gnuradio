@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,7 +22,9 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,pwr_squelch_cc);
 
-%include gr_squelch_base_cc.i
+// retrieve info on the base class, without generating wrappers since
+// the base class has a pure virual method.
+%import "gr_squelch_base_cc.i"
 
 gr_pwr_squelch_cc_sptr 
 gr_make_pwr_squelch_cc(double db, double alpha=0.0001, int ramp=0, bool gate=false);
