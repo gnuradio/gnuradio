@@ -488,7 +488,7 @@ rfx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc)
 
   *dc = 0;
   struct db_rfx_dummy *db = (struct db_rfx_dummy *) dbb;
-  u2_fxpt_freq_t desired_n = ((1LL<<20)*db->common.freq_mult*(freq+db->common.freq_offset))/phdet_freq;
+  u2_fxpt_freq_t desired_n = (U2_DOUBLE_TO_FXPT_FREQ(1.0)*db->common.freq_mult*(freq+db->common.freq_offset))/phdet_freq;
   int N_DIV = u2_fxpt_freq_round_to_int(desired_n);
   int B = N_DIV/PRESCALER;
   int A = N_DIV - PRESCALER*B;

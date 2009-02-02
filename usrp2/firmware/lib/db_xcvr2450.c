@@ -19,6 +19,7 @@
 #include <db_base.h>
 #include <stdio.h>
 #include <spi.h>
+#include <hal_io.h>
 
 // RX IO Pins
 #define LOCKDET (1 << 15)           // This is an INPUT!!!
@@ -289,10 +290,15 @@ set_gpio(struct db_xcvr2450_dummy *db){
   int io_rx_while_tx = EN|rx_hp;
   int io_tx_while_rx = HB_PA_OFF|LB_PA_OFF|rx_antsel|AD9515DIV;
   int io_tx_while_tx = tx_pa_sel|tx_antsel|TX_EN|AD9515DIV;
-  //rx_set_atr_rxval(io_rx_while_rx); //TODO write to fpga regs?
-  //rx_set_atr_txval(io_rx_while_tx);
-  //tx_set_atr_rxval(io_tx_while_rx);
-  //tx_set_atr_txval(io_tx_while_tx);
+  /*rx_set_atr_rxval(io_rx_while_rx);
+  rx_set_atr_txval(io_rx_while_tx);
+  tx_set_atr_rxval(io_tx_while_rx);
+  tx_set_atr_txval(io_tx_while_tx);*/
+  
+  hal_gpio_write(GPIO_RX_BANK, io_rx_while_rx, 0xffff); //mask?
+  hal_gpio_write(GPIO_RX_BANK, io_rx_while_tx, 0xffff); //mask?
+  hal_gpio_write(GPIO_TX_BANK, io_tx_while_rx, 0xffff); //mask?
+  hal_gpio_write(GPIO_TX_BANK, io_tx_while_tx, 0xffff); //mask?
 
   printf("GPIO: RXRX=%04X RXTX=%04X TXRX=%04X TXTX=%04X\n",
          io_rx_while_rx, io_rx_while_tx, io_tx_while_rx, io_tx_while_tx);
@@ -308,7 +314,7 @@ rx_read_io(){
   //  val = FR_RB_IO_RX_B_IO_TX_B;
   //else
   //  val = FR_RB_IO_RX_A_IO_TX_A;
-  int t = 0;//usrp()->_read_fpga_reg(val);
+  int t = hal_gpio_read(GPIO_RX_BANK);//usrp()->_read_fpga_reg(val);
   return (t >> 16) & 0xffff;
 }
 
@@ -349,7 +355,7 @@ xcvr2450_init(struct db_base *dbb){
   db->common.d_rx_bb_gain = 16;   // 0 = min, 31 = max (0 - 62 dB)
   db->common.d_txgain = 63;       // 0 = min, 63 = max
 
-  /*
+  /*--------------------------------> !!! taken care of by db base operations
   // Initialize GPIO and ATR
   tx_write_io(TX_SAFE_IO, TX_OE_MASK);
   tx_write_oe(TX_OE_MASK, ~0);
@@ -362,7 +368,11 @@ xcvr2450_init(struct db_base *dbb){
   rx_set_atr_rxval(RX_SAFE_IO);
   rx_set_atr_txval(RX_SAFE_IO);
   rx_set_atr_mask(RX_OE_MASK);
-  */
+  ---------------------------------------> replaced with set_gpio
+  * */
+  
+  set_gpio(db);
+  
   // Initialize chipset
   // TODO: perform reset sequence to ensure power up defaults
   set_reg_standby(db);
@@ -445,7 +455,8 @@ xcvr2450_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc){
  // d_int_div = int(floor(div));
  // d_frac_div = int((div-d_int_div)*65536.0);
  // double actual_freq = phdet_freq*(d_int_div+(d_frac_div/65536.0))/scaler;
-  db->common.d_int_div = vco_freq/phdet_freq;
+  u2_fxpt_freq_t desired_n = U2_DOUBLE_TO_FXPT_FREQ(1.0)*vco_freq/phdet_freq;
+  db->common.d_int_div = u2_fxpt_freq_round_to_int(desired_n);
   *dc = db->common.d_int_div*phdet_freq*freq/vco_freq;
 
 
