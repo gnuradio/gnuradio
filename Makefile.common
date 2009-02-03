@@ -64,7 +64,7 @@ WITH_SWIG_INCLUDES = @with_SWIG_INCLUDES@
 # "-outdir $(builddir)" writes all generated output files to
 #   the local builddir (which should always be '.')
 SWIG_PYTHON_FLAGS = -fvirtual -python -modern -keyword \
-	-w511 -outdir $(builddir)
+	-w511 -outdir .
 
 # standard swig flags used by most components
 STD_SWIG_PYTHON_ARGS = \
