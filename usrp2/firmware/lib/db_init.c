@@ -162,7 +162,7 @@ lookup_dboard(int i2c_addr, struct db_base *default_db, char *msg)
   return db;
 }
 
-static void
+void
 set_atr_regs(int bank, struct db_base *db)
 {
   uint32_t	val[4];
