@@ -22,7 +22,7 @@
 
 %feature("autodoc", "1");		// generate python docstrings
 
-%import (module="gnuradio.gr.gnuradio_swig_py_runtime") "gnuradio.i"	// the common stuff
+%import "gnuradio.i"	// the common stuff
 
 %{
 #include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
