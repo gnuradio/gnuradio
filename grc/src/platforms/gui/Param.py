@@ -85,48 +85,15 @@ class Param(Element):
 
 	def get_markup(self):
 		"""
-		Create a markup to display the Param as a label on the SignalBlock.
-		If the data type is an Enum type, use the cname of the Enum's current choice.
-		Otherwise, use parsed the data type and use its string representation.
-		If the data type is not valid, use a red foreground color.
+		Create a markup to display the param as a label on the block.
+		If the param is valid, use the param's repr representation.
+		Otherwise, create a markup for error.
 		@return pango markup string
 		"""
-		###########################################################################
-		# display logic for numbers
-		###########################################################################
-		def float_to_str(var):
-			if var-int(var) == 0: return '%d'%int(var)
-			if var*10-int(var*10) == 0: return '%.1f'%var
-			if var*100-int(var*100) == 0: return '%.2f'%var
-			if var*1000-int(var*1000) == 0: return '%.3f'%var
-			else: return '%.3g'%var
-		def to_str(var):
-			if isinstance(var, str): return var
-			elif isinstance(var, complex):
-				if var == 0: return '0' #value is zero
-				elif var.imag == 0: return '%s'%float_to_str(var.real) #value is real
-				elif var.real == 0: return '%sj'%float_to_str(var.imag) #value is imaginary
-				elif var.imag < 0: return '%s-%sj'%(float_to_str(var.real), float_to_str(abs(var.imag)))
-				else: return '%s+%sj'%(float_to_str(var.real), float_to_str(var.imag))
-			elif isinstance(var, float): return float_to_str(var)
-			elif isinstance(var, int): return '%d'%var
-			else: return str(var)
-		###########################################################################
 		if self.is_valid():
-			data = self.evaluate()
-			t = self.get_type()
-			if self.is_enum():
-				dt_str = self.get_option(self.get_value()).get_name()
-			elif isinstance(data, (list, tuple, set)): #vector types
-				if len(data) > 8: dt_str = self.get_value() #large vectors use code
-				else: dt_str = ', '.join(map(to_str, data)) #small vectors use eval
-			else: dt_str = to_str(data)	#other types
-			#truncate
-			max_len = max(27 - len(self.get_name()), 3)
-			if len(dt_str) > max_len:
-				dt_str = dt_str[:max_len/2 -3] + '...' + dt_str[-max_len/2:]
-			return '<b>%s:</b> %s'%(Utils.xml_encode(self.get_name()), Utils.xml_encode(dt_str))
-		else: return '<span foreground="red"><b>%s:</b> error</span>'%Utils.xml_encode(self.get_name())
+			return '<b>%s:</b> %s'%(Utils.xml_encode(self.get_name()), Utils.xml_encode(repr(self)))
+		else:
+			return '<span foreground="red"><b>%s:</b> error</span>'%Utils.xml_encode(self.get_name())
 
 	def get_layout(self):
 		"""

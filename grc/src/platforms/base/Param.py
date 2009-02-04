@@ -228,6 +228,16 @@ class Param(Element):
 	def get_type(self): return self.get_parent().resolve_dependencies(self._type)
 	def is_enum(self): return bool(self.get_options())
 
+	def __repr__(self):
+		"""
+		Get the repr (nice string format) for this param.
+		Just return the value (special case enum).
+		Derived classes can handle complex formatting.
+		@return the string representation
+		"""
+		if self.is_enum(): return self.get_option(self.get_value()).get_name()
+		return self.get_value()
+
 	def get_input_class(self):
 		"""
 		Get the graphical gtk class to represent this parameter.

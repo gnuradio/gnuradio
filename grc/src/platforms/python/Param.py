@@ -25,6 +25,7 @@ import os
 import pygtk
 pygtk.require('2.0')
 import gtk
+from gnuradio import eng_notation
 
 class FileParam(EntryParam):
 	"""Provide an entry box for filename and a button to browse for a file."""
@@ -87,6 +88,54 @@ class Param(_Param):
 		'id',
 		'grid_pos', 'import',
 	]
+
+	def __repr__(self):
+		"""
+		Get the repr (nice string format) for this param.
+		@return the string representation
+		"""
+		if self.is_enum(): return _Param.__repr__(self)
+		##################################################
+		# display logic for numbers
+		##################################################
+		def to_str(num):
+			if isinstance(num, str): return num
+			elif isinstance(num, complex):
+				if num == 0: return '0' #value is zero
+				elif num.imag == 0: return '%s'%eng_notation.num_to_str(num.real) #value is real
+				elif num.real == 0: return '%sj'%eng_notation.num_to_str(num.imag) #value is imaginary
+				elif num.imag < 0: return '%s-%sj'%(eng_notation.num_to_str(num.real), eng_notation.num_to_str(abs(num.imag)))
+				else: return '%s+%sj'%(eng_notation.num_to_str(num.real), eng_notation.num_to_str(num.imag))
+			elif isinstance(num, (float, int)): return eng_notation.num_to_str(num)
+			else: return str(var)
+		##################################################
+		# split up formatting by type
+		##################################################
+		truncate = 0 #default center truncate
+		max_len = max(27 - len(self.get_name()), 3)
+		e = self.evaluate()
+		t = self.get_type()
+		if t in ('int', 'real', 'complex'): dt_str = to_str(e)
+		elif isinstance(e, (list, tuple, set, numpy.ndarray)): #vector types
+			if len(e) > 8:
+				dt_str = self.get_value() #large vectors use code
+				truncate = 1
+			else: dt_str = ', '.join(map(to_str, e)) #small vectors use eval
+		elif t in ('file_open', 'file_save'):
+			dt_str = self.get_value()
+			truncate = -1
+		else: dt_str = to_str(e) #other types
+		##################################################
+		# truncate
+		##################################################
+		if len(dt_str) > max_len:
+			if truncate < 0: #front truncate
+				dt_str = '...' + dt_str[3-max_len:]
+			elif truncate == 0: #center truncate
+				dt_str = dt_str[:max_len/2 -3] + '...' + dt_str[-max_len/2:]
+			elif truncate > 0: #rear truncate
+				dt_str = dt_str[:max_len-3] + '...'
+		return dt_str
 
 	def get_input_class(self):
 		if self.get_type() in ('file_open', 'file_save'): return FileParam
