@@ -191,6 +191,10 @@ if __name__ == '__main__':
 		#end for
 	(options, args) = parser.parse_args()
 	#end if
+	#if $flow_graph.get_option('realtime_scheduling')
+	if gr.enable_realtime_scheduling() != gr.RT_OK:
+		print "Error: failed to enable realtime scheduling."
+	#end if
 	tb = $(class_name)($(', '.join($args)))
 	#if $generate_options == 'wx_gui'
 	tb.Run()

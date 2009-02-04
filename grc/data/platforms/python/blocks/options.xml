@@ -49,17 +49,14 @@ import wx
 		<option>
 			<name>WX GUI</name>
 			<key>wx_gui</key>
-			<opt>hide_category:all</opt>
 		</option>
 		<option>
 			<name>No GUI</name>
 			<key>no_gui</key>
-			<opt>hide_category:all</opt>
 		</option>
 		<option>
 			<name>Hier Block</name>
 			<key>hb</key>
-			<opt>hide_category:</opt>
 		</option>
 	</param>
 	<param>
@@ -67,7 +64,28 @@ import wx
 		<key>category</key>
 		<value>Custom</value>
 		<type>string</type>
-		<hide>$generate_options.hide_category</hide>
+		<hide>#if $generate_options.eval == 'hb' then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Realtime Scheduling</name>
+		<key>realtime_scheduling</key>
+		<value></value>
+		<type>enum</type>
+		<hide>#if $generate_options.eval == 'hb'
+all#slurp
+#elif $realtime_scheduling.eval
+none#slurp
+#else
+part#slurp
+#end if</hide>
+		<option>
+			<name>Off</name>
+			<key></key>
+		</option>
+		<option>
+			<name>On</name>
+			<key>1</key>
+		</option>
 	</param>
 	<check>len($window_size) == 2</check>
 	<check>300 &lt;= $(window_size)[0] &lt;= 2048</check>
