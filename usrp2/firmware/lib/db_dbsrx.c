@@ -107,7 +107,7 @@ struct db_dbsrx db_dbsrx = {
 bool
 db_dbsrx_init(struct db_base *dbb){
   struct db_dbsrx_dummy *db = (struct db_dbsrx_dummy *) dbb;
-  db->base.set_gain(dbb, (db->base.gain_max - db->base.gain_min)/2);
+  db->base.set_gain(dbb, (db->base.gain_max + db->base.gain_min)/2);
   clocks_enable_rx_dboard(true, REFCLK_DIVISOR);  // Gives 4 MHz clock
   return true;
 }
@@ -115,7 +115,7 @@ db_dbsrx_init(struct db_base *dbb){
 /**************************************************
  * Registers
  **************************************************/
-int
+static int
 _read_adc (void){
   unsigned char readback[2];
   i2c_read(I2C_ADDR, readback, 2*sizeof(unsigned char));
@@ -125,7 +125,7 @@ _read_adc (void){
   return adc_val;
 }
 
-void
+static void
 _write_reg (int regno, int v){
   //regno is in [0,5], v is value to write to register"""
   unsigned char args[2];
@@ -135,66 +135,66 @@ _write_reg (int regno, int v){
   printf("Reg %d, Val %x\n",regno,v);
 }
 
-void _send_reg_0(struct db_dbsrx_dummy *db){
+static void _send_reg_0(struct db_dbsrx_dummy *db){
   _write_reg(0,(db->common.d_div2<<7) + (db->common.d_n>>8));
 }
 
-void _send_reg_1(struct db_dbsrx_dummy *db){
+static void _send_reg_1(struct db_dbsrx_dummy *db){
   _write_reg(1,db->common.d_n & 255);
 }
 
-void _send_reg_2(struct db_dbsrx_dummy *db){
+static void _send_reg_2(struct db_dbsrx_dummy *db){
   _write_reg(2,db->common.d_osc + (db->common.d_cp<<3) + (db->common.d_r_reg<<5));
 }
 
-void _send_reg_3(struct db_dbsrx_dummy *db){
+static void _send_reg_3(struct db_dbsrx_dummy *db){
   _write_reg(3,db->common.d_fdac);
 }
 
-void _send_reg_4(struct db_dbsrx_dummy *db){
+static void _send_reg_4(struct db_dbsrx_dummy *db){
   _write_reg(4,db->common.d_m + (db->common.d_dl<<5) + (db->common.d_ade<<6) + (db->common.d_adl<<7));
 }
 
-void _send_reg_5(struct db_dbsrx_dummy *db){
+static void _send_reg_5(struct db_dbsrx_dummy *db){
   _write_reg(5,db->common.d_gc2 + (db->common.d_diag<<5));
 }
 
 /**************************************************
  * Helpers for setting the freq
  **************************************************/
-void
+static void
 _set_div2(struct db_dbsrx_dummy *db, int div2){
   db->common.d_div2 = div2;
   _send_reg_0(db);
 }
 
 // FIXME  How do we handle ADE and ADL properly?
-void
+static void
 _set_ade(struct db_dbsrx_dummy *db, int ade){
   db->common.d_ade = ade;
   _send_reg_4(db);
 }
 
-void
+static void
 _set_r(struct db_dbsrx_dummy *db, int r){
   db->common.d_r_reg = r;
   _send_reg_2(db);
 }
 
-void
+static void
 _set_n(struct db_dbsrx_dummy *db, int n){
   db->common.d_n = n;
   _send_reg_0(db);
   _send_reg_1(db);
 }
 
-void
+static void
 _set_osc(struct db_dbsrx_dummy *db, int osc){
   db->common.d_osc = osc;
   _send_reg_2(db);
 }
 
-void
+static void
 _set_cp(struct db_dbsrx_dummy *db, int cp){
   db->common.d_cp = cp;
   _send_reg_2(db);
@@ -330,7 +330,7 @@ db_dbsrx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc){
  * Helpers for setting the gain
  **************************************************/
 
-void
+static void
 _set_gc2(struct db_dbsrx_dummy *db, int gc2){
   db->common.d_gc2 = gc2;
   _send_reg_5(db);
@@ -380,13 +380,13 @@ db_dbsrx_set_gain(struct db_base *dbb, u2_fxpt_gain_t gain){
 /**************************************************
  * Helpers for setting the bw
  **************************************************/
-void
+static void
 _set_m(struct db_dbsrx_dummy *db, int m){
   db->common.d_m = m;
   _send_reg_4(db);
 }
   
-void
+static void
 _set_fdac(struct db_dbsrx_dummy *db, int fdac){
   db->common.d_fdac = fdac;
   _send_reg_3(db);
