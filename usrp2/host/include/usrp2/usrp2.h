@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -116,6 +116,11 @@ namespace usrp2 {
     double rx_gain_db_per_step();
 
     /*!
+     * \brief Set receive daughterboard LO offset frequency
+     */
+    bool set_rx_lo_offset(double frequency);
+
+    /*!
      * Set receiver center frequency
      */
     bool set_rx_center_freq(double frequency, tune_result *result);
@@ -199,6 +204,11 @@ namespace usrp2 {
 
     //! return Tx gain db_per_step
     double tx_gain_db_per_step();
+
+    /*
+     * \brief Set transmit daughterboard LO offset frequency
+     */
+    bool set_tx_lo_offset(double frequency);
 
     /*!
      * Set transmitter center frequency

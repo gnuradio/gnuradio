@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005,2007,2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -58,6 +58,9 @@ class rx_cfile_block(gr.top_block):
         self._u.set_gain(options.gain)
 
         # Set receive frequency
+        if options.lo_offset is not None:
+            self._u.set_lo_offset(options.lo_offset)
+
         tr = self._u.set_center_freq(options.freq)
         if tr == None:
             sys.stderr.write('Failed to set center frequency\n')
@@ -115,6 +118,9 @@ def get_options():
                       help="number of samples to collect [default=+inf]")
     parser.add_option("-v", "--verbose", action="store_true", default=False,
                       help="verbose output")
+    parser.add_option("", "--lo-offset", type="eng_float", default=None,
+                      help="set daughterboard LO offset to OFFSET [default=hw default]")
+
     (options, args) = parser.parse_args ()
     if len(args) != 1:
         parser.print_help()

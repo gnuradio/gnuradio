@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ struct db_basic db_basic_tx = {
   .base.is_quadrature = true,
   .base.i_and_q_swapped = false,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
   .base.atr_mask = 	0,
   .base.atr_txval = 	0,
   .base.atr_rxval =	0,
@@ -68,7 +68,7 @@ struct db_basic db_basic_rx = {
   .base.is_quadrature = false,
   .base.i_and_q_swapped = false,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
   .base.atr_mask = 	0,
   .base.atr_txval = 	0,
   .base.atr_rxval =	0,
@@ -94,7 +94,7 @@ struct db_basic db_lf_tx = {
   .base.is_quadrature = true,
   .base.i_and_q_swapped = false,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
   .base.atr_mask = 	0,
   .base.atr_txval = 	0,
   .base.atr_rxval =	0,
@@ -120,7 +120,7 @@ struct db_basic db_lf_rx = {
   .base.is_quadrature = false,
   .base.i_and_q_swapped = false,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
   .base.atr_mask = 	0,
   .base.atr_txval = 	0,
   .base.atr_rxval =	0,

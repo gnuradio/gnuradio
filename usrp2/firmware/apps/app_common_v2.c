@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -369,6 +369,16 @@ poke_cmd(const op_poke_t *p)
   return true;
 }
 
+static bool
+set_lo_offset_cmd(const op_freq_t *p)
+{
+  u2_fxpt_freq_t f = u2_fxpt_freq_from_hilo(p->freq_hi, p->freq_lo);
+  if (p->opcode == OP_SET_TX_LO_OFFSET)
+    return db_set_lo_offset(tx_dboard, f);
+  else
+    return db_set_lo_offset(rx_dboard, f);
+}
+
 static size_t
 generic_reply(const op_generic_t *p,
 	      void *reply_payload, size_t reply_payload_space,
@@ -377,12 +387,12 @@ generic_reply(const op_generic_t *p,
   op_generic_t *r = (op_generic_t *) reply_payload;
   if (reply_payload_space < sizeof(*r))		
     return 0;					// no room
-
+  
   r->opcode = p->opcode | OP_REPLY_BIT;
   r->len = sizeof(*r);
   r->rid = p->rid;
   r->ok = ok;
-
+  
   return r->len;
 }
 
@@ -392,12 +402,12 @@ add_eop(void *reply_payload, size_t reply_payload_space)
   op_generic_t *r = (op_generic_t *) reply_payload;
   if (reply_payload_space < sizeof(*r))		
     return 0;					// no room
-
+  
   r->opcode = OP_EOP;
   r->len = sizeof(*r);
   r->rid = 0;
   r->ok =  0;
-
+  
   return r->len;
 }
 
@@ -407,15 +417,15 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
   unsigned char reply[sizeof(u2_eth_packet_t) + 4 * sizeof(u2_subpkt_t)] _AL4;
   unsigned char *reply_payload = &reply[sizeof(u2_eth_packet_t)];
   int reply_payload_space = sizeof(reply) - sizeof(u2_eth_packet_t);
-
+  
   // initialize reply
   memset(reply, 0, sizeof(reply));
   set_reply_hdr((u2_eth_packet_t *) reply, pkt);
-
+  
   // point to beginning of payload (subpackets)
   unsigned char *payload = ((unsigned char *) pkt) + sizeof(u2_eth_packet_t);
   int payload_len = len - sizeof(u2_eth_packet_t);
-
+  
   size_t subpktlen = 0;
 
   while (payload_len >= sizeof(op_generic_t)){
@@ -482,6 +492,17 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
     case OP_POKE:
       subpktlen = generic_reply(gp, reply_payload, reply_payload_space,
 				poke_cmd((op_poke_t *)payload));
+      break;
+
+    case OP_SET_TX_LO_OFFSET:
+    case OP_SET_RX_LO_OFFSET:
+      subpktlen = generic_reply(gp, reply_payload, reply_payload_space,
+				set_lo_offset_cmd((op_freq_t *)payload));
+      break;
+
+    case OP_RESET_DB:
+      db_init();
+      subpktlen = generic_reply(gp, reply_payload, reply_payload_space, true);
       break;
 
     default:

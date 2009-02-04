@@ -44,6 +44,10 @@ class siggen_top_block(gr.top_block):
         self._u.set_gain(options.gain)
 
         # Tune the USRP2 FPGA and daughterboard to the requested center frequency
+        # and LO offset
+        if options.lo_offset is not None:
+            self._u.set_lo_offset(options.lo_offset)
+
         tr = self._u.set_center_freq(options.tx_freq)
         if tr == None:
             sys.stderr.write('Failed to set center frequency\n')
@@ -143,6 +147,8 @@ def get_options():
                       help="set waveform amplitude to AMPLITUDE (0-1.0) [default=%default]", metavar="AMPL")
     parser.add_option("--offset", type="eng_float", default=0,
                       help="set waveform offset to OFFSET [default=%default]")
+    parser.add_option("--lo-offset", type="eng_float", default=None,
+                      help="set daughterboard LO offset to OFFSET [default=hw default]")
     parser.add_option("--sine", dest="type", action="store_const", const=gr.GR_SIN_WAVE,
                       help="generate a complex sinusoid [default]", default=gr.GR_SIN_WAVE)
     parser.add_option("--const", dest="type", action="store_const", const=gr.GR_CONST_WAVE, 

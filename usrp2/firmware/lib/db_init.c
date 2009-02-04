@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -270,6 +270,7 @@ db_init(void)
   //m = determine_tx_mux_value(tx_dboard);
   //dsp_tx_regs->tx_mux = m;
   //printf("tx_mux = 0x%x\n", m);
+  tx_dboard->current_lo_offset = tx_dboard->default_lo_offset;
 
   rx_dboard = lookup_dboard(I2C_ADDR_RX_A, &db_basic_rx, "Rx");
   //printf("db_init: rx dbid = 0x%x\n", rx_dboard->dbid);
@@ -278,6 +279,7 @@ db_init(void)
   m = determine_rx_mux_value(rx_dboard);
   dsp_rx_regs->rx_mux = m;
   //printf("rx_mux = 0x%x\n", m);
+  rx_dboard->current_lo_offset = rx_dboard->default_lo_offset;
 }
 
 /*!
@@ -330,6 +332,12 @@ calc_dxc_freq(u2_fxpt_freq_t target_freq, u2_fxpt_freq_t baseband_freq,
   }
 }
 
+bool
+db_set_lo_offset(struct db_base *db, u2_fxpt_freq_t offset)
+{
+  db->current_lo_offset = offset;
+  return true;
+}
 
 bool
 db_tune(struct db_base *db, u2_fxpt_freq_t target_freq, struct tune_result *result)
@@ -339,8 +347,8 @@ db_tune(struct db_base *db, u2_fxpt_freq_t target_freq, struct tune_result *resu
   u2_fxpt_freq_t dxc_freq;
   u2_fxpt_freq_t actual_dxc_freq;
 
-  // Ask the d'board to tune as closely as it can to target_freq
-  bool ok = db->set_freq(db, target_freq, &result->baseband_freq);
+  // Ask the d'board to tune as closely as it can to target_freq+lo_offset
+  bool ok = db->set_freq(db, target_freq+db->current_lo_offset, &result->baseband_freq);
 
   // Calculate the DDC setting that will downconvert the baseband from the
   // daughterboard to our target frequency.

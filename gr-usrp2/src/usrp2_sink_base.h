@@ -46,6 +46,11 @@ public:
   bool set_gain(double gain);
 
   /*!
+   * \brief Set transmitter LO offset frequency
+   */
+  bool set_lo_offset(double frequency);
+
+  /*!
    * \brief Set transmitter center frequency
    */
   bool set_center_freq(double frequency, usrp2::tune_result *tr);

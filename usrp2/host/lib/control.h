@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -91,6 +91,12 @@ namespace usrp2 {
     op_poke_t       op;
     // words to write go here
     // eop must be dynamically written here
+  };
+
+  struct op_freq_cmd {
+    u2_eth_packet_t h;
+    op_freq_t       op;
+    op_generic_t    eop;
   };
 
   /*!

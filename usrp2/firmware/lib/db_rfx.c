@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,7 +73,6 @@ struct db_rfx_common {
   unsigned char CP2;
   int freq_mult;
   int spi_mask;  
-  u2_fxpt_freq_t freq_offset;
 };
 
 struct db_rfx_dummy {
@@ -149,7 +148,7 @@ struct db_rfx_400_rx db_rfx_400_rx = {
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(4e6),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
   .base.init = rfx_init_rx,
   .base.set_freq = rfx_set_freq,
   .base.set_gain = rfx_set_gain_rx,
@@ -163,8 +162,7 @@ struct db_rfx_400_rx db_rfx_400_rx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_RX_DB,
-  .common.freq_mult = 2,
-  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(0)
+  .common.freq_mult = 2
 };
 
 
@@ -181,7 +179,7 @@ struct db_rfx_400_tx db_rfx_400_tx = {
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(4e6),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6),
   .base.init = rfx_init_tx,
   .base.set_freq = rfx_set_freq,
   .base.set_gain = rfx_set_gain_tx,
@@ -195,8 +193,7 @@ struct db_rfx_400_tx db_rfx_400_tx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_TX_DB,
-  .common.freq_mult = 2,
-  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6)
+  .common.freq_mult = 2
 };
 
 struct db_rfx_900_rx db_rfx_900_rx = {
@@ -212,7 +209,7 @@ struct db_rfx_900_rx db_rfx_900_rx = {
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(4e6),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
   .base.init = rfx_init_rx,
   .base.set_freq = rfx_set_freq,
   .base.set_gain = rfx_set_gain_rx,
@@ -226,8 +223,7 @@ struct db_rfx_900_rx db_rfx_900_rx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_RX_DB,
-  .common.freq_mult = 2,
-  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(0)
+  .common.freq_mult = 2
 };
 
 
@@ -244,7 +240,7 @@ struct db_rfx_900_tx db_rfx_900_tx = {
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(4e6),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6),
   .base.init = rfx_init_tx,
   .base.set_freq = rfx_set_freq,
   .base.set_gain = rfx_set_gain_tx,
@@ -258,8 +254,7 @@ struct db_rfx_900_tx db_rfx_900_tx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_TX_DB,
-  .common.freq_mult = 2,
-  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6)
+  .common.freq_mult = 2
 };
 
 struct db_rfx_1200_rx db_rfx_1200_rx = {
@@ -275,7 +270,7 @@ struct db_rfx_1200_rx db_rfx_1200_rx = {
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(4e6),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
   .base.init = rfx_init_rx,
   .base.set_freq = rfx_set_freq,
   .base.set_gain = rfx_set_gain_rx,
@@ -289,8 +284,7 @@ struct db_rfx_1200_rx db_rfx_1200_rx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_RX_DB,
-  .common.freq_mult = 2,
-  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(0)
+  .common.freq_mult = 2
 };
 
 
@@ -307,7 +301,7 @@ struct db_rfx_1200_tx db_rfx_1200_tx = {
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(4e6),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6),
   .base.init = rfx_init_tx,
   .base.set_freq = rfx_set_freq,
   .base.set_gain = rfx_set_gain_tx,
@@ -321,8 +315,7 @@ struct db_rfx_1200_tx db_rfx_1200_tx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_TX_DB,
-  .common.freq_mult = 2,
-  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6)
+  .common.freq_mult = 2
 };
 
 struct db_rfx_1800_rx db_rfx_1800_rx = {
@@ -338,7 +331,7 @@ struct db_rfx_1800_rx db_rfx_1800_rx = {
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(4e6),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
   .base.init = rfx_init_rx,
   .base.set_freq = rfx_set_freq,
   .base.set_gain = rfx_set_gain_rx,
@@ -352,8 +345,7 @@ struct db_rfx_1800_rx db_rfx_1800_rx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_RX_DB,
-  .common.freq_mult = 1,
-  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(0)
+  .common.freq_mult = 1
 };
 
 
@@ -370,7 +362,7 @@ struct db_rfx_1800_tx db_rfx_1800_tx = {
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(4e6),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6),
   .base.init = rfx_init_tx,
   .base.set_freq = rfx_set_freq,
   .base.set_gain = rfx_set_gain_tx,
@@ -384,8 +376,7 @@ struct db_rfx_1800_tx db_rfx_1800_tx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_TX_DB,
-  .common.freq_mult = 1,  
-  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6)
+  .common.freq_mult = 1  
 };
 
 
@@ -402,7 +393,7 @@ struct db_rfx_2400_rx db_rfx_2400_rx = {
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(4e6),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
   .base.init = rfx_init_rx,
   .base.set_freq = rfx_set_freq,
   .base.set_gain = rfx_set_gain_rx,
@@ -416,8 +407,7 @@ struct db_rfx_2400_rx db_rfx_2400_rx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_RX_DB,
-  .common.freq_mult = 1,
-  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(0)
+  .common.freq_mult = 1
 };
 
 
@@ -434,7 +424,7 @@ struct db_rfx_2400_tx db_rfx_2400_tx = {
   .base.is_quadrature = true,
   .base.i_and_q_swapped = true,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(4e6),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6),
   .base.init = rfx_init_tx,
   .base.set_freq = rfx_set_freq,
   .base.set_gain = rfx_set_gain_tx,
@@ -448,8 +438,7 @@ struct db_rfx_2400_tx db_rfx_2400_tx = {
   .common.CP1 = 7,
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_TX_DB,
-  .common.freq_mult = 1,
-  .common.freq_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6)
+  .common.freq_mult = 1
 };
 
 
@@ -488,7 +477,7 @@ rfx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc)
 
   *dc = 0;
   struct db_rfx_dummy *db = (struct db_rfx_dummy *) dbb;
-  u2_fxpt_freq_t desired_n = (U2_DOUBLE_TO_FXPT_FREQ(1.0)*db->common.freq_mult*(freq+db->common.freq_offset))/phdet_freq;
+  u2_fxpt_freq_t desired_n = (U2_DOUBLE_TO_FXPT_FREQ(1.0)*db->common.freq_mult*freq)/phdet_freq;
   int N_DIV = u2_fxpt_freq_round_to_int(desired_n);
   int B = N_DIV/PRESCALER;
   int A = N_DIV - PRESCALER*B;

@@ -67,6 +67,7 @@ public:
 
   bool set_gain(double gain);
   %rename(_real_set_center_freq) set_center_freq;
+  bool set_lo_offset(double frequency);
   bool set_center_freq(double frequency, usrp2::tune_result *r);
   bool set_decim(int decimation_factor);
   bool set_scale_iq(int scale_i, int scale_q);
@@ -132,6 +133,7 @@ public:
 
   bool set_gain(double gain);
   %rename(_real_set_center_freq) set_center_freq;
+  bool set_lo_offset(double frequency);
   bool set_center_freq(double frequency, usrp2::tune_result *r);
   bool set_interp(int interp_factor);
   bool set_scale_iq(int scale_i, int scale_q);

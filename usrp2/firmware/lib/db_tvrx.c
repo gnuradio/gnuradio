@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,7 +88,7 @@ struct db_tvrx1 db_tvrx1 = {
   .base.is_quadrature = false,
   .base.i_and_q_swapped = false,
   .base.spectrum_inverted = false,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(4e6),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
   .base.init = tvrx_init,
   .base.set_freq = tvrx_set_freq,
   .base.set_gain = tvrx_set_gain,
@@ -115,7 +115,7 @@ struct db_tvrx2 db_tvrx2 = {
   .base.is_quadrature = false,
   .base.i_and_q_swapped = false,
   .base.spectrum_inverted = true,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(4e6),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
   .base.init = tvrx_init,
   .base.set_freq = tvrx_set_freq,
   .base.set_gain = tvrx_set_gain,
@@ -142,7 +142,7 @@ struct db_tvrx3 db_tvrx3 = {
   .base.is_quadrature = false,
   .base.i_and_q_swapped = false,
   .base.spectrum_inverted = true,
-  //.base.lo_offset = U2_DOUBLE_TO_FXPT_FREQ(4e6),
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
   .base.init = tvrx_init,
   .base.set_freq = tvrx_set_freq,
   .base.set_gain = tvrx_set_gain,

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -44,6 +44,11 @@ public:
    * \brief Set receiver gain
    */
   bool set_gain(double gain);
+
+  /*!
+   * \brief Set receive LO offset frequency
+   */
+  bool set_lo_offset(double frequency);
 
   /*!
    * \brief Set receiver center frequency

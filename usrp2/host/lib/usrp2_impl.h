@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -108,6 +108,7 @@ namespace usrp2 {
     data_handler::result handle_control_packet(const void *base, size_t len);
     data_handler::result handle_data_packet(const void *base, size_t len);
     bool dboard_info();
+    bool reset_db();
 
   public:
     impl(const std::string &ifc, props *p);
@@ -123,6 +124,7 @@ namespace usrp2 {
     double rx_gain_min() { return d_rx_db_info.gain_min; }
     double rx_gain_max() { return d_rx_db_info.gain_max; }
     double rx_gain_db_per_step() { return d_rx_db_info.gain_step_size; }
+    bool set_rx_lo_offset(double frequency);
     bool set_rx_center_freq(double frequency, tune_result *result);
     double rx_freq_min() { return d_rx_db_info.freq_min; }
     double rx_freq_max() { return d_rx_db_info.freq_max; }
@@ -141,6 +143,7 @@ namespace usrp2 {
     double tx_gain_min() { return d_tx_db_info.gain_min; }
     double tx_gain_max() { return d_tx_db_info.gain_max; }
     double tx_gain_db_per_step() { return d_tx_db_info.gain_step_size; }
+    bool set_tx_lo_offset(double frequency);
     bool set_tx_center_freq(double frequency, tune_result *result);
     double tx_freq_min() { return d_tx_db_info.freq_min; }
     double tx_freq_max() { return d_tx_db_info.freq_max; }

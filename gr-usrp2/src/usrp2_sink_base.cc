@@ -53,6 +53,12 @@ usrp2_sink_base::set_gain(double gain)
 }
 
 bool
+usrp2_sink_base::set_lo_offset(double frequency)
+{
+  return d_u2->set_tx_lo_offset(frequency);
+}
+
+bool
 usrp2_sink_base::set_center_freq(double frequency, usrp2::tune_result *tr)
 {
   return d_u2->set_tx_center_freq(frequency, tr);

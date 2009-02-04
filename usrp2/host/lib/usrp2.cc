@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -187,6 +187,12 @@ namespace usrp2 {
   }
 
   bool
+  usrp2::set_rx_lo_offset(double frequency)
+  {
+    return d_impl->set_rx_lo_offset(frequency);
+  }
+
+  bool
   usrp2::set_rx_center_freq(double frequency, tune_result *result)
   {
     return d_impl->set_rx_center_freq(frequency, result);
@@ -276,6 +282,12 @@ namespace usrp2 {
   usrp2::tx_gain_db_per_step()
   {
     return d_impl->tx_gain_db_per_step();
+  }
+
+  bool
+  usrp2::set_tx_lo_offset(double frequency)
+  {
+    return d_impl->set_tx_lo_offset(frequency);
   }
 
   bool

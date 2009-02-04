@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,6 +73,10 @@ namespace usrp2 {
     case OP_SYNC_TO_PPS: return "OP_SYNC_TO_PPS";
     case OP_PEEK: return "OP_PEEK";
     case OP_PEEK_REPLY: return "OP_PEEK_REPLY";
+    case OP_SET_TX_LO_OFFSET: return "OP_SET_TX_LO_OFFSET";
+    case OP_SET_TX_LO_OFFSET_REPLY: return "OP_SET_TX_LO_OFFSET_REPLY";
+    case OP_SET_RX_LO_OFFSET: return "OP_SET_RX_LO_OFFSET";
+    case OP_SET_RX_LO_OFFSET_REPLY: return "OP_SET_RX_LO_OFFSET_REPLY";
 
     default:
       char buf[64];
@@ -168,6 +172,10 @@ namespace usrp2 {
       fprintf(stderr, "  gain_max = %g\n", rx_gain_max());
       fprintf(stderr, "  gain_db_per_step = %g\n", rx_gain_db_per_step());
     }
+
+    // Ensure any custom values in hardware are cleared
+    if (!reset_db())
+      std::cerr << "usrp2::ctor reset_db failed\n";
 
     // default gains to mid point
     if (!set_tx_gain((tx_gain_min() + tx_gain_max()) / 2))
@@ -472,6 +480,33 @@ namespace usrp2 {
   }
   
   bool
+  usrp2::impl::set_rx_lo_offset(double frequency)
+  {
+    op_freq_cmd cmd;
+    op_generic_t reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_SET_RX_LO_OFFSET;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+
+    u2_fxpt_freq_t fxpt = u2_double_to_fxpt_freq(frequency);
+    cmd.op.freq_hi = htonl(u2_fxpt_freq_hi(fxpt));
+    cmd.op.freq_lo = htonl(u2_fxpt_freq_lo(fxpt));
+
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+    
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+      return false;
+
+    bool success = (ntohx(reply.ok) == 1);
+    return success;
+  }
+
+  bool
   usrp2::impl::set_rx_center_freq(double frequency, tune_result *result)
   {
     op_config_rx_v2_cmd cmd;
@@ -710,6 +745,33 @@ namespace usrp2 {
     return success;
   }
   
+  bool
+  usrp2::impl::set_tx_lo_offset(double frequency)
+  {
+    op_freq_cmd cmd;
+    op_generic_t reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_SET_TX_LO_OFFSET;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+
+    u2_fxpt_freq_t fxpt = u2_double_to_fxpt_freq(frequency);
+    cmd.op.freq_hi = htonl(u2_fxpt_freq_hi(fxpt));
+    cmd.op.freq_lo = htonl(u2_fxpt_freq_lo(fxpt));
+
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+    
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+      return false;
+
+    bool success = (ntohx(reply.ok) == 1);
+    return success;
+  }
+
   bool
   usrp2::impl::set_tx_center_freq(double frequency, tune_result *result)
   {
@@ -1152,7 +1214,7 @@ namespace usrp2 {
 
     // Copy data from vector into packet space
     uint32_t *dest = (uint32_t *)((uint8_t *)cmd+plen);
-    for (unsigned int i = 0; i < words; i++) {
+    for (int i = 0; i < words; i++) {
       //fprintf(stderr, "%03i@%p\n", i, dest);
       *dest++ = htonl(data[i]);
     }
@@ -1172,6 +1234,28 @@ namespace usrp2 {
 
     free(cmd);
     return ok;
+  }
+
+  bool
+  usrp2::impl::reset_db()
+  {
+    op_generic_cmd cmd;
+    op_generic_t reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_RESET_DB;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+    
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+      return false;
+
+    bool success = (ntohx(reply.ok) == 1);
+    return success;
   }
 
 } // namespace usrp2

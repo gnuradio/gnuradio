@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +43,8 @@ struct db_base {
   u2_fxpt_gain_t	gain_max;	//< max gain that can be set (dB)
   u2_fxpt_gain_t	gain_step_size;	//< (dB)
 
-  // u2_fxpt_freq_t	lo_offset;
+  u2_fxpt_freq_t	default_lo_offset;  //< offset to add to tune frequency, reset value
+  u2_fxpt_freq_t        current_lo_offset;  //< current value of lo_offset
 
   /*
    * Auto T/R control values

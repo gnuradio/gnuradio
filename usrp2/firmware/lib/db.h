@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,6 +58,16 @@ struct tune_result
  */
 void 
 db_init(void);
+
+/*!
+ * \brief Set daughterboard LO offset frequency.
+ *
+ * \param[in] db is the daughterboard instance
+ * \param[in] offset is the amount to add to tuning requests
+ * \param[out] success or failure
+ */
+bool
+db_set_lo_offset(struct db_base *db, u2_fxpt_freq_t offset);
 
 /*!
  * \brief Two stage tuning.  Given target_freq, tune LO and DDC/DUC

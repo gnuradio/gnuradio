@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -189,6 +189,12 @@ typedef struct {
 #define OP_PEEK_REPLY                (OP_PEEK | OP_REPLY_BIT)
 #define OP_POKE                      12
 #define OP_POKE_REPLY                (OP_POKE | OP_REPLY_BIT)
+#define OP_SET_TX_LO_OFFSET          13
+#define OP_SET_TX_LO_OFFSET_REPLY    (OP_SET_TX_LO_OFFSET | OP_REPLY_BIT)
+#define OP_SET_RX_LO_OFFSET          14
+#define OP_SET_RX_LO_OFFSET_REPLY    (OP_SET_RX_LO_OFFSET | OP_REPLY_BIT)
+#define OP_RESET_DB                  15
+#define OP_RESET_DB_REPLY            (OP_RESET_DB | OP_REPLY_BIT)
 
 /*
  * All subpackets are a multiple of 4 bytes long.
@@ -402,6 +408,19 @@ typedef struct {
   // Words follow here
 } _AL4 op_poke_t;
 
+/* 
+ * Common structure for commands with a single frequency param 
+ * (e.g., set_*_lo_offset, set_*_bw)
+ */
+typedef struct {
+  uint8_t       opcode;
+  uint8_t	len;
+  uint8_t	rid;
+  uint8_t	mbz;
+  uint32_t	freq_hi;	//< high 32-bits of 64-bit fxpt_freq (Q44.20)
+  uint32_t	freq_lo;	//< low  32-bits of 64-bit fxpt_freq (Q44.20)
+} _AL4 op_freq_t;
+
 /*
  * ================================================================
  *             union of all of subpacket types
@@ -421,6 +440,7 @@ typedef union {
   op_config_mimo_t 		op_config_mimo;
   op_peek_t                     op_peek;
   op_poke_t                     op_poke;
+  op_freq_t                     op_freq;
 
 } u2_subpkt_t;
 
