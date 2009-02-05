@@ -98,16 +98,15 @@ class Param(_Param):
 		##################################################
 		# display logic for numbers
 		##################################################
-		def to_str(num):
-			if isinstance(num, str): return num
-			elif isinstance(num, complex):
+		def num_to_str(num):
+			if isinstance(num, COMPLEX_TYPES):
+				num = complex(num) #cast to python complex
 				if num == 0: return '0' #value is zero
 				elif num.imag == 0: return '%s'%eng_notation.num_to_str(num.real) #value is real
 				elif num.real == 0: return '%sj'%eng_notation.num_to_str(num.imag) #value is imaginary
 				elif num.imag < 0: return '%s-%sj'%(eng_notation.num_to_str(num.real), eng_notation.num_to_str(abs(num.imag)))
 				else: return '%s+%sj'%(eng_notation.num_to_str(num.real), eng_notation.num_to_str(num.imag))
-			elif isinstance(num, (float, int)): return eng_notation.num_to_str(num)
-			else: return str(var)
+			else: return str(num)
 		##################################################
 		# split up formatting by type
 		##################################################
@@ -115,16 +114,16 @@ class Param(_Param):
 		max_len = max(27 - len(self.get_name()), 3)
 		e = self.evaluate()
 		t = self.get_type()
-		if t in ('int', 'real', 'complex'): dt_str = to_str(e)
-		elif isinstance(e, (list, tuple, set, numpy.ndarray)): #vector types
+		if isinstance(e, COMPLEX_TYPES): dt_str = num_to_str(e)
+		elif isinstance(e, VECTOR_TYPES): #vector types
 			if len(e) > 8:
 				dt_str = self.get_value() #large vectors use code
 				truncate = 1
-			else: dt_str = ', '.join(map(to_str, e)) #small vectors use eval
+			else: dt_str = ', '.join(map(num_to_str, e)) #small vectors use eval
 		elif t in ('file_open', 'file_save'):
 			dt_str = self.get_value()
 			truncate = -1
-		else: dt_str = to_str(e) #other types
+		else: dt_str = str(e) #other types
 		##################################################
 		# truncate
 		##################################################
