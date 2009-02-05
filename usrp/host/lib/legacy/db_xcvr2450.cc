@@ -271,7 +271,7 @@ xcvr2450::send_reg(int v)
   std::string s(c, 3);
   
   usrp()->_write_spi(0, d_spi_enable, d_spi_format, s);
-  printf("xcvr2450: Setting reg %d to %X\n", (v&15), v);
+  //printf("xcvr2450: Setting reg %d to %X\n", (v&15), v);
 }
 
 // --------------------------------------------------------------------
