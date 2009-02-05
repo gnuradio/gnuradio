@@ -26,38 +26,13 @@ AC_DEFUN([GRC_GRC],[
     AM_CONDITIONAL(XDG_UTILS, $XDG_UTILS)
 
     dnl ########################################
-    dnl # test python version
-    dnl ########################################
-    AC_MSG_CHECKING([for Python version >= 2.5])
-    result=`${PYTHON} -c "import sys; print sys.version.split()[[0]] >= '2.5'"`
-    if test "$result" = "True"; then
-        AC_MSG_RESULT([yes])
-    else
-        AC_MSG_RESULT([no])
-        passed=no
-    fi
-
-    dnl ########################################
-    dnl # test python dependencies
+    dnl # test python modules and versions
     dnl ########################################
     if test $passed = yes; then
-        PYTHON_CHECK_MODULE([Cheetah],[Python Cheetah templates],[],[passed=no])
-        PYTHON_CHECK_MODULE([lxml],[Python XML wrappers],[],[passed=no])
-        PYTHON_CHECK_MODULE([pygtk],[Python GTK wrappers],[],[passed=no])
-    fi
-
-    dnl ########################################
-    dnl # test gtk version
-    dnl ########################################
-    if test $passed = yes; then
-        AC_MSG_CHECKING([for Python GTK version >= 2.10.0])
-        result=`${PYTHON} -c "import gtk; print gtk.pygtk_version >= (2, 10, 0)" 2> /dev/null`
-        if test "$result" = "True"; then
-            AC_MSG_RESULT([yes])
-        else
-            AC_MSG_RESULT([no])
-            passed=no
-        fi
+        PYTHON_CHECK_MODULE([sys],[Python >= 2.5],[],[passed=no],[sys.version.split()[[0]] >= "2.5"])
+        PYTHON_CHECK_MODULE([Cheetah],[Python Cheetah templates >= 2.0.1],[],[passed=no],[Cheetah.Version >= "2.0.0"])
+        PYTHON_CHECK_MODULE([lxml.etree],[Python lxml wrappers >= 2.0.0],[],[passed=no],[lxml.etree.LXML_VERSION >= (2, 0, 0, 0)])
+        PYTHON_CHECK_MODULE([gtk],[Python gtk wrappers >= 2.10.0],[],[passed=no],[gtk.pygtk_version >= (2, 10, 0)])
     fi
 
     dnl ########################################

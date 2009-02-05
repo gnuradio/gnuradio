@@ -135,20 +135,32 @@ print path
 # $2 - module description
 # $3 - action if found
 # $4 - action if not found
+# $5 - test command
 
 AC_DEFUN([PYTHON_CHECK_MODULE],[
-    AC_MSG_CHECKING([for $2]) 
-    python_cmd='import sys
+    AC_MSG_CHECKING([for $2])
+    dnl ########################################
+    dnl # import and test checking
+    dnl ########################################
+    if test "$5"; then
+        python_cmd='
 try:
     import $1
-except:
-    sys.exit(1)'
-
-    if ! $PYTHON -c "$python_cmd" ; then
-	AC_MSG_RESULT([no])
-	$4
+    assert $5
+except: exit(1)'
+    dnl ########################################
+    dnl # import checking only
+    dnl ########################################
     else
-	AC_MSG_RESULT([yes])
-	$3
+        python_cmd='
+try: import $1
+except: exit(1)'
+    fi
+    if ! $PYTHON -c "$python_cmd" 2> /dev/null; then
+        AC_MSG_RESULT([no])
+        $4
+    else
+        AC_MSG_RESULT([yes])
+        $3
     fi
 ])
