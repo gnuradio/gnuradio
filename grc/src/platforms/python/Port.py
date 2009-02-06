@@ -50,7 +50,7 @@ class Port(_Port):
 		_Port.validate(self)
 		try: assert(self.get_enabled_connections() or self.get_optional())
 		except AssertionError: self._add_error_message('Port is not connected.')
-		try: assert(self.is_source() or len(self.get_enabled_connections()) == 1)
+		try: assert(self.is_source() or len(self.get_enabled_connections()) <= 1)
 		except AssertionError: self._add_error_message('Port has too many connections.')
 
 	def get_vlen(self):
