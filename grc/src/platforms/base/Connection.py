@@ -37,10 +37,10 @@ class Connection(Element):
 		for port in (porta, portb):
 			if port.is_source(): source = port
 			if port.is_sink(): sink = port
-		#verify the source and sink
 		assert(source and sink)
-		assert(not source.is_full())
-		assert(not sink.is_full())
+		#ensure that this connection (source -> sink) is unique
+		for connection in self.get_parent().get_connections():
+			assert not (connection.get_source() is source and connection.get_sink() is sink)
 		self._source = source
 		self._sink = sink
 

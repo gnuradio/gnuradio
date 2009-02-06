@@ -46,6 +46,13 @@ class Port(_Port):
 		self._vlen = vlen
 		self._optional = bool(optional)
 
+	def validate(self):
+		_Port.validate(self)
+		try: assert(self.get_enabled_connections() or self.get_optional())
+		except AssertionError: self._add_error_message('Port is not connected.')
+		try: assert(self.is_source() or len(self.get_enabled_connections()) == 1)
+		except AssertionError: self._add_error_message('Port has too many connections.')
+
 	def get_vlen(self):
 		"""
 		Get the vector length.
@@ -97,15 +104,6 @@ class Port(_Port):
 				'byte': Constants.BYTE_VECTOR_COLOR_SPEC,
 			}[self.get_type()]
 		except: return _Port.get_color(self)
-
-	def is_empty(self):
-		"""
-		Is this port empty?
-		An empty port has no connections.
-		Not empty of optional is set.
-		@return true if empty
-		"""
-		return not self.get_optional() and not self.get_connections()
 
 class Source(Port):
 

@@ -69,6 +69,7 @@ class Block(_Block):
 				try: assert check_eval
 				except AssertionError: self._add_error_message('Check "%s" failed.'%check)
 			except: self._add_error_message('Check "%s" did not evaluate.'%check)
+		#adjust nports
 		for ports, Port in (
 			(self._sources, self.get_parent().get_parent().Source),
 			(self._sinks, self.get_parent().get_parent().Sink),

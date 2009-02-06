@@ -142,8 +142,7 @@ class Block(Element):
 		All ports and params must be valid.
 		All checks must evaluate to true.
 		"""
-		if not self.get_enabled(): return
-		for c in self.get_params() + self.get_sinks() + self.get_sources() + self.get_connections():
+		for c in self.get_params() + self.get_ports() + self.get_connections():
 			try: assert(c.is_valid())
 			except AssertionError:
 				for msg in c.get_error_messages():

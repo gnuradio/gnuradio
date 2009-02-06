@@ -41,9 +41,12 @@ class Element(object):
 
 	def is_valid(self):
 		self._error_messages = []#reset err msgs
-		try: self.validate()
-		except: pass
+		if self.get_enabled():
+			try: self.validate()
+			except: pass
 		return not self.get_error_messages()
+
+	def get_enabled(self): return True
 
 	def _add_error_message(self, msg):
 		self._error_messages.append(msg)

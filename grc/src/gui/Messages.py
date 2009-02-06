@@ -91,7 +91,7 @@ def send_fail_save(file_path):
 
 ################# functions for connections	########################################
 def send_fail_connection():
-	send('>>> Warning: A connection can only be created between a source and an unconnected sink.\n')
+	send('>>> Error: Cannot create connection.\n')
 
 ################# functions for preferences	########################################
 def send_fail_load_preferences(prefs_file_path):

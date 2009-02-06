@@ -47,8 +47,6 @@ class Port(Element):
 		Validate the port.
 		The port must be non-empty and type must a possible type.
 		"""
-		try: assert(not self.is_empty())
-		except AssertionError: self._add_error_message('Port is not connected.')
 		try: assert(self.get_type() in self.TYPES)
 		except AssertionError: self._add_error_message('Type "%s" is not a possible type.'%self.get_type())
 
@@ -59,17 +57,11 @@ class Port(Element):
 			return 'Sink - %s(%s)'%(self.get_name(), self.get_key())
 
 	def is_port(self): return True
-
 	def get_color(self): return '#FFFFFF'
-
 	def get_name(self): return self._name
-
 	def get_key(self): return self._key
-
 	def is_sink(self): return self in self.get_parent().get_sinks()
-
 	def is_source(self): return self in self.get_parent().get_sources()
-
 	def get_type(self): return self.get_parent().resolve_dependencies(self._type)
 
 	def get_connections(self):
@@ -81,26 +73,9 @@ class Port(Element):
 		connections = filter(lambda c: c.get_source() is self or c.get_sink() is self, connections)
 		return connections
 
-	def is_connected(self):
+	def get_enabled_connections(self):
 		"""
-		Is this port connected?
-		@return true if at least one connection
+		Get all enabled connections that use this port.
+		@return a list of connection objects
 		"""
-		return bool(self.get_connections())
-
-	def is_full(self):
-		"""
-		Is this port full of connections?
-		Generally a sink can handle one connection and a source can handle many.
-		@return true if the port is full
-		"""
-		if self.is_source(): return False
-		if self.is_sink(): return bool(self.get_connections())
-
-	def is_empty(self):
-		"""
-		Is this port empty?
-		An empty port has no connections.
-		@return true if empty
-		"""
-		return not self.get_connections()
+		return filter(lambda c: c.get_enabled(), self.get_connections())
