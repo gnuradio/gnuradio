@@ -80,9 +80,10 @@ _msdd_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 # link the library against some comon swig runtime code and the 
 # c++ standard library
 _msdd_la_LIBADD = 			\
+	$(GNURADIO_CORE_LA)		\
 	$(PYTHON_LDFLAGS)		\
 	-lstdc++
-# -L/usr/lib/libfftw3f.so.3.1.2
+
 
 msdd.cc msdd.py: $(ALL_IFILES) 
 	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module msdd \
