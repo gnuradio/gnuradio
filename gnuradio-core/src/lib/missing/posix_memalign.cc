@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,6 +25,7 @@
 #endif
 
 #include "posix_memalign.h"
+#include <malloc.h>
 
 #ifndef HAVE_POSIX_MEMALIGN
 
