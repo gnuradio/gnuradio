@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -82,6 +82,11 @@ MSDD6000::MSDD6000(char* addr)
 	d_ddc_gain = 2;
 	d_rf_attn = 0;
 	d_state = STATE_STOPPED;
+}
+
+MSDD6000::~MSDD6000()
+{
+  // NOP
 }
 
 
