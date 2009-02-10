@@ -67,10 +67,7 @@ ourlib_LTLIBRARIES = _msdd.la
 # These are the source files that go into the shared library
 _msdd_la_SOURCES = 			\
 	msdd.cc			\
-	msdd_source_base.cc	\
-	msdd_source_c.cc	\
 	msdd_source_simple.cc	\
-	msdd_source_s.cc	\
 	msdd6000.cc
 
 # magic flag
@@ -91,10 +88,7 @@ msdd.cc msdd.py: $(ALL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
-	msdd_source_base.h		\
-	msdd_source_c.h			\
 	msdd_source_simple.h			\
-	msdd_source_s.h		\
 	msdd_buffer_copy_behaviors.h \
 	msdd6000.h
 
