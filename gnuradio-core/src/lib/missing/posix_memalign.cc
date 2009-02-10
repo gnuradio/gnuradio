@@ -25,7 +25,7 @@
 #endif
 
 #include "posix_memalign.h"
-#include <malloc.h>
+#include <stdlib.h>
 
 #ifndef HAVE_POSIX_MEMALIGN
 
