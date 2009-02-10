@@ -33,23 +33,23 @@ typedef boost::shared_ptr<msdd_source_simple> msdd_source_simple_sptr;
 
 // public shared_ptr constructor
 
-msdd_source_simple_sptr msdd_make_source_simple ( const char *src, unsigned short port_src);
+msdd_source_simple_sptr msdd_make_source_simple(const char *src, unsigned short port_src);
 
 
 class msdd_source_simple : public gr_sync_block {
  private:
   friend msdd_source_simple_sptr
-  msdd_make_source_simple ( const char *src, unsigned short port_src);
+  msdd_make_source_simple(const char *src, unsigned short port_src);
 
   boost::scoped_ptr<MSDD6000> rcv;
   int d_lastseq;
   bool d_firstrun;
 
  protected:
-  msdd_source_simple (const char *src, unsigned short port_src);
+  msdd_source_simple(const char *src, unsigned short port_src);
 
  public:
-  ~msdd_source_simple ();
+  ~msdd_source_simple();
   bool stop();
   bool start();
 
