@@ -77,6 +77,8 @@ namespace usrp2 {
     case OP_SET_TX_LO_OFFSET_REPLY: return "OP_SET_TX_LO_OFFSET_REPLY";
     case OP_SET_RX_LO_OFFSET: return "OP_SET_RX_LO_OFFSET";
     case OP_SET_RX_LO_OFFSET_REPLY: return "OP_SET_RX_LO_OFFSET_REPLY";
+    case OP_SYNC_EVERY_PPS: return "OP_SYNC_EVERY_PPS";
+    case OP_SYNC_EVERY_PPS_REPLY: return "OP_SYNC_EVERY_PPS_REPLY";
 
     default:
       char buf[64];
@@ -1118,6 +1120,28 @@ namespace usrp2 {
     cmd.op.opcode = OP_SYNC_TO_PPS;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+    
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+      return false;
+
+    return ntohx(reply.ok) == 1;
+  }
+
+  bool
+  usrp2::impl::sync_every_pps(bool enable)
+  {
+    op_generic_cmd cmd;
+    op_generic_t   reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_SYNC_EVERY_PPS;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+    cmd.op.ok = enable ? 1 : 0;
     cmd.eop.opcode = OP_EOP;
     cmd.eop.len = sizeof(cmd.eop);
     

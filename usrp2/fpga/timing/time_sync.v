@@ -22,6 +22,7 @@ module time_sync
    reg 	       tick_int_enable, tick_source, external_sync;
    reg [31:0]  tick_interval;
    reg 	       sync_on_next_pps;
+   reg         sync_every_pps;
    reg 	       pps_edge;
    
    // Generate master time
@@ -30,7 +31,7 @@ module time_sync
        master_time <= 0;
      else if(external_sync & sync_rcvd)
        master_time <= master_time_rcvd + delta_time;
-     else if(pps_ext & sync_on_next_pps)
+     else if(pps_ext & (sync_on_next_pps|sync_every_pps))
        master_time <= 0;
      else
        master_time <= master_time + 1;
@@ -62,6 +63,7 @@ module time_sync
 	  tick_interval <= 100000-1;  // default to 1K times per second
 	  delta_time <= 0;
 	  pps_edge <= 0;
+	  sync_every_pps <= 0;
        end
      else if(wb_write)
        case(adr_i[2:0])
@@ -71,6 +73,7 @@ module time_sync
 	      tick_int_enable <= dat_i[1];
 	      external_sync <= dat_i[2];
 	      pps_edge <= dat_i[3];
+	      sync_every_pps <= dat_i[4];
 	   end
 	 3'd1 :
 	   tick_interval <= dat_i;

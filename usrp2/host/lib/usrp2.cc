@@ -413,6 +413,12 @@ namespace usrp2 {
     return d_impl->sync_to_pps();
   }
 
+  bool
+  usrp2::sync_every_pps(bool enable)
+  {
+    return d_impl->sync_every_pps(enable);
+  }
+
   std::vector<uint32_t>
   usrp2::peek32(uint32_t addr, uint32_t words)
   {

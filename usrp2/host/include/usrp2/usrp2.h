@@ -372,9 +372,14 @@ namespace usrp2 {
     bool burn_mac_addr(const std::string &new_addr);
 
     /*!
-     * Reset master time to 0 at next PPS rising edge
+     * Reset master time to 0 at next PPS edge
      */
     bool sync_to_pps();
+
+    /*!
+     * Reset master time to 0 at every PPS edge
+     */
+    bool sync_every_pps(bool enable);
 
     /*!
      * Read memory from Wishbone bus as 32-bit words.  Handles endian swapping if needed.

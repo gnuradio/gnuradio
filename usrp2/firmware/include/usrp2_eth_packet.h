@@ -195,6 +195,8 @@ typedef struct {
 #define OP_SET_RX_LO_OFFSET_REPLY    (OP_SET_RX_LO_OFFSET | OP_REPLY_BIT)
 #define OP_RESET_DB                  15
 #define OP_RESET_DB_REPLY            (OP_RESET_DB | OP_REPLY_BIT)
+#define OP_SYNC_EVERY_PPS            16
+#define OP_SYNC_EVERY_PPS_REPLY      (OP_SYNC_EVERY_PPS | OP_REPLY_BIT)
 
 /*
  * All subpackets are a multiple of 4 bytes long.

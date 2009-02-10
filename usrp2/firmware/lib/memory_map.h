@@ -629,6 +629,25 @@ typedef struct {
 #define TIMESYNC_BASE  0xE800
 
 typedef struct {
+  /*!
+   * \brief Time sync configuration.
+   *
+   * <pre>
+   *
+   *    3                   2                   1                       
+   *  1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0
+   * +-----------------------------------------------------+-+-+-+-+-+
+   * |                                                     |T|G|X|I|S|
+   * +-----------------------------------------------------+-+-+-+-+-+
+   *
+   * S - Tick source (0 = free run, 1 = pps, default=0)
+   * I - Tick interrupt enable (not implemented)
+   * X - Use external sync source (default=1)
+   * G - PPS edge selection (0=negedge, 1=posedge, default=0)
+   * T - Trigger sync every pps edge (default=0)
+   *
+   * </pre>
+   */
   volatile uint32_t tick_control;
   volatile uint32_t tick_interval;
   volatile uint32_t delta_time;

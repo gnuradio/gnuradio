@@ -55,6 +55,18 @@ sync_to_pps(const op_generic_t *p)
 }
 
 static bool
+sync_every_pps(const op_generic_t *p)
+{
+  // FIXME use bit fields or defined masks
+  if (p->ok)
+    timesync_regs->tick_control |= 16;
+  else
+    timesync_regs->tick_control &= ~16;
+
+  return true;
+}
+
+static bool
 config_mimo_cmd(const op_config_mimo_t *p)
 {
   clocks_mimo_config(p->flags);
@@ -503,6 +515,11 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
     case OP_RESET_DB:
       db_init();
       subpktlen = generic_reply(gp, reply_payload, reply_payload_space, true);
+      break;
+
+    case OP_SYNC_EVERY_PPS:
+      subpktlen = generic_reply(gp, reply_payload, reply_payload_space,
+				sync_every_pps((op_generic_t *) payload));
       break;
 
     default:

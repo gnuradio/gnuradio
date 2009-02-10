@@ -180,6 +180,7 @@ namespace usrp2 {
 
     bool burn_mac_addr(const std::string &new_addr);
     bool sync_to_pps();
+    bool sync_every_pps(bool enable);
     std::vector<uint32_t> peek32(uint32_t addr, uint32_t words);
     bool poke32(uint32_t addr, const std::vector<uint32_t> &data);
   };
