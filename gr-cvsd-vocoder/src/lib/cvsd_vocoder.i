@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,15 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%feature("autodoc","1");
-%include "exception.i"
-%import "gnuradio.i"
+%include "gnuradio.i"
 
 %{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
 #include "cvsd_encode_sb.h"
 #include "cvsd_decode_bs.h"
-#include <stdexcept>
 %}
 
 GR_SWIG_BLOCK_MAGIC(cvsd,encode_sb);

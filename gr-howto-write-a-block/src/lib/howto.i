@@ -1,15 +1,10 @@
 /* -*- c++ -*- */
 
-%feature("autodoc", "1");		// generate python docstrings
-
-%include "exception.i"
-%import "gnuradio.i"			// the common stuff
+%include "gnuradio.i"			// the common stuff
 
 %{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
 #include "howto_square_ff.h"
 #include "howto_square2_ff.h"
-#include <stdexcept>
 %}
 
 // ----------------------------------------------------------------

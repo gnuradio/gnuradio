@@ -1,12 +1,12 @@
 /* -*- c++ -*- */
 //
-// Copyright 2008 Free Software Foundation, Inc.
+// Copyright 2008,2009 Free Software Foundation, Inc.
 // 
 // This file is part of GNU Radio
 // 
 // GNU Radio is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either asversion 3, or (at your option)
+// the Free Software Foundation; either version 3, or (at your option)
 // any later version.
 // 
 // GNU Radio is distributed in the hope that it will be useful,
@@ -25,7 +25,7 @@
 #include "db_base.h"
 %}
 
-%include <shared_ptr.i>
+%include <gr_shared_ptr.i>
 
 class usrp_tune_result
 {

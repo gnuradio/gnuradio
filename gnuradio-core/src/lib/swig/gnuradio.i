@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2004 Free Software Foundation, Inc.
+ * Copyright 2003,2004,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,23 +25,21 @@
 // SWIG interface definition
 ////////////////////////////////////////////////////////////////////////
 
-
-#ifndef SWIGIMPORTED
-%module(directors="1") gnuradio_swig_py_runtime
-#endif
-
 ////////////////////////////////////////////////////////////////////////
 // Headers
 
-
 %{
+#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
 #include <gr_types.h>
 #include <stddef.h>		// size_t
 %}
 
 %feature("autodoc","1");
 
-%include <shared_ptr.i>
+// local file
+%include <gr_shared_ptr.i>
+
+// non-local SWIG files
 %include <stl.i>
 %include <std_complex.i>
 %include <std_except.i>
@@ -81,11 +79,9 @@ namespace std {
 
 ////////////////////////////////////////////////////////////////////////
 
-%include <runtime.i>
- // %include <general.i>
- // %include <filter.i>
- // %include <io.i>
-
-// %include <atsc.i>
+#ifndef SW_RUNTIME
+// import runtime.i for all but sw_runtime, since it needs to %include
+%import <runtime.i>
+#endif
 
 ////////////////////////////////////////////////////////////////////////

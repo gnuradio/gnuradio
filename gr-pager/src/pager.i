@@ -1,5 +1,5 @@
 /*
- * Copyright 2005,2006 Free Software Foundation, Inc.
+ * Copyright 2005,2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,18 +19,14 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%feature("autodoc","1");
-%include "exception.i"
-%import "gnuradio.i"
+%include "gnuradio.i"
 
 %{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
 #include "pager_flex_frame.h"
 #include "pager_slicer_fb.h"
 #include "pager_flex_sync.h"
 #include "pager_flex_deinterleave.h"
 #include "pager_flex_parse.h"
-#include <stdexcept>
 %}
 
 %include "pager_flex_frame.i"

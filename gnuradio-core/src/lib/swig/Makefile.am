@@ -35,11 +35,13 @@ EXTRA_DIST = gen-swig-bug-fix
 
 LOCAL_IFILES =				\
 	gnuradio.i			\
-	shared_ptr.i			\
+	gr_swig_block_magic.i		\
+	gr_shared_ptr.i			\
 	sw_general.i			\
 	sw_gengen.i			\
 	sw_filter.i			\
-	sw_io.i
+	sw_io.i				\
+	sw_runtime.i
 
 ALL_IFILES =				\
 	$(LOCAL_IFILES)
@@ -99,7 +101,7 @@ _gnuradio_swig_py_io_la_CXXFLAGS      = @swig_CXXFLAGS@
 
 
 # ----------------------------------------------------------------
-# Part 1: gnuradio.i -> gnuradio_swig_py_runtime
+# Part 1: sw_runtime.i -> gnuradio_swig_py_runtime
 #
 # We continue to call this gnuradio.i to avoid having to touch
 # lots of code in other modules
@@ -123,8 +125,8 @@ _gnuradio_swig_py_runtime_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
 
 gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime.h: gnuradio_swig_py_runtime.cc
 
-gnuradio_swig_py_runtime.cc : $(srcdir)/gnuradio.i
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) -MMD -MF gnuradio_swig_py_runtime.Td -module gnuradio_swig_py_runtime -o gnuradio_swig_py_runtime.cc $(srcdir)/gnuradio.i ;\
+gnuradio_swig_py_runtime.cc : $(srcdir)/sw_runtime.i
+	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) -MMD -MF gnuradio_swig_py_runtime.Td -module gnuradio_swig_py_runtime -o gnuradio_swig_py_runtime.cc $(srcdir)/sw_runtime.i ;\
 	then if test $(host_os) = mingw32; \
 	     then sed 's,\\\\,/,g' <gnuradio_swig_py_runtime.Td >gnuradio_swig_py_runtime.d; rm -f gnuradio_swig_py_runtime.Td; \
 	     else mv -f gnuradio_swig_py_runtime.Td gnuradio_swig_py_runtime.d; fi \

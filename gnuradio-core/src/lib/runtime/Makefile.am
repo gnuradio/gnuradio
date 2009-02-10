@@ -1,5 +1,5 @@
 #
-# Copyright 2003,2004,2007,2008 Free Software Foundation, Inc.
+# Copyright 2003,2004,2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -152,7 +152,6 @@ swiginclude_HEADERS =			\
 	gr_sync_block.i			\
 	gr_sync_decimator.i		\
 	gr_sync_interpolator.i		\
-	gr_swig_block_magic.i		\
 	gr_top_block.i			\
 	runtime.i
 

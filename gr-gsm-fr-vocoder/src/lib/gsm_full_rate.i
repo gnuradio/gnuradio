@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,15 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%feature("autodoc","1");
-%include "exception.i"
-%import "gnuradio.i"
+%include "gnuradio.i"
 
 %{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
 #include "gsm_fr_encode_sp.h"
 #include "gsm_fr_decode_ps.h"
-#include <stdexcept>
 %}
 
 GR_SWIG_BLOCK_MAGIC(gsm_fr,encode_sp);

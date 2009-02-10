@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,15 +20,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%feature("autodoc","1");
-%include "exception.i"
-%import "gnuradio.i"
+%include "gnuradio.i"
 
 %{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
 #include "qtgui_sink_c.h"
 #include "qtgui_sink_f.h"
-#include <stdexcept>
 %}
 
 GR_SWIG_BLOCK_MAGIC(qtgui,sink_c)

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,13 +23,8 @@
 %module(directors="1") gnuradio_swig_py_filter
 #endif
 
+ //%feature("autodoc", "1");		// generate python docstrings
 
-%feature("autodoc", "1");		// generate python docstrings
-
-%import "gnuradio.i"				// the common stuff
-
-%{
-#include "gnuradio_swig_bug_workaround.h"	// mandatory bug fix
-%}
+%include "gnuradio.i"				// the common stuff
 
 %include "filter.i"

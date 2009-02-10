@@ -20,13 +20,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%feature("autodoc", "1");		// generate python docstrings
-
-%import "gnuradio.i"	// the common stuff
-%import <stdint.i>     
+%include "gnuradio.i"	// the common stuff
+%import <stdint.i>
 
 %{
-#include <gnuradio_swig_bug_workaround.h>
 #include "usrp2_source_16sc.h"
 #include "usrp2_source_32fc.h"
 #include "usrp2_sink_16sc.h"
