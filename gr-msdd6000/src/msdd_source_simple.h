@@ -25,6 +25,7 @@
 #include <msdd6000.h>
 #include <boost/scoped_ptr.hpp>
 
+#define     MSDD_COMPLEX_SAMPLES_PER_PACKET        366
 
 class msdd_source_simple;
 typedef boost::shared_ptr<msdd_source_simple> msdd_source_simple_sptr;
@@ -42,6 +43,7 @@ class msdd_source_simple : public gr_sync_block {
 
   boost::scoped_ptr<MSDD6000> rcv;
   int d_lastseq;
+  bool d_firstrun;
 
  protected:
   msdd_source_simple (const char *src, unsigned short port_src);

@@ -40,8 +40,9 @@ msdd_source_simple::msdd_source_simple (
 		: gr_sync_block("MSDD_SOURCE_SIMPLE",
 				gr_make_io_signature (0,0,0),
 				gr_make_io_signature (1, 1, sizeof (short))),
-                  rcv(new MSDD6000((char*) src)), d_lastseq(0)
+                  rcv(new MSDD6000((char*) src)), d_lastseq(0), d_firstrun(true)
 {
+    set_output_multiple(MSDD_COMPLEX_SAMPLES_PER_PACKET*2);
 }
 
 msdd_source_simple::~msdd_source_simple ()
@@ -55,51 +56,51 @@ msdd_source_simple::work (int noutput_items,
                          gr_vector_void_star &output_items)
 {
 	
-#define BUF_LEN	(366*sizeof(short)*2 + 6)
+#define BUF_LEN        (MSDD_COMPLEX_SAMPLES_PER_PACKET*sizeof(short)*2 + 6)
 
 	float* out1 =(float*) output_items[0];
 
-	char buffer[BUF_LEN];
-	rcv->read( &buffer[0], BUF_LEN );
+    for(int i=0; i<floor(noutput_items*1.0/(2*MSDD_COMPLEX_SAMPLES_PER_PACKET));i++){
+            char buffer[BUF_LEN];
+            rcv->read( &buffer[0], BUF_LEN );
 
-	int seq = *((int*) &buffer[2]);
-	
-	// FIXME get rid of these magic 366's!
-	if(d_lastseq == -366){
-		// not started case
-		if(seq == 0){
-			d_lastseq = 0;
-			} else {
-			// THROW AWAY SAMPLES WE ARE NOT STARTED YET!
-			return 0;
-			}
-		
-		} else {
-		// started case
-		int samples_missed = seq - d_lastseq - 366;
-		if(samples_missed > 0){
-			printf("dropped %d samples.\n", samples_missed);
-			}
-		d_lastseq = seq;
-		}
-	
-	if(noutput_items< 366*2){
-		printf("NOT ENOUGH SPACE IN OUTPUT BUFFER!!! >:-(\n");
-		}
-	
-	memcpy(&out1[0], &buffer[6], BUF_LEN - 6);
-	
-//	for(int i = 0; i < 366*2; i++){
-//		out1[i] = (float)  (*((short*) &buffer[6+2*i]) );
-//	}
-	
-	return 366*2;
+            int seq = *((int*) &buffer[2]);
+
+            if(d_lastseq == -MSDD_COMPLEX_SAMPLES_PER_PACKET){
+                    // not started case
+                    if(seq == 0){
+                            d_lastseq = 0;
+                            } else {
+                            // THROW AWAY SAMPLES WE ARE NOT STARTED YET!
+                            return 0;
+                            }
+
+                    } else {
+                    // started case
+                    int samples_missed = seq - d_lastseq - MSDD_COMPLEX_SAMPLES_PER_PACKET;
+                    if(samples_missed > 0){
+                if(d_firstrun == true){
+                    // we may have missed some initial samples off the beginning of
+                    // a stream but there are no drop outs in the middle of what we have
+                    } else {
+                                printf("dropped %d samples.\n", samples_missed);
+                    }
+                            }
+                    d_lastseq = seq;
+                    }
+
+            int out_idx = i*MSDD_COMPLEX_SAMPLES_PER_PACKET*2;
+            memcpy(&out1[out_idx], &buffer[6], BUF_LEN - 6);
+            d_firstrun = false;
+        }
+
+    return noutput_items;
+
 }
 
 bool msdd_source_simple::set_decim_rate(unsigned int rate)
 {
-	// FIXME seems buggy.  How about a floor or ceil?
-        rcv->set_decim((int) log2(rate));
+    rcv->set_decim((int) floor(log2(rate)));
 	return true;
 }
 

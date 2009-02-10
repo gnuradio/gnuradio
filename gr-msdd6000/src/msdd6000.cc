@@ -86,7 +86,8 @@ MSDD6000::MSDD6000(char* addr)
 
 MSDD6000::~MSDD6000()
 {
-  // NOP
+    // printf("MSDD6000::Destructing\n");
+    close(d_sock);
 }
 
 
