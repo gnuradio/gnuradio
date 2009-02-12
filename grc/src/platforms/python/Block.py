@@ -104,6 +104,28 @@ class Block(_Block):
 					ports[key] = port
 				continue
 
+	def port_controller_modify(self, direction):
+		"""
+		Change the port controller.
+		@param direction +1 or -1
+		@return true for change
+		"""
+		changed = False
+		for ports in (self.get_sinks(), self.get_sources()):
+			if ports and ports[0].get_nports():
+				#find the param that controls port0
+				for param in self.get_params():
+					if not param.is_enum() and param.get_key() in ports[0]._nports:
+						#try to increment the port controller by direction
+						try:
+							value = param.evaluate()
+							value = value + direction
+							assert 0 < value
+							param.set_value(value)
+							changed = True
+						except: pass
+		return changed
+
 	def get_doc(self):
 		doc = self._doc.strip('\n').replace('\\\n', '')
 		#merge custom doc with doxygen docs

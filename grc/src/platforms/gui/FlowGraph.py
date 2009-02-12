@@ -176,25 +176,7 @@ class FlowGraph(Element):
 		@param direction +1 or -1
 		@return true for change
 		"""
-		changed = False
-		for selected_block in self.get_selected_blocks():
-			type_param = None
-			for param in filter(lambda p: p.is_enum(), selected_block.get_params()):
-				children = param.get_parent().get_ports() + param.get_parent().get_params()
-				#priority to the type controller
-				if param.get_key() in ' '.join(map(lambda p: p._type, children)): type_param = param
-				#use param if type param is unset
-				if not type_param: type_param = param
-			if type_param:
-				#try to increment the enum by direction
-				try:
-					keys = type_param.get_option_keys()
-					old_index = keys.index(type_param.get_value())
-					new_index = (old_index + direction + len(keys))%len(keys)
-					type_param.set_value(keys[new_index])
-					changed = True
-				except: pass
-		return changed
+		return any([sb.type_controller_modify(direction) for sb in self.get_selected_blocks()])
 
 	def port_controller_modify_selected(self, direction):
 		"""
@@ -202,32 +184,15 @@ class FlowGraph(Element):
 		@param direction +1 or -1
 		@return true for changed
 		"""
-		changed = False
-		for selected_block in self.get_selected_blocks():
-			for ports in (selected_block.get_sinks(), selected_block.get_sources()):
-				if ports and hasattr(ports[0], 'get_nports') and ports[0].get_nports():
-					#find the param that controls port0
-					for param in selected_block.get_params():
-						if param.get_key() in ports[0]._nports:
-							#try to increment the port controller by direction
-							try:
-								value = param.evaluate()
-								value = value + direction
-								assert 0 < value
-								param.set_value(value)
-								changed = True
-							except: pass
-		return changed
+		return any([sb.port_controller_modify(direction) for sb in self.get_selected_blocks()])
 
 	def param_modify_selected(self):
 		"""
 		Create and show a param modification dialog for the selected block.
 		@return true if parameters were changed
 		"""
-		if self.get_selected_block():
-			signal_block_params_dialog = ParamsDialog(self.get_selected_block())
-			return signal_block_params_dialog.run()
-		return False
+		if not self.get_selected_block(): return False
+		return ParamsDialog(self.get_selected_block()).run()
 
 	def enable_selected(self, enable):
 		"""

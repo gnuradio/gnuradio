@@ -196,6 +196,42 @@ class Block(Element):
 		except Exception, e: return "-------->\n%s: %s\n<--------"%(e, tmpl)
 
 	##############################################
+	# Controller Modify
+	##############################################
+	def type_controller_modify(self, direction):
+		"""
+		Change the type controller.
+		@param direction +1 or -1
+		@return true for change
+		"""
+		changed = False
+		type_param = None
+		for param in filter(lambda p: p.is_enum(), self.get_params()):
+			children = self.get_ports() + self.get_params()
+			#priority to the type controller
+			if param.get_key() in ' '.join(map(lambda p: p._type, children)): type_param = param
+			#use param if type param is unset
+			if not type_param: type_param = param
+		if type_param:
+			#try to increment the enum by direction
+			try:
+				keys = type_param.get_option_keys()
+				old_index = keys.index(type_param.get_value())
+				new_index = (old_index + direction + len(keys))%len(keys)
+				type_param.set_value(keys[new_index])
+				changed = True
+			except: pass
+		return changed
+
+	def port_controller_modify(self, direction):
+		"""
+		Change the port controller.
+		@param direction +1 or -1
+		@return true for change
+		"""
+		return False
+
+	##############################################
 	## Import/Export Methods
 	##############################################
 	def export_data(self):
