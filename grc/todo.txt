@@ -2,9 +2,8 @@
 # Blocks
 ##################################################
 -ofdm wrappers
--controlled step block
 -probe: also non-float outputs
--RFID, ATSC
+-log slider gui control
 
 ##################################################
 # Features
@@ -12,7 +11,6 @@
 -param editor, expand entry boxes in focus
 -change param dialog to panel within main window
 -command line option for additional block wrappers
--log slider gui control
 -zoom in/out (cairo vector graphics) (use scroll wheel as control)
 -search for blocks
 -click and drag on whitespace to scroll
@@ -28,18 +26,5 @@
 -add hier blocks to tree without restart?
 -dont generate py files in .grc file dir
 -save/restore cwd
--special connection validation rules for disabled blocks
 -threads dont die on exit in probe and variable sink
 -overloaded gui classes for each platform, move param input objects into overloaded
-
-##################################################
-# External
-##################################################
--simple usrp
--global wxgui controls and top block window
-
-##################################################
-# Documentation
-##################################################
--notes on throttle
--notes on xdg-utils
