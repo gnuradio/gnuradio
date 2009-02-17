@@ -63,10 +63,13 @@ def to_spec(side, rx_ant='RXA'):
 	Convert the side to a spec number.
 	@param side A or B
 	@param rx_ant antenna type
-	@return the spec (0/1, 0/1)
+	@return the spec (0/1, 0/1/2)
 	"""
-	try: return (
-		{'A': 0, 'B': 1}[side.upper()], #side spec is 0 for A, 1 for B
-		rx_ant.upper() == 'RXB' and 1 or 0, #subdev spec is 1 for RXB
-	)
+	#determine the side spec
+	try: side_spec = {'A': 0, 'B': 1}[side.upper()]
 	except: raise ValueError, 'Side A or B expected.'
+	#determine the subdevice spec
+	if rx_ant.upper() == 'RXB': subdev_spec = 1
+	elif rx_ant.upper() == 'RXAB': subdev_spec = 2
+	else: subdev_spec = 0
+	return (side_spec, subdev_spec)

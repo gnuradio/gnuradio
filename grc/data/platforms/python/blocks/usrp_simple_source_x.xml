@@ -103,6 +103,11 @@ self.$(id).set_gain($gain)</make>
 			<opt>flex:</opt>
 		</option>
 		<option>
+			<name>RXAB</name>
+			<key>RXAB</key>
+			<opt>flex:</opt>
+		</option>
+		<option>
 			<name>TX/RX</name>
 			<key>TX/RX</key>
 			<opt>flex:1</opt>
@@ -137,11 +142,8 @@ The USRP source outputs 64 Megasamples per second / decimation.
 
 The "Receive Antenna Setting" selects one of the SMA connectors as the data source. \
 Flex RF boards use the "TX/RX" and "RX2" settings. \
-Basic RX and LFRX use the "RXA" and "RXB" settings. \
+Basic RX and LFRX use the "RXA", "RXB", and "RXAB" settings. \
 All other boards use the "RXA" setting.
-
-Flex RF boards only: If enabled, "Auto Transmit/Receive Switching" handles the preference for transmit packets vs receive packets. \
-By default, "Auto TR" is disabled.
 
 With the format set to 8 bits and the halfband filters disabled, the USRP can acheive a decimation rate of 4. \
 Disabling the halfband filters requires a special USRP firmware without halfband filters or TX paths. \

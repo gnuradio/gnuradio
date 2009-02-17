@@ -46,6 +46,7 @@ instantiate_dbs(int dbid, usrp_basic_sptr usrp, int which_side)
   case(USRP_DBID_BASIC_RX):
     db.push_back(db_base_sptr(new db_basic_rx(usrp, which_side, 0)));
     db.push_back(db_base_sptr(new db_basic_rx(usrp, which_side, 1)));
+    db.push_back(db_base_sptr(new db_basic_rx(usrp, which_side, 2)));
     break;
 
   case(USRP_DBID_LF_TX):
@@ -55,6 +56,7 @@ instantiate_dbs(int dbid, usrp_basic_sptr usrp, int which_side)
   case(USRP_DBID_LF_RX):
     db.push_back(db_base_sptr(new db_lf_rx(usrp, which_side, 0)));
     db.push_back(db_base_sptr(new db_lf_rx(usrp, which_side, 1)));
+    db.push_back(db_base_sptr(new db_lf_rx(usrp, which_side, 2)));
     break;
     
   case(USRP_DBID_DBS_RX):

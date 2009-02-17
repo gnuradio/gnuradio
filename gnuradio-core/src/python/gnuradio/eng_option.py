@@ -63,13 +63,13 @@ def check_subdev (option, opt, value):
 
     @returns a 2-tuple (0|1, 0|1)
     """
-    d = { 'A'   : (0, 0),  'A:0' : (0, 0),  'A:1' : (0, 1),
-          'B'   : (1, 0),  'B:0' : (1, 0),  'B:1' : (1, 1) }
+    d = { 'A' : (0, 0), 'A:0' : (0, 0), 'A:1' : (0, 1), 'A:2' : (0, 2),
+          'B' : (1, 0), 'B:0' : (1, 0), 'B:1' : (1, 1), 'B:2' : (1, 2) }
     try:
         return d[value.upper()]
     except:
         raise OptionValueError(
-            "option %s: invalid subdev: '%r', must be one of A, B, A:0, A:1, B:0, B:1" % (opt, value))
+            "option %s: invalid subdev: '%r', must be one of %s" % (opt, value, ', '.join(sorted(d.keys()))))
 
 class eng_option (Option):
     TYPES = Option.TYPES + ("eng_float", "intx", "subdev")

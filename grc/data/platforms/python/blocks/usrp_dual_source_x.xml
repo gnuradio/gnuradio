@@ -8,7 +8,7 @@
 	<name>USRP Dual Source</name>
 	<key>usrp_dual_source_x</key>
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
-	<make>grc_usrp.dual_source_$(type.fcn)(which=$which, side_a='$rx_ant_a.side', rx_ant_a='$rx_ant_a.rx_ant', side_b='$rx_ant_b.side', rx_ant_b='$rx_ant_b.rx_ant')
+	<make>grc_usrp.dual_source_$(type.fcn)(which=$which, rx_ant_a='$rx_ant_a', rx_ant_b='$rx_ant_b')
 #if $format.eval
 self.$(id).set_format(width=$format.width, shift=$format.shift)
 #end if
@@ -97,39 +97,29 @@ self.$(id).set_gain_b($gain_b)</make>
 		<key>rx_ant_a</key>
 		<type>enum</type>
 		<option>
-			<name>Side A, RXA</name>
-			<key>A_RXA</key>
-			<opt>side:A</opt>
-			<opt>rx_ant:RXA</opt>
+			<name>RXA</name>
+			<key>RXA</key>
 			<opt>flex:</opt>
 		</option>
 		<option>
-			<name>Side A, RXB</name>
-			<key>A_RXB</key>
-			<opt>side:A</opt>
-			<opt>rx_ant:RXB</opt>
+			<name>RXB</name>
+			<key>RXB</key>
 			<opt>flex:</opt>
 		</option>
 		<option>
-			<name>Side A, TX/RX</name>
-			<key>A_TXRX</key>
-			<opt>side:A</opt>
-			<opt>rx_ant:TX/RX</opt>
+			<name>RXAB</name>
+			<key>RXAB</key>
+			<opt>flex:</opt>
+		</option>
+		<option>
+			<name>TX/RX</name>
+			<key>TX/RX</key>
 			<opt>flex:1</opt>
 		</option>
 		<option>
-			<name>Side A, RX2</name>
-			<key>A_RX2</key>
-			<opt>side:A</opt>
-			<opt>rx_ant:RX2</opt>
+			<name>RX2</name>
+			<key>RX2</key>
 			<opt>flex:1</opt>
-		</option>
-		<option>
-			<name>Side B, RXA</name>
-			<key>B_RXA</key>
-			<opt>side:B</opt>
-			<opt>rx_ant:RXA</opt>
-			<opt>flex:</opt>
 		</option>
 	</param>
 <!--
@@ -142,42 +132,31 @@ self.$(id).set_gain_b($gain_b)</make>
 		<key>rx_ant_b</key>
 		<type>enum</type>
 		<option>
-			<name>Side B, RXA</name>
-			<key>B_RXA</key>
-			<opt>side:B</opt>
-			<opt>rx_ant:RXA</opt>
+			<name>RXA</name>
+			<key>RXA</key>
 			<opt>flex:</opt>
 		</option>
 		<option>
-			<name>Side B, RXB</name>
-			<key>B_RXB</key>
-			<opt>side:B</opt>
-			<opt>rx_ant:RXB</opt>
+			<name>RXB</name>
+			<key>RXB</key>
 			<opt>flex:</opt>
 		</option>
 		<option>
-			<name>Side B, TX/RX</name>
-			<key>B_TXRX</key>
-			<opt>side:B</opt>
-			<opt>rx_ant:TX/RX</opt>
+			<name>RXAB</name>
+			<key>RXAB</key>
+			<opt>flex:</opt>
+		</option>
+		<option>
+			<name>TX/RX</name>
+			<key>TX/RX</key>
 			<opt>flex:1</opt>
 		</option>
 		<option>
-			<name>Side B, RX2</name>
-			<key>B_RX2</key>
-			<opt>side:B</opt>
-			<opt>rx_ant:RX2</opt>
+			<name>RX2</name>
+			<key>RX2</key>
 			<opt>flex:1</opt>
-		</option>
-		<option>
-			<name>Side A, RXB</name>
-			<key>A_RXB</key>
-			<opt>side:A</opt>
-			<opt>rx_ant:RXB</opt>
-			<opt>flex:</opt>
 		</option>
 	</param>
-	<check>'$rx_ant_a' != '$rx_ant_b'</check>
 	<source>
 		<name>Aout</name>
 		<type>$type</type>
@@ -191,10 +170,7 @@ The USRP source outputs 64 Megasamples per second / decimation.
 
 The "Receive Antenna Setting" selects one of the SMA connectors as the data source. \
 Flex RF boards use the "TX/RX" and "RX2" settings. \
-Basic RX and LFRX use the "RXA" and "RXB" settings. \
+Basic RX and LFRX use the "RXA", "RXB", and "RXAB" settings. \
 All other boards use the "RXA" setting.
-
-Flex RF boards only: If enabled, "Auto Transmit/Receive Switching" handles the preference for transmit packets vs receive packets. \
-By default, "Auto TR" is disabled.
 	</doc>
 </block>

@@ -197,7 +197,7 @@ db_basic_rx::is_quadrature()
 
   // This bit of info is useful when setting up the USRP Rx mux register.
   
-  return false;
+  return (d_subdev == 2);
 }
 
 

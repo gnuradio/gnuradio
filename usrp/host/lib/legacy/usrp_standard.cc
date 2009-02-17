@@ -585,32 +585,24 @@ usrp_standard_rx::determine_rx_mux_value(const usrp_subdev_spec &ss)
   // classes for the selected side.
   std::vector<db_base_sptr> db = this->db(ss.side);
   
-  unsigned int subdev0_uses, subdev1_uses, uses;
+  unsigned int uses;
 
   // compute bitmasks of used A/D's
   
-  if(db[0]->is_quadrature())
-    subdev0_uses = 0x3;               // uses A/D 0 and 1
-  else
-    subdev0_uses = 0x1;               // uses A/D 0 only
-
-  if(db.size() > 1)                   // more than 1 subdevice?
-    subdev1_uses = 0x2;               // uses A/D 1 only
-  else
-    subdev1_uses = 0x0;               // uses no A/D (doesn't exist)
-  
-  if(ss.subdev == 0)
-    uses = subdev0_uses;
+  if(db[ss.subdev]->is_quadrature())
+    uses = 0x3;               // uses A/D 0 and 1
+  else if (ss.subdev == 0)
+    uses = 0x1;               // uses A/D 0 only
   else if(ss.subdev == 1)
-    uses = subdev1_uses;
+    uses = 0x2;               // uses A/D 1 only
   else
-    throw std::invalid_argument("subdev_spec");
-
+    uses = 0x0;               // uses no A/D (doesn't exist)
+  
   if(uses == 0){
-    throw std::runtime_error("Daughterboard doesn't have a subdevice 1");
+    throw std::runtime_error("Determine RX Mux Error");
   }
   
-  bool swap_iq = db[0]->i_and_q_swapped();
+  bool swap_iq = db[ss.subdev]->i_and_q_swapped();
   
   truth_table_element truth_table[8] = {
     // (side, uses, swap_iq) : mux_val
@@ -959,7 +951,7 @@ usrp_standard_tx::determine_tx_mux_value(const usrp_subdev_spec &ss)
 
   std::vector<db_base_sptr> db = this->db(ss.side);
   
-  if(db[0]->i_and_q_swapped()) {
+  if(db[ss.subdev]->i_and_q_swapped()) {
     unsigned int mask[2] = {0x0089, 0x8900};
     return mask[ss.side];
   }

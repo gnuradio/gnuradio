@@ -27,13 +27,11 @@ from gnuradio import gr, usrp
 class _dual_source(gr.hier_block2):
 	"""A dual usrp source of IO type short or complex."""
 
-	def __init__(self, which, side_a='A', rx_ant_a='RXA', side_b='B', rx_ant_b='RXA'):
+	def __init__(self, which, rx_ant_a='RXA', rx_ant_b='RXA'):
 		"""
 		USRP dual source contructor.
 		@param which the unit number
-		@param side_a A or B
 		@param rx_ant_a the antenna choice
-		@param side_b A or B
 		@param rx_ant_b the antenna choice
 		"""
 		#initialize hier2 block
@@ -44,12 +42,12 @@ class _dual_source(gr.hier_block2):
 		)
 		#create usrp object
 		self._make_usrp(which=which, nchan=2)
-		#get the mux for output A
-		subdev_spec_a = common.to_spec(side_a, rx_ant_a)
+		#get the mux for side A
+		subdev_spec_a = common.to_spec('A', rx_ant_a)
 		self._subdev_a = usrp.selected_subdev(self._get_u(), subdev_spec_a)
 		mux_a = usrp.determine_rx_mux_value(self._get_u(), subdev_spec_a)
-		#get the mux for output B
-		subdev_spec_b = common.to_spec(side_b, rx_ant_b)
+		#get the mux for side B
+		subdev_spec_b = common.to_spec('B', rx_ant_b)
 		self._subdev_b = usrp.selected_subdev(self._get_u(), subdev_spec_b)
 		mux_b = usrp.determine_rx_mux_value(self._get_u(), subdev_spec_b)
 		#move the lower byte of the mux b into the second byte of the mux a
