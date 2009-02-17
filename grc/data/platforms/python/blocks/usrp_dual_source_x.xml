@@ -99,27 +99,22 @@ self.$(id).set_gain_b($gain_b)</make>
 		<option>
 			<name>RXA</name>
 			<key>RXA</key>
-			<opt>flex:</opt>
 		</option>
 		<option>
 			<name>RXB</name>
 			<key>RXB</key>
-			<opt>flex:</opt>
 		</option>
 		<option>
 			<name>RXAB</name>
 			<key>RXAB</key>
-			<opt>flex:</opt>
 		</option>
 		<option>
 			<name>TX/RX</name>
 			<key>TX/RX</key>
-			<opt>flex:1</opt>
 		</option>
 		<option>
 			<name>RX2</name>
 			<key>RX2</key>
-			<opt>flex:1</opt>
 		</option>
 	</param>
 <!--
@@ -134,27 +129,22 @@ self.$(id).set_gain_b($gain_b)</make>
 		<option>
 			<name>RXA</name>
 			<key>RXA</key>
-			<opt>flex:</opt>
 		</option>
 		<option>
 			<name>RXB</name>
 			<key>RXB</key>
-			<opt>flex:</opt>
 		</option>
 		<option>
 			<name>RXAB</name>
 			<key>RXAB</key>
-			<opt>flex:</opt>
 		</option>
 		<option>
 			<name>TX/RX</name>
 			<key>TX/RX</key>
-			<opt>flex:1</opt>
 		</option>
 		<option>
 			<name>RX2</name>
 			<key>RX2</key>
-			<opt>flex:1</opt>
 		</option>
 	</param>
 	<source>
