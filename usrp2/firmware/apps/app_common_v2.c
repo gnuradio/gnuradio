@@ -58,9 +58,9 @@ static bool
 sync_every_pps(const op_generic_t *p)
 {
   if (p->ok)
-    timesync_regs->tick_control |= TSC_EVERYPPS;
+    timesync_regs->tick_control |= TSC_TRIGGER_EVERYPPS;
   else
-    timesync_regs->tick_control &= ~TSC_EVERYPPS;
+    timesync_regs->tick_control &= ~TSC_TRIGGER_EVERYPPS;
 
   return true;
 }

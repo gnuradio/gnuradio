@@ -655,11 +655,14 @@ typedef struct {
 
 #define timesync_regs ((timesync_regs_t *) TIMESYNC_BASE)
 
-#define TSC_SOURCE      (1 << 0)
-#define TSC_IENABLE     (1 << 1)
-#define TSC_EXTSYNC     (1 << 2)
-#define TSC_PPSEDGE     (1 << 3)
-#define TSC_EVERYPPS    (1 << 4)
+#define TSC_SOURCE_PPS        (1 << 0)
+//#define TSC_SOURCE_FREE_RUN (0 << 0)
+#define TSC_IENABLE           (1 << 1)
+#define TSC_EXTSYNC           (1 << 2)
+#define TSC_PPSEDGE_POS       (1 << 3)
+//#define TSC_PPSEDGE_NEG     (0 << 3)
+#define TSC_TRIGGER_EVERYPPS  (1 << 4)
+//#define TSC_TRIGGER_ONCE    (0 << 4)
 
 ///////////////////////////////////////////////////
 // SD Card SPI interface, Slave 13
