@@ -57,11 +57,10 @@ sync_to_pps(const op_generic_t *p)
 static bool
 sync_every_pps(const op_generic_t *p)
 {
-  // FIXME use bit fields or defined masks
   if (p->ok)
-    timesync_regs->tick_control |= 16;
+    timesync_regs->tick_control |= TSC_EVERYPPS;
   else
-    timesync_regs->tick_control &= ~16;
+    timesync_regs->tick_control &= ~TSC_EVERYPPS;
 
   return true;
 }

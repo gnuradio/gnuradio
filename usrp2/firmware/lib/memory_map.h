@@ -1,6 +1,6 @@
 /* -*- c -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -625,7 +625,6 @@ typedef struct {
 
 ///////////////////////////////////////////////////
 // Time Sync Controller, Slave 12
-
 #define TIMESYNC_BASE  0xE800
 
 typedef struct {
@@ -655,6 +654,12 @@ typedef struct {
 } timesync_regs_t;
 
 #define timesync_regs ((timesync_regs_t *) TIMESYNC_BASE)
+
+#define TSC_SOURCE      (1 << 0)
+#define TSC_IENABLE     (1 << 1)
+#define TSC_EXTSYNC     (1 << 2)
+#define TSC_PPSEDGE     (1 << 3)
+#define TSC_EVERYPPS    (1 << 4)
 
 ///////////////////////////////////////////////////
 // SD Card SPI interface, Slave 13
