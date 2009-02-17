@@ -22,10 +22,6 @@
 Welcome to GNU Radio!
 
 
-As of August 3, 2006 we have restructured the GNU Radio build process
-and moved the source code repository from CVS to subversion.
-
-
 Please see http://gnuradio.org/trac for the wiki, bug tracking,
 and source code viewer.  If you've got questions about GNU Radio, please
 subscribe to the discuss-gnuradio mailing list and post your questions
@@ -44,14 +40,6 @@ For information about subversion, please see:
   http://subversion.tigris.org/
 
 
-
-GNU Radio is now distributed as one giant blob, instead of N smaller
-blobs.  We believe that this will reduce some of the build problems
-people were seeing.  Now you'll always get all of the code, and the
-configure step will determine which components can be built on your
-system.
-
-
 How to Build GNU Radio:
 
   (1) Ensure that you've satisfied the external dependencies listed
@@ -63,8 +51,8 @@ How to Build GNU Radio:
 
       With the exception of SDCC, the following GNU/Linux
       distributions are known to come with all required dependencies
-      pre-packaged: Ubuntu 6.06, SuSE 10.0 (the pay version, not the
-      free download), Fedora Core 5.  Other distribution may work too.
+      pre-packaged: Ubuntu 8.10, SuSE 10.0 (the pay version, not the
+      free download), Fedora Core 9.  Other distribution may work too.
       We know these three are easy.  The required packages may be
       contained on your installation CD/DVD, or may be loaded over the
       net.  The specifics vary depending on your GNU/Linux
@@ -78,7 +66,6 @@ How to Build GNU Radio:
 
       See the wiki at http://gnuradio.org/trac/wiki for details.
 
-      FIXME: update the wiki; talk about OS/X, NetBSD and MinGW too.
 
   (2) do the "usual dance"
 
@@ -176,7 +163,8 @@ single-precision libraries.
 
 Python 2.3 or later is now required.  If your system splits
 python into a bunch of separate packages including python-devel or
-libpython you'll most likely need those too.
+libpython you'll most likely need those too. The GNU Radio Companion 
+application requires Python 2.5 or later.
 
 
 (5) Numpy python library   http://numeric.scipy.org
@@ -215,21 +203,30 @@ worry about it.
 
 Scheme interpreter.  http://www.gnu.org/software/guile/guile.html
 
+(11) GNU Scientific Library (gsl) 1.10 or later
+
+The GNU Radio core library uses some routines from here.
 
 
 Optional, but nice to have:
 
-(11) wxPython.  Python binding for the wxWidgets GUI framework.  Use
+(12) wxPython.  Python binding for the wxWidgets GUI framework.  Use
 version 2.5.2.7 or later.  Again, almost all systems have this
 available.
 
 As a last resort, build it from source (not recommended!)
 http://www.wxpython.org
 
-(12) xmlto version ? or later.   http://cyberelk.net/tim/xmlto/index.html
+(13) xmlto version ? or later.   http://cyberelk.net/tim/xmlto/index.html
 
 Wrapper for XML conversion tools to ease e.g. making html from docbook.
 
+(14) Python Cheetah extensions 2.0.0 or later
+(15) Python lxml wrappers 2.0.0 or later
+(16) Python gtk wrappers 2.10.0 or later
+
+The GNU Radio Companion application requires these additional Python libraries
+to be installed.
 
 ----------------------------------------------------------------
 
@@ -239,7 +236,7 @@ class hierarchy etc.  Point your browser at
 gnuradio/gnuradio-core/doc/html/index.html
 
 
-To run the examples you'll need to set PYTHONPATH.  Note that the
+To run the examples you may need to set PYTHONPATH.  Note that the
 prefix and python version number in the path needs to match your
 installed version of python.
 
@@ -264,3 +261,4 @@ happens with pkgsrc and NetBSD.  To build, tell configure to use these
 locations:
 
 	LDFLAGS="-L/usr/pkg/lib -R/usr/pkg/lib" CPPFLAGS="-I/usr/pkg/include" ./configure --prefix=/usr/gnuradio
+
