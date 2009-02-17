@@ -60,6 +60,9 @@ public:
 
   // Dump the flowgraph to stdout
   void dump();
+
+  // Has flowgraph been started?
+  bool is_running();
   
 protected:
     

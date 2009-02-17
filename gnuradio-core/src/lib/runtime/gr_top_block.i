@@ -44,6 +44,7 @@ public:
   void stop();
   void wait();
   void run();
+  bool is_running();
   void lock();
   void unlock() throw (std::runtime_error);
   void dump();

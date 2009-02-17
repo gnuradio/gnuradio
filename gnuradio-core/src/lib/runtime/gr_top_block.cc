@@ -78,6 +78,12 @@ gr_top_block::run()
   wait();
 }
 
+bool
+gr_top_block::is_running()
+{
+  return d_impl->is_running();
+}
+
 void
 gr_top_block::lock()
 {
