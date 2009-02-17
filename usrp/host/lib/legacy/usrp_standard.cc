@@ -627,7 +627,22 @@ usrp_standard_rx::determine_rx_mux_value(const usrp_subdev_spec &ss)
   throw std::runtime_error("internal error");
 }
 
-
+int
+usrp_standard_rx::determine_rx_mux_value(const usrp_subdev_spec &ss_a, const usrp_subdev_spec &ss_b)
+{
+  if (ss_a.side == ss_b.side && ss_a.subdev == ss_b.subdev){
+    throw std::runtime_error("Cannot compute dual mux, repeated subdevice");
+  }
+  std::vector<db_base_sptr> db_a = this->db(ss_a.side);
+  std::vector<db_base_sptr> db_b = this->db(ss_b.side);
+  if (db_a[ss_a.subdev]->is_quadrature() != db_b[ss_b.subdev]->is_quadrature()){
+    throw std::runtime_error("Cannot compute dual mux when mixing quadrature and non-quadrature subdevices");
+  }
+  int mux_a = determine_rx_mux_value(ss_a);
+  int mux_b = determine_rx_mux_value(ss_b);
+  //move the lower byte of the mux b into the second byte of the mux a
+  return ((mux_b & 0xff) << 8) | (mux_a & 0xffff00ff);
+}
 
 bool
 usrp_standard_rx::set_rx_freq (int channel, double freq)
@@ -961,7 +976,20 @@ usrp_standard_tx::determine_tx_mux_value(const usrp_subdev_spec &ss)
   }
 }
 
-
+int
+usrp_standard_tx::determine_tx_mux_value(const usrp_subdev_spec &ss_a, const usrp_subdev_spec &ss_b)
+{
+  if (ss_a.side == ss_b.side && ss_a.subdev == ss_b.subdev){
+    throw std::runtime_error("Cannot compute dual mux, repeated subdevice");
+  }
+  int mux_a = determine_tx_mux_value(ss_a);
+  //Get the mux b:
+  //	DAC0 becomes DAC2
+  //	DAC1 becomes DAC3
+  unsigned int mask[2] = {0x0022, 0x2200};
+  int mux_b = determine_tx_mux_value(ss_b) + mask[ss_b.side];
+  return mux_b | mux_a;
+}
 
 #ifdef USE_FPGA_TX_CORDIC
 

@@ -179,6 +179,7 @@ class usrp_standard_rx : public usrp_basic_rx, public usrp_standard_common
    * and the characteristics of the respective daughterboard.
    */
   int determine_rx_mux_value(const usrp_subdev_spec &ss);
+  int determine_rx_mux_value(const usrp_subdev_spec &ss_a, const usrp_subdev_spec &ss_b);
 
   /*!
    * \brief set the frequency of the digital down converter.
@@ -389,6 +390,7 @@ class usrp_standard_tx : public usrp_basic_tx, public usrp_standard_common
    * and the characteristics of the respective daughterboard.
    */
   int determine_tx_mux_value(const usrp_subdev_spec &ss);
+  int determine_tx_mux_value(const usrp_subdev_spec &ss_a, const usrp_subdev_spec &ss_b);
 
   /*!
    * \brief set the frequency of the digital up converter.

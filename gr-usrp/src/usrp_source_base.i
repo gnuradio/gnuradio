@@ -35,6 +35,7 @@ public:
   bool set_mux (int mux);
   %rename(_real_determine_rx_mux_value) determine_rx_mux_value;
   int determine_rx_mux_value(usrp_subdev_spec ss);
+  int determine_rx_mux_value(usrp_subdev_spec ss_a, usrp_subdev_spec ss_b);
   bool set_rx_freq (int channel, double freq);
   bool set_fpga_mode (int mode);
   bool set_ddc_phase(int channel, int phase);

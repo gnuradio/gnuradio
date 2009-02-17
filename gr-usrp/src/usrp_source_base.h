@@ -101,6 +101,7 @@ class usrp_source_base : public usrp_base {
   bool set_nchannels (int nchan);
   bool set_mux (int mux);
   int determine_rx_mux_value(usrp_subdev_spec ss);
+  int determine_rx_mux_value(usrp_subdev_spec ss_a, usrp_subdev_spec ss_b);
 
   /*!
    * \brief set the center frequency of the digital down converter.

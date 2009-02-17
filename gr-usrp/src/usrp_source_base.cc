@@ -148,6 +148,12 @@ usrp_source_base::determine_rx_mux_value(usrp_subdev_spec ss)
   return d_usrp->determine_rx_mux_value(ss);
 }
 
+int
+usrp_source_base::determine_rx_mux_value(usrp_subdev_spec ss_a, usrp_subdev_spec ss_b)
+{
+  return d_usrp->determine_rx_mux_value(ss_a, ss_b);
+}
+
 bool
 usrp_source_base::set_rx_freq (int channel, double freq)
 {

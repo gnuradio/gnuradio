@@ -48,14 +48,18 @@ def __selected_subdev(self, subdev_spec):
   return self._real_selected_subdev(ss)
 
 # Allow subdev_spec to be tuple
-def __determine_tx_mux_value(self, subdev_spec):
+def __determine_tx_mux_value(self, subdev_spec, subdev_spec_=None):
     ss = usrp_subdev_spec(subdev_spec[0], subdev_spec[1])
-    return self._real_determine_tx_mux_value(ss)
+    if subdev_spec_ is None: return self._real_determine_tx_mux_value(ss)
+    ss_ = usrp_subdev_spec(subdev_spec_[0], subdev_spec_[1])
+    return self._real_determine_tx_mux_value(ss, ss_)
 
 # Allow subdev_spec to be tuple
-def __determine_rx_mux_value(self, subdev_spec):
+def __determine_rx_mux_value(self, subdev_spec, subdev_spec_=None):
     ss = usrp_subdev_spec(subdev_spec[0], subdev_spec[1])
-    return self._real_determine_rx_mux_value(ss)
+    if subdev_spec_ is None: return self._real_determine_rx_mux_value(ss)
+    ss_ = usrp_subdev_spec(subdev_spec_[0], subdev_spec_[1])
+    return self._real_determine_rx_mux_value(ss, ss_)
 
 # Allow subdev_spec to be tuple
 def __pick_subdev(self, candidates=[]):
@@ -86,12 +90,12 @@ def tune(u, chan, subdev, target_freq):
     return u.tune(chan, subdev, target_freq)
 
 # Allow to be called as free function
-def determine_tx_mux_value(u, subdev_spec):
-    return u.determine_tx_mux_value(subdev_spec)
+def determine_tx_mux_value(u, subdev_spec, subdev_spec_=None):
+    return u.determine_tx_mux_value(subdev_spec, subdev_spec_)
 
 # Allow to be called as free function
-def determine_rx_mux_value(u, subdev_spec):
-    return u.determine_rx_mux_value(subdev_spec)
+def determine_rx_mux_value(u, subdev_spec, subdev_spec_=None):
+    return u.determine_rx_mux_value(subdev_spec, subdev_spec_)
 
 # Allow to be called as free function
 def selected_subdev(u, subdev_spec):

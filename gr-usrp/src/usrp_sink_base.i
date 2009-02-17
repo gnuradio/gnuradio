@@ -35,6 +35,7 @@ public:
   bool set_mux (int mux);
   %rename(_real_determine_tx_mux_value) determine_tx_mux_value;
   int determine_tx_mux_value(usrp_subdev_spec ss);
+  int determine_tx_mux_value(usrp_subdev_spec ss_a, usrp_subdev_spec ss_b);
   bool set_tx_freq (int channel, double freq);
   long dac_rate() const { return converter_rate(); }
   long dac_freq() const { return converter_rate(); }

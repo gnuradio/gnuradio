@@ -81,19 +81,14 @@ class USRPProbeWindow(gtk.Window):
 		"""Probe the USRP device and copy the results into the query text box."""
 		dboard = usrp_dboard_param.evaluate()
 		side = {'a': 0, 'b': 1}[dboard[-1]]
-		if dboard.startswith('rx'): #for the rx query, use the source and rx methods
-			make = usrp.source_c
-			get_mux = usrp.determine_rx_mux_value
-		elif dboard.startswith('tx'): #for the tx query, use the sink and tx methods
-			make = usrp.sink_c
-			get_mux = usrp.determine_tx_mux_value
+		if dboard.startswith('rx'): make = usrp.source_c
+		elif dboard.startswith('tx'): make = usrp.sink_c
 		try:
 			u = make(which=usrp_which_param.evaluate())
 			subdev_spec = (side, 0)
 			subdev = usrp.selected_subdev(u, subdev_spec) #get the subdev
 			msg = ">>> USRP Probe\n"
 			msg = "%s\nName:\n\t%s\n"%(msg, str(subdev.name()))
-			msg = "%s\nAutomated Mux:\n\t0x%08x\n"%(msg, 0xFFFFFFFFL & long(get_mux(u, subdev_spec))) #ensure that the value is displayed as: 8 nibbles, unsigned, hex
 			msg = "%s\nConverter Rate:\n\t%s\n"%(msg, u.converter_rate())
 			msg = "%s\nUses Quadrature:\n\t%s\n"%(msg, str(subdev.is_quadrature()))
 			gain_min, gain_max, gain_step = subdev.gain_range()

@@ -88,6 +88,7 @@ class usrp_sink_base : public usrp_base {
   bool set_nchannels (int nchan);
   bool set_mux (int mux);
   int determine_tx_mux_value(usrp_subdev_spec ss);
+  int determine_tx_mux_value(usrp_subdev_spec ss_a, usrp_subdev_spec ss_b);
 
   /*!
    * \brief set the frequency of the digital up converter.

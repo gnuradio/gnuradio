@@ -46,8 +46,8 @@ class _simple_source(gr.hier_block2):
 		if self._no_hb: self._make_usrp(which=which, nchan=1, fpga_filename="std_4rx_0tx.rbf")
 		else: self._make_usrp(which=which, nchan=1)
 		subdev_spec = common.to_spec(side, rx_ant)
-		self._get_u().set_mux(usrp.determine_rx_mux_value(self._get_u(), subdev_spec))
-		self._subdev = usrp.selected_subdev(self._get_u(), subdev_spec)
+		self._get_u().set_mux(self._get_u().determine_rx_mux_value(subdev_spec))
+		self._subdev = self._get_u().selected_subdev(subdev_spec)
 		if common.is_flex(rx_ant): self._subdev.select_rx_antenna(rx_ant)
 		#connect
 		self.connect(self._get_u(), self)
@@ -89,8 +89,8 @@ class _simple_sink(gr.hier_block2):
 		#create usrp object
 		self._make_usrp(which=which, nchan=1)
 		subdev_spec = common.to_spec(side)
-		self._get_u().set_mux(usrp.determine_tx_mux_value(self._get_u(), subdev_spec))
-		self._subdev = usrp.selected_subdev(self._get_u(), subdev_spec)
+		self._get_u().set_mux(self._get_u().determine_tx_mux_value(subdev_spec))
+		self._subdev = self._get_u().selected_subdev(subdev_spec)
 		#connect
 		self.connect(self, self._get_u())
 

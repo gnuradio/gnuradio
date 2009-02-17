@@ -151,6 +151,12 @@ usrp_sink_base::determine_tx_mux_value(usrp_subdev_spec ss)
   return d_usrp->determine_tx_mux_value(ss);
 }
 
+int
+usrp_sink_base::determine_tx_mux_value(usrp_subdev_spec ss_a, usrp_subdev_spec ss_b)
+{
+  return d_usrp->determine_tx_mux_value(ss_a, ss_b);
+}
+
 bool
 usrp_sink_base::set_tx_freq (int channel, double freq)
 {
