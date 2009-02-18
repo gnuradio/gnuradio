@@ -25,7 +25,11 @@
 #endif
 
 #include "posix_memalign.h"
-#include <stdlib.h>
+
+#ifdef HAVE_MALLOC_H
+// for Cygwin valloc () prototype
+#include <malloc.h>
+#endif
 
 #ifndef HAVE_POSIX_MEMALIGN
 
