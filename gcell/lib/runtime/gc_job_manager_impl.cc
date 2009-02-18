@@ -712,7 +712,7 @@ static void
 pthread_create_failure_msg(int r, const char *which)
 {
   char buf[256];
-  char *s = 0;
+  const char *s = 0;
 
   switch (r){
   case EAGAIN: s = "EAGAIN"; break;

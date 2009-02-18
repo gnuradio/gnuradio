@@ -28,6 +28,7 @@
 #include <gr_math.h>
 #include <gr_altivec.h>
 #include <dotprod_fff_altivec.h>
+#include <string.h>
 #include "posix_memalign.h"
 
 gr_fir_fff_altivec::gr_fir_fff_altivec()
