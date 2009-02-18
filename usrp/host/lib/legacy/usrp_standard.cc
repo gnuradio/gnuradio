@@ -630,9 +630,6 @@ usrp_standard_rx::determine_rx_mux_value(const usrp_subdev_spec &ss)
 int
 usrp_standard_rx::determine_rx_mux_value(const usrp_subdev_spec &ss_a, const usrp_subdev_spec &ss_b)
 {
-  if (ss_a.side == ss_b.side && ss_a.subdev == ss_b.subdev){
-    throw std::runtime_error("Cannot compute dual mux, repeated subdevice");
-  }
   std::vector<db_base_sptr> db_a = this->db(ss_a.side);
   std::vector<db_base_sptr> db_b = this->db(ss_b.side);
   if (db_a[ss_a.subdev]->is_quadrature() != db_b[ss_b.subdev]->is_quadrature()){
