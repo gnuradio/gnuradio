@@ -33,9 +33,22 @@ cell_root=/mnt/cell-root
 python_version=2.5
 compiler_includes="-isystem ${cell_root}/usr/include"
 
+# check for 4.3 versions of cross-compilers and use them if we've got them
+if which ppu32-gcc43 >/dev/null 2>&1; then
+  ppu32_gcc=ppu32-gcc43
+else
+  ppu32_gcc=ppu32-gcc
+fi
+
+if which ppu32-g++43 >/dev/null 2>&1; then
+  ppu32_gxx=ppu32-g++43
+else
+  ppu32_gxx=ppu32-g++
+fi
+
 $scriptdir/configure			    \
-    CC=${arch}32-gcc                        \
-    CXX=${arch}32-g++                       \
+    CC=${ppu32_gcc}                         \
+    CXX=${ppu32_gxx}                        \
     AR=${arch}-ar                           \
     NM=${arch}-nm                           \
     RANLIB=${arch}-ranlib                   \
