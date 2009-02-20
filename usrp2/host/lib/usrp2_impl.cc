@@ -995,6 +995,7 @@ namespace usrp2 {
     cmd.op.opcode = OP_CONFIG_MIMO;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
+    cmd.op.flags = flags;
     cmd.eop.opcode = OP_EOP;
     cmd.eop.len = sizeof(cmd.eop);
     
