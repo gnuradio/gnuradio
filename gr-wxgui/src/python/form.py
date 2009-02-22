@@ -273,7 +273,7 @@ class radiobox_field(field):
         else:
             style=wx.RA_SPECIFY_COLS | wx.RA_HORIZONTAL
             
-        w = wx.RadioBox(parent, new_id, label, style=style, majorDimension=major_dimension,
+        w = wx.RadioBox(parent, new_id, label="", style=style, majorDimension=major_dimension,
                         choices=choices)
         self.f = self._pair_with_label(w, parent=parent, sizer=sizer, label=label, weight=weight)
         if callback:
