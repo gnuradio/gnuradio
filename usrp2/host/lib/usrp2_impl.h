@@ -57,6 +57,7 @@ namespace usrp2 {
     static const size_t NCHANS = 32;
 
     eth_buffer    *d_eth_buf;
+    std::string    d_ifc_name;
     pktfilter     *d_pf;
     std::string    d_addr;       // FIXME: use u2_mac_addr_t instead
     usrp2_thread  *d_bg_thread;
@@ -117,6 +118,7 @@ namespace usrp2 {
     void bg_loop();
 
     std::string mac_addr() const { return d_addr; } // FIXME: convert from u2_mac_addr_t
+    std::string ifc_name() const { return d_ifc_name; }
 
     // Rx
 

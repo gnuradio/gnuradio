@@ -54,6 +54,11 @@ public:
   std::string mac_addr() const;
   
   /*!
+   * \brief Get interface name used to communicat with USRP2
+   */
+  std::string ifc_name() const;
+
+  /*!
    * \brief Get USRP2 master clock rate
    */
   bool fpga_master_clock_freq(long *freq) const;

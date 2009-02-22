@@ -55,6 +55,12 @@ usrp2_base::mac_addr() const
   return d_u2->mac_addr();
 }
 
+std::string
+usrp2_base::ifc_name() const
+{
+  return d_u2->ifc_name();
+}
+
 bool
 usrp2_base::fpga_master_clock_freq(long *freq) const
 {

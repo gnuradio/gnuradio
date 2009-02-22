@@ -94,6 +94,11 @@ namespace usrp2 {
      */
     std::string mac_addr();
 
+    /*!
+     * Returns the GbE interface name associated with this USRP
+     */
+    std::string ifc_name();
+
     /*
      * ----------------------------------------------------------------
      * Rx configuration and control
