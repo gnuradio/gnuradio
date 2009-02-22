@@ -54,6 +54,7 @@ bin_SCRIPTS = \
     usrp_test_loopback.py \
     usrp2_fft.py \
     usrp2_rx_cfile.py \
-    usrp2_siggen.py
-    
+    usrp2_siggen.py \
+    usrp2_siggen_gui.py
+
 MOSTLYCLEANFILES = *~ *.pyc
