@@ -62,6 +62,7 @@ $scriptdir/configure			    \
     --with-pythondir=$prefix/lib/python${python_version}/site-packages			\
     --disable-gr-video-sdl \
     --disable-gr-audio-portaudio \
+    --disable-gr-audio-jack \
     --disable-usrp2-firmware \
     "$@"
 
