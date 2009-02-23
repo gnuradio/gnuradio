@@ -87,12 +87,6 @@ gr_top_block_impl::~gr_top_block_impl()
   d_owner = 0;
 }
 
-bool
-gr_top_block_impl::is_running()
-{
-  return (d_state != IDLE);
-}
-
 void
 gr_top_block_impl::start()
 {
