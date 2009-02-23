@@ -56,7 +56,7 @@ public:
   /*!
    * \brief Get interface name used to communicat with USRP2
    */
-  std::string ifc_name() const;
+  std::string interface_name() const;
 
   /*!
    * \brief Get USRP2 master clock rate

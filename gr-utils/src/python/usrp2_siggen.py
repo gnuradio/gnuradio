@@ -60,8 +60,7 @@ class top_block(gr.top_block):
         self.set_amplitude(options.amplitude)
 
         self.set_waveform_freq(options.waveform_freq)
-        #self.set_waveform2_freq(options.waveform2_freq)
-        self._waveform2_freq = options.waveform2_freq
+        self.set_waveform2_freq(options.waveform2_freq)
         self.set_waveform(options.type)
 
     def set_usrp2(self, interface, mac_addr):
@@ -282,14 +281,11 @@ class top_block(gr.top_block):
 
     # Property getters
 
-    #def interface(self):
-    #    return self._u.ifc_name()
-
     def mac_addr(self):
         return self._u.mac_addr()
 
-    def ifc_name(self):
-        return self._u.ifc_name()
+    def interface_name(self):
+        return self._u.interface_name()
 
     def daughterboard_id(self):
         return self._u.daughterboard_id()
@@ -304,10 +300,7 @@ class top_block(gr.top_block):
         return self._freq
 
     def freq_range(self):
-        fr = self._u.freq_range()
-        if self._u.daughterboard_id() == 0x0000:
-            fr = (-50e6, 50e6) # DEBUG
-        return fr
+        return self._u.freq_range()
 
     def ddc_freq(self):
         return self._ddc_freq

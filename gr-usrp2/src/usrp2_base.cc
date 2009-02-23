@@ -56,9 +56,9 @@ usrp2_base::mac_addr() const
 }
 
 std::string
-usrp2_base::ifc_name() const
+usrp2_base::interface_name() const
 {
-  return d_u2->ifc_name();
+  return d_u2->interface_name();
 }
 
 bool

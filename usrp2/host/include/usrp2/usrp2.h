@@ -97,7 +97,7 @@ namespace usrp2 {
     /*!
      * Returns the GbE interface name associated with this USRP
      */
-    std::string ifc_name();
+    std::string interface_name();
 
     /*
      * ----------------------------------------------------------------

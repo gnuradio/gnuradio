@@ -23,7 +23,7 @@
 import wx
 from gnuradio.wxgui import form, slider, gui
 import usrp2_siggen
-import math
+import sys, math
 
 class app_gui(object):
     def __init__(self, frame, panel, vbox, top_block, options, args):
@@ -43,7 +43,7 @@ class app_gui(object):
         self.build_gui()
 
         # TODO: turn these into listeners
-        self.myform['ifc'].set_value(self.tb.ifc_name())
+        self.myform['ifc'].set_value(self.tb.interface_name())
         self.myform['mac'].set_value(self.tb.mac_addr())
         dbid = self.tb.daughterboard_id()
         self.myform['dbid'].set_value("%04x" % (dbid,))

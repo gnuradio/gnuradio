@@ -45,7 +45,7 @@ public:
   ~usrp2_base();
 
   std::string mac_addr() const;
-  std::string ifc_name() const;
+  std::string interface_name() const;
   %rename(_real_fpga_master_clock_freq) fpga_master_clock_freq;
   bool fpga_master_clock_freq(long *freq);
   bool sync_to_pps();

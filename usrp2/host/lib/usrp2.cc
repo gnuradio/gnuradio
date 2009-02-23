@@ -161,9 +161,9 @@ namespace usrp2 {
   }
 
   std::string
-  usrp2::ifc_name()
+  usrp2::interface_name()
   {
-    return d_impl->ifc_name();
+    return d_impl->interface_name();
   }
 
   // Receive
