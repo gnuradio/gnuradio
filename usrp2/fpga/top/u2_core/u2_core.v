@@ -375,10 +375,18 @@ module u2_core
    assign 	 s3_rty = 1'b0;
    
    // GPIOs -- Slave #4
+   reg [4:0] 	 dbsrx_ctr;
+   reg 		 dbsrx_clk;
+   always @(posedge dsp_clk)
+     if(dsp_rst) dbsrx_ctr <= 0;
+     else if(dbsrx_ctr == 24) dbsrx_ctr <= 0;
+     else dbsrx_ctr <= dbsrx_ctr + 1;
+   always @(posedge dsp_clk) dbsrx_clk <= (dbsrx_ctr == 24);
+   
    nsgpio nsgpio(.clk_i(wb_clk),.rst_i(wb_rst),
 		 .cyc_i(s4_cyc),.stb_i(s4_stb),.adr_i(s4_adr[3:0]),.we_i(s4_we),
 		 .dat_i(s4_dat_o),.dat_o(s4_dat_i),.ack_o(s4_ack),
-		 .atr(atr_lines),.debug_0(debug_gpio_0),.debug_1(debug_gpio_1),
+		 .atr(atr_lines),.debug_0(debug_gpio_0),.debug_1({debug_gpio_1[31:1],dbsrx_clk}),
 		 .gpio( {io_tx,io_rx} ) );
    assign 	 s4_err = 1'b0;
    assign 	 s4_rty = 1'b0;
