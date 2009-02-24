@@ -706,25 +706,22 @@ module u2_core
      eth_mac_debug <= { { GMII_TX_EN, GMII_RX_DV, debug_txc[13:0]},
 			{eth_rx_full2, eth_rx_empty2, eth_rx_occ2[13:0]} };
    
-   wire        debug_mux;
-   setting_reg #(.my_addr(5)) sr_debug (.clk(wb_clk),.rst(wb_rst),.strobe(set_stb),.addr(set_addr),
-					.in(set_data),.out(debug_mux),.changed());
-
-   //assign     debug = debug_mux ? host_to_dsp_fifo : dsp_to_host_fifo;
-   //assign     debug = debug_mux ? serdes_to_dsp_fifo : dsp_to_serdes_fifo;
-   
-   assign      debug_clk[0] = wb_clk;
+   assign      debug_clk[0] = 0;
    assign      debug_clk[1] = dsp_clk;	
    
-   assign      debug = 0; //master_time; 
-   assign      debug_gpio_0={{8'b0},
-			     {8'b0},
-			     {4'b0,strobe_rx,run_rx,strobe_tx,run_tx},
-			     {s12_ack,pps_o,pps_int,epoch,pps_pos_d1,pps_posedge,pps_neg_d1,pps_negedge}};
+   assign      debug = 0;
+   assign      debug_gpio_0 = 0;
    assign      debug_gpio_1 = 0;
    
 endmodule // u2_core
 
+//   wire        debug_mux;
+//   setting_reg #(.my_addr(5)) sr_debug (.clk(wb_clk),.rst(wb_rst),.strobe(set_stb),.addr(set_addr),
+//					.in(set_data),.out(debug_mux),.changed());
+
+//assign     debug = debug_mux ? host_to_dsp_fifo : dsp_to_host_fifo;
+//assign     debug = debug_mux ? serdes_to_dsp_fifo : dsp_to_serdes_fifo;
+   
 //assign      debug = {{strobe_rx,/*adc_ovf_a*/ 1'b0,adc_a},
 //		{run_rx,/*adc_ovf_b*/ 1'b0,adc_b}};
 
