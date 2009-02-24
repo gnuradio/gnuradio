@@ -81,10 +81,15 @@ class app_flow_graph(stdgui2.std_top_block):
 		parser.add_option("-I", "--interferometer", action="store_true", default=False, help="Interferometer mode")
 		parser.add_option("-D", "--switch_mode", action="store_true", default=False, help="Dicke Switching mode")
 		parser.add_option("-P", "--reference_divisor", type="eng_float", default=1.0, help="Reference Divisor")
-		parser.add_option("-U", "--ref_fifo", default="@@@@")
+		parser.add_option("-U", "--ref_fifo", default=None)
 		parser.add_option("-k", "--notch_taps", type="int", default=64, help="Number of notch taps")
 		parser.add_option("-n", "--notches", action="store_true", 
 		    default=False, help="Notch frequencies after all other args")
+		parser.add_option("-Y", "--interface", default=None)
+		parser.add_option("-H", "--mac_addr", default=None)
+
+		# Added this documentation
+		
 		(options, args) = parser.parse_args()
 
 		self.setimode = options.setimode
@@ -95,6 +100,14 @@ class app_flow_graph(stdgui2.std_top_block):
 		self.switch_state = 0
 		self.reference_divisor = options.reference_divisor
 		self.ref_fifo = options.ref_fifo
+		self.usrp2 = False
+		self.decim = options.decim
+		self.rx_subdev_spec = options.rx_subdev_spec
+		
+		if (options.interface != None and options.mac_addr != None):
+			self.mac_addr = options.mac_addr
+			self.interface = options.interface
+			self.usrp2 = True
 		
 		self.NOTCH_TAPS = options.notch_taps
 		self.notches = Numeric.zeros(self.NOTCH_TAPS,Numeric.Float64)
@@ -106,8 +119,8 @@ class app_flow_graph(stdgui2.std_top_block):
 		
 		self.use_notches = options.notches
 		
-		if (self.ref_fifo != "@@@@"):
-			self.ref_fifo_file = open (self.ref_fifo, "w")
+		if (self.ref_fifo != None):
+			self.ref_fifo_file = open (self.ref_fifo, "r")
 		
 		modecount = 0
 		for modes in (self.dual_mode, self.interferometer):
@@ -231,35 +244,8 @@ class app_flow_graph(stdgui2.std_top_block):
 		if (self.dual_mode == True and self.decim <= 4):
 			print "Cannot use decim <= 4 with dual_mode"
 			sys.exit(1)
-
-		if (self.dual_mode == False and self.interferometer == False):
-			if (options.decim > 4):
-				self.u = usrp.source_c(decim_rate=options.decim,fusb_block_size=8192)
-			else:
-				self.u = usrp.source_c(decim_rate=options.decim,fusb_block_size=8192, fpga_filename="std_4rx_0tx.rbf")
-			self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
-			# determine the daughterboard subdevice we're using
-			self.subdev[0] = usrp.selected_subdev(self.u, options.rx_subdev_spec)
-			self.subdev[1] = self.subdev[0]
-			self.cardtype = self.subdev[0].dbid()
-		else:
-			self.u=usrp.source_c(decim_rate=options.decim, nchan=2,fusb_block_size=8192)
-			self.subdev[0] = usrp.selected_subdev(self.u, (0, 0))
-			self.subdev[1] = usrp.selected_subdev(self.u, (1, 0))
-			self.cardtype = self.subdev[0].dbid()
-			self.u.set_mux(0x32103210)
-			c1 = self.subdev[0].name()
-			c2 = self.subdev[1].name()
-			if (c1 != c2):
-				print "Must have identical cardtypes for --dual_mode or --interferometer"
-				sys.exit(1)
-		#
-		# Set 8-bit mode
-		#
-		width = 8
-		shift = 8
-		format = self.u.make_format(width, shift)
-		r = self.u.set_format(format)
+		
+		self.setup_usrp()
 		
 		# Set initial declination
 		self.decln = options.decln
@@ -1362,8 +1348,46 @@ class app_flow_graph(stdgui2.std_top_block):
 	def setup_seti(self):
 		self.connect (self.shead, self.fft_bandpass, self.scope)
 		return
-
+	
+	def setup_usrp(self):
 		
+		if (self.usrp2 == False):
+			if (self.dual_mode == False and self.interferometer == False):
+				if (self.decim > 4):
+					self.u = usrp.source_c(decim_rate=self.decim,fusb_block_size=8192)
+				else:
+					self.u = usrp.source_c(decim_rate=self.decim,fusb_block_size=8192, fpga_filename="std_4rx_0tx.rbf")
+				self.u.set_mux(usrp.determine_rx_mux_value(self.u, self.rx_subdev_spec))
+				# determine the daughterboard subdevice we're using
+				self.subdev[0] = usrp.selected_subdev(self.u, self.rx_subdev_spec)
+				self.subdev[1] = self.subdev[0]
+				self.cardtype = self.subdev[0].dbid()
+			else:
+				self.u=usrp.source_c(decim_rate=self.decim, nchan=2,fusb_block_size=8192)
+				self.subdev[0] = usrp.selected_subdev(self.u, (0, 0))
+				self.subdev[1] = usrp.selected_subdev(self.u, (1, 0))
+				self.cardtype = self.subdev[0].dbid()
+				self.u.set_mux(0x32103210)
+				c1 = self.subdev[0].name()
+				c2 = self.subdev[1].name()
+				if (c1 != c2):
+					print "Must have identical cardtypes for --dual_mode or --interferometer"
+					sys.exit(1)
+				#
+				# Set 8-bit mode
+				#
+				
+				width = 8
+				shift = 8
+				format = self.u.make_format(width, shift)
+				r = self.u.set_format(format)
+		else:
+			if (self.dual_mode == True or self.interferometer == True):
+				print "Cannot use dual_mode or interferometer with single USRP2"
+				sys.exit(1)
+			self.u = usrp2.source_32fc(self.interface, self.mac_addr)
+			self.u.set_decim (self.decim)
+			self.cardtype = self.u.daughterboard_id()
 
 def main ():
 	app = stdgui2.stdapp(app_flow_graph, "RADIO ASTRONOMY SPECTRAL/CONTINUUM RECEIVER: $Revision$", nstatus=1)
