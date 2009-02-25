@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -33,6 +33,23 @@ except KeyError, e:
     srcdir = "."
 srcdir = srcdir + '/'
 
+# set do_makefile to either true or false dependeing on the environment
+try:
+    if os.environ['do_makefile'] == '0':
+        do_makefile = False
+    else:
+        do_makefile = True
+except KeyError, e:
+    do_makefile = False
+
+# set do_sources to either true or false dependeing on the environment
+try:
+    if os.environ['do_sources'] == '0':
+        do_sources = False
+    else:
+        do_sources = True
+except KeyError, e:
+    do_sources = True
 
 name_dict = {}
 
@@ -44,28 +61,39 @@ def log_output_name (name):
     entry.append (name)
     
 def open_and_log_name (name, dir):
-    f = open (name, dir)
+    global do_sources
+    if do_sources:
+        f = open (name, dir)
+    else:
+        f = None
     log_output_name (name)
     return f
 
 def expand_template (d, template_filename, extra = ""):
     '''Given a dictionary D and a TEMPLATE_FILENAME, expand template into output file
     '''
+    global do_sources
     output_extension = extract_extension (template_filename)
     template = open_src (template_filename, 'r')
     output_name = d['NAME'] + extra + '.' + output_extension
     log_output_name (output_name)
-    output = open (output_name, 'w')
-    do_substitution (d, template, output)
+    if do_sources:
+        output = open (output_name, 'w')
+        do_substitution (d, template, output)
+        output.close ()
     template.close ()
-    output.close ()
 
 def output_glue (dirname):
     output_makefile_fragment ()
     output_ifile_include (dirname)
-    
+
 def output_makefile_fragment ():
-    f = open ('Makefile.gen', 'w')
+    global do_makefile
+    if not do_makefile:
+        return
+# overwrite the source, which must be writable; this should have been
+# checked for beforehand in the top-level Makefile.gen.gen .
+    f = open_src ('Makefile.gen', 'w')
     f.write ('#\n# This file is machine generated.  All edits will be overwritten\n#\n')
     output_subfrag (f, 'h')
     output_subfrag (f, 'i')
@@ -73,16 +101,18 @@ def output_makefile_fragment ():
     f.close ()
 
 def output_ifile_include (dirname):
-    f = open ('%s_generated.i' % (dirname,), 'w')
-    f.write ('//\n// This file is machine generated.  All edits will be overwritten\n//\n')
-    files = name_dict.setdefault ('i', [])
-    files.sort ()
-    f.write ('%{\n')
-    for file in files:
-        f.write ('#include <%s>\n' % (file[0:-1] + 'h',))
-    f.write ('%}\n\n')
-    for file in files:
-        f.write ('%%include <%s>\n' % (file,))
+    global do_sources
+    if do_sources:
+        f = open ('%s_generated.i' % (dirname,), 'w')
+        f.write ('//\n// This file is machine generated.  All edits will be overwritten\n//\n')
+        files = name_dict.setdefault ('i', [])
+        files.sort ()
+        f.write ('%{\n')
+        for file in files:
+            f.write ('#include <%s>\n' % (file[0:-1] + 'h',))
+        f.write ('%}\n\n')
+        for file in files:
+            f.write ('%%include <%s>\n' % (file,))
 
 def output_subfrag (f, ext):
     files = name_dict.setdefault (ext, [])
@@ -91,7 +121,6 @@ def output_subfrag (f, ext):
     for file in files:
         f.write (" \\\n\t%s" % (file,))
     f.write ("\n\n")
-    
 
 def extract_extension (template_name):
     # template name is something like: GrFIRfilterXXX.h.t

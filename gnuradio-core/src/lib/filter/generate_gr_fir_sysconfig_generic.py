@@ -1,7 +1,7 @@
 #!/bin/env python
 # -*- python -*-
 #
-# Copyright 2003 Free Software Foundation, Inc.
+# Copyright 2003,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -28,6 +28,8 @@ from generate_utils import *
 
 def make_gr_fir_sysconfig_generic_h ():
     out = open_and_log_name ('gr_fir_sysconfig_generic.h', 'w')
+    if not out:
+        return
     out.write (copyright)
 
     out.write (
@@ -110,6 +112,8 @@ gr_fir_sysconfig_generic::get_gr_fir_%s_info (std::vector<gr_fir_%s_info> *info)
 
 def make_gr_fir_sysconfig_generic_cc ():
     out = open_and_log_name ('gr_fir_sysconfig_generic.cc', 'w')
+    if not out:
+        return
     out.write (copyright)
 
     out.write (

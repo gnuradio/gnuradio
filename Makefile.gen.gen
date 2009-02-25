@@ -1,0 +1,97 @@
+# -*- Makefile -*-
+#
+# Copyright 2009 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
+
+STAMPS += $(DEPDIR)/sources-generate-*
+
+# Ensure parallel make does the right thing.
+# http://sources.redhat.com/automake/automake.html#Multiple-Outputs
+
+$(DEPDIR)/sources-generate-stamp: $(gen_sources_deps)
+	@rm -f $(DEPDIR)/sources-generate-tmp
+	@touch $(DEPDIR)/sources-generate-tmp
+	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
+	@mv -f $(DEPDIR)/sources-generate-tmp $@
+
+$(gen_sources): $(DEPDIR)/sources-generate-stamp
+## Recover from the removal of $@
+	@if test -f $@; then :; else \
+		trap 'rm -rf $(DEPDIR)/sources-generate-*' 1 2 13 15; \
+		if mkdir $(DEPDIR)/sources-generate-lock 2>/dev/null; then \
+## This code is being executed by the first process.
+			rm -f $(DEPDIR)/sources-generate-stamp; \
+			$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/sources-generate-stamp; \
+			rmdir $(DEPDIR)/sources-generate-lock; \
+		else \
+## This code is being executed by the follower processes.
+## Wait until the first process is done.
+			while test -d $(DEPDIR)/sources-generate-lock; do sleep 1; done; \
+## Succeed if and only if the first process succeeded.
+			test -f $(DEPDIR)/sources-generate-stamp; exit $$?; \
+		fi; \
+	fi;
+
+## ----------------------------------------------------------------
+## Special rule for regenerating the local Makefile.gen
+
+STAMPS += $(DEPDIR)/generate-makefile-generate-*
+
+generate-makefile $(srcdir)/Makefile.gen:
+## parallel make protection; can't hurt
+	@trap 'rm -rf $(DEPDIR)/Makefile.gen-generate-*' 1 2 13 15; \
+	if mkdir $(DEPDIR)/Makefile.gen-generate-lock 2>/dev/null; then \
+## This code is being executed by the first process.
+		rm -f $(DEPDIR)/Makefile.gen-generate-stamp; \
+		rm -f $(DEPDIR)/Makefile.gen-generate-tmp; \
+		touch $(DEPDIR)/Makefile.gen-generate-tmp; \
+## recreate $(srcdir)/Makefile.gen only if ...
+		do_recreate=0; \
+		if test -f $(srcdir)/Makefile.gen; then \
+## the file exists and can be removed; or ...
+			if $(RM) $(srcdir)/Makefile.gen 2>/dev/null; then \
+				do_recreate=1; \
+			fi; \
+		else \
+## the file doesn't exist, but can be created (e.g., by touching it).
+			if touch $(srcdir)/Makefile.gen 2>/dev/null; then \
+				do_recreate=1; \
+			fi; \
+		fi; \
+		if test "$$do_recreate" == "1"; then \
+			echo "Regenerating $(srcdir)/Makefile.gen"; \
+			PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) do_makefile=1 do_sources=0 $(PYTHON) $(srcdir)/generate_all.py; \
+		else \
+			echo "Cannot recreate $(srcdir)/Makefile.gen because the directory or file is write-protected."; \
+		fi; \
+		mv -f $(DEPDIR)/Makefile.gen-generate-tmp $(DEPDIR)/Makefile.gen-generate-stamp; \
+		rmdir $(DEPDIR)/Makefile.gen-generate-lock; \
+	else \
+## This code is being executed by the follower processes.
+## Wait until the first process is done.
+		while test -d $(DEPDIR)/$@-generate-lock; do sleep 1; done; \
+## Succeed if and only if the first process succeeded.
+		test -f $(DEPDIR)/$@-generate-stamp; exit $$?; \
+	fi;
+
+## ----------------------------------------------------------------
+
+MOSTLYCLEANFILES += $(STAMPS)
+

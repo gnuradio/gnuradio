@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2004,2005,2006,2007,2008 Free Software Foundation, Inc.
+# Copyright 2001,2002,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -34,7 +34,7 @@ noinst_LTLIBRARIES = libfilter.la libfilter-qa.la
 # these scripts generate FIR code
 #
 
-CODE_GENERATOR = 					\
+code_generator = 					\
 	generate_all.py					\
 	generate_gr_fir_XXX.py				\
 	generate_gr_fir_filter_XXX.py			\
@@ -62,41 +62,28 @@ CODE_GENERATOR = 					\
 	gr_freq_xlating_fir_filter_XXX.h.t		\
 	gr_freq_xlating_fir_filter_XXX.i.t
 
-include Makefile.gen
+# include the srcdir's Makefile.gen; doing this creates an implicit
+# dependency between $(srcdir)/Makefile.in and $(srcdir)/Makefile.gen.
+include $(srcdir)/Makefile.gen
 
-# Ensure parallel make does the right thing.
-# http://sources.redhat.com/automake/automake.html#Multiple-Outputs
+# Source built by Python into $(builddir)
+python_built_sources =		\
+	$(GENERATED_H)		\
+	$(GENERATED_I)		\
+	$(GENERATED_CC)		\
+	filter_generated.i
 
-STAMPS = generate-stamp
+BUILT_SOURCES = $(python_built_sources)
 
-generate-stamp: $(CODE_GENERATOR)
-	@rm -f generate-tmp
-	@touch generate-tmp
-	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
-	@mv -f generate-tmp $@
+# Required when including Makefile.gen.gen
 
+STAMPS =
+gen_sources = $(BUILT_SOURCES)
+gen_sources_deps = $(core_generator)
+MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
 
-$(GENERATED_H) $(GENERATED_I) $(GENERATED_CC) filter_generated.i: generate-stamp
-## Recover from the removal of $@
-	@if test -f $@; then :; else \
-               trap 'rm -rf generate-lock generate-stamp' 1 2 13 15; \
-               if mkdir generate-lock 2>/dev/null; then \
-## This code is being executed by the first process.
-                 rm -f generate-stamp; \
-                 $(MAKE) $(AM_MAKEFLAGS) generate-stamp; \
-                 rmdir generate-lock; \
-               else \
-## This code is being executed by the follower processes.
-## Wait until the first process is done.
-                 while test -d generate-lock; do sleep 1; done; \
-## Succeed if and only if the first process succeeded.
-                 test -f generate-stamp; exit $$?; \
-               fi; \
-             fi
-
-
-BUILT_SOURCES = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC)
-
+# common way for generating sources from templates, using the above parameters
+include $(top_srcdir)/Makefile.gen.gen
 
 # ----------------------------------------------------------------
 # MD_CPU and MD_SUBCPU are set at configure time by way of 
@@ -195,9 +182,7 @@ EXTRA_libfilter_la_SOURCES =		\
 EXTRA_DIST = 					\
 	3dnow_float_dotprod_really_simple.S	\
 	3dnow_float_dotprod_simple.S		\
-	$(CODE_GENERATOR)			\
-	$(STAMPS)
-
+	$(code_generator)
 
 # work around automake deficiency
 libfilter_la_common_SOURCES = 		\
@@ -341,6 +326,3 @@ swiginclude_HEADERS =			\
 	gr_single_pole_iir_filter_ff.i	\
 	gr_single_pole_iir_filter_cc.i	\
 	$(GENERATED_I)
-
-
-CLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc

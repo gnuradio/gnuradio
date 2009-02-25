@@ -1,6 +1,6 @@
 #!/bin/env python
 #
-# Copyright 2003 Free Software Foundation, Inc.
+# Copyright 2003,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -44,6 +44,8 @@ def make_info (out, sig):
 
 def make_gr_fir_util_h ():
     out = open_and_log_name ('gr_fir_util.h', 'w')
+    if not out:
+        return
     out.write (copyright)
 
     out.write (
@@ -142,6 +144,8 @@ gr_fir_util::get_gr_fir_%s_info (std::vector<gr_fir_%s_info> *info)
     
 def make_gr_fir_util_cc ():
     out = open_and_log_name ('gr_fir_util.cc', 'w')
+    if not out:
+        return
     out.write (copyright)
     out.write ('''
 

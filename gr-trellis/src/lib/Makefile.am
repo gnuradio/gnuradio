@@ -33,7 +33,7 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 # ----------------------------------------------------------------
 # these scripts generate trellis codes from template files
 
-CODE_GENERATOR = 				\
+core_generator = 				\
 	generate_all.py				\
 	generate_trellis.py			\
 	trellis_encoder_XX.cc.t			\
@@ -49,38 +49,26 @@ CODE_GENERATOR = 				\
 	trellis_viterbi_X.h.t			\
 	trellis_viterbi_X.i.t
 
-include Makefile.gen
+# include the srcdir's Makefile.gen; doing this creates an implicit
+# dependency between $(srcdir)/Makefile.in and $(srcdir)/Makefile.gen.
+include $(srcdir)/Makefile.gen
 
+# Source built by Python into $(builddir)
+python_built_sources =		\
+	$(GENERATED_H)		\
+	$(GENERATED_I)		\
+	$(GENERATED_CC)		\
+	trellis_generated.i
 
-# Ensure parallel make does the right thing.
-# http://sources.redhat.com/automake/automake.html#Multiple-Outputs
+# Required when including Makefile.gen.gen
 
-STAMPS = generate-stamp
+STAMPS =
+gen_sources = $(python_built_sources)
+gen_sources_deps = $(core_generator)
+MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
 
-generate-stamp: $(CODE_GENERATOR)
-	@rm -f generate-tmp
-	@touch generate-tmp
-	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
-	@mv -f generate-tmp $@
-
-$(GENERATED_H) $(GENERATED_I) $(GENERATED_CC) trellis_generated.i : generate-stamp
-## Recover from the removal of $@
-	@if test -f $@; then :; else \
-               trap 'rm -rf generate-lock generate-stamp' 1 2 13 15; \
-               if mkdir generate-lock 2>/dev/null; then \
-## This code is being executed by the first process.
-                 rm -f generate-stamp; \
-                 $(MAKE) $(AM_MAKEFLAGS) generate-stamp; \
-                 rmdir generate-lock; \
-               else \
-## This code is being executed by the follower processes.
-## Wait until the first process is done.
-                 while test -d generate-lock; do sleep 1; done; \
-## Succeed if and only if the first process succeeded.
-                 test -f generate-stamp; exit $$?; \
-               fi; \
-             fi
-
+# common way for generating sources from templates, using the above parameters
+include $(top_srcdir)/Makefile.gen.gen
 
 # These files are built by SWIG.  The first is the C++ glue.
 # The second is the python wrapper that loads the _trellis shared library
@@ -90,11 +78,9 @@ swig_built_sources = 		\
 	trellis.cc		\
 	trellis.py				
 
-BUILT_SOURCES = \
-	$(GENERATED_H)		\
-	$(GENERATED_I)		\
-	$(GENERATED_CC)		\
-	$(swig_built_sources)	
+BUILT_SOURCES =			\
+	$(python_built_sources)	\
+	$(swig_built_sources)
 
 ALL_IFILES = 			\
 	$(LOCAL_IFILES)		\
@@ -107,9 +93,7 @@ LOCAL_IFILES = 			\
 	$(srcdir)/trellis.i			
 
 EXTRA_DIST = 			\
-	$(CODE_GENERATOR)	\
-	$(STAMPS)
-
+	$(core_generator)
 
 # This gets trellis.py installed in the right place
 ourpython_PYTHON =		\
@@ -170,8 +154,6 @@ swiginclude_HEADERS = 			\
 	trellis_siso_f.i		\
 	trellis_siso_combined_f.i	\
 	trellis_generated.i
-
-CLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc
 
 # Don't distribute output of swig
 dist-hook:
