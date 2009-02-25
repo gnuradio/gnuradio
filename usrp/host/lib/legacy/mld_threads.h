@@ -29,7 +29,7 @@
 
 #define __macos__
 #ifdef _USE_OMNI_THREADS_
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #else
 #include <pthread.h>
 #endif

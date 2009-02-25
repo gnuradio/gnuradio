@@ -77,10 +77,10 @@ class omni_thread;
 #endif
 
 #if defined(OMNITHREAD_POSIX)
-#include <ot_posix.h>
+#include <gnuradio/ot_posix.h>
 
 #elif defined(OMNITHREAD_NT)
-#include <ot_nt.h>
+#include <gnuradio/ot_nt.h>
 
 #ifdef _MSC_VER
 
@@ -111,7 +111,7 @@ class omni_thread;
  // _MSC_VER
  
 #elif defined(__vxWorks__)
-#include <ot_VxThread.h>
+#include <gnuradio/ot_VxThread.h>
 
 #elif defined(__sunos__)
 #if __OSVERSION__ != 5
@@ -122,17 +122,17 @@ class omni_thread;
 #endif
 #endif
 #ifdef UseSolarisThreads
-#include <ot_solaris.h>
+#include <gnuradio/ot_solaris.h>
 #else
-#include <ot_posix.h>
+#include <gnuradio/ot_posix.h>
 #endif
 
 #elif defined(__rtems__)
-#include <ot_posix.h>
+#include <gnuradio/ot_posix.h>
 #include <sched.h>
 
 #elif defined(__macos__)
-#include <ot_posix.h>
+#include <gnuradio/ot_posix.h>
 #include <sched.h>
 
 #else

@@ -23,7 +23,7 @@
 #define INCLUDED_MB_RUNTIME_BASE_H
 
 #include <mblock/runtime.h>
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #include <mblock/time.h>
 
 /*

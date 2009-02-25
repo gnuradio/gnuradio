@@ -22,7 +22,7 @@
 #define INCLUDED_PMT_POOL_H
 
 #include <cstddef>
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #include <vector>
 
 /*!

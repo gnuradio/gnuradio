@@ -22,7 +22,7 @@
 #define INCLUDED_MB_MSG_QUEUE_H
 
 #include <mblock/common.h>
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #include <mblock/time.h>
 
 /*!

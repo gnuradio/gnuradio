@@ -22,7 +22,7 @@
 #ifndef INCLUDED_MB_WORKER_H
 #define INCLUDED_MB_WORKER_H
 
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #include <mblock/common.h>
 #include <mblock/class_registry.h>
 

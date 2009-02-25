@@ -31,7 +31,7 @@
 #include <errno.h>
 #include <sys/time.h>
 #include <mach/cthreads.h>
-#include "omnithread.h"
+#include "gnuradio/omnithread.h"
 
 #define DB(x) // x
 // #include <iostream> or #include <iostream.h> if DB is on.

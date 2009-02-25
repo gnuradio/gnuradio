@@ -23,7 +23,7 @@
 #ifndef INCLUDED_USRP2_THREAD_H
 #define INCLUDED_USRP2_THREAD_H
 
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #include <usrp2_impl.h>
 
 namespace usrp2 {

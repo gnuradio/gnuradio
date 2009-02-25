@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_FILE_SINK_BASE_H
 #define INCLUDED_GR_FILE_SINK_BASE_H
 
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #include <cstdio>
 
 /*!

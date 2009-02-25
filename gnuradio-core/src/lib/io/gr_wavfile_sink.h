@@ -25,7 +25,7 @@
 
 #include <gr_sync_block.h>
 #include <gr_file_sink_base.h>
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 
 class gr_wavfile_sink;
 typedef boost::shared_ptr<gr_wavfile_sink> gr_wavfile_sink_sptr;

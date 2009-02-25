@@ -33,7 +33,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <WinError.h>
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #include <process.h>
 
 #define DB(x) // x 

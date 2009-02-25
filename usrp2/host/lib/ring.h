@@ -21,7 +21,7 @@
 #ifndef INCLUDED_RING_H
 #define INCLUDED_RING_H
 
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #include <stddef.h>
 #include <vector>
 #include <boost/shared_ptr.hpp>

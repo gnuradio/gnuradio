@@ -23,7 +23,7 @@
 #define INCLUDED_GR_MSG_QUEUE_H
 
 #include <gr_msg_handler.h>
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 
 class gr_msg_queue;
 typedef boost::shared_ptr<gr_msg_queue> gr_msg_queue_sptr;

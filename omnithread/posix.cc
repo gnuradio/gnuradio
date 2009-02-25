@@ -49,7 +49,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <time.h>
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 
 #if (PthreadDraftVersion == 0)
 #error "PthreadDraftVersion not defined.  If not sure, define it to 10"

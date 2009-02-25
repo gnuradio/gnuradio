@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 
-#include <omni_time.h>
+#include <gnuradio/omni_time.h>
 #include "control.h"
 #include <iostream>
 

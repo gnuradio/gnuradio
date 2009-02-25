@@ -19,7 +19,7 @@
 #ifndef INCLUDED_CONTROL_H
 #define INCLUDED_CONTROL_H
 
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #include <usrp2_eth_packet.h>
 
 namespace usrp2 {

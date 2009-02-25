@@ -23,7 +23,7 @@
 #define INCLUDED_GRI_LOGGER_H
 
 #include <stddef.h>
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #include <gr_buffer.h>
 
 class gri_log_poster;

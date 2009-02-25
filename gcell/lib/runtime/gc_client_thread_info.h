@@ -21,7 +21,7 @@
 #ifndef INCLUDED_GC_CLIENT_THREAD_INFO_H
 #define INCLUDED_GC_CLIENT_THREAD_INFO_H
 
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #include <boost/utility.hpp>
 
 enum gc_ct_state {

@@ -22,7 +22,7 @@
 #define INCLUDED_MB_RUNTIME_H
 
 #include <mblock/common.h>
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 
 /*!
  * \brief Public constructor (factory) for mb_runtime objects.

@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 #include <gcell/gc_job_manager.h>
-#include <omni_time.h>
+#include <gnuradio/omni_time.h>
 #include <getopt.h>
 #include <stdlib.h>
 #include <stdio.h>

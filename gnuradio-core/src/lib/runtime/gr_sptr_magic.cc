@@ -32,7 +32,7 @@
   typedef boost::mutex			mutex;
   typedef boost::mutex::scoped_lock	scoped_lock;
 #else
-  #include <omnithread.h>
+  #include <gnuradio/omnithread.h>
   typedef omni_mutex			mutex;
   typedef omni_mutex_lock		scoped_lock;
 #endif

@@ -22,8 +22,8 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <omni_time.h>
-#include <omnithread.h>
+#include <gnuradio/omni_time.h>
+#include <gnuradio/omnithread.h>
 #include <math.h>
 #include <assert.h>
 

@@ -28,7 +28,7 @@
 #include <mblock/class_registry.h>
 #include <mblock/exception.h>
 #include <mb_worker.h>
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #include <iostream>
 #include <mb_msg_accepter_msgq.h>
 

@@ -21,6 +21,8 @@
 
 include $(top_srcdir)/Makefile.common
 
+SUBDIRS = gnuradio
+
 # This is the omnithread package,
 #   extracted from the omniORB-4.0.1 distribution
 
@@ -66,13 +68,3 @@ EXTRA_DIST =				\
 	threaddata.cc			\
 	vxWorks.cc			\
 	dir.mk
-
-grinclude_HEADERS =			\
-	omnithread.h			\
-	omni_time.h			\
-	ot_mach.h			\
-	ot_nt.h				\
-	ot_posix.h			\
-	ot_pthread_nt.h			\
-	ot_solaris.h			\
-	ot_VxThread.h			

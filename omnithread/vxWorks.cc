@@ -56,7 +56,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <time.h>
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #include <sysLib.h>
 
 #include <assert.h>		// assert

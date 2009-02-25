@@ -24,7 +24,7 @@
 
 #include <gr_sync_block.h>
 #include <gr_buffer.h>
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #include <string>
 #include <portaudio.h>
 #include <stdexcept>

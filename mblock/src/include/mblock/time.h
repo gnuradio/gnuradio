@@ -21,7 +21,7 @@
 #ifndef INCLUDED_MB_TIME_H
 #define INCLUDED_MB_TIME_H
 
-#include <omni_time.h>
+#include <gnuradio/omni_time.h>
 typedef omni_time mb_time;
 
 #endif /* INCLUDED_MB_TIME_H */

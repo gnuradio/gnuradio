@@ -24,7 +24,7 @@
 #define INCLUDED_GR_UDP_SOURCE_H
 
 #include <gr_sync_block.h>
-#include <omnithread.h>
+#include <gnuradio/omnithread.h>
 #if defined(HAVE_SOCKET)
 #include <sys/socket.h>
 #include <arpa/inet.h>
