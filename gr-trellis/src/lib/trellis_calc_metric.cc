@@ -31,6 +31,7 @@ void calc_metric(int O, int D, const std::vector<T> &TABLE, const T *in, float *
 {
   float minm = FLT_MAX;
   int minmi = 0;
+  
 
   switch (type){
   case TRELLIS_EUCLIDEAN:
@@ -213,6 +214,7 @@ void calc_metric(int O, int D, const std::vector<gr_complex> &TABLE, const gr_co
   float minm = FLT_MAX;
   int minmi = 0;
 
+
   switch (type){
   case TRELLIS_EUCLIDEAN:
     for(int o=0;o<O;o++) {
@@ -222,6 +224,7 @@ void calc_metric(int O, int D, const std::vector<gr_complex> &TABLE, const gr_co
         metric[o]+=s.real()*s.real()+s.imag()*s.imag();
       }
     }
+    break;
   case TRELLIS_HARD_SYMBOL:
     for(int o=0;o<O;o++) {
       metric[o]=0.0;

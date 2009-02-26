@@ -170,7 +170,7 @@ fsm::fsm(int k, int n, const std::vector<int> &G)
 
 
   for(int s=0;s<d_S;s++) {
-    dec2bases(s,bases_x,sx); // split s into k values, each representing on of the k shift registers
+    dec2bases(s,bases_x,sx); // split s into k values, each representing one of the k shift registers
 //printf("state = %d \nstates = ",s);
 //for(int j=0;j<sx.size();j++) printf("%d ",sx[j]); printf("\n");
     for(int i=0;i<d_I;i++) {
@@ -237,6 +237,53 @@ fsm::fsm(int mod_size, int ch_length)
   generate_PS_PI();
   generate_TM();
 }
+
+
+
+
+//######################################################################
+//# Automatically generate an FSM specification describing the 
+//# the trellis for a CPM with h=K/P (relatively prime), 
+//# alphabet size M, and frequency pulse duration L symbols
+//#
+//# This FSM is based on the paper by B. Rimoldi
+//# "A decomposition approach to CPM", IEEE Trans. Info Theory, March 1988
+//# See also my own notes at http://www.eecs.umich.edu/~anastas/docs/cpm.pdf
+//######################################################################
+fsm::fsm(int P, int M, int L)
+{
+  d_I=M;
+  d_S=(int)(pow(1.0*M,1.0*L-1)+0.5)*P;
+  d_O=(int)(pow(1.0*M,1.0*L)+0.5)*P;
+
+  d_NS.resize(d_I*d_S);
+  d_OS.resize(d_I*d_S);
+  int nv;
+  for(int s=0;s<d_S;s++) {
+    for(int i=0;i<d_I;i++) {
+      int s1=s/P;
+      int v=s%P;
+      int ns1= (i*(int)(pow(1.0*M,1.0*(L-1))+0.5)+s1)/M;
+      if (L==1)
+        nv=(i+v)%P;
+      else
+        nv=(s1%M+v)%P;
+      d_NS[s*d_I+i] = ns1*P+nv;
+      d_OS[s*d_I+i] = i*d_S+s;
+    }
+  }
+
+  generate_PS_PI();
+  generate_TM();
+}
+
+
+
+
+
+
+
+
 
 
 //######################################################################
@@ -419,7 +466,7 @@ void fsm::write_trellis_svg( std::string filename ,int number_stages)
 
 
 //######################################################################
-//# Write trellis specification to a text files,
+//# Write trellis specification to a text file,
 //# in the same format used when reading FSM files
 //######################################################################
 void fsm::write_fsm_txt(std::string filename)

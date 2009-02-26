@@ -25,6 +25,8 @@ import re
 import math
 import sys
 import operator
+import numpy
+import scipy.linalg
 
 from gnuradio import trellis
 
@@ -58,33 +60,6 @@ def base2dec(s,base):
     return num
 
 
-######################################################################
-# Generate a new FSM representing the concatenation of two FSMs
-######################################################################
-def fsm_concatenate(f1,f2):
-    if f1.O() > f2.I():
-        print "Not compatible FSMs\n"
-    I=f1.I()
-    S=f1.S()*f2.S() 
-    O=f2.O()
-    nsm=list([0]*I*S)
-    osm=list([0]*I*S)
-    for s1 in range(f1.S()):
-        for s2 in range(f2.S()):
-            for i in range(f1.I()):
-                ns1=f1.NS()[s1*f1.I()+i]
-                o1=f1.OS()[s1*f1.I()+i]
-                ns2=f2.NS()[s2*f2.I()+o1]
-                o2=f2.OS()[s2*f2.I()+o1]
-
-                s=s1*f2.S()+s2
-                ns=ns1*f2.S()+ns2
-                nsm[s*I+i]=ns
-                osm[s*I+i]=o2
-
-
-    f=trellis.fsm(I,S,O,nsm,osm)
-    return f
 
 ######################################################################
 # Generate a new FSM representing n stages through the original FSM
@@ -143,6 +118,76 @@ def make_isi_lookup(mod,channel,normalize):
     return (1,lookup)
 
 
+
+
+
+
+######################################################################
+# Automatically generate the signals appropriate for CPM
+# decomposition. 
+# This decomposition is based on the paper by B. Rimoldi
+# "A decomposition approach to CPM", IEEE Trans. Info Theory, March 1988
+# See also my own notes at http://www.eecs.umich.edu/~anastas/docs/cpm.pdf
+######################################################################
+def make_cpm_signals(K,P,M,L,q,frac):
+
+    Q=numpy.size(q)/L
+    h=(1.0*K)/P
+    f0=-h*(M-1)/2
+    dt=0.0; # maybe start at t=0.5
+    t=(dt+numpy.arange(0,Q))/Q
+    qq=numpy.zeros(Q)
+    for m in range(L):
+       qq=qq + q[m*Q:m*Q+Q]
+    w=math.pi*h*(M-1)*t-2*math.pi*h*(M-1)*qq+math.pi*h*(L-1)*(M-1)
+    
+    X=(M**L)*P
+    PSI=numpy.empty((X,Q))
+    for x in range(X):
+       xv=dec2base(x/P,M,L)
+       xv=numpy.append(xv, x%P)
+       qq1=numpy.zeros(Q)
+       for m in range(L):
+          qq1=qq1+xv[m]*q[m*Q:m*Q+Q]
+       psi=2*math.pi*h*xv[-1]+4*math.pi*h*qq1+w
+       #print psi
+       PSI[x]=psi
+    PSI = numpy.transpose(PSI)
+    SS=numpy.exp(1j*PSI) # contains all signals as columns
+    #print SS
+   
+
+    # Now we need to orthogonalize the signals 
+    F = scipy.linalg.orth(SS) # find an orthonormal basis for SS
+    #print numpy.dot(numpy.transpose(F.conjugate()),F) # check for orthonormality
+    S = numpy.dot(numpy.transpose(F.conjugate()),SS)
+    #print F
+    #print S
+
+    # We only want to keep those dimensions that contain most
+    # of the energy of the overall constellation (eg, frac=0.9 ==> 90%)
+    # evaluate mean energy in each dimension
+    E=numpy.sum(numpy.absolute(S)**2,axis=1)/Q
+    E=E/numpy.sum(E)
+    #print E
+    Es = -numpy.sort(-E)
+    Esi = numpy.argsort(-E)
+    #print Es
+    #print Esi
+    Ecum=numpy.cumsum(Es)
+    #print Ecum
+    v0=numpy.searchsorted(Ecum,frac)
+    N = v0+1
+    #print v0
+    #print Esi[0:v0+1]
+    Ff=numpy.transpose(numpy.transpose(F)[Esi[0:v0+1]])
+    #print Ff
+    Sf = S[Esi[0:v0+1]]
+    #print Sf
+    
+
+    return (f0,SS,S,F,Sf,Ff,N)
+    #return f0
     
 
 
@@ -194,20 +239,23 @@ c_channel = [0.227, 0.460, 0.688, 0.460, 0.227]
 if __name__ == '__main__':
     f1=trellis.fsm('fsm_files/awgn1o2_4.fsm')
     #f2=trellis.fsm('fsm_files/awgn2o3_4.fsm')
-    print f1.I(), f1.S(), f1.O()
-    print f1.NS()
-    print f1.OS()
+    #print f1.I(), f1.S(), f1.O()
+    #print f1.NS()
+    #print f1.OS()
     #print f2.I(), f2.S(), f2.O()
     #print f2.NS()
     #print f2.OS()
     ##f1.write_trellis_svg('f1.svg',4)
     #f2.write_trellis_svg('f2.svg',4)
     #f=fsm_concatenate(f1,f2)
-    f=fsm_radix(f1,2)
+    #f=fsm_radix(f1,2)
 
-    print "----------\n"
-    print f.I(), f.S(), f.O()
-    print f.NS()
-    print f.OS()
+    #print "----------\n"
+    #print f.I(), f.S(), f.O()
+    #print f.NS()
+    #print f.OS()
     #f.write_trellis_svg('f.svg',4)
+
+    q=numpy.arange(0,8)/(2.0*8)
+    (f0,SS,S,F,Sf,Ff,N) = make_cpm_signals(1,2,2,1,q,0.99)
 
