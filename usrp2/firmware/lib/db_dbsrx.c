@@ -69,10 +69,10 @@ struct db_dbsrx {
 };
 
 struct db_dbsrx db_dbsrx = {
-  .base.dbid = 0x0002,
+  .base.dbid = 0x000d,
   .base.is_tx = false,
-  .base.output_enables = 0x0001,
-  .base.used_pins = 0x0001,
+  .base.output_enables = 0x0000,
+  .base.used_pins = 0x0000,
   .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(500e6),
   .base.freq_max = U2_DOUBLE_TO_FXPT_FREQ(2.6e9),
   .base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(0),
@@ -110,9 +110,6 @@ db_dbsrx_init(struct db_base *dbb){
   struct db_dbsrx_dummy *db = (struct db_dbsrx_dummy *) dbb;
   db->base.set_gain(dbb, (db->base.gain_max + db->base.gain_min)/2);
   clocks_enable_rx_dboard(true, REFCLK_DIVISOR);  // Gives 4 MHz clock
-
-  hal_gpio_set_sel(GPIO_RX_BANK, 0, '1');
-
 
   return true;
 }
