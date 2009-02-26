@@ -131,6 +131,8 @@ module buffer_int
 	   
 	   WRITING :
 	     begin
+		if(wr_write_i)
+		  addr_o <= addr_o + 1;  // This was the timing problem, so now it doesn't depend on wr_error_i
 		if(wr_error_i)
 		  begin
 		     state <= ERROR;
@@ -141,7 +143,6 @@ module buffer_int
 		     if(wr_write_i)
 		       begin
 			  wr_ready_o <= 0;
-			  addr_o <= addr_o + 1;
 			  if(addr_o == (lastline-1))
 			    wr_full_o <= 1;
 			  if(addr_o == lastline)
@@ -175,6 +176,65 @@ module buffer_int
    assign     error = (state == ERROR);
    assign     idle = (state == IDLE);
 endmodule // buffer_int
+
+
+
+// These are 2 other ways for doing the WRITING state, both work.  First one is faster, but confusing
+/*
+	     begin
+		// Gen 4 values -- state, wr_ready_o, addr_o, wr_full_o
+		if(~wr_error_i & wr_write_i & (addr_o == (lastline-1)))
+		  wr_full_o <= 1;
+		if(wr_error_i | wr_write_i | wr_done_i)
+		  wr_ready_o <= 0;
+		if(wr_error_i)
+		  state <= ERROR;
+		else if(wr_done_i | (wr_write_i & (addr_o == lastline)))
+		  state <= DONE;
+		// This one was the timing problem...  now we increment addr_o even if there is an error
+		if(wr_write_i)
+		  addr_o <= addr_o + 1;
+	     end // case: WRITING
+*/	   
+		
+/*      begin
+		if(wr_error_i)
+		  begin
+		     state <= ERROR;
+		     wr_ready_o <= 0;
+		  end
+		else
+		  begin
+		     if(wr_write_i)
+		       begin
+			  wr_ready_o <= 0;
+			  addr_o <= addr_o + 1;
+			  if(addr_o == (lastline-1))
+			    wr_full_o <= 1;
+			  if(addr_o == lastline)
+			    state <= DONE;
+		       end
+		     if(wr_done_i)
+		       begin
+			  state <= DONE;
+			  wr_ready_o <= 0;
+		       end
+		  end // else: !if(wr_error_i)
+	     end // case: WRITING
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Unused old code
    //assign     rd_empty_o = (state != READING); // && (state != PRE_READ);
