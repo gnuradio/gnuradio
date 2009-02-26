@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,34 +21,24 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXAMPLE_FILES = \
-    README \
-    btl-fsd.py \
-    fpll.py \
-    interp.py \
-    xlate.py \
-    viterbi-out.py
-
-EXTRA_DIST = run_tests.in \
-	     $(EXAMPLE_FILES)
+EXTRA_DIST =		\
+	run_tests.in
 
 ourdatadir = $(exampledir)/atsc
-ourdata_DATA = $(EXAMPLE_FILES)
 
+dist_ourdata_DATA =	\
+	README
+
+dist_ourdata_SCRIPTS =  \
+	btl-fsd.py	\
+	fpll.py		\
+	interp.py	\
+	xlate.py	\
+	viterbi-out.py
 
 TESTS = 				\
 	run_tests
 
-
 noinst_PYTHON = 			\
 	atsc_utils.py			\
 	qa_atsc.py			
-
-# Make example scripts with #! executable
-install-data-local: install-ourdataDATA
-	for i in `find $(ourdatadir) -type f ! -perm 755`; do \
-	  if head -1 $$i | grep -q '^#!'; then \
-	    chmod 755 $$i; \
-	    echo "made executable: $$i"; \
-	  fi; \
-	done

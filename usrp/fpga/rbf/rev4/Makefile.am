@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2006,2009 Free Software Foundation, Inc.
+# Copyright 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,13 +21,11 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
-    gr-audio-alsa.pc.in
+rbf4datadir = $(prefix)/share/usrp/rev4
 
-SUBDIRS = src
-
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = gr-audio-alsa.pc
-
-etcdir = $(sysconfdir)/gnuradio/conf.d
-dist_etc_DATA = gr-audio-alsa.conf
+dist_rbf4data_DATA =		\
+	std_2rxhb_2tx.rbf		\
+	std_4rx_0tx.rbf		\
+	inband_1rxhb_1tx.rbf	\
+	inband_2rxhb_2tx.rbf	\
+	multi_2rxhb_2tx.rbf

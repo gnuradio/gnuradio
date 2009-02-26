@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,8 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = gr-audio-jack.conf
 SUBDIRS = src
 
 etcdir = $(sysconfdir)/gnuradio/conf.d
-etc_DATA = gr-audio-jack.conf
+dist_etc_DATA = gr-audio-jack.conf

@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,34 +23,25 @@ include $(top_srcdir)/Makefile.common
 
 SUBDIRS = fsm_files
 
-EXTRA_DIST =			\
-        README			\
-	fsm_utils.py		\
-	test_tcm.py		\
-	test_tcm1.py		\
-	test_tcm2.py          	\
-	test_tcm_parallel.py	\
-	test_tcm_combined.py	\
-	test_sccc_hard.py	\
-	test_sccc_soft.py     	\
-	test_sccc_turbo.py    	\
+ourdatadir = $(exampledir)/trellis
+
+dist_ourdata_DATA =	\
+        README
+
+dist_ourdata_SCRIPTS =			\
+	fsm_utils.py			\
+	test_tcm.py			\
+	test_tcm1.py			\
+	test_tcm2.py          		\
+	test_tcm_parallel.py		\
+	test_tcm_combined.py		\
+	test_sccc_hard.py		\
+	test_sccc_soft.py     		\
+	test_sccc_turbo.py    		\
 	test_viterbi_equalization1.py	\
 	test_viterbi_equalization.py	\
 	test_turbo_equalization.py	\
 	test_turbo_equalization1.py	\
-	test_turbo_equalization2.py	
-
-
-ourdatadir = $(exampledir)/trellis
-ourdata_DATA = $(EXTRA_DIST)
-
-# Make example scripts with #! executable
-install-data-local: install-ourdataDATA
-	for i in `find $(ourdatadir) -type f ! -perm 755`; do \
-	  if head -1 $$i | grep -q '^#!'; then \
-	    chmod 755 $$i; \
-	    echo "made executable: $$i"; \
-	  fi; \
-	done
+	test_turbo_equalization2.py
 
 MOSTLYCLEANFILES = *.pyc

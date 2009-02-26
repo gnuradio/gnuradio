@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,8 +21,12 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST =			\
-	README			\
+ourdatadir = $(exampledir)/digital
+
+dist_ourdata_DATA =	\
+	README
+
+dist_ourdata_SCRIPTS =		\
 	benchmark_loopback.py   \
 	benchmark_rx.py		\
 	benchmark_tx.py		\
@@ -36,9 +40,6 @@ EXTRA_DIST =			\
 	transmit_path.py	\
 	transmit_path_lb.py	\
 	tunnel.py		\
-	tx_voice.py		
-
-ourdatadir = $(exampledir)/digital
-ourdata_DATA = $(EXTRA_DIST)
+	tx_voice.py
 
 MOSTLYCLEANFILES = *.pyc *.pyo *~

@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,22 +21,10 @@
 
 include $(top_srcdir)/Makefile.common
 
-#EXTRA_DIST =			\
-#       README			\
-#	fsm_utils.py		
+#ourdatadir = $(exampledir)/gcell
 
+#dist_ourdata_DATA = README
 
-ourdatadir = $(exampledir)/gcell
-ourdata_DATA = $(EXTRA_DIST)
-
-# Make example scripts with #! executable
-install-data-local: install-ourdataDATA
-	for i in `find $(ourdatadir) -type f ! -perm 755`; do \
-	  if head -1 $$i | grep -q '^#!'; then \
-	    chmod 755 $$i; \
-	    echo "made executable: $$i"; \
-	  fi; \
-	done
+#dist_ourdata_SCRIPTS = fsm_utils.py
 
 MOSTLYCLEANFILES = *.pyc
-

@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2007 Free Software Foundation, Inc.
+# Copyright 2004,2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -34,12 +34,3 @@ SUBDIRS = \
 	ofdm \
 	usrp \
 	usrp2
-
-# Make example scripts with #! executable
-install-data-local:
-	for i in `find $(exampledir) -type f ! -perm 755`; do \
-	  if head -1 $$i | grep -q '^#!'; then \
-	    chmod 755 $$i; \
-	    echo "made executable: $$i"; \
-	  fi; \
-	done

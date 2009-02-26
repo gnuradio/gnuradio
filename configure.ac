@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2007,2008 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -82,6 +82,7 @@ AM_PROG_AS
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_INSTALL
+AC_PROG_MKDIR_P
 AC_PATH_PROG([RM_PROG], [rm])
 
 AC_LIBTOOL_WIN32_DLL
@@ -308,9 +309,10 @@ AC_SUBST([build_dirs], [$build_dirs])
 AC_SUBST([skipped_dirs], [$skipped_dirs])
 AC_SUBST([with_dirs], [$with_dirs])
 
-# fix for older autotools that don't define "abs_top_YYY" by default
+# fix for older autotools that don't define these by default
 AC_SUBST(abs_top_srcdir)
 AC_SUBST(abs_top_builddir)
+AC_SUBST(MKDIR_P)
 
 # 'with' variables - the pre-installed libraries, includes, and paths
 # - must always come last in the lists, so they require special

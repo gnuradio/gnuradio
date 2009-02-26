@@ -22,7 +22,6 @@
 include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = 				\
-	gnuradio-core.conf		\
 	gnuradio-core.pc.in
 
 SUBDIRS = src doc
@@ -31,4 +30,4 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gnuradio-core.pc
 
 etcdir = $(sysconfdir)/gnuradio/conf.d
-etc_DATA = gnuradio-core.conf
+dist_etc_DATA = gnuradio-core.conf

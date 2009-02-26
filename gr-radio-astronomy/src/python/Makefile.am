@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2006 Free Software Foundation, Inc.
+# Copyright 2004,2006,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -32,10 +32,8 @@ ourlibdir    = $(grpyexecdir)
 wxguipythondir  = $(grpythondir)/wxgui
 wxguilibdir     = $(grpyexecdir)/wxgui
 
-EXTRA_DIST = run_tests.in		\
-	     usrp_ra_receiver.py	\
-	     usrp_psr_receiver.py
-
+EXTRA_DIST =				\
+	run_tests.in
 
 TESTS = 				\
 	run_tests
@@ -54,6 +52,6 @@ wxguipython_PYTHON =			\
 
 
 # and here for applications you want installed in prefix/bin
-bin_SCRIPTS = 				\
+dist_bin_SCRIPTS = 			\
 	usrp_ra_receiver.py		\
 	usrp_psr_receiver.py

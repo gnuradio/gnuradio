@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004,2005,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -40,28 +40,19 @@ EXTRA_DIST = \
 
 BUILT_XML_FILES = 			
 
+htmldocdir = $(gr_docdir)/html
+htmldoc_DATA = $(HTML_FILES)
+
 # ----------------------------------------------------------------
 
 gr-trellis.html : gr-trellis.xml
 	xmlto html-nochunks $(top_srcdir)/gr-trellis/doc/gr-trellis.xml
 
-# XXX `%'-style pattern rules are a GNU make extension
-%.xml : % make_numbered_listing.py
-	./make_numbered_listing.py $<
+test_tcm.py.xml : test_tcm.py make_numbered_listing.py
+	$(srcdir)/make_numbered_listing.py $<
 
-install-data-local:
-	mkdir -p $(DESTDIR)$(gr_docdir)/html
-	@for i in $(HTML_FILES); do \
-		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(gr_docdir)/html"; \
-		$(INSTALL_DATA) $$i $(DESTDIR)$(gr_docdir)/html; \
-	done
-
-uninstall-local:
-	@for i in $(HTML_FILES); do \
-		echo "$(RM) $(DESTDIR)$(gr_docdir)/$$i;"; \
-		$(RM) $(DESTDIR)$(gr_docdir)/$$i; \
-	done
-	$(RM) -fr $(DESTDIR)$(gr_docdir)/html
+test_viterbi_equalization1.py.xml : test_viterbi_equalization1.py make_numbered_listing.py
+	$(srcdir)/make_numbered_listing.py $<
 
 clean-local:
 	$(RM) -fr $(HTML_FILES) *~

@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2005 Free Software Foundation, Inc.
+# Copyright 2001,2005,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,8 +23,6 @@ include $(top_srcdir)/Makefile.common
 
 SUBDIRS = other xml-swig
 
-EXTRA_DIST = 
-
 all-local: prep @generate_docs@
 doc: docs            # alias
 
@@ -33,26 +31,17 @@ html/index.html:
 	@DOXYGEN@
 
 prep:
-	mkdir -p html
-	mkdir -p xml
+	$(MKDIR_P) html
+	$(MKDIR_P) xml
 
 install-data-local:
-	$(mkinstalldirs) $(DESTDIR)$(gr_docdir)
-	@for i in $(top_srcdir)/README $(top_srcdir)/README.hacking; do \
-		echo "$(INSTALL_DATA) $$i $(DESTDIR)$(gr_docdir)"; \
-		$(INSTALL_DATA) $$i $(DESTDIR)$(gr_docdir); \
-	done
+	$(MKDIR_P) $(DESTDIR)$(gr_docdir)
 	cp -r html $(DESTDIR)$(gr_docdir)
 	cp -r xml $(DESTDIR)$(gr_docdir)
 
 uninstall-local:
-	@for i in README README.hacking; do \
-		echo "$(RM) $(DESTDIR)$(gr_docdir)/$$i;"; \
-		$(RM) $(DESTDIR)$(gr_docdir)/$$i; \
-	done
 	$(RM) -fr $(DESTDIR)$(gr_docdir)/html
 	$(RM) -fr $(DESTDIR)$(gr_docdir)/xml
 
 clean-local:
 	$(RM) -fr latex html man xml
-

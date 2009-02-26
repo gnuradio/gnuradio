@@ -1,5 +1,5 @@
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,10 +21,11 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = 	\
-    README 	\
-    hfx2.py 	\
+ourdatadir = $(exampledir)/hf_explorer
+
+dist_ourdata_DATA =	\
+    README		\
     hfx_help
 
-ourdatadir = $(exampledir)/hf_explorer
-ourdata_DATA = $(EXTRA_DIST)
+dist_ourdata_SCRIPTS = 	\
+    hfx2.py

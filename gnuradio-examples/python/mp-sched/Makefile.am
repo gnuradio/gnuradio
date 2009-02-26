@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,12 +20,10 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
-	plot_flops.py \
-	run_synthetic.py \
-	synthetic.py \
-	wfm_rcv_pll_to_wav.py
-
-
 ourdatadir = $(exampledir)/mp-sched
-ourdata_DATA = $(EXTRA_DIST)
+
+dist_ourdata_SCRIPTS =		\
+	plot_flops.py		\
+	run_synthetic.py	\
+	synthetic.py		\
+	wfm_rcv_pll_to_wav.py

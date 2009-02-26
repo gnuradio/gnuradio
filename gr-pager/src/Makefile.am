@@ -22,13 +22,12 @@
 include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = \
-    run_tests.in \
-    $(bin_SCRIPTS)
+    run_tests.in
 
 TESTS = \
     run_tests
 
-bin_SCRIPTS = \
+dist_bin_SCRIPTS = \
     usrp_flex.py \
     usrp_flex_all.py \
     usrp_flex_band.py

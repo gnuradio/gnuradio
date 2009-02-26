@@ -22,15 +22,14 @@
 include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = \
-    gr-wxgui.conf \
     gr-wxgui.pc.in \
     README \
     README.gl
-    
+
 SUBDIRS = src
 
 etcdir = $(sysconfdir)/gnuradio/conf.d
-etc_DATA = gr-wxgui.conf
+dist_etc_DATA = gr-wxgui.conf
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gr-wxgui.pc

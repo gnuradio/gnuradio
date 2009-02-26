@@ -1,5 +1,5 @@
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,15 +21,14 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = 			\
+ourdatadir = $(exampledir)/network
+
+dist_ourdata_SCRIPTS =		\
 	audio_sink.py		\
 	audio_source.py		\
 	dial_tone_sink.py	\
 	dial_tone_source.py	\
 	vector_sink.py		\
 	vector_source.py
-
-ourdatadir = $(exampledir)/network
-ourdata_DATA = $(EXTRA_DIST)
 
 MOSTLYCLEANFILES = *.pyc *~

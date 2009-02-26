@@ -1,5 +1,5 @@
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,10 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = 		\
+ourdatadir = $(exampledir)/multi-antenna
+
+dist_ourdata_SCRIPTS =	\
     multi_fft.py	\
     multi_file.py	\
     multi_scope.py
-
-ourdatadir = $(exampledir)/multi-antenna
-ourdata_DATA = $(EXTRA_DIST)

@@ -1,5 +1,5 @@
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,20 +21,21 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = 					\
-		benchmark_ofdm.py		\
-		benchmark_ofdm_rx.py		\
-		benchmark_ofdm_tx.py		\
-		fftshift.py			\
-		fusb_options.py			\
-		pick_bitrate.py			\
-		receive_path.py			\
-		transmit_path.py		\
-		ofdm_mod_demod_test.py		\
-		ofdm_sync.m			\
-		ofdm_sync_pn.m			\
-		plot_ofdm.m			\
-		tunnel.py	
-
 ourdatadir = $(exampledir)/ofdm
-ourdata_DATA = $(EXTRA_DIST)
+
+dist_ourdata_DATA =	\
+	ofdm_sync.m	\
+	ofdm_sync_pn.m	\
+	plot_ofdm.m
+
+dist_ourdata_SCRIPTS =		\
+	benchmark_ofdm.py	\
+	benchmark_ofdm_rx.py	\
+	benchmark_ofdm_tx.py	\
+	fftshift.py		\
+	fusb_options.py		\
+	pick_bitrate.py		\
+	receive_path.py		\
+	transmit_path.py	\
+	ofdm_mod_demod_test.py	\
+	tunnel.py

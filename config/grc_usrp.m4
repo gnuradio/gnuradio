@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2007,2008 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -107,6 +107,8 @@ AC_DEFUN([GRC_USRP],[
         usrp/firmware/src/usrp2/Makefile \
         usrp/fpga/Makefile \
         usrp/fpga/rbf/Makefile \
+        usrp/fpga/rbf/rev2/Makefile \
+        usrp/fpga/rbf/rev4/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(usrp)

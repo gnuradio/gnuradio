@@ -1,5 +1,5 @@
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -24,14 +24,10 @@ include $(top_srcdir)/Makefile.common
 ourpythondir = $(grpythondir)
 ourlibdir    = $(grpyexecdir)
 
-EXTRA_DIST = \
-        radar_mono.py \
+dist_bin_SCRIPTS = 	\
 	usrp_radar_mono.py
 
-bin_SCRIPTS = 		\
-	usrp_radar_mono.py
-
-ourpython_PYTHON =	\
+dist_ourpython_PYTHON =	\
 	radar_mono.py
 
 MOSTLYCLEANFILES = *~ *.pyc *.pyo

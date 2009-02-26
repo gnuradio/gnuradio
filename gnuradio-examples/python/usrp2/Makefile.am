@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004,2005,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,8 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
-	usrp2_wfm_rcv.py
-
 ourdatadir = $(exampledir)/usrp2
-ourdata_DATA = $(EXTRA_DIST)
+
+dist_ourdata_SCRIPTS =		\
+	usrp2_wfm_rcv.py

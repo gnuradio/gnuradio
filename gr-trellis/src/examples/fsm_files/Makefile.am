@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST =			\
+ourdatadir = $(exampledir)/trellis/fsm_files
+
+dist_ourdata_DATA =		\
 	awgn1o2_128.fsm		\
 	awgn1o2_16.fsm		\
 	awgn1o2_4.fsm		\
@@ -35,7 +37,4 @@ EXTRA_DIST =			\
 	disconnected.fsm	\
 	rep3.fsm		\
 	rep5.fsm		\
-	simple.fsm		
-
-ourdatadir = $(exampledir)/trellis/fsm_files
-ourdata_DATA = $(EXTRA_DIST)
+	simple.fsm

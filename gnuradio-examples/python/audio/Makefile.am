@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = 			\
+ourdatadir = $(exampledir)/audio
+
+dist_ourdata_SCRIPTS =		\
 	audio_copy.py		\
 	audio_fft.py		\
 	audio_play.py		\
@@ -33,7 +35,4 @@ EXTRA_DIST = 			\
 	multi_tone.py		\
 	noise.py		\
 	spectrum_inversion.py	\
-	test_resampler.py	
-
-ourdatadir = $(exampledir)/audio
-ourdata_DATA = $(EXTRA_DIST)
+	test_resampler.py

@@ -1,5 +1,5 @@
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,9 +21,13 @@
 
 include $(top_srcdir)/Makefile.common
 
-datadir = $(prefix)/share/usrp
-
 RBFS = usrp_radar_mono.rbf
+
+rbf2datadir = $(prefix)/share/usrp/rev2
+dist_rbf2data_DATA = $(RBFS)
+
+rbf4datadir = $(prefix)/share/usrp/rev4
+dist_rbf4data_DATA = $(RBFS)
 
 EXTRA_DIST = \
 	usrp_radar_mono.csf \
@@ -31,25 +35,7 @@ EXTRA_DIST = \
 	usrp_radar_mono.psf \
 	usrp_radar_mono.qpf \
 	usrp_radar_mono.qsf \
-	usrp_radar_mono.v   \
-	$(RBFS)
-
-install-data-local:
-	@for file in $(RBFS); do \
-		echo "$(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(datadir)/rev2/$$file"; \
-		$(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(datadir)/rev2/$$file; \
-		echo "$(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(datadir)/rev4/$$file"; \
-		$(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(datadir)/rev4/$$file; \
-	done
-
-uninstall-local:
-	@for file in $(RBFS); do \
-		echo "$(RM) $(DESTDIR)$(datadir)/rev2/$$file"; \
-		$(RM) $(DESTDIR)$(datadir)/rev2/$$file; \
-		echo "$(RM) $(DESTDIR)$(datadir)/rev4/$$file"; \
-		$(RM) $(DESTDIR)$(datadir)/rev4/$$file; \
-	done
-
+	usrp_radar_mono.v
 
 MOSTLYCLEANFILES = 	\
 	db/*		\

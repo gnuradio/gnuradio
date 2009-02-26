@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -31,7 +31,7 @@ ourpython_PYTHON = 			\
     gpio.py
 
 # List of python files that will be installed onto $prefix/bin
-bin_SCRIPTS = 				\
+dist_bin_SCRIPTS = 			\
     gpio_rx_sfile.py			\
     gpio_usrp_siggen.py 		\
     gpio_usrp_fft.py
@@ -44,7 +44,7 @@ noinst_PYTHON = 			\
 # Programs that get run by 'make check'
 TESTS = run_tests
 
-# Files to go into tarball not otherwise mentioned (except bin_SCRIPTS!)
-EXTRA_DIST = run_tests.in $(bin_SCRIPTS)
+# Files to go into tarball not otherwise mentioned
+EXTRA_DIST = run_tests.in
 
 MOSTLYCLEANFILES = *.pyo *.pyc *~

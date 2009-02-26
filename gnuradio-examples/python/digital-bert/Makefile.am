@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,13 +21,12 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST =			\
+ourdatadir = $(exampledir)/digital-bert
+
+dist_ourdata_SCRIPTS =		\
 	benchmark_rx.py		\
 	benchmark_tx.py		\
 	receive_path.py		\
 	transmit_path.py
-
-ourdatadir = $(exampledir)/digital-bert
-ourdata_DATA = $(EXTRA_DIST)
 
 MOSTLYCLEANFILES = *.pyc *.pyo *~

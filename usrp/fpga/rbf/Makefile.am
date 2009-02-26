@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,35 +19,4 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
-
-datadir = $(prefix)/share/usrp
-
-rbfs = 				\
-	rev2/std_2rxhb_2tx.rbf	\
-	rev2/std_4rx_0tx.rbf	\
-	rev2/inband_1rxhb_1tx.rbf	\
-	rev2/inband_2rxhb_2tx.rbf	\
-	rev4/std_2rxhb_2tx.rbf	\
-	rev4/std_4rx_0tx.rbf    \
-	rev4/inband_1rxhb_1tx.rbf	\
-	rev4/inband_2rxhb_2tx.rbf	\
-	rev2/multi_2rxhb_2tx.rbf	\
-	rev4/multi_2rxhb_2tx.rbf		
-
-
-EXTRA_DIST = 			\
-	$(rbfs)
-
-
-install-data-local:
-	@for file in $(rbfs); do \
-		echo "$(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(datadir)/$$file"; \
-		$(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(datadir)/$$file; \
-	done
-
-uninstall-local:
-	@for file in $(rbfs); do \
-		echo "$(RM) $(DESTDIR)$(datadir)/$$file"; \
-		$(RM) $(DESTDIR)$(datadir)/$$file; \
-	done
+SUBDIRS = rev2 rev4

@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005 Free Software Foundation, Inc.
+# Copyright 2004,2005,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,26 +21,25 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = 					\
-	fm_tx_2_daughterboards.py		\
-	fm_tx4.py				\
-	max_power.py				\
-	test_dft_analysis.py			\
-	test_dft_synth.py			\
-	usrp_benchmark_usb.py			\
-	usrp_nbfm_ptt.py			\
-	usrp_nbfm_rcv.py			\
-	usrp_spectrum_sense.py			\
-	usrp_test_loop_lfsr.py			\
-	usrp_tv_rcv_nogui.py			\
-	usrp_tv_rcv.py				\
-	usrp_wfm_rcv.py				\
-	usrp_wfm_rcv_nogui.py			\
-	usrp_wfm_rcv_pll.py			\
-	usrp_wfm_rcv_sca.py			\
-	usrp_wfm_rcv2_nogui.py			\
-	usrp_wxapt_rcv.py			\
-	usrp_am_mw_rcv.py
-
 ourdatadir = $(exampledir)/usrp
-ourdata_DATA = $(EXTRA_DIST)
+
+dist_ourdata_SCRIPTS = 			\
+	fm_tx_2_daughterboards.py	\
+	fm_tx4.py			\
+	max_power.py			\
+	test_dft_analysis.py		\
+	test_dft_synth.py		\
+	usrp_benchmark_usb.py		\
+	usrp_nbfm_ptt.py		\
+	usrp_nbfm_rcv.py		\
+	usrp_spectrum_sense.py		\
+	usrp_test_loop_lfsr.py		\
+	usrp_tv_rcv_nogui.py		\
+	usrp_tv_rcv.py			\
+	usrp_wfm_rcv.py			\
+	usrp_wfm_rcv_nogui.py		\
+	usrp_wfm_rcv_pll.py		\
+	usrp_wfm_rcv_sca.py		\
+	usrp_wfm_rcv2_nogui.py		\
+	usrp_wxapt_rcv.py		\
+	usrp_am_mw_rcv.py

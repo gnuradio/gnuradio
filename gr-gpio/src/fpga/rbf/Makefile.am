@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -29,9 +29,6 @@ datadir = $(prefix)/share/usrp
 datarev2dir = $(datadir)/rev2
 datarev4dir = $(datadir)/rev4
 
-datarev2_DATA = $(RBFS)
+dist_datarev2_DATA = $(RBFS)
 
-datarev4_DATA = $(RBFS)
-
-EXTRA_DIST = \
-	$(RBFS)
+dist_datarev4_DATA = $(RBFS)

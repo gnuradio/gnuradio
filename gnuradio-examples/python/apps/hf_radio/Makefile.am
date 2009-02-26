@@ -1,5 +1,5 @@
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,18 +21,19 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = 	\
+ourdatadir = $(exampledir)/hf_radio
+
+dist_ourdata_DATA = 	\
     hfir.sci	\
+    radio.xml	\
+    README.TXT	\
+    ssb_taps
+
+dist_ourdata_SCRIPTS = 	\
     input.py	\
     output.py	\
     radio.py	\
-    radio.xml	\
-    README.TXT	\
     ssbagc.py	\
     ssbdemod.py \
-    ssb_taps	\
     startup.py	\
     ui.py
-
-ourdatadir = $(exampledir)/hf_radio
-ourdata_DATA = $(EXTRA_DIST)

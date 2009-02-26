@@ -1,5 +1,5 @@
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -29,12 +29,11 @@ ourpythondir = $(grpythondir)
 ourlibdir    = $(grpyexecdir)
 
 EXTRA_DIST = 		\
-	usrp_sounder.py \
 	sounder_loopback.sh \
 	qa_nothing.py	\
 	run_tests.in
 
-bin_SCRIPTS = 		\
+dist_bin_SCRIPTS = 		\
 	usrp_sounder.py
 
 ourpython_PYTHON =	\

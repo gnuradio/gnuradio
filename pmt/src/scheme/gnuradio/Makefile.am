@@ -1,5 +1,5 @@
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,12 +21,9 @@
 #pkgdatadir = $(datadir)/gnuradio
 
 EXTRA_DIST = 				\
-	gen-serial-tags.scm		\
-	pmt-serial-tags.scm		\
-	pmt-serialize.scm		
-
+	gen-serial-tags.scm
 
 # really scheme source files
-pkgdata_DATA =				\
+dist_pkgdata_DATA =			\
 	pmt-serial-tags.scm		\
 	pmt-serialize.scm		
