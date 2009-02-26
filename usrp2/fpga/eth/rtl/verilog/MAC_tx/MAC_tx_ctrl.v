@@ -627,7 +627,15 @@ always @ (posedge Clk or posedge Reset)
         pause_quanta_sub    <=0;
 
 // FIXME  The below probably won't work if the pause request comes when we are in the wrong state
-   wire clear_xonxoff = (Current_state==StateSendPauseFrame) & (IPLengthCounter==17);
+   reg clear_xonxoff;
+   always @(posedge Clk or posedge Reset)
+     if(Reset)
+       clear_xonxoff <= 0;
+     else if((Current_state==StateSendPauseFrame) & (IPLengthCounter==17))
+       clear_xonxoff <= 1;
+     else if(~xon_gen & ~xoff_gen)
+       clear_xonxoff <= 0;
+   
 always @ (posedge Clk or posedge Reset)
     if (Reset) 
         xoff_gen_complete   <=0;

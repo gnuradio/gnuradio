@@ -127,6 +127,11 @@ wire            MAC_tx_addr_init    ;
 wire            MAC_tx_addr_rd      ;
 wire[7:0]       MAC_tx_addr_data    ;
 
+
+   reg 		xon_gen_d1, xoff_gen_d1;
+   always @(posedge Clk) xon_gen_d1 <= xon_gen;
+   always @(posedge Clk) xoff_gen_d1 <= xoff_gen;
+   
 //******************************************************************************        
 //instantiation                                                              
 //****************************************************************************** 
@@ -147,9 +152,9 @@ MAC_tx_ctrl U_MAC_tx_ctrl(
  //flow control           (//flow control         ),           
 .pause_apply              (pause_apply            ),            
 .pause_quanta_sub         (pause_quanta_sub       ),        
-.xoff_gen                 (xoff_gen               ),        
+.xoff_gen                 (xoff_gen_d1            ),        
 .xoff_gen_complete        (xoff_gen_complete      ),            
-.xon_gen                  (xon_gen                ),            
+.xon_gen                  (xon_gen_d1             ),            
 .xon_gen_complete         (xon_gen_complete       ),        
  //MAC_tx_FF              (//MAC_tx_FF            ),           
 .Fifo_data                (Fifo_data              ),            
