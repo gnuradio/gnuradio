@@ -1,4 +1,4 @@
-dnl Copyright 2006,2008 Free Software Foundation, Inc.
+dnl Copyright 2006,2008,2009 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -201,7 +201,7 @@ dnl    echo
         else
             dnl make sure this dependency was --with'd only; not --enable'd
             if test [x$]m4_bpatsubst($2,-,_)[_with] = xno; then
-                AC_MSG_ERROR([Component $1 requires $2 to be included as --with-$1@<:@=arg@:>@])
+                AC_MSG_ERROR([Component $1 requires $2 to be included as --with-$2@<:@=arg@:>@])
             fi
         fi
     fi
