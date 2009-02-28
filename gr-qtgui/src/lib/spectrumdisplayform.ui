@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>637</width>
+    <width>633</width>
     <height>436</height>
    </rect>
   </property>
@@ -156,6 +156,9 @@
      <width>630</width>
      <height>380</height>
     </rect>
+   </property>
+   <property name="currentIndex" >
+    <number>0</number>
    </property>
    <widget class="QWidget" name="FrequencyPage" >
     <attribute name="title" >
@@ -355,7 +358,7 @@
       </property>
      </item>
     </widget>
-    <widget class="QwtWheel" name="WaterfallMaximumIntensityWheel" >
+    <widget class="QwtWheel" native="1" name="WaterfallMaximumIntensityWheel" >
      <property name="geometry" >
       <rect>
        <x>215</x>
@@ -370,19 +373,16 @@
      <property name="focusPolicy" >
       <enum>Qt::WheelFocus</enum>
      </property>
-     <property name="valid" >
+     <property name="valid" stdset="0" >
       <bool>true</bool>
      </property>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="totalAngle" >
+     <property name="totalAngle" stdset="0" >
       <double>200.000000000000000</double>
      </property>
-     <property name="viewAngle" >
+     <property name="viewAngle" stdset="0" >
       <double>20.000000000000000</double>
      </property>
-     <property name="mass" >
+     <property name="mass" stdset="0" >
       <double>0.000000000000000</double>
      </property>
     </widget>
@@ -418,7 +418,7 @@
       <enum>QFrame::Plain</enum>
      </property>
     </widget>
-    <widget class="QwtWheel" name="WaterfallMinimumIntensityWheel" >
+    <widget class="QwtWheel" native="1" name="WaterfallMinimumIntensityWheel" >
      <property name="geometry" >
       <rect>
        <x>215</x>
@@ -427,19 +427,16 @@
        <height>24</height>
       </rect>
      </property>
-     <property name="valid" >
+     <property name="valid" stdset="0" >
       <bool>true</bool>
      </property>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="totalAngle" >
+     <property name="totalAngle" stdset="0" >
       <double>200.000000000000000</double>
      </property>
-     <property name="viewAngle" >
+     <property name="viewAngle" stdset="0" >
       <double>20.000000000000000</double>
      </property>
-     <property name="mass" >
+     <property name="mass" stdset="0" >
       <double>0.000000000000000</double>
      </property>
     </widget>
@@ -528,7 +525,7 @@
       <string>Auto Scale</string>
      </property>
     </widget>
-    <widget class="QwtWheel" name="Waterfall3DMinimumIntensityWheel" >
+    <widget class="QwtWheel" native="1" name="Waterfall3DMinimumIntensityWheel" >
      <property name="geometry" >
       <rect>
        <x>215</x>
@@ -537,19 +534,16 @@
        <height>24</height>
       </rect>
      </property>
-     <property name="valid" >
+     <property name="valid" stdset="0" >
       <bool>true</bool>
      </property>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="totalAngle" >
+     <property name="totalAngle" stdset="0" >
       <double>200.000000000000000</double>
      </property>
-     <property name="viewAngle" >
+     <property name="viewAngle" stdset="0" >
       <double>20.000000000000000</double>
      </property>
-     <property name="mass" >
+     <property name="mass" stdset="0" >
       <double>0.000000000000000</double>
      </property>
     </widget>
@@ -620,7 +614,7 @@
       </property>
      </item>
     </widget>
-    <widget class="QwtWheel" name="Waterfall3DMaximumIntensityWheel" >
+    <widget class="QwtWheel" native="1" name="Waterfall3DMaximumIntensityWheel" >
      <property name="geometry" >
       <rect>
        <x>215</x>
@@ -635,19 +629,16 @@
      <property name="focusPolicy" >
       <enum>Qt::WheelFocus</enum>
      </property>
-     <property name="valid" >
+     <property name="valid" stdset="0" >
       <bool>true</bool>
      </property>
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="totalAngle" >
+     <property name="totalAngle" stdset="0" >
       <double>200.000000000000000</double>
      </property>
-     <property name="viewAngle" >
+     <property name="viewAngle" stdset="0" >
       <double>20.000000000000000</double>
      </property>
-     <property name="mass" >
+     <property name="mass" stdset="0" >
       <double>0.000000000000000</double>
      </property>
     </widget>

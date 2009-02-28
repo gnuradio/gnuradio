@@ -30,40 +30,51 @@
 GR_SWIG_BLOCK_MAGIC(qtgui,sink_c)
 
   qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
-				       float fmin=-0.5, float fmax=0.5, const std::string &name="Display");
+				       float fmin=-0.5, float fmax=0.5,
+				       const std::string &name="Display");
 
 class qtgui_sink_c : public gr_block
 {
 private:
   friend qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
-					      float fmin, float fmax, const std::string &name);
+					      float fmin, float fmax,
+					      const std::string &name);
   qtgui_sink_c (int fftsize, int wintype,
 		float fmin, float fmax, const std::string &name);
 
 public:
   void start_app();
-
+  void initialize();
+  void initialize(QApplication *qapp);
+  QApplication* get_qapplication(); 
 };
 
 
 
-/****************************************************************************************/
+/*********************************************************************/
 
 
 GR_SWIG_BLOCK_MAGIC(qtgui,sink_f)
   
-qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, const std::vector<float> &window,
-				     float fmin, float fmax, const std::string &name="Display");
+qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, 
+				     const std::vector<float> &window,
+				     float fmin, float fmax, 
+				     const std::string &name="Display");
 
 class qtgui_sink_f : public gr_block
 {
 private:
-  friend qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, const std::vector<float> &window,
-					      float fmin, float fmax, const std::string &name);
-  qtgui_sink_fy (int fftsize, const std::vector<float> &window,
-		 float fmin, float fmax, const std::string &name);
+  friend qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, 
+					      const std::vector<float> &window,
+					      float fmin, float fmax, 
+					      const std::string &name);
+  qtgui_sink_f (int fftsize, 
+		const std::vector<float> &window,
+		float fmin, float fmax,
+		const std::string &name);
   
 public:
   void start_app();
 };
+
 

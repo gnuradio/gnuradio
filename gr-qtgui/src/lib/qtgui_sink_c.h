@@ -44,6 +44,8 @@ private:
 					      float fmin, float fmax, const std::string &name);
   qtgui_sink_c (int fftsize, int wintype,
 		float fmin, float fmax, const std::string &name);
+
+  void __initialize();
   
   int d_fftsize;
   gr_firdes::win_type d_wintype;
@@ -70,12 +72,16 @@ private:
   
 public:
   ~qtgui_sink_c();
+  void initialize();
+  void initialize(QApplication *qapp);
   void start_app();
   void lock();
   void unlock();
 
-  QApplication *d_qApplication
-;
+  QApplication* get_qapplication();
+
+  QApplication *d_qApplication;
+  qtgui_obj *d_object;
 
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,

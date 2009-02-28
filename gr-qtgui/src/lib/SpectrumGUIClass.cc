@@ -9,7 +9,8 @@
 const long SpectrumGUIClass::MAX_FFT_SIZE;
 const long SpectrumGUIClass::MIN_FFT_SIZE;
 
-SpectrumGUIClass::SpectrumGUIClass(const uint64_t maxDataSize, const uint64_t fftSize, const double newStartFrequency, const double newStopFrequency){
+SpectrumGUIClass::SpectrumGUIClass(const uint64_t maxDataSize, const uint64_t fftSize, 
+				   const double newStartFrequency, const double newStopFrequency){
   _dataPoints = maxDataSize;
   if(_dataPoints < 2){
     _dataPoints = 2;
@@ -102,7 +103,9 @@ void SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent){
 
 void SpectrumGUIClass::Reset(){
   if(GetWindowOpenFlag()){
-    qApp->postEvent(_spectrumDisplayForm, new SpectrumFrequencyRangeEvent(_centerFrequency, _startFrequency, _stopFrequency));
+    qApp->postEvent(_spectrumDisplayForm, new SpectrumFrequencyRangeEvent(_centerFrequency, 
+									  _startFrequency, 
+									  _stopFrequency));
     qApp->postEvent(_spectrumDisplayForm, new SpectrumWindowResetEvent());
   }
   _droppedEntriesCount = 0;
