@@ -54,6 +54,7 @@ QMAKE_SOURCES = 				\
 	TimeDomainDisplayPlot_moc.cc		\
 	WaterfallDisplayPlot_moc.cc		\
 	Waterfall3DDisplayPlot_moc.cc		\
+	ConstellationDisplayPlot_moc.cc		\
 	spectrumdisplayform_ui.h
 endif
 
@@ -81,6 +82,7 @@ libqtgui_la_SOURCES = 	\
 	WaterfallDisplayPlot.cc			\
 	Waterfall3DDisplayPlot.cc		\
 	waterfallGlobalData.cc			\
+	ConstellationDisplayPlot.cc		\
 	spectrumdisplayform.cc			\
 	SpectrumGUIClass.cc			\
 	spectrumUpdateEvents.cc			\
@@ -100,6 +102,7 @@ grinclude_HEADERS =			\
 	WaterfallDisplayPlot.h		\
 	Waterfall3DDisplayPlot.h	\
 	waterfallGlobalData.h		\
+	ConstellationDisplayPlot.h	\
 	highResTimeFunctions.h		\
 	plot_waterfall.h		\
 	spectrumdisplayform.h		\

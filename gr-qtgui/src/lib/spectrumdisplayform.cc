@@ -15,6 +15,7 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent) : QDialog(parent){
   _waterfallDisplayPlot = new WaterfallDisplayPlot(Tab2PlotDisplayFrame);
   _waterfall3DDisplayPlot = new Waterfall3DDisplayPlot(Waterfall3DPlotDisplayFrame);
   _timeDomainDisplayPlot = new TimeDomainDisplayPlot(TimeDomainDisplayFrame);
+  _constellationDisplayPlot = new ConstellationDisplayPlot(ConstellationDisplayFrame);
   _numRealDataPoints = 1024;
   _realFFTDataPoints = new double[_numRealDataPoints];
   _averagedValues = new double[_numRealDataPoints];
@@ -42,8 +43,10 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent) : QDialog(parent){
   
   _noiseFloorAmplitude = -HUGE_VAL;
   
-  connect(_waterfallDisplayPlot, SIGNAL(UpdatedLowerIntensityLevel(const double)), _frequencyDisplayPlot, SLOT(SetLowerIntensityLevel(const double)));
-  connect(_waterfallDisplayPlot, SIGNAL(UpdatedUpperIntensityLevel(const double)), _frequencyDisplayPlot, SLOT(SetUpperIntensityLevel(const double)));
+  connect(_waterfallDisplayPlot, SIGNAL(UpdatedLowerIntensityLevel(const double)), 
+	  _frequencyDisplayPlot, SLOT(SetLowerIntensityLevel(const double)));
+  connect(_waterfallDisplayPlot, SIGNAL(UpdatedUpperIntensityLevel(const double)), 
+	  _frequencyDisplayPlot, SLOT(SetUpperIntensityLevel(const double)));
   
   _frequencyDisplayPlot->SetLowerIntensityLevel(-200);
   _frequencyDisplayPlot->SetUpperIntensityLevel(-200);
@@ -72,7 +75,9 @@ SpectrumDisplayForm::~SpectrumDisplayForm(){
   delete _historyVector;
 }
 
-void SpectrumDisplayForm::setSystem( SpectrumGUIClass * newSystem, const uint64_t numFFTDataPoints, const uint64_t numTimeDomainDataPoints )
+void SpectrumDisplayForm::setSystem( SpectrumGUIClass * newSystem, 
+				     const uint64_t numFFTDataPoints, 
+				     const uint64_t numTimeDomainDataPoints )
 {
   ResizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
   
@@ -168,6 +173,9 @@ void SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumU
     _timeDomainDisplayPlot->PlotNewData(realTimeDomainDataPoints, 
 					imagTimeDomainDataPoints, 
 					numTimeDomainDataPoints);
+    _constellationDisplayPlot->PlotNewData(realTimeDomainDataPoints, 
+					   imagTimeDomainDataPoints, 
+					   numTimeDomainDataPoints);
   }
   // Don't update the repeated data for the waterfall
   if(!repeatDataFlag){
@@ -199,27 +207,29 @@ void SpectrumDisplayForm::resizeEvent( QResizeEvent *e )
   SpectrumTypeTab->resize( e->size().width(), SpectrumTypeTab->height());
 
   // Tell the TabXFreqDisplay to resize
-  Tab1PlotDisplayFrame->resize(e->size().width()-4, 
+  Tab1PlotDisplayFrame->resize(e->size().width()-4,
 			       Tab1PlotDisplayFrame->height());
   Tab2PlotDisplayFrame->resize(e->size().width()-4,
 			       Tab2PlotDisplayFrame->height());
-  Waterfall3DPlotDisplayFrame->resize(e->size().width()-4, 
+  Waterfall3DPlotDisplayFrame->resize(e->size().width()-4,
 				      Waterfall3DPlotDisplayFrame->height());
-  TimeDomainDisplayFrame->resize(e->size().width()-4, 
+  TimeDomainDisplayFrame->resize(e->size().width()-4,
 				 TimeDomainDisplayFrame->height());
-  _frequencyDisplayPlot->resize( Tab1PlotDisplayFrame->width()-4, 
+  _frequencyDisplayPlot->resize( Tab1PlotDisplayFrame->width()-4,
 				 Tab1PlotDisplayFrame->height());
-  _waterfallDisplayPlot->resize( Tab2PlotDisplayFrame->width()-4, 
+  _waterfallDisplayPlot->resize( Tab2PlotDisplayFrame->width()-4,
 				 Tab2PlotDisplayFrame->height());
-  _waterfall3DDisplayPlot->resize( Waterfall3DPlotDisplayFrame->width()-4, 
+  _waterfall3DDisplayPlot->resize( Waterfall3DPlotDisplayFrame->width()-4,
 				   Waterfall3DPlotDisplayFrame->height());
-  _timeDomainDisplayPlot->resize( TimeDomainDisplayFrame->width()-4, 
+  _timeDomainDisplayPlot->resize( TimeDomainDisplayFrame->width()-4,
 				  TimeDomainDisplayFrame->height());
 
   // Move the IntensityWheels and Labels
-  WaterfallMaximumIntensityLabel->move(width() - 5 - WaterfallMaximumIntensityLabel->width(),
+  WaterfallMaximumIntensityLabel->move(width() - 5 -
+				       WaterfallMaximumIntensityLabel->width(),
 				       WaterfallMaximumIntensityLabel->y());
-  WaterfallMinimumIntensityLabel->move(width() - 5 - WaterfallMinimumIntensityLabel->width(),
+  WaterfallMinimumIntensityLabel->move(width() - 5 -
+				       WaterfallMinimumIntensityLabel->width(),
 				       WaterfallMinimumIntensityLabel->y());
   WaterfallMaximumIntensityWheel->resize(WaterfallMaximumIntensityLabel->x() - 5 -
 					 WaterfallMaximumIntensityWheel->x(),

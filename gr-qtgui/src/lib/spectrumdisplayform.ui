@@ -358,7 +358,7 @@
       </property>
      </item>
     </widget>
-    <widget class="QwtWheel" native="1" name="WaterfallMaximumIntensityWheel" >
+    <widget class="QwtWheel" name="WaterfallMaximumIntensityWheel" >
      <property name="geometry" >
       <rect>
        <x>215</x>
@@ -373,16 +373,16 @@
      <property name="focusPolicy" >
       <enum>Qt::WheelFocus</enum>
      </property>
-     <property name="valid" stdset="0" >
+     <property name="valid" >
       <bool>true</bool>
      </property>
-     <property name="totalAngle" stdset="0" >
+     <property name="totalAngle" >
       <double>200.000000000000000</double>
      </property>
-     <property name="viewAngle" stdset="0" >
+     <property name="viewAngle" >
       <double>20.000000000000000</double>
      </property>
-     <property name="mass" stdset="0" >
+     <property name="mass" >
       <double>0.000000000000000</double>
      </property>
     </widget>
@@ -418,7 +418,7 @@
       <enum>QFrame::Plain</enum>
      </property>
     </widget>
-    <widget class="QwtWheel" native="1" name="WaterfallMinimumIntensityWheel" >
+    <widget class="QwtWheel" name="WaterfallMinimumIntensityWheel" >
      <property name="geometry" >
       <rect>
        <x>215</x>
@@ -427,16 +427,16 @@
        <height>24</height>
       </rect>
      </property>
-     <property name="valid" stdset="0" >
+     <property name="valid" >
       <bool>true</bool>
      </property>
-     <property name="totalAngle" stdset="0" >
+     <property name="totalAngle" >
       <double>200.000000000000000</double>
      </property>
-     <property name="viewAngle" stdset="0" >
+     <property name="viewAngle" >
       <double>20.000000000000000</double>
      </property>
-     <property name="mass" stdset="0" >
+     <property name="mass" >
       <double>0.000000000000000</double>
      </property>
     </widget>
@@ -525,7 +525,7 @@
       <string>Auto Scale</string>
      </property>
     </widget>
-    <widget class="QwtWheel" native="1" name="Waterfall3DMinimumIntensityWheel" >
+    <widget class="QwtWheel" name="Waterfall3DMinimumIntensityWheel" >
      <property name="geometry" >
       <rect>
        <x>215</x>
@@ -534,16 +534,16 @@
        <height>24</height>
       </rect>
      </property>
-     <property name="valid" stdset="0" >
+     <property name="valid" >
       <bool>true</bool>
      </property>
-     <property name="totalAngle" stdset="0" >
+     <property name="totalAngle" >
       <double>200.000000000000000</double>
      </property>
-     <property name="viewAngle" stdset="0" >
+     <property name="viewAngle" >
       <double>20.000000000000000</double>
      </property>
-     <property name="mass" stdset="0" >
+     <property name="mass" >
       <double>0.000000000000000</double>
      </property>
     </widget>
@@ -614,7 +614,7 @@
       </property>
      </item>
     </widget>
-    <widget class="QwtWheel" native="1" name="Waterfall3DMaximumIntensityWheel" >
+    <widget class="QwtWheel" name="Waterfall3DMaximumIntensityWheel" >
      <property name="geometry" >
       <rect>
        <x>215</x>
@@ -629,16 +629,16 @@
      <property name="focusPolicy" >
       <enum>Qt::WheelFocus</enum>
      </property>
-     <property name="valid" stdset="0" >
+     <property name="valid" >
       <bool>true</bool>
      </property>
-     <property name="totalAngle" stdset="0" >
+     <property name="totalAngle" >
       <double>200.000000000000000</double>
      </property>
-     <property name="viewAngle" stdset="0" >
+     <property name="viewAngle" >
       <double>20.000000000000000</double>
      </property>
-     <property name="mass" stdset="0" >
+     <property name="mass" >
       <double>0.000000000000000</double>
      </property>
     </widget>
@@ -661,6 +661,27 @@
      </property>
      <property name="frameShadow" >
       <enum>QFrame::Plain</enum>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="ConstellationPage" >
+    <attribute name="title" >
+     <string>Constellation Display</string>
+    </attribute>
+    <widget class="QFrame" name="ConstellationDisplayFrame" >
+     <property name="geometry" >
+      <rect>
+       <x>5</x>
+       <y>5</y>
+       <width>620</width>
+       <height>340</height>
+      </rect>
+     </property>
+     <property name="frameShape" >
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow" >
+      <enum>QFrame::Raised</enum>
      </property>
     </widget>
    </widget>

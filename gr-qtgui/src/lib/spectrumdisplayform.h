@@ -11,6 +11,7 @@ class SpectrumGUIClass;
 #include <WaterfallDisplayPlot.h>
 #include <Waterfall3DDisplayPlot.h>
 #include <TimeDomainDisplayPlot.h>
+#include <ConstellationDisplayPlot.h>
 #include <QValidator>
 #include <vector>
 
@@ -73,6 +74,7 @@ private:
   WaterfallDisplayPlot* _waterfallDisplayPlot;
   Waterfall3DDisplayPlot* _waterfall3DDisplayPlot;
   TimeDomainDisplayPlot* _timeDomainDisplayPlot;
+  ConstellationDisplayPlot* _constellationDisplayPlot;
   SpectrumGUIClass* _system;
   bool _systemSpecifiedFlag;
   double _centerFrequency;
