@@ -491,5 +491,6 @@ bool
 xcvr2450_set_tx_enable(struct db_base *dbb, bool on){
   struct db_xcvr2450_dummy *db = (struct db_xcvr2450_dummy *) dbb;
   db->common->d_tx_enb = on;
+  set_gpio(db);
   return true;
 }
