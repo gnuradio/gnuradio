@@ -20,6 +20,9 @@ GENERATED_H = \
 	gr_add_vii.h \
 	gr_add_vss.h \
 	gr_and_bb.h \
+	gr_and_const_bb.h \
+	gr_and_const_ii.h \
+	gr_and_const_ss.h \
 	gr_and_ii.h \
 	gr_and_ss.h \
 	gr_argmax_fs.h \
@@ -130,6 +133,9 @@ GENERATED_I = \
 	gr_add_vii.i \
 	gr_add_vss.i \
 	gr_and_bb.i \
+	gr_and_const_bb.i \
+	gr_and_const_ii.i \
+	gr_and_const_ss.i \
 	gr_and_ii.i \
 	gr_and_ss.i \
 	gr_argmax_fs.i \
@@ -240,6 +246,9 @@ GENERATED_CC = \
 	gr_add_vii.cc \
 	gr_add_vss.cc \
 	gr_and_bb.cc \
+	gr_and_const_bb.cc \
+	gr_and_const_ii.cc \
+	gr_and_const_ss.cc \
 	gr_and_ii.cc \
 	gr_and_ss.cc \
 	gr_argmax_fs.cc \

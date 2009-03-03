@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2006,2007,2008 Free Software Foundation, Inc.
+# Copyright 2004,2006,2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -62,6 +62,7 @@ others = (
     ('gr_packed_to_unpacked_XX',    ('bb','ss','ii')),
     ('gr_xor_XX',                   ('bb','ss','ii')),
     ('gr_and_XX',                   ('bb','ss','ii')),
+    ('gr_and_const_XX',             ('bb','ss','ii')),
     ('gr_or_XX',                    ('bb','ss','ii')),
     ('gr_not_XX',                   ('bb','ss','ii')),
     ('gr_sample_and_hold_XX',       ('bb','ss','ii','ff')),

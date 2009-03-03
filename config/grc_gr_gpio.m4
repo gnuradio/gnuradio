@@ -1,4 +1,4 @@
-dnl Copyright 2007,2008 Free Software Foundation, Inc.
+dnl Copyright 2007,2008,2009 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -31,13 +31,8 @@ AC_DEFUN([GRC_GR_GPIO],[
         gr-gpio/src/fpga/top/Makefile \
         gr-gpio/src/fpga/lib/Makefile \
 	gr-gpio/src/fpga/rbf/Makefile \
-        gr-gpio/src/lib/Makefile \
-        gr-gpio/src/python/Makefile \
-        gr-gpio/src/python/run_tests
+        gr-gpio/src/python/Makefile
     ])
 
-    GRC_BUILD_CONDITIONAL(gr-gpio,[
-	dnl run_tests is created from run_tests.in.  Make it executable.
-	AC_CONFIG_COMMANDS([run_tests_gpio], [chmod +x gr-gpio/src/python/run_tests])
-    ])
+    GRC_BUILD_CONDITIONAL(gr-gpio)
 ])

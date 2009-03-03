@@ -30,9 +30,5 @@ EXTRA_DIST = \
 	config.h.in \
 	run_tests.sh.in
 
-dist_gr_doc_DATA =	\
-	README		\
-	README.hacking
-
 SUBDIRS = @build_dirs@
 DIST_SUBDIRS = @build_dirs@ @skipped_dirs@ @with_dirs@

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,31 +20,34 @@
  * Boston, MA 02110-1301, USA.
  */
 
+// @WARNING@
 
-#ifndef INCLUDED_GPIO_AND_CONST_SS_H
-#define INCLUDED_GPIO_AND_CONST_SS_H
+#ifndef @GUARD_NAME@
+#define @GUARD_NAME@
 
 #include <gr_sync_block.h>
 
-class gpio_and_const_ss;
-typedef boost::shared_ptr<gpio_and_const_ss> gpio_and_const_ss_sptr;
+class @NAME@;
+typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-gpio_and_const_ss_sptr gpio_make_and_const_ss (unsigned short k);
+@SPTR_NAME@ gr_make_@BASE_NAME@ (@O_TYPE@ k);
 
 /*!
- * \brief output = input & constant
- * \ingroup block
+ * \brief output_N = input_N & value
+ * \ingroup math
+ *
+ * bitwise boolean and of const to the data stream.
  */
-class gpio_and_const_ss : public gr_sync_block
+class @NAME@ : public gr_sync_block
 {
-  friend gpio_and_const_ss_sptr gpio_make_and_const_ss (unsigned short k);
+  friend @SPTR_NAME@ gr_make_@BASE_NAME@ (@O_TYPE@ k);
 
-  unsigned short	d_k;		// the constant
-  gpio_and_const_ss (unsigned short k);
+  @O_TYPE@	d_k;		// the constant
+  @NAME@ (@O_TYPE@ k);
 
  public:
-  unsigned short k () const { return d_k; }
-  void set_k (unsigned short k) { d_k = k; }
+  @O_TYPE@ k () const { return d_k; }
+  void set_k (@O_TYPE@ k) { d_k = k; }
 
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,

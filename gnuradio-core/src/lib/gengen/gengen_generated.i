@@ -20,6 +20,9 @@
 #include <gr_add_vii.h>
 #include <gr_add_vss.h>
 #include <gr_and_bb.h>
+#include <gr_and_const_bb.h>
+#include <gr_and_const_ii.h>
+#include <gr_and_const_ss.h>
 #include <gr_and_ii.h>
 #include <gr_and_ss.h>
 #include <gr_argmax_fs.h>
@@ -130,6 +133,9 @@
 %include <gr_add_vii.i>
 %include <gr_add_vss.i>
 %include <gr_and_bb.i>
+%include <gr_and_const_bb.i>
+%include <gr_and_const_ii.i>
+%include <gr_and_const_ss.i>
 %include <gr_and_ii.i>
 %include <gr_and_ss.i>
 %include <gr_argmax_fs.i>

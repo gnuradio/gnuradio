@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,39 +20,40 @@
  * Boston, MA 02110-1301, USA.
  */
 
+// @WARNING@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#include <gpio_and_const_ss.h>
+#include <@NAME@.h>
 #include <gr_io_signature.h>
 
-gpio_and_const_ss_sptr
-gpio_make_and_const_ss (unsigned short k)
+@SPTR_NAME@
+gr_make_@BASE_NAME@ (@I_TYPE@ k)
 {
-  return gpio_and_const_ss_sptr (new gpio_and_const_ss (k));
-}
+  return @SPTR_NAME@ (new @NAME@ (k));
+};
 
-gpio_and_const_ss::gpio_and_const_ss (unsigned short k)
-  : gr_sync_block ("and_const_ss",
-		   gr_make_io_signature (1, 1, sizeof (short)),
-		   gr_make_io_signature (1, 1, sizeof (short))),
-    d_k (k)
+@NAME@::@NAME@ (@I_TYPE@ k)
+  : gr_sync_block ("@BASE_NAME@",
+		   gr_make_io_signature (1, 1, sizeof (@I_TYPE@)),
+		   gr_make_io_signature (1, 1, sizeof (@O_TYPE@))),
+  d_k (k)
 {
 }
 
 int
-gpio_and_const_ss::work (int noutput_items,
-		   gr_vector_const_void_star &input_items,
-		   gr_vector_void_star &output_items)
+@NAME@::work (int noutput_items,
+	      gr_vector_const_void_star &input_items,
+	      gr_vector_void_star &output_items)
 {
-  short *iptr = (short *) input_items[0];
-  short *optr = (short *) output_items[0];
+  @I_TYPE@ *iptr = (@I_TYPE@ *) input_items[0];
+  @O_TYPE@ *optr = (@O_TYPE@ *) output_items[0];
 
   int	size = noutput_items;
 
-  while (size >= 8){
+  while (size >= 8) {
     *optr++ = *iptr++ & d_k;
     *optr++ = *iptr++ & d_k;
     *optr++ = *iptr++ & d_k;
@@ -66,6 +67,6 @@ gpio_and_const_ss::work (int noutput_items,
 
   while (size-- > 0)
     *optr++ = *iptr++ & d_k;
-  
-  return noutput_items;
+
+  return (noutput_items);
 }

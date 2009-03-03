@@ -1,5 +1,5 @@
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,4 +19,4 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-SUBDIRS = lib python fpga
+SUBDIRS = python fpga

@@ -36,15 +36,4 @@ dist_bin_SCRIPTS = 			\
     gpio_usrp_siggen.py 		\
     gpio_usrp_fft.py
 
-# List of python files that will get distributed in tarball
-# but not installed anywhere on system
-noinst_PYTHON = 			\
-    qa_gpio.py
-
-# Programs that get run by 'make check'
-TESTS = run_tests
-
-# Files to go into tarball not otherwise mentioned
-EXTRA_DIST = run_tests.in
-
 MOSTLYCLEANFILES = *.pyo *.pyc *~

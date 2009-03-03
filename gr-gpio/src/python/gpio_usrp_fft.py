@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005,2007,2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -144,10 +144,10 @@ class app_top_block(stdgui2.std_top_block):
           thr = gr.throttle(gr.sizeof_short, input_rate)
           self.connect(self.filesrc,thr,self.is2c,self.scope)
         elif options.digital:
-          self.select_dig=gpio.and_const_ss(0x0001)
+          self.select_dig=gr.and_const_ss(0x0001)
           self.connect(self.u, self.select_dig,self.is2c,self.scope)
         elif options.analog:
-          self.select_ana=gpio.and_const_ss(0xFFFE)
+          self.select_ana=gr.and_const_ss(0xFFFE)
           self.connect(self.u, self.select_ana,self.is2c,self.scope)
         else:
           self.connect(self.u,self.is2c,self.scope)

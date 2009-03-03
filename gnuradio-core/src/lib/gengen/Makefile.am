@@ -107,6 +107,9 @@ core_generator = 			\
 	gr_and_XX.cc.t			\
 	gr_and_XX.h.t			\
 	gr_and_XX.i.t     		\
+	gr_and_const_XX.cc.t		\
+	gr_and_const_XX.h.t		\
+	gr_and_const_XX.i.t     	\
 	gr_or_XX.cc.t			\
 	gr_or_XX.h.t			\
 	gr_or_XX.i.t      		\

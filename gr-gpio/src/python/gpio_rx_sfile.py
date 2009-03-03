@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -79,8 +79,8 @@ class my_top_block(gr.top_block):
 	    self.connect(u, head)
 	    src = head
 
-	ana_strip = gpio.and_const_ss(0xFFFE)
-	dig_strip = gpio.and_const_ss(0x0001)
+	ana_strip = gr.and_const_ss(0xFFFE)
+	dig_strip = gr.and_const_ss(0x0001)
         ana_sink = gr.file_sink(gr.sizeof_short, options.ana_filename)
 	dig_sink = gr.file_sink(gr.sizeof_short, options.dig_filename)
     

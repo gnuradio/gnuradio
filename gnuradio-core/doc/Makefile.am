@@ -23,6 +23,10 @@ include $(top_srcdir)/Makefile.common
 
 SUBDIRS = other xml-swig
 
+dist_gr_doc_DATA =			\
+	$(top_srcdir)/README		\
+	$(top_srcdir)/README.hacking
+
 all-local: prep @generate_docs@
 doc: docs            # alias
 

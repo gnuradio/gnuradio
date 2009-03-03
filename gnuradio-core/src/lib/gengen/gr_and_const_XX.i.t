@@ -20,24 +20,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "gnuradio.i"			// the common stuff
+// @WARNING@
 
-%{
-#include "gpio_and_const_ss.h"
-%}
+GR_SWIG_BLOCK_MAGIC(gr,@BASE_NAME@)
 
-// ----------------------------------------------------------------
+@SPTR_NAME@ gr_make_@BASE_NAME@ (@O_TYPE@ k);
 
-GR_SWIG_BLOCK_MAGIC(gpio,and_const_ss)
-
-gpio_and_const_ss_sptr gpio_make_and_const_ss (unsigned short k);
-
-class gpio_and_const_ss : public gr_sync_block
+class @NAME@ : public gr_sync_block
 {
  private:
-  gpio_and_const_ss (unsigned short k);
+  @NAME@ (@O_TYPE@ k);
 
  public:
-  unsigned short k () const { return d_k; }
-  void set_k (unsigned short k) { d_k = k; }
+  @O_TYPE@ k () const { return d_k; }
+  void set_k (@O_TYPE@ k) { d_k = k; }
 };
