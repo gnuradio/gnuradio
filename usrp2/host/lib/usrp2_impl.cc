@@ -152,6 +152,10 @@ namespace usrp2 {
     d_bg_thread = new usrp2_thread(this);
     d_bg_thread->start();
 
+    // In case the USRP2 was left streaming RX
+    // FIXME: only one channel right now
+    stop_rx_streaming(0);
+
     if (!dboard_info())		// we're hosed
       throw std::runtime_error("Unable to retrieve daughterboard info");
 
