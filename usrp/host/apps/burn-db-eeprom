@@ -32,7 +32,7 @@ daughterboards = {
     'basictx'         : ((BASIC_TX, 0x0000),        None),
     'basicrx'         : (None,                      (BASIC_RX, 0x0000)),
     'dbsrx'           : (None,                      (DBS_RX, 0x0000)),
-    'dbsrx2'          : (None,                      (DBS_RX_REV_2_1, 0x0000)),
+    'dbsrx_clkmod'    : (None,                      (DBS_RX_CLKMOD, 0x0000)),
     'tvrx'            : (None,                      (TV_RX, 0x0000)),
     'tvrx2'           : (None,                      (TV_RX_REV_2, 0x0000)),
     'tvrx3'           : (None,                      (TV_RX_REV_3, 0x0000)),

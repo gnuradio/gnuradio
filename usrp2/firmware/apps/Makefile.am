@@ -23,6 +23,7 @@ noinst_PROGRAMS = \
 	blink_leds \
 	blink_leds2 \
 	buf_ram_test \
+	burn_dbsrx_eeprom \
 	can_i_sub \
 	echo \
 	eth_serdes \

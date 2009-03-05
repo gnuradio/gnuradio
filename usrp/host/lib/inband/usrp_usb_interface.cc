@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -553,7 +553,6 @@ usrp_usb_interface::pick_rx_subdevice()
     USRP_DBID_TV_RX,
     USRP_DBID_TV_RX_REV_2,
     USRP_DBID_DBS_RX,
-    USRP_DBID_DBS_RX_REV_2_1,
     USRP_DBID_BASIC_RX
   };
 

@@ -91,12 +91,6 @@ int  hal_gpio_read(int bank);
  * ------------------------------------------------------------------------
  */
 
-#define	LED_0		0x0001
-#define	LED_1		0x0002
-#define	LED_3		0x0004
-#define	LED_4		0x0008
-#define	LED_ETH_CONN	0x0010
-
 void hal_set_leds(int value, int mask);
 void hal_toggle_leds(int mask);
 

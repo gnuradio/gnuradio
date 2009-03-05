@@ -292,7 +292,6 @@ usrp_source_base::pick_rx_subdevice()
     USRP_DBID_TV_RX,
     USRP_DBID_TV_RX_REV_2,
     USRP_DBID_DBS_RX,
-    USRP_DBID_DBS_RX_REV_2_1,
     USRP_DBID_BASIC_RX
   };
 

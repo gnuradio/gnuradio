@@ -1,5 +1,5 @@
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -36,7 +36,7 @@
 "Flex 2400 Tx"		0x000b
 
 "TV Rx Rev 2"		0x000c
-"DBS Rx Rev 2_1"	0x000d
+"DBS Rx ClkMod"		0x000d
 
 "LF Tx"			0x000e
 "LF Rx"			0x000f

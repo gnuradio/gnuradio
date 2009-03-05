@@ -104,7 +104,7 @@ read_raw_dboard_eeprom (unsigned char *buf, int i2c_addr)
 /*
  * Return DBID, -1 <none> or -2 <invalid eeprom contents>
  */
-static int
+int
 read_dboard_eeprom(int i2c_addr)
 {
   unsigned char buf[DB_EEPROM_CLEN];
