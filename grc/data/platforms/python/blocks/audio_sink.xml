@@ -44,12 +44,14 @@
 		<key>device_name</key>
 		<value></value>
 		<type>string</type>
+		<hide>#if $device_name.eval then 'none' else 'part'#</hide>
 	</param>
 	<param>
 		<name>OK to Block</name>
 		<key>ok_to_block</key>
 		<value>True</value>
 		<type>enum</type>
+		<hide>part</hide>
 		<option>
 			<name>Yes</name>
 			<key>True</key>
@@ -75,7 +77,7 @@
 Not all sampling rates will be supported by your hardware.
 
 Leave the device name blank to choose deafult audio device. \
-Audio device names may look like hw:0,0
+ALSA users with audio trouble may try setting the device name to plughw:0,0
 
 The audio sink can have multiple inputs depending upon your hardware. \
 For example, set the inputs to 2 for stereo audio.
