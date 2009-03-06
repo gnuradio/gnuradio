@@ -41,12 +41,12 @@ AC_DEFUN([GRC_GR_QTGUI],[
 
     if test $passed = yes; then
         dnl Check for package qt or qt-mt, set QT_CFLAGS and QT_LIBS
-        PKG_CHECK_MODULES(QTCORE, QtCore >= 4.3.4, [],
-	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtCore.])])
-        PKG_CHECK_MODULES(QTGUI, QtGui >= 4.3.4, [],
-	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtGui.])])
-        PKG_CHECK_MODULES(QTOPENGL, QtOpenGL >= 4.3.4, [],
-	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtOpenGL.])])
+        PKG_CHECK_MODULES(QTCORE, QtCore >= 4.2, [],
+	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtCore >= 4.2.])])
+        PKG_CHECK_MODULES(QTGUI, QtGui >= 4.2, [],
+	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtGui >= 4.2.])])
+        PKG_CHECK_MODULES(QTOPENGL, QtOpenGL >= 4.2, [],
+	    [passed=no; AC_MSG_RESULT([gr-qtgui requires libQtOpenGL >- 4.2.])])
 	
         dnl Fetch QWT variables
         GR_QWT([], [passed=no])
