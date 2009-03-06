@@ -57,7 +57,7 @@ msdd_source_simple::work (int noutput_items,
 	
 #define BUF_LEN        (MSDD_COMPLEX_SAMPLES_PER_PACKET*sizeof(short)*2 + 6)
 
-  float* out1 =(float*) output_items[0];
+  signed short* out1 =(signed short*) output_items[0];
 
   for(int i=0; i<floor(noutput_items*1.0/(2*MSDD_COMPLEX_SAMPLES_PER_PACKET));i++){
     char buffer[BUF_LEN];
