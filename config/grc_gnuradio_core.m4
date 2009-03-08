@@ -42,7 +42,7 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
         dnl check for GSL
 	PKG_CHECK_MODULES(GSL, gsl >= 1.10,
 	    [], dnl FIXME remove -lgslcblas from GSL_LIBS if we found a better CBLAS_LIBS above
-	    [passed=no;AC_MSG_RESULT([gnuradio-core requires package gsl, not found.])])
+	    [passed=no;AC_MSG_RESULT([gnuradio-core requires package gsl >= 1.10, not found.])])
     fi
 
     if test $passed != with; then
