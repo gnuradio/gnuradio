@@ -40,7 +40,8 @@ grgrpython_PYTHON = 		\
 	hier_block2.py		\
 	prefs.py		\
 	scheduler.py		\
-	top_block.py
+	top_block.py		\
+	pubsub.py
 
 noinst_PYTHON = 			\
 	benchmark_filters.py		\
