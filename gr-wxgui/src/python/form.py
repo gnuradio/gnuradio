@@ -263,7 +263,7 @@ class checkbox_field(field):
 
 
 class radiobox_field(field):
-    def __init__(self, parent=None, sizer=None, label="", value=None,
+    def __init__(self, parent=None, sizer=None, label=None, value=None,
                  converter=identity_converter(), callback=None, weight=1,
                  choices=None, major_dimension=1, specify_rows=False):
         new_id = wx.NewId()
@@ -273,9 +273,9 @@ class radiobox_field(field):
         else:
             style=wx.RA_SPECIFY_COLS | wx.RA_HORIZONTAL
             
-        w = wx.RadioBox(parent, new_id, label="", style=style, majorDimension=major_dimension,
+        w = wx.RadioBox(parent, new_id, label=label, style=style, majorDimension=major_dimension,
                         choices=choices)
-        self.f = self._pair_with_label(w, parent=parent, sizer=sizer, label=label, weight=weight)
+        self.f = self._pair_with_label(w, parent=parent, sizer=sizer, label=None, weight=weight)
         if callback:
             wx.EVT_RADIOBOX(w, new_id, lambda evt: callback(evt.GetString()))
         field.__init__(self, converter, value)
