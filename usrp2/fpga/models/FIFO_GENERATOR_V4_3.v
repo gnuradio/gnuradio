@@ -1,8 +1,8 @@
 /*
- * $RDCfile: $ $Revision: 1.1.2.6 $ $Date: 2007/11/28 17:15:18 $
+ * $RDCfile: $ $Revision: 1.1.2.15 $ $Date: 2007/07/25 15:58:33 $
  *******************************************************************************
  *
- * FIFO Generator - Verilog Behavioral Model
+ * FIFO Generator v3.3 - Verilog Behavioral Model
  *
  *******************************************************************************
  *
@@ -45,32 +45,8 @@
  *
  *******************************************************************************
  *
- * Filename: FIFO_GENERATOR_V4_3.v
+ * Filename: fifo_generator_v4_3_bhv.v
  *
- * Author     : Xilinx
- *
- *******************************************************************************
- * Structure:
- * 
- * fifo_generator_v4_3.vhd
- *    |
- *    +-fifo_generator_v4_3_bhv_as
- *    |
- *    +-fifo_generator_v4_3_bhv_ss
- *    |
- *    +-fifo_generator_v4_3_bhv_preload0
- * 
- *******************************************************************************
- * Description:
- *
- * The Verilog behavioral model for the FIFO Generator.
- *
- *   The behavioral model has three parts:
- *      - The behavioral model for independent clocks FIFOs (_as)
- *      - The behavioral model for common clock FIFOs (_ss)
- *      - The "preload logic" block which implements First-word Fall-through
- * 
- *******************************************************************************
  * Description:
  *  The verilog behavioral model for the FIFO generator core.
  *
@@ -84,8 +60,8 @@
  ******************************************************************************/
 module FIFO_GENERATOR_V4_3
 (
-  BACKUP, //not used
-  BACKUP_MARKER, //not used
+  BACKUP,
+  BACKUP_MARKER,
   CLK,
   DIN,
   PROG_EMPTY_THRESH,
@@ -96,12 +72,12 @@ module FIFO_GENERATOR_V4_3
   PROG_FULL_THRESH_NEGATE,
   RD_CLK,
   RD_EN,
-  RD_RST, //not used
+  RD_RST,
   RST,
   SRST,
   WR_CLK,
   WR_EN,
-  WR_RST, //not used
+  WR_RST,
   INT_CLK,
 
   ALMOST_EMPTY,
@@ -118,169 +94,59 @@ module FIFO_GENERATOR_V4_3
   VALID,
   WR_ACK,
   WR_DATA_COUNT,
- 
   SBITERR,
   DBITERR
   );
 
-/*
- ******************************************************************************
- * Definition of Parameters
- ******************************************************************************
- *     C_COMMON_CLOCK                : Common Clock (1), Independent Clocks (0)
- *     C_COUNT_TYPE                  :    *not used
- *     C_DATA_COUNT_WIDTH            : Width of DATA_COUNT bus
- *     C_DEFAULT_VALUE               :    *not used
- *     C_DIN_WIDTH                   : Width of DIN bus
- *     C_DOUT_RST_VAL                : Reset value of DOUT
- *     C_DOUT_WIDTH                  : Width of DOUT bus
- *     C_ENABLE_RLOCS                :    *not used
- *     C_FAMILY                      : not used in bhv model
- *     C_FULL_FLAGS_RST_VAL          : Full flags rst val (0 or 1)
- *     C_HAS_ALMOST_EMPTY            : 1=Core has ALMOST_EMPTY flag
- *     C_HAS_ALMOST_FULL             : 1=Core has ALMOST_FULL flag
- *     C_HAS_BACKUP                  :    *not used
- *     C_HAS_DATA_COUNT              : 1=Core has DATA_COUNT bus
- *     C_HAS_INT_CLK                 : not used in bhv model
- *     C_HAS_MEMINIT_FILE            :    *not used
- *     C_HAS_OVERFLOW                : 1=Core has OVERFLOW flag
- *     C_HAS_RD_DATA_COUNT           : 1=Core has RD_DATA_COUNT bus
- *     C_HAS_RD_RST                  :    *not used
- *     C_HAS_RST                     : 1=Core has Async Rst
- *     C_HAS_SRST                    : 1=Core has Sync Rst
- *     C_HAS_UNDERFLOW               : 1=Core has UNDERFLOW flag
- *     C_HAS_VALID                   : 1=Core has VALID flag
- *     C_HAS_WR_ACK                  : 1=Core has WR_ACK flag
- *     C_HAS_WR_DATA_COUNT           : 1=Core has WR_DATA_COUNT bus
- *     C_HAS_WR_RST                  :    *not used
- *     C_IMPLEMENTATION_TYPE         : 0=Common-Clock Bram/Dram
- *                                     1=Common-Clock ShiftRam
- *                                     2=Indep. Clocks Bram/Dram
- *                                     3=Virtex-4 Built-in
- *                                     4=Virtex-5 Built-in
- *     C_INIT_WR_PNTR_VAL            :   *not used
- *     C_MEMORY_TYPE                 : 1=Block RAM
- *                                     2=Distributed RAM
- *                                     3=Shift RAM
- *                                     4=Built-in FIFO
- *     C_MIF_FILE_NAME               :   *not used
- *     C_OPTIMIZATION_MODE           :   *not used
- *     C_OVERFLOW_LOW                : 1=OVERFLOW active low
- *     C_PRELOAD_LATENCY             : Latency of read: 0, 1, 2
- *     C_PRELOAD_REGS                : 1=Use output registers
- *     C_PRIM_FIFO_TYPE              : not used in bhv model
- *     C_PROG_EMPTY_THRESH_ASSERT_VAL: PROG_EMPTY assert threshold
- *     C_PROG_EMPTY_THRESH_NEGATE_VAL: PROG_EMPTY negate threshold
- *     C_PROG_EMPTY_TYPE             : 0=No programmable empty
- *                                     1=Single prog empty thresh constant
- *                                     2=Multiple prog empty thresh constants
- *                                     3=Single prog empty thresh input
- *                                     4=Multiple prog empty thresh inputs
- *     C_PROG_FULL_THRESH_ASSERT_VAL : PROG_FULL assert threshold
- *     C_PROG_FULL_THRESH_NEGATE_VAL : PROG_FULL negate threshold
- *     C_PROG_FULL_TYPE              : 0=No prog full
- *                                     1=Single prog full thresh constant
- *                                     2=Multiple prog full thresh constants
- *                                     3=Single prog full thresh input
- *                                     4=Multiple prog full thresh inputs
- *     C_RD_DATA_COUNT_WIDTH         : Width of RD_DATA_COUNT bus
- *     C_RD_DEPTH                    : Depth of read interface (2^N)
- *     C_RD_FREQ                     : not used in bhv model
- *     C_RD_PNTR_WIDTH               : always log2(C_RD_DEPTH)
- *     C_UNDERFLOW_LOW               : 1=UNDERFLOW active low
- *     C_USE_DOUT_RST                : 1=Resets DOUT on RST
- *     C_USE_ECC                     : not used in bhv model
- *     C_USE_EMBEDDED_REG            : 1=Use BRAM embedded output register
- *     C_USE_FIFO16_FLAGS            : not used in bhv model
- *     C_USE_FWFT_DATA_COUNT         : 1=Use extra logic for FWFT data count
- *     C_VALID_LOW                   : 1=VALID active low
- *     C_WR_ACK_LOW                  : 1=WR_ACK active low
- *     C_WR_DATA_COUNT_WIDTH         : Width of WR_DATA_COUNT bus
- *     C_WR_DEPTH                    : Depth of write interface (2^N)
- *     C_WR_FREQ                     : not used in bhv model
- *     C_WR_PNTR_WIDTH               : always log2(C_WR_DEPTH)
- *     C_WR_RESPONSE_LATENCY         :    *not used
- *     C_MSGON_VAL                   :    *not used by bhv model
- ******************************************************************************
- * Definition of Ports
- ******************************************************************************
- *   BACKUP       : Not used
- *   BACKUP_MARKER: Not used
- *   CLK          : Clock
- *   DIN          : Input data bus
- *   PROG_EMPTY_THRESH       : Threshold for Programmable Empty Flag
- *   PROG_EMPTY_THRESH_ASSERT: Threshold for Programmable Empty Flag
- *   PROG_EMPTY_THRESH_NEGATE: Threshold for Programmable Empty Flag
- *   PROG_FULL_THRESH        : Threshold for Programmable Full Flag
- *   PROG_FULL_THRESH_ASSERT : Threshold for Programmable Full Flag
- *   PROG_FULL_THRESH_NEGATE : Threshold for Programmable Full Flag
- *   RD_CLK       : Read Domain Clock
- *   RD_EN        : Read enable
- *   RD_RST       : Not used
- *   RST          : Asynchronous Reset
- *   SRST         : Synchronous Reset
- *   WR_CLK       : Write Domain Clock
- *   WR_EN        : Write enable
- *   WR_RST       : Not used
- *   INT_CLK      : Internal Clock
- *   ALMOST_EMPTY : One word remaining in FIFO
- *   ALMOST_FULL  : One empty space remaining in FIFO
- *   DATA_COUNT   : Number of data words in fifo( synchronous to CLK)
- *   DOUT         : Output data bus
- *   EMPTY        : Empty flag
- *   FULL         : Full flag
- *   OVERFLOW     : Last write rejected
- *   PROG_EMPTY   : Programmable Empty Flag
- *   PROG_FULL    : Programmable Full Flag
- *   RD_DATA_COUNT: Number of data words in fifo (synchronous to RD_CLK)
- *   UNDERFLOW    : Last read rejected
- *   VALID        : Last read acknowledged, DOUT bus VALID
- *   WR_ACK       : Last write acknowledged
- *   WR_DATA_COUNT: Number of data words in fifo (synchronous to WR_CLK)
- *   SBITERR      : Single Bit ECC Error Detected
- *   DBITERR      : Double Bit ECC Error Detected
- ******************************************************************************
- */
+  /****************************************************************************
+  * Definition of Ports
+  *
+  *
+  *****************************************************************************
+  * Definition of Parameters
+  *
+  *
+  *****************************************************************************/
 
-   
   /****************************************************************************
   * Declare user parameters and their defaults
   *****************************************************************************/
   parameter  C_COMMON_CLOCK                 = 0;
-  parameter  C_COUNT_TYPE                   = 0; //not used
+  parameter  C_COUNT_TYPE                   = 0;
   parameter  C_DATA_COUNT_WIDTH             = 2;
-  parameter  C_DEFAULT_VALUE                = ""; //not used
+  parameter  C_DEFAULT_VALUE                = "";
   parameter  C_DIN_WIDTH                    = 8;
   parameter  C_DOUT_RST_VAL                 = "";
   parameter  C_DOUT_WIDTH                   = 8;
-  parameter  C_ENABLE_RLOCS                 = 0; //not used
-  parameter  C_FAMILY                       = "virtex2"; //not used in bhv model
-  parameter  C_FULL_FLAGS_RST_VAL           = 1;
+  parameter  C_ENABLE_RLOCS                 = 0;
+
+  parameter  C_FAMILY                       = "virtex2"; 
+  //Not allowed in Verilog model
+  
   parameter  C_HAS_ALMOST_EMPTY             = 0;
   parameter  C_HAS_ALMOST_FULL              = 0;
-  parameter  C_HAS_BACKUP                   = 0; //not used
+  parameter  C_HAS_BACKUP                   = 0;
   parameter  C_HAS_DATA_COUNT               = 0;
-  parameter  C_HAS_INT_CLK                  = 0; //not used in bhv model
-  parameter  C_HAS_MEMINIT_FILE             = 0; //not used
+  parameter  C_HAS_MEMINIT_FILE             = 0;
   parameter  C_HAS_OVERFLOW                 = 0;
   parameter  C_HAS_RD_DATA_COUNT            = 0;
-  parameter  C_HAS_RD_RST                   = 0; //not used
+  parameter  C_HAS_RD_RST                   = 0;
   parameter  C_HAS_RST                      = 0;
   parameter  C_HAS_SRST                     = 0;
   parameter  C_HAS_UNDERFLOW                = 0;
   parameter  C_HAS_VALID                    = 0;
   parameter  C_HAS_WR_ACK                   = 0;
   parameter  C_HAS_WR_DATA_COUNT            = 0;
-  parameter  C_HAS_WR_RST                   = 0; //not used
+  parameter  C_HAS_WR_RST                   = 0;
   parameter  C_IMPLEMENTATION_TYPE          = 0;
-  parameter  C_INIT_WR_PNTR_VAL             = 0; //not used
+  parameter  C_INIT_WR_PNTR_VAL             = 0;
   parameter  C_MEMORY_TYPE                  = 1;
-  parameter  C_MIF_FILE_NAME                = ""; //not used
-  parameter  C_OPTIMIZATION_MODE            = 0; //not used
+  parameter  C_MIF_FILE_NAME                = "";
+  parameter  C_OPTIMIZATION_MODE            = 0;
   parameter  C_OVERFLOW_LOW                 = 0;
   parameter  C_PRELOAD_LATENCY              = 1;
   parameter  C_PRELOAD_REGS                 = 0;
-  parameter  C_PRIM_FIFO_TYPE               = 512; //not used in bhv model
+  parameter  C_PRIM_FIFO_TYPE               = 512;
   parameter  C_PROG_EMPTY_THRESH_ASSERT_VAL = 0;
   parameter  C_PROG_EMPTY_THRESH_NEGATE_VAL = 0;
   parameter  C_PROG_EMPTY_TYPE              = 0;
@@ -289,38 +155,34 @@ module FIFO_GENERATOR_V4_3
   parameter  C_PROG_FULL_TYPE               = 0;
   parameter  C_RD_DATA_COUNT_WIDTH          = 2;
   parameter  C_RD_DEPTH                     = 256;
-  parameter  C_RD_FREQ                      = 1; //not used in bhv model
+  parameter  C_RD_FREQ                      = 1;
   parameter  C_RD_PNTR_WIDTH                = 8;
   parameter  C_UNDERFLOW_LOW                = 0;
-  parameter  C_USE_DOUT_RST                 = 0;
-  parameter  C_USE_ECC                      = 0; //not used in bhv model
-  parameter  C_USE_EMBEDDED_REG             = 0;
-  parameter  C_USE_FIFO16_FLAGS             = 0; //not used in bhv model
-  parameter  C_USE_FWFT_DATA_COUNT          = 0;
+  parameter  C_USE_FIFO16_FLAGS             = 0;
   parameter  C_VALID_LOW                    = 0;
   parameter  C_WR_ACK_LOW                   = 0;
   parameter  C_WR_DATA_COUNT_WIDTH          = 2;
   parameter  C_WR_DEPTH                     = 256;
-  parameter  C_WR_FREQ                      = 1; //not used in bhv model
+  parameter  C_WR_FREQ                      = 1;
   parameter  C_WR_PNTR_WIDTH                = 8;
-  parameter  C_WR_RESPONSE_LATENCY          = 1; //not used
-  parameter  C_MSGON_VAL                    = 1; //not used 
+  parameter  C_WR_RESPONSE_LATENCY          = 1;
+  parameter  C_USE_ECC                      = 0;
+  parameter  C_FULL_FLAGS_RST_VAL           = 1;
+  parameter  C_HAS_INT_CLK                  = 0;
+  parameter  C_USE_EMBEDDED_REG             = 0;
+  parameter  C_USE_FWFT_DATA_COUNT             = 0;
 
-
-
-  /*****************************************************************************
-   * Derived parameters
-   ****************************************************************************/
   //There are 2 Verilog behavioral models
-  // 0 = Common-Clock FIFO/ShiftRam FIFO
-  // 1 = Independent Clocks FIFO
+  // 0 = Synchronous FIFO/ShiftRam FIFO
+  // 1 = Asynchronous FIFO
   parameter  C_VERILOG_IMPL = (C_IMPLEMENTATION_TYPE==0 ? 0 :
                                (C_IMPLEMENTATION_TYPE==1 ? 0 :
                                 (C_IMPLEMENTATION_TYPE==2 ? 1 : 0)));
 
-  /*****************************************************************************
+
+  /******************************************************************************
    * Declare Input and Output Ports
-   ****************************************************************************/
+   *****************************************************************************/
   input                              CLK;
   input                              BACKUP;
   input                              BACKUP_MARKER;
@@ -414,40 +276,45 @@ module FIFO_GENERATOR_V4_3
   wire                               RDEN_P0_OUT;
   wire [C_DOUT_WIDTH-1:0]            DATA_P0_IN;
   wire                               EMPTY_P0_IN;
-  reg  [31:0]      DATA_COUNT_FWFT;
-  reg                               SS_FWFT_WR  ;
-  reg                              SS_FWFT_RD ;
 
   assign SBITERR = 1'b0;
   assign DBITERR = 1'b0;
 
-   
-// Choose the behavioral model to instantiate based on the C_VERILOG_IMPL
-// parameter (1=Independent Clocks, 0=Common Clock)
+// choose the base FIFO implementation for simulation
 generate
 case (C_VERILOG_IMPL)
 0 : begin : block1
-  //Common Clock Behavioral Model
   fifo_generator_v4_3_bhv_ver_ss
   #(
+    C_COMMON_CLOCK,
+    C_COUNT_TYPE,
     C_DATA_COUNT_WIDTH,
+    C_DEFAULT_VALUE,
     C_DIN_WIDTH,
     C_DOUT_RST_VAL,
     C_DOUT_WIDTH,
-    C_FULL_FLAGS_RST_VAL,
+    C_ENABLE_RLOCS,
+    C_FAMILY,//Not allowed in Verilog model
     C_HAS_ALMOST_EMPTY,
     C_HAS_ALMOST_FULL,
+    C_HAS_BACKUP,
     C_HAS_DATA_COUNT,
+    C_HAS_MEMINIT_FILE,
     C_HAS_OVERFLOW,
     C_HAS_RD_DATA_COUNT,
+    C_HAS_RD_RST,
     C_HAS_RST,
     C_HAS_SRST,
     C_HAS_UNDERFLOW,
     C_HAS_VALID,
     C_HAS_WR_ACK,
     C_HAS_WR_DATA_COUNT,
+    C_HAS_WR_RST,
     C_IMPLEMENTATION_TYPE,
+    C_INIT_WR_PNTR_VAL,
     C_MEMORY_TYPE,
+    C_MIF_FILE_NAME,
+    C_OPTIMIZATION_MODE,
     C_OVERFLOW_LOW,
     C_PRELOAD_LATENCY,
     C_PRELOAD_REGS,
@@ -461,14 +328,14 @@ case (C_VERILOG_IMPL)
     C_RD_DEPTH,
     C_RD_PNTR_WIDTH,
     C_UNDERFLOW_LOW,
-    C_USE_DOUT_RST,
-    C_USE_EMBEDDED_REG,
-    C_USE_FWFT_DATA_COUNT,
     C_VALID_LOW,
     C_WR_ACK_LOW,
     C_WR_DATA_COUNT_WIDTH,
     C_WR_DEPTH,
-    C_WR_PNTR_WIDTH
+    C_WR_PNTR_WIDTH,
+    C_WR_RESPONSE_LATENCY,
+    C_FULL_FLAGS_RST_VAL,
+    C_USE_EMBEDDED_REG
   )
   gen_ss
   (
@@ -499,26 +366,36 @@ case (C_VERILOG_IMPL)
    );
 end
 1 : begin : block1
-  //Independent Clocks Behavioral Model
   fifo_generator_v4_3_bhv_ver_as
   #(
+    C_COMMON_CLOCK,
+    C_COUNT_TYPE,
     C_DATA_COUNT_WIDTH,
+    C_DEFAULT_VALUE,
     C_DIN_WIDTH,
     C_DOUT_RST_VAL,
     C_DOUT_WIDTH,
-    C_FULL_FLAGS_RST_VAL,
+    C_ENABLE_RLOCS,
+    C_FAMILY,//Not allowed in Verilog model
     C_HAS_ALMOST_EMPTY,
     C_HAS_ALMOST_FULL,
+    C_HAS_BACKUP,
     C_HAS_DATA_COUNT,
+    C_HAS_MEMINIT_FILE,
     C_HAS_OVERFLOW,
     C_HAS_RD_DATA_COUNT,
+    C_HAS_RD_RST,
     C_HAS_RST,
     C_HAS_UNDERFLOW,
     C_HAS_VALID,
     C_HAS_WR_ACK,
     C_HAS_WR_DATA_COUNT,
+    C_HAS_WR_RST,
     C_IMPLEMENTATION_TYPE,
+    C_INIT_WR_PNTR_VAL,
     C_MEMORY_TYPE,
+    C_MIF_FILE_NAME,
+    C_OPTIMIZATION_MODE,
     C_OVERFLOW_LOW,
     C_PRELOAD_LATENCY,
     C_PRELOAD_REGS,
@@ -532,14 +409,15 @@ end
     C_RD_DEPTH,
     C_RD_PNTR_WIDTH,
     C_UNDERFLOW_LOW,
-    C_USE_DOUT_RST,
-    C_USE_EMBEDDED_REG,
-    C_USE_FWFT_DATA_COUNT,
     C_VALID_LOW,
     C_WR_ACK_LOW,
     C_WR_DATA_COUNT_WIDTH,
     C_WR_DEPTH,
-    C_WR_PNTR_WIDTH
+    C_WR_PNTR_WIDTH,
+    C_WR_RESPONSE_LATENCY,
+    C_FULL_FLAGS_RST_VAL,
+    C_USE_FWFT_DATA_COUNT,
+    C_USE_EMBEDDED_REG
   )
   gen_as
   (
@@ -572,26 +450,36 @@ end
 end
 
 default : begin : block1
-  //Independent Clocks Behavioral Model
   fifo_generator_v4_3_bhv_ver_as
   #(
+    C_COMMON_CLOCK,
+    C_COUNT_TYPE,
     C_DATA_COUNT_WIDTH,
+    C_DEFAULT_VALUE,
     C_DIN_WIDTH,
     C_DOUT_RST_VAL,
     C_DOUT_WIDTH,
-    C_FULL_FLAGS_RST_VAL,
+    C_ENABLE_RLOCS,
+    C_FAMILY,//Not allowed in Verilog model
     C_HAS_ALMOST_EMPTY,
     C_HAS_ALMOST_FULL,
+    C_HAS_BACKUP,
     C_HAS_DATA_COUNT,
+    C_HAS_MEMINIT_FILE,
     C_HAS_OVERFLOW,
     C_HAS_RD_DATA_COUNT,
+    C_HAS_RD_RST,
     C_HAS_RST,
     C_HAS_UNDERFLOW,
     C_HAS_VALID,
     C_HAS_WR_ACK,
     C_HAS_WR_DATA_COUNT,
+    C_HAS_WR_RST,
     C_IMPLEMENTATION_TYPE,
+    C_INIT_WR_PNTR_VAL,
     C_MEMORY_TYPE,
+    C_MIF_FILE_NAME,
+    C_OPTIMIZATION_MODE,
     C_OVERFLOW_LOW,
     C_PRELOAD_LATENCY,
     C_PRELOAD_REGS,
@@ -605,14 +493,15 @@ default : begin : block1
     C_RD_DEPTH,
     C_RD_PNTR_WIDTH,
     C_UNDERFLOW_LOW,
-    C_USE_DOUT_RST,
-    C_USE_EMBEDDED_REG,
-    C_USE_FWFT_DATA_COUNT,
     C_VALID_LOW,
     C_WR_ACK_LOW,
     C_WR_DATA_COUNT_WIDTH,
     C_WR_DEPTH,
-    C_WR_PNTR_WIDTH
+    C_WR_PNTR_WIDTH,
+    C_WR_RESPONSE_LATENCY,
+    C_FULL_FLAGS_RST_VAL,
+    C_USE_FWFT_DATA_COUNT,
+    C_USE_EMBEDDED_REG
   )
   gen_as
   (
@@ -648,685 +537,391 @@ endcase
 endgenerate
 
 
-   //**************************************************************************
-   // Connect Internal Signals
-   //   (Signals labeled internal_*)
-   //  In the normal case, these signals tie directly to the FIFO's inputs and
-   //    outputs.
-   //  In the case of Preload Latency 0 or 1, there are intermediate
-   //    signals between the internal FIFO and the preload logic.
-   //**************************************************************************
-   
-   
-   //***********************************************
-   // If First-Word Fall-Through, instantiate
-   // the preload0 (FWFT) module
-   //***********************************************
-   generate
-      if (C_PRELOAD_REGS==1 && C_PRELOAD_LATENCY==0) begin : block2
-	 
-	 
-	 fifo_generator_v4_3_bhv_ver_preload0
-	   #(
-	     C_DOUT_RST_VAL,
-	     C_DOUT_WIDTH,
-	     C_HAS_RST,
-	     C_USE_DOUT_RST,
-	     C_VALID_LOW,
-	     C_UNDERFLOW_LOW
-	     )
-	     fgpl0
-	       (
-		.RD_CLK           (RD_CLK_P0_IN),
-		.RD_RST           (RST_P0_IN),
-		.RD_EN            (RD_EN_P0_IN),
-		.FIFOEMPTY        (EMPTY_P0_IN),
-		.FIFODATA         (DATA_P0_IN),
-		.USERDATA         (DATA_P0_OUT),
-		.USERVALID        (VALID_P0_OUT),
-		.USEREMPTY        (EMPTY_P0_OUT),
-		.USERALMOSTEMPTY  (ALMOSTEMPTY_P0_OUT),
-		.USERUNDERFLOW    (UNDERFLOW_P0_OUT),
-		.RAMVALID         (RAMVALID_P0_OUT),
-		.FIFORDEN         (RDEN_P0_OUT)
-		);
-	 
-	 
-	 //***********************************************
-	 // Connect inputs to preload (FWFT) module
-	 //***********************************************
-	 //Connect the RD_CLK of the Preload (FWFT) module to CLK if we 
-	 // have a common-clock FIFO, or RD_CLK if we have an 
-	 // independent clock FIFO
-	 assign RD_CLK_P0_IN       = ((C_VERILOG_IMPL == 0) ? CLK : RD_CLK);
-	 assign RST_P0_IN          = RST;
-	 assign RD_EN_P0_IN        = RD_EN;
-	 assign EMPTY_P0_IN        = EMPTY_FIFO_OUT;
-	 assign DATA_P0_IN         = DOUT_FIFO_OUT;
-	 
-	 //***********************************************
-	 // Connect outputs from preload (FWFT) module
-	 //***********************************************
-	 assign DOUT               = DATA_P0_OUT;
-	 assign VALID              = VALID_P0_OUT ;
-	 assign EMPTY              = EMPTY_P0_OUT;
-	 assign ALMOST_EMPTY       = ALMOSTEMPTY_P0_OUT;
-	 assign UNDERFLOW          = UNDERFLOW_P0_OUT ;
-	 
-	 assign RD_EN_FIFO_IN      = RDEN_P0_OUT;
-	 
-	 
-	 //***********************************************
-	 // Create DATA_COUNT from First-Word Fall-Through
-	 // data count
-	 //***********************************************
-	 assign DATA_COUNT = (C_DATA_COUNT_WIDTH>C_RD_PNTR_WIDTH) ? 
-	   DATA_COUNT_FWFT[C_RD_PNTR_WIDTH:0] : 
-	   DATA_COUNT_FWFT[C_RD_PNTR_WIDTH:C_RD_PNTR_WIDTH-C_DATA_COUNT_WIDTH+1];  
-	 
-	 //***********************************************
-	 // Create DATA_COUNT from First-Word Fall-Through
-	 // data count
-	 //***********************************************
-	 always @ (posedge RD_CLK or posedge RST) begin
-	    if (RST) begin
-	       EMPTY_P0_OUT_Q       <= 1;
-	       ALMOSTEMPTY_P0_OUT_Q <= 1;
-	    end else begin
-	       EMPTY_P0_OUT_Q       <= EMPTY_P0_OUT;
-	       ALMOSTEMPTY_P0_OUT_Q <= ALMOSTEMPTY_P0_OUT;
-	    end
-	 end //always
-	 
-	 
-	 //***********************************************
-	 // logic for common-clock data count when FWFT is selected
-	 //***********************************************
-	 initial begin
-	    SS_FWFT_RD = 1'b0;
-	    DATA_COUNT_FWFT = 0 ;
-	    SS_FWFT_WR   = 1'b0 ;
-	 end //initial
-	 
-	 
-	 //***********************************************
-	 // common-clock data count is implemented as an
-	 // up-down counter. SS_FWFT_WR and SS_FWFT_RD
-	 // are the up/down enables for the counter.
-	 //***********************************************
-	 always @ (RD_EN or VALID_P0_OUT or WR_EN or FULL_FIFO_OUT) begin
-	    SS_FWFT_RD = RD_EN && VALID_P0_OUT ;	    
-	    SS_FWFT_WR = (WR_EN && (~FULL_FIFO_OUT))  ;
-	 end 
+//**************************************************************************
+// Connect Internal Signals
+//   (Signals labeled internal_*)
+//  In the normal case, these signals tie directly to the FIFO's inputs and
+//    outputs.
+//  In the case of Preload Latency 0 or 1, there are intermediate
+//    signals between the internal FIFO and the preload logic.
+//**************************************************************************
 
-	 //***********************************************
-	 // common-clock data count is implemented as an
-	 // up-down counter for FWFT. This always block 
-	 // calculates the counter.
-	 //***********************************************
-	 always @ (posedge RD_CLK_P0_IN or posedge RST) begin
-	    if (RST && (C_HAS_RST == 1) ) begin
-	       DATA_COUNT_FWFT      <= 0;
-	    end else begin
-	       if (SRST && (C_HAS_SRST == 1) ) begin
-		  DATA_COUNT_FWFT      <= 0;
-               end else begin
-		  case ( {SS_FWFT_WR, SS_FWFT_RD})
-		    2'b00: DATA_COUNT_FWFT <= DATA_COUNT_FWFT ;
-		    2'b01: DATA_COUNT_FWFT <= DATA_COUNT_FWFT - 1 ;
-		    2'b10: DATA_COUNT_FWFT <= DATA_COUNT_FWFT + 1 ;
-		    2'b11: DATA_COUNT_FWFT <= DATA_COUNT_FWFT ;
-		  endcase  
-               end //if SRST
-	    end //IF RST
-	 end //always
+generate
+if (C_PRELOAD_REGS==1 && C_PRELOAD_LATENCY==0)
+ begin : block2
 
-	 
-      end else begin : block2 //if !(C_PRELOAD_REGS==1 && C_PRELOAD_LATENCY==0)
-	 
-	 //***********************************************
-	 // If NOT First-Word Fall-Through, wire the outputs
-	 // of the internal _ss or _as FIFO directly to the
-	 // output, and do not instantiate the preload0
-	 // module.
-	 //***********************************************
-	 
-	 assign RD_CLK_P0_IN       = 0;
-	 assign RST_P0_IN          = 0;
-	 assign RD_EN_P0_IN        = 0;
-	 
-	 assign RD_EN_FIFO_IN      = RD_EN;
-	 
-	 assign DOUT               = DOUT_FIFO_OUT;
-	 assign DATA_P0_IN         = 0;
-	 assign VALID              = VALID_FIFO_OUT;
-	 assign EMPTY              = EMPTY_FIFO_OUT;
-	 assign ALMOST_EMPTY       = ALMOST_EMPTY_FIFO_OUT;
-	 assign EMPTY_P0_IN        = 0;
-	 assign UNDERFLOW          = UNDERFLOW_FIFO_OUT;
-	 assign DATA_COUNT         = DATA_COUNT_FIFO_OUT;
-	 
-      end //if !(C_PRELOAD_REGS==1 && C_PRELOAD_LATENCY==0)
-   endgenerate
+fifo_generator_v4_3_bhv_ver_preload0
+ #(
+    C_DOUT_RST_VAL,
+    C_DOUT_WIDTH,
+    C_HAS_RST,
+    C_VALID_LOW,
+    C_UNDERFLOW_LOW
+   )
+ fgpl0
+(
+ .RD_CLK           (RD_CLK_P0_IN),
+ .RD_RST           (RST_P0_IN),
+ .RD_EN            (RD_EN_P0_IN),
+ .FIFOEMPTY        (EMPTY_P0_IN),
+ .FIFODATA         (DATA_P0_IN),
+ .USERDATA         (DATA_P0_OUT),
+ .USERVALID        (VALID_P0_OUT),
+ .USEREMPTY        (EMPTY_P0_OUT),
+ .USERALMOSTEMPTY  (ALMOSTEMPTY_P0_OUT),
+ .USERUNDERFLOW    (UNDERFLOW_P0_OUT),
+ .RAMVALID         (RAMVALID_P0_OUT),
+ .FIFORDEN         (RDEN_P0_OUT)
+ );
+
+ assign RD_CLK_P0_IN       = ((C_VERILOG_IMPL == 0) ? CLK : RD_CLK);
+ assign RST_P0_IN          = RST;
+ assign RD_EN_P0_IN        = RD_EN;
+
+ assign RD_EN_FIFO_IN      = RDEN_P0_OUT;
+
+ assign DOUT               = DATA_P0_OUT;
+ assign DATA_P0_IN         = DOUT_FIFO_OUT;
+ assign VALID              = VALID_P0_OUT ;
+ assign EMPTY              = EMPTY_P0_OUT;
+ assign ALMOST_EMPTY       = ALMOSTEMPTY_P0_OUT;
+ assign EMPTY_P0_IN        = EMPTY_FIFO_OUT;
+ assign UNDERFLOW          = UNDERFLOW_P0_OUT ;
+
+ always @ (posedge RD_CLK or posedge RST)
+  begin
+   if (RST)
+    begin
+     EMPTY_P0_OUT_Q       <= 1;
+     ALMOSTEMPTY_P0_OUT_Q <= 1;
+    end
+   else
+    begin
+     EMPTY_P0_OUT_Q       <= EMPTY_P0_OUT;
+     ALMOSTEMPTY_P0_OUT_Q <= ALMOSTEMPTY_P0_OUT;
+    end
+  end
+
+ end
+else
+ begin : block2
+
+ assign RD_CLK_P0_IN       = 0;
+ assign RST_P0_IN          = 0;
+ assign RD_EN_P0_IN        = 0;
+
+ assign RD_EN_FIFO_IN      = RD_EN;
+
+ assign DOUT               = DOUT_FIFO_OUT;
+ assign DATA_P0_IN         = 0;
+ assign VALID              = VALID_FIFO_OUT;
+ assign EMPTY              = EMPTY_FIFO_OUT;
+ assign ALMOST_EMPTY       = ALMOST_EMPTY_FIFO_OUT;
+ assign EMPTY_P0_IN        = 0;
+ assign UNDERFLOW          = UNDERFLOW_FIFO_OUT;
+
+ end
+endgenerate
 
 
-   //***********************************************
-   // Connect user flags to internal signals
-   //***********************************************
-   
-   //If we are using extra logic for the FWFT data count, then override the
-   //RD_DATA_COUNT output when we are EMPTY or ALMOST_EMPTY.
-   //RD_DATA_COUNT is 0 when EMPTY and 1 when ALMOST_EMPTY.
-   generate
-      if (C_USE_FWFT_DATA_COUNT==1 && (C_RD_DATA_COUNT_WIDTH>C_RD_PNTR_WIDTH) ) begin : block3
-	 assign RD_DATA_COUNT = (EMPTY_P0_OUT_Q | RST) ? 0 : (ALMOSTEMPTY_P0_OUT_Q ? 1 : RD_DATA_COUNT_FIFO_OUT);
-      end //block3
-   endgenerate
-   
-   //If we are using extra logic for the FWFT data count, then override the
-   //RD_DATA_COUNT output when we are EMPTY or ALMOST_EMPTY.
-   //Due to asymmetric ports, RD_DATA_COUNT is 0 when EMPTY or ALMOST_EMPTY.
-   generate
-      if (C_USE_FWFT_DATA_COUNT==1 && (C_RD_DATA_COUNT_WIDTH <=C_RD_PNTR_WIDTH) ) begin : block30
-	 assign RD_DATA_COUNT = (EMPTY_P0_OUT_Q | RST) ? 0 : (ALMOSTEMPTY_P0_OUT_Q ? 0 : RD_DATA_COUNT_FIFO_OUT);
-      end //block30
-   endgenerate
+//Connect Data Count Signals
+generate
+if (C_USE_FWFT_DATA_COUNT==1) begin : block3
+  assign RD_DATA_COUNT = (EMPTY_P0_OUT_Q | RST) ? 0 : (ALMOSTEMPTY_P0_OUT_Q ? 1 : RD_DATA_COUNT_FIFO_OUT);
+end
+else begin : block3
+  assign RD_DATA_COUNT = RD_DATA_COUNT_FIFO_OUT;
+end
+endgenerate
 
-   //If we are not using extra logic for the FWFT data count,
-   //then connect RD_DATA_COUNT to the RD_DATA_COUNT from the
-   //internal FIFO instance  
-   generate
-      if (C_USE_FWFT_DATA_COUNT==0 ) begin : block31
-	 assign RD_DATA_COUNT = RD_DATA_COUNT_FIFO_OUT;
-      end
-   endgenerate
-
-   //Always connect WR_DATA_COUNT to the WR_DATA_COUNT from the internal
-   //FIFO instance
-   generate
-      if (C_USE_FWFT_DATA_COUNT==1) begin : block4
-	 assign WR_DATA_COUNT = WR_DATA_COUNT_FIFO_OUT;
-      end
-      else begin : block4
-	 assign WR_DATA_COUNT = WR_DATA_COUNT_FIFO_OUT;
-      end
-   endgenerate
+generate
+if (C_USE_FWFT_DATA_COUNT==1) begin : block4
+  assign WR_DATA_COUNT = WR_DATA_COUNT_FIFO_OUT;
+end
+else begin : block4
+  assign WR_DATA_COUNT = WR_DATA_COUNT_FIFO_OUT;
+end
+endgenerate
 
 
-   //Connect other flags to the internal FIFO instance
-   assign 	FULL        = FULL_FIFO_OUT;
-   assign 	ALMOST_FULL = ALMOST_FULL_FIFO_OUT;
-   assign 	WR_ACK      = WR_ACK_FIFO_OUT;
-   assign 	OVERFLOW    = OVERFLOW_FIFO_OUT;
-   assign 	PROG_FULL   = PROG_FULL_FIFO_OUT;
-   assign 	PROG_EMPTY  = PROG_EMPTY_FIFO_OUT;
+ assign FULL        = FULL_FIFO_OUT;
+ assign ALMOST_FULL = ALMOST_FULL_FIFO_OUT;
+ assign WR_ACK      = WR_ACK_FIFO_OUT;
+ assign OVERFLOW    = OVERFLOW_FIFO_OUT;
+ assign PROG_FULL   = PROG_FULL_FIFO_OUT;
+ assign PROG_EMPTY  = PROG_EMPTY_FIFO_OUT;
+ assign DATA_COUNT  = DATA_COUNT_FIFO_OUT;
 
 
-   // if an asynchronous FIFO has been selected, display a message that the FIFO
-   //   will not be cycle-accurate in simulation
-   initial begin
-      if (C_IMPLEMENTATION_TYPE == 2) begin
-	 $display("Warning in %m at time %t: When using an asynchronous configuration for the FIFO Generator, the behavioral model is not cycle-accurate. You may wish to choose the structural simulation model instead of the behavioral model. This will ensure accurate behavior and latencies during simulation. You can enable this from CORE Generator by selecting Project -> Project Options -> Generation tab -> Structural Simulation. See the FIFO Generator User Guide for more information.", $time);
-      end else if (C_IMPLEMENTATION_TYPE == 3 || C_IMPLEMENTATION_TYPE == 4) begin
-	 $display("Failure in %m at time %t: Use of Virtex-4 and Virtex-5 built-in FIFO configurations is currently not supported. Please use the structural simulation model. You can enable this from CORE Generator by selecting Project -> Project Options -> Generation tab -> Structural Simulation. See the FIFO Generator User Guide for more information.", $time);
-	 $finish;
-      end
-   end //initial
+ // if an asynchronous FIFO has been selected, display a message that the FIFO
+ //   will not be cycle-accurate in simulation
+ initial begin
+   //if (C_IMPLEMENTATION_TYPE == 1) begin //bug in v3.1
+   if (C_IMPLEMENTATION_TYPE == 2) begin   //fixed in v3.2 (IP2_Im)
+     $display("Warning in %m at time %t: When using an asynchronous configuration for the FIFO Generator, the behavioral model is not cycle-accurate. You may wish to choose the structural simulation model instead of the behavioral model. This will ensure accurate behavior and latencies during simulation. You can enable this from CORE Generator by selecting Project -> Project Options -> Generation tab -> Structural Simulation. See the FIFO Generator User Guide for more information.", $time);
+   end else if (C_IMPLEMENTATION_TYPE == 3 || C_IMPLEMENTATION_TYPE == 4) begin
+     $display("Failure in %m at time %t: Use of Virtex-4 and Virtex-5 built-in FIFO configurations is currently not supported. Please use the structural simulation model. You can enable this from CORE Generator by selecting Project -> Project Options -> Generation tab -> Structural Simulation. See the FIFO Generator User Guide for more information.", $time);
+     $finish;
+   end
 
-endmodule //FIFO_GENERATOR_V4_3
+ end
+
+endmodule //fifo_generator_v4_3_bhv_ver
+
+
+
 
 
 
 /*******************************************************************************
- * Declaration of Independent-Clocks FIFO Module
+ * Declaration of asynchronous FIFO Module
  ******************************************************************************/
 module fifo_generator_v4_3_bhv_ver_as
   (
-   WR_CLK, RD_CLK, RST, DIN, WR_EN, RD_EN,
-   PROG_EMPTY_THRESH, PROG_EMPTY_THRESH_ASSERT, PROG_EMPTY_THRESH_NEGATE,
-   PROG_FULL_THRESH, PROG_FULL_THRESH_ASSERT, PROG_FULL_THRESH_NEGATE,
-   DOUT, FULL, ALMOST_FULL, WR_ACK, OVERFLOW, EMPTY, ALMOST_EMPTY, VALID,
-   UNDERFLOW, RD_DATA_COUNT, WR_DATA_COUNT, PROG_FULL, PROG_EMPTY
-   );
-   
-   /***************************************************************************
-    * Declare user parameters and their defaults
-    ***************************************************************************/
-   parameter  C_DATA_COUNT_WIDTH             = 2;
-   parameter  C_DIN_WIDTH                    = 8;
-   parameter  C_DOUT_RST_VAL                 = "";
-   parameter  C_DOUT_WIDTH                   = 8;
-   parameter  C_FULL_FLAGS_RST_VAL           = 1;
-   parameter  C_HAS_ALMOST_EMPTY             = 0;
-   parameter  C_HAS_ALMOST_FULL              = 0;
-   parameter  C_HAS_DATA_COUNT               = 0;
-   parameter  C_HAS_OVERFLOW                 = 0;
-   parameter  C_HAS_RD_DATA_COUNT            = 0;
-   parameter  C_HAS_RST                      = 0;
-   parameter  C_HAS_UNDERFLOW                = 0;
-   parameter  C_HAS_VALID                    = 0;
-   parameter  C_HAS_WR_ACK                   = 0;
-   parameter  C_HAS_WR_DATA_COUNT            = 0;
-   parameter  C_IMPLEMENTATION_TYPE          = 0;
-   parameter  C_MEMORY_TYPE                  = 1;
-   parameter  C_OVERFLOW_LOW                 = 0;
-   parameter  C_PRELOAD_LATENCY              = 1;
-   parameter  C_PRELOAD_REGS                 = 0;
-   parameter  C_PROG_EMPTY_THRESH_ASSERT_VAL = 0;
-   parameter  C_PROG_EMPTY_THRESH_NEGATE_VAL = 0;
-   parameter  C_PROG_EMPTY_TYPE              = 0;
-   parameter  C_PROG_FULL_THRESH_ASSERT_VAL  = 0;
-   parameter  C_PROG_FULL_THRESH_NEGATE_VAL  = 0;
-   parameter  C_PROG_FULL_TYPE               = 0;
-   parameter  C_RD_DATA_COUNT_WIDTH          = 2;
-   parameter  C_RD_DEPTH                     = 256;
-   parameter  C_RD_PNTR_WIDTH                = 8;
-   parameter  C_UNDERFLOW_LOW                = 0;
-   parameter  C_USE_DOUT_RST                 = 0;
-   parameter  C_USE_EMBEDDED_REG             = 0;
-   parameter  C_USE_FWFT_DATA_COUNT          = 0;
-   parameter  C_VALID_LOW                    = 0;
-   parameter  C_WR_ACK_LOW                   = 0;
-   parameter  C_WR_DATA_COUNT_WIDTH          = 2;
-   parameter  C_WR_DEPTH                     = 256;
-   parameter  C_WR_PNTR_WIDTH                = 8;
+    WR_CLK, RD_CLK, RST, DIN, WR_EN, RD_EN,
+    PROG_EMPTY_THRESH, PROG_EMPTY_THRESH_ASSERT, PROG_EMPTY_THRESH_NEGATE,
+    PROG_FULL_THRESH, PROG_FULL_THRESH_ASSERT, PROG_FULL_THRESH_NEGATE,
+    DOUT, FULL, ALMOST_FULL, WR_ACK, OVERFLOW, EMPTY, ALMOST_EMPTY, VALID,
+    UNDERFLOW, RD_DATA_COUNT, WR_DATA_COUNT, PROG_FULL, PROG_EMPTY
+  );
 
-   /***************************************************************************
-    * Declare Input and Output Ports
-    ***************************************************************************/
-   input [C_DIN_WIDTH-1:0] DIN;
-   input [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH;
-   input [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH_ASSERT;
-   input [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH_NEGATE;
-   input [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH;
-   input [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH_ASSERT;
-   input [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH_NEGATE;
-   input 		       RD_CLK;
-   input 		       RD_EN;
-   input 		       RST;
-   input 		       WR_CLK;
-   input 		       WR_EN;
-   output 		       ALMOST_EMPTY;
-   output 		       ALMOST_FULL;
-   output [C_DOUT_WIDTH-1:0]   DOUT;
-   output 		       EMPTY;
-   output 		       FULL;
-   output 		       OVERFLOW;
-   output 		       PROG_EMPTY;
-   output 		       PROG_FULL;
-   output 		       VALID;
-   output [C_RD_DATA_COUNT_WIDTH-1:0] RD_DATA_COUNT;
-   output                             UNDERFLOW;
-   output                             WR_ACK;
-   output [C_WR_DATA_COUNT_WIDTH-1:0] WR_DATA_COUNT;
-   
-  /*************************************************************************
-   * Declare the type for each Input/Output port, and connect each I/O
-   * to it's associated internal signal in the behavioral model
-   * 
-   * The values for the outputs are assigned in assign statements immediately
-   * following wire, parameter, and function declarations in this code.
-   *************************************************************************/
-   //Inputs
-   wire [C_DIN_WIDTH-1:0] DIN;
-   wire [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH;
-   wire [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH_ASSERT;
-   wire [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH_NEGATE;
-   wire [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH;
-   wire [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH_ASSERT;
-   wire [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH_NEGATE;   
-   wire RD_CLK;
-   wire RD_EN;
-   wire RST;
-   wire WR_CLK;
-   wire WR_EN;
+  /*****************************************************************************
+  * Declare user parameters and their defaults
+  *****************************************************************************/
+  parameter  C_COMMON_CLOCK                 = 0;
+  parameter  C_COUNT_TYPE                   = 0;
+  parameter  C_DATA_COUNT_WIDTH             = 2;
+  parameter  C_DEFAULT_VALUE                = "";
+  parameter  C_DIN_WIDTH                    = 8;
+  parameter  C_DOUT_RST_VAL                 = "";
+  parameter  C_DOUT_WIDTH                   = 8;
+  parameter  C_ENABLE_RLOCS                 = 0;
+  parameter  C_FAMILY                       = "virtex2"; //Not allowed in Verilog model
+  parameter  C_HAS_ALMOST_EMPTY             = 0;
+  parameter  C_HAS_ALMOST_FULL              = 0;
+  parameter  C_HAS_BACKUP                   = 0;
+  parameter  C_HAS_DATA_COUNT               = 0;
+  parameter  C_HAS_MEMINIT_FILE             = 0;
+  parameter  C_HAS_OVERFLOW                 = 0;
+  parameter  C_HAS_RD_DATA_COUNT            = 0;
+  parameter  C_HAS_RD_RST                   = 0;
+  parameter  C_HAS_RST                      = 0;
+  parameter  C_HAS_UNDERFLOW                = 0;
+  parameter  C_HAS_VALID                    = 0;
+  parameter  C_HAS_WR_ACK                   = 0;
+  parameter  C_HAS_WR_DATA_COUNT            = 0;
+  parameter  C_HAS_WR_RST                   = 0;
+  parameter  C_IMPLEMENTATION_TYPE          = 0;
+  parameter  C_INIT_WR_PNTR_VAL             = 0;
+  parameter  C_MEMORY_TYPE                  = 1;
+  parameter  C_MIF_FILE_NAME                = "";
+  parameter  C_OPTIMIZATION_MODE            = 0;
+  parameter  C_OVERFLOW_LOW                 = 0;
+  parameter  C_PRELOAD_LATENCY              = 1;
+  parameter  C_PRELOAD_REGS                 = 0;
+  parameter  C_PROG_EMPTY_THRESH_ASSERT_VAL = 0;
+  parameter  C_PROG_EMPTY_THRESH_NEGATE_VAL = 0;
+  parameter  C_PROG_EMPTY_TYPE              = 0;
+  parameter  C_PROG_FULL_THRESH_ASSERT_VAL  = 0;
+  parameter  C_PROG_FULL_THRESH_NEGATE_VAL  = 0;
+  parameter  C_PROG_FULL_TYPE               = 0;
+  parameter  C_RD_DATA_COUNT_WIDTH          = 2;
+  parameter  C_RD_DEPTH                     = 256;
+  parameter  C_RD_PNTR_WIDTH                = 8;
+  parameter  C_UNDERFLOW_LOW                = 0;
+  parameter  C_VALID_LOW                    = 0;
+  parameter  C_WR_ACK_LOW                   = 0;
+  parameter  C_WR_DATA_COUNT_WIDTH          = 2;
+  parameter  C_WR_DEPTH                     = 256;
+  parameter  C_WR_PNTR_WIDTH                = 8;
+  parameter  C_WR_RESPONSE_LATENCY          = 1;
+  parameter  C_FULL_FLAGS_RST_VAL           = 1;
+  parameter  C_USE_FWFT_DATA_COUNT          = 0;
+  parameter  C_USE_EMBEDDED_REG             = 0;
 
-   //Outputs
-   wire ALMOST_EMPTY;
-   wire ALMOST_FULL;
-   wire [C_DOUT_WIDTH-1:0] DOUT;   
-   wire EMPTY;
-   wire FULL;
-   wire OVERFLOW;
-   wire PROG_EMPTY;
-   wire PROG_FULL;
-   wire VALID;  
-   wire [C_RD_DATA_COUNT_WIDTH-1:0] RD_DATA_COUNT;
-   wire UNDERFLOW;
-   wire WR_ACK;   
-   wire [C_WR_DATA_COUNT_WIDTH-1:0] WR_DATA_COUNT;
-   
+  /*****************************************************************************
+  * Declare Input and Output Ports
+  *****************************************************************************/
+  input [C_DIN_WIDTH-1:0]            DIN;
+  input [C_RD_PNTR_WIDTH-1:0]        PROG_EMPTY_THRESH;
+  input [C_RD_PNTR_WIDTH-1:0]        PROG_EMPTY_THRESH_ASSERT;
+  input [C_RD_PNTR_WIDTH-1:0]        PROG_EMPTY_THRESH_NEGATE;
+  input [C_WR_PNTR_WIDTH-1:0]        PROG_FULL_THRESH;
+  input [C_WR_PNTR_WIDTH-1:0]        PROG_FULL_THRESH_ASSERT;
+  input [C_WR_PNTR_WIDTH-1:0]        PROG_FULL_THRESH_NEGATE;
+  input                              RD_CLK;
+  input                              RD_EN;
+  input                              RST;
+  input                              WR_CLK;
+  input                              WR_EN;
+  output                             ALMOST_EMPTY;
+  output                             ALMOST_FULL;
+  output [C_DOUT_WIDTH-1:0]          DOUT;
+  output                             EMPTY;
+  output                             FULL;
+  output                             OVERFLOW;
+  output                             PROG_EMPTY;
+  output                             PROG_FULL;
+  output                             VALID;
+  output [C_RD_DATA_COUNT_WIDTH-1:0] RD_DATA_COUNT;
+  output                             UNDERFLOW;
+  output                             WR_ACK;
+  output [C_WR_DATA_COUNT_WIDTH-1:0] WR_DATA_COUNT;
+
+  /*******************************************************************************
+  * Input and output register declarations
+  ******************************************************************************/
+  /*******************************************************************************
+  * Parameters used as constants
+  ******************************************************************************/
+  //When RST is present, set FULL reset value to '1'.
+  //If core has no RST, make sure FULL powers-on as '0'.
+  parameter                      C_DEPTH_RATIO_WR =  
+    (C_WR_DEPTH>C_RD_DEPTH) ? (C_WR_DEPTH/C_RD_DEPTH) : 1;
+  parameter                      C_DEPTH_RATIO_RD =  
+    (C_RD_DEPTH>C_WR_DEPTH) ? (C_RD_DEPTH/C_WR_DEPTH) : 1;
+  parameter                      C_FIFO_WR_DEPTH = 
+    (C_COMMON_CLOCK) ? 
+    C_WR_DEPTH : C_WR_DEPTH - 1;
+  parameter                      C_FIFO_RD_DEPTH = 
+    (C_COMMON_CLOCK) ? 
+    C_RD_DEPTH : C_RD_DEPTH - 1;
+
   
-   /***************************************************************************
-    * Parameters used as constants
-    **************************************************************************/
-   //When RST is present, set FULL reset value to '1'.
-   //If core has no RST, make sure FULL powers-on as '0'.
-   parameter C_DEPTH_RATIO_WR =  
-      (C_WR_DEPTH>C_RD_DEPTH) ? (C_WR_DEPTH/C_RD_DEPTH) : 1;
-   parameter C_DEPTH_RATIO_RD =  
-      (C_RD_DEPTH>C_WR_DEPTH) ? (C_RD_DEPTH/C_WR_DEPTH) : 1;
-   parameter C_FIFO_WR_DEPTH = C_WR_DEPTH - 1;
-   parameter C_FIFO_RD_DEPTH = C_RD_DEPTH - 1;
-
-   
-   // EXTRA_WORDS = 2 * C_DEPTH_RATIO_WR / C_DEPTH_RATIO_RD
-   // WR_DEPTH : RD_DEPTH = 1:2 => EXTRA_WORDS = 1
-   // WR_DEPTH : RD_DEPTH = 1:4 => EXTRA_WORDS = 1 (rounded to ceiling)
-   // WR_DEPTH : RD_DEPTH = 2:1 => EXTRA_WORDS = 4
-   // WR_DEPTH : RD_DEPTH = 4:1 => EXTRA_WORDS = 8
-   parameter EXTRA_WORDS = (C_DEPTH_RATIO_RD > 1)? 1:(2 * C_DEPTH_RATIO_WR);
-   // extra_words_dc = 2 * C_DEPTH_RATIO_WR / C_DEPTH_RATIO_RD
-   //  C_DEPTH_RATIO_WR | C_DEPTH_RATIO_RD | C_PNTR_WIDTH    | EXTRA_WORDS_DC
-   //  -----------------|------------------|-----------------|---------------
-   //  1                | 8                | C_RD_PNTR_WIDTH | 0
-   //  1                | 4                | C_RD_PNTR_WIDTH | 0
-   //  1                | 2                | C_RD_PNTR_WIDTH | 1
-   //  1                | 1                | C_WR_PNTR_WIDTH | 2
-   //  2                | 1                | C_WR_PNTR_WIDTH | 4
-   //  4                | 1                | C_WR_PNTR_WIDTH | 8
-   //  8                | 1                | C_WR_PNTR_WIDTH | 16
-   parameter EXTRA_WORDS_DC = ( C_DEPTH_RATIO_RD > 2)?
-                              0:(2 * C_DEPTH_RATIO_WR/C_DEPTH_RATIO_RD);  
-   
-
-   parameter [31:0] reads_per_write = C_DIN_WIDTH/C_DOUT_WIDTH;
-   
-   parameter [31:0] log2_reads_per_write = log2_val(reads_per_write);
-   
-   parameter [31:0] writes_per_read = C_DOUT_WIDTH/C_DIN_WIDTH;
-   
-   parameter [31:0] log2_writes_per_read = log2_val(writes_per_read);
+  // EXTRA_WORDS = 2 * C_DEPTH_RATIO_WR / C_DEPTH_RATIO_RD
+  // WR_DEPTH : RD_DEPTH = 1:2 => EXTRA_WORDS = 1
+  // WR_DEPTH : RD_DEPTH = 1:4 => EXTRA_WORDS = 1 (rounded to ceiling)
+  // WR_DEPTH : RD_DEPTH = 2:1 => EXTRA_WORDS = 4
+  // WR_DEPTH : RD_DEPTH = 4:1 => EXTRA_WORDS = 8
+  parameter EXTRA_WORDS = (C_DEPTH_RATIO_RD > 1)? 1:(2 * C_DEPTH_RATIO_WR);
+  // extra_words_dc = 2 * C_DEPTH_RATIO_WR / C_DEPTH_RATIO_RD
+  //  C_DEPTH_RATIO_WR | C_DEPTH_RATIO_RD | C_PNTR_WIDTH    | EXTRA_WORDS_DC
+  //  -----------------|------------------|-----------------|---------------
+  //  1                | 8                | C_RD_PNTR_WIDTH | 2
+  //  1                | 4                | C_RD_PNTR_WIDTH | 2
+  //  1                | 2                | C_RD_PNTR_WIDTH | 2
+  //  1                | 1                | C_WR_PNTR_WIDTH | 2
+  //  2                | 1                | C_WR_PNTR_WIDTH | 4
+  //  4                | 1                | C_WR_PNTR_WIDTH | 8
+  //  8                | 1                | C_WR_PNTR_WIDTH | 16
+  parameter EXTRA_WORDS_DC = (C_DEPTH_RATIO_WR)?
+                             2:(2 * C_DEPTH_RATIO_WR/C_DEPTH_RATIO_RD);  
 
 
+  //Memory which will be used to simulate a FIFO
+  reg [C_DIN_WIDTH-1:0]          memory[C_WR_DEPTH-1:0];
+  reg [31:0]                     num_wr_bits;
+  reg [31:0]                     num_rd_bits;
+  reg [31:0]                     next_num_wr_bits;
+  reg [31:0]                     next_num_rd_bits;
+  reg [31:0]                     wr_ptr;
+  reg [31:0]                     rd_ptr;
+  reg [31:0]                     wr_ptr_rdclk;
+  reg [31:0]                     wr_ptr_rdclk_next;
+  reg [31:0]                     rd_ptr_wrclk;
+  reg [31:0]                     rd_ptr_wrclk_next;
+  wire [31:0]                    num_read_words  = num_rd_bits/C_DOUT_WIDTH;
+  wire [31:0]                    num_read_words_dc_i; 
+  wire [31:0]                    num_read_words_dc = num_rd_bits/C_DOUT_WIDTH;
+  wire [31:0]                    num_read_words_fwft_dc = (num_rd_bits/C_DOUT_WIDTH+2);
+  wire [31:0]                    num_read_words_pe = 
+    num_rd_bits/(C_DOUT_WIDTH/C_DEPTH_RATIO_WR);
+  wire [C_RD_DATA_COUNT_WIDTH-1:0] num_read_words_sized_i; 
+  wire [C_RD_DATA_COUNT_WIDTH-1:0] num_read_words_sized 
+    = num_read_words_dc_i[C_RD_PNTR_WIDTH-1 : C_RD_PNTR_WIDTH-C_RD_DATA_COUNT_WIDTH]; 
+  wire [C_RD_DATA_COUNT_WIDTH-1:0] num_read_words_sized_fwft 
+    = num_read_words_dc_i[C_RD_PNTR_WIDTH : C_RD_PNTR_WIDTH-C_RD_DATA_COUNT_WIDTH+1]; 
+  wire [31:0]                    num_write_words = num_wr_bits/C_DIN_WIDTH;
+  wire [31:0]                    num_write_words_dc_i;
+  wire [31:0]                    num_write_words_dc = 1+(num_wr_bits-1)/C_DIN_WIDTH;//roof of num_wr_bits/C_DIN_WIDTH
+  wire [31:0]                    num_write_words_fwft_dc = 
+    (num_wr_bits/C_DIN_WIDTH*C_DEPTH_RATIO_RD+2*C_DEPTH_RATIO_WR)/C_DEPTH_RATIO_RD;
+  wire [31:0]                    num_write_words_pf = 
+    num_wr_bits/(C_DIN_WIDTH/C_DEPTH_RATIO_RD);
+  wire [C_WR_DATA_COUNT_WIDTH-1:0] num_write_words_sized_i; 
+  wire [C_WR_DATA_COUNT_WIDTH-1:0] num_write_words_sized 
+    = num_write_words_dc_i[C_WR_PNTR_WIDTH-1 : C_WR_PNTR_WIDTH-C_WR_DATA_COUNT_WIDTH]; 
+  wire [C_WR_DATA_COUNT_WIDTH-1:0] num_write_words_sized_fwft 
+    = num_write_words_dc_i[C_WR_PNTR_WIDTH : C_WR_PNTR_WIDTH-C_WR_DATA_COUNT_WIDTH+1]; 
+  wire [31:0]                    reads_per_write = C_DIN_WIDTH/C_DOUT_WIDTH;
+  wire [31:0]                    log2_reads_per_write = log2_val(reads_per_write);
+  wire [31:0]                    writes_per_read = C_DOUT_WIDTH/C_DIN_WIDTH;
+  wire [31:0]                    log2_writes_per_read = log2_val(writes_per_read);
 
-   /**************************************************************************
-    * FIFO Contents Tracking and Data Count Calculations
-    *************************************************************************/
-   
-   //Memory which will be used to simulate a FIFO
-   reg [C_DIN_WIDTH-1:0] memory[C_WR_DEPTH-1:0];
-
-   //The amount of data stored in the FIFO at any time is given
-   // by num_wr_bits (in the WR_CLK domain) and num_rd_bits (in the RD_CLK
-   // domain.
-   //num_wr_bits is calculated by considering the total words in the FIFO,
-   // and the state of the read pointer (which may not have yet crossed clock
-   // domains.)
-   //num_rd_bits is calculated by considering the total words in the FIFO,
-   // and the state of the write pointer (which may not have yet crossed clock
-   // domains.)
-   reg [31:0]  num_wr_bits;
-   reg [31:0]  num_rd_bits;
-   reg [31:0]  next_num_wr_bits;
-   reg [31:0]  next_num_rd_bits;
-
-   //The write pointer - tracks write operations
-   // (Works opposite to core: wr_ptr is a DOWN counter)
-   reg [31:0]  wr_ptr;
-
-   //The read pointer - tracks read operations
-   // (Works opposite to core: rd_ptr is a DOWN counter)
-   reg [31:0]  rd_ptr;
-
-   //Pointers passed into opposite clock domain
-   reg [31:0]  wr_ptr_rdclk;
-   reg [31:0]  wr_ptr_rdclk_next;
-   reg [31:0]  rd_ptr_wrclk;
-   reg [31:0]  rd_ptr_wrclk_next;
-
-   //Amount of data stored in the FIFO scaled to the narrowest (deepest) port
-   // (Do not include data in FWFT stages)
-   //Used to calculate PROG_EMPTY.
-   wire [31:0] num_read_words_pe = 
-     num_rd_bits/(C_DOUT_WIDTH/C_DEPTH_RATIO_WR);
-
-   //Amount of data stored in the FIFO scaled to the narrowest (deepest) port
-   // (Do not include data in FWFT stages)
-   //Used to calculate PROG_FULL.
-   wire [31:0] num_write_words_pf =
-     num_wr_bits/(C_DIN_WIDTH/C_DEPTH_RATIO_RD);
-
-   /**************************
-    * Read Data Count
-    *************************/
-
-   /* ORIGINAL CODE - Removed 10/24/07 jeo
-   //Amount of data stored in the FIFO scaled to read words
-   // (Do not include data in FWFT stages)
-   //Not used in the code.
-   wire [31:0] num_read_words_dc = num_rd_bits/C_DOUT_WIDTH;
-   
-   //Amount of data stored in the FIFO scaled to read words
-   // (Include data in FWFT stages)
-   //Not used in the code.
-   wire [31:0] num_read_words_fwft_dc = (num_rd_bits/C_DOUT_WIDTH+2);
-   
-   //Not used in the code.
-   wire [31:0] num_read_words_dc_i = 
-     C_USE_FWFT_DATA_COUNT ? num_read_words_fwft_dc : num_read_words_dc;
-
-   //Not used in the code.
-   wire [C_RD_DATA_COUNT_WIDTH-1:0] num_read_words_sized = 
-     num_read_words_dc_i[C_RD_PNTR_WIDTH-1 : C_RD_PNTR_WIDTH-C_RD_DATA_COUNT_WIDTH];
-   
-   //Not used in the code.
-   wire [C_RD_DATA_COUNT_WIDTH-1:0] num_read_words_sized_fwft = 
-     num_read_words_dc_i[C_RD_PNTR_WIDTH : C_RD_PNTR_WIDTH-C_RD_DATA_COUNT_WIDTH+1];
-
-   //Used to calculate ideal_rd_count (RD_DATA_COUNT)
-   wire [C_RD_DATA_COUNT_WIDTH-1:0] num_read_words_sized_i = 
-     C_USE_FWFT_DATA_COUNT ? num_read_words_sized_fwft : num_read_words_sized;
-   */
-
-   reg [31:0] num_read_words_dc;
-   reg [C_RD_DATA_COUNT_WIDTH-1:0] num_read_words_sized_i;
-   
-   always @(num_rd_bits) begin
-     if (C_USE_FWFT_DATA_COUNT) begin
-	
-	//If using extra logic for FWFT Data Counts, 
-	// then scale FIFO contents to read domain, 
-	// and add two read words for FWFT stages
-	//This value is only a temporary value and not used in the code.
-        num_read_words_dc = (num_rd_bits/C_DOUT_WIDTH+2);
-	
-        //Trim the read words for use with RD_DATA_COUNT
-	num_read_words_sized_i = 
-          num_read_words_dc[C_RD_PNTR_WIDTH : C_RD_PNTR_WIDTH-C_RD_DATA_COUNT_WIDTH+1];
-	
-     end else begin
-	
-	//If not using extra logic for FWFT Data Counts, 
-	// then scale FIFO contents to read domain.
-	//This value is only a temporary value and not used in the code.
-        num_read_words_dc = num_rd_bits/C_DOUT_WIDTH;
-	
-        //Trim the read words for use with RD_DATA_COUNT
-	num_read_words_sized_i = 
-          num_read_words_dc[C_RD_PNTR_WIDTH-1 : C_RD_PNTR_WIDTH-C_RD_DATA_COUNT_WIDTH];
-	
-     end //if (C_USE_FWFT_DATA_COUNT)
-   end //always
+  /*******************************************************************************
+   * Internal Registers and wires
+   ******************************************************************************/
+  wire                           wr_ack_i;
+  wire                           overflow_i;
+  wire                           underflow_i;
+  wire                           valid_i;
+  wire                           valid_out;
+  reg                            valid_d1;
+  /*******************************************************************************
+   * Internal registers and wires for internal reset logics 
+   ******************************************************************************/
+  reg                            rd_rst_asreg    =0;
+  reg                            rd_rst_asreg_d1 =0;
+  reg                            rd_rst_asreg_d2 =0;
+  reg                            rd_rst_reg      =0;
+  reg                            rd_rst_d1       =0;
+  reg                            wr_rst_asreg    =0;
+  reg                            wr_rst_asreg_d1 =0;
+  reg                            wr_rst_asreg_d2 =0;
+  reg                            wr_rst_reg      =0;
+  reg                            wr_rst_d1       =0;
+  wire                           rd_rst_comb;
+  wire                           rd_rst_i;
+  wire                           wr_rst_comb;
+  wire                           wr_rst_i;
 
 
 
+  //Special ideal FIFO signals
+  reg [C_DOUT_WIDTH-1:0]         ideal_dout;
+  wire [C_DOUT_WIDTH-1:0]        ideal_dout_out;
+  reg [C_DOUT_WIDTH-1:0]         ideal_dout_d1;
+  reg                            ideal_wr_ack;
+  reg                            ideal_valid;
+  reg                            ideal_overflow;
+  reg                            ideal_underflow;
+  reg                            ideal_full;
+  reg                            ideal_empty;
+  reg                            ideal_almost_full;
+  reg                            ideal_almost_empty;
+  reg                            ideal_prog_full;
+  reg                            ideal_prog_empty;
 
+  //MSBs of the counts
+  reg [C_WR_DATA_COUNT_WIDTH-1 : 0] ideal_wr_count;
+  reg [C_RD_DATA_COUNT_WIDTH-1 : 0] ideal_rd_count;
 
-   
-   
-   
-   /**************************
-    * Write Data Count
-    *************************/
-   /* ORIGINAL CODE - Removed 10/24/07 jeo
+  //user specified value for reseting the size of the fifo
+  reg [C_DOUT_WIDTH-1:0]            dout_reset_val;
 
-   //Calculate the Data Count value for the number of write words, when not
-   // using First-Word Fall-Through with extra logic for Data Counts. This 
-   // calculates only the number of words in the internal FIFO.
-   //The expression (((A-1)/B))+1 divides A/B, but takes the 
-   // ceiling of the result.
-   //When num_wr_bits==0, set the result manually to prevent division errors.
-   wire [31:0] 	num_write_words_dc = 
-     (num_wr_bits==0) ? 0 : ((num_wr_bits-1)/C_DIN_WIDTH) + 1;
+  //temporary registers for WR_RESPONSE_LATENCY feature
 
-   //Calculate the Data Count value for the number of write words, when using
-   // First-Word Fall-Through with extra logic for Data Counts. This takes into
-   // consideration the number of words that are expected to be stored in the
-   // FWFT register stages (it always assumes they are filled).
-   //The expression (((A-1)/B))+1 divides A/B, but takes the 
-   // ceiling of the result.
-   //When num_wr_bits==0, set the result manually to prevent division errors.
-   //EXTRA_WORDS_DC is the number of words added to write_words due to FWFT.
-   wire [31:0] num_write_words_fwft_dc = 
-     (num_wr_bits==0) ? EXTRA_WORDS_DC :  (((num_wr_bits-1)/C_DIN_WIDTH) + 1) + EXTRA_WORDS_DC ;
+  integer                           tmp_wr_listsize;
+  integer                           tmp_rd_listsize;
 
-   wire [31:0] num_write_words_dc_i = 
-     C_USE_FWFT_DATA_COUNT ? num_write_words_fwft_dc : num_write_words_dc;
-    
-    
-   
-   wire [C_WR_DATA_COUNT_WIDTH-1:0] num_write_words_sized = 
-     num_write_words_dc_i[C_WR_PNTR_WIDTH-1 : C_WR_PNTR_WIDTH-C_WR_DATA_COUNT_WIDTH];
-   
-   wire [C_WR_DATA_COUNT_WIDTH-1:0] num_write_words_sized_fwft = 
-     num_write_words_dc_i[C_WR_PNTR_WIDTH : C_WR_PNTR_WIDTH-C_WR_DATA_COUNT_WIDTH+1];
+  //Signal for registered version of prog full and empty
+  reg                               prog_full_d;
+  reg                               prog_empty_d;
 
-       wire [C_WR_DATA_COUNT_WIDTH-1:0] num_write_words_sized_i = C_USE_FWFT_DATA_COUNT?
-                                num_write_words_sized_fwft:num_write_words_sized;
-   
-   */
+  //Threshold values for Programmable Flags
+  integer                           prog_empty_actual_thresh_assert;
+  integer                           prog_empty_actual_thresh_negate;
+  integer                           prog_full_actual_thresh_assert;
+  integer                           prog_full_actual_thresh_negate;
 
-   reg [31:0] num_write_words_dc;
-   reg [C_WR_DATA_COUNT_WIDTH-1:0] num_write_words_sized_i;
-   
-   always @(num_wr_bits) begin
-     if (C_USE_FWFT_DATA_COUNT) begin
-	
-	//Calculate the Data Count value for the number of write words, 
-	// when using First-Word Fall-Through with extra logic for Data 
-	// Counts. This takes into consideration the number of words that 
-	// are expected to be stored in the FWFT register stages (it always 
-	// assumes they are filled).
-	//This value is scaled to the Write Domain.
-	//The expression (((A-1)/B))+1 divides A/B, but takes the 
-	// ceiling of the result.
-	//When num_wr_bits==0, set the result manually to prevent 
-	// division errors.
-	//EXTRA_WORDS_DC is the number of words added to write_words 
-	// due to FWFT.
-	//This value is only a temporary value and not used in the code.
-        num_write_words_dc = (num_wr_bits==0) ? EXTRA_WORDS_DC :  (((num_wr_bits-1)/C_DIN_WIDTH)+1) + EXTRA_WORDS_DC ;
-	
-        //Trim the write words for use with WR_DATA_COUNT
-	num_write_words_sized_i = 
-          num_write_words_dc[C_WR_PNTR_WIDTH : C_WR_PNTR_WIDTH-C_WR_DATA_COUNT_WIDTH+1];
-	
-     end else begin
-	
-	//Calculate the Data Count value for the number of write words, when NOT
-	// using First-Word Fall-Through with extra logic for Data Counts. This 
-	// calculates only the number of words in the internal FIFO.
-	//The expression (((A-1)/B))+1 divides A/B, but takes the 
-	// ceiling of the result.
-	//This value is scaled to the Write Domain.
-	//When num_wr_bits==0, set the result manually to prevent 
-	// division errors.
-	//This value is only a temporary value and not used in the code.
-        num_write_words_dc = (num_wr_bits==0) ? 0 : ((num_wr_bits-1)/C_DIN_WIDTH)+1;
-	
-        //Trim the read words for use with RD_DATA_COUNT
-	num_write_words_sized_i = 
-          num_write_words_dc[C_WR_PNTR_WIDTH-1 : C_WR_PNTR_WIDTH-C_WR_DATA_COUNT_WIDTH];
-	
-     end //if (C_USE_FWFT_DATA_COUNT)
-   end //always
-
-    
-    
-   /***************************************************************************
-    * Internal registers and wires
-    **************************************************************************/
-
-   //Temporary signals used for calculating the model's outputs. These
-   //are only used in the assign statements immediately following wire,
-   //parameter, and function declarations.
-   wire [C_DOUT_WIDTH-1:0] ideal_dout_out;   
-   wire valid_i;
-   wire valid_out;  
-   wire underflow_i;
-
-   //Ideal FIFO signals. These are the raw output of the behavioral model,
-   //which behaves like an ideal FIFO.
-   reg [C_DOUT_WIDTH-1:0] ideal_dout;
-   reg [C_DOUT_WIDTH-1:0]  ideal_dout_d1;
-   reg 			   ideal_wr_ack;
-   reg 			   ideal_valid;
-   reg 			   ideal_overflow;
-   reg 			   ideal_underflow;
-   reg 			   ideal_full;
-   reg 			   ideal_empty;
-   reg 			   ideal_almost_full;
-   reg 			   ideal_almost_empty;
-   reg 			   ideal_prog_full;
-   reg 			   ideal_prog_empty;
-   reg [C_WR_DATA_COUNT_WIDTH-1 : 0] ideal_wr_count;
-   reg [C_RD_DATA_COUNT_WIDTH-1 : 0] ideal_rd_count;
-
-   //Assorted reg values for delayed versions of signals   
-   reg 	       valid_d1;
-   reg         prog_full_d;
-   reg         prog_empty_d;
-
-   //Internal reset signals
-   reg 	       rd_rst_asreg    =0;
-   reg 	       rd_rst_asreg_d1 =0;
-   reg 	       rd_rst_asreg_d2 =0;
-   reg 	       rd_rst_reg      =0;
-   reg 	       rd_rst_d1       =0;
-   reg 	       wr_rst_asreg    =0;
-   reg 	       wr_rst_asreg_d1 =0;
-   reg 	       wr_rst_asreg_d2 =0;
-   reg 	       wr_rst_reg      =0;
-   reg 	       wr_rst_d1       =0;
-
-   wire        rd_rst_comb;
-   wire        rd_rst_i;
-   wire        wr_rst_comb;
-   wire        wr_rst_i;   
-   
-   
-   //user specified value for reseting the size of the fifo
-   reg [C_DOUT_WIDTH-1:0] 	     dout_reset_val;
-   
-   //temporary registers for WR_RESPONSE_LATENCY feature
-   
-   integer                           tmp_wr_listsize;
-   integer                           tmp_rd_listsize;
-   
-   //Signal for registered version of prog full and empty
-   
-   //Threshold values for Programmable Flags
-   integer                           prog_empty_actual_thresh_assert;
-   integer                           prog_empty_actual_thresh_negate;
-   integer                           prog_full_actual_thresh_assert;
-   integer                           prog_full_actual_thresh_negate;
-   
 
   /****************************************************************************
    * Function Declarations
    ***************************************************************************/
 
-  /**************************************************************************
-   * write_fifo
-   *   This task writes a word to the FIFO memory and updates the 
-   * write pointer.
-   *   FIFO size is relative to write domain.
-  ***************************************************************************/
   task write_fifo;
     begin
       memory[wr_ptr]     <= DIN;
-      // (Works opposite to core: wr_ptr is a DOWN counter)
       if (wr_ptr == 0) begin
         wr_ptr          <= C_WR_DEPTH - 1;
       end else begin
@@ -1335,12 +930,6 @@ module fifo_generator_v4_3_bhv_ver_as
     end
   endtask // write_fifo
 
-  /**************************************************************************
-   * read_fifo
-   *   This task reads a word from the FIFO memory and updates the read 
-   * pointer. It's output is the ideal_dout bus.
-   *   FIFO size is relative to write domain.
-   ***************************************************************************/
   task read_fifo;
     integer i;
     reg [C_DOUT_WIDTH-1:0] tmp_dout;
@@ -1356,8 +945,6 @@ module fifo_generator_v4_3_bhv_ver_as
         for (i = writes_per_read - 1; i >= 0; i = i - 1) begin
           tmp_dout = tmp_dout << C_DIN_WIDTH;
           tmp_dout = tmp_dout | memory[tmp_rd_ptr];
-	   
-          // (Works opposite to core: rd_ptr is a DOWN counter)
           if (tmp_rd_ptr == 0) begin
             tmp_rd_ptr = C_WR_DEPTH - 1;
           end else begin
@@ -1377,8 +964,6 @@ module fifo_generator_v4_3_bhv_ver_as
         tmp_dout    = memory_read >> (rd_ptr_low*C_DOUT_WIDTH);
       end
       ideal_dout <= tmp_dout;
-       
-      // (Works opposite to core: rd_ptr is a DOWN counter)
       if (rd_ptr == 0) begin
         rd_ptr <= C_RD_DEPTH - 1;
       end else begin
@@ -1387,7 +972,7 @@ module fifo_generator_v4_3_bhv_ver_as
     end
   endtask
 
-  /**************************************************************************
+  /****************************************************************************
   * log2_val
   *   Returns the 'log2' value for the input value for the supported ratios
   ***************************************************************************/
@@ -1405,7 +990,7 @@ module fifo_generator_v4_3_bhv_ver_as
     end
   endfunction
 
-  /***********************************************************************
+  /*************************************************************************
   * hexstr_conv
   *   Converts a string of type hex to a binary value (for C_DOUT_RST_VAL)
   ***********************************************************************/
@@ -1469,7 +1054,8 @@ module fifo_generator_v4_3_bhv_ver_as
   /*************************************************************************
   * Initialize Signals for clean power-on simulation
   *************************************************************************/
-   initial begin
+  initial
+    begin
       num_wr_bits        = 0;
       num_rd_bits        = 0;
       next_num_wr_bits   = 0;
@@ -1480,92 +1066,97 @@ module fifo_generator_v4_3_bhv_ver_as
       wr_ptr_rdclk       = wr_ptr;
       dout_reset_val     = hexstr_conv(C_DOUT_RST_VAL);
       ideal_dout         = dout_reset_val;
-      ideal_dout_d1      = 0 ;
       ideal_wr_ack       = 1'b0;
       ideal_valid        = 1'b0;
-      valid_d1           = 1'b0;
       ideal_overflow     = 1'b0;
       ideal_underflow    = 1'b0;
-      ideal_full         = 1'b0;
+      //Modified the start-up value of FULL to '0' in v3.2 (IP2_Im)
+      //ideal_full         = C_FULL_RESET_VAL; //was in v3.1
+      ideal_full         = 1'b0; //v3.2 
       ideal_empty        = 1'b1;
-      ideal_almost_full  = 1'b0;
+      //Modified the start-up value of ALMOST_FULL to '0' in v3.2 (IP2_Im)
+      //ideal_almost_full  = C_ALMOST_FULL_RESET_VAL; //was in v3.1
+      ideal_almost_full  = 1'b0; //v3.2
       ideal_almost_empty = 1'b1;
       ideal_wr_count     = 0;
       ideal_rd_count     = 0;
-      ideal_prog_full    = 1'b0;
+      //Modified the start-up value of PROG_FULL to '0' in v3.2 (IP2_Im)
+      //ideal_prog_full    = C_PROG_FULL_RESET_VAL; //was in v3.1
+      ideal_prog_full    = 1'b0; //v3.2
       ideal_prog_empty   = 1'b1;
-      prog_full_d        = 1'b0;
+      //Modified the start-up value of PROG_FULL to '0' in v3.2 (IP2_Im)
+      //Therefore, prog_full_d has to start-up at '0' too
+      //prog_full_d        = C_PROG_FULL_RESET_VAL; //was in v3.1
+      prog_full_d        = 1'b0; //v3.2
       prog_empty_d       = 1'b1;
     end
 
 
+
   /*************************************************************************
-   * Connect the module inputs and outputs to the internal signals of the 
-   * behavioral model.
+   * Assign Internal ideal signals to output ports
    *************************************************************************/
-   //Inputs
-   /*
-    wire [C_DIN_WIDTH-1:0] DIN;
-   wire [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH;
-   wire [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH_ASSERT;
-   wire [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH_NEGATE;
-   wire [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH;
-   wire [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH_ASSERT;
-   wire [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH_NEGATE;   
-   wire RD_CLK;
-   wire RD_EN;
-   wire RST;
-   wire WR_CLK;
-   wire WR_EN;
-    */
-
-   //Outputs
-   assign ALMOST_EMPTY = ideal_almost_empty;
-   assign ALMOST_FULL  = ideal_almost_full;
-
-   //Dout may change behavior based on latency
-   assign ideal_dout_out[C_DOUT_WIDTH-1:0] = (C_PRELOAD_LATENCY==2 &&
+  assign ideal_dout_out= (C_PRELOAD_LATENCY==2 &&
                           (C_MEMORY_TYPE==0 || C_MEMORY_TYPE==1))?
                          ideal_dout_d1: ideal_dout;   
-   assign DOUT[C_DOUT_WIDTH-1:0] = ideal_dout_out; 
-  
-   assign EMPTY = ideal_empty;
-   assign FULL  = ideal_full;
+  assign DOUT          = ideal_dout_out;
+  assign FULL          = ideal_full;
+  assign EMPTY         = ideal_empty;
+  assign ALMOST_FULL   = ideal_almost_full;
+  assign ALMOST_EMPTY  = ideal_almost_empty;
+  assign num_write_words_sized_i=C_USE_FWFT_DATA_COUNT?
+                                num_write_words_sized_fwft:num_write_words_sized;
+  assign num_read_words_sized_i=C_USE_FWFT_DATA_COUNT?
+                                num_read_words_sized_fwft:num_read_words_sized;
+  assign num_write_words_dc_i = C_USE_FWFT_DATA_COUNT?
+                               num_write_words_fwft_dc: num_write_words_dc;
+  assign num_read_words_dc_i = C_USE_FWFT_DATA_COUNT?
+                               num_read_words_fwft_dc: num_read_words_dc;
+  assign WR_DATA_COUNT = ideal_wr_count;
+  assign RD_DATA_COUNT = ideal_rd_count;
+  assign PROG_FULL     = ideal_prog_full;
+  assign PROG_EMPTY    = ideal_prog_empty;
 
-   //Overflow may be active-low
-   assign OVERFLOW = ideal_overflow ? !C_OVERFLOW_LOW : C_OVERFLOW_LOW;
-   
-   assign PROG_EMPTY = ideal_prog_empty;
-   assign PROG_FULL  = ideal_prog_full;
+  //Handshaking signals can be active low, depending on _LOW parameters
+  assign valid_i       = (C_PRELOAD_LATENCY==0) ? (RD_EN & ~EMPTY) : ideal_valid;
+  assign VALID         = valid_out ? !C_VALID_LOW : C_VALID_LOW;
+  assign valid_out     = (C_PRELOAD_LATENCY==2 &&
+                          (C_MEMORY_TYPE==0 || C_MEMORY_TYPE==1))?
+                         valid_d1: valid_i;  
+  assign underflow_i   = (C_PRELOAD_LATENCY==0) ? (RD_EN & EMPTY) : ideal_underflow;
+  assign UNDERFLOW     = underflow_i ? !C_UNDERFLOW_LOW : C_UNDERFLOW_LOW;
 
-   //Valid may change behavior based on latency or active-low
-   assign valid_i   = (C_PRELOAD_LATENCY==0) ? (RD_EN & ~EMPTY) : ideal_valid;
-   assign valid_out = (C_PRELOAD_LATENCY==2 &&
-                       (C_MEMORY_TYPE==0 || C_MEMORY_TYPE==1))?
-                       valid_d1: valid_i;  
-   assign VALID     = valid_out ? !C_VALID_LOW : C_VALID_LOW;
-   
-   assign RD_DATA_COUNT[C_RD_DATA_COUNT_WIDTH-1:0] = ideal_rd_count;
+  assign WR_ACK        = wr_ack_i ? !C_WR_ACK_LOW : C_WR_ACK_LOW;
+  assign wr_ack_i      = (C_WR_RESPONSE_LATENCY==1) ? ideal_wr_ack :
+                            (WR_EN & !FULL);
+  assign OVERFLOW      = overflow_i ? !C_OVERFLOW_LOW : C_OVERFLOW_LOW;
+  assign overflow_i    = (C_WR_RESPONSE_LATENCY==1) ? ideal_overflow :
+                             (WR_EN & FULL);
 
-   //Underflow may change behavior based on latency or active-low   
-   assign underflow_i = (C_PRELOAD_LATENCY==0) ? (RD_EN & EMPTY) : ideal_underflow;
-   assign UNDERFLOW   = underflow_i ? !C_UNDERFLOW_LOW : C_UNDERFLOW_LOW;
-
-   //Write acknowledge may be active low
-   assign WR_ACK = ideal_wr_ack ? !C_WR_ACK_LOW : C_WR_ACK_LOW;
-   
-   assign WR_DATA_COUNT[C_WR_DATA_COUNT_WIDTH-1:0] = ideal_wr_count;
-
-
-  /**************************************************************************
-  * Internal reset logic
-  **************************************************************************/
+  /*******************************************************************************
+  * Internal reset logics 
+  ******************************************************************************/
   assign wr_rst_comb      = !wr_rst_asreg_d2 && wr_rst_asreg;
   assign rd_rst_comb      = !rd_rst_asreg_d2 && rd_rst_asreg;
   assign wr_rst_i         = C_HAS_RST ? wr_rst_reg : 0;
   assign rd_rst_i         = C_HAS_RST ? rd_rst_reg : 0;
 
 
+  always @(posedge RD_CLK or posedge rd_rst_i) begin
+    if (rd_rst_i == 1'b1) begin
+      valid_d1 <= 1'b0;
+    end else begin
+      valid_d1 <= valid_i;
+    end    
+  end   
+  always @(posedge RD_CLK or posedge rd_rst_i) begin
+    if (rd_rst_i == 1'b1) begin
+      ideal_dout_d1 <= dout_reset_val;
+    end else begin
+      ideal_dout_d1 <= ideal_dout;
+    end    
+  end   
+  
   always @(posedge WR_CLK or posedge RST) begin
     if (RST == 1'b1) begin
       wr_rst_asreg <= 1'b1;
@@ -1623,42 +1214,18 @@ module fifo_generator_v4_3_bhv_ver_as
     end    
   end   
    
-  /**************************************************************************
-  * Assorted registers for delayed versions of signals
-  **************************************************************************/
-  //Capture delayed version of valid
-  always @(posedge RD_CLK or posedge rd_rst_i) begin
-    if (rd_rst_i == 1'b1) begin
-      valid_d1 <= 1'b0;
-    end else begin
-      valid_d1 <= valid_i;
-    end    
-  end   
-   
-  //Capture delayed version of dout
-  always @(posedge RD_CLK or posedge rd_rst_i) begin
-    if (rd_rst_i == 1'b1 && C_USE_DOUT_RST == 1) begin
-      ideal_dout_d1 <= dout_reset_val;
-    end else begin
-      ideal_dout_d1 <= ideal_dout;
-    end    
-  end   
-  
-   /**************************************************************************
-    * Overflow and Underflow Flag calculation
-    *  (handled separately because they don't support rst)
-    **************************************************************************/
+   //Generate overflow and underflow flags seperately
+   //because they don't support async rst
    always @(posedge WR_CLK) begin
      ideal_overflow    <= WR_EN & ideal_full;
    end
-   
    always @(posedge RD_CLK) begin
      ideal_underflow    <= ideal_empty & RD_EN;
    end
 
-   /**************************************************************************
-   * Write Domain Logic
-   **************************************************************************/
+   /*******************************************************************************
+   * Write and Read Logics 
+   ******************************************************************************/
    always @(posedge WR_CLK or posedge wr_rst_i) begin : gen_fifo_w
 
      /****** Reset fifo (case 1)***************************************/
@@ -1710,9 +1277,8 @@ module fifo_generator_v4_3_bhv_ver_as
              ideal_wr_count    <= num_write_words_sized_i;
 
            //If the FIFO is one from full, but reporting full
-           end else 
-	     if ((tmp_wr_listsize + C_DEPTH_RATIO_RD - 1)/C_DEPTH_RATIO_RD ==
-                C_FIFO_WR_DEPTH-1) begin
+           end else if ((tmp_wr_listsize + C_DEPTH_RATIO_RD - 1)/C_DEPTH_RATIO_RD ==
+                        C_FIFO_WR_DEPTH-1) begin
              //No change to FIFO
 
              //Write not successful
@@ -1726,9 +1292,8 @@ module fifo_generator_v4_3_bhv_ver_as
 
            //If the FIFO is completely empty, but it is
            // reporting FULL for some reason (like reset)
-           end else 
-             if ((tmp_wr_listsize + C_DEPTH_RATIO_RD - 1)/C_DEPTH_RATIO_RD <=
-                C_FIFO_WR_DEPTH-2) begin
+           end else if ((tmp_wr_listsize + C_DEPTH_RATIO_RD - 1)/C_DEPTH_RATIO_RD <=
+                        C_FIFO_WR_DEPTH-2) begin
              //No change to FIFO
 
              //Write not successful
@@ -1757,9 +1322,8 @@ module fifo_generator_v4_3_bhv_ver_as
              ideal_wr_count     <= num_write_words_sized_i;
 
            //If the FIFO is one from full
-           end else 
-             if ((tmp_wr_listsize + C_DEPTH_RATIO_RD - 1)/C_DEPTH_RATIO_RD ==
-                C_FIFO_WR_DEPTH-1) begin
+           end else if ((tmp_wr_listsize + C_DEPTH_RATIO_RD - 1)/C_DEPTH_RATIO_RD ==
+                       C_FIFO_WR_DEPTH-1) begin
              //Add value on DIN port to FIFO
              write_fifo;
              next_num_wr_bits = next_num_wr_bits + C_DIN_WIDTH;
@@ -1774,9 +1338,8 @@ module fifo_generator_v4_3_bhv_ver_as
              ideal_wr_count    <= num_write_words_sized_i;
 
            //If the FIFO is 2 from full
-           end else 
-             if ((tmp_wr_listsize + C_DEPTH_RATIO_RD - 1)/C_DEPTH_RATIO_RD == 
-                C_FIFO_WR_DEPTH-2) begin
+           end else if ((tmp_wr_listsize + C_DEPTH_RATIO_RD - 1)/C_DEPTH_RATIO_RD ==
+                        C_FIFO_WR_DEPTH-2) begin
              //Add value on DIN port to FIFO
              write_fifo;
              next_num_wr_bits =  next_num_wr_bits + C_DIN_WIDTH;
@@ -1791,9 +1354,8 @@ module fifo_generator_v4_3_bhv_ver_as
              ideal_wr_count    <= num_write_words_sized_i;
 
            //If the FIFO is not close to being full
-           end else 
-             if ((tmp_wr_listsize + C_DEPTH_RATIO_RD - 1)/C_DEPTH_RATIO_RD <
-                C_FIFO_WR_DEPTH-2) begin
+           end else if ((tmp_wr_listsize + C_DEPTH_RATIO_RD - 1)/C_DEPTH_RATIO_RD <
+                       C_FIFO_WR_DEPTH-2) begin
              //Add value on DIN port to FIFO
              write_fifo;
              next_num_wr_bits  = next_num_wr_bits + C_DIN_WIDTH;
@@ -1905,10 +1467,6 @@ module fifo_generator_v4_3_bhv_ver_as
      end //wr_rst_i==0
    end // write always
 
-   
-   /**************************************************************************
-   * Read Domain Logic
-   **************************************************************************/
    always @(posedge RD_CLK or posedge rd_rst_i) begin : gen_fifo_r
 
      /****** Reset fifo (case 1)***************************************/
@@ -1917,11 +1475,7 @@ module fifo_generator_v4_3_bhv_ver_as
        next_num_rd_bits   <= 0;
        rd_ptr             <= C_RD_DEPTH -1;
        wr_ptr_rdclk       <= C_WR_DEPTH -1;
-       if (C_USE_DOUT_RST == 1) begin
        ideal_dout         <= dout_reset_val;
-       end else begin
-       ideal_dout         <= ideal_dout;
-       end
        ideal_valid        <= 1'b0;
        ideal_empty        <= 1'b1;
        ideal_almost_empty <= 1'b1;
@@ -2365,183 +1919,147 @@ endmodule // fifo_generator_v4_3_bhv_ver_as
  ******************************************************************************/
 module fifo_generator_v4_3_bhv_ver_ss
   (
-   CLK, RST, SRST, DIN, WR_EN, RD_EN,
-   PROG_FULL_THRESH, PROG_FULL_THRESH_ASSERT, PROG_FULL_THRESH_NEGATE,
-   PROG_EMPTY_THRESH, PROG_EMPTY_THRESH_ASSERT, PROG_EMPTY_THRESH_NEGATE,
-   DOUT, FULL, ALMOST_FULL, WR_ACK, OVERFLOW, EMPTY,
-   ALMOST_EMPTY, VALID, UNDERFLOW, DATA_COUNT,
-   PROG_FULL, PROG_EMPTY
+    CLK, RST, SRST, DIN, WR_EN, RD_EN,
+    PROG_FULL_THRESH, PROG_FULL_THRESH_ASSERT, PROG_FULL_THRESH_NEGATE,
+    PROG_EMPTY_THRESH, PROG_EMPTY_THRESH_ASSERT, PROG_EMPTY_THRESH_NEGATE,
+    DOUT, FULL, ALMOST_FULL, WR_ACK, OVERFLOW, EMPTY,
+    ALMOST_EMPTY, VALID, UNDERFLOW, DATA_COUNT,
+    PROG_FULL, PROG_EMPTY
    );
-   
-   /**************************************************************************
-    * Declare user parameters and their defaults
-    *************************************************************************/
-   parameter  C_DATA_COUNT_WIDTH             = 2;
-   parameter  C_DIN_WIDTH                    = 8;
-   parameter  C_DOUT_RST_VAL                 = "";
-   parameter  C_DOUT_WIDTH                   = 8;
-   parameter  C_FULL_FLAGS_RST_VAL           = 1;
-   parameter  C_HAS_ALMOST_EMPTY             = 0;
-   parameter  C_HAS_ALMOST_FULL              = 0;
-   parameter  C_HAS_DATA_COUNT               = 0;
-   parameter  C_HAS_OVERFLOW                 = 0;
-   parameter  C_HAS_RD_DATA_COUNT            = 0;
-   parameter  C_HAS_RST                      = 0;
-   parameter  C_HAS_SRST                     = 0;
-   parameter  C_HAS_UNDERFLOW                = 0;
-   parameter  C_HAS_VALID                    = 0;
-   parameter  C_HAS_WR_ACK                   = 0;
-   parameter  C_HAS_WR_DATA_COUNT            = 0;
-   parameter  C_IMPLEMENTATION_TYPE          = 0;
-   parameter  C_MEMORY_TYPE                  = 1;
-   parameter  C_OVERFLOW_LOW                 = 0;
-   parameter  C_PRELOAD_LATENCY              = 1;
-   parameter  C_PRELOAD_REGS                 = 0;
-   parameter  C_PROG_EMPTY_THRESH_ASSERT_VAL = 0;
-   parameter  C_PROG_EMPTY_THRESH_NEGATE_VAL = 0;
-   parameter  C_PROG_EMPTY_TYPE              = 0;
-   parameter  C_PROG_FULL_THRESH_ASSERT_VAL  = 0;
-   parameter  C_PROG_FULL_THRESH_NEGATE_VAL  = 0;
-   parameter  C_PROG_FULL_TYPE               = 0;
-   parameter  C_RD_DATA_COUNT_WIDTH          = 2;
-   parameter  C_RD_DEPTH                     = 256;
-   parameter  C_RD_PNTR_WIDTH                = 8;
-   parameter  C_UNDERFLOW_LOW                = 0;
-   parameter  C_USE_DOUT_RST                 = 0;
-   parameter  C_USE_EMBEDDED_REG             = 0;
-   parameter  C_USE_FWFT_DATA_COUNT          = 0;
-   parameter  C_VALID_LOW                    = 0;
-   parameter  C_WR_ACK_LOW                   = 0;
-   parameter  C_WR_DATA_COUNT_WIDTH          = 2;
-   parameter  C_WR_DEPTH                     = 256;
-   parameter  C_WR_PNTR_WIDTH                = 8;
-   
-   
-   /**************************************************************************
-    * Declare Input and Output Ports
-    *************************************************************************/
-   //Inputs
-   input      CLK;
-   input [C_DIN_WIDTH-1:0] DIN;
-   input [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH;
-   input [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH_ASSERT;
-   input [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH_NEGATE;
-   input [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH;
-   input [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH_ASSERT;
-   input [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH_NEGATE;
-   input 		       RD_EN;
-   input 		       RST;
-   input 		       SRST;
-   input 		       WR_EN;
 
-   //Outputs
-   output 		       ALMOST_EMPTY;
-   output 		       ALMOST_FULL;
-   output [C_DATA_COUNT_WIDTH-1:0] DATA_COUNT;
-   output [C_DOUT_WIDTH-1:0] 	   DOUT;
-   output 			   EMPTY;
-   output 			   FULL;
-   output 			   OVERFLOW;
-   output 			   PROG_EMPTY;
-   output 			   PROG_FULL;
-   output 			   VALID;
-   output 			   UNDERFLOW;
-   output 			   WR_ACK;
-
-  /*************************************************************************
-   * Declare the type for each Input/Output port, and connect each I/O
-   * to it's associated internal signal in the behavioral model
-   *
-   * The values for the outputs are assigned in assign statements immediately
-   * following wire, parameter, and function declarations in this code.
-   *************************************************************************/
-   //Inputs
-   wire CLK;
-   wire [C_DIN_WIDTH-1:0] DIN;
-   wire [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH;
-   wire [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH_ASSERT;
-   wire [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH_NEGATE;
-   wire [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH;
-   wire [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH_ASSERT;
-   wire [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH_NEGATE;
-   wire RD_EN;
-   wire RST;
-   wire SRST;
-   wire WR_EN;
-
-   //Outputs
-   wire ALMOST_EMPTY;
-   wire ALMOST_FULL;
-   reg [C_DATA_COUNT_WIDTH-1:0] DATA_COUNT;
-   wire [C_DOUT_WIDTH-1:0] DOUT;
-   wire EMPTY;
-   wire FULL;
-   wire OVERFLOW;
-   wire PROG_EMPTY;
-   wire PROG_FULL;
-   wire VALID;
-   wire UNDERFLOW;
-   wire WR_ACK;
+/******************************************************************************
+ * Declare user parameters and their defaults
+ *****************************************************************************/
+ parameter  C_COMMON_CLOCK                 = 0;
+ parameter  C_COUNT_TYPE                   = 0;
+ parameter  C_DATA_COUNT_WIDTH             = 2;
+ parameter  C_DEFAULT_VALUE                = "";
+ parameter  C_DIN_WIDTH                    = 8;
+ parameter  C_DOUT_RST_VAL                 = "";
+ parameter  C_DOUT_WIDTH                   = 8;
+ parameter  C_ENABLE_RLOCS                 = 0;
+ parameter  C_FAMILY                       = "virtex2"; //Not allowed in Verilog model
+ parameter  C_HAS_ALMOST_EMPTY             = 0;
+ parameter  C_HAS_ALMOST_FULL              = 0;
+ parameter  C_HAS_BACKUP                   = 0;
+ parameter  C_HAS_DATA_COUNT               = 0;
+ parameter  C_HAS_MEMINIT_FILE             = 0;
+ parameter  C_HAS_OVERFLOW                 = 0;
+ parameter  C_HAS_RD_DATA_COUNT            = 0;
+ parameter  C_HAS_RD_RST                   = 0;
+ parameter  C_HAS_RST                      = 0;
+ parameter  C_HAS_SRST                     = 0;
+ parameter  C_HAS_UNDERFLOW                = 0;
+ parameter  C_HAS_VALID                    = 0;
+ parameter  C_HAS_WR_ACK                   = 0;
+ parameter  C_HAS_WR_DATA_COUNT            = 0;
+ parameter  C_HAS_WR_RST                   = 0;
+ parameter  C_IMPLEMENTATION_TYPE          = 0;
+ parameter  C_INIT_WR_PNTR_VAL             = 0;
+ parameter  C_MEMORY_TYPE                  = 1;
+ parameter  C_MIF_FILE_NAME                = "";
+ parameter  C_OPTIMIZATION_MODE            = 0;
+ parameter  C_OVERFLOW_LOW                 = 0;
+ parameter  C_PRELOAD_LATENCY              = 1;
+ parameter  C_PRELOAD_REGS                 = 0;
+ parameter  C_PROG_EMPTY_THRESH_ASSERT_VAL = 0;
+ parameter  C_PROG_EMPTY_THRESH_NEGATE_VAL = 0;
+ parameter  C_PROG_EMPTY_TYPE              = 0;
+ parameter  C_PROG_FULL_THRESH_ASSERT_VAL  = 0;
+ parameter  C_PROG_FULL_THRESH_NEGATE_VAL  = 0;
+ parameter  C_PROG_FULL_TYPE               = 0;
+ parameter  C_RD_DATA_COUNT_WIDTH          = 2;
+ parameter  C_RD_DEPTH                     = 256;
+ parameter  C_RD_PNTR_WIDTH                = 8;
+ parameter  C_UNDERFLOW_LOW                = 0;
+ parameter  C_VALID_LOW                    = 0;
+ parameter  C_WR_ACK_LOW                   = 0;
+ parameter  C_WR_DATA_COUNT_WIDTH          = 2;
+ parameter  C_WR_DEPTH                     = 256;
+ parameter  C_WR_PNTR_WIDTH                = 8;
+ parameter  C_WR_RESPONSE_LATENCY          = 1;
+ parameter  C_FULL_FLAGS_RST_VAL           = 1;
+ parameter  C_USE_EMBEDDED_REG             = 0;
 
 
-   /***************************************************************************
-    * Parameters used as constants
-    **************************************************************************/
+/******************************************************************************
+ * Declare Input and Output Ports
+ *****************************************************************************/
+ input                            CLK;
+ input [C_DIN_WIDTH-1:0]          DIN;
+ input [C_RD_PNTR_WIDTH-1:0]      PROG_EMPTY_THRESH;
+ input [C_RD_PNTR_WIDTH-1:0]      PROG_EMPTY_THRESH_ASSERT;
+ input [C_RD_PNTR_WIDTH-1:0]      PROG_EMPTY_THRESH_NEGATE;
+ input [C_WR_PNTR_WIDTH-1:0]      PROG_FULL_THRESH;
+ input [C_WR_PNTR_WIDTH-1:0]      PROG_FULL_THRESH_ASSERT;
+ input [C_WR_PNTR_WIDTH-1:0]      PROG_FULL_THRESH_NEGATE;
+ input                            RD_EN;
+ input                            RST;
+ input                            SRST;
+ input                            WR_EN;
+ output                           ALMOST_EMPTY;
+ output                           ALMOST_FULL;
+ output [C_DATA_COUNT_WIDTH-1:0]  DATA_COUNT;
+ output [C_DOUT_WIDTH-1:0]        DOUT;
+ output                           EMPTY;
+ output                           FULL;
+ output                           OVERFLOW;
+ output                           PROG_EMPTY;
+ output                           PROG_FULL;
+ output                           VALID;
+ output                           UNDERFLOW;
+ output                           WR_ACK;
+
+/*******************************************************************************
+ * Input and output register declarations
+ ******************************************************************************/
+/*******************************************************************************
+ * Parameters used as constants
+ ******************************************************************************/
    //When RST is present, set FULL reset value to '1'.
    //If core has no RST, make sure FULL powers-on as '0'.
    //The reset value assignments for FULL, ALMOST_FULL, and PROG_FULL are not 
    //changed for v3.2(IP2_Im). When the core has Sync Reset, C_HAS_SRST=1 and C_HAS_RST=0.
    // Therefore, during SRST, all the FULL flags reset to 0.
    parameter                      C_HAS_FAST_FIFO = 0;
-   parameter                      C_FIFO_WR_DEPTH = C_WR_DEPTH;
-   parameter                      C_FIFO_RD_DEPTH = C_RD_DEPTH;
+   parameter                      C_FIFO_WR_DEPTH = (C_COMMON_CLOCK) ? C_WR_DEPTH : C_WR_DEPTH - 1;
+   parameter                      C_FIFO_RD_DEPTH = (C_COMMON_CLOCK) ? C_RD_DEPTH : C_RD_DEPTH - 1;
 
-  /**************************************************************************
-    * FIFO Contents Tracking and Data Count Calculations
-    *************************************************************************/
-   //Memory which will be used to simulate a FIFO
-   reg [C_DIN_WIDTH-1:0]          memory[C_WR_DEPTH-1:0];
-
-   //The amount of data stored in the FIFO at any time is given
-   // by num_bits.
-   //num_bits is calculated by from the total words in the FIFO.
-   reg [31:0]                     num_bits;
-
-   //The write pointer - tracks write operations
-   // (Works opposite to core: wr_ptr is a DOWN counter)
-   reg [31:0]                     wr_ptr;
-
-   //The write pointer - tracks read operations
-   // (Works opposite to core: rd_ptr is a DOWN counter)
-   reg [31:0]                     rd_ptr;
-  
-   /**************************
-    * Data Count
-    *************************/   
-   //Amount of data stored in the FIFO scaled to read words
-   wire [31:0]                    num_read_words  = num_bits/C_DOUT_WIDTH;
-   //num_read_words delayed 1 clock cycle
-   reg [31:0]                     num_read_words_q;
-
-   //Amount of data stored in the FIFO scaled to write words
-   wire [31:0]                    num_write_words = num_bits/C_DIN_WIDTH;
-   //num_write_words delayed 1 clock cycle
-   reg [31:0]                     num_write_words_q;
-
-   
-   /**************************************************************************
+   /****************************************************************************
     * Internal Registers and wires
-    *************************************************************************/
-
-   //Temporary signals used for calculating the model's outputs. These
-   //are only used in the assign statements immediately following wire,
-   //parameter, and function declarations.
+    ***************************************************************************/
+   wire                           wr_ack_i;
+   wire                           overflow_i;
    wire                           underflow_i;
    wire                           valid_i;
    wire                           valid_out;
+   reg                            valid_d1;
+   wire                           srst_i;
+   /*******************************************************************************
+    * Internal registers and wires for internal reset logics 
+    ******************************************************************************/
+   reg                            rst_asreg    =0;
+   reg                            rst_asreg_d1 =0;
+   reg                            rst_asreg_d2 =0;
+   reg                            rst_reg      =0;
+   reg                            rst_d1       =0;
+   wire                           rst_comb;
+   wire                           rst_i;
 
-   //Ideal FIFO signals. These are the raw output of the behavioral model,
-   //which behaves like an ideal FIFO.
+
+   //Memory which will be used to simulate a FIFO
+   reg [C_DIN_WIDTH-1:0]          memory[C_WR_DEPTH-1:0];
+   reg [31:0]                     num_bits;
+   reg [31:0]                     wr_ptr;
+   reg [31:0]                     rd_ptr;
+   wire [31:0]                    num_read_words  = num_bits/C_DOUT_WIDTH;
+   reg [31:0]                     num_read_words_q;
+   wire [31:0]                    num_write_words = num_bits/C_DIN_WIDTH;
+   reg [31:0]                     num_write_words_q;
+   //Removed power_on_timer in v3.2 (IP2_Im). For all reset types (Async, Sync, or no reset), the power-on values of the flags in the core are modified so that the core is ready to use from the very first clock cycle.
+  //reg [3:0]                    power_on_timer;
+
+   //Special ideal FIFO signals
    reg [C_DOUT_WIDTH-1:0]         ideal_dout;
    reg [C_DOUT_WIDTH-1:0]         ideal_dout_d1;
    wire [C_DOUT_WIDTH-1:0]        ideal_dout_out;
@@ -2556,40 +2074,28 @@ module fifo_generator_v4_3_bhv_ver_ss
    reg                            ideal_prog_full;
    reg                            ideal_prog_empty;
 
-   //Assorted reg values for delayed versions of signals
-   reg                            valid_d1;
-   reg 				  prog_full_d;
-   reg 				  prog_empty_d;
-   
 
-   //Internal reset signals
-   reg                            rst_asreg    =0;
-   reg                            rst_asreg_d1 =0;
-   reg                            rst_asreg_d2 =0;
-   reg                            rst_reg      =0;
-   reg                            rst_d1       =0;
-   wire                           rst_comb;
-   wire                           rst_i;
-   wire                           srst_i;
-
-   //Delayed version of RST
-   reg                             rst_q;
-   reg                             rst_qq;
+   //MSBs of the counts
+   wire [C_DATA_COUNT_WIDTH-1:0]  ideal_d_count;
 
    //user specified value for reseting the size of the fifo
    reg [C_DOUT_WIDTH-1:0]          dout_reset_val;
 
 
+   //temporary registers for WR_RESPONSE_LATENCY feature
+   reg                             ideal_wr_ack_q;
+   reg                             ideal_overflow_q;
+
+   reg                             prog_full_d;
+   reg                             prog_empty_d;
+
+   //Delayed version of RST
+   reg                             rst_q;
+   reg                             rst_qq;
+
    /****************************************************************************
     * Function Declarations
     ***************************************************************************/
-
-  /**************************************************************************
-   * write_fifo
-   *   This task writes a word to the FIFO memory and updates the
-   * write pointer.
-   *   FIFO size is relative to write domain.
-  ***************************************************************************/
    task write_fifo;
       begin
          memory[wr_ptr]     <= DIN;
@@ -2601,12 +2107,6 @@ module fifo_generator_v4_3_bhv_ver_ss
       end
    endtask // write_fifo
 
-  /**************************************************************************
-   * read_fifo
-   *   This task reads a word from the FIFO memory and updates the read
-   * pointer. It's output is the ideal_dout bus.
-   *   FIFO size is relative to write domain.
-   ***************************************************************************/
    task  read_fifo;
       begin
          ideal_dout <= memory[rd_ptr];
@@ -2697,10 +2197,9 @@ module fifo_generator_v4_3_bhv_ver_ss
     end
   endfunction
 
-   
-  /*************************************************************************
-  * Initialize Signals for clean power-on simulation
-  *************************************************************************/
+  /*****************************************************************************
+   * Initialize Signals
+   ****************************************************************************/
    initial begin
       num_bits           = 0;
       num_read_words_q   = 0;
@@ -2714,90 +2213,112 @@ module fifo_generator_v4_3_bhv_ver_ss
       valid_d1           = 1'b0;
       ideal_overflow     = 1'b0;
       ideal_underflow    = 1'b0;
-      ideal_full         = 1'b0;
+      //Modified the start-up value of FULL to '0' in v3.2 (IP2_Im)
+      //ideal_full         = C_FULL_RESET_VAL; //was in v3.1
+      ideal_full         = 1'b0; //v3.2
       ideal_empty        = 1'b1;
+      //Modified the start-up value of ALMOST_FULL to '0' in v3.2 (IP2_Im)
+      //ideal_almost_full  = C_ALMOST_FULL_RESET_VAL; //was in v3.1
       ideal_almost_full  = 1'b0;
       ideal_almost_empty = 1'b1;
-      ideal_prog_full    = 1'b0;
+      //Modified the start-up value of PROG_FULL to '0' in v3.2 (IP2_Im)
+      //ideal_prog_full    = C_PROG_FULL_RESET_VAL; //was in v3.1
+      ideal_prog_full    = 1'b0; //v3.2
       ideal_prog_empty   = 1'b1;
-      prog_full_d        = 1'b0;
+
+      //Modified the start-up value of PROG_FULL to '0' in v3.2 (IP2_Im)
+      //Therefore, prog_full_d is also changed
+      //prog_full_d        = C_PROG_FULL_RESET_VAL; //was in v3.1
+      prog_full_d        = 1'b0; //v3.2
       prog_empty_d       = 1'b1;
+
+      //Removed in v3.2
+      //power_on_timer     = C_HAS_RST ? 4'h3 : 4'h0;
+  
+      //Added these initial values in v3.2 to make it consistent with the synchronization flop stages in the core.
       rst_q              = 1'b0;
       rst_qq             = 1'b0;    
    end
 
 
-  /*************************************************************************
-   * Connect the module inputs and outputs to the internal signals of the
-   * behavioral model.
-   *************************************************************************/
-   //Inputs
-   /*
-   wire CLK;
-   wire [C_DIN_WIDTH-1:0] DIN;
-   wire [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH;
-   wire [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH_ASSERT;
-   wire [C_RD_PNTR_WIDTH-1:0] PROG_EMPTY_THRESH_NEGATE;
-   wire [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH;
-   wire [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH_ASSERT;
-   wire [C_WR_PNTR_WIDTH-1:0] PROG_FULL_THRESH_NEGATE;
-   wire RD_EN;
-   wire RST;
-   wire WR_EN;
-    */
-
-  //Outputs
-  assign ALMOST_EMPTY  = ideal_almost_empty;
-  assign ALMOST_FULL   = ideal_almost_full;
-
-  //Dout may change behavior based on latency
+  /*****************************************************************************
+   * Assign Internal ideal signals to output ports
+   ****************************************************************************/
   assign ideal_dout_out= (C_USE_EMBEDDED_REG==1 &&
                           (C_MEMORY_TYPE==0 || C_MEMORY_TYPE==1))?
                          ideal_dout_d1: ideal_dout; 
-  assign DOUT = ideal_dout_out;
-  
-  assign EMPTY         = ideal_empty;
+  assign DOUT          = ideal_dout_out;
+  //was in v3.1
+  //assign FULL          = (power_on_timer) ? C_FULL_RESET_VAL : ideal_full;
+  //v3.2
   assign FULL          = ideal_full;
 
-  //Overflow may be active-low
-  assign OVERFLOW      = ideal_overflow ? !C_OVERFLOW_LOW : C_OVERFLOW_LOW;
+  assign EMPTY         = ideal_empty;
+  //was in v3.1
+  //assign ALMOST_FULL   = (power_on_timer) ? C_ALMOST_FULL_RESET_VAL : ideal_almost_full;
+  //v3.2
+  assign ALMOST_FULL   = ideal_almost_full;
 
-  assign PROG_EMPTY    = ideal_prog_empty;
+  assign ALMOST_EMPTY  = ideal_almost_empty;
+
+  assign ideal_d_count = num_read_words[C_RD_PNTR_WIDTH-1:C_RD_PNTR_WIDTH-C_DATA_COUNT_WIDTH];
+  assign DATA_COUNT    = ideal_d_count;
+
+  //was in v3.1
+  //assign PROG_FULL     = (power_on_timer) ? C_PROG_FULL_RESET_VAL : ideal_prog_full;
+  //v3.2
   assign PROG_FULL     = ideal_prog_full;
 
-   //Valid may change behavior based on latency or active-low
+  assign PROG_EMPTY    = ideal_prog_empty;
+
+  //Handshaking signals can be active low, depending on _LOW parameters
   assign valid_i       = (C_PRELOAD_LATENCY==0) ? (RD_EN & ~EMPTY) : ideal_valid;
+  assign VALID         = valid_out ? !C_VALID_LOW : C_VALID_LOW;
   assign valid_out     = (C_PRELOAD_LATENCY==2 &&
                           (C_MEMORY_TYPE==0 || C_MEMORY_TYPE==1))?
                          valid_d1: valid_i; 
-  assign VALID         = valid_out ? !C_VALID_LOW : C_VALID_LOW;
-
-  //Trim data count differently depending on set widths
-  always @(num_read_words) begin
-     if (C_DATA_COUNT_WIDTH>C_RD_PNTR_WIDTH) begin
-	DATA_COUNT = num_read_words[C_RD_PNTR_WIDTH:0];	
-     end else begin
-        DATA_COUNT = 
-	  num_read_words[C_RD_PNTR_WIDTH-1:C_RD_PNTR_WIDTH-C_DATA_COUNT_WIDTH];	
-     end //if
-  end //always
-   
-  //Underflow may change behavior based on latency or active-low
   assign underflow_i   = (C_PRELOAD_LATENCY==0) ? (RD_EN & EMPTY) : ideal_underflow;
   assign UNDERFLOW     = underflow_i ? !C_UNDERFLOW_LOW : C_UNDERFLOW_LOW;
-	
 
-  //Write acknowledge may be active low
-  assign WR_ACK        = ideal_wr_ack ? !C_WR_ACK_LOW : C_WR_ACK_LOW;
+  assign WR_ACK        = wr_ack_i ? !C_WR_ACK_LOW : C_WR_ACK_LOW;
+  assign wr_ack_i      = (C_WR_RESPONSE_LATENCY==2) ? ideal_wr_ack_q :
+                         (C_WR_RESPONSE_LATENCY==1) ? ideal_wr_ack :
+                         (WR_EN & !FULL);
+  assign OVERFLOW      = overflow_i ? !C_OVERFLOW_LOW : C_OVERFLOW_LOW;
+  assign overflow_i    = (C_WR_RESPONSE_LATENCY==2) ? ideal_overflow_q :
+                         (C_WR_RESPONSE_LATENCY==1) ? ideal_overflow :
+                         (WR_EN & FULL);
 
+  assign srst_i         = C_HAS_SRST ? SRST : 0;
 
-
-  /*****************************************************************************
-   * Internal reset logic 
-   ****************************************************************************/
-  assign srst_i        = C_HAS_SRST ? SRST : 0;
+  /*******************************************************************************
+   * Internal reset logics 
+   ******************************************************************************/
   assign rst_comb      = !rst_asreg_d2 && rst_asreg;
   assign rst_i         = C_HAS_RST ? rst_reg : 0;
+
+  always @(posedge CLK or posedge rst_i) begin
+    if (rst_i == 1'b1) begin
+      valid_d1 <= 1'b0;
+    end else begin
+      if (srst_i) begin
+        valid_d1 <= 1'b0;
+      end else begin
+        valid_d1 <= valid_i;
+      end
+    end    
+  end   
+  always @(posedge CLK or posedge rst_i) begin
+    if (rst_i == 1'b1) begin
+      ideal_dout_d1 <= dout_reset_val;
+    end else begin
+      if (srst_i) begin
+        ideal_dout_d1 <= dout_reset_val;
+      end else begin
+        ideal_dout_d1 <= ideal_dout;
+      end
+    end    
+  end   
 
   always @(posedge CLK or posedge RST) begin
      if (RST == 1'b1) begin
@@ -2824,127 +2345,117 @@ module fifo_generator_v4_3_bhv_ver_ss
      end    
   end   
 
-   /**************************************************************************
-    * Assorted registers for delayed versions of signals
-    **************************************************************************/
-   //Capture delayed version of valid
-   always @(posedge CLK or posedge rst_i) begin
-      if (rst_i == 1'b1) begin
-	 valid_d1 <= 1'b0;
-      end else begin
-	 if (srst_i) begin
-            valid_d1 <= 1'b0;
-	 end else begin
-            valid_d1 <= valid_i;
-	 end
-      end    
-   end // always @ (posedge CLK or posedge rst_i)
-   
-   //Capture delayed version of dout
-   always @(posedge CLK or posedge rst_i) begin
-      if (rst_i == 1'b1 && C_USE_DOUT_RST == 1) begin
-	 ideal_dout_d1 <= dout_reset_val;
-      end else begin
-	 if (srst_i && C_USE_DOUT_RST == 1) begin
-            ideal_dout_d1 <= dout_reset_val;
-	 end else begin
-            ideal_dout_d1 <= ideal_dout;
-	 end
-      end    
-   end   
+  
+  /*******************************************************************************
+   * Write and Read Logics 
+   ******************************************************************************/
 
-   /**************************************************************************
-    * Overflow and Underflow Flag calculation
-    *  (handled separately because they don't support rst)
-    **************************************************************************/
-   always @(posedge CLK) begin
-     ideal_overflow    <= WR_EN & ideal_full;
-     ideal_underflow   <= ideal_empty & RD_EN;
-   end
- 
-   /*************************************************************************
-    * Write and Read Logic  
-    ************************************************************************/
-   always @(posedge CLK or posedge rst_i)
-     begin : gen_wr_ack_resp
-	
-	//Register reset
-	rst_q   <= rst_i;
-	rst_qq  <= rst_q;
-	
-     end // block: gen_wr_ack_resp
-   
+  always @(posedge CLK or posedge rst_i)
+   begin : gen_wr_ack_resp
+
+       //Register reset
+       rst_q   <= rst_i;
+       rst_qq  <= rst_q;
+
+       //Register output signals to achieve desired WR_RESPONSE latency
+       if (C_WR_RESPONSE_LATENCY == 2) begin
+          if (rst_i == 1) begin
+            ideal_wr_ack_q   <= 0;
+            ideal_overflow_q <= 0;
+          end else begin
+            ideal_wr_ack_q   <= ideal_wr_ack;
+            ideal_overflow_q <= ideal_overflow;
+          end
+       end
+  
+      //Removed in v3.2 
+      /*
+      if (rst_i == 1) begin
+         power_on_timer <= 0;
+      end else if (power_on_timer > 0) begin
+         power_on_timer <= power_on_timer -1;
+      end else begin
+         power_on_timer <= 0;
+      end
+      */
+    end // block: gen_wr_ack_resp
+
    // block memory has a synchronous reset
    always @(posedge CLK) begin : gen_fifo_blkmemdout
-      //Changed the latency of during async reset to '1' instead of '2' to 
-      // make it consistent with the core.
-      if (rst_i || rst_q || srst_i) begin
-         /******Initialize Read Domain Signals*********************************/
-         if (C_MEMORY_TYPE == 1 && C_USE_DOUT_RST == 1) begin
+      //Changed the latency of during async reset to '1' instead of '2' to make it consistent with the core.
+      //if (rst_i || rst_q || rst_qq) begin //was in v3.1
+      if (rst_i || rst_q || srst_i) begin //v3.2
+         /******Initialize Read Domain Signals************************************/
+         if (C_MEMORY_TYPE == 1) begin
             ideal_dout <= dout_reset_val;
          end
-      end
-   end //always
-   
+     //v3.2
+     //end else begin
+         //if (C_MEMORY_TYPE == 1 && power_on_timer >= 2) begin //was in v3.1
+     //    if (C_MEMORY_TYPE == 1) begin //v3.2
+     //       ideal_dout <= dout_reset_val;
+     //    end
+     end
+   end
+
    always @(posedge CLK or posedge rst_i) begin : gen_fifo
-      
-      /****** Reset fifo - Asynchronous Reset**********************************/
-      //Changed the latency of during async reset to '1' instead of '2' to 
-      // make it consistent with the core.
-      if (rst_i) begin //v3.2
-         /******Initialize Generic FIFO constructs*****************************/
+
+      /****** Reset fifo - Asynchronous Reset*************************************/
+      //Changed the latency of during async reset to '1' instead of '2' to make it consistent with the core.
+      //if (rst_i || rst_q || rst_qq) begin //was in v3.1
+      //if (rst_i || rst_q) begin //v3.2
+      if (rst_i ) begin //v3.2
+         /******Initialize Generic FIFO constructs********************************/
          num_bits           <= 0;
          wr_ptr             <= C_WR_DEPTH - 1;
          rd_ptr             <= C_RD_DEPTH - 1;
          num_read_words_q   <= 0;
          num_write_words_q  <= 0;
-	 
-	 
-         /******Initialize Write Domain Signals********************************/
+
+
+         /******Initialize Write Domain Signals***********************************/
          ideal_wr_ack       <= 0;
          ideal_full         <= C_FULL_FLAGS_RST_VAL;
          ideal_almost_full  <= C_FULL_FLAGS_RST_VAL;
-	 
-         /******Initialize Read Domain Signals*********************************/
-         if (C_MEMORY_TYPE != 1 && C_USE_DOUT_RST == 1) begin
+
+         /******Initialize Read Domain Signals************************************/
+         if (C_MEMORY_TYPE != 1) begin
             ideal_dout      <= dout_reset_val;
          end
          ideal_valid        <= 1'b0;
          ideal_empty        <= 1'b1;
          ideal_almost_empty <= 1'b1;
-	 
+
       end else begin   
          if (srst_i) begin
-            // SRST is available only for Sync BRAM and Sync DRAM.
-	    // Not for SSHFT.
+            // SRST is available only for Sync BRAM and Sync DRAM. Not for SSHFT.
             if (C_MEMORY_TYPE == 1 || C_MEMORY_TYPE == 2) begin
- 	       /******Initialize Generic FIFO constructs***********************/
+ 	       /******Initialize Generic FIFO constructs********************************/
                num_bits           <= 0;
                wr_ptr             <= C_WR_DEPTH - 1;
                rd_ptr             <= C_RD_DEPTH - 1;
                num_read_words_q   <= 0;
                num_write_words_q  <= 0;
-	       
-               /******Initialize Write Domain Signals**************************/
+
+               /******Initialize Write Domain Signals***********************************/
                ideal_wr_ack       <= 0;
                ideal_full         <= 0; //'0'
                ideal_almost_full  <= 0; //'0'
-	       
-               /******Initialize Read Domain Signals***************************/
-               //Reset DOUT of Sync DRAM. Sync BRAM DOUT was reset in the 
-	       // above always block.
-	       if (C_MEMORY_TYPE == 2 && C_USE_DOUT_RST == 1 ) begin  
+
+               /******Initialize Read Domain Signals************************************/
+               //Reset DOUT of Sync DRAM. Sync BRAM DOUT was reset in the above always block.
+	       if (C_MEMORY_TYPE == 2) begin  
                   ideal_dout      <= dout_reset_val;
                end
                ideal_valid        <= 1'b0;
                ideal_empty        <= 1'b1;
                ideal_almost_empty <= 1'b1;
             end
-	    
+
          end else begin  //normal operating conditions
-         /********************************************************************/
+         /**********************************************************************/
          // Synchronous FIFO Condition #1 : Writing and not reading
-         /********************************************************************/
+         /**********************************************************************/
          if (WR_EN & ~RD_EN) begin
 
             /*********************************/
@@ -3107,9 +2618,9 @@ module fifo_generator_v4_3_bhv_ver_ss
             end // average case
 
 
-            /******************************************************************/
+            /**********************************************************************/
             // Synchronous FIFO Condition #2 : Reading and not writing
-            /******************************************************************/
+            /**********************************************************************/
          end else if (~WR_EN & RD_EN) begin
 
             /*********************************/
@@ -3253,9 +2764,9 @@ module fifo_generator_v4_3_bhv_ver_ss
               end // average read
 
 
-            /******************************************************************/
+            /**********************************************************************/
             // Synchronous FIFO Condition #3 : Reading and writing
-            /******************************************************************/
+            /**********************************************************************/
          end else if (WR_EN & RD_EN) begin
 
             /*********************************/
@@ -3411,9 +2922,10 @@ module fifo_generator_v4_3_bhv_ver_ss
 
             end // average case
 
-            /******************************************************************/
+            /**********************************************************************/
             // Synchronous FIFO Condition #4 : Not reading or writing
-            /******************************************************************/
+            /***
+             *******************************************************************/
          end else begin
 
             /*********************************/
@@ -3515,13 +3027,19 @@ module fifo_generator_v4_3_bhv_ver_ss
 
    end // block: gen_fifo
 
+   //Generate overflow and underflow flags seperately
+   //because they don't support async rst
+   always @(posedge CLK) begin
+     ideal_overflow    <= WR_EN & ideal_full;
+     ideal_underflow    <= ideal_empty & RD_EN;
+   end
    
    always @(posedge CLK or posedge rst_i) begin : gen_fifo_p
 
       /****** Reset fifo - Async Reset****************************************/
-      //The latency of de-assertion of the flags is reduced by 1 to be 
-      // consistent with the core.
-      if (rst_i) begin 
+      //The latency of de-assertion of the flags is reduced by 1 to be consistent with the core.
+      //if (rst_i || rst_q) begin //was in v3.1 
+      if (rst_i) begin //v3.2 
          ideal_prog_full   <= C_FULL_FLAGS_RST_VAL;
          ideal_prog_empty  <= 1'b1;
          prog_full_d       <= C_FULL_FLAGS_RST_VAL;
@@ -3538,126 +3056,69 @@ module fifo_generator_v4_3_bhv_ver_ss
             end
          end else begin 
 
-	    /***************************************************************
-             * Programmable FULL flags
-             ****************************************************************/
-	    //calculation for standard fifo and latency =2
-	    if  (! (C_PRELOAD_REGS==1 && C_PRELOAD_LATENCY==0) ) begin  
-               //Single constant threshold
-               if (C_PROG_FULL_TYPE == 1) begin
-		  if ((num_write_words >= C_PROG_FULL_THRESH_ASSERT_VAL-1)
-                      && WR_EN && !RD_EN) begin
-                     prog_full_d <= 1'b1;
-		  end else if (((num_write_words == C_PROG_FULL_THRESH_ASSERT_VAL)
-				&& RD_EN && !WR_EN) || (rst_q && !rst_i)) begin
-	             prog_full_d <= 1'b0;
-		  end
-
-		  //Dual constant thresholds
-               end else if (C_PROG_FULL_TYPE == 2) begin
-		  if ((num_write_words == C_PROG_FULL_THRESH_ASSERT_VAL-1)
-                      && WR_EN && !RD_EN) begin
-                     prog_full_d <= 1'b1;
-		  end else if ((num_write_words == C_PROG_FULL_THRESH_NEGATE_VAL)
-                               && RD_EN && !WR_EN) begin
-                     prog_full_d <= 1'b0;
-		  end
-		  
-		  //Single input threshold
-               end else if (C_PROG_FULL_TYPE == 3) begin
-		  if ((num_write_words == PROG_FULL_THRESH-1)
-                      && WR_EN && !RD_EN) begin
-                     prog_full_d <= 1'b1;
-		  end else if ((num_write_words == PROG_FULL_THRESH)
-			       && !WR_EN && RD_EN) begin
-                     prog_full_d <= 1'b0;
-		  end else if (num_write_words >= PROG_FULL_THRESH) begin
-                     prog_full_d <= 1'b1;
-		  end else if (num_write_words < PROG_FULL_THRESH) begin
-                     prog_full_d <= 1'b0;
-		  end
-		  
-		  //Dual input thresholds
-               end else begin
-		  if ((num_write_words == PROG_FULL_THRESH_ASSERT-1)
-                      && WR_EN && !RD_EN) begin
-                     prog_full_d <= 1'b1;
-		  end else if ((num_write_words == PROG_FULL_THRESH_NEGATE)
-			       && !WR_EN && RD_EN)begin
-                     prog_full_d <= 1'b0;
-		  end else if (num_write_words >= PROG_FULL_THRESH_ASSERT) begin
-                     prog_full_d <= 1'b1;
-		  end else if (num_write_words < PROG_FULL_THRESH_NEGATE) begin 
-                     prog_full_d <= 1'b0;
-		  end
+	        /*****************************************************************
+            * Programmable FULL flags
+            ****************************************************************/
+            //Single constant threshold
+            if (C_PROG_FULL_TYPE == 1) begin
+               if ((num_write_words >= C_PROG_FULL_THRESH_ASSERT_VAL-1)
+                             && WR_EN && !RD_EN) begin
+                  prog_full_d <= 1'b1;
+               end else if (((num_write_words == C_PROG_FULL_THRESH_ASSERT_VAL)
+                    && RD_EN && !WR_EN) || (rst_q && !rst_i)) begin //v3.2
+	              prog_full_d <= 1'b0;
                end
-            end  // (~ (C_PRELOAD_REGS==1 && C_PRELOAD_LATENCY==0) )
-	    
-	    
-	    //calculation for FWFT fifo 
-	    if  (C_PRELOAD_REGS==1 && C_PRELOAD_LATENCY==0)  begin  
-               if (C_PROG_FULL_TYPE == 1) begin
-		  if ((num_write_words >= C_PROG_FULL_THRESH_ASSERT_VAL-1 - 2)
-                      && WR_EN && !RD_EN) begin
-                     prog_full_d <= 1'b1;
-		  end else if (((num_write_words == C_PROG_FULL_THRESH_ASSERT_VAL - 2)
-				&& RD_EN && !WR_EN) || (rst_q && !rst_i)) begin
-                     prog_full_d <= 1'b0;
-		  end
-		  
-		  //Dual constant thresholds
-               end else if (C_PROG_FULL_TYPE == 2) begin
-		  if ((num_write_words == C_PROG_FULL_THRESH_ASSERT_VAL-1 - 2)
-                      && WR_EN && !RD_EN) begin
-                     prog_full_d <= 1'b1;
-		  end else if ((num_write_words == C_PROG_FULL_THRESH_NEGATE_VAL - 2)
-                               && RD_EN && !WR_EN) begin
-                     prog_full_d <= 1'b0;
-		  end
-		  
-		  //Single input threshold
-               end else if (C_PROG_FULL_TYPE == 3) begin
-		  if ((num_write_words == PROG_FULL_THRESH-1 - 2)
-                      && WR_EN && !RD_EN) begin
-                     prog_full_d <= 1'b1;
-		  end else if ((num_write_words == PROG_FULL_THRESH - 2)
-			       && !WR_EN && RD_EN) begin
-                     prog_full_d <= 1'b0;
-		  end else if (num_write_words >= PROG_FULL_THRESH - 2) begin
-                     prog_full_d <= 1'b1;
-		  end else if (num_write_words < PROG_FULL_THRESH - 2) begin
-                     prog_full_d <= 1'b0;
-		  end
-		  
-		  //Dual input thresholds
-               end else begin
-		  if ((num_write_words == PROG_FULL_THRESH_ASSERT-1 - 2)
-                      && WR_EN && !RD_EN) begin
-                     prog_full_d <= 1'b1;
-		  end else if ((num_write_words == PROG_FULL_THRESH_NEGATE - 2)
-			       && !WR_EN && RD_EN)begin
-                     prog_full_d <= 1'b0;
-		  end else if (num_write_words >= PROG_FULL_THRESH_ASSERT - 2) begin
-                     prog_full_d <= 1'b1;
-		  end else if (num_write_words < PROG_FULL_THRESH_NEGATE - 2) begin
-                     prog_full_d <= 1'b0;
-		  end
-               end  
-            end  //  (C_PRELOAD_REGS==1 && C_PRELOAD_LATENCY==0)  
-	    
+
+            //Dual constant thresholds
+            end else if (C_PROG_FULL_TYPE == 2) begin
+               if ((num_write_words == C_PROG_FULL_THRESH_ASSERT_VAL-1)
+                   && WR_EN && !RD_EN) begin
+                  prog_full_d <= 1'b1;
+               end else if ((num_write_words == C_PROG_FULL_THRESH_NEGATE_VAL)
+                            && RD_EN && !WR_EN) begin
+                  prog_full_d <= 1'b0;
+               end
+
+            //Single input threshold
+            end else if (C_PROG_FULL_TYPE == 3) begin
+              if ((num_write_words == PROG_FULL_THRESH-1)
+                    && WR_EN && !RD_EN) begin
+                  prog_full_d <= 1'b1;
+              end else if ((num_write_words == PROG_FULL_THRESH)
+                    && !WR_EN && RD_EN) begin
+                   prog_full_d <= 1'b0;
+              end else if (num_write_words >= PROG_FULL_THRESH) begin
+                  prog_full_d <= 1'b1;
+              end else if (num_write_words < PROG_FULL_THRESH) begin
+                   prog_full_d <= 1'b0;
+              end
+
+            //Dual input thresholds
+            end else begin
+              if ((num_write_words == PROG_FULL_THRESH_ASSERT-1)
+                    && WR_EN && !RD_EN) begin
+                  prog_full_d <= 1'b1;
+              end else if ((num_write_words == PROG_FULL_THRESH_NEGATE)
+                    && !WR_EN && RD_EN)begin
+                  prog_full_d <= 1'b0;
+              end else if (num_write_words >= PROG_FULL_THRESH_ASSERT) begin
+                  prog_full_d <= 1'b1;
+              end else if (num_write_words < PROG_FULL_THRESH_NEGATE) begin 
+                  prog_full_d <= 1'b0;
+               end
+            end
+
             /*****************************************************************
              * Programmable EMPTY flags
              ****************************************************************/
-            //calculation for standard fifo and latency = 2
-	    if  (! (C_PRELOAD_REGS==1 && C_PRELOAD_LATENCY==0) ) begin  
-               //Single constant threshold
-               if (C_PROG_EMPTY_TYPE == 1) begin
-		  if ((num_read_words == C_PROG_EMPTY_THRESH_ASSERT_VAL+1)
-                      && RD_EN && !WR_EN) begin
-                     prog_empty_d <= 1'b1;
-		  end else if ((num_read_words == C_PROG_EMPTY_THRESH_ASSERT_VAL)
-			       && WR_EN && !RD_EN) begin
-                     prog_empty_d <= 1'b0;
+            //Single constant threshold
+            if (C_PROG_EMPTY_TYPE == 1) begin
+               if ((num_read_words == C_PROG_EMPTY_THRESH_ASSERT_VAL+1)
+                   && RD_EN && !WR_EN) begin
+                  prog_empty_d <= 1'b1;
+               end else if ((num_read_words == C_PROG_EMPTY_THRESH_ASSERT_VAL)
+                   && WR_EN && !RD_EN) begin
+                  prog_empty_d <= 1'b0;
                end
             //Dual constant thresholds
             end else if (C_PROG_EMPTY_TYPE == 2) begin
@@ -3697,77 +3158,20 @@ module fifo_generator_v4_3_bhv_ver_ss
                   prog_empty_d <= 1'b0;
                end
             end
-          end // (~ (C_PRELOAD_REGS==1 && C_PRELOAD_LATENCY==0) )
-	    
-            //calculation for FWFT fifo
-	    if   (C_PRELOAD_REGS==1 && C_PRELOAD_LATENCY==0)  begin  
-               //Single constant threshold
-               if (C_PROG_EMPTY_TYPE == 1) begin
-		  if ((num_read_words == C_PROG_EMPTY_THRESH_ASSERT_VAL+1 - 2)
-                      && RD_EN && !WR_EN) begin
-                     prog_empty_d <= 1'b1;    
-		  end else if ((num_read_words == C_PROG_EMPTY_THRESH_ASSERT_VAL - 2)
-			       && WR_EN && !RD_EN) begin
-                     prog_empty_d <= 1'b0;    
-		  end
-		  //Dual constant thresholds
-               end else if (C_PROG_EMPTY_TYPE == 2) begin
-		  if ((num_read_words == C_PROG_EMPTY_THRESH_ASSERT_VAL+1 - 2)  
-                      && RD_EN && !WR_EN) begin
-                     prog_empty_d <= 1'b1;    
-		  end else if ((num_read_words == C_PROG_EMPTY_THRESH_NEGATE_VAL - 2)
-                               && !RD_EN && WR_EN) begin
-                     prog_empty_d <= 1'b0;
-		  end
-		  
-		  //Single input threshold
-               end else if (C_PROG_EMPTY_TYPE == 3) begin
-		  if ((num_read_words == PROG_EMPTY_THRESH+1 - 2)
-                      && RD_EN && !WR_EN) begin   
-                     prog_empty_d <= 1'b1;
-		  end else if ((num_read_words == PROG_EMPTY_THRESH - 2)
-                               && !RD_EN && WR_EN) begin
-                     prog_empty_d <= 1'b0;
-		  end else if (num_read_words <= PROG_EMPTY_THRESH - 2) begin
-                     prog_empty_d <= 1'b1;
-		  end else if (num_read_words > PROG_EMPTY_THRESH - 2)begin
-                     prog_empty_d <= 1'b0;
-		  end
-		  
-		  //Dual input thresholds
-               end else begin
-		  if (num_read_words <= PROG_EMPTY_THRESH_ASSERT - 2) begin 
-                     prog_empty_d <= 1'b1;
-		  end else if ((num_read_words == PROG_EMPTY_THRESH_ASSERT+1 - 2)
-			       && RD_EN && !WR_EN) begin
-                     prog_empty_d <= 1'b1;    
-		  end else if (num_read_words > PROG_EMPTY_THRESH_NEGATE - 2)begin
-                     prog_empty_d <= 1'b0;
-		  end else if ((num_read_words == PROG_EMPTY_THRESH_NEGATE - 2)
-			       && !RD_EN && WR_EN) begin
-                     prog_empty_d <= 1'b0;    
-		  end
-               end  
-            end // (~ (C_PRELOAD_REGS==1 && C_PRELOAD_LATENCY==0) )
-	    
+
             ideal_prog_empty  <= prog_empty_d;
             if (rst_q && !rst_i) begin
-               ideal_prog_full   <= 1'b0;
-               prog_full_d       <= 1'b0;
+              ideal_prog_full   <= 1'b0;
             end else begin
-               ideal_prog_full   <= prog_full_d;
+              ideal_prog_full   <= prog_full_d;
             end
-	    
+
          end //if (srst_i) begin
       end //if (rst_i) begin
    end //always @(posedge CLK or posedge rst_i) begin : gen_fifo_p
 endmodule // fifo_generator_v4_3_bhv_ver_ss
 
 
-
-/**************************************************************************
- * First-Word Fall-Through module (preload 0)
- **************************************************************************/
 module fifo_generator_v4_3_bhv_ver_preload0
  (
   RD_CLK,
@@ -3784,21 +3188,19 @@ module fifo_generator_v4_3_bhv_ver_preload0
   FIFORDEN
   );
 
+
  parameter  C_DOUT_RST_VAL            = "";
  parameter  C_DOUT_WIDTH              = 8;
  parameter  C_HAS_RST                 = 0;
- parameter  C_USE_DOUT_RST            = 0;
  parameter  C_USERVALID_LOW           = 0;
  parameter  C_USERUNDERFLOW_LOW       = 0;
 
- //Inputs
+
  input                     RD_CLK;
  input                     RD_RST;
  input                     RD_EN;
  input                     FIFOEMPTY;
  input  [C_DOUT_WIDTH-1:0] FIFODATA;
-
- //Outputs
  output [C_DOUT_WIDTH-1:0] USERDATA;
  output                    USERVALID;
  output                    USERUNDERFLOW;
@@ -3807,14 +3209,11 @@ module fifo_generator_v4_3_bhv_ver_preload0
  output                    RAMVALID;
  output                    FIFORDEN;
 
- //Inputs
  wire                      RD_CLK;
  wire                      RD_RST;
  wire                      RD_EN;
  wire                      FIFOEMPTY;
  wire [C_DOUT_WIDTH-1:0]   FIFODATA;
-
- //Outputs
  reg [C_DOUT_WIDTH-1:0]    USERDATA;
  wire                      USERVALID;
  wire                      USERUNDERFLOW;
@@ -3823,7 +3222,6 @@ module fifo_generator_v4_3_bhv_ver_preload0
  wire                      RAMVALID;
  wire                      FIFORDEN;
 
- //Internal signals
  wire                      preloadstage1;
  wire                      preloadstage2;
  reg                       ram_valid_i;
@@ -3832,10 +3230,10 @@ module fifo_generator_v4_3_bhv_ver_preload0
  wire                      ram_rd_en;
  reg                       empty_i        = 1'b1;
  reg                       empty_q        = 1'b1;
- reg                       rd_en_q        = 1'b0;
+ reg                       rd_en_q        = 1'b0; //Fix for CR:236270 in v3.2 //prasanna
  reg                       almost_empty_i = 1'b1;
  reg                       almost_empty_q = 1'b1;
- wire 		           rd_rst_i;
+ wire rd_rst_i;
 
 
 /*************************************************************************
@@ -3903,191 +3301,194 @@ module fifo_generator_v4_3_bhv_ver_preload0
     end
   endfunction
 
-   
-   //*************************************************************************
-   //  Set power-on states for regs
-   //*************************************************************************
-   initial begin
-      ram_valid_i       = 1'b0;
-      read_data_valid_i = 1'b0;
-      USERDATA          = hexstr_conv(C_DOUT_RST_VAL);
-   end //initial
-
-   //***************************************************************************
-   //  connect up optional reset
-   //***************************************************************************
-   assign rd_rst_i = C_HAS_RST ? RD_RST : 0;
+initial
+ begin
+    ram_valid_i       = 1'b0;
+    read_data_valid_i = 1'b0;
+    USERDATA          = hexstr_conv(C_DOUT_RST_VAL);
+  end
 
 
-   //***************************************************************************
-   //  preloadstage2 indicates that stage2 needs to be updated. This is true
-   //  whenever read_data_valid is false, and RAM_valid is true.
-   //***************************************************************************
-   assign preloadstage2 = ram_valid_i & (~read_data_valid_i | RD_EN);
+ //******************************************************************************
+ //  connect up optional reset
+ //******************************************************************************
+ assign rd_rst_i = C_HAS_RST ? RD_RST : 0;
 
-   //***************************************************************************
-   //  preloadstage1 indicates that stage1 needs to be updated. This is true
-   //  whenever the RAM has data (RAM_EMPTY is false), and either RAM_Valid is
-   //  false (indicating that Stage1 needs updating), or preloadstage2 is active
-   //  (indicating that Stage2 is going to update, so Stage1, therefore, must
-   //  also be updated to keep it valid.
-   //***************************************************************************
-   assign preloadstage1 = ((~ram_valid_i | preloadstage2) & ~FIFOEMPTY);
 
-   //***************************************************************************
-   // Calculate RAM_REGOUT_EN
-   //  The output registers are controlled by the ram_regout_en signal.
-   //  These registers should be updated either when the output in Stage2 is
-   //  invalid (preloadstage2), OR when the user is reading, in which case the
-   //  Stage2 value will go invalid unless it is replenished.
-   //***************************************************************************
-   assign ram_regout_en = preloadstage2;
+ //******************************************************************************
+ //  preloadstage2 indicates that stage2 needs to be updated. This is true
+ //  whenever read_data_valid is false, and RAM_valid is true.
+ //******************************************************************************
+ assign preloadstage2 = ram_valid_i & (~read_data_valid_i | RD_EN);
 
-   //***************************************************************************
-   // Calculate RAM_RD_EN
-   //   RAM_RD_EN will be asserted whenever the RAM needs to be read in order to
-   //  update the value in Stage1.
-   //   One case when this happens is when preloadstage1=true, which indicates
-   //  that the data in Stage1 or Stage2 is invalid, and needs to automatically
-   //  be updated.
-   //   The other case is when the user is reading from the FIFO, which 
-   // guarantees that Stage1 or Stage2 will be invalid on the next clock 
-   // cycle, unless it is replinished by data from the memory. So, as long 
-   // as the RAM has data in it, a read of the RAM should occur.
-   //***************************************************************************
-   assign ram_rd_en = (RD_EN & ~FIFOEMPTY) | preloadstage1;
-   
-   //***************************************************************************
-   // Calculate RAMVALID_P0_OUT
-   //   RAMVALID_P0_OUT indicates that the data in Stage1 is valid.
-   //
-   //   If the RAM is being read from on this clock cycle (ram_rd_en=1), then
-   //   RAMVALID_P0_OUT is certainly going to be true.
-   //   If the RAM is not being read from, but the output registers are being
-   //   updated to fill Stage2 (ram_regout_en=1), then Stage1 will be emptying,
-   //   therefore causing RAMVALID_P0_OUT to be false.
-   //   Otherwise, RAMVALID_P0_OUT will remain unchanged.
-   //***************************************************************************
-   // PROCESS regout_valid
-   always @ (posedge RD_CLK or posedge rd_rst_i) begin  
-      if (rd_rst_i) begin 
-	 // asynchronous reset (active high)
-	 ram_valid_i     <= 1'b0;
-      end else begin
-	 if (ram_rd_en == 1'b1) begin
-            ram_valid_i   <= 1'b1;
-	 end else begin
-            if (ram_regout_en == 1'b1)
-	      ram_valid_i <= 1'b0;
-            else
-	      ram_valid_i <= ram_valid_i;
-	 end
-      end //rd_rst_i
-   end //always
-   
-   //***************************************************************************
-   // Calculate READ_DATA_VALID
-   //  READ_DATA_VALID indicates whether the value in Stage2 is valid or not.
-   //  Stage2 has valid data whenever Stage1 had valid data and 
-   //  ram_regout_en_i=1, such that the data in Stage1 is propogated 
-   //  into Stage2.
-   //***************************************************************************
-   always @ (posedge RD_CLK or posedge rd_rst_i) begin
-      if (rd_rst_i)
-	read_data_valid_i <= 1'b0;
+ //******************************************************************************
+ //  preloadstage1 indicates that stage1 needs to be updated. This is true
+ //  whenever the RAM has data (RAM_EMPTY is false), and either RAM_Valid is
+ //  false (indicating that Stage1 needs updating), or preloadstage2 is active
+ //  (indicating that Stage2 is going to update, so Stage1, therefore, must
+ //  also be updated to keep it valid.
+ //******************************************************************************
+ assign preloadstage1 = ((~ram_valid_i | preloadstage2) & ~FIFOEMPTY);
+
+ //******************************************************************************
+ // Calculate RAM_REGOUT_EN
+ //  The output registers are controlled by the ram_regout_en signal.
+ //  These registers should be updated either when the output in Stage2 is
+ //  invalid (preloadstage2), OR when the user is reading, in which case the
+ //  Stage2 value will go invalid unless it is replenished.
+ //******************************************************************************
+ assign ram_regout_en = preloadstage2;
+
+ //******************************************************************************
+ // Calculate RAM_RD_EN
+ //   RAM_RD_EN will be asserted whenever the RAM needs to be read in order to
+ //  update the value in Stage1.
+ //   One case when this happens is when preloadstage1=true, which indicates
+ //  that the data in Stage1 or Stage2 is invalid, and needs to automatically
+ //  be updated.
+ //   The other case is when the user is reading from the FIFO, which guarantees
+ //  that Stage1 or Stage2 will be invalid on the next clock cycle, unless it is
+ //  replinished by data from the memory. So, as long as the RAM has data in it,
+ //  a read of the RAM should occur.
+ //******************************************************************************
+ assign ram_rd_en = (RD_EN & ~FIFOEMPTY) | preloadstage1;
+
+ //******************************************************************************
+ // Calculate RAMVALID_P0_OUT
+ //   RAMVALID_P0_OUT indicates that the data in Stage1 is valid.
+ //
+ //   If the RAM is being read from on this clock cycle (ram_rd_en=1), then
+ //   RAMVALID_P0_OUT is certainly going to be true.
+ //   If the RAM is not being read from, but the output registers are being
+ //   updated to fill Stage2 (ram_regout_en=1), then Stage1 will be emptying,
+ //   therefore causing RAMVALID_P0_OUT to be false.
+ //   Otherwise, RAMVALID_P0_OUT will remain unchanged.
+ //******************************************************************************
+ always @ (posedge RD_CLK or posedge rd_rst_i)
+  begin  // PROCESS regout_valid
+    if (rd_rst_i)                // asynchronous reset (active high)
+      ram_valid_i     <= 1'b0;
+    else
+    begin
+      if (ram_rd_en == 1'b1)
+        ram_valid_i   <= 1'b1;
       else
-	read_data_valid_i <= ram_valid_i | (read_data_valid_i & ~RD_EN);
+        if (ram_regout_en == 1'b1)
+          ram_valid_i <= 1'b0;
+        else
+          ram_valid_i <= ram_valid_i;
+    end //rd_rst_i
+  end //always
+
+ //******************************************************************************
+ // Calculate READ_DATA_VALID
+ //  READ_DATA_VALID indicates whether the value in Stage2 is valid or not.
+ //  Stage2 has valid data whenever Stage1 had valid data and ram_regout_en_i=1,
+ //  such that the data in Stage1 is propogated into Stage2.
+ //******************************************************************************
+ always @ (posedge RD_CLK or posedge rd_rst_i)
+   begin
+    if (rd_rst_i)
+     read_data_valid_i <= 1'b0;
+    else
+     read_data_valid_i <= ram_valid_i | (read_data_valid_i & ~RD_EN);
    end //always
-   
-   
-   //**************************************************************************
-   // Calculate EMPTY
-   //  Defined as the inverse of READ_DATA_VALID
-   //
-   // Description:
-   //
-   //  If read_data_valid_i indicates that the output is not valid,
-   // and there is no valid data on the output of the ram to preload it
-   // with, then we will report empty.
-   //
-   //  If there is no valid data on the output of the ram and we are
-   // reading, then the FIFO will go empty.
-   //
-   //**************************************************************************
-   always @ (posedge RD_CLK or posedge rd_rst_i) begin
-      if (rd_rst_i) begin
-	 // asynchronous reset (active high)
-	 empty_i <= 1'b1;
-	 empty_q <= 1'b1;
-      end else begin
-	 // rising clock edge
-	 empty_i <= (~ram_valid_i & ~read_data_valid_i) | (~ram_valid_i & RD_EN);
-	 empty_q <= empty_i;
+
+
+ //*****************************************************************************
+ // Calculate EMPTY
+ //  Defined as the inverse of READ_DATA_VALID
+ //
+ // Description:
+ //
+ //  If read_data_valid_i indicates that the output is not valid,
+ // and there is no valid data on the output of the ram to preload it
+ // with, then we will report empty.
+ //
+ //  If there is no valid data on the output of the ram and we are
+ // reading, then the FIFO will go empty.
+ //
+ //*****************************************************************************
+ always @ (posedge RD_CLK or posedge rd_rst_i)
+  begin
+   if (rd_rst_i)                // asynchronous reset (active high)
+   begin
+    empty_i <= 1'b1;
+    empty_q <= 1'b1;
+   end
+   else // rising clock edge
+    begin
+     empty_i <= (~ram_valid_i & ~read_data_valid_i) | (~ram_valid_i & RD_EN);
+     empty_q <= empty_i;
+    end
+  end //always
+
+  //Fix for CR:236270 //prasanna
+  //Register RD_EN from user to calculate USERUNDERFLOW.
+  always @ (posedge RD_CLK or posedge rd_rst_i)
+  begin
+   if (rd_rst_i)                // asynchronous reset (active high)
+   begin
+    rd_en_q <= 1'b0;
+   end
+   else // rising clock edge
+    begin
+     rd_en_q <= RD_EN;
+    end
+  end //always
+
+
+ //*****************************************************************************
+ // Calculate user_almost_empty
+ //  user_almost_empty is defined such that, unless more words are written
+ //  to the FIFO, the next read will cause the FIFO to go EMPTY.
+ //
+ //  In most cases, whenever the output registers are updated (due to a user
+ // read or a preload condition), then user_almost_empty will update to
+ // whatever RAM_EMPTY is.
+ //
+ //  The exception is when the output is valid, the user is not reading, and
+ // Stage1 is not empty. In this condition, Stage1 will be preloaded from the
+ // memory, so we need to make sure user_almost_empty deasserts properly under
+ // this condition.
+ //*****************************************************************************
+ always @ (posedge RD_CLK or posedge rd_rst_i)
+  begin
+   if (rd_rst_i)                // asynchronous reset (active high)
+   begin
+    almost_empty_i <= 1'b1;
+    almost_empty_q <= 1'b1;
+   end
+   else // rising clock edge
+    begin
+     if ((ram_regout_en) | (~FIFOEMPTY & read_data_valid_i & ~RD_EN))
+      begin
+       almost_empty_i <= FIFOEMPTY;
       end
-   end //always
-   
-   //Register RD_EN from user to calculate USERUNDERFLOW.
-   always @ (posedge RD_CLK or posedge rd_rst_i) begin
-      if (rd_rst_i) begin
-	 // asynchronous reset (active high)
-	 rd_en_q <= 1'b0;
-      end else begin
-	 // rising clock edge
-	 rd_en_q <= RD_EN;
-      end
-   end //always
-   
-   
-   //***************************************************************************
-   // Calculate user_almost_empty
-   //  user_almost_empty is defined such that, unless more words are written
-   //  to the FIFO, the next read will cause the FIFO to go EMPTY.
-   //
-   //  In most cases, whenever the output registers are updated (due to a user
-   // read or a preload condition), then user_almost_empty will update to
-   // whatever RAM_EMPTY is.
-   //
-   //  The exception is when the output is valid, the user is not reading, and
-   // Stage1 is not empty. In this condition, Stage1 will be preloaded from the
-   // memory, so we need to make sure user_almost_empty deasserts properly under
-   // this condition.
-   //***************************************************************************
-   always @ (posedge RD_CLK or posedge rd_rst_i)
-     begin
-	if (rd_rst_i)                // asynchronous reset (active high)
-	  begin
-	     almost_empty_i <= 1'b1;
-	     almost_empty_q <= 1'b1;
-	  end
-	else // rising clock edge
-	  begin
-	     if ((ram_regout_en) | (~FIFOEMPTY & read_data_valid_i & ~RD_EN))
-	       begin
-		  almost_empty_i <= FIFOEMPTY;
-	       end
-	     almost_empty_q   <= empty_i;
-	  end
-     end //always
-   
-   
-   assign USEREMPTY       = empty_i;
-   assign USERALMOSTEMPTY = almost_empty_i;
-   assign FIFORDEN        = ram_rd_en;
-   assign RAMVALID        = ram_valid_i;
-   assign USERVALID       = C_USERVALID_LOW ? ~read_data_valid_i : read_data_valid_i;
-   assign USERUNDERFLOW   = C_USERUNDERFLOW_LOW ? ~(empty_q & rd_en_q) : empty_q & rd_en_q;
-   
-   always @ (posedge RD_CLK or posedge rd_rst_i)
-     begin
-	if (rd_rst_i && C_USE_DOUT_RST == 1)  //asynchronous reset (active high)
-	  USERDATA   <= hexstr_conv(C_DOUT_RST_VAL);
-	else  // rising clock edge
-	  if (ram_regout_en)
-            USERDATA <= FIFODATA;
-     end //always
-   
-   
-   
-   
-   
+     almost_empty_q   <= empty_i;
+    end
+  end //always
+
+
+ assign USEREMPTY       = empty_i;
+ assign USERALMOSTEMPTY = almost_empty_i;
+ assign FIFORDEN        = ram_rd_en;
+ assign RAMVALID        = ram_valid_i;
+ assign USERVALID       = C_USERVALID_LOW ? ~read_data_valid_i : read_data_valid_i;
+ //assign USERUNDERFLOW   = C_USERUNDERFLOW_LOW ? ~(empty_q & RD_EN) : empty_q & RD_EN; //Bug in v3.1 (CR:236270) 
+ assign USERUNDERFLOW   = C_USERUNDERFLOW_LOW ? ~(empty_q & rd_en_q) : empty_q & rd_en_q; //Fix for CR:236270 in v3.2 //prasanna 
+ 
+ always @ (posedge RD_CLK or posedge rd_rst_i)
+  begin
+    if (rd_rst_i)             // asynchronous reset (active high)
+      USERDATA   <= hexstr_conv(C_DOUT_RST_VAL);
+    else  // rising clock edge
+      if (ram_regout_en)
+        USERDATA <= FIFODATA;
+  end //always
+
+
+
+
+
 endmodule
