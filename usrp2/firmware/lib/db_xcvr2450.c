@@ -57,7 +57,7 @@ void set_atr_regs(int bank, struct db_base *db); //FIXME I need to be in a heade
 #define HB_FREQ_MIN U2_DOUBLE_TO_FXPT_FREQ(4.8e9)
 #define HB_FREQ_MAX U2_DOUBLE_TO_FXPT_FREQ(6.1e9)
 #define MASTER_REF_CLK_DIV 1
-#define N_DIV_MIN_Q16 (130 << 16)
+#define N_DIV_MIN_Q16 (131 << 16)
 
 bool xcvr2450_init(struct db_base *db);
 bool xcvr2450_set_freq(struct db_base *db, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc);
