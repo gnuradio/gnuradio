@@ -99,3 +99,7 @@ def send_fail_load_preferences(prefs_file_path):
 
 def send_fail_save_preferences(prefs_file_path):
 	send('>>> Error: Cannot save preferences file: "%s"\n'%prefs_file_path)
+
+################# functions for warning	########################################
+def send_warning(warning):
+	send('>>> Warning: %s\n'%warning)

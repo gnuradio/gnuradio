@@ -26,6 +26,7 @@ from Constants import \
 	HIER_BLOCKS_LIB_DIR, PYEXEC, \
 	FLOW_GRAPH_TEMPLATE
 from utils import convert_hier
+from ... gui import Messages
 
 class Generator(object):
 
@@ -50,6 +51,12 @@ class Generator(object):
 	def get_file_path(self): return self._file_path
 
 	def write(self):
+		#do throttle warning
+		all_keys = ' '.join(map(lambda b: b.get_key(), self._flow_graph.get_enabled_blocks()))
+		if ('usrp' not in all_keys) and ('audio' not in all_keys) and ('throttle' not in all_keys):
+			Messages.send_warning('''\
+This flow graph may not have flow control: no audio or usrp blocks found. \
+Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 		#generate
 		open(self.get_file_path(), 'w').write(str(self))
 		if self._generate_options == 'hb':
