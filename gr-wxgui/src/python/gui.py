@@ -52,6 +52,11 @@ class top_panel(wx.Panel):
         self.SetAutoLayout(True)
         vbox.Fit(self)
 
+    def shutdown(self):
+        try:
+            self.gui.shutdown()
+        except AttributeError:
+            pass
 
 #
 # Top-level window frame with menu and status bars.
@@ -91,6 +96,10 @@ class top_frame(wx.Frame):
             self.top_block.start()
 
     def OnCloseWindow(self, event):
+        # Give user API a chance to do something
+        self.panel.shutdown()
+
+        # Stop flowgraph as a convenience
         self.SetStatusText("Ensuring flowgraph has completed before exiting...")
         if self.top_block is not None:
             self.top_block.stop()
