@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2007,2008 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -77,7 +77,17 @@ class wfm_rx_block (stdgui2.std_top_block):
         audio_decimation = 10
         audio_rate = demod_rate / audio_decimation  # ~32 kHz
 
-        print "Using RX d'board 0x%04X" % (self.u.daughterboard_id(),)
+        #FIXME: need named constants and text descriptions available to (gr-)usrp2 even
+        #when usrp(1) module is not built.  A usrp_common module, perhaps?
+        dbid = self.u.daughterboard_id()
+        print "Using RX d'board 0x%04X" % (dbid,)
+        if not (dbid == 0x0001 or #usrp_dbid.BASIC_RX
+                dbid == 0x0003 or #usrp_dbid.TV_RX
+                dbid == 0x000c or #usrp_dbid.TV_RX_REV_2
+                dbid == 0x0040):  #usrp_dbid.TV_RX_REV_3    
+            print "This daughterboard does not cover the required frequency range"
+            print "for this application.  Please use a BasicRX or TVRX daughterboard."
+            raw_input("Press ENTER to continue anyway, or Ctrl-C to exit.")
 
         chan_filt_coeffs = optfir.low_pass (1,           # gain
                                             usrp_rate,   # sampling rate

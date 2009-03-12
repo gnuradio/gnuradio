@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -93,7 +93,14 @@ class wfm_rx_block (stdgui2.std_top_block):
         self.u.set_mux(usrp.determine_rx_mux_value(self.u, options.rx_subdev_spec))
         self.subdev = usrp.selected_subdev(self.u, options.rx_subdev_spec)
         print "Using RX d'board %s" % (self.subdev.side_and_name(),)
-
+        dbid = self.subdev.dbid()
+        if not (dbid == usrp_dbid.BASIC_RX or
+                dbid == usrp_dbid.TV_RX or
+                dbid == usrp_dbid.TV_RX_REV_2 or
+                dbid == usrp_dbid.TV_RX_REV_3):
+            print "This daughterboard does not cover the required frequency range"
+            print "for this application.  Please use a BasicRX or TVRX daughterboard."
+            raw_input("Press ENTER to continue anyway, or Ctrl-C to exit.")
 
         chan_filt_coeffs = optfir.low_pass (1,           # gain
                                             usrp_rate,   # sampling rate
