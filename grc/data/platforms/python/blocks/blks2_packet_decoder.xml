@@ -8,11 +8,11 @@
 	<name>Packet Decoder</name>
 	<key>blks2_packet_decoder</key>
 	<import>from grc_gnuradio import blks2 as grc_blks2</import>
-	<import>from gnuradio import gr</import>
-	<make>grc_blks2.packet_decoder(
-	item_size_out=$type.size*$vlen,
-	access_code=$access_code,
-	threshold=$threshold,
+	<make>grc_blks2.packet_demod_$(type.fcn)(grc_blks2.packet_decoder(
+		access_code=$access_code,
+		threshold=$threshold,
+		callback=lambda ok, payload: self.$(id).recv_pkt(ok, payload),
+	),
 )</make>
 	<param>
 		<name>Output Type</name>
@@ -22,27 +22,27 @@
 		<option>
 			<name>Complex</name>
 			<key>complex</key>
-			<opt>size:gr.sizeof_gr_complex</opt>
+			<opt>fcn:c</opt>
 		</option>
 		<option>
 			<name>Float</name>
 			<key>float</key>
-			<opt>size:gr.sizeof_float</opt>
+			<opt>fcn:f</opt>
 		</option>
 		<option>
 			<name>Int</name>
 			<key>int</key>
-			<opt>size:gr.sizeof_int</opt>
+			<opt>fcn:i</opt>
 		</option>
 		<option>
 			<name>Short</name>
 			<key>short</key>
-			<opt>size:gr.sizeof_short</opt>
+			<opt>fcn:s</opt>
 		</option>
 		<option>
 			<name>Byte</name>
 			<key>byte</key>
-			<opt>size:gr.sizeof_char</opt>
+			<opt>fcn:b</opt>
 		</option>
 	</param>
 	<param>
@@ -57,13 +57,6 @@
 		<value>-1</value>
 		<type>int</type>
 	</param>
-	<param>
-		<name>Vec Length</name>
-		<key>vlen</key>
-		<value>1</value>
-		<type>int</type>
-	</param>
-	<check>$vlen &gt; 0</check>
 	<sink>
 		<name>in</name>
 		<type>byte</type>
@@ -71,11 +64,12 @@
 	<source>
 		<name>out</name>
 		<type>$type</type>
-		<vlen>$vlen</vlen>
 	</source>
 	<doc>
 Packet decoder block, for use with the gnuradio demodulator blocks: gmsk, psk, qam.
 
-Access Code: string of 1's and 0's, leave blank for default.
+Access Code: string of 1's and 0's, leave blank for automatic.
+
+Threshold: -1 for automatic.
 	</doc>
 </block>

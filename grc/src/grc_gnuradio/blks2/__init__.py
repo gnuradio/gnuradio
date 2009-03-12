@@ -1,4 +1,4 @@
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2009 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,6 +19,8 @@
 #
 
 from selector import selector, valve
-from packet import packet_encoder, packet_decoder
+from packet import options, packet_encoder, packet_decoder, \
+	packet_mod_b, packet_mod_s, packet_mod_i, packet_mod_f, packet_mod_c, \
+	packet_demod_b, packet_demod_s, packet_demod_i, packet_demod_f, packet_demod_c
 from error_rate import error_rate
 from probe import probe_function, probe_avg_mag_sqrd_c, probe_avg_mag_sqrd_f, probe_density_b, probe_mpsk_snr_c

@@ -1,7 +1,6 @@
 ##################################################
 # Blocks
 ##################################################
--ofdm wrappers
 -probe: also non-float outputs
 -log slider gui control
 

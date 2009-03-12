@@ -1,18 +1,24 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Packet Encoder
+##OFDM Mod
 ###################################################
  -->
 <block>
-	<name>Packet Encoder</name>
-	<key>blks2_packet_encoder</key>
+	<name>OFDM Mod</name>
+	<key>blks2_ofdm_mod</key>
 	<import>from grc_gnuradio import blks2 as grc_blks2</import>
-	<make>grc_blks2.packet_mod_$(type.fcn)(grc_blks2.packet_encoder(
-		samples_per_symbol=$samples_per_symbol,
-		bits_per_symbol=$bits_per_symbol,
-		access_code=$access_code,
-		pad_for_usrp=$pad_for_usrp,
+	<import>from gnuradio import blks2</import>
+	<make>grc_blks2.packet_mod_$(type.fcn)(blks2.ofdm_mod(
+		options=grc_blks2.options(
+			modulation="$modulation",
+			fft_length=$fft_length,
+			occupied_tones=$occupied_tones,
+			cp_length=$cp_length,
+			pad_for_usrp=$pad_for_usrp,
+			log=None,
+			verbose=None,
+		),
 	),
 	payload_length=$payload_length,
 )</make>
@@ -48,20 +54,55 @@
 		</option>
 	</param>
 	<param>
-		<name>Samples/Symbol</name>
-		<key>samples_per_symbol</key>
+		<name>Modulation</name>
+		<key>modulation</key>
+		<type>enum</type>
+		<option>
+			<name>BPSK</name>
+			<key>bpsk</key>
+		</option>
+		<option>
+			<name>QPSK</name>
+			<key>qpsk</key>
+		</option>
+		<option>
+			<name>8PSK</name>
+			<key>8psk</key>
+		</option>
+		<option>
+			<name>QAM8</name>
+			<key>qam8</key>
+		</option>
+		<option>
+			<name>QAM16</name>
+			<key>qam16</key>
+		</option>
+		<option>
+			<name>QAM64</name>
+			<key>qam64</key>
+		</option>
+		<option>
+			<name>QAM256</name>
+			<key>qam256</key>
+		</option>
+	</param>
+	<param>
+		<name>FFT Length</name>
+		<key>fft_length</key>
+		<value>512</value>
 		<type>int</type>
 	</param>
 	<param>
-		<name>Bits/Symbol</name>
-		<key>bits_per_symbol</key>
+		<name>Occupied Tones</name>
+		<key>occupied_tones</key>
+		<value>200</value>
 		<type>int</type>
 	</param>
 	<param>
-		<name>Access Code</name>
-		<key>access_code</key>
-		<value></value>
-		<type>string</type>
+		<name>Cyclic Prefix Length</name>
+		<key>cp_length</key>
+		<value>128</value>
+		<type>int</type>
 	</param>
 	<param>
 		<name>Pad for USRP</name>
@@ -88,23 +129,7 @@
 	</sink>
 	<source>
 		<name>out</name>
-		<type>byte</type>
+		<type>complex</type>
 	</source>
-	<doc>
-Packet encoder block, for use with the gnuradio modulator blocks: gmsk, dpsk, qam.
-
-Access Code: string of 1's and 0's, leave blank for automatic.
-
-Payload Length: 0 for automatic.
-
-Bits/Symbol should be set accordingly:
-	gmsk -> 1
-	dbpsk -> 1
-	dqpsk -> 2
-	d8psk -> 3
-	qam8 -> 3
-	qam16 -> 4
-	qam64 -> 6
-	qam256 -> 8
-	</doc>
+	<doc>Payload Length: 0 for automatic.</doc>
 </block>

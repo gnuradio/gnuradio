@@ -213,6 +213,9 @@
 		<block>blks2_qamx_mod</block>
 		<block>blks2_qamx_demod</block>
 
+		<block>blks2_ofdm_mod</block>
+		<block>blks2_ofdm_demod</block>
+
 		<block>blks2_synthesis_filterbank</block>
 		<block>blks2_analysis_filterbank</block>
 	</cat>
