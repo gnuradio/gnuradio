@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004, 2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,9 +22,9 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,float_to_complex)
 
-gr_float_to_complex_sptr gr_make_float_to_complex ();
+gr_float_to_complex_sptr gr_make_float_to_complex (int vlen = 1);
 
 class gr_float_to_complex : public gr_sync_block
 {
-  gr_float_to_complex ();
+  gr_float_to_complex (int vlen);
 };

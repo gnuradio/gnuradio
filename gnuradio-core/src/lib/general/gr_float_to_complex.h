@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004, 2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@ class gr_float_to_complex;
 typedef boost::shared_ptr<gr_float_to_complex> gr_float_to_complex_sptr;
 
 gr_float_to_complex_sptr
-gr_make_float_to_complex ();
+gr_make_float_to_complex (int vlen = 1);
 
 /*!
  * \brief Convert 1 or 2 streams of float to a stream of gr_complex
@@ -39,8 +39,10 @@ gr_make_float_to_complex ();
 
 class gr_float_to_complex : public gr_sync_block
 {
-  friend gr_float_to_complex_sptr gr_make_float_to_complex ();
-  gr_float_to_complex ();
+  friend gr_float_to_complex_sptr gr_make_float_to_complex (int vlen);
+  gr_float_to_complex (int vlen);
+
+  int d_vlen;
 
  public:
   virtual int work (int noutput_items,

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004, 2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,15 +28,16 @@
 #include <gr_io_signature.h>
 
 gr_float_to_complex_sptr
-gr_make_float_to_complex ()
+gr_make_float_to_complex (int vlen)
 {
-  return gr_float_to_complex_sptr (new gr_float_to_complex ());
+  return gr_float_to_complex_sptr (new gr_float_to_complex (vlen));
 }
 
-gr_float_to_complex::gr_float_to_complex ()
+gr_float_to_complex::gr_float_to_complex (int vlen)
   : gr_sync_block ("gr_float_to_complex",
-		   gr_make_io_signature (1, 2, sizeof (float)),
-		   gr_make_io_signature (1, 1, sizeof (gr_complex)))
+		   gr_make_io_signature (1, 2, sizeof (float) *  vlen),
+		   gr_make_io_signature (1, 1, sizeof (gr_complex) * vlen)),
+  d_vlen (vlen)
 {
 }
 
@@ -51,12 +52,12 @@ gr_float_to_complex::work (int noutput_items,
 
   switch (input_items.size ()){
   case 1:
-    for (int j = 0; j < noutput_items; j++)
+    for (int j = 0; j < noutput_items*d_vlen; j++)
       out[j] = gr_complex (r[j], 0);
     break;
 
   case 2:
-    for (int j = 0; j < noutput_items; j++)
+    for (int j = 0; j < noutput_items*d_vlen; j++)
       out[j] = gr_complex (r[j], i[j]);
     break;
 
