@@ -120,28 +120,12 @@ core_generator = 			\
 	gr_moving_average_XX.h.t	\
 	gr_moving_average_XX.i.t
 
-# include the srcdir's Makefile.gen; doing this creates an implicit
-# dependency between $(srcdir)/Makefile.in and $(srcdir)/Makefile.gen.
-include $(srcdir)/Makefile.gen
-
 # Source built by Python into $(builddir)
-python_built_sources =		\
+BUILT_SOURCES =			\
 	$(GENERATED_H)		\
 	$(GENERATED_I)		\
 	$(GENERATED_CC)		\
 	gengen_generated.i
-
-BUILT_SOURCES = $(python_built_sources)
-
-# Required when including Makefile.gen.gen
-
-STAMPS =
-gen_sources = $(BUILT_SOURCES)
-gen_sources_deps = $(core_generator)
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
-
-# common way for generating sources from templates, using the above parameters
-include $(top_srcdir)/Makefile.gen.gen
 
 # ----------------------------------------------------------------
 
@@ -151,15 +135,11 @@ EXTRA_DIST = 				\
 libgengen_la_SOURCES = 			\
 	$(GENERATED_CC)			
 
-#libgengen_qa_la_SOURCES = 		
-
 grinclude_HEADERS = 			\
 	$(GENERATED_H)			\
 	gr_endianness.h			\
 	gr_noise_type.h			\
 	gr_sig_source_waveform.h	
-
-noinst_HEADERS = 			
 
 swiginclude_HEADERS =			\
 	$(GENERATED_I)			\
@@ -167,4 +147,19 @@ swiginclude_HEADERS =			\
 	gengen.i			\
 	gengen_generated.i		
 
-CLEANFILES = $(BUILT_SOURCES) *.pyc
+# Do creation and inclusion of other Makefiles last
+
+# include the srcdir's Makefile.gen; doing this creates an implicit
+# dependency between $(srcdir)/Makefile.in and $(srcdir)/Makefile.gen.
+include $(srcdir)/Makefile.gen
+
+# common way for generating local Makefile.gen
+makefile_gen_gen_command = PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) do_makefile=1 do_sources=0 $(PYTHON) $(srcdir)/generate_all.py
+include $(top_srcdir)/Makefile.gen.gen
+
+# common way for generating sources from templates when using
+# BUILT_SOURCES, using parallel build protection.
+gen_sources = $(BUILT_SOURCES)
+gen_sources_deps = $(core_generator)
+par_gen_command = PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
+include $(top_srcdir)/Makefile.par.gen

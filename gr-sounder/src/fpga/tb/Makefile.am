@@ -1,5 +1,5 @@
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -27,4 +27,4 @@ EXTRA_DIST = \
 	sounder_tb.sh \
 	sounder_tb_wave.sh
 
-MOSTLYCLEANFILES = *~ *.vcd *.out* sounder_tb
+MOSTLYCLEANFILES += *.vcd *.out* sounder_tb

@@ -1,5 +1,5 @@
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -26,5 +26,3 @@ EXTRA_DIST = microtune.py
 
 noinst_SCRIPTS = 		\
 	microtune.py		
-
-CLEANFILES = *.pyc

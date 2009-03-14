@@ -1,7 +1,7 @@
 #
 #  USRP - Universal Software Radio Peripheral
 # 
-#  Copyright (C) 2003,2004,2006,2007,2008 Free Software Foundation, Inc.
+#  Copyright (C) 2003,2004,2006,2007,2008,2009 Free Software Foundation, Inc.
 # 
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -184,10 +184,11 @@ noinst_PYTHON =				\
 	check_data.py			\
 	dump_data.py
 
-usrp_dbid.py usrp_dbid.h usrp_dbid.cc: gen_usrp_dbid.py usrp_dbid.dat
-	PYTHONPATH=$(top_srcdir)/usrp/src srcdir=$(srcdir) $(PYTHON) $(srcdir)/gen_usrp_dbid.py $(srcdir)/usrp_dbid.dat
-
 swiginclude_HEADERS = db_base.i
 
-MOSTLYCLEANFILES = \
-	$(BUILT_SOURCES) *~ *.pyc
+# common way for generating sources from templates when using
+# BUILT_SOURCES, using parallel build protection.
+gen_sources = $(BUILT_SOURCES)
+gen_sources_deps = gen_usrp_dbid.py usrp_dbid.dat
+par_gen_command = PYTHONPATH=$(top_srcdir)/usrp/src srcdir=$(srcdir) $(PYTHON) $(srcdir)/gen_usrp_dbid.py $(srcdir)/usrp_dbid.dat
+include $(top_srcdir)/Makefile.par.gen

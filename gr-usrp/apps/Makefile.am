@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -51,5 +51,3 @@ usrp_rx_cfile_SOURCES = 	\
 
 usrp_siggen_SOURCES = 	\
     usrp_siggen.cc
-
-MOSTLYCLEANFILES = *~

@@ -41,5 +41,3 @@ dist_ourdata_SCRIPTS =		\
 	transmit_path_lb.py	\
 	tunnel.py		\
 	tx_voice.py
-
-MOSTLYCLEANFILES = *.pyc *.pyo *~

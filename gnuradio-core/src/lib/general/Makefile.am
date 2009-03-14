@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2004,2006,2007,2008 Free Software Foundation, Inc.
+# Copyright 2001,2002,2004,2006,2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -475,6 +475,3 @@ swiginclude_HEADERS =			\
 	gr_scrambler_bb.i		\
 	gr_probe_mpsk_snr_c.i		\
 	gr_probe_density_b.i
-
-
-CLEANFILES = $(BUILT_SOURCES) *.pyc

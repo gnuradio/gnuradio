@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -36,5 +36,3 @@ grblkspython_PYTHON =		\
 noinst_PYTHON = 			\
 	encdec.py			\
 	qa_cvsd_vocoder.py		
-
-CLEANFILES = *.pyc *.pyo

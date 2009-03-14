@@ -35,5 +35,3 @@ dist_bin_SCRIPTS = 			\
     gpio_rx_sfile.py			\
     gpio_usrp_siggen.py 		\
     gpio_usrp_fft.py
-
-MOSTLYCLEANFILES = *.pyo *.pyc *~

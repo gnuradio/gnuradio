@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -43,4 +43,3 @@ Constants.py: Makefile Constants.py.in
 
 EXTRA_DIST = $(srcdir)/Constants.py.in
 BUILT_SOURCES = Constants.py
-MOSTLYCLEANFILES = $(BUILT_SOURCES)

@@ -21,86 +21,41 @@
 
 include $(top_srcdir)/Makefile.common
 
-# Install this stuff so that it ends up as the gnuradio.howto module
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-
-ourpythondir = $(grpythondir)
-ourlibdir    = $(grpyexecdir)
-
-
-#EXTRA_DIST = run_tests.in
-
-#TESTS = run_tests
-
-
-#INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 	$(WITH_INCLUDES)
 
-NON_LOCAL_IFILES =			\
-	$(GNURADIO_I)
-
-LOCAL_IFILES = 				\
-	$(srcdir)/msdd.i
-
-ALL_IFILES = 				\
-	$(LOCAL_IFILES)			\
-	$(NON_LOCAL_IFILES)		
-
-
-# These files are built by SWIG.  The first is the C++ glue.
-# The second is the python wrapper that loads the _howto shared library
-# and knows how to call our extensions.
-
-BUILT_SOURCES = 			\
-	msdd.cc			\
-	msdd.py				
-
-# This gets howto.py installed in the right place
-ourpython_PYTHON =			\
-	msdd.py
-
-ourlib_LTLIBRARIES = _msdd.la
-
-# These are the source files that go into the shared library
-_msdd_la_SOURCES = 			\
-	msdd.cc			\
-	msdd_source_simple.cc	\
-	msdd6000.cc
-
-# magic flag
-_msdd_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version 
-#-lfftw3 -lfftw3f -lfann 
-
-# link the library against some comon swig runtime code and the 
-# c++ standard library
-_msdd_la_LIBADD = 			\
-	$(GNURADIO_CORE_LA)		\
-	$(PYTHON_LDFLAGS)		\
-	-lstdc++
-
-
-msdd.cc msdd.py: $(ALL_IFILES) 
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module msdd \
-		-o msdd.cc $(LOCAL_IFILES)
-
-# These headers get installed in ${prefix}/include/gnuradio
+# C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
-	msdd_source_simple.h			\
-	msdd_buffer_copy_behaviors.h \
+	msdd_source_simple.h		\
+	msdd_buffer_copy_behaviors.h	\
 	msdd6000.h
 
+#################################
+# SWIG interface and library
 
-# These swig headers get installed in ${prefix}/include/gnuradio/swig
-swiginclude_HEADERS = 			\
-	$(LOCAL_IFILES)
+TOP_SWIG_IFILES =			\
+	msdd.i
 
+# Install so that they end up available as:
+#   import gnuradio.msdd
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+msdd_pythondir_category =		\
+	gnuradio
 
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
+# additional sources for the SWIG-generated library
+msdd_la_swig_sources =			\
+	msdd_source_simple.cc		\
+	msdd6000.cc
 
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
+# additional libraries for linking with the SWIG-generated library
+msdd_la_swig_libadd =			\
+	$(GNURADIO_CORE_LA)
+
+include $(top_srcdir)/Makefile.swig
+
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
+
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

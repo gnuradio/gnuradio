@@ -21,67 +21,22 @@
 
 include $(top_srcdir)/Makefile.common
 
-# Install this stuff so that it ends up as the gnuradio.ra module
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-
-ourpythondir = $(grpythondir)
-ourlibdir    = $(grpyexecdir)
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-ALL_IFILES = 				\
-	$(LOCAL_IFILES)			\
-	$(NON_LOCAL_IFILES)		
+TOP_SWIG_IFILES =		\
+	ra.i
 
-NON_LOCAL_IFILES =			\
-	$(GNURADIO_I)
+# Install so that they end up available as:
+#   import gnuradio.ra
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+ra_pythondir_category =		\
+	gnuradio
 
-LOCAL_IFILES = 				\
-	$(srcdir)/ra.i				
+include $(top_srcdir)/Makefile.swig
 
-# These files are built by SWIG.  The first is the C++ glue.
-# The second is the python wrapper that loads the _howto shared library
-# and knows how to call our extensions.
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
 
-BUILT_SOURCES = 		\
-	ra.cc			\
-	ra.py				
-
-# This gets ra.py installed in the right place
-ourpython_PYTHON =			\
-	ra.py
-
-ourlib_LTLIBRARIES = _ra.la
-
-# These are the source files that go into the shared library
-_ra_la_SOURCES = 		\
-	ra.cc			
-
-# magic flags
-_ra_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
-
-# link the library against some comon swig runtime code and the 
-# c++ standard library
-_ra_la_LIBADD = 		\
-	$(PYTHON_LDFLAGS)	\
-	$(GNURADIO_CORE_LA)	\
-	-lstdc++			
-
-ra.cc ra.py: $(ALL_IFILES)
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module ra -o ra.cc $(LOCAL_IFILES)
-
-# These headers get installed in ${prefix}/include/gnuradio
-grinclude_HEADERS =
-
-# These swig headers get installed in ${prefix}/include/gnuradio/swig
-swiginclude_HEADERS = 			\
-	$(LOCAL_IFILES)
-
-
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
-
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

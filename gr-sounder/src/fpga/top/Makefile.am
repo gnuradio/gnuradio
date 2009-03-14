@@ -37,7 +37,7 @@ EXTRA_DIST =			\
 	usrp_sounder.psf	\
 	usrp_sounder.qpf
 
-MOSTLYCLEANFILES = 	\
+MOSTLYCLEANFILES += 	\
 	db/*		\
 	*.rpt		\
 	*.summary	\
@@ -45,5 +45,4 @@ MOSTLYCLEANFILES = 	\
 	*.smsg		\
 	*.done		\
 	*.pin		\
-	*.sof		\
-	*~
+	*.sof

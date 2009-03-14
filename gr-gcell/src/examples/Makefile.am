@@ -26,5 +26,3 @@ include $(top_srcdir)/Makefile.common
 #dist_ourdata_DATA = README
 
 #dist_ourdata_SCRIPTS = fsm_utils.py
-
-MOSTLYCLEANFILES = *.pyc

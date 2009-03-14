@@ -112,6 +112,3 @@ noinst_PROGRAMS =			\
 
 test_inband_SOURCES = test_inband.cc
 test_inband_LDADD   = libusrp-inband-qa.la
-
-MOSTLYCLEANFILES = \
-	$(BUILT_SOURCES) *~ *.pyc

@@ -62,28 +62,12 @@ code_generator = 					\
 	gr_freq_xlating_fir_filter_XXX.h.t		\
 	gr_freq_xlating_fir_filter_XXX.i.t
 
-# include the srcdir's Makefile.gen; doing this creates an implicit
-# dependency between $(srcdir)/Makefile.in and $(srcdir)/Makefile.gen.
-include $(srcdir)/Makefile.gen
-
 # Source built by Python into $(builddir)
-python_built_sources =		\
+BUILT_SOURCES =			\
 	$(GENERATED_H)		\
 	$(GENERATED_I)		\
 	$(GENERATED_CC)		\
 	filter_generated.i
-
-BUILT_SOURCES = $(python_built_sources)
-
-# Required when including Makefile.gen.gen
-
-STAMPS =
-gen_sources = $(BUILT_SOURCES)
-gen_sources_deps = $(core_generator)
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
-
-# common way for generating sources from templates, using the above parameters
-include $(top_srcdir)/Makefile.gen.gen
 
 # ----------------------------------------------------------------
 # MD_CPU and MD_SUBCPU are set at configure time by way of 
@@ -326,3 +310,20 @@ swiginclude_HEADERS =			\
 	gr_single_pole_iir_filter_ff.i	\
 	gr_single_pole_iir_filter_cc.i	\
 	$(GENERATED_I)
+
+# Do creation and inclusion of other Makefiles last
+
+# include the srcdir's Makefile.gen; doing this creates an implicit
+# dependency between $(srcdir)/Makefile.in and $(srcdir)/Makefile.gen.
+include $(srcdir)/Makefile.gen
+
+# common way for generating local Makefile.gen
+makefile_gen_gen_command = PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) do_makefile=1 do_sources=0 $(PYTHON) $(srcdir)/generate_all.py
+include $(top_srcdir)/Makefile.gen.gen
+
+# common way for generating sources from templates when using
+# BUILT_SOURCES, using parallel build protection.
+gen_sources = $(BUILT_SOURCES)
+gen_sources_deps = $(core_generator)
+par_gen_command = PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
+include $(top_srcdir)/Makefile.par.gen

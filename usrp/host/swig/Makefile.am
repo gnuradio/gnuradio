@@ -21,63 +21,42 @@
 
 include $(top_srcdir)/Makefile.common
 
-ourpythondir = $(usrppythondir)
-ourlibdir    = $(usrppyexecdir)
+AM_CPPFLAGS =			\
+	$(USRP_INCLUDES)	\
+	$(PYTHON_CPPFLAGS)	\
+	-I$(srcdir)		\
+	$(WITH_INCLUDES)
 
+#################################
+# SWIG interface and library
 
-AM_CPPFLAGS = $(USRP_INCLUDES) 		\
-	   $(PYTHON_CPPFLAGS) 		\
-	   -I$(srcdir)			\
-	   $(WITH_INCLUDES)
+TOP_SWIG_IFILES =		\
+	usrp_prims.i
 
-LOCAL_IFILES =				\
-	prims.i
+# Install so that they end up available as:
+#   import usrpm.usrp_prims
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/usrpm
+usrp_prims_pythondir_category =	\
+	usrpm
 
+# additional arguments to the SWIG command
+usrp_prims_swig_args =		\
+	$(USRP_INCLUDES)
 
-ALL_IFILES =				\
-	$(LOCAL_IFILES)			
+# additional libraries for linking with the SWIG-generated library
+usrp_prims_la_swig_libadd =	\
+	$(USRP_LA)
 
+# additional Python files to be installed along with the SWIG-generated one
+usrp_prims_python =		\
+	__init__.py		\
+	usrp_fpga_regs.py
 
-EXTRA_DIST = 				\
-	$(LOCAL_IFILES)
+include $(top_srcdir)/Makefile.swig
 
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
 
-BUILT_SOURCES =				\
-	prims.cc			\
-	usrp_prims.py
-
-
-ourpython_PYTHON = 			\
-	__init__.py			\
-	usrp_fpga_regs.py		\
-	usrp_prims.py			
-
-# special SWIG flags
-LOCAL_SWIG_DEFINES_AND_INCLUDES = $(USRP_INCLUDES)
-
-ourlib_LTLIBRARIES = 			\
-	_usrp_prims.la
-
-_usrp_prims_la_SOURCES = 		\
-	prims.cc		
-
-
-noinst_HEADERS =
-
-_usrp_prims_la_LIBADD  = $(USRP_LA) -lstdc++ $(PYTHON_LDFLAGS)
-_usrp_prims_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
-
-_usrp_prims_la_CXXFLAGS = @swig_CXXFLAGS@
-
-prims.cc usrp_prims.py : $(srcdir)/prims.i ../../firmware/include/fpga_regs_common.h ../../firmware/include/fpga_regs_standard.h
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module usrp_prims \
-		-o prims.cc $(srcdir)/prims.i
-
-MOSTLYCLEANFILES = \
-	prims.cc usrp_prims.py *~ *.pyc
-
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
-
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

@@ -22,6 +22,17 @@
 include $(top_srcdir)/Makefile.common
 
 # ----------------------------------------------------------------
+# Misc. build/installation activities
+
+EXTRA_DIST = run_tests.in
+
+TESTS = run_tests
+
+DISTCLEANFILES = run_tests
+
+noinst_PYTHON =	qa_usrp.py
+
+# ----------------------------------------------------------------
 # The straight C++ library
 
 AM_CPPFLAGS = \
@@ -58,76 +69,45 @@ grinclude_HEADERS = \
 	usrp_source_s.h
 
 # ----------------------------------------------------------------
-# The SWIG library and Python modules
-#
-# Install this stuff so that it ends up as the gnuradio.usrp module
-# This usually ends up at:
+# The SWIG library
+
+TOP_SWIG_IFILES =		\
+	usrp_swig.i
+
+# Install so that they end up available as:
+#   import gnuradio.usrp
+# This ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio/usrp
+usrp_swig_pythondir_category = 	\
+	gnuradio/usrp
 
-ourpythondir = $(grpythondir)/usrp
-ourlibdir    = $(grpyexecdir)/usrp
+# additional arguments to the SWIG command
+usrp_swig_swig_args =		\
+	$(USRP_INCLUDES)
 
-BUILT_SOURCES = \
-	usrp_swig.cc \
-	usrp_swig.py		
-
-LOCAL_IFILES = \
-	$(srcdir)/usrp.i \
-	$(srcdir)/usrp_base.i \
-	$(srcdir)/usrp_source_base.i \
-	$(srcdir)/usrp_source_c.i \
-	$(srcdir)/usrp_source_s.i \
-	$(srcdir)/usrp_sink_base.i \
-	$(srcdir)/usrp_sink_c.i \
-	$(srcdir)/usrp_sink_s.i \
-	$(srcdir)/usrp_standard.i
-
-NON_LOCAL_IFILES = \
-	$(GNURADIO_I)
-
-ALL_IFILES = \
-	$(LOCAL_IFILES)	\
-	$(NON_LOCAL_IFILES)		
-
-ourlib_LTLIBRARIES = \
-	_usrp_swig.la
-
-ourlib_PYTHON = \
-	__init__.py \
-	usrp_swig.py
-
-_usrp_swig_la_SOURCES =	\
-	usrp_swig.cc			
-
-_usrp_swig_la_LIBADD = \
-	$(PYTHON_LDFLAGS) \
+# additional libraries for linking with the SWIG-generated library
+usrp_swig_la_swig_libadd =	\
 	libgnuradio-usrp.la
 
-_usrp_swig_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
+# additional Python files to be installed along with the SWIG-generated one
+usrp_swig_python =		\
+	__init__.py
 
-_usrp_swig_la_CXXFLAGS = @swig_CXXFLAGS@
+# additional SWIG files to be installed
+usrp_swig_swiginclude_headers =	\
+	usrp_base.i		\
+	usrp_source_base.i	\
+	usrp_source_c.i		\
+	usrp_source_s.i		\
+	usrp_sink_base.i	\
+	usrp_sink_c.i		\
+	usrp_sink_s.i		\
+	usrp_standard.i
 
-# Special swig arguments
-LOCAL_SWIG_DEFINES_AND_INCLUDES = $(USRP_INCLUDES)
+include $(top_srcdir)/Makefile.swig
 
-usrp_swig.cc usrp_swig.py: $(ALL_IFILES)
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module usrp_swig \
-		-o usrp_swig.cc $(srcdir)/usrp.i
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
 
-noinst_PYTHON =	\
-	qa_usrp.py			
-
-swiginclude_HEADERS = \
-	$(LOCAL_IFILES)
-
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
-
-# ----------------------------------------------------------------
-# Misc. build/installation activities
-
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *~ *.pyc
-EXTRA_DIST = run_tests.in
-TESTS = run_tests
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

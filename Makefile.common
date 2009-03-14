@@ -59,21 +59,6 @@ STD_DEFINES_AND_INCLUDES = $(DEFINES) $(BOOST_CPPFLAGS) \
 WITH_INCLUDES = @with_INCLUDES@
 WITH_SWIG_INCLUDES = @with_SWIG_INCLUDES@
 
-# swig flags
-# -w511 turns off keyword argument warning
-# "-outdir $(builddir)" writes all generated output files to
-#   the local builddir (which should always be '.')
-SWIG_PYTHON_FLAGS = -fvirtual -python -modern -keyword \
-	-w511 -outdir .
-
-# standard swig flags used by most components
-STD_SWIG_PYTHON_ARGS = \
-	$(SWIG_PYTHON_FLAGS) \
-	$(STD_DEFINES_AND_INCLUDES) \
-	$(LOCAL_SWIG_DEFINES_AND_INCLUDES) \
-	$(WITH_SWIG_INCLUDES) \
-	$(WITH_INCLUDES)
-
 # How to link in the top-level omnithreads library from inside the tree
 OMNITHREAD_INCLUDES = @omnithread_INCLUDES@
 OMNITHREAD_LA = @omnithread_LA@
@@ -84,9 +69,6 @@ GNURADIO_INCLUDES = @gnuradio_core_INCLUDES@
 
 # How to link in GNU Radio core library from inside the tree
 GNURADIO_CORE_LA = @gnuradio_core_LA@
-
-# This is a dependency for many swig operations
-GNURADIO_I = @gnuradio_core_I@
 
 # How to link in the USRP library from inside the tree
 GRUEL_INCLUDES = @gruel_INCLUDES@
@@ -132,3 +114,14 @@ exampledir = $(datadir)/gnuradio/examples
 # Base directory for documentation (docdir undefined in autoconf < 1.60)
 docdir ?= $(datadir)/doc/$(PACKAGE)
 gr_docdir = $(docdir)-$(VERSION)
+
+# Other common defines; use "+=" to add to these
+STAMPS =
+MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
+
+# Don't distribute the files defined in the variable 'no_dist_files'
+dist-hook:
+	@for file in $(no_dist_files); do \
+		echo $(RM) $(distdir)/$$file; \
+		$(RM) $(distdir)/$$file; \
+	done;

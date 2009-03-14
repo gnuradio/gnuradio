@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -29,5 +29,3 @@ qtguipythondir = $(grpythondir)/qtgui
 
 qtguipython_PYTHON = 			\
 	__init__.py
-
-CLEANFILES = *.pyc *.pyo

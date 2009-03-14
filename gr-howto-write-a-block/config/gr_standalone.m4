@@ -1,5 +1,5 @@
 dnl
-dnl Copyright 2008 Free Software Foundation, Inc.
+dnl Copyright 2008,2009 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -37,9 +37,40 @@ m4_define([GR_STANDALONE],
 
   AM_INIT_AUTOMAKE
 
+  dnl Remember if the user explicity set CXXFLAGS
+  if test -n "${CXXFLAGS}"; then
+    user_set_cxxflags=yes
+  fi
+
   LF_CONFIGURE_CC
   LF_CONFIGURE_CXX
   GR_LIB64		dnl check for lib64 suffix after choosing compilers
+
+  dnl The three macros above are known to override CXXFLAGS if the user
+  dnl didn't specify them.  Though I'm sure somebody thought this was
+  dnl a good idea, it makes it hard to use other than -g -O2 when compiling
+  dnl selected files.  Thus we "undo" the damage here...
+  dnl 
+  dnl If the user specified CXXFLAGS, we use them.  Otherwise when compiling
+  dnl the output of swig use use -O1 if we're using g++.
+  dnl See Makefile.common for the rest of the magic.
+  if test "$user_set_cxxflags" != yes; then
+    autoconf_default_CXXFLAGS="$CXXFLAGS"
+    if test "$GXX" = yes; then
+      case "$host_cpu" in
+    	powerpc*)
+	   dnl "-O1" is broken on the PPC for some reason
+	   dnl (at least as of g++ 4.1.1)
+	   swig_CXXFLAGS="-g1 -O2 -Wno-strict-aliasing -Wno-parentheses"
+	;;
+    	*) 
+	swig_CXXFLAGS="-g -O1 -Wno-strict-aliasing -Wno-parentheses"
+	;;
+      esac
+    fi
+  fi
+  AC_SUBST(autoconf_default_CXXFLAGS)
+  AC_SUBST(swig_CXXFLAGS)
 
   dnl add ${prefix}/lib${gr_libdir_suffix}/pkgconfig to the head of the PKG_CONFIG_PATH
   if test x${PKG_CONFIG_PATH} = x; then
@@ -66,13 +97,6 @@ m4_define([GR_STANDALONE],
 
   GR_NO_UNDEFINED	dnl do we need the -no-undefined linker flag
   GR_SCRIPTING		dnl Locate python, SWIG, etc
-
-  dnl Set the c++ compiler that we use for the build system when cross compiling
-  if test "x$CXX_FOR_BUILD" = x
-  then
-    CXX_FOR_BUILD=${CXX}
-  fi
-  AC_SUBST(CXX_FOR_BUILD)
 
   dnl Checks for header files.
   AC_HEADER_STDC

@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -30,7 +30,7 @@ EXTRA_DIST = \
 	usrp_gpio.qsf \
 	usrp_gpio.v
 
-MOSTLYCLEANFILES = 	\
+MOSTLYCLEANFILES += 	\
 	db/*		\
 	*.rpt		\
 	*.summary	\
@@ -38,5 +38,4 @@ MOSTLYCLEANFILES = 	\
 	*.smsg		\
 	*.done		\
 	*.pin		\
-	*.sof		\
-	*~
+	*.sof

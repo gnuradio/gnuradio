@@ -31,7 +31,7 @@ lib_LTLIBRARIES = libpmt.la libpmt-qa.la
 # ----------------------------------------------------------------
 # these scripts generate code
 
-CODE_GENERATOR = 			\
+code_generator = 			\
 	generate_unv.py			\
 	unv_template.h.t		\
 	unv_template.cc.t		\
@@ -45,49 +45,14 @@ GENERATED_CC =				\
 	pmt_unv.cc			\
 	qa_pmt_unv.cc			
 
+python_built_sources = $(GENERATED_H) $(GENERATED_I) $(GENERATED_CC)
 
-
-# Ensure parallel make does the right thing.
-# http://sources.redhat.com/automake/automake.html#Multiple-Outputs
-
-STAMPS = generate-stamp
-
-generate-stamp: $(CODE_GENERATOR)
-	@rm -f generate-tmp
-	@touch generate-tmp
-	PYTHONPATH=$(top_srcdir)/pmt/src/lib srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_unv.py
-	@mv -f generate-tmp $@
-
-$(GENERATED_H) $(GENERATED_I) $(GENERATED_CC): generate-stamp
-## Recover from the removal of $@
-	@if test -f $@; then :; else \
-               trap 'rm -rf generate-lock generate-stamp' 1 2 13 15; \
-               if mkdir generate-lock 2>/dev/null; then \
-## This code is being executed by the first process.
-                 rm -f generate-stamp; \
-                 $(MAKE) $(AM_MAKEFLAGS) generate-stamp; \
-                 rmdir generate-lock; \
-               else \
-## This code is being executed by the follower processes.
-## Wait until the first process is done.
-                 while test -d generate-lock; do sleep 1; done; \
-## Succeed if and only if the first process succeeded.
-                 test -f generate-stamp; exit $$?; \
-               fi; \
-             fi
-
-
-pmt_serial_tags.h: $(srcdir)/../scheme/gnuradio/gen-serial-tags.scm $(srcdir)/../scheme/gnuradio/pmt-serial-tags.scm
-	$(RUN_GUILE) $(srcdir)/../scheme/gnuradio/gen-serial-tags.scm $(srcdir)/../scheme/gnuradio/pmt-serial-tags.scm pmt_serial_tags.h
-
-BUILT_SOURCES = $(GENERATED_H) $(GENERATED_CC) pmt_serial_tags.h
+BUILT_SOURCES = $(python_built_sources) pmt_serial_tags.h
 
 # ----------------------------------------------------------------
 
 EXTRA_DIST = 				\
-	$(CODE_GENERATOR)		\
-	$(STAMPS)
-
+	$(code_generator)
 
 # These are the source files that go into the pmt shared library
 libpmt_la_SOURCES =			\
@@ -143,5 +108,16 @@ LIBPMTQA = libpmt-qa.la $(LIBPMT)
 test_pmt_SOURCES = test_pmt.cc
 test_pmt_LDADD   = $(LIBPMTQA)
 
+# Do creation and inclusion of other Makefiles last
 
-CLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc
+# common way for generating sources from templates when using
+# BUILT_SOURCES, using parallel build protection.
+gen_sources = $(python_built_sources)
+gen_sources_deps = $(core_generator)
+par_gen_command = PYTHONPATH=$(top_srcdir)/pmt/src/lib srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_unv.py
+include $(top_srcdir)/Makefile.par.gen
+
+# Rule to create the build header file using GUILE
+# Doesn't need parallel protections because there is a single target
+pmt_serial_tags.h: $(srcdir)/../scheme/gnuradio/gen-serial-tags.scm $(srcdir)/../scheme/gnuradio/pmt-serial-tags.scm
+	$(RUN_GUILE) $(srcdir)/../scheme/gnuradio/gen-serial-tags.scm $(srcdir)/../scheme/gnuradio/pmt-serial-tags.scm pmt_serial_tags.h

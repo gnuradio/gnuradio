@@ -1,5 +1,5 @@
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -27,4 +27,4 @@ EXTRA_DIST = \
 	radar_tb.sh \
 	radar_tb_wave.sh
 
-MOSTLYCLEANFILES = *~ *.vcd *.out* radar_tb
+MOSTLYCLEANFILES += *.vcd *.out* radar_tb

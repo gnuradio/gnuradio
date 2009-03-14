@@ -1,5 +1,5 @@
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -56,5 +56,3 @@ bin_SCRIPTS = \
     usrp2_rx_cfile.py \
     usrp2_siggen.py \
     usrp2_siggen_gui.py
-
-MOSTLYCLEANFILES = *~ *.pyc

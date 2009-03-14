@@ -21,75 +21,57 @@
 
 include $(top_srcdir)/Makefile.common
 
-# Install this stuff so that it ends up as the gnuradio.howto module
-# This usually ends up at:
+# C/C++ headers get installed in ${prefix}/include/gnuradio
+grinclude_HEADERS =		\
+	howto_square_ff.h	\
+	howto_square2_ff.h
+
+###################################
+# SWIG Python interface and library
+
+TOP_SWIG_IFILES = 		\
+	howto.i
+
+# Install so that they end up available as:
+#   import gnuradio.howto
+# This ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+howto_pythondir_category =	\
+	gnuradio
 
-ourpythondir = $(grpythondir)
-ourlibdir    = $(grpyexecdir)
+# additional arguments to the SWIG command
+#howto_la_swig_args =		\
+#	-g
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS)
+# additional sources for the SWIG-generated library
+howto_la_swig_sources = 	\
+	howto_square_ff.cc	\
+	howto_square2_ff.cc
 
-SWIG_PYTHON_ARGS = $(SWIG_PYTHON_FLAGS) $(SWIGGRFLAGS)
+# additional arguments to the SWIG command
+#howto_la_swig_args =		\
+#	$(SWIG_PYTHON_ARGS)
 
-ALL_IFILES = 				\
-	$(LOCAL_IFILES)			\
-	$(NON_LOCAL_IFILES)		
+# additional libraries for linking with the SWIG-generated library
+#howto_la_swig_libadd =		\
+#	libm.dylib
 
-NON_LOCAL_IFILES =			\
-	$(GNURADIO_CORE_INCLUDEDIR)/swig/gnuradio.i
+# additional LD flags for linking the SWIG-generated library
+#howto_la_swig_ldflags =	\
+#	-L/opt/local/bin
 
+# additional Python files to be installed along with the SWIG-generated one
+#howto_python =			\
+#	__init__.py
 
-LOCAL_IFILES = 				\
-	$(srcdir)/howto.i				
+# additional SWIG files to be installed
+#howto_swiginclude_headers =	\
+#	nothing.i
 
-# These files are built by SWIG.  The first is the C++ glue.
-# The second is the python wrapper that loads the _howto shared library
-# and knows how to call our extensions.
+include $(top_srcdir)/Makefile.swig
 
-BUILT_SOURCES = 			\
-	howto.cc			\
-	howto.py				
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
 
-# This gets howto.py installed in the right place
-ourpython_PYTHON =			\
-	howto.py
-
-ourlib_LTLIBRARIES = _howto.la
-
-# These are the source files that go into the shared library
-_howto_la_SOURCES = 			\
-	howto.cc			\
-	howto_square_ff.cc		\
-	howto_square2_ff.cc		
-
-# magic flags
-_howto_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
-
-# link the library against some comon swig runtime code and the 
-# c++ standard library
-_howto_la_LIBADD = 			\
-	$(PYTHON_LDFLAGS)		\
-	-lstdc++			
-
-howto.cc howto.py: $(ALL_IFILES)
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module howto \
-		-o howto.cc $(LOCAL_IFILES)
-
-# These headers get installed in ${prefix}/include/gnuradio
-grinclude_HEADERS =			\
-	howto_square_ff.h		\
-	howto_square2_ff.h		
-
-
-# These swig headers get installed in ${prefix}/include/gnuradio/swig
-swiginclude_HEADERS = 			\
-	$(LOCAL_IFILES)
-
-
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
-
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

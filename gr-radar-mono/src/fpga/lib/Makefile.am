@@ -1,5 +1,5 @@
 #
-# Copyright 2007 Free Software Foundation, Inc.
+# Copyright 2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -31,4 +31,4 @@ EXTRA_DIST = 			\
 		fifo32_2k.v	\
 		cordic_nco.v
 
-MOSTLYCLEANFILES = *~ *.bak
+MOSTLYCLEANFILES += *.bak

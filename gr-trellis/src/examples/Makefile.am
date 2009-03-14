@@ -43,5 +43,3 @@ dist_ourdata_SCRIPTS =			\
 	test_turbo_equalization.py	\
 	test_turbo_equalization1.py	\
 	test_turbo_equalization2.py
-
-MOSTLYCLEANFILES = *.pyc

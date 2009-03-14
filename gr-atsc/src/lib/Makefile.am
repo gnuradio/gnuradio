@@ -21,13 +21,6 @@
 
 include $(top_srcdir)/Makefile.common
 
-# Install this stuff so that it ends up as the gnuradio.atsc module
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-
-ourpythondir = $(grpythondir)
-ourlibdir    = $(grpyexecdir)
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 	$(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
@@ -37,17 +30,10 @@ EXTRA_DIST =					\
 	qa_atsci_trellis_encoder_t1_input.dat	\
 	qa_atsci_trellis_encoder_t1_output.dat	\
 	qa_atsci_viterbi_decoder_t1_input.dat	\
-	qa_atsci_viterbi_decoder_t1_output.dat	
-
-
-BUILT_SOURCES = 				\
-	atsci_viterbi_mux.cc 			\
-	$(swig_built_sources)
-
+	qa_atsci_viterbi_decoder_t1_output.dat
 
 TESTS =						\
-	test_atsci				
-
+	test_atsci
 
 # We build two libtool convenience libraries
 
@@ -60,7 +46,7 @@ noinst_LTLIBRARIES = libatsc.la libatsc-qa.la
 #	atsci_vsbtx_lp.cc			\
 #
 
-libatsc_la_SOURCES = 				\
+libatsc_la_SOURCES = 			\
 	atsc_derandomizer.cc			\
 	atsc_randomizer.cc			\
 	atsc_rs_decoder.cc			\
@@ -102,6 +88,9 @@ libatsc_la_SOURCES = 				\
 	create_atsci_fs_correlator.cc		\
 	plinfo.cc				
 
+libatsc_la_LIBADD = 				\
+	$(GNURADIO_CORE_LA)
+
 libatsc_qa_la_SOURCES = 			\
 	qa_atsci_basic_trellis_encoder.cc 	\
 	qa_atsci_data_interleaver.cc		\
@@ -118,6 +107,8 @@ libatsc_qa_la_SOURCES = 			\
 	qa_atsci.cc				\
 	qa_interleaver_fifo.cc			
 
+libatsc_qa_la_LIBADD = 			\
+	$(GNURADIO_CORE_LA)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =				\
@@ -186,14 +177,13 @@ grinclude_HEADERS =				\
 	qa_atsci_trellis_encoder.h		\
 	qa_atsci_viterbi_decoder.h		\
 	qa_convolutional_interleaver.h		\
-	qa_interleaver_fifo.h              	
+	qa_interleaver_fifo.h
 
 
 # programs we build but don't install
 # FIXME add test_atsc
 noinst_PROGRAMS = 				\
-	test_atsci				
-
+	test_atsci
 
 atsci_viterbi_gen$(EXEEXT): $(srcdir)/atsci_viterbi_gen.cc
 	$(CXX_FOR_BUILD) -O2 $(srcdir)/atsci_viterbi_gen.cc -o atsci_viterbi_gen$(EXEEXT)
@@ -201,75 +191,43 @@ atsci_viterbi_gen$(EXEEXT): $(srcdir)/atsci_viterbi_gen.cc
 atsci_viterbi_mux.cc: atsci_viterbi_gen$(EXEEXT) 
 	./atsci_viterbi_gen$(EXEEXT) -o atsci_viterbi_mux.cc
 
-
 test_atsci_SOURCES = test_atsci.cc
 test_atsci_LDADD   =  		\
 	libatsc-qa.la 		\
 	libatsc.la		\
-	$(GNURADIO_CORE_LA)	\
 	$(CPPUNIT_LIBS)
+
+# ------------------------------------------------------------------------
+#  Cleanup
+# ------------------------------------------------------------------------
+
+CLEANFILES = atsci_viterbi_mux.cc atsci_viterbi_gen$(EXEEXT)
 
 # ------------------------------------------------------------------------
 #  This is the swig-ish part of the Makefile.
 #  It builds the atsc module which we'll load into python
 # ------------------------------------------------------------------------
 
-ALL_IFILES = 				\
-	$(LOCAL_IFILES)			\
-	$(NON_LOCAL_IFILES)		
+TOP_SWIG_IFILES = 		\
+	atsc.i
 
-NON_LOCAL_IFILES =			\
-	$(GNURADIO_I)
+# Install so that they end up available as:
+#   import gnuradio
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+atsc_pythondir_category =	\
+	gnuradio
 
-LOCAL_IFILES = 				\
-	$(srcdir)/atsc.i				
+# additional libraries for linking with the SWIG-generated library
+atsc_la_swig_libadd =		\
+	libatsc.la
 
-# These files are built by SWIG.  The first is the C++ glue.
-# The second is the python wrapper that loads the _atsc shared library
-# and knows how to call our extensions.
+include $(top_srcdir)/Makefile.swig
 
-swig_built_sources = 			\
-	atsc.cc				\
-	atsc.py				
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = 				\
+	atsci_viterbi_mux.cc 			\
+	$(swig_built_sources)
 
-# This gets atsc.py installed in the right place
-ourpython_PYTHON =			\
-	atsc.py
-
-ourlib_LTLIBRARIES = _atsc.la
-
-# These are the source files that go into the shared library
-_atsc_la_SOURCES = 			\
-	atsc.cc			
-
-# magic flags
-_atsc_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
-
-# link the library against some comon swig runtime code and the 
-# c++ standard library
-_atsc_la_LIBADD = 			\
-	$(GNURADIO_CORE_LA)		\
-	$(PYTHON_LDFLAGS)		\
-	libatsc.la			\
-	-lstdc++			
-
-atsc.cc atsc.py: $(ALL_IFILES)
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module atsc \
-		-o atsc.cc $(LOCAL_IFILES)
-
-# These swig headers get installed in ${prefix}/include/gnuradio/swig
-swiginclude_HEADERS = 			\
-	$(LOCAL_IFILES)			
-
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
-
-# ------------------------------------------------------------------------
-#  Cleanup
-# ------------------------------------------------------------------------
-
-CLEANFILES =	   atsci_viterbi_mux.cc atsci_viterbi_gen
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
-
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

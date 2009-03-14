@@ -21,13 +21,6 @@
 
 include $(top_srcdir)/Makefile.common
 
-# Install this stuff so that it ends up as the gnuradio.trellis module
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-
-ourpythondir = $(grpythondir)
-ourlibdir    = $(grpyexecdir)
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
 # ----------------------------------------------------------------
@@ -42,16 +35,12 @@ core_generator = 				\
 	trellis_metrics_X.cc.t			\
 	trellis_metrics_X.h.t			\
 	trellis_metrics_X.i.t			\
-	trellis_viterbi_combined_XX.cc.t		\
+	trellis_viterbi_combined_XX.cc.t	\
 	trellis_viterbi_combined_XX.h.t		\
 	trellis_viterbi_combined_XX.i.t		\
 	trellis_viterbi_X.cc.t			\
 	trellis_viterbi_X.h.t			\
 	trellis_viterbi_X.i.t
-
-# include the srcdir's Makefile.gen; doing this creates an implicit
-# dependency between $(srcdir)/Makefile.in and $(srcdir)/Makefile.gen.
-include $(srcdir)/Makefile.gen
 
 # Source built by Python into $(builddir)
 python_built_sources =		\
@@ -60,75 +49,8 @@ python_built_sources =		\
 	$(GENERATED_CC)		\
 	trellis_generated.i
 
-# Required when including Makefile.gen.gen
-
-STAMPS =
-gen_sources = $(python_built_sources)
-gen_sources_deps = $(core_generator)
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
-
-# common way for generating sources from templates, using the above parameters
-include $(top_srcdir)/Makefile.gen.gen
-
-# These files are built by SWIG.  The first is the C++ glue.
-# The second is the python wrapper that loads the _trellis shared library
-# and knows how to call our extensions.
-
-swig_built_sources = 		\
-	trellis.cc		\
-	trellis.py				
-
-BUILT_SOURCES =			\
-	$(python_built_sources)	\
-	$(swig_built_sources)
-
-ALL_IFILES = 			\
-	$(LOCAL_IFILES)		\
-	$(NON_LOCAL_IFILES)	
-
-NON_LOCAL_IFILES =		\
-	$(GNURADIO_I)	
-
-LOCAL_IFILES = 			\
-	$(srcdir)/trellis.i			
-
 EXTRA_DIST = 			\
 	$(core_generator)
-
-# This gets trellis.py installed in the right place
-ourpython_PYTHON =		\
-	trellis.py
-
-ourlib_LTLIBRARIES = _trellis.la
-
-# These are the source files that go into the shared library
-_trellis_la_SOURCES = 			\
-	trellis.cc			\
-        fsm.cc				\
-        quicksort_index.cc		\
-        base.cc				\
-        interleaver.cc			\
-        trellis_calc_metric.cc		\
-        trellis_permutation.cc		\
-	trellis_siso_f.cc		\
-	trellis_siso_combined_f.cc	\
-	$(GENERATED_CC)                 
-
-# magic flags
-_trellis_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
-
-# link the library against some comon swig runtime code and the 
-# c++ standard library
-_trellis_la_LIBADD = 			\
-	$(PYTHON_LDFLAGS)		\
-	$(GNURADIO_CORE_LA)		\
-	-lstdc++
-
-_trellis_la_CXXFLAGS = @swig_CXXFLAGS@
-
-trellis.cc trellis.py: $(ALL_IFILES) $(grinclude_HEADERS)
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module trellis \
-		-o trellis.cc $(LOCAL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
@@ -144,9 +66,37 @@ grinclude_HEADERS =			\
 	trellis_siso_combined_f.h	\
 	$(GENERATED_H)
 
-# These swig headers get installed in ${prefix}/include/gnuradio/swig
-swiginclude_HEADERS = 			\
-	$(LOCAL_IFILES)			\
+#################################
+# SWIG interface and library
+
+TOP_SWIG_IFILES = 			\
+	trellis.i
+
+# Install so that they end up available as:
+#   import gnuradio.trellis
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+trellis_pythondir_category =		\
+	gnuradio
+
+# additional sources for the SWIG-generated library
+trellis_la_swig_sources = 		\
+        fsm.cc				\
+        quicksort_index.cc		\
+        base.cc				\
+        interleaver.cc			\
+        trellis_calc_metric.cc		\
+        trellis_permutation.cc		\
+	trellis_siso_f.cc		\
+	trellis_siso_combined_f.cc	\
+	$(GENERATED_CC)
+
+# additional libraries for linking with the SWIG-generated library
+trellis_la_swig_libadd =		\
+	$(GNURADIO_CORE_LA)
+
+# additional SWIG files to be installed
+trellis_swiginclude_headers = 		\
 	$(GENERATED_I)			\
 	fsm.i				\
 	interleaver.i			\
@@ -155,7 +105,29 @@ swiginclude_HEADERS = 			\
 	trellis_siso_combined_f.i	\
 	trellis_generated.i
 
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(swig_built_sources); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(swig_built_sources); do $(RM) $(distdir)/$$file; done
+# Do creation and inclusion of other Makefiles last
+
+# include the srcdir's Makefile.gen; doing this creates an implicit
+# dependency between $(srcdir)/Makefile.in and $(srcdir)/Makefile.gen.
+include $(srcdir)/Makefile.gen
+
+# common way for generating local Makefile.gen
+makefile_gen_gen_command = PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) do_makefile=1 do_sources=0 $(PYTHON) $(srcdir)/generate_all.py
+include $(top_srcdir)/Makefile.gen.gen
+
+# common way for generating sources from templates when using
+# BUILT_SOURCES, using parallel build protection.
+gen_sources = $(python_built_sources)
+gen_sources_deps = $(core_generator)
+par_gen_command = PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
+include $(top_srcdir)/Makefile.par.gen
+
+include $(top_srcdir)/Makefile.swig
+
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES =				\
+	$(python_built_sources) 	\
+	$(swig_built_sources)
+
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

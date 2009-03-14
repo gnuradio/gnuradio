@@ -30,5 +30,3 @@ dist_ourdata_SCRIPTS =		\
 	dial_tone_source.py	\
 	vector_sink.py		\
 	vector_source.py
-
-MOSTLYCLEANFILES = *.pyc *~

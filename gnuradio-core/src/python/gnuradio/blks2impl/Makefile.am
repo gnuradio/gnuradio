@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2007 Free Software Foundation, Inc.
+# Copyright 2005,2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -60,8 +60,3 @@ grblkspython_PYTHON =		\
 	wfm_rcv.py		\
 	wfm_rcv_pll.py		\
 	wfm_tx.py		
-
-
-noinst_PYTHON = 		
-
-CLEANFILES = *.pyc *.pyo

@@ -21,69 +21,49 @@
 
 include $(top_srcdir)/Makefile.common
 
-# Install this stuff so that it ends up as the gnuradio.video_sdl module
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-
-ourpythondir = $(grpythondir)
-ourlibdir    = $(grpyexecdir)
-
 EXTRA_DIST = run_tests.in
+
 TESTS = run_tests
 
-LOCAL_IFILES = 				\
-	$(top_srcdir)/gr-video-sdl/src/video_sdl.i				
+DISTCLEANFILES = run_tests
 
-NON_LOCAL_IFILES =			\
-	$(GNURADIO_I)
-
-ALL_IFILES = 				\
-	$(LOCAL_IFILES)			\
-	$(NON_LOCAL_IFILES)		
-
-BUILT_SOURCES = 			\
-	video_sdl.cc			\
-	video_sdl.py				
-
-ourpython_PYTHON =			\
-	video_sdl.py
+noinst_PYTHON =				\
+	qa_video_sdl.py
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(SDL_CFLAGS) \
 	$(WITH_INCLUDES)
-
-ourlib_LTLIBRARIES = _video_sdl.la
-
-_video_sdl_la_SOURCES = 		\
-	video_sdl.cc			\
-	video_sdl_sink_uc.cc		\
-	video_sdl_sink_s.cc
-
 
 grinclude_HEADERS =			\
 	video_sdl_sink_uc.h		\
 	video_sdl_sink_s.h
 
-swiginclude_HEADERS = 			\
-	$(LOCAL_IFILES)
+#################################
+# SWIG interface and library
 
-_video_sdl_la_LIBADD = 			\
-	$(PYTHON_LDFLAGS)		\
-	$(GNURADIO_CORE_LA)		\
-        $(SDL_LIBS)			\
-	-lstdc++				
+TOP_SWIG_IFILES =			\
+	video_sdl.i
 
-_video_sdl_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
+# Install so that they end up available as:
+#   import gnuradio.video_sdl
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+video_sdl_pythondir_category =		\
+	gnuradio
 
-video_sdl.cc video_sdl.py: $(ALL_IFILES)
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module video_sdl \
-		-o video_sdl.cc $(LOCAL_IFILES)
+# additional sources for the SWIG-generated library
+video_sdl_la_swig_sources =		\
+	video_sdl_sink_uc.cc		\
+	video_sdl_sink_s.cc
 
-noinst_PYTHON = qa_video_sdl.py
+# additional libraries for linking with the SWIG-generated library
+video_sdl_la_swig_libadd =		\
+	$(SDL_LIBS)			\
+	$(GNURADIO_CORE_LA)
 
-MOSTLYCLEANFILES = \
-	$(BUILT_SOURCES) *~ *.pyc
+include $(top_srcdir)/Makefile.swig
 
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
+
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

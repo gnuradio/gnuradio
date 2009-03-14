@@ -21,103 +21,75 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
-    run_tests.in
+EXTRA_DIST = run_tests.in
 
-TESTS = \
-    run_tests
+TESTS = run_tests
 
-dist_bin_SCRIPTS = \
-    usrp_flex.py \
-    usrp_flex_all.py \
-    usrp_flex_band.py
-
-noinst_PYTHON = \
-    qa_pager.py
-
-# Install this stuff so that it ends up as the gnuradio.pgr module
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/pager
-
-ourpythondir = $(grpythondir)/pager
-ourlibdir    = $(grpyexecdir)/pager
+DISTCLEANFILES = run_tests
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-ALL_IFILES = \
-    $(LOCAL_IFILES) \
-    $(NON_LOCAL_IFILES)	\
-    $(srcdir)/pager_flex_frame.i
+dist_bin_SCRIPTS = \
+	usrp_flex.py \
+	usrp_flex_all.py \
+	usrp_flex_band.py
 
-NON_LOCAL_IFILES = \
-    $(GNURADIO_I)
-
-LOCAL_IFILES = \
-    $(srcdir)/pager.i
-
-# These files are built by SWIG.  The first is the C++ glue.
-# The second is the python wrapper that loads the _howto shared library
-# and knows how to call our extensions.
-
-BUILT_SOURCES = \
-    pager_swig.cc \
-    pager_swig.py				
-
-# This gets imported Python objects installed in the right place
-ourpython_PYTHON = \
-    __init__.py \
-    pager_swig.py \
-    pager_utils.py \
-    flex_demod.py
-
-ourlib_LTLIBRARIES = _pager_swig.la
-
-# These are the source files that go into the shared library
-_pager_swig_la_SOURCES = \
-    pager_swig.cc \
-    pager_flex_frame.cc \
-    pager_slicer_fb.cc \
-    pager_flex_sync.cc \
-    pager_flex_deinterleave.cc \
-    pager_flex_parse.cc \
-    pageri_bch3221.cc \
-    pageri_flex_modes.cc \
-    pageri_util.cc
-    # Additional source modules here
-
-# magic flags
-_pager_swig_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
-
-# link the library against the c++ standard library
-_pager_swig_la_LIBADD = \
-    $(PYTHON_LDFLAGS) \
-    $(GNURADIO_CORE_LA) \
-    -lstdc++			
-
-pager_swig.cc pager_swig.py: $(ALL_IFILES)
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module pager_swig \
-		-o pager_swig.cc $(LOCAL_IFILES)
+noinst_PYTHON = \
+	qa_pager.py
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = \
-    pager_slicer_fb.h \
-    pager_flex_sync.h \
-    pager_flex_deinterleave.h \
-    pager_flex_parse.h \
-    pager_flex_frame.h \
-    pageri_bch3221.h \
-    pageri_flex_modes.h \
-    pageri_util.h
-    # Additional header files here
+	pager_slicer_fb.h \
+	pager_flex_sync.h \
+	pager_flex_deinterleave.h \
+	pager_flex_parse.h \
+	pager_flex_frame.h \
+	pageri_bch3221.h \
+	pageri_flex_modes.h \
+	pageri_util.h
 
-# These swig headers get installed in ${prefix}/include/gnuradio/swig
-swiginclude_HEADERS = \
-    $(LOCAL_IFILES) \
-    pager_flex_frame.i
+##############################
+# SWIG interface and library
 
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc *~ *.tmp
+TOP_SWIG_IFILES = \
+	pager_swig.i
 
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
+# Install so that they end up available as:
+#   import gnuradio.pager
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/pager
+pager_swig_pythondir_category = \
+	gnuradio/pager
+
+# additional sources for the SWIG-generated library
+pager_swig_la_swig_sources = \
+	pager_flex_frame.cc \
+	pager_slicer_fb.cc \
+	pager_flex_sync.cc \
+	pager_flex_deinterleave.cc \
+	pager_flex_parse.cc \
+	pageri_bch3221.cc \
+	pageri_flex_modes.cc \
+	pageri_util.cc
+
+# additional libraries for linking with the SWIG-generated library
+pager_swig_la_swig_libadd = \
+	$(GNURADIO_CORE_LA)
+
+# additional Python files to be installed along with the SWIG-generated one
+pager_swig_python = \
+	__init__.py \
+	pager_utils.py \
+	flex_demod.py
+
+# additional SWIG files to be installed
+pager_swig_swiginclude_headers = \
+	pager_flex_frame.i
+
+include $(top_srcdir)/Makefile.swig
+
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
+
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

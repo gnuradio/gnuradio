@@ -21,29 +21,8 @@
 
 include $(top_srcdir)/Makefile.common
 
-# Install this stuff so that it ends up as the gnuradio.qtgui module
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/qtgui
-
-ourpythondir = $(grpythondir)/qtgui
-ourlibdir    = $(grpyexecdir)/qtgui
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
               $(QT_INCLUDES) -I. $(WITH_INCLUDES)
-
-ALL_IFILES = 				\
-	$(LOCAL_IFILES)			\
-	$(NON_LOCAL_IFILES)		
-
-NON_LOCAL_IFILES =			\
-	$(GNURADIO_I)
-
-LOCAL_IFILES = 				\
-	$(srcdir)/qtgui.i
-
-# These files are built by SWIG.  The first is the C++ glue.
-# The second is the python wrapper that loads the shared library
-# and knows how to call our extensions.
 
 # Only include these files in the build if qtgui passes configure checks
 # This is mostly to help make distcheck pass
@@ -59,18 +38,6 @@ QMAKE_SOURCES = 				\
 endif
 
 EXTRA_DIST = spectrumdisplayform.ui
-
-BUILT_SOURCES = 				\
-	qtgui.cc				\
-	qtgui.py				\
-	$(QMAKE_SOURCES)
-
-# This gets qtgui.py installed in the right place
-ourpython_PYTHON =			\
-	qtgui.py
-
-# Build the library for Python module to link against
-ourlib_LTLIBRARIES = _qtgui.la
 
 # Build the normal library for C++ apps to link against
 lib_LTLIBRARIES = libqtgui.la
@@ -90,10 +57,6 @@ libqtgui_la_SOURCES = 	\
 	$(QMAKE_SOURCES)			\
 	qtgui_sink_c.cc				\
 	qtgui_sink_f.cc
-
-_qtgui_la_SOURCES = 			\
-	$(libqtgui_la_SOURCES)		\
-	qtgui.cc
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
@@ -127,34 +90,36 @@ else
 endif
 
 # magic flags
-_qtgui_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
 libqtgui_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
-
-# link the library against the c++ standard library
-_qtgui_la_LIBADD = 		\
-	$(PYTHON_LDFLAGS)	\
-	$(GNURADIO_CORE_LA)	\
-	-lstdc++		\
-	$(QT_LIBS)
-
 
 libqtgui_la_LIBADD = 		\
 	$(GNURADIO_CORE_LA)	\
 	-lstdc++		\
 	$(QT_LIBS)
 
-qtgui.cc qtgui.py: $(ALL_IFILES)
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module qtgui \
-		-o qtgui.cc $(LOCAL_IFILES)
+##############################
+# SWIG interface and library
 
-# These swig headers get installed in ${prefix}/include/gnuradio/swig
-swiginclude_HEADERS = 			\
-	$(LOCAL_IFILES)
+TOP_SWIG_IFILES = 		\
+	qtgui.i
 
+# Install so that they end up available as:
+#   import gnuradio.qtgui
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+qtgui_pythondir_category =	\
+	gnuradio
 
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
+# additional libraries for linking with the SWIG-generated library
+qtgui_la_swig_libadd =		\
+	libqtgui.la
 
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
+include $(top_srcdir)/Makefile.swig
+
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = 		\
+	$(QMAKE_SOURCES)	\
+	$(swig_built_sources)
+
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

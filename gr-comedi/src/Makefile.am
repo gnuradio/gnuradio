@@ -21,77 +21,53 @@
 
 include $(top_srcdir)/Makefile.common
 
-# Install this stuff so that it ends up as the gnuradio.comedi module
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-
-ourpythondir = $(grpythondir)
-ourlibdir    = $(grpyexecdir)
-
 EXTRA_DIST = run_tests.in
 
 TESTS = run_tests
 
-LOCAL_IFILES = 				\
-	$(srcdir)/comedi.i				
-
-NON_LOCAL_IFILES =			\
-	$(GNURADIO_I)
-
-ALL_IFILES = 				\
-	$(LOCAL_IFILES)			\
-	$(NON_LOCAL_IFILES)		
-
-BUILT_SOURCES = 			\
-	comedi.cc			\
-	comedi.py				
-
-ourpython_PYTHON =			\
-	comedi.py
+DISTCLEANFILES = run_tests
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-ourlib_LTLIBRARIES = _comedi.la
-
-_comedi_la_SOURCES = 		\
-	comedi.cc		\
-	comedi_sink_s.cc	\
-	comedi_source_s.cc	\
-	gri_comedi.cc			
-
+# C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =		\
 	comedi_sink_s.h		\
-	comedi_source_s.h		
+	comedi_source_s.h
 
-noinst_HEADERS = 		\
-	gri_comedi.h			
+noinst_HEADERS =		\
+	gri_comedi.h
 
+noinst_PYTHON =			\
+	qa_comedi.py
 
-swiginclude_HEADERS = 		\
-	$(LOCAL_IFILES)
+###################################
+# SWIG Python interface and library
 
-_comedi_la_LIBADD = 		\
-	$(PYTHON_LDFLAGS)	\
+TOP_SWIG_IFILES =		\
+	comedi.i
+
+# Install so that they end up available as:
+#   import gnuradio.comedi
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+comedi_pythondir_category =	\
+	gnuradio
+
+# additional sources for the SWIG-generated library
+comedi_la_swig_sources =	\
+	comedi_sink_s.cc	\
+	comedi_source_s.cc	\
+	gri_comedi.cc
+
+# additional libraries for linking with the SWIG-generated library
+comedi_la_swig_libadd =		\
 	$(GNURADIO_CORE_LA)	\
-	$(COMEDI_LIBS)		\
-	-lstdc++				
+	$(COMEDI_LIBS)
 
-_comedi_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
+include $(top_srcdir)/Makefile.swig
 
-_comedi_la_CXXFLAGS = @swig_CXXFLAGS@
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
 
-comedi.cc comedi.py: $(ALL_IFILES)
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module comedi \
-		-o comedi.cc $(LOCAL_IFILES)
-
-noinst_PYTHON = 		\
-	qa_comedi.py			
-
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
-
-MOSTLYCLEANFILES = \
-	$(BUILT_SOURCES) *~ *.pyc
-
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

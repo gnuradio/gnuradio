@@ -21,241 +21,21 @@
 
 include $(top_srcdir)/Makefile.common
 
-# Install this stuff in the gr subdirectory of the python pkg dir.
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/gr
-
-grgrpythondir = $(grpythondir)/gr
-grgrlibdir    = $(grpyexecdir)/gr
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) -I$(srcdir) \
 	 $(WITH_INCLUDES)
 
 EXTRA_DIST = gen-swig-bug-fix
 
-LOCAL_IFILES =				\
+# SWIG headers get installed in ${prefix}/include/gnuradio/swig
+swiginclude_HEADERS =			\
 	gnuradio.i			\
 	gr_swig_block_magic.i		\
-	gr_shared_ptr.i			\
-	sw_general.i			\
-	sw_gengen.i			\
-	sw_filter.i			\
-	sw_io.i				\
-	sw_runtime.i
+	gr_shared_ptr.i
 
-ALL_IFILES =				\
-	$(LOCAL_IFILES)
-
-# ----------------------------------------------------------------
-# We've split the previously monstrous gnuradio_swig_python into
-# 5 smaller pieces.  This reduces compile time coupling and
-# creates smaller pieces for the compiler to digest.
-# prior to this change, on X86_64, g++'s resident set size was
-# 650MB!
-
-BUILT_SOURCES =				\
-	gnuradio_swig_py_runtime.cc	\
-	gnuradio_swig_py_runtime.py	\
-	gnuradio_swig_py_runtime.h	\
-	gnuradio_swig_py_general.cc	\
-	gnuradio_swig_py_general.py	\
-	gnuradio_swig_py_general.h	\
-	gnuradio_swig_py_gengen.cc	\
-	gnuradio_swig_py_gengen.py	\
-	gnuradio_swig_py_gengen.h	\
-	gnuradio_swig_py_filter.cc	\
-	gnuradio_swig_py_filter.py	\
-	gnuradio_swig_py_filter.h	\
-	gnuradio_swig_py_io.cc		\
-	gnuradio_swig_py_io.py		\
-	gnuradio_swig_py_io.h		\
-	gnuradio_swig_bug_workaround.h	
-
-# ----------------------------------------------------------------
-# We break this up into 5 libraries...
-
-grgrlib_LTLIBRARIES = 				\
-	_gnuradio_swig_py_runtime.la		\
-	_gnuradio_swig_py_general.la		\
-	_gnuradio_swig_py_gengen.la		\
-	_gnuradio_swig_py_filter.la		\
-	_gnuradio_swig_py_io.la			
-
-
-grgrpython_PYTHON = 			\
-	gnuradio_swig_python.py		\
-	gnuradio_swig_py_runtime.py	\
-	gnuradio_swig_py_general.py	\
-	gnuradio_swig_py_gengen.py	\
-	gnuradio_swig_py_filter.py	\
-	gnuradio_swig_py_io.py		
-
-
-# This results in the code being compiled with -O1 instead of -g -O2
-
-_gnuradio_swig_py_runtime_la_CXXFLAGS = @swig_CXXFLAGS@
-_gnuradio_swig_py_general_la_CXXFLAGS = @swig_CXXFLAGS@
-_gnuradio_swig_py_gengen_la_CXXFLAGS  = @swig_CXXFLAGS@
-_gnuradio_swig_py_filter_la_CXXFLAGS  = @swig_CXXFLAGS@
-_gnuradio_swig_py_io_la_CXXFLAGS      = @swig_CXXFLAGS@
-
-
-# ----------------------------------------------------------------
-# Part 1: sw_runtime.i -> gnuradio_swig_py_runtime
-#
-# We continue to call this gnuradio.i to avoid having to touch
-# lots of code in other modules
-
-_gnuradio_swig_py_runtime_la_SOURCES = 		\
-	gnuradio_swig_py_runtime.cc		
-
-
-_gnuradio_swig_py_runtime_la_LIBADD  = 		\
-	$(GNURADIO_CORE_LA)			\
-	$(PYTHON_LDFLAGS)			\
-	-lstdc++
-
-_gnuradio_swig_py_runtime_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
-
-
-# KLUDGE: Force runtime include of gnuradio_swig_py_runtime.d dependency file.
-# This is not guaranteed to be portable, but will probably work.
-# If it works, we have accurate dependencies for our swig stuff, which is good.
-@am__include@ @am__quote@./gnuradio_swig_py_runtime.d@am__quote@
-
-gnuradio_swig_py_runtime.py gnuradio_swig_py_runtime.h: gnuradio_swig_py_runtime.cc
-
-gnuradio_swig_py_runtime.cc : $(srcdir)/sw_runtime.i
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) -MMD -MF gnuradio_swig_py_runtime.Td -module gnuradio_swig_py_runtime -o gnuradio_swig_py_runtime.cc $(srcdir)/sw_runtime.i ;\
-	then if test $(host_os) = mingw32; \
-	     then sed 's,\\\\,/,g' <gnuradio_swig_py_runtime.Td >gnuradio_swig_py_runtime.d; rm -f gnuradio_swig_py_runtime.Td; \
-	     else mv -f gnuradio_swig_py_runtime.Td gnuradio_swig_py_runtime.d; fi \
-	else rm -f gnuradio_swig_py_runtime.Td; exit 1; fi 
-
-
-# ----------------------------------------------------------------
-# Part 2: sw_general.i -> gnuradio_swig_py_general
-#
-
-_gnuradio_swig_py_general_la_SOURCES = 		\
-	gnuradio_swig_py_general.cc		
-
-
-_gnuradio_swig_py_general_la_LIBADD  = 		\
-	$(GNURADIO_CORE_LA)			\
-	$(PYTHON_LDFLAGS)			\
-	-lstdc++
-
-_gnuradio_swig_py_general_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
-
-
-# KLUDGE: Force general include of gnuradio_swig_py_general.d dependency file.
-# This is not guaranteed to be portable, but will probably work.
-# If it works, we have accurate dependencies for our swig stuff, which is good.
-@am__include@ @am__quote@./gnuradio_swig_py_general.d@am__quote@
-
-gnuradio_swig_py_general.py gnuradio_swig_py_general.h: gnuradio_swig_py_general.cc
-
-gnuradio_swig_py_general.cc : $(srcdir)/sw_general.i
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) -MMD -MF gnuradio_swig_py_general.Td -module gnuradio_swig_py_general -o gnuradio_swig_py_general.cc $(srcdir)/sw_general.i ;\
-	then if test $(host_os) = mingw32; \
-	     then sed 's,\\\\,/,g' <gnuradio_swig_py_general.Td >gnuradio_swig_py_general.d; rm -f gnuradio_swig_py_general.Td; \
-	     else mv -f gnuradio_swig_py_general.Td gnuradio_swig_py_general.d; fi \
-	else rm -f gnuradio_swig_py_general.Td; exit 1; fi 
-
-
-# ----------------------------------------------------------------
-# Part 3: sw_gengen.i -> gnuradio_swig_py_gengen
-#
-
-_gnuradio_swig_py_gengen_la_SOURCES = 		\
-	gnuradio_swig_py_gengen.cc		
-
-
-_gnuradio_swig_py_gengen_la_LIBADD  = 		\
-	$(GNURADIO_CORE_LA)			\
-	$(PYTHON_LDFLAGS)			\
-	-lstdc++
-
-_gnuradio_swig_py_gengen_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
-
-
-# KLUDGE: Force gengen include of gnuradio_swig_py_gengen.d dependency file.
-# This is not guaranteed to be portable, but will probably work.
-# If it works, we have accurate dependencies for our swig stuff, which is good.
-@am__include@ @am__quote@./gnuradio_swig_py_gengen.d@am__quote@
-
-gnuradio_swig_py_gengen.py gnuradio_swig_py_gengen.h: gnuradio_swig_py_gengen.cc
-
-gnuradio_swig_py_gengen.cc : $(srcdir)/sw_gengen.i
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) -MMD -MF gnuradio_swig_py_gengen.Td -module gnuradio_swig_py_gengen -o gnuradio_swig_py_gengen.cc $(srcdir)/sw_gengen.i ;\
-	then if test $(host_os) = mingw32; \
-	     then sed 's,\\\\,/,g' <gnuradio_swig_py_gengen.Td >gnuradio_swig_py_gengen.d; rm -f gnuradio_swig_py_gengen.Td; \
-	     else mv -f gnuradio_swig_py_gengen.Td gnuradio_swig_py_gengen.d; fi \
-	else rm -f gnuradio_swig_py_gengen.Td; exit 1; fi 
-
-
-# ----------------------------------------------------------------
-# Part 4: sw_filter.i -> gnuradio_swig_py_filter
-#
-
-_gnuradio_swig_py_filter_la_SOURCES = 		\
-	gnuradio_swig_py_filter.cc		
-
-
-_gnuradio_swig_py_filter_la_LIBADD  = 		\
-	$(GNURADIO_CORE_LA)			\
-	$(PYTHON_LDFLAGS)			\
-	-lstdc++
-
-_gnuradio_swig_py_filter_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
-
-
-# KLUDGE: Force filter include of gnuradio_swig_py_filter.d dependency file.
-# This is not guaranteed to be portable, but will probably work.
-# If it works, we have accurate dependencies for our swig stuff, which is good.
-@am__include@ @am__quote@./gnuradio_swig_py_filter.d@am__quote@
-
-gnuradio_swig_py_filter.py gnuradio_swig_py_filter.h: gnuradio_swig_py_filter.cc
-
-gnuradio_swig_py_filter.cc : $(srcdir)/sw_filter.i
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) -MMD -MF gnuradio_swig_py_filter.Td -module gnuradio_swig_py_filter -o gnuradio_swig_py_filter.cc $(srcdir)/sw_filter.i ;\
-	then if test $(host_os) = mingw32; \
-	     then sed 's,\\\\,/,g' <gnuradio_swig_py_filter.Td >gnuradio_swig_py_filter.d; rm -f gnuradio_swig_py_filter.Td; \
-	     else mv -f gnuradio_swig_py_filter.Td gnuradio_swig_py_filter.d; fi \
-	else rm -f gnuradio_swig_py_filter.Td; exit 1; fi 
-
-
-# ----------------------------------------------------------------
-# Part 5: sw_io.i -> gnuradio_swig_py_io
-#
-
-_gnuradio_swig_py_io_la_SOURCES = 		\
-	gnuradio_swig_py_io.cc		
-
-
-_gnuradio_swig_py_io_la_LIBADD  = 		\
-	$(GNURADIO_CORE_LA)			\
-	$(PYTHON_LDFLAGS)			\
-	-lstdc++
-
-_gnuradio_swig_py_io_la_LDFLAGS = -module -avoid-version $(NO_UNDEFINED)
-
-
-# KLUDGE: Force io include of gnuradio_swig_py_io.d dependency file.
-# This is not guaranteed to be portable, but will probably work.
-# If it works, we have accurate dependencies for our swig stuff, which is good.
-@am__include@ @am__quote@./gnuradio_swig_py_io.d@am__quote@
-
-gnuradio_swig_py_io.py gnuradio_swig_py_io.h: gnuradio_swig_py_io.cc
-
-gnuradio_swig_py_io.cc : $(srcdir)/sw_io.i
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) -MMD -MF gnuradio_swig_py_io.Td -module gnuradio_swig_py_io -o gnuradio_swig_py_io.cc $(srcdir)/sw_io.i ;\
-	then if test $(host_os) = mingw32; \
-	     then sed 's,\\\\,/,g' <gnuradio_swig_py_io.Td >gnuradio_swig_py_io.d; rm -f gnuradio_swig_py_io.Td; \
-	     else mv -f gnuradio_swig_py_io.Td gnuradio_swig_py_io.d; fi \
-	else rm -f gnuradio_swig_py_io.Td; exit 1; fi 
-
+# special install for this top-level Python script which includes all
+# of the split Python libraries.
+ourpythondir = $(grpythondir)/gr
+ourpython_PYTHON = gnuradio_swig_python.py
 
 # ----------------------------------------------------------------
 # FIXME As of swig 1.3.31, this still seems to be required...
@@ -263,26 +43,55 @@ gnuradio_swig_py_io.cc : $(srcdir)/sw_io.i
 gnuradio_swig_bug_workaround.h : gnuradio_swig_py_runtime.cc $(srcdir)/gen-swig-bug-fix
 	$(PYTHON) $(srcdir)/gen-swig-bug-fix gnuradio_swig_py_runtime.cc $@
 
-# ----------------------------------------------------------------
-
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
-
-
-grinclude_HEADERS =				\
+# C/C++ headers get installed in ${prefix}/include/gnuradio
+grinclude_HEADERS =			\
 	gnuradio_swig_bug_workaround.h
 
-swiginclude_HEADERS =				\
-	$(LOCAL_IFILES)			
+# ----------------------------------------------------------------
+# We've split the previously monstrous gnuradio_swig_python into 5
+# smaller pieces.  This reduces compile time coupling and creates
+# smaller pieces for the compiler to digest.  prior to this change, on
+# X86_64, g++'s resident set size was 650MB!
+# ----------------------------------------------------------------
 
-MOSTLYCLEANFILES = \
-	$(BUILT_SOURCES) *~ *.pyc 
+TOP_SWIG_IFILES =			\
+	gnuradio_swig_py_runtime.i	\
+	gnuradio_swig_py_general.i	\
+	gnuradio_swig_py_gengen.i	\
+	gnuradio_swig_py_filter.i	\
+	gnuradio_swig_py_io.i
 
-DISTCLEANFILES = 			\
-	gnuradio_swig_py_runtime.d	\
-	gnuradio_swig_py_general.d	\
-	gnuradio_swig_py_gengen.d	\
-	gnuradio_swig_py_filter.d	\
-	gnuradio_swig_py_io.d		
+# Install so that they end up available as:
+#   import gnuradio.gr
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/gr
+gnuradio_swig_py_runtime_pythondir_category = gnuradio/gr
+gnuradio_swig_py_general_pythondir_category = gnuradio/gr
+gnuradio_swig_py_gengen_pythondir_category  = gnuradio/gr
+gnuradio_swig_py_filter_pythondir_category  = gnuradio/gr
+gnuradio_swig_py_io_pythondir_category      = gnuradio/gr
+
+# additional libraries for linking with each SWIG-generated library
+gnuradio_swig_py_runtime_la_swig_libadd = $(GNURADIO_CORE_LA)
+gnuradio_swig_py_general_la_swig_libadd = $(GNURADIO_CORE_LA)
+gnuradio_swig_py_gengen_la_swig_libadd  = $(GNURADIO_CORE_LA)
+gnuradio_swig_py_filter_la_swig_libadd  = $(GNURADIO_CORE_LA)
+gnuradio_swig_py_io_la_swig_libadd      = $(GNURADIO_CORE_LA)
+
+include $(top_srcdir)/Makefile.swig
+
+# add some of the variables generated inside the Makefile.swig
+
+# include the SWIG-generated .h files in the BUILT SOURCES, since they
+# aren't by default when using Makefile.swig; order doesn't matter.
+BUILT_SOURCES =				\
+	gnuradio_swig_py_runtime.h	\
+	gnuradio_swig_py_general.h	\
+	gnuradio_swig_py_gengen.h	\
+	gnuradio_swig_py_filter.h	\
+	gnuradio_swig_py_io.h		\
+	$(grinclude_HEADERS)		\
+	$(swig_built_sources)
+
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

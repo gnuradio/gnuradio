@@ -23,75 +23,39 @@ include $(top_srcdir)/Makefile.common
 
 SUBDIRS = gsm .
 
-# Install this stuff so that it ends up as the gnuradio.vocoder module
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/vocoder
-
-ourpythondir = $(grpythondir)/vocoder
-ourlibdir    = $(grpyexecdir)/vocoder
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-ALL_IFILES = 				\
-	$(LOCAL_IFILES)			\
-	$(NON_LOCAL_IFILES)		
-
-NON_LOCAL_IFILES =			\
-	$(GNURADIO_I)
-
-LOCAL_IFILES = 				\
-	$(srcdir)/gsm_full_rate.i
-
-# These files are built by SWIG.  The first is the C++ glue.
-# The second is the python wrapper that loads the _howto shared library
-# and knows how to call our extensions.
-
-BUILT_SOURCES = 			\
-	gsm_full_rate.cc		\
-	gsm_full_rate.py				
-
-# This gets gsm_full_rate.py installed in the right place
-ourpython_PYTHON =			\
-	gsm_full_rate.py
-
-ourlib_LTLIBRARIES = _gsm_full_rate.la
-
-# These are the source files that go into the shared library
-_gsm_full_rate_la_SOURCES = 		\
-	gsm_fr_decode_ps.cc		\
-	gsm_fr_encode_sp.cc		\
-	gsm_full_rate.cc		
-
-
-# magic flags
-_gsm_full_rate_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
-
-# link the library against the gsm library and the
-# c++ standard library
-_gsm_full_rate_la_LIBADD = 	\
-	gsm/libgsm.la		\
-	$(PYTHON_LDFLAGS)	\
-	$(GNURADIO_CORE_LA)	\
-	-lstdc++			
-
-gsm_full_rate.cc gsm_full_rate.py: $(ALL_IFILES)
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module gsm_full_rate \
-		-o gsm_full_rate.cc $(LOCAL_IFILES)
-
-# These headers get installed in ${prefix}/include/gnuradio
+# C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
 	gsm_fr_decode_ps.h		\
-	gsm_fr_encode_sp.h		
+	gsm_fr_encode_sp.h
 
-# These swig headers get installed in ${prefix}/include/gnuradio/swig
-swiginclude_HEADERS = 			\
-	$(LOCAL_IFILES)
+# SWIG interface and library
 
+TOP_SWIG_IFILES = 			\
+	gsm_full_rate.i
 
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
+# Install so that they end up available as:
+#   import gnuradio.vocoder.gsm_full_rate
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/vocoder
+gsm_full_rate_pythondir_category =	\
+	gnuradio/vocoder
 
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
+# additional sources for the SWIG-generated library
+gsm_full_rate_la_swig_sources = 	\
+	gsm_fr_decode_ps.cc		\
+	gsm_fr_encode_sp.cc
 
+# additional libraries for linking with the SWIG-generated library
+gsm_full_rate_la_swig_libadd =		\
+	$(GNURADIO_CORE_LA)		\
+	gsm/libgsm.la
+
+include $(top_srcdir)/Makefile.swig
+
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
+
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

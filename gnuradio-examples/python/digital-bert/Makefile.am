@@ -28,5 +28,3 @@ dist_ourdata_SCRIPTS =		\
 	benchmark_tx.py		\
 	receive_path.py		\
 	transmit_path.py
-
-MOSTLYCLEANFILES = *.pyc *.pyo *~

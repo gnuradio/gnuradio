@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 #
-# Copyright 2004,2006 Free Software Foundation, Inc.
+# Copyright 2004,2006,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,8 +20,25 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+# these flags are used when compiling non-SWIG-wrapper files
+# when going in to non-SWIG libraries
+AM_CXXFLAGS = @autoconf_default_CXXFLAGS@
+
+# these flags are used when compiling any CXX file
+AM_CPPFLAGS = \
+	$(STD_DEFINES_AND_INCLUDES) \
+	$(PYTHON_CPPFLAGS) \
+	$(CPPUNIT_INCLUDES) \
+	$(GNURADIO_CORE_CPPFLAGS)
+
+# these are used by both SWIG and CXX
+STD_DEFINES_AND_INCLUDES = \
+	$(DEFINES) \
+	-I$(GNURADIO_CORE_INCLUDEDIR) \
+	-I$(GNURADIO_CORE_INCLUDEDIR)/swig
+
 # includes
-grincludedir   = $(includedir)/gnuradio
+grincludedir = $(includedir)/gnuradio
 
 # swig includes 
 swigincludedir = $(grincludedir)/swig
@@ -33,11 +50,18 @@ swigincludedir = $(grincludedir)/swig
 grpythondir = $(pythondir)/gnuradio
 grpyexecdir = $(pyexecdir)/gnuradio
 
-# swig flags
-SWIGPYTHONFLAGS = -fvirtual -python -modern
-SWIGGRFLAGS = -I$(GNURADIO_CORE_INCLUDEDIR)/swig -I$(GNURADIO_CORE_INCLUDEDIR)
-
 # Don't assume that make predefines $(RM), because BSD make does
 # not. We define it now in configure.ac using AM_PATH_PROG, but now
 # here have to add a -f to be like GNU make.
 RM=$(RM_PROG) -f
+
+# Other common defines; use "+=" to add to these
+STAMPS =
+MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
+
+# Don't distribute the files defined in the variable 'no_dist_files'
+dist-hook:
+	@for file in $(no_dist_files); do \
+		echo $(RM) $(distdir)/$$file; \
+		$(RM) $(distdir)/$$file; \
+	done;

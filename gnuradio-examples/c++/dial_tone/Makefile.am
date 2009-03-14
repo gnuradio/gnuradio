@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2008 Free Software Foundation, Inc.
+# Copyright 2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -42,5 +42,3 @@ dial_tone_SOURCES = \
 dial_tone_LDADD = \
     $(GNURADIO_CORE_LA) \
     $(GR_AUDIO_ALSA_LA)
-
-MOSTLYCLEANFILES = *~

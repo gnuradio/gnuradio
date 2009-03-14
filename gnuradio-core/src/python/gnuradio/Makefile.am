@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2007,2008 Free Software Foundation, Inc.
+# Copyright 2004,2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -34,5 +34,3 @@ grpython_PYTHON = 			\
 	gr_unittest.py			\
 	optfir.py			\
 	window.py
-
-CLEANFILES = *.pyc

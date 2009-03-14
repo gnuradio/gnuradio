@@ -21,74 +21,60 @@
 
 include $(top_srcdir)/Makefile.common
 
-# Install this stuff so that it ends up as the gnuradio.audio_osx module
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-
-ourpythondir = $(grpythondir)
-ourlibdir    = $(grpyexecdir)
-
 EXTRA_DIST = run_tests.in
+
 TESTS = run_tests
 
-LOCAL_IFILES = 				\
-	$(srcdir)/audio_osx.i				
-
-NON_LOCAL_IFILES =			\
-	$(GNURADIO_I)
-
-ALL_IFILES = 				\
-	$(LOCAL_IFILES)			\
-	$(NON_LOCAL_IFILES)		
-
-BUILT_SOURCES = 			\
-	audio_osx.cc			\
-	audio_osx.py				
-
-ourpython_PYTHON =			\
-	audio_osx.py
+DISTCLEANFILES = run_tests
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-ourlib_LTLIBRARIES = _audio_osx.la
-
-_audio_osx_la_SOURCES = 		\
-	audio_osx.cc			\
-	audio_osx_sink.cc		\
-	audio_osx_source.cc			
+# C/C++ headers get installed in ${prefix}/include/gnuradio
+grinclude_HEADERS =			\
+	audio_osx_sink.h		\
+	audio_osx_source.h
 
 noinst_HEADERS =			\
 	audio_osx.h			\
 	circular_buffer.h		\
 	mld_threads.h
 
-grinclude_HEADERS =			\
-	audio_osx_sink.h		\
-	audio_osx_source.h			
+noinst_PYTHON =				\
+	qa_osx.py			\
+	test_audio_loop.py
 
-swiginclude_HEADERS = 			\
-	$(LOCAL_IFILES)
+###################################
+# SWIG Python interface and library
 
-_audio_osx_la_LIBADD = 			\
-	$(PYTHON_LDFLAGS)		\
-	$(GNURADIO_CORE_LA)		\
-	-lstdc++				
+TOP_SWIG_IFILES =			\
+	audio_osx.i
 
-_audio_osx_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version -framework AudioUnit -framework CoreAudio -framework AudioToolbox
+# Install so that they end up available as:
+#   import gnuradio.audio_osx
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+audio_osx_pythondir_category =		\
+	gnuradio
 
-_audio_osx_la_CXXFLAGS = @swig_CXXFLAGS@
+# additional sources for the SWIG-generated library
+audio_osx_la_swig_sources =		\
+	audio_osx_sink.cc		\
+	audio_osx_source.cc
 
-audio_osx.cc audio_osx.py: $(ALL_IFILES)
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module audio_osx \
-		-o audio_osx.cc $(LOCAL_IFILES)
+# additional libraries for linking with the SWIG-generated library
+audio_osx_la_swig_libadd =		\
+	$(GNURADIO_CORE_LA)
 
-noinst_PYTHON = qa_osx.py test_audio_loop.py
+# additional LD flags for linking the SWIG-generated library
+audio_osx_la_swig_ldflags =		\
+	-framework AudioUnit		\
+	-framework CoreAudio		\
+	-framework AudioToolbox
 
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *~ *.pyc run_tests *.loT
+include $(top_srcdir)/Makefile.swig
 
-CONFIG_CLEAN_FILES = run_tests *.loT
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
 
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

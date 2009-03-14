@@ -21,75 +21,39 @@
 
 include $(top_srcdir)/Makefile.common
 
-# Install this stuff so that it ends up as the gnuradio.vocoder module
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/vocoder
-
-ourpythondir = $(grpythondir)/vocoder
-ourlibdir    = $(grpyexecdir)/vocoder
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
-
-ALL_IFILES = 				\
-	$(LOCAL_IFILES)			\
-	$(NON_LOCAL_IFILES)		
-
-NON_LOCAL_IFILES =			\
-	$(GNURADIO_I)
-
-LOCAL_IFILES = 				\
-	$(srcdir)/cvsd_vocoder.i
-
-# These files are built by SWIG.  The first is the C++ glue.
-# The second is the python wrapper that loads the _howto shared library
-# and knows how to call our extensions.
-
-BUILT_SOURCES = 			\
-	cvsd_vocoder.cc		\
-	cvsd_vocoder.py				
-
-# This gets cvsd_vocoder.py installed in the right place
-ourpython_PYTHON =			\
-	cvsd_vocoder.py
-
-ourlib_LTLIBRARIES = _cvsd_vocoder.la
-
-# These are the source files that go into the shared library
-_cvsd_vocoder_la_SOURCES = 		\
-	cvsd_decode_bs.cc		\
-	cvsd_encode_sb.cc		\
-	cvsd_vocoder.cc		
-
-
-# magic flags
-_cvsd_vocoder_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
-
-# link the library against the c++ standard library
-_cvsd_vocoder_la_LIBADD = 	\
-	$(PYTHON_LDFLAGS)	\
-	$(GNURADIO_CORE_LA)	\
-	-lstdc++			
-
-_cvsd_vocoder_la_CXXFLAGS = @swig_CXXFLAGS@
-
-cvsd_vocoder.cc cvsd_vocoder.py: $(ALL_IFILES)
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module cvsd_vocoder \
-		-o cvsd_vocoder.cc $(LOCAL_IFILES)
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
 	cvsd_decode_bs.h		\
-	cvsd_encode_sb.h		
+	cvsd_encode_sb.h
 
-# These swig headers get installed in ${prefix}/include/gnuradio/swig
-swiginclude_HEADERS = 			\
-	$(LOCAL_IFILES)
+###################################
+# SWIG Python interface and library
 
+TOP_SWIG_IFILES = 			\
+	cvsd_vocoder.i
 
-MOSTLYCLEANFILES = $(BUILT_SOURCES) *.pyc
+# Install so that they end up available as:
+#   import gnuradio.vocoder.cvsd_vocoder
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/vocoder
+cvsd_vocoder_pythondir_category =	\
+	gnuradio/vocoder
 
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
+# additional sources for the SWIG-generated library
+cvsd_vocoder_la_swig_sources =	 	\
+	cvsd_decode_bs.cc		\
+	cvsd_encode_sb.cc
 
+# additional libraries for linking with the SWIG-generated library
+cvsd_vocoder_la_swig_libadd =		\
+	$(GNURADIO_CORE_LA)
+
+include $(top_srcdir)/Makefile.swig
+
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
+
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

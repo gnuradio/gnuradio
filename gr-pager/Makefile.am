@@ -1,5 +1,5 @@
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,5 +22,3 @@
 include $(top_srcdir)/Makefile.common
 
 SUBDIRS = src
-
-MOSTLYCLEANFILES = *~ *.tmp

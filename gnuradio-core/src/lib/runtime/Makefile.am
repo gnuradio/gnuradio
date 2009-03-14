@@ -154,5 +154,3 @@ swiginclude_HEADERS =			\
 	gr_sync_interpolator.i		\
 	gr_top_block.i			\
 	runtime.i
-
-MOSTLYCLEANFILES = *~ *.loT

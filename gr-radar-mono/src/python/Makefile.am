@@ -29,5 +29,3 @@ dist_bin_SCRIPTS = 	\
 
 dist_ourpython_PYTHON =	\
 	radar_mono.py
-
-MOSTLYCLEANFILES = *~ *.pyc *.pyo

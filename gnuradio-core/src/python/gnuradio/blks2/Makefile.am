@@ -1,5 +1,5 @@
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -28,8 +28,3 @@ grblks2pythondir = $(grpythondir)/blks2
 
 grblks2python_PYTHON =		\
 	__init__.py		
-
-
-noinst_PYTHON = 		
-
-CLEANFILES = *.pyc *.pyo

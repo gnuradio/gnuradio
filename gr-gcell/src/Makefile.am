@@ -23,20 +23,20 @@ include $(top_srcdir)/Makefile.common
 SUBDIRS = . examples
 
 EXTRA_DIST = run_tests.in
+
 TESTS = run_tests
-
-
-# Install the python portion so that it ends up as the gnuradio.gcell module
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-
-ourpythondir = $(grpythondir)
-ourlibdir    = $(grpyexecdir)
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(GCELL_INCLUDES) \
 	$(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
-# Special swig arguments
-LOCAL_SWIG_DEFINES_AND_INCLUDES = $(GCELL_INCLUDES)
+# ----------------------------------------------------------------
+
+noinst_PYTHON =  \
+	qa_fft.py
+
+DISTCLEANFILES = \
+	gcell.d \
+	run_tests
 
 # ----------------------------------------------------------------
 #                        The C++ blocks
@@ -48,6 +48,7 @@ lib_LTLIBRARIES = libgr_gcell.la
 libgr_gcell_la_SOURCES = \
 	gcell_fft_vcc.cc
 
+# C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = \
 	gcell_fft_vcc.h
 
@@ -57,80 +58,37 @@ libgr_gcell_la_LIBADD = \
 
 libgr_gcell_la_LDFLAGS = $(NO_UNDEFINED)
 
-
 # ----------------------------------------------------------------
 #                         SWIG stuff
 # ----------------------------------------------------------------
 
-# the library for the swig interface
-ourlib_LTLIBRARIES = _gcell.la
+TOP_SWIG_IFILES =		\
+	gcell.i
 
-LOCAL_IFILES = \
-	$(srcdir)/gc_job_manager.i \
-	$(srcdir)/gcell.i \
-	$(srcdir)/gcell_fft_vcc.i
+# Install so that they end up available as:
+#   import gnuradio.gcell
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+gcell_pythondir_category =	\
+	gnuradio
 
-NON_LOCAL_IFILES = \
-	$(GNURADIO_I)
+# additional arguments to the SWIG command
+gcell_swig_args =		\
+	$(GCELL_INCLUDES)
 
-ALL_IFILES = \
-	$(LOCAL_IFILES)	\
-	$(NON_LOCAL_IFILES)
+# additional libraries for linking with the SWIG-generated library
+gcell_la_swig_libadd =		\
+	libgr_gcell.la
 
-swig_built_sources = \
-	gcell.cc \
-	gcell.py
+# additional SWIG files to be installed
+gcell_swiginclude_headers =	\
+	gc_job_manager.i	\
+	gcell_fft_vcc.i
 
-ourpython_PYTHON = \
-	gcell.py
+include $(top_srcdir)/Makefile.swig
 
-_gcell_la_SOURCES = \
-	gcell.cc
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
 
-_gcell_la_LIBADD = \
-	$(PYTHON_LDFLAGS) \
-	libgr_gcell.la \
-	-lstdc++
-
-_gcell_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
-
-_gcell_la_CXXFLAGS = @swig_CXXFLAGS@
-
-swiginclude_HEADERS = \
-	$(LOCAL_IFILES)
-
-#gcell.cc gcell.py: $(ALL_IFILES)
-#	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module gcell \
-#		-o gcell.cc $(LOCAL_IFILES)
-
-# KLUDGE: Force runtime include of gcell.d dependency file.
-# This is not guaranteed to be portable, but will probably work.
-# If it works, we have accurate dependencies for our swig stuff, which is good.
-@am__include@ @am__quote@./gcell.d@am__quote@
-
-gcell.py gcell.h: gcell.cc
-
-gcell.cc : $(srcdir)/gcell.i $(GNURADIO_I)
-	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) -MMD -MF gcell.Td -module gcell \
-		-o gcell.cc $(srcdir)/gcell.i ;\
-	then if test $(host_os) = mingw32; \
-	     then sed 's,\\\\,/,g' <gcell.Td >gcell.d; rm -f gcell.Td; \
-	     else mv -f gcell.Td gcell.d; fi \
-	else rm -f gcell.Td; exit 1; fi 
-
-
-noinst_PYTHON =  \
-	qa_fft.py
-
-# ----------------------------------------------------------------
-
-MOSTLYCLEANFILES =  \
-	$(swig_built_sources) *~ *.pyc
-
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(swig_built_sources); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(swig_built_sources); do $(RM) $(distdir)/$$file; done
-
-DISTCLEANFILES = \
-	gcell.d
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

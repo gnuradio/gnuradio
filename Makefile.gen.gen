@@ -20,39 +20,16 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-STAMPS += $(DEPDIR)/sources-generate-*
-
-# Ensure parallel make does the right thing.
-# http://sources.redhat.com/automake/automake.html#Multiple-Outputs
-
-$(DEPDIR)/sources-generate-stamp: $(gen_sources_deps)
-	@rm -f $(DEPDIR)/sources-generate-tmp
-	@touch $(DEPDIR)/sources-generate-tmp
-	PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_all.py
-	@mv -f $(DEPDIR)/sources-generate-tmp $@
-
-$(gen_sources): $(DEPDIR)/sources-generate-stamp
-## Recover from the removal of $@
-	@if test -f $@; then :; else \
-		trap 'rm -rf $(DEPDIR)/sources-generate-*' 1 2 13 15; \
-		if mkdir $(DEPDIR)/sources-generate-lock 2>/dev/null; then \
-## This code is being executed by the first process.
-			rm -f $(DEPDIR)/sources-generate-stamp; \
-			$(MAKE) $(AM_MAKEFLAGS) $(DEPDIR)/sources-generate-stamp; \
-			rmdir $(DEPDIR)/sources-generate-lock; \
-		else \
-## This code is being executed by the follower processes.
-## Wait until the first process is done.
-			while test -d $(DEPDIR)/sources-generate-lock; do sleep 1; done; \
-## Succeed if and only if the first process succeeded.
-			test -f $(DEPDIR)/sources-generate-stamp; exit $$?; \
-		fi; \
-	fi;
-
 ## ----------------------------------------------------------------
 ## Special rule for regenerating the local Makefile.gen
+##
+## Define the variable 'makefile_gen_gen_command' to be the command
+## that creates $(srcdir)/Makefile.gen .  The rule below will check to
+## make sure that it can create the generated file, and if not exits
+## with an error -1.
+##
 
-STAMPS += $(DEPDIR)/generate-makefile-generate-*
+STAMPS += $(DEPDIR)/Makefile.gen-generate-generate-*
 
 generate-makefile $(srcdir)/Makefile.gen:
 ## parallel make protection; can't hurt
@@ -77,21 +54,17 @@ generate-makefile $(srcdir)/Makefile.gen:
 		fi; \
 		if test "$$do_recreate" == "1"; then \
 			echo "Regenerating $(srcdir)/Makefile.gen"; \
-			PYTHONPATH=$(top_srcdir)/gnuradio-core/src/python srcdir=$(srcdir) do_makefile=1 do_sources=0 $(PYTHON) $(srcdir)/generate_all.py; \
+			$(makefile_gen_gen_command); \
 		else \
 			echo "Cannot recreate $(srcdir)/Makefile.gen because the directory or file is write-protected."; \
+			exit -1; \
 		fi; \
 		mv -f $(DEPDIR)/Makefile.gen-generate-tmp $(DEPDIR)/Makefile.gen-generate-stamp; \
 		rmdir $(DEPDIR)/Makefile.gen-generate-lock; \
 	else \
 ## This code is being executed by the follower processes.
 ## Wait until the first process is done.
-		while test -d $(DEPDIR)/$@-generate-lock; do sleep 1; done; \
+		while test -d $(DEPDIR)/Makefile.gen-generate-lock; do sleep 1; done; \
 ## Succeed if and only if the first process succeeded.
-		test -f $(DEPDIR)/$@-generate-stamp; exit $$?; \
+		test -f $(DEPDIR)/Makefile.gen-generate-stamp; exit $$?; \
 	fi;
-
-## ----------------------------------------------------------------
-
-MOSTLYCLEANFILES += $(STAMPS)
-

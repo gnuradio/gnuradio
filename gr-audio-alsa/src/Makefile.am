@@ -21,48 +21,13 @@
 
 include $(top_srcdir)/Makefile.common
 
-# Install this stuff so that it ends up as the gnuradio.audio_alsa module
-# This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-
-ourpythondir = $(grpythondir)
-ourlibdir    = $(grpyexecdir)
-
 EXTRA_DIST = run_tests.in
 
 TESTS = run_tests
 
-LOCAL_IFILES = 				\
-	$(srcdir)/audio_alsa.i				
+DISTCLEANFILES = run_tests
 
-NON_LOCAL_IFILES =			\
-	$(GNURADIO_I)
-
-ALL_IFILES = 				\
-	$(LOCAL_IFILES)			\
-	$(NON_LOCAL_IFILES)		
-
-BUILT_SOURCES = 			\
-	audio_alsa.cc			\
-	audio_alsa.py				
-
-ourpython_PYTHON =			\
-	audio_alsa.py
-
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
-
-ourlib_LTLIBRARIES = _audio_alsa.la
-
-lib_LTLIBRARIES = libgnuradio-audio-alsa.la
-
-_audio_alsa_la_SOURCES = 		\
-	audio_alsa.cc
-
-libgnuradio_audio_alsa_la_SOURCES = 	\
-	audio_alsa_sink.cc		\
-	audio_alsa_source.cc		\
-	gri_alsa.cc
-
+# C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
 	audio_alsa_sink.h		\
 	audio_alsa_source.h
@@ -70,36 +35,49 @@ grinclude_HEADERS =			\
 noinst_HEADERS = 			\
 	gri_alsa.h
 
-swiginclude_HEADERS = 			\
-	$(LOCAL_IFILES)
+noinst_PYTHON = 			\
+	qa_alsa.py
 
-_audio_alsa_la_LIBADD = 		\
-	$(PYTHON_LDFLAGS)		\
-	$(GNURADIO_CORE_LA)		\
-	$(ALSA_LIBS)			\
-	libgnuradio-audio-alsa.la	\
-	-lstdc++
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
+
+###################################
+# ALSA library, including OS interface, sink, and source
+
+lib_LTLIBRARIES = libgnuradio-audio-alsa.la
+
+libgnuradio_audio_alsa_la_SOURCES = 	\
+	audio_alsa_sink.cc		\
+	audio_alsa_source.cc		\
+	gri_alsa.cc
 
 libgnuradio_audio_alsa_la_LIBADD =	\
+	$(GNURADIO_CORE_LA)		\
 	$(ALSA_LIBS)
 
-_audio_alsa_la_LDFLAGS = $(NO_UNDEFINED) -module -avoid-version
+libgnuradio_audio_alsa_la_LDFLAGS =	\
+	$(NO_UNDEFINED)
 
-libgnuradio_audio_alsa_la_LDFLAGS = $(NO_UNDEFINED)
+###################################
+# SWIG Python interface and library
 
-_audio_alsa_la_CXXFLAGS = @swig_CXXFLAGS@
+TOP_SWIG_IFILES = 			\
+	audio_alsa.i
 
-audio_alsa.cc audio_alsa.py: $(ALL_IFILES)
-	$(SWIG) $(STD_SWIG_PYTHON_ARGS) -module audio_alsa \
-		-o audio_alsa.cc $(LOCAL_IFILES)
+# Install so that they end up available as:
+#   import gnuradio.audio_alsa
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+audio_alsa_pythondir_category =		\
+	gnuradio
 
-noinst_PYTHON = 			\
-	qa_alsa.py			
+# additional libraries for linking with the SWIG-generated library
+audio_alsa_la_swig_libadd =		\
+	libgnuradio-audio-alsa.la
 
-MOSTLYCLEANFILES = \
-	$(BUILT_SOURCES) *~ *.pyc
+include $(top_srcdir)/Makefile.swig
 
-# Don't distribute output of swig
-dist-hook:
-	@for file in $(BUILT_SOURCES); do echo $(RM) $(distdir)/$$file; done
-	@for file in $(BUILT_SOURCES); do $(RM) $(distdir)/$$file; done
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
+
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)

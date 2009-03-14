@@ -1,5 +1,5 @@
 #
-# Copyright 2005 Free Software Foundation, Inc.
+# Copyright 2005,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -37,5 +37,3 @@ grupython_PYTHON = 			\
 	seq_with_cursor.py		\
 	socket_stuff.py			\
 	daemon.py
-
-CLEANFILES = *.pyc

@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2007,2008 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -65,19 +65,10 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
 \$(FFTW3F_CFLAGS) \
 \$(GSL_CFLAGS)"
         gnuradio_core_LA="\${abs_top_builddir}/gnuradio-core/src/lib/libgnuradio-core.la"
-	gnuradio_core_I="\${abs_top_srcdir}/gnuradio-core/src/lib/swig/gnuradio.i"
+	dnl gnuradio_core_I="\${abs_top_srcdir}/gnuradio-core/src/lib/swig/gnuradio.i"
 	gnuradio_core_LIBDIRPATH="\${abs_top_builddir}/gnuradio-core/src/lib:\${abs_top_builddir}/gnuradio-core/src/lib/.libs"
 	gnuradio_core_SWIGDIRPATH="\${abs_top_builddir}/gnuradio-core/src/lib/swig:\${abs_top_builddir}/gnuradio-core/src/lib/swig/.libs:\${abs_top_srcdir}/gnuradio-core/src/lib/swig"
 	gnuradio_core_PYDIRPATH="\${abs_top_srcdir}/gnuradio-core/src/python"
-
-        dnl kludge up initial swig dependency files
-        AC_CONFIG_COMMANDS([swig_deps], [
-            touch gnuradio-core/src/lib/swig/gnuradio_swig_py_runtime.d
-            touch gnuradio-core/src/lib/swig/gnuradio_swig_py_general.d
-            touch gnuradio-core/src/lib/swig/gnuradio_swig_py_gengen.d
-            touch gnuradio-core/src/lib/swig/gnuradio_swig_py_filter.d
-            touch gnuradio-core/src/lib/swig/gnuradio_swig_py_io.d
-        ])
     fi
 
     dnl other externally-required gnuradio-core variables

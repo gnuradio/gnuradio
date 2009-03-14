@@ -38,5 +38,3 @@ dist_bin_SCRIPTS = 		\
 
 ourpython_PYTHON =	\
 	sounder.py
-
-MOSTLYCLEANFILES = *~ *.pyc *.pyo

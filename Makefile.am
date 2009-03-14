@@ -28,7 +28,11 @@ EXTRA_DIST = \
 	configure \
 	configure-cell-cross \
 	config.h.in \
-	run_tests.sh.in
+	run_tests.sh.in \
+	Makefile.swig \
+	Makefile.swig.gen.t \
+	Makefile.par.gen \
+	Makefile.gen.gen
 
 SUBDIRS = @build_dirs@
 DIST_SUBDIRS = @build_dirs@ @skipped_dirs@ @with_dirs@
