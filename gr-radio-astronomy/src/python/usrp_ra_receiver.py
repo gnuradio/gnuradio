@@ -426,7 +426,7 @@ class app_flow_graph(stdgui2.std_top_block):
 			self.myform['dbname'].set_value(self.subdev[0].name())
 
 		# Set analog baseband filtering, if DBS_RX
-		if self.cardtype in (usrp_dbid.DBS_RX, usrp_dbid.DBS_RX_REV_2_1):
+		if self.cardtype == usrp_dbid.DBS_RX:
 			lbw = (self.u.adc_freq() / self.u.decim_rate()) / 2
 			if lbw < 1.0e6:
 				lbw = 1.0e6
