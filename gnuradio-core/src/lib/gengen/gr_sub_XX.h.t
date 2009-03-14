@@ -30,7 +30,7 @@
 class @NAME@;
 typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
-@SPTR_NAME@ gr_make_@BASE_NAME@ (int vlen = 1);
+@SPTR_NAME@ gr_make_@BASE_NAME@ (size_t vlen = 1);
 
 /*!
  * \brief output = input_0 -  input_1 - ...)
@@ -40,11 +40,11 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
  */
 class @NAME@ : public gr_sync_block
 {
-  friend @SPTR_NAME@ gr_make_@BASE_NAME@ (int vlen);
+  friend @SPTR_NAME@ gr_make_@BASE_NAME@ (size_t vlen);
 
-  @NAME@ (int vlen);
+  @NAME@ (size_t vlen);
 
-  int d_vlen;
+  size_t d_vlen;
 
  public:
 

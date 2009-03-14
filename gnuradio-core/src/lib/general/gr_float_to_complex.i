@@ -22,9 +22,9 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,float_to_complex)
 
-gr_float_to_complex_sptr gr_make_float_to_complex (int vlen = 1);
+gr_float_to_complex_sptr gr_make_float_to_complex (size_t vlen = 1);
 
 class gr_float_to_complex : public gr_sync_block
 {
-  gr_float_to_complex (int vlen);
+  gr_float_to_complex (size_t vlen);
 };

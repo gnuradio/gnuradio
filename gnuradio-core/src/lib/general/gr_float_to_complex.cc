@@ -28,12 +28,12 @@
 #include <gr_io_signature.h>
 
 gr_float_to_complex_sptr
-gr_make_float_to_complex (int vlen)
+gr_make_float_to_complex (size_t vlen)
 {
   return gr_float_to_complex_sptr (new gr_float_to_complex (vlen));
 }
 
-gr_float_to_complex::gr_float_to_complex (int vlen)
+gr_float_to_complex::gr_float_to_complex (size_t vlen)
   : gr_sync_block ("gr_float_to_complex",
 		   gr_make_io_signature (1, 2, sizeof (float) *  vlen),
 		   gr_make_io_signature (1, 1, sizeof (gr_complex) * vlen)),

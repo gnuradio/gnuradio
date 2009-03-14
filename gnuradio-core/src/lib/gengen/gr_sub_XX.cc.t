@@ -30,12 +30,12 @@
 #include <gr_io_signature.h>
 
 @SPTR_NAME@
-gr_make_@BASE_NAME@ (int vlen)
+gr_make_@BASE_NAME@ (size_t vlen)
 {
   return @SPTR_NAME@ (new @NAME@ (vlen));
 }
 
-@NAME@::@NAME@ (int vlen)
+@NAME@::@NAME@ (size_t vlen)
   : gr_sync_block ("@BASE_NAME@",
 		   gr_make_io_signature (1, -1, sizeof (@I_TYPE@)*vlen),
 		   gr_make_io_signature (1,  1, sizeof (@O_TYPE@)*vlen))

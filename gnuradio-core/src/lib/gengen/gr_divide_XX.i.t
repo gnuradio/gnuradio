@@ -24,10 +24,10 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,@BASE_NAME@)
 
-@SPTR_NAME@ gr_make_@BASE_NAME@ (int vlen = 1);
+@SPTR_NAME@ gr_make_@BASE_NAME@ (size_t vlen = 1);
 
 class @NAME@ : public gr_sync_block
 {
  private:
-  @NAME@ (int vlen);
+  @NAME@ (size_t vlen);
 };
