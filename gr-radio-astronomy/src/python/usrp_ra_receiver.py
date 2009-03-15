@@ -628,9 +628,9 @@ class app_flow_graph(stdgui2.std_top_block):
 			self.centerfreq = target_freq
 			self.observing -= delta
 			self.scope.set_baseband_freq (self.observing)
-
-			self.myform['baseband'].set_value(r.baseband_freq)
-			self.myform['ddc'].set_value(r.dxc_freq)
+			if not self.cardtype == usrp_dbid.BASIC_RX:
+				self.myform['baseband'].set_value(r.baseband_freq)
+				self.myform['ddc'].set_value(r.dxc_freq)
 			
 			if (self.use_notches):
 				self.compute_notch_taps(self.notches)
