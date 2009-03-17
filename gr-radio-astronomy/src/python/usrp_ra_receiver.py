@@ -599,24 +599,12 @@ class app_flow_graph(stdgui2.std_top_block):
 		Set the center frequency we're interested in.
 
 		@param target_freq: frequency in Hz
-		@rypte: bool
 
-		Tuning is a two step process.  First we ask the front-end to
-		tune as close to the desired frequency as it can.  Then we use
-		the result of that operation and our target_frequency to
-		determine the value for the digital down converter.
 		"""
 		#
-		# Everything except BASIC_RX should support usrp.tune()
 		#
-		if not (self.cardtype == usrp_dbid.BASIC_RX):
-			r = usrp.tune(self.u, self.subdev[0].which(), self.subdev[0], target_freq)
-			r = usrp.tune(self.u, self.subdev[1].which(), self.subdev[1], target_freq)
-		else:
-			r = self.u.set_rx_freq(0, target_freq)
-			f = self.u.rx_freq(0)
-			if abs(f-target_freq) > 2.0e3:
-				r = 0
+		r = usrp.tune(self.u, self.subdev[0].which(), self.subdev[0], target_freq)
+		r = usrp.tune(self.u, self.subdev[1].which(), self.subdev[1], target_freq)
 		if r:
 			self.myform['freq'].set_value(target_freq)	   # update displayed value
 			#
@@ -628,9 +616,8 @@ class app_flow_graph(stdgui2.std_top_block):
 			self.centerfreq = target_freq
 			self.observing -= delta
 			self.scope.set_baseband_freq (self.observing)
-			if not self.cardtype == usrp_dbid.BASIC_RX:
-				self.myform['baseband'].set_value(r.baseband_freq)
-				self.myform['ddc'].set_value(r.dxc_freq)
+			self.myform['baseband'].set_value(r.baseband_freq)
+			self.myform['ddc'].set_value(r.dxc_freq)
 			
 			if (self.use_notches):
 				self.compute_notch_taps(self.notches)
