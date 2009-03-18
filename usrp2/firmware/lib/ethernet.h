@@ -65,11 +65,18 @@ int ethernet_check_errors(void);
 
 typedef enum { LS_UNKNOWN, LS_DOWN, LS_UP } eth_link_state_t;
 
+// flow control bitmasks
+#define	FC_NONE		0x0
+#define	FC_WE_TX	0x1			// we send PAUSE frames
+#define	FC_WE_RX 	0x2			// we honor received PAUSE frames
+#define	FC_SYMM		(FC_WE_TX | FC_WE_RX)
+
 #define S_UNKNOWN (-1)			// unknown link speed
 
 typedef struct {
   eth_link_state_t	link_state;
   int			link_speed;	// in Mb/s
+  int			flow_control;
 } ethernet_t;
 
 #endif /* INCLUDED_ETHERNET_H */

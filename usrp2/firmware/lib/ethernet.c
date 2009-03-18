@@ -86,6 +86,36 @@ ed_link_speed_change(int speed)
   ed_link_up(speed);
 }
 
+static void
+print_flow_control(int flow_control)
+{
+  static const char *flow_control_msg[4] = {
+    "NONE", "WE_TX", "WE_RX", "SYMMETRIC"
+  };
+  putstr("ethernet flow control: ");
+  puts(flow_control_msg[flow_control & 0x3]);
+}
+
+static void
+check_flow_control_resolution(void)
+{
+  static const unsigned char table[16] = {
+    // index = {local_asm, local_pause, partner_asm, partner_pause}
+    FC_NONE,  FC_NONE,  FC_NONE,  FC_NONE,
+    FC_NONE,  FC_SYMM,  FC_NONE,  FC_SYMM,
+    FC_NONE,  FC_NONE,  FC_NONE,  FC_WE_TX,
+    FC_NONE,  FC_SYMM,  FC_WE_RX, FC_SYMM
+  };
+
+  int us = eth_mac_miim_read(PHY_AUTONEG_ADV);
+  int lp = eth_mac_miim_read(PHY_LP_ABILITY);
+  int index = (((us >> 10) & 0x3) << 2) | ((lp >> 10) & 0x3);
+  ed_state.flow_control = table[index];
+
+  if (1)
+    print_flow_control(ed_state.flow_control);
+}
+
 /*
  * Read the PHY state register to determine link state and speed
  */
@@ -123,6 +153,8 @@ ed_check_phy_state(void)
       new_speed = S_UNKNOWN;
       break;
     }
+
+    check_flow_control_resolution();
   }
   else {				// link's down
     if (VERBOSE)
@@ -194,9 +226,36 @@ ethernet_init(void)
 
   pic_register_handler(IRQ_PHY, eth_phy_irq_handler);
 
-  // Advertise that we handle PAUSE frames and asymmetric pause direction.
+  // Advertise our flow control configuation.
+  //
+  // We and the link partner each specify two bits in the base page
+  // related to autoconfiguration: NWAY_AR_PAUSE and NWAY_AR_ASM_DIR.
+  // The bits say what a device is "willing" to do, not what may actually
+  // happen as a result of the negotiation.  There are 4 cases:
+  //
+  // PAUSE  ASM_DIR
+  //
+  //  0        0        I have no flow control capability.
+  //
+  //  1        0        I both assert and respond to flow control.
+  //
+  //  0        1        I assert flow control, but cannot respond.  That is,
+  //                    I want to be able to send PAUSE frames, but will ignore any
+  //		 	you send to me.  (This is our configuration.)
+  //
+  //  1        1        I can both assert and respond to flow control AND I am willing
+  //                    to operate symmetrically OR asymmetrically in EITHER direction.
+  //                    (We hope the link partner advertises this, otherwise we don't
+  //			get what we want.)
+
   int t = eth_mac_miim_read(PHY_AUTONEG_ADV);
-  eth_mac_miim_write(PHY_AUTONEG_ADV, t | NWAY_AR_PAUSE | NWAY_AR_ASM_DIR);
+  t &= ~(NWAY_AR_PAUSE | NWAY_AR_ASM_DIR);
+  t |= NWAY_AR_ASM_DIR;
+
+  // Say we can't to 10BASE-T or 100BASE-TX, half or full duplex
+  t &= ~(NWAY_AR_10T_HD_CAPS | NWAY_AR_10T_FD_CAPS | NWAY_AR_100TX_HD_CAPS | NWAY_AR_100TX_FD_CAPS);
+
+  eth_mac_miim_write(PHY_AUTONEG_ADV, t);
 
   // Restart autonegotation.  
   // We want to ensure that we're advertising our PAUSE capabilities.
