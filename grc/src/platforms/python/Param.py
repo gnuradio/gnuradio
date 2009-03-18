@@ -215,7 +215,7 @@ class Param(_Param):
 		#########################
 		# Enum Type
 		#########################
-		if self.is_enum(): return self.get_value()
+		if self.is_enum(): return v
 		#########################
 		# Numeric Types
 		#########################
@@ -305,7 +305,7 @@ class Param(_Param):
 				raise Exception
 			params = self.get_all_params('id')
 			keys = [param.get_value() for param in params]
-			try: assert(len(keys) == len(set(keys)))
+			try: assert keys.count(v) <= 1 #id should only appear once, or zero times if block is disabled
 			except:
 				self._add_error_message('ID "%s" is not unique.'%v)
 				raise Exception
@@ -392,4 +392,4 @@ class Param(_Param):
 		@param type the specified type
 		@return a list of params
 		"""
-		return sum([filter(lambda p: p.get_type() == type, block.get_params()) for block in self.get_parent().get_parent().get_blocks()], [])
+		return sum([filter(lambda p: p.get_type() == type, block.get_params()) for block in self.get_parent().get_parent().get_enabled_blocks()], [])
