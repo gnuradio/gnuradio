@@ -32,6 +32,25 @@ import gr_threading as _threading
 #
 # This kludge allows ^C to interrupt top_block.run and top_block.wait
 #
+# The problem that we are working around is that Python only services
+# signals (e.g., KeyboardInterrupt) in its main thread.  If the main
+# thread is blocked in our C++ version of wait, even though Python's
+# SIGINT handler fires, and even though there may be other python
+# threads running, no one will know.  Thus instead of directly waiting
+# in the thread that calls wait (which is likely to be the Python main
+# thread), we create a separate thread that does the blocking wait,
+# and then use the thread that called wait to do a slow poll of an
+# event queue.  That thread, which is executing "wait" below is
+# interruptable, and if it sees a KeyboardInterrupt, executes a stop
+# on the top_block, then goes back to waiting for it to complete.
+# This ensures that the unlocked wait that was in progress (in the
+# _top_block_waiter thread) can complete, release its mutex and back
+# out.  If we don't do that, we are never able to clean up, and nasty
+# things occur like leaving the USRP transmitter sending a carrier.
+#
+# See also top_block.wait (below), which uses this class to implement
+# the interruptable wait.
+#
 class _top_block_waiter(_threading.Thread):
     def __init__(self, tb):
         _threading.Thread.__init__(self)
@@ -45,8 +64,12 @@ class _top_block_waiter(_threading.Thread):
         self.event.set()
 
     def wait(self):
-        while not self.event.isSet():
-            self.event.wait(0.100)
+        try:
+            while not self.event.isSet():
+                self.event.wait(0.100)
+        except KeyboardInterrupt:
+            self.tb.stop()
+            self.wait()
 
 
 #
