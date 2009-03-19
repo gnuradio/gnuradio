@@ -108,9 +108,10 @@ gr_clock_recovery_mm_ff::general_work (int noutput_items,
 
   int 	ii = 0;				// input index
   int  	oo = 0;				// output index
+  int   ni = ninput_items[0] - d_interp->ntaps(); // don't use more input than this
   float mm_val;
 
-  while (oo < noutput_items){
+  while (oo < noutput_items && ii < ni ){
 
     // produce output sample
     out[oo] = d_interp->interpolate (&in[ii], d_mu);
@@ -132,5 +133,5 @@ gr_clock_recovery_mm_ff::general_work (int noutput_items,
 
   consume_each (ii);
 
-  return noutput_items;
+  return oo;
 }
