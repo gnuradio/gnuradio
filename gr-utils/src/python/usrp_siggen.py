@@ -29,7 +29,7 @@ import sys
 
 
 class my_top_block(gr.top_block):
-    def __init__ (self):
+    def __init__ (self, nsamples):
         gr.top_block.__init__(self)
         
         # controllable values
@@ -38,6 +38,7 @@ class my_top_block(gr.top_block):
         self.waveform_ampl = 16000
         self.waveform_freq = 100.12345e3
         self.waveform_offset = 0
+        self.nsamples = nsamples
         self._instantiate_blocks ()
         self.set_waveform_type (self.waveform_type)
 
@@ -86,19 +87,30 @@ class my_top_block(gr.top_block):
         self.noisegen = gr.noise_source_c (gr.GR_UNIFORM,
                                            self.waveform_ampl)
 
+        self.head = None
+        if self.nsamples > 0:
+            self.head = gr.head(gr.sizeof_gr_complex, int(self.nsamples))
+
         # self.file_sink = gr.file_sink (gr.sizeof_gr_complex, "siggen.dat")
 
     def _configure_graph (self, type):
         try:
             self.lock()
             self.disconnect_all ()
+
+            if self.head:
+                self.connect(self.head, self.u)
+                tail = self.head
+            else:
+                tail = self.u
+                
             if type == gr.GR_SIN_WAVE or type == gr.GR_CONST_WAVE:
-                self.connect (self.siggen, self.u)
+                self.connect (self.siggen, tail)
                 # self.connect (self.siggen, self.file_sink)
                 self.siggen.set_waveform (type)
                 self.src = self.siggen
             elif type == gr.GR_UNIFORM or type == gr.GR_GAUSSIAN:
-                self.connect (self.noisegen, self.u)
+                self.connect (self.noisegen, tail)
                 self.noisegen.set_type (type)
                 self.src = self.noisegen
             else:
@@ -156,6 +168,8 @@ def main ():
                        help="set output gain to GAIN [default=%default]")
     parser.add_option ("-o", "--offset", type="eng_float", default=0,
                        help="set waveform offset to OFFSET [default=%default]")
+    parser.add_option ("-N", "--nsamples", type="eng_float", default=0,
+                       help="set number of samples to transmit [default=+inf]")
     (options, args) = parser.parse_args ()
 
     if len(args) != 0:
@@ -167,7 +181,7 @@ def main ():
         parser.print_help()
         raise SystemExit
 
-    tb = my_top_block()
+    tb = my_top_block(options.nsamples)
     tb.set_interpolator (options.interp)
     tb.set_waveform_type (options.type)
     tb.set_waveform_freq (options.waveform_freq)

@@ -47,7 +47,7 @@ test_usrp_standard_rx_SOURCES 	= test_usrp_standard_rx.cc time_stuff.c
 test_usrp_standard_rx_LDADD   	= $(USRP_LA)
 
 test_usrp_standard_tx_SOURCES 	= test_usrp_standard_tx.cc time_stuff.c
-test_usrp_standard_tx_LDADD   	= $(USRP_LA)
+test_usrp_standard_tx_LDADD   	= $(USRP_LA) $(BOOST_LDFLAGS) $(BOOST_PROGRAM_OPTIONS_LIB)
 
 usrper_SOURCES			= usrper.cc
 usrper_LDADD 			= $(USRP_LA)

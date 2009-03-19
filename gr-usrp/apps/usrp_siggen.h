@@ -31,7 +31,7 @@ typedef boost::shared_ptr<usrp_siggen> usrp_siggen_sptr;
 usrp_siggen_sptr make_usrp_siggen(int which, usrp_subdev_spec spec, 
 				  double rf_freq, int interp, double wfreq,
 				  int waveform, float amp, float gain, 
-				  float offset);
+				  float offset, long long nsamples);
 
 class usrp_siggen : public gr_top_block
 {
@@ -39,11 +39,12 @@ private:
     usrp_siggen(int which, usrp_subdev_spec spec, 
 		double rf_freq, int interp, double wfreq,
 		int waveform, float amp, float gain, 
-		float offset);
+		float offset, long long nsamples);
     friend usrp_siggen_sptr make_usrp_siggen(int which, usrp_subdev_spec spec, 
 					     double rf_freq, int interp, double wfreq,
 					     int waveform, float amp, float gain, 
-					     float offset);
+					     float offset,
+					     long long nsamples);
     
  public:
     gr_block_sptr source;

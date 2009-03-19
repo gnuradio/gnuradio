@@ -60,20 +60,20 @@ str_to_subdev(std::string spec_str)
 usrp_siggen_sptr make_usrp_siggen(int which, usrp_subdev_spec spec, 
 				  double rf_freq, int interp, double wfreq,
 				  int waveform, float amp, float gain, 
-				  float offset)
+				  float offset, long long nsamples)
 {
   return gnuradio::get_initial_sptr(new usrp_siggen(which, spec, 
 						    rf_freq, interp, wfreq,
 						    waveform, amp, gain, 
-						    offset));
+						    offset, nsamples));
 }
 
 // Hierarchical block constructor, with no inputs or outputs
 usrp_siggen::usrp_siggen(int which, usrp_subdev_spec spec, 
 			 double rf_freq, int interp, double wfreq,
 			 int waveform, float amp, float gain, 
-			 float offset) :
-  gr_top_block("usrp_siggen")
+			 float offset, long long nsamples)
+  : gr_top_block("usrp_siggen")
 {
   usrp_sink_c_sptr usrp = usrp_make_sink_c(which, interp);
 
@@ -126,7 +126,14 @@ usrp_siggen::usrp_siggen(int which, usrp_subdev_spec spec,
 
   siggen->set_waveform((gr_waveform_t)waveform);
 
-  connect(source, 0, usrp, 0);
+  if (nsamples > 0){
+    gr_block_sptr head = gr_make_head(sizeof(gr_complex), nsamples);
+    connect(source, 0, head, 0);
+    connect(head, 0, usrp, 0);
+  }
+  else {
+    connect(source, 0, usrp, 0);
+  }
 }
 
 int main(int argc, char *argv[])
@@ -140,6 +147,7 @@ int main(int argc, char *argv[])
   float gain = -1;                     // set the d'board PGA gain
   float offset = 0;                    // set waveform offset
   int waveform;
+  double nsamples = 0;		       // set the number of samples to transmit (0 -> inf)
 
   po::options_description cmdconfig("Program options");
   cmdconfig.add_options()
@@ -155,9 +163,10 @@ int main(int argc, char *argv[])
     ("uniform", "generate Uniform random output")
 
     ("waveform-freq,w", po::value<double>(&wfreq), "set waveform frequency to FREQ")
-    ("amplitdue,a", po::value<float>(&amp), "set amplitude")
+    ("amplitude,a", po::value<float>(&amp), "set amplitude")
     ("gain,g", po::value<float>(&gain), "set output gain to GAIN")
     ("offset,o", po::value<float>(&offset), "set waveform offset to OFFSET")
+    ("nsamples,N", po::value<double>(&nsamples), "number of samples to send [default=+inf]")
     ;
   
   po::variables_map vm;
@@ -199,14 +208,15 @@ int main(int argc, char *argv[])
     waveform = GR_SIN_WAVE;
   }
 
-  printf("which:   %d\n", which);
-  printf("interp:  %d\n", interp);
-  printf("rf_freq: %g\n", rf_freq);
-  printf("amp:     %f\n", amp);
+  printf("which:    %d\n", which);
+  printf("interp:   %d\n", interp);
+  printf("rf_freq:  %g\n", rf_freq);
+  printf("amp:      %f\n", amp);
+  printf("nsamples: %g\n", nsamples);
 
   usrp_siggen_sptr top_block = make_usrp_siggen(which, spec, rf_freq, 
 						interp, wfreq, waveform,
-						amp, gain, offset);
+						amp, gain, offset, (long long) nsamples);
 
   top_block->run();
   
