@@ -138,11 +138,14 @@ namespace usrp2 {
     if (!d_eth_buf->open(ifc, htons(U2_ETHERTYPE)))
       throw std::runtime_error("Unable to register USRP2 protocol");
     
-    d_pf = pktfilter::make_ethertype_inbound(U2_ETHERTYPE, d_eth_buf->mac());
+    d_addr = p->addr;
+
+    // Create a packet filter for U2_ETHERTYPE packets sourced from target USRP2
+    u2_mac_addr_t usrp_mac;
+    parse_mac_addr(d_addr, &usrp_mac);
+    d_pf = pktfilter::make_ethertype_inbound_target(U2_ETHERTYPE, (const unsigned char*)&(usrp_mac.addr));
     if (!d_pf || !d_eth_buf->attach_pktfilter(d_pf))
       throw std::runtime_error("Unable to attach packet filter.");
-    
-    d_addr = p->addr;
     
     if (USRP2_IMPL_DEBUG)
       std::cerr << "usrp2 constructor: using USRP2 at " << d_addr << std::endl;

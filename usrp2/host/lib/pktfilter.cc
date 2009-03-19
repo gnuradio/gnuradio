@@ -148,5 +148,40 @@ namespace usrp2 {
     
     return pf;
   }
+  /*
+   * Return a filter that harvests inbound packets with the specified ethertype and target USRP2 MAC address.
+   * \param ethertype	the ethertype we're looking for
+   * \param usrp_mac    our target USRP2 MAC address
+   */
+  pktfilter *
+  pktfilter::make_ethertype_inbound_target (unsigned short ethertype, const unsigned char *usrp_mac)
+  {
+    static const int MAX_LEN = 20;
+    sock_filter	*inst = new sock_filter [MAX_LEN];
+    pktfilter	*pf = new pktfilter ();
+
+    __u16 tmac_hi = (usrp_mac[0] << 8) | usrp_mac[1];
+    __u32 tmac_lo = (usrp_mac[2] << 24) | (usrp_mac[3] << 16) | (usrp_mac[4] << 8) | usrp_mac[5];
+    
+    // ignore packets that have a different ethertype
+    // and only return packets that have a source mac address == usrp_mac
+    
+    int i = 0;
+    inst[i++] = make_stmt (BPF_LD|BPF_H|BPF_ABS, 12);	// load ethertype
+    inst[i++] = make_jump (BPF_JMP|BPF_JEQ|BPF_K, ethertype, 0, 5);
+    inst[i++] = make_stmt (BPF_LD|BPF_W|BPF_ABS, 8);	// load low 32-bit of src mac
+    inst[i++] = make_jump (BPF_JMP|BPF_JEQ|BPF_K, tmac_lo, 0, 3);
+    inst[i++] = make_stmt (BPF_LD|BPF_H|BPF_ABS, 6);	// load high 16-bits of src mac
+    inst[i++] = make_jump (BPF_JMP|BPF_JEQ|BPF_K, tmac_hi, 0, 1);
+    inst[i++] = make_stmt (BPF_RET|BPF_K, (unsigned) -1);	// return whole packet
+    inst[i++] = make_stmt (BPF_RET|BPF_K, 0);		// return 0 (ignore packet)
+    
+    assert (i <= MAX_LEN);
+    
+    pf->d_inst = inst;
+    pf->d_len = i;
+    
+    return pf;
+  }
   
 } // namespace usrp2

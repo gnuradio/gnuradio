@@ -48,6 +48,15 @@ namespace usrp2 {
      */
     static pktfilter *make_ethertype_inbound (unsigned short ethertype,
 					      const unsigned char *our_mac);
+
+    /*!
+     * \brief Return a filter that harvests inbound packets with the specified ethertype
+     *        and source MAC address
+     * \param ethertype	the ethertype we're looking for
+     * \param usrp_mac 	the source MAC address
+     */
+    static pktfilter *make_ethertype_inbound_target (unsigned short ethertype,
+						     const unsigned char *usrp_mac); 
   };
   
 } // namespace usrp2
