@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -51,21 +51,22 @@ public:
    * \brief The simple interface to running a flowgraph.
    *
    * Calls start() then wait().  Used to run a flowgraph that will stop
-   * on its own, or to run a flowgraph indefinitely until SIGINT is
-   * received.
+   * on its own, or when another thread will call stop().
    */
   void run();
 
   /*!
    * Start the contained flowgraph.  Creates one or more threads to
    * execute the flow graph.  Returns to the caller once the threads
-   * are created.
+   * are created.  Calling start() on a top_block that is already
+   * started IS an error.
    */
   void start();
   
   /*!
    * Stop the running flowgraph.  Notifies each thread created by the
-   * scheduler to shutdown, then returns to caller.
+   * scheduler to shutdown, then returns to caller. Calling stop() on
+   * a top_block that is already stopped IS NOT an error.
    */
   void stop();
 
@@ -73,16 +74,17 @@ public:
    * Wait for a flowgraph to complete.  Flowgraphs complete when
    * either (1) all blocks indicate that they are done (typically only
    * when using gr.file_source, or gr.head, or (2) after stop() has been
-   * called to request shutdown.
+   * called to request shutdown.  Calling wait on a top_block that is
+   * not running IS NOT an error (wait returns w/o blocking).
    */
   void wait();
 
   /*!
    * Lock a flowgraph in preparation for reconfiguration.  When an equal
    * number of calls to lock() and unlock() have occurred, the flowgraph
-   * will be restarted automatically.
+   * will be reconfigured.
    *
-   * N.B. lock() and unlock() cannot be called from a flowgraph thread
+   * N.B. lock() and unlock() may not be called from a flowgraph thread
    * (E.g., gr_block::work method) or deadlock will occur when
    * reconfiguration happens.
    */
@@ -91,9 +93,9 @@ public:
   /*!
    * Unlock a flowgraph in preparation for reconfiguration.  When an equal
    * number of calls to lock() and unlock() have occurred, the flowgraph
-   * will be restarted automatically.
+   * will be reconfigured.
    *
-   * N.B. lock() and unlock() cannot be called from a flowgraph thread
+   * N.B. lock() and unlock() may not be called from a flowgraph thread
    * (E.g., gr_block::work method) or deadlock will occur when
    * reconfiguration happens.
    */

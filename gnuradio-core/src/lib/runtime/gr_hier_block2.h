@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007,2008 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -124,9 +124,9 @@ public:
   /*!
    * Lock a flowgraph in preparation for reconfiguration.  When an equal
    * number of calls to lock() and unlock() have occurred, the flowgraph
-   * will be restarted automatically.
+   * will be reconfigured.
    *
-   * N.B. lock() and unlock() cannot be called from a flowgraph thread
+   * N.B. lock() and unlock() may not be called from a flowgraph thread
    * (E.g., gr_block::work method) or deadlock will occur when
    * reconfiguration happens.
    */
@@ -135,9 +135,9 @@ public:
   /*!
    * Unlock a flowgraph in preparation for reconfiguration.  When an equal
    * number of calls to lock() and unlock() have occurred, the flowgraph
-   * will be restarted automatically.
+   * will be reconfigured.
    *
-   * N.B. lock() and unlock() cannot be called from a flowgraph thread
+   * N.B. lock() and unlock() may not be called from a flowgraph thread
    * (E.g., gr_block::work method) or deadlock will occur when
    * reconfiguration happens.
    */
