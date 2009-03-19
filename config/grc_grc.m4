@@ -32,14 +32,7 @@ AC_DEFUN([GRC_GRC],[
         PYTHON_CHECK_MODULE([sys],[Python >= 2.5],[],[passed=no],[sys.version.split()[[0]] >= "2.5"])
         PYTHON_CHECK_MODULE([Cheetah],[Python Cheetah templates >= 2.0.0],[],[passed=no],[Cheetah.Version >= "2.0.0"])
         PYTHON_CHECK_MODULE([lxml.etree],[Python lxml wrappers >= 2.0.0],[],[passed=no],[lxml.etree.LXML_VERSION >= (2, 0, 0, 0)])
-        PYTHON_CHECK_MODULE([pygtk],[Python gtk wrappers],[],[passed=no])
-    fi
-
-    dnl ########################################
-    dnl # gtk version test w/ pkg-config
-    dnl ########################################
-    if test $passed = yes; then
-        PKG_CHECK_MODULES(GTK, gtk+-2.0 >= 2.10.0,[],[passed=no])
+        PYTHON_CHECK_MODULE([gtk],[Python gtk wrappers >= 2.10.0],[],[passed=no],[gtk.pygtk_version >= (2, 10, 0)])
     fi
 
     dnl ########################################
