@@ -29,8 +29,8 @@ AC_DEFUN([GRC_GR_WXGUI],[
     dnl   yes  : if the --enable code passed muster and all dependencies are met
     dnl   no   : otherwise
     if test $passed = yes; then
-	PYTHON_CHECK_MODULE([wx],[Python wxWidgets wrappers],[],[passed=no])
-	PYTHON_CHECK_MODULE([numpy],[Numeric Python extensions],[],[passed=no])
+        PYTHON_CHECK_MODULE([wx],[Python wxWidgets wrappers >= 2.8],[],[passed=no],[wx.version().split()[[0]] >= "2.8"])
+        PYTHON_CHECK_MODULE([numpy],[Numeric Python extensions],[],[passed=no])
     fi
 
     AC_CONFIG_FILES([ \
@@ -38,7 +38,7 @@ AC_DEFUN([GRC_GR_WXGUI],[
         gr-wxgui/gr-wxgui.pc \
         gr-wxgui/src/Makefile \
         gr-wxgui/src/python/Makefile \
-	gr-wxgui/src/python/plotter/Makefile \
+        gr-wxgui/src/python/plotter/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-wxgui)
