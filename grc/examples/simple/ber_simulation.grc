@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Thu Jul 24 14:28:06 2008</timestamp>
+  <timestamp>Thu Mar 19 11:08:59 2009</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -36,78 +36,12 @@
       <value>Custom</value>
     </param>
     <param>
+      <key>realtime_scheduling</key>
+      <value></value>
+    </param>
+    <param>
       <key>_coordinate</key>
       <value>(16, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_add_vxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_add_vxx</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(652, 395)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>wxgui_constellationsink2</key>
-    <param>
-      <key>id</key>
-      <value>wxgui_constellationsink2</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>"Constellation: "+str(const)</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>frame_decim</key>
-      <value>15</value>
-    </param>
-    <param>
-      <key>marker</key>
-      <value>set_format_plus</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>2, 0, 1, 1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(907, 334)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -239,12 +173,16 @@
       <value>15</value>
     </param>
     <param>
-      <key>avg_alpha</key>
-      <value>0</value>
+      <key>peak_hold</key>
+      <value>False</value>
     </param>
     <param>
-      <key>options</key>
-      <value>none</value>
+      <key>average</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>avg_alpha</key>
+      <value>0</value>
     </param>
     <param>
       <key>show_gauge</key>
@@ -306,7 +244,7 @@
     </param>
     <param>
       <key>type</key>
-      <value>"BER"</value>
+      <value>'BER'</value>
     </param>
     <param>
       <key>win_size</key>
@@ -483,6 +421,92 @@
       <value>0</value>
     </param>
   </block>
+  <block>
+    <key>gr_add_vxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_add_vxx</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>2</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(652, 395)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>wxgui_scopesink2</key>
+    <param>
+      <key>id</key>
+      <value>wxgui_scopesink2_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>title</key>
+      <value>"Constellation: "+str(const)</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>v_scale</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>t_scale</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>ac_couple</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>xy_mode</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>2, 0, 1, 1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(828, 368)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
   <connection>
     <source_block_id>blks2_error_rate</source_block_id>
     <sink_block_id>wxgui_numbersink2</sink_block_id>
@@ -520,12 +544,6 @@
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_vxx</source_block_id>
-    <sink_block_id>wxgui_constellationsink2</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>random_source_x</source_block_id>
     <sink_block_id>gr_throttle</sink_block_id>
     <source_key>0</source_key>
@@ -534,6 +552,12 @@
   <connection>
     <source_block_id>random_source_x</source_block_id>
     <sink_block_id>gr_chunks_to_symbols_xx</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_add_vxx</source_block_id>
+    <sink_block_id>wxgui_scopesink2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

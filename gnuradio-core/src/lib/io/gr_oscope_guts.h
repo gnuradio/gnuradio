@@ -41,13 +41,15 @@
  */
 
 class gr_oscope_guts {
+public:
+  static const int	MAX_CHANNELS = 8;
 private:
-  static const int	MAX_CHANNELS = 16;
   enum scope_state 	{ HOLD_OFF, LOOK_FOR_TRIGGER, POST_TRIGGER };
 
   int			d_nchannels;		// how many channels
   gr_msg_queue_sptr	d_msgq;			// message queue we stuff output records into
-  gr_trigger_mode	d_trigger_mode;		
+  gr_trigger_mode	d_trigger_mode;
+  gr_trigger_slope	d_trigger_slope;
   int			d_trigger_channel;	// which channel to watch for trigger condition
   double		d_sample_rate;		// input sample rate in Hz
   double		d_update_rate;		// approx freq to produce an output record (Hz)
@@ -61,9 +63,10 @@ private:
   int			d_decimator_count_init;
   int			d_hold_off_count;
   int			d_hold_off_count_init;
+  int			d_pre_trigger_count;
   int			d_post_trigger_count;
   int			d_post_trigger_count_init;
-  float			d_prev_sample;			// used for trigger checking
+  float			d_trigger_off;			//%sample trigger is off
 
   // NOT IMPLEMENTED
   gr_oscope_guts (const gr_oscope_guts &rhs);			// no copy constructor
@@ -71,7 +74,7 @@ private:
 
   void trigger_changed ();
   void update_rate_or_decimation_changed ();
-  int  found_trigger (float sample);	// returns -1, 0, +1
+  bool found_trigger ();	// returns true if found
   void write_output_records ();
 
   void enter_hold_off ();			// called on state entry
@@ -80,7 +83,7 @@ private:
 
 public:
   // CREATORS
-  gr_oscope_guts (int nchannels, double sample_rate, gr_msg_queue_sptr msgq);
+  gr_oscope_guts (double sample_rate, gr_msg_queue_sptr msgq);
   ~gr_oscope_guts ();
 
   // MANIPULATORS
@@ -95,9 +98,11 @@ public:
   bool set_decimation_count (int decimation_count);
   bool set_trigger_channel (int channel);
   bool set_trigger_mode (gr_trigger_mode mode);
+  bool set_trigger_slope (gr_trigger_slope slope);
   bool set_trigger_level (double trigger_level);
   bool set_trigger_level_auto ();				// set to 50% level
   bool set_sample_rate(double sample_rate);
+  bool set_num_channels(int nchannels);
 
 
   // ACCESSORS
@@ -107,6 +112,7 @@ public:
   int get_decimation_count () const;
   int get_trigger_channel () const;
   gr_trigger_mode get_trigger_mode () const;
+  gr_trigger_slope get_trigger_slope () const;
   double get_trigger_level () const;
 
   // # of samples written to each output record.

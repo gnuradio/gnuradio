@@ -69,6 +69,12 @@ gr_oscope_sink_x::set_trigger_mode (gr_trigger_mode mode)
 }
 
 bool
+gr_oscope_sink_x::set_trigger_slope (gr_trigger_slope slope)
+{
+  return d_guts->set_trigger_slope (slope);
+}
+
+bool
 gr_oscope_sink_x::set_trigger_level (double trigger_level)
 {
   return d_guts->set_trigger_level (trigger_level);
@@ -85,6 +91,12 @@ bool
 gr_oscope_sink_x::set_sample_rate (double sample_rate)
 {
   return d_guts->set_sample_rate (sample_rate);
+}
+
+bool
+gr_oscope_sink_x::set_num_channels (int nchannels)
+{
+  return d_guts->set_num_channels (nchannels);
 }
 
 // ACCESSORS
@@ -123,6 +135,12 @@ gr_trigger_mode
 gr_oscope_sink_x::get_trigger_mode () const
 {
   return d_guts->get_trigger_mode ();
+}
+
+gr_trigger_slope
+gr_oscope_sink_x::get_trigger_slope () const
+{
+  return d_guts->get_trigger_slope ();
 }
 
 double

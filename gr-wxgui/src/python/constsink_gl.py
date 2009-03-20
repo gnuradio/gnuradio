@@ -31,7 +31,7 @@ from constants import *
 ##################################################
 # Constellation sink block (wrapper for old wxgui)
 ##################################################
-class const_sink_c(gr.hier_block2, common.prop_setter):
+class const_sink_c(gr.hier_block2):
 	"""
 	A constellation block with a gui window.
 	"""
@@ -97,8 +97,7 @@ class const_sink_c(gr.hier_block2, common.prop_setter):
 		#connect
 		self.connect(self, self._costas, self._retime, agc, sd, sink)
 		#controller
-		def setter(p, k, x): # lambdas can't have assignments :(
-		    p[k] = x
+		def setter(p, k, x): p[k] = x
 		self.controller = pubsub()
 		self.controller.subscribe(ALPHA_KEY, self._costas.set_alpha)
 		self.controller.publish(ALPHA_KEY, self._costas.alpha)
@@ -116,7 +115,7 @@ class const_sink_c(gr.hier_block2, common.prop_setter):
 		#initial update
 		self.controller[SAMPLE_RATE_KEY] = sample_rate
 		#start input watcher
-		common.input_watcher(msgq, lambda x: setter(self.controller, MSG_KEY, x))
+		common.input_watcher(msgq, self.controller, MSG_KEY)
 		#create window
 		self.win = const_window.const_window(
 			parent=parent,
@@ -128,15 +127,9 @@ class const_sink_c(gr.hier_block2, common.prop_setter):
 			beta_key=BETA_KEY,
 			gain_mu_key=GAIN_MU_KEY,
 			gain_omega_key=GAIN_OMEGA_KEY,
+			omega_key=OMEGA_KEY,
+			sample_rate_key=SAMPLE_RATE_KEY,
 		)
-		#register callbacks from window for external use
-		for attr in filter(lambda a: a.startswith('set_'), dir(self.win)):
-			setattr(self, attr, getattr(self.win, attr))
-		self._register_set_prop(self.controller, ALPHA_KEY)
-		self._register_set_prop(self.controller, BETA_KEY)
-		self._register_set_prop(self.controller, GAIN_MU_KEY)
-		self._register_set_prop(self.controller, OMEGA_KEY)
-		self._register_set_prop(self.controller, GAIN_OMEGA_KEY)
-		self._register_set_prop(self.controller, SAMPLE_RATE_KEY)
+		common.register_access_methods(self, self.win)
 
 

@@ -53,23 +53,23 @@ class control_panel(wx.Panel):
 		@param parent the wx parent window
 		"""
 		self.parent = parent
-		wx.Panel.__init__(self, parent, -1, style=wx.SUNKEN_BORDER)
+		wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
 		control_box = wx.BoxSizer(wx.VERTICAL)
 		#checkboxes for average and peak hold
 		control_box.AddStretchSpacer()
 		control_box.Add(common.LabelText(self, 'Options'), 0, wx.ALIGN_CENTER)
-		self.average_check_box = common.CheckBoxController(self, 'Average', parent.ext_controller, parent.average_key)
-		control_box.Add(self.average_check_box, 0, wx.EXPAND)
 		self.peak_hold_check_box = common.CheckBoxController(self, 'Peak Hold', parent, PEAK_HOLD_KEY)
 		control_box.Add(self.peak_hold_check_box, 0, wx.EXPAND)
+		self.average_check_box = common.CheckBoxController(self, 'Average', parent, AVERAGE_KEY)
+		control_box.Add(self.average_check_box, 0, wx.EXPAND)
 		control_box.AddSpacer(2)
 		self.avg_alpha_slider = common.LogSliderController(
 			self, 'Avg Alpha',
 			AVG_ALPHA_MIN_EXP, AVG_ALPHA_MAX_EXP, SLIDER_STEPS,
-			parent.ext_controller, parent.avg_alpha_key,
+			parent, AVG_ALPHA_KEY,
 			formatter=lambda x: ': %.4f'%x,
 		)
-		parent.ext_controller.subscribe(parent.average_key, self.avg_alpha_slider.Enable)
+		parent.subscribe(AVERAGE_KEY, self.avg_alpha_slider.Enable)
 		control_box.Add(self.avg_alpha_slider, 0, wx.EXPAND)
 		#run/stop
 		control_box.AddStretchSpacer()
@@ -81,7 +81,7 @@ class control_panel(wx.Panel):
 ##################################################
 # Numbersink window with label and gauges
 ##################################################
-class number_window(wx.Panel, pubsub.pubsub, common.prop_setter):
+class number_window(wx.Panel, pubsub.pubsub):
 	def __init__(
 		self,
 		parent,
@@ -98,20 +98,23 @@ class number_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		avg_alpha_key,
 		peak_hold,
 		msg_key,
+		sample_rate_key,
 	):
 		pubsub.pubsub.__init__(self)
-		wx.Panel.__init__(self, parent, -1, style=wx.SUNKEN_BORDER)
+		wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
 		#setup
 		self.peak_val_real = NEG_INF
 		self.peak_val_imag = NEG_INF
-		self.ext_controller = controller
 		self.real = real
 		self.units = units
 		self.minval = minval
 		self.maxval = maxval
 		self.decimal_places = decimal_places
-		self.average_key = average_key
-		self.avg_alpha_key = avg_alpha_key
+		#proxy the keys
+		self.proxy(MSG_KEY, controller, msg_key)
+		self.proxy(AVERAGE_KEY, controller, average_key)
+		self.proxy(AVG_ALPHA_KEY, controller, avg_alpha_key)
+		self.proxy(SAMPLE_RATE_KEY, controller, sample_rate_key)
 		#setup the box with display and controls
 		self.control_panel = control_panel(self)
 		main_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -128,13 +131,13 @@ class number_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		sizer.Add(self.gauge_real, 1, wx.EXPAND)
 		sizer.Add(self.gauge_imag, 1, wx.EXPAND)
 		self.SetSizerAndFit(main_box)
-		#initial setup
-		self.ext_controller[self.average_key] = self.ext_controller[self.average_key]
-		self.ext_controller[self.avg_alpha_key] = self.ext_controller[self.avg_alpha_key]
-		self._register_set_prop(self, PEAK_HOLD_KEY, peak_hold)
-		self._register_set_prop(self, RUNNING_KEY, True)
+		#initialize values
+		self[PEAK_HOLD_KEY] = peak_hold
+		self[RUNNING_KEY] = True
+		self[AVERAGE_KEY] = self[AVERAGE_KEY]
+		self[AVG_ALPHA_KEY] = self[AVG_ALPHA_KEY]
 		#register events
-		self.ext_controller.subscribe(msg_key, self.handle_msg)
+		self.subscribe(MSG_KEY, self.handle_msg)
 		self.Bind(common.EVT_DATA, self.update)
 
 	def show_gauges(self, show_gauge):

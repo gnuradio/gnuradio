@@ -33,6 +33,7 @@ libio_la_SOURCES = 			\
 	gr_file_source.cc		\
 	gr_file_descriptor_sink.cc	\
 	gr_file_descriptor_source.cc	\
+	gr_histo_sink_f.cc		\
 	gr_message_sink.cc		\
 	gr_message_source.cc		\
 	gr_oscope_guts.cc		\
@@ -64,6 +65,7 @@ grinclude_HEADERS = 			\
 	gr_file_source.h		\
 	gr_file_descriptor_sink.h	\
 	gr_file_descriptor_source.h	\
+	gr_histo_sink_f.h		\
 	gr_message_sink.h		\
 	gr_message_source.h		\
 	gr_oscope_guts.h		\
@@ -101,6 +103,7 @@ swiginclude_HEADERS =			\
 	gr_file_source.i		\
 	gr_file_descriptor_sink.i	\
 	gr_file_descriptor_source.i	\
+	gr_histo_sink.i			\
 	gr_message_sink.i		\
 	gr_message_source.i		\
 	gr_oscope_sink.i		\

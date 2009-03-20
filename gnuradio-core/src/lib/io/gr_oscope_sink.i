@@ -20,11 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-enum gr_trigger_mode {
-  gr_TRIG_AUTO,			// auto trigger (on anything)
-  gr_TRIG_POS_SLOPE,		// trigger on positive slope across trigger level
-  gr_TRIG_NEG_SLOPE		// trigger on negative slope across trigger level
-};
+%include gr_trigger_mode.h
 
 // GR_SWIG_BLOCK_MAGIC(gr,oscope_sink_x)
 
@@ -43,6 +39,7 @@ class gr_oscope_sink_x : public gr_sync_block
   bool set_decimation_count (int decimation_count);
   bool set_trigger_channel (int channel);
   bool set_trigger_mode (gr_trigger_mode mode);
+  bool set_trigger_slope (gr_trigger_slope slope);
   bool set_trigger_level (double trigger_level);
   bool set_trigger_level_auto ();				// set to 50% level
   bool set_sample_rate(double sample_rate);
@@ -54,6 +51,7 @@ class gr_oscope_sink_x : public gr_sync_block
   int get_decimation_count () const;
   int get_trigger_channel () const;
   gr_trigger_mode get_trigger_mode () const;
+  gr_trigger_slope get_trigger_slope () const;
   double get_trigger_level () const;
 
   // # of samples written to each output record.

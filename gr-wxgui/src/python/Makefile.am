@@ -42,6 +42,8 @@ ourpython_PYTHON =			\
 	fftsink_gl.py			\
 	fft_window.py			\
 	gui.py				\
+	histosink_gl.py			\
+	histo_window.py			\
 	numbersink2.py			\
 	number_window.py		\
 	plot.py				\

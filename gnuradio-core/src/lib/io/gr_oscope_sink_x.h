@@ -51,9 +51,11 @@ public:
   bool set_decimation_count (int decimation_count);
   bool set_trigger_channel (int channel);
   bool set_trigger_mode (gr_trigger_mode mode);
+  bool set_trigger_slope (gr_trigger_slope slope);
   bool set_trigger_level (double trigger_level);
   bool set_trigger_level_auto ();				// set to 50% level
   bool set_sample_rate(double sample_rate);
+  bool set_num_channels (int nchannels);
 
 
   // ACCESSORS
@@ -63,6 +65,7 @@ public:
   int get_decimation_count () const;
   int get_trigger_channel () const;
   gr_trigger_mode get_trigger_mode () const;
+  gr_trigger_slope get_trigger_slope () const;
   double get_trigger_level () const;
 
   // # of samples written to each output record.

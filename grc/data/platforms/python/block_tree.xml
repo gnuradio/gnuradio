@@ -38,6 +38,7 @@
 		<block>wxgui_fftsink2</block>
 		<block>wxgui_constellationsink2</block>
 		<block>wxgui_waterfallsink2</block>
+		<block>wxgui_histosink2</block>
 	</cat>
 	<cat>
 		<name>Operators</name>

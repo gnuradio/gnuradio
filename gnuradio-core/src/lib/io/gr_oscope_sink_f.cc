@@ -38,20 +38,18 @@ gr_make_oscope_sink_f (double sampling_rate, gr_msg_queue_sptr msgq)
 
 gr_oscope_sink_f::gr_oscope_sink_f (double sampling_rate, gr_msg_queue_sptr msgq)
   : gr_oscope_sink_x ("oscope_sink_f",
-		      gr_make_io_signature (1, MAX_CHANNELS, sizeof (float)),
+		      gr_make_io_signature (1, gr_oscope_guts::MAX_CHANNELS, sizeof (float)),
 		      sampling_rate),
     d_msgq(msgq)
 {
+  d_guts = new gr_oscope_guts (d_sampling_rate, d_msgq);
 }
 
 
 bool
 gr_oscope_sink_f::check_topology (int ninputs, int noutputs)
 {
-  delete d_guts;
-  d_guts = 0;
-  d_guts = new gr_oscope_guts (ninputs, d_sampling_rate, d_msgq);
-  return true;
+  return d_guts->set_num_channels(ninputs);
 }
 
 
@@ -65,7 +63,7 @@ gr_oscope_sink_f::work (int noutput_items,
 			gr_vector_void_star &output_items)
 {
   int	  ni = input_items.size ();
-  float	  tmp[MAX_CHANNELS];
+  float	  tmp[gr_oscope_guts::MAX_CHANNELS];
 
   for (int i = 0; i < noutput_items; i++){
 

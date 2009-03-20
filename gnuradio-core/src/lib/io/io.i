@@ -30,6 +30,7 @@
 #include <gr_file_source.h>
 #include <gr_file_descriptor_sink.h>
 #include <gr_file_descriptor_source.h>
+#include <gr_histo_sink_f.h>
 #include <microtune_4702_eval_board.h>
 #include <microtune_4937_eval_board.h>
 #include <sdr_1000.h>
@@ -50,6 +51,7 @@
 %include "gr_file_source.i"
 %include "gr_file_descriptor_sink.i"
 %include "gr_file_descriptor_source.i"
+%include "gr_histo_sink.i"
 %include "microtune_xxxx_eval_board.i"
 %include "microtune_4702_eval_board.i"
 %include "microtune_4937_eval_board.i"

@@ -38,7 +38,7 @@ if style == 'gl':
     except ImportError:
         raise RuntimeError("Unable to import OpenGL. Are Python wrappers for OpenGL installed?")
 
-    from scopesink_gl import scope_sink_f, scope_sink_c, constellation_sink
+    from scopesink_gl import scope_sink_f, scope_sink_c
 
 else:
-    from scopesink_nongl import scope_sink_f, scope_sink_c, constellation_sink
+    from scopesink_nongl import scope_sink_f, scope_sink_c

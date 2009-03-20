@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2009 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,20 +20,21 @@
 #
 
 import wx
-from plotter_base import grid_plotter_base
-from OpenGL.GL import *
-from gnuradio.wxgui import common
+from grid_plotter_base import grid_plotter_base
+from OpenGL import GL
+import common
 import numpy
 import gltext
 import math
 
 LEGEND_TEXT_FONT_SIZE = 8
 LEGEND_BOX_PADDING = 3
-PADDING = 35, 15, 40, 60 #top, right, bottom, left
+MIN_PADDING = 35, 10, 0, 0 #top, right, bottom, left
 #constants for the waveform storage
 SAMPLES_KEY = 'samples'
 COLOR_SPEC_KEY = 'color_spec'
 MARKERY_KEY = 'marker'
+TRIG_OFF_KEY = 'trig_off'
 
 ##################################################
 # Channel Plotter for X Y Waveforms
@@ -45,16 +46,21 @@ class channel_plotter(grid_plotter_base):
 		Create a new channel plotter.
 		"""
 		#init
-		grid_plotter_base.__init__(self, parent, PADDING)
-		self._channels = dict()
+		grid_plotter_base.__init__(self, parent, MIN_PADDING)
+		#setup legend cache
+		self._legend_cache = self.new_gl_cache(self._draw_legend, 50)
 		self.enable_legend(False)
+		#setup waveform cache
+		self._waveform_cache = self.new_gl_cache(self._draw_waveforms, 50)
+		self._channels = dict()
+		#init channel plotter
+		self.register_init(self._init_channel_plotter)
 
-	def _gl_init(self):
+	def _init_channel_plotter(self):
 		"""
 		Run gl initialization tasks.
 		"""
-		glEnableClientState(GL_VERTEX_ARRAY)
-		self._grid_compiled_list_id = glGenLists(1)
+		GL.glEnableClientState(GL.GL_VERTEX_ARRAY)
 
 	def enable_legend(self, enable=None):
 		"""
@@ -65,38 +71,7 @@ class channel_plotter(grid_plotter_base):
 		if enable is None: return self._enable_legend
 		self.lock()
 		self._enable_legend = enable
-		self.changed(True)
-		self.unlock()
-
-	def draw(self):
-		"""
-		Draw the grid and waveforms.
-		"""
-		self.lock()
-		self.clear()
-		#store the grid drawing operations
-		if self.changed():
-			glNewList(self._grid_compiled_list_id, GL_COMPILE)
-			self._draw_grid()
-			self._draw_legend()
-			glEndList()
-			self.changed(False)
-		#draw the grid
-		glCallList(self._grid_compiled_list_id)
-		#use scissor to prevent drawing outside grid
-		glEnable(GL_SCISSOR_TEST)
-		glScissor(
-			self.padding_left+1,
-			self.padding_bottom+1,
-			self.width-self.padding_left-self.padding_right-1,
-			self.height-self.padding_top-self.padding_bottom-1,
-		)
-		#draw the waveforms
-		self._draw_waveforms()
-		glDisable(GL_SCISSOR_TEST)
-		self._draw_point_label()
-		#swap buffer into display
-		self.SwapBuffers()
+		self._legend_cache.changed(True)
 		self.unlock()
 
 	def _draw_waveforms(self):
@@ -104,34 +79,47 @@ class channel_plotter(grid_plotter_base):
 		Draw the waveforms for each channel.
 		Scale the waveform data to the grid using gl matrix operations.
 		"""
+		#use scissor to prevent drawing outside grid
+		GL.glEnable(GL.GL_SCISSOR_TEST)
+		GL.glScissor(
+			self.padding_left+1,
+			self.padding_bottom+1,
+			self.width-self.padding_left-self.padding_right-1,
+			self.height-self.padding_top-self.padding_bottom-1,
+		)
 		for channel in reversed(sorted(self._channels.keys())):
 			samples = self._channels[channel][SAMPLES_KEY]
 			num_samps = len(samples)
 			if not num_samps: continue
 			#use opengl to scale the waveform
-			glPushMatrix()
-			glTranslatef(self.padding_left, self.padding_top, 0)
-			glScalef(
+			GL.glPushMatrix()
+			GL.glTranslatef(self.padding_left, self.padding_top, 0)
+			GL.glScalef(
 				(self.width-self.padding_left-self.padding_right),
 				(self.height-self.padding_top-self.padding_bottom),
 				1,
 			)
-			glTranslatef(0, 1, 0)
+			GL.glTranslatef(0, 1, 0)
 			if isinstance(samples, tuple):
 				x_scale, x_trans = 1.0/(self.x_max-self.x_min), -self.x_min
 				points = zip(*samples)
 			else:
-				x_scale, x_trans = 1.0/(num_samps-1), 0
+				x_scale, x_trans = 1.0/(num_samps-1), -self._channels[channel][TRIG_OFF_KEY]
 				points = zip(numpy.arange(0, num_samps), samples)
-			glScalef(x_scale, -1.0/(self.y_max-self.y_min), 1)
-			glTranslatef(x_trans, -self.y_min, 0)
+			GL.glScalef(x_scale, -1.0/(self.y_max-self.y_min), 1)
+			GL.glTranslatef(x_trans, -self.y_min, 0)
 			#draw the points/lines
-			glColor3f(*self._channels[channel][COLOR_SPEC_KEY])
+			GL.glColor3f(*self._channels[channel][COLOR_SPEC_KEY])
 			marker = self._channels[channel][MARKERY_KEY]
-			if marker: glPointSize(marker)
-			glVertexPointerf(points)
-			glDrawArrays(marker is None and GL_LINE_STRIP or GL_POINTS, 0, len(points))
-			glPopMatrix()
+			if marker is None:
+				GL.glVertexPointerf(points)
+				GL.glDrawArrays(GL.GL_LINE_STRIP, 0, len(points))
+			elif isinstance(marker, (int, float)) and marker > 0:
+				GL.glPointSize(marker)
+				GL.glVertexPointerf(points)
+				GL.glDrawArrays(GL.GL_POINTS, 0, len(points))
+			GL.glPopMatrix()
+		GL.glDisable(GL.GL_SCISSOR_TEST)
 
 	def _populate_point_label(self, x_val, y_val):
 		"""
@@ -143,12 +131,9 @@ class channel_plotter(grid_plotter_base):
 		@return a string with newlines
 		"""
 		#create text
-		label_str = '%s: %s %s\n%s: %s %s'%(
-			self.x_label,
-			common.label_format(x_val),
-			self.x_units, self.y_label,
-			common.label_format(y_val),
-			self.y_units,
+		label_str = '%s: %s\n%s: %s'%(
+			self.x_label, common.eng_format(x_val, self.x_units),
+			self.y_label, common.eng_format(y_val, self.y_units),
 		)
 		for channel in sorted(self._channels.keys()):
 			samples = self._channels[channel][SAMPLES_KEY]
@@ -156,11 +141,12 @@ class channel_plotter(grid_plotter_base):
 			if not num_samps: continue
 			if isinstance(samples, tuple): continue
 			#linear interpolation
-			x_index = (num_samps-1)*(x_val/self.x_scalar-self.x_min)/(self.x_max-self.x_min)
+			x_index = (num_samps-1)*(x_val-self.x_min)/(self.x_max-self.x_min)
 			x_index_low = int(math.floor(x_index))
 			x_index_high = int(math.ceil(x_index))
-			y_value = (samples[x_index_high] - samples[x_index_low])*(x_index - x_index_low) + samples[x_index_low]
-			label_str += '\n%s: %s %s'%(channel, common.label_format(y_value), self.y_units)
+			scale = x_index - x_index_low + self._channels[channel][TRIG_OFF_KEY]
+			y_value = (samples[x_index_high] - samples[x_index_low])*scale + samples[x_index_low]
+			label_str += '\n%s: %s'%(channel, common.eng_format(y_value, self.y_units))
 		return label_str
 
 	def _draw_legend(self):
@@ -178,7 +164,7 @@ class channel_plotter(grid_plotter_base):
 			txt = gltext.Text(channel, font_size=LEGEND_TEXT_FONT_SIZE)
 			w, h = txt.get_size()
 			#draw rect + text
-			glColor3f(*color_spec)
+			GL.glColor3f(*color_spec)
 			self._draw_rect(
 				x_off - w - LEGEND_BOX_PADDING,
 				self.padding_top/2 - h/2 - LEGEND_BOX_PADDING,
@@ -188,21 +174,36 @@ class channel_plotter(grid_plotter_base):
 			txt.draw_text(wx.Point(x_off - w, self.padding_top/2 - h/2))
 			x_off -= w + 4*LEGEND_BOX_PADDING
 
-	def set_waveform(self, channel, samples, color_spec, marker=None):
+	def clear_waveform(self, channel):
+		"""
+		Remove a waveform from the list of waveforms.
+		@param channel the channel key
+		"""
+		self.lock()
+		if channel in self._channels.keys():
+			self._channels.pop(channel)
+			self._legend_cache.changed(True)
+			self._waveform_cache.changed(True)
+		self.unlock()
+
+	def set_waveform(self, channel, samples=[], color_spec=(0, 0, 0), marker=None, trig_off=0):
 		"""
 		Set the waveform for a given channel.
 		@param channel the channel key
 		@param samples the waveform samples
 		@param color_spec the 3-tuple for line color
 		@param marker None for line
+		@param trig_off fraction of sample for trigger offset
 		"""
 		self.lock()
-		if channel not in self._channels.keys(): self.changed(True)
+		if channel not in self._channels.keys(): self._legend_cache.changed(True)
 		self._channels[channel] = {
 			SAMPLES_KEY: samples,
 			COLOR_SPEC_KEY: color_spec,
 			MARKERY_KEY: marker,
+			TRIG_OFF_KEY: trig_off,
 		}
+		self._waveform_cache.changed(True)
 		self.unlock()
 
 if __name__ == '__main__':

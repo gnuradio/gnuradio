@@ -36,13 +36,10 @@ gr_oscope_sink_f_sptr gr_make_oscope_sink_f (double sampling_rate, gr_msg_queue_
  * \brief Building block for python oscilloscope module.
  * \ingroup sink
  *
- * Accepts 1 to 16 float streams.
+ * Accepts multiple float streams.
  */
 class gr_oscope_sink_f : public gr_oscope_sink_x
 {
-public:
-  static const int MAX_CHANNELS = 16;
-
 private:
   friend gr_oscope_sink_f_sptr
   gr_make_oscope_sink_f (double sampling_rate, gr_msg_queue_sptr msgq);

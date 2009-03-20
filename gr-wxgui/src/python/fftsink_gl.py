@@ -31,7 +31,7 @@ from constants import *
 ##################################################
 # FFT sink block (wrapper for old wxgui)
 ##################################################
-class _fft_sink_base(gr.hier_block2, common.prop_setter):
+class _fft_sink_base(gr.hier_block2):
 	"""
 	An fft block with real/complex inputs and a gui window.
 	"""
@@ -85,9 +85,7 @@ class _fft_sink_base(gr.hier_block2, common.prop_setter):
 		self.controller.subscribe(SAMPLE_RATE_KEY, fft.set_sample_rate)
 		self.controller.publish(SAMPLE_RATE_KEY, fft.sample_rate)
 		#start input watcher
-		def setter(p, k, x): # lambdas can't have assignments :(
-		    p[k] = x
-		common.input_watcher(msgq, lambda x: setter(self.controller, MSG_KEY, x))
+		common.input_watcher(msgq, self.controller, MSG_KEY)
 		#create window
 		self.win = fft_window.fft_window(
 			parent=parent,
@@ -106,12 +104,9 @@ class _fft_sink_base(gr.hier_block2, common.prop_setter):
 			peak_hold=peak_hold,
 			msg_key=MSG_KEY,
 		)
-		#register callbacks from window for external use
-		for attr in filter(lambda a: a.startswith('set_'), dir(self.win)):
-			setattr(self, attr, getattr(self.win, attr))
-		self._register_set_prop(self.controller, SAMPLE_RATE_KEY)
-		self._register_set_prop(self.controller, AVERAGE_KEY)
-		self._register_set_prop(self.controller, AVG_ALPHA_KEY)
+		common.register_access_methods(self, self.win)
+		setattr(self.win, 'set_baseband_freq', getattr(self, 'set_baseband_freq')) #BACKWARDS
+		setattr(self.win, 'set_peak_hold', getattr(self, 'set_peak_hold')) #BACKWARDS
 
 class fft_sink_f(_fft_sink_base):
 	_fft_chain = blks2.logpwrfft_f

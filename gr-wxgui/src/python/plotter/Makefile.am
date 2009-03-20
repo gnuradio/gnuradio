@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -30,8 +30,11 @@ ourlibdir    = $(grpyexecdir)/wxgui/plotter
 
 ourpython_PYTHON =			\
 	__init__.py			\
+	bar_plotter.py		\
 	channel_plotter.py		\
+	common.py			\
 	gltext.py			\
+	grid_plotter_base.py	\
 	plotter_base.py			\
 	waterfall_plotter.py
 

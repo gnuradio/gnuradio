@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2009 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,9 +20,9 @@
 #
 
 import wx
-from plotter_base import grid_plotter_base
-from OpenGL.GL import *
-from gnuradio.wxgui import common
+from grid_plotter_base import grid_plotter_base
+from OpenGL import GL
+import common
 import numpy
 import gltext
 import math
@@ -33,7 +33,7 @@ LEGEND_NUM_LABELS = 9
 LEGEND_WIDTH = 8
 LEGEND_FONT_SIZE = 8
 LEGEND_BORDER_COLOR_SPEC = (0, 0, 0) #black
-PADDING = 35, 60, 40, 60 #top, right, bottom, left
+MIN_PADDING = 0, 60, 0, 0 #top, right, bottom, left
 
 ceil_log2 = lambda x: 2**int(math.ceil(math.log(x)/math.log(2)))
 
@@ -91,7 +91,13 @@ class waterfall_plotter(grid_plotter_base):
 		Create a new channel plotter.
 		"""
 		#init
-		grid_plotter_base.__init__(self, parent, PADDING)
+		grid_plotter_base.__init__(self, parent, MIN_PADDING)
+		#setup legend cache
+		self._legend_cache = self.new_gl_cache(self._draw_legend)
+		#setup waterfall cache
+		self._waterfall_cache = self.new_gl_cache(self._draw_waterfall, 50)
+		#setup waterfall plotter
+		self.register_init(self._init_waterfall)
 		self._resize_texture(False)
 		self._minimum = 0
 		self._maximum = 0
@@ -102,35 +108,11 @@ class waterfall_plotter(grid_plotter_base):
 		self.set_num_lines(0)
 		self.set_color_mode(COLORS.keys()[0])
 
-	def _gl_init(self):
+	def _init_waterfall(self):
 		"""
 		Run gl initialization tasks.
 		"""
-		self._grid_compiled_list_id = glGenLists(1)
-		self._waterfall_texture = glGenTextures(1)
-
-	def draw(self):
-		"""
-		Draw the grid and waveforms.
-		"""
-		self.lock()
-		#resize texture
-		self._resize_texture()
-		#store the grid drawing operations
-		if self.changed():
-			glNewList(self._grid_compiled_list_id, GL_COMPILE)
-			self._draw_grid()
-			self._draw_legend()
-			glEndList()
-			self.changed(False)
-		self.clear()
-		#draw the grid
-		glCallList(self._grid_compiled_list_id)
-		self._draw_waterfall()
-		self._draw_point_label()
-		#swap buffer into display
-		self.SwapBuffers()
-		self.unlock()
+		self._waterfall_texture = GL.glGenTextures(1)
 
 	def _draw_waterfall(self):
 		"""
@@ -138,42 +120,44 @@ class waterfall_plotter(grid_plotter_base):
 		The texture is circularly filled and will wrap around.
 		Use matrix modeling to shift and scale the texture onto the coordinate plane.
 		"""
+		#resize texture
+		self._resize_texture()
 		#setup texture
-		glBindTexture(GL_TEXTURE_2D, self._waterfall_texture)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE)
+		GL.glBindTexture(GL.GL_TEXTURE_2D, self._waterfall_texture)
+		GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR)
+		GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR)
+		GL.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT)
+		GL.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE)
 		#write the buffer to the texture
 		while self._buffer:
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, self._pointer, self._fft_size, 1, GL_RGBA, GL_UNSIGNED_BYTE, self._buffer.pop(0))
+			GL.glTexSubImage2D(GL.GL_TEXTURE_2D, 0, 0, self._pointer, self._fft_size, 1, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, self._buffer.pop(0))
 			self._pointer = (self._pointer + 1)%self._num_lines
 		#begin drawing
-		glEnable(GL_TEXTURE_2D)
-		glPushMatrix()
+		GL.glEnable(GL.GL_TEXTURE_2D)
+		GL.glPushMatrix()
 		#matrix scaling
-		glTranslatef(self.padding_left, self.padding_top, 0)
-		glScalef(
+		GL.glTranslatef(self.padding_left, self.padding_top, 0)
+		GL.glScalef(
 			float(self.width-self.padding_left-self.padding_right),
 			float(self.height-self.padding_top-self.padding_bottom),
 			1.0,
 		)
 		#draw texture with wrapping
-		glBegin(GL_QUADS)
+		GL.glBegin(GL.GL_QUADS)
 		prop_y = float(self._pointer)/(self._num_lines-1)
 		prop_x = float(self._fft_size)/ceil_log2(self._fft_size)
 		off = 1.0/(self._num_lines-1)
-		glTexCoord2f(0, prop_y+1-off)
-		glVertex2f(0, 1)
-		glTexCoord2f(prop_x, prop_y+1-off)
-		glVertex2f(1, 1)
-		glTexCoord2f(prop_x, prop_y)
-		glVertex2f(1, 0)
-		glTexCoord2f(0, prop_y)
-		glVertex2f(0, 0)
-		glEnd()
-		glPopMatrix()
-		glDisable(GL_TEXTURE_2D)
+		GL.glTexCoord2f(0, prop_y+1-off)
+		GL.glVertex2f(0, 1)
+		GL.glTexCoord2f(prop_x, prop_y+1-off)
+		GL.glVertex2f(1, 1)
+		GL.glTexCoord2f(prop_x, prop_y)
+		GL.glVertex2f(1, 0)
+		GL.glTexCoord2f(0, prop_y)
+		GL.glVertex2f(0, 0)
+		GL.glEnd()
+		GL.glPopMatrix()
+		GL.glDisable(GL.GL_TEXTURE_2D)
 
 	def _populate_point_label(self, x_val, y_val):
 		"""
@@ -183,7 +167,7 @@ class waterfall_plotter(grid_plotter_base):
 		@param y_val the current y value
 		@return a value string with units
 		"""
-		return '%s: %s %s'%(self.x_label, common.label_format(x_val), self.x_units)
+		return '%s: %s'%(self.x_label, common.eng_format(x_val, self.x_units))
 
 	def _draw_legend(self):
 		"""
@@ -196,11 +180,11 @@ class waterfall_plotter(grid_plotter_base):
 		x = self.width - self.padding_right + LEGEND_LEFT_PAD
 		for i in range(LEGEND_NUM_BLOCKS):
 			color = COLORS[self._color_mode][int(255*i/float(LEGEND_NUM_BLOCKS-1))]
-			glColor4f(*map(lambda c: ord(c)/255.0, color))
+			GL.glColor4f(*map(lambda c: ord(c)/255.0, color))
 			y = self.height - (i+1)*block_height - self.padding_bottom
 			self._draw_rect(x, y, LEGEND_WIDTH, block_height)
 		#draw rectangle around color scale border
-		glColor3f(*LEGEND_BORDER_COLOR_SPEC)
+		GL.glColor3f(*LEGEND_BORDER_COLOR_SPEC)
 		self._draw_rect(x, self.padding_top, LEGEND_WIDTH, legend_height, fill=False)
 		#draw each legend label
 		label_spacing = float(legend_height)/(LEGEND_NUM_LABELS-1)
@@ -224,9 +208,9 @@ class waterfall_plotter(grid_plotter_base):
 		self._buffer = list()
 		self._pointer = 0
 		if self._num_lines and self._fft_size:
-			glBindTexture(GL_TEXTURE_2D, self._waterfall_texture)
+			GL.glBindTexture(GL.GL_TEXTURE_2D, self._waterfall_texture)
 			data = numpy.zeros(self._num_lines*self._fft_size*4, numpy.uint8).tostring()
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, ceil_log2(self._fft_size), self._num_lines, 0, GL_RGBA, GL_UNSIGNED_BYTE, data)
+			GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, ceil_log2(self._fft_size), self._num_lines, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, data)
 		self._resize_texture_flag = False
 
 	def set_color_mode(self, color_mode):
@@ -239,7 +223,7 @@ class waterfall_plotter(grid_plotter_base):
 		self.lock()
 		if color_mode in COLORS.keys():
 			self._color_mode = color_mode
-			self.changed(True)
+			self._legend_cache.changed(True)
 		self.update()
 		self.unlock()
 
@@ -268,7 +252,7 @@ class waterfall_plotter(grid_plotter_base):
 		if self._minimum != minimum or self._maximum != maximum:
 			self._minimum = minimum
 			self._maximum = maximum
-			self.changed(True)
+			self._legend_cache.changed(True)
 		if self._fft_size != len(samples):
 			self._fft_size = len(samples)
 			self._resize_texture(True)
@@ -279,4 +263,5 @@ class waterfall_plotter(grid_plotter_base):
 		#convert the samples to RGBA data
 		data = numpy.choose(samples, COLORS[self._color_mode]).tostring()
 		self._buffer.append(data)
+		self._waterfall_cache.changed(True)
 		self.unlock()

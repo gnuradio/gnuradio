@@ -19,59 +19,85 @@
 # Boston, MA 02110-1301, USA.
 #
 
-import threading
-import numpy
-import math
-import wx
+#A macro to apply an index to a key
+index_key = lambda key, i: "%s_%d"%(key, i+1)
 
-class prop_setter(object):
-	def _register_set_prop(self, controller, control_key, *args):
-		def set_method(value): controller[control_key] = value
-		if args: set_method(args[0])
-		setattr(self, 'set_%s'%control_key, set_method)
+def _register_access_method(destination, controller, key):
+	"""
+	Helper function for register access methods.
+	This helper creates distinct set and get methods for each key
+	and adds them to the destination object.
+	"""
+	def set(value): controller[key] = value
+	setattr(destination, 'set_'+key, set)
+	def get(): return controller[key]
+	setattr(destination, 'get_'+key, get) 
 
-##################################################
-# Custom Data Event
-##################################################
-EVT_DATA = wx.PyEventBinder(wx.NewEventType())
-class DataEvent(wx.PyEvent):
-	def __init__(self, data):
-		wx.PyEvent.__init__(self, wx.NewId(), EVT_DATA.typeId)
-		self.data = data
+def register_access_methods(destination, controller):
+	"""
+	Register setter and getter functions in the destination object for all keys in the controller.
+	@param destination the object to get new setter and getter methods
+	@param controller the pubsub controller
+	"""
+	for key in controller.keys(): _register_access_method(destination, controller, key)
 
 ##################################################
 # Input Watcher Thread
 ##################################################
+import threading
+
 class input_watcher(threading.Thread):
 	"""
 	Input watcher thread runs forever.
 	Read messages from the message queue.
 	Forward messages to the message handler.
 	"""
-	def __init__ (self, msgq, handle_msg):
+	def __init__ (self, msgq, controller, msg_key, arg1_key='', arg2_key=''):
 		threading.Thread.__init__(self)
 		self.setDaemon(1)
 		self.msgq = msgq
-		self._handle_msg = handle_msg
+		self._controller = controller
+		self._msg_key = msg_key
+		self._arg1_key = arg1_key
+		self._arg2_key = arg2_key
 		self.keep_running = True
 		self.start()
 
 	def run(self):
-		while self.keep_running: self._handle_msg(self.msgq.delete_head().to_string())
+		while self.keep_running:
+			msg = self.msgq.delete_head()
+			if self._arg1_key: self._controller[self._arg1_key] = msg.arg1()
+			if self._arg2_key: self._controller[self._arg2_key] = msg.arg2()
+			self._controller[self._msg_key] = msg.to_string()
 
 ##################################################
 # WX Shared Classes
 ##################################################
+import math
+import wx
+
+EVT_DATA = wx.PyEventBinder(wx.NewEventType())
+class DataEvent(wx.PyEvent):
+	def __init__(self, data):
+		wx.PyEvent.__init__(self, wx.NewId(), EVT_DATA.typeId)
+		self.data = data
+
 class LabelText(wx.StaticText):
 	"""
 	Label text to give the wx plots a uniform look.
 	Get the default label text and set the font bold.
 	"""
 	def __init__(self, parent, label):
-		wx.StaticText.__init__(self, parent, -1, label)
+		wx.StaticText.__init__(self, parent, label=label)
 		font = self.GetFont()
 		font.SetWeight(wx.FONTWEIGHT_BOLD)
 		self.SetFont(font)
+
+class LabelBox(wx.BoxSizer):
+	def __init__(self, parent, label, widget):
+		wx.BoxSizer.__init__(self, wx.HORIZONTAL)
+		self.Add(wx.StaticText(parent, label=' %s '%label), 1, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_LEFT)
+		self.Add(widget, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT)
 
 class IncrDecrButtons(wx.BoxSizer):
 	"""
@@ -84,14 +110,14 @@ class IncrDecrButtons(wx.BoxSizer):
 		@param on_decr the event handler for decrement
 		"""
 		wx.BoxSizer.__init__(self, wx.HORIZONTAL)
-		self._incr_button = wx.Button(parent, -1, '+', style=wx.BU_EXACTFIT)
+		self._incr_button = wx.Button(parent, label='+', style=wx.BU_EXACTFIT)
 		self._incr_button.Bind(wx.EVT_BUTTON, on_incr)
 		self.Add(self._incr_button, 0, wx.ALIGN_CENTER_VERTICAL)
-		self._decr_button = wx.Button(parent, -1, ' - ', style=wx.BU_EXACTFIT)
+		self._decr_button = wx.Button(parent, label=' - ', style=wx.BU_EXACTFIT)
 		self._decr_button.Bind(wx.EVT_BUTTON, on_decr)
 		self.Add(self._decr_button, 0, wx.ALIGN_CENTER_VERTICAL)
 
-	def Disable(self, disable=True): self.Enable(not disable)
+	def Disable(self): self.Enable(False)
 	def Enable(self, enable=True):
 		if enable:
 			self._incr_button.Enable()
@@ -104,7 +130,7 @@ class ToggleButtonController(wx.Button):
 	def __init__(self, parent, controller, control_key, true_label, false_label):
 		self._controller = controller
 		self._control_key = control_key
-		wx.Button.__init__(self, parent, -1, '', style=wx.BU_EXACTFIT)
+		wx.Button.__init__(self, parent, style=wx.BU_EXACTFIT)
 		self.Bind(wx.EVT_BUTTON, self._evt_button)
 		controller.subscribe(control_key, lambda x: self.SetLabel(x and true_label or false_label))
 
@@ -122,30 +148,55 @@ class CheckBoxController(wx.CheckBox):
 	def _evt_checkbox(self, e):
 		self._controller[self._control_key] = bool(e.IsChecked())
 
+from gnuradio import eng_notation
+
+class TextBoxController(wx.TextCtrl):
+	def __init__(self, parent, controller, control_key, cast=float):
+		self._controller = controller
+		self._control_key = control_key
+		self._cast = cast
+		wx.TextCtrl.__init__(self, parent, style=wx.TE_PROCESS_ENTER)
+		self.Bind(wx.EVT_TEXT_ENTER, self._evt_enter)
+		controller.subscribe(control_key, lambda x: self.SetValue(eng_notation.num_to_str(x)))
+
+	def _evt_enter(self, e):
+		try: self._controller[self._control_key] = self._cast(eng_notation.str_to_num(self.GetValue()))
+		except: self._controller[self._control_key] = self._controller[self._control_key]
+
 class LogSliderController(wx.BoxSizer):
 	"""
 	Log slider controller with display label and slider.
 	Gives logarithmic scaling to slider operation.
 	"""
-	def __init__(self, parent, label, min_exp, max_exp, slider_steps, controller, control_key, formatter=lambda x: ': %.6f'%x):
+	def __init__(self, parent, prefix, min_exp, max_exp, slider_steps, controller, control_key, formatter=lambda x: ': %.6f'%x):
+		self._prefix = prefix
+		self._min_exp = min_exp
+		self._max_exp = max_exp
+		self._controller = controller
+		self._control_key = control_key
+		self._formatter = formatter
 		wx.BoxSizer.__init__(self, wx.VERTICAL)
-		self._label = wx.StaticText(parent, -1, label + formatter(1/3.0))
+		self._label = wx.StaticText(parent, label=prefix + formatter(1/3.0))
 		self.Add(self._label, 0, wx.EXPAND)
-		self._slider = wx.Slider(parent, -1, 0, 0, slider_steps, style=wx.SL_HORIZONTAL)
+		self._slider = wx.Slider(parent, minValue=0, maxValue=slider_steps, style=wx.SL_HORIZONTAL)
 		self.Add(self._slider, 0, wx.EXPAND)
-		def _on_slider_event(event):
-			controller[control_key] = \
-			10**(float(max_exp-min_exp)*self._slider.GetValue()/slider_steps + min_exp)
-		self._slider.Bind(wx.EVT_SLIDER, _on_slider_event)
-		def _on_controller_set(value):
-			self._label.SetLabel(label + formatter(value))
-			slider_value = slider_steps*(math.log10(value)-min_exp)/(max_exp-min_exp)
-			slider_value = min(max(0, slider_value), slider_steps)
-			if abs(slider_value - self._slider.GetValue()) > 1:
-				self._slider.SetValue(slider_value)
-		controller.subscribe(control_key, _on_controller_set)
+		self._slider.Bind(wx.EVT_SLIDER, self._on_slider_event)
+		controller.subscribe(control_key, self._on_controller_set)
 
-	def Disable(self, disable=True): self.Enable(not disable)
+	def _get_slope(self):
+		return float(self._max_exp-self._min_exp)/self._slider.GetMax()
+
+	def _on_slider_event(self, e):
+		self._controller[self._control_key] = 10**(self._get_slope()*self._slider.GetValue() + self._min_exp)
+
+	def _on_controller_set(self, value):
+		self._label.SetLabel(self._prefix + self._formatter(value))
+		slider_value = (math.log10(value)-self._min_exp)/self._get_slope()
+		slider_value = min(max(self._slider.GetMin(), slider_value), self._slider.GetMax())
+		if abs(slider_value - self._slider.GetValue()) > 1:
+			self._slider.SetValue(slider_value)
+
+	def Disable(self): self.Enable(False)
 	def Enable(self, enable=True):
 		if enable:
 			self._slider.Enable()
@@ -154,45 +205,39 @@ class LogSliderController(wx.BoxSizer):
 			self._slider.Disable()
 			self._label.Disable()
 
-class DropDownController(wx.BoxSizer):
+class DropDownController(wx.Choice):
 	"""
 	Drop down controller with label and chooser.
 	Srop down selection from a set of choices.
 	"""
-	def __init__(self, parent, label, choices, controller, control_key, size=(-1, -1)):
+	def __init__(self, parent, choices, controller, control_key, size=(-1, -1)):
 		"""
 		@param parent the parent window
-		@param label the label for the drop down
 		@param choices a list of tuples -> (label, value)
 		@param controller the prop val controller
 		@param control_key the prop key for this control
 		"""
-		wx.BoxSizer.__init__(self, wx.HORIZONTAL)
-		self._label = wx.StaticText(parent, -1, ' %s '%label)
-		self.Add(self._label, 1, wx.ALIGN_CENTER_VERTICAL)
-		self._chooser = wx.Choice(parent, -1, choices=[c[0] for c in choices], size=size)
-		def _on_chooser_event(event):
-			controller[control_key] = choices[self._chooser.GetSelection()][1]
-		self._chooser.Bind(wx.EVT_CHOICE, _on_chooser_event)
-		self.Add(self._chooser, 0, wx.ALIGN_CENTER_VERTICAL)
-		def _on_controller_set(value):
-			#only set the chooser if the value is a possible choice
-			for i, choice in enumerate(choices):
-				if value == choice[1]: self._chooser.SetSelection(i)
-		controller.subscribe(control_key, _on_controller_set)
+		self._controller = controller
+		self._control_key = control_key
+		self._choices = choices
+		wx.Choice.__init__(self, parent, choices=[c[0] for c in choices], size=size)
+		self.Bind(wx.EVT_CHOICE, self._on_chooser_event)
+		controller.subscribe(control_key, self._on_controller_set)
 
-	def Disable(self, disable=True): self.Enable(not disable)
-	def Enable(self, enable=True):
-		if enable:
-			self._chooser.Enable()
-			self._label.Enable()
-		else:
-			self._chooser.Disable()
-			self._label.Disable()
+	def _on_chooser_event(self, e):
+		self._controller[self._control_key] = self._choices[self.GetSelection()][1]
+
+	def _on_controller_set(self, value):
+		#only set the chooser if the value is a possible choice
+		for i, choice in enumerate(self._choices):
+			if value == choice[1]: self.SetSelection(i)
 
 ##################################################
 # Shared Functions
 ##################################################
+import numpy
+import math
+
 def get_exp(num):
 	"""
 	Get the exponent of the number in base 10.
@@ -209,8 +254,7 @@ def get_clean_num(num):
 	@return the closest number
 	"""
 	if num == 0: return 0
-	if num > 0: sign = 1
-	else: sign = -1
+	sign = num > 0 and 1 or -1
 	exp = get_exp(num)
 	nums = numpy.array((1, 2, 5, 10))*(10**exp)
 	return sign*nums[numpy.argmin(numpy.abs(nums - abs(num)))]
@@ -263,49 +307,3 @@ def get_min_max(samples):
 	min = mean - rms
 	max = mean + rms
 	return min, max
-
-def get_si_components(num):
-	"""
-	Get the SI units for the number.
-	Extract the coeff and exponent of the number.
-	The exponent will be a multiple of 3.
-	@param num the floating point number
-	@return the tuple coeff, exp, prefix
-	"""
-	exp = get_exp(num)
-	exp -= exp%3
-	exp = min(max(exp, -24), 24) #bounds on SI table below
-	prefix = {
-		24: 'Y', 21: 'Z',
-		18: 'E', 15: 'P',
-		12: 'T', 9: 'G',
-		6: 'M', 3: 'K',
-		0: '',
-		-3: 'm', -6: 'u',
-		-9: 'n', -12: 'p',
-		-15: 'f', -18: 'a',
-		-21: 'z', -24: 'y',
-	}[exp]
-	coeff = num/10**exp
-	return coeff, exp, prefix
-
-def label_format(num):
-	"""
-	Format a floating point number into a presentable string.
-	If the number has an small enough exponent, use regular decimal.
-	Otherwise, format the number with floating point notation.
-	Exponents are normalized to multiples of 3.
-	In the case where the exponent was found to be -3,
-	it is best to display this as a regular decimal, with a 0 to the left.
-	@param num the number to format
-	@return a label string
-	"""
-	coeff, exp, prefix = get_si_components(num)
-	if -3 <= exp < 3: return '%g'%num
-	return '%se%d'%('%.3g'%coeff, exp)
-
-if __name__ == '__main__':
-	import random
-	for i in range(-25, 25):
-		num = random.random()*10**i
-		print num, ':', get_si_components(num)

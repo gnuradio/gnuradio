@@ -28,10 +28,38 @@ from gnuradio import gr
 from pubsub import pubsub
 from constants import *
 
+class ac_couple_block(gr.hier_block2):
+	"""
+	AC couple the incoming stream by subtracting out the low pass signal.
+	Mute the low pass filter to disable ac coupling.
+	"""
+
+	def __init__(self, controller, ac_couple_key, ac_couple, sample_rate_key):
+		gr.hier_block2.__init__(
+			self,
+			"ac_couple",
+			gr.io_signature(1, 1, gr.sizeof_float),
+			gr.io_signature(1, 1, gr.sizeof_float),
+		)
+		#blocks
+		copy = gr.kludge_copy(gr.sizeof_float)
+		lpf = gr.single_pole_iir_filter_ff(0.0)
+		sub = gr.sub_ff()
+		mute = gr.mute_ff()
+		#connect
+		self.connect(self, copy, sub, self)
+		self.connect(copy, lpf, mute, (sub, 1))
+		#subscribe
+		controller.subscribe(ac_couple_key, lambda x: mute.set_mute(not x))
+		controller.subscribe(sample_rate_key, lambda x: lpf.set_taps(2.0/x))
+		#initialize
+		controller[ac_couple_key] = ac_couple
+		controller[sample_rate_key] = controller[sample_rate_key]
+
 ##################################################
 # Scope sink block (wrapper for old wxgui)
 ##################################################
-class _scope_sink_base(gr.hier_block2, common.prop_setter):
+class _scope_sink_base(gr.hier_block2):
 	"""
 	A scope block with a gui window.
 	"""
@@ -42,15 +70,14 @@ class _scope_sink_base(gr.hier_block2, common.prop_setter):
 		title='',
 		sample_rate=1,
 		size=scope_window.DEFAULT_WIN_SIZE,
-		frame_decim=None, #ignore (old wrapper)
-		v_scale=scope_window.DEFAULT_V_SCALE,
-		t_scale=None,
-		num_inputs=1,
-		ac_couple=False,
+		v_scale=0,
+		t_scale=0,
 		xy_mode=False,
+		ac_couple=False,
+		num_inputs=1,
 		frame_rate=scope_window.DEFAULT_FRAME_RATE,
 	):
-		if t_scale is None: t_scale = 0.001
+		if not t_scale: t_scale = 10.0/sample_rate
 		#init
 		gr.hier_block2.__init__(
 			self,
@@ -61,37 +88,41 @@ class _scope_sink_base(gr.hier_block2, common.prop_setter):
 		#scope
 		msgq = gr.msg_queue(2)
 		scope = gr.oscope_sink_f(sample_rate, msgq)
-		#connect
-		if self._real:
-			for i in range(num_inputs):
-				self.connect((self, i), (scope, i))
-		else:
-			for i in range(num_inputs):
-				c2f = gr.complex_to_float() 
-				self.connect((self, i), c2f)
-				self.connect((c2f, 0), (scope, 2*i+0))
-				self.connect((c2f, 1), (scope, 2*i+1))
-			num_inputs *= 2
 		#controller
 		self.controller = pubsub()
 		self.controller.subscribe(SAMPLE_RATE_KEY, scope.set_sample_rate)
 		self.controller.publish(SAMPLE_RATE_KEY, scope.sample_rate)
-		def set_trigger_level(level):
-			if level == '': scope.set_trigger_level_auto()
-			else: scope.set_trigger_level(level)
-		self.controller.subscribe(SCOPE_TRIGGER_LEVEL_KEY, set_trigger_level)
-		def set_trigger_mode(mode):
-			if mode == 0: mode = gr.gr_TRIG_AUTO
-			elif mode < 0: mode = gr.gr_TRIG_NEG_SLOPE
-			elif mode > 0: mode = gr.gr_TRIG_POS_SLOPE
-			else: return
-			scope.set_trigger_mode(mode)
-		self.controller.subscribe(SCOPE_TRIGGER_MODE_KEY, set_trigger_mode)
-		self.controller.subscribe(SCOPE_TRIGGER_CHANNEL_KEY, scope.set_trigger_channel)
+		self.controller.subscribe(DECIMATION_KEY, scope.set_decimation_count)
+		self.controller.publish(DECIMATION_KEY, scope.get_decimation_count)
+		self.controller.subscribe(TRIGGER_LEVEL_KEY, scope.set_trigger_level)
+		self.controller.publish(TRIGGER_LEVEL_KEY, scope.get_trigger_level)
+		self.controller.subscribe(TRIGGER_MODE_KEY, scope.set_trigger_mode)
+		self.controller.publish(TRIGGER_MODE_KEY, scope.get_trigger_mode)
+		self.controller.subscribe(TRIGGER_SLOPE_KEY, scope.set_trigger_slope)
+		self.controller.publish(TRIGGER_SLOPE_KEY, scope.get_trigger_slope)
+		self.controller.subscribe(TRIGGER_CHANNEL_KEY, scope.set_trigger_channel)
+		self.controller.publish(TRIGGER_CHANNEL_KEY, scope.get_trigger_channel)
+		#connect
+		if self._real:
+			for i in range(num_inputs):
+				self.connect(
+					(self, i),
+					ac_couple_block(self.controller, common.index_key(AC_COUPLE_KEY, i), ac_couple, SAMPLE_RATE_KEY),
+					(scope, i),
+				)
+		else:
+			for i in range(num_inputs):
+				c2f = gr.complex_to_float() 
+				self.connect((self, i), c2f)
+				for j in range(2):
+					self.connect(
+						(c2f, j), 
+						ac_couple_block(self.controller, common.index_key(AC_COUPLE_KEY, 2*i+j), ac_couple, SAMPLE_RATE_KEY),
+						(scope, 2*i+j),
+					)
+			num_inputs *= 2
 		#start input watcher
-		def setter(p, k, x): # lambdas can't have assignments :(
-		    p[k] = x
-		common.input_watcher(msgq, lambda x: setter(self.controller, MSG_KEY, x))
+		common.input_watcher(msgq, self.controller, MSG_KEY)
 		#create window
 		self.win = scope_window.scope_window(
 			parent=parent,
@@ -103,21 +134,16 @@ class _scope_sink_base(gr.hier_block2, common.prop_setter):
 			sample_rate_key=SAMPLE_RATE_KEY,
 			t_scale=t_scale,
 			v_scale=v_scale,
-			ac_couple=ac_couple,
 			xy_mode=xy_mode,
-			scope_trigger_level_key=SCOPE_TRIGGER_LEVEL_KEY,
-			scope_trigger_mode_key=SCOPE_TRIGGER_MODE_KEY,
-			scope_trigger_channel_key=SCOPE_TRIGGER_CHANNEL_KEY,
+			ac_couple_key=AC_COUPLE_KEY,
+			trigger_level_key=TRIGGER_LEVEL_KEY,
+			trigger_mode_key=TRIGGER_MODE_KEY,
+			trigger_slope_key=TRIGGER_SLOPE_KEY,
+			trigger_channel_key=TRIGGER_CHANNEL_KEY,
+			decimation_key=DECIMATION_KEY,
 			msg_key=MSG_KEY,
 		)
-		#register callbacks from window for external use
-		for attr in filter(lambda a: a.startswith('set_'), dir(self.win)):
-			setattr(self, attr, getattr(self.win, attr))
-		self._register_set_prop(self.controller, SAMPLE_RATE_KEY)
-		#backwards compadibility
-		self.win.set_format_line = lambda: setter(self.win, MARKER_KEY, None)
-		self.win.set_format_dot = lambda: setter(self.win, MARKER_KEY, 2.0)
-		self.win.set_format_plus =  lambda: setter(self.win, MARKER_KEY, 3.0)
+		common.register_access_methods(self, self.win)
 
 class scope_sink_f(_scope_sink_base):
 	_item_size = gr.sizeof_float
@@ -126,12 +152,6 @@ class scope_sink_f(_scope_sink_base):
 class scope_sink_c(_scope_sink_base):
 	_item_size = gr.sizeof_gr_complex
 	_real = False
-
-#backwards compadible wrapper (maybe only grc uses this)
-class constellation_sink(scope_sink_c):
-	def __init__(self, *args, **kwargs):
-		scope_sink_c.__init__(self, *args, **kwargs)
-		self.set_scope_xy_mode(True)
 
 # ----------------------------------------------------------------
 # Stand-alone test application
@@ -171,7 +191,6 @@ class test_top_block (stdgui2.std_top_block):
         self.thr = gr.throttle(gr.sizeof_gr_complex, input_rate)
 
         scope = scope_sink_c (panel,"Secret Data",sample_rate=input_rate,
-                              frame_decim=frame_decim,
                               v_scale=v_scale, t_scale=t_scale)
         vbox.Add (scope.win, 1, wx.EXPAND)
 

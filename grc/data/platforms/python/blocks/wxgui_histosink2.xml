@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Histogram Sink
+###################################################
+ -->
+<block>
+	<name>Histo Sink</name>
+	<key>wxgui_histosink2</key>
+	<import>from gnuradio.wxgui import histosink_gl</import>
+	<make>histosink_gl.histo_sink_f(
+	self.GetWin(),
+	title=$title,
+	num_bins=$num_bins,
+	frame_size=$frame_size,
+)
+#set $grid_pos = $grid_pos.eval
+#if not grid_pos
+self.Add(self.$(id).win)
+#else
+self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+#end if</make>
+	<callback>set_num_bins($num_bins)</callback>
+	<callback>set_frame_size($frame_size)</callback>
+	<param>
+		<name>Title</name>
+		<key>title</key>
+		<value>Histogram Plot</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Num Bins</name>
+		<key>num_bins</key>
+		<value>27</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Frame Size</name>
+		<key>frame_size</key>
+		<value>1000</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Grid Position</name>
+		<key>grid_pos</key>
+		<value></value>
+		<type>grid_pos</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<doc>
+Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+	</doc>
+</block>

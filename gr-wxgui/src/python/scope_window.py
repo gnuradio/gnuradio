@@ -29,41 +29,40 @@ import numpy
 import time
 import pubsub
 from constants import *
-from gnuradio import gr #for gr.prefs
+from gnuradio import gr #for gr.prefs, trigger modes
 
 ##################################################
 # Constants
 ##################################################
 DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'scope_rate', 30)
 DEFAULT_WIN_SIZE = (600, 300)
-DEFAULT_V_SCALE = 1000
-TRIGGER_MODES = (
-	('Off', 0),
-	('Neg', -1),
-	('Pos', +1),
+COUPLING_MODES = (
+	('DC', False),
+	('AC', True),
 )
-TRIGGER_LEVELS = (
-	('Auto', None),
-	('+High', 0.75),
-	('+Med', 0.5),
-	('+Low', 0.25),
-	('Zero', 0.0),
-	('-Low', -0.25),
-	('-Med', -0.5),
-	('-High', -0.75),
+TRIGGER_MODES = (
+	('Freerun', gr.gr_TRIG_MODE_FREE),
+	('Automatic', gr.gr_TRIG_MODE_AUTO),
+	('Normal', gr.gr_TRIG_MODE_NORM),
+)
+TRIGGER_SLOPES = (
+	('Positive +', gr.gr_TRIG_SLOPE_POS),
+	('Negative -', gr.gr_TRIG_SLOPE_NEG),
 )
 CHANNEL_COLOR_SPECS = (
-	(0, 0, 1),
-	(0, 1, 0),
-	(1, 0, 0),
-	(1, 0, 1),
+	(0.3, 0.3, 1.0),
+	(0.0, 0.8, 0.0),
+	(1.0, 0.0, 0.0),
+	(0.8, 0.0, 0.8),
 )
+TRIGGER_COLOR_SPEC = (1.0, 0.4, 0.0)
 AUTORANGE_UPDATE_RATE = 0.5 #sec
 MARKER_TYPES = (
-	('Dot Small', 1.0),
-	('Dot Medium', 2.0),
-	('Dot Large', 3.0),
 	('Line Link', None),
+	('Dot Large', 3.0),
+	('Dot Med', 2.0),
+	('Dot Small', 1.0),
+	('None', 0.0),
 )
 DEFAULT_MARKER_TYPE = None
 
@@ -79,175 +78,213 @@ class control_panel(wx.Panel):
 		Create a new control panel.
 		@param parent the wx parent window
 		"""
+		SIZE = (100, -1)
 		self.parent = parent
 		wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
-		self.control_box = control_box = wx.BoxSizer(wx.VERTICAL)
-		#trigger options
-		control_box.AddStretchSpacer()
-		control_box.Add(common.LabelText(self, 'Trigger Options'), 0, wx.ALIGN_CENTER)
-		control_box.AddSpacer(2)
-		#trigger mode
-		self.trigger_mode_chooser = common.DropDownController(self, 'Mode', TRIGGER_MODES, parent, TRIGGER_MODE_KEY)
-		control_box.Add(self.trigger_mode_chooser, 0, wx.EXPAND)
-		#trigger level
-		self.trigger_level_chooser = common.DropDownController(self, 'Level', TRIGGER_LEVELS, parent, TRIGGER_LEVEL_KEY)
-		parent.subscribe(TRIGGER_MODE_KEY, lambda x: self.trigger_level_chooser.Disable(x==0))
-		control_box.Add(self.trigger_level_chooser, 0, wx.EXPAND)
-		#trigger channel
-		choices = [('Ch%d'%(i+1), i) for i in range(parent.num_inputs)]
-		self.trigger_channel_chooser = common.DropDownController(self, 'Channel', choices, parent, TRIGGER_CHANNEL_KEY)
-		parent.subscribe(TRIGGER_MODE_KEY, lambda x: self.trigger_channel_chooser.Disable(x==0))
-		control_box.Add(self.trigger_channel_chooser, 0, wx.EXPAND)
-		#axes options
-		SPACING = 15
+		control_box = wx.BoxSizer(wx.VERTICAL)
+		##################################################
+		# Axes Options
+		##################################################
 		control_box.AddStretchSpacer()
 		control_box.Add(common.LabelText(self, 'Axes Options'), 0, wx.ALIGN_CENTER)
 		control_box.AddSpacer(2)
 		##################################################
 		# Scope Mode Box
 		##################################################
-		self.scope_mode_box = wx.BoxSizer(wx.VERTICAL)
-		control_box.Add(self.scope_mode_box, 0, wx.EXPAND)
+		scope_mode_box = wx.BoxSizer(wx.VERTICAL)
+		control_box.Add(scope_mode_box, 0, wx.EXPAND)
 		#x axis divs
-		hbox = wx.BoxSizer(wx.HORIZONTAL)
-		self.scope_mode_box.Add(hbox, 0, wx.EXPAND)
-		hbox.Add(wx.StaticText(self, -1, ' Secs/Div '), 1, wx.ALIGN_CENTER_VERTICAL)
-		x_buttons = common.IncrDecrButtons(self, self._on_incr_t_divs, self._on_decr_t_divs)
-		hbox.Add(x_buttons, 0, wx.ALIGN_CENTER_VERTICAL)
-		hbox.AddSpacer(SPACING)
+		x_buttons_scope = common.IncrDecrButtons(self, self._on_incr_t_divs, self._on_decr_t_divs)
+		scope_mode_box.Add(common.LabelBox(self, 'Secs/Div', x_buttons_scope), 0, wx.EXPAND)
 		#y axis divs
-		hbox = wx.BoxSizer(wx.HORIZONTAL)
-		self.scope_mode_box.Add(hbox, 0, wx.EXPAND)
-		hbox.Add(wx.StaticText(self, -1, ' Units/Div '), 1, wx.ALIGN_CENTER_VERTICAL)
-		y_buttons = common.IncrDecrButtons(self, self._on_incr_y_divs, self._on_decr_y_divs)
-		parent.subscribe(AUTORANGE_KEY, y_buttons.Disable)
-		hbox.Add(y_buttons, 0, wx.ALIGN_CENTER_VERTICAL)
-		hbox.AddSpacer(SPACING)
+		y_buttons_scope = common.IncrDecrButtons(self, self._on_incr_y_divs, self._on_decr_y_divs)
+		parent.subscribe(AUTORANGE_KEY, lambda x: y_buttons_scope.Enable(not x))
+		scope_mode_box.Add(common.LabelBox(self, 'Counts/Div', y_buttons_scope), 0, wx.EXPAND)
 		#y axis ref lvl
-		hbox = wx.BoxSizer(wx.HORIZONTAL)
-		self.scope_mode_box.Add(hbox, 0, wx.EXPAND)
-		hbox.Add(wx.StaticText(self, -1, ' Y Offset '), 1, wx.ALIGN_CENTER_VERTICAL)
-		y_off_buttons = common.IncrDecrButtons(self, self._on_incr_y_off, self._on_decr_y_off)
-		parent.subscribe(AUTORANGE_KEY, y_off_buttons.Disable)
-		hbox.Add(y_off_buttons, 0, wx.ALIGN_CENTER_VERTICAL)
-		hbox.AddSpacer(SPACING)
+		y_off_buttons_scope = common.IncrDecrButtons(self, self._on_incr_y_off, self._on_decr_y_off)
+		parent.subscribe(AUTORANGE_KEY, lambda x: y_off_buttons_scope.Enable(not x))
+		scope_mode_box.Add(common.LabelBox(self, 'Y Offset', y_off_buttons_scope), 0, wx.EXPAND)
+		#t axis ref lvl
+		scope_mode_box.AddSpacer(5)
+		t_off_slider = wx.Slider(self, size=SIZE, style=wx.SL_HORIZONTAL)
+		t_off_slider.SetRange(0, 1000)
+		def t_off_slider_changed(evt): parent[T_FRAC_OFF_KEY] = float(t_off_slider.GetValue())/t_off_slider.GetMax()
+		t_off_slider.Bind(wx.EVT_SLIDER, t_off_slider_changed)
+		parent.subscribe(T_FRAC_OFF_KEY, lambda x: t_off_slider.SetValue(int(round(x*t_off_slider.GetMax()))))
+		scope_mode_box.Add(common.LabelBox(self, 'T Offset', t_off_slider), 0, wx.EXPAND)
+		scope_mode_box.AddSpacer(5)
 		##################################################
 		# XY Mode Box
 		##################################################
-		self.xy_mode_box = wx.BoxSizer(wx.VERTICAL)
-		control_box.Add(self.xy_mode_box, 0, wx.EXPAND)
-		#x and y channel
-		CHOOSER_WIDTH = 60
-		CENTER_SPACING = 10
-		hbox = wx.BoxSizer(wx.HORIZONTAL)
-		self.xy_mode_box.Add(hbox, 0, wx.EXPAND)
-		choices = [('Ch%d'%(i+1), i) for i in range(parent.num_inputs)]
-		self.channel_x_chooser = common.DropDownController(self, 'X Ch', choices, parent, SCOPE_X_CHANNEL_KEY, (CHOOSER_WIDTH, -1))
-		hbox.Add(self.channel_x_chooser, 0, wx.EXPAND)
-		hbox.AddSpacer(CENTER_SPACING)
-		self.channel_y_chooser = common.DropDownController(self, 'Y Ch', choices, parent, SCOPE_Y_CHANNEL_KEY, (CHOOSER_WIDTH, -1))
-		hbox.Add(self.channel_y_chooser, 0, wx.EXPAND)
-		#div controls
-		hbox = wx.BoxSizer(wx.HORIZONTAL)
-		self.xy_mode_box.Add(hbox, 0, wx.EXPAND)
-		hbox.Add(wx.StaticText(self, -1, ' X/Div '), 1, wx.ALIGN_CENTER_VERTICAL)
+		xy_mode_box = wx.BoxSizer(wx.VERTICAL)
+		control_box.Add(xy_mode_box, 0, wx.EXPAND)
+		#x div controls
 		x_buttons = common.IncrDecrButtons(self, self._on_incr_x_divs, self._on_decr_x_divs)
-		parent.subscribe(AUTORANGE_KEY, x_buttons.Disable)
-		hbox.Add(x_buttons, 0, wx.ALIGN_CENTER_VERTICAL)
-		hbox.AddSpacer(CENTER_SPACING)
-		hbox.Add(wx.StaticText(self, -1, ' Y/Div '), 1, wx.ALIGN_CENTER_VERTICAL)
+		parent.subscribe(AUTORANGE_KEY, lambda x: x_buttons.Enable(not x))
+		xy_mode_box.Add(common.LabelBox(self, 'X/Div', x_buttons), 0, wx.EXPAND)
+		#y div controls
 		y_buttons = common.IncrDecrButtons(self, self._on_incr_y_divs, self._on_decr_y_divs)
-		parent.subscribe(AUTORANGE_KEY, y_buttons.Disable)
-		hbox.Add(y_buttons, 0, wx.ALIGN_CENTER_VERTICAL)
-		#offset controls
-		hbox = wx.BoxSizer(wx.HORIZONTAL)
-		self.xy_mode_box.Add(hbox, 0, wx.EXPAND)
-		hbox.Add(wx.StaticText(self, -1, ' X Off '), 1, wx.ALIGN_CENTER_VERTICAL)
+		parent.subscribe(AUTORANGE_KEY, lambda x: y_buttons.Enable(not x))
+		xy_mode_box.Add(common.LabelBox(self, 'Y/Div', y_buttons), 0, wx.EXPAND)
+		#x offset controls
 		x_off_buttons = common.IncrDecrButtons(self, self._on_incr_x_off, self._on_decr_x_off)
-		parent.subscribe(AUTORANGE_KEY, x_off_buttons.Disable)
-		hbox.Add(x_off_buttons, 0, wx.ALIGN_CENTER_VERTICAL)
-		hbox.AddSpacer(CENTER_SPACING)
-		hbox.Add(wx.StaticText(self, -1, ' Y Off '), 1, wx.ALIGN_CENTER_VERTICAL)
+		parent.subscribe(AUTORANGE_KEY, lambda x: x_off_buttons.Enable(not x))
+		xy_mode_box.Add(common.LabelBox(self, 'X Off', x_off_buttons), 0, wx.EXPAND)
+		#y offset controls
 		y_off_buttons = common.IncrDecrButtons(self, self._on_incr_y_off, self._on_decr_y_off)
-		parent.subscribe(AUTORANGE_KEY, y_off_buttons.Disable)
-		hbox.Add(y_off_buttons, 0, wx.ALIGN_CENTER_VERTICAL)
-		##################################################
-		# End Special Boxes
-		##################################################
-		#misc options
-		control_box.AddStretchSpacer()
-		control_box.Add(common.LabelText(self, 'Range Options'), 0, wx.ALIGN_CENTER)
-		#ac couple check box
-		self.ac_couple_check_box = common.CheckBoxController(self, 'AC Couple', parent, AC_COUPLE_KEY)
-		control_box.Add(self.ac_couple_check_box, 0, wx.ALIGN_LEFT)
+		parent.subscribe(AUTORANGE_KEY, lambda x: y_off_buttons.Enable(not x))
+		xy_mode_box.Add(common.LabelBox(self, 'Y Off', y_off_buttons), 0, wx.EXPAND)
+		xy_mode_box.ShowItems(False)
 		#autorange check box
 		self.autorange_check_box = common.CheckBoxController(self, 'Autorange', parent, AUTORANGE_KEY)
 		control_box.Add(self.autorange_check_box, 0, wx.ALIGN_LEFT)
-		#marker
 		control_box.AddStretchSpacer()
-		self.marker_chooser = common.DropDownController(self, 'Marker', MARKER_TYPES, parent, MARKER_KEY)
-		control_box.Add(self.marker_chooser, 0, wx.EXPAND)
-		#xy mode
-		control_box.AddStretchSpacer()
-		self.scope_xy_mode_button = common.ToggleButtonController(self, parent, SCOPE_XY_MODE_KEY, 'Scope Mode', 'X:Y Mode')
-		parent.subscribe(SCOPE_XY_MODE_KEY, self._on_scope_xy_mode)
-		control_box.Add(self.scope_xy_mode_button, 0, wx.EXPAND)
+		##################################################
+		# Channel Options
+		##################################################
+		TRIGGER_PAGE_INDEX = parent.num_inputs
+		XY_PAGE_INDEX = parent.num_inputs+1
+		control_box.Add(common.LabelText(self, 'Channel Options'), 0, wx.ALIGN_CENTER)
+		control_box.AddSpacer(2)
+		options_notebook = wx.Notebook(self)
+		control_box.Add(options_notebook, 0, wx.EXPAND)
+		def options_notebook_changed(evt):
+			try:
+				parent[TRIGGER_SHOW_KEY] = options_notebook.GetSelection() == TRIGGER_PAGE_INDEX
+				parent[XY_MODE_KEY] = options_notebook.GetSelection() == XY_PAGE_INDEX
+			except wx.PyDeadObjectError: pass
+		options_notebook.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, options_notebook_changed)
+		def xy_mode_changed(mode):
+			#ensure xy tab is selected
+			if mode and options_notebook.GetSelection() != XY_PAGE_INDEX:
+				options_notebook.SetSelection(XY_PAGE_INDEX)
+			#ensure xy tab is not selected
+			elif not mode and options_notebook.GetSelection() == XY_PAGE_INDEX:
+				options_notebook.SetSelection(0)
+			#show/hide control buttons
+			scope_mode_box.ShowItems(not mode)
+			xy_mode_box.ShowItems(mode)
+			control_box.Layout()
+		parent.subscribe(XY_MODE_KEY, xy_mode_changed)
+		##################################################
+		# Channel Menu Boxes
+		##################################################
+		for i in range(parent.num_inputs):
+			channel_menu_panel = wx.Panel(options_notebook)
+			options_notebook.AddPage(channel_menu_panel, 'Ch%d'%(i+1))
+			channel_menu_box = wx.BoxSizer(wx.VERTICAL)
+			channel_menu_panel.SetSizer(channel_menu_box)
+			#ac couple check box
+			channel_menu_box.AddStretchSpacer()
+			coupling_chooser = common.DropDownController(channel_menu_panel, COUPLING_MODES, parent, common.index_key(AC_COUPLE_KEY, i), SIZE)
+			channel_menu_box.Add(common.LabelBox(channel_menu_panel, 'Coupling', coupling_chooser), 0, wx.EXPAND)
+			#marker
+			channel_menu_box.AddStretchSpacer()
+			marker_chooser = common.DropDownController(channel_menu_panel, MARKER_TYPES, parent, common.index_key(MARKER_KEY, i), SIZE)
+			channel_menu_box.Add(common.LabelBox(channel_menu_panel, 'Marker', marker_chooser), 0, wx.EXPAND)
+			channel_menu_box.AddStretchSpacer()
+		##################################################
+		# Trigger Menu Box
+		##################################################
+		trigger_menu_panel = wx.Panel(options_notebook)
+		options_notebook.AddPage(trigger_menu_panel, 'Trig')
+		trigger_menu_box = wx.BoxSizer(wx.VERTICAL)
+		trigger_menu_panel.SetSizer(trigger_menu_box)
+		#trigger mode
+		trigger_mode_chooser = common.DropDownController(trigger_menu_panel, TRIGGER_MODES, parent, TRIGGER_MODE_KEY, SIZE)
+		trigger_menu_box.Add(common.LabelBox(trigger_menu_panel, 'Mode', trigger_mode_chooser), 0, wx.EXPAND)
+		#trigger slope
+		trigger_slope_chooser = common.DropDownController(trigger_menu_panel, TRIGGER_SLOPES, parent, TRIGGER_SLOPE_KEY, SIZE)
+		parent.subscribe(TRIGGER_MODE_KEY, lambda x: trigger_slope_chooser.Enable(x!=gr.gr_TRIG_MODE_FREE))
+		trigger_menu_box.Add(common.LabelBox(trigger_menu_panel, 'Slope', trigger_slope_chooser), 0, wx.EXPAND)
+		#trigger channel
+		choices = [('Channel %d'%(i+1), i) for i in range(parent.num_inputs)]
+		trigger_channel_chooser = common.DropDownController(trigger_menu_panel, choices, parent, TRIGGER_CHANNEL_KEY, SIZE)
+		parent.subscribe(TRIGGER_MODE_KEY, lambda x: trigger_channel_chooser.Enable(x!=gr.gr_TRIG_MODE_FREE))
+		trigger_menu_box.Add(common.LabelBox(trigger_menu_panel, 'Channel', trigger_channel_chooser), 0, wx.EXPAND)
+		#trigger level
+		hbox = wx.BoxSizer(wx.HORIZONTAL)
+		trigger_menu_box.Add(hbox, 0, wx.EXPAND)
+		hbox.Add(wx.StaticText(trigger_menu_panel, label=' Level '), 1, wx.ALIGN_CENTER_VERTICAL)
+		trigger_level_button = wx.Button(trigger_menu_panel, label='50%', style=wx.BU_EXACTFIT)
+		parent.subscribe(TRIGGER_MODE_KEY, lambda x: trigger_level_button.Enable(x!=gr.gr_TRIG_MODE_FREE))
+		trigger_level_button.Bind(wx.EVT_BUTTON, self.parent.set_auto_trigger_level)
+		hbox.Add(trigger_level_button, 0, wx.ALIGN_CENTER_VERTICAL)
+		hbox.AddSpacer(10)
+		trigger_level_buttons = common.IncrDecrButtons(trigger_menu_panel, self._on_incr_trigger_level, self._on_decr_trigger_level)
+		parent.subscribe(TRIGGER_MODE_KEY, lambda x: trigger_level_buttons.Enable(x!=gr.gr_TRIG_MODE_FREE))
+		hbox.Add(trigger_level_buttons, 0, wx.ALIGN_CENTER_VERTICAL)
+		##################################################
+		# XY Menu Box
+		##################################################
+		if parent.num_inputs > 1:
+			xy_menu_panel = wx.Panel(options_notebook)
+			options_notebook.AddPage(xy_menu_panel, 'XY')
+			xy_menu_box = wx.BoxSizer(wx.VERTICAL)
+			xy_menu_panel.SetSizer(xy_menu_box)
+			#x and y channel choosers
+			xy_menu_box.AddStretchSpacer()
+			choices = [('Ch%d'%(i+1), i) for i in range(parent.num_inputs)]
+			x_channel_chooser = common.DropDownController(xy_menu_panel, choices, parent, X_CHANNEL_KEY, SIZE)
+			xy_menu_box.Add(common.LabelBox(xy_menu_panel, 'Ch X', x_channel_chooser), 0, wx.EXPAND)
+			xy_menu_box.AddStretchSpacer()
+			y_channel_chooser = common.DropDownController(xy_menu_panel, choices, parent, Y_CHANNEL_KEY, SIZE)
+			xy_menu_box.Add(common.LabelBox(xy_menu_panel, 'Ch Y', y_channel_chooser), 0, wx.EXPAND)
+			#marker
+			xy_menu_box.AddStretchSpacer()
+			marker_chooser = common.DropDownController(xy_menu_panel, MARKER_TYPES, parent, XY_MARKER_KEY, SIZE)
+			xy_menu_box.Add(common.LabelBox(xy_menu_panel, 'Marker', marker_chooser), 0, wx.EXPAND)
+			xy_menu_box.AddStretchSpacer()
+		##################################################
+		# Run/Stop Button
+		##################################################
 		#run/stop
 		self.run_button = common.ToggleButtonController(self, parent, RUNNING_KEY, 'Stop', 'Run')
 		control_box.Add(self.run_button, 0, wx.EXPAND)
 		#set sizer
 		self.SetSizerAndFit(control_box)
+		#mouse wheel event
+		def on_mouse_wheel(event):
+			if not parent[XY_MODE_KEY]:
+				if event.GetWheelRotation() < 0: self._on_incr_t_divs(event)
+				else: self._on_decr_t_divs(event)
+		parent.plotter.Bind(wx.EVT_MOUSEWHEEL, on_mouse_wheel)
 
 	##################################################
 	# Event handlers
 	##################################################
-	def _on_scope_xy_mode(self, mode):
-		self.scope_mode_box.ShowItems(not mode)
-		self.xy_mode_box.ShowItems(mode)
-		self.control_box.Layout()
+	#trigger level
+	def _on_incr_trigger_level(self, event):
+		self.parent[TRIGGER_LEVEL_KEY] += self.parent[Y_PER_DIV_KEY]/3.
+	def _on_decr_trigger_level(self, event):
+		self.parent[TRIGGER_LEVEL_KEY] -= self.parent[Y_PER_DIV_KEY]/3.
 	#incr/decr divs
 	def _on_incr_t_divs(self, event):
-		self.parent.set_t_per_div(
-			common.get_clean_incr(self.parent[T_PER_DIV_KEY]))
+		self.parent[T_PER_DIV_KEY] = common.get_clean_incr(self.parent[T_PER_DIV_KEY])
 	def _on_decr_t_divs(self, event):
-		self.parent.set_t_per_div(
-			common.get_clean_decr(self.parent[T_PER_DIV_KEY]))
+		self.parent[T_PER_DIV_KEY] = common.get_clean_decr(self.parent[T_PER_DIV_KEY])
 	def _on_incr_x_divs(self, event):
-		self.parent.set_x_per_div(
-			common.get_clean_incr(self.parent[X_PER_DIV_KEY]))
+		self.parent[X_PER_DIV_KEY] = common.get_clean_incr(self.parent[X_PER_DIV_KEY])
 	def _on_decr_x_divs(self, event):
-		self.parent.set_x_per_div(
-			common.get_clean_decr(self.parent[X_PER_DIV_KEY]))
+		self.parent[X_PER_DIV_KEY] = common.get_clean_decr(self.parent[X_PER_DIV_KEY])
 	def _on_incr_y_divs(self, event):
-		self.parent.set_y_per_div(
-			common.get_clean_incr(self.parent[Y_PER_DIV_KEY]))
+		self.parent[Y_PER_DIV_KEY] = common.get_clean_incr(self.parent[Y_PER_DIV_KEY])
 	def _on_decr_y_divs(self, event):
-		self.parent.set_y_per_div(
-			common.get_clean_decr(self.parent[Y_PER_DIV_KEY]))
+		self.parent[Y_PER_DIV_KEY] = common.get_clean_decr(self.parent[Y_PER_DIV_KEY])
 	#incr/decr offset
-	def _on_incr_t_off(self, event):
-		self.parent.set_t_off(
-			self.parent[T_OFF_KEY] + self.parent[T_PER_DIV_KEY])
-	def _on_decr_t_off(self, event):
-		self.parent.set_t_off(
-			self.parent[T_OFF_KEY] - self.parent[T_PER_DIV_KEY])
 	def _on_incr_x_off(self, event):
-		self.parent.set_x_off(
-			self.parent[X_OFF_KEY] + self.parent[X_PER_DIV_KEY])
+		self.parent[X_OFF_KEY] = self.parent[X_OFF_KEY] + self.parent[X_PER_DIV_KEY]
 	def _on_decr_x_off(self, event):
-		self.parent.set_x_off(
-			self.parent[X_OFF_KEY] - self.parent[X_PER_DIV_KEY])
+		self.parent[X_OFF_KEY] = self.parent[X_OFF_KEY] - self.parent[X_PER_DIV_KEY]
 	def _on_incr_y_off(self, event):
-		self.parent.set_y_off(
-			self.parent[Y_OFF_KEY] + self.parent[Y_PER_DIV_KEY])
+		self.parent[Y_OFF_KEY] = self.parent[Y_OFF_KEY] + self.parent[Y_PER_DIV_KEY]
 	def _on_decr_y_off(self, event):
-		self.parent.set_y_off(
-			self.parent[Y_OFF_KEY] - self.parent[Y_PER_DIV_KEY])
+		self.parent[Y_OFF_KEY] = self.parent[Y_OFF_KEY] - self.parent[Y_PER_DIV_KEY]
 
 ##################################################
 # Scope window with plotter and control panel
 ##################################################
-class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
+class scope_window(wx.Panel, pubsub.pubsub):
 	def __init__(
 		self,
 		parent,
@@ -259,11 +296,13 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		sample_rate_key,
 		t_scale,
 		v_scale,
-		ac_couple,
 		xy_mode,
-		scope_trigger_level_key,
-		scope_trigger_mode_key,
-		scope_trigger_channel_key,
+		ac_couple_key,
+		trigger_level_key,
+		trigger_mode_key,
+		trigger_slope_key,
+		trigger_channel_key,
+		decimation_key,
 		msg_key,
 	):
 		pubsub.pubsub.__init__(self)
@@ -271,67 +310,73 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		assert num_inputs <= len(CHANNEL_COLOR_SPECS)
 		#setup
 		self.sampleses = None
-		self.ext_controller = controller
 		self.num_inputs = num_inputs
-		self.sample_rate_key = sample_rate_key
-		autorange = v_scale is None
+		autorange = not v_scale
 		self.autorange_ts = 0
-		if v_scale is None: v_scale = 1
+		v_scale = v_scale or 1
 		self.frame_rate_ts = 0
-		self._init = False #HACK
-		#scope keys
-		self.scope_trigger_level_key = scope_trigger_level_key
-		self.scope_trigger_mode_key = scope_trigger_mode_key
-		self.scope_trigger_channel_key = scope_trigger_channel_key
+		#proxy the keys
+		self.proxy(MSG_KEY, controller, msg_key)
+		self.proxy(SAMPLE_RATE_KEY, controller, sample_rate_key)
+		self.proxy(TRIGGER_LEVEL_KEY, controller, trigger_level_key)
+		self.proxy(TRIGGER_MODE_KEY, controller, trigger_mode_key)
+		self.proxy(TRIGGER_SLOPE_KEY, controller, trigger_slope_key)
+		self.proxy(TRIGGER_CHANNEL_KEY, controller, trigger_channel_key)
+		self.proxy(DECIMATION_KEY, controller, decimation_key)
+		for i in range(num_inputs):
+			self.proxy(common.index_key(AC_COUPLE_KEY, i), controller, common.index_key(ac_couple_key, i))
 		#init panel and plot
-		wx.Panel.__init__(self, parent, -1, style=wx.SIMPLE_BORDER)
+		wx.Panel.__init__(self, parent, style=wx.SIMPLE_BORDER)
 		self.plotter = plotter.channel_plotter(self)
 		self.plotter.SetSize(wx.Size(*size))
 		self.plotter.set_title(title)
 		self.plotter.enable_legend(True)
 		self.plotter.enable_point_label(True)
+		self.plotter.enable_grid_lines(True)
 		#setup the box with plot and controls
 		self.control_panel = control_panel(self)
 		main_box = wx.BoxSizer(wx.HORIZONTAL)
 		main_box.Add(self.plotter, 1, wx.EXPAND)
 		main_box.Add(self.control_panel, 0, wx.EXPAND)
 		self.SetSizerAndFit(main_box)
-		#initial setup
-		self._register_set_prop(self, RUNNING_KEY, True)
-		self._register_set_prop(self, AC_COUPLE_KEY, ac_couple)
-		self._register_set_prop(self, SCOPE_XY_MODE_KEY, xy_mode)
-		self._register_set_prop(self, AUTORANGE_KEY, autorange)
-		self._register_set_prop(self, T_PER_DIV_KEY, t_scale)
-		self._register_set_prop(self, X_PER_DIV_KEY, v_scale)
-		self._register_set_prop(self, Y_PER_DIV_KEY, v_scale)
-		self._register_set_prop(self, T_OFF_KEY, 0)
-		self._register_set_prop(self, X_OFF_KEY, 0)
-		self._register_set_prop(self, Y_OFF_KEY, 0)
-		self._register_set_prop(self, T_DIVS_KEY, 8)
-		self._register_set_prop(self, X_DIVS_KEY, 8)
-		self._register_set_prop(self, Y_DIVS_KEY, 8)
-		self._register_set_prop(self, SCOPE_X_CHANNEL_KEY, 0)
-		self._register_set_prop(self, SCOPE_Y_CHANNEL_KEY, num_inputs-1)
-		self._register_set_prop(self, FRAME_RATE_KEY, frame_rate)
-		self._register_set_prop(self, TRIGGER_CHANNEL_KEY, 0)
-		self._register_set_prop(self, TRIGGER_MODE_KEY, 1)
-		self._register_set_prop(self, TRIGGER_LEVEL_KEY, None)
-		self._register_set_prop(self, MARKER_KEY, DEFAULT_MARKER_TYPE)
-		#register events
-		self.ext_controller.subscribe(msg_key, self.handle_msg)
-		for key in (
+		#initialize values
+		self[RUNNING_KEY] = True
+		for i in range(self.num_inputs):
+			self[common.index_key(AC_COUPLE_KEY, i)] = self[common.index_key(AC_COUPLE_KEY, i)]
+			self[common.index_key(MARKER_KEY, i)] = DEFAULT_MARKER_TYPE
+		self[XY_MARKER_KEY] = 2.0
+		self[XY_MODE_KEY] = xy_mode
+		self[X_CHANNEL_KEY] = 0
+		self[Y_CHANNEL_KEY] = self.num_inputs-1
+		self[AUTORANGE_KEY] = autorange
+		self[T_PER_DIV_KEY] = t_scale
+		self[X_PER_DIV_KEY] = v_scale
+		self[Y_PER_DIV_KEY] = v_scale
+		self[T_OFF_KEY] = 0
+		self[X_OFF_KEY] = 0
+		self[Y_OFF_KEY] = 0
+		self[T_DIVS_KEY] = 8
+		self[X_DIVS_KEY] = 8
+		self[Y_DIVS_KEY] = 8
+		self[FRAME_RATE_KEY] = frame_rate
+		self[TRIGGER_LEVEL_KEY] = 0
+		self[TRIGGER_CHANNEL_KEY] = 0
+		self[TRIGGER_MODE_KEY] = gr.gr_TRIG_MODE_AUTO
+		self[TRIGGER_SLOPE_KEY] = gr.gr_TRIG_SLOPE_POS
+		self[T_FRAC_OFF_KEY] = 0.5
+		#register events for message
+		self.subscribe(MSG_KEY, self.handle_msg)
+		#register events for grid
+		for key in [common.index_key(MARKER_KEY, i) for i in range(self.num_inputs)] + [
+			TRIGGER_LEVEL_KEY, TRIGGER_MODE_KEY,
 			T_PER_DIV_KEY, X_PER_DIV_KEY, Y_PER_DIV_KEY,
 			T_OFF_KEY, X_OFF_KEY, Y_OFF_KEY,
 			T_DIVS_KEY, X_DIVS_KEY, Y_DIVS_KEY,
-			SCOPE_XY_MODE_KEY,
-			SCOPE_X_CHANNEL_KEY,
-			SCOPE_Y_CHANNEL_KEY,
-			AUTORANGE_KEY,
-			AC_COUPLE_KEY,
-			MARKER_KEY,
-		): self.subscribe(key, self.update_grid)
-		#initial update, dont do this here, wait for handle_msg #HACK
-		#self.update_grid()
+			XY_MODE_KEY, AUTORANGE_KEY, T_FRAC_OFF_KEY,
+			TRIGGER_SHOW_KEY, XY_MARKER_KEY, X_CHANNEL_KEY, Y_CHANNEL_KEY,
+		]: self.subscribe(key, self.update_grid)
+		#initial update
+		self.update_grid()
 
 	def handle_msg(self, msg):
 		"""
@@ -345,14 +390,22 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		if time.time() - self.frame_rate_ts < 1.0/self[FRAME_RATE_KEY]: return
 		#convert to floating point numbers
 		samples = numpy.fromstring(msg, numpy.float32)
+		#extract the trigger offset
+		self.trigger_offset = samples[-1]
+		samples = samples[:-1]
 		samps_per_ch = len(samples)/self.num_inputs
 		self.sampleses = [samples[samps_per_ch*i:samps_per_ch*(i+1)] for i in range(self.num_inputs)]
-		if not self._init: #HACK
-			self._init = True
-			self.update_grid()
 		#handle samples
 		self.handle_samples()
 		self.frame_rate_ts = time.time()
+
+	def set_auto_trigger_level(self, *args):
+		"""
+		Use the current trigger channel and samples to calculate the 50% level.
+		"""
+		if not self.sampleses: return
+		samples = self.sampleses[self[TRIGGER_CHANNEL_KEY]]
+		self[TRIGGER_LEVEL_KEY] = (numpy.max(samples)+numpy.min(samples))/2
 
 	def handle_samples(self):
 		"""
@@ -361,52 +414,37 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		"""
 		if not self.sampleses: return
 		sampleses = self.sampleses
-		#trigger level (must do before ac coupling)
-		self.ext_controller[self.scope_trigger_channel_key] = self[TRIGGER_CHANNEL_KEY]
-		self.ext_controller[self.scope_trigger_mode_key] = self[TRIGGER_MODE_KEY]
-		trigger_level = self[TRIGGER_LEVEL_KEY]
-		if trigger_level is None: self.ext_controller[self.scope_trigger_level_key] = ''
-		else:
-			samples = sampleses[self[TRIGGER_CHANNEL_KEY]]
-			self.ext_controller[self.scope_trigger_level_key] = \
-			trigger_level*(numpy.max(samples)-numpy.min(samples))/2 + numpy.average(samples)
-		#ac coupling
-		if self[AC_COUPLE_KEY]:
-			sampleses = [samples - numpy.average(samples) for samples in sampleses]
-		if self[SCOPE_XY_MODE_KEY]:
-			x_samples = sampleses[self[SCOPE_X_CHANNEL_KEY]]
-			y_samples = sampleses[self[SCOPE_Y_CHANNEL_KEY]]
+		if self[XY_MODE_KEY]:
+			self[DECIMATION_KEY] = 1
+			x_samples = sampleses[self[X_CHANNEL_KEY]]
+			y_samples = sampleses[self[Y_CHANNEL_KEY]]
 			#autorange
 			if self[AUTORANGE_KEY] and time.time() - self.autorange_ts > AUTORANGE_UPDATE_RATE:
 				x_min, x_max = common.get_min_max(x_samples)
 				y_min, y_max = common.get_min_max(y_samples)
 				#adjust the x per div
 				x_per_div = common.get_clean_num((x_max-x_min)/self[X_DIVS_KEY])
-				if x_per_div != self[X_PER_DIV_KEY]: self.set_x_per_div(x_per_div)
+				if x_per_div != self[X_PER_DIV_KEY]: self[X_PER_DIV_KEY] = x_per_div; return
 				#adjust the x offset
 				x_off = x_per_div*round((x_max+x_min)/2/x_per_div)
-				if x_off != self[X_OFF_KEY]: self.set_x_off(x_off)
+				if x_off != self[X_OFF_KEY]: self[X_OFF_KEY] = x_off; return
 				#adjust the y per div
 				y_per_div = common.get_clean_num((y_max-y_min)/self[Y_DIVS_KEY])
-				if y_per_div != self[Y_PER_DIV_KEY]: self.set_y_per_div(y_per_div)
+				if y_per_div != self[Y_PER_DIV_KEY]: self[Y_PER_DIV_KEY] = y_per_div; return
 				#adjust the y offset
 				y_off = y_per_div*round((y_max+y_min)/2/y_per_div)
-				if y_off != self[Y_OFF_KEY]: self.set_y_off(y_off)
+				if y_off != self[Y_OFF_KEY]: self[Y_OFF_KEY] = y_off; return
 				self.autorange_ts = time.time()
 			#plot xy channel
 			self.plotter.set_waveform(
 				channel='XY',
 				samples=(x_samples, y_samples),
 				color_spec=CHANNEL_COLOR_SPECS[0],
-				marker=self[MARKER_KEY],
+				marker=self[XY_MARKER_KEY],
 			)
 			#turn off each waveform
 			for i, samples in enumerate(sampleses):
-				self.plotter.set_waveform(
-					channel='Ch%d'%(i+1),
-					samples=[],
-					color_spec=CHANNEL_COLOR_SPECS[i],
-				)
+				self.plotter.clear_waveform(channel='Ch%d'%(i+1))
 		else:
 			#autorange
 			if self[AUTORANGE_KEY] and time.time() - self.autorange_ts > AUTORANGE_UPDATE_RATE:
@@ -415,86 +453,89 @@ class scope_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 				y_max = numpy.max([bound[1] for bound in bounds])
 				#adjust the y per div
 				y_per_div = common.get_clean_num((y_max-y_min)/self[Y_DIVS_KEY])
-				if y_per_div != self[Y_PER_DIV_KEY]: self.set_y_per_div(y_per_div)
+				if y_per_div != self[Y_PER_DIV_KEY]: self[Y_PER_DIV_KEY] = y_per_div; return
 				#adjust the y offset
 				y_off = y_per_div*round((y_max+y_min)/2/y_per_div)
-				if y_off != self[Y_OFF_KEY]: self.set_y_off(y_off)
+				if y_off != self[Y_OFF_KEY]: self[Y_OFF_KEY] = y_off; return
 				self.autorange_ts = time.time()
-			#plot each waveform
-			for i, samples in enumerate(sampleses):
-				#number of samples to scale to the screen
-				num_samps = int(self[T_PER_DIV_KEY]*self[T_DIVS_KEY]*self.ext_controller[self.sample_rate_key])
-				#handle num samps out of bounds
-				if num_samps > len(samples):
-					self.set_t_per_div(
-						common.get_clean_decr(self[T_PER_DIV_KEY]))
-				elif num_samps < 2:
-					self.set_t_per_div(
-						common.get_clean_incr(self[T_PER_DIV_KEY]))
-					num_samps = 0
-				else:
+			#number of samples to scale to the screen
+			actual_rate = self.get_actual_rate()
+			time_span = self[T_PER_DIV_KEY]*self[T_DIVS_KEY]
+			num_samps = int(round(time_span*actual_rate))
+			#handle the time offset
+			t_off = self[T_FRAC_OFF_KEY]*(len(sampleses[0])/actual_rate - time_span)
+			if t_off != self[T_OFF_KEY]: self[T_OFF_KEY] = t_off; return
+			samps_off = int(round(actual_rate*self[T_OFF_KEY]))
+			#adjust the decim so that we use about half the samps
+			self[DECIMATION_KEY] = int(round(
+					time_span*self[SAMPLE_RATE_KEY]/(0.5*len(sampleses[0]))
+				)
+			)
+			#num samps too small, auto increment the time
+			if num_samps < 2: self[T_PER_DIV_KEY] = common.get_clean_incr(self[T_PER_DIV_KEY])
+			#num samps in bounds, plot each waveform
+			elif num_samps <= len(sampleses[0]):
+				for i, samples in enumerate(sampleses):
 					#plot samples
 					self.plotter.set_waveform(
 						channel='Ch%d'%(i+1),
-						samples=samples[:num_samps],
+						samples=samples[samps_off:num_samps+samps_off],
 						color_spec=CHANNEL_COLOR_SPECS[i],
-						marker=self[MARKER_KEY],
+						marker=self[common.index_key(MARKER_KEY, i)],
+						trig_off=self.trigger_offset,
 					)
 			#turn XY channel off
+			self.plotter.clear_waveform(channel='XY')
+		#keep trigger level within range
+		if self[TRIGGER_LEVEL_KEY] > self.get_y_max():
+			self[TRIGGER_LEVEL_KEY] = self.get_y_max(); return
+		if self[TRIGGER_LEVEL_KEY] < self.get_y_min():
+			self[TRIGGER_LEVEL_KEY] = self.get_y_min(); return
+		#disable the trigger channel
+		if not self[TRIGGER_SHOW_KEY] or self[XY_MODE_KEY] or self[TRIGGER_MODE_KEY] == gr.gr_TRIG_MODE_FREE:
+			self.plotter.clear_waveform(channel='Trig')
+		else: #show trigger channel
+			trigger_level = self[TRIGGER_LEVEL_KEY]
+			trigger_point = (len(self.sampleses[0])-1)/self.get_actual_rate()/2.0
 			self.plotter.set_waveform(
-				channel='XY',
-				samples=[],
-				color_spec=CHANNEL_COLOR_SPECS[0],
+				channel='Trig',
+				samples=(
+					[self.get_t_min(), trigger_point, trigger_point, trigger_point, trigger_point, self.get_t_max()],
+					[trigger_level, trigger_level, self.get_y_max(), self.get_y_min(), trigger_level, trigger_level]
+				),
+				color_spec=TRIGGER_COLOR_SPEC,
 			)
 		#update the plotter
 		self.plotter.update()
+
+	def get_actual_rate(self): return 1.0*self[SAMPLE_RATE_KEY]/self[DECIMATION_KEY]
+	def get_t_min(self): return self[T_OFF_KEY]
+	def get_t_max(self): return self[T_PER_DIV_KEY]*self[T_DIVS_KEY] + self[T_OFF_KEY]
+	def get_x_min(self): return -1*self[X_PER_DIV_KEY]*self[X_DIVS_KEY]/2.0 + self[X_OFF_KEY]
+	def get_x_max(self): return self[X_PER_DIV_KEY]*self[X_DIVS_KEY]/2.0 + self[X_OFF_KEY]
+	def get_y_min(self): return -1*self[Y_PER_DIV_KEY]*self[Y_DIVS_KEY]/2.0 + self[Y_OFF_KEY]
+	def get_y_max(self): return self[Y_PER_DIV_KEY]*self[Y_DIVS_KEY]/2.0 + self[Y_OFF_KEY]
 
 	def update_grid(self, *args):
 		"""
 		Update the grid to reflect the current settings:
 		xy divisions, xy offset, xy mode setting
 		"""
-		#grid parameters
-		t_per_div = self[T_PER_DIV_KEY]
-		x_per_div = self[X_PER_DIV_KEY]
-		y_per_div = self[Y_PER_DIV_KEY]
-		t_off = self[T_OFF_KEY]
-		x_off = self[X_OFF_KEY]
-		y_off = self[Y_OFF_KEY]
-		t_divs = self[T_DIVS_KEY]
-		x_divs = self[X_DIVS_KEY]
-		y_divs = self[Y_DIVS_KEY]
-		if self[SCOPE_XY_MODE_KEY]:
+		if self[T_FRAC_OFF_KEY] < 0: self[T_FRAC_OFF_KEY] = 0; return
+		if self[T_FRAC_OFF_KEY] > 1: self[T_FRAC_OFF_KEY] = 1; return
+		if self[XY_MODE_KEY]:
 			#update the x axis
-			self.plotter.set_x_label('Ch%d'%(self[SCOPE_X_CHANNEL_KEY]+1))
-			self.plotter.set_x_grid(
-				-1*x_per_div*x_divs/2.0 + x_off,
-				x_per_div*x_divs/2.0 + x_off,
-				x_per_div,
-			)
+			self.plotter.set_x_label('Ch%d'%(self[X_CHANNEL_KEY]+1))
+			self.plotter.set_x_grid(self.get_x_min(), self.get_x_max(), self[X_PER_DIV_KEY])
 			#update the y axis
-			self.plotter.set_y_label('Ch%d'%(self[SCOPE_Y_CHANNEL_KEY]+1))
-			self.plotter.set_y_grid(
-				-1*y_per_div*y_divs/2.0 + y_off,
-				y_per_div*y_divs/2.0 + y_off,
-				y_per_div,
-			)
+			self.plotter.set_y_label('Ch%d'%(self[Y_CHANNEL_KEY]+1))
+			self.plotter.set_y_grid(self.get_y_min(), self.get_y_max(), self[Y_PER_DIV_KEY])
 		else:
 			#update the t axis
-			coeff, exp, prefix = common.get_si_components(t_per_div*t_divs + t_off)
-			self.plotter.set_x_label('Time', prefix+'s')
-			self.plotter.set_x_grid(
-				t_off,
-				t_per_div*t_divs + t_off,
-				t_per_div,
-				10**(-exp),
-			)
+			self.plotter.set_x_label('Time', 's')
+			self.plotter.set_x_grid(self.get_t_min(), self.get_t_max(), self[T_PER_DIV_KEY], True)
 			#update the y axis
 			self.plotter.set_y_label('Counts')
-			self.plotter.set_y_grid(
-				-1*y_per_div*y_divs/2.0 + y_off,
-				y_per_div*y_divs/2.0 + y_off,
-				y_per_div,
-			)
+			self.plotter.set_y_grid(self.get_y_min(), self.get_y_max(), self[Y_PER_DIV_KEY])
 		#redraw current sample
 		self.handle_samples()

@@ -21,3 +21,4 @@
 
 from channel_plotter import channel_plotter
 from waterfall_plotter import waterfall_plotter
+from bar_plotter import bar_plotter

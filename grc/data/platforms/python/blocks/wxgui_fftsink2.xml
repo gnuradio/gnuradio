@@ -12,7 +12,6 @@
 	self.GetWin(),
 	baseband_freq=$baseband_freq,
 	y_per_div=$y_per_div,
-	y_divs=$y_divs,
 	ref_level=$ref_level,
 	sample_rate=$samp_rate,
 	fft_size=$fft_size,
@@ -68,16 +67,30 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<name>Y per Div</name>
 		<key>y_per_div</key>
 		<value>10</value>
-		<type>real</type>
+		<type>enum</type>
+		<option>
+			<name>1 dB</name>
+			<key>1</key>
+		</option>
+		<option>
+			<name>2 dB</name>
+			<key>2</key>
+		</option>
+		<option>
+			<name>5 dB</name>
+			<key>5</key>
+		</option>
+		<option>
+			<name>10 dB</name>
+			<key>10</key>
+		</option>
+		<option>
+			<name>20 dB</name>
+			<key>20</key>
+		</option>
 	</param>
 	<param>
-		<name>Y Divs</name>
-		<key>y_divs</key>
-		<value>8</value>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Reference Level</name>
+		<name>Ref Level (dB)</name>
 		<key>ref_level</key>
 		<value>50</value>
 		<type>real</type>
@@ -95,38 +108,41 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<type>int</type>
 	</param>
 	<param>
-		<name>Average Alpha</name>
-		<key>avg_alpha</key>
-		<value>0</value>
-		<type>real</type>
+		<name>Peak Hold</name>
+		<key>peak_hold</key>
+		<value>False</value>
+		<type>enum</type>
+		<hide>#if $peak_hold.eval == 'True' then 'none' else 'part'#</hide>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
 	</param>
 	<param>
 		<name>Average</name>
 		<key>average</key>
 		<value>False</value>
 		<type>enum</type>
+		<hide>#if $average.eval == 'True' then 'none' else 'part'#</hide>
 		<option>
-			<name>Yes</name>
+			<name>On</name>
 			<key>True</key>
 		</option>
 		<option>
-			<name>No</name>
+			<name>Off</name>
 			<key>False</key>
 		</option>
 	</param>
 	<param>
-		<name>Peak Hold</name>
-		<key>peak_hold</key>
-		<value>False</value>
-		<type>enum</type>
-		<option>
-			<name>Yes</name>
-			<key>True</key>
-		</option>
-		<option>
-			<name>No</name>
-			<key>False</key>
-		</option>
+		<name>Average Alpha</name>
+		<key>avg_alpha</key>
+		<value>0</value>
+		<type>real</type>
+		<hide>#if $average.eval == 'True' then 'none' else 'all'#</hide>
 	</param>
 	<param>
 		<name>Grid Position</name>

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2004 Free Software Foundation, Inc.
+ * Copyright 2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,18 +20,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GR_TRIGGER_MODE_H
-#define INCLUDED_GR_TRIGGER_MODE_H
 
-enum gr_trigger_mode {
-  gr_TRIG_MODE_FREE,
-  gr_TRIG_MODE_AUTO,
-  gr_TRIG_MODE_NORM,
+GR_SWIG_BLOCK_MAGIC(gr,histo_sink_f)
+
+gr_histo_sink_f_sptr gr_make_histo_sink_f (gr_msg_queue_sptr msgq);
+
+class gr_histo_sink_f : public gr_sync_block
+{
+public:
+  ~gr_histo_sink_f (void);
+
+  unsigned int get_frame_size(void);
+  unsigned int get_num_bins(void);
+
+  void set_frame_size(unsigned int frame_size);
+  void set_num_bins(unsigned int num_bins);
+
 };
-
-enum gr_trigger_slope {
-  gr_TRIG_SLOPE_POS,
-  gr_TRIG_SLOPE_NEG,
-};
-
-#endif /* INCLUDED_GR_TRIGGER_MODE_H */

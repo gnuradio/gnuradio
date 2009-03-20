@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
-# Boston, MA 02110-1301, USA.
+# Boston, MA 02110-1`301, USA.
 #
 
 ##################################################
@@ -61,57 +61,57 @@ class control_panel(wx.Panel):
 		@param parent the wx parent window
 		"""
 		self.parent = parent
-		wx.Panel.__init__(self, parent, -1, style=wx.SUNKEN_BORDER)
+		wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
 		control_box = wx.BoxSizer(wx.VERTICAL)
 		control_box.AddStretchSpacer()
 		control_box.Add(common.LabelText(self, 'Options'), 0, wx.ALIGN_CENTER)
 		#color mode
 		control_box.AddStretchSpacer()
-		self.color_mode_chooser = common.DropDownController(self, 'Color', COLOR_MODES, parent, COLOR_MODE_KEY)
-		control_box.Add(self.color_mode_chooser, 0, wx.EXPAND)
+		color_mode_chooser = common.DropDownController(self, COLOR_MODES, parent, COLOR_MODE_KEY)
+		control_box.Add(common.LabelBox(self, 'Color', color_mode_chooser), 0, wx.EXPAND)
 		#average
 		control_box.AddStretchSpacer()
-		self.average_check_box = common.CheckBoxController(self, 'Average', parent.ext_controller, parent.average_key)
-		control_box.Add(self.average_check_box, 0, wx.EXPAND)
+		average_check_box = common.CheckBoxController(self, 'Average', parent, AVERAGE_KEY)
+		control_box.Add(average_check_box, 0, wx.EXPAND)
 		control_box.AddSpacer(2)
-		self.avg_alpha_slider = common.LogSliderController(
+		avg_alpha_slider = common.LogSliderController(
 			self, 'Avg Alpha',
 			AVG_ALPHA_MIN_EXP, AVG_ALPHA_MAX_EXP, SLIDER_STEPS,
-			parent.ext_controller, parent.avg_alpha_key,
+			parent, AVG_ALPHA_KEY,
 			formatter=lambda x: ': %.4f'%x,
 		)
-		parent.ext_controller.subscribe(parent.average_key, self.avg_alpha_slider.Enable)
-		control_box.Add(self.avg_alpha_slider, 0, wx.EXPAND)
+		parent.subscribe(AVERAGE_KEY, avg_alpha_slider.Enable)
+		control_box.Add(avg_alpha_slider, 0, wx.EXPAND)
 		#dyanmic range buttons
 		control_box.AddStretchSpacer()
 		control_box.Add(common.LabelText(self, 'Dynamic Range'), 0, wx.ALIGN_CENTER)
 		control_box.AddSpacer(2)
-		self._dynamic_range_buttons = common.IncrDecrButtons(self, self._on_incr_dynamic_range, self._on_decr_dynamic_range)
-		control_box.Add(self._dynamic_range_buttons, 0, wx.ALIGN_CENTER)
+		dynamic_range_buttons = common.IncrDecrButtons(self, self._on_incr_dynamic_range, self._on_decr_dynamic_range)
+		control_box.Add(dynamic_range_buttons, 0, wx.ALIGN_CENTER)
 		#ref lvl buttons
 		control_box.AddStretchSpacer()
 		control_box.Add(common.LabelText(self, 'Set Ref Level'), 0, wx.ALIGN_CENTER)
 		control_box.AddSpacer(2)
-		self._ref_lvl_buttons = common.IncrDecrButtons(self, self._on_incr_ref_level, self._on_decr_ref_level)
-		control_box.Add(self._ref_lvl_buttons, 0, wx.ALIGN_CENTER)
+		ref_lvl_buttons = common.IncrDecrButtons(self, self._on_incr_ref_level, self._on_decr_ref_level)
+		control_box.Add(ref_lvl_buttons, 0, wx.ALIGN_CENTER)
 		#num lines buttons
 		control_box.AddStretchSpacer()
 		control_box.Add(common.LabelText(self, 'Set Time Scale'), 0, wx.ALIGN_CENTER)
 		control_box.AddSpacer(2)
-		self._time_scale_buttons = common.IncrDecrButtons(self, self._on_incr_time_scale, self._on_decr_time_scale)
-		control_box.Add(self._time_scale_buttons, 0, wx.ALIGN_CENTER)
+		time_scale_buttons = common.IncrDecrButtons(self, self._on_incr_time_scale, self._on_decr_time_scale)
+		control_box.Add(time_scale_buttons, 0, wx.ALIGN_CENTER)
 		#autoscale
 		control_box.AddStretchSpacer()
-		self.autoscale_button = wx.Button(self, label='Autoscale', style=wx.BU_EXACTFIT)
-		self.autoscale_button.Bind(wx.EVT_BUTTON, self.parent.autoscale)
-		control_box.Add(self.autoscale_button, 0, wx.EXPAND)
+		autoscale_button = wx.Button(self, label='Autoscale', style=wx.BU_EXACTFIT)
+		autoscale_button.Bind(wx.EVT_BUTTON, self.parent.autoscale)
+		control_box.Add(autoscale_button, 0, wx.EXPAND)
 		#clear
-		self.clear_button = wx.Button(self, label='Clear', style=wx.BU_EXACTFIT)
-		self.clear_button.Bind(wx.EVT_BUTTON, self._on_clear_button)
-		control_box.Add(self.clear_button, 0, wx.EXPAND)
+		clear_button = wx.Button(self, label='Clear', style=wx.BU_EXACTFIT)
+		clear_button.Bind(wx.EVT_BUTTON, self._on_clear_button)
+		control_box.Add(clear_button, 0, wx.EXPAND)
 		#run/stop
-		self.run_button = common.ToggleButtonController(self, parent, RUNNING_KEY, 'Stop', 'Run')
-		control_box.Add(self.run_button, 0, wx.EXPAND)
+		run_button = common.ToggleButtonController(self, parent, RUNNING_KEY, 'Stop', 'Run')
+		control_box.Add(run_button, 0, wx.EXPAND)
 		#set sizer
 		self.SetSizerAndFit(control_box)
 
@@ -119,34 +119,30 @@ class control_panel(wx.Panel):
 	# Event handlers
 	##################################################
 	def _on_clear_button(self, event):
-		self.parent.set_num_lines(self.parent[NUM_LINES_KEY])
+		self.parent[NUM_LINES_KEY] = self.parent[NUM_LINES_KEY]
 	def _on_incr_dynamic_range(self, event):
-		self.parent.set_dynamic_range(
-			min(self.parent[DYNAMIC_RANGE_KEY] + 10, MAX_DYNAMIC_RANGE))
+		self.parent[DYNAMIC_RANGE_KEY] = min(self.parent[DYNAMIC_RANGE_KEY] + 10, MAX_DYNAMIC_RANGE)
 	def _on_decr_dynamic_range(self, event):
-		self.parent.set_dynamic_range(
-			max(self.parent[DYNAMIC_RANGE_KEY] - 10, MIN_DYNAMIC_RANGE))
+		self.parent[DYNAMIC_RANGE_KEY] = max(self.parent[DYNAMIC_RANGE_KEY] - 10, MIN_DYNAMIC_RANGE)
 	def _on_incr_ref_level(self, event):
-		self.parent.set_ref_level(
-			self.parent[REF_LEVEL_KEY] + self.parent[DYNAMIC_RANGE_KEY]*.1)
+		self.parent[REF_LEVEL_KEY] = self.parent[REF_LEVEL_KEY] + self.parent[DYNAMIC_RANGE_KEY]*.1
 	def _on_decr_ref_level(self, event):
-		self.parent.set_ref_level(
-			self.parent[REF_LEVEL_KEY] - self.parent[DYNAMIC_RANGE_KEY]*.1)
+		self.parent[REF_LEVEL_KEY] = self.parent[REF_LEVEL_KEY] - self.parent[DYNAMIC_RANGE_KEY]*.1
 	def _on_incr_time_scale(self, event):
-		old_rate = self.parent.ext_controller[self.parent.frame_rate_key]
-		self.parent.ext_controller[self.parent.frame_rate_key] *= 0.75
-		if self.parent.ext_controller[self.parent.frame_rate_key] == old_rate:
-			self.parent.ext_controller[self.parent.decimation_key] += 1
+		old_rate = self.parent[FRAME_RATE_KEY]
+		self.parent[FRAME_RATE_KEY] *= 0.75
+		if self.parent[FRAME_RATE_KEY] == old_rate:
+			self.parent[DECIMATION_KEY] += 1
 	def _on_decr_time_scale(self, event):
-		old_rate = self.parent.ext_controller[self.parent.frame_rate_key]
-		self.parent.ext_controller[self.parent.frame_rate_key] *= 1.25
-		if self.parent.ext_controller[self.parent.frame_rate_key] == old_rate:
-			self.parent.ext_controller[self.parent.decimation_key] -= 1
+		old_rate = self.parent[FRAME_RATE_KEY]
+		self.parent[FRAME_RATE_KEY] *= 1.25
+		if self.parent[FRAME_RATE_KEY] == old_rate:
+			self.parent[DECIMATION_KEY] -= 1
 
 ##################################################
 # Waterfall window with plotter and control panel
 ##################################################
-class waterfall_window(wx.Panel, pubsub.pubsub, common.prop_setter):
+class waterfall_window(wx.Panel, pubsub.pubsub):
 	def __init__(
 		self,
 		parent,
@@ -169,20 +165,22 @@ class waterfall_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		pubsub.pubsub.__init__(self)
 		#setup
 		self.samples = list()
-		self.ext_controller = controller
 		self.real = real
 		self.fft_size = fft_size
-		self.decimation_key = decimation_key
-		self.sample_rate_key = sample_rate_key
-		self.frame_rate_key = frame_rate_key
-		self.average_key = average_key
-		self.avg_alpha_key = avg_alpha_key
+		#proxy the keys
+		self.proxy(MSG_KEY, controller, msg_key)
+		self.proxy(DECIMATION_KEY, controller, decimation_key)
+		self.proxy(FRAME_RATE_KEY, controller, frame_rate_key)
+		self.proxy(AVERAGE_KEY, controller, average_key)
+		self.proxy(AVG_ALPHA_KEY, controller, avg_alpha_key)
+		self.proxy(SAMPLE_RATE_KEY, controller, sample_rate_key)
 		#init panel and plot
-		wx.Panel.__init__(self, parent, -1, style=wx.SIMPLE_BORDER)
+		wx.Panel.__init__(self, parent, style=wx.SIMPLE_BORDER)
 		self.plotter = plotter.waterfall_plotter(self)
 		self.plotter.SetSize(wx.Size(*size))
 		self.plotter.set_title(title)
 		self.plotter.enable_point_label(True)
+		self.plotter.enable_grid_lines(False)
 		#setup the box with plot and controls
 		self.control_panel = control_panel(self)
 		main_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -192,26 +190,23 @@ class waterfall_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		#plotter listeners
 		self.subscribe(COLOR_MODE_KEY, self.plotter.set_color_mode)
 		self.subscribe(NUM_LINES_KEY, self.plotter.set_num_lines)
-		#initial setup
-		self.ext_controller[self.average_key] = self.ext_controller[self.average_key]
-		self.ext_controller[self.avg_alpha_key] = self.ext_controller[self.avg_alpha_key]
-		self._register_set_prop(self, DYNAMIC_RANGE_KEY, dynamic_range)
-		self._register_set_prop(self, NUM_LINES_KEY, num_lines)
-		self._register_set_prop(self, Y_DIVS_KEY, 8)
-		self._register_set_prop(self, X_DIVS_KEY, 8) #approximate
-		self._register_set_prop(self, REF_LEVEL_KEY, ref_level)
-		self._register_set_prop(self, BASEBAND_FREQ_KEY, baseband_freq)
-		self._register_set_prop(self, COLOR_MODE_KEY, COLOR_MODES[0][1])
-		self._register_set_prop(self, RUNNING_KEY, True)
+		#initialize values
+		self[AVERAGE_KEY] = self[AVERAGE_KEY]
+		self[AVG_ALPHA_KEY] = self[AVG_ALPHA_KEY]
+		self[DYNAMIC_RANGE_KEY] = dynamic_range
+		self[NUM_LINES_KEY] = num_lines
+		self[Y_DIVS_KEY] = 8
+		self[X_DIVS_KEY] = 8 #approximate
+		self[REF_LEVEL_KEY] = ref_level
+		self[BASEBAND_FREQ_KEY] = baseband_freq
+		self[COLOR_MODE_KEY] = COLOR_MODES[0][1]
+		self[RUNNING_KEY] = True
 		#register events
-		self.ext_controller.subscribe(msg_key, self.handle_msg)
-		self.ext_controller.subscribe(self.decimation_key, self.update_grid)
-		self.ext_controller.subscribe(self.sample_rate_key, self.update_grid)
-		self.ext_controller.subscribe(self.frame_rate_key, self.update_grid)
-		self.subscribe(BASEBAND_FREQ_KEY, self.update_grid)
-		self.subscribe(NUM_LINES_KEY, self.update_grid)
-		self.subscribe(Y_DIVS_KEY, self.update_grid)
-		self.subscribe(X_DIVS_KEY, self.update_grid)
+		self.subscribe(MSG_KEY, self.handle_msg)
+		for key in (
+			DECIMATION_KEY, SAMPLE_RATE_KEY, FRAME_RATE_KEY,
+			BASEBAND_FREQ_KEY, X_DIVS_KEY, Y_DIVS_KEY, NUM_LINES_KEY,
+		): self.subscribe(key, self.update_grid)
 		#initial update
 		self.update_grid()
 
@@ -230,8 +225,8 @@ class waterfall_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		noise_floor -= abs(noise_floor)*.5
 		peak_level += abs(peak_level)*.1
 		#set the range and level
-		self.set_ref_level(peak_level)
-		self.set_dynamic_range(peak_level - noise_floor)
+		self[REF_LEVEL_KEY] = peak_level
+		self[DYNAMIC_RANGE_KEY] = peak_level - noise_floor
 
 	def handle_msg(self, msg):
 		"""
@@ -266,8 +261,8 @@ class waterfall_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		The y axis depends on y per div, y divs, and ref level.
 		"""
 		#grid parameters
-		sample_rate = self.ext_controller[self.sample_rate_key]
-		frame_rate = self.ext_controller[self.frame_rate_key]
+		sample_rate = self[SAMPLE_RATE_KEY]
+		frame_rate = self[FRAME_RATE_KEY]
 		baseband_freq = self[BASEBAND_FREQ_KEY]
 		num_lines = self[NUM_LINES_KEY]
 		y_divs = self[Y_DIVS_KEY]
@@ -276,28 +271,25 @@ class waterfall_window(wx.Panel, pubsub.pubsub, common.prop_setter):
 		if self.real: x_width = sample_rate/2.0
 		else: x_width = sample_rate/1.0
 		x_per_div = common.get_clean_num(x_width/x_divs)
-		coeff, exp, prefix = common.get_si_components(abs(baseband_freq) + abs(sample_rate/2.0))
 		#update the x grid
 		if self.real:
 			self.plotter.set_x_grid(
 				baseband_freq,
 				baseband_freq + sample_rate/2.0,
-				x_per_div,
-				10**(-exp),
+				x_per_div, True,
 			)
 		else:
 			self.plotter.set_x_grid(
 				baseband_freq - sample_rate/2.0,
 				baseband_freq + sample_rate/2.0,
-				x_per_div,
-				10**(-exp),
+				x_per_div, True,
 			)
 		#update x units
-		self.plotter.set_x_label('Frequency', prefix+'Hz')
+		self.plotter.set_x_label('Frequency', 'Hz')
 		#update y grid
 		duration = float(num_lines)/frame_rate
 		y_per_div = common.get_clean_num(duration/y_divs)
-		self.plotter.set_y_grid(0, duration, y_per_div)
+		self.plotter.set_y_grid(0, duration, y_per_div, True)
 		#update y units
 		self.plotter.set_y_label('Time', 's')
 		#update plotter

@@ -210,6 +210,7 @@ dist_ourdata_DATA = \
 	variable_text_box.xml \
 	wxgui_constellationsink2.xml \
 	wxgui_fftsink2.xml \
+	wxgui_histosink2.xml \
 	wxgui_numbersink2.xml \
 	wxgui_scopesink2.xml \
 	wxgui_waterfallsink2.xml \

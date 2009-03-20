@@ -35,7 +35,7 @@ default_frame_decim = gr.prefs().get_long('wxgui', 'frame_decim', 1)
 class scope_sink_f(gr.hier_block2):
     def __init__(self, parent, title='', sample_rate=1,
                  size=default_scopesink_size, frame_decim=default_frame_decim,
-                 v_scale=default_v_scale, t_scale=None, num_inputs=1):
+                 v_scale=default_v_scale, t_scale=None, num_inputs=1, **kwargs):
 
         gr.hier_block2.__init__(self, "scope_sink_f",
                                 gr.io_signature(num_inputs, num_inputs, gr.sizeof_float),
@@ -56,7 +56,7 @@ class scope_sink_f(gr.hier_block2):
 class scope_sink_c(gr.hier_block2):
     def __init__(self, parent, title='', sample_rate=1,
                  size=default_scopesink_size, frame_decim=default_frame_decim,
-                 v_scale=default_v_scale, t_scale=None, num_inputs=1):
+                 v_scale=default_v_scale, t_scale=None, num_inputs=1, **kwargs):
 
         gr.hier_block2.__init__(self, "scope_sink_c",
                                 gr.io_signature(num_inputs, num_inputs, gr.sizeof_gr_complex),
@@ -167,10 +167,7 @@ class win_info (object):
 
         self.marker = 'line'
         self.xy = xy
-        if v_scale == None:        # 0 and None are both False, but 0 != None
-            self.autorange = True
-        else:
-            self.autorange = False # 0 is a valid v_scale            
+        self.autorange = not v_scale
         self.running = True
 
     def get_time_per_div (self):
@@ -320,7 +317,8 @@ class scope_window (wx.Panel):
         ctrlbox.Add (self.trig_chan_choice, 0, wx.ALIGN_CENTER)
 
         self.trig_mode_choice = wx.Choice (self, 1005,
-                                           choices = ['Auto', 'Pos', 'Neg'])
+                                           choices = ['Free', 'Auto', 'Norm'])
+        self.trig_mode_choice.SetSelection(1)
         self.trig_mode_choice.SetToolTipString ("Select trigger slope or Auto (untriggered roll)")
         wx.EVT_CHOICE (self, 1005, self.trig_mode_choice_event)
         ctrlbox.Add (self.trig_mode_choice, 0, wx.ALIGN_CENTER)
@@ -432,12 +430,12 @@ class scope_window (wx.Panel):
     def trig_mode_choice_event (self, evt):
         sink = self.info.scopesink
         s = evt.GetString ()
-        if s == 'Pos':
-            sink.set_trigger_mode (gr.gr_TRIG_POS_SLOPE)
-        elif s == 'Neg':
-            sink.set_trigger_mode (gr.gr_TRIG_NEG_SLOPE)
+        if s == 'Norm':
+            sink.set_trigger_mode (gr.gr_TRIG_MODE_NORM)
         elif s == 'Auto':
-            sink.set_trigger_mode (gr.gr_TRIG_AUTO)
+            sink.set_trigger_mode (gr.gr_TRIG_MODE_AUTO)
+        elif s == 'Free':
+            sink.set_trigger_mode (gr.gr_TRIG_MODE_FREE)
         else:
             assert 0, "Bad trig_mode_choice string"
     

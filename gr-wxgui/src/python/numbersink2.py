@@ -31,7 +31,7 @@ from constants import *
 ##################################################
 # Number sink block (wrapper for old wxgui)
 ##################################################
-class _number_sink_base(gr.hier_block2, common.prop_setter):
+class _number_sink_base(gr.hier_block2):
 	"""
 	An decimator block with a number window display
 	"""
@@ -74,29 +74,28 @@ class _number_sink_base(gr.hier_block2, common.prop_setter):
 		if self._real:
 			mult = gr.multiply_const_ff(factor)
 			add = gr.add_const_ff(ref_level)
-			self._avg = gr.single_pole_iir_filter_ff(1.0)
+			avg = gr.single_pole_iir_filter_ff(1.0)
 		else:
 			mult = gr.multiply_const_cc(factor)
 			add = gr.add_const_cc(ref_level)
-			self._avg = gr.single_pole_iir_filter_cc(1.0)
+			avg = gr.single_pole_iir_filter_cc(1.0)
 		msgq = gr.msg_queue(2)
 		sink = gr.message_sink(self._item_size, msgq, True)
 		#connect
-		self.connect(self, sd, mult, add, self._avg, sink)
-		#setup averaging
-		self._avg_alpha = avg_alpha
-		self.set_average(average)
-		self.set_avg_alpha(avg_alpha)
+		self.connect(self, sd, mult, add, avg, sink)
 		#controller
 		self.controller = pubsub()
 		self.controller.subscribe(SAMPLE_RATE_KEY, sd.set_sample_rate)
-		self.controller.subscribe(AVERAGE_KEY, self.set_average)
-		self.controller.publish(AVERAGE_KEY, self.get_average)
-		self.controller.subscribe(AVG_ALPHA_KEY, self.set_avg_alpha)
-		self.controller.publish(AVG_ALPHA_KEY, self.get_avg_alpha)
+		self.controller.publish(SAMPLE_RATE_KEY, sd.sample_rate)
+		def update_avg(*args):
+			if self.controller[AVERAGE_KEY]: avg.set_taps(self.controller[AVG_ALPHA_KEY])
+			else: avg.set_taps(1.0)
+		self.controller.subscribe(AVERAGE_KEY, update_avg)
+		self.controller.subscribe(AVG_ALPHA_KEY, update_avg)
+		self.controller[AVERAGE_KEY] = average
+		self.controller[AVG_ALPHA_KEY] = avg_alpha
 		#start input watcher
-		def set_msg(msg): self.controller[MSG_KEY] = msg
-		common.input_watcher(msgq, set_msg)
+		common.input_watcher(msgq, self.controller, MSG_KEY)
 		#create window
 		self.win = number_window.number_window(
 			parent=parent,
@@ -113,24 +112,11 @@ class _number_sink_base(gr.hier_block2, common.prop_setter):
 			avg_alpha_key=AVG_ALPHA_KEY,
 			peak_hold=peak_hold,
 			msg_key=MSG_KEY,
+			sample_rate_key=SAMPLE_RATE_KEY,
 		)
-		#register callbacks from window for external use
-		for attr in filter(lambda a: a.startswith('set_'), dir(self.win)):
-			setattr(self, attr, getattr(self.win, attr))
-		self._register_set_prop(self.controller, SAMPLE_RATE_KEY)
+		common.register_access_methods(self, self.controller)
 		#backwards compadibility
 		self.set_show_gauge = self.win.show_gauges
-
-	def get_average(self): return self._average
-	def set_average(self, average):
-		self._average = average
-		if self.get_average(): self._avg.set_taps(self.get_avg_alpha())
-		else: self._avg.set_taps(1.0)
-
-	def get_avg_alpha(self): return self._avg_alpha
-	def set_avg_alpha(self, avg_alpha):
-		self._avg_alpha = avg_alpha
-		self.set_average(self.get_average())
 
 class number_sink_f(_number_sink_base):
 	_item_size = gr.sizeof_float

@@ -26,7 +26,7 @@ class LabelText(wx.StaticText):
 	"""Label text class for uniform labels among all controls."""
 
 	def __init__(self, window, label):
-		wx.StaticText.__init__(self, window, -1, str(label))
+		wx.StaticText.__init__(self, window, label=str(label))
 		font = self.GetFont()
 		font.SetWeight(wx.FONTWEIGHT_BOLD)
 		self.SetFont(font)
@@ -92,7 +92,7 @@ class button_control(_chooser_control_base):
 	"""House a button for variable control."""
 
 	def _init(self):
-		self.button = wx.Button(self.get_window(), -1, self.labels[self.index])
+		self.button = wx.Button(self.get_window(), label=self.labels[self.index])
 		self.button.Bind(wx.EVT_BUTTON, self._handle_changed)
 		self.Add(self.button, 0, wx.ALIGN_CENTER)
 
@@ -107,7 +107,7 @@ class drop_down_control(_chooser_control_base):
 	"""House a drop down for variable control."""
 
 	def _init(self):
-		self.drop_down = wx.Choice(self.get_window(), -1, choices=self.labels)
+		self.drop_down = wx.Choice(self.get_window(), choices=self.labels)
 		self.Add(self.drop_down, 0, wx.ALIGN_CENTER)
 		self.drop_down.Bind(wx.EVT_CHOICE, self._handle_changed)
 		self.drop_down.SetSelection(self.index)
@@ -124,13 +124,13 @@ class _radio_buttons_control_base(_chooser_control_base):
 	def _init(self):
 		#create box for radio buttons
 		radio_box = wx.BoxSizer(self.radio_box_orientation)
-		panel = wx.Panel(self.get_window(), -1)
+		panel = wx.Panel(self.get_window())
 		panel.SetSizer(radio_box)
 		self.Add(panel, 0, wx.ALIGN_CENTER)
 		#create radio buttons
 		self.radio_buttons = list()
 		for label in self.labels:
-			radio_button = wx.RadioButton(panel, -1, label)
+			radio_button = wx.RadioButton(panel, label=label)
 			radio_button.SetValue(False)
 			self.radio_buttons.append(radio_button)
 			radio_box.Add(radio_button, 0, self.radio_button_align)
@@ -177,13 +177,13 @@ class _slider_control_base(_control_base):
 		#create gui elements
 		label_text_sizer = wx.BoxSizer(self.label_text_orientation) #label and text box container
 		label_text = LabelText(self.get_window(), '%s: '%str(label))
-		self.text_box = text_box = wx.TextCtrl(self.get_window(), -1, str(value), style=wx.TE_PROCESS_ENTER)
+		self.text_box = text_box = wx.TextCtrl(self.get_window(), style=wx.TE_PROCESS_ENTER)
 		text_box.Bind(wx.EVT_TEXT_ENTER, self._handle_enter) #bind this special enter hotkey event
 		for obj in (label_text, text_box): #fill the container with label and text entry box
-			label_text_sizer.Add(obj, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL)
+			label_text_sizer.Add(obj, 0, wx.ALIGN_CENTER)
 		self.Add(label_text_sizer, 0, wx.ALIGN_CENTER)
 		#make the slider
-		self.slider = slider = wx.Slider(self.get_window(), -1, size=wx.Size(*self.get_slider_size()), style=self.slider_style)
+		self.slider = slider = wx.Slider(self.get_window(), size=wx.Size(*self.get_slider_size()), style=self.slider_style)
 		try: slider.SetRange(0, num_steps)
 		except Exception, e:
 			print >> sys.stderr, 'Error in set slider range: "%s".'%e
@@ -245,11 +245,11 @@ class _slider_control_base(_control_base):
 class slider_horizontal_control(_slider_control_base):
 	label_text_orientation = wx.HORIZONTAL
 	slider_style = wx.SL_HORIZONTAL
-	def get_slider_size(self): return self.slider_length, 20
+	def get_slider_size(self): return self.slider_length, -1
 class slider_vertical_control(_slider_control_base):
 	label_text_orientation = wx.VERTICAL
 	slider_style = wx.SL_VERTICAL
-	def get_slider_size(self): return 20, self.slider_length
+	def get_slider_size(self): return -1, self.slider_length
 
 ##############################################################################################
 # Text Box Control
@@ -271,10 +271,10 @@ class text_box_control(_control_base):
 		#create gui elements
 		label_text_sizer = wx.BoxSizer(wx.HORIZONTAL) #label and text box container
 		label_text = LabelText(self.get_window(), '%s: '%str(label))
-		self.text_box = text_box = wx.TextCtrl(self.get_window(), -1, str(value), style=wx.TE_PROCESS_ENTER)
+		self.text_box = text_box = wx.TextCtrl(self.get_window(), value=str(value), style=wx.TE_PROCESS_ENTER)
 		text_box.Bind(wx.EVT_TEXT_ENTER, self._handle_enter) #bind this special enter hotkey event
 		for obj in (label_text, text_box): #fill the container with label and text entry box
-			label_text_sizer.Add(obj, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL)
+			label_text_sizer.Add(obj, 0, wx.ALIGN_CENTER)
 		self.Add(label_text_sizer, 0, wx.ALIGN_CENTER)
 		#detect string mode
 		self._string_mode = isinstance(value, str)

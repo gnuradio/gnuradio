@@ -31,30 +31,31 @@
 #include <math.h>
 #include <assert.h>
 
-static const int OUTPUT_RECORD_SIZE = 2048;	// must be power of 2
+static const int OUTPUT_RECORD_SIZE = 2048;        // must be power of 2
 
 static inline int
-wrap_bi (int buffer_index)		// wrap buffer index
+wrap_bi (int buffer_index)                // wrap buffer index
 {
   return buffer_index & (OUTPUT_RECORD_SIZE - 1);
 }
 
 static inline int
-incr_bi (int buffer_index)		// increment buffer index
+incr_bi (int buffer_index)                // increment buffer index
 {
   return wrap_bi (buffer_index + 1);
 }
 
 static inline int
-decr_bi (int buffer_index)		// decrement buffer index
+decr_bi (int buffer_index)                // decrement buffer index
 {
   return wrap_bi (buffer_index - 1);
 }
 
-gr_oscope_guts::gr_oscope_guts (int nchannels, double sample_rate, gr_msg_queue_sptr msgq)
-  : d_nchannels (nchannels),
+gr_oscope_guts::gr_oscope_guts (double sample_rate, gr_msg_queue_sptr msgq)
+  : d_nchannels (1),
     d_msgq (msgq), 
-    d_trigger_mode (gr_TRIG_AUTO),
+    d_trigger_mode (gr_TRIG_MODE_AUTO),
+    d_trigger_slope (gr_TRIG_SLOPE_POS),
     d_trigger_channel (0),
     d_sample_rate (sample_rate),
     d_update_rate (20),
@@ -65,19 +66,14 @@ gr_oscope_guts::gr_oscope_guts (int nchannels, double sample_rate, gr_msg_queue_
     d_decimator_count_init (1),
     d_hold_off_count (0),
     d_hold_off_count_init (OUTPUT_RECORD_SIZE/2-1),
+    d_pre_trigger_count (0),
     d_post_trigger_count (0),
-    d_post_trigger_count_init (OUTPUT_RECORD_SIZE/2),
-    d_prev_sample (0)
+    d_post_trigger_count_init (OUTPUT_RECORD_SIZE/2)
 {
-  if (d_nchannels > MAX_CHANNELS){
-    fprintf (stderr, "gr_oscope_guts: too many channels.  MAX_CHANNELS = %d\n", MAX_CHANNELS);
-    throw std::runtime_error ("too many channels");
-  }
-
   for (int i = 0; i < MAX_CHANNELS; i++)
     d_buffer[i] = 0;
 
-  for (int i = 0; i < d_nchannels; i++){
+  for (int i = 0; i < MAX_CHANNELS; i++){
     d_buffer[i] = new float [OUTPUT_RECORD_SIZE];
     for (int j = 0; j < OUTPUT_RECORD_SIZE; j++)
       d_buffer[i][j] = 0.0;
@@ -109,10 +105,8 @@ gr_oscope_guts::process_sample (const float *channel_data)
   d_decimator_count = d_decimator_count_init;
   
   for (int i = 0; i < d_nchannels; i++)
-    d_buffer[i][d_obi] = channel_data[i];		// copy data into buffer
+    d_buffer[i][d_obi] = channel_data[i];                // copy data into buffer
 
-  int trigger = 0;
-  
   switch (d_state){
   case HOLD_OFF:
     d_hold_off_count--;
@@ -121,12 +115,8 @@ gr_oscope_guts::process_sample (const float *channel_data)
     break;
 
   case LOOK_FOR_TRIGGER:
-    trigger = found_trigger (d_buffer[d_trigger_channel][d_obi]);
-    if (trigger != 0){
+    if (found_trigger ())
       enter_post_trigger ();
-      if (trigger < 0)			// previous sample was closer
-	d_post_trigger_count--;
-    }
     break;
 
   case POST_TRIGGER:
@@ -158,8 +148,8 @@ gr_oscope_guts::enter_hold_off ()
 void
 gr_oscope_guts::enter_look_for_trigger ()
 {
+  d_pre_trigger_count = 0;
   d_state = LOOK_FOR_TRIGGER;
-  d_prev_sample = d_buffer[d_trigger_channel][d_obi];
 }
 
 void
@@ -167,48 +157,49 @@ gr_oscope_guts::enter_post_trigger ()
 {
   d_state = POST_TRIGGER;
   d_post_trigger_count = d_post_trigger_count_init;
+  //ensure that the trigger offset is no more than than half a sample
+  if (d_trigger_off > .5) d_trigger_off -= 1;
+  else d_post_trigger_count--;
 }
 
 // ----------------------------------------------------------------
-// returns 0 if no trigger found. 
-// returns +1 if this sample is the trigger point
-// returns -1 if the previous sample is the trigger point
+// returns true if trigger found
 
-int
-gr_oscope_guts::found_trigger (float new_sample)
+bool
+gr_oscope_guts::found_trigger ()
 {
-  float prev_sample = d_prev_sample;
-  d_prev_sample = new_sample;
-  bool trig;
+  float prev_sample = d_buffer[d_trigger_channel][decr_bi(d_obi)];
+  float new_sample = d_buffer[d_trigger_channel][d_obi];
 
   switch (d_trigger_mode){
 
-  case gr_TRIG_AUTO:		// always trigger
-    return +1;
-    
-  case gr_TRIG_POS_SLOPE:
-    trig = prev_sample < d_trigger_level && new_sample >= d_trigger_level;
-    if (trig){
-      if (fabs (prev_sample - d_trigger_level) < fabs (new_sample - d_trigger_level))
-	return -1;
-      else
-	return +1;
-    }
-    return 0;
+  case gr_TRIG_MODE_AUTO: //too many samples without a trigger
+    d_pre_trigger_count++;
+    if (d_pre_trigger_count > OUTPUT_RECORD_SIZE/2) return true;
 
-  case gr_TRIG_NEG_SLOPE:
-    trig = prev_sample > d_trigger_level && new_sample <= d_trigger_level;
-    if (trig){
-      if (fabs (prev_sample - d_trigger_level) < fabs (new_sample - d_trigger_level))
-	return -1;
-      else
-	return +1;
+  case gr_TRIG_MODE_NORM: //look for trigger
+    switch (d_trigger_slope){
+
+    case gr_TRIG_SLOPE_POS: //trigger point in pos slope?
+      if (new_sample < d_trigger_level || prev_sample >= d_trigger_level) return false;
+      break;
+
+    case gr_TRIG_SLOPE_NEG: //trigger point in neg slope?
+      if (new_sample > d_trigger_level || prev_sample <= d_trigger_level) return false;
+      break;
     }
-    return 0;
+
+    //calculate the trigger offset in % sample
+    d_trigger_off = (d_trigger_level - prev_sample)/(new_sample - prev_sample);
+    return true;
+
+  case gr_TRIG_MODE_FREE: //free run mode, always trigger
+    d_trigger_off = 0;
+    return true;
 
   default:
     assert (0);
-    return 0;
+    return false;
   }
 }
 
@@ -218,28 +209,30 @@ gr_oscope_guts::found_trigger (float new_sample)
 void
 gr_oscope_guts::write_output_records ()
 {
-  // if the output queue if full, drop the data on the ground.
+  // if the output queue if full, drop the data like its hot.
   if (d_msgq->full_p())
     return;
-
-  // Build a message to hold the output records
+    // Build a message to hold the output records
   gr_message_sptr msg = 
-    gr_make_message(0,		                                       // msg type
-		    d_nchannels,	                               // arg1 for other side
-		    OUTPUT_RECORD_SIZE,                                // arg2 for other side
-		    d_nchannels * OUTPUT_RECORD_SIZE * sizeof(float)); // sizeof payload
+    gr_make_message(0,                                         // msg type
+            d_nchannels,                                       // arg1 for other side
+            OUTPUT_RECORD_SIZE,                                // arg2 for other side
+            ((d_nchannels * OUTPUT_RECORD_SIZE) + 1) * sizeof(float)); // sizeof payload
 
-  float *out = (float *)msg->msg();	// get pointer to raw message buffer
+  float *out = (float *)msg->msg();        // get pointer to raw message buffer
 
   for (int ch = 0; ch < d_nchannels; ch++){
     // note that d_obi + 1 points at the oldest sample in the buffer
-    for (int i = 0; i < OUTPUT_RECORD_SIZE; i++)
+    for (int i = 0; i < OUTPUT_RECORD_SIZE; i++){
       out[i] = d_buffer[ch][wrap_bi(d_obi + 1 + i)];
-
+    }
     out += OUTPUT_RECORD_SIZE;
   }
-
-  d_msgq->handle(msg);		// send the msg
+  //Set the last sample as the trigger offset:
+  //  The non gl scope sink will not look at this last sample.
+  //  The gl scope sink will use this last sample as an offset.
+  out[0] = d_trigger_off;
+  d_msgq->handle(msg);                // send the msg
 }
 
 // ----------------------------------------------------------------
@@ -291,15 +284,17 @@ gr_oscope_guts::set_trigger_channel (int channel)
 bool
 gr_oscope_guts::set_trigger_mode (gr_trigger_mode mode)
 {
-  switch (mode){
-  case gr_TRIG_POS_SLOPE:
-  case gr_TRIG_NEG_SLOPE:
-  case gr_TRIG_AUTO:
-    d_trigger_mode = mode;
-    trigger_changed ();
-    return true;
-  }
-  return false;
+  d_trigger_mode = mode;
+  trigger_changed ();
+  return true;
+}
+
+bool
+gr_oscope_guts::set_trigger_slope (gr_trigger_slope slope)
+{
+  d_trigger_slope = slope;
+  trigger_changed ();
+  return true;
 }
 
 bool
@@ -315,23 +310,30 @@ gr_oscope_guts::set_trigger_level_auto ()
 {
   // find the level 1/2 way between the min and the max
 
-  float	min_v = d_buffer[d_trigger_channel][0];
-  float	max_v = d_buffer[d_trigger_channel][0];
+  float min_v = d_buffer[d_trigger_channel][0];
+  float max_v = d_buffer[d_trigger_channel][0];
 
   for (int i = 1; i < OUTPUT_RECORD_SIZE; i++){
     min_v = std::min (min_v, d_buffer[d_trigger_channel][i]);
     max_v = std::max (max_v, d_buffer[d_trigger_channel][i]);
   }
-
-  d_trigger_level = (min_v + max_v) * 0.5;
-  trigger_changed ();
-  return true;
+  return set_trigger_level((min_v + max_v) * 0.5);
 }
+
+bool
+gr_oscope_guts::set_num_channels(int nchannels)
+{
+  if (nchannels > 0 && nchannels <= MAX_CHANNELS){
+    d_nchannels = nchannels;
+    return true;
+  }
+  return false;
+}
+
 
 void
 gr_oscope_guts::trigger_changed ()
 {
-  // d_prev_sample = d_buffer[d_trigger_channel][decr_bi(d_obi)];
   enter_look_for_trigger ();
 }
 
@@ -371,6 +373,12 @@ gr_trigger_mode
 gr_oscope_guts::get_trigger_mode () const
 {
   return d_trigger_mode;
+}
+
+gr_trigger_slope
+gr_oscope_guts::get_trigger_slope () const
+{
+  return d_trigger_slope;
 }
 
 double

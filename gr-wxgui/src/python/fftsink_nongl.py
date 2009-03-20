@@ -319,7 +319,7 @@ class fft_window (wx.Panel):
         # self.SetBackgroundColour ('black')
         
         self.build_popup_menu()
-        self.set_baseband_freq(0.0)
+        self.set_baseband_freq(self.fftsink.baseband_freq)
                 
         EVT_DATA_EVENT (self, self.set_data)
         wx.EVT_CLOSE (self, self.on_close_window)

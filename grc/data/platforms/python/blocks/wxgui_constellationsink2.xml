@@ -7,14 +7,22 @@
 <block>
 	<name>Constellation Sink</name>
 	<key>wxgui_constellationsink2</key>
-	<import>from gnuradio.wxgui import scopesink2</import>
-	<make>scopesink2.constellation_sink(
+	<import>from gnuradio.wxgui import constsink_gl</import>
+	<make>constsink_gl.const_sink_c(
 	self.GetWin(),
 	title=$title,
 	sample_rate=$samp_rate,
-	frame_decim=$frame_decim,
+	frame_rate=$frame_rate,
+	const_size=$const_size,
+	M=$M,
+	theta=$theta,
+	alpha=$alpha,
+	fmax=$fmax,
+	mu=$mu,
+	gain_mu=$gain_mu,
+	symbol_rate=$symbol_rate,
+	omega_limit=$omega_limit,
 )
-self.$(id).win.$(marker)()
 #set $grid_pos = $grid_pos.eval
 #if not grid_pos
 self.Add(self.$(id).win)
@@ -35,28 +43,64 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<type>real</type>
 	</param>
 	<param>
-		<name>Frame Decimation</name>
-		<key>frame_decim</key>
-		<value>15</value>
+		<name>Frame Rate</name>
+		<key>frame_rate</key>
+		<value>5</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Constellation Size</name>
+		<key>const_size</key>
+		<value>2048</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>M</name>
+		<key>M</key>
+		<value>4</value>
 		<type>int</type>
 	</param>
 	<param>
-		<name>Marker</name>
-		<key>marker</key>
-		<value>set_format_plus</value>
-		<type>enum</type>
-		<option>
-			<name>Line</name>
-			<key>set_format_line</key>
-		</option>
-		<option>
-			<name>Dot</name>
-			<key>set_format_dot</key>
-		</option>
-		<option>
-			<name>Plus</name>
-			<key>set_format_plus</key>
-		</option>
+		<name>Theta</name>
+		<key>theta</key>
+		<value>0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<value>0.005</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Max Freq</name>
+		<key>fmax</key>
+		<value>0.06</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Mu</name>
+		<key>mu</key>
+		<value>0.5</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Gain Mu</name>
+		<key>gain_mu</key>
+		<value>0.005</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Symbol Rate</name>
+		<key>symbol_rate</key>
+		<value>samp_rate/4.</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Omega Limit</name>
+		<key>omega_limit</key>
+		<value>0.005</value>
+		<type>real</type>
 	</param>
 	<param>
 		<name>Grid Position</name>

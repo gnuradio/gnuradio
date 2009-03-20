@@ -31,7 +31,7 @@ from constants import *
 ##################################################
 # Waterfall sink block (wrapper for old wxgui)
 ##################################################
-class _waterfall_sink_base(gr.hier_block2, common.prop_setter):
+class _waterfall_sink_base(gr.hier_block2):
 	"""
 	An fft block with real/complex inputs and a gui window.
 	"""
@@ -89,9 +89,7 @@ class _waterfall_sink_base(gr.hier_block2, common.prop_setter):
 		self.controller.subscribe(FRAME_RATE_KEY, fft.set_vec_rate)
 		self.controller.publish(FRAME_RATE_KEY, fft.frame_rate)
 		#start input watcher
-		def setter(p, k, x): # lambdas can't have assignments :(
-			p[k] = x
-		common.input_watcher(msgq, lambda x: setter(self.controller, MSG_KEY, x))
+		common.input_watcher(msgq, self.controller, MSG_KEY)
 		#create window
 		self.win = waterfall_window.waterfall_window(
 			parent=parent,
@@ -111,12 +109,8 @@ class _waterfall_sink_base(gr.hier_block2, common.prop_setter):
 			avg_alpha_key=AVG_ALPHA_KEY,
 			msg_key=MSG_KEY,
 		)
-		#register callbacks from window for external use
-		for attr in filter(lambda a: a.startswith('set_'), dir(self.win)):
-			setattr(self, attr, getattr(self.win, attr))
-		self._register_set_prop(self.controller, SAMPLE_RATE_KEY)
-		self._register_set_prop(self.controller, AVERAGE_KEY)
-		self._register_set_prop(self.controller, AVG_ALPHA_KEY)
+		common.register_access_methods(self, self.win)
+		setattr(self.win, 'set_baseband_freq', getattr(self, 'set_baseband_freq')) #BACKWARDS
 
 class waterfall_sink_f(_waterfall_sink_base):
 	_fft_chain = blks2.logpwrfft_f

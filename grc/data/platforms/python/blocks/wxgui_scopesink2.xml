@@ -13,21 +13,18 @@
 	self.GetWin(),
 	title=$title,
 	sample_rate=$samp_rate,
-	frame_decim=$frame_decim,
-	v_scale=#if $v_scale.eval then $v_scale else 'None'#,
+	v_scale=$v_scale,
 	t_scale=$t_scale,
+	ac_couple=$ac_couple,
+	xy_mode=$xy_mode,
 	num_inputs=$num_inputs,
 )
-self.$(id).win.$(marker)()
 #set $grid_pos = $grid_pos.eval
 #if not grid_pos
 self.Add(self.$(id).win)
 #else
 self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
 #end if</make>
-<!--
-$(id).win.info.scopesink.set_trigger_channel($(trigger_channel))
-$(id).win.info.scopesink.set_trigger_mode(gr.$(trigger_mode)) -->
 	<callback>set_sample_rate($samp_rate)</callback>
 	<param>
 		<name>Type</name>
@@ -58,12 +55,6 @@ $(id).win.info.scopesink.set_trigger_mode(gr.$(trigger_mode)) -->
 		<type>real</type>
 	</param>
 	<param>
-		<name>Frame Decimation</name>
-		<key>frame_decim</key>
-		<value>15</value>
-		<type>int</type>
-	</param>
-	<param>
 		<name>V Scale</name>
 		<key>v_scale</key>
 		<value>0</value>
@@ -72,51 +63,39 @@ $(id).win.info.scopesink.set_trigger_mode(gr.$(trigger_mode)) -->
 	<param>
 		<name>T Scale</name>
 		<key>t_scale</key>
-		<value>.001</value>
+		<value>0</value>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Marker</name>
-		<key>marker</key>
-		<value>set_format_line</value>
+		<name>AC Couple</name>
+		<key>ac_couple</key>
+		<value>False</value>
 		<type>enum</type>
+		<hide>#if $ac_couple.eval == 'True' then 'none' else 'part'#</hide>
 		<option>
-			<name>Line</name>
-			<key>set_format_line</key>
+			<name>Off</name>
+			<key>False</key>
 		</option>
 		<option>
-			<name>Dot</name>
-			<key>set_format_dot</key>
+			<name>On</name>
+			<key>True</key>
 		</option>
-		<option>
-			<name>Plus</name>
-			<key>set_format_plus</key>
-		</option>
-	</param>
-	<!-- <param>
-		<name>Trigger Channel</name>
-		<key>trigger_channel</key>
-		<value>0</value>
-		<type>int</type>
 	</param>
 	<param>
-		<name>Trigger Mode</name>
-		<key>trigger_mode</key>
-		<value>gr_TRIG_AUTO</value>
+		<name>XY Mode</name>
+		<key>xy_mode</key>
+		<value>False</value>
 		<type>enum</type>
+		<hide>#if $xy_mode.eval == 'True' then 'none' else 'part'#</hide>
 		<option>
-			<name>Auto</name>
-			<key>gr_TRIG_AUTO</key>
+			<name>Off</name>
+			<key>False</key>
 		</option>
 		<option>
-			<name>Positive Slope</name>
-			<key>gr_TRIG_POS_SLOPE</key>
+			<name>On</name>
+			<key>True</key>
 		</option>
-		<option>
-			<name>Negative Slope</name>
-			<key>gr_TRIG_NEG_SLOPE</key>
-		</option>
-	</param> -->
+	</param>
 	<param>
 		<name>Num Inputs</name>
 		<key>num_inputs</key>
@@ -129,6 +108,7 @@ $(id).win.info.scopesink.set_trigger_mode(gr.$(trigger_mode)) -->
 		<value></value>
 		<type>grid_pos</type>
 	</param>
+	<check>not $xy_mode or '$type' == 'complex' or $num_inputs != 1</check>
 	<sink>
 		<name>in</name>
 		<type>$type</type>
@@ -136,6 +116,10 @@ $(id).win.info.scopesink.set_trigger_mode(gr.$(trigger_mode)) -->
 	</sink>
 	<doc>
 Set the V Scale to 0 for the scope to auto-scale.
+
+Set the T Scale to 0 for automatic setting.
+
+XY Mode allows the scope to initialize as an XY plotter.
 
 Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
 	</doc>
