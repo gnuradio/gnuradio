@@ -239,6 +239,18 @@ class test_hier_block2(gr_unittest.TestCase):
         tb.connect(hb)
         tb.run()
         self.assertEquals(expected_data, dst.data())
+
+    def test_027_disconnected_internal(self):
+        tb = gr.top_block()
+        hb = gr.hier_block2("block",
+                            gr.io_signature(1, 1, 1),
+                            gr.io_signature(1, 1, 1))
+        src = gr.vector_source_b([1, ])
+        dst = gr.vector_sink_b()
+        tb.connect(src, hb, dst) # hb is not connected internally
+        self.assertRaises(RuntimeError, 
+                          lambda: tb.run())
+
     
 if __name__ == "__main__":
     gr_unittest.main()
