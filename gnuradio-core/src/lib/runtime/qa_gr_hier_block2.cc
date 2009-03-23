@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2008 Free Software Foundation, Inc.
+ * Copyright 2006,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,8 +33,8 @@
 void qa_gr_hier_block2::test_make()
 {
     gr_hier_block2_sptr src1(gr_make_hier_block2("test",
-						 gr_make_io_signature(1, 2, 1 * sizeof(int)),
-						 gr_make_io_signature(3, 4, 2 * sizeof(int))));
+						 gr_make_io_signature(1, 1, 1 * sizeof(int)),
+						 gr_make_io_signature(1, 1, 1 * sizeof(int))));
 
     CPPUNIT_ASSERT(src1);
     CPPUNIT_ASSERT_EQUAL(std::string("test"), src1->name());
@@ -43,14 +43,14 @@ void qa_gr_hier_block2::test_make()
 			 src1->input_signature()->sizeof_stream_item(0));
 
     CPPUNIT_ASSERT_EQUAL(1, src1->input_signature()->min_streams());
-    CPPUNIT_ASSERT_EQUAL(2, src1->input_signature()->max_streams());
+    CPPUNIT_ASSERT_EQUAL(1, src1->input_signature()->max_streams());
 
 
-    CPPUNIT_ASSERT_EQUAL(2 * (int) sizeof(int), 
+    CPPUNIT_ASSERT_EQUAL(1 * (int) sizeof(int), 
 			 src1->output_signature()->sizeof_stream_item(0));
 
-    CPPUNIT_ASSERT_EQUAL(3, src1->output_signature()->min_streams());
-    CPPUNIT_ASSERT_EQUAL(4, src1->output_signature()->max_streams());
+    CPPUNIT_ASSERT_EQUAL(1, src1->output_signature()->min_streams());
+    CPPUNIT_ASSERT_EQUAL(1, src1->output_signature()->max_streams());
 
 }
 

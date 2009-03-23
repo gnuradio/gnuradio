@@ -31,7 +31,8 @@ typedef boost::shared_ptr<gr_hier_block2> gr_hier_block2_sptr;
 %rename(hier_block2_swig) gr_make_hier_block2;
 gr_hier_block2_sptr gr_make_hier_block2(const std::string name,
                                         gr_io_signature_sptr input_signature,
-                                        gr_io_signature_sptr output_signature);
+                                        gr_io_signature_sptr output_signature)
+  throw (std::runtime_error);
 
 class gr_hier_block2 : public gr_basic_block
 {
