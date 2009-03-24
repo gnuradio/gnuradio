@@ -61,33 +61,6 @@ def base2dec(s,base):
 
 
 
-######################################################################
-# Generate a new FSM representing n stages through the original FSM
-######################################################################
-def fsm_radix(f,n):
-    I=f.I()**n
-    S=f.S()
-    O=f.O()**n
-    nsm=list([0]*I*S)
-    osm=list([0]*I*S)
-    for s in range(f.S()):
-        for i in range(I):
-            ii=dec2base(i,f.I(),n) 
-            oo=list([0]*n)
-            ns=s
-            for k in range(n):
-                oo[k]=f.OS()[ns*f.I()+ii[k]]
-                ns=f.NS()[ns*f.I()+ii[k]]
-
-            nsm[s*I+i]=ns
-            osm[s*I+i]=base2dec(oo,f.O())
-
-
-    f=trellis.fsm(I,S,O,nsm,osm)
-    return f
-
-
-
 
 ######################################################################
 # Automatically generate the lookup table that maps the FSM outputs

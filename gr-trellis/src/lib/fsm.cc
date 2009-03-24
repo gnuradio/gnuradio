@@ -315,6 +315,48 @@ fsm::fsm(const fsm &FSM1, const fsm &FSM2)
 }
 
 
+
+
+//######################################################################
+//# Generate a new FSM representing n stages through the original FSM
+//# AKA radix-n FSM
+//######################################################################
+fsm::fsm(const fsm &FSM, int n)
+{
+  d_I=(int) (pow(1.0*FSM.I(),1.0*n)+0.5);
+  d_S=FSM.S();
+  d_O=(int) (pow(1.0*FSM.O(),1.0*n)+0.5);
+
+  d_NS.resize(d_I*d_S);
+  d_OS.resize(d_I*d_S);
+
+  for(int s=0;s<d_S;s++ ) {
+    for(int i=0;i<d_I;i++ ) {
+      std::vector<int> ii(n);
+      dec2base(i,FSM.I(),ii);
+      std::vector<int> oo(n);
+      int ns=s;
+      for(int k=0;k<n;k++) {
+        oo[k]=FSM.OS()[ns*FSM.I()+ii[k]];
+        ns=FSM.NS()[ns*FSM.I()+ii[k]];
+      }
+      d_NS[s*d_I+i]=ns;
+      d_OS[s*d_I+i]=base2dec(oo,FSM.O());
+    }
+  }
+
+  generate_PS_PI();
+  generate_TM();
+}
+
+
+
+
+
+
+
+
+
 //######################################################################
 //# generate the PS and PI tables for later use
 //######################################################################

@@ -42,6 +42,7 @@ public:
   fsm(int mod_size, int ch_length);
   fsm(int P, int M, int L);
   fsm(const fsm &FSM1, const fsm &FSM2);
+  fsm(const fsm &FSM, int n);
   int I () const { return d_I; }
   int S () const { return d_S; }
   int O () const { return d_O; }
