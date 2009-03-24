@@ -42,9 +42,9 @@
 	</cat>
 	<cat>
 		<name>Operators</name>
-		<block>gr_add_vxx</block>
+		<block>gr_add_xx</block>
 		<block>gr_sub_xx</block>
-		<block>gr_multiply_vxx</block>
+		<block>gr_multiply_xx</block>
 		<block>gr_divide_xx</block>
 		<block>gr_nlog10_ff</block>
 

@@ -59,7 +59,7 @@ dist_ourdata_DATA = \
 	blks2_wfm_tx.xml \
 	const_source_x.xml \
 	gr_add_const_vxx.xml \
-	gr_add_vxx.xml \
+	gr_add_xx.xml \
 	gr_agc2_xx.xml \
 	gr_agc_xx.xml \
 	gr_and_xx.xml \
@@ -124,7 +124,7 @@ dist_ourdata_DATA = \
 	gr_mpsk_receiver_cc.xml \
 	gr_mpsk_sync_cc.xml \
 	gr_multiply_const_vxx.xml \
-	gr_multiply_vxx.xml \
+	gr_multiply_xx.xml \
 	gr_mute_xx.xml \
 	gr_nlog10_ff.xml \
 	gr_noise_source_x.xml \

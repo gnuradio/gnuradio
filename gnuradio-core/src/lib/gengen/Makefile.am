@@ -38,9 +38,6 @@ core_generator = 			\
 	gr_add_const_XX.cc.t		\
 	gr_add_const_XX.h.t		\
 	gr_add_const_XX.i.t		\
-	gr_add_vXX.cc.t			\
-	gr_add_vXX.h.t			\
-	gr_add_vXX.i.t			\
 	gr_add_const_vXX.cc.t		\
 	gr_add_const_vXX.h.t		\
 	gr_add_const_vXX.i.t		\
@@ -65,9 +62,6 @@ core_generator = 			\
 	gr_multiply_const_XX.cc.t	\
 	gr_multiply_const_XX.h.t	\
 	gr_multiply_const_XX.i.t	\
-	gr_multiply_vXX.cc.t		\
-	gr_multiply_vXX.h.t		\
-	gr_multiply_vXX.i.t		\
 	gr_multiply_const_vXX.cc.t	\
 	gr_multiply_const_vXX.h.t	\
 	gr_multiply_const_vXX.i.t	\

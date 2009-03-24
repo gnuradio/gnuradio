@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Multiply Block:
+##Add Block:
 ##	all types, 1 output, 2 to inf inputs
 ###################################################
  -->
 <block>
-	<name>Multiply</name>
-	<key>gr_multiply_vxx</key>
+	<name>Add</name>
+	<key>gr_add_xx</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.multiply_v$(type.fcn)($vlen)</make>
+	<make>gr.add_v$(type.fcn)($vlen)</make>
 	<param>
 		<name>IO Type</name>
 		<key>type</key>

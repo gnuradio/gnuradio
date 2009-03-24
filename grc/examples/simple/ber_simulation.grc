@@ -422,10 +422,10 @@
     </param>
   </block>
   <block>
-    <key>gr_add_vxx</key>
+    <key>gr_add_xx</key>
     <param>
       <key>id</key>
-      <value>gr_add_vxx</value>
+      <value>gr_add_xx</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -526,20 +526,20 @@
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_vxx</source_block_id>
+    <source_block_id>gr_add_xx</source_block_id>
     <sink_block_id>gr_constellation_decoder_cb</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>gr_chunks_to_symbols_xx</source_block_id>
-    <sink_block_id>gr_add_vxx</sink_block_id>
+    <sink_block_id>gr_add_xx</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>gr_noise_source_x</source_block_id>
-    <sink_block_id>gr_add_vxx</sink_block_id>
+    <sink_block_id>gr_add_xx</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
@@ -556,7 +556,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_vxx</source_block_id>
+    <source_block_id>gr_add_xx</source_block_id>
     <sink_block_id>wxgui_scopesink2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004, 2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,15 +30,16 @@
 #include <gr_io_signature.h>
 
 @SPTR_NAME@
-gr_make_@BASE_NAME@ ()
+gr_make_@BASE_NAME@ (size_t vlen)
 {
-  return @SPTR_NAME@ (new @NAME@ ());
+  return @SPTR_NAME@ (new @NAME@ (vlen));
 }
 
-@NAME@::@NAME@ ()
+@NAME@::@NAME@ (size_t vlen)
   : gr_sync_block ("@BASE_NAME@",
-		   gr_make_io_signature (1, -1, sizeof (@I_TYPE@)),
-		   gr_make_io_signature (1,  1, sizeof (@O_TYPE@)))
+		   gr_make_io_signature (1, -1, sizeof (@I_TYPE@)*vlen),
+		   gr_make_io_signature (1,  1, sizeof (@O_TYPE@)*vlen)),
+  d_vlen (vlen)
 {
 }
 
@@ -51,7 +52,7 @@ int
 
   int ninputs = input_items.size ();
 
-  for (int i = 0; i < noutput_items; i++){
+  for (int i = 0; i < noutput_items*d_vlen; i++){
     @I_TYPE@ acc = ((@I_TYPE@ *) input_items[0])[i];
     for (int j = 1; j < ninputs; j++)
       acc += ((@I_TYPE@ *) input_items[j])[i];

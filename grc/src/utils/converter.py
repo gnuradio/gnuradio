@@ -81,10 +81,10 @@ def convert(file_path, platform):
 			#convert instances of gui_coordinate and gui_rotation
 			xml = etree.parse(file_path)
 			for find, replace in (
-				('gui_coordinate', '_coordinate'),
-				('gui_rotation', '_rotation'),
+				('gr_add_vxx', 'gr_add_xx'),
+				('gr_multiply_vxx', 'gr_multiply_xx'),
 			):
-				keys = xml.xpath('/flow_graph/block/param[key="%s"]/key'%find)
+				keys = xml.xpath('/flow_graph/block[key="%s"]/key'%find)
 				for key in keys:
 					key.text = replace
 					changed = True

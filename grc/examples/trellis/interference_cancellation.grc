@@ -384,10 +384,10 @@
     </param>
   </block>
   <block>
-    <key>gr_add_vxx</key>
+    <key>gr_add_xx</key>
     <param>
       <key>id</key>
-      <value>gr_add_vxx_0</value>
+      <value>gr_add_xx_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -481,10 +481,10 @@
     </param>
   </block>
   <block>
-    <key>gr_multiply_vxx</key>
+    <key>gr_multiply_xx</key>
     <param>
       <key>id</key>
-      <value>gr_multiply_vxx_0</value>
+      <value>gr_multiply_xx_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -562,10 +562,10 @@
     </param>
   </block>
   <block>
-    <key>gr_multiply_vxx</key>
+    <key>gr_multiply_xx</key>
     <param>
       <key>id</key>
-      <value>gr_multiply_vxx_1</value>
+      <value>gr_multiply_xx_1</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -740,10 +740,10 @@
     </param>
   </block>
   <block>
-    <key>gr_multiply_vxx</key>
+    <key>gr_multiply_xx</key>
     <param>
       <key>id</key>
-      <value>gr_multiply_vxx_2</value>
+      <value>gr_multiply_xx_2</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -918,10 +918,10 @@
     </param>
   </block>
   <block>
-    <key>gr_multiply_vxx</key>
+    <key>gr_multiply_xx</key>
     <param>
       <key>id</key>
-      <value>gr_multiply_vxx_2_0</value>
+      <value>gr_multiply_xx_2_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1607,10 +1607,10 @@
     </param>
   </block>
   <block>
-    <key>gr_add_vxx</key>
+    <key>gr_add_xx</key>
     <param>
       <key>id</key>
-      <value>gr_add_vxx_1</value>
+      <value>gr_add_xx_1</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1801,19 +1801,19 @@
   </connection>
   <connection>
     <source_block_id>gr_multiply_const_vxx_0</source_block_id>
-    <sink_block_id>gr_add_vxx_0</sink_block_id>
+    <sink_block_id>gr_add_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_vxx_0</source_block_id>
-    <sink_block_id>gr_add_vxx_1</sink_block_id>
+    <source_block_id>gr_add_xx_0</source_block_id>
+    <sink_block_id>gr_add_xx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>gr_noise_source_x_0</source_block_id>
-    <sink_block_id>gr_add_vxx_1</sink_block_id>
+    <sink_block_id>gr_add_xx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
@@ -1825,24 +1825,24 @@
   </connection>
   <connection>
     <source_block_id>gr_multiply_const_vxx_1</source_block_id>
-    <sink_block_id>gr_add_vxx_0</sink_block_id>
+    <sink_block_id>gr_add_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
   <connection>
     <source_block_id>gr_sub_xx_0</source_block_id>
-    <sink_block_id>gr_multiply_vxx_0</sink_block_id>
+    <sink_block_id>gr_multiply_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>gr_sub_xx_0</source_block_id>
-    <sink_block_id>gr_multiply_vxx_0</sink_block_id>
+    <sink_block_id>gr_multiply_xx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_multiply_vxx_0</source_block_id>
+    <source_block_id>gr_multiply_xx_0</source_block_id>
     <sink_block_id>gr_short_to_float_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -1854,7 +1854,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_multiply_vxx_2</source_block_id>
+    <source_block_id>gr_multiply_xx_2</source_block_id>
     <sink_block_id>gr_short_to_float_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -1866,7 +1866,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_vxx_1</source_block_id>
+    <source_block_id>gr_add_xx_1</source_block_id>
     <sink_block_id>trellis_viterbi_combined_xx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -1897,13 +1897,13 @@
   </connection>
   <connection>
     <source_block_id>gr_sub_xx_1</source_block_id>
-    <sink_block_id>gr_multiply_vxx_2</sink_block_id>
+    <sink_block_id>gr_multiply_xx_2</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>gr_sub_xx_1</source_block_id>
-    <sink_block_id>gr_multiply_vxx_2</sink_block_id>
+    <sink_block_id>gr_multiply_xx_2</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
@@ -1914,7 +1914,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_vxx_1</source_block_id>
+    <source_block_id>gr_add_xx_1</source_block_id>
     <sink_block_id>gr_sub_xx_2</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -1944,7 +1944,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_multiply_vxx_1</source_block_id>
+    <source_block_id>gr_multiply_xx_1</source_block_id>
     <sink_block_id>gr_short_to_float_2</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -1963,18 +1963,18 @@
   </connection>
   <connection>
     <source_block_id>gr_sub_xx_3</source_block_id>
-    <sink_block_id>gr_multiply_vxx_1</sink_block_id>
+    <sink_block_id>gr_multiply_xx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>gr_sub_xx_3</source_block_id>
-    <sink_block_id>gr_multiply_vxx_1</sink_block_id>
+    <sink_block_id>gr_multiply_xx_1</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_vxx_1</source_block_id>
+    <source_block_id>gr_add_xx_1</source_block_id>
     <sink_block_id>trellis_viterbi_combined_xx_2</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -2010,7 +2010,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_multiply_vxx_2_0</source_block_id>
+    <source_block_id>gr_multiply_xx_2_0</source_block_id>
     <sink_block_id>gr_short_to_float_1_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -2023,13 +2023,13 @@
   </connection>
   <connection>
     <source_block_id>gr_sub_xx_1_0</source_block_id>
-    <sink_block_id>gr_multiply_vxx_2_0</sink_block_id>
+    <sink_block_id>gr_multiply_xx_2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>gr_sub_xx_1_0</source_block_id>
-    <sink_block_id>gr_multiply_vxx_2_0</sink_block_id>
+    <sink_block_id>gr_multiply_xx_2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
   </connection>
@@ -2046,7 +2046,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_vxx_1</source_block_id>
+    <source_block_id>gr_add_xx_1</source_block_id>
     <sink_block_id>gr_sub_xx_2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
@@ -2064,7 +2064,7 @@
     <sink_key>1</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_add_vxx_1</source_block_id>
+    <source_block_id>gr_add_xx_1</source_block_id>
     <sink_block_id>wxgui_scopesink2_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>

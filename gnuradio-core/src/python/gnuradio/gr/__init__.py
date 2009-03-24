@@ -1,5 +1,5 @@
 #
-# Copyright 2003,2004,2006,2008 Free Software Foundation, Inc.
+# Copyright 2003,2004,2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -55,3 +55,12 @@ parallel_to_serial = vector_to_stream
 # Force the preference database to be initialized
 from prefs import prefs
 
+#alias old gr_add_vXX and gr_multiply_vXX
+add_vcc = add_cc
+add_vff = add_ff
+add_vii = add_ii
+add_vss = add_ss
+multiply_vcc = multiply_cc
+multiply_vff = multiply_ff
+multiply_vii = multiply_ii
+multiply_vss = multiply_ss

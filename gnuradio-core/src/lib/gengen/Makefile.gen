@@ -15,10 +15,6 @@ GENERATED_H = \
 	gr_add_ff.h \
 	gr_add_ii.h \
 	gr_add_ss.h \
-	gr_add_vcc.h \
-	gr_add_vff.h \
-	gr_add_vii.h \
-	gr_add_vss.h \
 	gr_and_bb.h \
 	gr_and_const_bb.h \
 	gr_and_const_ii.h \
@@ -61,10 +57,6 @@ GENERATED_H = \
 	gr_multiply_ff.h \
 	gr_multiply_ii.h \
 	gr_multiply_ss.h \
-	gr_multiply_vcc.h \
-	gr_multiply_vff.h \
-	gr_multiply_vii.h \
-	gr_multiply_vss.h \
 	gr_mute_cc.h \
 	gr_mute_ff.h \
 	gr_mute_ii.h \
@@ -128,10 +120,6 @@ GENERATED_I = \
 	gr_add_ff.i \
 	gr_add_ii.i \
 	gr_add_ss.i \
-	gr_add_vcc.i \
-	gr_add_vff.i \
-	gr_add_vii.i \
-	gr_add_vss.i \
 	gr_and_bb.i \
 	gr_and_const_bb.i \
 	gr_and_const_ii.i \
@@ -174,10 +162,6 @@ GENERATED_I = \
 	gr_multiply_ff.i \
 	gr_multiply_ii.i \
 	gr_multiply_ss.i \
-	gr_multiply_vcc.i \
-	gr_multiply_vff.i \
-	gr_multiply_vii.i \
-	gr_multiply_vss.i \
 	gr_mute_cc.i \
 	gr_mute_ff.i \
 	gr_mute_ii.i \
@@ -241,10 +225,6 @@ GENERATED_CC = \
 	gr_add_ff.cc \
 	gr_add_ii.cc \
 	gr_add_ss.cc \
-	gr_add_vcc.cc \
-	gr_add_vff.cc \
-	gr_add_vii.cc \
-	gr_add_vss.cc \
 	gr_and_bb.cc \
 	gr_and_const_bb.cc \
 	gr_and_const_ii.cc \
@@ -287,10 +267,6 @@ GENERATED_CC = \
 	gr_multiply_ff.cc \
 	gr_multiply_ii.cc \
 	gr_multiply_ss.cc \
-	gr_multiply_vcc.cc \
-	gr_multiply_vff.cc \
-	gr_multiply_vii.cc \
-	gr_multiply_vss.cc \
 	gr_mute_cc.cc \
 	gr_mute_ff.cc \
 	gr_mute_ii.cc \

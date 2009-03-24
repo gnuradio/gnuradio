@@ -47,8 +47,6 @@ reg_roots = [
     'gr_multiply_XX',
     'gr_divide_XX',
     'gr_mute_XX',
-    'gr_add_vXX',
-    'gr_multiply_vXX',
     'gr_add_const_vXX',
     'gr_multiply_const_vXX',
     'gr_integrate_XX',
