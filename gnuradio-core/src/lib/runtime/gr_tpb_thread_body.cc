@@ -23,6 +23,7 @@
 #endif
 #include <gr_tpb_thread_body.h>
 #include <iostream>
+#include <boost/thread.hpp>
 
 gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block)
   : d_exec(block)
@@ -33,6 +34,8 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block)
   gr_block_executor::state s;
 
   while (1){
+    boost::this_thread::interruption_point();
+
     d->d_tpb.clear_changed();
     s = d_exec.run_one_iteration();
 
