@@ -194,6 +194,9 @@ gri_fft_real_fwd::execute ()
 
 gri_fft_real_rev::gri_fft_real_rev (int fft_size)
 {
+  // Hold global mutex during plan construction and destruction.
+  gri_fft_planner::scoped_lock	lock(gri_fft_planner::mutex());
+
   assert (sizeof (fftwf_complex) == sizeof (gr_complex));
   
   if (fft_size <= 0)
