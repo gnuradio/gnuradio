@@ -150,6 +150,7 @@ typedef struct {
  */
 
 #define U2_MAX_SAMPLES	371
+#define	U2_MIN_SAMPLES    9
 
 typedef struct {
   u2_eth_packet_t	hdrs;

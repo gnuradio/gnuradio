@@ -932,10 +932,8 @@ namespace usrp2 {
     if (nitems == 0)
       return true;
 
-    // FIXME there's the possibility that we send fewer than 9 items in a frame.
-    // That would end up glitching the transmitter, since the ethernet will pad to
-    // 64-bytes total (9 items).  We really need some part of the stack to
-    // carry the real length (thdr?).
+    // FIXME can't deal with nitems < U2_MIN_SAMPLES (will be fixed in VRT)
+    // FIXME need to check the MTU instead of assuming 1500 bytes
 
     // fragment as necessary then fire away
 
@@ -965,7 +963,12 @@ namespace usrp2 {
 
       init_etf_hdrs(&hdrs, d_addr, flags, channel, timestamp);
 
-      size_t i = std::min((size_t) U2_MAX_SAMPLES, nitems - n);
+      // Avoid short packet by splitting last two packets if reqd
+      size_t i;
+      if ((nitems - n) > U2_MAX_SAMPLES && (nitems - n) < (U2_MAX_SAMPLES + U2_MIN_SAMPLES))
+	i = (nitems - n) / 2;
+      else
+	i = std::min((size_t) U2_MAX_SAMPLES, nitems - n);
 
       eth_iovec iov[2];
       iov[0].iov_base = &hdrs;
