@@ -192,7 +192,7 @@ class qam8_demod(gr.hier_block2):
 
 	gr.hier_block2.__init__(self, "qam8_demod",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-				gr.io_signature(1, 1, gr.sizeof_gr_char))    # Output signature
+				gr.io_signature(1, 1, gr.sizeof_char))    # Output signature
 
         # do this
         pass
