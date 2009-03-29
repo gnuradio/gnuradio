@@ -1,10 +1,28 @@
 #!/usr/bin/env python
+#
+# Copyright 2006,2007,2009 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
 from gnuradio import gr, gru, usrp, optfir, eng_notation, blks2, pager
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
-from string import split, join, printable
-import time
 
 class app_top_block(gr.top_block):
     def __init__(self, options, queue):
@@ -54,10 +72,6 @@ class app_top_block(gr.top_block):
 	    if options.log:
 		self.connect((bank, i), gr.file_sink(gr.sizeof_gr_complex, 'chan_'+'%3.3f'%(freq/1e6)+'.dat'))
 
-    def __del__(self):
-	# Avoid weak-ref error
-	del self.subdev
-	
 
 def main():
     parser = OptionParser(option_class=eng_option)
@@ -82,23 +96,15 @@ def main():
 
     queue = gr.msg_queue()
     tb = app_top_block(options, queue)
+    runner = pager.queue_runner(queue)
 
-    runner = pager.top_block_runner(tb)
     try:
-	while 1:
-	    if not queue.empty_p():
-		msg = queue.delete_head() # Blocking read
-		page = join(split(msg.to_string(), chr(128)), '|')
-                s = pager.make_printable(page)
-                print s
-            elif runner.done:
-                break
-	    else:
-		time.sleep(0.05)
-
+        tb.run()
     except KeyboardInterrupt:
-        tb.stop()
-        runner = None
+        pass
+
+    runner.end()
+
     
 if __name__ == "__main__":
     main()

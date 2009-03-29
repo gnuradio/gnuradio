@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -18,7 +18,10 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+from gnuradio import gr
 import gnuradio.gr.gr_threading as _threading
+from string import split, join, printable
+import time
 
 def make_trans_table():
     table = 256 * ['.']
@@ -34,14 +37,24 @@ _trans_table = make_trans_table()
 def make_printable(s):
     return s.translate(_trans_table)
 
-class top_block_runner(_threading.Thread):
-    def __init__(self, tb):
+
+class queue_runner(_threading.Thread):
+    def __init__(self, msgq):
         _threading.Thread.__init__(self)
-        self.setDaemon(1)
-        self.tb = tb
+        self.msgq = msgq
         self.done = False
         self.start()
 
     def run(self):
-        self.tb.run()
+        while 1:
+            msg = self.msgq.delete_head() # Blocking read
+            if msg.type() != 0:
+                break
+            
+            page = join(split(msg.to_string(), chr(128)), '|')
+            s = make_printable(page)
+            print msg.type(), s
+                
+    def end(self):
+        self.msgq.insert_tail(gr.message(1))
         self.done = True

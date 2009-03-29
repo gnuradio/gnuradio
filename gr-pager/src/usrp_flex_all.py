@@ -1,4 +1,24 @@
 #!/usr/bin/env python
+#
+# Copyright 2006,2007,2009 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
 from gnuradio import gr, gru, usrp, optfir, eng_notation, blks2, pager
 from gnuradio.eng_option import eng_option
@@ -21,10 +41,10 @@ class app_top_block(gr.top_block):
             subdev = usrp.selected_subdev(src, options.rx_subdev_spec)
             src.set_mux(usrp.determine_rx_mux_value(src, options.rx_subdev_spec))
             src.set_decim_rate(20)
-            result = usrp.tune(src, 0, subdev, 930.5e6+options.calibration)
+            result = usrp.tune(src, 0, subdev, 930.5125e6+options.calibration)
             if options.verbose:
                 print "Using", subdev.name(), " for receiving."
-                print "Tuned USRP to", 930.5e6+options.calibration
+                print "Tuned USRP to", 930.5125e6+options.calibration
                 
         taps = gr.firdes.low_pass(1.0,
                                   1.0,
@@ -76,23 +96,14 @@ def main():
 
     queue = gr.msg_queue()
     tb = app_top_block(options, queue)
+    runner = pager.queue_runner(queue)
 
-    runner = pager.top_block_runner(tb)
     try:
-	while 1:
-	    if not queue.empty_p():
-		msg = queue.delete_head() # Blocking read
-		page = join(split(msg.to_string(), chr(128)), '|')
-                s = pager.make_printable(page)
-                print s
-            elif runner.done:
-                break
-	    else:
-		time.sleep(0.05)
-
+        tb.run()
     except KeyboardInterrupt:
-        tb.stop()
-        runner = None
+        pass
+
+    runner.end()
     
 if __name__ == "__main__":
     main()

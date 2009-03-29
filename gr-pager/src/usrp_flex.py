@@ -1,7 +1,6 @@
 #!/usr/bin/env python
-
 #
-# Copyright 2006,2007 Free Software Foundation, Inc.
+# Copyright 2006,2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,7 +24,6 @@ from gnuradio import gr, gru, usrp, optfir, eng_notation, pager
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import time, os, sys
-from string import split, join
 
 """
 This example application demonstrates receiving and demodulating the
@@ -108,9 +106,9 @@ class app_top_block(gr.top_block):
 	    print "Channel filter has", len(taps), "taps."
 
         self.chan = gr.freq_xlating_fir_filter_ccf(10,    # Decimation rate
-                                              taps,  # Filter taps
-                                              0.0,   # Offset frequency
-                                              250e3) # Sample rate
+                                                   taps,  # Filter taps
+                                                   0.0,   # Offset frequency
+                                                   250e3) # Sample rate
 
 	if options.log:
 	    chan_sink = gr.file_sink(gr.sizeof_gr_complex, 'chan.dat')
@@ -160,24 +158,15 @@ def main():
     # Flow graph emits pages into message queue
     queue = gr.msg_queue()
     tb = app_top_block(options, queue)
-    runner = pager.top_block_runner(tb)
+    runner = pager.queue_runner(queue)
     
     try:
-	while 1:
-	    if not queue.empty_p():
-		msg = queue.delete_head() # Blocking read
-		page = join(split(msg.to_string(), chr(128)), '|')
-                s = pager.make_printable(page)
-                print s
-		tb.adjust_freq()
-            elif runner.done:
-                break
-	    else:
-		time.sleep(1)
-
+        tb.run()
     except KeyboardInterrupt:
-        tb.stop()
-        runner = None
+        pass
+
+    runner.end()
+
 
 if __name__ == "__main__":
     main()
