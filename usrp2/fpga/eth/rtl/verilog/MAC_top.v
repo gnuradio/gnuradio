@@ -342,7 +342,7 @@ module MAC_top
       .xoff_gen_complete (xoff_gen_complete), 
       .xon_gen_complete(xon_gen_complete)
       );
-   
+/*   
   RMON U_RMON(
     .Clk                 ( CLK_I                ),
     .Reset               ( RST_I                ),
@@ -365,7 +365,7 @@ module MAC_top
     .CPU_rd_grant        ( CPU_rd_grant         ),
     .CPU_rd_dout         ( CPU_rd_dout          )
   );
-
+*/
    Phy_int U_Phy_int(
     .rst_mac_rx  ( rst_mac_rx   ),
     .rst_mac_tx  ( rst_mac_tx   ),
