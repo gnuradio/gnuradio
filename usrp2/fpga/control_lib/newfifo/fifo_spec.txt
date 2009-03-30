@@ -1,0 +1,36 @@
+
+
+FIFO and Buffer Interface Spec
+
+Buffer Interface Data Wires -- matches fifo36
+     DATA[31:0]
+     FLAGS[3:0]
+     Bit 0	SOP
+     Bit 1	EOP
+	If SOP=1 && EOP=1, OCC contains error flags
+     Bits 3:2	OCC[1:0] --> 00 = all 4 bytes
+		     01 = 1 byte
+		     10 = 2 bytes
+		     11 = 3 bytes
+
+fifo36 -->  {OCC[1:0],EOP,SOP,DATA[31:0]}
+       OCC same as buffer interface
+
+fifo19 -->  {OCC,EOP,SOP,DATA[15:0]}    
+       Doesn't fit well into BRAM, dist RAM ok
+       OCC = 1 means last word is half full
+	   = 0 means last word is full
+
+fifo18 -->  {EOP,SOP,DATA[15:0]}
+       No half-word capability?  Should we drop sop instead?
+
+Control Wires - Data into FIFO
+	SRC_RDY_i    Upstream has data for me
+	DST_RDY_o    I have space
+		     Transfer occurs if SRC_RDI_i && DST_RDY_o
+	
+Control Wires - Data out of FIFO
+	SRC_RDY_o    I have data for downstream
+	DST_RDY_i    Downstream has space
+		     Transfer occurs if SRC_RDI_o && DST_RDY_i
+	
