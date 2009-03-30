@@ -62,6 +62,7 @@ class grid_plotter_base(plotter_base):
 		#setup point label cache
 		self._point_label_cache = self.new_gl_cache(self._draw_point_label, 75)
 		self.enable_point_label(False)
+		self.enable_grid_aspect_ratio(False)
 		self.set_point_label_coordinate(None)
 		common.point_label_thread(self)
 		#init grid plotter
@@ -82,6 +83,20 @@ class grid_plotter_base(plotter_base):
 		self._point_label_coordinate = coor
 		self._point_label_cache.changed(True)
 		self.update()
+		self.unlock()
+
+	def enable_grid_aspect_ratio(self, enable=None):
+		"""
+		Enable/disable the grid aspect ratio.
+		If enabled, enforce the aspect ratio on the padding:
+			horizontal_padding:vertical_padding == width:height
+		@param enable true to enable
+		@return the enable state when None
+		"""
+		if enable is None: return self._enable_grid_aspect_ratio
+		self.lock()
+		self._enable_grid_aspect_ratio = enable
+		for cache in self._gl_caches: cache.changed(True)
 		self.unlock()
 
 	def enable_point_label(self, enable=None):
@@ -204,6 +219,23 @@ class grid_plotter_base(plotter_base):
 		self.padding_right = max(2*TICK_LABEL_PADDING, self.padding_right_min)
 		self.padding_bottom = max(2*AXIS_LABEL_PADDING + TICK_LABEL_PADDING + x_label.get_size()[1] + max([label.get_size()[1] for tick, label in x_tick_labels]), self.padding_bottom_min)
 		self.padding_left = max(2*AXIS_LABEL_PADDING + TICK_LABEL_PADDING + y_label.get_size()[1] + max([label.get_size()[0] for tick, label in y_tick_labels]), self.padding_left_min)
+		#enforce padding aspect ratio if enabled
+		if self.enable_grid_aspect_ratio():
+			w_over_h_ratio = float(self.width)/float(self.height)
+			horizontal_padding = float(self.padding_right + self.padding_left)
+			veritical_padding = float(self.padding_top + self.padding_bottom)
+			if w_over_h_ratio > horizontal_padding/veritical_padding:
+				#increase the horizontal padding
+				new_padding = veritical_padding*w_over_h_ratio - horizontal_padding
+				#distribute the padding to left and right
+				self.padding_left += int(round(new_padding/2))
+				self.padding_right += int(round(new_padding/2))
+			else:
+				#increase the vertical padding
+				new_padding = horizontal_padding/w_over_h_ratio - veritical_padding
+				#distribute the padding to top and bottom
+				self.padding_top += int(round(new_padding/2))
+				self.padding_bottom += int(round(new_padding/2))
 		##################################################
 		# Draw Grid X
 		##################################################
