@@ -32,13 +32,24 @@ module mac_rxfifo_int
    // Write side of short FIFO
    assign write = ~full & ~Rx_mac_empty;
    assign Rx_mac_rd = write;
+
+`define LONGFIFO 0
  
+`ifdef LONGFIFO
+   cascadefifo2 #(.WIDTH(35),.SIZE(10)) mac_rx_longfifo
+     (.clk(clk),.rst(rst),.clear(0),
+      .datain({Rx_mac_sop,Rx_mac_eop,Rx_mac_err,Rx_mac_data}),.write(write),.full(full),
+      .dataout({sop_o,eop_o,error_o,wr_dat_o}),.read(read),.empty(empty),
+      .space(), .occupied(fifo_occupied) );   
+`else 
    shortfifo #(.WIDTH(35)) mac_rx_sfifo
      (.clk(clk),.rst(rst),.clear(0),
       .datain({Rx_mac_sop,Rx_mac_eop,Rx_mac_err,Rx_mac_data}),.write(write),.full(full),
       .dataout({sop_o,eop_o,error_o,wr_dat_o}),.read(read),.empty(empty),
       .space(), .occupied(fifo_occupied[4:0]) );
    assign fifo_occupied[15:5] = 0;
+`endif
+   
    assign fifo_full = full;
    assign fifo_empty = empty;
    
