@@ -7,9 +7,12 @@ module simple_gemac_tx
    input pause_req, input [15:0] pause_time,
    input pause_apply, output pause_applied
    );
+
+   reg tx_en_pre, tx_er_pre;
+   reg [7:0] txd_pre;
    
-   assign GMII_GTX_CLK  = clk125;
-   assign tx_clk       = clk125;
+   assign GMII_GTX_CLK 	= clk125;
+   assign tx_clk 	= clk125;
    
    reg [7:0] tx_state;
    reg [7:0] ifg_ctr;
@@ -23,7 +26,7 @@ module simple_gemac_tx
    localparam MIN_FRAME_LEN  = 64 + 8 - 4; // Min frame length includes preamble but not CRC
    localparam MAX_FRAME_LEN  = 8192;       // How big are the jumbo frames we want to handle?
    always @(posedge tx_clk)
-     if(reset |(tx_state <= TX_IDLE))
+     if(reset |(tx_state == TX_IDLE))
        frame_len_ctr 	    <= 0;
      else
        frame_len_ctr 	    <= frame_len_ctr + 1;
@@ -31,7 +34,8 @@ module simple_gemac_tx
    localparam TX_IDLE 	     = 0;
    localparam TX_PREAMBLE    = 1;
    localparam TX_SOF_DEL     = TX_PREAMBLE + 7;
-   localparam TX_IN_FRAME    = TX_SOF_DEL + 1;
+   localparam TX_FIRSTBYTE   = TX_SOF_DEL + 1;
+   localparam TX_IN_FRAME    = TX_FIRSTBYTE + 1;
    localparam TX_IN_FRAME_2  = TX_IN_FRAME + 1;
    localparam TX_PAD 	     = TX_IN_FRAME_2 + 1;
    localparam TX_CRC_0 	     = 16;
@@ -40,13 +44,12 @@ module simple_gemac_tx
    localparam TX_CRC_3 	     = TX_CRC_0 + 3;
    localparam TX_ERROR 	     = 32;
    localparam TX_PAUSE 	     = 56;
-   localparam TX_PAUSE_PRE   = TX_PAUSE + 1;
-   localparam TX_PAUSE_SOF   = 64;
+   localparam TX_PAUSE_SOF   = 63;
    localparam TX_PAUSE_END   = TX_PAUSE_SOF + 18;
 
    reg send_pause;
    reg [15:0] pause_time_held;
-   
+
    always @(posedge tx_clk)
      if(reset)
        send_pause      <= 0;
@@ -70,12 +73,19 @@ module simple_gemac_tx
 	       tx_state <= TX_PAUSE;
 	     else if(tx_valid)
 	       tx_state <= TX_PREAMBLE;
+	 TX_FIRSTBYTE :
+	   if(tx_error)
+	     tx_state <= TX_ERROR;   // underrun
+	   else if(~tx_valid)
+	     tx_state <= TX_PAD;
+	   else
+	     tx_state <= TX_IN_FRAME;
 	 TX_IN_FRAME :
 	   if(tx_error)
 	     tx_state <= TX_ERROR;   // underrun
 	   else if(~tx_valid)
 	     tx_state <= TX_PAD;
-	   else if(frame_len_ctr == MIN_FRAME_LEN)
+	   else if(frame_len_ctr == MIN_FRAME_LEN - 1)
 	     tx_state <= TX_IN_FRAME_2;
 	 TX_IN_FRAME_2 :
 	   if(tx_error)
@@ -89,55 +99,48 @@ module simple_gemac_tx
 	   tx_state <= TX_IDLE;
 	 TX_ERROR :
 	   tx_state <= TX_IDLE;
-	 TX_PAUSE :
-	   tx_state <= TX_PAUSE_PRE;
 	 TX_PAUSE_END :
 	   tx_state <= TX_PAD;
 	 default :
-	   tx_state  <= tx_state + 1;
+	   tx_state <= tx_state + 1;
        endcase // case (tx_state)
 
    always @(posedge tx_clk)
      if(reset)
        begin
-	  GMII_TX_EN <= 0;
-	  GMII_TX_ER <= 0;
-	  GMII_TXD   <= 0;
+	  tx_en_pre <= 0;
+	  tx_er_pre <= 0;
+	  txd_pre   <= 0;
        end
      else
        casex(tx_state)
 	 TX_IDLE :
 	   begin
-	      GMII_TX_EN <= 0;
-	      GMII_TX_ER <= 0;
-	      GMII_TXD <= 0;
+	      tx_en_pre <= 0;
+	      tx_er_pre <= 0;
+	      txd_pre <= 0;
 	   end
-	 TX_PREAMBLE, TX_PAUSE_PRE :
+	 TX_PREAMBLE, TX_PAUSE :
 	   begin
-	      GMII_TXD 	 <= 8'h55;
-	      GMII_TX_EN <= 1;
+	      txd_pre 	 <= 8'h55;
+	      tx_en_pre <= 1;
 	   end
 	 TX_SOF_DEL, TX_PAUSE_SOF :
-	   GMII_TXD <= 8'hD5;
-	 TX_IN_FRAME, TX_IN_FRAME_2 :
-	   GMII_TXD <= tx_data;
+	   txd_pre <= 8'hD5;
+	 TX_FIRSTBYTE, TX_IN_FRAME, TX_IN_FRAME_2 :
+	   txd_pre <= tx_valid ? tx_data : 0;
 	 TX_ERROR :
 	   begin
-	      GMII_TX_ER <= 1;
-	      GMII_TXD 	 <= 0;
+	      tx_er_pre <= 1;
+	      txd_pre 	 <= 0;
 	   end
-	 TX_CRC_0 :
-	   GMII_TXD <= crc_out[31:24];
-	 TX_CRC_1 :
-	   GMII_TXD <= crc_out[23:16];
-	 TX_CRC_2 :
-	   GMII_TXD <= crc_out[15:8];
 	 TX_CRC_3 :
-	   GMII_TXD <= crc_out[7:0];
+	   tx_en_pre <= 0;
 	 TX_PAD :
-	   GMII_TXD <= 0;
+	   txd_pre <= 0;
+ 
 	 8'b01xx_xxxx :  // In Pause Frame
-	   GMII_TXD <= pause_dat;
+	   txd_pre <= pause_dat;
        endcase // case (tx_state)
 
    localparam SGE_FLOW_CTRL_ADDR  = 48'h01_80_C2_00_00_01;
@@ -191,10 +194,41 @@ module simple_gemac_tx
        ifg_ctr 	   <= ifg_ctr - 1;
 
    wire clear_crc   = (tx_state == TX_IDLE);
-   wire calc_crc    = 1;
+
+   wire calc_crc_pre = (tx_state==TX_FIRSTBYTE)||(tx_state==TX_IN_FRAME)||
+	((tx_state==TX_IN_FRAME_2)&tx_valid )||(tx_state==TX_PAD )||(tx_state[6]);
+   reg calc_crc;
+   always @(posedge tx_clk)
+     calc_crc <= calc_crc_pre;
    
    crc crc(.clk(tx_clk), .reset(reset), .clear(clear_crc),
-	    .data(GMII_TXD), .calc(calc_crc), .crc_out(crc_out));
+	    .data(txd_pre), .calc(calc_crc), .crc_out(crc_out));
 
-   assign tx_ack = (tx_state == TX_IN_FRAME);
+   assign tx_ack    = (tx_state == TX_FIRSTBYTE);
+
+   reg tx_valid_d1;
+   always @(posedge tx_clk)
+     tx_valid_d1   <= tx_valid;
+   
+   always @(posedge tx_clk) 
+     begin
+	GMII_TX_EN <= tx_en_pre;
+	GMII_TX_ER <= tx_er_pre;
+	case(tx_state)
+	  TX_CRC_0 :
+	    GMII_TXD <= crc_out[31:24];
+	  TX_CRC_1 :
+	    GMII_TXD <= crc_out[23:16];
+	  TX_CRC_2 :
+	    GMII_TXD <= crc_out[15:8];
+	  TX_CRC_3 :
+	    GMII_TXD <= crc_out[7:0];
+//	  TX_IN_FRAME : 
+//	  TX_PAD :
+//	    GMII_TXD <= tx_valid_d1 ? txd_pre : 0;
+	  default :
+	    GMII_TXD <= txd_pre;
+	endcase // case (tx_state)
+     end
+   
 endmodule // simple_gemac_tx

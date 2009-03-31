@@ -38,6 +38,7 @@ module simple_gemac_tb;
    task SendFlowCtrl;
      begin
 	$display("Sending Flow Control");
+	 $display($time);
 	@(posedge clk);
 	pause_req <= 1;
 	@(posedge clk);
@@ -51,12 +52,15 @@ module simple_gemac_tb;
       input [31:0] data_len;
       begin
 	 $display("Sending Packet");
+	 $display($time);
 	 count <= 0;
 	 tx_data  <= data_start;
 	 tx_error <= 0;
 	 tx_valid <= 1;
 	 while(~tx_ack)
 	   @(posedge tx_clk);
+	 $display("Packet Accepted");
+	 $display($time);
 	 while(count < data_len)
 	   begin
 	      tx_data <= tx_data + 1;
@@ -68,21 +72,75 @@ module simple_gemac_tb;
       end
    endtask // SendPacket
    	
+   task SendPacketFromFile;
+      input [31:0] data_len;
+      begin
+	 $display("Sending Packet From File");
+	 $display($time);
+	 $readmemh( "test_packet.mem",pkt_rom );     
+	 count 	  = 0;
+	 tx_data  = pkt_rom[count];
+	 tx_error = 0;
+	 tx_valid = 1;
+	 while(~tx_ack)
+	   @(posedge tx_clk);
+	 $display("Packet Accepted");
+	 $display($time);
+	 count = 1;
+	 while(count < data_len)
+	   begin
+	      tx_data = pkt_rom[count];
+	      count   = count + 1;
+	      @(posedge clk);
+	   end
+	 tx_valid <= 0;
+	 @(posedge tx_clk);
+      end
+   endtask // SendPacket
+   	
    initial $dumpfile("simple_gemac_tb.vcd");
    initial $dumpvars(0,simple_gemac_tb);
-	
+
+   integer i; 
+   reg [7:0] pkt_rom[0:65535];
+   reg [1023:0] ROMFile;
+   
+   initial
+     for (i=0;i<65536;i=i+1)
+       pkt_rom[i] <= 8'h0;
+      
    initial
      begin
 	@(negedge reset);
 	repeat (20)
 	  @(posedge clk);
 	SendFlowCtrl;
-	repeat (100)
+	//repeat (200)
 	  @(posedge clk);
 	SendPacket(8'hAA,10);
-	repeat (1000)
-	  @(posedge clk);
-	$finish;
+	//repeat (100)
+	//  @(posedge clk);
+	SendPacketFromFile(60);
+	SendPacketFromFile(59);
+	SendPacketFromFile(58);
+	#10000 $finish;
      end
+
+   always @(posedge clk)
+     if(GMII_TX_EN)
+       $display("%x",GMII_TXD);
    
 endmodule // simple_gemac_tb
+
+/*
+    if ( !$value$plusargs( "rom=%s", ROMFile ) )
+        begin
+           $display( "Using default ROM file, 'flash.rom'" );
+           ROMFile = "flash.rom";
+        end
+      else
+	$display( "Using %s as ROM file.", ROMFile);
+      
+      #1 $readmemh( ROMFile,rom );     
+   end
+ */
