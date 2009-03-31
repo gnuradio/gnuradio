@@ -43,8 +43,9 @@ module simple_gemac_tx
    localparam TX_CRC_2 	     = TX_CRC_0 + 2;
    localparam TX_CRC_3 	     = TX_CRC_0 + 3;
    localparam TX_ERROR 	     = 32;
-   localparam TX_PAUSE 	     = 56;
-   localparam TX_PAUSE_SOF   = 63;
+   localparam TX_PAUSE 	     = 55;
+   localparam TX_PAUSE_SOF   = TX_PAUSE + 7;
+   localparam TX_PAUSE_FIRST = TX_PAUSE_SOF + 1;
    localparam TX_PAUSE_END   = TX_PAUSE_SOF + 18;
 
    reg send_pause;
@@ -138,8 +139,7 @@ module simple_gemac_tx
 	   tx_en_pre <= 0;
 	 TX_PAD :
 	   txd_pre <= 0;
- 
-	 8'b01xx_xxxx :  // In Pause Frame
+	 TX_PAUSE_FIRST, 8'b01xx_xxxx :  // In Pause Frame
 	   txd_pre <= pause_dat;
        endcase // case (tx_state)
 
@@ -195,24 +195,29 @@ module simple_gemac_tx
 
    wire clear_crc   = (tx_state == TX_IDLE);
 
-//   wire calc_crc_pre = (tx_state==TX_FIRSTBYTE)||(tx_state==TX_IN_FRAME)||
-//	((tx_state  ==TX_IN_FRAME_2)&tx_valid )||(tx_state==TX_PAD )||(tx_state[6]);
-  // reg calc_crc;
-  // always @(posedge tx_clk)
-  //   calc_crc <= calc_crc_pre;
-   wire calc_crc    = 0;
+   wire calc_crc    = 
+	(tx_state==TX_IN_FRAME) |
+	(tx_state==TX_IN_FRAME_2) |
+	(tx_state==TX_PAD) |
+	(tx_state[6]);
 
-   /*
-   wire calc_crc    = ~(tx_state==TX_IDLE) &
-	~(tx_state==TX_IDLE) &
-	~(tx_state==TX_IDLE) &
-	~(tx_state==TX_IDLE) &
-    */
+   reg [7:0] crc_ctr;
+   reg calc_crc_d1;
+   always @(posedge tx_clk) 
+     calc_crc_d1 <= calc_crc;
+   
+   always @(posedge tx_clk)
+     if(reset)
+       crc_ctr 	 <= 0;
+     else if(calc_crc)
+       crc_ctr 	 <= crc_ctr+1;
+     else if(calc_crc_d1)
+       $display("CRC COUNT = %d",crc_ctr);
+     else
+       crc_ctr <= 0;
+
    crc crc(.clk(tx_clk), .reset(reset), .clear(clear_crc),
 	    .data(txd_pre), .calc(calc_crc), .crc_out(crc_out));
-
-
-//	   .data(txd_pre), .calc(calc_crc & ~(tx_state==TX_CRC_0)), .crc_out(crc_out));
 
    assign tx_ack    = (tx_state == TX_FIRSTBYTE);
 
@@ -233,9 +238,6 @@ module simple_gemac_tx
 	    GMII_TXD <= crc_out[15:8];
 	  TX_CRC_3 :
 	    GMII_TXD <= crc_out[7:0];
-//	  TX_IN_FRAME : 
-//	  TX_PAD :
-//	    GMII_TXD <= tx_valid_d1 ? txd_pre : 0;
 	  default :
 	    GMII_TXD <= txd_pre;
 	endcase // case (tx_state)

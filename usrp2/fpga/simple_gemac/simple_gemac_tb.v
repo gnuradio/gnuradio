@@ -123,16 +123,22 @@ module simple_gemac_tb;
 	SendPacketFromFile(60);
 	repeat (100)
 	  @(posedge clk);
-	SendPacketFromFile(59);
-	repeat (100)
-	  @(posedge clk);
-	SendPacketFromFile(58);
-	repeat (100)
-	  @(posedge clk);
 	SendPacketFromFile(61);
 	repeat (100)
 	  @(posedge clk);
 	SendPacketFromFile(62);
+	repeat (100)
+	  @(posedge clk);
+	SendPacketFromFile(63);
+	repeat (100)
+	  @(posedge clk);
+	SendPacketFromFile(64);
+	repeat (100)
+	  @(posedge clk);
+	SendPacketFromFile(59);
+	repeat (100)
+	  @(posedge clk);
+	SendPacketFromFile(58);
 	#10000 $finish;
      end
 
