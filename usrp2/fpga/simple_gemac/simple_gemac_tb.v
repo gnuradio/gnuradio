@@ -37,8 +37,7 @@ module simple_gemac_tb;
 
    task SendFlowCtrl;
      begin
-	$display("Sending Flow Control");
-	 $display($time);
+	$display("Sending Flow Control, %d", $time);
 	@(posedge clk);
 	pause_req <= 1;
 	@(posedge clk);
@@ -51,16 +50,14 @@ module simple_gemac_tb;
       input [7:0] data_start;
       input [31:0] data_len;
       begin
-	 $display("Sending Packet Len=%d", data_len);
-	 $display($time);
+	 $display("Sending Packet Len=%d, %d", data_len, $time);
 	 count <= 1;
 	 tx_data  <= data_start;
 	 tx_error <= 0;
 	 tx_valid <= 1;
 	 while(~tx_ack)
 	   @(posedge tx_clk);
-//	 $display("Packet Accepted");
-//	 $display($time);
+	 $display("Packet Accepted, %d", $time);
 	 while(count < data_len)
 	   begin
 	      tx_data <= tx_data + 1;
@@ -75,8 +72,7 @@ module simple_gemac_tb;
    task SendPacketFromFile;
       input [31:0] data_len;
       begin
-	 $display("Sending Packet From File Len=%d",data_len);
-	 $display($time);
+	 $display("Sending Packet From File Len=%d, %d",data_len,$time);
 	 $readmemh( "test_packet.mem",pkt_rom );     
 	 count 	  = 0;
 	 tx_data  = pkt_rom[count];
@@ -84,8 +80,7 @@ module simple_gemac_tb;
 	 tx_valid = 1;
 	 while(~tx_ack)
 	   @(posedge tx_clk);
-//	 $display("Packet Accepted");
-//	 $display($time);
+	 $display("Packet Accepted, %d",$time);
 	 count = 1;
 	 while(count < data_len)
 	   begin
@@ -112,31 +107,31 @@ module simple_gemac_tb;
    initial
      begin
 	@(negedge reset);
-	repeat (100)
+	repeat (10)
 	  @(posedge clk);
 	SendFlowCtrl;
-	repeat (200)
+	repeat (20)
 	  @(posedge clk);
 	SendPacket(8'hAA,10);
-	repeat (100)
+	repeat (10)
 	  @(posedge clk);
 	SendPacketFromFile(60);
-	repeat (100)
+	repeat (10)
 	  @(posedge clk);
 	SendPacketFromFile(61);
-	repeat (100)
+	repeat (10)
 	  @(posedge clk);
 	SendPacketFromFile(62);
-	repeat (100)
+	repeat (10)
 	  @(posedge clk);
 	SendPacketFromFile(63);
-	repeat (100)
+	repeat (1)
 	  @(posedge clk);
 	SendPacketFromFile(64);
-	repeat (100)
+	repeat (10)
 	  @(posedge clk);
 	SendPacketFromFile(59);
-	repeat (100)
+	repeat (1)
 	  @(posedge clk);
 	SendPacketFromFile(58);
 	#10000 $finish;

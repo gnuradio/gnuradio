@@ -201,30 +201,11 @@ module simple_gemac_tx
 	(tx_state==TX_PAD) |
 	(tx_state[6]);
 
-   reg [7:0] crc_ctr;
-   reg calc_crc_d1;
-   always @(posedge tx_clk) 
-     calc_crc_d1 <= calc_crc;
-   
-   always @(posedge tx_clk)
-     if(reset)
-       crc_ctr 	 <= 0;
-     else if(calc_crc)
-       crc_ctr 	 <= crc_ctr+1;
-     else if(calc_crc_d1)
-       $display("CRC COUNT = %d",crc_ctr);
-     else
-       crc_ctr <= 0;
-
    crc crc(.clk(tx_clk), .reset(reset), .clear(clear_crc),
 	    .data(txd_pre), .calc(calc_crc), .crc_out(crc_out));
 
    assign tx_ack    = (tx_state == TX_FIRSTBYTE);
 
-   reg tx_valid_d1;
-   always @(posedge tx_clk)
-     tx_valid_d1   <= tx_valid;
-   
    always @(posedge tx_clk) 
      begin
 	GMII_TX_EN <= tx_en_pre;
@@ -244,3 +225,21 @@ module simple_gemac_tx
      end
    
 endmodule // simple_gemac_tx
+
+// Testing code
+/*
+    reg [7:0] crc_ctr;
+   reg calc_crc_d1;
+   always @(posedge tx_clk) 
+     calc_crc_d1 <= calc_crc;
+   
+   always @(posedge tx_clk)
+     if(reset)
+       crc_ctr 	 <= 0;
+     else if(calc_crc)
+       crc_ctr 	 <= crc_ctr+1;
+     else if(calc_crc_d1)
+       $display("CRC COUNT = %d",crc_ctr);
+     else
+       crc_ctr <= 0;
+*/
