@@ -9,7 +9,7 @@ module simple_gemac_tb;
    initial #1000 reset = 0;
    always #50 clk = ~clk;
 
-   wire GMII_RX_DV, GMII_RX_ER, GMII_TX_EN, GMII_TX_ER;
+   wire GMII_RX_DV, GMII_RX_ER, GMII_TX_EN, GMII_TX_ER, GMII_GTX_CLK;
    wire [7:0] GMII_RXD, GMII_TXD;
 
    wire rx_valid, rx_error, rx_ack;
@@ -20,7 +20,13 @@ module simple_gemac_tb;
    reg [7:0] tx_data;
    
    wire [15:0] pause_time = 16'hBEEF;
-   reg pause_req = 0;
+   reg pause_req     = 0;
+
+   reg GMII_RX_CLK;
+   always @(GMII_GTX_CLK)
+     GMII_RX_CLK <= #30 GMII_GTX_CLK;
+   
+//   wire GMII_RX_CLK  = #30 GMII_GTX_CLK;
    
    simple_gemac simple_gemac
      (.clk125(clk),  .reset(reset),

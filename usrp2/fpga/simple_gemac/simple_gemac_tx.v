@@ -5,7 +5,7 @@ module simple_gemac_tx
    output tx_clk, input [7:0] tx_data, input tx_valid, input tx_error, output tx_ack,
    input [7:0] ifg, input [47:0] mac_addr,
    input pause_req, input [15:0] pause_time,
-   input pause_apply, output pause_applied
+   input pause_apply, output reg paused
    );
 
    reg tx_en_pre, tx_er_pre;
@@ -72,7 +72,7 @@ module simple_gemac_tx
 	   if(~in_ifg)
 	     if(send_pause)
 	       tx_state <= TX_PAUSE;
-	     else if(tx_valid)
+	     else if(tx_valid & ~pause_apply)
 	       tx_state <= TX_PREAMBLE;
 	 TX_FIRSTBYTE :
 	   if(tx_error)
@@ -223,6 +223,15 @@ module simple_gemac_tx
 	    GMII_TXD <= txd_pre;
 	endcase // case (tx_state)
      end
+
+   // report that we are paused only when we get back to IDLE
+   always @(posedge tx_clk)
+     if(reset)
+       paused 	     <= 0;
+     else if(~pause_apply)
+       paused 	     <= 0;
+     else if(tx_state == TX_IDLE)
+       paused 	     <= 1;
    
 endmodule // simple_gemac_tx
 

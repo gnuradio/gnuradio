@@ -31,24 +31,24 @@ module simple_gemac
       .tx_clk(tx_clk), .tx_data(tx_data), .tx_valid(tx_valid), .tx_error(tx_error), .tx_ack(tx_ack),
       .ifg(SGE_IFG), .mac_addr(48'hF1_F2_F3_F4_F5_F6),
       .pause_req(pause_req), .pause_time(pause_time),  // We request flow control
-      .pause_apply(pause_apply), .pause_applied(pause_applied)  // We respect flow control
+      .pause_apply(pause_apply), .paused(paused)  // We respect flow control
       );
-/*
+
    simple_gemac_rx simple_gemac_rx
      (.reset(rst_rxclk),
       .GMII_RX_CLK(GMII_RX_CLK), .GMII_RX_DV(GMII_RX_DV), 
       .GMII_RX_ER(GMII_RX_ER), .GMII_RXD(GMII_RXD),
       .rx_clk(rx_clk), .rx_data(rx_data), .rx_valid(rx_valid), .rx_error(rx_error), .rx_ack(rx_ack),
-      .pause_quanta_rcvd(pause_qanta_rcvd), .pause_rcvd(pause_rcvd) 
+      .pause_quanta_rcvd(pause_quanta_rcvd), .pause_rcvd(pause_rcvd) 
       );
-  */ 
+
    flow_ctrl_tx flow_ctrl_tx
-     (.rst(reset_txclk), .tx_clk(tx_clk),
+     (.rst(rst_txclk), .tx_clk(tx_clk),
       .tx_pause_en(SGE_RESPECT_FLOW_CTRL),
       .pause_quanta(pause_quanta_rcvd), // 16 bit value
       .pause_quanta_val(pause_rcvd),
       .pause_apply(pause_apply),
-      .pause_quanta_sub(pause_applied)
+      .paused(paused)
       );
 
    

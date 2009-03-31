@@ -11,13 +11,16 @@ module flow_ctrl_tx
    input        pause_quanta_val,
    // MAC_tx_ctrl
    output       pause_apply,
-   input        pause_quanta_sub);
+   input        paused);
      
    // ******************************************************************************        
    // Inhibit our TX from transmitting because they sent us a PAUSE frame
    // ******************************************************************************
 
-   reg [15:0] 	pause_quanta_counter;
+   // Pauses are in units of 512 bit times, or 64 bytes/clock cycles, and can be
+   //   as big as 16 bits, so 22 bits are needed for the counter
+   
+   reg [15+6:0] pause_quanta_counter;
    reg 		pqval_d1, pqval_d2;		
 
    always @(posedge tx_clk) pqval_d1 <= pause_quanta_val;
@@ -27,8 +30,8 @@ module flow_ctrl_tx
      if (rst)
        pause_quanta_counter <= 0;
      else if (pqval_d1 & ~pqval_d2)
-       pause_quanta_counter <= pause_quanta; 
-     else if((pause_quanta_counter!=0) & pause_quanta_sub)
+       pause_quanta_counter <= {pause_quanta, 6'b0}; 
+     else if((pause_quanta_counter!=0) & paused)
        pause_quanta_counter <= pause_quanta_counter - 1;
 
    assign	pause_apply = tx_pause_en & (pause_quanta_counter != 0);
