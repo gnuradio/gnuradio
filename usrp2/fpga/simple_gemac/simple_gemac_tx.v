@@ -195,14 +195,24 @@ module simple_gemac_tx
 
    wire clear_crc   = (tx_state == TX_IDLE);
 
-   wire calc_crc_pre = (tx_state==TX_FIRSTBYTE)||(tx_state==TX_IN_FRAME)||
-	((tx_state==TX_IN_FRAME_2)&tx_valid )||(tx_state==TX_PAD )||(tx_state[6]);
-   reg calc_crc;
-   always @(posedge tx_clk)
-     calc_crc <= calc_crc_pre;
-   
+//   wire calc_crc_pre = (tx_state==TX_FIRSTBYTE)||(tx_state==TX_IN_FRAME)||
+//	((tx_state  ==TX_IN_FRAME_2)&tx_valid )||(tx_state==TX_PAD )||(tx_state[6]);
+  // reg calc_crc;
+  // always @(posedge tx_clk)
+  //   calc_crc <= calc_crc_pre;
+   wire calc_crc    = 0;
+
+   /*
+   wire calc_crc    = ~(tx_state==TX_IDLE) &
+	~(tx_state==TX_IDLE) &
+	~(tx_state==TX_IDLE) &
+	~(tx_state==TX_IDLE) &
+    */
    crc crc(.clk(tx_clk), .reset(reset), .clear(clear_crc),
 	    .data(txd_pre), .calc(calc_crc), .crc_out(crc_out));
+
+
+//	   .data(txd_pre), .calc(calc_crc & ~(tx_state==TX_CRC_0)), .crc_out(crc_out));
 
    assign tx_ack    = (tx_state == TX_FIRSTBYTE);
 

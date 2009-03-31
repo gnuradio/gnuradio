@@ -51,16 +51,16 @@ module simple_gemac_tb;
       input [7:0] data_start;
       input [31:0] data_len;
       begin
-	 $display("Sending Packet");
+	 $display("Sending Packet Len=%d", data_len);
 	 $display($time);
-	 count <= 0;
+	 count <= 1;
 	 tx_data  <= data_start;
 	 tx_error <= 0;
 	 tx_valid <= 1;
 	 while(~tx_ack)
 	   @(posedge tx_clk);
-	 $display("Packet Accepted");
-	 $display($time);
+//	 $display("Packet Accepted");
+//	 $display($time);
 	 while(count < data_len)
 	   begin
 	      tx_data <= tx_data + 1;
@@ -75,7 +75,7 @@ module simple_gemac_tb;
    task SendPacketFromFile;
       input [31:0] data_len;
       begin
-	 $display("Sending Packet From File");
+	 $display("Sending Packet From File Len=%d",data_len);
 	 $display($time);
 	 $readmemh( "test_packet.mem",pkt_rom );     
 	 count 	  = 0;
@@ -84,8 +84,8 @@ module simple_gemac_tb;
 	 tx_valid = 1;
 	 while(~tx_ack)
 	   @(posedge tx_clk);
-	 $display("Packet Accepted");
-	 $display($time);
+//	 $display("Packet Accepted");
+//	 $display($time);
 	 count = 1;
 	 while(count < data_len)
 	   begin
@@ -112,17 +112,27 @@ module simple_gemac_tb;
    initial
      begin
 	@(negedge reset);
-	repeat (20)
+	repeat (100)
 	  @(posedge clk);
 	SendFlowCtrl;
-	//repeat (200)
+	repeat (200)
 	  @(posedge clk);
 	SendPacket(8'hAA,10);
-	//repeat (100)
-	//  @(posedge clk);
+	repeat (100)
+	  @(posedge clk);
 	SendPacketFromFile(60);
+	repeat (100)
+	  @(posedge clk);
 	SendPacketFromFile(59);
+	repeat (100)
+	  @(posedge clk);
 	SendPacketFromFile(58);
+	repeat (100)
+	  @(posedge clk);
+	SendPacketFromFile(61);
+	repeat (100)
+	  @(posedge clk);
+	SendPacketFromFile(62);
 	#10000 $finish;
      end
 
