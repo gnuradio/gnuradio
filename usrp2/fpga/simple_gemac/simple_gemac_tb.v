@@ -13,19 +13,13 @@ module simple_gemac_tb;
    wire [7:0] GMII_RXD, GMII_TXD;
 
    wire rx_valid, rx_error, rx_ack;
-   wire tx_ack;
-   reg tx_valid = 0, tx_error = 0;
+   wire tx_ack, tx_valid, tx_error;
    
-   wire [7:0] rx_data;
-   reg [7:0] tx_data;
+   wire [7:0] rx_data, tx_data;
    
    reg [15:0] pause_time;
    reg pause_req     = 0;
 
-//   reg GMII_RX_CLK;
-//   always @(GMII_GTX_CLK)
-//     GMII_RX_CLK     <= #30 GMII_GTX_CLK;
-   
    wire GMII_RX_CLK  = GMII_GTX_CLK;
 
    // Loopback
@@ -45,6 +39,44 @@ module simple_gemac_tb;
       .tx_clk(tx_clk), .tx_data(tx_data), 
       .tx_valid(tx_valid), .tx_error(tx_error), .tx_ack(tx_ack)
       );
+
+   wire rx_ll_sof, rx_ll_eof, rx_ll_src_rdy, rx_ll_dst_rdy;
+   wire rx_ll_sof2, rx_ll_eof2, rx_ll_src_rdy2, rx_ll_dst_rdy2;
+   wire [7:0] rx_ll_data, rx_ll_data2;
+   wire rx_ll_error, rx_ll_error2;
+   
+   rxmac_to_ll8 rx_adapt
+     (.clk(clk), .reset(reset), .clear(0),
+      .rx_data(rx_data), .rx_valid(rx_valid), .rx_error(rx_error), .rx_ack(rx_ack),
+      .ll_data(rx_ll_data), .ll_sof(rx_ll_sof), .ll_eof(rx_ll_eof), 
+      .ll_src_rdy(rx_ll_src_rdy), .ll_dst_rdy(rx_ll_dst_rdy));
+
+   ll8_shortfifo rx_sfifo
+     (.clk(clk), .reset(reset), .clear(0),
+      .datain(rx_ll_data), .sof_i(rx_ll_sof), .eof_i(rx_ll_eof),
+      .error_i(rx_ll_error), .src_rdy_i(rx_ll_src_rdy), .dst_rdy_o(rx_ll_dst_rdy),
+      .dataout(rx_ll_data2), .sof_o(rx_ll_sof2), .eof_o(rx_ll_eof2),
+      .error_o(rx_ll_error2), .src_rdy_o(rx_ll_src_rdy2), .dst_rdy_i(rx_ll_dst_rdy2));
+
+   assign rx_ll_dst_rdy2 	= 1;
+
+   wire tx_ll_sof, tx_ll_eof, tx_ll_src_rdy, tx_ll_dst_rdy;
+   wire tx_ll_sof2, tx_ll_eof2, tx_ll_src_rdy2, tx_ll_dst_rdy2;
+   wire [7:0] tx_ll_data, tx_ll_data2;
+   wire tx_ll_error, tx_ll_error2;
+
+   ll8_shortfifo tx_sfifo
+     (.clk(clk), .reset(reset), .clear(clear),
+      .datain(tx_ll_data2), .sof_i(tx_ll_sof2), .eof_i(tx_ll_sof2),
+      .error_i(tx_ll_error2), .src_rdy_i(tx_ll_src_rdy2), .dst_rdy_i(tx_ll_dst_rdy2),
+      .dataout(tx_ll_data), .sof_o(tx_ll_sof), .eof_o(tx_ll_eof),
+      .error_o(tx_ll_error), .src_rdy_o(tx_ll_src_rdy), .dst_rdy_o(tx_ll_dst_rdy));
+   
+   ll8_to_txmac ll8_to_txmac
+     (.clk(clk), .reset(reset), .clear(clear),
+      .ll_data(tx_ll_data), .ll_sof(tx_ll_sof), .ll_eof(tx_ll_eof),
+      .ll_src_rdy(tx_ll_src_rdy), .ll_dst_rdy(tx_ll_dst_rdy),
+      .tx_data(tx_data), .tx_valid(tx_valid), .tx_error(tx_error), .tx_ack(tx_ack));
 
    task SendFlowCtrl;
       input [15:0] fc_len;
@@ -155,9 +187,15 @@ module simple_gemac_tb;
 	#10000 $finish;
      end
 
+   /*
    always @(posedge clk)
      if(GMII_TX_EN)
        $display("%x",GMII_TXD);
+   */
+
+   always @(posedge clk)
+     if(rx_ll_src_rdy2 & rx_ll_dst_rdy2)
+       $display("RX-PKT SOF %d EOF %d ERR%d DAT %x, TIME=%d",rx_ll_sof2,rx_ll_eof2,rx_ll_error2,rx_ll_data2,$time);
    
 endmodule // simple_gemac_tb
 
