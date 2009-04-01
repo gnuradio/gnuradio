@@ -20,16 +20,20 @@ module simple_gemac
 
    wire rst_rxclk, rst_txclk;   
    oneshot_2clk tx_rst_1shot (.clk_in(tx_clk),.in(reset),.clk_out(tx_clk),.out(rst_txclk));  // FIXME clocks
-   oneshot_2clk rx_rst_1shot (.clk_in(sys_clk),.in(reset),.clk_out(rx_clk),.out(rst_rxclk));
+   oneshot_2clk rx_rst_1shot (.clk_in(rx_clk),.in(reset),.clk_out(rx_clk),.out(rst_rxclk));
 
    wire [15:0] pause_quanta_rcvd;
+
+   wire [47:0] ucast_addr = 48'hF1F2_F3F4_F5F6;
+   wire [47:0] mcast_addr = 0;
+   wire pass_ucast  =1, pass_mcast=0, pass_bcast=1, pass_pause=0, pass_all=0;
    
    simple_gemac_tx simple_gemac_tx
      (.clk125(clk125),.reset(rst_txclk),
       .GMII_GTX_CLK(GMII_GTX_CLK), .GMII_TX_EN(GMII_TX_EN),
       .GMII_TX_ER(GMII_TX_ER), .GMII_TXD(GMII_TXD),
       .tx_clk(tx_clk), .tx_data(tx_data), .tx_valid(tx_valid), .tx_error(tx_error), .tx_ack(tx_ack),
-      .ifg(SGE_IFG), .mac_addr(48'hF1_F2_F3_F4_F5_F6),
+      .ifg(SGE_IFG), .mac_addr(ucast_addr),
       .pause_req(pause_req), .pause_time(pause_time),  // We request flow control
       .pause_apply(pause_apply), .paused(paused)  // We respect flow control
       );
@@ -39,6 +43,9 @@ module simple_gemac
       .GMII_RX_CLK(GMII_RX_CLK), .GMII_RX_DV(GMII_RX_DV), 
       .GMII_RX_ER(GMII_RX_ER), .GMII_RXD(GMII_RXD),
       .rx_clk(rx_clk), .rx_data(rx_data), .rx_valid(rx_valid), .rx_error(rx_error), .rx_ack(rx_ack),
+      .ucast_addr(ucast_addr), .mcast_addr(mcast_addr),
+      .pass_ucast(pass_ucast), .pass_mcast(pass_mcast), .pass_bcast(pass_bcast), 
+      .pass_pause(pass_pause), .pass_all(pass_all),
       .pause_quanta_rcvd(pause_quanta_rcvd), .pause_rcvd(pause_rcvd) 
       );
 
@@ -51,5 +58,4 @@ module simple_gemac
       .paused(paused)
       );
 
-   
 endmodule // simple_gemac
