@@ -24,6 +24,7 @@ module address_filter
 	   3 : af_state <= (data == address[23:16]) ? 4 : 7;
 	   4 : af_state <= (data == address[15:8])  ? 5 : 7;
 	   5 : af_state <= (data == address[7:0]) ? 6 : 7;
+	   6, 7 : af_state <= 0;
 	 endcase // case (af_state)
 
    assign match  = (af_state==6);
