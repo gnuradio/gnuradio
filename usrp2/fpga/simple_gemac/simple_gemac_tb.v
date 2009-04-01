@@ -19,14 +19,19 @@ module simple_gemac_tb;
    wire [7:0] rx_data;
    reg [7:0] tx_data;
    
-   wire [15:0] pause_time = 16'hBEEF;
+   reg [15:0] pause_time;
    reg pause_req     = 0;
 
-   reg GMII_RX_CLK;
-   always @(GMII_GTX_CLK)
-     GMII_RX_CLK <= #30 GMII_GTX_CLK;
+//   reg GMII_RX_CLK;
+//   always @(GMII_GTX_CLK)
+//     GMII_RX_CLK     <= #30 GMII_GTX_CLK;
    
-//   wire GMII_RX_CLK  = #30 GMII_GTX_CLK;
+   wire GMII_RX_CLK  = GMII_GTX_CLK;
+
+   // Loopback
+   assign GMII_RX_DV  = GMII_TX_EN;
+   assign GMII_RX_ER  = GMII_TX_ER;
+   assign GMII_RXD    = GMII_TXD;
    
    simple_gemac simple_gemac
      (.clk125(clk),  .reset(reset),
@@ -42,15 +47,17 @@ module simple_gemac_tb;
       );
 
    task SendFlowCtrl;
-     begin
-	$display("Sending Flow Control, %d", $time);
-	@(posedge clk);
-	pause_req <= 1;
-	@(posedge clk);
-	pause_req <= 0;
-     end
+      input [15:0] fc_len;
+      begin
+	 $display("Sending Flow Control, quanta = %d, time = %d", fc_len,$time);
+	 pause_time = fc_len;
+	 @(posedge clk);
+	 pause_req <= 1;
+	 @(posedge clk);
+	 pause_req <= 0;
+      end
    endtask // SendFlowCtrl
-
+   
    reg [31:0] count;
    task SendPacket;
       input [7:0] data_start;
@@ -115,13 +122,18 @@ module simple_gemac_tb;
 	@(negedge reset);
 	repeat (10)
 	  @(posedge clk);
-	SendFlowCtrl;
-	repeat (20)
-	  @(posedge clk);
-	SendPacket(8'hAA,10);
+	SendFlowCtrl(16'h0007);  // Send flow control
+	#30000;
+	@(posedge clk);
+	SendFlowCtrl(16'h0009);  // Increas flow control before it expires
+	#10000;
+	@(posedge clk);
+	SendFlowCtrl(16'h0000);  // Cancel flow control befor it expires
+	@(posedge clk);
+	SendPacket(8'hAA,10);    // This packet gets dropped by the filters
 	repeat (10)
 	  @(posedge clk);
-	SendPacketFromFile(60);
+	SendPacketFromFile(60);  // The rest are valid packets
 	repeat (10)
 	  @(posedge clk);
 	SendPacketFromFile(61);
