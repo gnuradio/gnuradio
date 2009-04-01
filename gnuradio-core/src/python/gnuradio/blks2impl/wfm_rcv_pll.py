@@ -38,7 +38,7 @@ class wfm_rcv_pll(gr.hier_block2):
         """
 	gr.hier_block2.__init__(self, "wfm_rcv_pll",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-				gr.io_signature(1, 2, gr.sizeof_float))      # Output signature
+				gr.io_signature(2, 2, gr.sizeof_float))      # Output signature
         bandwidth = 250e3
         audio_rate = demod_rate / audio_decimation
 
@@ -187,5 +187,7 @@ class wfm_rcv_pll(gr.hier_block2):
             # The result of Make_Right gets  (L+R) - (L-R) and results in 2*R
             self.connect(self.Make_Left , self.deemph_Left, (self, 0))
             self.connect(self.Make_Right, self.deemph_Right, (self, 1))
-        else:
-            self.connect (self.fm_demod, self.audio_filter, self)
+        # NOTE: mono support will require variable number of outputs in hier_block2s
+        # See ticket:174 in Trac database
+        #else:
+        #    self.connect (self.fm_demod, self.audio_filter, self)
