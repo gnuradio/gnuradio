@@ -1,7 +1,7 @@
 
 
 module simple_gemac_tb;
-
+`include "eth_tasks.v"
      
    reg clk = 0;
    reg reset = 1;
@@ -61,16 +61,20 @@ module simple_gemac_tb;
    assign rx_ll_dst_rdy2 	= 1;
 
    wire tx_ll_sof, tx_ll_eof, tx_ll_src_rdy, tx_ll_dst_rdy;
-   wire tx_ll_sof2, tx_ll_eof2, tx_ll_src_rdy2, tx_ll_dst_rdy2;
-   wire [7:0] tx_ll_data, tx_ll_data2;
-   wire tx_ll_error, tx_ll_error2;
+   reg tx_ll_sof2=0, tx_ll_eof2=0;
+   reg tx_ll_src_rdy2 = 0;
+   wire tx_ll_dst_rdy2;
+   wire [7:0] tx_ll_data;
+   reg [7:0] tx_ll_data2 = 0;
+   wire tx_ll_error;
+   wire tx_ll_error2 = 0;
 
    ll8_shortfifo tx_sfifo
      (.clk(clk), .reset(reset), .clear(clear),
-      .datain(tx_ll_data2), .sof_i(tx_ll_sof2), .eof_i(tx_ll_sof2),
-      .error_i(tx_ll_error2), .src_rdy_i(tx_ll_src_rdy2), .dst_rdy_i(tx_ll_dst_rdy2),
+      .datain(tx_ll_data2), .sof_i(tx_ll_sof2), .eof_i(tx_ll_eof2),
+      .error_i(tx_ll_error2), .src_rdy_i(tx_ll_src_rdy2), .dst_rdy_o(tx_ll_dst_rdy2),
       .dataout(tx_ll_data), .sof_o(tx_ll_sof), .eof_o(tx_ll_eof),
-      .error_o(tx_ll_error), .src_rdy_o(tx_ll_src_rdy), .dst_rdy_o(tx_ll_dst_rdy));
+      .error_o(tx_ll_error), .src_rdy_o(tx_ll_src_rdy), .dst_rdy_i(tx_ll_dst_rdy));
    
    ll8_to_txmac ll8_to_txmac
      (.clk(clk), .reset(reset), .clear(clear),
@@ -78,66 +82,6 @@ module simple_gemac_tb;
       .ll_src_rdy(tx_ll_src_rdy), .ll_dst_rdy(tx_ll_dst_rdy),
       .tx_data(tx_data), .tx_valid(tx_valid), .tx_error(tx_error), .tx_ack(tx_ack));
 
-   task SendFlowCtrl;
-      input [15:0] fc_len;
-      begin
-	 $display("Sending Flow Control, quanta = %d, time = %d", fc_len,$time);
-	 pause_time = fc_len;
-	 @(posedge clk);
-	 pause_req <= 1;
-	 @(posedge clk);
-	 pause_req <= 0;
-      end
-   endtask // SendFlowCtrl
-   
-   reg [31:0] count;
-   task SendPacket;
-      input [7:0] data_start;
-      input [31:0] data_len;
-      begin
-	 $display("Sending Packet Len=%d, %d", data_len, $time);
-	 count <= 1;
-	 tx_data  <= data_start;
-	 tx_error <= 0;
-	 tx_valid <= 1;
-	 while(~tx_ack)
-	   @(posedge tx_clk);
-	 $display("Packet Accepted, %d", $time);
-	 while(count < data_len)
-	   begin
-	      tx_data <= tx_data + 1;
-	      count   <= count + 1;
-	      @(posedge clk);
-	   end
-	 tx_valid <= 0;
-	 @(posedge tx_clk);
-      end
-   endtask // SendPacket
-   	
-   task SendPacketFromFile;
-      input [31:0] data_len;
-      begin
-	 $display("Sending Packet From File Len=%d, %d",data_len,$time);
-	 $readmemh( "test_packet.mem",pkt_rom );     
-	 count 	  = 0;
-	 tx_data  = pkt_rom[count];
-	 tx_error = 0;
-	 tx_valid = 1;
-	 while(~tx_ack)
-	   @(posedge tx_clk);
-	 $display("Packet Accepted, %d",$time);
-	 count = 1;
-	 while(count < data_len)
-	   begin
-	      tx_data = pkt_rom[count];
-	      count   = count + 1;
-	      @(posedge clk);
-	   end
-	 tx_valid <= 0;
-	 @(posedge tx_clk);
-      end
-   endtask // SendPacket
-   	
    initial $dumpfile("simple_gemac_tb.vcd");
    initial $dumpvars(0,simple_gemac_tb);
 
@@ -155,36 +99,40 @@ module simple_gemac_tb;
 	repeat (10)
 	  @(posedge clk);
 	SendFlowCtrl(16'h0007);  // Send flow control
+	@(posedge clk);
 	#30000;
 	@(posedge clk);
 	SendFlowCtrl(16'h0009);  // Increas flow control before it expires
 	#10000;
 	@(posedge clk);
 	SendFlowCtrl(16'h0000);  // Cancel flow control befor it expires
-	@(posedge clk);
-	SendPacket(8'hAA,10);    // This packet gets dropped by the filters
+	@(posedge clk); 
+
+	SendPacket_to_ll8(8'hAA,10);    // This packet gets dropped by the filters
 	repeat (10)
 	  @(posedge clk);
-	SendPacketFromFile(60);  // The rest are valid packets
+
+ 	SendPacketFromFile_ll8(60);  // The rest are valid packets
 	repeat (10)
 	  @(posedge clk);
-	SendPacketFromFile(61);
+
+ 	SendPacketFromFile_ll8(61);
 	repeat (10)
 	  @(posedge clk);
-	SendPacketFromFile(62);
+	SendPacketFromFile_ll8(62);
 	repeat (10)
 	  @(posedge clk);
-	SendPacketFromFile(63);
+	SendPacketFromFile_ll8(63);
 	repeat (1)
 	  @(posedge clk);
-	SendPacketFromFile(64);
+	SendPacketFromFile_ll8(64);
 	repeat (10)
 	  @(posedge clk);
-	SendPacketFromFile(59);
+	SendPacketFromFile_ll8(59);
 	repeat (1)
 	  @(posedge clk);
-	SendPacketFromFile(58);
-	#10000 $finish;
+	SendPacketFromFile_ll8(58);
+	#100000 $finish;
      end
 
    /*
