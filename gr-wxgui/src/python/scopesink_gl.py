@@ -76,6 +76,7 @@ class _scope_sink_base(gr.hier_block2):
 		ac_couple=False,
 		num_inputs=1,
 		frame_rate=scope_window.DEFAULT_FRAME_RATE,
+		**kwargs #do not end with a comma
 	):
 		if not t_scale: t_scale = 10.0/sample_rate
 		#init
