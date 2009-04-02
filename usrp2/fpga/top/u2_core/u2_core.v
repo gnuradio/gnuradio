@@ -695,14 +695,14 @@ module u2_core
 			   {dsp_rx_full,dsp_rx_empty,dsp_rx_occ[13:0]} };
    
    always @(posedge dsp_clk)
-     eth_mac_debug <= { { GMII_TX_EN, GMII_RX_DV, debug_txc[13:0]},
+     eth_mac_debug <= { { 6'd0, GMII_TX_EN, GMII_RX_DV, debug_mac0[7:0]},
 			{eth_rx_full2, eth_rx_empty2, eth_rx_occ2[13:0]} };
    
    assign      debug_clk[0] = 0;
    assign      debug_clk[1] = dsp_clk;	
    
-   assign      debug = 0;
-   assign      debug_gpio_0 = 0;
+   assign     debug = host_to_dsp_fifo; // debug_mux ? host_to_dsp_fifo : dsp_to_host_fifo;
+   assign      debug_gpio_0 = eth_mac_debug;
    assign      debug_gpio_1 = 0;
    
 endmodule // u2_core
