@@ -107,8 +107,21 @@ task SendPacketFromFile;
    end
 endtask // SendPacketFromFile
 
+task Waiter;
+   input [31:0] wait_length;
+   begin
+      tx_ll_src_rdy2 <= 0;
+      repeat(wait_length)
+	@(posedge clk);
+      tx_ll_src_rdy2 <= 1;
+   end
+endtask // Waiter
+
 task SendPacketFromFile_ll8;
    input [31:0] data_len;
+   input [31:0] wait_length;
+   input [31:0] wait_time;
+   
    integer count;
    begin
       $display("Sending Packet From File to LL8 Len=%d, %d",data_len,$time);
@@ -129,6 +142,8 @@ task SendPacketFromFile_ll8;
 	   tx_ll_data2 <= pkt_rom[i];
 	   tx_ll_sof2  <= 0;
 	   @(posedge clk);
+	   if(i==wait_time)
+	     Waiter(wait_length);
 	end
       
       while(~tx_ll_dst_rdy2)
