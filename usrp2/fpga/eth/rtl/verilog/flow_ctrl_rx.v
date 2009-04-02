@@ -8,6 +8,7 @@ module flow_ctrl_rx
    input [15:0] pause_quanta_set,
    input [15:0] fc_hwmark,
    input [15:0] fc_lwmark,
+   input [15:0] fc_padtime,
    // From MAC_rx_ctrl
    input        rx_clk,
    input [15:0] rx_fifo_space,
@@ -70,13 +71,13 @@ module flow_ctrl_rx
      else if (xon_int | xon_int_d1)
        xon_gen     <=1;                     
 
-   wire [15:0] pq_reduced = pause_quanta_set - 2;
+   wire [21:0] pq_reduced = {pause_quanta_set,6'd0} - {6'd0,fc_padtime};
    
    always @(posedge tx_clk or posedge rst)
      if(rst)
        countdown <= 0;
      else if(xoff_gen)
-       countdown <= {pq_reduced,6'd0};
+       countdown <= pq_reduced;
      else if(xon_gen)
        countdown <= 0;
      else if(countdown != 0)

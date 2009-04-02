@@ -137,7 +137,7 @@ module MAC_top
    wire [15:0] rx_fifo_space;
    wire        pause_apply, pause_quanta_sub;
    wire        xon_gen, xoff_gen, xon_gen_complete, xoff_gen_complete;
-   wire [15:0] fc_hwmark, fc_lwmark;
+   wire [15:0] fc_hwmark, fc_lwmark, fc_padtime;
    
   //PHY interface
   wire [7:0]  MTxD;
@@ -332,6 +332,7 @@ module MAC_top
       .pause_quanta_set         ( pause_quanta_set          ),
       .fc_hwmark (fc_hwmark),
       .fc_lwmark (fc_lwmark),
+      .fc_padtime (fc_padtime),
       // From RX side
       .rx_clk(MAC_rx_clk_div),
       .rx_fifo_space (rx_fifo_space),    // Decide if we need to send a PAUSE
@@ -342,7 +343,7 @@ module MAC_top
       .xoff_gen_complete (xoff_gen_complete), 
       .xon_gen_complete(xon_gen_complete)
       );
-/*   
+
   RMON U_RMON(
     .Clk                 ( CLK_I                ),
     .Reset               ( RST_I                ),
@@ -365,7 +366,7 @@ module MAC_top
     .CPU_rd_grant        ( CPU_rd_grant         ),
     .CPU_rd_dout         ( CPU_rd_dout          )
   );
-*/
+
    Phy_int U_Phy_int(
     .rst_mac_rx  ( rst_mac_rx   ),
     .rst_mac_tx  ( rst_mac_tx   ),
@@ -478,6 +479,7 @@ module MAC_top
     .tx_pause_en              ( tx_pause_en               ),
     .fc_hwmark                ( fc_hwmark                 ),
     .fc_lwmark                ( fc_lwmark                 ),
+    .fc_padtime               ( fc_padtime                ),
 		    
     // RMON host interface
     .CPU_rd_addr              ( CPU_rd_addr               ),
@@ -507,7 +509,7 @@ module MAC_top
     .UpdateMIIRX_DATAReg      ( UpdateMIIRX_DATAReg       )
   );
 
-   assign     debug0 = {xon_gen, xoff_gen, Tx_en, Rx_dv};
+   assign     debug0 = {xon_gen, xoff_gen, xon_gen_complete, xoff_gen_complete, debug_rx[3:0]};
    //assign     debug0 = {{debug_rx[3:0], xon_gen, xon_gen_complete, xoff_gen, xoff_gen_complete},
    //			{1'b0,Rx_mac_err,Rx_mac_empty,Rx_mac_rd,Rx_mac_sop,Rx_mac_eop,Rx_mac_BE[1:0]},
    //			{rx_fifo_space}};

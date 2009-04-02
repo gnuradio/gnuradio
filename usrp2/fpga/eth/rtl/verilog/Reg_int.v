@@ -43,6 +43,7 @@ module Reg_int (
   output            tx_pause_en,
   output [15:0]     fc_hwmark,
   output [15:0]     fc_lwmark,
+  output [15:0]     fc_padtime,
 		
   // RMON host interface
   output [5:0]      CPU_rd_addr,
@@ -141,6 +142,9 @@ module Reg_int (
   RegCPUData #( 13 ) U_0_037( MIIADDRESS                   , 7'd037, 13'h0000, RST_I, CLK_I, Wr, ADR_I, DAT_I[12:0] );
   RegCPUData #( 16 ) U_0_038( MIITX_DATA                   , 7'd038, 16'h0000, RST_I, CLK_I, Wr, ADR_I, DAT_I[15:0] );
 
+   // New FC register
+  RegCPUData #( 16 ) U_0_041( fc_padtime                   , 7'd041, 1'h0,     RST_I, CLK_I, Wr, ADR_I, DAT_I[15:0] );
+
   // Asserted in first clock of 2-cycle access, negated otherwise
   wire Access = ~ACK_O & STB_I & CYC_I;
 
@@ -231,6 +235,7 @@ module Reg_int (
             7'd38: DAT_O <= MIITX_DATA;
             7'd39: DAT_O <= MIIRX_DATA;
             7'd40: DAT_O <= MIISTATUS;
+            7'd41: DAT_O <= fc_padtime;
           endcase
       end
 
