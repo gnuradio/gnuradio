@@ -46,7 +46,7 @@ module simple_gemac_rx
        rx_valid <= 0;
      else if(keep_packet)
        rx_valid <= 1;
-     else if((rx_state == RX_IDLE))//|(rx_state == RX_GOODFRAME))
+     else if((rx_state == RX_IDLE)|(rx_state == RX_ERROR))
        rx_valid <= 0;
    
    address_filter af_ucast (.clk(rx_clk), .reset(reset), .go(go_filt), .data(rxd_d1),
