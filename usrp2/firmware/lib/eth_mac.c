@@ -69,6 +69,8 @@ eth_mac_init(const u2_mac_addr_t *src)
 
   eth_mac->fc_lwmark = 600;		// there are currently 2047 lines in the fifo
   eth_mac->fc_hwmark = 1200;
+  eth_mac->fc_padtime = 1700;           // how long before flow control runs out do we 
+                                        // request a re-pause.  Units of 8ns (bytes)
 
   //eth_mac->tx_pause_en = 0;		// pay attn to pause frames sent to us
   //eth_mac->pause_quanta_set = 38;	// a bit more than 1 max frame 16kb/512 + fudge

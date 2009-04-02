@@ -81,6 +81,7 @@ typedef struct {
   volatile int	miitx_data;
   volatile int	miirx_data;
   volatile int	miistatus;
+  volatile int	fc_padtime;
 } eth_mac_regs_t;
 
 // miicommand register
