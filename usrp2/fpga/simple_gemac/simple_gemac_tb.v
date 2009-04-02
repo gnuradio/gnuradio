@@ -44,7 +44,8 @@ module simple_gemac_tb;
       );
 
    wire rx_ll_sof, rx_ll_eof, rx_ll_src_rdy, rx_ll_dst_rdy;
-   wire rx_ll_sof2, rx_ll_eof2, rx_ll_src_rdy2, rx_ll_dst_rdy2;
+   wire rx_ll_sof2, rx_ll_eof2, rx_ll_src_rdy2;
+   reg rx_ll_dst_rdy2 = 1;
    wire [7:0] rx_ll_data, rx_ll_data2;
    wire rx_ll_error, rx_ll_error2;
    
@@ -60,8 +61,6 @@ module simple_gemac_tb;
       .error_i(rx_ll_error), .src_rdy_i(rx_ll_src_rdy), .dst_rdy_o(rx_ll_dst_rdy),
       .dataout(rx_ll_data2), .sof_o(rx_ll_sof2), .eof_o(rx_ll_eof2),
       .error_o(rx_ll_error2), .src_rdy_o(rx_ll_src_rdy2), .dst_rdy_i(rx_ll_dst_rdy2));
-
-   assign rx_ll_dst_rdy2 	= 1;
 
    wire tx_ll_sof, tx_ll_eof, tx_ll_src_rdy, tx_ll_dst_rdy;
    reg tx_ll_sof2=0, tx_ll_eof2=0;
@@ -108,36 +107,46 @@ module simple_gemac_tb;
 	SendFlowCtrl(16'h0009);  // Increas flow control before it expires
 	#10000;
 	@(posedge clk);
-	SendFlowCtrl(16'h0000);  // Cancel flow control befor it expires
+	SendFlowCtrl(16'h0000);  // Cancel flow control before it expires
 	@(posedge clk); 
 
 	SendPacket_to_ll8(8'hAA,10);    // This packet gets dropped by the filters
 	repeat (10)
 	  @(posedge clk);
 
- 	SendPacketFromFile_ll8(60);  // The rest are valid packets
+ 	SendPacketFromFile_ll8(60,0,0);  // The rest are valid packets
 	repeat (10)
 	  @(posedge clk);
 
- 	SendPacketFromFile_ll8(61);
+ 	SendPacketFromFile_ll8(61,0,0);
 	repeat (10)
 	  @(posedge clk);
-	SendPacketFromFile_ll8(62);
+	SendPacketFromFile_ll8(62,0,0);
 	repeat (10)
 	  @(posedge clk);
-	SendPacketFromFile_ll8(63);
+	SendPacketFromFile_ll8(63,0,0);
 	repeat (1)
 	  @(posedge clk);
-	SendPacketFromFile_ll8(64);
+	SendPacketFromFile_ll8(64,0,0);
 	repeat (10)
 	  @(posedge clk);
-	SendPacketFromFile_ll8(59);
+	SendPacketFromFile_ll8(59,0,0);
 	repeat (1)
 	  @(posedge clk);
-	SendPacketFromFile_ll8(58);
-	#100000 $finish;
+	SendPacketFromFile_ll8(58,0,0);
+	repeat (1)
+	  @(posedge clk);
+	SendPacketFromFile_ll8(100,0,0);
+	repeat (1)
+	  @(posedge clk);
+	SendPacketFromFile_ll8(200,150,30);  // waiting 14 empties the fifo, 15 underruns
+	repeat (1)
+	  @(posedge clk);
+	SendPacketFromFile_ll8(100,0,30);
+	#10000 $finish;
      end
 
+   // Force a CRC error
     initial
      begin
 	#90000;
@@ -147,6 +156,7 @@ module simple_gemac_tb;
 	FORCE_DAT_ERR <= 8'h00;
      end
 
+   // Force an RX_ER error (i.e. link loss)
    initial
      begin
 	#116000;
@@ -156,30 +166,28 @@ module simple_gemac_tb;
 	FORCE_ERR <= 0;
      end
 
-   // Tests: Send and recv flow control, send and receive good packets, RX CRC err, RX_ER
-   // Still need to test: RX overrun, TX underrun
+   // Cause receive fifo to fill, causing an RX overrun
+   initial
+     begin
+	#126000;
+	@(posedge clk);
+	rx_ll_dst_rdy2 <= 0;
+	repeat (30)          // Repeat of 14 fills the shortfifo, but works.  15 overflows
+	  @(posedge clk);
+	rx_ll_dst_rdy2 <= 1;
+     end
    
-   /*
-   always @(posedge clk)
-     if(GMII_TX_EN)
-       $display("%x",GMII_TXD);
-   */
-
+   // Tests: Send and recv flow control, send and receive good packets, RX CRC err, RX_ER, RX overrun, TX underrun
+   // Still need to test: ?
+   
    always @(posedge clk)
      if(rx_ll_src_rdy2 & rx_ll_dst_rdy2)
-       $display("RX-PKT SOF %d EOF %d ERR%d DAT %x, TIME=%d",rx_ll_sof2,rx_ll_eof2,rx_ll_error2,rx_ll_data2,$time);
+       begin
+	  if(rx_ll_sof2 & ~rx_ll_eof2)
+	    $display("RX-PKT-START %d",$time);
+	  $display("RX-PKT SOF %d EOF %d ERR%d DAT %x",rx_ll_sof2,rx_ll_eof2,rx_ll_error2,rx_ll_data2);
+	  if(rx_ll_eof2 & ~rx_ll_sof2)
+	    $display("RX-PKT-END %d",$time);
+       end
    
 endmodule // simple_gemac_tb
-
-/*
-    if ( !$value$plusargs( "rom=%s", ROMFile ) )
-        begin
-           $display( "Using default ROM file, 'flash.rom'" );
-           ROMFile = "flash.rom";
-        end
-      else
-	$display( "Using %s as ROM file.", ROMFile);
-      
-      #1 $readmemh( ROMFile,rom );     
-   end
- */
