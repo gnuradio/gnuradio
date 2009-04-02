@@ -18,14 +18,17 @@ module simple_gemac_tb;
    wire [7:0] rx_data, tx_data;
    
    reg [15:0] pause_time;
-   reg pause_req     = 0;
+   reg pause_req      = 0;
 
-   wire GMII_RX_CLK  = GMII_GTX_CLK;
+   wire GMII_RX_CLK   = GMII_GTX_CLK;
 
+   reg [7:0] FORCE_DAT_ERR = 0;
+   reg FORCE_ERR = 0;
+   
    // Loopback
    assign GMII_RX_DV  = GMII_TX_EN;
-   assign GMII_RX_ER  = GMII_TX_ER;
-   assign GMII_RXD    = GMII_TXD;
+   assign GMII_RX_ER  = GMII_TX_ER | FORCE_ERR;
+   assign GMII_RXD    = GMII_TXD ^ FORCE_DAT_ERR;
    
    simple_gemac simple_gemac
      (.clk125(clk),  .reset(reset),
@@ -48,7 +51,7 @@ module simple_gemac_tb;
    rxmac_to_ll8 rx_adapt
      (.clk(clk), .reset(reset), .clear(0),
       .rx_data(rx_data), .rx_valid(rx_valid), .rx_error(rx_error), .rx_ack(rx_ack),
-      .ll_data(rx_ll_data), .ll_sof(rx_ll_sof), .ll_eof(rx_ll_eof), 
+      .ll_data(rx_ll_data), .ll_sof(rx_ll_sof), .ll_eof(rx_ll_eof), .ll_error(rx_ll_error),
       .ll_src_rdy(rx_ll_src_rdy), .ll_dst_rdy(rx_ll_dst_rdy));
 
    ll8_shortfifo rx_sfifo
@@ -92,7 +95,7 @@ module simple_gemac_tb;
    initial
      for (i=0;i<65536;i=i+1)
        pkt_rom[i] <= 8'h0;
-      
+
    initial
      begin
 	@(negedge reset);
@@ -135,6 +138,27 @@ module simple_gemac_tb;
 	#100000 $finish;
      end
 
+    initial
+     begin
+	#90000;
+	@(posedge clk);
+	FORCE_DAT_ERR <= 8'h10;
+	@(posedge clk);
+	FORCE_DAT_ERR <= 8'h00;
+     end
+
+   initial
+     begin
+	#116000;
+	@(posedge clk);
+	FORCE_ERR <= 1;
+	@(posedge clk);
+	FORCE_ERR <= 0;
+     end
+
+   // Tests: Send and recv flow control, send and receive good packets, RX CRC err, RX_ER
+   // Still need to test: RX overrun, TX underrun
+   
    /*
    always @(posedge clk)
      if(GMII_TX_EN)
