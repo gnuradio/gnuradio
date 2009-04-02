@@ -27,9 +27,6 @@ module simple_gemac_rx
    delay_line #(.WIDTH(10)) rx_delay
      (.clk(rx_clk), .delay(DELAY), .din({rx_dv_d1,rx_er_d1,rxd_d1}),.dout({rx_dv_del,rx_er_dl,rxd_del}));
 
-   assign rx_data   = rxd_del;
-   assign rx_error  = 0;
-
    always @(posedge rx_clk)
      if(reset)
        rx_ack 	   <= 0;
@@ -41,6 +38,9 @@ module simple_gemac_rx
 	(pass_bcast & is_bcast) | (pass_pause & is_pause) | pass_all;
    
    reg [7:0] rx_state;
+   assign rx_data   = rxd_del;
+   assign rx_error  = (rx_state == RX_ERROR);
+
    always @(posedge rx_clk)
      if(reset)
        rx_valid <= 0;
