@@ -36,7 +36,7 @@ module simple_gemac_tb;
       .GMII_TX_ER(GMII_TX_ER), .GMII_TXD(GMII_TXD),
       .GMII_RX_CLK(GMII_RX_CLK), .GMII_RX_DV(GMII_RX_DV),  
       .GMII_RX_ER(GMII_RX_ER), .GMII_RXD(GMII_RXD),
-      .pause_req(pause_req), .pause_time(pause_time),
+      .pause_req(pause_req), .pause_time(pause_time), .pause_en(1),
       .rx_clk(rx_clk), .rx_data(rx_data),
       .rx_valid(rx_valid), .rx_error(rx_error), .rx_ack(rx_ack),
       .tx_clk(tx_clk), .tx_data(tx_data), 
@@ -178,7 +178,7 @@ module simple_gemac_tb;
      end
    
    // Tests: Send and recv flow control, send and receive good packets, RX CRC err, RX_ER, RX overrun, TX underrun
-   // Still need to test: ?
+   // Still need to test: CRC errors on Pause Frames
    
    always @(posedge clk)
      if(rx_ll_src_rdy2 & rx_ll_dst_rdy2)

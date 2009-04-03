@@ -6,7 +6,7 @@ module simple_gemac
    input GMII_RX_CLK, input GMII_RX_DV, input GMII_RX_ER, input [7:0] GMII_RXD,
 
    // Flow Control Interface
-   input pause_req, input [15:0] pause_time,
+   input pause_req, input [15:0] pause_time, input pause_en,
 
    // RX Client Interface
    output rx_clk, output [7:0] rx_data, output rx_valid, output rx_error, output rx_ack,
@@ -16,7 +16,6 @@ module simple_gemac
    );
 
    localparam SGE_IFG 		     = 8'd12;  // 12 should be the absolute minimum
-   localparam SGE_RESPECT_FLOW_CTRL  = 1'b1;  // stop sending if other side requests
 
    wire rst_rxclk, rst_txclk;   
    oneshot_2clk tx_rst_1shot (.clk_in(tx_clk),.in(reset),.clk_out(tx_clk),.out(rst_txclk));  // FIXME clocks
@@ -51,7 +50,7 @@ module simple_gemac
 
    flow_ctrl_tx flow_ctrl_tx
      (.rst(rst_txclk), .tx_clk(tx_clk),
-      .tx_pause_en(SGE_RESPECT_FLOW_CTRL),
+      .tx_pause_en(pause_en),
       .pause_quanta(pause_quanta_rcvd), // 16 bit value
       .pause_quanta_val(pause_rcvd),
       .pause_apply(pause_apply),
