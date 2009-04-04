@@ -45,3 +45,4 @@ rx_streaming_samples_SOURCES = rx_streaming_samples.cc
 gen_const_SOURCES = gen_const.cc
 tx_samples_SOURCES = tx_samples.cc
 test_mimo_tx_SOURCES = test_mimo_tx.cc
+gpio_SOURCES = gpio.cc
