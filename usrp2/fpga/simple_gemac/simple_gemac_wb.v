@@ -18,7 +18,7 @@ endmodule // wb_reg
 
 module simple_gemac_wb
   (input wb_clk, input wb_rst,
-   input wb_cyc, input wb_stb, input wb_ack, input wb_we,
+   input wb_cyc, input wb_stb, output reg wb_ack, input wb_we,
    input [7:0] wb_adr, input [31:0] wb_dat_i, output reg [31:0] wb_dat_o,
    
    inout mdio, output mdc,
@@ -26,22 +26,34 @@ module simple_gemac_wb
    output pass_ucast, output pass_mcast, output pass_bcast,
    output pass_pause, output pass_all, output pause_en  );
 
+   wire   acc 	  = wb_cyc & wb_stb;
    wire   wr_acc  = wb_cyc & wb_stb & wb_we;
    wire   rd_acc  = wb_cyc & wb_stb & ~wb_we;
-   
+
+   always @(posedge wb_clk)
+     if(wb_rst)
+       wb_ack 	 <= 0;
+     else
+       wb_ack 	 <= acc & ~wb_ack;
+       
    wire [5:0] misc_settings;
    assign {pass_ucast, pass_mcast, pass_bcast, pass_pause, pass_all, pause_en} 	= misc_settings;
 
    wb_reg #(.ADDR(0),.DEFAULT(6'b111001))
-   wb_reg_settings (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .dat_i(wb_dat_i), .dat_o(misc_settings) );
+   wb_reg_settings (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .wr_acc(wr_acc),
+		    .dat_i(wb_dat_i), .dat_o(misc_settings) );
    wb_reg #(.ADDR(1),.DEFAULT(0))
-   wb_reg_ucast_h (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .dat_i(wb_dat_i), .dat_o(ucast_addr[47:32]) );
+   wb_reg_ucast_h (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .wr_acc(wr_acc),
+		   .dat_i(wb_dat_i), .dat_o(ucast_addr[47:32]) );
    wb_reg #(.ADDR(2),.DEFAULT(0))
-   wb_reg_ucast_l (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .dat_i(wb_dat_i), .dat_o(ucast_addr[31:0]) );
+   wb_reg_ucast_l (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .wr_acc(wr_acc),
+		   .dat_i(wb_dat_i), .dat_o(ucast_addr[31:0]) );
    wb_reg #(.ADDR(3),.DEFAULT(0))
-   wb_reg_mcast_h (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .dat_i(wb_dat_i), .dat_o(mcast_addr[47:32]) );
+   wb_reg_mcast_h (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .wr_acc(wr_acc),
+		   .dat_i(wb_dat_i), .dat_o(mcast_addr[47:32]) );
    wb_reg #(.ADDR(4),.DEFAULT(0))
-   wb_reg_mcast_l (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .dat_i(wb_dat_i), .dat_o(mcast_addr[31:0]) );
+   wb_reg_mcast_l (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .wr_acc(wr_acc),
+		   .dat_i(wb_dat_i), .dat_o(mcast_addr[31:0]) );
 
    //MII to CPU 
    wire [7:0] Divider;            // Divider for the host clock

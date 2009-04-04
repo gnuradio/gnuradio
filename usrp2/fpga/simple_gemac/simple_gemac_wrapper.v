@@ -31,8 +31,8 @@ module simple_gemac_wrapper
    wire pass_ucast, pass_mcast, pass_bcast, pass_pause, pass_all, pause_en;
 
    wire rst_rxclk, rst_txclk;
-   reset_sync reset_sync_tx (.clk(tx_clk),.reset_in(reset),.reset_out(rst_txclk));
-   reset_sync reset_sync_rx (.clk(rx_clk),.reset_in(reset),.reset_out(rst_rxclk));
+   reset_sync reset_sync_tx (.clk(tx_clk),.reset_in(reset),.reset_out(tx_reset));
+   reset_sync reset_sync_rx (.clk(rx_clk),.reset_in(reset),.reset_out(rx_reset));
 
    simple_gemac simple_gemac
      (.clk125(clk125),  .reset(reset),
