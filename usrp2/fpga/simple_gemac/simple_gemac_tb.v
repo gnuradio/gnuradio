@@ -29,6 +29,10 @@ module simple_gemac_tb;
    assign GMII_RX_DV  = GMII_TX_EN;
    assign GMII_RX_ER  = GMII_TX_ER | FORCE_ERR;
    assign GMII_RXD    = GMII_TXD ^ FORCE_DAT_ERR;
+
+   wire [47:0] ucast_addr = 48'hF1F2_F3F4_F5F6;
+   wire [47:0] mcast_addr = 0;
+   wire        pass_ucast  =1, pass_mcast=0, pass_bcast=1, pass_pause=0, pass_all=0;
    
    simple_gemac simple_gemac
      (.clk125(clk),  .reset(reset),
@@ -37,6 +41,9 @@ module simple_gemac_tb;
       .GMII_RX_CLK(GMII_RX_CLK), .GMII_RX_DV(GMII_RX_DV),  
       .GMII_RX_ER(GMII_RX_ER), .GMII_RXD(GMII_RXD),
       .pause_req(pause_req), .pause_time(pause_time), .pause_en(1),
+      .ucast_addr(ucast_addr), .mcast_addr(mcast_addr),
+      .pass_ucast(pass_ucast), .pass_mcast(pass_mcast), .pass_bcast(pass_bcast), 
+      .pass_pause(pass_pause), .pass_all(pass_all),
       .rx_clk(rx_clk), .rx_data(rx_data),
       .rx_valid(rx_valid), .rx_error(rx_error), .rx_ack(rx_ack),
       .tx_clk(tx_clk), .tx_data(tx_data), 

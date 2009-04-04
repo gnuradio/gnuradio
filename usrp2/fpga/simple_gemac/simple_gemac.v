@@ -8,6 +8,10 @@ module simple_gemac
    // Flow Control Interface
    input pause_req, input [15:0] pause_time, input pause_en,
 
+   // Settings
+   input [47:0] ucast_addr, input [47:0] mcast_addr,
+   input pass_ucast, input pass_mcast, input pass_bcast, input pass_pause, input pass_all,
+   
    // RX Client Interface
    output rx_clk, output [7:0] rx_data, output rx_valid, output rx_error, output rx_ack,
 
@@ -18,15 +22,11 @@ module simple_gemac
    localparam SGE_IFG 		     = 8'd12;  // 12 should be the absolute minimum
 
    wire rst_rxclk, rst_txclk;   
-   oneshot_2clk tx_rst_1shot (.clk_in(tx_clk),.in(reset),.clk_out(tx_clk),.out(rst_txclk));  // FIXME clocks
-   oneshot_2clk rx_rst_1shot (.clk_in(rx_clk),.in(reset),.clk_out(rx_clk),.out(rst_rxclk));
+   reset_sync reset_sync_tx (.clk(tx_clk),.reset_in(reset),.reset_out(rst_txclk));
+   reset_sync reset_sync_rx (.clk(rx_clk),.reset_in(reset),.reset_out(rst_rxclk));
 
    wire [15:0] pause_quanta_rcvd;
 
-   wire [47:0] ucast_addr = 48'hF1F2_F3F4_F5F6;
-   wire [47:0] mcast_addr = 0;
-   wire pass_ucast  =1, pass_mcast=0, pass_bcast=1, pass_pause=0, pass_all=0;
-   
    simple_gemac_tx simple_gemac_tx
      (.clk125(clk125),.reset(rst_txclk),
       .GMII_GTX_CLK(GMII_GTX_CLK), .GMII_TX_EN(GMII_TX_EN),
