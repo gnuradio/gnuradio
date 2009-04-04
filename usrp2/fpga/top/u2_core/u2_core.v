@@ -602,7 +602,7 @@ module u2_core
      (.clk(dsp_clk),.rst(dsp_rst),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .adc_a(adc_a),.adc_ovf_a(adc_ovf_a),.adc_b(adc_b),.adc_ovf_b(adc_ovf_b),
-      .sample(sample_rx), .run(run_rx_d1), .strobe(strobe_rx),
+      .io_rx(io_rx),.sample(sample_rx), .run(run_rx_d1), .strobe(strobe_rx),
       .debug(debug_rx_dsp) );
 
    tx_control #(.FIFOSIZE(10)) tx_control

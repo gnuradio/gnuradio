@@ -133,6 +133,11 @@ namespace usrp2 {
     bool set_rx_decim(int decimation_factor);
     int rx_decim() { return d_rx_decim; }
     bool set_rx_scale_iq(int scale_i, int scale_q);
+    bool set_gpio_ddr(int bank, uint16_t value, uint16_t mask);
+    bool set_gpio_sels(int bank, std::string src);
+    bool enable_gpio_streaming(int bank, int enable);
+    bool write_gpio(int bank, uint16_t value, uint16_t mask);
+    bool read_gpio(int bank, uint16_t *value);
     bool start_rx_streaming(unsigned int channel, unsigned int items_per_frame);
     bool rx_samples(unsigned int channel, rx_sample_handler *handler);
     bool stop_rx_streaming(unsigned int channel);

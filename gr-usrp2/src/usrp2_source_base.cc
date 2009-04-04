@@ -147,3 +147,33 @@ usrp2_source_base::stop()
 {
   return d_u2->stop_rx_streaming(0); // FIXME: someday sources will have channel #s
 }
+
+bool
+usrp2_source_base::set_gpio_ddr(uint16_t value, uint16_t mask)
+{
+  return d_u2->set_gpio_ddr(usrp2::GPIO_RX_BANK, value, mask);
+}
+
+bool
+usrp2_source_base::set_gpio_sels(std::string sels)
+{
+  return d_u2->set_gpio_sels(usrp2::GPIO_RX_BANK, sels);
+}
+
+bool
+usrp2_source_base::write_gpio(uint16_t value, uint16_t mask)
+{
+  return d_u2->write_gpio(usrp2::GPIO_RX_BANK, value, mask);
+}
+
+bool
+usrp2_source_base::read_gpio(uint16_t *value)
+{
+  return d_u2->read_gpio(usrp2::GPIO_RX_BANK, value);
+}
+
+bool
+usrp2_source_base::enable_gpio_streaming(int enable)
+{
+  return d_u2->enable_gpio_streaming(usrp2::GPIO_RX_BANK, enable);
+}

@@ -129,6 +129,31 @@ public:
    * \brief Called by scheduler when stopping flowgraph
    */
   virtual bool stop();
+
+  /*!
+   * \brief Set daughterboard GPIO data direction register.
+   */
+  bool set_gpio_ddr(uint16_t value, uint16_t mask);
+
+  /*!
+   * \brief Set daughterboard GPIO output selection register.
+   */
+  bool set_gpio_sels(std::string sels);
+
+  /*!
+   * \brief Set daughterboard GPIO pin values.
+   */
+  bool write_gpio(uint16_t value, uint16_t mask);
+
+  /*!
+   * \brief Read daughterboard GPIO pin values
+   */
+  bool read_gpio(uint16_t *value);
+
+  /*!
+   * \brief Enable streaming GPIO in sample LSBs
+   */
+  bool enable_gpio_streaming(int enable);
 };
 
 #endif /* INCLUDED_USRP2_SOURCE_BASE_H */

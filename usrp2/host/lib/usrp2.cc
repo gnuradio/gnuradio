@@ -437,8 +437,37 @@ namespace usrp2 {
     return d_impl->poke32(addr, data);
   }
 
-} // namespace usrp2
+  bool
+  usrp2::set_gpio_ddr(int bank, uint16_t value, uint16_t mask)
+  {
+    return d_impl->set_gpio_ddr(bank, value, mask);
+  }
 
+  bool
+  usrp2::set_gpio_sels(int bank, std::string src)
+  {
+    return d_impl->set_gpio_sels(bank, src);
+  }
+
+  bool
+  usrp2::write_gpio(int bank, uint16_t value, uint16_t mask)
+  {
+    return d_impl->write_gpio(bank, value, mask);
+  }
+
+  bool
+  usrp2::read_gpio(int bank, uint16_t *value)
+  {
+    return d_impl->read_gpio(bank, value);
+  }
+
+  bool
+  usrp2::enable_gpio_streaming(int bank, int enable)
+  {
+    return d_impl->enable_gpio_streaming(bank, enable);
+  }
+
+} // namespace usrp2
 
 std::ostream& operator<<(std::ostream &os, const usrp2::props &x)
 {

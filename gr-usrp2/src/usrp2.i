@@ -81,6 +81,12 @@ public:
   bool daughterboard_id(int *dbid);
   unsigned int overruns();
   unsigned int missing();
+  bool set_gpio_ddr(uint16_t value, uint16_t mask);
+  bool set_gpio_sels(std::string sels);
+  bool write_gpio(uint16_t value, uint16_t mask);
+  %rename(_real_read_gpio) read_gpio;
+  bool read_gpio(uint16_t *value);
+  bool enable_gpio_streaming(int enable);
 };
 
 // ----------------------------------------------------------------
@@ -147,6 +153,11 @@ public:
   double freq_max();
   %rename(_real_daughterboard_id) daughterboard_id;
   bool daughterboard_id(int *dbid);
+  bool set_gpio_ddr(uint16_t value, uint16_t mask);
+  bool set_gpio_sels(std::string sels);
+  bool write_gpio(uint16_t value, uint16_t mask);
+  %rename(_real_read_gpio) read_gpio;
+  bool read_gpio(uint16_t *value);
 };
 
 // ----------------------------------------------------------------
@@ -189,12 +200,15 @@ public:
 
 // some utility functions to allow Python to deal with pointers
 %{
-  long *make_long_ptr() { return (long *)malloc(sizeof(long)); }
+  long *make_long_ptr() { return new long; }
   long deref_long_ptr(long *l) { return *l; }
-  void free_long_ptr(long *l) { free(l); }
-  int *make_int_ptr() { return (int *)malloc(sizeof(int)); }
+  void free_long_ptr(long *l) { delete l; }
+  int *make_int_ptr() { return new int; }
   int deref_int_ptr(int *l) { return *l; }
-  void free_int_ptr(int *l) { free(l); }
+  void free_int_ptr(int *l) { delete l; }
+  uint16_t *make_uint16_ptr() { return new uint16_t; }
+  int deref_uint16_ptr(uint16_t *l) { return *l; }
+  void free_uint16_ptr(uint16_t *l) { delete l; }
 %}
 
 long *make_long_ptr();
@@ -203,6 +217,9 @@ void free_long_ptr(long *l);
 int *make_int_ptr();
 int deref_int_ptr(int *l);
 void free_int_ptr(int *l);
+uint16_t *make_uint16_ptr();
+int deref_uint16_ptr(uint16_t *l);
+void free_uint16_ptr(uint16_t *l);
 
 // create a more pythonic interface
 %pythoncode %{
@@ -273,6 +290,17 @@ def __default_tx_scale_iq(self, interp):
   self._real_default_tx_scale_iq(interp, scale_i, scale_q)
   return (deref_int_ptr(scale_i), deref_int_ptr(scale_q))
 
+def __read_gpio(self):
+  value = make_uint16_ptr()
+  r = self._real_read_gpio(value)
+  if r:
+    result = deref_uint16_ptr(value)
+  else:
+    result = None
+  free_uint16_ptr(value)
+  return result
+
+
 usrp2_source_32fc_sptr.set_center_freq = __set_center_freq
 usrp2_source_16sc_sptr.set_center_freq = __set_center_freq
 usrp2_sink_32fc_sptr.set_center_freq = __set_center_freq
@@ -305,5 +333,10 @@ usrp2_sink_16sc_sptr.daughterboard_id = __daughterboard_id
 
 usrp2_sink_32fc_sptr.default_scale_iq = __default_tx_scale_iq
 usrp2_sink_16sc_sptr.default_scale_iq = __default_tx_scale_iq
+
+usrp2_source_32fc_sptr.read_gpio = __read_gpio
+usrp2_source_16sc_sptr.read_gpio = __read_gpio
+usrp2_sink_32fc_sptr.read_gpio = __read_gpio
+usrp2_sink_16sc_sptr.read_gpio = __read_gpio
 
 %}

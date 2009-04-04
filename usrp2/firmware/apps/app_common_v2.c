@@ -40,17 +40,11 @@ dbsm_t *ac_could_be_sending_to_eth;
 
 static unsigned char exp_seqno __attribute__((unused)) = 0;
 
-static bool
-burn_mac_addr(const op_burn_mac_addr_t *p)
-{
-  return ethernet_set_mac_addr(&p->addr);
-}
-
-static bool
+static inline bool
 sync_to_pps(const op_generic_t *p)
 {
   timesync_regs->sync_on_next_pps = 1;
-  putstr("SYNC to PPS\n");
+  //putstr("SYNC to PPS\n");
   return true;
 }
 
@@ -65,7 +59,7 @@ sync_every_pps(const op_generic_t *p)
   return true;
 }
 
-static bool
+static inline bool
 config_mimo_cmd(const op_config_mimo_t *p)
 {
   clocks_mimo_config(p->flags);
@@ -348,8 +342,8 @@ peek_cmd(const op_peek_t *p,
 {
   op_generic_t *r = (op_generic_t *) reply_payload;
 
-  putstr("peek: addr="); puthex32(p->addr);
-  printf(" bytes=%u\n", p->bytes);
+  //putstr("peek: addr="); puthex32(p->addr);
+  //printf(" bytes=%u\n", p->bytes);
 
   if ((reply_payload_space < (sizeof(*r) + p->bytes)) ||
       p->bytes > MAX_SUBPKT_LEN - sizeof(op_generic_t)) {
@@ -371,8 +365,8 @@ static bool
 poke_cmd(const op_poke_t *p)
 {
   int bytes = p->len - sizeof(*p);
-  putstr("poke: addr="); puthex32(p->addr);
-  printf(" bytes=%u\n", bytes);
+  //putstr("poke: addr="); puthex32(p->addr);
+  //printf(" bytes=%u\n", bytes);
 
   uint8_t *src = (uint8_t *)p + sizeof(*p);
   memcpy_wa((void *)p->addr, src, bytes);
@@ -388,6 +382,26 @@ set_lo_offset_cmd(const op_freq_t *p)
     return db_set_lo_offset(tx_dboard, f);
   else
     return db_set_lo_offset(rx_dboard, f);
+}
+
+static size_t
+gpio_read_cmd(const op_gpio_t *p,
+	      void *reply_payload, size_t reply_payload_space)
+{
+  op_gpio_read_reply_t *r = (op_gpio_read_reply_t *) reply_payload;
+  if (reply_payload_space < sizeof(*r))	// no room
+    return 0;
+
+ // Build reply subpacket
+
+  r->opcode = OP_GPIO_READ_REPLY;
+  r->len = sizeof(op_gpio_read_reply_t);
+  r->rid = p->rid;
+  r->ok = true;
+  r->mbz = 0;
+  r->value = hal_gpio_read(p->bank);
+
+  return r->len;
 }
 
 static size_t
@@ -438,6 +452,7 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
   int payload_len = len - sizeof(u2_eth_packet_t);
   
   size_t subpktlen = 0;
+  bool ok = false;
 
   while (payload_len >= sizeof(op_generic_t)){
     const op_generic_t *gp = (const op_generic_t *) payload;
@@ -454,34 +469,30 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
       break;
     
     case OP_CONFIG_TX_V2:
-      subpktlen = config_tx_v2_cmd((op_config_tx_v2_t *) payload,
-				   reply_payload, reply_payload_space);
+      subpktlen = config_tx_v2_cmd((op_config_tx_v2_t *) payload, reply_payload, reply_payload_space);
       break;
 
     case OP_CONFIG_RX_V2:
-      subpktlen = config_rx_v2_cmd((op_config_rx_v2_t *) payload,
-				   reply_payload, reply_payload_space);
+      subpktlen = config_rx_v2_cmd((op_config_rx_v2_t *) payload, reply_payload, reply_payload_space);
       break;
 
     case OP_START_RX_STREAMING:
       start_rx_streaming_cmd(&pkt->ehdr.src, (op_start_rx_streaming_t *) payload);
-      subpktlen = generic_reply(gp, reply_payload, reply_payload_space, true);
-      break;
+      ok = true;
+      goto generic_reply;
     
     case OP_STOP_RX:
       stop_rx_cmd();
-      subpktlen = generic_reply(gp, reply_payload, reply_payload_space, true);
-      break;
+      ok = true;
+      goto generic_reply;
     
     case OP_BURN_MAC_ADDR:
-      subpktlen = generic_reply(gp, reply_payload, reply_payload_space,
-				burn_mac_addr((op_burn_mac_addr_t *) payload));
-      break;
+      ok = ethernet_set_mac_addr(&((op_burn_mac_addr_t *)payload)->addr);
+      goto generic_reply;
 
     case OP_CONFIG_MIMO:
-      subpktlen = generic_reply(gp, reply_payload, reply_payload_space,
-				config_mimo_cmd((op_config_mimo_t *) payload));
-      break;
+      ok = config_mimo_cmd((op_config_mimo_t *) payload);
+      goto generic_reply;
 
     case OP_READ_TIME:
       subpktlen = read_time_cmd(gp, reply_payload, reply_payload_space);
@@ -492,33 +503,65 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
       break;
 
     case OP_SYNC_TO_PPS:
-      subpktlen = generic_reply(gp, reply_payload, reply_payload_space,
-				sync_to_pps((op_generic_t *) payload));
-      break;
+      sync_to_pps((op_generic_t *) payload);
+      ok = true;
+      goto generic_reply;
 
     case OP_PEEK:
       subpktlen = peek_cmd((op_peek_t *)payload, reply_payload, reply_payload_space);
       break;
 
     case OP_POKE:
-      subpktlen = generic_reply(gp, reply_payload, reply_payload_space,
-				poke_cmd((op_poke_t *)payload));
-      break;
+      ok = poke_cmd((op_poke_t *)payload);
+      goto generic_reply;
 
     case OP_SET_TX_LO_OFFSET:
     case OP_SET_RX_LO_OFFSET:
-      subpktlen = generic_reply(gp, reply_payload, reply_payload_space,
-				set_lo_offset_cmd((op_freq_t *)payload));
-      break;
+      ok = set_lo_offset_cmd((op_freq_t *)payload);
+      goto generic_reply;
 
     case OP_RESET_DB:
       db_init();
-      subpktlen = generic_reply(gp, reply_payload, reply_payload_space, true);
-      break;
+      ok = true;
+      goto generic_reply;
 
     case OP_SYNC_EVERY_PPS:
-      subpktlen = generic_reply(gp, reply_payload, reply_payload_space,
-				sync_every_pps((op_generic_t *) payload));
+      ok = sync_every_pps((op_generic_t *) payload);
+      goto generic_reply;
+
+    case OP_GPIO_SET_DDR:
+      ok = true;
+      hal_gpio_set_ddr(((op_gpio_t *)payload)->bank, 
+		       ((op_gpio_t *)payload)->value, 
+		       ((op_gpio_t *)payload)->mask);
+      goto generic_reply;
+
+    case OP_GPIO_SET_SELS:
+      ok = true;
+      hal_gpio_set_sels(((op_gpio_set_sels_t *)payload)->bank,
+			(char *)(&((op_gpio_set_sels_t *)payload)->sels));
+      goto generic_reply;
+
+    case OP_GPIO_READ:
+      subpktlen = gpio_read_cmd((op_gpio_t *) payload, reply_payload, reply_payload_space);
+      break;
+
+    case OP_GPIO_WRITE:
+      ok = true;
+      hal_gpio_write(((op_gpio_t *)payload)->bank, 
+		     ((op_gpio_t *)payload)->value, 
+		     ((op_gpio_t *)payload)->mask);
+      goto generic_reply;
+
+    case OP_GPIO_STREAM:
+      ok = true;
+      dsp_rx_regs->gpio_stream_enable = (uint32_t)((op_gpio_t *)payload)->value;
+      goto generic_reply;
+
+    // Add new opcode handlers here
+
+    generic_reply:
+      subpktlen = generic_reply(gp, reply_payload, reply_payload_space, ok);
       break;
 
     default:

@@ -99,6 +99,18 @@ namespace usrp2 {
     op_generic_t    eop;
   };
 
+  struct op_gpio_cmd {
+    u2_eth_packet_t h;
+    op_gpio_t       op;
+    op_generic_t    eop;
+  };
+
+  struct op_gpio_set_sels_cmd {
+    u2_eth_packet_t h;
+    op_gpio_set_sels_t op;
+    op_generic_t    eop;
+  };
+
   /*!
    * Control mechanism to allow API calls to block waiting for reply packets
    */    

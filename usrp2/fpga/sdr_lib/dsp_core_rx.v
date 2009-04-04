@@ -7,6 +7,8 @@ module dsp_core_rx
    input [13:0] adc_a, input adc_ovf_a,
    input [13:0] adc_b, input adc_ovf_b,
    
+   input [15:0] io_rx,
+
    output [31:0] sample,
    input run,
    output strobe,
@@ -55,6 +57,11 @@ module dsp_core_rx
    setting_reg #(.my_addr(`DSP_CORE_RX_BASE+8)) sr_8
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out(muxctrl),.changed());
+
+   wire [1:0] gpio_ena;
+   setting_reg #(.my_addr(`DSP_CORE_RX_BASE+9)) sr_9
+     (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
+      .in(set_data),.out(gpio_ena),.changed());
 
    // The TVRX connects to what is called adc_b, thus A and B are
    // swapped throughout the design.
@@ -151,7 +158,21 @@ module dsp_core_rx
    round #(.bits_in(18),.bits_out(16)) round_iout (.in(i_hb2),.out(i_out));
    round #(.bits_in(18),.bits_out(16)) round_qout (.in(q_hb2),.out(q_out));
 
-   assign      sample = {i_out,q_out};
+   // Streaming GPIO
+   //
+   // io_rx[15] => I channel LSB if gpio_ena[0] high
+   // io_rx[14] => Q channel LSB if gpio_ena[1] high
+
+   reg [31:0] sample_reg;
+   always @(posedge clk)
+     begin
+	sample_reg[31:17] <= i_out[15:1];
+	sample_reg[15:1]  <= q_out[15:1];
+	sample_reg[16]    <= gpio_ena[0] ? io_rx[15] : i_out[0]; 
+	sample_reg[0]     <= gpio_ena[1] ? io_rx[14] : q_out[0];
+     end
+   
+   assign      sample = sample_reg;
    assign      strobe = strobe_hb2;
    assign      debug = {enable_hb1, enable_hb2, run, strobe, strobe_cic, strobe_cic_d1, strobe_hb1, strobe_hb2};
    

@@ -36,7 +36,8 @@ noinst_PROGRAMS = \
 	gen_const \
 	rx_streaming_samples \
 	tx_samples \
-	test_mimo_tx
+	test_mimo_tx \
+	gpio
 
 find_usrps_SOURCES = find_usrps.cc
 usrp2_burn_mac_addr_SOURCES = usrp2_burn_mac_addr.cc

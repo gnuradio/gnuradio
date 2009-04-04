@@ -1293,4 +1293,161 @@ namespace usrp2 {
     return success;
   }
 
+  bool usrp2::impl::set_gpio_ddr(int bank, uint16_t value, uint16_t mask)
+  {
+    if (bank != GPIO_TX_BANK && bank != GPIO_RX_BANK) {
+      fprintf(stderr, "set_gpio_ddr: bank must be one of GPIO_RX_BANK or GPIO_TX_BANK\n");
+      return false;
+    }
+
+    op_gpio_cmd cmd;
+    op_generic_t reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_GPIO_SET_DDR;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+    cmd.op.bank = static_cast<uint8_t>(bank);
+    cmd.op.value = htons(value);
+    cmd.op.mask = htons(mask);
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+    
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+      return false;
+
+    bool success = (ntohx(reply.ok) == 1);
+    return success;
+  }
+
+  bool usrp2::impl::set_gpio_sels(int bank, std::string sels)
+  {
+    if (bank != GPIO_TX_BANK && bank != GPIO_RX_BANK) {
+      fprintf(stderr, "set_gpio_ddr: bank must be one of GPIO_RX_BANK or GPIO_TX_BANK\n");
+      return false;
+    }
+
+    if (sels.size() != 16) {
+      fprintf(stderr, "set_gpio_sels: sels must be exactly 16 bytes\n");
+      return false;
+    }
+
+    op_gpio_set_sels_cmd cmd;
+    op_generic_t reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_GPIO_SET_SELS;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+    cmd.op.bank = static_cast<uint8_t>(bank);
+    memcpy(&cmd.op.sels, sels.c_str(), 16);
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+    
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+      return false;
+
+    bool success = (ntohx(reply.ok) == 1);
+    return success;
+  }
+
+  bool usrp2::impl::write_gpio(int bank, uint16_t value, uint16_t mask)
+  {
+    if (bank != GPIO_TX_BANK && bank != GPIO_RX_BANK) {
+      fprintf(stderr, "set_gpio_ddr: bank must be one of GPIO_RX_BANK or GPIO_TX_BANK\n");
+      return false;
+    }
+
+    op_gpio_cmd cmd;
+    op_generic_t reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_GPIO_WRITE;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+    cmd.op.bank = static_cast<uint8_t>(bank);
+    cmd.op.value = htons(value);
+    cmd.op.mask = htons(mask);
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+    
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+      return false;
+
+    bool success = (ntohx(reply.ok) == 1);
+    return success;
+  }
+
+  bool usrp2::impl::read_gpio(int bank, uint16_t *value)
+  {
+    if (bank != GPIO_TX_BANK && bank != GPIO_RX_BANK) {
+      fprintf(stderr, "set_gpio_ddr: bank must be one of GPIO_RX_BANK or GPIO_TX_BANK\n");
+      return false;
+    }
+
+    op_gpio_cmd cmd;
+    op_gpio_read_reply_t reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_GPIO_READ;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+    cmd.op.bank = static_cast<uint8_t>(bank);
+    cmd.op.value = 0; // not used
+    cmd.op.mask = 0;  // not used
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+    
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+      return false;
+
+    bool success = (ntohx(reply.ok) == 1);
+    if (success && (value != NULL))
+      *value = ntohs(reply.value);
+
+    return success;
+  }
+
+  bool usrp2::impl::enable_gpio_streaming(int bank, int enable)
+  {
+    if (bank != GPIO_RX_BANK) {
+      fprintf(stderr, "enable_gpio_streaming: only RX streaming is currently implemented\n");
+      return false;
+    }
+
+    if ((enable & ~0x03) != 0) {
+      fprintf(stderr, "enable_gpio_streaming: invalid enable format\n");
+      return false;
+    }
+
+    op_gpio_cmd cmd;
+    op_generic_t reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_GPIO_STREAM;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+    cmd.op.bank = static_cast<uint8_t>(bank);
+    cmd.op.value = htons((uint16_t)enable);
+    cmd.op.mask = 0;  // not used
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+    
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+      return false;
+
+    bool success = (ntohx(reply.ok) == 1);
+    return success;
+  }
+
 } // namespace usrp2

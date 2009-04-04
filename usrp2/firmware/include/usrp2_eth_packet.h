@@ -198,6 +198,16 @@ typedef struct {
 #define OP_RESET_DB_REPLY            (OP_RESET_DB | OP_REPLY_BIT)
 #define OP_SYNC_EVERY_PPS            16
 #define OP_SYNC_EVERY_PPS_REPLY      (OP_SYNC_EVERY_PPS | OP_REPLY_BIT)
+#define OP_GPIO_SET_DDR              17
+#define OP_GPIO_SET_DDR_REPLY        (OP_GPIO_SET_DDR | OP_REPLY_BIT)
+#define OP_GPIO_SET_SELS             18
+#define OP_GPIO_SET_SELS_REPLY       (OP_GPIO_SET_SELS | OP_REPLY_BIT)
+#define OP_GPIO_READ                 19
+#define OP_GPIO_READ_REPLY           (OP_GPIO_READ | OP_REPLY_BIT)
+#define OP_GPIO_WRITE                20
+#define OP_GPIO_WRITE_REPLY          (OP_GPIO_WRITE | OP_REPLY_BIT)
+#define OP_GPIO_STREAM               21
+#define OP_GPIO_STREAM_REPLY         (OP_GPIO_STREAM | OP_REPLY_BIT)
 
 /*
  * All subpackets are a multiple of 4 bytes long.
@@ -425,6 +435,35 @@ typedef struct {
 } _AL4 op_freq_t;
 
 /*
+ * Structures for commands in GPIO system
+ */
+typedef struct {
+  uint8_t       opcode;		// OP_GPIO_SET_DDR, OP_GPIO_WRITE, OP_GPIO_STREAM
+  uint8_t       len;
+  uint8_t       rid;
+  uint8_t       bank;
+  uint16_t      value;
+  uint16_t      mask;
+} _AL4 op_gpio_t;
+
+typedef struct {
+  uint8_t       opcode;		// OP_GPIO_SET_SELS
+  uint8_t       len;
+  uint8_t       rid;
+  uint8_t       bank;
+  uint8_t       sels[16];
+} _AL4 op_gpio_set_sels_t;
+
+typedef struct {
+  uint8_t	opcode;		// OP_GPIO_READ_REPLY
+  uint8_t	len;
+  uint8_t	rid;
+  uint8_t	ok;
+  uint16_t      mbz;
+  uint16_t	value;
+} _AL4 op_gpio_read_reply_t;
+
+/*
  * ================================================================
  *             union of all of subpacket types
  * ================================================================
@@ -444,6 +483,9 @@ typedef union {
   op_peek_t                     op_peek;
   op_poke_t                     op_poke;
   op_freq_t                     op_freq;
+  op_gpio_t                     op_gpio;
+  op_gpio_set_sels_t            op_gpio_set_sels;
+  op_gpio_read_reply_t          op_gpio_read_reply;
 
 } u2_subpkt_t;
 

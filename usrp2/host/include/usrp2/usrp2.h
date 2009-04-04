@@ -63,6 +63,10 @@ namespace usrp2 {
   props_vector_t find(const std::string &ifc, const std::string &mac_addr=""); 
 
   class tune_result;
+
+  // FIXME: get from firmware include
+  static const int GPIO_TX_BANK = 0;
+  static const int GPIO_RX_BANK = 1;
   
   class usrp2 : boost::noncopyable
   {
@@ -413,6 +417,91 @@ namespace usrp2 {
      * 
      */
     bool poke32(uint32_t addr, const std::vector<uint32_t> &data);
+
+    /*!
+     * Set daughterboard GPIO data direction register.
+     *
+     * \param bank      GPIO_TX_BANK or GPIO_RX_BANK
+     * \param value     16-bits, 0=FPGA input, 1=FPGA output
+     * \param mask      16-bits, 0=ignore, 1=set
+     *
+     * \returns true iff successful
+     *
+     * WARNING: Improper usage of this function may result in damage to the USRP2
+     *
+     */
+    bool set_gpio_ddr(int bank, uint16_t value, uint16_t mask);
+
+    /*!
+     * Set daughterboard GPIO output selection register.  For those GPIO pins that
+     * are configured as outputs in the DDR, this settings configures the source
+     * of the pin value.
+     *
+     * \param bank      GPIO_TX_BANK or GPIO_RX_BANK
+     * \param sels      Exactly 16 character MSB->LSB string. For each position:
+     *                    '.' = ignore this bit, i.e., leave current value
+     *                    'a' = Output ATR value
+     *                    's' = Output host software controlled value
+     *                    '0' = Output FPGA debug bus 0 value
+     *                    '1' = Output FPGA debug bus 1 value
+     *
+     * \returns true iff successful
+     *
+     * WARNING: Improper usage of this function may result in damage to the USRP2
+     *
+     */
+    bool set_gpio_sels(int bank, std::string sels);
+
+    /*!
+     * Set daughterboard GPIO pin values.
+     *
+     * \param bank     GPIO_TX_BANK or GPIO_RX_BANK
+     * \param value    16 bits, 0=low, 1=high
+     * \param mask     16 bits, 0=ignore, 1=set
+     *
+     * \returns true iff successful
+     *
+     * WARNING: Improper usage of this function may result in damage to the USRP2
+     *
+     */
+    bool write_gpio(int bank, uint16_t value, uint16_t mask);
+
+    /*!
+     * Read daughterboard GPIO pin values
+     *
+     * \param bank     GPIO_TX_BANK or GPIO_RX_BANK
+     * \param value    pointer to uint16_t to hold read results
+     *
+     * \returns true iff successful
+     *
+     */
+    bool read_gpio(int bank, uint16_t *value);
+
+    /*!
+     * Set GPIO streaming mode
+     *
+     * Individually enables streaming GPIO pins through LSBs of DSP
+     * samples.
+     *
+     * On receive, io_rx[15] replaces I[0], io_rx[14] replaces Q[0]
+     * On transmit, I[0] maps to io_tx[15], Q[0] maps to io_tx[14]
+     * (Transmit streaming is not yet implemented.)
+     *
+     * The selected GPIO pins must have been set as inputs or outputs
+     * and, for transmit, set to software control.
+     *
+     * When enabled, the replaced DSP sample LSBs become 0.
+     *
+     * \param bank     GPIO_TX_BANK or GPIO_RX_BANK
+     * \param enable   enable[0] controls I channel LSB
+     *                 enable[1] controls Q channel LSB
+     *
+     * \returns true iff successful
+     *
+     * WARNING: Improper usage of this function may result in damage to the USRP2
+     *
+     */
+    bool enable_gpio_streaming(int bank, int enable);
 
 #if 0	// not yet implemented
     /*!

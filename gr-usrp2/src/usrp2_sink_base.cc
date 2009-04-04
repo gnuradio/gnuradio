@@ -129,3 +129,23 @@ usrp2_sink_base::daughterboard_id(int *dbid)
 {
   return d_u2->tx_daughterboard_id(dbid);
 }
+
+bool usrp2_sink_base::set_gpio_ddr(uint16_t value, uint16_t mask)
+{
+  return d_u2->set_gpio_ddr(usrp2::GPIO_TX_BANK, value, mask);
+}
+
+bool usrp2_sink_base::set_gpio_sels(std::string sels)
+{
+  return d_u2->set_gpio_sels(usrp2::GPIO_TX_BANK, sels);
+}
+
+bool usrp2_sink_base::write_gpio(uint16_t value, uint16_t mask)
+{
+  return d_u2->write_gpio(usrp2::GPIO_TX_BANK, value, mask);
+}
+
+bool usrp2_sink_base::read_gpio(uint16_t *value)
+{
+  return d_u2->read_gpio(usrp2::GPIO_TX_BANK, value);
+}

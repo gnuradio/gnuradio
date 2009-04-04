@@ -471,6 +471,31 @@ typedef struct {
    */
   volatile uint32_t     rx_mux;        // called adc_mux in dsp_core_rx.v
 
+  /*!
+   * \brief Streaming GPIO configuration
+   *
+   * This determines whether the LSBs of I and Q samples come from the DSP
+   * pipeline or from the io_rx GPIO pins.  To stream GPIO, one must first
+   * set the GPIO data direction register to have io_rx[15] and/or io_rx[14]
+   * configured as inputs.  The GPIO pins will be sampled at the time the
+   * remainder of the DSP sample is strobed into the RX sample FIFO.  There
+   * will be a decimation-dependent fixed time offset between the GPIO
+   * sample stream and the associated RF samples.
+   *
+   *    3                   2                   1                       
+   *  1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0
+   * +-------+-------+-------+-------+-------+-------+-------+-------+
+   * |                           MBZ                             |Q|I|
+   * +-------+-------+-------+-------+-------+-------+-------+-------+
+   *
+   * I         0=LSB comes from DSP pipeline (default)
+   *           1=LSB comes from io_rx[15]
+   * 
+   * Q         0=LSB comes from DSP pipeline (default)
+   *           1=LSB comes from io_rx[14]
+   */
+  volatile uint32_t gpio_stream_enable;
+
 } dsp_rx_regs_t;
   
 #define dsp_rx_regs ((dsp_rx_regs_t *) DSP_RX_BASE)
