@@ -1,6 +1,6 @@
 
 module ll8_to_fifo36
-  (input clk, reset,
+  (input clk, input reset, input clear,
    input [7:0] ll_data,
    input ll_sof_n,
    input ll_eof_n,
@@ -11,7 +11,6 @@ module ll8_to_fifo36
    output f36_src_rdy_o,
    input f36_dst_rdy_i );
 
-   wire f36_full     = ~f36_dst_rdy_i;
    wire f36_write    = f36_src_rdy_o & f36_dst_rdy_i;
       
    // Why anybody would use active low in an FPGA is beyond me...
@@ -38,7 +37,7 @@ module ll8_to_fifo36
 
    always @(posedge clk)
      if(ll_eof)
-       f36_occ <= state[1:0];
+       f36_occ <= state[1:0] + 1;
      else
        f36_occ <= 0;
    
@@ -64,8 +63,12 @@ module ll8_to_fifo36
 	     else 
 	       state <= 3;
 	   3 : state <= 4;
-	   4 : if(~f36_full)
-	     state 	   <= 1;
+	   4 : 
+	     if(f36_dst_rdy_i)
+	       if(ll_eof)
+		 state 	   <= 4;
+	       else
+		 state 	   <= 1;
 	 endcase // case(state)
        else
 	 if(f36_write)
@@ -87,7 +90,7 @@ module ll8_to_fifo36
      if(ll_src_rdy & ((state==0) | f36_write))
        dat0 		   <= ll_data;
    
-   assign    ll_dst_rdy     = ~f36_full | (state != 4);
+   assign    ll_dst_rdy     = f36_dst_rdy_i | (state != 4);
    assign    f36_data 	    = {f36_occ,f36_eof,f36_sof,dat0,dat1,dat2,dat3};  // FIXME endianess
    assign    f36_src_rdy_o  = (state == 4);
       
