@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -49,7 +49,6 @@ gr_dpll_bb::gr_dpll_bb (float period, float gain)
 	  d_gain,
 	  d_decision_threshold);
 #endif
-  set_history(1); // so we can look behind us
 }
 
 int
