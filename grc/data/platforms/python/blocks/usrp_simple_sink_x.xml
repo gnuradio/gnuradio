@@ -9,9 +9,6 @@
 	<key>usrp_simple_sink_x</key>
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
 	<make>grc_usrp.simple_sink_$(type.fcn)(which=$which, side='$side')
-#if $width.eval
-self.$(id).set_format(width=$width, shift=$shift)
-#end if
 self.$(id).set_interp_rate($interpolation)
 self.$(id).set_frequency($frequency, verbose=True)
 self.$(id).set_gain($gain)
@@ -38,32 +35,6 @@ self.$(id).set_auto_tr(True)
 			<key>short</key>
 			<opt>fcn:s</opt>
 		</option>
-	</param>
-	<param>
-		<name>Width</name>
-		<key>width</key>
-		<value></value>
-		<type>enum</type>
-		<hide>#if $width.eval then 'none' else 'part'#</hide>
-		<option>
-			<name>Default</name>
-			<key></key>
-		</option>
-		<option>
-			<name>16 Bits</name>
-			<key>16</key>
-		</option>
-		<option>
-			<name>8 Bits</name>
-			<key>8</key>
-		</option>
-	</param>
-	<param>
-		<name>Shift</name>
-		<key>shift</key>
-		<value>8</value>
-		<type>int</type>
-		<hide>#if $width.eval then 'none' else 'all'#</hide>
 	</param>
 	<param>
 		<name>Unit Number</name>
