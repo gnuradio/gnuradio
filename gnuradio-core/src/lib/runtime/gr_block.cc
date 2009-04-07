@@ -51,7 +51,7 @@ gr_block::forecast (int noutput_items, gr_vector_int &ninput_items_required)
 {
   unsigned ninputs = ninput_items_required.size ();
   for (unsigned i = 0; i < ninputs; i++)
-    ninput_items_required[i] = noutput_items;
+    ninput_items_required[i] = noutput_items + history() - 1;
 }
 
 // default implementation
