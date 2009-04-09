@@ -445,24 +445,28 @@ namespace usrp2 {
     // FIXME unaligned load!
     unsigned int chan = u2p_chan(&pkt->hdrs.fixed);
 
-    if (!d_channel_rings[chan]) {
-      DEBUG_LOG("!");
-      return data_handler::RELEASE; 	// discard packet, no channel handler
-    }
+    {
+      omni_mutex_lock l(d_channel_rings_mutex);
 
-    // Strip off ethernet header and transport header and enqueue the rest
-
-    size_t offset = offsetof(u2_eth_samples_t, hdrs.fixed);
-    if (d_channel_rings[chan]->enqueue(&pkt->hdrs.fixed, len-offset)) {
-      inc_enqueued();
-      DEBUG_LOG("+");
-      return data_handler::KEEP;	// channel ring runner will mark frame done
+      if (!d_channel_rings[chan]) {
+	DEBUG_LOG("!");
+	return data_handler::RELEASE; 	// discard packet, no channel handler
+      }
+      
+      // Strip off ethernet header and transport header and enqueue the rest
+      
+      size_t offset = offsetof(u2_eth_samples_t, hdrs.fixed);
+      if (d_channel_rings[chan]->enqueue(&pkt->hdrs.fixed, len-offset)) {
+	inc_enqueued();
+	DEBUG_LOG("+");
+	return data_handler::KEEP;	// channel ring runner will mark frame done
+      }
+      else {
+	DEBUG_LOG("!");
+	return data_handler::RELEASE;	// discard, no room in channel ring
+      }  	
+      return data_handler::RELEASE;
     }
-    else {
-      DEBUG_LOG("!");
-      return data_handler::RELEASE;	// discard, no room in channel ring
-    }  	
-    return data_handler::RELEASE;
   }
 
 
@@ -607,35 +611,39 @@ namespace usrp2 {
       return false;
     }
 
-    if (d_channel_rings[channel]) {
-      std::cerr << "usrp2: channel " << channel
-		<< " already streaming" << std::endl;
-      return false;
+    {
+      omni_mutex_lock l(d_channel_rings_mutex);
+      if (d_channel_rings[channel]) {
+	std::cerr << "usrp2: channel " << channel
+		  << " already streaming" << std::endl;
+	return false;
+      }
+      
+      if (items_per_frame == 0)
+	items_per_frame = U2_MAX_SAMPLES;		// minimize overhead
+      
+      op_start_rx_streaming_cmd cmd;
+      op_generic_t reply;
+
+      memset(&cmd, 0, sizeof(cmd));
+      init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+      cmd.op.opcode = OP_START_RX_STREAMING;
+      cmd.op.len = sizeof(cmd.op);
+      cmd.op.rid = d_next_rid++;
+      cmd.op.items_per_frame = htonl(items_per_frame);
+      cmd.eop.opcode = OP_EOP;
+      cmd.eop.len = sizeof(cmd.eop);
+    
+      bool success = false;
+      pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+      success = transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
+      success = success && (ntohx(reply.ok) == 1);
+      
+      if (success)
+	d_channel_rings[channel] = ring_sptr(new ring(d_eth_buf->max_frames()));
+
+      return success;
     }
-
-    d_channel_rings[channel] = ring_sptr(new ring(d_eth_buf->max_frames()));
-
-    if (items_per_frame == 0)
-      items_per_frame = U2_MAX_SAMPLES;		// minimize overhead
-    
-    op_start_rx_streaming_cmd cmd;
-    op_generic_t reply;
-
-    memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
-    cmd.op.opcode = OP_START_RX_STREAMING;
-    cmd.op.len = sizeof(cmd.op);
-    cmd.op.rid = d_next_rid++;
-    cmd.op.items_per_frame = htonl(items_per_frame);
-    cmd.eop.opcode = OP_EOP;
-    cmd.eop.len = sizeof(cmd.eop);
-    
-    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
-      return false;
-
-    bool success = (ntohx(reply.ok) == 1);
-    return success;
   }
   
   bool
@@ -653,36 +661,28 @@ namespace usrp2 {
       return false;
     }
 
-#if 0 // don't be overzealous.    
-    if (!d_channel_rings[channel]) {
-      std::cerr << "usrp2: channel " << channel
-		<< " not streaming" << std::endl;
-      return false;
-    }
-#endif
-
     op_stop_rx_cmd cmd;
     op_generic_t reply;
 
-    memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
-    cmd.op.opcode = OP_STOP_RX;
-    cmd.op.len = sizeof(cmd.op);
-    cmd.op.rid = d_next_rid++;
-    cmd.eop.opcode = OP_EOP;
-    cmd.eop.len = sizeof(cmd.eop);
+    {
+      omni_mutex_lock l(d_channel_rings_mutex);
+
+      memset(&cmd, 0, sizeof(cmd));
+      init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+      cmd.op.opcode = OP_STOP_RX;
+      cmd.op.len = sizeof(cmd.op);
+      cmd.op.rid = d_next_rid++;
+      cmd.eop.opcode = OP_EOP;
+      cmd.eop.len = sizeof(cmd.eop);
     
-    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
-      return false;
-
-    bool success = (ntohx(reply.ok) == 1);
-    if (success)
+      bool success = false;
+      pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+      success = transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
+      success = success && (ntohx(reply.ok) == 1);
       d_channel_rings[channel].reset();
-
-    return success;
+      return success;
+    }
   }
-  
 
   bool
   usrp2::impl::rx_samples(unsigned int channel, rx_sample_handler *handler)

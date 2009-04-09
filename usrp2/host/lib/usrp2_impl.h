@@ -79,6 +79,7 @@ namespace usrp2 {
     pending_reply *d_pending_replies[NRIDS]; // indexed by 8-bit reply id
 
     std::vector<ring_sptr>   d_channel_rings; // indexed by 5-bit channel number
+    omni_mutex     d_channel_rings_mutex;
 
     db_info	   d_tx_db_info;
     db_info	   d_rx_db_info;
