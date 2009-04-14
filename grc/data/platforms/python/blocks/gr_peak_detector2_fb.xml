@@ -13,26 +13,6 @@
 	<callback>set_look_ahead($look_ahead)</callback>
 	<callback>set_alpha($alpha)</callback>
 	<param>
-		<name>Input Type</name>
-		<key>type</key>
-		<type>enum</type>
-		<option>
-			<name>Float</name>
-			<key>float</key>
-			<opt>fcn:f</opt>
-		</option>
-		<option>
-			<name>Int</name>
-			<key>int</key>
-			<opt>fcn:i</opt>
-		</option>
-		<option>
-			<name>Short</name>
-			<key>short</key>
-			<opt>fcn:s</opt>
-		</option>
-	</param>
-	<param>
 		<name>TH Factor Rise</name>
 		<key>threshold_factor_rise</key>
 		<type>real</type>
