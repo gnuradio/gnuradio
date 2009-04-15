@@ -45,14 +45,12 @@ gr_fmdet_cf::gr_fmdet_cf (float samplerate, float freq_low, float freq_high, flo
     d_S1(0.1),d_S2(0.1),
     d_S3(0.1),d_S4(0.1)
 {
-  #include <stdio.h>
   float delta;
   d_freqhi = freq_high;
   d_freqlo = freq_low;
   delta = (d_freqhi - d_freqlo);
   d_scl = scl;
   d_bias = 0.5*scl*(d_freqhi+d_freqlo)/delta;
-  fprintf(stderr,"delta = %f d_scl=%f d_bias=%f\n",delta,d_scl,d_bias),fflush(stderr);
 }
 
 int
