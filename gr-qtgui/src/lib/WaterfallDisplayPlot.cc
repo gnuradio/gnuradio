@@ -182,7 +182,9 @@ const int WaterfallDisplayPlot::INTENSITY_COLOR_MAP_TYPE_BLACK_HOT;
 const int WaterfallDisplayPlot::INTENSITY_COLOR_MAP_TYPE_INCANDESCENT;
 const int WaterfallDisplayPlot::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED;
 
-WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent):QwtPlot(parent){
+WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
+  : QwtPlot(parent)
+{
   _zoomer = NULL;
   _startFrequency = 0;
   _stopFrequency = 4000;
@@ -253,11 +255,14 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent):QwtPlot(parent){
   _UpdateIntensityRangeDisplay();
 }
 
-WaterfallDisplayPlot::~WaterfallDisplayPlot(){
+WaterfallDisplayPlot::~WaterfallDisplayPlot()
+{
   delete _waterfallData;
 }
 
-void WaterfallDisplayPlot::Reset(){
+void 
+WaterfallDisplayPlot::Reset()
+{
   _waterfallData->ResizeData(_startFrequency, _stopFrequency, _numPoints);
   _waterfallData->Reset();
 
@@ -270,25 +275,31 @@ void WaterfallDisplayPlot::Reset(){
   _zoomer->zoom(0);
 }
 
-void WaterfallDisplayPlot::SetFrequencyRange(const double startFreq, const double stopFreq, const double centerFreq, const bool useCenterFrequencyFlag){
-  if((stopFreq > 0) && (stopFreq > startFreq)){
-    _startFrequency = startFreq;
-    _stopFrequency = stopFreq;
+void
+WaterfallDisplayPlot::SetFrequencyRange(const double constStartFreq,
+					const double constStopFreq,
+					const double constCenterFreq,
+					const bool useCenterFrequencyFlag,
+					const double units, const std::string &strunits)
+{
+  double startFreq = constStartFreq / units;
+  double stopFreq = constStopFreq / units;
+  double centerFreq = constCenterFreq / units;
+
+  if(stopFreq > startFreq) {
+    _startFrequency = 1000*startFreq;
+    _stopFrequency = 1000*stopFreq;
+
+    setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
 
     if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (_zoomer != NULL)){
       WaterfallFreqDisplayScaleDraw* freqScale = ((WaterfallFreqDisplayScaleDraw*)axisScaleDraw(QwtPlot::xBottom));
       freqScale->SetCenterFrequency(centerFreq);
       ((WaterfallZoomer*)_zoomer)->SetCenterFrequency(centerFreq);
-      if(useCenterFrequencyFlag){
-	freqScale->SetFrequencyPrecision( 3 );
-	((WaterfallZoomer*)_zoomer)->SetFrequencyPrecision( 3 );
-	setAxisTitle(QwtPlot::xBottom, "Frequency (kHz)");
-      }
-      else{
-	freqScale->SetFrequencyPrecision( 0 );
-	((WaterfallZoomer*)_zoomer)->SetFrequencyPrecision( 0 );
-	setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
-      }
+
+      freqScale->SetFrequencyPrecision( 2 );
+      ((WaterfallZoomer*)_zoomer)->SetFrequencyPrecision( 2 );
+      setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
     }
 
     Reset();
@@ -461,7 +472,7 @@ void WaterfallDisplayPlot::_UpdateIntensityRangeDisplay(){
   rightAxis->setColorBarEnabled(true);
   rightAxis->setColorMap(d_spectrogram->data()->range(),
 			 d_spectrogram->colorMap());
-  
+
   setAxisScale(QwtPlot::yRight, 
 	       d_spectrogram->data()->range().minValue(),
 	       d_spectrogram->data()->range().maxValue() );

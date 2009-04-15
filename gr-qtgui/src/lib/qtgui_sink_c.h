@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -28,25 +28,40 @@
 #include <gri_fft.h>
 #include <qapplication.h>
 #include <qtgui.h>
+#include <Python.h>
 #include "SpectrumGUIClass.h"
-
 
 class qtgui_sink_c;
 typedef boost::shared_ptr<qtgui_sink_c> qtgui_sink_c_sptr;
 
 qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
-				     float fmin=-0.5, float fmax=0.5, const std::string &name="Display");
+				     float fmin=-0.5, float fmax=0.5,
+				     const std::string &name="Spectrum Display",
+				     bool plotfreq=true, bool plotwaterfall=true,
+				     bool plotwaterfall3d=true, bool plottime=true,
+				     bool plotconst=true,
+				     QWidget *parent=NULL);
 
 class qtgui_sink_c : public gr_block
 {
 private:
   friend qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
-					      float fmin, float fmax, const std::string &name);
+					      float fmin, float fmax,
+					      const std::string &name,
+					      bool plotfreq, bool plotwaterfall,
+					      bool plotwaterfall3d, bool plottime,
+					      bool plotconst,
+					      QWidget *parent);
   qtgui_sink_c (int fftsize, int wintype,
-		float fmin, float fmax, const std::string &name);
+		float fmin, float fmax, 
+		const std::string &name,
+		bool plotfreq, bool plotwaterfall,
+		bool plotwaterfall3d, bool plottime,
+		bool plotconst,
+		QWidget *parent);
 
-  void __initialize();
-  
+  void initialize();
+
   int d_fftsize;
   gr_firdes::win_type d_wintype;
   std::vector<float> d_window;
@@ -63,7 +78,10 @@ private:
   int d_index;
   gr_complex *d_residbuf;
 
-  SpectrumGUIClass *d_main_gui; 
+  bool d_plotfreq, d_plotwaterfall, d_plotwaterfall3d, d_plottime, d_plotconst;
+
+  QWidget *d_parent;
+  SpectrumGUIClass *d_main_gui;
 
   void windowreset();
   void buildwindow();
@@ -72,13 +90,15 @@ private:
   
 public:
   ~qtgui_sink_c();
-  void initialize();
-  void initialize(QApplication *qapp);
-  void start_app();
+  void exec_();
   void lock();
   void unlock();
+  QWidget*  qwidget();
+  PyObject* pyqwidget();
 
-  QApplication* get_qapplication();
+  void set_frequency_range(const double centerfreq,
+			   const double startfreq,
+			   const double stopfreq);
 
   QApplication *d_qApplication;
   qtgui_obj *d_object;

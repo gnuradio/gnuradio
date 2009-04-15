@@ -18,11 +18,16 @@ public:
 
   void Reset();
 
-  void SetFrequencyRange(const double, const double, const double, const bool);
+  void SetFrequencyRange(const double, const double, 
+			 const double, const bool,
+			 const double units=1000.0, 
+			 const std::string &strunits = "kHz");
   double GetStartFrequency()const;
   double GetStopFrequency()const;
 
-  void PlotNewData(const double* dataPoints, const int64_t numDataPoints, const double timePerFFT, const timespec timestamp, const int droppedFrames);
+  void PlotNewData(const double* dataPoints, const int64_t numDataPoints,
+		   const double timePerFFT, const timespec timestamp,
+		   const int droppedFrames);
 
   void SetIntensityRange(const double minIntensity, const double maxIntensity);
 

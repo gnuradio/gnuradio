@@ -20,11 +20,16 @@ public:
   FrequencyDisplayPlot(QWidget*);
   virtual ~FrequencyDisplayPlot();
 
-  void SetFrequencyRange(const double, const double, const double, const bool);
+  void SetFrequencyRange(const double, const double, 
+			 const double, const bool,
+			 const double units=1000.0, 
+			 const std::string &strunits = "kHz");
   double GetStartFrequency()const;
   double GetStopFrequency()const;
 
-  void PlotNewData(const double* dataPoints, const int64_t numDataPoints, const double noiseFloorAmplitude, const double peakFrequency, const double peakAmplitude);
+  void PlotNewData(const double* dataPoints, const int64_t numDataPoints,
+		   const double noiseFloorAmplitude, const double peakFrequency,
+		   const double peakAmplitude);
   
   void ClearMaxData();
   void ClearMinData();

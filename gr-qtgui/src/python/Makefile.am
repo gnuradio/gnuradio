@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2009 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,9 +21,12 @@
 
 include $(top_srcdir)/Makefile.common
 
-noinst_PYTHON = 			\
-	qttest_f.py			\
-	qttest_c.py		
+noinst_PYTHON = 		\
+	pyqt_example_f.py 	\
+	pyqt_example.py		\
+	qt_digital.py		\
+	usrp2_display.py	\
+	usrp_display.py
 
 qtguipythondir = $(grpythondir)/qtgui
 

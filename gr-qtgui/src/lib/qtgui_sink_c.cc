@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,24 +32,46 @@
 
 qtgui_sink_c_sptr
 qtgui_make_sink_c (int fftsize, int wintype,
-		   float fmin, float fmax, const std::string &name)
+		   float fmin, float fmax,
+		   const std::string &name,
+		   bool plotfreq, bool plotwaterfall,
+		   bool plotwaterfall3d, bool plottime,
+		   bool plotconst,
+		   QWidget *parent)
 {
-  return qtgui_sink_c_sptr (new qtgui_sink_c (fftsize, wintype, fmin, fmax, name));
+  return qtgui_sink_c_sptr (new qtgui_sink_c (fftsize, wintype,
+					      fmin, fmax, name,
+					      plotfreq, plotwaterfall,
+					      plotwaterfall3d, plottime,
+					      plotconst,
+					      parent));
 }
 
 qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
-			    float fmin, float fmax, const std::string &name)
+			    float fmin, float fmax,
+			    const std::string &name,
+			    bool plotfreq, bool plotwaterfall,
+			    bool plotwaterfall3d, bool plottime,
+			    bool plotconst,
+			    QWidget *parent)
   : gr_block ("sink_c",
 	      gr_make_io_signature (1, -1, sizeof(gr_complex)),
 	      gr_make_io_signature (0, 0, 0)),
-    d_fftsize(fftsize), d_wintype((gr_firdes::win_type)(wintype)), 
-    d_fmin(fmin), d_fmax(fmax), d_name(name)
+    d_fftsize(fftsize),
+    d_wintype((gr_firdes::win_type)(wintype)), 
+    d_fmin(fmin), d_fmax(fmax), d_name(name),
+    d_plotfreq(plotfreq), d_plotwaterfall(plotwaterfall),
+    d_plotwaterfall3d(plotwaterfall3d), d_plottime(plottime),
+    d_plotconst(plotconst),
+    d_parent(parent)
 {
   d_main_gui = NULL;
   pthread_mutex_init(&d_pmutex, NULL);
   lock();
 
-  d_shift = true;  // Perform fftshift operation; this is usually desired when plotting
+  // Perform fftshift operation;
+  // this is usually desired when plotting
+  d_shift = true;  
 
   d_fft = new gri_fft_complex (d_fftsize, true);
 
@@ -60,7 +82,7 @@ qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
 
   buildwindow();
 
-  //initialize();
+  initialize();
 }
 
 qtgui_sink_c::~qtgui_sink_c()
@@ -68,7 +90,6 @@ qtgui_sink_c::~qtgui_sink_c()
   delete d_object;
   delete [] d_fftdata;
   delete [] d_residbuf;
-  delete d_main_gui;
   delete d_fft;
 }
 
@@ -86,47 +107,60 @@ void qtgui_sink_c::unlock()
 void
 qtgui_sink_c::initialize()
 {
-  int argc;
-  char **argv = NULL;
-  d_qApplication = new QApplication(argc, argv);
-  __initialize();
-}
+  if(qApp != NULL) {
+    d_qApplication = qApp;
+  }
+  else {
+    int argc;
+    char **argv = NULL;
+    d_qApplication = new QApplication(argc, argv);
+  }
 
-
-void
-qtgui_sink_c::initialize(QApplication *qapp)
-{
-  d_qApplication = qapp;
-  __initialize();
-}
-
-void
-qtgui_sink_c::__initialize()
-{
   uint64_t maxBufferSize = 32768;
-  d_main_gui = new SpectrumGUIClass(maxBufferSize, d_fftsize, d_fmin, d_fmax);
+  d_main_gui = new SpectrumGUIClass(maxBufferSize, d_fftsize, 
+				    d_fmin, d_fmax);
+
   d_main_gui->SetDisplayTitle(d_name);
   d_main_gui->SetFFTSize(d_fftsize);
   d_main_gui->SetWindowType((int)d_wintype);
-  d_main_gui->OpenSpectrumWindow(NULL);
+
+  d_main_gui->OpenSpectrumWindow(d_parent, 
+				 d_plotfreq, d_plotwaterfall,
+				 d_plotwaterfall3d, d_plottime,
+				 d_plotconst);
 
   d_object = new qtgui_obj(d_qApplication);
   qApp->postEvent(d_object, new qtgui_event(&d_pmutex));
 }
 
-QApplication* 
-qtgui_sink_c::get_qapplication()
-{
-  return d_qApplication;
-}
-
 
 void
-qtgui_sink_c::start_app()
+qtgui_sink_c::exec_()
 {
   d_qApplication->exec();
 }
 
+QWidget*
+qtgui_sink_c::qwidget()
+{
+  return d_main_gui->qwidget();
+}
+
+PyObject*
+qtgui_sink_c::pyqwidget()
+{
+  PyObject *w = PyLong_FromVoidPtr((void*)d_main_gui->qwidget());
+  PyObject *retarg = Py_BuildValue("N", w);
+  return retarg;
+}
+
+void
+qtgui_sink_c::set_frequency_range(const double centerfreq, 
+				  const double startfreq,
+				  const double stopfreq)
+{
+  d_main_gui->SetFrequencyRange(centerfreq, startfreq, stopfreq);
+}
 
 void
 qtgui_sink_c::fft(const gr_complex *data_in, int size, gr_complex *data_out)
@@ -221,37 +255,45 @@ qtgui_sink_c::general_work (int noutput_items,
   // Update the FFT size from the application
   fftresize();
   windowreset();
+ 
+  const timespec currentTime = get_highres_clock();
+  const timespec lastUpdateGUITime = d_main_gui->GetLastGUIUpdateTime();
 
-  if(d_index) {
-    int filler = std::min(d_fftsize - d_index, noutput_items);
+  if(diff_timespec(currentTime, lastUpdateGUITime) > 0.25) {
 
-    memcpy(&d_residbuf[d_index], &in[0], sizeof(gr_complex)*filler);
-    d_index += filler;
-    i = filler;
-    j = filler;
-  }
-
-  if(d_index == d_fftsize) {
-    d_index = 0;
-    fft(d_residbuf, d_fftsize, d_fftdata);
-    
-    d_main_gui->UpdateWindow(true, d_fftdata, d_fftsize, NULL, 0, (float*)d_residbuf, d_fftsize,
-			     1.0/4.0, convert_to_timespec(0.0), true);
-  }
-  
-  for(; i < noutput_items; i+=d_fftsize) {
-    if(noutput_items - i > d_fftsize) {
-      j += d_fftsize;
-      fft(&in[i], d_fftsize, d_fftdata);
+    if(d_index) {
+      int filler = std::min(d_fftsize - d_index, noutput_items);
       
-      d_main_gui->UpdateWindow(true, d_fftdata, d_fftsize, NULL, 0, (float*)&in[i], d_fftsize,
+      memcpy(&d_residbuf[d_index], &in[0], sizeof(gr_complex)*filler);
+      d_index += filler;
+      i = filler;
+      j = filler;
+    }
+    
+    if(d_index == d_fftsize) {
+      d_index = 0;
+      fft(d_residbuf, d_fftsize, d_fftdata);
+      
+      d_main_gui->UpdateWindow(true, d_fftdata, d_fftsize, NULL, 0, 
+			       (float*)d_residbuf, d_fftsize,
 			       1.0/4.0, convert_to_timespec(0.0), true);
     }
-  }
-
-  if(noutput_items > j) {
-    d_index = noutput_items - j;
-    memcpy(d_residbuf, &in[j], sizeof(gr_complex)*d_index);
+    
+    for(; i < noutput_items; i+=d_fftsize) {
+      if(noutput_items - i > d_fftsize) {
+	j += d_fftsize;
+	fft(&in[i], d_fftsize, d_fftdata);
+	
+	d_main_gui->UpdateWindow(true, d_fftdata, d_fftsize, NULL, 0, 
+				 (float*)&in[i], d_fftsize,
+				 1.0/4.0, convert_to_timespec(0.0), true);
+      }
+    }
+    
+    if(noutput_items > j) {
+      d_index = noutput_items - j;
+      memcpy(d_residbuf, &in[j], sizeof(gr_complex)*d_index);
+    }
   }
 
   pthread_mutex_unlock(&d_pmutex);

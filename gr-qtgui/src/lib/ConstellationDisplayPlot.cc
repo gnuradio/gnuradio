@@ -100,11 +100,8 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent):QwtPlot(pare
   _zoomer->setRubberBandPen(c);
   _zoomer->setTrackerPen(c);
 
-  QwtLegend* legendDisplay = new QwtLegend(this);
-  legendDisplay->setItemMode(QwtLegend::CheckableItem);
-  insertLegend(legendDisplay);
-
-  connect(this, SIGNAL( legendChecked(QwtPlotItem *, bool ) ), this, SLOT( LegendEntryChecked(QwtPlotItem *, bool ) ));
+  connect(this, SIGNAL( legendChecked(QwtPlotItem *, bool ) ), 
+	  this, SLOT( LegendEntryChecked(QwtPlotItem *, bool ) ));
 }
 
 ConstellationDisplayPlot::~ConstellationDisplayPlot(){

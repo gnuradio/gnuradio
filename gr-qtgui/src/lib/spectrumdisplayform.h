@@ -15,7 +15,7 @@ class SpectrumGUIClass;
 #include <QValidator>
 #include <vector>
 
-class SpectrumDisplayForm : public QDialog, public Ui::SpectrumDisplayForm
+class SpectrumDisplayForm : public QWidget, public Ui::SpectrumDisplayForm
 {
   Q_OBJECT
 
@@ -23,13 +23,15 @@ class SpectrumDisplayForm : public QDialog, public Ui::SpectrumDisplayForm
   SpectrumDisplayForm(QWidget* parent = 0);
   ~SpectrumDisplayForm();
   
-  void setSystem( SpectrumGUIClass * newSystem, const uint64_t numFFTDataPoints, const uint64_t numTimeDomainDataPoints );
+  void setSystem( SpectrumGUIClass * newSystem, const uint64_t numFFTDataPoints,
+		  const uint64_t numTimeDomainDataPoints );
 
   int GetAverageCount();
   void SetAverageCount( const int newCount );
   void Reset();
   void AverageDataReset();
-  void ResizeBuffers( const uint64_t numFFTDataPoints, const uint64_t numTimeDomainDataPoints );
+  void ResizeBuffers( const uint64_t numFFTDataPoints,
+		      const uint64_t numTimeDomainDataPoints );
   
 public slots:
   void resizeEvent( QResizeEvent * e );
@@ -40,7 +42,9 @@ public slots:
   void MinHoldResetBtn_clicked();
   void MaxHoldResetBtn_clicked();
   void PowerLineEdit_textChanged( const QString& valueString );
-  void SetFrequencyRange( const double newStartFrequency, const double newStopFrequency, const double newCenterFrequency );
+  void SetFrequencyRange( const double newStartFrequency,
+			  const double newStopFrequency,
+			  const double newCenterFrequency );
   void closeEvent( QCloseEvent * e );
   void WindowTypeChanged( int newItem );
   void UseRFFrequenciesCB( bool useRFFlag );
@@ -53,6 +57,12 @@ public slots:
   void Waterfall3DIntensityColorTypeChanged(int);
   void Waterfall3DAutoScaleBtnCB();
   void FFTComboBoxSelectedCB(const QString&);
+
+  void ToggleTabFrequency(const bool state);
+  void ToggleTabWaterfall(const bool state);
+  void ToggleTabWaterfall3D(const bool state);
+  void ToggleTabTime(const bool state);
+  void ToggleTabConstellation(const bool state);
 
 
 private slots:
@@ -84,6 +94,13 @@ private:
   double _peakAmplitude;
   static int _openGLWaterfall3DFlag;
   double _stopFrequency;
+
+  // whether or not to use a particular display
+  int d_plot_fft;
+  int d_plot_waterfall;
+  int d_plot_waterfall3d;
+  int d_plot_time;
+  int d_plot_constellation;
 };
 
 #endif /* SPECTRUM_DISPLAY_FORM_H */

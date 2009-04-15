@@ -5,14 +5,16 @@
 
 int SpectrumDisplayForm::_openGLWaterfall3DFlag = -1;
 
-SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent) : QDialog(parent){
+SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
+  : QWidget(parent)
+{
   setupUi(this);
-  
+
   _systemSpecifiedFlag = false;
   _intValidator = new QIntValidator(this);
   _intValidator->setBottom(0);
-  _frequencyDisplayPlot = new FrequencyDisplayPlot(Tab1PlotDisplayFrame);
-  _waterfallDisplayPlot = new WaterfallDisplayPlot(Tab2PlotDisplayFrame);
+  _frequencyDisplayPlot = new FrequencyDisplayPlot(FrequencyPlotDisplayFrame);
+  _waterfallDisplayPlot = new WaterfallDisplayPlot(WaterfallPlotDisplayFrame);
   _waterfall3DDisplayPlot = new Waterfall3DDisplayPlot(Waterfall3DPlotDisplayFrame);
   _timeDomainDisplayPlot = new TimeDomainDisplayPlot(TimeDomainDisplayFrame);
   _constellationDisplayPlot = new ConstellationDisplayPlot(ConstellationDisplayFrame);
@@ -42,7 +44,7 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent) : QDialog(parent){
   _peakAmplitude = -HUGE_VAL;
   
   _noiseFloorAmplitude = -HUGE_VAL;
-  
+
   connect(_waterfallDisplayPlot, SIGNAL(UpdatedLowerIntensityLevel(const double)), 
 	  _frequencyDisplayPlot, SLOT(SetLowerIntensityLevel(const double)));
   connect(_waterfallDisplayPlot, SIGNAL(UpdatedUpperIntensityLevel(const double)), 
@@ -50,16 +52,23 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent) : QDialog(parent){
   
   _frequencyDisplayPlot->SetLowerIntensityLevel(-200);
   _frequencyDisplayPlot->SetUpperIntensityLevel(-200);
-  
+
   // Load up the acceptable FFT sizes...
   FFTSizeComboBox->clear();
   for(long fftSize = SpectrumGUIClass::MIN_FFT_SIZE; fftSize <= SpectrumGUIClass::MAX_FFT_SIZE; fftSize *= 2){
     FFTSizeComboBox->insertItem(FFTSizeComboBox->count(), QString("%1").arg(fftSize));
   }
   Reset();
+
+  ToggleTabFrequency(false);
+  ToggleTabWaterfall(false);
+  ToggleTabWaterfall3D(false);
+  ToggleTabTime(false);
+  ToggleTabConstellation(false);
 }
 
-SpectrumDisplayForm::~SpectrumDisplayForm(){
+SpectrumDisplayForm::~SpectrumDisplayForm()
+{
   // Qt deletes children when parent is deleted
 
   // Don't worry about deleting Display Plots - they are deleted when parents are deleted
@@ -75,9 +84,10 @@ SpectrumDisplayForm::~SpectrumDisplayForm(){
   delete _historyVector;
 }
 
-void SpectrumDisplayForm::setSystem( SpectrumGUIClass * newSystem, 
-				     const uint64_t numFFTDataPoints, 
-				     const uint64_t numTimeDomainDataPoints )
+void
+SpectrumDisplayForm::setSystem( SpectrumGUIClass * newSystem, 
+				const uint64_t numFFTDataPoints, 
+				const uint64_t numTimeDomainDataPoints )
 {
   ResizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
   
@@ -90,7 +100,8 @@ void SpectrumDisplayForm::setSystem( SpectrumGUIClass * newSystem,
   }
 }
 
-void SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdateEvent)
+void
+SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdateEvent)
 {
   const std::complex<float>* complexDataPoints = spectrumUpdateEvent->getFFTPoints();
   const uint64_t numFFTDataPoints = spectrumUpdateEvent->getNumFFTDataPoints();
@@ -116,12 +127,14 @@ void SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumU
     // 75 ohm load assumption
     // 10 * log10 (v^2 / (2 * 75.0 * .001)) = 10 * log10( v^2 * 15)
     
-    *realFFTDataPointsPtr = 10.0*log10((((*complexDataPointsPtr).real() * (*complexDataPointsPtr).real()) + ((*complexDataPointsPtr).imag()*(*complexDataPointsPtr).imag())) + 1e-20);
+    *realFFTDataPointsPtr = 10.0*log10((((*complexDataPointsPtr).real() * (*complexDataPointsPtr).real()) +
+					((*complexDataPointsPtr).imag()*(*complexDataPointsPtr).imag())) + 1e-20);
 
     complexDataPointsPtr++;
     realFFTDataPointsPtr++;
   }
  
+  int tabindex = SpectrumTypeTab->currentIndex();
 
   // Don't update the averaging history if this is repeated data
   if(!repeatDataFlag){
@@ -167,36 +180,46 @@ void SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumU
   }
 
   if(lastOfMultipleUpdatesFlag){
-    _frequencyDisplayPlot->PlotNewData(_averagedValues, numFFTDataPoints, 
-				       _noiseFloorAmplitude, _peakFrequency, 
-				       _peakAmplitude);
-    _timeDomainDisplayPlot->PlotNewData(realTimeDomainDataPoints, 
-					imagTimeDomainDataPoints, 
-					numTimeDomainDataPoints);
-    _constellationDisplayPlot->PlotNewData(realTimeDomainDataPoints, 
-					   imagTimeDomainDataPoints, 
-					   numTimeDomainDataPoints);
-  }
-  // Don't update the repeated data for the waterfall
-  if(!repeatDataFlag){
-    _waterfallDisplayPlot->PlotNewData(_realFFTDataPoints, numFFTDataPoints, 
-				       timePerFFT, dataTimestamp, 
-				       spectrumUpdateEvent->getDroppedFFTFrames());
-    if( _openGLWaterfall3DFlag == 1 ){
-      _waterfall3DDisplayPlot->PlotNewData(_realFFTDataPoints, numFFTDataPoints, 
+    if(tabindex == d_plot_fft) {
+      _frequencyDisplayPlot->PlotNewData(_averagedValues, numFFTDataPoints, 
+					 _noiseFloorAmplitude, _peakFrequency, 
+					 _peakAmplitude);
+    }
+    if(tabindex == d_plot_time) {
+      _timeDomainDisplayPlot->PlotNewData(realTimeDomainDataPoints, 
+					  imagTimeDomainDataPoints, 
+					  numTimeDomainDataPoints);
+    }
+    if(tabindex == d_plot_constellation) {
+      _constellationDisplayPlot->PlotNewData(realTimeDomainDataPoints, 
+					     imagTimeDomainDataPoints, 
+					     numTimeDomainDataPoints);
+    }
+
+    // Don't update the repeated data for the waterfall
+    if(!repeatDataFlag){
+      if(tabindex == d_plot_waterfall) {
+	_waterfallDisplayPlot->PlotNewData(_realFFTDataPoints, numFFTDataPoints, 
 					   timePerFFT, dataTimestamp, 
 					   spectrumUpdateEvent->getDroppedFFTFrames());
+      }
+      if( _openGLWaterfall3DFlag == 1 && (tabindex == d_plot_waterfall3d)) {
+	_waterfall3DDisplayPlot->PlotNewData(_realFFTDataPoints, numFFTDataPoints, 
+					     timePerFFT, dataTimestamp, 
+					     spectrumUpdateEvent->getDroppedFFTFrames());
+      }
     }
-  }
-  
-  // Tell the system the GUI has been updated
-  if(_systemSpecifiedFlag){
-    _system->SetLastGUIUpdateTime(generatedTimestamp);
-    _system->DecrementPendingGUIUpdateEvents();
+
+    // Tell the system the GUI has been updated
+    if(_systemSpecifiedFlag){
+      _system->SetLastGUIUpdateTime(generatedTimestamp);
+      _system->DecrementPendingGUIUpdateEvents();
+    }
   }
 }
 
-void SpectrumDisplayForm::resizeEvent( QResizeEvent *e )
+void
+SpectrumDisplayForm::resizeEvent( QResizeEvent *e )
 {
   // Let the actual window resize its width, but not its height
   QSize newSize(e->size().width(), e->oldSize().height());
@@ -207,81 +230,23 @@ void SpectrumDisplayForm::resizeEvent( QResizeEvent *e )
   SpectrumTypeTab->resize( e->size().width(), e->size().height()-60);
 
   // Tell the TabXFreqDisplay to resize
-  //Tab1PlotDisplayFrame->resize(e->size().width()-4,
-  //Tab1PlotDisplayFrame->height());
-  Tab1PlotDisplayFrame->resize(e->size().width()-4,
-			       e->size().height()-140);
-  Tab2PlotDisplayFrame->resize(e->size().width()-4,
-			       e->size().height()-140);
-  Waterfall3DPlotDisplayFrame->resize(e->size().width()-4,
-				      e->size().height()-140);
-  TimeDomainDisplayFrame->resize(e->size().width()-4,
-				 e->size().height()-140);
-  ConstellationDisplayFrame->resize(e->size().width()-4,
+  FrequencyPlotDisplayFrame->resize(e->size().width()-4,
 				    e->size().height()-140);
-  _frequencyDisplayPlot->resize( Tab1PlotDisplayFrame->width()-4,
+  _frequencyDisplayPlot->resize( FrequencyPlotDisplayFrame->width()-4,
 				 e->size().height()-140);
-  _waterfallDisplayPlot->resize( Tab2PlotDisplayFrame->width()-4,
-				 e->size().height()-140);
-  _waterfall3DDisplayPlot->resize( Waterfall3DPlotDisplayFrame->width()-4,
-				   e->size().height()-140);
-  _timeDomainDisplayPlot->resize( TimeDomainDisplayFrame->width()-4,
-				  e->size().height()-140);
-  _constellationDisplayPlot->resize( TimeDomainDisplayFrame->width()-4,
-				     e->size().height()-140);
-
-  // Move the IntensityWheels and Labels
-  WaterfallMaximumIntensityLabel->move(width() - 5 -
-				       WaterfallMaximumIntensityLabel->width(),
-				       WaterfallMaximumIntensityLabel->y());
-  WaterfallMaximumIntensityWheel->resize(WaterfallMaximumIntensityLabel->x() - 5 -
-					 WaterfallMaximumIntensityWheel->x(),
-					 WaterfallMaximumIntensityWheel->height());
-
-  WaterfallMinimumIntensityLabel->move(width() - 5 -
-				       WaterfallMinimumIntensityLabel->width(),
-				       height() - 115);
-  WaterfallMinimumIntensityWheel->resize(WaterfallMinimumIntensityLabel->x() - 5 -
-					 WaterfallMinimumIntensityWheel->x(),
-					 WaterfallMaximumIntensityWheel->height());
-  WaterfallMinimumIntensityWheel->move(WaterfallMinimumIntensityWheel->x(),
-				       height() - 115);
-
-  Waterfall3DMaximumIntensityLabel->move(width() - 5 -
-					 Waterfall3DMaximumIntensityLabel->width(),
-					 Waterfall3DMaximumIntensityLabel->y());
-  Waterfall3DMaximumIntensityWheel->resize(Waterfall3DMaximumIntensityLabel->x() - 5 -
-					   Waterfall3DMaximumIntensityWheel->x(),
-					   Waterfall3DMaximumIntensityWheel->height());
-
-  Waterfall3DMinimumIntensityLabel->move(width() - 5 -
-					 Waterfall3DMinimumIntensityLabel->width(),
-					 height() - 115);
-  Waterfall3DMinimumIntensityWheel->resize(Waterfall3DMinimumIntensityLabel->x() - 5 -
-					   Waterfall3DMinimumIntensityWheel->x(),
-					   Waterfall3DMaximumIntensityWheel->height());
-  Waterfall3DMinimumIntensityWheel->move(Waterfall3DMinimumIntensityWheel->x(),
-					 height() - 115);
-
-  // Move Waterfall and Waterfall3D Auto Scan button
-  WaterfallAutoScaleBtn->move(WaterfallAutoScaleBtn->x(),
-			      e->size().height()-115);
-  Waterfall3DAutoScaleBtn->move(WaterfallAutoScaleBtn->x(),
-			      e->size().height()-115);
   
-
   // Move the Power Lbl and Line Edit
   PowerLabel->move(e->size().width()-(415-324) - PowerLabel->width(),
 		   e->size().height()-135);
   PowerLineEdit->move(e->size().width()-(415-318) - PowerLineEdit->width(),
 		      e->size().height()-115);
-
+  
   // Move the Avg Lbl and Line Edit
   AvgLabel->move(e->size().width()-(415-406) - AvgLabel->width(),
-		   e->size().height()-135);
+		 e->size().height()-135);
   AvgLineEdit->move(e->size().width()-(415-400) - AvgLineEdit->width(),
 		    e->size().height()-115);
-
+  
   // Move Max and Min check boxes
   MaxHoldCheckBox->move(MaxHoldCheckBox->x(),
 			e->size().height()-135);
@@ -291,13 +256,69 @@ void SpectrumDisplayForm::resizeEvent( QResizeEvent *e )
 			e->size().height()-115);
   MinHoldResetBtn->move(MinHoldResetBtn->x(),
 			e->size().height()-115);
+
+  WaterfallPlotDisplayFrame->resize(e->size().width()-4,
+				    e->size().height()-140);
+  _waterfallDisplayPlot->resize( WaterfallPlotDisplayFrame->width()-4,
+				 e->size().height()-140);
+  
+  // Move the IntensityWheels and Labels
+  WaterfallMaximumIntensityLabel->move(width() - 5 -
+				       WaterfallMaximumIntensityLabel->width(),
+				       WaterfallMaximumIntensityLabel->y());
+  WaterfallMaximumIntensityWheel->resize(WaterfallMaximumIntensityLabel->x() - 5 -
+					 WaterfallMaximumIntensityWheel->x(),
+					 WaterfallMaximumIntensityWheel->height());
+  
+  WaterfallMinimumIntensityLabel->move(width() - 5 -
+				       WaterfallMinimumIntensityLabel->width(),
+				       height() - 115);
+  WaterfallMinimumIntensityWheel->resize(WaterfallMinimumIntensityLabel->x() - 5 -
+					 WaterfallMinimumIntensityWheel->x(),
+					 WaterfallMaximumIntensityWheel->height());
+  WaterfallMinimumIntensityWheel->move(WaterfallMinimumIntensityWheel->x(),
+				       height() - 115);
+  WaterfallAutoScaleBtn->move(WaterfallAutoScaleBtn->x(),
+			      e->size().height()-115);
+  
+  Waterfall3DPlotDisplayFrame->resize(e->size().width()-4,
+				      e->size().height()-140);
+  _waterfall3DDisplayPlot->resize( Waterfall3DPlotDisplayFrame->width()-4,
+				   e->size().height()-140);
+  
+  Waterfall3DMaximumIntensityLabel->move(width() - 5 -
+					 Waterfall3DMaximumIntensityLabel->width(),
+					 Waterfall3DMaximumIntensityLabel->y());
+  Waterfall3DMaximumIntensityWheel->resize(Waterfall3DMaximumIntensityLabel->x() - 5 -
+					   Waterfall3DMaximumIntensityWheel->x(),
+					   Waterfall3DMaximumIntensityWheel->height());
+  Waterfall3DMinimumIntensityLabel->move(width() - 5 -
+					 Waterfall3DMinimumIntensityLabel->width(),
+					 height() - 115);
+  Waterfall3DMinimumIntensityWheel->resize(Waterfall3DMinimumIntensityLabel->x() - 5 -
+					   Waterfall3DMinimumIntensityWheel->x(),
+					   Waterfall3DMaximumIntensityWheel->height());
+  Waterfall3DMinimumIntensityWheel->move(Waterfall3DMinimumIntensityWheel->x(),
+					 height() - 115);
+  Waterfall3DAutoScaleBtn->move(WaterfallAutoScaleBtn->x(),
+				e->size().height()-115);
+  
+  TimeDomainDisplayFrame->resize(e->size().width()-4,
+				 e->size().height()-140);
+  _timeDomainDisplayPlot->resize( TimeDomainDisplayFrame->width()-4,
+				  e->size().height()-140);
+  
+  ConstellationDisplayFrame->resize(e->size().width()-4,
+				    e->size().height()-140);
+  _constellationDisplayPlot->resize( TimeDomainDisplayFrame->width()-4,
+				     e->size().height()-140);
   
   // Move the FFT Size Combobox and label
   FFTSizeComboBox->move(width() - 5 - FFTSizeComboBox->width(),
 			height()-50);
   FFTSizeLabel->move(width() - 10 - FFTSizeComboBox->width() - FFTSizeLabel->width(),
 		     height()-50);
-
+  
   // Move the lower check and combo boxes
   UseRFFrequenciesCheckBox->move(UseRFFrequenciesCheckBox->x(), height()-50);
   WindowLbl->move(WindowLbl->x(), height()-25);
@@ -305,7 +326,8 @@ void SpectrumDisplayForm::resizeEvent( QResizeEvent *e )
 }
 
 
-void SpectrumDisplayForm::customEvent( QEvent * e)
+void
+SpectrumDisplayForm::customEvent( QEvent * e)
 {
   if(e->type() == QEvent::User+3){
     if(_systemSpecifiedFlag){
@@ -337,15 +359,13 @@ void SpectrumDisplayForm::customEvent( QEvent * e)
 	_openGLWaterfall3DFlag = 1;
       }
     }
-
+    
     if(_openGLWaterfall3DFlag != 1){
-      SpectrumTypeTab->removeTab(SpectrumTypeTab->indexOf(Waterfall3DPage));
+      ToggleTabWaterfall3D(false);
     }
 
     // Clear any previous display
     Reset();
-
-    show();
   }
   else if(e->type() == 10005){
     SpectrumUpdateEvent* spectrumUpdateEvent = (SpectrumUpdateEvent*)e;
@@ -369,7 +389,8 @@ void SpectrumDisplayForm::customEvent( QEvent * e)
   }
 }
 
-void SpectrumDisplayForm::AvgLineEdit_textChanged( const QString &valueString )
+void
+SpectrumDisplayForm::AvgLineEdit_textChanged( const QString &valueString )
 {
   if(!valueString.isEmpty()){
     int value = valueString.toInt();
@@ -382,7 +403,8 @@ void SpectrumDisplayForm::AvgLineEdit_textChanged( const QString &valueString )
 }
 
 
-void SpectrumDisplayForm::MaxHoldCheckBox_toggled( bool newState )
+void
+SpectrumDisplayForm::MaxHoldCheckBox_toggled( bool newState )
 {
   MaxHoldResetBtn->setEnabled(newState);
   _frequencyDisplayPlot->SetMaxFFTVisible(newState);
@@ -390,7 +412,8 @@ void SpectrumDisplayForm::MaxHoldCheckBox_toggled( bool newState )
 }
 
 
-void SpectrumDisplayForm::MinHoldCheckBox_toggled( bool newState )
+void
+SpectrumDisplayForm::MinHoldCheckBox_toggled( bool newState )
 {
   MinHoldResetBtn->setEnabled(newState);
   _frequencyDisplayPlot->SetMinFFTVisible(newState);
@@ -398,21 +421,24 @@ void SpectrumDisplayForm::MinHoldCheckBox_toggled( bool newState )
 }
 
 
-void SpectrumDisplayForm::MinHoldResetBtn_clicked()
+void
+SpectrumDisplayForm::MinHoldResetBtn_clicked()
 {
   _frequencyDisplayPlot->ClearMinData();
   _frequencyDisplayPlot->replot();
 }
 
 
-void SpectrumDisplayForm::MaxHoldResetBtn_clicked()
+void
+SpectrumDisplayForm::MaxHoldResetBtn_clicked()
 {
   _frequencyDisplayPlot->ClearMaxData();
   _frequencyDisplayPlot->replot();
 }
 
 
-void SpectrumDisplayForm::PowerLineEdit_textChanged( const QString &valueString )
+void
+SpectrumDisplayForm::PowerLineEdit_textChanged( const QString &valueString )
 {
   if(_systemSpecifiedFlag){
     if(!valueString.isEmpty()){
@@ -435,18 +461,47 @@ void SpectrumDisplayForm::PowerLineEdit_textChanged( const QString &valueString 
   }
 }
 
-void SpectrumDisplayForm::SetFrequencyRange(const double newStartFrequency, const double newStopFrequency, const double newCenterFrequency){
-  _frequencyDisplayPlot->SetFrequencyRange(newStartFrequency, newStopFrequency, newCenterFrequency, UseRFFrequenciesCheckBox->isChecked());
-  _waterfallDisplayPlot->SetFrequencyRange(newStartFrequency, newStopFrequency, newCenterFrequency, UseRFFrequenciesCheckBox->isChecked());
-  _waterfall3DDisplayPlot->SetFrequencyRange(newStartFrequency, newStopFrequency, newCenterFrequency, UseRFFrequenciesCheckBox->isChecked());
+void
+SpectrumDisplayForm::SetFrequencyRange(const double newStartFrequency, 
+				       const double newStopFrequency,
+				       const double newCenterFrequency)
+{
+  double fdiff = abs(newStartFrequency - newStopFrequency);
 
+  if(fdiff > 0) {
+    std::string strunits[4] = {"Hz", "kHz", "MHz", "GHz"};
+    double units10 = floor(log10(fdiff));
+    double units3  = floor(units10 / 3.0);
+    double units = pow(10, units10);
+    int iunit = static_cast<int>(units3);
+    
+    _frequencyDisplayPlot->SetFrequencyRange(newStartFrequency,
+					     newStopFrequency,
+					     newCenterFrequency,
+					     UseRFFrequenciesCheckBox->isChecked(),
+					     units, strunits[iunit]);
+    _waterfallDisplayPlot->SetFrequencyRange(newStartFrequency,
+					     newStopFrequency,
+					     newCenterFrequency,
+					     UseRFFrequenciesCheckBox->isChecked(),
+					     units, strunits[iunit]);
+    _waterfall3DDisplayPlot->SetFrequencyRange(newStartFrequency,
+					       newStopFrequency,
+					       newCenterFrequency,
+					       UseRFFrequenciesCheckBox->isChecked(),
+					       units, strunits[iunit]);
+  }
 }
 
-int SpectrumDisplayForm::GetAverageCount(){
+int
+SpectrumDisplayForm::GetAverageCount()
+{
   return _historyVector->size();
 }
 
-void SpectrumDisplayForm::SetAverageCount(const int newCount){
+void
+SpectrumDisplayForm::SetAverageCount(const int newCount)
+{
   if(newCount > -1){
     if(newCount != static_cast<int>(_historyVector->size())){
       std::vector<double*>::iterator pos;
@@ -464,10 +519,13 @@ void SpectrumDisplayForm::SetAverageCount(const int newCount){
   }
 }
 
-void SpectrumDisplayForm::_AverageHistory(const double* newBuffer){
+void
+SpectrumDisplayForm::_AverageHistory(const double* newBuffer)
+{
   if(_numRealDataPoints > 0){
     if(_historyVector->size() > 0){
-      memcpy(_historyVector->operator[](_historyEntry), newBuffer, _numRealDataPoints*sizeof(double));
+      memcpy(_historyVector->operator[](_historyEntry), newBuffer,
+	     _numRealDataPoints*sizeof(double));
 
       // Increment the next location to store data
       _historyEntryCount++;
@@ -492,7 +550,10 @@ void SpectrumDisplayForm::_AverageHistory(const double* newBuffer){
   }
 }
 
-void SpectrumDisplayForm::ResizeBuffers( const uint64_t numFFTDataPoints, const uint64_t /*numTimeDomainDataPoints*/ ){
+void
+SpectrumDisplayForm::ResizeBuffers( const uint64_t numFFTDataPoints,
+				    const uint64_t /*numTimeDomainDataPoints*/ )
+{
   // Convert from Complex to Real for certain Displays
   if(_numRealDataPoints != numFFTDataPoints){
     _numRealDataPoints = numFFTDataPoints;
@@ -511,7 +572,9 @@ void SpectrumDisplayForm::ResizeBuffers( const uint64_t numFFTDataPoints, const 
   }
 }
 
-void SpectrumDisplayForm::Reset(){
+void
+SpectrumDisplayForm::Reset()
+{
   AverageDataReset();
 
   _waterfallDisplayPlot->Reset();
@@ -519,7 +582,9 @@ void SpectrumDisplayForm::Reset(){
 }
 
 
-void SpectrumDisplayForm::AverageDataReset(){
+void
+SpectrumDisplayForm::AverageDataReset()
+{
   _historyEntry = 0;
   _historyEntryCount = 0;
 
@@ -530,7 +595,8 @@ void SpectrumDisplayForm::AverageDataReset(){
 }
 
 
-void SpectrumDisplayForm::closeEvent( QCloseEvent *e )
+void
+SpectrumDisplayForm::closeEvent( QCloseEvent *e )
 {
   if(_systemSpecifiedFlag){
     _system->SetWindowOpenFlag(false);
@@ -542,7 +608,8 @@ void SpectrumDisplayForm::closeEvent( QCloseEvent *e )
 }
 
 
-void SpectrumDisplayForm::WindowTypeChanged( int newItem )
+void
+SpectrumDisplayForm::WindowTypeChanged( int newItem )
 {
   if(_systemSpecifiedFlag){
    _system->SetWindowType(newItem);
@@ -550,7 +617,8 @@ void SpectrumDisplayForm::WindowTypeChanged( int newItem )
 }
 
 
-void SpectrumDisplayForm::UseRFFrequenciesCB( bool useRFFlag )
+void
+SpectrumDisplayForm::UseRFFrequenciesCB( bool useRFFlag )
 {
   if(useRFFlag){
     SetFrequencyRange(_startFrequency, _stopFrequency, _centerFrequency);
@@ -561,7 +629,8 @@ void SpectrumDisplayForm::UseRFFrequenciesCB( bool useRFFlag )
 }
 
 
-void SpectrumDisplayForm::waterfallMaximumIntensityChangedCB( double newValue )
+void
+SpectrumDisplayForm::waterfallMaximumIntensityChangedCB( double newValue )
 {
   if(newValue > WaterfallMinimumIntensityWheel->value()){
     WaterfallMaximumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
@@ -569,11 +638,14 @@ void SpectrumDisplayForm::waterfallMaximumIntensityChangedCB( double newValue )
   else{
     WaterfallMaximumIntensityWheel->setValue(WaterfallMinimumIntensityWheel->value());
   }
-  _waterfallDisplayPlot->SetIntensityRange(WaterfallMinimumIntensityWheel->value(), WaterfallMaximumIntensityWheel->value());
+
+  _waterfallDisplayPlot->SetIntensityRange(WaterfallMinimumIntensityWheel->value(),
+					   WaterfallMaximumIntensityWheel->value());
 }
 
 
-void SpectrumDisplayForm::waterfallMinimumIntensityChangedCB( double newValue )
+void
+SpectrumDisplayForm::waterfallMinimumIntensityChangedCB( double newValue )
 {
   if(newValue < WaterfallMaximumIntensityWheel->value()){
     WaterfallMinimumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
@@ -581,10 +653,13 @@ void SpectrumDisplayForm::waterfallMinimumIntensityChangedCB( double newValue )
   else{
     WaterfallMinimumIntensityWheel->setValue(WaterfallMaximumIntensityWheel->value());
   }
-  _waterfallDisplayPlot->SetIntensityRange(WaterfallMinimumIntensityWheel->value(), WaterfallMaximumIntensityWheel->value());
+
+  _waterfallDisplayPlot->SetIntensityRange(WaterfallMinimumIntensityWheel->value(),
+					   WaterfallMaximumIntensityWheel->value());
 }
 
-void SpectrumDisplayForm::waterfall3DMaximumIntensityChangedCB( double newValue )
+void
+SpectrumDisplayForm::waterfall3DMaximumIntensityChangedCB( double newValue )
 {
   if(newValue > Waterfall3DMinimumIntensityWheel->value()){
     Waterfall3DMaximumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
@@ -592,11 +667,14 @@ void SpectrumDisplayForm::waterfall3DMaximumIntensityChangedCB( double newValue 
   else{
     Waterfall3DMaximumIntensityWheel->setValue(Waterfall3DMinimumIntensityWheel->value());
   }
-  _waterfall3DDisplayPlot->SetIntensityRange(Waterfall3DMinimumIntensityWheel->value(), Waterfall3DMaximumIntensityWheel->value());
+
+  _waterfall3DDisplayPlot->SetIntensityRange(Waterfall3DMinimumIntensityWheel->value(),
+					     Waterfall3DMaximumIntensityWheel->value());
 }
 
 
-void SpectrumDisplayForm::waterfall3DMinimumIntensityChangedCB( double newValue )
+void
+SpectrumDisplayForm::waterfall3DMinimumIntensityChangedCB( double newValue )
 {
   if(newValue < Waterfall3DMaximumIntensityWheel->value()){
     Waterfall3DMinimumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
@@ -604,11 +682,14 @@ void SpectrumDisplayForm::waterfall3DMinimumIntensityChangedCB( double newValue 
   else{
     Waterfall3DMinimumIntensityWheel->setValue(Waterfall3DMaximumIntensityWheel->value());
   }
-  _waterfall3DDisplayPlot->SetIntensityRange(Waterfall3DMinimumIntensityWheel->value(), Waterfall3DMaximumIntensityWheel->value());
+
+  _waterfall3DDisplayPlot->SetIntensityRange(Waterfall3DMinimumIntensityWheel->value(),
+					     Waterfall3DMaximumIntensityWheel->value());
 }
 
 
-void SpectrumDisplayForm::FFTComboBoxSelectedCB( const QString &fftSizeString )
+void
+SpectrumDisplayForm::FFTComboBoxSelectedCB( const QString &fftSizeString )
 {
   if(_systemSpecifiedFlag){
     _system->SetFFTSize(fftSizeString.toLong());
@@ -616,7 +697,8 @@ void SpectrumDisplayForm::FFTComboBoxSelectedCB( const QString &fftSizeString )
 }
 
 
-void SpectrumDisplayForm::WaterfallAutoScaleBtnCB()
+void
+SpectrumDisplayForm::WaterfallAutoScaleBtnCB()
 {
   double minimumIntensity = _noiseFloorAmplitude - 5;
   if(minimumIntensity < WaterfallMinimumIntensityWheel->minValue()){
@@ -631,7 +713,8 @@ void SpectrumDisplayForm::WaterfallAutoScaleBtnCB()
   waterfallMaximumIntensityChangedCB(maximumIntensity);
 }
 
-void SpectrumDisplayForm::Waterfall3DAutoScaleBtnCB()
+void
+SpectrumDisplayForm::Waterfall3DAutoScaleBtnCB()
 {
   double minimumIntensity = _noiseFloorAmplitude - 5;
   if(minimumIntensity < Waterfall3DMinimumIntensityWheel->minValue()){
@@ -646,7 +729,8 @@ void SpectrumDisplayForm::Waterfall3DAutoScaleBtnCB()
   waterfallMaximumIntensityChangedCB(maximumIntensity);
 }
 
-void SpectrumDisplayForm::WaterfallIntensityColorTypeChanged( int newType )
+void
+SpectrumDisplayForm::WaterfallIntensityColorTypeChanged( int newType )
 {
   QColor lowIntensityColor;
   QColor highIntensityColor;
@@ -658,7 +742,7 @@ void SpectrumDisplayForm::WaterfallIntensityColorTypeChanged( int newType )
     }
     QMessageBox::information(this, "Low Intensity Color Selection", "In the next window, select the low intensity color for the waterfall display",  QMessageBox::Ok);
     lowIntensityColor = QColorDialog::getColor(lowIntensityColor, this);
-
+    
     // Select the High Intensity Color
     highIntensityColor = _waterfallDisplayPlot->GetUserDefinedHighIntensityColor();
     if(!highIntensityColor.isValid()){
@@ -667,10 +751,12 @@ void SpectrumDisplayForm::WaterfallIntensityColorTypeChanged( int newType )
     QMessageBox::information(this, "High Intensity Color Selection", "In the next window, select the high intensity color for the waterfall display",  QMessageBox::Ok);
     highIntensityColor = QColorDialog::getColor(highIntensityColor, this);
   }
+  
   _waterfallDisplayPlot->SetIntensityColorMapType(newType, lowIntensityColor, highIntensityColor);
 }
 
-void SpectrumDisplayForm::Waterfall3DIntensityColorTypeChanged( int newType )
+void
+SpectrumDisplayForm::Waterfall3DIntensityColorTypeChanged( int newType )
 {
   QColor lowIntensityColor;
   QColor highIntensityColor;
@@ -682,7 +768,7 @@ void SpectrumDisplayForm::Waterfall3DIntensityColorTypeChanged( int newType )
     }
     QMessageBox::information(this, "Low Intensity Color Selection", "In the next window, select the low intensity color for the waterfall display",  QMessageBox::Ok);
     lowIntensityColor = QColorDialog::getColor(lowIntensityColor, this);
-
+    
     // Select the High Intensity Color
     highIntensityColor = _waterfallDisplayPlot->GetUserDefinedHighIntensityColor();
     if(!highIntensityColor.isValid()){
@@ -691,5 +777,82 @@ void SpectrumDisplayForm::Waterfall3DIntensityColorTypeChanged( int newType )
     QMessageBox::information(this, "High Intensity Color Selection", "In the next window, select the high intensity color for the waterfall display",  QMessageBox::Ok);
     highIntensityColor = QColorDialog::getColor(highIntensityColor, this);
   }
-  _waterfall3DDisplayPlot->SetIntensityColorMapType(newType, lowIntensityColor, highIntensityColor);
+  _waterfall3DDisplayPlot->SetIntensityColorMapType(newType, lowIntensityColor,
+						    highIntensityColor);
+}
+
+
+void
+SpectrumDisplayForm::ToggleTabFrequency(const bool state)
+{
+  if(state == true) {
+    if(d_plot_fft == -1) {
+      SpectrumTypeTab->addTab(FrequencyPage, "Frequency Display");
+      d_plot_fft = SpectrumTypeTab->count()-1;
+    }
+  }
+  else {
+    SpectrumTypeTab->removeTab(SpectrumTypeTab->indexOf(FrequencyPage));
+    d_plot_fft = -1;
+  }
+}
+
+void
+SpectrumDisplayForm::ToggleTabWaterfall(const bool state)
+{
+  if(state == true) {
+    if(d_plot_waterfall == -1) {
+      SpectrumTypeTab->addTab(WaterfallPage, "Waterfall Display");
+      d_plot_waterfall = SpectrumTypeTab->count()-1;
+    }
+  }
+  else {
+    SpectrumTypeTab->removeTab(SpectrumTypeTab->indexOf(WaterfallPage));
+    d_plot_waterfall = -1;
+  }
+}
+
+void
+SpectrumDisplayForm::ToggleTabWaterfall3D(const bool state)
+{
+  if(state == true) {
+    if(d_plot_waterfall3d == -1) {
+      SpectrumTypeTab->addTab(Waterfall3DPage, "3D Waterfall Display");
+      d_plot_waterfall3d = SpectrumTypeTab->count()-1;
+    }
+  }
+  else {
+    SpectrumTypeTab->removeTab(SpectrumTypeTab->indexOf(Waterfall3DPage));
+    d_plot_waterfall3d = -1;
+  }
+}
+
+void
+SpectrumDisplayForm::ToggleTabTime(const bool state)
+{
+  if(state == true) {
+    if(d_plot_time == -1) {
+      SpectrumTypeTab->addTab(TimeDomainPage, "Time Domain Display");
+      d_plot_time = SpectrumTypeTab->count()-1;
+    }
+  }
+  else {
+    SpectrumTypeTab->removeTab(SpectrumTypeTab->indexOf(TimeDomainPage));
+    d_plot_time = -1;
+  }
+}
+
+void
+SpectrumDisplayForm::ToggleTabConstellation(const bool state)
+{
+  if(state == true) {
+    if(d_plot_constellation == -1) {
+      SpectrumTypeTab->addTab(ConstellationPage, "Constellation Display");
+      d_plot_constellation = SpectrumTypeTab->count()-1;
+    }
+  }
+  else {
+    SpectrumTypeTab->removeTab(SpectrumTypeTab->indexOf(ConstellationPage));
+    d_plot_constellation = -1;
+  }
 }

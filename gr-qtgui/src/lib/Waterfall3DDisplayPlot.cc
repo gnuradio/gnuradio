@@ -111,8 +111,18 @@ void Waterfall3DDisplayPlot::Reset(){
   _timePerFFT = 1.0;
 }
 
-void Waterfall3DDisplayPlot::SetFrequencyRange(const double startFreq, const double stopFreq, const double centerFreq, const bool useCenterFrequencyFlag){
-  if((stopFreq > 0) && (stopFreq > startFreq)){
+void
+Waterfall3DDisplayPlot::SetFrequencyRange(const double constStartFreq,
+					  const double constStopFreq,
+					  const double constCenterFreq,
+					  const bool useCenterFrequencyFlag,
+					  const double units, const std::string &strunits)
+{
+  double startFreq = constStartFreq / units;
+  double stopFreq = constStopFreq / units;
+  double centerFreq = constCenterFreq / units;
+
+  if(stopFreq > startFreq) {
     _startFrequency = startFreq;
     _stopFrequency = stopFreq;
 

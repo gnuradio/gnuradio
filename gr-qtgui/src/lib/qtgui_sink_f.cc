@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,39 +31,65 @@
 #include <QTimer>
 
 qtgui_sink_f_sptr
-qtgui_make_sink_f (int fftsize, const std::vector<float> &window,
-		   float fmin, float fmax, const std::string &name)
+qtgui_make_sink_f (int fftsize, int wintype,
+		   float fmin, float fmax,
+		   const std::string &name,
+		   bool plotfreq, bool plotwaterfall,
+		   bool plotwaterfall3d, bool plottime,
+		   bool plotconst,
+		   QWidget *parent)
 {
-  return qtgui_sink_f_sptr (new qtgui_sink_f (fftsize, window, fmin, fmax, name));
+  return qtgui_sink_f_sptr (new qtgui_sink_f (fftsize, wintype,
+					      fmin, fmax, name,
+					      plotfreq, plotwaterfall,
+					      plotwaterfall3d, plottime,
+					      plotconst,
+					      parent));
 }
 
-qtgui_sink_f::qtgui_sink_f (int fftsize, const std::vector<float> &window,
-			    float fmin, float fmax, const std::string &name)
+qtgui_sink_f::qtgui_sink_f (int fftsize, int wintype,
+			    float fmin, float fmax,
+			    const std::string &name,
+			    bool plotfreq, bool plotwaterfall,
+			    bool plotwaterfall3d, bool plottime,
+			    bool plotconst,
+			    QWidget *parent)
   : gr_block ("sink_f",
 	      gr_make_io_signature (1, 1, sizeof(float)),
 	      gr_make_io_signature (0, 0, 0)),
-    d_fftsize(fftsize), d_window(window), 
-    d_fmin(fmin), d_fmax(fmax), d_name(name)
+    d_fftsize(fftsize),
+    d_wintype((gr_firdes::win_type)(wintype)),
+    d_fmin(fmin), d_fmax(fmax), d_name(name),
+    d_plotfreq(plotfreq), d_plotwaterfall(plotwaterfall),
+    d_plotwaterfall3d(plotwaterfall3d), d_plottime(plottime),
+    d_plotconst(plotconst),
+    d_parent(parent)
 {
   d_main_gui = NULL;
   pthread_mutex_init(&d_pmutex, NULL);
   lock();
 
-  d_shift = true;  // Perform fftshift operation; this is usually desired when plotting
+  // Perform fftshift operation;
+  // this is usually desired when plotting
+  d_shift = true;
 
   d_fft = new gri_fft_complex (d_fftsize, true);
 
-  fftdata = new gr_complex[d_fftsize];
+  d_fftdata = new gr_complex[d_fftsize];
 
   d_index = 0;
   d_residbuf = new float[d_fftsize];
+
+  buildwindow();
+
+  initialize();
 }
 
 qtgui_sink_f::~qtgui_sink_f()
 {
-  delete [] fftdata;
+  delete d_object;
+  delete [] d_fftdata;
   delete [] d_residbuf;
-  delete d_main_gui;
   delete d_fft;
 }
 
@@ -78,21 +104,61 @@ void qtgui_sink_f::unlock()
 }
 
 void
-qtgui_sink_f::start_app()
+qtgui_sink_f::initialize()
 {
-  d_qApplication = new QApplication(0, NULL);
+  if(qApp != NULL) {
+    d_qApplication = qApp;
+  }
+  else {
+    int argc;
+    char **argv = NULL;
+    d_qApplication = new QApplication(argc, argv);
+  }
+
 
   uint64_t maxBufferSize = 32768;
-  d_main_gui = new SpectrumGUIClass(maxBufferSize, d_fftsize, d_fmin, d_fmax);
+  d_main_gui = new SpectrumGUIClass(maxBufferSize, d_fftsize,
+				    d_fmin, d_fmax);
   d_main_gui->SetDisplayTitle(d_name);
-  d_main_gui->OpenSpectrumWindow(NULL);
+  d_main_gui->SetFFTSize(d_fftsize);
+  d_main_gui->SetWindowType((int)d_wintype);
 
-  qtgui_obj object(d_qApplication);
-  qApp->postEvent(&object, new qtgui_event(&d_pmutex));
+  d_main_gui->OpenSpectrumWindow(d_parent,
+				 d_plotfreq, d_plotwaterfall,
+				 d_plotwaterfall3d, d_plottime,
+				 d_plotconst);
 
+  d_object = new qtgui_obj(d_qApplication);
+  qApp->postEvent(d_object, new qtgui_event(&d_pmutex));
+}
+
+void
+qtgui_sink_f::exec_()
+{
   d_qApplication->exec();
 }
 
+QWidget*
+qtgui_sink_f::qwidget()
+{
+  return d_main_gui->qwidget();
+}
+
+PyObject*
+qtgui_sink_f::pyqwidget()
+{
+  PyObject *w = PyLong_FromVoidPtr((void*)d_main_gui->qwidget());
+  PyObject *retarg = Py_BuildValue("N", w);
+  return retarg;
+}
+
+void
+qtgui_sink_f::set_frequency_range(const double centerfreq, 
+				  const double startfreq,
+				  const double stopfreq)
+{
+  d_main_gui->SetFrequencyRange(centerfreq, startfreq, stopfreq);
+}
 
 void
 qtgui_sink_f::fft(const float *data_in, int size, gr_complex *data_out)
@@ -104,7 +170,7 @@ qtgui_sink_f::fft(const float *data_in, int size, gr_complex *data_out)
   }
   else {
       gr_complex *dst = d_fft->get_inbuf();
-      for (unsigned int i = 0; i < size; i++)		// float to complex conversion
+      for (int i = 0; i < size; i++)	        // float to complex conversion
 	dst[i] = data_in[i];
   }
   
@@ -122,6 +188,54 @@ qtgui_sink_f::fft(const float *data_in, int size, gr_complex *data_out)
   }
   else {
     memcpy(data_out, d_fft->get_outbuf(), sizeof(gr_complex)*size);
+  }
+}
+
+void 
+qtgui_sink_f::windowreset()
+{
+  gr_firdes::win_type newwintype = (gr_firdes::win_type)d_main_gui->GetWindowType();  
+  if(d_wintype != newwintype) {
+    d_wintype = newwintype;
+    buildwindow();
+  }
+}
+
+void
+qtgui_sink_f::buildwindow()
+{
+  d_window.clear();
+  if(d_wintype != 0) {
+    d_window = gr_firdes::window(d_wintype, d_fftsize, 6.76);
+  }
+}
+
+void
+qtgui_sink_f::fftresize()
+{
+  int newfftsize = d_main_gui->GetFFTSize();
+
+  if(newfftsize != d_fftsize) {
+
+    // Resize the fftdata buffer; no need to preserve old data
+    delete [] d_fftdata;
+    d_fftdata = new gr_complex[newfftsize];
+
+    // Resize residbuf and replace data
+    delete [] d_residbuf;
+    d_residbuf = new float[newfftsize];
+
+    // Set new fft size and reset buffer index 
+    // (throws away any currently held data, but who cares?) 
+    d_fftsize = newfftsize;
+    d_index = 0;
+    
+    // Reset window to reflect new size
+    buildwindow();
+
+    // Reset FFTW plan for new size
+    delete d_fft;
+    d_fft = new gri_fft_complex (d_fftsize, true);
   }
 }
 
@@ -147,19 +261,21 @@ qtgui_sink_f::general_work (int noutput_items,
 
   if(d_index == d_fftsize) {
     d_index = 0;
-    fft(d_residbuf, d_fftsize, fftdata);
+    fft(d_residbuf, d_fftsize, d_fftdata);
     
-    d_main_gui->UpdateWindow(true, fftdata, d_fftsize, d_residbuf, d_fftsize, NULL, 0,
+    d_main_gui->UpdateWindow(true, d_fftdata, d_fftsize,
+			     d_residbuf, d_fftsize, NULL, 0,
 			     1.0/4.0, convert_to_timespec(0.0), true);
   }
   
   for(; i < noutput_items; i+=d_fftsize) {
     if(noutput_items - i > d_fftsize) {
       j += d_fftsize;
-      fft(&in[i], d_fftsize, fftdata);
+      fft(&in[i], d_fftsize, d_fftdata);
       
-      d_main_gui->UpdateWindow(true, fftdata, d_fftsize, &in[i], d_fftsize, NULL, 0,
-			       1.0/4.0, convert_to_timespec(0.0), true);
+      d_main_gui->UpdateWindow(true, d_fftdata, d_fftsize, &in[i],
+			       d_fftsize, NULL, 0, 1.0/4.0,
+			       convert_to_timespec(0.0), true);
     }
   }
 

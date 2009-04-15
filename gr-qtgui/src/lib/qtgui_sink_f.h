@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,27 +24,46 @@
 #define INCLUDED_QTGUI_SINK_F_H
 
 #include <gr_block.h>
+#include <gr_firdes.h>
 #include <gri_fft.h>
 #include <qapplication.h>
 #include <qtgui.h>
+#include <Python.h>
 #include "SpectrumGUIClass.h"
-
 
 class qtgui_sink_f;
 typedef boost::shared_ptr<qtgui_sink_f> qtgui_sink_f_sptr;
 
-qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, const std::vector<float> &window,
-				     float fmin=-0.5, float fmax=0.5, const std::string &name="Display");
+qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
+				     float fmin=-0.5, float fmax=0.5,
+				     const std::string &name="Spectrum Display",
+				     bool plotfreq=true, bool plotwaterfall=true,
+				     bool plotwaterfall3d=true, bool plottime=true,
+				     bool plotconst=true,
+				     QWidget *parent=NULL);
 
 class qtgui_sink_f : public gr_block
 {
 private:
-  friend qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, const std::vector<float> &window,
-					      float fmin, float fmax, const std::string &name);
-  qtgui_sink_f (int fftsize, const std::vector<float> &window,
-		float fmin, float fmax, const std::string &name);
-  
+  friend qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
+					      float fmin, float fmax,
+					      const std::string &name,
+					      bool plotfreq, bool plotwaterfall,
+					      bool plotwaterfall3d, bool plottime,
+					      bool plotconst,
+					      QWidget *parent);
+  qtgui_sink_f (int fftsize, int wintype,
+		float fmin, float fmax, 
+		const std::string &name,
+		bool plotfreq, bool plotwaterfall,
+		bool plotwaterfall3d, bool plottime,
+		bool plotconst,
+		QWidget *parent);
+
+  void initialize();
+
   int d_fftsize;
+  gr_firdes::win_type d_wintype;
   std::vector<float> d_window;
   float d_fmin;
   float d_fmax;
@@ -54,23 +73,35 @@ private:
 
   bool d_shift;
   gri_fft_complex *d_fft;
-  gr_complex *fftdata;
+  gr_complex *d_fftdata;
 
   int d_index;
   float *d_residbuf;
 
+  bool d_plotfreq, d_plotwaterfall, d_plotwaterfall3d, d_plottime, d_plotconst;
+
+  QWidget *d_parent;
   SpectrumGUIClass *d_main_gui; 
 
+  void windowreset();
+  void buildwindow();
+  void fftresize();
   void fft(const float *data_in, int size, gr_complex *data_out);
   
 public:
   ~qtgui_sink_f();
-  void start_app();
+  void exec_();
   void lock();
   void unlock();
+  QWidget*  qwidget();
+  PyObject* pyqwidget();
 
-  QApplication *d_qApplication
-;
+  void set_frequency_range(const double centerfreq,
+			   const double startfreq,
+			   const double stopfreq);
+
+  QApplication *d_qApplication;
+  qtgui_obj *d_object;
 
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,

@@ -31,22 +31,37 @@ GR_SWIG_BLOCK_MAGIC(qtgui,sink_c)
 
   qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
 				       float fmin=-0.5, float fmax=0.5,
-				       const std::string &name="Display");
+				       const std::string &name="Display",
+				       bool plotfreq=true, bool plotwaterfall=true,
+				       bool plotwaterfall3d=true, bool plottime=true,
+				       bool plotconst=true,
+				       QWidget *parent=NULL);
 
 class qtgui_sink_c : public gr_block
 {
 private:
   friend qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
 					      float fmin, float fmax,
-					      const std::string &name);
+					      const std::string &name,
+					      bool plotfreq, bool plotwaterfall,
+					      bool plotwaterfall3d, bool plottime,
+					      bool plotconst,
+					      QWidget *parent);
   qtgui_sink_c (int fftsize, int wintype,
-		float fmin, float fmax, const std::string &name);
+		float fmin, float fmax,
+		const std::string &name,
+		bool plotfreq, bool plotwaterfall,
+		bool plotwaterfall3d, bool plottime,
+		bool plotconst,
+		QWidget *parent);
 
 public:
-  void start_app();
-  void initialize();
-  void initialize(QApplication *qapp);
-  QApplication* get_qapplication(); 
+  void exec_();
+  PyObject* pyqwidget();
+
+  void set_frequency_range(const double centerfreq,
+			   const double startfreq,
+			   const double stopfreq);
 };
 
 
@@ -56,25 +71,34 @@ public:
 
 GR_SWIG_BLOCK_MAGIC(qtgui,sink_f)
   
-qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, 
-				     const std::vector<float> &window,
-				     float fmin, float fmax, 
-				     const std::string &name="Display");
+qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
+				     float fmin=-0.5, float fmax=0.5,
+				     const std::string &name="Display",
+				     bool plotfreq=true, bool plotwaterfall=true,
+				     bool plotwaterfall3d=true, bool plottime=true,
+				     bool plotconst=true,
+				     QWidget *parent=NULL);
 
 class qtgui_sink_f : public gr_block
 {
 private:
-  friend qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, 
-					      const std::vector<float> &window,
-					      float fmin, float fmax, 
-					      const std::string &name);
-  qtgui_sink_f (int fftsize, 
-		const std::vector<float> &window,
+  friend qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
+					      float fmin, float fmax,
+					      const std::string &name,
+					      bool plotfreq, bool plotwaterfall,
+					      bool plotwaterfall3d, bool plottime,
+					      bool plotconst,
+					      QWidget *parent);
+  qtgui_sink_f (int fftsize, int wintype,
 		float fmin, float fmax,
-		const std::string &name);
-  
-public:
-  void start_app();
-};
+		const std::string &name,
+		bool plotfreq, bool plotwaterfall,
+		bool plotwaterfall3d, bool plottime,
+		bool plotconst,
+		QWidget *parent);
 
+public:
+  void exec_();
+  PyObject* pyqwidget();
+};
 

@@ -8,18 +8,22 @@
 class FreqPrecisionClass
 {
 public:
-  FreqPrecisionClass(const int freqPrecision){
+  FreqPrecisionClass(const int freqPrecision)
+  {
     _frequencyPrecision = freqPrecision;
   }
 
-  virtual ~FreqPrecisionClass(){
+  virtual ~FreqPrecisionClass()
+  {
   }
 
-  virtual unsigned int GetFrequencyPrecision()const{
+  virtual unsigned int GetFrequencyPrecision() const
+  {
     return _frequencyPrecision;
   }
 
-  virtual void SetFrequencyPrecision(const unsigned int newPrecision){
+  virtual void SetFrequencyPrecision(const unsigned int newPrecision)
+  {
     _frequencyPrecision = newPrecision;
   }
 protected:
@@ -29,17 +33,20 @@ private:
 
 };
 
-class FreqDisplayScaleDraw: public QwtScaleDraw, public FreqPrecisionClass{
+class FreqDisplayScaleDraw: public QwtScaleDraw, public FreqPrecisionClass
+{
 public:
-  FreqDisplayScaleDraw(const unsigned int precision):QwtScaleDraw(), FreqPrecisionClass(precision){
-
+  FreqDisplayScaleDraw(const unsigned int precision)
+    : QwtScaleDraw(), FreqPrecisionClass(precision)
+  {
   }
 
-  virtual ~FreqDisplayScaleDraw(){
-
+  virtual ~FreqDisplayScaleDraw() 
+  {
   }
 
-  virtual QwtText label(double value)const{
+  virtual QwtText label(double value) const
+  {
     return QString("%1").arg(value, 0, 'f', GetFrequencyPrecision());
   }
 
@@ -52,7 +59,8 @@ private:
 class FreqDisplayZoomer: public QwtPlotZoomer, public FreqPrecisionClass
 {
 public:
-  FreqDisplayZoomer(QwtPlotCanvas* canvas, const unsigned int freqPrecision):QwtPlotZoomer(canvas),FreqPrecisionClass(freqPrecision)
+  FreqDisplayZoomer(QwtPlotCanvas* canvas, const unsigned int freqPrecision)
+    : QwtPlotZoomer(canvas),FreqPrecisionClass(freqPrecision)
   {
     setTrackerMode(QwtPicker::AlwaysOn);
   }
@@ -74,7 +82,9 @@ protected:
   }
 };
 
-FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent):QwtPlot(parent){
+FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
+  : QwtPlot(parent)
+{
   _startFrequency = 0;
   _stopFrequency = 4000;
   
@@ -199,10 +209,10 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent):QwtPlot(parent){
   const QColor c(Qt::darkRed);
   _zoomer->setRubberBandPen(c);
   _zoomer->setTrackerPen(c);
-
 }
 
-FrequencyDisplayPlot::~FrequencyDisplayPlot(){
+FrequencyDisplayPlot::~FrequencyDisplayPlot()
+{
   delete[] _dataPoints;
   delete[] _maxFFTPoints;
   delete[] _minFFTPoints;
@@ -212,49 +222,37 @@ FrequencyDisplayPlot::~FrequencyDisplayPlot(){
   // _zoomer and _panner deleted when parent deleted
 }
 
-void FrequencyDisplayPlot::SetFrequencyRange(const double constStartFreq, const double constStopFreq, const double centerFrequency, const bool useCenterFrequencyFlag){
-  double startFreq = constStartFreq;
-  double stopFreq = constStopFreq;
+void
+FrequencyDisplayPlot::SetFrequencyRange(const double constStartFreq,
+					const double constStopFreq,
+					const double constCenterFreq,
+					const bool useCenterFrequencyFlag,
+					const double units, const std::string &strunits)
+{
+  double startFreq = constStartFreq / units;
+  double stopFreq = constStopFreq / units;
+  double centerFreq = constCenterFreq / units;
 
   _useCenterFrequencyFlag = useCenterFrequencyFlag;
 
   if(_useCenterFrequencyFlag){
-    startFreq = (startFreq + centerFrequency) / 1000.0;
-    stopFreq = (stopFreq + centerFrequency) / 1000.0;
+    startFreq = (startFreq + centerFreq);
+    stopFreq = (stopFreq + centerFreq);
   }
 
-  if((stopFreq > 0) && (stopFreq > startFreq)){
-    _startFrequency = startFreq;
-    _stopFrequency = stopFreq;
-    _resetXAxisPoints();
-
-    // Load up the new base zoom settings
-    QwtDoubleRect newSize = _zoomer->zoomBase();
-    newSize.setLeft(_startFrequency);
-    newSize.setWidth(_stopFrequency-_startFrequency);    
-    _zoomer->setZoomBase(newSize);
-
-    // Zooms back to the base and clears any other zoom levels
-    _zoomer->zoom(0);
-
-    setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
-  }
-
-  if(useCenterFrequencyFlag){
-    setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(3));
-    setAxisTitle(QwtPlot::xBottom, "RF Frequency (kHz)");
-    ((FreqDisplayZoomer*)_zoomer)->SetFrequencyPrecision(3);
-  }
-  else{
-    setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(0));
-    setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
-    ((FreqDisplayZoomer*)_zoomer)->SetFrequencyPrecision(0);
-  }
+  _startFrequency = startFreq;
+  _stopFrequency = stopFreq;
+  _resetXAxisPoints();
+  
+  setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
+  setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(2));
+  setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
+  ((FreqDisplayZoomer*)_zoomer)->SetFrequencyPrecision(2);
 
   // Load up the new base zoom settings
   QwtDoubleRect newSize = _zoomer->zoomBase();
   newSize.setLeft(_startFrequency);
-  newSize.setWidth(_stopFrequency-_startFrequency);    
+  newSize.setWidth(_stopFrequency-_startFrequency);
   _zoomer->setZoomBase(newSize);
   
   // Zooms back to the base and clears any other zoom levels
@@ -262,16 +260,21 @@ void FrequencyDisplayPlot::SetFrequencyRange(const double constStartFreq, const 
 }
 
 
-double FrequencyDisplayPlot::GetStartFrequency()const{
+double
+FrequencyDisplayPlot::GetStartFrequency() const
+{
   return _startFrequency;
 }
 
-double FrequencyDisplayPlot::GetStopFrequency()const{
+double
+FrequencyDisplayPlot::GetStopFrequency() const
+{
   return _stopFrequency;
 }
 
-void FrequencyDisplayPlot::replot(){
-
+void
+FrequencyDisplayPlot::replot()
+{
   const timespec startTime = get_highres_clock();
 
   _markerNoiseFloorAmplitude->setYValue(_noiseFloorAmplitude);
@@ -296,7 +299,11 @@ void FrequencyDisplayPlot::replot(){
   }
 }
 
-void FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDataPoints, const double noiseFloorAmplitude, const double peakFrequency, const double peakAmplitude){
+void
+FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDataPoints,
+				  const double noiseFloorAmplitude, const double peakFrequency,
+				  const double peakAmplitude)
+{
   if(numDataPoints > 0){
 
     if(numDataPoints != _numPoints){
@@ -345,27 +352,37 @@ void FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t n
   }
 }
 
-void FrequencyDisplayPlot::ClearMaxData(){
+void
+FrequencyDisplayPlot::ClearMaxData()
+{
   for(int64_t number = 0; number < _numPoints; number++){
     _maxFFTPoints[number] = -280.0;
   }
 }
 
-void FrequencyDisplayPlot::ClearMinData(){
+void
+FrequencyDisplayPlot::ClearMinData()
+{
   for(int64_t number = 0; number < _numPoints; number++){
     _minFFTPoints[number] = 200.0;
   }
 }
 
-void FrequencyDisplayPlot::SetMaxFFTVisible(const bool visibleFlag){
+void
+FrequencyDisplayPlot::SetMaxFFTVisible(const bool visibleFlag)
+{
   _max_fft_plot_curve->setVisible(visibleFlag);
 }
 
-void FrequencyDisplayPlot::SetMinFFTVisible(const bool visibleFlag){
+void
+FrequencyDisplayPlot::SetMinFFTVisible(const bool visibleFlag)
+{
   _min_fft_plot_curve->setVisible(visibleFlag);
 }
 
-void FrequencyDisplayPlot::_resetXAxisPoints(){
+void
+FrequencyDisplayPlot::_resetXAxisPoints()
+{
   double fft_bin_size = (_stopFrequency-_startFrequency) / static_cast<double>(_numPoints);
   double freqValue = _startFrequency;
   for(int64_t loc = 0; loc < _numPoints; loc++){
@@ -374,11 +391,15 @@ void FrequencyDisplayPlot::_resetXAxisPoints(){
   }
 }
 
-void FrequencyDisplayPlot::SetLowerIntensityLevel(const double lowerIntensityLevel){
+void
+FrequencyDisplayPlot::SetLowerIntensityLevel(const double lowerIntensityLevel)
+{
   _lower_intensity_marker->setYValue( lowerIntensityLevel );
 }
 
-void FrequencyDisplayPlot::SetUpperIntensityLevel(const double upperIntensityLevel){
+void
+FrequencyDisplayPlot::SetUpperIntensityLevel(const double upperIntensityLevel)
+{
   _upper_intensity_marker->setYValue( upperIntensityLevel );
 }
 

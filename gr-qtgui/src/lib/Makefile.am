@@ -108,7 +108,7 @@ TOP_SWIG_IFILES = 		\
 # This ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio
 qtgui_pythondir_category =	\
-	gnuradio
+	gnuradio/qtgui
 
 # additional libraries for linking with the SWIG-generated library
 qtgui_la_swig_libadd =		\

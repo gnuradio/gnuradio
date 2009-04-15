@@ -19,13 +19,18 @@ class SpectrumDisplayForm;
 #include <vector>
 #include <string>
 
-class SpectrumGUIClass{
+class SpectrumGUIClass
+{
 public:
-  SpectrumGUIClass(const uint64_t, const uint64_t, const double, const double);
+  SpectrumGUIClass(const uint64_t maxDataSize, const uint64_t fftSize,
+		   const double newStartFrequency, const double newStopFrequency);
   ~SpectrumGUIClass();
   void Reset();
 
-  void OpenSpectrumWindow(QWidget*);
+  void OpenSpectrumWindow(QWidget*,
+			  const bool frequency=true, const bool waterfall=true,
+			  const bool waterfall3d=true, const bool time=true,
+			  const bool constellation=true);
   void SetDisplayTitle(const std::string);
 
   bool GetWindowOpenFlag();
@@ -36,7 +41,11 @@ public:
   double GetStopFrequency()const;
   double GetCenterFrequency()const;
 
-  void UpdateWindow(const bool, const std::complex<float>*, const uint64_t, const float*, const uint64_t, const float*, const uint64_t, const double, const timespec, const bool);
+  void UpdateWindow(const bool, const std::complex<float>*,
+		    const uint64_t, const float*,
+		    const uint64_t, const float*,
+		    const uint64_t, const double,
+		    const timespec, const bool);
 
   float GetPowerValue()const;
   void SetPowerValue(const float);
@@ -58,6 +67,8 @@ public:
 
   static const long MAX_FFT_SIZE = /*1048576*/32768;
   static const long MIN_FFT_SIZE = 1024;
+
+  QWidget* qwidget();
 
 protected:
 

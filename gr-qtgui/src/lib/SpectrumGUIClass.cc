@@ -9,8 +9,11 @@
 const long SpectrumGUIClass::MAX_FFT_SIZE;
 const long SpectrumGUIClass::MIN_FFT_SIZE;
 
-SpectrumGUIClass::SpectrumGUIClass(const uint64_t maxDataSize, const uint64_t fftSize, 
-				   const double newStartFrequency, const double newStopFrequency){
+SpectrumGUIClass::SpectrumGUIClass(const uint64_t maxDataSize,
+				   const uint64_t fftSize, 
+				   const double newStartFrequency,
+				   const double newStopFrequency)
+{
   _dataPoints = maxDataSize;
   if(_dataPoints < 2){
     _dataPoints = 2;
@@ -40,7 +43,8 @@ SpectrumGUIClass::SpectrumGUIClass(const uint64_t maxDataSize, const uint64_t ff
   _powerValue = 1;
 }
 
-SpectrumGUIClass::~SpectrumGUIClass(){
+SpectrumGUIClass::~SpectrumGUIClass()
+{
   if(GetWindowOpenFlag()){
     delete _spectrumDisplayForm;
   }
@@ -54,7 +58,12 @@ SpectrumGUIClass::~SpectrumGUIClass(){
   //delete _windowStateLock;
 }
 
-void SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent){
+void
+SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
+				     const bool frequency, const bool waterfall,
+				     const bool waterfall3d, const bool time,
+				     const bool constellation)
+{
   //_windowStateLock->Lock();
 
   if(!_windowOpennedFlag){
@@ -73,6 +82,13 @@ void SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent){
     
     // Called from the Event Thread
     _spectrumDisplayForm = new SpectrumDisplayForm(parent);
+    
+    // Toggle Windows on/off
+    _spectrumDisplayForm->ToggleTabFrequency(frequency);
+    _spectrumDisplayForm->ToggleTabWaterfall(waterfall);
+    _spectrumDisplayForm->ToggleTabWaterfall3D(waterfall3d);
+    _spectrumDisplayForm->ToggleTabTime(time);
+    _spectrumDisplayForm->ToggleTabConstellation(constellation);
 
     _windowOpennedFlag = true;
 
@@ -86,9 +102,8 @@ void SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent){
   SetDisplayTitle(_title);
   Reset();
 
-  qApp->postEvent(_spectrumDisplayForm, new QEvent(QEvent::Type(QEvent::User+3)));
-
-  _spectrumDisplayForm->show();
+  qApp->postEvent(_spectrumDisplayForm,
+		  new QEvent(QEvent::Type(QEvent::User+3)));
 
   qApp->processEvents();
 
@@ -101,11 +116,14 @@ void SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent){
   qApp->processEvents();
 }
 
-void SpectrumGUIClass::Reset(){
-  if(GetWindowOpenFlag()){
-    qApp->postEvent(_spectrumDisplayForm, new SpectrumFrequencyRangeEvent(_centerFrequency, 
-									  _startFrequency, 
-									  _stopFrequency));
+void
+SpectrumGUIClass::Reset()
+{
+  if(GetWindowOpenFlag()) {
+    qApp->postEvent(_spectrumDisplayForm,
+		    new SpectrumFrequencyRangeEvent(_centerFrequency, 
+						    _startFrequency, 
+						    _stopFrequency));
     qApp->postEvent(_spectrumDisplayForm, new SpectrumWindowResetEvent());
   }
   _droppedEntriesCount = 0;
@@ -113,16 +131,20 @@ void SpectrumGUIClass::Reset(){
   // ResetPendingGUIUpdateEvents();
 }
 
-void SpectrumGUIClass::SetDisplayTitle(const std::string newString){
+void
+SpectrumGUIClass::SetDisplayTitle(const std::string newString)
+{
   _title.assign(newString);
 
   if(GetWindowOpenFlag()){
-    qApp->postEvent(_spectrumDisplayForm, new SpectrumWindowCaptionEvent(_title.c_str()));
+    qApp->postEvent(_spectrumDisplayForm,
+		    new SpectrumWindowCaptionEvent(_title.c_str()));
   }
-
 }
 
-bool SpectrumGUIClass::GetWindowOpenFlag(){
+bool
+SpectrumGUIClass::GetWindowOpenFlag()
+{
   bool returnFlag = false;
   //_windowStateLock->Lock();
   returnFlag =  _windowOpennedFlag;
@@ -131,21 +153,33 @@ bool SpectrumGUIClass::GetWindowOpenFlag(){
 }
 
 
-void SpectrumGUIClass::SetWindowOpenFlag(const bool newFlag){
+void
+SpectrumGUIClass::SetWindowOpenFlag(const bool newFlag)
+{
   //_windowStateLock->Lock();
   _windowOpennedFlag = newFlag;
   //_windowStateLock->Unlock();
 }
 
-void SpectrumGUIClass::SetFrequencyRange(const double centerFreq, const double startFreq, const double stopFreq){
+void
+SpectrumGUIClass::SetFrequencyRange(const double centerFreq,
+				    const double startFreq,
+				    const double stopFreq)
+{
   //_windowStateLock->Lock();
   _centerFrequency = centerFreq;
   _startFrequency = startFreq;
   _stopFrequency = stopFreq;
+
+  _spectrumDisplayForm->SetFrequencyRange(_centerFrequency,
+					  _startFrequency,
+					  _stopFrequency);
   //_windowStateLock->Unlock();
 }
 
-double SpectrumGUIClass::GetStartFrequency()const{
+double
+SpectrumGUIClass::GetStartFrequency() const 
+{
   double returnValue = 0.0;
   //_windowStateLock->Lock();
   returnValue =  _startFrequency;
@@ -153,7 +187,9 @@ double SpectrumGUIClass::GetStartFrequency()const{
   return returnValue;
 }
 
-double SpectrumGUIClass::GetStopFrequency()const{
+double
+SpectrumGUIClass::GetStopFrequency() const
+{
   double returnValue = 0.0;
   //_windowStateLock->Lock();
   returnValue =  _stopFrequency;
@@ -161,7 +197,9 @@ double SpectrumGUIClass::GetStopFrequency()const{
   return returnValue;
 }
 
-double SpectrumGUIClass::GetCenterFrequency()const{
+double
+SpectrumGUIClass::GetCenterFrequency() const
+{
   double returnValue = 0.0;
   //_windowStateLock->Lock();
   returnValue =  _centerFrequency;
@@ -170,8 +208,18 @@ double SpectrumGUIClass::GetCenterFrequency()const{
 }
 
 
-void SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag, const std::complex<float>* fftBuffer, const uint64_t inputBufferSize, const float* realTimeDomainData, const uint64_t realTimeDomainDataSize, const float* complexTimeDomainData, const uint64_t complexTimeDomainDataSize, const double timePerFFT, const timespec timestamp, const bool lastOfMultipleFFTUpdateFlag){
-
+void
+SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
+			       const std::complex<float>* fftBuffer,
+			       const uint64_t inputBufferSize,
+			       const float* realTimeDomainData,
+			       const uint64_t realTimeDomainDataSize,
+			       const float* complexTimeDomainData,
+			       const uint64_t complexTimeDomainDataSize,
+			       const double timePerFFT,
+			       const timespec timestamp,
+			       const bool lastOfMultipleFFTUpdateFlag)
+{
   int64_t bufferSize = inputBufferSize;
   bool repeatDataFlag = false;
   if(bufferSize > _dataPoints){
@@ -179,7 +227,7 @@ void SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag, const std::com
   }
   int64_t timeDomainBufferSize = 0;
 
-  if( updateDisplayFlag){
+  if(updateDisplayFlag){
     if((fftBuffer != NULL) && (bufferSize > 0)){
       memcpy(_fftPoints, fftBuffer, bufferSize * sizeof(std::complex<float>));
     }
@@ -225,25 +273,36 @@ void SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag, const std::com
   const timespec currentTime = get_highres_clock();
   const timespec lastUpdateGUITime = GetLastGUIUpdateTime();
 
-  if((diff_timespec(currentTime, lastUpdateGUITime) > (4*timePerFFT)) && (GetPendingGUIUpdateEvents() > 0) && !timespec_empty(&lastUpdateGUITime)){
+  if((diff_timespec(currentTime, lastUpdateGUITime) > (4*timePerFFT)) &&
+     (GetPendingGUIUpdateEvents() > 0) && !timespec_empty(&lastUpdateGUITime)) {
     // Do not update the display if too much data is pending to be displayed
     _droppedEntriesCount++;
   }
   else{
     // Draw the Data
     IncrementPendingGUIUpdateEvents();
-    qApp->postEvent(_spectrumDisplayForm, new SpectrumUpdateEvent(_fftPoints, bufferSize, _realTimeDomainPoints, _imagTimeDomainPoints, timeDomainBufferSize, timePerFFT, timestamp, repeatDataFlag, lastOfMultipleFFTUpdateFlag, currentTime, _droppedEntriesCount));
+    qApp->postEvent(_spectrumDisplayForm,
+		    new SpectrumUpdateEvent(_fftPoints, bufferSize,
+					    _realTimeDomainPoints,
+					    _imagTimeDomainPoints,
+					    timeDomainBufferSize,
+					    timePerFFT, timestamp,
+					    repeatDataFlag,
+					    lastOfMultipleFFTUpdateFlag,
+					    currentTime,
+					    _droppedEntriesCount));
     
-    // Only reset the dropped entries counter if this is not repeat data since repeat data is dropped by the display systems
+    // Only reset the dropped entries counter if this is not
+    // repeat data since repeat data is dropped by the display systems
     if(!repeatDataFlag){
       _droppedEntriesCount = 0;
     }
-  
-    //qApp->wakeUpGuiThread();
   }
 }
 
-float SpectrumGUIClass::GetPowerValue()const{
+float
+SpectrumGUIClass::GetPowerValue() const
+{
   float returnValue = 0;
   //_windowStateLock->Lock();
   returnValue = _powerValue;
@@ -251,13 +310,17 @@ float SpectrumGUIClass::GetPowerValue()const{
   return returnValue;
 }
 
-void SpectrumGUIClass::SetPowerValue(const float value){
+void
+SpectrumGUIClass::SetPowerValue(const float value)
+{
   //_windowStateLock->Lock();
   _powerValue = value;
   //_windowStateLock->Unlock();
 }
 
-int SpectrumGUIClass::GetWindowType()const{
+int
+SpectrumGUIClass::GetWindowType() const
+{
   int returnValue = 0;
   //_windowStateLock->Lock();
   returnValue = _windowType;
@@ -265,13 +328,17 @@ int SpectrumGUIClass::GetWindowType()const{
   return returnValue;
 }
 
-void SpectrumGUIClass::SetWindowType(const int newType){
+void
+SpectrumGUIClass::SetWindowType(const int newType)
+{
   //_windowStateLock->Lock();
   _windowType = newType;
   //_windowStateLock->Unlock();
 }
 
-int SpectrumGUIClass::GetFFTSize()const{
+int
+SpectrumGUIClass::GetFFTSize() const
+{
   int returnValue = 0;
   //_windowStateLock->Lock();
   returnValue = _fftSize;
@@ -279,7 +346,9 @@ int SpectrumGUIClass::GetFFTSize()const{
   return returnValue;
 }
 
-int SpectrumGUIClass::GetFFTSizeIndex()const{
+int
+SpectrumGUIClass::GetFFTSizeIndex() const
+{
   int fftsize = GetFFTSize();
   switch(fftsize) {
   case(1024): return 0; break;
@@ -292,13 +361,17 @@ int SpectrumGUIClass::GetFFTSizeIndex()const{
   }
 }
 
-void SpectrumGUIClass::SetFFTSize(const int newSize){
+void
+SpectrumGUIClass::SetFFTSize(const int newSize)
+{
   //_windowStateLock->Lock();
   _fftSize = newSize;
   //_windowStateLock->Unlock();
 }
 
-timespec SpectrumGUIClass::GetLastGUIUpdateTime()const{
+timespec
+SpectrumGUIClass::GetLastGUIUpdateTime() const
+{
   timespec returnValue;
   //_windowStateLock->Lock();
   returnValue = _lastGUIUpdateTime;
@@ -306,13 +379,17 @@ timespec SpectrumGUIClass::GetLastGUIUpdateTime()const{
   return returnValue;
 }
 
-void SpectrumGUIClass::SetLastGUIUpdateTime(const timespec newTime){
+void
+SpectrumGUIClass::SetLastGUIUpdateTime(const timespec newTime)
+{
   //_windowStateLock->Lock();
   _lastGUIUpdateTime = newTime;
   //_windowStateLock->Unlock();
 }
 
-unsigned int SpectrumGUIClass::GetPendingGUIUpdateEvents()const{
+unsigned int
+SpectrumGUIClass::GetPendingGUIUpdateEvents() const
+{
   unsigned int returnValue = 0;
   //_windowStateLock->Lock();
   returnValue = _pendingGUIUpdateEventsCount;
@@ -320,13 +397,17 @@ unsigned int SpectrumGUIClass::GetPendingGUIUpdateEvents()const{
   return returnValue;
 }
 
-void SpectrumGUIClass::IncrementPendingGUIUpdateEvents(){
+void
+SpectrumGUIClass::IncrementPendingGUIUpdateEvents()
+{
   //_windowStateLock->Lock();
   _pendingGUIUpdateEventsCount++;
   //_windowStateLock->Unlock();
 }
 
-void SpectrumGUIClass::DecrementPendingGUIUpdateEvents(){
+void
+SpectrumGUIClass::DecrementPendingGUIUpdateEvents()
+{
   //_windowStateLock->Lock();
   if(_pendingGUIUpdateEventsCount > 0){
     _pendingGUIUpdateEventsCount--;
@@ -334,10 +415,19 @@ void SpectrumGUIClass::DecrementPendingGUIUpdateEvents(){
   //_windowStateLock->Unlock();
 }
 
-void SpectrumGUIClass::ResetPendingGUIUpdateEvents(){
+void
+SpectrumGUIClass::ResetPendingGUIUpdateEvents()
+{
   //_windowStateLock->Lock();
   _pendingGUIUpdateEventsCount = 0;
   //_windowStateLock->Unlock();
+}
+
+
+QWidget*
+SpectrumGUIClass::qwidget()
+{
+  return (QWidget*)_spectrumDisplayForm;
 }
 
 

@@ -1,6 +1,6 @@
 <ui version="4.0" >
  <class>SpectrumDisplayForm</class>
- <widget class="QDialog" name="SpectrumDisplayForm" >
+ <widget class="QWidget" name="SpectrumDisplayForm" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -286,7 +286,7 @@
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QFrame" name="Tab1PlotDisplayFrame" >
+    <widget class="QFrame" name="FrequencyPlotDisplayFrame" >
      <property name="geometry" >
       <rect>
        <x>5</x>
@@ -402,7 +402,7 @@
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QFrame" name="Tab2PlotDisplayFrame" >
+    <widget class="QFrame" name="WaterfallPlotDisplayFrame" >
      <property name="geometry" >
       <rect>
        <x>5</x>

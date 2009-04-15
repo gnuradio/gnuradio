@@ -130,7 +130,9 @@ public:
   bool loadFromData(double** data, unsigned int columns, unsigned int rows
 		    ,double minx, double maxx, double miny, double maxy);
 
-  void SetFrequencyRange(const double, const double, const double, const bool);
+  void SetFrequencyRange(const double, const double,
+			 const double, const bool,
+			 const double units, const std::string &strunits);
   double GetStartFrequency()const;
   double GetStopFrequency()const;
 

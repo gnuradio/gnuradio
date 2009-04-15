@@ -28,6 +28,14 @@ AC_DEFUN([GRC_GR_QTGUI],[
     dnl   yes  : if the --enable code passed muster and all dependencies are met
     dnl   no   : otherwise
 
+    PYTHON_CHECK_MODULE([PyQt4.QtCore], [PyQt4 for Qt4], \
+	[passed=yes], [passed=no], \
+	[PyQt4.QtCore.PYQT_VERSION >= 260000])
+
+    # Enable this if we want to test for PyQwt, too
+    #PYTHON_CHECK_MODULE([PyQt4.Qwt5], [PyQwt5 for Qt4], \
+    #   [passed=yes], [passed=no], \
+    #   [PyQt4.Qwt5.QWT_VERSION >= 327000])
 
 # Check for: 
 #	QtOpenGL

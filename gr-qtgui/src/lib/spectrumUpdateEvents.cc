@@ -3,8 +3,19 @@
 
 #include <spectrumUpdateEvents.h>
 
-SpectrumUpdateEvent::SpectrumUpdateEvent(const std::complex<float>* fftPoints, const uint64_t numFFTDataPoints, const double* realTimeDomainPoints, const double* imagTimeDomainPoints, const uint64_t numTimeDomainDataPoints, const double timePerFFT, const timespec dataTimestamp, const bool repeatDataFlag, const bool lastOfMultipleUpdateFlag, const timespec generatedTimestamp, const int droppedFFTFrames):QEvent(QEvent::Type(10005)){
-
+SpectrumUpdateEvent::SpectrumUpdateEvent(const std::complex<float>* fftPoints,
+					 const uint64_t numFFTDataPoints,
+					 const double* realTimeDomainPoints,
+					 const double* imagTimeDomainPoints,
+					 const uint64_t numTimeDomainDataPoints,
+					 const double timePerFFT,
+					 const timespec dataTimestamp,
+					 const bool repeatDataFlag,
+					 const bool lastOfMultipleUpdateFlag,
+					 const timespec generatedTimestamp,
+					 const int droppedFFTFrames)
+  : QEvent(QEvent::Type(10005))
+{
   _numFFTDataPoints = numFFTDataPoints;
   if(_numFFTDataPoints < 1){
     _numFFTDataPoints = 1;
@@ -22,13 +33,15 @@ SpectrumUpdateEvent::SpectrumUpdateEvent(const std::complex<float>* fftPoints, c
   _realDataTimeDomainPoints = new double[_numTimeDomainDataPoints];
   memset(_realDataTimeDomainPoints, 0x0, _numTimeDomainDataPoints*sizeof(double));
   if(numTimeDomainDataPoints > 0){
-    memcpy(_realDataTimeDomainPoints, realTimeDomainPoints, numTimeDomainDataPoints*sizeof(double));
+    memcpy(_realDataTimeDomainPoints, realTimeDomainPoints,
+	   numTimeDomainDataPoints*sizeof(double));
   }
 
   _imagDataTimeDomainPoints = new double[_numTimeDomainDataPoints];
   memset(_imagDataTimeDomainPoints, 0x0, _numTimeDomainDataPoints*sizeof(double));
   if(numTimeDomainDataPoints > 0){
-    memcpy(_imagDataTimeDomainPoints, imagTimeDomainPoints, numTimeDomainDataPoints*sizeof(double));
+    memcpy(_imagDataTimeDomainPoints, imagTimeDomainPoints,
+	   numTimeDomainDataPoints*sizeof(double));
   }
   _dataTimestamp = dataTimestamp;
   _timePerFFT = timePerFFT;
@@ -44,87 +57,126 @@ SpectrumUpdateEvent::~SpectrumUpdateEvent(){
   delete[] _imagDataTimeDomainPoints;
 }
 
-const std::complex<float>* SpectrumUpdateEvent::getFFTPoints()const{
+const std::complex<float>*
+SpectrumUpdateEvent::getFFTPoints() const
+{
   return _fftPoints;
 }
 
-const double* SpectrumUpdateEvent::getRealTimeDomainPoints()const{
+const double*
+SpectrumUpdateEvent::getRealTimeDomainPoints() const
+{
   return _realDataTimeDomainPoints;
 }
 
-const double* SpectrumUpdateEvent::getImagTimeDomainPoints()const{
+const double*
+SpectrumUpdateEvent::getImagTimeDomainPoints() const
+{
   return _imagDataTimeDomainPoints;
 }
 
-uint64_t SpectrumUpdateEvent::getNumFFTDataPoints()const{
+uint64_t
+SpectrumUpdateEvent::getNumFFTDataPoints() const
+{
   return _numFFTDataPoints;
 }
 
-uint64_t SpectrumUpdateEvent::getNumTimeDomainDataPoints()const{
+uint64_t
+SpectrumUpdateEvent::getNumTimeDomainDataPoints() const
+{
   return _numTimeDomainDataPoints;
 }
 
-double SpectrumUpdateEvent::getTimePerFFT()const{
+double
+SpectrumUpdateEvent::getTimePerFFT() const
+{
   return _timePerFFT;
 }
 
-timespec SpectrumUpdateEvent::getDataTimestamp()const{
+timespec
+SpectrumUpdateEvent::getDataTimestamp() const
+{
   return _dataTimestamp;
 }
 
-bool SpectrumUpdateEvent::getRepeatDataFlag()const{
+bool
+SpectrumUpdateEvent::getRepeatDataFlag() const
+{
   return _repeatDataFlag;
 }
 
-bool SpectrumUpdateEvent::getLastOfMultipleUpdateFlag()const{
+bool
+SpectrumUpdateEvent::getLastOfMultipleUpdateFlag() const
+{
   return _lastOfMultipleUpdateFlag;
 }
 
-timespec SpectrumUpdateEvent::getEventGeneratedTimestamp()const{
+timespec
+SpectrumUpdateEvent::getEventGeneratedTimestamp() const
+{
   return _eventGeneratedTimestamp;
 }
 
-int SpectrumUpdateEvent::getDroppedFFTFrames()const{
+int
+SpectrumUpdateEvent::getDroppedFFTFrames() const
+{
   return _droppedFFTFrames;
 }
 
-SpectrumWindowCaptionEvent::SpectrumWindowCaptionEvent(const QString& newLbl):QEvent(QEvent::Type(10008)){
+SpectrumWindowCaptionEvent::SpectrumWindowCaptionEvent(const QString& newLbl)
+  : QEvent(QEvent::Type(10008))
+{
   _labelString = newLbl;
 }
 
-SpectrumWindowCaptionEvent::~SpectrumWindowCaptionEvent(){
+SpectrumWindowCaptionEvent::~SpectrumWindowCaptionEvent()
+{
 }
 
-QString SpectrumWindowCaptionEvent::getLabel(){
+QString
+SpectrumWindowCaptionEvent::getLabel()
+{
   return _labelString;
 }
 
-SpectrumWindowResetEvent::SpectrumWindowResetEvent():QEvent(QEvent::Type(10009)){
+SpectrumWindowResetEvent::SpectrumWindowResetEvent()
+  : QEvent(QEvent::Type(10009))
+{
 }
 
-SpectrumWindowResetEvent::~SpectrumWindowResetEvent(){
-
+SpectrumWindowResetEvent::~SpectrumWindowResetEvent()
+{
 }
 
-  SpectrumFrequencyRangeEvent::SpectrumFrequencyRangeEvent(const double centerFreq, const double startFreq, const double stopFreq):QEvent(QEvent::Type(10010)){
+SpectrumFrequencyRangeEvent::SpectrumFrequencyRangeEvent(const double centerFreq, 
+							 const double startFreq,
+							 const double stopFreq)
+  : QEvent(QEvent::Type(10010))
+{
   _centerFrequency = centerFreq;
   _startFrequency = startFreq;
   _stopFrequency = stopFreq;
 }
 
-SpectrumFrequencyRangeEvent::~SpectrumFrequencyRangeEvent(){
-
+SpectrumFrequencyRangeEvent::~SpectrumFrequencyRangeEvent()
+{
 }
 
-double SpectrumFrequencyRangeEvent::GetCenterFrequency()const{
+double
+SpectrumFrequencyRangeEvent::GetCenterFrequency() const
+{
   return _centerFrequency;
 }
 
-double SpectrumFrequencyRangeEvent::GetStartFrequency()const{
+double
+SpectrumFrequencyRangeEvent::GetStartFrequency() const
+{
   return _startFrequency;
 }
 
-double SpectrumFrequencyRangeEvent::GetStopFrequency()const{
+double
+SpectrumFrequencyRangeEvent::GetStopFrequency() const
+{
   return _stopFrequency;
 }
 
