@@ -182,7 +182,6 @@ libfilter_la_common_SOURCES = 		\
 	gr_hilbert_fc.cc		\
 	gr_iir_filter_ffd.cc		\
 	gr_sincos.c			\
-	gr_secondorder_section_iir_filter_ff.cc	\
 	gr_single_pole_iir_filter_ff.cc	\
 	gr_single_pole_iir_filter_cc.cc	\
 	gri_goertzel.cc			\
@@ -250,9 +249,7 @@ grinclude_HEADERS = 			\
 	gr_iir_filter_ffd.h		\
 	gr_rotator.h			\
 	gr_sincos.h			\
-	gr_secondorder_section_iir.h	\
 	gr_single_pole_iir.h		\
-	gr_secondorder_section_iir_filter_ff.h	\
 	gr_single_pole_iir_filter_ff.h	\
 	gr_single_pole_iir_filter_cc.h  \
 	gr_vec_types.h			\
@@ -310,7 +307,6 @@ swiginclude_HEADERS =			\
 	gr_goertzel_fc.i		\
 	gr_hilbert_fc.i			\
 	gr_iir_filter_ffd.i		\
-	gr_secondorder_section_iir_filter_ff.i	\
 	gr_single_pole_iir_filter_ff.i	\
 	gr_single_pole_iir_filter_cc.i	\
 	$(GENERATED_I)
