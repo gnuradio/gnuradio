@@ -79,6 +79,7 @@ libgeneral_la_SOURCES = 		\
 	gr_float_to_complex.cc		\
 	gr_float_to_short.cc		\
 	gr_float_to_uchar.cc		\
+	gr_fmdet_cf.cc			\
 	gr_frequency_modulator_fc.cc	\
 	gr_fxpt.cc			\
 	gr_framer_sink_1.cc		\
@@ -230,6 +231,7 @@ grinclude_HEADERS = 			\
 	gr_float_to_complex.h		\
 	gr_float_to_short.h		\
 	gr_float_to_uchar.h		\
+	gr_fmdet_cf.h			\
 	gr_framer_sink_1.h		\
 	gr_frequency_modulator_fc.h	\
 	gr_fxpt.h			\
@@ -394,6 +396,7 @@ swiginclude_HEADERS =			\
 	gr_float_to_complex.i		\
 	gr_float_to_short.i		\
 	gr_float_to_uchar.i		\
+	gr_fmdet_cf.i			\
 	gr_frequency_modulator_fc.i	\
 	gr_framer_sink_1.i		\
 	gr_glfsr_source_b.i		\

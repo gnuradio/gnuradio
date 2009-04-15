@@ -58,5 +58,6 @@ grblkspython_PYTHON =		\
 	standard_squelch.py	\
 	stream_to_vector_decimator.py \
 	wfm_rcv.py		\
+	wfm_rcv_fmdet.py	\
 	wfm_rcv_pll.py		\
 	wfm_tx.py		

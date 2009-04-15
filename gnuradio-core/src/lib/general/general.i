@@ -85,6 +85,7 @@
 #include <gr_lms_dfe_cc.h>
 #include <gr_lms_dfe_ff.h>
 #include <gr_dpll_bb.h>
+#include <gr_fmdet_cf.h>
 #include <gr_pll_freqdet_cf.h>
 #include <gr_pll_refout_cc.h>
 #include <gr_pll_carriertracking_cc.h>
@@ -204,6 +205,7 @@
 %include "gr_lms_dfe_cc.i"
 %include "gr_lms_dfe_ff.i"
 %include "gr_dpll_bb.i"
+%include "gr_fmdet_cf.i"
 %include "gr_pll_freqdet_cf.i"
 %include "gr_pll_refout_cc.i"
 %include "gr_pll_carriertracking_cc.i"
