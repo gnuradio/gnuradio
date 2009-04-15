@@ -96,19 +96,19 @@ xcvr2450::xcvr2450(usrp_basic_sptr _usrp, int which)
 
   d_txgain = 63;       // 0 = min, 63 = max
 
-  // Initialize GPIO and ATR
-  tx_write_io(TX_SAFE_IO, TX_OE_MASK);
-  tx_write_oe(TX_OE_MASK, ~0);
-  tx_set_atr_txval(TX_SAFE_IO);
-  tx_set_atr_rxval(TX_SAFE_IO);
-  tx_set_atr_mask(TX_OE_MASK);
+  // Initialize GPIO and ATR  
+  usrp()->common_write_io(C_TX, d_which, TX_SAFE_IO, TX_OE_MASK);
+  usrp()->_common_write_oe(C_TX, d_which, TX_OE_MASK, 0xffff);
+  usrp()->common_write_atr_txval(C_TX, d_which, TX_SAFE_IO);
+  usrp()->common_write_atr_rxval(C_TX, d_which, TX_SAFE_IO);
+  usrp()->common_write_atr_mask(C_TX, d_which, TX_OE_MASK);
 
-  rx_write_io(RX_SAFE_IO, RX_OE_MASK);
-  rx_write_oe(RX_OE_MASK, ~0);
-  rx_set_atr_rxval(RX_SAFE_IO);
-  rx_set_atr_txval(RX_SAFE_IO);
-  rx_set_atr_mask(RX_OE_MASK);
-        
+  usrp()->common_write_io(C_RX, d_which, RX_SAFE_IO, RX_OE_MASK);
+  usrp()->_common_write_oe(C_RX, d_which, RX_OE_MASK, 0xffff);
+  usrp()->common_write_atr_txval(C_RX, d_which, RX_SAFE_IO);
+  usrp()->common_write_atr_rxval(C_RX, d_which, RX_SAFE_IO);
+  usrp()->common_write_atr_mask(C_RX, d_which, RX_OE_MASK);
+
   // Initialize chipset
   // TODO: perform reset sequence to ensure power up defaults
   set_reg_standby();
@@ -126,10 +126,10 @@ xcvr2450::xcvr2450(usrp_basic_sptr _usrp, int which)
 xcvr2450::~xcvr2450()
 {
   //printf("xcvr2450::destructor\n");
-  tx_set_atr_txval(TX_SAFE_IO);
-  tx_set_atr_rxval(TX_SAFE_IO);
-  rx_set_atr_rxval(RX_SAFE_IO);
-  rx_set_atr_txval(RX_SAFE_IO);
+  usrp()->common_write_atr_txval(C_TX, d_which, TX_SAFE_IO);
+  usrp()->common_write_atr_rxval(C_TX, d_which, TX_SAFE_IO);
+  usrp()->common_write_atr_txval(C_RX, d_which, RX_SAFE_IO);
+  usrp()->common_write_atr_rxval(C_RX, d_which, RX_SAFE_IO);
 }
 
 bool
@@ -274,151 +274,6 @@ xcvr2450::send_reg(int v)
   //printf("xcvr2450: Setting reg %d to %X\n", (v&15), v);
 }
 
-// --------------------------------------------------------------------
-// These methods control the GPIO bus.  Since the board has to access
-// both the io_rx_* and io_tx_* pins, we define our own methods to do so.
-// This bypasses any code in db_base.
-//
-// The board operates in ATR mode, always.  Thus, when the board is first
-// initialized, it is in receive mode, until bits show up in the TX FIFO.
-//
-
-// FIXME these should just call the similarly named common_* method on usrp_basic
-
-bool
-xcvr2450::tx_write_oe(int value, int mask)
-{
-  int reg;
-  if(d_which)
-    reg = FR_OE_2;
-  else
-    reg = FR_OE_0;
-  return usrp()->_write_fpga_reg(reg, (mask << 16) | value);
-}
-   
-bool
-xcvr2450::tx_write_io(int value, int mask)
-{
-  int reg;
-  if(d_which)
-    reg = FR_IO_2;
-  else
-    reg = FR_IO_0;
-  return usrp()->_write_fpga_reg(reg, (mask << 16) | value);
-}
-
-int
-xcvr2450::tx_read_io()
-{
-  int val;
-  if(d_which)
-    val = FR_RB_IO_RX_B_IO_TX_B;
-  else
-    val = FR_RB_IO_RX_A_IO_TX_A;
-  int t = usrp()->_read_fpga_reg(val);
-  return t & 0xffff;
-}
-
-bool
-xcvr2450::rx_write_oe(int value, int mask)
-{
-  int reg;
-  if(d_which)
-    reg = FR_OE_3;
-  else
-    reg = FR_OE_1;
-  return usrp()->_write_fpga_reg(reg, (mask << 16) | value);
-}
-
-bool
-xcvr2450::rx_write_io(int value, int mask)
-{
-  int reg;
-  if(d_which)
-    reg = FR_IO_3;
-  else
-    reg = FR_IO_1;
-  return usrp()->_write_fpga_reg(reg, (mask << 16) | value);
-}
-
-int
-xcvr2450::rx_read_io()
-{
-  int val;
-  if(d_which)
-    val = FR_RB_IO_RX_B_IO_TX_B;
-  else
-    val = FR_RB_IO_RX_A_IO_TX_A;
-  int t = usrp()->_read_fpga_reg(val);
-  return (t >> 16) & 0xffff;
-}
-
-bool
-xcvr2450::tx_set_atr_mask(int v)
-{
-  int reg;
-  if(d_which)
-    reg = FR_ATR_MASK_2;
-  else
-    reg = FR_ATR_MASK_0;
-  return usrp()->_write_fpga_reg(reg, v);
-}
-
-bool
-xcvr2450::tx_set_atr_txval(int v)
-{
-  int reg;
-  if(d_which)
-    reg = FR_ATR_TXVAL_2;
-  else
-    reg = FR_ATR_TXVAL_0;
-  return usrp()->_write_fpga_reg(reg, v);
-}
-
-bool
-xcvr2450::tx_set_atr_rxval(int v)
-{
-  int reg;
-  if(d_which)
-    reg = FR_ATR_RXVAL_2;
-  else
-    reg = FR_ATR_RXVAL_0;
-  return usrp()->_write_fpga_reg(reg, v);
-}
-
-bool
-xcvr2450::rx_set_atr_mask(int v)
-{
-  int reg;
-  if(d_which)
-    reg = FR_ATR_MASK_3;
-  else
-    reg = FR_ATR_MASK_1;
-  return usrp()->_write_fpga_reg(reg, v);
-}
-
-bool
-xcvr2450::rx_set_atr_txval(int v)
-{
-  int reg;
-  if(d_which)
-    reg = FR_ATR_TXVAL_3;
-  else
-    reg = FR_ATR_TXVAL_1;
-  return usrp()->_write_fpga_reg(reg, v);
-}
-
-bool
-xcvr2450::rx_set_atr_rxval(int v)
-{
-  int reg;
-  if(d_which)
-    reg = FR_ATR_RXVAL_3;
-  else
-    reg = FR_ATR_RXVAL_1;
-  return usrp()->_write_fpga_reg(reg, v);
-}
-
 // ----------------------------------------------------------------
 
 void
@@ -453,16 +308,21 @@ xcvr2450::set_gpio()
     tx_pa_sel = LB_PA_OFF;
   else
     tx_pa_sel = HB_PA_OFF;
+ 
+  // Reset GPIO and ATR
+  // FIXME: dont set io, oe, atr mask once basic code stops overriding our settings
+  usrp()->common_write_io(C_TX, d_which, TX_SAFE_IO, TX_OE_MASK);
+  usrp()->_common_write_oe(C_TX, d_which, TX_OE_MASK, 0xffff);
+  usrp()->common_write_atr_txval(C_TX, d_which, tx_pa_sel|tx_antsel|TX_EN|AD9515DIV);
+  usrp()->common_write_atr_rxval(C_TX, d_which, HB_PA_OFF|LB_PA_OFF|rx_antsel|AD9515DIV);
+  usrp()->common_write_atr_mask(C_TX, d_which, TX_OE_MASK);
 
-  int io_rx_while_rx = EN|rx_hp|RX_EN;
-  int io_rx_while_tx = EN|rx_hp;
-  int io_tx_while_rx = HB_PA_OFF|LB_PA_OFF|rx_antsel|AD9515DIV;
-  int io_tx_while_tx = tx_pa_sel|tx_antsel|TX_EN|AD9515DIV;
-  rx_set_atr_rxval(io_rx_while_rx);
-  rx_set_atr_txval(io_rx_while_tx);
-  tx_set_atr_rxval(io_tx_while_rx);
-  tx_set_atr_txval(io_tx_while_tx);
-        
+  usrp()->common_write_io(C_RX, d_which, RX_SAFE_IO, RX_OE_MASK);
+  usrp()->_common_write_oe(C_RX, d_which, RX_OE_MASK, 0xffff);
+  usrp()->common_write_atr_txval(C_RX, d_which, EN|rx_hp);
+  usrp()->common_write_atr_rxval(C_RX, d_which, EN|rx_hp|RX_EN);
+  usrp()->common_write_atr_mask(C_RX, d_which, RX_OE_MASK);
+
   //printf("GPIO: RXRX=%04X RXTX=%04X TXRX=%04X TXTX=%04X\n",
   //       io_rx_while_rx, io_rx_while_tx, io_tx_while_rx, io_tx_while_tx);
 }
@@ -532,11 +392,11 @@ xcvr2450::lock_detect()
     @returns: the value of the VCO/PLL lock detect bit.
     @rtype: 0 or 1
   */
-  if(rx_read_io() & LOCKDET) {
+  if(usrp()->common_read_io(C_RX, d_which) & LOCKDET) {
     return true;
   }
   else {      // Give it a second chance
-    if(rx_read_io() & LOCKDET)
+    if(usrp()->common_read_io(C_RX, d_which) & LOCKDET)
       return true;
     else
       return false;

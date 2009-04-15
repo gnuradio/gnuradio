@@ -41,14 +41,7 @@
 #define EN      (1 << 14)
 #define RX_EN   (1 << 13)           // 1 = RX on, 0 = RX off
 #define RX_HP   (1 << 12)
-#define B1      (1 << 11)
-#define B2      (1 << 10)
-#define B3      (1 << 9)
-#define B4      (1 << 8)
-#define B5      (1 << 7)
-#define B6      (1 << 6)
-#define B7      (1 << 5)
-#define RX_OE_MASK EN|RX_EN|RX_HP|B1|B2|B3|B4|B5|B6|B7
+#define RX_OE_MASK EN|RX_EN|RX_HP
 #define RX_SAFE_IO EN
 
 struct xcvr2450_key {
@@ -131,30 +124,6 @@ public:
   
   // Send register write to SPI
   void send_reg(int v);
-  
-  // --------------------------------------------------------------------
-  // These methods control the GPIO bus.  Since the board has to access
-  // both the io_rx_* and io_tx_* pins, we define our own methods to do so.
-  // This bypasses any code in db_base.
-  //
-  // The board operates in ATR mode, always.  Thus, when the board is first
-  // initialized, it is in receive mode, until bits show up in the TX FIFO.
-  //
-
-  // FIXME these should just call the similarly named common_* method on usrp_basic
-
-  bool tx_write_oe(int value, int mask);
-  bool tx_write_io(int value, int mask);
-  int  tx_read_io();
-  bool rx_write_oe(int value, int mask);
-  bool rx_write_io(int value, int mask);
-  int  rx_read_io();
-  bool tx_set_atr_mask(int v);
-  bool tx_set_atr_txval(int v);
-  bool tx_set_atr_rxval(int v);
-  bool rx_set_atr_mask(int v);
-  bool rx_set_atr_txval(int v);
-  bool rx_set_atr_rxval(int v);
 
   void set_gpio();
   bool lock_detect();
