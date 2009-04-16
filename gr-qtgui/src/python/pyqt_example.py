@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from gnuradio import gr, blks2
+from gnuradio import gr
 from gnuradio.qtgui import qtgui
 from PyQt4 import QtGui, QtCore
 import sys, sip
@@ -111,7 +111,7 @@ class my_top_block(gr.top_block):
         src1 = gr.sig_source_c(Rs, gr.GR_SIN_WAVE, f1, 0.1, 0)
         src2 = gr.sig_source_c(Rs, gr.GR_SIN_WAVE, f2, 0.1, 0)
         src  = gr.add_cc()
-        channel = blks2.channel_model(0.001)
+        channel = gr.channel_model(0.001)
         thr = gr.throttle(gr.sizeof_gr_complex, 100*fftsize)
         self.snk1 = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
                                  -Rs/2, Rs/2,

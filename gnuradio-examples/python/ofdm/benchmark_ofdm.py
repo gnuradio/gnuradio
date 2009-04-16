@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006, 2007 Free Software Foundation, Inc.
+# Copyright 2006, 2007, 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -71,8 +71,8 @@ class my_top_block(gr.top_block):
 
         #self.mux = gr.stream_mux(gr.sizeof_gr_complex, stream_size)
         self.throttle = gr.throttle(gr.sizeof_gr_complex, options.sample_rate)
-        self.channel = blks2.channel_model(noise_voltage, frequency_offset,
-                                           options.clockrate_ratio, taps)
+        self.channel = gr.channel_model(noise_voltage, frequency_offset,
+                                        options.clockrate_ratio, taps)
         self.rxpath = receive_path(callback, options)
                 
         #self.connect(self.zeros, (self.mux,0))

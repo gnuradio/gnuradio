@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005, 2006, 2007 Free Software Foundation, Inc.
+# Copyright 2005, 2006, 2007, 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, modulation_utils, blks2
+from gnuradio import gr, gru, modulation_utils
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -50,7 +50,7 @@ class my_top_block(gr.top_block):
         self.rxpath = receive_path(demod_class, rx_callback, options)
 
         if channelon:
-            self.channel = blks2.channel_model(noise_voltage, frequency_offset, 1.01)
+            self.channel = gr.channel_model(noise_voltage, frequency_offset, 1.01)
 
             if options.discontinuous:
                 z = 20000*[0,]

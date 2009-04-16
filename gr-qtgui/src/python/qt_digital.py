@@ -74,7 +74,7 @@ class control_panel(QtGui.QWidget):
     def noiseEditText(self):
         try:
             noise = self.noiseEdit.text().toDouble()[0]
-            self.channel.noise.set_amplitude(noise)
+            self.channel.set_noise_voltage(noise)
 
             self.noise = noise
         except RuntimeError:
@@ -83,7 +83,7 @@ class control_panel(QtGui.QWidget):
     def freqEditText(self):
         try:
             freq = self.freqEdit.text().toDouble()[0]
-            self.channel.freq_offset.set_frequency(freq)
+            self.channel.set_frequency_offset(freq)
 
             self.freq = freq
         except RuntimeError:
@@ -92,7 +92,7 @@ class control_panel(QtGui.QWidget):
     def timeEditText(self):
         try:
             to = self.timeEdit.text().toDouble()[0]
-            self.channel.timing_offset.set_interp_ratio(to)
+            self.channel.set_timing_offset(to)
 
             self.timing_offset = to
         except RuntimeError:
@@ -121,7 +121,7 @@ class my_top_block(gr.top_block):
         noise = 1e-7
         fo = 1e-6
         to = 1.0
-        channel = blks2.channel_model(noise, fo, to)
+        channel = gr.channel_model(noise, fo, to)
 
         thr = gr.throttle(gr.sizeof_gr_complex, 10*fftsize)
         self.snk_tx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS, -1/2, 1/2,
