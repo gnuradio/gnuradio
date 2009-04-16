@@ -48,7 +48,7 @@ grinclude_HEADERS =			\
 	gnuradio_swig_bug_workaround.h
 
 # ----------------------------------------------------------------
-# We've split the previously monstrous gnuradio_swig_python into 5
+# We've split the previously monstrous gnuradio_swig_python into 6
 # smaller pieces.  This reduces compile time coupling and creates
 # smaller pieces for the compiler to digest.  prior to this change, on
 # X86_64, g++'s resident set size was 650MB!
@@ -59,7 +59,8 @@ TOP_SWIG_IFILES =			\
 	gnuradio_swig_py_general.i	\
 	gnuradio_swig_py_gengen.i	\
 	gnuradio_swig_py_filter.i	\
-	gnuradio_swig_py_io.i
+	gnuradio_swig_py_io.i		\
+	gnuradio_swig_py_hier.i
 
 # Install so that they end up available as:
 #   import gnuradio.gr
@@ -70,6 +71,7 @@ gnuradio_swig_py_general_pythondir_category = gnuradio/gr
 gnuradio_swig_py_gengen_pythondir_category  = gnuradio/gr
 gnuradio_swig_py_filter_pythondir_category  = gnuradio/gr
 gnuradio_swig_py_io_pythondir_category      = gnuradio/gr
+gnuradio_swig_py_hier_pythondir_category    = gnuradio/gr
 
 # additional libraries for linking with each SWIG-generated library
 gnuradio_swig_py_runtime_la_swig_libadd = $(GNURADIO_CORE_LA)
@@ -77,6 +79,7 @@ gnuradio_swig_py_general_la_swig_libadd = $(GNURADIO_CORE_LA)
 gnuradio_swig_py_gengen_la_swig_libadd  = $(GNURADIO_CORE_LA)
 gnuradio_swig_py_filter_la_swig_libadd  = $(GNURADIO_CORE_LA)
 gnuradio_swig_py_io_la_swig_libadd      = $(GNURADIO_CORE_LA)
+gnuradio_swig_py_hier_la_swig_libadd    = $(GNURADIO_CORE_LA)
 
 include $(top_srcdir)/Makefile.swig
 
@@ -90,6 +93,7 @@ BUILT_SOURCES =				\
 	gnuradio_swig_py_gengen.h	\
 	gnuradio_swig_py_filter.h	\
 	gnuradio_swig_py_io.h		\
+	gnuradio_swig_py_hier.h		\
 	$(grinclude_HEADERS)		\
 	$(swig_built_sources)
 

@@ -1,5 +1,5 @@
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,3 +25,4 @@ from gnuradio_swig_py_general import *
 from gnuradio_swig_py_gengen import *
 from gnuradio_swig_py_filter import *
 from gnuradio_swig_py_io import *
+from gnuradio_swig_py_hier import *

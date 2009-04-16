@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,20 +20,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%define GR_SWIG_BLOCK_MAGIC(PKG, BASE_NAME)
-_GR_SWIG_BLOCK_MAGIC_HELPER(PKG, PKG ## _ ## BASE_NAME, BASE_NAME)
-%enddef
+%{
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-%define _GR_SWIG_BLOCK_MAGIC_HELPER(PKG, NAME, BASE_NAME)
-class NAME;
-typedef boost::shared_ptr<NAME> NAME ## _sptr;
-%template(NAME ## _sptr) boost::shared_ptr<NAME>;
-%rename(BASE_NAME) PKG ## _make_ ## BASE_NAME;
-
-%pythoncode %{
-NAME ## _sptr.block = lambda self: NAME ## _block (self)
-NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id ())
+#include <gr_channel_model.h>
 %}
 
-%ignore NAME;
-%enddef
+%include "gr_channel_model.i"

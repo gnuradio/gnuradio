@@ -61,6 +61,7 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/io \
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/g72x \
 -I\${abs_top_srcdir}/gnuradio-core/src/lib/swig \
+-I\${abs_top_srcdir}/gnuradio-core/src/lib/hier \
 -I\${abs_top_builddir}/gnuradio-core/src/lib/swig \
 \$(FFTW3F_CFLAGS) \
 \$(GSL_CFLAGS)"
@@ -96,6 +97,7 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
         gnuradio-core/src/lib/reed-solomon/Makefile \
         gnuradio-core/src/lib/viterbi/Makefile \
         gnuradio-core/src/lib/runtime/Makefile \
+	gnuradio-core/src/lib/hier/Makefile \
         gnuradio-core/src/lib/swig/Makefile \
         gnuradio-core/src/python/Makefile \
         gnuradio-core/src/python/bin/Makefile \

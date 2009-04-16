@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,20 +20,26 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%define GR_SWIG_BLOCK_MAGIC(PKG, BASE_NAME)
-_GR_SWIG_BLOCK_MAGIC_HELPER(PKG, PKG ## _ ## BASE_NAME, BASE_NAME)
-%enddef
+GR_SWIG_BLOCK_MAGIC(gr,channel_model)
 
-%define _GR_SWIG_BLOCK_MAGIC_HELPER(PKG, NAME, BASE_NAME)
-class NAME;
-typedef boost::shared_ptr<NAME> NAME ## _sptr;
-%template(NAME ## _sptr) boost::shared_ptr<NAME>;
-%rename(BASE_NAME) PKG ## _make_ ## BASE_NAME;
+gr_channel_model_sptr gr_make_channel_model(double noise_voltage=0.0,
+					    double frequency_offset=0.0,
+					    double epsilon=1.0,
+					    const std::vector<gr_complex> &taps=std::vector<gr_complex>(1, 1),
+					    double noise_seed=3021);
 
-%pythoncode %{
-NAME ## _sptr.block = lambda self: NAME ## _block (self)
-NAME ## _sptr.__repr__ = lambda self: "<gr_block %s (%d)>" % (self.name(), self.unique_id ())
-%}
-
-%ignore NAME;
-%enddef
+class gr_channel_model : public gr_hier_block2
+{
+ private:
+  gr_channel_model(double noise_voltage,
+		   double frequency_offset,
+		   double epsilon,
+		   const std::vector<gr_complex> &taps,
+		   double noise_seed);
+  
+ public:
+  void set_noise_voltage(double noise_voltage);
+  void set_frequency_offset(double frequency_offset);
+  void set_taps(const std::vector<gr_complex> &taps);
+  void set_timing_offset(double epsilon);
+};
