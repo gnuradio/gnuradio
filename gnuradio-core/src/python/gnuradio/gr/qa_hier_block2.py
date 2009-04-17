@@ -284,7 +284,7 @@ class test_hier_block2(gr_unittest.TestCase):
                              gr.io_signature(1, 1, gr.sizeof_char),
                              gr.io_signature(0, 0, 0))
         dst = gr.vector_sink_b()
-        tb.connect(gr.vector_source_b([1,]), hb1)
+        tb.connect(src, hb1)
         hb1.connect(hb1, hb2)
         hb2.connect(hb2, gr.kludge_copy(gr.sizeof_char), dst)
         tb.run()
