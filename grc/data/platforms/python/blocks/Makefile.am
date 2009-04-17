@@ -30,7 +30,6 @@ dist_ourdata_DATA = \
 	band_reject_filter.xml \
 	blks2_am_demod_cf.xml \
 	blks2_analysis_filterbank.xml \
-	blks2_channel_model.xml \
 	blks2_dxpsk_demod.xml \
 	blks2_dxpsk_mod.xml \
 	blks2_error_rate.xml \
@@ -65,6 +64,7 @@ dist_ourdata_DATA = \
 	gr_and_xx.xml \
 	gr_argmax_xx.xml \
 	gr_binary_slicer_fb.xml \
+	gr_channel_model.xml \
 	gr_char_to_float.xml \
 	gr_chunks_to_symbols.xml \
 	gr_clock_recovery_mm_xx.xml \

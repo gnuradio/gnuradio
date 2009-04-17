@@ -6,10 +6,10 @@
  -->
 <block>
 	<name>Channel Model</name>
-	<key>blks2_channel_model</key>
-	<import>from gnuradio import blks2</import>
+	<key>gr_channel_model</key>
+	<import>from gnuradio import gr</import>
 	<import>from gnuradio.gr import firdes</import>
-	<make>blks2.channel_model(
+	<make>gr.channel_model(
 	noise_voltage=$noise_voltage,
 	frequency_offset=$freq_offset,
 	epsilon=$epsilon,
@@ -19,6 +19,7 @@
 	<callback>set_noise_voltage($noise_voltage)</callback>
 	<callback>set_frequency_offset($freq_offset)</callback>
 	<callback>set_taps($taps)</callback>
+	<callback>set_timing_offset($epsilon)</callback>
 	<param>
 		<name>Noise Voltage</name>
 		<key>noise_voltage</key>
@@ -40,7 +41,7 @@
 	<param>
 		<name>Taps</name>
 		<key>taps</key>
-		<value>1.0, 0.0</value>
+		<value>1.0 + 1.0j</value>
 		<type>complex_vector</type>
 	</param>
 	<param>

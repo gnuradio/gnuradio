@@ -166,7 +166,7 @@
 		<block>gr_freq_xlating_fir_filter_xxx</block>
 		<block>gr_iir_filter_ffd</block>
 		<block>gr_filter_delay_fc</block>
-		<block>blks2_channel_model</block>
+		<block>gr_channel_model</block>
 		<!-- Other filters -->
 		<block>gr_single_pole_iir_filter_xx</block>
 		<block>gr_hilbert_fc</block>
