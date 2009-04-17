@@ -76,6 +76,14 @@ gr_hier_block2_detail::connect(gr_basic_block_sptr block)
     throw std::invalid_argument(msg.str());
   }
 
+  gr_hier_block2_sptr hblock(cast_to_hier_block2_sptr(block));
+
+  if (hblock && hblock.get() != d_owner) {
+    if (GR_HIER_BLOCK2_DETAIL_DEBUG)
+      std::cout << "connect: block is hierarchical, setting parent to " << this << std::endl;
+    hblock->d_detail->d_parent_detail = this;
+  }
+		
   d_blocks.push_back(block);
 }
 

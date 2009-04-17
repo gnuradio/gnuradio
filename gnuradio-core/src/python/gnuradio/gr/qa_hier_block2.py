@@ -251,6 +251,18 @@ class test_hier_block2(gr_unittest.TestCase):
         self.assertRaises(RuntimeError, 
                           lambda: tb.run())
 
+    def test_028_singleton_reconfigure(self):
+        tb = gr.top_block()
+        hb = gr.hier_block2("block", 
+                            gr.io_signature(0, 0, 0), gr.io_signature(0, 0, 0))
+        src = gr.vector_source_b([1, ])
+        dst = gr.vector_sink_b()
+        hb.connect(src, dst)
+        tb.connect(hb) # Singleton connect
+        tb.lock()
+        tb.disconnect_all()
+        tb.connect(src, dst)
+        tb.unlock()
     
 if __name__ == "__main__":
     gr_unittest.main()
