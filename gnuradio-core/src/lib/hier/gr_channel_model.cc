@@ -39,7 +39,7 @@ gr_make_channel_model(double noise_voltage,
 							 noise_seed));
 }
 
-// Hierarchical block constructor, with no inputs or outputs
+// Hierarchical block constructor
 gr_channel_model::gr_channel_model(double noise_voltage,
 				   double frequency_offset,
 				   double epsilon,
