@@ -146,16 +146,44 @@ gr_hier_block2_detail::connect(gr_basic_block_sptr src, int src_port,
 void
 gr_hier_block2_detail::disconnect(gr_basic_block_sptr block)
 {
+  // Check on singleton list
   for (gr_basic_block_viter_t p = d_blocks.begin(); p != d_blocks.end(); p++) {
     if (*p == block) {
       d_blocks.erase(p);
+      
+      gr_hier_block2_sptr hblock(cast_to_hier_block2_sptr(block));
+      if (block && block.get() != d_owner) {
+	if (GR_HIER_BLOCK2_DETAIL_DEBUG)
+	  std::cout << "disconnect: block is hierarchical, clearing parent" << std::endl;
+	hblock->d_detail->d_parent_detail = 0;
+      }
+    
       return;
     }
   }
 
-  std::stringstream msg;
-  msg << "cannot disconnect block " << block << ", not found";
-  throw std::invalid_argument(msg.str());
+  // Otherwise find all edges containing block
+  gr_edge_vector_t edges, tmp = d_fg->edges();
+  gr_edge_vector_t::iterator p;
+  for (p = tmp.begin(); p != tmp.end(); p++) {
+    if ((*p).src().block() == block || (*p).dst().block() == block) {
+      edges.push_back(*p);
+
+      if (GR_HIER_BLOCK2_DETAIL_DEBUG)
+	std::cout << "disconnect: block found in edge " << (*p) << std::endl;  
+    }
+  }
+
+  if (edges.size() == 0) {
+    std::stringstream msg;
+    msg << "cannot disconnect block " << block << ", not found";
+    throw std::invalid_argument(msg.str());
+  }
+
+  for (p = edges.begin(); p != edges.end(); p++) {
+    disconnect((*p).src().block(), (*p).src().port(),
+	       (*p).dst().block(), (*p).dst().port());
+  }
 }
 
 void 
@@ -174,13 +202,13 @@ gr_hier_block2_detail::disconnect(gr_basic_block_sptr src, int src_port,
 
   if (src_block && src.get() != d_owner) {
     if (GR_HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << "connect: src is hierarchical, clearing parent" << std::endl;
+      std::cout << "disconnect: src is hierarchical, clearing parent" << std::endl;
     src_block->d_detail->d_parent_detail = 0;
   }
 		
   if (dst_block && dst.get() != d_owner) {
     if (GR_HIER_BLOCK2_DETAIL_DEBUG)
-      std::cout << "connect: dst is hierarchical, clearing parent" << std::endl;
+      std::cout << "disconnect: dst is hierarchical, clearing parent" << std::endl;
     dst_block->d_detail->d_parent_detail = 0;
   }
 

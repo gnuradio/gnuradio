@@ -263,6 +263,16 @@ class test_hier_block2(gr_unittest.TestCase):
         tb.disconnect_all()
         tb.connect(src, dst)
         tb.unlock()
+
+    def test_029_singleton_disconnect(self):
+        tb = gr.top_block()
+        src = gr.vector_source_b([1, ])
+        dst = gr.vector_sink_b()
+        tb.connect(src, dst)
+        tb.disconnect(src)   # Singleton disconnect
+        tb.connect(src, dst)
+        tb.run()
+        self.assertEquals(dst.data(), (1,))
     
 if __name__ == "__main__":
     gr_unittest.main()
