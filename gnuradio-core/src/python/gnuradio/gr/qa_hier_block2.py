@@ -273,6 +273,22 @@ class test_hier_block2(gr_unittest.TestCase):
         tb.connect(src, dst)
         tb.run()
         self.assertEquals(dst.data(), (1,))
+
+    def test_030_nested_input(self):
+        tb = gr.top_block()
+        src = gr.vector_source_b([1,])
+        hb1 = gr.hier_block2("hb1",
+                             gr.io_signature(1, 1, gr.sizeof_char),
+                             gr.io_signature(0, 0, 0))
+        hb2 = gr.hier_block2("hb2",
+                             gr.io_signature(1, 1, gr.sizeof_char),
+                             gr.io_signature(0, 0, 0))
+        dst = gr.vector_sink_b()
+        tb.connect(gr.vector_source_b([1,]), hb1)
+        hb1.connect(hb1, hb2)
+        hb2.connect(hb2, gr.kludge_copy(gr.sizeof_char), dst)
+        tb.run()
+        self.assertEquals(dst.data(), (1,))
     
 if __name__ == "__main__":
     gr_unittest.main()

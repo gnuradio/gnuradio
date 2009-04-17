@@ -365,9 +365,12 @@ gr_hier_block2_detail::resolve_endpoint(const gr_endpoint &endp, bool is_input) 
   std::stringstream msg;
 
   // Check if endpoint is a leaf node
-  if (cast_to_block_sptr(endp.block()))
+  if (cast_to_block_sptr(endp.block())) {
+    if (GR_HIER_BLOCK2_DETAIL_DEBUG)
+      std::cout << "Block " << endp.block() << " is a leaf node, returning." << std::endl;
     return endp;
-  
+  }
+
   // Check if endpoint is a hierarchical block
   gr_hier_block2_sptr hier_block2(cast_to_hier_block2_sptr(endp.block()));
   if (hier_block2) {
@@ -387,35 +390,53 @@ void
 gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
 {
   if (GR_HIER_BLOCK2_DETAIL_DEBUG)
-    std::cout << "flattening " << d_owner->name() << std::endl;
+    std::cout << "Flattening " << d_owner->name() << std::endl;
 
   // Add my edges to the flow graph, resolving references to actual endpoints
   gr_edge_vector_t edges = d_fg->edges();
-
+  
   for (gr_edge_viter_t p = edges.begin(); p != edges.end(); p++) {
     if (GR_HIER_BLOCK2_DETAIL_DEBUG)
       std::cout << "Flattening edge " << (*p) << std::endl;
 
     gr_endpoint src_endp = resolve_endpoint(p->src(), false);
     gr_endpoint dst_endp = resolve_endpoint(p->dst(), true);
+
+    if (GR_HIER_BLOCK2_DETAIL_DEBUG) {
+      std::cout << "src_endp = " << src_endp 
+		<< ", dst_endp = " << dst_endp << std::endl;
+    }
+
     sfg->connect(src_endp, dst_endp);
   }
 
-  // Construct unique list of blocks used either in edges or
-  // by themselves.  I hate STL.
+  // Construct unique list of blocks used either in edges, inputs, 
+  // outputs, or by themselves.  I still hate STL.
   gr_basic_block_vector_t blocks, tmp = d_fg->calc_used_blocks();
-  std::insert_iterator<gr_basic_block_vector_t> inserter(blocks, blocks.begin());
+
   std::vector<gr_basic_block_sptr>::const_iterator p; // Because flatten_aux is const
   for (p = d_blocks.begin(); p != d_blocks.end(); p++) 
     tmp.push_back(*p);
+
+  std::vector<gr_endpoint>::const_iterator e; // Because flatten_aux is const
+  for (e = d_inputs.begin(); e != d_inputs.end(); e++)
+    tmp.push_back((*e).block());
+  for (e = d_outputs.begin(); e != d_outputs.end(); e++)
+    tmp.push_back((*e).block());
+
   sort(tmp.begin(), tmp.end());
+
+  std::insert_iterator<gr_basic_block_vector_t> inserter(blocks, blocks.begin());
   unique_copy(tmp.begin(), tmp.end(), inserter);
 
   // Recurse hierarchical children
   for (gr_basic_block_viter_t p = blocks.begin(); p != blocks.end(); p++) {
     gr_hier_block2_sptr hier_block2(cast_to_hier_block2_sptr(*p));
-    if (hier_block2)
+    if (hier_block2) {
+      if (GR_HIER_BLOCK2_DETAIL_DEBUG)
+	std::cout << "flatten_aux: recursing into hierarchical block " << hier_block2 << std::endl;
       hier_block2->d_detail->flatten_aux(sfg);
+    }
   }
 }
 
