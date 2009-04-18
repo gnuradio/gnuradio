@@ -6,74 +6,48 @@ from PyQt4 import QtGui, QtCore
 import sys, sip
 import scipy
 
-class dialog_box(QtGui.QWidget):
-    def __init__(self, display_tx, display_rx, channel):
-        QtGui.QWidget.__init__(self, None)
-        self.setWindowTitle('Digital Signal Examples')
+try:
+    from qt_digital_window import Ui_DigitalWindow
+except ImportError:
+    print "Error: could not find qt_digital_window.py:"
+    print "\t\"pyuic4 qt_digital_window.ui -o qt_digital_window.py\""
+    sys.exit(1)
 
-        self.control = control_panel(channel, self)
-
-        hlayout = QtGui.QHBoxLayout()
-        hlayout.addWidget(display_tx)
-        hlayout.addWidget(display_rx)
-        hlayout.setGeometry(QtCore.QRect(0,0,100,100))
-
-        vlayout = QtGui.QVBoxLayout()
-        vlayout.addLayout(hlayout)
-        vlayout.addLayout(self.control.layout, -1)
-        #vlayout.addStretch(-1)
-
-        self.setLayout(vlayout)
-        self.resize(1000, 1000)
-
-class control_panel(QtGui.QWidget):
-    def __init__(self, channel, parent=None):
+class dialog_box(QtGui.QMainWindow):
+    def __init__(self, snkTx, snkRx, channel, parent=None):
         QtGui.QWidget.__init__(self, parent)
-        self.setWindowTitle('Control Panel')
+        self.gui = Ui_DigitalWindow()
+        self.gui.setupUi(self)
 
         self.channel = channel
-        
-        self.layout = QtGui.QFormLayout()
 
-        # Set channel noise
-        self.noiseEdit = QtGui.QLineEdit(self)
-        self.layout.addRow("Noise Amplitude:", self.noiseEdit)
-        self.connect(self.noiseEdit, QtCore.SIGNAL("editingFinished()"),
+        # Add the qtsnk widgets to the hlayout box
+        self.gui.sinkLayout.addWidget(snkTx)
+        self.gui.sinkLayout.addWidget(snkRx)
+
+        # Connect up some signals
+        self.connect(self.gui.noiseEdit, QtCore.SIGNAL("editingFinished()"),
                      self.noiseEditText)
-
-        # Set channel frequency offset
-        self.freqEdit = QtGui.QLineEdit(self)
-        self.layout.addRow("Frequency Offset:", self.freqEdit)
-        self.connect(self.freqEdit, QtCore.SIGNAL("editingFinished()"),
+        self.connect(self.gui.freqEdit, QtCore.SIGNAL("editingFinished()"),
                      self.freqEditText)
-
-        # Set channel timing offset
-        self.timeEdit = QtGui.QLineEdit(self)
-        self.layout.addRow("Timing Offset:", self.timeEdit)
-        self.connect(self.timeEdit, QtCore.SIGNAL("editingFinished()"),
+        self.connect(self.gui.timeEdit, QtCore.SIGNAL("editingFinished()"),
                      self.timeEditText)
-
-        self.quit = QtGui.QPushButton('Close', self)
-        self.layout.addRow(self.quit)
-
-        self.connect(self.quit, QtCore.SIGNAL('clicked()'),
-                     QtGui.qApp, QtCore.SLOT('quit()'))
-
+        
     def set_noise(self, noise):
         self.noise = noise
-        self.noiseEdit.setText(QtCore.QString("%1").arg(self.noise))
+        self.gui.noiseEdit.setText(QtCore.QString("%1").arg(self.noise))
 
     def set_frequency(self, freq):
         self.freq = freq
-        self.freqEdit.setText(QtCore.QString("%1").arg(self.freq))
+        self.gui.freqEdit.setText(QtCore.QString("%1").arg(self.freq))
 
     def set_time_offset(self, to):
         self.timing_offset = to
-        self.timeEdit.setText(QtCore.QString("%1").arg(self.timing_offset))
+        self.gui.timeEdit.setText(QtCore.QString("%1").arg(self.timing_offset))
 
     def noiseEditText(self):
         try:
-            noise = self.noiseEdit.text().toDouble()[0]
+            noise = self.gui.noiseEdit.text().toDouble()[0]
             self.channel.set_noise_voltage(noise)
 
             self.noise = noise
@@ -82,7 +56,7 @@ class control_panel(QtGui.QWidget):
 
     def freqEditText(self):
         try:
-            freq = self.freqEdit.text().toDouble()[0]
+            freq = self.gui.freqEdit.text().toDouble()[0]
             self.channel.set_frequency_offset(freq)
 
             self.freq = freq
@@ -91,7 +65,7 @@ class control_panel(QtGui.QWidget):
 
     def timeEditText(self):
         try:
-            to = self.timeEdit.text().toDouble()[0]
+            to = self.gui.timeEdit.text().toDouble()[0]
             self.channel.set_timing_offset(to)
 
             self.timing_offset = to
@@ -139,12 +113,13 @@ class my_top_block(gr.top_block):
         pyRxQt  = self.snk_rx.pyqwidget()
         pyRx = sip.wrapinstance(pyRxQt, QtGui.QWidget)
 
-        self.main_box = dialog_box(pyTx, pyRx, channel)
-        self.main_box.control.set_noise(noise)
-        self.main_box.control.set_frequency(fo)
-        self.main_box.control.set_time_offset(to)
-
+        self.main_box = dialog_box(pyTx, pyRx, channel);
+        self.main_box.set_noise(noise)
+        self.main_box.set_frequency(fo)
+        self.main_box.set_time_offset(to)
         self.main_box.show()
+
+
     
 if __name__ == "__main__":
     tb = my_top_block();
