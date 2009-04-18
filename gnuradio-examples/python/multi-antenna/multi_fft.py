@@ -64,7 +64,7 @@ class my_graph(stdgui2.std_top_block):
 
         self.subdev = self.u.db(0) + self.u.db(1)
 
-        if (len (self.subdev) != 4 or
+        if (len (self.subdev) < 4 or
             self.u.db(0, 0).dbid() != usrp_dbid.BASIC_RX or
             self.u.db(0, 0).dbid() != usrp_dbid.BASIC_RX):
             sys.stderr.write('This code requires a Basic Rx board on Sides A & B\n')
