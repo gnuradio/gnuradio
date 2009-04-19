@@ -63,7 +63,6 @@ class _fft_sink_base(gr.hier_block2):
 			gr.io_signature(0, 0, 0),
 		)
 		#blocks
-		copy = gr.kludge_copy(self._item_size)
 		fft = self._fft_chain(
 			sample_rate=sample_rate,
 			fft_size=fft_size,
@@ -75,7 +74,7 @@ class _fft_sink_base(gr.hier_block2):
 		msgq = gr.msg_queue(2)
 		sink = gr.message_sink(gr.sizeof_float*fft_size, msgq, True)
 		#connect
-		self.connect(self, copy, fft, sink)
+		self.connect(self, fft, sink)
 		#controller
 		self.controller = pubsub()
 		self.controller.subscribe(AVERAGE_KEY, fft.set_average)

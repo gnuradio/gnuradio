@@ -1,5 +1,6 @@
+/* -*- c++ -*- */
 /*
- * Copyright 2006,2007 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -48,16 +49,17 @@ private:
   gr_hier_block2 *d_owner;
   gr_hier_block2_detail *d_parent_detail;
   gr_flowgraph_sptr d_fg;
-  gr_endpoint_vector_t d_inputs;
-  gr_endpoint_vector_t d_outputs;
+  std::vector<gr_endpoint_vector_t> d_inputs; // Multiple internal endpoints per external input
+  gr_endpoint_vector_t d_outputs;             // Single internal endpoint per external output
   gr_basic_block_vector_t d_blocks;
   
   void connect_input(int my_port, int port, gr_basic_block_sptr block);
   void connect_output(int my_port, int port, gr_basic_block_sptr block);
   void disconnect_input(int my_port, int port, gr_basic_block_sptr block);
   void disconnect_output(int my_port, int port, gr_basic_block_sptr block);
-  gr_endpoint resolve_port(int port, bool is_input);
-  gr_endpoint resolve_endpoint(const gr_endpoint &endp, bool is_input) const;
+
+  gr_endpoint_vector_t resolve_port(int port, bool is_input);
+  gr_endpoint_vector_t resolve_endpoint(const gr_endpoint &endp, bool is_input) const;
 };
 
 #endif /* INCLUDED_GR_HIER_BLOCK2_DETAIL_H */

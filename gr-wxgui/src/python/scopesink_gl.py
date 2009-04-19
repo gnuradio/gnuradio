@@ -42,13 +42,12 @@ class ac_couple_block(gr.hier_block2):
 			gr.io_signature(1, 1, gr.sizeof_float),
 		)
 		#blocks
-		copy = gr.kludge_copy(gr.sizeof_float)
 		lpf = gr.single_pole_iir_filter_ff(0.0)
 		sub = gr.sub_ff()
 		mute = gr.mute_ff()
 		#connect
-		self.connect(self, copy, sub, self)
-		self.connect(copy, lpf, mute, (sub, 1))
+		self.connect(self, sub, self)
+		self.connect(self, lpf, mute, (sub, 1))
 		#subscribe
 		controller.subscribe(ac_couple_key, lambda x: mute.set_mute(not x))
 		controller.subscribe(sample_rate_key, lambda x: lpf.set_taps(2.0/x))

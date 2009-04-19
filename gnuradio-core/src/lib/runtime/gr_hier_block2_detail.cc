@@ -49,7 +49,7 @@ gr_hier_block2_detail::gr_hier_block2_detail(gr_hier_block2 *owner) :
     throw std::runtime_error(msg.str());
   }
 
-  d_inputs = gr_endpoint_vector_t(max_inputs);
+  d_inputs = std::vector<gr_endpoint_vector_t>(max_inputs);
   d_outputs = gr_endpoint_vector_t(max_outputs);
 }
 
@@ -222,7 +222,6 @@ gr_hier_block2_detail::disconnect(gr_basic_block_sptr src, int src_port,
   d_fg->disconnect(src, src_port, dst, dst_port);
 }
 
-// FIXME: ticket:161 will be implemented here
 void
 gr_hier_block2_detail::connect_input(int my_port, int port, gr_basic_block_sptr block)
 {
@@ -233,13 +232,16 @@ gr_hier_block2_detail::connect_input(int my_port, int port, gr_basic_block_sptr 
     throw std::invalid_argument(msg.str());
   }
 
-  if (d_inputs[my_port].block()) {
-    msg << "external input port " << my_port << " already wired to "
-        << d_inputs[my_port];
+  gr_endpoint_vector_t &endps = d_inputs[my_port];
+  gr_endpoint endp(block, port);
+
+  gr_endpoint_viter_t p = std::find(endps.begin(), endps.end(), endp);
+  if (p != endps.end()) {
+    msg << "external input port " << my_port << " already wired to " << endp;
     throw std::invalid_argument(msg.str());
   }
-
-  d_inputs[my_port] = gr_endpoint(block, port);
+  
+  endps.push_back(endp);
 }
 
 void
@@ -271,13 +273,16 @@ gr_hier_block2_detail::disconnect_input(int my_port, int port, gr_basic_block_sp
     throw std::invalid_argument(msg.str());
   }
 
-  if (d_inputs[my_port].block() != block) {
-    msg << "block " << block << " not assigned to input " 
-	<< my_port << ", can't disconnect";
+  gr_endpoint_vector_t &endps = d_inputs[my_port];
+  gr_endpoint endp(block, port);
+
+  gr_endpoint_viter_t p = std::find(endps.begin(), endps.end(), endp);
+  if (p == endps.end()) {
+    msg << "external input port " << my_port << " not connected to " << endp;
     throw std::invalid_argument(msg.str());
   }
-
-  d_inputs[my_port] = gr_endpoint();
+  
+  endps.erase(p);
 }
 
 void
@@ -299,7 +304,7 @@ gr_hier_block2_detail::disconnect_output(int my_port, int port, gr_basic_block_s
   d_outputs[my_port] = gr_endpoint();
 }
 
-gr_endpoint
+gr_endpoint_vector_t
 gr_hier_block2_detail::resolve_port(int port, bool is_input)
 {
   std::stringstream msg;
@@ -309,7 +314,7 @@ gr_hier_block2_detail::resolve_port(int port, bool is_input)
 	      << (is_input ? "input" : "output")
 	      << " of " << d_owner->name() << std::endl;
 
-  gr_endpoint result;
+  gr_endpoint_vector_t result;
 
   if (is_input) {
     if (port < 0 || port >= (signed)d_inputs.size()) {
@@ -317,13 +322,18 @@ gr_hier_block2_detail::resolve_port(int port, bool is_input)
       throw std::runtime_error(msg.str());
     }
 
-    if (d_inputs[port] == gr_endpoint()) {
+    if (d_inputs[port].empty()) {
       msg << "hierarchical block '" << d_owner->name() << "' input " << port
 	  << " is not connected internally";
       throw std::runtime_error(msg.str());
     }
 
-    result = resolve_endpoint(d_inputs[port], true);
+    gr_endpoint_vector_t &endps = d_inputs[port];
+    gr_endpoint_viter_t p;
+    for (p = endps.begin(); p != endps.end(); p++) {
+      gr_endpoint_vector_t tmp = resolve_endpoint(*p, true);
+      std::copy(tmp.begin(), tmp.end(), back_inserter(result));
+    }
   }
   else {
     if (port < 0 || port >= (signed)d_outputs.size()) {
@@ -340,7 +350,7 @@ gr_hier_block2_detail::resolve_port(int port, bool is_input)
     result = resolve_endpoint(d_outputs[port], false);
   }
 
-  if (!result.block()) {
+  if (result.empty()) {
     msg << "unable to resolve " 
 	<< (is_input ? "input port " : "output port ")
         << port;
@@ -359,16 +369,18 @@ gr_hier_block2_detail::disconnect_all()
   d_outputs.clear();
 }
 
-gr_endpoint
+gr_endpoint_vector_t
 gr_hier_block2_detail::resolve_endpoint(const gr_endpoint &endp, bool is_input) const
 {
   std::stringstream msg;
+  gr_endpoint_vector_t result;
 
   // Check if endpoint is a leaf node
   if (cast_to_block_sptr(endp.block())) {
     if (GR_HIER_BLOCK2_DETAIL_DEBUG)
       std::cout << "Block " << endp.block() << " is a leaf node, returning." << std::endl;
-    return endp;
+    result.push_back(endp);
+    return result;
   }
 
   // Check if endpoint is a hierarchical block
@@ -394,33 +406,41 @@ gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
 
   // Add my edges to the flow graph, resolving references to actual endpoints
   gr_edge_vector_t edges = d_fg->edges();
-  
-  for (gr_edge_viter_t p = edges.begin(); p != edges.end(); p++) {
+  gr_edge_viter_t p;
+
+  for (p = edges.begin(); p != edges.end(); p++) {
     if (GR_HIER_BLOCK2_DETAIL_DEBUG)
       std::cout << "Flattening edge " << (*p) << std::endl;
 
-    gr_endpoint src_endp = resolve_endpoint(p->src(), false);
-    gr_endpoint dst_endp = resolve_endpoint(p->dst(), true);
+    gr_endpoint_vector_t src_endps = resolve_endpoint(p->src(), false);
+    gr_endpoint_vector_t dst_endps = resolve_endpoint(p->dst(), true);
 
-    if (GR_HIER_BLOCK2_DETAIL_DEBUG) {
-      std::cout << "src_endp = " << src_endp 
-		<< ", dst_endp = " << dst_endp << std::endl;
+    gr_endpoint_viter_t s, d;
+    for (s = src_endps.begin(); s != src_endps.end(); s++) {
+      for (d = dst_endps.begin(); d != dst_endps.end(); d++) {
+	if (GR_HIER_BLOCK2_DETAIL_DEBUG)
+	  std::cout << (*s) << "->" << (*d) << std::endl;
+	sfg->connect(*s, *d);
+      }
     }
 
-    sfg->connect(src_endp, dst_endp);
   }
 
   // Construct unique list of blocks used either in edges, inputs, 
   // outputs, or by themselves.  I still hate STL.
   gr_basic_block_vector_t blocks, tmp = d_fg->calc_used_blocks();
 
-  std::vector<gr_basic_block_sptr>::const_iterator p; // Because flatten_aux is const
-  for (p = d_blocks.begin(); p != d_blocks.end(); p++) 
-    tmp.push_back(*p);
+  std::vector<gr_basic_block_sptr>::const_iterator b;   // Because flatten_aux is const
+  for (b = d_blocks.begin(); b != d_blocks.end(); b++) 
+    tmp.push_back(*b);
 
-  std::vector<gr_endpoint>::const_iterator e; // Because flatten_aux is const
-  for (e = d_inputs.begin(); e != d_inputs.end(); e++)
-    tmp.push_back((*e).block());
+  std::vector<gr_endpoint_vector_t>::const_iterator ep; // Because flatten_aux is const
+  std::vector<gr_endpoint>::const_iterator e;           // Because flatten_aux is const
+
+  for (ep = d_inputs.begin(); ep != d_inputs.end(); ep++)
+    for (e = (*ep).begin(); e != (*ep).end(); e++)
+      tmp.push_back((*e).block());
+
   for (e = d_outputs.begin(); e != d_outputs.end(); e++)
     tmp.push_back((*e).block());
 

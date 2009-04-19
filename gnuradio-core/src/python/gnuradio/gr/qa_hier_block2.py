@@ -27,16 +27,6 @@ class test_hier_block2(gr_unittest.TestCase):
 	nop1 = gr.nop(gr.sizeof_int)
 	hblock.connect(hblock, nop1)
 
-    def test_003_connect_input_in_use(self):
-	hblock = gr.hier_block2("test_block", 
-				gr.io_signature(1,1,gr.sizeof_int), 
-				gr.io_signature(1,1,gr.sizeof_int))
-	nop1 = gr.nop(gr.sizeof_int)
-	nop2 = gr.nop(gr.sizeof_int)
-	hblock.connect(hblock, nop1)
-	self.assertRaises(ValueError,
-	    lambda: hblock.connect(hblock, nop2))
-
     def test_004_connect_output(self):
 	hblock = gr.hier_block2("test_block", 
 				gr.io_signature(1,1,gr.sizeof_int), 
@@ -289,6 +279,50 @@ class test_hier_block2(gr_unittest.TestCase):
         hb2.connect(hb2, gr.kludge_copy(gr.sizeof_char), dst)
         tb.run()
         self.assertEquals(dst.data(), (1,))
+
+    def test_031_multiple_internal_inputs(self):
+        tb = gr.top_block()
+        src = gr.vector_source_f([1.0,])
+        hb = gr.hier_block2("hb",
+                            gr.io_signature(1, 1, gr.sizeof_float),
+                            gr.io_signature(1, 1, gr.sizeof_float))
+        m1 = gr.multiply_const_ff(1.0)
+        m2 = gr.multiply_const_ff(2.0)
+        add = gr.add_ff()
+        hb.connect(hb, m1)       # m1 is connected to hb external input #0
+        hb.connect(hb, m2)       # m2 is also connected to hb external input #0
+        hb.connect(m1, (add, 0)) 
+        hb.connect(m2, (add, 1))
+        hb.connect(add, hb)      # add is connected to hb external output #0
+        dst = gr.vector_sink_f()
+        tb.connect(src, hb, dst)
+        tb.run()
+        self.assertEquals(dst.data(), (3.0,))
+
+    def test_032_nested_multiple_internal_inputs(self):
+        tb = gr.top_block()
+        src = gr.vector_source_f([1.0,])
+        hb = gr.hier_block2("hb",
+                            gr.io_signature(1, 1, gr.sizeof_float),
+                            gr.io_signature(1, 1, gr.sizeof_float))
+        hb2 = gr.hier_block2("hb",
+                            gr.io_signature(1, 1, gr.sizeof_float),
+                            gr.io_signature(1, 1, gr.sizeof_float))
+
+        m1 = gr.multiply_const_ff(1.0)
+        m2 = gr.multiply_const_ff(2.0)
+        add = gr.add_ff()
+        hb2.connect(hb2, m1)       # m1 is connected to hb2 external input #0
+        hb2.connect(hb2, m2)       # m2 is also connected to hb2 external input #0
+        hb2.connect(m1, (add, 0)) 
+        hb2.connect(m2, (add, 1))
+        hb2.connect(add, hb2)      # add is connected to hb2 external output #0
+        hb.connect(hb, hb2, hb)   # hb as hb2 as nested internal block
+        dst = gr.vector_sink_f()
+        tb.connect(src, hb, dst)
+        tb.run()
+        self.assertEquals(dst.data(), (3.0,))
+        
     
 if __name__ == "__main__":
     gr_unittest.main()
