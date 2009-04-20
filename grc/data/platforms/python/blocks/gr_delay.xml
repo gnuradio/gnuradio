@@ -8,7 +8,8 @@
 	<name>Delay</name>
 	<key>gr_delay</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.head($type.size*$vlen, $delay)</make>
+	<make>gr.delay($type.size*$vlen, $delay)</make>
+	<callback>set_delay($delay)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
