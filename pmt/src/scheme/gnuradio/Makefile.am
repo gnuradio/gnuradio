@@ -26,4 +26,6 @@ EXTRA_DIST = 				\
 # really scheme source files
 dist_pkgdata_DATA =			\
 	pmt-serial-tags.scm		\
-	pmt-serialize.scm		
+	pmt-serialize.scm		\
+	macros-etc.scm
+
