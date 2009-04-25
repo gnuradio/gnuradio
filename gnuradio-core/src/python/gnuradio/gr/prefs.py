@@ -1,5 +1,5 @@
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -53,8 +53,9 @@ class _prefs(_prefs_base):
     invoke the methods in this python class.
     """
     def __init__(self):
-        _prefs_base.__init__(self)
-        self.cp = ConfigParser.RawConfigParser()
+	_prefs_base.__init__(self)
+	self.cp = ConfigParser.RawConfigParser()
+	self.__getattr__ = lambda self, name: getattr(self.cp, name)
 
     def _sys_prefs_filenames(self):
         dir = _sys_prefs_dirname()
@@ -65,15 +66,11 @@ class _prefs(_prefs_base):
         fnames.sort()
         return [os.path.join(dir, f) for f in fnames]
 
-        
     def _read_files(self):
         filenames = self._sys_prefs_filenames()
         filenames.append(_user_prefs_filename())
         #print "filenames: ", filenames
         self.cp.read(filenames)
-
-    def __getattr__(self, name):
-        return getattr(self.cp, name)
 
     # ----------------------------------------------------------------
     # These methods override the C++ virtual methods of the same name
