@@ -89,6 +89,8 @@ class top_block(object):
 	self._tb = top_block_swig(name)
 
     def __getattr__(self, name):
+        if not hasattr(self, "_tb"):
+            raise RuntimeError("top_block: invalid state--did you forget to call gr.top_block.__init__ in a derived class?")
 	return getattr(self._tb, name)
 
     def start(self):

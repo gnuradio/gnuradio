@@ -45,6 +45,8 @@ class hier_block2(object):
         """
         Pass-through member requests to the C++ object.
         """
+        if not hasattr(self, "_hb"):
+            raise RuntimeError("hier_block2: invalid state--did you forget to call gr.hier_block2.__init__ in a derived class?")
 	return getattr(self._hb, name)
 
     def connect(self, *points):
