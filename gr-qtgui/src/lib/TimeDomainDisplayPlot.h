@@ -26,6 +26,8 @@ public:
 				   
   virtual void replot();
 
+  void set_yaxis(double min, double max);
+
 protected slots:
   void LegendEntryChecked(QwtPlotItem *plotItem, bool on);
 

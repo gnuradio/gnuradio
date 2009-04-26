@@ -60,7 +60,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent){
   setAxisTitle(QwtPlot::xBottom, "Sample Number");
 
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
-  setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
+  set_yaxis(-2.0, 2.0);
   setAxisTitle(QwtPlot::yLeft, "Normalized Voltage");
 
   // Automatically deleted when parent is deleted
@@ -125,7 +125,11 @@ TimeDomainDisplayPlot::~TimeDomainDisplayPlot(){
   // _zoomer and _panner deleted when parent deleted
 }
 
-
+void
+TimeDomainDisplayPlot::set_yaxis(double min, double max)
+{
+  setAxisScale(QwtPlot::yLeft, min, max);
+}
 
 void TimeDomainDisplayPlot::replot(){
 

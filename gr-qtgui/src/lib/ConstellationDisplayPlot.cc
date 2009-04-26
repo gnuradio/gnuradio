@@ -55,11 +55,13 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent):QwtPlot(pare
   canvas()->setPalette(palette);  
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
-  setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
+  //setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
+  set_xaxis(-2.0, 2.0);
   setAxisTitle(QwtPlot::xBottom, "In-phase");
 
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
-  setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
+  //setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
+  set_yaxis(-2.0, 2.0);
   setAxisTitle(QwtPlot::yLeft, "Quadrature");
 
   // Automatically deleted when parent is deleted
@@ -112,7 +114,25 @@ ConstellationDisplayPlot::~ConstellationDisplayPlot(){
   // _zoomer and _panner deleted when parent deleted
 }
 
+void
+ConstellationDisplayPlot::set_xaxis(double min, double max)
+{
+  setAxisScale(QwtPlot::xBottom, min, max);
+}
 
+void
+ConstellationDisplayPlot::set_yaxis(double min, double max)
+{
+  setAxisScale(QwtPlot::yLeft, min, max);
+}
+
+void
+ConstellationDisplayPlot::set_axis(double xmin, double xmax,
+				   double ymin, double ymax)
+{
+  set_xaxis(xmin, xmax);
+  set_yaxis(ymin, ymax);
+}
 
 void ConstellationDisplayPlot::replot(){
 
