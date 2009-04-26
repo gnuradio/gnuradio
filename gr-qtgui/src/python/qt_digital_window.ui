@@ -1,102 +1,34 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>DigitalWindow</class>
- <widget class="QMainWindow" name="DigitalWindow" >
-  <property name="geometry" >
+ <widget class="QMainWindow" name="DigitalWindow">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>1236</width>
-    <height>655</height>
+    <height>739</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget" >
-   <widget class="QLineEdit" name="noiseEdit" >
-    <property name="geometry" >
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="closeButton">
+    <property name="geometry">
      <rect>
-      <x>120</x>
-      <y>520</y>
-      <width>113</width>
-      <height>23</height>
+      <x>1120</x>
+      <y>650</y>
+      <width>101</width>
+      <height>31</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QLabel" name="noiseLabel" >
-    <property name="geometry" >
-     <rect>
-      <x>10</x>
-      <y>520</y>
-      <width>111</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text" >
-     <string>Noise Amplitude</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="closeButton" >
-    <property name="geometry" >
-     <rect>
-      <x>260</x>
-      <y>580</y>
-      <width>80</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="text" >
+    <property name="text">
      <string>Close</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="freqEdit" >
-    <property name="geometry" >
-     <rect>
-      <x>120</x>
-      <y>550</y>
-      <width>113</width>
-      <height>23</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="timeEdit" >
-    <property name="geometry" >
-     <rect>
-      <x>120</x>
-      <y>580</y>
-      <width>113</width>
-      <height>23</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="freqLabel" >
-    <property name="geometry" >
-     <rect>
-      <x>10</x>
-      <y>550</y>
-      <width>101</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text" >
-     <string>Frequency Offset</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="timeLabel" >
-    <property name="geometry" >
-     <rect>
-      <x>10</x>
-      <y>580</y>
-      <width>101</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text" >
-     <string>Timing Offset</string>
-    </property>
-   </widget>
-   <widget class="QFrame" name="sinkFrame" >
-    <property name="geometry" >
+   <widget class="QFrame" name="sinkFrame">
+    <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
@@ -104,14 +36,14 @@
       <height>501</height>
      </rect>
     </property>
-    <property name="frameShape" >
+    <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
     </property>
-    <property name="frameShadow" >
+    <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QWidget" name="horizontalLayoutWidget" >
-     <property name="geometry" >
+    <widget class="QWidget" name="horizontalLayoutWidget">
+     <property name="geometry">
       <rect>
        <x>10</x>
        <y>10</y>
@@ -119,37 +51,214 @@
        <height>481</height>
       </rect>
      </property>
-     <layout class="QHBoxLayout" name="sinkLayout" />
+     <layout class="QHBoxLayout" name="sinkLayout"/>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="channelModeBox">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>520</y>
+      <width>291</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Channel Model Parameters</string>
+    </property>
+    <widget class="QLabel" name="timeLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>90</y>
+       <width>101</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Timing Offset</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="timeEdit">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>90</y>
+       <width>113</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="snrEdit">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>30</y>
+       <width>113</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="snrLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>111</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>SNR (dB)</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="freqEdit">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>60</y>
+       <width>113</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="freqLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>141</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Frequency Offset (Hz)</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="rxBox">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>520</y>
+      <width>251</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Receiver Parameters</string>
+    </property>
+    <widget class="QLineEdit" name="gainMuEdit">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>30</y>
+       <width>113</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="gainMuLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>111</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Gain mu</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="alphaEdit">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>60</y>
+       <width>113</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="alphaLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>111</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Alpha</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="sysBox">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>520</y>
+      <width>261</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>System Parameters</string>
+    </property>
+    <widget class="QLineEdit" name="sampleRateEdit">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>30</y>
+       <width>113</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="sampleRateLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>121</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Sample Rate (sps)</string>
+     </property>
     </widget>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar" >
-   <property name="geometry" >
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>1236</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile" >
-    <property name="title" >
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="actionExit" />
+    <addaction name="actionExit"/>
    </widget>
-   <addaction name="menuFile" />
+   <addaction name="menuFile"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar" />
-  <action name="actionExit" >
-   <property name="text" >
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionExit">
+   <property name="text">
     <string>E&amp;xit</string>
    </property>
   </action>
  </widget>
  <tabstops>
   <tabstop>closeButton</tabstop>
-  <tabstop>noiseEdit</tabstop>
+  <tabstop>snrEdit</tabstop>
   <tabstop>freqEdit</tabstop>
   <tabstop>timeEdit</tabstop>
  </tabstops>
@@ -161,11 +270,11 @@
    <receiver>DigitalWindow</receiver>
    <slot>close()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>322</x>
      <y>623</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>66</x>
      <y>561</y>
     </hint>
@@ -177,11 +286,11 @@
    <receiver>DigitalWindow</receiver>
    <slot>close()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>-1</x>
      <y>-1</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>617</x>
      <y>327</y>
     </hint>
