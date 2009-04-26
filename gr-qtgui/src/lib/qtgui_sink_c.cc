@@ -163,6 +163,19 @@ qtgui_sink_c::set_frequency_range(const double centerfreq,
 }
 
 void
+qtgui_sink_c::set_time_domain_axis(double min, double max)
+{
+  d_main_gui->SetTimeDomainAxis(min, max);
+}
+
+void
+qtgui_sink_c::set_constellation_axis(double xmin, double xmax,
+				     double ymin, double ymax)
+{
+  d_main_gui->SetConstellationAxis(xmin, xmax, ymin, ymax);
+}
+
+void
 qtgui_sink_c::fft(const gr_complex *data_in, int size, gr_complex *data_out)
 {
   if (d_window.size()) {

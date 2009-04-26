@@ -70,6 +70,10 @@ public:
 
   QWidget* qwidget();
 
+  void SetTimeDomainAxis(double min, double max);
+  void SetConstellationAxis(double xmin, double xmax,
+			    double ymin, double ymax);
+
 protected:
 
 private:

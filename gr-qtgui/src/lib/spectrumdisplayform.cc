@@ -856,3 +856,17 @@ SpectrumDisplayForm::ToggleTabConstellation(const bool state)
     d_plot_constellation = -1;
   }
 }
+
+
+void
+SpectrumDisplayForm::SetTimeDomainAxis(double min, double max)
+{
+  _timeDomainDisplayPlot->set_yaxis(min, max);
+}
+
+void
+SpectrumDisplayForm::SetConstellationAxis(double xmin, double xmax,
+						double ymin, double ymax)
+{
+  _constellationDisplayPlot->set_axis(xmin, xmax, ymin, ymax);
+}

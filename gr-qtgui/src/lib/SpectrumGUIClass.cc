@@ -430,5 +430,19 @@ SpectrumGUIClass::qwidget()
   return (QWidget*)_spectrumDisplayForm;
 }
 
+void
+SpectrumGUIClass::SetTimeDomainAxis(double min, double max)
+{
+  _spectrumDisplayForm->SetTimeDomainAxis(min, max);
+}
+
+void
+SpectrumGUIClass::SetConstellationAxis(double xmin, double xmax,
+				       double ymin, double ymax)
+{
+  _spectrumDisplayForm->SetConstellationAxis(xmin, xmax, ymin, ymax);
+
+}
+
 
 #endif /* SPECTRUM_GUI_CLASS_CPP */
