@@ -35,7 +35,11 @@ class dialog_box(QtGui.QMainWindow):
         self.gui.sinkLayout.addWidget(snkTx)
         self.gui.sinkLayout.addWidget(snkRx)
 
+
         # Connect up some signals
+        self.connect(self.gui.pauseButton, QtCore.SIGNAL("clicked()"),
+                     self.pauseFg)
+
         self.connect(self.gui.sampleRateEdit, QtCore.SIGNAL("editingFinished()"),
                      self.sampleRateEditText)
 
@@ -51,6 +55,15 @@ class dialog_box(QtGui.QMainWindow):
         self.connect(self.gui.alphaEdit, QtCore.SIGNAL("editingFinished()"),
                      self.alphaEditText)
 
+
+    def pauseFg(self):
+        if(self.gui.pauseButton.text() == "Pause"):
+            self.fg.stop()
+            self.fg.wait()
+            self.gui.pauseButton.setText("Unpause")
+        else:
+            self.fg.start()
+            self.gui.pauseButton.setText("Pause")
 
     # Accessor functions for Gui to manipulate system parameters
     def set_sample_rate(self, sr):
