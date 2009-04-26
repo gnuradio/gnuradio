@@ -67,6 +67,7 @@ public slots:
   void SetTimeDomainAxis(double min, double max);
   void SetConstellationAxis(double xmin, double xmax,
 			    double ymin, double ymax);
+  void SetFrequencyAxis(double min, double max);
 
 private slots:
   void newFrequencyData( const SpectrumUpdateEvent* );

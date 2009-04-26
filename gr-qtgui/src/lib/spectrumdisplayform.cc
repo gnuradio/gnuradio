@@ -870,3 +870,9 @@ SpectrumDisplayForm::SetConstellationAxis(double xmin, double xmax,
 {
   _constellationDisplayPlot->set_axis(xmin, xmax, ymin, ymax);
 }
+
+void
+SpectrumDisplayForm::SetFrequencyAxis(double min, double max)
+{
+  _frequencyDisplayPlot->set_yaxis(min, max);
+}

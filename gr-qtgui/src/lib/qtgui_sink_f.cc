@@ -174,6 +174,12 @@ qtgui_sink_f::set_constellation_axis(double xmin, double xmax,
 }
 
 void
+qtgui_sink_f::set_frequency_axis(double min, double max)
+{
+  d_main_gui->SetFrequencyAxis(min, max);
+}
+
+void
 qtgui_sink_f::fft(const float *data_in, int size, gr_complex *data_out)
 {
   if (d_window.size()) {

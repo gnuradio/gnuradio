@@ -118,7 +118,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
 
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
-  setAxisScale(QwtPlot::yLeft, -210, 5);
+  set_yaxis(-210, 5);
   setAxisTitle(QwtPlot::yLeft, "Power (dB)");
 
   // Automatically deleted when parent is deleted
@@ -220,6 +220,12 @@ FrequencyDisplayPlot::~FrequencyDisplayPlot()
 
   // _fft_plot_curves deleted when parent deleted
   // _zoomer and _panner deleted when parent deleted
+}
+
+void
+FrequencyDisplayPlot::set_yaxis(double min, double max)
+{
+  setAxisScale(QwtPlot::yLeft, min, max);
 }
 
 void

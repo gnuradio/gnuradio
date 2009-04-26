@@ -39,6 +39,8 @@ public:
 				   
   virtual void replot();
 
+  void set_yaxis(double min, double max);
+
 public slots:
   void SetLowerIntensityLevel(const double);
   void SetUpperIntensityLevel(const double);

@@ -444,5 +444,10 @@ SpectrumGUIClass::SetConstellationAxis(double xmin, double xmax,
 
 }
 
+void
+SpectrumGUIClass::SetFrequencyAxis(double min, double max)
+{
+  _spectrumDisplayForm->SetFrequencyAxis(min, max);
+}
 
 #endif /* SPECTRUM_GUI_CLASS_CPP */
