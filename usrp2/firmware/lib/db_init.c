@@ -267,8 +267,8 @@ db_init(void)
   //printf("db_init: tx dbid = 0x%x\n", tx_dboard->dbid);
   set_gpio_mode(GPIO_TX_BANK, tx_dboard);
   tx_dboard->init(tx_dboard);
-  //m = determine_tx_mux_value(tx_dboard);
-  //dsp_tx_regs->tx_mux = m;
+  m = determine_tx_mux_value(tx_dboard);
+  dsp_tx_regs->tx_mux = m;
   //printf("tx_mux = 0x%x\n", m);
   tx_dboard->current_lo_offset = tx_dboard->default_lo_offset;
 
