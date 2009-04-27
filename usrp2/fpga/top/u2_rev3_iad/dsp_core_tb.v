@@ -175,7 +175,7 @@ module dsp_core_tb;
 	 set_rx_muxctrl(1);
 	 set_ddc_freq(0);
 	 set_rx_scale_iq(1243, 1243);
-	 set_decim(1, 1, 10);
+	 set_decim(0, 1, 3);
 
 	 #100000 $finish;
       end

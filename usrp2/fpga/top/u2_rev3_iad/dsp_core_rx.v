@@ -117,7 +117,8 @@ module dsp_core_rx
 	    .xo(i_cordic),.yo(q_cordic),.zo() );
 
    // Reconstruct original decimation rate from standard firmware settings
-   assign decim_rate = enable_hb1 ? (enable_hb2 ? {cic_decim,2'b0} : {1'b0,cic_decim,1'b0 }) :
+   assign decim_rate = enable_hb2 ? (enable_hb1 ? {cic_decim,2'b0} : 
+                                                  {1'b0,cic_decim,1'b0 }) :
 				    cic_decim;
 
    cic_strober #(.WIDTH(10)) // Convenient reuse of strobe generator
