@@ -50,12 +50,21 @@ private:
   @O_TYPE@ d_scale;
   int d_max_iter;
 
+  int d_new_length;
+  @O_TYPE@ d_new_scale;
+  bool d_updated;
+
 public:
   ~@NAME@ ();	
 
   int work (int noutput_items,
 	    gr_vector_const_void_star &input_items,
 	    gr_vector_void_star &output_items);
+
+  int length() const { return d_new_length; }
+  @O_TYPE@ scale() const { return d_new_scale; }
+
+  void set_length_and_scale(int length, @O_TYPE@ scale);
 };
 
 #endif /* @GUARD_NAME@ */

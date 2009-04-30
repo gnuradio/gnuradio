@@ -30,4 +30,9 @@ class @NAME@ : public gr_sync_block
 {
 private:
   @NAME@ ();
+
+ public:
+  int length() const;
+  @O_TYPE@ scale() const;
+  void set_length_and_scale(int length, @O_TYPE@ scale);
 };

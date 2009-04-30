@@ -39,9 +39,12 @@ gr_make_@BASE_NAME@ (int length, @O_TYPE@ scale, int max_iter)
   : gr_sync_block ("@BASE_NAME@",
 		   gr_make_io_signature (1, 1, sizeof (@I_TYPE@)),
 		   gr_make_io_signature (1, 1, sizeof (@O_TYPE@))),
-    d_length(length),
-    d_scale(scale),
-    d_max_iter(max_iter)
+  d_length(length),
+  d_scale(scale),
+  d_max_iter(max_iter),
+  d_new_length(length),
+  d_new_scale(scale),
+  d_updated(false)
 {
   set_history(length);
 }
@@ -50,11 +53,27 @@ gr_make_@BASE_NAME@ (int length, @O_TYPE@ scale, int max_iter)
 {
 }
 
+void
+@NAME@::set_length_and_scale(int length, @O_TYPE@ scale)
+{
+  d_new_length = length;
+  d_new_scale = scale;
+  d_updated = true;
+}
+
 int 
 @NAME@::work (int noutput_items,
 	      gr_vector_const_void_star &input_items,
 	      gr_vector_void_star &output_items)
 {
+  if (d_updated) {
+    d_length = d_new_length;
+    d_scale = d_new_scale;
+    set_history(d_length);
+    d_updated = false;
+    return 0; // history requirements might have changed
+  }
+
   const @I_TYPE@ *in = (const @I_TYPE@ *) input_items[0];
   @O_TYPE@ *out = (@O_TYPE@ *) output_items[0];
 
