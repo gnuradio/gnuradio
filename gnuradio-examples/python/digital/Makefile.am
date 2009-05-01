@@ -30,7 +30,6 @@ dist_ourdata_SCRIPTS =		\
 	benchmark_loopback.py   \
 	benchmark_rx.py		\
 	benchmark_tx.py		\
-	fusb_options.py		\
 	gen_whitener.py		\
 	pick_bitrate.py		\
 	receive_path.py		\

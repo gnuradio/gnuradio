@@ -30,7 +30,6 @@ import random, time, struct, sys, math
 # from current dir
 from transmit_path_lb import transmit_path
 from receive_path_lb import receive_path
-import fusb_options
 
 class my_top_block(gr.top_block):
     def __init__(self, mod_class, demod_class, rx_callback, options):

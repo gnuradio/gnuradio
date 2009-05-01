@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -28,6 +28,7 @@ import sys
 
 # from current dir
 from pick_bitrate import pick_tx_bitrate
+import usrp_options
 
 # /////////////////////////////////////////////////////////////////////////////
 #                              transmit path
@@ -44,16 +45,12 @@ class transmit_path(gr.hier_block2):
 
         options = copy.copy(options)    # make a copy so we can destructively modify
 
-        self._which              = options.which           # the USRP board attached
         self._verbose            = options.verbose
         self._tx_freq            = options.tx_freq         # tranmitter's center frequency
         self._tx_amplitude       = options.tx_amplitude    # digital amplitude sent to USRP
-        self._tx_subdev_spec     = options.tx_subdev_spec  # daughterboard to use
         self._bitrate            = options.bitrate         # desired bit rate
         self._interp             = options.interp          # interpolating rate for the USRP (prelim)
         self._samples_per_symbol = options.samples_per_symbol  # desired samples/baud
-        self._fusb_block_size    = options.fusb_block_size # usb info for USRP
-        self._fusb_nblocks       = options.fusb_nblocks    # usb info for USRP
         self._use_whitener_offset = options.use_whitener_offset # increment start of whitener XOR data
         
         self._modulator_class = modulator_class         # the modulator_class we are using
@@ -63,7 +60,10 @@ class transmit_path(gr.hier_block2):
             raise SystemExit
 
         # Set up USRP sink; also adjusts interp, samples_per_symbol, and bitrate
-        self._setup_usrp_sink()
+        self._setup_usrp_sink(options)
+
+        if options.show_tx_ampl_range:
+            print "Tx Amplitude Range: minimum = %g, maximum = %g"%tuple(self.u.ampl_range())
 
         # copy the final answers back into options for use by modulator
         options.samples_per_symbol = self._samples_per_symbol
@@ -90,13 +90,10 @@ class transmit_path(gr.hier_block2):
 
         # Set the USRP for maximum transmit gain
         # (Note that on the RFX cards this is a nop.)
-        self.set_gain(self.subdev.gain_range()[1])
+        self.set_gain(self.u.gain_range()[1])
 
         self.amp = gr.multiply_const_cc(1)
         self.set_tx_amplitude(self._tx_amplitude)
-
-        # enable Auto Transmit/Receive switching
-        self.set_auto_tr(True)
 
         # Display some information about the setup
         if self._verbose:
@@ -105,14 +102,12 @@ class transmit_path(gr.hier_block2):
         # Create and setup transmit path flow graph
         self.connect(self.packet_transmitter, self.amp, self.u)
 
-    def _setup_usrp_sink(self):
+    def _setup_usrp_sink(self, options):
         """
         Creates a USRP sink, determines the settings for best bitrate,
         and attaches to the transmitter's subdevice.
         """
-        self.u = usrp.sink_c(self._which,
-                             fusb_block_size=self._fusb_block_size,
-                             fusb_nblocks=self._fusb_nblocks)
+        self.u = usrp_options.create_usrp_sink(options)
         dac_rate = self.u.dac_rate();
 
         # derive values of bitrate, samples_per_symbol, and interp from desired info
@@ -120,13 +115,7 @@ class transmit_path(gr.hier_block2):
             pick_tx_bitrate(self._bitrate, self._modulator_class.bits_per_symbol(),
                             self._samples_per_symbol, self._interp, dac_rate)
         
-        self.u.set_interp_rate(self._interp)
-
-        # determine the daughterboard subdevice we're using
-        if self._tx_subdev_spec is None:
-            self._tx_subdev_spec = usrp.pick_tx_subdevice(self.u)
-        self.u.set_mux(usrp.determine_tx_mux_value(self.u, self._tx_subdev_spec))
-        self.subdev = usrp.selected_subdev(self.u, self._tx_subdev_spec)
+        self.u.set_interp(self._interp)
 
 
     def set_freq(self, target_freq):
@@ -141,33 +130,24 @@ class transmit_path(gr.hier_block2):
         the result of that operation and our target_frequency to
         determine the value for the digital up converter.
         """
-        r = self.u.tune(self.subdev.which(), self.subdev, target_freq)
-        if r:
-            return True
-
-        return False
+        return self.u.set_center_freq(target_freq)
         
     def set_gain(self, gain):
         """
         Sets the analog gain in the USRP
         """
-        self.gain = gain
-        self.subdev.set_gain(gain)
+        return self.u.set_gain(gain)
 
     def set_tx_amplitude(self, ampl):
         """
         Sets the transmit amplitude sent to the USRP
-        @param: ampl 0 <= ampl < 32768.  Try 8000
+        @param ampl the amplitude or None for automatic
         """
-        self._tx_amplitude = max(0.0, min(ampl, 32767.0))
+        ampl_range = self.u.ampl_range()
+        if ampl is None: ampl = (ampl_range[1] - ampl_range[0])*0.15 + ampl_range[0]
+        self._tx_amplitude = max(ampl_range[0], min(ampl, ampl_range[1]))
         self.amp.set_k(self._tx_amplitude)
-        
-    def set_auto_tr(self, enable):
-        """
-        Turns on auto transmit/receive of USRP daughterboard (if exits; else ignored)
-        """
-        return self.subdev.set_auto_tr(enable)
-        
+
     def send_pkt(self, payload='', eof=False):
         """
         Calls the transmitter method to send a packet
@@ -191,20 +171,16 @@ class transmit_path(gr.hier_block2):
         if not normal.has_option('--bitrate'):
             normal.add_option("-r", "--bitrate", type="eng_float", default=None,
                               help="specify bitrate.  samples-per-symbol and interp/decim will be derived.")
-        normal.add_option("-w", "--which", type="int", default=0,
-                          help="select USRP board [default=%default]")
-        normal.add_option("-T", "--tx-subdev-spec", type="subdev", default=None,
-                          help="select USRP Tx side A or B")
-        normal.add_option("", "--tx-amplitude", type="eng_float", default=12000, metavar="AMPL",
-                          help="set transmitter digital amplitude: 0 <= AMPL < 32768 [default=%default]")
+        usrp_options.add_tx_options(normal, expert)
+        normal.add_option("--tx-amplitude", type="eng_float", default=None, metavar="AMPL",
+                          help="set transmitter digital amplitude [default=midpoint].  See also --show-tx-ampl-range")
+        normal.add_option("--show-tx-ampl-range", action="store_true", default=False, 
+                          help="print min and max Tx amplitude available")
         normal.add_option("-v", "--verbose", action="store_true", default=False)
-
         expert.add_option("-S", "--samples-per-symbol", type="int", default=None,
                           help="set samples/symbol [default=%default]")
         expert.add_option("", "--tx-freq", type="eng_float", default=None,
                           help="set transmit frequency to FREQ [default=%default]", metavar="FREQ")
-        expert.add_option("-i", "--interp", type="intx", default=None,
-                          help="set fpga interpolation rate to INTERP [default=%default]")
         expert.add_option("", "--log", action="store_true", default=False,
                           help="Log all parts of flow graph to file (CAUTION: lots of data)")
         expert.add_option("","--use-whitener-offset", action="store_true", default=False,
@@ -217,7 +193,7 @@ class transmit_path(gr.hier_block2):
         """
         Prints information about the transmit path
         """
-        print "Using TX d'board %s"    % (self.subdev.side_and_name(),)
+        print "Using TX d'board %s"    % (self.u,)
         print "Tx amplitude     %s"    % (self._tx_amplitude)
         print "modulation:      %s"    % (self._modulator_class.__name__)
         print "bitrate:         %sb/s" % (eng_notation.num_to_str(self._bitrate))

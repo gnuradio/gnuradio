@@ -19,6 +19,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+from gnuradio import eng_notation
+
 _default_bitrate = 500e3
 
 _valid_samples_per_symbol = (2,3,4,5,6,7)
@@ -94,13 +96,15 @@ def _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
     # now we have a target bitrate and possibly an xrate or
     # samples_per_symbol constraint, but not both of them.
 
-    return _pick_best(bitrate, bits_per_symbol,
+    ret = _pick_best(bitrate, bits_per_symbol,
                       _filter_info(gen_info(converter_rate), samples_per_symbol, xrate))
+    print "Actual Bitrate:", eng_notation.num_to_str(ret[0])
+    return ret
     
 # ---------------------------------------------------------------------------------------
 
 def pick_tx_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
-                    interp_rate, converter_rate=128e6):
+                    interp_rate, converter_rate):
     """
     Given the 4 input parameters, return at configuration that matches
 
@@ -117,12 +121,13 @@ def pick_tx_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
 
     @returns tuple (bitrate, samples_per_symbol, interp_rate)
     """
+    print "Requested TX Bitrate:", bitrate and eng_notation.num_to_str(bitrate) or 'Auto'
     return _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
                          interp_rate, converter_rate, _gen_tx_info)
 
 
 def pick_rx_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
-                    decim_rate, converter_rate=64e6):
+                    decim_rate, converter_rate):
     """
     Given the 4 input parameters, return at configuration that matches
 
@@ -139,5 +144,6 @@ def pick_rx_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
 
     @returns tuple (bitrate, samples_per_symbol, decim_rate)
     """
+    print "Requested RX Bitrate:", bitrate and eng_notation.num_to_str(bitrate) or 'Auto'
     return _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
                          decim_rate, converter_rate, _gen_rx_info)

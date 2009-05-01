@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005, 2006, 2007 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -30,7 +30,6 @@ import random, time, struct, sys
 
 # from current dir
 from transmit_path import transmit_path
-import fusb_options
 
 #import os 
 #print os.getpid()
@@ -78,7 +77,6 @@ def main():
     for mod in mods.values():
         mod.add_options(expert_grp)
 
-    fusb_options.add_options(expert_grp)
     (options, args) = parser.parse_args ()
 
     if len(args) != 0:

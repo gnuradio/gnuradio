@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -48,7 +48,6 @@ import os
 # from current dir
 from transmit_path import transmit_path
 from receive_path import receive_path
-import fusb_options
 
 #print os.getpid()
 #raw_input('Attach and press enter')
@@ -201,8 +200,6 @@ def main():
 
     for demod in demods.values():
         demod.add_options(expert_grp)
-
-    fusb_options.add_options(expert_grp)
 
     (options, args) = parser.parse_args ()
     if len(args) != 0:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2005,2006,2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -28,6 +28,7 @@ import sys
 
 # from current dir
 from pick_bitrate import pick_rx_bitrate
+import usrp_options
 
 # /////////////////////////////////////////////////////////////////////////////
 #                              receive path
@@ -42,16 +43,12 @@ class receive_path(gr.hier_block2):
 
         options = copy.copy(options)    # make a copy so we can destructively modify
 
-        self._which              = options.which           # the USRP board attached
         self._verbose            = options.verbose
         self._rx_freq            = options.rx_freq         # receiver's center frequency
         self._rx_gain            = options.rx_gain         # receiver's gain
-        self._rx_subdev_spec     = options.rx_subdev_spec  # daughterboard to use
         self._bitrate            = options.bitrate         # desired bit rate
         self._decim              = options.decim           # Decimating rate for the USRP (prelim)
         self._samples_per_symbol = options.samples_per_symbol  # desired samples/symbol
-        self._fusb_block_size    = options.fusb_block_size # usb info for USRP
-        self._fusb_nblocks       = options.fusb_nblocks    # usb info for USRP
 
         self._rx_callback   = rx_callback      # this callback is fired when there's a packet available
         self._demod_class   = demod_class      # the demodulator_class we're using
@@ -61,16 +58,12 @@ class receive_path(gr.hier_block2):
             raise SystemExit
 
         # Set up USRP source; also adjusts decim, samples_per_symbol, and bitrate
-        self._setup_usrp_source()
+        self._setup_usrp_source(options)
 
-        g = self.subdev.gain_range()
         if options.show_rx_gain_range:
-            print "Rx Gain Range: minimum = %g, maximum = %g, step size = %g" \
-                  % (g[0], g[1], g[2])
+            print "Rx Gain Range: minimum = %g, maximum = %g, step size = %g"%tuple(self.u.gain_range())
 
         self.set_gain(options.rx_gain)
-
-        self.set_auto_tr(True)                 # enable Auto Transmit/Receive switching
 
         # Set RF frequency
         ok = self.set_freq(self._rx_freq)
@@ -124,10 +117,9 @@ class receive_path(gr.hier_block2):
             
         self.connect(self.u, self.chan_filt, self.packet_receiver)
 
-    def _setup_usrp_source(self):
-        self.u = usrp.source_c (self._which,
-                                fusb_block_size=self._fusb_block_size,
-                                fusb_nblocks=self._fusb_nblocks)
+    def _setup_usrp_source(self, options):
+
+        self.u = usrp_options.create_usrp_source(options)
         adc_rate = self.u.adc_rate()
 
         # derive values of bitrate, samples_per_symbol, and decim from desired info
@@ -135,14 +127,7 @@ class receive_path(gr.hier_block2):
             pick_rx_bitrate(self._bitrate, self._demod_class.bits_per_symbol(), \
                             self._samples_per_symbol, self._decim, adc_rate)
 
-        self.u.set_decim_rate(self._decim)
-
-        # determine the daughterboard subdevice we're using
-        if self._rx_subdev_spec is None:
-            self._rx_subdev_spec = usrp.pick_rx_subdevice(self.u)
-        self.subdev = usrp.selected_subdev(self.u, self._rx_subdev_spec)
-
-        self.u.set_mux(usrp.determine_rx_mux_value(self.u, self._rx_subdev_spec))
+        self.u.set_decim(self._decim)
 
     def set_freq(self, target_freq):
         """
@@ -156,24 +141,13 @@ class receive_path(gr.hier_block2):
         the result of that operation and our target_frequency to
         determine the value for the digital up converter.
         """
-        r = self.u.tune(0, self.subdev, target_freq)
-        if r:
-            return True
-
-        return False
+        return self.u.set_center_freq(target_freq)
 
     def set_gain(self, gain):
         """
         Sets the analog gain in the USRP
         """
-        if gain is None:
-            r = self.subdev.gain_range()
-            gain = (r[0] + r[1])/2               # set gain to midpoint
-        self.gain = gain
-        return self.subdev.set_gain(gain)
-
-    def set_auto_tr(self, enable):
-        return self.subdev.set_auto_tr(enable)
+        return self.u.set_gain(gain)
         
     def bitrate(self):
         return self._bitrate
@@ -206,7 +180,7 @@ class receive_path(gr.hier_block2):
         """
         self.probe.set_threshold(threshold_in_db)
     
-        
+    @staticmethod
     def add_options(normal, expert):
         """
         Adds receiver-specific options to the Options Parser
@@ -215,48 +189,30 @@ class receive_path(gr.hier_block2):
         if not normal.has_option("--bitrate"):
             normal.add_option("-r", "--bitrate", type="eng_float", default=None,
                               help="specify bitrate.  samples-per-symbol and interp/decim will be derived.")
-        normal.add_option("-w", "--which", type="int", default=0,
-                          help="select USRP board [default=%default]")
-        normal.add_option("-R", "--rx-subdev-spec", type="subdev", default=None,
-                          help="select USRP Rx side A or B")
-        normal.add_option("", "--rx-gain", type="eng_float", default=None, metavar="GAIN",
-                          help="set receiver gain in dB [default=midpoint].  See also --show-rx-gain-range")
-        normal.add_option("", "--show-rx-gain-range", action="store_true", default=False, 
-                          help="print min and max Rx gain available on selected daughterboard")
+        usrp_options.add_rx_options(normal, expert)
         normal.add_option("-v", "--verbose", action="store_true", default=False)
         expert.add_option("-S", "--samples-per-symbol", type="int", default=None,
                           help="set samples/symbol [default=%default]")
         expert.add_option("", "--rx-freq", type="eng_float", default=None,
                           help="set Rx frequency to FREQ [default=%default]", metavar="FREQ")
-        expert.add_option("-d", "--decim", type="intx", default=None,
-                          help="set fpga decimation rate to DECIM [default=%default]")
         expert.add_option("", "--log", action="store_true", default=False,
                           help="Log all parts of flow graph to files (CAUTION: lots of data)")
         expert.add_option("", "--log-rx-power", action="store_true", default=False,
                           help="Log receive signal power to file (CAUTION: lots of data)")
-
-    # Make a static method to call before instantiation
-    add_options = staticmethod(add_options)
-
 
     def _print_verbage(self):
         """
         Prints information about the receive path
         """
         print "\nReceive Path:"
-        print "Using RX d'board %s"    % (self.subdev.side_and_name(),)
-        print "Rx gain:         %g"    % (self.gain,)
+        print "USRP %s"    % (self.u,)
+        print "Rx gain:         %g"    % (self.u.gain(),)
         print "modulation:      %s"    % (self._demod_class.__name__)
         print "bitrate:         %sb/s" % (eng_notation.num_to_str(self._bitrate))
         print "samples/symbol:  %3d"   % (self._samples_per_symbol)
         print "decim:           %3d"   % (self._decim)
         print "Rx Frequency:    %s"    % (eng_notation.num_to_str(self._rx_freq))
-        # print "Rx Frequency:    %f"    % (self._rx_freq)
 
-    def __del__(self):
-        # Avoid weak reference error
-        del self.subdev
-            
 def add_freq_option(parser):
     """
     Hackery that has the -f / --freq option set both tx_freq and rx_freq
