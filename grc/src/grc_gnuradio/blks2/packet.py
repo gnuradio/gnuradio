@@ -193,10 +193,9 @@ class packet_mod_base(gr.hier_block2):
 		#create blocks
 		msgq = gr.msg_queue(DEFAULT_MSGQ_LIMIT)
 		msg_sink = gr.message_sink(self._item_size_in, msgq, False) #False -> blocking
-		copy = gr.kludge_copy(packet_source._hb.output_signature().sizeof_stream_item(0))
 		#connect
 		self.connect(self, msg_sink)
-		self.connect(packet_source, copy, self)
+		self.connect(packet_source, self)
 		#start thread
 		_packet_encoder_thread(msgq, payload_length, packet_source.send_pkt)
 
@@ -225,9 +224,8 @@ class packet_demod_base(gr.hier_block2):
 		#create blocks
 		msg_source = gr.message_source(self._item_size_out, DEFAULT_MSGQ_LIMIT)
 		self._msgq_out = msg_source.msgq()
-		copy = gr.kludge_copy(packet_sink._hb.input_signature().sizeof_stream_item(0))
 		#connect
-		self.connect(self, copy, packet_sink)
+		self.connect(self, packet_sink)
 		self.connect(msg_source, self)
 		if packet_sink._hb.output_signature().sizeof_stream_item(0):
 			self.connect(packet_sink, gr.null_sink(packet_sink._hb.output_signature().sizeof_stream_item(0)))
