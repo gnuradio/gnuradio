@@ -9,6 +9,7 @@
 	<key>gr_moving_average_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.moving_average_$(type.fcn)($length, $scale, $max_iter)</make>
+	<callback>set_length_and_scale($length, $scale)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
