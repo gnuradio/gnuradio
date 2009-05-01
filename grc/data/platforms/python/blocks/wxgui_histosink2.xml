@@ -14,7 +14,7 @@
 	num_bins=$num_bins,
 	frame_size=$frame_size,
 )
-#set $grid_pos = $grid_pos.eval
+#set $grid_pos = $grid_pos()
 #if not grid_pos
 self.Add(self.$(id).win)
 #else

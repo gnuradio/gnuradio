@@ -7,13 +7,13 @@
 <block>
 	<name>Parameter</name>
 	<key>parameter</key>
-	<import>from optparse import OptionParser</import>
 	<make>$value</make>
 	<param>
 		<name>Label</name>
 		<key>label</key>
 		<value></value>
 		<type>string</type>
+		<hide>#if $label() then 'none' else 'part'#</hide>
 	</param>
 	<param>
 		<name>Value</name>
@@ -41,7 +41,7 @@
 		</option>
 		<option>
 			<name>Float</name>
-			<key>float</key>
+			<key>eng_float</key>
 			<opt>type:real</opt>
 			<opt>hide:none</opt>
 		</option>
@@ -65,12 +65,14 @@
 		</option>
 	</param>
 	<doc>
-This block represents a parameter to the flow graph, \
-used when the flow graph is instantiated as a hier block.
+This block represents a parameter to the flow graph. \
+A parameter can be used to pass command line arguments into a top block. \
+Or, parameters can pass arguments into an instantiated hierarchical block.
 
 The paramater value cannot depend on any variables.
 
-Leave the label blank to use the parameter id as the label.
+Leave the label blank to use the parameter id as the label. \
+The label only applies when this flow graph is instantiated as a hierarchical block.
 
 When type is not None, this parameter also becomes a command line option of the form --[id] [value].
 	</doc>

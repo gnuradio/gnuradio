@@ -1,5 +1,5 @@
 """
-Copyright 2007 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -20,15 +20,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from Element import Element
 import Utils
 import Colors
-from ... gui.Constants import BORDER_PROXIMITY_SENSITIVITY
+from ... utils import odict
+from Constants import BORDER_PROXIMITY_SENSITIVITY
 from Constants import \
-	BLOCK_FONT, BLOCK_LABEL_PADDING, \
+	BLOCK_LABEL_PADDING, \
 	PORT_SEPARATION, LABEL_SEPARATION, \
 	PORT_BORDER_SEPARATION, POSSIBLE_ROTATIONS
 import pygtk
 pygtk.require('2.0')
 import gtk
-import pango
+
+BLOCK_MARKUP_TMPL="""\
+#set $foreground = $block.is_valid() and 'black' or 'red'
+<span foreground="$foreground" font_desc="Sans 8"><b>$encode($block.get_name())</b></span>"""
 
 class Block(Element):
 	"""The graphical signal block."""
@@ -41,23 +45,23 @@ class Block(Element):
 		#add the position param
 		self._params['_coordinate'] = self.get_parent().get_parent().Param(
 			self,
-			{
+			odict({
 				'name': 'GUI Coordinate',
 				'key': '_coordinate',
 				'type': 'raw',
 				'value': '(0, 0)',
 				'hide': 'all',
-			}
+			})
 		)
 		self._params['_rotation'] = self.get_parent().get_parent().Param(
 			self,
-			{
+			odict({
 				'name': 'GUI Rotation',
 				'key': '_rotation',
 				'type': 'raw',
 				'value': '0',
 				'hide': 'all',
-			}
+			})
 		)
 		Element.__init__(self)
 
@@ -130,10 +134,7 @@ class Block(Element):
 		#create the main layout
 		layout = gtk.DrawingArea().create_pango_layout('')
 		layouts.append(layout)
-		if self.is_valid():	layout.set_markup('<b>'+Utils.xml_encode(self.get_name())+'</b>')
-		else: layout.set_markup('<span foreground="red"><b>'+Utils.xml_encode(self.get_name())+'</b></span>')
-		desc = pango.FontDescription(BLOCK_FONT)
-		layout.set_font_description(desc)
+		layout.set_markup(Utils.parse_template(BLOCK_MARKUP_TMPL, block=self))
 		self.label_width, self.label_height = layout.get_pixel_size()
 		#display the params
 		for param in filter(lambda p: p.get_hide() not in ('all', 'part'), self.get_params()):
@@ -166,22 +167,22 @@ class Block(Element):
 				for j in range(height): vimage.put_pixel(j, width-i-1, image.get_pixel(i, j))
 		map(lambda p: p._create_labels(), self.get_ports())
 
-	def draw(self, window):
+	def draw(self, gc, window):
 		"""
 		Draw the signal block with label and inputs/outputs.
+		@param gc the graphics context
 		@param window the gtk window to draw on
 		"""
 		x, y = self.get_coordinate()
 		#draw main block
-		Element.draw(self, window, BG_color=self.bg_color)
+		Element.draw(self, gc, window, BG_color=self.bg_color)
 		#draw label image
-		gc = self.get_gc()
 		if self.is_horizontal():
 			window.draw_image(gc, self.horizontal_label, 0, 0, x+BLOCK_LABEL_PADDING, y+(self.H-self.label_height)/2, -1, -1)
 		elif self.is_vertical():
 			window.draw_image(gc, self.vertical_label, 0, 0, x+(self.H-self.label_height)/2, y+BLOCK_LABEL_PADDING, -1, -1)
 		#draw ports
-		map(lambda p: p.draw(window), self.get_ports())
+		for port in self.get_ports(): port.draw(gc, window)
 
 	def what_is_selected(self, coor, coor_m=None):
 		"""

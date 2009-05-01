@@ -8,9 +8,9 @@
 	<name>USRP2 Source</name>
 	<key>usrp2_source_xxxx</key>
 	<import>from gnuradio import usrp2</import>
-	<make>#if not $interface.eval and not $mac_addr.eval
+	<make>#if not $interface() and not $mac_addr()
 usrp2.source_$(type.fcn)()
-#elif not $mac_addr.eval
+#elif not $mac_addr()
 usrp2.source_$(type.fcn)($interface)
 #else
 usrp2.source_$(type.fcn)($interface, $mac_addr)

@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -17,13 +17,11 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from ... import utils
 from ... utils import odict
 from Element import Element
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gobject
 
 class InputParam(gtk.HBox):
 	"""The base class for an input parameter inside the input parameters dialog."""
@@ -60,37 +58,60 @@ class EnumParam(InputParam):
 
 	def __init__(self, *args, **kwargs):
 		InputParam.__init__(self, *args, **kwargs)
-		input = gtk.ComboBox(gtk.ListStore(gobject.TYPE_STRING))
-		cell = gtk.CellRendererText()
-		input.pack_start(cell, True)
-		input.add_attribute(cell, 'text', 0)
-		for option in self.param.get_options(): input.append_text(option.get_name())
-		input.set_active(int(self.param.get_option_keys().index(self.param.get_value())))
-		input.connect("changed", self._handle_changed)
-		self.pack_start(input, False)
-		self.get_text = lambda: str(input.get_active())	#the get text parses the selected index to a string
+		self._input = gtk.combo_box_new_text()
+		for option in self.param.get_options(): self._input.append_text(option.get_name())
+		self._input.set_active(self.param.get_option_keys().index(self.param.get_value()))
+		self._input.connect('changed', self._handle_changed)
+		self.pack_start(self._input, False)
+	def get_text(self): return self.param.get_option_keys()[self._input.get_active()]
+
+class EnumEntryParam(InputParam):
+	"""Provide an entry box and drop down menu for Raw Enum types."""
+
+	def __init__(self, *args, **kwargs):
+		InputParam.__init__(self, *args, **kwargs)
+		self._input = gtk.combo_box_entry_new_text()
+		for option in self.param.get_options(): self._input.append_text(option.get_name())
+		try: self._input.set_active(self.param.get_option_keys().index(self.param.get_value()))
+		except:
+			self._input.set_active(-1)
+			self._input.get_child().set_text(self.param.get_value())
+		self._input.connect('changed', self._handle_changed)
+		self._input.get_child().connect('changed', self._handle_changed)
+		self.pack_start(self._input, False)
+	def get_text(self):
+		if self._input.get_active() == -1: return self._input.get_child().get_text()
+		return self.param.get_option_keys()[self._input.get_active()]
+	def set_color(self, color):
+		if self._input.get_active() == -1: #custom entry, use color
+			self._input.get_child().modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
+		else: #from enum, make white background
+			self._input.get_child().modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse('#ffffff'))
 
 class Option(Element):
 
-	def __init__(self, param, name, key, opts):
+	def __init__(self, param, n):
 		Element.__init__(self, param)
-		self._name = name
-		self._key = key
+		self._name = n.find('name')
+		self._key = n.find('key')
 		self._opts = dict()
+		opts = n.findall('opt')
+		#test against opts when non enum
+		try: assert self.get_parent().is_enum() or not opts
+		except AssertionError: self._exit_with_error('Options for non-enum types cannot have sub-options')
+		#extract opts
 		for opt in opts:
 			#separate the key:value
 			try: key, value = opt.split(':')
 			except: self._exit_with_error('Error separating "%s" into key:value'%opt)
 			#test against repeated keys
-			try: assert(not self._opts.has_key(key))
+			try: assert not self._opts.has_key(key)
 			except AssertionError: self._exit_with_error('Key "%s" already exists in option'%key)
 			#store the option
 			self._opts[key] = value
 
 	def __str__(self): return 'Option %s(%s)'%(self.get_name(), self.get_key())
-
 	def get_name(self): return self._name
-
 	def get_key(self): return self._key
 
 	##############################################
@@ -99,29 +120,6 @@ class Option(Element):
 	def get_opt_keys(self): return self._opts.keys()
 	def get_opt(self, key): return self._opts[key]
 	def get_opts(self): return self._opts.values()
-
-	##############################################
-	## Static Make Methods
-	##############################################
-	def make_option_from_n(param, n):
-		"""
-		Make a new option from nested data.
-		@param param the parent element
-		@param n the nested odict
-		@return a new option
-		"""
-		#grab the data
-		name = n['name']
-		key = n['key']
-		opts = utils.listify(n, 'opt')
-		#build the option
-		return Option(
-			param=param,
-			name=name,
-			key=key,
-			opts=opts,
-		)
-	make_option_from_n = staticmethod(make_option_from_n)
 
 class Param(Element):
 
@@ -136,21 +134,16 @@ class Param(Element):
 		@return a new param
 		"""
 		#grab the data
-		name = n['name']
-		key = n['key']
-		value = utils.exists_or_else(n, 'value', '')
-		type = n['type']
-		hide = utils.exists_or_else(n, 'hide', '')
-		options = utils.listify(n, 'option')
+		self._name = n.find('name')
+		self._key = n.find('key')
+		value = n.find('value') or ''
+		self._type = n.find('type')
+		self._hide = n.find('hide') or ''
 		#build the param
 		Element.__init__(self, block)
-		self._name = name
-		self._key = key
-		self._type = type
-		self._hide = hide
 		#create the Option objects from the n data
 		self._options = odict()
-		for option in map(lambda o: Option.make_option_from_n(self, o), options):
+		for option in map(lambda o: Option(self, o), n.findall('option')):
 			key = option.get_key()
 			#test against repeated keys
 			try: assert(key not in self.get_option_keys())
@@ -226,7 +219,7 @@ class Param(Element):
 		self._value = str(value) #must be a string
 
 	def get_type(self): return self.get_parent().resolve_dependencies(self._type)
-	def is_enum(self): return bool(self.get_options())
+	def is_enum(self): return self._type == 'enum'
 
 	def __repr__(self):
 		"""
@@ -241,9 +234,13 @@ class Param(Element):
 	def get_input_class(self):
 		"""
 		Get the graphical gtk class to represent this parameter.
+		An enum requires and combo parameter.
+		A non-enum with options gets a combined entry/combo parameter.
+		All others get a standard entry parameter.
 		@return gtk input class
 		"""
 		if self.is_enum(): return EnumParam
+		if self.get_options(): return EnumEntryParam
 		return EntryParam
 
 	##############################################

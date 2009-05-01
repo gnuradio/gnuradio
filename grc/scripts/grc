@@ -22,6 +22,14 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
+try: import gnuradio
+except ImportError, e:
+	d = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_CLOSE, message_format="""
+Cannot find module gnuradio. Is your PYTHONPATH set correctly?""")
+	d.set_title(e.message)
+	d.run()
+	exit(-1)
+
 from gnuradio.grc.platforms.base.Constants import VERSION
 from optparse import OptionParser
 

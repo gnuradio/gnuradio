@@ -1,5 +1,5 @@
 """
-Copyright 2007 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os
 import signal 
-from Constants import DIR_LEFT, DIR_RIGHT, IMAGE_FILE_EXTENSION
+from Constants import IMAGE_FILE_EXTENSION
 import Actions
 import pygtk
 pygtk.require('2.0')
@@ -32,7 +32,8 @@ from .. utils import ParseXML
 import random
 from .. platforms.gui.Platform import Platform
 from MainWindow import MainWindow
-from Dialogs import AboutDialog
+from ParamsDialog import ParamsDialog
+import Dialogs
 from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveImageFileDialog
 
 gobject.threads_init()
@@ -57,7 +58,7 @@ class ActionHandler:
 		#setup the main window
 		self.main_window = MainWindow(self.handle_states, platform)
 		self.main_window.connect('delete_event', self._quit)
-		self.main_window.connect('key_press_event', self._handle_key_press)
+		self.main_window.connect('key-press-event', self._handle_key_press)
 		self.get_page = self.main_window.get_page
 		self.get_flow_graph = self.main_window.get_flow_graph
 		self.get_focus_flag = self.main_window.drawing_area.get_focus_flag
@@ -72,32 +73,25 @@ class ActionHandler:
 
 	def _handle_key_press(self, widget, event):
 		"""
-		Handle key presses from the keyboard and translate key combos into actions.
-		This key press handler is called before the gtk accelerators kick in.
-		This handler ensures that key presses without a mod mask,
-		only pass to the accelerators if the flow graph is in focus.
-		This function also handles keys that accelerators refuse to handle: left/right,
-		and keys that are not registered with an accelerator: +/-.
-		@return false to let the accelerators handle the key action
+		Handle key presses from the keyboard and translate key combinations into actions.
+		This key press handler is called prior to the gtk key press handler.
+		This handler bypasses built in accelerator key handling when in focus because
+		* some keys are ignored by the accelerators like the direction keys,
+		* some keys are not registered to any accelerators but are still used.
+		When not in focus, gtk and the accelerators handle the the key press.
+		@return false to let gtk handle the key action
 		"""
-		if self.get_focus_flag():
-			try:
-				self.handle_states({
-					'Left': Actions.BLOCK_ROTATE_LEFT,
-					'Right': Actions.BLOCK_ROTATE_RIGHT,
-					'Up': Actions.BLOCK_DEC_TYPE,
-					'Down': Actions.BLOCK_INC_TYPE,
-					'equal': Actions.PORT_CONTROLLER_INC,
-					'plus': Actions.PORT_CONTROLLER_INC,
-					'KP_Add': Actions.PORT_CONTROLLER_INC,
-					'minus': Actions.PORT_CONTROLLER_DEC,
-					'KP_Subtract': Actions.PORT_CONTROLLER_DEC,
-				}[gtk.gdk.keyval_name(event.keyval)])
-				return True
-			#focus: always return false for accelerator to handle
-			except: return False
-		#no focus: only allow accelerator to handle when a mod is used
-		return not event.state
+		#dont allow key presses to queue up
+		if gtk.events_pending(): return True
+		#extract action name from this key press
+		key_name = gtk.gdk.keyval_name(event.keyval)
+		mod_mask = event.state
+		action_name = Actions.get_action_name_from_key_name(key_name, mod_mask)
+		#handle the action if flow graph is in focus
+		if action_name and self.get_focus_flag():
+			self.handle_states(action_name)
+			return True #handled by this method
+		return False #let gtk handle the key press
 
 	def _quit(self, window, event):
 		"""
@@ -138,7 +132,7 @@ class ActionHandler:
 				Actions.APPLICATION_QUIT, Actions.FLOW_GRAPH_NEW,
 				Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
 				Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
-				Actions.FLOW_GRAPH_SCREEN_CAPTURE,
+				Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
 			): Actions.get_action_from_name(action).set_sensitive(True)
 			if not self.init_file_paths:
 				self.init_file_paths = Preferences.files_open()
@@ -193,13 +187,13 @@ class ActionHandler:
 		elif state == Actions.BLOCK_MOVE:
 			self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 			self.get_page().set_saved(False)
-		elif state == Actions.BLOCK_ROTATE_LEFT:
-			if self.get_flow_graph().rotate_selected(DIR_LEFT):
+		elif state == Actions.BLOCK_ROTATE_CCW:
+			if self.get_flow_graph().rotate_selected(90):
 				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)
-		elif state == Actions.BLOCK_ROTATE_RIGHT:
-			if self.get_flow_graph().rotate_selected(DIR_RIGHT):
+		elif state == Actions.BLOCK_ROTATE_CW:
+			if self.get_flow_graph().rotate_selected(-90):
 				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)
@@ -238,12 +232,15 @@ class ActionHandler:
 		# Window stuff
 		##################################################
 		elif state == Actions.ABOUT_WINDOW_DISPLAY:
-			AboutDialog()
+			Dialogs.AboutDialog()
+		elif state == Actions.HELP_WINDOW_DISPLAY:
+			Dialogs.HelpDialog()
 		##################################################
 		# Param Modifications
 		##################################################
 		elif state == Actions.BLOCK_PARAM_MODIFY:
-			if self.get_flow_graph().param_modify_selected():
+			selected_block = self.get_flow_graph().get_selected_block()
+			if selected_block and ParamsDialog(selected_block).run():
 				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)
@@ -296,7 +293,7 @@ class ActionHandler:
 		elif state == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
 			file_path = SaveImageFileDialog(self.get_page().get_file_path()).run()
 			if file_path is not None:
-				pixmap = self.get_flow_graph().get_drawing_area().pixmap
+				pixmap = self.get_flow_graph().get_pixmap()
 				width, height = pixmap.get_size()
 				pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, 0, 8, width, height)
 				pixbuf.get_from_drawable(pixmap, pixmap.get_colormap(), 0, 0, 0, 0, width, height)
@@ -333,8 +330,8 @@ class ActionHandler:
 		#update general buttons
 		Actions.get_action_from_name(Actions.ELEMENT_DELETE).set_sensitive(bool(self.get_flow_graph().get_selected_elements()))
 		Actions.get_action_from_name(Actions.BLOCK_PARAM_MODIFY).set_sensitive(bool(self.get_flow_graph().get_selected_block()))
-		Actions.get_action_from_name(Actions.BLOCK_ROTATE_RIGHT).set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
-		Actions.get_action_from_name(Actions.BLOCK_ROTATE_LEFT).set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+		Actions.get_action_from_name(Actions.BLOCK_ROTATE_CCW).set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+		Actions.get_action_from_name(Actions.BLOCK_ROTATE_CW).set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
 		#update cut/copy/paste
 		Actions.get_action_from_name(Actions.BLOCK_CUT).set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
 		Actions.get_action_from_name(Actions.BLOCK_COPY).set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
@@ -348,7 +345,7 @@ class ActionHandler:
 		Actions.get_action_from_name(Actions.FLOW_GRAPH_SAVE).set_sensitive(not self.get_page().get_saved())
 		self.main_window.update()
 		#draw the flow graph
-		self.get_flow_graph().draw()
+		self.get_flow_graph().queue_draw()
 
 	def update_exec_stop(self):
 		"""

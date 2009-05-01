@@ -23,7 +23,7 @@
 	symbol_rate=$symbol_rate,
 	omega_limit=$omega_limit,
 )
-#set $grid_pos = $grid_pos.eval
+#set $grid_pos = $grid_pos()
 #if not grid_pos
 self.Add(self.$(id).win)
 #else

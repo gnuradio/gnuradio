@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,5 +25,6 @@ ourpythondir = $(grc_src_prefix)/utils
 
 ourpython_PYTHON = \
 	converter.py \
+	odict.py \
 	ParseXML.py \
 	__init__.py

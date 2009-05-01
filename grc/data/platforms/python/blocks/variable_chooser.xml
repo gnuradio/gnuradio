@@ -1,42 +1,51 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Variable Chooser: a grc variable with multiple choices
+##Variable Chooser:
+##	a gui form with enumerated choices
+##	radio buttons, drop down, or button
 ###################################################
  -->
 <block>
 	<name>Variable Chooser</name>
 	<key>variable_chooser</key>
-	<make>$(choices)[$value_index]
-_$(id)_control = grc_wxgui.$(chooser_type)_control(
-	window=self.GetWin(),
-	callback=self.set_$(id),
-		#if $label.eval
+	<import>from grc_gnuradio.wxgui import forms</import>
+	<make>$value
+self['$id'] = $id
+self.subscribe('$id', self.set_$(id))
+self._$(id)_control = forms.$(type)(
+	parent=self.GetWin(),
+	ps=self,
+	key='$id',
+	#if $label()
 	label=$label,
-		#else
+	#else
 	label='$id',
-		#end if
-	index=$value_index,
+	#end if
 	choices=$choices,
 	labels=$labels,
+#if $type() == 'radio_buttons'
+	style=$style,
+#end if
 )
-#set $grid_pos = $grid_pos.eval
+#set $grid_pos = $grid_pos()
 #if not grid_pos
-self.Add(_$(id)_control)
+self.Add(self._$(id)_control)
 #else
-self.GridAdd(_$(id)_control, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+self.GridAdd(self._$(id)_control, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
 #end if</make>
 	<param>
 		<name>Label</name>
 		<key>label</key>
 		<value></value>
 		<type>string</type>
+		<hide>#if $label() then 'none' else 'part'#</hide>
 	</param>
 	<param>
-		<name>Value Index</name>
-		<key>value_index</key>
-		<value>0</value>
-		<type>int</type>
+		<name>Default Value</name>
+		<key>value</key>
+		<value>1</value>
+		<type>raw</type>
 	</param>
 	<param>
 		<name>Choices</name>
@@ -51,8 +60,8 @@ self.GridAdd(_$(id)_control, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<type>raw</type>
 	</param>
 	<param>
-		<name>Chooser Type</name>
-		<key>chooser_type</key>
+		<name>Type</name>
+		<key>type</key>
 		<value>drop_down</value>
 		<type>enum</type>
 		<option>
@@ -60,16 +69,27 @@ self.GridAdd(_$(id)_control, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 			<key>drop_down</key>
 		</option>
 		<option>
-			<name>Radio Buttons Horizontal</name>
-			<key>radio_buttons_horizontal</key>
-		</option>
-		<option>
-			<name>Radio Buttons Vertical</name>
-			<key>radio_buttons_vertical</key>
+			<name>Radio Buttons</name>
+			<key>radio_buttons</key>
 		</option>
 		<option>
 			<name>Button</name>
 			<key>button</key>
+		</option>
+	</param>
+	<param>
+		<name>Style</name>
+		<key>style</key>
+		<value>wx.RA_HORIZONTAL</value>
+		<type>enum</type>
+		<hide>#if $type() == 'radio_buttons' then 'part' else 'all'#</hide>
+		<option>
+			<name>Horizontal</name>
+			<key>wx.RA_HORIZONTAL</key>
+		</option>
+		<option>
+			<name>Vertical</name>
+			<key>wx.RA_VERTICAL</key>
 		</option>
 	</param>
 	<param>
@@ -78,7 +98,7 @@ self.GridAdd(_$(id)_control, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<value></value>
 		<type>grid_pos</type>
 	</param>
-	<check>$value_index in range(len($choices))</check>
+	<check>$value in $choices</check>
 	<check>not $labels or len($labels) == len($choices)</check>
 	<doc>
 This block creates a variable with a drop down, radio buttons, or a button. \

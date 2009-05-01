@@ -41,6 +41,14 @@
 		<key>mute</key>
 		<value>False</value>
 		<type>raw</type>
+		<option>
+			<name>True</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>False</name>
+			<key>False</key>
+		</option>
 	</param>
 	<sink>
 		<name>in</name>

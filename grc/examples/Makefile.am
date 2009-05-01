@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2009 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,11 +19,35 @@
 # Boston, MA 02110-1301, USA.
 #
 
-include $(top_srcdir)/grc/Makefile.inc
+include $(top_srcdir)/Makefile.common
 
-SUBDIRS = \
-	audio \
-	simple \
-	trellis \
-	usrp \
-	xmlrpc
+grc_examples_prefix = $(exampledir)/grc
+
+audiodatadir = $(grc_examples_prefix)/audio
+dist_audiodata_DATA = \
+	audio/dial_tone.grc
+
+simpledatadir = $(grc_examples_prefix)/simple
+dist_simpledata_DATA = \
+	simple/ber_simulation.grc \
+	simple/dpsk_loopback.grc
+
+trellisdatadir = $(grc_examples_prefix)/trellis
+dist_trellisdata_DATA = \
+	trellis/readme.txt \
+	trellis/interference_cancellation.grc
+
+usrpdatadir = $(grc_examples_prefix)/usrp
+dist_usrpdata_DATA = \
+	usrp/usrp2_const_wave.grc \
+	usrp/usrp2_dpsk_mod.grc \
+	usrp/usrp2_fft.grc \
+	usrp/usrp_two_tone_loopback.grc \
+	usrp/usrp_wbfm_receive.grc
+
+xmlrpcdatadir = $(grc_examples_prefix)/xmlrpc
+dist_xmlrpcdata_DATA = \
+	xmlrpc/readme.txt \
+	xmlrpc/xmlrpc_client.grc \
+	xmlrpc/xmlrpc_client_script.py\
+	xmlrpc/xmlrpc_server.grc

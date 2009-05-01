@@ -14,8 +14,6 @@
 -search for blocks
 -click and drag on whitespace to scroll
 -gui grid editor for configuring grid params/placing wxgui plots and controls
--grid param chooser gui
--histogram plot
 
 ##################################################
 # Problems

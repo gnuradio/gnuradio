@@ -8,8 +8,8 @@
 	<name>USRP Dual Source</name>
 	<key>usrp_dual_source_x</key>
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
-	<make>grc_usrp.dual_source_$(type.fcn)(which=$which, rx_ant_a='$rx_ant_a', rx_ant_b='$rx_ant_b')
-#if $format.eval
+	<make>grc_usrp.dual_source_$(type.fcn)(which=$which, rx_ant_a=$rx_ant_a, rx_ant_b=$rx_ant_b)
+#if $format()
 self.$(id).set_format(width=$format.width, shift=$format.shift)
 #end if
 self.$(id).set_decim_rate($decimation)
@@ -42,7 +42,7 @@ self.$(id).set_gain_b($gain_b)</make>
 		<key>format</key>
 		<value></value>
 		<type>enum</type>
-		<hide>#if $format.eval then '' else 'part'#</hide>
+		<hide>#if $format() then '' else 'part'#</hide>
 		<option>
 			<name>16 Bits (Default)</name>
 			<key></key>
@@ -95,7 +95,8 @@ self.$(id).set_gain_b($gain_b)</make>
 	<param>
 		<name>RX Antenna A</name>
 		<key>rx_ant_a</key>
-		<type>enum</type>
+		<value>RXA</value>
+		<type>string</type>
 		<option>
 			<name>RXA</name>
 			<key>RXA</key>
@@ -125,7 +126,8 @@ self.$(id).set_gain_b($gain_b)</make>
 	<param>
 		<name>RX Antenna B</name>
 		<key>rx_ant_b</key>
-		<type>enum</type>
+		<value>RXA</value>
+		<type>string</type>
 		<option>
 			<name>RXA</name>
 			<key>RXA</key>

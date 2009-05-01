@@ -60,11 +60,6 @@ AC_DEFUN([GRC_GRC],[
         grc/src/utils/Makefile \
         grc/src/gui/Makefile \
         grc/examples/Makefile \
-        grc/examples/xmlrpc/Makefile \
-        grc/examples/usrp/Makefile \
-        grc/examples/audio/Makefile \
-        grc/examples/simple/Makefile \
-        grc/examples/trellis/Makefile \
         grc/Makefile \
         grc/data/Makefile \
         grc/data/platforms/Makefile \

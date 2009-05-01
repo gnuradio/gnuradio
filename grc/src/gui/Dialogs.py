@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import pygtk
 pygtk.require('2.0')
 import gtk
-from Constants import MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT
 from .. platforms.base.Constants import PACKAGE, VERSION
 import Preferences
 
@@ -82,3 +81,20 @@ Achilleas Anastasopoulos -> trellis support
 -----""")
 		self.run()
 		self.destroy()
+
+def HelpDialog():
+	MessageDialogHelper(
+		type=gtk.MESSAGE_INFO,
+		buttons=gtk.BUTTONS_CLOSE,
+		title='Help',
+		markup="""\
+<b>Usage Tips</b>
+
+<u>Add block</u>: drag and drop or double click a block in the block selection window.
+<u>Rotate block</u>: Select a block, press left/right on the keyboard.
+<u>Change type</u>: Select a block, press up/down on the keyboard.
+<u>Edit parameters</u>: double click on a block in the flow graph.
+<u>Make connection</u>: click on the source port of one block, then click on the sink port of another block.
+<u>Remove connection</u>: select the connection and press delete, or drag the connection.
+
+* See the menu for other keyboard shortcuts.""")

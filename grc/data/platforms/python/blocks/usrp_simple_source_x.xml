@@ -8,8 +8,8 @@
 	<name>USRP Source</name>
 	<key>usrp_simple_source_x</key>
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
-	<make>grc_usrp.simple_source_$(type.fcn)(which=$which, side='$side', rx_ant='$rx_ant'#if $hb_filters.eval then ', no_hb=True' else ''#)
-#if $format.eval
+	<make>grc_usrp.simple_source_$(type.fcn)(which=$which, side=$side, rx_ant=$rx_ant#if $hb_filters() then ', no_hb=True' else ''#)
+#if $format()
 self.$(id).set_format(width=$format.width, shift=$format.shift)
 #end if
 self.$(id).set_decim_rate($decimation)
@@ -38,7 +38,7 @@ self.$(id).set_gain($gain)</make>
 		<key>format</key>
 		<value></value>
 		<type>enum</type>
-		<hide>#if $format.eval then '' else 'part'#</hide>
+		<hide>#if $format() then '' else 'part'#</hide>
 		<option>
 			<name>16 Bits (Default)</name>
 			<key></key>
@@ -77,13 +77,13 @@ self.$(id).set_gain($gain)</make>
 		<name>Side</name>
 		<key>side</key>
 		<value>A</value>
-		<type>enum</type>
+		<type>string</type>
 		<option>
-			<name>Side A</name>
+			<name>A</name>
 			<key>A</key>
 		</option>
 		<option>
-			<name>Side B</name>
+			<name>B</name>
 			<key>B</key>
 		</option>
 	</param>
@@ -91,7 +91,7 @@ self.$(id).set_gain($gain)</make>
 		<name>RX Antenna</name>
 		<key>rx_ant</key>
 		<value>RXA</value>
-		<type>enum</type>
+		<type>string</type>
 		<option>
 			<name>RXA</name>
 			<key>RXA</key>
@@ -118,7 +118,7 @@ self.$(id).set_gain($gain)</make>
 		<key>hb_filters</key>
 		<value></value>
 		<type>enum</type>
-		<hide>#if $hb_filters.eval then 'none' else 'part'#</hide>
+		<hide>#if $hb_filters() then 'none' else 'part'#</hide>
 		<option>
 			<name>Enable</name>
 			<key></key>

@@ -1,316 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon Sep  8 21:47:19 2008</timestamp>
-  <block>
-    <key>options</key>
-    <param>
-      <key>id</key>
-      <value>top_block</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>USRP Loopback - 2 Tone</value>
-    </param>
-    <param>
-      <key>author</key>
-      <value>Example</value>
-    </param>
-    <param>
-      <key>description</key>
-      <value>Loopback test with basic rx and basic tx</value>
-    </param>
-    <param>
-      <key>window_size</key>
-      <value>1280, 1024</value>
-    </param>
-    <param>
-      <key>generate_options</key>
-      <value>wx_gui</value>
-    </param>
-    <param>
-      <key>category</key>
-      <value>Custom</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(10, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>usrp_simple_source_x</key>
-    <param>
-      <key>id</key>
-      <value>usrp_simple_source_x</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>number</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>subdev_spec</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>frequency</key>
-      <value>tun_freq</value>
-    </param>
-    <param>
-      <key>decimation</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>gain</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>mux</key>
-      <value>0x0</value>
-    </param>
-    <param>
-      <key>auto_tr</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>rx_ant</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(578, 319)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>wxgui_fftsink2</key>
-    <param>
-      <key>id</key>
-      <value>wxgui_fftsink2</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>FFT Plot</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>baseband_freq</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>y_per_div</key>
-      <value>10</value>
-    </param>
-    <param>
-      <key>y_divs</key>
-      <value>8</value>
-    </param>
-    <param>
-      <key>ref_level</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>fft_size</key>
-      <value>512*2</value>
-    </param>
-    <param>
-      <key>fft_rate</key>
-      <value>15</value>
-    </param>
-    <param>
-      <key>avg_alpha</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>average</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>peak_hold</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>1, 2, 2, 4</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(845, 228)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_slider</key>
-    <param>
-      <key>id</key>
-      <value>tone2</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Tone 2</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>75e3</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>150000</value>
-    </param>
-    <param>
-      <key>num_steps</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>slider_type</key>
-      <value>horizontal</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>0, 4, 1, 2</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(397, 478)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_slider</key>
-    <param>
-      <key>id</key>
-      <value>tone1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Tone 1</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>50e3</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>150000</value>
-    </param>
-    <param>
-      <key>num_steps</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>slider_type</key>
-      <value>horizontal</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>0, 2, 1, 2</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(220, 475)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_slider</key>
-    <param>
-      <key>id</key>
-      <value>noise_ampl</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Noise Ampl</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>2000</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>5000</value>
-    </param>
-    <param>
-      <key>num_steps</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>slider_type</key>
-      <value>vertical</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>1, 1, 2, 1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(20, 243)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
+  <timestamp>Fri Apr 17 18:23:35 2009</timestamp>
   <block>
     <key>variable</key>
     <param>
@@ -444,41 +134,6 @@
     </param>
   </block>
   <block>
-    <key>gr_noise_source_x</key>
-    <param>
-      <key>id</key>
-      <value>gr_noise_source_x</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>noise_type</key>
-      <value>gr.GR_GAUSSIAN</value>
-    </param>
-    <param>
-      <key>amp</key>
-      <value>noise_ampl</value>
-    </param>
-    <param>
-      <key>seed</key>
-      <value>42</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(257, 337)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_add_xx</key>
     <param>
       <key>id</key>
@@ -510,6 +165,37 @@
     </param>
   </block>
   <block>
+    <key>parameter</key>
+    <param>
+      <key>id</key>
+      <value>tx_side</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>A</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(688, 384)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>usrp_simple_sink_x</key>
     <param>
       <key>id</key>
@@ -524,40 +210,306 @@
       <value>complex</value>
     </param>
     <param>
-      <key>number</key>
+      <key>format</key>
+      <value></value>
+    </param>
+    <param>
+      <key>which</key>
       <value>0</value>
-    </param>
-    <param>
-      <key>subdev_spec</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>frequency</key>
-      <value>tun_freq</value>
     </param>
     <param>
       <key>interpolation</key>
       <value>400</value>
     </param>
     <param>
+      <key>frequency</key>
+      <value>tun_freq</value>
+    </param>
+    <param>
       <key>gain</key>
       <value>0</value>
     </param>
     <param>
-      <key>mux</key>
-      <value>0x0</value>
+      <key>side</key>
+      <value>tx_side</value>
     </param>
     <param>
-      <key>auto_tr</key>
-      <value>None</value>
-    </param>
-    <param>
-      <key>tx_enb</key>
-      <value>None</value>
+      <key>transmit</key>
+      <value></value>
     </param>
     <param>
       <key>_coordinate</key>
       <value>(835, 5)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>usrp_simple_source_x</key>
+    <param>
+      <key>id</key>
+      <value>usrp_simple_source_x</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>format</key>
+      <value></value>
+    </param>
+    <param>
+      <key>which</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>decimation</key>
+      <value>200</value>
+    </param>
+    <param>
+      <key>frequency</key>
+      <value>tun_freq</value>
+    </param>
+    <param>
+      <key>gain</key>
+      <value>20</value>
+    </param>
+    <param>
+      <key>side</key>
+      <value>rx_side</value>
+    </param>
+    <param>
+      <key>rx_ant</key>
+      <value>rx_ant</value>
+    </param>
+    <param>
+      <key>hb_filters</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(479, 224)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>parameter</key>
+    <param>
+      <key>id</key>
+      <value>rx_ant</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>RXA</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(802, 384)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>wxgui_fftsink2</key>
+    <param>
+      <key>id</key>
+      <value>wxgui_fftsink2</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>title</key>
+      <value>FFT Plot</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>baseband_freq</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>y_per_div</key>
+      <value>10</value>
+    </param>
+    <param>
+      <key>ref_level</key>
+      <value>100</value>
+    </param>
+    <param>
+      <key>fft_size</key>
+      <value>512*2</value>
+    </param>
+    <param>
+      <key>fft_rate</key>
+      <value>15</value>
+    </param>
+    <param>
+      <key>peak_hold</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>average</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>avg_alpha</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>1, 2, 2, 4</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(746, 133)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>parameter</key>
+    <param>
+      <key>id</key>
+      <value>rx_side</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value></value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>A</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(568, 382)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_noise_source_x</key>
+    <param>
+      <key>id</key>
+      <value>gr_noise_source_x</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>noise_type</key>
+      <value>gr.GR_GAUSSIAN</value>
+    </param>
+    <param>
+      <key>amp</key>
+      <value>noise_ampl</value>
+    </param>
+    <param>
+      <key>seed</key>
+      <value>42</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(276, 312)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_slider</key>
+    <param>
+      <key>id</key>
+      <value>noise_ampl</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Noise Ampl</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>2000</value>
+    </param>
+    <param>
+      <key>min</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>max</key>
+      <value>5000</value>
+    </param>
+    <param>
+      <key>num_steps</key>
+      <value>100</value>
+    </param>
+    <param>
+      <key>style</key>
+      <value>wx.SL_VERTICAL</value>
+    </param>
+    <param>
+      <key>converver</key>
+      <value>float_converter</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>1, 1, 2, 1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(20, 243)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -584,6 +536,57 @@
     </param>
     <param>
       <key>min</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>max</key>
+      <value>10e3</value>
+    </param>
+    <param>
+      <key>num_steps</key>
+      <value>100</value>
+    </param>
+    <param>
+      <key>style</key>
+      <value>wx.SL_VERTICAL</value>
+    </param>
+    <param>
+      <key>converver</key>
+      <value>float_converter</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>1, 0, 2, 1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(28, 437)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_slider</key>
+    <param>
+      <key>id</key>
+      <value>tone1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Tone 1</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>50e3</value>
+    </param>
+    <param>
+      <key>min</key>
       <value>-samp_rate/2</value>
     </param>
     <param>
@@ -595,16 +598,118 @@
       <value>100</value>
     </param>
     <param>
-      <key>slider_type</key>
-      <value>vertical</value>
+      <key>style</key>
+      <value>wx.SL_HORIZONTAL</value>
+    </param>
+    <param>
+      <key>converver</key>
+      <value>float_converter</value>
     </param>
     <param>
       <key>grid_pos</key>
-      <value>1, 0, 2, 1</value>
+      <value>0, 0, 1, 4</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(21, 422)</value>
+      <value>(190, 436)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_slider</key>
+    <param>
+      <key>id</key>
+      <value>tone2</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>Tone 2</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>75e3</value>
+    </param>
+    <param>
+      <key>min</key>
+      <value>-samp_rate/2</value>
+    </param>
+    <param>
+      <key>max</key>
+      <value>samp_rate/2</value>
+    </param>
+    <param>
+      <key>num_steps</key>
+      <value>100</value>
+    </param>
+    <param>
+      <key>style</key>
+      <value>wx.SL_HORIZONTAL</value>
+    </param>
+    <param>
+      <key>converver</key>
+      <value>float_converter</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>0, 4, 1, 4</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(367, 439)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>options</key>
+    <param>
+      <key>id</key>
+      <value>usrp_two_tone_loopback</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>title</key>
+      <value>USRP Loopback - 2 Tone</value>
+    </param>
+    <param>
+      <key>author</key>
+      <value>Example</value>
+    </param>
+    <param>
+      <key>description</key>
+      <value>Loopback test with basic rx and basic tx</value>
+    </param>
+    <param>
+      <key>window_size</key>
+      <value>1280, 1024</value>
+    </param>
+    <param>
+      <key>generate_options</key>
+      <value>wx_gui</value>
+    </param>
+    <param>
+      <key>category</key>
+      <value>Custom</value>
+    </param>
+    <param>
+      <key>realtime_scheduling</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(10, 10)</value>
     </param>
     <param>
       <key>_rotation</key>

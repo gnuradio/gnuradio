@@ -9,7 +9,7 @@
 	<key>probe_function</key>
 	<import>from grc_gnuradio import blks2 as grc_blks2</import>
 	<make>grc_blks2.probe_function(
-	probe_callback=self.$(block_id.eval).$(function_name.eval),
+	probe_callback=self.$(block_id()).$(function_name()),
 	probe_rate=$probe_rate,
 )</make>
 	<callback>set_probe_rate($probe_rate)</callback>

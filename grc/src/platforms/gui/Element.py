@@ -22,7 +22,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import pango
-from ... gui.Constants import CONNECTION_SELECT_SENSITIVITY
+from Constants import LINE_SELECT_SENSITIVITY
 from Constants import POSSIBLE_ROTATIONS
 
 class Element(object):
@@ -61,17 +61,14 @@ class Element(object):
 		rotation = rotation or self.get_rotation()
 		return rotation in (90, 270)
 
-	def get_gc(self): return self._gc
-
-	def draw(self, window, BG_color=Colors.BG_COLOR, FG_color=Colors.FG_COLOR):
+	def draw(self, gc, window, BG_color=Colors.BG_COLOR, FG_color=Colors.FG_COLOR):
 		"""
 		Draw in the given window.
+		@param gc the graphics context
 		@param window the gtk window to draw on
 		@param BG_color the background color
 		@param FG_color the foreground color
 		"""
-		gc = self.get_parent().get_gc()
-		self._gc = gc
 		X,Y = self.get_coordinate()
 		for (rX,rY),(W,H) in self.areas_dict[self.get_rotation()]:
 			aX = X + rX
@@ -84,12 +81,12 @@ class Element(object):
 			gc.foreground = self.is_highlighted() and Colors.H_COLOR or FG_color
 			window.draw_line(gc, X+x1, Y+y1, X+x2, Y+y2)
 
-	def rotate(self, direction):
+	def rotate(self, rotation):
 		"""
 		Rotate all of the areas by 90 degrees.
-		@param direction 90 or 270 degrees
+		@param rotation multiple of 90 degrees
 		"""
-		self.set_rotation((self.get_rotation() + direction)%360)
+		self.set_rotation((self.get_rotation() + rotation)%360)
 
 	def clear(self):
 		"""Empty the lines and areas."""
@@ -204,8 +201,8 @@ class Element(object):
 				if in_between(x, x1, x1+w) and in_between(y, y1, y1+h): return self
 			#handle horizontal or vertical lines
 			for (x1, y1), (x2, y2) in self.lines_dict[self.get_rotation()]:
-				if x1 == x2: x1, x2 = x1-CONNECTION_SELECT_SENSITIVITY, x2+CONNECTION_SELECT_SENSITIVITY
-				if y1 == y2: y1, y2 = y1-CONNECTION_SELECT_SENSITIVITY, y2+CONNECTION_SELECT_SENSITIVITY
+				if x1 == x2: x1, x2 = x1-LINE_SELECT_SENSITIVITY, x2+LINE_SELECT_SENSITIVITY
+				if y1 == y2: y1, y2 = y1-LINE_SELECT_SENSITIVITY, y2+LINE_SELECT_SENSITIVITY
 				if in_between(x, x1, x2) and in_between(y, y1, y2): return self
 			return None
 

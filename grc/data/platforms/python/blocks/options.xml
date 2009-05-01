@@ -10,9 +10,13 @@
 	<name>Options</name>
 	<key>options</key>
 	<import>from gnuradio import gr
-#if $generate_options.eval == 'wx_gui'
+#if $generate_options() == 'wx_gui'
 from grc_gnuradio import wxgui as grc_wxgui
 import wx
+#end if
+#if $generate_options() != 'hb'
+from optparse import OptionParser
+from gnuradio.eng_option import eng_option
 #end if
 </import>
 	<make></make>
@@ -64,16 +68,16 @@ import wx
 		<key>category</key>
 		<value>Custom</value>
 		<type>string</type>
-		<hide>#if $generate_options.eval == 'hb' then 'none' else 'all'#</hide>
+		<hide>#if $generate_options() == 'hb' then 'none' else 'all'#</hide>
 	</param>
 	<param>
 		<name>Realtime Scheduling</name>
 		<key>realtime_scheduling</key>
 		<value></value>
 		<type>enum</type>
-		<hide>#if $generate_options.eval == 'hb'
+		<hide>#if $generate_options() == 'hb'
 all#slurp
-#elif $realtime_scheduling.eval
+#elif $realtime_scheduling()
 none#slurp
 #else
 part#slurp

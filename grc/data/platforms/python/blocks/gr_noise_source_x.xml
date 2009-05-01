@@ -9,6 +9,7 @@
 	<key>gr_noise_source_x</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.noise_source_$(type.fcn)($noise_type, $amp, $seed)</make>
+	<callback>set_type($noise_type)</callback>
 	<callback>set_amplitude($amp)</callback>
 	<param>
 		<name>Output Type</name>
@@ -39,7 +40,7 @@
 		<name>Noise Type</name>
 		<key>noise_type</key>
 		<value>gr.GR_GAUSSIAN</value>
-		<type>enum</type>
+		<type>raw</type>
 		<option>
 			<name>Uniform</name>
 			<key>gr.GR_UNIFORM</key>

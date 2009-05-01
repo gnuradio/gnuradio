@@ -1,5 +1,5 @@
 """
-Copyright 2007 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -22,8 +22,30 @@ from Element import Element
 import pygtk
 pygtk.require('2.0')
 import gtk
-import pango
-from Constants import PARAM_LABEL_FONT, PARAM_FONT
+
+PARAM_MARKUP_TMPL="""\
+#set $foreground = $param.is_valid() and 'black' or 'red'
+#set $value = not $param.is_valid() and 'error' or repr($param)
+<span foreground="$foreground" font_desc="Sans 7.5"><b>$encode($param.get_name()): </b>$encode($value)</span>"""
+
+PARAM_LABEL_MARKUP_TMPL="""\
+#set $foreground = $param.is_valid() and 'black' or 'red'
+#set $underline = $has_cb and 'low' or 'none'
+<span underline="$underline" foreground="$foreground" font_desc="Sans 9">$encode($param.get_name())</span>"""
+
+TIP_MARKUP_TMPL="""\
+Key: $param.get_key()
+Type: $param.get_type()
+#if $param.is_valid()
+Value: $param.evaluate()
+#elif len($param.get_error_messages()) == 1
+Error: $(param.get_error_messages()[0])
+#else
+Error:
+	#for $error_msg in $param.get_error_messages()
+ * $error_msg
+	#end for
+#end if"""
 
 class Param(Element):
 	"""The graphical parameter."""
@@ -52,24 +74,12 @@ class Param(Element):
 		When the input changes, write the inputs to the data type.
 		Finish by calling the exteral callback.
 		"""
-		value = self._input.get_text()
-		if self.is_enum(): value = self.get_option_keys()[int(value)]
-		self.set_value(value)
-		#set the markup on the label, red for errors in corresponding data type.
-		name = '<span font_desc="%s">%s</span>'%(
-			PARAM_LABEL_FONT,
-			Utils.xml_encode(self.get_name()),
-		)
-		#special markups if param is involved in a callback
-		if hasattr(self.get_parent(), 'get_callbacks') and \
-			filter(lambda c: self.get_key() in c, self.get_parent()._callbacks):
-			name = '<span underline="low">%s</span>'%name
-		if not self.is_valid():
-			self._input.set_markup('<span foreground="red">%s</span>'%name)
-			tip = 'Error: ' + ' '.join(self.get_error_messages())
-		else:
-			self._input.set_markup(name)
-			tip = 'Value: %s'%str(self.evaluate())
+		self.set_value(self._input.get_text())
+		#is param is involved in a callback? #FIXME: messy
+		has_cb = \
+			hasattr(self.get_parent(), 'get_callbacks') and \
+			filter(lambda c: self.get_key() in c, self.get_parent()._callbacks)
+		self._input.set_markup(Utils.parse_template(PARAM_LABEL_MARKUP_TMPL, param=self, has_cb=has_cb))
 		#hide/show
 		if self.get_hide() == 'all': self._input.hide_all()
 		else: self._input.show_all()
@@ -78,22 +88,10 @@ class Param(Element):
 		#set the tooltip
 		if self._input.tp: self._input.tp.set_tip(
 			self._input.entry,
-			'Key: %s\nType: %s\n%s'%(self.get_key(), self.get_type(), tip),
+			Utils.parse_template(TIP_MARKUP_TMPL, param=self).strip(),
 		)
 		#execute the external callback
 		if self._callback: self._callback(self)
-
-	def get_markup(self):
-		"""
-		Create a markup to display the param as a label on the block.
-		If the param is valid, use the param's repr representation.
-		Otherwise, create a markup for error.
-		@return pango markup string
-		"""
-		if self.is_valid():
-			return '<b>%s:</b> %s'%(Utils.xml_encode(self.get_name()), Utils.xml_encode(repr(self)))
-		else:
-			return '<span foreground="red"><b>%s:</b> error</span>'%Utils.xml_encode(self.get_name())
 
 	def get_layout(self):
 		"""
@@ -101,7 +99,5 @@ class Param(Element):
 		@return the pango layout
 		"""
 		layout = gtk.DrawingArea().create_pango_layout('')
-		layout.set_markup(self.get_markup())
-		desc = pango.FontDescription(PARAM_FONT)
-		layout.set_font_description(desc)
+		layout.set_markup(Utils.parse_template(PARAM_MARKUP_TMPL, param=self))
 		return layout

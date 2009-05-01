@@ -15,13 +15,13 @@ def _$(id)_run():
 	while True:
 		time.sleep(1.0/$samp_rate)
 		data = self.$(id).data()
-#if $vlen.eval == 0
+#if $vlen() == 0
 		if data:
-			self.set_$(variable.eval)(data[-1])
+			self.set_$(variable())(data[-1])
 			self.$(id).clear()
 #else
 		if len(data) &gt;= $vlen:
-			self.set_$(variable.eval)(data[-($vlen):])
+			self.set_$(variable())(data[-($vlen):])
 			self.$(id).clear()
 #end if
 threading.Thread(target=_$(id)_run).start()</make>

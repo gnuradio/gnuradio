@@ -39,13 +39,12 @@ $imp
 ##	Setup the IO signature (hier block only).
 ########################################################
 #set $class_name = $flow_graph.get_option('id')
-#set $param_str = ', '.join(['self'] + ['%s=%s'%(param.get_id(), param.get_make()) for param in $parameters])
 #if $generate_options == 'wx_gui'
 	#import gtk
 	#set $icon = gtk.IconTheme().lookup_icon('gnuradio-grc', 32, 0)
 class $(class_name)(grc_wxgui.top_block_gui):
 
-	def __init__($param_str):
+	def __init__(self, options):
 		grc_wxgui.top_block_gui.__init__(
 			self,
 			title="$flow_graph.get_parent().get_name() - Executing: $flow_graph.get_option('title')",
@@ -56,11 +55,12 @@ class $(class_name)(grc_wxgui.top_block_gui):
 #elif $generate_options == 'no_gui'
 class $(class_name)(gr.top_block):
 
-	def __init__($param_str):
+	def __init__(self, options):
 		gr.top_block.__init__(self, "$flow_graph.get_option('title')")
 #elif $generate_options == 'hb'
 	#set $in_sig = $flow_graph.get_input_signature()
 	#set $out_sig = $flow_graph.get_output_signature()
+	#set $param_str = ', '.join(['self'] + ['%s=%s'%(param.get_id(), param.get_make()) for param in $parameters])
 class $(class_name)(gr.hier_block2):
 
 	def __init__($param_str):
@@ -73,7 +73,7 @@ class $(class_name)(gr.hier_block2):
 #end if
 ########################################################
 ##Create Parameters
-##	Set the parameter to a property of self..
+##	Set the parameter to a property of self.
 ########################################################
 #if $parameters
 
@@ -82,7 +82,11 @@ class $(class_name)(gr.hier_block2):
 		$DIVIDER
 #end if
 #for $param in $parameters
+	#if $generate_options != 'hb'
+		self.$param.get_id() = $param.get_id() = options.$param.get_id()
+	#else
 		self.$param.get_id() = $param.get_id()
+	#end if
 #end for
 ########################################################
 ##Create Variables
@@ -179,23 +183,19 @@ class $(class_name)(gr.hier_block2):
 ########################################################
 #if $generate_options != 'hb'
 if __name__ == '__main__':
-	#set $args = list()
-	#if $parameters
-	parser = OptionParser()
-		#for $param in $parameters
-			#set $type = $param.get_param('type').get_value()
-			#if $type
+	parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
+	#for $param in $parameters
+		#set $type = $param.get_param('type').get_value()
+		#if $type
 	parser.add_option("--$param.get_id()", dest="$param.get_id()", type="$type", default=$param.get_make())
-				#silent $args.append('%s=options.%s'%($param.get_id(), $param.get_id()))
-			#end if
-		#end for
+		#end if
+	#end for
 	(options, args) = parser.parse_args()
-	#end if
 	#if $flow_graph.get_option('realtime_scheduling')
 	if gr.enable_realtime_scheduling() != gr.RT_OK:
 		print "Error: failed to enable realtime scheduling."
 	#end if
-	tb = $(class_name)($(', '.join($args)))
+	tb = $(class_name)(options)
 	#if $generate_options == 'wx_gui'
 	tb.Run()
 	#elif $generate_options == 'no_gui'

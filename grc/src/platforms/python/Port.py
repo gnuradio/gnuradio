@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from .. base.Port import Port as _Port
-from ... import utils
 import Constants
 
 class Port(_Port):
@@ -33,9 +32,9 @@ class Port(_Port):
 		@param n the nested odict
 		@return a new port
 		"""
-		vlen = utils.exists_or_else(n, 'vlen', '1')
-		nports = utils.exists_or_else(n, 'nports', '')
-		optional = utils.exists_or_else(n, 'optional', '')
+		vlen = n.find('vlen') or '1'
+		nports = n.find('nports') or ''
+		optional = n.find('optional') or ''
 		#build the port
 		_Port.__init__(
 			self,

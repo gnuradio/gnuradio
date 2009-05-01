@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from .. base.Block import Block as _Block
 from utils import extract_docs
-from ... import utils
 
 class Block(_Block):
 
@@ -36,11 +35,11 @@ class Block(_Block):
 		@return block a new block
 		"""
 		#grab the data
-		doc = utils.exists_or_else(n, 'doc', '')
-		imports = map(lambda i: i.strip(), utils.listify(n, 'import'))
-		make = n['make']
-		checks = utils.listify(n, 'check')
-		callbacks = utils.listify(n, 'callback')
+		doc = n.find('doc') or ''
+		imports = map(lambda i: i.strip(), n.findall('import'))
+		make = n.find('make')
+		checks = n.findall('check')
+		callbacks = n.findall('callback')
 		#build the block
 		_Block.__init__(
 			self,

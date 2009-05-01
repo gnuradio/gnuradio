@@ -22,8 +22,12 @@
 include $(top_srcdir)/grc/Makefile.inc
 
 ourpythondir = $(grc_gnuradio_prefix)/wxgui
-
 ourpython_PYTHON = \
 	__init__.py \
-	callback_controls.py \
 	top_block_gui.py
+
+oursubpythondir = $(grc_gnuradio_prefix)/wxgui/forms
+oursubpython_PYTHON = \
+	forms/__init__.py \
+	forms/converters.py \
+	forms/forms.py

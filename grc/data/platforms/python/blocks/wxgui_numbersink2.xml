@@ -20,12 +20,12 @@
 	sample_rate=$samp_rate,
 	number_rate=$number_rate,
 	average=$average,
-	avg_alpha=#if $avg_alpha.eval then $avg_alpha else 'None'#,
+	avg_alpha=#if $avg_alpha() then $avg_alpha else 'None'#,
 	label=$title,
 	peak_hold=$peak_hold,
 	show_gauge=$show_gauge,
 )
-#set $grid_pos = $grid_pos.eval
+#set $grid_pos = $grid_pos()
 #if not grid_pos
 self.Add(self.$(id).win)
 #else
@@ -112,7 +112,7 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<key>peak_hold</key>
 		<value>False</value>
 		<type>enum</type>
-		<hide>#if $peak_hold.eval == 'True' then 'none' else 'part'#</hide>
+		<hide>#if $peak_hold() == 'True' then 'none' else 'part'#</hide>
 		<option>
 			<name>On</name>
 			<key>True</key>
@@ -127,7 +127,7 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<key>average</key>
 		<value>False</value>
 		<type>enum</type>
-		<hide>#if $average.eval == 'True' then 'none' else 'part'#</hide>
+		<hide>#if $average() == 'True' then 'none' else 'part'#</hide>
 		<option>
 			<name>On</name>
 			<key>True</key>
@@ -142,7 +142,7 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<key>avg_alpha</key>
 		<value>0</value>
 		<type>real</type>
-		<hide>#if $average.eval == 'True' then 'none' else 'all'#</hide>
+		<hide>#if $average() == 'True' then 'none' else 'all'#</hide>
 	</param>
 	<param>
 		<name>Show Gauge</name>

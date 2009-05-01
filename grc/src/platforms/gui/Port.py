@@ -20,13 +20,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from Element import Element
 from Constants import \
 	PORT_SEPARATION, CONNECTOR_EXTENSION_MINIMAL, \
-	CONNECTOR_EXTENSION_INCREMENT, PORT_FONT, \
+	CONNECTOR_EXTENSION_INCREMENT, \
 	PORT_LABEL_PADDING, PORT_MIN_WIDTH
+import Utils
 import Colors
 import pygtk
 pygtk.require('2.0')
 import gtk
-import pango
+
+PORT_MARKUP_TMPL="""\
+<span foreground="black" font_desc="Sans 7.5">$encode($port.get_name())</span>"""
 
 class Port(Element):
 	"""The graphical port."""
@@ -83,9 +86,8 @@ class Port(Element):
 		"""Create the labels for the socket."""
 		self.BG_color = Colors.get_color(self.get_color())
 		#create the layout
-		layout = gtk.DrawingArea().create_pango_layout(self.get_name())
-		desc = pango.FontDescription(PORT_FONT)
-		layout.set_font_description(desc)
+		layout = gtk.DrawingArea().create_pango_layout('')
+		layout.set_markup(Utils.parse_template(PORT_MARKUP_TMPL, port=self))
 		self.w, self.h = layout.get_pixel_size()
 		self.W, self.H = 2*PORT_LABEL_PADDING+self.w, 2*PORT_LABEL_PADDING+self.h
 		#create the pixmap
@@ -102,13 +104,13 @@ class Port(Element):
 			for i in range(self.w):
 				for j in range(self.h): vimage.put_pixel(j, self.w-i-1, image.get_pixel(i, j))
 
-	def draw(self, window):
+	def draw(self, gc, window):
 		"""
 		Draw the socket with a label.
+		@param gc the graphics context
 		@param window the gtk window to draw on
 		"""
-		Element.draw(self, window, BG_color=self.BG_color)
-		gc = self.get_gc()
+		Element.draw(self, gc, window, BG_color=self.BG_color)
 		gc.foreground = Colors.TXT_COLOR
 		X,Y = self.get_coordinate()
 		(x,y),(w,h) = self.areas_dict[self.get_rotation()][0] #use the first area's sizes to place the labels

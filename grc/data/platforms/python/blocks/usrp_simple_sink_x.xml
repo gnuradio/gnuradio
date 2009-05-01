@@ -8,7 +8,7 @@
 	<name>USRP Sink</name>
 	<key>usrp_simple_sink_x</key>
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
-	<make>grc_usrp.simple_sink_$(type.fcn)(which=$which, side='$side')
+	<make>grc_usrp.simple_sink_$(type.fcn)(which=$which, side=$side)
 self.$(id).set_interp_rate($interpolation)
 self.$(id).set_frequency($frequency, verbose=True)
 self.$(id).set_gain($gain)
@@ -61,13 +61,13 @@ self.$(id).set_auto_tr(True)
 		<name>Side</name>
 		<key>side</key>
 		<value>A</value>
-		<type>enum</type>
+		<type>string</type>
 		<option>
-			<name>Side A</name>
+			<name>A</name>
 			<key>A</key>
 		</option>
 		<option>
-			<name>Side B</name>
+			<name>B</name>
 			<key>B</key>
 		</option>
 	</param>

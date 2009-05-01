@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from Constants import POSSIBLE_ROTATIONS
+from Cheetah.Template import Template
 
 def get_rotated_coordinate(coor, rotation):
 	"""
@@ -69,3 +70,13 @@ def xml_encode(string):
 			("'", '&apos;'),
 	): string = string.replace(char, safe)
 	return string
+
+def parse_template(tmpl_str, **kwargs):
+	"""
+	Parse the template string with the given args.
+	Pass in the xml encode method for pango escape chars.
+	@param tmpl_str the template as a string
+	@return a string of the parsed template
+	"""
+	kwargs['encode'] = xml_encode
+	return str(Template(tmpl_str, kwargs))

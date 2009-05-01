@@ -8,7 +8,7 @@
 	<name>Vector Source</name>
 	<key>gr_vector_source_x</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.vector_source_$(type.fcn)($vector, $repeat)</make>
+	<make>gr.vector_source_$(type.fcn)($vector, $repeat, $vlen)</make>
 	<param>
 		<name>Output Type</name>
 		<key>type</key>
@@ -64,8 +64,16 @@
 			<key>False</key>
 		</option>
 	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$vlen &gt; 0</check>
 	<source>
 		<name>out</name>
 		<type>$type</type>
+		<vlen>$vlen</vlen>
 	</source>
 </block>

@@ -1,5 +1,5 @@
 """
-Copyright 2007 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -28,8 +28,8 @@ APPLICATION_INITIALIZE = 'app init'
 APPLICATION_QUIT = 'app quit'
 PARAM_MODIFY = 'param modify'
 BLOCK_MOVE = 'block move'
-BLOCK_ROTATE_LEFT = 'block rotate left'
-BLOCK_ROTATE_RIGHT = 'block rotate right'
+BLOCK_ROTATE_CCW = 'block rotate ccw'
+BLOCK_ROTATE_CW = 'block rotate cw'
 BLOCK_PARAM_MODIFY = 'block param modify'
 BLOCK_INC_TYPE = 'block increment type'
 BLOCK_DEC_TYPE = 'block decrement type'
@@ -56,60 +56,85 @@ FLOW_GRAPH_EXEC = 'flow graph exec'
 FLOW_GRAPH_KILL = 'flow graph kill'
 FLOW_GRAPH_SCREEN_CAPTURE = 'flow graph screen capture'
 ABOUT_WINDOW_DISPLAY = 'about window display'
+HELP_WINDOW_DISPLAY = 'help window display'
 
 ######################################################################################################
 # Action Key Map
 ######################################################################################################
-_actions_key_map = {
-	#action name: (key name, mask)
-	FLOW_GRAPH_NEW: ('n', gtk.gdk.CONTROL_MASK),
-	FLOW_GRAPH_OPEN: ('o', gtk.gdk.CONTROL_MASK),
-	FLOW_GRAPH_SAVE: ('s', gtk.gdk.CONTROL_MASK),
-	FLOW_GRAPH_CLOSE: ('w', gtk.gdk.CONTROL_MASK),
-	APPLICATION_QUIT: ('q', gtk.gdk.CONTROL_MASK),
-	FLOW_GRAPH_UNDO: ('z', gtk.gdk.CONTROL_MASK),
-	FLOW_GRAPH_REDO: ('y', gtk.gdk.CONTROL_MASK),
-	ELEMENT_DELETE: ('Delete', 0),
-	BLOCK_ROTATE_LEFT: ('Left', 0),
-	BLOCK_ROTATE_RIGHT: ('Right', 0),
-	BLOCK_PARAM_MODIFY: ('Return', 0),
-	BLOCK_ENABLE: ('e', 0),
-	BLOCK_DISABLE: ('d', 0),
-	BLOCK_CUT: ('x', gtk.gdk.CONTROL_MASK),
-	BLOCK_COPY: ('c', gtk.gdk.CONTROL_MASK),
-	BLOCK_PASTE: ('v', gtk.gdk.CONTROL_MASK),
-	FLOW_GRAPH_GEN: ('F5', 0),
-	FLOW_GRAPH_EXEC: ('F6', 0),
-	FLOW_GRAPH_KILL: ('F7', 0),
-	FLOW_GRAPH_SCREEN_CAPTURE: ('Print', 0),
-}
+_actions_key_list = (
+	#action name, key name, mod mask
+	(FLOW_GRAPH_NEW, 'n', gtk.gdk.CONTROL_MASK),
+	(FLOW_GRAPH_OPEN, 'o', gtk.gdk.CONTROL_MASK),
+	(FLOW_GRAPH_SAVE, 's', gtk.gdk.CONTROL_MASK),
+	(FLOW_GRAPH_SAVE_AS, 's', gtk.gdk.CONTROL_MASK | gtk.gdk.SHIFT_MASK),
+	(FLOW_GRAPH_CLOSE, 'w', gtk.gdk.CONTROL_MASK),
+	(APPLICATION_QUIT, 'q', gtk.gdk.CONTROL_MASK),
+	(FLOW_GRAPH_UNDO, 'z', gtk.gdk.CONTROL_MASK),
+	(FLOW_GRAPH_REDO, 'y', gtk.gdk.CONTROL_MASK),
+	(ELEMENT_DELETE, 'Delete', 0),
+	(BLOCK_ROTATE_CCW, 'Left', 0),
+	(BLOCK_ROTATE_CW, 'Right', 0),
+	(BLOCK_DEC_TYPE, 'Up', 0),
+	(BLOCK_INC_TYPE, 'Down', 0),
+	(BLOCK_PARAM_MODIFY, 'Return', 0),
+	(BLOCK_ENABLE, 'e', 0),
+	(BLOCK_DISABLE, 'd', 0),
+	(BLOCK_CUT, 'x', gtk.gdk.CONTROL_MASK),
+	(BLOCK_COPY, 'c', gtk.gdk.CONTROL_MASK),
+	(BLOCK_PASTE, 'v', gtk.gdk.CONTROL_MASK),
+	(FLOW_GRAPH_GEN, 'F5', 0),
+	(FLOW_GRAPH_EXEC, 'F6', 0),
+	(FLOW_GRAPH_KILL, 'F7', 0),
+	(FLOW_GRAPH_SCREEN_CAPTURE, 'Print', 0),
+	(HELP_WINDOW_DISPLAY, 'F1', 0),
+	#the following have no associated gtk.Action
+	(PORT_CONTROLLER_INC, 'equal', 0),
+	(PORT_CONTROLLER_INC, 'plus', 0),
+	(PORT_CONTROLLER_INC, 'KP_Add', 0),
+	(PORT_CONTROLLER_DEC, 'minus', 0),
+	(PORT_CONTROLLER_DEC, 'KP_Subtract', 0),
+)
+
+_actions_key_dict = dict(((key_name, mod_mask), action_name) for action_name, key_name, mod_mask in _actions_key_list)
+def get_action_name_from_key_name(key_name, mod_mask=0):
+	"""
+	Get the action name associated with the key name and mask.
+	Both keyname and mask have to match.
+	@param key_name the name of the key
+	@param mod_mask the key press mask (shift, ctrl) 0 for none
+	@return the action name or blank string
+	"""
+	key_name_mod_mask = (key_name, mod_mask)
+	if key_name_mod_mask in _actions_key_dict: return _actions_key_dict[key_name_mod_mask]
+	return ''
 
 ######################################################################################################
 # Actions
 ######################################################################################################
 _actions_list = (
-	gtk.Action(FLOW_GRAPH_NEW, '_New', 'Create a new flow graph', 'gtk-new'),
-	gtk.Action(FLOW_GRAPH_OPEN, '_Open', 'Open an existing flow graph', 'gtk-open'),
-	gtk.Action(FLOW_GRAPH_SAVE, '_Save', 'Save the current flow graph', 'gtk-save'),
-	gtk.Action(FLOW_GRAPH_SAVE_AS, 'Save _As', 'Save the current flow graph as...', 'gtk-save-as'),
-	gtk.Action(FLOW_GRAPH_CLOSE, '_Close', 'Close the current flow graph', 'gtk-close'),
-	gtk.Action(APPLICATION_QUIT, '_Quit', 'Quit program', 'gtk-quit'),
-	gtk.Action(FLOW_GRAPH_UNDO, '_Undo', 'Undo a change to the flow graph', 'gtk-undo'),
-	gtk.Action(FLOW_GRAPH_REDO, '_Redo', 'Redo a change to the flow graph', 'gtk-redo'),
-	gtk.Action(ELEMENT_DELETE, '_Delete', 'Delete the selected blocks', 'gtk-delete'),
-	gtk.Action(BLOCK_ROTATE_LEFT, 'Rotate _Left', 'Rotate the selected blocks 90 degrees', 'gtk-go-back'),
-	gtk.Action(BLOCK_ROTATE_RIGHT, 'Rotate _Right', 'Rotate the selected blocks -90 degrees', 'gtk-go-forward'),
-	gtk.Action(BLOCK_PARAM_MODIFY, '_Properties', 'Modify params for the selected block', 'gtk-properties'),
-	gtk.Action(BLOCK_ENABLE, 'E_nable', 'Enable the selected blocks', 'gtk-connect'),
-	gtk.Action(BLOCK_DISABLE, 'D_isable', 'Disable the selected blocks', 'gtk-disconnect'),
-	gtk.Action(BLOCK_CUT, 'Cu_t', 'Cut', 'gtk-cut'),
-	gtk.Action(BLOCK_COPY, '_Copy', 'Copy', 'gtk-copy'),
-	gtk.Action(BLOCK_PASTE, '_Paste', 'Paste', 'gtk-paste'),
-	gtk.Action(ABOUT_WINDOW_DISPLAY, '_About', 'About this program', 'gtk-about'),
-	gtk.Action(FLOW_GRAPH_GEN, '_Generate', 'Generate the flow graph', 'gtk-convert'),
-	gtk.Action(FLOW_GRAPH_EXEC, '_Execute', 'Execute the flow graph', 'gtk-execute'),
-	gtk.Action(FLOW_GRAPH_KILL, '_Kill', 'Kill the flow graph', 'gtk-stop'),
-	gtk.Action(FLOW_GRAPH_SCREEN_CAPTURE, 'S_creen Capture', 'Create a screen capture of the flow graph', 'gtk-print'),
+	gtk.Action(FLOW_GRAPH_NEW, '_New', 'Create a new flow graph', gtk.STOCK_NEW),
+	gtk.Action(FLOW_GRAPH_OPEN, '_Open', 'Open an existing flow graph', gtk.STOCK_OPEN),
+	gtk.Action(FLOW_GRAPH_SAVE, '_Save', 'Save the current flow graph', gtk.STOCK_SAVE),
+	gtk.Action(FLOW_GRAPH_SAVE_AS, 'Save _As', 'Save the current flow graph as...', gtk.STOCK_SAVE_AS),
+	gtk.Action(FLOW_GRAPH_CLOSE, '_Close', 'Close the current flow graph', gtk.STOCK_CLOSE),
+	gtk.Action(APPLICATION_QUIT, '_Quit', 'Quit program', gtk.STOCK_QUIT),
+	gtk.Action(FLOW_GRAPH_UNDO, '_Undo', 'Undo a change to the flow graph', gtk.STOCK_UNDO),
+	gtk.Action(FLOW_GRAPH_REDO, '_Redo', 'Redo a change to the flow graph', gtk.STOCK_REDO),
+	gtk.Action(ELEMENT_DELETE, '_Delete', 'Delete the selected blocks', gtk.STOCK_DELETE),
+	gtk.Action(BLOCK_ROTATE_CCW, 'Rotate Counterclockwise', 'Rotate the selected blocks 90 degrees to the left', gtk.STOCK_GO_BACK),
+	gtk.Action(BLOCK_ROTATE_CW, 'Rotate Clockwise', 'Rotate the selected blocks 90 degrees to the right', gtk.STOCK_GO_FORWARD),
+	gtk.Action(BLOCK_PARAM_MODIFY, '_Properties', 'Modify params for the selected block', gtk.STOCK_PROPERTIES),
+	gtk.Action(BLOCK_ENABLE, 'E_nable', 'Enable the selected blocks', gtk.STOCK_CONNECT),
+	gtk.Action(BLOCK_DISABLE, 'D_isable', 'Disable the selected blocks', gtk.STOCK_DISCONNECT),
+	gtk.Action(BLOCK_CUT, 'Cu_t', 'Cut', gtk.STOCK_CUT),
+	gtk.Action(BLOCK_COPY, '_Copy', 'Copy', gtk.STOCK_COPY),
+	gtk.Action(BLOCK_PASTE, '_Paste', 'Paste', gtk.STOCK_PASTE),
+	gtk.Action(ABOUT_WINDOW_DISPLAY, '_About', 'About this program', gtk.STOCK_ABOUT),
+	gtk.Action(HELP_WINDOW_DISPLAY, '_Help', 'Usage Tips', gtk.STOCK_HELP),
+	gtk.Action(FLOW_GRAPH_GEN, '_Generate', 'Generate the flow graph', gtk.STOCK_CONVERT),
+	gtk.Action(FLOW_GRAPH_EXEC, '_Execute', 'Execute the flow graph', gtk.STOCK_EXECUTE),
+	gtk.Action(FLOW_GRAPH_KILL, '_Kill', 'Kill the flow graph', gtk.STOCK_STOP),
+	gtk.Action(FLOW_GRAPH_SCREEN_CAPTURE, 'S_creen Capture', 'Create a screen capture of the flow graph', gtk.STOCK_PRINT),
 )
 def get_all_actions(): return _actions_list
 
@@ -122,16 +147,21 @@ def get_action_from_name(action_name):
 	@throw KeyError bad action name
 	@return a gtk action object
 	"""
-	if _actions_dict.has_key(action_name): return _actions_dict[action_name]
+	if action_name in _actions_dict: return _actions_dict[action_name]
 	raise KeyError('Action Name: "%s" does not exist'%action_name)
 
+######################################################################################################
+# Accelerators
+######################################################################################################
 _accel_group = gtk.AccelGroup()
 def get_accel_group(): return _accel_group
 
-#load the actions key map
 #set the accelerator group, and accelerator path
-#register the key and mod with the accelerator path
-for action_name, (key_name, mod) in _actions_key_map.iteritems():
-	get_action_from_name(action_name).set_accel_group(get_accel_group())
-	get_action_from_name(action_name).set_accel_path('<main>/'+action_name)
-	gtk.accel_map_add_entry('<main>/'+action_name, gtk.gdk.keyval_from_name(key_name),mod)
+#register the key name and mod mask with the accelerator path
+for action_name, key_name, mod_mask in _actions_key_list:
+	try:
+		accel_path = '<main>/'+action_name
+		get_action_from_name(action_name).set_accel_group(get_accel_group())
+		get_action_from_name(action_name).set_accel_path(accel_path)
+		gtk.accel_map_add_entry(accel_path, gtk.gdk.keyval_from_name(key_name), mod_mask)
+	except KeyError: pass #no action was created for this action name

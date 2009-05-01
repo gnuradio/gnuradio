@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -22,21 +22,15 @@ from .. base.FlowGraph import FlowGraph as _FlowGraph
 from Block import Block
 from Connection import Connection
 
-def get_variable_code(variable):
+def _get_value_expr(variable_block):
 	"""
-	Get the code representation for a variable.
-	Normally this is the value parameter.
-	For the variable chooser, use the index and choices.
-	Avoid using the to_code method of the variables,
-	as this forces evaluation before the variables are evaluated.
-	@param variable the variable block
-	@return the code string
+	Get the expression to evaluate from the value param.
+	@param variable_block the variable or parameter block
+	@return the expression string
 	"""
-	if variable.get_key() == 'variable_chooser':
-		choices = variable.get_param('choices').get_value()
-		value_index = variable.get_param('value_index').get_value()
-		return "(%s)[%s]"%(choices, value_index)
-	return variable.get_param('value').get_value()
+	value_param = variable_block.get_param('value')
+	value_param.evaluate() #evaluate prior to code
+	return value_param.to_code()
 
 class FlowGraph(_FlowGraph):
 
@@ -117,7 +111,7 @@ class FlowGraph(_FlowGraph):
 		id2var = dict([(var.get_id(), var) for var in variables])
 		#map var id to variable code
 		#variable code is a concatenation of all param code (without the id param)
-		id2expr = dict([(var.get_id(), get_variable_code(var)) for var in variables])
+		id2expr = dict([(var.get_id(), var.get_param('value').get_value()) for var in variables])
 		#sort according to dependency
 		sorted_ids = expr_utils.sort_variables(id2expr)
 		#create list of sorted variable blocks
@@ -151,14 +145,14 @@ class FlowGraph(_FlowGraph):
 			np = dict()
 			for parameter in self.get_parameters():
 				try:
-					e = self._eval(parameter.get_param('value').to_code(), n)
+					e = self._eval(_get_value_expr(parameter), n)
 					np[parameter.get_id()] = e
 				except: pass
 			n.update(np) #merge param namespace
 			#load variables
 			for variable in self.get_variables():
 				try:
-					e = self._eval(get_variable_code(variable), n)
+					e = self._eval(_get_value_expr(variable), n)
 					n[variable.get_id()] = e
 				except: pass
 			#make namespace public

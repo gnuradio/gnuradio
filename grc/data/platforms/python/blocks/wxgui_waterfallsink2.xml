@@ -17,10 +17,10 @@
 	fft_size=$fft_size,
 	fft_rate=$fft_rate,
 	average=$options.average,
-	avg_alpha=#if $avg_alpha.eval then $avg_alpha else 'None'#,
+	avg_alpha=#if $avg_alpha() then $avg_alpha else 'None'#,
 	title=$title,
 )
-#set $grid_pos = $grid_pos.eval
+#set $grid_pos = $grid_pos()
 #if not grid_pos
 self.Add(self.$(id).win)
 #else

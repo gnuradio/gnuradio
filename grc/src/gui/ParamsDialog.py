@@ -1,5 +1,5 @@
 """
-Copyright 2007 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -45,9 +45,11 @@ class ParamsDialog(gtk.Dialog):
 		SignalBlockParamsDialog contructor.
 		@param block the signal block
 		"""
-		gtk.Dialog.__init__(self, buttons=('gtk-close', gtk.RESPONSE_CLOSE))
+		gtk.Dialog.__init__(self,
+			title='Properties: %s'%block.get_name(),
+			buttons=(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE),
+		)
 		self.block = block
-		self.set_title('Properties: %s'%block.get_name())
 		self.set_size_request(MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
 		vbox = gtk.VBox()
 		#Add the title label

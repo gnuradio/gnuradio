@@ -9,7 +9,7 @@
 	<key>gr_fft_vxx</key>
 	<import>from gnuradio import gr</import>
 	<import>from gnuradio import window</import>
-	<make>#if $type.eval == "complex"
+	<make>#if $type() == "complex"
 gr.fft_vcc($fft_size, $forward, $window, $shift)
 #else
 gr.fft_vfc($fft_size, $forward, $window)

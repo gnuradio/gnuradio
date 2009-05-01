@@ -1,5 +1,5 @@
 """
-Copyright 2007 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -17,25 +17,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from ... gui.Constants import \
-	DIR_LEFT, DIR_RIGHT, \
-	SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE, \
-	MOTION_DETECT_REDRAWING_SENSITIVITY
+from Constants import SCROLL_PROXIMITY_SENSITIVITY, SCROLL_DISTANCE
 from ... gui.Actions import \
 	ELEMENT_CREATE, ELEMENT_SELECT, \
 	BLOCK_PARAM_MODIFY, BLOCK_MOVE, \
 	ELEMENT_DELETE
 import Colors
 import Utils
-from ... import utils
-from ... gui.ParamsDialog import ParamsDialog
 from Element import Element
 from .. base import FlowGraph as _FlowGraph
 import pygtk
 pygtk.require('2.0')
 import gtk
 import random
-import time
 from ... gui import Messages
 
 class FlowGraph(Element):
@@ -57,7 +51,6 @@ class FlowGraph(Element):
 		self.element_moved = False
 		self.mouse_pressed = False
 		self.unselect()
-		self.time = 0
 		self.press_coor = (0, 0)
 		#selected ports
 		self._old_selected_port = None
@@ -67,28 +60,31 @@ class FlowGraph(Element):
 	# Access Drawing Area
 	###########################################################################
 	def get_drawing_area(self): return self.drawing_area
-	def get_gc(self): return self.get_drawing_area().gc
-	def get_pixmap(self): return self.get_drawing_area().pixmap
+	def queue_draw(self): self.get_drawing_area().queue_draw()
 	def get_size(self): return self.get_drawing_area().get_size_request()
 	def set_size(self, *args): self.get_drawing_area().set_size_request(*args)
 	def get_window(self): return self.get_drawing_area().window
+	def get_pixmap(self): return self.get_drawing_area().pixmap
 	def get_scroll_pane(self): return self.drawing_area.get_parent()
 	def get_ctrl_mask(self): return self.drawing_area.ctrl_mask
 
-	def add_new_block(self, key):
+	def add_new_block(self, key, coor=None):
 		"""
 		Add a block of the given key to this flow graph.
 		@param key the block key
+		@param coor an optional coordinate or None for random
 		"""
 		id = self._get_unique_id(key)
 		#calculate the position coordinate
 		h_adj = self.get_scroll_pane().get_hadjustment()
 		v_adj = self.get_scroll_pane().get_vadjustment()
-		x = int(random.uniform(.25, .75)*h_adj.page_size + h_adj.get_value())
-		y = int(random.uniform(.25, .75)*v_adj.page_size + v_adj.get_value())
+		if coor is None: coor = (
+			int(random.uniform(.25, .75)*h_adj.page_size + h_adj.get_value()),
+			int(random.uniform(.25, .75)*v_adj.page_size + v_adj.get_value()),
+		)
 		#get the new block
 		block = self.get_new_block(key)
-		block.set_coordinate((x, y))
+		block.set_coordinate(coor)
 		block.set_rotation(0)
 		block.get_param('id').set_value(id)
 		self.handle_states(ELEMENT_CREATE)
@@ -137,15 +133,15 @@ class FlowGraph(Element):
 		y_off = v_adj.get_value() - y_min + v_adj.page_size/4
 		#create blocks
 		for block_n in blocks_n:
-			block_key = block_n['key']
+			block_key = block_n.find('key')
 			if block_key == 'options': continue
 			block = self.get_new_block(block_key)
 			selected.add(block)
 			#set params
-			params_n = utils.listify(block_n, 'param')
+			params_n = block_n.findall('param')
 			for param_n in params_n:
-				param_key = param_n['key']
-				param_value = param_n['value']
+				param_key = param_n.find('key')
+				param_value = param_n.find('value')
 				#setup id parameter
 				if param_key == 'id':
 					old_id2block[param_value] = block
@@ -160,8 +156,8 @@ class FlowGraph(Element):
 		self.update()
 		#create connections
 		for connection_n in connections_n:
-			source = old_id2block[connection_n['source_block_id']].get_source(connection_n['source_key'])
-			sink = old_id2block[connection_n['sink_block_id']].get_sink(connection_n['sink_key'])
+			source = old_id2block[connection_n.find('source_block_id')].get_source(connection_n.find('source_key'))
+			sink = old_id2block[connection_n.find('sink_block_id')].get_sink(connection_n.find('sink_key'))
 			self.connect(source, sink)
 		#set all pasted elements selected
 		for block in selected: selected = selected.union(set(block.get_connections()))
@@ -186,14 +182,6 @@ class FlowGraph(Element):
 		"""
 		return any([sb.port_controller_modify(direction) for sb in self.get_selected_blocks()])
 
-	def param_modify_selected(self):
-		"""
-		Create and show a param modification dialog for the selected block.
-		@return true if parameters were changed
-		"""
-		if not self.get_selected_block(): return False
-		return ParamsDialog(self.get_selected_block()).run()
-
 	def enable_selected(self, enable):
 		"""
 		Enable/disable the selected blocks.
@@ -216,15 +204,13 @@ class FlowGraph(Element):
 			selected_block.move(delta_coordinate)
 			self.element_moved = True
 
-	def rotate_selected(self, direction):
+	def rotate_selected(self, rotation):
 		"""
-		Rotate the selected blocks by 90 degrees.
-		@param direction DIR_LEFT or DIR_RIGHT
+		Rotate the selected blocks by multiples of 90 degrees.
+		@param rotation the rotation in degrees
 		@return true if changed, otherwise false.
 		"""
 		if not self.get_selected_blocks(): return False
-		#determine the number of degrees to rotate
-		rotation = {DIR_LEFT: 90, DIR_RIGHT:270}[direction]
 		#initialize min and max coordinates
 		min_x, min_y = self.get_selected_block().get_coordinate()
 		max_x, max_y = self.get_selected_block().get_coordinate()
@@ -255,55 +241,49 @@ class FlowGraph(Element):
 			changed = True
 		return changed
 
-	def draw(self):
+	def draw(self, gc, window):
 		"""
 		Draw the background and grid if enabled.
 		Draw all of the elements in this flow graph onto the pixmap.
 		Draw the pixmap to the drawable window of this flow graph.
 		"""
-		if self.get_gc():
-			W,H = self.get_size()
-			#draw the background
-			self.get_gc().foreground = Colors.BACKGROUND_COLOR
-			self.get_pixmap().draw_rectangle(self.get_gc(), True, 0, 0, W, H)
-			#draw multi select rectangle
-			if self.mouse_pressed and (not self.get_selected_elements() or self.get_ctrl_mask()):
-				#coordinates
-				x1, y1 = self.press_coor
-				x2, y2 = self.get_coordinate()
-				#calculate top-left coordinate and width/height
-				x, y = int(min(x1, x2)), int(min(y1, y2))
-				w, h = int(abs(x1 - x2)), int(abs(y1 - y2))
-				#draw
-				self.get_gc().foreground = Colors.H_COLOR
-				self.get_pixmap().draw_rectangle(self.get_gc(), True, x, y, w, h)
-				self.get_gc().foreground = Colors.TXT_COLOR
-				self.get_pixmap().draw_rectangle(self.get_gc(), False, x, y, w, h)
-			#draw blocks on top of connections
-			for element in self.get_connections() + self.get_blocks():
-				element.draw(self.get_pixmap())
-			#draw selected blocks on top of selected connections
-			for selected_element in self.get_selected_connections() + self.get_selected_blocks():
-				selected_element.draw(self.get_pixmap())
-			self.get_drawing_area().draw()
+		try: #set the size of the flow graph area (if changed)
+			new_size = self.get_option('window_size')
+			if self.get_size() != tuple(new_size): self.set_size(*new_size)
+		except: pass
+		W,H = self.get_size()
+		#draw the background
+		gc.foreground = Colors.BACKGROUND_COLOR
+		window.draw_rectangle(gc, True, 0, 0, W, H)
+		#draw multi select rectangle
+		if self.mouse_pressed and (not self.get_selected_elements() or self.get_ctrl_mask()):
+			#coordinates
+			x1, y1 = self.press_coor
+			x2, y2 = self.get_coordinate()
+			#calculate top-left coordinate and width/height
+			x, y = int(min(x1, x2)), int(min(y1, y2))
+			w, h = int(abs(x1 - x2)), int(abs(y1 - y2))
+			#draw
+			gc.foreground = Colors.H_COLOR
+			window.draw_rectangle(gc, True, x, y, w, h)
+			gc.foreground = Colors.TXT_COLOR
+			window.draw_rectangle(gc, False, x, y, w, h)
+		#draw blocks on top of connections
+		for element in self.get_connections() + self.get_blocks():
+			element.draw(gc, window)
+		#draw selected blocks on top of selected connections
+		for selected_element in self.get_selected_connections() + self.get_selected_blocks():
+			selected_element.draw(gc, window)
 
 	def update(self):
 		"""
 		Update highlighting so only the selected is highlighted.
 		Call update on all elements.
-		Resize the window if size changed.
 		"""
-		#update highlighting
-		map(lambda e: e.set_highlighted(False), self.get_elements())
-		for selected_element in self.get_selected_elements():
-			selected_element.set_highlighted(True)
-		#update all elements
-		map(lambda e: e.update(), self.get_elements())
-		#set the size of the flow graph area
-		old_x, old_y = self.get_size()
-		try: new_x, new_y = self.get_option('window_size')
-		except: new_x, new_y = old_x, old_y
-		if new_x != old_x or new_y != old_y: self.set_size(new_x, new_y)
+		selected_elements = self.get_selected_elements()
+		for element in self.get_elements():
+			element.set_highlighted(element in selected_elements)
+			element.update()
 
 	##########################################################################
 	## Get Selected
@@ -466,7 +446,6 @@ class FlowGraph(Element):
 			self.handle_states(BLOCK_MOVE)
 			self.element_moved = False
 		self.update_selected_elements()
-		self.draw()
 
 	def handle_mouse_motion(self, coordinate):
 		"""
@@ -474,9 +453,8 @@ class FlowGraph(Element):
 		Move a selected element to the new coordinate.
 		Auto-scroll the scroll bars at the boundaries.
 		"""
-		#to perform a movement, the mouse must be pressed, timediff large enough
-		if not self.mouse_pressed: return
-		if time.time() - self.time < MOTION_DETECT_REDRAWING_SENSITIVITY: return
+		#to perform a movement, the mouse must be pressed, no pending events
+		if gtk.events_pending() or not self.mouse_pressed: return
 		#perform autoscrolling
 		width, height = self.get_size()
 		x, y = coordinate
@@ -499,7 +477,6 @@ class FlowGraph(Element):
 		#move the selected elements and record the new coordinate
 		X, Y = self.get_coordinate()
 		if not self.get_ctrl_mask(): self.move_selected((int(x - X), int(y - Y)))
-		self.draw()
 		self.set_coordinate((x, y))
-		#update time
-		self.time = time.time()
+		#queue draw for animation
+		self.queue_draw()

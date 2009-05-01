@@ -1,5 +1,5 @@
 """
-Copyright 2007 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Constants import DEFAULT_BLOCKS_WINDOW_WIDTH
+from Constants import DEFAULT_BLOCKS_WINDOW_WIDTH, DND_TARGETS
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -53,6 +53,9 @@ class BlockTreeWindow(gtk.VBox):
 		renderer = gtk.CellRendererText()
 		column = gtk.TreeViewColumn('Blocks', renderer, text=NAME_INDEX)
 		self.treeview.append_column(column)
+		#setup drag and drop
+		self.treeview.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, DND_TARGETS, gtk.gdk.ACTION_COPY)
+		self.treeview.connect('drag-data-get', self._handle_drag_get_data)
 		#make the scrolled window to hold the tree view
 		scrolled_window = gtk.ScrolledWindow()
 		scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
@@ -60,12 +63,11 @@ class BlockTreeWindow(gtk.VBox):
 		scrolled_window.set_size_request(DEFAULT_BLOCKS_WINDOW_WIDTH, -1)
 		self.pack_start(scrolled_window)
 		#add button
-		self.add_button = gtk.Button(None, 'gtk-add')
+		self.add_button = gtk.Button(None, gtk.STOCK_ADD)
 		self.add_button.connect('clicked', self._handle_add_button)
 		self.pack_start(self.add_button, False)
-		#map categories to iters
-		self.categories = dict()
-		self.categories[tuple()] = None
+		#map categories to iters, automatic mapping for root
+		self._categories = {tuple(): None}
 		#add blocks and categories
 		self.platform.load_block_tree(self)
 		#initialize
@@ -78,22 +80,21 @@ class BlockTreeWindow(gtk.VBox):
 		"""
 		Add a block with category to this selection window.
 		Add only the category when block is None.
-		@param category the category string
+		@param category the category list
 		@param block the block object or None
 		"""
-		#rectify category
-		category = filter(lambda x: x, category.split('/'))
+		category = tuple(category)[1:] #tuple is hashable
 		#add category and all sub categories
-		for i in range(len(category)):
-			sub_category = tuple(category[:i+1])
-			if sub_category not in self.categories.keys():
-				iter = self.treestore.insert_before(self.categories[tuple(category[:i])], None)
-				self.treestore.set_value(iter, NAME_INDEX, '[ %s ]'%category[i])
+		for i, cat_name in enumerate(category):
+			sub_category = category[:i+1]
+			if sub_category not in self._categories:
+				iter = self.treestore.insert_before(self._categories[sub_category[:-1]], None)
+				self.treestore.set_value(iter, NAME_INDEX, '[ %s ]'%cat_name)
 				self.treestore.set_value(iter, KEY_INDEX, '')
-				self.categories[sub_category] = iter
+				self._categories[sub_category] = iter
 		#add block
 		if block is None: return
-		iter = self.treestore.insert_before(self.categories[tuple(category)], None)
+		iter = self.treestore.insert_before(self._categories[category], None)
 		self.treestore.set_value(iter, NAME_INDEX, block.get_name())
 		self.treestore.set_value(iter, KEY_INDEX, block.get_key())
 
@@ -127,6 +128,15 @@ class BlockTreeWindow(gtk.VBox):
 	############################################################
 	## Event Handlers
 	############################################################
+	def _handle_drag_get_data(self, widget, drag_context, selection_data, info, time):
+		"""
+		Handle a drag and drop by setting the key to the selection object.
+		This will call the destination handler for drag and drop.
+		Only call set when the key is valid to ignore DND from categories.
+		"""
+		key = self._get_selected_block_key()
+		if key: selection_data.set(selection_data.target, 8, key)
+
 	def _handle_mouse_button_press(self, widget, event):
 		"""
 		Handle the mouse button press.

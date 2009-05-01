@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -17,7 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from ... import utils
 from ... utils import odict
 from Element import Element
 from Param import Param
@@ -31,7 +30,7 @@ class TemplateArg(UserDict):
 	A cheetah template argument created from a param.
 	The str of this class evaluates to the param's to code method.
 	The use of this class as a dictionary (enum only) will reveal the enum opts.
-	The eval method can return the param evaluated to a raw python data type.
+	The __call__ or () method can return the param evaluated to a raw python data type.
 	"""
 
 	def __init__(self, param):
@@ -44,7 +43,7 @@ class TemplateArg(UserDict):
 	def __str__(self):
 		return str(self._param.to_code())
 
-	def eval(self):
+	def __call__(self):
 		return self._param.evaluate()
 
 class Block(Element):
@@ -59,33 +58,33 @@ class Block(Element):
 		#build the block
 		Element.__init__(self, flow_graph)
 		#grab the data
-		params = utils.listify(n, 'param')
-		sources = utils.listify(n, 'source')
-		sinks = utils.listify(n, 'sink')
-		self._name = n['name']
-		self._key = n['key']
-		self._category = utils.exists_or_else(n, 'category', '')
-		self._block_wrapper_path = n['block_wrapper_path']
+		params = n.findall('param')
+		sources = n.findall('source')
+		sinks = n.findall('sink')
+		self._name = n.find('name')
+		self._key = n.find('key')
+		self._category = n.find('category') or ''
+		self._block_wrapper_path = n.find('block_wrapper_path')
 		#create the param objects
 		self._params = odict()
 		#add the id param
 		self._params['id'] = self.get_parent().get_parent().Param(
 			self,
-			{
+			odict({
 				'name': 'ID',
 				'key': 'id',
 				'type': 'id',
-			}
+			})
 		)
 		self._params['_enabled'] = self.get_parent().get_parent().Param(
 			self,
-			{
+			odict({
 				'name': 'Enabled',
 				'key': '_enabled',
 				'type': 'raw',
 				'value': 'True',
 				'hide': 'all',
-			}
+			})
 		)
 		for param in map(lambda n: self.get_parent().get_parent().Param(self, n), params):
 			key = param.get_key()
@@ -250,13 +249,11 @@ class Block(Element):
 		Any param keys that do not exist will be ignored.
 		@param n the nested data odict
 		"""
-		params_n = utils.listify(n, 'param')
+		params_n = n.findall('param')
 		for param_n in params_n:
-			#key and value must exist in the n data
-			if 'key' in param_n.keys() and 'value' in param_n.keys():
-				key = param_n['key']
-				value = param_n['value']
-				#the key must exist in this block's params
-				if key in self.get_param_keys():
-					self.get_param(key).set_value(value)
+			key = param_n.find('key')
+			value = param_n.find('value')
+			#the key must exist in this block's params
+			if key in self.get_param_keys():
+				self.get_param(key).set_value(value)
 		self.validate()

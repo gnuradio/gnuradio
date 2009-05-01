@@ -1,40 +1,68 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Variable Text Box: a grc variable with key, value
+##Variable Text Box:
+##	a gui text box form
 ###################################################
  -->
 <block>
 	<name>Variable Text Box</name>
 	<key>variable_text_box</key>
+	<import>from grc_gnuradio.wxgui import forms</import>
 	<make>$value
-_$(id)_control = grc_wxgui.text_box_control(
-	window=self.GetWin(),
-	callback=self.set_$(id),
-		#if $label.eval
+self['$id'] = $id
+self.subscribe('$id', self.set_$(id))
+self._$(id)_control = forms.text_box(
+	parent=self.GetWin(),
+	ps=self,
+	key='$id',
+	#if $label()
 	label=$label,
-		#else
+	#else
 	label='$id',
-		#end if
-	value=$id,
+	#end if
+	converter=forms.$(converver)(),
 )
-#set $grid_pos = $grid_pos.eval
+#set $grid_pos = $grid_pos()
 #if not grid_pos
-self.Add(_$(id)_control)
+self.Add(self._$(id)_control)
 #else
-self.GridAdd(_$(id)_control, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+self.GridAdd(self._$(id)_control, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
 #end if</make>
 	<param>
 		<name>Label</name>
 		<key>label</key>
 		<value></value>
 		<type>string</type>
+		<hide>#if $label() then 'none' else 'part'#</hide>
 	</param>
 	<param>
 		<name>Default Value</name>
 		<key>value</key>
 		<value>0</value>
 		<type>raw</type>
+	</param>
+	<param>
+		<name>Converter</name>
+		<key>converver</key>
+		<value>float_converter</value>
+		<type>enum</type>
+		<option>
+			<name>Float</name>
+			<key>float_converter</key>
+		</option>
+		<option>
+			<name>Integer</name>
+			<key>int_converter</key>
+		</option>
+		<option>
+			<name>String</name>
+			<key>str_converter</key>
+		</option>
+		<option>
+			<name>Evaluate</name>
+			<key>eval_converter</key>
+		</option>
 	</param>
 	<param>
 		<name>Grid Position</name>

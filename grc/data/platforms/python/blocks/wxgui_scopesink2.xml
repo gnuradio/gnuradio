@@ -19,7 +19,7 @@
 	xy_mode=$xy_mode,
 	num_inputs=$num_inputs,
 )
-#set $grid_pos = $grid_pos.eval
+#set $grid_pos = $grid_pos()
 #if not grid_pos
 self.Add(self.$(id).win)
 #else
@@ -71,7 +71,7 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<key>ac_couple</key>
 		<value>False</value>
 		<type>enum</type>
-		<hide>#if $ac_couple.eval == 'True' then 'none' else 'part'#</hide>
+		<hide>#if $ac_couple() == 'True' then 'none' else 'part'#</hide>
 		<option>
 			<name>Off</name>
 			<key>False</key>
@@ -86,7 +86,7 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<key>xy_mode</key>
 		<value>False</value>
 		<type>enum</type>
-		<hide>#if $xy_mode.eval == 'True' then 'none' else 'part'#</hide>
+		<hide>#if $xy_mode() == 'True' then 'none' else 'part'#</hide>
 		<option>
 			<name>Off</name>
 			<key>False</key>

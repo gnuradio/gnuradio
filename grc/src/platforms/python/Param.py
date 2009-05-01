@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -94,7 +94,7 @@ class Param(_Param):
 		Get the repr (nice string format) for this param.
 		@return the string representation
 		"""
-		if self.is_enum(): return _Param.__repr__(self)
+		if self.get_value() in self.get_option_keys(): return self.get_option(self.get_value()).get_name()
 		##################################################
 		# display logic for numbers
 		##################################################
@@ -158,7 +158,7 @@ class Param(_Param):
 				#special
 				'hex': Constants.INT_COLOR_SPEC,
 				'string': Constants.BYTE_VECTOR_COLOR_SPEC,
-				'id': '#DDDDDD',
+				'id': Constants.ID_COLOR_SPEC,
 				'grid_pos': Constants.INT_VECTOR_COLOR_SPEC,
 			}[self.get_type()]
 		except: return _Param.get_color(self)

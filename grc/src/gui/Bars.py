@@ -1,5 +1,5 @@
 """
-Copyright 2007 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -43,8 +43,8 @@ TOOLBAR_LIST = (
 	Actions.FLOW_GRAPH_EXEC,
 	Actions.FLOW_GRAPH_KILL,
 	None,
-	Actions.BLOCK_ROTATE_LEFT,
-	Actions.BLOCK_ROTATE_RIGHT,
+	Actions.BLOCK_ROTATE_CCW,
+	Actions.BLOCK_ROTATE_CW,
 	None,
 	Actions.BLOCK_ENABLE,
 	Actions.BLOCK_DISABLE,
@@ -73,8 +73,8 @@ MENU_BAR_LIST = (
 		Actions.BLOCK_PASTE,
 		Actions.ELEMENT_DELETE,
 		None,
-		Actions.BLOCK_ROTATE_LEFT,
-		Actions.BLOCK_ROTATE_RIGHT,
+		Actions.BLOCK_ROTATE_CCW,
+		Actions.BLOCK_ROTATE_CW,
 		None,
 		Actions.BLOCK_ENABLE,
 		Actions.BLOCK_DISABLE,
@@ -87,6 +87,8 @@ MENU_BAR_LIST = (
 		Actions.FLOW_GRAPH_KILL,
 	]),
 	(gtk.Action('Help', '_Help', None, None), [
+		Actions.HELP_WINDOW_DISPLAY,
+		None,
 		Actions.ABOUT_WINDOW_DISPLAY,
 	]),
 )

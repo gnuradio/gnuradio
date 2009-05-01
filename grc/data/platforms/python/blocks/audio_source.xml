@@ -13,7 +13,7 @@
 		<name>Sample Rate</name>
 		<key>samp_rate</key>
 		<value>32000</value>
-		<type>enum</type>
+		<type>int</type>
 		<option>
 			<name>16KHz</name>
 			<key>16000</key>
@@ -44,7 +44,7 @@
 		<key>device_name</key>
 		<value></value>
 		<type>string</type>
-		<hide>#if $device_name.eval then 'none' else 'part'#</hide>
+		<hide>#if $device_name() then 'none' else 'part'#</hide>
 	</param>
 	<param>
 		<name>OK to Block</name>

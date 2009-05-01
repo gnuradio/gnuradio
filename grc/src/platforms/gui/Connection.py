@@ -106,9 +106,10 @@ class Connection(Element):
 			self.add_line((x1, y1), points[0])
 			self.add_line((x2, y2), points[0])
 
-	def draw(self, window):
+	def draw(self, gc, window):
 		"""
 		Draw the connection.
+		@param gc the graphics context
 		@param window the gtk window to draw on
 		"""
 		sink = self.get_sink()
@@ -123,8 +124,7 @@ class Connection(Element):
 		self._source_coor = source.get_coordinate()
 		#draw
 		fg_color = self.get_enabled() and Colors.FG_COLOR or Colors.DISABLED_FG_COLOR
-		Element.draw(self, window, FG_color=fg_color)
-		gc = self.get_gc()
+		Element.draw(self, gc, window, FG_color=fg_color)
 		gc.foreground = self._foreground
 		#draw arrow on sink port
 		window.draw_polygon(gc, True, self._arrow)

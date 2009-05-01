@@ -21,10 +21,11 @@
 import wx
 import sys, os
 from gnuradio import gr
+from gnuradio.gr.pubsub import pubsub
 
 default_gui_size = (200, 100)
 
-class top_block_gui(gr.top_block):
+class top_block_gui(gr.top_block, pubsub):
 	"""gr top block with wx gui app and grid sizer."""
 
 	def __init__(self, title='', size=default_gui_size, icon=None):
@@ -37,6 +38,7 @@ class top_block_gui(gr.top_block):
 		"""
 		#initialize
 		gr.top_block.__init__(self)
+		pubsub.__init__(self)
 		self._size = size
 		#set the icon
 		if icon and os.path.isfile(icon): self._icon = icon

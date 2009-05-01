@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -19,7 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os
 from ... utils import ParseXML
-from ... import utils
 from Element import Element as _Element
 from FlowGraph import FlowGraph as _FlowGraph
 from Connection import Connection as _Connection
@@ -73,17 +72,17 @@ class Platform(_Element):
 		"""
 		try: ParseXML.validate_dtd(f, self._block_dtd)
 		except ParseXML.XMLSyntaxError, e: self._exit_with_error('Block definition "%s" failed: \n\t%s'%(f, e))
-		for n in utils.listify(ParseXML.from_file(f), 'block'):
-			#inject block wrapper path
-			n['block_wrapper_path'] = f
-			block = self.Block(self._flow_graph, n)
-			key = block.get_key()
-			#test against repeated keys
-			try: assert(key not in self.get_block_keys())
-			except AssertionError: self._exit_with_error('Key "%s" already exists in blocks'%key)
-			#store the block
-			self._blocks[key] = block
-			self._blocks_n[key] = n
+		n = ParseXML.from_file(f).find('block')
+		#inject block wrapper path
+		n['block_wrapper_path'] = f
+		block = self.Block(self._flow_graph, n)
+		key = block.get_key()
+		#test against repeated keys
+		try: assert(key not in self.get_block_keys())
+		except AssertionError: self._exit_with_error('Key "%s" already exists in blocks'%key)
+		#store the block
+		self._blocks[key] = block
+		self._blocks_n[key] = n
 
 	def load_block_tree(self, block_tree):
 		"""
@@ -93,21 +92,21 @@ class Platform(_Element):
 		@param block_tree the block tree object
 		"""
 		#recursive function to load categories and blocks
-		def load_category(cat_n, parent=''):
+		def load_category(cat_n, parent=[]):
 			#add this category
-			parent = '%s/%s'%(parent, cat_n['name'])
+			parent = parent + [cat_n.find('name')]
 			block_tree.add_block(parent)
 			#recursive call to load sub categories
-			map(lambda c: load_category(c, parent), utils.listify(cat_n, 'cat'))
+			map(lambda c: load_category(c, parent), cat_n.findall('cat'))
 			#add blocks in this category
-			for block_key in utils.listify(cat_n, 'block'):
+			for block_key in cat_n.findall('block'):
 				block_tree.add_block(parent, self.get_block(block_key))
 		#load the block tree
 		f = self._block_tree
 		try: ParseXML.validate_dtd(f, BLOCK_TREE_DTD)
 		except ParseXML.XMLSyntaxError, e: self._exit_with_error('Block tree "%s" failed: \n\t%s'%(f, e))
 		#add all blocks in the tree
-		load_category(ParseXML.from_file(f)['cat'])
+		load_category(ParseXML.from_file(f).find('cat'))
 		#add all other blocks, use the catgory
 		for block in self.get_blocks():
 			#blocks with empty categories are in the xml block tree or hidden

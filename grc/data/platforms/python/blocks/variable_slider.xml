@@ -1,38 +1,55 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Variable Slider: a grc variable with key, value, min, max, step
+##Variable Slider:
+##	a combined slider and text box form
 ###################################################
  -->
 <block>
 	<name>Variable Slider</name>
 	<key>variable_slider</key>
+	<import>from grc_gnuradio.wxgui import forms</import>
 	<make>$value
-_$(id)_control = grc_wxgui.slider_$(slider_type)_control(
-	window=self.GetWin(),
-	callback=self.set_$(id),
-		#if $label.eval
+self['$id'] = $id
+self.subscribe('$id', self.set_$(id))
+self._$(id)_sizer = wx.BoxSizer(wx.VERTICAL)
+forms.text_box(
+	parent=self.GetWin(),
+	sizer=self._$(id)_sizer,
+	ps=self,
+	key='$id',
+	#if $label()
 	label=$label,
-		#else
+	#else
 	label='$id',
-		#end if
-	value=$id,
-	min=$min,
-	max=$max,
-	num_steps=$num_steps,
-	slider_length=$slider_length,
+	#end if
+	converter=forms.$(converver)(),
+	proportion=0,
 )
-#set $grid_pos = $grid_pos.eval
+forms.slider(
+	parent=self.GetWin(),
+	sizer=self._$(id)_sizer,
+	ps=self,
+	key='$id',
+	minimum=$min,
+	maximum=$max,
+	num_steps=$num_steps,
+	style=$style,
+	cast=$(converver.slider_cast),
+	proportion=1,
+)
+#set $grid_pos = $grid_pos()
 #if not grid_pos
-self.Add(_$(id)_control)
+self.Add(self._$(id)_sizer)
 #else
-self.GridAdd(_$(id)_control, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+self.GridAdd(self._$(id)_sizer, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
 #end if</make>
 	<param>
 		<name>Label</name>
 		<key>label</key>
 		<value></value>
 		<type>string</type>
+		<hide>#if $label() then 'none' else 'part'#</hide>
 	</param>
 	<param>
 		<name>Default Value</name>
@@ -60,24 +77,34 @@ self.GridAdd(_$(id)_control, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<hide>part</hide>
 	</param>
 	<param>
-		<name>Slider Length (px)</name>
-		<key>slider_length</key>
-		<value>200</value>
-		<type>int</type>
-		<hide>part</hide>
-	</param>
-	<param>
-		<name>Slider Type</name>
-		<key>slider_type</key>
-		<value>horizontal</value>
+		<name>Style</name>
+		<key>style</key>
+		<value>wx.SL_HORIZONTAL</value>
 		<type>enum</type>
+		<hide>part</hide>
 		<option>
 			<name>Horizontal</name>
-			<key>horizontal</key>
+			<key>wx.SL_HORIZONTAL</key>
 		</option>
 		<option>
 			<name>Vertical</name>
-			<key>vertical</key>
+			<key>wx.SL_VERTICAL</key>
+		</option>
+	</param>
+	<param>
+		<name>Converter</name>
+		<key>converver</key>
+		<value>float_converter</value>
+		<type>enum</type>
+		<option>
+			<name>Float</name>
+			<key>float_converter</key>
+			<opt>slider_cast:float</opt>
+		</option>
+		<option>
+			<name>Integer</name>
+			<key>int_converter</key>
+			<opt>slider_cast:int</opt>
 		</option>
 	</param>
 	<param>
