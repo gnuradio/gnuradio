@@ -80,10 +80,11 @@ class BlockTreeWindow(gtk.VBox):
 		"""
 		Add a block with category to this selection window.
 		Add only the category when block is None.
-		@param category the category list
+		@param category the category list or path string
 		@param block the block object or None
 		"""
-		category = tuple(category)[1:] #tuple is hashable
+		if isinstance(category, str): category = category.split('/')
+		category = tuple(filter(lambda x: x, category)) #tuple is hashable
 		#add category and all sub categories
 		for i, cat_name in enumerate(category):
 			sub_category = category[:i+1]
