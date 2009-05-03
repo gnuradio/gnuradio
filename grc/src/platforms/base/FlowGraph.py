@@ -31,8 +31,6 @@ class FlowGraph(Element):
 		@param platform a platforms with blocks and contrcutors
 		@return the flow graph object
 		"""
-		#hold connections and blocks
-		self._elements = list()
 		#initialize
 		Element.__init__(self, platform)
 		#inital blank import
@@ -73,18 +71,14 @@ class FlowGraph(Element):
 	def get_elements(self):
 		"""
 		Get a list of all the elements.
-		Always ensure that the options block is in the list.
+		Always ensure that the options block is in the list (only once).
 		@return the element list
 		"""
-		if self._options_block not in self._elements: self._elements.append(self._options_block)
-		#ensure uniqueness of the elements list
-		element_set = set()
-		element_list = list()
-		for element in self._elements:
-			if element not in element_set: element_list.append(element)
-			element_set.add(element)
-		#store cleaned up list
-		self._elements = element_list
+		options_block_count = self._elements.count(self._options_block)
+		if not options_block_count:
+			self._elements.append(self._options_block)
+		for i in range(options_block_count-1):
+			self._elements.remove(self._options_block)
 		return self._elements
 
 	def get_enabled_blocks(self):
@@ -142,9 +136,7 @@ class FlowGraph(Element):
 		#remove block, remove all involved connections
 		if element.is_block():
 			for port in element.get_ports():
-				map(lambda c: self.remove_element(c), port.get_connections())
-		#remove a connection
-		elif element.is_connection(): pass
+				map(self.remove_element, port.get_connections())
 		self.get_elements().remove(element)
 
 	def evaluate(self, expr):
@@ -161,7 +153,7 @@ class FlowGraph(Element):
 		All connections and blocks must be valid.
 		"""
 		for c in self.get_elements():
-			try: assert(c.is_valid())
+			try: assert c.is_valid()
 			except AssertionError: self._add_error_message('Element "%s" is not valid.'%c)
 
 	##############################################
@@ -195,7 +187,6 @@ class FlowGraph(Element):
 		connections_n = fg_n.findall('connection')
 		#create option block
 		self._options_block = self.get_parent().get_new_block(self, 'options')
-		self._options_block.get_param('id').set_value('options')
 		#build the blocks
 		for block_n in blocks_n:
 			key = block_n.find('key')

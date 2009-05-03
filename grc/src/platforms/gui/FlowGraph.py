@@ -277,10 +277,16 @@ class FlowGraph(Element):
 
 	def update(self):
 		"""
+		Removed deleted elements from the selected elements list.
 		Update highlighting so only the selected is highlighted.
 		Call update on all elements.
 		"""
 		selected_elements = self.get_selected_elements()
+		#remove deleted elements
+		for selected in selected_elements:
+			if selected not in self.get_elements():
+				selected_elements.remove(selected)
+		#set highlight and update all
 		for element in self.get_elements():
 			element.set_highlighted(element in selected_elements)
 			element.update()
@@ -299,7 +305,7 @@ class FlowGraph(Element):
 		What is selected?
 		At the given coordinate, return the elements found to be selected.
 		If coor_m is unspecified, return a list of only the first element found to be selected:
-		Iterate though the elements backwardssince top elements are at the end of the list.
+		Iterate though the elements backwards since top elements are at the end of the list.
 		If an element is selected, place it at the end of the list so that is is drawn last,
 		and hence on top. Update the selected port information.
 		@param coor the coordinate of the mouse click
@@ -317,11 +323,11 @@ class FlowGraph(Element):
 				if not coor_m: selected_port = selected_element
 				selected_element = selected_element.get_parent()
 			selected.add(selected_element)
+			#place at the end of the list
+			self.get_elements().remove(element)
+			self.get_elements().append(element)
 			#single select mode, break
-			if not coor_m:
-				self.get_elements().remove(element)
-				self.get_elements().append(element)
-				break;
+			if not coor_m: break
 		#update selected ports
 		self._old_selected_port = self._new_selected_port
 		self._new_selected_port = selected_port

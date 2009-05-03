@@ -110,19 +110,21 @@ class Block(_Block):
 		@return true for change
 		"""
 		changed = False
-		for ports in (self.get_sinks(), self.get_sources()):
-			if ports and ports[0].get_nports():
-				#find the param that controls port0
-				for param in self.get_params():
-					if not param.is_enum() and param.get_key() in ports[0]._nports:
-						#try to increment the port controller by direction
-						try:
-							value = param.evaluate()
-							value = value + direction
-							assert 0 < value
-							param.set_value(value)
-							changed = True
-						except: pass
+		#concat the nports string from the private nports settings of both port0
+		nports_str = \
+			(self.get_sinks() and self.get_sinks()[0]._nports or '') + \
+			(self.get_sources() and self.get_sources()[0]._nports or '')
+		#modify all params whose keys appear in the nports string
+		for param in self.get_params():
+			if param.is_enum() or param.get_key() not in nports_str: continue
+			#try to increment the port controller by direction
+			try:
+				value = param.evaluate()
+				value = value + direction
+				assert 0 < value
+				param.set_value(value)
+				changed = True
+			except: pass
 		return changed
 
 	def get_doc(self):
