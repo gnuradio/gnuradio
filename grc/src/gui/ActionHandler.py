@@ -150,10 +150,9 @@ class ActionHandler:
 		# Selections
 		##################################################
 		elif state == Actions.ELEMENT_SELECT:
-			self.get_flow_graph().update()
+			pass #do nothing, update routines below
 		elif state == Actions.NOTHING_SELECT:
 			self.get_flow_graph().unselect()
-			self.get_flow_graph().update()
 		##################################################
 		# Enable/Disable
 		##################################################
@@ -345,6 +344,7 @@ class ActionHandler:
 		Actions.get_action_from_name(Actions.FLOW_GRAPH_SAVE).set_sensitive(not self.get_page().get_saved())
 		self.main_window.update()
 		#draw the flow graph
+		self.get_flow_graph().update_highlighting()
 		self.get_flow_graph().queue_draw()
 
 	def update_exec_stop(self):

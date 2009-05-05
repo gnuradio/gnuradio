@@ -275,21 +275,27 @@ class FlowGraph(Element):
 		for selected_element in self.get_selected_connections() + self.get_selected_blocks():
 			selected_element.draw(gc, window)
 
+	def update_highlighting(self):
+		"""
+		Update highlighting so only the selected are highlighted.
+		"""
+		selected_elements = self.get_selected_elements()
+		for element in self.get_elements():
+			element.set_highlighted(element in selected_elements)
+
 	def update(self):
 		"""
 		Removed deleted elements from the selected elements list.
-		Update highlighting so only the selected is highlighted.
 		Call update on all elements.
 		"""
 		selected_elements = self.get_selected_elements()
+		elements = self.get_elements()
 		#remove deleted elements
 		for selected in selected_elements:
-			if selected not in self.get_elements():
-				selected_elements.remove(selected)
-		#set highlight and update all
-		for element in self.get_elements():
-			element.set_highlighted(element in selected_elements)
-			element.update()
+			if selected in elements: continue
+			selected_elements.remove(selected)
+		#update all
+		for element in elements: element.update()
 
 	##########################################################################
 	## Get Selected
