@@ -198,10 +198,12 @@ class ActionHandler:
 				self.get_page().set_saved(False)
 		elif state == Actions.ELEMENT_DELETE:
 			if self.get_flow_graph().remove_selected():
+				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.handle_states(Actions.NOTHING_SELECT)
 				self.get_page().set_saved(False)
 		elif state == Actions.ELEMENT_CREATE:
+			self.get_flow_graph().update()
 			self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 			self.handle_states(Actions.NOTHING_SELECT)
 			self.get_page().set_saved(False)
