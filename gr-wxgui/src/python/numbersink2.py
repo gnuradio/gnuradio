@@ -87,13 +87,14 @@ class _number_sink_base(gr.hier_block2):
 		self.controller = pubsub()
 		self.controller.subscribe(SAMPLE_RATE_KEY, sd.set_sample_rate)
 		self.controller.publish(SAMPLE_RATE_KEY, sd.sample_rate)
+		self.controller[AVERAGE_KEY] = average
+		self.controller[AVG_ALPHA_KEY] = avg_alpha
 		def update_avg(*args):
 			if self.controller[AVERAGE_KEY]: avg.set_taps(self.controller[AVG_ALPHA_KEY])
 			else: avg.set_taps(1.0)
+		update_avg()
 		self.controller.subscribe(AVERAGE_KEY, update_avg)
 		self.controller.subscribe(AVG_ALPHA_KEY, update_avg)
-		self.controller[AVERAGE_KEY] = average
-		self.controller[AVG_ALPHA_KEY] = avg_alpha
 		#start input watcher
 		common.input_watcher(msgq, self.controller, MSG_KEY)
 		#create window
