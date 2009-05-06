@@ -345,8 +345,13 @@ class ActionHandler:
 		#saved status
 		Actions.get_action_from_name(Actions.FLOW_GRAPH_SAVE).set_sensitive(not self.get_page().get_saved())
 		self.main_window.update()
+		try: #set the size of the flow graph area (if changed)
+			new_size = self.get_flow_graph().get_option('window_size')
+			if self.get_flow_graph().get_size() != tuple(new_size):
+				self.get_flow_graph().set_size(*new_size)
+		except: pass
 		#draw the flow graph
-		self.get_flow_graph().update_highlighting()
+		self.get_flow_graph().update_selected()
 		self.get_flow_graph().queue_draw()
 
 	def update_exec_stop(self):

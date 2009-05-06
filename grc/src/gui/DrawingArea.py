@@ -40,11 +40,12 @@ class DrawingArea(gtk.DrawingArea):
 		self._main_window.drawing_area = self
 		gtk.DrawingArea.__init__(self)
 		self.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
+		self.connect('configure-event', self._handle_window_configure)
 		self.connect('expose-event', self._handle_window_expose)
 		self.connect('motion-notify-event', self._handle_mouse_motion)
 		self.connect('button-press-event', self._handle_mouse_button_press)
 		self.connect('button-release-event', self._handle_mouse_button_release)
-		self.set_events(
+		self.add_events(
 			gtk.gdk.BUTTON_PRESS_MASK | \
 			gtk.gdk.POINTER_MOTION_MASK | \
 			gtk.gdk.BUTTON_RELEASE_MASK | \
@@ -59,8 +60,6 @@ class DrawingArea(gtk.DrawingArea):
 		self.get_focus_flag = lambda: self._focus_flag
 		self.connect('leave-notify-event', self._handle_focus_event, False)
 		self.connect('enter-notify-event', self._handle_focus_event, True)
-		#pixmap for drawing
-		self.pixmap = None
 
 	##########################################################################
 	## Handlers
@@ -105,14 +104,19 @@ class DrawingArea(gtk.DrawingArea):
 			coordinate=(event.x, event.y),
 		)
 
+	def _handle_window_configure(self, widget, event):
+		"""
+		Called when the window is resized.
+		Create a new pixmap for background buffer.
+		"""
+		width, height = self.get_size_request()
+		self.pixmap = gtk.gdk.Pixmap(self.window, width, height, -1)
+
 	def _handle_window_expose(self, widget, event):
 		"""
-		Called when window is exposed, resized, or queue_draw is called.
+		Called when window is exposed, or queue_draw is called.
+		Double buffering: draw to pixmap, then draw pixmap to window.
 		"""
 		gc = self.window.new_gc()
-		width, height = self.get_size_request()
-		if not self.pixmap or (width, height) != self.pixmap.get_size():
-			self.pixmap = gtk.gdk.Pixmap(self.window, width, height, -1)
-		#double buffering: draw to pixmap, then draw pixmap
 		self._main_window.get_flow_graph().draw(gc, self.pixmap)
 		self.window.draw_drawable(gc, self.pixmap, 0, 0, 0, 0, -1, -1)

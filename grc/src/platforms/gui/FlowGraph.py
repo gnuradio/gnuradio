@@ -247,10 +247,6 @@ class FlowGraph(Element):
 		Draw all of the elements in this flow graph onto the pixmap.
 		Draw the pixmap to the drawable window of this flow graph.
 		"""
-		try: #set the size of the flow graph area (if changed)
-			new_size = self.get_option('window_size')
-			if self.get_size() != tuple(new_size): self.set_size(*new_size)
-		except: pass
 		W,H = self.get_size()
 		#draw the background
 		gc.foreground = Colors.BACKGROUND_COLOR
@@ -275,18 +271,10 @@ class FlowGraph(Element):
 		for selected_element in self.get_selected_connections() + self.get_selected_blocks():
 			selected_element.draw(gc, window)
 
-	def update_highlighting(self):
+	def update_selected(self):
 		"""
+		Remove deleted elements from the selected elements list.
 		Update highlighting so only the selected are highlighted.
-		"""
-		selected_elements = self.get_selected_elements()
-		for element in self.get_elements():
-			element.set_highlighted(element in selected_elements)
-
-	def update(self):
-		"""
-		Removed deleted elements from the selected elements list.
-		Call update on all elements.
 		"""
 		selected_elements = self.get_selected_elements()
 		elements = self.get_elements()
@@ -294,8 +282,15 @@ class FlowGraph(Element):
 		for selected in selected_elements:
 			if selected in elements: continue
 			selected_elements.remove(selected)
-		#update all
-		for element in elements: element.update()
+		#update highlighting
+		for element in elements:
+			element.set_highlighted(element in selected_elements)
+
+	def update(self):
+		"""
+		Call update on all elements.
+		"""
+		for element in self.get_elements(): element.update()
 
 	##########################################################################
 	## Get Selected
