@@ -76,6 +76,7 @@ self.$(id).set_lo_offset($lo_offset)
 	<param>
 		<name>Gain (dB)</name>
 		<key>gain</key>
+		<value>0</value>
 		<type>real</type>
 	</param>
 	<sink>

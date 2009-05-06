@@ -56,6 +56,7 @@ class _simple_source(gr.hier_block2):
 		self._get_u().set_decim_rate(int(decim))
 		if self._no_hb: #set the BW to half the sample rate
 			self._subdev.set_bw(self._get_u().converter_rate()/decim/2)
+	def set_lo_offset(self, lo_offset): self._subdev.set_lo_offset(lo_offset)
 	def set_frequency(self, frequency, verbose=False):
 		self._set_frequency(
 			chan=0, #ddc0
@@ -102,6 +103,7 @@ class _simple_sink(gr.hier_block2):
 			frequency=frequency,
 			verbose=verbose,
 		)
+	def set_lo_offset(self, lo_offset): self._subdev.set_lo_offset(lo_offset)
 	def set_gain(self, gain): self._subdev.set_gain(gain)
 	def set_enable(self, enable): self._subdev.set_enable(enable)
 	def set_auto_tr(self, auto_tr): self._subdev.set_auto_tr(auto_tr)

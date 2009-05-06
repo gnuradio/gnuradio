@@ -62,7 +62,7 @@ self.$(id).set_lo_offset($lo_offset)
 		<key>frequency</key>
 		<type>real</type>
 	</param>
-    <param>
+	<param>
 		<name>LO Offset (Hz)</name>
 		<key>lo_offset</key>
 		<value>float('inf')</value>
@@ -76,6 +76,7 @@ self.$(id).set_lo_offset($lo_offset)
 	<param>
 		<name>Gain (dB)</name>
 		<key>gain</key>
+		<value>0</value>
 		<type>real</type>
 	</param>
 	<source>

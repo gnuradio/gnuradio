@@ -16,7 +16,13 @@ self.$(id).set_decim_rate($decimation)
 self.$(id).set_frequency_a($frequency_a, verbose=True)
 self.$(id).set_frequency_b($frequency_b, verbose=True)
 self.$(id).set_gain_a($gain_a)
-self.$(id).set_gain_b($gain_b)</make>
+self.$(id).set_gain_b($gain_b)
+#if $lo_offset_a() != float('inf')
+self.$(id).set_lo_offset_a($lo_offset_a)
+#end if
+#if $lo_offset_b() != float('inf')
+self.$(id).set_lo_offset_b($lo_offset_b)
+#end if</make>
 	<callback>set_decim_rate($decimation)</callback>
 	<callback>set_frequency_a($frequency_a)</callback>
 	<callback>set_frequency_b($frequency_b)</callback>
@@ -68,23 +74,47 @@ self.$(id).set_gain_b($gain_b)</make>
 		<type>int</type>
 	</param>
 	<param>
-		<name>Frequency A</name>
+		<name>Frequency A (Hz)</name>
 		<key>frequency_a</key>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Frequency B</name>
+		<name>Frequency B (Hz)</name>
 		<key>frequency_b</key>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Gain A</name>
+		<name>LO Offset A (Hz)</name>
+		<key>lo_offset_a</key>
+		<value>float('inf')</value>
+		<type>real</type>
+		<hide>#if $lo_offset_a() == float('inf') then 'part' else 'none'#</hide>
+		<option>
+			<name>Default</name>
+			<key>float('inf')</key>
+		</option>
+	</param>
+	<param>
+		<name>LO Offset B (Hz)</name>
+		<key>lo_offset_b</key>
+		<value>float('inf')</value>
+		<type>real</type>
+		<hide>#if $lo_offset_b() == float('inf') then 'part' else 'none'#</hide>
+		<option>
+			<name>Default</name>
+			<key>float('inf')</key>
+		</option>
+	</param>
+	<param>
+		<name>Gain A (dB)</name>
 		<key>gain_a</key>
+		<value>0</value>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Gain B</name>
+		<name>Gain B (dB)</name>
 		<key>gain_b</key>
+		<value>0</value>
 		<type>real</type>
 	</param>
 <!--

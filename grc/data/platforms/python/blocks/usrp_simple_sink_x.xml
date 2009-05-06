@@ -17,7 +17,11 @@ self.$(id).set_enable(True)
 #end if
 #if $transmit.auto_tr
 self.$(id).set_auto_tr(True)
+#end if
+#if $lo_offset() != float('inf')
+self.$(id).set_lo_offset($lo_offset)
 #end if</make>
+	<callback>set_lo_offset($lo_offset)</callback>
 	<callback>set_interp_rate($interpolation)</callback>
 	<callback>set_frequency($frequency)</callback>
 	<callback>set_gain($gain)</callback>
@@ -48,13 +52,25 @@ self.$(id).set_auto_tr(True)
 		<type>int</type>
 	</param>
 	<param>
-		<name>Frequency</name>
+		<name>Frequency (Hz)</name>
 		<key>frequency</key>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Gain</name>
+		<name>LO Offset (Hz)</name>
+		<key>lo_offset</key>
+		<value>float('inf')</value>
+		<type>real</type>
+		<hide>#if $lo_offset() == float('inf') then 'part' else 'none'#</hide>
+		<option>
+			<name>Default</name>
+			<key>float('inf')</key>
+		</option>
+	</param>
+	<param>
+		<name>Gain (dB)</name>
 		<key>gain</key>
+		<value>0</value>
 		<type>real</type>
 	</param>
 	<param>
@@ -102,6 +118,8 @@ self.$(id).set_auto_tr(True)
 	</sink>
 	<doc>
 The USRP sink inputs 128 Megasamples per second / interpolation.
+
+Input amplitude should be between 0 and 32767.
 
 Flex RF boards only: The "Transmit Setting" must be configured. \
 When set to "Enable" the transmitter is always on. \

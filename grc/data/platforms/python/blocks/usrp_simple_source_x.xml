@@ -14,7 +14,11 @@ self.$(id).set_format(width=$format.width, shift=$format.shift)
 #end if
 self.$(id).set_decim_rate($decimation)
 self.$(id).set_frequency($frequency, verbose=True)
-self.$(id).set_gain($gain)</make>
+self.$(id).set_gain($gain)
+#if $lo_offset() != float('inf')
+self.$(id).set_lo_offset($lo_offset)
+#end if</make>
+	<callback>set_lo_offset($lo_offset)</callback>
 	<callback>set_decim_rate($decimation)</callback>
 	<callback>set_frequency($frequency)</callback>
 	<callback>set_gain($gain)</callback>
@@ -64,13 +68,25 @@ self.$(id).set_gain($gain)</make>
 		<type>int</type>
 	</param>
 	<param>
-		<name>Frequency</name>
+		<name>Frequency (Hz)</name>
 		<key>frequency</key>
 		<type>real</type>
 	</param>
 	<param>
-		<name>Gain</name>
+		<name>LO Offset (Hz)</name>
+		<key>lo_offset</key>
+		<value>float('inf')</value>
+		<type>real</type>
+		<hide>#if $lo_offset() == float('inf') then 'part' else 'none'#</hide>
+		<option>
+			<name>Default</name>
+			<key>float('inf')</key>
+		</option>
+	</param>
+	<param>
+		<name>Gain (dB)</name>
 		<key>gain</key>
+		<value>0</value>
 		<type>real</type>
 	</param>
 	<param>

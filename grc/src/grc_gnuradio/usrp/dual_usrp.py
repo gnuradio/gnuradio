@@ -67,6 +67,8 @@ class _dual_source(gr.hier_block2):
 			frequency=frequency,
 			verbose=verbose,
 		)
+	def set_lo_offset_a(self, lo_offset): self._subdev_a.set_lo_offset(lo_offset)
+	def set_lo_offset_b(self, lo_offset): self._subdev_b.set_lo_offset(lo_offset)
 	def set_gain_a(self, gain): self._subdev_a.set_gain(gain)
 	def set_gain_b(self, gain): self._subdev_b.set_gain(gain)
 
@@ -117,6 +119,8 @@ class _dual_sink(gr.hier_block2):
 			frequency=frequency,
 			verbose=verbose,
 		)
+	def set_lo_offset_a(self, lo_offset): self._subdev_a.set_lo_offset(lo_offset)
+	def set_lo_offset_b(self, lo_offset): self._subdev_b.set_lo_offset(lo_offset)
 	def set_gain_a(self, gain): self._subdev_a.set_gain(gain)
 	def set_gain_b(self, gain): self._subdev_b.set_gain(gain)
 	def set_enable_a(self, enable): self._subdev_a.set_enable(enable)
