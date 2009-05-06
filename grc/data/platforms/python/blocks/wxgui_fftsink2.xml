@@ -12,6 +12,7 @@
 	self.GetWin(),
 	baseband_freq=$baseband_freq,
 	y_per_div=$y_per_div,
+	y_divs=$y_divs,
 	ref_level=$ref_level,
 	sample_rate=$samp_rate,
 	fft_size=$fft_size,
@@ -88,6 +89,12 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 			<name>20 dB</name>
 			<key>20</key>
 		</option>
+	</param>
+	<param>
+		<name>Y Divs</name>
+		<key>y_divs</key>
+		<value>10</value>
+		<type>int</type>
 	</param>
 	<param>
 		<name>Ref Level (dB)</name>
