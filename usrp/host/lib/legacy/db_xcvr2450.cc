@@ -1,5 +1,5 @@
 //
-// Copyright 2008 Free Software Foundation, Inc.
+// Copyright 2008,2009 Free Software Foundation, Inc.
 // 
 // This file is part of GNU Radio
 // 
@@ -21,6 +21,8 @@
 #include <db_xcvr2450.h>
 #include <db_base_impl.h>
 #include <cmath>
+#include <boost/thread.hpp>
+#include <boost/weak_ptr.hpp>
 
 #if 0
 #define LO_OFFSET 4.25e6
@@ -43,11 +45,122 @@
  */
 
 
+
+// TX IO Pins
+#define HB_PA_OFF      (1 << 15)    // 5GHz PA, 1 = off, 0 = on
+#define LB_PA_OFF      (1 << 14)    // 2.4GHz PA, 1 = off, 0 = on
+#define ANTSEL_TX1_RX2 (1 << 13)    // 1 = Ant 1 to TX, Ant 2 to RX
+#define ANTSEL_TX2_RX1 (1 << 12)    // 1 = Ant 2 to TX, Ant 1 to RX
+#define TX_EN          (1 << 11)    // 1 = TX on, 0 = TX off
+#define AD9515DIV      (1 << 4)     // 1 = Div  by 3, 0 = Div by 2
+
+#define TX_OE_MASK HB_PA_OFF|LB_PA_OFF|ANTSEL_TX1_RX2|ANTSEL_TX2_RX1|TX_EN|AD9515DIV
+#define TX_SAFE_IO HB_PA_OFF|LB_PA_OFF|ANTSEL_TX1_RX2|AD9515DIV
+
+// RX IO Pins
+#define LOCKDET (1 << 15)           // This is an INPUT!!!
+#define EN      (1 << 14)
+#define RX_EN   (1 << 13)           // 1 = RX on, 0 = RX off
+#define RX_HP   (1 << 12)
+#define RX_OE_MASK EN|RX_EN|RX_HP
+#define RX_SAFE_IO EN
+
+struct xcvr2450_key {
+  std::string serial_no;
+  int which;
+
+  bool operator==(const xcvr2450_key &x){
+    return x.serial_no ==serial_no && x.which == which;
+  }
+};
+
+class xcvr2450
+{
+private:
+  usrp_basic *d_raw_usrp;
+  int d_which;
+
+  bool d_is_shutdown;
+  int d_spi_format, d_spi_enable;
+  
+  int d_mimo, d_int_div, d_frac_div, d_highband, d_five_gig;
+  int d_cp_current, d_ref_div, d_rssi_hbw;
+  int d_txlpf_bw, d_rxlpf_bw, d_rxlpf_fine, d_rxvga_ser;
+  int d_rssi_range, d_rssi_mode, d_rssi_mux;
+  int d_rx_hp_pin, d_rx_hpf, d_rx_ant;
+  int d_tx_ant, d_txvga_ser, d_tx_driver_lin;
+  int d_tx_vga_lin, d_tx_upconv_lin, d_tx_bb_gain;
+  int d_pabias_delay, d_pabias, rx_rf_gain, rx_bb_gain, d_txgain;
+  int d_rx_rf_gain, d_rx_bb_gain;
+
+  int d_reg_standby, d_reg_int_divider, d_reg_frac_divider, d_reg_bandselpll;
+  int d_reg_cal, dsend_reg, d_reg_lpf, d_reg_rxrssi_ctrl, d_reg_txlin_gain;
+  int d_reg_pabias, d_reg_rxgain, d_reg_txgain;
+
+  int d_ad9515_div;
+
+  void _set_rfagc(float gain);
+  void _set_ifagc(float gain);
+  void _set_pga(float pga_gain);
+
+public:
+  usrp_basic *usrp(){
+    return d_raw_usrp;
+  }
+
+  xcvr2450(usrp_basic_sptr usrp, int which);
+  ~xcvr2450();
+  void shutdown();
+
+  void set_reg_standby();
+  
+  // Integer-Divider Ratio (3)
+  void set_reg_int_divider();
+  
+  // Fractional-Divider Ratio (4)
+  void set_reg_frac_divider();
+  
+  // Band Select and PLL (5)
+  void set_reg_bandselpll();
+  
+  // Calibration (6)
+  void set_reg_cal();
+
+  // Lowpass Filter (7)
+  void set_reg_lpf();
+  
+  // Rx Control/RSSI (8)
+  void set_reg_rxrssi_ctrl();
+  
+  // Tx Linearity/Baseband Gain (9)
+  void set_reg_txlin_gain();
+  
+  // PA Bias DAC (10)
+  void set_reg_pabias();
+  
+  // Rx Gain (11)
+  void set_reg_rxgain();
+  
+  // Tx Gain (12)
+  void set_reg_txgain();
+  
+  // Send register write to SPI
+  void send_reg(int v);
+
+  void set_gpio();
+  bool lock_detect();
+  bool set_rx_gain(float gain);
+  bool set_tx_gain(float gain);
+
+  struct freq_result_t set_freq(double target_freq);
+};
+
+
 /*****************************************************************************/
 
 
 xcvr2450::xcvr2450(usrp_basic_sptr _usrp, int which)
-  : d_weak_usrp(_usrp), d_which(which)
+  : d_raw_usrp(_usrp.get()), d_which(which), d_is_shutdown(false)
 {
   // Handler for Tv Rx daughterboards.
   // 
@@ -126,22 +239,21 @@ xcvr2450::xcvr2450(usrp_basic_sptr _usrp, int which)
 xcvr2450::~xcvr2450()
 {
   //printf("xcvr2450::destructor\n");
-  usrp()->common_write_atr_txval(C_TX, d_which, TX_SAFE_IO);
-  usrp()->common_write_atr_rxval(C_TX, d_which, TX_SAFE_IO);
-  usrp()->common_write_atr_txval(C_RX, d_which, RX_SAFE_IO);
-  usrp()->common_write_atr_rxval(C_RX, d_which, RX_SAFE_IO);
+  shutdown();
 }
 
-bool
-xcvr2450::operator==(xcvr2450_key x)
+void
+xcvr2450::shutdown()
 {
-  if((x.serial_no == usrp()->serial_number()) && (x.which == d_which)) {
-    return true;
-  }
-  else {
-    return false;
+  if (!d_is_shutdown){
+    d_is_shutdown = true;
+    usrp()->common_write_atr_txval(C_TX, d_which, TX_SAFE_IO);
+    usrp()->common_write_atr_rxval(C_TX, d_which, TX_SAFE_IO);
+    usrp()->common_write_atr_txval(C_RX, d_which, RX_SAFE_IO);
+    usrp()->common_write_atr_rxval(C_RX, d_which, RX_SAFE_IO);
   }
 }
+
 
 void
 xcvr2450::set_reg_standby()
@@ -361,7 +473,7 @@ xcvr2450::set_freq(double target_freq)
   double div = vco_freq/phdet_freq;
   d_int_div = int(floor(div));
   d_frac_div = int((div-d_int_div)*65536.0);
-  double actual_freq = phdet_freq*(d_int_div+(d_frac_div/65536.0))/scaler;
+  // double actual_freq = phdet_freq*(d_int_div+(d_frac_div/65536.0))/scaler;
   
   //printf("RF=%f VCO=%f R=%d PHD=%f DIV=%3.5f I=%3d F=%5d ACT=%f\n",
   //	 target_freq, vco_freq, d_ref_div, phdet_freq,
@@ -453,32 +565,46 @@ xcvr2450::set_tx_gain(float gain)
 /*****************************************************************************/
 
 
-//_xcvr2450_inst = weakref.WeakValueDictionary()
-std::vector<xcvr2450_sptr> _xcvr2450_inst;
+struct xcvr2450_table_entry {
+  xcvr2450_key 			key;
+  boost::weak_ptr<xcvr2450>	value;
 
-xcvr2450_sptr
+  xcvr2450_table_entry(const xcvr2450_key &_key, boost::weak_ptr<xcvr2450> _value)
+    : key(_key), value(_value) {}
+};
+
+typedef std::vector<xcvr2450_table_entry> xcvr2450_table;
+
+static boost::mutex s_table_mutex;
+static xcvr2450_table s_table;
+
+static xcvr2450_sptr
 _get_or_make_xcvr2450(usrp_basic_sptr usrp, int which)
 {
-  xcvr2450_sptr inst;
   xcvr2450_key key = {usrp->serial_number(), which};
-  std::vector<xcvr2450_sptr>::iterator itr; // =
-  //std::find(_xcvr2450_inst.begin(), _xcvr2450_inst.end(), key);
 
-  for(itr = _xcvr2450_inst.begin(); itr != _xcvr2450_inst.end(); itr++) {
-    if(*(*itr) == key) {
-      //printf("Using existing xcvr2450 instance\n");
-      inst = *itr;
-      break;
+  boost::mutex::scoped_lock	guard(s_table_mutex);
+
+  for (xcvr2450_table::iterator p = s_table.begin(); p != s_table.end();){
+    if (p->value.expired())	// weak pointer is now dead
+      p = s_table.erase(p);	// erase it
+    else {
+      if (key == p->key){	// found it
+	return xcvr2450_sptr(p->value);
+      }
+      else		        
+	++p;			// keep looking
     }
   }
-  
-  if(itr == _xcvr2450_inst.end()) {
-    //printf("Creating new xcvr2450 instance\n");
-    inst = xcvr2450_sptr(new xcvr2450(usrp, which));
-    _xcvr2450_inst.push_back(inst);
-  }
 
-  return inst;
+  // We don't have the xcvr2450 we're looking for
+
+  // create a new one and stick it in the table.
+  xcvr2450_sptr r(new xcvr2450(usrp, which));
+  xcvr2450_table_entry t(key, r);
+  s_table.push_back(t);
+
+  return r;
 }
 
 
@@ -503,6 +629,22 @@ db_xcvr2450_base::db_xcvr2450_base(usrp_basic_sptr usrp, int which)
 
 db_xcvr2450_base::~db_xcvr2450_base()
 {
+}
+
+void
+db_xcvr2450_base::shutdown_common()
+{
+  // If the usrp_basic in the xcvr2450 is the same as the usrp_basic
+  // in the daughterboard, shutdown the xcvr now (when only one of Tx
+  // and Rx is open, this is always true).
+
+  if (d_xcvr->usrp() == usrp()){
+    //std::cerr << "db_xcvr2450_base::shutdown_common: same -> shutting down\n";
+    d_xcvr->shutdown();
+  }
+  else {
+    //std::cerr << "db_xcvr2450_base::shutdown_common: different -> ignoring\n";
+  }
 }
 
 struct freq_result_t
@@ -552,6 +694,16 @@ db_xcvr2450_tx::db_xcvr2450_tx(usrp_basic_sptr usrp, int which)
 
 db_xcvr2450_tx::~db_xcvr2450_tx()
 {
+  shutdown();
+}
+
+void
+db_xcvr2450_tx::shutdown()
+{
+  if (!d_is_shutdown){
+    d_is_shutdown = true;
+    shutdown_common();
+  }
 }
 
 float
@@ -601,6 +753,16 @@ db_xcvr2450_rx::db_xcvr2450_rx(usrp_basic_sptr usrp, int which)
 
 db_xcvr2450_rx::~db_xcvr2450_rx()
 {
+  shutdown();
+}
+
+void
+db_xcvr2450_rx::shutdown()
+{
+  if (!d_is_shutdown){
+    d_is_shutdown = true;
+    shutdown_common();
+  }
 }
 
 float
