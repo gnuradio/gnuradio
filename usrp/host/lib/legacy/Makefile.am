@@ -143,6 +143,15 @@ endif
 
 include_HEADERS = 			\
 	db_base.h			\
+	db_basic.h			\
+	db_dbs_rx.h			\
+	db_dtt754.h			\
+	db_dtt768.h			\
+	db_flexrf.h			\
+	db_flexrf_mimo.h		\
+	db_tv_rx.h			\
+	db_util.h			\
+	db_xcvr2450.h			\
 	usrp_basic.h			\
 	usrp_bytesex.h			\
 	usrp_config.h			\
@@ -156,17 +165,8 @@ include_HEADERS = 			\
 noinst_HEADERS =			\
 	ad9862.h			\
 	db_base_impl.h			\
-	db_basic.h			\
 	db_boards.h			\
-	db_dbs_rx.h			\
-	db_dtt754.h			\
-	db_dtt768.h			\
-	db_flexrf.h			\
-	db_flexrf_mimo.h		\
-	db_tv_rx.h			\
-	db_util.h			\
 	db_wbx.h			\
-	db_xcvr2450.h			\
 	fusb.h				\
 	fusb_darwin.h			\
 	fusb_generic.h			\

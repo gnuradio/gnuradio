@@ -26,6 +26,7 @@ AC_DEFUN([GRC_GR_USRP2],[
 
     AC_CONFIG_FILES([ \
         gr-usrp2/Makefile \
+	gr-usrp2/gnuradio-usrp2.pc \
         gr-usrp2/src/Makefile \
         gr-usrp2/src/run_tests \
     ])

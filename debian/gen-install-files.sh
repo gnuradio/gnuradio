@@ -2,6 +2,23 @@
 
 EXTRACT=dtools/bin/extract_install_filenames
 
+# libusrp-dev
+NAME=debian/libusrp-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT usrp/host/lib/legacy/Makefile include_HEADERS >>$NAME
+$EXTRACT usrp/firmware/include/Makefile include_HEADERS >>$NAME
+echo usr/lib/libusrp.so >>$NAME
+echo usr/lib/pkgconfig/usrp.pc >>$NAME
+
+# libusrp2-dev
+NAME=debian/libusrp2-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT usrp2/host/include/usrp2/Makefile usrp2include_HEADERS >>$NAME
+echo usr/lib/libusrp2.so >>$NAME
+echo usr/lib/pkgconfig/usrp2.pc >>$NAME
+
 # libgnuradio-core-dev
 NAME=debian/libgnuradio-core-dev.install
 rm -f $NAME
@@ -18,19 +35,78 @@ $EXTRACT gnuradio-core/src/lib/reed-solomon/Makefile grinclude_HEADERS >>$NAME
 $EXTRACT gnuradio-core/src/lib/reed-solomon/Makefile swiginclude_HEADERS >>$NAME
 $EXTRACT gnuradio-core/src/lib/runtime/Makefile grinclude_HEADERS >>$NAME
 $EXTRACT gnuradio-core/src/lib/runtime/Makefile swiginclude_HEADERS >>$NAME
+$EXTRACT gnuradio-core/src/lib/hier/Makefile grinclude_HEADERS >>$NAME
+$EXTRACT gnuradio-core/src/lib/hier/Makefile swiginclude_HEADERS >>$NAME
 $EXTRACT gnuradio-core/src/lib/swig/Makefile grinclude_HEADERS >>$NAME
 $EXTRACT gnuradio-core/src/lib/swig/Makefile swiginclude_HEADERS >>$NAME
 echo usr/lib/libgnuradio-core.so >>$NAME
 echo usr/lib/pkgconfig/gnuradio-core.pc >>$NAME
 
-# libmblock-dev
-NAME=debian/libmblock-dev.install
+# libgnuradio-audio-alsa
+NAME=debian/libgnuradio-audio-alsa.install
 rm -f $NAME
 touch $NAME
-$EXTRACT mblock/src/lib/Makefile include_HEADERS >>$NAME
-$EXTRACT mblock/src/lib/Makefile swiginclude_HEADERS >>$NAME
-echo usr/lib/libmblock.so >>$NAME
-echo usr/lib/pkgconfig/mblock.pc >>$NAME
+$EXTRACT gr-audio-alsa/src/Makefile lib_LTLIBRARIES >>$NAME
+$EXTRACT gr-audio-alsa/src/Makefile lib_LTLIBRARIES | \
+    sed -e 's/\.la$/.so.*/' >>$NAME
+echo etc/gnuradio/conf.d/gr-audio-alsa.conf >>$NAME
+
+# libgnuradio-audio-alsa-dev
+NAME=debian/libgnuradio-audio-alsa-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-audio-alsa/src/Makefile grinclude_HEADERS >>$NAME
+echo usr/lib/libgnuradio-audio-alsa.so >>$NAME
+echo usr/lib/pkgconfig/gr-audio-alsa.pc >>$NAME
+
+# libgnuradio-qtgui
+NAME=debian/libgnuradio-qtgui.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-qtgui/src/lib/Makefile lib_LTLIBRARIES >>$NAME
+$EXTRACT gr-qtgui/src/lib/Makefile lib_LTLIBRARIES | \
+    sed -e 's/\.la$/.so.*/' >>$NAME
+
+# libgnuradio-qtgui-dev
+NAME=debian/libgnuradio-qtgui-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-qtgui/src/lib/Makefile grinclude_HEADERS >>$NAME
+echo usr/lib/libgnuradio-qtgui.so >>$NAME
+
+# libgnuradio-usrp
+NAME=debian/libgnuradio-usrp.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-usrp/src/Makefile lib_LTLIBRARIES >>$NAME
+$EXTRACT gr-usrp/src/Makefile lib_LTLIBRARIES | \
+    sed -e 's/\.la$/.so.*/' >>$NAME
+echo usr/lib/pkgconfig/gnuradio-usrp.pc >> $NAME
+
+# libgnuradio-usrp-dev
+NAME=debian/libgnuradio-usrp-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-usrp/src/Makefile grinclude_HEADERS >>$NAME
+echo usr/lib/libgnuradio-usrp.so >>$NAME
+
+# libgnuradio-usrp2
+NAME=debian/libgnuradio-usrp2.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-usrp2/src/Makefile lib_LTLIBRARIES >>$NAME
+$EXTRACT gr-usrp2/src/Makefile lib_LTLIBRARIES | \
+    sed -e 's/\.la$/.so.*/' >>$NAME
+echo usr/lib/pkgconfig/gnuradio-usrp2.pc >> $NAME
+
+# libgnuradio-usrp2-dev
+NAME=debian/libgnuradio-usrp2-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-usrp2/src/Makefile grinclude_HEADERS >>$NAME
+echo usr/lib/libgnuradio-usrp2.so >>$NAME
+
+exit 0
 
 # python-gnuradio-core
 NAME=debian/python-gnuradio-core.install
@@ -47,15 +123,6 @@ $EXTRACT gnuradio-core/src/python/gnuradio/blks2impl/Makefile grblkspython_PYTHO
 $EXTRACT gnuradio-core/src/python/gnuradio/gru/Makefile grblkspython_PYTHON >>$NAME
 $EXTRACT gnuradio-core/src/python/gnuradio/gruimpl/Makefile grupython_PYTHON >>$NAME
 $EXTRACT gnuradio-core/src/python/gnuradio/vocoder/Makefile grvocoderpython_PYTHON >>$NAME
-
-# libusrp-dev
-NAME=debian/libusrp-dev.install
-rm -f $NAME
-touch $NAME
-$EXTRACT usrp/host/lib/legacy/Makefile include_HEADERS >>$NAME
-$EXTRACT usrp/firmware/include/Makefile include_HEADERS >>$NAME
-echo usr/lib/libusrp.so >>$NAME
-echo usr/lib/pkgconfig/usrp.pc >>$NAME
 
 # libusrp-inband-dev
 NAME=debian/libusrp-inband-dev.install
@@ -103,23 +170,6 @@ $EXTRACT gr-atsc/src/lib/Makefile ourlib_LTLIBRARIES >>$NAME
 $EXTRACT gr-atsc/src/lib/Makefile ourlib_LTLIBRARIES | \
     sed -e 's/\.la$/.so/' >>$NAME
 $EXTRACT gr-atsc/src/python/Makefile ourdata_DATA >>$NAME
-
-# libgnuradio-audio-alsa
-NAME=debian/libgnuradio-audio-alsa.install
-rm -f $NAME
-touch $NAME
-$EXTRACT gr-audio-alsa/src/Makefile lib_LTLIBRARIES >>$NAME
-$EXTRACT gr-audio-alsa/src/Makefile lib_LTLIBRARIES | \
-    sed -e 's/\.la$/.so.*/' >>$NAME
-echo etc/gnuradio/conf.d/gr-audio-alsa.conf >>$NAME
-
-# libgnuradio-audio-alsa-dev
-NAME=debian/libgnuradio-audio-alsa-dev.install
-rm -f $NAME
-touch $NAME
-$EXTRACT gr-audio-alsa/src/Makefile grinclude_HEADERS >>$NAME
-echo usr/lib/libgnuradio-audio-alsa.so >>$NAME
-echo usr/lib/pkgconfig/gr-audio-alsa.pc >>$NAME
 
 # python-gnuradio-audio-alsa
 NAME=debian/python-gnuradio-audio-alsa.install

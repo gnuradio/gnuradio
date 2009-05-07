@@ -40,10 +40,10 @@ endif
 EXTRA_DIST = spectrumdisplayform.ui
 
 # Build the normal library for C++ apps to link against
-lib_LTLIBRARIES = libqtgui.la
+lib_LTLIBRARIES = libgnuradio-qtgui.la
 
 # These are the source files that go into the shared library
-libqtgui_la_SOURCES = 	\
+libgnuradio_qtgui_la_SOURCES = 	\
 	FrequencyDisplayPlot.cc 		\
 	TimeDomainDisplayPlot.cc		\
 	WaterfallDisplayPlot.cc			\
@@ -90,9 +90,9 @@ else
 endif
 
 # magic flags
-libqtgui_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
+libgnuradio_qtgui_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
 
-libqtgui_la_LIBADD = 		\
+libgnuradio_qtgui_la_LIBADD = 		\
 	$(GNURADIO_CORE_LA)	\
 	-lstdc++		\
 	$(QT_LIBS)
@@ -112,7 +112,7 @@ qtgui_pythondir_category =	\
 
 # additional libraries for linking with the SWIG-generated library
 qtgui_la_swig_libadd =		\
-	libqtgui.la
+	libgnuradio-qtgui.la
 
 include $(top_srcdir)/Makefile.swig
 

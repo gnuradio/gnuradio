@@ -48,7 +48,7 @@ configure-stamp:
 		--enable-doxygen --enable-html-docs \
 		--sysconfdir=/etc --enable-all-components \
 		--disable-gr-audio-osx --disable-gr-audio-windows \
-		--disable-gr-qtgui --disable-gcell --disable-gr-gcell \
+		--disable-gcell --disable-gr-gcell \
 		--disable-gr-comedi --disable-usrp2-firmware
 	touch configure-stamp
 
@@ -61,7 +61,7 @@ extract-stamp: configure-stamp debian/gen-install-files.sh
 build: build-stamp
 build-stamp: extract-stamp
 
-	$(MAKE) 
+	$(MAKE) -j
 	$(MAKE) check
 	touch $@
 
@@ -85,6 +85,10 @@ install-stamp: build-stamp
 	install -m 0644 -D debian/libusrp.udev \
 		debian/tmp/etc/udev/rules.d/40-usrp.rules
 
+	: # Deposit rule to allow group 'usrp' access to USRP2 hardware
+	install -m 0644 -D debian/libusrp2.limits \
+		debian/tmp/etc/security/limits.d/libusrp2.limits
+
 	dh_install --sourcedir=debian/tmp
 	touch $@
 
@@ -107,7 +111,7 @@ binary-common:
 	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
-	dh_builddeb
+	dh_builddeb --destdir=../debfiles
 
 # Build architecture independant packages using the common target.
 binary-indep: build install

@@ -49,9 +49,9 @@ AM_CPPFLAGS = \
 	$(USRP2_INCLUDES) \
 	$(WITH_INCLUDES)
 
-lib_LTLIBRARIES = libgr-usrp2.la
+lib_LTLIBRARIES = libgnuradio-usrp2.la
 
-libgr_usrp2_la_SOURCES = \
+libgnuradio_usrp2_la_SOURCES = \
 	rx_16sc_handler.cc \
 	rx_32fc_handler.cc \
 	usrp2_base.cc \
@@ -62,7 +62,7 @@ libgr_usrp2_la_SOURCES = \
 	usrp2_sink_16sc.cc \
 	usrp2_sink_32fc.cc
 
-libgr_usrp2_la_LIBADD = \
+libgnuradio_usrp2_la_LIBADD = \
 	$(USRP2_LA) \
 	$(GNURADIO_CORE_LA) 
 
@@ -102,7 +102,7 @@ usrp2_swig_args =		\
 
 # additional libraries for linking with the SWIG-generated library
 usrp2_la_swig_libadd =		\
-	libgr-usrp2.la
+	libgnuradio-usrp2.la
 
 include $(top_srcdir)/Makefile.swig
 

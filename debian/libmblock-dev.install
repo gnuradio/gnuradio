@@ -1,0 +1,3 @@
+usr/include/mblock/*
+usr/lib/libmblock.so
+usr/lib/pkgconfig/mblock.pc
