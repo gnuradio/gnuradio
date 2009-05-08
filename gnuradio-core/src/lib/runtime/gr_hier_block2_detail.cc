@@ -423,27 +423,40 @@ gr_hier_block2_detail::flatten_aux(gr_flat_flowgraph_sptr sfg) const
 	sfg->connect(*s, *d);
       }
     }
-
   }
 
   // Construct unique list of blocks used either in edges, inputs, 
   // outputs, or by themselves.  I still hate STL.
-  gr_basic_block_vector_t blocks, tmp = d_fg->calc_used_blocks();
+  gr_basic_block_vector_t blocks; // unique list of used blocks
+  gr_basic_block_vector_t tmp = d_fg->calc_used_blocks();
 
+  // First add the list of singleton blocks
   std::vector<gr_basic_block_sptr>::const_iterator b;   // Because flatten_aux is const
-  for (b = d_blocks.begin(); b != d_blocks.end(); b++) 
+  for (b = d_blocks.begin(); b != d_blocks.end(); b++)
     tmp.push_back(*b);
 
-  std::vector<gr_endpoint_vector_t>::const_iterator ep; // Because flatten_aux is const
-  std::vector<gr_endpoint>::const_iterator e;           // Because flatten_aux is const
+  // Now add the list of connected input blocks
+  std::stringstream msg;
+  for (unsigned int i = 0; i < d_inputs.size(); i++) {
+    if (d_inputs[i].size() == 0) {
+      msg << "In hierarchical block " << d_owner->name() << ", input " << i
+	  << " is not connected internally";
+      throw std::runtime_error(msg.str());
+    }
+    
+    for (unsigned int j = 0; j < d_inputs[i].size(); j++)
+      tmp.push_back(d_inputs[i][j].block());
+  }
 
-  for (ep = d_inputs.begin(); ep != d_inputs.end(); ep++)
-    for (e = (*ep).begin(); e != (*ep).end(); e++)
-      tmp.push_back((*e).block());
-
-  for (e = d_outputs.begin(); e != d_outputs.end(); e++)
-    tmp.push_back((*e).block());
-
+  for (unsigned int i = 0; i < d_outputs.size(); i++) {
+    gr_basic_block_sptr blk = d_outputs[i].block();
+    if (!blk) {
+      msg << "In hierarchical block " << d_owner->name() << ", output " << i
+	  << " is not connected internally";
+      throw std::runtime_error(msg.str());
+    }
+    tmp.push_back(blk);
+  }
   sort(tmp.begin(), tmp.end());
 
   std::insert_iterator<gr_basic_block_vector_t> inserter(blocks, blocks.begin());

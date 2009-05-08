@@ -230,14 +230,55 @@ class test_hier_block2(gr_unittest.TestCase):
         tb.run()
         self.assertEquals(expected_data, dst.data())
 
-    def test_027_disconnected_internal(self):
+    def test_027a_internally_unconnected_input(self):
         tb = gr.top_block()
         hb = gr.hier_block2("block",
                             gr.io_signature(1, 1, 1),
                             gr.io_signature(1, 1, 1))
+        hsrc = gr.vector_source_b([1,])
+        hb.connect(hsrc, hb) # wire output internally
         src = gr.vector_source_b([1, ])
         dst = gr.vector_sink_b()
-        tb.connect(src, hb, dst) # hb is not connected internally
+        tb.connect(src, hb, dst) # hb's input is not connected internally
+        self.assertRaises(RuntimeError, 
+                          lambda: tb.run())
+
+    def test_027b_internally_unconnected_output(self):
+        tb = gr.top_block()
+
+        hb = gr.hier_block2("block",
+                            gr.io_signature(1, 1, 1),
+                            gr.io_signature(1, 1, 1))
+        hdst = gr.vector_sink_b()
+        hb.connect(hb, hdst) # wire input internally
+        src = gr.vector_source_b([1, ])
+        dst = gr.vector_sink_b()
+        tb.connect(src, hb, dst) # hb's output is not connected internally
+        self.assertRaises(RuntimeError, 
+                          lambda: tb.run())
+
+    def test_027c_fully_unconnected_output(self):
+        tb = gr.top_block()
+        hb = gr.hier_block2("block",
+                            gr.io_signature(1, 1, 1),
+                            gr.io_signature(1, 1, 1))
+        hsrc = gr.vector_sink_b()
+        hb.connect(hb, hsrc) # wire input internally
+        src = gr.vector_source_b([1, ])
+        dst = gr.vector_sink_b()
+        tb.connect(src, hb) # hb's output is not connected internally or externally
+        self.assertRaises(RuntimeError, 
+                          lambda: tb.run())
+
+    def test_027d_fully_unconnected_input(self):
+        tb = gr.top_block()
+        hb = gr.hier_block2("block",
+                            gr.io_signature(1, 1, 1),
+                            gr.io_signature(1, 1, 1))
+        hdst = gr.vector_source_b([1,])
+        hb.connect(hdst, hb) # wire output internally
+        dst = gr.vector_sink_b()
+        tb.connect(hb, dst) # hb's input is not connected internally or externally
         self.assertRaises(RuntimeError, 
                           lambda: tb.run())
 
