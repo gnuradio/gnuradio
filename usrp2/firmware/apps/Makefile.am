@@ -46,6 +46,9 @@ noinst_PROGRAMS = \
 	tx_standalone \
 	txrx \
 	factory_test \
+	burnrev30 \
+	burnrev31 \
+	burnrev40 \
 	serdes_txrx \
 	sd_gentest \
 	sd_bounce \
