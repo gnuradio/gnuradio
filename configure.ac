@@ -82,7 +82,18 @@ AM_PROG_AS
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_PROG_INSTALL
+
+# AC_PROG_MKDIR_P
+# is a backport of autoconf-2.60's AC_PROG_MKDIR_P.
+# Remove this macro when we can assume autoconf >= 2.60.
+m4_ifdef([AC_PROG_MKDIR_P], [], [
+  AC_DEFUN([AC_PROG_MKDIR_P],
+    [AC_REQUIRE([AM_PROG_MKDIR_P])dnl defined by automake
+     MKDIR_P='$(mkdir_p)'
+     AC_SUBST([MKDIR_P])])
+])
 AC_PROG_MKDIR_P
+
 AC_PATH_PROG([RM_PROG], [rm])
 
 AC_LIBTOOL_WIN32_DLL
