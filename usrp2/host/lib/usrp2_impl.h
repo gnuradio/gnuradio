@@ -113,7 +113,7 @@ namespace usrp2 {
     bool reset_db();
 
   public:
-    impl(const std::string &ifc, props *p);
+    impl(const std::string &ifc, props *p, size_t rx_bufsize);
     ~impl();
     
     void bg_loop();

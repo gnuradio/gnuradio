@@ -49,7 +49,7 @@ namespace usrp2 {
   static usrp_table s_table;
 
   usrp2::sptr
-  usrp2::find_existing_or_make_new(const std::string &ifc, props *pr)
+  usrp2::find_existing_or_make_new(const std::string &ifc, props *pr, size_t rx_bufsize)
   {
     std::string key = ifc + ":" + pr->addr;
 
@@ -69,7 +69,7 @@ namespace usrp2 {
     // We don't have the USRP2 we're looking for
 
     // create a new one and stick it in the table.
-    usrp2::sptr r(new usrp2::usrp2(ifc, pr));
+    usrp2::sptr r(new usrp2::usrp2(ifc, pr, rx_bufsize));
     usrp_table_entry t(key, r);
     s_table.push_back(t);
 
@@ -119,7 +119,7 @@ namespace usrp2 {
   }
 
   usrp2::sptr
-  usrp2::make(const std::string &ifc, const std::string &addr)
+  usrp2::make(const std::string &ifc, const std::string &addr, size_t rx_bufsize)
   {
     std::string naddr = "";
     if (addr != "" && !parse_mac_addr(addr, naddr))
@@ -138,12 +138,12 @@ namespace usrp2 {
     if (n > 1)
       throw std::runtime_error("Multiple USRPs found on interface; must select by MAC address.");
 
-    return find_existing_or_make_new(ifc, &u2s[0]);
+    return find_existing_or_make_new(ifc, &u2s[0], rx_bufsize);
   }
 
   // Private constructor.  Sole function is to create an impl.
-  usrp2::usrp2(const std::string &ifc, props *p)
-    : d_impl(new usrp2::impl(ifc, p))
+  usrp2::usrp2(const std::string &ifc, props *p, size_t rx_bufsize)
+    : d_impl(new usrp2::impl(ifc, p, rx_bufsize))
   {
     // NOP
   }

@@ -86,7 +86,7 @@ namespace usrp2 {
      *              If \p addr is HH:HH, it's treated as if it were 00:50:c2:85:HH:HH
      *              "" will autoselect a USRP2 if there is only a single one on the local ethernet.
      */
-    static sptr make(const std::string &ifc, const std::string &addr="");
+    static sptr make(const std::string &ifc, const std::string &addr="", size_t rx_bufsize=0);
 
     /*!
      * Class destructor
@@ -578,10 +578,10 @@ namespace usrp2 {
 
   private:
     // Static function to retrieve or create usrp2 instance
-    static sptr find_existing_or_make_new(const std::string &ifc, props *p);
+    static sptr find_existing_or_make_new(const std::string &ifc, props *p, size_t rx_bufsize);
 
     // Only class members can instantiate this class
-    usrp2(const std::string &ifc, props *p);
+    usrp2(const std::string &ifc, props *p, size_t rx_bufsize);
   
     // All private state is held in opaque pointer
     std::auto_ptr<impl> d_impl;

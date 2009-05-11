@@ -44,8 +44,9 @@
 #define DEBUG_LOG(X)
 #endif
 
-#define MAX_MEM_SIZE       25e6 // ~0.25s @ 100 MB/s
-#define MAX_SLAB_SIZE    131702 // 128 KB (FIXME fish out of /proc/slabinfo)
+#define DEFAULT_MEM_SIZE   25e6 // ~0.25s @ 100 MB/s
+#define MAX_MEM_SIZE     1000e6 // ~10.00s @ 100 MB/s. 
+#define MAX_SLAB_SIZE    131072 // 128 KB (FIXME fish out of /proc/slabinfo)
 #define MAX_PKT_SIZE       1512 // we don't do jumbo frames
 
 namespace usrp2 {
@@ -55,7 +56,7 @@ namespace usrp2 {
       d_frame_size(0), d_head(0), d_ring(0), d_ethernet(new ethernet())
   {
     if (rx_bufsize == 0)
-      d_buflen = (size_t)MAX_MEM_SIZE;
+      d_buflen = (size_t)DEFAULT_MEM_SIZE;
     else
       d_buflen = std::min((size_t)MAX_MEM_SIZE, rx_bufsize);
 	
@@ -92,8 +93,8 @@ namespace usrp2 {
     req.tp_block_size = page_size << (int)ceil(log2(npages));
 
     // Calculate number of blocks
-    req.tp_block_nr = std::min((int)(MAX_SLAB_SIZE/sizeof(void*)),
-			       (int)(d_buflen/req.tp_block_size));
+    req.tp_block_nr = (int)(d_buflen/req.tp_block_size);
+			       
 
     // Recalculate buffer length
     d_buflen = req.tp_block_nr*req.tp_block_size;

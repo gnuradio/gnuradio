@@ -128,8 +128,8 @@ namespace usrp2 {
   }
 
 
-  usrp2::impl::impl(const std::string &ifc, props *p)
-    : d_eth_buf(new eth_buffer()), d_interface_name(ifc), d_pf(0), d_bg_thread(0),
+  usrp2::impl::impl(const std::string &ifc, props *p, size_t rx_bufsize)
+    : d_eth_buf(new eth_buffer(rx_bufsize)), d_interface_name(ifc), d_pf(0), d_bg_thread(0),
       d_bg_running(false), d_rx_seqno(-1), d_tx_seqno(0), d_next_rid(0),
       d_num_rx_frames(0), d_num_rx_missing(0), d_num_rx_overruns(0), d_num_rx_bytes(0), 
       d_num_enqueued(0), d_enqueued_mutex(), d_bg_pending_cond(&d_enqueued_mutex),
