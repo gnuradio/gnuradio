@@ -20,7 +20,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-AM_CXXFLAGS = @autoconf_default_CXXFLAGS@
+AM_CFLAGS = @autoconf_default_CFLAGS@ @lf_CFLAGS@
+AM_CXXFLAGS = @autoconf_default_CXXFLAGS@ @lf_CXXFLAGS@
 
 # includes
 grincludedir = $(includedir)/gnuradio

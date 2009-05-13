@@ -1,4 +1,5 @@
 dnl Copyright (C) 1988 Eleftherios Gkioulekas <lf@amath.washington.edu>
+dnl Copyright (C) 2009 Free Software Foundation, Inc.
 dnl  
 dnl This program is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
@@ -21,7 +22,7 @@ dnl distribution terms that you use for the rest of that program.
 
 # --------------------------------------------------------------------------
 # Check whether the C++ compiler accepts a certain flag
-# If it does it adds the flag to CXXFLAGS
+# If it does it adds the flag to lf_CXXFLAGS
 # If it does not then it returns an error to lf_ok
 # Usage:
 #   LF_CHECK_CXX_FLAG(-flag1 -flag2 -flag3 ...)
@@ -34,18 +35,19 @@ AC_DEFUN([LF_CHECK_CXX_FLAG],[
     AC_MSG_CHECKING([whether $CXX accepts $i])
     if test -z "`${CXX} $i -c conftest.cc 2>&1`"
     then
-      CXXFLAGS="${CXXFLAGS} $i"
+      lf_CXXFLAGS="${lf_CXXFLAGS} $i"
       AC_MSG_RESULT(yes)
     else
       AC_MSG_RESULT(no)
     fi
   done
   rm -f conftest.cc conftest.o
+  AC_SUBST(lf_CXXFLAGS)
 ])
 
 # --------------------------------------------------------------------------
 # Check whether the C compiler accepts a certain flag
-# If it does it adds the flag to CFLAGS
+# If it does it adds the flag to lf_CFLAGS
 # If it does not then it returns an error to lf_ok
 # Usage:
 #  LF_CHECK_CC_FLAG(-flag1 -flag2 -flag3 ...)
@@ -58,18 +60,19 @@ AC_DEFUN([LF_CHECK_CC_FLAG],[
     AC_MSG_CHECKING([whether $CC accepts $i])
     if test -z "`${CC} $i -c conftest.c 2>&1`"
     then
-      CFLAGS="${CFLAGS} $i"
+      lf_CFLAGS="${lf_CFLAGS} $i"
       AC_MSG_RESULT(yes)
     else
       AC_MSG_RESULT(no)
     fi
   done
   rm -f conftest.c conftest.o
+  AC_SUBST(lf_CFLAGS)
 ])
 
 # --------------------------------------------------------------------------
 # Check whether the Fortran compiler accepts a certain flag
-# If it does it adds the flag to FFLAGS
+# If it does it adds the flag to lf_FFLAGS
 # If it does not then it returns an error to lf_ok
 # Usage:
 #  LF_CHECK_F77_FLAG(-flag1 -flag2 -flag3 ...)
@@ -87,36 +90,26 @@ EOF
     AC_MSG_CHECKING([whether $F77 accepts $i])
     if test -z "`${F77} $i -c conftest.f 2>&1`"
     then
-      FFLAGS="${FFLAGS} $i"
+      lf_FFLAGS="${lf_FFLAGS} $i"
       AC_MSG_RESULT(yes)  
     else
       AC_MSG_RESULT(no)
     fi
   done
   rm -f conftest.f conftest.o
+  AC_SUBST(lf_FFLAGS)
 ])
 
 # ----------------------------------------------------------------------
-# Enable compiler warnings.  Conditionally enable -Werror.
-# Call this command AFTER you have configured ALL your
-# compilers. 
+# Enable compiler warnings. 
+# Call this command AFTER you have configured ALL your compilers. 
 # ----------------------------------------------------------------------
 
 AC_DEFUN([LF_SET_WARNINGS],[
-  lf_warnings_as_errors=""
-  AC_ARG_ENABLE([warnings-as-errors],
-    AC_HELP_STRING([--enable-warnings-as-errors], [Treat compiler warnings as errors (no)]),
-    [case "$enableval" in 
-      (no) ;;
-      (yes) lf_warnings_as_errors="-Werror" ;;
-      (*) AC_MSG_ERROR([Invalid argument ($enableval) to --enable-warnings-as-errors]) ;;
-     esac],
-    [])
-     
   dnl Warnings for the two main compilers
   dnl add -Wextra when you're got time to fix a bunch of them ;-)
-  cc_warning_flags="-Wall -Werror-implicit-function-declaration $lf_warnings_as_errors"
-  cxx_warning_flags="-Wall -Woverloaded-virtual $lf_warnings_as_errors"
+  cc_warning_flags="-Wall -Werror-implicit-function-declaration"
+  cxx_warning_flags="-Wall -Woverloaded-virtual"
   if test -n "${CC}"
   then
     LF_CHECK_CC_FLAG($cc_warning_flags)

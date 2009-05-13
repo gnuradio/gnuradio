@@ -17,6 +17,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+include $(top_srcdir)/Makefile.common
+
 LIBS = -lm
 
 noinst_LTLIBRARIES = libviterbi.la
@@ -25,7 +27,7 @@ libviterbi_la_SOURCES = \
     metrics.c		\
     tab.c		\
     viterbi.c
-    
+
 noinst_HEADERS =	\
     viterbi.h
 

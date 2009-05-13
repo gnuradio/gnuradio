@@ -19,6 +19,8 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+include $(top_srcdir)/Makefile.common
+
 EXTRA_DIST = \
 	getopt.c getopt.h \
 	gettimeofday.c \
