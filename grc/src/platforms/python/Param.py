@@ -63,6 +63,9 @@ class FileParam(EntryParam):
 			self._handle_changed()
 		file_dialog.destroy() #destroy the dialog
 
+#blacklist certain ids, its not complete, but should help
+import __builtin__
+ID_BLACKLIST = ['options', 'gr', 'blks2', 'wxgui', 'wx', 'math', 'forms', 'firdes'] + dir(__builtin__)
 #define types, native python + numpy
 VECTOR_TYPES = (tuple, list, set, numpy.ndarray)
 COMPLEX_TYPES = [complex, numpy.complex, numpy.complex64, numpy.complex128]
@@ -308,6 +311,10 @@ class Param(_Param):
 			try: assert keys.count(v) <= 1 #id should only appear once, or zero times if block is disabled
 			except:
 				self._add_error_message('ID "%s" is not unique.'%v)
+				raise Exception
+			try: assert v not in ID_BLACKLIST
+			except:
+				self._add_error_message('ID "%s" is blacklisted.'%v)
 				raise Exception
 			return v
 		#########################
