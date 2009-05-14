@@ -34,7 +34,8 @@ class audio_portaudio_source;
 typedef boost::shared_ptr<audio_portaudio_source> audio_portaudio_source_sptr;
 
 /*!
- * \PORTAUDIO audio source.
+ * \brief PORTAUDIO audio source.
+ *
  * \param sampling_rate	sampling rate in Hz
  * \param dev PORTAUDIO device name, e.g., "pa:"
  * \param ok_to_block	true if it's ok for us to block

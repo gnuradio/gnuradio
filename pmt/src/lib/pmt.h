@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -83,19 +83,19 @@ public:
  * I.e., there is a single false value, #f.
  * ------------------------------------------------------------------------
  */
-extern const pmt_t PMT_T;	//< #t : boolean true constant
-extern const pmt_t PMT_F;	//< #f : boolean false constant
+extern const pmt_t PMT_T;	//< \#t : boolean true constant
+extern const pmt_t PMT_F;	//< \#f : boolean false constant
 
-//! Return true if obj is #t or #f, else return false.
+//! Return true if obj is \#t or \#f, else return false.
 bool pmt_is_bool(pmt_t obj);
 
-//! Return false if obj is #f, else return true.
+//! Return false if obj is \#f, else return true.
 bool pmt_is_true(pmt_t obj);
 
-//! Return true if obj is #f, else return true.
+//! Return true if obj is \#f, else return true.
 bool pmt_is_false(pmt_t obj);
 
-//! Return #f is val is false, else return #t.
+//! Return \#f is val is false, else return \#t.
 pmt_t pmt_from_bool(bool val);
 
 //! Return true if val is PMT_T, return false when val is PMT_F, 
@@ -457,7 +457,7 @@ bool pmt_eq(pmt_t x, pmt_t y);
  * <pre>
  * eqv returns true if:
  *   x and y are the same object.
- *   x and y are both #t or both #f.
+ *   x and y are both \#t or both \#f.
  *   x and y are both symbols and their names are the same.
  *   x and y are both numbers, and are numerically equal.
  *   x and y are both the empty list (nil).
@@ -483,7 +483,7 @@ size_t pmt_length(pmt_t v);
  *  and return that pair.
  *
  * \p alist (for "association list") must be a list of pairs.  If no pair
- * in \p alist has \p obj as its car then #f is returned.
+ * in \p alist has \p obj as its car then \#f is returned.
  * Uses pmt_eq to compare \p obj with car fields of the pairs in \p alist.
  */
 pmt_t pmt_assq(pmt_t obj, pmt_t alist);
@@ -493,7 +493,7 @@ pmt_t pmt_assq(pmt_t obj, pmt_t alist);
  *  and return that pair.
  *
  * \p alist (for "association list") must be a list of pairs.  If no pair
- * in \p alist has \p obj as its car then #f is returned.
+ * in \p alist has \p obj as its car then \#f is returned.
  * Uses pmt_eqv to compare \p obj with car fields of the pairs in \p alist.
  */
 pmt_t pmt_assv(pmt_t obj, pmt_t alist);
@@ -503,7 +503,7 @@ pmt_t pmt_assv(pmt_t obj, pmt_t alist);
  *  and return that pair.
  *
  * \p alist (for "association list") must be a list of pairs.  If no pair
- * in \p alist has \p obj as its car then #f is returned.
+ * in \p alist has \p obj as its car then \#f is returned.
  * Uses pmt_equal to compare \p obj with car fields of the pairs in \p alist.
  */
 pmt_t pmt_assoc(pmt_t obj, pmt_t alist);
@@ -553,21 +553,21 @@ pmt_t pmt_nthcdr(size_t n, pmt_t list);
 
 /*!
  * \brief Return the first sublist of \p list whose car is \p obj.
- * If \p obj does not occur in \p list, then #f is returned.
+ * If \p obj does not occur in \p list, then \#f is returned.
  * pmt_memq use pmt_eq to compare \p obj with the elements of \p list.
  */
 pmt_t pmt_memq(pmt_t obj, pmt_t list);
 
 /*!
  * \brief Return the first sublist of \p list whose car is \p obj.
- * If \p obj does not occur in \p list, then #f is returned.
+ * If \p obj does not occur in \p list, then \#f is returned.
  * pmt_memv use pmt_eqv to compare \p obj with the elements of \p list.
  */
 pmt_t pmt_memv(pmt_t obj, pmt_t list);
 
 /*!
  * \brief Return the first sublist of \p list whose car is \p obj.
- * If \p obj does not occur in \p list, then #f is returned.
+ * If \p obj does not occur in \p list, then \#f is returned.
  * pmt_member use pmt_equal to compare \p obj with the elements of \p list.
  */
 pmt_t pmt_member(pmt_t obj, pmt_t list);

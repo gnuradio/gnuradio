@@ -40,13 +40,13 @@ public:
 
   /*!
    * \brief lock the big runtime lock
-   * \implementation
+   * \internal
    */
   inline void lock() { d_brl.lock(); }
 
   /*!
    * \brief unlock the big runtime lock
-   * \implementation
+   * \internal
    */
   inline void unlock() { d_brl.unlock(); }
 

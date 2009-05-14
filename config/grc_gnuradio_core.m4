@@ -80,10 +80,6 @@ AC_DEFUN([GRC_GNURADIO_CORE],[
     AC_CONFIG_FILES([ \
         gnuradio-core/Makefile
         gnuradio-core/gnuradio-core.pc \
-        gnuradio-core/doc/Doxyfile \
-        gnuradio-core/doc/Makefile \
-        gnuradio-core/doc/other/Makefile \
-        gnuradio-core/doc/xml-swig/Makefile \
         gnuradio-core/src/Makefile \
         gnuradio-core/src/gen_interpolator_taps/Makefile \
         gnuradio-core/src/lib/Makefile \

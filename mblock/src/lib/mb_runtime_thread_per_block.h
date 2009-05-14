@@ -28,7 +28,7 @@
 
 /*!
  * \brief Concrete runtime that uses a thread per mblock
- * \implementation
+ * \internal
  *
  * These are all implementation details.
  */

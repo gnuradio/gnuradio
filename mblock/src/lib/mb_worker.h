@@ -34,7 +34,7 @@ class mb_runtime_thread_per_block;
 
 /*!
  * \brief Worker thread for thread_per_block runtime
- * \implementation
+ * \internal
  */
 class mb_worker : public omni_thread
 {

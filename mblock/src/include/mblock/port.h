@@ -85,7 +85,7 @@ public:
 
   /*
    * \brief Invalidate any cached peer resolutions
-   * \implementation
+   * \internal
    */
   virtual void invalidate_cache() = 0;
 };

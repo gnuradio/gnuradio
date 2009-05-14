@@ -45,6 +45,7 @@ m4macros = \
 	bnv_have_qt.m4 \
 	cppunit.m4 \
 	grc_build.m4 \
+	grc_docs.m4 \
 	grc_gcell.m4 \
 	grc_gnuradio_core.m4 \
 	grc_gnuradio_examples.m4 \

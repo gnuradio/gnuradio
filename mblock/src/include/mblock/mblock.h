@@ -307,7 +307,7 @@ public:
   walk_tree(mb_visitor *visitor);
 
 
-  //! \implementation
+  //! \internal
   // internal use only
   mb_mblock_impl_sptr
   impl() const { return d_impl; }

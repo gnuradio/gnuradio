@@ -63,7 +63,7 @@ public:
 
   /*
    * \brief Invalidate any cached peer resolutions
-   * \implementation
+   * \internal
    */
   void invalidate_cache();
 

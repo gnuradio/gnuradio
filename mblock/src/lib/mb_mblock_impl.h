@@ -216,7 +216,7 @@ private:
 
   /*!
    * \brief walk mblock tree and invalidate all port resolution caches.
-   * \implementation
+   * \internal
    */
   void
   invalidate_all_port_caches();
