@@ -146,7 +146,7 @@ class Block(Element):
 		width = self.label_width
 		height = self.label_height
 		#setup the pixmap
-		pixmap = gtk.gdk.Pixmap(self.get_parent().get_window(), width, height, -1)
+		pixmap = self.get_parent().new_pixmap(width, height)
 		gc = pixmap.new_gc()
 		gc.foreground = self.bg_color
 		pixmap.draw_rectangle(gc, True, 0, 0, width, height)

@@ -63,10 +63,9 @@ class FlowGraph(Element):
 	def queue_draw(self): self.get_drawing_area().queue_draw()
 	def get_size(self): return self.get_drawing_area().get_size_request()
 	def set_size(self, *args): self.get_drawing_area().set_size_request(*args)
-	def get_window(self): return self.get_drawing_area().window
-	def get_pixmap(self): return self.get_drawing_area().pixmap
 	def get_scroll_pane(self): return self.drawing_area.get_parent()
 	def get_ctrl_mask(self): return self.drawing_area.ctrl_mask
+	def new_pixmap(self, *args): return self.get_drawing_area().new_pixmap(*args)
 
 	def add_new_block(self, key, coor=None):
 		"""

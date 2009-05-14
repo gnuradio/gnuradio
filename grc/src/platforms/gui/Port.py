@@ -91,7 +91,7 @@ class Port(Element):
 		self.w, self.h = layout.get_pixel_size()
 		self.W, self.H = 2*PORT_LABEL_PADDING+self.w, 2*PORT_LABEL_PADDING+self.h
 		#create the pixmap
-		pixmap = gtk.gdk.Pixmap(self.get_parent().get_parent().get_window(), self.w, self.h, -1)
+		pixmap = self.get_parent().get_parent().new_pixmap(self.w, self.h)
 		gc = pixmap.new_gc()
 		gc.foreground = self.BG_color
 		pixmap.draw_rectangle(gc, True, 0, 0, self.w, self.h)

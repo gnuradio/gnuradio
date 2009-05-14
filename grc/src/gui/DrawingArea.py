@@ -61,6 +61,8 @@ class DrawingArea(gtk.DrawingArea):
 		self.connect('leave-notify-event', self._handle_focus_event, False)
 		self.connect('enter-notify-event', self._handle_focus_event, True)
 
+	def new_pixmap(self, width, height): return gtk.gdk.Pixmap(self.window, width, height, -1)
+
 	##########################################################################
 	## Handlers
 	##########################################################################
@@ -109,8 +111,7 @@ class DrawingArea(gtk.DrawingArea):
 		Called when the window is resized.
 		Create a new pixmap for background buffer.
 		"""
-		width, height = self.get_size_request()
-		self.pixmap = gtk.gdk.Pixmap(self.window, width, height, -1)
+		self._pixmap = self.new_pixmap(*self.get_size_request())
 
 	def _handle_window_expose(self, widget, event):
 		"""
@@ -118,5 +119,5 @@ class DrawingArea(gtk.DrawingArea):
 		Double buffering: draw to pixmap, then draw pixmap to window.
 		"""
 		gc = self.window.new_gc()
-		self._main_window.get_flow_graph().draw(gc, self.pixmap)
-		self.window.draw_drawable(gc, self.pixmap, 0, 0, 0, 0, -1, -1)
+		self._main_window.get_flow_graph().draw(gc, self._pixmap)
+		self.window.draw_drawable(gc, self._pixmap, 0, 0, 0, 0, -1, -1)
