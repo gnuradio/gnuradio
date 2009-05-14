@@ -24,6 +24,8 @@ import gtk
 from .. utils import ParseXML
 from StateCache import StateCache
 from .. platforms.base.Constants import FLOW_GRAPH_DTD
+from Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT
+from DrawingArea import DrawingArea
 import os
 
 ############################################################
@@ -56,7 +58,6 @@ class NotebookPage(gtk.HBox):
 		self.set_saved(True)
 		#import the data to the flow graph
 		self.get_flow_graph().import_data(initial_state)
-		self.get_flow_graph().update()
 		#initialize page gui
 		gtk.HBox.__init__(self, False, 0)
 		self.show()
@@ -81,6 +82,18 @@ class NotebookPage(gtk.HBox):
 		button.set_size_request(w+6, h+6)
 		self.tab.pack_start(button, False)
 		self.tab.show_all()
+		#setup scroll window and drawing area
+		self.scrolled_window = gtk.ScrolledWindow()
+		self.scrolled_window.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
+		self.scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+		self.drawing_area = DrawingArea(self.get_flow_graph())
+		self.scrolled_window.add_with_viewport(self.get_drawing_area())
+		self.pack_start(self.scrolled_window)
+		#inject drawing area and handle states into flow graph
+		self.get_flow_graph().drawing_area = self.get_drawing_area()
+		self.show_all()
+
+	def get_drawing_area(self): return self.drawing_area
 
 	def get_generator(self):
 		"""

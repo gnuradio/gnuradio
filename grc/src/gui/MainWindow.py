@@ -18,7 +18,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from Constants import \
-	MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT, \
 	NEW_FLOGRAPH_TITLE, DEFAULT_REPORTS_WINDOW_WIDTH
 from Actions import \
 	APPLICATION_QUIT, FLOW_GRAPH_KILL, \
@@ -29,7 +28,6 @@ import gtk
 import Bars
 from BlockTreeWindow import BlockTreeWindow
 from Dialogs import TextDisplay, MessageDialogHelper
-from DrawingArea import DrawingArea
 from NotebookPage import NotebookPage
 import Preferences
 import Messages
@@ -59,12 +57,6 @@ class MainWindow(gtk.Window):
 		vbox.pack_start(Bars.MenuBar(), False)
 		vbox.pack_start(Bars.Toolbar(), False)
 		vbox.pack_start(self.hpaned)
-		#setup scrolled window
-		self.scrolled_window = gtk.ScrolledWindow()
-		self.scrolled_window.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
-		self.scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-		self.drawing_area = DrawingArea(self)
-		self.scrolled_window.add_with_viewport(self.drawing_area)
 		#create the notebook
 		self.notebook = gtk.Notebook()
 		self.page_to_be_closed = None
@@ -73,11 +65,9 @@ class MainWindow(gtk.Window):
 		self.notebook.set_scrollable(True) #scroll arrows for page tabs
 		self.notebook.connect('switch-page', self._handle_page_change)
 		#setup containers
-		flow_graph_box = gtk.VBox(False, 0)
 		self.flow_graph_vpaned = gtk.VPaned()
-		flow_graph_box.pack_start(self.notebook, False, False, 0)
-		flow_graph_box.pack_start(self.scrolled_window)
-		self.flow_graph_vpaned.pack1(flow_graph_box)
+		#flow_graph_box.pack_start(self.scrolled_window)
+		self.flow_graph_vpaned.pack1(self.notebook)
 		self.hpaned.pack1(self.flow_graph_vpaned)
 		self.hpaned.pack2(BlockTreeWindow(platform, self.get_flow_graph), False) #dont allow resize
 		#create the reports window
@@ -155,8 +145,6 @@ class MainWindow(gtk.Window):
 		try: #try to load from file
 			if file_path: Messages.send_start_load(file_path)
 			flow_graph = self._platform.get_new_flow_graph()
-			#inject drawing area and handle states into flow graph
-			flow_graph.drawing_area = self.drawing_area
 			flow_graph.handle_states = self.handle_states
 			page = NotebookPage(
 				self,
@@ -252,8 +240,7 @@ class MainWindow(gtk.Window):
 				)
 			)
 		#show/hide notebook tabs
-		if len(self._get_pages()) > 1: self.notebook.show()
-		else: self.notebook.hide()
+		self.notebook.set_show_tabs(len(self._get_pages()) > 1)
 
 	def get_page(self):
 		"""
@@ -268,6 +255,13 @@ class MainWindow(gtk.Window):
 		@return the selected flow graph
 		"""
 		return self.get_page().get_flow_graph()
+
+	def get_focus_flag(self):
+		"""
+		Get the focus flag from the current page.
+		@return the focus flag
+		"""
+		return self.get_page().get_drawing_area().get_focus_flag()
 
 	############################################################
 	# Helpers

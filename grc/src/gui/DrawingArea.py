@@ -28,18 +28,17 @@ class DrawingArea(gtk.DrawingArea):
 	The drawing area also responds to mouse and key events.
 	"""
 
-	def __init__(self, main_window):
+	def __init__(self, flow_graph):
 		"""
 		DrawingArea contructor.
 		Connect event handlers.
 		@param main_window the main_window containing all flow graphs
 		"""
 		self.ctrl_mask = False
-		self._main_window = main_window
-		#inject drawing area into main_window
-		self._main_window.drawing_area = self
+		self._flow_graph = flow_graph
 		gtk.DrawingArea.__init__(self)
 		self.set_size_request(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT)
+		self.connect('realize', self._handle_window_realize)
 		self.connect('configure-event', self._handle_window_configure)
 		self.connect('expose-event', self._handle_window_expose)
 		self.connect('motion-notify-event', self._handle_mouse_motion)
@@ -58,8 +57,9 @@ class DrawingArea(gtk.DrawingArea):
 		#setup the focus flag
 		self._focus_flag = False
 		self.get_focus_flag = lambda: self._focus_flag
-		self.connect('leave-notify-event', self._handle_focus_event, False)
-		self.connect('enter-notify-event', self._handle_focus_event, True)
+		def _handle_focus_event(widget, event, focus_flag): self._focus_flag = focus_flag
+		self.connect('leave-notify-event', _handle_focus_event, False)
+		self.connect('enter-notify-event', _handle_focus_event, True)
 
 	def new_pixmap(self, width, height): return gtk.gdk.Pixmap(self.window, width, height, -1)
 
@@ -70,18 +70,14 @@ class DrawingArea(gtk.DrawingArea):
 		"""
 		Handle a drag and drop by adding a block at the given coordinate.
 		"""
-		self._main_window.get_flow_graph().add_new_block(selection_data.data, (x, y))
-
-	def _handle_focus_event(self, widget, event, focus_flag):
-		"""Record the focus state of the flow graph window."""
-		self._focus_flag = focus_flag
+		self._flow_graph.add_new_block(selection_data.data, (x, y))
 
 	def _handle_mouse_button_press(self, widget, event):
 		"""
 		Forward button click information to the flow graph.
 		"""
 		self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
-		self._main_window.get_flow_graph().handle_mouse_button_press(
+		self._flow_graph.handle_mouse_button_press(
 			left_click=(event.button == 1),
 			double_click=(event.type == gtk.gdk._2BUTTON_PRESS),
 			coordinate=(event.x, event.y),
@@ -92,7 +88,7 @@ class DrawingArea(gtk.DrawingArea):
 		Forward button release information to the flow graph.
 		"""
 		self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
-		self._main_window.get_flow_graph().handle_mouse_button_release(
+		self._flow_graph.handle_mouse_button_release(
 			left_click=(event.button == 1),
 			coordinate=(event.x, event.y),
 		)
@@ -102,9 +98,16 @@ class DrawingArea(gtk.DrawingArea):
 		Forward mouse motion information to the flow graph.
 		"""
 		self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
-		self._main_window.get_flow_graph().handle_mouse_motion(
+		self._flow_graph.handle_mouse_motion(
 			coordinate=(event.x, event.y),
 		)
+
+	def _handle_window_realize(self, widget):
+		"""
+		Called when the window is realized.
+		Update the flowgraph, which calls new pixmap.
+		"""
+		self._flow_graph.update()
 
 	def _handle_window_configure(self, widget, event):
 		"""
@@ -119,5 +122,5 @@ class DrawingArea(gtk.DrawingArea):
 		Double buffering: draw to pixmap, then draw pixmap to window.
 		"""
 		gc = self.window.new_gc()
-		self._main_window.get_flow_graph().draw(gc, self._pixmap)
+		self._flow_graph.draw(gc, self._pixmap)
 		self.window.draw_drawable(gc, self._pixmap, 0, 0, 0, 0, -1, -1)

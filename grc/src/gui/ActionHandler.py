@@ -61,7 +61,7 @@ class ActionHandler:
 		self.main_window.connect('key-press-event', self._handle_key_press)
 		self.get_page = self.main_window.get_page
 		self.get_flow_graph = self.main_window.get_flow_graph
-		self.get_focus_flag = self.main_window.drawing_area.get_focus_flag
+		self.get_focus_flag = self.main_window.get_focus_flag
 		#setup the messages
 		Messages.register_messenger(self.main_window.add_report_line)
 		Messages.send_init()
@@ -170,8 +170,8 @@ class ActionHandler:
 		# Cut/Copy/Paste
 		##################################################
 		elif state == Actions.BLOCK_CUT:
-			self.handle_states(BLOCK_COPY)
-			self.handle_states(ELEMENT_DELETE)
+			self.handle_states(Actions.BLOCK_COPY)
+			self.handle_states(Actions.ELEMENT_DELETE)
 		elif state == Actions.BLOCK_COPY:
 			self.clipboard = self.get_flow_graph().copy_to_clipboard()
 		elif state == Actions.BLOCK_PASTE:
