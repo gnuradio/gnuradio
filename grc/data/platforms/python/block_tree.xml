@@ -167,6 +167,9 @@
 		<block>gr_iir_filter_ffd</block>
 		<block>gr_filter_delay_fc</block>
 		<block>gr_channel_model</block>
+		<!-- Filter banks -->
+		<block>blks2_synthesis_filterbank</block>
+		<block>blks2_analysis_filterbank</block>
 		<!-- Other filters -->
 		<block>gr_single_pole_iir_filter_xx</block>
 		<block>gr_hilbert_fc</block>
@@ -216,9 +219,6 @@
 
 		<block>blks2_ofdm_mod</block>
 		<block>blks2_ofdm_demod</block>
-
-		<block>blks2_synthesis_filterbank</block>
-		<block>blks2_analysis_filterbank</block>
 	</cat>
 	<cat>
 		<name>Error Correction</name>

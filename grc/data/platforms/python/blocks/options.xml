@@ -92,8 +92,8 @@ part#slurp
 		</option>
 	</param>
 	<check>len($window_size) == 2</check>
-	<check>300 &lt;= $(window_size)[0] &lt;= 2048</check>
-	<check>300 &lt;= $(window_size)[1] &lt;= 2048</check>
+	<check>300 &lt;= $(window_size)[0] &lt;= 4096</check>
+	<check>300 &lt;= $(window_size)[1] &lt;= 4096</check>
 	<doc>
 The options block sets special parameters for the flow graph. \
 Only one option block is allowed per flow graph.
@@ -101,7 +101,7 @@ Only one option block is allowed per flow graph.
 Title, author, and description parameters are for identification purposes.
 
 The window size controls the dimensions of the flow graph editor. \
-The window size (width, height) must be between (300, 300) and (2048, 2048).
+The window size (width, height) must be between (300, 300) and (4096, 4096).
 
 The generate options controls the type of code generated. \
 Non-graphical flow graphs should avoid using graphical sinks or graphical variable controls.
