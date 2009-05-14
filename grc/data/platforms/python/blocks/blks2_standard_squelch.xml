@@ -9,7 +9,7 @@
 	<key>blks2_standard_squelch</key>
 	<import>from gnuradio import blks2</import>
 	<make>blks2.standard_squelch(audio_rate=$audio_rate)
-$id.set_threshold($threshold)</make>
+$(id).set_threshold($threshold)</make>
 	<callback>set_threshold($threshold)</callback>
 	<param>
 		<name>Audio Rate</name>
