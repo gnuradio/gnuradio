@@ -11,4 +11,5 @@ if ! getent group usrp >/dev/null; then
     addgroup --system usrp
 fi
 
+ldconfig
 exit 0

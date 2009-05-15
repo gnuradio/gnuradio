@@ -7,5 +7,5 @@ if [ "$1" != "remove" ]; then
 fi
 
 rm -f /etc/security/limits.d/libusrp2.limits
-
+ldconfig
 exit 0

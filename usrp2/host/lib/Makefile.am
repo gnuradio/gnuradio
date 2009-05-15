@@ -50,7 +50,7 @@ libusrp2_la_SOURCES = \
 
 libusrp2_la_LIBADD = \
 	$(OMNITHREAD_LA) \
-	$(GRUEL_LIBS) \
+	$(GRUEL_LA) \
 	$(BOOST_LDFLAGS) $(BOOST_THREAD_LIB)
 
 # Private headers not needed for above the API development

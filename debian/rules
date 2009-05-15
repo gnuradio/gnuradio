@@ -6,14 +6,6 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
-CFLAGS = -Wall -g
-
-ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-	CFLAGS += -O0
-else
-	CFLAGS += -O2
-endif
-
 clean:
 	dh_testdir
 	dh_testroot
@@ -42,7 +34,7 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	[ -f ./configure ] || ./bootstrap
-	CFLAGS="$(CFLAGS)" ./configure \
+	./configure LDFLAGS="-Wl,--as-needed" \
 		--prefix=/usr --mandir=\$${prefix}/share/man \
 		--infodir=\$${prefix}/share/info --enable-shared \
 		--enable-doxygen --enable-html-docs \
@@ -111,6 +103,7 @@ binary-common:
 	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
+	mkdir -p ../debfiles
 	dh_builddeb --destdir=../debfiles
 
 # Build architecture independant packages using the common target.

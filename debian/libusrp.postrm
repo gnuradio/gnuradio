@@ -7,5 +7,5 @@ if [ "$1" != "remove" ]; then
 fi
 
 rm -f /etc/udev/rules.d/40-usrp.rules
-
+ldconfig
 exit 0
