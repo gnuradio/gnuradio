@@ -56,7 +56,7 @@ class scope_sink_f(gr.hier_block2):
 class scope_sink_c(gr.hier_block2):
     def __init__(self, parent, title='', sample_rate=1,
                  size=default_scopesink_size, frame_decim=default_frame_decim,
-                 v_scale=default_v_scale, t_scale=None, num_inputs=1, **kwargs):
+                 v_scale=default_v_scale, t_scale=None, num_inputs=1, xy_mode=False, **kwargs):
 
         gr.hier_block2.__init__(self, "scope_sink_c",
                                 gr.io_signature(num_inputs, num_inputs, gr.sizeof_gr_complex),
@@ -72,6 +72,7 @@ class scope_sink_c(gr.hier_block2):
         
         self.win = scope_window(win_info(msgq, sample_rate, frame_decim,
                                          v_scale, t_scale, self.guts, title), parent)
+        self.win.info.xy = xy_mode
         
     def set_sample_rate(self, sample_rate):
         self.guts.set_sample_rate(sample_rate)
