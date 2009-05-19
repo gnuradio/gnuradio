@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -64,9 +64,19 @@ public:
   bool fpga_master_clock_freq(long *freq) const;
 
   /*!
+   * \brief MIMO configuration
+   */
+  bool config_mimo(int flags);
+  
+  /*!
    * \brief Set master time to 0 at next PPS rising edge
    */
   bool sync_to_pps();
+
+  /*!
+   * Reset master time to 0 at every PPS edge
+   */
+  bool sync_every_pps(bool enable);
 
   /*!
    * \brief Read memory from Wishbone bus as words

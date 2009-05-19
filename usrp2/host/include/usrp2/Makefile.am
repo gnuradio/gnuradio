@@ -26,6 +26,7 @@ usrp2include_HEADERS = \
 	copy_handler.h \
         data_handler.h \
 	metadata.h \
+	mimo_config.h \
 	rx_nop_handler.h \
 	rx_sample_handler.h \
 	strtod_si.h \

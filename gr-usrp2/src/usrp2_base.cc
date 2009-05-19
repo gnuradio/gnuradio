@@ -68,9 +68,21 @@ usrp2_base::fpga_master_clock_freq(long *freq) const
 }
 
 bool
+usrp2_base::config_mimo(int flags)
+{
+  return d_u2->config_mimo(flags);
+}
+
+bool
 usrp2_base::sync_to_pps()
 {
   return d_u2->sync_to_pps();
+}
+
+bool
+usrp2_base::sync_every_pps(bool enable)
+{
+  return d_u2->sync_every_pps(enable);
 }
 
 std::vector<uint32_t>

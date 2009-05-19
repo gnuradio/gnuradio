@@ -31,6 +31,7 @@
 %}
 
 %include <usrp2/tune_result.h>
+%include <usrp2/mimo_config.h>
 
 %template(uint32_t_vector) std::vector<uint32_t>;
 
@@ -48,7 +49,9 @@ public:
   std::string interface_name() const;
   %rename(_real_fpga_master_clock_freq) fpga_master_clock_freq;
   bool fpga_master_clock_freq(long *freq);
+  bool config_mimo(int flags);
   bool sync_to_pps();
+  bool sync_every_pps(bool enable);
   std::vector<uint32_t> peek32(uint32_t addr, uint32_t words);
   bool poke32(uint32_t addr, const std::vector<uint32_t> &data);
 };

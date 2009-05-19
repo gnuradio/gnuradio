@@ -25,7 +25,7 @@
 #include <complex>
 #include <usrp2/rx_sample_handler.h>
 #include <usrp2/tune_result.h>
-
+#include <usrp2/mimo_config.h>
 
 /*
  * N.B., The interfaces described here are still in flux.
@@ -67,7 +67,7 @@ namespace usrp2 {
   // FIXME: get from firmware include
   static const int GPIO_TX_BANK = 0;
   static const int GPIO_RX_BANK = 1;
-  
+
   class usrp2 : boost::noncopyable
   {
   public:
