@@ -23,6 +23,7 @@
 	</cat>
 	<cat>
 		<name>Sinks</name>
+		<block>blks2_variable_sink_x</block>
 		<block>gr_vector_sink_x</block>
 		<block>gr_null_sink</block>
 		<block>gr_file_sink</block>
@@ -263,7 +264,6 @@
 		<block>variable_slider</block>
 		<block>variable_chooser</block>
 		<block>variable_text_box</block>
-		<block>variable_sink</block>
 		<block>parameter</block>
 	</cat>
 	<cat>

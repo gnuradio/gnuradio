@@ -6,25 +6,14 @@
  -->
 <block>
 	<name>Variable Sink</name>
-	<key>variable_sink</key>
-	<import>from gnuradio import gr</import>
-	<import>import threading</import>
-	<import>import time</import>
-	<make>gr.vector_sink_$(type.fcn)()
-def _$(id)_run():
-	while True:
-		time.sleep(1.0/$samp_rate)
-		data = self.$(id).data()
-#if $vlen() == 0
-		if data:
-			self.set_$(variable())(data[-1])
-			self.$(id).clear()
-#else
-		if len(data) &gt;= $vlen:
-			self.set_$(variable())(data[-($vlen):])
-			self.$(id).clear()
-#end if
-threading.Thread(target=_$(id)_run).start()</make>
+	<key>blks2_variable_sink_x</key>
+	<import>from grc_gnuradio import blks2 as grc_blks2</import>
+	<make>grc_blks2.variable_sink_$(type.fcn)(
+	vlen=$vlen,
+	decim=$decim,
+	callback=self.set_$(variable()),
+)</make>
+	<callback>set_decim($decim)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -62,28 +51,27 @@ threading.Thread(target=_$(id)_run).start()</make>
 		<type>string</type>
 	</param>
 	<param>
-		<name>Sample Rate</name>
-		<key>samp_rate</key>
-		<value>10</value>
-		<type>real</type>
+		<name>Decimation</name>
+		<key>decim</key>
+		<value>1</value>
+		<type>int</type>
 	</param>
 	<param>
 		<name>Vec Length</name>
 		<key>vlen</key>
-		<value>0</value>
+		<value>1</value>
 		<type>int</type>
 	</param>
-	<check>$vlen &gt;= 0</check>
+	<check>$vlen &gt; 0</check>
 	<sink>
 		<name>in</name>
 		<type>$type</type>
+		<vlen>$vlen</vlen>
 	</sink>
 	<doc>
-Read samples at from the input stream and write each sample to the variable.
+Read samples from the input stream and \
+write one in every decimation samples to the variable.
 
 The variable must be the id of an existing variable block.
-
-When the vector length is 0, the variable will be set to numbers. \
-When the vector length is > 0, the variable will be set to vectors.
 	</doc>
 </block>

@@ -30,7 +30,8 @@ dist_audiodata_DATA = \
 simpledatadir = $(grc_examples_prefix)/simple
 dist_simpledata_DATA = \
 	simple/ber_simulation.grc \
-	simple/dpsk_loopback.grc
+	simple/dpsk_loopback.grc \
+	simple/var_sink_taps.grc
 
 trellisdatadir = $(grc_examples_prefix)/trellis
 dist_trellisdata_DATA = \

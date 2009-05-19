@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -28,4 +28,5 @@ ourpython_PYTHON = \
 	error_rate.py \
 	packet.py \
 	probe.py \
-	selector.py
+	selector.py \
+	variable_sink.py

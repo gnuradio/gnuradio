@@ -53,6 +53,7 @@ dist_ourdata_DATA = \
 	blks2_stream_to_vector_decimator.xml \
 	blks2_synthesis_filterbank.xml \
 	blks2_valve.xml \
+	blks2_variable_sink_x.xml \
 	blks2_wfm_rcv.xml \
 	blks2_wfm_rcv_pll.xml \
 	blks2_wfm_tx.xml \
@@ -205,7 +206,6 @@ dist_ourdata_DATA = \
 	usrp_simple_source_x.xml \
 	variable.xml \
 	variable_chooser.xml \
-	variable_sink.xml \
 	variable_slider.xml \
 	variable_text_box.xml \
 	wxgui_constellationsink2.xml \
