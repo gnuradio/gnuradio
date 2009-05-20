@@ -29,4 +29,5 @@ ourpython_PYTHON = \
 	packet.py \
 	probe.py \
 	selector.py \
+	tcp.py \
 	variable_sink.py

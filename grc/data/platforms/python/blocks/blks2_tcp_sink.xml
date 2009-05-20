@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##TCP Sink: Custom blks2 block
+###################################################
+ -->
+<block>
+	<name>TCP Sink</name>
+	<key>blks2_tcp_sink</key>
+	<import>from grc_gnuradio import blks2 as grc_blks2</import>
+	<make>grc_blks2.tcp_sink(
+	itemsize=$type.size*$vlen,
+	addr=$addr,
+	port=$port,
+	server=$server,
+)</make>
+	<param>
+		<name>Input Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:gr.sizeof_gr_complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>size:gr.sizeof_float</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>size:gr.sizeof_int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>size:gr.sizeof_short</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>size:gr.sizeof_char</opt>
+		</option>
+	</param>
+	<param>
+		<name>Address</name>
+		<key>addr</key>
+		<value>127.0.0.1</value>
+		<type>string</type>
+	</param>
+	<param>
+		<name>Port</name>
+		<key>port</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Mode</name>
+		<key>server</key>
+		<value>False</value>
+		<type>enum</type>
+		<option>
+			<name>Server</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Client</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Vec Length</name>
+		<key>vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$vlen &gt; 0</check>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+		<vlen>$vlen</vlen>
+	</sink>
+		<doc>
+In client mode, we attempt to connect to a server at the given address and port. \
+In server mode, we bind a socket to the given address and port and accept the first client.
+	</doc>
+</block>

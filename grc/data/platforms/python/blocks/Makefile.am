@@ -52,6 +52,8 @@ dist_ourdata_DATA = \
 	blks2_standard_squelch.xml \
 	blks2_stream_to_vector_decimator.xml \
 	blks2_synthesis_filterbank.xml \
+	blks2_tcp_sink.xml \
+	blks2_tcp_source.xml \
 	blks2_valve.xml \
 	blks2_variable_sink_x.xml \
 	blks2_wfm_rcv.xml \
