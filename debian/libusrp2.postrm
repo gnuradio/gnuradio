@@ -6,6 +6,5 @@ if [ "$1" != "remove" ]; then
 	exit 0
 fi
 
-rm -f /etc/security/limits.d/libusrp2.limits
-ldconfig
+/sbin/ldconfig
 exit 0

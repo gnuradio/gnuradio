@@ -31,6 +31,7 @@ dist_ourdata_SCRIPTS =		\
 	benchmark_rx.py		\
 	benchmark_tx.py		\
 	gen_whitener.py		\
+	generic_usrp.py		\
 	pick_bitrate.py		\
 	receive_path.py		\
 	receive_path_lb.py	\
@@ -39,4 +40,5 @@ dist_ourdata_SCRIPTS =		\
 	transmit_path.py	\
 	transmit_path_lb.py	\
 	tunnel.py		\
-	tx_voice.py
+	tx_voice.py             \
+	usrp_options.py

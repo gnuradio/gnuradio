@@ -23,6 +23,9 @@ include $(top_srcdir)/Makefile.common
 
 ourdatadir = $(exampledir)/digital-bert
 
+dist_ourdata_DATA = \
+	README
+
 dist_ourdata_SCRIPTS =		\
 	benchmark_rx.py		\
 	benchmark_tx.py		\

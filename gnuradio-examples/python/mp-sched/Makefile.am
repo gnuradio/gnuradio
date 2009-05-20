@@ -22,6 +22,9 @@ include $(top_srcdir)/Makefile.common
 
 ourdatadir = $(exampledir)/mp-sched
 
+dist_ourdata_DATA = \
+	README
+
 dist_ourdata_SCRIPTS =		\
 	plot_flops.py		\
 	run_synthetic.py	\

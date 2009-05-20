@@ -54,7 +54,11 @@ def main():
     if suffix.upper() != suffix:
         raise SystemExit, "AM-variable-name is malformed.  Expected something like grgrpython_PYTHON"
 
-    dirname = prefix + "dir"
+    if prefix[:5] == "dist_":
+        dirname = prefix[5:] + "dir"
+    else:
+        dirname = prefix + "dir"
+    #print "dirname =", dirname
 
     tail = make_makefile_tail(dirname, full_var_name)
 

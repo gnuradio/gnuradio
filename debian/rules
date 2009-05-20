@@ -34,31 +34,35 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	[ -f ./configure ] || ./bootstrap
-	./configure LDFLAGS="-Wl,--as-needed" \
-		--prefix=/usr --mandir=\$${prefix}/share/man \
-		--infodir=\$${prefix}/share/info --enable-shared \
-		--enable-doxygen --enable-html-docs \
-		--sysconfdir=/etc --enable-all-components \
-		--disable-gr-audio-osx --disable-gr-audio-windows \
+	./configure \
+		--prefix=/usr \
+		--mandir=\$${prefix}/share/man \
+		--infodir=\$${prefix}/share/info \
+		--enable-shared \
+		--sysconfdir=/etc \
+		--enable-all-components \
+		--enable-doxygen \
+		--disable-gr-audio-osx \
+		--disable-gr-audio-windows \
 		--disable-gcell --disable-gr-gcell \
 		--disable-gr-comedi --disable-usrp2-firmware
 	touch configure-stamp
 
-extract: extract-stamp
-extract-stamp: configure-stamp debian/gen-install-files.sh
-	dh_testdir
-	debian/gen-install-files.sh 
-	touch $@
-
 build: build-stamp
-build-stamp: extract-stamp
+build-stamp: configure-stamp
 
 	$(MAKE) -j
 	$(MAKE) check
 	touch $@
 
+extract: extract-stamp
+extract-stamp: build-stamp debian/gen-install-files.sh
+	dh_testdir
+	debian/gen-install-files.sh 
+	touch $@
+
 install: install-stamp
-install-stamp: build-stamp
+install-stamp: extract-stamp debian/control
 	dh_testdir
 	dh_testroot
 	dh_clean -k
