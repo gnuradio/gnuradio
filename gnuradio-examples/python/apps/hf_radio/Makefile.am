@@ -26,14 +26,14 @@ ourdatadir = $(exampledir)/hf_radio
 dist_ourdata_DATA = 	\
     hfir.sci	\
     radio.xml	\
-    README.TXT	\
-    ssb_taps
-
-dist_ourdata_SCRIPTS = 	\
     input.py	\
     output.py	\
-    radio.py	\
+    README.TXT	\
     ssbagc.py	\
     ssbdemod.py \
     startup.py	\
+    ssb_taps
+
+dist_ourdata_SCRIPTS = 	\
+    radio.py	\
     ui.py

@@ -301,29 +301,42 @@ $EXTRACT gnuradio-examples/python/ofdm/Makefile dist_ourdata_SCRIPTS >>$NAME
 $EXTRACT gnuradio-examples/python/usrp/Makefile dist_ourdata_SCRIPTS >>$NAME
 $EXTRACT gnuradio-examples/python/usrp2/Makefile dist_ourdata_SCRIPTS >>$NAME
 
-exit 0
+# gnuradio-pager
+NAME=debian/gnuradio-pager.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-pager/src/Makefile dist_bin_SCRIPTS >>$NAME
+$EXTRACT gr-pager/src/Makefile pager_swig_python_PYTHON >>$NAME
+$EXTRACT gr-pager/src/Makefile pager_swig_pylib_LTLIBRARIES >>$NAME
+$EXTRACT gr-pager/src/Makefile pager_swig_pylib_LTLIBRARIES |
+    sed -e 's/\.la$/.so/' >>$NAME
+
+# gnuradio-sounder
+NAME=debian/gnuradio-sounder.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-sounder/src/python/Makefile sounder_python_PYTHON >>$NAME
+$EXTRACT gr-sounder/src/python/Makefile dist_bin_SCRIPTS >>$NAME
+echo usr/share/usrp/rev2/usrp_sounder.rbf >>$NAME
+echo usr/share/usrp/rev4/usrp_sounder.rbf >>$NAME
 
 # gnuradio-gpio
 NAME=debian/gnuradio-gpio.install
 rm -f $NAME
 touch $NAME
-$EXTRACT gr-gpio/src/python/Makefile bin_SCRIPTS >>$NAME
+$EXTRACT gr-gpio/src/python/Makefile dist_bin_SCRIPTS >>$NAME
 $EXTRACT gr-gpio/src/python/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT gr-gpio/src/lib/Makefile ourlib_LTLIBRARIES >>$NAME
-$EXTRACT gr-gpio/src/lib/Makefile ourlib_LTLIBRARIES |
-    sed -e 's/\.la$/.so/' >>$NAME
 echo usr/share/usrp/rev2/std_2rxhb_2tx_dig.rbf >> $NAME
 echo usr/share/usrp/rev4/std_2rxint_2tx_dig.rbf >> $NAME
 
-# gnuradio-pager
-NAME=debian/gnuradio-pager.install
+# gnuradio-radar-mono
+NAME=debian/gnuradio-radar-mono.install
 rm -f $NAME
 touch $NAME
-$EXTRACT gr-pager/src/Makefile bin_SCRIPTS >>$NAME
-$EXTRACT gr-pager/src/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT gr-pager/src/Makefile ourlib_LTLIBRARIES >>$NAME
-$EXTRACT gr-pager/src/Makefile ourlib_LTLIBRARIES |
-    sed -e 's/\.la$/.so/' >>$NAME
+$EXTRACT gr-radar-mono/src/python/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT gr-radar-mono/src/python/Makefile dist_bin_SCRIPTS >>$NAME
+echo usr/share/usrp/rev2/usrp_radar_mono.rbf >>$NAME
+echo usr/share/usrp/rev4/usrp_radar_mono.rbf >>$NAME
 
 # gnuradio-radio-astronomy
 NAME=debian/gnuradio-radio-astronomy.install
@@ -331,26 +344,37 @@ rm -f $NAME
 touch $NAME
 $EXTRACT gr-radio-astronomy/src/python/Makefile ourpython_PYTHON >>$NAME
 $EXTRACT gr-radio-astronomy/src/python/Makefile wxguipython_PYTHON >>$NAME
-$EXTRACT gr-radio-astronomy/src/python/Makefile bin_SCRIPTS >>$NAME
-$EXTRACT gr-radio-astronomy/src/lib/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT gr-radio-astronomy/src/lib/Makefile ourlib_LTLIBRARIES >>$NAME
-$EXTRACT gr-radio-astronomy/src/lib/Makefile ourlib_LTLIBRARIES |
+$EXTRACT gr-radio-astronomy/src/python/Makefile dist_bin_SCRIPTS >>$NAME
+$EXTRACT gr-radio-astronomy/src/lib/Makefile ra_python_PYTHON >>$NAME
+$EXTRACT gr-radio-astronomy/src/lib/Makefile ra_pylib_LTLIBRARIES >>$NAME
+$EXTRACT gr-radio-astronomy/src/lib/Makefile ra_pylib_LTLIBRARIES |
     sed -e 's/\.la$/.so/' >>$NAME
 
-# gnuradio-radar-mono
-NAME=debian/gnuradio-radar-mono.install
+# grc
+NAME=debian/grc.install
 rm -f $NAME
 touch $NAME
-$EXTRACT gr-radar-mono/src/python/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT gr-radar-mono/src/python/Makefile bin_SCRIPTS >>$NAME
-echo usr/share/usrp/rev2/usrp_radar_mono.rbf >>$NAME
-echo usr/share/usrp/rev4/usrp_radar_mono.rbf >>$NAME
-
-# gnuradio-sounder
-NAME=debian/gnuradio-sounder.install
-rm -f $NAME
-touch $NAME
-$EXTRACT gr-sounder/src/python/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT gr-sounder/src/python/Makefile bin_SCRIPTS >>$NAME
-echo usr/share/usrp/rev2/usrp_sounder.rbf
-echo usr/share/usrp/rev4/usrp_sounder.rbf
+$EXTRACT grc/data/platforms/base/Makefile dist_ourdata_DATA >>$NAME
+$EXTRACT grc/data/platforms/python/Makefile dist_ourdata_DATA >>$NAME
+$EXTRACT grc/data/platforms/python/blocks/Makefile dist_ourdata_DATA >>$NAME
+$EXTRACT grc/examples/Makefile dist_audiodata_DATA >>$NAME
+$EXTRACT grc/examples/Makefile dist_simpledata_DATA >>$NAME
+$EXTRACT grc/examples/Makefile dist_trellisdata_DATA >>$NAME
+$EXTRACT grc/examples/Makefile dist_usrpdata_DATA >>$NAME
+$EXTRACT grc/examples/Makefile dist_xmlrpcdata_DATA >>$NAME
+$EXTRACT grc/freedesktop/Makefile dist_ourdata_DATA >>$NAME
+$EXTRACT grc/freedesktop/Makefile dist_bin_SCRIPTS >>$NAME
+$EXTRACT grc/scripts/Makefile dist_bin_SCRIPTS >>$NAME
+$EXTRACT grc/src/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/src/grc_gnuradio/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/src/grc_gnuradio/blks2/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/src/grc_gnuradio/usrp/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/src/grc_gnuradio/wxgui/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/src/grc_gnuradio/wxgui/Makefile oursubpython_PYTHON >>$NAME
+$EXTRACT grc/src/gui/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/src/platforms/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/src/platforms/base/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/src/platforms/gui/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/src/platforms/python/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/src/platforms/python/utils/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/src/utils/Makefile ourpython_PYTHON >>$NAME

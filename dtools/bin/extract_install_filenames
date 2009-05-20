@@ -84,12 +84,12 @@ def main():
     target_files = make.readline().rstrip()
     if target_dirname.startswith('/'):
         target_dirname = target_dirname[1:]
-    
+   
     #print "target_dirname =", target_dirname
     #print "target_files =", target_files
 
     for f in target_files.split():
-        sys.stdout.write(os.path.join(target_dirname, f) + '\n')
+        sys.stdout.write(os.path.join(target_dirname, f.split('/')[-1]) + '\n')
 
 if __name__ == '__main__':
   main()
