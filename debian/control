@@ -195,7 +195,7 @@ Section: libdevel
 Architecture: any 
 Replaces: libgnuradio-core0-dev
 Conflicts: libgnuradio-core0-dev
-Depends: libgnuradio-core (= ${binary:Version}), libgruel-dev (= ${binary:Version}), libgnuradio-omnithread-dev (= ${binary:Version}), libboost-thread1.37-dev, libboost-date-time1.37-dev, libgsl0-dev, libfftw3-dev
+Depends: libgnuradio-core (= ${binary:Version}), libgruel-dev (= ${binary:Version}), libgnuradio-omnithread-dev (= ${binary:Version}), libboost-thread1.37-dev, libboost-date-time1.37-dev, libgsl0-dev, libfftw3-dev, swig
 Description: The GNU Software Radio Core Library
  This package contains the core GNU Radio libraries.
  .
@@ -491,7 +491,7 @@ Description: GNU Radio Radio Astronomy Applications
 
 Package: grc
 Architecture: any
-Depends: python (>= 2.6), gnuradio, gnuradio-doc, usrp-doc
+Depends: python (>= 2.6), gnuradio, gnuradio-doc, usrp-doc, python-lxml, python-cheetah, python-gtk2
 Section: comm
 XB-Python-Version: 2.6
 Description: The GNU Radio Companion
