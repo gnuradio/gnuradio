@@ -7,7 +7,7 @@ Section: comm
 Priority: optional
 Maintainer: Johnathan Corgan <jcorgan@corganenterprises.com>
 Build-Conflicts: automake1.8, automake1.9
-Build-Depends: debhelper (>= 5.0.37.2), build-essential, automake, libtool, pkg-config, python-dev, swig, fftw3-dev | libfftw3-dev, libcppunit-dev, libboost1.37-dev, libgsl0-dev, guile-1.8, libasound2-dev, python-wxgtk2.8, python-numpy, doxygen, xmlto, sdcc-nf, libusb-dev, libjack-dev, portaudio19-dev, libsdl1.2-dev, python-cheetah, python-lxml, python-gtk2
+Build-Depends: debhelper (>= 5.0.37.2), build-essential, automake, libtool, pkg-config, python-dev, swig, fftw3-dev | libfftw3-dev, libcppunit-dev, libboost1.37-dev, libgsl0-dev, guile-1.8, libasound2-dev, python-wxgtk2.8, python-numpy, doxygen, xmlto, sdcc-nf, libusb-dev, libjack-dev, portaudio19-dev, libsdl1.2-dev, python-cheetah, python-lxml, python-gtk2, libqt4-dev, libqwt5-qt4-dev, libqwtplot3d-qt4-dev
 Standards-Version: 3.7.2
 XS-Python-Version: = 2.6
 

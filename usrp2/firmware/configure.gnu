@@ -21,6 +21,7 @@ do
       (RANLIB=*)   ;;
       (STRIP=*)    ;;
       (F77=*)      ;;
+      (FFLAGS=*)   ;;
       (CFLAGS=*)   ;;
       (CXXFLAGS=*) ;;
       (CPPFLAGS=*) ;;

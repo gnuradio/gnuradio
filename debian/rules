@@ -51,7 +51,7 @@ configure-stamp:
 build: build-stamp
 build-stamp: configure-stamp
 
-	$(MAKE) -j
+	$(MAKE)
 	$(MAKE) check
 	touch $@
 
@@ -107,8 +107,7 @@ binary-common:
 	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
-	mkdir -p ../debfiles
-	dh_builddeb --destdir=../debfiles
+	dh_builddeb
 
 # Build architecture independant packages using the common target.
 binary-indep: build install

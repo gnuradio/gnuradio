@@ -8,5 +8,3 @@ svn-buildpackage \
     --svn-reuse \
     -nc \
     -rfakeroot
-
-
