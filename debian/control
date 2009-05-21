@@ -491,7 +491,7 @@ Description: GNU Radio Radio Astronomy Applications
 
 Package: grc
 Architecture: any
-Depends: python (>= 2.6), python-gnuradio
+Depends: python (>= 2.6), gnuradio, gnuradio-doc, usrp-doc
 Section: comm
 XB-Python-Version: 2.6
 Description: The GNU Radio Companion
