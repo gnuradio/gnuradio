@@ -33,7 +33,7 @@ gr_make_rms_ff (double alpha = 0.0001);
 
 /*!
  * \brief RMS average power
- * \ingroup math
+ * \ingroup math_blk
  */
 class gr_rms_ff : public gr_sync_block
 {

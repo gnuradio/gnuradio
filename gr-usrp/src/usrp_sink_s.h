@@ -43,7 +43,9 @@ usrp_make_sink_s (int which_board=0,
 		  ) throw (std::runtime_error);
 
 /*!
- * \brief interface to Universal Software Radio Peripheral Tx path (Rev 1)
+ * \brief Interface to Universal Software Radio Peripheral Tx path
+ * \ingroup usrp
+ * \ingroup sink_blk
  *
  * input: short
  */

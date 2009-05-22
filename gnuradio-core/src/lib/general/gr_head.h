@@ -28,7 +28,7 @@
 
 /*!
  * \brief copies the first N items to the output then signals done
- * \ingroup flow
+ * \ingroup slicedice_blk
  *
  * Useful for building test cases
  */

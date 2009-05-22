@@ -37,7 +37,7 @@ gr_make_probe_mpsk_snr_c(double alpha = 0.0001);
  * This technique assumes an AWGN channel.
  *
  * \param alpha  Mean and variance smoothing filter constant
- * \ingroup sink
+ * \ingroup sink_blk
  *
  * Compute the running average of the signal mean and noise variance.
  * The estimated signal mean, noise variance, and SNR are available

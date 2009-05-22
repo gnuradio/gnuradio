@@ -32,7 +32,7 @@ gr_frequency_modulator_fc_sptr gr_make_frequency_modulator_fc (double sensitivit
 
 /*!
  * \brief Frequency modulator block
- * \ingroup modulation
+ * \ingroup modulation_blk
  *
  * float input; complex baseband output
  */

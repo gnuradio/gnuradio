@@ -47,7 +47,7 @@ gr_make_udp_sink (size_t itemsize,
 
 /*!
  * \brief Write stream to an UDP socket.
- * \ingroup sink
+ * \ingroup sink_blk
  * 
  * \param itemsize     The size (in bytes) of the item datatype
  * \param src          The source address as either the host name or the 'numbers-and-dots'

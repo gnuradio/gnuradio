@@ -43,7 +43,6 @@ typedef boost::shared_ptr<cvsd_decode_bs> cvsd_decode_bs_sptr;
   * \param neg_accum_max  Minimum integer value allowed for the internal reference.  Default: "-32767" (-2^15 + 1 or MINSHORT+1)
   *
   */
-
 cvsd_decode_bs_sptr cvsd_make_decode_bs (short min_step=10,
 					   short max_step=1280,
 					   double step_decay=0.9990234375,
@@ -58,7 +57,7 @@ cvsd_decode_bs_sptr cvsd_make_decode_bs (short min_step=10,
  * is modeled after the CVSD encoder/decoder specifications defined in the
  * Bluetooth standard.
  *
- * \ingroup block
+ * \ingroup vocoder
  *
  * CVSD is a method for encoding speech that seeks to reduce the
  * bandwidth required for digital voice transmission.  CVSD takes

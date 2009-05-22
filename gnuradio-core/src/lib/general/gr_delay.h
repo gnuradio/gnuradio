@@ -32,7 +32,7 @@ gr_delay_sptr gr_make_delay (size_t itemsize, int delay);
 
 /*!
  * \brief delay the input by a certain number of samples
- * \ingroup misc
+ * \ingroup misc_blk
  */
 class gr_delay : public gr_sync_block
 {

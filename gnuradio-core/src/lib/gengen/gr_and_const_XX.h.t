@@ -34,7 +34,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 /*!
  * \brief output_N = input_N & value
- * \ingroup math
+ * \ingroup math_blk
  *
  * bitwise boolean and of const to the data stream.
  */

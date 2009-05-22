@@ -34,7 +34,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 /*!
  * \brief output = input_0 & input_1 & , ... & input_N)
- * \ingroup math
+ * \ingroup math_blk
  *
  * bitwise boolean and across all input streams.
  */

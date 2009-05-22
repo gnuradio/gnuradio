@@ -35,7 +35,7 @@ gr_make_single_pole_iir_filter_ff (double alpha, unsigned int vlen=1);
 
 /*!
  * \brief  single pole IIR filter with float input, float output
- * \ingroup filter
+ * \ingroup filter_blk
  *
  * The input and output satisfy a difference equation of the form
 

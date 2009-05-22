@@ -32,7 +32,7 @@ gr_dpll_bb_sptr gr_make_dpll_bb (float period, float gain);
 
 /*!
  * \brief Detect the peak of a signal
- * \ingroup level
+ * \ingroup level_blk
  *
  * If a peak is detected, this block outputs a 1, 
  * or it outputs 0's.

@@ -27,9 +27,8 @@
 
 /*!
  * \brief Implements Goertzel single-bin DFT calculation
- * \ingroup dft
+ * \ingroup misc
  */
-
 class gri_goertzel
 {
 public:

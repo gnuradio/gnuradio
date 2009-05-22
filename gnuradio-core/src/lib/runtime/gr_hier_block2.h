@@ -36,7 +36,8 @@ class gr_hier_block2_detail;
 
 /*!
  * \brief gr_hier_block2 - Hierarchical container class for gr_block's
- * \ingroup internal
+ * \ingroup container_blk
+ * \ingroup base_blk
  *
  */
 class gr_hier_block2 : public gr_basic_block

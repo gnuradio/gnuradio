@@ -34,7 +34,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 /*!
  * \brief Map a stream of symbol indexes (unpacked bytes or shorts) to stream of float or complex onstellation points.in \p D dimensions (\p D = 1 by default)
- * \ingroup converter
+ * \ingroup converter_blk
  *
  * input: stream of @I_TYPE@; output: stream of @O_TYPE@
  *

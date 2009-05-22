@@ -35,7 +35,7 @@ gr_constellation_decoder_cb_sptr
 
 /*!
  * \brief Constellation Decoder
- * \ingroup coding
+ * \ingroup coding_blk
  *
  */
 class gr_constellation_decoder_cb : public gr_sync_block

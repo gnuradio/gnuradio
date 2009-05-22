@@ -35,7 +35,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 /*!
  * \brief output = sum(input[0]...input[n])
- * \ingroup math
+ * \ingroup math_blk
  *
  * Integrate successive samples in input stream and decimate
  */

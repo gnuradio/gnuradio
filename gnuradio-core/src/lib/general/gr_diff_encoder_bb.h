@@ -32,7 +32,7 @@ gr_diff_encoder_bb_sptr gr_make_diff_encoder_bb (unsigned int modulus);
 
 /*!
  * \brief y[0] = (x[0] + y[-1]) % M
- * \ingroup coding
+ * \ingroup coding_blk
  *
  * Differential encoder
  */

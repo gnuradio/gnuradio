@@ -1,67 +1,43 @@
 /*!
- * \defgroup block Signal Processing Blocks
- * These are the signal processing blocks...
+ * \defgroup block GNU Radio C++ Signal Processing Blocks
+ * \brief All C++ blocks that can be used in GR graphs are listed here or in
+ * the subcategories below.  
+ *
+ * Sorry, at this time the Python hierarchical blocks are not included
+ * in this index.
  * @{
  */
 
-/*!
- * \defgroup source Signal Sources
- * signal sources docs...
+/*! \defgroup container_blk Top Block and Hierarchical Block Base Classes	*/
+/*! \defgroup source_blk Signal Sources			*/
+/*! \defgroup sink_blk Signal Sinks			*/
+/*! \defgroup filter_blk Filters			*/
+/*! \defgroup math_blk Mathematics			*/
+/*! \defgroup modulation_blk Signal Modulation		*/
+/*! \defgroup demodulation_blk Signal Demodulation	*/
+/*! \defgroup coding_blk Information Coding and Decoding*/
+/*! \defgroup synch_blk Synchronization			*/
+/*! \defgroup eq_blk Equalization			*/
+/*! \defgroup converter_blk Type Conversions		*/
+/*! \defgroup level_blk Signal Level Control (AGC)	*/
+/*! \defgroup dft_blk Fourier Transform			*/
+/*! \defgroup wavelet_blk Wavelet Transform		*/
+/*! \defgroup misc_blk Miscellaneous Blocks		*/
+/*! \defgroup slicedice_blk Slicing and Dicing Streams  */
+/*! \defgroup vocoder_blk Voice Encoders and Decoders	*/
+
+/*! 
+ * \defgroup base_blk Base classes for GR Blocks
+ * \brief All C++ blocks are derived from these base classes
  */
 
-/*!
- * \defgroup sink Signal Sinks
- * docs for sinks...
- */
-
-/*!
- * \defgroup filter Filters
- */
-
-/*!
- * \defgroup converter Type Conversions
- */
-
-/*!
- * \defgroup level Signal Level Control
- */
-
-/*!
- * \defgroup clock Signal Clock Synchronization
- */
-
-/*!
- * \defgroup dft Fourier Transformation
- */
-
-/*!
- * \defgroup synch Synchronization
- */
-
-/*!
- * \defgroup packet Packetization
- */
-
-/*!
- * \defgroup logic Logical
- */
 
 /*! @} */
 
-/*! \defgroup filter_design Digital Filter Design		*/
-/*! \defgroup graphical Graphical Utilities		*/
-/*! \defgroup encdec Voice Encoders and Decoders	*/
-/*! \defgroup coding Information Coding and Decoding			*/
-/*! \defgroup modulation Signal Modulation			*/
-/*! \defgroup demodulation Signal Demodulation			*/
-/*! \defgroup flow Samples Flow Control			*/
-
-/*! \defgroup math	Mathmatics			*/
-/*! \defgroup tools Tools				*/
-/*! \defgroup misc Miscellaneous				*/
+/*! \defgroup filter_design Digital Filter Design	*/
+/*! \defgroup misc Miscellaneous			*/
 /*! \defgroup internal Implementation Details		*/
 
-/*! \defgroup base Misc Common Base Classes			*/
 /*!
  * \defgroup applications Applications
  * These are some applications build using gnuradio...
@@ -90,6 +66,6 @@
 
 /*! @} */
 
-/*! \defgroup usrp USRP	*/
-/*! \defgroup usrp2 USRP2	*/
-/*! \defgroup hardware Hardware				*/
+/*! \defgroup usrp USRP					*/
+/*! \defgroup usrp2 USRP2				*/
+/*! \defgroup hardware Misc Hardware Control		*/

@@ -34,7 +34,7 @@ gr_message_source_sptr gr_make_message_source (size_t itemsize, int msgq_limit=0
 
 /*!
  * \brief Turn received messages into a stream
- * \ingroup source
+ * \ingroup source_blk
  */
 class gr_message_source : public gr_sync_block
 {

@@ -35,7 +35,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 /*!
  * \brief output is the moving sum of the last N samples, scaled by the scale factor
- * \ingroup filter
+ * \ingroup filter_blk
  *
  * max_iter limits how long we go without flushing the accumulator
  * This is necessary to avoid numerical instability for float and complex.

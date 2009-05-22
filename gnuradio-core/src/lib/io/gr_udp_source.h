@@ -44,7 +44,7 @@ gr_udp_source_sptr gr_make_udp_source(size_t itemsize, const char *src,
 
 /*! 
  * \brief Read stream from an UDP socket.
- * \ingroup sink
+ * \ingroup source_blk
  *
  * \param itemsize     The size (in bytes) of the item datatype
  * \param src          The source address as either the host name or the 'numbers-and-dots'

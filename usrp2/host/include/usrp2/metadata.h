@@ -27,6 +27,7 @@ namespace usrp2 {
 
   /*!
    * \brief metadata associated with received frames
+   * \ingroup usrp2
    */
   struct rx_metadata {
     uint32_t		word0;			//< debugging, extensions
@@ -43,6 +44,7 @@ namespace usrp2 {
 
   /*!
    * \brief metadata associated with transmitted frames
+   * \ingroup usrp2
    */
   struct tx_metadata {
     fpga_timestamp	timestamp;		//< time to transmit first sample of frame

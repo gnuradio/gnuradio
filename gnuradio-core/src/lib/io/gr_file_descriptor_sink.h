@@ -32,7 +32,7 @@ gr_file_descriptor_sink_sptr gr_make_file_descriptor_sink (size_t itemsize, int 
 
 /*!
  * \brief Write stream to file descriptor.
- * \ingroup sink
+ * \ingroup sink_blk
  */
 
 class gr_file_descriptor_sink : public gr_sync_block

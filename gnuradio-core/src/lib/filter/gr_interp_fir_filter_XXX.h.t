@@ -38,7 +38,7 @@ class @FIR_TYPE@;
 
 /*!
  * \brief Interpolating FIR filter with @I_TYPE@ input, @O_TYPE@ output and @TAP_TYPE@ taps
- * \ingroup filter
+ * \ingroup filter_blk
  */
 class @NAME@ : public gr_sync_interpolator
 {

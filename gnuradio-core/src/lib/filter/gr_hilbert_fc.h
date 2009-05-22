@@ -38,7 +38,7 @@ class gr_fir_fff;
 
 /*!
  * \brief Hilbert transformer.
- * \ingroup filter
+ * \ingroup filter_blk
  *
  * real output is input appropriately delayed.
  * imaginary output is hilbert filtered (90 degree phase shift)

@@ -32,7 +32,7 @@ typedef boost::shared_ptr<gr_skiphead> gr_skiphead_sptr;
 
 /*!
  * \brief skips the first N items, from then on copies items to the output
- * \ingroup flow
+ * \ingroup slicedice_blk
  *
  * Useful for building test cases and sources which have metadata or junk at the start
  */

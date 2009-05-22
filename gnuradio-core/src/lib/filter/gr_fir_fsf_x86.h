@@ -27,7 +27,7 @@
 
 /*!
  * \brief 3DNow! version of gr_fir_fsf
- * \ingroup filter
+ * \ingroup filter_blk
  */
 class gr_fir_fsf_3dnow : public gr_fir_fsf_simd
 {
@@ -38,7 +38,7 @@ public:
 
 /*!
  * \brief SSE version of gr_fir_fsf
- * \ingroup filter
+ * \ingroup filter_blk
  */
 class gr_fir_fsf_sse : public gr_fir_fsf_simd
 {

@@ -34,7 +34,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 /*!
  * \brief output = prod (input_0, input_1, ...)
- * \ingroup math
+ * \ingroup math_blk
  *
  * Multiply across all input streams.
  */

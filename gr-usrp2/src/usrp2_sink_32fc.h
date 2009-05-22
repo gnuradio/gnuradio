@@ -33,6 +33,10 @@ usrp2_make_sink_32fc(const std::string &ifc="eth0",
 		     const std::string &mac="")
   throw (std::runtime_error);
 
+/*!
+ * \ingroup sink_blk
+ * \ingroup usrp2
+ */
 class usrp2_sink_32fc : public usrp2_sink_base 
 {
 private:

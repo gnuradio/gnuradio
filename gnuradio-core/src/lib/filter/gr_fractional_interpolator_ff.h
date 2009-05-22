@@ -35,7 +35,7 @@ gr_fractional_interpolator_ff_sptr gr_make_fractional_interpolator_ff (float pha
 
 /*!
  * \brief Interpolating mmse filter with float input, float output
- * \ingroup filter
+ * \ingroup filter_blk
  */
 class gr_fractional_interpolator_ff : public gr_block
 {

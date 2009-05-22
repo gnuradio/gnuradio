@@ -48,7 +48,9 @@ usrp_make_source_s (int which_board=0,
 		    ) throw (std::runtime_error);
 
 /*!
- * \brief interface to Universal Software Radio Peripheral Rx path (Rev 1)
+ * \brief Interface to Universal Software Radio Peripheral Rx path
+ * \ingroup usrp
+ * \ingroup source_blk
  *
  * output: 1 stream of short
  */

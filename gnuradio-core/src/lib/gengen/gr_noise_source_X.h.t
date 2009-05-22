@@ -38,7 +38,7 @@ gr_make_@BASE_NAME@ (gr_noise_type_t type, float ampl, long seed = 3021);
 
 /*!
  * \brief random number source
- * \ingroup source
+ * \ingroup source_blk
  */
 class @NAME@ : public gr_sync_block {
   friend @NAME@_sptr 

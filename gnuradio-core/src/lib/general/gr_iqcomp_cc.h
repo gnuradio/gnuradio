@@ -33,7 +33,7 @@ gr_iqcomp_cc_sptr gr_make_iqcomp_cc (float mu);
 
 /*!
  * \brief 
- * \ingroup 
+ * \ingroup misc_blk
  */
 class gr_iqcomp_cc : public gr_sync_block
 {

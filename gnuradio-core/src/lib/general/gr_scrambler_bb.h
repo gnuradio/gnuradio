@@ -39,7 +39,7 @@ gr_scrambler_bb_sptr gr_make_scrambler_bb(int mask, int seed, int len);
  * \param seed     Initial shift register contents
  * \param len      Shift register length
  *
- * \ingroup misc
+ * \ingroup coding_blk
  */
 
 class gr_scrambler_bb : public gr_sync_block

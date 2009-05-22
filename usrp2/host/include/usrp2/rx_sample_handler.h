@@ -26,6 +26,7 @@ namespace usrp2 {
 
   /*!
    * \brief Abstract function object called to handle received data blocks.
+   * \ingroup usrp2
    *
    * An object derived from this class is passed to usrp2::rx_samples
    * to process the received frames of samples.

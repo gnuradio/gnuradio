@@ -32,7 +32,7 @@ gr_binary_slicer_fb_sptr gr_make_binary_slicer_fb ();
 
 /*!
  * \brief slice float binary symbol outputting 1 bit output
- * \ingroup converter
+ * \ingroup converter_blk
  *
  * x <  0 --> 0
  * x >= 0 --> 1

@@ -32,7 +32,7 @@ gr_make_fft_vcc_fftw (int fft_size, bool forward, const std::vector<float> &wind
 
 /*!
  * \brief Compute forward or reverse FFT.  complex vector in / complex vector out.
- * \ingroup dft
+ * \ingroup dft_blk
  *
  * Concrete class that uses FFTW.
  */

@@ -34,7 +34,7 @@ class gri_fft_real_rev;
 
 /*!
  * \brief Fast FFT filter with float input, float output and float taps
- * \ingroup filter
+ * \ingroup filter_blk
  */
 class gr_fft_filter_fff : public gr_sync_decimator
 {

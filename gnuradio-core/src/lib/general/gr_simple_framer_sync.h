@@ -28,7 +28,7 @@
  * the "mseq" matlab/octave code downloaded from:
  * http://www.mathworks.com/matlabcentral/fileexchange/loadFile.do?objectId=990&objectType=file
  *
- * \ingroup synch
+ * \ingroup synch_blk
  * 31-bit m-sequence:
  *	0110100100001010111011000111110
  *	0x690AEC76 (padded on right with a zero)

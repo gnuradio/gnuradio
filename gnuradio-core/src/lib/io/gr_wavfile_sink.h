@@ -48,7 +48,7 @@ gr_make_wavfile_sink (const char *filename,
  * Values are within [-1;1].
  * Check gr_make_wavfile_source() for extra info.
  *
- * \ingroup sink
+ * \ingroup sink_blk
  */
 class gr_wavfile_sink : public gr_sync_block
 {

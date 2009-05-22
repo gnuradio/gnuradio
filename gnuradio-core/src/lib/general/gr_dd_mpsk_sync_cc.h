@@ -37,7 +37,7 @@ gr_make_dd_mpsk_sync_cc (float alpha, float beta,
 
 /*!
  * \brief Decision directed M-PSK synchronous demod 
- * \ingroup clock
+ * \ingroup synch_blk
  * This block performs joint carrier tracking and symbol timing recovery.
  *
  * input: complex baseband; output: properly timed complex samples ready for slicing.

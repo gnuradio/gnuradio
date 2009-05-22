@@ -42,6 +42,10 @@ struct freq_result_t
 
 /******************************************************************************/
 
+/*!
+ * \brief Abstract base class for all USRP daughterboards
+ * \ingroup usrp
+ */
 class db_base
 {
  protected:

@@ -33,7 +33,7 @@ gr_make_cma_equalizer_cc(int num_taps, float modulus, float mu);
 
 /*!
  * \brief Implements constant modulus adaptive filter on complex stream
- * \ingroup filter
+ * \ingroup eq_blk
  */
 class gr_cma_equalizer_cc : public gr_adaptive_fir_ccf
 {

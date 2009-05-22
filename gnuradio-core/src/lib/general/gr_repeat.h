@@ -32,7 +32,7 @@ gr_repeat_sptr gr_make_repeat(size_t itemsize, int interp);
 
 /*!
  * \brief Repeat a sample 'interp' times in output stream
- * \ingroup converter
+ * \ingroup misc_blk
  */
 
 class gr_repeat : public gr_sync_interpolator

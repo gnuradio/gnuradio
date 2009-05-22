@@ -31,7 +31,7 @@ gr_bytes_to_syms_sptr gr_make_bytes_to_syms ();
 
 /*!
  * \brief Convert stream of bytes to stream of +/- 1 symbols
- * \ingroup converter
+ * \ingroup converter_blk
  *
  * input: stream of bytes; output: stream of float
  *

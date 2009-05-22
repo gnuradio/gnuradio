@@ -28,7 +28,7 @@
 
 /*!
  * \brief Bit bucket
- * \ingroup sink
+ * \ingroup sink_blk
  */
  
 class gr_null_sink : public gr_sync_block

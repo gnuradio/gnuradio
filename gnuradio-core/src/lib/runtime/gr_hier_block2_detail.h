@@ -26,6 +26,9 @@
 #include <gr_flat_flowgraph.h>
 #include <boost/utility.hpp>
 
+/*!
+ * \ingroup internal
+ */
 class gr_hier_block2_detail : boost::noncopyable
 {
 public:

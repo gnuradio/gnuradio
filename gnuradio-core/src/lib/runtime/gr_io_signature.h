@@ -85,6 +85,7 @@ gr_make_io_signaturev(int min_streams, int max_streams,
 
 /*!
  * \brief i/o signature for input and output ports.
+ * \brief misc
  */
 class gr_io_signature {
   int			d_min_streams;

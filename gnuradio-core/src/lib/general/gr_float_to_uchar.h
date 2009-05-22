@@ -33,7 +33,7 @@ gr_make_float_to_uchar ();
 
 /*!
  * \brief Convert stream of float to a stream of unsigned char
- * \ingroup converter
+ * \ingroup converter_blk
  */
 
 class gr_float_to_uchar : public gr_sync_block

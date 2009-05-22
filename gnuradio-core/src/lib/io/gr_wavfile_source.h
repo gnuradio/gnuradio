@@ -37,7 +37,7 @@ gr_make_wavfile_source (const char *filename, bool repeat = false);
  * Unless otherwise called, values are within [-1;1].
  * Check gr_make_wavfile_source() for extra info.
  *
- * \ingroup source
+ * \ingroup source_blk
  */
 
 class gr_wavfile_source : public gr_sync_block

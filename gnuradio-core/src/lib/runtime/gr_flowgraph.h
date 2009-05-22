@@ -27,9 +27,8 @@
 #include <iostream>
 
 /*!
- *\brief Class representing a specific input or output graph endpoint
+ * \brief Class representing a specific input or output graph endpoint
  * \ingroup internal
- *
  */
 class gr_endpoint
 {
@@ -85,8 +84,8 @@ typedef std::vector<gr_edge>::iterator gr_edge_viter_t;
 gr_flowgraph_sptr gr_make_flowgraph();
 
 /*!
- *\brief Class representing a directed, acyclic graph of basic blocks
- *
+ * \brief Class representing a directed, acyclic graph of basic blocks
+ * \ingroup internal
  */
 class gr_flowgraph
 {

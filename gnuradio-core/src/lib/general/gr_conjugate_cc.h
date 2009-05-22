@@ -34,7 +34,7 @@ gr_conjugate_cc_sptr gr_make_conjugate_cc ();
 
 /*!
  * \brief output = complex conjugate of input
- * \ingroup math
+ * \ingroup math_blk
  */
 class gr_conjugate_cc : public gr_sync_block
 {

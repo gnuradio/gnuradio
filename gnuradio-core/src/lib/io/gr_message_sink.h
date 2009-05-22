@@ -36,7 +36,7 @@ gr_message_sink_sptr gr_make_message_sink (size_t itemsize,
 
 /*!
  * \brief Gather received items into messages and insert into msgq
- * \ingroup sink
+ * \ingroup sink_blk
  */
 class gr_message_sink : public gr_sync_block
 {

@@ -27,7 +27,7 @@
 
 /*!
  * \brief 3DNow! version of gr_fir_ccf
- * \ingroup filter
+ * \ingroup filter_primitive
  */
 class gr_fir_ccf_3dnow : public gr_fir_ccf_simd
 {
@@ -38,7 +38,7 @@ public:
 
 /*!
  * \brief SSE version of gr_fir_ccf
- * \ingroup filter
+ * \ingroup filter_primitive
  */
 class gr_fir_ccf_sse : public gr_fir_ccf_simd
 {

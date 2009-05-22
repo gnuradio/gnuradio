@@ -33,7 +33,7 @@ gr_make_file_descriptor_source (size_t itemsize, int fd, bool repeat = false);
 
 /*!
  * \brief Read stream from file descriptor.
- * \ingroup source
+ * \ingroup source_blk
  */
 
 class gr_file_descriptor_source : public gr_sync_block

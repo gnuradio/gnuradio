@@ -32,7 +32,7 @@ typedef boost::shared_ptr<@NAME@> @NAME@_sptr;
 
 /*!
  * \brief source of @TYPE@'s that gets its data from a vector
- * \ingroup source
+ * \ingroup source_blk
  */
 
 class @NAME@ : public gr_sync_block {

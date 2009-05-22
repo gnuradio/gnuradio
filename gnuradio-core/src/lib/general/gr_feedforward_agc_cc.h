@@ -33,7 +33,7 @@ gr_make_feedforward_agc_cc(int nsamples, float reference = 1.0);
 
 /*!
  * \brief Non-causal AGC which computes required gain based on max absolute value over nsamples
- * \ingroup level
+ * \ingroup level_blk
  */
 class gr_feedforward_agc_cc : public gr_sync_block
 {

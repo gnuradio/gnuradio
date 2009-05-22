@@ -50,7 +50,7 @@ int gr_signbit (double x);
   
 /*!
  * \brief Fast arc tangent using table lookup and linear interpolation
- * \ingroup math
+ * \ingroup misc
  *
  * \param y component of input vector
  * \param x component of input vector

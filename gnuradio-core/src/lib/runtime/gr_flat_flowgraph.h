@@ -33,8 +33,7 @@ gr_flat_flowgraph_sptr gr_make_flat_flowgraph();
 /*!
  *\brief Class specializing gr_flat_flowgraph that has all nodes
  * as gr_blocks, with no hierarchy
- * \ingroup base
- *
+ * \ingroup internal
  */
 class gr_flat_flowgraph : public gr_flowgraph
 {

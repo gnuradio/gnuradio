@@ -27,7 +27,6 @@
 
 /*!
  * \brief high performance Automatic Gain Control class with attack and decay rate
- * \ingroup level
  *
  * Power is approximated by absolute value
  */

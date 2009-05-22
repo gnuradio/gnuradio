@@ -30,7 +30,7 @@ class gr_oscope_guts;
 
 /*!
  * \brief Abstract class for python oscilloscope module.
- * \ingroup sink
+ * \ingroup sink_blk
  *
  * Don't instantiate this.  Use gr_oscope_sink_f or gr_oscope_sink_c instead.
  */

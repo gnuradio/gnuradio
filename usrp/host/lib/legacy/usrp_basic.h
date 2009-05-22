@@ -57,6 +57,7 @@ enum txrx_t {
 
 /*!
  * \brief abstract base class for usrp operations
+ * \ingroup usrp
  */
 class usrp_basic : boost::noncopyable
 {
@@ -764,6 +765,7 @@ public:
 
 /*!
  * \brief class for accessing the receive side of the USRP
+ * \ingroup usrp
  */
 class usrp_basic_rx : public usrp_basic 
 {
@@ -871,6 +873,7 @@ public:
 
 /*!
  * \brief class for accessing the transmit side of the USRP
+ * \ingroup usrp
  */
 class usrp_basic_tx : public usrp_basic 
 {

@@ -34,7 +34,7 @@ typedef boost::shared_ptr<@NAME@> @NAME@_sptr;
 
 /*!
  * \brief signal generator with @TYPE@ output.
- * \ingroup source
+ * \ingroup source_blk
  */
 
 class @NAME@ : public gr_sync_block {

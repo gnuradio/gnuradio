@@ -34,7 +34,7 @@ gr_peak_detector2_fb_sptr gr_make_peak_detector2_fb (float threshold_factor_rise
 
 /*!
  * \brief Detect the peak of a signal
- * \ingroup level
+ * \ingroup level_blk
  *
  * If a peak is detected, this block outputs a 1, 
  * or it outputs 0's.  A separate debug output may be connected, to

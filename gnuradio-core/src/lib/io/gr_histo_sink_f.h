@@ -34,7 +34,7 @@ gr_histo_sink_f_sptr gr_make_histo_sink_f (gr_msg_queue_sptr msgq);
 
 /*!
  * \brief Histogram module.
- * \ingroup sink
+ * \ingroup sink_blk
  */
 class gr_histo_sink_f : public gr_sync_block
 {

@@ -31,7 +31,7 @@ gr_cpfsk_bc_sptr gr_make_cpfsk_bc(float k, float ampl, int samples_per_sym);
 /*!
  * \brief Perform continuous phase 2-level frequency shift keying modulation 
  * on an input stream of unpacked bits.
- * \ingroup modulation
+ * \ingroup modulation_blk
  *
  * \param k                     modulation index
  * \param ampl		        output amplitude

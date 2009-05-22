@@ -49,12 +49,7 @@ gr_test_sptr gr_make_test (const std::string &name=std::string("gr_test"),
  * factor and/or large output_multiple.
  * The runtime system should detect this and create large enough buffers
  * all through the signal chain.
- *
  */
-
-
-
-
 class gr_test : public gr_block {
 
  public:

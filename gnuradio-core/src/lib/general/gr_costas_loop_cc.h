@@ -30,7 +30,7 @@
 
 
 /*! \brief A Costas loop carrier recovery module.
- * \ingroup clock
+ * \ingroup synch_blk
  *  
  *  The Costas loop locks to the center frequency of a signal and
  *  downconverts it to baseband. The second (order=2) order loop is
@@ -49,8 +49,8 @@
  *  
  * \param alpha the loop gain used for phase adjustment
  * \param beta the loop gain for frequency adjustments
- * \param max_freq the maximum frequency deviation (normalized frequency) the loop can handle
- * \param min_freq the minimum frequency deviation (normalized frequency) the loop can handle
+ * \param max_freq the maximum frequency deviation (radians/sample) the loop can handle
+ * \param min_freq the minimum frequency deviation (radians/sample) the loop can handle
  * \param order the loop order, either 2 or 4
  */
 class gr_costas_loop_cc;
@@ -66,7 +66,7 @@ gr_make_costas_loop_cc (float alpha, float beta,
 
 /*!
  * \brief Carrier tracking PLL for QPSK
- * \ingroup clock
+ * \ingroup synch_blk
  * input: complex; output: complex
  * <br>The Costas loop can have two output streams:
  *    stream 1 is the baseband I and Q;

@@ -33,6 +33,10 @@ usrp2_make_sink_16sc(const std::string &ifc="eth0",
 		     const std::string &mac="")
   throw (std::runtime_error);
 
+/*!
+ * \ingroup sink_blk
+ * \ingroup usrp2
+ */
 class usrp2_sink_16sc : public usrp2_sink_base 
 {
 private:

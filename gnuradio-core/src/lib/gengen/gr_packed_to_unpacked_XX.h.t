@@ -36,7 +36,7 @@ gr_make_@BASE_NAME@ (unsigned int bits_per_chunk, gr_endianness_t endianness);
 
 /*!
  * \brief Convert a stream of packed bytes or shorts to stream of unpacked bytes or shorts.
- * \ingroup converter
+ * \ingroup converter_blk
  *
  * input: stream of @I_TYPE@; output: stream of @O_TYPE@
  *

@@ -34,7 +34,7 @@ gr_make_interleaved_short_to_complex ();
 
 /*!
  * \brief Convert stream of interleaved shorts to a stream of complex
- * \ingroup converter
+ * \ingroup converter_blk
  */
 
 class gr_interleaved_short_to_complex : public gr_sync_decimator

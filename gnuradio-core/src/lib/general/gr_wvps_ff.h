@@ -34,7 +34,7 @@ gr_make_wvps_ff(int ilen);
 
 /*!
  * \brief computes the Wavelet Power Spectrum from a set of wavelet coefficients
- * \ingroup misc
+ * \ingroup wavelet_blk
  */
 class gr_wvps_ff : public gr_sync_block
 {

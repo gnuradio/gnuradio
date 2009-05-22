@@ -36,7 +36,7 @@ gr_make_@BASE_NAME@ (int vlen = 1);
 
 /*!
  * \brief @TYPE@ sink that writes to a vector
- * \ingroup sink
+ * \ingroup sink_blk
  */
 
 class @NAME@ : public gr_sync_block {

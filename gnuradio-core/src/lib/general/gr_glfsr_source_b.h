@@ -34,7 +34,7 @@ gr_glfsr_source_b_sptr gr_make_glfsr_source_b(int degree, bool repeat=true, int 
 
 /*!
  * \brief Galois LFSR pseudo-random source
- * \ingroup source
+ * \ingroup source_blk
  */
 class gr_glfsr_source_b : public gr_sync_block 
 {

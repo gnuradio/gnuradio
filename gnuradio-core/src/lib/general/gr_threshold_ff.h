@@ -32,7 +32,7 @@ gr_threshold_ff_sptr gr_make_threshold_ff (float lo, float hi, float initial_sta
 
 /*!
  * \brief Please fix my documentation
- * \ingroup misc
+ * \ingroup misc_blk
  */
 class gr_threshold_ff : public gr_sync_block
 {

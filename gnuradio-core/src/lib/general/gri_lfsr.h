@@ -28,7 +28,7 @@
 
 /*!
  * \brief Fibonacci Linear Feedback Shift Register using specified polynomial mask
- * \ingroup math
+ * \ingroup misc
  *
  * Generates a maximal length pseudo-random sequence of length 2^degree-1
  * 

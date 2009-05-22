@@ -35,9 +35,14 @@ gr_throttle_sptr gr_make_throttle(size_t itemsize, double samples_per_sec);
 
 /*!
  * \brief throttle flow of samples such that the average rate does not exceed samples_per_sec.
- * \ingroup flow
+ * \ingroup misc_blk
  *
  * input: one stream of itemsize; output: one stream of itemsize
+ *
+ * N.B. this should only be used in GUI apps where there is no other
+ * rate limiting block.  It is not intended nor effective at precisely
+ * controlling the rate of samples.  That should be controlled by a
+ * source or sink tied to sample clock.  E.g., a USRP or audio card.
  */
 class gr_throttle : public gr_sync_block
 {

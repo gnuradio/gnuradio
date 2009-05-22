@@ -33,6 +33,10 @@ usrp2_make_source_32fc(const std::string &ifc="eth0",
 		       const std::string &mac="")
   throw (std::runtime_error);
 
+/*!
+ * \ingroup source_blk
+ * \ingroup usrp2
+ */
 class usrp2_source_32fc : public usrp2_source_base
 {
 private:

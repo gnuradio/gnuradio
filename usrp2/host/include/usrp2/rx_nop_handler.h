@@ -23,6 +23,8 @@
 #include <boost/shared_ptr.hpp>
 
 /*!
+ * \ingroup usrp2
+ *
  * Base class for receive handlers that must copy into potentially limited
  * range destination buffers.
  *

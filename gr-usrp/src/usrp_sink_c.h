@@ -44,7 +44,9 @@ usrp_make_sink_c (int which_board=0,
 
 
 /*!
- * \brief interface to Universal Software Radio Peripheral Tx path (Rev 1)
+ * \brief Interface to Universal Software Radio Peripheral Tx path
+ * \ingroup usrp
+ * \ingroup sink_blk
  *
  * input: gr_complex
  */

@@ -33,7 +33,7 @@ gr_check_lfsr_32k_s_sptr gr_make_check_lfsr_32k_s ();
 
 /*!
  * \brief sink that checks if its input stream consists of a lfsr_32k sequence.
- * \ingroup sink
+ * \ingroup sink_blk
  *
  * This sink is typically used along with gr_lfsr_32k_source_s to test
  * the USRP using its digital loopback mode.

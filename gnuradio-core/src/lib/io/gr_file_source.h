@@ -33,7 +33,7 @@ gr_make_file_source (size_t itemsize, const char *filename, bool repeat = false)
 
 /*!
  * \brief Read stream from file
- * \ingroup source
+ * \ingroup source_blk
  */
 
 class gr_file_source : public gr_sync_block

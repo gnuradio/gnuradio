@@ -33,7 +33,7 @@ gr_make_short_to_float ();
 
 /*!
  * \brief Convert stream of short to a stream of float
- * \ingroup converter
+ * \ingroup converter_blk
  */
 
 class gr_short_to_float : public gr_sync_block

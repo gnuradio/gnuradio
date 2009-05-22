@@ -41,6 +41,7 @@ gr_vco_f_sptr gr_make_vco_f(double sampling_rate, double sensitivity, double amp
 
 /*!
  * \brief VCO - Voltage controlled oscillator
+ * \ingroup modulator_blk
  *
  * input: float stream of control voltages; output: float oscillator output
  */

@@ -33,6 +33,9 @@ class usrp_standard_rx;
 typedef boost::shared_ptr<usrp_standard_tx> usrp_standard_tx_sptr;
 typedef boost::shared_ptr<usrp_standard_rx> usrp_standard_rx_sptr;
 
+/*!
+ * \ingroup usrp
+ */
 class usrp_standard_common
 {
   int	d_fpga_caps;		// capability register val
@@ -79,9 +82,11 @@ public:
 };
 
 /*!
- * \brief standard usrp RX class.  
+ * \brief The C++ interface the receive side of the USRP
+ * \ingroup usrp
  *
- * Assumes digital down converter in FPGA
+ * This is the recommended interface to USRP receive functionality
+ * for applications that use the USRP but not GNU Radio.
  */
 class usrp_standard_rx : public usrp_basic_rx, public usrp_standard_common
 {
@@ -272,7 +277,11 @@ class usrp_standard_rx : public usrp_basic_rx, public usrp_standard_common
 // ----------------------------------------------------------------
 
 /*!
- * \brief standard usrp TX class.
+ * \brief The C++ interface the transmit side of the USRP
+ * \ingroup usrp
+ *
+ * This is the recommended interface to USRP transmit functionality
+ * for applications that use the USRP but not GNU Radio.
  *
  * Uses digital upconverter (coarse & fine modulators) in AD9862...
  */

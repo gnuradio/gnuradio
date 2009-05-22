@@ -34,7 +34,7 @@ gr_oscope_sink_f_sptr gr_make_oscope_sink_f (double sampling_rate, gr_msg_queue_
 
 /*!
  * \brief Building block for python oscilloscope module.
- * \ingroup sink
+ * \ingroup sink_blk
  *
  * Accepts multiple float streams.
  */

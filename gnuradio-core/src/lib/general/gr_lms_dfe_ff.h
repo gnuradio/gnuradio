@@ -33,7 +33,7 @@ gr_lms_dfe_ff_sptr gr_make_lms_dfe_ff (float lambda_ff, float lambda_fb,
 
 /*!
  * \brief Least-Mean-Square Decision Feedback Equalizer (float in/out)
- * \ingroup misc
+ * \ingroup eq_blk
  */
 class gr_lms_dfe_ff : public gr_sync_block
 {

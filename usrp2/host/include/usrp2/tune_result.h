@@ -21,6 +21,9 @@
 
 namespace usrp2 {
 
+  /*
+   * \ingroup usrp2
+   */
   class tune_result
   {
   public:

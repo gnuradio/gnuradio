@@ -68,6 +68,10 @@ namespace usrp2 {
   static const int GPIO_TX_BANK = 0;
   static const int GPIO_RX_BANK = 1;
 
+  /*!
+   * \brief standard C++ interface to USRP2
+   * \ingroup usrp2
+   */
   class usrp2 : boost::noncopyable
   {
   public:

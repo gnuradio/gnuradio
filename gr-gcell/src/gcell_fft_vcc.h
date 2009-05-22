@@ -35,7 +35,7 @@ gcell_make_fft_vcc(int fft_size, bool forward, const std::vector<float> &window,
 
 /*!
  * \brief Compute forward or reverse FFT.  complex vector in / complex vector out.
- * \ingroup dft
+ * \ingroup dft_blk
  *
  * Concrete class that uses gcell to offload FFT to SPEs.
  */

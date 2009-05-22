@@ -27,11 +27,9 @@
 
 /*!
  * \brief high performance Automatic Gain Control class
- * \ingroup level
  *
  * For Power the absolute value of the complex number is used.
  */
-
 class gri_agc2_cc {
 
  public:

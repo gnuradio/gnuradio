@@ -32,7 +32,7 @@ gr_make_probe_signal_f ();
 
 /*!
  * \brief Sink that allows a sample to be grabbed from Python.
- * \ingroup sink
+ * \ingroup sink_blk
  */
 class gr_probe_signal_f : public gr_sync_block
 {

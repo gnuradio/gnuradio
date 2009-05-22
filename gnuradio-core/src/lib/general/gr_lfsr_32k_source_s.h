@@ -33,7 +33,7 @@ gr_lfsr_32k_source_s_sptr gr_make_lfsr_32k_source_s ();
 
 /*!
  * \brief LFSR pseudo-random source with period of 2^15 bits (2^11 shorts)
- * \ingroup source
+ * \ingroup source_blk
  *
  * This source is typically used along with gr_check_lfsr_32k_s to test
  * the USRP using its digital loopback mode.

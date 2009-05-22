@@ -27,7 +27,7 @@
 
 /*!
  * \brief A source of zeros.
- * \ingroup source
+ * \ingroup source_blk
  */
 
 class gr_null_source : public gr_sync_block

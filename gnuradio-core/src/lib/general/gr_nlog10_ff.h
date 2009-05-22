@@ -31,7 +31,7 @@ gr_nlog10_ff_sptr gr_make_nlog10_ff (float n=1.0, unsigned vlen=1, float k=0);
 
 /*!
  * \brief output = n*log10(input) + k
- * \ingroup math
+ * \ingroup math_blk
  */
 class gr_nlog10_ff : public gr_sync_block
 {

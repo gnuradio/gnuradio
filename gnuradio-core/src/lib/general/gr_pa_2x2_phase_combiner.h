@@ -31,7 +31,7 @@ gr_pa_2x2_phase_combiner_sptr gr_make_pa_2x2_phase_combiner ();
 
 /*!
  * \brief pa_2x2 phase combiner
- * \ingroup misc
+ * \ingroup misc_blk
  *
  * Anntenas are arranged like this:
  *

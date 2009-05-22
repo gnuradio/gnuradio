@@ -38,7 +38,7 @@ gr_make_wavelet_ff(int size = 1024,
 
 /*!
  * \brief compute wavelet transform using gsl routines
- * \ingroup math
+ * \ingroup wavelet_blk
  */
 
 class gr_wavelet_ff : public gr_sync_block

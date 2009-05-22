@@ -26,7 +26,7 @@
 
 /*!
  * \brief fixed point sine and cosine and friends.
- * \ingroup math
+ * \ingroup misc
  *
  *   fixed pt	radians
  *  ---------	--------

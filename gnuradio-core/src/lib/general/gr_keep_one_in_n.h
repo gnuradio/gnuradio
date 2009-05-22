@@ -34,7 +34,7 @@ gr_make_keep_one_in_n (size_t item_size, int n);
 
 /*!
  * \brief decimate a stream, keeping one item out of every n.
- * \ingroup misc
+ * \ingroup slicedice_blk
  */
 class gr_keep_one_in_n : public gr_block
 {

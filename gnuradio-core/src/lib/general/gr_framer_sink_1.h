@@ -34,7 +34,7 @@ gr_make_framer_sink_1 (gr_msg_queue_sptr target_queue);
 
 /*!
  * \brief Given a stream of bits and access_code flags, assemble packets.
- * \ingroup sink
+ * \ingroup sink_blk
  *
  * input: stream of bytes from gr_correlate_access_code_bb
  * output: none.  Pushes assembled packet into target queue
