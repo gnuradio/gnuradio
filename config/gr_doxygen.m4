@@ -22,10 +22,12 @@ dnl
 AC_DEFUN([GR_CHECK_DOXYGEN],[
   AC_ARG_ENABLE(doxygen,
 		AC_HELP_STRING([--enable-doxygen],
-			       [enable documentation generation with doxygen (no)]))
+			       [enable documentation generation with doxygen (auto)]))
   AC_ARG_ENABLE(dot, AC_HELP_STRING([--enable-dot],[use 'dot' to generate graphs in doxygen (auto)]))
 
-  if test "x$enable_doxygen" = xyes; then
+  if test "x$enable_doxygen" = xno; then
+        enable_doc=no
+  else
         AC_PATH_PROG(DOXYGEN, doxygen, , $PATH)
         if test x$DOXYGEN = x; then
                 if test "x$enable_doxygen" = xyes; then
@@ -38,8 +40,6 @@ AC_DEFUN([GR_CHECK_DOXYGEN],[
 		generate_docs=docs
                 AC_PATH_PROG(DOT, dot, , $PATH)
         fi
-  else 
-        enable_doc=no
   fi
 
   AM_CONDITIONAL(DOC, test x$enable_doc = xyes)
