@@ -6,6 +6,8 @@ export DH_VERBOSE=1
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+export DH_PYCENTRAL=nomove
+
 clean:
 	dh_testdir
 	dh_testroot
@@ -41,7 +43,6 @@ configure-stamp:
 		--enable-shared \
 		--sysconfdir=/etc \
 		--enable-all-components \
-		--enable-doxygen \
 		--disable-gr-audio-osx \
 		--disable-gr-audio-windows \
 		--disable-gcell --disable-gr-gcell \
