@@ -40,6 +40,7 @@ gr_make_ofdm_frame_acquisition (unsigned int occupied_carriers, unsigned int fft
  * \brief take a vector of complex constellation points in from an FFT
  * and performs a correlation and equalization.
  * \ingroup demodulation_blk
+ * \ingroup ofdm_blk
  *
  * This block takes the output of an FFT of a received OFDM symbol and finds the 
  * start of a frame based on two known symbols. It also looks at the surrounding
@@ -59,12 +60,9 @@ class gr_ofdm_frame_acquisition : public gr_block
    * \brief Build an OFDM correlator and equalizer.
    * \param occupied_carriers   The number of subcarriers with data in the received symbol
    * \param fft_length          The size of the FFT vector (occupied_carriers + unused carriers)
-   * \param known_symbol1       A vector of complex numbers representing a known symbol at the
+   * \param cplen		The length of the cycle prefix
+   * \param known_symbol        A vector of complex numbers representing a known symbol at the
    *                            start of a frame (usually a BPSK PN sequence)
-   * \param known_symbol2       A vector of complex numbers representing a known symbol at the
-   *                            start of a frame after known_symbol1 (usually a BPSK PN sequence). 
-   *                            Both of these start symbols are differentially correlated to compensate
-   *                            for phase changes between symbols. 
    * \param max_fft_shift_len   Set's the maximum distance you can look between bins for correlation
    */
   friend gr_ofdm_frame_acquisition_sptr

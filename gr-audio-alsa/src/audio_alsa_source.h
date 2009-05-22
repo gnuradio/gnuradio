@@ -39,12 +39,12 @@ typedef boost::shared_ptr<audio_alsa_source> audio_alsa_source_sptr;
  * \brief Make an ALSA audio source.
  *
  * \param sampling_rate	sampling rate
- * \param dev ALSA pcm device name, e.g., "hw:0,0"
+ * \param device_name ALSA pcm device name, e.g., "hw:0,0"
  * \param ok_to_block  (currently ignored)
  */
 audio_alsa_source_sptr
 audio_alsa_make_source (int sampling_rate,
-			const std::string dev = "",
+			const std::string device_name = "",
 			bool ok_to_block = true);
 
 /*!

@@ -49,7 +49,7 @@ comedi_make_sink_s (int sampling_freq,
  */
 class comedi_sink_s : public gr_sync_block {
   friend comedi_sink_s_sptr
-  comedi_make_sink_s (int sampling_freq, const std::string device_name);
+  comedi_make_sink_s (int sampling_freq, const std::string dev);
 
   // typedef for pointer to class work method
   typedef int (comedi_sink_s::*work_t)(int noutput_items,

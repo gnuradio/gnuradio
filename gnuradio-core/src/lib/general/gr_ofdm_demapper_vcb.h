@@ -37,8 +37,8 @@ gr_make_ofdm_demapper_vcb (unsigned int bits_per_symbol, unsigned int vlen);
  * bits.  Abstract class must be subclassed with specific mapping.
  *
  * \ingroup demodulation_blk
+ * \ingroup ofdm_blk
  */
-
 class gr_ofdm_demapper_vcb : public gr_sync_decimator
 {
   friend gr_ofdm_demapper_vcb_sptr

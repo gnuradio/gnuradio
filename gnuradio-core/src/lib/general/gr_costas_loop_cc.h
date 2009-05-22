@@ -30,7 +30,7 @@
 
 
 /*! \brief A Costas loop carrier recovery module.
- * \ingroup synch_blk
+ * \ingroup sync_blk
  *  
  *  The Costas loop locks to the center frequency of a signal and
  *  downconverts it to baseband. The second (order=2) order loop is
@@ -66,7 +66,7 @@ gr_make_costas_loop_cc (float alpha, float beta,
 
 /*!
  * \brief Carrier tracking PLL for QPSK
- * \ingroup synch_blk
+ * \ingroup sync_blk
  * input: complex; output: complex
  * <br>The Costas loop can have two output streams:
  *    stream 1 is the baseband I and Q;
@@ -96,7 +96,7 @@ class gr_costas_loop_cc : public gr_sync_block
   float phase_detector_4(gr_complex sample) const;    // for QPSK
 
   /*! \brief the phase detector circuit for second-order loops
-   *  \param a complex sample
+   *  \param sample a complex sample
    *  \return the phase error
    */
   float phase_detector_2(gr_complex sample) const;    // for BPSK

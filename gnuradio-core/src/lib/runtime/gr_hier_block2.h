@@ -35,7 +35,7 @@ gr_hier_block2_sptr gr_make_hier_block2(const std::string &name,
 class gr_hier_block2_detail;
 
 /*!
- * \brief gr_hier_block2 - Hierarchical container class for gr_block's
+ * \brief Hierarchical container class for gr_block's and gr_hier_block2's
  * \ingroup container_blk
  * \ingroup base_blk
  *

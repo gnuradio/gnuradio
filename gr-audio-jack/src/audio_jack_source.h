@@ -35,12 +35,12 @@ typedef boost::shared_ptr<audio_jack_source> audio_jack_source_sptr;
  * \brief make a JACK audio source.
  *
  * \param sampling_rate	sampling rate in Hz
- * \param dev JACK device name, e.g., "gr_source"
+ * \param device_name JACK device name, e.g., "gr_source"
  * \param ok_to_block
  */
 audio_jack_source_sptr
 audio_jack_make_source (int sampling_rate,
-			const std::string dev = "",
+			const std::string device_name = "",
 			bool ok_to_block = true);
 
 int jack_source_process (jack_nframes_t nframes, void *arg);

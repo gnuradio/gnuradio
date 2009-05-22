@@ -31,7 +31,7 @@ pager_slicer_fb_sptr pager_make_slicer_fb(float alpha);
 
 /*!
  * \brief slicer description
- * \ingroup block
+ * \ingroup pager_blk
  */
 class pager_slicer_fb : public gr_sync_block
 {

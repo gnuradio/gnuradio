@@ -38,7 +38,7 @@ gr_make_correlate_access_code_bb (const std::string &access_code, int threshold)
 
 /*!
  * \brief Examine input for specified access code, one bit at a time.
- * \ingroup synch_blk
+ * \ingroup sync_blk
  *
  * input:  stream of bits, 1 bit per input byte (data in LSB)
  * output: stream of bits, 2 bits per output byte (data in LSB, flag in next higher bit)

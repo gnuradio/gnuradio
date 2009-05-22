@@ -35,12 +35,12 @@ typedef boost::shared_ptr<audio_jack_sink> audio_jack_sink_sptr;
  * \brief make an JACK audio sink.
  *
  * \param sampling_rate	sampling rate in Hz
- * \param dev JACK device name, e.g., "gr_sink"
+ * \param device_name JACK device name, e.g., "gr_sink"
  * \param ok_to_block
  */
 audio_jack_sink_sptr
 audio_jack_make_sink (int sampling_rate,
-		      const std::string dev = "",
+		      const std::string device_name = "",
 		      bool ok_to_block = true);
 
 int jack_sink_process (jack_nframes_t nframes, void *arg);

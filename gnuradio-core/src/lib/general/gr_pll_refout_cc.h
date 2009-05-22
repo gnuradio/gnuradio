@@ -34,7 +34,7 @@ gr_pll_refout_cc_sptr gr_make_pll_refout_cc (float alpha, float beta,
 					       float max_freq, float min_freq);
 /*!
  * \brief Implements a PLL which locks to the input frequency and outputs a carrier
- * \ingroup synch_blk
+ * \ingroup sync_blk
  *
  * input: stream of complex; output: stream of complex
  *

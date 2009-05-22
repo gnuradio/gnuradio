@@ -16,12 +16,14 @@
 /*! \defgroup modulation_blk Signal Modulation		*/
 /*! \defgroup demodulation_blk Signal Demodulation	*/
 /*! \defgroup coding_blk Information Coding and Decoding*/
-/*! \defgroup synch_blk Synchronization			*/
+/*! \defgroup sync_blk Synchronization			*/
 /*! \defgroup eq_blk Equalization			*/
 /*! \defgroup converter_blk Type Conversions		*/
 /*! \defgroup level_blk Signal Level Control (AGC)	*/
 /*! \defgroup dft_blk Fourier Transform			*/
 /*! \defgroup wavelet_blk Wavelet Transform		*/
+/*! \defgroup ofdm_blk OFDM Blocks			*/
+/*! \defgroup pager_blk Pager Blocks			*/
 /*! \defgroup misc_blk Miscellaneous Blocks		*/
 /*! \defgroup slicedice_blk Slicing and Dicing Streams  */
 /*! \defgroup vocoder_blk Voice Encoders and Decoders	*/
@@ -59,13 +61,17 @@
  * Pager Applications
  */
 
-/*!
- * \defgroup sounder	Sounder
- * Channel Sounder
- */
-
 /*! @} */
 
 /*! \defgroup usrp USRP					*/
 /*! \defgroup usrp2 USRP2				*/
+
+/*! 
+ * \defgroup gcell gcell: Cell Broadband Engine SPE Scheduler & RPC Mechanism
+ *
+ * For additional information please see the 
+ * <a href="http://gnuradio.org/trac/wiki/Gcell">gcell wiki page</a>
+ * and <a href="http://comsec.com/papers/gcell-sdrf-2008.pdf">gcell-sdrf-2008.pdf</a>.
+ */
+
 /*! \defgroup hardware Misc Hardware Control		*/

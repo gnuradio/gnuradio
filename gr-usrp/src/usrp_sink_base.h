@@ -55,13 +55,13 @@ class usrp_sink_base : public usrp_base {
   /*!
    * \brief convert between input item format and usrp native format
    *
-   * \param input_items[in]		stream(s) of input items
-   * \param input_index[in]		starting index in input_items
-   * \param input_items_available[in]	number of items available starting at item[index]
-   * \param input_items_consumed[out]  	number of input items consumed by copy
-   * \param usrp_buffer[out]		destination buffer
-   * \param usrp_buffer_length[in] 	\p usrp_buffer length in bytes
-   * \param bytes_written[out]		number of bytes written into \p usrp_buffer
+   * \param[in] input_items		stream(s) of input items
+   * \param[in] input_index		starting index in input_items
+   * \param[in] input_items_available	number of items available starting at item[index]
+   * \param[out] input_items_consumed  	number of input items consumed by copy
+   * \param[out] usrp_buffer		destination buffer
+   * \param[in] usrp_buffer_length 	\p usrp_buffer length in bytes
+   * \param[out] bytes_written		number of bytes written into \p usrp_buffer
    */
   virtual void copy_to_usrp_buffer (gr_vector_const_void_star &input_items,
 				    int  input_index,
@@ -137,7 +137,7 @@ class usrp_sink_base : public usrp_base {
    * \param chan  which DUC channel we're controlling (usually == which_side).
    * \param db    the daughterboard we're controlling.
    * \param target_freq the RF frequency we want our baseband translated to.
-   * \param[out] tune_result details how the hardware was configured.
+   * \param[out] result details how the hardware was configured.
    *
    * \returns true iff everything was successful.
    */

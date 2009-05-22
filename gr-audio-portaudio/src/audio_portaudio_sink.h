@@ -37,12 +37,12 @@ typedef boost::shared_ptr<audio_portaudio_sink> audio_portaudio_sink_sptr;
  * \brief PORTAUDIO audio sink.
  *
  * \param sampling_rate	sampling rate in Hz
- * \param dev PORTAUDIO device name, e.g., "pa:"
+ * \param device_name PORTAUDIO device name, e.g., "pa:"
  * \param ok_to_block	true if it's ok for us to block
  */
 audio_portaudio_sink_sptr
 audio_portaudio_make_sink (int sampling_rate,
-			   const std::string dev = "",
+			   const std::string device_name = "",
 			   bool ok_to_block = true);
 
 PaStreamCallback portaudio_sink_callback;

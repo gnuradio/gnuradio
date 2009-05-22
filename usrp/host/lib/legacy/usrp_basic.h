@@ -237,14 +237,14 @@ public:
 
   /*!
    * \brief Set ADC offset correction
-   * \param which	which ADC[0,3]: 0 = RX_A I, 1 = RX_A Q...
+   * \param which_adc	which ADC[0,3]: 0 = RX_A I, 1 = RX_A Q...
    * \param offset	16-bit value to subtract from raw ADC input.
    */
   bool set_adc_offset (int which_adc, int offset);
 
   /*!
    * \brief Set DAC offset correction
-   * \param which	which DAC[0,3]: 0 = TX_A I, 1 = TX_A Q...
+   * \param which_dac	which DAC[0,3]: 0 = TX_A I, 1 = TX_A Q...
    * \param offset	10-bit offset value (ambiguous format:  See AD9862 datasheet).
    * \param offset_pin	1-bit value.  If 0 offset applied to -ve differential pin;
    *                                  If 1 offset applied to +ve differential pin.
@@ -782,6 +782,8 @@ protected:
    * \param fusb_block_size  fast usb xfer block size.  Must be a multiple of 512. 
    *                         Use zero for a reasonable default.
    * \param fusb_nblocks     number of fast usb URBs to allocate.  Use zero for a reasonable default. 
+   * \param fpga_filename    name of the rbf file to load
+   * \param firmware_filename name of ihx file to load
    */
   usrp_basic_rx (int which_board,
 		 int fusb_block_size=0,

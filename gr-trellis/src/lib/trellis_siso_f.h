@@ -41,7 +41,9 @@ trellis_siso_f_sptr trellis_make_siso_f (
 );
 
 
-
+/*!
+ *  \ingroup coding_blk
+ */
 class trellis_siso_f : public gr_block
 {
   fsm d_FSM;

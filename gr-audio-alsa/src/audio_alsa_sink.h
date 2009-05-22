@@ -40,12 +40,12 @@ typedef boost::shared_ptr<audio_alsa_sink> audio_alsa_sink_sptr;
  * \brief make an alsa audio sink.
  *
  * \param sampling_rate	sampling rate in Hz
- * \param dev ALSA pcm device name, e.g., "hw:0,0"
+ * \param device_name ALSA pcm device name, e.g., "hw:0,0"
  * \param ok_to_block (currently ignored)
  */
 audio_alsa_sink_sptr
 audio_alsa_make_sink (int sampling_rate,
-		      const std::string dev = "",
+		      const std::string device_name = "",
 		      bool ok_to_block = true);
 
 /*!

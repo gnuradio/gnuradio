@@ -163,7 +163,8 @@ class gr_buffer {
 };
 
 /*!
- * \brief create a new gr_buffer_reader and attach it to buffer \p buf
+ * \brief Create a new gr_buffer_reader and attach it to buffer \p buf
+ * \param buf is the buffer the \p gr_buffer_reader reads from.
  * \param nzero_preload -- number of zero items to "preload" into buffer.
  * \param link is the block that reads from the buffer using this gr_buffer_reader.
  */

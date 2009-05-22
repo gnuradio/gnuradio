@@ -75,7 +75,7 @@ public:
 
 /*!
  * \brief FFT: real in, complex out
- * \ingroup dft_blk
+ * \ingroup misc
  */
 class gri_fft_real_fwd {
   int	      d_fft_size;
@@ -106,7 +106,7 @@ public:
 
 /*!
  * \brief FFT: complex in, float out
- * \ingroup dft_blk
+ * \ingroup misc
  */
 class gri_fft_real_rev {
   int	      d_fft_size;

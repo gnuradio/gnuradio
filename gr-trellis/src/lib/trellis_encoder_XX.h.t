@@ -35,9 +35,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 /*!
  * \brief Convolutional encoder.
- * \ingroup block
- *
- * 
+ * \ingroup coding_blk
  */
 class @NAME@ : public gr_sync_block
 {

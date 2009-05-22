@@ -32,13 +32,12 @@ typedef boost::shared_ptr<pager_flex_parse> pager_flex_parse_sptr;
 
 pager_flex_parse_sptr pager_make_flex_parse(gr_msg_queue_sptr queue, float freq);
 
-/*!
- * \brief flex parse description
- * \ingroup block
- */
-
 #define FIELD_DELIM ((unsigned char)128)
 
+/*!
+ * \brief flex parse description
+ * \ingroup pager_blk
+ */
 class pager_flex_parse : public gr_sync_block
 {
 private:

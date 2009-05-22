@@ -149,6 +149,7 @@ gc_make_job_manager(const gc_jm_options *options = 0);
 
 /*!
  * \brief Abstract class that manages SPE jobs.
+ * \ingroup gcell
  *
  * There is typically a single instance derived from this class.
  * It is safe to call its methods from any thread.
@@ -211,10 +212,10 @@ public:
   /*!
    * \brief wait for 1 or more jobs to complete.
    *
-   * \param[input] njobs is the length of arrays \p jd and \p done.
-   * \param[input] jd are the jobs that are to be waited for.
-   * \param[output] done indicates whether the corresponding job is complete.
-   * \param[input] mode indicates whether to wait for ALL or ANY of the jobs
+   * \param[in] njobs is the length of arrays \p jd and \p done.
+   * \param[in] jd are the jobs that are to be waited for.
+   * \param[out] done indicates whether the corresponding job is complete.
+   * \param[in] mode indicates whether to wait for ALL or ANY of the jobs
    *   in \p jd to complete.
    *
    * A thread may only wait for jobs which it submitted.

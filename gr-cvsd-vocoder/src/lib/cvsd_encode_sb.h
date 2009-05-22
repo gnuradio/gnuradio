@@ -58,7 +58,7 @@ cvsd_encode_sb_sptr cvsd_make_encode_sb (short min_step=10,
  * is modeled after the CVSD encoder/decoder specifications defined in the
  * Bluetooth standard.
  *
- * \ingroup vocoder
+ * \ingroup vocoder_blk
  *
  * CVSD is a method for encoding speech that seeks to reduce the
  * bandwidth required for digital voice transmission.  CVSD takes

@@ -27,12 +27,11 @@
 
 /*!
  * \brief common base class for SIMD versions of gr_fir_scc
- * \ingroup filter_blk
+ * \ingroup filter_primitive
  *
  * This base class handles alignment issues common to SSE and 3DNOW
  * subclasses.
  */
-
 class gr_fir_scc_simd : public gr_fir_scc_generic
 {
 protected:

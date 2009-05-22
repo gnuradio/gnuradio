@@ -65,13 +65,13 @@ class usrp_source_base : public usrp_base {
   /*!
    * \brief convert between native usrp format and output item format
    *
-   * \param output_items[out]		stream(s) of output items
-   * \param output_index[in]		starting index in output_items
-   * \param output_items_available[in]	number of empty items available at item[index]
-   * \param output_items_produced[out]	number of items produced by copy
-   * \param usrp_buffer[in]		source buffer
-   * \param usrp_buffer_length[in]	number of bytes available in \p usrp_buffer
-   * \param bytes_read[out]		number of bytes read from \p usrp_buffer
+   * \param[out] output_items		stream(s) of output items
+   * \param[in] output_index		starting index in output_items
+   * \param[in] output_items_available	number of empty items available at item[index]
+   * \param[out] output_items_produced	number of items produced by copy
+   * \param[in] usrp_buffer		source buffer
+   * \param[in] usrp_buffer_length	number of bytes available in \p usrp_buffer
+   * \param[out] bytes_read		number of bytes read from \p usrp_buffer
    *
    * The copy must consume all bytes available.  That is, \p bytes_read must equal
    * \p usrp_buffer_length.
@@ -205,7 +205,7 @@ class usrp_source_base : public usrp_base {
    * \param chan  which DDC channel we're controlling (almost always 0).
    * \param db    the daughterboard we're controlling.
    * \param target_freq the RF frequency we want at DC in the complex baseband.
-   * \param[out] tune_result details how the hardware was configured.
+   * \param[out] result details how the hardware was configured.
    *
    * \returns true iff everything was successful.
    */

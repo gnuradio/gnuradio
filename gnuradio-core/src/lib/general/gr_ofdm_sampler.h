@@ -34,9 +34,8 @@ gr_ofdm_sampler_sptr gr_make_ofdm_sampler (unsigned int fft_length,
 
 /*!
  * \brief does the rest of the OFDM stuff
- * \ingroup misc
+ * \ingroup ofdm_blk
  */
-
 class gr_ofdm_sampler : public gr_block
 {
   friend gr_ofdm_sampler_sptr gr_make_ofdm_sampler (unsigned int fft_length, 

@@ -42,6 +42,9 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
     trellis_metric_type_t TYPE);
 
 
+/*!
+ *  \ingroup coding_blk
+ */
 class @NAME@ : public gr_block
 {
   fsm d_FSM;

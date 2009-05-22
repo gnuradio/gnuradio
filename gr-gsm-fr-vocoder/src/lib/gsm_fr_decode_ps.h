@@ -31,7 +31,7 @@ gsm_fr_decode_ps_sptr gsm_fr_make_decode_ps ();
 
 /*!
  * \brief GSM 06.10 Full Rate Vocoder Decoder
- * \ingroup vocoder
+ * \ingroup vocoder_blk
  */
 class gsm_fr_decode_ps : public gr_sync_interpolator {
   struct gsm_state	*d_gsm;

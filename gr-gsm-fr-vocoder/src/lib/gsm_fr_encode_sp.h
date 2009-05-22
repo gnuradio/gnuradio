@@ -31,7 +31,7 @@ gsm_fr_encode_sp_sptr gsm_fr_make_encode_sp ();
 
 /*!
  * \brief GSM 06.10 Full Rate Vocoder Encoder
- * \ingroup vocoder
+ * \ingroup vocoder_blk
  *
  * shorts in; 33 byte packets out
  */

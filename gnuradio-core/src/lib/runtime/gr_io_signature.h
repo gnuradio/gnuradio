@@ -98,7 +98,7 @@ class gr_io_signature {
   friend gr_io_signature_sptr 
   gr_make_io_signaturev(int min_streams,
 			int max_streams,
-			const std::vector<int> &sizeof_stream_item);
+			const std::vector<int> &sizeof_stream_items);
 
  public:
 

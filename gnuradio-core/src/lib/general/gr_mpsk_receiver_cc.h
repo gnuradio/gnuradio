@@ -43,7 +43,8 @@ gr_make_mpsk_receiver_cc (unsigned int M, float theta,
 /*!
  * \brief This block takes care of receiving M-PSK modulated signals through phase, frequency, and symbol
  * synchronization. 
- * \ingroup synch_blk
+ * \ingroup sync_blk
+ * \ingroup demod_blk
  *
  * This block takes care of receiving M-PSK modulated signals through phase, frequency, and symbol
  * synchronization. It performs carrier frequency and phase locking as well as symbol timing recovery. 

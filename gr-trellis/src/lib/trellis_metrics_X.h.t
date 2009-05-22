@@ -35,8 +35,7 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 /*!
  * \brief Evaluate metrics for use by the Viterbi algorithm.
- * \ingroup block
- *
+ * \ingroup coding_blk
  */
 class @NAME@ : public gr_block
 {

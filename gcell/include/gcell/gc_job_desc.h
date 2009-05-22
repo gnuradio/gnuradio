@@ -171,6 +171,7 @@ typedef struct gc_job_ea_args {
 
 /*!
  * \brief "job description" that is DMA'd to/from the SPE.
+ * \ingroup gcell
  */
 typedef struct gc_job_desc
 {

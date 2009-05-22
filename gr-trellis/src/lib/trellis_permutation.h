@@ -34,9 +34,7 @@ trellis_permutation_sptr trellis_make_permutation (int K, const std::vector<int>
 
 /*!
  * \brief Permutation.
- * \ingroup block
- *
- * 
+ * \ingroup coding_blk
  */
 class trellis_permutation : public gr_sync_block
 {

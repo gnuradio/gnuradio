@@ -32,7 +32,7 @@ pager_flex_sync_sptr pager_make_flex_sync();
 
 /*!
  * \brief flex sync description
- * \ingroup block
+ * \ingroup pager_blk
  */
 
 class pager_flex_sync : public gr_block

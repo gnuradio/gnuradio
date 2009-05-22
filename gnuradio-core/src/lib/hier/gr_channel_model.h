@@ -37,6 +37,10 @@ gr_channel_model_sptr gr_make_channel_model(double noise_voltage=0.0,
 					    const std::vector<gr_complex> &taps=std::vector<gr_complex>(1, 1),
 					    double noise_seed=3021);
 
+/*!
+ * \brief channel simulator
+ * \ingroup misc_blk
+ */
 class gr_channel_model : public gr_hier_block2
 {
  private:

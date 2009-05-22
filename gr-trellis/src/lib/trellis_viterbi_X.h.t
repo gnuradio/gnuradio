@@ -39,6 +39,9 @@ typedef boost::shared_ptr<@NAME@> @SPTR_NAME@;
 
 
 
+/*!
+ *  \ingroup coding_blk
+ */
 class @NAME@ : public gr_block
 {
   fsm d_FSM;

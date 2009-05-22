@@ -2,4 +2,11 @@
 
 Welcome to GNU Radio!
 
+For a list of all GNU Radio C++ blocks, please see <a href="modules.html">C++ Blocks</a>.
+
+Please note that at this time, we haven't found an acceptable way to
+provide unified documentation for the C++ parts of the system and the
+parts written in Python (mostly hierarchical blocks).  Until this gets
+worked out, please bear with us, or better yet, solve it for us!
+
 */

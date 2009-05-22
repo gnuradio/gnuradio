@@ -44,8 +44,9 @@ trellis_siso_combined_f_sptr trellis_make_siso_combined_f (
     trellis_metric_type_t TYPE
 );
 
-
-
+/*!
+ *  \ingroup coding_blk
+ */
 class trellis_siso_combined_f : public gr_block
 {
   fsm d_FSM;

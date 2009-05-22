@@ -50,9 +50,10 @@ public:
    * This routine turns into the m-block scheduler, and
    * blocks until the system is shutdown.
    *
-   * \param name name of the top-level mblock (conventionally "top")
+   * \param instance_name name of the top-level mblock (conventionally "top")
    * \param class_name The class of the top-level mblock to create.
    * \param user_arg The argument to pass to the top-level mblock constructor
+   * \param result The value passed to shutdown_all.
    *
    * \returns true if the system ran successfully.
    */
