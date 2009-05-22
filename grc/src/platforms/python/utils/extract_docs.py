@@ -77,15 +77,17 @@ def extract(key):
 	@param key the block key
 	@return a string with documentation
 	"""
-	#get potential xml file matches for the key
-	if os.path.exists(DOCS_DIR) and os.path.isdir(DOCS_DIR):
-		matches = filter(lambda f: is_match(key, f), os.listdir(DOCS_DIR))
-	else: matches = list()
+	UBUNTU_DOCS_DIR = '/usr/share/doc/gnuradio-doc/xml'
+	if os.path.exists(DOCS_DIR): docs_dir = DOCS_DIR
+	elif os.path.exists(UBUNTU_DOCS_DIR): docs_dir = UBUNTU_DOCS_DIR
+	else: return ''
+	#extract matches
+	matches = filter(lambda f: is_match(key, f), os.listdir(docs_dir))
 	#combine all matches
 	doc_strs = list()
 	for match in matches:
 		try:
-			xml_file = DOCS_DIR + '/' + match
+			xml_file = os.path.join(docs_dir, match)
 			xml = etree.parse(xml_file)
 			#extract descriptions
 			comp_name = extract_txt(xml.xpath(DOXYGEN_NAME_XPATH)[0]).strip('\n')
