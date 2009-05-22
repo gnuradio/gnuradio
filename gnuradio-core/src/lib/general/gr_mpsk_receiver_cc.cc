@@ -257,7 +257,7 @@ gr_mpsk_receiver_cc::phase_error_tracking(gr_complex sample)
   phase_error = gr_branchless_clip(phase_error, 1.0);
     
   d_freq += d_beta*phase_error;             // adjust frequency based on error
-  d_phase += d_alpha*phase_error;  // adjust phase based on error
+  d_phase += d_freq + d_alpha*phase_error;  // adjust phase based on error
 
   // Make sure we stay within +-2pi
   while(d_phase > M_TWOPI)
