@@ -7,7 +7,7 @@ Section: comm
 Priority: optional
 Maintainer: Johnathan Corgan <jcorgan@corganenterprises.com>
 Build-Conflicts: automake1.8, automake1.9
-Build-Depends: debhelper (>= 5.0.38), build-essential, python-central (>=0.5.6), automake, libtool, pkg-config, python-dev (>=2.6), python-dev (<2.7), swig, fftw3-dev | libfftw3-dev, libcppunit-dev, libboost1.37-dev | libboost1.35-dev, libgsl0-dev, guile-1.8, libasound2-dev, python-wxgtk2.8, python-numpy, doxygen, xmlto, sdcc-nf, libusb-dev, libjack-dev, portaudio19-dev, libsdl1.2-dev, python-cheetah, python-lxml, python-gtk2, libqt4-dev, libqwt5-qt4-dev, libqwtplot3d-qt4-dev
+Build-Depends: debhelper (>= 5.0.38), build-essential, python-central (>=0.5.6), automake, libtool, pkg-config, python-dev (>=2.6), python-dev (<2.7), swig, fftw3-dev | libfftw3-dev, libcppunit-dev, libboost1.37-dev | libboost1.35-dev, libgsl0-dev, guile-1.8, libasound2-dev, python-wxgtk2.8, python-numpy, doxygen, xmlto, sdcc-nf, libusb-dev, libjack-dev, portaudio19-dev, libsdl1.2-dev, python-cheetah, python-lxml, python-gtk2, libqt4-dev, libqwt5-qt4-dev, libqwtplot3d-qt4-dev, libblas-dev, texlive-latex-base
 Standards-Version: 3.7.2
 XS-Python-Version: =2.6
 
@@ -195,7 +195,7 @@ Section: libdevel
 Architecture: any 
 Replaces: libgnuradio-core0-dev
 Conflicts: libgnuradio-core0-dev
-Depends: libgnuradio-core (= ${binary:Version}), libgruel-dev (= ${binary:Version}), libgnuradio-omnithread-dev (= ${binary:Version}), libboost-thread1.37-dev, libboost-date-time1.37-dev, libgsl0-dev, libfftw3-dev, swig
+Depends: libgnuradio-core (= ${binary:Version}), libgruel-dev (= ${binary:Version}), libgnuradio-omnithread-dev (= ${binary:Version}), libboost-thread1.37-dev, libboost-date-time1.37-dev, libgsl0-dev, libblas-dev, libfftw3-dev, swig
 Description: The GNU Software Radio Core Library
  This package contains the core GNU Radio libraries.
  .
