@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -24,21 +24,18 @@ from gnuradio import gr
 p = gr.prefs()
 style = p.get_string('wxgui', 'style', 'auto')
 
-# In 3.2 we'll change 'auto' to mean 'gl' if possible, then fallback
-# Currently, anything other than 'gl' means 'nongl'
-
-if style == 'gl':
+if style == 'auto' or style == 'gl':
     try:
         import wx.glcanvas
-    except ImportError:
-        raise RuntimeError("wxPython doesn't support glcanvas")
-
-    try:
         from OpenGL.GL import *
+        from fftsink_gl import fft_sink_f, fft_sink_c
     except ImportError:
-        raise RuntimeError("Unable to import OpenGL. Are Python wrappers for OpenGL installed?")
-
-    from fftsink_gl import fft_sink_f, fft_sink_c
-
-else:
+        if style == 'gl':
+            raise RuntimeError("Unable to import OpenGL.  Are Python wrappers for OpenGL installed?")
+        else:
+            # Fall backto non-gl sinks
+            from fftsink_nongl import fft_sink_f, fft_sink_c
+elif style == 'nongl':
     from fftsink_nongl import fft_sink_f, fft_sink_c
+else:
+    raise RuntimeError("Unknown wxgui style")
