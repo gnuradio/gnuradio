@@ -25,4 +25,3 @@
 -save/restore cwd
 -threads dont die on exit in probe and variable sink
 -overloaded gui classes for each platform, move param input objects into overloaded
--update extract_docs.py for current doxygen setup

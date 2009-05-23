@@ -20,12 +20,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from .. Constants import DOCS_DIR
 from lxml import etree
 import os
+import re
 
 DOXYGEN_NAME_XPATH = '/doxygen/compounddef/compoundname'
 DOXYGEN_BRIEFDESC_GR_XPATH = '/doxygen/compounddef/briefdescription'
 DOXYGEN_DETAILDESC_GR_XPATH = '/doxygen/compounddef/detaileddescription'
-DOXYGEN_BRIEFDESC_BLKS2_XPATH = '/doxygen/compounddef/sectiondef[@kind="public-func"]/memberdef/briefdescription'
-DOXYGEN_DETAILDESC_BLKS2_XPATH = '/doxygen/compounddef/sectiondef[@kind="public-func"]/memberdef/detaileddescription'
 
 def extract_txt(xml, parent_text=None):
 	"""
@@ -40,37 +39,7 @@ def extract_txt(xml, parent_text=None):
 		map(lambda x: extract_txt(x, text), xml)
 	) + tail
 
-def is_match(key, file):
-	"""
-	Is the block key a match for the given file name?
-	@param key block key
-	@param file the xml file name
-	@return true if matches
-	"""
-	if not file.endswith('.xml'): return False
-	file = file.replace('.xml', '') #remove file ext
-	file = file.replace('__', '_') #doxygen xml files have 2 underscores
-	if key.startswith('gr_'):
-		if not file.startswith('classgr_'): return False
-		key = key.replace('gr_', 'classgr_')
-	elif key.startswith('trellis_'):
-		if not file.startswith('classtrellis_'): return False
-		key = key.replace('trellis_', 'classtrellis_')
-	elif key.startswith('blks2_'):
-		if not file.startswith('classgnuradio_'): return False
-		if 'blks2' not in file: return False
-		file = file.replace('_1_1', '_') #weird blks2 doxygen syntax
-		key = key.replace('blks2_', '')
-	else: return False
-	for k, f in zip(*map(reversed, map(lambda x: x.split('_'), [key, file]))):
-		if k == f: continue
-		ks = k.split('x')
-		if len(ks) == 2 and f.startswith(ks[0]) and f.endswith(ks[1]): continue
-		if len(ks) > 2 and all(ki in ('x', fi) for ki, fi in zip(k, f)): continue
-		return False
-	return True
-
-def extract(key):
+def _extract(key):
 	"""
 	Extract the documentation from the doxygen generated xml files.
 	If multiple files match, combine the docs.
@@ -82,7 +51,9 @@ def extract(key):
 	elif os.path.exists(UBUNTU_DOCS_DIR): docs_dir = UBUNTU_DOCS_DIR
 	else: return ''
 	#extract matches
-	matches = filter(lambda f: is_match(key, f), os.listdir(docs_dir))
+	pattern = key.replace('_', '_*').replace('x', '\w')
+	prog = re.compile('^class%s\..*$'%pattern)
+	matches = filter(lambda f: prog.match(f), os.listdir(docs_dir))
 	#combine all matches
 	doc_strs = list()
 	for match in matches:
@@ -95,9 +66,6 @@ def extract(key):
 			if key.startswith('gr_') or key.startswith('trellis_'):
 				brief_desc = extract_txt(xml.xpath(DOXYGEN_BRIEFDESC_GR_XPATH)[0]).strip('\n')
 				detailed_desc = extract_txt(xml.xpath(DOXYGEN_DETAILDESC_GR_XPATH)[0]).strip('\n')
-			elif key.startswith('blks2_'):
-				brief_desc = extract_txt(xml.xpath(DOXYGEN_BRIEFDESC_BLKS2_XPATH)[0]).strip('\n')
-				detailed_desc = extract_txt(xml.xpath(DOXYGEN_DETAILDESC_BLKS2_XPATH)[0]).strip('\n')
 			else:
 				brief_desc = ''
 				detailed_desc = ''
@@ -105,6 +73,17 @@ def extract(key):
 			doc_strs.append('\n'.join([comp_name, brief_desc, detailed_desc]).strip('\n'))
 		except IndexError: pass #bad format
 	return '\n\n'.join(doc_strs)
+
+_docs_cache = dict()
+def extract(key):
+	"""
+	Call the private extract and cache the result.
+	@param key the block key
+	@return a string with documentation
+	"""
+	try: assert _docs_cache.has_key(key)
+	except: _docs_cache[key] = _extract(key)
+	return _docs_cache[key]
 
 if __name__ == '__main__':
 	import sys
