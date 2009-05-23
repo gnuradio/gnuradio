@@ -59,6 +59,5 @@ libgnuradio_core_qa_la_LIBADD  = 	\
 	filter/libfilter-qa.la		\
 	general/libgeneral-qa.la	\
 	runtime/libruntime-qa.la	\
-	missing/libmissing.la		\
 	libgnuradio-core.la		\
 	$(CPPUNIT_LIBS)			
