@@ -495,7 +495,7 @@ XB-Python-Version: ${python:Versions}
 Description: GNU Radio Radio Astronomy Applications
  This package provides radio astronomy applications for GNU Radio
 
-Package: grc
+Package: gnuradio-companion
 Architecture: any
 Depends: ${python:Depends}, gnuradio, gnuradio-doc, usrp-doc, python-lxml, python-cheetah, python-gtk2
 Provides: ${python:Provides}

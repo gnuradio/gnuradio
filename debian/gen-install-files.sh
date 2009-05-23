@@ -350,8 +350,8 @@ $EXTRACT gr-radio-astronomy/src/lib/Makefile ra_pylib_LTLIBRARIES >>$NAME
 $EXTRACT gr-radio-astronomy/src/lib/Makefile ra_pylib_LTLIBRARIES |
     sed -e 's/\.la$/.so/' >>$NAME
 
-# grc
-NAME=debian/grc.install
+# gnuradio-companion
+NAME=debian/gnuradio-companion.install
 rm -f $NAME
 touch $NAME
 $EXTRACT grc/data/platforms/base/Makefile dist_ourdata_DATA >>$NAME
