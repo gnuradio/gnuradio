@@ -1,5 +1,5 @@
 dnl 
-dnl  Copyright 2004,2005,2007,2008 Free Software Foundation, Inc.
+dnl  Copyright 2004,2005,2007,2008,2009 Free Software Foundation, Inc.
 dnl  
 dnl  This file is part of GNU Radio
 dnl  
@@ -19,7 +19,7 @@ dnl  the Free Software Foundation, Inc., 51 Franklin Street,
 dnl  Boston, MA 02110-1301, USA.
 dnl 
 
-AC_INIT(gr-howto-write-a-block,3.2svn)
+AC_INIT(gr-howto-write-a-block,3.3svn)
 AC_PREREQ(2.57)
 AC_CONFIG_AUX_DIR([.])	
 
