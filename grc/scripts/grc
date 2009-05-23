@@ -26,7 +26,7 @@ try: import gnuradio
 except ImportError, e:
 	d = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_CLOSE, message_format="""
 Cannot find module gnuradio. Is your PYTHONPATH set correctly?""")
-	d.set_title(e.message)
+	d.set_title(str(e))
 	d.run()
 	exit(-1)
 
