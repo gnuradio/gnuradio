@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2002,2003,2004,2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2001,2002,2003,2004,2005,2006,2007,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -159,12 +159,11 @@ In systems using pkgsrc, install math/fftwf, which provides the
 single-precision libraries.
 
 
-(4) Python 2.3 or later	      http://www.python.org
+(4) Python 2.5 or later	      http://www.python.org
 
-Python 2.3 or later is now required.  If your system splits
+Python 2.5 or later is now required.  If your system splits
 python into a bunch of separate packages including python-devel or
-libpython you'll most likely need those too. The GNU Radio Companion 
-application requires Python 2.5 or later.
+libpython you'll most likely need those too.
 
 
 (5) Numpy python library   http://numeric.scipy.org
@@ -199,9 +198,11 @@ This includes a C compiler and linker for the 8051.  It's required to
 build the firmware for the USRP.  If you don't have a USRP, don't
 worry about it.
 
+
 (10) Guile 1.6 or 1.8 
 
 Scheme interpreter.  http://www.gnu.org/software/guile/guile.html
+
 
 (11) GNU Scientific Library (gsl) 1.10 or later
 
@@ -211,7 +212,7 @@ The GNU Radio core library uses some routines from here.
 Optional, but nice to have:
 
 (12) wxPython.  Python binding for the wxWidgets GUI framework.  Use
-version 2.5.2.7 or later.  Again, almost all systems have this
+version 2.8 or later.  Again, almost all systems have this
 available.
 
 As a last resort, build it from source (not recommended!)
@@ -230,9 +231,8 @@ to be installed.
 
 ----------------------------------------------------------------
 
-If you've got doxygen installed and provide the --enable-doxygen
-configure option, the build process creates documentation for the
-class hierarchy etc.  Point your browser at
+If you've got doxygen installed, the build process creates 
+documentation for the class hierarchy etc.  Point your browser at
 gnuradio/gnuradio-core/doc/html/index.html
 
 
@@ -240,7 +240,7 @@ To run the examples you may need to set PYTHONPATH.  Note that the
 prefix and python version number in the path needs to match your
 installed version of python.
 
-  $ export PYTHONPATH=/usr/local/lib/python2.4/site-packages
+  $ export PYTHONPATH=/usr/local/lib/python2.5/site-packages
 
 You may want to add this to your shell init file (~/.bash_profile if
 you use bash).

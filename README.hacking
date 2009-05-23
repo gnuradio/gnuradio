@@ -1,6 +1,6 @@
 # -*- Outline -*-
 #
-# Copyright 2004,2007,2008 Free Software Foundation, Inc.
+# Copyright 2004,2007,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -40,9 +40,6 @@ DISTCHECK_CONFIGURE_FLAGS.  E.g.,
 GNU Radio is now a hybrid system.  Some parts of the system are built
 in C++ and some of it in Python.  In general, prefer Python to C++.
 Signal processing primitives are still built in C++ for performance.
-
-It is no longer possible to build user applications entirely in C++.
-Essential parts of the runtime system have been moved into Python.
 
 
 * C++ namespaces

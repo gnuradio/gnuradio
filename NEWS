@@ -1,5 +1,5 @@
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -18,21 +18,4 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-changes in gnuradio-3.0rc1 relative to gnuradio-core-2.8 and related tarballs:
-
-* We moved the source code repository from CVS on savannah.gnu.org to
-  subversion on gnuradio.org
-* The build system was restructured such that there is now a single
-  top-level configure.  See ./configure --help for details.  All
-  top-level components may be required or excluded via configure
-  options.  By default configure includes all components for which the
-  dependencies are satisifed.
-* There is now uniform handling for a variety of digital modulations
-  and demodulations including gmsk, dbpsk and dqpsk.
-* dbpsk and dqpsk now work!  dqpsk still has a higher error-rate than
-  it should.
-* gr-radio-astronomy now has very cool code for observing pulsars!
-* gr-trellis: new module implementing a variety of forward error
-correction techniques.  See gnuradio-examples/python/channel-coding
-* gnuradio-core, usrp and gr-usrp now build and run under Cygwin.
-* Fixed 52 bugs
+See http://gnuradio.org for the latest information about this software.
