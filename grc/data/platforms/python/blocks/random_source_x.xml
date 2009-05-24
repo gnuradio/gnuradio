@@ -10,7 +10,7 @@
 	<key>random_source_x</key>
 	<import>from gnuradio import gr</import>
 	<import>import numpy</import>
-	<make>gr.vector_source_$(type.fcn)(numpy.random.randint($min, $max, $num_samps), $repeat)</make>
+	<make>gr.vector_source_$(type.fcn)(map(int, numpy.random.randint($min, $max, $num_samps)), $repeat)</make>
 	<param>
 		<name>Output Type</name>
 		<key>type</key>
