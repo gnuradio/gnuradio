@@ -31,7 +31,6 @@
 #include "usrp2_eth_packet.h"
 #include "dbsm.h"
 #include "app_common.h"
-#include <ad9510.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -140,17 +139,9 @@ main(void)
 
   // Get our clock from the mimo interface
 
-  // if(I WANT TO LOCK TO A REFERENCE CLOCK) 
-  // Reg 8, Charge pump on, dig lock det, positive PFD, 47
-  ad9510_write_reg(0x08, 0x47);
-  ad9510_write_reg(0x5A, 0x01); // Update Regs
-  // if (LOCK_TO_MIMO_REF)
-
-  // Turn on ref output and choose the MIMO connector
-  output_regs->clk_ctrl = 0x15;
-  // Turn on ref output and choose the SMA connector
-  //output_regs->clk_ctrl = 0x14;
-
+  clocks_enable_test_clk(true,1);
+  clocks_mimo_config(MC_WE_LOCK_TO_MIMO);
+  
   // setup tx gpio bits for GPIOM_FPGA_1 -- fpga debug output
   //hal_gpio_set_sels(GPIO_TX_BANK, "1111111111111111");
   //hal_gpio_set_sels(GPIO_RX_BANK, "1111111111111111");
