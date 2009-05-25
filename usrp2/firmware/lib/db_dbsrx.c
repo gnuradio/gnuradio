@@ -122,8 +122,8 @@ _read_adc (void){
   unsigned char readback[2];
   i2c_read(I2C_ADDR, readback, 2*sizeof(unsigned char));
   int adc_val = (readback[0] >> 2)&7;
-  printf("READBACK[0] %d, [1] %d\n",readback[0],readback[1]);
-  printf("ADC: %d\n",adc_val);
+  //printf("READBACK[0] %d, [1] %d\n",readback[0],readback[1]);
+  //printf("ADC: %d\n",adc_val);
   return adc_val;
 }
 
@@ -134,7 +134,7 @@ _write_reg (int regno, int v){
   args[0] = (unsigned char)regno;
   args[1] = (unsigned char)v;
   i2c_write(I2C_ADDR, args, 2*sizeof(unsigned char));
-  printf("Reg %d, Val %x\n",regno,v);
+  //printf("Reg %d, Val %x\n",regno,v);
 }
 
 static void _send_reg_0(struct db_dbsrx_dummy *db){
@@ -236,7 +236,7 @@ db_dbsrx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc){
   while ((r_reg<7) && ((2<<r_reg) < rmin)) {
     r_reg++;
   }
-  printf ("r_reg = %d, r = %d\n",r_reg,2<<r_reg);
+  //printf ("r_reg = %d, r = %d\n",r_reg,2<<r_reg);
   int best_r = r_reg;
   int best_n = 0;
 
@@ -262,8 +262,8 @@ db_dbsrx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc){
     r_reg++;
   }
 
-  printf("BEST R: %d  Best Delta %d  Best N %d\n",
-	 best_r,u2_fxpt_freq_round_to_int(best_delta),best_n);
+  //printf("BEST R: %d  Best Delta %d  Best N %d\n",
+  // best_r,u2_fxpt_freq_round_to_int(best_delta),best_n);
   _set_r(db, best_r);
   _set_n(db, best_n);
  
@@ -284,14 +284,14 @@ db_dbsrx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc){
     vco=6;
   else
     vco=7;
-  printf("Initial VCO choice %d\n",vco);  
+  //printf("Initial VCO choice %d\n",vco);  
   _set_osc(db, vco);
   
 
   int adc_val = 0;
   while(adc_val == 0 || adc_val == 7) {
     adc_val = _read_adc();
-    printf("adc %d\n",adc_val);
+    //printf("adc %d\n",adc_val);
 
     if(adc_val == 0) {
       if(vco <= 0) {
@@ -321,7 +321,7 @@ db_dbsrx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc){
   else {
     _set_cp(db, 3);
   }
-  printf("Final VCO choice %d\n",vco);  
+  //printf("Final VCO choice %d\n",vco);  
 
   *dc = db->common.d_n * REFCLK_FREQ / (2<<db->common.d_r_reg);
   return true;
