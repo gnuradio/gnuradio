@@ -65,6 +65,10 @@ u2_init(void)
   // init spi, so that we can switch over to the high-speed clock
   spi_init();
 
+  // init i2c so we can read our rev
+  i2c_init();
+  get_hw_rev();
+
   // set up the default clocks
   clocks_init();
 
@@ -97,13 +101,10 @@ u2_init(void)
 
   pic_init();	// progammable interrupt controller
   bp_init();	// buffer pool
-  i2c_init();
   lsadc_init();	    // low-speed ADCs
   lsdac_init();	    // low-speed DACs
   db_init();	    // daughterboard init
   
-  get_hw_rev();
-
   hal_enable_ints();
 
   // flash all leds to let us know board is alive
