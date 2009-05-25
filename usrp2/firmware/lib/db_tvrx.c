@@ -21,7 +21,6 @@
 #include <memory_map.h>
 #include <db_base.h>
 #include <hal_io.h>
-#include <ad9510.h>
 #include <stdio.h>
 
 bool tvrx_init(struct db_base *db);
