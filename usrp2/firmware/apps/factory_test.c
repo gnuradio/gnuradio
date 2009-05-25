@@ -40,9 +40,6 @@
 #include <clocks.h>
 #include "sd.h"
 
-#define HW_REV_MAJOR 3
-#define HW_REV_MINOR 1
-
 #define FW_SETS_SEQNO	1	// define to 0 or 1 (FIXME must be 1 for now)
 
 #if (FW_SETS_SEQNO)
@@ -329,29 +326,17 @@ main(void)
 {
   u2_init();
 
-  putstr("\nFactory Test TXRX\n");
+  putstr("\nFactory Test\n");
 
-  bool ok = true;
-  unsigned char maj = HW_REV_MAJOR;
-  unsigned char min = HW_REV_MINOR;
-  ok = eeprom_write(I2C_ADDR_MBOARD, MBOARD_REV_MSB, &maj, 1);
-  ok &= eeprom_write(I2C_ADDR_MBOARD, MBOARD_REV_LSB, &min, 1);
-
-  putstr("\nset_hw_rev\n");
-  if (ok)
-    printf("OK: set h/w rev to %d.%d\n", HW_REV_MAJOR, HW_REV_MINOR);
-  else {
-    printf("FAILED to set h/w rev to %d.%d\n", HW_REV_MAJOR, HW_REV_MINOR);
-    hal_finish();
-    return 0;
-  }
+  print_mac_addr(ethernet_mac_addr()->addr);
+  newline();
 
   if(test_sd())
     puts("SD OK\n");
   else {
     puts("SD FAIL\n");
-    hal_finish();
-    return 0;
+    //    hal_finish();
+    //return 0;
   }
   if(test_ram())
     puts("RAM OK\n");
