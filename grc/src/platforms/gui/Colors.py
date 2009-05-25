@@ -21,14 +21,17 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-COLORMAP = gtk.gdk.colormap_get_system() #create all of the colors
-def get_color(color_code): return COLORMAP.alloc_color(color_code, True, True)
+_COLORMAP = gtk.gdk.colormap_get_system() #create all of the colors
+def get_color(color_code): return _COLORMAP.alloc_color(color_code, True, True)
 
-BACKGROUND_COLOR = get_color('#FFF9FF') #main window background
-FG_COLOR = get_color('black') #normal border color
-BG_COLOR = get_color('#F1ECFF') #default background
-DISABLED_BG_COLOR = get_color('#CCCCCC') #disabled background
-DISABLED_FG_COLOR = get_color('#999999') #disabled foreground
-H_COLOR = get_color('#00FFFF') #Highlight border color
-TXT_COLOR = get_color('black') #text color
-ERROR_COLOR = get_color('red') #error color
+HIGHLIGHT_COLOR = get_color('#00FFFF')
+BORDER_COLOR = get_color('black')
+#flow graph color constants
+FLOWGRAPH_BACKGROUND_COLOR = get_color('#FFF9FF')
+#block color constants
+BLOCK_ENABLED_COLOR = get_color('#F1ECFF')
+BLOCK_DISABLED_COLOR = get_color('#CCCCCC')
+#connection color constants
+CONNECTION_ENABLED_COLOR = get_color('black')
+CONNECTION_DISABLED_COLOR = get_color('#999999')
+CONNECTION_ERROR_COLOR = get_color('red')

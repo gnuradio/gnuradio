@@ -84,7 +84,7 @@ class Port(Element):
 
 	def _create_labels(self):
 		"""Create the labels for the socket."""
-		self.BG_color = Colors.get_color(self.get_color())
+		self._bg_color = Colors.get_color(self.get_color())
 		#create the layout
 		layout = gtk.DrawingArea().create_pango_layout('')
 		layout.set_markup(Utils.parse_template(PORT_MARKUP_TMPL, port=self))
@@ -93,9 +93,8 @@ class Port(Element):
 		#create the pixmap
 		pixmap = self.get_parent().get_parent().new_pixmap(self.w, self.h)
 		gc = pixmap.new_gc()
-		gc.foreground = self.BG_color
+		gc.set_foreground(self._bg_color)
 		pixmap.draw_rectangle(gc, True, 0, 0, self.w, self.h)
-		gc.foreground = Colors.TXT_COLOR
 		pixmap.draw_layout(gc, 0, 0, layout)
 		#create the images
 		self.horizontal_label = image = pixmap.get_image(0, 0, self.w, self.h)
@@ -110,8 +109,10 @@ class Port(Element):
 		@param gc the graphics context
 		@param window the gtk window to draw on
 		"""
-		Element.draw(self, gc, window, BG_color=self.BG_color)
-		gc.foreground = Colors.TXT_COLOR
+		Element.draw(
+			self, gc, window, bg_color=self._bg_color,
+			border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or Colors.BORDER_COLOR,
+		)
 		X,Y = self.get_coordinate()
 		(x,y),(w,h) = self.areas_dict[self.get_rotation()][0] #use the first area's sizes to place the labels
 		if self.is_horizontal():

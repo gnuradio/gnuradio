@@ -61,24 +61,24 @@ class Element(object):
 		rotation = rotation or self.get_rotation()
 		return rotation in (90, 270)
 
-	def draw(self, gc, window, BG_color=Colors.BG_COLOR, FG_color=Colors.FG_COLOR):
+	def draw(self, gc, window, border_color, bg_color):
 		"""
 		Draw in the given window.
 		@param gc the graphics context
 		@param window the gtk window to draw on
-		@param BG_color the background color
-		@param FG_color the foreground color
+		@param border_color the color for lines and rectangle borders
+		@param bg_color the color for the inside of the rectangle
 		"""
 		X,Y = self.get_coordinate()
 		for (rX,rY),(W,H) in self.areas_dict[self.get_rotation()]:
 			aX = X + rX
 			aY = Y + rY
-			gc.foreground = BG_color
+			gc.set_foreground(bg_color)
 			window.draw_rectangle(gc, True, aX, aY, W, H)
-			gc.foreground = self.is_highlighted() and Colors.H_COLOR or FG_color
+			gc.set_foreground(border_color)
 			window.draw_rectangle(gc, False, aX, aY, W, H)
 		for (x1, y1),(x2, y2) in self.lines_dict[self.get_rotation()]:
-			gc.foreground = self.is_highlighted() and Colors.H_COLOR or FG_color
+			gc.set_foreground(border_color)
 			window.draw_line(gc, X+x1, Y+y1, X+x2, Y+y2)
 
 	def rotate(self, rotation):

@@ -248,7 +248,7 @@ class FlowGraph(Element):
 		"""
 		W,H = self.get_size()
 		#draw the background
-		gc.foreground = Colors.BACKGROUND_COLOR
+		gc.set_foreground(Colors.FLOWGRAPH_BACKGROUND_COLOR)
 		window.draw_rectangle(gc, True, 0, 0, W, H)
 		#draw multi select rectangle
 		if self.mouse_pressed and (not self.get_selected_elements() or self.get_ctrl_mask()):
@@ -259,9 +259,9 @@ class FlowGraph(Element):
 			x, y = int(min(x1, x2)), int(min(y1, y2))
 			w, h = int(abs(x1 - x2)), int(abs(y1 - y2))
 			#draw
-			gc.foreground = Colors.H_COLOR
+			gc.set_foreground(Colors.HIGHLIGHT_COLOR)
 			window.draw_rectangle(gc, True, x, y, w, h)
-			gc.foreground = Colors.TXT_COLOR
+			gc.set_foreground(Colors.BORDER_COLOR)
 			window.draw_rectangle(gc, False, x, y, w, h)
 		#draw blocks on top of connections
 		for element in self.get_connections() + self.get_blocks():

@@ -115,7 +115,7 @@ class Block(Element):
 
 	def update(self):
 		"""Update the block, parameters, and ports when a change occurs."""
-		self.bg_color = self.get_enabled() and Colors.BG_COLOR or Colors.DISABLED_BG_COLOR
+		self._bg_color = self.get_enabled() and Colors.BLOCK_ENABLED_COLOR or Colors.BLOCK_DISABLED_COLOR
 		self.clear()
 		self._create_labels()
 		self.W = self.label_width + 2*BLOCK_LABEL_PADDING
@@ -148,9 +148,8 @@ class Block(Element):
 		#setup the pixmap
 		pixmap = self.get_parent().new_pixmap(width, height)
 		gc = pixmap.new_gc()
-		gc.foreground = self.bg_color
+		gc.set_foreground(self._bg_color)
 		pixmap.draw_rectangle(gc, True, 0, 0, width, height)
-		gc.foreground = Colors.TXT_COLOR
 		#draw the layouts
 		h_off = 0
 		for i,layout in enumerate(layouts):
@@ -175,7 +174,10 @@ class Block(Element):
 		"""
 		x, y = self.get_coordinate()
 		#draw main block
-		Element.draw(self, gc, window, BG_color=self.bg_color)
+		Element.draw(
+			self, gc, window, bg_color=self._bg_color,
+			border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or Colors.BORDER_COLOR,
+		)
 		#draw label image
 		if self.is_horizontal():
 			window.draw_image(gc, self.horizontal_label, 0, 0, x+BLOCK_LABEL_PADDING, y+(self.H-self.label_height)/2, -1, -1)

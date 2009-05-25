@@ -23,7 +23,14 @@ import Colors
 from Constants import CONNECTOR_ARROW_BASE, CONNECTOR_ARROW_HEIGHT
 
 class Connection(Element):
-	"""A graphical connection for ports."""
+	"""
+	A graphical connection for ports.
+	The connection has 2 parts, the arrow and the wire.
+	The coloring of the arrow and wire exposes the status of 3 states:
+		enabled/disabled, valid/invalid, highlighted/non-highlighted.
+	The wire coloring exposes the enabled and highlighted states.
+	The arrow coloring exposes the enabled and valid states.
+	"""
 
 	def get_coordinate(self):
 		"""
@@ -59,8 +66,9 @@ class Connection(Element):
 			Utils.get_rotated_coordinate((-CONNECTOR_ARROW_HEIGHT, CONNECTOR_ARROW_BASE/2), self.get_sink().get_rotation()),
 		]
 		self._update_after_move()
-		if self.is_valid(): self._foreground = Colors.FG_COLOR
-		else: self._foreground = Colors.ERROR_COLOR
+		if not self.get_enabled(): self._arrow_color = Colors.CONNECTION_DISABLED_COLOR
+		elif not self.is_valid(): self._arrow_color = Colors.CONNECTION_ERROR_COLOR
+		else: self._arrow_color = Colors.CONNECTION_ENABLED_COLOR
 
 	def _update_after_move(self):
 		"""Calculate coordinates."""
@@ -123,8 +131,10 @@ class Connection(Element):
 		self._sink_coor = sink.get_coordinate()
 		self._source_coor = source.get_coordinate()
 		#draw
-		fg_color = self.get_enabled() and Colors.FG_COLOR or Colors.DISABLED_FG_COLOR
-		Element.draw(self, gc, window, FG_color=fg_color)
-		gc.foreground = self._foreground
+		if self.is_highlighted(): border_color = Colors.HIGHLIGHT_COLOR
+		elif self.get_enabled(): border_color = Colors.CONNECTION_ENABLED_COLOR
+		else: border_color = Colors.CONNECTION_DISABLED_COLOR
+		Element.draw(self, gc, window, bg_color=None, border_color=border_color)
 		#draw arrow on sink port
+		gc.set_foreground(self._arrow_color)
 		window.draw_polygon(gc, True, self._arrow)
