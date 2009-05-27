@@ -23,3 +23,5 @@ include $(top_srcdir)/Makefile.common
 
 SUBDIRS = src
 
+pkgconfigdir = $(libdir)/pkgconfig
+dist_pkgconfig_DATA = gnuradio-msdd6000.pc

@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2008,2009 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -37,6 +37,7 @@ AC_DEFUN([GRC_GR_VIDEO_SDL],[
 
     AC_CONFIG_FILES([ \
         gr-video-sdl/Makefile \
+	gr-video-sdl/gnuradio-video-sdl.pc \
         gr-video-sdl/src/Makefile \
         gr-video-sdl/src/run_tests \
     ])

@@ -30,6 +30,19 @@ grinclude_HEADERS =			\
 	msdd_buffer_copy_behaviors.h	\
 	msdd6000.h
 
+lib_LTLIBRARIES = libgnuradio-msdd6000.la
+
+libgnuradio_msdd6000_la_SOURCES = 	\
+	msdd_source_simple.cc		\
+	msdd6000.cc
+
+libgnuradio_msdd6000_la_LIBADD = 	\
+	$(GNURADIO_CORE_LA)
+
+libgnuradio_msdd6000_la_LDFLAGS =	\
+	$(NO_UNDEFINED)
+
+if PYTHON
 #################################
 # SWIG interface and library
 
@@ -43,14 +56,9 @@ TOP_SWIG_IFILES =			\
 msdd_pythondir_category =		\
 	gnuradio
 
-# additional sources for the SWIG-generated library
-msdd_la_swig_sources =			\
-	msdd_source_simple.cc		\
-	msdd6000.cc
-
 # additional libraries for linking with the SWIG-generated library
 msdd_la_swig_libadd =			\
-	$(GNURADIO_CORE_LA)
+	libgnuradio-msdd6000.la
 
 include $(top_srcdir)/Makefile.swig
 
@@ -59,3 +67,4 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

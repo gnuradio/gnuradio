@@ -21,4 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = python c++
+SUBDIRS = c++
+if PYTHON
+SUBDIRS += python
+endif

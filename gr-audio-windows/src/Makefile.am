@@ -23,21 +23,34 @@ include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = run_tests.in
 
-TESTS = run_tests
-
-DISTCLEANFILES = run_tests
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
 noinst_PYTHON = qa_audio_windows.py
-
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
 	audio_windows_sink.h		\
 	audio_windows_source.h
 
+lib_LTLIBRARIES = libgnuradio-audio-windows.la
+
+libgnuradio_audio_windows_la_SOURCES = 	\
+	audio_windows_sink.cc		\
+	audio_windows_source.cc		
+
+libgnuradio_audio_windows_la_LIBADD =	\
+	$(GNURADIO_CORE_LA)		\
+	$(WINAUDIO_LIBS)
+
+libgnuradio_audio_windows_la_LDFLAGS =	\
+	$(LIBGNURADIO_CORE_EXTRA_LDFLAGS) \
+	$(NO_UNDEFINED)
+
+if PYTHON
 ###################################
 # SWIG Python interface and library
+TESTS = run_tests
+DISTCLEANFILES = run_tests
 
 TOP_SWIG_IFILES = 			\
 	audio_windows.i
@@ -49,19 +62,9 @@ TOP_SWIG_IFILES = 			\
 audio_windows_pythondir_category =	\
 	gnuradio
 
-# additional sources for the SWIG-generated library
-audio_windows_la_swig_sources = 	\
-	audio_windows_sink.cc		\
-	audio_windows_source.cc		
-
 # additional libraries for linking with the SWIG-generated library
 audio_windows_la_swig_libadd =		\
-	$(GNURADIO_CORE_LA)		\
-	$(WINAUDIO_LIBS)
-
-# additional LD flags for linking the SWIG-generated library
-audio_windows_la_swig_ldflags =		\
-	$(LIBGNURADIO_CORE_EXTRA_LDFLAGS)
+	libgnuradio-audio-windows.la
 
 include $(top_srcdir)/Makefile.swig
 
@@ -70,3 +73,4 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

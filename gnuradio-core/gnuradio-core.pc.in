@@ -7,5 +7,6 @@ Name: gnuradio-core
 Description: GNU Software Radio toolkit
 Requires: gruel fftw3f gsl gnuradio-omnithread
 Version: @VERSION@
-Libs: -L${libdir} -lgnuradio-core @BOOST_LDFLAGS@ @BOOST_THREAD_LIB@ @BOOST_DATE_TIME_LIB@
-Cflags: @BOOST_CPPFLAGS@ @BOOST_CXXFLAGS@ -I${includedir} @DEFINES@
+Libs.private: @BOOST_LDFLAGS@ @BOOST_THREAD_LIB@ @BOOST_DATE_TIME_LIB@
+Libs: -L${libdir} -lgnuradio-core
+Cflags: @BOOST_CPPFLAGS@ @BOOST_CXXFLAGS@ -I${includedir}

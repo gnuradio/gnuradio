@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2004 Free Software Foundation, Inc.
+# Copyright 2001,2004,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,6 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = gen_interpolator_taps lib tests python
+SUBDIRS = gen_interpolator_taps lib tests
+if PYTHON
+SUBDIRS += python
+endif
 
 DIST_SUBDIRS = gen_interpolator_taps lib tests python utils

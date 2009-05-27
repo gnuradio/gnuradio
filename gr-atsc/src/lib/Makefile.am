@@ -32,12 +32,10 @@ EXTRA_DIST =					\
 	qa_atsci_viterbi_decoder_t1_input.dat	\
 	qa_atsci_viterbi_decoder_t1_output.dat
 
-TESTS =						\
-	test_atsci
 
-# We build two libtool convenience libraries
+TESTS =	test_atsci
 
-noinst_LTLIBRARIES = libatsc.la libatsc-qa.la
+lib_LTLIBRARIES = libgnuradio-atsc.la
 
 # FIXME
 #	atsci_exp2_lp.cc			\
@@ -46,7 +44,7 @@ noinst_LTLIBRARIES = libatsc.la libatsc-qa.la
 #	atsci_vsbtx_lp.cc			\
 #
 
-libatsc_la_SOURCES = 			\
+libgnuradio_atsc_la_SOURCES = 			\
 	atsc_derandomizer.cc			\
 	atsc_randomizer.cc			\
 	atsc_rs_decoder.cc			\
@@ -88,10 +86,15 @@ libatsc_la_SOURCES = 			\
 	create_atsci_fs_correlator.cc		\
 	plinfo.cc				
 
-libatsc_la_LIBADD = 				\
+BUILT_SOURCES = 				\
+	atsci_viterbi_mux.cc
+
+libgnuradio_atsc_la_LIBADD = 			\
 	$(GNURADIO_CORE_LA)
 
-libatsc_qa_la_SOURCES = 			\
+noinst_LTLIBRARIES = libgnuradio-atsc-qa.la
+
+libgnuradio_atsc_qa_la_SOURCES = 		\
 	qa_atsci_basic_trellis_encoder.cc 	\
 	qa_atsci_data_interleaver.cc		\
 	qa_atsci_equalizer_nop.cc		\
@@ -107,8 +110,9 @@ libatsc_qa_la_SOURCES = 			\
 	qa_atsci.cc				\
 	qa_interleaver_fifo.cc			
 
-libatsc_qa_la_LIBADD = 			\
+libgnuradio_atsc_qa_la_LIBADD =			\
 	$(GNURADIO_CORE_LA)
+
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =				\
@@ -193,8 +197,8 @@ atsci_viterbi_mux.cc: atsci_viterbi_gen$(EXEEXT)
 
 test_atsci_SOURCES = test_atsci.cc
 test_atsci_LDADD   =  		\
-	libatsc-qa.la 		\
-	libatsc.la		\
+	libgnuradio-atsc-qa.la	\
+	libgnuradio-atsc.la	\
 	$(CPPUNIT_LIBS)
 
 # ------------------------------------------------------------------------
@@ -203,6 +207,7 @@ test_atsci_LDADD   =  		\
 
 CLEANFILES = atsci_viterbi_mux.cc atsci_viterbi_gen$(EXEEXT)
 
+if PYTHON
 # ------------------------------------------------------------------------
 #  This is the swig-ish part of the Makefile.
 #  It builds the atsc module which we'll load into python
@@ -220,14 +225,13 @@ atsc_pythondir_category =	\
 
 # additional libraries for linking with the SWIG-generated library
 atsc_la_swig_libadd =		\
-	libatsc.la
+	libgnuradio-atsc.la
 
 include $(top_srcdir)/Makefile.swig
 
 # add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = 				\
-	atsci_viterbi_mux.cc 			\
-	$(swig_built_sources)
+BUILT_SOURCES += $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

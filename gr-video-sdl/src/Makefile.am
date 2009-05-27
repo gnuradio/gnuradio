@@ -23,22 +23,34 @@ include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = run_tests.in
 
-TESTS = run_tests
-
-DISTCLEANFILES = run_tests
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(SDL_CFLAGS) \
+	$(WITH_INCLUDES)
 
 noinst_PYTHON =				\
 	qa_video_sdl.py
-
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(SDL_CFLAGS) \
-	$(WITH_INCLUDES)
 
 grinclude_HEADERS =			\
 	video_sdl_sink_uc.h		\
 	video_sdl_sink_s.h
 
+lib_LTLIBRARIES = libgnuradio-video-sdl.la
+
+libgnuradio_video_sdl_la_SOURCES = 	\
+	video_sdl_sink_uc.cc		\
+	video_sdl_sink_s.cc
+
+libgnuradio_video_sdl_la_LIBADD =	\
+	$(SDL_LIBS)			\
+	$(GNURADIO_CORE_LA)
+
+libgnuradio_video_sdl_la_LDFLAGS =	\
+	$(NO_UNDEFINED)
+
+if PYTHON
 #################################
 # SWIG interface and library
+TESTS = run_tests
+DISTCLEANFILES = run_tests
 
 TOP_SWIG_IFILES =			\
 	video_sdl.i
@@ -50,15 +62,9 @@ TOP_SWIG_IFILES =			\
 video_sdl_pythondir_category =		\
 	gnuradio
 
-# additional sources for the SWIG-generated library
-video_sdl_la_swig_sources =		\
-	video_sdl_sink_uc.cc		\
-	video_sdl_sink_s.cc
-
 # additional libraries for linking with the SWIG-generated library
 video_sdl_la_swig_libadd =		\
-	$(SDL_LIBS)			\
-	$(GNURADIO_CORE_LA)
+	libgnuradio-video-sdl.la
 
 include $(top_srcdir)/Makefile.swig
 
@@ -67,3 +73,4 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

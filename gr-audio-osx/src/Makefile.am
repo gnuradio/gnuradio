@@ -23,10 +23,6 @@ include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = run_tests.in
 
-TESTS = run_tests
-
-DISTCLEANFILES = run_tests
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
@@ -43,8 +39,26 @@ noinst_PYTHON =				\
 	qa_osx.py			\
 	test_audio_loop.py
 
+lib_LTLIBRARIES = libgnuradio-audio-osx.la
+
+libgnuradio_audio_osx_la_SOURCES = 	\
+	audio_osx_sink.cc		\
+	audio_osx_source.cc
+
+libgnuradio_audio_osx_la_LIBADD =	\
+	$(GNURADIO_CORE_LA)
+
+libgnuradio_audio_osx_la_LDFLAGS =	\
+	-framework AudioUnit		\
+	-framework CoreAudio		\
+	-framework AudioToolbox		\
+	$(NO_UNDEFINED)
+
+if PYTHON
 ###################################
 # SWIG Python interface and library
+TESTS = run_tests
+DISTCLEANFILES = run_tests
 
 TOP_SWIG_IFILES =			\
 	audio_osx.i
@@ -56,20 +70,9 @@ TOP_SWIG_IFILES =			\
 audio_osx_pythondir_category =		\
 	gnuradio
 
-# additional sources for the SWIG-generated library
-audio_osx_la_swig_sources =		\
-	audio_osx_sink.cc		\
-	audio_osx_source.cc
-
 # additional libraries for linking with the SWIG-generated library
 audio_osx_la_swig_libadd =		\
-	$(GNURADIO_CORE_LA)
-
-# additional LD flags for linking the SWIG-generated library
-audio_osx_la_swig_ldflags =		\
-	-framework AudioUnit		\
-	-framework CoreAudio		\
-	-framework AudioToolbox
+	libgnuradio_audio_osx.la
 
 include $(top_srcdir)/Makefile.swig
 
@@ -78,3 +81,4 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

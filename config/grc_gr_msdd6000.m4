@@ -22,6 +22,7 @@ AC_DEFUN([GRC_GR_MSDD6000],[
 
     AC_CONFIG_FILES([\
 	gr-msdd6000/Makefile \
+	gr-msdd6000/gnuradio-msdd6000.pc \
 	gr-msdd6000/src/Makefile
     ])
 

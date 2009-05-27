@@ -47,10 +47,10 @@ EXTRA_DIST = 				\
 	usrp_dbid.dat			
 
 BUILT_SOURCES = 			\
-	usrp_dbid.h			\
-	usrp_dbid.cc			\
-	usrp_dbid.py			
+	usrp_dbid.h
 
+BUILT_SOURCES += usrp_dbid.cc \
+	         usrp_dbid.py
 
 # ----------------------------------------------------------------
 # FUSB_TECH is set at configure time by way of
@@ -118,7 +118,6 @@ libusrp_la_common_SOURCES = 		\
 	db_dtt768.cc			\
 	db_util.cc
 
-#	db_wbx.cc
 
 
 if FUSB_TECH_generic
@@ -177,6 +176,7 @@ noinst_HEADERS =			\
 	rate_to_regval.h		\
 	usrp_local_sighandler.h		
 
+if PYTHON
 usrppython_PYTHON =			\
 	usrp_dbid.py			
 
@@ -186,6 +186,7 @@ noinst_PYTHON =				\
 	dump_data.py
 
 swiginclude_HEADERS = db_base.i
+endif
 
 # common way for generating sources from templates when using
 # BUILT_SOURCES, using parallel build protection.

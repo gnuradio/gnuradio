@@ -26,6 +26,7 @@ EXTRA_DIST = \
     README \
     README.gl
 
+if PYTHON
 SUBDIRS = src
 
 etcdir = $(sysconfdir)/gnuradio/conf.d
@@ -33,3 +34,4 @@ dist_etc_DATA = gr-wxgui.conf
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gr-wxgui.pc
+endif

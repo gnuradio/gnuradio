@@ -93,9 +93,7 @@ grinclude_HEADERS = 			\
 	gr_wavfile_sink.h               \
 	gri_wavfile.h
 
-
-
-
+if PYTHON
 swiginclude_HEADERS =			\
 	io.i				\
 	gr_file_sink.i			\
@@ -116,4 +114,4 @@ swiginclude_HEADERS =			\
 	gr_udp_source.i                 \
 	gr_wavfile_source.i             \
 	gr_wavfile_sink.i
-
+endif

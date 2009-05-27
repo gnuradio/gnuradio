@@ -26,8 +26,6 @@ include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = run_tests.in
 
-TESTS = run_tests
-
 DISTCLEANFILES = run_tests
 
 noinst_PYTHON =	qa_usrp.py
@@ -68,8 +66,10 @@ grinclude_HEADERS = \
 	usrp_source_c.h \
 	usrp_source_s.h
 
+if PYTHON
 # ----------------------------------------------------------------
 # The SWIG library
+TESTS = run_tests
 
 TOP_SWIG_IFILES =		\
 	usrp_swig.i
@@ -111,3 +111,4 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

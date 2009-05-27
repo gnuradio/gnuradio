@@ -21,4 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = fpga lib python
+SUBDIRS = fpga lib
+if PYTHON
+SUBDIRS += python
+endif

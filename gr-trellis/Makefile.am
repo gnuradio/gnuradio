@@ -23,3 +23,5 @@ include $(top_srcdir)/Makefile.common
 
 SUBDIRS = src doc
 
+pkgconfigdir = $(libdir)/pkgconfig
+dist_pkgconfig_DATA = gnuradio-trellis.pc

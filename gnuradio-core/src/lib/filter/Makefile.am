@@ -293,7 +293,7 @@ noinst_HEADERS = 			\
 	qa_gri_mmse_fir_interpolator_cc.h	
 
 
-
+if PYTHON
 swiginclude_HEADERS =			\
 	filter.i			\
 	filter_generated.i		\
@@ -310,6 +310,7 @@ swiginclude_HEADERS =			\
 	gr_single_pole_iir_filter_ff.i	\
 	gr_single_pole_iir_filter_cc.i	\
 	$(GENERATED_I)
+endif
 
 # Do creation and inclusion of other Makefiles last
 

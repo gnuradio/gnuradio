@@ -21,6 +21,7 @@
 
 include $(top_srcdir)/grc/Makefile.inc
 
+if PYTHON
 SUBDIRS = \
 	data \
 	examples \
@@ -30,4 +31,5 @@ SUBDIRS = \
 ## append freedesktop to the list of subdirs when xdg utils are present
 if XDG_UTILS
 SUBDIRS += freedesktop
+endif
 endif

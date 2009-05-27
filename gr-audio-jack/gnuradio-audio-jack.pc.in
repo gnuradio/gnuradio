@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: gnuradio-audio-jack
+Description: GNU Radio blocks for the JACK sound system
+Requires: gnuradio-core jack
+Version: @VERSION@
+Libs: -L${libdir} -lgnuradio-audio-jack
+Cflags: -I${includedir}

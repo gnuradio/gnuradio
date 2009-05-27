@@ -23,10 +23,6 @@ include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = run_tests.in
 
-TESTS = run_tests
-
-DISTCLEANFILES = run_tests
-
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
 	audio_jack_sink.h		\
@@ -35,13 +31,30 @@ grinclude_HEADERS =			\
 noinst_HEADERS = 			\
 	gri_jack.h
 
+lib_LTLIBRARIES = libgnuradio-audio-jack.la
+
+libgnuradio_audio_jack_la_SOURCES = 	\
+	audio_jack_sink.cc		\
+	audio_jack_source.cc		\
+	gri_jack.cc
+
+libgnuradio_audio_jack_la_LIBADD =	\
+	$(GNURADIO_CORE_LA)		\
+	$(JACK_LIBS)
+
+libgnuradio_audio_jack_la_LDFLAGS =	\
+	$(NO_UNDEFINED)
+
 noinst_PYTHON = 			\
 	qa_jack.py
 
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
+if PYTHON
 ###################################
 # SWIG Python interface and library
+TESTS = run_tests
+DISTCLEANFILES = run_tests
 
 TOP_SWIG_IFILES = 			\
 	audio_jack.i
@@ -53,16 +66,9 @@ TOP_SWIG_IFILES = 			\
 audio_jack_pythondir_category =		\
 	gnuradio
 
-# additional sources for the SWIG-generated library
-audio_jack_la_swig_sources = 		\
-	audio_jack_sink.cc		\
-	audio_jack_source.cc		\
-	gri_jack.cc
-
 # additional libraries for linking with the SWIG-generated library
 audio_jack_la_swig_libadd =		\
-	$(GNURADIO_CORE_LA)		\
-	$(JACK_LIBS)
+	libgnuradio-audio-jack.la
 
 include $(top_srcdir)/Makefile.swig
 
@@ -71,3 +77,4 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

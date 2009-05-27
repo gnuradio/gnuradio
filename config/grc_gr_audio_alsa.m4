@@ -35,7 +35,7 @@ AC_DEFUN([GRC_GR_AUDIO_ALSA],[
 
     AC_CONFIG_FILES([ \
         gr-audio-alsa/Makefile \
-	gr-audio-alsa/gr-audio-alsa.pc \
+	gr-audio-alsa/gnuradio-audio-alsa.pc \
         gr-audio-alsa/src/Makefile \
         gr-audio-alsa/src/run_tests \
     ])

@@ -126,6 +126,20 @@ GR_FORTRAN
 GR_NO_UNDEFINED		dnl do we need the -no-undefined linker flag
 GR_SCRIPTING
 
+# Allow user to choose whether to generate SWIG/Python 
+# Default is enabled
+AC_ARG_ENABLE([python],
+  [AS_HELP_STRING([--enable-python],
+    [generate SWIG/Python components (default is yes)])],
+  [case "${enableval}" in
+     yes) enable_python=yes ;;
+     no) enable_python=no ;;
+     *) AC_MSG_ERROR([bad value ${enableval} for --enable-python]) ;;
+   esac],
+  [enable_python=yes]
+)
+AM_CONDITIONAL([PYTHON], [test x$enable_python = xyes])
+
 AC_CHECK_PROG([XMLTO],[xmlto],[yes],[])
 AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
 
@@ -327,7 +341,7 @@ GRC_GR_VIDEO_SDL
 GRC_GR_WXGUI
 GRC_GR_QTGUI
 GRC_GR_SOUNDER			dnl this must come after GRC_USRP
-GRC_GR_UTILS                    dnl this must come after GRC_GR_WXGUI
+GRC_GR_UTILS                   dnl this must come after GRC_GR_WXGUI
 GRC_GNURADIO_EXAMPLES		dnl must come after all GRC_GR_*
 GRC_GRC
 GRC_DOCS			dnl must be last
@@ -402,3 +416,4 @@ if test "$with_dirs" != ""; then
     echo These components will not be built.
     echo
 fi
+

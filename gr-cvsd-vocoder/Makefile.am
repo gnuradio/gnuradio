@@ -22,4 +22,6 @@
 include $(top_srcdir)/Makefile.common
 
 SUBDIRS = src
-DIST_SUBDIRS = src
+
+pkgconfigdir = $(libdir)/pkgconfig
+dist_pkgconfig_DATA = gnuradio-cvsd-vocoder.pc

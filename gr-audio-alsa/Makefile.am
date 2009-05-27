@@ -21,13 +21,10 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
-    gr-audio-alsa.pc.in
-
 SUBDIRS = src
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = gr-audio-alsa.pc
+dist_pkgconfig_DATA = gnuradio-audio-alsa.pc
 
 etcdir = $(sysconfdir)/gnuradio/conf.d
 dist_etc_DATA = gr-audio-alsa.conf

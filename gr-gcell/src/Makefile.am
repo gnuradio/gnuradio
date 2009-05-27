@@ -22,10 +22,6 @@ include $(top_srcdir)/Makefile.common
 
 SUBDIRS = . examples
 
-EXTRA_DIST = run_tests.in
-
-TESTS = run_tests
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(GCELL_INCLUDES) \
 	$(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
@@ -43,24 +39,27 @@ DISTCLEANFILES = \
 # ----------------------------------------------------------------
 
 # the library for the C++ blocks
-lib_LTLIBRARIES = libgr_gcell.la
+lib_LTLIBRARIES = libgnuradio_gcell.la
 
-libgr_gcell_la_SOURCES = \
+libgnuradio_gcell_la_SOURCES = \
 	gcell_fft_vcc.cc
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = \
 	gcell_fft_vcc.h
 
-libgr_gcell_la_LIBADD = \
+libgnuradio_gcell_la_LIBADD = \
 	$(GNURADIO_CORE_LA) \
 	$(GCELL_LA)
 
-libgr_gcell_la_LDFLAGS = $(NO_UNDEFINED)
+libgnuradio_gcell_la_LDFLAGS = $(NO_UNDEFINED)
 
+if PYTHON
 # ----------------------------------------------------------------
 #                         SWIG stuff
 # ----------------------------------------------------------------
+EXTRA_DIST = run_tests.in
+TESTS = run_tests
 
 TOP_SWIG_IFILES =		\
 	gcell.i
@@ -78,7 +77,7 @@ gcell_swig_args =		\
 
 # additional libraries for linking with the SWIG-generated library
 gcell_la_swig_libadd =		\
-	libgr_gcell.la
+	libgnuradio_gcell.la
 
 # additional SWIG files to be installed
 gcell_swiginclude_headers =	\
@@ -92,3 +91,4 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

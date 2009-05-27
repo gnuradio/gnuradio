@@ -3,9 +3,9 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: usrp
+Name: usrp-inband
 Description: USRP C++ Interface with in-band signaling
-Requires: mblock pmt gnuradio-omnithread libusb
+Requires: usrp pmt mblock
 Version: @VERSION@
-Libs: -L${libdir} -lusrp-inband -lusrp
-Cflags: -I${includedir} @DEFINES@
+Libs: -L${libdir} -lusrp-inband
+Cflags: -I${includedir}

@@ -21,11 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
+
 EXTRA_DIST = run_tests.in
-
-TESTS = run_tests
-
-DISTCLEANFILES = run_tests
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =		\
@@ -34,10 +32,24 @@ grinclude_HEADERS =		\
 
 noinst_PYTHON = qa_oss.py
 
-AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
+lib_LTLIBRARIES = libgnuradio-audio-oss.la
 
+libgnuradio_audio_oss_la_SOURCES = 	\
+	audio_oss_sink.cc		\
+	audio_oss_source.cc
+
+libgnuradio_audio_oss_la_LIBADD =	\
+	$(GNURADIO_CORE_LA)		\
+	$(OSS_LIBS)
+
+libgnuradio_audio_oss_la_LDFLAGS =	\
+	$(NO_UNDEFINED)
+
+if PYTHON
 ###################################
 # SWIG Python interface and library
+TESTS = run_tests
+DISTCLEANFILES = run_tests
 
 TOP_SWIG_IFILES =		\
 	audio_oss.i
@@ -49,15 +61,9 @@ TOP_SWIG_IFILES =		\
 audio_oss_pythondir_category =	\
 	gnuradio
 
-# additional sources for the SWIG-generated library
-audio_oss_la_swig_sources =	\
-	audio_oss_sink.cc	\
-	audio_oss_source.cc
-
 # additional libraries for linking with the SWIG-generated library
 audio_oss_la_swig_libadd =	\
-	$(GNURADIO_CORE_LA)	\
-	$(OSS_LIBS)
+	libgnuradio-audio-oss.la
 
 include $(top_srcdir)/Makefile.swig
 
@@ -66,3 +72,4 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

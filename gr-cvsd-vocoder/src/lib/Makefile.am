@@ -28,6 +28,19 @@ grinclude_HEADERS =			\
 	cvsd_decode_bs.h		\
 	cvsd_encode_sb.h
 
+lib_LTLIBRARIES = libgnuradio-cvsd-vocoder.la
+
+libgnuradio_cvsd_vocoder_la_SOURCES = 	\
+	cvsd_decode_bs.cc		\
+	cvsd_encode_sb.cc
+
+libgnuradio_cvsd_vocoder_la_LIBADD =	\
+	$(GNURADIO_CORE_LA)
+
+libgnuradio_cvsd_vocoder_la_LDFLAGS =	\
+	$(NO_UNDEFINED)
+
+if PYTHON
 ###################################
 # SWIG Python interface and library
 
@@ -41,14 +54,9 @@ TOP_SWIG_IFILES = 			\
 cvsd_vocoder_pythondir_category =	\
 	gnuradio/vocoder
 
-# additional sources for the SWIG-generated library
-cvsd_vocoder_la_swig_sources =	 	\
-	cvsd_decode_bs.cc		\
-	cvsd_encode_sb.cc
-
 # additional libraries for linking with the SWIG-generated library
 cvsd_vocoder_la_swig_libadd =		\
-	$(GNURADIO_CORE_LA)
+	libgnuradio-cvsd-vocoder.la
 
 include $(top_srcdir)/Makefile.swig
 
@@ -57,3 +65,4 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

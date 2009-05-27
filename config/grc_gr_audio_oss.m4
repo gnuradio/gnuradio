@@ -51,6 +51,7 @@ AC_DEFUN([GRC_GR_AUDIO_OSS],[
 
     AC_CONFIG_FILES([ \
         gr-audio-oss/Makefile \
+	gr-audio-oss/gnuradio-audio-oss.pc \
         gr-audio-oss/src/Makefile \
         gr-audio-oss/src/run_tests \
     ])

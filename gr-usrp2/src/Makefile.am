@@ -34,7 +34,6 @@ noinst_PYTHON = qa_usrp2.py
 # ----------------------------------------------------------------------
 
 EXTRA_DIST = run_tests.in
-TESTS = run_tests
 DISTCLEANFILES = run_tests
 
 # ----------------------------------------------------------------------
@@ -79,12 +78,14 @@ noinst_HEADERS = \
 	rx_16sc_handler.h \
 	rx_32fc_handler.h
 
+if PYTHON
 # ----------------------------------------------------------------------
 # Python SWIG wrapper around C++ library
 #
 # usrp2.py
 # _usrp2.so
 # ----------------------------------------------------------------------
+TESTS = run_tests
 
 TOP_SWIG_IFILES =		\
 	usrp2.i
@@ -111,3 +112,4 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

@@ -23,10 +23,6 @@ include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = run_tests.in
 
-TESTS = run_tests
-
-DISTCLEANFILES = run_tests
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 	$(PORTAUDIO_CFLAGS) $(WITH_INCLUDES)
 
@@ -41,8 +37,26 @@ noinst_HEADERS = 			\
 noinst_PYTHON = 			\
 	qa_portaudio.py
 
+lib_LTLIBRARIES = libgnuradio-audio-portaudio.la
+
+libgnuradio_audio_portaudio_la_SOURCES = \
+	audio_portaudio_sink.cc		\
+	audio_portaudio_source.cc	\
+	gri_portaudio.cc
+
+libgnuradio_audio_portaudio_la_LIBADD =	\
+	$(GNURADIO_CORE_LA)		\
+	$(PORTAUDIO_LIBS)
+
+libgnuradio_audio_portaudio_la_LDFLAGS = \
+	$(NO_UNDEFINED)
+
+
+if PYTHON
 ###################################
 # SWIG Python interface and library
+TESTS = run_tests
+DISTCLEANFILES = run_tests
 
 TOP_SWIG_IFILES = 			\
 	audio_portaudio.i
@@ -54,16 +68,9 @@ TOP_SWIG_IFILES = 			\
 audio_portaudio_pythondir_category =	\
 	gnuradio
 
-# additional sources for the SWIG-generated library
-audio_portaudio_la_swig_sources = 	\
-	audio_portaudio_sink.cc		\
-	audio_portaudio_source.cc	\
-	gri_portaudio.cc
-
 # additional libraries for linking with the SWIG-generated library
 audio_portaudio_la_swig_libadd =	\
-	$(GNURADIO_CORE_LA)		\
-	$(PORTAUDIO_LIBS)
+	libgnuradio-audio-portaudio.la
 
 include $(top_srcdir)/Makefile.swig
 
@@ -72,3 +79,4 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

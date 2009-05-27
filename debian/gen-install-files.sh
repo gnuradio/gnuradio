@@ -57,7 +57,7 @@ rm -f $NAME
 touch $NAME
 $EXTRACT gr-audio-alsa/src/Makefile grinclude_HEADERS >>$NAME
 echo usr/lib/libgnuradio-audio-alsa.so >>$NAME
-echo usr/lib/pkgconfig/gr-audio-alsa.pc >>$NAME
+echo usr/lib/pkgconfig/gnuradio-audio-alsa.pc >>$NAME
 
 # libgnuradio-qtgui
 NAME=debian/libgnuradio-qtgui.install

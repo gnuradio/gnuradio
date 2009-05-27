@@ -25,6 +25,7 @@ AC_DEFUN([GRC_GR_ATSC],[
 
     AC_CONFIG_FILES([\
         gr-atsc/Makefile \
+	gr-atsc/gnuradio-atsc.pc \
         gr-atsc/doc/Makefile \
         gr-atsc/src/Makefile \
         gr-atsc/src/lib/Makefile \

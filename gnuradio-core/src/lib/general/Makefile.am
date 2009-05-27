@@ -353,6 +353,7 @@ noinst_HEADERS = 			\
 	sine_table.h			\
 	qa_gr_math.h
 
+if PYTHON
 swiginclude_HEADERS =			\
 	general.i			\
 	gr_agc_cc.i                 	\
@@ -478,3 +479,4 @@ swiginclude_HEADERS =			\
 	gr_scrambler_bb.i		\
 	gr_probe_mpsk_snr_c.i		\
 	gr_probe_density_b.i
+endif

@@ -21,6 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
+if PYTHON
 SUBDIRS = gr gru gruimpl blks2 blks2impl vocoder
 
 grpython_PYTHON = 			\
@@ -34,3 +35,4 @@ grpython_PYTHON = 			\
 	gr_unittest.py			\
 	optfir.py			\
 	window.py
+endif

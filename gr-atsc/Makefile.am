@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,4 +25,4 @@ SUBDIRS = src
 DIST_SUBDIRS = src doc
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA =
+dist_pkgconfig_DATA = gnuradio-atsc.pc

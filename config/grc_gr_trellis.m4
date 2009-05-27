@@ -25,6 +25,7 @@ AC_DEFUN([GRC_GR_TRELLIS],[
 
     AC_CONFIG_FILES([\
         gr-trellis/Makefile \
+	gr-trellis/gnuradio-trellis.pc \
         gr-trellis/doc/Makefile \
         gr-trellis/src/Makefile \
         gr-trellis/src/lib/Makefile \

@@ -25,6 +25,7 @@ AC_DEFUN([GRC_GR_CVSD_VOCODER],[
 
     AC_CONFIG_FILES([\
         gr-cvsd-vocoder/Makefile \
+	gr-cvsd-vocoder/gnuradio-cvsd-vocoder.pc \
         gr-cvsd-vocoder/src/Makefile \
         gr-cvsd-vocoder/src/lib/Makefile \
         gr-cvsd-vocoder/src/python/Makefile \

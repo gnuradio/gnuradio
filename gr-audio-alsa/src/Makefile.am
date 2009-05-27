@@ -23,10 +23,6 @@ include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = run_tests.in
 
-TESTS = run_tests
-
-DISTCLEANFILES = run_tests
-
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =			\
 	audio_alsa_sink.h		\
@@ -57,8 +53,11 @@ libgnuradio_audio_alsa_la_LIBADD =	\
 libgnuradio_audio_alsa_la_LDFLAGS =	\
 	$(NO_UNDEFINED)
 
+if PYTHON
 ###################################
 # SWIG Python interface and library
+TESTS = run_tests
+DISTCLEANFILES = run_tests
 
 TOP_SWIG_IFILES = 			\
 	audio_alsa.i
@@ -81,3 +80,4 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

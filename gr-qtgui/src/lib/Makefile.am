@@ -39,6 +39,8 @@ endif
 
 EXTRA_DIST = spectrumdisplayform.ui
 
+BUILT_SOURCES = $(QMAKE_SOURCES)
+
 # Build the normal library for C++ apps to link against
 lib_LTLIBRARIES = libgnuradio-qtgui.la
 
@@ -97,6 +99,7 @@ libgnuradio_qtgui_la_LIBADD = 		\
 	-lstdc++		\
 	$(QT_LIBS)
 
+if PYTHON
 ##############################
 # SWIG interface and library
 
@@ -117,9 +120,9 @@ qtgui_la_swig_libadd =		\
 include $(top_srcdir)/Makefile.swig
 
 # add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = 		\
-	$(QMAKE_SOURCES)	\
+BUILT_SOURCES += 		\
 	$(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

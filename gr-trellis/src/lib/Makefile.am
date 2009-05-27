@@ -66,6 +66,29 @@ grinclude_HEADERS =			\
 	trellis_siso_combined_f.h	\
 	$(GENERATED_H)
 
+lib_LTLIBRARIES = libgnuradio-trellis.la
+
+libgnuradio_trellis_la_SOURCES = 	\
+        fsm.cc				\
+        quicksort_index.cc		\
+        base.cc				\
+        interleaver.cc			\
+        trellis_calc_metric.cc		\
+        trellis_permutation.cc		\
+	trellis_siso_f.cc		\
+	trellis_siso_combined_f.cc	\
+	$(GENERATED_CC)
+
+libgnuradio_trellis_la_LIBADD =	\
+	$(GNURADIO_CORE_LA)
+
+libgnuradio_trellis_la_LDFLAGS =	\
+	$(NO_UNDEFINED)
+
+
+
+
+if PYTHON
 #################################
 # SWIG interface and library
 
@@ -79,21 +102,9 @@ TOP_SWIG_IFILES = 			\
 trellis_pythondir_category =		\
 	gnuradio
 
-# additional sources for the SWIG-generated library
-trellis_la_swig_sources = 		\
-        fsm.cc				\
-        quicksort_index.cc		\
-        base.cc				\
-        interleaver.cc			\
-        trellis_calc_metric.cc		\
-        trellis_permutation.cc		\
-	trellis_siso_f.cc		\
-	trellis_siso_combined_f.cc	\
-	$(GENERATED_CC)
-
 # additional libraries for linking with the SWIG-generated library
 trellis_la_swig_libadd =		\
-	$(GNURADIO_CORE_LA)
+	libgnuradio-trellis.la
 
 # additional SWIG files to be installed
 trellis_swiginclude_headers = 		\
@@ -131,3 +142,4 @@ BUILT_SOURCES =				\
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

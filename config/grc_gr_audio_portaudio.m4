@@ -35,6 +35,7 @@ AC_DEFUN([GRC_GR_AUDIO_PORTAUDIO],[
 
     AC_CONFIG_FILES([ \
         gr-audio-portaudio/Makefile \
+	gr-audio-portaudio/gnuradio-audio-portaudio.pc \
         gr-audio-portaudio/src/Makefile \
         gr-audio-portaudio/src/run_tests \
     ])

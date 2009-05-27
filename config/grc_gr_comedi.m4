@@ -35,6 +35,7 @@ AC_DEFUN([GRC_GR_COMEDI],[
 
     AC_CONFIG_FILES([ \
         gr-comedi/Makefile \
+	gr-comedi/gnuradio-comedi.pc \
         gr-comedi/src/Makefile \
         gr-comedi/src/run_tests \
     ])

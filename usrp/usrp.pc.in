@@ -8,4 +8,4 @@ Description: USRP Client Side C++ interface
 Requires: libusb @usrp_darwin_omnithread_pc_requires@
 Version: @VERSION@
 Libs: -L${libdir} -lusrp
-Cflags: -I${includedir} @DEFINES@
+Cflags: -I${includedir}

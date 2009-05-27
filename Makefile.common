@@ -26,6 +26,7 @@ AM_CXXFLAGS = @autoconf_default_CXXFLAGS@ @lf_CXXFLAGS@
 # includes
 grincludedir = $(includedir)/gnuradio
 
+if PYTHON
 # swig includes
 swigincludedir = $(grincludedir)/swig
 
@@ -42,6 +43,7 @@ grpyexecdir = $(pyexecdir)/gnuradio
 
 usrppythondir = $(pythondir)/usrpm
 usrppyexecdir = $(pyexecdir)/usrpm
+endif
 
 # gcell includes
 gcellincludedir = $(includedir)/gcell

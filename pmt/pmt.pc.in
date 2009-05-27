@@ -8,4 +8,4 @@ Description: The GNU Radio Polymorphic Type library
 Requires: gnuradio-omnithread
 Version: @VERSION@
 Libs: -L${libdir} -lpmt
-Cflags: -I${includedir} @DEFINES@
+Cflags: -I${includedir}

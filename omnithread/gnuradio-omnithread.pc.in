@@ -8,4 +8,4 @@ Description: The GNU Radio omniORB threading library
 Requires:
 Version: @VERSION@
 Libs: -L${libdir} -lgromnithread
-Cflags: -I${includedir} @DEFINES@ @PTHREAD_CFLAGS@
+Cflags: -I${includedir}

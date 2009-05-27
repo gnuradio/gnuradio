@@ -30,8 +30,21 @@ grinclude_HEADERS =			\
 	gsm_fr_decode_ps.h		\
 	gsm_fr_encode_sp.h
 
-# SWIG interface and library
+lib_LTLIBRARIES = libgnuradio-gsm-fr-vocoder.la
 
+libgnuradio_gsm_fr_vocoder_la_SOURCES = \
+	gsm_fr_decode_ps.cc		\
+	gsm_fr_encode_sp.cc
+
+libgnuradio_gsm_fr_vocoder_la_LIBADD =	\
+	$(GNURADIO_CORE_LA)		\
+	gsm/libgsm.la
+
+libgnuradio_gsm_fr_vocoder_la_LDFLAGS =	\
+	$(NO_UNDEFINED)
+
+if PYTHON
+# SWIG interface and library
 TOP_SWIG_IFILES = 			\
 	gsm_full_rate.i
 
@@ -42,15 +55,9 @@ TOP_SWIG_IFILES = 			\
 gsm_full_rate_pythondir_category =	\
 	gnuradio/vocoder
 
-# additional sources for the SWIG-generated library
-gsm_full_rate_la_swig_sources = 	\
-	gsm_fr_decode_ps.cc		\
-	gsm_fr_encode_sp.cc
-
 # additional libraries for linking with the SWIG-generated library
 gsm_full_rate_la_swig_libadd =		\
-	$(GNURADIO_CORE_LA)		\
-	gsm/libgsm.la
+	libgnuradio-gsm-fr-vocoder.la
 
 include $(top_srcdir)/Makefile.swig
 
@@ -59,3 +66,4 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

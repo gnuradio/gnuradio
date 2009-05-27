@@ -25,6 +25,7 @@ AC_DEFUN([GRC_GR_GSM_FR_VOCODER],[
 
     AC_CONFIG_FILES([\
         gr-gsm-fr-vocoder/Makefile \
+	gr-gsm-fr-vocoder/gnuradio-gsm-fr-vocoder.pc \
         gr-gsm-fr-vocoder/src/Makefile \
         gr-gsm-fr-vocoder/src/lib/Makefile \
         gr-gsm-fr-vocoder/src/lib/gsm/Makefile \

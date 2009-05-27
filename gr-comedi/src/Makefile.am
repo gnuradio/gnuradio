@@ -23,10 +23,6 @@ include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = run_tests.in
 
-TESTS = run_tests
-
-DISTCLEANFILES = run_tests
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
@@ -40,8 +36,25 @@ noinst_HEADERS =		\
 noinst_PYTHON =			\
 	qa_comedi.py
 
+lib_LTLIBRARIES = libgnuradio-comedi.la
+
+libgnuradio_comedi_la_SOURCES = \
+	comedi_sink.cc		\
+	comedi_source.cc	\
+	gri_comedi.cc
+
+libgnuradio_comedi_la_LIBADD =	\
+	$(GNURADIO_CORE_LA)	\
+	$(COMEDI_LIBS)
+
+libgnuradio_comedi_la_LDFLAGS =	\
+	$(NO_UNDEFINED)
+
+if PYTHON
 ###################################
 # SWIG Python interface and library
+TESTS = run_tests
+DISTCLEANFILES = run_tests
 
 TOP_SWIG_IFILES =		\
 	comedi.i
@@ -53,16 +66,9 @@ TOP_SWIG_IFILES =		\
 comedi_pythondir_category =	\
 	gnuradio
 
-# additional sources for the SWIG-generated library
-comedi_la_swig_sources =	\
-	comedi_sink_s.cc	\
-	comedi_source_s.cc	\
-	gri_comedi.cc
-
 # additional libraries for linking with the SWIG-generated library
 comedi_la_swig_libadd =		\
-	$(GNURADIO_CORE_LA)	\
-	$(COMEDI_LIBS)
+	libgnuradio-comedi.la
 
 include $(top_srcdir)/Makefile.swig
 
@@ -71,3 +77,4 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+endif

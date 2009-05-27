@@ -35,6 +35,7 @@ AC_DEFUN([GRC_GR_AUDIO_JACK],[
 
     AC_CONFIG_FILES([ \
         gr-audio-jack/Makefile \
+	gr-audio-jack/gnuradio-audio-jack.pc \
         gr-audio-jack/src/Makefile \
         gr-audio-jack/src/run_tests \
     ])

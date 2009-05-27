@@ -8,4 +8,4 @@ Description: The GNU Radio message block library
 Requires: pmt gnuradio-omnithread
 Version: @VERSION@
 Libs: -L${libdir} -lmblock
-Cflags: -I${includedir} @DEFINES@
+Cflags: -I${includedir}

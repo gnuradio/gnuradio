@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2004 Free Software Foundation, Inc.
+# Copyright 2001,2004,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -24,7 +24,10 @@ include $(top_srcdir)/Makefile.common
 ## Process this file with automake to produce Makefile.in
 
 # We've got to build . before swig
-SUBDIRS = missing runtime filter viterbi general gengen g72x reed-solomon io hier . swig
+SUBDIRS = missing runtime filter viterbi general gengen g72x reed-solomon io hier .
+if PYTHON
+SUBDIRS += swig
+endif
 
 # generate libgnuradio-core.la from the convenience libraries in subdirs
 
