@@ -39,8 +39,8 @@ noinst_PYTHON =			\
 lib_LTLIBRARIES = libgnuradio-comedi.la
 
 libgnuradio_comedi_la_SOURCES = \
-	comedi_sink.cc		\
-	comedi_source.cc	\
+	comedi_sink_s.cc	\
+	comedi_source_s.cc	\
 	gri_comedi.cc
 
 libgnuradio_comedi_la_LIBADD =	\
