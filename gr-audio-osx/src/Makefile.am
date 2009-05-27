@@ -72,7 +72,7 @@ audio_osx_pythondir_category =		\
 
 # additional libraries for linking with the SWIG-generated library
 audio_osx_la_swig_libadd =		\
-	libgnuradio_audio_osx.la
+	libgnuradio-audio-osx.la
 
 include $(top_srcdir)/Makefile.swig
 
