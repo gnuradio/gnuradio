@@ -49,6 +49,31 @@ void clocks_mimo_config(int flags);
 void clocks_enable_test_clk(bool enable, int divisor);
 
 /*!
+ * \brief Enable or disable fpga clock.  Disabling would wedge and require a power cycle.
+ */
+void clocks_enable_fpga_clk(bool enable, int divisor);
+
+/*!
+ * \brief Enable or disable clock output sent to MIMO connector
+ */
+void clocks_enable_clkexp_out(bool enable, int divisor);
+
+/*!
+ * \brief Enable or disable ethernet phyclk, should always be disabled
+ */
+void clocks_enable_eth_phyclk(bool enable, int divisor);
+
+/*!
+ * \brief Enable or disable clock to DAC
+ */
+void clocks_enable_dac_clk(bool enable, int divisor);
+
+/*!
+ * \brief Enable or disable clock to ADC
+ */
+void clocks_enable_adc_clk(bool enable, int divisor);
+
+/*!
  * \brief Enable or disable clock to Rx daughterboard
  */
 void clocks_enable_rx_dboard(bool enable, int divisor);

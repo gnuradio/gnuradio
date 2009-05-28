@@ -24,15 +24,16 @@
 #include "memory_map.h"
 #include "ad9510.h"
 #include "spi.h"
+#include "u2_init.h"
+#include "nonstdio.h"
 
 void 
 clocks_init(void)
 {
   // Set up basic clocking functions in AD9510
   ad9510_write_reg(0x45, 0x00); // CLK2 drives distribution
-  ad9510_write_reg(0x3D, 0x00); // Turn on output 1 (FPGA CLK), normal levels
-  ad9510_write_reg(0x4B, 0x80); // Bypass divider 1
-  ad9510_write_reg(0x5A, 0x01); // Update Regs
+
+  clocks_enable_fpga_clk(true, 1);
 
   spi_wait();
 
@@ -51,23 +52,14 @@ clocks_init(void)
   clocks_mimo_config(MC_WE_DONT_LOCK);
 
   // Set up other clocks
-
   clocks_enable_test_clk(false, 0);
   clocks_enable_tx_dboard(false, 0);
   clocks_enable_rx_dboard(false, 0);
-
-  // ETH phy clock
-  ad9510_write_reg(0x41, 0x01); // Turn off output 5 (phy_clk)
-  ad9510_write_reg(0x53, 0x80); // Bypass divider
+  clocks_enable_eth_phyclk(false, 0);
 
   // Enable clock to ADCs and DACs
-  ad9510_write_reg(0x3F, 0x00); // Turn on output 3 (DAC CLK), normal levels
-  ad9510_write_reg(0x4F, 0x80); // Bypass Div #3
-
-  ad9510_write_reg(0x40, 0x02); // Turn on out 4 (ADC clk), LVDS
-  ad9510_write_reg(0x51, 0x80); // Bypass Div #4
-
-  ad9510_write_reg(0x5A, 0x01); // Update Regs
+  clocks_enable_dac_clk(true, 1);
+  clocks_enable_adc_clk(true, 1);
 }
 
 
@@ -96,9 +88,9 @@ clocks_mimo_config(int flags)
   ad9510_write_reg(0x5A, 0x01); // Update Regs
 
   spi_wait();
-
+  
   // Allow for clock switchover
-
+  
   if (flags & _MC_WE_LOCK){		// WE LOCK
     if (flags & _MC_MIMO_CLK_INPUT) {
       // Turn on ref output and choose the MIMO connector
@@ -115,17 +107,10 @@ clocks_mimo_config(int flags)
   }
 
   // Do we drive a clock onto the MIMO connector?
-
-  if (flags & MC_PROVIDE_CLK_TO_MIMO) {
-    ad9510_write_reg(0x3E, 0x00); // Turn on output 2 (clk_exp_out), normal levels
-    ad9510_write_reg(0x4D, 0x00); // Turn on Div2
-    ad9510_write_reg(0x4C, 0x44); // Set Div2 = 10, output a 10 MHz clock
-  }
-  else {
-    ad9510_write_reg(0x3E, 0x02); // Turn off output 2 (clk_exp_out)
-    ad9510_write_reg(0x4D, 0x80); // Bypass divider 2
-  }
-  ad9510_write_reg(0x5A, 0x01); // Update Regs
+  if (flags & MC_PROVIDE_CLK_TO_MIMO)
+    clocks_enable_clkexp_out(true,10);
+  else
+    clocks_enable_clkexp_out(false,0); 
 }
 
 int inline
@@ -143,40 +128,108 @@ clocks_gen_div(int divisor)
 #define CLOCK_DIV_DIS 0x80
 #define CLOCK_DIV_EN 0x00
 
+#define CLOCK_MODE_PECL 1
+#define CLOCK_MODE_LVDS 2
+#define CLOCK_MODE_CMOS 3
+
 void 
-clocks_enable_XXX_clk(bool enable, int divisor, int reg_en, int reg_div, int val_off)
+clocks_enable_XXX_clk(bool enable, int divisor, int reg_en, int reg_div, int mode)
 {
-  if(enable) {
-    ad9510_write_reg(reg_en,CLOCK_OUT_EN);     // Turn on output, normal levels
-    if(divisor>1) {
-      ad9510_write_reg(reg_div,clocks_gen_div(divisor)); // Set divisor
-      ad9510_write_reg(reg_div+1,CLOCK_DIV_EN);   // Enable divider
-    }
-    else {
-      ad9510_write_reg(reg_div+1,CLOCK_DIV_DIS);  // Disable Divider
-    }
+  int enable_word, div_word, div_en_word;
+
+  switch(mode) {
+  case CLOCK_MODE_PECL :
+    enable_word = enable ? 0x08 : 0x0A;
+    break;
+  case CLOCK_MODE_LVDS :
+    enable_word = enable ? 0x02 : 0x03;
+    break;
+  case CLOCK_MODE_CMOS :
+    enable_word = enable ? 0x08 : 0x09;
+    break;
+  }
+  if(enable && (divisor>1)) {
+    div_word = clocks_gen_div(divisor);
+    div_en_word = CLOCK_DIV_EN;
   }
   else {
-    ad9510_write_reg(reg_en,val_off);  // Power off output (val different for PECL/CMOS)
-    ad9510_write_reg(reg_div+1,CLOCK_DIV_DIS);  // Bypass Divider to power it down
+    div_word = 0;
+    div_en_word = CLOCK_DIV_DIS;
   }
+
+  ad9510_write_reg(reg_en,enable_word); // Output en/dis
+  ad9510_write_reg(reg_div,div_word); // Set divisor
+  ad9510_write_reg(reg_div+1,div_en_word); // Enable or Bypass Divider
   ad9510_write_reg(0x5A, 0x01);  // Update Regs
 }
 
+// Clock 0
 void
 clocks_enable_test_clk(bool enable, int divisor)
 {
-  clocks_enable_XXX_clk(enable,divisor,0x3C,0x48,CLOCK_OUT_DIS_PECL);
+  clocks_enable_XXX_clk(enable,divisor,0x3C,0x48,CLOCK_MODE_PECL);
 }
 
+// Clock 1
 void
-clocks_enable_rx_dboard(bool enable, int divisor)
+clocks_enable_fpga_clk(bool enable, int divisor)
 {
-  clocks_enable_XXX_clk(enable,divisor,0x43,0x56,CLOCK_OUT_DIS_CMOS);
+  clocks_enable_XXX_clk(enable,divisor,0x3D,0x4A,CLOCK_MODE_PECL);
 }
 
+// Clock 2 on Rev 3, Clock 5 on Rev 4
+void
+clocks_enable_clkexp_out(bool enable, int divisor)
+{
+  if(u2_hw_rev_major == 3)
+    clocks_enable_XXX_clk(enable,divisor,0x3E,0x4C,CLOCK_MODE_PECL);
+  else if(u2_hw_rev_major == 4) {
+    ad9510_write_reg(0x34,0x00);  // Turn on fine delay
+    ad9510_write_reg(0x35,0x00);  // Set Full Scale to nearly 10ns
+    ad9510_write_reg(0x36,0x1c);  // Set fine delay.  0x20 is midscale
+    clocks_enable_XXX_clk(enable,divisor,0x41,0x52,CLOCK_MODE_LVDS);
+    
+  }
+  else
+    putstr("ERR: Invalid Rev\n");
+}
+
+// Clock 5 on Rev 3, none (was 2) on Rev 4
+void
+clocks_enable_eth_phyclk(bool enable, int divisor)
+{
+  if(u2_hw_rev_major == 3)
+    clocks_enable_XXX_clk(enable,divisor,0x41,0x52,CLOCK_MODE_LVDS);
+  else if(u2_hw_rev_major == 4)
+    clocks_enable_XXX_clk(enable,divisor,0x3E,0x4C,CLOCK_MODE_PECL);
+  else
+    putstr("ERR: Invalid Rev\n");
+}
+
+// Clock 3
+void
+clocks_enable_dac_clk(bool enable, int divisor)
+{
+  clocks_enable_XXX_clk(enable,divisor,0x3F,0x4E,CLOCK_MODE_PECL);
+}
+
+// Clock 4
+void
+clocks_enable_adc_clk(bool enable, int divisor)
+{
+  clocks_enable_XXX_clk(enable,divisor,0x40,0x50,CLOCK_MODE_LVDS);
+}
+
+// Clock 6
 void
 clocks_enable_tx_dboard(bool enable, int divisor)
 {
-  clocks_enable_XXX_clk(enable,divisor,0x42,0x54,CLOCK_OUT_DIS_CMOS);
+  clocks_enable_XXX_clk(enable,divisor,0x42,0x54,CLOCK_MODE_CMOS);
+}
+
+// Clock 7
+void
+clocks_enable_rx_dboard(bool enable, int divisor)
+{
+  clocks_enable_XXX_clk(enable,divisor,0x43,0x56,CLOCK_MODE_CMOS);
 }
