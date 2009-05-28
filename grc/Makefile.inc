@@ -22,7 +22,6 @@
 include $(top_srcdir)/Makefile.common
 grc_gnuradio_prefix = $(pythondir)/grc_gnuradio
 grc_src_prefix = $(pythondir)/gnuradio/grc
-grc_data_prefix = $(datadir)/$(PACKAGE)/grc
-grc_base_data_dir = $(grc_data_prefix)/platforms/base
-grc_python_data_dir = $(grc_data_prefix)/platforms/python
-grc_python_blocks_dir = $(grc_data_prefix)/platforms/python/blocks
+grc_base_data_reldir = grc/base
+grc_python_data_reldir = grc/python
+grc_blocks_data_reldir = grc/blocks

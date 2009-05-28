@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/grc/Makefile.inc
 
-ourdatadir = $(grc_python_blocks_dir)
+ourdatadir = $(pkgdatadir)/$(grc_blocks_data_reldir)
 
 dist_ourdata_DATA = \
 	audio_sink.xml \

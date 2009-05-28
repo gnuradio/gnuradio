@@ -23,7 +23,7 @@ include $(top_srcdir)/grc/Makefile.inc
 
 SUBDIRS = blocks
 
-ourdatadir = $(grc_python_data_dir)
+ourdatadir = $(pkgdatadir)/$(grc_python_data_reldir)
 
 dist_ourdata_DATA = \
 	block.dtd \

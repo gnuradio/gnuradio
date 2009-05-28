@@ -24,6 +24,7 @@ PACKAGE = '@PACKAGE@'
 VERSION = '@VERSION@'
 
 #setup paths
-DATA_DIR = '@datadir@'
+PKG_DIR = os.environ.get('GR_DATADIR', '@pkgdatadir@')
+DATA_DIR = os.path.join(PKG_DIR, '@reldatadir@')
 FLOW_GRAPH_DTD = os.path.join(DATA_DIR, 'flow_graph.dtd')
 BLOCK_TREE_DTD = os.path.join(DATA_DIR, 'block_tree.dtd')

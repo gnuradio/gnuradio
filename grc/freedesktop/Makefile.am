@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/grc/Makefile.inc
 
-ourdatadir = $(grc_data_prefix)/freedesktop
+ourdatadir = $(pkgdatadir)/grc/freedesktop
 
 dist_ourdata_DATA = \
 	grc-icon-256.png \
@@ -36,8 +36,8 @@ dist_ourdata_DATA = \
 
 dist_bin_SCRIPTS = grc_setup_freedesktop
 
-grc_setup_freedesktop: Makefile grc_setup_freedesktop.in
-	sed -e 's|@SRCDIR[@]|$(ourdatadir)|g' $(srcdir)/$@.in > $@
+grc_setup_freedesktop: $(srcdir)/grc_setup_freedesktop.in Makefile
+	sed -e 's|@SRCDIR[@]|$(ourdatadir)|g' $< > $@
 
 EXTRA_DIST = $(srcdir)/grc_setup_freedesktop.in
 BUILT_SOURCES = grc_setup_freedesktop

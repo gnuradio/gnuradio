@@ -20,13 +20,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import os
 import sys
 import stat
+from .. base.Constants import PKG_DIR
 
 PYEXEC = '@PYTHONW@'
 
 #setup paths
-DOCS_DIR = os.path.join('@docdir@', 'xml')
-DATA_DIR = '@datadir@'
-BLOCKS_DIR = '@blocksdir@'
+DOCS_DIR = os.path.join(os.environ.get('GR_DOCDIR', '@docdir@'), 'xml')
+DATA_DIR = os.path.join(PKG_DIR, '@reldatadir@')
+BLOCKS_DIR = os.path.join(PKG_DIR, '@relblocksdir@')
 HIER_BLOCKS_LIB_DIR = os.path.join(os.path.expanduser('~'), '.grc_gnuradio')
 
 #file creation modes

@@ -34,12 +34,13 @@ ourpython_PYTHON = \
 	Port.py \
 	__init__.py
 
-Constants.py: Makefile Constants.py.in
+Constants.py: $(srcdir)/Constants.py.in Makefile
 	sed \
 		-e 's|@PACKAGE[@]|$(PACKAGE)|g' \
 		-e 's|@VERSION[@]|$(VERSION)|g' \
-		-e 's|@datadir[@]|$(grc_base_data_dir)|g' \
-	$(srcdir)/$@.in > $@
+		-e 's|@pkgdatadir[@]|$(pkgdatadir)|g' \
+		-e 's|@reldatadir[@]|$(grc_base_data_reldir)|g' \
+	$< > $@
 
 EXTRA_DIST = $(srcdir)/Constants.py.in
 BUILT_SOURCES = Constants.py

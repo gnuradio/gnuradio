@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/grc/Makefile.inc
 
-ourdatadir = $(grc_base_data_dir)
+ourdatadir = $(pkgdatadir)/$(grc_base_data_reldir)
 
 dist_ourdata_DATA = \
 	block_tree.dtd \

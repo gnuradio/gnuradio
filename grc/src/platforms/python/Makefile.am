@@ -36,13 +36,13 @@ ourpython_PYTHON = \
 	Port.py \
 	__init__.py
 
-Constants.py: Makefile Constants.py.in
+Constants.py: $(srcdir)/Constants.py.in Makefile
 	sed \
 		-e 's|@PYTHONW[@]|$(PYTHONW)|g' \
-		-e 's|@datadir[@]|$(grc_python_data_dir)|g' \
-		-e 's|@blocksdir[@]|$(grc_python_blocks_dir)|g' \
+		-e 's|@reldatadir[@]|$(grc_python_data_reldir)|g' \
+		-e 's|@relblocksdir[@]|$(grc_blocks_data_reldir)|g' \
 		-e 's|@docdir[@]|$(gr_docdir)|g' \
-	$(srcdir)/$@.in > $@
+	$< > $@
 
 EXTRA_DIST = $(srcdir)/Constants.py.in
 BUILT_SOURCES = Constants.py
