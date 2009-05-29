@@ -25,11 +25,12 @@ from Connection import Connection
 def _get_value_expr(variable_block):
 	"""
 	Get the expression to evaluate from the value param.
+	Parameter blocks need to be evaluated so the stringify flag can be determined.
 	@param variable_block the variable or parameter block
 	@return the expression string
 	"""
 	value_param = variable_block.get_param('value')
-	value_param.evaluate() #evaluate prior to code
+	if variable_block.get_key() == 'parameter': value_param.evaluate()
 	return value_param.to_code()
 
 class FlowGraph(_FlowGraph):
