@@ -61,8 +61,6 @@ class Platform(_Element):
 					for filename in filter(lambda f: f.endswith('.xml'), filenames):
 						self._load_blocks(os.path.join(dirpath, filename))
 
-	def get_prefs_block(self): return self.get_new_flow_graph().get_new_block('preferences')
-
 	def _load_blocks(self, f):
 		"""
 		Load the block wrappers from the file path.

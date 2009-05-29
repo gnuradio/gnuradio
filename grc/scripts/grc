@@ -18,6 +18,8 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
+import os
+
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -50,5 +52,8 @@ and you are welcome to redistribute it.
 	#setup icon using icon theme
 	try: gtk.window_set_default_icon(gtk.IconTheme().load_icon('gnuradio-grc', 256, 0))
 	except: pass
-	ActionHandler(args, Platform())
+	#extract extra block paths from environment variable, separated by semicolon
+	try: extra_blocks = os.environ['GRC_BLOCKS_PATH'].split(';')
+	except: extra_blocks = list()
+	ActionHandler(args, Platform(extra_blocks=extra_blocks))
 

@@ -28,7 +28,7 @@ import gtk
 from gnuradio.grc.gui.Dialogs import TextDisplay
 
 from gnuradio.grc.platforms.python.Platform import Platform
-platform = Platform(block_paths_internal_only=['usrp_probe.xml'])
+platform = Platform(critical_only=True)
 
 from gnuradio.grc.platforms.gui.Platform import Platform
 platform = Platform(platform)

@@ -30,25 +30,22 @@ from Constants import \
 	BLOCK_TREE, DEFAULT_FLOW_GRAPH, \
 	BLOCKS_DIR
 
+_critical_blocks_only = map(lambda b: os.path.join(BLOCKS_DIR, b), ['options.xml', 'usrp_probe.xml', 'usrp2_probe.xml'])
+
 class Platform(_Platform):
 
-	def __init__(self, block_paths_internal_only=[], block_paths_external=[]):
+	def __init__(self, extra_blocks=[], critical_only=False):
 		"""
 		Make a platform for gnuradio.
-		The internal only list will replace the current block path.
-		@param block_paths_internal_only a list of blocks internal to this platform
-		@param block_paths_external a list of blocks to load in addition to the above blocks
+		@param extra_blocks a list of block paths to load in addition to main block library
+		@param critical_only only load critical blocks (used only for usrp probe scripts to speed up load time)
 		"""
 		#ensure hier dir
 		if not os.path.exists(HIER_BLOCKS_LIB_DIR): os.mkdir(HIER_BLOCKS_LIB_DIR)
-		#handle internal/only
-		if block_paths_internal_only:
-			block_paths = map(lambda b: os.path.join(BLOCKS_DIR, b), ['options.xml'] + block_paths_internal_only)
-		else: block_paths = [BLOCKS_DIR]
-		#handle external
-		block_paths.extend(block_paths_external)
-		#append custom hiers
-		block_paths.append(HIER_BLOCKS_LIB_DIR)
+		if critical_only: block_paths = _critical_blocks_only
+		else: block_paths = extra_blocks + [HIER_BLOCKS_LIB_DIR, BLOCKS_DIR]
+		#convert block paths to absolute paths, ensure uniqueness
+		block_paths = set(map(os.path.abspath, block_paths))
 		#init
 		_Platform.__init__(
 			self,
