@@ -40,7 +40,6 @@ class _number_sink_base(gr.hier_block2):
 		self,
 		parent,
 		unit='units',
-		base_value=None, #ignore (old wrapper)
 		minval=0,
 		maxval=1,
 		factor=1,
@@ -54,6 +53,7 @@ class _number_sink_base(gr.hier_block2):
 		size=number_window.DEFAULT_WIN_SIZE,
 		peak_hold=False,
 		show_gauge=True,
+		**kwargs #catchall for backwards compatibility
 	):
 		#ensure avg alpha
 		if avg_alpha is None: avg_alpha = 2.0/number_rate

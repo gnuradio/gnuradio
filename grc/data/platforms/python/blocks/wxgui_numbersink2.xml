@@ -11,7 +11,6 @@
 	<make>numbersink2.$(type.fcn)(
 	self.GetWin(),
 	unit=$units,
-	base_value=$base_value,
 	minval=$min_value,
 	maxval=$max_value,
 	factor=$factor,
@@ -63,12 +62,6 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<name>Sample Rate</name>
 		<key>samp_rate</key>
 		<value>samp_rate</value>
-		<type>real</type>
-	</param>
-	<param>
-		<name>Base Value</name>
-		<key>base_value</key>
-		<value>0.0</value>
 		<type>real</type>
 	</param>
 	<param>
@@ -172,5 +165,7 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 Set Average Alpha to 0 for automatic setting.
 
 Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+
+Incoming numbers are multiplied by the factor, and then added-to by the reference level.
 	</doc>
 </block>
