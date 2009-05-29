@@ -225,8 +225,8 @@ class Param(_Param):
 		elif t in ('raw', 'complex', 'real', 'int', 'complex_vector', 'real_vector', 'int_vector', 'hex'):
 			#raise exception if python cannot evaluate this value
 			try: e = self.get_parent().get_parent().evaluate(v)
-			except:
-				self._add_error_message('Value "%s" cannot be evaluated.'%v)
+			except Exception, e:
+				self._add_error_message('Value "%s" cannot be evaluated: %s'%(v, e))
 				raise Exception
 			#raise an exception if the data is invalid
 			if t == 'raw': return e
