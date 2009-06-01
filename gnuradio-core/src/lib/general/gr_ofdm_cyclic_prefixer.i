@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,7 +25,7 @@ GR_SWIG_BLOCK_MAGIC(gr,ofdm_cyclic_prefixer)
 gr_ofdm_cyclic_prefixer_sptr 
 gr_make_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
 
-class gr_ofdm_cyclic_prefixer : public gr_sync_decimator
+class gr_ofdm_cyclic_prefixer : public gr_sync_interpolator
 {
  protected:
   gr_ofdm_cyclic_prefixer (size_t input_size, size_t output_size);
