@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from Constants import DEFAULT_BLOCKS_WINDOW_WIDTH, DND_TARGETS
+from .. platforms.gui import Utils
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -25,6 +26,7 @@ import gobject
 
 NAME_INDEX = 0
 KEY_INDEX = 1
+DOC_INDEX = 2
 
 class BlockTreeWindow(gtk.VBox):
 	"""The block selection panel."""
@@ -42,7 +44,7 @@ class BlockTreeWindow(gtk.VBox):
 		self.platform = platform
 		self.get_flow_graph = get_flow_graph
 		#make the tree model for holding blocks
-		self.treestore = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+		self.treestore = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING, gobject.TYPE_STRING)
 		self.treeview = gtk.TreeView(self.treestore)
 		self.treeview.set_enable_search(False) #disable pop up search box
 		self.treeview.add_events(gtk.gdk.BUTTON_PRESS_MASK)
@@ -53,6 +55,9 @@ class BlockTreeWindow(gtk.VBox):
 		renderer = gtk.CellRendererText()
 		column = gtk.TreeViewColumn('Blocks', renderer, text=NAME_INDEX)
 		self.treeview.append_column(column)
+		#try to enable the tooltips (available in pygtk 2.12 and above) 
+		try: self.treeview.set_tooltip_column(DOC_INDEX)
+		except: pass
 		#setup drag and drop
 		self.treeview.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, DND_TARGETS, gtk.gdk.ACTION_COPY)
 		self.treeview.connect('drag-data-get', self._handle_drag_get_data)
@@ -92,12 +97,14 @@ class BlockTreeWindow(gtk.VBox):
 				iter = self.treestore.insert_before(self._categories[sub_category[:-1]], None)
 				self.treestore.set_value(iter, NAME_INDEX, '[ %s ]'%cat_name)
 				self.treestore.set_value(iter, KEY_INDEX, '')
+				self.treestore.set_value(iter, DOC_INDEX, Utils.xml_encode('Category: %s'%cat_name))
 				self._categories[sub_category] = iter
 		#add block
 		if block is None: return
 		iter = self.treestore.insert_before(self._categories[category], None)
 		self.treestore.set_value(iter, NAME_INDEX, block.get_name())
 		self.treestore.set_value(iter, KEY_INDEX, block.get_key())
+		self.treestore.set_value(iter, DOC_INDEX, Utils.xml_encode(block.get_doc() or 'undocumented'))
 
 	############################################################
 	## Helper Methods
