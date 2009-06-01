@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -63,7 +63,7 @@ def _extract(key):
 			#extract descriptions
 			comp_name = extract_txt(xml.xpath(DOXYGEN_NAME_XPATH)[0]).strip('\n')
 			comp_name = '   ---   ' + comp_name + '   ---   '
-			if key.startswith('gr_') or key.startswith('trellis_'):
+			if re.match('(gr|usrp2|trellis)_.*', key):
 				brief_desc = extract_txt(xml.xpath(DOXYGEN_BRIEFDESC_GR_XPATH)[0]).strip('\n')
 				detailed_desc = extract_txt(xml.xpath(DOXYGEN_DETAILDESC_GR_XPATH)[0]).strip('\n')
 			else:
