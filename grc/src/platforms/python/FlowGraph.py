@@ -35,7 +35,7 @@ def _get_value_expr(variable_block):
 
 class FlowGraph(_FlowGraph):
 
-	_eval_cache = dict()
+	#_eval_cache = dict()
 	def _eval(self, code, namespace):
 		"""
 		Evaluate the code with the given namespace.
@@ -44,11 +44,11 @@ class FlowGraph(_FlowGraph):
 		@return the resultant object
 		"""
 		#check cache
-		if self._eval_cache.has_key(code) and self._eval_cache[code][0] == namespace:
-			return self._eval_cache[code][1]
+		#if self._eval_cache.has_key(code) and self._eval_cache[code][0] == namespace:
+		#	return self._eval_cache[code][1]
 		#evaluate
 		result = eval(code, namespace, namespace)
-		self._eval_cache[code] = (namespace.copy(), result)
+		#self._eval_cache[code] = (namespace.copy(), result)
 		return result
 
 	def _get_io_signature(self, pad_key):
