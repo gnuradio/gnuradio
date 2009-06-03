@@ -1,27 +1,45 @@
 ##################################################
 # Blocks
 ##################################################
--probe: also non-float outputs
--log slider gui control
+* probe: also non-float outputs
+* log slider gui control
+* generic usrp (when its ready)
+* packet mod: whitening offset
 
 ##################################################
 # Features
 ##################################################
--param editor, expand entry boxes in focus
--change param dialog to panel within main window
--command line option for additional block wrappers
--zoom in/out (cairo vector graphics) (use scroll wheel as control)
--search for blocks
--click and drag on whitespace to scroll
--gui grid editor for configuring grid params/placing wxgui plots and controls
+* param editor, expand entry boxes in focus
+* change param dialog to panel within main window
+* search for blocks in category window
+* gui grid editor for configuring grid params/placing wxgui plots and controls
+* drag from one port to another to connect
+* per parameter docs
+  * extract individual param docs from doxygen
+  * doc tag in param for handwritten notes
+* separate generated code into top block and gui class
+  * use gui.py in gr-wxgui and remove custom top_block_gui
+* configuration option for adding block paths
+* data types guide/colors for the help menu
 
 ##################################################
 # Problems
 ##################################################
--auto generate hier library
--auto clean hier library
--add hier blocks to tree without restart?
--dont generate py files in .grc file dir
--save/restore cwd
--threads dont die on exit in probe and variable sink
--overloaded gui classes for each platform, move param input objects into overloaded
+* hier block generation
+  * auto generate hier library on changes
+  * auto clean hier library when block removed
+  * add hier blocks to tree without restart
+* dont generate py files in saved flowgraph dir
+* save/restore cwd
+* threads dont die on exit in probe and variable sink
+* overloaded gui classes for each platform, move param input objects into overloaded
+* align param titles in paramsdialog
+
+##################################################
+# Future
+##################################################
+* require pygtk 2.12 for treeview tooltips
+  * remove try/except in BlockTreeWindow.py
+* remove support for saved flow graphs ending in .xml
+* remove converter script for previous format
+* reorganize module structure
