@@ -26,17 +26,19 @@ DOXYGEN_NAME_XPATH = '/doxygen/compounddef/compoundname'
 DOXYGEN_BRIEFDESC_GR_XPATH = '/doxygen/compounddef/briefdescription'
 DOXYGEN_DETAILDESC_GR_XPATH = '/doxygen/compounddef/detaileddescription'
 
-def extract_txt(xml, parent_text=None):
+def extract_txt(xml):
 	"""
 	Recursivly pull the text out of an xml tree.
 	@param xml the xml tree
-	@param parent_text the text of the parent element
 	@return a string
 	"""
-	text = xml.text or ''
-	tail = parent_text and xml.tail or ''
+	text = (xml.text or '').replace('\n', '')
+	tail = (xml.tail or '').replace('\n', '')
+	if xml.tag == 'para': tail += '\n\n'
+	if xml.tag == 'linebreak': text += '\n'
+	if xml.tag == 'parametername': text += ': '
 	return text + ''.join(
-		map(lambda x: extract_txt(x, text), xml)
+		map(lambda x: extract_txt(x), xml)
 	) + tail
 
 def _extract(key):
@@ -61,16 +63,16 @@ def _extract(key):
 			xml_file = os.path.join(docs_dir, match)
 			xml = etree.parse(xml_file)
 			#extract descriptions
-			comp_name = extract_txt(xml.xpath(DOXYGEN_NAME_XPATH)[0]).strip('\n')
+			comp_name = extract_txt(xml.xpath(DOXYGEN_NAME_XPATH)[0]).strip()
 			comp_name = '   ---   ' + comp_name + '   ---   '
 			if re.match('(gr|usrp2|trellis)_.*', key):
-				brief_desc = extract_txt(xml.xpath(DOXYGEN_BRIEFDESC_GR_XPATH)[0]).strip('\n')
-				detailed_desc = extract_txt(xml.xpath(DOXYGEN_DETAILDESC_GR_XPATH)[0]).strip('\n')
+				brief_desc = extract_txt(xml.xpath(DOXYGEN_BRIEFDESC_GR_XPATH)[0]).strip()
+				detailed_desc = extract_txt(xml.xpath(DOXYGEN_DETAILDESC_GR_XPATH)[0]).strip()
 			else:
 				brief_desc = ''
 				detailed_desc = ''
 			#combine
-			doc_strs.append('\n'.join([comp_name, brief_desc, detailed_desc]).strip('\n'))
+			doc_strs.append('\n\n'.join([comp_name, brief_desc, detailed_desc]).strip())
 		except IndexError: pass #bad format
 	return '\n\n'.join(doc_strs)
 
