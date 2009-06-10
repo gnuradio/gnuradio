@@ -147,7 +147,6 @@ Package: libusrp2
 Section: comm
 Architecture: any
 Depends: libgruel (= ${binary:Version}), libgnuradio-omnithread (= ${binary:Version}), ${shlibs:Depends}
-Suggests: usrp-doc
 Description: Client side library for the USRP2 hardware
  The Universal Software Radio Peripheral 2 (USRP2) is a GbE-connected,
  low-cost and open board. It features two high-speed analog-to-digital
@@ -257,17 +256,17 @@ Package: libgnuradio-usrp2
 Section: libs
 Architecture: any
 Depends: libgnuradio-core (= ${binary:Version}), libusrp2 (= ${binary:Version}), ${shlibs:Depends}
-Description: GNU Radio C++ blocks for USRP(1) hardware
+Description: GNU Radio C++ blocks for USRP2 hardware
  This package contains the C++ API blocks for the Universal Software Radio
- Peripheral.
+ Peripheral 2.
 
 Package: libgnuradio-usrp2-dev
 Section: libdevel
 Architecture: any
 Depends: libgnuradio-usrp2 (= ${binary:Version}), libgnuradio-core-dev (= ${binary:Version}), libusrp2-dev (= ${binary:Version})
-Description: GNU Radio C++ blocks for USRP(1) hardware
+Description: GNU Radio C++ blocks for USRP2 hardware
  This package contains the C++ API blocks for the Universal Software Radio
- Peripheral.
+ Peripheral 2.
  .
  This package contains header files needed by developers.
 
