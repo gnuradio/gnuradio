@@ -26,5 +26,5 @@ SUBDIRS = src
 pkgconfigdir = $(libdir)/pkgconfig
 dist_pkgconfig_DATA = gnuradio-audio-jack.pc
 
-etcdir = $(sysconfdir)/gnuradio/conf.d
+etcdir = $(gr_sysconfdir)
 dist_etc_DATA = gr-audio-jack.conf

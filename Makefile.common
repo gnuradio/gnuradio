@@ -118,6 +118,9 @@ exampledir = $(datadir)/gnuradio/examples
 docdir ?= $(datadir)/doc/$(PACKAGE)
 gr_docdir = $(docdir)-$(VERSION)
 
+# System configuration files
+gr_sysconfdir = $(sysconfdir)/$(PACKAGE)/conf.d
+
 # Other common defines; use "+=" to add to these
 STAMPS =
 MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
