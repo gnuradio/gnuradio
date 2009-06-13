@@ -30,6 +30,7 @@ import math
 import pubsub
 from constants import *
 from gnuradio import gr #for gr.prefs
+import forms
 
 ##################################################
 # Constants
@@ -53,23 +54,31 @@ class control_panel(wx.Panel):
 		wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
 		control_box = wx.BoxSizer(wx.VERTICAL)
 		SIZE = (100, -1)
-		control_box.Add(common.LabelText(self, 'Options'), 0, wx.ALIGN_CENTER)
-		control_box.AddStretchSpacer()
+		control_box = forms.static_box_sizer(
+			parent=self, label='Options',
+			bold=True, orient=wx.VERTICAL,
+		)
 		#num bins
-		def num_bins_cast(num):
-			num = int(num)
-			assert num > 1
-			return num
-		num_bins_ctrl = common.TextBoxController(self, parent, NUM_BINS_KEY, cast=num_bins_cast)
-		control_box.Add(common.LabelBox(self, ' Num Bins ', num_bins_ctrl), 0, wx.EXPAND)
 		control_box.AddStretchSpacer()
+		forms.text_box(
+			sizer=control_box, parent=self, label='Num Bins',
+			converter=forms.int_converter(),
+			ps=parent, key=NUM_BINS_KEY,
+		)
 		#frame size
-		frame_size_ctrl = common.TextBoxController(self, parent, FRAME_SIZE_KEY, cast=num_bins_cast)
-		control_box.Add(common.LabelBox(self, ' Frame Size ', frame_size_ctrl), 0, wx.EXPAND)
 		control_box.AddStretchSpacer()
+		forms.text_box(
+			sizer=control_box, parent=self, label='Frame Size',
+			converter=forms.int_converter(),
+			ps=parent, key=FRAME_SIZE_KEY,
+		)
 		#run/stop
-		self.run_button = common.ToggleButtonController(self, parent, RUNNING_KEY, 'Stop', 'Run')
-		control_box.Add(self.run_button, 0, wx.EXPAND)
+		control_box.AddStretchSpacer()
+		forms.toggle_button(
+			sizer=control_box, parent=self,
+			true_label='Stop', false_label='Run',
+			ps=parent, key=RUNNING_KEY,
+		)
 		#set sizer
 		self.SetSizerAndFit(control_box)
 
@@ -98,6 +107,10 @@ class histo_window(wx.Panel, pubsub.pubsub):
 		self.proxy(NUM_BINS_KEY, controller, num_bins_key)
 		self.proxy(FRAME_SIZE_KEY, controller, frame_size_key)
 		self.proxy(MSG_KEY, controller, msg_key)
+		#initialize values
+		self[RUNNING_KEY] = True
+		self[X_DIVS_KEY] = 8
+		self[Y_DIVS_KEY] = 4
 		#init panel and plot
 		wx.Panel.__init__(self, parent, style=wx.SIMPLE_BORDER)
 		self.plotter = plotter.bar_plotter(self)
@@ -111,12 +124,6 @@ class histo_window(wx.Panel, pubsub.pubsub):
 		main_box.Add(self.plotter, 1, wx.EXPAND)
 		main_box.Add(self.control_panel, 0, wx.EXPAND)
 		self.SetSizerAndFit(main_box)
-		#initialize values
-		self[NUM_BINS_KEY] = self[NUM_BINS_KEY]
-		self[FRAME_SIZE_KEY] = self[FRAME_SIZE_KEY]
-		self[RUNNING_KEY] = True
-		self[X_DIVS_KEY] = 8
-		self[Y_DIVS_KEY] = 4
 		#register events
 		self.subscribe(MSG_KEY, self.handle_msg)
 		self.subscribe(X_DIVS_KEY, self.update_grid)

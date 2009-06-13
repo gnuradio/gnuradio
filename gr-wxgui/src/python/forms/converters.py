@@ -107,8 +107,10 @@ class int_converter(abstract_converter):
 		return "Enter an integer.  Leading 0x indicates hex"
 
 class float_converter(abstract_converter):
+	def __init__(self, formatter=eng_notation.num_to_str):
+		self._formatter = formatter
 	def external_to_internal(self, v):
-		return eng_notation.num_to_str(v)
+		return self._formatter(v)
 	def internal_to_external(self, s):
 		return eng_notation.str_to_num(s)
 	def help(self):

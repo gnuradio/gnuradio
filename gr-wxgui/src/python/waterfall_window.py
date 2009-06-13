@@ -30,6 +30,7 @@ import math
 import pubsub
 from constants import *
 from gnuradio import gr #for gr.prefs
+import forms
 
 ##################################################
 # Constants
@@ -64,54 +65,75 @@ class control_panel(wx.Panel):
 		wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
 		control_box = wx.BoxSizer(wx.VERTICAL)
 		control_box.AddStretchSpacer()
-		control_box.Add(common.LabelText(self, 'Options'), 0, wx.ALIGN_CENTER)
-		#color mode
-		control_box.AddStretchSpacer()
-		color_mode_chooser = common.DropDownController(self, COLOR_MODES, parent, COLOR_MODE_KEY)
-		control_box.Add(common.LabelBox(self, 'Color', color_mode_chooser), 0, wx.EXPAND)
-		#average
-		control_box.AddStretchSpacer()
-		average_check_box = common.CheckBoxController(self, 'Average', parent, AVERAGE_KEY)
-		control_box.Add(average_check_box, 0, wx.EXPAND)
-		control_box.AddSpacer(2)
-		avg_alpha_slider = common.LogSliderController(
-			self, 'Avg Alpha',
-			AVG_ALPHA_MIN_EXP, AVG_ALPHA_MAX_EXP, SLIDER_STEPS,
-			parent, AVG_ALPHA_KEY,
-			formatter=lambda x: ': %.4f'%x,
+		options_box = forms.static_box_sizer(
+			parent=self, sizer=control_box, label='Options',
+			bold=True, orient=wx.VERTICAL,
 		)
-		parent.subscribe(AVERAGE_KEY, avg_alpha_slider.Enable)
-		control_box.Add(avg_alpha_slider, 0, wx.EXPAND)
-		#dyanmic range buttons
+		#average
+		forms.check_box(
+			sizer=options_box, parent=self, label='Average',
+			ps=parent, key=AVERAGE_KEY,
+		)
+		avg_alpha_text = forms.static_text(
+			sizer=options_box, parent=self, label='Avg Alpha',
+			converter=forms.float_converter(lambda x: '%.4f'%x),
+			ps=parent, key=AVG_ALPHA_KEY, width=50,
+		)
+		avg_alpha_slider = forms.log_slider(
+			sizer=options_box, parent=self,
+			min_exp=AVG_ALPHA_MIN_EXP,
+			max_exp=AVG_ALPHA_MAX_EXP,
+			num_steps=SLIDER_STEPS,
+			ps=parent, key=AVG_ALPHA_KEY,
+		)
+		for widget in (avg_alpha_text, avg_alpha_slider):
+			parent.subscribe(AVERAGE_KEY, widget.Enable)
+			widget.Enable(parent[AVERAGE_KEY])
+		#begin axes box
 		control_box.AddStretchSpacer()
-		control_box.Add(common.LabelText(self, 'Dynamic Range'), 0, wx.ALIGN_CENTER)
-		control_box.AddSpacer(2)
-		dynamic_range_buttons = common.IncrDecrButtons(self, self._on_incr_dynamic_range, self._on_decr_dynamic_range)
-		control_box.Add(dynamic_range_buttons, 0, wx.ALIGN_CENTER)
-		#ref lvl buttons
-		control_box.AddStretchSpacer()
-		control_box.Add(common.LabelText(self, 'Set Ref Level'), 0, wx.ALIGN_CENTER)
-		control_box.AddSpacer(2)
-		ref_lvl_buttons = common.IncrDecrButtons(self, self._on_incr_ref_level, self._on_decr_ref_level)
-		control_box.Add(ref_lvl_buttons, 0, wx.ALIGN_CENTER)
+		axes_box = forms.static_box_sizer(
+			parent=self, sizer=control_box, label='Axes Options',
+			bold=True, orient=wx.VERTICAL,
+		)
 		#num lines buttons
-		control_box.AddStretchSpacer()
-		control_box.Add(common.LabelText(self, 'Set Time Scale'), 0, wx.ALIGN_CENTER)
-		control_box.AddSpacer(2)
-		time_scale_buttons = common.IncrDecrButtons(self, self._on_incr_time_scale, self._on_decr_time_scale)
-		control_box.Add(time_scale_buttons, 0, wx.ALIGN_CENTER)
+		forms.incr_decr_buttons(
+			parent=self, sizer=axes_box, label='Time Scale',
+			on_incr=self._on_incr_time_scale, on_decr=self._on_decr_time_scale,
+		)
+		#dyanmic range buttons
+		forms.incr_decr_buttons(
+			parent=self, sizer=axes_box, label='Dyn Range',
+			on_incr=self._on_incr_dynamic_range, on_decr=self._on_decr_dynamic_range,
+		)
+		#ref lvl buttons
+		forms.incr_decr_buttons(
+			parent=self, sizer=axes_box, label='Ref Level',
+			on_incr=self._on_incr_ref_level, on_decr=self._on_decr_ref_level,
+		)
+		#color mode
+		forms.drop_down(
+			parent=self, sizer=axes_box, width=100,
+			ps=parent, key=COLOR_MODE_KEY, label='Color',
+			choices=map(lambda x: x[1], COLOR_MODES),
+			labels=map(lambda x: x[0], COLOR_MODES),
+		)
 		#autoscale
-		control_box.AddStretchSpacer()
-		autoscale_button = wx.Button(self, label='Autoscale', style=wx.BU_EXACTFIT)
-		autoscale_button.Bind(wx.EVT_BUTTON, self.parent.autoscale)
-		control_box.Add(autoscale_button, 0, wx.EXPAND)
+		forms.single_button(
+			parent=self, sizer=axes_box, label='Autoscale',
+			callback=self.parent.autoscale,
+		)
 		#clear
-		clear_button = wx.Button(self, label='Clear', style=wx.BU_EXACTFIT)
-		clear_button.Bind(wx.EVT_BUTTON, self._on_clear_button)
-		control_box.Add(clear_button, 0, wx.EXPAND)
+		control_box.AddStretchSpacer()
+		forms.single_button(
+			parent=self, sizer=control_box, label='Clear',
+			callback=self._on_clear_button,
+		)
 		#run/stop
-		run_button = common.ToggleButtonController(self, parent, RUNNING_KEY, 'Stop', 'Run')
-		control_box.Add(run_button, 0, wx.EXPAND)
+		forms.toggle_button(
+			sizer=control_box, parent=self,
+			true_label='Stop', false_label='Run',
+			ps=parent, key=RUNNING_KEY,
+		)
 		#set sizer
 		self.SetSizerAndFit(control_box)
 
@@ -181,18 +203,10 @@ class waterfall_window(wx.Panel, pubsub.pubsub):
 		self.plotter.set_title(title)
 		self.plotter.enable_point_label(True)
 		self.plotter.enable_grid_lines(False)
-		#setup the box with plot and controls
-		self.control_panel = control_panel(self)
-		main_box = wx.BoxSizer(wx.HORIZONTAL)
-		main_box.Add(self.plotter, 1, wx.EXPAND)
-		main_box.Add(self.control_panel, 0, wx.EXPAND)
-		self.SetSizerAndFit(main_box)
 		#plotter listeners
 		self.subscribe(COLOR_MODE_KEY, self.plotter.set_color_mode)
 		self.subscribe(NUM_LINES_KEY, self.plotter.set_num_lines)
 		#initialize values
-		self[AVERAGE_KEY] = self[AVERAGE_KEY]
-		self[AVG_ALPHA_KEY] = self[AVG_ALPHA_KEY]
 		self[DYNAMIC_RANGE_KEY] = dynamic_range
 		self[NUM_LINES_KEY] = num_lines
 		self[Y_DIVS_KEY] = 8
@@ -201,6 +215,12 @@ class waterfall_window(wx.Panel, pubsub.pubsub):
 		self[BASEBAND_FREQ_KEY] = baseband_freq
 		self[COLOR_MODE_KEY] = COLOR_MODES[0][1]
 		self[RUNNING_KEY] = True
+		#setup the box with plot and controls
+		self.control_panel = control_panel(self)
+		main_box = wx.BoxSizer(wx.HORIZONTAL)
+		main_box.Add(self.plotter, 1, wx.EXPAND)
+		main_box.Add(self.control_panel, 0, wx.EXPAND)
+		self.SetSizerAndFit(main_box)
 		#register events
 		self.subscribe(MSG_KEY, self.handle_msg)
 		for key in (

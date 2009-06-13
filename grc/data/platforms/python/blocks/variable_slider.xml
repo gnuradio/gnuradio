@@ -8,7 +8,7 @@
 <block>
 	<name>Variable Slider</name>
 	<key>variable_slider</key>
-	<import>from grc_gnuradio.wxgui import forms</import>
+	<import>from gnuradio.wxgui import forms</import>
 	<make>$value
 self['$id'] = $id
 self.subscribe('$id', self.set_$(id))

@@ -33,6 +33,10 @@ The forms follow a layered model:
     * provided external access to the user
     * set_value, get_value, and optional callback
     * set and get through optional pubsub and key
+
+Known problems:
+  * An empty label in the radio box still consumes space.
+  * The static text cannot resize the parent at runtime.
 """
 
 EXT_KEY = 'external'
@@ -49,6 +53,11 @@ class DataEvent(wx.PyEvent):
 		wx.PyEvent.__init__(self, wx.NewId(), EVT_DATA.typeId)
 		self.data = data
 
+def make_bold(widget):
+	font = widget.GetFont()
+	font.SetWeight(wx.FONTWEIGHT_BOLD)
+	widget.SetFont(font)
+
 ########################################################################
 # Base Class Form
 ########################################################################
@@ -57,6 +66,7 @@ class _form_base(pubsub, wx.BoxSizer):
 		pubsub.__init__(self)
 		wx.BoxSizer.__init__(self, wx.HORIZONTAL)
 		self._parent = parent
+		self._key = key
 		self._converter = converter
 		self._callback = callback
 		self._widgets = list()
@@ -69,7 +79,10 @@ class _form_base(pubsub, wx.BoxSizer):
 		#no pubsub passed, must set initial value
 		else: self.set_value(value)
 
-	def _add_widget(self, widget, label='', flag=0):
+	def __str__(self):
+		return "Form: %s -> %s"%(self.__class__, self._key)
+
+	def _add_widget(self, widget, label='', flag=0, label_prop=0, widget_prop=1):
 		"""
 		Add the main widget to this object sizer.
 		If label is passed, add a label as well.
@@ -80,6 +93,8 @@ class _form_base(pubsub, wx.BoxSizer):
 		@param widget the main widget
 		@param label the optional label
 		@param flag additional flags for widget
+		@param label_prop the proportion for the label
+		@param widget_prop the proportion for the widget
 		"""
 		#setup data event
 		widget.Bind(EVT_DATA, lambda x: self._update(x.data))
@@ -87,12 +102,12 @@ class _form_base(pubsub, wx.BoxSizer):
 		#register widget
 		self._widgets.append(widget)
 		#create optional label
-		if not label: self.Add(widget, 1, wx.ALIGN_CENTER_VERTICAL | flag)
+		if not label: self.Add(widget, widget_prop, wx.ALIGN_CENTER_VERTICAL | flag)
 		else:
 			label_text = wx.StaticText(self._parent, label='%s: '%label)
 			self._widgets.append(label_text)
-			self.Add(label_text, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_LEFT)
-			self.Add(widget, 1, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT | flag)
+			self.Add(label_text, label_prop, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_LEFT)
+			self.Add(widget, widget_prop, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT | flag)
 		#initialize without triggering pubsubs
 		self._translate_external_to_internal(self[EXT_KEY])
 		update(self[INT_KEY])
@@ -121,7 +136,7 @@ class _form_base(pubsub, wx.BoxSizer):
 			self[EXT_KEY] = self[EXT_KEY] #reset to last good setting
 
 	def _err_msg(self, value, e):
-		print >> sys.stderr, 'Error translating value: "%s"\n\t%s\n\t%s'%(value, e, self._converter.help())
+		print >> sys.stderr, self, 'Error translating value: "%s"\n\t%s\n\t%s'%(value, e, self._converter.help())
 
 	#override in subclasses to handle the wxgui object
 	def _update(self, value): raise NotImplementedError
@@ -139,42 +154,18 @@ class _form_base(pubsub, wx.BoxSizer):
 			for widget in self._widgets: widget.Disable()
 
 ########################################################################
-# Static Text Form
+# Base Class Chooser Form
 ########################################################################
-class static_text(_form_base):
-	def __init__(self, label='', width=-1, bold=False, converter=converters.str_converter(), **kwargs):
-		_form_base.__init__(self, converter=converter, **kwargs)
-		self._static_text = wx.StaticText(self._parent, size=wx.Size(width, -1))
-		if bold:
-			font = self._static_text.GetFont()
-			font.SetWeight(wx.FONTWEIGHT_BOLD)
-			self._static_text.SetFont(font)
-		self._add_widget(self._static_text, label)
-
-	def _update(self, label): self._static_text.SetLabel(label)
+class _chooser_base(_form_base):
+	def __init__(self, choices=[], labels=None, **kwargs):
+		_form_base.__init__(self, converter=converters.chooser_converter(choices), **kwargs)
+		self._choices = choices
+		self._labels = map(str, labels or choices)
 
 ########################################################################
-# Text Box Form
-########################################################################
-class text_box(_form_base):
-	def __init__(self, label='', width=-1, converter=converters.eval_converter(), **kwargs):
-		_form_base.__init__(self, converter=converter, **kwargs)
-		self._text_box = wx.TextCtrl(self._parent, size=wx.Size(width, -1), style=wx.TE_PROCESS_ENTER)
-		self._text_box.Bind(wx.EVT_TEXT_ENTER, self._handle)
-		self._add_widget(self._text_box, label)
-
-	def _handle(self, event): self[INT_KEY] = self._text_box.GetValue()
-	def _update(self, value): self._text_box.SetValue(value)
-
-########################################################################
-# Slider Form
+# Base Class Slider Form
 ########################################################################
 class _slider_base(_form_base):
-	"""
-	Base class for linear and log slider.
-	@param length the length of the slider in px
-	@param style wx.SL_HORIZONTAL or wx.SL_VERTICAL
-	"""
 	def __init__(self, label='', length=-1, converter=None, num_steps=100, style=wx.SL_HORIZONTAL, **kwargs):
 		_form_base.__init__(self, converter=converter, **kwargs)
 		if style & wx.SL_HORIZONTAL: slider_size = wx.Size(length, -1)
@@ -187,9 +178,80 @@ class _slider_base(_form_base):
 	def _handle(self, event): self[INT_KEY] = self._slider.GetValue()
 	def _update(self, value): self._slider.SetValue(value)
 
+########################################################################
+# Static Text Form
+########################################################################
+class static_text(_form_base):
+	"""
+	A text box form.
+	@param parent the parent widget
+	@param sizer add this widget to sizer if provided (optional)
+	@param proportion the proportion when added to the sizer (default=0)
+	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
+	@param ps the pubsub object (optional)
+	@param key the pubsub key (optional)
+	@param value the default value (optional)
+	@param label title label for this widget (optional)
+	@param width the width of the form in px
+	@param bold true to bold-ify the text (default=False)
+	@param converter forms.str_converter(), int_converter(), float_converter()...
+	"""
+	def __init__(self, label='', width=-1, bold=False, converter=converters.str_converter(), **kwargs):
+		_form_base.__init__(self, converter=converter, **kwargs)
+		self._static_text = wx.StaticText(self._parent, size=wx.Size(width, -1))
+		if bold: make_bold(self._static_text)
+		self._add_widget(self._static_text, label)
+
+	def _update(self, label): self._static_text.SetLabel(label); self._parent.Layout()
+
+########################################################################
+# Text Box Form
+########################################################################
+class text_box(_form_base):
+	"""
+	A text box form.
+	@param parent the parent widget
+	@param sizer add this widget to sizer if provided (optional)
+	@param proportion the proportion when added to the sizer (default=0)
+	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
+	@param ps the pubsub object (optional)
+	@param key the pubsub key (optional)
+	@param value the default value (optional)
+	@param label title label for this widget (optional)
+	@param width the width of the form in px
+	@param converter forms.str_converter(), int_converter(), float_converter()...
+	"""
+	def __init__(self, label='', width=-1, converter=converters.eval_converter(), **kwargs):
+		_form_base.__init__(self, converter=converter, **kwargs)
+		self._text_box = wx.TextCtrl(self._parent, size=wx.Size(width, -1), style=wx.TE_PROCESS_ENTER)
+		self._text_box.Bind(wx.EVT_TEXT_ENTER, self._handle)
+		self._add_widget(self._text_box, label)
+
+	def _handle(self, event): self[INT_KEY] = self._text_box.GetValue()
+	def _update(self, value): self._text_box.SetValue(value)
+
+########################################################################
+# Slider Form
+#  Linear Slider
+#  Logarithmic Slider
+########################################################################
 class slider(_slider_base):
 	"""
 	A generic linear slider.
+	@param parent the parent widget
+	@param sizer add this widget to sizer if provided (optional)
+	@param proportion the proportion when added to the sizer (default=0)
+	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
+	@param ps the pubsub object (optional)
+	@param key the pubsub key (optional)
+	@param value the default value (optional)
+	@param label title label for this widget (optional)
+	@param length the length of the slider in px (optional)
+	@param style wx.SL_HORIZONTAL or wx.SL_VERTICAL (default=horizontal)
+	@param minimum the minimum value
+	@param maximum the maximum value
+	@param num_steps the number of slider steps (or specify step_size)
+	@param step_size the step between slider jumps (or specify num_steps)
 	@param cast a cast function, int, or float (default=float)
 	"""
 	def __init__(self, minimum=-100, maximum=100, num_steps=100, step_size=None, cast=float, **kwargs):
@@ -200,7 +262,23 @@ class slider(_slider_base):
 
 class log_slider(_slider_base):
 	"""
-	A generic log slider.
+	A generic logarithmic slider.
+	The sliders min and max values are base**min_exp and base**max_exp.
+	@param parent the parent widget
+	@param sizer add this widget to sizer if provided (optional)
+	@param proportion the proportion when added to the sizer (default=0)
+	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
+	@param ps the pubsub object (optional)
+	@param key the pubsub key (optional)
+	@param value the default value (optional)
+	@param label title label for this widget (optional)
+	@param length the length of the slider in px (optional)
+	@param style wx.SL_HORIZONTAL or wx.SL_VERTICAL (default=horizontal)
+	@param min_exp the minimum exponent
+	@param max_exp the maximum exponent
+	@param base the exponent base in base**exp
+	@param num_steps the number of slider steps (or specify step_size)
+	@param step_size the exponent step size (or specify num_steps)
 	"""
 	def __init__(self, min_exp=0, max_exp=1, base=10, num_steps=100, step_size=None, **kwargs):
 		assert step_size or num_steps
@@ -209,9 +287,57 @@ class log_slider(_slider_base):
 		_slider_base.__init__(self, converter=converter, num_steps=num_steps, **kwargs)
 
 ########################################################################
+# Gauge Form
+########################################################################
+class gauge(_form_base):
+	"""
+	A gauge bar.
+	The gauge displays floating point values between the minimum and maximum.
+	@param parent the parent widget
+	@param sizer add this widget to sizer if provided (optional)
+	@param proportion the proportion when added to the sizer (default=0)
+	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
+	@param ps the pubsub object (optional)
+	@param key the pubsub key (optional)
+	@param value the default value (optional)
+	@param label title label for this widget (optional)
+	@param length the length of the slider in px (optional)
+	@param style wx.GA_HORIZONTAL or wx.GA_VERTICAL (default=horizontal)
+	@param minimum the minimum value
+	@param maximum the maximum value
+	@param num_steps the number of slider steps (or specify step_size)
+	@param step_size the step between slider jumps (or specify num_steps)
+	"""
+	def __init__(self, label='', length=-1, minimum=-100, maximum=100, num_steps=100, step_size=None, style=wx.GA_HORIZONTAL, **kwargs):
+		assert step_size or num_steps
+		if step_size is not None: num_steps = (maximum - minimum)/step_size
+		converter = converters.slider_converter(minimum=minimum, maximum=maximum, num_steps=num_steps, cast=float)
+		_form_base.__init__(self, converter=converter, **kwargs)
+		if style & wx.SL_HORIZONTAL: gauge_size = wx.Size(length, -1)
+		elif style & wx.SL_VERTICAL: gauge_size = wx.Size(-1, length)
+		else: raise NotImplementedError
+		self._gauge = wx.Gauge(self._parent, range=num_steps, size=gauge_size, style=style)
+		self._add_widget(self._gauge, label, flag=wx.EXPAND)
+
+	def _update(self, value): self._gauge.SetValue(value)
+
+########################################################################
 # Check Box Form
 ########################################################################
 class check_box(_form_base):
+	"""
+	Create a check box form.
+	@param parent the parent widget
+	@param sizer add this widget to sizer if provided (optional)
+	@param proportion the proportion when added to the sizer (default=0)
+	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
+	@param ps the pubsub object (optional)
+	@param key the pubsub key (optional)
+	@param value the default value (optional)
+	@param true the value for form when checked (default=True)
+	@param false the value for form when unchecked (default=False)
+	@param label title label for this widget (optional)
+	"""
 	def __init__(self, label='', true=True, false=False, **kwargs):
 		_form_base.__init__(self, converter=converters.bool_converter(true=true, false=false), **kwargs)
 		self._check_box = wx.CheckBox(self._parent, style=wx.CHK_2STATE, label=label)
@@ -222,23 +348,28 @@ class check_box(_form_base):
 	def _update(self, checked): self._check_box.SetValue(checked)
 
 ########################################################################
-# Base Class Chooser Form
-########################################################################
-class _chooser_base(_form_base):
-	def __init__(self, choices=[], labels=None, **kwargs):
-		_form_base.__init__(self, converter=converters.chooser_converter(choices), **kwargs)
-		self._choices = choices
-		self._labels = map(str, labels or choices)
-
-########################################################################
 # Drop Down Chooser Form
 ########################################################################
 class drop_down(_chooser_base):
-	def __init__(self, label='', **kwargs):
+	"""
+	Create a drop down menu form.
+	@param parent the parent widget
+	@param sizer add this widget to sizer if provided (optional)
+	@param proportion the proportion when added to the sizer (default=0)
+	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
+	@param ps the pubsub object (optional)
+	@param key the pubsub key (optional)
+	@param value the default value (optional)
+	@param choices list of possible values
+	@param labels list of labels for each choice (default=choices)
+	@param label title label for this widget (optional)
+	@param width the form width in px (optional)
+	"""
+	def __init__(self, label='', width=-1, **kwargs):
 		_chooser_base.__init__(self, **kwargs)
-		self._drop_down = wx.Choice(self._parent, choices=self._labels)
+		self._drop_down = wx.Choice(self._parent, choices=self._labels, size=wx.Size(width, -1))
 		self._drop_down.Bind(wx.EVT_CHOICE, self._handle)
-		self._add_widget(self._drop_down, label)
+		self._add_widget(self._drop_down, label, widget_prop=0, label_prop=1)
 
 	def _handle(self, event): self[INT_KEY] = self._drop_down.GetSelection()
 	def _update(self, i): self._drop_down.SetSelection(i)
@@ -250,19 +381,45 @@ class drop_down(_chooser_base):
 #  Can be a 2-state button with two choices.
 ########################################################################
 class button(_chooser_base):
+	"""
+	Create a multi-state button.
+	@param parent the parent widget
+	@param sizer add this widget to sizer if provided (optional)
+	@param proportion the proportion when added to the sizer (default=0)
+	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
+	@param ps the pubsub object (optional)
+	@param key the pubsub key (optional)
+	@param value the default value (optional)
+	@param choices list of possible values
+	@param labels list of labels for each choice (default=choices)
+	@param width the width of the button in pixels (optional)
+	@param style style arguments (optional)
+	@param label title label for this widget (optional)
+	"""
 	def __init__(self, label='', style=0, width=-1, **kwargs):
 		_chooser_base.__init__(self, **kwargs)
 		self._button = wx.Button(self._parent, size=wx.Size(width, -1), style=style)
 		self._button.Bind(wx.EVT_BUTTON, self._handle)
-		self._add_widget(self._button, label)
+		self._add_widget(self._button, label, widget_prop=((not style&wx.BU_EXACTFIT) and 1 or 0))
 
 	def _handle(self, event): self[INT_KEY] = (self[INT_KEY] + 1)%len(self._choices) #circularly increment index
 	def _update(self, i): self._button.SetLabel(self._labels[i]); self.Layout()
 
 class toggle_button(button):
 	"""
-	Create a dual state button.
+	Create a dual-state button.
 	This button will alternate between True and False when clicked.
+	@param parent the parent widget
+	@param sizer add this widget to sizer if provided (optional)
+	@param proportion the proportion when added to the sizer (default=0)
+	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
+	@param ps the pubsub object (optional)
+	@param key the pubsub key (optional)
+	@param value the default value (optional)
+	@param width the width of the button in pixels (optional)
+	@param style style arguments (optional)
+	@param true_label the button's label in the true state
+	@param false_label the button's label in the false state
 	"""
 	def __init__(self, true_label='On (click to stop)', false_label='Off (click to start)', **kwargs):
 		button.__init__(self, choices=[True, False], labels=[true_label, false_label], **kwargs)
@@ -272,6 +429,16 @@ class single_button(toggle_button):
 	Create a single state button.
 	This button will callback() when clicked.
 	For use when state holding is not important.
+	@param parent the parent widget
+	@param sizer add this widget to sizer if provided (optional)
+	@param proportion the proportion when added to the sizer (default=0)
+	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
+	@param ps the pubsub object (optional)
+	@param key the pubsub key (optional)
+	@param value the default value (optional)
+	@param width the width of the button in pixels (optional)
+	@param style style arguments (optional)
+	@param label the button's label
 	"""
 	def __init__(self, label='click for callback', **kwargs):
 		toggle_button.__init__(self, true_label=label, false_label=label, value=True, **kwargs)
@@ -285,6 +452,7 @@ class radio_buttons(_chooser_base):
 	@param parent the parent widget
 	@param sizer add this widget to sizer if provided (optional)
 	@param proportion the proportion when added to the sizer (default=0)
+	@param flag the flag argument when added to the sizer (default=wx.EXPAND)
 	@param ps the pubsub object (optional)
 	@param key the pubsub key (optional)
 	@param value the default value (optional)

@@ -30,6 +30,7 @@ import math
 import pubsub
 from constants import *
 from gnuradio import gr #for gr.prefs
+import forms
 
 ##################################################
 # Constants
@@ -59,48 +60,66 @@ class control_panel(wx.Panel):
 		self.parent = parent
 		wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
 		control_box = wx.BoxSizer(wx.VERTICAL)
-		#checkboxes for average and peak hold
 		control_box.AddStretchSpacer()
-		control_box.Add(common.LabelText(self, 'Options'), 0, wx.ALIGN_CENTER)
-		peak_hold_check_box = common.CheckBoxController(self, 'Peak Hold', parent, PEAK_HOLD_KEY)
-		control_box.Add(peak_hold_check_box, 0, wx.EXPAND)
-		average_check_box = common.CheckBoxController(self, 'Average', parent, AVERAGE_KEY)
-		control_box.Add(average_check_box, 0, wx.EXPAND)
-		control_box.AddSpacer(2)
-		avg_alpha_slider = common.LogSliderController(
-			self, 'Avg Alpha',
-			AVG_ALPHA_MIN_EXP, AVG_ALPHA_MAX_EXP, SLIDER_STEPS,
-			parent, AVG_ALPHA_KEY,
-			formatter=lambda x: ': %.4f'%x,
+		#checkboxes for average and peak hold
+		options_box = forms.static_box_sizer(
+			parent=self, sizer=control_box, label='Options',
+			bold=True, orient=wx.VERTICAL,
 		)
-		parent.subscribe(AVERAGE_KEY, avg_alpha_slider.Enable)
-		control_box.Add(avg_alpha_slider, 0, wx.EXPAND)
+		forms.check_box(
+			sizer=options_box, parent=self, label='Peak Hold',
+			ps=parent, key=PEAK_HOLD_KEY,
+		)
+		forms.check_box(
+			sizer=options_box, parent=self, label='Average',
+			ps=parent, key=AVERAGE_KEY,
+		)
+		#static text and slider for averaging
+		avg_alpha_text = forms.static_text(
+			sizer=options_box, parent=self, label='Avg Alpha',
+			converter=forms.float_converter(lambda x: '%.4f'%x),
+			ps=parent, key=AVG_ALPHA_KEY, width=50,
+		)
+		avg_alpha_slider = forms.log_slider(
+			sizer=options_box, parent=self,
+			min_exp=AVG_ALPHA_MIN_EXP,
+			max_exp=AVG_ALPHA_MAX_EXP,
+			num_steps=SLIDER_STEPS,
+			ps=parent, key=AVG_ALPHA_KEY,
+		)
+		for widget in (avg_alpha_text, avg_alpha_slider):
+			parent.subscribe(AVERAGE_KEY, widget.Enable)
+			widget.Enable(parent[AVERAGE_KEY])
 		#radio buttons for div size
 		control_box.AddStretchSpacer()
-		control_box.Add(common.LabelText(self, 'Set dB/div'), 0, wx.ALIGN_CENTER)
-		radio_box = wx.BoxSizer(wx.VERTICAL)
-		self.radio_buttons = list()
-		for y_per_div in DIV_LEVELS:
-			radio_button = wx.RadioButton(self, label="%d dB/div"%y_per_div)
-			radio_button.Bind(wx.EVT_RADIOBUTTON, self._on_y_per_div)
-			self.radio_buttons.append(radio_button)
-			radio_box.Add(radio_button, 0, wx.ALIGN_LEFT)
-		parent.subscribe(Y_PER_DIV_KEY, self._on_set_y_per_div)
-		control_box.Add(radio_box, 0, wx.EXPAND)
+		y_ctrl_box = forms.static_box_sizer(
+			parent=self, sizer=control_box, label='Axis Options',
+			bold=True, orient=wx.VERTICAL,
+		)
+		forms.radio_buttons(
+			sizer=y_ctrl_box, parent=self,
+			ps=parent, key=Y_PER_DIV_KEY,
+			style=wx.RA_VERTICAL|wx.NO_BORDER, choices=DIV_LEVELS,
+			labels=map(lambda x: '%s dB/div'%x, DIV_LEVELS),
+		)
 		#ref lvl buttons
-		control_box.AddStretchSpacer()
-		control_box.Add(common.LabelText(self, 'Set Ref Level'), 0, wx.ALIGN_CENTER)
-		control_box.AddSpacer(2)
-		_ref_lvl_buttons = common.IncrDecrButtons(self, self._on_incr_ref_level, self._on_decr_ref_level)
-		control_box.Add(_ref_lvl_buttons, 0, wx.ALIGN_CENTER)
+		forms.incr_decr_buttons(
+			parent=self, sizer=y_ctrl_box, label='Ref Level',
+			on_incr=self._on_incr_ref_level, on_decr=self._on_decr_ref_level,
+		)
+		y_ctrl_box.AddSpacer(2)
 		#autoscale
-		control_box.AddStretchSpacer()
-		autoscale_button = wx.Button(self, label='Autoscale', style=wx.BU_EXACTFIT)
-		autoscale_button.Bind(wx.EVT_BUTTON, self.parent.autoscale)
-		control_box.Add(autoscale_button, 0, wx.EXPAND)
+		forms.single_button(
+			sizer=y_ctrl_box, parent=self, label='Autoscale',
+			callback=self.parent.autoscale,
+		)
 		#run/stop
-		run_button = common.ToggleButtonController(self, parent, RUNNING_KEY, 'Stop', 'Run')
-		control_box.Add(run_button, 0, wx.EXPAND)
+		control_box.AddStretchSpacer()
+		forms.toggle_button(
+			sizer=control_box, parent=self,
+			true_label='Stop', false_label='Run',
+			ps=parent, key=RUNNING_KEY,
+		)
 		#set sizer
 		self.SetSizerAndFit(control_box)
 		#mouse wheel event
@@ -112,15 +131,6 @@ class control_panel(wx.Panel):
 	##################################################
 	# Event handlers
 	##################################################
-	def _on_set_y_per_div(self, y_per_div):
-		try:
-			index = list(DIV_LEVELS).index(y_per_div)
-			self.radio_buttons[index].SetValue(True)
-		except: pass
-	def _on_y_per_div(self, event):
-		selected_radio_button = filter(lambda rb: rb.GetValue(), self.radio_buttons)[0]
-		index = self.radio_buttons.index(selected_radio_button)
-		self.parent[Y_PER_DIV_KEY] = DIV_LEVELS[index]
 	def _on_incr_ref_level(self, event):
 		self.parent[REF_LEVEL_KEY] = self.parent[REF_LEVEL_KEY] + self.parent[Y_PER_DIV_KEY]
 	def _on_decr_ref_level(self, event):
@@ -161,6 +171,14 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		self.proxy(AVERAGE_KEY, controller, average_key)
 		self.proxy(AVG_ALPHA_KEY, controller, avg_alpha_key)
 		self.proxy(SAMPLE_RATE_KEY, controller, sample_rate_key)
+		#initialize values
+		self[PEAK_HOLD_KEY] = peak_hold
+		self[Y_PER_DIV_KEY] = y_per_div
+		self[Y_DIVS_KEY] = y_divs
+		self[X_DIVS_KEY] = 8 #approximate
+		self[REF_LEVEL_KEY] = ref_level
+		self[BASEBAND_FREQ_KEY] = baseband_freq
+		self[RUNNING_KEY] = True
 		#init panel and plot
 		wx.Panel.__init__(self, parent, style=wx.SIMPLE_BORDER)
 		self.plotter = plotter.channel_plotter(self)
@@ -175,16 +193,6 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		main_box.Add(self.plotter, 1, wx.EXPAND)
 		main_box.Add(self.control_panel, 0, wx.EXPAND)
 		self.SetSizerAndFit(main_box)
-		#initialize values
-		self[AVERAGE_KEY] = self[AVERAGE_KEY]
-		self[AVG_ALPHA_KEY] = self[AVG_ALPHA_KEY]
-		self[PEAK_HOLD_KEY] = peak_hold
-		self[Y_PER_DIV_KEY] = y_per_div
-		self[Y_DIVS_KEY] = y_divs
-		self[X_DIVS_KEY] = 8 #approximate
-		self[REF_LEVEL_KEY] = ref_level
-		self[BASEBAND_FREQ_KEY] = baseband_freq
-		self[RUNNING_KEY] = True
 		#register events
 		self.subscribe(AVERAGE_KEY, lambda x: self._reset_peak_vals())
 		self.subscribe(MSG_KEY, self.handle_msg)

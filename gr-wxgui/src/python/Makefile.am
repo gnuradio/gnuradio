@@ -59,3 +59,10 @@ ourpython_PYTHON =			\
 	waterfall_window.py		\
 	slider.py			\
 	stdgui2.py
+
+formspythondir = $(grpythondir)/wxgui/forms
+
+formspython_PYTHON = \
+	forms/__init__.py \
+	forms/forms.py \
+	forms/converters.py

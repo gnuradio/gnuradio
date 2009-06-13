@@ -30,6 +30,7 @@ import time
 import pubsub
 from constants import *
 from gnuradio import gr #for gr.prefs, trigger modes
+import forms
 
 ##################################################
 # Constants
@@ -42,12 +43,12 @@ COUPLING_MODES = (
 )
 TRIGGER_MODES = (
 	('Freerun', gr.gr_TRIG_MODE_FREE),
-	('Automatic', gr.gr_TRIG_MODE_AUTO),
+	('Auto', gr.gr_TRIG_MODE_AUTO),
 	('Normal', gr.gr_TRIG_MODE_NORM),
 )
 TRIGGER_SLOPES = (
-	('Positive +', gr.gr_TRIG_SLOPE_POS),
-	('Negative -', gr.gr_TRIG_SLOPE_NEG),
+	('Pos +', gr.gr_TRIG_SLOPE_POS),
+	('Neg -', gr.gr_TRIG_SLOPE_NEG),
 )
 CHANNEL_COLOR_SPECS = (
 	(0.3, 0.3, 1.0),
@@ -78,7 +79,7 @@ class control_panel(wx.Panel):
 		Create a new control panel.
 		@param parent the wx parent window
 		"""
-		SIZE = (100, -1)
+		WIDTH = 90
 		self.parent = parent
 		wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
 		control_box = wx.BoxSizer(wx.VERTICAL)
@@ -86,161 +87,238 @@ class control_panel(wx.Panel):
 		# Axes Options
 		##################################################
 		control_box.AddStretchSpacer()
-		control_box.Add(common.LabelText(self, 'Axes Options'), 0, wx.ALIGN_CENTER)
-		control_box.AddSpacer(2)
+		axes_options_box = forms.static_box_sizer(
+			parent=self, sizer=control_box, label='Axes Options',
+			bold=True, orient=wx.VERTICAL,
+		)
 		##################################################
 		# Scope Mode Box
 		##################################################
 		scope_mode_box = wx.BoxSizer(wx.VERTICAL)
-		control_box.Add(scope_mode_box, 0, wx.EXPAND)
+		axes_options_box.Add(scope_mode_box, 0, wx.EXPAND)
 		#x axis divs
-		x_buttons_scope = common.IncrDecrButtons(self, self._on_incr_t_divs, self._on_decr_t_divs)
-		scope_mode_box.Add(common.LabelBox(self, 'Secs/Div', x_buttons_scope), 0, wx.EXPAND)
+		forms.incr_decr_buttons(
+			parent=self, sizer=scope_mode_box, label='Secs/Div',
+			on_incr=self._on_incr_t_divs, on_decr=self._on_decr_t_divs,
+		)
 		#y axis divs
-		y_buttons_scope = common.IncrDecrButtons(self, self._on_incr_y_divs, self._on_decr_y_divs)
-		parent.subscribe(AUTORANGE_KEY, lambda x: y_buttons_scope.Enable(not x))
-		scope_mode_box.Add(common.LabelBox(self, 'Counts/Div', y_buttons_scope), 0, wx.EXPAND)
+		y_buttons_scope = forms.incr_decr_buttons(
+			parent=self, sizer=scope_mode_box, label='Counts/Div',
+			on_incr=self._on_incr_y_divs, on_decr=self._on_decr_y_divs,
+		)
 		#y axis ref lvl
-		y_off_buttons_scope = common.IncrDecrButtons(self, self._on_incr_y_off, self._on_decr_y_off)
-		parent.subscribe(AUTORANGE_KEY, lambda x: y_off_buttons_scope.Enable(not x))
-		scope_mode_box.Add(common.LabelBox(self, 'Y Offset', y_off_buttons_scope), 0, wx.EXPAND)
+		y_off_buttons_scope = forms.incr_decr_buttons(
+			parent=self, sizer=scope_mode_box, label='Y Offset',
+			on_incr=self._on_incr_y_off, on_decr=self._on_decr_y_off,
+		)
 		#t axis ref lvl
 		scope_mode_box.AddSpacer(5)
-		t_off_slider = wx.Slider(self, size=SIZE, style=wx.SL_HORIZONTAL)
-		t_off_slider.SetRange(0, 1000)
-		def t_off_slider_changed(evt): parent[T_FRAC_OFF_KEY] = float(t_off_slider.GetValue())/t_off_slider.GetMax()
-		t_off_slider.Bind(wx.EVT_SLIDER, t_off_slider_changed)
-		parent.subscribe(T_FRAC_OFF_KEY, lambda x: t_off_slider.SetValue(int(round(x*t_off_slider.GetMax()))))
-		scope_mode_box.Add(common.LabelBox(self, 'T Offset', t_off_slider), 0, wx.EXPAND)
+		forms.slider(
+			parent=self, sizer=scope_mode_box,
+			ps=parent, key=T_FRAC_OFF_KEY, label='T Offset',
+			minimum=0, maximum=1, num_steps=1000,
+		)
 		scope_mode_box.AddSpacer(5)
 		##################################################
 		# XY Mode Box
 		##################################################
 		xy_mode_box = wx.BoxSizer(wx.VERTICAL)
-		control_box.Add(xy_mode_box, 0, wx.EXPAND)
+		axes_options_box.Add(xy_mode_box, 0, wx.EXPAND)
 		#x div controls
-		x_buttons = common.IncrDecrButtons(self, self._on_incr_x_divs, self._on_decr_x_divs)
-		parent.subscribe(AUTORANGE_KEY, lambda x: x_buttons.Enable(not x))
-		xy_mode_box.Add(common.LabelBox(self, 'X/Div', x_buttons), 0, wx.EXPAND)
+		x_buttons = forms.incr_decr_buttons(
+			parent=self, sizer=xy_mode_box, label='X/Div',
+			on_incr=self._on_incr_x_divs, on_decr=self._on_decr_x_divs,
+		)
 		#y div controls
-		y_buttons = common.IncrDecrButtons(self, self._on_incr_y_divs, self._on_decr_y_divs)
-		parent.subscribe(AUTORANGE_KEY, lambda x: y_buttons.Enable(not x))
-		xy_mode_box.Add(common.LabelBox(self, 'Y/Div', y_buttons), 0, wx.EXPAND)
+		y_buttons = forms.incr_decr_buttons(
+			parent=self, sizer=xy_mode_box, label='Y/Div',
+			on_incr=self._on_incr_y_divs, on_decr=self._on_decr_y_divs,
+		)
 		#x offset controls
-		x_off_buttons = common.IncrDecrButtons(self, self._on_incr_x_off, self._on_decr_x_off)
-		parent.subscribe(AUTORANGE_KEY, lambda x: x_off_buttons.Enable(not x))
-		xy_mode_box.Add(common.LabelBox(self, 'X Off', x_off_buttons), 0, wx.EXPAND)
+		x_off_buttons = forms.incr_decr_buttons(
+			parent=self, sizer=xy_mode_box, label='X Off',
+			on_incr=self._on_incr_x_off, on_decr=self._on_decr_x_off,
+		)
 		#y offset controls
-		y_off_buttons = common.IncrDecrButtons(self, self._on_incr_y_off, self._on_decr_y_off)
-		parent.subscribe(AUTORANGE_KEY, lambda x: y_off_buttons.Enable(not x))
-		xy_mode_box.Add(common.LabelBox(self, 'Y Off', y_off_buttons), 0, wx.EXPAND)
+		y_off_buttons = forms.incr_decr_buttons(
+			parent=self, sizer=xy_mode_box, label='Y Off',
+			on_incr=self._on_incr_y_off, on_decr=self._on_decr_y_off,
+		)
+		for widget in (y_buttons_scope, y_off_buttons_scope, x_buttons, y_buttons, x_off_buttons, y_off_buttons):
+			parent.subscribe(AUTORANGE_KEY, widget.Disable)
+			widget.Disable(parent[AUTORANGE_KEY])
 		xy_mode_box.ShowItems(False)
 		#autorange check box
-		self.autorange_check_box = common.CheckBoxController(self, 'Autorange', parent, AUTORANGE_KEY)
-		control_box.Add(self.autorange_check_box, 0, wx.ALIGN_LEFT)
-		control_box.AddStretchSpacer()
+		forms.check_box(
+			parent=self, sizer=axes_options_box, label='Autorange',
+			ps=parent, key=AUTORANGE_KEY,
+		)
 		##################################################
 		# Channel Options
 		##################################################
 		TRIGGER_PAGE_INDEX = parent.num_inputs
 		XY_PAGE_INDEX = parent.num_inputs+1
-		control_box.Add(common.LabelText(self, 'Channel Options'), 0, wx.ALIGN_CENTER)
-		control_box.AddSpacer(2)
+		control_box.AddStretchSpacer()
+		chan_options_box = forms.static_box_sizer(
+			parent=self, sizer=control_box, label='Channel Options',
+			bold=True, orient=wx.VERTICAL,
+		)
 		options_notebook = wx.Notebook(self)
-		control_box.Add(options_notebook, 0, wx.EXPAND)
-		def options_notebook_changed(evt):
-			try:
-				parent[TRIGGER_SHOW_KEY] = options_notebook.GetSelection() == TRIGGER_PAGE_INDEX
-				parent[XY_MODE_KEY] = options_notebook.GetSelection() == XY_PAGE_INDEX
-			except wx.PyDeadObjectError: pass
-		options_notebook.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, options_notebook_changed)
-		def xy_mode_changed(mode):
-			#ensure xy tab is selected
-			if mode and options_notebook.GetSelection() != XY_PAGE_INDEX:
-				options_notebook.SetSelection(XY_PAGE_INDEX)
-			#ensure xy tab is not selected
-			elif not mode and options_notebook.GetSelection() == XY_PAGE_INDEX:
-				options_notebook.SetSelection(0)
-			#show/hide control buttons
-			scope_mode_box.ShowItems(not mode)
-			xy_mode_box.ShowItems(mode)
-			control_box.Layout()
-		parent.subscribe(XY_MODE_KEY, xy_mode_changed)
+		options_notebook_args = list()
+		CHANNELS = [('Ch %d'%(i+1), i) for i in range(parent.num_inputs)]
 		##################################################
 		# Channel Menu Boxes
 		##################################################
 		for i in range(parent.num_inputs):
 			channel_menu_panel = wx.Panel(options_notebook)
-			options_notebook.AddPage(channel_menu_panel, 'Ch%d'%(i+1))
+			options_notebook_args.append((channel_menu_panel, i, 'Ch%d'%(i+1)))
 			channel_menu_box = wx.BoxSizer(wx.VERTICAL)
 			channel_menu_panel.SetSizer(channel_menu_box)
 			#ac couple check box
 			channel_menu_box.AddStretchSpacer()
-			coupling_chooser = common.DropDownController(channel_menu_panel, COUPLING_MODES, parent, common.index_key(AC_COUPLE_KEY, i), SIZE)
-			channel_menu_box.Add(common.LabelBox(channel_menu_panel, 'Coupling', coupling_chooser), 0, wx.EXPAND)
+			forms.drop_down(
+				parent=channel_menu_panel, sizer=channel_menu_box,
+				ps=parent, key=common.index_key(AC_COUPLE_KEY, i),
+				choices=map(lambda x: x[1], COUPLING_MODES),
+				labels=map(lambda x: x[0], COUPLING_MODES),
+				label='Coupling', width=WIDTH,
+			)
 			#marker
 			channel_menu_box.AddStretchSpacer()
-			marker_chooser = common.DropDownController(channel_menu_panel, MARKER_TYPES, parent, common.index_key(MARKER_KEY, i), SIZE)
-			channel_menu_box.Add(common.LabelBox(channel_menu_panel, 'Marker', marker_chooser), 0, wx.EXPAND)
+			forms.drop_down(
+				parent=channel_menu_panel, sizer=channel_menu_box,
+				ps=parent, key=common.index_key(MARKER_KEY, i),
+				choices=map(lambda x: x[1], MARKER_TYPES),
+				labels=map(lambda x: x[0], MARKER_TYPES),
+				label='Marker', width=WIDTH,
+			)
 			channel_menu_box.AddStretchSpacer()
 		##################################################
 		# Trigger Menu Box
 		##################################################
 		trigger_menu_panel = wx.Panel(options_notebook)
-		options_notebook.AddPage(trigger_menu_panel, 'Trig')
+		options_notebook_args.append((trigger_menu_panel, TRIGGER_PAGE_INDEX, 'Trig'))
 		trigger_menu_box = wx.BoxSizer(wx.VERTICAL)
 		trigger_menu_panel.SetSizer(trigger_menu_box)
 		#trigger mode
-		trigger_mode_chooser = common.DropDownController(trigger_menu_panel, TRIGGER_MODES, parent, TRIGGER_MODE_KEY, SIZE)
-		trigger_menu_box.Add(common.LabelBox(trigger_menu_panel, 'Mode', trigger_mode_chooser), 0, wx.EXPAND)
+		forms.drop_down(
+			parent=trigger_menu_panel, sizer=trigger_menu_box,
+			ps=parent, key=TRIGGER_MODE_KEY,
+			choices=map(lambda x: x[1], TRIGGER_MODES),
+			labels=map(lambda x: x[0], TRIGGER_MODES),
+			label='Mode', width=WIDTH,
+		)
 		#trigger slope
-		trigger_slope_chooser = common.DropDownController(trigger_menu_panel, TRIGGER_SLOPES, parent, TRIGGER_SLOPE_KEY, SIZE)
-		parent.subscribe(TRIGGER_MODE_KEY, lambda x: trigger_slope_chooser.Enable(x!=gr.gr_TRIG_MODE_FREE))
-		trigger_menu_box.Add(common.LabelBox(trigger_menu_panel, 'Slope', trigger_slope_chooser), 0, wx.EXPAND)
+		trigger_slope_chooser = forms.drop_down(
+			parent=trigger_menu_panel, sizer=trigger_menu_box,
+			ps=parent, key=TRIGGER_SLOPE_KEY,
+			choices=map(lambda x: x[1], TRIGGER_SLOPES),
+			labels=map(lambda x: x[0], TRIGGER_SLOPES),
+			label='Slope', width=WIDTH,
+		)
 		#trigger channel
-		choices = [('Channel %d'%(i+1), i) for i in range(parent.num_inputs)]
-		trigger_channel_chooser = common.DropDownController(trigger_menu_panel, choices, parent, TRIGGER_CHANNEL_KEY, SIZE)
-		parent.subscribe(TRIGGER_MODE_KEY, lambda x: trigger_channel_chooser.Enable(x!=gr.gr_TRIG_MODE_FREE))
-		trigger_menu_box.Add(common.LabelBox(trigger_menu_panel, 'Channel', trigger_channel_chooser), 0, wx.EXPAND)
+		trigger_channel_chooser = forms.drop_down(
+			parent=trigger_menu_panel, sizer=trigger_menu_box,
+			ps=parent, key=TRIGGER_CHANNEL_KEY,
+			choices=map(lambda x: x[1], CHANNELS),
+			labels=map(lambda x: x[0], CHANNELS),
+			label='Channel', width=WIDTH,
+		)
 		#trigger level
 		hbox = wx.BoxSizer(wx.HORIZONTAL)
 		trigger_menu_box.Add(hbox, 0, wx.EXPAND)
-		hbox.Add(wx.StaticText(trigger_menu_panel, label=' Level '), 1, wx.ALIGN_CENTER_VERTICAL)
-		trigger_level_button = wx.Button(trigger_menu_panel, label='50%', style=wx.BU_EXACTFIT)
-		parent.subscribe(TRIGGER_MODE_KEY, lambda x: trigger_level_button.Enable(x!=gr.gr_TRIG_MODE_FREE))
-		trigger_level_button.Bind(wx.EVT_BUTTON, self.parent.set_auto_trigger_level)
-		hbox.Add(trigger_level_button, 0, wx.ALIGN_CENTER_VERTICAL)
-		hbox.AddSpacer(10)
-		trigger_level_buttons = common.IncrDecrButtons(trigger_menu_panel, self._on_incr_trigger_level, self._on_decr_trigger_level)
-		parent.subscribe(TRIGGER_MODE_KEY, lambda x: trigger_level_buttons.Enable(x!=gr.gr_TRIG_MODE_FREE))
-		hbox.Add(trigger_level_buttons, 0, wx.ALIGN_CENTER_VERTICAL)
+		hbox.Add(wx.StaticText(trigger_menu_panel, label='Level:'), 1, wx.ALIGN_CENTER_VERTICAL)
+		trigger_level_button = forms.single_button(
+			parent=trigger_menu_panel, sizer=hbox, label='50%',
+			callback=parent.set_auto_trigger_level, style=wx.BU_EXACTFIT,
+		)
+		hbox.AddSpacer(WIDTH-60)
+		trigger_level_buttons = forms.incr_decr_buttons(
+			parent=trigger_menu_panel, sizer=hbox,
+			on_incr=self._on_incr_trigger_level, on_decr=self._on_decr_trigger_level,
+		)
+		def disable_all(trigger_mode):
+			for widget in (trigger_slope_chooser, trigger_channel_chooser, trigger_level_buttons, trigger_level_button):
+				widget.Disable(trigger_mode == gr.gr_TRIG_MODE_FREE)
+		parent.subscribe(TRIGGER_MODE_KEY, disable_all)
+		disable_all(parent[TRIGGER_MODE_KEY])
 		##################################################
 		# XY Menu Box
 		##################################################
 		if parent.num_inputs > 1:
 			xy_menu_panel = wx.Panel(options_notebook)
-			options_notebook.AddPage(xy_menu_panel, 'XY')
+			options_notebook_args.append((xy_menu_panel, XY_PAGE_INDEX, 'XY'))
 			xy_menu_box = wx.BoxSizer(wx.VERTICAL)
 			xy_menu_panel.SetSizer(xy_menu_box)
 			#x and y channel choosers
 			xy_menu_box.AddStretchSpacer()
-			choices = [('Ch%d'%(i+1), i) for i in range(parent.num_inputs)]
-			x_channel_chooser = common.DropDownController(xy_menu_panel, choices, parent, X_CHANNEL_KEY, SIZE)
-			xy_menu_box.Add(common.LabelBox(xy_menu_panel, 'Ch X', x_channel_chooser), 0, wx.EXPAND)
+			forms.drop_down(
+				parent=xy_menu_panel, sizer=xy_menu_box,
+				ps=parent, key=X_CHANNEL_KEY,
+				choices=map(lambda x: x[1], CHANNELS),
+				labels=map(lambda x: x[0], CHANNELS),
+				label='Channel X', width=WIDTH,
+			)
 			xy_menu_box.AddStretchSpacer()
-			y_channel_chooser = common.DropDownController(xy_menu_panel, choices, parent, Y_CHANNEL_KEY, SIZE)
-			xy_menu_box.Add(common.LabelBox(xy_menu_panel, 'Ch Y', y_channel_chooser), 0, wx.EXPAND)
+			forms.drop_down(
+				parent=xy_menu_panel, sizer=xy_menu_box,
+				ps=parent, key=Y_CHANNEL_KEY,
+				choices=map(lambda x: x[1], CHANNELS),
+				labels=map(lambda x: x[0], CHANNELS),
+				label='Channel Y', width=WIDTH,
+			)
 			#marker
 			xy_menu_box.AddStretchSpacer()
-			marker_chooser = common.DropDownController(xy_menu_panel, MARKER_TYPES, parent, XY_MARKER_KEY, SIZE)
-			xy_menu_box.Add(common.LabelBox(xy_menu_panel, 'Marker', marker_chooser), 0, wx.EXPAND)
+			forms.drop_down(
+				parent=xy_menu_panel, sizer=xy_menu_box,
+				ps=parent, key=XY_MARKER_KEY,
+				choices=map(lambda x: x[1], MARKER_TYPES),
+				labels=map(lambda x: x[0], MARKER_TYPES),
+				label='Marker', width=WIDTH,
+			)
 			xy_menu_box.AddStretchSpacer()
+		##################################################
+		# Setup Options Notebook
+		##################################################
+		forms.notebook(
+			parent=self, sizer=chan_options_box,
+			notebook=options_notebook,
+			ps=parent, key=CHANNEL_OPTIONS_KEY,
+			pages=map(lambda x: x[0], options_notebook_args),
+			choices=map(lambda x: x[1], options_notebook_args),
+			labels=map(lambda x: x[2], options_notebook_args),
+		)
+		#gui handling for channel options changing
+		def options_notebook_changed(chan_opt):
+			try:
+				parent[TRIGGER_SHOW_KEY] = chan_opt == TRIGGER_PAGE_INDEX
+				parent[XY_MODE_KEY] = chan_opt == XY_PAGE_INDEX
+			except wx.PyDeadObjectError: pass
+		parent.subscribe(CHANNEL_OPTIONS_KEY, options_notebook_changed)
+		#gui handling for xy mode changing
+		def xy_mode_changed(mode):
+			#ensure xy tab is selected
+			if mode and parent[CHANNEL_OPTIONS_KEY] != XY_PAGE_INDEX:
+				parent[CHANNEL_OPTIONS_KEY] = XY_PAGE_INDEX
+			#ensure xy tab is not selected
+			elif not mode and parent[CHANNEL_OPTIONS_KEY] == XY_PAGE_INDEX:
+				parent[CHANNEL_OPTIONS_KEY] = 0
+			#show/hide control buttons
+			scope_mode_box.ShowItems(not mode)
+			xy_mode_box.ShowItems(mode)
+			control_box.Layout()
+		parent.subscribe(XY_MODE_KEY, xy_mode_changed)
+		xy_mode_changed(parent[XY_MODE_KEY])
 		##################################################
 		# Run/Stop Button
 		##################################################
 		#run/stop
-		self.run_button = common.ToggleButtonController(self, parent, RUNNING_KEY, 'Stop', 'Run')
-		control_box.Add(self.run_button, 0, wx.EXPAND)
+		control_box.AddStretchSpacer()
+		forms.toggle_button(
+			sizer=control_box, parent=self,
+			true_label='Stop', false_label='Run',
+			ps=parent, key=RUNNING_KEY,
+		)
 		#set sizer
 		self.SetSizerAndFit(control_box)
 		#mouse wheel event
@@ -323,28 +401,10 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		self.proxy(TRIGGER_SLOPE_KEY, controller, trigger_slope_key)
 		self.proxy(TRIGGER_CHANNEL_KEY, controller, trigger_channel_key)
 		self.proxy(DECIMATION_KEY, controller, decimation_key)
-		for i in range(num_inputs):
-			self.proxy(common.index_key(AC_COUPLE_KEY, i), controller, common.index_key(ac_couple_key, i))
-		#init panel and plot
-		wx.Panel.__init__(self, parent, style=wx.SIMPLE_BORDER)
-		self.plotter = plotter.channel_plotter(self)
-		self.plotter.SetSize(wx.Size(*size))
-		self.plotter.set_title(title)
-		self.plotter.enable_legend(True)
-		self.plotter.enable_point_label(True)
-		self.plotter.enable_grid_lines(True)
-		#setup the box with plot and controls
-		self.control_panel = control_panel(self)
-		main_box = wx.BoxSizer(wx.HORIZONTAL)
-		main_box.Add(self.plotter, 1, wx.EXPAND)
-		main_box.Add(self.control_panel, 0, wx.EXPAND)
-		self.SetSizerAndFit(main_box)
 		#initialize values
 		self[RUNNING_KEY] = True
-		for i in range(self.num_inputs):
-			self[common.index_key(AC_COUPLE_KEY, i)] = self[common.index_key(AC_COUPLE_KEY, i)]
-			self[common.index_key(MARKER_KEY, i)] = DEFAULT_MARKER_TYPE
 		self[XY_MARKER_KEY] = 2.0
+		self[CHANNEL_OPTIONS_KEY] = 0
 		self[XY_MODE_KEY] = xy_mode
 		self[X_CHANNEL_KEY] = 0
 		self[Y_CHANNEL_KEY] = self.num_inputs-1
@@ -364,6 +424,22 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		self[TRIGGER_MODE_KEY] = gr.gr_TRIG_MODE_AUTO
 		self[TRIGGER_SLOPE_KEY] = gr.gr_TRIG_SLOPE_POS
 		self[T_FRAC_OFF_KEY] = 0.5
+		for i in range(num_inputs):
+			self.proxy(common.index_key(AC_COUPLE_KEY, i), controller, common.index_key(ac_couple_key, i))
+		#init panel and plot
+		wx.Panel.__init__(self, parent, style=wx.SIMPLE_BORDER)
+		self.plotter = plotter.channel_plotter(self)
+		self.plotter.SetSize(wx.Size(*size))
+		self.plotter.set_title(title)
+		self.plotter.enable_legend(True)
+		self.plotter.enable_point_label(True)
+		self.plotter.enable_grid_lines(True)
+		#setup the box with plot and controls
+		self.control_panel = control_panel(self)
+		main_box = wx.BoxSizer(wx.HORIZONTAL)
+		main_box.Add(self.plotter, 1, wx.EXPAND)
+		main_box.Add(self.control_panel, 0, wx.EXPAND)
+		self.SetSizerAndFit(main_box)
 		#register events for message
 		self.subscribe(MSG_KEY, self.handle_msg)
 		#register events for grid

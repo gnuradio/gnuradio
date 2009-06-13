@@ -30,6 +30,7 @@ import math
 import pubsub
 from constants import *
 from gnuradio import gr #for gr.prefs
+import forms
 
 ##################################################
 # Constants
@@ -63,34 +64,53 @@ class control_panel(wx.Panel):
 		"""
 		self.parent = parent
 		wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
-		control_box = wx.BoxSizer(wx.VERTICAL)
-		self.marker_index = 2
-		#begin control box
-		control_box.Add(common.LabelText(self, 'Options'), 0, wx.ALIGN_CENTER)
+		control_box = forms.static_box_sizer(
+			parent=self, label='Options',
+			bold=True, orient=wx.VERTICAL,
+		)
 		#alpha
 		control_box.AddStretchSpacer()
-		alpha_slider = common.LogSliderController(
-			self, 'Alpha',
-			ALPHA_MIN_EXP, ALPHA_MAX_EXP, SLIDER_STEPS,
-			parent, ALPHA_KEY,
+		forms.text_box(
+			sizer=control_box, parent=self, label='Alpha',
+			converter=forms.float_converter(),
+			ps=parent, key=ALPHA_KEY,
 		)
-		control_box.Add(alpha_slider, 0, wx.EXPAND)
+		forms.log_slider(
+			sizer=control_box, parent=self,
+			min_exp=ALPHA_MIN_EXP,
+			max_exp=ALPHA_MAX_EXP,
+			num_steps=SLIDER_STEPS,
+			ps=parent, key=ALPHA_KEY,
+		)
 		#gain_mu
 		control_box.AddStretchSpacer()
-		gain_mu_slider = common.LogSliderController(
-			self, 'Gain Mu',
-			GAIN_MU_MIN_EXP, GAIN_MU_MAX_EXP, SLIDER_STEPS,
-			parent, GAIN_MU_KEY,
+		forms.text_box(
+			sizer=control_box, parent=self, label='Gain Mu',
+			converter=forms.float_converter(),
+			ps=parent, key=GAIN_MU_KEY,
 		)
-		control_box.Add(gain_mu_slider, 0, wx.EXPAND)
+		forms.log_slider(
+			sizer=control_box, parent=self,
+			min_exp=GAIN_MU_MIN_EXP,
+			max_exp=GAIN_MU_MAX_EXP,
+			num_steps=SLIDER_STEPS,
+			ps=parent, key=GAIN_MU_KEY,
+		)
 		#marker
 		control_box.AddStretchSpacer()
-		marker_chooser = common.DropDownController(self, MARKER_TYPES, parent, MARKER_KEY)
-		control_box.Add(common.LabelBox(self, 'Marker', marker_chooser), 0, wx.EXPAND)
+		forms.drop_down(
+			sizer=control_box, parent=self,
+			ps=parent, key=MARKER_KEY, label='Marker',
+			choices=map(lambda x: x[1], MARKER_TYPES),
+			labels=map(lambda x: x[0], MARKER_TYPES),
+		)
 		#run/stop
 		control_box.AddStretchSpacer()
-		self.run_button = common.ToggleButtonController(self, parent, RUNNING_KEY, 'Stop', 'Run')
-		control_box.Add(self.run_button, 0, wx.EXPAND)
+		forms.toggle_button(
+			sizer=control_box, parent=self,
+			true_label='Stop', false_label='Run',
+			ps=parent, key=RUNNING_KEY,
+		)
 		#set sizer
 		self.SetSizerAndFit(control_box)
 
@@ -121,6 +141,11 @@ class const_window(wx.Panel, pubsub.pubsub):
 		self.proxy(GAIN_OMEGA_KEY, controller, gain_omega_key)
 		self.proxy(OMEGA_KEY, controller, omega_key)
 		self.proxy(SAMPLE_RATE_KEY, controller, sample_rate_key)
+		#initialize values
+		self[RUNNING_KEY] = True
+		self[X_DIVS_KEY] = 8
+		self[Y_DIVS_KEY] = 8
+		self[MARKER_KEY] = DEFAULT_MARKER_TYPE
 		#init panel and plot
 		wx.Panel.__init__(self, parent, style=wx.SIMPLE_BORDER)
 		self.plotter = plotter.channel_plotter(self)
@@ -141,13 +166,6 @@ class const_window(wx.Panel, pubsub.pubsub):
 		self.subscribe(ALPHA_KEY, set_beta)
 		def set_gain_omega(gain_mu): self[GAIN_OMEGA_KEY] = .25*gain_mu**2
 		self.subscribe(GAIN_MU_KEY, set_gain_omega)
-		#initialize values
-		self[ALPHA_KEY] = self[ALPHA_KEY]
-		self[GAIN_MU_KEY] = self[GAIN_MU_KEY]
-		self[RUNNING_KEY] = True
-		self[X_DIVS_KEY] = 8
-		self[Y_DIVS_KEY] = 8
-		self[MARKER_KEY] = DEFAULT_MARKER_TYPE
 		#register events
 		self.subscribe(MSG_KEY, self.handle_msg)
 		self.subscribe(X_DIVS_KEY, self.update_grid)
