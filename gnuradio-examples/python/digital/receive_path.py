@@ -45,7 +45,6 @@ class receive_path(gr.hier_block2):
 
         self._verbose            = options.verbose
         self._rx_freq            = options.rx_freq         # receiver's center frequency
-        self._rx_gain            = options.rx_gain         # receiver's gain
         self._bitrate            = options.bitrate         # desired bit rate
         self._decim              = options.decim           # Decimating rate for the USRP (prelim)
         self._samples_per_symbol = options.samples_per_symbol  # desired samples/symbol
@@ -59,11 +58,6 @@ class receive_path(gr.hier_block2):
 
         # Set up USRP source; also adjusts decim, samples_per_symbol, and bitrate
         self._setup_usrp_source(options)
-
-        if options.show_rx_gain_range:
-            print "Rx Gain Range: minimum = %g, maximum = %g, step size = %g"%tuple(self.u.gain_range())
-
-        self.set_gain(options.rx_gain)
 
         # Set RF frequency
         ok = self.set_freq(self._rx_freq)
@@ -125,7 +119,7 @@ class receive_path(gr.hier_block2):
         # derive values of bitrate, samples_per_symbol, and decim from desired info
         (self._bitrate, self._samples_per_symbol, self._decim) = \
             pick_rx_bitrate(self._bitrate, self._demod_class.bits_per_symbol(), \
-                            self._samples_per_symbol, self._decim, adc_rate)
+                            self._samples_per_symbol, self._decim, adc_rate, self.u.get_decim_rates())
 
         self.u.set_decim(self._decim)
 
@@ -142,12 +136,6 @@ class receive_path(gr.hier_block2):
         determine the value for the digital up converter.
         """
         return self.u.set_center_freq(target_freq)
-
-    def set_gain(self, gain):
-        """
-        Sets the analog gain in the USRP
-        """
-        return self.u.set_gain(gain)
         
     def bitrate(self):
         return self._bitrate
@@ -189,7 +177,7 @@ class receive_path(gr.hier_block2):
         if not normal.has_option("--bitrate"):
             normal.add_option("-r", "--bitrate", type="eng_float", default=None,
                               help="specify bitrate.  samples-per-symbol and interp/decim will be derived.")
-        usrp_options.add_rx_options(normal, expert)
+        usrp_options.add_rx_options(normal)
         normal.add_option("-v", "--verbose", action="store_true", default=False)
         expert.add_option("-S", "--samples-per-symbol", type="int", default=None,
                           help="set samples/symbol [default=%default]")

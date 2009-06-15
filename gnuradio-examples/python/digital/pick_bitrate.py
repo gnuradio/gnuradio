@@ -25,19 +25,19 @@ _default_bitrate = 500e3
 
 _valid_samples_per_symbol = (2,3,4,5,6,7)
 
-def _gen_tx_info(converter_rate):
+def _gen_tx_info(converter_rate, xrates):
     results = []
     for samples_per_symbol in _valid_samples_per_symbol:
-        for interp in range(16, 512 + 1, 4):
+        for interp in xrates:
             bitrate = converter_rate / interp / samples_per_symbol
             results.append((bitrate, samples_per_symbol, interp))
     results.sort()
     return results
 
-def _gen_rx_info(converter_rate):
+def _gen_rx_info(converter_rate, xrates):
     results = []
     for samples_per_symbol in _valid_samples_per_symbol:
-        for decim in range(8, 256 + 1, 2):
+        for decim in xrates:
             bitrate = converter_rate / decim / samples_per_symbol
             results.append((bitrate, samples_per_symbol, decim))
     results.sort()
@@ -79,7 +79,7 @@ def _pick_best(target_bitrate, bits_per_symbol, info):
     return ((best[0] * bits_per_symbol),) + best[1:]
 
 def _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
-                  xrate, converter_rate, gen_info):
+                  xrate, converter_rate, xrates, gen_info):
     """
     @returns tuple (bitrate, samples_per_symbol, interp_rate_or_decim_rate)
     """
@@ -97,14 +97,14 @@ def _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
     # samples_per_symbol constraint, but not both of them.
 
     ret = _pick_best(bitrate, bits_per_symbol,
-                      _filter_info(gen_info(converter_rate), samples_per_symbol, xrate))
+                      _filter_info(gen_info(converter_rate, xrates), samples_per_symbol, xrate))
     print "Actual Bitrate:", eng_notation.num_to_str(ret[0])
     return ret
     
 # ---------------------------------------------------------------------------------------
 
 def pick_tx_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
-                    interp_rate, converter_rate):
+                    interp_rate, converter_rate, possible_interps):
     """
     Given the 4 input parameters, return at configuration that matches
 
@@ -118,16 +118,18 @@ def pick_tx_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
     @type interp_rate: integer or None
     @param converter_rate: converter sample rate in Hz
     @type converter_rate: number
+    @param possible_interps: a list of possible rates
+    @type possible_interps: a list of integers
 
     @returns tuple (bitrate, samples_per_symbol, interp_rate)
     """
-    print "Requested TX Bitrate:", bitrate and eng_notation.num_to_str(bitrate) or 'Auto'
+    print "Requested TX Bitrate:", bitrate and eng_notation.num_to_str(bitrate) or 'Auto',
     return _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
-                         interp_rate, converter_rate, _gen_tx_info)
+                         interp_rate, converter_rate, possible_interps, _gen_tx_info)
 
 
 def pick_rx_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
-                    decim_rate, converter_rate):
+                    decim_rate, converter_rate, possible_decims):
     """
     Given the 4 input parameters, return at configuration that matches
 
@@ -141,9 +143,11 @@ def pick_rx_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
     @type decim_rate: integer or None
     @param converter_rate: converter sample rate in Hz
     @type converter_rate: number
+    @param possible_decims: a list of possible rates
+    @type possible_decims: a list of integers
 
     @returns tuple (bitrate, samples_per_symbol, decim_rate)
     """
     print "Requested RX Bitrate:", bitrate and eng_notation.num_to_str(bitrate) or 'Auto'
     return _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
-                         decim_rate, converter_rate, _gen_rx_info)
+                         decim_rate, converter_rate, possible_decims, _gen_rx_info)

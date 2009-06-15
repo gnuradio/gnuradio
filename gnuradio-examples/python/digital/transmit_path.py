@@ -62,9 +62,6 @@ class transmit_path(gr.hier_block2):
         # Set up USRP sink; also adjusts interp, samples_per_symbol, and bitrate
         self._setup_usrp_sink(options)
 
-        if options.show_tx_ampl_range:
-            print "Tx Amplitude Range: minimum = %g, maximum = %g"%tuple(self.u.ampl_range())
-
         # copy the final answers back into options for use by modulator
         options.samples_per_symbol = self._samples_per_symbol
         options.bitrate = self._bitrate
@@ -90,7 +87,7 @@ class transmit_path(gr.hier_block2):
 
         # Set the USRP for maximum transmit gain
         # (Note that on the RFX cards this is a nop.)
-        self.set_gain(self.u.gain_range()[1])
+        #self.set_gain(self.u.gain_range()[1])
 
         self.amp = gr.multiply_const_cc(1)
         self.set_tx_amplitude(self._tx_amplitude)
@@ -113,7 +110,7 @@ class transmit_path(gr.hier_block2):
         # derive values of bitrate, samples_per_symbol, and interp from desired info
         (self._bitrate, self._samples_per_symbol, self._interp) = \
             pick_tx_bitrate(self._bitrate, self._modulator_class.bits_per_symbol(),
-                            self._samples_per_symbol, self._interp, dac_rate)
+                            self._samples_per_symbol, self._interp, dac_rate, self.u.get_interp_rates())
         
         self.u.set_interp(self._interp)
 
@@ -131,21 +128,13 @@ class transmit_path(gr.hier_block2):
         determine the value for the digital up converter.
         """
         return self.u.set_center_freq(target_freq)
-        
-    def set_gain(self, gain):
-        """
-        Sets the analog gain in the USRP
-        """
-        return self.u.set_gain(gain)
 
     def set_tx_amplitude(self, ampl):
         """
         Sets the transmit amplitude sent to the USRP
-        @param ampl the amplitude or None for automatic
+        @param ampl the amplitude between 0.0 and 1.0
         """
-        ampl_range = self.u.ampl_range()
-        if ampl is None: ampl = (ampl_range[1] - ampl_range[0])*0.15 + ampl_range[0]
-        self._tx_amplitude = max(ampl_range[0], min(ampl, ampl_range[1]))
+        self._tx_amplitude = max(0.0, min(ampl, 1.0))
         self.amp.set_k(self._tx_amplitude)
 
     def send_pkt(self, payload='', eof=False):
@@ -171,11 +160,9 @@ class transmit_path(gr.hier_block2):
         if not normal.has_option('--bitrate'):
             normal.add_option("-r", "--bitrate", type="eng_float", default=None,
                               help="specify bitrate.  samples-per-symbol and interp/decim will be derived.")
-        usrp_options.add_tx_options(normal, expert)
-        normal.add_option("--tx-amplitude", type="eng_float", default=None, metavar="AMPL",
-                          help="set transmitter digital amplitude [default=midpoint].  See also --show-tx-ampl-range")
-        normal.add_option("--show-tx-ampl-range", action="store_true", default=False, 
-                          help="print min and max Tx amplitude available")
+        usrp_options.add_tx_options(normal)
+        normal.add_option("--tx-amplitude", type="eng_float", default=0.15, metavar="AMPL",
+                          help="set transmitter digital amplitude (0.0-1.0) [default=%default].")
         normal.add_option("-v", "--verbose", action="store_true", default=False)
         expert.add_option("-S", "--samples-per-symbol", type="int", default=None,
                           help="set samples/symbol [default=%default]")
