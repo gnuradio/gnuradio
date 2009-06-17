@@ -28,9 +28,7 @@ dist_ourdata_DATA =		\
 	generic_usrp.py		\
 	pick_bitrate.py		\
 	receive_path.py		\
-	receive_path_lb.py	\
 	transmit_path.py	\
-	transmit_path_lb.py	\
 	usrp_options.py
 
 dist_ourdata_SCRIPTS =		\
