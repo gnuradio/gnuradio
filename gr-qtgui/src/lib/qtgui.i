@@ -35,6 +35,7 @@ GR_SWIG_BLOCK_MAGIC(qtgui,sink_c)
 				       bool plotfreq=true, bool plotwaterfall=true,
 				       bool plotwaterfall3d=true, bool plottime=true,
 				       bool plotconst=true,
+				       bool use_openGL=true,
 				       QWidget *parent=NULL);
 
 class qtgui_sink_c : public gr_block
@@ -46,6 +47,7 @@ private:
 					      bool plotfreq, bool plotwaterfall,
 					      bool plotwaterfall3d, bool plottime,
 					      bool plotconst,
+					      bool use_openGL,
 					      QWidget *parent);
   qtgui_sink_c (int fftsize, int wintype,
 		float fmin, float fmax,
@@ -53,6 +55,7 @@ private:
 		bool plotfreq, bool plotwaterfall,
 		bool plotwaterfall3d, bool plottime,
 		bool plotconst,
+		bool use_openGL,
 		QWidget *parent);
 
 public:
