@@ -40,6 +40,7 @@ qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
 				     bool plotfreq=true, bool plotwaterfall=true,
 				     bool plotwaterfall3d=true, bool plottime=true,
 				     bool plotconst=true,
+				     bool use_openGL=true,
 				     QWidget *parent=NULL);
 
 class qtgui_sink_c : public gr_block
@@ -51,6 +52,7 @@ private:
 					      bool plotfreq, bool plotwaterfall,
 					      bool plotwaterfall3d, bool plottime,
 					      bool plotconst,
+					      bool use_openGL,
 					      QWidget *parent);
   qtgui_sink_c (int fftsize, int wintype,
 		float fmin, float fmax, 
@@ -58,9 +60,12 @@ private:
 		bool plotfreq, bool plotwaterfall,
 		bool plotwaterfall3d, bool plottime,
 		bool plotconst,
+		bool use_openGL,
 		QWidget *parent);
 
-  void initialize();
+  // use opengl to force OpenGL on or off
+  // this might be necessary for sessions over SSH
+  void initialize(const bool opengl);
 
   int d_fftsize;
   gr_firdes::win_type d_wintype;
@@ -79,7 +84,7 @@ private:
   gr_complex *d_residbuf;
 
   bool d_plotfreq, d_plotwaterfall, d_plotwaterfall3d, d_plottime, d_plotconst;
-
+  
   QWidget *d_parent;
   SpectrumGUIClass *d_main_gui;
 

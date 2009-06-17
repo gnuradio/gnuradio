@@ -5,17 +5,22 @@
 
 int SpectrumDisplayForm::_openGLWaterfall3DFlag = -1;
 
-SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
+SpectrumDisplayForm::SpectrumDisplayForm(bool useOpenGL, QWidget* parent)
   : QWidget(parent)
 {
   setupUi(this);
 
+  _useOpenGL = useOpenGL;
   _systemSpecifiedFlag = false;
   _intValidator = new QIntValidator(this);
   _intValidator->setBottom(0);
   _frequencyDisplayPlot = new FrequencyDisplayPlot(FrequencyPlotDisplayFrame);
   _waterfallDisplayPlot = new WaterfallDisplayPlot(WaterfallPlotDisplayFrame);
-  _waterfall3DDisplayPlot = new Waterfall3DDisplayPlot(Waterfall3DPlotDisplayFrame);
+
+  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
+    _waterfall3DDisplayPlot = new Waterfall3DDisplayPlot(Waterfall3DPlotDisplayFrame);
+  }
+
   _timeDomainDisplayPlot = new TimeDomainDisplayPlot(TimeDomainDisplayFrame);
   _constellationDisplayPlot = new ConstellationDisplayPlot(ConstellationDisplayFrame);
   _numRealDataPoints = 1024;
@@ -34,12 +39,14 @@ SpectrumDisplayForm::SpectrumDisplayForm(QWidget* parent)
   WaterfallMinimumIntensityWheel->setTickCnt(50);
   WaterfallMinimumIntensityWheel->setValue(-200);
   
-  Waterfall3DMaximumIntensityWheel->setRange(-200, 0);
-  Waterfall3DMaximumIntensityWheel->setTickCnt(50);
-  Waterfall3DMinimumIntensityWheel->setRange(-200, 0);
-  Waterfall3DMinimumIntensityWheel->setTickCnt(50);
-  Waterfall3DMinimumIntensityWheel->setValue(-200);
-  
+  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
+    Waterfall3DMaximumIntensityWheel->setRange(-200, 0);
+    Waterfall3DMaximumIntensityWheel->setTickCnt(50);
+    Waterfall3DMinimumIntensityWheel->setRange(-200, 0);
+    Waterfall3DMinimumIntensityWheel->setTickCnt(50);
+    Waterfall3DMinimumIntensityWheel->setValue(-200);
+  }
+
   _peakFrequency = 0;
   _peakAmplitude = -HUGE_VAL;
   
@@ -203,10 +210,12 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
 					   timePerFFT, dataTimestamp, 
 					   spectrumUpdateEvent->getDroppedFFTFrames());
       }
-      if( _openGLWaterfall3DFlag == 1 && (tabindex == d_plot_waterfall3d)) {
-	_waterfall3DDisplayPlot->PlotNewData(_realFFTDataPoints, numFFTDataPoints, 
-					     timePerFFT, dataTimestamp, 
-					     spectrumUpdateEvent->getDroppedFFTFrames());
+      if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
+	if( _openGLWaterfall3DFlag == 1 && (tabindex == d_plot_waterfall3d)) {
+	  _waterfall3DDisplayPlot->PlotNewData(_realFFTDataPoints, numFFTDataPoints, 
+					       timePerFFT, dataTimestamp, 
+					       spectrumUpdateEvent->getDroppedFFTFrames());
+	}
       }
     }
 
@@ -281,27 +290,29 @@ SpectrumDisplayForm::resizeEvent( QResizeEvent *e )
   WaterfallAutoScaleBtn->move(WaterfallAutoScaleBtn->x(),
 			      e->size().height()-115);
   
-  Waterfall3DPlotDisplayFrame->resize(e->size().width()-4,
-				      e->size().height()-140);
-  _waterfall3DDisplayPlot->resize( Waterfall3DPlotDisplayFrame->width()-4,
-				   e->size().height()-140);
-  
-  Waterfall3DMaximumIntensityLabel->move(width() - 5 -
-					 Waterfall3DMaximumIntensityLabel->width(),
-					 Waterfall3DMaximumIntensityLabel->y());
-  Waterfall3DMaximumIntensityWheel->resize(Waterfall3DMaximumIntensityLabel->x() - 5 -
-					   Waterfall3DMaximumIntensityWheel->x(),
-					   Waterfall3DMaximumIntensityWheel->height());
-  Waterfall3DMinimumIntensityLabel->move(width() - 5 -
-					 Waterfall3DMinimumIntensityLabel->width(),
-					 height() - 115);
-  Waterfall3DMinimumIntensityWheel->resize(Waterfall3DMinimumIntensityLabel->x() - 5 -
-					   Waterfall3DMinimumIntensityWheel->x(),
-					   Waterfall3DMaximumIntensityWheel->height());
-  Waterfall3DMinimumIntensityWheel->move(Waterfall3DMinimumIntensityWheel->x(),
-					 height() - 115);
-  Waterfall3DAutoScaleBtn->move(WaterfallAutoScaleBtn->x(),
-				e->size().height()-115);
+  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
+    Waterfall3DPlotDisplayFrame->resize(e->size().width()-4,
+					e->size().height()-140);
+    _waterfall3DDisplayPlot->resize( Waterfall3DPlotDisplayFrame->width()-4,
+				     e->size().height()-140);
+
+    Waterfall3DMaximumIntensityLabel->move(width() - 5 -
+					   Waterfall3DMaximumIntensityLabel->width(),
+					   Waterfall3DMaximumIntensityLabel->y());
+    Waterfall3DMaximumIntensityWheel->resize(Waterfall3DMaximumIntensityLabel->x() - 5 -
+					     Waterfall3DMaximumIntensityWheel->x(),
+					     Waterfall3DMaximumIntensityWheel->height());
+    Waterfall3DMinimumIntensityLabel->move(width() - 5 -
+					   Waterfall3DMinimumIntensityLabel->width(),
+					   height() - 115);
+    Waterfall3DMinimumIntensityWheel->resize(Waterfall3DMinimumIntensityLabel->x() - 5 -
+					     Waterfall3DMinimumIntensityWheel->x(),
+					     Waterfall3DMaximumIntensityWheel->height());
+    Waterfall3DMinimumIntensityWheel->move(Waterfall3DMinimumIntensityWheel->x(),
+					   height() - 115);
+    Waterfall3DAutoScaleBtn->move(WaterfallAutoScaleBtn->x(),
+				  e->size().height()-115);
+  }
   
   TimeDomainDisplayFrame->resize(e->size().width()-4,
 				 e->size().height()-140);
@@ -340,11 +351,11 @@ SpectrumDisplayForm::customEvent( QEvent * e)
     waterfallMinimumIntensityChangedCB(WaterfallMinimumIntensityWheel->value());
     waterfallMaximumIntensityChangedCB(WaterfallMaximumIntensityWheel->value());
 
-    waterfall3DMinimumIntensityChangedCB(Waterfall3DMinimumIntensityWheel->value());
-    waterfall3DMaximumIntensityChangedCB(Waterfall3DMaximumIntensityWheel->value());
-
     // If the video card doesn't support OpenGL then don't display the 3D Waterfall
-    if(QGLFormat::hasOpenGL()){
+    if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
+      waterfall3DMinimumIntensityChangedCB(Waterfall3DMinimumIntensityWheel->value());
+      waterfall3DMaximumIntensityChangedCB(Waterfall3DMaximumIntensityWheel->value());
+      
       // Check for Hardware Acceleration of the OpenGL
       if(!_waterfall3DDisplayPlot->format().directRendering()){
 	// Only ask this once while the program is running...
@@ -485,11 +496,13 @@ SpectrumDisplayForm::SetFrequencyRange(const double newStartFrequency,
 					     newCenterFrequency,
 					     UseRFFrequenciesCheckBox->isChecked(),
 					     units, strunits[iunit]);
-    _waterfall3DDisplayPlot->SetFrequencyRange(newStartFrequency,
-					       newStopFrequency,
-					       newCenterFrequency,
-					       UseRFFrequenciesCheckBox->isChecked(),
-					       units, strunits[iunit]);
+    if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
+      _waterfall3DDisplayPlot->SetFrequencyRange(newStartFrequency,
+						 newStopFrequency,
+						 newCenterFrequency,
+						 UseRFFrequenciesCheckBox->isChecked(),
+						 units, strunits[iunit]);
+    }
   }
 }
 
@@ -578,7 +591,9 @@ SpectrumDisplayForm::Reset()
   AverageDataReset();
 
   _waterfallDisplayPlot->Reset();
-  _waterfall3DDisplayPlot->Reset();
+  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
+    _waterfall3DDisplayPlot->Reset();
+  }
 }
 
 
@@ -661,30 +676,34 @@ SpectrumDisplayForm::waterfallMinimumIntensityChangedCB( double newValue )
 void
 SpectrumDisplayForm::waterfall3DMaximumIntensityChangedCB( double newValue )
 {
-  if(newValue > Waterfall3DMinimumIntensityWheel->value()){
-    Waterfall3DMaximumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
+  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
+    if(newValue > Waterfall3DMinimumIntensityWheel->value()){
+      Waterfall3DMaximumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
+    }
+    else{
+      Waterfall3DMaximumIntensityWheel->setValue(Waterfall3DMinimumIntensityWheel->value());
+    }
+    
+    _waterfall3DDisplayPlot->SetIntensityRange(Waterfall3DMinimumIntensityWheel->value(),
+					       Waterfall3DMaximumIntensityWheel->value());
   }
-  else{
-    Waterfall3DMaximumIntensityWheel->setValue(Waterfall3DMinimumIntensityWheel->value());
-  }
-
-  _waterfall3DDisplayPlot->SetIntensityRange(Waterfall3DMinimumIntensityWheel->value(),
-					     Waterfall3DMaximumIntensityWheel->value());
 }
 
 
 void
 SpectrumDisplayForm::waterfall3DMinimumIntensityChangedCB( double newValue )
 {
-  if(newValue < Waterfall3DMaximumIntensityWheel->value()){
-    Waterfall3DMinimumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
+  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
+    if(newValue < Waterfall3DMaximumIntensityWheel->value()){
+      Waterfall3DMinimumIntensityLabel->setText(QString("%1 dB").arg(newValue, 0, 'f', 0));
+    }
+    else{
+      Waterfall3DMinimumIntensityWheel->setValue(Waterfall3DMaximumIntensityWheel->value());
+    }
+    
+    _waterfall3DDisplayPlot->SetIntensityRange(Waterfall3DMinimumIntensityWheel->value(),
+					       Waterfall3DMaximumIntensityWheel->value());
   }
-  else{
-    Waterfall3DMinimumIntensityWheel->setValue(Waterfall3DMaximumIntensityWheel->value());
-  }
-
-  _waterfall3DDisplayPlot->SetIntensityRange(Waterfall3DMinimumIntensityWheel->value(),
-					     Waterfall3DMaximumIntensityWheel->value());
 }
 
 
@@ -716,17 +735,19 @@ SpectrumDisplayForm::WaterfallAutoScaleBtnCB()
 void
 SpectrumDisplayForm::Waterfall3DAutoScaleBtnCB()
 {
-  double minimumIntensity = _noiseFloorAmplitude - 5;
-  if(minimumIntensity < Waterfall3DMinimumIntensityWheel->minValue()){
-    minimumIntensity = Waterfall3DMinimumIntensityWheel->minValue();
+  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
+    double minimumIntensity = _noiseFloorAmplitude - 5;
+    if(minimumIntensity < Waterfall3DMinimumIntensityWheel->minValue()){
+      minimumIntensity = Waterfall3DMinimumIntensityWheel->minValue();
+    }
+    Waterfall3DMinimumIntensityWheel->setValue(minimumIntensity);
+    double maximumIntensity = _peakAmplitude + 10;
+    if(maximumIntensity > Waterfall3DMaximumIntensityWheel->maxValue()){
+      maximumIntensity = Waterfall3DMaximumIntensityWheel->maxValue();
+    }
+    Waterfall3DMaximumIntensityWheel->setValue(maximumIntensity);
+    waterfallMaximumIntensityChangedCB(maximumIntensity);
   }
-  Waterfall3DMinimumIntensityWheel->setValue(minimumIntensity);
-  double maximumIntensity = _peakAmplitude + 10;
-  if(maximumIntensity > Waterfall3DMaximumIntensityWheel->maxValue()){
-    maximumIntensity = Waterfall3DMaximumIntensityWheel->maxValue();
-  }
-  Waterfall3DMaximumIntensityWheel->setValue(maximumIntensity);
-  waterfallMaximumIntensityChangedCB(maximumIntensity);
 }
 
 void
@@ -758,27 +779,29 @@ SpectrumDisplayForm::WaterfallIntensityColorTypeChanged( int newType )
 void
 SpectrumDisplayForm::Waterfall3DIntensityColorTypeChanged( int newType )
 {
-  QColor lowIntensityColor;
-  QColor highIntensityColor;
-  if(newType == Waterfall3DDisplayPlot::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED){
-    // Select the Low Intensity Color
-    lowIntensityColor = _waterfallDisplayPlot->GetUserDefinedLowIntensityColor();
-    if(!lowIntensityColor.isValid()){
-      lowIntensityColor = Qt::black;
+  if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
+    QColor lowIntensityColor;
+    QColor highIntensityColor;
+    if(newType == Waterfall3DDisplayPlot::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED){
+      // Select the Low Intensity Color
+      lowIntensityColor = _waterfallDisplayPlot->GetUserDefinedLowIntensityColor();
+      if(!lowIntensityColor.isValid()){
+	lowIntensityColor = Qt::black;
+      }
+      QMessageBox::information(this, "Low Intensity Color Selection", "In the next window, select the low intensity color for the waterfall display",  QMessageBox::Ok);
+      lowIntensityColor = QColorDialog::getColor(lowIntensityColor, this);
+      
+      // Select the High Intensity Color
+      highIntensityColor = _waterfallDisplayPlot->GetUserDefinedHighIntensityColor();
+      if(!highIntensityColor.isValid()){
+	highIntensityColor = Qt::white;
+      }
+      QMessageBox::information(this, "High Intensity Color Selection", "In the next window, select the high intensity color for the waterfall display",  QMessageBox::Ok);
+      highIntensityColor = QColorDialog::getColor(highIntensityColor, this);
     }
-    QMessageBox::information(this, "Low Intensity Color Selection", "In the next window, select the low intensity color for the waterfall display",  QMessageBox::Ok);
-    lowIntensityColor = QColorDialog::getColor(lowIntensityColor, this);
-    
-    // Select the High Intensity Color
-    highIntensityColor = _waterfallDisplayPlot->GetUserDefinedHighIntensityColor();
-    if(!highIntensityColor.isValid()){
-      highIntensityColor = Qt::white;
-    }
-    QMessageBox::information(this, "High Intensity Color Selection", "In the next window, select the high intensity color for the waterfall display",  QMessageBox::Ok);
-    highIntensityColor = QColorDialog::getColor(highIntensityColor, this);
+    _waterfall3DDisplayPlot->SetIntensityColorMapType(newType, lowIntensityColor,
+						      highIntensityColor);
   }
-  _waterfall3DDisplayPlot->SetIntensityColorMapType(newType, lowIntensityColor,
-						    highIntensityColor);
 }
 
 
@@ -816,9 +839,11 @@ void
 SpectrumDisplayForm::ToggleTabWaterfall3D(const bool state)
 {
   if(state == true) {
-    if(d_plot_waterfall3d == -1) {
-      SpectrumTypeTab->addTab(Waterfall3DPage, "3D Waterfall Display");
-      d_plot_waterfall3d = SpectrumTypeTab->count()-1;
+    if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
+      if(d_plot_waterfall3d == -1) {
+	SpectrumTypeTab->addTab(Waterfall3DPage, "3D Waterfall Display");
+	d_plot_waterfall3d = SpectrumTypeTab->count()-1;
+      }
     }
   }
   else {

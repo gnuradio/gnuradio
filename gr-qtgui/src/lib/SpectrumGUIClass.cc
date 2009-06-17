@@ -62,7 +62,8 @@ void
 SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
 				     const bool frequency, const bool waterfall,
 				     const bool waterfall3d, const bool time,
-				     const bool constellation)
+				     const bool constellation,
+				     const bool use_openGL)
 {
   //_windowStateLock->Lock();
 
@@ -81,7 +82,7 @@ SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
     }
     
     // Called from the Event Thread
-    _spectrumDisplayForm = new SpectrumDisplayForm(parent);
+    _spectrumDisplayForm = new SpectrumDisplayForm(use_openGL, parent);
     
     // Toggle Windows on/off
     _spectrumDisplayForm->ToggleTabFrequency(frequency);

@@ -37,6 +37,7 @@ qtgui_make_sink_c (int fftsize, int wintype,
 		   bool plotfreq, bool plotwaterfall,
 		   bool plotwaterfall3d, bool plottime,
 		   bool plotconst,
+		   bool use_openGL,
 		   QWidget *parent)
 {
   return qtgui_sink_c_sptr (new qtgui_sink_c (fftsize, wintype,
@@ -44,6 +45,7 @@ qtgui_make_sink_c (int fftsize, int wintype,
 					      plotfreq, plotwaterfall,
 					      plotwaterfall3d, plottime,
 					      plotconst,
+					      use_openGL,
 					      parent));
 }
 
@@ -53,6 +55,7 @@ qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
 			    bool plotfreq, bool plotwaterfall,
 			    bool plotwaterfall3d, bool plottime,
 			    bool plotconst,
+			    bool use_openGL,
 			    QWidget *parent)
   : gr_block ("sink_c",
 	      gr_make_io_signature (1, -1, sizeof(gr_complex)),
@@ -82,7 +85,7 @@ qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
 
   buildwindow();
 
-  initialize();
+  initialize(use_openGL);
 }
 
 qtgui_sink_c::~qtgui_sink_c()
@@ -105,7 +108,7 @@ void qtgui_sink_c::unlock()
 
 
 void
-qtgui_sink_c::initialize()
+qtgui_sink_c::initialize(const bool opengl)
 {
   if(qApp != NULL) {
     d_qApplication = qApp;
@@ -127,7 +130,8 @@ qtgui_sink_c::initialize()
   d_main_gui->OpenSpectrumWindow(d_parent, 
 				 d_plotfreq, d_plotwaterfall,
 				 d_plotwaterfall3d, d_plottime,
-				 d_plotconst);
+				 d_plotconst,
+				 opengl);
 
   d_object = new qtgui_obj(d_qApplication);
   qApp->postEvent(d_object, new qtgui_event(&d_pmutex));

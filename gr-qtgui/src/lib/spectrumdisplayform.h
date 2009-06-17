@@ -20,7 +20,7 @@ class SpectrumDisplayForm : public QWidget, public Ui::SpectrumDisplayForm
   Q_OBJECT
 
   public:
-  SpectrumDisplayForm(QWidget* parent = 0);
+  SpectrumDisplayForm(bool useOpenGL = true, QWidget* parent = 0);
   ~SpectrumDisplayForm();
   
   void setSystem( SpectrumGUIClass * newSystem, const uint64_t numFFTDataPoints,
@@ -75,8 +75,9 @@ private slots:
 protected:
 
 private:
-    void _AverageHistory( const double * newBuffer );
+  void _AverageHistory( const double * newBuffer );
 
+  bool _useOpenGL;
   int _historyEntryCount;
   int _historyEntry;
   std::vector<double*>* _historyVector;
