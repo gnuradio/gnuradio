@@ -56,13 +56,19 @@ class my_top_block(gr.top_block):
 
         # Set up USRP source
         self._setup_usrp_source(options)
+
+        # copy the final answers back into options for use by demodulator
+        options.samples_per_symbol = self._samples_per_symbol
+        options.bitrate = self._bitrate
+        options.decim = self._decim
+
         ok = self.set_freq(self._rx_freq)
         if not ok:
             print "Failed to set Rx frequency to %s" % (eng_notation.num_to_str(self._rx_freq))
             raise ValueError, eng_notation.num_to_str(self._rx_freq)
 
         self.set_gain(options.rx_gain)
-        #self.set_auto_tr(True)                 # enable Auto Transmit/Receive switching
+        self.set_auto_tr(True)                 # enable Auto Transmit/Receive switching
 
         # Set up receive path
         self.rxpath = receive_path(demodulator, rx_callback, options) 
@@ -108,7 +114,7 @@ class my_top_block(gr.top_block):
         return self.u.set_gain(gain)
 
     def set_auto_tr(self, enable):
-        return self.subdev.set_auto_tr(enable)
+        return self.u.set_auto_tr(enable)
 
     def decim(self):
         return self._decim

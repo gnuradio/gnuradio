@@ -32,6 +32,8 @@ import sys
 
 # from current dir
 from receive_path import receive_path
+from pick_bitrate import pick_rx_bitrate
+import usrp_options
 
 try:
     from gnuradio.qtgui import qtgui
@@ -174,6 +176,9 @@ class my_top_block(gr.top_block):
         self._rx_gain            = options.rx_gain         # receiver's gain
         self._rx_subdev_spec     = options.rx_subdev_spec  # daughterboard to use
         self._decim              = options.decim           # Decimating rate for the USRP (prelim)
+        self._bitrate            = options.bitrate
+        self._samples_per_symbol = options.samples_per_symbol
+        self._demod_class        = demodulator
         self.gui_on              = options.gui
                
         if self._rx_freq is None:
@@ -181,17 +186,19 @@ class my_top_block(gr.top_block):
             raise SystemExit
 
         # Set up USRP source
-        self._setup_usrp_source()
+        self._setup_usrp_source(options)
+
+        # copy the final answers back into options for use by demodulator
+        options.samples_per_symbol = self._samples_per_symbol
+        options.bitrate = self._bitrate
+        options.decim = self._decim
+
         ok = self.set_freq(self._rx_freq)
         if not ok:
             print "Failed to set Rx frequency to %s" % (eng_notation.num_to_str(self._rx_freq))
             raise ValueError, eng_notation.num_to_str(self._rx_freq)
-        g = self.subdev.gain_range()
-        if options.show_rx_gain_range:
-            print "Rx Gain Range: minimum = %g, maximum = %g, step size = %g" \
-                  % (g[0], g[1], g[2])
+
         self.set_gain(options.rx_gain)
-        self.set_auto_tr(True)                 # enable Auto Transmit/Receive switching
 
         # Set up receive path
         self.rxpath = receive_path(demodulator, rx_callback, options) 
@@ -208,13 +215,14 @@ class my_top_block(gr.top_block):
             
             self.snk_rxin = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
                                          -1/2, 1/2,
-                                         "Received", True, True, False, True, True)
+                                         "Received", True, True, False, True, True, False)
             self.snk_rx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
                                        -1/2, 1/2,
-                                       "Post-Synchronizer", True, True, False, True, True)
+                                       "Post-Synchronizer", True, True, False, True, True, False)
 
-            self.snk_rxin.set_frequency_axis(-60, 20)
+            self.snk_rxin.set_frequency_axis(-60, 60)
             self.snk_rx.set_frequency_axis(-60, 20)
+            self.snk_rxin.set_time_domain_axis(-2000,2000)
             
             # Connect to the QT sinks
             # FIXME: make better exposure to receiver from rxpath
@@ -231,18 +239,19 @@ class my_top_block(gr.top_block):
             self.main_box = dialog_box(pyRxIn, pyRx, self)
             self.main_box.show()
 
-    def _setup_usrp_source(self):
-        self.u = usrp.source_c ()
+    def _setup_usrp_source(self, options):
+        self.u = usrp_options.create_usrp_source(options)
         adc_rate = self.u.adc_rate()
 
-        self.u.set_decim_rate(self._decim)
+        self.u.set_decim(self._decim)
 
-        # determine the daughterboard subdevice we're using
-        if self._rx_subdev_spec is None:
-            self._rx_subdev_spec = usrp.pick_rx_subdevice(self.u)
-        self.subdev = usrp.selected_subdev(self.u, self._rx_subdev_spec)
+        (self._bitrate, self._samples_per_symbol, self._decim) = \
+                        pick_rx_bitrate(self._bitrate, self._demod_class.bits_per_symbol(), \
+                                        self._samples_per_symbol, self._decim, adc_rate,  \
+                                        self.u.get_decim_rates())
 
-        self.u.set_mux(usrp.determine_rx_mux_value(self.u, self._rx_subdev_spec))
+        self.u.set_decim(self._decim)
+        self.set_auto_tr(True)                 # enable Auto Transmit/Receive switching
 
     def set_freq(self, target_freq):
         """
@@ -256,29 +265,24 @@ class my_top_block(gr.top_block):
         the result of that operation and our target_frequency to
         determine the value for the digital up converter.
         """
-        r = self.u.tune(0, self.subdev, target_freq)
-        if r:
-            self._rx_freq = target_freq
-            return True
-
-        return False
+        return self.u.set_center_freq(target_freq)
 
     def set_gain(self, gain):
         """
         Sets the analog gain in the USRP
         """
         if gain is None:
-            r = self.subdev.gain_range()
+            r = self.u.gain_range()
             gain = (r[0] + r[1])/2               # set gain to midpoint
         self._rx_gain = gain
-        return self.subdev.set_gain(self._rx_gain)
+        return self.u.set_gain(self._rx_gain)
 
     def set_auto_tr(self, enable):
-        return self.subdev.set_auto_tr(enable)
+        return self.u.set_auto_tr(enable)
 
     def set_decim(self, decim):
         self._decim = decim
-        self.u.set_decim_rate(self._decim)
+        self.u.set_decim(self._decim)
 
     def frequency(self):
         return self._rx_freq
@@ -393,6 +397,7 @@ def main():
 
     my_top_block.add_options(parser, expert_grp)
     receive_path.add_options(parser, expert_grp)
+    usrp_options.add_rx_options(parser)
 
     for mod in demods.values():
         mod.add_options(expert_grp)
