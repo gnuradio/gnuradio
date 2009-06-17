@@ -30,6 +30,8 @@ import random, time, struct, sys
 
 # from current dir
 from transmit_path import transmit_path
+from pick_bitrate import pick_tx_bitrate
+import usrp_options
 
 #import os 
 #print os.getpid()
@@ -40,37 +42,22 @@ class my_top_block(gr.top_block):
         gr.top_block.__init__(self)
 
         self._tx_freq            = options.tx_freq         # tranmitter's center frequency
-        self._tx_subdev_spec     = options.tx_subdev_spec  # daughterboard to use
         self._interp             = options.interp          # interpolating rate for the USRP (prelim)
+        self._bitrate            = options.bitrate
+        self._samples_per_symbol = options.samples_per_symbol
+        self._modulator_class    = modulator
 
         if self._tx_freq is None:
             sys.stderr.write("-f FREQ or --freq FREQ or --tx-freq FREQ must be specified\n")
             raise SystemExit
 
         # Set up USRP sink; also adjusts interp, and bitrate
-        self._setup_usrp_sink()
+        self._setup_usrp_sink(options)
 
         # copy the final answers back into options for use by modulator
-        #options.bitrate = self._bitrate
-
-        self.txpath = transmit_path(modulator, options)
-
-        self.connect(self.txpath, self.u)
-
-    def _setup_usrp_sink(self):
-        """
-        Creates a USRP sink, determines the settings for best bitrate,
-        and attaches to the transmitter's subdevice.
-        """
-        self.u = usrp.sink_c()
-
-        self.u.set_interp_rate(self._interp)
-
-        # determine the daughterboard subdevice we're using
-        if self._tx_subdev_spec is None:
-            self._tx_subdev_spec = usrp.pick_tx_subdevice(self.u)
-        self.u.set_mux(usrp.determine_tx_mux_value(self.u, self._tx_subdev_spec))
-        self.subdev = usrp.selected_subdev(self.u, self._tx_subdev_spec)
+        options.samples_per_symbol = self._samples_per_symbol
+        options.bitrate = self._bitrate
+        options.interp = self._interp
 
         # Set center frequency of USRP
         ok = self.set_freq(self._tx_freq)
@@ -80,10 +67,27 @@ class my_top_block(gr.top_block):
 
         # Set the USRP for maximum transmit gain
         # (Note that on the RFX cards this is a nop.)
-        self.set_gain(self.subdev.gain_range()[1])
+        self.set_gain(self.u.gain_range()[1])
 
-        # enable Auto Transmit/Receive switching
-        self.set_auto_tr(True)
+        self.txpath = transmit_path(modulator, options)
+
+        self.connect(self.txpath, self.u)
+
+    def _setup_usrp_sink(self, options):
+        """
+        Creates a USRP sink, determines the settings for best bitrate,
+        and attaches to the transmitter's subdevice.
+        """
+        self.u = usrp_options.create_usrp_sink(options)
+        dac_rate = self.u.dac_rate()
+
+        (self._bitrate, self._samples_per_symbol, self._interp) = \
+                        pick_tx_bitrate(self._bitrate, self._modulator_class.bits_per_symbol(), \
+                                        self._samples_per_symbol, self._interp, dac_rate, \
+                                        self.u.get_interp_rates())
+
+        self.u.set_interp(self._interp)
+        self.set_auto_tr(True)                 # enable Auto Transmit/Receive switching
 
     def set_freq(self, target_freq):
         """
@@ -97,24 +101,20 @@ class my_top_block(gr.top_block):
         the result of that operation and our target_frequency to
         determine the value for the digital up converter.
         """
-        r = self.u.tune(self.subdev.which(), self.subdev, target_freq)
-        if r:
-            return True
+        return self.u.set_center_freq(target_freq)
 
-        return False
-        
     def set_gain(self, gain):
         """
         Sets the analog gain in the USRP
         """
         self.gain = gain
-        self.subdev.set_gain(gain)
+        self.u.set_gain(gain)
 
     def set_auto_tr(self, enable):
         """
         Turns on auto transmit/receive of USRP daughterboard (if exits; else ignored)
         """
-        return self.subdev.set_auto_tr(enable)
+        return self.u.set_auto_tr(enable)
         
     def interp(self):
         return self._interp
@@ -193,6 +193,7 @@ def main():
 
     my_top_block.add_options(parser, expert_grp)
     transmit_path.add_options(parser, expert_grp)
+    usrp_options.add_tx_options(parser)
 
     for mod in mods.values():
         mod.add_options(expert_grp)
