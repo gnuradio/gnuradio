@@ -11,7 +11,7 @@ try:
     from qt_digital_window import Ui_DigitalWindow
 except ImportError:
     print "Error: could not find qt_digital_window.py:"
-    print "\t\"pyuic4 qt_digital_window.ui -o qt_digital_window.py\""
+    print "\t\"Please run: pyuic4 qt_digital_window.ui -o qt_digital_window.py\""
     sys.exit(1)
 
 class dialog_box(QtGui.QMainWindow):
