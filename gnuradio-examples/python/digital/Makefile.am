@@ -37,6 +37,10 @@ dist_ourdata_SCRIPTS =		\
 	benchmark_tx.py		\
 	benchmark_qt_rx.py	\
 	benchmark_qt_loopback.py\
+	qt_digital_window.ui	\
+	qt_digital_window.py	\
+	qt_rx_window.ui		\
+	qt_rx_window.py		\
 	gen_whitener.py		\
 	rx_voice.py		\
 	run_length.py		\

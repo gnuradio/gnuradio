@@ -235,7 +235,7 @@ class my_top_block(gr.top_block):
                                            -1/2, 1/2,
                                            "Rx", True, True, False, True, True)
 
-                self.snk_tx.set_frequency_axis(0, 80)
+                self.snk_tx.set_frequency_axis(-80, 0)
                 self.snk_rx.set_frequency_axis(-60, 20)
             
                 # Connect to the QT sinks
