@@ -113,6 +113,14 @@ clocks_mimo_config(int flags)
     clocks_enable_clkexp_out(false,0); 
 }
 
+bool 
+clocks_lock_detect()
+{
+  if(pic_regs->pending & PIC_CLKSTATUS)
+    return true;
+  return false;
+}
+
 int inline
 clocks_gen_div(int divisor)
 {

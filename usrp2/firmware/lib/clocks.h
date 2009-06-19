@@ -44,6 +44,11 @@ void clocks_init(void);
 void clocks_mimo_config(int flags);
 
 /*!
+ * \brief Lock Detect -- Return True if our PLL is locked
+ */
+bool clocks_lock_detect();
+
+/*!
  * \brief Enable or disable test clock (extra clock signal)
  */
 void clocks_enable_test_clk(bool enable, int divisor);
