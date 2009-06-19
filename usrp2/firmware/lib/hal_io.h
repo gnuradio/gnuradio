@@ -92,6 +92,7 @@ int  hal_gpio_read(int bank);
  */
 
 void hal_set_leds(int value, int mask);
+void hal_set_led_src(int value, int mask);
 void hal_toggle_leds(int mask);
 
 /*

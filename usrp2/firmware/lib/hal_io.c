@@ -160,6 +160,7 @@ hal_gpio_read(int bank)
  */
 
 static unsigned long leds_shadow = 0;
+static unsigned long led_src_shadow = 0;
 
 void 
 hal_set_leds(int value, int mask)
@@ -167,6 +168,16 @@ hal_set_leds(int value, int mask)
   int ei = hal_disable_ints();
   leds_shadow = (leds_shadow & ~mask) | (value & mask);
   output_regs->leds = leds_shadow;
+  hal_restore_ints(ei);
+}
+
+// Allow hardware control over leds
+void 
+hal_set_led_src(int value, int mask)
+{
+  int ei = hal_disable_ints();
+  led_src_shadow = (led_src_shadow & ~mask) | (value & mask);
+  output_regs->led_src = led_src_shadow;
   hal_restore_ints(ei);
 }
 
