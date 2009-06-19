@@ -39,6 +39,7 @@
 #include <usrp2_i2c_addr.h>
 #include <clocks.h>
 #include "sd.h"
+#include "mdelay.h"
 
 #define HW_REV_MAJOR 4
 #define HW_REV_MINOR 0
@@ -149,5 +150,13 @@ main(void)
 
   print_mac_addr(ethernet_mac_addr()->addr);
   newline();
+
+  clocks_mimo_config(MC_WE_LOCK_TO_SMA);
+
+  while (!clocks_lock_detect()) {
+    puts("No Lock");
+    mdelay(1000);
+  }
+  puts("Clock Locked\n");
 
 }
