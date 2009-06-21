@@ -123,9 +123,21 @@ gr_mpsk_receiver_cc::forecast(int noutput_items, gr_vector_int &ninput_items_req
 float
 gr_mpsk_receiver_cc::phase_error_detector_qpsk(gr_complex sample) const
 {
-  float phase_error = -((sample.real()>0 ? 1.0 : -1.0) * sample.imag() -
-			(sample.imag()>0 ? 1.0 : -1.0) * sample.real());
-  return -phase_error;
+  float phase_error = 0;
+  if(fabsf(sample.real()) > fabsf(sample.imag())) {
+    if(sample.real() > 0)
+      phase_error = -sample.imag();
+    else
+      phase_error = sample.imag();
+  }
+  else {
+    if(sample.imag() > 0)
+      phase_error = sample.real();
+    else
+      phase_error = -sample.real();
+  }
+  
+  return phase_error;
 }
 
 float
