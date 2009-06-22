@@ -171,7 +171,7 @@ hal_set_leds(int value, int mask)
   hal_restore_ints(ei);
 }
 
-// Allow hardware control over leds
+// Allow hardware control over leds.  1 = hardware, 0 = software
 void 
 hal_set_led_src(int value, int mask)
 {
