@@ -28,6 +28,7 @@
 #include <gr_io_signature.h>
 #include <usrp_standard.h>
 #include <assert.h>
+#include <cstdio>
 
 static const int OUTPUT_MULTIPLE_BYTES = 4 * 1024;
 

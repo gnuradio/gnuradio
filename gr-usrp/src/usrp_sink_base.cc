@@ -28,6 +28,7 @@
 #include <gr_io_signature.h>
 #include <usrp_standard.h>
 #include <assert.h>
+#include <cstdio>
 
 static const int OUTPUT_MULTIPLE_SAMPLES = 128;		// DON'T CHANGE THIS VALUE!
 

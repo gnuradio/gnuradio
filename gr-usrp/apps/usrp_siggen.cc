@@ -25,6 +25,7 @@
 #include <gr_noise_type.h>
 #include <stdexcept>
 #include <iostream>
+#include <cstdio>
 #include <boost/program_options.hpp>
 
 namespace po = boost::program_options;
