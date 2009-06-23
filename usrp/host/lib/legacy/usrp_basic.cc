@@ -37,6 +37,7 @@
 #include <math.h>
 #include <ad9862.h>
 #include <string.h>
+#include <cstdio>
 
 using namespace ad9862;
 

@@ -37,6 +37,7 @@
 #include <algorithm>
 #include <errno.h>
 #include <string.h>
+#include <cstdio>
 
 #define MINIMIZE_TX_BUFFERING 1		// must be defined to 0 or 1
 

@@ -31,6 +31,7 @@
 #include <db_wbx.h>
 #include <db_dtt754.h>
 #include <db_dtt768.h>
+#include <cstdio>
 
 std::vector<db_base_sptr>
 instantiate_dbs(int dbid, usrp_basic_sptr usrp, int which_side)

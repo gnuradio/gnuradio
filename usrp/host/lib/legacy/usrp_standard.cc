@@ -29,6 +29,7 @@
 #include <assert.h>
 #include <math.h>
 #include <ad9862.h>
+#include <cstdio>
 
 
 static const int OLD_CAPS_VAL = 0xaa55ff77;

@@ -23,6 +23,7 @@
 #include <cmath>
 #include <boost/thread.hpp>
 #include <boost/weak_ptr.hpp>
+#include <cstdio>
 
 #if 0
 #define LO_OFFSET 4.25e6

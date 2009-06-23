@@ -21,6 +21,7 @@
 #include <db_dbs_rx.h>
 #include <db_base_impl.h>
 #include <cmath>
+#include <cstdio>
 
 
 /*****************************************************************************/
