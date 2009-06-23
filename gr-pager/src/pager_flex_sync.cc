@@ -29,6 +29,7 @@
 #include <pageri_util.h>
 #include <gr_io_signature.h>
 #include <gr_count_bits.h>
+#include <cstdio>
 
 pager_flex_sync_sptr pager_make_flex_sync()
 {
