@@ -1,0 +1,5 @@
+GRC could be used to generate c++ based flowgraphs:
+
+* A few base and gui classes would be overridden.
+* Block info could be extracted from the doxygen xml.
+* New flowgraph templates would be designed.

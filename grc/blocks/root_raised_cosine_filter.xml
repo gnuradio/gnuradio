@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Root Raised Cosine Filter: Custom wrapper
+###################################################
+ -->
+<block>
+	<name>Root Raised Cosine Filter</name>
+	<key>root_raised_cosine_filter</key>
+	<import>from gnuradio import gr</import>
+	<import>from gnuradio.gr import firdes</import>
+	<make>gr.$(type)(#if str($type).startswith('interp') then $interp else $decim#, firdes.root_raised_cosine(
+	$gain, $samp_rate, $sym_rate, $alpha, $ntaps))</make>
+	<callback>set_taps(firdes.root_raised_cosine($gain, $samp_rate, $sym_rate, $alpha, $ntaps))</callback>
+	<param>
+		<name>FIR Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex->Complex (Decimating)</name>
+			<key>fir_filter_ccf</key>
+			<opt>input:complex</opt>
+			<opt>output:complex</opt>
+		</option>
+		<option>
+			<name>Complex->Complex (Interpolating)</name>
+			<key>interp_fir_filter_ccf</key>
+			<opt>input:complex</opt>
+			<opt>output:complex</opt>
+		</option>
+		<option>
+			<name>Float->Float (Decimating)</name>
+			<key>fir_filter_fff</key>
+			<opt>input:float</opt>
+			<opt>output:float</opt>
+		</option>
+		<option>
+			<name>Float->Float (Interpolating)</name>
+			<key>interp_fir_filter_fff</key>
+			<opt>input:float</opt>
+			<opt>output:float</opt>
+		</option>
+	</param>
+	<param>
+		<name>Decimation</name>
+		<key>decim</key>
+		<value>1</value>
+		<type>int</type>
+		<hide>#if str($type).startswith('interp') then 'all' else 'none'#</hide>
+	</param>
+	<param>
+		<name>Interpolation</name>
+		<key>interp</key>
+		<value>1</value>
+		<type>int</type>
+		<hide>#if str($type).startswith('interp') then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Gain</name>
+		<key>gain</key>
+		<value>1</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Sample Rate</name>
+		<key>samp_rate</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Symbol Rate</name>
+		<key>sym_rate</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<value>0.35</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Num Taps</name>
+		<key>ntaps</key>
+		<value>11*samp_rate</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type.input</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type.output</type>
+	</source>
+	<doc>
+This filter is a convenience wrapper for an fir filter and a firdes taps generating function.
+
+Sample rate in Hertz.
+	</doc>
+</block>

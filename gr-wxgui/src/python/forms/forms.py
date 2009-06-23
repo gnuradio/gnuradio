@@ -115,7 +115,6 @@ class _form_base(pubsub, wx.BoxSizer):
 		self.subscribe(INT_KEY, update)
 		self.subscribe(INT_KEY, self._translate_internal_to_external)
 		self.subscribe(EXT_KEY, self._translate_external_to_internal)
-		if self._callback: self.subscribe(EXT_KEY, self._callback)
 
 	def _translate_external_to_internal(self, external):
 		try:
@@ -134,6 +133,7 @@ class _form_base(pubsub, wx.BoxSizer):
 		except Exception, e:
 			self._err_msg(internal, e)
 			self[EXT_KEY] = self[EXT_KEY] #reset to last good setting
+		if self._callback: self._callback(self[EXT_KEY])
 
 	def _err_msg(self, value, e):
 		print >> sys.stderr, self, 'Error translating value: "%s"\n\t%s\n\t%s'%(value, e, self._converter.help())

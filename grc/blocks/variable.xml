@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Variable block: a grc variable with key, value
+###################################################
+ -->
+<block>
+	<name>Variable</name>
+	<key>variable</key>
+	<var_make>self.$(id) = $(id) = $value</var_make>
+	<make></make>
+	<callback>self.set_$(id)($value)</callback>
+	<param>
+		<name>Value</name>
+		<key>value</key>
+		<value>0</value>
+		<type>raw</type>
+	</param>
+	<doc>
+This block maps a value to a unique variable. \
+This variable block has no graphical representation.
+	</doc>
+</block>

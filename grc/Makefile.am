@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2009 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -23,13 +23,43 @@ include $(top_srcdir)/grc/Makefile.inc
 
 if PYTHON
 SUBDIRS = \
-	data \
+	base \
+	blocks \
 	examples \
-	scripts \
-	src
+	grc_gnuradio \
+	gui \
+	python \
+	scripts
 
 ## append freedesktop to the list of subdirs when xdg utils are present
 if XDG_UTILS
 SUBDIRS += freedesktop
 endif
+
+ourpythondir = $(grc_src_prefix)
+ourpython_PYTHON = __init__.py
+
+etcdir = $(gr_sysconfdir)
+dist_etc_DATA = grc.conf
+
+EXTRA_DIST = \
+	$(srcdir)/__init__.py.in \
+	$(srcdir)/grc.conf.in
+
+BUILT_SOURCES = \
+	__init__.py \
+	grc.conf
+
+__init__.py: $(srcdir)/__init__.py.in Makefile
+	sed \
+		-e 's|@VERSION[@]|$(VERSION)|g' \
+	$< > $@
+
+grc.conf: $(srcdir)/grc.conf.in Makefile
+	sed \
+		-e 's|@pythonw[@]|$(PYTHONW)|g' \
+		-e 's|@blocksdir[@]|$(grc_blocksdir)|g' \
+		-e 's|@docdir[@]|$(gr_docdir)|g' \
+	$< > $@
+
 endif

@@ -85,22 +85,28 @@ class eval_converter(abstract_converter):
 	Possible uses, set a complex number, constellation points.
 	Used in text box.
 	"""
-	def external_to_internal(self, s):
-		return str(s)
+	def __init__(self, formatter=lambda x: '%s'%(x)):
+		self._formatter = formatter
+	def external_to_internal(self, v):
+		return self._formatter(v)
 	def internal_to_external(self, s):
 		return eval(s)
 	def help(self):
 		return "Value must be evaluatable by python's eval."
 
 class str_converter(abstract_converter):
+	def __init__(self, formatter=lambda x: '%s'%(x)):
+		self._formatter = formatter
 	def external_to_internal(self, v):
-		return str(v)
+		return self._formatter(v)
 	def internal_to_external(self, s):
 		return str(s)
 
 class int_converter(abstract_converter):
+	def __init__(self, formatter=lambda x: '%d'%round(x)):
+		self._formatter = formatter
 	def external_to_internal(self, v):
-		return str(int(round(v)))
+		return self._formatter(v)
 	def internal_to_external(self, s):
 		return int(s, 0)
 	def help(self):
@@ -127,7 +133,8 @@ class slider_converter(abstract_converter):
 		self._scaler = float(maximum - minimum)/num_steps
 		self._cast = cast
 	def external_to_internal(self, v):
-		return (v - self._offset)/self._scaler
+		#slider's internal representation is an integer
+		return int(round((v - self._offset)/self._scaler))
 	def internal_to_external(self, v):
 		return self._cast(v*self._scaler + self._offset)
 	def help(self):

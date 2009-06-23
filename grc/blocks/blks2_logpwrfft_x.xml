@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Log Power FFT
+###################################################
+ -->
+<block>
+	<name>Log Power FFT</name>
+	<key>blks2_logpwrfft_x</key>
+	<import>from gnuradio import blks2</import>
+	<make>blks2.logpwrfft_$(type.fcn)(
+	sample_rate=$sample_rate,
+	fft_size=$fft_size,
+	ref_scale=$ref_scale,
+	frame_rate=$frame_rate,
+	avg_alpha=$avg_alpha,
+	average=$average,
+)</make>
+	<callback>set_sample_rate($sample_rate)</callback>
+	<callback>set_avg_alpha($avg_alpha)</callback>
+	<callback>set_average($average)</callback>
+	<param>
+		<name>Input Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>fcn:c</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>fcn:f</opt>
+		</option>
+	</param>
+	<param>
+		<name>Sample Rate</name>
+		<key>sample_rate</key>
+		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>FFT Size</name>
+		<key>fft_size</key>
+		<value>1024</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Reference Scale</name>
+		<key>ref_scale</key>
+		<value>2</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Frame Rate</name>
+		<key>frame_rate</key>
+		<value>30</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Average</name>
+		<key>average</key>
+		<value>False</value>
+		<type>bool</type>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Average Alpha</name>
+		<key>avg_alpha</key>
+		<value>1.0</value>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>float</type>
+		<vlen>$fft_size</vlen>
+	</source>
+</block>

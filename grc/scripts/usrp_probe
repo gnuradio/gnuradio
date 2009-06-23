@@ -27,10 +27,10 @@ import gtk
 
 from gnuradio.grc.gui.Dialogs import TextDisplay
 
-from gnuradio.grc.platforms.python.Platform import Platform
-platform = Platform(critical_only=True)
+from gnuradio.grc.python.Platform import Platform
+platform = Platform()
 
-from gnuradio.grc.platforms.gui.Platform import Platform
+from gnuradio.grc.gui.Platform import Platform
 platform = Platform(platform)
 
 flow_graph = platform.get_new_flow_graph()

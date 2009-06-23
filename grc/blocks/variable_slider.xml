@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Variable Slider:
+##	a combined slider and text box form
+###################################################
+ -->
+<block>
+	<name>Variable Slider</name>
+	<key>variable_slider</key>
+	<import>from gnuradio.wxgui import forms</import>
+	<var_make>self.$(id) = $(id) = $value</var_make>
+	<make>_$(id)_sizer = wx.BoxSizer(wx.VERTICAL)
+self.$(id)_text_box = forms.text_box(
+	parent=self.GetWin(),
+	sizer=_$(id)_sizer,
+	value=self.$id,
+	callback=self.set_$(id),
+	#if $label()
+	label=$label,
+	#else
+	label='$id',
+	#end if
+	converter=forms.$(converver)(),
+	proportion=0,
+)
+self.$(id)_slider = forms.slider(
+	parent=self.GetWin(),
+	sizer=_$(id)_sizer,
+	value=self.$id,
+	callback=self.set_$(id),
+	minimum=$min,
+	maximum=$max,
+	num_steps=$num_steps,
+	style=$style,
+	cast=$(converver.slider_cast),
+	proportion=1,
+)
+#set $grid_pos = $grid_pos()
+#if not grid_pos
+self.Add(_$(id)_sizer)
+#else
+self.GridAdd(_$(id)_sizer, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+#end if</make>
+	<callback>self.set_$(id)($value)</callback>
+	<callback>self.$(id)_slider.set_value($id)</callback>
+	<callback>self.$(id)_text_box.set_value($id)</callback>
+	<param>
+		<name>Label</name>
+		<key>label</key>
+		<value></value>
+		<type>string</type>
+		<hide>#if $label() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>Default Value</name>
+		<key>value</key>
+		<value>50</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Minimum</name>
+		<key>min</key>
+		<value>0</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Maximum</name>
+		<key>max</key>
+		<value>100</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Num Steps</name>
+		<key>num_steps</key>
+		<value>100</value>
+		<type>int</type>
+		<hide>part</hide>
+	</param>
+	<param>
+		<name>Style</name>
+		<key>style</key>
+		<value>wx.SL_HORIZONTAL</value>
+		<type>enum</type>
+		<hide>part</hide>
+		<option>
+			<name>Horizontal</name>
+			<key>wx.SL_HORIZONTAL</key>
+		</option>
+		<option>
+			<name>Vertical</name>
+			<key>wx.SL_VERTICAL</key>
+		</option>
+	</param>
+	<param>
+		<name>Converter</name>
+		<key>converver</key>
+		<value>float_converter</value>
+		<type>enum</type>
+		<option>
+			<name>Float</name>
+			<key>float_converter</key>
+			<opt>slider_cast:float</opt>
+		</option>
+		<option>
+			<name>Integer</name>
+			<key>int_converter</key>
+			<opt>slider_cast:int</opt>
+		</option>
+	</param>
+	<param>
+		<name>Grid Position</name>
+		<key>grid_pos</key>
+		<value></value>
+		<type>grid_pos</type>
+	</param>
+	<check>$min &lt;= $value &lt;= $max</check>
+	<check>$min &lt; $max</check>
+	<check>0 &lt; $num_steps &lt;= 1000</check>
+	<doc>
+This block creates a variable with a slider. \
+Leave the label blank to use the variable id as the label. \
+The value must be a real number. \
+The value must be between the minimum and the maximum. \
+The number of steps must be between 0 and 1000.
+
+Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+	</doc>
+</block>

@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Variable Chooser:
+##	a gui form with enumerated choices
+##	radio buttons, drop down, or button
+###################################################
+ -->
+<block>
+	<name>Variable Chooser</name>
+	<key>variable_chooser</key>
+	<import>from gnuradio.wxgui import forms</import>
+	<var_make>self.$(id) = $(id) = $value</var_make>
+	<make>self.$(id)_chooser = forms.$(type)(
+	parent=self.GetWin(),
+	value=self.$id,
+	callback=self.set_$(id),
+	#if $label()
+	label=$label,
+	#else
+	label='$id',
+	#end if
+	choices=$choices,
+	labels=$labels,
+#if $type() == 'radio_buttons'
+	style=$style,
+#end if
+)
+#set $grid_pos = $grid_pos()
+#if not grid_pos
+self.Add(self.$(id)_chooser)
+#else
+self.GridAdd(self.$(id)_chooser, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+#end if</make>
+	<callback>self.set_$(id)($value)</callback>
+	<callback>self.$(id)_chooser.set_value($id)</callback>
+	<param>
+		<name>Label</name>
+		<key>label</key>
+		<value></value>
+		<type>string</type>
+		<hide>#if $label() then 'none' else 'part'#</hide>
+	</param>
+	<param>
+		<name>Default Value</name>
+		<key>value</key>
+		<value>1</value>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Choices</name>
+		<key>choices</key>
+		<value>[1, 2, 3]</value>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Labels</name>
+		<key>labels</key>
+		<value>[]</value>
+		<type>raw</type>
+	</param>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<value>drop_down</value>
+		<type>enum</type>
+		<option>
+			<name>Drop Down</name>
+			<key>drop_down</key>
+		</option>
+		<option>
+			<name>Radio Buttons</name>
+			<key>radio_buttons</key>
+		</option>
+		<option>
+			<name>Button</name>
+			<key>button</key>
+		</option>
+	</param>
+	<param>
+		<name>Style</name>
+		<key>style</key>
+		<value>wx.RA_HORIZONTAL</value>
+		<type>enum</type>
+		<hide>#if $type() == 'radio_buttons' then 'part' else 'all'#</hide>
+		<option>
+			<name>Horizontal</name>
+			<key>wx.RA_HORIZONTAL</key>
+		</option>
+		<option>
+			<name>Vertical</name>
+			<key>wx.RA_VERTICAL</key>
+		</option>
+	</param>
+	<param>
+		<name>Grid Position</name>
+		<key>grid_pos</key>
+		<value></value>
+		<type>grid_pos</type>
+	</param>
+	<check>$value in $choices</check>
+	<check>not $labels or len($labels) == len($choices)</check>
+	<doc>
+This block creates a variable with a drop down, radio buttons, or a button. \
+Leave the label blank to use the variable id as the label. \
+The value index is the index of a particular choice, \
+which defines the default choice when the flow graph starts. \
+The choices must be a list of possible values. \
+Leave labels empty to use the choices as the labels.
+
+Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+	</doc>
+</block>

@@ -1,4 +1,4 @@
-dnl Copyright 2008 Free Software Foundation, Inc.
+dnl Copyright 2008, 2009 Free Software Foundation, Inc.
 dnl
 dnl This file is part of GNU Radio
 dnl
@@ -47,27 +47,15 @@ AC_DEFUN([GRC_GRC],[
     AC_SUBST(PYTHONW)
 
     AC_CONFIG_FILES([ \
-        grc/src/grc_gnuradio/Makefile \
-        grc/src/grc_gnuradio/wxgui/Makefile \
-        grc/src/grc_gnuradio/blks2/Makefile \
-        grc/src/grc_gnuradio/usrp/Makefile \
-        grc/src/Makefile \
-        grc/src/platforms/Makefile \
-        grc/src/platforms/base/Makefile \
-        grc/src/platforms/python/Makefile \
-        grc/src/platforms/python/utils/Makefile \
-        grc/src/platforms/gui/Makefile \
-        grc/src/utils/Makefile \
-        grc/src/gui/Makefile \
-        grc/examples/Makefile \
         grc/Makefile \
-        grc/data/Makefile \
-        grc/data/platforms/Makefile \
-        grc/data/platforms/base/Makefile \
-        grc/data/platforms/python/Makefile \
-        grc/data/platforms/python/blocks/Makefile \
-        grc/scripts/Makefile \
+        grc/base/Makefile \
+        grc/blocks/Makefile \
+        grc/examples/Makefile \
         grc/freedesktop/Makefile \
+        grc/grc_gnuradio/Makefile \
+        grc/gui/Makefile \
+        grc/python/Makefile \
+        grc/scripts/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(grc)
