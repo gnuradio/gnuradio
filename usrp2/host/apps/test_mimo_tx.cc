@@ -33,6 +33,7 @@
 #include <usrp2/usrp2.h>
 #include <usrp2/strtod_si.h>
 #include <iostream>
+#include <cstdio>
 #include <complex>
 #include <getopt.h>
 #include <gruel/realtime.h>

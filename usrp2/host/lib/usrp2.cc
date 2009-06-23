@@ -27,6 +27,7 @@
 #include <boost/weak_ptr.hpp>
 #include <string>
 #include <stdexcept>
+#include <cstdio>
 
 namespace usrp2 {
 

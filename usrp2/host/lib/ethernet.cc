@@ -20,10 +20,12 @@
 #include <config.h>
 #endif
 
+#include "eth_buffer.h"
 #include "ethernet.h"
 #include "pktfilter.h"
 #include <open_usrp2_socket.h>
 
+#include <cstdio>
 #include <iostream>
 #include <unistd.h>
 #include <fcntl.h>

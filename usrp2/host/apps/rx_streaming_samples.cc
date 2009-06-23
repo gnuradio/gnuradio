@@ -27,6 +27,7 @@
 #include <gruel/realtime.h>
 #include <sys/time.h>
 #include <iostream>
+#include <cstdio>
 #include <string.h>
 #include <boost/scoped_ptr.hpp>
 #include <boost/shared_ptr.hpp>

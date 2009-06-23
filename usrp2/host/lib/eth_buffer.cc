@@ -35,6 +35,7 @@
 #include <errno.h>
 #include <stdexcept>
 #include <string.h>
+#include <cstdio>
 
 
 #define ETH_BUFFER_DEBUG      0 // define to 0 or 1

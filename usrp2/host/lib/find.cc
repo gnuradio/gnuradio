@@ -29,6 +29,7 @@
 #include <string.h>
 #include <iostream>
 #include <stdexcept>
+#include <cstdio>
 
 #define FIND_DEBUG 0
 

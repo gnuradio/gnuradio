@@ -22,6 +22,7 @@
 
 #include <usrp2/usrp2.h>
 #include <iostream>
+#include <cstdio>
 #include <getopt.h>
 
 static void
