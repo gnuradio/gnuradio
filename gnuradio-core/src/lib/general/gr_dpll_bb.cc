@@ -26,6 +26,7 @@
 
 #include <gr_dpll_bb.h>
 #include <gr_io_signature.h>
+#include <cstdio>
 
 gr_dpll_bb_sptr
 gr_make_dpll_bb (float period, float gain)

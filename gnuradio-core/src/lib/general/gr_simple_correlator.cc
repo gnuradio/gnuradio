@@ -31,6 +31,7 @@
 #include <stdexcept>
 #include <gr_count_bits.h>
 #include <string.h>
+#include <cstdio>
 
 
 static const int THRESHOLD = 3;

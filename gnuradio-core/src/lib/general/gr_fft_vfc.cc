@@ -30,6 +30,7 @@
 #include <math.h>
 #include <stdexcept>
 #include <string.h>
+#include <cstdio>
 
 
 // FIXME after this is working, change to use native real to complex fft.

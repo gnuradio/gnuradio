@@ -28,6 +28,7 @@
 #include <gr_io_signature.h>
 #include <gr_expj.h>
 #include <gr_math.h>
+#include <cstdio>
 
 #define VERBOSE 0
 #define M_TWOPI (2*M_PI)

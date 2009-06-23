@@ -28,6 +28,7 @@
 #include <gr_io_signature.h>
 #include <stdexcept>
 
+#include <cstdio>
 #include <iostream>
 using std::cout;
 using std::endl;

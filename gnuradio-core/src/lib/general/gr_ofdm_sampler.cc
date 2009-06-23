@@ -27,6 +27,7 @@
 #include <gr_ofdm_sampler.h>
 #include <gr_io_signature.h>
 #include <gr_expj.h>
+#include <cstdio>
 
 gr_ofdm_sampler_sptr
 gr_make_ofdm_sampler (unsigned int fft_length, 

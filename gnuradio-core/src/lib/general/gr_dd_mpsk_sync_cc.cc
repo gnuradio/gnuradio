@@ -30,6 +30,7 @@
 #include <gri_mmse_fir_interpolator_cc.h>
 #include <math.h>
 #include <stdexcept>
+#include <cstdio>
 
 #include <gr_complex.h>
 

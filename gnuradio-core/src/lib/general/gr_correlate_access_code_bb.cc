@@ -28,6 +28,8 @@
 #include <gr_io_signature.h>
 #include <stdexcept>
 #include <gr_count_bits.h>
+#include <cstdio>
+
 
 #define VERBOSE 0
 

@@ -29,6 +29,8 @@
 #include <gr_clock_recovery_mm_cc.h>
 #include <gri_mmse_fir_interpolator_cc.h>
 #include <stdexcept>
+#include <cstdio>
+
 
 // Public constructor
 

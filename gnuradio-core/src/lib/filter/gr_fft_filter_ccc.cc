@@ -37,6 +37,7 @@
 #include <stdexcept>
 #include <gr_firdes.h>
 
+#include <cstdio>
 #include <iostream>
 #include <string.h>
 
