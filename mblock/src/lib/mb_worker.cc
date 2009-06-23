@@ -29,6 +29,7 @@
 #include <mb_gettid.h>
 #include <mblock/msg_accepter.h>
 #include <iostream>
+#include <cstdio>
 #ifdef HAVE_SCHED_H
 #include <sched.h>
 #endif

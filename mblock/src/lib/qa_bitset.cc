@@ -27,6 +27,7 @@
 #include <mblock/message.h>
 #include <mblock/class_registry.h>
 #include <iostream>
+#include <cstdio>
 #include <sstream>
 #include <bitset>
 
