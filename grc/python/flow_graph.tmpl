@@ -185,7 +185,8 @@ if __name__ == '__main__':
 		#set $type = $param.get_param('type').get_value()
 		#if $type
 			#silent $params_eq_list.append('%s=options.%s'%($param.get_id(), $param.get_id()))
-	parser.add_option("--$param.get_id()", dest="$param.get_id()", type="$type", default=$param.get_make())
+	parser.add_option("--$param.get_id()", dest="$param.get_id()", type="$type", default=$param.get_make(),
+		help="Set $($param.get_param('label').evaluate() or $param.get_id()) [default=%default]")
 		#end if
 	#end for
 	(options, args) = parser.parse_args()

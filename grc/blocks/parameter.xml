@@ -72,8 +72,7 @@ Or, parameters can pass arguments into an instantiated hierarchical block.
 
 The paramater value cannot depend on any variables.
 
-Leave the label blank to use the parameter id as the label. \
-The label only applies when this flow graph is instantiated as a hierarchical block.
+Leave the label blank to use the parameter id as the label.
 
 When type is not None, this parameter also becomes a command line option of the form --[id] [value].
 	</doc>
