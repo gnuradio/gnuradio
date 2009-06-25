@@ -2,7 +2,6 @@
 # Examples
 ##################################################
 * Push-to-Talk example
-* Variable Config usage example
 * Start/Stop the flow graph
 
 ##################################################
