@@ -11,14 +11,16 @@
 	<import>import ConfigParser</import>
 	<var_make>self._$(id)_config = ConfigParser.ConfigParser()
 self._$(id)_config.read($config_file)
-if not self._$(id)_config.has_section($section):
-	self._$(id)_config.add_section($section)
 try: $(id) = self._$(id)_config.$(type.get)($section, $option)
 except: $(id) = $value
 self.$(id) = $(id)</var_make>
 	<make></make>
 	<callback>self.set_$(id)($value)</callback>
-	<callback>self._$(id)_config.set($section, $option, str($writeback))
+	<callback>self._$(id)_config = ConfigParser.ConfigParser()
+self._$(id)_config.read($config_file)
+if not self._$(id)_config.has_section($section):
+	self._$(id)_config.add_section($section)
+self._$(id)_config.set($section, $option, str($writeback))
 self._$(id)_config.write(open($config_file, 'w'))</callback>
 	<param>
 		<name>Default Value</name>

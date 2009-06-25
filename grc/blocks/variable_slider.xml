@@ -11,7 +11,7 @@
 	<import>from gnuradio.wxgui import forms</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
 	<make>_$(id)_sizer = wx.BoxSizer(wx.VERTICAL)
-self.$(id)_text_box = forms.text_box(
+self._$(id)_text_box = forms.text_box(
 	parent=self.GetWin(),
 	sizer=_$(id)_sizer,
 	value=self.$id,
@@ -24,7 +24,7 @@ self.$(id)_text_box = forms.text_box(
 	converter=forms.$(converver)(),
 	proportion=0,
 )
-self.$(id)_slider = forms.slider(
+self._$(id)_slider = forms.slider(
 	parent=self.GetWin(),
 	sizer=_$(id)_sizer,
 	value=self.$id,
@@ -43,8 +43,8 @@ self.Add(_$(id)_sizer)
 self.GridAdd(_$(id)_sizer, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
 #end if</make>
 	<callback>self.set_$(id)($value)</callback>
-	<callback>self.$(id)_slider.set_value($id)</callback>
-	<callback>self.$(id)_text_box.set_value($id)</callback>
+	<callback>self._$(id)_slider.set_value($id)</callback>
+	<callback>self._$(id)_text_box.set_value($id)</callback>
 	<param>
 		<name>Label</name>
 		<key>label</key>

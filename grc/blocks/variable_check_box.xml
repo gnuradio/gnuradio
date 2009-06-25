@@ -10,7 +10,7 @@
 	<key>variable_check_box</key>
 	<import>from gnuradio.wxgui import forms</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
-	<make>self.$(id)_check_box = forms.check_box(
+	<make>self._$(id)_check_box = forms.check_box(
 	parent=self.GetWin(),
 	value=self.$id,
 	callback=self.set_$(id),
@@ -24,12 +24,12 @@
 )
 #set $grid_pos = $grid_pos()
 #if not grid_pos
-self.Add(self.$(id)_check_box)
+self.Add(self._$(id)_check_box)
 #else
-self.GridAdd(self.$(id)_check_box, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+self.GridAdd(self._$(id)_check_box, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
 #end if</make>
 	<callback>self.set_$(id)($value)</callback>
-	<callback>self.$(id)_check_box.set_value($id)</callback>
+	<callback>self._$(id)_check_box.set_value($id)</callback>
 	<param>
 		<name>Label</name>
 		<key>label</key>
