@@ -53,7 +53,8 @@ class chooser_converter(abstract_converter):
 	Used in the chooser base and all sub-classes.
 	"""
 	def __init__(self, choices):
-		self._choices = choices
+		#choices must be a list because tuple does not have .index() in python2.5
+		self._choices = list(choices)
 	def external_to_internal(self, choice):
 		return self._choices.index(choice)
 	def internal_to_external(self, index):
