@@ -62,6 +62,11 @@ class DrawingArea(gtk.DrawingArea):
 		self.connect('enter-notify-event', _handle_focus_event, True)
 
 	def new_pixmap(self, width, height): return gtk.gdk.Pixmap(self.window, width, height, -1)
+	def get_pixbuf(self):
+		width, height = self._pixmap.get_size()
+		pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, 0, 8, width, height)
+		pixbuf.get_from_drawable(self._pixmap, self._pixmap.get_colormap(), 0, 0, 0, 0, width, height)
+		return pixbuf
 
 	##########################################################################
 	## Handlers

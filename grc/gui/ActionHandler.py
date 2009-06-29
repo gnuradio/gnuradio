@@ -297,10 +297,7 @@ class ActionHandler:
 		elif state == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
 			file_path = SaveImageFileDialog(self.get_page().get_file_path()).run()
 			if file_path is not None:
-				pixmap = self.get_flow_graph().get_pixmap()
-				width, height = pixmap.get_size()
-				pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, 0, 8, width, height)
-				pixbuf.get_from_drawable(pixmap, pixmap.get_colormap(), 0, 0, 0, 0, width, height)
+				pixbuf = self.get_flow_graph().get_drawing_area().get_pixbuf()
 				pixbuf.save(file_path, IMAGE_FILE_EXTENSION[1:])
 		##################################################
 		# Gen/Exec/Stop
