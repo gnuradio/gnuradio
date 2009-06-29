@@ -51,8 +51,11 @@
 		<nports>$num_inputs</nports>
 	</sink>
 	<source>
-		<name>out</name>
+		<name>max_vec</name>
 		<type>short</type>
-		<vlen>$vlen</vlen>
+	</source>
+	<source>
+		<name>max_inp</name>
+		<type>short</type>
 	</source>
 </block>
