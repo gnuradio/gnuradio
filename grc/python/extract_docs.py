@@ -52,8 +52,8 @@ def _extract(key):
 	if not os.path.exists(docs_dir): return ''
 	#extract matches
 	pattern = key.replace('_', '_*').replace('x', '\w')
-	prog = re.compile('^class%s\..*$'%pattern)
-	matches = filter(lambda f: prog.match(f), os.listdir(docs_dir))
+	class_file_matcher = re.compile('^class%s\..*$'%pattern) #xml or xml.gz
+	matches = filter(lambda f: class_file_matcher.match(f), os.listdir(docs_dir))
 	#combine all matches
 	doc_strs = list()
 	for match in matches:

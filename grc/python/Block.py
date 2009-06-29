@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from .. base.Block import Block as _Block
 import extract_docs
+import extract_category
 
 class Block(_Block):
 
@@ -127,6 +128,11 @@ class Block(_Block):
 		doc = self._doc.strip('\n').replace('\\\n', '')
 		#merge custom doc with doxygen docs
 		return '\n'.join([doc, extract_docs.extract(self.get_key())]).strip('\n')
+
+	def get_category(self):
+		#category = extract_category.extract(self.get_key())
+		#if category: return category
+		return _Block.get_category(self)
 
 	def get_imports(self):
 		"""

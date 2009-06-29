@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os
 import sys
-from .. base import ParseXML
+from .. base import ParseXML, odict
 from Element import Element as _Element
 from FlowGraph import FlowGraph as _FlowGraph
 from Connection import Connection as _Connection
@@ -66,11 +66,11 @@ class Platform(_Element):
 			if os.path.isfile(block_path): xml_files.append(block_path)
 			elif os.path.isdir(block_path):
 				for dirpath, dirnames, filenames in os.walk(block_path):
-					for filename in filter(lambda f: f.endswith('.xml'), filenames):
+					for filename in sorted(filter(lambda f: f.endswith('.xml'), filenames)):
 						xml_files.append(os.path.join(dirpath, filename))
 		#load the blocks
-		self._blocks = dict()
-		self._blocks_n = dict()
+		self._blocks = odict()
+		self._blocks_n = odict()
 		self._block_tree_files = list()
 		for xml_file in xml_files:
 			try: #try to add the xml file as a block wrapper
