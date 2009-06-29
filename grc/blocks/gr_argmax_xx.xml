@@ -42,7 +42,7 @@
 		<value>1</value>
 		<type>int</type>
 	</param>
-	<check>$num_inputs &gt;= 2</check>
+	<check>$num_inputs &gt;= 1</check>
 	<check>$vlen &gt;= 1</check>
 	<sink>
 		<name>in</name>
