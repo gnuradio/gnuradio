@@ -25,8 +25,12 @@ noinst_PYTHON = 		\
 	pyqt_example_f.py 	\
 	pyqt_example.py		\
 	qt_digital.py		\
+	qt_digital_window.py    \
 	usrp2_display.py	\
 	usrp_display.py
+
+EXTRA_DIST = \
+	qt_digital_window.ui
 
 qtguipythondir = $(grpythondir)/qtgui
 
