@@ -27,6 +27,10 @@ dist_ourdata_DATA =		\
 	README			\
 	generic_usrp.py		\
 	pick_bitrate.py		\
+	qt_digital_window.ui	\
+	qt_digital_window.py	\
+	qt_rx_window.ui		\
+	qt_rx_window.py		\
 	receive_path.py		\
 	transmit_path.py	\
 	usrp_options.py
@@ -37,10 +41,6 @@ dist_ourdata_SCRIPTS =		\
 	benchmark_tx.py		\
 	benchmark_qt_rx.py	\
 	benchmark_qt_loopback.py\
-	qt_digital_window.ui	\
-	qt_digital_window.py	\
-	qt_rx_window.ui		\
-	qt_rx_window.py		\
 	gen_whitener.py		\
 	rx_voice.py		\
 	run_length.py		\
