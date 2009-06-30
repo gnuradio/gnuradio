@@ -48,7 +48,7 @@ try:
 except ImportError:
     print "Error: could not find qt_rx_window.py:"
     print "\tYou must first build this from qt_rx_window.ui with the following command:"
-    print "\t\  "pyuic4 qt_rx_window.ui -o qt_rx_window.py\""
+    print "\t  pyuic4 qt_rx_window.ui -o qt_rx_window.py"
     sys.exit(1)
 
 #import os
