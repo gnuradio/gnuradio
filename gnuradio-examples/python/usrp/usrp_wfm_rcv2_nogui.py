@@ -30,6 +30,18 @@ from usrpm import usrp_dbid
 import sys
 import math
 
+def calc_dxc_freq(target_freq, baseband_freq, fs):
+   dxc_temp = (target_freq - baseband_freq) % fs
+
+   if dxc_temp < fs/2.0:
+       dxc_freq = - dxc_temp
+       inverted = False
+   else:
+       dxc_freq = fs - dxc_temp
+       inverted = True
+
+   return (dxc_freq, inverted)
+
 def pick_subdevice(u):
     """
     The user didn't specify a subdevice on the command line.
@@ -123,7 +135,7 @@ class wfm_rx_block (gr.top_block):
 
         mid_freq = (f[0] + f[1]) / 2
         # set front end PLL to middle frequency
-        ok, baseband_freq = self.subdev.set_freq(mid_freq)
+        tune_result = self.subdev.set_freq(mid_freq)
 
         for n in range(2):
             chan_filt = gr.fir_filter_ccf (chanfilt_decim, chan_filt_coeffs)
@@ -132,8 +144,8 @@ class wfm_rx_block (gr.top_block):
             self.connect((di, n), chan_filt)
             self.connect(chan_filt, guts, volume_control)
             self.connect(volume_control, (audio_sink, n))
-            dxc_freq, inverted = usrp.calc_dxc_freq(f[n], baseband_freq,
-                                                    self.u.converter_rate())
+            dxc_freq, inverted = calc_dxc_freq(f[n], tune_result.baseband_freq,
+                                               self.u.converter_rate())
             self.u.set_rx_freq(n, dxc_freq)
         
 
