@@ -37,7 +37,6 @@ ourpython_PYTHON = \
 	Actions.py \
 	Bars.py \
 	BlockTreeWindow.py \
-	Constants.py \
 	Dialogs.py \
 	DrawingArea.py \
 	FileDialogs.py \
