@@ -216,6 +216,108 @@ Description: GNU Radio C++ block for ALSA sound system
  .
  This package contains header files needed by developers.
 
+Package: libgnuradio-audio-jack
+Section: libs
+Architecture: any
+Depends: libgnuradio-core (= ${binary:Version}), ${shlibs:Depends}
+Description: GNU Radio C++ block for JACK sound system
+ This package contains the JACK sound system driver for GNU Radio.
+
+Package: libgnuradio-audio-jack-dev
+Section: libdevel
+Architecture: any
+Depends: libgnuradio-audio-jack (= ${binary:Version}), libgnuradio-core-dev (= ${binary:Version}), libjack-dev
+Description: GNU Radio C++ block for JACK sound system
+ This package contains the JACK sound system driver for GNU Radio.
+ .
+ This package contains header files needed by developers.
+
+Package: libgnuradio-audio-oss
+Section: libs
+Architecture: any
+Depends: libgnuradio-core (= ${binary:Version}), ${shlibs:Depends}
+Description: GNU Radio C++ block for OSS sound system
+ This package contains the OSS sound system driver for GNU Radio.
+
+Package: libgnuradio-audio-oss-dev
+Section: libdevel
+Architecture: any
+Depends: libgnuradio-audio-oss (= ${binary:Version}), libgnuradio-core-dev (= ${binary:Version})
+Description: GNU Radio C++ block for OSS sound system
+ This package contains the OSS sound system driver for GNU Radio.
+ .
+ This package contains header files needed by developers.
+
+Package: libgnuradio-audio-portaudio
+Section: libs
+Architecture: any
+Depends: libgnuradio-core (= ${binary:Version}), ${shlibs:Depends}
+Description: GNU Radio C++ block for PORTAUDIO sound system
+ This package contains the PORTAUDIO sound system driver for GNU Radio.
+
+Package: libgnuradio-audio-portaudio-dev
+Section: libdevel
+Architecture: any
+Depends: libgnuradio-audio-portaudio (= ${binary:Version}), libgnuradio-core-dev (= ${binary:Version}), portaudio19-dev
+Description: GNU Radio C++ block for PORTAUDIO sound system
+ This package contains the PORTAUDIO sound system driver for GNU Radio.
+ .
+ This package contains header files needed by developers.
+
+Package: libgnuradio-cvsd-vocoder
+Section: libs
+Architecture: any
+Depends: libgnuradio-core (= ${binary:Version}), ${shlibs:Depends}
+Description: GNU Radio C++ block implementing the CVSD vocoder
+ This package provides an implementation of a CVSD vocoder for
+ GNU Radio.
+
+Package: libgnuradio-cvsd-vocoder-dev
+Section: libdevel
+Architecture: any
+Depends: libgnuradio-cvsd-vocoder (= ${binary:Version}), libgnuradio-core-dev (= ${binary:Version})
+Description: GNU Radio C++ block implement the CVSD vocoder
+ This package provides an implementation of a CVSD vocoder for
+ GNU Radio.
+ .
+ This package contains header files needed by developers.
+
+Package: libgnuradio-gsm-fr-vocoder
+Section: libs
+Architecture: any
+Depends: libgnuradio-core (= ${binary:Version}), ${shlibs:Depends}
+Description: GNU Radio C++ block implementing the GSM full rate vocoder
+ This package provides an implementation of a GSM-FR vocoder for
+ GNU Radio.
+
+Package: libgnuradio-gsm-fr-vocoder-dev
+Section: libdevel
+Architecture: any
+Depends: libgnuradio-gsm-fr-vocoder (= ${binary:Version}), libgnuradio-core-dev (= ${binary:Version})
+Description: GNU Radio C++ block implementing the GSM full rate vocoder
+ This package provides an implementation of a GSM-FR vocoder for
+ GNU Radio.
+ .
+ This package contains header files needed by developers.
+
+Package: libgnuradio-pager
+Section: libs
+Architecture: any
+Depends: libgnuradio-core (= ${binary:Version}), ${shlibs:Depends}
+Description: GNU Radio C++ block implementing the FLEX one-way pager protocol
+ This package provides an implementation of the FLEX one-way pager protocol
+ for GNU Radio.
+
+Package: libgnuradio-pager-dev
+Section: libdevel
+Architecture: any
+Depends: libgnuradio-pager (= ${binary:Version}), libgnuradio-core-dev (= ${binary:Version})
+Description: GNU Radio C++ block implementing the FLEX one-way pager protocol
+ This package provides an implementation of the FLEX one-way pager protocol
+ for GNU Radio.
+ .
+ This package contains header files needed by developers.
+
 Package: libgnuradio-qtgui
 Section: libs
 Architecture: any
@@ -231,6 +333,42 @@ Depends: libgnuradio-qtgui (= ${binary:Version}), libgnuradio-core-dev (= ${bina
 Description: GNU Radio C++ blocks fro QT-based GUI applications
  This package contains the C++ library for using GNU Radio inside
  QT-based GUI applications.
+ .
+ This package contains header files needed by developers.
+
+Package: libgnuradio-trellis
+Section: libs
+Architecture: any
+Depends: libgnuradio-core (= ${binary:Version}), ${shlibs:Depends}
+Description: GNU Radio C++ block implementing trellis-coded modulation
+ This package provides an implementation of tellis-coded modulation
+ for GNU Radio.
+
+Package: libgnuradio-trellis-dev
+Section: libdevel
+Architecture: any
+Depends: libgnuradio-trellis (= ${binary:Version}), libgnuradio-core-dev (= ${binary:Version})
+Description: GNU Radio C++ block implementing trellis-coded modulation
+ This package provides an implementation of trellis-coded modulation
+ for GNU Radio.
+ .
+ This package contains header files needed by developers.
+
+Package: libgnuradio-video-sdl
+Section: libs
+Architecture: any
+Depends: libgnuradio-core (= ${binary:Version}), ${shlibs:Depends}
+Description: GNU Radio C++ block implementing video-sdl-coded modulation
+ This package provides an interface to the SDL rendering library
+ for GNU Radio.
+
+Package: libgnuradio-video-sdl-dev
+Section: libdevel
+Architecture: any
+Depends: libgnuradio-video-sdl (= ${binary:Version}), libgnuradio-core-dev (= ${binary:Version})
+Description: GNU Radio C++ block implementing video-sdl-coded modulation
+ This package provides an interface to the SDL rendering library
+ for GNU Radio.
  .
  This package contains header files needed by developers.
 
@@ -529,7 +667,7 @@ Package: libgnuradio
 Section: libs
 Architecture: all
 Depends: libgnuradio-core (= ${binary:Version}), 
-Recommends: libgnuradio-audio-alsa, libgnuradio-qtqui, libgnuradio-usrp, libgnuradio-usrp2
+Recommends: libgnuradio-audio-alsa, libgnuradio-cvsd-vocoder, libgnuradio-gsm-fr-vocoder, libgnuradio-pager, libgnuradio-qtqui, libgnuradio-trellis, libgnuradio-usrp, libgnuradio-usrp2, libgnuradio-video-sdl
 Description: GNU Radio C++ API libraries
  This is a virtual package that depends, recommends, or suggests all of the
  binary packages that make up the GNU Radio C++ API.  For development headers,
@@ -539,7 +677,7 @@ Package: libgnuradio-dev
 Section: libdevel
 Architecture: all
 Depends: libgnuradio (= ${binary:Version}), libgnuradio-core-dev
-Recommends: libgnuradio-audio-alsa-dev, libgnuradio-qtgui-dev, libgnuradio-usrp-dev, libgnuradio-usrp2-dev,
+Recommends: libgnuradio-audio-alsa-dev, libgnuradio-cvsd-vocoder-dev, libgnuradio-gsm-fr-vocoder-dev, libgnuradio-pager-dev, libgnuradio-qtgui-dev, libgnuradio-trellis-dev, libgnuradio-usrp-dev, libgnuradio-usrp2-dev, libgnuradio-video-sdl-dev
 Suggests: gnuradio-doc, usrp-doc
 Replaces: gnuradio-dev
 Description: Development headers for GNU Radio C++ development

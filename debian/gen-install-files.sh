@@ -56,8 +56,107 @@ NAME=debian/libgnuradio-audio-alsa-dev.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gr-audio-alsa/src/Makefile grinclude_HEADERS >>$NAME
+$EXTRACT gr-audio-alsa/Makefile dist_pkgconfig_DATA >>$NAME
 echo usr/lib/libgnuradio-audio-alsa.so >>$NAME
-echo usr/lib/pkgconfig/gnuradio-audio-alsa.pc >>$NAME
+
+# libgnuradio-audio-jack
+NAME=debian/libgnuradio-audio-jack.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-audio-jack/src/Makefile lib_LTLIBRARIES >>$NAME
+$EXTRACT gr-audio-jack/src/Makefile lib_LTLIBRARIES | \
+    sed -e 's/\.la$/.so.*/' >>$NAME
+echo etc/gnuradio/conf.d/gr-audio-jack.conf >>$NAME
+
+# libgnuradio-audio-jack-dev
+NAME=debian/libgnuradio-audio-jack-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-audio-jack/src/Makefile grinclude_HEADERS >>$NAME
+$EXTRACT gr-audio-jack/Makefile dist_pkgconfig_DATA >>$NAME
+echo usr/lib/libgnuradio-audio-jack.so >>$NAME
+
+# libgnuradio-audio-oss
+NAME=debian/libgnuradio-audio-oss.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-audio-oss/src/Makefile lib_LTLIBRARIES >>$NAME
+$EXTRACT gr-audio-oss/src/Makefile lib_LTLIBRARIES | \
+    sed -e 's/\.la$/.so.*/' >>$NAME
+echo etc/gnuradio/conf.d/gr-audio-oss.conf >>$NAME
+
+# libgnuradio-audio-oss-dev
+NAME=debian/libgnuradio-audio-oss-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-audio-oss/src/Makefile grinclude_HEADERS >>$NAME
+$EXTRACT gr-audio-oss/Makefile dist_pkgconfig_DATA >>$NAME
+echo usr/lib/libgnuradio-audio-oss.so >>$NAME
+
+# libgnuradio-audio-portaudio
+NAME=debian/libgnuradio-audio-portaudio.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-audio-portaudio/src/Makefile lib_LTLIBRARIES >>$NAME
+$EXTRACT gr-audio-portaudio/src/Makefile lib_LTLIBRARIES | \
+    sed -e 's/\.la$/.so.*/' >>$NAME
+echo etc/gnuradio/conf.d/gr-audio-portaudio.conf >>$NAME
+
+# libgnuradio-audio-portaudio-dev
+NAME=debian/libgnuradio-audio-portaudio-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-audio-portaudio/src/Makefile grinclude_HEADERS >>$NAME
+$EXTRACT gr-audio-portaudio/Makefile dist_pkgconfig_DATA >>$NAME
+echo usr/lib/libgnuradio-audio-portaudio.so >>$NAME
+
+# libgnuradio-cvsd-vocoder
+NAME=debian/libgnuradio-cvsd-vocoder.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-cvsd-vocoder/src/lib/Makefile lib_LTLIBRARIES >>$NAME
+$EXTRACT gr-cvsd-vocoder/src/lib/Makefile lib_LTLIBRARIES | \
+    sed -e 's/\.la$/.so.*/' >>$NAME
+
+# libgnuradio-cvsd-vocoder-dev
+NAME=debian/libgnuradio-cvsd-vocoder-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-cvsd-vocoder/src/lib/Makefile grinclude_HEADERS >>$NAME
+$EXTRACT gr-cvsd-vocoder/Makefile dist_pkgconfig_DATA >>$NAME
+echo usr/lib/libgnuradio-cvsd-vocoder.so >>$NAME
+
+# libgnuradio-gsm-fr-vocoder
+NAME=debian/libgnuradio-gsm-fr-vocoder.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-gsm-fr-vocoder/src/lib/Makefile lib_LTLIBRARIES >>$NAME
+$EXTRACT gr-gsm-fr-vocoder/src/lib/Makefile lib_LTLIBRARIES | \
+    sed -e 's/\.la$/.so.*/' >>$NAME
+
+# libgnuradio-gsm-fr-vocoder-dev
+NAME=debian/libgnuradio-gsm-fr-vocoder-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-gsm-fr-vocoder/src/lib/Makefile grinclude_HEADERS >>$NAME
+$EXTRACT gr-gsm-fr-vocoder/Makefile dist_pkgconfig_DATA >>$NAME
+echo usr/lib/libgnuradio-gsm-fr-vocoder.so >>$NAME
+
+# libgnuradio-pager
+NAME=debian/libgnuradio-pager.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-pager/src/Makefile lib_LTLIBRARIES >>$NAME
+$EXTRACT gr-pager/src/Makefile lib_LTLIBRARIES | \
+    sed -e 's/\.la$/.so.*/' >>$NAME
+
+# libgnuradio-pager-dev
+NAME=debian/libgnuradio-pager-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-pager/src/Makefile grinclude_HEADERS >>$NAME
+$EXTRACT gr-pager/Makefile dist_pkgconfig_DATA >>$NAME
+echo usr/lib/libgnuradio-pager.so >>$NAME
 
 # libgnuradio-qtgui
 NAME=debian/libgnuradio-qtgui.install
@@ -73,6 +172,22 @@ rm -f $NAME
 touch $NAME
 $EXTRACT gr-qtgui/src/lib/Makefile grinclude_HEADERS >>$NAME
 echo usr/lib/libgnuradio-qtgui.so >>$NAME
+
+# libgnuradio-trellis
+NAME=debian/libgnuradio-trellis.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-trellis/src/lib/Makefile lib_LTLIBRARIES >>$NAME
+$EXTRACT gr-trellis/src/lib/Makefile lib_LTLIBRARIES | \
+    sed -e 's/\.la$/.so.*/' >>$NAME
+
+# libgnuradio-trellis-dev
+NAME=debian/libgnuradio-trellis-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-trellis/src/lib/Makefile grinclude_HEADERS >>$NAME
+$EXTRACT gr-trellis/Makefile dist_pkgconfig_DATA >>$NAME
+echo usr/lib/libgnuradio-trellis.so >>$NAME
 
 # libgnuradio-usrp
 NAME=debian/libgnuradio-usrp.install
@@ -105,6 +220,22 @@ rm -f $NAME
 touch $NAME
 $EXTRACT gr-usrp2/src/Makefile grinclude_HEADERS >>$NAME
 echo usr/lib/libgnuradio-usrp2.so >>$NAME
+
+# libgnuradio-video-sdl
+NAME=debian/libgnuradio-video-sdl.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-video-sdl/src/Makefile lib_LTLIBRARIES >>$NAME
+$EXTRACT gr-video-sdl/src/Makefile lib_LTLIBRARIES | \
+    sed -e 's/\.la$/.so.*/' >>$NAME
+
+# libgnuradio-video-sdl-dev
+NAME=debian/libgnuradio-video-sdl-dev.install
+rm -f $NAME
+touch $NAME
+$EXTRACT gr-video-sdl/src/Makefile grinclude_HEADERS >>$NAME
+$EXTRACT gr-video-sdl/Makefile dist_pkgconfig_DATA >>$NAME
+echo usr/lib/libgnuradio-video-sdl.so >>$NAME
 
 # python-usrp
 NAME=debian/python-usrp.install
@@ -194,7 +325,6 @@ $EXTRACT gr-audio-alsa/src/Makefile audio_alsa_pylib_LTLIBRARIES | \
 NAME=debian/python-gnuradio-audio-jack.install
 rm -f $NAME
 touch $NAME
-echo etc/gnuradio/conf.d/gr-audio-jack.conf >>$NAME
 $EXTRACT gr-audio-jack/src/Makefile audio_jack_python_PYTHON >>$NAME
 $EXTRACT gr-audio-jack/src/Makefile audio_jack_pylib_LTLIBRARIES >>$NAME
 $EXTRACT gr-audio-jack/src/Makefile audio_jack_pylib_LTLIBRARIES | \
@@ -204,7 +334,6 @@ $EXTRACT gr-audio-jack/src/Makefile audio_jack_pylib_LTLIBRARIES | \
 NAME=debian/python-gnuradio-audio-oss.install
 rm -f $NAME
 touch $NAME
-echo etc/gnuradio/conf.d/gr-audio-oss.conf >>$NAME
 $EXTRACT gr-audio-oss/src/Makefile audio_oss_python_PYTHON >>$NAME
 $EXTRACT gr-audio-oss/src/Makefile audio_oss_pylib_LTLIBRARIES >>$NAME
 $EXTRACT gr-audio-oss/src/Makefile audio_oss_pylib_LTLIBRARIES | \
@@ -214,7 +343,6 @@ $EXTRACT gr-audio-oss/src/Makefile audio_oss_pylib_LTLIBRARIES | \
 NAME=debian/python-gnuradio-audio-portaudio.install
 rm -f $NAME
 touch $NAME
-echo etc/gnuradio/conf.d/gr-audio-portaudio.conf >>$NAME
 $EXTRACT gr-audio-portaudio/src/Makefile audio_portaudio_python_PYTHON >>$NAME
 $EXTRACT gr-audio-portaudio/src/Makefile audio_portaudio_pylib_LTLIBRARIES >>$NAME
 $EXTRACT gr-audio-portaudio/src/Makefile audio_portaudio_pylib_LTLIBRARIES | \
