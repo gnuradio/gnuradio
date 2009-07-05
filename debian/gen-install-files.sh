@@ -159,6 +159,7 @@ rm -f $NAME
 touch $NAME
 echo etc/gnuradio/conf.d/gr-wxgui.conf >>$NAME
 $EXTRACT gr-wxgui/src/python/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT gr-wxgui/src/python/Makefile formspython_PYTHON >>$NAME
 $EXTRACT gr-wxgui/src/python/plotter/Makefile ourpython_PYTHON >>$NAME
 $EXTRACT gr-wxgui/Makefile pkgconfig_DATA >>$NAME
 
@@ -354,9 +355,11 @@ $EXTRACT gr-radio-astronomy/src/lib/Makefile ra_pylib_LTLIBRARIES |
 NAME=debian/gnuradio-companion.install
 rm -f $NAME
 touch $NAME
-$EXTRACT grc/data/platforms/base/Makefile dist_ourdata_DATA >>$NAME
-$EXTRACT grc/data/platforms/python/Makefile dist_ourdata_DATA >>$NAME
-$EXTRACT grc/data/platforms/python/blocks/Makefile dist_ourdata_DATA >>$NAME
+$EXTRACT grc/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/Makefile dist_etc_DATA >>$NAME
+$EXTRACT grc/base/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/base/Makefile dist_ourdata_DATA >>$NAME
+$EXTRACT grc/blocks/Makefile dist_ourdata_DATA >>$NAME
 $EXTRACT grc/examples/Makefile dist_audiodata_DATA >>$NAME
 $EXTRACT grc/examples/Makefile dist_simpledata_DATA >>$NAME
 $EXTRACT grc/examples/Makefile dist_trellisdata_DATA >>$NAME
@@ -364,17 +367,11 @@ $EXTRACT grc/examples/Makefile dist_usrpdata_DATA >>$NAME
 $EXTRACT grc/examples/Makefile dist_xmlrpcdata_DATA >>$NAME
 $EXTRACT grc/freedesktop/Makefile dist_ourdata_DATA >>$NAME
 $EXTRACT grc/freedesktop/Makefile dist_bin_SCRIPTS >>$NAME
+$EXTRACT grc/grc_gnuradio/Makefile rootpython_PYTHON >>$NAME
+$EXTRACT grc/grc_gnuradio/Makefile blks2python_PYTHON >>$NAME
+$EXTRACT grc/grc_gnuradio/Makefile usrppython_PYTHON >>$NAME
+$EXTRACT grc/grc_gnuradio/Makefile wxguipython_PYTHON >>$NAME
+$EXTRACT grc/gui/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/python/Makefile ourpython_PYTHON >>$NAME
+$EXTRACT grc/python/Makefile dist_ourdata_DATA >>$NAME
 $EXTRACT grc/scripts/Makefile dist_bin_SCRIPTS >>$NAME
-$EXTRACT grc/src/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT grc/src/grc_gnuradio/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT grc/src/grc_gnuradio/blks2/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT grc/src/grc_gnuradio/usrp/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT grc/src/grc_gnuradio/wxgui/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT grc/src/grc_gnuradio/wxgui/Makefile oursubpython_PYTHON >>$NAME
-$EXTRACT grc/src/gui/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT grc/src/platforms/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT grc/src/platforms/base/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT grc/src/platforms/gui/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT grc/src/platforms/python/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT grc/src/platforms/python/utils/Makefile ourpython_PYTHON >>$NAME
-$EXTRACT grc/src/utils/Makefile ourpython_PYTHON >>$NAME
