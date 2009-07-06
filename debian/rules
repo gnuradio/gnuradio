@@ -90,8 +90,13 @@ install-stamp: extract-stamp debian/control
 	install -m 0644 -D debian/grc.conf \
 		debian/tmp/etc/gnuradio/conf.d/grc.conf
 
+	: # Install custom prefs.py FIXME
+	install -m 0644 -D debian/prefs.py \
+		debian/tmp/usr/lib/python2.6/dist-packages/gnuradio/gr/prefs.py
+
 	dh_install --sourcedir=debian/tmp
 	touch $@
+
 
 
 # Must not depend on anything. This is to be called by
