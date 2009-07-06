@@ -86,6 +86,10 @@ install-stamp: extract-stamp debian/control
 	install -m 0644 -D debian/libusrp2.limits \
 		debian/tmp/etc/security/limits.d/libusrp2.limits
 
+	: # Install custom grc.conf
+	install -m 0644 -D debian/grc.conf \
+		debian/tmp/etc/gnuradio/conf.d/grc.conf
+
 	dh_install --sourcedir=debian/tmp
 	touch $@
 

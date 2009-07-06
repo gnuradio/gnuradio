@@ -1,9 +1,9 @@
 gnuradio (3.3svn) unstable; urgency=low
 
-  * New upstream release 3.2
+  * Development trunk updates as of packaging date
   * See http://gnuradio.org/trac
 
- -- Johnathan Corgan <jcorgan@corganenterprises.com>  Sat,  23 May 2009 18:00:00 -0800
+ -- Johnathan Corgan <jcorgan@corganenterprises.com>  Sun,  05 Jul 2009 18:00:00 -0800
 
 gnuradio (3.2) unstable; urgency=low
 
