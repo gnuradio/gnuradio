@@ -429,6 +429,7 @@ $EXTRACT gnuradio-examples/python/ofdm/Makefile dist_ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/ofdm/Makefile dist_ourdata_SCRIPTS >>$NAME
 $EXTRACT gnuradio-examples/python/usrp/Makefile dist_ourdata_SCRIPTS >>$NAME
 $EXTRACT gnuradio-examples/python/usrp2/Makefile dist_ourdata_SCRIPTS >>$NAME
+$EXTRACT gnuradio-examples/python/usrp2/Makefile dist_ourdata_DATA >>$NAME
 
 # gnuradio-pager
 NAME=debian/gnuradio-pager.install

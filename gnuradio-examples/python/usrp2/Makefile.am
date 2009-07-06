@@ -22,6 +22,11 @@
 include $(top_srcdir)/Makefile.common
 
 ourdatadir = $(exampledir)/usrp2
+dist_ourdata_DATA = \
+	qt_wfm_interface.ui \
+	qt_wfm_interface.py
 
-dist_ourdata_SCRIPTS =		\
+
+dist_ourdata_SCRIPTS =	\
+	usrp2_wfm_qt.py \
 	usrp2_wfm_rcv.py
