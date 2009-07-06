@@ -194,7 +194,7 @@ Section: libdevel
 Architecture: any 
 Replaces: libgnuradio-core0-dev
 Conflicts: libgnuradio-core0-dev
-Depends: libgnuradio-core (= ${binary:Version}), libgruel-dev (= ${binary:Version}), libgnuradio-omnithread-dev (= ${binary:Version}), libboost-thread1.37-dev, libboost-date-time1.37-dev, libgsl0-dev, libatlas-dev, libfftw3-dev, swig
+Depends: libgnuradio-core (= ${binary:Version}), libgruel-dev (= ${binary:Version}), libgnuradio-omnithread-dev (= ${binary:Version}), libboost-thread1.37-dev, libboost-date-time1.37-dev, libgsl0-dev, libatlas-base-dev, libfftw3-dev, swig
 Description: The GNU Software Radio Core Library
  This package contains the core GNU Radio libraries.
  .
