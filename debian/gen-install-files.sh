@@ -495,10 +495,10 @@ $EXTRACT grc/examples/Makefile dist_usrpdata_DATA >>$NAME
 $EXTRACT grc/examples/Makefile dist_xmlrpcdata_DATA >>$NAME
 $EXTRACT grc/freedesktop/Makefile dist_ourdata_DATA >>$NAME
 $EXTRACT grc/freedesktop/Makefile dist_bin_SCRIPTS >>$NAME
-$EXTRACT grc/grc_gnuradio/Makefile rootpython_PYTHON >>$NAME
-$EXTRACT grc/grc_gnuradio/Makefile blks2python_PYTHON >>$NAME
-$EXTRACT grc/grc_gnuradio/Makefile usrppython_PYTHON >>$NAME
-$EXTRACT grc/grc_gnuradio/Makefile wxguipython_PYTHON >>$NAME
+$EXTRACT grc/grc_gnuradio/Makefile root_python_PYTHON >>$NAME
+$EXTRACT grc/grc_gnuradio/Makefile blks2_python_PYTHON >>$NAME
+$EXTRACT grc/grc_gnuradio/Makefile usrp_python_PYTHON >>$NAME
+$EXTRACT grc/grc_gnuradio/Makefile wxgui_python_PYTHON >>$NAME
 $EXTRACT grc/gui/Makefile ourpython_PYTHON >>$NAME
 $EXTRACT grc/python/Makefile ourpython_PYTHON >>$NAME
 $EXTRACT grc/python/Makefile dist_ourdata_DATA >>$NAME
