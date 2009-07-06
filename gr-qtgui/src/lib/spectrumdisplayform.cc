@@ -473,19 +473,29 @@ SpectrumDisplayForm::PowerLineEdit_textChanged( const QString &valueString )
 }
 
 void
-SpectrumDisplayForm::SetFrequencyRange(const double newStartFrequency, 
-				       const double newStopFrequency,
-				       const double newCenterFrequency)
+SpectrumDisplayForm::SetFrequencyRange(const double newCenterFrequency,
+				       const double newStartFrequency, 
+				       const double newStopFrequency)
 {
-  double fdiff = abs(newStartFrequency - newStopFrequency);
+  double fdiff;
+  if(UseRFFrequenciesCheckBox->isChecked()) {
+    fdiff = newCenterFrequency;
+  }
+  else {
+    fdiff = std::max(fabs(newStartFrequency), fabs(newStopFrequency));
+  }
 
   if(fdiff > 0) {
     std::string strunits[4] = {"Hz", "kHz", "MHz", "GHz"};
     double units10 = floor(log10(fdiff));
-    double units3  = floor(units10 / 3.0);
-    double units = pow(10, units10);
+    double units3  = std::max(floor(units10 / 3.0), 0.0);
+    double units = pow(10, (units10-fmod(units10, 3.0)));
     int iunit = static_cast<int>(units3);
     
+    _startFrequency = newStartFrequency;
+    _stopFrequency = newStopFrequency;
+    _centerFrequency = newCenterFrequency;
+
     _frequencyDisplayPlot->SetFrequencyRange(newStartFrequency,
 					     newStopFrequency,
 					     newCenterFrequency,
@@ -635,12 +645,7 @@ SpectrumDisplayForm::WindowTypeChanged( int newItem )
 void
 SpectrumDisplayForm::UseRFFrequenciesCB( bool useRFFlag )
 {
-  if(useRFFlag){
-    SetFrequencyRange(_startFrequency, _stopFrequency, _centerFrequency);
-  }
-  else{
-    SetFrequencyRange(_startFrequency, _stopFrequency, 0.0 );
-  }
+  SetFrequencyRange(_centerFrequency, _startFrequency, _stopFrequency);
 }
 
 

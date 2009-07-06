@@ -1,0 +1,253 @@
+<ui version="4.0" >
+ <class>InterfaceWindow</class>
+ <widget class="QMainWindow" name="InterfaceWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>909</width>
+    <height>711</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <widget class="QPushButton" name="closeButton" >
+    <property name="geometry" >
+     <rect>
+      <x>790</x>
+      <y>580</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text" >
+     <string>Close</string>
+    </property>
+   </widget>
+   <widget class="QFrame" name="sinkFrame" >
+    <property name="geometry" >
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>891</width>
+      <height>501</height>
+     </rect>
+    </property>
+    <property name="frameShape" >
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow" >
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QWidget" name="horizontalLayoutWidget" >
+     <property name="geometry" >
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>871</width>
+       <height>481</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="sinkLayout" />
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="channelModeBox" >
+    <property name="geometry" >
+     <rect>
+      <x>10</x>
+      <y>520</y>
+      <width>261</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>USRP Parameters</string>
+    </property>
+    <widget class="QLabel" name="bandwidthabel" >
+     <property name="geometry" >
+      <rect>
+       <x>10</x>
+       <y>90</y>
+       <width>101</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text" >
+      <string>Bandwidth (Hz)</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="bandwidthEdit" >
+     <property name="geometry" >
+      <rect>
+       <x>130</x>
+       <y>90</y>
+       <width>113</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="gainEdit" >
+     <property name="geometry" >
+      <rect>
+       <x>130</x>
+       <y>60</y>
+       <width>113</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="gainLabel" >
+     <property name="geometry" >
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>111</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text" >
+      <string>Gain (dB)</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="freqEdit" >
+     <property name="geometry" >
+      <rect>
+       <x>130</x>
+       <y>30</y>
+       <width>113</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="freqLabel" >
+     <property name="geometry" >
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>111</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text" >
+      <string>Frequency</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="pauseButton" >
+    <property name="geometry" >
+     <rect>
+      <x>790</x>
+      <y>520</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text" >
+     <string>Pause</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="fmBox" >
+    <property name="geometry" >
+     <rect>
+      <x>290</x>
+      <y>520</y>
+      <width>251</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>FM Tuner Parameters</string>
+    </property>
+    <widget class="QLineEdit" name="volumeEdit" >
+     <property name="geometry" >
+      <rect>
+       <x>130</x>
+       <y>20</y>
+       <width>113</width>
+       <height>23</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="volumeLabel" >
+     <property name="geometry" >
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>111</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text" >
+      <string>Volume</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>909</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile" >
+    <property name="title" >
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionExit" />
+   </widget>
+   <addaction name="menuFile" />
+  </widget>
+  <widget class="QStatusBar" name="statusbar" />
+  <action name="actionExit" >
+   <property name="text" >
+    <string>E&amp;xit</string>
+   </property>
+  </action>
+ </widget>
+ <tabstops>
+  <tabstop>closeButton</tabstop>
+  <tabstop>gainEdit</tabstop>
+  <tabstop>freqEdit</tabstop>
+  <tabstop>bandwidthEdit</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>closeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>InterfaceWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>322</x>
+     <y>623</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>66</x>
+     <y>561</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>InterfaceWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>617</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

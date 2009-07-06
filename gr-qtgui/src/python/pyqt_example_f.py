@@ -113,7 +113,7 @@ class my_top_block(gr.top_block):
         src  = gr.add_ff()
         thr = gr.throttle(gr.sizeof_float, 100*fftsize)
         self.snk1 = qtgui.sink_f(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
-                                 -Rs/2, Rs/2,
+                                 0, Rs,
                                  "Float Signal Example",
                                  True, True, False, True, False)
 

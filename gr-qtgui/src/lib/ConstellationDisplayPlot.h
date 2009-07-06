@@ -1,6 +1,7 @@
 #ifndef CONSTELLATION_DISPLAY_PLOT_HPP
 #define CONSTELLATION_DISPLAY_PLOT_HPP
 
+#include <cstdio>
 #include <qwt_plot.h>
 #include <qwt_painter.h>
 #include <qwt_plot_canvas.h>

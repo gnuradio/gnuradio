@@ -1,6 +1,7 @@
 #ifndef WATERFALL_3D_DISPLAY_PLOT_HPP
 #define WATERFALL_3D_DISPLAY_PLOT_HPP
 
+#include <cstdio>
 #include <highResTimeFunctions.h>
 
 #include <waterfallGlobalData.h>

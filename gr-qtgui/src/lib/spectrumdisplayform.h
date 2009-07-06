@@ -42,9 +42,9 @@ public slots:
   void MinHoldResetBtn_clicked();
   void MaxHoldResetBtn_clicked();
   void PowerLineEdit_textChanged( const QString& valueString );
-  void SetFrequencyRange( const double newStartFrequency,
-			  const double newStopFrequency,
-			  const double newCenterFrequency );
+  void SetFrequencyRange( const double newCenterFrequency,
+			  const double newStartFrequency,
+			  const double newStopFrequency );
   void closeEvent( QCloseEvent * e );
   void WindowTypeChanged( int newItem );
   void UseRFFrequenciesCB( bool useRFFlag );

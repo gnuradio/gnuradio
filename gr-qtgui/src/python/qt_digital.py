@@ -183,10 +183,10 @@ class my_top_block(gr.top_block):
         self.channel = gr.channel_model(noise, self.fo, self.to)
 
         self.thr = gr.throttle(gr.sizeof_char, 10*fftsize)
-        self.snk_tx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS, -1/2, 1/2,
+        self.snk_tx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS, 0, 1,
                                    "Tx", True, True, False, True, True)
 
-        self.snk_rx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS, -1/2, 1/2,
+        self.snk_rx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS, 0, 1,
                                    "Rx", True, True, False, True, True)
 
         self.connect(self.src, self.thr, self.mod, self.channel, self.snk_tx)

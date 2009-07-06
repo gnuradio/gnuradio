@@ -32,34 +32,37 @@
 
 qtgui_sink_f_sptr
 qtgui_make_sink_f (int fftsize, int wintype,
-		   float fmin, float fmax,
+		   double fc, double bw,
 		   const std::string &name,
 		   bool plotfreq, bool plotwaterfall,
 		   bool plotwaterfall3d, bool plottime,
 		   bool plotconst,
+		   bool use_openGL,
 		   QWidget *parent)
 {
   return qtgui_sink_f_sptr (new qtgui_sink_f (fftsize, wintype,
-					      fmin, fmax, name,
+					      fc, bw, name,
 					      plotfreq, plotwaterfall,
 					      plotwaterfall3d, plottime,
 					      plotconst,
+					      use_openGL,
 					      parent));
 }
 
 qtgui_sink_f::qtgui_sink_f (int fftsize, int wintype,
-			    float fmin, float fmax,
+			    double fc, double bw,
 			    const std::string &name,
 			    bool plotfreq, bool plotwaterfall,
 			    bool plotwaterfall3d, bool plottime,
 			    bool plotconst,
+			    bool use_openGL,
 			    QWidget *parent)
   : gr_block ("sink_f",
 	      gr_make_io_signature (1, 1, sizeof(float)),
 	      gr_make_io_signature (0, 0, 0)),
     d_fftsize(fftsize),
     d_wintype((gr_firdes::win_type)(wintype)),
-    d_fmin(fmin), d_fmax(fmax), d_name(name),
+    d_center_freq(fc), d_bandwidth(bw), d_name(name),
     d_plotfreq(plotfreq), d_plotwaterfall(plotwaterfall),
     d_plotwaterfall3d(plotwaterfall3d), d_plottime(plottime),
     d_plotconst(plotconst),
@@ -82,7 +85,7 @@ qtgui_sink_f::qtgui_sink_f (int fftsize, int wintype,
 
   buildwindow();
 
-  initialize();
+  initialize(use_openGL);
 }
 
 qtgui_sink_f::~qtgui_sink_f()
@@ -104,7 +107,7 @@ void qtgui_sink_f::unlock()
 }
 
 void
-qtgui_sink_f::initialize()
+qtgui_sink_f::initialize(const bool opengl)
 {
   if(qApp != NULL) {
     d_qApplication = qApp;
@@ -118,7 +121,9 @@ qtgui_sink_f::initialize()
 
   uint64_t maxBufferSize = 32768;
   d_main_gui = new SpectrumGUIClass(maxBufferSize, d_fftsize,
-				    d_fmin, d_fmax);
+				    d_center_freq, 
+				    -d_bandwidth/2.0, 
+				    d_bandwidth/2.0);
   d_main_gui->SetDisplayTitle(d_name);
   d_main_gui->SetFFTSize(d_fftsize);
   d_main_gui->SetWindowType((int)d_wintype);
@@ -126,7 +131,8 @@ qtgui_sink_f::initialize()
   d_main_gui->OpenSpectrumWindow(d_parent,
 				 d_plotfreq, d_plotwaterfall,
 				 d_plotwaterfall3d, d_plottime,
-				 d_plotconst);
+				 d_plotconst,
+				 opengl);
 
   d_object = new qtgui_obj(d_qApplication);
   qApp->postEvent(d_object, new qtgui_event(&d_pmutex));
@@ -154,10 +160,13 @@ qtgui_sink_f::pyqwidget()
 
 void
 qtgui_sink_f::set_frequency_range(const double centerfreq, 
-				  const double startfreq,
-				  const double stopfreq)
+				  const double bandwidth)
 {
-  d_main_gui->SetFrequencyRange(centerfreq, startfreq, stopfreq);
+  d_center_freq = centerfreq;
+  d_bandwidth = bandwidth;
+  d_main_gui->SetFrequencyRange(d_center_freq, 
+				-d_bandwidth/2.0,
+				d_bandwidth/2.0);
 }
 
 void

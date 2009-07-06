@@ -1,6 +1,7 @@
 #ifndef SPECTRUM_UPDATE_EVENTS_H
 #define SPECTRUM_UPDATE_EVENTS_H
 
+#include <stdint.h>
 #include <QEvent>
 #include <QString>
 #include <complex>

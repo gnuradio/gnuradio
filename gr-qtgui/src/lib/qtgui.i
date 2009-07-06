@@ -30,7 +30,7 @@
 GR_SWIG_BLOCK_MAGIC(qtgui,sink_c)
 
   qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
-				       float fmin=-0.5, float fmax=0.5,
+				       double fc=0, double bw=1.0,
 				       const std::string &name="Display",
 				       bool plotfreq=true, bool plotwaterfall=true,
 				       bool plotwaterfall3d=true, bool plottime=true,
@@ -42,7 +42,7 @@ class qtgui_sink_c : public gr_block
 {
 private:
   friend qtgui_sink_c_sptr qtgui_make_sink_c (int fftsize, int wintype,
-					      float fmin, float fmax,
+					      double fc, double bw,
 					      const std::string &name,
 					      bool plotfreq, bool plotwaterfall,
 					      bool plotwaterfall3d, bool plottime,
@@ -50,7 +50,7 @@ private:
 					      bool use_openGL,
 					      QWidget *parent);
   qtgui_sink_c (int fftsize, int wintype,
-		float fmin, float fmax,
+		double fc, double bw,
 		const std::string &name,
 		bool plotfreq, bool plotwaterfall,
 		bool plotwaterfall3d, bool plottime,
@@ -63,8 +63,7 @@ public:
   PyObject* pyqwidget();
 
   void set_frequency_range(const double centerfreq,
-			   const double startfreq,
-			   const double stopfreq);
+			   const double bandwidth);
   void set_time_domain_axis(double min, double max);
   void set_constellation_axis(double xmin, double xmax,
 			      double ymin, double ymax);
@@ -79,29 +78,32 @@ public:
 GR_SWIG_BLOCK_MAGIC(qtgui,sink_f)
   
 qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
-				     float fmin=-0.5, float fmax=0.5,
+				     double fc=0, double bw=0.0,
 				     const std::string &name="Display",
 				     bool plotfreq=true, bool plotwaterfall=true,
 				     bool plotwaterfall3d=true, bool plottime=true,
 				     bool plotconst=true,
+				     bool use_openGL=true,
 				     QWidget *parent=NULL);
 
 class qtgui_sink_f : public gr_block
 {
 private:
   friend qtgui_sink_f_sptr qtgui_make_sink_f (int fftsize, int wintype,
-					      float fmin, float fmax,
+					      double fc, double bw,
 					      const std::string &name,
 					      bool plotfreq, bool plotwaterfall,
 					      bool plotwaterfall3d, bool plottime,
 					      bool plotconst,
+					      bool use_openGL,
 					      QWidget *parent);
   qtgui_sink_f (int fftsize, int wintype,
-		float fmin, float fmax,
+		double fc, double bw,
 		const std::string &name,
 		bool plotfreq, bool plotwaterfall,
 		bool plotwaterfall3d, bool plottime,
 		bool plotconst,
+		bool use_openGL,
 		QWidget *parent);
 
 public:
@@ -109,8 +111,7 @@ public:
   PyObject* pyqwidget();
 
   void set_frequency_range(const double centerfreq,
-			   const double startfreq,
-			   const double stopfreq);
+			   const double bandwidth);
   void set_time_domain_axis(double min, double max);
   void set_constellation_axis(double xmin, double xmax,
 			      double ymin, double ymax);

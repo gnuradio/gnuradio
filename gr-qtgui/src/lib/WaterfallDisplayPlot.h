@@ -1,6 +1,7 @@
 #ifndef WATERFALL_DISPLAY_PLOT_HPP
 #define WATERFALL_DISPLAY_PLOT_HPP
 
+#include <cstdio>
 #include <qwt_plot.h>
 #include <qwt_plot_zoomer.h>
 #include <qwt_plot_panner.h>

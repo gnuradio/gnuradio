@@ -32,7 +32,7 @@
 
 qtgui_sink_c_sptr
 qtgui_make_sink_c (int fftsize, int wintype,
-		   float fmin, float fmax,
+		   double fc, double bw,
 		   const std::string &name,
 		   bool plotfreq, bool plotwaterfall,
 		   bool plotwaterfall3d, bool plottime,
@@ -41,7 +41,7 @@ qtgui_make_sink_c (int fftsize, int wintype,
 		   QWidget *parent)
 {
   return qtgui_sink_c_sptr (new qtgui_sink_c (fftsize, wintype,
-					      fmin, fmax, name,
+					      fc, bw, name,
 					      plotfreq, plotwaterfall,
 					      plotwaterfall3d, plottime,
 					      plotconst,
@@ -50,7 +50,7 @@ qtgui_make_sink_c (int fftsize, int wintype,
 }
 
 qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
-			    float fmin, float fmax,
+			    double fc, double bw,
 			    const std::string &name,
 			    bool plotfreq, bool plotwaterfall,
 			    bool plotwaterfall3d, bool plottime,
@@ -62,7 +62,7 @@ qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
 	      gr_make_io_signature (0, 0, 0)),
     d_fftsize(fftsize),
     d_wintype((gr_firdes::win_type)(wintype)), 
-    d_fmin(fmin), d_fmax(fmax), d_name(name),
+    d_center_freq(fc), d_bandwidth(bw), d_name(name),
     d_plotfreq(plotfreq), d_plotwaterfall(plotwaterfall),
     d_plotwaterfall3d(plotwaterfall3d), d_plottime(plottime),
     d_plotconst(plotconst),
@@ -119,9 +119,15 @@ qtgui_sink_c::initialize(const bool opengl)
     d_qApplication = new QApplication(argc, argv);
   }
 
+  if(d_center_freq < 0) {
+    throw std::runtime_error("qtgui_sink_c: Received bad center frequency.\n");
+  }
+
   uint64_t maxBufferSize = 32768;
   d_main_gui = new SpectrumGUIClass(maxBufferSize, d_fftsize, 
-				    d_fmin, d_fmax);
+				    d_center_freq, 
+				    -d_bandwidth/2.0, 
+				    d_bandwidth/2.0);
 
   d_main_gui->SetDisplayTitle(d_name);
   d_main_gui->SetFFTSize(d_fftsize);
@@ -160,10 +166,13 @@ qtgui_sink_c::pyqwidget()
 
 void
 qtgui_sink_c::set_frequency_range(const double centerfreq, 
-				  const double startfreq,
-				  const double stopfreq)
+				  const double bandwidth)
 {
-  d_main_gui->SetFrequencyRange(centerfreq, startfreq, stopfreq);
+  d_center_freq = centerfreq;
+  d_bandwidth = bandwidth;
+  d_main_gui->SetFrequencyRange(d_center_freq, 
+				-d_bandwidth/2.0,
+				d_bandwidth/2.0);
 }
 
 void
@@ -282,7 +291,7 @@ qtgui_sink_c::general_work (int noutput_items,
   const timespec currentTime = get_highres_clock();
   const timespec lastUpdateGUITime = d_main_gui->GetLastGUIUpdateTime();
 
-  if(diff_timespec(currentTime, lastUpdateGUITime) > 0.25) {
+  if(diff_timespec(currentTime, lastUpdateGUITime) > 0.05) {
 
     if(d_index) {
       int filler = std::min(d_fftsize - d_index, noutput_items);

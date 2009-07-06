@@ -1,6 +1,7 @@
 #ifndef FREQUENCY_DISPLAY_PLOT_HPP
 #define FREQUENCY_DISPLAY_PLOT_HPP
 
+#include <cstdio>
 #include <qwt_plot.h>
 #include <qwt_painter.h>
 #include <qwt_plot_canvas.h>
@@ -52,7 +53,9 @@ private:
   
   double _startFrequency;
   double _stopFrequency;
-
+  double _maxYAxis;
+  double _minYAxis;
+  
   QwtPlotCurve* _fft_plot_curve;
   QwtPlotCurve* _min_fft_plot_curve;
   QwtPlotCurve* _max_fft_plot_curve;

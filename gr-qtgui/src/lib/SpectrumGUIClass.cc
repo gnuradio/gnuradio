@@ -10,7 +10,8 @@ const long SpectrumGUIClass::MAX_FFT_SIZE;
 const long SpectrumGUIClass::MIN_FFT_SIZE;
 
 SpectrumGUIClass::SpectrumGUIClass(const uint64_t maxDataSize,
-				   const uint64_t fftSize, 
+				   const uint64_t fftSize,
+				   const double newCenterFrequency,
 				   const double newStartFrequency,
 				   const double newStopFrequency)
 {
@@ -25,7 +26,7 @@ SpectrumGUIClass::SpectrumGUIClass(const uint64_t maxDataSize,
   _pendingGUIUpdateEventsCount = 0;
   _droppedEntriesCount = 0;
 
-  _centerFrequency = 0;
+  _centerFrequency = newCenterFrequency;
   _startFrequency = newStartFrequency;
   _stopFrequency = newStopFrequency;
 
@@ -112,6 +113,9 @@ SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
 
   // Draw Blank Display
   UpdateWindow(false, NULL, 0, NULL, 0, NULL, 0, 1.0, get_highres_clock(), true);
+
+  // Set up the initial frequency axis settings
+  SetFrequencyRange(_centerFrequency, _startFrequency, _stopFrequency);
 
   // GUI Thread only
   qApp->processEvents();

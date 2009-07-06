@@ -229,10 +229,10 @@ class my_top_block(gr.top_block):
                 fftsize = 2048
 
                 self.snk_tx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
-                                           -1/2, 1/2,
+                                           0, 1,
                                            "Tx", True, True, False, True, True)
                 self.snk_rx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
-                                           -1/2, 1/2,
+                                           0, 1,
                                            "Rx", True, True, False, True, True)
 
                 self.snk_tx.set_frequency_axis(-80, 0)

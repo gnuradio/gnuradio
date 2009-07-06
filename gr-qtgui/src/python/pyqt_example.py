@@ -114,7 +114,7 @@ class my_top_block(gr.top_block):
         channel = gr.channel_model(0.001)
         thr = gr.throttle(gr.sizeof_gr_complex, 100*fftsize)
         self.snk1 = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
-                                 -Rs/2, Rs/2,
+                                 0, Rs,
                                  "Complex Signal Example",
                                  True, True, False, True, False)
 

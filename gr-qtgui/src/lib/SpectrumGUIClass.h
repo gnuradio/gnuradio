@@ -23,7 +23,9 @@ class SpectrumGUIClass
 {
 public:
   SpectrumGUIClass(const uint64_t maxDataSize, const uint64_t fftSize,
-		   const double newStartFrequency, const double newStopFrequency);
+		   const double newCenterFrequency,
+		   const double newStartFrequency, 
+		   const double newStopFrequency);
   ~SpectrumGUIClass();
   void Reset();
 

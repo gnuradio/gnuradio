@@ -48,7 +48,7 @@ try:
 except ImportError:
     print "Error: could not find qt_rx_window.py:"
     print "\tYou must first build this from qt_rx_window.ui with the following command:"
-    print "\t  pyuic4 qt_rx_window.ui -o qt_rx_window.py"
+    print "\t\"pyuic4 qt_rx_window.ui -o qt_rx_window.py\""
     sys.exit(1)
 
 #import os
@@ -213,12 +213,13 @@ class my_top_block(gr.top_block):
         if self.gui_on:
             self.qapp = QtGui.QApplication(sys.argv)
             fftsize = 2048
-            
+
+            bw_in = self.u.adc_rate() / self.decim()
             self.snk_rxin = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
-                                         -1/2, 1/2,
+                                         self._rx_freq, bw_in,
                                          "Received", True, True, False, True, True, False)
             self.snk_rx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
-                                       -1/2, 1/2,
+                                       0, self._bitrate,
                                        "Post-Synchronizer", True, True, False, True, True, False)
 
             self.snk_rxin.set_frequency_axis(-60, 60)
@@ -284,6 +285,12 @@ class my_top_block(gr.top_block):
     def set_decim(self, decim):
         self._decim = decim
         self.u.set_decim(self._decim)
+
+        if(self.gui_on):
+            bw_in = self.u.adc_rate() / self._decim
+            self._bitrate = bw_in / self._samples_per_symbol
+            self.snk_rxin.set_frequency_range(0, -bw_in/2.0, bw_in/2.0)
+            self.snk_rx.set_frequency_range(0, -self._bitrate/2.0, self._bitrate/2.0)
 
     def frequency(self):
         return self._rx_freq

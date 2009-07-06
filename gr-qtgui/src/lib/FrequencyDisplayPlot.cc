@@ -117,8 +117,10 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
   setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
 
+  _minYAxis = -120;
+  _maxYAxis = 10;
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
-  set_yaxis(-210, 5);
+  setAxisScale(QwtPlot::yLeft, _minYAxis, _maxYAxis);
   setAxisTitle(QwtPlot::yLeft, "Power (dB)");
 
   // Automatically deleted when parent is deleted
@@ -225,7 +227,15 @@ FrequencyDisplayPlot::~FrequencyDisplayPlot()
 void
 FrequencyDisplayPlot::set_yaxis(double min, double max)
 {
-  setAxisScale(QwtPlot::yLeft, min, max);
+  // Get the new max/min values for the plot
+  _minYAxis = min;
+  _maxYAxis = max;
+
+  // Set the axis max/min to the new values
+  setAxisScale(QwtPlot::yLeft, _minYAxis, _maxYAxis);
+
+  // Reset the base zoom level to the new axis scale set here
+  _zoomer->setZoomBase();
 }
 
 void
@@ -249,17 +259,14 @@ FrequencyDisplayPlot::SetFrequencyRange(const double constStartFreq,
   _startFrequency = startFreq;
   _stopFrequency = stopFreq;
   _resetXAxisPoints();
-  
+
   setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
   setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(2));
   setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
   ((FreqDisplayZoomer*)_zoomer)->SetFrequencyPrecision(2);
 
   // Load up the new base zoom settings
-  QwtDoubleRect newSize = _zoomer->zoomBase();
-  newSize.setLeft(_startFrequency);
-  newSize.setWidth(_stopFrequency-_startFrequency);
-  _zoomer->setZoomBase(newSize);
+  _zoomer->setZoomBase();
   
   // Zooms back to the base and clears any other zoom levels
   _zoomer->zoom(0);
@@ -362,7 +369,7 @@ void
 FrequencyDisplayPlot::ClearMaxData()
 {
   for(int64_t number = 0; number < _numPoints; number++){
-    _maxFFTPoints[number] = -280.0;
+    _maxFFTPoints[number] = _maxYAxis;
   }
 }
 
@@ -370,7 +377,7 @@ void
 FrequencyDisplayPlot::ClearMinData()
 {
   for(int64_t number = 0; number < _numPoints; number++){
-    _minFFTPoints[number] = 200.0;
+    _minFFTPoints[number] = _minYAxis;
   }
 }
 
