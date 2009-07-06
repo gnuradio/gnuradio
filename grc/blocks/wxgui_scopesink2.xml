@@ -9,8 +9,9 @@
 	<key>wxgui_scopesink2</key>
 	<import>from gnuradio.wxgui import scopesink2</import>
 	<import>from gnuradio import gr</import>
-	<make>scopesink2.$(type.fcn)(
-	self.GetWin(),
+	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
+scopesink2.$(type.fcn)(
+	$(parent).GetWin(),
 	title=$title,
 	sample_rate=$samp_rate,
 	v_scale=$v_scale,
@@ -19,11 +20,10 @@
 	xy_mode=$xy_mode,
 	num_inputs=$num_inputs,
 )
-#set $grid_pos = $grid_pos()
-#if not grid_pos
-self.Add(self.$(id).win)
+#if not $grid_pos()
+$(parent).Add(self.$(id).win)
 #else
-self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+$(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 #end if</make>
 	<callback>set_sample_rate($samp_rate)</callback>
 	<param>
@@ -108,6 +108,12 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<value></value>
 		<type>grid_pos</type>
 	</param>
+	<param>
+		<name>Notebook</name>
+		<key>notebook</key>
+		<value></value>
+		<type>notebook</type>
+	</param>
 	<check>not $xy_mode or '$type' == 'complex' or $num_inputs != 1</check>
 	<sink>
 		<name>in</name>
@@ -122,5 +128,7 @@ Set the T Scale to 0 for automatic setting.
 XY Mode allows the scope to initialize as an XY plotter.
 
 Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+
+Use the Notebook Param (notebook-id, page-index) to place the graphical element inside of a notebook page.
 	</doc>
 </block>

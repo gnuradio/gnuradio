@@ -90,7 +90,13 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 		#list of blocks not including variables and imports and parameters and disabled
 		blocks = sorted(self._flow_graph.get_enabled_blocks(), lambda x, y: cmp(x.get_id(), y.get_id()))
 		probes = filter(lambda b: b.get_key().startswith('probe_'), blocks) #ensure probes are last in the block list
-		blocks = filter(lambda b: b not in (imports + parameters + variables + probes), blocks) + probes
+		#get a list of notebooks and sort them according dependencies
+		notebooks = expr_utils.sort_objects(
+			filter(lambda b: b.get_key() == 'notebook', blocks),
+			lambda n: n.get_id(), lambda n: n.get_param('notebook').get_value(),
+		)
+		#list of regular blocks (all blocks minus the special ones)
+		blocks = filter(lambda b: b not in (imports + parameters + variables + probes + notebooks), blocks) + probes
 		#list of connections where each endpoint is enabled
 		connections = self._flow_graph.get_enabled_connections()
 		#list of variable names
@@ -113,6 +119,7 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 			'imports': imports,
 			'flow_graph': self._flow_graph,
 			'variables': variables,
+			'notebooks': notebooks,
 			'controls': controls,
 			'parameters': parameters,
 			'blocks': blocks,

@@ -185,6 +185,7 @@ dist_ourdata_DATA = \
 	import.xml \
 	low_pass_filter.xml \
 	note.xml \
+	notebook.xml \
 	options.xml \
 	pad_sink.xml \
 	pad_source.xml \

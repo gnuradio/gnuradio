@@ -99,16 +99,7 @@ class FlowGraph(_FlowGraph):
 		@return a sorted list of variable blocks in order of dependency (indep -> dep)
 		"""
 		variables = filter(lambda b: _variable_matcher.match(b.get_key()), self.get_enabled_blocks())
-		#map var id to variable block
-		id2var = dict([(var.get_id(), var) for var in variables])
-		#map var id to variable code
-		#variable code is a concatenation of all param code (without the id param)
-		id2expr = dict([(var.get_id(), var.get_var_make()) for var in variables])
-		#sort according to dependency
-		sorted_ids = expr_utils.sort_variables(id2expr)
-		#create list of sorted variable blocks
-		variables = [id2var[id] for id in sorted_ids]
-		return variables
+		return expr_utils.sort_objects(variables, lambda v: v.get_id(), lambda v: v.get_var_make())
 
 	def get_parameters(self):
 		"""

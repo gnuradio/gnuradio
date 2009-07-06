@@ -40,7 +40,6 @@ class _waterfall_sink_base(gr.hier_block2):
 		self,
 		parent,
 		baseband_freq=0,
-		y_per_div=None, #ignore (old wrapper)
 		ref_level=50,
 		sample_rate=1,
 		fft_size=512,
@@ -52,6 +51,7 @@ class _waterfall_sink_base(gr.hier_block2):
 		ref_scale=2.0,
 		dynamic_range=80,
 		num_lines=256,
+		**kwargs #do not end with a comma
 	):
 		#ensure avg alpha
 		if avg_alpha is None: avg_alpha = 2.0/fft_rate

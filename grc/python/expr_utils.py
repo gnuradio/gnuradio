@@ -133,5 +133,21 @@ def sort_variables(exprs):
 		for var in indep_vars: var_graph.remove_node(var)
 	return reversed(sorted_vars)
 
+def sort_objects(objects, get_id, get_expr):
+	"""
+	Sort a list of objects according to their expressions.
+	@param objects the list of objects to sort
+	@param get_id the function to extract an id from the object
+	@param get_expr the function to extract an expression from the object
+	@return a list of sorted objects
+	"""
+	id2obj = dict([(get_id(obj), obj) for obj in objects])
+	#map obj id to expression code
+	id2expr = dict([(get_id(obj), get_expr(obj)) for obj in objects])
+	#sort according to dependency
+	sorted_ids = sort_variables(id2expr)
+	#return list of sorted objects
+	return [id2obj[id] for id in sorted_ids]
+
 if __name__ == '__main__':
 	for i in sort_variables({'x':'1', 'y':'x+1', 'a':'x+y', 'b':'y+1', 'c':'a+b+x+y'}): print i

@@ -130,7 +130,7 @@ class Block(_Block):
 		return '\n'.join([doc, extract_docs.extract(self.get_key())]).strip('\n')
 
 	def get_category(self):
-		#category = extract_category.extract(self.get_key())
+		category = extract_category.extract(self.get_key())
 		#if category: return category
 		return _Block.get_category(self)
 
@@ -154,6 +154,6 @@ class Block(_Block):
 		"""
 		def make_callback(callback):
 			callback = self.resolve_dependencies(callback)
-			if callback.startswith('self.'): return callback
+			if 'self.' in callback: return callback
 			return 'self.%s.%s'%(self.get_id(), callback)
 		return map(make_callback, self._callbacks)

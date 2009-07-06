@@ -8,17 +8,17 @@
 	<name>Histo Sink</name>
 	<key>wxgui_histosink2</key>
 	<import>from gnuradio.wxgui import histosink_gl</import>
-	<make>histosink_gl.histo_sink_f(
-	self.GetWin(),
+	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
+histosink_gl.histo_sink_f(
+	$(parent).GetWin(),
 	title=$title,
 	num_bins=$num_bins,
 	frame_size=$frame_size,
 )
-#set $grid_pos = $grid_pos()
-#if not grid_pos
-self.Add(self.$(id).win)
+#if not $grid_pos()
+$(parent).Add(self.$(id).win)
 #else
-self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+$(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 #end if</make>
 	<callback>set_num_bins($num_bins)</callback>
 	<callback>set_frame_size($frame_size)</callback>
@@ -46,11 +46,19 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<value></value>
 		<type>grid_pos</type>
 	</param>
+	<param>
+		<name>Notebook</name>
+		<key>notebook</key>
+		<value></value>
+		<type>notebook</type>
+	</param>
 	<sink>
 		<name>in</name>
 		<type>float</type>
 	</sink>
 	<doc>
 Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+
+Use the Notebook Param (notebook-id, page-index) to place the graphical element inside of a notebook page.
 	</doc>
 </block>

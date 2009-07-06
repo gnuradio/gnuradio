@@ -168,4 +168,5 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		"""
 		Force a paint event.
 		"""
+		if not self._gl_init_flag: return
 		wx.PostEvent(self, wx.PaintEvent())

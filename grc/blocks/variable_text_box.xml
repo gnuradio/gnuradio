@@ -10,8 +10,10 @@
 	<key>variable_text_box</key>
 	<import>from gnuradio.wxgui import forms</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
-	<make>self._$(id)_text_box = forms.text_box(
-	parent=self.GetWin(),
+	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
+#set $win = 'self._%s_text_box'%$id
+$win = forms.text_box(
+	parent=$(parent).GetWin(),
 	value=self.$id,
 	callback=self.set_$(id),
 	#if $label()
@@ -25,11 +27,10 @@
 	converter=forms.$(converver)(),
 	#end if
 )
-#set $grid_pos = $grid_pos()
-#if not grid_pos
-self.Add(self._$(id)_text_box)
+#if not $grid_pos()
+$(parent).Add($win)
 #else
-self.GridAdd(self._$(id)_text_box, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+$(parent).GridAdd($win, $(', '.join(map(str, $grid_pos()))))
 #end if</make>
 	<callback>self.set_$(id)($value)</callback>
 	<callback>self._$(id)_text_box.set_value($id)</callback>
@@ -81,6 +82,12 @@ self.GridAdd(self._$(id)_text_box, $grid_pos[0], $grid_pos[1], $grid_pos[2], $gr
 		<value></value>
 		<type>grid_pos</type>
 	</param>
+	<param>
+		<name>Notebook</name>
+		<key>notebook</key>
+		<value></value>
+		<type>notebook</type>
+	</param>
 	<doc>
 This block creates a variable with a text box. \
 Leave the label blank to use the variable id as the label.
@@ -88,5 +95,7 @@ Leave the label blank to use the variable id as the label.
 Format should be a function/lambda that converts a value into a string or None for the default formatter.
 
 Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+
+Use the Notebook Param (notebook-id, page-index) to place the graphical element inside of a notebook page.
 	</doc>
 </block>

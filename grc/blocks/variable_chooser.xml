@@ -11,8 +11,10 @@
 	<key>variable_chooser</key>
 	<import>from gnuradio.wxgui import forms</import>
 	<var_make>self.$(id) = $(id) = $value</var_make>
-	<make>self._$(id)_chooser = forms.$(type)(
-	parent=self.GetWin(),
+	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
+#set $win = 'self._%s_chooser'%$id
+$win = forms.$(type)(
+	parent=$(parent).GetWin(),
 	value=self.$id,
 	callback=self.set_$(id),
 	#if $label()
@@ -26,11 +28,10 @@
 	style=$style,
 #end if
 )
-#set $grid_pos = $grid_pos()
-#if not grid_pos
-self.Add(self._$(id)_chooser)
+#if not $grid_pos()
+$(parent).Add($win)
 #else
-self.GridAdd(self._$(id)_chooser, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+$(parent).GridAdd($win, $(', '.join(map(str, $grid_pos()))))
 #end if</make>
 	<callback>self.set_$(id)($value)</callback>
 	<callback>self._$(id)_chooser.set_value($id)</callback>
@@ -98,6 +99,12 @@ self.GridAdd(self._$(id)_chooser, $grid_pos[0], $grid_pos[1], $grid_pos[2], $gri
 		<value></value>
 		<type>grid_pos</type>
 	</param>
+	<param>
+		<name>Notebook</name>
+		<key>notebook</key>
+		<value></value>
+		<type>notebook</type>
+	</param>
 	<check>$value in $choices</check>
 	<check>not $labels or len($labels) == len($choices)</check>
 	<doc>
@@ -109,5 +116,7 @@ The choices must be a list of possible values. \
 Leave labels empty to use the choices as the labels.
 
 Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+
+Use the Notebook Param (notebook-id, page-index) to place the graphical element inside of a notebook page.
 	</doc>
 </block>

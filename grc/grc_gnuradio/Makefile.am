@@ -23,11 +23,11 @@ include $(top_srcdir)/Makefile.common
 
 grc_gnuradio_prefix = $(pythondir)/grc_gnuradio
 
-rootpythondir = $(grc_gnuradio_prefix)
-rootpython_PYTHON = __init__.py
+root_pythondir = $(grc_gnuradio_prefix)
+root_python_PYTHON = __init__.py
 
-blks2pythondir = $(grc_gnuradio_prefix)/blks2
-blks2python_PYTHON = \
+blks2_pythondir = $(grc_gnuradio_prefix)/blks2
+blks2_python_PYTHON = \
 	blks2/__init__.py \
 	blks2/error_rate.py \
 	blks2/packet.py \
@@ -36,14 +36,15 @@ blks2python_PYTHON = \
 	blks2/tcp.py \
 	blks2/variable_sink.py
 
-usrppythondir = $(grc_gnuradio_prefix)/usrp
-usrppython_PYTHON = \
+usrp_pythondir = $(grc_gnuradio_prefix)/usrp
+usrp_python_PYTHON = \
 	usrp/__init__.py \
 	usrp/common.py \
 	usrp/dual_usrp.py \
 	usrp/simple_usrp.py
 
-wxguipythondir = $(grc_gnuradio_prefix)/wxgui
-wxguipython_PYTHON = \
+wxgui_pythondir = $(grc_gnuradio_prefix)/wxgui
+wxgui_python_PYTHON = \
 	wxgui/__init__.py \
+	wxgui/panel.py \
 	wxgui/top_block_gui.py

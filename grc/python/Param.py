@@ -30,7 +30,7 @@ import re
 from gnuradio import gr
 
 _check_id_matcher = re.compile('^[a-z|A-Z]\w*$')
-_show_id_matcher = re.compile('^(variable\w*|parameter|options)$')
+_show_id_matcher = re.compile('^(variable\w*|parameter|options|notebook)$')
 
 class FileParam(EntryParam):
 	"""Provide an entry box for filename and a button to browse for a file."""
@@ -95,7 +95,8 @@ class Param(_Param):
 		'hex', 'string', 'bool',
 		'file_open', 'file_save',
 		'id',
-		'grid_pos', 'import',
+		'grid_pos', 'notebook',
+		'import',
 	]
 
 	def __repr__(self):
@@ -103,6 +104,7 @@ class Param(_Param):
 		Get the repr (nice string format) for this param.
 		@return the string representation
 		"""
+		if not self.is_valid(): return self.get_value()
 		if self.get_value() in self.get_option_keys(): return self.get_option(self.get_value()).get_name()
 		##################################################
 		# display logic for numbers
@@ -171,6 +173,7 @@ class Param(_Param):
 				'string': Constants.BYTE_VECTOR_COLOR_SPEC,
 				'id': Constants.ID_COLOR_SPEC,
 				'grid_pos': Constants.INT_VECTOR_COLOR_SPEC,
+				'notebook': Constants.INT_VECTOR_COLOR_SPEC,
 				'raw': Constants.WILDCARD_COLOR_SPEC,
 			}[self.get_type()]
 		except: return _Param.get_color(self)
@@ -201,7 +204,7 @@ class Param(_Param):
 				return 'part'
 			except: pass
 		#hide empty grid positions
-		if self.get_key() == 'grid_pos' and not self.get_value(): return 'part'
+		if self.get_key() in ('grid_pos', 'notebook') and not self.get_value(): return 'part'
 		return hide
 
 	def validate(self):
@@ -331,16 +334,37 @@ class Param(_Param):
 			#check row span, col span
 			try: assert row_span > 0 and col_span > 0
 			except AssertionError: raise Exception, 'Row and column span must be greater than zero.'
+			#get hostage cell parent
+			try: my_parent = self.get_parent().get_param('notebook').evaluate()
+			except: my_parent = ''
 			#calculate hostage cells
 			for r in range(row_span):
 				for c in range(col_span):
-					self._hostage_cells.append((row+r, col+c))
+					self._hostage_cells.append((my_parent, (row+r, col+c)))
 			#avoid collisions
 			params = filter(lambda p: p is not self, self.get_all_params('grid_pos'))
 			for param in params:
-				for cell in param._hostage_cells:
-					if cell in self._hostage_cells: raise Exception, 'Another graphical element is using cell "%s".'%str(cell)
+				for parent, cell in param._hostage_cells:
+					if (parent, cell) in self._hostage_cells:
+						raise Exception, 'Another graphical element is using parent "%s", cell "%s".'%(str(parent), str(cell))
 			return e
+		#########################
+		# Notebook Page Type
+		#########################
+		elif t == 'notebook':
+			if not v: return '' #allow for empty notebook
+			#get a list of all notebooks
+			notebook_blocks = filter(lambda b: b.get_key() == 'notebook', self.get_parent().get_parent().get_enabled_blocks())
+			#check for notebook param syntax
+			try: notebook_id, page_index = map(str.strip, v.split(','))
+			except: raise Exception, 'Bad notebook page format.'
+			#check that the notebook id is valid
+			try: notebook_block = filter(lambda b: b.get_id() == notebook_id, notebook_blocks)[0]
+			except: raise Exception, 'Notebook id "%s" is not an existing notebook id.'%notebook_id
+			#check that page index exists
+			try: assert int(page_index) in range(len(notebook_block.get_param('labels').get_evaluated()))
+			except: raise Exception, 'Page index "%s" is not a valid index number.'%page_index
+			return notebook_id, page_index
 		#########################
 		# Import Type
 		#########################

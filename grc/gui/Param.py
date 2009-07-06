@@ -25,8 +25,7 @@ import gtk
 
 PARAM_MARKUP_TMPL="""\
 #set $foreground = $param.is_valid() and 'black' or 'red'
-#set $value = not $param.is_valid() and 'error' or repr($param)
-<span foreground="$foreground" font_desc="Sans 7.5"><b>$encode($param.get_name()): </b>$encode($value)</span>"""
+<span foreground="$foreground" font_desc="Sans 7.5"><b>$encode($param.get_name()): </b>$encode(repr($param))</span>"""
 
 PARAM_LABEL_MARKUP_TMPL="""\
 #set $foreground = $param.is_valid() and 'black' or 'red'

@@ -20,7 +20,8 @@ from gnuradio.eng_option import eng_option
 #end if
 </import>
 	<make></make>
-	<callback>self.start($autostart)</callback>
+	<callback>if $run: self.start()
+else: self.stop(); self.wait()</callback>
 	<param>
 		<name>Title</name>
 		<key>title</key>
@@ -76,12 +77,12 @@ from gnuradio.eng_option import eng_option
 		<hide>#if $generate_options() == 'hb' then 'none' else 'all'#</hide>
 	</param>
 	<param>
-		<name>Autostart</name>
-		<key>autostart</key>
+		<name>Run</name>
+		<key>run</key>
 		<value>True</value>
 		<type>bool</type>
 		<hide>#if $generate_options() == 'wx_gui'
-	#if str($autostart) == 'True'
+	#if str($run) == 'True'
 part#slurp
 	#else
 none#slurp
@@ -90,11 +91,11 @@ none#slurp
 all#slurp
 #end if</hide>
 		<option>
-			<name>Yes</name>
+			<name>Autostart</name>
 			<key>True</key>
 		</option>
 		<option>
-			<name>No</name>
+			<name>Off</name>
 			<key>False</key>
 		</option>
 	</param>
@@ -135,7 +136,7 @@ The generate options controls the type of code generated. \
 Non-graphical flow graphs should avoid using graphical sinks or graphical variable controls.
 
 In a graphical application, \
-autostart can be controlled by a variable to start and stop the flowgraph at runtime.
+run can be controlled by a variable to start and stop the flowgraph at runtime.
 
 The id of this block determines the name of the generated file and the name of the class. \
 For example, an id of my_block will generate the file my_block.py and class my_block(gr....

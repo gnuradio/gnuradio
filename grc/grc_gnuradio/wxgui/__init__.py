@@ -1,4 +1,4 @@
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2009 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -19,3 +19,4 @@
 #
 
 from top_block_gui import top_block_gui
+from panel import Panel

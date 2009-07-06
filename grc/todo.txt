@@ -22,6 +22,8 @@
   * gr_ofdm_insert_preamble
   * gr_ofdm_mapper_bcv
   * gr_ofdm_sampler
+* size params for the graphical sinks
+* callbacks for set average on fft, waterfall, number sinks
 
 ##################################################
 # Features
@@ -40,8 +42,6 @@
 * configuration option for adding block paths
 * orientations for ports (top, right, bottom, left)
   * source defaults to right, sink defaults to left
-* grid params take a notebook argument
-  * add a wx notebook block
 * separation of variables and gui controls
 * speedup w/ background layer and animation layer
 * multiple doxygen directories (doc_dir becomes doc_path)
@@ -68,6 +68,7 @@
 * params dialog needs to dynamically update for all params
   * will not update for non-enum params
   * needs to account for added or removed params
+  * example with grid params need update after notebook change
 
 ##################################################
 # Future

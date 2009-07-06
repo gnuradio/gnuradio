@@ -8,8 +8,9 @@
 	<name>Number Sink</name>
 	<key>wxgui_numbersink2</key>
 	<import>from gnuradio.wxgui import numbersink2</import>
-	<make>numbersink2.$(type.fcn)(
-	self.GetWin(),
+	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
+numbersink2.$(type.fcn)(
+	$(parent).GetWin(),
 	unit=$units,
 	minval=$min_value,
 	maxval=$max_value,
@@ -24,11 +25,10 @@
 	peak_hold=$peak_hold,
 	show_gauge=$show_gauge,
 )
-#set $grid_pos = $grid_pos()
-#if not grid_pos
-self.Add(self.$(id).win)
+#if not $grid_pos()
+$(parent).Add(self.$(id).win)
 #else
-self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos[3])
+$(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 #end if</make>
 	<param>
 		<name>Type</name>
@@ -157,6 +157,12 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 		<value></value>
 		<type>grid_pos</type>
 	</param>
+	<param>
+		<name>Notebook</name>
+		<key>notebook</key>
+		<value></value>
+		<type>notebook</type>
+	</param>
 	<sink>
 		<name>in</name>
 		<type>$type</type>
@@ -165,6 +171,8 @@ self.GridAdd(self.$(id).win, $grid_pos[0], $grid_pos[1], $grid_pos[2], $grid_pos
 Set Average Alpha to 0 for automatic setting.
 
 Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
+
+Use the Notebook Param (notebook-id, page-index) to place the graphical element inside of a notebook page.
 
 Incoming numbers are multiplied by the factor, and then added-to by the reference level.
 	</doc>

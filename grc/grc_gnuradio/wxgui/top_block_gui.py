@@ -1,4 +1,4 @@
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2009 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -21,13 +21,14 @@
 import wx
 import sys, os
 from gnuradio import gr
+import panel
 
 default_gui_size = (200, 100)
 
 class top_block_gui(gr.top_block):
 	"""gr top block with wx gui app and grid sizer."""
 
-	def __init__(self, title='', size=default_gui_size, icon=None):
+	def __init__(self, title='', size=default_gui_size):
 		"""
 		Initialize the gr top block.
 		Create the wx gui elements.
@@ -38,68 +39,37 @@ class top_block_gui(gr.top_block):
 		#initialize
 		gr.top_block.__init__(self)
 		self._size = size
-		#set the icon
-		if icon and os.path.isfile(icon): self._icon = icon
-		else: self._icon = None
 		#create gui elements
-		self._wx_app = wx.App()
-		self._wx_frame = wx.Frame(None , -1, title)
-		self._wx_grid = wx.GridBagSizer(5, 5)
-		self._wx_vbox = wx.BoxSizer(wx.VERTICAL)
+		self._app = wx.App()
+		self._frame = wx.Frame(None, title=title)
+		self._panel = panel.Panel(self._frame)
+		self.Add = self._panel.Add
+		self.GridAdd = self._panel.GridAdd
+		self.GetWin = self._panel.GetWin
 
-	def GetWin(self):
-		"""
-		Get the window for wx elements to fit within.
-		@return the wx frame
-		"""
-		return self._wx_frame
+	def SetIcon(self, *args, **kwargs): self._frame.SetIcon(*args, **kwargs)
 
-	def Add(self, win):
-		"""
-		Add a window to the wx vbox.
-		@param win the wx window
-		"""
-		self._wx_vbox.Add(win, 0, wx.EXPAND)
-
-	def GridAdd(self, win, row, col, row_span=1, col_span=1):
-		"""
-		Add a window to the wx grid at the given position.
-		@param win the wx window
-		@param row the row specification (integer >= 0)
-		@param col the column specification (integer >= 0)
-		@param row_span the row span specification (integer >= 1)
-		@param col_span the column span specification (integer >= 1)
-		"""
-		self._wx_grid.Add(win, wx.GBPosition(row, col), wx.GBSpan(row_span, col_span), wx.EXPAND)
-
-	def start(self, start=True):
-		if start:
-			gr.top_block.start(self)
-		else:
-			gr.top_block.stop(self)
-			gr.top_block.wait(self)
-
-	def Run(self, autostart=True):
+	def Run(self, start=True):
 		"""
 		Setup the wx gui elements.
 		Start the gr top block.
 		Block with the wx main loop.
 		"""
-		#set wx app icon
-		if self._icon: self._wx_frame.SetIcon(wx.Icon(self._icon, wx.BITMAP_TYPE_ANY))
 		#set minimal window size
-		self._wx_frame.SetSizeHints(*self._size)
+		self._frame.SetSizeHints(*self._size)
 		#create callback for quit
 		def _quit(event):
-			gr.top_block.stop(self)
-			self._wx_frame.Destroy()
+			self.stop(); self.wait()
+			self._frame.Destroy()
 		#setup app
-		self._wx_vbox.Add(self._wx_grid, 0, wx.EXPAND)
-		self._wx_frame.Bind(wx.EVT_CLOSE, _quit)
-		self._wx_frame.SetSizerAndFit(self._wx_vbox)
-		self._wx_frame.Show()
-		self._wx_app.SetTopWindow(self._wx_frame)
+		self._frame.Bind(wx.EVT_CLOSE, _quit)
+		self._sizer = wx.BoxSizer(wx.VERTICAL)
+		self._sizer.Add(self._panel, 0, wx.EXPAND)
+		self._frame.SetSizerAndFit(self._sizer)
+		self._frame.SetAutoLayout(True)
+		self._frame.Show(True)
+		self._app.SetTopWindow(self._frame)
 		#start flow graph
-		self.start(autostart)
+		if start: self.start()
 		#blocking main loop
-		self._wx_app.MainLoop()
+		self._app.MainLoop()

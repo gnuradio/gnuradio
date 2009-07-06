@@ -293,5 +293,7 @@
 
 		<block>xmlrpc_server</block>
 		<block>xmlrpc_client</block>
+
+		<block>notebook</block>
 	</cat>
 </cat>

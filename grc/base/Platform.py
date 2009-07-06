@@ -129,7 +129,9 @@ class Platform(_Element):
 				if block_key not in self.get_block_keys():
 					print >> sys.stderr, 'Warning: Block key "%s" not found when loading category tree.'%(block_key)
 					continue
-				block_tree.add_block(parent, self.get_block(block_key))
+				block = self.get_block(block_key)
+				#if it exists, the block's category overrides the block tree
+				if not block.get_category(): block_tree.add_block(parent, block)
 		#load the block tree
 		for block_tree_file in self._block_tree_files:
 			#recursivly add all blocks in the tree

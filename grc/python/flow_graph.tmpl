@@ -5,6 +5,7 @@
 ##@param imports the import statements
 ##@param flow_graph the flow_graph
 ##@param variables the variable blocks
+##@param notebooks a list of notebook blocks
 ##@param controls the variables with gui controls
 ##@param parameters the paramater blocks
 ##@param blocks the signal blocks
@@ -52,13 +53,11 @@ $imp
 class $(class_name)(grc_wxgui.top_block_gui):
 
 	def __init__($param_str):
-		grc_wxgui.top_block_gui.__init__(
-			self,
-			title="$title",
+		grc_wxgui.top_block_gui.__init__(self, title="$title")
 	#if $icon
-			icon="$icon.get_filename()",
+		_icon_path = "$icon.get_filename()"
+		self.SetIcon(wx.Icon(_icon_path, wx.BITMAP_TYPE_ANY))
 	#end if
-		)
 #elif $generate_options == 'no_gui'
 class $(class_name)(gr.top_block):
 
@@ -71,8 +70,7 @@ class $(class_name)(gr.hier_block2):
 
 	def __init__($param_str):
 		gr.hier_block2.__init__(
-			self,
-			"$title",
+			self, "$title",
 			gr.io_signature($in_sig.nports, $in_sig.nports, $in_sig.size*$in_sig.vlen),
 			gr.io_signature($out_sig.nports, $out_sig.nports, $out_sig.size*$out_sig.vlen),
 		)
@@ -92,8 +90,6 @@ class $(class_name)(gr.hier_block2):
 #end for
 ########################################################
 ##Create Variables
-##	Set the variable to a property of self.
-##	Write the first line of the variable make.
 ########################################################
 #if $variables
 
@@ -105,9 +101,19 @@ class $(class_name)(gr.hier_block2):
 		$indent($var.get_var_make())
 #end for
 ########################################################
+##Create Notebooks
+########################################################
+#if $notebooks
+
+		$DIVIDER
+		# Notebooks
+		$DIVIDER
+#end if
+#for $notebook in $notebooks
+		$indent($notebook.get_make())
+#end for
+########################################################
 ##Create Controls
-##	Write the variable make (excluding first line).
-##	Indent each line with 2 tabs.
 ########################################################
 #if $controls
 
@@ -120,7 +126,6 @@ class $(class_name)(gr.hier_block2):
 #end for
 ########################################################
 ##Create Blocks
-##	Write the block make, and indent with 2 tabs.
 ########################################################
 #if $blocks
 
@@ -161,7 +166,6 @@ class $(class_name)(gr.hier_block2):
 ########################################################
 ##Create Callbacks
 ##	Write a set method for this variable that calls the callbacks
-##	and sets the direct variable dependencies.
 ########################################################
 #for $var in $parameters + $variables
 	#set $id = $var.get_id()
@@ -196,7 +200,7 @@ if __name__ == '__main__':
 	#end if
 	tb = $(class_name)($(', '.join($params_eq_list)))
 	#if $generate_options == 'wx_gui'
-	tb.Run($flow_graph.get_option('autostart'))
+	tb.Run($flow_graph.get_option('run'))
 	#elif $generate_options == 'no_gui'
 	tb.start()
 	raw_input('Press Enter to quit: ')
