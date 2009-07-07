@@ -20,120 +20,134 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru
+from gnuradio import gr
 from gnuradio import usrp2
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from gnuradio.qtgui import qtgui
 from optparse import OptionParser
-from PyQt4 import QtGui, QtCore
-import sys, sip
+import sys
 
-class dialog_box(QtGui.QWidget):
-    def __init__(self, display, control):
-        QtGui.QWidget.__init__(self, None)
-        self.setWindowTitle('USRP2 Display')
+try:
+    from gnuradio.qtgui import qtgui
+    from PyQt4 import QtGui, QtCore
+    import sip
+except ImportError:
+    print "Please install gr-qtgui."
+    sys.exit(1)
 
-        self.boxlayout = QtGui.QBoxLayout(QtGui.QBoxLayout.LeftToRight, self)
-        self.boxlayout.addWidget(display, 1)
-        self.boxlayout.addWidget(control)
+try:
+    from usrp_display_qtgui import Ui_MainWindow
+except ImportError:
+    print "Error: could not find usrp_display_qtgui.py:"
+    print "\t\"pyuic4 usrp_display_qtgui.ui -o usrp_display_qtgui.py\""
+    sys.exit(1)
 
-        self.resize(800, 500)
 
-class control_panel(QtGui.QWidget):
-    def __init__(self, usrp, qtsink, parent=None):
+# ////////////////////////////////////////////////////////////////////
+#        Define the QT Interface and Control Dialog
+# ////////////////////////////////////////////////////////////////////
+
+
+class main_window(QtGui.QMainWindow):
+    def __init__(self, snk, fg, parent=None):
+
         QtGui.QWidget.__init__(self, parent)
-        self.setWindowTitle('USRP2 Control Panel')
+        self.gui = Ui_MainWindow()
+        self.gui.setupUi(self)
 
-        self.usrp = usrp
-        self.qtsink = qtsink
-        self.adc_rate = self.usrp.adc_rate()
+        self.fg = fg
 
-        self.freq = 0
-        self.decim = 0
-        self.bw = 0
-        self.gain = 0
-         
-        self.setToolTip('Set the values of the USRP2')
-        QtGui.QToolTip.setFont(QtGui.QFont('OldEnglish', 10))
+        # Add the qtsnk widgets to the layout box
+        self.gui.sinkLayout.addWidget(snk)
 
-        self.layout = QtGui.QFormLayout(self)
-
-        # Received frequency
-        self.freqEdit = QtGui.QLineEdit(self)
-        self.layout.addRow("Frequency:", self.freqEdit)
-        self.connect(self.freqEdit, QtCore.SIGNAL("editingFinished()"),
-                     self.freqEditText)
-
-        # Receiver gain
-        self.gainEdit = QtGui.QLineEdit(self)
-        self.layout.addRow("Gain:", self.gainEdit)
-        self.connect(self.gainEdit, QtCore.SIGNAL("editingFinished()"),
+        # Connect up some signals
+        self.connect(self.gui.pauseButton, QtCore.SIGNAL("clicked()"),
+                     self.pauseFg)
+        self.connect(self.gui.frequencyEdit, QtCore.SIGNAL("editingFinished()"),
+                     self.frequencyEditText)
+        self.connect(self.gui.gainEdit, QtCore.SIGNAL("editingFinished()"),
                      self.gainEditText)
+        self.connect(self.gui.bandwidthEdit, QtCore.SIGNAL("editingFinished()"),
+                     self.bandwidthEditText)
+        self.connect(self.gui.amplifierEdit, QtCore.SIGNAL("editingFinished()"),
+                     self.amplifierEditText)
 
+        self.connect(self.gui.actionSaveData, QtCore.SIGNAL("activated()"),
+                     self.saveData)
+        self.gui.actionSaveData.setShortcut(QtGui.QKeySequence.Save)
 
-        # Decim / Bandwidth
-        self.decimEdit = QtGui.QLineEdit(self)
-        self.layout.addRow("Decim Rate:", self.decimEdit)
-        self.connect(self.decimEdit, QtCore.SIGNAL("editingFinished()"),
-                     self.decimEditText)
+    def pauseFg(self):
+        if(self.gui.pauseButton.text() == "Pause"):
+            self.fg.stop()
+            self.fg.wait()
+            self.gui.pauseButton.setText("Unpause")
+        else:
+            self.fg.start()
+            self.gui.pauseButton.setText("Pause")
+      
 
-        self.quit = QtGui.QPushButton('Close', self)
-        self.layout.addRow(self.quit)
-
-        self.connect(self.quit, QtCore.SIGNAL('clicked()'),
-                     QtGui.qApp, QtCore.SLOT('quit()'))
-
+    # Functions to set the values in the GUI
     def set_frequency(self, freq):
         self.freq = freq
         sfreq = eng_notation.num_to_str(self.freq)
-        self.freqEdit.setText(QtCore.QString("%1").arg(sfreq))
+        self.gui.frequencyEdit.setText(QtCore.QString("%1").arg(sfreq))
         
     def set_gain(self, gain):
         self.gain = gain
-        self.gainEdit.setText(QtCore.QString("%1").arg(self.gain))
+        self.gui.gainEdit.setText(QtCore.QString("%1").arg(self.gain))
 
-    def set_decim(self, decim):
-        self.decim = decim
-        self.bw = self.adc_rate / float(self.decim) / 1000.0
-        self.decimEdit.setText(QtCore.QString("%1").arg(self.decim))
+    def set_bandwidth(self, bw):
+        self.bw = bw
+        sbw = eng_notation.num_to_str(self.bw)
+        self.gui.bandwidthEdit.setText(QtCore.QString("%1").arg(sbw))
 
-    def freqEditText(self):
+    def set_amplifier(self, amp):
+        self.amp = amp
+        self.gui.amplifierEdit.setText(QtCore.QString("%1").arg(self.amp))
+
+
+    # Functions called when signals are triggered in the GUI
+    def frequencyEditText(self):
         try:
-            freq = eng_notation.str_to_num(self.freqEdit.text().toAscii())
-            r = self.usrp.set_center_freq(freq)
+            freq = eng_notation.str_to_num(self.gui.frequencyEdit.text().toAscii()) 
+            self.fg.set_frequency(freq)
             self.freq = freq
-            self.qtsink.set_frequency_range(self.freq, self.freq-self.bw/2.0, self.freq+self.bw/2.0)
         except RuntimeError:
             pass
 
-        #self.set_frequency(self.freq)
-
     def gainEditText(self):
         try:
-            gain = float(self.gainEdit.text())
-            self.usrp.set_gain(gain)
+            gain = float(self.gui.gainEdit.text())
+            self.fg.set_gain(gain)
             self.gain = gain
         except ValueError:
             pass
-        
-        #self.set_gain(gain)
-        
-    def decimEditText(self):
+                
+    def bandwidthEditText(self):
         try:
-            decim = int(self.decimEdit.text())
-            self.usrp.set_decim(decim)
-
-            self.decim = decim
-            self.bw = self.adc_rate / self.decim
-            self.qtsink.set_frequency_range(-self.bw/2.0, self.bw/2.0, self.freq)           
-            
+            bw = eng_notation.str_to_num(self.gui.bandwidthEdit.text().toAscii())
+            self.fg.set_bandwidth(bw)
+            self.bw = bw
+        except ValueError:
+            pass
+        
+    def amplifierEditText(self):
+        try:
+            amp = float(self.gui.amplifierEdit.text())
+            self.fg.set_amplifier_gain(amp)
+            self.amp = amp
         except ValueError:
             pass
 
-        #self.set_decim(decim)
+    def saveData(self):
+        fileName = QtGui.QFileDialog.getSaveFileName(self, "Save data to file", ".");
+        if(len(fileName)):
+            self.fg.save_to_file(str(fileName))
+
+
         
-class app_top_block(gr.top_block):
+class my_top_block(gr.top_block):
     def __init__(self):
         gr.top_block.__init__(self)
 
@@ -142,13 +156,13 @@ class app_top_block(gr.top_block):
                           help="select Ethernet interface, default is eth0")
         parser.add_option("-m", "--mac-addr", type="string", default="",
                           help="select USRP by MAC address, default is auto-select")
-        parser.add_option("-d", "--decim", type="int", default=16,
-                          help="set fgpa decimation rate to DECIM [default=%default]")
+        parser.add_option("-W", "--bw", type="float", default=1e6,
+                          help="set bandwidth of receiver [default=%default]")
         parser.add_option("-f", "--freq", type="eng_float", default=None,
                           help="set frequency to FREQ", metavar="FREQ")
         parser.add_option("-g", "--gain", type="eng_float", default=None,
                           help="set gain in dB (default is midpoint)")
-        parser.add_option("--fft-size", type="int", default=1024,
+        parser.add_option("--fft-size", type="int", default=2048,
                           help="Set number of FFT bins [default=%default]")
         (options, args) = parser.parse_args()
 
@@ -161,65 +175,95 @@ class app_top_block(gr.top_block):
         self.qapp = QtGui.QApplication(sys.argv)
 
         self.u = usrp2.source_32fc(options.interface, options.mac_addr)
-        self.u.set_decim(options.decim)
-        
-        input_rate = self.u.adc_rate() / self.u.decim()
-        
-        self.snk = qtgui.sink_c(options.fft_size, gr.firdes.WIN_BLACKMAN_hARRIS,
-                                -input_rate/2, input_rate/2,
-                                "USRP2 Display",
-                                True, True, False, True, False)
-
-        self.connect(self.u, self.snk)
+        self._adc_rate = self.u.adc_rate()
+        self.set_bandwidth(options.bw)
 
         if options.gain is None:
             # if no gain was specified, use the mid-point in dB
             g = self.u.gain_range()
             options.gain = float(g[0]+g[1])/2
+        self.set_gain(options.gain)
 
         if options.freq is None:
-            # if no freq was specified, use the mid-point
-            r = self.u.freq_range()
-            options.freq = float(r[0]+r[1])/2
-            
-        self.set_gain(options.gain)
-        r = self.u.set_center_freq(options.freq)
+            # if no frequency was specified, use the mid-point of the subdev
+            f = self.u.freq_range()
+            options.freq = float(f[0]+f[1])/2
+        self.set_frequency(options.freq)
+
+        self._fftsize = options.fft_size
+
+        self.snk = qtgui.sink_c(options.fft_size, gr.firdes.WIN_BLACKMAN_hARRIS,
+                                self._freq, self._bandwidth,
+                                "USRP2 Display",
+                                True, True, False, True, False)
+
+        # Set up internal amplifier
+        self.amp = gr.multiply_const_cc(0.0)
+        self.set_amplifier_gain(100)
+
+        self.connect(self.u, self.amp, self.snk)
 
         if self.show_debug_info:
-            print "Decimation rate: ", self.u.decim()
-            print "Bandwidth: ", input_rate
+            print "Decimation rate: ", self._decim
+            print "Bandwidth: ", self._bandwidth
             print "D'board: ", self.u.daughterboard_id()
 
-
-        self.ctrl_win = control_panel(self.u, self.snk)
-
-        self.ctrl_win.set_frequency(options.freq)
-        self.ctrl_win.set_gain(options.gain)
-        self.ctrl_win.set_decim(options.decim)
-
         # Get the reference pointer to the SpectrumDisplayForm QWidget
-        pyQt  = self.snk.pyqwidget()
-
         # Wrap the pointer as a PyQt SIP object
-        # This can now be manipulated as a PyQt4.QtGui.QWidget
-        pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
+        #     This can now be manipulated as a PyQt4.QtGui.QWidget
+        self.pysink = sip.wrapinstance(self.snk.pyqwidget(), QtGui.QWidget)
 
-        self.main_box = dialog_box(pyWin, self.ctrl_win)
+        self.main_win = main_window(self.pysink, self)
 
-        self.main_box.show()
+        self.main_win.set_frequency(self._freq)
+        self.main_win.set_gain(self._gain)
+        self.main_win.set_bandwidth(self._bandwidth)
+        self.main_win.set_amplifier(self._amp_value)
+
+        self.main_win.show()
+
+
+    def save_to_file(self, name):
+        # Pause the flow graph
+        self.stop()
+        self.wait()
+
+        # Add file sink to save data
+        self.file_sink = gr.file_sink(gr.sizeof_gr_complex, name)
+        self.connect(self.amp, self.file_sink)
+
+        # Restart flow graph
+        self.start()
 
     def set_gain(self, gain):
-        self.u.set_gain(gain)
+        self._gain = gain
+        self.u.set_gain(self._gain)
 
-    def set_decim(self, decim):
-        ok = self.u.set_decim(decim)
-        if not ok:
-            print "set_decim failed"
-        input_rate = self.u.adc_rate() / self.u.decim()
-        return ok
+    def set_frequency(self, freq):
+        self._freq = freq
+        r = self.u.set_center_freq(freq)
+
+        try:
+            self.snk.set_frequency_range(self._freq, self._bandwidth)
+        except:
+            pass
+
+    def set_bandwidth(self, bw):
+        self._bandwidth = bw
+        self._decim = int(self._adc_rate / self._bandwidth)
+        self.u.set_decim(self._decim)
+
+        try:
+            self.snk.set_frequency_range(self._freq, self._bandwidth)
+        except:
+            pass
+
+    def set_amplifier_gain(self, amp):
+            self._amp_value = amp
+            self.amp.set_k(self._amp_value)
 
 def main ():
-    tb = app_top_block()
+    tb = my_top_block()
     tb.start()
     tb.snk.exec_();
 

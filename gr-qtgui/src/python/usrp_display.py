@@ -1,4 +1,24 @@
 #!/usr/bin/env python
+#
+# Copyright 2009 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
 from gnuradio import gr
 from gnuradio import usrp
@@ -83,7 +103,7 @@ class main_window(QtGui.QMainWindow):
         sbw = eng_notation.num_to_str(self.bw)
         self.gui.bandwidthEdit.setText(QtCore.QString("%1").arg(sbw))
 
-    def set_amplifier(self, bw):
+    def set_amplifier(self, amp):
         self.amp = amp
         self.gui.amplifierEdit.setText(QtCore.QString("%1").arg(self.amp))
 
@@ -168,7 +188,7 @@ class my_top_block(gr.top_block):
 			  help="Set fftsink averaging factor, [default=%default]")
 	parser.add_option("", "--ref-scale", type="eng_float", default=13490.0,
 			  help="Set dBFS=0dB input value, [default=%default]")
-        parser.add_option("", "--fft-size", type="int", default=1024,
+        parser.add_option("", "--fft-size", type="int", default=2048,
                           help="Set FFT frame size, [default=%default]");
 
         (options, args) = parser.parse_args()
@@ -181,7 +201,7 @@ class my_top_block(gr.top_block):
         # Call this before creating the Qt sink
         self.qapp = QtGui.QApplication(sys.argv)
 
-        self._fftsize = 2048
+        self._fftsize = options.fft_size
 
         self.u = usrp.source_c(which=options.which)
         self._adc_rate = self.u.converter_rate()
@@ -229,6 +249,7 @@ class my_top_block(gr.top_block):
         self.main_win.set_frequency(self._freq)
         self.main_win.set_gain(self._gain)
         self.main_win.set_bandwidth(self._bandwidth)
+        self.main_win.set_amplifier(self._amp_value)
 
         self.main_win.show()
 
