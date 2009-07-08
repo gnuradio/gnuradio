@@ -17,12 +17,6 @@
 		<hide>#if $label() then 'none' else 'part'#</hide>
 	</param>
 	<param>
-	        <name>Short ID</name>
-		<key>short_id</key>
-		<value></value>
-		<type>string</type>
-	</param>
-	<param>
 		<name>Value</name>
 		<key>value</key>
 		<value>0</value>
@@ -33,44 +27,53 @@
 		<key>type</key>
 		<value></value>
 		<type>enum</type>
-		<hide>$type.hide</hide>
+		<hide>#if $type() then 'none' else 'part'#</hide>
 		<option>
 			<name>None</name>
 			<key></key>
 			<opt>type:raw</opt>
-			<opt>hide:part</opt>
 		</option>
 		<option>
 			<name>Complex</name>
 			<key>complex</key>
 			<opt>type:complex</opt>
-			<opt>hide:none</opt>
 		</option>
 		<option>
 			<name>Float</name>
 			<key>eng_float</key>
 			<opt>type:real</opt>
-			<opt>hide:none</opt>
 		</option>
 		<option>
 			<name>Int</name>
 			<key>int</key>
 			<opt>type:int</opt>
-			<opt>hide:none</opt>
 		</option>
 		<option>
 			<name>Long</name>
 			<key>long</key>
 			<opt>type:int</opt>
-			<opt>hide:none</opt>
 		</option>
 		<option>
 			<name>String</name>
 			<key>string</key>
 			<opt>type:string</opt>
-			<opt>hide:none</opt>
 		</option>
 	</param>
+	<param>
+		<name>Short ID</name>
+		<key>short_id</key>
+		<value></value>
+		<type>string</type>
+		<hide>#if not $type()
+all#slurp
+#elif $short_id()
+none#slurp
+#else
+part#slurp
+#end if</hide>
+	</param>
+	<check>len($short_id) in (0, 1)</check>
+	<check>$short_id == '' or $(short_id).isalpha()</check>
 	<doc>
 This block represents a parameter to the flow graph. \
 A parameter can be used to pass command line arguments into a top block. \

@@ -69,6 +69,7 @@
   * will not update for non-enum params
   * needs to account for added or removed params
   * example with grid params need update after notebook change
+* use .strip() on the hide property so we can do away with #slurp(s) in the templates
 
 ##################################################
 # Future

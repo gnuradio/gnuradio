@@ -189,7 +189,11 @@ if __name__ == '__main__':
 		#set $type = $param.get_param('type').get_value()
 		#if $type
 			#silent $params_eq_list.append('%s=options.%s'%($param.get_id(), $param.get_id()))
-	parser.add_option("-$param.get_param('short_id').get_value()", "--$param.get_id()", dest="$param.get_id()", type="$type", default=$param.get_make(),
+			#set $short_id = $param.get_param('short_id').get_evaluated()
+			#if $short_id
+				#set $short_id = '-' + $short_id
+			#end if
+	parser.add_option("$short_id", "--$param.get_id()", dest="$param.get_id()", type="$type", default=$param.get_make(),
 		help="Set $($param.get_param('label').evaluate() or $param.get_id()) [default=%default]")
 		#end if
 	#end for

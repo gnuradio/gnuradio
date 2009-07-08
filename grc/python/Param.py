@@ -302,13 +302,6 @@ class Param(_Param):
 		elif t in ('string', 'file_open', 'file_save'):
 			#do not check if file/directory exists, that is a runtime issue
 			e = eval_string(v)
-			str_e = str(e)
-			if t == 'string' and self.get_name() == 'Short ID' and len(str_e) > 0:
-				try: 
-					assert len(str_e) == 1
-					ord_e = ord(str_e)
-					assert ord_e >= ord('a') and ord_e <= ord('z') or ord_e >= ord('A') and ord_e <= ord('Z')
-				except AssertionError: raise Exception, 'Short ID "%s" must be a single letter'%v
 			return str(e)
 		#########################
 		# Unique ID Type
