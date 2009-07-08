@@ -17,6 +17,12 @@
 		<hide>#if $label() then 'none' else 'part'#</hide>
 	</param>
 	<param>
+	        <name>Short ID</name>
+		<key>short_id</key>
+		<value></value>
+		<type>string</type>
+	</param>
+	<param>
 		<name>Value</name>
 		<key>value</key>
 		<value>0</value>
@@ -74,6 +80,10 @@ The paramater value cannot depend on any variables.
 
 Leave the label blank to use the parameter id as the label.
 
-When type is not None, this parameter also becomes a command line option of the form --[id] [value].
+When type is not None, this parameter also becomes a command line option of the form:
+
+-[short_id] --[id] [value]
+
+The Short ID field may be left blank.
 	</doc>
 </block>
