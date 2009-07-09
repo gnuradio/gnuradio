@@ -6,8 +6,8 @@ EXTRACT=dtools/bin/extract_install_filenames
 NAME=debian/libusrp-dev.install
 rm -f $NAME
 touch $NAME
-$EXTRACT usrp/host/lib/legacy/Makefile include_HEADERS >>$NAME
-$EXTRACT usrp/firmware/include/Makefile include_HEADERS >>$NAME
+$EXTRACT usrp/host/include/usrp/Makefile usrpinclude_HEADERS >>$NAME
+$EXTRACT usrp/firmware/include/Makefile usrpinclude_HEADERS >>$NAME
 echo usr/lib/libusrp.so >>$NAME
 echo usr/lib/pkgconfig/usrp.pc >>$NAME
 
@@ -245,7 +245,7 @@ $EXTRACT usrp/host/swig/Makefile usrp_prims_pylib_LTLIBRARIES >>$NAME
 $EXTRACT usrp/host/swig/Makefile usrp_prims_pylib_LTLIBRARIES | \
     sed -e 's/\.la$/.so/' >>$NAME
 $EXTRACT usrp/host/swig/Makefile usrp_prims_python_PYTHON >>$NAME
-$EXTRACT usrp/host/lib/legacy/Makefile usrppython_PYTHON >>$NAME
+$EXTRACT usrp/host/lib/Makefile usrppython_PYTHON >>$NAME
 
 # python-gnuradio-core
 NAME=debian/python-gnuradio-core.install
