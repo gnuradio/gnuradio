@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2004,2009 Free Software Foundation, Inc.
+ * Copyright 2003,2004,2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,22 +23,21 @@
 /*
  * Low level primitives for directly messing with USRP hardware.
  *
- * If you're trying to use the USRP, you'll probably want to take a
- * look at the usrp_standard_rx and usrp_standard_tx classes.  They
- * hide a bunch of low level details and provide high performance
- * streaming i/o.
+ * If you're trying to use the USRP, you'll probably want to take a look
+ * at the usrp_rx and usrp_tx classes.  They hide a bunch of low level details
+ * and provide high performance streaming i/o.
  *
  * This interface is built on top of libusb, which allegedly works under
  * Linux, *BSD and Mac OS/X.  http://libusb.sourceforge.net
  */
 
-%include <stl.i>	// pick up string stuff
+#ifndef _USRP_PRIMS_H_
+#define _USRP_PRIMS_H_
 
+#include <usrp/usrp_slots.h>
+#include <string>
 
-%{
-#include <usrp/usrp_prims.h>
-%}
-
+static const int USRP_HASH_SIZE = 16;
 
 enum usrp_load_status_t { ULS_ERROR = 0, ULS_OK, ULS_ALREADY_LOADED };
 
@@ -51,6 +50,9 @@ struct usb_device;
  */
 void usrp_one_time_init ();
 
+/*
+ * force a rescan of the buses and devices
+ */
 void usrp_rescan ();
 
 /*!
@@ -70,6 +72,7 @@ bool usrp_usrp0_p (struct usb_device *q);		//< is this a USRP Rev 0
 bool usrp_usrp1_p (struct usb_device *q);		//< is this a USRP Rev 1
 bool usrp_usrp2_p (struct usb_device *q);		//< is this a USRP Rev 2
 int  usrp_hw_rev (struct usb_device *q);		//< return h/w rev code
+
 bool usrp_fx2_p (struct usb_device *q);			//< is this an unconfigured Cypress FX2
 
 bool usrp_unconfigured_usrp_p (struct usb_device *q);	//< some kind of unconfigured USRP
@@ -129,30 +132,26 @@ usrp_load_fpga (struct usb_dev_handle *udh, const char *filename, bool force);
  *
  * This is the normal starting point...
  */
-bool usrp_load_standard_bits (int nth, bool force);
+bool usrp_load_standard_bits (int nth, bool force,
+			      const std::string fpga_filename = "",
+			      const std::string firmware_filename = "");
 
+/*!
+ * \brief copy the given \p hash into the USRP hash slot \p which.
+ * The usrp implements two hash slots, 0 and 1.
+ */
+bool usrp_set_hash (struct usb_dev_handle *udh, int which,
+		    const unsigned char hash[USRP_HASH_SIZE]);
 
-%include <fpga_regs_common.h>
-%include <fpga_regs_standard.h>
-
+/*!
+ * \brief retrieve the \p hash from the USRP hash slot \p which.
+ * The usrp implements two hash slots, 0 and 1.
+ */
+bool usrp_get_hash (struct usb_dev_handle *udh, int which,
+		    unsigned char hash[USRP_HASH_SIZE]);
 
 bool usrp_write_fpga_reg (struct usb_dev_handle *udh, int reg, int value);
-
-%inline %{
-
-int 
-usrp_read_fpga_reg (struct usb_dev_handle *udh, int reg)
-{
-  int value;
-  bool ok = usrp_read_fpga_reg (udh, reg, &value);
-  if (ok)
-    return value;
-  else
-    return -999;
-}
-
-%}
-
+bool usrp_read_fpga_reg (struct usb_dev_handle *udh, int reg, int *value);
 bool usrp_set_fpga_reset (struct usb_dev_handle *udh, bool on);
 bool usrp_set_fpga_tx_enable (struct usb_dev_handle *udh, bool on);
 bool usrp_set_fpga_rx_enable (struct usb_dev_handle *udh, bool on);
@@ -166,7 +165,7 @@ bool usrp_check_tx_underrun (struct usb_dev_handle *udh, bool *underrun_p);
 // i2c_read and i2c_write are limited to a maximum len of 64 bytes.
 
 bool usrp_i2c_write (struct usb_dev_handle *udh, int i2c_addr,
-		     void *buf, int len);
+		     const void *buf, int len);
 
 bool usrp_i2c_read (struct usb_dev_handle *udh, int i2c_addr,
 		    void *buf, int len);
@@ -176,11 +175,11 @@ bool usrp_i2c_read (struct usb_dev_handle *udh, int i2c_addr,
 
 bool usrp_spi_write (struct usb_dev_handle *udh,
 		     int optional_header, int enables, int format,
-		     unsigned char *buf, int len);
+		     const void *buf, int len);
 
 bool usrp_spi_read (struct usb_dev_handle *udh,
 		     int optional_header, int enables, int format,
-		     unsigned char *buf, int len);
+		     void *buf, int len);
 
 
 bool usrp_9862_write (struct usb_dev_handle *udh,
@@ -188,64 +187,101 @@ bool usrp_9862_write (struct usb_dev_handle *udh,
 		      int regno,			// [0, 63]
 		      int value);			// [0, 255]	
 
-%inline %{
+bool usrp_9862_read (struct usb_dev_handle *udh,
+		     int which_codec,			// [0,  1]
+		     int regno,				// [0, 63]
+		     unsigned char *value);		// [0, 255]
 
-int 
-usrp_9862_read (struct usb_dev_handle *udh, int which_codec, int reg)
-{
-  unsigned char value;
-  bool ok = usrp_9862_read (udh, which_codec, reg, &value);
-  if (ok)
-    return value;
-  else
-    return -999;
-}
+/*!
+ * \brief Write multiple 9862 regs at once.
+ *
+ * \p buf contains alternating register_number, register_value pairs.
+ * \p len must be even and is the length of buf in bytes.
+ */
+bool usrp_9862_write_many (struct usb_dev_handle *udh, int which_codec,
+			   const unsigned char *buf, int len);
+			   
 
-%}
+/*!
+ * \brief write specified regs to all 9862's in the system
+ */
+bool usrp_9862_write_many_all (struct usb_dev_handle *udh,
+			       const unsigned char *buf, int len);
+			   
 
-%inline %{
+// Write 24LC024 / 24LC025 EEPROM on motherboard or daughterboard.
+// Which EEPROM is determined by i2c_addr.  See i2c_addr.h
 
-bool 
-usrp_eeprom_write (struct usb_dev_handle *udh, int i2c_addr,
-		   int eeprom_offset, const std::string buf)
-{
-  return usrp_eeprom_write (udh, i2c_addr, eeprom_offset,
-			    buf.data (), buf.size ());
-}
-  
-std::string
-usrp_eeprom_read (struct usb_dev_handle *udh, int i2c_addr,
-		  int eeprom_offset, int len)
-{
-  if (len <= 0)
-    return "";
-  
-  char buf[len];
+bool usrp_eeprom_write (struct usb_dev_handle *udh, int i2c_addr,
+			int eeprom_offset, const void *buf, int len);
 
-  if (!usrp_eeprom_read (udh, i2c_addr, eeprom_offset, buf, len))
-    return "";
 
-  return std::string (buf, len);
-}
+// Read 24LC024 / 24LC025 EEPROM on motherboard or daughterboard.
+// Which EEPROM is determined by i2c_addr.  See i2c_addr.h
 
-%}
+bool usrp_eeprom_read (struct usb_dev_handle *udh, int i2c_addr,
+		       int eeprom_offset, void *buf, int len);
 
+
+// Slot specific i/o routines
+
+/*!
+ * \brief write to the specified aux dac.
+ *
+ * \p slot: which Tx or Rx slot to write.
+ *    N.B., SLOT_TX_A and SLOT_RX_A share the same AUX DAC's
+ *          SLOT_TX_B and SLOT_RX_B share the same AUX DAC's
+ *
+ * \p which_dac: [0,3]  RX slots must use only 0 and 1.
+ *			TX slots must use only 2 and 3.
+ *
+ * AUX DAC 3 is really the 9862 sigma delta output.
+ *
+ * \p value to write to aux dac.  All dacs take straight
+ * binary values.  Although dacs 0, 1 and 2 are 8-bit and dac 3 is 12-bit,
+ * the interface is in terms of 12-bit values [0,4095]
+ */
 bool usrp_write_aux_dac (struct usb_dev_handle *uhd, int slot,
 			 int which_dac, int value);
 
-%inline %{
+/*!
+ * \brief Read the specified aux adc
+ *
+ * \p slot: which Tx or Rx slot to read aux dac
+ * \p which_adc: [0,1]  which of the two adcs to read
+ * \p *value: return value, 12-bit straight binary.
+ */
+bool usrp_read_aux_adc (struct usb_dev_handle *udh, int slot,
+			int which_adc, int *value);
 
-int usrp_read_aux_adc (struct usb_dev_handle *udh, int slot, int which_adc)
-{
-  int value;
-  bool ok = usrp_read_aux_adc (udh, slot, which_adc, &value);
-  if (ok)
-    return value;
-  else
-    return -999;
-}
 
-%}
+/*!
+ * \brief usrp daughterboard id to name mapping
+ */
+const std::string usrp_dbid_to_string (int dbid);
+
+
+enum usrp_dbeeprom_status_t { UDBE_OK, UDBE_BAD_SLOT, UDBE_NO_EEPROM, UDBE_INVALID_EEPROM };
+
+struct usrp_dboard_eeprom {
+  unsigned short	id;		// d'board identifier code
+  unsigned short	oe;		// fpga output enables:
+					//   If bit set, i/o pin is an output from FPGA.
+  short			offset[2];	// ADC/DAC offset correction
+};
+
+/*!
+ * \brief Read and return parsed daughterboard eeprom
+ */
+usrp_dbeeprom_status_t
+usrp_read_dboard_eeprom (struct usb_dev_handle *udh,
+			 int slot_id, usrp_dboard_eeprom *eeprom);
+
+/*!
+ * \brief write ADC/DAC offset calibration constants to d'board eeprom
+ */
+bool usrp_write_dboard_offsets (struct usb_dev_handle *udh, int slot_id,
+				short offset0, short offset1);
 
 /*!
  * \brief return a usrp's serial number.
@@ -255,12 +291,4 @@ int usrp_read_aux_adc (struct usb_dev_handle *udh, int slot, int which_adc)
  */
 std::string usrp_serial_number(struct usb_dev_handle *udh);
 
-/*!
- * \brief usrp daughterboard id to name mapping
- */
-const std::string usrp_dbid_to_string (int dbid);
-
-%inline %{
-#include "../../firmware/include/fpga_regs_common.h"
-#include "../../firmware/include/fpga_regs_standard.h"
-%}
+#endif /* _USRP_PRIMS_H_ */

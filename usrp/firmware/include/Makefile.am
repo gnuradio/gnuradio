@@ -19,7 +19,9 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include_HEADERS = 		\
+usrpincludedir = $(includedir)/usrp
+
+usrpinclude_HEADERS = 		\
 	usrp_i2c_addr.h		\
 	usrp_spi_defs.h	        \
 	fpga_regs_common.h	\

@@ -34,8 +34,8 @@
 #include <assert.h>
 #include <math.h>
 #include "time_stuff.h"
-#include "usrp_standard.h"
-#include "usrp_bytesex.h"
+#include <usrp/usrp_standard.h>
+#include <usrp/usrp_bytesex.h>
 #include <boost/program_options.hpp>
 
 enum {

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,8 +26,8 @@
 
 #include <usrp_sink_s.h>
 #include <gr_io_signature.h>
-#include <usrp_standard.h>
-#include <usrp_bytesex.h>
+#include <usrp/usrp_standard.h>
+#include <usrp/usrp_bytesex.h>
 
 usrp_sink_s_sptr
 usrp_make_sink_s (int which_board,

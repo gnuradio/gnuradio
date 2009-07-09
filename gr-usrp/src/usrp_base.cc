@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 #include <usrp_base.h>
-#include <usrp_basic.h>
+#include <usrp/usrp_basic.h>
 
 class truth_table_element_t 
 {

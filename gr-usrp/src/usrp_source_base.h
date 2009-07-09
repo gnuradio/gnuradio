@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,8 +25,8 @@
 
 #include <usrp_base.h>
 #include <stdexcept>
-#include <usrp_tune_result.h>
-#include <usrp_dbid.h>
+#include <usrp/usrp_tune_result.h>
+#include <usrp/usrp_dbid.h>
 
 class usrp_standard_rx;
 

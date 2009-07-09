@@ -26,8 +26,8 @@
 #include <vector>
 %}
 
-%include <usrp_subdev_spec.h>
-%include <db_base.i>
+%include <usrp/usrp_subdev_spec.h>
+%include <usrp/db_base.i>
 %include <fpga_regs_common.h>
 %include <fpga_regs_standard.h>
 %include "usrp_standard.i"

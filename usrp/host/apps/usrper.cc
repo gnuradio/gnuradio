@@ -2,7 +2,7 @@
 /*
  * USRP - Universal Software Radio Peripheral
  *
- * Copyright (C) 2003,2004 Free Software Foundation, Inc.
+ * Copyright (C) 2003,2004,2009 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "usrp_prims.h"
+#include "usrp/usrp_prims.h"
 #include "usrp_spi_defs.h"
 #include <string.h>
 

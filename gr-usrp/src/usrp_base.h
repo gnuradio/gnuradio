@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,8 +24,8 @@
 #include <gr_sync_block.h>
 #include <stdexcept>
 #include <boost/shared_ptr.hpp>
-#include <db_base.h>
-#include <usrp_subdev_spec.h>
+#include <usrp/db_base.h>
+#include <usrp/usrp_subdev_spec.h>
 
 class usrp_basic;
 

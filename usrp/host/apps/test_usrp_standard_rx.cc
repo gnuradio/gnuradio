@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2006,2008 Free Software Foundation, Inc.
+ * Copyright 2003,2006,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,8 +33,8 @@
 #include <assert.h>
 #include <math.h>
 #include "time_stuff.h"
-#include "usrp_standard.h"
-#include "usrp_bytesex.h"
+#include <usrp/usrp_standard.h>
+#include <usrp/usrp_bytesex.h>
 #include "fpga_regs_common.h"
 #include "fpga_regs_standard.h"
 

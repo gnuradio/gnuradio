@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,8 +26,8 @@
 
 #include <usrp_source_c.h>
 #include <gr_io_signature.h>
-#include <usrp_standard.h>
-#include <usrp_bytesex.h>
+#include <usrp/usrp_standard.h>
+#include <usrp/usrp_bytesex.h>
 
 static const int NBASIC_SAMPLES_PER_ITEM = 2;	// I & Q
 

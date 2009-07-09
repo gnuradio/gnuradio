@@ -81,10 +81,6 @@ GRUEL_LA = @gruel_LA@
 USRP_INCLUDES = @usrp_INCLUDES@
 USRP_LA = @usrp_LA@
 
-# How to link in usrp-inband library from inside the tree
-USRP_INBAND_INCLUDES = @usrp_inband_INCLUDES@
-USRP_INBAND_LA = @usrp_inband_LA@
-
 # How to link the PMT library from inside the tree
 PMT_INCLUDES = @pmt_INCLUDES@
 PMT_LA = @pmt_LA@

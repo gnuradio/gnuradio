@@ -1,5 +1,5 @@
 #
-# Copyright 2008,2009 Free Software Foundation, Inc.
+# Copyright 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,31 +21,29 @@
 
 include $(top_srcdir)/Makefile.common
 
-# For compiling within the GNU Radio build tree
-AM_CPPFLAGS=$(STD_DEFINES_AND_INCLUDES) \
-	 -I$(top_srcdir)/gr-usrp/src \
-	 $(USRP_INCLUDES) \
-	 $(WITH_INCLUDES)
+usrpincludedir = $(includedir)/usrp
 
-GR_USRP_LA=$(top_builddir)/gr-usrp/src/libgnuradio-usrp.la
+usrpinclude_HEADERS = \
+	db_base.h \
+	db_basic.h \
+	db_dbs_rx.h \
+	db_dtt754.h \
+	db_dtt768.h \
+	db_flexrf.h \
+	db_flexrf_mimo.h \
+	db_tv_rx.h \
+	db_xcvr2450.h \
+	usrp_basic.h \
+	usrp_bytesex.h \
+	usrp_dbid.h \
+	usrp_local_sighandler.h \
+	usrp_prims.h \
+	usrp_slots.h \
+	usrp_standard.h \
+	usrp_subdev_spec.h \
+	usrp_tune_result.h
 
-# For compiling outside the tree, these will get fished out by pkgconfig
-
-LDADD = \
-	$(BOOST_LDFLAGS) \
-	$(BOOST_PROGRAM_OPTIONS_LIB) \
-	$(GR_USRP_LA)
-
-noinst_PROGRAMS = \
-	usrp_rx_cfile \
-	usrp_siggen
-
-noinst_HEADERS = 	\
-	usrp_rx_cfile.h	\
-	usrp_siggen.h
-
-usrp_rx_cfile_SOURCES = 	\
-    usrp_rx_cfile.cc
-
-usrp_siggen_SOURCES = 	\
-    usrp_siggen.cc
+if PYTHON
+swiginclude_HEADERS = \
+	db_base.i
+endif

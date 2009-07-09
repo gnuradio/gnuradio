@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005,2008 Free Software Foundation, Inc.
+ * Copyright 2005,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,9 +33,9 @@
 #include <assert.h>
 #include <math.h>
 #include <boost/scoped_ptr.hpp>
-#include "usrp_local_sighandler.h"
-#include "usrp_standard.h"
-#include "usrp_bytesex.h"
+#include <usrp/usrp_local_sighandler.h>
+#include <usrp/usrp_standard.h>
+#include <usrp/usrp_bytesex.h>
 
 char *prog_name;
 

@@ -14,23 +14,20 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with GNU Radio; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 51 Franklin Street,
- * Boston, MA 02110-1301, USA.
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+#ifndef INCLUDED_DB_BASE_IMPL_H
+#define INCLUDED_DB_BASE_IMPL_H
 
-// FIXME: move to usrp/usrpm component
-
-%{
-#include <usrp/usrp_standard.h>
+#include <usrp/db_base.h>
+#include <db_util.h>
+#include <usrp/usrp_basic.h>
+#include <fpga_regs_standard.h>
+#include <fpga_regs_common.h>
+#include <usrp/usrp_prims.h>
 #include <usrp_spi_defs.h>
-#include <usrp/usrp_dbid.h>
-%}
+#include <stdexcept>
 
-%include <usrp_spi_defs.h>
-%include <usrp/usrp_dbid.h>
-
-%constant int FPGA_MODE_NORMAL   = usrp_standard_rx::FPGA_MODE_NORMAL;
-%constant int FPGA_MODE_LOOPBACK = usrp_standard_rx::FPGA_MODE_LOOPBACK;
-%constant int FPGA_MODE_COUNTING = usrp_standard_rx::FPGA_MODE_COUNTING;
+#endif /* INCLUDED_DB_BASE_IMPL_H */

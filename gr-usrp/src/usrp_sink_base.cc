@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,7 +26,7 @@
 
 #include <usrp_sink_base.h>
 #include <gr_io_signature.h>
-#include <usrp_standard.h>
+#include <usrp/usrp_standard.h>
 #include <assert.h>
 #include <cstdio>
 

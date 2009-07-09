@@ -32,8 +32,7 @@
 
 // WAV files are always little-endian, so we need some byte switching macros
 
-// FIXME: These need to be refactored into a separate endianess header file
-// as they duplicate routines defined in usrp/host/lib/legacy/usrp_bytesex.h
+// FIXME: Use libgruel versions
 
 #ifdef WORDS_BIGENDIAN
 
