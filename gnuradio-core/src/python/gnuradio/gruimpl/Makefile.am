@@ -32,6 +32,7 @@ grupython_PYTHON = 			\
 	listmisc.py			\
 	mathmisc.py			\
 	lmx2306.py			\
+	msgq_runner.py			\
 	os_read_exactly.py		\
 	sdr_1000.py			\
 	seq_with_cursor.py		\
