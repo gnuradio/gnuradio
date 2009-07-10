@@ -21,11 +21,10 @@
 
 include $(top_srcdir)/Makefile.common
 
-ourpythondir = $(grpythondir)
-ourlibdir    = $(grpyexecdir)
+radar_mono_pythondir = $(grpythondir)
 
 dist_bin_SCRIPTS = 	\
 	usrp_radar_mono.py
 
-dist_ourpython_PYTHON =	\
+radar_mono_python_PYTHON =	\
 	radar_mono.py

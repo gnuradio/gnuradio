@@ -463,7 +463,7 @@ echo usr/share/usrp/rev4/std_2rxint_2tx_dig.rbf >> $NAME
 NAME=debian/gnuradio-radar-mono.install
 rm -f $NAME
 touch $NAME
-$EXTRACT gr-radar-mono/src/python/Makefile dist_ourpython_PYTHON >>$NAME
+$EXTRACT gr-radar-mono/src/python/Makefile radar_mono_python_PYTHON >>$NAME
 $EXTRACT gr-radar-mono/src/python/Makefile dist_bin_SCRIPTS >>$NAME
 echo usr/share/usrp/rev2/usrp_radar_mono.rbf >>$NAME
 echo usr/share/usrp/rev4/usrp_radar_mono.rbf >>$NAME

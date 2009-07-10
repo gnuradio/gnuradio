@@ -25,8 +25,7 @@ include $(top_srcdir)/Makefile.common
 # This usually ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio
 
-ourpythondir = $(grpythondir)
-ourlibdir    = $(grpyexecdir)
+sounder_pythondir = $(grpythondir)
 
 EXTRA_DIST = 		\
 	sounder_loopback.sh \
@@ -36,5 +35,5 @@ EXTRA_DIST = 		\
 dist_bin_SCRIPTS = 		\
 	usrp_sounder.py
 
-ourpython_PYTHON =	\
+sounder_python_PYTHON =	\
 	sounder.py
