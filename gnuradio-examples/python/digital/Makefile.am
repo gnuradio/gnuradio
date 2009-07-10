@@ -33,7 +33,9 @@ dist_ourdata_DATA =		\
 	qt_rx_window.py		\
 	receive_path.py		\
 	transmit_path.py	\
-	usrp_options.py
+	usrp_options.py \
+	usrp_receive_path.py \
+	usrp_transmit_path.py
 
 dist_ourdata_SCRIPTS =		\
 	benchmark_loopback.py   \

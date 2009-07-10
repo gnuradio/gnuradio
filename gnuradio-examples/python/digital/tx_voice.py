@@ -35,7 +35,7 @@ import struct
 import sys
 
 # from current dir
-from transmit_path import transmit_path
+import usrp_transmit_path
 
 #import os
 #print os.getpid()
@@ -64,7 +64,7 @@ class my_top_block(gr.top_block):
 
     def __init__(self, modulator_class, options):
         gr.top_block.__init__(self)
-        self.txpath = transmit_path(modulator_class, options)
+        self.txpath = usrp_transmit_path.usrp_transmit_path(modulator_class, options)
         self.audio_rx = audio_rx(options.audio_input)
 	self.connect(self.txpath)
 	self.connect(self.audio_rx)
@@ -95,8 +95,7 @@ def main():
                       help="set megabytes to transmit [default=inf]")
     parser.add_option("-I", "--audio-input", type="string", default="",
                       help="pcm input device name.  E.g., hw:0,0 or /dev/dsp")
-
-    transmit_path.add_options(parser, expert_grp)
+    usrp_transmit_path.add_options(parser, expert_grp)
 
     for mod in mods.values():
         mod.add_options(expert_grp)

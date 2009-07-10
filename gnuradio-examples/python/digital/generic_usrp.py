@@ -99,7 +99,7 @@ class _generic_usrp_base(object):
     def gain_range(self):
         if self._type == USRP1_TYPE: return self._subdev.gain_range()
         elif self._type == USRP2_TYPE: return self._u.gain_range()
-        elif self._type == DUMMY_TYPE: return (0, 0)
+        elif self._type == DUMMY_TYPE: return (0, 0, 0)
 
     def set_center_freq(self, target_freq):
         if self._type == USRP1_TYPE:

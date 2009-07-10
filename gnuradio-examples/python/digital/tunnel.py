@@ -46,8 +46,8 @@ import sys
 import os
 
 # from current dir
-from transmit_path import transmit_path
-from receive_path import receive_path
+import usrp_transmit_path
+import usrp_receive_path
 
 #print os.getpid()
 #raw_input('Attach and press enter')
@@ -91,11 +91,11 @@ class my_top_block(gr.top_block):
                  rx_callback, options):
 
         gr.top_block.__init__(self)
-        self.txpath = transmit_path(mod_class, options)
-        self.rxpath = receive_path(demod_class, rx_callback, options)
-	self.connect(self.txpath);
-	self.connect(self.rxpath);
-	
+        self.txpath = usrp_transmit_path.usrp_transmit_path(mod_class, options)
+        self.rxpath = usrp_receive_path.usrp_receive_path(demod_class, rx_callback, options)
+        self.connect(self.txpath)
+        self.connect(self.rxpath)
+
     def send_pkt(self, payload='', eof=False):
         return self.txpath.send_pkt(payload, eof)
 
@@ -180,7 +180,10 @@ def main():
 
     parser = OptionParser (option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
-
+    expert_grp.add_option("", "--rx-freq", type="eng_float", default=None,
+                          help="set Rx frequency to FREQ [default=%default]", metavar="FREQ")
+    expert_grp.add_option("", "--tx-freq", type="eng_float", default=None,
+                          help="set transmit frequency to FREQ [default=%default]", metavar="FREQ")
     parser.add_option("-m", "--modulation", type="choice", choices=mods.keys(),
                       default='gmsk',
                       help="Select modulation from: %s [default=%%default]"
@@ -192,8 +195,8 @@ def main():
     expert_grp.add_option("","--tun-device-filename", default="/dev/net/tun",
                           help="path to tun device file [default=%default]")
 
-    transmit_path.add_options(parser, expert_grp)
-    receive_path.add_options(parser, expert_grp)
+    usrp_transmit_path.add_options(parser, expert_grp)
+    usrp_receive_path.add_options(parser, expert_grp)
 
     for mod in mods.values():
         mod.add_options(expert_grp)
@@ -203,11 +206,6 @@ def main():
 
     (options, args) = parser.parse_args ()
     if len(args) != 0:
-        parser.print_help(sys.stderr)
-        sys.exit(1)
-
-    if options.rx_freq is None or options.tx_freq is None:
-        sys.stderr.write("You must specify -f FREQ or --freq FREQ\n")
         parser.print_help(sys.stderr)
         sys.exit(1)
 

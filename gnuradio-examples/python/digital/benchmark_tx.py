@@ -29,9 +29,7 @@ from optparse import OptionParser
 import random, time, struct, sys
 
 # from current dir
-from transmit_path import transmit_path
-from pick_bitrate import pick_tx_bitrate
-import usrp_options
+import usrp_transmit_path
 
 #import os 
 #print os.getpid()
@@ -41,124 +39,9 @@ class my_top_block(gr.top_block):
     def __init__(self, modulator, options):
         gr.top_block.__init__(self)
 
-        self._tx_freq            = options.tx_freq         # tranmitter's center frequency
-        self._interp             = options.interp          # interpolating rate for the USRP (prelim)
-        self._bitrate            = options.bitrate
-        self._samples_per_symbol = options.samples_per_symbol
-        self._modulator_class    = modulator
+        self.txpath = usrp_transmit_path.usrp_transmit_path(modulator, options)
 
-        if self._tx_freq is None:
-            sys.stderr.write("-f FREQ or --freq FREQ or --tx-freq FREQ must be specified\n")
-            raise SystemExit
-
-        # Set up USRP sink; also adjusts interp, and bitrate
-        self._setup_usrp_sink(options)
-
-        # copy the final answers back into options for use by modulator
-        options.samples_per_symbol = self._samples_per_symbol
-        options.bitrate = self._bitrate
-        options.interp = self._interp
-
-        # Set center frequency of USRP
-        ok = self.set_freq(self._tx_freq)
-        if not ok:
-            print "Failed to set Tx frequency to %s" % (eng_notation.num_to_str(self._tx_freq),)
-            raise ValueError
-
-        # Set the USRP for maximum transmit gain
-        # (Note that on the RFX cards this is a nop.)
-        self.set_gain(self.u.gain_range()[1])
-
-        self.txpath = transmit_path(modulator, options)
-
-        self.connect(self.txpath, self.u)
-
-    def _setup_usrp_sink(self, options):
-        """
-        Creates a USRP sink, determines the settings for best bitrate,
-        and attaches to the transmitter's subdevice.
-        """
-        self.u = usrp_options.create_usrp_sink(options)
-        dac_rate = self.u.dac_rate()
-
-        (self._bitrate, self._samples_per_symbol, self._interp) = \
-                        pick_tx_bitrate(self._bitrate, self._modulator_class.bits_per_symbol(), \
-                                        self._samples_per_symbol, self._interp, dac_rate, \
-                                        self.u.get_interp_rates())
-
-        self.u.set_interp(self._interp)
-        self.set_auto_tr(True)                 # enable Auto Transmit/Receive switching
-
-    def set_freq(self, target_freq):
-        """
-        Set the center frequency we're interested in.
-
-        @param target_freq: frequency in Hz
-        @rypte: bool
-
-        Tuning is a two step process.  First we ask the front-end to
-        tune as close to the desired frequency as it can.  Then we use
-        the result of that operation and our target_frequency to
-        determine the value for the digital up converter.
-        """
-        return self.u.set_center_freq(target_freq)
-
-    def set_gain(self, gain):
-        """
-        Sets the analog gain in the USRP
-        """
-        self.gain = gain
-        self.u.set_gain(gain)
-
-    def set_auto_tr(self, enable):
-        """
-        Turns on auto transmit/receive of USRP daughterboard (if exits; else ignored)
-        """
-        return self.u.set_auto_tr(enable)
-        
-    def interp(self):
-        return self._interp
-
-    def add_options(normal, expert):
-        """
-        Adds usrp-specific options to the Options Parser
-        """
-        add_freq_option(normal)
-        normal.add_option("-T", "--tx-subdev-spec", type="subdev", default=None,
-                          help="select USRP Tx side A or B")
-        normal.add_option("-v", "--verbose", action="store_true", default=False)
-
-        expert.add_option("", "--tx-freq", type="eng_float", default=None,
-                          help="set transmit frequency to FREQ [default=%default]", metavar="FREQ")
-        expert.add_option("-i", "--interp", type="intx", default=256,
-                          help="set fpga interpolation rate to INTERP [default=%default]")
-    # Make a static method to call before instantiation
-    add_options = staticmethod(add_options)
-
-    def _print_verbage(self):
-        """
-        Prints information about the transmit path
-        """
-        print "Using TX d'board %s"    % (self.subdev.side_and_name(),)
-        print "modulation:      %s"    % (self._modulator_class.__name__)
-        print "interp:          %3d"   % (self._interp)
-        print "Tx Frequency:    %s"    % (eng_notation.num_to_str(self._tx_freq))
-        
-
-def add_freq_option(parser):
-    """
-    Hackery that has the -f / --freq option set both tx_freq and rx_freq
-    """
-    def freq_callback(option, opt_str, value, parser):
-        parser.values.rx_freq = value
-        parser.values.tx_freq = value
-
-    if not parser.has_option('--freq'):
-        parser.add_option('-f', '--freq', type="eng_float",
-                          action="callback", callback=freq_callback,
-                          help="set Tx and/or Rx frequency to FREQ [default=%default]",
-                          metavar="FREQ")
-
+        self.connect(self.txpath)
 
 # /////////////////////////////////////////////////////////////////////////////
 #                                   main
@@ -191,9 +74,7 @@ def main():
     parser.add_option("","--from-file", default=None,
                       help="use file for packet contents")
 
-    my_top_block.add_options(parser, expert_grp)
-    transmit_path.add_options(parser, expert_grp)
-    usrp_options.add_tx_options(parser)
+    usrp_transmit_path.add_options(parser, expert_grp)
 
     for mod in mods.values():
         mod.add_options(expert_grp)

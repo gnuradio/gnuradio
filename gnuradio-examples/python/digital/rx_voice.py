@@ -34,7 +34,7 @@ import struct
 import sys
 
 # from current dir
-from receive_path import receive_path
+import usrp_receive_path
 
 #import os
 #print os.getpid()
@@ -61,7 +61,7 @@ class audio_tx(gr.hier_block2):
 class my_top_block(gr.top_block):
     def __init__(self, demod_class, rx_callback, options):
         gr.top_block.__init__(self)
-        self.rxpath = receive_path(demod_class, rx_callback, options)
+        self.rxpath = usrp_receive_path.usrp_receive_path(demod_class, rx_callback, options)
         self.audio_tx = audio_tx(options.audio_output)
 	self.connect(self.rxpath)
 	self.connect(self.audio_tx)        
@@ -101,8 +101,7 @@ def main():
                             % (', '.join(demods.keys()),))
     parser.add_option("-O", "--audio-output", type="string", default="",
                       help="pcm output device name.  E.g., hw:0,0 or /dev/dsp")
-
-    receive_path.add_options(parser, expert_grp)
+    usrp_receive_path.add_options(parser, expert_grp)
 
     for mod in demods.values():
         mod.add_options(expert_grp)

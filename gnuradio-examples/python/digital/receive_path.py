@@ -118,8 +118,6 @@ class receive_path(gr.hier_block2):
         if not normal.has_option("--bitrate"):
             normal.add_option("-r", "--bitrate", type="eng_float", default=100e3,
                               help="specify bitrate [default=%default].")
-        normal.add_option("", "--show-rx-gain-range", action="store_true", default=False, 
-                          help="print min and max Rx gain available on selected daughterboard")
         normal.add_option("-v", "--verbose", action="store_true", default=False)
         expert.add_option("-S", "--samples-per-symbol", type="int", default=2,
                           help="set samples/symbol [default=%default]")
