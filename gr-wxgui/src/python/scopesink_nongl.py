@@ -25,7 +25,6 @@ from gnuradio.wxgui import stdgui2
 import wx
 import gnuradio.wxgui.plot as plot
 import numpy
-import threading
 import struct
 
 default_scopesink_size = (640, 240)
@@ -193,48 +192,40 @@ class win_info (object):
         return self.marker
 
 
-class input_watcher (threading.Thread):
+class input_watcher (gru.msgq_runner):
     def __init__ (self, msgq, event_receiver, frame_decim, **kwds):
-        threading.Thread.__init__ (self, **kwds)
-        self.setDaemon (1)
-        self.msgq = msgq
         self.event_receiver = event_receiver
         self.frame_decim = frame_decim
         self.iscan = 0
-        self.keep_running = True
-        self.start ()
+        gru.msgq_runner.__init__(self, msgq, self.handle_msg)
 
-    def run (self):
-        # print "input_watcher: pid = ", os.getpid ()
-        while (self.keep_running):
-            msg = self.msgq.delete_head()   # blocking read of message queue
-            if self.iscan == 0:            # only display at frame_decim
-                self.iscan = self.frame_decim
-                                
-                nchan = int(msg.arg1())    # number of channels of data in msg
-                nsamples = int(msg.arg2()) # number of samples in each channel
-
-                s = msg.to_string()      # get the body of the msg as a string
-
-                bytes_per_chan = nsamples * gr.sizeof_float
-
-                records = []
-                for ch in range (nchan):
-
-                    start = ch * bytes_per_chan
-                    chan_data = s[start:start+bytes_per_chan]
-                    rec = numpy.fromstring (chan_data, numpy.float32)
-                    records.append (rec)
-
+    def handle_msg(self, msg):
+        if self.iscan == 0:            # only display at frame_decim
+            self.iscan = self.frame_decim
+            
+            nchan = int(msg.arg1())    # number of channels of data in msg
+            nsamples = int(msg.arg2()) # number of samples in each channel
+            
+            s = msg.to_string()      # get the body of the msg as a string
+            
+            bytes_per_chan = nsamples * gr.sizeof_float
+            
+            records = []
+            for ch in range (nchan):
+                
+                start = ch * bytes_per_chan
+                chan_data = s[start:start+bytes_per_chan]
+                rec = numpy.fromstring (chan_data, numpy.float32)
+                records.append (rec)
+                
                 # print "nrecords = %d, reclen = %d" % (len (records),nsamples)
-
+                
                 de = DataEvent (records)
                 wx.PostEvent (self.event_receiver, de)
                 records = []
                 del de
 
-            # end if iscan == 0
-            self.iscan -= 1
+        self.iscan -= 1
     
 
 class scope_window (wx.Panel):

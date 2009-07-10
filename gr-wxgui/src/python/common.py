@@ -44,31 +44,26 @@ def register_access_methods(destination, controller):
 ##################################################
 # Input Watcher Thread
 ##################################################
-import threading
+from gnuradio import gru
 
-class input_watcher(threading.Thread):
+class input_watcher(gru.msgq_runner):
 	"""
 	Input watcher thread runs forever.
 	Read messages from the message queue.
 	Forward messages to the message handler.
 	"""
 	def __init__ (self, msgq, controller, msg_key, arg1_key='', arg2_key=''):
-		threading.Thread.__init__(self)
-		self.setDaemon(1)
-		self.msgq = msgq
 		self._controller = controller
 		self._msg_key = msg_key
 		self._arg1_key = arg1_key
 		self._arg2_key = arg2_key
-		self.keep_running = True
-		self.start()
+		gru.msgq_runner.__init__(self, msgq, self.handle_msg)
 
-	def run(self):
-		while self.keep_running:
-			msg = self.msgq.delete_head()
-			if self._arg1_key: self._controller[self._arg1_key] = msg.arg1()
-			if self._arg2_key: self._controller[self._arg2_key] = msg.arg2()
-			self._controller[self._msg_key] = msg.to_string()
+	def handle_msg(self, msg):
+		if self._arg1_key: self._controller[self._arg1_key] = msg.arg1()
+		if self._arg2_key: self._controller[self._arg2_key] = msg.arg2()
+		self._controller[self._msg_key] = msg.to_string()
+
 
 ##################################################
 # Shared Functions

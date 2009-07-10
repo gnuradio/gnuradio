@@ -26,7 +26,6 @@ import wx
 import gnuradio.wxgui.plot as plot
 import numpy
 import os
-import threading
 import math    
 
 default_fftsink_size = (640,240)
@@ -148,37 +147,29 @@ class DataEvent(wx.PyEvent):
 
     def Clone (self): 
         self.__class__ (self.GetId())
-
-
-class input_watcher (threading.Thread):
+    
+class input_watcher (gru.msgq_runner):
     def __init__ (self, msgq, fft_size, event_receiver, **kwds):
-        threading.Thread.__init__ (self, **kwds)
-        self.setDaemon (1)
-        self.msgq = msgq
         self.fft_size = fft_size
         self.event_receiver = event_receiver
-        self.keep_running = True
-        self.start ()
+        gru.msgq_runner.__init__(self, msgq, self.handle_msg)
 
-    def run (self):
-        while (self.keep_running):
-            msg = self.msgq.delete_head()  # blocking read of message queue
-            itemsize = int(msg.arg1())
-            nitems = int(msg.arg2())
+    def handle_msg(self, msg):
+        itemsize = int(msg.arg1())
+        nitems = int(msg.arg2())
 
-            s = msg.to_string()            # get the body of the msg as a string
+        s = msg.to_string() # get the body of the msg as a string
 
-            # There may be more than one FFT frame in the message.
-            # If so, we take only the last one
-            if nitems > 1:
-                start = itemsize * (nitems - 1)
-                s = s[start:start+itemsize]
+        # There may be more than one FFT frame in the message.
+        # If so, we take only the last one
+        if nitems > 1:
+            start = itemsize * (nitems - 1)
+            s = s[start:start+itemsize]
 
-            complex_data = numpy.fromstring (s, numpy.float32)
-            de = DataEvent (complex_data)
-            wx.PostEvent (self.event_receiver, de)
-            del de
-    
+        complex_data = numpy.fromstring (s, numpy.float32)
+        de = DataEvent (complex_data)
+        wx.PostEvent (self.event_receiver, de)
+        del de
 
 class waterfall_window (wx.Panel):
     def __init__ (self, fftsink, parent, id = -1,
