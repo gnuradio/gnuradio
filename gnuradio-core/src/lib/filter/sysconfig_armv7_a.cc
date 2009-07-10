@@ -20,21 +20,20 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _GR_CPU_H_
-#define _GR_CPU_H_
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-struct gr_cpu {
-  static bool has_mmx ();
-  static bool has_sse ();
-  static bool has_sse2 ();
-  static bool has_sse3 ();
-  static bool has_ssse3 ();
-  static bool has_sse4_1 ();
-  static bool has_sse4_2 ();
-  static bool has_3dnow ();
-  static bool has_3dnowext ();
-  static bool has_altivec ();
-  static bool has_armv7_a ();
-};
+#include <gr_fir_sysconfig_armv7_a.h>
 
-#endif /* _GR_CPU_H_ */
+gr_fir_sysconfig *
+gr_fir_sysconfig_singleton ()
+{
+  static gr_fir_sysconfig *singleton = 0;
+
+  if (singleton)
+    return singleton;
+
+  singleton = new gr_fir_sysconfig_armv7_a ();
+  return singleton;
+}

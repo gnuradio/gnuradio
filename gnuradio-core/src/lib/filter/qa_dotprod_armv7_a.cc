@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2003,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,22 +19,14 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+#include "qa_dotprod.h"
 
-#ifndef _GR_CPU_H_
-#define _GR_CPU_H_
+CppUnit::TestSuite *
+qa_dotprod_suite ()
+{
+  CppUnit::TestSuite *s = new CppUnit::TestSuite ("dotprod");
 
-struct gr_cpu {
-  static bool has_mmx ();
-  static bool has_sse ();
-  static bool has_sse2 ();
-  static bool has_sse3 ();
-  static bool has_ssse3 ();
-  static bool has_sse4_1 ();
-  static bool has_sse4_2 ();
-  static bool has_3dnow ();
-  static bool has_3dnowext ();
-  static bool has_altivec ();
-  static bool has_armv7_a ();
-};
+  // empty test suite
 
-#endif /* _GR_CPU_H_ */
+  return s;
+}

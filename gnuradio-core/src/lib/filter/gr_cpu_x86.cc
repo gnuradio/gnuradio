@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2002 Free Software Foundation, Inc.
+ * Copyright 2002,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -111,3 +111,10 @@ gr_cpu::has_altivec ()
 {
   return false;
 }
+
+bool
+gr_cpu::has_armv7_a ()
+{
+  return false;
+}
+

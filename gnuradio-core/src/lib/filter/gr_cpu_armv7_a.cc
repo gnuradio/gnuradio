@@ -20,21 +20,46 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _GR_CPU_H_
-#define _GR_CPU_H_
+#include <gr_cpu.h>
 
-struct gr_cpu {
-  static bool has_mmx ();
-  static bool has_sse ();
-  static bool has_sse2 ();
-  static bool has_sse3 ();
-  static bool has_ssse3 ();
-  static bool has_sse4_1 ();
-  static bool has_sse4_2 ();
-  static bool has_3dnow ();
-  static bool has_3dnowext ();
-  static bool has_altivec ();
-  static bool has_armv7_a ();
-};
+bool
+gr_cpu::has_mmx ()
+{
+  return false;
+}
 
-#endif /* _GR_CPU_H_ */
+bool
+gr_cpu::has_sse ()
+{
+  return false;
+}
+
+bool
+gr_cpu::has_sse2 ()
+{
+  return false;
+}
+
+bool
+gr_cpu::has_3dnow ()
+{
+  return false;
+}
+
+bool
+gr_cpu::has_3dnowext ()
+{
+  return false;
+}
+
+bool
+gr_cpu::has_altivec ()
+{
+  return false;
+}
+
+bool
+gr_cpu::has_armv7_a ()
+{
+  return true;
+}

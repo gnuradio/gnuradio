@@ -1,5 +1,5 @@
 dnl
-dnl Copyright 2003,2008 Free Software Foundation, Inc.
+dnl Copyright 2003,2008,2009 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -25,6 +25,26 @@ AC_DEFUN([_TRY_ADD_ALTIVEC],
   LF_CHECK_CXX_FLAG([-mabi=altivec -maltivec])
 ])
 
+AC_DEFUN([_FIND_ARM_ISA],
+[
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+  [[#ifndef __ARM_ARCH_5__
+    #error "Not armv5"
+    #endif
+  ]])],
+    [is_armv5=yes],
+    [is_armv5=no])
+
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+  [[#ifndef __ARM_ARCH_7A__
+    #error "Not armv7-a"
+    #endif
+  ]])],
+    [is_armv7_a=yes],
+    [is_armv7_a=no])
+
+])
+
 AC_DEFUN([GR_SET_MD_CPU],[
   AC_REQUIRE([AC_CANONICAL_HOST])
   AC_ARG_WITH(md-cpu,
@@ -36,6 +56,12 @@ AC_DEFUN([GR_SET_MD_CPU],[
    x86 | i[[3-7]]86)	MD_CPU=x86	MD_SUBCPU=x86 ;;
    x86_64)		MD_CPU=x86	MD_SUBCPU=x86_64 ;;
    powerpc*)            MD_CPU=powerpc ;;
+   arm)
+       _FIND_ARM_ISA
+       if test $is_armv5 = yes; then MD_CPU=armv5;
+       elif test $is_armv7_a = yes; then MD_CPU=armv7_a;
+       else MD_CPU=generic; fi
+       ;;
    *)           	MD_CPU=generic ;;
   esac
 
@@ -59,5 +85,7 @@ AC_DEFUN([GR_SET_MD_CPU],[
   AM_CONDITIONAL(MD_CPU_x86,     test "$MD_CPU" = "x86")
   AM_CONDITIONAL(MD_SUBCPU_x86_64,  test "$MD_SUBCPU" = "x86_64")
   AM_CONDITIONAL(MD_CPU_powerpc, test "$MD_CPU" = "powerpc")
+  AM_CONDITIONAL(MD_CPU_armv5, test "$MD_CPU" = "armv5")
+  AM_CONDITIONAL(MD_CPU_armv7_a, test "$MD_CPU" = "armv7_a")
   AM_CONDITIONAL(MD_CPU_generic, test "$MD_CPU" = "generic")
 ])

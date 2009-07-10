@@ -57,3 +57,9 @@ gr_cpu::has_altivec ()
 {
   return true;		// FIXME assume we've always got it
 }
+
+bool
+gr_cpu::has_armv7_a ()
+{
+  return false;
+}

@@ -148,6 +148,15 @@ powerpc_CODE = \
 powerpc_qa_CODE = \
 	qa_dotprod_powerpc.cc
 
+armv7_a_CODE = \
+	sysconfig_armv7_a.cc \
+	gr_fir_sysconfig_armv7_a.cc \
+	gr_cpu_armv7_a.cc \
+	gr_fir_fff_armv7_a.cc \
+	dotprod_fff_armv7_a.c
+
+armv7_a_qa_CODE = \
+	qa_dotprod_armv7_a.cc
 
 #
 # include each <foo>_CODE entry here...
@@ -160,7 +169,9 @@ EXTRA_libfilter_la_SOURCES =		\
 	$(x86_64_SUBCODE)		\
 	$(x86_qa_CODE)			\
 	$(powerpc_CODE)			\
-	$(powerpc_qa_CODE)
+	$(powerpc_qa_CODE)		\
+	$(armv7_a_CODE)		\
+	$(armv7_a_qa_CODE)
 
 
 EXTRA_DIST = 					\
@@ -223,6 +234,11 @@ libfilter_la_SOURCES = $(libfilter_la_common_SOURCES) $(powerpc_CODE)
 libfilter_qa_la_SOURCES = $(libfilter_qa_la_common_SOURCES) $(powerpc_qa_CODE)
 endif
 
+if MD_CPU_armv7_a
+libfilter_la_SOURCES = $(libfilter_la_common_SOURCES) $(armv7_a_CODE)
+libfilter_qa_la_SOURCES = $(libfilter_qa_la_common_SOURCES) $(armv7_a_qa_CODE)
+endif
+
 
 grinclude_HEADERS = 			\
 	$(GENERATED_H)			\
@@ -265,6 +281,7 @@ grinclude_HEADERS = 			\
 noinst_HEADERS = 			\
 	assembly.h			\
 	dotprod_fff_altivec.h		\
+	dotprod_fff_armv7_a.h		\
 	gr_fir_scc_simd.h		\
 	gr_fir_scc_x86.h		\
 	gr_fir_fcc_simd.h		\
@@ -274,6 +291,7 @@ noinst_HEADERS = 			\
 	gr_fir_ccc_simd.h		\
 	gr_fir_ccc_x86.h		\
 	gr_fir_fff_altivec.h		\
+	gr_fir_fff_armv7_a.h		\
 	gr_fir_fff_simd.h		\
 	gr_fir_fff_x86.h		\
 	gr_fir_fsf_simd.h		\
