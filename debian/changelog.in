@@ -1,15 +1,9 @@
-gnuradio (3.3svn-1) unstable; urgency=high
+gnuradio (3.3svn-@SVNVERSION@) unstable; urgency=low
 
-  * Fix broken prefs.py when installed in --prefix=/usr
-
- -- Johnathan Corgan <jcorgan@corganenterprises.com>  Sun,  06 Jul 2009 16:00:00 -0800
-
-gnuradio (3.3svn) unstable; urgency=low
-
-  * Development trunk updates as of revision 11370
+  * Development trunk updates as of revision @SVNVERSION@
   * See http://gnuradio.org/trac
 
- -- Johnathan Corgan <jcorgan@corganenterprises.com>  Sun,  05 Jul 2009 18:00:00 -0800
+ -- Johnathan Corgan <jcorgan@corganenterprises.com>  @BUILD_DATE@
 
 gnuradio (3.2) unstable; urgency=low
 

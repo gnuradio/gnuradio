@@ -286,6 +286,8 @@ dnl AX_BOOST_WSERIALIZATION
 
 dnl If this is being done from a subversion tree, create variables
 GR_SUBVERSION
+BUILD_DATE=`date -R`
+AC_SUBST(BUILD_DATE)
 
 dnl Component specific configuration
 dnl The order of the GR_ macros determines the order of compilation
@@ -372,6 +374,7 @@ AC_CONFIG_FILES([\
     Makefile \
     run_tests.sh \
     config/Makefile \
+    debian/changelog \
 ])
 
 dnl run_tests.sh is created from run_tests.sh.in .  Make it executable.
