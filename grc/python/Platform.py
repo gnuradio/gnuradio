@@ -18,7 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import os
-from .. import VERSION #TEMP: until gnuradio has __version__
+from gnuradio import gr
 from .. base.Platform import Platform as _Platform
 from FlowGraph import FlowGraph as _FlowGraph
 from Connection import Connection as _Connection
@@ -59,7 +59,7 @@ class Platform(_Platform):
 		_Platform.__init__(
 			self,
 			name='GNU Radio Companion',
-			version=VERSION,
+			version=gr.version(),
 			key='grc',
 			license=__doc__.strip(),
 			website='http://gnuradio.org/trac/wiki/GNURadioCompanion',

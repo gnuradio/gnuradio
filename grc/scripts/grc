@@ -30,7 +30,7 @@ Cannot import gnuradio. Are your PYTHONPATH and LD_LIBRARY_PATH set correctly?""
 	d.run()
 	exit(-1)
 
-from gnuradio.grc import VERSION
+from gnuradio import gr
 from optparse import OptionParser
 
 if __name__ == "__main__":
@@ -42,7 +42,7 @@ This program is part of GNU Radio
 GRC comes with ABSOLUTELY NO WARRANTY.
 This is free software,
 and you are welcome to redistribute it.
-"""%VERSION
+"""%gr.version()
 	parser = OptionParser(usage=usage, version=version)
 	(options, args) = parser.parse_args()
 	from gnuradio.grc.python.Platform import Platform

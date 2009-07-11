@@ -42,18 +42,9 @@ ourpython_PYTHON = __init__.py
 etcdir = $(gr_prefsdir)
 dist_etc_DATA = grc.conf
 
-EXTRA_DIST = \
-	$(srcdir)/__init__.py.in \
-	$(srcdir)/grc.conf.in
+EXTRA_DIST = $(srcdir)/grc.conf.in
 
-BUILT_SOURCES = \
-	__init__.py \
-	grc.conf
-
-__init__.py: $(srcdir)/__init__.py.in Makefile
-	sed \
-		-e 's|@VERSION[@]|$(VERSION)|g' \
-	$< > $@
+BUILT_SOURCES = grc.conf
 
 grc.conf: $(srcdir)/grc.conf.in Makefile
 	sed \
