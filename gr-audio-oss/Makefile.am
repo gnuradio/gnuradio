@@ -26,5 +26,5 @@ SUBDIRS = src
 pkgconfigdir = $(libdir)/pkgconfig
 dist_pkgconfig_DATA = gnuradio-audio-oss.pc
 
-etcdir = $(gr_sysconfdir)
+etcdir = $(gr_prefsdir)
 dist_etc_DATA = gr-audio-oss.conf

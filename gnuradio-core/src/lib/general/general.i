@@ -105,7 +105,7 @@
 #include <gr_pa_2x2_phase_combiner.h>
 #include <gr_kludge_copy.h>
 #include <gr_prefs.h>
-#include <gr_prefix.h>
+#include <gr_constants.h>
 #include <gr_test_types.h>
 #include <gr_test.h>
 #include <gr_unpack_k_bits_bb.h>
@@ -225,7 +225,7 @@
 %include "gr_pa_2x2_phase_combiner.i"
 %include "gr_kludge_copy.i"
 %include "gr_prefs.i"
-%include "gr_prefix.i"
+%include "gr_constants.i"
 %include "gr_test_types.h"
 %include "gr_test.i"
 %include "gr_unpack_k_bits_bb.i"

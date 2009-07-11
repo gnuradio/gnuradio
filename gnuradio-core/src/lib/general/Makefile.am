@@ -31,7 +31,7 @@ BUILT_SOURCES =
 
 EXTRA_DIST = 				\
 	gen_sine_table.py		\
-	gr_prefix.cc.in			
+	gr_constants.cc.in			
 
 libgeneral_la_SOURCES = 		\
 	gr_agc_cc.cc                	\
@@ -117,7 +117,7 @@ libgeneral_la_SOURCES = 		\
 	gr_pll_freqdet_cf.cc		\
 	gr_pll_refout_cc.cc		\
 	gr_pn_correlator_cc.cc		\
-	gr_prefix.cc			\
+	gr_constants.cc			\
 	gr_prefs.cc			\
 	gr_probe_avg_mag_sqrd_c.cc	\
 	gr_probe_avg_mag_sqrd_cf.cc	\
@@ -273,7 +273,7 @@ grinclude_HEADERS = 			\
 	gr_pll_freqdet_cf.h		\
 	gr_pll_refout_cc.h		\
 	gr_pn_correlator_cc.h		\
-	gr_prefix.h			\
+	gr_constants.h			\
 	gr_prefs.h			\
 	gr_probe_avg_mag_sqrd_c.h	\
 	gr_probe_avg_mag_sqrd_cf.h	\
@@ -432,7 +432,7 @@ swiginclude_HEADERS =			\
 	gr_pll_freqdet_cf.i		\
 	gr_pll_refout_cc.i		\
 	gr_pn_correlator_cc.i		\
-	gr_prefix.i			\
+	gr_constants.i			\
 	gr_prefs.i			\
 	gr_probe_avg_mag_sqrd_c.i	\
 	gr_probe_avg_mag_sqrd_cf.i	\

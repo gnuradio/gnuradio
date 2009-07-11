@@ -29,6 +29,8 @@ if PYTHON
 SUBDIRS += swig
 endif
 
+AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
+
 # generate libgnuradio-core.la from the convenience libraries in subdirs
 
 lib_LTLIBRARIES = libgnuradio-core.la libgnuradio-core-qa.la
@@ -64,3 +66,7 @@ libgnuradio_core_qa_la_LIBADD  = 	\
 	runtime/libruntime-qa.la	\
 	libgnuradio-core.la		\
 	$(CPPUNIT_LIBS)			
+
+bin_PROGRAMS = gnuradio
+gnuradio_SOURCES = gnuradio.cc
+gnuradio_LDADD = libgnuradio-core.la $(BOOST_PROGRAM_OPTIONS_LIB)

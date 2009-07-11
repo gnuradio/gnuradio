@@ -26,7 +26,10 @@ AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-AM_INIT_AUTOMAKE(gnuradio,3.3svn)
+
+VERSION=3.3svn
+AC_SUBST(VERSION)
+AM_INIT_AUTOMAKE(gnuradio,$VERSION)
 
 DEFINES=""
 AC_SUBST(DEFINES)
@@ -286,8 +289,24 @@ dnl AX_BOOST_WSERIALIZATION
 
 dnl If this is being done from a subversion tree, create variables
 GR_SUBVERSION
-BUILD_DATE=`date -R`
+BUILD_DATE=`date -R -u`
 AC_SUBST(BUILD_DATE)
+
+dnl SYSCONFDIR substitution
+if test "${sysconfdir}" == "\${prefix}/etc" ; then
+   if test "${prefix}" == "NONE" ; then
+      SYSCONFDIR=["$ac_default_prefix/etc"]
+   else
+      SYSCONFDIR=["${prefix}/etc"]
+   fi
+else
+   SYSCONFDIR=[${sysconfdir}]
+fi
+AC_SUBST(SYSCONFDIR)
+
+dnl System configuration files
+GR_PREFSDIR=[$SYSCONFDIR/${PACKAGE}/conf.d]
+AC_SUBST(GR_PREFSDIR)
 
 dnl Component specific configuration
 dnl The order of the GR_ macros determines the order of compilation

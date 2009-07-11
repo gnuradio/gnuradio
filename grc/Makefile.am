@@ -39,7 +39,7 @@ endif
 ourpythondir = $(grc_src_prefix)
 ourpython_PYTHON = __init__.py
 
-etcdir = $(gr_sysconfdir)
+etcdir = $(gr_prefsdir)
 dist_etc_DATA = grc.conf
 
 EXTRA_DIST = \

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,10 +20,50 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <gr_prefix.h>
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <gr_constants.h>
 
 const std::string
 gr_prefix()
 {
   return "@prefix@";
+}
+
+const std::string
+gr_sysconfdir()
+{
+  return "@SYSCONFDIR@";
+}
+
+const std::string
+gr_prefsdir()
+{
+  return "@GR_PREFSDIR@";
+}
+
+const std::string
+gr_build_date()
+{
+  return "@BUILD_DATE@";
+}
+
+const std::string
+gr_svn_date()
+{
+  return "@SVNDATE@";
+}
+
+const std::string
+gr_svn_version()
+{
+  return "@SVNVERSION@";
+}
+
+const std::string
+gr_version()
+{
+  return "@VERSION@";
 }

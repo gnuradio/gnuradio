@@ -115,7 +115,7 @@ docdir ?= $(datadir)/doc/$(PACKAGE)
 gr_docdir = $(docdir)-$(VERSION)
 
 # System configuration files
-gr_sysconfdir = $(sysconfdir)/$(PACKAGE)/conf.d
+gr_prefsdir = $(GR_PREFSDIR)
 
 # Other common defines; use "+=" to add to these
 STAMPS =

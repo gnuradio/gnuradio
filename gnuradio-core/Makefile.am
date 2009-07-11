@@ -29,5 +29,5 @@ SUBDIRS = src
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = gnuradio-core.pc
 
-etcdir = $(gr_sysconfdir)
+etcdir = $(gr_prefsdir)
 dist_etc_DATA = gnuradio-core.conf

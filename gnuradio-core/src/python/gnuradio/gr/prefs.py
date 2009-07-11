@@ -33,7 +33,7 @@ def _user_prefs_filename():
     return os.path.expanduser('~/.gnuradio/config.conf')
         
 def _sys_prefs_dirname():
-    return os.path.join(gsp.prefix(), 'etc/gnuradio/conf.d')
+    return gsp.prefsdir()
 
 def _bool(x):
     """

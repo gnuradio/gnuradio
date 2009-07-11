@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -19,8 +19,8 @@
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef INCLUDED_GR_PREFIX_H
-#define INCLUDED_GR_PREFIX_H
+#ifndef INCLUDED_GR_CONSTANTS_H
+#define INCLUDED_GR_CONSTANTS_H
 
 #include <string>
 
@@ -29,5 +29,34 @@
  */
 const std::string gr_prefix();
 
+/*!
+ * \brief return ./configure --sysconfdir argument.  Typically $prefix/etc or /etc
+ */
+const std::string gr_sysconfdir();
 
-#endif /* INCLUDED_GR_PREFIX_H */
+/*!
+ * \brief return preferences file directory.  Typically $sysconfdir/etc/conf.d
+ */
+const std::string gr_prefsdir();
+
+/*!
+ * \brief return date/time of build, as set when 'bootstrap' is run
+ */
+const std::string gr_build_date();
+
+/*!
+ * \brief return repository date as set when 'bootstrap' is run
+ */
+const std::string gr_svn_date();
+
+/*!
+ * \brief return repository version as set when 'bootstrap' is run
+ */
+const std::string gr_svn_version();
+
+/*!
+ * \brief return version string defined in configure.ac
+ */
+const std::string gr_version();
+
+#endif /* INCLUDED_GR_CONSTANTS_H */
