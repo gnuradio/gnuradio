@@ -46,7 +46,7 @@ configure-stamp:
 		--disable-gr-audio-osx \
 		--disable-gr-audio-windows \
 		--disable-gcell --disable-gr-gcell \
-		--disable-gr-comedi --disable-usrp2-firmware
+		--disable-gr-comedi
 	touch configure-stamp
 
 build: build-stamp
@@ -57,9 +57,9 @@ build-stamp: configure-stamp
 	touch $@
 
 extract: extract-stamp
-extract-stamp: build-stamp debian/gen-install-files.sh
+extract-stamp: build-stamp debian/bin/gen-install-files.sh
 	dh_testdir
-	debian/gen-install-files.sh 
+	debian/bin/gen-install-files.sh 
 	touch $@
 
 install: install-stamp
@@ -79,15 +79,15 @@ install-stamp: extract-stamp debian/control
 	done
 
 	: # Deposit rule to allow group 'usrp' access to USRP hardware
-	install -m 0644 -D debian/libusrp.udev \
+	install -m 0644 -D debian/custom/libusrp.udev \
 		debian/tmp/etc/udev/rules.d/40-usrp.rules
 
 	: # Deposit rule to allow group 'usrp' access to USRP2 hardware
-	install -m 0644 -D debian/libusrp2.limits \
+	install -m 0644 -D debian/custom/libusrp2.limits \
 		debian/tmp/etc/security/limits.d/libusrp2.limits
 
 	: # Install custom grc.conf
-	install -m 0644 -D debian/grc.conf \
+	install -m 0644 -D debian/custom/grc.conf \
 		debian/tmp/etc/gnuradio/conf.d/grc.conf
 
 	dh_install --sourcedir=debian/tmp

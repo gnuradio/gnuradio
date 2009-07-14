@@ -27,7 +27,7 @@
 # ========================
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 3.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "00:14:04  JULY 13, 2003"
-set_global_assignment -name LAST_QUARTUS_VERSION "7.1 SP1"
+set_global_assignment -name LAST_QUARTUS_VERSION 8.1
 
 # Pin & Location Assignments
 # ==========================
@@ -368,7 +368,7 @@ set_instance_assignment -name CLOCK_SETTINGS master_clk -to master_clk
 # end ENTITY(usrp_std)
 # --------------------
 
-set_instance_assignment -name PARTITION_HIERARCHY no_file_for_top_partition -to | -section_id Top
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name VERILOG_FILE ../../megacells/fifo_4k_18.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/atr_delay.v
@@ -407,3 +407,6 @@ set_global_assignment -name VERILOG_FILE ../../sdr_lib/clk_divider.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/serial_io.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/strobe_gen.v
 set_global_assignment -name VERILOG_FILE ../../sdr_lib/sign_extend.v
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
+set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"

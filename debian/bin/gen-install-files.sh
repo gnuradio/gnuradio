@@ -1,6 +1,6 @@
 #!/bin/sh
 
-EXTRACT=dtools/bin/extract_install_filenames
+EXTRACT=debian/bin/extract-install-filenames
 
 # libusrp-dev
 NAME=debian/libusrp-dev.install
