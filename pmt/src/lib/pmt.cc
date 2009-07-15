@@ -864,7 +864,7 @@ pmt_nth(size_t n, pmt_t list)
 pmt_t
 pmt_nthcdr(size_t n, pmt_t list)
 {
-  if (!(pmt_is_null(list) || pmt_is_pair(list)))
+  if (!(pmt_is_pair(list) || pmt_is_null(list)))
     throw pmt_wrong_type("pmt_nthcdr", list);
     
   while (n > 0){
