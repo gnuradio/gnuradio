@@ -413,3 +413,24 @@ qa_pmt_prims::test_serialize()
   // FIXME add tests for malformed input too.
 
 }
+
+void
+qa_pmt_prims::test_sets()
+{
+  pmt_t s1 = pmt_intern("s1");
+  pmt_t s2 = pmt_intern("s2");
+  pmt_t s3 = pmt_intern("s3");
+
+  pmt_t l1 = pmt_list1(s1);
+  pmt_t l2 = pmt_list2(s2,s3);
+  pmt_t l3 = pmt_list3(s1,s2,s3);
+
+  CPPUNIT_ASSERT(pmt_is_pair(pmt_memq(s1,l1)));
+  CPPUNIT_ASSERT(pmt_is_false(pmt_memq(s3,l1)));
+
+  CPPUNIT_ASSERT(pmt_subsetp(l1,l3));
+  CPPUNIT_ASSERT(pmt_subsetp(l2,l3));
+  CPPUNIT_ASSERT(!pmt_subsetp(l1,l2));
+  CPPUNIT_ASSERT(!pmt_subsetp(l2,l1));
+  CPPUNIT_ASSERT(!pmt_subsetp(l3,l2));
+}

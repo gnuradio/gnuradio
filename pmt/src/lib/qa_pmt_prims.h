@@ -42,6 +42,7 @@ class qa_pmt_prims : public CppUnit::TestCase {
   CPPUNIT_TEST(test_io);
   CPPUNIT_TEST(test_lists);
   CPPUNIT_TEST(test_serialize);
+  CPPUNIT_TEST(test_sets);
   CPPUNIT_TEST_SUITE_END();
 
  private:
@@ -59,6 +60,7 @@ class qa_pmt_prims : public CppUnit::TestCase {
   void test_io();
   void test_lists();
   void test_serialize();
+  void test_sets();
 };
 
 #endif /* INCLUDED_QA_PMT_PRIMS_H */
