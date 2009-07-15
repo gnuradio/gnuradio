@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,8 +22,8 @@
 #define INCLUDED_PMT_POOL_H
 
 #include <cstddef>
-#include <gnuradio/omnithread.h>
 #include <vector>
+#include <boost/thread.hpp>
 
 /*!
  * \brief very simple thread-safe fixed-size allocation pool
@@ -37,8 +37,9 @@ class pmt_pool {
     struct item	*d_next;
   };
   
-  omni_mutex	      d_mutex;
-  omni_condition      d_cond;
+  typedef boost::unique_lock<boost::mutex>  scoped_lock;
+  mutable boost::mutex 		d_mutex;
+  boost::condition_variable	d_cond;
   
   size_t	      d_itemsize;
   size_t	      d_alignment;

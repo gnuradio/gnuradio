@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -34,8 +34,7 @@ ROUNDUP(size_t x, size_t stride)
 
 pmt_pool::pmt_pool(size_t itemsize, size_t alignment,
 		   size_t allocation_size, size_t max_items)
-  : d_cond(&d_mutex),
-    d_itemsize(ROUNDUP(itemsize, alignment)),
+  : d_itemsize(ROUNDUP(itemsize, alignment)),
     d_alignment(alignment),
     d_allocation_size(std::max(allocation_size, 16 * itemsize)),
     d_max_items(max_items), d_n_items(0),
@@ -53,12 +52,12 @@ pmt_pool::~pmt_pool()
 void *
 pmt_pool::malloc()
 {
-  omni_mutex_lock l(d_mutex);
+  scoped_lock guard(d_mutex);
   item *p;
 
   if (d_max_items != 0){
     while (d_n_items >= d_max_items)
-      d_cond.wait();
+      d_cond.wait(guard);
   }
 
   if (d_freelist){	// got something?
@@ -98,12 +97,12 @@ pmt_pool::free(void *foo)
   if (!foo)
     return;
 
-  omni_mutex_lock l(d_mutex);
+  scoped_lock guard(d_mutex);
 
   item *p = (item *) foo;
   p->d_next = d_freelist;
   d_freelist = p;
   d_n_items--;
   if (d_max_items != 0)
-    d_cond.signal();
+    d_cond.notify_one();
 }

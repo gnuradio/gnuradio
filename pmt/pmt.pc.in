@@ -5,7 +5,7 @@ includedir=@includedir@
 
 Name: pmt
 Description: The GNU Radio Polymorphic Type library
-Requires: gnuradio-omnithread
+Requires: 
 Version: @VERSION@
 Libs: -L${libdir} -lpmt
 Cflags: -I${includedir}

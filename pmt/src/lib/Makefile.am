@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2008 Free Software Foundation, Inc.
+# Copyright 2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(DEFINES) $(OMNITHREAD_INCLUDES) $(BOOST_CPPFLAGS) \
+AM_CPPFLAGS = $(DEFINES) $(BOOST_CPPFLAGS) \
 	$(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 TESTS = test_pmt
@@ -63,11 +63,11 @@ libpmt_la_SOURCES =			\
 	pmt_unv.cc			
 
 # magic flags
-libpmt_la_LDFLAGS = $(NO_UNDEFINED)
+libpmt_la_LDFLAGS = $(NO_UNDEFINED) $(BOOST_LDFLAGS)
 
 # link the library against the c++ standard library
 libpmt_la_LIBADD = 			\
-	$(OMNITHREAD_LA)		\
+	$(BOOST_THREAD_LIB)		\
 	-lstdc++			
 
 include_HEADERS =			\
