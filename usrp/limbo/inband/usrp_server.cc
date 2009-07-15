@@ -256,10 +256,11 @@ usrp_server::handle_message(mb_message_sptr msg)
         return;
 
       // Find the port through the owner of the channel
-      if((port = tx_port_index(d_chaninfo_tx[channel].owner)) !=-1 )
+      if((port = tx_port_index(d_chaninfo_tx[channel].owner)) !=-1 ){
         d_tx[port]->send(s_response_xmit_raw_frame, 
                          pmt_list2(invocation_handle, status));
-      return;
+	return;
+      }
     }
     //--------------- USRP READ ---------------//
     else if (pmt_eq(event, s_response_usrp_read)) {
