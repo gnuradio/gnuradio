@@ -71,7 +71,7 @@ Section: libdevel
 Architecture: any
 Replaces: libpmt0-dev
 Conflicts: libpmt0-dev
-Depends: libpmt (= ${binary:Version}), libgnuradio-omnithread-dev (= ${binary:Version})
+Depends: libpmt (= ${binary:Version}), libboost-thread1.37-dev
 Description: GNU Radio Polymorphic Type Library
  This package implements polymorphic types.  These are similar 
  to lisp or Python data objects, and implement transparent
