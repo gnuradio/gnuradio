@@ -109,7 +109,7 @@ bool pmt_to_bool(pmt_t val);
  */
 
 //! Return true if obj is a symbol, else false.
-bool pmt_is_symbol(pmt_t obj);
+bool pmt_is_symbol(const pmt_t& obj);
 
 //! Return the symbol whose name is \p s.
 pmt_t pmt_string_to_symbol(const std::string &s);
@@ -122,7 +122,7 @@ pmt_t pmt_intern(const std::string &s);
  * If \p is a symbol, return the name of the symbol as a string.
  * Otherwise, raise the wrong_type exception.
  */
-const std::string pmt_symbol_to_string(pmt_t sym);
+const std::string pmt_symbol_to_string(const pmt_t& sym);
 
 /*
  * ------------------------------------------------------------------------
@@ -206,19 +206,19 @@ std::complex<double> pmt_to_complex(pmt_t z);
 extern const pmt_t PMT_NIL;	//< the empty list
 
 //! Return true if \p x is the empty list, otherwise return false.
-bool pmt_is_null(pmt_t x);
+bool pmt_is_null(const pmt_t& x);
 
 //! Return true if \p obj is a pair, else false.
-bool pmt_is_pair(pmt_t obj);
+bool pmt_is_pair(const pmt_t& obj);
 
 //! Return a newly allocated pair whose car is \p x and whose cdr is \p y.
-pmt_t pmt_cons(pmt_t x, pmt_t y);
+pmt_t pmt_cons(const pmt_t& x, const pmt_t& y);
 
 //! If \p pair is a pair, return the car of the \p pair, otherwise raise wrong_type.
-pmt_t pmt_car(pmt_t pair);
+pmt_t pmt_car(const pmt_t& pair);
 
 //! If \p pair is a pair, return the cdr of the \p pair, otherwise raise wrong_type.
-pmt_t pmt_cdr(pmt_t pair);
+pmt_t pmt_cdr(const pmt_t& pair);
 
 //! Stores \p value in the car field of \p pair.
 void pmt_set_car(pmt_t pair, pmt_t value);
@@ -449,7 +449,7 @@ void pmt_any_set(pmt_t obj, const boost::any &any);
  */
 
 //! Return true if x and y are the same object; otherwise return false.
-bool pmt_eq(pmt_t x, pmt_t y);
+bool pmt_eq(const pmt_t& x, const pmt_t& y);
 
 /*!
  * \brief Return true if x and y should normally be regarded as the same object, else false.
@@ -464,7 +464,7 @@ bool pmt_eq(pmt_t x, pmt_t y);
  *   x and y are pairs or vectors that denote same location in store.
  * </pre>
  */
-bool pmt_eqv(pmt_t x, pmt_t y);
+bool pmt_eqv(const pmt_t& x, const pmt_t& y);
 
 /*!
  * pmt_equal recursively compares the contents of pairs and vectors,
@@ -472,11 +472,11 @@ bool pmt_eqv(pmt_t x, pmt_t y);
  * pmt_equal may fail to terminate if its arguments are circular data
  * structures.
  */
-bool pmt_equal(pmt_t x, pmt_t y);
+bool pmt_equal(const pmt_t& x, const pmt_t& y);
 
 
 //! Return the number of elements in v
-size_t pmt_length(pmt_t v);
+size_t pmt_length(const pmt_t& v);
 
 /*!
  * \brief Find the first pair in \p alist whose car field is \p obj
@@ -515,7 +515,7 @@ pmt_t pmt_assoc(pmt_t obj, pmt_t alist);
  * \p list must be a list.  The dynamic order in which \p proc is
  * applied to the elements of \p list is unspecified.
  */
-pmt_t pmt_map(pmt_t proc(pmt_t), pmt_t list);
+pmt_t pmt_map(pmt_t proc(const pmt_t&), pmt_t list);
 
 /*!
  * \brief reverse \p list.
@@ -581,38 +581,38 @@ bool pmt_subsetp(pmt_t list1, pmt_t list2);
 /*!
  * \brief Return a list of length 1 containing \p x1
  */
-pmt_t pmt_list1(pmt_t x1);
+pmt_t pmt_list1(const pmt_t& x1);
 
 /*!
  * \brief Return a list of length 2 containing \p x1, \p x2
  */
-pmt_t pmt_list2(pmt_t x1, pmt_t x2);
+pmt_t pmt_list2(const pmt_t& x1, const pmt_t& x2);
 
 /*!
  * \brief Return a list of length 3 containing \p x1, \p x2, \p x3
  */
-pmt_t pmt_list3(pmt_t x1, pmt_t x2, pmt_t x3);
+pmt_t pmt_list3(const pmt_t& x1, const pmt_t& x2, const pmt_t& x3);
 
 /*!
  * \brief Return a list of length 4 containing \p x1, \p x2, \p x3, \p x4
  */
-pmt_t pmt_list4(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4);
+pmt_t pmt_list4(const pmt_t& x1, const pmt_t& x2, const pmt_t& x3, const pmt_t& x4);
 
 /*!
  * \brief Return a list of length 5 containing \p x1, \p x2, \p x3, \p x4, \p x5
  */
-pmt_t pmt_list5(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4, pmt_t x5);
+pmt_t pmt_list5(const pmt_t& x1, const pmt_t& x2, const pmt_t& x3, const pmt_t& x4, const pmt_t& x5);
 
 /*!
  * \brief Return a list of length 6 containing \p x1, \p x2, \p x3, \p x4, \p
  * x5, \p x6
  */
-pmt_t pmt_list6(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4, pmt_t x5, pmt_t x6);
+pmt_t pmt_list6(const pmt_t& x1, const pmt_t& x2, const pmt_t& x3, const pmt_t& x4, const pmt_t& x5, const pmt_t& x6);
 
 /*!
  * \brief Return \p list with \p item added to it.
  */
-pmt_t pmt_list_add(pmt_t list, pmt_t item);
+pmt_t pmt_list_add(pmt_t list, const pmt_t& item);
 
 
 /*

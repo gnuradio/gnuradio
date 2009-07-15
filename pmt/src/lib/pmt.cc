@@ -219,7 +219,7 @@ hash_string(const std::string &s)
 }
 
 bool 
-pmt_is_symbol(pmt_t obj)
+pmt_is_symbol(const pmt_t& obj)
 {
   return obj->is_symbol();
 }
@@ -250,7 +250,7 @@ pmt_intern(const std::string &name)
 }
 
 const std::string
-pmt_symbol_to_string(pmt_t sym)
+pmt_symbol_to_string(const pmt_t& sym)
 {
   if (!sym->is_symbol())
     throw pmt_wrong_type("pmt_symbol_to_string", sym);
@@ -364,28 +364,28 @@ pmt_to_complex(pmt_t x)
 ////////////////////////////////////////////////////////////////////////////
 
 pmt_null::pmt_null() {}
-pmt_pair::pmt_pair(pmt_t car, pmt_t cdr) : d_car(car), d_cdr(cdr) {}
+pmt_pair::pmt_pair(const pmt_t& car, const pmt_t& cdr) : d_car(car), d_cdr(cdr) {}
 
 bool
-pmt_is_null(pmt_t x)
+pmt_is_null(const pmt_t& x)
 {
   return x == PMT_NIL;
 }
 
 bool
-pmt_is_pair(pmt_t obj)
+pmt_is_pair(const pmt_t& obj)
 {
   return obj->is_pair();
 }
 
 pmt_t
-pmt_cons(pmt_t x, pmt_t y)
+pmt_cons(const pmt_t& x, const pmt_t& y)
 {
   return pmt_t(new pmt_pair(x, y));
 }
 
 pmt_t
-pmt_car(pmt_t pair)
+pmt_car(const pmt_t& pair)
 {
   pmt_pair* p = dynamic_cast<pmt_pair*>(pair.get());
   if ( p )
@@ -395,7 +395,7 @@ pmt_car(pmt_t pair)
 }
 
 pmt_t
-pmt_cdr(pmt_t pair)
+pmt_cdr(const pmt_t& pair)
 {
   pmt_pair* p = dynamic_cast<pmt_pair*>(pair.get());
   if ( p )
@@ -681,13 +681,13 @@ pmt_any_set(pmt_t obj, const boost::any &any)
 ////////////////////////////////////////////////////////////////////////////
 
 bool
-pmt_eq(pmt_t x, pmt_t y)
+pmt_eq(const pmt_t& x, const pmt_t& y)
 {
   return x == y;
 }
 
 bool
-pmt_eqv(pmt_t x, pmt_t y)
+pmt_eqv(const pmt_t& x, const pmt_t& y)
 {
   if (x == y)
     return true;
@@ -705,7 +705,7 @@ pmt_eqv(pmt_t x, pmt_t y)
 }
 
 bool
-pmt_equal(pmt_t x, pmt_t y)
+pmt_equal(const pmt_t& x, const pmt_t& y)
 {
   if (pmt_eqv(x, y))
     return true;
@@ -747,7 +747,7 @@ pmt_equal(pmt_t x, pmt_t y)
 }
 
 size_t
-pmt_length(pmt_t x)
+pmt_length(const pmt_t& x)
 {
   if (x->is_vector())
     return _vector(x)->length();
@@ -755,13 +755,16 @@ pmt_length(pmt_t x)
   if (x->is_uniform_vector())
     return _uniform_vector(x)->length();
 
-  if (x->is_pair() || x->is_null()) {
-    size_t length=0;
-    while (pmt_is_pair(x)){
+  if (x->is_null()) return 0;
+
+  if (x->is_pair()) {
+    size_t length=1;
+	pmt_t it = pmt_cdr(x);
+    while (pmt_is_pair(it)){
       length++;
-      x = pmt_cdr(x);
+      it = pmt_cdr(it);
     }
-    if (pmt_is_null(x))
+    if (pmt_is_null(it))
       return length;
 
     // not a proper list
@@ -822,7 +825,7 @@ pmt_assoc(pmt_t obj, pmt_t alist)
 }
 
 pmt_t
-pmt_map(pmt_t proc(pmt_t), pmt_t list)
+pmt_map(pmt_t proc(const pmt_t&), pmt_t list)
 {
   pmt_t r = PMT_NIL;
 
@@ -933,43 +936,43 @@ pmt_subsetp(pmt_t list1, pmt_t list2)
 }
 
 pmt_t
-pmt_list1(pmt_t x1)
+pmt_list1(const pmt_t& x1)
 {
   return pmt_cons(x1, PMT_NIL);
 }
 
 pmt_t
-pmt_list2(pmt_t x1, pmt_t x2)
+pmt_list2(const pmt_t& x1, const pmt_t& x2)
 {
   return pmt_cons(x1, pmt_cons(x2, PMT_NIL));
 }
 
 pmt_t
-pmt_list3(pmt_t x1, pmt_t x2, pmt_t x3)
+pmt_list3(const pmt_t& x1, const pmt_t& x2, const pmt_t& x3)
 {
   return pmt_cons(x1, pmt_cons(x2, pmt_cons(x3, PMT_NIL)));
 }
 
 pmt_t
-pmt_list4(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4)
+pmt_list4(const pmt_t& x1, const pmt_t& x2, const pmt_t& x3, const pmt_t& x4)
 {
   return pmt_cons(x1, pmt_cons(x2, pmt_cons(x3, pmt_cons(x4, PMT_NIL))));
 }
 
 pmt_t
-pmt_list5(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4, pmt_t x5)
+pmt_list5(const pmt_t& x1, const pmt_t& x2, const pmt_t& x3, const pmt_t& x4, const pmt_t& x5)
 {
   return pmt_cons(x1, pmt_cons(x2, pmt_cons(x3, pmt_cons(x4, pmt_cons(x5, PMT_NIL)))));
 }
 
 pmt_t
-pmt_list6(pmt_t x1, pmt_t x2, pmt_t x3, pmt_t x4, pmt_t x5, pmt_t x6)
+pmt_list6(const pmt_t& x1, const pmt_t& x2, const pmt_t& x3, const pmt_t& x4, const pmt_t& x5, const pmt_t& x6)
 {
   return pmt_cons(x1, pmt_cons(x2, pmt_cons(x3, pmt_cons(x4, pmt_cons(x5, pmt_cons(x6, PMT_NIL))))));
 }
 
 pmt_t
-pmt_list_add(pmt_t list, pmt_t item)
+pmt_list_add(pmt_t list, const pmt_t& item)
 {
   return pmt_reverse(pmt_cons(item, pmt_reverse(list)));
 }

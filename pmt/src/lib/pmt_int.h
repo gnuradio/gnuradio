@@ -151,7 +151,7 @@ class pmt_pair : public pmt_base
   pmt_t		d_cdr;
 
 public:
-  pmt_pair(pmt_t car, pmt_t cdr);
+  pmt_pair(const pmt_t& car, const pmt_t& cdr);
   //~pmt_pair(){};
 
   bool is_pair() const { return true; }
