@@ -292,8 +292,9 @@ pmt_from_long(long x)
 long
 pmt_to_long(pmt_t x)
 {
-  if (x->is_integer())
-    return _integer(x)->value();
+  pmt_integer* i = dynamic_cast<pmt_integer*>(x.get());
+  if ( i )
+    return i->value();
 
   throw pmt_wrong_type("pmt_to_long", x);
 }
@@ -386,8 +387,9 @@ pmt_cons(pmt_t x, pmt_t y)
 pmt_t
 pmt_car(pmt_t pair)
 {
-  if (pair->is_pair())
-    return _pair(pair)->car();
+  pmt_pair* p = dynamic_cast<pmt_pair*>(pair.get());
+  if ( p )
+    return p->car();
   
   throw pmt_wrong_type("pmt_car", pair);
 }
@@ -395,8 +397,9 @@ pmt_car(pmt_t pair)
 pmt_t
 pmt_cdr(pmt_t pair)
 {
-  if (pair->is_pair())
-    return _pair(pair)->cdr();
+  pmt_pair* p = dynamic_cast<pmt_pair*>(pair.get());
+  if ( p )
+    return p->cdr();
   
   throw pmt_wrong_type("pmt_cdr", pair);
 }
@@ -585,28 +588,31 @@ pmt_make_dict()
 void
 pmt_dict_set(pmt_t dict, pmt_t key, pmt_t value)
 {
-  if (!dict->is_dict())
+  pmt_dict* d = _dict(dict);
+  if (!d)
     throw pmt_wrong_type("pmt_dict_set", dict);
 
-  _dict(dict)->set(key, value);
+  d->set(key, value);
 }
 
 bool
 pmt_dict_has_key(pmt_t dict, pmt_t key)
 {
-  if (!dict->is_dict())
+  pmt_dict* d = _dict(dict);
+  if (!d)
     throw pmt_wrong_type("pmt_dict_has_key", dict);
 
-  return _dict(dict)->has_key(key);
+  return d->has_key(key);
 }
 
 pmt_t
 pmt_dict_ref(pmt_t dict, pmt_t key, pmt_t not_found)
 {
-  if (!dict->is_dict())
+  pmt_dict* d = _dict(dict);
+  if (!d)
     throw pmt_wrong_type("pmt_dict_ref", dict);
 
-  return _dict(dict)->ref(key, not_found);
+  return d->ref(key, not_found);
 }
 
 pmt_t
