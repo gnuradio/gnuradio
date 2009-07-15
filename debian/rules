@@ -46,7 +46,7 @@ configure-stamp:
 		--disable-gr-audio-osx \
 		--disable-gr-audio-windows \
 		--disable-gcell --disable-gr-gcell \
-		--disable-gr-comedi
+		--disable-gr-comedi --disable-usrp2-firmware
 	touch configure-stamp
 
 build: build-stamp
