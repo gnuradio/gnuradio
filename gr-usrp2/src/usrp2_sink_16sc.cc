@@ -29,6 +29,9 @@
 #include <gr_io_signature.h>
 #include <iostream>
 
+// FIXME hack until VRT replaces libusrp2
+#define U2_MIN_SAMPLES 9
+
 usrp2_sink_16sc_sptr
 usrp2_make_sink_16sc(const std::string &ifc, const std::string &mac_addr) 
   throw (std::runtime_error)
@@ -56,6 +59,12 @@ usrp2_sink_16sc::work(int noutput_items,
 		      gr_vector_void_star &output_items)
 {
   std::complex<int16_t> *in = (std::complex<int16_t> *)input_items[0];
+
+  // FIXME: Current libusrp2 can't handle short packets.
+  // Returning 0 assumes there will be more samples
+  // the next round...
+  if (noutput_items < U2_MIN_SAMPLES)
+    return 0;
 
   usrp2::tx_metadata metadata;
   metadata.timestamp = -1;
