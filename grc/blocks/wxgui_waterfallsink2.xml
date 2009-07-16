@@ -12,7 +12,7 @@
 waterfallsink2.$(type.fcn)(
 	$(parent).GetWin(),
 	baseband_freq=$baseband_freq,
-	y_per_div=$y_per_div,
+	dynamic_range=$dynamic_range,
 	ref_level=$ref_level,
 	sample_rate=$samp_rate,
 	fft_size=$fft_size,
@@ -63,9 +63,9 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<type>real</type>
 	</param>
 	<param>
-		<name>Y per Div</name>
-		<key>y_per_div</key>
-		<value>10</value>
+		<name>Dynamic Range</name>
+		<key>dynamic_range</key>
+		<value>100</value>
 		<type>real</type>
 	</param>
 	<param>

@@ -75,7 +75,7 @@ class waterfall_sink_f(gr.hier_block2, waterfall_sink_base):
     def __init__(self, parent, baseband_freq=0,
                  y_per_div=10, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
-                 title='', size=default_fftsink_size):
+                 title='', size=default_fftsink_size, **kwargs):
 
         gr.hier_block2.__init__(self, "waterfall_sink_f",
                                 gr.io_signature(1, 1, gr.sizeof_float),
@@ -106,7 +106,7 @@ class waterfall_sink_c(gr.hier_block2, waterfall_sink_base):
     def __init__(self, parent, baseband_freq=0,
                  y_per_div=10, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None, 
-                 title='', size=default_fftsink_size):
+                 title='', size=default_fftsink_size, **kwargs):
 
         gr.hier_block2.__init__(self, "waterfall_sink_f",
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex),

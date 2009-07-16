@@ -24,11 +24,15 @@
   * gr_ofdm_sampler
 * size params for the graphical sinks
 * callbacks for set average on fft, waterfall, number sinks
+* add units to params: Sps, Hz, dB...
+* command line options should replace _ with - for the --option
 
 ##################################################
 # Features
 ##################################################
 * extract category from doxygen
+  * fix up block tree to mirror current doxygen group
+  * remove blocks in block tree covered by doxygen
 * param editor, expand entry boxes in focus
 * change param dialog to panel within main window
 * search for blocks in category window
