@@ -261,8 +261,8 @@ class waterfall_window(wx.Panel, pubsub.pubsub):
 		self.samples = samples = numpy.fromstring(msg, numpy.float32)[:self.fft_size] #only take first frame
 		num_samps = len(samples)
 		#reorder fft
-		if self.real: samples = samples[:num_samps/2]
-		else: samples = numpy.concatenate((samples[num_samps/2:], samples[:num_samps/2]))
+		if self.real: samples = samples[:(num_samps+1)/2]
+		else: samples = numpy.concatenate((samples[num_samps/2+1:], samples[:(num_samps+1)/2]))
 		#plot the fft
 		self.plotter.set_samples(
 			samples=samples,
