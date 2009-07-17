@@ -61,6 +61,8 @@ class main_window(QtGui.QMainWindow):
         # Add the qtsnk widgets to the layout box
         self.gui.sinkLayout.addWidget(snk)
 
+        self.gui.dcGainEdit.setText(QtCore.QString("%1").arg(0.001))
+
         # Connect up some signals
         self.connect(self.gui.pauseButton, QtCore.SIGNAL("clicked()"),
                      self.pauseFg)
@@ -76,6 +78,11 @@ class main_window(QtGui.QMainWindow):
         self.connect(self.gui.actionSaveData, QtCore.SIGNAL("activated()"),
                      self.saveData)
         self.gui.actionSaveData.setShortcut(QtGui.QKeySequence.Save)
+
+        self.connect(self.gui.dcGainEdit, QtCore.SIGNAL("editingFinished()"),
+                     self.dcGainEditText)
+        self.connect(self.gui.dcCancelCheckBox, QtCore.SIGNAL("clicked(bool)"),
+                     self.dcCancelClicked)
 
     def pauseFg(self):
         if(self.gui.pauseButton.text() == "Pause"):
@@ -145,6 +152,14 @@ class main_window(QtGui.QMainWindow):
         if(len(fileName)):
             self.fg.save_to_file(str(fileName))
 
+    def dcGainEditText(self):
+        gain = float(self.gui.dcGainEdit.text())
+        self.fg.set_dc_gain(gain)
+        
+    def dcCancelClicked(self, state):
+        self.dcGainEditText()
+        self.fg.cancel_dc(state)
+        
 
         
 class my_top_block(gr.top_block):
@@ -201,6 +216,12 @@ class my_top_block(gr.top_block):
         self.amp = gr.multiply_const_cc(0.0)
         self.set_amplifier_gain(100)
 
+        # Create a single-pole IIR filter to remove DC
+        #   but don't connect it yet
+        self.dc_gain = 0.001
+        self.dc = gr.single_pole_iir_filter_cc(self.dc_gain)
+        self.dc_sub = gr.sub_cc()
+
         self.connect(self.u, self.amp, self.snk)
 
         if self.show_debug_info:
@@ -224,16 +245,13 @@ class my_top_block(gr.top_block):
 
 
     def save_to_file(self, name):
-        # Pause the flow graph
-        self.stop()
-        self.wait()
+        self.lock()
 
         # Add file sink to save data
         self.file_sink = gr.file_sink(gr.sizeof_gr_complex, name)
         self.connect(self.amp, self.file_sink)
 
-        # Restart flow graph
-        self.start()
+        self.unlock()
 
     def set_gain(self, gain):
         self._gain = gain
@@ -259,8 +277,28 @@ class my_top_block(gr.top_block):
             pass
 
     def set_amplifier_gain(self, amp):
-            self._amp_value = amp
-            self.amp.set_k(self._amp_value)
+        self._amp_value = amp
+        self.amp.set_k(self._amp_value)
+
+    def set_dc_gain(self, gain):
+        self.dc.set_taps(gain)
+        
+    def cancel_dc(self, state):
+        self.lock()
+
+        if(state):
+            self.disconnect(self.u, self.amp)
+            self.connect(self.u, (self.dc_sub,0))
+            self.connect(self.u, self.dc, (self.dc_sub,1))
+            self.connect(self.dc_sub, self.amp)
+        else:
+            self.disconnect(self.dc_sub, self.amp)
+            self.disconnect(self.dc, (self.dc_sub,1))
+            self.disconnect(self.u, self.dc)
+            self.disconnect(self.u, (self.dc_sub,0))
+            self.connect(self.u, self.amp)
+
+        self.unlock()
 
 def main ():
     tb = my_top_block()
