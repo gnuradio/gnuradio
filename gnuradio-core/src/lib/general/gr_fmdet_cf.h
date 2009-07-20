@@ -30,6 +30,9 @@ typedef boost::shared_ptr<gr_fmdet_cf> gr_fmdet_cf_sptr;
 
 gr_fmdet_cf_sptr gr_make_fmdet_cf (float samplerate, float freq_low, float freq_high, float scl);
 
+class gr_fir_ccf;
+
+
 /*!
  * \brief Implements an IQ slope detector
  * 
@@ -47,6 +50,7 @@ class gr_fmdet_cf : public gr_sync_block
 
   gr_complex d_S1,d_S2,d_S3,d_S4;
   float d_freq,d_freqlo,d_freqhi,d_scl,d_bias;
+  gr_fir_ccf* d_filter;
   gr_fmdet_cf (float samplerate, float freq_low, float freq_high, float scl);
 
   int work (int noutput_items,

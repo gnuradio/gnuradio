@@ -62,6 +62,7 @@ gr_fmdet_cf::gr_fmdet_cf (float samplerate, float freq_low, float freq_high, flo
   d_scl = scl;
   d_bias = 0.5*scl*(d_freqhi+d_freqlo)/delta;
   for (int i=0;i<15;i++) taps[i] = h[i];
+  //  d_filter = gr_fir_util::create_gr_fir_ccf(taps);
   
 }
 
@@ -72,7 +73,7 @@ gr_fmdet_cf::work (int noutput_items,
 {
   const gr_complex *iptr = (gr_complex *) input_items[0];
   float *optr = (float *) output_items[0];
-  const gr_complex *scaleiptr = (gr_complex *) input_items[0];
+  //  const gr_complex *scaleiptr = (gr_complex *) input_items[0];
 
   int	size = noutput_items;
 
