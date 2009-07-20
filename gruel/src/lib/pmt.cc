@@ -24,11 +24,13 @@
 #include <config.h>
 #endif
 #include <vector>
-#include <pmt.h>
+#include <gruel/pmt.h>
 #include "pmt_int.h"
 #include <stdio.h>
-#include <pmt_pool.h>
+#include <gruel/pmt_pool.h>
 #include <string.h>
+
+namespace gruel {
 
 static const int CACHE_LINE_SIZE = 64;		// good guess
 
@@ -1035,3 +1037,5 @@ pmt_dump_sizeof()
   printf("sizeof(pmt_dict)           = %3zd\n", sizeof(pmt_dict));
   printf("sizeof(pmt_uniform_vector) = %3zd\n", sizeof(pmt_uniform_vector));
 }
+
+} /* namespace gruel */

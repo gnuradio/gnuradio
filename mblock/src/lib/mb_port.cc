@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2008 Free Software Foundation, Inc.
+ * Copyright 2006,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,11 +31,11 @@ mb_port::mb_port(mb_mblock *mblock,
 		 const std::string &protocol_class_name,
 		 bool conjugated,
 		 mb_port::port_type_t port_type)
-  : d_port_name(port_name), d_port_symbol(pmt_intern(port_name)),
+  : d_port_name(port_name), d_port_symbol(gruel::pmt_intern(port_name)),
     d_conjugated(conjugated), d_port_type(port_type),
     d_mblock(mblock)
 {
-  pmt_t pc = mb_protocol_class_lookup(pmt_intern(protocol_class_name));
+  gruel::pmt_t pc = mb_protocol_class_lookup(gruel::pmt_intern(protocol_class_name));
   if (pmt_is_null(pc)){
     throw std::runtime_error("mb_port: unknown protocol class '"
 			     + protocol_class_name + "'");
@@ -48,7 +48,7 @@ mb_port::~mb_port()
   // nop
 }
 
-pmt_t
+gruel::pmt_t
 mb_port::incoming_message_set() const
 {
   if (!conjugated())
@@ -57,7 +57,7 @@ mb_port::incoming_message_set() const
     return mb_protocol_class_outgoing(protocol_class());
 }
 
-pmt_t
+gruel::pmt_t
 mb_port::outgoing_message_set() const
 {
   if (!conjugated())

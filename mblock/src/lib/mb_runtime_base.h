@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -50,24 +50,24 @@ public:
    */
   inline void unlock() { d_brl.unlock(); }
 
-  virtual void request_shutdown(pmt_t result);
+  virtual void request_shutdown(gruel::pmt_t result);
 
   virtual mb_mblock_sptr
   create_component(const std::string &instance_name,
 		   const std::string &class_name,
-		   pmt_t user_arg) = 0;
+		   gruel::pmt_t user_arg) = 0;
 
-  virtual pmt_t
-  schedule_one_shot_timeout(const mb_time &abs_time, pmt_t user_data,
+  virtual gruel::pmt_t
+  schedule_one_shot_timeout(const mb_time &abs_time, gruel::pmt_t user_data,
 			    mb_msg_accepter_sptr accepter);
 
-  virtual pmt_t
+  virtual gruel::pmt_t
   schedule_periodic_timeout(const mb_time &first_abs_time,
 			    const mb_time &delta_time,
-			    pmt_t user_data,
+			    gruel::pmt_t user_data,
 			    mb_msg_accepter_sptr accepter);
   virtual void
-  cancel_timeout(pmt_t handle);
+  cancel_timeout(gruel::pmt_t handle);
 
   mb_msg_accepter_sptr
   accepter() { return d_accepter; }

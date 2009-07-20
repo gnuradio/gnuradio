@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2008 Free Software Foundation, Inc.
+ * Copyright 2006,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,14 +30,14 @@
  * \param incoming	incoming message set (list of symbols)
  * \param outgoing	outgoing message set (list of symbols)
  */
-pmt_t mb_make_protocol_class(pmt_t name, pmt_t incoming, pmt_t outgoing);
+gruel::pmt_t mb_make_protocol_class(gruel::pmt_t name, gruel::pmt_t incoming, gruel::pmt_t outgoing);
 
 // Accessors
-pmt_t mb_protocol_class_name(pmt_t pc);		//< return name of protocol class
-pmt_t mb_protocol_class_incoming(pmt_t pc);	//< return incoming message set
-pmt_t mb_protocol_class_outgoing(pmt_t pc);	//< return outgoing message set
+gruel::pmt_t mb_protocol_class_name(gruel::pmt_t pc);		//< return name of protocol class
+gruel::pmt_t mb_protocol_class_incoming(gruel::pmt_t pc);	//< return incoming message set
+gruel::pmt_t mb_protocol_class_outgoing(gruel::pmt_t pc);	//< return outgoing message set
 
-pmt_t mb_protocol_class_lookup(pmt_t name);	//< lookup an existing protocol class by name
+gruel::pmt_t mb_protocol_class_lookup(gruel::pmt_t name);	//< lookup an existing protocol class by name
 
 
 /*!

@@ -22,6 +22,8 @@
 #include <mblock/runtime.h>
 #include <iostream>
 
+using namespace gruel;
+
 int
 main(int argc, char **argv)
 {

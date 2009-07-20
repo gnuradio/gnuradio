@@ -26,60 +26,60 @@
 #include <mblock/protocol_class.h>
 #include <iostream>
 
-static pmt_t s_ALL_PROTOCOL_CLASSES = PMT_NIL;
+static gruel::pmt_t s_ALL_PROTOCOL_CLASSES = gruel::PMT_NIL;
 
-pmt_t 
-mb_make_protocol_class(pmt_t name, pmt_t incoming, pmt_t outgoing)
+gruel::pmt_t 
+mb_make_protocol_class(gruel::pmt_t name, gruel::pmt_t incoming, gruel::pmt_t outgoing)
 {
   // (protocol-class <name> <incoming> <outgoing>)
 
-  if (!pmt_is_symbol(name))
-    throw pmt_wrong_type("mb_make_protocol_class: NAME must be symbol", name);
-  if (!(pmt_is_pair(incoming) || pmt_is_null(incoming)))
-    throw pmt_wrong_type("mb_make_protocol_class: INCOMING must be a list", name);
-  if (!(pmt_is_pair(outgoing) || pmt_is_null(outgoing)))
-    throw pmt_wrong_type("mb_make_protocol_class: OUTGOING must be a list", name);
+  if (!gruel::pmt_is_symbol(name))
+    throw gruel::pmt_wrong_type("mb_make_protocol_class: NAME must be symbol", name);
+  if (!(gruel::pmt_is_pair(incoming) || gruel::pmt_is_null(incoming)))
+    throw gruel::pmt_wrong_type("mb_make_protocol_class: INCOMING must be a list", name);
+  if (!(gruel::pmt_is_pair(outgoing) || gruel::pmt_is_null(outgoing)))
+    throw gruel::pmt_wrong_type("mb_make_protocol_class: OUTGOING must be a list", name);
 
-  pmt_t t = pmt_cons(pmt_intern("protocol-class"),
-		     pmt_cons(name,
-			      pmt_cons(incoming,
-				       pmt_cons(outgoing, PMT_NIL))));
+  gruel::pmt_t t = gruel::pmt_cons(gruel::pmt_intern("protocol-class"),
+		     gruel::pmt_cons(name,
+			      gruel::pmt_cons(incoming,
+				       gruel::pmt_cons(outgoing, gruel::PMT_NIL))));
 
   // Remember this protocol class.
-  s_ALL_PROTOCOL_CLASSES = pmt_cons(t, s_ALL_PROTOCOL_CLASSES);
+  s_ALL_PROTOCOL_CLASSES = gruel::pmt_cons(t, s_ALL_PROTOCOL_CLASSES);
   return t;
 }
 
-pmt_t
-mb_protocol_class_name(pmt_t pc)
+gruel::pmt_t
+mb_protocol_class_name(gruel::pmt_t pc)
 {
-  return pmt_nth(1, pc);
+  return gruel::pmt_nth(1, pc);
 }
 
-pmt_t
-mb_protocol_class_incoming(pmt_t pc)
+gruel::pmt_t
+mb_protocol_class_incoming(gruel::pmt_t pc)
 {
-  return pmt_nth(2, pc);
+  return gruel::pmt_nth(2, pc);
 }
 
-pmt_t
-mb_protocol_class_outgoing(pmt_t pc)
+gruel::pmt_t
+mb_protocol_class_outgoing(gruel::pmt_t pc)
 {
-  return pmt_nth(3, pc);
+  return gruel::pmt_nth(3, pc);
 }
 
-pmt_t
-mb_protocol_class_lookup(pmt_t name)
+gruel::pmt_t
+mb_protocol_class_lookup(gruel::pmt_t name)
 {
-  pmt_t lst = s_ALL_PROTOCOL_CLASSES;
+  gruel::pmt_t lst = s_ALL_PROTOCOL_CLASSES;
 
-  while (pmt_is_pair(lst)){
-    if (pmt_eq(name, mb_protocol_class_name(pmt_car(lst))))
-      return pmt_car(lst);
-    lst = pmt_cdr(lst);
+  while (gruel::pmt_is_pair(lst)){
+    if (gruel::pmt_eq(name, mb_protocol_class_name(gruel::pmt_car(lst))))
+      return gruel::pmt_car(lst);
+    lst = gruel::pmt_cdr(lst);
   }
 
-  return PMT_NIL;
+  return gruel::PMT_NIL;
 }
 
 mb_protocol_class_init::mb_protocol_class_init(const char *data, size_t len)
@@ -88,18 +88,18 @@ mb_protocol_class_init::mb_protocol_class_init(const char *data, size_t len)
   sb.str(std::string(data, len));
 
   while (1){
-    pmt_t obj = pmt_deserialize(sb);
+    gruel::pmt_t obj = gruel::pmt_deserialize(sb);
 
     if (0){
-      pmt_write(obj, std::cout);
+      gruel::pmt_write(obj, std::cout);
       std::cout << std::endl;
     }
 
-    if (pmt_is_eof_object(obj))
+    if (gruel::pmt_is_eof_object(obj))
       return;
 
-    mb_make_protocol_class(pmt_nth(0, obj),   // protocol-class name
-			   pmt_nth(1, obj),   // list of incoming msg names
-			   pmt_nth(2, obj));  // list of outgoing msg names
+    mb_make_protocol_class(gruel::pmt_nth(0, obj),   // protocol-class name
+			   gruel::pmt_nth(1, obj),   // list of incoming msg names
+			   gruel::pmt_nth(2, obj));  // list of outgoing msg names
   }
 }

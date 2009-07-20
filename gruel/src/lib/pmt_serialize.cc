@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,9 +23,11 @@
 #include <config.h>
 #endif
 #include <vector>
-#include <pmt.h>
+#include <gruel/pmt.h>
 #include "pmt_int.h"
-#include "pmt_serial_tags.h"
+#include "gruel/pmt_serial_tags.h"
+
+namespace gruel {
 
 static pmt_t parse_pair(std::streambuf &sb);
 
@@ -351,3 +353,5 @@ parse_pair(std::streambuf &sb)
   pmt_set_cdr(lastnptr, expr);
   return val;
 }
+
+} /* namespace gruel */

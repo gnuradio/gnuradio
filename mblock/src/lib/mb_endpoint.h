@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2008 Free Software Foundation, Inc.
+ * Copyright 2006,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -51,8 +51,8 @@ public:
   //! Does this endpoint represent the inside of a relay port
   bool inside_of_relay_port_p() const;
 
-  pmt_t	incoming_message_set() const;
-  pmt_t	outgoing_message_set() const;
+  gruel::pmt_t	incoming_message_set() const;
+  gruel::pmt_t	outgoing_message_set() const;
 };
 
 #endif /* INCLUDED_MB_ENDPOINT_H */

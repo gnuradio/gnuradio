@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2006,2008 Free Software Foundation, Inc.
+# Copyright 2001,2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -74,7 +74,6 @@ m4macros = \
 	gr_check_mc4020.m4 \
 	gr_check_shm_open.m4 \
 	gr_check_usrp.m4 \
-	grc_pmt.m4 \
 	grc_usrp.m4 \
 	grc_usrp2.m4 \
 	grc_gr_msdd6000.m4 \

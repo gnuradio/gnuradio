@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007,2008 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -87,7 +87,7 @@ public:
   void
   define_component(const std::string &component_name,
 		   const std::string &class_name,
-		   pmt_t user_arg);
+		   gruel::pmt_t user_arg);
 
   /*!
    * \brief connect endpoint_1 to endpoint_2
@@ -148,7 +148,7 @@ public:
   walk_tree(mb_visitor *visitor);
   
   mb_msg_accepter_sptr
-  make_accepter(pmt_t port_name);
+  make_accepter(gruel::pmt_t port_name);
 
   mb_msg_queue &
   msgq() { return d_msgq; }
@@ -196,9 +196,9 @@ public:
    * Our implementation methods
    */
 private:
-  //bool port_is_defined(pmt_t name);
+  //bool port_is_defined(gruel::pmt_t name);
   bool port_is_defined(const std::string &name);
-  //bool comp_is_defined(pmt_t name);
+  //bool comp_is_defined(gruel::pmt_t name);
   bool comp_is_defined(const std::string &name);
 
   mb_endpoint 

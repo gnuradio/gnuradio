@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -48,7 +48,7 @@ mb_port_simple::~mb_port_simple()
 }
 
 void
-mb_port_simple::send(pmt_t signal, pmt_t data, pmt_t metadata, mb_pri_t priority)
+mb_port_simple::send(gruel::pmt_t signal, gruel::pmt_t data, gruel::pmt_t metadata, mb_pri_t priority)
 {
   if (port_type() == mb_port::RELAY)  // Can't send directly to a RELAY port
     throw mbe_invalid_port_type(mblock(), mblock()->instance_name(), port_name());

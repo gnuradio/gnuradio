@@ -22,9 +22,11 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include <pmt_pool.h>
+#include <gruel/pmt_pool.h>
 #include <algorithm>
 #include <stdint.h>
+
+namespace gruel {
 
 static inline size_t
 ROUNDUP(size_t x, size_t stride)
@@ -106,3 +108,5 @@ pmt_pool::free(void *foo)
   if (d_max_items != 0)
     d_cond.notify_one();
 }
+
+} /* namespace gruel */

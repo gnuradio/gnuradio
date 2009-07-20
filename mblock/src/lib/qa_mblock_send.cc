@@ -38,6 +38,8 @@
 #include <mblock/class_registry.h>
 #include <stdio.h>
 
+using namespace gruel;
+
 static pmt_t s_data    = pmt_intern("data");
 static pmt_t s_status  = pmt_intern("status");
 static pmt_t s_control = pmt_intern("control");

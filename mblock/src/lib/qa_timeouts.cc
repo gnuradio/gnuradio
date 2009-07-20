@@ -34,6 +34,7 @@
 #include <string.h>
 #include <iostream>
 
+using namespace gruel;
 
 static pmt_t s_timeout = pmt_intern("%timeout");
 static pmt_t s_done = pmt_intern("done");

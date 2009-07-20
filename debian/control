@@ -7,7 +7,7 @@ Section: comm
 Priority: optional
 Maintainer: Johnathan Corgan <jcorgan@corganenterprises.com>
 Build-Conflicts: automake1.8, automake1.9
-Build-Depends: debhelper (>= 5.0.38), build-essential, python-central (>=0.5.6), automake, libtool, pkg-config, python-dev (>=2.6), python-dev (<2.7), swig, fftw3-dev | libfftw3-dev, libcppunit-dev, libboost1.37-dev | libboost1.35-dev, libgsl0-dev, guile-1.8, libasound2-dev, python-wxgtk2.8, python-numpy, doxygen, xmlto, sdcc-nf, libusb-dev, libjack-dev, portaudio19-dev, libsdl1.2-dev, python-cheetah, python-lxml, python-gtk2, libqt4-dev, libqwt5-qt4-dev, libqwtplot3d-qt4-dev, libblas-dev, texlive-latex-base
+Build-Depends: debhelper (>= 5.0.38), build-essential, python-central (>=0.5.6), automake, libtool, pkg-config, python-dev (>=2.6), python-dev (<2.7), swig, fftw3-dev | libfftw3-dev, libcppunit-dev, libboost1.37-dev, libgsl0-dev, guile-1.8, libasound2-dev, python-wxgtk2.8, python-numpy, doxygen, xmlto, sdcc-nf, libusb-dev, libjack-dev, portaudio19-dev, libsdl1.2-dev, python-cheetah, python-lxml, python-gtk2, libqt4-dev, libqwt5-qt4-dev, libqwtplot3d-qt4-dev, libblas-dev, texlive-latex-base
 Standards-Version: 3.7.2
 XS-Python-Version: =2.6
 
@@ -19,6 +19,8 @@ Package: libgruel
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}
+Replaces: libpmt
+Conflicts: libpmt
 Description: GNU Radio Utility Etcetera Library
  This package implements a variety of low-level utility
  routines for GNU Radio.
@@ -26,7 +28,9 @@ Description: GNU Radio Utility Etcetera Library
 Package: libgruel-dev
 Section: libdevel
 Architecture: any
-Depends: libgruel (= ${binary:Version})
+Depends: libgruel (= ${binary:Version}), libboost1.37-dev, guile-1.8
+Replaces: libpmt-dev
+Conflicts: libpmt-dev
 Description: GNU Radio Utility Etcetera Library
  This package implements a variety of low-level utility
  routines for GNU Radio.
@@ -55,30 +59,6 @@ Description: GNU Radio Omnithreads Abstraction Library
  .
  This package contains header files needed by developers.
 
-Package: libpmt
-Section: libs
-Architecture: any
-Replaces: libpmt0c2a
-Conflicts: libpmt0c2a
-Depends: libgnuradio-omnithread (= ${binary:Version}), ${shlibs:Depends}
-Description: GNU Radio Polymorphic Type Library
- This package implements polymorphic types.  These are similar 
- to lisp or Python data objects, and implement transparent
- reference counting using the boost shared_ptr templates.
-
-Package: libpmt-dev
-Section: libdevel
-Architecture: any
-Replaces: libpmt0-dev
-Conflicts: libpmt0-dev
-Depends: libpmt (= ${binary:Version}), libboost-thread1.37-dev
-Description: GNU Radio Polymorphic Type Library
- This package implements polymorphic types.  These are similar 
- to lisp or Python data objects, and implement transparent
- reference counting using the boost shared_ptr templates.
- .
- This package contains header files needed by developers.
-
 ################################################################################
 # C++ M-Block library packages                                                 #
 ################################################################################
@@ -88,7 +68,7 @@ Section: libs
 Architecture: any
 Replaces: libmblock0c2a
 Conflicts: libmblock0c2a
-Depends: libpmt (= ${binary:Version}), libgnuradio-omnithread (= ${binary:Version}), ${shlibs:Depends}, guile-1.8
+Depends: libpmt (= ${binary:Version}), libgnuradio-omnithread (= ${binary:Version}), libgruel (= ${binary:Version}), ${shlibs:Depends}
 Description: GNU Radio Message Block Library 
  This package provides the GNU Radio message block library. 
 
@@ -97,7 +77,7 @@ Section: libdevel
 Architecture: any
 Replaces: libmblock0-dev
 Conflicts: libmblock0-dev
-Depends: libmblock (= ${binary:Version}), libgnuradio-omnithread-dev (= ${binary:Version}), libpmt-dev (= ${binary:Version})
+Depends: libmblock (= ${binary:Version}), libgnuradio-omnithread-dev (= ${binary:Version}), libgruel-dev (= ${binary:Version})
 Description: GNU Radio Message Block Library
  This package provides the GNU Radio message block library.
  .

@@ -2,6 +2,8 @@
 //                           pmt_@TAG@vector
 ////////////////////////////////////////////////////////////////////////////
 
+namespace gruel {
+
 static pmt_@TAG@vector *
 _@TAG@vector(pmt_t x)
 {
@@ -116,3 +118,5 @@ pmt_@TAG@vector_writable_elements(pmt_t vector, size_t &len)
     throw pmt_wrong_type("pmt_@TAG@vector_writable_elements", vector);
   return _@TAG@vector(vector)->writable_elements(len);
 }
+
+} /* namespace gruel */

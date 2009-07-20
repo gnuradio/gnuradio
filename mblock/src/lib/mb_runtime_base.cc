@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -29,29 +29,29 @@
  */
 
 void
-mb_runtime_base::request_shutdown(pmt_t result)
+mb_runtime_base::request_shutdown(gruel::pmt_t result)
 {
 }
 
-pmt_t
+gruel::pmt_t
 mb_runtime_base::schedule_one_shot_timeout(const mb_time &abs_time,
-					   pmt_t user_data,
+					   gruel::pmt_t user_data,
 					   mb_msg_accepter_sptr accepter)
 {
-  return PMT_F;
+  return gruel::PMT_F;
 }
 
-pmt_t
+gruel::pmt_t
 mb_runtime_base::schedule_periodic_timeout(const mb_time &first_abs_time,
 					   const mb_time &delta_time,
-					   pmt_t user_data,
+					   gruel::pmt_t user_data,
 					   mb_msg_accepter_sptr accepter)
 {
-  return PMT_F;
+  return gruel::PMT_F;
 }
 
 void
-mb_runtime_base::cancel_timeout(pmt_t handle)
+mb_runtime_base::cancel_timeout(gruel::pmt_t handle)
 {
 }
 

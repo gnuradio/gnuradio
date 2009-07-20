@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,9 +23,11 @@
 #include <config.h>
 #endif
 #include <vector>
-#include <pmt.h>
+#include <gruel/pmt.h>
 #include "pmt_int.h"
 #include <sstream>
+
+namespace gruel {
 
 static void
 pmt_write_list_tail(pmt_t obj, std::ostream &port)
@@ -136,3 +138,4 @@ pmt_deserialize(std::istream &source)
   throw pmt_notimplemented("notimplemented: pmt_deserialize", PMT_NIL);
 }
 
+} /* namespace gruel */

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2008 Free Software Foundation, Inc.
+ * Copyright 2006,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -72,7 +72,7 @@ protected:
    * \param user_arg argument passed by user to constructor
    *        (ignored by the mb_mblock base class)
    */
-  mb_mblock(mb_runtime *runtime, const std::string &instance_name, pmt_t user_arg);
+  mb_mblock(mb_runtime *runtime, const std::string &instance_name, gruel::pmt_t user_arg);
 
 public:
   /*!
@@ -128,7 +128,7 @@ protected:
   void
   define_component(const std::string &component_name,
 		   const std::string &class_name,
-		   pmt_t user_arg = PMT_NIL);
+		   gruel::pmt_t user_arg = gruel::PMT_NIL);
 
   /*!
    * \brief connect endpoint_1 to endpoint_2
@@ -217,7 +217,7 @@ protected:
    *
    * runtime->run(...) returns when all blocks have called exit.
    */
-  void shutdown_all(pmt_t result);
+  void shutdown_all(gruel::pmt_t result);
 
   /*!
    * \brief main event dispatching loop
@@ -259,8 +259,8 @@ public:
    *
    * To cancel a pending timeout, call cancel_timeout.
    */
-  pmt_t
-  schedule_one_shot_timeout(const mb_time &abs_time, pmt_t user_data);
+  gruel::pmt_t
+  schedule_one_shot_timeout(const mb_time &abs_time, gruel::pmt_t user_data);
 
   /*!
    * \brief Schedule a periodic timeout.
@@ -281,10 +281,10 @@ public:
    *
    * To cancel a pending timeout, call cancel_timeout.
    */
-  pmt_t
+  gruel::pmt_t
   schedule_periodic_timeout(const mb_time &first_abs_time,
 			    const mb_time &delta_time,
-			    pmt_t user_data);
+			    gruel::pmt_t user_data);
 
   /*!
    * \brief Attempt to cancel a pending timeout.
@@ -296,7 +296,7 @@ public:
    *
    * \param handle returned from schedule_one_shot_timeout or schedule_periodic_timeout.
    */
-  void cancel_timeout(pmt_t handle);
+  void cancel_timeout(gruel::pmt_t handle);
 
   /*!
    * \brief Perform a pre-order depth-first traversal of the hierarchy.

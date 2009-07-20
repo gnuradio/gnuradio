@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -37,13 +37,13 @@
 #define VERBOSE 0		// define to 0 or 1
 
 
-static pmt_t s_worker_state_changed = pmt_intern("%worker-state-changed");
+static gruel::pmt_t s_worker_state_changed = gruel::pmt_intern("%worker-state-changed");
 
 
 mb_worker::mb_worker(mb_runtime_thread_per_block *runtime,
 		     mb_mblock_maker_t maker,
 		     const std::string &instance_name,
-		     pmt_t user_arg)
+		     gruel::pmt_t user_arg)
   : omni_thread((void *) 0, PRIORITY_NORMAL),
     d_runtime(runtime), d_maker(maker),
     d_instance_name(instance_name), d_user_arg(user_arg),
@@ -95,7 +95,7 @@ mb_worker::set_state(worker_state_t state)
   }
 
   // send msg to runtime, telling it something changed.
-  (*d_runtime->accepter())(s_worker_state_changed, PMT_F, PMT_F, MB_PRI_BEST);
+  (*d_runtime->accepter())(s_worker_state_changed, gruel::PMT_F, gruel::PMT_F, MB_PRI_BEST);
 }
 
 void *

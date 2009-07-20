@@ -39,11 +39,13 @@
  * exception that these objects are transparently reference counted.
  */
 
+namespace gruel {
+
 /*!
  * \brief base class of all pmt types
  */
 class pmt_base;
-
+ 
 /*!
  * \brief typedef for shared pointer (transparent reference counting).
  * See http://www.boost.org/libs/smart_ptr/smart_ptr.htm
@@ -674,5 +676,7 @@ pmt_t pmt_deserialize(std::streambuf &source);
 
 
 void pmt_dump_sizeof();	// debugging
+
+} /* namespace gruel */
 
 #endif /* INCLUDED_PMT_H */

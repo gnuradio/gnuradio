@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(DEFINES) $(OMNITHREAD_INCLUDES) $(PMT_INCLUDES) \
+AM_CPPFLAGS = $(DEFINES) $(OMNITHREAD_INCLUDES) $(GRUEL_INCLUDES) \
 	$(BOOST_CPPFLAGS) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES) \
 	$(MBLOCK_INCLUDES)
 
@@ -73,7 +73,7 @@ libmblock_la_LDFLAGS = $(NO_UNDEFINED)
 # link the library against the c++ standard library
 libmblock_la_LIBADD = 			\
 	$(OMNITHREAD_LA)		\
-	$(PMT_LA)			\
+	$(GRUEL_LA)			\
 	-lstdc++			
 
 noinst_HEADERS =			\

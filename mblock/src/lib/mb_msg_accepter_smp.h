@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -29,13 +29,13 @@
 class mb_msg_accepter_smp : public mb_msg_accepter
 {
   mb_mblock_sptr	d_mb;
-  pmt_t			d_port_name;
+  gruel::pmt_t		d_port_name;
   
 public:
-  mb_msg_accepter_smp(mb_mblock_sptr mblock, pmt_t port_name);
+  mb_msg_accepter_smp(mb_mblock_sptr mblock, gruel::pmt_t port_name);
   ~mb_msg_accepter_smp();
 
-  void operator()(pmt_t signal, pmt_t data, pmt_t metadata, mb_pri_t priority);
+  void operator()(gruel::pmt_t signal, gruel::pmt_t data, gruel::pmt_t metadata, mb_pri_t priority);
 };
 
 

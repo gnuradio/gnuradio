@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -33,7 +33,7 @@ class mb_msg_accepter_msgq : public mb_msg_accepter {
 public:
   mb_msg_accepter_msgq(mb_msg_queue *msgq);
   ~mb_msg_accepter_msgq();
-  void operator()(pmt_t signal, pmt_t data, pmt_t metadata, mb_pri_t priority);
+  void operator()(gruel::pmt_t signal, gruel::pmt_t data, gruel::pmt_t metadata, mb_pri_t priority);
 };
 
 #endif /* INCLUDED_MB_MSG_ACCEPTER_MSGQ_H */

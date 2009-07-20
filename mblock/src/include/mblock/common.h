@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2007,2008 Free Software Foundation, Inc.
+ * Copyright 2006,2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,7 +21,7 @@
 #ifndef INCLUDED_MB_COMMON_H
 #define INCLUDED_MB_COMMON_H
 
-#include <pmt.h>
+#include <gruel/pmt.h>
 #include <vector>
 #include <stdexcept>
 #include <boost/utility.hpp>

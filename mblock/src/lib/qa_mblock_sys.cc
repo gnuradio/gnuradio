@@ -40,6 +40,7 @@
 #include <string.h>
 #include <iostream>
 
+using namespace gruel;
 
 static pmt_t s_data    = pmt_intern("data");
 static pmt_t s_status  = pmt_intern("status");

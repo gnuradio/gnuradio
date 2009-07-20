@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -56,9 +56,9 @@ public:
    * \param priority	the urgency at which the message is sent
    */
   void
-  send(pmt_t signal,
-       pmt_t data = PMT_NIL,
-       pmt_t metadata = PMT_NIL,
+  send(gruel::pmt_t signal,
+       gruel::pmt_t data = gruel::PMT_NIL,
+       gruel::pmt_t metadata = gruel::PMT_NIL,
        mb_pri_t priority = MB_PRI_DEFAULT);
 
   /*

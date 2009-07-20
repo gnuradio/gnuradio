@@ -45,7 +45,7 @@ unv_types = (
 header = """\
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -75,17 +75,17 @@ includes = """
 #include <config.h>
 #endif
 #include <vector>
-#include <pmt.h>
+#include <gruel/pmt.h>
 #include "pmt_int.h"
-
 """
 
 qa_includes = """
 #include <qa_pmt_unv.h>
 #include <cppunit/TestAssert.h>
-#include <pmt.h>
+#include <gruel/pmt.h>
 #include <stdio.h>
 
+using namespace gruel;
 """
 
 

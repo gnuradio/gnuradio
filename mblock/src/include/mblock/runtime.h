@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2008 Free Software Foundation, Inc.
+ * Copyright 2006,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -59,8 +59,8 @@ public:
    */
   virtual bool run(const std::string &instance_name,
 		   const std::string &class_name,
-		   pmt_t user_arg,
-		   pmt_t *result = 0) = 0;
+		   gruel::pmt_t user_arg,
+		   gruel::pmt_t *result = 0) = 0;
 
   // QA only...
   mb_mblock_sptr top() { return d_top; }

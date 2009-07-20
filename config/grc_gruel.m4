@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2008,2009 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -42,6 +42,8 @@ AC_DEFUN([GRC_GRUEL],[
         gruel/src/include/gruel/Makefile \
 	gruel/src/include/gruel/inet.h \
         gruel/src/lib/Makefile \
+	gruel/src/scheme/Makefile \
+	gruel/src/scheme/gnuradio/Makefile \
     ])
 
     dnl Allow creating autoconf independent header files for bytesex routines

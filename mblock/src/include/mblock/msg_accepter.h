@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -42,7 +42,7 @@ public:
   mb_msg_accepter(){};
   virtual ~mb_msg_accepter();
 
-  virtual void operator()(pmt_t signal, pmt_t data, pmt_t metadata, mb_pri_t priority) = 0;
+  virtual void operator()(gruel::pmt_t signal, gruel::pmt_t data, gruel::pmt_t metadata, mb_pri_t priority) = 0;
 };
 
 #endif /* INCLUDED_MB_MSG_ACCEPTER_H */

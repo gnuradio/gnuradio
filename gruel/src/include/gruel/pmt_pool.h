@@ -25,6 +25,8 @@
 #include <vector>
 #include <boost/thread.hpp>
 
+namespace gruel {
+
 /*!
  * \brief very simple thread-safe fixed-size allocation pool
  *
@@ -64,5 +66,7 @@ public:
   void *malloc();
   void free(void *p);
 };
+
+} /* namespace gruel */
 
 #endif /* INCLUDED_PMT_POOL_H */

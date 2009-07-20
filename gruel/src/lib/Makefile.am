@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,21 +21,100 @@
 
 include $(top_srcdir)/Makefile.common
 
-AM_CPPFLAGS = $(DEFINES) $(BOOST_CPPFLAGS) $(GRUEL_INCLUDES) $(WITH_INCLUDES)
+AM_CPPFLAGS = $(DEFINES) $(BOOST_CPPFLAGS) $(CPPUNIT_INCLUDES) $(GRUEL_INCLUDES) $(WITH_INCLUDES)
+
+TESTS = test_pmt
 
 lib_LTLIBRARIES = libgruel.la
 
 # magic flags
 libgruel_la_LDFLAGS = $(NO_UNDEFINED) $(BOOST_LDFLAGS) -version-info 0:0:0
 
+# ----------------------------------------------------------------
+# these scripts generate code
+
+code_generator = 			\
+	generate_unv.py			\
+	unv_template.h.t		\
+	unv_template.cc.t		\
+	unv_qa_template.cc.t		
+
+GENERATED_H =				\
+	pmt_unv_int.h			\
+	qa_pmt_unv.h			
+
+GENERATED_CC =				\
+	pmt_unv.cc			\
+	qa_pmt_unv.cc			
+
+python_built_sources = $(GENERATED_H) $(GENERATED_CC)
+
+PMT_SERIAL_TAGS_H = $(abs_top_builddir)/gruel/src/include/gruel/pmt_serial_tags.h
+BUILT_SOURCES = $(python_built_sources) $(PMT_SERIAL_TAGS_H)
+
+EXTRA_DIST = $(code_generator)
+
+# ----------------------------------------------------------------
+
 # These are the source files that go into the gruel shared library
-libgruel_la_SOURCES = \
-	realtime.cc \
-	sys_pri.cc \
-	thread_body_wrapper.cc \
+libgruel_la_SOURCES = 			\
+	pmt.cc 				\
+	pmt_io.cc 			\
+	pmt_pool.cc 			\
+	pmt_serialize.cc 		\
+	pmt_unv.cc 			\
+	realtime.cc 			\
+	sys_pri.cc 			\
+	thread_body_wrapper.cc 		\
 	thread_group.cc
 
-libgruel_la_LIBADD = \
-	$(BOOST_THREAD_LIB)
+libgruel_la_LIBADD = 			\
+	$(BOOST_THREAD_LIB) 		\
+	-lstdc++
 
-noinst_HEADERS =
+noinst_HEADERS = \
+	$(GENERATED_H)			\
+	pmt_int.h			\
+	qa_pmt.h			\
+	qa_pmt_prims.h
+
+# Build the qa code into its own library
+
+noinst_LTLIBRARIES = libpmt-qa.la
+
+libpmt_qa_la_SOURCES =			\
+	qa_pmt.cc			\
+	qa_pmt_prims.cc			\
+	qa_pmt_unv.cc			
+
+# magic flags
+libpmt_qa_la_LDFLAGS = $(NO_UNDEFINED) -avoid version
+
+libpmt_qa_la_LIBADD = 			\
+	libgruel.la			\
+	$(CPPUNIT_LIBS)			\
+	-lstdc++			
+
+noinst_PROGRAMS	=			\
+	test_pmt
+
+
+LIBGRUEL = libgruel.la
+LIBPMTQA = libpmt-qa.la $(LIBGRUEL)
+
+test_pmt_SOURCES = test_pmt.cc
+test_pmt_LDADD   = $(LIBPMTQA)
+
+# Do creation and inclusion of other Makefiles last
+
+# common way for generating sources from templates when using
+# BUILT_SOURCES, using parallel build protection.
+gen_sources = $(python_built_sources)
+gen_sources_deps = $(core_generator)
+par_gen_command = PYTHONPATH=$(top_srcdir)/gruel/src/lib srcdir=$(srcdir) $(PYTHON) $(srcdir)/generate_unv.py
+include $(top_srcdir)/Makefile.par.gen
+
+# Rule to create the build header file using GUILE
+# Doesn't need parallel protections because there is a single target
+$(PMT_SERIAL_TAGS_H): $(srcdir)/../scheme/gnuradio/gen-serial-tags.scm $(srcdir)/../scheme/gnuradio/pmt-serial-tags.scm
+	$(RUN_GUILE) $(srcdir)/../scheme/gnuradio/gen-serial-tags.scm $(srcdir)/../scheme/gnuradio/pmt-serial-tags.scm $(PMT_SERIAL_TAGS_H)

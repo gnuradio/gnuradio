@@ -30,8 +30,8 @@
 #include <iostream>
 
 
-static pmt_t s_sys_port = pmt_intern("%sys-port");
-static pmt_t s_halt = pmt_intern("%halt");
+static gruel::pmt_t s_sys_port = gruel::pmt_intern("%sys-port");
+static gruel::pmt_t s_halt = gruel::pmt_intern("%halt");
 
 mb_visitor::~mb_visitor()
 {
@@ -41,7 +41,7 @@ mb_visitor::~mb_visitor()
 
 mb_mblock::mb_mblock(mb_runtime *runtime,
 		     const std::string &instance_name,
-		     pmt_t user_arg)
+		     gruel::pmt_t user_arg)
   : d_impl(mb_mblock_impl_sptr(
 	       new mb_mblock_impl(dynamic_cast<mb_runtime_base*>(runtime),
 				  this, instance_name)))
@@ -82,7 +82,7 @@ mb_mblock::main_loop()
 	handle_message(msg);
       }
     }
-    catch (pmt_exception e){
+    catch (gruel::pmt_exception e){
       std::cerr << "\nmb_mblock::main_loop: ignored pmt_exception: "
 		<< e.what()
 		<< "\nin mblock instance \"" << instance_name()
@@ -112,7 +112,7 @@ mb_mblock::define_port(const std::string &port_name_string,
 void
 mb_mblock::define_component(const std::string &component_name,
 			    const std::string &class_name,
-			    pmt_t user_arg)
+			    gruel::pmt_t user_arg)
 		
 {
   d_impl->define_component(component_name, class_name, user_arg);
@@ -196,23 +196,23 @@ mb_mblock::exit()
 }
 
 void
-mb_mblock::shutdown_all(pmt_t result)
+mb_mblock::shutdown_all(gruel::pmt_t result)
 {
   d_impl->runtime()->request_shutdown(result);
 }
 
-pmt_t
-mb_mblock::schedule_one_shot_timeout(const mb_time &abs_time, pmt_t user_data)
+gruel::pmt_t
+mb_mblock::schedule_one_shot_timeout(const mb_time &abs_time, gruel::pmt_t user_data)
 {
   mb_msg_accepter_sptr accepter = impl()->make_accepter(s_sys_port);
   return d_impl->runtime()->schedule_one_shot_timeout(abs_time, user_data,
 						      accepter);
 }
 
-pmt_t
+gruel::pmt_t
 mb_mblock::schedule_periodic_timeout(const mb_time &first_abs_time,
 				     const mb_time &delta_time,
-				     pmt_t user_data)
+				     gruel::pmt_t user_data)
 {
   mb_msg_accepter_sptr accepter = impl()->make_accepter(s_sys_port);
   return d_impl->runtime()->schedule_periodic_timeout(first_abs_time,
@@ -222,7 +222,7 @@ mb_mblock::schedule_periodic_timeout(const mb_time &first_abs_time,
 }
 
 void
-mb_mblock::cancel_timeout(pmt_t handle)
+mb_mblock::cancel_timeout(gruel::pmt_t handle)
 {
   d_impl->runtime()->cancel_timeout(handle);
 }

@@ -34,7 +34,7 @@
 #include <iostream>
 
 
-static pmt_t s_self = pmt_intern("self");
+static gruel::pmt_t s_self = gruel::pmt_intern("self");
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -87,7 +87,7 @@ mb_mblock_impl::define_port(const std::string &port_name,
 void
 mb_mblock_impl::define_component(const std::string &name,
 				 const std::string &class_name,
-				 pmt_t user_arg)
+				 gruel::pmt_t user_arg)
 {
   {
     mbi_runtime_lock	l(this);
@@ -226,11 +226,11 @@ bool
 mb_mblock_impl::endpoints_are_compatible(const mb_endpoint &ep0,
 					 const mb_endpoint &ep1)
 {
-  pmt_t p0_outgoing = ep0.outgoing_message_set();
-  pmt_t p0_incoming = ep0.incoming_message_set();
+  gruel::pmt_t p0_outgoing = ep0.outgoing_message_set();
+  gruel::pmt_t p0_incoming = ep0.incoming_message_set();
 
-  pmt_t p1_outgoing = ep1.outgoing_message_set();
-  pmt_t p1_incoming = ep1.incoming_message_set();
+  gruel::pmt_t p1_outgoing = ep1.outgoing_message_set();
+  gruel::pmt_t p1_incoming = ep1.incoming_message_set();
 
   return (pmt_subsetp(p0_outgoing, p1_incoming)
 	  && pmt_subsetp(p1_outgoing, p0_incoming));
@@ -251,7 +251,7 @@ mb_mblock_impl::walk_tree(mb_visitor *visitor)
 }
 
 mb_msg_accepter_sptr
-mb_mblock_impl::make_accepter(pmt_t port_name)
+mb_mblock_impl::make_accepter(gruel::pmt_t port_name)
 {
   // FIXME this should probably use some kind of configurable factory
   mb_msg_accepter *ma =

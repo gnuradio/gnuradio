@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,7 +25,7 @@
 #include <mblock/time.h>
 #include <vector>
 #include <queue>
-#include <pmt.h>
+#include <gruel/pmt.h>
 #include <mblock/msg_accepter.h>
 
 class mb_timeout {
@@ -33,19 +33,19 @@ public:
   mb_time		d_when;		// absolute time to fire timeout
   mb_time		d_delta;	// if periodic, delta_t to next timeout
   bool			d_is_periodic;	// true iff this is a periodic timeout
-  pmt_t			d_user_data;	// data from %timeout msg
-  pmt_t			d_handle;	// handle for cancellation
+  gruel::pmt_t		d_user_data;	// data from %timeout msg
+  gruel::pmt_t		d_handle;	// handle for cancellation
   mb_msg_accepter_sptr	d_accepter;	// where to send the message
 
   // one-shot constructor
   mb_timeout(const mb_time &abs_time,
-	     pmt_t user_data, mb_msg_accepter_sptr accepter);
+	     gruel::pmt_t user_data, mb_msg_accepter_sptr accepter);
 
   // periodic constructor
   mb_timeout(const mb_time &first_abs_time, const mb_time &delta_time,
-	     pmt_t user_data, mb_msg_accepter_sptr accepter);
+	     gruel::pmt_t user_data, mb_msg_accepter_sptr accepter);
 
-  pmt_t handle() const { return d_handle; }
+  gruel::pmt_t handle() const { return d_handle; }
 };
 
 typedef boost::shared_ptr<mb_timeout> mb_timeout_sptr;
@@ -67,7 +67,7 @@ class mb_timer_queue : public std::priority_queue<mb_timeout_sptr,
 						  timeout_later>
 {
 public:
-  void cancel(pmt_t handle);
+  void cancel(gruel::pmt_t handle);
 };
 
 #endif /* INCLUDED_MB_TIMER_QUEUE_H */

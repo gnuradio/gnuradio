@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,9 +22,11 @@
 
 #include <qa_pmt_prims.h>
 #include <cppunit/TestAssert.h>
-#include <pmt.h>
+#include <gruel/pmt.h>
 #include <stdio.h>
 #include <sstream>
+
+using namespace gruel;
 
 void
 qa_pmt_prims::test_symbols()

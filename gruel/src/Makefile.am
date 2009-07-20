@@ -19,4 +19,5 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-SUBDIRS = include lib
+SUBDIRS = lib include scheme
+
