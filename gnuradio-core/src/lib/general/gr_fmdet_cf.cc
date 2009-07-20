@@ -45,12 +45,24 @@ gr_fmdet_cf::gr_fmdet_cf (float samplerate, float freq_low, float freq_high, flo
     d_S1(0.1),d_S2(0.1),
     d_S3(0.1),d_S4(0.1)
 {
+  const float h[]={0.003118678733, -0.012139843428,  0.027270898036, -0.051318579352,
+	     0.090406910552, -0.162926865366,  0.361885392563, 0.000000000000,
+	     -0.361885392563,  0.162926865366, -0.090406910552,  0.051318579352,
+	     -0.027270898036,  0.012139843428, -0.003118678733};
+
+
+
+
   float delta;
+  std::vector<float> taps(15);
+  
   d_freqhi = freq_high;
   d_freqlo = freq_low;
   delta = (d_freqhi - d_freqlo);
   d_scl = scl;
   d_bias = 0.5*scl*(d_freqhi+d_freqlo)/delta;
+  for (int i=0;i<15;i++) taps[i] = h[i];
+  
 }
 
 int
@@ -60,18 +72,19 @@ gr_fmdet_cf::work (int noutput_items,
 {
   const gr_complex *iptr = (gr_complex *) input_items[0];
   float *optr = (float *) output_items[0];
+  const gr_complex *scaleiptr = (gr_complex *) input_items[0];
 
   int	size = noutput_items;
 
   gr_complex Sdot,S0,S1=d_S1,S2=d_S2,S3=d_S3,S4=d_S4;
+  float d_8 = 8.0;
 
   while (size-- > 0) {
     S0=*iptr++;
 
-    Sdot = gr_complex(d_scl*
-		      (-S0.real() + 8.0*S1.real() - 8.0*S3.real() + S4.real()),
-		      d_scl*
-		      (-S0.imag() + 8.0*S1.imag() - 8.0*S3.imag() + S4.imag()));
+
+    Sdot = d_scl * (-S0+d_8*S1-d_8*S1+S4);
+
     d_freq = (S2.real()*Sdot.imag()-S2.imag()*Sdot.real())/
       (S2.real()*S2.real()+S2.imag()*S2.imag());
 
