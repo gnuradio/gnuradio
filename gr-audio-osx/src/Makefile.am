@@ -46,7 +46,8 @@ libgnuradio_audio_osx_la_SOURCES = 	\
 	audio_osx_source.cc
 
 libgnuradio_audio_osx_la_LIBADD =	\
-	$(GNURADIO_CORE_LA)
+	$(GNURADIO_CORE_LA)		\
+	$(OMNITHREAD_LA)
 
 libgnuradio_audio_osx_la_LDFLAGS =	\
 	-framework AudioUnit		\

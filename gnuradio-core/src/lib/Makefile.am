@@ -54,7 +54,6 @@ libgnuradio_core_la_LIBADD  = 		\
 	reed-solomon/librs.la		\
 	runtime/libruntime.la		\
 	hier/libhier.la			\
-	$(OMNITHREAD_LA)		\
 	$(GRUEL_LA)			\
 	$(FFTW3F_LIBS)			\
 	$(GSL_LIBS)			\
