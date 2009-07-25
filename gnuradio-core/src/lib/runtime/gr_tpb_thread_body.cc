@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -54,7 +54,7 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block)
 
     case gr_block_executor::BLKD_IN:		// Wait for input.
       {
-	gr_tpb_detail::scoped_lock guard(d->d_tpb.mutex);
+	gruel::scoped_lock guard(d->d_tpb.mutex);
 	while(!d->d_tpb.input_changed)
 	  d->d_tpb.input_cond.wait(guard);
       }
@@ -62,7 +62,7 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block)
       
     case gr_block_executor::BLKD_OUT:		// Wait for output buffer space.
       {
-	gr_tpb_detail::scoped_lock guard(d->d_tpb.mutex);
+	gruel::scoped_lock guard(d->d_tpb.mutex);
 	while(!d->d_tpb.output_changed)
 	  d->d_tpb.output_cond.wait(guard);
       }

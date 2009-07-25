@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,7 +25,7 @@
 
 #include <gr_runtime_types.h>
 #include <boost/weak_ptr.hpp>
-#include <boost/thread.hpp>
+#include <gruel/thread.h>
 
 class gr_vmcircbuf;
 
@@ -49,8 +49,6 @@ gr_buffer_sptr gr_make_buffer (int nitems, size_t sizeof_item, gr_block_sptr lin
  */
 class gr_buffer {
  public:
-
-  typedef boost::unique_lock<boost::mutex>  scoped_lock;
 
   virtual ~gr_buffer ();
 
@@ -88,7 +86,7 @@ class gr_buffer {
   size_t nreaders() const { return d_readers.size(); }
   gr_buffer_reader* reader(size_t index) { return d_readers[index]; }
 
-  boost::mutex *mutex() { return &d_mutex; }
+  gruel::mutex *mutex() { return &d_mutex; }
 
   // -------------------------------------------------------------------------
 
@@ -110,7 +108,7 @@ class gr_buffer {
   //
   // The mutex protects d_write_index, d_done and the d_read_index's in the buffer readers.
   //
-  boost::mutex				d_mutex;
+  gruel::mutex				d_mutex;
   unsigned int				d_write_index;	// in items [0,d_bufsize)
   bool					d_done;
   
@@ -185,8 +183,6 @@ long gr_buffer_ncurrently_allocated ();
 class gr_buffer_reader {
  public:
 
-  typedef gr_buffer::scoped_lock scoped_lock;
-
   ~gr_buffer_reader ();
 
   /*!
@@ -221,7 +217,7 @@ class gr_buffer_reader {
   void set_done (bool done)   { d_buffer->set_done (done); }
   bool done () const { return d_buffer->done (); }
 
-  boost::mutex *mutex() { return d_buffer->mutex(); }
+  gruel::mutex *mutex() { return d_buffer->mutex(); }
 
 
   /*!

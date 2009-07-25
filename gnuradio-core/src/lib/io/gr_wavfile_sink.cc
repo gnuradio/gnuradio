@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006,2007,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2007,2008,2009 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -32,6 +32,7 @@
 #include <cstring>
 #include <cmath>
 #include <fcntl.h>
+#include <gruel/thread.h>
 
 // win32 (mingw/msvc) specific
 #ifdef HAVE_IO_H
@@ -103,7 +104,7 @@ gr_wavfile_sink::gr_wavfile_sink(const char *filename,
 bool
 gr_wavfile_sink::open(const char* filename)
 {
-  omni_mutex_lock l(d_mutex);
+  gruel::scoped_lock guard(d_mutex);
   
   // we use the open system call to get access to the O_LARGEFILE flag.
   int fd;
@@ -141,7 +142,7 @@ gr_wavfile_sink::open(const char* filename)
 void
 gr_wavfile_sink::close()
 {
-  omni_mutex_lock l(d_mutex);
+  gruel::scoped_lock guard(d_mutex);
   
   if (!d_fp)
     return;
@@ -230,7 +231,7 @@ gr_wavfile_sink::convert_to_short(float sample)
 void
 gr_wavfile_sink::set_bits_per_sample(int bits_per_sample)
 {
-  omni_mutex_lock l(d_mutex);
+  gruel::scoped_lock guard(d_mutex);
   if (bits_per_sample == 8 || bits_per_sample == 16) {
     d_bytes_per_sample_new = bits_per_sample / 8;
   }
@@ -240,7 +241,7 @@ gr_wavfile_sink::set_bits_per_sample(int bits_per_sample)
 void
 gr_wavfile_sink::set_sample_rate(unsigned int sample_rate)
 {
-  omni_mutex_lock l(d_mutex);
+  gruel::scoped_lock guard(d_mutex);
   d_sample_rate = sample_rate;
 }
 
@@ -252,7 +253,7 @@ gr_wavfile_sink::do_update()
     return;
   }
   
-  omni_mutex_lock     l(d_mutex);     // hold mutex for duration of this block
+  gruel::scoped_lock guard(d_mutex);     // hold mutex for duration of this block
   if (d_fp) {
     close_wav();
   }

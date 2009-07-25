@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -32,12 +32,6 @@ gr_msg_queue_sptr gr_make_msg_queue(unsigned limit=0);
  */
 %ignore gr_msg_queue;
 class gr_msg_queue : public gr_msg_handler {
-  omni_mutex		d_mutex;
-  omni_condition	d_cond;
-  gr_message_sptr	d_head;
-  gr_message_sptr	d_tail;
-  int			d_count;
-
 public:
   gr_msg_queue(unsigned int limit);
   ~gr_msg_queue();

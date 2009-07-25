@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,7 +23,7 @@
 #define INCLUDED_GR_MSG_QUEUE_H
 
 #include <gr_msg_handler.h>
-#include <gnuradio/omnithread.h>
+#include <gruel/thread.h>
 
 class gr_msg_queue;
 typedef boost::shared_ptr<gr_msg_queue> gr_msg_queue_sptr;
@@ -35,13 +35,14 @@ gr_msg_queue_sptr gr_make_msg_queue(unsigned int limit=0);
  * \ingroup misc
  */
 class gr_msg_queue : public gr_msg_handler {
-  omni_mutex		d_mutex;
-  omni_condition	d_not_empty;
-  omni_condition	d_not_full;
-  gr_message_sptr	d_head;
-  gr_message_sptr	d_tail;
-  unsigned int		d_count;    // # of messages in queue.
-  unsigned int		d_limit;    // max # of messages in queue.  0 -> unbounded
+
+  gruel::mutex		    d_mutex;
+  gruel::condition_variable d_not_empty;
+  gruel::condition_variable d_not_full;
+  gr_message_sptr	    d_head;
+  gr_message_sptr	    d_tail;
+  unsigned int		    d_count;    // # of messages in queue.
+  unsigned int		    d_limit;    // max # of messages in queue.  0 -> unbounded
 
 public:
   gr_msg_queue(unsigned int limit);

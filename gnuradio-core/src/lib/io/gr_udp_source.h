@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,7 +24,6 @@
 #define INCLUDED_GR_UDP_SOURCE_H
 
 #include <gr_sync_block.h>
-#include <gnuradio/omnithread.h>
 #if defined(HAVE_SOCKET)
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -35,6 +34,8 @@
 #if defined(HAVE_NETINET_IN_H)
 #include <netinet/in.h>
 #endif
+
+#include <gruel/thread.h>
 
 class gr_udp_source;
 typedef boost::shared_ptr<gr_udp_source> gr_udp_source_sptr;
@@ -63,7 +64,7 @@ class gr_udp_source : public gr_sync_block
  private:
   size_t	d_itemsize;
   bool		d_updated;
-  omni_mutex	d_mutex;
+  gruel::mutex	d_mutex;
 
   int            d_payload_size;  // maximum transmission unit (packet length)
   int            d_socket;        // handle to socket

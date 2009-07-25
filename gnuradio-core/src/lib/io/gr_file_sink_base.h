@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2008 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,7 +23,7 @@
 #ifndef INCLUDED_GR_FILE_SINK_BASE_H
 #define INCLUDED_GR_FILE_SINK_BASE_H
 
-#include <gnuradio/omnithread.h>
+#include <boost/thread.hpp>
 #include <cstdio>
 
 /*!
@@ -36,7 +36,7 @@ class gr_file_sink_base
   FILE	       *d_new_fp;	// new FILE pointer
   bool		d_updated;	// is there a new FILE pointer?
   bool		d_is_binary;
-  omni_mutex	d_mutex;
+  boost::mutex	d_mutex;
 
  protected:
   gr_file_sink_base(const char *filename, bool is_binary);

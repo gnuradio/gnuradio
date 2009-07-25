@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -90,7 +90,7 @@ gr_udp_source::~gr_udp_source ()
 bool
 gr_udp_source::open()
 {
-  omni_mutex_lock l(d_mutex);	// hold mutex for duration of this function
+  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
   // create socket
   d_socket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
   if(d_socket == -1) {
@@ -137,7 +137,7 @@ gr_udp_source::open()
 void
 gr_udp_source::close()
 {
-  omni_mutex_lock l(d_mutex);	// hold mutex for duration of this function
+  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
 
   if (d_socket){
     shutdown(d_socket, SHUT_RDWR);

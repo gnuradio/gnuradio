@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2006,2007 Free Software Foundation, Inc.
+ * Copyright 2004,2006,2007,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,6 +31,7 @@
 #include <fcntl.h>
 #include <stdexcept>
 #include <stdio.h>
+#include <gruel/thread.h>
 
 // win32 (mingw/msvc) specific
 #ifdef HAVE_IO_H
@@ -68,7 +69,7 @@ gr_file_sink_base::~gr_file_sink_base ()
 bool
 gr_file_sink_base::open(const char *filename)
 {
-  omni_mutex_lock	l(d_mutex);	// hold mutex for duration of this function
+  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
 
   // we use the open system call to get access to the O_LARGEFILE flag.
   int fd;
@@ -96,7 +97,7 @@ gr_file_sink_base::open(const char *filename)
 void
 gr_file_sink_base::close()
 {
-  omni_mutex_lock	l(d_mutex);	// hold mutex for duration of this function
+  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
 
   if (d_new_fp){
     fclose(d_new_fp);
@@ -109,7 +110,7 @@ void
 gr_file_sink_base::do_update()
 {
   if (d_updated){
-    omni_mutex_lock	l(d_mutex);	// hold mutex for duration of this block
+    gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this block
     if (d_fp)
       fclose(d_fp);
     d_fp = d_new_fp;			// install new file pointer

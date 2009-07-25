@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -175,14 +175,14 @@ gr_buffer::write_pointer ()
 void
 gr_buffer::update_write_pointer (int nitems)
 {
-  scoped_lock	guard(*mutex());
+  gruel::scoped_lock guard(*mutex());
   d_write_index = index_add (d_write_index, nitems);
 }
 
 void
 gr_buffer::set_done (bool done)
 {
-  scoped_lock	guard(*mutex());
+  gruel::scoped_lock guard(*mutex());
   d_done = done;
 }
 
@@ -251,7 +251,7 @@ gr_buffer_reader::read_pointer ()
 void
 gr_buffer_reader::update_read_pointer (int nitems)
 {
-  scoped_lock	guard(*mutex());
+  gruel::scoped_lock guard(*mutex());
   d_read_index = d_buffer->index_add (d_read_index, nitems);
 }
 

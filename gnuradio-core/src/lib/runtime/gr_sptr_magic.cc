@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -27,19 +27,11 @@
 #include <stdexcept>
 
 
-#if 0
-  #include <boost/thread.hpp>
-  typedef boost::mutex			mutex;
-  typedef boost::mutex::scoped_lock	scoped_lock;
-#else
-  #include <gnuradio/omnithread.h>
-  typedef omni_mutex			mutex;
-  typedef omni_mutex_lock		scoped_lock;
-#endif
+#include <gruel/thread.h>
 
 namespace gnuradio {
 
-  static mutex		s_mutex;
+  static gruel::mutex	s_mutex;
   typedef std::map<gr_basic_block*, gr_basic_block_sptr> sptr_map;
   static sptr_map	s_map;
 
@@ -47,7 +39,7 @@ namespace gnuradio {
   detail::sptr_magic::create_and_stash_initial_sptr(gr_hier_block2 *p)
   {
     gr_basic_block_sptr sptr(p);
-    scoped_lock	l();
+    gruel::scoped_lock guard();
     s_map.insert(sptr_map::value_type(static_cast<gr_basic_block *>(p), sptr));
   }
 
@@ -68,7 +60,7 @@ namespace gnuradio {
      * p is a subclass of gr_hier_block2, thus we've already created the shared pointer
      * and stashed it away.  Fish it out and return it.
      */
-    scoped_lock	l();
+    gruel::scoped_lock guard();
     sptr_map::iterator pos = s_map.find(static_cast<gr_basic_block *>(p));
     if (pos == s_map.end())
       throw std::invalid_argument("gr_sptr_magic: invalid pointer!");
@@ -78,4 +70,3 @@ namespace gnuradio {
     return sptr;
   }
 };
-

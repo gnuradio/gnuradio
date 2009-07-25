@@ -162,7 +162,7 @@ Description: Client side library for the USRP2 hardware
 Package: libgnuradio-core
 Section: libs
 Architecture: any
-Depends: libgruel (= ${binary:Version}), libgnuradio-omnithread (= ${binary:Version}), ${shlibs:Depends}
+Depends: libgruel (= ${binary:Version}), ${shlibs:Depends}
 Conflicts:  libgnuradio-core0, libgnuradio-core0c2, libgnuradio-core0c2a
 Replaces:  libgnuradio-core0, libgnuradio-core0c2, libgnuradio-core0c2a
 Suggests: gnuradio-doc
@@ -174,7 +174,7 @@ Section: libdevel
 Architecture: any 
 Replaces: libgnuradio-core0-dev
 Conflicts: libgnuradio-core0-dev
-Depends: libgnuradio-core (= ${binary:Version}), libgruel-dev (= ${binary:Version}), libgnuradio-omnithread-dev (= ${binary:Version}), libboost-thread1.37-dev, libboost-date-time1.37-dev, libcppunit-dev, libgsl0-dev, libatlas-base-dev, libfftw3-dev, swig
+Depends: libgnuradio-core (= ${binary:Version}), libgruel-dev (= ${binary:Version}), libboost-thread1.37-dev, libboost-date-time1.37-dev, libcppunit-dev, libgsl0-dev, libatlas-base-dev, libfftw3-dev, swig
 Description: The GNU Software Radio Core Library
  This package contains the core GNU Radio libraries.
  .

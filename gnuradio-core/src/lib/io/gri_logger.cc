@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,6 +23,8 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
+#if 0 // This needs reimplementation with boost threads and synchronization
 
 #include <gri_logger.h>
 #include <stdio.h>
@@ -172,3 +174,5 @@ gri_logger::printf(const char *format, ...)
   if (n > -1 && n < (ssize_t) sizeof(buf))
     write(buf, n);
 }
+
+#endif

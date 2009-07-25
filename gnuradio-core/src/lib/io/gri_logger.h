@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,6 +21,8 @@
  */
 #ifndef INCLUDED_GRI_LOGGER_H
 #define INCLUDED_GRI_LOGGER_H
+
+#if 0 // This needs reimplementation with boost threads and synchronization
 
 #include <stddef.h>
 #include <gnuradio/omnithread.h>
@@ -51,5 +53,7 @@ public:
   void write(const void *buf, size_t count);
   void printf(const char *format, ...);
 };
+
+#endif
 
 #endif /* INCLUDED_GRI_LOGGER_H */

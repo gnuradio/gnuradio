@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,7 +21,7 @@
 #ifndef INCLUDED_THREAD_BODY_WRAPPER_H
 #define INCLUDED_THREAD_BODY_WRAPPER_H
 
-#include <boost/thread.hpp>
+#include <gruel/thread.h>
 #include <exception>
 #include <iostream>
 

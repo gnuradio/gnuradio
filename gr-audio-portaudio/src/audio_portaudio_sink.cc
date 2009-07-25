@@ -35,7 +35,7 @@
 #include <gnuradio/omnithread.h>
 #include <string.h>
 
-#define	LOGGING   0		// define to 0 or 1
+//#define	LOGGING   0		// define to 0 or 1
 
 #define SAMPLE_FORMAT 		paFloat32
 typedef float sample_t;
@@ -85,8 +85,8 @@ portaudio_sink_callback (const void *inputBuffer,
   int navail_samples = self->d_reader->items_available();
   
   if (nreqd_samples <= navail_samples){  // We've got enough data...
-    if (LOGGING)
-      self->d_log->printf("PAsink cb: f/b = %4ld\n", framesPerBuffer);
+    //if (LOGGING)
+    //  self->d_log->printf("PAsink cb: f/b = %4ld\n", framesPerBuffer);
     // copy from ringbuffer into output buffer
     memcpy(outputBuffer,
 	   self->d_reader->read_pointer(),
@@ -99,8 +99,8 @@ portaudio_sink_callback (const void *inputBuffer,
   }
 
   else {			// underrun
-    if (LOGGING)
-      self->d_log->printf("PAsink cb: f/b = %4ld UNDERRUN\n", framesPerBuffer);
+    //if (LOGGING)
+    //  self->d_log->printf("PAsink cb: f/b = %4ld UNDERRUN\n", framesPerBuffer);
 
     self->d_nunderuns++;
     ::write(2, "aU", 2);	// FIXME change to non-blocking call
@@ -139,8 +139,8 @@ audio_portaudio_sink::audio_portaudio_sink(int sampling_rate,
     d_nunderuns(0)
 {
   memset(&d_output_parameters, 0, sizeof(d_output_parameters));
-  if (LOGGING)
-    d_log = gri_logger::singleton();
+  //if (LOGGING)
+  //  d_log = gri_logger::singleton();
 
   PaError 	      err;
   int     	      i, numDevices;

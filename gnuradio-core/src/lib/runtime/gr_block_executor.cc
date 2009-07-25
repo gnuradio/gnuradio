@@ -68,7 +68,7 @@ min_available_space (gr_block_detail *d, int output_multiple)
   int	min_space = std::numeric_limits<int>::max();
 
   for (int i = 0; i < d->noutputs (); i++){
-    gr_buffer::scoped_lock guard(*d->output(i)->mutex());
+    gruel::scoped_lock guard(*d->output(i)->mutex());
 #if 0
     int n = round_down(d->output(i)->space_available(), output_multiple);
 #else
@@ -163,7 +163,7 @@ gr_block_executor::run_one_iteration()
 	/*
 	 * Acquire the mutex and grab local copies of items_available and done.
 	 */
-	gr_buffer::scoped_lock guard(*d->input(i)->mutex());
+	gruel::scoped_lock guard(*d->input(i)->mutex());
 	d_ninput_items[i] = d->input(i)->items_available();
 	d_input_done[i] = d->input(i)->done();
       }
@@ -205,7 +205,7 @@ gr_block_executor::run_one_iteration()
 	/*
 	 * Acquire the mutex and grab local copies of items_available and done.
 	 */
-	gr_buffer::scoped_lock guard(*d->input(i)->mutex());
+	gruel::scoped_lock guard(*d->input(i)->mutex());
 	d_ninput_items[i] = d->input(i)->items_available ();
 	d_input_done[i] = d->input(i)->done();
       }

@@ -28,7 +28,7 @@
 #include <string>
 #include <portaudio.h>
 #include <stdexcept>
-#include <gri_logger.h>
+//#include <gri_logger.h>
 
 class audio_portaudio_source;
 typedef boost::shared_ptr<audio_portaudio_source> audio_portaudio_source_sptr;
@@ -78,7 +78,7 @@ class audio_portaudio_source : public gr_sync_block {
 
   // random stats
   int			d_noverruns;		// count of overruns
-  gri_logger_sptr	d_log;			// handle to non-blocking logging instance
+  //gri_logger_sptr	d_log;			// handle to non-blocking logging instance
 
   void output_error_msg (const char *msg, int err);
   void bail (const char *msg, int err) throw (std::runtime_error);

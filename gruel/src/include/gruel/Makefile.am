@@ -34,4 +34,5 @@ gruelinclude_HEADERS = \
 	realtime.h \
 	sys_pri.h \
 	thread_body_wrapper.h \
-	thread_group.h
+	thread_group.h \
+	thread.h

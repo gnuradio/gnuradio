@@ -2,7 +2,7 @@
 /*
  * Copyright (C) 2001-2003 William E. Kempf
  * Copyright (C) 2007 Anthony Williams
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  *
  *  Distributed under the Boost Software License, Version 1.0. (See accompanying 
  *  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -15,8 +15,8 @@
 #ifndef INCLUDED_GRUEL_THREAD_GROUP_H
 #define INCLUDED_GRUEL_THREAD_GROUP_H
 
+#include <gruel/thread.h>
 #include <boost/utility.hpp>
-#include <boost/thread.hpp>
 #include <boost/thread/shared_mutex.hpp>
 #include <boost/function.hpp>
 

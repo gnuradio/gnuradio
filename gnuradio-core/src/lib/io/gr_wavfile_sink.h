@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,7 +25,7 @@
 
 #include <gr_sync_block.h>
 #include <gr_file_sink_base.h>
-#include <gnuradio/omnithread.h>
+#include <boost/thread.hpp>
 
 class gr_wavfile_sink;
 typedef boost::shared_ptr<gr_wavfile_sink> gr_wavfile_sink_sptr;
@@ -76,7 +76,7 @@ private:
   FILE *d_fp;
   FILE *d_new_fp;
   bool d_updated;
-  omni_mutex d_mutex;
+  boost::mutex d_mutex;
   
   /*!
    * \brief Convert a sample value within [-1;+1] to a corresponding

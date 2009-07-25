@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -35,6 +35,8 @@ typedef void* optval_t;
 #define inet_aton(N,A) ( (A)->s_addr = inet_addr(N), ( (A)->s_addr != INADDR_NONE ) )
 typedef char* optval_t;
 #endif
+
+#include <gruel/thread.h>
 
 #define SNK_VERBOSE 0
 
@@ -110,7 +112,7 @@ gr_udp_sink::~gr_udp_sink ()
 bool
 gr_udp_sink::open()
 {
-  omni_mutex_lock l(d_mutex);	// hold mutex for duration of this function
+  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
 
   // create socket
   if((d_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
@@ -153,7 +155,7 @@ gr_udp_sink::open()
 void
 gr_udp_sink::close()
 {
-  omni_mutex_lock l(d_mutex);	// hold mutex for duration of this function
+  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
 
   if (d_socket){
     shutdown(d_socket, SHUT_RDWR);

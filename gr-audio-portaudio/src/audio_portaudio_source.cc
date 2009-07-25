@@ -35,7 +35,7 @@
 #include <gnuradio/omnithread.h>
 #include <string.h>
 
-#define	LOGGING 0		// define to 0 or 1
+//#define	LOGGING 0		// define to 0 or 1
 
 #define SAMPLE_FORMAT 		paFloat32
 typedef float sample_t;
@@ -84,8 +84,8 @@ portaudio_source_callback (const void *inputBuffer,
   int nframes_room = self->d_writer->space_available() / nchan;
 
   if (nframes_to_copy <= nframes_room){  // We've got room for the data ..
-    if (LOGGING)
-      self->d_log->printf("PAsrc  cb: f/b = %4ld\n", framesPerBuffer);
+    //if (LOGGING)
+    //  self->d_log->printf("PAsrc  cb: f/b = %4ld\n", framesPerBuffer);
 
     // copy from input buffer to ringbuffer
     memcpy(self->d_writer->write_pointer(),
@@ -99,8 +99,8 @@ portaudio_source_callback (const void *inputBuffer,
   }
 
   else {			// overrun
-    if (LOGGING)
-      self->d_log->printf("PAsrc  cb: f/b = %4ld OVERRUN\n", framesPerBuffer);
+    //if (LOGGING)
+    //  self->d_log->printf("PAsrc  cb: f/b = %4ld OVERRUN\n", framesPerBuffer);
 
     self->d_noverruns++;
     ::write(2, "aO", 2);	// FIXME change to non-blocking call
@@ -144,8 +144,8 @@ audio_portaudio_source::audio_portaudio_source(int sampling_rate,
     d_noverruns(0)
 {
   memset(&d_input_parameters, 0, sizeof(d_input_parameters));
-  if (LOGGING)
-    d_log = gri_logger::singleton();
+  //if (LOGGING)
+  //  d_log = gri_logger::singleton();
 
   PaError 	      err;
   int     	      i, numDevices;
