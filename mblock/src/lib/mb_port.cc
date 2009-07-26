@@ -26,16 +26,18 @@
 #include <mblock/port.h>
 #include <mblock/protocol_class.h>
 
+using namespace pmt;
+
 mb_port::mb_port(mb_mblock *mblock,
 		 const std::string &port_name,
 		 const std::string &protocol_class_name,
 		 bool conjugated,
 		 mb_port::port_type_t port_type)
-  : d_port_name(port_name), d_port_symbol(gruel::pmt_intern(port_name)),
+  : d_port_name(port_name), d_port_symbol(pmt_intern(port_name)),
     d_conjugated(conjugated), d_port_type(port_type),
     d_mblock(mblock)
 {
-  gruel::pmt_t pc = mb_protocol_class_lookup(gruel::pmt_intern(protocol_class_name));
+  pmt_t pc = mb_protocol_class_lookup(pmt_intern(protocol_class_name));
   if (pmt_is_null(pc)){
     throw std::runtime_error("mb_port: unknown protocol class '"
 			     + protocol_class_name + "'");
@@ -48,7 +50,7 @@ mb_port::~mb_port()
   // nop
 }
 
-gruel::pmt_t
+pmt_t
 mb_port::incoming_message_set() const
 {
   if (!conjugated())
@@ -57,7 +59,7 @@ mb_port::incoming_message_set() const
     return mb_protocol_class_outgoing(protocol_class());
 }
 
-gruel::pmt_t
+pmt_t
 mb_port::outgoing_message_set() const
 {
   if (!conjugated())

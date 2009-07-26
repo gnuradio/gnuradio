@@ -32,7 +32,7 @@
  */
 
 #define PMT_LOCAL_ALLOCATOR 0		// define to 0 or 1
-namespace gruel {
+namespace pmt {
 
 class pmt_base : boost::noncopyable {
 protected:
@@ -222,6 +222,6 @@ public:
 
 #include "pmt_unv_int.h"
 
-} /* namespace gruel */
+} /* namespace pmt */
 
 #endif /* INCLUDED_PMT_INT_H */

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,7 +26,7 @@
 //! conceptually, pointer to constructor
 typedef mb_mblock_sptr (*mb_mblock_maker_t)(mb_runtime *runtime,
 					    const std::string &instance_name,
-					    gruel::pmt_t user_arg);
+					    pmt::pmt_t user_arg);
 
 /*
  * \brief Maintain mapping between mblock class_name and factory (maker)
@@ -40,7 +40,7 @@ public:
 template<class mblock>
 mb_mblock_sptr mb_mblock_maker(mb_runtime *runtime,
 			       const std::string &instance_name,
-			       gruel::pmt_t user_arg)
+			       pmt::pmt_t user_arg)
 {
   return mb_mblock_sptr(new mblock(runtime, instance_name, user_arg));
 }

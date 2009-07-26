@@ -22,7 +22,7 @@
 #include <mblock/runtime.h>
 #include <iostream>
 
-using namespace gruel;
+using namespace pmt;
 
 int
 main(int argc, char **argv)

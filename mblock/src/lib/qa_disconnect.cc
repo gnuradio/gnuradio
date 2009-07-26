@@ -31,7 +31,7 @@
 #include <sstream>
 #include <bitset>
 
-using namespace gruel;
+using namespace pmt;
 
 static pmt_t s_in = pmt_intern("in");
 static pmt_t s_out = pmt_intern("out");

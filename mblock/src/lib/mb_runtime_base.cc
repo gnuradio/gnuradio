@@ -24,34 +24,36 @@
 #endif
 #include <mb_runtime_base.h>
 
+using namespace pmt;
+
 /*
  * Default nop implementations...
  */
 
 void
-mb_runtime_base::request_shutdown(gruel::pmt_t result)
+mb_runtime_base::request_shutdown(pmt_t result)
 {
 }
 
-gruel::pmt_t
+pmt_t
 mb_runtime_base::schedule_one_shot_timeout(const mb_time &abs_time,
-					   gruel::pmt_t user_data,
+					   pmt_t user_data,
 					   mb_msg_accepter_sptr accepter)
 {
-  return gruel::PMT_F;
+  return PMT_F;
 }
 
-gruel::pmt_t
+pmt_t
 mb_runtime_base::schedule_periodic_timeout(const mb_time &first_abs_time,
 					   const mb_time &delta_time,
-					   gruel::pmt_t user_data,
+					   pmt_t user_data,
 					   mb_msg_accepter_sptr accepter)
 {
-  return gruel::PMT_F;
+  return PMT_F;
 }
 
 void
-mb_runtime_base::cancel_timeout(gruel::pmt_t handle)
+mb_runtime_base::cancel_timeout(pmt_t handle)
 {
 }
 

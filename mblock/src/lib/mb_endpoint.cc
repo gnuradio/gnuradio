@@ -24,13 +24,15 @@
 #endif
 #include <mb_endpoint.h>
 
+using namespace pmt;
+
 bool
 mb_endpoint::inside_of_relay_port_p() const
 {
   return d_port->port_type() == mb_port::RELAY && d_component_name == "self";
 }
 
-gruel::pmt_t
+pmt_t
 mb_endpoint::incoming_message_set() const
 {
   if (inside_of_relay_port_p())			// swap incoming and outgoing
@@ -39,7 +41,7 @@ mb_endpoint::incoming_message_set() const
     return port()->incoming_message_set();
 }
 
-gruel::pmt_t
+pmt_t
 mb_endpoint::outgoing_message_set() const
 {
   if (inside_of_relay_port_p())			// swap incoming and outgoing

@@ -27,6 +27,8 @@
 #include <mblock/class_registry.h>
 #include <mblock/exception.h>
 
+using namespace pmt;
+
 mb_runtime_sptr 
 mb_make_runtime_nop()
 {
@@ -48,7 +50,7 @@ mb_runtime_nop::~mb_runtime_nop()
 bool
 mb_runtime_nop::run(const std::string &instance_name,
 		    const std::string &class_name,
-		    gruel::pmt_t user_arg, gruel::pmt_t *result)
+		    pmt_t user_arg, pmt_t *result)
 {
   class initial_visitor : public mb_visitor
   {
@@ -63,7 +65,7 @@ mb_runtime_nop::run(const std::string &instance_name,
   initial_visitor visitor;
 
   if (result)
-    *result = gruel::PMT_T;
+    *result = PMT_T;
 
   d_top = create_component(instance_name, class_name, user_arg);
   d_top->walk_tree(&visitor);
@@ -74,7 +76,7 @@ mb_runtime_nop::run(const std::string &instance_name,
 mb_mblock_sptr
 mb_runtime_nop::create_component(const std::string &instance_name,
 				 const std::string &class_name,
-				 gruel::pmt_t user_arg)
+				 pmt_t user_arg)
 {
   mb_mblock_maker_t maker;
   if (!mb_class_registry::lookup_maker(class_name, &maker))

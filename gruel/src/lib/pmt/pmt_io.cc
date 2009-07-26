@@ -27,7 +27,7 @@
 #include "pmt_int.h"
 #include <sstream>
 
-namespace gruel {
+namespace pmt {
 
 static void
 pmt_write_list_tail(pmt_t obj, std::ostream &port)
@@ -138,4 +138,4 @@ pmt_deserialize(std::istream &source)
   throw pmt_notimplemented("notimplemented: pmt_deserialize", PMT_NIL);
 }
 
-} /* namespace gruel */
+} /* namespace pmt */

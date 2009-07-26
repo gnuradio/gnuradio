@@ -56,9 +56,9 @@ public:
    * \param priority	the urgency at which the message is sent
    */
   void
-  send(gruel::pmt_t signal,
-       gruel::pmt_t data = gruel::PMT_NIL,
-       gruel::pmt_t metadata = gruel::PMT_NIL,
+  send(pmt::pmt_t signal,
+       pmt::pmt_t data = pmt::PMT_NIL,
+       pmt::pmt_t metadata = pmt::PMT_NIL,
        mb_pri_t priority = MB_PRI_DEFAULT);
 
   /*

@@ -62,7 +62,7 @@ public:
   mb_runtime_thread_per_block  *d_runtime;
   mb_mblock_maker_t		d_maker;
   std::string			d_instance_name;
-  gruel::pmt_t			d_user_arg;
+  pmt::pmt_t			d_user_arg;
 
   mb_mblock_sptr		d_mblock;	//< holds pointer to created mblock
 
@@ -80,7 +80,7 @@ public:
   mb_worker(mb_runtime_thread_per_block *runtime,
 	    mb_mblock_maker_t maker,
 	    const std::string &instance_name,
-	    gruel::pmt_t user_arg);
+	    pmt::pmt_t user_arg);
 
   // ~mb_worker();
 

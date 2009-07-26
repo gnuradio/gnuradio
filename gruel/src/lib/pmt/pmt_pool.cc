@@ -26,7 +26,7 @@
 #include <algorithm>
 #include <stdint.h>
 
-namespace gruel {
+namespace pmt {
 
 static inline size_t
 ROUNDUP(size_t x, size_t stride)
@@ -109,4 +109,4 @@ pmt_pool::free(void *foo)
     d_cond.notify_one();
 }
 
-} /* namespace gruel */
+} /* namespace pmt */

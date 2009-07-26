@@ -50,24 +50,24 @@ public:
    */
   inline void unlock() { d_brl.unlock(); }
 
-  virtual void request_shutdown(gruel::pmt_t result);
+  virtual void request_shutdown(pmt::pmt_t result);
 
   virtual mb_mblock_sptr
   create_component(const std::string &instance_name,
 		   const std::string &class_name,
-		   gruel::pmt_t user_arg) = 0;
+		   pmt::pmt_t user_arg) = 0;
 
-  virtual gruel::pmt_t
-  schedule_one_shot_timeout(const mb_time &abs_time, gruel::pmt_t user_data,
+  virtual pmt::pmt_t
+  schedule_one_shot_timeout(const mb_time &abs_time, pmt::pmt_t user_data,
 			    mb_msg_accepter_sptr accepter);
 
-  virtual gruel::pmt_t
+  virtual pmt::pmt_t
   schedule_periodic_timeout(const mb_time &first_abs_time,
 			    const mb_time &delta_time,
-			    gruel::pmt_t user_data,
+			    pmt::pmt_t user_data,
 			    mb_msg_accepter_sptr accepter);
   virtual void
-  cancel_timeout(gruel::pmt_t handle);
+  cancel_timeout(pmt::pmt_t handle);
 
   mb_msg_accepter_sptr
   accepter() { return d_accepter; }

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -30,7 +30,7 @@
 #include <gruel/pmt_pool.h>
 #include <string.h>
 
-namespace gruel {
+namespace pmt {
 
 static const int CACHE_LINE_SIZE = 64;		// good guess
 
@@ -1038,4 +1038,4 @@ pmt_dump_sizeof()
   printf("sizeof(pmt_uniform_vector) = %3zd\n", sizeof(pmt_uniform_vector));
 }
 
-} /* namespace gruel */
+} /* namespace pmt */

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -85,7 +85,7 @@ qa_includes = """
 #include <gruel/pmt.h>
 #include <stdio.h>
 
-using namespace gruel;
+using namespace pmt;
 """
 
 

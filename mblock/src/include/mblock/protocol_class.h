@@ -30,14 +30,14 @@
  * \param incoming	incoming message set (list of symbols)
  * \param outgoing	outgoing message set (list of symbols)
  */
-gruel::pmt_t mb_make_protocol_class(gruel::pmt_t name, gruel::pmt_t incoming, gruel::pmt_t outgoing);
+pmt::pmt_t mb_make_protocol_class(pmt::pmt_t name, pmt::pmt_t incoming, pmt::pmt_t outgoing);
 
 // Accessors
-gruel::pmt_t mb_protocol_class_name(gruel::pmt_t pc);		//< return name of protocol class
-gruel::pmt_t mb_protocol_class_incoming(gruel::pmt_t pc);	//< return incoming message set
-gruel::pmt_t mb_protocol_class_outgoing(gruel::pmt_t pc);	//< return outgoing message set
+pmt::pmt_t mb_protocol_class_name(pmt::pmt_t pc);		//< return name of protocol class
+pmt::pmt_t mb_protocol_class_incoming(pmt::pmt_t pc);	//< return incoming message set
+pmt::pmt_t mb_protocol_class_outgoing(pmt::pmt_t pc);	//< return outgoing message set
 
-gruel::pmt_t mb_protocol_class_lookup(gruel::pmt_t name);	//< lookup an existing protocol class by name
+pmt::pmt_t mb_protocol_class_lookup(pmt::pmt_t name);	//< lookup an existing protocol class by name
 
 
 /*!

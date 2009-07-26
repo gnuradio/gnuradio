@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <sstream>
 
-using namespace gruel;
+using namespace pmt;
 
 void
 qa_pmt_prims::test_symbols()

@@ -29,13 +29,13 @@
 class mb_msg_accepter_smp : public mb_msg_accepter
 {
   mb_mblock_sptr	d_mb;
-  gruel::pmt_t		d_port_name;
+  pmt::pmt_t		d_port_name;
   
 public:
-  mb_msg_accepter_smp(mb_mblock_sptr mblock, gruel::pmt_t port_name);
+  mb_msg_accepter_smp(mb_mblock_sptr mblock, pmt::pmt_t port_name);
   ~mb_msg_accepter_smp();
 
-  void operator()(gruel::pmt_t signal, gruel::pmt_t data, gruel::pmt_t metadata, mb_pri_t priority);
+  void operator()(pmt::pmt_t signal, pmt::pmt_t data, pmt::pmt_t metadata, mb_pri_t priority);
 };
 
 

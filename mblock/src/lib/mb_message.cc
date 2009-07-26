@@ -26,6 +26,8 @@
 #include <stdio.h>
 #include <gruel/pmt_pool.h>
 
+using namespace pmt;
+
 static const int CACHE_LINE_SIZE = 64;	// good guess
 static const int MAX_MESSAGES =  1024;	// KLUDGE max number of messages in sys
 					//   0 -> no limit
@@ -54,14 +56,14 @@ mb_message::operator delete(void *p, size_t size)
 
 
 mb_message_sptr
-mb_make_message(gruel::pmt_t signal, gruel::pmt_t data, gruel::pmt_t metadata, mb_pri_t priority)
+mb_make_message(pmt_t signal, pmt_t data, pmt_t metadata, mb_pri_t priority)
 {
   return mb_message_sptr(new mb_message(signal, data, metadata, priority));
 }
 
-mb_message::mb_message(gruel::pmt_t signal, gruel::pmt_t data, gruel::pmt_t metadata, mb_pri_t priority)
+mb_message::mb_message(pmt_t signal, pmt_t data, pmt_t metadata, mb_pri_t priority)
   : d_signal(signal), d_data(data), d_metadata(metadata), d_priority(priority),
-    d_port_id(gruel::PMT_NIL)
+    d_port_id(PMT_NIL)
 {
 }
 

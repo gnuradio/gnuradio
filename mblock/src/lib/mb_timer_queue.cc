@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,17 +24,19 @@
 #endif
 #include <mb_timer_queue.h>
 
-static gruel::pmt_t
+using namespace pmt;
+
+static pmt_t
 make_handle()
 {
   static long counter = 0;
-  gruel::pmt_t n = gruel::pmt_from_long(counter++);
-  return gruel::pmt_list1(n);		// guaranteed to be a unique object
+  pmt_t n = pmt_from_long(counter++);
+  return pmt_list1(n);		// guaranteed to be a unique object
 }
 
 // one-shot constructor
 mb_timeout::mb_timeout(const mb_time &abs_time,
-		       gruel::pmt_t user_data, mb_msg_accepter_sptr accepter)
+		       pmt_t user_data, mb_msg_accepter_sptr accepter)
   : d_when(abs_time), d_is_periodic(false),
     d_user_data(user_data), d_handle(make_handle()), d_accepter(accepter)
 {
@@ -42,19 +44,19 @@ mb_timeout::mb_timeout(const mb_time &abs_time,
 
 // periodic constructor
 mb_timeout::mb_timeout(const mb_time &first_abs_time, const mb_time &delta_time,
-		       gruel::pmt_t user_data, mb_msg_accepter_sptr accepter)
+		       pmt_t user_data, mb_msg_accepter_sptr accepter)
   : d_when(first_abs_time), d_delta(delta_time), d_is_periodic(true),
     d_user_data(user_data), d_handle(make_handle()), d_accepter(accepter)
 {
 }
 
 void
-mb_timer_queue::cancel(gruel::pmt_t handle)
+mb_timer_queue::cancel(pmt_t handle)
 {
   container_type::iterator it;
 
   for (it = c.begin(); it != c.end();){
-    if (gruel::pmt_equal((*it)->handle(), handle))
+    if (pmt_equal((*it)->handle(), handle))
       it = c.erase(it);
     else
       ++it;

@@ -27,7 +27,7 @@
 #include "pmt_int.h"
 #include "gruel/pmt_serial_tags.h"
 
-namespace gruel {
+namespace pmt {
 
 static pmt_t parse_pair(std::streambuf &sb);
 
@@ -354,4 +354,4 @@ parse_pair(std::streambuf &sb)
   return val;
 }
 
-} /* namespace gruel */
+} /* namespace pmt */

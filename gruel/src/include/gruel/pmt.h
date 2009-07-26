@@ -39,7 +39,7 @@
  * exception that these objects are transparently reference counted.
  */
 
-namespace gruel {
+namespace pmt {
 
 /*!
  * \brief base class of all pmt types
@@ -677,6 +677,6 @@ pmt_t pmt_deserialize(std::streambuf &source);
 
 void pmt_dump_sizeof();	// debugging
 
-} /* namespace gruel */
+} /* namespace pmt */
 
 #endif /* INCLUDED_PMT_H */

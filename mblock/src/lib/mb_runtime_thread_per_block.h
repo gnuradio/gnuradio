@@ -38,7 +38,7 @@ public:
   omni_mutex		      d_workers_mutex;	// hold while manipulating d_workers
   std::vector<mb_worker*>     d_workers;
   bool			      d_shutdown_in_progress;
-  gruel::pmt_t		      d_shutdown_result;
+  pmt::pmt_t		      d_shutdown_result;
   mb_msg_queue		      d_msgq;
   mb_timer_queue	      d_timer_queue;
 
@@ -49,35 +49,35 @@ public:
 
   bool run(const std::string &instance_name,
 	   const std::string &class_name,
-	   gruel::pmt_t user_arg,
-	   gruel::pmt_t *result);
+	   pmt::pmt_t user_arg,
+	   pmt::pmt_t *result);
 
-  void request_shutdown(gruel::pmt_t result);
+  void request_shutdown(pmt::pmt_t result);
 
 protected:
   mb_mblock_sptr
   create_component(const std::string &instance_name,
 		   const std::string &class_name,
-		   gruel::pmt_t user_arg);
+		   pmt::pmt_t user_arg);
 
-  gruel::pmt_t
-  schedule_one_shot_timeout(const mb_time &abs_time, gruel::pmt_t user_data,
+  pmt::pmt_t
+  schedule_one_shot_timeout(const mb_time &abs_time, pmt::pmt_t user_data,
 			    mb_msg_accepter_sptr accepter);
 
-  gruel::pmt_t
+  pmt::pmt_t
   schedule_periodic_timeout(const mb_time &first_abs_time,
 			    const mb_time &delta_time,
-			    gruel::pmt_t user_data,
+			    pmt::pmt_t user_data,
 			    mb_msg_accepter_sptr accepter);
   void
-  cancel_timeout(gruel::pmt_t handle);
+  cancel_timeout(pmt::pmt_t handle);
 
 private:
   void reap_dead_workers();
   void run_loop();
 
-  void send_all_sys_msg(gruel::pmt_t signal, gruel::pmt_t data = gruel::PMT_F,
-			gruel::pmt_t metadata = gruel::PMT_F,
+  void send_all_sys_msg(pmt::pmt_t signal, pmt::pmt_t data = pmt::PMT_F,
+			pmt::pmt_t metadata = pmt::PMT_F,
 			mb_pri_t priority = MB_PRI_BEST);
 };
 

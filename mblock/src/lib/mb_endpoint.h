@@ -51,8 +51,8 @@ public:
   //! Does this endpoint represent the inside of a relay port
   bool inside_of_relay_port_p() const;
 
-  gruel::pmt_t	incoming_message_set() const;
-  gruel::pmt_t	outgoing_message_set() const;
+  pmt::pmt_t	incoming_message_set() const;
+  pmt::pmt_t	outgoing_message_set() const;
 };
 
 #endif /* INCLUDED_MB_ENDPOINT_H */

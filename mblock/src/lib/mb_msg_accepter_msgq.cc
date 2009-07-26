@@ -25,7 +25,9 @@
 #include <mb_msg_accepter_msgq.h>
 #include <mblock/message.h>
 
-gruel::pmt_t s_sys_port = gruel::pmt_intern("%sys-port");
+using namespace pmt;
+
+pmt_t s_sys_port = pmt_intern("%sys-port");
 
 mb_msg_accepter_msgq::mb_msg_accepter_msgq(mb_msg_queue *msgq)
   : d_msgq(msgq)
@@ -37,8 +39,8 @@ mb_msg_accepter_msgq::~mb_msg_accepter_msgq()
 }
 
 void
-mb_msg_accepter_msgq::operator()(gruel::pmt_t signal, gruel::pmt_t data,
-				 gruel::pmt_t metadata, mb_pri_t priority)
+mb_msg_accepter_msgq::operator()(pmt_t signal, pmt_t data,
+				 pmt_t metadata, mb_pri_t priority)
 {
   mb_message_sptr msg = mb_make_message(signal, data, metadata, priority);
   msg->set_port_id(s_sys_port);

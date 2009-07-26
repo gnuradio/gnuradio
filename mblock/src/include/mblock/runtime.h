@@ -59,8 +59,8 @@ public:
    */
   virtual bool run(const std::string &instance_name,
 		   const std::string &class_name,
-		   gruel::pmt_t user_arg,
-		   gruel::pmt_t *result = 0) = 0;
+		   pmt::pmt_t user_arg,
+		   pmt::pmt_t *result = 0) = 0;
 
   // QA only...
   mb_mblock_sptr top() { return d_top; }

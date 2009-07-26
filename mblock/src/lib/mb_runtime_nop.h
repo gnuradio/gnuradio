@@ -39,14 +39,14 @@ public:
 
   bool run(const std::string &instance_name,
 	   const std::string &class_name,
-	   gruel::pmt_t user_arg,
-	   gruel::pmt_t *result);
+	   pmt::pmt_t user_arg,
+	   pmt::pmt_t *result);
 
 protected:
   mb_mblock_sptr
   create_component(const std::string &instance_name,
 		   const std::string &class_name,
-		   gruel::pmt_t user_arg);
+		   pmt::pmt_t user_arg);
 };
 
 #endif /* INCLUDED_MB_RUNTIME_NOP_H */

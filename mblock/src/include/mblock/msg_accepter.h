@@ -42,7 +42,7 @@ public:
   mb_msg_accepter(){};
   virtual ~mb_msg_accepter();
 
-  virtual void operator()(gruel::pmt_t signal, gruel::pmt_t data, gruel::pmt_t metadata, mb_pri_t priority) = 0;
+  virtual void operator()(pmt::pmt_t signal, pmt::pmt_t data, pmt::pmt_t metadata, mb_pri_t priority) = 0;
 };
 
 #endif /* INCLUDED_MB_MSG_ACCEPTER_H */

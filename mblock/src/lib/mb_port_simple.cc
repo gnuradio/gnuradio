@@ -31,6 +31,7 @@
 #include <assert.h>
 #include <mbi_runtime_lock.h>
 
+using namespace pmt;
 
 mb_port_simple::mb_port_simple(mb_mblock *mblock,
 			       const std::string &port_name,
@@ -48,7 +49,7 @@ mb_port_simple::~mb_port_simple()
 }
 
 void
-mb_port_simple::send(gruel::pmt_t signal, gruel::pmt_t data, gruel::pmt_t metadata, mb_pri_t priority)
+mb_port_simple::send(pmt_t signal, pmt_t data, pmt_t metadata, mb_pri_t priority)
 {
   if (port_type() == mb_port::RELAY)  // Can't send directly to a RELAY port
     throw mbe_invalid_port_type(mblock(), mblock()->instance_name(), port_name());

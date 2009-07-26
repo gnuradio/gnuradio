@@ -28,7 +28,9 @@
 #include <mb_mblock_impl.h>
 #include <mblock/message.h>
 
-mb_msg_accepter_smp::mb_msg_accepter_smp(mb_mblock_sptr mblock, gruel::pmt_t port_name)
+using namespace pmt;
+
+mb_msg_accepter_smp::mb_msg_accepter_smp(mb_mblock_sptr mblock, pmt_t port_name)
   : d_mb(mblock), d_port_name(port_name)
 {
 }
@@ -39,8 +41,8 @@ mb_msg_accepter_smp::~mb_msg_accepter_smp()
 }
 
 void
-mb_msg_accepter_smp::operator()(gruel::pmt_t signal, gruel::pmt_t data,
-				gruel::pmt_t metadata, mb_pri_t priority)
+mb_msg_accepter_smp::operator()(pmt_t signal, pmt_t data,
+				pmt_t metadata, mb_pri_t priority)
 {
   mb_message_sptr msg = mb_make_message(signal, data, metadata, priority);
   msg->set_port_id(d_port_name);

@@ -37,7 +37,7 @@
 #include <mblock/class_registry.h>
 #include <stdio.h>
 
-using namespace gruel;
+using namespace pmt;
 
 static pmt_t s_cs = pmt_intern("cs");
 static pmt_t s_debug = pmt_intern("debug");

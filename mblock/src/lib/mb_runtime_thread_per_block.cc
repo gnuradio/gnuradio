@@ -32,21 +32,22 @@
 #include <iostream>
 #include <mb_msg_accepter_msgq.h>
 
+using namespace pmt;
 
-static gruel::pmt_t s_halt = gruel::pmt_intern("%halt");
-static gruel::pmt_t s_sys_port = gruel::pmt_intern("%sys-port");
-static gruel::pmt_t s_shutdown = gruel::pmt_intern("%shutdown");
-static gruel::pmt_t s_request_shutdown = gruel::pmt_intern("%request-shutdown");
-static gruel::pmt_t s_worker_state_changed = gruel::pmt_intern("%worker-state-changed");
-static gruel::pmt_t s_timeout = gruel::pmt_intern("%timeout");
-static gruel::pmt_t s_request_timeout = gruel::pmt_intern("%request-timeout");
-static gruel::pmt_t s_cancel_timeout = gruel::pmt_intern("%cancel-timeout");
-static gruel::pmt_t s_send_halt = gruel::pmt_intern("send-halt");
-static gruel::pmt_t s_exit_now = gruel::pmt_intern("exit-now");
+static pmt_t s_halt = pmt_intern("%halt");
+static pmt_t s_sys_port = pmt_intern("%sys-port");
+static pmt_t s_shutdown = pmt_intern("%shutdown");
+static pmt_t s_request_shutdown = pmt_intern("%request-shutdown");
+static pmt_t s_worker_state_changed = pmt_intern("%worker-state-changed");
+static pmt_t s_timeout = pmt_intern("%timeout");
+static pmt_t s_request_timeout = pmt_intern("%request-timeout");
+static pmt_t s_cancel_timeout = pmt_intern("%cancel-timeout");
+static pmt_t s_send_halt = pmt_intern("send-halt");
+static pmt_t s_exit_now = pmt_intern("exit-now");
 
 static void
-send_sys_msg(mb_msg_queue &msgq, gruel::pmt_t signal,
-	     gruel::pmt_t data = gruel::PMT_F, gruel::pmt_t metadata = gruel::PMT_F,
+send_sys_msg(mb_msg_queue &msgq, pmt_t signal,
+	     pmt_t data = PMT_F, pmt_t metadata = PMT_F,
 	     mb_pri_t priority = MB_PRI_BEST)
 {
   mb_message_sptr msg = mb_make_message(signal, data, metadata, priority);
@@ -57,7 +58,7 @@ send_sys_msg(mb_msg_queue &msgq, gruel::pmt_t signal,
 
 mb_runtime_thread_per_block::mb_runtime_thread_per_block()
   : d_shutdown_in_progress(false),
-    d_shutdown_result(gruel::PMT_T)
+    d_shutdown_result(PMT_T)
 {
   d_accepter = mb_msg_accepter_sptr(new mb_msg_accepter_msgq(&d_msgq));
 }
@@ -72,22 +73,22 @@ mb_runtime_thread_per_block::~mb_runtime_thread_per_block()
 }
 
 void
-mb_runtime_thread_per_block::request_shutdown(gruel::pmt_t result)
+mb_runtime_thread_per_block::request_shutdown(pmt_t result)
 {
-  (*accepter())(s_request_shutdown, result, gruel::PMT_F, MB_PRI_BEST);
+  (*accepter())(s_request_shutdown, result, PMT_F, MB_PRI_BEST);
 }
 
 bool
 mb_runtime_thread_per_block::run(const std::string &instance_name,
 				 const std::string &class_name,
-				 gruel::pmt_t user_arg, gruel::pmt_t *result)
+				 pmt_t user_arg, pmt_t *result)
 {
   if (result)		// set it to something now, in case we throw
-    *result = gruel::PMT_F;
+    *result = PMT_F;
   
   // reset the shutdown state
   d_shutdown_in_progress = false;
-  d_shutdown_result = gruel::PMT_T;
+  d_shutdown_result = PMT_T;
 
   assert(d_workers.empty());
 
@@ -144,15 +145,15 @@ mb_runtime_thread_per_block::run_loop()
       }
     }
 
-    gruel::pmt_t signal = msg->signal();
+    pmt_t signal = msg->signal();
 
-    if (gruel::pmt_eq(signal, s_worker_state_changed)){	// %worker-state-changed
+    if (pmt_eq(signal, s_worker_state_changed)){	// %worker-state-changed
       omni_mutex_lock l1(d_workers_mutex);
       reap_dead_workers();
       if (d_workers.empty())	// no work left to do...
 	return;
     }
-    else if (gruel::pmt_eq(signal, s_request_shutdown)){	// %request-shutdown
+    else if (pmt_eq(signal, s_request_shutdown)){	// %request-shutdown
       if (!d_shutdown_in_progress){
 	d_shutdown_in_progress = true;
 	d_shutdown_result = msg->data();
@@ -162,23 +163,23 @@ mb_runtime_thread_per_block::run_loop()
 	send_all_sys_msg(s_shutdown);
       }
     }
-    else if (gruel::pmt_eq(signal, s_request_timeout)){	// %request-timeout
+    else if (pmt_eq(signal, s_request_timeout)){	// %request-timeout
       mb_timeout_sptr to =
-	boost::any_cast<mb_timeout_sptr>(gruel::pmt_any_ref(msg->data()));
+	boost::any_cast<mb_timeout_sptr>(pmt_any_ref(msg->data()));
       d_timer_queue.push(to);
     }
-    else if (gruel::pmt_eq(signal, s_cancel_timeout)){		// %cancel-timeout
+    else if (pmt_eq(signal, s_cancel_timeout)){		// %cancel-timeout
       d_timer_queue.cancel(msg->data());
     }
-    else if (gruel::pmt_eq(signal, s_timeout)
-	     && gruel::pmt_eq(msg->data(), s_send_halt)){	// %timeout, send-halt
+    else if (pmt_eq(signal, s_timeout)
+	     && pmt_eq(msg->data(), s_send_halt)){	// %timeout, send-halt
 
       // schedule another timeout for ourselves...
       schedule_one_shot_timeout(mb_time::time(0.100), s_exit_now, d_accepter);
       send_all_sys_msg(s_halt);
     }
-    else if (gruel::pmt_eq(signal, s_timeout)
-	     && gruel::pmt_eq(msg->data(), s_exit_now)){	// %timeout, exit-now
+    else if (pmt_eq(signal, s_timeout)
+	     && pmt_eq(msg->data(), s_exit_now)){	// %timeout, exit-now
 
       // We only get here if we've sent all workers %shutdown followed
       // by %halt, and one or more of them is still alive.  They must
@@ -234,7 +235,7 @@ mb_runtime_thread_per_block::reap_dead_workers()
 mb_mblock_sptr
 mb_runtime_thread_per_block::create_component(const std::string &instance_name,
 					      const std::string &class_name,
-					      gruel::pmt_t user_arg)
+					      pmt_t user_arg)
 {
   mb_mblock_maker_t maker;
   if (!mb_class_registry::lookup_maker(class_name, &maker))
@@ -293,9 +294,9 @@ mb_runtime_thread_per_block::create_component(const std::string &instance_name,
 }
 
 void
-mb_runtime_thread_per_block::send_all_sys_msg(gruel::pmt_t signal,
-					      gruel::pmt_t data,
-					      gruel::pmt_t metadata,
+mb_runtime_thread_per_block::send_all_sys_msg(pmt_t signal,
+					      pmt_t data,
+					      pmt_t metadata,
 					      mb_pri_t priority)
 {
   omni_mutex_lock l1(d_workers_mutex);
@@ -310,14 +311,14 @@ mb_runtime_thread_per_block::send_all_sys_msg(gruel::pmt_t signal,
 // Can be invoked from any thread.
 // Sends a message to the runtime.
 //
-gruel::pmt_t
+pmt_t
 mb_runtime_thread_per_block::schedule_one_shot_timeout
   (const mb_time &abs_time,
-   gruel::pmt_t user_data,
+   pmt_t user_data,
    mb_msg_accepter_sptr accepter)
 {
   mb_timeout_sptr to(new mb_timeout(abs_time, user_data, accepter));
-  (*d_accepter)(s_request_timeout, gruel::pmt_make_any(to), gruel::PMT_F, MB_PRI_BEST);
+  (*d_accepter)(s_request_timeout, pmt_make_any(to), PMT_F, MB_PRI_BEST);
   return to->handle();
 }
 
@@ -325,16 +326,16 @@ mb_runtime_thread_per_block::schedule_one_shot_timeout
 // Can be invoked from any thread.
 // Sends a message to the runtime.
 //
-gruel::pmt_t
+pmt_t
 mb_runtime_thread_per_block::schedule_periodic_timeout
   (const mb_time &first_abs_time,
    const mb_time &delta_time,
-   gruel::pmt_t user_data,
+   pmt_t user_data,
    mb_msg_accepter_sptr accepter)
 {
   mb_timeout_sptr to(new mb_timeout(first_abs_time, delta_time,
 				    user_data, accepter));
-  (*d_accepter)(s_request_timeout, gruel::pmt_make_any(to), gruel::PMT_F, MB_PRI_BEST);
+  (*d_accepter)(s_request_timeout, pmt_make_any(to), PMT_F, MB_PRI_BEST);
   return to->handle();
 }
 
@@ -343,7 +344,7 @@ mb_runtime_thread_per_block::schedule_periodic_timeout
 // Sends a message to the runtime.
 //
 void
-mb_runtime_thread_per_block::cancel_timeout(gruel::pmt_t handle)
+mb_runtime_thread_per_block::cancel_timeout(pmt_t handle)
 {
-  (*d_accepter)(s_cancel_timeout, handle, gruel::PMT_F, MB_PRI_BEST);
+  (*d_accepter)(s_cancel_timeout, handle, PMT_F, MB_PRI_BEST);
 }
