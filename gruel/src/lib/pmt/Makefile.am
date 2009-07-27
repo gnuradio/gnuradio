@@ -64,6 +64,9 @@ libpmt_la_LIBADD = 			\
 	$(BOOST_THREAD_LIB) 		\
 	-lstdc++
 
+libpmt_la_LDFLAGS =			\
+	$(BOOST_LDFLAGS)
+
 noinst_HEADERS = \
 	$(GENERATED_H)			\
 	pmt_int.h			\
