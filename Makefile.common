@@ -81,10 +81,6 @@ GRUEL_LA = @gruel_LA@
 USRP_INCLUDES = @usrp_INCLUDES@
 USRP_LA = @usrp_LA@
 
-# How to link the PMT library from inside the tree
-PMT_INCLUDES = @pmt_INCLUDES@
-PMT_LA = @pmt_LA@
-
 # How to link the mblock library from inside the tree
 MBLOCK_INCLUDES = @mblock_INCLUDES@
 MBLOCK_LA = @mblock_LA@
