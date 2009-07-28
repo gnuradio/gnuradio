@@ -24,6 +24,7 @@
 #include <usrp/usrp_dbid.h>
 #include <usrp/db_basic.h>
 #include <usrp/db_tv_rx.h>
+#include <usrp/db_tv_rx_mimo.h>
 #include <usrp/db_dbs_rx.h>
 #include <usrp/db_flexrf.h>
 #include <usrp/db_flexrf_mimo.h>
@@ -71,6 +72,15 @@ instantiate_dbs(int dbid, usrp_basic_sptr usrp, int which_side)
     break;
   case(USRP_DBID_TV_RX_REV_3):
     db.push_back(db_base_sptr(new db_tv_rx(usrp, which_side, 44e6, 20e6)));
+    break;
+  case(USRP_DBID_TV_RX_MIMO):
+    db.push_back(db_base_sptr(new db_tv_rx_mimo(usrp, which_side, 43.75e6, 5.75e6)));
+    break;
+  case(USRP_DBID_TV_RX_REV_2_MIMO):
+    db.push_back(db_base_sptr(new db_tv_rx_mimo(usrp, which_side, 44e6, 20e6)));
+    break;
+  case(USRP_DBID_TV_RX_REV_3_MIMO):
+    db.push_back(db_base_sptr(new db_tv_rx_mimo(usrp, which_side, 44e6, 20e6)));
     break;
 
   case(USRP_DBID_FLEX_2400_TX):

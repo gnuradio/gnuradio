@@ -18,7 +18,12 @@ class input:
         self.src = usrp.source_c( )
         self.subdev = usrp.pick_subdev( self.src,
                                         (usrp_dbid.BASIC_RX,
-                                         usrp_dbid.TV_RX))
+                                         usrp_dbid.TV_RX,
+                                         usrp_dbid.TV_RX_REV_2,
+                                         usrp_dbid.TV_RX_REV_3,
+                                         usrp_dbid.TV_RX_MIMO,
+                                         usrp_dbid.TV_RX_REV_2_MIMO,
+                                         usrp_dbid.TV_RX_REV_3_MIMO))
 
         print self.subdev
 

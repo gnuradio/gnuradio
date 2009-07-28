@@ -32,6 +32,7 @@ usrpinclude_HEADERS = \
 	db_flexrf.h \
 	db_flexrf_mimo.h \
 	db_tv_rx.h \
+ 	db_tv_rx_mimo.h	\
 	db_xcvr2450.h \
 	usrp_basic.h \
 	usrp_bytesex.h \

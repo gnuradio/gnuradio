@@ -292,6 +292,10 @@ usrp_source_base::pick_rx_subdevice()
     USRP_DBID_FLEX_2400_RX,
     USRP_DBID_TV_RX,
     USRP_DBID_TV_RX_REV_2,
+    USRP_DBID_TV_RX_REV_3,
+    USRP_DBID_TV_RX_MIMO,
+    USRP_DBID_TV_RX_REV_2_MIMO,
+    USRP_DBID_TV_RX_REV_3_MIMO,
     USRP_DBID_DBS_RX,
     USRP_DBID_BASIC_RX
   };

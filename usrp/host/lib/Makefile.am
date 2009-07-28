@@ -110,6 +110,7 @@ libusrp_la_common_SOURCES = 		\
 	db_base.cc			\
 	db_basic.cc			\
 	db_tv_rx.cc			\
+	db_tv_rx_mimo.cc			\
 	db_flexrf.cc			\
 	db_flexrf_mimo.cc		\
 	db_dbs_rx.cc			\

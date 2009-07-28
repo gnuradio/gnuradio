@@ -44,7 +44,10 @@ def pick_subdevice(u):
                                 usrp_dbid.LF_RX,
                                 usrp_dbid.TV_RX,
                                 usrp_dbid.TV_RX_REV_2,
-				usrp_dbid.TV_RX_REV_3))
+				usrp_dbid.TV_RX_REV_3,
+				usrp_dbid.TV_RX_MIMO,
+                                usrp_dbid.TV_RX_REV_2_MIMO,
+				usrp_dbid.TV_RX_REV_3_MIMO))
 
 
 class wfm_rx_block (stdgui2.std_top_block):

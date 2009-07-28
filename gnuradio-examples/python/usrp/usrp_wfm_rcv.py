@@ -43,6 +43,9 @@ def pick_subdevice(u):
     return usrp.pick_subdev(u, (usrp_dbid.TV_RX,
                                 usrp_dbid.TV_RX_REV_2,
 				usrp_dbid.TV_RX_REV_3,
+				usrp_dbid.TV_RX_MIMO,
+                                usrp_dbid.TV_RX_REV_2_MIMO,
+				usrp_dbid.TV_RX_REV_3_MIMO,
                                 usrp_dbid.BASIC_RX))
 
 
@@ -97,7 +100,11 @@ class wfm_rx_block (stdgui2.std_top_block):
         if not (dbid == usrp_dbid.BASIC_RX or
                 dbid == usrp_dbid.TV_RX or
                 dbid == usrp_dbid.TV_RX_REV_2 or
-                dbid == usrp_dbid.TV_RX_REV_3):
+                dbid == usrp_dbid.TV_RX_REV_3 or
+                dbid == usrp_dbid.TV_RX_MIMO or
+                dbid == usrp_dbid.TV_RX_REV_2_MIMO or
+                dbid == usrp_dbid.TV_RX_REV_3_MIMO
+):
             print "This daughterboard does not cover the required frequency range"
             print "for this application.  Please use a BasicRX or TVRX daughterboard."
             raw_input("Press ENTER to continue anyway, or Ctrl-C to exit.")
