@@ -177,10 +177,10 @@ timing/time_receiver.v \
 timing/time_sender.v \
 timing/time_sync.v \
 timing/timer.v \
-top/u2_core/u2_core.v \
 top/u2_rev3/u2_rev3.ucf \
 top/u2_rev3/u2_rev3.v \
-top/u2_rev3_iad/dsp_core_rx.v
+top/u2_rev3_2rx_iad/u2_core.v \
+top/u2_rev3_2rx_iad/dsp_core_rx.v
 
 ##################################################
 # Process Properties

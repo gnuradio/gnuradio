@@ -16,6 +16,8 @@ module impulse
    );
 
    reg [13:0] adc_a_int = 0;
+   reg [13:0] adc_b_int = 0;
+   
    reg [15:0] count;
 
    localparam ST_ZERO = 0;
@@ -26,6 +28,7 @@ module impulse
      if (rst | ~ena)
        begin
 	  adc_a_int <= 0;
+	  adc_b_int <= 0;
 	  count <= 0;
 	  state <= ST_ZERO;
        end
@@ -35,6 +38,7 @@ module impulse
 	   if (count == zero_len)
 	     begin
 		adc_a_int <= amplitude;
+		adc_b_int <= amplitude >> 2;
 		state <= ST_HIGH;
 		count <= 0;
 	     end
@@ -45,6 +49,7 @@ module impulse
 	   if (count == impulse_len)
 	     begin
 		adc_a_int <= 0;
+		adc_b_int <= 0;
 		state <= ST_ZERO;
 		count <= 0;
 	     end
@@ -54,9 +59,9 @@ module impulse
        endcase // case (state)
 
    assign adc_a = adc_a_int + dc_offset_a;
+   assign adc_b = adc_b_int + dc_offset_b;
 
    // Ignore for now
-   assign adc_b = dc_offset_b;
    assign adc_ovf_a = 0;
    assign adc_ovf_b = 0;
 
