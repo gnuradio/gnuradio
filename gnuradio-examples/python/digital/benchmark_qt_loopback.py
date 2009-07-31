@@ -279,7 +279,7 @@ class my_top_block(gr.top_block):
     def get_noise_voltage(self, SNR):
         snr = 10.0**(SNR/10.0)        
         power_in_signal = abs(self._tx_amplitude)**2
-        noise_power = power_in_signal/SNR
+        noise_power = power_in_signal/snr
         noise_voltage = math.sqrt(noise_power)
         return noise_voltage
 
