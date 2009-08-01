@@ -28,6 +28,9 @@ gruelincludedir = $(prefix)/include/gruel
 
 gruelinclude_HEADERS = \
 	$(BUILT_SOURCES) \
+	msg_accepter.h \
+	msg_accepter_msgq.h \
+	msg_queue.h \
 	pmt.h \
 	pmt_pool.h \
 	pmt_serial_tags.h \

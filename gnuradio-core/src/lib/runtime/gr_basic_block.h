@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2008 Free Software Foundation, Inc.
+ * Copyright 2006,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,20 +26,21 @@
 #include <gr_runtime_types.h>
 #include <gr_sptr_magic.h>
 #include <boost/enable_shared_from_this.hpp>
+#include <gruel/msg_accepter_msgq.h>
 #include <string>
 
 /*!
  * \brief The abstract base class for all signal processing blocks.
  * \ingroup internal
  *
- * Basic blocks are the bare abstraction of an entity that has a name
- * and a set of inputs and outputs.  These are never instantiated
+ * Basic blocks are the bare abstraction of an entity that has a name,
+ * a set of inputs and outputs, and a message queue.  These are never instantiated
  * directly; rather, this is the abstract parent class of both gr_hier_block,
  * which is a recursive container, and gr_block, which implements actual
  * signal processing functions.
  */
 
-class gr_basic_block : public boost::enable_shared_from_this<gr_basic_block>
+class gr_basic_block : gruel::msg_accepter_msgq, public boost::enable_shared_from_this<gr_basic_block>
 {
 protected:
     friend class gr_flowgraph;
@@ -96,6 +97,17 @@ public:
      * and output gr_io_signatures.
      */
     virtual bool check_topology(int ninputs, int noutputs) { return true; }
+
+    /*!
+     * \brief Block message handler.
+     * 
+     * \param msg  Arbitrary message encapsulated as pmt::pmt_t
+     *
+     * This function is called by the runtime system whenever there are
+     * messages in its queue.  Blocks should override this to receive
+     * messages; the default behavior is to drop them on the floor.
+     */
+    virtual void handle_msg(pmt::pmt_t msg) { };
 };
 
 inline bool operator<(gr_basic_block_sptr lhs, gr_basic_block_sptr rhs)

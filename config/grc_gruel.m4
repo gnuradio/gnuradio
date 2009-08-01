@@ -43,6 +43,7 @@ AC_DEFUN([GRC_GRUEL],[
 	gruel/src/include/gruel/inet.h \
         gruel/src/lib/Makefile \
 	gruel/src/lib/pmt/Makefile \
+	gruel/src/lib/msg/Makefile \
 	gruel/src/scheme/Makefile \
 	gruel/src/scheme/gnuradio/Makefile \
     ])
