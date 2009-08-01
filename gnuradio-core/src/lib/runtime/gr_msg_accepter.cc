@@ -19,31 +19,26 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef INCLUDED_MSG_ACCEPTER_MSGQ_H
-#define INCLUDED_MSG_ACCEPTER_MSGQ_H
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#include <gruel/msg_accepter.h>
-#include <gruel/msg_queue.h>
+#include <gr_msg_accepter.h>
 
-namespace gruel {
+using namespace pmt;
 
-  /*!
-   * \brief Concrete class that accepts messages and inserts them into a message queue.
-   */
-  class msg_accepter_msgq : public msg_accepter 
-  {
-  protected:
-    msg_queue_sptr d_msg_queue;
-    
-  public:
-    msg_accepter_msgq(msg_queue_sptr msgq);
-    ~msg_accepter_msgq();
+gr_msg_accepter::gr_msg_accepter(gruel::msg_queue_sptr msgq)
+  : gruel::msg_accepter_msgq(msgq)
+{
+}
 
-    virtual void post(pmt::pmt_t msg);
+gr_msg_accepter::~gr_msg_accepter()
+{
+  // NOP, required as virtual destructor
+}
 
-    msg_queue_sptr msg_queue() const { return d_msg_queue; }
-  };
-
-} /* namespace gruel */
-
-#endif /* INCLUDED_MSG_ACCEPTER_MSGQ_H */
+void
+gr_msg_accepter::post(pmt_t msg)
+{
+  d_msg_queue->insert_tail(msg);
+}

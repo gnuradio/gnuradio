@@ -19,31 +19,22 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef INCLUDED_MSG_ACCEPTER_MSGQ_H
-#define INCLUDED_MSG_ACCEPTER_MSGQ_H
+#ifndef INCLUDED_GR_MSG_ACCEPTER_H
+#define INCLUDED_GR_MSG_ACCEPTER_H
 
-#include <gruel/msg_accepter.h>
-#include <gruel/msg_queue.h>
+#include <gruel/msg_accepter_msgq.h>
 
-namespace gruel {
+/*!
+ * \brief Accepts messages and inserts them into a message queue, then notifies
+ * subclass gr_basic_block there is a message pending.
+ */
+class gr_msg_accepter : gruel::msg_accepter_msgq
+{
+public:
+  gr_msg_accepter(gruel::msg_queue_sptr msgq);
+  ~gr_msg_accepter();
+  
+  void post(pmt::pmt_t msg);
+};
 
-  /*!
-   * \brief Concrete class that accepts messages and inserts them into a message queue.
-   */
-  class msg_accepter_msgq : public msg_accepter 
-  {
-  protected:
-    msg_queue_sptr d_msg_queue;
-    
-  public:
-    msg_accepter_msgq(msg_queue_sptr msgq);
-    ~msg_accepter_msgq();
-
-    virtual void post(pmt::pmt_t msg);
-
-    msg_queue_sptr msg_queue() const { return d_msg_queue; }
-  };
-
-} /* namespace gruel */
-
-#endif /* INCLUDED_MSG_ACCEPTER_MSGQ_H */
+#endif /* INCLUDED_GR_MSG_ACCEPTER_H */
