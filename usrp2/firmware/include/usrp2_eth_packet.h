@@ -147,10 +147,11 @@ typedef struct {
  *   ethernet header + transport header + fixed header + maximum number of samples.
  *   sizeof(u2_eth_samples_t) == 1512
  *   (payload is 1498 bytes, two bytes shorter than 1500 byte MTU)
+ *   (sample numbers are made even to force pairwise alignment in the interleaved case)
  */
 
-#define U2_MAX_SAMPLES	371
-#define	U2_MIN_SAMPLES    9
+#define U2_MAX_SAMPLES	370
+#define	U2_MIN_SAMPLES   10
 
 typedef struct {
   u2_eth_packet_t	hdrs;
