@@ -24,6 +24,8 @@
 #endif
 
 #include <gr_msg_accepter.h>
+#include <gr_block.h>
+#include <gr_block_detail.h>
 
 using namespace pmt;
 
@@ -40,5 +42,15 @@ gr_msg_accepter::~gr_msg_accepter()
 void
 gr_msg_accepter::post(pmt_t msg)
 {
-  d_msg_queue->insert_tail(msg);
+  // Let parent class do whatever it would have
+  gruel::msg_accepter_msgq::post(msg);
+
+  // Notify this block's scheduler a message is pending
+  gr_block *p = dynamic_cast<gr_block *>(this);
+  if (p)  
+    p->detail()->d_tpb.notify_msg();
+  else {
+    // got here somehow with a non-gr_block
+    throw std::runtime_error("gr_msg_accepter::post() - invalid derived class");
+  }
 }
