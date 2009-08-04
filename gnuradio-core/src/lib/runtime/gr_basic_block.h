@@ -40,7 +40,7 @@
  * signal processing functions.
  */
 
-class gr_basic_block : gr_msg_accepter, public boost::enable_shared_from_this<gr_basic_block>
+class gr_basic_block : public gr_msg_accepter, public boost::enable_shared_from_this<gr_basic_block>
 {
 protected:
     friend class gr_flowgraph;

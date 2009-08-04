@@ -35,10 +35,9 @@ struct gr_tpb_detail {
   gruel::condition_variable	input_cond;
   bool				output_changed;
   gruel::condition_variable	output_cond;
-  bool                          msg_pending;
 
   gr_tpb_detail()
-    : input_changed(false), output_changed(false), msg_pending(false) { }
+    : input_changed(false), output_changed(false) { }
 
   //! Called by us to tell all our upstream blocks that their output may have changed.
   void notify_upstream(gr_block_detail *d);
@@ -61,7 +60,8 @@ struct gr_tpb_detail {
   void notify_msg()
   {
     gruel::scoped_lock guard(mutex);
-    msg_pending = true;
+
+    // Just wake up thread if BLKD_IN or BLKD_OUT
     input_cond.notify_one();
     output_cond.notify_one();
   }

@@ -45,12 +45,12 @@ gr_msg_accepter::post(pmt_t msg)
   // Let parent class do whatever it would have
   gruel::msg_accepter_msgq::post(msg);
 
-  // Notify this block's scheduler a message is pending
+  // Notify derived class, handled case by case
   gr_block *p = dynamic_cast<gr_block *>(this);
-  if (p)  
+  if (p) { 
     p->detail()->d_tpb.notify_msg();
-  else {
-    // got here somehow with a non-gr_block
-    throw std::runtime_error("gr_msg_accepter::post() - invalid derived class");
+    return;
   }
+
+  // Test for other derived classes and handle
 }

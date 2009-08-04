@@ -28,7 +28,7 @@
  * \brief Accepts messages and inserts them into a message queue, then notifies
  * subclass gr_basic_block there is a message pending.
  */
-class gr_msg_accepter : gruel::msg_accepter_msgq
+class gr_msg_accepter : public gruel::msg_accepter_msgq
 {
 public:
   gr_msg_accepter(gruel::msg_queue_sptr msgq);
