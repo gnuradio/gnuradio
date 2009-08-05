@@ -814,8 +814,10 @@ gr_remez (int order,
   if (arg_bands[0] < 0 || arg_bands[arg_bands.size () - 1] > 1)
     punt ("gr_remez: band edges must be in the range [0,1]");
 
+  // Divide by 2 to fit with the implementation that uses a
+  // sample rate of [0, 0.5] instead of [0, 1.0]
   for (int i = 0; i < 2 * numbands; i++)
-    bands[i] = arg_bands[i] / 2;		// FIXME why / 2?
+    bands[i] = arg_bands[i] / 2;
 
   LOCAL_BUFFER (double, response, numbands * 2);
   if (arg_response.size () != arg_bands.size ())
