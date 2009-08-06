@@ -116,4 +116,18 @@ m4_define([GR_STANDALONE],
 
   PKG_CHECK_MODULES(GNURADIO_CORE, gnuradio-core >= 3)
   LIBS="$LIBS $GNURADIO_CORE_LIBS"
+
+  dnl Allow user to choose whether to generate SWIG/Python 
+  dnl Default is enabled
+  AC_ARG_ENABLE([python],
+    [AS_HELP_STRING([--enable-python],
+      [generate SWIG/Python components (default is yes)])],
+    [case "${enableval}" in
+       yes) enable_python=yes ;;
+       no) enable_python=no ;;
+       *) AC_MSG_ERROR([bad value ${enableval} for --enable-python]) ;;
+     esac],
+    [enable_python=yes]  
+  )
+  AM_CONDITIONAL([PYTHON], [test x$enable_python = xyes])
 ])
