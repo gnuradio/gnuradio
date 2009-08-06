@@ -31,6 +31,7 @@ class gr_message_source;
 typedef boost::shared_ptr<gr_message_source> gr_message_source_sptr;
 
 gr_message_source_sptr gr_make_message_source (size_t itemsize, int msgq_limit=0);
+gr_message_source_sptr gr_make_message_source (size_t itemsize, gr_msg_queue_sptr msgq);
 
 /*!
  * \brief Turn received messages into a stream
@@ -47,9 +48,12 @@ class gr_message_source : public gr_sync_block
 
   friend gr_message_source_sptr
   gr_make_message_source(size_t itemsize, int msgq_limit);
+  friend gr_message_source_sptr
+  gr_make_message_source(size_t itemsize, gr_msg_queue_sptr msgq);
 
  protected:
   gr_message_source (size_t itemsize, int msgq_limit);
+  gr_message_source (size_t itemsize, gr_msg_queue_sptr msgq);
 
  public:
   ~gr_message_source ();

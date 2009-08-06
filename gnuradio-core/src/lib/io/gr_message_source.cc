@@ -43,11 +43,26 @@ gr_make_message_source(size_t itemsize, int msgq_limit)
   return gr_message_source_sptr(new gr_message_source(itemsize, msgq_limit));
 }
 
+// public constructor that takes existing message queue
+gr_message_source_sptr
+gr_make_message_source(size_t itemsize, gr_msg_queue_sptr msgq)
+{
+  return gr_message_source_sptr(new gr_message_source(itemsize, msgq));
+}
+
 gr_message_source::gr_message_source (size_t itemsize, int msgq_limit)
   : gr_sync_block("message_source",
 		  gr_make_io_signature(0, 0, 0),
 		  gr_make_io_signature(1, 1, itemsize)),
     d_itemsize(itemsize), d_msgq(gr_make_msg_queue(msgq_limit)), d_msg_offset(0), d_eof(false)
+{
+}
+
+gr_message_source::gr_message_source (size_t itemsize, gr_msg_queue_sptr msgq)
+  : gr_sync_block("message_source",
+		  gr_make_io_signature(0, 0, 0),
+		  gr_make_io_signature(1, 1, itemsize)),
+    d_itemsize(itemsize), d_msgq(msgq), d_msg_offset(0), d_eof(false)
 {
 }
 

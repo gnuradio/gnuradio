@@ -99,6 +99,7 @@ class test_message (gr_unittest.TestCase):
         self.assertEquals(input_data, dst.data())
 
     def test_301(self):
+        # Use itemsize, limit constructor
         src = gr.message_source(gr.sizeof_char)
         dst = gr.vector_sink_b()
 	tb = gr.top_block()
@@ -111,6 +112,20 @@ class test_message (gr_unittest.TestCase):
         tb.run()
         self.assertEquals(tuple(map(ord, '0123456789')), dst.data())
         
+    def test_302(self):
+        # Use itemsize, msgq constructor
+        msgq = gr.msg_queue()
+        src = gr.message_source(gr.sizeof_char, msgq)
+        dst = gr.vector_sink_b()
+	tb = gr.top_block()
+        tb.connect(src, dst)
+        src.msgq().insert_tail(gr.message_from_string('01234'))
+        src.msgq().insert_tail(gr.message_from_string('5'))
+        src.msgq().insert_tail(gr.message_from_string(''))
+        src.msgq().insert_tail(gr.message_from_string('6789'))
+        src.msgq().insert_tail(gr.message(1))                  # send EOF
+        tb.run()
+        self.assertEquals(tuple(map(ord, '0123456789')), dst.data())
 
 if __name__ == '__main__':
     gr_unittest.main ()
