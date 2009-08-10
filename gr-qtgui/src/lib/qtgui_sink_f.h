@@ -63,6 +63,8 @@ private:
 		bool use_openGL,
 		QWidget *parent);
 
+  void forecast(int noutput_items, gr_vector_int &ninput_items_required);
+
   void initialize(const bool opengl=true);
 
   int d_fftsize;
@@ -76,7 +78,6 @@ private:
 
   bool d_shift;
   gri_fft_complex *d_fft;
-  gr_complex *d_fftdata;
 
   int d_index;
   float *d_residbuf;
@@ -89,7 +90,7 @@ private:
   void windowreset();
   void buildwindow();
   void fftresize();
-  void fft(const float *data_in, int size, gr_complex *data_out);
+  void fft(const float *data_in, int size);
   
 public:
   ~qtgui_sink_f();

@@ -30,7 +30,6 @@ SpectrumGUIClass::SpectrumGUIClass(const uint64_t maxDataSize,
   _startFrequency = newStartFrequency;
   _stopFrequency = newStopFrequency;
 
-#warning SPECIFY THIS LATER...
   _windowType = 5;
 
   timespec_reset(&_lastGUIUpdateTime);

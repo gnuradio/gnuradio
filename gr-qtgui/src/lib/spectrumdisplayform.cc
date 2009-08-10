@@ -110,6 +110,7 @@ SpectrumDisplayForm::setSystem( SpectrumGUIClass * newSystem,
 void
 SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdateEvent)
 {
+  //_lastSpectrumEvent = (SpectrumUpdateEvent)(*spectrumUpdateEvent);
   const std::complex<float>* complexDataPoints = spectrumUpdateEvent->getFFTPoints();
   const uint64_t numFFTDataPoints = spectrumUpdateEvent->getNumFFTDataPoints();
   const double* realTimeDomainDataPoints = spectrumUpdateEvent->getRealTimeDomainPoints();
@@ -125,23 +126,34 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   ResizeBuffers(numFFTDataPoints, numTimeDomainDataPoints);
 
   // Calculate the Magnitude of the complex point
-  const std::complex<float>* complexDataPointsPtr = complexDataPoints;
+  const std::complex<float>* complexDataPointsPtr = complexDataPoints+numFFTDataPoints/2;
   double* realFFTDataPointsPtr = _realFFTDataPoints;
-  for(uint64_t point = 0; point < numFFTDataPoints; point++){
+
+  // Run this twice to perform the fftshift operation on the data here as well
+  for(uint64_t point = 0; point < numFFTDataPoints/2; point++){
     // Calculate dBm
     // 50 ohm load assumption
     // 10 * log10 (v^2 / (2 * 50.0 * .001)) = 10 * log10( v^2 * 10)
     // 75 ohm load assumption
     // 10 * log10 (v^2 / (2 * 75.0 * .001)) = 10 * log10( v^2 * 15)
-    
-    *realFFTDataPointsPtr = 10.0*log10((((*complexDataPointsPtr).real() * (*complexDataPointsPtr).real()) +
-					((*complexDataPointsPtr).imag()*(*complexDataPointsPtr).imag())) + 1e-20);
+
+    // perform scaling here
+    std::complex<float> pt = (*complexDataPointsPtr) / std::complex<float>((float)numFFTDataPoints);
+    *realFFTDataPointsPtr = 10.0*log10((pt.real() * pt.real() + pt.imag()*pt.imag()) + 1e-20);
 
     complexDataPointsPtr++;
     realFFTDataPointsPtr++;
   }
- 
-  int tabindex = SpectrumTypeTab->currentIndex();
+  
+  // This loop takes the first half of the input data and puts it in the second half of the plotted data
+  complexDataPointsPtr = complexDataPoints;
+  for(uint64_t point = 0; point < numFFTDataPoints/2; point++){
+    std::complex<float> pt = (*complexDataPointsPtr) / std::complex<float>((float)numFFTDataPoints);
+    *realFFTDataPointsPtr = 10.0*log10((pt.real() * pt.real() + pt.imag()*pt.imag()) + 1e-20);
+
+    complexDataPointsPtr++;
+    realFFTDataPointsPtr++;
+  }
 
   // Don't update the averaging history if this is repeated data
   if(!repeatDataFlag){
@@ -157,7 +169,8 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
     for(uint64_t number = 0; number < numFFTDataPoints; number++){
       // find peak
       if(_realFFTDataPoints[number] > _peakAmplitude){
-        _peakFrequency = (static_cast<float>(number) * fft_bin_size);  // Calculate the frequency relative to the local bw, adjust for _startFrequency later
+	// Calculate the frequency relative to the local bw, adjust for _startFrequency later
+        _peakFrequency = (static_cast<float>(number) * fft_bin_size);
         _peakAmplitude = _realFFTDataPoints[number];
         // _peakBin = number;
       }
@@ -187,6 +200,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   }
 
   if(lastOfMultipleUpdatesFlag){
+    int tabindex = SpectrumTypeTab->currentIndex();
     if(tabindex == d_plot_fft) {
       _frequencyDisplayPlot->PlotNewData(_averagedValues, numFFTDataPoints, 
 					 _noiseFloorAmplitude, _peakFrequency, 
@@ -219,6 +233,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
       }
     }
 
+    
     // Tell the system the GUI has been updated
     if(_systemSpecifiedFlag){
       _system->SetLastGUIUpdateTime(generatedTimestamp);
@@ -447,6 +462,13 @@ SpectrumDisplayForm::MaxHoldResetBtn_clicked()
   _frequencyDisplayPlot->replot();
 }
 
+
+void
+SpectrumDisplayForm::TabChanged(int index)
+{
+  _frequencyDisplayPlot->replot();
+  
+}
 
 void
 SpectrumDisplayForm::PowerLineEdit_textChanged( const QString &valueString )

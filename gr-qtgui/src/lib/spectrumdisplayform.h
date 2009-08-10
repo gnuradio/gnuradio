@@ -41,6 +41,8 @@ public slots:
   void MinHoldCheckBox_toggled( bool newState );
   void MinHoldResetBtn_clicked();
   void MaxHoldResetBtn_clicked();
+  void TabChanged(int index);
+
   void PowerLineEdit_textChanged( const QString& valueString );
   void SetFrequencyRange( const double newCenterFrequency,
 			  const double newStartFrequency,
@@ -99,7 +101,9 @@ private:
   double _peakAmplitude;
   static int _openGLWaterfall3DFlag;
   double _stopFrequency;
-
+  
+  //SpectrumUpdateEvent _lastSpectrumEvent;
+  
   // whether or not to use a particular display
   int d_plot_fft;
   int d_plot_waterfall;

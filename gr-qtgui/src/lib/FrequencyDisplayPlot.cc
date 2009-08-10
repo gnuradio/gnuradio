@@ -76,7 +76,9 @@ public:
 protected:
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
-    QwtText t(QString("%1 %2, %3 dB").arg(p.x(), 0, 'f', GetFrequencyPrecision()).arg( (GetFrequencyPrecision() == 0) ? "Hz" : "kHz").arg(p.y(), 0, 'f', 2));
+    QString strunits = (GetFrequencyPrecision() == 0) ? "Hz" : "kHz";
+    QwtText t(QString("%1 %2, %3 dB").arg(p.x(), 0, 'f', 
+					  GetFrequencyPrecision()).arg(strunits).arg(p.y(), 0, 'f', 2));
 
     return t;
   }
@@ -260,10 +262,11 @@ FrequencyDisplayPlot::SetFrequencyRange(const double constStartFreq,
   _stopFrequency = stopFreq;
   _resetXAxisPoints();
 
+  double display_units = ceil(log10(units)/2.0);
   setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
-  setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(2));
+  setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(display_units));
   setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
-  ((FreqDisplayZoomer*)_zoomer)->SetFrequencyPrecision(2);
+  ((FreqDisplayZoomer*)_zoomer)->SetFrequencyPrecision(display_units);
 
   // Load up the new base zoom settings
   _zoomer->setZoomBase();
@@ -339,6 +342,7 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
       ClearMaxData();
       ClearMinData();
     }
+
     memcpy(_dataPoints, dataPoints, numDataPoints*sizeof(double));
     for(int64_t point = 0; point < numDataPoints; point++){
       if(dataPoints[point] < _minFFTPoints[point]){
@@ -369,7 +373,7 @@ void
 FrequencyDisplayPlot::ClearMaxData()
 {
   for(int64_t number = 0; number < _numPoints; number++){
-    _maxFFTPoints[number] = _maxYAxis;
+    _maxFFTPoints[number] = _minYAxis;
   }
 }
 
@@ -377,7 +381,7 @@ void
 FrequencyDisplayPlot::ClearMinData()
 {
   for(int64_t number = 0; number < _numPoints; number++){
-    _minFFTPoints[number] = _minYAxis;
+    _minFFTPoints[number] = _maxYAxis;
   }
 }
 

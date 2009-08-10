@@ -44,6 +44,8 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent){
   _imagDataPoints = new double[_numPoints];
   _xAxisPoints = new double[_numPoints];
 
+  _zoomer = new TimeDomainDisplayZoomer(canvas());
+
   // Disable polygon clipping
   QwtPainter::setDeviceClipping(false);
   
@@ -56,7 +58,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent){
   canvas()->setPalette(palette);  
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
-  setAxisScale(QwtPlot::xBottom, 0, _numPoints);
+  set_xaxis(0, _numPoints);
   setAxisTitle(QwtPlot::xBottom, "Sample Number");
 
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
@@ -83,7 +85,6 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent){
 
   replot();
 
-  _zoomer = new TimeDomainDisplayZoomer(canvas());
 #if QT_VERSION < 0x040000
   _zoomer->setMousePattern(QwtEventPattern::MouseSelect2,
 			  Qt::RightButton, Qt::ControlModifier);
@@ -129,7 +130,16 @@ void
 TimeDomainDisplayPlot::set_yaxis(double min, double max)
 {
   setAxisScale(QwtPlot::yLeft, min, max);
+  _zoomer->setZoomBase();
 }
+
+void
+TimeDomainDisplayPlot::set_xaxis(double min, double max)
+{
+  setAxisScale(QwtPlot::xBottom, min, max);
+  _zoomer->setZoomBase();
+}
+
 
 void TimeDomainDisplayPlot::replot(){
 
@@ -146,7 +156,9 @@ void TimeDomainDisplayPlot::replot(){
   }
 }
 
-void TimeDomainDisplayPlot::PlotNewData(const double* realDataPoints, const double* imagDataPoints, const int64_t numDataPoints){
+void TimeDomainDisplayPlot::PlotNewData(const double* realDataPoints,
+					const double* imagDataPoints,
+					const int64_t numDataPoints){
   if(numDataPoints > 0){
 
     if(numDataPoints != _numPoints){
@@ -161,6 +173,8 @@ void TimeDomainDisplayPlot::PlotNewData(const double* realDataPoints, const doub
       
       _real_plot_curve->setRawData(_xAxisPoints, _realDataPoints, _numPoints);
       _imag_plot_curve->setRawData(_xAxisPoints, _imagDataPoints, _numPoints);
+
+      set_xaxis(0, numDataPoints);
 
       _resetXAxisPoints();
     }

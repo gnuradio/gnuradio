@@ -729,8 +729,8 @@
    <slot>MaxHoldCheckBox_toggled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
+     <x>22</x>
+     <y>324</y>
     </hint>
     <hint type="destinationlabel" >
      <x>20</x>
@@ -745,8 +745,8 @@
    <slot>MaxHoldResetBtn_clicked()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
+     <x>107</x>
+     <y>324</y>
     </hint>
     <hint type="destinationlabel" >
      <x>20</x>
@@ -761,8 +761,8 @@
    <slot>MinHoldCheckBox_toggled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
+     <x>22</x>
+     <y>349</y>
     </hint>
     <hint type="destinationlabel" >
      <x>20</x>
@@ -777,8 +777,8 @@
    <slot>MinHoldResetBtn_clicked()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
+     <x>107</x>
+     <y>349</y>
     </hint>
     <hint type="destinationlabel" >
      <x>20</x>
@@ -793,8 +793,8 @@
    <slot>AvgLineEdit_textChanged(QString)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
+     <x>552</x>
+     <y>344</y>
     </hint>
     <hint type="destinationlabel" >
      <x>20</x>
@@ -809,8 +809,8 @@
    <slot>PowerLineEdit_textChanged(QString)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
+     <x>482</x>
+     <y>344</y>
     </hint>
     <hint type="destinationlabel" >
      <x>20</x>
@@ -857,8 +857,8 @@
    <slot>waterfallMaximumIntensityChangedCB(double)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
+     <x>217</x>
+     <y>44</y>
     </hint>
     <hint type="destinationlabel" >
      <x>20</x>
@@ -873,8 +873,8 @@
    <slot>waterfallMinimumIntensityChangedCB(double)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
+     <x>217</x>
+     <y>349</y>
     </hint>
     <hint type="destinationlabel" >
      <x>20</x>
@@ -889,8 +889,8 @@
    <slot>waterfall3DMaximumIntensityChangedCB(double)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
+     <x>217</x>
+     <y>44</y>
     </hint>
     <hint type="destinationlabel" >
      <x>20</x>
@@ -905,8 +905,8 @@
    <slot>waterfall3DMinimumIntensityChangedCB(double)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
+     <x>217</x>
+     <y>349</y>
     </hint>
     <hint type="destinationlabel" >
      <x>20</x>
@@ -937,8 +937,8 @@
    <slot>WaterfallAutoScaleBtnCB()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
+     <x>22</x>
+     <y>349</y>
     </hint>
     <hint type="destinationlabel" >
      <x>20</x>
@@ -953,8 +953,8 @@
    <slot>Waterfall3DAutoScaleBtnCB()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
+     <x>22</x>
+     <y>349</y>
     </hint>
     <hint type="destinationlabel" >
      <x>20</x>
@@ -969,8 +969,8 @@
    <slot>WaterfallIntensityColorTypeChanged(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
+     <x>92</x>
+     <y>44</y>
     </hint>
     <hint type="destinationlabel" >
      <x>20</x>
@@ -985,12 +985,28 @@
    <slot>Waterfall3DIntensityColorTypeChanged(int)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
+     <x>92</x>
+     <y>44</y>
     </hint>
     <hint type="destinationlabel" >
      <x>20</x>
      <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>SpectrumTypeTab</sender>
+   <signal>currentChanged(int)</signal>
+   <receiver>SpectrumDisplayForm</receiver>
+   <slot>TabChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>314</x>
+     <y>189</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>316</x>
+     <y>217</y>
     </hint>
    </hints>
   </connection>

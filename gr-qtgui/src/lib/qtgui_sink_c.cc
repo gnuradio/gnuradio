@@ -78,8 +78,6 @@ qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
 
   d_fft = new gri_fft_complex (d_fftsize, true);
 
-  d_fftdata = new gr_complex[d_fftsize];
-
   d_index = 0;
   d_residbuf = new gr_complex[d_fftsize];
 
@@ -91,9 +89,17 @@ qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
 qtgui_sink_c::~qtgui_sink_c()
 {
   delete d_object;
-  delete [] d_fftdata;
   delete [] d_residbuf;
   delete d_fft;
+}
+
+void
+qtgui_sink_c::forecast(int noutput_items, gr_vector_int &ninput_items_required)
+{
+  unsigned int ninputs = ninput_items_required.size();
+  for (unsigned int i = 0; i < ninputs; i++) {
+    ninput_items_required[i] = std::min(d_fftsize, 8191);
+  }
 }
 
 void qtgui_sink_c::lock()
@@ -195,7 +201,7 @@ qtgui_sink_c::set_frequency_axis(double min, double max)
 }
 
 void
-qtgui_sink_c::fft(const gr_complex *data_in, int size, gr_complex *data_out)
+qtgui_sink_c::fft(const gr_complex *data_in, int size)
 {
   if (d_window.size()) {
     gr_complex *dst = d_fft->get_inbuf();
@@ -208,20 +214,6 @@ qtgui_sink_c::fft(const gr_complex *data_in, int size, gr_complex *data_out)
   }
 
   d_fft->execute ();     // compute the fft
-
-  for(int i=0; i < size; i++) {
-    d_fft->get_outbuf()[i] /= size;
-  }
-
-  // copy result to our output
-  if(d_shift) {  // apply a fft shift on the data
-    unsigned int len = (unsigned int)(ceil(size/2.0));
-    memcpy(&data_out[0], &d_fft->get_outbuf()[len], sizeof(gr_complex)*(size - len));
-    memcpy(&data_out[size - len], &d_fft->get_outbuf()[0], sizeof(gr_complex)*len);
-  }
-  else {
-    memcpy(data_out, d_fft->get_outbuf(), sizeof(gr_complex)*size);
-  }
 }
 
 void 
@@ -250,10 +242,6 @@ qtgui_sink_c::fftresize()
 
   if(newfftsize != d_fftsize) {
 
-    // Resize the fftdata buffer; no need to preserve old data
-    delete [] d_fftdata;
-    d_fftdata = new gr_complex[newfftsize];
-
     // Resize residbuf and replace data
     delete [] d_residbuf;
     d_residbuf = new gr_complex[newfftsize];
@@ -279,7 +267,7 @@ qtgui_sink_c::general_work (int noutput_items,
 			    gr_vector_const_void_star &input_items,
 			    gr_vector_void_star &output_items)
 {
-  int i=0, j=0;
+  int j=0;
   const gr_complex *in = (const gr_complex*)input_items[0];
 
   pthread_mutex_lock(&d_pmutex);
@@ -287,49 +275,36 @@ qtgui_sink_c::general_work (int noutput_items,
   // Update the FFT size from the application
   fftresize();
   windowreset();
- 
-  const timespec currentTime = get_highres_clock();
-  const timespec lastUpdateGUITime = d_main_gui->GetLastGUIUpdateTime();
 
-  if(diff_timespec(currentTime, lastUpdateGUITime) > 0.05) {
+  for(int i=0; i < noutput_items; i+=d_fftsize) {
+    unsigned int datasize = noutput_items - i;
+    unsigned int resid = d_fftsize-d_index;
 
-    if(d_index) {
-      int filler = std::min(d_fftsize - d_index, noutput_items);
+    // If we have enough input for one full FFT, do it
+    if(datasize >= resid) {
+      const timespec currentTime = get_highres_clock();
       
-      memcpy(&d_residbuf[d_index], &in[0], sizeof(gr_complex)*filler);
-      d_index += filler;
-      i = filler;
-      j = filler;
-    }
-    
-    if(d_index == d_fftsize) {
+      // Fill up residbuf with d_fftsize number of items
+      memcpy(d_residbuf+d_index, &in[j], sizeof(gr_complex)*resid);
       d_index = 0;
-      fft(d_residbuf, d_fftsize, d_fftdata);
+
+      j += resid;
+      fft(d_residbuf, d_fftsize);
       
-      d_main_gui->UpdateWindow(true, d_fftdata, d_fftsize, NULL, 0, 
-			       (float*)d_residbuf, d_fftsize,
-			       1.0/4.0, convert_to_timespec(0.0), true);
+      d_main_gui->UpdateWindow(true, d_fft->get_outbuf(), d_fftsize,
+			       NULL, 0, (float*)d_residbuf, d_fftsize,
+			       1.0/4.0, currentTime, true);
     }
-    
-    for(; i < noutput_items; i+=d_fftsize) {
-      if(noutput_items - i > d_fftsize) {
-	j += d_fftsize;
-	fft(&in[i], d_fftsize, d_fftdata);
-	
-	d_main_gui->UpdateWindow(true, d_fftdata, d_fftsize, NULL, 0, 
-				 (float*)&in[i], d_fftsize,
-				 1.0/4.0, convert_to_timespec(0.0), true);
-      }
-    }
-    
-    if(noutput_items > j) {
-      d_index = noutput_items - j;
-      memcpy(d_residbuf, &in[j], sizeof(gr_complex)*d_index);
-    }
+    // Otherwise, copy what we received into the residbuf for next time
+    else {
+      memcpy(d_residbuf+d_index, &in[j], sizeof(gr_complex)*datasize);
+      d_index += datasize;
+      j += datasize;
+    }   
   }
 
   pthread_mutex_unlock(&d_pmutex);
 
-  consume_each(noutput_items);
-  return noutput_items;
+  consume_each(j);
+  return j;
 }

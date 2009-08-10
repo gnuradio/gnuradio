@@ -63,6 +63,8 @@ private:
 		bool use_openGL,
 		QWidget *parent);
 
+  void forecast(int noutput_items, gr_vector_int &ninput_items_required);
+
   // use opengl to force OpenGL on or off
   // this might be necessary for sessions over SSH
   void initialize(const bool opengl=true);
@@ -78,7 +80,6 @@ private:
 
   bool d_shift;
   gri_fft_complex *d_fft;
-  gr_complex *d_fftdata;
 
   int d_index;
   gr_complex *d_residbuf;
@@ -91,7 +92,7 @@ private:
   void windowreset();
   void buildwindow();
   void fftresize();
-  void fft(const gr_complex *data_in, int size, gr_complex *data_out);
+  void fft(const gr_complex *data_in, int size);
   
 public:
   ~qtgui_sink_c();
