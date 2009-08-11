@@ -106,6 +106,7 @@ public:
   void set_time_domain_axis(double min, double max);
   void set_constellation_axis(double xmin, double xmax,
 			      double ymin, double ymax);
+  void set_constellation_pen_size(int size);
   void set_frequency_axis(double min, double max);
 
   QApplication *d_qApplication;

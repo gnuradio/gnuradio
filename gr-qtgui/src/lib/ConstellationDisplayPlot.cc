@@ -42,6 +42,7 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
   _displayIntervalTime = (1.0/10.0); // 1/10 of a second between updates
 
   _numPoints = 1024;
+  _penSize = 5;
   _realDataPoints = new double[_numPoints];
   _imagDataPoints = new double[_numPoints];
 
@@ -69,7 +70,7 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
   // Automatically deleted when parent is deleted
   _plot_curve = new QwtPlotCurve("Constellation Points");
   _plot_curve->attach(this);
-  _plot_curve->setPen(QPen(Qt::blue, 5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+  _plot_curve->setPen(QPen(Qt::blue, _penSize, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
   _plot_curve->setStyle(QwtPlotCurve::Dots);
   _plot_curve->setRawData(_realDataPoints, _imagDataPoints, _numPoints);
 
@@ -116,6 +117,16 @@ ConstellationDisplayPlot::~ConstellationDisplayPlot()
   // _fft_plot_curves deleted when parent deleted
   // _zoomer and _panner deleted when parent deleted
 }
+
+void 
+ConstellationDisplayPlot::set_pen_size(int size)
+{
+  if(size > 0 && size < 30){
+    _penSize = size;
+    _plot_curve->setPen(QPen(Qt::blue, _penSize, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+  }
+}
+
 
 void
 ConstellationDisplayPlot::set_xaxis(double min, double max)

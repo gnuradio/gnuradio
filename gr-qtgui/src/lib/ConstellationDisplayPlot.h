@@ -32,6 +32,7 @@ public:
   void set_yaxis(double min, double max);
   void set_axis(double xmin, double xmax,
 		double ymin, double ymax);
+  void set_pen_size(int size);
 
 public slots:
   void resizeSlot( QSize *s );
@@ -53,6 +54,7 @@ private:
   timespec _lastReplot;
 
   int64_t _numPoints;
+  int64_t _penSize;
 
   double _displayIntervalTime;
 };

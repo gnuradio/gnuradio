@@ -188,6 +188,13 @@ qtgui_sink_f::set_constellation_axis(double xmin, double xmax,
   d_main_gui->SetConstellationAxis(xmin, xmax, ymin, ymax);
 }
 
+void 
+qtgui_sink_f::set_constellation_pen_size(int size)
+{
+  d_main_gui->SetConstellationPenSize(size);
+}
+
+
 void
 qtgui_sink_f::set_frequency_axis(double min, double max)
 {

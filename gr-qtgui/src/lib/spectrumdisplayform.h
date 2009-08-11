@@ -69,6 +69,7 @@ public slots:
   void SetTimeDomainAxis(double min, double max);
   void SetConstellationAxis(double xmin, double xmax,
 			    double ymin, double ymax);
+  void SetConstellationPenSize(int size);
   void SetFrequencyAxis(double min, double max);
 
 private slots:
