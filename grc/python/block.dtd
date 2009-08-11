@@ -31,8 +31,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  -->
 <!ELEMENT param (name, key, value?, type, hide?, option*)>
 <!ELEMENT option (name, key, opt*)>
-<!ELEMENT sink (name, type, vlen?, nports?, optional?)>
-<!ELEMENT source (name, type, vlen?, nports?, optional?)>
+<!ELEMENT sink (name, key?, type, vlen?, nports?, optional?)>
+<!ELEMENT source (name, key?, type, vlen?, nports?, optional?)>
 <!--
 	Bottom level elements.
 	Character data only.

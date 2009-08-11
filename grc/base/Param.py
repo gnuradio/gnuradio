@@ -165,6 +165,8 @@ class Param(Element):
 			try: assert self.get_value() in self.get_option_keys()
 			except AssertionError: raise Exception, 'The value "%s" is not in the possible values of "%s".'%(self.get_value(), self.get_option_keys())
 		else: self._value = value or ''
+		#begin the testing
+		self.test()
 
 	def test(self):
 		"""

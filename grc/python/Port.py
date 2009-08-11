@@ -23,27 +23,23 @@ import Constants
 class Port(_Port):
 
 	##possible port types
-	TYPES = ['complex', 'float', 'int', 'short', 'byte']
+	TYPES = ['complex', 'float', 'int', 'short', 'byte', 'msg']
 
 	def __init__(self, block, n):
 		"""
 		Make a new port from nested data.
 		@param block the parent element
 		@param n the nested odict
-		@return a new port
 		"""
-		vlen = n.find('vlen') or '1'
-		nports = n.find('nports') or ''
-		optional = n.find('optional') or ''
 		#build the port
 		_Port.__init__(
 			self,
 			block=block,
 			n=n,
 		)
-		self._nports = nports
-		self._vlen = vlen
-		self._optional = bool(optional)
+		self._nports = n.find('nports') or ''
+		self._vlen = n.find('vlen') or '1'
+		self._optional = bool(n.find('optional'))
 
 	def validate(self):
 		_Port.validate(self)
@@ -94,6 +90,7 @@ class Port(_Port):
 					'int': Constants.INT_COLOR_SPEC,
 					'short': Constants.SHORT_COLOR_SPEC,
 					'byte': Constants.BYTE_COLOR_SPEC,
+					'msg': Constants.MSG_COLOR_SPEC,
 				}[self.get_type()]
 			return {#vlen is non 1
 				'complex': Constants.COMPLEX_VECTOR_COLOR_SPEC,
@@ -108,10 +105,10 @@ class Source(Port):
 
 	def __init__(self, block, n):
 		self._n = n #save n
-		#key is port index
-		n['key'] = str(block._source_count)
-		block._source_count = block._source_count + 1
-		Port.__init__(self, block, n)
+		if n['type'] != 'msg': #key is port index
+			n['key'] = str(block._source_count)
+			block._source_count = block._source_count + 1
+			Port.__init__(self, block, n)
 
 	def __del__(self):
 		self.get_parent()._source_count = self.get_parent()._source_count - 1
@@ -120,10 +117,14 @@ class Sink(Port):
 
 	def __init__(self, block, n):
 		self._n = n #save n
-		#key is port index
-		n['key'] = str(block._sink_count)
-		block._sink_count = block._sink_count + 1
-		Port.__init__(self, block, n)
+		if n['type'] != 'msg': #key is port index
+			n['key'] = str(block._sink_count)
+			block._sink_count = block._sink_count + 1
+			Port.__init__(self, block, n)
 
 	def __del__(self):
 		self.get_parent()._sink_count = self.get_parent()._sink_count - 1
+
+#TODO merge source and sink classes into port class
+#TODO check that key is only defined if and only if type is message
+#TODO check that nports is undefined when type is message 
