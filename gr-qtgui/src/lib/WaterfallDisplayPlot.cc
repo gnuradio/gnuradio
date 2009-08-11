@@ -15,28 +15,33 @@
 class FreqOffsetAndPrecisionClass
 {
 public:
-  FreqOffsetAndPrecisionClass(const int freqPrecision){
+  FreqOffsetAndPrecisionClass(const int freqPrecision)
+  {
     _frequencyPrecision = freqPrecision;
     _centerFrequency = 0;
   }
 
-  virtual ~FreqOffsetAndPrecisionClass(){
-
+  virtual ~FreqOffsetAndPrecisionClass()
+  {
   }
 
-  virtual unsigned int GetFrequencyPrecision()const{
+  virtual unsigned int GetFrequencyPrecision() const
+  {
     return _frequencyPrecision;
   }
 
-  virtual void SetFrequencyPrecision(const unsigned int newPrecision){
+  virtual void SetFrequencyPrecision(const unsigned int newPrecision)
+  {
     _frequencyPrecision = newPrecision;
   }
 
-  virtual double GetCenterFrequency()const{
+  virtual double GetCenterFrequency() const
+  {
     return _centerFrequency;
   }
 
-  virtual void SetCenterFrequency(const double newFreq){
+  virtual void SetCenterFrequency(const double newFreq)
+  {
     _centerFrequency = newFreq;
   }
 
@@ -50,19 +55,23 @@ private:
 
 class WaterfallFreqDisplayScaleDraw: public QwtScaleDraw, public FreqOffsetAndPrecisionClass{
 public:
-  WaterfallFreqDisplayScaleDraw(const unsigned int precision):QwtScaleDraw(), FreqOffsetAndPrecisionClass(precision){
-
+  WaterfallFreqDisplayScaleDraw(const unsigned int precision)
+    : QwtScaleDraw(), FreqOffsetAndPrecisionClass(precision)
+  {
   }
 
-  virtual ~WaterfallFreqDisplayScaleDraw(){
-
+  virtual ~WaterfallFreqDisplayScaleDraw()
+  {
   }
 
-  QwtText label(double value)const{
-    return QString("%1").arg((value + GetCenterFrequency()) / ((GetFrequencyPrecision() == 0) ? 1.0 : 1000.0), 0, 'f', GetFrequencyPrecision());
+  QwtText label(double value) const
+  {
+    return QString("%1").arg((value + GetCenterFrequency()) / ((GetFrequencyPrecision() == 0) ? 1.0 : 1000.0), 
+			     0, 'f', GetFrequencyPrecision());
   }
 
-  virtual void initiateUpdate(){
+  virtual void initiateUpdate()
+  {
     invalidateCache();
   }
 
@@ -75,29 +84,33 @@ private:
 class TimeScaleData
 {
 public:
-  TimeScaleData(){
+  TimeScaleData()
+  {
     timespec_reset(&_zeroTime);
     _secondsPerLine = 1.0;
-    
   }
   
-  virtual ~TimeScaleData(){
-    
+  virtual ~TimeScaleData()
+  {    
   }
 
-  virtual timespec GetZeroTime()const{
+  virtual timespec GetZeroTime() const
+  {
     return _zeroTime;
   }
   
-  virtual void SetZeroTime(const timespec newTime){
+  virtual void SetZeroTime(const timespec newTime)
+  {
     _zeroTime = newTime;
   }
 
-  virtual void SetSecondsPerLine(const double newTime){
+  virtual void SetSecondsPerLine(const double newTime)
+  {
     _secondsPerLine = newTime;
   }
 
-  virtual double GetSecondsPerLine()const{
+  virtual double GetSecondsPerLine() const
+  {
     return _secondsPerLine;
   }
 
@@ -113,27 +126,32 @@ private:
 class QwtTimeScaleDraw: public QwtScaleDraw, public TimeScaleData
 {
 public:
-  QwtTimeScaleDraw():QwtScaleDraw(),TimeScaleData(){
-    
+  QwtTimeScaleDraw():QwtScaleDraw(),TimeScaleData()
+  {    
   }
 
-  virtual ~QwtTimeScaleDraw(){
-    
+  virtual ~QwtTimeScaleDraw()
+  {    
   }
 
-  virtual QwtText label(double value)const{
+  virtual QwtText label(double value) const
+  {
     QwtText returnLabel("");
 
     timespec lineTime = timespec_add(GetZeroTime(), (-value) * GetSecondsPerLine());
     struct tm timeTm;
     gmtime_r(&lineTime.tv_sec, &timeTm);
-    returnLabel = (QString("").sprintf("%04d/%02d/%02d\n%02d:%02d:%02d.%03ld", timeTm.tm_year+1900, timeTm.tm_mon+1, timeTm.tm_mday, timeTm.tm_hour, timeTm.tm_min, timeTm.tm_sec, lineTime.tv_nsec/1000000));
-    
+    returnLabel = (QString("").sprintf("%04d/%02d/%02d\n%02d:%02d:%02d.%03ld",
+				       timeTm.tm_year+1900, timeTm.tm_mon+1,
+				       timeTm.tm_mday, timeTm.tm_hour, timeTm.tm_min,
+				       timeTm.tm_sec, lineTime.tv_nsec/1000000));
     return returnLabel;
   }
 
-  virtual void initiateUpdate(){
-    // Do this in one call rather than when zeroTime and secondsPerLine updates is to prevent the display from being updated too often...
+  virtual void initiateUpdate()
+  {
+    // Do this in one call rather than when zeroTime and secondsPerLine
+    // updates is to prevent the display from being updated too often...
     invalidateCache();
   }
   
@@ -146,16 +164,19 @@ private:
 class WaterfallZoomer: public QwtPlotZoomer, public TimeScaleData, public FreqOffsetAndPrecisionClass
 {
 public:
-  WaterfallZoomer(QwtPlotCanvas* canvas, const unsigned int freqPrecision):QwtPlotZoomer(canvas), TimeScaleData(), FreqOffsetAndPrecisionClass(freqPrecision)
+  WaterfallZoomer(QwtPlotCanvas* canvas, const unsigned int freqPrecision)
+    : QwtPlotZoomer(canvas), TimeScaleData(), 
+      FreqOffsetAndPrecisionClass(freqPrecision)
   {
     setTrackerMode(QwtPicker::AlwaysOn);
   }
 
-  virtual ~WaterfallZoomer(){
-
+  virtual ~WaterfallZoomer()
+  {
   }
   
-  virtual void updateTrackerText(){
+  virtual void updateTrackerText()
+  {
     updateDisplay();
   }
 
@@ -167,7 +188,10 @@ protected:
     timespec lineTime = timespec_add(GetZeroTime(), (-p.y()) * GetSecondsPerLine());
     struct tm timeTm;
     gmtime_r(&lineTime.tv_sec, &timeTm);
-    yLabel = (QString("").sprintf("%04d/%02d/%02d %02d:%02d:%02d.%03ld", timeTm.tm_year+1900, timeTm.tm_mon+1, timeTm.tm_mday, timeTm.tm_hour, timeTm.tm_min, timeTm.tm_sec, lineTime.tv_nsec/1000000));
+    yLabel = (QString("").sprintf("%04d/%02d/%02d %02d:%02d:%02d.%03ld",
+				  timeTm.tm_year+1900, timeTm.tm_mon+1,
+				  timeTm.tm_mday, timeTm.tm_hour, timeTm.tm_min,
+				  timeTm.tm_sec, lineTime.tv_nsec/1000000));
 
     QwtText t(QString("%1 %2, %3").arg((p.x() + GetCenterFrequency()) / ((GetFrequencyPrecision() == 0) ? 1.0 : 1000.0), 0, 'f', GetFrequencyPrecision()).arg( (GetFrequencyPrecision() == 0) ? "Hz" : "kHz").arg(yLabel));
 
@@ -312,15 +336,25 @@ WaterfallDisplayPlot::SetFrequencyRange(const double constStartFreq,
 }
 
 
-double WaterfallDisplayPlot::GetStartFrequency()const{
+double
+WaterfallDisplayPlot::GetStartFrequency() const
+{
   return _startFrequency;
 }
 
-double WaterfallDisplayPlot::GetStopFrequency()const{
+double
+WaterfallDisplayPlot::GetStopFrequency() const
+{
   return _stopFrequency;
 }
 
-void WaterfallDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDataPoints, const double timePerFFT, const timespec timestamp, const int droppedFrames){
+void
+WaterfallDisplayPlot::PlotNewData(const double* dataPoints, 
+				       const int64_t numDataPoints,
+				       const double timePerFFT,
+				       const timespec timestamp,
+				       const int droppedFrames)
+{
   if(numDataPoints > 0){
     if(numDataPoints != _numPoints){
       _numPoints = numDataPoints;
@@ -363,7 +397,10 @@ void WaterfallDisplayPlot::PlotNewData(const double* dataPoints, const int64_t n
   }
 }
 
-void WaterfallDisplayPlot::SetIntensityRange(const double minIntensity, const double maxIntensity){
+void
+WaterfallDisplayPlot::SetIntensityRange(const double minIntensity, 
+					     const double maxIntensity)
+{
   _waterfallData->setRange(QwtDoubleInterval(minIntensity, maxIntensity));
 
   emit UpdatedLowerIntensityLevel(minIntensity);
@@ -372,7 +409,9 @@ void WaterfallDisplayPlot::SetIntensityRange(const double minIntensity, const do
   _UpdateIntensityRangeDisplay();
 }
 
-void WaterfallDisplayPlot::replot(){
+void
+WaterfallDisplayPlot::replot()
+{
   const timespec startTime = get_highres_clock();
 
   QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
@@ -406,11 +445,23 @@ void WaterfallDisplayPlot::replot(){
   }
 }
 
-int WaterfallDisplayPlot::GetIntensityColorMapType()const{
+void
+WaterfallDisplayPlot::resizeSlot( QSize *s )
+{
+  resize(s->width(), s->height());
+}
+
+int
+WaterfallDisplayPlot::GetIntensityColorMapType() const
+{
   return _intensityColorMapType;
 }
 
-void WaterfallDisplayPlot::SetIntensityColorMapType(const int newType, const QColor lowColor, const QColor highColor){
+void
+WaterfallDisplayPlot::SetIntensityColorMapType(const int newType, 
+					       const QColor lowColor, 
+					       const QColor highColor)
+{
   if((_intensityColorMapType != newType) || 
      ((newType == INTENSITY_COLOR_MAP_TYPE_USER_DEFINED) &&
       (lowColor.isValid() && highColor.isValid()))){
@@ -458,15 +509,21 @@ void WaterfallDisplayPlot::SetIntensityColorMapType(const int newType, const QCo
   }
 }
 
-const QColor WaterfallDisplayPlot::GetUserDefinedLowIntensityColor()const{
+const QColor
+WaterfallDisplayPlot::GetUserDefinedLowIntensityColor() const
+{
   return _userDefinedLowIntensityColor;
 }
 
-const QColor WaterfallDisplayPlot::GetUserDefinedHighIntensityColor()const{
+const QColor
+WaterfallDisplayPlot::GetUserDefinedHighIntensityColor() const
+{
   return _userDefinedHighIntensityColor;
 }
 
-void WaterfallDisplayPlot::_UpdateIntensityRangeDisplay(){
+void
+WaterfallDisplayPlot::_UpdateIntensityRangeDisplay()
+{
   QwtScaleWidget *rightAxis = axisWidget(QwtPlot::yRight);
   rightAxis->setTitle("Intensity (dB)");
   rightAxis->setColorBarEnabled(true);

@@ -36,7 +36,7 @@ class SpectrumDisplayForm : public QWidget, public Ui::SpectrumDisplayForm
 public slots:
   void resizeEvent( QResizeEvent * e );
   void customEvent( QEvent * e );
-  void AvgLineEdit_textChanged( const QString & valueString );
+  void AvgLineEdit_valueChanged( int valueString );
   void MaxHoldCheckBox_toggled( bool newState );
   void MinHoldCheckBox_toggled( bool newState );
   void MinHoldResetBtn_clicked();

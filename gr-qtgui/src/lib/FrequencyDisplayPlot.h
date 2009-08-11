@@ -43,12 +43,14 @@ public:
   void set_yaxis(double min, double max);
 
 public slots:
+  void resizeSlot( QSize *e );
   void SetLowerIntensityLevel(const double);
   void SetUpperIntensityLevel(const double);
 
 protected:
 
 private:
+
   void _resetXAxisPoints();
   
   double _startFrequency;

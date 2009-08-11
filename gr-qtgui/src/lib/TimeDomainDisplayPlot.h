@@ -30,6 +30,9 @@ public:
   void set_yaxis(double min, double max);
   void set_xaxis(double min, double max);
 
+public slots:
+  void resizeSlot( QSize *s );
+
 protected slots:
   void LegendEntryChecked(QwtPlotItem *plotItem, bool on);
 

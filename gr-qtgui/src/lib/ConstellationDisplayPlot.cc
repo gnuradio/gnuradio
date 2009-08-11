@@ -32,7 +32,9 @@ protected:
   }
 };
 
-ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent):QwtPlot(parent){
+ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
+  : QwtPlot(parent)
+{
   timespec_reset(&_lastReplot);
 
   resize(parent->width(), parent->height());
@@ -106,7 +108,8 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent):QwtPlot(pare
 	  this, SLOT( LegendEntryChecked(QwtPlotItem *, bool ) ));
 }
 
-ConstellationDisplayPlot::~ConstellationDisplayPlot(){
+ConstellationDisplayPlot::~ConstellationDisplayPlot()
+{
   delete[] _realDataPoints;
   delete[] _imagDataPoints;
 
@@ -149,7 +152,16 @@ void ConstellationDisplayPlot::replot(){
   }
 }
 
-void ConstellationDisplayPlot::PlotNewData(const double* realDataPoints, const double* imagDataPoints, const int64_t numDataPoints){
+void
+ConstellationDisplayPlot::resizeSlot( QSize *s )
+{
+  resize(s->width(), s->height());
+}
+
+void ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
+					   const double* imagDataPoints,
+					   const int64_t numDataPoints)
+{
   if(numDataPoints > 0){
 
     if(numDataPoints != _numPoints){
@@ -177,7 +189,9 @@ void ConstellationDisplayPlot::PlotNewData(const double* realDataPoints, const d
   }
 }
 
-void ConstellationDisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on){
+void
+ConstellationDisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on)
+{
   plotItem->setVisible(!on);
 }
 

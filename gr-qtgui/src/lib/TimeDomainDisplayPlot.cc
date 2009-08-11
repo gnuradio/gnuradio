@@ -141,8 +141,8 @@ TimeDomainDisplayPlot::set_xaxis(double min, double max)
 }
 
 
-void TimeDomainDisplayPlot::replot(){
-
+void TimeDomainDisplayPlot::replot()
+{
   const timespec startTime = get_highres_clock();
   
   QwtPlot::replot();
@@ -156,9 +156,16 @@ void TimeDomainDisplayPlot::replot(){
   }
 }
 
+void
+TimeDomainDisplayPlot::resizeSlot( QSize *s )
+{
+  resize(s->width(), s->height());
+}
+
 void TimeDomainDisplayPlot::PlotNewData(const double* realDataPoints,
 					const double* imagDataPoints,
-					const int64_t numDataPoints){
+					const int64_t numDataPoints)
+{
   if(numDataPoints > 0){
 
     if(numDataPoints != _numPoints){

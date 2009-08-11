@@ -10,7 +10,8 @@
 #include <qwt3d_color.h>
 #include <qwt_color_map.h>
 
-class Waterfall3DColorMap:public Qwt3D::Color, public QwtLinearColorMap{
+class Waterfall3DColorMap: public Qwt3D::Color, public QwtLinearColorMap
+{
 public:
   Waterfall3DColorMap();
   virtual ~Waterfall3DColorMap();
@@ -75,12 +76,14 @@ class Waterfall3DDisplayPlot:public Qwt3D::SurfacePlot{
     virtual QString ticLabel(unsigned int idx) const{
       if (idx<majors_p.size())
 	{
-	  const timespec markerTime = timespec_add(_plot->_dataTimestamp, -(_plot->_timePerFFT) * majors_p[idx]);
+	  const timespec markerTime = timespec_add(_plot->_dataTimestamp,
+						   -(_plot->_timePerFFT) * majors_p[idx]);
 	  struct tm timeTm;
 	  gmtime_r(&markerTime.tv_sec, &timeTm);
 	  
 	  char* timeBuffer = new char[128];
-	  snprintf(timeBuffer, 128, "%02d:%02d:%02d.%03ld", timeTm.tm_hour, timeTm.tm_min, timeTm.tm_sec, (markerTime.tv_nsec / 1000000));
+	  snprintf(timeBuffer, 128, "%02d:%02d:%02d.%03ld", timeTm.tm_hour,
+		   timeTm.tm_min, timeTm.tm_sec, (markerTime.tv_nsec / 1000000));
 	  QString returnBuffer(timeBuffer);
 	  delete[] timeBuffer;
 	  return returnBuffer;
@@ -100,10 +103,14 @@ class Waterfall3DDisplayPlot:public Qwt3D::SurfacePlot{
     double _centerFrequency;
     bool _useCenterFrequencyFlag;
   public:
-    FrequencyScale(bool useCenterFrequencyFlag, double centerFrequency):_centerFrequency(centerFrequency),_useCenterFrequencyFlag(useCenterFrequencyFlag){}
+    FrequencyScale(bool useCenterFrequencyFlag, double centerFrequency)
+      : _centerFrequency(centerFrequency),_useCenterFrequencyFlag(useCenterFrequencyFlag)
+      {}
+
     virtual ~FrequencyScale(){}
 
-    virtual QString ticLabel(unsigned int idx) const{
+    virtual QString ticLabel(unsigned int idx) const
+    {
       if (idx<majors_p.size())
 	{
 	  if(!_useCenterFrequencyFlag){
@@ -137,14 +144,18 @@ public:
   double GetStartFrequency()const;
   double GetStopFrequency()const;
 
-  void PlotNewData(const double* dataPoints, const int64_t numDataPoints, const double timePerFFT, const timespec timestamp, const int droppedFrames);
+  void PlotNewData(const double* dataPoints, const int64_t numDataPoints,
+		   const double timePerFFT, const timespec timestamp,
+		   const int droppedFrames);
 
   void SetIntensityRange(const double minIntensity, const double maxIntensity);
 
   virtual void replot(void);
 
   int GetIntensityColorMapType()const;
-  void SetIntensityColorMapType( const int, const QColor, const QColor, const bool forceFlag = false, const bool noReplotFlag = false );
+  void SetIntensityColorMapType( const int, const QColor,
+				 const QColor, const bool forceFlag = false,
+				 const bool noReplotFlag = false );
   const QColor GetUserDefinedLowIntensityColor()const;
   const QColor GetUserDefinedHighIntensityColor()const;
 
@@ -153,6 +164,10 @@ public:
   static const int INTENSITY_COLOR_MAP_TYPE_BLACK_HOT = 2;
   static const int INTENSITY_COLOR_MAP_TYPE_INCANDESCENT = 3;
   static const int INTENSITY_COLOR_MAP_TYPE_USER_DEFINED = 4;
+
+public slots:
+  void resizeSlot( QSize *s );
+
 
 signals:
   void UpdatedLowerIntensityLevel(const double);

@@ -15,15 +15,21 @@ Waterfall3DColorMap::~Waterfall3DColorMap(){
 
 }
 
-Qwt3D::RGBA Waterfall3DColorMap::operator()(double, double, double z)const{
+Qwt3D::RGBA
+Waterfall3DColorMap::operator()(double, double, double z) const
+{
   return Qwt3D::RGBA(Qwt3D::Qt2GL(color(_interval, z)));
 }
 
-void Waterfall3DColorMap::SetInterval(const double minValue, const double maxValue){
+void
+Waterfall3DColorMap::SetInterval(const double minValue, const double maxValue)
+{
   _interval.setInterval(minValue, maxValue);
 }
 
-Qwt3D::ColorVector& Waterfall3DColorMap::createVector(Qwt3D::ColorVector& vec) { 
+Qwt3D::ColorVector&
+Waterfall3DColorMap::createVector(Qwt3D::ColorVector& vec)
+{
   // Generate 100 interval values and then return those
   Qwt3D::ColorVector colorVec;
   for(unsigned int number = 0; number < 100; number++){
@@ -41,7 +47,8 @@ const int Waterfall3DDisplayPlot::INTENSITY_COLOR_MAP_TYPE_BLACK_HOT;
 const int Waterfall3DDisplayPlot::INTENSITY_COLOR_MAP_TYPE_INCANDESCENT;
 const int Waterfall3DDisplayPlot::INTENSITY_COLOR_MAP_TYPE_USER_DEFINED;
 
-Waterfall3DDisplayPlot::Waterfall3DDisplayPlot(QWidget* parent):Qwt3D::SurfacePlot(parent){
+Waterfall3DDisplayPlot::Waterfall3DDisplayPlot(QWidget* parent):Qwt3D::SurfacePlot(parent)
+{
   _startFrequency = 0;
   _stopFrequency = 4000;
 
@@ -76,11 +83,14 @@ Waterfall3DDisplayPlot::Waterfall3DDisplayPlot(QWidget* parent):Qwt3D::SurfacePl
   enableMouse(true);  
 }
 
-Waterfall3DDisplayPlot::~Waterfall3DDisplayPlot(){
+Waterfall3DDisplayPlot::~Waterfall3DDisplayPlot()
+{
   delete _waterfallData;
 }
 
-void Waterfall3DDisplayPlot::Init(){
+void
+Waterfall3DDisplayPlot::Init()
+{
   if(!_initialized && initializedGL()){
     resize(parentWidget()->width(), parentWidget()->height());
 
@@ -97,7 +107,9 @@ void Waterfall3DDisplayPlot::Init(){
   }
 }
 
-void Waterfall3DDisplayPlot::Reset(){
+void
+Waterfall3DDisplayPlot::Reset()
+{
   _waterfallData->ResizeData(_startFrequency, _stopFrequency, _numPoints);
   _waterfallData->Reset();
 
@@ -116,7 +128,8 @@ Waterfall3DDisplayPlot::SetFrequencyRange(const double constStartFreq,
 					  const double constStopFreq,
 					  const double constCenterFreq,
 					  const bool useCenterFrequencyFlag,
-					  const double units, const std::string &strunits)
+					  const double units,
+					  const std::string &strunits)
 {
   double startFreq = constStartFreq / units;
   double stopFreq = constStopFreq / units;
@@ -138,8 +151,10 @@ Waterfall3DDisplayPlot::SetFrequencyRange(const double constStartFreq,
   }
 }
 
-bool Waterfall3DDisplayPlot::loadFromData(double** data, unsigned int columns, unsigned int rows
-					  ,double minx, double maxx, double miny, double maxy){
+bool
+Waterfall3DDisplayPlot::loadFromData(double** data, unsigned int columns, unsigned int rows
+				     ,double minx, double maxx, double miny, double maxy)
+{
 
   Qwt3D::GridData* gridPtr = (Qwt3D::GridData*)actualData_p;
   
@@ -196,15 +211,25 @@ bool Waterfall3DDisplayPlot::loadFromData(double** data, unsigned int columns, u
   return true;
 }
 
-double Waterfall3DDisplayPlot::GetStartFrequency()const{
+double
+Waterfall3DDisplayPlot::GetStartFrequency() const
+{
   return _startFrequency;
 }
 
-double Waterfall3DDisplayPlot::GetStopFrequency()const{
+double
+Waterfall3DDisplayPlot::GetStopFrequency() const
+{
   return _stopFrequency;
 }
 
-void Waterfall3DDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDataPoints, const double timePerFFT, const timespec timestamp, const int droppedFrames){
+void
+Waterfall3DDisplayPlot::PlotNewData(const double* dataPoints,
+				    const int64_t numDataPoints,
+				    const double timePerFFT,
+				    const timespec timestamp,
+				    const int droppedFrames)
+{
   if(numDataPoints > 0){
     if(numDataPoints != _numPoints){
       _numPoints = numDataPoints;
@@ -238,7 +263,10 @@ void Waterfall3DDisplayPlot::PlotNewData(const double* dataPoints, const int64_t
   }
 }
 
-void Waterfall3DDisplayPlot::SetIntensityRange(const double minIntensity, const double maxIntensity){
+void
+Waterfall3DDisplayPlot::SetIntensityRange(const double minIntensity,
+					  const double maxIntensity)
+{
   _waterfallData->SetFloorValue(minIntensity);
   _waterfallData->setMinZ(0);
   _waterfallData->setMaxZ(maxIntensity-minIntensity);
@@ -248,11 +276,14 @@ void Waterfall3DDisplayPlot::SetIntensityRange(const double minIntensity, const 
   emit UpdatedLowerIntensityLevel(minIntensity);
   emit UpdatedUpperIntensityLevel(maxIntensity);
 
-  SetIntensityColorMapType(_intensityColorMapType, _userDefinedLowIntensityColor, _userDefinedLowIntensityColor, true);
+  SetIntensityColorMapType(_intensityColorMapType,
+			   _userDefinedLowIntensityColor,
+			   _userDefinedLowIntensityColor, true);
 }
 
-void Waterfall3DDisplayPlot::replot(){
-
+void
+Waterfall3DDisplayPlot::replot()
+{
   if(!_initialized){
     Init();
   }
@@ -283,11 +314,25 @@ void Waterfall3DDisplayPlot::replot(){
   }
 }
 
-int Waterfall3DDisplayPlot::GetIntensityColorMapType()const{
+void
+Waterfall3DDisplayPlot::resizeSlot( QSize *s )
+{
+  resize(s->width(), s->height());
+}
+
+int
+Waterfall3DDisplayPlot::GetIntensityColorMapType() const
+{
   return _intensityColorMapType;
 }
 
-void Waterfall3DDisplayPlot::SetIntensityColorMapType(const int newType, const QColor lowColor, const QColor highColor, const bool forceFlag, const bool noReplotFlag){
+void
+Waterfall3DDisplayPlot::SetIntensityColorMapType(const int newType,
+						 const QColor lowColor,
+						 const QColor highColor,
+						 const bool forceFlag,
+						 const bool noReplotFlag)
+{
   if(((_intensityColorMapType != newType) || forceFlag) || 
      ((newType == INTENSITY_COLOR_MAP_TYPE_USER_DEFINED) &&
       (lowColor.isValid() && highColor.isValid()))){
@@ -350,11 +395,15 @@ void Waterfall3DDisplayPlot::SetIntensityColorMapType(const int newType, const Q
   }
 }
 
-const QColor Waterfall3DDisplayPlot::GetUserDefinedLowIntensityColor()const{
+const QColor
+Waterfall3DDisplayPlot::GetUserDefinedLowIntensityColor() const
+{
   return _userDefinedLowIntensityColor;
 }
 
-const QColor Waterfall3DDisplayPlot::GetUserDefinedHighIntensityColor()const{
+const QColor
+Waterfall3DDisplayPlot::GetUserDefinedHighIntensityColor() const
+{
   return _userDefinedHighIntensityColor;
 }
 

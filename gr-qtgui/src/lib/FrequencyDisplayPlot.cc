@@ -93,7 +93,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   timespec_reset(&_lastReplot);
 
   resize(parent->width(), parent->height());
-
+  
   _displayIntervalTime = (1.0/10.0); // 1/10 of a second between updates
 
   _useCenterFrequencyFlag = false;
@@ -313,6 +313,12 @@ FrequencyDisplayPlot::replot()
   if(differenceTime > (1.0/10.0)){
     _displayIntervalTime = differenceTime;
   }
+}
+ 
+void
+FrequencyDisplayPlot::resizeSlot( QSize *s )
+{
+  resize(s->width(), s->height());
 }
 
 void

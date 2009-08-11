@@ -14,14 +14,16 @@
 #include <highResTimeFunctions.h>
 #include <qwt_symbol.h>
 
-class ConstellationDisplayPlot:public QwtPlot{
+class ConstellationDisplayPlot : public QwtPlot
+{
   Q_OBJECT
 
 public:
   ConstellationDisplayPlot(QWidget*);
   virtual ~ConstellationDisplayPlot();
 
-  void PlotNewData(const double* realDataPoints, const double* imagDataPoints, 
+  void PlotNewData(const double* realDataPoints, 
+		   const double* imagDataPoints, 
 		   const int64_t numDataPoints);
     
   virtual void replot();
@@ -30,6 +32,9 @@ public:
   void set_yaxis(double min, double max);
   void set_axis(double xmin, double xmax,
 		double ymin, double ymax);
+
+public slots:
+  void resizeSlot( QSize *s );
 
 protected slots:
   void LegendEntryChecked(QwtPlotItem *plotItem, bool on);
