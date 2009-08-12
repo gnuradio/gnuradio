@@ -35,9 +35,6 @@ except ImportError:
 
 from optparse import OptionParser
 
-matplotlib.interactive(True)
-matplotlib.use('TkAgg')
-
 class draw_constellation:
     def __init__(self, filename, options):
         self.hfile = open(filename, "r")
@@ -139,8 +136,9 @@ class draw_constellation:
         draw()
         
     def zoom(self, event):
-        newxlim = self.sp_iq.get_xlim()
-        if(newxlim.all() != self.xlim.all()):
+        newxlim = scipy.array(self.sp_iq.get_xlim())
+        curxlim = scipy.array(self.xlim)
+        if(newxlim.all() != curxlim.all()):
             self.xlim = newxlim
             r = self.reals[int(ceil(self.xlim[0])) : int(ceil(self.xlim[1]))]
             i = self.imags[int(ceil(self.xlim[0])) : int(ceil(self.xlim[1]))]

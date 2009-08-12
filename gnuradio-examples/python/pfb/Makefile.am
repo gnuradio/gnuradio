@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2007,2009 Free Software Foundation, Inc.
+# Copyright 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,17 +21,11 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = \
-	apps \
-	audio \
-	digital \
-	digital-bert \
-	digital_voice \
-	mp-sched \
-	multi-antenna \
-	multi_usrp \
-	network \
-	ofdm \
-	pfb \
-	usrp \
-	usrp2
+ourdatadir = $(exampledir)/pfb
+
+dist_ourdata_SCRIPTS =		\
+	channelize.py		\
+	chirp_channelize.py	\
+	decimate.py		\
+	interpolate.py		\
+	fmtest.py

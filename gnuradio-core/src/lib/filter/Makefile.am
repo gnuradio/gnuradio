@@ -201,7 +201,11 @@ libfilter_la_common_SOURCES = 		\
 	complex_dotprod_generic.cc	\
 	ccomplex_dotprod_generic.cc	\
 	float_dotprod_generic.c		\
-	short_dotprod_generic.c		
+	short_dotprod_generic.c		\
+	gr_pfb_channelizer_ccf.cc	\
+	gr_pfb_decimator_ccf.cc		\
+	gr_pfb_interpolator_ccf.cc	\
+	gr_pfb_arb_resampler_ccf.cc
 
 libfilter_qa_la_common_SOURCES = 	\
 	qa_filter.cc			\
@@ -276,7 +280,11 @@ grinclude_HEADERS = 			\
 	qa_filter.h			\
 	short_dotprod_generic.h		\
 	short_dotprod_x86.h		\
-	sse_debug.h
+	sse_debug.h			\
+	gr_pfb_channelizer_ccf.h	\
+	gr_pfb_decimator_ccf.h		\
+	gr_pfb_interpolator_ccf.h	\
+	gr_pfb_arb_resampler_ccf.h
 
 noinst_HEADERS = 			\
 	assembly.h			\
@@ -327,6 +335,10 @@ swiginclude_HEADERS =			\
 	gr_iir_filter_ffd.i		\
 	gr_single_pole_iir_filter_ff.i	\
 	gr_single_pole_iir_filter_cc.i	\
+	gr_pfb_channelizer_ccf.i	\
+	gr_pfb_decimator_ccf.i		\
+	gr_pfb_interpolator_ccf.i	\
+	gr_pfb_arb_resampler_ccf.i	\
 	$(GENERATED_I)
 endif
 

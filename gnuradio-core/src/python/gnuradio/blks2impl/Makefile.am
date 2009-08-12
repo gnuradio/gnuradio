@@ -47,6 +47,10 @@ grblkspython_PYTHON =		\
 	ofdm_sync_pn.py		\
 	ofdm_sync_pnac.py	\
 	ofdm_sync_ml.py		\
+	pfb_arb_resampler.py	\
+	pfb_channelizer.py	\
+	pfb_decimator.py	\
+	pfb_interpolator.py	\
 	pkt.py			\
 	psk.py			\
 	qam.py			\

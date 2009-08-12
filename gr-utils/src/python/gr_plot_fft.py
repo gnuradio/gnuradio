@@ -21,14 +21,6 @@
 # 
 
 try:
-    import matplotlib
-    matplotlib.use('TkAgg')
-    matplotlib.interactive(True)
-except ImportError:
-    print "Please install Matplotlib to run this script (http://matplotlib.sourceforge.net/)"
-    raise SystemExit, 1
-
-try:
     import scipy
     from scipy import fftpack
 except ImportError:
@@ -164,8 +156,9 @@ class gr_plot_fft:
         draw()
         
     def zoom(self, event):
-        newxlim = self.sp_iq.get_xlim()
-        if(newxlim.all() != self.xlim.all()):
+        newxlim = scipy.array(self.sp_iq.get_xlim())
+        curxlim = scipy.array(self.xlim)
+        if(newxlim.all() != curxlim.all()):
             self.xlim = newxlim
             xmin = max(0, int(ceil(self.sample_rate*(self.xlim[0] - self.position))))
             xmax = min(int(ceil(self.sample_rate*(self.xlim[1] - self.position))), len(self.iq))

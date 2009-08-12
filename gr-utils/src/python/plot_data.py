@@ -33,9 +33,6 @@ except ImportError:
 
 from optparse import OptionParser
 
-matplotlib.interactive(True)
-matplotlib.use('TkAgg')
-
 class plot_data:
     def __init__(self, datatype, filenames, options):
         self.hfile = list()

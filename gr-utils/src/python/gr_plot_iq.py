@@ -34,10 +34,7 @@ except ImportError:
 
 from optparse import OptionParser
 
-matplotlib.interactive(True)
-matplotlib.use('TkAgg')
-
-class draw_fft:
+class draw_iq:
     def __init__(self, filename, options):
         self.hfile = open(filename, "r")
         self.block_length = options.block
@@ -168,7 +165,7 @@ def main():
         raise SystemExit, 1
     filename = args[0]
 
-    dc = draw_fft(filename, options)
+    dc = draw_iq(filename, options)
 
 if __name__ == "__main__":
     try:
