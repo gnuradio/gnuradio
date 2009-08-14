@@ -70,6 +70,8 @@ class Block(_Block):
 			(self._sources, self.get_parent().get_parent().Source),
 			(self._sinks, self.get_parent().get_parent().Sink),
 		):
+			#TODO #FIXME we want to filter out msg ports and run the regular code below this line
+			if any([port.get_type() == 'msg' for port in ports.values()]): continue
 			#how many ports?
 			num_ports = len(ports)
 			#do nothing for 0 ports

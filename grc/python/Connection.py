@@ -21,6 +21,9 @@ from .. base.Connection import Connection as _Connection
 
 class Connection(_Connection):
 
+	def is_msg(self):
+		return self.get_source().get_type() == self.get_sink().get_type() == 'msg'
+
 	def validate(self):
 		"""
 		Validate the connections.

@@ -10,6 +10,7 @@
 ##@param parameters the paramater blocks
 ##@param blocks the signal blocks
 ##@param connections the connections
+##@param messages the msg type connections
 ##@param generate_options the type of flow graph
 ##@param var_id2cbs variable id map to callback strings
 ########################################################
@@ -123,6 +124,18 @@ class $(class_name)(gr.hier_block2):
 #end if
 #for $ctrl in $controls
 		$indent($ctrl.get_make())
+#end for
+########################################################
+##Create Message Queues
+########################################################
+#if $messages
+
+		$DIVIDER
+		# Message Queues
+		$DIVIDER
+#end if
+#for $msg in $messages
+		$(msg.get_source().get_parent().get_id())_msgq = $(msg.get_sink().get_parent().get_id())_msgq = gr.msg_queue(2)
 #end for
 ########################################################
 ##Create Blocks

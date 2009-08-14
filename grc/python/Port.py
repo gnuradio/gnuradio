@@ -105,10 +105,11 @@ class Source(Port):
 
 	def __init__(self, block, n):
 		self._n = n #save n
-		if n['type'] != 'msg': #key is port index
+		if n['type'] == 'msg': n['key'] = 'msg'
+		else:
 			n['key'] = str(block._source_count)
 			block._source_count = block._source_count + 1
-			Port.__init__(self, block, n)
+		Port.__init__(self, block, n)
 
 	def __del__(self):
 		self.get_parent()._source_count = self.get_parent()._source_count - 1
@@ -117,14 +118,14 @@ class Sink(Port):
 
 	def __init__(self, block, n):
 		self._n = n #save n
-		if n['type'] != 'msg': #key is port index
+		if n['type'] == 'msg': n['key'] = 'msg'
+		else:
 			n['key'] = str(block._sink_count)
 			block._sink_count = block._sink_count + 1
-			Port.__init__(self, block, n)
+		Port.__init__(self, block, n)
 
 	def __del__(self):
 		self.get_parent()._sink_count = self.get_parent()._sink_count - 1
 
-#TODO merge source and sink classes into port class
-#TODO check that key is only defined if and only if type is message
-#TODO check that nports is undefined when type is message 
+#TODO check that nports and vlen is undefined when type is message
+#TODO only allow up to one port of type msg
