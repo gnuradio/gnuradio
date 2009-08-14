@@ -1,0 +1,12 @@
+/Makefile
+/Makefile.in
+/.la
+/.lo
+/.deps
+/.libs
+/*.la
+/*.lo
+/*.pyc
+/video_sdl.cc
+/video_sdl.py
+/run_tests

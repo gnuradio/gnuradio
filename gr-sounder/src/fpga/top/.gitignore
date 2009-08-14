@@ -1,0 +1,11 @@
+/Makefile
+/Makefile.in
+/db
+/*.rpt
+/*.summary
+/*.rbf
+/*.qws
+/*.smsg
+/*.done
+/*.pin
+/*.sof

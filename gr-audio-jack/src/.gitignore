@@ -1,0 +1,12 @@
+/Makefile
+/Makefile.in
+/.la
+/.lo
+/.deps
+/.libs
+/*.la
+/*.lo
+/*.pyc
+/audio_jack.cc
+/audio_jack.py
+/run_tests

@@ -1,0 +1,5 @@
+/.libs
+/.deps
+/Makefile
+/Makefile.in
+/usrp2_socket_opener

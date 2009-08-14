@@ -1,0 +1,14 @@
+/Makefile
+/Makefile.in
+/.la
+/.lo
+/.deps
+/.libs
+/*.la
+/*.lo
+/test_fusb
+/std_paths.h
+/usrp_dbid.py
+/usrp_dbid.h
+/usrp_dbid.cc
+/stamp-*

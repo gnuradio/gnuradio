@@ -1,0 +1,14 @@
+/Makefile
+/Makefile.in
+/.la
+/.lo
+/.deps
+/.libs
+/*.la
+/*.lo
+/atsc.cc
+/atsc.py
+/atsci_viterbi_gen
+/atsci_viterbi_mux.cc
+/test_atsci
+/*.pyc

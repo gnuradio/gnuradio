@@ -1,0 +1,11 @@
+/Makefile
+/Makefile.in
+/.la
+/.lo
+/.deps
+/.libs
+/*.la
+/*.lo
+/gsm_full_rate.py
+/gsm_full_rate.cc
+/*.pyc

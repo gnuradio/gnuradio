@@ -1,0 +1,13 @@
+/Makefile
+/Makefile.in
+/html
+/latex
+/xml
+/man
+/Doxyfile
+/.la
+/.lo
+/.deps
+/.libs
+/*.la
+/*.lo

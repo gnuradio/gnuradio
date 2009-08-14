@@ -1,0 +1,12 @@
+/Makefile
+/Makefile.in
+/.la
+/.lo
+/.deps
+/.libs
+/*.la
+/*.lo
+/comedi.cc
+/*.pyc
+/comedi.py
+/run_tests

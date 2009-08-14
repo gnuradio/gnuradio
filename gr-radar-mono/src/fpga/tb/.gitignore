@@ -1,0 +1,6 @@
+/Makefile
+/Makefile.in
+/radar_tb
+/out
+/*.out*
+/*.vcd

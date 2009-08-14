@@ -1,0 +1,14 @@
+/Makefile
+/Makefile.in
+/.la
+/.lo
+/.deps
+/.libs
+/*.la
+/*.lo
+/gnuradio_swig_python.cc
+/gnuradio_swig_python.py
+/usrp_prims.cc
+/usrp_prims.py
+/prims.cc
+/prims.py

@@ -1,0 +1,12 @@
+/Makefile
+/Makefile.in
+/.la
+/.lo
+/.deps
+/.libs
+/*.la
+/*.lo
+/test_all
+/benchmark_nop
+/benchmark_dma
+/benchmark_roundtrip
