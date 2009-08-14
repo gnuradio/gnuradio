@@ -1,0 +1,10 @@
+/Makefile
+/Makefile.in
+/*.a
+/*.la
+/*.lo
+/.deps
+/.libs
+/test_spu
+/gcell_spu_main
+/gcell_qa

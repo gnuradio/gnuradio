@@ -1,0 +1,12 @@
+/Makefile
+/Makefile.in
+/.la
+/.lo
+/.deps
+/.libs
+/*.la
+/*.lo
+/test_mblock
+/qa_bitset_mbh.cc
+/benchmark_send
+/getres

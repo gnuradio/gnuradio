@@ -1,0 +1,16 @@
+/Makefile
+/Makefile.in
+/.libs
+/.deps
+/test_eth
+/test_usrp2
+/gen_const
+/find_usrps
+/cerr
+/*.sh
+/tx_samples
+/rx_streaming_samples
+/u2_burn_mac_addr
+/usrp2_burn_mac_addr
+/test_mimo_tx
+/gpio

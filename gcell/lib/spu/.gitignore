@@ -1,0 +1,11 @@
+/Makefile
+/Makefile.in
+/.deps
+/.libs
+/*.la
+/*.lo
+/*.a
+/*.o
+/gcell_general_qa
+/gcell_runtime_qa
+/gcell_all

@@ -1,0 +1,6 @@
+/Makefile
+/Makefile.in
+/.libs
+/.deps
+/usrp_siggen
+/usrp_rx_cfile

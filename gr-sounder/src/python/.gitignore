@@ -1,0 +1,5 @@
+/Makefile
+/Makefile.in
+/run_tests
+/*.pyc
+/loopback.dat

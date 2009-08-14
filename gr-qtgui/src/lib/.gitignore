@@ -1,0 +1,13 @@
+/Makefile
+/Makefile.in
+/.libs
+/.deps
+/qtgui.cc
+/qtgui.py
+/WaterfallDisplayPlot_moc.cc
+/Waterfall3DDisplayPlot_moc.cc
+/TimeDomainDisplayPlot_moc.cc
+/spectrumdisplayform_moc.cc
+/spectrumdisplayform_ui.h
+/FrequencyDisplayPlot_moc.cc
+/ConstellationDisplayPlot_moc.cc

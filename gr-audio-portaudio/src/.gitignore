@@ -1,0 +1,17 @@
+/Makefile
+/Makefile.in
+/.la
+/.lo
+/.deps
+/.libs
+/*.la
+/*.lo
+/*.pyc
+/*.pyo
+/usrp.py
+/usrp.cc
+/audio_oss.cc
+/audio_oss.py
+/audio_portaudio.py
+/audio_portaudio.cc
+/run_tests

@@ -1,0 +1,11 @@
+/Makefile
+/Makefile.in
+/.deps
+/.libs
+/*.la
+/*.lo
+/usrp_swig.cc
+/usrp_swig.py
+/run_tests
+/usrp_dbids.py
+/*.pyc
