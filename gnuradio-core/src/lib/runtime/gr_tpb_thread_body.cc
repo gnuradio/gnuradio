@@ -35,12 +35,15 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block)
 
   gr_block_detail *d = block->detail().get();
   gr_block_executor::state s;
+  pmt_t msg;
+
 
   while (1){
     boost::this_thread::interruption_point();
  
-    while (!block->msg_queue()->empty_p())
-      block->handle_msg(block->msg_queue()->delete_head_nowait());
+    // handle any queued up messages
+    while ((msg = d->d_tpb.delete_head_nowait()))
+      block->handle_msg(msg);
 
     d->d_tpb.clear_changed();
     s = d_exec.run_one_iteration();
@@ -59,37 +62,41 @@ gr_tpb_thread_body::gr_tpb_thread_body(gr_block_sptr block)
       return;
 
     case gr_block_executor::BLKD_IN:		// Wait for input.
-      while (!d->d_tpb.input_changed) 
       {
-	boost::this_thread::interruption_point();
 	gruel::scoped_lock guard(d->d_tpb.mutex);
-	
-	// Block then wake on input_changed or msg arrived
-	while(!d->d_tpb.input_changed && !block->msg_queue()->empty_p())
-	  d->d_tpb.input_cond.wait(guard); 
+	while (!d->d_tpb.input_changed){
+	  
+	  // wait for input or message
+	  while(!d->d_tpb.input_changed && d->d_tpb.empty_p())
+	    d->d_tpb.input_cond.wait(guard);
 
-	// Run msgq while unlocked
-	guard.unlock();
-	while (!block->msg_queue()->empty_p())
-	  block->handle_msg(block->msg_queue()->delete_head_nowait());
+	  // handle all pending messages
+	  while ((msg = d->d_tpb.delete_head_nowait_already_holding_mutex())){
+	    guard.unlock();			// release lock while processing msg
+	    block->handle_msg(msg);
+	    guard.lock();
+	  }
+	}
       }
       break;
 
       
     case gr_block_executor::BLKD_OUT:		// Wait for output buffer space.
-      while (!d->d_tpb.output_changed) 
       {
-	boost::this_thread::interruption_point();
 	gruel::scoped_lock guard(d->d_tpb.mutex);
+	while (!d->d_tpb.output_changed){
+	  
+	  // wait for output room or message
+	  while(!d->d_tpb.output_changed && d->d_tpb.empty_p())
+	    d->d_tpb.output_cond.wait(guard);
 
-	// Block then wake on output_changed or msg arrived
-	while(!d->d_tpb.output_changed && !block->msg_queue()->empty_p())
-	  d->d_tpb.output_cond.wait(guard); 
-
-	// Run msgq while unlocked
-	guard.unlock();
-	while (!block->msg_queue()->empty_p())
-	  block->handle_msg(block->msg_queue()->delete_head_nowait());
+	  // handle all pending messages
+	  while ((msg = d->d_tpb.delete_head_nowait_already_holding_mutex())){
+	    guard.unlock();			// release lock while processing msg
+	    block->handle_msg(msg);
+	    guard.lock();
+	  }
+	}
       }
       break;
 

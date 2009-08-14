@@ -106,3 +106,10 @@ gr_block_detail::produce_each (int how_many_items)
     for (int i = 0; i < noutputs (); i++)
       d_output[i]->update_write_pointer (how_many_items);
 }
+
+
+void
+gr_block_detail::_post(pmt::pmt_t msg)
+{
+  d_tpb.insert_tail(msg);
+}

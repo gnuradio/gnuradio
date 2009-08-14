@@ -22,19 +22,21 @@
 #ifndef INCLUDED_GR_MSG_ACCEPTER_H
 #define INCLUDED_GR_MSG_ACCEPTER_H
 
-#include <gruel/msg_accepter_msgq.h>
+#include <gruel/msg_accepter.h>
+#include <gruel/pmt.h>
 
 /*!
  * \brief Accepts messages and inserts them into a message queue, then notifies
  * subclass gr_basic_block there is a message pending.
  */
-class gr_msg_accepter : public gruel::msg_accepter_msgq
+class gr_msg_accepter : public gruel::msg_accepter
 {
 public:
-  gr_msg_accepter(gruel::msg_queue_sptr msgq);
+  gr_msg_accepter();
   ~gr_msg_accepter();
-  
+
   void post(pmt::pmt_t msg);
+
 };
 
 #endif /* INCLUDED_GR_MSG_ACCEPTER_H */

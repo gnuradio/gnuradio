@@ -18,32 +18,32 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_GRUEL_MSG_ACCEPTER_H
-#define INCLUDED_GRUEL_MSG_ACCEPTER_H
+#ifndef INCLUDED_GRUEL_SEND_H
+#define INCLUDED_GRUEL_SEND_H
 
-#include <gruel/pmt.h>
+#include <gruel/msg_accepter.h>
 
 namespace gruel {
 
-  /*!
-   * \brief Virtual base class that accepts messages
-   */
-  class msg_accepter
-  {
-  public:
-    msg_accepter() {};
-    virtual ~msg_accepter();
 
-    /*!
-     * \brief send \p msg to \p msg_accepter
-     *
-     * Sending a message is an asynchronous operation.  The \p post
-     * call will not wait for the message either to arrive at the
-     * destination or to be received.
-     */
-    virtual void post(pmt::pmt_t msg) = 0;
-  };
+  /*!
+   * \brief send \p msg to \p msg_accepter
+   *
+   * Sending a message is an asynchronous operation.  The \p send
+   * call will not wait for the message either to arrive at the
+   * destination or to be received.
+   *
+   * \returns msg
+   */
+  static inline pmt::pmt_t
+  send(msg_accepter &acc, pmt::pmt_t msg)
+  {
+    return acc.post(msg);
+  }
+
+
 
 } /* namespace gruel */
 
-#endif /* INCLUDED_GRUEL_MSG_ACCEPTER_H */
+
+#endif /* INCLUDED_SEND_H */

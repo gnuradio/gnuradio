@@ -22,6 +22,8 @@
 #define INCLUDED_GR_TPB_DETAIL_H
 
 #include <gruel/thread.h>
+#include <deque>
+#include <gruel/pmt.h>
 
 class gr_block_detail;
 
@@ -36,6 +38,10 @@ struct gr_tpb_detail {
   bool				output_changed;
   gruel::condition_variable	output_cond;
 
+private:
+  std::deque<pmt::pmt_t>	msg_queue;
+
+public:
   gr_tpb_detail()
     : input_changed(false), output_changed(false) { }
 
@@ -55,16 +61,23 @@ struct gr_tpb_detail {
     input_changed = false;
     output_changed = false;
   }
+  
+  //! is the queue empty?
+  bool empty_p() const { return msg_queue.empty(); }
 
-  //! Called to notify us that a message is pending in the queue
-  void notify_msg()
-  {
-    gruel::scoped_lock guard(mutex);
+  //| Acquires and release the mutex	
+  void insert_tail(pmt::pmt_t msg);
 
-    // Just wake up thread if BLKD_IN or BLKD_OUT
-    input_cond.notify_one();
-    output_cond.notify_one();
-  }
+  /*!
+   * \returns returns pmt at head of queue or pmt_t() if empty.
+   */
+  pmt::pmt_t delete_head_nowait();
+
+  /*!
+   * \returns returns pmt at head of queue or pmt_t() if empty.
+   * Caller must already be holding the mutex
+   */
+  pmt::pmt_t delete_head_nowait_already_holding_mutex();
 
 private:
 
@@ -83,6 +96,7 @@ private:
     output_changed = true;
     output_cond.notify_one();
   }
+
 };
 
 #endif /* INCLUDED_GR_TPB_DETAIL_H */

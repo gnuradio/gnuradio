@@ -26,11 +26,12 @@
 #include <gr_msg_accepter.h>
 #include <gr_block.h>
 #include <gr_block_detail.h>
+#include <gr_hier_block2.h>
+#include <stdexcept>
 
 using namespace pmt;
 
-gr_msg_accepter::gr_msg_accepter(gruel::msg_queue_sptr msgq)
-  : gruel::msg_accepter_msgq(msgq)
+gr_msg_accepter::gr_msg_accepter()
 {
 }
 
@@ -42,15 +43,17 @@ gr_msg_accepter::~gr_msg_accepter()
 void
 gr_msg_accepter::post(pmt_t msg)
 {
-  // Let parent class do whatever it would have
-  gruel::msg_accepter_msgq::post(msg);
-
   // Notify derived class, handled case by case
   gr_block *p = dynamic_cast<gr_block *>(this);
   if (p) { 
-    p->detail()->d_tpb.notify_msg();
+    p->detail()->_post(msg);
+    return;
+  }
+  gr_hier_block2 *p2 = dynamic_cast<gr_hier_block2 *>(this);
+  if (p2){
+    // FIXME do the right thing
     return;
   }
 
-  // Test for other derived classes and handle
+  throw std::runtime_error("unknown derived class");
 }
