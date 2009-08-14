@@ -23,7 +23,7 @@
 #ifndef INCLUDED_PMT_H
 #define INCLUDED_PMT_H
 
-#include <boost/shared_ptr.hpp>
+#include <boost/intrusive_ptr.hpp>
 #include <boost/any.hpp>
 #include <complex>
 #include <string>
@@ -50,8 +50,10 @@ class pmt_base;
  * \brief typedef for shared pointer (transparent reference counting).
  * See http://www.boost.org/libs/smart_ptr/smart_ptr.htm
  */
-typedef boost::shared_ptr<pmt_base> pmt_t;
+typedef boost::intrusive_ptr<pmt_base> pmt_t;
 
+extern void intrusive_ptr_add_ref(pmt_base*);
+extern void intrusive_ptr_release(pmt_base*);
 
 class pmt_exception : public std::logic_error
 {
