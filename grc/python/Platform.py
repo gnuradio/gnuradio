@@ -42,7 +42,8 @@ COLORS = (#title, #color spec
 	('Integer Vector', Constants.INT_VECTOR_COLOR_SPEC),
 	('Short Vector', Constants.SHORT_VECTOR_COLOR_SPEC),
 	('Byte Vector', Constants.BYTE_VECTOR_COLOR_SPEC),
-	('Wildcard Type', Constants.WILDCARD_COLOR_SPEC),
+	('Wildcard', Constants.WILDCARD_COLOR_SPEC),
+	('Message', Constants.MSG_COLOR_SPEC),
 )
 
 class Platform(_Platform):

@@ -43,7 +43,7 @@ class Block(Element):
 		Add graphics related params to the block.
 		"""
 		#add the position param
-		self._params['_coordinate'] = self.get_parent().get_parent().Param(
+		self.get_params().append(self.get_parent().get_parent().Param(
 			self,
 			odict({
 				'name': 'GUI Coordinate',
@@ -52,8 +52,8 @@ class Block(Element):
 				'value': '(0, 0)',
 				'hide': 'all',
 			})
-		)
-		self._params['_rotation'] = self.get_parent().get_parent().Param(
+		))
+		self.get_params().append(self.get_parent().get_parent().Param(
 			self,
 			odict({
 				'name': 'GUI Rotation',
@@ -62,7 +62,7 @@ class Block(Element):
 				'value': '0',
 				'hide': 'all',
 			})
-		)
+		))
 		Element.__init__(self)
 
 	def get_coordinate(self):
