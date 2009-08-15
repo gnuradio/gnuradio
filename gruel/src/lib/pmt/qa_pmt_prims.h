@@ -35,6 +35,7 @@ class qa_pmt_prims : public CppUnit::TestCase {
   CPPUNIT_TEST(test_complexes);
   CPPUNIT_TEST(test_pairs);
   CPPUNIT_TEST(test_vectors);
+  CPPUNIT_TEST(test_tuples);
   CPPUNIT_TEST(test_equivalence);
   CPPUNIT_TEST(test_misc);
   CPPUNIT_TEST(test_dict);
@@ -53,6 +54,7 @@ class qa_pmt_prims : public CppUnit::TestCase {
   void test_complexes();
   void test_pairs();
   void test_vectors();
+  void test_tuples();
   void test_equivalence();
   void test_misc();
   void test_dict();

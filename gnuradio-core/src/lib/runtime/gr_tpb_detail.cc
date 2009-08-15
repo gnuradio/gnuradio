@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,6 +26,8 @@
 #include <gr_block.h>
 #include <gr_block_detail.h>
 #include <gr_buffer.h>
+
+using namespace pmt;
 
 /*
  * We assume that no worker threads are ever running when the
@@ -64,4 +66,45 @@ gr_tpb_detail::notify_neighbors(gr_block_detail *d)
 {
   notify_downstream(d);
   notify_upstream(d);
+}
+
+void
+gr_tpb_detail::insert_tail(pmt::pmt_t msg)
+{
+  gruel::scoped_lock guard(mutex);
+
+  msg_queue.push_back(msg);
+
+  // wake up thread if BLKD_IN or BLKD_OUT
+  input_cond.notify_one();
+  output_cond.notify_one();
+}
+
+pmt_t 
+gr_tpb_detail::delete_head_nowait()
+{
+  gruel::scoped_lock guard(mutex);
+
+  if (empty_p())
+    return pmt_t();
+
+  pmt_t m(msg_queue.front());
+  msg_queue.pop_front();
+
+  return m;
+}
+
+/*
+ * Caller must already be holding the mutex
+ */
+pmt_t 
+gr_tpb_detail::delete_head_nowait_already_holding_mutex()
+{
+  if (empty_p())
+    return pmt_t();
+
+  pmt_t m(msg_queue.front());
+  msg_queue.pop_front();
+
+  return m;
 }

@@ -18,32 +18,25 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_GRUEL_MSG_ACCEPTER_H
-#define INCLUDED_GRUEL_MSG_ACCEPTER_H
 
+#ifndef INCLUDED_GR_MSG_ACCEPTER_H
+#define INCLUDED_GR_MSG_ACCEPTER_H
+
+#include <gruel/msg_accepter.h>
 #include <gruel/pmt.h>
 
-namespace gruel {
+/*!
+ * \brief Accepts messages and inserts them into a message queue, then notifies
+ * subclass gr_basic_block there is a message pending.
+ */
+class gr_msg_accepter : public gruel::msg_accepter
+{
+public:
+  gr_msg_accepter();
+  ~gr_msg_accepter();
 
-  /*!
-   * \brief Virtual base class that accepts messages
-   */
-  class msg_accepter
-  {
-  public:
-    msg_accepter() {};
-    virtual ~msg_accepter();
+  void post(pmt::pmt_t msg);
 
-    /*!
-     * \brief send \p msg to \p msg_accepter
-     *
-     * Sending a message is an asynchronous operation.  The \p post
-     * call will not wait for the message either to arrive at the
-     * destination or to be received.
-     */
-    virtual void post(pmt::pmt_t msg) = 0;
-  };
+};
 
-} /* namespace gruel */
-
-#endif /* INCLUDED_GRUEL_MSG_ACCEPTER_H */
+#endif /* INCLUDED_GR_MSG_ACCEPTER_H */
