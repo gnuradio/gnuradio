@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2009 Free Software Foundation, Inc.
  *
  * This file is part of GNU Radio
  *
@@ -74,12 +74,19 @@ class gr_block_detail {
   void consume_each (int how_many_items);
 
   /*!
+   * \brief Tell the scheduler \p how_many_items were produced on output stream \p which_output.
+   */
+  void produce (int which_output, int how_many_items);
+
+  /*!
    * \brief Tell the scheduler \p how_many_items were produced on each output stream.
    */
   void produce_each (int how_many_items);
 
 
+
   gr_tpb_detail			     d_tpb;	// used by thread-per-block scheduler
+  int				     d_produce_or;
 
   // ----------------------------------------------------------------------------
 

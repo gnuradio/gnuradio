@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -97,6 +97,12 @@ void
 gr_block::consume_each (int how_many_items)
 {
   d_detail->consume_each (how_many_items);
+}
+
+void
+gr_block::produce (int which_output, int how_many_items)
+{
+  d_detail->produce (which_output, how_many_items);
 }
 
 int

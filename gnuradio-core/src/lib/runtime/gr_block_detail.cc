@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -36,7 +36,8 @@ gr_block_detail_ncurrently_allocated ()
 }
 
 gr_block_detail::gr_block_detail (unsigned int ninputs, unsigned int noutputs)
-  : d_ninputs (ninputs), d_noutputs (noutputs),
+  : d_produce_or(0),
+    d_ninputs (ninputs), d_noutputs (noutputs),
     d_input (ninputs), d_output (noutputs),
     d_done (false)
 {
@@ -100,9 +101,20 @@ gr_block_detail::consume_each (int how_many_items)
 }
 
 void
+gr_block_detail::produce (int which_output, int how_many_items)
+{
+  if (how_many_items > 0){
+    d_output[which_output]->update_write_pointer (how_many_items);
+    d_produce_or |= how_many_items;
+  }
+}
+
+void
 gr_block_detail::produce_each (int how_many_items)
 {
-  if (how_many_items > 0)
+  if (how_many_items > 0){
     for (int i = 0; i < noutputs (); i++)
       d_output[i]->update_write_pointer (how_many_items);
+    d_produce_or |= how_many_items;
+  }
 }

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2007 Free Software Foundation, Inc.
+ * Copyright 2004,2007,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -57,6 +57,12 @@ class gr_block : public gr_basic_block {
 
  public:
   
+  //! Magic return values from general_work
+  enum {
+    WORK_CALLED_PRODUCE = -2,
+    WORK_DONE = -1
+  };
+
   virtual ~gr_block ();
 
   /*!
@@ -70,7 +76,7 @@ class gr_block : public gr_basic_block {
   void  set_history (unsigned history) { d_history = history; }
   
   /*!
-   * \brief return true if this block has a fixed input to output rate
+   * \brief Return true if this block has a fixed input to output rate.
    *
    * If true, then fixed_rate_in_to_out and fixed_rate_out_to_in may be called.
    */
@@ -150,6 +156,13 @@ class gr_block : public gr_basic_block {
   void consume_each (int how_many_items);
 
   /*!
+   * \brief Tell the scheduler \p how_many_items were produced on output stream \p which_output.
+   *
+   * If the block's general_work method calls produce, \p general_work must return WORK_CALLED_PRODUCE.
+   */
+  void produce (int which_output, int how_many_items);
+
+  /*!
    * \brief Set the approximate output rate / input rate
    *
    * Provide a hint to the buffer allocator and scheduler.
@@ -191,7 +204,7 @@ class gr_block : public gr_basic_block {
 
   int                   d_output_multiple;
   double                d_relative_rate;	// approx output_rate / input_rate
-  gr_block_detail_sptr	d_detail;		    // implementation details
+  gr_block_detail_sptr	d_detail;		// implementation details
   unsigned              d_history;
   bool                  d_fixed_rate;
     
