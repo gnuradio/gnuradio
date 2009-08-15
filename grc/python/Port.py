@@ -111,9 +111,6 @@ class Source(Port):
 			block._source_count = block._source_count + 1
 		Port.__init__(self, block, n)
 
-	def __del__(self):
-		self.get_parent()._source_count = self.get_parent()._source_count - 1
-
 class Sink(Port):
 
 	def __init__(self, block, n):
@@ -123,9 +120,6 @@ class Sink(Port):
 			n['key'] = str(block._sink_count)
 			block._sink_count = block._sink_count + 1
 		Port.__init__(self, block, n)
-
-	def __del__(self):
-		self.get_parent()._sink_count = self.get_parent()._sink_count - 1
 
 #TODO check that nports and vlen is undefined when type is message
 #TODO only allow up to one port of type msg

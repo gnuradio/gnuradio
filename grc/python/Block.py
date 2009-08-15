@@ -66,18 +66,18 @@ class Block(_Block):
 				except AssertionError: self.add_error_message('Check "%s" failed.'%check)
 			except: self.add_error_message('Check "%s" did not evaluate.'%check)
 		#adjust nports
-		for ports, Port in (
-			(self._sources, self.get_parent().get_parent().Source),
-			(self._sinks, self.get_parent().get_parent().Sink),
+		for get_ports, get_port, Port in (
+			(self.get_sources, self.get_source, self.get_parent().get_parent().Source),
+			(self.get_sinks, self.get_sink, self.get_parent().get_parent().Sink),
 		):
 			#TODO #FIXME we want to filter out msg ports and run the regular code below this line
-			if any([port.get_type() == 'msg' for port in ports.values()]): continue
+			if any([port.get_type() == 'msg' for port in get_ports()]): continue
 			#how many ports?
-			num_ports = len(ports)
+			num_ports = len(get_ports())
 			#do nothing for 0 ports
 			if not num_ports: continue
 			#get the nports setting
-			port0 = ports[str(0)]
+			port0 = get_port(str(0))
 			nports = port0.get_nports()
 			#do nothing for no nports
 			if not nports: continue
@@ -87,11 +87,12 @@ class Block(_Block):
 			if nports < num_ports:
 				#remove the connections
 				for key in map(str, range(nports, num_ports)):
-					port = ports[key]
+					port = get_port(key)
 					for connection in port.get_connections():
 						self.get_parent().remove_element(connection)
 				#remove the ports
-				for key in map(str, range(nports, num_ports)): ports.pop(key)
+				for key in map(str, range(nports, num_ports)):
+					get_ports().remove(get_port(key))
 				continue
 			#add more ports
 			if nports > num_ports:
@@ -99,7 +100,8 @@ class Block(_Block):
 					n = port0._n
 					n['key'] = key
 					port = Port(self, n)
-					ports[key] = port
+					#FIXME should use insert w/index not append
+					get_ports().append(port)
 				continue
 
 	def port_controller_modify(self, direction):

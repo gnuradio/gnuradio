@@ -46,6 +46,9 @@ class TemplateArg(UserDict):
 	def __call__(self):
 		return self._param.get_evaluated()
 
+def _get_keys(lst): return [elem.get_key() for elem in lst]
+def _get_elem(lst, key): return lst[_get_keys(lst).index(key)]
+
 class Block(Element):
 
 	def __init__(self, flow_graph, n):
@@ -66,17 +69,17 @@ class Block(Element):
 		self._category = n.find('category') or ''
 		self._block_wrapper_path = n.find('block_wrapper_path')
 		#create the param objects
-		self._params = odict()
+		self._params = list()
 		#add the id param
-		self._params['id'] = self.get_parent().get_parent().Param(
+		self.get_params().append(self.get_parent().get_parent().Param(
 			self,
 			odict({
 				'name': 'ID',
 				'key': 'id',
 				'type': 'id',
 			})
-		)
-		self._params['_enabled'] = self.get_parent().get_parent().Param(
+		))
+		self.get_params().append(self.get_parent().get_parent().Param(
 			self,
 			odict({
 				'name': 'Enabled',
@@ -85,32 +88,32 @@ class Block(Element):
 				'value': 'True',
 				'hide': 'all',
 			})
-		)
+		))
 		for param in map(lambda n: self.get_parent().get_parent().Param(self, n), params):
 			key = param.get_key()
 			#test against repeated keys
 			try: assert key not in self.get_param_keys()
 			except AssertionError: raise Exception, 'Key "%s" already exists in params'%key
 			#store the param
-			self._params[key] = param
+			self.get_params().append(param)
 		#create the source objects
-		self._sources = odict()
+		self._sources = list()
 		for source in map(lambda n: self.get_parent().get_parent().Source(self, n), sources):
 			key = source.get_key()
 			#test against repeated keys
 			try: assert key not in self.get_source_keys()
 			except AssertionError: raise Exception, 'Key "%s" already exists in sources'%key
 			#store the port
-			self._sources[key] = source
+			self.get_sources().append(source)
 		#create the sink objects
-		self._sinks = odict()
+		self._sinks = list()
 		for sink in map(lambda n: self.get_parent().get_parent().Sink(self, n), sinks):
 			key = sink.get_key()
 			#test against repeated keys
 			try: assert key not in self.get_sink_keys()
 			except AssertionError: raise Exception, 'Key "%s" already exists in sinks'%key
 			#store the port
-			self._sinks[key] = sink
+			self.get_sinks().append(sink)
 		#begin the testing
 		self.test()
 
@@ -164,23 +167,23 @@ class Block(Element):
 	##############################################
 	# Access Params
 	##############################################
-	def get_param_keys(self): return self._params.keys()
-	def get_param(self, key): return self._params[key]
-	def get_params(self): return self._params.values()
+	def get_param_keys(self): return _get_keys(self._params)
+	def get_param(self, key): return _get_elem(self._params, key)
+	def get_params(self): return self._params
 
 	##############################################
 	# Access Sinks
 	##############################################
-	def get_sink_keys(self): return self._sinks.keys()
-	def get_sink(self, key): return self._sinks[key]
-	def get_sinks(self): return self._sinks.values()
+	def get_sink_keys(self): return _get_keys(self._sinks)
+	def get_sink(self, key): return _get_elem(self._sinks, key)
+	def get_sinks(self): return self._sinks
 
 	##############################################
 	# Access Sources
 	##############################################
-	def get_source_keys(self): return self._sources.keys()
-	def get_source(self, key): return self._sources[key]
-	def get_sources(self): return self._sources.values()
+	def get_source_keys(self): return _get_keys(self._sources)
+	def get_source(self, key): return _get_elem(self._sources, key)
+	def get_sources(self): return self._sources
 
 	def get_connections(self):
 		return sum([port.get_connections() for port in self.get_ports()], [])
