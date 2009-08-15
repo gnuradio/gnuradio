@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,6 +26,9 @@
 #include <gr_sync_block.h>
 #include <stddef.h>			// size_t
 
+class gr_head;
+typedef boost::shared_ptr<gr_head> gr_head_sptr;
+
 /*!
  * \brief copies the first N items to the output then signals done
  * \ingroup slicedice_blk
@@ -35,7 +38,7 @@
 
 class gr_head : public gr_sync_block
 {
-  friend gr_block_sptr gr_make_head (size_t sizeof_stream_item, int nitems);
+  friend gr_head_sptr gr_make_head (size_t sizeof_stream_item, int nitems);
   gr_head (size_t sizeof_stream_item, int nitems);
 
   int	d_nitems;
@@ -45,9 +48,11 @@ class gr_head : public gr_sync_block
   int work (int noutput_items,
 		 gr_vector_const_void_star &input_items,
 		 gr_vector_void_star &output_items);
+
+  void reset() { d_ncopied_items = 0; }
 };
 
-gr_block_sptr
+gr_head_sptr
 gr_make_head (size_t sizeof_stream_item, int nitems);
 
 

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -35,10 +35,10 @@ gr_head::gr_head (size_t sizeof_stream_item, int nitems)
 {
 }
 
-gr_block_sptr
+gr_head_sptr
 gr_make_head (size_t sizeof_stream_item, int nitems)
 {
-  return gr_block_sptr (new gr_head (sizeof_stream_item, nitems));
+  return gnuradio::get_initial_sptr(new gr_head (sizeof_stream_item, nitems));
 }
 
 int

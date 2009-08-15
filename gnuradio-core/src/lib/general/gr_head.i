@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004 Free Software Foundation, Inc.
+ * Copyright 2004,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -20,11 +20,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%ignore gr_head;
+GR_SWIG_BLOCK_MAGIC(gr,head);
+
+gr_head_sptr gr_make_head(size_t sizeof_stream_item, int nitems);
+
 class gr_head : public gr_block {
-  friend gr_block_sptr gr_make_head (size_t sizeof_stream_item, int nitems);
-  gr_head (size_t sizeof_stream_item, int nitems);
+  gr_head();
+public:
+  void reset();
 };
 
-%rename(head) gr_make_head;
-gr_block_sptr gr_make_head (size_t sizeof_stream_item, int nitems);

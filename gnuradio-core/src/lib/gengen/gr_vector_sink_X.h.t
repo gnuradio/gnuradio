@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2004,2008 Free Software Foundation, Inc.
+ * Copyright 2004,2008,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -50,7 +50,8 @@ class @NAME@ : public gr_sync_block {
 		    gr_vector_const_void_star &input_items,
 		    gr_vector_void_star &output_items);
 
-  void clear() {d_data.clear();}
+  void reset() {d_data.clear();}
+  void clear() {reset(); }		// deprecated
   std::vector<@TYPE@> data () const;
 };
 
