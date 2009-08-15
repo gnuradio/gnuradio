@@ -237,6 +237,42 @@ pmt_t pmt_cadddr(pmt_t pair);
 
 /*
  * ------------------------------------------------------------------------
+ *			          Tuples
+ *
+ * Store a fixed number of objects.  Tuples are not modifiable, and thus
+ * are excellent for use as messages.  Indexing is zero based.
+ * Access time to an element is O(1).
+ * ------------------------------------------------------------------------
+ */
+
+//! Return true if \p x is a tuple, othewise false.
+bool pmt_is_tuple(pmt_t x);
+
+pmt_t pmt_make_tuple();
+pmt_t pmt_make_tuple(const pmt_t &e0);
+pmt_t pmt_make_tuple(const pmt_t &e0, const pmt_t &e1);
+pmt_t pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2);
+pmt_t pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3);
+pmt_t pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4);
+pmt_t pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5);
+pmt_t pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5, const pmt_t &e6);
+pmt_t pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5, const pmt_t &e6, const pmt_t &e7);
+pmt_t pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5, const pmt_t &e6, const pmt_t &e7, const pmt_t &e8);
+pmt_t pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5, const pmt_t &e6, const pmt_t &e7, const pmt_t &e8, const pmt_t &e9);
+
+/*!
+ * If \p x is a vector or proper list, return a tuple containing the elements of x
+ */
+pmt_t pmt_to_tuple(const pmt_t &x);
+
+/*!
+ * Return the contents of position \p k of \p tuple.
+ * \p k must be a valid index of \p tuple.
+ */
+pmt_t pmt_tuple_ref(const pmt_t &tuple, size_t k);
+
+/*
+ * ------------------------------------------------------------------------
  *			       Vectors
  *
  * These vectors can hold any kind of objects.  Indexing is zero based.

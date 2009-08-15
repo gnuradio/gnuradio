@@ -48,6 +48,7 @@ public:
   virtual bool is_complex() const { return false; }
   virtual bool is_null()    const { return false; }
   virtual bool is_pair()    const { return false; }
+  virtual bool is_tuple()   const { return false; }
   virtual bool is_vector()  const { return false; }
   virtual bool is_dict()    const { return false; }
   virtual bool is_any()     const { return false; }
@@ -178,6 +179,22 @@ public:
   size_t length() const { return d_v.size(); }
 
   pmt_t _ref(size_t k) const { return d_v[k]; }
+};
+
+class pmt_tuple : public pmt_base
+{
+  std::vector<pmt_t>	d_v;
+
+public:
+  pmt_tuple(size_t len);
+  //~pmt_tuple();
+
+  bool is_tuple() const { return true; }
+  pmt_t ref(size_t k) const;
+  size_t length() const { return d_v.size(); }
+
+  pmt_t _ref(size_t k) const { return d_v[k]; }
+  void _set(size_t k, pmt_t v) { d_v[k] = v; }
 };
 
 class pmt_dict : public pmt_base
