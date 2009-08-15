@@ -24,6 +24,7 @@
 
 #include <gruel/pmt.h>
 #include <boost/utility.hpp>
+#include <boost/detail/atomic_count.hpp>
 
 /*
  * EVERYTHING IN THIS FILE IS PRIVATE TO THE IMPLEMENTATION!
@@ -35,8 +36,10 @@
 namespace pmt {
 
 class pmt_base : boost::noncopyable {
+  mutable boost::detail::atomic_count count_;
+
 protected:
-  pmt_base(){};
+  pmt_base() : count_(0) {};
   virtual ~pmt_base();
 
 public:
@@ -65,6 +68,9 @@ public:
   virtual bool is_f64vector() const { return false; }
   virtual bool is_c32vector() const { return false; }
   virtual bool is_c64vector() const { return false; }
+
+  friend void intrusive_ptr_add_ref(pmt_base* p);
+  friend void intrusive_ptr_release(pmt_base* p);
 
 # if (PMT_LOCAL_ALLOCATOR)
   void *operator new(size_t);
