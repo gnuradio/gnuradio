@@ -38,7 +38,7 @@ class Port(_Port):
 			n=n,
 		)
 		self._nports = n.find('nports') or ''
-		self._vlen = n.find('vlen') or '1'
+		self._vlen = n.find('vlen') or ''
 		self._optional = bool(n.find('optional'))
 
 	def validate(self):
@@ -47,6 +47,11 @@ class Port(_Port):
 		except AssertionError: self.add_error_message('Port is not connected.')
 		try: assert self.is_source() or len(self.get_enabled_connections()) <= 1
 		except AssertionError: self.add_error_message('Port has too many connections.')
+		if self.get_type() == 'msg':
+			try: assert not self.get_nports()
+			except AssertionError: self.add_error_message('A port of type "msg" cannot have "nports" set.')
+			try: assert self.get_vlen() == 1
+			except AssertionError: self.add_error_message('A port of type "msg" must have a "vlen" of 1.')
 
 	def get_vlen(self):
 		"""
@@ -101,12 +106,17 @@ class Port(_Port):
 			}[self.get_type()]
 		except: return _Port.get_color(self)
 
+	def copy(self, new_key=None):
+		n = self._n.copy()
+		if new_key: n['key'] = new_key
+		return self.__class__(self.get_parent(), n)
+
 class Source(Port):
 
 	def __init__(self, block, n):
 		self._n = n #save n
 		if n['type'] == 'msg': n['key'] = 'msg'
-		else:
+		if not n.find('key'):
 			n['key'] = str(block._source_count)
 			block._source_count = block._source_count + 1
 		Port.__init__(self, block, n)
@@ -116,10 +126,7 @@ class Sink(Port):
 	def __init__(self, block, n):
 		self._n = n #save n
 		if n['type'] == 'msg': n['key'] = 'msg'
-		else:
+		if not n.find('key'):
 			n['key'] = str(block._sink_count)
 			block._sink_count = block._sink_count + 1
 		Port.__init__(self, block, n)
-
-#TODO check that nports and vlen is undefined when type is message
-#TODO only allow up to one port of type msg

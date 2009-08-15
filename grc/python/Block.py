@@ -66,14 +66,12 @@ class Block(_Block):
 				except AssertionError: self.add_error_message('Check "%s" failed.'%check)
 			except: self.add_error_message('Check "%s" did not evaluate.'%check)
 		#adjust nports
-		for get_ports, get_port, Port in (
-			(self.get_sources, self.get_source, self.get_parent().get_parent().Source),
-			(self.get_sinks, self.get_sink, self.get_parent().get_parent().Sink),
+		for get_ports, get_port in (
+			(self.get_sources, self.get_source),
+			(self.get_sinks, self.get_sink),
 		):
-			#TODO #FIXME we want to filter out msg ports and run the regular code below this line
-			if any([port.get_type() == 'msg' for port in get_ports()]): continue
-			#how many ports?
-			num_ports = len(get_ports())
+			#how many streaming (non-message) ports?
+			num_ports = len(filter(lambda p: p.get_type() != 'msg', get_ports()))
 			#do nothing for 0 ports
 			if not num_ports: continue
 			#get the nports setting
@@ -97,11 +95,11 @@ class Block(_Block):
 			#add more ports
 			if nports > num_ports:
 				for key in map(str, range(num_ports, nports)):
-					n = port0._n
-					n['key'] = key
-					port = Port(self, n)
-					#FIXME should use insert w/index not append
-					get_ports().append(port)
+					prev_port = get_port(str(int(key)-1))
+					get_ports().insert(
+						get_ports().index(prev_port)+1,
+						prev_port.copy(new_key=key),
+					)
 				continue
 
 	def port_controller_modify(self, direction):
