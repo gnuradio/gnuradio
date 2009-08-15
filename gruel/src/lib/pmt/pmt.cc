@@ -673,20 +673,21 @@ pmt_to_tuple(const pmt_t &x)
 
   size_t len = pmt_length(x);
   pmt_tuple *t = new pmt_tuple(len);
+  pmt_t r = pmt_t(t);
 
   if (x->is_vector()){
     for (size_t i = 0; i < len; i++)
       t->_set(i, _vector(x)->ref(i));
-    return pmt_t(t);
+    return r;
   }
 
   if (x->is_pair()){
     pmt_t y = x;
     for (size_t i = 0; i < len; i++){
       t->_set(i, pmt_car(y));
-      y = pmt_cdr(x);
+      y = pmt_cdr(y);
     }
-    return pmt_t(t);
+    return r;
   }
 
   throw pmt_wrong_type("pmt_to_tuple", x);
@@ -918,6 +919,19 @@ pmt_equal(const pmt_t& x, const pmt_t& y)
   if (x->is_vector() && y->is_vector()){
     pmt_vector *xv = _vector(x);
     pmt_vector *yv = _vector(y);
+    if (xv->length() != yv->length())
+      return false;
+
+    for (unsigned i = 0; i < xv->length(); i++)
+      if (!pmt_equal(xv->_ref(i), yv->_ref(i)))
+	return false;
+
+    return true;
+  }
+
+  if (x->is_tuple() && y->is_tuple()){
+    pmt_tuple *xv = _tuple(x);
+    pmt_tuple *yv = _tuple(y);
     if (xv->length() != yv->length())
       return false;
 

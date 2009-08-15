@@ -90,6 +90,11 @@ pmt_write(pmt_t obj, std::ostream &port)
     // port << "#<vector " << obj << ">";
     port << "#<vector>";
   }
+  else if (pmt_is_tuple(obj)){
+    // FIXME
+    // port << "#<tuple " << obj << ">";
+    port << "#<tuple>";
+  }
   else if (pmt_is_uniform_vector(obj)){
     // FIXME
     // port << "#<uniform-vector " << obj << ">";
