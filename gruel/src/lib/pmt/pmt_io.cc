@@ -80,20 +80,30 @@ pmt_write(pmt_t obj, std::ostream &port)
     port << "(";
     pmt_write_list_tail(obj, port);
   }
+  else if (pmt_is_tuple(obj)){
+    port << "{";
+    size_t len = pmt_length(obj);
+    if (len > 0){
+      port << pmt_tuple_ref(obj, 0);
+      for (size_t i = 1; i < len; i++)
+	port << " " << pmt_tuple_ref(obj, i);
+    }
+    port << "}";
+  }
+  else if (pmt_is_vector(obj)){
+    port << "#(";
+    size_t len = pmt_length(obj);
+    if (len > 0){
+      port << pmt_vector_ref(obj, 0);
+      for (size_t i = 1; i < len; i++)
+	port << " " << pmt_vector_ref(obj, i);
+    }
+    port << ")";
+  }
   else if (pmt_is_dict(obj)){
     // FIXME
     // port << "#<dict " << obj << ">";
     port << "#<dict>";
-  }
-  else if (pmt_is_vector(obj)){
-    // FIXME
-    // port << "#<vector " << obj << ">";
-    port << "#<vector>";
-  }
-  else if (pmt_is_tuple(obj)){
-    // FIXME
-    // port << "#<tuple " << obj << ">";
-    port << "#<tuple>";
   }
   else if (pmt_is_uniform_vector(obj)){
     // FIXME
