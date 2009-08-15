@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2009 Free Software Foundation, Inc.
+# Copyright 2001,2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,39 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = \
-    $(bin_SCRIPTS) \
-    README.plot
+SUBDIRS = src
 
-ourpythondir = $(grpythondir)
-
-ourpython_PYTHON = \
-    plot_data.py
-
-bin_SCRIPTS = \
-    gr_plot_char.py \
-    gr_plot_const.py \
-    gr_plot_fft.py \
-    gr_plot_fft_c.py \
-    gr_plot_fft_f.py \
-    gr_plot_psd.py \
-    gr_plot_psd_c.py \
-    gr_plot_psd_f.py \
-    gr_plot_float.py \
-    gr_plot_int.py \
-    gr_plot_iq.py \
-    gr_plot_short.py \
-    lsusrp \
-    qr_fft.py \
-    usrp_fft.py \
-    usrp_oscope.py \
-    usrp_print_db.py \
-    usrp_rx_cfile.py \
-    usrp_rx_nogui.py \
-    usrp_siggen.py \
-    usrp_test_counting.py \
-    usrp_test_loopback.py \
-    usrp2_fft.py \
-    usrp2_rx_cfile.py \
-    usrp2_siggen.py \
-    usrp2_siggen_gui.py
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = gnuradio-vrt.pc
