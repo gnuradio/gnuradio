@@ -18,32 +18,42 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_GRUEL_MSG_ACCEPTER_H
-#define INCLUDED_GRUEL_MSG_ACCEPTER_H
 
-#include <gruel/pmt.h>
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-namespace gruel {
+#include <gr_msg_accepter.h>
+#include <gr_block.h>
+#include <gr_block_detail.h>
+#include <gr_hier_block2.h>
+#include <stdexcept>
 
-  /*!
-   * \brief Virtual base class that accepts messages
-   */
-  class msg_accepter
-  {
-  public:
-    msg_accepter() {};
-    virtual ~msg_accepter();
+using namespace pmt;
 
-    /*!
-     * \brief send \p msg to \p msg_accepter
-     *
-     * Sending a message is an asynchronous operation.  The \p post
-     * call will not wait for the message either to arrive at the
-     * destination or to be received.
-     */
-    virtual void post(pmt::pmt_t msg) = 0;
-  };
+gr_msg_accepter::gr_msg_accepter()
+{
+}
 
-} /* namespace gruel */
+gr_msg_accepter::~gr_msg_accepter()
+{
+  // NOP, required as virtual destructor
+}
 
-#endif /* INCLUDED_GRUEL_MSG_ACCEPTER_H */
+void
+gr_msg_accepter::post(pmt_t msg)
+{
+  // Notify derived class, handled case by case
+  gr_block *p = dynamic_cast<gr_block *>(this);
+  if (p) { 
+    p->detail()->_post(msg);
+    return;
+  }
+  gr_hier_block2 *p2 = dynamic_cast<gr_hier_block2 *>(this);
+  if (p2){
+    // FIXME do the right thing
+    return;
+  }
+
+  throw std::runtime_error("unknown derived class");
+}

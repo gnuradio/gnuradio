@@ -44,6 +44,7 @@ libruntime_la_SOURCES = 			\
 	gr_io_signature.cc			\
 	gr_local_sighandler.cc			\
 	gr_message.cc				\
+	gr_msg_accepter.cc			\
 	gr_msg_handler.cc			\
 	gr_msg_queue.cc				\
 	gr_pagesize.cc				\
@@ -96,6 +97,7 @@ grinclude_HEADERS = 				\
 	gr_io_signature.h			\
 	gr_local_sighandler.h			\
 	gr_message.h				\
+	gr_msg_accepter.h			\
 	gr_msg_handler.h			\
 	gr_msg_queue.h				\
 	gr_pagesize.h				\

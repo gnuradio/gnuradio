@@ -193,6 +193,91 @@ qa_pmt_prims::test_vectors()
     CPPUNIT_ASSERT_EQUAL(s0, pmt_vector_ref(v1, i));
 }
 
+static void
+check_tuple(size_t len, const std::vector<pmt_t> &s, pmt_t t)
+{
+  CPPUNIT_ASSERT_EQUAL(true, pmt_is_tuple(t));
+  CPPUNIT_ASSERT_EQUAL(len, pmt_length(t));
+
+  for (size_t i = 0; i < len; i++)
+    CPPUNIT_ASSERT_EQUAL(s[i], pmt_tuple_ref(t, i));
+
+}
+
+void
+qa_pmt_prims::test_tuples()
+{
+  pmt_t v = pmt_make_vector(10, PMT_NIL);
+  std::vector<pmt_t> s(10);
+  for (size_t i = 0; i < 10; i++){
+    std::ostringstream os;
+    os << "s" << i;
+    s[i] = pmt_string_to_symbol(os.str());
+    pmt_vector_set(v, i, s[i]);
+  }
+
+
+  pmt_t t;
+
+  t = pmt_make_tuple();
+  check_tuple(0, s, t);
+
+  t = pmt_make_tuple(s[0]);
+  check_tuple(1, s, t);
+
+  CPPUNIT_ASSERT(pmt_is_vector(v));
+  CPPUNIT_ASSERT(!pmt_is_tuple(v));
+  CPPUNIT_ASSERT(pmt_is_tuple(t));
+  CPPUNIT_ASSERT(!pmt_is_vector(t));
+
+  t = pmt_make_tuple(s[0], s[1]);
+  check_tuple(2, s, t);
+
+  t = pmt_make_tuple(s[0], s[1], s[2]);
+  check_tuple(3, s, t);
+
+  t = pmt_make_tuple(s[0], s[1], s[2], s[3]);
+  check_tuple(4, s, t);
+
+  t = pmt_make_tuple(s[0], s[1], s[2], s[3], s[4]);
+  check_tuple(5, s, t);
+
+  t = pmt_make_tuple(s[0], s[1], s[2], s[3], s[4], s[5]);
+  check_tuple(6, s, t);
+
+  t = pmt_make_tuple(s[0], s[1], s[2], s[3], s[4], s[5], s[6]);
+  check_tuple(7, s, t);
+
+  t = pmt_make_tuple(s[0], s[1], s[2], s[3], s[4], s[5], s[6], s[7]);
+  check_tuple(8, s, t);
+
+  t = pmt_make_tuple(s[0], s[1], s[2], s[3], s[4], s[5], s[6], s[7], s[8]);
+  check_tuple(9, s, t);
+
+  t = pmt_make_tuple(s[0], s[1], s[2], s[3], s[4], s[5], s[6], s[7], s[8], s[9]);
+  check_tuple(10, s, t);
+
+  t = pmt_make_tuple(s[0], s[1], s[2]);
+  CPPUNIT_ASSERT_THROW(pmt_tuple_ref(t, 3), pmt_out_of_range);
+  CPPUNIT_ASSERT_THROW(pmt_vector_ref(t, 0), pmt_wrong_type);
+  CPPUNIT_ASSERT_THROW(pmt_tuple_ref(v, 0), pmt_wrong_type);
+
+  t = pmt_make_tuple(s[0], s[1], s[2], s[3], s[4], s[5], s[6], s[7], s[8], s[9]);
+  pmt_t t2 = pmt_to_tuple(v);
+  CPPUNIT_ASSERT_EQUAL(size_t(10), pmt_length(v));
+  CPPUNIT_ASSERT(pmt_equal(t, t2));
+  //std::cout << v << std::endl;
+  //std::cout << t2 << std::endl;
+
+  
+  t = pmt_make_tuple(s[0], s[1], s[2]);
+  pmt_t list0 = pmt_list3(s[0], s[1], s[2]);
+  CPPUNIT_ASSERT_EQUAL(size_t(3), pmt_length(list0));
+  t2 = pmt_to_tuple(list0);
+  CPPUNIT_ASSERT_EQUAL(size_t(3), pmt_length(t2));
+  CPPUNIT_ASSERT(pmt_equal(t, t2));
+}
+
 void
 qa_pmt_prims::test_equivalence()
 {
@@ -436,3 +521,4 @@ qa_pmt_prims::test_sets()
   CPPUNIT_ASSERT(!pmt_subsetp(l2,l1));
   CPPUNIT_ASSERT(!pmt_subsetp(l3,l2));
 }
+

@@ -26,7 +26,7 @@
 #include <gr_runtime_types.h>
 #include <gr_sptr_magic.h>
 #include <boost/enable_shared_from_this.hpp>
-#include <gruel/msg_accepter_msgq.h>
+#include <gr_msg_accepter.h>
 #include <string>
 
 /*!
@@ -40,7 +40,7 @@
  * signal processing functions.
  */
 
-class gr_basic_block : gruel::msg_accepter_msgq, public boost::enable_shared_from_this<gr_basic_block>
+class gr_basic_block : public gr_msg_accepter, public boost::enable_shared_from_this<gr_basic_block>
 {
 protected:
     friend class gr_flowgraph;

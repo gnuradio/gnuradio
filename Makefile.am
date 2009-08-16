@@ -37,3 +37,16 @@ EXTRA_DIST = \
 
 SUBDIRS = @build_dirs@
 DIST_SUBDIRS = @build_dirs@ @skipped_dirs@ @with_dirs@
+
+if PYTHON
+
+export pythondir
+
+install-data-hook:
+	@if ! python -c "import gnuradio" > /dev/null 2>&1; then\
+		printf "\n*** Post-Install Message ***\
+		\nWarning: python could not find the gnuradio module.\
+		\nMake sure that $${pythondir} is in your PYTHONPATH\n\n";\
+	fi
+
+endif

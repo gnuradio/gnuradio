@@ -98,7 +98,8 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 		#list of regular blocks (all blocks minus the special ones)
 		blocks = filter(lambda b: b not in (imports + parameters + variables + probes + notebooks), blocks) + probes
 		#list of connections where each endpoint is enabled
-		connections = self._flow_graph.get_enabled_connections()
+		connections = filter(lambda c: not c.is_msg(), self._flow_graph.get_enabled_connections())
+		messages = filter(lambda c: c.is_msg(), self._flow_graph.get_enabled_connections())
 		#list of variable names
 		var_ids = [var.get_id() for var in parameters + variables]
 		#prepend self.
@@ -124,6 +125,7 @@ Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
 			'parameters': parameters,
 			'blocks': blocks,
 			'connections': connections,
+			'messages': messages,
 			'generate_options': self._generate_options,
 			'var_id2cbs': var_id2cbs,
 		}

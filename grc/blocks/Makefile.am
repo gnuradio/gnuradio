@@ -123,6 +123,8 @@ dist_ourdata_DATA = \
 	gr_kludge_copy.xml \
 	gr_map_bb.xml \
 	gr_max_xx.xml \
+	gr_message_sink.xml \
+	gr_message_source.xml \
 	gr_moving_average_xx.xml \
 	gr_mpsk_receiver_cc.xml \
 	gr_mpsk_sync_cc.xml \

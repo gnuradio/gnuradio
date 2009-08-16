@@ -118,3 +118,10 @@ gr_block_detail::produce_each (int how_many_items)
     d_produce_or |= how_many_items;
   }
 }
+
+
+void
+gr_block_detail::_post(pmt::pmt_t msg)
+{
+  d_tpb.insert_tail(msg);
+}

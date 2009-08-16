@@ -41,8 +41,7 @@ gr_basic_block_ncurrently_allocated()
 gr_basic_block::gr_basic_block(const std::string &name,
                                gr_io_signature_sptr input_signature,
                                gr_io_signature_sptr output_signature) 
-  : gruel::msg_accepter_msgq(gruel::make_msg_queue(0)),
-    d_name(name),
+  : d_name(name),
     d_input_signature(input_signature),
     d_output_signature(output_signature),
     d_unique_id(s_next_id++),

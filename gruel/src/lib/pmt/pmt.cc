@@ -128,6 +128,12 @@ _vector(pmt_t x)
   return dynamic_cast<pmt_vector*>(x.get());
 }
 
+static pmt_tuple *
+_tuple(pmt_t x)
+{
+  return dynamic_cast<pmt_tuple*>(x.get());
+}
+
 static pmt_uniform_vector *
 _uniform_vector(pmt_t x)
 {
@@ -497,6 +503,201 @@ pmt_vector_fill(pmt_t vector, pmt_t obj)
 }
 
 ////////////////////////////////////////////////////////////////////////////
+//                             Tuples
+////////////////////////////////////////////////////////////////////////////
+
+pmt_tuple::pmt_tuple(size_t len)
+  : d_v(len)
+{
+}
+
+pmt_t
+pmt_tuple::ref(size_t k) const
+{
+  if (k >= length())
+    throw pmt_out_of_range("pmt_tuple_ref", pmt_from_long(k));
+  return d_v[k];
+}
+
+bool
+pmt_is_tuple(pmt_t obj)
+{
+  return obj->is_tuple();
+}
+
+pmt_t
+pmt_tuple_ref(const pmt_t &tuple, size_t k)
+{
+  if (!tuple->is_tuple())
+    throw pmt_wrong_type("pmt_tuple_ref", tuple);
+  return _tuple(tuple)->ref(k);
+}
+
+// for (i=0; i < 10; i++)
+//   make_constructor()
+
+pmt_t
+pmt_make_tuple()
+{
+  return pmt_t(new pmt_tuple(0));
+}
+
+pmt_t
+pmt_make_tuple(const pmt_t &e0)
+{
+  pmt_tuple *t = new pmt_tuple(1);
+  t->_set(0, e0);
+  return pmt_t(t);
+}
+
+pmt_t
+pmt_make_tuple(const pmt_t &e0, const pmt_t &e1)
+{
+  pmt_tuple *t = new pmt_tuple(2);
+  t->_set(0, e0);
+  t->_set(1, e1);
+  return pmt_t(t);
+}
+
+pmt_t
+pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2)
+{
+  pmt_tuple *t = new pmt_tuple(3);
+  t->_set(0, e0);
+  t->_set(1, e1);
+  t->_set(2, e2);
+  return pmt_t(t);
+}
+
+pmt_t
+pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3)
+{
+  pmt_tuple *t = new pmt_tuple(4);
+  t->_set(0, e0);
+  t->_set(1, e1);
+  t->_set(2, e2);
+  t->_set(3, e3);
+  return pmt_t(t);
+}
+
+pmt_t
+pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4)
+{
+  pmt_tuple *t = new pmt_tuple(5);
+  t->_set(0, e0);
+  t->_set(1, e1);
+  t->_set(2, e2);
+  t->_set(3, e3);
+  t->_set(4, e4);
+  return pmt_t(t);
+}
+
+pmt_t
+pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5)
+{
+  pmt_tuple *t = new pmt_tuple(6);
+  t->_set(0, e0);
+  t->_set(1, e1);
+  t->_set(2, e2);
+  t->_set(3, e3);
+  t->_set(4, e4);
+  t->_set(5, e5);
+  return pmt_t(t);
+}
+
+pmt_t
+pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5, const pmt_t &e6)
+{
+  pmt_tuple *t = new pmt_tuple(7);
+  t->_set(0, e0);
+  t->_set(1, e1);
+  t->_set(2, e2);
+  t->_set(3, e3);
+  t->_set(4, e4);
+  t->_set(5, e5);
+  t->_set(6, e6);
+  return pmt_t(t);
+}
+
+pmt_t
+pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5, const pmt_t &e6, const pmt_t &e7)
+{
+  pmt_tuple *t = new pmt_tuple(8);
+  t->_set(0, e0);
+  t->_set(1, e1);
+  t->_set(2, e2);
+  t->_set(3, e3);
+  t->_set(4, e4);
+  t->_set(5, e5);
+  t->_set(6, e6);
+  t->_set(7, e7);
+  return pmt_t(t);
+}
+
+pmt_t
+pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5, const pmt_t &e6, const pmt_t &e7, const pmt_t &e8)
+{
+  pmt_tuple *t = new pmt_tuple(9);
+  t->_set(0, e0);
+  t->_set(1, e1);
+  t->_set(2, e2);
+  t->_set(3, e3);
+  t->_set(4, e4);
+  t->_set(5, e5);
+  t->_set(6, e6);
+  t->_set(7, e7);
+  t->_set(8, e8);
+  return pmt_t(t);
+}
+
+pmt_t
+pmt_make_tuple(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5, const pmt_t &e6, const pmt_t &e7, const pmt_t &e8, const pmt_t &e9)
+{
+  pmt_tuple *t = new pmt_tuple(10);
+  t->_set(0, e0);
+  t->_set(1, e1);
+  t->_set(2, e2);
+  t->_set(3, e3);
+  t->_set(4, e4);
+  t->_set(5, e5);
+  t->_set(6, e6);
+  t->_set(7, e7);
+  t->_set(8, e8);
+  t->_set(9, e9);
+  return pmt_t(t);
+}
+
+pmt_t
+pmt_to_tuple(const pmt_t &x)
+{
+  if (x->is_tuple())		// already one
+    return x;
+
+  size_t len = pmt_length(x);
+  pmt_tuple *t = new pmt_tuple(len);
+  pmt_t r = pmt_t(t);
+
+  if (x->is_vector()){
+    for (size_t i = 0; i < len; i++)
+      t->_set(i, _vector(x)->ref(i));
+    return r;
+  }
+
+  if (x->is_pair()){
+    pmt_t y = x;
+    for (size_t i = 0; i < len; i++){
+      t->_set(i, pmt_car(y));
+      y = pmt_cdr(y);
+    }
+    return r;
+  }
+
+  throw pmt_wrong_type("pmt_to_tuple", x);
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////
 //                       Uniform Numeric Vectors
 ////////////////////////////////////////////////////////////////////////////
 
@@ -730,6 +931,19 @@ pmt_equal(const pmt_t& x, const pmt_t& y)
     return true;
   }
 
+  if (x->is_tuple() && y->is_tuple()){
+    pmt_tuple *xv = _tuple(x);
+    pmt_tuple *yv = _tuple(y);
+    if (xv->length() != yv->length())
+      return false;
+
+    for (unsigned i = 0; i < xv->length(); i++)
+      if (!pmt_equal(xv->_ref(i), yv->_ref(i)))
+	return false;
+
+    return true;
+  }
+
   if (x->is_uniform_vector() && y->is_uniform_vector()){
     pmt_uniform_vector *xv = _uniform_vector(x);
     pmt_uniform_vector *yv = _uniform_vector(y);
@@ -759,11 +973,15 @@ pmt_length(const pmt_t& x)
   if (x->is_uniform_vector())
     return _uniform_vector(x)->length();
 
-  if (x->is_null()) return 0;
+  if (x->is_tuple())
+    return _tuple(x)->length();
+
+  if (x->is_null())
+    return 0;
 
   if (x->is_pair()) {
     size_t length=1;
-	pmt_t it = pmt_cdr(x);
+    pmt_t it = pmt_cdr(x);
     while (pmt_is_pair(it)){
       length++;
       it = pmt_cdr(it);

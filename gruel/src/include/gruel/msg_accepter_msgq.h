@@ -32,13 +32,14 @@ namespace gruel {
    */
   class msg_accepter_msgq : public msg_accepter 
   {
+  protected:
     msg_queue_sptr d_msg_queue;
     
   public:
     msg_accepter_msgq(msg_queue_sptr msgq);
     ~msg_accepter_msgq();
 
-    void post(pmt::pmt_t msg);
+    virtual void post(pmt::pmt_t msg);
 
     msg_queue_sptr msg_queue() const { return d_msg_queue; }
   };

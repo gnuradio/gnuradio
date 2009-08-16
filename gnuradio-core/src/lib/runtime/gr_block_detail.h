@@ -83,7 +83,10 @@ class gr_block_detail {
    */
   void produce_each (int how_many_items);
 
-
+  /*!
+   * Accept msg, place in queue, arrange for thread to be awakened if it's not already.
+   */
+  void _post(pmt::pmt_t msg);
 
   gr_tpb_detail			     d_tpb;	// used by thread-per-block scheduler
   int				     d_produce_or;
