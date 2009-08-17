@@ -24,22 +24,20 @@ class Port(Element):
 	##possible port types
 	TYPES = []
 
-	def __init__(self, block, n):
+	def __init__(self, block, n, dir):
 		"""
 		Make a new port from nested data.
 		@param block the parent element
 		@param n the nested odict
-		@return a new port
+		@param dir the direction source or sink
 		"""
-		#grab the data
-		name = n['name']
-		key = n['key']
-		type = n['type']
 		#build the port
 		Element.__init__(self, block)
-		self._name = name
-		self._key = key
-		self._type = type
+		#grab the data
+		self._name = n['name']
+		self._key = n['key']
+		self._type = n['type']
+		self._dir = dir
 
 	def validate(self):
 		"""
@@ -60,8 +58,8 @@ class Port(Element):
 	def get_color(self): return '#FFFFFF'
 	def get_name(self): return self._name
 	def get_key(self): return self._key
-	def is_sink(self): return self in self.get_parent().get_sinks()
-	def is_source(self): return self in self.get_parent().get_sources()
+	def is_sink(self): return self._dir == 'sink'
+	def is_source(self): return self._dir == 'source'
 	def get_type(self): return self.get_parent().resolve_dependencies(self._type)
 
 	def get_connections(self):

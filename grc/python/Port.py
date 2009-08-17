@@ -25,17 +25,27 @@ class Port(_Port):
 	##possible port types
 	TYPES = ['complex', 'float', 'int', 'short', 'byte', 'msg']
 
-	def __init__(self, block, n):
+	def __init__(self, block, n, dir):
 		"""
 		Make a new port from nested data.
 		@param block the parent element
 		@param n the nested odict
+		@param dir the direction
 		"""
+		self._n = n
+		if n['type'] == 'msg': n['key'] = 'msg'
+		if dir == 'source' and not n.find('key'):
+			n['key'] = str(block._source_count)
+			block._source_count += 1
+		if dir == 'sink' and not n.find('key'):
+			n['key'] = str(block._sink_count)
+			block._sink_count += 1
 		#build the port
 		_Port.__init__(
 			self,
 			block=block,
 			n=n,
+			dir=dir,
 		)
 		self._nports = n.find('nports') or ''
 		self._vlen = n.find('vlen') or ''
@@ -109,24 +119,4 @@ class Port(_Port):
 	def copy(self, new_key=None):
 		n = self._n.copy()
 		if new_key: n['key'] = new_key
-		return self.__class__(self.get_parent(), n)
-
-class Source(Port):
-
-	def __init__(self, block, n):
-		self._n = n #save n
-		if n['type'] == 'msg': n['key'] = 'msg'
-		if not n.find('key'):
-			n['key'] = str(block._source_count)
-			block._source_count = block._source_count + 1
-		Port.__init__(self, block, n)
-
-class Sink(Port):
-
-	def __init__(self, block, n):
-		self._n = n #save n
-		if n['type'] == 'msg': n['key'] = 'msg'
-		if not n.find('key'):
-			n['key'] = str(block._sink_count)
-			block._sink_count = block._sink_count + 1
-		Port.__init__(self, block, n)
+		return self.__class__(self.get_parent(), n, self._dir)

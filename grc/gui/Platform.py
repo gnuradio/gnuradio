@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -38,8 +38,7 @@ def Platform(platform):
 		('FlowGraph', FlowGraph),
 		('Connection', Connection),
 		('Block', Block),
-		('Source', Port),
-		('Sink', Port),
+		('Port', Port),
 		('Param', Param),
 	):
 		old_value = getattr(platform, attr)

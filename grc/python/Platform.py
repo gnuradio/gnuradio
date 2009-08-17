@@ -23,7 +23,7 @@ from .. base.Platform import Platform as _Platform
 from FlowGraph import FlowGraph as _FlowGraph
 from Connection import Connection as _Connection
 from Block import Block as _Block
-from Port import Source,Sink
+from Port import Port as _Port
 from Param import Param as _Param
 from Generator import Generator
 from Constants import \
@@ -77,6 +77,5 @@ class Platform(_Platform):
 	FlowGraph = _FlowGraph
 	Connection = _Connection
 	Block = _Block
-	Source = Source
-	Sink = Sink
+	Port = _Port
 	Param = _Param

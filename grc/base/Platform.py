@@ -171,6 +171,5 @@ class Platform(_Element):
 	FlowGraph = _FlowGraph
 	Connection = _Connection
 	Block = _Block
-	Source = _Port
-	Sink = _Port
+	Port = _Port
 	Param = _Param
