@@ -67,4 +67,5 @@ EXTRA_DIST =				\
 	solaris.cc			\
 	threaddata.cc			\
 	vxWorks.cc			\
-	dir.mk
+	dir.mk				\
+	README
