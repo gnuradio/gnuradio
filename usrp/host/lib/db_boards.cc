@@ -32,6 +32,7 @@
 #include <usrp/db_dbs_rx.h>
 #include <usrp/db_flexrf.h>
 #include <usrp/db_flexrf_mimo.h>
+#include <usrp/db_wbxng.h>
 #include <usrp/db_xcvr2450.h>
 #include <usrp/db_dtt754.h>
 #include <usrp/db_dtt768.h>
@@ -193,6 +194,13 @@ instantiate_dbs(int dbid, usrp_basic_sptr usrp, int which_side)
     db.push_back(db_base_sptr(new db_wbx_lo_rx(usrp, which_side)));
     break;
 #endif
+
+  case(USRP_DBID_WBX_NG_TX):
+    db.push_back(db_base_sptr(new db_wbxng_tx(usrp, which_side)));
+    break;
+  case(USRP_DBID_WBX_NG_RX):
+    db.push_back(db_base_sptr(new db_wbxng_rx(usrp, which_side)));
+    break;
 
   case(USRP_DBID_DTT754):
     db.push_back(db_base_sptr(new db_dtt754(usrp, which_side)));
