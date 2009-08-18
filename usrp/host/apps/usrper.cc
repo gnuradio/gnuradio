@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <usb.h>			/* needed for usb functions */
+#include <libusb-1.0/libusb.h>			/* needed for usb functions */
 #include <getopt.h>
 #include <assert.h>
 #include <errno.h>
@@ -194,7 +194,7 @@ main (int argc, char **argv)
   usrp_one_time_init ();
 
   
-  struct usb_device *udev = usrp_find_device (which_board, fx2_ok_p);
+  struct libusb_device *udev = usrp_find_device (which_board, fx2_ok_p);
   if (udev == 0){
     fprintf (stderr, "%s: failed to find usrp[%d]\n", prog_name, which_board);
     exit (1);
@@ -208,7 +208,7 @@ main (int argc, char **argv)
     fprintf (stderr, "%s: found unconfigured FX2; needs firmware.\n", prog_name);
   }
 
-  struct usb_dev_handle *udh = usrp_open_cmd_interface (udev);
+  struct libusb_device_handle *udh = usrp_open_cmd_interface (udev);
   if (udh == 0){
     fprintf (stderr, "%s: failed to open_cmd_interface\n", prog_name);
     exit (1);

@@ -20,41 +20,30 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <fusb.h>
+#include <fusb_libusb1.h>
 
+static const int MAX_BLOCK_SIZE = 16 * 1024;		// hard limit
+static const int DEFAULT_BLOCK_SIZE =   4 * 1024;
+static const int FUSB_BUFFER_SIZE = 2 * (1L << 20);	// 2 MB
 
-// ------------------------------------------------------------------------
-// 			     device handle
-// ------------------------------------------------------------------------
-
-fusb_devhandle::fusb_devhandle (libusb_device_handle *udh)
-  : d_udh (udh)
+fusb_devhandle *
+fusb_sysconfig::make_devhandle (libusb_device_handle *udh)
 {
-  // that's it
-};
-
-fusb_devhandle::~fusb_devhandle ()
+  return new fusb_devhandle_libusb1 (udh);
+}
+	
+int fusb_sysconfig::max_block_size ()
 {
-  // nop
+  return MAX_BLOCK_SIZE;
 }
 
-// ------------------------------------------------------------------------
-// 			     end point handle
-// ------------------------------------------------------------------------
-
-fusb_ephandle::fusb_ephandle (int endpoint, bool input_p,
-			      int block_size, int nblocks)
-  : d_endpoint (endpoint), d_input_p (input_p),
-    d_block_size (block_size), d_nblocks (nblocks), d_started (false)
+int fusb_sysconfig::default_block_size ()
 {
-  // that't it
+  return DEFAULT_BLOCK_SIZE;
 }
 
-fusb_ephandle::~fusb_ephandle ()
+int fusb_sysconfig::default_buffer_size ()
 {
-  // nop
+  return FUSB_BUFFER_SIZE;
 }

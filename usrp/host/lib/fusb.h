@@ -26,7 +26,7 @@
 #define _FUSB_H_
 
 
-struct  usb_dev_handle;
+struct  libusb_device_handle;
 class   fusb_ephandle;
 
 /*!
@@ -39,11 +39,11 @@ private:
   fusb_devhandle &operator= (const fusb_devhandle &rhs);  // no assignment operator
 
 protected:
-  usb_dev_handle		*d_udh;
+  libusb_device_handle		*d_udh;
 
 public:
   // CREATORS
-  fusb_devhandle (usb_dev_handle *udh);
+  fusb_devhandle (libusb_device_handle *udh);
   virtual ~fusb_devhandle ();
 
   // MANIPULATORS
@@ -55,7 +55,7 @@ public:
 					int block_size = 0, int nblocks = 0) = 0;
   
   // ACCESSORS
-  usb_dev_handle *get_usb_dev_handle () const { return d_udh; }
+  libusb_device_handle *get_libusb_device_handle () const { return d_udh; }
 };
 
 
@@ -116,7 +116,7 @@ public:
   /*!
    * \brief returns fusb_devhandle or throws if trouble
    */
-  static fusb_devhandle *make_devhandle (usb_dev_handle *udh);
+  static fusb_devhandle *make_devhandle (libusb_device_handle *udh);
 
   /*!
    * \brief Returns max block size in bytes (hard limit).

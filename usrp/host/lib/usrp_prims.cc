@@ -30,7 +30,7 @@
 #include "usrp_i2c_addr.h"
 #include "fpga_regs_common.h"
 #include "fpga_regs_standard.h"
-#include <usb.h>
+#include <libusb-1.0/libusb.h>
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -101,7 +101,7 @@ get_proto_filename(const std::string user_filename, const char *env_var, const c
 }
 
 
-static void power_down_9862s (struct usb_dev_handle *udh);
+static void power_down_9862s (struct libusb_device_handle *udh);
 
 void
 usrp_one_time_init ()
@@ -110,35 +110,14 @@ usrp_one_time_init ()
 
   if (first){
     first = false;
-    usb_init ();			// usb library init
-    usb_find_busses ();
-    usb_find_devices ();
+    libusb_init (NULL);			// usb library init
   }
 }
 
 void
 usrp_rescan ()
 {
-  usb_find_busses ();
-  usb_find_devices ();
-}
-
-
-// ----------------------------------------------------------------
-// Danger, big, fragile KLUDGE.  The problem is that we want to be
-// able to get from a usb_dev_handle back to a usb_device, and the
-// right way to do this is buried in a non-installed include file.
-
-static struct usb_device *
-dev_handle_to_dev (usb_dev_handle *udh)
-{
-  struct usb_dev_handle_kludge {
-    int			 fd;
-    struct usb_bus	*bus;
-    struct usb_device	*device;
-  };
-
-  return ((struct usb_dev_handle_kludge *) udh)->device;
+  // deprecated?
 }
 
 // ----------------------------------------------------------------
@@ -147,171 +126,176 @@ dev_handle_to_dev (usb_dev_handle *udh)
  * q must be a real USRP, not an FX2.  Return its hardware rev number.
  */
 int
-usrp_hw_rev (struct usb_device *q)
+usrp_hw_rev (struct libusb_device *q)
 {
-  return q->descriptor.bcdDevice & 0x00FF;
+  struct libusb_device_descriptor desc;
+  if (libusb_get_device_descriptor(q, &desc) < 0)
+    fprintf (stderr, "usrp: libusb_get_device_descriptor failed\n");
+
+  return desc.bcdDevice & 0x00FF;
 }
 
 /*
  * q must be a real USRP, not an FX2.  Return true if it's configured.
  */
 static bool
-_usrp_configured_p (struct usb_device *q)
+_usrp_configured_p (struct libusb_device *q)
 {
-  return (q->descriptor.bcdDevice & 0xFF00) != 0;
+  struct libusb_device_descriptor desc;
+  if (libusb_get_device_descriptor(q, &desc) < 0)
+    fprintf (stderr, "usrp: libusb_get_device_descriptor failed\n");
+
+  return (desc.bcdDevice & 0xFF00) != 0;
 }
 
 bool
-usrp_usrp_p (struct usb_device *q)
+usrp_usrp_p (struct libusb_device *q)
 {
-  return (q->descriptor.idVendor == USB_VID_FSF
-	  && q->descriptor.idProduct == USB_PID_FSF_USRP);
+  struct libusb_device_descriptor desc;
+  if (libusb_get_device_descriptor(q, &desc) < 0)
+    fprintf (stderr, "usrp: libusb_get_device_descriptor failed\n");
+
+  return (desc.idVendor == USB_VID_FSF
+	  && desc.idProduct == USB_PID_FSF_USRP);
 }
 
 bool
-usrp_fx2_p (struct usb_device *q)
+usrp_fx2_p (struct libusb_device *q)
 {
-  return (q->descriptor.idVendor == USB_VID_CYPRESS
-	  && q->descriptor.idProduct == USB_PID_CYPRESS_FX2);
+  struct libusb_device_descriptor desc;
+  if (libusb_get_device_descriptor(q, &desc) < 0)
+    fprintf (stderr, "usrp: libusb_get_device_descriptor failed\n");
+
+  return (desc.idVendor == USB_VID_CYPRESS
+	  && desc.idProduct == USB_PID_CYPRESS_FX2);
 }
 
 bool
-usrp_usrp0_p (struct usb_device *q)
+usrp_usrp0_p (struct libusb_device *q)
 {
   return usrp_usrp_p (q) && usrp_hw_rev (q) == 0;
 }
 
 bool
-usrp_usrp1_p (struct usb_device *q)
+usrp_usrp1_p (struct libusb_device *q)
 {
   return usrp_usrp_p (q) && usrp_hw_rev (q) == 1;
 }
 
 bool
-usrp_usrp2_p (struct usb_device *q)
+usrp_usrp2_p (struct libusb_device *q)
 {
   return usrp_usrp_p (q) && usrp_hw_rev (q) == 2;
 }
 
 
 bool
-usrp_unconfigured_usrp_p (struct usb_device *q)
+usrp_unconfigured_usrp_p (struct libusb_device *q)
 {
   return usrp_usrp_p (q) && !_usrp_configured_p (q);
 }
 
 bool
-usrp_configured_usrp_p (struct usb_device *q)
+usrp_configured_usrp_p (struct libusb_device *q)
 {
   return usrp_usrp_p (q) && _usrp_configured_p (q);
 }
 
 // ----------------------------------------------------------------
 
-struct usb_device *
+struct libusb_device *
 usrp_find_device (int nth, bool fx2_ok_p)
 {
-  struct usb_bus *p;
-  struct usb_device *q;
+  libusb_device **list;
+
+  struct libusb_device *q;
   int	 n_found = 0;
 
   usrp_one_time_init ();
-  
-  p = usb_get_busses();
-  while (p != NULL){
-    q = p->devices;
-    while (q != NULL){
-      if (usrp_usrp_p (q) || (fx2_ok_p && usrp_fx2_p (q))){
+ 
+  size_t cnt = libusb_get_device_list(NULL, &list);
+  size_t i = 0;
+
+  if (cnt < 0)
+    fprintf(stderr, "usrp: libusb_get_device_list failed %d\n", cnt);
+
+  for (i = 0; i < cnt; i++) {
+    q = list[i];
+    if (usrp_usrp_p (q) || (fx2_ok_p && usrp_fx2_p (q))) {
 	if (n_found == nth)	// return this one
 	  return q;
 	n_found++;		// keep looking
-      }
-      q = q->next;
     }
-    p = p->next;
   }
+
+  libusb_free_device_list(list, 1);
   return 0;	// not found
 }
 
-static struct usb_dev_handle *
-usrp_open_interface (struct usb_device *dev, int interface, int altinterface)
+static struct libusb_device_handle *
+usrp_open_interface (struct libusb_device *dev, int interface, int altinterface)
 {
-  struct usb_dev_handle *udh = usb_open (dev);
-  if (udh == 0)
+  struct libusb_device_handle *udh;
+  int ret;
+
+  if (libusb_open (dev, &udh) < 0)
     return 0;
 
-  if (dev != dev_handle_to_dev (udh)){
+  if (dev != libusb_get_device (udh)){
     fprintf (stderr, "%s:%d: internal error!\n", __FILE__, __LINE__);
     abort ();
   }
 
-#if defined(_WIN32) || defined(__WIN32__) || defined(__CYGWIN__)
-  // There's no get get_configuration function, and with some of the newer kernels
-  // setting the configuration, even if to the same value, hoses any other processes
-  // that have it open.  Hence we opt to not set it at all (We've only
-  // got a single configuration anyway).  This may hose the win32 stuff...
-
-  // Appears to be required for libusb-win32 and Cygwin -- dew 09/20/06
-  if (usb_set_configuration (udh, 1) < 0){
-    /*
-     * Ignore this error.  
-     *
-     * Seems that something changed in drivers/usb/core/devio.c:proc_setconfig such that
-     * it returns -EBUSY if _any_ of the interfaces of a device are open.
-     * We've only got a single configuration, so setting it doesn't even seem
-     * like it should be required.
-     */
-  }
-#endif
-
-  if (usb_claim_interface (udh, interface) < 0){
+  if ((ret = libusb_claim_interface (udh, interface)) < 0) {
     fprintf (stderr, "%s:usb_claim_interface: failed interface %d\n", __FUNCTION__,interface);
-    fprintf (stderr, "%s\n", usb_strerror());
-    usb_close (udh);
+    fprintf (stderr, "%d\n", ret);
+    libusb_close (udh);
     return 0;
   }
 
-  if (usb_set_altinterface (udh, altinterface) < 0){
+  if ((ret = libusb_set_interface_alt_setting (udh, interface,
+                                                   altinterface)) < 0) {
     fprintf (stderr, "%s:usb_set_alt_interface: failed\n", __FUNCTION__);
-    fprintf (stderr, "%s\n", usb_strerror());
-    usb_release_interface (udh, interface);
-    usb_close (udh);
+    fprintf (stderr, "%d\n", ret);
+    libusb_release_interface (udh, interface);
+    libusb_close (udh);
     return 0;
   }
 
   return udh;
 }
 
-struct usb_dev_handle *
-usrp_open_cmd_interface (struct usb_device *dev)
+struct libusb_device_handle *
+usrp_open_cmd_interface (struct libusb_device *dev)
 {
   return usrp_open_interface (dev, USRP_CMD_INTERFACE, USRP_CMD_ALTINTERFACE);
 }
 
-struct usb_dev_handle *
-usrp_open_rx_interface (struct usb_device *dev)
+struct libusb_device_handle *
+usrp_open_rx_interface (struct libusb_device *dev)
 {
   return usrp_open_interface (dev, USRP_RX_INTERFACE, USRP_RX_ALTINTERFACE);
 }
 
-struct usb_dev_handle *
-usrp_open_tx_interface (struct usb_device *dev)
+struct libusb_device_handle *
+usrp_open_tx_interface (struct libusb_device *dev)
 {
   return usrp_open_interface (dev, USRP_TX_INTERFACE, USRP_TX_ALTINTERFACE);
 }
 
 bool
-usrp_close_interface (struct usb_dev_handle *udh)
+usrp_close_interface (struct libusb_device_handle *udh)
 {
-  // we're assuming that closing an interface automatically releases it.
-  return usb_close (udh) == 0;
+  // returns void 
+  libusb_close(udh);
+  return 0;
 }
 
 // ----------------------------------------------------------------
 // write internal ram using Cypress vendor extension
 
 static bool
-write_internal_ram (struct usb_dev_handle *udh, unsigned char *buf,
+write_internal_ram (struct libusb_device_handle *udh, unsigned char *buf,
 		    int start_addr, size_t len)
 {
   int addr;
@@ -324,11 +308,11 @@ write_internal_ram (struct usb_dev_handle *udh, unsigned char *buf,
     if (n > quanta)
       n = quanta;
 
-    a = usb_control_msg (udh, 0x40, 0xA0,
-			 addr, 0, (char *)(buf + (addr - start_addr)), n, 1000);
+    a = libusb_control_transfer (udh, 0x40, 0xA0,
+			 addr, 0, (unsigned char *)(buf + (addr - start_addr)), n, 1000);
 
     if (a < 0){
-      fprintf(stderr,"write_internal_ram failed: %s\n", usb_strerror());
+      fprintf(stderr,"write_internal_ram failed: %u\n", a);
       return false;
     }
   }
@@ -339,7 +323,7 @@ write_internal_ram (struct usb_dev_handle *udh, unsigned char *buf,
 // whack the CPUCS register using the upload RAM vendor extension
 
 static bool
-reset_cpu (struct usb_dev_handle *udh, bool reset_p)
+reset_cpu (struct libusb_device_handle *udh, bool reset_p)
 {
   unsigned char v;
 
@@ -355,7 +339,7 @@ reset_cpu (struct usb_dev_handle *udh, bool reset_p)
 // Load intel format file into cypress FX2 (8051)
 
 static bool
-_usrp_load_firmware (struct usb_dev_handle *udh, const char *filename,
+_usrp_load_firmware (struct libusb_device_handle *udh, const char *filename,
 		     unsigned char hash[USRP_HASH_SIZE])
 {
   FILE	*f = fopen (filename, "ra");
@@ -437,18 +421,20 @@ _usrp_load_firmware (struct usb_dev_handle *udh, const char *filename,
 // write vendor extension command to USRP
 
 static int
-write_cmd (struct usb_dev_handle *udh,
+write_cmd (struct libusb_device_handle *udh,
 	   int request, int value, int index,
 	   unsigned char *bytes, int len)
 {
   int	requesttype = (request & 0x80) ? VRT_VENDOR_IN : VRT_VENDOR_OUT;
 
-  int r = usb_control_msg (udh, requesttype, request, value, index,
-			   (char *) bytes, len, 1000);
+  int r = libusb_control_transfer(udh, requesttype, request, value, index,
+                                  (unsigned char *) bytes, len, 1000);
+
   if (r < 0){
     // we get EPIPE if the firmware stalls the endpoint.
-    if (errno != EPIPE)
-      fprintf (stderr, "usb_control_msg failed: %s\n", usb_strerror ());
+    if (r != LIBUSB_ERROR_PIPE) {
+      fprintf (stderr, "libusb_control_transfer failed: %i\n", r);
+    }
   }
 
   return r;
@@ -458,7 +444,7 @@ write_cmd (struct usb_dev_handle *udh,
 // load fpga
 
 static bool
-_usrp_load_fpga (struct usb_dev_handle *udh, const char *filename,
+_usrp_load_fpga (struct libusb_device_handle *udh, const char *filename,
 		 unsigned char hash[USRP_HASH_SIZE])
 {
   bool ok = true;
@@ -536,7 +522,7 @@ _usrp_load_fpga (struct usb_dev_handle *udh, const char *filename,
 // ----------------------------------------------------------------
 
 bool 
-usrp_set_led (struct usb_dev_handle *udh, int which, bool on)
+usrp_set_led (struct libusb_device_handle *udh, int which, bool on)
 {
   int r = write_cmd (udh, VRQ_SET_LED, on, which, 0, 0);
 
@@ -544,38 +530,38 @@ usrp_set_led (struct usb_dev_handle *udh, int which, bool on)
 }
 
 bool
-usrp_set_hash (struct usb_dev_handle *udh, int which,
+usrp_set_hash (struct libusb_device_handle *udh, int which,
 	       const unsigned char hash[USRP_HASH_SIZE])
 {
   which &= 1;
   
   // we use the Cypress firmware down load command to jam it in.
-  int r = usb_control_msg (udh, 0x40, 0xa0, hash_slot_addr[which], 0,
-			   (char *) hash, USRP_HASH_SIZE, 1000);
+  int r = libusb_control_transfer (udh, 0x40, 0xa0, hash_slot_addr[which], 0,
+			   (unsigned char *) hash, USRP_HASH_SIZE, 1000);
   return r == USRP_HASH_SIZE;
 }
 
 bool
-usrp_get_hash (struct usb_dev_handle *udh, int which, 
+usrp_get_hash (struct libusb_device_handle *udh, int which, 
 	       unsigned char hash[USRP_HASH_SIZE])
 {
   which &= 1;
   
   // we use the Cypress firmware upload command to fetch it.
-  int r = usb_control_msg (udh, 0xc0, 0xa0, hash_slot_addr[which], 0,
-			   (char *) hash, USRP_HASH_SIZE, 1000);
+  int r = libusb_control_transfer (udh, 0xc0, 0xa0, hash_slot_addr[which], 0,
+			   (unsigned char *) hash, USRP_HASH_SIZE, 1000);
   return r == USRP_HASH_SIZE;
 }
 
 static bool
-usrp_set_switch (struct usb_dev_handle *udh, int cmd_byte, bool on)
+usrp_set_switch (struct libusb_device_handle *udh, int cmd_byte, bool on)
 {
   return write_cmd (udh, cmd_byte, on, 0, 0, 0) == 0;
 }
 
 
 static bool
-usrp1_fpga_write (struct usb_dev_handle *udh,
+usrp1_fpga_write (struct libusb_device_handle *udh,
 		  int regno, int value)
 {
   // on the rev1 usrp, we use the generic spi_write interface
@@ -594,7 +580,7 @@ usrp1_fpga_write (struct usb_dev_handle *udh,
 }
 
 static bool
-usrp1_fpga_read (struct usb_dev_handle *udh,
+usrp1_fpga_read (struct libusb_device_handle *udh,
 		 int regno, int *value)
 {
   *value = 0;
@@ -613,9 +599,9 @@ usrp1_fpga_read (struct usb_dev_handle *udh,
 
 
 bool
-usrp_write_fpga_reg (struct usb_dev_handle *udh, int reg, int value)
+usrp_write_fpga_reg (struct libusb_device_handle *udh, int reg, int value)
 {
-  switch (usrp_hw_rev (dev_handle_to_dev (udh))){
+  switch (usrp_hw_rev (libusb_get_device (udh))){
   case 0:			// not supported ;)
     abort();	
 
@@ -625,9 +611,9 @@ usrp_write_fpga_reg (struct usb_dev_handle *udh, int reg, int value)
 }
 
 bool
-usrp_read_fpga_reg (struct usb_dev_handle *udh, int reg, int *value)
+usrp_read_fpga_reg (struct libusb_device_handle *udh, int reg, int *value)
 {
-  switch (usrp_hw_rev (dev_handle_to_dev (udh))){
+  switch (usrp_hw_rev (libusb_get_device (udh))){
   case 0:		// not supported ;)
     abort();
     
@@ -637,31 +623,31 @@ usrp_read_fpga_reg (struct usb_dev_handle *udh, int reg, int *value)
 }
 
 bool 
-usrp_set_fpga_reset (struct usb_dev_handle *udh, bool on)
+usrp_set_fpga_reset (struct libusb_device_handle *udh, bool on)
 {
   return usrp_set_switch (udh, VRQ_FPGA_SET_RESET, on);
 }
 
 bool 
-usrp_set_fpga_tx_enable (struct usb_dev_handle *udh, bool on)
+usrp_set_fpga_tx_enable (struct libusb_device_handle *udh, bool on)
 {
   return usrp_set_switch (udh, VRQ_FPGA_SET_TX_ENABLE, on);
 }
 
 bool 
-usrp_set_fpga_rx_enable (struct usb_dev_handle *udh, bool on)
+usrp_set_fpga_rx_enable (struct libusb_device_handle *udh, bool on)
 {
   return usrp_set_switch (udh, VRQ_FPGA_SET_RX_ENABLE, on);
 }
 
 bool 
-usrp_set_fpga_tx_reset (struct usb_dev_handle *udh, bool on)
+usrp_set_fpga_tx_reset (struct libusb_device_handle *udh, bool on)
 {
   return usrp_set_switch (udh, VRQ_FPGA_SET_TX_RESET, on);
 }
 
 bool 
-usrp_set_fpga_rx_reset (struct usb_dev_handle *udh, bool on)
+usrp_set_fpga_rx_reset (struct libusb_device_handle *udh, bool on)
 {
   return usrp_set_switch (udh, VRQ_FPGA_SET_RX_RESET, on);
 }
@@ -688,11 +674,11 @@ compute_hash (const char *filename, unsigned char hash[USRP_HASH_SIZE])
 }
 
 static usrp_load_status_t
-usrp_conditionally_load_something (struct usb_dev_handle *udh,
+usrp_conditionally_load_something (struct libusb_device_handle *udh,
 				   const char *filename,
 				   bool force,
 				   int slot,
-				   bool loader (struct usb_dev_handle *,
+				   bool loader (struct libusb_device_handle *,
 						const char *,
 						unsigned char [USRP_HASH_SIZE]))
 {
@@ -721,7 +707,7 @@ usrp_conditionally_load_something (struct usb_dev_handle *udh,
 }
 
 usrp_load_status_t
-usrp_load_firmware (struct usb_dev_handle *udh,
+usrp_load_firmware (struct libusb_device_handle *udh,
 		    const char *filename,
 		    bool force)
 {
@@ -731,7 +717,7 @@ usrp_load_firmware (struct usb_dev_handle *udh,
 }
 
 usrp_load_status_t
-usrp_load_fpga (struct usb_dev_handle *udh,
+usrp_load_fpga (struct libusb_device_handle *udh,
 		const char *filename,
 		bool force)
 {
@@ -740,23 +726,22 @@ usrp_load_fpga (struct usb_dev_handle *udh,
 					    _usrp_load_fpga);
 }
 
-static usb_dev_handle *
+static libusb_device_handle *
 open_nth_cmd_interface (int nth)
 {
-  struct usb_device *udev = usrp_find_device (nth);
+  struct libusb_device *udev = usrp_find_device (nth);
   if (udev == 0){
     fprintf (stderr, "usrp: failed to find usrp[%d]\n", nth);
     return 0;
   }
 
-  struct usb_dev_handle *udh;
+  struct libusb_device_handle *udh;
 
   udh = usrp_open_cmd_interface (udev);
   if (udh == 0){
     // FIXME this could be because somebody else has it open.
     // We should delay and retry...
     fprintf (stderr, "open_nth_cmd_interface: open_cmd_interface failed\n");
-    usb_strerror ();
     return 0;
   }
 
@@ -793,7 +778,7 @@ mdelay (int millisecs)
 
 usrp_load_status_t
 usrp_load_firmware_nth (int nth, const char *filename, bool force){
-  struct usb_dev_handle *udh = open_nth_cmd_interface (nth);
+  struct libusb_device_handle *udh = open_nth_cmd_interface (nth);
   if (udh == 0)
     return ULS_ERROR;
 
@@ -819,9 +804,6 @@ usrp_load_firmware_nth (int nth, const char *filename, bool force){
     t.tv_sec = 2;
     t.tv_nsec = 0;
     our_nanosleep (&t);
-
-    usb_find_busses ();		// rescan busses and devices
-    usb_find_devices ();
 
     return ULS_OK;
 
@@ -866,7 +848,7 @@ usrp_load_standard_bits (int nth, bool force,
 
   // first, figure out what hardware rev we're dealing with
   {
-    struct usb_device *udev = usrp_find_device (nth);
+    struct libusb_device *udev = usrp_find_device (nth);
     if (udev == 0){
       fprintf (stderr, "usrp: failed to find usrp[%d]\n", nth);
       return false;
@@ -904,7 +886,7 @@ usrp_load_standard_bits (int nth, bool force,
     return false;
   }
 
-  struct usb_dev_handle *udh = open_nth_cmd_interface (nth);
+  struct libusb_device_handle *udh = open_nth_cmd_interface (nth);
   if (udh == 0)
     return false;
   
@@ -919,7 +901,7 @@ usrp_load_standard_bits (int nth, bool force,
 }
 
 bool
-_usrp_get_status (struct usb_dev_handle *udh, int which, bool *trouble)
+_usrp_get_status (struct libusb_device_handle *udh, int which, bool *trouble)
 {
   unsigned char	status;
   *trouble = true;
@@ -933,20 +915,20 @@ _usrp_get_status (struct usb_dev_handle *udh, int which, bool *trouble)
 }
 
 bool
-usrp_check_rx_overrun (struct usb_dev_handle *udh, bool *overrun_p)
+usrp_check_rx_overrun (struct libusb_device_handle *udh, bool *overrun_p)
 {
   return _usrp_get_status (udh, GS_RX_OVERRUN, overrun_p);
 }
 
 bool
-usrp_check_tx_underrun (struct usb_dev_handle *udh, bool *underrun_p)
+usrp_check_tx_underrun (struct libusb_device_handle *udh, bool *underrun_p)
 {
   return _usrp_get_status (udh, GS_TX_UNDERRUN, underrun_p);
 }
 
 
 bool
-usrp_i2c_write (struct usb_dev_handle *udh, int i2c_addr,
+usrp_i2c_write (struct libusb_device_handle *udh, int i2c_addr,
 		const void *buf, int len)
 {
   if (len < 1 || len > MAX_EP0_PKTSIZE)
@@ -958,7 +940,7 @@ usrp_i2c_write (struct usb_dev_handle *udh, int i2c_addr,
 
 
 bool
-usrp_i2c_read (struct usb_dev_handle *udh, int i2c_addr,
+usrp_i2c_read (struct libusb_device_handle *udh, int i2c_addr,
 	       void *buf, int len)
 {
   if (len < 1 || len > MAX_EP0_PKTSIZE)
@@ -969,7 +951,7 @@ usrp_i2c_read (struct usb_dev_handle *udh, int i2c_addr,
 }
 
 bool
-usrp_spi_write (struct usb_dev_handle *udh,
+usrp_spi_write (struct libusb_device_handle *udh,
 		int optional_header, int enables, int format,
 		const void *buf, int len)
 {
@@ -984,7 +966,7 @@ usrp_spi_write (struct usb_dev_handle *udh,
 
 
 bool
-usrp_spi_read (struct usb_dev_handle *udh,
+usrp_spi_read (struct libusb_device_handle *udh,
 	       int optional_header, int enables, int format,
 	       void *buf, int len)
 {
@@ -998,7 +980,7 @@ usrp_spi_read (struct usb_dev_handle *udh,
 }
 
 bool
-usrp_9862_write (struct usb_dev_handle *udh, int which_codec,
+usrp_9862_write (struct libusb_device_handle *udh, int which_codec,
 		 int regno, int value)
 {
   if (0)
@@ -1016,7 +998,7 @@ usrp_9862_write (struct usb_dev_handle *udh, int which_codec,
 }
 
 bool
-usrp_9862_read (struct usb_dev_handle *udh, int which_codec,
+usrp_9862_read (struct libusb_device_handle *udh, int which_codec,
 		int regno, unsigned char *value)
 {
   return usrp_spi_read (udh, 0x80 | (regno & 0x3f),
@@ -1026,7 +1008,7 @@ usrp_9862_read (struct usb_dev_handle *udh, int which_codec,
 }
 
 bool
-usrp_9862_write_many (struct usb_dev_handle *udh,
+usrp_9862_write_many (struct libusb_device_handle *udh,
 		      int which_codec,
 		      const unsigned char *buf,
 		      int len)
@@ -1047,7 +1029,7 @@ usrp_9862_write_many (struct usb_dev_handle *udh,
 
 
 bool
-usrp_9862_write_many_all (struct usb_dev_handle *udh,
+usrp_9862_write_many_all (struct libusb_device_handle *udh,
 			   const unsigned char *buf, int len)
 {
   // FIXME handle 2/2 and 4/4 versions
@@ -1059,7 +1041,7 @@ usrp_9862_write_many_all (struct usb_dev_handle *udh,
 }
 
 static void
-power_down_9862s (struct usb_dev_handle *udh)
+power_down_9862s (struct libusb_device_handle *udh)
 {
   static const unsigned char regs[] = {
     REG_RX_PWR_DN,	0x01,			// everything
@@ -1067,7 +1049,7 @@ power_down_9862s (struct usb_dev_handle *udh)
     REG_TX_MODULATOR,	0x00			// coarse & fine modulators disabled
   };
 
-  switch (usrp_hw_rev (dev_handle_to_dev (udh))){
+  switch (usrp_hw_rev (libusb_get_device (udh))){
   case 0:
     break;
 
@@ -1082,7 +1064,7 @@ power_down_9862s (struct usb_dev_handle *udh)
 static const int EEPROM_PAGESIZE = 16;
 
 bool
-usrp_eeprom_write (struct usb_dev_handle *udh, int i2c_addr,
+usrp_eeprom_write (struct libusb_device_handle *udh, int i2c_addr,
 		   int eeprom_offset, const void *buf, int len)
 {
   unsigned char cmd[2];
@@ -1107,7 +1089,7 @@ usrp_eeprom_write (struct usb_dev_handle *udh, int i2c_addr,
 }
 
 bool
-usrp_eeprom_read (struct usb_dev_handle *udh, int i2c_addr,
+usrp_eeprom_read (struct libusb_device_handle *udh, int i2c_addr,
 		  int eeprom_offset, void *buf, int len)
 {
   unsigned char *p = (unsigned char *) buf;
@@ -1169,7 +1151,7 @@ tx_slot_p (int slot)
 }
 
 bool
-usrp_write_aux_dac (struct usb_dev_handle *udh, int slot,
+usrp_write_aux_dac (struct libusb_device_handle *udh, int slot,
 		    int which_dac, int value)
 {
   int which_codec;
@@ -1200,7 +1182,7 @@ usrp_write_aux_dac (struct usb_dev_handle *udh, int slot,
 
 
 bool
-usrp_read_aux_adc (struct usb_dev_handle *udh, int slot,
+usrp_read_aux_adc (struct libusb_device_handle *udh, int slot,
 		   int which_adc, int *value)
 {
   *value = 0;
@@ -1279,7 +1261,7 @@ set_chksum (unsigned char *buf)
 }
 
 static usrp_dbeeprom_status_t
-read_dboard_eeprom (struct usb_dev_handle *udh,
+read_dboard_eeprom (struct libusb_device_handle *udh,
 		    int slot_id, unsigned char *buf)
 {
   int i2c_addr = slot_to_i2c_addr (slot_id);
@@ -1303,7 +1285,7 @@ read_dboard_eeprom (struct usb_dev_handle *udh,
 }
 
 usrp_dbeeprom_status_t
-usrp_read_dboard_eeprom (struct usb_dev_handle *udh,
+usrp_read_dboard_eeprom (struct libusb_device_handle *udh,
 			 int slot_id, usrp_dboard_eeprom *eeprom)
 {
   unsigned char buf[DB_EEPROM_CLEN];
@@ -1323,7 +1305,7 @@ usrp_read_dboard_eeprom (struct usb_dev_handle *udh,
 }
 
 bool
-usrp_write_dboard_offsets (struct usb_dev_handle *udh, int slot_id,
+usrp_write_dboard_offsets (struct libusb_device_handle *udh, int slot_id,
 			   short offset0, short offset1)
 {
   unsigned char buf[DB_EEPROM_CLEN];
@@ -1343,15 +1325,19 @@ usrp_write_dboard_offsets (struct usb_dev_handle *udh, int slot_id,
 }
 
 std::string
-usrp_serial_number(struct usb_dev_handle *udh)
+usrp_serial_number(struct libusb_device_handle *udh)
 {
-  unsigned char iserial = usb_device(udh)->descriptor.iSerialNumber;
+  struct libusb_device_descriptor desc;
+  if (libusb_get_device_descriptor(libusb_get_device(udh), &desc) < 0)
+    fprintf (stderr, "usrp: libusb_get_device_descriptor failed\n");
+
+  unsigned char iserial = desc.iSerialNumber;
   if (iserial == 0)
     return "";
 
-  char buf[1024];
-  if (usb_get_string_simple(udh, iserial, buf, sizeof(buf)) < 0)
+  unsigned char buf[1024];
+  if (libusb_get_string_descriptor_ascii(udh, iserial, buf, sizeof(buf)) < 0)
     return "";
 
-  return buf;
+  return (char*) buf;
 }

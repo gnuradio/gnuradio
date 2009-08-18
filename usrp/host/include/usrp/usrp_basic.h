@@ -46,7 +46,7 @@
 #include <boost/utility.hpp>
 #include <usrp/usrp_subdev_spec.h>
 
-struct usb_dev_handle;
+struct libusb_device_handle;
 class  fusb_devhandle;
 class  fusb_ephandle;
 
@@ -65,16 +65,16 @@ protected:
   void shutdown_daughterboards();
 
 protected:
-  struct usb_dev_handle	*d_udh;
-  int			 d_usb_data_rate;	// bytes/sec
-  int			 d_bytes_per_poll;	// how often to poll for overruns
-  bool			 d_verbose;
-  long                   d_fpga_master_clock_freq;
+  struct libusb_device_handle	*d_udh;
+  int				 d_usb_data_rate;	// bytes/sec
+  int				 d_bytes_per_poll;	// how often to poll for overruns
+  bool				 d_verbose;
+  long   			 d_fpga_master_clock_freq;
 
-  static const int	 MAX_REGS = 128;
-  unsigned int		 d_fpga_shadows[MAX_REGS];
+  static const int		 MAX_REGS = 128;
+  unsigned int			 d_fpga_shadows[MAX_REGS];
 
-  int			 d_dbid[2];		// daughterboard ID's (side A, side B)
+  int				 d_dbid[2];		// daughterboard ID's (side A, side B)
 
   /*!
    * Shared pointers to subclasses of db_base.
@@ -91,7 +91,7 @@ protected:
 
 
   usrp_basic (int which_board,
-	      struct usb_dev_handle *open_interface (struct usb_device *dev),
+	      struct libusb_device_handle *open_interface (struct libusb_device *dev),
 	      const std::string fpga_filename = "",
 	      const std::string firmware_filename = "");
 

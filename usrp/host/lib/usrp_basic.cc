@@ -31,7 +31,7 @@
 #include "fpga_regs_standard.h"
 #include "fusb.h"
 #include "db_boards.h"
-#include <usb.h>
+#include <libusb-1.0/libusb.h>
 #include <stdexcept>
 #include <assert.h>
 #include <math.h>
@@ -55,24 +55,22 @@ static const double POLLING_INTERVAL = 0.1;	// seconds
 
 ////////////////////////////////////////////////////////////////
 
-static struct usb_dev_handle *
-open_rx_interface (struct usb_device *dev)
+static struct libusb_device_handle *
+open_rx_interface (struct libusb_device *dev)
 {
-  struct usb_dev_handle *udh = usrp_open_rx_interface (dev);
+  struct libusb_device_handle *udh = usrp_open_rx_interface (dev);
   if (udh == 0){
     fprintf (stderr, "usrp_basic_rx: can't open rx interface\n");
-    usb_strerror ();
   }
   return udh;
 }
 
-static struct usb_dev_handle *
-open_tx_interface (struct usb_device *dev)
+static struct libusb_device_handle *
+open_tx_interface (struct libusb_device *dev)
 {
-  struct usb_dev_handle *udh = usrp_open_tx_interface (dev);
+  struct libusb_device_handle *udh = usrp_open_tx_interface (dev);
   if (udh == 0){
     fprintf (stderr, "usrp_basic_tx: can't open tx interface\n");
-    usb_strerror ();
   }
   return udh;
 }
@@ -106,8 +104,8 @@ static unsigned char common_regs[] = {
 
 
 usrp_basic::usrp_basic (int which_board, 
-			struct usb_dev_handle *
-			open_interface (struct usb_device *dev),
+			struct libusb_device_handle *
+			open_interface (struct libusb_device *dev),
 			const std::string fpga_filename,
 			const std::string firmware_filename)
   : d_udh (0),
@@ -132,7 +130,7 @@ usrp_basic::usrp_basic (int which_board,
   if (!usrp_load_standard_bits (which_board, false, fpga_filename, firmware_filename))
     throw std::runtime_error ("usrp_basic/usrp_load_standard_bits");
 
-  struct usb_device *dev = usrp_find_device (which_board);
+  struct libusb_device *dev = usrp_find_device (which_board);
   if (dev == 0){
     fprintf (stderr, "usrp_basic: can't find usrp[%d]\n", which_board);
     throw std::runtime_error ("usrp_basic/usrp_find_device");
@@ -175,7 +173,14 @@ usrp_basic::~usrp_basic ()
   d_db.resize(0); // forget db shared ptrs
 
   if (d_udh)
-    usb_close (d_udh);
+    libusb_close (d_udh);
+
+  // There's no reference count on the number of times libusb is initialized.
+  // libusb_init can be called multiple times, but libusb_exit shuts down
+  // everything. Leave libusb running for now. Need to add a count so that it
+  // exits nicely. 
+
+  //libusb_exit (NULL);
 }
 
 void
@@ -834,7 +839,6 @@ usrp_basic_rx::~usrp_basic_rx ()
 {
   if (!set_rx_enable (false)){
     fprintf (stderr, "usrp_basic_rx: set_fpga_rx_enable failed\n");
-    usb_strerror ();
   }
 
   d_ephandle->stop ();
@@ -859,13 +863,11 @@ usrp_basic_rx::start ()
 
   if (!d_ephandle->start ()){
     fprintf (stderr, "usrp_basic_rx: failed to start end point streaming");
-    usb_strerror ();
     return false;
   }
 
   if (!set_rx_enable (true)){
     fprintf (stderr, "usrp_basic_rx: set_rx_enable failed\n");
-    usb_strerror ();
     return false;
   }
   
@@ -879,13 +881,11 @@ usrp_basic_rx::stop ()
 
   if (!set_rx_enable(false)){
     fprintf (stderr, "usrp_basic_rx: set_rx_enable(false) failed\n");
-    usb_strerror ();
     ok = false;
   }
 
   if (!d_ephandle->stop()){
     fprintf (stderr, "usrp_basic_rx: failed to stop end point streaming");
-    usb_strerror ();
     ok = false;
   }
 
@@ -959,7 +959,6 @@ usrp_basic_rx::read (void *buf, int len, bool *overrun)
     d_bytes_seen = 0;
     if (!usrp_check_rx_overrun (d_udh, overrun)){
       fprintf (stderr, "usrp_basic_rx: usrp_check_rx_overrun failed\n");
-      usb_strerror ();
     }
   }
     
@@ -1264,13 +1263,11 @@ usrp_basic_tx::start ()
 
   if (!set_tx_enable (true)){
     fprintf (stderr, "usrp_basic_tx: set_tx_enable failed\n");
-    usb_strerror ();
     return false;
   }
   
   if (!d_ephandle->start ()){
     fprintf (stderr, "usrp_basic_tx: failed to start end point streaming");
-    usb_strerror ();
     return false;
   }
 
@@ -1284,13 +1281,11 @@ usrp_basic_tx::stop ()
 
   if (!d_ephandle->stop ()){
     fprintf (stderr, "usrp_basic_tx: failed to stop end point streaming");
-    usb_strerror ();
     ok = false;
   }
 
   if (!set_tx_enable (false)){
     fprintf (stderr, "usrp_basic_tx: set_tx_enable(false) failed\n");
-    usb_strerror ();
     ok = false;
   }
 
@@ -1364,7 +1359,6 @@ usrp_basic_tx::write (const void *buf, int len, bool *underrun)
     d_bytes_seen = 0;
     if (!usrp_check_tx_underrun (d_udh, underrun)){
       fprintf (stderr, "usrp_basic_tx: usrp_check_tx_underrun failed\n");
-      usb_strerror ();
     }
   }
 

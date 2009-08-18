@@ -37,9 +37,9 @@ AC_DEFUN([USRP_SET_FUSB_TECHNIQUE],[
 	                  [x_have_usbdevice_fs_h=yes],
                           [x_have_usbdevice_fs_h=no])
           if test x${x_have_usbdevice_fs_h} = xyes; then
-              FUSB_TECH=linux
+              FUSB_TECH=libusb1
           else
-              FUSB_TECH=generic
+              FUSB_TECH=libusb1
           fi
           ;;
         darwin*)
@@ -69,6 +69,7 @@ AC_DEFUN([USRP_SET_FUSB_TECHNIQUE],[
   AM_CONDITIONAL(FUSB_TECH_darwin,   test x$FUSB_TECH = xdarwin)
   AM_CONDITIONAL(FUSB_TECH_win32,    test x$FUSB_TECH = xwin32)
   AM_CONDITIONAL(FUSB_TECH_generic,  test x$FUSB_TECH = xgeneric)
+  AM_CONDITIONAL(FUSB_TECH_libusb1,  test x$FUSB_TECH = xlibusb1)
   AM_CONDITIONAL(FUSB_TECH_linux,    test x$FUSB_TECH = xlinux)
   AM_CONDITIONAL(FUSB_TECH_ra_wb,    test x$FUSB_TECH = xra_wb)
 ])

@@ -84,6 +84,9 @@ ra_wb_CODE =				\
 	fusb_ra_wb.cc			\
 	fusb_sysconfig_ra_wb.cc
 
+libusb1_CODE =				\
+	fusb_libusb1.cc			\
+	fusb_sysconfig_libusb1.cc
 
 #
 # include each <foo>_CODE entry here...
@@ -93,8 +96,8 @@ EXTRA_libusrp_la_SOURCES =		\
 	$(darwin_CODE)			\
 	$(win32_CODE)			\
 	$(linux_CODE)			\
-	$(ra_wb_CODE)
-
+	$(ra_wb_CODE)			\
+	$(libusb1_CODE)
 
 # work around automake deficiency
 libusrp_la_common_SOURCES = 		\
@@ -141,6 +144,11 @@ if FUSB_TECH_ra_wb
 libusrp_la_SOURCES = $(libusrp_la_common_SOURCES) $(ra_wb_CODE)
 endif
 
+if FUSB_TECH_libusb1
+libusrp_la_SOURCES = $(libusrp_la_common_SOURCES) $(libusb1_CODE)
+endif
+
+
 noinst_HEADERS =			\
 	ad9862.h			\
 	db_base_impl.h			\
@@ -150,6 +158,7 @@ noinst_HEADERS =			\
 	fusb_darwin.h			\
 	fusb_generic.h			\
 	fusb_linux.h			\
+	fusb_libusb1.h			\
 	fusb_ra_wb.h			\
 	fusb_win32.h			\
 	md5.h				\
