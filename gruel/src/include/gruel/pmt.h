@@ -304,6 +304,33 @@ void pmt_vector_set(pmt_t vector, size_t k, pmt_t obj);
 //! Store \p fill in every position of \p vector
 void pmt_vector_fill(pmt_t vector, pmt_t fill);
 
+/*
+ * ------------------------------------------------------------------------
+ *		      Binary Large Objects (BLOBs)
+ *
+ * Handy for passing around uninterpreted chunks of memory.
+ * ------------------------------------------------------------------------
+ */
+
+//! Return true if \p x is a blob, othewise false.
+bool pmt_is_blob(pmt_t x);
+
+/*!
+ * \brief Make a blob given a pointer and length in bytes
+ *
+ * \param buf is the pointer to data to use to create blob
+ * \param len is the size of the data in bytes.
+ *
+ * The data is copied into the blob.
+ */
+pmt_t pmt_make_blob(const void *buf, size_t len);
+
+//! Return a pointer to the blob's data
+const void *pmt_blob_data(pmt_t blob);
+
+//! Return the blob's length in bytes
+size_t pmt_blob_length(pmt_t blob);
+
 /*!
  * <pre>
  * ------------------------------------------------------------------------
@@ -735,5 +762,8 @@ pmt_t pmt_deserialize(std::streambuf &source);
 void pmt_dump_sizeof();	// debugging
 
 } /* namespace pmt */
+
+
+#include <gruel/pmt_sugar.h>
 
 #endif /* INCLUDED_PMT_H */

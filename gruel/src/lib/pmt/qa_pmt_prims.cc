@@ -23,7 +23,8 @@
 #include <qa_pmt_prims.h>
 #include <cppunit/TestAssert.h>
 #include <gruel/msg_passing.h>
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
 #include <sstream>
 
 using namespace pmt;
@@ -557,3 +558,19 @@ qa_pmt_prims::test_sets()
   CPPUNIT_ASSERT(!pmt_subsetp(l3,l2));
 }
 
+void
+qa_pmt_prims::test_sugar()
+{
+  CPPUNIT_ASSERT(pmt_is_symbol(mp("my-symbol")));
+  CPPUNIT_ASSERT_EQUAL((long) 10, pmt_to_long(mp(10)));
+  CPPUNIT_ASSERT_EQUAL((double) 1e6, pmt_to_double(mp(1e6)));
+  CPPUNIT_ASSERT_EQUAL(std::complex<double>(2, 3),
+		       pmt_to_complex(mp(std::complex<double>(2, 3))));
+
+  int buf[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+  pmt_t blob = mp(buf, sizeof(buf));
+  const void *data = pmt_blob_data(blob);
+  size_t nbytes = pmt_blob_length(blob);
+  CPPUNIT_ASSERT_EQUAL(sizeof(buf), nbytes);
+  CPPUNIT_ASSERT(memcmp(buf, data, nbytes) == 0);
+}

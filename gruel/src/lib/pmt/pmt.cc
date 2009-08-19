@@ -917,6 +917,39 @@ pmt_msg_accepter_ref(const pmt_t &obj)
 
 
 ////////////////////////////////////////////////////////////////////////////
+//             Binary Large Object -- currently a u8vector
+////////////////////////////////////////////////////////////////////////////
+
+bool
+pmt_is_blob(pmt_t x)
+{
+  // return pmt_is_u8vector(x);
+  return pmt_is_uniform_vector(x);
+}
+
+pmt_t
+pmt_make_blob(const void *buf, size_t len_in_bytes)
+{
+  return pmt_init_u8vector(len_in_bytes, (const uint8_t *) buf);
+}
+
+const void *
+pmt_blob_data(pmt_t blob)
+{
+  size_t len;
+  return pmt_uniform_vector_elements(blob, len);
+}
+
+size_t
+pmt_blob_length(pmt_t blob)
+{
+  size_t len;
+  pmt_uniform_vector_elements(blob, len);
+  return len;
+}
+
+
+////////////////////////////////////////////////////////////////////////////
 //                          General Functions
 ////////////////////////////////////////////////////////////////////////////
 

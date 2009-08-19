@@ -35,6 +35,7 @@ gruelinclude_HEADERS = \
 	pmt.h \
 	pmt_pool.h \
 	pmt_serial_tags.h \
+	pmt_sugar.h \
 	realtime.h \
 	sys_pri.h \
 	thread_body_wrapper.h \
