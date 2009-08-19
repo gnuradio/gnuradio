@@ -88,6 +88,77 @@ namespace pmt {
     return pmt_make_blob(data, len_in_bytes);
   }
 
+  //! Make tuple
+  static inline pmt_t
+  mp(const pmt_t &e0)
+  {
+    return pmt_make_tuple(e0);
+  }
+
+  //! Make tuple
+  static inline pmt_t
+  mp(const pmt_t &e0, const pmt_t &e1)
+  {
+    return pmt_make_tuple(e0, e1);
+  }
+
+  //! Make tuple
+  static inline pmt_t
+  mp(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2)
+  {
+    return pmt_make_tuple(e0, e1, e2);
+  }
+
+  //! Make tuple
+  static inline pmt_t
+  mp(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3)
+  {
+    return pmt_make_tuple(e0, e1, e2, e3);
+  }
+
+  //! Make tuple
+  static inline pmt_t
+  mp(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4)
+  {
+    return pmt_make_tuple(e0, e1, e2, e3, e4);
+  }
+
+  //! Make tuple
+  static inline pmt_t
+  mp(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5)
+  {
+    return pmt_make_tuple(e0, e1, e2, e3, e4, e5);
+  }
+
+  //! Make tuple
+  static inline pmt_t
+  mp(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5, const pmt_t &e6)
+  {
+    return pmt_make_tuple(e0, e1, e2, e3, e4, e5, e6);
+  }
+
+  //! Make tuple
+  static inline pmt_t
+  mp(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5, const pmt_t &e6, const pmt_t &e7)
+  {
+    return pmt_make_tuple(e0, e1, e2, e3, e4, e5, e6, e7);
+  }
+
+  //! Make tuple
+  static inline pmt_t
+  mp(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5, const pmt_t &e6, const pmt_t &e7, const pmt_t &e8)
+  {
+    return pmt_make_tuple(e0, e1, e2, e3, e4, e5, e6, e7, e8);
+  }
+
+  //! Make tuple
+  static inline pmt_t
+  mp(const pmt_t &e0, const pmt_t &e1, const pmt_t &e2, const pmt_t &e3, const pmt_t &e4, const pmt_t &e5, const pmt_t &e6, const pmt_t &e7, const pmt_t &e8, const pmt_t &e9)
+  {
+    return pmt_make_tuple(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9);
+  }
+
+
 } /* namespace pmt */
 
 
