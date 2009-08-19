@@ -907,9 +907,13 @@ pmt_make_msg_accepter(gruel::msg_accepter_sptr ma)
 gruel::msg_accepter_sptr
 pmt_msg_accepter_ref(const pmt_t &obj)
 {
-  return boost::any_cast<gruel::msg_accepter_sptr>(pmt_any_ref(obj));
+  try {
+    return boost::any_cast<gruel::msg_accepter_sptr>(pmt_any_ref(obj));
+  }
+  catch (boost::bad_any_cast &e){
+    throw pmt_wrong_type("pmt_msg_accepter_ref", obj);
+  }
 }
-
 
 
 ////////////////////////////////////////////////////////////////////////////

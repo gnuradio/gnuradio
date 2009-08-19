@@ -25,6 +25,12 @@ SUBDIRS = pmt msg
 
 AM_CPPFLAGS = $(DEFINES) $(BOOST_CPPFLAGS) $(CPPUNIT_INCLUDES) $(GRUEL_INCLUDES) $(WITH_INCLUDES)
 
+
+TESTS = test_gruel
+
+noinst_PROGRAMS = test_gruel
+
+
 lib_LTLIBRARIES = libgruel.la
 
 # magic flags
@@ -47,3 +53,10 @@ libgruel_la_LIBADD = 			\
 	$(PMT_LIB)			\
 	$(MSG_LIB)			\
 	-lstdc++
+
+
+# ----------------------------------------------------------------
+
+test_gruel_SOURCES = test_gruel.cc
+test_gruel_LDADD   = libgruel.la pmt/libpmt-qa.la
+

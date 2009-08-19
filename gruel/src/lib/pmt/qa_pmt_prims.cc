@@ -456,9 +456,9 @@ qa_pmt_prims::test_any()
 
 class qa_pmt_msg_accepter_nop : public gruel::msg_accepter {
 public:
-  qa_pmt_msg_accepter_nop();
+  qa_pmt_msg_accepter_nop(){};
   ~qa_pmt_msg_accepter_nop();
-  void post(pmt_t) { };
+  void post(pmt_t){};
 };
 
 qa_pmt_msg_accepter_nop::~qa_pmt_msg_accepter_nop(){}
@@ -478,8 +478,7 @@ qa_pmt_prims::test_msg_accepter()
   CPPUNIT_ASSERT_EQUAL(ma0.get(), pmt_msg_accepter_ref(p1).get());
 
   CPPUNIT_ASSERT_THROW(pmt_msg_accepter_ref(sym), pmt_wrong_type);
-  CPPUNIT_ASSERT_THROW(pmt_msg_accepter_ref(p0),  pmt_wrong_type); // FIXME
-
+  CPPUNIT_ASSERT_THROW(pmt_msg_accepter_ref(p0),  pmt_wrong_type);
 }
 
 // ------------------------------------------------------------------------
