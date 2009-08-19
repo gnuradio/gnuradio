@@ -24,12 +24,17 @@
 #define INCLUDED_PMT_H
 
 #include <boost/intrusive_ptr.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/any.hpp>
 #include <complex>
 #include <string>
 #include <stdint.h>
 #include <iosfwd>
 #include <stdexcept>
+
+namespace gruel {
+  class msg_accepter;
+};
 
 /*!
  * This file defines a polymorphic type and the operations on it.
@@ -481,6 +486,20 @@ boost::any pmt_any_ref(pmt_t obj);
 //! Store \p any in \p obj
 void pmt_any_set(pmt_t obj, const boost::any &any);
 
+
+/*
+ * ------------------------------------------------------------------------
+ *    msg_accepter -- pmt representation of gruel::msg_accepter
+ * ------------------------------------------------------------------------
+ */
+//! Return true if \p obj is a msg_accepter
+bool pmt_is_msg_accepter(const pmt_t &obj);
+
+//! make a msg_accepter
+pmt_t pmt_make_msg_accepter(boost::shared_ptr<gruel::msg_accepter> ma);
+
+//! Return underlying msg_accepter
+boost::shared_ptr<gruel::msg_accepter> pmt_msg_accepter_ref(const pmt_t &obj);
 
 /*
  * ------------------------------------------------------------------------

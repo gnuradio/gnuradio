@@ -23,6 +23,7 @@
 #include <qa_pmt_prims.h>
 #include <cppunit/TestAssert.h>
 #include <gruel/pmt.h>
+#include <gruel/msg_accepter.h>
 #include <stdio.h>
 #include <sstream>
 
@@ -449,6 +450,36 @@ qa_pmt_prims::test_any()
 
   CPPUNIT_ASSERT_EQUAL(foo(3.250, 21),
 		       boost::any_cast<foo>(pmt_any_ref(p2)));
+}
+
+// ------------------------------------------------------------------------
+
+class qa_pmt_msg_accepter_nop : public gruel::msg_accepter {
+public:
+  qa_pmt_msg_accepter_nop();
+  ~qa_pmt_msg_accepter_nop();
+  void post(pmt_t) { };
+};
+
+qa_pmt_msg_accepter_nop::~qa_pmt_msg_accepter_nop(){}
+
+void
+qa_pmt_prims::test_msg_accepter()
+{
+  pmt_t sym = pmt_intern("my-symbol");
+
+  boost::any a0;
+  a0 = std::string("Hello!");
+  pmt_t p0 = pmt_make_any(a0);
+
+  gruel::msg_accepter_sptr ma0 = gruel::msg_accepter_sptr(new qa_pmt_msg_accepter_nop());
+  pmt_t p1 = pmt_make_msg_accepter(ma0);
+
+  CPPUNIT_ASSERT_EQUAL(ma0.get(), pmt_msg_accepter_ref(p1).get());
+
+  CPPUNIT_ASSERT_THROW(pmt_msg_accepter_ref(sym), pmt_wrong_type);
+  CPPUNIT_ASSERT_THROW(pmt_msg_accepter_ref(p0),  pmt_wrong_type); // FIXME
+
 }
 
 // ------------------------------------------------------------------------

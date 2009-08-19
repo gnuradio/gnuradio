@@ -26,8 +26,9 @@
 #include <vector>
 #include <gruel/pmt.h>
 #include "pmt_int.h"
-#include <stdio.h>
+#include <gruel/msg_accepter.h>
 #include <gruel/pmt_pool.h>
+#include <stdio.h>
 #include <string.h>
 
 namespace pmt {
@@ -880,6 +881,36 @@ pmt_any_set(pmt_t obj, const boost::any &any)
     throw pmt_wrong_type("pmt_any_set", obj);
   _any(obj)->set(any);
 }
+
+////////////////////////////////////////////////////////////////////////////
+//               msg_accepter -- built from "any"
+////////////////////////////////////////////////////////////////////////////
+
+bool 
+pmt_is_msg_accepter(const pmt_t &obj)
+{
+  if (!pmt_is_any(obj))
+    return false;
+
+  boost::any r = pmt_any_ref(obj);
+  return boost::any_cast<gruel::msg_accepter_sptr>(&r) != 0;
+}
+
+//! make a msg_accepter
+pmt_t
+pmt_make_msg_accepter(gruel::msg_accepter_sptr ma)
+{
+  return pmt_make_any(ma);
+}
+
+//! Return underlying msg_accepter
+gruel::msg_accepter_sptr
+pmt_msg_accepter_ref(const pmt_t &obj)
+{
+  return boost::any_cast<gruel::msg_accepter_sptr>(pmt_any_ref(obj));
+}
+
+
 
 ////////////////////////////////////////////////////////////////////////////
 //                          General Functions
