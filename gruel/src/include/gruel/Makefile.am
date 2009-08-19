@@ -31,11 +31,11 @@ gruelinclude_HEADERS = \
 	msg_accepter.h \
 	msg_accepter_msgq.h \
 	msg_queue.h \
+	msg_passing.h \
 	pmt.h \
 	pmt_pool.h \
 	pmt_serial_tags.h \
 	realtime.h \
-	send.h \
 	sys_pri.h \
 	thread_body_wrapper.h \
 	thread_group.h \
