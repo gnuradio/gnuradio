@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>624</width>
+    <height>696</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="1">
+     <widget class="QTabWidget" name="tabGroup">
+      <property name="minimumSize">
+       <size>
+        <width>800</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="freqTab">
+       <attribute name="title">
+        <string>Frequency Domain</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QwtPlot" name="freqPlot"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="timeTab">
+       <attribute name="title">
+        <string>Time Domain</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QwtPlot" name="timePlot"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QFrame" name="filterFrame">
+      <property name="minimumSize">
+       <size>
+        <width>300</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>300</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QComboBox" name="filterTypeComboBox">
+         <item>
+          <property name="text">
+           <string>Low Pass</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Band Pass</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Complex Band Pass</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Band Notch</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>High Pass</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Root Raised Cosine</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Gaussian</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="filterDesignTypeComboBox">
+         <item>
+          <property name="text">
+           <string>Windowed</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Equiripple</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <layout class="QFormLayout" name="formLayout_2">
+         <property name="fieldGrowthPolicy">
+          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+         </property>
+         <item row="0" column="0">
+          <widget class="QLabel" name="sampleRateLabel">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Sample Rate (sps)</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="sampleRateEdit">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="filterGainLabel">
+           <property name="text">
+            <string>Filter Gain</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="filterGainEdit"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QStackedWidget" name="filterTypeWidget">
+         <widget class="QWidget" name="firlpfPage"/>
+         <widget class="QWidget" name="firhpfPage"/>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="designButton">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Design</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>624</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="action_exit"/>
+   </widget>
+   <addaction name="menu_File"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_open">
+   <property name="text">
+    <string>&amp;Open</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action_exit">
+   <property name="text">
+    <string>E&amp;xit</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QwtPlot</class>
+   <extends>QFrame</extends>
+   <header>qwt_plot.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>filterTypeComboBox</tabstop>
+  <tabstop>filterDesignTypeComboBox</tabstop>
+  <tabstop>sampleRateEdit</tabstop>
+  <tabstop>filterGainEdit</tabstop>
+  <tabstop>designButton</tabstop>
+  <tabstop>tabGroup</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>action_exit</sender>
+   <signal>activated()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>347</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
