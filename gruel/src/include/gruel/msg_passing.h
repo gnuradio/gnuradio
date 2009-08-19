@@ -46,7 +46,27 @@ namespace gruel {
   static inline pmt::pmt_t
   send(msg_accepter_sptr accepter, const pmt::pmt_t &msg)
   {
-    return accepter->post(msg);
+    accepter->post(msg);
+    return msg;
+  }
+
+  /*!
+   * \brief send message to msg_accepter
+   *
+   * \param accepter is the target of the send.
+   * \param msg is the message to send.  It's usually a pmt tuple.
+   *
+   * Sending a message is an asynchronous operation.  The \p send
+   * call will not wait for the message either to arrive at the
+   * destination or to be received.
+   *
+   * \returns msg
+   */
+  static inline pmt::pmt_t
+  send(msg_accepter *accepter, const pmt::pmt_t &msg)
+  {
+    accepter->post(msg);
+    return msg;
   }
 
   /*!
@@ -64,7 +84,8 @@ namespace gruel {
   static inline pmt::pmt_t
   send(msg_accepter &accepter, const pmt::pmt_t &msg)
   {
-    return accepter.post(msg);
+    accepter.post(msg);
+    return msg;
   }
 
   /*!
@@ -79,9 +100,11 @@ namespace gruel {
    *
    * \returns msg
    */
-  pmt::pmt_t
-  send(const pmt_t &accepter, const pmt::pmt_t &msg);
-
+  static inline pmt::pmt_t
+  send(pmt::pmt_t accepter, const pmt::pmt_t &msg)
+  {
+    return send(pmt_msg_accepter_ref(accepter), msg);
+  }
 
 } /* namespace gruel */
 

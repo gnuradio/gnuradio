@@ -22,8 +22,7 @@
 
 #include <qa_pmt_prims.h>
 #include <cppunit/TestAssert.h>
-#include <gruel/pmt.h>
-#include <gruel/msg_accepter.h>
+#include <gruel/msg_passing.h>
 #include <stdio.h>
 #include <sstream>
 
@@ -479,6 +478,12 @@ qa_pmt_prims::test_msg_accepter()
 
   CPPUNIT_ASSERT_THROW(pmt_msg_accepter_ref(sym), pmt_wrong_type);
   CPPUNIT_ASSERT_THROW(pmt_msg_accepter_ref(p0),  pmt_wrong_type);
+
+  // just confirm interfaces on send are OK
+  gruel::send(ma0.get(), sym);
+  gruel::send(ma0, sym);
+  gruel::send(p1, sym);
+
 }
 
 // ------------------------------------------------------------------------
