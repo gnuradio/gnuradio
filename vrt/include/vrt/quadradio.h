@@ -53,7 +53,7 @@ namespace vrt {
     int		   d_data_port;	       // our data port number
     vrt::rx::sptr  d_rx;	       // has-a rx
     
-    int		   d_band_select;	       // band select setting
+    std::string		   d_band_select;	       // band select setting
     int		   d_rx_antenna;	       // antenna type rf/cal
     int		   d_attenuation0;	       // attenuation setting
     int		   d_attenuation1;	       // attenuation setting
@@ -93,6 +93,7 @@ namespace vrt {
     /* convenience methods that ultimately write the dboard pins */
     bool set_center_freq(double target_freq);
     bool set_band_select(const std::string &band);
+    std::string get_band_select(void){return d_band_select;}
     //void set_10dB_atten(bool on);
     bool set_attenuation0(int attenuation);
     bool select_rx_antenna(const std::string &ant);

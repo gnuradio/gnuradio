@@ -91,6 +91,12 @@ vrt_quadradio_source_32fc::set_band_select(const std::string &band)
   return d_qr->set_band_select(band);
 }
 
+std::string 
+vrt_quadradio_source_32fc::get_band_select(void)
+{
+  return d_qr->get_band_select();
+}
+
 //void 
 //vrt_quadradio_source_32fc::set_10dB_atten(bool on)
 //{

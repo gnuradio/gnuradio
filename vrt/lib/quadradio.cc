@@ -51,7 +51,7 @@ send_and_check(int fd, void *buf, size_t len)
 
 vrt::quadradio::quadradio(const std::string &ip, size_t rx_bufsize)
   : d_ctrl_fd(0), d_data_fd(0), d_data_port(0),
-  d_band_select(0), d_rx_antenna(0), d_attenuation0(0), d_attenuation1(0)//d_10dB_atten(true)
+  d_band_select("A"), d_rx_antenna(0), d_attenuation0(0), d_attenuation1(0)//d_10dB_atten(true)
 {
   if (!open(ip.c_str()))
     throw std::runtime_error("vrt::quadradio: failed to open " + ip + "\n");
@@ -98,11 +98,7 @@ vrt::quadradio::set_center_freq(double target_freq){
 
 bool
 vrt::quadradio::set_band_select(const std::string &band){
-    if (band == "A") d_band_select = 3;
-    else if (band == "B") d_band_select = 2;
-    else if (band == "C") d_band_select = 1;
-    else if (band == "D") d_band_select = 0;
-    else return false;
+    d_band_select = band;
     update_dboard_pins();
     return true;
 }
@@ -149,11 +145,18 @@ static int reverse_bits(int input, int len){
 
 void
 vrt::quadradio::update_dboard_pins(void){
+    //convert the band ID to bits
+    int band_select;
+    if (d_band_select == "A") band_select = 3;
+    else if (d_band_select == "B") band_select = 2;
+    else if (d_band_select == "C") band_select = 1;
+    else if (d_band_select == "D") band_select = 0;
+    //calculate the control bits
     int db_ctrl = \
-        ((reverse_bits(d_attenuation0, 5) & 0x1f) << 10) | \
+        ((reverse_bits(d_attenuation0, 5)  & 0x1f) << 10) | \
         ((reverse_bits(~d_attenuation1, 5) & 0x1f) << 03) | \
-        ((d_band_select                   & 0x03) << 01) | \
-        ((d_rx_antenna                    & 0x01) << 00);
+        ((band_select                      & 0x03) << 01) | \
+        ((d_rx_antenna                     & 0x01) << 00);
     set_dboard_pins(ALL_DBOARDS, db_ctrl);  // FIXME sets them all
 }
 
