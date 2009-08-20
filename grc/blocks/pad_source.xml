@@ -9,6 +9,20 @@
 	<key>pad_source</key>
 	<make></make>
 	<param>
+		<name>Mode</name>
+		<key>mode</key>
+		<value>hb</value>
+		<type>enum</type>
+		<option>
+			<name>Hierarchical</name>
+			<key>hb</key>
+		</option>
+		<option>
+			<name>Continuation</name>
+			<key>cont</key>
+		</option>
+	</param>
+	<param>
 		<name>Num Outputs</name>
 		<key>nports</key>
 		<value>1</value>
@@ -50,6 +64,13 @@
 		<value>1</value>
 		<type>int</type>
 	</param>
+	<param>
+		<name>Pad Sink ID</name>
+		<key>pad_sink_id</key>
+		<value>pad_sink_0</value>
+		<type>string</type>
+		<hide>#if $mode() == 'cont' then 'none' else 'all'#</hide>
+	</param>
 	<check>$vlen &gt; 0</check>
 	<check>0 &lt; $nports</check>
 	<source>
@@ -59,10 +80,12 @@
 		<nports>$nports</nports>
 	</source>
 	<doc>
-This is a source pad block for creating hierarchical flow graphs. \
-The outputs of this block will become the inputs to this flow graph when it is instantiated as a hierarchical block. \
-Limit one source pad block per flow graph.
+Continuation Mode:
+The outputs of this block will alias the inputs of the pad sink specified by "pad sink id".
 
-Remember to set the generate options to hier block.
+Hierarchical Mode:
+The outputs of this block will become the inputs to this flow graph when it is instantiated as a hierarchical block. \
+Limit one source pad block per flow graph. \
+The "pad sink id" will be ignored in this mode.
 	</doc>
 </block>

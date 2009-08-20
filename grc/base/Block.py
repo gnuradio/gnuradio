@@ -47,7 +47,9 @@ class TemplateArg(UserDict):
 		return self._param.get_evaluated()
 
 def _get_keys(lst): return [elem.get_key() for elem in lst]
-def _get_elem(lst, key): return lst[_get_keys(lst).index(key)]
+def _get_elem(lst, key):
+	try: return lst[_get_keys(lst).index(key)]
+	except ValueError: raise ValueError, 'Key "%s" not found in %s.'%(key, _get_keys(lst))
 
 class Block(Element):
 
