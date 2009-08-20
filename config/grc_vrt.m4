@@ -34,6 +34,19 @@ AC_DEFUN([GRC_VRT],[
         VRT_LA="\${abs_top_builddir}/vrt/lib/libvrt.la"
     fi
 
+    # Test host OS compatibility
+    AC_MSG_CHECKING([whether host_os is linux*])
+    case "$host_os" in
+      linux*)
+	AC_MSG_RESULT([yes])
+        ;;
+      *)
+	AC_MSG_RESULT([no])
+	AC_MSG_NOTICE([libvrt currently requires Linux host OS, not found])
+        passed="no"
+        ;;
+    esac
+
     dnl Include the vrt INCLUDES and LA
     AC_SUBST(VRT_INCLUDES)
     AC_SUBST(VRT_LA)
