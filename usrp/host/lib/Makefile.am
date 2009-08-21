@@ -122,6 +122,8 @@ libusrp_la_common_SOURCES = 		\
 	usrp_local_sighandler.cc	\
 	usrp_prims_common.cc		\
 	usrp_standard.cc		\
+	db_wbxng_adf4350.cc			\
+	db_wbxng_adf4350_regs.cc			\
 	db_boards.cc			\
 	db_base.cc			\
 	db_basic.cc			\

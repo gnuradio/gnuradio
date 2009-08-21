@@ -23,70 +23,118 @@
 #define DB_WBXNG_H
 
 #include <usrp/db_base.h>
-#include <boost/shared_ptr.hpp>
+#include <cmath>
 
-class wbxng;
-typedef boost::shared_ptr<wbxng> wbxng_sptr;
+//debug_using_gui = true                // Must be set to True or False
+#define debug_using_gui false           // Must be set to True or False
 
+class adf4350;
 
-/******************************************************************************/
-
-
-class db_wbxng_base: public db_base
+class wbxng_base : public db_base
 {
-  /*
-   * Abstract base class for all wbxng boards.
-   * 
-   * Derive board specific subclasses from db_wbxng_base_{tx,rx}
-   */
 public:
-  db_wbxng_base(usrp_basic_sptr usrp, int which);
-  ~db_wbxng_base();
-  struct freq_result_t set_freq(double target_freq);
-  bool is_quadrature();
+  wbxng_base(usrp_basic_sptr usrp, int which, int _power_on=0);
+  ~wbxng_base();
+
+  struct freq_result_t set_freq(double freq);
+
+  bool  is_quadrature();
   double freq_min();
   double freq_max();
 
 protected:
-  wbxng_sptr d_wbxng;
-  void shutdown_common();
+  void _write_all(int R, int control, int N);
+  void _write_control(int control);
+  void _write_R(int R);
+  void _write_N(int N);
+  void _write_it(int v);
+  bool _lock_detect();
+
+  virtual bool _compute_regs(double freq, int &retR, int &retcontrol, 
+			     int &retN, double &retfreq);
+  int  _compute_control_reg();
+  int _refclk_divisor();
+  double _refclk_freq();
+
+  bool _set_pga(float pga_gain);
+
+  int power_on() { return d_power_on; }
+  int power_off() { return 0; }
+
+  bool d_first;
+  int  d_spi_format;
+  int  d_spi_enable;
+  int  d_power_on;
+  int  d_PD;
+
+  adf4350 *d_common;
 };
 
+// ----------------------------------------------------------------
 
-/******************************************************************************/
-
-
-class db_wbxng_tx : public db_wbxng_base
+class wbxng_base_tx : public wbxng_base
 {
 protected:
   void shutdown();
 
 public:
+  wbxng_base_tx(usrp_basic_sptr usrp, int which, int _power_on=0);
+  ~wbxng_base_tx();
+
+  //*** TODO *** Fix comment
+  // All RFX tx d'boards have fixed gain
+  float gain_min();
+  float gain_max();
+  float gain_db_per_step();
+
+  bool set_auto_tr(bool on);
+  bool set_enable(bool on);
+  bool set_gain(float gain);
+};
+
+class wbxng_base_rx : public wbxng_base
+{
+protected:
+  void shutdown();
+
+public:
+  wbxng_base_rx(usrp_basic_sptr usrp, int which, int _power_on=0);
+  ~wbxng_base_rx();
+    
+  bool set_auto_tr(bool on);
+  bool select_rx_antenna(int which_antenna);
+  bool select_rx_antenna(const std::string &which_antenna);
+  bool set_gain(float gain);
+
+};
+
+// ----------------------------------------------------------------
+
+class db_wbxng_tx : public wbxng_base_tx
+{
+ public:
   db_wbxng_tx(usrp_basic_sptr usrp, int which);
   ~db_wbxng_tx();
 
-  float gain_min();
-  float gain_max();
-  float gain_db_per_step();
-  bool  set_gain(float gain);
-  bool  i_and_q_swapped();
+  // Wrapper calls to d_common functions
+  bool _compute_regs(double freq, int &retR, int &retcontrol,
+		     int &retN, double &retfreq);
 };
 
-class db_wbxng_rx : public db_wbxng_base
+class db_wbxng_rx : public wbxng_base_rx
 {
-protected:
-  void shutdown();
-
 public:
   db_wbxng_rx(usrp_basic_sptr usrp, int which);
   ~db_wbxng_rx();
-
+  
   float gain_min();
   float gain_max();
   float gain_db_per_step();
-  bool  set_gain(float gain);
-};
+  bool i_and_q_swapped();
 
+  bool _compute_regs(double freq, int &retR, int &retcontrol,
+		     int &retN, double &retfreq);
+};
 
 
 #endif

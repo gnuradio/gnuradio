@@ -33,6 +33,8 @@ usrpinclude_HEADERS = \
 	db_flexrf_mimo.h \
 	db_tv_rx.h \
  	db_tv_rx_mimo.h	\
+	db_wbxng_adf4350.h \
+	db_wbxng_adf4350_regs.h \
 	db_wbxng.h \
 	db_xcvr2450.h \
 	libusb_types.h \
