@@ -38,6 +38,14 @@ typedef enum{
       
     } vrt_test_sig_t;
 
+typedef enum{
+    VRT_BAND_SEL_A='A',
+    VRT_BAND_SEL_B='B',
+    VRT_BAND_SEL_C='C',
+    VRT_BAND_SEL_D='D',  
+      
+    } vrt_band_sel_t;
+
 namespace vrt {
 
   /*
@@ -53,7 +61,7 @@ namespace vrt {
     int		   d_data_port;	       // our data port number
     vrt::rx::sptr  d_rx;	       // has-a rx
     
-    std::string		   d_band_select;	       // band select setting
+    vrt_band_sel_t		   d_band_select;	       // band select setting
     int		   d_rx_antenna;	       // antenna type rf/cal
     int		   d_attenuation0;	       // attenuation setting
     int		   d_attenuation1;	       // attenuation setting
@@ -92,8 +100,8 @@ namespace vrt {
 
     /* convenience methods that ultimately write the dboard pins */
     bool set_center_freq(double target_freq);
-    bool set_band_select(const std::string &band);
-    std::string get_band_select(void){return d_band_select;}
+    bool set_band_select(vrt_band_sel_t band);
+    vrt_band_sel_t get_band_select(void){return d_band_select;}
     //void set_10dB_atten(bool on);
     bool set_attenuation0(int attenuation);
     bool select_rx_antenna(const std::string &ant);

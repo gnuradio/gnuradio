@@ -51,7 +51,7 @@ send_and_check(int fd, void *buf, size_t len)
 
 vrt::quadradio::quadradio(const std::string &ip, size_t rx_bufsize)
   : d_ctrl_fd(0), d_data_fd(0), d_data_port(0),
-  d_band_select("A"), d_rx_antenna(0), d_attenuation0(0), d_attenuation1(0)//d_10dB_atten(true)
+  d_band_select(VRT_BAND_SEL_A), d_rx_antenna(0), d_attenuation0(0), d_attenuation1(0)//d_10dB_atten(true)
 {
   if (!open(ip.c_str()))
     throw std::runtime_error("vrt::quadradio: failed to open " + ip + "\n");
@@ -89,15 +89,15 @@ vrt::quadradio::stop_streaming()
 bool
 vrt::quadradio::set_center_freq(double target_freq){
     if (target_freq < 700e6) return false;
-    if (target_freq <= 1.0e9) return set_band_select("A");
-    if (target_freq <= 1.5e9) return set_band_select("B");
-    if (target_freq <= 2.2e9) return set_band_select("C");
-    if (target_freq <= 3.0e9) return set_band_select("D");
+    if (target_freq <= 1.0e9) return set_band_select(VRT_BAND_SEL_A);
+    if (target_freq <= 1.5e9) return set_band_select(VRT_BAND_SEL_B);
+    if (target_freq <= 2.2e9) return set_band_select(VRT_BAND_SEL_C);
+    if (target_freq <= 3.0e9) return set_band_select(VRT_BAND_SEL_D);
     return false;
 }
 
 bool
-vrt::quadradio::set_band_select(const std::string &band){
+vrt::quadradio::set_band_select(vrt_band_sel_t band){
     d_band_select = band;
     update_dboard_pins();
     return true;
@@ -147,10 +147,13 @@ void
 vrt::quadradio::update_dboard_pins(void){
     //convert the band ID to bits
     int band_select;
-    if (d_band_select == "A") band_select = 3;
-    else if (d_band_select == "B") band_select = 2;
-    else if (d_band_select == "C") band_select = 1;
-    else if (d_band_select == "D") band_select = 0;
+    switch (d_band_select){
+        case VRT_BAND_SEL_A: band_select = 3; break;
+        case VRT_BAND_SEL_B: band_select = 2; break;
+        case VRT_BAND_SEL_C: band_select = 1; break;
+        case VRT_BAND_SEL_D: band_select = 0; break;
+        default: band_select = 0;
+    }
     //calculate the control bits
     int db_ctrl = \
         ((reverse_bits(d_attenuation0, 5)  & 0x1f) << 10) | \

@@ -86,15 +86,15 @@ vrt_quadradio_source_32fc::set_center_freq(double target_freq)
 }
 
 bool 
-vrt_quadradio_source_32fc::set_band_select(const std::string &band)
+vrt_quadradio_source_32fc::set_band_select(int band)
 {
-  return d_qr->set_band_select(band);
+  return d_qr->set_band_select(static_cast<vrt_band_sel_t>(band));
 }
 
-std::string 
+int 
 vrt_quadradio_source_32fc::get_band_select(void)
 {
-  return d_qr->get_band_select();
+  return static_cast<int>(d_qr->get_band_select());
 }
 
 //void 

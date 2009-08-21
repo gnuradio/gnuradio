@@ -68,10 +68,9 @@ public:
 
   /*!
    * \brief Set the band select dboard bits.
-   * \param band "A", "B", "C", "D"
    */
-  bool set_band_select(const std::string &band);
-  std::string get_band_select(void);
+  bool set_band_select(int band);
+  int get_band_select(void);
 
   /*!
    * \brief Turn the 10 dB attenuation on/off.
