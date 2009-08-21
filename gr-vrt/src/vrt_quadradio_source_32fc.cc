@@ -216,3 +216,7 @@ vrt_quadradio_source_32fc::set_beamforming(std::vector<gr_complex> gains){
  return d_qr->set_beamforming(gains_ints);
 }
 
+bool
+vrt_quadradio_source_32fc::set_cal_enb(bool enb){
+  return d_qr->set_cal_enb(enb);
+}

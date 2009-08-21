@@ -412,3 +412,13 @@ vrt::quadradio::set_beamforming(int32_t gains[8]){
   return send_and_check(d_ctrl_fd, cmd, sizeof(cmd));
 }
 
+bool
+vrt::quadradio::set_cal_enb(bool enb)
+{
+  uint32_t cmd[3];
+  cmd[0] = htonl(0);		   // verb: set
+  cmd[1] = htonl(9);		   // id: cal enb
+  cmd[2] = htonl(enb);
+
+  return send_and_check(d_ctrl_fd, cmd, sizeof(cmd));
+}

@@ -119,6 +119,7 @@ namespace vrt {
     bool set_lo_freq(double freq);
     bool set_cal_freq(double freq);
     bool set_beamforming(int32_t gains[8]);
+    bool set_cal_enb(bool enb);
     /*
      * The first parameter for these is a bitmask which indicates which
      * daughterboard or daughterboards to apply the operation to.

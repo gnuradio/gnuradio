@@ -109,6 +109,7 @@ public:
   bool set_lo_freq(double freq);
   bool set_cal_freq(double freq);
   bool set_beamforming(std::vector<gr_complex> gains);
+  bool set_cal_enb(bool enb);
 };
 
 
