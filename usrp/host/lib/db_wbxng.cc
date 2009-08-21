@@ -46,7 +46,7 @@ wbxng_base::wbxng_base(usrp_basic_sptr _usrp, int which, int _power_on)
   d_first = true;
   d_spi_format = SPI_FMT_MSB | SPI_FMT_HDR_0;
 
-  usrp()->_write_oe(d_which, 0, 0xffff);   // turn off all outputs
+  usrp()->_write_oe(d_which, 1, 0xffff);   // turn off all outputs
   _enable_refclk(false);                // disable refclk
 
   set_auto_tr(false);
@@ -125,11 +125,13 @@ wbxng_base::_lock_detect()
     @returns: the value of the VCO/PLL lock detect bit.
     @rtype: 0 or 1
   */
-  /*
-  if(usrp()->read_io(d_which) & PLL_LOCK_DETECT) {
+  
+  if(d_common->_get_locked()){
     return true;
   }
   else {      // Give it a second chance
+    return false;
+    /*
     // FIXME: make portable sleep
     timespec t;
     t.tv_sec = 0;
@@ -142,8 +144,9 @@ wbxng_base::_lock_detect()
     else {
       return false;
     }
+    */
   }
-  */
+ 
   throw std::runtime_error("_lock_detect called from wbxng_base\n");
 }
 
@@ -199,14 +202,17 @@ wbxng_base::set_freq(double freq)
     actual_baseband_freq is the RF frequency that corresponds to DC in the IF.
   */
 
-  struct freq_result_t args = {false, 0};
+  freq_t int_freq = (freq_t) freq;
+  bool ok = d_common->_set_freq(int_freq);
+  double freq_result = (double) d_common->_get_freq();
+  struct freq_result_t args = {ok, freq_result};
 
   // Offsetting the LO helps get the Tx carrier leakage out of the way.
   // This also ensures that on Rx, we're not getting hosed by the
   // FPGA's DC removal loop's time constant.  We were seeing a
   // problem when running with discontinuous transmission.
   // Offsetting the LO made the problem go away.
-  freq += d_lo_offset;
+  //freq += d_lo_offset;
   
   //int R, control, N;
   //double actual_freq;
@@ -252,15 +258,13 @@ wbxng_base::is_quadrature()
 double
 wbxng_base::freq_min()
 {
-  throw std::runtime_error("freq_min called from wbxng_base\n");
-  //return d_common->freq_min();
+  return (double) d_common->_get_min_freq();
 }
 
 double
 wbxng_base::freq_max()
 {
-  throw std::runtime_error("freq_max called from wbxng_base\n");
-  //return d_common->freq_max();
+  return (double) d_common->_get_max_freq();
 }
 
 // ----------------------------------------------------------------
@@ -283,13 +287,11 @@ wbxng_base_tx::wbxng_base_tx(usrp_basic_sptr _usrp, int which, int _power_on)
   d_common = new adf4350(_usrp, d_which, d_spi_enable);
   
   // power up the transmit side, but don't enable the mixer
-  /*
-  usrp()->_write_oe(d_which,(POWER_UP|RX_TXN|ENABLE), 0xffff);
-  usrp()->write_io(d_which, (power_on()|RX_TXN), (POWER_UP|RX_TXN|ENABLE));
-  set_lo_offset(4e6);
+  usrp()->_write_oe(d_which,(RX_TXN|ENABLE_33|ENABLE_5), 0xffff);
+  usrp()->write_io(d_which, (power_on()|RX_TXN), (RX_TXN|ENABLE_33|ENABLE_5));
+  //set_lo_offset(4e6);
 
-  set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
-  */
+  //set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
 }
 
 wbxng_base_tx::~wbxng_base_tx()
@@ -308,12 +310,14 @@ wbxng_base_tx::shutdown()
     // do whatever there is to do to shutdown
 
     // Power down and leave the T/R switch in the R position
-    //usrp()->write_io(d_which, (power_off()|RX_TXN), (POWER_UP|RX_TXN|ENABLE));
+    usrp()->write_io(d_which, (power_off()|RX_TXN), (RX_TXN|ENABLE_33|ENABLE_5));
 
+    /*
     // Power down VCO/PLL
     d_PD = 3;
   
     _write_control(_compute_control_reg());
+    */
     _enable_refclk(false);                       // turn off refclk
     set_auto_tr(false);
   }
@@ -325,8 +329,8 @@ wbxng_base_tx::set_auto_tr(bool on)
   bool ok = true;
   /*
   if(on) {
-    ok &= set_atr_mask (RX_TXN | ENABLE);
-    ok &= set_atr_txval(0      | ENABLE);
+    ok &= set_atr_mask (RX_TXN | ENABLE_33 | ENABLE_5);
+    ok &= set_atr_txval(0      | ENABLE_33 | ENABLE_5);
     ok &= set_atr_rxval(RX_TXN | 0);
   }
   else {
@@ -346,15 +350,14 @@ wbxng_base_tx::set_enable(bool on)
   */
 
   int v;
-  //int mask = RX_TXN | ENABLE_5 | ENABLE_33;
+  int mask = RX_TXN | ENABLE_5 | ENABLE_33;
   if(on) {
     v = ENABLE_5 | ENABLE_33;
   }
   else {
     v = RX_TXN;
   }
-  throw std::runtime_error("set_enable called from wbxng_base_tx\n");
-  //return usrp()->write_io(d_which, v, mask);
+  return usrp()->write_io(d_which, v, mask);
 }
 
 float
@@ -408,16 +411,16 @@ wbxng_base_rx::wbxng_base_rx(usrp_basic_sptr _usrp, int which, int _power_on)
 
   d_common = new adf4350(_usrp, d_which, d_spi_enable);
 
-  /*  
-  usrp()->_write_oe(d_which, (POWER_UP|RX2_RX1N|ENABLE), 0xffff);
-  usrp()->write_io(d_which,  (power_on()|RX2_RX1N|ENABLE), 
-		   (POWER_UP|RX2_RX1N|ENABLE));
+  usrp()->_write_oe(d_which, (RX2_RX1N|ENABLE_33|ENABLE_5), 0xffff);
+  usrp()->write_io(d_which,  (power_on()|RX2_RX1N|ENABLE_33|ENABLE_5), 
+		   (RX2_RX1N|ENABLE_33|ENABLE_5));
   
   // set up for RX on TX/RX port
   select_rx_antenna("TX/RX");
   
   bypass_adc_buffers(true);
 
+  /*  
   set_lo_offset(-4e6);
   */
 }
@@ -437,7 +440,7 @@ wbxng_base_rx::shutdown()
     // do whatever there is to do to shutdown
 
     // Power down
-    //usrp()->common_write_io(C_RX, d_which, power_off(), (POWER_UP|ENABLE));
+    usrp()->common_write_io(C_RX, d_which, power_off(), (ENABLE_33|ENABLE_5));
 
     // Power down VCO/PLL
     d_PD = 3;
@@ -447,10 +450,10 @@ wbxng_base_rx::shutdown()
     //_write_control(_compute_control_reg());
 
     // fprintf(stderr, "wbxng_base_rx::shutdown  before _enable_refclk\n");
-    //_enable_refclk(false);                       // turn off refclk
+    _enable_refclk(false);                       // turn off refclk
 
     // fprintf(stderr, "wbxng_base_rx::shutdown  before set_auto_tr\n");
-    //set_auto_tr(false);
+    set_auto_tr(false);
 
     // fprintf(stderr, "wbxng_base_rx::shutdown  after set_auto_tr\n");
   }
@@ -462,9 +465,9 @@ wbxng_base_rx::set_auto_tr(bool on)
   //bool ok = true;
   /*
   if(on) {
-    ok &= set_atr_mask (ENABLE);
+    ok &= set_atr_mask (ENABLE_33|ENABLE_5);
     ok &= set_atr_txval(     0);
-    ok &= set_atr_rxval(ENABLE);
+    ok &= set_atr_rxval(ENABLE_33|ENABLE_5);
   }
   else {
     ok &= set_atr_mask (0);
@@ -475,14 +478,13 @@ wbxng_base_rx::set_auto_tr(bool on)
   return true;
 }
 
-/* *** TODO *** Defined select_rx_antenna twice?
 bool
 wbxng_base_rx::select_rx_antenna(int which_antenna)
 {
-  **COMMENT**
+  /*
     Specify which antenna port to use for reception.
     @param which_antenna: either 'TX/RX' or 'RX2'
-  **COMMENT**
+  */
 
   if(which_antenna == 0) {
     usrp()->write_io(d_which, 0,RX2_RX1N);
@@ -496,7 +498,6 @@ wbxng_base_rx::select_rx_antenna(int which_antenna)
   }
   return true;
 }
-*/
 
 bool
 wbxng_base_rx::select_rx_antenna(const std::string &which_antenna)
@@ -506,7 +507,7 @@ wbxng_base_rx::select_rx_antenna(const std::string &which_antenna)
     @param which_antenna: either 'TX/RX' or 'RX2'
   */
 
-  /*
+  
   if(which_antenna == "TX/RX") {
     usrp()->write_io(d_which, 0, RX2_RX1N);
   }
@@ -517,7 +518,7 @@ wbxng_base_rx::select_rx_antenna(const std::string &which_antenna)
     // throw std::invalid_argument("which_antenna must be either 'TX/RX' or 'RX2'\n");
     return false;
   }
-  */
+  
   return true;
 }
 

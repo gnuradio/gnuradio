@@ -50,8 +50,7 @@ protected:
   void _write_it(int v);
   bool _lock_detect();
 
-  virtual bool _compute_regs(double freq, int &retR, int &retcontrol, 
-			     int &retN, double &retfreq);
+  //virtual bool _compute_regs(double freq, int &retR, int &retcontrol, int &retN, double &retfreq);
   int  _compute_control_reg();
   int _refclk_divisor();
   double _refclk_freq();
@@ -117,8 +116,7 @@ class db_wbxng_tx : public wbxng_base_tx
   ~db_wbxng_tx();
 
   // Wrapper calls to d_common functions
-  bool _compute_regs(double freq, int &retR, int &retcontrol,
-		     int &retN, double &retfreq);
+  //bool _compute_regs(double freq, int &retR, int &retcontrol, int &retN, double &retfreq);
 };
 
 class db_wbxng_rx : public wbxng_base_rx
@@ -132,8 +130,7 @@ public:
   float gain_db_per_step();
   bool i_and_q_swapped();
 
-  bool _compute_regs(double freq, int &retR, int &retcontrol,
-		     int &retN, double &retfreq);
+  //bool _compute_regs(double freq, int &retR, int &retcontrol, int &retN, double &retfreq);
 };
 
 

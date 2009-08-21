@@ -9,7 +9,7 @@
 #include <usrp/db_base.h>
 #include <stdint.h>
 
-typedef uint32_t freq_t;
+typedef uint64_t freq_t;
 class adf4350_regs;
 
 class adf4350

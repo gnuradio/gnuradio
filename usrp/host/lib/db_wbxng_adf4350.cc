@@ -104,32 +104,32 @@ adf4350::_set_freq(freq_t freq){
 	/* Set the frequency by setting int, frac, mod, r, div */
 	if (freq > MAX_FREQ || freq < MIN_FREQ) return false;
 	/* Ramp up the RF divider until the VCO is within range. */
-	d_regs->_divider_select = 0;
+	d_regs->d_divider_select = 0;
 	while (freq < MIN_VCO_FREQ){
 		freq <<= 1; //double the freq
-		d_regs->_divider_select++; //double the divider
+		d_regs->d_divider_select++; //double the divider
 	}
 	/* Ramp up the R divider until the N divider is at least the minimum. */
-	d_regs->_10_bit_r_counter = INPUT_REF_FREQ_2X*MIN_INT_DIV/freq;
+	d_regs->d_10_bit_r_counter = INPUT_REF_FREQ_2X*MIN_INT_DIV/freq;
 	uint64_t n_mod;
 	do{
-		d_regs->_10_bit_r_counter++;
+		d_regs->d_10_bit_r_counter++;
 		n_mod = freq;
-		n_mod *= d_regs->_10_bit_r_counter;
-		n_mod *= d_regs->_mod;
+		n_mod *= d_regs->d_10_bit_r_counter;
+		n_mod *= d_regs->d_mod;
 		n_mod /= INPUT_REF_FREQ_2X;
 		/* calculate int and frac */
-		d_regs->_int = n_mod/d_regs->_mod;
-		d_regs->_frac = (n_mod - (freq_t)d_regs->_int*d_regs->_mod) & uint16_t(0xfff);
+		d_regs->d_int = n_mod/d_regs->d_mod;
+		d_regs->d_frac = (n_mod - (freq_t)d_regs->d_int*d_regs->d_mod) & uint16_t(0xfff);
 		/*printf(
 			"VCO %lu KHz, Int %u, Frac %u, Mod %u, R %u, Div %u\n",
-			freq, d_regs->_int, d_regs->_frac,
-			d_regs->_mod, d_regs->_10_bit_r_counter, (1 << d_regs->_divider_select)
+			freq, d_regs->d_int, d_regs->d_frac,
+			d_regs->d_mod, d_regs->d_10_bit_r_counter, (1 << d_regs->d_divider_select)
 		);*/
-	}while(d_regs->_int < MIN_INT_DIV);
+	}while(d_regs->d_int < MIN_INT_DIV);
 	/* calculate the band select so PFD is under 125 KHz */
-	d_regs->_8_bit_band_select_clock_divider_value = \
-		INPUT_REF_FREQ_2X/(FREQ_C(125e3)*d_regs->_10_bit_r_counter) + 1;
+	d_regs->d_8_bit_band_select_clock_divider_value = \
+		INPUT_REF_FREQ_2X/(FREQ_C(125e3)*d_regs->d_10_bit_r_counter) + 1;
 	/* load involved registers */
 	d_regs->_load_register(2);
 	d_regs->_load_register(4);
@@ -145,12 +145,12 @@ adf4350::_get_freq(void){
 	 *  freq = (((((((int)*mod) + frac)*ref)/mod)/r)/div)
 	 */
 	uint64_t temp;
-	temp = d_regs->_int;
-	temp *= d_regs->_mod;
-	temp += d_regs->_frac;
+	temp = d_regs->d_int;
+	temp *= d_regs->d_mod;
+	temp += d_regs->d_frac;
 	temp *= INPUT_REF_FREQ_2X;
-	temp /= d_regs->_mod;
-	temp /= d_regs->_10_bit_r_counter;
-	temp /= (1 << d_regs->_divider_select);
+	temp /= d_regs->d_mod;
+	temp /= d_regs->d_10_bit_r_counter;
+	temp /= (1 << d_regs->d_divider_select);
 	return temp;
 }
