@@ -6,48 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>624</width>
+    <width>1124</width>
     <height>696</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>GNU Radio Filter Design Tool</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="1">
-     <widget class="QTabWidget" name="tabGroup">
-      <property name="minimumSize">
-       <size>
-        <width>800</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="QWidget" name="freqTab">
-       <attribute name="title">
-        <string>Frequency Domain</string>
-       </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QwtPlot" name="freqPlot"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="timeTab">
-       <attribute name="title">
-        <string>Time Domain</string>
-       </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QwtPlot" name="timePlot"/>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-    </item>
     <item row="1" column="0">
      <widget class="QFrame" name="filterFrame">
       <property name="minimumSize">
@@ -112,7 +79,32 @@
         <widget class="QComboBox" name="filterDesignTypeComboBox">
          <item>
           <property name="text">
-           <string>Windowed</string>
+           <string>Hamming Window</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Hann Window</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Blackman Window</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Rectangular Window</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Kaiser Window</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Blackman-harris Window</string>
           </property>
          </item>
          <item>
@@ -123,7 +115,7 @@
         </widget>
        </item>
        <item>
-        <layout class="QFormLayout" name="formLayout_2">
+        <layout class="QFormLayout" name="globalParamsLayout">
          <property name="fieldGrowthPolicy">
           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
          </property>
@@ -164,8 +156,151 @@
        </item>
        <item>
         <widget class="QStackedWidget" name="filterTypeWidget">
-         <widget class="QWidget" name="firlpfPage"/>
-         <widget class="QWidget" name="firhpfPage"/>
+         <property name="currentIndex">
+          <number>2</number>
+         </property>
+         <widget class="QWidget" name="firlpfPage">
+          <layout class="QFormLayout" name="formLayout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="endofLpfPassBandLabel">
+             <property name="text">
+              <string>End of Pass Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="endofLpfPassBandEdit"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="startofLpfStopBandLabel">
+             <property name="text">
+              <string>Start of Stop Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="startofLpfStopBandEdit"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="lpfStopBandAttenLabel">
+             <property name="text">
+              <string>Stop Band Attenuation (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="lpfStopBandAttenEdit"/>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="lpfPassBandRippleEdit"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="lpfPassBandRippleLabel">
+             <property name="text">
+              <string>Pass Band Ripple (dB)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="firbpfPage">
+          <layout class="QFormLayout" name="formLayout_2">
+           <item row="0" column="0">
+            <widget class="QLabel" name="startofBpfPassBandLabel">
+             <property name="text">
+              <string>Start of Pass Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="startofBpfPassBandEdit"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="endofBpfPassBandLabel">
+             <property name="text">
+              <string>End of Pass Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="endofBpfPassBandEdit"/>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="bpfStopBandAttenEdit"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="bpfStopBandAttenLabel">
+             <property name="text">
+              <string>Stop Band Attenuation (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="bpfTransitionLabel">
+             <property name="text">
+              <string>Transition Width (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="bpfTransitionEdit"/>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="bpfPassBandRippleEdit"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="bpfPassBandRippleLabel">
+             <property name="text">
+              <string>Pass Band Ripple (dB)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="firhpfPage">
+          <layout class="QFormLayout" name="formLayout_3">
+           <item row="0" column="0">
+            <widget class="QLabel" name="endofHpfStopBandLabel">
+             <property name="text">
+              <string>End of Stop Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="endofHpfStopBandEdit"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="startofHpfPassBandLabel">
+             <property name="text">
+              <string>Start of Pass Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="startofHpfPassBandEdit"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="hpfStopBandAttenLabel">
+             <property name="text">
+              <string>Stop Band Attenuation (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="hpfStopBandAttenEdit"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="hpfPassBandRippleLabel">
+             <property name="text">
+              <string>Pass Band Ripple (dB)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="hpfPassBandRippleEdit"/>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
        <item>
@@ -185,9 +320,48 @@
          <property name="text">
           <string>Design</string>
          </property>
+         <property name="autoDefault">
+          <bool>true</bool>
+         </property>
+         <property name="default">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QTabWidget" name="tabGroup">
+      <property name="minimumSize">
+       <size>
+        <width>800</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="freqTab">
+       <attribute name="title">
+        <string>Frequency Domain</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QwtPlot" name="freqPlot"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="timeTab">
+       <attribute name="title">
+        <string>Time Domain</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QwtPlot" name="timePlot"/>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -197,7 +371,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>624</width>
+     <width>1124</width>
      <height>25</height>
     </rect>
    </property>
@@ -236,6 +410,19 @@
   <tabstop>filterDesignTypeComboBox</tabstop>
   <tabstop>sampleRateEdit</tabstop>
   <tabstop>filterGainEdit</tabstop>
+  <tabstop>endofLpfPassBandEdit</tabstop>
+  <tabstop>startofLpfStopBandEdit</tabstop>
+  <tabstop>lpfStopBandAttenEdit</tabstop>
+  <tabstop>lpfPassBandRippleEdit</tabstop>
+  <tabstop>startofBpfPassBandEdit</tabstop>
+  <tabstop>endofBpfPassBandEdit</tabstop>
+  <tabstop>bpfTransitionEdit</tabstop>
+  <tabstop>bpfStopBandAttenEdit</tabstop>
+  <tabstop>bpfPassBandRippleEdit</tabstop>
+  <tabstop>endofHpfStopBandEdit</tabstop>
+  <tabstop>startofHpfPassBandEdit</tabstop>
+  <tabstop>hpfStopBandAttenEdit</tabstop>
+  <tabstop>hpfPassBandRippleEdit</tabstop>
   <tabstop>designButton</tabstop>
   <tabstop>tabGroup</tabstop>
  </tabstops>

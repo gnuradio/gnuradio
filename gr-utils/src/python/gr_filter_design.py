@@ -11,7 +11,7 @@ import sys, os
 from PyQt4 import Qt, QtCore, QtGui
 import PyQt4.Qwt5 as Qwt
 from optparse import OptionParser
-from gnuradio import gr, eng_notation
+from gnuradio import gr, blks2, eng_notation
 from scipy import fftpack
 
 from pyqt_filter import Ui_MainWindow
@@ -34,13 +34,22 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.connect(self.gui.designButton,
                      Qt.SIGNAL("released()"),
                      self.design)
-        
-        self.fltdeslpf = Ui_firlpfForm()
-        self.fltdeshpf = Ui_firhpfForm()
 
-        self.fltdeslpf.setupUi(self.gui.firlpfPage)
-        self.fltdeshpf.setupUi(self.gui.firhpfPage)
+        self.connect(self.gui.tabGroup,
+                     Qt.SIGNAL("currentChanged(int)"),
+                     self.tab_changed)
 
+        self.gui.designButton.setShortcut("Return")
+
+        self.taps = []
+
+        self.gui.lpfPassBandRippleLabel.setVisible(False)
+        self.gui.lpfPassBandRippleEdit.setVisible(False)
+        self.gui.bpfPassBandRippleLabel.setVisible(False)
+        self.gui.bpfPassBandRippleEdit.setVisible(False)
+        self.gui.hpfPassBandRippleLabel.setVisible(False)
+        self.gui.hpfPassBandRippleEdit.setVisible(False)
+                
         # Initialize to LPF
         self.gui.filterTypeWidget.setCurrentWidget(self.gui.firlpfPage)
 
@@ -70,77 +79,243 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.freqcurve.setPen(Qt.QPen(blueBrush, 2))
         self.rcurve.setPen(Qt.QPen(blueBrush, 2))
 
+        self.filterWindows = {"Hamming Window" : gr.firdes.WIN_HAMMING,
+                              "Hann Window" : gr.firdes.WIN_HANN,
+                              "Blackman Window" : gr.firdes.WIN_BLACKMAN,
+                              "Rectangular Window" : gr.firdes.WIN_RECTANGULAR,
+                              "Kaiser Window" : gr.firdes.WIN_KAISER,
+                              "Blackman-harris Window" : gr.firdes.WIN_BLACKMAN_hARRIS}
+
         self.show()
 
     def changed_filter_type(self, ftype):
         strftype = str(ftype.toAscii())
         if(ftype == "Low Pass"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firlpfPage)
+        elif(ftype == "Band Pass"):
+            self.gui.filterTypeWidget.setCurrentWidget(self.gui.firbpfPage)
         elif(ftype == "High Pass"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firhpfPage)
+
+        self.design()
         
     def changed_filter_design_type(self, design):
-        print design
+        if(design == "Equiripple"):
+            self.set_equiripple()
+        else:
+            self.set_windowed()
+            
+        self.design()
 
+    def set_equiripple(self):
+        self.equiripple = True
+        self.gui.lpfPassBandRippleLabel.setVisible(True)
+        self.gui.lpfPassBandRippleEdit.setVisible(True)
+        self.gui.bpfPassBandRippleLabel.setVisible(True)
+        self.gui.bpfPassBandRippleEdit.setVisible(True)
+        self.gui.hpfPassBandRippleLabel.setVisible(True)
+        self.gui.hpfPassBandRippleEdit.setVisible(True)
+        
+    def set_windowed(self):
+        self.equiripple = False
+        self.gui.lpfPassBandRippleLabel.setVisible(False)
+        self.gui.lpfPassBandRippleEdit.setVisible(False)
+        self.gui.bpfPassBandRippleLabel.setVisible(False)
+        self.gui.bpfPassBandRippleEdit.setVisible(False)
+        self.gui.hpfPassBandRippleLabel.setVisible(False)
+        self.gui.hpfPassBandRippleEdit.setVisible(False)
+        
     def design(self):
-        fs = self.gui.sampleRateEdit.text().toDouble()[0]
-        gain = self.gui.filterGainEdit.text().toDouble()[0]
-        
-        ftype = self.gui.filterTypeComboBox.currentText()
-        if(ftype == "Low Pass"):
-            taps = self.design_win_lpf(fs, gain)
-        elif(ftype == "High Pass"):
-            taps = self.design_win_hpf(fs, gain)
+        ret = True
+        fs,r = self.gui.sampleRateEdit.text().toDouble()
+        ret = r and ret
+        gain,r = self.gui.filterGainEdit.text().toDouble()
+        ret = r and ret
 
-        self.update_time_curves(taps)
-        self.update_freq_curves(taps)
-        
-    def design_win_lpf(self, fs, gain):
-        pb = self.fltdeslpf.endofPassBandEdit.text().toDouble()[0]
-        sb = self.fltdeslpf.startofStopBandEdit.text().toDouble()[0]
-        atten = self.fltdeslpf.stopBandAttenEdit.text().toDouble()[0]
-        tb = sb - pb
+        if(ret):
+            winstr = str(self.gui.filterDesignTypeComboBox.currentText().toAscii())
+            ftype = str(self.gui.filterTypeComboBox.currentText().toAscii())
 
-        taps = gr.firdes.low_pass_2(gain, fs, pb, tb, atten,
-                                    gr.firdes.WIN_BLACKMAN_hARRIS)
-        return taps
+            if(winstr == "Equiripple"):
+                designer = {"Low Pass" : self.design_opt_lpf,
+                            "Band Pass" : self.design_opt_bpf,
+                            "High Pass" :  self.design_opt_hpf}        
+                taps,r = designer[ftype](fs, gain)
+
+            else:
+                designer = {"Low Pass" : self.design_win_lpf,
+                            "Band Pass" : self.design_win_bpf,
+                            "High Pass" :  self.design_win_hpf}        
+                wintype = self.filterWindows[winstr]
+                taps,r = designer[ftype](fs, gain, wintype)
+
+            if(r):
+                self.update_time_curves(taps)
+                self.update_freq_curves(taps)
+        
+
+    # Filter design functions using a window
+    def design_win_lpf(self, fs, gain, wintype):
+        ret = True
+        pb,r = self.gui.endofLpfPassBandEdit.text().toDouble()
+        ret = r and ret
+        sb,r = self.gui.startofLpfStopBandEdit.text().toDouble()
+        ret = r and ret
+        atten,r = self.gui.lpfStopBandAttenEdit.text().toDouble()
+        ret = r and ret
+
+        if(ret):
+            tb = sb - pb
+            
+            taps = gr.firdes.low_pass_2(gain, fs, pb, tb,
+                                        atten, wintype)
+            return (taps, ret)
+        else:
+            return ([], ret)
     
-    def design_win_hpf(self, fs, gain):
-        print fs
-        print widget
+    def design_win_bpf(self, fs, gain, wintype):
+        ret = True
+        pb1,r = self.gui.startofBpfPassBandEdit.text().toDouble()
+        ret = r and ret
+        pb2,r = self.gui.endofBpfPassBandEdit.text().toDouble()
+        ret = r and ret
+        tb,r  = self.gui.bpfTransitionEdit.text().toDouble()
+        ret = r and ret
+        atten,r = self.gui.bpfStopBandAttenEdit.text().toDouble()
+        ret = r and ret
 
+        if(r):
+            taps = gr.firdes.band_pass_2(gain, fs, pb1, pb2, tb,
+                                         atten, wintype)
+            return (taps,r)
+        else:
+            return ([],r)
+
+    def design_win_hpf(self, fs, gain, wintype):
+        ret = True
+        sb,r = self.gui.endofHpfStopBandEdit.text().toDouble()
+        ret = r and ret
+        pb,r = self.gui.startofHpfPassBandEdit.text().toDouble()
+        ret = r and ret
+        atten,r = self.gui.hpfStopBandAttenEdit.text().toDouble()
+        ret = r and ret
+
+        if(r):
+            tb = pb - sb
+            taps = gr.firdes.high_pass_2(gain, fs, pb, tb,
+                                         atten, wintype)            
+            return (taps,r)
+        else:
+            return ([],r)
+
+
+
+    # Design Functions for Equiripple Filters
+    def design_opt_lpf(self, fs, gain, wintype=None):
+        ret = True
+        pb,r = self.gui.endofLpfPassBandEdit.text().toDouble()
+        ret = r and ret
+        sb,r = self.gui.startofLpfStopBandEdit.text().toDouble()
+        ret = r and ret
+        atten,r = self.gui.lpfStopBandAttenEdit.text().toDouble()
+        ret = r and ret
+        ripple,r = self.gui.lpfPassBandRippleEdit.text().toDouble()
+        ret = r and ret
+
+        if(ret):
+            taps = blks2.optfir.low_pass(gain, fs, pb, sb,
+                                         ripple, atten)
+            return (taps, ret)
+        else:
+            return ([], ret)
+    
+    def design_opt_bpf(self, fs, gain, wintype=None):
+        ret = True
+        pb1,r = self.gui.startofBpfPassBandEdit.text().toDouble()
+        ret = r and ret
+        pb2,r = self.gui.endofBpfPassBandEdit.text().toDouble()
+        ret = r and ret
+        tb,r  = self.gui.bpfTransitionEdit.text().toDouble()
+        ret = r and ret
+        atten,r = self.gui.bpfStopBandAttenEdit.text().toDouble()
+        ret = r and ret
+        ripple,r = self.gui.bpfPassBandRippleEdit.text().toDouble()
+        ret = r and ret
+
+        if(r):
+            sb1 = pb1 - tb
+            sb2 = pb2 + tb
+            taps = blks2.optfir.band_pass(gain, fs, sb1, pb1, pb2, sb2,
+                                          ripple, atten)
+            return (taps,r)
+        else:
+            return ([],r)
+
+    def design_opt_hpf(self, fs, gain, wintype=None):
+        ret = True
+        sb,r = self.gui.endofHpfStopBandEdit.text().toDouble()
+        ret = r and ret
+        pb,r = self.gui.startofHpfPassBandEdit.text().toDouble()
+        ret = r and ret
+        atten,r = self.gui.hpfStopBandAttenEdit.text().toDouble()
+        ret = r and ret
+        ripple,r = self.gui.hpfPassBandRippleEdit.text().toDouble()
+        ret = r and ret
+
+        if(r):
+            taps = blks2.optfir.high_pass(gain, fs, sb, pb,
+                                          atten, ripple)
+            return (taps,r)
+        else:
+            return ([],r)
+
+    def tab_changed(self, tab):
+        if(tab == 0):
+            self.update_freq_curves(self.taps)
+        if(tab == 1):
+            self.update_time_curves(self.taps)
+        
     def update_time_curves(self, taps):
+        self.taps = taps
         ntaps = len(taps)
-        self.rcurve.setData(scipy.arange(ntaps), taps)
-
-        # Reset the x-axis to the new time scale
-        ymax = 1.5 * max(taps)
-        ymin = 1.5 * min(taps)
-        self.gui.timePlot.setAxisScale(self.gui.timePlot.xBottom,
-                                       0, ntaps)
-        self.gui.timePlot.setAxisScale(self.gui.timePlot.yLeft,
-                                       ymin, ymax)
-
-        # Set the zoomer base to unzoom to the new axis
-        self.timeZoomer.setZoomBase()
-    
-        self.gui.timePlot.replot()
+        if(ntaps > 0):
+            self.rcurve.setData(scipy.arange(ntaps), taps)
+            
+            # Reset the x-axis to the new time scale
+            ymax = 1.5 * max(taps)
+            ymin = 1.5 * min(taps)
+            self.gui.timePlot.setAxisScale(self.gui.timePlot.xBottom,
+                                           0, ntaps)
+            self.gui.timePlot.setAxisScale(self.gui.timePlot.yLeft,
+                                           ymin, ymax)
+            
+            # Set the zoomer base to unzoom to the new axis
+            rect = Qt.QRectF(0, ymin, (ntaps-0), (ymax-ymin))
+            self.timeZoomer.setZoomBase(rect)
+            
+            self.gui.timePlot.replot()
         
     def update_freq_curves(self, taps, Npts=1000):
-        fftpts = fftpack.fft(taps, Npts)
-        freq = scipy.arange(0, Npts)
-
-        fftdB = 20.0*scipy.log10(abs(fftpts))
-        
-        self.freqcurve.setData(freq, fftdB)
-
-        self.gui.freqPlot.setAxisScale(self.gui.freqPlot.xBottom,
-                                       0, Npts/2)
-
-        # Set the zoomer base to unzoom to the new axis
-        self.freqZoomer.setZoomBase()
-
-        self.gui.freqPlot.replot()
+        if(len(taps) > 0):
+            fftpts = fftpack.fft(taps, Npts)
+            freq = scipy.arange(0, Npts)
+            
+            fftdB = 20.0*scipy.log10(abs(fftpts))
+            
+            self.freqcurve.setData(freq, fftdB)
+            
+            # Reset the x-axis to the new time scale
+            ymax = 1.5 * max(fftdB)
+            ymin = 1.5 * min(fftdB)
+            self.gui.freqPlot.setAxisScale(self.gui.freqPlot.xBottom,
+                                           0, Npts/2)
+            self.gui.timePlot.setAxisScale(self.gui.timePlot.yLeft,
+                                           ymin, ymax)
+            
+            # Set the zoomer base to unzoom to the new axis
+            self.freqZoomer.setZoomBase()
+            
+            self.gui.freqPlot.replot()
 
 
 def setup_options():
