@@ -210,11 +210,18 @@ class fft_window(wx.Panel, pubsub.pubsub):
 					self._traces[my_trace] = self.samples
 					self.update_grid()
 				return store_trace
+			def new_toggle_trace(my_trace):
+				def toggle_trace(toggle):
+					#do an automatic store if toggled on and empty trace
+					if toggle and not len(self._traces[my_trace]):
+						self._traces[my_trace] = self.samples
+					self.update_grid()
+				return toggle_trace
 			self._traces[trace] = EMPTY_TRACE
 			self[TRACE_STORE_KEY+trace] = False
-			self[TRACE_SHOW_KEY+trace] = True
+			self[TRACE_SHOW_KEY+trace] = False
 			self.subscribe(TRACE_STORE_KEY+trace, new_store_trace(trace))
-			self.subscribe(TRACE_SHOW_KEY+trace, self.update_grid)
+			self.subscribe(TRACE_SHOW_KEY+trace, new_toggle_trace(trace))
 		#init panel and plot
 		wx.Panel.__init__(self, parent, style=wx.SIMPLE_BORDER)
 		self.plotter = plotter.channel_plotter(self)
