@@ -59,6 +59,24 @@ class gr_plot_filter(QtGui.QMainWindow):
         # Initialize to LPF
         self.gui.filterTypeWidget.setCurrentWidget(self.gui.firlpfPage)
 
+        # Set Axis labels
+        self.gui.freqPlot.setAxisTitle(self.gui.freqPlot.xBottom,
+                                       "Frequency (Hz)")
+        self.gui.freqPlot.setAxisTitle(self.gui.freqPlot.yLeft,
+                                       "Magnitude (dB)")
+        self.gui.timePlot.setAxisTitle(self.gui.timePlot.xBottom,
+                                       "Tap number")
+        self.gui.timePlot.setAxisTitle(self.gui.timePlot.yLeft,
+                                       "Amplitude")
+        self.gui.phasePlot.setAxisTitle(self.gui.phasePlot.xBottom,
+                                        "Frequency (Hz)")
+        self.gui.phasePlot.setAxisTitle(self.gui.phasePlot.yLeft,
+                                        "Phase (Radians)")
+        self.gui.groupPlot.setAxisTitle(self.gui.groupPlot.xBottom,
+                                        "Frequency (Hz)")
+        self.gui.groupPlot.setAxisTitle(self.gui.groupPlot.yLeft,
+                                        "Delay (sec)")
+
         # Set up plot curves
         self.rcurve = Qwt.QwtPlotCurve("Real")
         self.rcurve.attach(self.gui.timePlot)
