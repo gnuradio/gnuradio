@@ -39,9 +39,15 @@ class gr_plot_filter(QtGui.QMainWindow):
                      Qt.SIGNAL("currentChanged(int)"),
                      self.tab_changed)
 
+        self.connect(self.gui.nfftEdit,
+                     Qt.SIGNAL("textEdited(QString)"),
+                     self.nfft_edit_changed)
+
         self.gui.designButton.setShortcut("Return")
 
         self.taps = []
+        self.nfftpts = int(10000)
+        self.gui.nfftEdit.setText(Qt.QString("%1").arg(self.nfftpts))
 
         self.gui.lpfPassBandRippleLabel.setVisible(False)
         self.gui.lpfPassBandRippleEdit.setVisible(False)
@@ -72,6 +78,18 @@ class gr_plot_filter(QtGui.QMainWindow):
                                             Qwt.QwtPicker.PointSelection,
                                             Qwt.QwtPicker.AlwaysOn,
                                             self.gui.freqPlot.canvas())
+
+        self.phaseZoomer = Qwt.QwtPlotZoomer(self.gui.phasePlot.xBottom,
+                                             self.gui.phasePlot.yLeft,
+                                             Qwt.QwtPicker.PointSelection,
+                                             Qwt.QwtPicker.AlwaysOn,
+                                             self.gui.phasePlot.canvas())
+
+        self.groupZoomer = Qwt.QwtPlotZoomer(self.gui.groupPlot.xBottom,
+                                             self.gui.groupPlot.yLeft,
+                                             Qwt.QwtPicker.PointSelection,
+                                             Qwt.QwtPicker.AlwaysOn,
+                                             self.gui.groupPlot.canvas())
 
         # Set up pen for colors and line width
         blue = QtGui.qRgb(0x00, 0x00, 0xFF)
@@ -151,7 +169,7 @@ class gr_plot_filter(QtGui.QMainWindow):
 
             if(r):
                 self.update_time_curves(taps)
-                self.update_freq_curves(taps)
+                self.update_freq_curves(taps, self.nfftpts)
         
 
     # Filter design functions using a window
@@ -269,9 +287,15 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             return ([],r)
 
+    def nfft_edit_changed(self, nfft):
+        infft,r = nfft.toInt()
+        if(r and (infft != self.nfftpts)):
+            self.nfftpts = infft
+            self.update_freq_curves(self.taps, self.nfftpts)
+
     def tab_changed(self, tab):
         if(tab == 0):
-            self.update_freq_curves(self.taps)
+            self.update_freq_curves(self.taps, self.nfftpts)
         if(tab == 1):
             self.update_time_curves(self.taps)
         

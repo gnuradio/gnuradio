@@ -259,6 +259,9 @@
          </widget>
          <widget class="QWidget" name="firhpfPage">
           <layout class="QFormLayout" name="formLayout_3">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+           </property>
            <item row="0" column="0">
             <widget class="QLabel" name="endofHpfStopBandLabel">
              <property name="text">
@@ -301,6 +304,25 @@
            </item>
           </layout>
          </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="sysParamsBox">
+         <property name="title">
+          <string>System Parameters</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout_4">
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="nfftEdit"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="nfftLabel">
+            <property name="text">
+             <string>Num FFT points</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
@@ -359,6 +381,26 @@
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QwtPlot" name="timePlot"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="phaseTab">
+       <attribute name="title">
+        <string>Phase</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QwtPlot" name="phasePlot"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="groupTab">
+       <attribute name="title">
+        <string>Group Delay</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QwtPlot" name="groupPlot"/>
         </item>
        </layout>
       </widget>
