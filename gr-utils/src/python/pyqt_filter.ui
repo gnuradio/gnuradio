@@ -257,6 +257,50 @@
            </item>
           </layout>
          </widget>
+         <widget class="QWidget" name="firbnfPage">
+          <layout class="QFormLayout" name="formLayout_5">
+           <item row="0" column="0">
+            <widget class="QLabel" name="startofBnfStopBandLabel">
+             <property name="text">
+              <string>Start of Stop Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="startofBnfStopBandEdit"/>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="endofBnfStopBandEdit"/>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="bnfTransitionEdit"/>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="bnfStopBandAttenEdit"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="endofBnfStopBandLabel">
+             <property name="text">
+              <string>End of Stop Band (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="bnfTransitionLabel">
+             <property name="text">
+              <string>Transition Width (Hz)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="bnfStopBandAttenLabel">
+             <property name="text">
+              <string>Stop Band Attenuation (dB)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
          <widget class="QWidget" name="firhpfPage">
           <layout class="QFormLayout" name="formLayout_3">
            <property name="fieldGrowthPolicy">

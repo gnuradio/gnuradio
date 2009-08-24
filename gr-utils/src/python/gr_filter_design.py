@@ -145,6 +145,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firbpfPage)
         elif(ftype == "Complex Band Pass"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firbpfPage)
+        elif(ftype == "Band Notch"):
+            self.gui.filterTypeWidget.setCurrentWidget(self.gui.firbnfPage)
         elif(ftype == "High Pass"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firhpfPage)
 
@@ -197,6 +199,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 designer = {"Low Pass" : self.design_win_lpf,
                             "Band Pass" : self.design_win_bpf,
                             "Complex Band Pass" : self.design_win_cbpf,
+                            "Band Notch" : self.design_win_bnf,
                             "High Pass" :  self.design_win_hpf}        
                 wintype = self.filterWindows[winstr]
                 taps,r = designer[ftype](fs, gain, wintype)
@@ -260,6 +263,24 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             taps = gr.firdes.complex_band_pass_2(gain, fs, pb1, pb2, tb,
                                                  atten, wintype)
+            return (taps,r)
+        else:
+            return ([],r)
+
+    def design_win_bnf(self, fs, gain, wintype):
+        ret = True
+        pb1,r = self.gui.startofBnfStopBandEdit.text().toDouble()
+        ret = r and ret
+        pb2,r = self.gui.endofBnfStopBandEdit.text().toDouble()
+        ret = r and ret
+        tb,r  = self.gui.bnfTransitionEdit.text().toDouble()
+        ret = r and ret
+        atten,r = self.gui.bnfStopBandAttenEdit.text().toDouble()
+        ret = r and ret
+
+        if(r):
+            taps = gr.firdes.band_reject_2(gain, fs, pb1, pb2, tb,
+                                           atten, wintype)
             return (taps,r)
         else:
             return ([],r)

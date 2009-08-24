@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter.ui'
 #
-# Created: Sun Aug 23 21:53:02 2009
+# Created: Sun Aug 23 23:26:14 2009
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -129,6 +129,35 @@ class Ui_MainWindow(object):
         self.bpfPassBandRippleLabel.setObjectName("bpfPassBandRippleLabel")
         self.formLayout_2.setWidget(4, QtGui.QFormLayout.LabelRole, self.bpfPassBandRippleLabel)
         self.filterTypeWidget.addWidget(self.firbpfPage)
+        self.firbnfPage = QtGui.QWidget()
+        self.firbnfPage.setObjectName("firbnfPage")
+        self.formLayout_5 = QtGui.QFormLayout(self.firbnfPage)
+        self.formLayout_5.setObjectName("formLayout_5")
+        self.startofBnfStopBandLabel = QtGui.QLabel(self.firbnfPage)
+        self.startofBnfStopBandLabel.setObjectName("startofBnfStopBandLabel")
+        self.formLayout_5.setWidget(0, QtGui.QFormLayout.LabelRole, self.startofBnfStopBandLabel)
+        self.startofBnfStopBandEdit = QtGui.QLineEdit(self.firbnfPage)
+        self.startofBnfStopBandEdit.setObjectName("startofBnfStopBandEdit")
+        self.formLayout_5.setWidget(0, QtGui.QFormLayout.FieldRole, self.startofBnfStopBandEdit)
+        self.endofBnfStopBandEdit = QtGui.QLineEdit(self.firbnfPage)
+        self.endofBnfStopBandEdit.setObjectName("endofBnfStopBandEdit")
+        self.formLayout_5.setWidget(1, QtGui.QFormLayout.FieldRole, self.endofBnfStopBandEdit)
+        self.bnfTransitionEdit = QtGui.QLineEdit(self.firbnfPage)
+        self.bnfTransitionEdit.setObjectName("bnfTransitionEdit")
+        self.formLayout_5.setWidget(2, QtGui.QFormLayout.FieldRole, self.bnfTransitionEdit)
+        self.bnfStopBandAttenEdit = QtGui.QLineEdit(self.firbnfPage)
+        self.bnfStopBandAttenEdit.setObjectName("bnfStopBandAttenEdit")
+        self.formLayout_5.setWidget(3, QtGui.QFormLayout.FieldRole, self.bnfStopBandAttenEdit)
+        self.endofBnfStopBandLabel = QtGui.QLabel(self.firbnfPage)
+        self.endofBnfStopBandLabel.setObjectName("endofBnfStopBandLabel")
+        self.formLayout_5.setWidget(1, QtGui.QFormLayout.LabelRole, self.endofBnfStopBandLabel)
+        self.bnfTransitionLabel = QtGui.QLabel(self.firbnfPage)
+        self.bnfTransitionLabel.setObjectName("bnfTransitionLabel")
+        self.formLayout_5.setWidget(2, QtGui.QFormLayout.LabelRole, self.bnfTransitionLabel)
+        self.bnfStopBandAttenLabel = QtGui.QLabel(self.firbnfPage)
+        self.bnfStopBandAttenLabel.setObjectName("bnfStopBandAttenLabel")
+        self.formLayout_5.setWidget(3, QtGui.QFormLayout.LabelRole, self.bnfStopBandAttenLabel)
+        self.filterTypeWidget.addWidget(self.firbnfPage)
         self.firhpfPage = QtGui.QWidget()
         self.firhpfPage.setObjectName("firhpfPage")
         self.formLayout_3 = QtGui.QFormLayout(self.firhpfPage)
@@ -283,6 +312,10 @@ class Ui_MainWindow(object):
         self.bpfStopBandAttenLabel.setText(QtGui.QApplication.translate("MainWindow", "Stop Band Attenuation (dB)", None, QtGui.QApplication.UnicodeUTF8))
         self.bpfTransitionLabel.setText(QtGui.QApplication.translate("MainWindow", "Transition Width (Hz)", None, QtGui.QApplication.UnicodeUTF8))
         self.bpfPassBandRippleLabel.setText(QtGui.QApplication.translate("MainWindow", "Pass Band Ripple (dB)", None, QtGui.QApplication.UnicodeUTF8))
+        self.startofBnfStopBandLabel.setText(QtGui.QApplication.translate("MainWindow", "Start of Stop Band (Hz)", None, QtGui.QApplication.UnicodeUTF8))
+        self.endofBnfStopBandLabel.setText(QtGui.QApplication.translate("MainWindow", "End of Stop Band (Hz)", None, QtGui.QApplication.UnicodeUTF8))
+        self.bnfTransitionLabel.setText(QtGui.QApplication.translate("MainWindow", "Transition Width (Hz)", None, QtGui.QApplication.UnicodeUTF8))
+        self.bnfStopBandAttenLabel.setText(QtGui.QApplication.translate("MainWindow", "Stop Band Attenuation (dB)", None, QtGui.QApplication.UnicodeUTF8))
         self.endofHpfStopBandLabel.setText(QtGui.QApplication.translate("MainWindow", "End of Stop Band (Hz)", None, QtGui.QApplication.UnicodeUTF8))
         self.startofHpfPassBandLabel.setText(QtGui.QApplication.translate("MainWindow", "Start of Pass Band (Hz)", None, QtGui.QApplication.UnicodeUTF8))
         self.hpfStopBandAttenLabel.setText(QtGui.QApplication.translate("MainWindow", "Stop Band Attenuation (dB)", None, QtGui.QApplication.UnicodeUTF8))
