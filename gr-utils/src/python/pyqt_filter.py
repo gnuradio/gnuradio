@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter.ui'
 #
-# Created: Mon Aug 24 00:28:45 2009
-#      by: PyQt4 UI code generator 4.4.4
+# Created: Mon Aug 24 17:59:37 2009
+#      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -157,6 +157,12 @@ class Ui_MainWindow(object):
         self.bnfStopBandAttenLabel = QtGui.QLabel(self.firbnfPage)
         self.bnfStopBandAttenLabel.setObjectName("bnfStopBandAttenLabel")
         self.formLayout_5.setWidget(3, QtGui.QFormLayout.LabelRole, self.bnfStopBandAttenLabel)
+        self.bnfPassBandRippleEdit = QtGui.QLineEdit(self.firbnfPage)
+        self.bnfPassBandRippleEdit.setObjectName("bnfPassBandRippleEdit")
+        self.formLayout_5.setWidget(4, QtGui.QFormLayout.FieldRole, self.bnfPassBandRippleEdit)
+        self.bnfPassBandRippleLabel = QtGui.QLabel(self.firbnfPage)
+        self.bnfPassBandRippleLabel.setObjectName("bnfPassBandRippleLabel")
+        self.formLayout_5.setWidget(4, QtGui.QFormLayout.LabelRole, self.bnfPassBandRippleLabel)
         self.filterTypeWidget.addWidget(self.firbnfPage)
         self.firhpfPage = QtGui.QWidget()
         self.firhpfPage.setObjectName("firhpfPage")
@@ -292,7 +298,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.tabGroup, 1, 1, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1124, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1124, 24))
         self.menubar.setObjectName("menubar")
         self.menu_File = QtGui.QMenu(self.menubar)
         self.menu_File.setObjectName("menu_File")
@@ -308,7 +314,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_File.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.filterTypeWidget.setCurrentIndex(5)
+        self.filterTypeWidget.setCurrentIndex(2)
         self.tabGroup.setCurrentIndex(0)
         QtCore.QObject.connect(self.action_exit, QtCore.SIGNAL("activated()"), MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -362,6 +368,7 @@ class Ui_MainWindow(object):
         self.endofBnfStopBandLabel.setText(QtGui.QApplication.translate("MainWindow", "End of Stop Band (Hz)", None, QtGui.QApplication.UnicodeUTF8))
         self.bnfTransitionLabel.setText(QtGui.QApplication.translate("MainWindow", "Transition Width (Hz)", None, QtGui.QApplication.UnicodeUTF8))
         self.bnfStopBandAttenLabel.setText(QtGui.QApplication.translate("MainWindow", "Stop Band Attenuation (dB)", None, QtGui.QApplication.UnicodeUTF8))
+        self.bnfPassBandRippleLabel.setText(QtGui.QApplication.translate("MainWindow", "Pass Band Ripple (dB)", None, QtGui.QApplication.UnicodeUTF8))
         self.endofHpfStopBandLabel.setText(QtGui.QApplication.translate("MainWindow", "End of Stop Band (Hz)", None, QtGui.QApplication.UnicodeUTF8))
         self.startofHpfPassBandLabel.setText(QtGui.QApplication.translate("MainWindow", "Start of Pass Band (Hz)", None, QtGui.QApplication.UnicodeUTF8))
         self.hpfStopBandAttenLabel.setText(QtGui.QApplication.translate("MainWindow", "Stop Band Attenuation (dB)", None, QtGui.QApplication.UnicodeUTF8))

@@ -41,7 +41,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                      Qt.SIGNAL("textEdited(QString)"),
                      self.nfft_edit_changed)
 
-        self.gui.designButton.setShortcut("Return")
+        self.gui.designButton.setShortcut(QtCore.Qt.Key_Return)
 
         self.taps = []
         self.fftdB = []
@@ -54,6 +54,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.lpfPassBandRippleEdit.setVisible(False)
         self.gui.bpfPassBandRippleLabel.setVisible(False)
         self.gui.bpfPassBandRippleEdit.setVisible(False)
+        self.gui.bnfPassBandRippleLabel.setVisible(False)
+        self.gui.bnfPassBandRippleEdit.setVisible(False)
         self.gui.hpfPassBandRippleLabel.setVisible(False)
         self.gui.hpfPassBandRippleEdit.setVisible(False)
                 
@@ -168,6 +170,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.lpfPassBandRippleEdit.setVisible(True)
         self.gui.bpfPassBandRippleLabel.setVisible(True)
         self.gui.bpfPassBandRippleEdit.setVisible(True)
+        self.gui.bnfPassBandRippleLabel.setVisible(True)
+        self.gui.bnfPassBandRippleEdit.setVisible(True)
         self.gui.hpfPassBandRippleLabel.setVisible(True)
         self.gui.hpfPassBandRippleEdit.setVisible(True)
         
@@ -177,6 +181,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.lpfPassBandRippleEdit.setVisible(False)
         self.gui.bpfPassBandRippleLabel.setVisible(False)
         self.gui.bpfPassBandRippleEdit.setVisible(False)
+        self.gui.bnfPassBandRippleLabel.setVisible(False)
+        self.gui.bnfPassBandRippleEdit.setVisible(False)
         self.gui.hpfPassBandRippleLabel.setVisible(False)
         self.gui.hpfPassBandRippleEdit.setVisible(False)
         
@@ -195,6 +201,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 designer = {"Low Pass" : self.design_opt_lpf,
                             "Band Pass" : self.design_opt_bpf,
                             "Complex Band Pass" : self.design_opt_cbpf,
+                            "Band Notch" : self.design_opt_bnf,
                             "High Pass" :  self.design_opt_hpf}
                 taps,r = designer[ftype](fs, gain)
 
@@ -210,6 +217,8 @@ class gr_plot_filter(QtGui.QMainWindow):
                 taps,r = designer[ftype](fs, gain, wintype)
 
             if(r):
+                print "Number of taps: ", len(taps)
+
                 self.taps = scipy.array(taps)
                 self.get_fft(fs, self.taps, self.nfftpts)
                 self.update_time_curves()
@@ -340,7 +349,7 @@ class gr_plot_filter(QtGui.QMainWindow):
             return ([],r)
 
     # Design Functions for Equiripple Filters
-    def design_opt_lpf(self, fs, gain, wintype=None):
+    def design_opt_lpf(self, fs, gain):
         ret = True
         pb,r = self.gui.endofLpfPassBandEdit.text().toDouble()
         ret = r and ret
@@ -358,7 +367,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             return ([], ret)
     
-    def design_opt_bpf(self, fs, gain, wintype=None):
+    def design_opt_bpf(self, fs, gain):
         ret = True
         pb1,r = self.gui.startofBpfPassBandEdit.text().toDouble()
         ret = r and ret
@@ -380,7 +389,7 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             return ([],r)
 
-    def design_opt_cbpf(self, fs, gain, wintype=None):
+    def design_opt_cbpf(self, fs, gain):
         ret = True
         pb1,r = self.gui.startofBpfPassBandEdit.text().toDouble()
         ret = r and ret
@@ -402,7 +411,29 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             return ([],r)
 
-    def design_opt_hpf(self, fs, gain, wintype=None):
+    def design_opt_bnf(self, fs, gain):
+        ret = True
+        sb1,r = self.gui.startofBnfStopBandEdit.text().toDouble()
+        ret = r and ret
+        sb2,r = self.gui.endofBnfStopBandEdit.text().toDouble()
+        ret = r and ret
+        tb,r  = self.gui.bnfTransitionEdit.text().toDouble()
+        ret = r and ret
+        atten,r = self.gui.bnfStopBandAttenEdit.text().toDouble()
+        ret = r and ret
+        ripple,r = self.gui.bnfPassBandRippleEdit.text().toDouble()
+        ret = r and ret
+
+        if(r):
+            pb1 = sb1 - tb
+            pb2 = sb2 + tb
+            taps = blks2.optfir.band_reject(gain, fs, pb1, sb1, sb2, pb2,
+                                            ripple, atten)
+            return (taps,r)
+        else:
+            return ([],r)
+
+    def design_opt_hpf(self, fs, gain):
         ret = True
         sb,r = self.gui.endofHpfStopBandEdit.text().toDouble()
         ret = r and ret
