@@ -66,6 +66,12 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.freqcurve = Qwt.QwtPlotCurve("PSD")
         self.freqcurve.attach(self.gui.freqPlot)
 
+        self.phasecurve = Qwt.QwtPlotCurve("Phase")
+        self.phasecurve.attach(self.gui.phasePlot)
+
+        self.groupcurve = Qwt.QwtPlotCurve("Group Delay")
+        self.groupcurve.attach(self.gui.groupPlot)
+
         # Create zoom functionality for the plots
         self.timeZoomer = Qwt.QwtPlotZoomer(self.gui.timePlot.xBottom,
                                             self.gui.timePlot.yLeft,
@@ -96,7 +102,9 @@ class gr_plot_filter(QtGui.QMainWindow):
         blueBrush = Qt.QBrush(Qt.QColor(blue))
         self.freqcurve.setPen(Qt.QPen(blueBrush, 2))
         self.rcurve.setPen(Qt.QPen(blueBrush, 2))
-
+        self.phasecurve.setPen(Qt.QPen(blueBrush, 2))
+        self.groupcurve.setPen(Qt.QPen(blueBrush, 2))
+        
         self.filterWindows = {"Hamming Window" : gr.firdes.WIN_HAMMING,
                               "Hann Window" : gr.firdes.WIN_HANN,
                               "Blackman Window" : gr.firdes.WIN_BLACKMAN,
@@ -165,11 +173,13 @@ class gr_plot_filter(QtGui.QMainWindow):
                             "Band Pass" : self.design_win_bpf,
                             "High Pass" :  self.design_win_hpf}        
                 wintype = self.filterWindows[winstr]
-                taps,r = designer[ftype](fs, gain, wintype)
+                self.taps,r = designer[ftype](fs, gain, wintype)
 
             if(r):
-                self.update_time_curves(taps)
-                self.update_freq_curves(taps, self.nfftpts)
+                self.get_fft(self.taps, self.nfftpts)
+                self.update_time_curves()
+                self.update_freq_curves()
+                self.update_phase_curves()
         
 
     # Filter design functions using a window
@@ -291,23 +301,31 @@ class gr_plot_filter(QtGui.QMainWindow):
         infft,r = nfft.toInt()
         if(r and (infft != self.nfftpts)):
             self.nfftpts = infft
-            self.update_freq_curves(self.taps, self.nfftpts)
+            self.update_freq_curves()
 
     def tab_changed(self, tab):
         if(tab == 0):
-            self.update_freq_curves(self.taps, self.nfftpts)
+            self.update_freq_curves()
         if(tab == 1):
-            self.update_time_curves(self.taps)
+            self.update_time_curves()
+        if(tab == 2):
+            self.update_phase_curves()
         
-    def update_time_curves(self, taps):
-        self.taps = taps
-        ntaps = len(taps)
+    def get_fft(self, taps, Npts):
+        fftpts = fftpack.fft(taps, Npts)
+        self.freq = scipy.arange(0, Npts)
+        
+        self.fftdB = 20.0*scipy.log10(abs(fftpts))
+        self.fftDeg = scipy.unwrap(scipy.angle(fftpts))
+        
+    def update_time_curves(self):
+        ntaps = len(self.taps)
         if(ntaps > 0):
-            self.rcurve.setData(scipy.arange(ntaps), taps)
+            self.rcurve.setData(scipy.arange(ntaps), self.taps)
             
             # Reset the x-axis to the new time scale
-            ymax = 1.5 * max(taps)
-            ymin = 1.5 * min(taps)
+            ymax = 1.5 * max(self.taps)
+            ymin = 1.5 * min(self.taps)
             self.gui.timePlot.setAxisScale(self.gui.timePlot.xBottom,
                                            0, ntaps)
             self.gui.timePlot.setAxisScale(self.gui.timePlot.yLeft,
@@ -318,27 +336,42 @@ class gr_plot_filter(QtGui.QMainWindow):
             
             self.gui.timePlot.replot()
         
-    def update_freq_curves(self, taps, Npts=1000):
-        if(len(taps) > 0):
-            fftpts = fftpack.fft(taps, Npts)
-            freq = scipy.arange(0, Npts)
-            
-            fftdB = 20.0*scipy.log10(abs(fftpts))
-            
-            self.freqcurve.setData(freq, fftdB)
+    def update_freq_curves(self):
+        npts = len(self.fftdB)
+        if(npts > 0):
+            self.freqcurve.setData(self.freq, self.fftdB)
             
             # Reset the x-axis to the new time scale
-            ymax = 1.5 * max(fftdB)
-            ymin = 1.5 * min(fftdB)
+            ymax = 1.5 * max(self.fftdB[0:npts/2])
+            ymin = 1.1 * min(self.fftdB[0:npts/2])
             self.gui.freqPlot.setAxisScale(self.gui.freqPlot.xBottom,
-                                           0, Npts/2)
-            self.gui.timePlot.setAxisScale(self.gui.timePlot.yLeft,
+                                           0, npts/2)
+            self.gui.freqPlot.setAxisScale(self.gui.freqPlot.yLeft,
                                            ymin, ymax)
             
             # Set the zoomer base to unzoom to the new axis
             self.freqZoomer.setZoomBase()
             
             self.gui.freqPlot.replot()
+
+
+    def update_phase_curves(self):
+        npts = len(self.fftDeg)
+        if(npts > 0):
+            self.phasecurve.setData(self.freq, self.fftDeg)
+            
+            # Reset the x-axis to the new time scale
+            ymax = 1.5 * max(self.fftDeg[0:npts/2])
+            ymin = 1.1 * min(self.fftDeg[0:npts/2])
+            self.gui.phasePlot.setAxisScale(self.gui.phasePlot.xBottom,
+                                            0, npts/2)
+            self.gui.phasePlot.setAxisScale(self.gui.phasePlot.yLeft,
+                                            ymin, ymax)
+            
+            # Set the zoomer base to unzoom to the new axis
+            self.phaseZoomer.setZoomBase()
+            
+            self.gui.phasePlot.replot()
 
 
 def setup_options():

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter.ui'
 #
-# Created: Sun Aug 23 21:18:30 2009
+# Created: Sun Aug 23 21:53:02 2009
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -234,7 +234,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.filterTypeWidget.setCurrentIndex(2)
-        self.tabGroup.setCurrentIndex(3)
+        self.tabGroup.setCurrentIndex(0)
         QtCore.QObject.connect(self.action_exit, QtCore.SIGNAL("activated()"), MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         MainWindow.setTabOrder(self.filterTypeComboBox, self.filterDesignTypeComboBox)
