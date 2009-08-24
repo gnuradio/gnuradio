@@ -27,7 +27,7 @@ For a great intro to how all this stuff works, see section 6.6 of
 and Barrie W. Jervis, Adison-Wesley, 1993.  ISBN 0-201-54413-X.
 '''
 
-import math
+import math, cmath
 from gnuradio import gr
 
 remez = gr.remez
@@ -74,6 +74,29 @@ def band_pass (gain, Fs, freq_sb1, freq_pb1, freq_pb2, freq_sb2,
     # The remezord typically under-estimates the filter order, so add 2 taps by default
     taps = gr.remez (n + nextra_taps, fo, ao, w, "bandpass")
     return taps
+
+
+##  Builds a band pass filter with complex taps by making an LPF and
+#   spinning it up to the right center frequency
+#   @param gain  Filter gain in the passband (linear)
+#   @param Fs    Sampling rate (sps)
+#   @param freq1 End of stop band (in Hz)
+#   @param freq2 Start of pass band (in Hz)
+#   @param passband_ripple_db Pass band ripple in dB (should be small, < 1)
+#   @param stopband_atten_db  Stop band attenuation in dB (should be large, >= 60)
+#   @param nextra_taps  Extra taps to use in the filter (default=2)
+def complex_band_pass (gain, Fs, freq_sb1, freq_pb1, freq_pb2, freq_sb2,
+                       passband_ripple_db, stopband_atten_db,
+                       nextra_taps=2):
+    center_freq = (freq_pb2 + freq_pb1) / 2.0
+    lp_pb = (freq_pb2 - center_freq)/1.0
+    lp_sb = freq_sb2 - center_freq
+    lptaps = low_pass(gain, Fs, lp_pb, lp_sb, passband_ripple_db,
+                      stopband_atten_db, nextra_taps)
+    spinner = [cmath.exp(2j*cmath.pi*center_freq/Fs*i) for i in xrange(len(lptaps))]
+    taps = [s*t for s,t in zip(spinner, lptaps)]
+    return taps
+
 
 ##  Builds a high pass filter.
 #   @param gain  Filter gain in the passband (linear)

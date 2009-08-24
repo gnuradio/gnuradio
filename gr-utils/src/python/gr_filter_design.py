@@ -15,8 +15,6 @@ from gnuradio import gr, blks2, eng_notation
 from scipy import fftpack
 
 from pyqt_filter import Ui_MainWindow
-from pyqt_filter_firlpf import Ui_firlpfForm
-from pyqt_filter_firhpf import Ui_firhpfForm
 
 class gr_plot_filter(QtGui.QMainWindow):
     def __init__(self, qapp, options):
@@ -196,7 +194,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             if(winstr == "Equiripple"):
                 designer = {"Low Pass" : self.design_opt_lpf,
                             "Band Pass" : self.design_opt_bpf,
-                            "High Pass" :  self.design_opt_hpf}        
+                            "Complex Band Pass" : self.design_opt_cbpf,
+                            "High Pass" :  self.design_opt_hpf}
                 taps,r = designer[ftype](fs, gain)
 
             else:
@@ -377,6 +376,28 @@ class gr_plot_filter(QtGui.QMainWindow):
             sb2 = pb2 + tb
             taps = blks2.optfir.band_pass(gain, fs, sb1, pb1, pb2, sb2,
                                           ripple, atten)
+            return (taps,r)
+        else:
+            return ([],r)
+
+    def design_opt_cbpf(self, fs, gain, wintype=None):
+        ret = True
+        pb1,r = self.gui.startofBpfPassBandEdit.text().toDouble()
+        ret = r and ret
+        pb2,r = self.gui.endofBpfPassBandEdit.text().toDouble()
+        ret = r and ret
+        tb,r  = self.gui.bpfTransitionEdit.text().toDouble()
+        ret = r and ret
+        atten,r = self.gui.bpfStopBandAttenEdit.text().toDouble()
+        ret = r and ret
+        ripple,r = self.gui.bpfPassBandRippleEdit.text().toDouble()
+        ret = r and ret
+
+        if(r):
+            sb1 = pb1 - tb
+            sb2 = pb2 + tb
+            taps = blks2.optfir.complex_band_pass(gain, fs, sb1, pb1, pb2, sb2,
+                                                  ripple, atten)
             return (taps,r)
         else:
             return ([],r)
