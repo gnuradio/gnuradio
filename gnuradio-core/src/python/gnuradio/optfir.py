@@ -102,6 +102,35 @@ def complex_band_pass (gain, Fs, freq_sb1, freq_pb1, freq_pb2, freq_sb2,
     return taps
 
 
+##  Builds a band reject filter
+#   spinning it up to the right center frequency
+#   @param gain  Filter gain in the passband (linear)
+#   @param Fs    Sampling rate (sps)
+#   @param freq_pb1 End of pass band (in Hz)
+#   @param freq_sb1 Start of stop band (in Hz)
+#   @param freq_sb2 End of stop band (in Hz)
+#   @param freq_pb2 Start of pass band (in Hz)
+#   @param passband_ripple_db Pass band ripple in dB (should be small, < 1)
+#   @param stopband_atten_db  Stop band attenuation in dB (should be large, >= 60)
+#   @param nextra_taps  Extra taps to use in the filter (default=2)
+def band_reject (gain, Fs, freq_pb1, freq_sb1, freq_sb2, freq_pb2,
+                 passband_ripple_db, stopband_atten_db,
+                 nextra_taps=2):
+    passband_dev = passband_ripple_to_dev (passband_ripple_db)
+    stopband_dev = stopband_atten_to_dev (stopband_atten_db)
+    desired_ampls = (gain, 0, gain)
+    desired_freqs = [freq_pb1, freq_sb1, freq_sb2, freq_pb2]
+    desired_ripple = [passband_dev, stopband_dev, passband_dev]
+    (n, fo, ao, w) = remezord (desired_freqs, desired_ampls,
+                               desired_ripple, Fs)
+    # Make sure we use an odd number of taps
+    if((n+nextra_taps)%2 == 1):
+        n += 1
+    # The remezord typically under-estimates the filter order, so add 2 taps by default
+    taps = gr.remez (n + nextra_taps, fo, ao, w, "bandpass")
+    return taps
+
+
 ##  Builds a high pass filter.
 #   @param gain  Filter gain in the passband (linear)
 #   @param Fs    Sampling rate (sps)
