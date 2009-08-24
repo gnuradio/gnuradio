@@ -83,6 +83,8 @@ class gr_plot_filter(QtGui.QMainWindow):
         # Set up plot curves
         self.rcurve = Qwt.QwtPlotCurve("Real")
         self.rcurve.attach(self.gui.timePlot)
+        self.icurve = Qwt.QwtPlotCurve("Imag")
+        self.icurve.attach(self.gui.timePlot)
 
         self.freqcurve = Qwt.QwtPlotCurve("PSD")
         self.freqcurve.attach(self.gui.freqPlot)
@@ -141,6 +143,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firlpfPage)
         elif(ftype == "Band Pass"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firbpfPage)
+        elif(ftype == "Complex Band Pass"):
+            self.gui.filterTypeWidget.setCurrentWidget(self.gui.firbpfPage)
         elif(ftype == "High Pass"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firhpfPage)
 
@@ -187,16 +191,18 @@ class gr_plot_filter(QtGui.QMainWindow):
                 designer = {"Low Pass" : self.design_opt_lpf,
                             "Band Pass" : self.design_opt_bpf,
                             "High Pass" :  self.design_opt_hpf}        
-                self.taps,r = designer[ftype](fs, gain)
+                taps,r = designer[ftype](fs, gain)
 
             else:
                 designer = {"Low Pass" : self.design_win_lpf,
                             "Band Pass" : self.design_win_bpf,
+                            "Complex Band Pass" : self.design_win_cbpf,
                             "High Pass" :  self.design_win_hpf}        
                 wintype = self.filterWindows[winstr]
-                self.taps,r = designer[ftype](fs, gain, wintype)
+                taps,r = designer[ftype](fs, gain, wintype)
 
             if(r):
+                self.taps = scipy.array(taps)
                 self.get_fft(fs, self.taps, self.nfftpts)
                 self.update_time_curves()
                 self.update_freq_curves()
@@ -236,6 +242,24 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             taps = gr.firdes.band_pass_2(gain, fs, pb1, pb2, tb,
                                          atten, wintype)
+            return (taps,r)
+        else:
+            return ([],r)
+
+    def design_win_cbpf(self, fs, gain, wintype):
+        ret = True
+        pb1,r = self.gui.startofBpfPassBandEdit.text().toDouble()
+        ret = r and ret
+        pb2,r = self.gui.endofBpfPassBandEdit.text().toDouble()
+        ret = r and ret
+        tb,r  = self.gui.bpfTransitionEdit.text().toDouble()
+        ret = r and ret
+        atten,r = self.gui.bpfStopBandAttenEdit.text().toDouble()
+        ret = r and ret
+
+        if(r):
+            taps = gr.firdes.complex_band_pass_2(gain, fs, pb1, pb2, tb,
+                                                 atten, wintype)
             return (taps,r)
         else:
             return ([],r)
@@ -345,8 +369,12 @@ class gr_plot_filter(QtGui.QMainWindow):
     def update_time_curves(self):
         ntaps = len(self.taps)
         if(ntaps > 0):
-            self.rcurve.setData(scipy.arange(ntaps), self.taps)
-            
+            if(type(self.taps[0]) == scipy.complex128):
+                self.rcurve.setData(scipy.arange(ntaps), self.taps.real)
+                self.icurve.setData(scipy.arange(ntaps), self.taps.imag)
+            else:
+                self.rcurve.setData(scipy.arange(ntaps), self.taps)
+
             # Reset the x-axis to the new time scale
             ymax = 1.5 * max(self.taps)
             ymin = 1.5 * min(self.taps)
