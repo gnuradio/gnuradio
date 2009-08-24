@@ -157,7 +157,7 @@
        <item>
         <widget class="QStackedWidget" name="filterTypeWidget">
          <property name="currentIndex">
-          <number>2</number>
+          <number>4</number>
          </property>
          <widget class="QWidget" name="firlpfPage">
           <layout class="QFormLayout" name="formLayout">
@@ -345,6 +345,40 @@
            </item>
            <item row="3" column="1">
             <widget class="QLineEdit" name="hpfPassBandRippleEdit"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="rrcPage">
+          <layout class="QFormLayout" name="formLayout_6">
+           <item row="0" column="0">
+            <widget class="QLabel" name="rrcSymbolRateLabel">
+             <property name="text">
+              <string>Symbol Rate (sps)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="rrcAlphaLabel">
+             <property name="text">
+              <string>Roll-off Factor</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="rrcNumTapsLabel">
+             <property name="text">
+              <string>Number of Taps</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="rrcSymbolRateEdit"/>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="rrcAlphaEdit"/>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="rrcNumTapsEdit"/>
            </item>
           </layout>
          </widget>

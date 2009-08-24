@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter.ui'
 #
-# Created: Sun Aug 23 23:26:14 2009
+# Created: Mon Aug 24 00:20:11 2009
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -188,6 +188,29 @@ class Ui_MainWindow(object):
         self.hpfPassBandRippleEdit.setObjectName("hpfPassBandRippleEdit")
         self.formLayout_3.setWidget(3, QtGui.QFormLayout.FieldRole, self.hpfPassBandRippleEdit)
         self.filterTypeWidget.addWidget(self.firhpfPage)
+        self.rrcPage = QtGui.QWidget()
+        self.rrcPage.setObjectName("rrcPage")
+        self.formLayout_6 = QtGui.QFormLayout(self.rrcPage)
+        self.formLayout_6.setObjectName("formLayout_6")
+        self.rrcSymbolRateLabel = QtGui.QLabel(self.rrcPage)
+        self.rrcSymbolRateLabel.setObjectName("rrcSymbolRateLabel")
+        self.formLayout_6.setWidget(0, QtGui.QFormLayout.LabelRole, self.rrcSymbolRateLabel)
+        self.rrcAlphaLabel = QtGui.QLabel(self.rrcPage)
+        self.rrcAlphaLabel.setObjectName("rrcAlphaLabel")
+        self.formLayout_6.setWidget(1, QtGui.QFormLayout.LabelRole, self.rrcAlphaLabel)
+        self.rrcNumTapsLabel = QtGui.QLabel(self.rrcPage)
+        self.rrcNumTapsLabel.setObjectName("rrcNumTapsLabel")
+        self.formLayout_6.setWidget(2, QtGui.QFormLayout.LabelRole, self.rrcNumTapsLabel)
+        self.rrcSymbolRateEdit = QtGui.QLineEdit(self.rrcPage)
+        self.rrcSymbolRateEdit.setObjectName("rrcSymbolRateEdit")
+        self.formLayout_6.setWidget(0, QtGui.QFormLayout.FieldRole, self.rrcSymbolRateEdit)
+        self.rrcAlphaEdit = QtGui.QLineEdit(self.rrcPage)
+        self.rrcAlphaEdit.setObjectName("rrcAlphaEdit")
+        self.formLayout_6.setWidget(1, QtGui.QFormLayout.FieldRole, self.rrcAlphaEdit)
+        self.rrcNumTapsEdit = QtGui.QLineEdit(self.rrcPage)
+        self.rrcNumTapsEdit.setObjectName("rrcNumTapsEdit")
+        self.formLayout_6.setWidget(2, QtGui.QFormLayout.FieldRole, self.rrcNumTapsEdit)
+        self.filterTypeWidget.addWidget(self.rrcPage)
         self.verticalLayout.addWidget(self.filterTypeWidget)
         self.sysParamsBox = QtGui.QGroupBox(self.filterFrame)
         self.sysParamsBox.setObjectName("sysParamsBox")
@@ -262,7 +285,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_File.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.filterTypeWidget.setCurrentIndex(2)
+        self.filterTypeWidget.setCurrentIndex(4)
         self.tabGroup.setCurrentIndex(0)
         QtCore.QObject.connect(self.action_exit, QtCore.SIGNAL("activated()"), MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -320,6 +343,9 @@ class Ui_MainWindow(object):
         self.startofHpfPassBandLabel.setText(QtGui.QApplication.translate("MainWindow", "Start of Pass Band (Hz)", None, QtGui.QApplication.UnicodeUTF8))
         self.hpfStopBandAttenLabel.setText(QtGui.QApplication.translate("MainWindow", "Stop Band Attenuation (dB)", None, QtGui.QApplication.UnicodeUTF8))
         self.hpfPassBandRippleLabel.setText(QtGui.QApplication.translate("MainWindow", "Pass Band Ripple (dB)", None, QtGui.QApplication.UnicodeUTF8))
+        self.rrcSymbolRateLabel.setText(QtGui.QApplication.translate("MainWindow", "Symbol Rate (sps)", None, QtGui.QApplication.UnicodeUTF8))
+        self.rrcAlphaLabel.setText(QtGui.QApplication.translate("MainWindow", "Roll-off Factor", None, QtGui.QApplication.UnicodeUTF8))
+        self.rrcNumTapsLabel.setText(QtGui.QApplication.translate("MainWindow", "Number of Taps", None, QtGui.QApplication.UnicodeUTF8))
         self.sysParamsBox.setTitle(QtGui.QApplication.translate("MainWindow", "System Parameters", None, QtGui.QApplication.UnicodeUTF8))
         self.nfftLabel.setText(QtGui.QApplication.translate("MainWindow", "Num FFT points", None, QtGui.QApplication.UnicodeUTF8))
         self.designButton.setText(QtGui.QApplication.translate("MainWindow", "Design", None, QtGui.QApplication.UnicodeUTF8))

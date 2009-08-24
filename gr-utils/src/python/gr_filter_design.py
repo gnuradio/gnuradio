@@ -149,6 +149,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firbnfPage)
         elif(ftype == "High Pass"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firhpfPage)
+        elif(ftype == "Root Raised Cosine"):
+            self.gui.filterTypeWidget.setCurrentWidget(self.gui.rrcPage)
 
         self.design()
         
@@ -200,7 +202,8 @@ class gr_plot_filter(QtGui.QMainWindow):
                             "Band Pass" : self.design_win_bpf,
                             "Complex Band Pass" : self.design_win_cbpf,
                             "Band Notch" : self.design_win_bnf,
-                            "High Pass" :  self.design_win_hpf}        
+                            "High Pass" :  self.design_win_hpf,
+                            "Root Raised Cosine" :  self.design_win_rrc}
                 wintype = self.filterWindows[winstr]
                 taps,r = designer[ftype](fs, gain, wintype)
 
@@ -302,7 +305,21 @@ class gr_plot_filter(QtGui.QMainWindow):
         else:
             return ([],r)
 
+    def design_win_rrc(self, fs, gain, wintype):
+        ret = True
+        sr,r = self.gui.rrcSymbolRateEdit.text().toDouble()
+        ret = r and ret
+        alpha,r = self.gui.rrcAlphaEdit.text().toDouble()
+        ret = r and ret
+        ntaps,r = self.gui.rrcNumTapsEdit.text().toInt()
+        ret = r and ret
 
+        if(r):
+            taps = gr.firdes.root_raised_cosine(gain, fs, sr,
+                                                alpha, ntaps)
+            return (taps,r)
+        else:
+            return ([],r)
 
     # Design Functions for Equiripple Filters
     def design_opt_lpf(self, fs, gain, wintype=None):
