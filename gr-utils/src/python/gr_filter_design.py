@@ -46,6 +46,9 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.designButton.setShortcut("Return")
 
         self.taps = []
+        self.fftdB = []
+        self.fftDeg = []
+        self.groupDelay = []
         self.nfftpts = int(10000)
         self.gui.nfftEdit.setText(Qt.QString("%1").arg(self.nfftpts))
 
@@ -184,7 +187,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                 designer = {"Low Pass" : self.design_opt_lpf,
                             "Band Pass" : self.design_opt_bpf,
                             "High Pass" :  self.design_opt_hpf}        
-                taps,r = designer[ftype](fs, gain)
+                self.taps,r = designer[ftype](fs, gain)
 
             else:
                 designer = {"Low Pass" : self.design_win_lpf,
@@ -194,11 +197,11 @@ class gr_plot_filter(QtGui.QMainWindow):
                 self.taps,r = designer[ftype](fs, gain, wintype)
 
             if(r):
-                self.get_fft(self.taps, self.nfftpts)
+                self.get_fft(fs, self.taps, self.nfftpts)
                 self.update_time_curves()
                 self.update_freq_curves()
                 self.update_phase_curves()
-        
+                self.update_group_curves()
 
     # Filter design functions using a window
     def design_win_lpf(self, fs, gain, wintype):
@@ -328,13 +331,16 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.update_time_curves()
         if(tab == 2):
             self.update_phase_curves()
+        if(tab == 3):
+            self.update_group_curves()
         
-    def get_fft(self, taps, Npts):
+    def get_fft(self, fs, taps, Npts):
+        Ts = 1.0/fs
         fftpts = fftpack.fft(taps, Npts)
-        self.freq = scipy.arange(0, Npts)
-        
+        self.freq = scipy.arange(0, fs, 1.0/(Npts*Ts))        
         self.fftdB = 20.0*scipy.log10(abs(fftpts))
         self.fftDeg = scipy.unwrap(scipy.angle(fftpts))
+        self.groupDelay = -scipy.diff(self.fftDeg)
         
     def update_time_curves(self):
         ntaps = len(self.taps)
@@ -362,8 +368,10 @@ class gr_plot_filter(QtGui.QMainWindow):
             # Reset the x-axis to the new time scale
             ymax = 1.5 * max(self.fftdB[0:npts/2])
             ymin = 1.1 * min(self.fftdB[0:npts/2])
+            xmax = self.freq[npts/2]
+            xmin = self.freq[0]
             self.gui.freqPlot.setAxisScale(self.gui.freqPlot.xBottom,
-                                           0, npts/2)
+                                           xmin, xmax)
             self.gui.freqPlot.setAxisScale(self.gui.freqPlot.yLeft,
                                            ymin, ymax)
             
@@ -381,8 +389,10 @@ class gr_plot_filter(QtGui.QMainWindow):
             # Reset the x-axis to the new time scale
             ymax = 1.5 * max(self.fftDeg[0:npts/2])
             ymin = 1.1 * min(self.fftDeg[0:npts/2])
+            xmax = self.freq[npts/2]
+            xmin = self.freq[0]
             self.gui.phasePlot.setAxisScale(self.gui.phasePlot.xBottom,
-                                            0, npts/2)
+                                            xmin, xmax)
             self.gui.phasePlot.setAxisScale(self.gui.phasePlot.yLeft,
                                             ymin, ymax)
             
@@ -390,6 +400,26 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.phaseZoomer.setZoomBase()
             
             self.gui.phasePlot.replot()
+
+    def update_group_curves(self):
+        npts = len(self.groupDelay)
+        if(npts > 0):
+            self.groupcurve.setData(self.freq, self.groupDelay)
+            
+            # Reset the x-axis to the new time scale
+            ymax = 1.5 * max(self.groupDelay[0:npts/2])
+            ymin = 1.1 * min(self.groupDelay[0:npts/2])
+            xmax = self.freq[npts/2]
+            xmin = self.freq[0]
+            self.gui.groupPlot.setAxisScale(self.gui.groupPlot.xBottom,
+                                            xmin, xmax)
+            self.gui.groupPlot.setAxisScale(self.gui.groupPlot.yLeft,
+                                            ymin, ymax)
+            
+            # Set the zoomer base to unzoom to the new axis
+            self.groupZoomer.setZoomBase()
+            
+            self.gui.groupPlot.replot()
 
 
 def setup_options():
