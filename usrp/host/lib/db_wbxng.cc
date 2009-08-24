@@ -203,13 +203,19 @@ wbxng_base::set_freq(double freq)
     actual_baseband_freq is the RF frequency that corresponds to DC in the IF.
   */
 
-  freq_t int_freq = (freq_t) (freq/1000);
+  freq_t int_freq = freq_t(freq);
   bool ok = d_common->_set_freq(int_freq);
-  double freq_result = (double) d_common->_get_freq()*1000;
+  double freq_result = (double) d_common->_get_freq();
   struct freq_result_t args = {ok, freq_result};
 
+  /* Wait before reading Lock Detect*/
+  timespec t;
+  t.tv_sec = 0;
+  t.tv_nsec = 10000000;
+  nanosleep(&t, NULL);
+
   fprintf(stderr,"Setting WBXNG frequency, requested %d, obtained %f, lock_detect %d\n", 
-          int_freq*1000, freq_result, _lock_detect());
+          int_freq, freq_result, _lock_detect());
 
   // Offsetting the LO helps get the Tx carrier leakage out of the way.
   // This also ensures that on Rx, we're not getting hosed by the
@@ -291,8 +297,8 @@ wbxng_base_tx::wbxng_base_tx(usrp_basic_sptr _usrp, int which, int _power_on)
   d_common = new adf4350(_usrp, d_which, d_spi_enable);
   
   // power up the transmit side, but don't enable the mixer
-  usrp()->_write_oe(d_which,(PLL_CE|RX_TXN|ENABLE_33|ENABLE_5), (PLL_CE|RX_TXN|ENABLE_33|ENABLE_5));
-  usrp()->write_io(d_which, (power_on()|PLL_CE|RX_TXN|ENABLE_33|ENABLE_5), (PLL_CE|RX_TXN|ENABLE_33|ENABLE_5));
+  usrp()->_write_oe(d_which,(PLL_PDBRF|PLL_CE|RX_TXN|ENABLE_33|ENABLE_5), (PLL_PDBRF|PLL_CE|RX_TXN|ENABLE_33|ENABLE_5));
+  usrp()->write_io(d_which, (power_on()|PLL_PDBRF|PLL_CE|RX_TXN|ENABLE_33|ENABLE_5), (PLL_PDBRF|PLL_CE|RX_TXN|ENABLE_33|ENABLE_5));
   //set_lo_offset(4e6);
 
   //set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
@@ -314,7 +320,7 @@ wbxng_base_tx::shutdown()
     // do whatever there is to do to shutdown
 
     // Power down and leave the T/R switch in the R position
-    usrp()->write_io(d_which, (power_off()|RX_TXN), (PLL_CE|RX_TXN|ENABLE_33|ENABLE_5));
+    usrp()->write_io(d_which, (power_off()|RX_TXN), (PLL_PDBRF|PLL_CE|RX_TXN|ENABLE_33|ENABLE_5));
 
     /*
     // Power down VCO/PLL
@@ -354,9 +360,9 @@ wbxng_base_tx::set_enable(bool on)
   */
 
   int v;
-  int mask = RX_TXN | ENABLE_5 | ENABLE_33;
+  int mask = PLL_PDBRF | PLL_PDBRF | RX_TXN | ENABLE_5 | ENABLE_33;
   if(on) {
-    v = PLL_CE | ENABLE_5 | ENABLE_33;
+    v = PLL_PDBRF | PLL_CE | ENABLE_5 | ENABLE_33;
   }
   else {
     v = RX_TXN;
