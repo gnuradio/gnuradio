@@ -151,6 +151,8 @@ class gr_plot_filter(QtGui.QMainWindow):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.firhpfPage)
         elif(ftype == "Root Raised Cosine"):
             self.gui.filterTypeWidget.setCurrentWidget(self.gui.rrcPage)
+        elif(ftype == "Gaussian"):
+            self.gui.filterTypeWidget.setCurrentWidget(self.gui.gausPage)
 
         self.design()
         
@@ -203,7 +205,8 @@ class gr_plot_filter(QtGui.QMainWindow):
                             "Complex Band Pass" : self.design_win_cbpf,
                             "Band Notch" : self.design_win_bnf,
                             "High Pass" :  self.design_win_hpf,
-                            "Root Raised Cosine" :  self.design_win_rrc}
+                            "Root Raised Cosine" :  self.design_win_rrc,
+                            "Gaussian" :  self.design_win_gaus}
                 wintype = self.filterWindows[winstr]
                 taps,r = designer[ftype](fs, gain, wintype)
 
@@ -317,6 +320,22 @@ class gr_plot_filter(QtGui.QMainWindow):
         if(r):
             taps = gr.firdes.root_raised_cosine(gain, fs, sr,
                                                 alpha, ntaps)
+            return (taps,r)
+        else:
+            return ([],r)
+
+    def design_win_gaus(self, fs, gain, wintype):
+        ret = True
+        sr,r = self.gui.gausSymbolRateEdit.text().toDouble()
+        ret = r and ret
+        bt,r = self.gui.gausBTEdit.text().toDouble()
+        ret = r and ret
+        ntaps,r = self.gui.gausNumTapsEdit.text().toInt()
+        ret = r and ret
+
+        if(r):
+            spb = fs / sr
+            taps = gr.firdes.gaussian(gain, spb, bt, ntaps)
             return (taps,r)
         else:
             return ([],r)

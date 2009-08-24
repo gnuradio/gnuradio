@@ -157,7 +157,7 @@
        <item>
         <widget class="QStackedWidget" name="filterTypeWidget">
          <property name="currentIndex">
-          <number>4</number>
+          <number>5</number>
          </property>
          <widget class="QWidget" name="firlpfPage">
           <layout class="QFormLayout" name="formLayout">
@@ -379,6 +379,40 @@
            </item>
            <item row="2" column="1">
             <widget class="QLineEdit" name="rrcNumTapsEdit"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="gausPage">
+          <layout class="QFormLayout" name="formLayout_7">
+           <item row="0" column="0">
+            <widget class="QLabel" name="gausSymbolRateLabel">
+             <property name="text">
+              <string>Symbol Rate (sps)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="gausSymbolRateEdit"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="gausBTLabel">
+             <property name="text">
+              <string>Roll-off Factor</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="gausBTEdit"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="gausNumTapsLabel">
+             <property name="text">
+              <string>Number of Taps</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="gausNumTapsEdit"/>
            </item>
           </layout>
          </widget>

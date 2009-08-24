@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter.ui'
 #
-# Created: Mon Aug 24 00:20:11 2009
+# Created: Mon Aug 24 00:28:45 2009
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -211,6 +211,29 @@ class Ui_MainWindow(object):
         self.rrcNumTapsEdit.setObjectName("rrcNumTapsEdit")
         self.formLayout_6.setWidget(2, QtGui.QFormLayout.FieldRole, self.rrcNumTapsEdit)
         self.filterTypeWidget.addWidget(self.rrcPage)
+        self.gausPage = QtGui.QWidget()
+        self.gausPage.setObjectName("gausPage")
+        self.formLayout_7 = QtGui.QFormLayout(self.gausPage)
+        self.formLayout_7.setObjectName("formLayout_7")
+        self.gausSymbolRateLabel = QtGui.QLabel(self.gausPage)
+        self.gausSymbolRateLabel.setObjectName("gausSymbolRateLabel")
+        self.formLayout_7.setWidget(0, QtGui.QFormLayout.LabelRole, self.gausSymbolRateLabel)
+        self.gausSymbolRateEdit = QtGui.QLineEdit(self.gausPage)
+        self.gausSymbolRateEdit.setObjectName("gausSymbolRateEdit")
+        self.formLayout_7.setWidget(0, QtGui.QFormLayout.FieldRole, self.gausSymbolRateEdit)
+        self.gausBTLabel = QtGui.QLabel(self.gausPage)
+        self.gausBTLabel.setObjectName("gausBTLabel")
+        self.formLayout_7.setWidget(1, QtGui.QFormLayout.LabelRole, self.gausBTLabel)
+        self.gausBTEdit = QtGui.QLineEdit(self.gausPage)
+        self.gausBTEdit.setObjectName("gausBTEdit")
+        self.formLayout_7.setWidget(1, QtGui.QFormLayout.FieldRole, self.gausBTEdit)
+        self.gausNumTapsLabel = QtGui.QLabel(self.gausPage)
+        self.gausNumTapsLabel.setObjectName("gausNumTapsLabel")
+        self.formLayout_7.setWidget(2, QtGui.QFormLayout.LabelRole, self.gausNumTapsLabel)
+        self.gausNumTapsEdit = QtGui.QLineEdit(self.gausPage)
+        self.gausNumTapsEdit.setObjectName("gausNumTapsEdit")
+        self.formLayout_7.setWidget(2, QtGui.QFormLayout.FieldRole, self.gausNumTapsEdit)
+        self.filterTypeWidget.addWidget(self.gausPage)
         self.verticalLayout.addWidget(self.filterTypeWidget)
         self.sysParamsBox = QtGui.QGroupBox(self.filterFrame)
         self.sysParamsBox.setObjectName("sysParamsBox")
@@ -285,7 +308,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_File.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.filterTypeWidget.setCurrentIndex(4)
+        self.filterTypeWidget.setCurrentIndex(5)
         self.tabGroup.setCurrentIndex(0)
         QtCore.QObject.connect(self.action_exit, QtCore.SIGNAL("activated()"), MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -346,6 +369,9 @@ class Ui_MainWindow(object):
         self.rrcSymbolRateLabel.setText(QtGui.QApplication.translate("MainWindow", "Symbol Rate (sps)", None, QtGui.QApplication.UnicodeUTF8))
         self.rrcAlphaLabel.setText(QtGui.QApplication.translate("MainWindow", "Roll-off Factor", None, QtGui.QApplication.UnicodeUTF8))
         self.rrcNumTapsLabel.setText(QtGui.QApplication.translate("MainWindow", "Number of Taps", None, QtGui.QApplication.UnicodeUTF8))
+        self.gausSymbolRateLabel.setText(QtGui.QApplication.translate("MainWindow", "Symbol Rate (sps)", None, QtGui.QApplication.UnicodeUTF8))
+        self.gausBTLabel.setText(QtGui.QApplication.translate("MainWindow", "Roll-off Factor", None, QtGui.QApplication.UnicodeUTF8))
+        self.gausNumTapsLabel.setText(QtGui.QApplication.translate("MainWindow", "Number of Taps", None, QtGui.QApplication.UnicodeUTF8))
         self.sysParamsBox.setTitle(QtGui.QApplication.translate("MainWindow", "System Parameters", None, QtGui.QApplication.UnicodeUTF8))
         self.nfftLabel.setText(QtGui.QApplication.translate("MainWindow", "Num FFT points", None, QtGui.QApplication.UnicodeUTF8))
         self.designButton.setText(QtGui.QApplication.translate("MainWindow", "Design", None, QtGui.QApplication.UnicodeUTF8))
