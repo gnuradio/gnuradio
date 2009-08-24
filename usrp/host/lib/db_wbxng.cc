@@ -43,10 +43,11 @@ wbxng_base::wbxng_base(usrp_basic_sptr _usrp, int which, int _power_on)
     @type which: int
   */
 
+  usrp()->_write_oe(d_which, 0, 0xffff);   // turn off all outputs
+
   d_first = true;
   d_spi_format = SPI_FMT_MSB | SPI_FMT_HDR_0;
 
-  usrp()->_write_oe(d_which, 1, 0xffff);   // turn off all outputs
   _enable_refclk(false);                // disable refclk
 
   set_auto_tr(false);
@@ -202,10 +203,13 @@ wbxng_base::set_freq(double freq)
     actual_baseband_freq is the RF frequency that corresponds to DC in the IF.
   */
 
-  freq_t int_freq = (freq_t) freq;
+  freq_t int_freq = (freq_t) (freq/1000);
   bool ok = d_common->_set_freq(int_freq);
-  double freq_result = (double) d_common->_get_freq();
+  double freq_result = (double) d_common->_get_freq()*1000;
   struct freq_result_t args = {ok, freq_result};
+
+  fprintf(stderr,"Setting WBXNG frequency, requested %d, obtained %f, lock_detect %d\n", 
+          int_freq*1000, freq_result, _lock_detect());
 
   // Offsetting the LO helps get the Tx carrier leakage out of the way.
   // This also ensures that on Rx, we're not getting hosed by the
@@ -287,8 +291,8 @@ wbxng_base_tx::wbxng_base_tx(usrp_basic_sptr _usrp, int which, int _power_on)
   d_common = new adf4350(_usrp, d_which, d_spi_enable);
   
   // power up the transmit side, but don't enable the mixer
-  usrp()->_write_oe(d_which,(RX_TXN|ENABLE_33|ENABLE_5), 0xffff);
-  usrp()->write_io(d_which, (power_on()|RX_TXN), (RX_TXN|ENABLE_33|ENABLE_5));
+  usrp()->_write_oe(d_which,(PLL_CE|RX_TXN|ENABLE_33|ENABLE_5), (PLL_CE|RX_TXN|ENABLE_33|ENABLE_5));
+  usrp()->write_io(d_which, (power_on()|PLL_CE|RX_TXN|ENABLE_33|ENABLE_5), (PLL_CE|RX_TXN|ENABLE_33|ENABLE_5));
   //set_lo_offset(4e6);
 
   //set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
@@ -310,7 +314,7 @@ wbxng_base_tx::shutdown()
     // do whatever there is to do to shutdown
 
     // Power down and leave the T/R switch in the R position
-    usrp()->write_io(d_which, (power_off()|RX_TXN), (RX_TXN|ENABLE_33|ENABLE_5));
+    usrp()->write_io(d_which, (power_off()|RX_TXN), (PLL_CE|RX_TXN|ENABLE_33|ENABLE_5));
 
     /*
     // Power down VCO/PLL
@@ -352,7 +356,7 @@ wbxng_base_tx::set_enable(bool on)
   int v;
   int mask = RX_TXN | ENABLE_5 | ENABLE_33;
   if(on) {
-    v = ENABLE_5 | ENABLE_33;
+    v = PLL_CE | ENABLE_5 | ENABLE_33;
   }
   else {
     v = RX_TXN;
@@ -411,9 +415,8 @@ wbxng_base_rx::wbxng_base_rx(usrp_basic_sptr _usrp, int which, int _power_on)
 
   d_common = new adf4350(_usrp, d_which, d_spi_enable);
 
-  usrp()->_write_oe(d_which, (RX2_RX1N|ENABLE_33|ENABLE_5), 0xffff);
-  usrp()->write_io(d_which,  (power_on()|RX2_RX1N|ENABLE_33|ENABLE_5), 
-		   (RX2_RX1N|ENABLE_33|ENABLE_5));
+  usrp()->_write_oe(d_which, (RX2_RX1N|ENABLE_33|ENABLE_5), (RX2_RX1N|ENABLE_33|ENABLE_5));
+  usrp()->write_io(d_which,  (power_on()|RX2_RX1N|ENABLE_33|ENABLE_5), (RX2_RX1N|ENABLE_33|ENABLE_5));
   
   // set up for RX on TX/RX port
   select_rx_antenna("TX/RX");

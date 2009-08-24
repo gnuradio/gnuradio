@@ -8,13 +8,13 @@
 
 /* reg 0 */
 /* reg 1 */
-const uint8_t adf4350_regs::s_prescaler = 1;
+const uint8_t adf4350_regs::s_prescaler = 0;
 const uint16_t adf4350_regs::s_phase = 0;
 /* reg 2 */
 const uint8_t adf4350_regs::s_low_noise_and_low_spur_modes = 0;
-const uint8_t adf4350_regs::s_muxout = 6;
-const uint8_t adf4350_regs::s_reference_doubler = 1;
-const uint8_t adf4350_regs::s_rdiv2 = 0;
+const uint8_t adf4350_regs::s_muxout = 3;
+const uint8_t adf4350_regs::s_reference_doubler = 0;
+const uint8_t adf4350_regs::s_rdiv2 = 1;
 const uint8_t adf4350_regs::s_double_buff = 0;
 const uint8_t adf4350_regs::s_charge_pump_setting = 7;
 const uint8_t adf4350_regs::s_ldf = 0;
@@ -31,11 +31,11 @@ const uint16_t adf4350_regs::s_12_bit_clock_divider_value = 0;
 const uint8_t adf4350_regs::s_feedback_select = 1;
 const uint8_t adf4350_regs::s_vco_power_down = 0;
 const uint8_t adf4350_regs::s_mtld = 0;
-const uint8_t adf4350_regs::s_aux_output_select = 0;
-const uint8_t adf4350_regs::s_aux_output_enable = 0;
-const uint8_t adf4350_regs::s_aux_output_power = 0;
-const uint8_t adf4350_regs::s_rf_output_enable = 1;
-const uint8_t adf4350_regs::s_output_power = 1;
+const uint8_t adf4350_regs::s_aux_output_select = 1;
+const uint8_t adf4350_regs::s_aux_output_enable = 1;
+const uint8_t adf4350_regs::s_aux_output_power = 1;
+const uint8_t adf4350_regs::s_rf_output_enable = 0;
+const uint8_t adf4350_regs::s_output_power = 0;
 /* reg 5 */
 const uint8_t adf4350_regs::s_ld_pin_mode = 1;
 
@@ -48,7 +48,7 @@ adf4350_regs::adf4350_regs(adf4350* _adf4350){
     /* reg 1 */
     d_mod = uint16_t(0xfff);                      /* max fractional accuracy */
     /* reg 2 */
-    d_10_bit_r_counter = uint16_t(1);
+    d_10_bit_r_counter = uint16_t(2);
     /* reg 3 */
     /* reg 4 */
     d_divider_select = 0;
