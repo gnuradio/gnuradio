@@ -290,8 +290,7 @@ class gr_plot_filter(QtGui.QMainWindow):
                                            ymin, ymax)
             
             # Set the zoomer base to unzoom to the new axis
-            rect = Qt.QRectF(0, ymin, (ntaps-0), (ymax-ymin))
-            self.timeZoomer.setZoomBase(rect)
+            self.timeZoomer.setZoomBase()
             
             self.gui.timePlot.replot()
         
