@@ -23,12 +23,16 @@ include $(top_srcdir)/Makefile.common
 
 EXTRA_DIST = \
     $(bin_SCRIPTS) \
-    README.plot
+    README.plot \
+    pyqt_plot.ui \
+    pyqt_filter.ui
 
 ourpythondir = $(grpythondir)
 
 ourpython_PYTHON = \
-    plot_data.py
+    plot_data.py   \
+    pyqt_plot.py   \
+    pyqt_filter.py
 
 bin_SCRIPTS = \
     gr_plot_char.py \
@@ -43,6 +47,8 @@ bin_SCRIPTS = \
     gr_plot_int.py \
     gr_plot_iq.py \
     gr_plot_short.py \
+    gr_plot_qt.py \
+    gr_filter_design.py \
     lsusrp \
     usrp_fft.py \
     usrp_oscope.py \
@@ -56,3 +62,4 @@ bin_SCRIPTS = \
     usrp2_rx_cfile.py \
     usrp2_siggen.py \
     usrp2_siggen_gui.py
+
