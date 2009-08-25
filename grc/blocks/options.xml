@@ -17,6 +17,7 @@ import wx
 #if $generate_options() != 'hb'
 from optparse import OptionParser
 from gnuradio.eng_option import eng_option
+from gnuradio import eng_notation
 #end if
 </import>
 	<make></make>

@@ -45,7 +45,7 @@
 		</option>
 		<option>
 			<name>Int</name>
-			<key>int</key>
+			<key>intx</key>
 			<opt>type:int</opt>
 		</option>
 		<option>
@@ -58,6 +58,13 @@
 			<key>string</key>
 			<opt>type:string</opt>
 		</option>
+		<!-- not supported yet in tmpl
+		<option>
+			<name>Boolean</name>
+			<key>bool</key>
+			<opt>type:bool</opt>
+		</option>
+		-->
 	</param>
 	<param>
 		<name>Short ID</name>
