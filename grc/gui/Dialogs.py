@@ -98,8 +98,8 @@ COLORS_DIALOG_MARKUP_TMPL = """\
 #end if
 """
 
-def ColorsDialog(platform): MessageDialogHelper(
+def TypesDialog(platform): MessageDialogHelper(
 	type=gtk.MESSAGE_INFO,
 	buttons=gtk.BUTTONS_CLOSE,
-	title='Colors',
+	title='Types',
 	markup=Utils.parse_template(COLORS_DIALOG_MARKUP_TMPL, colors=platform.get_colors()))

@@ -57,7 +57,7 @@ FLOW_GRAPH_KILL = 'flow graph kill'
 FLOW_GRAPH_SCREEN_CAPTURE = 'flow graph screen capture'
 ABOUT_WINDOW_DISPLAY = 'about window display'
 HELP_WINDOW_DISPLAY = 'help window display'
-COLORS_WINDOW_DISPLAY = 'colors window display'
+TYPES_WINDOW_DISPLAY = 'types window display'
 
 ######################################################################################################
 # Action Key Map
@@ -132,7 +132,7 @@ _actions_list = (
 	gtk.Action(BLOCK_PASTE, '_Paste', 'Paste', gtk.STOCK_PASTE),
 	gtk.Action(ABOUT_WINDOW_DISPLAY, '_About', 'About this program', gtk.STOCK_ABOUT),
 	gtk.Action(HELP_WINDOW_DISPLAY, '_Help', 'Usage Tips', gtk.STOCK_HELP),
-	gtk.Action(COLORS_WINDOW_DISPLAY, '_Colors', 'Color Mapping', gtk.STOCK_DIALOG_INFO),
+	gtk.Action(TYPES_WINDOW_DISPLAY, '_Types', 'Types Color Mapping', gtk.STOCK_DIALOG_INFO),
 	gtk.Action(FLOW_GRAPH_GEN, '_Generate', 'Generate the flow graph', gtk.STOCK_CONVERT),
 	gtk.Action(FLOW_GRAPH_EXEC, '_Execute', 'Execute the flow graph', gtk.STOCK_EXECUTE),
 	gtk.Action(FLOW_GRAPH_KILL, '_Kill', 'Kill the flow graph', gtk.STOCK_STOP),

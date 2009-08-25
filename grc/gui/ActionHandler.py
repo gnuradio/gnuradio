@@ -133,7 +133,7 @@ class ActionHandler:
 				Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
 				Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
 				Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
-				Actions.COLORS_WINDOW_DISPLAY,
+				Actions.TYPES_WINDOW_DISPLAY,
 			): Actions.get_action_from_name(action).set_sensitive(True)
 			if not self.init_file_paths:
 				self.init_file_paths = Preferences.files_open()
@@ -237,8 +237,8 @@ class ActionHandler:
 			Dialogs.AboutDialog(self.get_flow_graph().get_parent())
 		elif state == Actions.HELP_WINDOW_DISPLAY:
 			Dialogs.HelpDialog()
-		elif state == Actions.COLORS_WINDOW_DISPLAY:
-			Dialogs.ColorsDialog(self.get_flow_graph().get_parent())
+		elif state == Actions.TYPES_WINDOW_DISPLAY:
+			Dialogs.TypesDialog(self.get_flow_graph().get_parent())
 		##################################################
 		# Param Modifications
 		##################################################
