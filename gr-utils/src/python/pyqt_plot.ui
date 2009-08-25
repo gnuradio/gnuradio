@@ -24,7 +24,7 @@
     <item row="1" column="0" >
      <widget class="QTabWidget" name="tabGroup" >
       <property name="currentIndex" >
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="timeTab" >
        <attribute name="title" >
@@ -80,9 +80,6 @@
             </widget>
            </item>
           </layout>
-          <zorder>formLayoutWidget</zorder>
-          <zorder>psdFFTComboBox</zorder>
-          <zorder>psdFFTSizeLabel</zorder>
          </widget>
         </item>
         <item>
@@ -125,9 +122,6 @@
             </widget>
            </item>
           </layout>
-          <zorder>specFFTLabel</zorder>
-          <zorder>specFFTComboBox</zorder>
-          <zorder>specFFTComboBox</zorder>
          </widget>
         </item>
         <item>

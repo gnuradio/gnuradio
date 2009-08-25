@@ -195,9 +195,15 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.spec = Qwt.QwtPlotSpectrogram()
         self.spec.setColorMap(colorMap)
         self.spec.attach(self.gui.specPlot)
-        self.spec.setContourLevels([0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5])
         self.spec.setDisplayMode(Qwt.QwtPlotSpectrogram.ImageMode, True)
         self.spec.setData(self.specdata)
+
+        self.rightAxis = self.gui.specPlot.axisWidget(Qwt.QwtPlot.yRight)
+        self.rightAxis.setTitle("Magnitude (dBm)")
+        self.rightAxis.setColorBarEnabled(True)
+        self.rightAxis.setColorMap(self.spec.data().range(),
+                                   self.spec.colorMap())
+        self.gui.specPlot.enableAxis(Qwt.QwtPlot.yRight)
 
         # Set up initial color scheme
         self.color_modes["Blue on Black"]()
@@ -488,13 +494,21 @@ class gr_plot_qt(QtGui.QMainWindow):
         # since this is taken care of in the SpectrogramData class
         self.specdata.set_data(self.spec_f, self.spec_t, self.iq_spec)
 
+        # Set the color map based on the new data
+        self.rightAxis.setColorMap(self.spec.data().range(),
+                                   self.spec.colorMap())
+
+        # Set the new axis base; include right axis for the intenisty color bar
         self.gui.specPlot.setAxisScale(self.gui.specPlot.xBottom,
                                        min(self.spec_f),
                                        max(self.spec_f))
         self.gui.specPlot.setAxisScale(self.gui.specPlot.yLeft,
                                        min(self.spec_t),
                                        max(self.spec_t))
-
+        self.gui.specPlot.setAxisScale(self.gui.specPlot.yRight, 
+                                       self.iq_spec.min(),
+                                       self.iq_spec.max())
+ 
         # Set the zoomer base to unzoom to the new axis
         self.specZoomer.setZoomBase()
 

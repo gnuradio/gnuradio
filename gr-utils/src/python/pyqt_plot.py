@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_plot.ui'
 #
-# Created: Tue Aug 25 15:28:55 2009
+# Created: Tue Aug 25 18:18:14 2009
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -175,7 +175,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_File.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabGroup.setCurrentIndex(2)
+        self.tabGroup.setCurrentIndex(0)
         QtCore.QObject.connect(self.action_exit, QtCore.SIGNAL("activated()"), MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
