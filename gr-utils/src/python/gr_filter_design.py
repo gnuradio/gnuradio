@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+import sys, os
+from optparse import OptionParser
+from gnuradio import gr, blks2, eng_notation
+
 try:
     import scipy
     from scipy import fftpack
@@ -7,14 +11,24 @@ except ImportError:
     print "Please install SciPy to run this script (http://www.scipy.org/)"
     raise SystemExit, 1
 
-import sys, os
-from PyQt4 import Qt, QtCore, QtGui
-import PyQt4.Qwt5 as Qwt
-from optparse import OptionParser
-from gnuradio import gr, blks2, eng_notation
-from scipy import fftpack
+try:
+    from PyQt4 import Qt, QtCore, QtGui
+except ImportError:
+    print "Please install PyQt4 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)"
+    raise SystemExit, 1
 
-from pyqt_filter import Ui_MainWindow
+try:
+    import PyQt4.Qwt5 as Qwt
+except ImportError:
+    print "Please install PyQwt5 to run this script (http://pyqwt.sourceforge.net/)"
+    raise SystemExit, 1
+
+try:
+    from pyqt_filter import Ui_MainWindow
+except ImportError:
+    print "Could not import from pyqt_filter. Please build with \"pyuic4 pyqt_filter.ui -o pyqt_filter.py\""
+    raise SystemExit, 1
+
 
 class gr_plot_filter(QtGui.QMainWindow):
     def __init__(self, qapp, options):
