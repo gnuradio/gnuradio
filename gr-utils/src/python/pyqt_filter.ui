@@ -157,7 +157,7 @@
        <item>
         <widget class="QStackedWidget" name="filterTypeWidget">
          <property name="currentIndex">
-          <number>2</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="firlpfPage">
           <layout class="QFormLayout" name="formLayout">
@@ -636,10 +636,22 @@
   <tabstop>bpfTransitionEdit</tabstop>
   <tabstop>bpfStopBandAttenEdit</tabstop>
   <tabstop>bpfPassBandRippleEdit</tabstop>
+  <tabstop>startofBnfStopBandEdit</tabstop>
+  <tabstop>endofBnfStopBandEdit</tabstop>
+  <tabstop>bnfTransitionEdit</tabstop>
+  <tabstop>bnfStopBandAttenEdit</tabstop>
+  <tabstop>bnfPassBandRippleEdit</tabstop>
   <tabstop>endofHpfStopBandEdit</tabstop>
   <tabstop>startofHpfPassBandEdit</tabstop>
   <tabstop>hpfStopBandAttenEdit</tabstop>
   <tabstop>hpfPassBandRippleEdit</tabstop>
+  <tabstop>rrcSymbolRateEdit</tabstop>
+  <tabstop>rrcAlphaEdit</tabstop>
+  <tabstop>rrcNumTapsEdit</tabstop>
+  <tabstop>gausSymbolRateEdit</tabstop>
+  <tabstop>gausBTEdit</tabstop>
+  <tabstop>gausNumTapsEdit</tabstop>
+  <tabstop>nfftEdit</tabstop>
   <tabstop>designButton</tabstop>
   <tabstop>tabGroup</tabstop>
  </tabstops>
