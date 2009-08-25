@@ -26,7 +26,9 @@ class SpectrogramData(Qwt.QwtRasterData):
         self.sp = data
         self.freq = xfreq
         self.time = ytime
-        boundingBox = Qt.QRectF(0, 0, self.freq.size, self.time.size)
+        boundingBox = Qt.QRectF(self.freq.min(), self.time.min(),
+                                self.freq.max() - self.freq.min(),
+                                self.time.max() - self.time.min())
         self.setBoundingRect(boundingBox)
 
     def rasterHint(self, rect):
@@ -40,10 +42,9 @@ class SpectrogramData(Qwt.QwtRasterData):
         return Qwt.QwtDoubleInterval(self.sp.min(), self.sp.max())
 
     def value(self, x, y):
-        #print x, y
-        x = int(x)
-        y = int(y)
-        return self.sp[x][y-1]
+        f = int(self.freq.searchsorted(x))
+        t = int(self.time.searchsorted(y))
+        return self.sp[f][t-1]
 
 
 class gr_plot_qt(QtGui.QMainWindow):
@@ -68,6 +69,8 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.gui.timePlot.setAxisTitle(self.gui.timePlot.yLeft, "Amplitude (V)")
         self.gui.freqPlot.setAxisTitle(self.gui.freqPlot.xBottom, "Frequency (Hz)")
         self.gui.freqPlot.setAxisTitle(self.gui.freqPlot.yLeft, "Magnitude (dB)")
+        self.gui.specPlot.setAxisTitle(self.gui.specPlot.xBottom, "Frequency (Hz)")
+        self.gui.specPlot.setAxisTitle(self.gui.specPlot.yLeft, "Time (sec)")
 
         # Set up FFT size combo box
         self.fftsizes = ["128", "256", "512", "1024", "2048",
@@ -199,6 +202,7 @@ class gr_plot_qt(QtGui.QMainWindow):
         # Set up initial color scheme
         self.color_modes["Blue on Black"]()
 
+        # Connect a signal for when the sample rate changes
         self.set_sample_rate(self.sample_rate)
         self.connect(self.gui.sampleRateLineEdit,
                      Qt.SIGNAL("editingFinished()"),
@@ -338,6 +342,7 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.get_specgram()
         self.update_time_curves()
         self.update_psd_curves()
+        self.update_specgram_curves()
 
     def set_file_pos_box(self, start, end):
         tstart = start / self.sample_rate
@@ -482,6 +487,13 @@ class gr_plot_qt(QtGui.QMainWindow):
         # We don't have to reset the data for the speccurve here
         # since this is taken care of in the SpectrogramData class
         self.specdata.set_data(self.spec_f, self.spec_t, self.iq_spec)
+
+        self.gui.specPlot.setAxisScale(self.gui.specPlot.xBottom,
+                                       min(self.spec_f),
+                                       max(self.spec_f))
+        self.gui.specPlot.setAxisScale(self.gui.specPlot.yLeft,
+                                       min(self.spec_t),
+                                       max(self.spec_t))
 
         # Set the zoomer base to unzoom to the new axis
         self.specZoomer.setZoomBase()
