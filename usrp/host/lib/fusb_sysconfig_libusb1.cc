@@ -25,7 +25,7 @@
 
 static const int MAX_BLOCK_SIZE = 16 * 1024;		// hard limit
 static const int DEFAULT_BLOCK_SIZE =   4 * 1024;
-static const int FUSB_BUFFER_SIZE = 2 * (1L << 20);	// 2 MB
+static const int FUSB_BUFFER_SIZE = 1 * (1L << 20);	// 1 MB
 
 struct libusb_context;
 

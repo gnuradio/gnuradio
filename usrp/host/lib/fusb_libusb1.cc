@@ -268,8 +268,18 @@ bool
 fusb_devhandle_libusb1::_reap (bool ok_to_block_p)
 {
   int ret;
+  struct timeval tv;
 
-  if ((ret = libusb_handle_events(d_ctx)) < 0) {
+  if (ok_to_block_p) {
+    tv.tv_sec = 2;
+    tv.tv_usec =  0;
+  }
+  else {
+    tv.tv_sec = 0;
+    tv.tv_usec =  0;
+  }
+ 
+  if ((ret = libusb_handle_events_timeout(d_ctx, &tv)) < 0) {
     fprintf (stderr, "fusb::_reap libusb_handle_events()\n");
     return false;
   }
@@ -280,11 +290,6 @@ fusb_devhandle_libusb1::_reap (bool ok_to_block_p)
 void
 fusb_devhandle_libusb1::_wait_for_completion ()
 {
-
-  int ret;
-  struct timeval tv;
-  tv.tv_sec = 1;
-  tv.tv_usec =  0;
 
   while (!d_pending_rqsts.empty ()) 
     if (!_reap(true)) 
