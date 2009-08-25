@@ -128,6 +128,9 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.phasecurve.setPen(Qt.QPen(blueBrush, 2))
         self.groupcurve.setPen(Qt.QPen(blueBrush, 2))
         
+
+        self.gui.nTapsEdit.setText("0")
+
         self.filterWindows = {"Hamming Window" : gr.firdes.WIN_HAMMING,
                               "Hann Window" : gr.firdes.WIN_HANN,
                               "Blackman Window" : gr.firdes.WIN_BLACKMAN,
@@ -217,14 +220,15 @@ class gr_plot_filter(QtGui.QMainWindow):
                 taps,r = designer[ftype](fs, gain, wintype)
 
             if(r):
-                print "Number of taps: ", len(taps)
-
                 self.taps = scipy.array(taps)
                 self.get_fft(fs, self.taps, self.nfftpts)
                 self.update_time_curves()
                 self.update_freq_curves()
                 self.update_phase_curves()
                 self.update_group_curves()
+
+                self.gui.nTapsEdit.setText(Qt.QString("%1").arg(self.taps.size))
+
 
     # Filter design functions using a window
     def design_win_lpf(self, fs, gain, wintype):
