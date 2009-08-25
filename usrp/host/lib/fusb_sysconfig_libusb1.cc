@@ -27,10 +27,12 @@ static const int MAX_BLOCK_SIZE = 16 * 1024;		// hard limit
 static const int DEFAULT_BLOCK_SIZE =   4 * 1024;
 static const int FUSB_BUFFER_SIZE = 2 * (1L << 20);	// 2 MB
 
+struct libusb_context;
+
 fusb_devhandle *
-fusb_sysconfig::make_devhandle (libusb_device_handle *udh)
+fusb_sysconfig::make_devhandle (libusb_device_handle *udh, libusb_context *ctx)
 {
-  return new fusb_devhandle_libusb1 (udh);
+  return new fusb_devhandle_libusb1 (udh, ctx);
 }
 	
 int fusb_sysconfig::max_block_size ()

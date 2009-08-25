@@ -43,12 +43,16 @@ enum usrp_load_status_t { ULS_ERROR = 0, ULS_OK, ULS_ALREADY_LOADED };
 
 struct libusb_device_handle;
 struct libusb_device;
+struct libusb_context;
 
 /*!
  * \brief initialize libusb; probe busses and devices.
- * Safe to call more than once.
+ * If new_context is set to true, initiate and returns new libusb_context.
+ * If new_context is set to false, intiate default context if not already
+ * initiated and return NULL. It is NOT safe to call more than once with
+ * new_context set to true since a new context is initiated each time.
  */
-void usrp_one_time_init ();
+libusb_context* usrp_one_time_init (bool new_context);
 
 /*
  * force a rescan of the buses and devices
@@ -65,7 +69,7 @@ void usrp_rescan ();
  *   configured USRP (firmware loaded)
  *   unconfigured Cypress FX2 (only if fx2_ok_p is true)
  */
-struct libusb_device *usrp_find_device (int nth, bool fx2_ok_p = false);
+struct libusb_device *usrp_find_device (int nth, bool fx2_ok_p = false, libusb_context *ctx = NULL);
 
 bool usrp_usrp_p (struct libusb_device *q);		//< is this a USRP
 bool usrp_usrp0_p (struct libusb_device *q);		//< is this a USRP Rev 0
@@ -119,7 +123,7 @@ usrp_load_firmware (struct libusb_device_handle *udh, const char *filename, bool
  * then rescans the busses and devices.
  */
 usrp_load_status_t
-usrp_load_firmware_nth (int nth, const char *filename, bool force);
+usrp_load_firmware_nth (int nth, const char *filename, bool force, libusb_context *ctx);
 
 /*!
  * \brief load fpga configuration bitstream
@@ -134,7 +138,8 @@ usrp_load_fpga (struct libusb_device_handle *udh, const char *filename, bool for
  */
 bool usrp_load_standard_bits (int nth, bool force,
 			      const std::string fpga_filename = "",
-			      const std::string firmware_filename = "");
+			      const std::string firmware_filename = "",
+			      libusb_context *ctx = NULL);
 
 /*!
  * \brief copy the given \p hash into the USRP hash slot \p which.

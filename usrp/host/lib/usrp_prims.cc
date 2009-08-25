@@ -103,15 +103,30 @@ get_proto_filename(const std::string user_filename, const char *env_var, const c
 
 static void power_down_9862s (struct libusb_device_handle *udh);
 
-void
-usrp_one_time_init ()
+libusb_context *
+usrp_one_time_init (bool new_context)
 {
-  static bool first = true;
 
-  if (first){
+  static bool first = true;
+  libusb_context *ctx = NULL;
+  int ret;
+
+  // On first call create default context in addition to any new requested
+  // context. The default context is probably useless in this form, but keep
+  // it for now due to compatibility reasons.
+
+  if (first) {
     first = false;
-    libusb_init (NULL);			// usb library init
+    if ((ret = libusb_init (NULL)) < 0)
+      fprintf (stderr, "usrp: libusb_init failed %i\n", ret);
   }
+
+  if (new_context) {
+    if ((ret = libusb_init (&ctx)) < 0)
+      fprintf (stderr, "usrp: libusb_init failed %i\n", ret);
+  }
+
+  return ctx;
 }
 
 void
@@ -204,16 +219,17 @@ usrp_configured_usrp_p (struct libusb_device *q)
 // ----------------------------------------------------------------
 
 struct libusb_device *
-usrp_find_device (int nth, bool fx2_ok_p)
+usrp_find_device (int nth, bool fx2_ok_p, libusb_context *ctx)
 {
   libusb_device **list;
 
   struct libusb_device *q;
   int	 n_found = 0;
 
-  usrp_one_time_init ();
- 
-  size_t cnt = libusb_get_device_list(NULL, &list);
+//usrp_one_time_init (false);
+  assert (ctx != NULL);
+
+  size_t cnt = libusb_get_device_list(ctx, &list);
   size_t i = 0;
 
   if (cnt < 0)
@@ -228,7 +244,12 @@ usrp_find_device (int nth, bool fx2_ok_p)
     }
   }
 
+/*
+ * The list needs to be freed. Right just release it if nothing is found.
+ */
+
   libusb_free_device_list(list, 1);
+
   return 0;	// not found
 }
 
@@ -727,9 +748,10 @@ usrp_load_fpga (struct libusb_device_handle *udh,
 }
 
 static libusb_device_handle *
-open_nth_cmd_interface (int nth)
+open_nth_cmd_interface (int nth, libusb_context *ctx)
 {
-  struct libusb_device *udev = usrp_find_device (nth);
+
+  struct libusb_device *udev = usrp_find_device (nth, false, ctx);
   if (udev == 0){
     fprintf (stderr, "usrp: failed to find usrp[%d]\n", nth);
     return 0;
@@ -777,8 +799,9 @@ mdelay (int millisecs)
 }
 
 usrp_load_status_t
-usrp_load_firmware_nth (int nth, const char *filename, bool force){
-  struct libusb_device_handle *udh = open_nth_cmd_interface (nth);
+usrp_load_firmware_nth (int nth, const char *filename, bool force, libusb_context *ctx)
+{
+  struct libusb_device_handle *udh = open_nth_cmd_interface (nth, ctx);
   if (udh == 0)
     return ULS_ERROR;
 
@@ -839,16 +862,19 @@ load_status_msg (usrp_load_status_t s, const char *type, const char *filename)
 bool
 usrp_load_standard_bits (int nth, bool force,
 			 const std::string fpga_filename,
-			 const std::string firmware_filename)
+			 const std::string firmware_filename,
+			 libusb_context *ctx)
 {
   usrp_load_status_t 	s;
   const char		*filename;
   const char		*proto_filename;
   int hw_rev;
 
+  assert (ctx != NULL);
+
   // first, figure out what hardware rev we're dealing with
   {
-    struct libusb_device *udev = usrp_find_device (nth);
+    struct libusb_device *udev = usrp_find_device (nth, false, ctx);
     if (udev == 0){
       fprintf (stderr, "usrp: failed to find usrp[%d]\n", nth);
       return false;
@@ -865,8 +891,7 @@ usrp_load_standard_bits (int nth, bool force,
     fprintf (stderr, "Can't find firmware: %s\n", proto_filename);
     return false;
   }
-
-  s = usrp_load_firmware_nth (nth, filename, force);
+  s = usrp_load_firmware_nth (nth, filename, force, ctx);
   load_status_msg (s, "firmware", filename);
 
   if (s == ULS_ERROR)
@@ -885,8 +910,7 @@ usrp_load_standard_bits (int nth, bool force,
     fprintf (stderr, "Can't find fpga bitstream: %s\n", proto_filename);
     return false;
   }
-
-  struct libusb_device_handle *udh = open_nth_cmd_interface (nth);
+  struct libusb_device_handle *udh = open_nth_cmd_interface (nth, ctx);
   if (udh == 0)
     return false;
   

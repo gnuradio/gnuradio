@@ -27,6 +27,8 @@
 #include <list>
 
 struct libusb_transfer;
+struct libusb_context;
+
 class fusb_ephandle_libusb1;
 
 /*!
@@ -35,7 +37,8 @@ class fusb_ephandle_libusb1;
 class fusb_devhandle_libusb1 : public fusb_devhandle
 {
 private:
-  std::list<libusb_transfer*>	d_pending_rqsts;
+  std::list<libusb_transfer*>	 d_pending_rqsts;
+  libusb_context		*d_ctx;
 
   void pending_add (struct libusb_transfer *lut);
   struct libusb_transfer * pending_get ();
@@ -44,7 +47,7 @@ private:
 
 public:
   // CREATORS
-  fusb_devhandle_libusb1 (libusb_device_handle *udh);
+  fusb_devhandle_libusb1 (libusb_device_handle *udh, libusb_context *ctx);
   virtual ~fusb_devhandle_libusb1 ();
 
   // MANIPULATORS
@@ -54,6 +57,7 @@ public:
   bool _submit_lut (libusb_transfer *);
   bool _cancel_lut (libusb_transfer *);
   void _cancel_pending_rqsts (fusb_ephandle_libusb1 *eph);
+  bool _reap (bool ok_to_block_p);
   void _wait_for_completion ();
 
   // accessors to work from callback context

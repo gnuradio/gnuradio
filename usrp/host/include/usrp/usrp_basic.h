@@ -66,6 +66,7 @@ protected:
 
 protected:
   struct libusb_device_handle	*d_udh;
+  struct libusb_context		*d_ctx;
   int				 d_usb_data_rate;	// bytes/sec
   int				 d_bytes_per_poll;	// how often to poll for overruns
   bool				 d_verbose;

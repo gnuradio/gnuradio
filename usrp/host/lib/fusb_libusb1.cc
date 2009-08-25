@@ -124,8 +124,9 @@ alloc_lut (fusb_ephandle_libusb1 *self, int buffer_length, int endpoint,
 // 				device handle
 // ------------------------------------------------------------------------
 
-fusb_devhandle_libusb1::fusb_devhandle_libusb1 (libusb_device_handle *udh)
-  : fusb_devhandle (udh), d_teardown (false)
+fusb_devhandle_libusb1::fusb_devhandle_libusb1 (libusb_device_handle *udh,
+                                                libusb_context *ctx)
+  : fusb_devhandle (udh), d_ctx (ctx), d_teardown (false)
 {
   // that's it 
 }
@@ -258,6 +259,24 @@ fusb_devhandle_libusb1::_cancel_lut (libusb_transfer *lut)
 
 }
 
+/*
+ * Reimplementing _reap for context use and compatibiliy with libusb-0.12.
+ * Returns false on error, true otherwise.
+ */
+
+bool
+fusb_devhandle_libusb1::_reap (bool ok_to_block_p)
+{
+  int ret;
+
+  if ((ret = libusb_handle_events(d_ctx)) < 0) {
+    fprintf (stderr, "fusb::_reap libusb_handle_events()\n");
+    return false;
+  }
+  
+  return true;
+}
+
 void
 fusb_devhandle_libusb1::_wait_for_completion ()
 {
@@ -267,17 +286,9 @@ fusb_devhandle_libusb1::_wait_for_completion ()
   tv.tv_sec = 1;
   tv.tv_usec =  0;
 
-  // The regular libusb_handle_events sets a hardcoded timeout of 2
-  // seconds. Most of these calls should be changed to appropriate block / non-
-  // blocking version using libusb_handle_events_timeout. This was just a test
-  // usage. 
-
-  while (!d_pending_rqsts.empty ()) {
-    if ((ret = libusb_handle_events_timeout(NULL, &tv)) < 0) {
-      fprintf (stderr, "fusb: libusb_handle_events error %d\n", ret);
-      break;
-    }
-  }
+  while (!d_pending_rqsts.empty ()) 
+    if (!_reap(true)) 
+      break; 
 
 }
 
@@ -346,7 +357,6 @@ fusb_ephandle_libusb1::~fusb_ephandle_libusb1 ()
 bool
 fusb_ephandle_libusb1::start ()
 {
-
   if (d_started)
     return true;
 
@@ -390,12 +400,7 @@ fusb_ephandle_libusb1::stop ()
   }
 
   d_devhandle->_cancel_pending_rqsts (this);
-
-  // Do work, reap transfers, etc. 
-  if (libusb_handle_events(NULL) < 0) { 
-    perror ("fusb::libusb_handle_events");
-    return false;
-  }
+  d_devhandle->_reap (false);
 
   while (1) {
     libusb_transfer *lut;
@@ -405,15 +410,13 @@ fusb_ephandle_libusb1::stop ()
     if (d_free_list.size () == (unsigned) d_nblocks)
       break;
 
-    if (libusb_handle_events(NULL) < 0) {
-      perror ("fusb::libusb_handle_events");
-      return false;
-    }
+    if (!d_devhandle->_reap(true))
+      break;
   }
 
   d_started = false;
-  return true;
 
+  return true;
 }
 
 // ------------------------------------------------------------------------
@@ -425,7 +428,6 @@ fusb_ephandle_libusb1::stop ()
 int
 fusb_ephandle_libusb1::write (const void *buffer, int nbytes)
 {
-
   if (!d_started)	// doesn't matter here, but keeps semantics constant
     return -1;
   
@@ -456,7 +458,7 @@ fusb_ephandle_libusb1::write (const void *buffer, int nbytes)
     d_write_work_in_progress = 0;
   }
 
-  return nbytes;
+  return n;
 }
 
 #else
@@ -515,8 +517,8 @@ fusb_ephandle_libusb1::get_write_work_in_progress ()
       return lut;
     }
 
-    // Do work, reap transfers, etc. 
-    libusb_handle_events(NULL);
+    if (!d_devhandle->_reap (true))
+      return 0;
   }
 }
 
@@ -603,10 +605,9 @@ fusb_ephandle_libusb1::reload_read_buffer ()
 
   while (1) {
 
-    while ((lut = completed_list_get ()) == 0 ) {
-      if (libusb_handle_events(NULL) < 0) 
-        fprintf (stderr, "fusb: libusb_handle_events\n");
-    }
+    while ((lut = completed_list_get ()) == 0 ) 
+      if (!d_devhandle->_reap(true))
+        return false; 
 
     if (lut->status != LIBUSB_TRANSFER_COMPLETED) {
       fprintf (stderr, "fust: (rd status %d) %s\n", lut->status, 

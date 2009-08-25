@@ -108,7 +108,7 @@ usrp_basic::usrp_basic (int which_board,
 			open_interface (struct libusb_device *dev),
 			const std::string fpga_filename,
 			const std::string firmware_filename)
-  : d_udh (0),
+  : d_udh (0), d_ctx (0),
     d_usb_data_rate (16000000),	// SWAG, see below
     d_bytes_per_poll ((int) (POLLING_INTERVAL * d_usb_data_rate)),
     d_verbose (false), d_fpga_master_clock_freq(64000000), d_db(2)
@@ -125,12 +125,12 @@ usrp_basic::usrp_basic (int which_board,
    */
   memset (d_fpga_shadows, 0, sizeof (d_fpga_shadows));
 
-  usrp_one_time_init ();
+  d_ctx = usrp_one_time_init(true);
 
-  if (!usrp_load_standard_bits (which_board, false, fpga_filename, firmware_filename))
+  if (!usrp_load_standard_bits (which_board, false, fpga_filename, firmware_filename, d_ctx))
     throw std::runtime_error ("usrp_basic/usrp_load_standard_bits");
 
-  struct libusb_device *dev = usrp_find_device (which_board);
+  struct libusb_device *dev = usrp_find_device (which_board, false, d_ctx);
   if (dev == 0){
     fprintf (stderr, "usrp_basic: can't find usrp[%d]\n", which_board);
     throw std::runtime_error ("usrp_basic/usrp_find_device");
@@ -153,6 +153,7 @@ usrp_basic::usrp_basic (int which_board,
 
   _write_fpga_reg (FR_MODE, 0);		// ensure we're in normal mode
   _write_fpga_reg (FR_DEBUG_EN, 0);	// disable debug outputs
+
 }
 
 void
@@ -175,12 +176,11 @@ usrp_basic::~usrp_basic ()
   if (d_udh)
     libusb_close (d_udh);
 
-  // There's no reference count on the number of times libusb is initialized.
-  // libusb_init can be called multiple times, but libusb_exit shuts down
-  // everything. Leave libusb running for now. Need to add a count so that it
-  // exits nicely. 
+  // Each object should be running in it's own context. If running in default
+  // (NULL) context then something went wrong. 
 
-  //libusb_exit (NULL);
+  assert (d_ctx != NULL);
+  libusb_exit (d_ctx);
 }
 
 void
@@ -819,7 +819,7 @@ usrp_basic_rx::usrp_basic_rx (int which_board, int fusb_block_size, int fusb_nbl
   if (fusb_nblocks == 0)
     fusb_nblocks = std::max (1, FUSB_BUFFER_SIZE / fusb_block_size);
 
-  d_devhandle = fusb_sysconfig::make_devhandle (d_udh);
+  d_devhandle = fusb_sysconfig::make_devhandle (d_udh, d_ctx);
   d_ephandle = d_devhandle->make_ephandle (USRP_RX_ENDPOINT, true,
 					   fusb_block_size, fusb_nblocks);
 
@@ -870,7 +870,7 @@ usrp_basic_rx::start ()
     fprintf (stderr, "usrp_basic_rx: set_rx_enable failed\n");
     return false;
   }
-  
+ 
   return true;
 }
 
@@ -1222,7 +1222,7 @@ usrp_basic_tx::usrp_basic_tx (int which_board, int fusb_block_size, int fusb_nbl
   if (fusb_nblocks == 0)
     fusb_nblocks = std::max (1, FUSB_BUFFER_SIZE / fusb_block_size);
 
-  d_devhandle = fusb_sysconfig::make_devhandle (d_udh);
+  d_devhandle = fusb_sysconfig::make_devhandle (d_udh, d_ctx);
   d_ephandle = d_devhandle->make_ephandle (USRP_TX_ENDPOINT, false,
 					   fusb_block_size, fusb_nblocks);
 

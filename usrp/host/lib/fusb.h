@@ -27,6 +27,7 @@
 
 
 struct  libusb_device_handle;
+struct 	libusb_context;
 class   fusb_ephandle;
 
 /*!
@@ -116,7 +117,8 @@ public:
   /*!
    * \brief returns fusb_devhandle or throws if trouble
    */
-  static fusb_devhandle *make_devhandle (libusb_device_handle *udh);
+  static fusb_devhandle *make_devhandle (libusb_device_handle *udh,
+                                         libusb_context *ctx);
 
   /*!
    * \brief Returns max block size in bytes (hard limit).
