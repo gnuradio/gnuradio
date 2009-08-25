@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter.ui'
 #
-# Created: Mon Aug 24 23:10:31 2009
-#      by: PyQt4 UI code generator 4.4.4
+# Created: Tue Aug 25 11:13:57 2009
+#      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -316,7 +316,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.tabGroup, 1, 1, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1124, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1124, 24))
         self.menubar.setObjectName("menubar")
         self.menu_File = QtGui.QMenu(self.menubar)
         self.menu_File.setObjectName("menu_File")

@@ -64,14 +64,12 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.nfftpts = int(10000)
         self.gui.nfftEdit.setText(Qt.QString("%1").arg(self.nfftpts))
 
-        self.gui.lpfPassBandRippleLabel.setVisible(False)
-        self.gui.lpfPassBandRippleEdit.setVisible(False)
-        self.gui.bpfPassBandRippleLabel.setVisible(False)
-        self.gui.bpfPassBandRippleEdit.setVisible(False)
-        self.gui.bnfPassBandRippleLabel.setVisible(False)
-        self.gui.bnfPassBandRippleEdit.setVisible(False)
-        self.gui.hpfPassBandRippleLabel.setVisible(False)
-        self.gui.hpfPassBandRippleEdit.setVisible(False)
+        self.firFilters = ("Low Pass", "Band Pass", "Complex Band Pass", "Band Notch",
+                           "High Pass", "Root Raised Cosine", "Gaussian")
+        self.optFilters = ("Low Pass", "Band Pass", "Complex Band Pass",
+                           "Band Notch", "High Pass")
+        
+        self.set_windowed()
                 
         # Initialize to LPF
         self.gui.filterTypeWidget.setCurrentWidget(self.gui.firlpfPage)
@@ -137,8 +135,11 @@ class gr_plot_filter(QtGui.QMainWindow):
         # Set up pen for colors and line width
         blue = QtGui.qRgb(0x00, 0x00, 0xFF)
         blueBrush = Qt.QBrush(Qt.QColor(blue))
+        red = QtGui.qRgb(0xFF, 0x00, 0x00)
+        redBrush = Qt.QBrush(Qt.QColor(red))
         self.freqcurve.setPen(Qt.QPen(blueBrush, 2))
         self.rcurve.setPen(Qt.QPen(blueBrush, 2))
+        self.icurve.setPen(Qt.QPen(redBrush, 2))
         self.phasecurve.setPen(Qt.QPen(blueBrush, 2))
         self.groupcurve.setPen(Qt.QPen(blueBrush, 2))
 
@@ -212,6 +213,9 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.design()
 
     def set_equiripple(self):
+        # Stop sending the signal for this function
+        self.gui.filterTypeComboBox.blockSignals(True)
+        
         self.equiripple = True
         self.gui.lpfPassBandRippleLabel.setVisible(True)
         self.gui.lpfPassBandRippleEdit.setVisible(True)
@@ -221,8 +225,30 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.bnfPassBandRippleEdit.setVisible(True)
         self.gui.hpfPassBandRippleLabel.setVisible(True)
         self.gui.hpfPassBandRippleEdit.setVisible(True)
+
+        # Save current type and repopulate the combo box for
+        # filters this window type can handle
+        currenttype = self.gui.filterTypeComboBox.currentText()
+        items = self.gui.filterTypeComboBox.count()
+        for i in xrange(items):
+            self.gui.filterTypeComboBox.removeItem(0)
+        self.gui.filterTypeComboBox.addItems(self.optFilters)
+
+        # If the last filter type was valid for this window type,
+        # go back to it; otherwise, reset
+        try:
+            index = self.optFilters.index(currenttype)
+            self.gui.filterTypeComboBox.setCurrentIndex(index)
+        except ValueError:
+            pass
+
+        # Tell gui its ok to start sending this signal again
+        self.gui.filterTypeComboBox.blockSignals(False)
         
     def set_windowed(self):
+        # Stop sending the signal for this function
+        self.gui.filterTypeComboBox.blockSignals(True)
+        
         self.equiripple = False
         self.gui.lpfPassBandRippleLabel.setVisible(False)
         self.gui.lpfPassBandRippleEdit.setVisible(False)
@@ -232,7 +258,26 @@ class gr_plot_filter(QtGui.QMainWindow):
         self.gui.bnfPassBandRippleEdit.setVisible(False)
         self.gui.hpfPassBandRippleLabel.setVisible(False)
         self.gui.hpfPassBandRippleEdit.setVisible(False)
-        
+
+        # Save current type and repopulate the combo box for
+        # filters this window type can handle
+        currenttype = self.gui.filterTypeComboBox.currentText()
+        items = self.gui.filterTypeComboBox.count()
+        for i in xrange(items):
+            self.gui.filterTypeComboBox.removeItem(0)
+        self.gui.filterTypeComboBox.addItems(self.firFilters)
+
+        # If the last filter type was valid for this window type,
+        # go back to it; otherwise, reset
+        try:
+            index = self.optFilters.index(currenttype)
+            self.gui.filterTypeComboBox.setCurrentIndex(index)
+        except ValueError:
+            pass
+
+        # Tell gui its ok to start sending this signal again
+        self.gui.filterTypeComboBox.blockSignals(False)
+
     def design(self):
         ret = True
         fs,r = self.gui.sampleRateEdit.text().toDouble()
