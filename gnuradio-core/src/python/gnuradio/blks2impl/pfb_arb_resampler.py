@@ -24,7 +24,7 @@ from gnuradio import gr
 
 class pfb_arb_resampler_ccf(gr.hier_block2):
     '''
-    Convinience wrapper for the polyphase filterbank arbitrary resampler.
+    Convenience wrapper for the polyphase filterbank arbitrary resampler.
 
     The block takes a single complex stream in and outputs a single complex
     stream out. As such, it requires no extra glue to handle the input/output
@@ -45,6 +45,5 @@ class pfb_arb_resampler_ccf(gr.hier_block2):
         self.connect(self, self.pfb)
         self.connect(self.pfb, self)
         
-        
-        
-        
+    def set_taps(self, taps):
+        self.pfb.set_taps(taps)

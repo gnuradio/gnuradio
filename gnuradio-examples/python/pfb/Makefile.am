@@ -29,3 +29,6 @@ dist_ourdata_SCRIPTS =		\
 	decimate.py		\
 	interpolate.py		\
 	fmtest.py
+
+dist_ourdata_DATA =		\
+	resampler_demo.grc
