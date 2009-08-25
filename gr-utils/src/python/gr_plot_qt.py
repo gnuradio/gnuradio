@@ -152,14 +152,20 @@ class gr_plot_qt(QtGui.QMainWindow):
 
     def open_file(self):
         filename = Qt.QFileDialog.getOpenFileName(self, "Open", ".")
-        print filename
-        self.initialize(filename)
+        if(filename != ""):
+            print filename
+            self.initialize(filename)
 
     def initialize(self, filename):
         self.hfile = open(filename, "r")
 
         self.setWindowTitle(("GNU Radio File Plot Utility: %s" % filename))
-        
+
+        self.gui.filePosStartLineEdit.setText("0")
+        self.gui.filePosStopLineEdit.setText("0")
+        self.gui.fileTimeStartLineEdit.setText("0")
+        self.gui.fileTimeStopLineEdit.setText("0")
+
         self.cur_start = 0
         self.cur_stop = self.block_length
 
@@ -168,6 +174,7 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.get_psd()
         self.gui.plotHBar.setSliderPosition(0)
         self.gui.plotHBar.setMaximum(self.signal_size)
+
 
         self.update_time_curves()
         self.update_psd_curves()
@@ -182,16 +189,24 @@ class gr_plot_qt(QtGui.QMainWindow):
         if(end > start):
             self.hfile.seek(start*self.sizeof_data, os.SEEK_SET)
             self.position = start
-            iq = scipy.fromfile(self.hfile, dtype=self.datatype,
-                                count=end-start)
-            if(len(iq) < (end-start)):
-                print "End of File"
-            else:
+            try:
+                iq = scipy.fromfile(self.hfile, dtype=self.datatype,
+                                    count=end-start)
+
+                if(len(iq) < (end-start)):
+                    end = len(iq)
+                    self.gui.filePosLengthLineEdit.setText(Qt.QString("%1").arg(end))
+                    self.gui.plotHBar.setMaximum(end)
+                    self.gui.plotHBar.setSingleStep(end)
+                    self.file_length_changed()
+
                 tstep = 1.0 / self.sample_rate
                 self.iq = iq
                 self.time = [tstep*(self.position + i) for i in xrange(len(self.iq))]
 
-            self.set_file_pos_box(start, end)
+                self.set_file_pos_box(start, end)
+            except MemoryError:
+                pass
         else:
             # Do we want to do anything about this?
             pass
@@ -296,6 +311,7 @@ class gr_plot_qt(QtGui.QMainWindow):
     def file_length_changed(self):
         start = self.gui.filePosStartLineEdit.text().toInt()
         length = self.gui.filePosLengthLineEdit.text().toInt()
+
         if((start[1] == True) and (length[1] == True)):
             self.cur_start = start[0]
             self.block_length = length[0]
