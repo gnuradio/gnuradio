@@ -266,8 +266,10 @@ fusb_devhandle_libusb1::_cancel_lut (libusb_transfer *lut)
  *
  * If ok_to_block_p is false then handle already pending events and return
  * immediately.
+ *
  * If ok_to_block_p is true then call libusb_handle_events_timeout with default
- * timeout value of 2 seconds, which returns on event arrival or timeout.
+ * timeout value of 2 seconds, which waits and returns on event arrival or
+ * timeout.
  */
 
 bool
@@ -285,7 +287,6 @@ fusb_devhandle_libusb1::_reap (bool ok_to_block_p)
     tv.tv_usec =  0;
   }
  
-
   if ((ret = libusb_handle_events_timeout(d_ctx, &tv)) < 0) {
     fprintf (stderr, "fusb::_reap libusb_handle_events() %i\n", ret);
     return false;
