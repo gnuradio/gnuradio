@@ -16,6 +16,36 @@ from gnuradio import eng_notation
 
 from pyqt_plot import Ui_MainWindow
 
+class SpectrogramData(Qwt.QwtRasterData):
+
+    def __init__(self, f, t):
+        Qwt.QwtArrayData.__init__(self, Qt.QRectF(0, 0, 0, 0))
+        self.sp = scipy.array([[0], [0]])
+
+    def set_data(self, xfreq, ytime, data):
+        self.sp = data
+        self.freq = xfreq
+        self.time = ytime
+        boundingBox = Qt.QRectF(0, 0, self.freq.size, self.time.size)
+        self.setBoundingRect(boundingBox)
+
+    def rasterHint(self, rect):
+        return Qt.QSize(self.sp.shape[0], self.sp.shape[1])
+        
+    def copy(self):
+        return self
+
+    def range(self):
+        
+        return Qwt.QwtDoubleInterval(self.sp.min(), self.sp.max())
+
+    def value(self, x, y):
+        #print x, y
+        x = int(x)
+        y = int(y)
+        return self.sp[x][y-1]
+
+
 class gr_plot_qt(QtGui.QMainWindow):
     def __init__(self, qapp, filename, options, parent=None):
         QtGui.QWidget.__init__(self, parent)
@@ -32,7 +62,7 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.datatype = scipy.complex64
         self.iq = list()
         self.time = list()
-        
+
         # Set up basic plot attributes
         self.gui.timePlot.setAxisTitle(self.gui.timePlot.xBottom, "Time (sec)")
         self.gui.timePlot.setAxisTitle(self.gui.timePlot.yLeft, "Amplitude (V)")
@@ -40,13 +70,21 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.gui.freqPlot.setAxisTitle(self.gui.freqPlot.yLeft, "Magnitude (dB)")
 
         # Set up FFT size combo box
-        self.gui.fftComboBox.addItems(["128", "256", "512", "1024", "2048",
-                                       "4096", "8192", "16384", "32768"])
-        pos = self.gui.fftComboBox.findText(Qt.QString("%1").arg(self.psdfftsize))
-        self.gui.fftComboBox.setCurrentIndex(pos)
-        self.connect(self.gui.fftComboBox,
+        self.fftsizes = ["128", "256", "512", "1024", "2048",
+                         "4096", "8192", "16384", "32768"]
+        self.gui.psdFFTComboBox.addItems(self.fftsizes)
+        self.gui.specFFTComboBox.addItems(self.fftsizes)
+        pos = self.gui.psdFFTComboBox.findText(Qt.QString("%1").arg(self.psdfftsize))
+        self.gui.psdFFTComboBox.setCurrentIndex(pos)
+        pos = self.gui.specFFTComboBox.findText(Qt.QString("%1").arg(self.specfftsize))
+        self.gui.specFFTComboBox.setCurrentIndex(pos)
+
+        self.connect(self.gui.psdFFTComboBox,
                      Qt.SIGNAL("activated (const QString&)"),
-                     self.fftComboBoxEdit)
+                     self.psdFFTComboBoxEdit)
+        self.connect(self.gui.specFFTComboBox,
+                     Qt.SIGNAL("activated (const QString&)"),
+                     self.specFFTComboBoxEdit)
 
         # Set up color scheme box
         self.color_modes = {"Black on White" : self.color_black_on_white,
@@ -73,6 +111,12 @@ class gr_plot_qt(QtGui.QMainWindow):
                                             Qwt.QwtPicker.PointSelection,
                                             Qwt.QwtPicker.AlwaysOn,
                                             self.gui.freqPlot.canvas())
+
+        self.specZoomer = Qwt.QwtPlotZoomer(self.gui.specPlot.xBottom,
+                                            self.gui.specPlot.yLeft,
+                                            Qwt.QwtPicker.PointSelection,
+                                            Qwt.QwtPicker.AlwaysOn,
+                                            self.gui.specPlot.canvas())
 
         self.picker = Qwt.QwtPlotPicker(self.gui.timePlot.xBottom,
                                         self.gui.timePlot.yLeft,
@@ -137,6 +181,21 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.psdcurve = Qwt.QwtPlotCurve("PSD")
         self.psdcurve.attach(self.gui.freqPlot)
 
+        # Set up specTab plot as a spectrogram
+        self.specdata = SpectrogramData(range(0, 10), range(0, 10))
+
+        colorMap = Qwt.QwtLinearColorMap(Qt.Qt.darkCyan, Qt.Qt.red)
+        colorMap.addColorStop(0.1, Qt.Qt.cyan)
+        colorMap.addColorStop(0.6, Qt.Qt.green)
+        colorMap.addColorStop(0.95, Qt.Qt.yellow)
+
+        self.spec = Qwt.QwtPlotSpectrogram()
+        self.spec.setColorMap(colorMap)
+        self.spec.attach(self.gui.specPlot)
+        self.spec.setContourLevels([0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5])
+        self.spec.setDisplayMode(Qwt.QwtPlotSpectrogram.ImageMode, True)
+        self.spec.setData(self.specdata)
+
         # Set up initial color scheme
         self.color_modes["Blue on Black"]()
 
@@ -172,12 +231,14 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.init_data_input()
         self.get_data(self.cur_start, self.cur_stop)
         self.get_psd()
+        self.get_specgram() 
         self.gui.plotHBar.setSliderPosition(0)
         self.gui.plotHBar.setMaximum(self.signal_size)
 
 
         self.update_time_curves()
         self.update_psd_curves()
+        self.update_specgram_curves()
 
     def init_data_input(self):
         self.hfile.seek(0, os.SEEK_END)
@@ -218,17 +279,34 @@ class gr_plot_qt(QtGui.QMainWindow):
                                 noverlap=self.psdfftsize/4.0,
                                 window=winpoints,
                                 scale_by_freq=False)
+
         self.iq_psd = 10.0*scipy.log10(abs(fftpack.fftshift(iq_psd)))
         self.freq = freq - self.sample_rate/2.0
 
+    def get_specgram(self):
+        winpoints = self.winfunc(self.specfftsize)
+        iq_spec, f, t = mlab.specgram(self.iq, Fs=self.sample_rate,
+                                      NFFT=self.specfftsize,
+                                      noverlap=self.specfftsize/4.0,
+                                      window=winpoints,
+                                      scale_by_freq=False)
+        
+        self.iq_spec = 10.0*scipy.log10(abs(iq_spec))
+        self.spec_f = f
+        self.spec_t = t
 
     def clickMe(self, qPoint):
         print qPoint.x()
 
-    def fftComboBoxEdit(self, fftSize):
+    def psdFFTComboBoxEdit(self, fftSize):
         self.psdfftsize = fftSize.toInt()[0]
         self.get_psd()
         self.update_psd_curves()
+
+    def specFFTComboBoxEdit(self, fftSize):
+        self.specfftsize = fftSize.toInt()[0]
+        self.get_specgram()
+        self.update_specgram_curves()
         
     def colorComboBoxEdit(self, colorSelection):
         colorstr = str(colorSelection.toAscii())
@@ -241,8 +319,10 @@ class gr_plot_qt(QtGui.QMainWindow):
 
         self.get_data(pos_start, pos_end)
         self.get_psd()
+        self.get_specgram()
         self.update_time_curves()
         self.update_psd_curves()
+        self.update_specgram_curves()
 
     def set_sample_rate(self, sr):
         self.sample_rate = sr
@@ -255,6 +335,7 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.set_file_pos_box(self.cur_start, self.cur_stop)
         self.get_data(self.cur_start, self.cur_stop)
         self.get_psd()
+        self.get_specgram()
         self.update_time_curves()
         self.update_psd_curves()
 
@@ -286,6 +367,7 @@ class gr_plot_qt(QtGui.QMainWindow):
 
             self.update_time_curves()
             self.update_psd_curves()
+            self.update_specgram_curves()
 
         # If there's a non-digit character, reset box
         else:
@@ -304,6 +386,7 @@ class gr_plot_qt(QtGui.QMainWindow):
 
             self.update_time_curves()
             self.update_psd_curves()
+            self.update_specgram_curves()
         # If there's a non-digit character, reset box
         else:
             self.set_file_pos_box(self.cur_start, self.cur_stop)
@@ -328,9 +411,11 @@ class gr_plot_qt(QtGui.QMainWindow):
 
             self.get_data(self.cur_start, self.cur_stop)
             self.get_psd()
+            self.get_specgram()
 
             self.update_time_curves()
             self.update_psd_curves()
+            self.update_specgram_curves()
         # If there's a non-digit character, reset box
         else:
             self.set_file_pos_box(self.cur_start, self.cur_stop)
@@ -352,9 +437,11 @@ class gr_plot_qt(QtGui.QMainWindow):
 
             self.get_data(self.cur_start, self.cur_stop)
             self.get_psd()
+            self.get_specgram()
 
             self.update_time_curves()
             self.update_psd_curves()
+            self.update_specgram_curves()
         # If there's a non-digit character, reset box
         else:
             self.set_file_pos_box(self.cur_start, self.cur_stop)
@@ -385,11 +472,21 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.gui.freqPlot.setAxisScale(self.gui.freqPlot.xBottom,
                                        min(self.freq),
                                        max(self.freq))
-
+                                       
         # Set the zoomer base to unzoom to the new axis
         self.freqZoomer.setZoomBase()
 
         self.gui.freqPlot.replot()
+
+    def update_specgram_curves(self):
+        # We don't have to reset the data for the speccurve here
+        # since this is taken care of in the SpectrogramData class
+        self.specdata.set_data(self.spec_f, self.spec_t, self.iq_spec)
+
+        # Set the zoomer base to unzoom to the new axis
+        self.specZoomer.setZoomBase()
+
+        self.gui.specPlot.replot()
 
     def tabChanged(self, index):
         self.gui.timePlot.replot()
@@ -497,7 +594,7 @@ def setup_options():
                       help="Set the sampler rate of the data [default=%default]")
     parser.add_option("", "--psd-size", type="int", default=2048,
                       help="Set the size of the PSD FFT [default=%default]")
-    parser.add_option("", "--spec-size", type="int", default=256,
+    parser.add_option("", "--spec-size", type="int", default=2048,
                       help="Set the size of the spectrogram FFT [default=%default]")
 
     return parser
