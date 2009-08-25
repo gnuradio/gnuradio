@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_filter.ui'
 #
-# Created: Mon Aug 24 23:01:33 2009
+# Created: Mon Aug 24 23:10:31 2009
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -332,7 +332,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menu_File.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.filterTypeWidget.setCurrentIndex(2)
+        self.filterTypeWidget.setCurrentIndex(0)
         self.tabGroup.setCurrentIndex(0)
         QtCore.QObject.connect(self.action_exit, QtCore.SIGNAL("activated()"), MainWindow.close)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -348,11 +348,23 @@ class Ui_MainWindow(object):
         MainWindow.setTabOrder(self.endofBpfPassBandEdit, self.bpfTransitionEdit)
         MainWindow.setTabOrder(self.bpfTransitionEdit, self.bpfStopBandAttenEdit)
         MainWindow.setTabOrder(self.bpfStopBandAttenEdit, self.bpfPassBandRippleEdit)
-        MainWindow.setTabOrder(self.bpfPassBandRippleEdit, self.endofHpfStopBandEdit)
+        MainWindow.setTabOrder(self.bpfPassBandRippleEdit, self.startofBnfStopBandEdit)
+        MainWindow.setTabOrder(self.startofBnfStopBandEdit, self.endofBnfStopBandEdit)
+        MainWindow.setTabOrder(self.endofBnfStopBandEdit, self.bnfTransitionEdit)
+        MainWindow.setTabOrder(self.bnfTransitionEdit, self.bnfStopBandAttenEdit)
+        MainWindow.setTabOrder(self.bnfStopBandAttenEdit, self.bnfPassBandRippleEdit)
+        MainWindow.setTabOrder(self.bnfPassBandRippleEdit, self.endofHpfStopBandEdit)
         MainWindow.setTabOrder(self.endofHpfStopBandEdit, self.startofHpfPassBandEdit)
         MainWindow.setTabOrder(self.startofHpfPassBandEdit, self.hpfStopBandAttenEdit)
         MainWindow.setTabOrder(self.hpfStopBandAttenEdit, self.hpfPassBandRippleEdit)
-        MainWindow.setTabOrder(self.hpfPassBandRippleEdit, self.designButton)
+        MainWindow.setTabOrder(self.hpfPassBandRippleEdit, self.rrcSymbolRateEdit)
+        MainWindow.setTabOrder(self.rrcSymbolRateEdit, self.rrcAlphaEdit)
+        MainWindow.setTabOrder(self.rrcAlphaEdit, self.rrcNumTapsEdit)
+        MainWindow.setTabOrder(self.rrcNumTapsEdit, self.gausSymbolRateEdit)
+        MainWindow.setTabOrder(self.gausSymbolRateEdit, self.gausBTEdit)
+        MainWindow.setTabOrder(self.gausBTEdit, self.gausNumTapsEdit)
+        MainWindow.setTabOrder(self.gausNumTapsEdit, self.nfftEdit)
+        MainWindow.setTabOrder(self.nfftEdit, self.designButton)
         MainWindow.setTabOrder(self.designButton, self.tabGroup)
 
     def retranslateUi(self, MainWindow):
