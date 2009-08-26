@@ -191,10 +191,10 @@ main (int argc, char **argv)
   const char *cmd = argv[optind++];
   nopts--;
 
-  usrp_one_time_init ();
+  libusb_context *ctx = usrp_one_time_init (true);
 
   
-  struct libusb_device *udev = usrp_find_device (which_board, fx2_ok_p);
+  struct libusb_device *udev = usrp_find_device (which_board, fx2_ok_p, ctx);
   if (udev == 0){
     fprintf (stderr, "%s: failed to find usrp[%d]\n", prog_name, which_board);
     exit (1);

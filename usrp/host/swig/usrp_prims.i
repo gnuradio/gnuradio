@@ -49,7 +49,7 @@ struct libusb_device;
  * \brief initialize libusb; probe busses and devices.
  * Safe to call more than once.
  */
-void usrp_one_time_init ();
+struct libusb_context *usrp_one_time_init (bool new_context);
 
 void usrp_rescan ();
 
@@ -63,7 +63,7 @@ void usrp_rescan ();
  *   configured USRP (firmware loaded)
  *   unconfigured Cypress FX2 (only if fx2_ok_p is true)
  */
-struct libusb_device *usrp_find_device (int nth, bool fx2_ok_p = false);
+struct libusb_device *usrp_find_device (int nth, bool fx2_ok_p = false, struct libusb_context *ctx);
 
 bool usrp_usrp_p (struct libusb_device *q);		//< is this a USRP
 bool usrp_usrp0_p (struct libusb_device *q);		//< is this a USRP Rev 0
@@ -116,7 +116,7 @@ usrp_load_firmware (struct libusb_device_handle *udh, const char *filename, bool
  * then rescans the busses and devices.
  */
 usrp_load_status_t
-usrp_load_firmware_nth (int nth, const char *filename, bool force);
+usrp_load_firmware_nth (int nth, const char *filename, bool force, libusb_context *ctx);
 
 /*!
  * \brief load fpga configuration bitstream
