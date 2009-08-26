@@ -9,20 +9,6 @@
 	<key>pad_sink</key>
 	<make></make>
 	<param>
-		<name>Mode</name>
-		<key>mode</key>
-		<value>hb</value>
-		<type>enum</type>
-		<option>
-			<name>Hierarchical</name>
-			<key>hb</key>
-		</option>
-		<option>
-			<name>Continuation</name>
-			<key>cont</key>
-		</option>
-	</param>
-	<param>
 		<name>Num Inputs</name>
 		<key>nports</key>
 		<value>1</value>
@@ -73,10 +59,6 @@
 		<nports>$nports</nports>
 	</sink>
 	<doc>
-Continuation Mode:
-The inputs of this block can be aliased by one or more pad source blocks.
-
-Hierarchical Mode:
 The inputs of this block will become the outputs to this flow graph when it is instantiated as a hierarchical block. \
 Limit one sink pad block per flow graph.
 	</doc>

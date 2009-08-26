@@ -154,6 +154,13 @@ class $(class_name)(gr.hier_block2):
 ##	The port name should be the id of the parent block.
 ##	However, port names for IO pads should be self.
 ########################################################
+#def make_port_name($port)
+	#if $port.get_parent().get_key().startswith('pad_')
+self#slurp
+	#else
+self.$port.get_parent().get_id()#slurp
+	#end if
+#end def
 #if $connections
 
 		$DIVIDER
@@ -161,36 +168,9 @@ class $(class_name)(gr.hier_block2):
 		$DIVIDER
 #end if
 #for $con in $connections
-	####################################################################
-	## Logic to extract source and sink
-	##   Special resolution logic for pad source in continuation mode
-	####################################################################
 	#set $source = $con.get_source()
 	#set $sink = $con.get_sink()
-	#if $source.get_parent().get_key() == 'pad_source' and $source.get_parent().get_param('mode').get_value() == 'cont'
-		#set $pad_sink_id = $source.get_parent().get_param('pad_sink_id').get_evaluated()
-		#set $pad_sink = filter(lambda b: b.get_id() == pad_sink_id, $blocks)[0]
-		#set $source = $pad_sink.get_sink($source.get_key()).get_connections()[0].get_source()
-	#end if
-	####################################################################
-	## Logic to extract source and sink names
-	####################################################################
-	#if $source.get_parent().get_key() == 'pad_source'
-		#set $source_name = 'self'
-	#else
-		#set $source_name = 'self.' + $source.get_parent().get_id()
-	#end if
-	#if $sink.get_parent().get_key() == 'pad_sink'
-		#set $sink_name = 'self'
-	#else
-		#set $sink_name = 'self.' + $sink.get_parent().get_id()
-	#end if
-	####################################################################
-	## Dont make a connection for continuation pad sinks!!!
-	####################################################################
-	#if not ($sink.get_parent().get_key() == 'pad_sink' and $sink.get_parent().get_param('mode').get_value() == 'cont')
-		self.connect(($source_name, $source.get_key()), ($sink_name, $sink.get_key()))
-	#end if
+		self.connect(($make_port_name($source), $source.get_key()), ($make_port_name($sink), $sink.get_key()))
 #end for
 
 ########################################################
