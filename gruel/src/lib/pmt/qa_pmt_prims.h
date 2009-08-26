@@ -40,10 +40,12 @@ class qa_pmt_prims : public CppUnit::TestCase {
   CPPUNIT_TEST(test_misc);
   CPPUNIT_TEST(test_dict);
   CPPUNIT_TEST(test_any);
+  CPPUNIT_TEST(test_msg_accepter);
   CPPUNIT_TEST(test_io);
   CPPUNIT_TEST(test_lists);
   CPPUNIT_TEST(test_serialize);
   CPPUNIT_TEST(test_sets);
+  CPPUNIT_TEST(test_sugar);
   CPPUNIT_TEST_SUITE_END();
 
  private:
@@ -59,10 +61,12 @@ class qa_pmt_prims : public CppUnit::TestCase {
   void test_misc();
   void test_dict();
   void test_any();
+  void test_msg_accepter();
   void test_io();
   void test_lists();
   void test_serialize();
   void test_sets();
+  void test_sugar();
 };
 
 #endif /* INCLUDED_QA_PMT_PRIMS_H */

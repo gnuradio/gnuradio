@@ -22,6 +22,7 @@
 #define INCLUDED_GRUEL_MSG_ACCEPTER_H
 
 #include <gruel/pmt.h>
+#include <boost/shared_ptr.hpp>
 
 namespace gruel {
 
@@ -43,6 +44,8 @@ namespace gruel {
      */
     virtual void post(pmt::pmt_t msg) = 0;
   };
+
+  typedef boost::shared_ptr<msg_accepter> msg_accepter_sptr;
 
 } /* namespace gruel */
 

@@ -23,7 +23,6 @@ include $(top_srcdir)/Makefile.common
 
 AM_CPPFLAGS = $(DEFINES) $(BOOST_CPPFLAGS) $(CPPUNIT_INCLUDES) $(GRUEL_INCLUDES) $(WITH_INCLUDES)
 
-TESTS = test_pmt
 
 noinst_LTLIBRARIES = libpmt.la
 
@@ -90,14 +89,6 @@ libpmt_qa_la_LIBADD = 			\
 	$(CPPUNIT_LIBS)			\
 	-lstdc++			
 
-noinst_PROGRAMS	=			\
-	test_pmt
-
-
-LIBPMTQA = libpmt-qa.la
-
-test_pmt_SOURCES = test_pmt.cc
-test_pmt_LDADD   = $(LIBPMTQA)
 
 # Do creation and inclusion of other Makefiles last
 

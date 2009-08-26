@@ -26,8 +26,9 @@
 #include <vector>
 #include <gruel/pmt.h>
 #include "pmt_int.h"
-#include <stdio.h>
+#include <gruel/msg_accepter.h>
 #include <gruel/pmt_pool.h>
+#include <stdio.h>
 #include <string.h>
 
 namespace pmt {
@@ -880,6 +881,73 @@ pmt_any_set(pmt_t obj, const boost::any &any)
     throw pmt_wrong_type("pmt_any_set", obj);
   _any(obj)->set(any);
 }
+
+////////////////////////////////////////////////////////////////////////////
+//               msg_accepter -- built from "any"
+////////////////////////////////////////////////////////////////////////////
+
+bool 
+pmt_is_msg_accepter(const pmt_t &obj)
+{
+  if (!pmt_is_any(obj))
+    return false;
+
+  boost::any r = pmt_any_ref(obj);
+  return boost::any_cast<gruel::msg_accepter_sptr>(&r) != 0;
+}
+
+//! make a msg_accepter
+pmt_t
+pmt_make_msg_accepter(gruel::msg_accepter_sptr ma)
+{
+  return pmt_make_any(ma);
+}
+
+//! Return underlying msg_accepter
+gruel::msg_accepter_sptr
+pmt_msg_accepter_ref(const pmt_t &obj)
+{
+  try {
+    return boost::any_cast<gruel::msg_accepter_sptr>(pmt_any_ref(obj));
+  }
+  catch (boost::bad_any_cast &e){
+    throw pmt_wrong_type("pmt_msg_accepter_ref", obj);
+  }
+}
+
+
+////////////////////////////////////////////////////////////////////////////
+//             Binary Large Object -- currently a u8vector
+////////////////////////////////////////////////////////////////////////////
+
+bool
+pmt_is_blob(pmt_t x)
+{
+  // return pmt_is_u8vector(x);
+  return pmt_is_uniform_vector(x);
+}
+
+pmt_t
+pmt_make_blob(const void *buf, size_t len_in_bytes)
+{
+  return pmt_init_u8vector(len_in_bytes, (const uint8_t *) buf);
+}
+
+const void *
+pmt_blob_data(pmt_t blob)
+{
+  size_t len;
+  return pmt_uniform_vector_elements(blob, len);
+}
+
+size_t
+pmt_blob_length(pmt_t blob)
+{
+  size_t len;
+  pmt_uniform_vector_elements(blob, len);
+  return len;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////
 //                          General Functions

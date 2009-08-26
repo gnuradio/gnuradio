@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,7 +21,7 @@
  */
 
 #include <cppunit/TextTestRunner.h>
-#include <qa_pmt.h>
+#include "pmt/qa_pmt.h"
 
 int 
 main(int argc, char **argv)

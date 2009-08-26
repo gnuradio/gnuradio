@@ -22,8 +22,9 @@
 
 #include <qa_pmt_prims.h>
 #include <cppunit/TestAssert.h>
-#include <gruel/pmt.h>
-#include <stdio.h>
+#include <gruel/msg_passing.h>
+#include <cstdio>
+#include <cstring>
 #include <sstream>
 
 using namespace pmt;
@@ -453,6 +454,41 @@ qa_pmt_prims::test_any()
 
 // ------------------------------------------------------------------------
 
+class qa_pmt_msg_accepter_nop : public gruel::msg_accepter {
+public:
+  qa_pmt_msg_accepter_nop(){};
+  ~qa_pmt_msg_accepter_nop();
+  void post(pmt_t){};
+};
+
+qa_pmt_msg_accepter_nop::~qa_pmt_msg_accepter_nop(){}
+
+void
+qa_pmt_prims::test_msg_accepter()
+{
+  pmt_t sym = pmt_intern("my-symbol");
+
+  boost::any a0;
+  a0 = std::string("Hello!");
+  pmt_t p0 = pmt_make_any(a0);
+
+  gruel::msg_accepter_sptr ma0 = gruel::msg_accepter_sptr(new qa_pmt_msg_accepter_nop());
+  pmt_t p1 = pmt_make_msg_accepter(ma0);
+
+  CPPUNIT_ASSERT_EQUAL(ma0.get(), pmt_msg_accepter_ref(p1).get());
+
+  CPPUNIT_ASSERT_THROW(pmt_msg_accepter_ref(sym), pmt_wrong_type);
+  CPPUNIT_ASSERT_THROW(pmt_msg_accepter_ref(p0),  pmt_wrong_type);
+
+  // just confirm interfaces on send are OK
+  gruel::send(ma0.get(), sym);
+  gruel::send(ma0, sym);
+  gruel::send(p1, sym);
+
+}
+
+// ------------------------------------------------------------------------
+
 void
 qa_pmt_prims::test_serialize()
 {
@@ -522,3 +558,19 @@ qa_pmt_prims::test_sets()
   CPPUNIT_ASSERT(!pmt_subsetp(l3,l2));
 }
 
+void
+qa_pmt_prims::test_sugar()
+{
+  CPPUNIT_ASSERT(pmt_is_symbol(mp("my-symbol")));
+  CPPUNIT_ASSERT_EQUAL((long) 10, pmt_to_long(mp(10)));
+  CPPUNIT_ASSERT_EQUAL((double) 1e6, pmt_to_double(mp(1e6)));
+  CPPUNIT_ASSERT_EQUAL(std::complex<double>(2, 3),
+		       pmt_to_complex(mp(std::complex<double>(2, 3))));
+
+  int buf[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+  pmt_t blob = mp(buf, sizeof(buf));
+  const void *data = pmt_blob_data(blob);
+  size_t nbytes = pmt_blob_length(blob);
+  CPPUNIT_ASSERT_EQUAL(sizeof(buf), nbytes);
+  CPPUNIT_ASSERT(memcmp(buf, data, nbytes) == 0);
+}
