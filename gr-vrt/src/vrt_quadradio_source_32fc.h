@@ -68,9 +68,9 @@ public:
 
   /*!
    * \brief Set the band select dboard bits.
-   * \param band "A", "B", "C", "D"
    */
-  bool set_band_select(const std::string &band);
+  bool set_band_select(int band);
+  int get_band_select(void);
 
   /*!
    * \brief Turn the 10 dB attenuation on/off.
@@ -109,6 +109,7 @@ public:
   bool set_lo_freq(double freq);
   bool set_cal_freq(double freq);
   bool set_beamforming(std::vector<gr_complex> gains);
+  bool set_cal_enb(bool enb);
 };
 
 

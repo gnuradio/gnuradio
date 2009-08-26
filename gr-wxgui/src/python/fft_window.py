@@ -39,10 +39,15 @@ SLIDER_STEPS = 100
 AVG_ALPHA_MIN_EXP, AVG_ALPHA_MAX_EXP = -3, 0
 DEFAULT_WIN_SIZE = (600, 300)
 DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'fft_rate', 30)
-DIV_LEVELS = (1, 2, 5, 10, 20)
+DB_DIV_MIN, DB_DIV_MAX = 1, 20
 FFT_PLOT_COLOR_SPEC = (0.3, 0.3, 1.0)
 PEAK_VALS_COLOR_SPEC = (0.0, 0.8, 0.0)
-NO_PEAK_VALS = list()
+EMPTY_TRACE = list()
+TRACES = ('A', 'B')
+TRACES_COLOR_SPEC = {
+	'A': (1.0, 0.0, 0.0),
+	'B': (0.8, 0.0, 0.8),
+}
 
 ##################################################
 # FFT window control panel
@@ -63,7 +68,7 @@ class control_panel(wx.Panel):
 		control_box.AddStretchSpacer()
 		#checkboxes for average and peak hold
 		options_box = forms.static_box_sizer(
-			parent=self, sizer=control_box, label='Options',
+			parent=self, sizer=control_box, label='Trace Options',
 			bold=True, orient=wx.VERTICAL,
 		)
 		forms.check_box(
@@ -90,17 +95,32 @@ class control_panel(wx.Panel):
 		for widget in (avg_alpha_text, avg_alpha_slider):
 			parent.subscribe(AVERAGE_KEY, widget.Enable)
 			widget.Enable(parent[AVERAGE_KEY])
+		
+		#trace menu
+		for trace in TRACES:
+			trace_box = wx.BoxSizer(wx.HORIZONTAL)
+			options_box.Add(trace_box, 0, wx.EXPAND)
+			forms.check_box(
+				sizer=trace_box, parent=self,
+				ps=parent, key=TRACE_SHOW_KEY+trace,
+				label='Trace %s'%trace,
+			)
+			trace_box.AddSpacer(10)
+			forms.single_button(
+				sizer=trace_box, parent=self,
+				ps=parent, key=TRACE_STORE_KEY+trace,
+				label='Store', style=wx.BU_EXACTFIT,
+			)
+			trace_box.AddSpacer(10)
 		#radio buttons for div size
 		control_box.AddStretchSpacer()
 		y_ctrl_box = forms.static_box_sizer(
 			parent=self, sizer=control_box, label='Axis Options',
 			bold=True, orient=wx.VERTICAL,
 		)
-		forms.radio_buttons(
-			sizer=y_ctrl_box, parent=self,
-			ps=parent, key=Y_PER_DIV_KEY,
-			style=wx.RA_VERTICAL|wx.NO_BORDER, choices=DIV_LEVELS,
-			labels=map(lambda x: '%s dB/div'%x, DIV_LEVELS),
+		forms.incr_decr_buttons(
+			parent=self, sizer=y_ctrl_box, label='dB/Div',
+			on_incr=self._on_incr_db_div, on_decr=self._on_decr_db_div,
 		)
 		#ref lvl buttons
 		forms.incr_decr_buttons(
@@ -135,6 +155,10 @@ class control_panel(wx.Panel):
 		self.parent[REF_LEVEL_KEY] = self.parent[REF_LEVEL_KEY] + self.parent[Y_PER_DIV_KEY]
 	def _on_decr_ref_level(self, event):
 		self.parent[REF_LEVEL_KEY] = self.parent[REF_LEVEL_KEY] - self.parent[Y_PER_DIV_KEY]
+	def _on_incr_db_div(self, event):
+		self.parent[Y_PER_DIV_KEY] = min(DB_DIV_MAX, self.parent[Y_PER_DIV_KEY]*2)
+	def _on_decr_db_div(self, event):
+		self.parent[Y_PER_DIV_KEY] = max(DB_DIV_MIN, self.parent[Y_PER_DIV_KEY]/2)
 
 ##################################################
 # FFT window with plotter and control panel
@@ -159,13 +183,12 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		msg_key,
 	):
 		pubsub.pubsub.__init__(self)
-		#ensure y_per_div
-		if y_per_div not in DIV_LEVELS: y_per_div = DIV_LEVELS[0]
 		#setup
-		self.samples = list()
+		self.samples = EMPTY_TRACE
 		self.real = real
 		self.fft_size = fft_size
 		self._reset_peak_vals()
+		self._traces = dict()
 		#proxy the keys
 		self.proxy(MSG_KEY, controller, msg_key)
 		self.proxy(AVERAGE_KEY, controller, average_key)
@@ -179,6 +202,26 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		self[REF_LEVEL_KEY] = ref_level
 		self[BASEBAND_FREQ_KEY] = baseband_freq
 		self[RUNNING_KEY] = True
+		for trace in TRACES:
+			#a function that returns a function
+			#so the function wont use local trace
+			def new_store_trace(my_trace):
+				def store_trace(*args):
+					self._traces[my_trace] = self.samples
+					self.update_grid()
+				return store_trace
+			def new_toggle_trace(my_trace):
+				def toggle_trace(toggle):
+					#do an automatic store if toggled on and empty trace
+					if toggle and not len(self._traces[my_trace]):
+						self._traces[my_trace] = self.samples
+					self.update_grid()
+				return toggle_trace
+			self._traces[trace] = EMPTY_TRACE
+			self[TRACE_STORE_KEY+trace] = False
+			self[TRACE_SHOW_KEY+trace] = False
+			self.subscribe(TRACE_STORE_KEY+trace, new_store_trace(trace))
+			self.subscribe(TRACE_SHOW_KEY+trace, new_toggle_trace(trace))
 		#init panel and plot
 		wx.Panel.__init__(self, parent, style=wx.SIMPLE_BORDER)
 		self.plotter = plotter.channel_plotter(self)
@@ -194,7 +237,7 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		main_box.Add(self.control_panel, 0, wx.EXPAND)
 		self.SetSizerAndFit(main_box)
 		#register events
-		self.subscribe(AVERAGE_KEY, lambda x: self._reset_peak_vals())
+		self.subscribe(AVERAGE_KEY, self._reset_peak_vals)
 		self.subscribe(MSG_KEY, self.handle_msg)
 		self.subscribe(SAMPLE_RATE_KEY, self.update_grid)
 		for key in (
@@ -223,7 +266,7 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		#set the range to a clean number of the dynamic range
 		self[Y_PER_DIV_KEY] = common.get_clean_num((peak_level - noise_floor)/self[Y_DIVS_KEY])
 
-	def _reset_peak_vals(self): self.peak_vals = NO_PEAK_VALS
+	def _reset_peak_vals(self, *args): self.peak_vals = EMPTY_TRACE
 
 	def handle_msg(self, msg):
 		"""
@@ -272,6 +315,15 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		The x axis depends on sample rate, baseband freq, and x divs.
 		The y axis depends on y per div, y divs, and ref level.
 		"""
+		for trace in TRACES:
+			channel = '%s'%trace.upper()
+			if self[TRACE_SHOW_KEY+trace]:
+				self.plotter.set_waveform(
+					channel=channel,
+					samples=self._traces[trace],
+					color_spec=TRACES_COLOR_SPEC[trace],
+				)
+			else: self.plotter.clear_waveform(channel=channel)
 		#grid parameters
 		sample_rate = self[SAMPLE_RATE_KEY]
 		baseband_freq = self[BASEBAND_FREQ_KEY]

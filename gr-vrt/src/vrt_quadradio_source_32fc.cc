@@ -86,9 +86,15 @@ vrt_quadradio_source_32fc::set_center_freq(double target_freq)
 }
 
 bool 
-vrt_quadradio_source_32fc::set_band_select(const std::string &band)
+vrt_quadradio_source_32fc::set_band_select(int band)
 {
-  return d_qr->set_band_select(band);
+  return d_qr->set_band_select(static_cast<vrt_band_sel_t>(band));
+}
+
+int 
+vrt_quadradio_source_32fc::get_band_select(void)
+{
+  return static_cast<int>(d_qr->get_band_select());
 }
 
 //void 
@@ -210,3 +216,7 @@ vrt_quadradio_source_32fc::set_beamforming(std::vector<gr_complex> gains){
  return d_qr->set_beamforming(gains_ints);
 }
 
+bool
+vrt_quadradio_source_32fc::set_cal_enb(bool enb){
+  return d_qr->set_cal_enb(enb);
+}
