@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -37,6 +37,8 @@ class Element(object):
 	def is_valid(self): return not self.get_error_messages() or not self.get_enabled()
 	def add_error_message(self, msg): self._error_messages.append(msg)
 	def get_error_messages(self): return self._error_messages
+
+	def rewrite(self): pass
 
 	def get_enabled(self): return True
 

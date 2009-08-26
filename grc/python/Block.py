@@ -54,7 +54,6 @@ class Block(_Block):
 		Validate this block.
 		Call the base class validate.
 		Evaluate the checks: each check must evaluate to True.
-		Adjust the nports.
 		"""
 		_Block.validate(self)
 		#evaluate the checks
@@ -65,6 +64,12 @@ class Block(_Block):
 				try: assert check_eval
 				except AssertionError: self.add_error_message('Check "%s" failed.'%check)
 			except: self.add_error_message('Check "%s" did not evaluate.'%check)
+
+	def rewrite(self):
+		"""
+		Add and remove ports to adjust for the nports.
+		"""
+		_Block.rewrite(self)
 		#adjust nports
 		for get_ports, get_port in (
 			(self.get_sources, self.get_source),

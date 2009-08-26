@@ -57,17 +57,19 @@ class Port(_Port):
 		except AssertionError: self.add_error_message('Port is not connected.')
 		try: assert self.is_source() or len(self.get_enabled_connections()) <= 1
 		except AssertionError: self.add_error_message('Port has too many connections.')
-		################################################################
-		# message port logic
-		################################################################
+		#message port logic
 		if self.get_type() == 'msg':
 			try: assert not self.get_nports()
 			except AssertionError: self.add_error_message('A port of type "msg" cannot have "nports" set.')
 			try: assert self.get_vlen() == 1
 			except AssertionError: self.add_error_message('A port of type "msg" must have a "vlen" of 1.')
-		################################################################
-		# virtual sink logic
-		################################################################
+
+	def rewrite(self):
+		"""
+		Handle the port cloning for virtual blocks.
+		"""
+		_Port.rewrite(self)
+		#virtual sink logic
 		if self.get_parent().get_key() == 'virtual_sink':
 			if self.get_enabled_connections(): #clone type and vlen
 				source = self.get_enabled_connections()[0].get_source()

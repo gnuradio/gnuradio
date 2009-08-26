@@ -140,6 +140,14 @@ class Block(Element):
 		"""
 		self.get_param('_enabled').set_value(str(enabled))
 
+	def rewrite(self):
+		"""
+		Rewrite critical structures.
+		Call rewrite on all sub elements.
+		"""
+		Element.rewrite(self)
+		for elem in self.get_ports() + self.get_params(): elem.rewrite()
+
 	def validate(self):
 		"""
 		Validate the block.

@@ -147,6 +147,14 @@ class FlowGraph(Element):
 		"""
 		raise NotImplementedError
 
+	def rewrite(self):
+		"""
+		Rewrite critical structures.
+		Call rewrite on all sub elements.
+		"""
+		Element.rewrite(self)
+		for elem in self.get_elements(): elem.rewrite()
+
 	def validate(self):
 		"""
 		Validate the flow graph.
@@ -198,7 +206,7 @@ class FlowGraph(Element):
 			#only load the block when the block key was valid
 			if block: block.import_data(block_n)
 			else: Messages.send_error_load('Block key "%s" not found in %s'%(key, self.get_parent()))
-		self.validate() #validate all blocks before connections are made (in case of nports)
+		self.rewrite() #rewrite all blocks before connections are made (ex: nports)
 		#build the connections
 		for connection_n in connections_n:
 			#try to make the connection
@@ -225,3 +233,4 @@ class FlowGraph(Element):
 				#build the connection
 				self.connect(source, sink)
 			except AssertionError: Messages.send_error_load('Connection between %s(%s) and %s(%s) could not be made.'%(source_block_id, source_key, sink_block_id, sink_key))
+		self.rewrite() #global rewrite

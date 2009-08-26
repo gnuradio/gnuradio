@@ -291,12 +291,10 @@ class FlowGraph(Element):
 
 	def update(self):
 		"""
+		Do a global rewrite and validate.
 		Call update on all elements.
-		Validate twice:
-		1) elements call special rewrite rules that may break validation
-		2) elements should come up with the same results, validation can pass
 		"""
-		self.validate()
+		self.rewrite()
 		self.validate()
 		for element in self.get_elements(): element.update()
 
