@@ -145,13 +145,12 @@ class Block(Element):
 		Validate the block.
 		All ports and params must be valid.
 		All checks must evaluate to true.
+		Validate the params, ports, and the connections to this block.
 		"""
 		Element.validate(self)
 		for c in self.get_params() + self.get_ports() + self.get_connections():
-			try:
-				c.validate()
-				assert c.is_valid()
-			except AssertionError:
+			c.validate()
+			if not c.is_valid():
 				for msg in c.get_error_messages():
 					self.add_error_message('>>> %s:\n\t%s'%(c, msg))
 

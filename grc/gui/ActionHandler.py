@@ -221,13 +221,11 @@ class ActionHandler:
 		elif state == Actions.PORT_CONTROLLER_INC:
 			if self.get_flow_graph().port_controller_modify_selected(1):
 				self.get_flow_graph().update()
-				self.get_flow_graph().update() #2 times
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)
 		elif state == Actions.PORT_CONTROLLER_DEC:
 			if self.get_flow_graph().port_controller_modify_selected(-1):
 				self.get_flow_graph().update()
-				self.get_flow_graph().update() #2 times
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)
 		##################################################

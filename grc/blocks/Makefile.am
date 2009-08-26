@@ -218,6 +218,7 @@ dist_ourdata_DATA = \
 	variable_slider.xml \
 	variable_static_text.xml \
 	variable_text_box.xml \
+	virtual_sink.xml \
 	wxgui_constellationsink2.xml \
 	wxgui_fftsink2.xml \
 	wxgui_histosink2.xml \

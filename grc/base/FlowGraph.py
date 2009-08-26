@@ -150,14 +150,14 @@ class FlowGraph(Element):
 	def validate(self):
 		"""
 		Validate the flow graph.
-		All connections and blocks must be valid.
+		Validate only the blocks.
+		Connections will be validated within the blocks.
 		"""
 		Element.validate(self)
-		for c in self.get_elements():
-			try:
-				c.validate()
-				assert c.is_valid()
-			except AssertionError: self.add_error_message('Element "%s" is not valid.'%c)
+		for c in self.get_blocks():
+			c.validate()
+			if not c.is_valid():
+				self.add_error_message('Element "%s" is not valid.'%c)
 
 	##############################################
 	## Import/Export Methods

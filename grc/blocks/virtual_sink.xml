@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Virtual Sink
+###################################################
+ -->
+<block>
+	<name>Virtual Sink</name>
+	<key>virtual_sink</key>
+	<make></make>
+	<sink>
+		<name>in</name>
+		<type></type>
+	</sink>
+</block>

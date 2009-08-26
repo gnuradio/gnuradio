@@ -35,6 +35,7 @@
 		<block>gr_wavfile_sink</block>
 		<block>gr_message_sink</block>
 		<block>pad_sink</block>
+		<block>virtual_sink</block>
 	</cat>
 	<cat>
 		<name>Graphical Sinks</name>
