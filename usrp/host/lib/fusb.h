@@ -26,7 +26,13 @@
 #define _FUSB_H_
 
 
+#if 1
+struct	usb_dev_handle;
+typedef struct usb_dev_handle libusb_device_handle;
+#else
 struct  libusb_device_handle;
+#endif
+
 struct 	libusb_context;
 class   fusb_ephandle;
 
@@ -119,6 +125,8 @@ public:
    */
   static fusb_devhandle *make_devhandle (libusb_device_handle *udh,
                                          libusb_context *ctx);
+
+  static fusb_devhandle *make_devhandle (libusb_device_handle *udh);
 
   /*!
    * \brief Returns max block size in bytes (hard limit).

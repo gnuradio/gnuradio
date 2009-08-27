@@ -46,7 +46,15 @@
 #include <boost/utility.hpp>
 #include <usrp/usrp_subdev_spec.h>
 
+#if 1
+struct usb_dev_handle;
+struct usb_device;
+typedef struct usb_dev_handle libusb_device_handle;
+typedef struct usb_device libusb_device;
+#else
 struct libusb_device_handle;
+#endif
+
 class  fusb_devhandle;
 class  fusb_ephandle;
 
@@ -65,7 +73,7 @@ protected:
   void shutdown_daughterboards();
 
 protected:
-  struct libusb_device_handle	*d_udh;
+  libusb_device_handle		*d_udh;
   struct libusb_context		*d_ctx;
   int				 d_usb_data_rate;	// bytes/sec
   int				 d_bytes_per_poll;	// how often to poll for overruns
@@ -92,7 +100,7 @@ protected:
 
 
   usrp_basic (int which_board,
-	      struct libusb_device_handle *open_interface (struct libusb_device *dev),
+	      libusb_device_handle *open_interface (libusb_device *dev),
 	      const std::string fpga_filename = "",
 	      const std::string firmware_filename = "");
 

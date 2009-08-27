@@ -78,7 +78,9 @@ win32_CODE =				\
 
 linux_CODE =				\
 	fusb_linux.cc			\
-	fusb_sysconfig_linux.cc 	
+	fusb_sysconfig_linux.cc		\
+	usrp_prims_libusb.cc		\
+	usrp_basic_libusb.cc
 
 ra_wb_CODE =				\
 	fusb_ra_wb.cc			\
@@ -86,7 +88,9 @@ ra_wb_CODE =				\
 
 libusb1_CODE =				\
 	fusb_libusb1.cc			\
-	fusb_sysconfig_libusb1.cc
+	fusb_sysconfig_libusb1.cc	\
+	usrp_prims_libusb1.cc		\
+	usrp_basic_libusb1.cc
 
 #
 # include each <foo>_CODE entry here...
@@ -103,17 +107,17 @@ EXTRA_libusrp_la_SOURCES =		\
 libusrp_la_common_SOURCES = 		\
 	fusb.cc				\
 	md5.c				\
-	usrp_basic.cc			\
+	usrp_basic_common.cc		\
 	usrp_config.cc			\
 	usrp_dbid.cc			\
 	usrp_local_sighandler.cc	\
-	usrp_prims.cc			\
+	usrp_prims_common.cc		\
 	usrp_standard.cc		\
 	db_boards.cc			\
 	db_base.cc			\
 	db_basic.cc			\
 	db_tv_rx.cc			\
-	db_tv_rx_mimo.cc			\
+	db_tv_rx_mimo.cc		\
 	db_flexrf.cc			\
 	db_flexrf_mimo.cc		\
 	db_dbs_rx.cc			\

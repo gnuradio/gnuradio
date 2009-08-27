@@ -33,6 +33,12 @@ fusb_sysconfig::make_devhandle (usb_dev_handle *udh)
   return new fusb_devhandle_linux (udh);
 }
 
+fusb_devhandle *
+fusb_sysconfig::make_devhandle (usb_dev_handle *udh, libusb_context *ctx)
+{
+  return new fusb_devhandle_linux (udh);
+}
+
 int fusb_sysconfig::max_block_size ()
 {
   return MAX_BLOCK_SIZE;

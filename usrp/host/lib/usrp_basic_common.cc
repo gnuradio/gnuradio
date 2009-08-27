@@ -31,13 +31,18 @@
 #include "fpga_regs_standard.h"
 #include "fusb.h"
 #include "db_boards.h"
-#include <libusb-1.0/libusb.h>
 #include <stdexcept>
 #include <assert.h>
 #include <math.h>
 #include <ad9862.h>
 #include <string.h>
 #include <cstdio>
+
+#if 1
+#include <usb.h>
+#else
+#include <libusb-1.0/libusb.h>
+#endif
 
 using namespace ad9862;
 
@@ -55,20 +60,20 @@ static const double POLLING_INTERVAL = 0.1;	// seconds
 
 ////////////////////////////////////////////////////////////////
 
-static struct libusb_device_handle *
-open_rx_interface (struct libusb_device *dev)
+static libusb_device_handle *
+open_rx_interface (libusb_device *dev)
 {
-  struct libusb_device_handle *udh = usrp_open_rx_interface (dev);
+  libusb_device_handle *udh = usrp_open_rx_interface (dev);
   if (udh == 0){
     fprintf (stderr, "usrp_basic_rx: can't open rx interface\n");
   }
   return udh;
 }
 
-static struct libusb_device_handle *
-open_tx_interface (struct libusb_device *dev)
+static libusb_device_handle *
+open_tx_interface (libusb_device *dev)
 {
-  struct libusb_device_handle *udh = usrp_open_tx_interface (dev);
+  libusb_device_handle *udh = usrp_open_tx_interface (dev);
   if (udh == 0){
     fprintf (stderr, "usrp_basic_tx: can't open tx interface\n");
   }
@@ -102,60 +107,6 @@ static unsigned char common_regs[] = {
   REG_AUX_ADC_CLK,	AUX_ADC_CLK_CLK_OVER_4
 };
 
-
-usrp_basic::usrp_basic (int which_board, 
-			struct libusb_device_handle *
-			open_interface (struct libusb_device *dev),
-			const std::string fpga_filename,
-			const std::string firmware_filename)
-  : d_udh (0), d_ctx (0),
-    d_usb_data_rate (16000000),	// SWAG, see below
-    d_bytes_per_poll ((int) (POLLING_INTERVAL * d_usb_data_rate)),
-    d_verbose (false), d_fpga_master_clock_freq(64000000), d_db(2)
-{
-  /*
-   * SWAG: Scientific Wild Ass Guess.
-   *
-   * d_usb_data_rate is used only to determine how often to poll for over- and under-runs.
-   * We defualt it to 1/2  of our best case.  Classes derived from usrp_basic (e.g., 
-   * usrp_standard_tx and usrp_standard_rx) call set_usb_data_rate() to tell us the
-   * actual rate.  This doesn't change our throughput, that's determined by the signal
-   * processing code in the FPGA (which we know nothing about), and the system limits
-   * determined by libusb, fusb_*, and the underlying drivers.
-   */
-  memset (d_fpga_shadows, 0, sizeof (d_fpga_shadows));
-
-  d_ctx = usrp_one_time_init(true);
-
-  if (!usrp_load_standard_bits (which_board, false, fpga_filename, firmware_filename, d_ctx))
-    throw std::runtime_error ("usrp_basic/usrp_load_standard_bits");
-
-  struct libusb_device *dev = usrp_find_device (which_board, false, d_ctx);
-  if (dev == 0){
-    fprintf (stderr, "usrp_basic: can't find usrp[%d]\n", which_board);
-    throw std::runtime_error ("usrp_basic/usrp_find_device");
-  }
-
-  if (!(usrp_usrp_p(dev) && usrp_hw_rev(dev) >= 1)){
-    fprintf (stderr, "usrp_basic: sorry, this code only works with USRP revs >= 1\n");
-    throw std::runtime_error ("usrp_basic/bad_rev");
-  }
-
-  if ((d_udh = open_interface (dev)) == 0)
-    throw std::runtime_error ("usrp_basic/open_interface");
-
-  // initialize registers that are common to rx and tx
-
-  if (!usrp_9862_write_many_all (d_udh, common_regs, sizeof (common_regs))){
-    fprintf (stderr, "usrp_basic: failed to init common AD9862 regs\n");
-    throw std::runtime_error ("usrp_basic/init_9862");
-  }
-
-  _write_fpga_reg (FR_MODE, 0);		// ensure we're in normal mode
-  _write_fpga_reg (FR_DEBUG_EN, 0);	// disable debug outputs
-
-}
-
 void
 usrp_basic::shutdown_daughterboards()
 {
@@ -165,22 +116,6 @@ usrp_basic::shutdown_daughterboards()
   for(size_t i = 0; i < d_db.size(); i++) 
     for(size_t j = 0; j < d_db[i].size(); j++) 
       d_db[i][j]->shutdown();
-}
-
-usrp_basic::~usrp_basic ()
-{
-  // shutdown_daughterboards();		// call from ~usrp_basic_{tx,rx}
-
-  d_db.resize(0); // forget db shared ptrs
-
-  if (d_udh)
-    libusb_close (d_udh);
-
-  // Each object should be running in it's own context. If running in default
-  // (NULL) context then something went wrong. 
-
-  assert (d_ctx != NULL);
-  libusb_exit (d_ctx);
 }
 
 void

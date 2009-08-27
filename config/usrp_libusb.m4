@@ -19,10 +19,10 @@ dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([USRP_LIBUSB], [
     libusbok=yes
-    PKG_CHECK_MODULES(USB, libusb-1.0, [], [
+    PKG_CHECK_MODULES(USB, libusb, [], [
         AC_LANG_PUSH(C)
 
-	AC_CHECK_HEADERS([libusb.h], [], [libusbok=no; AC_MSG_RESULT([USRP requires libusb1. usb.h not found. See http://libusb.sf.net])])
+	AC_CHECK_HEADERS([usb.h], [], [libusbok=no; AC_MSG_RESULT([USRP requires libusb. usb.h not found. See http://libusb.sf.net])])
 
 	save_LIBS="$LIBS"
 	case "$host_os" in
