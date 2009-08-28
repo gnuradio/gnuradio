@@ -30,7 +30,14 @@ static const int FUSB_BUFFER_SIZE = 1 * (1L << 20);	// 1 MB
 struct libusb_context;
 
 fusb_devhandle *
-fusb_sysconfig::make_devhandle (libusb_device_handle *udh, libusb_context *ctx)
+fusb_sysconfig::make_devhandle (libusb_device_handle *udh)
+{
+  return new fusb_devhandle_libusb1 (udh, NULL);
+}
+
+fusb_devhandle *
+fusb_sysconfig::make_devhandle (libusb_device_handle *udh,
+                                libusb_context *ctx)
 {
   return new fusb_devhandle_libusb1 (udh, ctx);
 }
