@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Virtual Sink
+##Virtual Source
 ###################################################
  -->
 <block>
-	<name>Virtual Sink</name>
-	<key>virtual_sink</key>
+	<name>Virtual Source</name>
+	<key>virtual_source</key>
 	<make></make>
 	<param>
 		<name>Stream ID</name>
@@ -14,8 +14,8 @@
 		<value></value>
 		<type>string</type>
 	</param>
-	<sink>
-		<name>in</name>
+	<source>
+		<name>out</name>
 		<type></type>
-	</sink>
+	</source>
 </block>

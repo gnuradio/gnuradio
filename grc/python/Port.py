@@ -69,13 +69,23 @@ class Port(_Port):
 		Handle the port cloning for virtual blocks.
 		"""
 		_Port.rewrite(self)
-		#virtual sink logic
-		if self.get_parent().get_key() == 'virtual_sink':
-			if self.get_enabled_connections(): #clone type and vlen
-				source = self.get_enabled_connections()[0].get_source()
+		if self.get_parent().get_key() in ('virtual_sink', 'virtual_source'):
+			try:
+				if self.get_parent().get_key() == 'virtual_sink':
+					source = self.get_enabled_connections()[0].get_source()
+				if self.get_parent().get_key() == 'virtual_source':
+					source = filter(
+						lambda vs: vs.get_param('stream_id').get_value() == self.get_parent().get_param('stream_id').get_value(),
+						filter(
+							lambda b: b.get_key() == 'virtual_sink',
+							self.get_parent().get_parent().get_enabled_blocks(),
+						),
+					)[0].get_sink('0').get_enabled_connections()[0].get_source()
+				#clone type and vlen
 				self._type = str(source.get_type())
 				self._vlen = str(source.get_vlen())
-			else: #reset type and vlen
+			except:
+				#reset type and vlen
 				self._type = ''
 				self._vlen = ''
 

@@ -22,6 +22,7 @@
 		<block>gr_wavfile_source</block>
 		<block>gr_message_source</block>
 		<block>pad_source</block>
+		<block>virtual_source</block>
 	</cat>
 	<cat>
 		<name>Sinks</name>
