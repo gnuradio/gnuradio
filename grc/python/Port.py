@@ -20,6 +20,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 from .. base.Port import Port as _Port
 import Constants
 
+def _get_source_from_virtual_sink_port(vsp):
+	try: return _get_source_from_virtual_source_port(
+		vsp.get_enabled_connections()[0].get_source())
+	except: raise Exception, 'Could not resolve source for virtual sink port', vsp
+
+def _get_source_from_virtual_source_port(vsp):
+	if not vsp.is_virtual_source(): return vsp
+	try: return _get_source_from_virtual_source_port(
+		_get_source_from_virtual_sink_port(
+			filter(
+				lambda vs: vs.get_param('stream_id').get_value() == vsp.get_parent().get_param('stream_id').get_value(),
+				filter(
+					lambda b: b.get_key() == 'virtual_sink',
+					vsp.get_parent().get_parent().get_enabled_blocks(),
+				),
+			)[0].get_sink(vsp.get_key())
+		)
+	)
+	except: raise Exception, 'Could not resolve source for virtual source port', vsp
+
 class Port(_Port):
 
 	##possible port types
@@ -69,25 +89,20 @@ class Port(_Port):
 		Handle the port cloning for virtual blocks.
 		"""
 		_Port.rewrite(self)
-		if self.get_parent().get_key() in ('virtual_sink', 'virtual_source'):
-			try:
-				if self.get_parent().get_key() == 'virtual_sink':
-					source = self.get_enabled_connections()[0].get_source()
-				if self.get_parent().get_key() == 'virtual_source':
-					source = filter(
-						lambda vs: vs.get_param('stream_id').get_value() == self.get_parent().get_param('stream_id').get_value(),
-						filter(
-							lambda b: b.get_key() == 'virtual_sink',
-							self.get_parent().get_parent().get_enabled_blocks(),
-						),
-					)[0].get_sink('0').get_enabled_connections()[0].get_source()
-				#clone type and vlen
+		if self.is_virtual_sink() or self.is_virtual_source():
+			try: #clone type and vlen
+				source = self.resolve_virtual_source()
 				self._type = str(source.get_type())
 				self._vlen = str(source.get_vlen())
-			except:
-				#reset type and vlen
+			except: #reset type and vlen
 				self._type = ''
 				self._vlen = ''
+
+	def is_virtual_sink(self): return self.get_parent().get_key() == 'virtual_sink'
+	def is_virtual_source(self): return self.get_parent().get_key() == 'virtual_source'
+	def resolve_virtual_source(self):
+		if self.is_virtual_sink(): return _get_source_from_virtual_sink_port(self)
+		if self.is_virtual_source(): return _get_source_from_virtual_source_port(self)
 
 	def get_vlen(self):
 		"""

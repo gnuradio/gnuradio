@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2009 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -156,9 +156,9 @@ class control_panel(wx.Panel):
 	def _on_decr_ref_level(self, event):
 		self.parent[REF_LEVEL_KEY] = self.parent[REF_LEVEL_KEY] - self.parent[Y_PER_DIV_KEY]
 	def _on_incr_db_div(self, event):
-		self.parent[Y_PER_DIV_KEY] = min(DB_DIV_MAX, self.parent[Y_PER_DIV_KEY]*2)
+		self.parent[Y_PER_DIV_KEY] = min(DB_DIV_MAX, common.get_clean_incr(self.parent[Y_PER_DIV_KEY]))
 	def _on_decr_db_div(self, event):
-		self.parent[Y_PER_DIV_KEY] = max(DB_DIV_MIN, self.parent[Y_PER_DIV_KEY]/2)
+		self.parent[Y_PER_DIV_KEY] = max(DB_DIV_MIN, common.get_clean_decr(self.parent[Y_PER_DIV_KEY]))
 
 ##################################################
 # FFT window with plotter and control panel
