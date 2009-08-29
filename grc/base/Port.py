@@ -21,16 +21,15 @@ from Element import Element
 
 class Port(Element):
 
-	##possible port types
-	TYPES = []
-
-	def __init__(self, block, n, dir):
+	def __init__(self, block, n, dir, types):
 		"""
 		Make a new port from nested data.
 		@param block the parent element
 		@param n the nested odict
 		@param dir the direction source or sink
+		@param types a list of possible types
 		"""
+		self._types = types
 		#build the port
 		Element.__init__(self, block)
 		#grab the data
@@ -45,7 +44,7 @@ class Port(Element):
 		The port must be non-empty and type must a possible type.
 		"""
 		Element.validate(self)
-		try: assert self.get_type() in self.TYPES
+		try: assert self.get_type() in self._types
 		except AssertionError: self.add_error_message('Type "%s" is not a possible type.'%self.get_type())
 
 	def __str__(self):

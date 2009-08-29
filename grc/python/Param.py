@@ -83,21 +83,30 @@ COMPLEX_TYPES = tuple(COMPLEX_TYPES + REAL_TYPES + INT_TYPES)
 REAL_TYPES = tuple(REAL_TYPES + INT_TYPES)
 INT_TYPES = tuple(INT_TYPES)
 
+##possible param types
+TYPES = [
+	'raw', 'enum',
+	'complex', 'real', 'int',
+	'complex_vector', 'real_vector', 'int_vector',
+	'hex', 'string', 'bool',
+	'file_open', 'file_save',
+	'id', 'stream_id',
+	'grid_pos', 'notebook',
+	'import',
+]
+
 class Param(_Param):
 
 	_init = False
 	_hostage_cells = list()
 
-	##possible param types
-	TYPES = _Param.TYPES + [
-		'complex', 'real', 'int',
-		'complex_vector', 'real_vector', 'int_vector',
-		'hex', 'string', 'bool',
-		'file_open', 'file_save',
-		'id', 'stream_id',
-		'grid_pos', 'notebook',
-		'import',
-	]
+	def __init__(self, block, n, **kwargs):
+		_Param.__init__(
+			self,
+			block=block,
+			n=n,
+			types=TYPES,
+		)
 
 	def __repr__(self):
 		"""

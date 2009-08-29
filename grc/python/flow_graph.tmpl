@@ -171,11 +171,11 @@ self.$port.get_parent().get_id()#slurp
 	#set $source = $con.get_source()
 	#set $sink = $con.get_sink()
 	##resolve virtual sources to the actual sources
-	#if $source.is_virtual_source()
+	#if $source.get_parent().is_virtual_source()
 		#set $source = $source.resolve_virtual_source()
 	#end if
 	##do not generate connections with virtual sinks
-	#if not $sink.is_virtual_sink()
+	#if not $sink.get_parent().is_virtual_sink()
 		self.connect(($make_port_name($source), $source.get_key()), ($make_port_name($sink), $sink.get_key()))
 	#end if
 #end for

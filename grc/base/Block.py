@@ -91,7 +91,7 @@ class Block(Element):
 				'hide': 'all',
 			})
 		))
-		for param in map(lambda n: self.get_parent().get_parent().Param(self, n), params):
+		for param in map(lambda n: self.get_parent().get_parent().Param(block=self, n=n), params):
 			key = param.get_key()
 			#test against repeated keys
 			try: assert key not in self.get_param_keys()
@@ -100,7 +100,7 @@ class Block(Element):
 			self.get_params().append(param)
 		#create the source objects
 		self._sources = list()
-		for source in map(lambda n: self.get_parent().get_parent().Port(self, n, dir='source'), sources):
+		for source in map(lambda n: self.get_parent().get_parent().Port(block=self, n=n, dir='source'), sources):
 			key = source.get_key()
 			#test against repeated keys
 			try: assert key not in self.get_source_keys()
@@ -109,7 +109,7 @@ class Block(Element):
 			self.get_sources().append(source)
 		#create the sink objects
 		self._sinks = list()
-		for sink in map(lambda n: self.get_parent().get_parent().Port(self, n, dir='sink'), sinks):
+		for sink in map(lambda n: self.get_parent().get_parent().Port(block=self, n=n, dir='sink'), sinks):
 			key = sink.get_key()
 			#test against repeated keys
 			try: assert key not in self.get_sink_keys()

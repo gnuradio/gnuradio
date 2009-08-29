@@ -88,6 +88,11 @@ class EnumEntryParam(InputParam):
 		else: #from enum, make white background
 			self._input.get_child().modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse('#ffffff'))
 
+def _get_keys(lst): return [elem.get_key() for elem in lst]
+def _get_elem(lst, key):
+	try: return lst[_get_keys(lst).index(key)]
+	except ValueError: raise ValueError, 'Key "%s" not found in %s.'%(key, _get_keys(lst))
+
 class Option(Element):
 
 	def __init__(self, param, n):
@@ -123,16 +128,14 @@ class Option(Element):
 
 class Param(Element):
 
-	##possible param types
-	TYPES = ['enum', 'raw']
-
-	def __init__(self, block, n):
+	def __init__(self, block, n, types):
 		"""
 		Make a new param from nested data.
 		@param block the parent element
 		@param n the nested odict
-		@return a new param
+		@param types a list of possible types
 		"""
+		self._types = types
 		#grab the data
 		self._name = n.find('name')
 		self._key = n.find('key')
@@ -142,22 +145,22 @@ class Param(Element):
 		#build the param
 		Element.__init__(self, block)
 		#create the Option objects from the n data
-		self._options = odict()
-		for option in map(lambda o: Option(self, o), n.findall('option')):
+		self._options = list()
+		for option in map(lambda o: Option(param=self, n=o), n.findall('option')):
 			key = option.get_key()
 			#test against repeated keys
 			try: assert key not in self.get_option_keys()
 			except AssertionError: raise Exception, 'Key "%s" already exists in options'%key
 			#store the option
-			self._options[key] = option
+			self.get_options().append(option)
 		#test the enum options
 		if self.is_enum():
 			#test against options with identical keys
-			try: assert len(set(self.get_option_keys())) == len(self._options)
+			try: assert len(set(self.get_option_keys())) == len(self.get_options())
 			except AssertionError: raise Exception, 'Options keys "%s" are not unique.'%self.get_option_keys()
 			#test against inconsistent keys in options
-			opt_keys = self._options.values()[0].get_opt_keys()
-			for option in self._options.values():
+			opt_keys = self.get_options()[0].get_opt_keys()
+			for option in self.get_options():
 				try: assert set(opt_keys) == set(option.get_opt_keys())
 				except AssertionError: raise Exception, 'Opt keys "%s" are not identical across all options.'%opt_keys
 			#if a value is specified, it must be in the options keys
@@ -180,7 +183,7 @@ class Param(Element):
 		The value must be evaluated and type must a possible type.
 		"""
 		Element.validate(self)
-		try: assert self.get_type() in self.TYPES
+		try: assert self.get_type() in self._types
 		except AssertionError: self.add_error_message('Type "%s" is not a possible type.'%self.get_type())
 
 	def get_evaluated(self): raise NotImplementedError
@@ -197,7 +200,7 @@ class Param(Element):
 	def is_param(self): return True
 	def get_name(self): return self._name
 	def get_key(self): return self._key
-	def get_hide(self): return self.get_parent().resolve_dependencies(self._hide)
+	def get_hide(self): return self.get_parent().resolve_dependencies(self._hide).strip()
 
 	def get_value(self):
 		value = self._value
@@ -238,16 +241,16 @@ class Param(Element):
 	##############################################
 	# Access Options
 	##############################################
-	def get_option_keys(self): return self._options.keys()
-	def get_option(self, key): return self._options[key]
-	def get_options(self): return self._options.values()
+	def get_option_keys(self): return _get_keys(self.get_options())
+	def get_option(self, key): return _get_elem(self.get_options(), key)
+	def get_options(self): return self._options
 
 	##############################################
 	# Access Opts
 	##############################################
-	def get_opt_keys(self): return self._options[self.get_value()].get_opt_keys()
-	def get_opt(self, key): return self._options[self.get_value()].get_opt(key)
-	def get_opts(self): return self._options[self.get_value()].get_opts()
+	def get_opt_keys(self): return self.get_option(self.get_value()).get_opt_keys()
+	def get_opt(self, key): return self.get_option(self.get_value()).get_opt(key)
+	def get_opts(self): return self.get_option(self.get_value()).get_opts()
 
 	##############################################
 	## Import/Export Methods
