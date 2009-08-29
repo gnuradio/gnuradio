@@ -58,6 +58,8 @@
 ##################################################
 # Problems
 ##################################################
+* msg ports dont work with virtual connections
+  * dont fix this until pmts are used?
 * hier block generation
   * auto generate hier library on changes
   * auto clean hier library when block removed
