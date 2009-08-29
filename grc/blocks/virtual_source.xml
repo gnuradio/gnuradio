@@ -12,7 +12,7 @@
 		<name>Stream ID</name>
 		<key>stream_id</key>
 		<value></value>
-		<type>string</type>
+		<type>stream_id</type>
 	</param>
 	<source>
 		<name>out</name>

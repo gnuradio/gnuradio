@@ -94,7 +94,7 @@ class Param(_Param):
 		'complex_vector', 'real_vector', 'int_vector',
 		'hex', 'string', 'bool',
 		'file_open', 'file_save',
-		'id',
+		'id', 'stream_id',
 		'grid_pos', 'notebook',
 		'import',
 	]
@@ -310,12 +310,29 @@ class Param(_Param):
 			#can python use this as a variable?
 			try: assert _check_id_matcher.match(v)
 			except AssertionError: raise Exception, 'ID "%s" must begin with a letter and may contain letters, numbers, and underscores.'%v
-			params = self.get_all_params('id')
-			keys = [param.get_value() for param in params]
-			try: assert keys.count(v) <= 1 #id should only appear once, or zero times if block is disabled
+			ids = [param.get_value() for param in self.get_all_params(t)]
+			try: assert ids.count(v) <= 1 #id should only appear once, or zero times if block is disabled
 			except: raise Exception, 'ID "%s" is not unique.'%v
 			try: assert v not in ID_BLACKLIST
 			except: raise Exception, 'ID "%s" is blacklisted.'%v
+			return v
+		#########################
+		# Stream ID Type
+		#########################
+		elif t == 'stream_id':
+			#get a list of all stream ids used in the virtual sinks 
+			ids = [param.get_value() for param in filter(
+				lambda p: p.get_parent().get_key() == 'virtual_sink',
+				self.get_all_params(t),
+			)]
+			#check that the virtual sink's stream id is unique
+			if self.get_parent().get_key() == 'virtual_sink':
+				try: assert ids.count(v) <= 1 #id should only appear once, or zero times if block is disabled
+				except: raise Exception, 'Stream ID "%s" is not unique.'%v
+			#check that the virtual source's steam id is found
+			if self.get_parent().get_key() == 'virtual_source':
+				try: assert v in ids
+				except: raise Exception, 'Stream ID "%s" is not found.'%v
 			return v
 		#########################
 		# Grid Position Type
