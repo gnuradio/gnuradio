@@ -22,9 +22,15 @@
 include $(top_srcdir)/Makefile.common
 
 grcblocksdir = $(prefix)/share/gnuradio/grc/blocks
+
+dist_bin_SCRIPTS = \
+	usrp_rx_hrpt.py \
+	usrp_rx_lrit.py
+
 dist_grcblocks_DATA = \
-	noaa_carrier_pll_cc.xml
+	noaa_hrpt_pll_cc.xml \
+	noaa_hrpt_sync_cc.xml
 
 EXTRA_DIST = \
-	rx_goes.grc \
-	rx_poes.grc
+	usrp_rx_hrpt.grc \
+	usrp_rx_lrit.grc

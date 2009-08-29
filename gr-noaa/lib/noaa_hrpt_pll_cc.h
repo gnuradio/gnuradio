@@ -20,21 +20,21 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_NOAA_CARRIER_PLL_CC_H
-#define INCLUDED_NOAA_CARRIER_PLL_CC_H
+#ifndef INCLUDED_NOAA_HRPT_PLL_CC_H
+#define INCLUDED_NOAA_HRPT_PLL_CC_H
 
 #include <gr_sync_block.h>
 
-class noaa_carrier_pll_cc;
-typedef boost::shared_ptr<noaa_carrier_pll_cc> noaa_carrier_pll_cc_sptr;
+class noaa_hrpt_pll_cc;
+typedef boost::shared_ptr<noaa_hrpt_pll_cc> noaa_hrpt_pll_cc_sptr;
 
-noaa_carrier_pll_cc_sptr
-noaa_make_carrier_pll_cc(float alpha, float beta, float max_offset);
+noaa_hrpt_pll_cc_sptr
+noaa_make_hrpt_pll_cc(float alpha, float beta, float max_offset);
 
-class noaa_carrier_pll_cc : public gr_sync_block
+class noaa_hrpt_pll_cc : public gr_sync_block
 {
-  friend noaa_carrier_pll_cc_sptr noaa_make_carrier_pll_cc(float alpha, float beta, float max_offset);
-  noaa_carrier_pll_cc(float alpha, float beta, float max_offset);
+  friend noaa_hrpt_pll_cc_sptr noaa_make_hrpt_pll_cc(float alpha, float beta, float max_offset);
+  noaa_hrpt_pll_cc(float alpha, float beta, float max_offset);
 
   float d_alpha;		// 1st order loop constant
   float d_beta;			// 2nd order loop constant
@@ -52,4 +52,4 @@ class noaa_carrier_pll_cc : public gr_sync_block
   void set_max_offset(float max_offset) { d_max_offset = max_offset; }
 };
 
-#endif /* INCLUDED_NOAA_CARRIER_PLL_CC_H */
+#endif /* INCLUDED_NOAA_HRPT_PLL_CC_H */

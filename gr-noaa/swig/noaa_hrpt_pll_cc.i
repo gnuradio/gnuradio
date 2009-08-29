@@ -20,12 +20,18 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "gnuradio.i"
+GR_SWIG_BLOCK_MAGIC(noaa,hrpt_pll_cc)
 
-%{
-#include <noaa_hrpt_pll_cc.h>
-#include <noaa_hrpt_sync_cc.h>
-%}
+noaa_hrpt_pll_cc_sptr
+noaa_make_hrpt_pll_cc(float alpha, float beta, float max_offset);
 
-%include "noaa_hrpt_pll_cc.i"
-%include "noaa_hrpt_sync_cc.i"
+class noaa_hrpt_pll_cc : public gr_sync_block
+{
+private:
+  noaa_hrpt_pll_cc();
+
+public:
+  void set_alpha(float alpha);
+  void set_beta(float beta);
+  void set_max_offset(float min_freq);
+};

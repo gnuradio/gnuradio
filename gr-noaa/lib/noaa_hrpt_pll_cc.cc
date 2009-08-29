@@ -24,21 +24,21 @@
 #include "config.h"
 #endif
 
-#include <noaa_carrier_pll_cc.h>
+#include <noaa_hrpt_pll_cc.h>
 #include <gr_io_signature.h>
 #include <gr_math.h>
 #include <gr_sincos.h>
 
 #define M_TWOPI (2*M_PI)
 
-noaa_carrier_pll_cc_sptr
-noaa_make_carrier_pll_cc(float alpha, float beta, float max_offset)
+noaa_hrpt_pll_cc_sptr
+noaa_make_hrpt_pll_cc(float alpha, float beta, float max_offset)
 {
-  return gnuradio::get_initial_sptr(new noaa_carrier_pll_cc(alpha, beta, max_offset));
+  return gnuradio::get_initial_sptr(new noaa_hrpt_pll_cc(alpha, beta, max_offset));
 }
 
-noaa_carrier_pll_cc::noaa_carrier_pll_cc(float alpha, float beta, float max_offset)
-  : gr_sync_block("noaa_carrier_pll_cc",
+noaa_hrpt_pll_cc::noaa_hrpt_pll_cc(float alpha, float beta, float max_offset)
+  : gr_sync_block("noaa_hrpt_pll_cc",
 		  gr_make_io_signature(1, 1, sizeof(gr_complex)),
 		  gr_make_io_signature(1, 1, sizeof(gr_complex))),
     d_alpha(alpha), d_beta(beta), d_max_offset(max_offset),
@@ -58,7 +58,7 @@ phase_wrap(float phase)
 }
 
 int
-noaa_carrier_pll_cc::work(int noutput_items,
+noaa_hrpt_pll_cc::work(int noutput_items,
 			  gr_vector_const_void_star &input_items,
 			  gr_vector_void_star &output_items)
 {

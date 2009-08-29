@@ -29,7 +29,8 @@ lib_LTLIBRARIES = \
 	libgnuradio-noaa.la
 
 libgnuradio_noaa_la_SOURCES = \
-	noaa_carrier_pll_cc.cc
+	noaa_hrpt_pll_cc.cc \
+	noaa_hrpt_sync_cc.cc
 
 libgnuradio_noaa_la_LIBADD = \
 	$(GNURADIO_CORE_LA)
@@ -37,4 +38,5 @@ libgnuradio_noaa_la_LIBADD = \
 libgnuradio_noaa_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
 
 grinclude_HEADERS = \
-	noaa_carrier_pll_cc.h
+	noaa_hrpt_pll_cc.h \
+	noaa_hrpt_sync_cc.h

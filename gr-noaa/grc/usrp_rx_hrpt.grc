@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat Aug 22 13:06:22 2009</timestamp>
+  <timestamp>Sat Aug 29 11:48:56 2009</timestamp>
   <block>
     <key>options</key>
     <param>
       <key>id</key>
-      <value>rx_poes</value>
+      <value>usrp_rx_hrpt</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -13,7 +13,7 @@
     </param>
     <param>
       <key>title</key>
-      <value></value>
+      <value>USRP HRPT Receiver</value>
     </param>
     <param>
       <key>author</key>
@@ -53,121 +53,6 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>decim</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>16</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(97, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>sym_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>600*1109</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(286, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>sample_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>64e6/decim</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(176, 12)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>sps</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>sample_rate/sym_rate</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(382, 14)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>hs</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>int(sps/2.0)</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(492, 16)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>import</key>
     <param>
       <key>id</key>
@@ -184,84 +69,6 @@
     <param>
       <key>_coordinate</key>
       <value>(9, 202)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>max_offset</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>2*math.pi*100e3/sample_rate</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(342, 95)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_slider</key>
-    <param>
-      <key>id</key>
-      <value>pll_alpha</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>PLL Alpha</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0.005</value>
-    </param>
-    <param>
-      <key>min</key>
-      <value>0.0</value>
-    </param>
-    <param>
-      <key>max</key>
-      <value>0.5</value>
-    </param>
-    <param>
-      <key>num_steps</key>
-      <value>500</value>
-    </param>
-    <param>
-      <key>style</key>
-      <value>wx.SL_HORIZONTAL</value>
-    </param>
-    <param>
-      <key>converver</key>
-      <value>float_converter</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>0, 0, 1, 1</value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(192, 100)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -300,163 +107,149 @@
     </param>
   </block>
   <block>
-    <key>gr_agc_xx</key>
+    <key>gr_file_source</key>
     <param>
       <key>id</key>
-      <value>agr</value>
+      <value>src</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
+    </param>
+    <param>
+      <key>file</key>
+      <value>poes-d16.dat</value>
     </param>
     <param>
       <key>type</key>
       <value>complex</value>
     </param>
     <param>
-      <key>rate</key>
-      <value>1e-6</value>
-    </param>
-    <param>
-      <key>reference</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>gain</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>max_gain</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(261, 494)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_moving_average_xx</key>
-    <param>
-      <key>id</key>
-      <value>gr_moving_average_xx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
+      <key>repeat</key>
       <value>True</value>
     </param>
     <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>length</key>
-      <value>hs</value>
-    </param>
-    <param>
-      <key>scale</key>
-      <value>1.0/hs</value>
-    </param>
-    <param>
-      <key>max_iter</key>
-      <value>4000</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(429, 502)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>noaa_carrier_pll_cc</key>
-    <param>
-      <key>id</key>
-      <value>noaa_carrier_pll_cc_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>alpha</key>
-      <value>pll_alpha</value>
-    </param>
-    <param>
-      <key>beta</key>
-      <value>pll_alpha**2/4.0</value>
-    </param>
-    <param>
-      <key>max_offset</key>
-      <value>max_offset</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(636, 502)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>wxgui_scopesink2</key>
-    <param>
-      <key>id</key>
-      <value>wxgui_scopesink2_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>RX Waveform</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>sample_rate</value>
-    </param>
-    <param>
-      <key>v_scale</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>t_scale</key>
-      <value>20.0/sample_rate</value>
-    </param>
-    <param>
-      <key>ac_couple</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>xy_mode</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
+      <key>vlen</key>
       <value>1</value>
     </param>
     <param>
-      <key>grid_pos</key>
-      <value>1, 0, 1, 1</value>
+      <key>_coordinate</key>
+      <value>(34, 423)</value>
     </param>
     <param>
-      <key>notebook</key>
-      <value>displays, 0</value>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>decim</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>16</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(433, 612)</value>
+      <value>(186, 10)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>hs</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>int(sps/2.0)</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(589, 13)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>sym_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>600*1109</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(383, 7)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>sps</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>sample_rate/sym_rate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(479, 11)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>sample_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>64e6/decim</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(273, 9)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -531,76 +324,18 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(433, 241)</value>
+      <value>(194, 263)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_complex_to_imag</key>
-    <param>
-      <key>id</key>
-      <value>gr_complex_to_imag_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(877, 522)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>notebook</key>
-    <param>
-      <key>id</key>
-      <value>displays</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>style</key>
-      <value>wx.NB_TOP</value>
-    </param>
-    <param>
-      <key>labels</key>
-      <value>['RX','Baseband']</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>1, 0, 1, 1</value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(9, 99)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
   </block>
   <block>
     <key>wxgui_scopesink2</key>
     <param>
       <key>id</key>
-      <value>wxgui_scopesink2_0_1_0_1</value>
+      <value>wxgui_scopesink2_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -608,11 +343,11 @@
     </param>
     <param>
       <key>type</key>
-      <value>float</value>
+      <value>complex</value>
     </param>
     <param>
       <key>title</key>
-      <value>Manchester Symbols</value>
+      <value>RX Waveform</value>
     </param>
     <param>
       <key>samp_rate</key>
@@ -620,11 +355,11 @@
     </param>
     <param>
       <key>v_scale</key>
-      <value>0.5</value>
+      <value>0</value>
     </param>
     <param>
       <key>t_scale</key>
-      <value>5.0/sym_rate</value>
+      <value>20.0/sample_rate</value>
     </param>
     <param>
       <key>ac_couple</key>
@@ -644,15 +379,276 @@
     </param>
     <param>
       <key>notebook</key>
-      <value>displays, 1</value>
+      <value>displays, 0</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(856, 343)</value>
+      <value>(198, 609)</value>
     </param>
     <param>
       <key>_rotation</key>
       <value>180</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_agc_xx</key>
+    <param>
+      <key>id</key>
+      <value>agr</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>rate</key>
+      <value>1e-6</value>
+    </param>
+    <param>
+      <key>reference</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>gain</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>max_gain</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(261, 494)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_moving_average_xx</key>
+    <param>
+      <key>id</key>
+      <value>gr_moving_average_xx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>length</key>
+      <value>hs</value>
+    </param>
+    <param>
+      <key>scale</key>
+      <value>1.0/hs</value>
+    </param>
+    <param>
+      <key>max_iter</key>
+      <value>4000</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(434, 502)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>max_carrier_offset</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>2*math.pi*100e3/sample_rate</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(668, 107)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>max_sync_offset</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0.01</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(665, 173)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_slider</key>
+    <param>
+      <key>id</key>
+      <value>pll_alpha</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>PLL Alpha</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0.005</value>
+    </param>
+    <param>
+      <key>min</key>
+      <value>0.0</value>
+    </param>
+    <param>
+      <key>max</key>
+      <value>0.5</value>
+    </param>
+    <param>
+      <key>num_steps</key>
+      <value>500</value>
+    </param>
+    <param>
+      <key>style</key>
+      <value>wx.SL_HORIZONTAL</value>
+    </param>
+    <param>
+      <key>converver</key>
+      <value>float_converter</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>0, 0, 1, 1</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(192, 100)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_slider</key>
+    <param>
+      <key>id</key>
+      <value>sync_alpha</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>label</key>
+      <value>SYNC Alpha</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0.005</value>
+    </param>
+    <param>
+      <key>min</key>
+      <value>0.0</value>
+    </param>
+    <param>
+      <key>max</key>
+      <value>0.5</value>
+    </param>
+    <param>
+      <key>num_steps</key>
+      <value>500</value>
+    </param>
+    <param>
+      <key>style</key>
+      <value>wx.SL_HORIZONTAL</value>
+    </param>
+    <param>
+      <key>converver</key>
+      <value>float_converter</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>0, 1, 1, 1</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(344, 101)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>noaa_hrpt_pll_cc</key>
+    <param>
+      <key>id</key>
+      <value>noaa_hrpt_pll_cc_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>alpha</key>
+      <value>pll_alpha</value>
+    </param>
+    <param>
+      <key>beta</key>
+      <value>pll_alpha**2/4.0</value>
+    </param>
+    <param>
+      <key>max_offset</key>
+      <value>max_carrier_offset</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(628, 502)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
     </param>
   </block>
   <block>
@@ -671,7 +667,7 @@
     </param>
     <param>
       <key>title</key>
-      <value>Post-Filter/PLL</value>
+      <value>Post-PLL</value>
     </param>
     <param>
       <key>samp_rate</key>
@@ -707,7 +703,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(634, 335)</value>
+      <value>(618, 335)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -715,49 +711,255 @@
     </param>
   </block>
   <block>
-    <key>gr_file_source</key>
+    <key>wxgui_scopesink2</key>
     <param>
       <key>id</key>
-      <value>src</value>
+      <value>wxgui_scopesink2_0_0_1</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>file</key>
-      <value>poes-d16.dat</value>
-    </param>
-    <param>
       <key>type</key>
       <value>complex</value>
     </param>
     <param>
-      <key>repeat</key>
-      <value>True</value>
+      <key>title</key>
+      <value>Post-SYNC</value>
     </param>
     <param>
-      <key>vlen</key>
+      <key>samp_rate</key>
+      <value>sample_rate</value>
+    </param>
+    <param>
+      <key>v_scale</key>
+      <value>0.5</value>
+    </param>
+    <param>
+      <key>t_scale</key>
+      <value>20.0/sample_rate</value>
+    </param>
+    <param>
+      <key>ac_couple</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>xy_mode</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
       <value>1</value>
     </param>
     <param>
+      <key>grid_pos</key>
+      <value>0, 0, 1, 1</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value>displays, 2</value>
+    </param>
+    <param>
       <key>_coordinate</key>
-      <value>(34, 423)</value>
+      <value>(872, 341)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+  </block>
+  <block>
+    <key>notebook</key>
+    <param>
+      <key>id</key>
+      <value>displays</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>style</key>
+      <value>wx.NB_TOP</value>
+    </param>
+    <param>
+      <key>labels</key>
+      <value>['RX','PLL','SYNC']</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>1, 0, 1, 2</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(9, 99)</value>
     </param>
     <param>
       <key>_rotation</key>
       <value>0</value>
     </param>
   </block>
+  <block>
+    <key>wxgui_scopesink2</key>
+    <param>
+      <key>id</key>
+      <value>wxgui_scopesink2_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>title</key>
+      <value>Post-PLL</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>sample_rate</value>
+    </param>
+    <param>
+      <key>v_scale</key>
+      <value>0.5</value>
+    </param>
+    <param>
+      <key>t_scale</key>
+      <value>20.0/sample_rate</value>
+    </param>
+    <param>
+      <key>ac_couple</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>xy_mode</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>1, 0, 1, 1</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value>displays, 1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(618, 614)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+  </block>
+  <block>
+    <key>noaa_hrpt_sync_cc</key>
+    <param>
+      <key>id</key>
+      <value>sync</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>alpha</key>
+      <value>sync_alpha</value>
+    </param>
+    <param>
+      <key>beta</key>
+      <value>sync_alpha**2/4.0</value>
+    </param>
+    <param>
+      <key>sps</key>
+      <value>sps</value>
+    </param>
+    <param>
+      <key>max_offset</key>
+      <value>max_sync_offset</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(865, 494)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>wxgui_scopesink2</key>
+    <param>
+      <key>id</key>
+      <value>wxgui_scopesink2_0_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>title</key>
+      <value>Post-SYNC</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>sample_rate</value>
+    </param>
+    <param>
+      <key>v_scale</key>
+      <value>0.5</value>
+    </param>
+    <param>
+      <key>t_scale</key>
+      <value>20.0/sample_rate</value>
+    </param>
+    <param>
+      <key>ac_couple</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>xy_mode</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>1, 0, 1, 1</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value>displays, 2</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(872, 607)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>180</value>
+    </param>
+  </block>
   <connection>
     <source_block_id>src</source_block_id>
     <sink_block_id>throttle</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>noaa_carrier_pll_cc_0</source_block_id>
-    <sink_block_id>gr_complex_to_imag_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -787,19 +989,37 @@
   </connection>
   <connection>
     <source_block_id>gr_moving_average_xx_0</source_block_id>
-    <sink_block_id>noaa_carrier_pll_cc_0</sink_block_id>
+    <sink_block_id>noaa_hrpt_pll_cc_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>noaa_carrier_pll_cc_0</source_block_id>
+    <source_block_id>noaa_hrpt_pll_cc_0</source_block_id>
     <sink_block_id>wxgui_scopesink2_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_complex_to_imag_0</source_block_id>
-    <sink_block_id>wxgui_scopesink2_0_1_0_1</sink_block_id>
+    <source_block_id>noaa_hrpt_pll_cc_0</source_block_id>
+    <sink_block_id>wxgui_scopesink2_0_0_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>noaa_hrpt_pll_cc_0</source_block_id>
+    <sink_block_id>sync</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>sync</source_block_id>
+    <sink_block_id>wxgui_scopesink2_0_0_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>sync</source_block_id>
+    <sink_block_id>wxgui_scopesink2_0_0_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <block>
-  <name>Carrier PLL</name>
-  <key>noaa_carrier_pll_cc</key>
+  <name>HRPT SYNC</name>
+  <key>noaa_hrpt_sync_cc</key>
   <category>NOAA</category>
   <import>from gnuradio import noaa</import>
-  <make>noaa.carrier_pll_cc($alpha, $beta, $max_offset)</make>
+  <make>noaa.hrpt_sync_cc($alpha, $beta, $sps, $max_offset)</make>
   <callback>set_alpha($alpha)</callback>
   <callback>set_beta($beta)</callback>
   <callback>set_max_offset($max_offset)</callback>
@@ -16,6 +16,11 @@
   <param>
     <name>Beta</name>
     <key>beta</key>
+    <type>real</type>
+  </param>
+  <param>
+    <name>Samples/Symbol</name>
+    <key>sps</key>
     <type>real</type>
   </param>
   <param>
