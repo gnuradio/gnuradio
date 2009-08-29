@@ -42,6 +42,7 @@ class noaa_hrpt_sync_cc : public gr_block
   float d_max_offset;		// Maximum frequency offset for d_sps, samples/symbol
   float d_phase;		// Instantaneous symbol phase
   float d_freq;			// Instantaneous symbol frequency, samples/symbol
+  int   d_last_sign;            // Tracks zero crossings
 
  public:
   int general_work(int noutput_items,

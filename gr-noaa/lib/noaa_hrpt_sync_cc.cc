@@ -27,6 +27,11 @@
 #include <noaa_hrpt_sync_cc.h>
 #include <gr_io_signature.h>
 
+inline int signum(float f)
+{
+  return f >= 0.0 ? 1 : -1;
+}
+
 noaa_hrpt_sync_cc_sptr
 noaa_make_hrpt_sync_cc(float alpha, float beta, float sps, float max_offset)
 {
@@ -37,8 +42,10 @@ noaa_hrpt_sync_cc::noaa_hrpt_sync_cc(float alpha, float beta, float sps, float m
   : gr_block("noaa_hrpt_sync_cc",
 	     gr_make_io_signature(1, 1, sizeof(gr_complex)),
 	     gr_make_io_signature(1, 1, sizeof(gr_complex))),
-    d_alpha(alpha), d_beta(beta), d_sps(sps), d_max_offset(max_offset),
-    d_phase(0.0), d_freq(0.0)
+    d_alpha(alpha), d_beta(beta), 
+    d_sps(sps), d_max_offset(max_offset),
+    d_phase(0.0), d_freq(1.0/sps),
+    d_last_sign(1)
 {
 }
 
@@ -54,7 +61,25 @@ noaa_hrpt_sync_cc::general_work(int noutput_items,
 
   int i = 0, j = 0;
   while (i < ninputs && j < noutput_items) {
-    out[j++] = in[i++];
+    float sample = in[i++].imag();
+    int sign = signum(sample);
+    d_phase += d_freq;
+
+    // Train on zero crossings in center region of symbol
+    if (sign != d_last_sign) {
+      if (d_phase > 0.25 && d_phase < 0.75) {
+	float phase_err = d_phase-0.5;
+	d_phase -= phase_err*d_alpha;        // 1st order phase adjustment
+	d_freq -= phase_err*d_beta;          // 2nd order frequency adjustment
+      }
+
+      d_last_sign = sign;
+    }
+
+    if (d_phase > 1.0) {
+      out[j++] = in[i];
+      d_phase -= 1.0;
+    }
   }
 
   consume_each(i);
