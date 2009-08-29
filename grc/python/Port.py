@@ -21,12 +21,21 @@ from .. base.Port import Port as _Port
 import Constants
 
 def _get_source_from_virtual_sink_port(vsp):
+	"""
+	Resolve the source port that is connected to the given virtual sink port.
+	Use the get source from virtual source to recursively resolve subsequent ports. 
+	"""
 	try: return _get_source_from_virtual_source_port(
 		vsp.get_enabled_connections()[0].get_source())
-	except: raise Exception, 'Could not resolve source for virtual sink port', vsp
+	except: raise Exception, 'Could not resolve source for virtual sink port %s'%vsp
 
-def _get_source_from_virtual_source_port(vsp):
+def _get_source_from_virtual_source_port(vsp, traversed=[]):
+	"""
+	Recursively resolve source ports over the virtual connections.
+	Keep track of traversed sources to avoid recursive loops.
+	"""
 	if not vsp.is_virtual_source(): return vsp
+	if vsp in traversed: raise Exception, 'Loop found when resolving virtual source %s'%vsp
 	try: return _get_source_from_virtual_source_port(
 		_get_source_from_virtual_sink_port(
 			filter(
@@ -36,9 +45,9 @@ def _get_source_from_virtual_source_port(vsp):
 					vsp.get_parent().get_parent().get_enabled_blocks(),
 				),
 			)[0].get_sink(vsp.get_key())
-		)
+		), traversed + [vsp],
 	)
-	except: raise Exception, 'Could not resolve source for virtual source port', vsp
+	except: raise Exception, 'Could not resolve source for virtual source port %s'%vsp
 
 class Port(_Port):
 
