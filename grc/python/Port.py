@@ -34,14 +34,14 @@ def _get_source_from_virtual_source_port(vsp, traversed=[]):
 	Recursively resolve source ports over the virtual connections.
 	Keep track of traversed sources to avoid recursive loops.
 	"""
-	if not vsp.is_virtual_source(): return vsp
+	if not vsp.get_parent().is_virtual_source(): return vsp
 	if vsp in traversed: raise Exception, 'Loop found when resolving virtual source %s'%vsp
 	try: return _get_source_from_virtual_source_port(
 		_get_source_from_virtual_sink_port(
-			filter(
+			filter(#get all virtual sinks with a matching stream id
 				lambda vs: vs.get_param('stream_id').get_value() == vsp.get_parent().get_param('stream_id').get_value(),
-				filter(
-					lambda b: b.get_key() == 'virtual_sink',
+				filter(#get all enabled blocks that are also virtual sinks
+					lambda b: b.is_virtual_sink(),
 					vsp.get_parent().get_parent().get_enabled_blocks(),
 				),
 			)[0].get_sink(vsp.get_key())
@@ -98,7 +98,7 @@ class Port(_Port):
 		Handle the port cloning for virtual blocks.
 		"""
 		_Port.rewrite(self)
-		if self.is_virtual_sink() or self.is_virtual_source():
+		if self.get_parent().is_virtual_sink() or self.get_parent().is_virtual_source():
 			try: #clone type and vlen
 				source = self.resolve_virtual_source()
 				self._type = str(source.get_type())
@@ -107,11 +107,9 @@ class Port(_Port):
 				self._type = ''
 				self._vlen = ''
 
-	def is_virtual_sink(self): return self.get_parent().get_key() == 'virtual_sink'
-	def is_virtual_source(self): return self.get_parent().get_key() == 'virtual_source'
 	def resolve_virtual_source(self):
-		if self.is_virtual_sink(): return _get_source_from_virtual_sink_port(self)
-		if self.is_virtual_source(): return _get_source_from_virtual_source_port(self)
+		if self.get_parent().is_virtual_sink(): return _get_source_from_virtual_sink_port(self)
+		if self.get_parent().is_virtual_source(): return _get_source_from_virtual_source_port(self)
 
 	def get_vlen(self):
 		"""

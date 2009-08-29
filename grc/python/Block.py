@@ -23,6 +23,9 @@ import extract_category
 
 class Block(_Block):
 
+	def is_virtual_sink(self): return self.get_key() == 'virtual_sink'
+	def is_virtual_source(self): return self.get_key() == 'virtual_source'
+
 	##for make source to keep track of indexes
 	_source_count = 0
 	##for make sink to keep track of indexes

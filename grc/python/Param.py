@@ -322,15 +322,15 @@ class Param(_Param):
 		elif t == 'stream_id':
 			#get a list of all stream ids used in the virtual sinks 
 			ids = [param.get_value() for param in filter(
-				lambda p: p.get_parent().get_key() == 'virtual_sink',
+				lambda p: p.get_parent().is_virtual_sink(),
 				self.get_all_params(t),
 			)]
 			#check that the virtual sink's stream id is unique
-			if self.get_parent().get_key() == 'virtual_sink':
+			if self.get_parent().is_virtual_sink():
 				try: assert ids.count(v) <= 1 #id should only appear once, or zero times if block is disabled
 				except: raise Exception, 'Stream ID "%s" is not unique.'%v
 			#check that the virtual source's steam id is found
-			if self.get_parent().get_key() == 'virtual_source':
+			if self.get_parent().is_virtual_source():
 				try: assert v in ids
 				except: raise Exception, 'Stream ID "%s" is not found.'%v
 			return v
