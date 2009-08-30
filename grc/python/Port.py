@@ -49,12 +49,9 @@ def _get_source_from_virtual_source_port(vsp, traversed=[]):
 	)
 	except: raise Exception, 'Could not resolve source for virtual source port %s'%vsp
 
-##possible port types
-TYPES = ['complex', 'float', 'int', 'short', 'byte', 'msg', '']
-
 class Port(_Port):
 
-	def __init__(self, block, n, dir, **kwargs):
+	def __init__(self, block, n, dir):
 		"""
 		Make a new port from nested data.
 		@param block the parent element
@@ -75,11 +72,12 @@ class Port(_Port):
 			block=block,
 			n=n,
 			dir=dir,
-			types=TYPES,
 		)
 		self._nports = n.find('nports') or ''
 		self._vlen = n.find('vlen') or ''
 		self._optional = bool(n.find('optional'))
+
+	def get_types(self): return ('complex', 'float', 'int', 'short', 'byte', 'msg', '')
 
 	def validate(self):
 		_Port.validate(self)

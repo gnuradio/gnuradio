@@ -128,14 +128,12 @@ class Option(Element):
 
 class Param(Element):
 
-	def __init__(self, block, n, types):
+	def __init__(self, block, n):
 		"""
 		Make a new param from nested data.
 		@param block the parent element
 		@param n the nested odict
-		@param types a list of possible types
 		"""
-		self._types = types
 		#grab the data
 		self._name = n.find('name')
 		self._key = n.find('key')
@@ -183,7 +181,7 @@ class Param(Element):
 		The value must be evaluated and type must a possible type.
 		"""
 		Element.validate(self)
-		try: assert self.get_type() in self._types
+		try: assert self.get_type() in self.get_types()
 		except AssertionError: self.add_error_message('Type "%s" is not a possible type.'%self.get_type())
 
 	def get_evaluated(self): raise NotImplementedError
@@ -191,6 +189,13 @@ class Param(Element):
 	def to_code(self):
 		"""
 		Convert the value to code.
+		@throw NotImplementedError
+		"""
+		raise NotImplementedError
+
+	def get_types(self):
+		"""
+		Get a list of all possible param types.
 		@throw NotImplementedError
 		"""
 		raise NotImplementedError
