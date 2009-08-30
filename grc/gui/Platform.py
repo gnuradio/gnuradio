@@ -17,31 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from FlowGraph import FlowGraph
-from Connection import Connection
-from Block import Block
-from Port import Port
-from Param import Param
+from Element import Element
 
-def conjoin_classes(name, c1, c2):
-	exec("""
-class %s(c1, c2):
-	def __init__(self, *args, **kwargs):
-		c1.__init__(self, *args, **kwargs)
-		c2.__init__(self, *args, **kwargs)
-"""%name, locals())
-	return locals()[name]
-
-def Platform(platform):
-	#combine with gui class
-	for attr, value in (
-		('FlowGraph', FlowGraph),
-		('Connection', Connection),
-		('Block', Block),
-		('Port', Port),
-		('Param', Param),
-	):
-		old_value = getattr(platform, attr)
-		c = conjoin_classes(attr, old_value, value)
-		setattr(platform, attr, c)
-	return platform
+class Platform(Element): pass

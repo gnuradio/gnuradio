@@ -18,6 +18,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from .. base.Port import Port as _Port
+from .. gui.Port import Port as _GUIPort
 import Constants
 
 def _get_source_from_virtual_sink_port(vsp):
@@ -49,7 +50,7 @@ def _get_source_from_virtual_source_port(vsp, traversed=[]):
 	)
 	except: raise Exception, 'Could not resolve source for virtual source port %s'%vsp
 
-class Port(_Port):
+class Port(_Port, _GUIPort):
 
 	def __init__(self, block, n, dir):
 		"""
@@ -73,6 +74,7 @@ class Port(_Port):
 			n=n,
 			dir=dir,
 		)
+		_GUIPort.__init__(self)
 		self._nports = n.find('nports') or ''
 		self._vlen = n.find('vlen') or ''
 		self._optional = bool(n.find('optional'))

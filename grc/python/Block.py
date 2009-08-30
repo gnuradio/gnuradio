@@ -18,10 +18,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from .. base.Block import Block as _Block
+from .. gui.Block import Block as _GUIBlock
 import extract_docs
 import extract_category
 
-class Block(_Block):
+class Block(_Block, _GUIBlock):
 
 	def is_virtual_sink(self): return self.get_key() == 'virtual_sink'
 	def is_virtual_source(self): return self.get_key() == 'virtual_source'
@@ -51,6 +52,7 @@ class Block(_Block):
 			flow_graph=flow_graph,
 			n=n,
 		)
+		_GUIBlock.__init__(self)
 
 	def validate(self):
 		"""

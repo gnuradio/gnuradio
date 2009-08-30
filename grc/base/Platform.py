@@ -146,7 +146,7 @@ class Platform(_Element):
 
 	def is_platform(self): return True
 
-	def get_new_flow_graph(self): return self.FlowGraph(self)
+	def get_new_flow_graph(self): return self.FlowGraph(platform=self)
 
 	def get_generator(self): return self._generator
 

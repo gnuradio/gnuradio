@@ -44,8 +44,8 @@ class Block(Element):
 		"""
 		#add the position param
 		self.get_params().append(self.get_parent().get_parent().Param(
-			self,
-			odict({
+			block=self,
+			n=odict({
 				'name': 'GUI Coordinate',
 				'key': '_coordinate',
 				'type': 'raw',
@@ -54,8 +54,8 @@ class Block(Element):
 			})
 		))
 		self.get_params().append(self.get_parent().get_parent().Param(
-			self,
-			odict({
+			block=self,
+			n=odict({
 				'name': 'GUI Rotation',
 				'key': '_rotation',
 				'type': 'raw',

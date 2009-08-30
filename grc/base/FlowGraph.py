@@ -117,7 +117,7 @@ class FlowGraph(Element):
 		@return the new connection
 		"""
 		self.flag()
-		connection = self.get_parent().Connection(self, porta, portb)
+		connection = self.get_parent().Connection(flow_graph=self, porta=porta, portb=portb)
 		self.get_elements().append(connection)
 		return connection
 

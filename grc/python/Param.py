@@ -18,7 +18,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import expr_utils
-from .. base.Param import Param as _Param, EntryParam
+from .. base.Param import Param as _Param
+from .. gui.Param import Param as _GUIParam
+from .. gui.Param import EntryParam
 import Constants
 import numpy
 import os
@@ -83,14 +85,11 @@ COMPLEX_TYPES = tuple(COMPLEX_TYPES + REAL_TYPES + INT_TYPES)
 REAL_TYPES = tuple(REAL_TYPES + INT_TYPES)
 INT_TYPES = tuple(INT_TYPES)
 
-class Param(_Param):
+class Param(_Param, _GUIParam):
 
-	def __init__(self, block, n):
-		_Param.__init__(
-			self,
-			block=block,
-			n=n,
-		)
+	def __init__(self, **kwargs):
+		_Param.__init__(self, **kwargs)
+		_GUIParam.__init__(self)
 		self._init = False
 		self._hostage_cells = list()
 
@@ -156,7 +155,7 @@ class Param(_Param):
 
 	def get_input_class(self):
 		if self.get_type() in ('file_open', 'file_save'): return FileParam
-		return _Param.get_input_class(self)
+		return _GUIParam.get_input_class(self)
 
 	def get_color(self):
 		"""
@@ -178,6 +177,7 @@ class Param(_Param):
 				'hex': Constants.INT_COLOR_SPEC,
 				'string': Constants.BYTE_VECTOR_COLOR_SPEC,
 				'id': Constants.ID_COLOR_SPEC,
+				'stream_id': Constants.ID_COLOR_SPEC,
 				'grid_pos': Constants.INT_VECTOR_COLOR_SPEC,
 				'notebook': Constants.INT_VECTOR_COLOR_SPEC,
 				'raw': Constants.WILDCARD_COLOR_SPEC,

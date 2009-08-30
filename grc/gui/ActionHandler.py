@@ -30,7 +30,6 @@ from threading import Thread
 import Messages
 from .. base import ParseXML
 import random
-from Platform import Platform
 from MainWindow import MainWindow
 from ParamsDialog import ParamsDialog
 import Dialogs
@@ -53,7 +52,6 @@ class ActionHandler:
 		@param platform platform module
 		"""
 		self.clipboard = None
-		platform = Platform(platform)
 		for action in Actions.get_all_actions(): action.connect('activate', self._handle_actions)
 		#setup the main window
 		self.main_window = MainWindow(self.handle_states, platform)

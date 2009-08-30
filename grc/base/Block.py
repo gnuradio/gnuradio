@@ -74,16 +74,16 @@ class Block(Element):
 		self._params = list()
 		#add the id param
 		self.get_params().append(self.get_parent().get_parent().Param(
-			self,
-			odict({
+			block=self,
+			n=odict({
 				'name': 'ID',
 				'key': 'id',
 				'type': 'id',
 			})
 		))
 		self.get_params().append(self.get_parent().get_parent().Param(
-			self,
-			odict({
+			block=self,
+			n=odict({
 				'name': 'Enabled',
 				'key': '_enabled',
 				'type': 'raw',

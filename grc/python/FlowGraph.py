@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import expr_utils
 from .. base.FlowGraph import FlowGraph as _FlowGraph
+from .. gui.FlowGraph import FlowGraph as _GUIFlowGraph
 from Block import Block
 from Connection import Connection
 import re
@@ -26,7 +27,11 @@ import re
 _variable_matcher = re.compile('^(variable\w*)$')
 _parameter_matcher = re.compile('^(parameter)$')
 
-class FlowGraph(_FlowGraph):
+class FlowGraph(_FlowGraph, _GUIFlowGraph):
+
+	def __init__(self, **kwargs):
+		_FlowGraph.__init__(self, **kwargs)
+		_GUIFlowGraph.__init__(self)
 
 	_eval_cache = dict()
 	def _eval(self, code, namespace, namespace_hash):
