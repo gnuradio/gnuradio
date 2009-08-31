@@ -22,10 +22,9 @@ module adc_model
    assign     adc_ovf_b = adc_oe_b ? 1'b0 : 1'bz;
    
    real       phase = 0;
-   real       sample_rate = 100000000;
-   real       freq = 330000/sample_rate;     // 330 kHz
+   real       freq = 330000/100000000;
 
-   real       scale = math.pow(2,13)-2;
+   real       scale = 8190; // math.pow(2,13)-2;
    always @(posedge clk)
      if(rst)
        begin

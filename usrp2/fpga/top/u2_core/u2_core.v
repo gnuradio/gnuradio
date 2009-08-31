@@ -307,19 +307,21 @@ module u2_core
 					 .in(set_data),.out(),.changed(flush_icache));
 
    // Buffer Pool, slave #1
-   wire 	 rd0_read, rd0_sop, rd0_error, rd0_done, rd0_eop;
-   wire 	 rd1_read, rd1_sop, rd1_error, rd1_done, rd1_eop;
-   wire 	 rd2_read, rd2_sop, rd2_error, rd2_done, rd2_eop;
-   wire 	 rd3_read, rd3_sop, rd3_error, rd3_done, rd3_eop;
+   wire 	 rd0_ready_i, rd0_ready_o;
+   wire 	 rd1_ready_i, rd1_ready_o;
+   wire 	 rd2_ready_i, rd2_ready_o;
+   wire 	 rd3_ready_i, rd3_ready_o;
+   wire [3:0] 	 rd0_flags, rd1_flags, rd2_flags, rd3_flags;
    wire [31:0] 	 rd0_dat, rd1_dat, rd2_dat, rd3_dat;
 
-   wire 	 wr0_write, wr0_done, wr0_error, wr0_ready, wr0_full;
-   wire 	 wr1_write, wr1_done, wr1_error, wr1_ready, wr1_full;
-   wire 	 wr2_write, wr2_done, wr2_error, wr2_ready, wr2_full;
-   wire 	 wr3_write, wr3_done, wr3_error, wr3_ready, wr3_full;
+   wire 	 wr0_ready_i, wr0_ready_o;
+   wire 	 wr1_ready_i, wr1_ready_o;
+   wire 	 wr2_ready_i, wr2_ready_o;
+   wire 	 wr3_ready_i, wr3_ready_o;
+   wire [3:0] 	 wr0_flags, wr1_flags, wr2_flags, wr3_flags;
    wire [31:0] 	 wr0_dat, wr1_dat, wr2_dat, wr3_dat;
    
-   buffer_pool buffer_pool
+   buffer_pool #(.BUF_SIZE(9), .SET_ADDR(64)) buffer_pool
      (.wb_clk_i(wb_clk),.wb_rst_i(wb_rst),
       .wb_we_i(s1_we),.wb_stb_i(s1_stb),.wb_adr_i(s1_adr),.wb_dat_i(s1_dat_o),   
       .wb_dat_o(s1_dat_i),.wb_ack_o(s1_ack),.wb_err_o(s1_err),.wb_rty_o(s1_rty),
@@ -330,25 +332,17 @@ module u2_core
 
       .s0(status_b0),.s1(status_b1),.s2(status_b2),.s3(status_b3),
       .s4(status_b4),.s5(status_b5),.s6(status_b6),.s7(status_b7),
-      
+
       // Write Interfaces
-      .wr0_dat_i(wr0_dat), .wr0_write_i(wr0_write), .wr0_done_i(wr0_done),
-      .wr0_error_i(wr0_error), .wr0_ready_o(wr0_ready), .wr0_full_o(wr0_full),
-      .wr1_dat_i(wr1_dat), .wr1_write_i(wr1_write), .wr1_done_i(wr1_done),
-      .wr1_error_i(wr1_error), .wr1_ready_o(wr1_ready), .wr1_full_o(wr1_full),
-      .wr2_dat_i(wr2_dat), .wr2_write_i(wr2_write), .wr2_done_i(wr2_done),
-      .wr2_error_i(wr2_error), .wr2_ready_o(wr2_ready), .wr2_full_o(wr2_full),
-      .wr3_dat_i(wr3_dat), .wr3_write_i(wr3_write), .wr3_done_i(wr3_done),
-      .wr3_error_i(wr3_error), .wr3_ready_o(wr3_ready), .wr3_full_o(wr3_full),
+      .wr0_data_i(wr0_dat), .wr0_flags_i(wr0_flags), .wr0_ready_i(wr0_ready_i), .wr0_ready_o(wr0_ready_o),
+      .wr1_data_i(wr1_dat), .wr1_flags_i(wr1_flags), .wr1_ready_i(wr1_ready_i), .wr1_ready_o(wr1_ready_o),
+      .wr2_data_i(wr2_dat), .wr2_flags_i(wr2_flags), .wr2_ready_i(wr2_ready_i), .wr2_ready_o(wr2_ready_o),
+      .wr3_data_i(wr3_dat), .wr3_flags_i(wr3_flags), .wr3_ready_i(wr3_ready_i), .wr3_ready_o(wr3_ready_o),
       // Read Interfaces
-      .rd0_dat_o(rd0_dat), .rd0_read_i(rd0_read), .rd0_done_i(rd0_done),
-      .rd0_error_i(rd0_error), .rd0_sop_o(rd0_sop), .rd0_eop_o(rd0_eop),
-      .rd1_dat_o(rd1_dat), .rd1_read_i(rd1_read), .rd1_done_i(rd1_done),
-      .rd1_error_i(rd1_error), .rd1_sop_o(rd1_sop), .rd1_eop_o(rd1_eop),
-      .rd2_dat_o(rd2_dat), .rd2_read_i(rd2_read), .rd2_done_i(rd2_done),
-      .rd2_error_i(rd2_error), .rd2_sop_o(rd2_sop), .rd2_eop_o(rd2_eop),
-      .rd3_dat_o(rd3_dat), .rd3_read_i(rd3_read), .rd3_done_i(rd3_done),
-      .rd3_error_i(rd3_error), .rd3_sop_o(rd3_sop), .rd3_eop_o(rd3_eop)
+      .rd0_data_o(rd0_dat), .rd0_flags_o(rd0_flags), .rd0_ready_i(rd0_ready_i), .rd0_ready_o(rd0_ready_o),
+      .rd1_data_o(rd1_dat), .rd1_flags_o(rd1_flags), .rd1_ready_i(rd1_ready_i), .rd1_ready_o(rd1_ready_o),
+      .rd2_data_o(rd2_dat), .rd2_flags_o(rd2_flags), .rd2_ready_i(rd2_ready_i), .rd2_ready_o(rd2_ready_o),
+      .rd3_data_o(rd3_dat), .rd3_flags_o(rd3_flags), .rd3_ready_i(rd3_ready_i), .rd3_ready_o(rd3_ready_o)
       );
 
    // SPI -- Slave #2
@@ -398,11 +392,30 @@ module u2_core
       .word11(32'b0),.word12(32'b0),.word13(32'b0),.word14(32'b0),.word15(32'b0)
       );
 
-   assign 	 s5_err = 1'b0;
-   assign 	 s5_rty = 1'b0;
+   assign 	 s5_err  = 1'b0;
+   assign 	 s5_rty  = 1'b0;
 
-   // Slave, #6 Ethernet MAC, see below
+   // /////////////////////////////////////////////////////////////////////////
+   // Ethernet MAC  Slave #6
+
+   simple_gemac_wrapper simple_gemac_wrapper
+     (.clk125(clk_to_mac),  .reset(wb_rst),
+      .GMII_GTX_CLK(GMII_GTX_CLK), .GMII_TX_EN(GMII_TX_EN),  
+      .GMII_TX_ER(GMII_TX_ER), .GMII_TXD(GMII_TXD),
+      .GMII_RX_CLK(GMII_RX_CLK), .GMII_RX_DV(GMII_RX_DV),  
+      .GMII_RX_ER(GMII_RX_ER), .GMII_RXD(GMII_RXD),
+      .pause_req(0), .pause_time(0),
+      .sys_clk(dsp_clk),
+      .rx_f36_data({wr2_flags,wr2_dat}), .rx_f36_src_rdy(wr2_ready_i), .rx_f36_dst_rdy(wr2_ready_o),
+      .tx_f36_data({rd2_flags,rd2_dat}), .tx_f36_src_rdy(rd2_ready_o), .tx_f36_dst_rdy(rd2_ready_i),
+      .wb_clk(wb_clk), .wb_rst(wb_rst), .wb_stb(s6_stb), .wb_cyc(s6_cyc), .wb_ack(s6_ack),
+      .wb_we(s6_we), .wb_adr(s6_adr), .wb_dat_i(s6_dat_o), .wb_dat_o(s6_dat_i),
+      .mdio(MDIO), .mdc(MDC) );
    
+   assign 	 s6_err  = 1'b0;
+   assign 	 s6_rty  = 1'b0;
+   
+   // /////////////////////////////////////////////////////////////////////////
    // Settings Bus -- Slave #7
    settings_bus settings_bus
      (.wb_clk(wb_clk),.wb_rst(wb_rst),.wb_adr_i(s7_adr),.wb_dat_i(s7_dat_o),
@@ -446,55 +459,6 @@ module u2_core
 					  .in(set_data),.out(led_src),.changed());
 
    assign 	 leds = (led_src & led_hw) | (~led_src & led_sw);
-   
-   // /////////////////////////////////////////////////////////////////////////
-   // Ethernet MAC  Slave #6
-   
-   wire 	 Tx_mac_wa, Tx_mac_wr, Tx_mac_sop, Tx_mac_eop;
-   wire 	 Rx_mac_empty, Rx_mac_rd, Rx_mac_sop, Rx_mac_eop, Rx_mac_err;
-   wire [31:0] 	 Tx_mac_data, Rx_mac_data;
-   wire [1:0] 	 Tx_mac_BE, Rx_mac_BE;
-   wire 	 rst_mac;
-  
-   oneshot_2clk mac_rst_1shot (.clk_in(wb_clk),.in(wb_rst),.clk_out(clk_to_mac),.out(rst_mac));
-   
-   MAC_top #(.TX_FF_DEPTH(9), .RX_FF_DEPTH(11))
-     MAC_top
-       (.Clk_125M(clk_to_mac),.Clk_user(dsp_clk),
-	.rst_mac(rst_mac),.rst_user(dsp_rst),
-	.RST_I(wb_rst),.CLK_I(wb_clk),.STB_I(s6_stb),.CYC_I(s6_cyc),.ADR_I(s6_adr[8:2]),
-	.WE_I(s6_we),.DAT_I(s6_dat_o),.DAT_O(s6_dat_i),.ACK_O(s6_ack),
-	.Rx_mac_empty(Rx_mac_empty),.Rx_mac_rd(Rx_mac_rd),.Rx_mac_data(Rx_mac_data),.Rx_mac_BE(Rx_mac_BE),
-	.Rx_mac_sop(Rx_mac_sop),.Rx_mac_eop(Rx_mac_eop),.Rx_mac_err(Rx_mac_err),
-	.Tx_mac_wa(Tx_mac_wa),.Tx_mac_wr(Tx_mac_wr),.Tx_mac_data(Tx_mac_data),
-	.Tx_mac_BE(Tx_mac_BE),.Tx_mac_sop(Tx_mac_sop),.Tx_mac_eop(Tx_mac_eop),
-	.Gtx_clk(GMII_GTX_CLK),.Tx_clk(GMII_TX_CLK),.Tx_er(GMII_TX_ER),.Tx_en(GMII_TX_EN),.Txd(GMII_TXD),
-	.Rx_clk(GMII_RX_CLK),.Rx_er(GMII_RX_ER),.Rx_dv(GMII_RX_DV),.Rxd(GMII_RXD),
-	.Crs(GMII_CRS),.Col(GMII_COL),
-	.Mdio(MDIO),.Mdc(MDC),
-	.rx_fifo_occupied(eth_rx_occ2),.rx_fifo_full(eth_rx_full2),.rx_fifo_empty(eth_rx_empty2),
-	.tx_fifo_occupied(),.tx_fifo_full(),.tx_fifo_empty(),
-	.debug0(debug_mac0),.debug1(debug_mac1) );
-
-   assign 	 s6_err = 1'b0;
-   assign 	 s6_rty = 1'b0;
-
-   mac_rxfifo_int mac_rxfifo_int
-     (.clk(dsp_clk),.rst(dsp_rst),
-      .Rx_mac_empty(Rx_mac_empty),.Rx_mac_rd(Rx_mac_rd),.Rx_mac_data(Rx_mac_data),
-      .Rx_mac_BE(Rx_mac_BE),.Rx_mac_sop(Rx_mac_sop),
-      .Rx_mac_eop(Rx_mac_eop),.Rx_mac_err(Rx_mac_err),
-      .wr_dat_o(wr2_dat),.wr_write_o(wr2_write),.wr_done_o(wr2_done),
-      .wr_error_o(wr2_error),.wr_ready_i(wr2_ready),.wr_full_i(wr2_full),
-      .fifo_occupied(eth_rx_occ),.fifo_full(eth_rx_full),.fifo_empty(eth_rx_empty) );
-
-   mac_txfifo_int mac_txfifo_int
-     (.clk(dsp_clk),.rst(dsp_rst),.mac_clk(clk_to_mac),
-      .Tx_mac_wa(Tx_mac_wa),.Tx_mac_wr(Tx_mac_wr),.Tx_mac_data(Tx_mac_data),
-      .Tx_mac_BE(Tx_mac_BE),.Tx_mac_sop(Tx_mac_sop),.Tx_mac_eop(Tx_mac_eop),
-      .rd_dat_i(rd2_dat),.rd_read_o(rd2_read),.rd_done_o(rd2_done),
-      .rd_error_o(rd2_error),.rd_sop_i(rd2_sop),.rd_eop_i(rd2_eop),
-      .fifo_occupied(eth_tx_occ),.fifo_full(eth_tx_full),.fifo_empty(eth_tx_empty) );
    
    // /////////////////////////////////////////////////////////////////////////
    // Interrupt Controller, Slave #8
@@ -546,7 +510,7 @@ module u2_core
      (.clk_i(wb_clk),.rst_i(wb_rst),
       .adr_i(s11_adr[5:0]),.sel_i(s11_sel),.dat_i(s11_dat_o),.dat_o(s11_dat_i),
       .we_i(s11_we),.stb_i(s11_stb),.cyc_i(s11_cyc),.ack_o(s11_ack),
-      .run_rx(run_rx_d1),.run_tx(run_tx),.ctrl_lines(atr_lines) );
+      .run_rx(run_rx_d1),.run_tx(run_tx),.master_time(), .ctrl_lines(atr_lines) );
    assign 	 s11_err = 0;
    assign 	 s11_rty = 0;
    
@@ -591,8 +555,7 @@ module u2_core
      (.clk(dsp_clk), .rst(dsp_rst),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .master_time(master_time),.overrun(overrun),
-      .wr_dat_o(wr1_dat), .wr_write_o(wr1_write), .wr_done_o(wr1_done), .wr_error_o(wr1_error),
-      .wr_ready_i(wr1_ready), .wr_full_i(wr1_full),
+      .wr_dat_o(wr1_dat), .wr_flags_o(wr1_flags), .wr_ready_o(wr1_ready_i), .wr_ready_i(wr1_ready_o),
       .sample(sample_rx), .run(run_rx), .strobe(strobe_rx),
       .fifo_occupied(dsp_rx_occ),.fifo_full(dsp_rx_full),.fifo_empty(dsp_rx_empty),
       .debug_rx(debug_rx) );
@@ -602,15 +565,14 @@ module u2_core
      (.clk(dsp_clk),.rst(dsp_rst),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .adc_a(adc_a),.adc_ovf_a(adc_ovf_a),.adc_b(adc_b),.adc_ovf_b(adc_ovf_b),
-      .io_rx(io_rx),.sample(sample_rx), .run(run_rx_d1), .strobe(strobe_rx),
+      .sample(sample_rx), .run(run_rx_d1), .strobe(strobe_rx),
       .debug(debug_rx_dsp) );
 
    tx_control #(.FIFOSIZE(10)) tx_control
      (.clk(dsp_clk), .rst(dsp_rst),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .master_time(master_time),.underrun(underrun),
-      .rd_dat_i(rd1_dat), .rd_sop_i(rd1_sop), .rd_eop_i(rd1_eop),
-      .rd_read_o(rd1_read), .rd_done_o(rd1_done), .rd_error_o(rd1_error),
+      .rd_dat_i(rd1_dat), .rd_flags_i(rd_flags), .rd_ready_i(rd1_ready_o), .rd_ready_o(rd1_ready_i),
       .sample(sample_tx), .run(run_tx), .strobe(strobe_tx),
       .fifo_occupied(dsp_tx_occ),.fifo_full(dsp_tx_full),.fifo_empty(dsp_tx_empty),
       .debug(debug_txc) );
@@ -629,11 +591,9 @@ module u2_core
    serdes #(.TXFIFOSIZE(9),.RXFIFOSIZE(9)) serdes
      (.clk(dsp_clk),.rst(dsp_rst),
       .ser_tx_clk(ser_tx_clk),.ser_t(ser_t),.ser_tklsb(ser_tklsb),.ser_tkmsb(ser_tkmsb),
-      .rd_dat_i(rd0_dat),.rd_read_o(rd0_read),.rd_done_o(rd0_done),.rd_error_o(rd0_error),
-      .rd_sop_i(rd0_sop),.rd_eop_i(rd0_eop),
+      .rd_dat_i(rd0_dat),.rd_flags_i(rd0_flags),.rd_ready_o(rd0_ready_i),.rd_ready_i(rd0_ready_o),
       .ser_rx_clk(ser_rx_clk),.ser_r(ser_r),.ser_rklsb(ser_rklsb),.ser_rkmsb(ser_rkmsb),
-      .wr_dat_o(wr0_dat),.wr_write_o(wr0_write),.wr_done_o(wr0_done),.wr_error_o(wr0_error),
-      .wr_ready_i(wr0_ready),.wr_full_i(wr0_full),
+      .wr_dat_o(wr0_dat),.wr_flags_o(wr0_flags),.wr_ready_o(wr0_ready_i),.wr_ready_i(wr0_ready_o),
       .tx_occupied(ser_tx_occ),.tx_full(ser_tx_full),.tx_empty(ser_tx_empty),
       .rx_occupied(ser_rx_occ),.rx_full(ser_rx_full),.rx_empty(ser_rx_empty),
       .serdes_link_up(serdes_link_up),.debug0(debug_serdes0), .debug1(debug_serdes1) );

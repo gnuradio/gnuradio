@@ -1,6 +1,6 @@
 
 module fifo36_to_ll8
-  (input clk, reset,
+  (input clk, input reset, input clear,
    input [35:0] f36_data,
    input f36_src_rdy_i,
    output f36_dst_rdy_o,

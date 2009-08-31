@@ -8,7 +8,24 @@ module simple_gemac_rx
    input pass_ucast, input pass_mcast, input pass_bcast, input pass_pause, input pass_all,
    output reg [15:0] pause_quanta_rcvd, output pause_rcvd );
 
-   reg [7:0] rxd_d1;
+   localparam RX_IDLE 		  = 0;
+   localparam RX_PREAMBLE 	  = 1;
+   localparam RX_FRAME 		  = 2;
+   localparam RX_GOODFRAME 	  = 3;
+   localparam RX_DO_PAUSE 	  = 4;
+   localparam RX_ERROR 		  = 5;
+   localparam RX_DROP 		  = 6;
+
+   localparam RX_PAUSE 		  = 16;
+   localparam RX_PAUSE_CHK88 	  = RX_PAUSE + 5;
+   localparam RX_PAUSE_CHK08 	  = RX_PAUSE_CHK88 + 1;
+   localparam RX_PAUSE_CHK00 	  = RX_PAUSE_CHK08 + 1;
+   localparam RX_PAUSE_CHK01 	  = RX_PAUSE_CHK00 + 1;
+   localparam RX_PAUSE_STORE_MSB  = RX_PAUSE_CHK01 + 1;
+   localparam RX_PAUSE_STORE_LSB  = RX_PAUSE_STORE_MSB + 1;
+   localparam RX_PAUSE_WAIT_CRC   = RX_PAUSE_STORE_LSB + 1;
+   
+   reg [7:0] 	     rxd_d1;
    reg rx_dv_d1, rx_er_d1;
    assign rx_clk     = GMII_RX_CLK;
    
@@ -19,10 +36,15 @@ module simple_gemac_rx
 	rxd_d1 	    <= GMII_RXD;
      end
 
+   reg [7:0] rx_state;
    wire [7:0] rxd_del;
    wire rx_dv_del, rx_er_del;
    reg go_filt;
    
+   wire match_crc;
+   wire clear_crc 	 = rx_state == RX_IDLE;
+   wire calc_crc 	 = (rx_state == RX_FRAME) | rx_state[7:4]==4'h1;
+
    localparam DELAY  = 6;
    delay_line #(.WIDTH(10)) rx_delay
      (.clk(rx_clk), .delay(DELAY), .din({rx_dv_d1,rx_er_d1,rxd_d1}),.dout({rx_dv_del,rx_er_dl,rxd_del}));
@@ -37,7 +59,6 @@ module simple_gemac_rx
    wire keep_packet  = (pass_ucast & is_ucast) | (pass_mcast & is_mcast) | 
 	(pass_bcast & is_bcast) | (pass_pause & is_pause) | pass_all;
    
-   reg [7:0] rx_state;
    assign rx_data   = rxd_del;
    assign rx_error  = (rx_state == RX_ERROR);
 
@@ -58,24 +79,6 @@ module simple_gemac_rx
    address_filter af_pause (.clk(rx_clk), .reset(reset), .go(go_filt), .data(rxd_d1),
 			    .address(48'h0180_c200_0001), .match(is_pause), .done());
 
-   localparam RX_IDLE 		  = 0;
-   localparam RX_PREAMBLE 	  = 1;
-   localparam RX_FRAME 		  = 2;
-   localparam RX_GOODFRAME 	  = 3;
-   localparam RX_DO_PAUSE 	  = 4;
-   localparam RX_ERROR 		  = 5;
-   localparam RX_DROP 		  = 6;
-
-   localparam RX_PAUSE 		  = 16;
-   localparam RX_PAUSE_CHK88 	  = RX_PAUSE + 5;
-   localparam RX_PAUSE_CHK08 	  = RX_PAUSE_CHK88 + 1;
-   localparam RX_PAUSE_CHK00 	  = RX_PAUSE_CHK08 + 1;
-   localparam RX_PAUSE_CHK01 	  = RX_PAUSE_CHK00 + 1;
-   localparam RX_PAUSE_STORE_MSB  = RX_PAUSE_CHK01 + 1;
-   localparam RX_PAUSE_STORE_LSB  = RX_PAUSE_STORE_MSB + 1;
-   localparam RX_PAUSE_WAIT_CRC   = RX_PAUSE_STORE_LSB + 1;
-   
-   
    always @(posedge rx_clk)
      go_filt 			 <= (rx_state==RX_PREAMBLE) & (rxd_d1 == 8'hD5);
 
@@ -155,9 +158,6 @@ module simple_gemac_rx
 	 endcase // case (rx_state)
 
    assign pause_rcvd = (rx_state == RX_DO_PAUSE);
-   wire match_crc;
-   wire clear_crc 	 = rx_state == RX_IDLE;
-   wire calc_crc 	 = (rx_state == RX_FRAME) | rx_state[7:4]==4'h1;
    crc crc_check(.clk(rx_clk),.reset(reset),.clear(clear_crc),
 		 .data(rxd_d1),.calc(calc_crc),.crc_out(),.match(match_crc));
 

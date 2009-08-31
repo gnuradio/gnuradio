@@ -32,12 +32,10 @@ module serdes_rx
      input ser_rkmsb,
      
      output [31:0] wr_dat_o,
-     output wr_write_o,
-     output wr_done_o,
-     output wr_error_o,
+     output [3:0] wr_flags_o,
      input wr_ready_i,
-     input wr_full_i,
-
+     output wr_ready_o,
+     
      output [15:0] fifo_space,
      output xon_rcvd, output xoff_rcvd,
 
@@ -83,6 +81,7 @@ module serdes_rx
    wire [15:0] nextCRC;
    reg 	       write_d;
 
+   wire        rst_rxclk;
    oneshot_2clk rst_1s(.clk_in(clk),.in(rst),.clk_out(ser_rx_clk),.out(rst_rxclk));
 
    /*
@@ -311,34 +310,21 @@ module serdes_rx
       .wr_data_count() );
    assign 	       fifo_space = {{(16-FIFOSIZE){1'b0}},{FIFOSIZE{1'b1}}} - 
 		       {{(16-FIFOSIZE){1'b0}},level};
-   assign 	       fifo_occupied = { {(16-FIFOSIZE){1'b0}}, level };
-   assign 	       fifo_full = full;   // Note -- fifo_full is in the wrong clock domain
-   assign 	       fifo_empty = empty;
+   assign 	       fifo_occupied  = { {(16-FIFOSIZE){1'b0}}, level };
+   assign 	       fifo_full      = full;   // Note -- fifo_full is in the wrong clock domain
+   assign 	       fifo_empty     = empty;
 `endif //  `ifdef XILFIFO
    
    
    // Internal FIFO to Buffer interface
-   reg 	       xfer_active;
-
-   always @(posedge clk)
-     if(rst)
-       xfer_active <= 0;
-     else if(xfer_active & ~empty & (eop_o | wr_full_i | error_o))
-       xfer_active <= 0;
-     else if(wr_ready_i & sop_o)
-       xfer_active <= 1;
-
-   assign      read = (xfer_active | ~sop_o) & ~empty;
-
-   assign      wr_write_o = xfer_active & ~empty;
-   assign      wr_done_o = eop_o & ~empty & xfer_active;
-   //assign      wr_error_o = xfer_active & ((wr_full_i & ~eop_o & ~empty)|error_o);
-   assign      wr_error_o = xfer_active & ~empty & error_o;
-
-   assign      wr_dat_o = line_o;
-
-   wire        slu = ~(({2'b11,K_ERROR,K_ERROR}=={ser_rkmsb,ser_rklsb,ser_r}) ||
+   assign read 			      = wr_ready_i & wr_ready_o;
+   assign wr_ready_o 		      = ~empty;
+   assign wr_dat_o 		      = line_o;
+   assign wr_flags_o = { 2'b00, eop_o | error_o, sop_o | error_o };
+   
+   wire slu = ~(({2'b11,K_ERROR,K_ERROR}=={ser_rkmsb,ser_rklsb,ser_r}) ||
 		       ({2'b11,K_LOS,K_LOS}=={ser_rkmsb,ser_rklsb,ser_r}));
+   
    reg [3:0]   slu_reg;
    
    always @(posedge clk)
@@ -348,6 +334,6 @@ module serdes_rx
    always @(posedge clk)
      serdes_link_up <= &slu_reg[3:1];
    
-   assign      debug = { full, empty, odd, xfer_active, sop_i, eop_i, error_i, state[2:0] };
+   assign      debug = { full, empty, odd, sop_i, eop_i, error_i, state[2:0] };
    
 endmodule // serdes_rx

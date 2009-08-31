@@ -3,6 +3,7 @@
 -y .
 -y ../top/u2_core
 -y ../control_lib
+-y ../control_lib/newfifo
 -y ../serdes
 -y ../sdr_lib
 -y ../timing

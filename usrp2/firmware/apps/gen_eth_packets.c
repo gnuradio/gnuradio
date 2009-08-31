@@ -141,11 +141,12 @@ main(void)
   ethernet_register_link_changed_callback(link_changed_callback);
   ethernet_init();
 
+  /*
   if (hwconfig_simulation_p()){
     eth_mac->speed = 4;	// hardcode mac speed to 1000
     link_is_up = true;
   }
-
+  */
   // fire off a receive from the ethernet
   bp_receive_to_buf(CPU_RX_BUF, PORT_ETH, 1, 0, BP_LAST_LINE);
 

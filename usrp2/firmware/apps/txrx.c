@@ -257,12 +257,14 @@ main(void)
 {
   u2_init();
 
-  putstr("\nTxRx\n");
+  putstr("\nTxRx-NEWETH\n");
   print_mac_addr(ethernet_mac_addr()->addr);
   newline();
 
   ethernet_register_link_changed_callback(link_changed_callback);
+  putstr("Before ethernet_init()\n");
   ethernet_init();
+  putstr("After ethernet_init()\n");
 
 
 #if 0

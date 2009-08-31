@@ -33,11 +33,9 @@ module serdes_tx
      
      // TX Stream Interface
      input [31:0] rd_dat_i,
-     output rd_read_o,
-     output rd_done_o,
-     output rd_error_o,
-     input rd_sop_i,
-     input rd_eop_i,
+     input [3:0] rd_flags_i,
+     output rd_ready_o,
+     input rd_ready_i,
 
      // Flow control interface
      input inhibit_tx,
@@ -82,33 +80,24 @@ module serdes_tx
    wire        sop_o, eop_o, write, full, read, empty;
    wire [31:0] data_o;
    reg 	       xfer_active;
+
+   wire        rd_sop_i  = rd_flags_i[0];
+   wire        rd_eop_i  = rd_flags_i[1];
+   wire [1:0]  rd_occ_i = rd_flags_i[3:2];  // Unused
    
    cascadefifo2 #(.WIDTH(34),.SIZE(FIFOSIZE)) serdes_tx_fifo
      (.clk(clk),.rst(rst),.clear(0),
       .datain({rd_sop_i,rd_eop_i,rd_dat_i}), .write(write), .full(full),
       .dataout({sop_o,eop_o,data_o}), .read(read), .empty(empty),
       .space(), .occupied(fifo_occupied) );
-   assign      fifo_full = full;
-   assign      fifo_empty = empty;
+   assign      fifo_full   = full;
+   assign      fifo_empty  = empty;
+
+   assign write 	   = rd_ready_i & rd_ready_o;
+   assign rd_ready_o 	   = ~full;
+
    
-   // Buffer interface to internal FIFO
-   always @(posedge clk)
-     if(rst)
-       xfer_active <= 0;
-     else if(rd_eop_i & ~full)  // In case we can't store last line right away
-       xfer_active <= 0;
-     else if(rd_sop_i)
-       xfer_active <= 1;
-   
-   assign      write = xfer_active & ~full;
-   
-   assign      rd_read_o = write;
-   assign      rd_done_o = 0;        // Always take everything we're given
-   assign      rd_error_o = 0;       // No chance for errors anticipated
-   
-   
-   // FIXME Implement flow control
-   
+   // FIXME Implement flow control   
    reg [15:0]  second_word;
    reg [33:0]  pipeline;
    

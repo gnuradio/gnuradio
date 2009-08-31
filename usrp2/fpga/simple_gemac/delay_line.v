@@ -7,7 +7,7 @@ module delay_line
     input [WIDTH-1:0] din,
     output [WIDTH-1:0] dout);
     
-   integer i;
+   genvar 	       i;
    generate
       for (i=0;i<WIDTH;i=i+1)
 	begin : gen_delay
