@@ -55,9 +55,9 @@ class _logpwrfft_base(gr.hier_block2):
         c2mag = gr.complex_to_mag(fft_size)
         self._avg = gr.single_pole_iir_filter_ff(1.0, fft_size)
         self._log = gr.nlog10_ff(20, fft_size,
-                                 -10*math.log10(fft_size)              # Adjust for number of bins
+                                 -20*math.log10(fft_size)              # Adjust for number of bins
                                  -10*math.log10(window_power/fft_size) # Adjust for windowing loss
-                                 -20*math.log10(ref_scale/2))          # Adjust for reference scale
+                                 -20*math.log10(ref_scale/2)+3.0)      # Adjust for reference scale
         self.connect(self, self._sd, fft, c2mag, self._avg, self._log, self)
 
         self._average = average

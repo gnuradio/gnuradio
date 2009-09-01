@@ -256,15 +256,19 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		if not len(self.samples): return
 		#get the peak level (max of the samples)
 		peak_level = numpy.max(self.samples)
-		#get the noise floor (averge the smallest samples)
-		noise_floor = numpy.average(numpy.sort(self.samples)[:len(self.samples)/4])
-		#padding
-		noise_floor -= abs(noise_floor)*.5
-		peak_level += abs(peak_level)*.1
-		#set the reference level to a multiple of y divs
-		self[REF_LEVEL_KEY] = self[Y_DIVS_KEY]*math.ceil(peak_level/self[Y_DIVS_KEY])
+		#separate noise samples
+		noise_samps = numpy.sort(self.samples)[:len(self.samples)/2]
+		#get the noise floor
+		noise_floor = numpy.average(noise_samps)
+		#get the noise deviation
+		noise_dev = numpy.std(noise_samps)
+		#determine the maximum and minimum levels
+		max_level = peak_level
+		min_level = noise_floor - abs(2*noise_dev)
 		#set the range to a clean number of the dynamic range
-		self[Y_PER_DIV_KEY] = common.get_clean_num((peak_level - noise_floor)/self[Y_DIVS_KEY])
+		self[Y_PER_DIV_KEY] = common.get_clean_num(1+(max_level - min_level)/self[Y_DIVS_KEY])
+		#set the reference level to a multiple of y per div
+		self[REF_LEVEL_KEY] = self[Y_PER_DIV_KEY]*round(.5+max_level/self[Y_PER_DIV_KEY])
 
 	def _reset_peak_vals(self, *args): self.peak_vals = EMPTY_TRACE
 
