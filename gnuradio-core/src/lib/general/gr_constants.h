@@ -45,16 +45,6 @@ const std::string gr_prefsdir();
 const std::string gr_build_date();
 
 /*!
- * \brief return repository date as set when 'bootstrap' is run
- */
-const std::string gr_svn_date();
-
-/*!
- * \brief return repository version as set when 'bootstrap' is run
- */
-const std::string gr_svn_version();
-
-/*!
  * \brief return version string defined in configure.ac
  */
 const std::string gr_version();
