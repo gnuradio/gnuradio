@@ -259,6 +259,13 @@ class gr_plot_qt(QtGui.QMainWindow):
                      self.change_pen_width)
         self.gui.lineWidthSpinBox.setRange(1, 10)
 
+        # When style size spin box changes, update the pen size
+        self.connect(self.gui.styleSizeSpinBox,
+                     Qt.SIGNAL("valueChanged(int)"),
+                     self.change_style_size)
+        self.gui.styleSizeSpinBox.setRange(1, 20)
+        self.gui.styleSizeSpinBox.setValue(5)
+
 
         # Connect a signal for when the sample rate changes
         self.set_sample_rate(self.sample_rate)
@@ -586,6 +593,13 @@ class gr_plot_qt(QtGui.QMainWindow):
         colormode = str(self.gui.colorComboBox.currentText().toAscii())
         color_func = self.color_modes[colormode]()
 
+    def change_style_size(self, size):
+        self.rsym.setSize(size)
+        self.isym.setSize(size)
+        self.rcurve.setSymbol(self.rsym)
+        self.icurve.setSymbol(self.isym)
+        self.gui.timePlot.replot()
+    
     def color_black_on_white(self):
         blue = QtGui.qRgb(0x00, 0x00, 0xFF)
         red = QtGui.qRgb(0xFF, 0x00, 0x00)
