@@ -50,7 +50,7 @@ class ac_couple_block(gr.hier_block2):
 		self.connect(self, lpf, mute, (sub, 1))
 		#subscribe
 		controller.subscribe(ac_couple_key, lambda x: mute.set_mute(not x))
-		controller.subscribe(sample_rate_key, lambda x: lpf.set_taps(2.0/x))
+		controller.subscribe(sample_rate_key, lambda x: lpf.set_taps(0.05))
 		#initialize
 		controller[ac_couple_key] = ac_couple
 		controller[sample_rate_key] = controller[sample_rate_key]
