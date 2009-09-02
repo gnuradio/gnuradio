@@ -254,17 +254,7 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		Set the dynamic range and reference level.
 		"""
 		if not len(self.samples): return
-		#get the peak level (max of the samples)
-		peak_level = numpy.max(self.samples)
-		#separate noise samples
-		noise_samps = numpy.sort(self.samples)[:len(self.samples)/2]
-		#get the noise floor
-		noise_floor = numpy.average(noise_samps)
-		#get the noise deviation
-		noise_dev = numpy.std(noise_samps)
-		#determine the maximum and minimum levels
-		max_level = peak_level
-		min_level = noise_floor - abs(2*noise_dev)
+		min_level, max_level = common.get_min_max_fft(self.samples)
 		#set the range to a clean number of the dynamic range
 		self[Y_PER_DIV_KEY] = common.get_clean_num(1+(max_level - min_level)/self[Y_DIVS_KEY])
 		#set the reference level to a multiple of y per div
