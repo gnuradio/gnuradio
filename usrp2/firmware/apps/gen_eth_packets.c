@@ -147,6 +147,9 @@ main(void)
     link_is_up = true;
   }
   */
+
+  link_is_up = true;		/* FIXME tell s/w link is up */
+
   // fire off a receive from the ethernet
   bp_receive_to_buf(CPU_RX_BUF, PORT_ETH, 1, 0, BP_LAST_LINE);
 
@@ -160,10 +163,15 @@ main(void)
     }
 
     if (status & (BPS_DONE(CPU_TX_BUF) | BPS_ERROR(CPU_TX_BUF))){
+      if (status & BPS_ERROR(CPU_TX_BUF)){
+	putchar('E');
+      }
       bp_clear_buf(CPU_TX_BUF);
       npackets_sent++;
-      if ((npackets_sent & 0xF) == 0)	// print after every 16 packets
-	print_rmon_regs();
+      if ((npackets_sent & 0xF) == 0){	// print after every 16 packets
+	//print_rmon_regs();
+	putchar('.');
+      }
     }
 
     if (link_is_up && send_packet_now && (status & BPS_IDLE(CPU_TX_BUF))){

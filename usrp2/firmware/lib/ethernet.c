@@ -259,6 +259,10 @@ ethernet_init(void)
   t &= ~(NWAY_AR_10T_HD_CAPS | NWAY_AR_10T_FD_CAPS | NWAY_AR_100TX_HD_CAPS | NWAY_AR_100TX_FD_CAPS);
 
   eth_mac_miim_write(PHY_AUTONEG_ADV, t);
+  int r = eth_mac_miim_read(PHY_AUTONEG_ADV);  		// DEBUG, read back
+  if (t != r){
+    printf("PHY_AUTONEG_ADV: wrote 0x%x, got 0x%x\n", t, r);
+  }
 
   // Restart autonegotation.  
   // We want to ensure that we're advertising our PAUSE capabilities.

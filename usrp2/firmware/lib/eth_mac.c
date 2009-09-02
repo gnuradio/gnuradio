@@ -118,8 +118,9 @@ eth_mac_miim_read(int addr)
   while((eth_mac->miistatus & MIIS_BUSY) != 0)
     ;
 
-  printf("MIIM-READ ADDR %d DATA %d\n",addr, eth_mac->miirx_data);
-  return eth_mac->miirx_data;
+  int r = eth_mac->miirx_data;
+  printf("MIIM-READ ADDR 0x%x DATA 0x%x\n",addr, r);
+  return r;
 }
 
 void
@@ -130,7 +131,7 @@ eth_mac_miim_write(int addr, int value)
   eth_mac->miitx_data = value;
   eth_mac->miicommand = MIIC_WCTRLDATA;
 
-  printf("MIIM-WRITE ADDR %d VAL %d\n",addr,value);
+  printf("MIIM-WRITE ADDR 0x%x VAL 0x%x\n",addr,value);
   while((eth_mac->miistatus & MIIS_BUSY) != 0)
     ;
 }
