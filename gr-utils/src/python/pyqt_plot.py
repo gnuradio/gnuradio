@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_plot.ui'
 #
-# Created: Tue Sep  1 21:40:08 2009
+# Created: Tue Sep  1 22:46:04 2009
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(927, 696)
+        MainWindow.resize(927, 693)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtGui.QGridLayout(self.centralwidget)
@@ -142,19 +142,26 @@ class Ui_MainWindow(object):
         self.sampleRateLineEdit.setObjectName("sampleRateLineEdit")
         self.formLayout_2.setWidget(0, QtGui.QFormLayout.FieldRole, self.sampleRateLineEdit)
         self.displayGroupBox = QtGui.QGroupBox(self.filePosBox)
-        self.displayGroupBox.setGeometry(QtCore.QRect(730, 0, 170, 120))
+        self.displayGroupBox.setGeometry(QtCore.QRect(730, 0, 170, 142))
         self.displayGroupBox.setMinimumSize(QtCore.QSize(170, 0))
         self.displayGroupBox.setObjectName("displayGroupBox")
-        self.verticalLayoutWidget = QtGui.QWidget(self.displayGroupBox)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(0, 20, 160, 91))
-        self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
-        self.verticalLayout = QtGui.QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout.setObjectName("verticalLayout")
-        self.colorComboBox = QtGui.QComboBox(self.verticalLayoutWidget)
+        self.gridLayout_2 = QtGui.QGridLayout(self.displayGroupBox)
+        self.gridLayout_2.setObjectName("gridLayout_2")
+        self.colorComboBox = QtGui.QComboBox(self.displayGroupBox)
         self.colorComboBox.setObjectName("colorComboBox")
-        self.verticalLayout.addWidget(self.colorComboBox)
-        spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.verticalLayout.addItem(spacerItem)
+        self.gridLayout_2.addWidget(self.colorComboBox, 0, 0, 1, 2)
+        self.lineWidthSpinBox = QtGui.QSpinBox(self.displayGroupBox)
+        self.lineWidthSpinBox.setObjectName("lineWidthSpinBox")
+        self.gridLayout_2.addWidget(self.lineWidthSpinBox, 1, 1, 1, 1)
+        self.lineWidthLabel = QtGui.QLabel(self.displayGroupBox)
+        self.lineWidthLabel.setObjectName("lineWidthLabel")
+        self.gridLayout_2.addWidget(self.lineWidthLabel, 1, 0, 1, 1)
+        self.label = QtGui.QLabel(self.displayGroupBox)
+        self.label.setObjectName("label")
+        self.gridLayout_2.addWidget(self.label, 2, 0, 1, 1)
+        self.lineStyleComboBox = QtGui.QComboBox(self.displayGroupBox)
+        self.lineStyleComboBox.setObjectName("lineStyleComboBox")
+        self.gridLayout_2.addWidget(self.lineStyleComboBox, 2, 1, 1, 1)
         self.gridLayout.addWidget(self.filePosBox, 3, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
@@ -201,6 +208,8 @@ class Ui_MainWindow(object):
         self.sysGroupBox.setTitle(QtGui.QApplication.translate("MainWindow", "System Properties", None, QtGui.QApplication.UnicodeUTF8))
         self.sampleRateLabel.setText(QtGui.QApplication.translate("MainWindow", "Sample Rate", None, QtGui.QApplication.UnicodeUTF8))
         self.displayGroupBox.setTitle(QtGui.QApplication.translate("MainWindow", "Display Properties", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineWidthLabel.setText(QtGui.QApplication.translate("MainWindow", "Line Width", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("MainWindow", "Line Style", None, QtGui.QApplication.UnicodeUTF8))
         self.menu_File.setTitle(QtGui.QApplication.translate("MainWindow", "&File", None, QtGui.QApplication.UnicodeUTF8))
         self.action_open.setText(QtGui.QApplication.translate("MainWindow", "&Open", None, QtGui.QApplication.UnicodeUTF8))
         self.action_open.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+O", None, QtGui.QApplication.UnicodeUTF8))

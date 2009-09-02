@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>927</width>
-    <height>696</height>
+    <height>693</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -282,7 +282,7 @@
          <x>730</x>
          <y>0</y>
          <width>170</width>
-         <height>120</height>
+         <height>142</height>
         </rect>
        </property>
        <property name="minimumSize" >
@@ -294,34 +294,31 @@
        <property name="title" >
         <string>Display Properties</string>
        </property>
-       <widget class="QWidget" name="verticalLayoutWidget" >
-        <property name="geometry" >
-         <rect>
-          <x>0</x>
-          <y>20</y>
-          <width>160</width>
-          <height>91</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout" >
-         <item>
-          <widget class="QComboBox" name="colorComboBox" />
-         </item>
-         <item>
-          <spacer name="verticalSpacer" >
-           <property name="orientation" >
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0" >
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </widget>
+       <layout class="QGridLayout" name="gridLayout_2" >
+        <item row="0" column="0" colspan="2" >
+         <widget class="QComboBox" name="colorComboBox" />
+        </item>
+        <item row="1" column="1" >
+         <widget class="QSpinBox" name="lineWidthSpinBox" />
+        </item>
+        <item row="1" column="0" >
+         <widget class="QLabel" name="lineWidthLabel" >
+          <property name="text" >
+           <string>Line Width</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" >
+         <widget class="QLabel" name="label" >
+          <property name="text" >
+           <string>Line Style</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1" >
+         <widget class="QComboBox" name="lineStyleComboBox" />
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
