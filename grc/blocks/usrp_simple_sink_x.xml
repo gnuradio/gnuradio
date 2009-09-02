@@ -10,20 +10,24 @@
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
 	<make>grc_usrp.simple_sink_$(type.fcn)(which=$which, side=$side)
 self.$(id).set_interp_rate($interpolation)
-self.$(id).set_frequency($frequency, verbose=True)
+self.$(id).set_frequency($frequency, verbose=True#slurp
+#if $lo_offset() != float('inf')
+, lo_offset=$lo_offset#slurp
+#end if
+)
 self.$(id).set_gain($gain)
 #if $transmit.tx_enb
 self.$(id).set_enable(True)
 #end if
 #if $transmit.auto_tr
 self.$(id).set_auto_tr(True)
-#end if
-#if $lo_offset() != float('inf')
-self.$(id).set_lo_offset($lo_offset)
 #end if</make>
-	<callback>set_lo_offset($lo_offset)</callback>
 	<callback>set_interp_rate($interpolation)</callback>
-	<callback>set_frequency($frequency)</callback>
+	<callback>set_frequency($frequency#slurp
+#if $lo_offset() != float('inf')
+, lo_offset=$lo_offset#slurp
+#end if
+)</callback>
 	<callback>set_gain($gain)</callback>
 	<param>
 		<name>Input Type</name>

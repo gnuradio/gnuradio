@@ -2,6 +2,7 @@
 <!--
 ###################################################
 ##USRP2 Sink
+##  Note: the center freq must be set after the lo offset
 ###################################################
  -->
 <block>
@@ -16,14 +17,16 @@ usrp2.sink_$(type.fcn)($interface)
 usrp2.sink_$(type.fcn)($interface, $mac_addr)
 #end if
 self.$(id).set_interp($interpolation)
-self.$(id).set_center_freq($frequency)
-self.$(id).set_gain($gain)
 #if $lo_offset() != float('inf')
 self.$(id).set_lo_offset($lo_offset)
-#end if</make>
-	<callback>set_lo_offset($lo_offset)</callback>
+#end if
+self.$(id).set_center_freq($frequency)
+self.$(id).set_gain($gain)</make>
 	<callback>set_interp($interpolation)</callback>
-	<callback>set_center_freq($frequency)</callback>
+	<callback>#if $lo_offset() != float('inf')
+self.$(id).set_lo_offset($lo_offset)
+#end if
+self.$(id).set_center_freq($frequency)</callback>
 	<callback>set_gain($gain)</callback>
 	<param>
 		<name>Output Type</name>
