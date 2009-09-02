@@ -79,20 +79,23 @@ module simple_gemac_wb
    wire [2:0]  MIISTATUS;
 
    wb_reg #(.ADDR(5),.DEFAULT(0))
-   wb_reg_miimoder (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .dat_i(wb_dat_i), .dat_o({NoPre,Divider}) );
+   wb_reg_miimoder (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .wr_acc(wr_acc),
+		    .dat_i(wb_dat_i), .dat_o({NoPre,Divider}) );
    
    wb_reg #(.ADDR(6),.DEFAULT(0))
-   wb_reg_miiaddr (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .dat_i(wb_dat_i), .dat_o(MIIADDRESS) );
+   wb_reg_miiaddr (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .wr_acc(wr_acc),
+		   .dat_i(wb_dat_i), .dat_o(MIIADDRESS) );
    
    wb_reg #(.ADDR(7),.DEFAULT(0))
-   wb_reg_miidata (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .dat_i(wb_dat_i), .dat_o(CtrlData) );
+   wb_reg_miidata (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .wr_acc(wr_acc),
+		   .dat_i(wb_dat_i), .dat_o(CtrlData) );
    
    // MIICOMMAND register - needs special treatment because of auto-resetting bits
    always @ (posedge wb_clk)
      if (wb_rst)
        MIICOMMAND <= 0;
      else
-       if (wr_acc & (wb_adr == 8'd8))
+       if (wr_acc & (wb_adr[7:2] == 6'd8))
          MIICOMMAND <= wb_dat_i;
        else
          begin
@@ -129,7 +132,7 @@ module simple_gemac_wb
       .UpdateMIIRX_DATAReg(UpdateMIIRX_DATAReg) );
 
    always @(posedge wb_clk)
-     case(wb_adr)
+     case(wb_adr[7:2])
        0 : wb_dat_o <= misc_settings;
        1 : wb_dat_o <= ucast_addr[47:32];
        2 : wb_dat_o <= ucast_addr[31:0];
@@ -141,6 +144,6 @@ module simple_gemac_wb
        8 : wb_dat_o <= MIICOMMAND;
        9 : wb_dat_o <= MIISTATUS;
        10: wb_dat_o <= MIIRX_DATA;
-     endcase // case (wb_adr)
+     endcase // case (wb_adr[7:2])
    
 endmodule // simple_gemac_wb
