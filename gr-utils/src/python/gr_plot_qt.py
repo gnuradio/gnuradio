@@ -7,14 +7,36 @@ except ImportError:
     print "Please install SciPy to run this script (http://www.scipy.org/)"
     raise SystemExit, 1
 
+try:
+    from matplotlib import mlab
+except ImportError:
+    print "Please install Matplotlib to run this script (http://matplotlib.sourceforge.net)"
+    raise SystemExit, 1
+
+try:
+    from PyQt4 import Qt, QtCore, QtGui
+except ImportError:
+    print "Please install PyQt4 to run this script (http://www.riverbankcomputing.co.uk/software/pyqt/download)"
+    raise SystemExit, 1
+
+try:
+    import PyQt4.Qwt5 as Qwt
+except ImportError:
+    print "Please install PyQwt5 to run this script (http://pyqwt.sourceforge.net/)"
+    raise SystemExit, 1
+
+try:
+    # FIXME: reenable this before committing
+    #from gnuradio.pyqt_plot import Ui_MainWindow
+    from pyqt_plot import Ui_MainWindow
+except ImportError:
+    print "Could not import from pyqt_plot. Please build with \"pyuic4 pyqt_plot.ui -o pyqt_plot.py\""
+    raise SystemExit, 1
+
 import sys, os
-from PyQt4 import Qt, QtCore, QtGui
-import PyQt4.Qwt5 as Qwt
-from matplotlib import mlab
 from optparse import OptionParser
 from gnuradio import eng_notation
 
-from pyqt_plot import Ui_MainWindow
 
 class SpectrogramData(Qwt.QwtRasterData):
 
@@ -53,6 +75,7 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.gui = Ui_MainWindow()
         self.gui.setupUi(self)
                        
+        self.filename = None
         self.block_length = options.block_length
         self.start = options.start
         self.sample_rate = options.sample_rate
@@ -121,15 +144,15 @@ class gr_plot_qt(QtGui.QMainWindow):
                                             Qwt.QwtPicker.AlwaysOn,
                                             self.gui.specPlot.canvas())
 
-        self.picker = Qwt.QwtPlotPicker(self.gui.timePlot.xBottom,
-                                        self.gui.timePlot.yLeft,
-                                        Qwt.QwtPicker.PointSelection,
-                                        Qwt.QwtPlotPicker.CrossRubberBand,
-                                        Qwt.QwtPicker.AlwaysOn,
-                                        self.gui.timePlot.canvas())
-        self.picker.connect(self.picker,
-                            Qt.SIGNAL('selected(const QwtDoublePoint&)'),
-                            self.clickMe)
+        #self.picker = Qwt.QwtPlotPicker(self.gui.timePlot.xBottom,
+        #                                self.gui.timePlot.yLeft,
+        #                                Qwt.QwtPicker.PointSelection,
+        #                                Qwt.QwtPlotPicker.CrossRubberBand,
+        #                                Qwt.QwtPicker.AlwaysOn,
+        #                                self.gui.timePlot.canvas())
+        #self.picker.connect(self.picker,
+        #                    Qt.SIGNAL('selected(const QwtDoublePoint&)'),
+        #                    self.clickMe)
 
         # Set up action when tab is changed
         self.connect(self.gui.tabGroup,
@@ -153,7 +176,14 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.connect(self.gui.action_open,
                      Qt.SIGNAL("activated()"),
                      self.open_file)
-        
+
+        # Connect Reload action to reload the file
+        self.connect(self.gui.action_reload,
+                     Qt.SIGNAL("activated()"),
+                     self.reload_file)
+        self.gui.action_reload.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+R",
+                                                                        None, QtGui.QApplication.UnicodeUTF8))
+
         # Set up file position boxes to update current figure
         self.connect(self.gui.filePosStartLineEdit,
                      Qt.SIGNAL("editingFinished()"),
@@ -222,10 +252,15 @@ class gr_plot_qt(QtGui.QMainWindow):
     def open_file(self):
         filename = Qt.QFileDialog.getOpenFileName(self, "Open", ".")
         if(filename != ""):
-            print filename
+            #print filename
             self.initialize(filename)
 
+    def reload_file(self):
+        if(self.filename):
+            self.initialize(self.filename)
+        
     def initialize(self, filename):
+        self.filename = filename
         self.hfile = open(filename, "r")
 
         self.setWindowTitle(("GNU Radio File Plot Utility: %s" % filename))
@@ -253,7 +288,7 @@ class gr_plot_qt(QtGui.QMainWindow):
     def init_data_input(self):
         self.hfile.seek(0, os.SEEK_END)
         self.signal_size = self.hfile.tell()/self.sizeof_data
-        print "Sizeof File: ", self.signal_size
+        #print "Sizeof File: ", self.signal_size
         self.hfile.seek(0, os.SEEK_SET)
         
     def get_data(self, start, end):
@@ -528,7 +563,7 @@ class gr_plot_qt(QtGui.QMainWindow):
 
         self.gui.timePlot.setCanvasBackground(Qt.QColor("white"))
         self.gui.freqPlot.setCanvasBackground(Qt.QColor("white"))
-        self.picker.setTrackerPen(Qt.QPen(blackBrush, 2))
+        #self.picker.setTrackerPen(Qt.QPen(blackBrush, 2))
         self.timeZoomer.setTrackerPen(Qt.QPen(blackBrush, 2))
         self.timeZoomer.setRubberBandPen(Qt.QPen(blackBrush, 2))
         self.freqZoomer.setTrackerPen(Qt.QPen(blackBrush, 2))
@@ -550,7 +585,7 @@ class gr_plot_qt(QtGui.QMainWindow):
         
         self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
         self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        self.picker.setTrackerPen(Qt.QPen(whiteBrush, 2))
+        #self.picker.setTrackerPen(Qt.QPen(whiteBrush, 2))
         self.timeZoomer.setTrackerPen(Qt.QPen(whiteBrush, 2))
         self.timeZoomer.setRubberBandPen(Qt.QPen(whiteBrush, 2))
         self.freqZoomer.setTrackerPen(Qt.QPen(whiteBrush, 2))
@@ -573,7 +608,7 @@ class gr_plot_qt(QtGui.QMainWindow):
         
         self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
         self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        self.picker.setTrackerPen(Qt.QPen(whiteBrush, 2))
+        #self.picker.setTrackerPen(Qt.QPen(whiteBrush, 2))
         self.timeZoomer.setTrackerPen(Qt.QPen(whiteBrush, 2))
         self.timeZoomer.setRubberBandPen(Qt.QPen(whiteBrush, 2))
         self.freqZoomer.setTrackerPen(Qt.QPen(whiteBrush, 2))
@@ -595,7 +630,7 @@ class gr_plot_qt(QtGui.QMainWindow):
         
         self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
         self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        self.picker.setTrackerPen(Qt.QPen(whiteBrush, 2))
+        #self.picker.setTrackerPen(Qt.QPen(whiteBrush, 2))
         self.timeZoomer.setTrackerPen(Qt.QPen(whiteBrush, 2))
         self.timeZoomer.setRubberBandPen(Qt.QPen(whiteBrush, 2))
         self.freqZoomer.setTrackerPen(Qt.QPen(whiteBrush, 2))

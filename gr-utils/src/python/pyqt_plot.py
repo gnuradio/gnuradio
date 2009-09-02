@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_plot.ui'
 #
-# Created: Tue Aug 25 18:18:14 2009
+# Created: Tue Sep  1 21:40:08 2009
 #      by: PyQt4 UI code generator 4.4.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -170,7 +170,10 @@ class Ui_MainWindow(object):
         self.action_open.setObjectName("action_open")
         self.action_exit = QtGui.QAction(MainWindow)
         self.action_exit.setObjectName("action_exit")
+        self.action_reload = QtGui.QAction(MainWindow)
+        self.action_reload.setObjectName("action_reload")
         self.menu_File.addAction(self.action_open)
+        self.menu_File.addAction(self.action_reload)
         self.menu_File.addAction(self.action_exit)
         self.menubar.addAction(self.menu_File.menuAction())
 
@@ -202,5 +205,6 @@ class Ui_MainWindow(object):
         self.action_open.setText(QtGui.QApplication.translate("MainWindow", "&Open", None, QtGui.QApplication.UnicodeUTF8))
         self.action_open.setShortcut(QtGui.QApplication.translate("MainWindow", "Ctrl+O", None, QtGui.QApplication.UnicodeUTF8))
         self.action_exit.setText(QtGui.QApplication.translate("MainWindow", "E&xit", None, QtGui.QApplication.UnicodeUTF8))
+        self.action_reload.setText(QtGui.QApplication.translate("MainWindow", "&Reload", None, QtGui.QApplication.UnicodeUTF8))
 
 from PyQt4 import Qwt5

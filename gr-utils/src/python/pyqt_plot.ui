@@ -341,6 +341,7 @@
      <string>&amp;File</string>
     </property>
     <addaction name="action_open" />
+    <addaction name="action_reload" />
     <addaction name="action_exit" />
    </widget>
    <addaction name="menu_File" />
@@ -357,6 +358,11 @@
   <action name="action_exit" >
    <property name="text" >
     <string>E&amp;xit</string>
+   </property>
+  </action>
+  <action name="action_reload" >
+   <property name="text" >
+    <string>&amp;Reload</string>
    </property>
   </action>
  </widget>
