@@ -21,7 +21,6 @@ class Element(object):
 
 	def __init__(self, parent=None):
 		self._parent = parent
-		self.flag()
 
 	def test(self):
 		"""
@@ -43,17 +42,6 @@ class Element(object):
 	def get_enabled(self): return True
 
 	def get_parent(self): return self._parent
-
-	##############################################
-	## Update flagging
-	##############################################
-	def is_flagged(self): return self._flag
-	def flag(self):
-		self._flag = True
-		if self.get_parent(): self.get_parent().flag()
-	def deflag(self):
-		self._flag = False
-		if self.get_parent(): self.get_parent().deflag()
 
 	##############################################
 	## Type testing methods

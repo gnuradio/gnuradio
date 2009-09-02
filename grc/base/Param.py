@@ -146,9 +146,7 @@ class Param(Element):
 			self.set_value(value)
 		return value
 
-	def set_value(self, value):
-		self.flag()
-		self._value = str(value) #must be a string
+	def set_value(self, value): self._value = str(value) #must be a string
 
 	def get_type(self): return self.get_parent().resolve_dependencies(self._type)
 	def is_enum(self): return self._type == 'enum'

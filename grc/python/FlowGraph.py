@@ -32,8 +32,8 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 	def __init__(self, **kwargs):
 		_FlowGraph.__init__(self, **kwargs)
 		_GUIFlowGraph.__init__(self)
+		self._eval_cache = dict()
 
-	_eval_cache = dict()
 	def _eval(self, code, namespace, namespace_hash):
 		"""
 		Evaluate the code with the given namespace.
@@ -114,6 +114,13 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 		parameters = filter(lambda b: _parameter_matcher.match(b.get_key()), self.get_enabled_blocks())
 		return parameters
 
+	def rewrite(self):
+		"""
+		Flag the namespace to be renewed.
+		"""
+		self._renew_eval_ns = True
+		_FlowGraph.rewrite(self)
+
 	def evaluate(self, expr):
 		"""
 		Evaluate the expression.
@@ -121,8 +128,8 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 		@throw Exception bad expression
 		@return the evaluated data
 		"""
-		if self.is_flagged():
-			self.deflag()
+		if self._renew_eval_ns:
+			self._renew_eval_ns = False
 			#reload namespace
 			n = dict()
 			#load imports

@@ -102,7 +102,6 @@ class FlowGraph(Element):
 		@param key the block key
 		@return the new block or None if not found
 		"""
-		self.flag()
 		if key not in self.get_parent().get_block_keys(): return None
 		block = self.get_parent().get_new_block(self, key)
 		self.get_elements().append(block)
@@ -116,7 +115,6 @@ class FlowGraph(Element):
 		@throw Exception bad connection
 		@return the new connection
 		"""
-		self.flag()
 		connection = self.get_parent().Connection(flow_graph=self, porta=porta, portb=portb)
 		self.get_elements().append(connection)
 		return connection
@@ -128,7 +126,6 @@ class FlowGraph(Element):
 		If the element is a block, remove its connections.
 		If the element is a connection, just remove the connection.
 		"""
-		self.flag()
 		if element not in self.get_elements(): return
 		#found a port, set to parent signal block
 		if element.is_port():
