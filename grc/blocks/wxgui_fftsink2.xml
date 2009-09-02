@@ -15,6 +15,7 @@ fftsink2.$(type.fcn)(
 	y_per_div=$y_per_div,
 	y_divs=$y_divs,
 	ref_level=$ref_level,
+	ref_scale=$ref_scale,
 	sample_rate=$samp_rate,
 	fft_size=$fft_size,
 	fft_rate=$fft_rate,
@@ -100,6 +101,12 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<name>Ref Level (dB)</name>
 		<key>ref_level</key>
 		<value>50</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Ref Scale (p2p)</name>
+		<key>ref_scale</key>
+		<value>2.0</value>
 		<type>real</type>
 	</param>
 	<param>

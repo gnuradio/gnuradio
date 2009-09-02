@@ -14,6 +14,7 @@ waterfallsink2.$(type.fcn)(
 	baseband_freq=$baseband_freq,
 	dynamic_range=$dynamic_range,
 	ref_level=$ref_level,
+	ref_scale=$ref_scale,
 	sample_rate=$samp_rate,
 	fft_size=$fft_size,
 	fft_rate=$fft_rate,
@@ -72,6 +73,12 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<name>Reference Level</name>
 		<key>ref_level</key>
 		<value>50</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Ref Scale (p2p)</name>
+		<key>ref_scale</key>
+		<value>2.0</value>
 		<type>real</type>
 	</param>
 	<param>
