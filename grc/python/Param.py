@@ -403,17 +403,18 @@ class Param(_Param, _GUIParam):
 	def to_code(self):
 		"""
 		Convert the value to code.
+		For string and list types, check the init flag, call evaluate().
+		This ensures that evaluate() was called to set the xxxify_flags.
 		@return a string representing the code
 		"""
-		#run init tasks in evaluate
-		#such as setting flags
-		if not self._init: self.evaluate()
 		v = self.get_value()
 		t = self.get_type()
 		if t in ('string', 'file_open', 'file_save'): #string types
+			if not self._init: self.evaluate()
 			if self._stringify_flag: return '"%s"'%v.replace('"', '\"')
 			else: return v
 		elif t in ('complex_vector', 'real_vector', 'int_vector'): #vector types
+			if not self._init: self.evaluate()
 			if self._lisitify_flag: return '(%s, )'%v
 			else: return '(%s)'%v
 		else: return v
