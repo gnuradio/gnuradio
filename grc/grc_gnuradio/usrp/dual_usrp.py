@@ -53,22 +53,22 @@ class _dual_source(gr.hier_block2):
 		for i in range(2): self.connect((deinter, i), (self, i))
 
 	def set_decim_rate(self, decim): self._get_u().set_decim_rate(int(decim))
-	def set_frequency_a(self, frequency, verbose=False):
+	def set_frequency_a(self, frequency, verbose=False, lo_offset=None):
+		if lo_offset is not None: self._subdev_a.set_lo_offset(lo_offset)
 		self._set_frequency(
 			chan=0, #ddc0
 			subdev=self._subdev_a,
 			frequency=frequency,
 			verbose=verbose,
 		)
-	def set_frequency_b(self, frequency, verbose=False):
+	def set_frequency_b(self, frequency, verbose=False, lo_offset=None):
+		if lo_offset is not None: self._subdev_b.set_lo_offset(lo_offset)
 		self._set_frequency(
 			chan=1, #ddc1
 			subdev=self._subdev_b,
 			frequency=frequency,
 			verbose=verbose,
 		)
-	def set_lo_offset_a(self, lo_offset): self._subdev_a.set_lo_offset(lo_offset)
-	def set_lo_offset_b(self, lo_offset): self._subdev_b.set_lo_offset(lo_offset)
 	def set_gain_a(self, gain): self._subdev_a.set_gain(gain)
 	def set_gain_b(self, gain): self._subdev_b.set_gain(gain)
 
@@ -105,22 +105,22 @@ class _dual_sink(gr.hier_block2):
 		for i in range(2): self.connect((self, i), (inter, i))
 
 	def set_interp_rate(self, interp): self._get_u().set_interp_rate(int(interp))
-	def set_frequency_a(self, frequency, verbose=False):
+	def set_frequency_a(self, frequency, verbose=False, lo_offset=None):
+		if lo_offset is not None: self._subdev_a.set_lo_offset(lo_offset)
 		self._set_frequency(
 			chan=self._subdev_a.which(),
 			subdev=self._subdev_a,
 			frequency=frequency,
 			verbose=verbose,
 		)
-	def set_frequency_b(self, frequency, verbose=False):
+	def set_frequency_b(self, frequency, verbose=False, lo_offset=None):
+		if lo_offset is not None: self._subdev_b.set_lo_offset(lo_offset)
 		self._set_frequency(
 			chan=self._subdev_b.which(),
 			subdev=self._subdev_b,
 			frequency=frequency,
 			verbose=verbose,
 		)
-	def set_lo_offset_a(self, lo_offset): self._subdev_a.set_lo_offset(lo_offset)
-	def set_lo_offset_b(self, lo_offset): self._subdev_b.set_lo_offset(lo_offset)
 	def set_gain_a(self, gain): self._subdev_a.set_gain(gain)
 	def set_gain_b(self, gain): self._subdev_b.set_gain(gain)
 	def set_enable_a(self, enable): self._subdev_a.set_enable(enable)

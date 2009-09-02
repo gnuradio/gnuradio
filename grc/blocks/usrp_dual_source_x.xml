@@ -13,19 +13,29 @@
 self.$(id).set_format(width=$format.width, shift=$format.shift)
 #end if
 self.$(id).set_decim_rate($decimation)
-self.$(id).set_frequency_a($frequency_a, verbose=True)
-self.$(id).set_frequency_b($frequency_b, verbose=True)
-self.$(id).set_gain_a($gain_a)
-self.$(id).set_gain_b($gain_b)
+self.$(id).set_frequency_a($frequency_a, verbose=True#slurp
 #if $lo_offset_a() != float('inf')
-self.$(id).set_lo_offset_a($lo_offset_a)
+, lo_offset=$lo_offset_a#slurp
 #end if
+)
+self.$(id).set_frequency_b($frequency_b, verbose=True#slurp
 #if $lo_offset_b() != float('inf')
-self.$(id).set_lo_offset_b($lo_offset_b)
-#end if</make>
+, lo_offset=$lo_offset_b#slurp
+#end if
+)
+self.$(id).set_gain_a($gain_a)
+self.$(id).set_gain_b($gain_b)</make>
 	<callback>set_decim_rate($decimation)</callback>
-	<callback>set_frequency_a($frequency_a)</callback>
-	<callback>set_frequency_b($frequency_b)</callback>
+	<callback>set_frequency_a($frequency_a#slurp
+#if $lo_offset_a() != float('inf')
+, lo_offset=$lo_offset_a#slurp
+#end if
+)</callback>
+	<callback>set_frequency_b($frequency_b#slurp
+#if $lo_offset_b() != float('inf')
+, lo_offset=$lo_offset_b#slurp
+#end if
+)</callback>
 	<callback>set_gain_a($gain_a)</callback>
 	<callback>set_gain_b($gain_b)</callback>
 	<param>
