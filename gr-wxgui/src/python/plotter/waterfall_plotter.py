@@ -209,7 +209,7 @@ class waterfall_plotter(grid_plotter_base):
 		self._pointer = 0
 		if self._num_lines and self._fft_size:
 			GL.glBindTexture(GL.GL_TEXTURE_2D, self._waterfall_texture)
-			data = numpy.zeros(self._num_lines*self._fft_size*4, numpy.uint8).tostring()
+			data = numpy.zeros(self._num_lines*ceil_log2(self._fft_size)*4, numpy.uint8).tostring()
 			GL.glTexImage2D(GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, ceil_log2(self._fft_size), self._num_lines, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, data)
 		self._resize_texture_flag = False
 
