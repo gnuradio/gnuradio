@@ -144,16 +144,6 @@ class gr_plot_qt(QtGui.QMainWindow):
                                             Qwt.QwtPicker.AlwaysOn,
                                             self.gui.specPlot.canvas())
 
-        #self.picker = Qwt.QwtPlotPicker(self.gui.timePlot.xBottom,
-        #                                self.gui.timePlot.yLeft,
-        #                                Qwt.QwtPicker.PointSelection,
-        #                                Qwt.QwtPlotPicker.CrossRubberBand,
-        #                                Qwt.QwtPicker.AlwaysOn,
-        #                                self.gui.timePlot.canvas())
-        #self.picker.connect(self.picker,
-        #                    Qt.SIGNAL('selected(const QwtDoublePoint&)'),
-        #                    self.clickMe)
-
         # Set up action when tab is changed
         self.connect(self.gui.tabGroup,
                      Qt.SIGNAL("currentChanged (int)"),
@@ -213,6 +203,7 @@ class gr_plot_qt(QtGui.QMainWindow):
 
         self.psdcurve = Qwt.QwtPlotCurve("PSD")
         self.psdcurve.attach(self.gui.freqPlot)
+
 
         # Set up specTab plot as a spectrogram
         self.specdata = SpectrogramData(range(0, 10), range(0, 10))
@@ -339,9 +330,6 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.iq_spec = 10.0*scipy.log10(abs(iq_spec))
         self.spec_f = f
         self.spec_t = t
-
-    def clickMe(self, qPoint):
-        print qPoint.x()
 
     def psdFFTComboBoxEdit(self, fftSize):
         self.psdfftsize = fftSize.toInt()[0]
@@ -563,7 +551,6 @@ class gr_plot_qt(QtGui.QMainWindow):
 
         self.gui.timePlot.setCanvasBackground(Qt.QColor("white"))
         self.gui.freqPlot.setCanvasBackground(Qt.QColor("white"))
-        #self.picker.setTrackerPen(Qt.QPen(blackBrush, 2))
         self.timeZoomer.setTrackerPen(Qt.QPen(blackBrush, 2))
         self.timeZoomer.setRubberBandPen(Qt.QPen(blackBrush, 2))
         self.freqZoomer.setTrackerPen(Qt.QPen(blackBrush, 2))
@@ -585,7 +572,6 @@ class gr_plot_qt(QtGui.QMainWindow):
         
         self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
         self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        #self.picker.setTrackerPen(Qt.QPen(whiteBrush, 2))
         self.timeZoomer.setTrackerPen(Qt.QPen(whiteBrush, 2))
         self.timeZoomer.setRubberBandPen(Qt.QPen(whiteBrush, 2))
         self.freqZoomer.setTrackerPen(Qt.QPen(whiteBrush, 2))
@@ -608,7 +594,6 @@ class gr_plot_qt(QtGui.QMainWindow):
         
         self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
         self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        #self.picker.setTrackerPen(Qt.QPen(whiteBrush, 2))
         self.timeZoomer.setTrackerPen(Qt.QPen(whiteBrush, 2))
         self.timeZoomer.setRubberBandPen(Qt.QPen(whiteBrush, 2))
         self.freqZoomer.setTrackerPen(Qt.QPen(whiteBrush, 2))
@@ -630,7 +615,6 @@ class gr_plot_qt(QtGui.QMainWindow):
         
         self.gui.timePlot.setCanvasBackground(QtGui.QColor("black"))
         self.gui.freqPlot.setCanvasBackground(QtGui.QColor("black"))
-        #self.picker.setTrackerPen(Qt.QPen(whiteBrush, 2))
         self.timeZoomer.setTrackerPen(Qt.QPen(whiteBrush, 2))
         self.timeZoomer.setRubberBandPen(Qt.QPen(whiteBrush, 2))
         self.freqZoomer.setTrackerPen(Qt.QPen(whiteBrush, 2))
