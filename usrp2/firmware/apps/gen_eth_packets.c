@@ -148,8 +148,6 @@ main(void)
   }
   */
 
-  link_is_up = true;		/* FIXME tell s/w link is up */
-
   // fire off a receive from the ethernet
   bp_receive_to_buf(CPU_RX_BUF, PORT_ETH, 1, 0, BP_LAST_LINE);
 
