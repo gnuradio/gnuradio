@@ -59,8 +59,12 @@ module simple_gemac_wrapper
 
    // RX FIFO Chain
    wire rx_ll_sof, rx_ll_eof, rx_ll_src_rdy, rx_ll_dst_rdy;
-   wire rx_ll_sof2, rx_ll_eof2, rx_ll_src_rdy2_n, rx_ll_dst_rdy2;
+
+   wire rx_ll_sof2, rx_ll_eof2, rx_ll_src_rdy2, rx_ll_dst_rdy2;
+   wire rx_ll_sof2_n, rx_ll_eof2_n, rx_ll_src_rdy2_n, rx_ll_dst_rdy2_n;
+
    wire [7:0] rx_ll_data, rx_ll_data2;
+
    wire [35:0] rx_f36_data_int1;
    wire        rx_f36_src_rdy_int1, rx_f36_dst_rdy_int1;
    
@@ -75,19 +79,24 @@ module simple_gemac_wrapper
       .datain(rx_ll_data), .sof_i(rx_ll_sof), .eof_i(rx_ll_eof),
       .error_i(rx_ll_error), .src_rdy_i(rx_ll_src_rdy), .dst_rdy_o(rx_ll_dst_rdy),
       .dataout(rx_ll_data2), .sof_o(rx_ll_sof2), .eof_o(rx_ll_eof2),
-      .error_o(rx_ll_error2), .src_rdy_o(rx_ll_src_rdy2), .dst_rdy_i(~rx_ll_dst_rdy2_n));
+      .error_o(rx_ll_error2), .src_rdy_o(rx_ll_src_rdy2), .dst_rdy_i(rx_ll_dst_rdy2));
 
+   assign rx_ll_dst_rdy2  = ~rx_ll_dst_rdy2_n;
+   assign rx_ll_src_rdy2_n = ~rx_ll_src_rdy2;
+   assign rx_ll_sof2_n 	  = ~rx_ll_sof2;
+   assign rx_ll_eof2_n 	  = ~rx_ll_eof2;
+   
    ll8_to_fifo36 ll8_to_fifo36
      (.clk(rx_clk), .reset(rx_reset), .clear(0),
-      .ll_data(rx_ll_data2), .ll_sof_n(~rx_ll_sof2), .ll_eof_n(~rx_ll_eof2),
-      .ll_src_rdy_n(~rx_ll_src_rdy2), .ll_dst_rdy_n(rx_ll_dst_rdy2_n),
+      .ll_data(rx_ll_data2), .ll_sof_n(rx_ll_sof2_n), .ll_eof_n(rx_ll_eof2_n),
+      .ll_src_rdy_n(rx_ll_src_rdy2_n), .ll_dst_rdy_n(rx_ll_dst_rdy2_n),
       .f36_data(rx_f36_data_int1), .f36_src_rdy_o(rx_f36_src_rdy_int1), .f36_dst_rdy_i(rx_f36_dst_rdy_int1));
 
-   cascadefifo_2clock #(.DWIDTH(36), .AWIDTH(9)) rx_2clk_fifo
+   fifo_2clock_cascade #(.WIDTH(36), .SIZE(6)) rx_2clk_fifo
      (.wclk(rx_clk), .datain(rx_f36_data_int1), 
-      .src_rdy_i(rx_f36_src_rdy_int1), .dst_rdy_o(rx_f36_dst_rdy_int1), .level_wclk(),
+      .src_rdy_i(rx_f36_src_rdy_int1), .dst_rdy_o(rx_f36_dst_rdy_int1), .space(),
       .rclk(sys_clk), .dataout(rx_f36_data), 
-      .src_rdy_o(rx_f36_src_rdy), .dst_rdy_i(rx_f36_dst_rdy), .level_rclk(), .arst(reset));
+      .src_rdy_o(rx_f36_src_rdy), .dst_rdy_i(rx_f36_dst_rdy), .occupied(), .arst(reset));
    
    // TX FIFO Chain
    wire tx_ll_sof, tx_ll_eof, tx_ll_src_rdy, tx_ll_dst_rdy;
@@ -97,11 +106,11 @@ module simple_gemac_wrapper
    wire [35:0] tx_f36_data_int1;
    wire        tx_f36_src_rdy_int1, tx_f36_dst_rdy_int1;
 
-   cascadefifo_2clock #(.DWIDTH(36), .AWIDTH(9)) tx_2clk_fifo
+   fifo_2clock #(.WIDTH(36), .SIZE(6)) tx_2clk_fifo
      (.wclk(sys_clk), .datain(tx_f36_data), 
-      .src_rdy_i(tx_f36_src_rdy), .dst_rdy_o(tx_f36_dst_rdy), .level_wclk(),
+      .src_rdy_i(tx_f36_src_rdy), .dst_rdy_o(tx_f36_dst_rdy), .space(),
       .rclk(tx_clk), .dataout(tx_f36_data_int1), 
-      .src_rdy_o(tx_f36_src_rdy_int1), .dst_rdy_i(tx_f36_dst_rdy_int1), .level_rclk(), .arst(reset));
+      .src_rdy_o(tx_f36_src_rdy_int1), .dst_rdy_i(tx_f36_dst_rdy_int1), .occupied(), .arst(reset));
    
    fifo36_to_ll8 fifo36_to_ll8
      (.clk(tx_clk), .reset(tx_reset), .clear(clear),
@@ -115,7 +124,7 @@ module simple_gemac_wrapper
    assign tx_ll_dst_rdy2_n  = ~tx_ll_dst_rdy2;
    
    ll8_shortfifo tx_sfifo
-     (.clk(rx_clk), .reset(tx_reset), .clear(clear),
+     (.clk(tx_clk), .reset(tx_reset), .clear(clear),
       .datain(tx_ll_data2), .sof_i(tx_ll_sof2), .eof_i(tx_ll_eof2),
       .error_i(0), .src_rdy_i(tx_ll_src_rdy2), .dst_rdy_o(tx_ll_dst_rdy2),
       .dataout(tx_ll_data), .sof_o(tx_ll_sof), .eof_o(tx_ll_eof),

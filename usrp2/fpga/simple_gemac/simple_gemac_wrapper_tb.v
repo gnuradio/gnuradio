@@ -45,8 +45,11 @@ module simple_gemac_wrapper_tb;
    wire        wb_ack;
 
    reg [35:0]  tx_f36_data=0;
-   reg 	       tx_f36_src_rdy=0;
+   reg 	       tx_f36_src_rdy = 0;
    wire        tx_f36_dst_rdy;
+   wire        rx_f36_data;
+   wire        rx_f36_src_rdy;
+   wire        rx_f36_dst_rdy = 1;
    
    simple_gemac_wrapper simple_gemac_wrapper
      (.clk125(eth_clk),  .reset(reset),
@@ -56,11 +59,11 @@ module simple_gemac_wrapper_tb;
       .GMII_RX_ER(GMII_RX_ER), .GMII_RXD(GMII_RXD),
       .pause_req(pause_req), .pause_time(pause_time),
 
-      .sys_clk(sys_clk), .rx_f36_data(), .rx_f36_src_rdy(), .rx_f36_dst_rdy(),
+      .sys_clk(sys_clk), .rx_f36_data(rx_f36_data), .rx_f36_src_rdy(rx_f36_src_rdy), .rx_f36_dst_rdy(rx_f36_dst_rdy),
       .tx_f36_data(tx_f36_data), .tx_f36_src_rdy(tx_f36_src_rdy), .tx_f36_dst_rdy(tx_f36_dst_rdy),
 
       .wb_clk(wb_clk), .wb_rst(wb_rst), .wb_stb(wb_stb), .wb_cyc(wb_cyc), .wb_ack(wb_ack), .wb_we(wb_we),
-      .wb_adr(), .wb_dat_i(wb_dat_i), .wb_dat_o(wb_dat_o),
+      .wb_adr(wb_adr), .wb_dat_i(wb_dat_i), .wb_dat_o(wb_dat_o),
 
       .mdio(), .mdc(),
       .debug() );
@@ -81,9 +84,9 @@ module simple_gemac_wrapper_tb;
 	@(negedge reset);
 	repeat (10)
 	  @(posedge wb_clk);
-	WishboneWR(0,6'b111001);
-	WishboneWR(4,16'hF1F2);
-	WishboneWR(8,32'hF3F4_F5F6);
+	WishboneWR(0,6'b111101); 
+	WishboneWR(4,16'hA0B0);
+	WishboneWR(8,32'hC0D0_A1B1);
 	WishboneWR(12,16'h0000);
 	WishboneWR(16,32'h0000_0000);
 	
@@ -100,7 +103,7 @@ module simple_gemac_wrapper_tb;
 
 	repeat (1000)
 	  @(posedge sys_clk);
-	SendPacket_to_fifo36(32'hAABBCCDD,10);    // This packet gets dropped by the filters
+	SendPacket_to_fifo36(32'hA0B0C0D0,10);    // This packet gets dropped by the filters
 	repeat (1000)
 	  @(posedge sys_clk);
 
