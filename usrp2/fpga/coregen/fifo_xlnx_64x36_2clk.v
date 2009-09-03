@@ -30,14 +30,14 @@
 // supported by Xilinx, Mentor Graphics and Synplicity synthesis
 // tools. Ensure they are correct for your synthesis tool(s).
 
-// You must compile the wrapper file fifo_xlnx_2Kx36_2clk.v when simulating
-// the core, fifo_xlnx_2Kx36_2clk. When compiling the wrapper file, be sure to
+// You must compile the wrapper file fifo_xlnx_64x36_2clk.v when simulating
+// the core, fifo_xlnx_64x36_2clk. When compiling the wrapper file, be sure to
 // reference the XilinxCoreLib Verilog simulation library. For detailed
 // instructions, please refer to the "CORE Generator Help".
 
 `timescale 1ns/1ps
 
-module fifo_xlnx_2Kx36_2clk(
+module fifo_xlnx_64x36_2clk(
 	din,
 	rd_clk,
 	rd_en,
@@ -60,15 +60,15 @@ input wr_en;
 output [35 : 0] dout;
 output empty;
 output full;
-output [11 : 0] rd_data_count;
-output [11 : 0] wr_data_count;
+output [6 : 0] rd_data_count;
+output [6 : 0] wr_data_count;
 
 // synthesis translate_off
 
       FIFO_GENERATOR_V4_3 #(
 		.C_COMMON_CLOCK(0),
 		.C_COUNT_TYPE(0),
-		.C_DATA_COUNT_WIDTH(12),
+		.C_DATA_COUNT_WIDTH(7),
 		.C_DEFAULT_VALUE("BlankString"),
 		.C_DIN_WIDTH(36),
 		.C_DOUT_RST_VAL("0"),
@@ -94,24 +94,24 @@ output [11 : 0] wr_data_count;
 		.C_HAS_WR_RST(0),
 		.C_IMPLEMENTATION_TYPE(2),
 		.C_INIT_WR_PNTR_VAL(0),
-		.C_MEMORY_TYPE(1),
+		.C_MEMORY_TYPE(2),
 		.C_MIF_FILE_NAME("BlankString"),
 		.C_MSGON_VAL(1),
 		.C_OPTIMIZATION_MODE(0),
 		.C_OVERFLOW_LOW(0),
 		.C_PRELOAD_LATENCY(0),
 		.C_PRELOAD_REGS(1),
-		.C_PRIM_FIFO_TYPE("2kx18"),
+		.C_PRIM_FIFO_TYPE("512x36"),
 		.C_PROG_EMPTY_THRESH_ASSERT_VAL(4),
 		.C_PROG_EMPTY_THRESH_NEGATE_VAL(5),
 		.C_PROG_EMPTY_TYPE(0),
-		.C_PROG_FULL_THRESH_ASSERT_VAL(2047),
-		.C_PROG_FULL_THRESH_NEGATE_VAL(2046),
+		.C_PROG_FULL_THRESH_ASSERT_VAL(63),
+		.C_PROG_FULL_THRESH_NEGATE_VAL(62),
 		.C_PROG_FULL_TYPE(0),
-		.C_RD_DATA_COUNT_WIDTH(12),
-		.C_RD_DEPTH(2048),
+		.C_RD_DATA_COUNT_WIDTH(7),
+		.C_RD_DEPTH(64),
 		.C_RD_FREQ(1),
-		.C_RD_PNTR_WIDTH(11),
+		.C_RD_PNTR_WIDTH(6),
 		.C_UNDERFLOW_LOW(0),
 		.C_USE_DOUT_RST(1),
 		.C_USE_ECC(0),
@@ -120,10 +120,10 @@ output [11 : 0] wr_data_count;
 		.C_USE_FWFT_DATA_COUNT(1),
 		.C_VALID_LOW(0),
 		.C_WR_ACK_LOW(0),
-		.C_WR_DATA_COUNT_WIDTH(12),
-		.C_WR_DEPTH(2048),
+		.C_WR_DATA_COUNT_WIDTH(7),
+		.C_WR_DEPTH(64),
 		.C_WR_FREQ(1),
-		.C_WR_PNTR_WIDTH(11),
+		.C_WR_PNTR_WIDTH(6),
 		.C_WR_RESPONSE_LATENCY(1))
 	inst (
 		.DIN(din),
@@ -164,10 +164,6 @@ output [11 : 0] wr_data_count;
 
 
 // synthesis translate_on
-
-// XST black box declaration
-// box_type "black_box"
-// synthesis attribute box_type of fifo_xlnx_2Kx36_2clk is "black_box"
 
 endmodule
 

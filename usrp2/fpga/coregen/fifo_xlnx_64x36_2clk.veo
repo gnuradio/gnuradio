@@ -31,7 +31,7 @@
 // (in parentheses) to your own signal names.
 
 //----------- Begin Cut here for INSTANTIATION Template ---// INST_TAG
-fifo_xlnx_512x36_2clk YourInstanceName (
+fifo_xlnx_64x36_2clk YourInstanceName (
 	.din(din), // Bus [35 : 0] 
 	.rd_clk(rd_clk),
 	.rd_en(rd_en),
@@ -41,13 +41,13 @@ fifo_xlnx_512x36_2clk YourInstanceName (
 	.dout(dout), // Bus [35 : 0] 
 	.empty(empty),
 	.full(full),
-	.rd_data_count(rd_data_count), // Bus [9 : 0] 
-	.wr_data_count(wr_data_count)); // Bus [9 : 0] 
+	.rd_data_count(rd_data_count), // Bus [6 : 0] 
+	.wr_data_count(wr_data_count)); // Bus [6 : 0] 
 
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 
-// You must compile the wrapper file fifo_xlnx_512x36_2clk.v when simulating
-// the core, fifo_xlnx_512x36_2clk. When compiling the wrapper file, be sure to
+// You must compile the wrapper file fifo_xlnx_64x36_2clk.v when simulating
+// the core, fifo_xlnx_64x36_2clk. When compiling the wrapper file, be sure to
 // reference the XilinxCoreLib Verilog simulation library. For detailed
 // instructions, please refer to the "CORE Generator Help".
 
