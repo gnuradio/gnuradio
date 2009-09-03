@@ -149,7 +149,7 @@ module u2_core
    wire [31:0] 	debug_gpio_0, debug_gpio_1;
    wire [31:0] 	atr_lines;
 
-   wire [31:0] 	debug_rx, debug_mac0, debug_mac1, debug_tx_dsp, debug_txc, 
+   wire [31:0] 	debug_rx, debug_mac, debug_mac0, debug_mac1, debug_tx_dsp, debug_txc, 
 		debug_serdes0, debug_serdes1, debug_serdes2, debug_rx_dsp;
 
    wire [15:0] 	ser_rx_occ, ser_tx_occ, dsp_rx_occ, dsp_tx_occ, eth_rx_occ, eth_tx_occ, eth_rx_occ2;
@@ -410,7 +410,8 @@ module u2_core
       .tx_f36_data({rd2_flags,rd2_dat}), .tx_f36_src_rdy(rd2_ready_o), .tx_f36_dst_rdy(rd2_ready_i),
       .wb_clk(wb_clk), .wb_rst(wb_rst), .wb_stb(s6_stb), .wb_cyc(s6_cyc), .wb_ack(s6_ack),
       .wb_we(s6_we), .wb_adr(s6_adr), .wb_dat_i(s6_dat_o), .wb_dat_o(s6_dat_i),
-      .mdio(MDIO), .mdc(MDC) );
+      .mdio(MDIO), .mdc(MDC),
+      .debug(debug_mac));
    
    assign 	 s6_err  = 1'b0;
    assign 	 s6_rty  = 1'b0;
@@ -658,12 +659,24 @@ module u2_core
      eth_mac_debug <= { { 6'd0, GMII_TX_EN, GMII_RX_DV, debug_mac0[7:0]},
 			{eth_rx_full2, eth_rx_empty2, eth_rx_occ2[13:0]} };
    
-   assign      debug_clk[0] = 0;
-   assign      debug_clk[1] = dsp_clk;	
-   
-   assign     debug = host_to_dsp_fifo; // debug_mux ? host_to_dsp_fifo : dsp_to_host_fifo;
-   assign      debug_gpio_0 = eth_mac_debug;
-   assign      debug_gpio_1 = 0;
+   assign  debug_clk[0]  = wb_clk;
+   assign  debug_clk[1]  = clk_to_mac;	
+/*
+ 
+   wire        mdio_cpy  = MDIO;
+   assign  debug 	 = { { 1'b0, s6_stb, s6_ack, s6_we, s6_sel[3:0] },
+			     { s6_adr[15:8] },
+			     { s6_adr[7:0] },
+			     { 6'd0, mdio_cpy, MDC } };
+*/
+
+   assign debug 	 = { { GMII_TXD },
+			     { 5'd0, GMII_TX_EN, GMII_TX_ER, GMII_GTX_CLK },
+			     { wr2_flags, rd2_flags },
+			     { 4'd0, wr2_ready_i, wr2_ready_o, rd2_ready_i, rd2_ready_o } };
+          
+   assign  debug_gpio_0 = debug_mac; //eth_mac_debug;
+   assign  debug_gpio_1 = 0;
    
 endmodule // u2_core
 
