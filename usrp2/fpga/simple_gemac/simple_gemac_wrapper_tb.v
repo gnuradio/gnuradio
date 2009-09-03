@@ -1,18 +1,21 @@
 
 
 module simple_gemac_wrapper_tb;
-`include "eth_tasks.v"
+`include "eth_tasks_f36.v"
      
-   reg clk     = 0;
    reg reset   = 1;
-
    initial #1000 reset = 0;
-   always #50 clk = ~clk;
+   wire wb_rst 	= reset;
+
+   reg eth_clk     = 0;
+   always #50 eth_clk = ~eth_clk;
 
    reg wb_clk 	= 0;
-   wire wb_rst 	= reset;
    always #173 wb_clk = ~wb_clk;
-       
+
+   reg sys_clk 	= 0;
+   always #77 sys_clk = ~ sys_clk;
+   
    wire GMII_RX_DV, GMII_RX_ER, GMII_TX_EN, GMII_TX_ER, GMII_GTX_CLK;
    wire [7:0] GMII_RXD, GMII_TXD;
 
@@ -35,55 +38,32 @@ module simple_gemac_wrapper_tb;
    assign GMII_RXD    = GMII_TXD ^ FORCE_DAT_ERR;
 
 
-   wire rx_ll_sof, rx_ll_eof, rx_ll_src_rdy, rx_ll_dst_rdy;
-   wire rx_ll_sof2, rx_ll_eof2, rx_ll_src_rdy2;
-   reg rx_ll_dst_rdy2 = 1;
-   wire [7:0] rx_ll_data, rx_ll_data2;
-   wire rx_ll_error, rx_ll_error2;
-
    wire [31:0] wb_dat_o;
    reg [31:0]  wb_dat_i;
    reg [7:0]   wb_adr;
    reg 	       wb_stb=0, wb_cyc=0, wb_we=0;
    wire        wb_ack;
+
+   reg [35:0]  tx_f36_data=0;
+   reg 	       tx_f36_src_rdy=0;
+   wire        tx_f36_dst_rdy;
    
    simple_gemac_wrapper simple_gemac_wrapper
-     (.clk125(clk),  .reset(reset),
+     (.clk125(eth_clk),  .reset(reset),
       .GMII_GTX_CLK(GMII_GTX_CLK), .GMII_TX_EN(GMII_TX_EN),  
       .GMII_TX_ER(GMII_TX_ER), .GMII_TXD(GMII_TXD),
       .GMII_RX_CLK(GMII_RX_CLK), .GMII_RX_DV(GMII_RX_DV),  
       .GMII_RX_ER(GMII_RX_ER), .GMII_RXD(GMII_RXD),
       .pause_req(pause_req), .pause_time(pause_time),
-      .rx_clk(rx_clk), .rx_ll_data(rx_ll_data), .rx_ll_sof(rx_ll_sof),
-      .rx_ll_eof(rx_ll_eof), .rx_ll_src_rdy(rx_ll_src_rdy), .rx_ll_dst_rdy(rx_ll_dst_rdy),
-      .tx_clk(tx_clk), .tx_ll_data(tx_ll_data), .tx_ll_sof(tx_ll_sof),
-      .tx_ll_eof(tx_ll_eof), .tx_ll_src_rdy(tx_ll_src_rdy), .tx_ll_dst_rdy(tx_ll_dst_rdy),
-      .wb_clk(wb_clk), .wb_rst(wb_rst), .wb_stb(wb_stb), .wb_cyc(wb_cyc), .wb_ack(wb_ack),
-      .wb_we(wb_we), .wb_adr(wb_adr), .wb_dat_i(wb_dat_i), .wb_dat_o(wb_dat_o),
-      .mdio(mdio), .mdc(mdc) );
 
-   ll8_shortfifo rx_sfifo
-     (.clk(clk), .reset(reset), .clear(0),
-      .datain(rx_ll_data), .sof_i(rx_ll_sof), .eof_i(rx_ll_eof),
-      .error_i(rx_ll_error), .src_rdy_i(rx_ll_src_rdy), .dst_rdy_o(rx_ll_dst_rdy),
-      .dataout(rx_ll_data2), .sof_o(rx_ll_sof2), .eof_o(rx_ll_eof2),
-      .error_o(rx_ll_error2), .src_rdy_o(rx_ll_src_rdy2), .dst_rdy_i(rx_ll_dst_rdy2));
+      .sys_clk(sys_clk), .rx_f36_data(), .rx_f36_src_rdy(), .rx_f36_dst_rdy(),
+      .tx_f36_data(tx_f36_data), .tx_f36_src_rdy(tx_f36_src_rdy), .tx_f36_dst_rdy(tx_f36_dst_rdy),
 
-   wire tx_ll_sof, tx_ll_eof, tx_ll_src_rdy, tx_ll_dst_rdy;
-   reg tx_ll_sof2=0, tx_ll_eof2=0;
-   reg tx_ll_src_rdy2 = 0;
-   wire tx_ll_dst_rdy2;
-   wire [7:0] tx_ll_data;
-   reg [7:0] tx_ll_data2 = 0;
-   wire tx_ll_error;
-   wire tx_ll_error2 = 0;
+      .wb_clk(wb_clk), .wb_rst(wb_rst), .wb_stb(wb_stb), .wb_cyc(wb_cyc), .wb_ack(wb_ack), .wb_we(wb_we),
+      .wb_adr(), .wb_dat_i(wb_dat_i), .wb_dat_o(wb_dat_o),
 
-   ll8_shortfifo tx_sfifo
-     (.clk(clk), .reset(reset), .clear(clear),
-      .datain(tx_ll_data2), .sof_i(tx_ll_sof2), .eof_i(tx_ll_eof2),
-      .error_i(tx_ll_error2), .src_rdy_i(tx_ll_src_rdy2), .dst_rdy_o(tx_ll_dst_rdy2),
-      .dataout(tx_ll_data), .sof_o(tx_ll_sof), .eof_o(tx_ll_eof),
-      .error_o(tx_ll_error), .src_rdy_o(tx_ll_src_rdy), .dst_rdy_i(tx_ll_dst_rdy));
+      .mdio(), .mdc(),
+      .debug() );
    
    initial $dumpfile("simple_gemac_wrapper_tb.vcd");
    initial $dumpvars(0,simple_gemac_wrapper_tb);
@@ -100,67 +80,74 @@ module simple_gemac_wrapper_tb;
      begin
 	@(negedge reset);
 	repeat (10)
-	  @(posedge clk);
+	  @(posedge wb_clk);
 	WishboneWR(0,6'b111001);
 	WishboneWR(4,16'hF1F2);
 	WishboneWR(8,32'hF3F4_F5F6);
 	WishboneWR(12,16'h0000);
 	WishboneWR(16,32'h0000_0000);
 	
-	@(posedge clk);
+	@(posedge eth_clk);
 	SendFlowCtrl(16'h0007);  // Send flow control
-	@(posedge clk);
+	@(posedge eth_clk);
 	#30000;
-	@(posedge clk);
-	SendFlowCtrl(16'h0009);  // Increas flow control before it expires
+	@(posedge eth_clk);
+	SendFlowCtrl(16'h0009);  // Increase flow control before it expires
 	#10000;
-	@(posedge clk);
+	@(posedge eth_clk);
 	SendFlowCtrl(16'h0000);  // Cancel flow control before it expires
-	@(posedge clk); 
+	@(posedge eth_clk); 
 
-	SendPacket_to_ll8(8'hAA,10);    // This packet gets dropped by the filters
+	repeat (1000)
+	  @(posedge sys_clk);
+	SendPacket_to_fifo36(32'hAABBCCDD,10);    // This packet gets dropped by the filters
+	repeat (1000)
+	  @(posedge sys_clk);
+
+	SendPacket_to_fifo36(32'hAABBCCDD,100);    // This packet gets dropped by the filters
+	repeat (10)
+	  @(posedge sys_clk);
+/*
+ 	SendPacketFromFile_f36(60,0,0);  // The rest are valid packets
 	repeat (10)
 	  @(posedge clk);
 
- 	SendPacketFromFile_ll8(60,0,0);  // The rest are valid packets
+ 	SendPacketFromFile_f36(61,0,0);
 	repeat (10)
 	  @(posedge clk);
-
- 	SendPacketFromFile_ll8(61,0,0);
+	SendPacketFromFile_f36(62,0,0);
 	repeat (10)
 	  @(posedge clk);
-	SendPacketFromFile_ll8(62,0,0);
+	SendPacketFromFile_f36(63,0,0);
+	repeat (1)
+	  @(posedge clk);
+	SendPacketFromFile_f36(64,0,0);
 	repeat (10)
 	  @(posedge clk);
-	SendPacketFromFile_ll8(63,0,0);
+	SendPacketFromFile_f36(59,0,0);
 	repeat (1)
 	  @(posedge clk);
-	SendPacketFromFile_ll8(64,0,0);
-	repeat (10)
-	  @(posedge clk);
-	SendPacketFromFile_ll8(59,0,0);
+	SendPacketFromFile_f36(58,0,0);
 	repeat (1)
 	  @(posedge clk);
-	SendPacketFromFile_ll8(58,0,0);
+	SendPacketFromFile_f36(100,0,0);
 	repeat (1)
 	  @(posedge clk);
-	SendPacketFromFile_ll8(100,0,0);
+	SendPacketFromFile_f36(200,150,30);  // waiting 14 empties the fifo, 15 underruns
 	repeat (1)
 	  @(posedge clk);
-	SendPacketFromFile_ll8(200,150,30);  // waiting 14 empties the fifo, 15 underruns
-	repeat (1)
-	  @(posedge clk);
-	SendPacketFromFile_ll8(100,0,30);
-	#10000 $finish;
+	SendPacketFromFile_f36(100,0,30);
+ */
+	#100000 $finish;
      end
 
    // Force a CRC error
     initial
      begin
 	#90000;
-	@(posedge clk);
+	@(posedge eth_clk);
 	FORCE_DAT_ERR <= 8'h10;
-	@(posedge clk);
+	@(posedge eth_clk);
 	FORCE_DAT_ERR <= 8'h00;
      end
 
@@ -168,12 +155,12 @@ module simple_gemac_wrapper_tb;
    initial
      begin
 	#116000;
-	@(posedge clk);
+	@(posedge eth_clk);
 	FORCE_ERR <= 1;
-	@(posedge clk);
+	@(posedge eth_clk);
 	FORCE_ERR <= 0;
      end
-
+/*
    // Cause receive fifo to fill, causing an RX overrun
    initial
      begin
@@ -184,7 +171,7 @@ module simple_gemac_wrapper_tb;
 	  @(posedge clk);
 	rx_ll_dst_rdy2 <= 1;
      end
-   
+  */
    // Tests: Send and recv flow control, send and receive good packets, RX CRC err, RX_ER, RX overrun, TX underrun
    // Still need to test: CRC errors on Pause Frames, MDIO, wishbone
 
@@ -205,7 +192,7 @@ module simple_gemac_wrapper_tb;
 	 wb_we 	<= 0;
       end
    endtask // WishboneWR
-   
+   /*
    always @(posedge clk)
      if(rx_ll_src_rdy2 & rx_ll_dst_rdy2)
        begin
@@ -215,5 +202,5 @@ module simple_gemac_wrapper_tb;
 	  if(rx_ll_eof2 & ~rx_ll_sof2)
 	    $display("RX-PKT-END %d",$time);
        end
-   
+   */
 endmodule // simple_gemac_wrapper_tb

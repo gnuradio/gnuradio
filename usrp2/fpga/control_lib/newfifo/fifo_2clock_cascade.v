@@ -17,7 +17,7 @@ module fifo_2clock_cascade
       .dataout(data_int1), .src_rdy_o(src_rdy_int1), .dst_rdy_i(dst_rdy_int1),
       .space(s1_space), .occupied(s1_occupied) );
    
-   fifo_2clock #(.DWIDTH(WIDTH),.SIZE(SIZE)) fifo_2clock
+   fifo_2clock #(.WIDTH(WIDTH),.SIZE(SIZE)) fifo_2clock
      (.wclk(wclk), .datain(data_int1), .src_rdy_i(src_rdy_int1), .dst_rdy_o(dst_rdy_int1), .space(l_space),
       .rclk(rclk), .dataout(data_int2), .src_rdy_o(src_rdy_int2), .dst_rdy_i(dst_rdy_int2), .occupied(l_occupied),
       .arst(arst) );
