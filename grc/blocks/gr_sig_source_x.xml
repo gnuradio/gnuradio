@@ -53,7 +53,7 @@
 		<name>Waveform</name>
 		<key>waveform</key>
 		<value>gr.GR_COS_WAVE</value>
-		<type>raw</type>
+		<type>int</type>
 		<option>
 			<name>Constant</name>
 			<key>gr.GR_CONST_WAVE</key>

@@ -9,8 +9,9 @@
 <block>
 	<name>Options</name>
 	<key>options</key>
-	<import>from gnuradio import gr
-#if $generate_options() == 'wx_gui'
+	<import>from gnuradio import gr</import>
+	<import>from gnuradio.gr import firdes</import>
+	<import>#if $generate_options() == 'wx_gui'
 from grc_gnuradio import wxgui as grc_wxgui
 import wx
 #end if
@@ -18,8 +19,7 @@ import wx
 from optparse import OptionParser
 from gnuradio.eng_option import eng_option
 from gnuradio import eng_notation
-#end if
-</import>
+#end if</import>
 	<make></make>
 	<callback>if $run: self.start()
 else: self.stop(); self.wait()</callback>
