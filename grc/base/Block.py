@@ -116,14 +116,6 @@ class Block(Element):
 			except AssertionError: raise Exception, 'Key "%s" already exists in sinks'%key
 			#store the port
 			self.get_sinks().append(sink)
-		#begin the testing
-		self.test()
-
-	def test(self):
-		"""
-		Call test on all children.
-		"""
-		map(lambda c: c.test(), self.get_params() + self.get_sinks() + self.get_sources())
 
 	def get_enabled(self):
 		"""

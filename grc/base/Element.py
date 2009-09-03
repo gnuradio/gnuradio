@@ -22,13 +22,6 @@ class Element(object):
 	def __init__(self, parent=None):
 		self._parent = parent
 
-	def test(self):
-		"""
-		Test the element against failures.
-		Overload this method in sub-classes.
-		"""
-		pass
-
 	##################################################
 	# Element Validation API
 	##################################################
