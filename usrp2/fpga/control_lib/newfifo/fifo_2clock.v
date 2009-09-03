@@ -1,23 +1,31 @@
 
-module newfifo_2clock
-  #(parameter DWIDTH=32, AWIDTH=9)
-  (input wclk, input [DWIDTH-1:0] datain, input src_rdy_i, output dst_rdy_o, output reg [AWIDTH-1:0] level_wclk,
-   input rclk, output [DWIDTH-1:0] dataout, output src_rdy_o, input dst_rdy_i, output reg [AWIDTH-1:0] level_rclk,
-   input arst);
+// FIXME ignores the AWIDTH (fifo size) parameter
 
-   wire full, empty, write, read;
+module fifo_2clock
+  #(parameter WIDTH=32, SIZE=9)
+   (input wclk, input [WIDTH-1:0] datain, input src_rdy_i, output dst_rdy_o, output [15:0] space,
+    input rclk, output [WIDTH-1:0] dataout, output src_rdy_o, input dst_rdy_i, output [15:0] occupied,
+    input arst);
+   
+   wire [SIZE-1:0] level_rclk, level_wclk;
+   wire 	   full, empty, write, read;
 
    assign dst_rdy_o  = ~full;
    assign src_rdy_o  = ~empty;
    assign write      = src_rdy_i & dst_rdy_o;
    assign read 	     = src_rdy_o & dst_rdy_i;
-
-//`define USE_XLNX_FIFO 1
-`ifdef USE_XLNX_FIFO
+   
    fifo_xlnx_512x36_2clk mac_tx_fifo_2clk
      (.rst(rst),
-      .wr_clk(wclk),.din(datain),.full(full),.wr_en(write),.wr_data_count(fifo_occupied[8:0]),
-      .rd_clk(rclk),.dout(dataout),.empty(empty),.rd_en(read),.rd_data_count() );   
+      .wr_clk(wclk),.din(datain),.full(full),.wr_en(write),.wr_data_count(level_wclk),
+      .rd_clk(rclk),.dout(dataout),.empty(empty),.rd_en(read),.rd_data_count(level_rclk) );
+
+   assign occupied  = {{(16-SIZE){1'b0}},level_rclk};
+   assign space = ((1<<SIZE)-1)-level_wclk;
+   
+endmodule // fifo_2clock
+
+/*
 `else
    // ISE sucks, so the following doesn't work properly
 
@@ -80,3 +88,5 @@ module newfifo_2clock
      level_rclk <= wr_addr_rclk - rd_addr;
 `endif
 endmodule // fifo_2clock
+
+*/
