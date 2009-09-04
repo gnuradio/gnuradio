@@ -62,7 +62,8 @@ dbsm_init(dbsm_t *sm, int buf0,
 
   // How much to adjust the last_line register.
   // It's 1 for everything but the ethernet.
-  sm->last_line_adj = recv->port == PORT_ETH ? 3 : 1;
+  //sm->last_line_adj = recv->port == PORT_ETH ? 3 : 1;
+  sm->last_line_adj = 1;
 
   buffer_state[sm->buf0] = BS_EMPTY;
   buffer_state[sm->buf0 ^ 1] = BS_EMPTY;
