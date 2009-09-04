@@ -669,11 +669,16 @@ module u2_core
 			     { s6_adr[7:0] },
 			     { 6'd0, mdio_cpy, MDC } };
 */
-
+/*
    assign debug 	 = { { GMII_TXD },
 			     { 5'd0, GMII_TX_EN, GMII_TX_ER, GMII_GTX_CLK },
 			     { wr2_flags, rd2_flags },
 			     { 4'd0, wr2_ready_i, wr2_ready_o, rd2_ready_i, rd2_ready_o } };
+ */        
+   assign debug 	 = { { GMII_RXD },
+			     { 1'd0, debug_mac2[3:0], GMII_RX_DV, GMII_RX_ER, GMII_RX_CLK },
+			     { wr2_flags, rd2_flags },
+			     { GMII_TX_EN,3'd0, wr2_ready_i, wr2_ready_o, rd2_ready_i, rd2_ready_o } };
           
    assign  debug_gpio_0 = debug_mac; //eth_mac_debug;
    assign  debug_gpio_1 = 0;
