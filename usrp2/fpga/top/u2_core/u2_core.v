@@ -588,7 +588,7 @@ module u2_core
 
    // ///////////////////////////////////////////////////////////////////////////////////
    // SERDES
-
+/*
    serdes #(.TXFIFOSIZE(9),.RXFIFOSIZE(9)) serdes
      (.clk(dsp_clk),.rst(dsp_rst),
       .ser_tx_clk(ser_tx_clk),.ser_t(ser_t),.ser_tklsb(ser_tklsb),.ser_tkmsb(ser_tkmsb),
@@ -598,7 +598,7 @@ module u2_core
       .tx_occupied(ser_tx_occ),.tx_full(ser_tx_full),.tx_empty(ser_tx_empty),
       .rx_occupied(ser_rx_occ),.rx_full(ser_rx_full),.rx_empty(ser_rx_empty),
       .serdes_link_up(serdes_link_up),.debug0(debug_serdes0), .debug1(debug_serdes1) );
-
+*/
    // ///////////////////////////////////////////////////////////////////////////////////
    // External RAM Interface
 
@@ -659,7 +659,7 @@ module u2_core
      eth_mac_debug <= { { 6'd0, GMII_TX_EN, GMII_RX_DV, debug_mac0[7:0]},
 			{eth_rx_full2, eth_rx_empty2, eth_rx_occ2[13:0]} };
    
-   assign  debug_clk[0]  = wb_clk;
+   assign  debug_clk[0]  = 0; // wb_clk;
    assign  debug_clk[1]  = clk_to_mac;	
 /*
  
