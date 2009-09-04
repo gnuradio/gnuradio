@@ -300,8 +300,19 @@ namespace usrp2 {
 
 
   bool
-  usrp2::impl::transmit_cmd(void *cmd, size_t len)
+  usrp2::impl::transmit_cmd(void *cmd_, size_t len_)
   {
+    const void *cmd = cmd_;
+    int len = len_;
+    unsigned char tmp[64];
+
+    if (len_ < 64){		// pad to minimum ethernet frame size
+      memset(tmp, 0, sizeof(tmp));
+      memcpy(tmp, cmd_, len_);
+      cmd = tmp;
+      len = sizeof(tmp);
+    }
+
     return d_eth_buf->tx_frame(cmd, len) == eth_buffer::EB_OK;
   }
 
