@@ -47,7 +47,9 @@ class TemplateArg(UserDict):
 		return self._param.get_evaluated()
 
 def _get_keys(lst): return [elem.get_key() for elem in lst]
-def _get_elem(lst, key): return lst[_get_keys(lst).index(key)]
+def _get_elem(lst, key):
+	try: return lst[_get_keys(lst).index(key)]
+	except ValueError: raise ValueError, 'Key "%s" not found in %s.'%(key, _get_keys(lst))
 
 class Block(Element):
 
@@ -72,16 +74,16 @@ class Block(Element):
 		self._params = list()
 		#add the id param
 		self.get_params().append(self.get_parent().get_parent().Param(
-			self,
-			odict({
+			block=self,
+			n=odict({
 				'name': 'ID',
 				'key': 'id',
 				'type': 'id',
 			})
 		))
 		self.get_params().append(self.get_parent().get_parent().Param(
-			self,
-			odict({
+			block=self,
+			n=odict({
 				'name': 'Enabled',
 				'key': '_enabled',
 				'type': 'raw',
@@ -89,7 +91,7 @@ class Block(Element):
 				'hide': 'all',
 			})
 		))
-		for param in map(lambda n: self.get_parent().get_parent().Param(self, n), params):
+		for param in map(lambda n: self.get_parent().get_parent().Param(block=self, n=n), params):
 			key = param.get_key()
 			#test against repeated keys
 			try: assert key not in self.get_param_keys()
@@ -98,7 +100,7 @@ class Block(Element):
 			self.get_params().append(param)
 		#create the source objects
 		self._sources = list()
-		for source in map(lambda n: self.get_parent().get_parent().Source(self, n), sources):
+		for source in map(lambda n: self.get_parent().get_parent().Port(block=self, n=n, dir='source'), sources):
 			key = source.get_key()
 			#test against repeated keys
 			try: assert key not in self.get_source_keys()
@@ -107,21 +109,13 @@ class Block(Element):
 			self.get_sources().append(source)
 		#create the sink objects
 		self._sinks = list()
-		for sink in map(lambda n: self.get_parent().get_parent().Sink(self, n), sinks):
+		for sink in map(lambda n: self.get_parent().get_parent().Port(block=self, n=n, dir='sink'), sinks):
 			key = sink.get_key()
 			#test against repeated keys
 			try: assert key not in self.get_sink_keys()
 			except AssertionError: raise Exception, 'Key "%s" already exists in sinks'%key
 			#store the port
 			self.get_sinks().append(sink)
-		#begin the testing
-		self.test()
-
-	def test(self):
-		"""
-		Call test on all children.
-		"""
-		map(lambda c: c.test(), self.get_params() + self.get_sinks() + self.get_sources())
 
 	def get_enabled(self):
 		"""
@@ -138,18 +132,25 @@ class Block(Element):
 		"""
 		self.get_param('_enabled').set_value(str(enabled))
 
+	def rewrite(self):
+		"""
+		Rewrite critical structures.
+		Call rewrite on all sub elements.
+		"""
+		Element.rewrite(self)
+		for elem in self.get_ports() + self.get_params(): elem.rewrite()
+
 	def validate(self):
 		"""
 		Validate the block.
 		All ports and params must be valid.
 		All checks must evaluate to true.
+		Validate the params, ports, and the connections to this block.
 		"""
 		Element.validate(self)
 		for c in self.get_params() + self.get_ports() + self.get_connections():
-			try:
-				c.validate()
-				assert c.is_valid()
-			except AssertionError:
+			c.validate()
+			if not c.is_valid():
 				for msg in c.get_error_messages():
 					self.add_error_message('>>> %s:\n\t%s'%(c, msg))
 

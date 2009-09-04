@@ -88,7 +88,7 @@ MENU_BAR_LIST = (
 	]),
 	(gtk.Action('Help', '_Help', None, None), [
 		Actions.HELP_WINDOW_DISPLAY,
-		Actions.COLORS_WINDOW_DISPLAY,
+		Actions.TYPES_WINDOW_DISPLAY,
 		None,
 		Actions.ABOUT_WINDOW_DISPLAY,
 	]),

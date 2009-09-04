@@ -146,7 +146,7 @@ class Platform(_Element):
 
 	def is_platform(self): return True
 
-	def get_new_flow_graph(self): return self.FlowGraph(self)
+	def get_new_flow_graph(self): return self.FlowGraph(platform=self)
 
 	def get_generator(self): return self._generator
 
@@ -171,6 +171,5 @@ class Platform(_Element):
 	FlowGraph = _FlowGraph
 	Connection = _Connection
 	Block = _Block
-	Source = _Port
-	Sink = _Port
+	Port = _Port
 	Param = _Param

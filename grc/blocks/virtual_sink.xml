@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Virtual Sink
+###################################################
+ -->
+<block>
+	<name>Virtual Sink</name>
+	<key>virtual_sink</key>
+	<make></make>
+	<param>
+		<name>Stream ID</name>
+		<key>stream_id</key>
+		<value></value>
+		<type>stream_id</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type></type>
+	</sink>
+</block>

@@ -21,25 +21,20 @@ from Element import Element
 
 class Port(Element):
 
-	##possible port types
-	TYPES = []
-
-	def __init__(self, block, n):
+	def __init__(self, block, n, dir):
 		"""
 		Make a new port from nested data.
 		@param block the parent element
 		@param n the nested odict
-		@return a new port
+		@param dir the direction source or sink
 		"""
-		#grab the data
-		name = n['name']
-		key = n['key']
-		type = n['type']
 		#build the port
 		Element.__init__(self, block)
-		self._name = name
-		self._key = key
-		self._type = type
+		#grab the data
+		self._name = n['name']
+		self._key = n['key']
+		self._type = n['type']
+		self._dir = dir
 
 	def validate(self):
 		"""
@@ -47,7 +42,7 @@ class Port(Element):
 		The port must be non-empty and type must a possible type.
 		"""
 		Element.validate(self)
-		try: assert self.get_type() in self.TYPES
+		try: assert self.get_type() in self.get_types()
 		except AssertionError: self.add_error_message('Type "%s" is not a possible type.'%self.get_type())
 
 	def __str__(self):
@@ -56,12 +51,19 @@ class Port(Element):
 		if self.is_sink():
 			return 'Sink - %s(%s)'%(self.get_name(), self.get_key())
 
+	def get_types(self):
+		"""
+		Get a list of all possible port types.
+		@throw NotImplementedError
+		"""
+		raise NotImplementedError
+
 	def is_port(self): return True
 	def get_color(self): return '#FFFFFF'
 	def get_name(self): return self._name
 	def get_key(self): return self._key
-	def is_sink(self): return self in self.get_parent().get_sinks()
-	def is_source(self): return self in self.get_parent().get_sources()
+	def is_sink(self): return self._dir == 'sink'
+	def is_source(self): return self._dir == 'source'
 	def get_type(self): return self.get_parent().resolve_dependencies(self._type)
 
 	def get_connections(self):

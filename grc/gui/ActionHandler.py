@@ -30,7 +30,6 @@ from threading import Thread
 import Messages
 from .. base import ParseXML
 import random
-from Platform import Platform
 from MainWindow import MainWindow
 from ParamsDialog import ParamsDialog
 import Dialogs
@@ -53,7 +52,6 @@ class ActionHandler:
 		@param platform platform module
 		"""
 		self.clipboard = None
-		platform = Platform(platform)
 		for action in Actions.get_all_actions(): action.connect('activate', self._handle_actions)
 		#setup the main window
 		self.main_window = MainWindow(self.handle_states, platform)
@@ -133,7 +131,7 @@ class ActionHandler:
 				Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
 				Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
 				Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
-				Actions.COLORS_WINDOW_DISPLAY,
+				Actions.TYPES_WINDOW_DISPLAY,
 			): Actions.get_action_from_name(action).set_sensitive(True)
 			if not self.init_file_paths:
 				self.init_file_paths = Preferences.files_open()
@@ -221,13 +219,11 @@ class ActionHandler:
 		elif state == Actions.PORT_CONTROLLER_INC:
 			if self.get_flow_graph().port_controller_modify_selected(1):
 				self.get_flow_graph().update()
-				self.get_flow_graph().update() #2 times
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)
 		elif state == Actions.PORT_CONTROLLER_DEC:
 			if self.get_flow_graph().port_controller_modify_selected(-1):
 				self.get_flow_graph().update()
-				self.get_flow_graph().update() #2 times
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)
 		##################################################
@@ -237,8 +233,8 @@ class ActionHandler:
 			Dialogs.AboutDialog(self.get_flow_graph().get_parent())
 		elif state == Actions.HELP_WINDOW_DISPLAY:
 			Dialogs.HelpDialog()
-		elif state == Actions.COLORS_WINDOW_DISPLAY:
-			Dialogs.ColorsDialog(self.get_flow_graph().get_parent())
+		elif state == Actions.TYPES_WINDOW_DISPLAY:
+			Dialogs.TypesDialog(self.get_flow_graph().get_parent())
 		##################################################
 		# Param Modifications
 		##################################################

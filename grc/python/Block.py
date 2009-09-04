@@ -18,10 +18,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from .. base.Block import Block as _Block
+from .. gui.Block import Block as _GUIBlock
 import extract_docs
 import extract_category
 
-class Block(_Block):
+class Block(_Block, _GUIBlock):
+
+	def is_virtual_sink(self): return self.get_key() == 'virtual_sink'
+	def is_virtual_source(self): return self.get_key() == 'virtual_source'
 
 	##for make source to keep track of indexes
 	_source_count = 0
@@ -48,13 +52,13 @@ class Block(_Block):
 			flow_graph=flow_graph,
 			n=n,
 		)
+		_GUIBlock.__init__(self)
 
 	def validate(self):
 		"""
 		Validate this block.
 		Call the base class validate.
 		Evaluate the checks: each check must evaluate to True.
-		Adjust the nports.
 		"""
 		_Block.validate(self)
 		#evaluate the checks
@@ -65,6 +69,12 @@ class Block(_Block):
 				try: assert check_eval
 				except AssertionError: self.add_error_message('Check "%s" failed.'%check)
 			except: self.add_error_message('Check "%s" did not evaluate.'%check)
+
+	def rewrite(self):
+		"""
+		Add and remove ports to adjust for the nports.
+		"""
+		_Block.rewrite(self)
 		#adjust nports
 		for get_ports, get_port in (
 			(self.get_sources, self.get_source),

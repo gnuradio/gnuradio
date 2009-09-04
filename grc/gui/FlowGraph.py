@@ -291,8 +291,10 @@ class FlowGraph(Element):
 
 	def update(self):
 		"""
+		Do a global rewrite and validate.
 		Call update on all elements.
 		"""
+		self.rewrite()
 		self.validate()
 		for element in self.get_elements(): element.update()
 

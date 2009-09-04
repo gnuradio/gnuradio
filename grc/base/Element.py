@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -21,14 +21,6 @@ class Element(object):
 
 	def __init__(self, parent=None):
 		self._parent = parent
-		self.flag()
-
-	def test(self):
-		"""
-		Test the element against failures.
-		Overload this method in sub-classes.
-		"""
-		pass
 
 	##################################################
 	# Element Validation API
@@ -38,20 +30,11 @@ class Element(object):
 	def add_error_message(self, msg): self._error_messages.append(msg)
 	def get_error_messages(self): return self._error_messages
 
+	def rewrite(self): pass
+
 	def get_enabled(self): return True
 
 	def get_parent(self): return self._parent
-
-	##############################################
-	## Update flagging
-	##############################################
-	def is_flagged(self): return self._flag
-	def flag(self):
-		self._flag = True
-		if self.get_parent(): self.get_parent().flag()
-	def deflag(self):
-		self._flag = False
-		if self.get_parent(): self.get_parent().deflag()
 
 	##############################################
 	## Type testing methods

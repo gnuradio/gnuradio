@@ -23,6 +23,71 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
+class InputParam(gtk.HBox):
+	"""The base class for an input parameter inside the input parameters dialog."""
+
+	def __init__(self, param, _handle_changed):
+		gtk.HBox.__init__(self)
+		self.param = param
+		self._handle_changed = _handle_changed
+		self.label = gtk.Label('') #no label, markup is added by set_markup
+		self.label.set_size_request(150, -1)
+		self.pack_start(self.label, False)
+		self.set_markup = lambda m: self.label.set_markup(m)
+		self.tp = None
+	def set_color(self, color): pass
+
+class EntryParam(InputParam):
+	"""Provide an entry box for strings and numbers."""
+
+	def __init__(self, *args, **kwargs):
+		InputParam.__init__(self, *args, **kwargs)
+		self.entry = input = gtk.Entry()
+		input.set_text(self.param.get_value())
+		input.connect('changed', self._handle_changed)
+		self.pack_start(input, True)
+		self.get_text = input.get_text
+		#tool tip
+		self.tp = gtk.Tooltips()
+		self.tp.set_tip(self.entry, '')
+		self.tp.enable()
+	def set_color(self, color): self.entry.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
+
+class EnumParam(InputParam):
+	"""Provide an entry box for Enum types with a drop down menu."""
+
+	def __init__(self, *args, **kwargs):
+		InputParam.__init__(self, *args, **kwargs)
+		self._input = gtk.combo_box_new_text()
+		for option in self.param.get_options(): self._input.append_text(option.get_name())
+		self._input.set_active(self.param.get_option_keys().index(self.param.get_value()))
+		self._input.connect('changed', self._handle_changed)
+		self.pack_start(self._input, False)
+	def get_text(self): return self.param.get_option_keys()[self._input.get_active()]
+
+class EnumEntryParam(InputParam):
+	"""Provide an entry box and drop down menu for Raw Enum types."""
+
+	def __init__(self, *args, **kwargs):
+		InputParam.__init__(self, *args, **kwargs)
+		self._input = gtk.combo_box_entry_new_text()
+		for option in self.param.get_options(): self._input.append_text(option.get_name())
+		try: self._input.set_active(self.param.get_option_keys().index(self.param.get_value()))
+		except:
+			self._input.set_active(-1)
+			self._input.get_child().set_text(self.param.get_value())
+		self._input.connect('changed', self._handle_changed)
+		self._input.get_child().connect('changed', self._handle_changed)
+		self.pack_start(self._input, False)
+	def get_text(self):
+		if self._input.get_active() == -1: return self._input.get_child().get_text()
+		return self.param.get_option_keys()[self._input.get_active()]
+	def set_color(self, color):
+		if self._input.get_active() == -1: #custom entry, use color
+			self._input.get_child().modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
+		else: #from enum, make white background
+			self._input.get_child().modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse('#ffffff'))
+
 PARAM_MARKUP_TMPL="""\
 #set $foreground = $param.is_valid() and 'black' or 'red'
 <span foreground="$foreground" font_desc="Sans 7.5"><b>$encode($param.get_name()): </b>$encode(repr($param))</span>"""
@@ -48,6 +113,18 @@ Error:
 
 class Param(Element):
 	"""The graphical parameter."""
+
+	def get_input_class(self):
+		"""
+		Get the graphical gtk class to represent this parameter.
+		An enum requires and combo parameter.
+		A non-enum with options gets a combined entry/combo parameter.
+		All others get a standard entry parameter.
+		@return gtk input class
+		"""
+		if self.is_enum(): return EnumParam
+		if self.get_options(): return EnumEntryParam
+		return EntryParam
 
 	def update(self):
 		"""
