@@ -226,7 +226,6 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     if(newfilter != (int)d_last_filter)
       d_acc = 0.5;
 
-    d_last_filter = newfilter % d_nfilters;
     if(newfilter >= (int)d_nfilters) {
       d_last_filter = newfilter - d_nfilters;
       count++;
