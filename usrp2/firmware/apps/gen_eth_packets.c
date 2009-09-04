@@ -104,8 +104,7 @@ init_packets(void)
   memset(&pkt, 0, sizeof(pkt));
 
   pkt.ehdr.dst = dst_mac_addr;
-  // src address filled in by mac
-
+  pkt.ehdr.src = *ethernet_mac_addr();
   pkt.ehdr.ethertype = U2_ETHERTYPE;
   pkt.fixed.word0 = 0x01234567;
   pkt.fixed.timestamp = 0xffffffff;

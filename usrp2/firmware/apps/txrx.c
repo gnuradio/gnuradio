@@ -168,6 +168,7 @@ start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p)
   u2_eth_packet_t	pkt;
   memset(&pkt, 0, sizeof(pkt));
   pkt.ehdr.dst = *host;
+  pkt.ehdr.src = *ethernet_mac_addr();
   pkt.ehdr.ethertype = U2_ETHERTYPE;
   u2p_set_word0(&pkt.fixed, 0, 0);
   // DSP RX will fill in timestamp
