@@ -51,18 +51,6 @@ gr_build_date()
 }
 
 const std::string
-gr_svn_date()
-{
-  return "@SVNDATE@";
-}
-
-const std::string
-gr_svn_version()
-{
-  return "@SVNVERSION@";
-}
-
-const std::string
 gr_version()
 {
   return "@VERSION@";

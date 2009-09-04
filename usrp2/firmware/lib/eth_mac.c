@@ -28,37 +28,15 @@
 void
 eth_mac_set_addr(const u2_mac_addr_t *src)
 {
-  int i;
-  eth_mac->ucast_hi = ((unsigned int)src->addr[0])<<8 + ((unsigned int)src->addr[1]);
-  eth_mac->ucast_lo = ((unsigned int)src->addr[2])<<24 + ((unsigned int)src->addr[3])<<16 +
-    ((unsigned int)src->addr[4])<<8 +((unsigned int)src->addr[5]);
-  
-  /*
-  // tell mac our source address and enable automatic insertion on Tx.
-  eth_mac->mac_tx_add_prom_wr = 0;	// just in case
-  for (i = 0; i < 6; i++){
-    eth_mac->mac_tx_add_prom_add = i;
-    eth_mac->mac_tx_add_prom_data = src->addr[i];
-    eth_mac->mac_tx_add_prom_wr = 1;
-    mdelay(1);
-    eth_mac->mac_tx_add_prom_wr = 0;
-    mdelay(1);
-  }
-  eth_mac->mac_tx_add_en = 1;  // overwrite pkt src addr field with this stuff
-
-  // set up receive destination address filter
-  eth_mac->mac_rx_add_prom_wr = 0;	// just in case
-  for (i = 0; i < 6; i++){
-    eth_mac->mac_rx_add_prom_add = i;
-    eth_mac->mac_rx_add_prom_data = src->addr[i];
-    eth_mac->mac_rx_add_prom_wr = 1;
-    mdelay(1);
-    eth_mac->mac_rx_add_prom_wr = 0;
-    mdelay(1);
-  }
-  // eth_mac->mac_rx_add_chk_en = 1;  // FIXME enable when everything's working
-
-  */
+  eth_mac->ucast_hi = 
+    (((unsigned int)src->addr[0])<<8) + 
+    ((unsigned int)src->addr[1]);
+  eth_mac->ucast_lo = 
+    (((unsigned int)src->addr[2])<<24) + 
+    (((unsigned int)src->addr[3])<<16) +
+    (((unsigned int)src->addr[4])<<8) +
+    (((unsigned int)src->addr[5]));
+  printf("RDBK %x:%x\n",eth_mac->ucast_hi,eth_mac->ucast_lo);
 }
 
 
@@ -68,7 +46,8 @@ eth_mac_init(const u2_mac_addr_t *src)
   eth_mac->miimoder = 25;	// divider from CPU clock (50MHz/25 = 2MHz)
 
   eth_mac_set_addr(src);
-  eth_mac->settings = 0x39; 
+  eth_mac->settings = MAC_SET_PAUSE_EN | MAC_SET_PASS_BCAST | MAC_SET_PASS_UCAST;  // 0x39; 
+
   // set rx flow control high and low water marks
   // unsigned int lwmark = (2*2048 + 64)/4; // 2 * 2048-byte frames + 1 * 64-byte pause frame
   // eth_mac->fc_hwmark = lwmark + 2048/4;  // plus a 2048-byte frame
@@ -119,7 +98,7 @@ eth_mac_miim_read(int addr)
     ;
 
   int r = eth_mac->miirx_data;
-  printf("MIIM-READ ADDR 0x%x DATA 0x%x\n",addr, r);
+  //printf("MIIM-READ ADDR 0x%x DATA 0x%x\n",addr, r);
   return r;
 }
 
@@ -131,7 +110,7 @@ eth_mac_miim_write(int addr, int value)
   eth_mac->miitx_data = value;
   eth_mac->miicommand = MIIC_WCTRLDATA;
 
-  printf("MIIM-WRITE ADDR 0x%x VAL 0x%x\n",addr,value);
+  //printf("MIIM-WRITE ADDR 0x%x VAL 0x%x\n",addr,value);
   while((eth_mac->miistatus & MIIS_BUSY) != 0)
     ;
 }

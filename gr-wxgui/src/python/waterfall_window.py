@@ -237,16 +237,10 @@ class waterfall_window(wx.Panel, pubsub.pubsub):
 		Does not affect the current data in the waterfall.
 		"""
 		if not len(self.samples): return
-		#get the peak level (max of the samples)
-		peak_level = numpy.max(self.samples)
-		#get the noise floor (averge the smallest samples)
-		noise_floor = numpy.average(numpy.sort(self.samples)[:len(self.samples)/4])
-		#padding
-		noise_floor -= abs(noise_floor)*.5
-		peak_level += abs(peak_level)*.1
+		min_level, max_level = common.get_min_max_fft(self.samples)
 		#set the range and level
-		self[REF_LEVEL_KEY] = peak_level
-		self[DYNAMIC_RANGE_KEY] = peak_level - noise_floor
+		self[REF_LEVEL_KEY] = max_level
+		self[DYNAMIC_RANGE_KEY] = max_level - min_level
 
 	def handle_msg(self, msg):
 		"""
