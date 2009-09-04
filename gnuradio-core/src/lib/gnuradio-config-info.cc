@@ -43,8 +43,6 @@ main(int argc, char **argv)
     ("prefsdir", "print gnuradio preferences directory")
     ("builddate", "print gnuradio build date (RFC2822 format)")
     ("version,v", "print gnuradio version")
-    ("svnversion", "print SVN repository version (SVN format)")
-    ("svndate", "print SVN repository date")
     ;
 
   po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -69,12 +67,6 @@ main(int argc, char **argv)
 
   if (vm.count("version"))
     std::cout << gr_version() << std::endl;
-
-  if (vm.count("svnversion"))
-    std::cout << gr_svn_version() << std::endl;
-
-  if (vm.count("svndate"))
-    std::cout << gr_svn_date() << std::endl;
 
   return 0;
 }

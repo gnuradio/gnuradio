@@ -137,6 +137,25 @@ def get_min_max(samples):
 	scale_factor = 3
 	mean = numpy.average(samples)
 	rms = numpy.max([scale_factor*((numpy.sum((samples-mean)**2)/len(samples))**.5), .1])
-	min = mean - rms
-	max = mean + rms
-	return min, max
+	min_val = mean - rms
+	max_val = mean + rms
+	return min_val, max_val
+
+def get_min_max_fft(fft_samps):
+	"""
+	Get the minimum and maximum bounds for an array of fft samples.
+	@param samples the array of real values
+	@return a tuple of min, max
+	"""
+	#get the peak level (max of the samples)
+	peak_level = numpy.max(fft_samps)
+	#separate noise samples
+	noise_samps = numpy.sort(fft_samps)[:len(fft_samps)/2]
+	#get the noise floor
+	noise_floor = numpy.average(noise_samps)
+	#get the noise deviation
+	noise_dev = numpy.std(noise_samps)
+	#determine the maximum and minimum levels
+	max_level = peak_level
+	min_level = noise_floor - abs(2*noise_dev)
+	return min_level, max_level

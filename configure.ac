@@ -286,9 +286,6 @@ dnl AX_BOOST_TEST_EXEC_MONITOR
 dnl AX_BOOST_UNIT_TEST_FRAMEWORK
 dnl AX_BOOST_WSERIALIZATION
 
-
-dnl If this is being done from a subversion tree, create variables
-GR_SUBVERSION
 BUILD_DATE=`date -R -u`
 AC_SUBST(BUILD_DATE)
 

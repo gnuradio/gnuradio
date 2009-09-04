@@ -28,5 +28,6 @@ AC_DEFUN([GR_FORTRAN],[
     then
         AC_PROG_F77
         AC_F77_LIBRARY_LDFLAGS
+	AC_PROG_CC dnl bux fix to restore $ac_ext
     fi
 ])

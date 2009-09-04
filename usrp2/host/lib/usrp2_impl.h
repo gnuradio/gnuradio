@@ -87,6 +87,8 @@ namespace usrp2 {
     int		   d_tx_interp;		// shadow tx interp 
     int		   d_rx_decim;		// shadow rx decim
 
+    bool	   d_dont_enqueue;
+
     void inc_enqueued() {
       omni_mutex_lock l(d_enqueued_mutex);
       d_num_enqueued++;
@@ -105,7 +107,8 @@ namespace usrp2 {
     void stop_bg();
     void init_config_rx_v2_cmd(op_config_rx_v2_cmd *cmd);
     void init_config_tx_v2_cmd(op_config_tx_v2_cmd *cmd);
-    bool transmit_cmd(void *cmd, size_t len, pending_reply *p, double secs=0.0);
+    bool transmit_cmd_and_wait(void *cmd, size_t len, pending_reply *p, double secs=0.0);
+    bool transmit_cmd(void *cmd, size_t len);
     virtual data_handler::result operator()(const void *base, size_t len);
     data_handler::result handle_control_packet(const void *base, size_t len);
     data_handler::result handle_data_packet(const void *base, size_t len);
@@ -141,6 +144,7 @@ namespace usrp2 {
     bool read_gpio(int bank, uint16_t *value);
     bool start_rx_streaming(unsigned int channel, unsigned int items_per_frame);
     bool rx_samples(unsigned int channel, rx_sample_handler *handler);
+    bool flush_rx_samples(unsigned int channel);
     bool stop_rx_streaming(unsigned int channel);
     unsigned int rx_overruns() const { return d_num_rx_overruns; }
     unsigned int rx_missing() const { return d_num_rx_missing; }

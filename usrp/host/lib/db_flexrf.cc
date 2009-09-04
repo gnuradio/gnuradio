@@ -668,7 +668,7 @@ _2400_common::freq_min()
 double
 _2400_common::freq_max()
 {
-  return 2700e6;
+  return 2900e6;
 }
 
 //----------------------------------------------------------------------
@@ -700,7 +700,7 @@ _1200_common::freq_min()
 double 
 _1200_common::freq_max()
 {
-  return 1350e6;
+  return 1450e6;
 }
 
 //-------------------------------------------------------------------------
@@ -726,13 +726,13 @@ _1800_common::_1800_common()
 double 
 _1800_common::freq_min()
 {
-  return 1600e6;
+  return 1500e6;
 }
 
 double 
 _1800_common::freq_max()
 {
-  return 2000e6;
+  return 2100e6;
 }
 
 //-------------------------------------------------------------------------
@@ -758,13 +758,13 @@ _900_common::_900_common()
 double
 _900_common::freq_min()
 {
-  return 800e6;
+  return 750e6;
 }
 
 double
 _900_common::freq_max()
 {
-  return 1000e6;
+  return 1050e6;
 }
 
 //-------------------------------------------------------------------------

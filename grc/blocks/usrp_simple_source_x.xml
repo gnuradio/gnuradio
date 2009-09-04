@@ -13,14 +13,18 @@
 self.$(id).set_format(width=$format.width, shift=$format.shift)
 #end if
 self.$(id).set_decim_rate($decimation)
-self.$(id).set_frequency($frequency, verbose=True)
-self.$(id).set_gain($gain)
+self.$(id).set_frequency($frequency, verbose=True#slurp
 #if $lo_offset() != float('inf')
-self.$(id).set_lo_offset($lo_offset)
-#end if</make>
-	<callback>set_lo_offset($lo_offset)</callback>
+, lo_offset=$lo_offset#slurp
+#end if
+)
+self.$(id).set_gain($gain)</make>
 	<callback>set_decim_rate($decimation)</callback>
-	<callback>set_frequency($frequency)</callback>
+	<callback>set_frequency($frequency#slurp
+#if $lo_offset() != float('inf')
+, lo_offset=$lo_offset#slurp
+#end if
+)</callback>
 	<callback>set_gain($gain)</callback>
 	<param>
 		<name>Output Type</name>
