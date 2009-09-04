@@ -87,6 +87,8 @@ namespace usrp2 {
     int		   d_tx_interp;		// shadow tx interp 
     int		   d_rx_decim;		// shadow rx decim
 
+    bool	   d_dont_enqueue;
+
     void inc_enqueued() {
       omni_mutex_lock l(d_enqueued_mutex);
       d_num_enqueued++;
@@ -142,6 +144,7 @@ namespace usrp2 {
     bool read_gpio(int bank, uint16_t *value);
     bool start_rx_streaming(unsigned int channel, unsigned int items_per_frame);
     bool rx_samples(unsigned int channel, rx_sample_handler *handler);
+    bool flush_rx_samples(unsigned int channel);
     bool stop_rx_streaming(unsigned int channel);
     unsigned int rx_overruns() const { return d_num_rx_overruns; }
     unsigned int rx_missing() const { return d_num_rx_missing; }
