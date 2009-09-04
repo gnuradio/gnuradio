@@ -195,6 +195,7 @@ start_tx_transfers(void)
   u2_eth_packet_t	pkt;
   memset(&pkt, 0, sizeof(pkt));
   //pkt.ehdr.dst = *host;
+  pkt.ehdr.src = *ethernet_mac_addr();
   pkt.ehdr.ethertype = U2_ETHERTYPE;
   u2p_set_word0(&pkt.fixed,
 		U2P_TX_IMMEDIATE | U2P_TX_START_OF_BURST, 0);

@@ -104,8 +104,7 @@ init_packets(void)
   memset(&pkt, 0, sizeof(pkt));
 
   pkt.ehdr.dst = dst_mac_addr;
-  // src address filled in by mac
-
+  pkt.ehdr.src = *ethernet_mac_addr();
   pkt.ehdr.ethertype = U2_ETHERTYPE;
   pkt.fixed.word0 = 0x01234567;
   pkt.fixed.timestamp = 0xffffffff;
@@ -147,8 +146,6 @@ main(void)
     link_is_up = true;
   }
   */
-
-  link_is_up = true;		/* FIXME tell s/w link is up */
 
   // fire off a receive from the ethernet
   bp_receive_to_buf(CPU_RX_BUF, PORT_ETH, 1, 0, BP_LAST_LINE);
