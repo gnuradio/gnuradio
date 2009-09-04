@@ -64,21 +64,33 @@ module tx_control
 	     if(rd_eop_i)
 	       xfer_state <= XFER_IDLE;
 	 endcase // case(xfer_state)
-   
-   assign write_data = (xfer_state == XFER_PKT) & rd_ready_i & rd_ready_o;
-   assign write_ctrl = (xfer_state == XFER_CTRL) & rd_ready_i & rd_ready_o;
 
-   assign rd_ready_o = ~full_data & ~full_ctrl;
+   wire have_data_space;
+   assign full_data   = ~have_data_space;
+   
+   assign write_data  = (xfer_state == XFER_PKT) & rd_ready_i & rd_ready_o;
+   assign write_ctrl  = (xfer_state == XFER_CTRL) & rd_ready_i & rd_ready_o;
+
+   assign rd_ready_o  = ~full_data & ~full_ctrl;
    
    wire [31:0] data_o;
    wire        eop_o, eob, sob, send_imm;
    wire [31:0] sendtime;
    wire [4:0]  occ_ctrl;
-   
+/*   
    cascadefifo2 #(.WIDTH(33),.SIZE(FIFOSIZE)) txctrlfifo
      (.clk(clk),.rst(rst),.clear(clear_state),
       .datain({rd_eop_i,rd_dat_i[31:0]}), .write(write_data), .full(full_data),
       .dataout({eop_o,data_o}), .read(read_data), .empty(empty_data),
+      .space(), .occupied(fifo_occupied) );
+*/
+   wire        have_data;
+   assign empty_data  = ~have_data;
+   
+   fifo_cascade #(.WIDTH(33),.SIZE(FIFOSIZE)) txctrlfifo
+     (.clk(clk),.reset(rst),.clear(clear_state),
+      .datain({rd_eop_i,rd_dat_i[31:0]}), .src_rdy_i(write_data), .dst_rdy_o(have_data_space),
+      .dataout({eop_o,data_o}), .src_rdy_o(have_data), .dst_rdy_i(read_data),
       .space(), .occupied(fifo_occupied) );
    assign      fifo_full = full_data;
    assign      fifo_empty = empty_data;
