@@ -133,7 +133,7 @@ namespace usrp2 {
       d_bg_running(false), d_rx_seqno(-1), d_tx_seqno(0), d_next_rid(0),
       d_num_rx_frames(0), d_num_rx_missing(0), d_num_rx_overruns(0), d_num_rx_bytes(0), 
       d_num_enqueued(0), d_enqueued_mutex(), d_bg_pending_cond(&d_enqueued_mutex),
-      d_channel_rings(NCHANS), d_tx_interp(0), d_rx_decim(0)
+      d_channel_rings(NCHANS), d_tx_interp(0), d_rx_decim(0), d_dont_enqueue(true)
   {
     if (!d_eth_buf->open(ifc, htons(U2_ETHERTYPE)))
       throw std::runtime_error("Unable to register USRP2 protocol");
@@ -375,6 +375,10 @@ namespace usrp2 {
       return handle_control_packet(base, len);
     }
     else {				// data packets
+
+      if (d_dont_enqueue)		// toss packet
+	return data_handler::RELEASE;
+
       return handle_data_packet(base, len);
     }
 
@@ -636,6 +640,7 @@ namespace usrp2 {
       cmd.eop.opcode = OP_EOP;
       cmd.eop.len = sizeof(cmd.eop);
     
+      d_dont_enqueue = false;
       bool success = false;
       pending_reply p(cmd.op.rid, &reply, sizeof(reply));
       success = transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
@@ -643,6 +648,8 @@ namespace usrp2 {
       
       if (success)
 	d_channel_rings[channel] = ring_sptr(new ring(d_eth_buf->max_frames()));
+      else
+	d_dont_enqueue = true;
 
       //fprintf(stderr, "usrp2::start_rx_streaming: success = %d\n", success);
       return success;
@@ -664,6 +671,9 @@ namespace usrp2 {
       return false;
     }
 
+    d_dont_enqueue = true;	// no new samples
+    flush_rx_samples(channel);	// dump any we may already have
+
     op_stop_rx_cmd cmd;
     op_generic_t reply;
 
@@ -680,7 +690,7 @@ namespace usrp2 {
     
       bool success = false;
       pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-      success = transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, 10 * DEF_CMD_TIMEOUT);
+      success = transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
       success = success && (ntohx(reply.ok) == 1);
       d_channel_rings[channel].reset();
       //fprintf(stderr, "usrp2::stop_rx_streaming:  success = %d\n", success);
@@ -732,6 +742,36 @@ namespace usrp2 {
 
       if (!want_more)
         break;
+    }
+    return true;
+  }
+
+  bool
+  usrp2::impl::flush_rx_samples(unsigned int channel)
+  {
+    if (channel > MAX_CHAN) {
+      std::cerr << "usrp2: invalid channel (" << channel
+                << " )" << std::endl;
+      return false;
+    }
+
+    if (channel > 0) {
+      std::cerr << "usrp2: channel " << channel
+                << " not implemented" << std::endl;
+      return false;
+    }
+
+    ring_sptr rp = d_channel_rings[channel];
+    if (!rp){
+      return false;
+    }
+
+    // Iterate through frames and drop them
+    void *p;
+    size_t frame_len_in_bytes;
+    while (rp->dequeue(&p, &frame_len_in_bytes)) {
+      d_eth_buf->release_frame(p);
+      dec_enqueued();
     }
     return true;
   }
