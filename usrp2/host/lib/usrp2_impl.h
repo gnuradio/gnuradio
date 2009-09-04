@@ -105,7 +105,8 @@ namespace usrp2 {
     void stop_bg();
     void init_config_rx_v2_cmd(op_config_rx_v2_cmd *cmd);
     void init_config_tx_v2_cmd(op_config_tx_v2_cmd *cmd);
-    bool transmit_cmd(void *cmd, size_t len, pending_reply *p, double secs=0.0);
+    bool transmit_cmd_and_wait(void *cmd, size_t len, pending_reply *p, double secs=0.0);
+    bool transmit_cmd(void *cmd, size_t len);
     virtual data_handler::result operator()(const void *base, size_t len);
     data_handler::result handle_control_packet(const void *base, size_t len);
     data_handler::result handle_data_packet(const void *base, size_t len);

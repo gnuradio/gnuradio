@@ -30,26 +30,34 @@
 namespace usrp2 {
 
   pending_reply::pending_reply(unsigned int rid, void *buffer, size_t len)
-    : d_rid(rid), d_mutex(), d_cond(&d_mutex), d_buffer(buffer), d_len(len)
+    : d_rid(rid), d_buffer(buffer), d_len(len), d_mutex(), d_cond(&d_mutex),
+      d_complete(false)
   {
   }
 
   pending_reply::~pending_reply()
   {
-    signal(); // Needed?
+    notify_completion(); // Needed?
   }
 
   int
-  pending_reply::wait(double secs)
+  pending_reply::wait_for_completion(double secs)
   {
-    omni_mutex_lock l(d_mutex);
     omni_time abs_timeout = omni_time::time(omni_time(secs));
-    return d_cond.timedwait(abs_timeout.d_secs, abs_timeout.d_nsecs);
+    omni_mutex_lock l(d_mutex);
+    while (!d_complete){
+      int r = d_cond.timedwait(abs_timeout.d_secs, abs_timeout.d_nsecs);
+      if (r == 0)		// timed out
+	return 0;
+    }
+    return 1;
   }
 
   void
-  pending_reply::signal()
+  pending_reply::notify_completion()
   {
+    omni_mutex_lock l(d_mutex);
+    d_complete = true;
     d_cond.signal();
   }
   

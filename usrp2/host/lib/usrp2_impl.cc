@@ -298,22 +298,24 @@ namespace usrp2 {
     cmd->eop.len = sizeof(cmd->eop);
   }
 
+
   bool
-  usrp2::impl::transmit_cmd(void *cmd, size_t len, pending_reply *p, double secs)
+  usrp2::impl::transmit_cmd(void *cmd, size_t len)
   {
-    if (p)    
-      d_pending_replies[p->rid()] = p;
+    return d_eth_buf->tx_frame(cmd, len) == eth_buffer::EB_OK;
+  }
+
+  bool
+  usrp2::impl::transmit_cmd_and_wait(void *cmd, size_t len, pending_reply *p, double secs)
+  {
+    d_pending_replies[p->rid()] = p;
     
-    // Transmit command
-    if (d_eth_buf->tx_frame(cmd, len) != eth_buffer::EB_OK) {
+    if (!transmit_cmd(cmd, len)){
       d_pending_replies[p->rid()] = 0;
       return false;
     }
 
-    int res = 1;
-    if (p)
-      res = p->wait(secs);
-      
+    int res = p->wait_for_completion(secs);
     d_pending_replies[p->rid()] = 0;
     return res == 1;
   }
@@ -404,7 +406,7 @@ namespace usrp2 {
     
       // Copy reply into caller's buffer
       memcpy(rp->buffer(), p, std::min(oplen, buflen));
-      rp->signal();
+      rp->notify_completion();
       d_pending_replies[rid] = 0;
       return data_handler::RELEASE;
     }
@@ -485,7 +487,7 @@ namespace usrp2 {
     cmd.op.gain = htons(u2_double_to_fxpt_gain(gain));
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -512,7 +514,7 @@ namespace usrp2 {
     cmd.eop.len = sizeof(cmd.eop);
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -532,7 +534,7 @@ namespace usrp2 {
     cmd.op.freq_lo = htonl(u2_fxpt_freq_lo(fxpt));
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -569,7 +571,7 @@ namespace usrp2 {
     cmd.op.decim = htonl(decimation_factor);
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -589,7 +591,7 @@ namespace usrp2 {
     cmd.op.scale_iq = htonl(((scale_i & 0xffff) << 16) | (scale_q & 0xffff));
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -636,12 +638,13 @@ namespace usrp2 {
     
       bool success = false;
       pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-      success = transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
+      success = transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
       success = success && (ntohx(reply.ok) == 1);
       
       if (success)
 	d_channel_rings[channel] = ring_sptr(new ring(d_eth_buf->max_frames()));
 
+      //fprintf(stderr, "usrp2::start_rx_streaming: success = %d\n", success);
       return success;
     }
   }
@@ -677,9 +680,10 @@ namespace usrp2 {
     
       bool success = false;
       pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-      success = transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
+      success = transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, 10 * DEF_CMD_TIMEOUT);
       success = success && (ntohx(reply.ok) == 1);
       d_channel_rings[channel].reset();
+      //fprintf(stderr, "usrp2::stop_rx_streaming:  success = %d\n", success);
       return success;
     }
   }
@@ -747,7 +751,7 @@ namespace usrp2 {
     cmd.op.gain = htons(u2_double_to_fxpt_gain(gain));
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -774,7 +778,7 @@ namespace usrp2 {
     cmd.eop.len = sizeof(cmd.eop);
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -794,7 +798,7 @@ namespace usrp2 {
     cmd.op.freq_lo = htonl(u2_fxpt_freq_lo(fxpt));
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -831,7 +835,7 @@ namespace usrp2 {
     cmd.op.interp = htonl(interpolation_factor);
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -882,7 +886,7 @@ namespace usrp2 {
     cmd.op.scale_iq = htonl(((scale_i & 0xffff) << 16) | (scale_q & 0xffff));
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -1010,7 +1014,7 @@ namespace usrp2 {
     cmd.eop.len = sizeof(cmd.eop);
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     return ntohx(reply.ok) == 1;
@@ -1069,7 +1073,7 @@ namespace usrp2 {
       return false;
 
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, 4*DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, 4*DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -1108,7 +1112,7 @@ namespace usrp2 {
     cmd.eop.len = sizeof(cmd.eop);
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -1135,7 +1139,7 @@ namespace usrp2 {
     cmd.eop.len = sizeof(cmd.eop);
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     return ntohx(reply.ok) == 1;
@@ -1157,7 +1161,7 @@ namespace usrp2 {
     cmd.eop.len = sizeof(cmd.eop);
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     return ntohx(reply.ok) == 1;
@@ -1197,7 +1201,7 @@ namespace usrp2 {
 
     reply = (op_generic_t *)malloc(rlen+bytes);
     pending_reply p(cmd.op.rid, reply, rlen+bytes);
-    if (transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT)) {
+    if (transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT)) {
       uint32_t nwords = (reply->len-rlen)/sizeof(uint32_t);
       uint32_t *data = (uint32_t *)(reply+rlen/wlen);
       for (unsigned int i = 0; i < nwords; i++)
@@ -1264,7 +1268,7 @@ namespace usrp2 {
     bool ok = false;
     op_generic_t reply;
     pending_reply p(cmd->op.rid, &reply, sizeof(reply));
-    if (transmit_cmd(cmd, l, &p, DEF_CMD_TIMEOUT))
+    if (transmit_cmd_and_wait(cmd, l, &p, DEF_CMD_TIMEOUT))
       ok = (ntohx(reply.ok) == 1);
 
     free(cmd);
@@ -1286,7 +1290,7 @@ namespace usrp2 {
     cmd.eop.len = sizeof(cmd.eop);
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -1315,7 +1319,7 @@ namespace usrp2 {
     cmd.eop.len = sizeof(cmd.eop);
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -1348,7 +1352,7 @@ namespace usrp2 {
     cmd.eop.len = sizeof(cmd.eop);
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -1377,7 +1381,7 @@ namespace usrp2 {
     cmd.eop.len = sizeof(cmd.eop);
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -1406,7 +1410,7 @@ namespace usrp2 {
     cmd.eop.len = sizeof(cmd.eop);
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);
@@ -1443,7 +1447,7 @@ namespace usrp2 {
     cmd.eop.len = sizeof(cmd.eop);
     
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
     bool success = (ntohx(reply.ok) == 1);

@@ -118,10 +118,13 @@ namespace usrp2 {
   {
   private:
     unsigned int    d_rid;
-    omni_mutex      d_mutex;
-    omni_condition  d_cond;
     void           *d_buffer;
     size_t	    d_len;
+    
+    // d_mutex is used with d_cond and also protects d_complete
+    omni_mutex      d_mutex;
+    omni_condition  d_cond;
+    bool	    d_complete;
 
   public:  
     /*!
@@ -140,12 +143,12 @@ namespace usrp2 {
      * Returns: 1 = ok, reply packet in buffer
      *          0 = timeout
      */
-    int wait(double secs);
+    int wait_for_completion(double secs);
 
     /*!
      * Allows creating thread to resume after copying reply into buffer
      */
-    void signal();
+    void notify_completion();
 
     /*!
      * Retrieve pending reply ID
