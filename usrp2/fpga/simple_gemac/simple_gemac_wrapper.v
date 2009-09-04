@@ -38,7 +38,7 @@ module simple_gemac_wrapper
       .GMII_TX_ER(GMII_TX_ER), .GMII_TXD(GMII_TXD),
       .GMII_RX_CLK(GMII_RX_CLK), .GMII_RX_DV(GMII_RX_DV),  
       .GMII_RX_ER(GMII_RX_ER), .GMII_RXD(GMII_RXD),
-      .pause_req(pause_req), .pause_time(pause_time), .pause_en(1),
+      .pause_req(pause_req), .pause_time(pause_time), .pause_en(pause_en),
       .ucast_addr(ucast_addr), .mcast_addr(mcast_addr),
       .pass_ucast(pass_ucast), .pass_mcast(pass_mcast), .pass_bcast(pass_bcast), 
       .pass_pause(pass_pause), .pass_all(pass_all),
@@ -136,9 +136,19 @@ module simple_gemac_wrapper
       .ll_src_rdy(tx_ll_src_rdy), .ll_dst_rdy(tx_ll_dst_rdy),
       .tx_data(tx_data), .tx_valid(tx_valid), .tx_error(tx_error), .tx_ack(tx_ack));
 
-   assign debug  = { { tx_ll_data },
-		     { tx_ll_sof, tx_ll_eof, tx_ll_src_rdy, tx_ll_dst_rdy, 
-		       tx_ll_sof2, tx_ll_eof2, tx_ll_src_rdy2, tx_ll_dst_rdy2 },
-		     { tx_valid, tx_error, tx_ack, tx_f36_src_rdy_int1, tx_f36_dst_rdy_int1, tx_f36_data_int1[34:32]},
-		     { tx_data} };
+   wire [31:0] debug_tx, debug_rx;
+   
+   assign debug_tx  = { { tx_ll_data },
+			{ tx_ll_sof, tx_ll_eof, tx_ll_src_rdy, tx_ll_dst_rdy, 
+			  tx_ll_sof2, tx_ll_eof2, tx_ll_src_rdy2, tx_ll_dst_rdy2 },
+			{ tx_valid, tx_error, tx_ack, tx_f36_src_rdy_int1, tx_f36_dst_rdy_int1, tx_f36_data_int1[34:32]},
+			{ tx_data} };
+   assign debug_rx  = { { rx_ll_data },
+			{ rx_ll_sof, rx_ll_eof, rx_ll_src_rdy, rx_ll_dst_rdy, 
+			  rx_ll_sof2, rx_ll_eof2, rx_ll_src_rdy2, rx_ll_dst_rdy2 },
+			{ rx_valid, rx_error, rx_ack, rx_f36_src_rdy_int1, rx_f36_dst_rdy_int1, rx_f36_data_int1[34:32]},
+			{ rx_data} };
+
+   assign debug  = debug_rx;
+   
 endmodule // simple_gemac_wrapper
