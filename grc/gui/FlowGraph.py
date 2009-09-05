@@ -291,12 +291,13 @@ class FlowGraph(Element):
 
 	def update(self):
 		"""
-		Do a global rewrite and validate.
-		Call update on all elements.
+		Call the top level rewrite and validate.
+		Call the top level create labels and shapes.
 		"""
 		self.rewrite()
 		self.validate()
-		for element in self.get_elements(): element.update()
+		self.create_labels()
+		self.create_shapes()
 
 	##########################################################################
 	## Get Selected

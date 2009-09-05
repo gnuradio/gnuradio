@@ -50,8 +50,9 @@ class Connection(Element):
 		"""
 		return 0
 
-	def update(self):
+	def create_shapes(self):
 		"""Precalculate relative coordinates."""
+		Element.create_shapes(self)
 		self._sink_rot = None
 		self._source_rot = None
 		self._sink_coor = None
@@ -74,7 +75,7 @@ class Connection(Element):
 
 	def _update_after_move(self):
 		"""Calculate coordinates."""
-		self.clear()
+		self.clear() #FIXME do i want this here?
 		#source connector
 		source = self.get_source()
 		X, Y = source.get_connector_coordinate()
@@ -125,7 +126,7 @@ class Connection(Element):
 		sink = self.get_sink()
 		source = self.get_source()
 		#check for changes
-		if self._sink_rot != sink.get_rotation() or self._source_rot != source.get_rotation(): self.update()
+		if self._sink_rot != sink.get_rotation() or self._source_rot != source.get_rotation(): self.create_shapes()
 		elif self._sink_coor != sink.get_coordinate() or self._source_coor != source.get_coordinate(): self._update_after_move()
 		#cache values
 		self._sink_rot = sink.get_rotation()

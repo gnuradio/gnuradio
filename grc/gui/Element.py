@@ -61,6 +61,21 @@ class Element(object):
 		rotation = rotation or self.get_rotation()
 		return rotation in (90, 270)
 
+	def create_labels(self):
+		"""
+		Create labels (if applicable) and call on all children.
+		Call this base method before creating labels in the element.
+		"""
+		for child in self.get_children(): child.create_labels()
+
+	def create_shapes(self):
+		"""
+		Create shapes (if applicable) and call on all children.
+		Call this base method before creating shapes in the element.
+		"""
+		self.clear()
+		for child in self.get_children(): child.create_shapes()
+
 	def draw(self, gc, window, border_color, bg_color):
 		"""
 		Draw in the given window.
@@ -216,7 +231,3 @@ class Element(object):
 		if rotation not in POSSIBLE_ROTATIONS:
 			raise Exception('"%s" is not one of the possible rotations: (%s)'%(rotation, POSSIBLE_ROTATIONS))
 		self.rotation = rotation
-
-	def update(self):
-		"""Do nothing for the update. Dummy method."""
-		pass

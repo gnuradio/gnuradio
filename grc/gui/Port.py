@@ -42,9 +42,9 @@ class Port(Element):
 		Element.__init__(self)
 		self.connector_coordinates = dict()
 
-	def update(self):
+	def create_shapes(self):
 		"""Create new areas and labels for the port."""
-		self.clear()
+		Element.create_shapes(self)
 		#get current rotation
 		rotation = self.get_rotation()
 		#get all sibling ports
@@ -82,8 +82,9 @@ class Port(Element):
 		#the connector length
 		self._connector_length = CONNECTOR_EXTENSION_MINIMAL + CONNECTOR_EXTENSION_INCREMENT*index
 
-	def _create_labels(self):
+	def create_labels(self):
 		"""Create the labels for the socket."""
+		Element.create_labels(self)
 		self._bg_color = Colors.get_color(self.get_color())
 		#create the layout
 		layout = gtk.DrawingArea().create_pango_layout('')
