@@ -114,7 +114,7 @@ class Port(Element):
 			border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or Colors.BORDER_COLOR,
 		)
 		X,Y = self.get_coordinate()
-		(x,y),(w,h) = self.areas_dict[self.get_rotation()][0] #use the first area's sizes to place the labels
+		(x,y),(w,h) = self._areas_list[0] #use the first area's sizes to place the labels
 		if self.is_horizontal():
 			window.draw_image(gc, self.horizontal_label, 0, 0, x+X+(self.W-self.w)/2, y+Y+(self.H-self.h)/2, -1, -1)
 		elif self.is_vertical():
