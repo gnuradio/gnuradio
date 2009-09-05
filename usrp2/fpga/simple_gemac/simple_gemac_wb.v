@@ -24,7 +24,9 @@ module simple_gemac_wb
    inout mdio, output mdc,
    output [47:0] ucast_addr, output [47:0] mcast_addr,
    output pass_ucast, output pass_mcast, output pass_bcast,
-   output pass_pause, output pass_all, output pause_en  );
+   output pass_pause, output pass_all, 
+   output pause_respect_en, output pause_request_en, 
+   output [15:0] pause_time, output [15:0] pause_thresh  );
 
    wire   acc 	  = wb_cyc & wb_stb;
    wire   wr_acc  = wb_cyc & wb_stb & wb_we;
@@ -36,10 +38,10 @@ module simple_gemac_wb
      else
        wb_ack 	 <= acc & ~wb_ack;
        
-   wire [5:0] misc_settings;
-   assign {pass_ucast, pass_mcast, pass_bcast, pass_pause, pass_all, pause_en} 	= misc_settings;
+   wire [6:0] misc_settings;
+   assign {pause_request_en, pass_ucast, pass_mcast, pass_bcast, pass_pause, pass_all, pause_respect_en} = misc_settings;
 
-   wb_reg #(.ADDR(0),.DEFAULT(6'b111001))
+   wb_reg #(.ADDR(0),.DEFAULT(7'b0111001))
    wb_reg_settings (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .wr_acc(wr_acc),
 		    .dat_i(wb_dat_i), .dat_o(misc_settings) );
    wb_reg #(.ADDR(1),.DEFAULT(0))
@@ -131,6 +133,14 @@ module simple_gemac_wb
       .WCtrlDataStart(WCtrlDataStart), .RStatStart(RStatStart), 
       .UpdateMIIRX_DATAReg(UpdateMIIRX_DATAReg) );
 
+   wb_reg #(.ADDR(11),.DEFAULT(0))
+   wb_reg_pausetime (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .wr_acc(wr_acc),
+		     .dat_i(wb_dat_i), .dat_o(pause_time) );
+   
+   wb_reg #(.ADDR(12),.DEFAULT(0))
+   wb_reg_pausethresh (.clk(wb_clk), .rst(wb_rst), .adr(wb_adr[7:2]), .wr_acc(wr_acc),
+		       .dat_i(wb_dat_i), .dat_o(pause_thresh) );
+   
    always @(posedge wb_clk)
      case(wb_adr[7:2])
        0 : wb_dat_o <= misc_settings;
@@ -144,6 +154,8 @@ module simple_gemac_wb
        8 : wb_dat_o <= MIICOMMAND;
        9 : wb_dat_o <= MIISTATUS;
        10: wb_dat_o <= MIIRX_DATA;
+       11: wb_dat_o <= pause_time;
+       12: wb_dat_o <= pause_thresh;
      endcase // case (wb_adr[7:2])
    
 endmodule // simple_gemac_wb

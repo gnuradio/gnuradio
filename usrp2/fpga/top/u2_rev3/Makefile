@@ -90,6 +90,7 @@ simple_gemac/simple_gemac_rx.v \
 simple_gemac/crc.v \
 simple_gemac/delay_line.v \
 simple_gemac/flow_ctrl_tx.v \
+simple_gemac/flow_ctrl_rx.v \
 simple_gemac/address_filter.v \
 simple_gemac/ll8_to_txmac.v \
 simple_gemac/rxmac_to_ll8.v \

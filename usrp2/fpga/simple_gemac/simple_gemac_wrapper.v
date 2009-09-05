@@ -140,7 +140,12 @@ module simple_gemac_wrapper
       .ll_src_rdy(tx_ll_src_rdy), .ll_dst_rdy(tx_ll_dst_rdy),
       .tx_data(tx_data), .tx_valid(tx_valid), .tx_error(tx_error), .tx_ack(tx_ack));
 
-   wire [31:0] debug_tx, debug_rx;
+   flow_ctrl_rx flow_ctrl_rx
+     (.pause_request_en(pause_request_en), .pause_time(pause_time), .pause_thresh(pause_thresh),
+      .rx_clk(rx_clk), .rx_reset(rx_reset), .rx_fifo_space(rx_fifo_space),
+      .tx_clk(tx_clk), .tx_reset(tx_reset), .pause_req(pause_req), .pause_time_req(pause_time_req));
+   
+   wire [31:0] 	  debug_tx, debug_rx;
    
    assign debug_tx  = { { tx_ll_data },
 			{ tx_ll_sof, tx_ll_eof, tx_ll_src_rdy, tx_ll_dst_rdy, 

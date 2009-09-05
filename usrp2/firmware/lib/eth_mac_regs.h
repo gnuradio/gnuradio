@@ -35,6 +35,8 @@ typedef struct {
   volatile int miicommand;
   volatile int miistatus;
   volatile int miirx_data;
+  volatile int pause_time;
+  volatile int pause_thresh;
 } eth_mac_regs_t;
 
 // settings register
@@ -44,6 +46,7 @@ typedef struct {
 #define MAC_SET_PASS_BCAST (1 << 3)  // Sends broadcast frames through (normally on)
 #define MAC_SET_PASS_MCAST (1 << 4)  // Sends multicast frames that match mcast addr (normally off)
 #define MAC_SET_PASS_UCAST (1 << 5)  // Sends unicast (normal) frames through if they hit in address filter (normally on)
+#define MAC_SET_PAUSE_SEND_EN (1 << 6) // Enables sending pause frames
 
 // miicommand register
 #define MIIC_SCANSSTAT	(1 << 0)	// Scan status

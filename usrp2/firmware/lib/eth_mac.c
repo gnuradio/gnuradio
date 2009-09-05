@@ -46,7 +46,10 @@ eth_mac_init(const u2_mac_addr_t *src)
   eth_mac->miimoder = 25;	// divider from CPU clock (50MHz/25 = 2MHz)
 
   eth_mac_set_addr(src);
-  eth_mac->settings = MAC_SET_PAUSE_EN | MAC_SET_PASS_BCAST | MAC_SET_PASS_UCAST;  // 0x39; 
+  eth_mac->settings = MAC_SET_PAUSE_EN | MAC_SET_PASS_BCAST | MAC_SET_PASS_UCAST | MAC_SET_PAUSE_SEND_EN; 
+
+  eth_mac->pause_time = 38;
+  eth_mac->pause_thresh = 1200;
 
   // set rx flow control high and low water marks
   // unsigned int lwmark = (2*2048 + 64)/4; // 2 * 2048-byte frames + 1 * 64-byte pause frame
