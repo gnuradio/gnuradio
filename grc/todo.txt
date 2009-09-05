@@ -68,7 +68,6 @@
 * save/restore cwd
 * threads dont die on exit in probe and variable sink
 * align param titles in paramsdialog
-* better error for blank string params
 * weird grid params misbehaving
 * params dialog needs to dynamically update for all params
   * will not update for non-enum params
