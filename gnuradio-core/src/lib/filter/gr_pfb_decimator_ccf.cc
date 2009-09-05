@@ -30,6 +30,7 @@
 #include <gri_fft.h>
 #include <gr_io_signature.h>
 #include <gr_expj.h>
+#include <cstdio>
 
 gr_pfb_decimator_ccf_sptr gr_make_pfb_decimator_ccf (unsigned int decim, 
 						     const std::vector<float> &taps,

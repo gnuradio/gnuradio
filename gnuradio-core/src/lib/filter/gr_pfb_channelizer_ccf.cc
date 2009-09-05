@@ -29,6 +29,7 @@
 #include <gr_fir_util.h>
 #include <gri_fft.h>
 #include <gr_io_signature.h>
+#include <cstdio>
 
 gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans, 
 							 const std::vector<float> &taps)
