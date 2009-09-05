@@ -572,7 +572,7 @@ module u2_core
      (.clk(dsp_clk), .rst(dsp_rst),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .master_time(master_time),.underrun(underrun),
-      .rd_dat_i(rd1_dat), .rd_flags_i(rd_flags), .rd_ready_i(rd1_ready_o), .rd_ready_o(rd1_ready_i),
+      .rd_dat_i(rd1_dat), .rd_flags_i(rd1_flags), .rd_ready_i(rd1_ready_o), .rd_ready_o(rd1_ready_i),
       .sample(sample_tx), .run(run_tx), .strobe(strobe_tx),
       .fifo_occupied(dsp_tx_occ),.fifo_full(dsp_tx_full),.fifo_empty(dsp_tx_empty),
       .debug(debug_txc) );
