@@ -1,5 +1,5 @@
 """
-Copyright 2007 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -17,11 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import Colors
 import pygtk
 pygtk.require('2.0')
 import gtk
-import pango
 from Constants import LINE_SELECT_SENSITIVITY
 from Constants import POSSIBLE_ROTATIONS
 

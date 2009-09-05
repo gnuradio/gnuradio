@@ -135,7 +135,7 @@ class Block(Element):
 			layouts.append(layout)
 			w,h = layout.get_pixel_size()
 			self.label_width = max(w, self.label_width)
-			self.label_height = self.label_height + h + LABEL_SEPARATION
+			self.label_height += h + LABEL_SEPARATION
 		width = self.label_width
 		height = self.label_height
 		#setup the pixmap
