@@ -32,7 +32,7 @@ class Element(object):
 	and methods to detect selection of those areas.
 	"""
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self):
 		"""
 		Make a new list of rectangular areas and lines, and set the coordinate and the rotation.
 		"""

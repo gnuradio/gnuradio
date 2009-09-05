@@ -32,6 +32,8 @@ class Connection(Element):
 	The arrow coloring exposes the enabled and valid states.
 	"""
 
+	def __init__(self): Element.__init__(self)
+
 	def get_coordinate(self):
 		"""
 		Get the 0,0 coordinate.

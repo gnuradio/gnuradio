@@ -34,7 +34,7 @@ PORT_MARKUP_TMPL="""\
 class Port(Element):
 	"""The graphical port."""
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self):
 		"""
 		Port contructor.
 		Create list of connector coordinates.

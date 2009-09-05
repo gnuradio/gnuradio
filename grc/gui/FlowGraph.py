@@ -39,7 +39,7 @@ class FlowGraph(Element):
 	and the connections between inputs and outputs.
 	"""
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self):
 		"""
 		FlowGraph contructor.
 		Create a list for signal blocks and connections. Connect mouse handlers.

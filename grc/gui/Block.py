@@ -37,7 +37,7 @@ BLOCK_MARKUP_TMPL="""\
 class Block(Element):
 	"""The graphical signal block."""
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self):
 		"""
 		Block contructor.
 		Add graphics related params to the block.

@@ -114,6 +114,8 @@ Error:
 class Param(Element):
 	"""The graphical parameter."""
 
+	def __init__(self): Element.__init__(self)
+
 	def get_input_class(self):
 		"""
 		Get the graphical gtk class to represent this parameter.
