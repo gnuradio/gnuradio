@@ -398,13 +398,12 @@ module u2_core
    // /////////////////////////////////////////////////////////////////////////
    // Ethernet MAC  Slave #6
 
-   simple_gemac_wrapper simple_gemac_wrapper
+   simple_gemac_wrapper #(.RXFIFOSIZE(11), .TXFIFOSIZE(6)) simple_gemac_wrapper
      (.clk125(clk_to_mac),  .reset(wb_rst),
       .GMII_GTX_CLK(GMII_GTX_CLK), .GMII_TX_EN(GMII_TX_EN),  
       .GMII_TX_ER(GMII_TX_ER), .GMII_TXD(GMII_TXD),
       .GMII_RX_CLK(GMII_RX_CLK), .GMII_RX_DV(GMII_RX_DV),  
       .GMII_RX_ER(GMII_RX_ER), .GMII_RXD(GMII_RXD),
-      .pause_req(0), .pause_time(0),
       .sys_clk(dsp_clk),
       .rx_f36_data({wr2_flags,wr2_dat}), .rx_f36_src_rdy(wr2_ready_i), .rx_f36_dst_rdy(wr2_ready_o),
       .tx_f36_data({rd2_flags,rd2_dat}), .tx_f36_src_rdy(rd2_ready_o), .tx_f36_dst_rdy(rd2_ready_i),
@@ -676,7 +675,7 @@ module u2_core
 			     { 4'd0, wr2_ready_i, wr2_ready_o, rd2_ready_i, rd2_ready_o } };
  */        
    assign debug 	 = { { GMII_RXD },
-			     { 1'd0, debug_mac2[3:0], GMII_RX_DV, GMII_RX_ER, GMII_RX_CLK },
+			     { 5'd0, GMII_RX_DV, GMII_RX_ER, GMII_RX_CLK },
 			     { wr2_flags, rd2_flags },
 			     { GMII_TX_EN,3'd0, wr2_ready_i, wr2_ready_o, rd2_ready_i, rd2_ready_o } };
           
