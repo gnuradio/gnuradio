@@ -125,7 +125,7 @@ class PropsDialog(gtk.Dialog):
 			#repopulate the params box
 			for param in self.block.get_params():
 				if param.get_hide() == 'all': continue
-				io_param = param.get_input_object(self._update)
+				io_param = param.get_input_class()(param, callback=self._update)
 				self._input_object_params.append(io_param)
 				self._params_box.pack_start(io_param, False)
 			self._params_box.show_all()

@@ -156,21 +156,6 @@ class Param(Element):
 		if self.get_options(): return EnumEntryParam
 		return EntryParam
 
-	def update(self):
-		"""
-		Called when an external change occurs.
-		Update the graphical input by calling the change handler.
-		"""
-		if hasattr(self, '_input'): self._handle_changed()
-
-	def get_input_object(self, callback=None):
-		"""
-		Get the graphical gtk object to represent this parameter.
-		@param callback a function to be called from the input object. 
-		@return gtk input object
-		"""
-		return self.get_input_class()(self, callback=callback)
-
 	def get_layout(self):
 		"""
 		Create a layout based on the current markup.

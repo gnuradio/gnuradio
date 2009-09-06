@@ -70,6 +70,7 @@
 * align param titles in properties dialog
 * weird grid params misbehaving
 * properties dialog needs to show connection errors
+* fix param input stuff for usrp probes
 
 ##################################################
 # Future
