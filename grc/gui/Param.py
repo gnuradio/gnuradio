@@ -30,7 +30,7 @@ class InputParam(gtk.HBox):
 		gtk.HBox.__init__(self)
 		self.param = param
 		self._callback = callback
-		self.label = gtk.Label('') #no label, markup is added by set_markup
+		self.label = gtk.Label() #no label, markup is added by set_markup
 		self.label.set_size_request(150, -1)
 		self.pack_start(self.label, False)
 		self.set_markup = lambda m: self.label.set_markup(m)
@@ -66,7 +66,11 @@ class InputParam(gtk.HBox):
 		self.param.set_value(self.get_text())
 		#call the callback
 		if self._callback: self._callback()
-		#self.update() #dont update here, parent will update
+		else:
+			#no callback mode (used in supporting gui scripts)
+			#internally re-validate the param and update the gui
+			self.param.validate()
+			self.update()
 
 class EntryParam(InputParam):
 	"""Provide an entry box for strings and numbers."""
@@ -155,9 +159,9 @@ class Param(Element):
 		All others get a standard entry parameter.
 		@return gtk input class
 		"""
-		if self.is_enum(): return EnumParam(*args, **kwargs)
-		if self.get_options(): return EnumEntryParam(*args, **kwargs)
-		return EntryParam(*args, **kwargs)
+		if self.is_enum(): return EnumParam(self, *args, **kwargs)
+		if self.get_options(): return EnumEntryParam(self, *args, **kwargs)
+		return EntryParam(self, *args, **kwargs)
 
 	def get_layout(self):
 		"""

@@ -154,7 +154,7 @@ class Param(_Param, _GUIParam):
 		return dt_str
 
 	def get_input(self, *args, **kwargs):
-		if self.get_type() in ('file_open', 'file_save'): return FileParam(*args, **kwargs)
+		if self.get_type() in ('file_open', 'file_save'): return FileParam(self, *args, **kwargs)
 		return _GUIParam.get_input(self, *args, **kwargs)
 
 	def get_color(self):

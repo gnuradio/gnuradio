@@ -32,15 +32,18 @@ from gnuradio.grc.gui.Dialogs import TextDisplay
 from gnuradio.grc.python.Platform import Platform
 platform = Platform()
 
-from gnuradio.grc.gui.Platform import Platform
-platform = Platform(platform)
-
 flow_graph = platform.get_new_flow_graph()
 block = flow_graph.get_new_block('usrp2_probe')
 
 ##all params
 usrp_interface_param = block.get_param('interface')
 usrp_type_param = block.get_param('type')
+
+def get_input(param):
+	param.validate()
+	input = param.get_input()
+	input.update()
+	return input
 
 class USRP2ProbeWindow(gtk.Window):
 	"""
@@ -69,8 +72,8 @@ class USRP2ProbeWindow(gtk.Window):
 		#create vbox for storage
 		vbox = gtk.VBox()
 		frame.add(vbox)
-		vbox.pack_start(usrp_interface_param.get_input_object(), False)
-		vbox.pack_start(usrp_type_param.get_input_object(), False)
+		vbox.pack_start(get_input(usrp_interface_param), False)
+		vbox.pack_start(get_input(usrp_type_param), False)
 		#make the tree model for holding mac addrs
 		self.treestore = gtk.TreeStore(gobject.TYPE_STRING)
 		self.treeview = gtk.TreeView(self.treestore)

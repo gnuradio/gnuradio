@@ -123,7 +123,7 @@ class PropsDialog(gtk.Dialog):
 				io_param.destroy()
 			#repopulate the params box
 			for param in self._block.get_params():
-				io_param = param.get_input(param, callback=self._update)
+				io_param = param.get_input(self._update)
 				self._input_object_params.append(io_param)
 				self._params_box.pack_start(io_param, False)
 		#update the gui inputs

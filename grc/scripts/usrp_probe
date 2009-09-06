@@ -30,15 +30,18 @@ from gnuradio.grc.gui.Dialogs import TextDisplay
 from gnuradio.grc.python.Platform import Platform
 platform = Platform()
 
-from gnuradio.grc.gui.Platform import Platform
-platform = Platform(platform)
-
 flow_graph = platform.get_new_flow_graph()
 block = flow_graph.get_new_block('usrp_probe')
 
 ##all params
 usrp_which_param = block.get_param('which')
 usrp_dboard_param = block.get_param('dboard')
+
+def get_input(param):
+	param.validate()
+	input = param.get_input()
+	input.update()
+	return input
 
 class USRPProbeWindow(gtk.Window):
 	"""
@@ -66,8 +69,8 @@ class USRPProbeWindow(gtk.Window):
 		#create vbox for storage
 		vbox = gtk.VBox()
 		frame.add(vbox)
-		vbox.pack_start(usrp_which_param.get_input_object(), False)
-		vbox.pack_start(usrp_dboard_param.get_input_object(), False)
+		vbox.pack_start(get_input(usrp_which_param), False)
+		vbox.pack_start(get_input(usrp_dboard_param), False)
 		self.probe_button = gtk.Button('Probe')
 		self.probe_button.connect('clicked', self._probe_usrp)
 		vbox.pack_start(self.probe_button, False)

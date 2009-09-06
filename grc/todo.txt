@@ -69,7 +69,6 @@
 * threads dont die on exit in probe and variable sink
 * align param titles in properties dialog
 * weird grid params misbehaving
-* fix param input stuff for usrp probes
 
 ##################################################
 # Future
