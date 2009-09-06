@@ -26,16 +26,44 @@ import gtk
 class InputParam(gtk.HBox):
 	"""The base class for an input parameter inside the input parameters dialog."""
 
-	def __init__(self, param, _handle_changed):
+	def __init__(self, param, callback=None):
 		gtk.HBox.__init__(self)
 		self.param = param
-		self._handle_changed = _handle_changed
+		self._callback = callback
 		self.label = gtk.Label('') #no label, markup is added by set_markup
 		self.label.set_size_request(150, -1)
 		self.pack_start(self.label, False)
 		self.set_markup = lambda m: self.label.set_markup(m)
 		self.tp = None
 	def set_color(self, color): pass
+
+	def update(self):
+		"""
+		Set the markup, color, and tooltip.
+		"""
+		#set the markup
+		has_cb = \
+			hasattr(self.param.get_parent(), 'get_callbacks') and \
+			filter(lambda c: self.param.get_key() in c, self.param.get_parent()._callbacks)
+		self.set_markup(Utils.parse_template(PARAM_LABEL_MARKUP_TMPL, param=self.param, has_cb=has_cb))
+		#set the color
+		self.set_color(self.param.get_color())
+		#set the tooltip
+		if self.tp: self.tp.set_tip(
+			self.entry,
+			Utils.parse_template(TIP_MARKUP_TMPL, param=self.param).strip(),
+		)
+
+	def _handle_changed(self, *args):
+		"""
+		Handle a gui change by setting the new param value,
+		calling the callback (if applicable), and updating.
+		"""
+		#set the new value
+		self.param.set_value(self.get_text())
+		#call the callback
+		if self._callback: self._callback()
+		#self.update() #dont update here, parent will update
 
 class EntryParam(InputParam):
 	"""Provide an entry box for strings and numbers."""
@@ -138,39 +166,10 @@ class Param(Element):
 	def get_input_object(self, callback=None):
 		"""
 		Get the graphical gtk object to represent this parameter.
-		Create the input object with this data type and the handle changed method.
-		@param callback a function of one argument(this param) to be called from the change handler
+		@param callback a function to be called from the input object. 
 		@return gtk input object
 		"""
-		self._callback = callback
-		self._input = self.get_input_class()(self, self._handle_changed)
-		if not self._callback: self.update()
-		return self._input
-
-	def _handle_changed(self, widget=None):
-		"""
-		When the input changes, write the inputs to the data type.
-		Finish by calling the exteral callback.
-		"""
-		self.set_value(self._input.get_text())
-		self.validate()
-		#is param is involved in a callback? #FIXME: messy
-		has_cb = \
-			hasattr(self.get_parent(), 'get_callbacks') and \
-			filter(lambda c: self.get_key() in c, self.get_parent()._callbacks)
-		self._input.set_markup(Utils.parse_template(PARAM_LABEL_MARKUP_TMPL, param=self, has_cb=has_cb))
-		#hide/show
-		if self.get_hide() == 'all': self._input.hide_all()
-		else: self._input.show_all()
-		#set the color
-		self._input.set_color(self.get_color())
-		#set the tooltip
-		if self._input.tp: self._input.tp.set_tip(
-			self._input.entry,
-			Utils.parse_template(TIP_MARKUP_TMPL, param=self).strip(),
-		)
-		#execute the external callback
-		if self._callback: self._callback(self)
+		return self.get_input_class()(self, callback=callback)
 
 	def get_layout(self):
 		"""

@@ -67,14 +67,9 @@
 * dont generate py files in saved flowgraph dir
 * save/restore cwd
 * threads dont die on exit in probe and variable sink
-* align param titles in paramsdialog
+* align param titles in properties dialog
 * weird grid params misbehaving
-* params dialog needs to dynamically update for all params
-  * will not update for non-enum params
-  * needs to account for added or removed params
-  * example with grid params need update after notebook change
-  * idea: hash the current param keys list and types,
-    if changed, redo the whole dialog (params part)
+* properties dialog needs to show connection errors
 
 ##################################################
 # Future

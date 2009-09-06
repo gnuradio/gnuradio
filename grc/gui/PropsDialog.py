@@ -38,13 +38,17 @@ def get_title_label(title):
 	return hbox
 
 class PropsDialog(gtk.Dialog):
-	"""A dialog box to set block parameters."""
+	"""
+	A dialog to set block parameters, view errors, and view documentation.
+	"""
 
 	def __init__(self, block):
 		"""
-		SignalBlockParamsDialog contructor.
-		@param block the signal block
+		Properties dialog contructor.
+		@param block a block instance
 		"""
+		self._hash = ''
+		LABEL_SPACING = 7
 		gtk.Dialog.__init__(self,
 			title='Properties: %s'%block.get_name(),
 			buttons=(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE),
@@ -52,46 +56,81 @@ class PropsDialog(gtk.Dialog):
 		self.block = block
 		self.set_size_request(MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
 		vbox = gtk.VBox()
-		#Add the title label
-		vbox.pack_start(get_title_label('Parameters'), False)
 		#Create the scrolled window to hold all the parameters
 		scrolled_window = gtk.ScrolledWindow()
 		scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 		scrolled_window.add_with_viewport(vbox)
 		self.vbox.pack_start(scrolled_window, True)
+		#Params box for block parameters
+		self._params_box = gtk.VBox()
+		self._params_box.pack_start(get_title_label('Parameters'), False)
+		self._input_object_params = list()
 		#Error Messages for the block
 		self._error_box = gtk.VBox()
 		self._error_messages_text_display = TextDisplay()
-		self._error_box.pack_start(gtk.Label(), False, False, 7) #spacing
+		self._error_box.pack_start(gtk.Label(), False, False, LABEL_SPACING)
 		self._error_box.pack_start(get_title_label('Error Messages'), False)
 		self._error_box.pack_start(self._error_messages_text_display, False)
 		#Docs for the block
 		self._docs_box = err_box = gtk.VBox()
 		self._docs_text_display = TextDisplay()
-		self._docs_box.pack_start(gtk.Label(), False, False, 7) #spacing
+		self._docs_box.pack_start(gtk.Label(), False, False, LABEL_SPACING)
 		self._docs_box.pack_start(get_title_label('Documentation'), False)
 		self._docs_box.pack_start(self._docs_text_display, False)
-		#Add all the parameters
-		for param in self.block.get_params():
-			vbox.pack_start(param.get_input_object(self._handle_changed), False)
-		#Add the error and docs box
+		#Add the boxes
+		vbox.pack_start(self._params_box, False)
 		vbox.pack_start(self._error_box, False)
 		vbox.pack_start(self._docs_box, False)
-		#connect and show
+		#connect key press event
 		self.connect('key_press_event', self._handle_key_press)
+		#initial update to populate the params
 		self.show_all()
-		#initial update
-		for param in self.block.get_params(): param.update()
 		self._update()
+
+	def _params_changed(self):
+		"""
+		Have the params in this dialog changed?
+		Ex: Added, removed, type change, hidden, shown?
+		Make a hash that uniquely represents the params state.
+		@return true if changed
+		"""
+		old_hash = self._hash
+		str_accum = ''
+		for param in self.block.get_params():
+			str_accum += param.get_key()
+			str_accum += param.get_type()
+			str_accum += param.get_hide()
+		self._hash = hash(str_accum)
+		return self._hash != old_hash
 
 	def _update(self):
 		"""
+		Repopulate the parameters box (if changed).
+		Update all the input parameters.
 		Update the error messages box.
 		Hide the box if there are no errors.
 		Update the documentation block.
 		Hide the box if there are no docs.
 		"""
+		#update for the block
+		self.block.rewrite()
 		self.block.validate()
+		#update the params box
+		if self._params_changed():
+			#empty the params box
+			for io_param in list(self._input_object_params):
+				self._params_box.remove(io_param)
+				self._input_object_params.remove(io_param)
+				io_param.destroy()
+			#repopulate the params box
+			for param in self.block.get_params():
+				if param.get_hide() == 'all': continue
+				io_param = param.get_input_object(self._update)
+				self._input_object_params.append(io_param)
+				self._params_box.pack_start(io_param, False)
+			self._params_box.show_all()
+		#update the gui inputs
+		for io_param in self._input_object_params: io_param.update()
 		#update the errors box
 		if self.block.is_valid(): self._error_box.hide()
 		else: self._error_box.show()
@@ -111,23 +150,6 @@ class PropsDialog(gtk.Dialog):
 		keyname = gtk.gdk.keyval_name(event.keyval)
 		if keyname == 'Return': self.response(gtk.RESPONSE_OK)
 		return False #forward the keypress
-
-	def _handle_changed(self, param):
-		"""
-		A change occured, update any dependent parameters:
-		The enum inside the variable type may have changed and,
-		the variable param will need an external update.
-		@param param the graphical parameter that initiated the callback
-		"""
-		#update dependent params
-		if param.is_enum():
-			for other_param in param.get_parent().get_params():
-				if param.get_key() is not other_param.get_key() and (
-				param.get_key() in other_param._type or \
-				param.get_key() in other_param._hide): other_param.update()
-		#update
-		self._update()
-		return True
 
 	def run(self):
 		"""
