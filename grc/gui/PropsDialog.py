@@ -47,13 +47,13 @@ class PropsDialog(gtk.Dialog):
 		Properties dialog contructor.
 		@param block a block instance
 		"""
-		self._hash = ''
+		self._hash = 0
 		LABEL_SPACING = 7
 		gtk.Dialog.__init__(self,
 			title='Properties: %s'%block.get_name(),
 			buttons=(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE),
 		)
-		self.block = block
+		self._block = block
 		self.set_size_request(MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
 		vbox = gtk.VBox()
 		#Create the scrolled window to hold all the parameters
@@ -90,17 +90,15 @@ class PropsDialog(gtk.Dialog):
 	def _params_changed(self):
 		"""
 		Have the params in this dialog changed?
-		Ex: Added, removed, type change, hidden, shown?
+		Ex: Added, removed, type change...
 		Make a hash that uniquely represents the params state.
 		@return true if changed
 		"""
 		old_hash = self._hash
-		str_accum = ''
-		for param in self.block.get_params():
-			str_accum += param.get_key()
-			str_accum += param.get_type()
-			str_accum += param.get_hide()
-		self._hash = hash(str_accum)
+		self._hash = 0
+		for param in self._block.get_params():
+			self._hash ^= hash(param)
+			self._hash ^= hash(param.get_type())
 		return self._hash != old_hash
 
 	def _update(self):
@@ -113,33 +111,32 @@ class PropsDialog(gtk.Dialog):
 		Hide the box if there are no docs.
 		"""
 		#update for the block
-		self.block.rewrite()
-		self.block.validate()
+		self._block.rewrite()
+		self._block.validate()
 		#update the params box
 		if self._params_changed():
 			#empty the params box
 			for io_param in list(self._input_object_params):
+				io_param.hide_all()
 				self._params_box.remove(io_param)
 				self._input_object_params.remove(io_param)
 				io_param.destroy()
 			#repopulate the params box
-			for param in self.block.get_params():
-				if param.get_hide() == 'all': continue
-				io_param = param.get_input_class()(param, callback=self._update)
+			for param in self._block.get_params():
+				io_param = param.get_input(param, callback=self._update)
 				self._input_object_params.append(io_param)
 				self._params_box.pack_start(io_param, False)
-			self._params_box.show_all()
 		#update the gui inputs
 		for io_param in self._input_object_params: io_param.update()
 		#update the errors box
-		if self.block.is_valid(): self._error_box.hide()
+		if self._block.is_valid(): self._error_box.hide()
 		else: self._error_box.show()
-		messages = '\n\n'.join(self.block.get_error_messages())
+		messages = '\n\n'.join(self._block.get_error_messages())
 		self._error_messages_text_display.set_text(messages)
 		#update the docs box
-		if self.block.get_doc(): self._docs_box.show()
+		if self._block.get_doc(): self._docs_box.show()
 		else: self._docs_box.hide()
-		self._docs_text_display.set_text(self.block.get_doc())
+		self._docs_text_display.set_text(self._block.get_doc())
 
 	def _handle_key_press(self, widget, event):
 		"""
@@ -157,11 +154,11 @@ class PropsDialog(gtk.Dialog):
 		@return true if a change occured.
 		"""
 		original_data = list()
-		for param in self.block.get_params():
+		for param in self._block.get_params():
 			original_data.append(param.get_value())
 		gtk.Dialog.run(self)
 		self.destroy()
 		new_data = list()
-		for param in self.block.get_params():
+		for param in self._block.get_params():
 			new_data.append(param.get_value())
 		return original_data != new_data

@@ -39,7 +39,7 @@ class InputParam(gtk.HBox):
 
 	def update(self):
 		"""
-		Set the markup, color, and tooltip.
+		Set the markup, color, tooltip, show/hide.
 		"""
 		#set the markup
 		has_cb = \
@@ -53,6 +53,9 @@ class InputParam(gtk.HBox):
 			self.entry,
 			Utils.parse_template(TIP_MARKUP_TMPL, param=self.param).strip(),
 		)
+		#show/hide
+		if self.param.get_hide() == 'all': self.hide_all()
+		else: self.show_all()
 
 	def _handle_changed(self, *args):
 		"""
@@ -144,7 +147,7 @@ class Param(Element):
 
 	def __init__(self): Element.__init__(self)
 
-	def get_input_class(self):
+	def get_input(self, *args, **kwargs):
 		"""
 		Get the graphical gtk class to represent this parameter.
 		An enum requires and combo parameter.
@@ -152,9 +155,9 @@ class Param(Element):
 		All others get a standard entry parameter.
 		@return gtk input class
 		"""
-		if self.is_enum(): return EnumParam
-		if self.get_options(): return EnumEntryParam
-		return EntryParam
+		if self.is_enum(): return EnumParam(*args, **kwargs)
+		if self.get_options(): return EnumEntryParam(*args, **kwargs)
+		return EntryParam(*args, **kwargs)
 
 	def get_layout(self):
 		"""

@@ -153,9 +153,9 @@ class Param(_Param, _GUIParam):
 				dt_str = dt_str[:max_len-3] + '...'
 		return dt_str
 
-	def get_input_class(self):
-		if self.get_type() in ('file_open', 'file_save'): return FileParam
-		return _GUIParam.get_input_class(self)
+	def get_input(self, *args, **kwargs):
+		if self.get_type() in ('file_open', 'file_save'): return FileParam(*args, **kwargs)
+		return _GUIParam.get_input(self, *args, **kwargs)
 
 	def get_color(self):
 		"""
