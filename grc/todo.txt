@@ -73,6 +73,8 @@
   * will not update for non-enum params
   * needs to account for added or removed params
   * example with grid params need update after notebook change
+  * idea: hash the current param keys list and types,
+    if changed, redo the whole dialog (params part)
 
 ##################################################
 # Future

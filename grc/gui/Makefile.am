@@ -43,7 +43,7 @@ ourpython_PYTHON = \
 	MainWindow.py \
 	Messages.py \
 	NotebookPage.py \
-	ParamsDialog.py \
+	PropsDialog.py \
 	Preferences.py \
 	StateCache.py \
 	__init__.py

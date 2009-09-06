@@ -31,7 +31,7 @@ import Messages
 from .. base import ParseXML
 import random
 from MainWindow import MainWindow
-from ParamsDialog import ParamsDialog
+from PropsDialog import PropsDialog
 import Dialogs
 from FileDialogs import OpenFlowGraphFileDialog, SaveFlowGraphFileDialog, SaveImageFileDialog
 
@@ -240,7 +240,7 @@ class ActionHandler:
 		##################################################
 		elif state == Actions.BLOCK_PARAM_MODIFY:
 			selected_block = self.get_flow_graph().get_selected_block()
-			if selected_block and ParamsDialog(selected_block).run():
+			if selected_block and PropsDialog(selected_block).run():
 				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)

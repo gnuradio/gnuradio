@@ -37,7 +37,7 @@ def get_title_label(title):
 	hbox.pack_start(label, False, False, padding=11)
 	return hbox
 
-class ParamsDialog(gtk.Dialog):
+class PropsDialog(gtk.Dialog):
 	"""A dialog box to set block parameters."""
 
 	def __init__(self, block):
