@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <noaa_hrpt_sync_cc.h>
+#include <noaa_hrpt_sync_ff.h>
 #include <gr_io_signature.h>
 
 inline int signum(float f)
@@ -32,16 +32,16 @@ inline int signum(float f)
   return f >= 0.0 ? 1 : -1;
 }
 
-noaa_hrpt_sync_cc_sptr
-noaa_make_hrpt_sync_cc(float alpha, float beta, float sps, float max_offset)
+noaa_hrpt_sync_ff_sptr
+noaa_make_hrpt_sync_ff(float alpha, float beta, float sps, float max_offset)
 {
-  return gnuradio::get_initial_sptr(new noaa_hrpt_sync_cc(alpha, beta, sps, max_offset));
+  return gnuradio::get_initial_sptr(new noaa_hrpt_sync_ff(alpha, beta, sps, max_offset));
 }
 
-noaa_hrpt_sync_cc::noaa_hrpt_sync_cc(float alpha, float beta, float sps, float max_offset)
-  : gr_block("noaa_hrpt_sync_cc",
-	     gr_make_io_signature(1, 1, sizeof(gr_complex)),
-	     gr_make_io_signature(1, 1, sizeof(gr_complex))),
+noaa_hrpt_sync_ff::noaa_hrpt_sync_ff(float alpha, float beta, float sps, float max_offset)
+  : gr_block("noaa_hrpt_sync_ff",
+	     gr_make_io_signature(1, 1, sizeof(float)),
+	     gr_make_io_signature(1, 1, sizeof(float))),
     d_alpha(alpha), d_beta(beta), 
     d_sps(sps), d_max_offset(max_offset),
     d_phase(0.0), d_freq(1.0/sps),
@@ -50,18 +50,18 @@ noaa_hrpt_sync_cc::noaa_hrpt_sync_cc(float alpha, float beta, float sps, float m
 }
 
 int
-noaa_hrpt_sync_cc::general_work(int noutput_items,
-				 gr_vector_int &ninput_items,
-				 gr_vector_const_void_star &input_items,
-				 gr_vector_void_star &output_items)
+noaa_hrpt_sync_ff::general_work(int noutput_items,
+				gr_vector_int &ninput_items,
+				gr_vector_const_void_star &input_items,
+				gr_vector_void_star &output_items)
 {
   int ninputs = ninput_items[0];
-  const gr_complex *in = (const gr_complex *) input_items[0];
-  gr_complex *out = (gr_complex *) output_items[0];
+  const float *in = (const float *) input_items[0];
+  float *out = (float *) output_items[0];
 
   int i = 0, j = 0;
   while (i < ninputs && j < noutput_items) {
-    float sample = in[i++].imag();
+    float sample = in[i++];
     int sign = signum(sample);
     d_phase += d_freq;
 
@@ -77,7 +77,7 @@ noaa_hrpt_sync_cc::general_work(int noutput_items,
     }
 
     if (d_phase > 1.0) {
-      out[j++] = in[i];
+      out[j++] = -sample;	// Invert sense, -68 degrees=1
       d_phase -= 1.0;
     }
   }

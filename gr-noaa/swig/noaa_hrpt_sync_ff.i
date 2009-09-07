@@ -20,15 +20,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(noaa,hrpt_pll_cc)
+GR_SWIG_BLOCK_MAGIC(noaa,hrpt_sync_ff)
 
-noaa_hrpt_pll_cc_sptr
-noaa_make_hrpt_pll_cc(float alpha, float beta, float max_offset);
+noaa_hrpt_sync_ff_sptr
+noaa_make_hrpt_sync_ff(float alpha, float beta, float sps, float max_offset);
 
-class noaa_hrpt_pll_cc : public gr_sync_block
+class noaa_hrpt_sync_ff : public gr_sync_block
 {
 private:
-  noaa_hrpt_pll_cc();
+  noaa_hrpt_sync_ff();
 
 public:
   void set_alpha(float alpha);

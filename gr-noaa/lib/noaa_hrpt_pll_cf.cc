@@ -24,23 +24,23 @@
 #include "config.h"
 #endif
 
-#include <noaa_hrpt_pll_cc.h>
+#include <noaa_hrpt_pll_cf.h>
 #include <gr_io_signature.h>
 #include <gr_math.h>
 #include <gr_sincos.h>
 
 #define M_TWOPI (2*M_PI)
 
-noaa_hrpt_pll_cc_sptr
-noaa_make_hrpt_pll_cc(float alpha, float beta, float max_offset)
+noaa_hrpt_pll_cf_sptr
+noaa_make_hrpt_pll_cf(float alpha, float beta, float max_offset)
 {
-  return gnuradio::get_initial_sptr(new noaa_hrpt_pll_cc(alpha, beta, max_offset));
+  return gnuradio::get_initial_sptr(new noaa_hrpt_pll_cf(alpha, beta, max_offset));
 }
 
-noaa_hrpt_pll_cc::noaa_hrpt_pll_cc(float alpha, float beta, float max_offset)
-  : gr_sync_block("noaa_hrpt_pll_cc",
+noaa_hrpt_pll_cf::noaa_hrpt_pll_cf(float alpha, float beta, float max_offset)
+  : gr_sync_block("noaa_hrpt_pll_cf",
 		  gr_make_io_signature(1, 1, sizeof(gr_complex)),
-		  gr_make_io_signature(1, 1, sizeof(gr_complex))),
+		  gr_make_io_signature(1, 1, sizeof(float))),
     d_alpha(alpha), d_beta(beta), d_max_offset(max_offset),
     d_phase(0.0), d_freq(0.0)
 {
@@ -58,12 +58,12 @@ phase_wrap(float phase)
 }
 
 int
-noaa_hrpt_pll_cc::work(int noutput_items,
-			  gr_vector_const_void_star &input_items,
-			  gr_vector_void_star &output_items)
+noaa_hrpt_pll_cf::work(int noutput_items,
+		       gr_vector_const_void_star &input_items,
+		       gr_vector_void_star &output_items)
 {
   const gr_complex *in = (const gr_complex *) input_items[0];
-  gr_complex *out = (gr_complex *) output_items[0];
+  float *out = (float *) output_items[0];
 
   for (int i = 0; i < noutput_items; i++) {
 
@@ -75,7 +75,7 @@ noaa_hrpt_pll_cc::work(int noutput_items,
     // Generate and mix out carrier
     float re, im;
     gr_sincosf(d_phase, &im, &re);
-    out[i] = in[i]*gr_complex(re, -im);
+    out[i] = (in[i]*gr_complex(re, -im)).imag();
   }
 
   return noutput_items;

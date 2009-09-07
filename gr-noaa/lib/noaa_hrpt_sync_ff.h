@@ -20,30 +20,33 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_NOAA_HRPT_PLL_CC_H
-#define INCLUDED_NOAA_HRPT_PLL_CC_H
+#ifndef INCLUDED_NOAA_HRPT_SYNC_FF_H
+#define INCLUDED_NOAA_HRPT_SYNC_FF_H
 
 #include <gr_sync_block.h>
 
-class noaa_hrpt_pll_cc;
-typedef boost::shared_ptr<noaa_hrpt_pll_cc> noaa_hrpt_pll_cc_sptr;
+class noaa_hrpt_sync_ff;
+typedef boost::shared_ptr<noaa_hrpt_sync_ff> noaa_hrpt_sync_ff_sptr;
 
-noaa_hrpt_pll_cc_sptr
-noaa_make_hrpt_pll_cc(float alpha, float beta, float max_offset);
+noaa_hrpt_sync_ff_sptr
+noaa_make_hrpt_sync_ff(float alpha, float beta, float sps, float max_offset);
 
-class noaa_hrpt_pll_cc : public gr_sync_block
+class noaa_hrpt_sync_ff : public gr_block
 {
-  friend noaa_hrpt_pll_cc_sptr noaa_make_hrpt_pll_cc(float alpha, float beta, float max_offset);
-  noaa_hrpt_pll_cc(float alpha, float beta, float max_offset);
+  friend noaa_hrpt_sync_ff_sptr noaa_make_hrpt_sync_ff(float alpha, float beta, float sps, float max_offset);
+  noaa_hrpt_sync_ff(float alpha, float beta, float sps, float max_offset);
 
   float d_alpha;		// 1st order loop constant
   float d_beta;			// 2nd order loop constant
-  float d_max_offset;		// Maximum frequency offset, radians/sample
-  float d_phase;		// Instantaneous carrier phase
-  float d_freq;			// Instantaneous carrier frequency, radians/sample
+  float d_sps;                  // samples per symbol
+  float d_max_offset;		// Maximum frequency offset for d_sps, samples/symbol
+  float d_phase;		// Instantaneous symbol phase
+  float d_freq;			// Instantaneous symbol frequency, samples/symbol
+  int   d_last_sign;            // Tracks zero crossings
 
  public:
-  virtual int work(int noutput_items,
+  int general_work(int noutput_items,
+		   gr_vector_int &ninput_items,
 		   gr_vector_const_void_star &input_items,
 		   gr_vector_void_star &output_items);
 
@@ -52,4 +55,4 @@ class noaa_hrpt_pll_cc : public gr_sync_block
   void set_max_offset(float max_offset) { d_max_offset = max_offset; }
 };
 
-#endif /* INCLUDED_NOAA_HRPT_PLL_CC_H */
+#endif /* INCLUDED_NOAA_HRPT_SYNC_FF_H */

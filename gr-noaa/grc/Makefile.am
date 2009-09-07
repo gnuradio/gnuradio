@@ -28,8 +28,8 @@ dist_bin_SCRIPTS = \
 	usrp_rx_lrit.py
 
 dist_grcblocks_DATA = \
-	noaa_hrpt_pll_cc.xml \
-	noaa_hrpt_sync_cc.xml
+	noaa_hrpt_pll_cf.xml \
+	noaa_hrpt_sync_ff.xml
 
 EXTRA_DIST = \
 	usrp_rx_hrpt.grc \

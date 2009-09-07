@@ -2,12 +2,14 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: USRP HRPT Receiver
-# Generated: Sat Aug 29 13:16:19 2009
+# Generated: Mon Sep  7 13:05:09 2009
 ##################################################
 
+from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import noaa
 from gnuradio.eng_option import eng_option
+from gnuradio.gr import firdes
 from gnuradio.wxgui import fftsink2
 from gnuradio.wxgui import forms
 from gnuradio.wxgui import scopesink2
@@ -39,8 +41,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		##################################################
 		self.displays = wx.Notebook(self.GetWin(), style=wx.NB_TOP)
 		self.displays.AddPage(grc_wxgui.Panel(self.displays), "RX")
-		self.displays.AddPage(grc_wxgui.Panel(self.displays), "PLL")
-		self.displays.AddPage(grc_wxgui.Panel(self.displays), "SYNC")
+		self.displays.AddPage(grc_wxgui.Panel(self.displays), "PLL/SYNC")
 		self.GridAdd(self.displays, 1, 0, 1, 2)
 
 		##################################################
@@ -97,13 +98,20 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		# Blocks
 		##################################################
 		self.agr = gr.agc_cc(1e-6, 1.0, 1.0, 1.0)
-		self.noaa_hrpt_pll_cc_0 = noaa.hrpt_pll_cc(pll_alpha, pll_alpha**2/4.0, max_carrier_offset)
+		self.gr_add_const_vxx_0 = gr.add_const_vff((48.0, ))
+		self.gr_binary_slicer_fb_0 = gr.binary_slicer_fb()
+		self.gr_char_to_float_0 = gr.char_to_float()
+		self.gr_file_sink_0 = gr.file_sink(gr.sizeof_char*1, "bits.dat")
+		self.gr_float_to_char_0 = gr.float_to_char()
+		self.noaa_hrpt_pll_cf_0 = noaa.hrpt_pll_cf(pll_alpha, pll_alpha**2/4.0, max_carrier_offset)
+		self.noaa_hrpt_sync_ff_0 = noaa.hrpt_sync_ff(.005, .005*.005/4.0, sps, max_sync_offset)
 		self.rx_fftsink = fftsink2.fft_sink_c(
 			self.displays.GetPage(0).GetWin(),
 			baseband_freq=1698e6,
 			y_per_div=5,
 			y_divs=8,
 			ref_level=20,
+			ref_scale=2.0,
 			sample_rate=sample_rate,
 			fft_size=1024,
 			fft_rate=30,
@@ -113,8 +121,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 			peak_hold=False,
 		)
 		self.displays.GetPage(0).GridAdd(self.rx_fftsink.win, 0, 0, 1, 1)
-		self.src = gr.file_source(gr.sizeof_gr_complex*1, "poes-d16.dat", True)
-		self.sync = noaa.hrpt_sync_cc(sync_alpha, sync_alpha**2/4.0, sps, max_sync_offset)
+		self.src = gr.file_source(gr.sizeof_gr_complex*1, "poes-d16.dat", False)
 		self.throttle = gr.throttle(gr.sizeof_gr_complex*1, sample_rate)
 		self.wxgui_scopesink2_0 = scopesink2.scope_sink_c(
 			self.displays.GetPage(0).GetWin(),
@@ -127,7 +134,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 			num_inputs=1,
 		)
 		self.displays.GetPage(0).GridAdd(self.wxgui_scopesink2_0.win, 1, 0, 1, 1)
-		self.wxgui_scopesink2_0_0 = scopesink2.scope_sink_c(
+		self.wxgui_scopesink2_0_0 = scopesink2.scope_sink_f(
 			self.displays.GetPage(1).GetWin(),
 			title="Post-PLL",
 			sample_rate=sample_rate,
@@ -138,30 +145,8 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 			num_inputs=1,
 		)
 		self.displays.GetPage(1).GridAdd(self.wxgui_scopesink2_0_0.win, 0, 0, 1, 1)
-		self.wxgui_scopesink2_0_0_0 = scopesink2.scope_sink_c(
+		self.wxgui_scopesink2_0_0_0_0 = scopesink2.scope_sink_f(
 			self.displays.GetPage(1).GetWin(),
-			title="Post-PLL",
-			sample_rate=sample_rate,
-			v_scale=0.5,
-			t_scale=20.0/sample_rate,
-			ac_couple=False,
-			xy_mode=True,
-			num_inputs=1,
-		)
-		self.displays.GetPage(1).GridAdd(self.wxgui_scopesink2_0_0_0.win, 1, 0, 1, 1)
-		self.wxgui_scopesink2_0_0_0_0 = scopesink2.scope_sink_c(
-			self.displays.GetPage(2).GetWin(),
-			title="Post-SYNC",
-			sample_rate=sym_rate,
-			v_scale=0.5,
-			t_scale=20.0/sym_rate,
-			ac_couple=False,
-			xy_mode=True,
-			num_inputs=1,
-		)
-		self.displays.GetPage(2).GridAdd(self.wxgui_scopesink2_0_0_0_0.win, 1, 0, 1, 1)
-		self.wxgui_scopesink2_0_0_1 = scopesink2.scope_sink_c(
-			self.displays.GetPage(2).GetWin(),
 			title="Post-SYNC",
 			sample_rate=sym_rate,
 			v_scale=0.5,
@@ -170,7 +155,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 			xy_mode=False,
 			num_inputs=1,
 		)
-		self.displays.GetPage(2).GridAdd(self.wxgui_scopesink2_0_0_1.win, 0, 0, 1, 1)
+		self.displays.GetPage(1).GridAdd(self.wxgui_scopesink2_0_0_0_0.win, 1, 0, 1, 1)
 
 		##################################################
 		# Connections
@@ -179,12 +164,15 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self.connect((self.throttle, 0), (self.agr, 0))
 		self.connect((self.agr, 0), (self.rx_fftsink, 0))
 		self.connect((self.agr, 0), (self.wxgui_scopesink2_0, 0))
-		self.connect((self.noaa_hrpt_pll_cc_0, 0), (self.wxgui_scopesink2_0_0, 0))
-		self.connect((self.noaa_hrpt_pll_cc_0, 0), (self.wxgui_scopesink2_0_0_0, 0))
-		self.connect((self.noaa_hrpt_pll_cc_0, 0), (self.sync, 0))
-		self.connect((self.sync, 0), (self.wxgui_scopesink2_0_0_1, 0))
-		self.connect((self.sync, 0), (self.wxgui_scopesink2_0_0_0_0, 0))
-		self.connect((self.agr, 0), (self.noaa_hrpt_pll_cc_0, 0))
+		self.connect((self.agr, 0), (self.noaa_hrpt_pll_cf_0, 0))
+		self.connect((self.noaa_hrpt_pll_cf_0, 0), (self.wxgui_scopesink2_0_0, 0))
+		self.connect((self.noaa_hrpt_pll_cf_0, 0), (self.noaa_hrpt_sync_ff_0, 0))
+		self.connect((self.noaa_hrpt_sync_ff_0, 0), (self.gr_binary_slicer_fb_0, 0))
+		self.connect((self.noaa_hrpt_sync_ff_0, 0), (self.wxgui_scopesink2_0_0_0_0, 0))
+		self.connect((self.gr_binary_slicer_fb_0, 0), (self.gr_char_to_float_0, 0))
+		self.connect((self.gr_float_to_char_0, 0), (self.gr_file_sink_0, 0))
+		self.connect((self.gr_add_const_vxx_0, 0), (self.gr_float_to_char_0, 0))
+		self.connect((self.gr_char_to_float_0, 0), (self.gr_add_const_vxx_0, 0))
 
 	def set_decim(self, decim):
 		self.decim = decim
@@ -194,16 +182,14 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self.sym_rate = sym_rate
 		self.set_sps(self.sample_rate/self.sym_rate)
 		self.wxgui_scopesink2_0_0_0_0.set_sample_rate(self.sym_rate)
-		self.wxgui_scopesink2_0_0_1.set_sample_rate(self.sym_rate)
 
 	def set_sample_rate(self, sample_rate):
 		self.sample_rate = sample_rate
 		self.set_sps(self.sample_rate/self.sym_rate)
-		self.set_max_carrier_offset(2*math.pi*100e3/self.sample_rate)
-		self.wxgui_scopesink2_0_0.set_sample_rate(self.sample_rate)
-		self.wxgui_scopesink2_0_0_0.set_sample_rate(self.sample_rate)
 		self.rx_fftsink.set_sample_rate(self.sample_rate)
 		self.wxgui_scopesink2_0.set_sample_rate(self.sample_rate)
+		self.set_max_carrier_offset(2*math.pi*100e3/self.sample_rate)
+		self.wxgui_scopesink2_0_0.set_sample_rate(self.sample_rate)
 
 	def set_sps(self, sps):
 		self.sps = sps
@@ -211,25 +197,23 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 
 	def set_sync_alpha(self, sync_alpha):
 		self.sync_alpha = sync_alpha
-		self.sync.set_alpha(self.sync_alpha)
-		self.sync.set_beta(self.sync_alpha**2/4.0)
 		self._sync_alpha_slider.set_value(self.sync_alpha)
 		self._sync_alpha_text_box.set_value(self.sync_alpha)
 
 	def set_pll_alpha(self, pll_alpha):
 		self.pll_alpha = pll_alpha
-		self.noaa_hrpt_pll_cc_0.set_alpha(self.pll_alpha)
-		self.noaa_hrpt_pll_cc_0.set_beta(self.pll_alpha**2/4.0)
 		self._pll_alpha_slider.set_value(self.pll_alpha)
 		self._pll_alpha_text_box.set_value(self.pll_alpha)
+		self.noaa_hrpt_pll_cf_0.set_alpha(self.pll_alpha)
+		self.noaa_hrpt_pll_cf_0.set_beta(self.pll_alpha**2/4.0)
 
 	def set_max_sync_offset(self, max_sync_offset):
 		self.max_sync_offset = max_sync_offset
-		self.sync.set_max_offset(self.max_sync_offset)
+		self.noaa_hrpt_sync_ff_0.set_max_offset(self.max_sync_offset)
 
 	def set_max_carrier_offset(self, max_carrier_offset):
 		self.max_carrier_offset = max_carrier_offset
-		self.noaa_hrpt_pll_cc_0.set_max_offset(self.max_carrier_offset)
+		self.noaa_hrpt_pll_cf_0.set_max_offset(self.max_carrier_offset)
 
 	def set_hs(self, hs):
 		self.hs = hs
