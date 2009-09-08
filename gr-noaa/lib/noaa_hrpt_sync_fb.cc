@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <noaa_hrpt_sync_ff.h>
+#include <noaa_hrpt_sync_fb.h>
 #include <gr_io_signature.h>
 
 inline int signum(float f)
@@ -32,16 +32,16 @@ inline int signum(float f)
   return f >= 0.0 ? 1 : -1;
 }
 
-noaa_hrpt_sync_ff_sptr
-noaa_make_hrpt_sync_ff(float alpha, float beta, float sps, float max_offset)
+noaa_hrpt_sync_fb_sptr
+noaa_make_hrpt_sync_fb(float alpha, float beta, float sps, float max_offset)
 {
-  return gnuradio::get_initial_sptr(new noaa_hrpt_sync_ff(alpha, beta, sps, max_offset));
+  return gnuradio::get_initial_sptr(new noaa_hrpt_sync_fb(alpha, beta, sps, max_offset));
 }
 
-noaa_hrpt_sync_ff::noaa_hrpt_sync_ff(float alpha, float beta, float sps, float max_offset)
-  : gr_block("noaa_hrpt_sync_ff",
+noaa_hrpt_sync_fb::noaa_hrpt_sync_fb(float alpha, float beta, float sps, float max_offset)
+  : gr_block("noaa_hrpt_sync_fb",
 	     gr_make_io_signature(1, 1, sizeof(float)),
-	     gr_make_io_signature(1, 1, sizeof(float))),
+	     gr_make_io_signature(1, 1, sizeof(char))),
     d_alpha(alpha), d_beta(beta), 
     d_sps(sps), d_max_offset(max_offset),
     d_phase(0.0), d_freq(1.0/sps),
@@ -50,14 +50,14 @@ noaa_hrpt_sync_ff::noaa_hrpt_sync_ff(float alpha, float beta, float sps, float m
 }
 
 int
-noaa_hrpt_sync_ff::general_work(int noutput_items,
+noaa_hrpt_sync_fb::general_work(int noutput_items,
 				gr_vector_int &ninput_items,
 				gr_vector_const_void_star &input_items,
 				gr_vector_void_star &output_items)
 {
   int ninputs = ninput_items[0];
-  const float *in = (const float *) input_items[0];
-  float *out = (float *) output_items[0];
+  const float *in = (const float *)input_items[0];
+  char *out = (char *)output_items[0];
 
   int i = 0, j = 0;
   while (i < ninputs && j < noutput_items) {
@@ -77,7 +77,10 @@ noaa_hrpt_sync_ff::general_work(int noutput_items,
     }
 
     if (d_phase > 1.0) {
-      out[j++] = -sample;	// Invert sense, -68 degrees=1
+      if (sample < 0.0)
+	out[j++] = 1;
+      else
+	out[j++] = 0;
       d_phase -= 1.0;
     }
   }

@@ -20,21 +20,21 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_NOAA_HRPT_SYNC_FF_H
-#define INCLUDED_NOAA_HRPT_SYNC_FF_H
+#ifndef INCLUDED_NOAA_HRPT_SYNC_FB_H
+#define INCLUDED_NOAA_HRPT_SYNC_FB_H
 
-#include <gr_sync_block.h>
+#include <gr_block.h>
 
-class noaa_hrpt_sync_ff;
-typedef boost::shared_ptr<noaa_hrpt_sync_ff> noaa_hrpt_sync_ff_sptr;
+class noaa_hrpt_sync_fb;
+typedef boost::shared_ptr<noaa_hrpt_sync_fb> noaa_hrpt_sync_fb_sptr;
 
-noaa_hrpt_sync_ff_sptr
-noaa_make_hrpt_sync_ff(float alpha, float beta, float sps, float max_offset);
+noaa_hrpt_sync_fb_sptr
+noaa_make_hrpt_sync_fb(float alpha, float beta, float sps, float max_offset);
 
-class noaa_hrpt_sync_ff : public gr_block
+class noaa_hrpt_sync_fb : public gr_block
 {
-  friend noaa_hrpt_sync_ff_sptr noaa_make_hrpt_sync_ff(float alpha, float beta, float sps, float max_offset);
-  noaa_hrpt_sync_ff(float alpha, float beta, float sps, float max_offset);
+  friend noaa_hrpt_sync_fb_sptr noaa_make_hrpt_sync_fb(float alpha, float beta, float sps, float max_offset);
+  noaa_hrpt_sync_fb(float alpha, float beta, float sps, float max_offset);
 
   float d_alpha;		// 1st order loop constant
   float d_beta;			// 2nd order loop constant
@@ -55,4 +55,4 @@ class noaa_hrpt_sync_ff : public gr_block
   void set_max_offset(float max_offset) { d_max_offset = max_offset; }
 };
 
-#endif /* INCLUDED_NOAA_HRPT_SYNC_FF_H */
+#endif /* INCLUDED_NOAA_HRPT_SYNC_FB_H */

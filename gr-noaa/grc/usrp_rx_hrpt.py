@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: USRP HRPT Receiver
-# Generated: Mon Sep  7 13:05:09 2009
+# Generated: Tue Sep  8 14:58:57 2009
 ##################################################
 
 from gnuradio import eng_notation
@@ -99,12 +99,11 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		##################################################
 		self.agr = gr.agc_cc(1e-6, 1.0, 1.0, 1.0)
 		self.gr_add_const_vxx_0 = gr.add_const_vff((48.0, ))
-		self.gr_binary_slicer_fb_0 = gr.binary_slicer_fb()
 		self.gr_char_to_float_0 = gr.char_to_float()
 		self.gr_file_sink_0 = gr.file_sink(gr.sizeof_char*1, "bits.dat")
 		self.gr_float_to_char_0 = gr.float_to_char()
 		self.noaa_hrpt_pll_cf_0 = noaa.hrpt_pll_cf(pll_alpha, pll_alpha**2/4.0, max_carrier_offset)
-		self.noaa_hrpt_sync_ff_0 = noaa.hrpt_sync_ff(.005, .005*.005/4.0, sps, max_sync_offset)
+		self.noaa_hrpt_sync_fb_0 = noaa.hrpt_sync_fb(0.001, 0.001**2/4.0, sps, max_sync_offset)
 		self.rx_fftsink = fftsink2.fft_sink_c(
 			self.displays.GetPage(0).GetWin(),
 			baseband_freq=1698e6,
@@ -166,13 +165,12 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self.connect((self.agr, 0), (self.wxgui_scopesink2_0, 0))
 		self.connect((self.agr, 0), (self.noaa_hrpt_pll_cf_0, 0))
 		self.connect((self.noaa_hrpt_pll_cf_0, 0), (self.wxgui_scopesink2_0_0, 0))
-		self.connect((self.noaa_hrpt_pll_cf_0, 0), (self.noaa_hrpt_sync_ff_0, 0))
-		self.connect((self.noaa_hrpt_sync_ff_0, 0), (self.gr_binary_slicer_fb_0, 0))
-		self.connect((self.noaa_hrpt_sync_ff_0, 0), (self.wxgui_scopesink2_0_0_0_0, 0))
-		self.connect((self.gr_binary_slicer_fb_0, 0), (self.gr_char_to_float_0, 0))
-		self.connect((self.gr_float_to_char_0, 0), (self.gr_file_sink_0, 0))
-		self.connect((self.gr_add_const_vxx_0, 0), (self.gr_float_to_char_0, 0))
+		self.connect((self.noaa_hrpt_sync_fb_0, 0), (self.gr_char_to_float_0, 0))
+		self.connect((self.noaa_hrpt_pll_cf_0, 0), (self.noaa_hrpt_sync_fb_0, 0))
+		self.connect((self.gr_char_to_float_0, 0), (self.wxgui_scopesink2_0_0_0_0, 0))
 		self.connect((self.gr_char_to_float_0, 0), (self.gr_add_const_vxx_0, 0))
+		self.connect((self.gr_add_const_vxx_0, 0), (self.gr_float_to_char_0, 0))
+		self.connect((self.gr_float_to_char_0, 0), (self.gr_file_sink_0, 0))
 
 	def set_decim(self, decim):
 		self.decim = decim
@@ -186,9 +184,9 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 	def set_sample_rate(self, sample_rate):
 		self.sample_rate = sample_rate
 		self.set_sps(self.sample_rate/self.sym_rate)
+		self.set_max_carrier_offset(2*math.pi*100e3/self.sample_rate)
 		self.rx_fftsink.set_sample_rate(self.sample_rate)
 		self.wxgui_scopesink2_0.set_sample_rate(self.sample_rate)
-		self.set_max_carrier_offset(2*math.pi*100e3/self.sample_rate)
 		self.wxgui_scopesink2_0_0.set_sample_rate(self.sample_rate)
 
 	def set_sps(self, sps):
@@ -209,7 +207,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 
 	def set_max_sync_offset(self, max_sync_offset):
 		self.max_sync_offset = max_sync_offset
-		self.noaa_hrpt_sync_ff_0.set_max_offset(self.max_sync_offset)
+		self.noaa_hrpt_sync_fb_0.set_max_offset(self.max_sync_offset)
 
 	def set_max_carrier_offset(self, max_carrier_offset):
 		self.max_carrier_offset = max_carrier_offset

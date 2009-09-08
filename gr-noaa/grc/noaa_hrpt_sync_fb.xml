@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <block>
   <name>HRPT SYNC</name>
-  <key>noaa_hrpt_sync_ff</key>
+  <key>noaa_hrpt_sync_fb</key>
   <category>NOAA</category>
   <import>from gnuradio import noaa</import>
-  <make>noaa.hrpt_sync_ff($alpha, $beta, $sps, $max_offset)</make>
+  <make>noaa.hrpt_sync_fb($alpha, $beta, $sps, $max_offset)</make>
   <callback>set_alpha($alpha)</callback>
   <callback>set_beta($beta)</callback>
   <callback>set_max_offset($max_offset)</callback>
@@ -34,6 +34,6 @@
   </sink>
   <source>
     <name>out</name>
-    <type>float</type>
+    <type>byte</type>
   </source>
 </block>
