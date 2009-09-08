@@ -50,7 +50,6 @@ bin_SCRIPTS = \
     gr_plot_qt.py \
     gr_filter_design.py \
     lsusrp \
-    qr_fft.py \
     usrp_fft.py \
     usrp_oscope.py \
     usrp_print_db.py \
