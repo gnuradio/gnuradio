@@ -56,10 +56,9 @@ bin_SCRIPTS = \
     usrp_rx_cfile.py \
     usrp_rx_nogui.py \
     usrp_siggen.py \
+    usrp_siggen_gui.py \
     usrp_test_counting.py \
     usrp_test_loopback.py \
     usrp2_fft.py \
-    usrp2_rx_cfile.py \
-    usrp2_siggen.py \
-    usrp2_siggen_gui.py
+    usrp2_rx_cfile.py
 
