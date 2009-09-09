@@ -25,7 +25,6 @@ ourdatadir = $(exampledir)/digital
 
 dist_ourdata_DATA =		\
 	README			\
-	generic_usrp.py		\
 	pick_bitrate.py		\
 	qt_digital_window.ui	\
 	qt_digital_window.py	\
@@ -33,7 +32,6 @@ dist_ourdata_DATA =		\
 	qt_rx_window.py		\
 	receive_path.py		\
 	transmit_path.py	\
-	usrp_options.py \
 	usrp_receive_path.py \
 	usrp_transmit_path.py
 

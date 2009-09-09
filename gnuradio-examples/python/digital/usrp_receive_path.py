@@ -20,7 +20,7 @@
 # 
 
 from gnuradio import gr
-import usrp_options
+from gnuradio import usrp_options
 import receive_path
 from pick_bitrate import pick_rx_bitrate
 from gnuradio import eng_notation
