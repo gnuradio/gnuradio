@@ -208,10 +208,10 @@ class app_gui(pubsub):
             proportion=2,
             ps=self.tb,
             key=usrp_siggen.AMPLITUDE_KEY,
-            min_exp=-5,
+            min_exp=-6,
             max_exp=0,
             base=10,
-            step_size=1,
+            num_steps=100,
         )
         lvl_hbox.AddSpacer(5)
         if self.tb[usrp_siggen.GAIN_RANGE_KEY][0] < self.tb[usrp_siggen.GAIN_RANGE_KEY][1]:
