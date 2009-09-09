@@ -29,9 +29,12 @@ AC_DEFUN([USRP_SET_FUSB_TECHNIQUE],[
               AC_HELP_STRING([--with-fusb-tech=OS],
 		             [Set fast USB technique (default=auto)]),
 	      [cf_with_fusb_tech="$withval"],
-	      [cf_with_fusb_tech="$host_os"])
+	      [cf_with_fusb_tech="libusb1"])
   if test [x]$1 != xno; then
       case "$cf_with_fusb_tech" in
+        libusb1*)
+          FUSB_TECH=libusb1
+          ;;
         linux*)
           AC_CHECK_HEADER([linux/usbdevice_fs.h],
 	                  [x_have_usbdevice_fs_h=yes],

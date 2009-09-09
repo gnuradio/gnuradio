@@ -25,12 +25,15 @@
 #ifndef _FUSB_H_
 #define _FUSB_H_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-#if 1
+#ifdef HAVE_LIBUSB_1 
+struct  libusb_device_handle;
+#else
 struct	usb_dev_handle;
 typedef struct usb_dev_handle libusb_device_handle;
-#else
-struct  libusb_device_handle;
 #endif
 
 struct 	libusb_context;

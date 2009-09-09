@@ -23,6 +23,16 @@ include $(top_srcdir)/Makefile.common
 
 usrpincludedir = $(includedir)/usrp
 
+usrp_prims.h: usrp_prims.h.in $(top_srcdir)/config.status
+	cd $(top_srcdir) \
+	  && CONFIG_FILES= CONFIG_HEADERS= CONFIG_OTHER=usrp_prims.h \
+	$(SHELL) ./config.status
+
+usrp_basic.h: usrp_basic.h.in $(top_srcdir)/config.status
+	cd $(top_srcdir) \
+	  && CONFIG_FILES= CONFIG_HEADERS= CONFIG_OTHER=usrp_basic.h \
+	$(SHELL) ./config.status
+
 usrpinclude_HEADERS = \
 	db_base.h \
 	db_basic.h \

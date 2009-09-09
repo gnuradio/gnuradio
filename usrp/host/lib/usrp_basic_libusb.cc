@@ -39,7 +39,6 @@
 #include <string.h>
 #include <cstdio>
 
-
 using namespace ad9862;
 
 #define NELEM(x) (sizeof (x) / sizeof (x[0]))

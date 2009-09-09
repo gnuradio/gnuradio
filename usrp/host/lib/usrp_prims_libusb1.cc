@@ -50,24 +50,6 @@ extern "C" {
 
 using namespace ad9862;
 
-bool our_nanosleep (const struct timespec *delay);
-const char *get_proto_filename (const std::string user_filename,
-                                const char *env_var,
-                                const char *def);
-char *find_file (const char *filename, int hw_rev);
-void load_status_msg (usrp_load_status_t s, const char *type,
-                      const char *filename);
-bool usrp1_fpga_write (libusb_device_handle *udh, int regno, int value);
-bool usrp1_fpga_read (libusb_device_handle *udh, int regno, int *value);
-bool usrp_set_switch (libusb_device_handle *udh, int cmd_byte, bool on);
-
-bool usrp_set_fpga_reset (struct usb_dev_handle *udh, bool on);
-bool usrp_set_fpga_tx_enable (struct usb_dev_handle *udh, bool on);
-bool usrp_set_fpga_rx_enable (struct usb_dev_handle *udh, bool on);
-bool usrp_set_fpga_tx_reset (struct usb_dev_handle *udh, bool on);
-bool usrp_set_fpga_rx_reset (struct usb_dev_handle *udh, bool on);
-
-
 static const int FIRMWARE_HASH_SLOT	= 0;
 static const int FPGA_HASH_SLOT 	= 1;
 
@@ -132,7 +114,7 @@ usrp_hw_rev (struct libusb_device *q)
 /*
  * q must be a real USRP, not an FX2.  Return true if it's configured.
  */
-static bool
+bool
 _usrp_configured_p (struct libusb_device *q)
 {
   struct libusb_device_descriptor desc;

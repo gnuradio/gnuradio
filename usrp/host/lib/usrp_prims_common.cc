@@ -41,10 +41,10 @@
 #include <ad9862.h>
 #include <assert.h>
 
-#if 1
-#include <usb.h>
-#else
+#ifdef HAVE_LIBUSB_1 
 #include <libusb-1.0/libusb.h>
+#else
+#include <usb.h>
 #endif
 
 extern "C" {
@@ -66,18 +66,6 @@ static const int hash_slot_addr[2] = {
 static const char *default_firmware_filename = "std.ihx";
 static const char *default_fpga_filename     = "std_2rxhb_2tx.rbf";
 
-/*
- * Forward Declarations 
- */
-
-bool _usrp_configured_p (libusb_device *q);
-libusb_device_handle *usrp_open_interface(libusb_device *dev,
-                                          int interface,
-                                          int altinterface);
-bool write_internal_ram (libusb_device_handle *udh, unsigned char *buf,
-                         int start_addr, size_t len);
-int write_cmd (libusb_device_handle *udh, int request, int value,
-               int index, unsigned char *bytes, int len);
 
 #include "std_paths.h"
 #include <stdio.h>

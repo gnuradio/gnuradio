@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include <usrp/usrp_basic.h>
+#include "usrp/usrp_basic.h"
 #include "usrp/usrp_prims.h"
 #include "usrp_interfaces.h"
 #include "fpga_regs_common.h"
@@ -38,10 +38,10 @@
 #include <string.h>
 #include <cstdio>
 
-#if 1
-#include <usb.h>
-#else
+#ifdef HAVE_LIBUSB_1
 #include <libusb-1.0/libusb.h>
+#else
+#include <usb.h>
 #endif
 
 using namespace ad9862;

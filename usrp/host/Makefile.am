@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-SUBDIRS = misc lib include apps
+SUBDIRS = misc include lib apps
 
 if PYTHON
 SUBDIRS += swig
