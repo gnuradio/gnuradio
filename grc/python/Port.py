@@ -45,7 +45,7 @@ def _get_source_from_virtual_source_port(vsp, traversed=[]):
 					lambda b: b.is_virtual_sink(),
 					vsp.get_parent().get_parent().get_enabled_blocks(),
 				),
-			)[0].get_sink(vsp.get_key())
+			)[0].get_sinks()[0]
 		), traversed + [vsp],
 	)
 	except: raise Exception, 'Could not resolve source for virtual source port %s'%vsp

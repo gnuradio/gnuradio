@@ -40,7 +40,6 @@ usrp_dboard_param = block.get_param('dboard')
 def get_input(param):
 	param.validate()
 	input = param.get_input()
-	input.update()
 	return input
 
 class USRPProbeWindow(gtk.Window):

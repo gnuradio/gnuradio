@@ -35,9 +35,11 @@ class InputParam(gtk.HBox):
 		self.pack_start(self.label, False)
 		self.set_markup = lambda m: self.label.set_markup(m)
 		self.tp = None
+		#connect events
+		self.connect('show', self._update_gui)
 	def set_color(self, color): pass
 
-	def update(self):
+	def _update_gui(self, *args):
 		"""
 		Set the markup, color, tooltip, show/hide.
 		"""
@@ -65,12 +67,10 @@ class InputParam(gtk.HBox):
 		#set the new value
 		self.param.set_value(self.get_text())
 		#call the callback
-		if self._callback: self._callback()
-		else:
-			#no callback mode (used in supporting gui scripts)
-			#internally re-validate the param and update the gui
-			self.param.validate()
-			self.update()
+		if self._callback: self._callback(*args)
+		else: self.param.validate()
+		#gui update
+		self._update_gui()
 
 class EntryParam(InputParam):
 	"""Provide an entry box for strings and numbers."""

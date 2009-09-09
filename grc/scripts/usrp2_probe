@@ -42,7 +42,6 @@ usrp_type_param = block.get_param('type')
 def get_input(param):
 	param.validate()
 	input = param.get_input()
-	input.update()
 	return input
 
 class USRP2ProbeWindow(gtk.Window):

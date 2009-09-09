@@ -81,16 +81,16 @@ class PropsDialog(gtk.Dialog):
 		vbox.pack_start(self._params_box, False)
 		vbox.pack_start(self._error_box, False)
 		vbox.pack_start(self._docs_box, False)
-		#connect key press event
+		#connect events
 		self.connect('key_press_event', self._handle_key_press)
-		#initial update to populate the params
+		self.connect('show', self._update_gui)
+		#show all (performs initial gui update)
 		self.show_all()
-		self._update()
 
 	def _params_changed(self):
 		"""
 		Have the params in this dialog changed?
-		Ex: Added, removed, type change...
+		Ex: Added, removed, type change, hide change...
 		Make a hash that uniquely represents the params state.
 		@return true if changed
 		"""
@@ -99,9 +99,20 @@ class PropsDialog(gtk.Dialog):
 		for param in self._block.get_params():
 			self._hash ^= hash(param)
 			self._hash ^= hash(param.get_type())
+			self._hash ^= hash(param.get_hide())
 		return self._hash != old_hash
 
-	def _update(self):
+	def _handle_changed(self, *args):
+		"""
+		A change occured within a param:
+		Rewrite/validate the block and update the gui.
+		"""
+		#update for the block
+		self._block.rewrite()
+		self._block.validate()
+		self._update_gui()
+
+	def _update_gui(self, *args):
 		"""
 		Repopulate the parameters box (if changed).
 		Update all the input parameters.
@@ -110,24 +121,23 @@ class PropsDialog(gtk.Dialog):
 		Update the documentation block.
 		Hide the box if there are no docs.
 		"""
-		#update for the block
-		self._block.rewrite()
-		self._block.validate()
 		#update the params box
 		if self._params_changed():
+			#hide params box before changing
+			self._params_box.hide_all()
 			#empty the params box
 			for io_param in list(self._input_object_params):
-				io_param.hide_all()
 				self._params_box.remove(io_param)
 				self._input_object_params.remove(io_param)
 				io_param.destroy()
 			#repopulate the params box
 			for param in self._block.get_params():
-				io_param = param.get_input(self._update)
+				if param.get_hide() == 'all': continue
+				io_param = param.get_input(self._handle_changed)
 				self._input_object_params.append(io_param)
 				self._params_box.pack_start(io_param, False)
-		#update the gui inputs
-		for io_param in self._input_object_params: io_param.update()
+			#show params box with new params
+			self._params_box.show_all()
 		#update the errors box
 		if self._block.is_valid(): self._error_box.hide()
 		else: self._error_box.show()
