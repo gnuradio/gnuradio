@@ -37,6 +37,9 @@ The forms follow a layered model:
 Known problems:
   * An empty label in the radio box still consumes space.
   * The static text cannot resize the parent at runtime.
+  * Text box should indicate its that its edited but not committed.
+    * Colorize?
+    * Tab out to commit?
 """
 
 EXT_KEY = 'external'
@@ -176,7 +179,7 @@ class _slider_base(_form_base):
 		self._add_widget(self._slider, label, flag=wx.EXPAND)
 
 	def _handle(self, event): self[INT_KEY] = self._slider.GetValue()
-	def _update(self, value): self._slider.SetValue(value)
+	def _update(self, value): self._slider.SetValue(int(round(value)))
 
 ########################################################################
 # Static Text Form
