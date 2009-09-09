@@ -19,6 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Boston, MA  02110-1301  USA
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,7 +37,6 @@
 #include <string.h>
 
 char *prog_name;
-
 
 static void
 set_progname (char *path)
@@ -191,10 +194,10 @@ main (int argc, char **argv)
   const char *cmd = argv[optind++];
   nopts--;
 
-  libusb_context *ctx = usrp_one_time_init (true);
+  usrp_one_time_init ();
 
   
-  struct libusb_device *udev = usrp_find_device (which_board, fx2_ok_p, ctx);
+  struct libusb_device *udev = usrp_find_device (which_board, fx2_ok_p);
   if (udev == 0){
     fprintf (stderr, "%s: failed to find usrp[%d]\n", prog_name, which_board);
     exit (1);

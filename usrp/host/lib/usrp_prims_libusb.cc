@@ -64,12 +64,34 @@ static const char *default_fpga_filename     = "std_2rxhb_2tx.rbf";
 #include "std_paths.h"
 #include <stdio.h>
 
+/*
 void
 usrp_one_time_init ()
 {
   static bool first = true;
 
-  if (first){
+  if (first) {
+    first = false;
+    usb_init ();			// usb library init
+    usb_find_busses ();
+    usb_find_devices ();
+  }
+}
+
+libusb_context *
+usrp_one_time_init (bool new_context)
+{
+  usrp_one_time_init ();
+  return NULL; 
+}
+*/
+
+void
+usrp_one_time_init (libusb_context **ctx)
+{
+  static bool first = true;
+
+  if (first) {
     first = false;
     usb_init ();			// usb library init
     usb_find_busses ();

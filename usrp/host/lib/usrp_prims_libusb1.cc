@@ -64,6 +64,24 @@ static const char *default_fpga_filename     = "std_2rxhb_2tx.rbf";
 #include "std_paths.h"
 #include <stdio.h>
 
+/*
+void
+usrp_one_time_init ()
+{
+  usrp_one_time_init (false);
+}
+*/
+
+void
+usrp_one_time_init (libusb_context **ctx)
+{
+  int ret;
+
+  if ((ret = libusb_init (ctx)) < 0)
+    fprintf (stderr, "usrp: libusb_init failed %i\n", ret);
+}
+
+/*
 libusb_context *
 usrp_one_time_init (bool new_context)
 {
@@ -74,7 +92,7 @@ usrp_one_time_init (bool new_context)
 
   // On first call create default context in addition to any new requested
   // context. The default context is probably useless in this form, but keep
-  // it for now due to compatibility reasons.
+  // it for now due to possible compatibility reasons.
 
   if (first) {
     first = false;
@@ -89,6 +107,7 @@ usrp_one_time_init (bool new_context)
 
   return ctx;
 }
+*/
 
 void
 usrp_rescan ()

@@ -103,7 +103,8 @@ usrp_basic::usrp_basic (int which_board,
    */
   memset (d_fpga_shadows, 0, sizeof (d_fpga_shadows));
 
-  d_ctx = usrp_one_time_init(true);
+//  d_ctx = usrp_one_time_init(true);
+  usrp_one_time_init (&d_ctx);
 
   if (!usrp_load_standard_bits (which_board, false, fpga_filename, firmware_filename, d_ctx))
     throw std::runtime_error ("usrp_basic/usrp_load_standard_bits");
@@ -144,9 +145,10 @@ usrp_basic::~usrp_basic ()
     libusb_close (d_udh);
 
   // Each object should be running in it's own context. If running in default
-  // (NULL) context then something went wrong. 
+  // context then leave the instance open as it may be shared. This might
+  // occur in mixed libusb-0.12 and libusb-1.0 environments.  
 
-  assert (d_ctx != NULL);
-  libusb_exit (d_ctx);
+  if (d_ctx != NULL)
+    libusb_exit (d_ctx);
 }
 

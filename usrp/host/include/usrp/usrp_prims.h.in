@@ -11,9 +11,9 @@ enum usrp_load_status_t { ULS_ERROR = 0, ULS_OK, ULS_ALREADY_LOADED };
  * initiated and return NULL. It is NOT safe to call more than once with
  * new_context set to true since a new context is initiated each time.
  */
-libusb_context* usrp_one_time_init (bool new_context);
 
-void usrp_one_time_init ();
+//libusb_context* usrp_one_time_init (bool new_context);
+void usrp_one_time_init (libusb_context **ctx = NULL);
 
 /*
  * force a rescan of the buses and devices
