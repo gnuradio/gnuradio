@@ -32,7 +32,7 @@ struct libusb_context;
 fusb_devhandle *
 fusb_sysconfig::make_devhandle (libusb_device_handle *udh)
 {
-  return new fusb_devhandle_libusb1 (udh, NULL);
+  make_devhandle (udh, NULL); 
 }
 
 fusb_devhandle *

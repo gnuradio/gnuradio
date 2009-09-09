@@ -42,14 +42,12 @@
 
 enum usrp_load_status_t { ULS_ERROR = 0, ULS_OK, ULS_ALREADY_LOADED };
 
-struct libusb_device_handle;
-struct libusb_device;
 
 /*!
  * \brief initialize libusb; probe busses and devices.
  * Safe to call more than once.
  */
-struct libusb_context *usrp_one_time_init (bool new_context);
+void usrp_one_time_init (libusb_context **ctx = NULL);
 
 void usrp_rescan ();
 
@@ -63,17 +61,17 @@ void usrp_rescan ();
  *   configured USRP (firmware loaded)
  *   unconfigured Cypress FX2 (only if fx2_ok_p is true)
  */
-struct libusb_device *usrp_find_device (int nth, bool fx2_ok_p = false, struct libusb_context *ctx);
+libusb_device *usrp_find_device (int nth, bool fx2_ok_p = false, libusb_context *ctx);
 
-bool usrp_usrp_p (struct libusb_device *q);		//< is this a USRP
-bool usrp_usrp0_p (struct libusb_device *q);		//< is this a USRP Rev 0
-bool usrp_usrp1_p (struct libusb_device *q);		//< is this a USRP Rev 1
-bool usrp_usrp2_p (struct libusb_device *q);		//< is this a USRP Rev 2
-int  usrp_hw_rev (struct libusb_device *q);		//< return h/w rev code
-bool usrp_fx2_p (struct libusb_device *q);			//< is this an unconfigured Cypress FX2
+bool usrp_usrp_p (libusb_device *q);		//< is this a USRP
+bool usrp_usrp0_p (libusb_device *q);		//< is this a USRP Rev 0
+bool usrp_usrp1_p (libusb_device *q);		//< is this a USRP Rev 1
+bool usrp_usrp2_p (libusb_device *q);		//< is this a USRP Rev 2
+int  usrp_hw_rev (libusb_device *q);		//< return h/w rev code
+bool usrp_fx2_p (libusb_device *q);			//< is this an unconfigured Cypress FX2
 
-bool usrp_unconfigured_usrp_p (struct libusb_device *q);	//< some kind of unconfigured USRP
-bool usrp_configured_usrp_p (struct libusb_device *q);	//< some kind of configured USRP
+bool usrp_unconfigured_usrp_p (libusb_device *q);	//< some kind of unconfigured USRP
+bool usrp_configured_usrp_p (libusb_device *q);	//< some kind of configured USRP
 
 /*!
  * \brief given a libusb_device return an instance of the appropriate libusb_device_handle
@@ -84,14 +82,14 @@ bool usrp_configured_usrp_p (struct libusb_device *q);	//< some kind of configur
  * If interface can't be opened, or is already claimed by some other
  * process, 0 is returned.
  */
-struct libusb_device_handle *usrp_open_cmd_interface (struct libusb_device *dev);
-struct libusb_device_handle *usrp_open_rx_interface (struct libusb_device *dev);
-struct libusb_device_handle *usrp_open_tx_interface (struct libusb_device *dev);
+libusb_device_handle *usrp_open_cmd_interface (libusb_device *dev);
+libusb_device_handle *usrp_open_rx_interface (libusb_device *dev);
+libusb_device_handle *usrp_open_tx_interface (libusb_device *dev);
 
 /*!
  * \brief close interface.
  */
-bool usrp_close_interface (struct libusb_device_handle *udh);
+bool usrp_close_interface (libusb_device_handle *udh);
 
 /*!
  * \brief load intel hex format file into USRP/Cypress FX2 (8051).
@@ -103,7 +101,7 @@ bool usrp_close_interface (struct libusb_device_handle *udh);
  */
 
 usrp_load_status_t 
-usrp_load_firmware (struct libusb_device_handle *udh, const char *filename, bool force);
+usrp_load_firmware (libusb_device_handle *udh, const char *filename, bool force);
 
 /*!
  * \brief load intel hex format file into USRP FX2 (8051).
@@ -122,7 +120,7 @@ usrp_load_firmware_nth (int nth, const char *filename, bool force, libusb_contex
  * \brief load fpga configuration bitstream
  */
 usrp_load_status_t
-usrp_load_fpga (struct libusb_device_handle *udh, const char *filename, bool force);
+usrp_load_fpga (libusb_device_handle *udh, const char *filename, bool force);
 
 /*!
  * \brief load the regular firmware and fpga bitstream in the Nth USRP.
@@ -136,12 +134,12 @@ bool usrp_load_standard_bits (int nth, bool force);
 %include <fpga_regs_standard.h>
 
 
-bool usrp_write_fpga_reg (struct libusb_device_handle *udh, int reg, int value);
+bool usrp_write_fpga_reg (libusb_device_handle *udh, int reg, int value);
 
 %inline %{
 
 int 
-usrp_read_fpga_reg (struct libusb_device_handle *udh, int reg)
+usrp_read_fpga_reg (libusb_device_handle *udh, int reg)
 {
   int value;
   bool ok = usrp_read_fpga_reg (udh, reg, &value);
@@ -153,37 +151,37 @@ usrp_read_fpga_reg (struct libusb_device_handle *udh, int reg)
 
 %}
 
-bool usrp_set_fpga_reset (struct libusb_device_handle *udh, bool on);
-bool usrp_set_fpga_tx_enable (struct libusb_device_handle *udh, bool on);
-bool usrp_set_fpga_rx_enable (struct libusb_device_handle *udh, bool on);
-bool usrp_set_fpga_tx_reset (struct libusb_device_handle *udh, bool on);
-bool usrp_set_fpga_rx_reset (struct libusb_device_handle *udh, bool on);
-bool usrp_set_led (struct libusb_device_handle *udh, int which, bool on);
+bool usrp_set_fpga_reset (libusb_device_handle *udh, bool on);
+bool usrp_set_fpga_tx_enable (libusb_device_handle *udh, bool on);
+bool usrp_set_fpga_rx_enable (libusb_device_handle *udh, bool on);
+bool usrp_set_fpga_tx_reset (libusb_device_handle *udh, bool on);
+bool usrp_set_fpga_rx_reset (libusb_device_handle *udh, bool on);
+bool usrp_set_led (libusb_device_handle *udh, int which, bool on);
 
-bool usrp_check_rx_overrun (struct libusb_device_handle *udh, bool *overrun_p);
-bool usrp_check_tx_underrun (struct libusb_device_handle *udh, bool *underrun_p);
+bool usrp_check_rx_overrun (libusb_device_handle *udh, bool *overrun_p);
+bool usrp_check_tx_underrun (libusb_device_handle *udh, bool *underrun_p);
 
 // i2c_read and i2c_write are limited to a maximum len of 64 bytes.
 
-bool usrp_i2c_write (struct libusb_device_handle *udh, int i2c_addr,
+bool usrp_i2c_write (libusb_device_handle *udh, int i2c_addr,
 		     void *buf, int len);
 
-bool usrp_i2c_read (struct libusb_device_handle *udh, int i2c_addr,
+bool usrp_i2c_read (libusb_device_handle *udh, int i2c_addr,
 		    void *buf, int len);
 
 // spi_read and spi_write are limited to a maximum of 64 bytes
 // See usrp_spi_defs.h for more info
 
-bool usrp_spi_write (struct libusb_device_handle *udh,
+bool usrp_spi_write (libusb_device_handle *udh,
 		     int optional_header, int enables, int format,
 		     unsigned char *buf, int len);
 
-bool usrp_spi_read (struct libusb_device_handle *udh,
+bool usrp_spi_read (libusb_device_handle *udh,
 		     int optional_header, int enables, int format,
 		     unsigned char *buf, int len);
 
 
-bool usrp_9862_write (struct libusb_device_handle *udh,
+bool usrp_9862_write (libusb_device_handle *udh,
 		      int which_codec,			// [0,  1]
 		      int regno,			// [0, 63]
 		      int value);			// [0, 255]	
@@ -191,7 +189,7 @@ bool usrp_9862_write (struct libusb_device_handle *udh,
 %inline %{
 
 int 
-usrp_9862_read (struct libusb_device_handle *udh, int which_codec, int reg)
+usrp_9862_read (libusb_device_handle *udh, int which_codec, int reg)
 {
   unsigned char value;
   bool ok = usrp_9862_read (udh, which_codec, reg, &value);
@@ -206,7 +204,7 @@ usrp_9862_read (struct libusb_device_handle *udh, int which_codec, int reg)
 %inline %{
 
 bool 
-usrp_eeprom_write (struct libusb_device_handle *udh, int i2c_addr,
+usrp_eeprom_write (libusb_device_handle *udh, int i2c_addr,
 		   int eeprom_offset, const std::string buf)
 {
   return usrp_eeprom_write (udh, i2c_addr, eeprom_offset,
@@ -214,7 +212,7 @@ usrp_eeprom_write (struct libusb_device_handle *udh, int i2c_addr,
 }
   
 std::string
-usrp_eeprom_read (struct libusb_device_handle *udh, int i2c_addr,
+usrp_eeprom_read (libusb_device_handle *udh, int i2c_addr,
 		  int eeprom_offset, int len)
 {
   if (len <= 0)
@@ -230,12 +228,12 @@ usrp_eeprom_read (struct libusb_device_handle *udh, int i2c_addr,
 
 %}
 
-bool usrp_write_aux_dac (struct libusb_device_handle *uhd, int slot,
+bool usrp_write_aux_dac (libusb_device_handle *uhd, int slot,
 			 int which_dac, int value);
 
 %inline %{
 
-int usrp_read_aux_adc (struct libusb_device_handle *udh, int slot, int which_adc)
+int usrp_read_aux_adc (libusb_device_handle *udh, int slot, int which_adc)
 {
   int value;
   bool ok = usrp_read_aux_adc (udh, slot, which_adc, &value);
@@ -253,7 +251,7 @@ int usrp_read_aux_adc (struct libusb_device_handle *udh, int slot, int which_adc
  * Note that this only works on a configured usrp.
  * \returns non-zero length string iff successful.
  */
-std::string usrp_serial_number(struct libusb_device_handle *udh);
+std::string usrp_serial_number(libusb_device_handle *udh);
 
 /*!
  * \brief usrp daughterboard id to name mapping
