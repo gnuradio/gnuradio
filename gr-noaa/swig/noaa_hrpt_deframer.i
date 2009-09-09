@@ -20,14 +20,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "gnuradio.i"
+GR_SWIG_BLOCK_MAGIC(noaa,hrpt_deframer)
 
-%{
-#include <noaa_hrpt_deframer.h>
-#include <noaa_hrpt_pll_cf.h>
-#include <noaa_hrpt_sync_fb.h>
-%}
+noaa_hrpt_deframer_sptr
+noaa_make_hrpt_deframer();
 
-%include "noaa_hrpt_deframer.i"
-%include "noaa_hrpt_pll_cf.i"
-%include "noaa_hrpt_sync_fb.i"
+class noaa_hrpt_deframer : public gr_sync_block
+{
+private:
+  noaa_hrpt_deframer();
+};

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue Sep  8 14:57:48 2009</timestamp>
+  <timestamp>Tue Sep  8 21:03:12 2009</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -378,41 +378,6 @@
     </param>
   </block>
   <block>
-    <key>gr_file_source</key>
-    <param>
-      <key>id</key>
-      <value>src</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>file</key>
-      <value>poes-d16.dat</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(34, 423)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_agc_xx</key>
     <param>
       <key>id</key>
@@ -541,41 +506,6 @@
     </param>
   </block>
   <block>
-    <key>noaa_hrpt_sync_fb</key>
-    <param>
-      <key>id</key>
-      <value>noaa_hrpt_sync_fb_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>alpha</key>
-      <value>0.001</value>
-    </param>
-    <param>
-      <key>beta</key>
-      <value>0.001**2/4.0</value>
-    </param>
-    <param>
-      <key>sps</key>
-      <value>sps</value>
-    </param>
-    <param>
-      <key>max_offset</key>
-      <value>max_sync_offset</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(856, 494)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>virtual_sink</key>
     <param>
       <key>id</key>
@@ -611,87 +541,6 @@
     <param>
       <key>_coordinate</key>
       <value>(477, 923)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_add_const_vxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_add_const_vxx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>48.0</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(692, 919)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_float_to_char</key>
-    <param>
-      <key>id</key>
-      <value>gr_float_to_char_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(848, 923)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_file_sink</key>
-    <param>
-      <key>id</key>
-      <value>gr_file_sink_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>file</key>
-      <value>bits.dat</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>byte</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1020, 919)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -755,85 +604,6 @@
     <param>
       <key>_rotation</key>
       <value>180</value>
-    </param>
-  </block>
-  <block>
-    <key>wxgui_fftsink2</key>
-    <param>
-      <key>id</key>
-      <value>rx_fftsink</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>RX Spectrum</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>sample_rate</value>
-    </param>
-    <param>
-      <key>baseband_freq</key>
-      <value>1698e6</value>
-    </param>
-    <param>
-      <key>y_per_div</key>
-      <value>5</value>
-    </param>
-    <param>
-      <key>y_divs</key>
-      <value>8</value>
-    </param>
-    <param>
-      <key>ref_level</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>ref_scale</key>
-      <value>2.0</value>
-    </param>
-    <param>
-      <key>fft_size</key>
-      <value>1024</value>
-    </param>
-    <param>
-      <key>fft_rate</key>
-      <value>30</value>
-    </param>
-    <param>
-      <key>peak_hold</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>average</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>avg_alpha</key>
-      <value>0.1</value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value>0, 0, 1, 1</value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value>displays, 0</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(434, 269)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
     </param>
   </block>
   <block>
@@ -954,6 +724,255 @@
       <value>180</value>
     </param>
   </block>
+  <block>
+    <key>noaa_hrpt_sync_fb</key>
+    <param>
+      <key>id</key>
+      <value>noaa_hrpt_sync_fb_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>alpha</key>
+      <value>0.001</value>
+    </param>
+    <param>
+      <key>beta</key>
+      <value>0.001**2/4.0</value>
+    </param>
+    <param>
+      <key>sps</key>
+      <value>sps</value>
+    </param>
+    <param>
+      <key>max_offset</key>
+      <value>max_sync_offset</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(856, 494)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>noaa_hrpt_deframer</key>
+    <param>
+      <key>id</key>
+      <value>noaa_hrpt_deframer_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1110, 631)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_file_source</key>
+    <param>
+      <key>id</key>
+      <value>src</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>file</key>
+      <value>poes-d16.dat</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>repeat</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(34, 423)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_add_const_vxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_add_const_vxx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>const</key>
+      <value>48.0</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(692, 919)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_float_to_char</key>
+    <param>
+      <key>id</key>
+      <value>gr_float_to_char_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(848, 923)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_file_sink</key>
+    <param>
+      <key>id</key>
+      <value>gr_file_sink_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>file</key>
+      <value>bits.dat</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>byte</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1020, 919)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>wxgui_fftsink2</key>
+    <param>
+      <key>id</key>
+      <value>rx_fftsink</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>title</key>
+      <value>RX Spectrum</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>sample_rate</value>
+    </param>
+    <param>
+      <key>baseband_freq</key>
+      <value>1698e6</value>
+    </param>
+    <param>
+      <key>y_per_div</key>
+      <value>5</value>
+    </param>
+    <param>
+      <key>y_divs</key>
+      <value>8</value>
+    </param>
+    <param>
+      <key>ref_level</key>
+      <value>-5</value>
+    </param>
+    <param>
+      <key>ref_scale</key>
+      <value>2.0</value>
+    </param>
+    <param>
+      <key>fft_size</key>
+      <value>1024</value>
+    </param>
+    <param>
+      <key>fft_rate</key>
+      <value>30</value>
+    </param>
+    <param>
+      <key>peak_hold</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>average</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>avg_alpha</key>
+      <value>0.1</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value>0, 0, 1, 1</value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value>displays, 0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(434, 269)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
   <connection>
     <source_block_id>src</source_block_id>
     <sink_block_id>throttle</sink_block_id>
@@ -1029,6 +1048,12 @@
   <connection>
     <source_block_id>gr_float_to_char_0</source_block_id>
     <sink_block_id>gr_file_sink_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>noaa_hrpt_sync_fb_0</source_block_id>
+    <sink_block_id>noaa_hrpt_deframer_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

@@ -53,6 +53,7 @@ noaa_swig_python = \
 # additional SWIG files to be installed
 noaa_swig_swiginclude_headers =	\
 	noaa_swig.i \
+	noaa_hrpt_deframer.i \
 	noaa_hrpt_pll_cf.i \
 	noaa_hrpt_sync_fb.i
 

@@ -20,14 +20,33 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "gnuradio.i"
+#ifndef INCLUDED_NOAA_HRPT_DEFRAMER_H
+#define INCLUDED_NOAA_HRPT_DEFRAMER_H
 
-%{
-#include <noaa_hrpt_deframer.h>
-#include <noaa_hrpt_pll_cf.h>
-#include <noaa_hrpt_sync_fb.h>
-%}
+#include <gr_sync_block.h>
 
-%include "noaa_hrpt_deframer.i"
-%include "noaa_hrpt_pll_cf.i"
-%include "noaa_hrpt_sync_fb.i"
+class noaa_hrpt_deframer;
+typedef boost::shared_ptr<noaa_hrpt_deframer> noaa_hrpt_deframer_sptr;
+
+noaa_hrpt_deframer_sptr
+noaa_make_hrpt_deframer();
+
+class noaa_hrpt_deframer : public gr_sync_block
+{
+  friend noaa_hrpt_deframer_sptr noaa_make_hrpt_deframer();
+  noaa_hrpt_deframer();
+
+  unsigned int       d_state;
+  unsigned int       d_count;
+  unsigned long long d_shifter; // 60 bit sync word
+
+  void enter_idle();
+  void enter_synced();
+ 
+public:
+  int work(int noutput_items,
+	   gr_vector_const_void_star &input_items,
+	   gr_vector_void_star &output_items);
+};
+
+#endif /* INCLUDED_NOAA_HRPT_DEFRAMER_H */

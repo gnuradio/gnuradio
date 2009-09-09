@@ -28,6 +28,7 @@ dist_bin_SCRIPTS = \
 	usrp_rx_lrit.py
 
 dist_grcblocks_DATA = \
+	noaa_hrpt_deframer.xml \
 	noaa_hrpt_pll_cf.xml \
 	noaa_hrpt_sync_fb.xml
 

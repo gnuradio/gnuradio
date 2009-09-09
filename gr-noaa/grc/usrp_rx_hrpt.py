@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: USRP HRPT Receiver
-# Generated: Tue Sep  8 14:58:57 2009
+# Generated: Tue Sep  8 21:03:12 2009
 ##################################################
 
 from gnuradio import eng_notation
@@ -98,10 +98,8 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		# Blocks
 		##################################################
 		self.agr = gr.agc_cc(1e-6, 1.0, 1.0, 1.0)
-		self.gr_add_const_vxx_0 = gr.add_const_vff((48.0, ))
 		self.gr_char_to_float_0 = gr.char_to_float()
-		self.gr_file_sink_0 = gr.file_sink(gr.sizeof_char*1, "bits.dat")
-		self.gr_float_to_char_0 = gr.float_to_char()
+		self.noaa_hrpt_deframer_0 = noaa.hrpt_deframer()
 		self.noaa_hrpt_pll_cf_0 = noaa.hrpt_pll_cf(pll_alpha, pll_alpha**2/4.0, max_carrier_offset)
 		self.noaa_hrpt_sync_fb_0 = noaa.hrpt_sync_fb(0.001, 0.001**2/4.0, sps, max_sync_offset)
 		self.rx_fftsink = fftsink2.fft_sink_c(
@@ -109,7 +107,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 			baseband_freq=1698e6,
 			y_per_div=5,
 			y_divs=8,
-			ref_level=20,
+			ref_level=-5,
 			ref_scale=2.0,
 			sample_rate=sample_rate,
 			fft_size=1024,
@@ -120,7 +118,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 			peak_hold=False,
 		)
 		self.displays.GetPage(0).GridAdd(self.rx_fftsink.win, 0, 0, 1, 1)
-		self.src = gr.file_source(gr.sizeof_gr_complex*1, "poes-d16.dat", False)
+		self.src = gr.file_source(gr.sizeof_gr_complex*1, "poes-d16.dat", True)
 		self.throttle = gr.throttle(gr.sizeof_gr_complex*1, sample_rate)
 		self.wxgui_scopesink2_0 = scopesink2.scope_sink_c(
 			self.displays.GetPage(0).GetWin(),
@@ -168,9 +166,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self.connect((self.noaa_hrpt_sync_fb_0, 0), (self.gr_char_to_float_0, 0))
 		self.connect((self.noaa_hrpt_pll_cf_0, 0), (self.noaa_hrpt_sync_fb_0, 0))
 		self.connect((self.gr_char_to_float_0, 0), (self.wxgui_scopesink2_0_0_0_0, 0))
-		self.connect((self.gr_char_to_float_0, 0), (self.gr_add_const_vxx_0, 0))
-		self.connect((self.gr_add_const_vxx_0, 0), (self.gr_float_to_char_0, 0))
-		self.connect((self.gr_float_to_char_0, 0), (self.gr_file_sink_0, 0))
+		self.connect((self.noaa_hrpt_sync_fb_0, 0), (self.noaa_hrpt_deframer_0, 0))
 
 	def set_decim(self, decim):
 		self.decim = decim
@@ -185,9 +181,9 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self.sample_rate = sample_rate
 		self.set_sps(self.sample_rate/self.sym_rate)
 		self.set_max_carrier_offset(2*math.pi*100e3/self.sample_rate)
-		self.rx_fftsink.set_sample_rate(self.sample_rate)
 		self.wxgui_scopesink2_0.set_sample_rate(self.sample_rate)
 		self.wxgui_scopesink2_0_0.set_sample_rate(self.sample_rate)
+		self.rx_fftsink.set_sample_rate(self.sample_rate)
 
 	def set_sps(self, sps):
 		self.sps = sps
