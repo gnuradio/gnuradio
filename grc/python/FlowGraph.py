@@ -42,6 +42,7 @@ class FlowGraph(_FlowGraph, _GUIFlowGraph):
 		@param namespace_hash a unique hash for the namespace
 		@return the resultant object
 		"""
+		if not code: raise Exception, 'Cannot evaluate empty statement.'
 		my_hash = hash(code) ^ namespace_hash
 		#cache if does not exist
 		if not self._eval_cache.has_key(my_hash):

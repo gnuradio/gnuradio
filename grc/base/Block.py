@@ -132,28 +132,6 @@ class Block(Element):
 		"""
 		self.get_param('_enabled').set_value(str(enabled))
 
-	def rewrite(self):
-		"""
-		Rewrite critical structures.
-		Call rewrite on all sub elements.
-		"""
-		Element.rewrite(self)
-		for elem in self.get_ports() + self.get_params(): elem.rewrite()
-
-	def validate(self):
-		"""
-		Validate the block.
-		All ports and params must be valid.
-		All checks must evaluate to true.
-		Validate the params, ports, and the connections to this block.
-		"""
-		Element.validate(self)
-		for c in self.get_params() + self.get_ports() + self.get_connections():
-			c.validate()
-			if not c.is_valid():
-				for msg in c.get_error_messages():
-					self.add_error_message('>>> %s:\n\t%s'%(c, msg))
-
 	def __str__(self): return 'Block - %s - %s(%s)'%(self.get_id(), self.get_name(), self.get_key())
 
 	def get_id(self): return self.get_param('id').get_value()
@@ -163,6 +141,7 @@ class Block(Element):
 	def get_category(self): return self._category
 	def get_doc(self): return ''
 	def get_ports(self): return self.get_sources() + self.get_sinks()
+	def get_children(self): return self.get_ports() + self.get_params()
 	def get_block_wrapper_path(self): return self._block_wrapper_path
 
 	##############################################

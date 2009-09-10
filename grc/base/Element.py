@@ -25,16 +25,54 @@ class Element(object):
 	##################################################
 	# Element Validation API
 	##################################################
-	def validate(self): self._error_messages = list()
-	def is_valid(self): return not self.get_error_messages() or not self.get_enabled()
-	def add_error_message(self, msg): self._error_messages.append(msg)
-	def get_error_messages(self): return self._error_messages
+	def validate(self):
+		"""
+		Validate this element and call validate on all children.
+		Call this base method before adding error messages in the subclass.
+		"""
+		self._error_messages = list()
+		for child in self.get_children(): child.validate()
 
-	def rewrite(self): pass
+	def is_valid(self):
+		"""
+		Is this element valid?
+		@return true when the element is enabled and has no error messages
+		"""
+		return not self.get_error_messages() or not self.get_enabled()
+
+	def add_error_message(self, msg):
+		"""
+		Add an error message to the list of errors.
+		@param msg the error message string
+		"""
+		self._error_messages.append(msg)
+
+	def get_error_messages(self):
+		"""
+		Get the list of error messages from this element and all of its children.
+		Cleverly indent the children error messages for printing purposes.
+		@return a list of error message strings
+		"""
+		error_messages = list(self._error_messages) #make a copy
+		for child in self.get_children():
+			for msg in child.get_error_messages():
+				error_messages.append("%s:\n\t%s"%(child, msg.replace("\n", "\n\t")))
+		return error_messages
+
+	def rewrite(self):
+		"""
+		Rewrite this element and call rewrite on all children.
+		Call this base method before rewriting the element.
+		"""
+		for child in self.get_children(): child.rewrite()
 
 	def get_enabled(self): return True
 
+	##############################################
+	## Tree-like API
+	##############################################
 	def get_parent(self): return self._parent
+	def get_children(self): return list()
 
 	##############################################
 	## Type testing methods

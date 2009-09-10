@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -32,6 +32,8 @@ class Connection(Element):
 	The arrow coloring exposes the enabled and valid states.
 	"""
 
+	def __init__(self): Element.__init__(self)
+
 	def get_coordinate(self):
 		"""
 		Get the 0,0 coordinate.
@@ -48,8 +50,9 @@ class Connection(Element):
 		"""
 		return 0
 
-	def update(self):
+	def create_shapes(self):
 		"""Precalculate relative coordinates."""
+		Element.create_shapes(self)
 		self._sink_rot = None
 		self._source_rot = None
 		self._sink_coor = None
@@ -72,7 +75,7 @@ class Connection(Element):
 
 	def _update_after_move(self):
 		"""Calculate coordinates."""
-		self.clear()
+		self.clear() #FIXME do i want this here?
 		#source connector
 		source = self.get_source()
 		X, Y = source.get_connector_coordinate()
@@ -123,7 +126,7 @@ class Connection(Element):
 		sink = self.get_sink()
 		source = self.get_source()
 		#check for changes
-		if self._sink_rot != sink.get_rotation() or self._source_rot != source.get_rotation(): self.update()
+		if self._sink_rot != sink.get_rotation() or self._source_rot != source.get_rotation(): self.create_shapes()
 		elif self._sink_coor != sink.get_coordinate() or self._source_coor != source.get_coordinate(): self._update_after_move()
 		#cache values
 		self._sink_rot = sink.get_rotation()
