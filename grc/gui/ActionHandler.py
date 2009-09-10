@@ -240,10 +240,17 @@ class ActionHandler:
 		##################################################
 		elif state == Actions.BLOCK_PARAM_MODIFY:
 			selected_block = self.get_flow_graph().get_selected_block()
-			if selected_block and PropsDialog(selected_block).run():
-				self.get_flow_graph().update()
-				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
-				self.get_page().set_saved(False)
+			if selected_block:
+				if PropsDialog(selected_block).run():
+					#save the new state
+					self.get_flow_graph().update()
+					self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
+					self.get_page().set_saved(False)
+				else:
+					#restore the current state
+					n = self.get_page().get_state_cache().get_current_state()
+					self.get_flow_graph().import_data(n)
+					self.get_flow_graph().update()
 		##################################################
 		# Undo/Redo
 		##################################################

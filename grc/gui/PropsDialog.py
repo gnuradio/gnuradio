@@ -51,7 +51,7 @@ class PropsDialog(gtk.Dialog):
 		LABEL_SPACING = 7
 		gtk.Dialog.__init__(self,
 			title='Properties: %s'%block.get_name(),
-			buttons=(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE),
+			buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT),
 		)
 		self._block = block
 		self.set_size_request(MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
@@ -155,20 +155,14 @@ class PropsDialog(gtk.Dialog):
 		@return false to forward the keypress
 		"""
 		keyname = gtk.gdk.keyval_name(event.keyval)
-		if keyname == 'Return': self.response(gtk.RESPONSE_OK)
+		if keyname == 'Return': self.response(gtk.RESPONSE_ACCEPT)
 		return False #forward the keypress
 
 	def run(self):
 		"""
-		Call run().
-		@return true if a change occured.
+		Run the dialog and get its response.
+		@return true if the response was accept
 		"""
-		original_data = list()
-		for param in self._block.get_params():
-			original_data.append(param.get_value())
-		gtk.Dialog.run(self)
+		response = gtk.Dialog.run(self)
 		self.destroy()
-		new_data = list()
-		for param in self._block.get_params():
-			new_data.append(param.get_value())
-		return original_data != new_data
+		return response == gtk.RESPONSE_ACCEPT
