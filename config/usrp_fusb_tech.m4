@@ -25,15 +25,17 @@ dnl
 #   ""  : do these tests
 
 AC_DEFUN([USRP_SET_FUSB_TECHNIQUE],[
+  req_libusb1=no
   AC_ARG_WITH([fusb-tech],
               AC_HELP_STRING([--with-fusb-tech=OS],
 		             [Set fast USB technique (default=auto)]),
 	      [cf_with_fusb_tech="$withval"],
-	      [cf_with_fusb_tech="libusb1"])
+	      [cf_with_fusb_tech="$host_os"])
   if test [x]$1 != xno; then
       case "$cf_with_fusb_tech" in
         libusb1*)
           FUSB_TECH=libusb1
+          req_libusb1=yes
           ;;
         linux*)
           AC_CHECK_HEADER([linux/usbdevice_fs.h],
