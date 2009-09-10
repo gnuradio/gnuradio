@@ -64,14 +64,6 @@ static const char *default_fpga_filename     = "std_2rxhb_2tx.rbf";
 #include "std_paths.h"
 #include <stdio.h>
 
-/*
-void
-usrp_one_time_init ()
-{
-  usrp_one_time_init (false);
-}
-*/
-
 void
 usrp_one_time_init (libusb_context **ctx)
 {
@@ -80,34 +72,6 @@ usrp_one_time_init (libusb_context **ctx)
   if ((ret = libusb_init (ctx)) < 0)
     fprintf (stderr, "usrp: libusb_init failed %i\n", ret);
 }
-
-/*
-libusb_context *
-usrp_one_time_init (bool new_context)
-{
-
-  static bool first = true;
-  libusb_context *ctx = NULL;
-  int ret;
-
-  // On first call create default context in addition to any new requested
-  // context. The default context is probably useless in this form, but keep
-  // it for now due to possible compatibility reasons.
-
-  if (first) {
-    first = false;
-    if ((ret = libusb_init (NULL)) < 0)
-      fprintf (stderr, "usrp: libusb_init failed %i\n", ret);
-  }
-
-  if (new_context) {
-    if ((ret = libusb_init (&ctx)) < 0)
-      fprintf (stderr, "usrp: libusb_init failed %i\n", ret);
-  }
-
-  return ctx;
-}
-*/
 
 void
 usrp_rescan ()
@@ -176,7 +140,9 @@ usrp_find_device (int nth, bool fx2_ok_p, libusb_context *ctx)
   struct libusb_device *q;
   int	 n_found = 0;
 
-//usrp_one_time_init (false);
+  // Make sure not operating on default context. There are cases where operating
+  // with a single global (NULL) context may be preferable, so this check can be
+  // skipped if you know what you're doing.
   assert (ctx != NULL);
 
   size_t cnt = libusb_get_device_list(ctx, &list);
@@ -194,10 +160,7 @@ usrp_find_device (int nth, bool fx2_ok_p, libusb_context *ctx)
     }
   }
 
-/*
- * The list needs to be freed. Right now just release it if nothing is found.
- */
-
+  // The list needs to be freed. Right now just release it if nothing is found.
   libusb_free_device_list(list, 1);
 
   return 0;	// not found
@@ -206,7 +169,7 @@ usrp_find_device (int nth, bool fx2_ok_p, libusb_context *ctx)
 struct libusb_device_handle *
 usrp_open_interface (libusb_device *dev, int interface, int altinterface)
 {
-  struct libusb_device_handle *udh;
+  libusb_device_handle *udh;
   int ret;
 
   if (libusb_open (dev, &udh) < 0)
@@ -344,131 +307,6 @@ usrp_read_fpga_reg (struct libusb_device_handle *udh, int reg, int *value)
 }
 
 
-static libusb_device_handle *
-open_nth_cmd_interface (int nth, libusb_context *ctx)
-{
-
-  struct libusb_device *udev = usrp_find_device (nth, false, ctx);
-  if (udev == 0){
-    fprintf (stderr, "usrp: failed to find usrp[%d]\n", nth);
-    return 0;
-  }
-
-  struct libusb_device_handle *udh;
-
-  udh = usrp_open_cmd_interface (udev);
-  if (udh == 0){
-    // FIXME this could be because somebody else has it open.
-    // We should delay and retry...
-    fprintf (stderr, "open_nth_cmd_interface: open_cmd_interface failed\n");
-    return 0;
-  }
-
-  return udh;
-}
-
-usrp_load_status_t
-usrp_load_firmware_nth (int nth, const char *filename, bool force, libusb_context *ctx)
-{
-  struct libusb_device_handle *udh = open_nth_cmd_interface (nth, ctx);
-  if (udh == 0)
-    return ULS_ERROR;
-
-  usrp_load_status_t s = usrp_load_firmware (udh, filename, force);
-  usrp_close_interface (udh);
-
-  switch (s){
-
-  case ULS_ALREADY_LOADED:              // nothing changed...
-    return ULS_ALREADY_LOADED;
-    break;
-
-  case ULS_OK:
-    // we loaded firmware successfully.
- 
-    // It's highly likely that the board will renumerate (simulate a
-    // disconnect/reconnect sequence), invalidating our current
-    // handle.
-
-    // FIXME.  Turn this into a loop that rescans until we refind ourselves
-   
-    struct timespec     t;      // delay for 1 second
-    t.tv_sec = 2;
-    t.tv_nsec = 0;
-    our_nanosleep (&t);
-
-    return ULS_OK;
-
-  default:
-  case ULS_ERROR:               // some kind of problem
-    return ULS_ERROR;
-  }
-}
-
-bool
-usrp_load_standard_bits (int nth, bool force,
-			 const std::string fpga_filename,
-			 const std::string firmware_filename,
-			 libusb_context *ctx)
-{
-  usrp_load_status_t 	s;
-  const char		*filename;
-  const char		*proto_filename;
-  int hw_rev;
-
-  assert (ctx != NULL);
-
-  // first, figure out what hardware rev we're dealing with
-  {
-    struct libusb_device *udev = usrp_find_device (nth, false, ctx);
-    if (udev == 0){
-      fprintf (stderr, "usrp: failed to find usrp[%d]\n", nth);
-      return false;
-    }
-    hw_rev = usrp_hw_rev (udev);
-  }
-
-  // start by loading the firmware
-
-  proto_filename = get_proto_filename(firmware_filename, "USRP_FIRMWARE",
-				      default_firmware_filename);
-  filename = find_file(proto_filename, hw_rev);
-  if (filename == 0){
-    fprintf (stderr, "Can't find firmware: %s\n", proto_filename);
-    return false;
-  }
-  s = usrp_load_firmware_nth (nth, filename, force, ctx);
-  load_status_msg (s, "firmware", filename);
-
-  if (s == ULS_ERROR)
-    return false;
-
-  // if we actually loaded firmware, we must reload fpga ...
-  if (s == ULS_OK)
-    force = true;
-
-  // now move on to the fpga configuration bitstream
-
-  proto_filename = get_proto_filename(fpga_filename, "USRP_FPGA",
-				      default_fpga_filename);
-  filename = find_file (proto_filename, hw_rev);
-  if (filename == 0){
-    fprintf (stderr, "Can't find fpga bitstream: %s\n", proto_filename);
-    return false;
-  }
-  struct libusb_device_handle *udh = open_nth_cmd_interface (nth, ctx);
-  if (udh == 0)
-    return false;
-  
-  s = usrp_load_fpga (udh, filename, force);
-  usrp_close_interface (udh);
-  load_status_msg (s, "fpga bitstream", filename);
-
-  if (s == ULS_ERROR)
-    return false;
-
-  return true;
-}
 
 void
 power_down_9862s (struct libusb_device_handle *udh)

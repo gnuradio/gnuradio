@@ -64,28 +64,6 @@ static const char *default_fpga_filename     = "std_2rxhb_2tx.rbf";
 #include "std_paths.h"
 #include <stdio.h>
 
-/*
-void
-usrp_one_time_init ()
-{
-  static bool first = true;
-
-  if (first) {
-    first = false;
-    usb_init ();			// usb library init
-    usb_find_busses ();
-    usb_find_devices ();
-  }
-}
-
-libusb_context *
-usrp_one_time_init (bool new_context)
-{
-  usrp_one_time_init ();
-  return NULL; 
-}
-*/
-
 void
 usrp_one_time_init (libusb_context **ctx)
 {
@@ -323,137 +301,6 @@ usrp_read_fpga_reg (struct usb_dev_handle *udh, int reg, int *value)
 }
 
 
-
-
-static usb_dev_handle *
-open_nth_cmd_interface (int nth)
-{
-  struct usb_device *udev = usrp_find_device (nth);
-  if (udev == 0){
-    fprintf (stderr, "usrp: failed to find usrp[%d]\n", nth);
-    return 0;
-  }
-
-  struct usb_dev_handle *udh;
-
-  udh = usrp_open_cmd_interface (udev);
-  if (udh == 0){
-    // FIXME this could be because somebody else has it open.
-    // We should delay and retry...
-    fprintf (stderr, "open_nth_cmd_interface: open_cmd_interface failed\n");
-    usb_strerror ();
-    return 0;
-  }
-
-  return udh;
-}
-
-
-usrp_load_status_t
-usrp_load_firmware_nth (int nth, const char *filename, bool force, libusb_context *ctx){
-  struct usb_dev_handle *udh = open_nth_cmd_interface (nth);
-  if (udh == 0)
-    return ULS_ERROR;
-
-  usrp_load_status_t s = usrp_load_firmware (udh, filename, force);
-  usrp_close_interface (udh);
-
-  switch (s){
-
-  case ULS_ALREADY_LOADED:		// nothing changed...
-    return ULS_ALREADY_LOADED;
-    break;
-
-  case ULS_OK:
-    // we loaded firmware successfully.
-
-    // It's highly likely that the board will renumerate (simulate a
-    // disconnect/reconnect sequence), invalidating our current
-    // handle.
-
-    // FIXME.  Turn this into a loop that rescans until we refind ourselves
-    
-    struct timespec	t;	// delay for 1 second
-    t.tv_sec = 2;
-    t.tv_nsec = 0;
-    our_nanosleep (&t);
-
-    usb_find_busses ();		// rescan busses and devices
-    usb_find_devices ();
-
-    return ULS_OK;
-
-  default:
-  case ULS_ERROR:		// some kind of problem
-    return ULS_ERROR;
-  }
-}
-
-bool
-usrp_load_standard_bits (int nth, bool force,
-			 const std::string fpga_filename,
-			 const std::string firmware_filename,
-			 libusb_context *ctx)
-{
-  usrp_load_status_t 	s;
-  const char		*filename;
-  const char		*proto_filename;
-  int hw_rev;
-
-  // first, figure out what hardware rev we're dealing with
-  {
-    struct usb_device *udev = usrp_find_device (nth);
-    if (udev == 0){
-      fprintf (stderr, "usrp: failed to find usrp[%d]\n", nth);
-      return false;
-    }
-    hw_rev = usrp_hw_rev (udev);
-  }
-
-  // start by loading the firmware
-
-  proto_filename = get_proto_filename(firmware_filename, "USRP_FIRMWARE",
-				      default_firmware_filename);
-  filename = find_file(proto_filename, hw_rev);
-  if (filename == 0){
-    fprintf (stderr, "Can't find firmware: %s\n", proto_filename);
-    return false;
-  }
-
-  s = usrp_load_firmware_nth (nth, filename, force);
-  load_status_msg (s, "firmware", filename);
-
-  if (s == ULS_ERROR)
-    return false;
-
-  // if we actually loaded firmware, we must reload fpga ...
-  if (s == ULS_OK)
-    force = true;
-
-  // now move on to the fpga configuration bitstream
-
-  proto_filename = get_proto_filename(fpga_filename, "USRP_FPGA",
-				      default_fpga_filename);
-  filename = find_file (proto_filename, hw_rev);
-  if (filename == 0){
-    fprintf (stderr, "Can't find fpga bitstream: %s\n", proto_filename);
-    return false;
-  }
-
-  struct usb_dev_handle *udh = open_nth_cmd_interface (nth);
-  if (udh == 0)
-    return false;
-  
-  s = usrp_load_fpga (udh, filename, force);
-  usrp_close_interface (udh);
-  load_status_msg (s, "fpga bitstream", filename);
-
-  if (s == ULS_ERROR)
-    return false;
-
-  return true;
-}
-
 void
 power_down_9862s (struct usb_dev_handle *udh)
 {
@@ -473,6 +320,7 @@ power_down_9862s (struct usb_dev_handle *udh)
   }
 }
 
+// ----------------------------------------------------------------
 
 std::string
 usrp_serial_number(struct usb_dev_handle *udh)

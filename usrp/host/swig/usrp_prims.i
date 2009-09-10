@@ -61,7 +61,7 @@ void usrp_rescan ();
  *   configured USRP (firmware loaded)
  *   unconfigured Cypress FX2 (only if fx2_ok_p is true)
  */
-libusb_device *usrp_find_device (int nth, bool fx2_ok_p = false, libusb_context *ctx);
+libusb_device *usrp_find_device (int nth, bool fx2_ok_p = false, libusb_context *ctx = NULL);
 
 bool usrp_usrp_p (libusb_device *q);		//< is this a USRP
 bool usrp_usrp0_p (libusb_device *q);		//< is this a USRP Rev 0
@@ -114,7 +114,7 @@ usrp_load_firmware (libusb_device_handle *udh, const char *filename, bool force)
  * then rescans the busses and devices.
  */
 usrp_load_status_t
-usrp_load_firmware_nth (int nth, const char *filename, bool force, libusb_context *ctx);
+usrp_load_firmware_nth (int nth, const char *filename, bool force, libusb_context *ctx = NULL);
 
 /*!
  * \brief load fpga configuration bitstream

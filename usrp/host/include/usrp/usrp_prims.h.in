@@ -12,7 +12,6 @@ enum usrp_load_status_t { ULS_ERROR = 0, ULS_OK, ULS_ALREADY_LOADED };
  * new_context set to true since a new context is initiated each time.
  */
 
-//libusb_context* usrp_one_time_init (bool new_context);
 void usrp_one_time_init (libusb_context **ctx = NULL);
 
 /*
@@ -258,34 +257,22 @@ bool usrp_write_dboard_offsets (libusb_device_handle *udh, int slot_id,
 std::string usrp_serial_number(libusb_device_handle *udh);
 
 /*
- * Static helper functions
+ * Internal functions 
  */
 
 bool _usrp_configured_p (libusb_device *q);
+
 libusb_device_handle *usrp_open_interface(libusb_device *dev,
                                           int interface,
                                           int altinterface);
+
 bool write_internal_ram (libusb_device_handle *udh, unsigned char *buf,
                          int start_addr, size_t len);
+
 int write_cmd (libusb_device_handle *udh, int request, int value,
                int index, unsigned char *bytes, int len);
-bool usrp_usrp_p (libusb_device *q);
-int usrp_hw_rev (libusb_device *q);
-bool our_nanosleep (const struct timespec *delay);
-const char *get_proto_filename (const std::string user_filename,
-                                const char *env_var,
-                                const char *def);
-char *find_file (const char *filename, int hw_rev);
-void load_status_msg (usrp_load_status_t s, const char *type,
-                      const char *filename);
+
 bool usrp1_fpga_write (libusb_device_handle *udh, int regno, int value);
 bool usrp1_fpga_read (libusb_device_handle *udh, int regno, int *value);
-bool usrp_set_switch (libusb_device_handle *udh, int cmd_byte, bool on);
-
-bool usrp_set_fpga_reset (libusb_device_handle *udh, bool on);
-bool usrp_set_fpga_tx_enable (libusb_device_handle *udh, bool on);
-bool usrp_set_fpga_rx_enable (libusb_device_handle *udh, bool on);
-bool usrp_set_fpga_tx_reset (libusb_device_handle *udh, bool on);
-bool usrp_set_fpga_rx_reset (libusb_device_handle *udh, bool on);
 
 #endif /* _USRP_PRIMS_H_ */
