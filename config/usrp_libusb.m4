@@ -25,11 +25,41 @@ dnl Boston, MA 02110-1301, USA.
 
 AC_DEFUN([USRP_LIBUSB], [
   libusbok=yes
-
+  have_libusb1=no
   if test [x]$1 = xyes; then
-    PKG_CHECK_MODULES(USB, libusb-1.0, [have_libusb1=yes], [libusbok=no])
+    PKG_CHECK_MODULES(USB, libusb-1.0, [have_libusb1=yes], [
+      AC_LANG_PUSH(C)
+
+      AC_CHECK_HEADERS([libusb-1.0/libusb.h], [have_libusb1=yes],
+                       [libusbok=no; AC_MSG_RESULT([USRP requires libusb-1.0. libusb.h not found. See http://www.libusb.org])])
+
+      AC_SEARCH_LIBS(libusb_bulk_transfer, [usb], [USB_LIBS="$LIBS"],
+                     [libusbok=no; AC_MSG_RESULT([USRP requires libusb-1.0. libusb_bulk_transfer not found. See http://www.libusb.org])])
+
+      AC_LANG_POP
+    ])
   else
-    PKG_CHECK_MODULES(USB, libusb, [have_libusb1=no], [libusbok=no])
+    PKG_CHECK_MODULES(USB, libusb, [], [
+      AC_LANG_PUSH(C)
+
+      AC_CHECK_HEADERS([usb.h], [],
+                       [libusbok=no; AC_MSG_RESULT([USRP requires libusb. usb.h not found. See http://www.libusb.org])])
+
+      save_LIBS="$LIBS"
+      case "$host_os" in
+        darwin*)
+          LIBS="$LIBS -lIOKit"
+          ;;
+        *) ;;
+      esac
+
+      AC_SEARCH_LIBS(usb_bulk_write, [usb], [USB_LIBS="$LIBS"],
+                     [libusbok=no; AC_MSG_RESULT([USRP requires libusb. usb_bulk_write not found. See http://www.libusb.org])])
+
+      LIBS="$save_LIBS"
+
+      AC_LANG_POP
+    ])
   fi
 
   if test x$libusbok = xyes; then
