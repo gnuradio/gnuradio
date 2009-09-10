@@ -127,9 +127,7 @@ public:
    * \brief returns fusb_devhandle or throws if trouble
    */
   static fusb_devhandle *make_devhandle (libusb_device_handle *udh,
-                                         libusb_context *ctx);
-
-  static fusb_devhandle *make_devhandle (libusb_device_handle *udh);
+                                         libusb_context *ctx = 0);
 
   /*!
    * \brief Returns max block size in bytes (hard limit).

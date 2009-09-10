@@ -28,12 +28,6 @@ static const int DEFAULT_BLOCK_SIZE =   4 * 1024;	// fewer kernel memory problem
 static const int FUSB_BUFFER_SIZE   =   1 * (1L << 20); // 1MB
 
 fusb_devhandle *
-fusb_sysconfig::make_devhandle (usb_dev_handle *udh)
-{
-  return new fusb_devhandle_linux (udh);
-}
-
-fusb_devhandle *
 fusb_sysconfig::make_devhandle (usb_dev_handle *udh, libusb_context *ctx)
 {
   make_devhandle (udh); 
