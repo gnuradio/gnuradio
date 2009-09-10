@@ -110,7 +110,7 @@ module simple_gemac_wrapper
    wire [35:0] 	  tx_f36_data_int1;
    wire 	  tx_f36_src_rdy_int1, tx_f36_dst_rdy_int1;
    
-   fifo_2clock #(.WIDTH(36), .SIZE(TXFIFOSIZE)) tx_2clk_fifo
+   fifo_2clock_cascade #(.WIDTH(36), .SIZE(TXFIFOSIZE)) tx_2clk_fifo
      (.wclk(sys_clk), .datain(tx_f36_data), 
       .src_rdy_i(tx_f36_src_rdy), .dst_rdy_o(tx_f36_dst_rdy), .space(),
       .rclk(tx_clk), .dataout(tx_f36_data_int1), 
