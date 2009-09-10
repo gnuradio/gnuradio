@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005,2007,2008 Free Software Foundation, Inc.
+# Copyright 2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,200 +20,307 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru
-from gnuradio import usrp
+DESC_KEY = 'desc'
+SAMP_RATE_KEY = 'samp_rate'
+LINK_RATE_KEY = 'link_rate'
+DAC_RATE_KEY = 'dac_rate'
+INTERP_KEY = 'interp'
+GAIN_KEY = 'gain'
+TX_FREQ_KEY = 'tx_freq'
+DDC_FREQ_KEY = 'ddc_freq'
+BB_FREQ_KEY = 'bb_freq'
+AMPLITUDE_KEY = 'amplitude'
+AMPL_RANGE_KEY = 'ampl_range'
+WAVEFORM_FREQ_KEY = 'waveform_freq'
+WAVEFORM_OFFSET_KEY = 'waveform_offset'
+WAVEFORM2_FREQ_KEY = 'waveform2_freq'
+FREQ_RANGE_KEY = 'freq_range'
+GAIN_RANGE_KEY = 'gain_range'
+TYPE_KEY = 'type'
+
+def setter(ps, key, val): ps[key] = val
+
+from gnuradio import gr, eng_notation
+from gnuradio.gr.pubsub import pubsub
 from gnuradio.eng_option import eng_option
-from gnuradio import eng_notation
+from gnuradio import usrp_options
 from optparse import OptionParser
 import sys
+import math
 
+n2s = eng_notation.num_to_str
 
-class my_top_block(gr.top_block):
-    def __init__ (self, nsamples):
+waveforms = { gr.GR_SIN_WAVE   : "Complex Sinusoid",
+              gr.GR_CONST_WAVE : "Constant",
+              gr.GR_GAUSSIAN   : "Gaussian Noise",
+              gr.GR_UNIFORM    : "Uniform Noise",
+              "2tone"          : "Two Tone",
+              "sweep"          : "Sweep" }
+
+#
+# GUI-unaware GNU Radio flowgraph.  This may be used either with command
+# line applications or GUI applications.
+#
+class top_block(gr.top_block, pubsub):
+    def __init__(self, options, args):
         gr.top_block.__init__(self)
+        pubsub.__init__(self)
+        self._verbose = options.verbose
+        #initialize values from options
+        self._setup_usrpx(options)
+        self.subscribe(INTERP_KEY, lambda i: setter(self, SAMP_RATE_KEY, self[DAC_RATE_KEY]/i))
+        self.subscribe(SAMP_RATE_KEY, lambda e: setter(self, LINK_RATE_KEY, e*32))
+        self[INTERP_KEY] = options.interp or 16
+        self[TX_FREQ_KEY] = options.tx_freq
+        self[AMPLITUDE_KEY] = options.amplitude
+        self[WAVEFORM_FREQ_KEY] = options.waveform_freq
+        self[WAVEFORM_OFFSET_KEY] = options.offset
+        self[WAVEFORM2_FREQ_KEY] = options.waveform2_freq
+        self[BB_FREQ_KEY] = 0
+        self[DDC_FREQ_KEY] = 0
+        #subscribe set methods
+        self.subscribe(INTERP_KEY, self.set_interp)
+        self.subscribe(GAIN_KEY, self.set_gain)
+        self.subscribe(TX_FREQ_KEY, self.set_freq)
+        self.subscribe(AMPLITUDE_KEY, self.set_amplitude)
+        self.subscribe(WAVEFORM_FREQ_KEY, self.set_waveform_freq)
+        self.subscribe(WAVEFORM2_FREQ_KEY, self.set_waveform2_freq)
+        self.subscribe(TYPE_KEY, self.set_waveform)
+        #force update on pubsub keys
+        for key in (INTERP_KEY, GAIN_KEY, TX_FREQ_KEY,
+            AMPLITUDE_KEY, WAVEFORM_FREQ_KEY, WAVEFORM_OFFSET_KEY, WAVEFORM2_FREQ_KEY):
+            self[key] = self[key]
+        self[TYPE_KEY] = options.type #set type last
+
+    def _setup_usrpx(self, options):
+        self._u = usrp_options.create_usrp_sink(options)
+        self.publish(DESC_KEY, lambda: str(self._u))
+        self.publish(DAC_RATE_KEY, self._u.dac_rate)
+        self.publish(FREQ_RANGE_KEY, self._u.freq_range)
+        self.publish(GAIN_RANGE_KEY, self._u.gain_range)
+        self.publish(GAIN_KEY, self._u.gain)
+        if self._verbose: print str(self._u)
+
+    def _set_tx_amplitude(self, ampl):
+        """
+        Sets the transmit amplitude sent to the USRP
+        @param ampl the amplitude or None for automatic
+        """
+        ampl_range = self[AMPL_RANGE_KEY]
+        if ampl is None: ampl = (ampl_range[1] - ampl_range[0])*0.15 + ampl_range[0]
+        self[AMPLITUDE_KEY] = max(ampl_range[0], min(ampl, ampl_range[1]))
+
+    def set_interp(self, interp):
+        if not self._u.set_interp(interp):
+            raise RuntimeError("Failed to set interpolation rate %i" % (interp,))
+
+        if self._verbose:
+            print "USRP interpolation rate:", interp
+            print "USRP IF bandwidth: %sHz" % (n2s(self[SAMP_RATE_KEY]),)
+
+        if self[TYPE_KEY] in (gr.GR_SIN_WAVE, gr.GR_CONST_WAVE):
+            self._src.set_sampling_freq(self[SAMP_RATE_KEY])
+        elif self[TYPE_KEY] == "2tone":
+            self._src1.set_sampling_freq(self[SAMP_RATE_KEY])
+            self._src2.set_sampling_freq(self[SAMP_RATE_KEY])
+        elif self[TYPE_KEY] == "sweep":
+            self._src1.set_sampling_freq(self[SAMP_RATE_KEY])
+            self._src2.set_sampling_freq(self[WAVEFORM_FREQ_KEY]*2*math.pi/self[SAMP_RATE_KEY])
+        else:
+            return True # Waveform not yet set
         
-        # controllable values
-        self.interp = 64
-        self.waveform_type = gr.GR_SIN_WAVE
-        self.waveform_ampl = 16000
-        self.waveform_freq = 100.12345e3
-        self.waveform_offset = 0
-        self.nsamples = nsamples
-        self._instantiate_blocks ()
-        self.set_waveform_type (self.waveform_type)
+        if self._verbose: print "Set interpolation rate to:", interp
+        return True
 
-    def usb_freq (self):
-        return self.u.dac_freq() / self.interp
-
-    def usb_throughput (self):
-        return self.usb_freq () * 4
-        
-    def set_waveform_type (self, type):
-        '''
-        valid waveform types are: gr.GR_SIN_WAVE, gr.GR_CONST_WAVE,
-        gr.GR_UNIFORM and gr.GR_GAUSSIAN
-        '''
-        self._configure_graph (type)
-        self.waveform_type = type
-
-    def set_waveform_ampl (self, ampl):
-        self.waveform_ampl = ampl
-        self.siggen.set_amplitude (ampl)
-        self.noisegen.set_amplitude (ampl)
-
-    def set_waveform_freq (self, freq):
-        self.waveform_freq = freq
-        self.siggen.set_frequency (freq)
-        
-    def set_waveform_offset (self, offset):
-        self.waveform_offset = offset
-        self.siggen.set_offset (offset)
-
-    def set_interpolator (self, interp):
-        self.interp = interp
-        self.siggen.set_sampling_freq (self.usb_freq ())
-        self.u.set_interp_rate (interp)
-
-    def _instantiate_blocks (self):
-        self.src = None
-        self.u = usrp.sink_c (0, self.interp)
-        
-        self.siggen = gr.sig_source_c (self.usb_freq (),
-                                       gr.GR_SIN_WAVE,
-                                       self.waveform_freq,
-                                       self.waveform_ampl,
-                                       self.waveform_offset)
-
-        self.noisegen = gr.noise_source_c (gr.GR_UNIFORM,
-                                           self.waveform_ampl)
-
-        self.head = None
-        if self.nsamples > 0:
-            self.head = gr.head(gr.sizeof_gr_complex, int(self.nsamples))
-
-        # self.file_sink = gr.file_sink (gr.sizeof_gr_complex, "siggen.dat")
-
-    def _configure_graph (self, type):
-        try:
-            self.lock()
-            self.disconnect_all ()
-
-            if self.head:
-                self.connect(self.head, self.u)
-                tail = self.head
-            else:
-                tail = self.u
-                
-            if type == gr.GR_SIN_WAVE or type == gr.GR_CONST_WAVE:
-                self.connect (self.siggen, tail)
-                # self.connect (self.siggen, self.file_sink)
-                self.siggen.set_waveform (type)
-                self.src = self.siggen
-            elif type == gr.GR_UNIFORM or type == gr.GR_GAUSSIAN:
-                self.connect (self.noisegen, tail)
-                self.noisegen.set_type (type)
-                self.src = self.noisegen
-            else:
-                raise ValueError, type
-        finally:
-            self.unlock()
+    def set_gain(self, gain):
+        if gain is None:
+            g = self[GAIN_RANGE_KEY]
+            gain = float(g[0]+g[1])/2
+            if self._verbose:
+                print "Using auto-calculated mid-point TX gain"
+            self[GAIN_KEY] = gain
+            return
+        self._u.set_gain(gain)
+        if self._verbose:
+            print "Set TX gain to:", gain
 
     def set_freq(self, target_freq):
-        """
-        Set the center frequency we're interested in.
 
-        @param target_freq: frequency in Hz
-        @rypte: bool
+        if target_freq is None:
+            f = self[FREQ_RANGE_KEY]
+            target_freq = float(f[0]+f[1])/2.0
+            if self._verbose:
+                print "Using auto-calculated mid-point frequency"
+            self[TX_FREQ_KEY] = target_freq
+            return
 
-        Tuning is a two step process.  First we ask the front-end to
-        tune as close to the desired frequency as it can.  Then we use
-        the result of that operation and our target_frequency to
-        determine the value for the digital up converter.
-        """
-        r = self.u.tune(self.subdev.which(), self.subdev, target_freq)
-        if r:
-            #print "r.baseband_freq =", eng_notation.num_to_str(r.baseband_freq)
-            #print "r.dxc_freq      =", eng_notation.num_to_str(r.dxc_freq)
-            #print "r.residual_freq =", eng_notation.num_to_str(r.residual_freq)
-            #print "r.inverted      =", r.inverted
-            return True
+        tr = self._u.set_center_freq(target_freq)
+        fs = "%sHz" % (n2s(target_freq),)
+        if tr is not None:
+            self._freq = target_freq
+            self[DDC_FREQ_KEY] = tr.dxc_freq
+            self[BB_FREQ_KEY] = tr.baseband_freq
+            if self._verbose:
+                print "Set center frequency to", fs
+                print "Tx baseband frequency: %sHz" % (n2s(tr.baseband_freq),)
+                print "Tx DDC frequency: %sHz" % (n2s(tr.dxc_freq),)
+                print "Tx residual frequency: %sHz" % (n2s(tr.residual_freq),)
+        elif self._verbose: print "Failed to set freq." 
+        return tr
 
-        return False
+    def set_waveform_freq(self, freq):
+        if self[TYPE_KEY] == gr.GR_SIN_WAVE:
+            self._src.set_frequency(freq)
+        elif self[TYPE_KEY] == "2tone":
+            self._src1.set_frequency(freq)
+        elif self[TYPE_KEY] == 'sweep':
+            #there is no set sensitivity, redo fg
+            self[TYPE_KEY] = self[TYPE_KEY]
+        return True
+
+    def set_waveform2_freq(self, freq):
+        if freq is None:
+            self[WAVEFORM2_FREQ_KEY] = -self[WAVEFORM_FREQ_KEY]
+            return
+        if self[TYPE_KEY] == "2tone":
+            self._src2.set_frequency(freq)
+        elif self[TYPE_KEY] == "sweep":
+            self._src1.set_frequency(freq)
+        return True
+
+    def set_waveform(self, type):
+        self.lock()
+        self.disconnect_all()
+        if type == gr.GR_SIN_WAVE or type == gr.GR_CONST_WAVE:
+            self._src = gr.sig_source_c(self[SAMP_RATE_KEY],      # Sample rate
+                                        type,                # Waveform type
+                                        self[WAVEFORM_FREQ_KEY], # Waveform frequency
+                                        self[AMPLITUDE_KEY],     # Waveform amplitude
+                                        self[WAVEFORM_OFFSET_KEY])        # Waveform offset
+        elif type == gr.GR_GAUSSIAN or type == gr.GR_UNIFORM:
+            self._src = gr.noise_source_c(type, self[AMPLITUDE_KEY])
+        elif type == "2tone":
+            self._src1 = gr.sig_source_c(self[SAMP_RATE_KEY],
+                                         gr.GR_SIN_WAVE,
+                                         self[WAVEFORM_FREQ_KEY],
+                                         self[AMPLITUDE_KEY]/2.0,
+                                         0)
+            if(self[WAVEFORM2_FREQ_KEY] is None):
+                self[WAVEFORM2_FREQ_KEY] = -self[WAVEFORM_FREQ_KEY]
+
+            self._src2 = gr.sig_source_c(self[SAMP_RATE_KEY],
+                                         gr.GR_SIN_WAVE,
+                                         self[WAVEFORM2_FREQ_KEY],
+                                         self[AMPLITUDE_KEY]/2.0,
+                                         0)
+            self._src = gr.add_cc()
+            self.connect(self._src1,(self._src,0))
+            self.connect(self._src2,(self._src,1))
+        elif type == "sweep":
+            # rf freq is center frequency
+            # waveform_freq is total swept width
+            # waveform2_freq is sweep rate
+            # will sweep from (rf_freq-waveform_freq/2) to (rf_freq+waveform_freq/2)
+            if self[WAVEFORM2_FREQ_KEY] is None:
+                self[WAVEFORM2_FREQ_KEY] = 0.1
+
+            self._src1 = gr.sig_source_f(self[SAMP_RATE_KEY],
+                                         gr.GR_TRI_WAVE,
+                                         self[WAVEFORM2_FREQ_KEY],
+                                         1.0,
+                                         -0.5)
+            self._src2 = gr.frequency_modulator_fc(self[WAVEFORM_FREQ_KEY]*2*math.pi/self[SAMP_RATE_KEY])
+            self._src = gr.multiply_const_cc(self[AMPLITUDE_KEY])
+            self.connect(self._src1,self._src2,self._src)
+        else:
+            raise RuntimeError("Unknown waveform type")
+
+        self.connect(self._src, self._u)
+        self.unlock()
+
+        if self._verbose:
+            print "Set baseband modulation to:", waveforms[type]
+            if type == gr.GR_SIN_WAVE:
+                print "Modulation frequency: %sHz" % (n2s(self[WAVEFORM_FREQ_KEY]),)
+                print "Initial phase:", self[WAVEFORM_OFFSET_KEY]
+            elif type == "2tone":
+                print "Tone 1: %sHz" % (n2s(self[WAVEFORM_FREQ_KEY]),)
+                print "Tone 2: %sHz" % (n2s(self[WAVEFORM2_FREQ_KEY]),)
+            elif type == "sweep":
+                print "Sweeping across %sHz to %sHz" % (n2s(-self[WAVEFORM_FREQ_KEY]/2.0),n2s(self[WAVEFORM_FREQ_KEY]/2.0))
+                print "Sweep rate: %sHz" % (n2s(self[WAVEFORM2_FREQ_KEY]),)
+            print "TX amplitude:", self[AMPLITUDE_KEY]
 
 
+    def set_amplitude(self, amplitude):
+        if amplitude < 0.0 or amplitude > 1.0:
+            if self._verbose: print "Amplitude out of range:", amplitude
+            return False
 
-def main ():
-    parser = OptionParser (option_class=eng_option)
-    parser.add_option ("-T", "--tx-subdev-spec", type="subdev", default=(0, 0),
-                       help="select USRP Tx side A or B")
-    parser.add_option ("-f", "--rf-freq", type="eng_float", default=None,
-                       help="set RF center frequency to FREQ")
-    parser.add_option ("-i", "--interp", type="int", default=64,
-                       help="set fgpa interpolation rate to INTERP [default=%default]")
+        if self[TYPE_KEY] in (gr.GR_SIN_WAVE, gr.GR_CONST_WAVE, gr.GR_GAUSSIAN, gr.GR_UNIFORM):
+            self._src.set_amplitude(amplitude)
+        elif self[TYPE_KEY] == "2tone":
+            self._src1.set_amplitude(amplitude/2.0)
+            self._src2.set_amplitude(amplitude/2.0)
+        elif self[TYPE_KEY] == "sweep":
+            self._src.set_k(amplitude)
+        else:
+            return True # Waveform not yet set
+        
+        if self._verbose: print "Set amplitude to:", amplitude
+        return True
 
-    parser.add_option ("--sine", dest="type", action="store_const", const=gr.GR_SIN_WAVE,
-                       help="generate a complex sinusoid [default]", default=gr.GR_SIN_WAVE)
-    parser.add_option ("--const", dest="type", action="store_const", const=gr.GR_CONST_WAVE, 
-                       help="generate a constant output")
-    parser.add_option ("--gaussian", dest="type", action="store_const", const=gr.GR_GAUSSIAN,
-                       help="generate Gaussian random output")
-    parser.add_option ("--uniform", dest="type", action="store_const", const=gr.GR_UNIFORM,
-                       help="generate Uniform random output")
+def get_options():
+    usage="%prog: [options]"
 
-    parser.add_option ("-w", "--waveform-freq", type="eng_float", default=0,
-                       help="set waveform frequency to FREQ [default=%default]")
-    parser.add_option ("-a", "--amplitude", type="eng_float", default=16e3,
-                       help="set waveform amplitude to AMPLITUDE [default=%default]", metavar="AMPL")
-    parser.add_option ("-g", "--gain", type="eng_float", default=None,
-                       help="set output gain to GAIN [default=%default]")
-    parser.add_option ("-o", "--offset", type="eng_float", default=0,
-                       help="set waveform offset to OFFSET [default=%default]")
-    parser.add_option ("-N", "--nsamples", type="eng_float", default=0,
-                       help="set number of samples to transmit [default=+inf]")
-    (options, args) = parser.parse_args ()
+    parser = OptionParser(option_class=eng_option, usage=usage)
+    usrp_options.add_tx_options(parser)
+    parser.add_option("-f", "--tx-freq", type="eng_float", default=None,
+                      help="Set carrier frequency to FREQ [default=mid-point]", metavar="FREQ")
+    parser.add_option("-x", "--waveform-freq", type="eng_float", default=0,
+                      help="Set baseband waveform frequency to FREQ [default=%default]")
+    parser.add_option("-y", "--waveform2-freq", type="eng_float", default=None,
+                      help="Set 2nd waveform frequency to FREQ [default=%default]")
+    parser.add_option("--sine", dest="type", action="store_const", const=gr.GR_SIN_WAVE,
+                      help="Generate a carrier modulated by a complex sine wave", default=gr.GR_SIN_WAVE)
+    parser.add_option("--const", dest="type", action="store_const", const=gr.GR_CONST_WAVE, 
+                      help="Generate a constant carrier")
+    parser.add_option("--offset", type="eng_float", default=0,
+                      help="Set waveform phase offset to OFFSET [default=%default]")
+    parser.add_option("--gaussian", dest="type", action="store_const", const=gr.GR_GAUSSIAN,
+                      help="Generate Gaussian random output")
+    parser.add_option("--uniform", dest="type", action="store_const", const=gr.GR_UNIFORM,
+                      help="Generate Uniform random output")
+    parser.add_option("--2tone", dest="type", action="store_const", const="2tone",
+                      help="Generate Two Tone signal for IMD testing")
+    parser.add_option("--sweep", dest="type", action="store_const", const="sweep",
+                      help="Generate a swept sine wave")
+    parser.add_option("-A", "--amplitude", type="eng_float", default=0.15,
+                      help="Set output amplitude to AMPL (0.0-1.0) [default=%default]", metavar="AMPL")
+    parser.add_option("-v", "--verbose", action="store_true", default=False,
+                      help="Use verbose console output [default=%default]")
 
-    if len(args) != 0:
-        parser.print_help()
-        raise SystemExit
+    (options, args) = parser.parse_args()
 
-    if options.rf_freq is None:
-        sys.stderr.write("usrp_siggen: must specify RF center frequency with -f RF_FREQ\n")
-        parser.print_help()
-        raise SystemExit
+    return (options, args)
 
-    tb = my_top_block(options.nsamples)
-    tb.set_interpolator (options.interp)
-    tb.set_waveform_type (options.type)
-    tb.set_waveform_freq (options.waveform_freq)
-    tb.set_waveform_ampl (options.amplitude)
-    tb.set_waveform_offset (options.offset)
-
-    # determine the daughterboard subdevice we're using
-    if options.tx_subdev_spec is None:
-        options.tx_subdev_spec = usrp.pick_tx_subdevice(tb.u)
-
-    m = usrp.determine_tx_mux_value(tb.u, options.tx_subdev_spec)
-    #print "mux = %#04x" % (m,)
-    tb.u.set_mux(m)
-    tb.subdev = usrp.selected_subdev(tb.u, options.tx_subdev_spec)
-    print "Using TX d'board %s" % (tb.subdev.side_and_name(),)
+# If this script is executed, the following runs. If it is imported, the below does not run.
+if __name__ == "__main__":
+    if gr.enable_realtime_scheduling() != gr.RT_OK:
+        print "Note: failed to enable realtime scheduling, continuing"
     
-    if options.gain is None:
-        tb.subdev.set_gain(tb.subdev.gain_range()[1])    # set max Tx gain
-    else:
-        tb.subdev.set_gain(options.gain)    # set max Tx gain
+    # Grab command line options and create top block
+    try:
+        (options, args) = get_options()
+        tb = top_block(options, args)
 
-    if not tb.set_freq(options.rf_freq):
-        sys.stderr.write('Failed to set RF frequency\n')
-        raise SystemExit
-    
-    tb.subdev.set_enable(True)                       # enable transmitter
+    except RuntimeError, e:
+        print e
+        sys.exit(1)
 
+    # Run it
     try:
         tb.run()
+
     except KeyboardInterrupt:
         pass
-
-
-if __name__ == '__main__':
-    main ()
