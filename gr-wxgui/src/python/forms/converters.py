@@ -134,8 +134,7 @@ class slider_converter(abstract_converter):
 		self._scaler = float(maximum - minimum)/num_steps
 		self._cast = cast
 	def external_to_internal(self, v):
-		#slider's internal representation is an integer
-		return int(round((v - self._offset)/self._scaler))
+		return (v - self._offset)/self._scaler
 	def internal_to_external(self, v):
 		return self._cast(v*self._scaler + self._offset)
 	def help(self):
