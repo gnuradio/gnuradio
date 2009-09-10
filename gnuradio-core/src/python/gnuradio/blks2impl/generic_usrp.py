@@ -33,7 +33,7 @@ class _dummy_freq_result(object):
         self.baseband_freq = target_freq
         self.dxc_freq = 0
         self.residual_freq = 0
-from gnuradio import gr, usrp, usrp2
+from gnuradio import gr
 
 ########################################################################
 # generic usrp common stuff
@@ -167,6 +167,7 @@ class generic_usrp_source_c(_generic_usrp_base, gr.hier_block2):
     # setup usrp methods
     ####################################################################
     def _setup_usrp1(self):
+        from gnuradio import usrp
         self._u = usrp.source_c (self._which,
                                 fusb_block_size=self._fusb_block_size,
                                 fusb_nblocks=self._fusb_nblocks)
@@ -178,6 +179,7 @@ class generic_usrp_source_c(_generic_usrp_base, gr.hier_block2):
         self._dxc = 0
 
     def _setup_usrp2(self):
+        from gnuradio import usrp2
         self._u = usrp2.source_32fc(self._interface, self._mac_addr)
 
     def _setup_dummy(self): self._u = gr.null_source(gr.sizeof_gr_complex)
@@ -224,6 +226,7 @@ class generic_usrp_sink_c(_generic_usrp_base, gr.hier_block2):
     # setup usrp methods
     ####################################################################
     def _setup_usrp1(self):
+        from gnuradio import usrp
         self._u = usrp.sink_c (self._which,
                                 fusb_block_size=self._fusb_block_size,
                                 fusb_nblocks=self._fusb_nblocks)
@@ -234,6 +237,8 @@ class generic_usrp_sink_c(_generic_usrp_base, gr.hier_block2):
         self._u.set_mux(usrp.determine_tx_mux_value(self._u, self._subdev_spec))
         self._dxc = self._subdev.which()
 
-    def _setup_usrp2(self): self._u = usrp2.sink_32fc(self._interface, self._mac_addr)
+    def _setup_usrp2(self):
+        from gnuradio import usrp2
+        self._u = usrp2.sink_32fc(self._interface, self._mac_addr)
 
     def _setup_dummy(self): self._u = gr.null_sink(gr.sizeof_gr_complex)
