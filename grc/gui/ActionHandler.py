@@ -79,10 +79,11 @@ class ActionHandler:
 		When not in focus, gtk and the accelerators handle the the key press.
 		@return false to let gtk handle the key action
 		"""
+		keyval, egroup, level, consumed = \
+			gtk.gdk.keymap_get_default().translate_keyboard_state(
+			event.hardware_keycode, event.state, event.group)
 		#extract action name from this key press
-		key_name = gtk.gdk.keyval_name(event.keyval)
-		mod_mask = event.state
-		action_name = Actions.get_action_name_from_key_name(key_name, mod_mask)
+		action_name = Actions.get_action_name_from_key_press(keyval, event.state & ~consumed)
 		#handle the action if flow graph is in focus
 		if action_name and self.get_focus_flag():
 			self.handle_states(action_name)

@@ -62,54 +62,55 @@ TYPES_WINDOW_DISPLAY = 'types window display'
 ######################################################################################################
 # Action Key Map
 ######################################################################################################
+NO_MODS_MASK = 0
 _actions_key_list = (
-	#action name, key name, mod mask
-	(FLOW_GRAPH_NEW, 'n', gtk.gdk.CONTROL_MASK),
-	(FLOW_GRAPH_OPEN, 'o', gtk.gdk.CONTROL_MASK),
-	(FLOW_GRAPH_SAVE, 's', gtk.gdk.CONTROL_MASK),
-	(FLOW_GRAPH_SAVE_AS, 's', gtk.gdk.CONTROL_MASK | gtk.gdk.SHIFT_MASK),
-	(FLOW_GRAPH_CLOSE, 'w', gtk.gdk.CONTROL_MASK),
-	(APPLICATION_QUIT, 'q', gtk.gdk.CONTROL_MASK),
-	(FLOW_GRAPH_UNDO, 'z', gtk.gdk.CONTROL_MASK),
-	(FLOW_GRAPH_REDO, 'y', gtk.gdk.CONTROL_MASK),
-	(ELEMENT_DELETE, 'Delete', 0),
-	(BLOCK_ROTATE_CCW, 'Left', 0),
-	(BLOCK_ROTATE_CW, 'Right', 0),
-	(BLOCK_DEC_TYPE, 'Up', 0),
-	(BLOCK_INC_TYPE, 'Down', 0),
-	(BLOCK_PARAM_MODIFY, 'Return', 0),
-	(BLOCK_ENABLE, 'e', 0),
-	(BLOCK_DISABLE, 'd', 0),
-	(BLOCK_CUT, 'x', gtk.gdk.CONTROL_MASK),
-	(BLOCK_COPY, 'c', gtk.gdk.CONTROL_MASK),
-	(BLOCK_PASTE, 'v', gtk.gdk.CONTROL_MASK),
-	(FLOW_GRAPH_GEN, 'F5', 0),
-	(FLOW_GRAPH_EXEC, 'F6', 0),
-	(FLOW_GRAPH_KILL, 'F7', 0),
-	(FLOW_GRAPH_SCREEN_CAPTURE, 'Print', 0),
-	(HELP_WINDOW_DISPLAY, 'F1', 0),
+	#action name, key value, mod mask
+	(FLOW_GRAPH_NEW,            gtk.keysyms.n,           gtk.gdk.CONTROL_MASK),
+	(FLOW_GRAPH_OPEN,           gtk.keysyms.o,           gtk.gdk.CONTROL_MASK),
+	(FLOW_GRAPH_SAVE,           gtk.keysyms.s,           gtk.gdk.CONTROL_MASK),
+	(FLOW_GRAPH_SAVE_AS,        gtk.keysyms.s,           gtk.gdk.CONTROL_MASK | gtk.gdk.SHIFT_MASK),
+	(FLOW_GRAPH_CLOSE,          gtk.keysyms.w,           gtk.gdk.CONTROL_MASK),
+	(APPLICATION_QUIT,          gtk.keysyms.q,           gtk.gdk.CONTROL_MASK),
+	(FLOW_GRAPH_UNDO,           gtk.keysyms.z,           gtk.gdk.CONTROL_MASK),
+	(FLOW_GRAPH_REDO,           gtk.keysyms.y,           gtk.gdk.CONTROL_MASK),
+	(ELEMENT_DELETE,            gtk.keysyms.Delete,      NO_MODS_MASK),
+	(BLOCK_ROTATE_CCW,          gtk.keysyms.Left,        NO_MODS_MASK),
+	(BLOCK_ROTATE_CW,           gtk.keysyms.Right,       NO_MODS_MASK),
+	(BLOCK_DEC_TYPE,            gtk.keysyms.Up,          NO_MODS_MASK),
+	(BLOCK_INC_TYPE,            gtk.keysyms.Down,        NO_MODS_MASK),
+	(BLOCK_PARAM_MODIFY,        gtk.keysyms.Return,      NO_MODS_MASK),
+	(BLOCK_ENABLE,              gtk.keysyms.e,           NO_MODS_MASK),
+	(BLOCK_DISABLE,             gtk.keysyms.d,           NO_MODS_MASK),
+	(BLOCK_CUT,                 gtk.keysyms.x,           gtk.gdk.CONTROL_MASK),
+	(BLOCK_COPY,                gtk.keysyms.c,           gtk.gdk.CONTROL_MASK),
+	(BLOCK_PASTE,               gtk.keysyms.v,           gtk.gdk.CONTROL_MASK),
+	(FLOW_GRAPH_GEN,            gtk.keysyms.F5,          NO_MODS_MASK),
+	(FLOW_GRAPH_EXEC,           gtk.keysyms.F6,          NO_MODS_MASK),
+	(FLOW_GRAPH_KILL,           gtk.keysyms.F7,          NO_MODS_MASK),
+	(FLOW_GRAPH_SCREEN_CAPTURE, gtk.keysyms.Print,       NO_MODS_MASK),
+	(HELP_WINDOW_DISPLAY,       gtk.keysyms.F1,          NO_MODS_MASK),
 	#the following have no associated gtk.Action
-	(PORT_CONTROLLER_INC, 'equal', 0),
-	(PORT_CONTROLLER_INC, 'plus', 0),
-	(PORT_CONTROLLER_INC, 'KP_Add', 0),
-	(PORT_CONTROLLER_DEC, 'minus', 0),
-	(PORT_CONTROLLER_DEC, 'KP_Subtract', 0),
+	(PORT_CONTROLLER_INC,       gtk.keysyms.equal,       NO_MODS_MASK),
+	(PORT_CONTROLLER_INC,       gtk.keysyms.plus,        NO_MODS_MASK),
+	(PORT_CONTROLLER_INC,       gtk.keysyms.KP_Add,      NO_MODS_MASK),
+	(PORT_CONTROLLER_DEC,       gtk.keysyms.minus,       NO_MODS_MASK),
+	(PORT_CONTROLLER_DEC,       gtk.keysyms.KP_Subtract, NO_MODS_MASK),
 )
 
-_actions_key_dict = dict(((key_name, mod_mask), action_name) for action_name, key_name, mod_mask in _actions_key_list)
-_all_mods_mask = reduce(lambda x, y: x | y, [mod_mask for action_name, key_name, mod_mask in _actions_key_list], 0)
-def get_action_name_from_key_name(key_name, mod_mask=0):
+_actions_key_dict = dict(((key_val, mod_mask), action_name) for action_name, key_val, mod_mask in _actions_key_list)
+_all_mods_mask = reduce(lambda x, y: x | y, [mod_mask for action_name, key_val, mod_mask in _actions_key_list], NO_MODS_MASK)
+def get_action_name_from_key_press(key_val, mod_mask=NO_MODS_MASK):
 	"""
-	Get the action name associated with the key name and mask.
-	Both keyname and mask have to match.
-	@param key_name the name of the key
+	Get the action name associated with the key value and mask.
+	Both the key value and the mask have to match.
+	@param key_val the value of the key
 	@param mod_mask the key press mask (shift, ctrl) 0 for none
 	@return the action name or blank string
 	"""
 	mod_mask &= _all_mods_mask #ignore irrelevant modifiers
-	key_name_mod_mask = (key_name, mod_mask)
-	if key_name_mod_mask in _actions_key_dict: return _actions_key_dict[key_name_mod_mask]
-	return ''
+	key_val_mod_mask = (key_val, mod_mask)
+	try: return _actions_key_dict[key_val_mod_mask]
+	except KeyError: return ''
 
 ######################################################################################################
 # Actions
@@ -162,10 +163,10 @@ def get_accel_group(): return _accel_group
 
 #set the accelerator group, and accelerator path
 #register the key name and mod mask with the accelerator path
-for action_name, key_name, mod_mask in _actions_key_list:
+for action_name, key_val, mod_mask in _actions_key_list:
 	try:
 		accel_path = '<main>/'+action_name
 		get_action_from_name(action_name).set_accel_group(get_accel_group())
 		get_action_from_name(action_name).set_accel_path(accel_path)
-		gtk.accel_map_add_entry(accel_path, gtk.gdk.keyval_from_name(key_name), mod_mask)
+		gtk.accel_map_add_entry(accel_path, key_val, mod_mask)
 	except KeyError: pass #no action was created for this action name
