@@ -79,8 +79,6 @@ class ActionHandler:
 		When not in focus, gtk and the accelerators handle the the key press.
 		@return false to let gtk handle the key action
 		"""
-		#dont allow key presses to queue up
-		if gtk.events_pending(): return True
 		#extract action name from this key press
 		key_name = gtk.gdk.keyval_name(event.keyval)
 		mod_mask = event.state

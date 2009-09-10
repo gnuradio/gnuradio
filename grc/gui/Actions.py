@@ -97,6 +97,7 @@ _actions_key_list = (
 )
 
 _actions_key_dict = dict(((key_name, mod_mask), action_name) for action_name, key_name, mod_mask in _actions_key_list)
+_all_mods_mask = reduce(lambda x, y: x | y, [mod_mask for action_name, key_name, mod_mask in _actions_key_list], 0)
 def get_action_name_from_key_name(key_name, mod_mask=0):
 	"""
 	Get the action name associated with the key name and mask.
@@ -105,6 +106,7 @@ def get_action_name_from_key_name(key_name, mod_mask=0):
 	@param mod_mask the key press mask (shift, ctrl) 0 for none
 	@return the action name or blank string
 	"""
+	mod_mask &= _all_mods_mask #ignore irrelevant modifiers
 	key_name_mod_mask = (key_name, mod_mask)
 	if key_name_mod_mask in _actions_key_dict: return _actions_key_dict[key_name_mod_mask]
 	return ''
