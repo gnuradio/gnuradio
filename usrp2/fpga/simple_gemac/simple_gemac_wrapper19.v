@@ -9,7 +9,7 @@ module simple_gemac_wrapper19
     
     // Client FIFO Interfaces
     input sys_clk,
-    output [35:0] rx_f36_data, output rx_f36_src_rdy, input rx_f36_dst_rdy,
+    output [18:0] rx_f19_data, output rx_f19_src_rdy, input rx_f19_dst_rdy,
     input [18:0] tx_f19_data, input tx_f19_src_rdy, output tx_f19_dst_rdy,
     
     // Wishbone Interface
@@ -69,8 +69,8 @@ module simple_gemac_wrapper19
    
    wire [7:0] 	  rx_ll_data, rx_ll_data2;
    
-   wire [35:0] 	  rx_f36_data_int1;
-   wire 	  rx_f36_src_rdy_int1, rx_f36_dst_rdy_int1;
+   wire [18:0] 	  rx_f19_data_int1;
+   wire 	  rx_f19_src_rdy_int1, rx_f19_dst_rdy_int1;
    
    rxmac_to_ll8 rx_adapt
      (.clk(rx_clk), .reset(rx_reset), .clear(0),
@@ -90,17 +90,17 @@ module simple_gemac_wrapper19
    assign rx_ll_sof2_n 	  = ~rx_ll_sof2;
    assign rx_ll_eof2_n 	  = ~rx_ll_eof2;
    
-   ll8_to_fifo36 ll8_to_fifo36
+   ll8_to_fifo19 ll8_to_fifo19
      (.clk(rx_clk), .reset(rx_reset), .clear(0),
       .ll_data(rx_ll_data2), .ll_sof_n(rx_ll_sof2_n), .ll_eof_n(rx_ll_eof2_n),
       .ll_src_rdy_n(rx_ll_src_rdy2_n), .ll_dst_rdy_n(rx_ll_dst_rdy2_n),
-      .f36_data(rx_f36_data_int1), .f36_src_rdy_o(rx_f36_src_rdy_int1), .f36_dst_rdy_i(rx_f36_dst_rdy_int1));
+      .f19_data(rx_f19_data_int1), .f19_src_rdy_o(rx_f19_src_rdy_int1), .f19_dst_rdy_i(rx_f19_dst_rdy_int1));
 
-   fifo_2clock_cascade #(.WIDTH(36), .SIZE(RXFIFOSIZE)) rx_2clk_fifo
-     (.wclk(rx_clk), .datain(rx_f36_data_int1), 
-      .src_rdy_i(rx_f36_src_rdy_int1), .dst_rdy_o(rx_f36_dst_rdy_int1), .space(rx_fifo_space),
-      .rclk(sys_clk), .dataout(rx_f36_data), 
-      .src_rdy_o(rx_f36_src_rdy), .dst_rdy_i(rx_f36_dst_rdy), .occupied(), .arst(reset));
+   fifo_2clock_cascade #(.WIDTH(19), .SIZE(RXFIFOSIZE)) rx_2clk_fifo
+     (.wclk(rx_clk), .datain(rx_f19_data_int1), 
+      .src_rdy_i(rx_f19_src_rdy_int1), .dst_rdy_o(rx_f19_dst_rdy_int1), .space(rx_fifo_space),
+      .rclk(sys_clk), .dataout(rx_f19_data), 
+      .src_rdy_o(rx_f19_src_rdy), .dst_rdy_i(rx_f19_dst_rdy), .occupied(), .arst(reset));
    
    // TX FIFO Chain
    wire 	  tx_ll_sof, tx_ll_eof, tx_ll_src_rdy, tx_ll_dst_rdy;
@@ -147,7 +147,8 @@ module simple_gemac_wrapper19
       .tx_clk(tx_clk), .tx_reset(tx_reset), .pause_req(pause_req), .pause_time_req(pause_time_req));
    
    wire [31:0] 	  debug_tx, debug_rx;
-   
+
+   /*
    assign debug_tx  = { { tx_ll_data },
 			{ tx_ll_sof, tx_ll_eof, tx_ll_src_rdy, tx_ll_dst_rdy, 
 			  tx_ll_sof2, tx_ll_eof2, tx_ll_src_rdy2, tx_ll_dst_rdy2 },
@@ -156,9 +157,9 @@ module simple_gemac_wrapper19
    assign debug_rx  = { { rx_ll_data },
 			{ rx_ll_sof, rx_ll_eof, rx_ll_src_rdy, rx_ll_dst_rdy, 
 			  rx_ll_sof2, rx_ll_eof2, rx_ll_src_rdy2, rx_ll_dst_rdy2 },
-			{ rx_valid, rx_error, rx_ack, rx_f36_src_rdy_int1, rx_f36_dst_rdy_int1, rx_f36_data_int1[34:32]},
+			{ rx_valid, rx_error, rx_ack, rx_f19_src_rdy_int1, rx_f19_dst_rdy_int1, rx_f19_data_int1[34:32]},
 			{ rx_data} };
-
+    */
    assign debug  = debug_rx;
    
-endmodule // simple_gemac_wrapper18
+endmodule // simple_gemac_wrapper19
