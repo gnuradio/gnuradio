@@ -154,8 +154,9 @@ class PropsDialog(gtk.Dialog):
 		Call the ok response when enter is pressed.
 		@return false to forward the keypress
 		"""
-		keyname = gtk.gdk.keyval_name(event.keyval)
-		if keyname == 'Return': self.response(gtk.RESPONSE_ACCEPT)
+		if event.keyval == gtk.keysyms.Return:
+			self.response(gtk.RESPONSE_ACCEPT)
+			return True #handled here
 		return False #forward the keypress
 
 	def run(self):
