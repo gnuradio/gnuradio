@@ -65,7 +65,7 @@ public:
 					int block_size = 0, int nblocks = 0) = 0;
   
   // ACCESSORS
-  libusb_device_handle *get_libusb_device_handle () const { return d_udh; }
+  libusb_device_handle *get_usb_dev_handle () const { return d_udh; }
 };
 
 
