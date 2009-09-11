@@ -1,7 +1,7 @@
 
 
 module simple_gemac_rx
-  (input clk125, input reset,
+  (input reset,
    input GMII_RX_CLK, input GMII_RX_DV, input GMII_RX_ER, input [7:0] GMII_RXD,
    output rx_clk, output [7:0] rx_data, output reg rx_valid, output rx_error, output reg rx_ack,
    input [47:0] ucast_addr, input [47:0] mcast_addr, 
