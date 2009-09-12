@@ -22,8 +22,8 @@ include $(top_srcdir)/Makefile.common
 EXTRA_DIST = \
 	bootstrap \
 	configure \
-	configure.gnu
-
+	configure.gnu \
+	u2_flash_tool
 
 SUBDIRS = config 
 
