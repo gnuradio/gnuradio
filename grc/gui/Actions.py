@@ -97,20 +97,23 @@ _actions_key_list = (
 	(PORT_CONTROLLER_DEC,       gtk.keysyms.KP_Subtract, NO_MODS_MASK),
 )
 
-_actions_key_dict = dict(((key_val, mod_mask), action_name) for action_name, key_val, mod_mask in _actions_key_list)
-_used_mods_mask = reduce(lambda x, y: x | y, [mod_mask for action_name, key_val, mod_mask in _actions_key_list], NO_MODS_MASK)
-def get_action_name_from_key_press(key_val, mod_mask=NO_MODS_MASK):
+_actions_key_dict = dict(((keyval, mod_mask), action_name) for action_name, keyval, mod_mask in _actions_key_list)
+_used_mods_mask = reduce(lambda x, y: x | y, [mod_mask for action_name, keyval, mod_mask in _actions_key_list], NO_MODS_MASK)
+_keymap = gtk.gdk.keymap_get_default()
+def get_action_name_from_key_press(event):
 	"""
-	Get the action name associated with the key value and mask.
-	Both the key value and the mask have to match.
-	@param key_val the value of the key
-	@param mod_mask the key press mask (shift, ctrl) 0 for none
+	Get the action name associated with the key press event.
+	Both the key value and the mask must have a match.
+	@param event a gtk key press event
 	@return the action name or blank string
 	"""
-	mod_mask &= _used_mods_mask #ignore irrelevant modifiers
-	key_val_mod_mask = (key_val, mod_mask)
-	try: return _actions_key_dict[key_val_mod_mask]
-	except KeyError: return ''
+	#extract the key value and the consumed modifiers
+	keyval, egroup, level, consumed = _keymap.translate_keyboard_state(
+		event.hardware_keycode, event.state, event.group)
+	#get the modifier mask and ignore irrelevant modifiers
+	mod_mask = event.state & ~consumed & _used_mods_mask
+	try: return _actions_key_dict[(keyval, mod_mask)]
+	except KeyError: raise KeyError, 'Keypress: "%s, %s" does not have an associated action'%(gtk.gdk.keyval_name(keyval), mod_mask)
 
 ######################################################################################################
 # Actions
@@ -143,7 +146,7 @@ _actions_list = (
 )
 def get_all_actions(): return _actions_list
 
-_actions_dict = dict((action.get_name(), action) for action in _actions_list)
+_actions_dict = dict((action.get_name(), action) for action in get_all_actions())
 def get_action_from_name(action_name):
 	"""
 	Retrieve the action from the action list.
@@ -152,8 +155,8 @@ def get_action_from_name(action_name):
 	@throw KeyError bad action name
 	@return a gtk action object
 	"""
-	if action_name in _actions_dict: return _actions_dict[action_name]
-	raise KeyError('Action Name: "%s" does not exist'%action_name)
+	try: return _actions_dict[action_name]
+	except KeyError: raise KeyError, 'Action Name: "%s" does not exist'%action_name
 
 ######################################################################################################
 # Accelerators
@@ -163,10 +166,10 @@ def get_accel_group(): return _accel_group
 
 #set the accelerator group, and accelerator path
 #register the key name and mod mask with the accelerator path
-for action_name, key_val, mod_mask in _actions_key_list:
+for action_name, keyval, mod_mask in _actions_key_list:
 	try:
 		accel_path = '<main>/'+action_name
 		get_action_from_name(action_name).set_accel_group(get_accel_group())
 		get_action_from_name(action_name).set_accel_path(accel_path)
-		gtk.accel_map_add_entry(accel_path, key_val, mod_mask)
+		gtk.accel_map_add_entry(accel_path, keyval, mod_mask)
 	except KeyError: pass #no action was created for this action name

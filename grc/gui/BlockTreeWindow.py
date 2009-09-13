@@ -28,6 +28,15 @@ NAME_INDEX = 0
 KEY_INDEX = 1
 DOC_INDEX = 2
 
+DOC_MARKUP_TMPL="""\
+#if $doc
+$encode($doc)#slurp
+#else
+undocumented#slurp
+#end if"""
+
+CAT_MARKUP_TMPL="""Category: $cat"""
+
 class BlockTreeWindow(gtk.VBox):
 	"""The block selection panel."""
 
@@ -97,14 +106,14 @@ class BlockTreeWindow(gtk.VBox):
 				iter = self.treestore.insert_before(self._categories[sub_category[:-1]], None)
 				self.treestore.set_value(iter, NAME_INDEX, '[ %s ]'%cat_name)
 				self.treestore.set_value(iter, KEY_INDEX, '')
-				self.treestore.set_value(iter, DOC_INDEX, Utils.xml_encode('Category: %s'%cat_name))
+				self.treestore.set_value(iter, DOC_INDEX, Utils.parse_template(CAT_MARKUP_TMPL, cat=cat_name))
 				self._categories[sub_category] = iter
 		#add block
 		if block is None: return
 		iter = self.treestore.insert_before(self._categories[category], None)
 		self.treestore.set_value(iter, NAME_INDEX, block.get_name())
 		self.treestore.set_value(iter, KEY_INDEX, block.get_key())
-		self.treestore.set_value(iter, DOC_INDEX, Utils.xml_encode(block.get_doc() or 'undocumented'))
+		self.treestore.set_value(iter, DOC_INDEX, Utils.parse_template(DOC_MARKUP_TMPL, doc=block.get_doc()))
 
 	############################################################
 	## Helper Methods

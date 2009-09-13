@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from Constants import POSSIBLE_ROTATIONS
 from Cheetah.Template import Template
+import gobject
 
 def get_rotated_coordinate(coor, rotation):
 	"""
@@ -54,23 +55,6 @@ def get_angle_from_coordinates((x1,y1), (x2,y2)):
 		if y2 > y1: return 270
 		else: return 90
 
-def xml_encode(string):
-	"""
-	Encode a string into an xml safe string by replacing special characters.
-	Needed for gtk pango markup in labels.
-	@param string the input string
-	@return output string with safe characters
-	"""
-	string = str(string)
-	for char, safe in (
-			('&', '&amp;'),
-			('<', '&lt;'),
-			('>', '&gt;'),
-			('"', '&quot;'),
-			("'", '&apos;'),
-	): string = string.replace(char, safe)
-	return string
-
 def parse_template(tmpl_str, **kwargs):
 	"""
 	Parse the template string with the given args.
@@ -78,5 +62,5 @@ def parse_template(tmpl_str, **kwargs):
 	@param tmpl_str the template as a string
 	@return a string of the parsed template
 	"""
-	kwargs['encode'] = xml_encode
+	kwargs['encode'] = gobject.markup_escape_text
 	return str(Template(tmpl_str, kwargs))

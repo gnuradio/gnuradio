@@ -79,16 +79,11 @@ class ActionHandler:
 		When not in focus, gtk and the accelerators handle the the key press.
 		@return false to let gtk handle the key action
 		"""
-		keyval, egroup, level, consumed = \
-			gtk.gdk.keymap_get_default().translate_keyboard_state(
-			event.hardware_keycode, event.state, event.group)
-		#extract action name from this key press
-		action_name = Actions.get_action_name_from_key_press(keyval, event.state & ~consumed)
-		#handle the action if flow graph is in focus
-		if action_name and self.get_focus_flag():
-			self.handle_states(action_name)
-			return True #handled by this method
-		return False #let gtk handle the key press
+		try: assert self.get_focus_flag()
+		except AssertionError: return False
+		try: self.handle_states(Actions.get_action_name_from_key_press(event))
+		except KeyError: return False
+		return True #handled by this method
 
 	def _quit(self, window, event):
 		"""
@@ -100,13 +95,14 @@ class ActionHandler:
 		self.handle_states(Actions.APPLICATION_QUIT)
 		return True
 
-	def _handle_actions(self, event):
+	def _handle_actions(self, action):
 		"""
 		Handle all of the activate signals from the gtk actions.
 		The action signals derive from clicking on a toolbar or menu bar button.
 		Forward the action to the state handler.
 		"""
-		self.handle_states(event.get_name())
+		self.handle_states(action.get_name())
+		return True
 
 	def handle_states(self, state=''):
 		"""
