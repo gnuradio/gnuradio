@@ -19,10 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from Constants import \
 	NEW_FLOGRAPH_TITLE, DEFAULT_REPORTS_WINDOW_WIDTH
-from Actions import \
-	APPLICATION_QUIT, FLOW_GRAPH_KILL, \
-	FLOW_GRAPH_SAVE, PAGE_CHANGE, \
-	get_accel_group
+import Actions
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -80,7 +77,7 @@ class MainWindow(gtk.Window):
 		self.hpaned = gtk.HPaned()
 		self.add(vbox)
 		#create the menu bar and toolbar
-		self.add_accel_group(get_accel_group())
+		self.add_accel_group(Actions.get_accel_group())
 		vbox.pack_start(Bars.MenuBar(), False)
 		vbox.pack_start(Bars.Toolbar(), False)
 		vbox.pack_start(self.hpaned)
@@ -123,7 +120,7 @@ class MainWindow(gtk.Window):
 		This method in turns calls the state handler to quit.
 		@return true
 		"""
-		APPLICATION_QUIT()
+		Actions.APPLICATION_QUIT()
 		return True
 
 	def _handle_page_change(self, notebook, page, page_num):
@@ -137,7 +134,7 @@ class MainWindow(gtk.Window):
 		"""
 		self.current_page = self.notebook.get_nth_page(page_num)
 		Messages.send_page_switch(self.current_page.get_file_path())
-		PAGE_CHANGE()
+		Actions.PAGE_CHANGE()
 
 	############################################################
 	# Report Window
@@ -223,12 +220,12 @@ class MainWindow(gtk.Window):
 			self._set_page(self.page_to_be_closed)
 		#unsaved? ask the user
 		if not self.page_to_be_closed.get_saved() and self._save_changes():
-			FLOW_GRAPH_SAVE() #try to save
+			Actions.FLOW_GRAPH_SAVE() #try to save
 			if not self.page_to_be_closed.get_saved(): #still unsaved?
 				self.page_to_be_closed = None #set the page to be closed back to None
 				return
 		#stop the flow graph if executing
-		if self.page_to_be_closed.get_pid(): FLOW_GRAPH_KILL()
+		if self.page_to_be_closed.get_pid(): Actions.FLOW_GRAPH_KILL()
 		#remove the page
 		self.notebook.remove_page(self.notebook.page_num(self.page_to_be_closed))
 		if ensure and self.notebook.get_n_pages() == 0: self.new_page() #no pages, make a new one

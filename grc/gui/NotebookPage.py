@@ -17,10 +17,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Actions import FLOW_GRAPH_CLOSE
 import pygtk
 pygtk.require('2.0')
 import gtk
+import Actions
 from StateCache import StateCache
 from Constants import MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT
 from DrawingArea import DrawingArea
@@ -103,7 +103,7 @@ class NotebookPage(gtk.HBox):
 		@param the button
 		"""
 		self.main_window.page_to_be_closed = self
-		FLOW_GRAPH_CLOSE()
+		Actions.FLOW_GRAPH_CLOSE()
 
 	def set_markup(self, markup):
 		"""
