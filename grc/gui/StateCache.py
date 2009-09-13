@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-from Actions import FLOW_GRAPH_UNDO, FLOW_GRAPH_REDO, get_action_from_name
+from Actions import FLOW_GRAPH_UNDO, FLOW_GRAPH_REDO
 from Constants import STATE_CACHE_SIZE
 
 class StateCache(object):
@@ -88,5 +88,5 @@ class StateCache(object):
 		"""
 		Update the undo and redo actions based on the number of next and prev states.
 		"""
-		get_action_from_name(FLOW_GRAPH_REDO).set_sensitive(self.num_next_states != 0)
-		get_action_from_name(FLOW_GRAPH_UNDO).set_sensitive(self.num_prev_states != 0)
+		FLOW_GRAPH_REDO.set_sensitive(self.num_next_states != 0)
+		FLOW_GRAPH_UNDO.set_sensitive(self.num_prev_states != 0)

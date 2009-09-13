@@ -80,9 +80,8 @@ class NotebookPage(gtk.HBox):
 		self.drawing_area = DrawingArea(self.get_flow_graph())
 		self.scrolled_window.add_with_viewport(self.get_drawing_area())
 		self.pack_start(self.scrolled_window)
-		#inject drawing area and handle states into flow graph
+		#inject drawing area into flow graph
 		self.get_flow_graph().drawing_area = self.get_drawing_area()
-		self.get_flow_graph().handle_states = main_window.handle_states
 		self.show_all()
 
 	def get_drawing_area(self): return self.drawing_area
@@ -104,7 +103,7 @@ class NotebookPage(gtk.HBox):
 		@param the button
 		"""
 		self.main_window.page_to_be_closed = self
-		self.main_window.handle_states(FLOW_GRAPH_CLOSE)
+		FLOW_GRAPH_CLOSE()
 
 	def set_markup(self, markup):
 		"""

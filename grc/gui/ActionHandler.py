@@ -52,10 +52,10 @@ class ActionHandler:
 		@param platform platform module
 		"""
 		self.clipboard = None
-		for action in Actions.get_all_actions(): action.connect('activate', self._handle_actions)
+		for action in Actions.get_all_actions(): action.connect('activate', self._handle_action)
 		#setup the main window
-		self.main_window = MainWindow(self.handle_states, platform)
-		self.main_window.connect('delete_event', self._quit)
+		self.main_window = MainWindow(platform)
+		self.main_window.connect('delete-event', self._quit)
 		self.main_window.connect('key-press-event', self._handle_key_press)
 		self.get_page = self.main_window.get_page
 		self.get_flow_graph = self.main_window.get_flow_graph
@@ -65,7 +65,7 @@ class ActionHandler:
 		Messages.send_init(platform)
 		#initialize
 		self.init_file_paths = file_paths
-		self.handle_states(Actions.APPLICATION_INITIALIZE)
+		Actions.APPLICATION_INITIALIZE()
 		#enter the mainloop
 		gtk.main()
 
@@ -81,7 +81,7 @@ class ActionHandler:
 		"""
 		try: assert self.get_focus_flag()
 		except AssertionError: return False
-		try: self.handle_states(Actions.get_action_name_from_key_press(event))
+		try: Actions.get_action_from_key_press(event)()
 		except KeyError: return False
 		return True #handled by this method
 
@@ -92,42 +92,24 @@ class ActionHandler:
 		This method in turns calls the state handler to quit.
 		@return true
 		"""
-		self.handle_states(Actions.APPLICATION_QUIT)
+		Actions.APPLICATION_QUIT()
 		return True
 
-	def _handle_actions(self, action):
-		"""
-		Handle all of the activate signals from the gtk actions.
-		The action signals derive from clicking on a toolbar or menu bar button.
-		Forward the action to the state handler.
-		"""
-		self.handle_states(action.get_name())
-		return True
-
-	def handle_states(self, state=''):
-		"""
-		Handle the state changes in the GUI.
-		Handle all of the state changes that arise from the action handler or other gui and
-		inputs in the application. The state passed to the handle_states method is a string descriping
-		the change. A series of if/elif statements handle the state by greying out action buttons, causing
-		changes in the flow graph, saving/opening files... The handle_states method is passed to the
-		contructors of many of the classes used in this application enabling them to report any state change.
-		@param state a string describing the state change
-		"""
-		#print state
+	def _handle_action(self, action):
+		#print action
 		##################################################
 		# Initalize/Quit
 		##################################################
-		if state == Actions.APPLICATION_INITIALIZE:
+		if action == Actions.APPLICATION_INITIALIZE:
 			for action in Actions.get_all_actions(): action.set_sensitive(False) #set all actions disabled
-			# enable a select few actions
+			#enable a select few actions
 			for action in (
 				Actions.APPLICATION_QUIT, Actions.FLOW_GRAPH_NEW,
 				Actions.FLOW_GRAPH_OPEN, Actions.FLOW_GRAPH_SAVE_AS,
 				Actions.FLOW_GRAPH_CLOSE, Actions.ABOUT_WINDOW_DISPLAY,
 				Actions.FLOW_GRAPH_SCREEN_CAPTURE, Actions.HELP_WINDOW_DISPLAY,
 				Actions.TYPES_WINDOW_DISPLAY,
-			): Actions.get_action_from_name(action).set_sensitive(True)
+			): action.set_sensitive(True)
 			if not self.init_file_paths:
 				self.init_file_paths = Preferences.files_open()
 			if not self.init_file_paths: self.init_file_paths = ['']
@@ -136,26 +118,26 @@ class ActionHandler:
 			if Preferences.file_open() in self.init_file_paths:
 				self.main_window.new_page(Preferences.file_open(), show=True)
 			if not self.get_page():	self.main_window.new_page() #ensure that at least a blank page exists
-		elif state == Actions.APPLICATION_QUIT:
+		elif action == Actions.APPLICATION_QUIT:
 			if self.main_window.close_pages():
 				gtk.main_quit()
 				exit(0)
 		##################################################
 		# Selections
 		##################################################
-		elif state == Actions.ELEMENT_SELECT:
+		elif action == Actions.ELEMENT_SELECT:
 			pass #do nothing, update routines below
-		elif state == Actions.NOTHING_SELECT:
+		elif action == Actions.NOTHING_SELECT:
 			self.get_flow_graph().unselect()
 		##################################################
 		# Enable/Disable
 		##################################################
-		elif state == Actions.BLOCK_ENABLE:
+		elif action == Actions.BLOCK_ENABLE:
 			if self.get_flow_graph().enable_selected(True):
 				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)
-		elif state == Actions.BLOCK_DISABLE:
+		elif action == Actions.BLOCK_DISABLE:
 			if self.get_flow_graph().enable_selected(False):
 				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
@@ -163,12 +145,12 @@ class ActionHandler:
 		##################################################
 		# Cut/Copy/Paste
 		##################################################
-		elif state == Actions.BLOCK_CUT:
-			self.handle_states(Actions.BLOCK_COPY)
-			self.handle_states(Actions.ELEMENT_DELETE)
-		elif state == Actions.BLOCK_COPY:
+		elif action == Actions.BLOCK_CUT:
+			Actions.BLOCK_COPY()
+			Actions.ELEMENT_DELETE()
+		elif action == Actions.BLOCK_COPY:
 			self.clipboard = self.get_flow_graph().copy_to_clipboard()
-		elif state == Actions.BLOCK_PASTE:
+		elif action == Actions.BLOCK_PASTE:
 			if self.clipboard:
 				self.get_flow_graph().paste_from_clipboard(self.clipboard)
 				self.get_flow_graph().update()
@@ -177,46 +159,46 @@ class ActionHandler:
 		##################################################
 		# Move/Rotate/Delete/Create
 		##################################################
-		elif state == Actions.BLOCK_MOVE:
+		elif action == Actions.BLOCK_MOVE:
 			self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 			self.get_page().set_saved(False)
-		elif state == Actions.BLOCK_ROTATE_CCW:
+		elif action == Actions.BLOCK_ROTATE_CCW:
 			if self.get_flow_graph().rotate_selected(90):
 				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)
-		elif state == Actions.BLOCK_ROTATE_CW:
+		elif action == Actions.BLOCK_ROTATE_CW:
 			if self.get_flow_graph().rotate_selected(-90):
 				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)
-		elif state == Actions.ELEMENT_DELETE:
+		elif action == Actions.ELEMENT_DELETE:
 			if self.get_flow_graph().remove_selected():
 				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
-				self.handle_states(Actions.NOTHING_SELECT)
+				Actions.NOTHING_SELECT()
 				self.get_page().set_saved(False)
-		elif state == Actions.ELEMENT_CREATE:
+		elif action == Actions.ELEMENT_CREATE:
 			self.get_flow_graph().update()
 			self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
-			self.handle_states(Actions.NOTHING_SELECT)
+			Actions.NOTHING_SELECT()
 			self.get_page().set_saved(False)
-		elif state == Actions.BLOCK_INC_TYPE:
+		elif action == Actions.BLOCK_INC_TYPE:
 			if self.get_flow_graph().type_controller_modify_selected(1):
 				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)
-		elif state == Actions.BLOCK_DEC_TYPE:
+		elif action == Actions.BLOCK_DEC_TYPE:
 			if self.get_flow_graph().type_controller_modify_selected(-1):
 				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)
-		elif state == Actions.PORT_CONTROLLER_INC:
+		elif action == Actions.PORT_CONTROLLER_INC:
 			if self.get_flow_graph().port_controller_modify_selected(1):
 				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
 				self.get_page().set_saved(False)
-		elif state == Actions.PORT_CONTROLLER_DEC:
+		elif action == Actions.PORT_CONTROLLER_DEC:
 			if self.get_flow_graph().port_controller_modify_selected(-1):
 				self.get_flow_graph().update()
 				self.get_page().get_state_cache().save_new_state(self.get_flow_graph().export_data())
@@ -224,16 +206,16 @@ class ActionHandler:
 		##################################################
 		# Window stuff
 		##################################################
-		elif state == Actions.ABOUT_WINDOW_DISPLAY:
+		elif action == Actions.ABOUT_WINDOW_DISPLAY:
 			Dialogs.AboutDialog(self.get_flow_graph().get_parent())
-		elif state == Actions.HELP_WINDOW_DISPLAY:
+		elif action == Actions.HELP_WINDOW_DISPLAY:
 			Dialogs.HelpDialog()
-		elif state == Actions.TYPES_WINDOW_DISPLAY:
+		elif action == Actions.TYPES_WINDOW_DISPLAY:
 			Dialogs.TypesDialog(self.get_flow_graph().get_parent())
 		##################################################
 		# Param Modifications
 		##################################################
-		elif state == Actions.BLOCK_PARAM_MODIFY:
+		elif action == Actions.BLOCK_PARAM_MODIFY:
 			selected_block = self.get_flow_graph().get_selected_block()
 			if selected_block:
 				if PropsDialog(selected_block).run():
@@ -249,14 +231,14 @@ class ActionHandler:
 		##################################################
 		# Undo/Redo
 		##################################################
-		elif state == Actions.FLOW_GRAPH_UNDO:
+		elif action == Actions.FLOW_GRAPH_UNDO:
 			n = self.get_page().get_state_cache().get_prev_state()
 			if n:
 				self.get_flow_graph().unselect()
 				self.get_flow_graph().import_data(n)
 				self.get_flow_graph().update()
 				self.get_page().set_saved(False)
-		elif state == Actions.FLOW_GRAPH_REDO:
+		elif action == Actions.FLOW_GRAPH_REDO:
 			n = self.get_page().get_state_cache().get_next_state()
 			if n:
 				self.get_flow_graph().unselect()
@@ -266,19 +248,19 @@ class ActionHandler:
 		##################################################
 		# New/Open/Save/Close
 		##################################################
-		elif state == Actions.FLOW_GRAPH_NEW:
+		elif action == Actions.FLOW_GRAPH_NEW:
 			self.main_window.new_page()
-		elif state == Actions.FLOW_GRAPH_OPEN:
+		elif action == Actions.FLOW_GRAPH_OPEN:
 			file_paths = OpenFlowGraphFileDialog(self.get_page().get_file_path()).run()
 			if file_paths: #open a new page for each file, show only the first
 				for i,file_path in enumerate(file_paths):
 					self.main_window.new_page(file_path, show=(i==0))
-		elif state == Actions.FLOW_GRAPH_CLOSE:
+		elif action == Actions.FLOW_GRAPH_CLOSE:
 			self.main_window.close_page()
-		elif state == Actions.FLOW_GRAPH_SAVE:
+		elif action == Actions.FLOW_GRAPH_SAVE:
 			#read-only or undefined file path, do save-as
 			if self.get_page().get_read_only() or not self.get_page().get_file_path():
-				self.handle_states(Actions.FLOW_GRAPH_SAVE_AS)
+				Actions.FLOW_GRAPH_SAVE_AS()
 			#otherwise try to save
 			else:
 				try:
@@ -287,12 +269,12 @@ class ActionHandler:
 				except IOError:
 					Messages.send_fail_save(self.get_page().get_file_path())
 					self.get_page().set_saved(False)
-		elif state == Actions.FLOW_GRAPH_SAVE_AS:
+		elif action == Actions.FLOW_GRAPH_SAVE_AS:
 			file_path = SaveFlowGraphFileDialog(self.get_page().get_file_path()).run()
 			if file_path is not None:
 				self.get_page().set_file_path(file_path)
-				self.handle_states(Actions.FLOW_GRAPH_SAVE)
-		elif state == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
+				Actions.FLOW_GRAPH_SAVE()
+		elif action == Actions.FLOW_GRAPH_SCREEN_CAPTURE:
 			file_path = SaveImageFileDialog(self.get_page().get_file_path()).run()
 			if file_path is not None:
 				pixbuf = self.get_flow_graph().get_drawing_area().get_pixbuf()
@@ -300,10 +282,10 @@ class ActionHandler:
 		##################################################
 		# Gen/Exec/Stop
 		##################################################
-		elif state == Actions.FLOW_GRAPH_GEN:
+		elif action == Actions.FLOW_GRAPH_GEN:
 			if not self.get_page().get_pid():
 				if not self.get_page().get_saved() or not self.get_page().get_file_path():
-					self.handle_states(Actions.FLOW_GRAPH_SAVE) #only save if file path missing or not saved
+					Actions.FLOW_GRAPH_SAVE() #only save if file path missing or not saved
 				if self.get_page().get_saved() and self.get_page().get_file_path():
 					generator = self.get_page().get_generator()
 					try:
@@ -311,37 +293,37 @@ class ActionHandler:
 						generator.write()
 					except Exception,e: Messages.send_fail_gen(e)
 				else: self.generator = None
-		elif state == Actions.FLOW_GRAPH_EXEC:
+		elif action == Actions.FLOW_GRAPH_EXEC:
 			if not self.get_page().get_pid():
-				self.handle_states(Actions.FLOW_GRAPH_GEN)
+				Actions.FLOW_GRAPH_GEN()
 				if self.get_page().get_saved() and self.get_page().get_file_path():
 					ExecFlowGraphThread(self)
-		elif state == Actions.FLOW_GRAPH_KILL:
+		elif action == Actions.FLOW_GRAPH_KILL:
 			if self.get_page().get_pid():
 				try: os.kill(self.get_page().get_pid(), signal.SIGKILL)
 				except: print "could not kill pid: %s"%self.get_page().get_pid()
-		elif state == '': #pass and run the global actions
+		elif action == Actions.PAGE_CHANGE: #pass and run the global actions
 			pass
-		else: print '!!! State "%s" not handled !!!'%state
+		else: print '!!! Action "%s" not handled !!!'%action
 		##################################################
 		# Global Actions for all States
 		##################################################
 		#update general buttons
-		Actions.get_action_from_name(Actions.ELEMENT_DELETE).set_sensitive(bool(self.get_flow_graph().get_selected_elements()))
-		Actions.get_action_from_name(Actions.BLOCK_PARAM_MODIFY).set_sensitive(bool(self.get_flow_graph().get_selected_block()))
-		Actions.get_action_from_name(Actions.BLOCK_ROTATE_CCW).set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
-		Actions.get_action_from_name(Actions.BLOCK_ROTATE_CW).set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+		Actions.ELEMENT_DELETE.set_sensitive(bool(self.get_flow_graph().get_selected_elements()))
+		Actions.BLOCK_PARAM_MODIFY.set_sensitive(bool(self.get_flow_graph().get_selected_block()))
+		Actions.BLOCK_ROTATE_CCW.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+		Actions.BLOCK_ROTATE_CW.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
 		#update cut/copy/paste
-		Actions.get_action_from_name(Actions.BLOCK_CUT).set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
-		Actions.get_action_from_name(Actions.BLOCK_COPY).set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
-		Actions.get_action_from_name(Actions.BLOCK_PASTE).set_sensitive(bool(self.clipboard))
+		Actions.BLOCK_CUT.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+		Actions.BLOCK_COPY.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+		Actions.BLOCK_PASTE.set_sensitive(bool(self.clipboard))
 		#update enable/disable
-		Actions.get_action_from_name(Actions.BLOCK_ENABLE).set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
-		Actions.get_action_from_name(Actions.BLOCK_DISABLE).set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+		Actions.BLOCK_ENABLE.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
+		Actions.BLOCK_DISABLE.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))
 		#set the exec and stop buttons
 		self.update_exec_stop()
 		#saved status
-		Actions.get_action_from_name(Actions.FLOW_GRAPH_SAVE).set_sensitive(not self.get_page().get_saved())
+		Actions.FLOW_GRAPH_SAVE.set_sensitive(not self.get_page().get_saved())
 		self.main_window.update()
 		try: #set the size of the flow graph area (if changed)
 			new_size = self.get_flow_graph().get_option('window_size')
@@ -351,6 +333,7 @@ class ActionHandler:
 		#draw the flow graph
 		self.get_flow_graph().update_selected()
 		self.get_flow_graph().queue_draw()
+		return True #action was handled
 
 	def update_exec_stop(self):
 		"""
@@ -358,9 +341,9 @@ class ActionHandler:
 		Lock and unlock the mutex for race conditions with exec flow graph threads.
 		"""
 		sensitive = self.get_flow_graph().is_valid() and not self.get_page().get_pid()
-		Actions.get_action_from_name(Actions.FLOW_GRAPH_GEN).set_sensitive(sensitive)
-		Actions.get_action_from_name(Actions.FLOW_GRAPH_EXEC).set_sensitive(sensitive)
-		Actions.get_action_from_name(Actions.FLOW_GRAPH_KILL).set_sensitive(self.get_page().get_pid() != None)
+		Actions.FLOW_GRAPH_GEN.set_sensitive(sensitive)
+		Actions.FLOW_GRAPH_EXEC.set_sensitive(sensitive)
+		Actions.FLOW_GRAPH_KILL.set_sensitive(self.get_page().get_pid() != None)
 
 class ExecFlowGraphThread(Thread):
 	"""Execute the flow graph as a new process and wait on it to finish."""

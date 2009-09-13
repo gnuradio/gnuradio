@@ -86,7 +86,7 @@ class FlowGraph(Element):
 		block.set_coordinate(coor)
 		block.set_rotation(0)
 		block.get_param('id').set_value(id)
-		self.handle_states(ELEMENT_CREATE)
+		ELEMENT_CREATE()
 
 	###########################################################################
 	# Copy Paste
@@ -409,7 +409,7 @@ class FlowGraph(Element):
 			self._old_selected_port is not self._new_selected_port:
 			try:
 				self.connect(self._old_selected_port, self._new_selected_port)
-				self.handle_states(ELEMENT_CREATE)
+				ELEMENT_CREATE()
 			except: Messages.send_fail_connection()
 			self._old_selected_port = None
 			self._new_selected_port = None
@@ -424,7 +424,7 @@ class FlowGraph(Element):
 			self._selected_elements = list(
 				set.union(old_elements, new_elements) - set.intersection(old_elements, new_elements)
 			)
-		self.handle_states(ELEMENT_SELECT)
+		ELEMENT_SELECT()
 
 	##########################################################################
 	## Event Handlers
@@ -446,7 +446,7 @@ class FlowGraph(Element):
 		#double click detected, bring up params dialog if possible
 		if double_click and self.get_selected_block():
 			self.mouse_pressed = False
-			self.handle_states(BLOCK_PARAM_MODIFY)
+			BLOCK_PARAM_MODIFY()
 
 	def handle_mouse_button_release(self, left_click, coordinate):
 		"""
@@ -457,7 +457,7 @@ class FlowGraph(Element):
 		self.time = 0
 		self.mouse_pressed = False
 		if self.element_moved:
-			self.handle_states(BLOCK_MOVE)
+			BLOCK_MOVE()
 			self.element_moved = False
 		self.update_selected_elements()
 
@@ -487,7 +487,7 @@ class FlowGraph(Element):
 				adj.emit('changed')
 		#remove the connection if selected in drag event
 		if len(self.get_selected_elements()) == 1 and self.get_selected_element().is_connection():
-			self.handle_states(ELEMENT_DELETE)
+			ELEMENT_DELETE()
 		#move the selected elements and record the new coordinate
 		X, Y = self.get_coordinate()
 		if not self.get_ctrl_mask(): self.move_selected((int(x - X), int(y - Y)))

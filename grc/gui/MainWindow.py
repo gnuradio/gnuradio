@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -21,7 +21,8 @@ from Constants import \
 	NEW_FLOGRAPH_TITLE, DEFAULT_REPORTS_WINDOW_WIDTH
 from Actions import \
 	APPLICATION_QUIT, FLOW_GRAPH_KILL, \
-	FLOW_GRAPH_SAVE, get_accel_group
+	FLOW_GRAPH_SAVE, PAGE_CHANGE, \
+	get_accel_group
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -67,14 +68,13 @@ PAGE_TITLE_MARKUP_TMPL = """\
 class MainWindow(gtk.Window):
 	"""The topmost window with menus, the tool bar, and other major windows."""
 
-	def __init__(self, handle_states, platform):
+	def __init__(self, platform):
 		"""
-		MainWindow contructor.
-		@param handle_states the callback function
+		MainWindow contructor
+		Setup the menu, toolbar, flowgraph editor notebook, block selection window...
 		"""
 		self._platform = platform
 		#setup window
-		self.handle_states = handle_states
 		gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
 		vbox = gtk.VBox()
 		self.hpaned = gtk.HPaned()
@@ -123,7 +123,7 @@ class MainWindow(gtk.Window):
 		This method in turns calls the state handler to quit.
 		@return true
 		"""
-		self.handle_states(APPLICATION_QUIT)
+		APPLICATION_QUIT()
 		return True
 
 	def _handle_page_change(self, notebook, page, page_num):
@@ -137,7 +137,7 @@ class MainWindow(gtk.Window):
 		"""
 		self.current_page = self.notebook.get_nth_page(page_num)
 		Messages.send_page_switch(self.current_page.get_file_path())
-		self.handle_states()
+		PAGE_CHANGE()
 
 	############################################################
 	# Report Window
@@ -223,12 +223,12 @@ class MainWindow(gtk.Window):
 			self._set_page(self.page_to_be_closed)
 		#unsaved? ask the user
 		if not self.page_to_be_closed.get_saved() and self._save_changes():
-			self.handle_states(FLOW_GRAPH_SAVE) #try to save
+			FLOW_GRAPH_SAVE() #try to save
 			if not self.page_to_be_closed.get_saved(): #still unsaved?
 				self.page_to_be_closed = None #set the page to be closed back to None
 				return
 		#stop the flow graph if executing
-		if self.page_to_be_closed.get_pid(): self.handle_states(FLOW_GRAPH_KILL)
+		if self.page_to_be_closed.get_pid(): FLOW_GRAPH_KILL()
 		#remove the page
 		self.notebook.remove_page(self.notebook.page_num(self.page_to_be_closed))
 		if ensure and self.notebook.get_n_pages() == 0: self.new_page() #no pages, make a new one
