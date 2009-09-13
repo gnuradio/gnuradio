@@ -57,7 +57,7 @@ class BlockTreeWindow(gtk.VBox):
 		self.treeview = gtk.TreeView(self.treestore)
 		self.treeview.set_enable_search(False) #disable pop up search box
 		self.treeview.add_events(gtk.gdk.BUTTON_PRESS_MASK)
-		self.treeview.connect('button_press_event', self._handle_mouse_button_press)
+		self.treeview.connect('button-press-event', self._handle_mouse_button_press)
 		selection = self.treeview.get_selection()
 		selection.set_mode('single')
 		selection.connect('changed', self._handle_selection_change)

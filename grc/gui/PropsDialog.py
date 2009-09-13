@@ -82,7 +82,7 @@ class PropsDialog(gtk.Dialog):
 		vbox.pack_start(self._error_box, False)
 		vbox.pack_start(self._docs_box, False)
 		#connect events
-		self.connect('key_press_event', self._handle_key_press)
+		self.connect('key-press-event', self._handle_key_press)
 		self.connect('show', self._update_gui)
 		#show all (performs initial gui update)
 		self.show_all()
