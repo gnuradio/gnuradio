@@ -29,13 +29,12 @@ NO_MODS_MASK = 0
 _actions_keypress_dict = dict()
 _keymap = gtk.gdk.keymap_get_default()
 _used_mods_mask = NO_MODS_MASK
-def get_action_from_key_press(event):
+def handle_key_press(event):
 	"""
-	Get the action associated with the key press event.
+	Call the action associated with the key press event.
 	Both the key value and the mask must have a match.
 	@param event a gtk key press event
-	@throws a key error when no action matches
-	@return the action object
+	@return true if handled
 	"""
 	_used_mods_mask = reduce(lambda x, y: x | y, [mod_mask for keyval, mod_mask in _actions_keypress_dict], NO_MODS_MASK)
 	#extract the key value and the consumed modifiers
@@ -43,8 +42,10 @@ def get_action_from_key_press(event):
 		event.hardware_keycode, event.state, event.group)
 	#get the modifier mask and ignore irrelevant modifiers
 	mod_mask = event.state & ~consumed & _used_mods_mask
-	try: return _actions_keypress_dict[(keyval, mod_mask)]
-	except KeyError: raise KeyError, 'Keypress: "%s, %s" does not have an associated action'%(gtk.gdk.keyval_name(keyval), mod_mask)
+	#look up the keypress and call the action
+	try: _actions_keypress_dict[(keyval, mod_mask)]()
+	except KeyError: return False #not handled
+	return True #handled here
 
 _all_actions_list = list()
 def get_all_actions(): return _all_actions_list

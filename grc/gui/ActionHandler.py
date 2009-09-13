@@ -81,9 +81,7 @@ class ActionHandler:
 		"""
 		try: assert self.get_focus_flag()
 		except AssertionError: return False
-		try: Actions.get_action_from_key_press(event)()
-		except KeyError: return False
-		return True #handled by this method
+		return Actions.handle_key_press(event)
 
 	def _quit(self, window, event):
 		"""
