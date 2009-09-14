@@ -29,7 +29,7 @@
 #include "usrp_interfaces.h"
 #include "fpga_regs_common.h"
 #include "fpga_regs_standard.h"
-#include "fusb.h"
+#include "fusb_libusb1_base.h"
 #include "db_boards.h"
 #include <libusb-1.0/libusb.h>
 #include <stdexcept>

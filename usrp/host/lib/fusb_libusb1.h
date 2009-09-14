@@ -23,7 +23,7 @@
 #ifndef _FUSB_LIBUSB1_H_
 #define _FUSB_LIBUSB1_H_
 
-#include <fusb.h>
+#include <fusb_libusb1_base.h>
 #include <list>
 
 struct libusb_transfer;

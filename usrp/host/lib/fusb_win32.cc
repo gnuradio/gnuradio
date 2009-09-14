@@ -20,9 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-//#ifdef HAVE_CONFIG_H
-//#include "config.h"
-//#endif
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <fusb_win32.h>
 #include <usb.h>

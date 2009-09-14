@@ -61,7 +61,9 @@ BUILT_SOURCES += usrp_dbid.cc \
 
 generic_CODE = 				\
 	fusb_generic.cc			\
-	fusb_sysconfig_generic.cc
+	fusb_sysconfig_generic.cc	\
+	usrp_prims_libusb0.cc		\
+	usrp_basic_libusb0.cc
 
 darwin_CODE =				\
 	fusb_darwin.cc			\
@@ -87,7 +89,9 @@ linux_CODE =				\
 
 ra_wb_CODE =				\
 	fusb_ra_wb.cc			\
-	fusb_sysconfig_ra_wb.cc
+	fusb_sysconfig_ra_wb.cc		\
+	usrp_prims_libusb0.cc		\
+	usrp_basic_libusb0.cc
 
 libusb1_CODE =				\
 	fusb_libusb1.cc			\
@@ -162,6 +166,7 @@ noinst_HEADERS =			\
 	db_boards.h			\
 	db_util.h			\
 	fusb.h				\
+	fusb_libusb1_base.h		\
 	fusb_darwin.h			\
 	fusb_generic.h			\
 	fusb_linux.h			\

@@ -20,16 +20,23 @@
  * Boston, MA 02110-1301, USA.
  */
 
-//#ifdef HAVE_CONFIG_H
-//#include "config.h"
-//#endif
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#ifdef HAVE_LIBUSB_1
+#include "fusb_libusb1_base.h"
+#include <libusb-1.0/libusb.h>
+#else
+#include "fusb.h"
+#include <usb.h>
+#endif
 
 #include "usrp/usrp_basic.h"
 #include "usrp/usrp_prims.h"
 #include "usrp_interfaces.h"
 #include "fpga_regs_common.h"
 #include "fpga_regs_standard.h"
-#include "fusb.h"
 #include "db_boards.h"
 #include <stdexcept>
 #include <assert.h>
@@ -37,12 +44,6 @@
 #include <ad9862.h>
 #include <string.h>
 #include <cstdio>
-
-#ifdef HAVE_LIBUSB_1
-#include <libusb-1.0/libusb.h>
-#else
-#include <usb.h>
-#endif
 
 using namespace ad9862;
 

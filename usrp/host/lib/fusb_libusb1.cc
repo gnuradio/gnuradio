@@ -20,9 +20,9 @@
  * Boston, MA 02110-1301, USA.
  */
 
-//#ifdef HAVE_CONFIG_H
-//#include "config.h"
-//#endif
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <fusb_libusb1.h>
 #include <libusb-1.0/libusb.h>

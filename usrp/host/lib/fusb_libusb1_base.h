@@ -22,12 +22,10 @@
 
 // Fast USB interface
 
-#ifndef _FUSB_H_
-#define _FUSB_H_
+#ifndef _FUSB_LIBUSB1_BASE_H_
+#define _FUSB_LIBUSB1_BASE_H_
 
-struct	usb_dev_handle;
-typedef usb_dev_handle libusb_device_handle;
-
+struct  libusb_device_handle;
 struct 	libusb_context;
 class   fusb_ephandle;
 
@@ -138,4 +136,5 @@ public:
 
 };
 
-#endif /* _FUSB_H_ */
+#endif /*_FUSB_LIBUSB1_BASE_H_ */
+

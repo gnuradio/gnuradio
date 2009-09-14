@@ -24,6 +24,12 @@
 #include "config.h"
 #endif
 
+#ifdef HAVE_LIBUSB_1 
+#include <libusb-1.0/libusb.h>
+#else
+#include <usb.h>
+#endif
+
 #include "usrp/usrp_prims.h"
 #include "usrp_commands.h"
 #include "usrp_ids.h"
@@ -41,12 +47,6 @@
 #include <ad9862.h>
 #include <assert.h>
 #include "std_paths.h"
-
-#ifdef HAVE_LIBUSB_1 
-#include <libusb-1.0/libusb.h>
-#else
-#include <usb.h>
-#endif
 
 extern "C" {
 #include "md5.h"
