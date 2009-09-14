@@ -118,6 +118,7 @@ _EOF_
         if test x$have_libusb1 = xyes; then
           echo 'struct libusb_device;' >> $tmpfile
           echo 'struct libusb_device_handle;' >> $tmpfile
+          echo 'struct libusb_device_descriptor;' >> $tmpfile
           echo >> $tmpfile
         fi
 
@@ -132,9 +133,9 @@ _EOF_
       have_libusb1=$have_libusb1
     ])
 
-      AC_SUBST(USB_LIBS)
-      ifelse([$1], , :, [$1])
+    AC_SUBST(USB_LIBS)
+    ifelse([$2], , :, [$2])
   else
-      ifelse([$2], , :, [$2])
+    ifelse([$3], , :, [$3])
   fi
 ])

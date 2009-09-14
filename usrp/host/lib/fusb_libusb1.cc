@@ -105,7 +105,7 @@ alloc_lut (fusb_ephandle_libusb1 *self, int buffer_length, int endpoint,
     write_buffer = new unsigned char [buffer_length];
 
   // We need the base class libusb_device_handle
-  libusb_device_handle *dev_handle = dh->get_libusb_device_handle();
+  libusb_device_handle *dev_handle = dh->get_usb_dev_handle();
 
   // Load the libusb_transfer for bulk transfer
   libusb_fill_bulk_transfer (lut,		// transfer

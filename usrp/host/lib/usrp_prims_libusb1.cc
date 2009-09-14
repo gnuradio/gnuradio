@@ -26,10 +26,6 @@
 
 #include "usrp/usrp_prims.h"
 #include "usrp_commands.h"
-#include "usrp_ids.h"
-#include "usrp_i2c_addr.h"
-#include "fpga_regs_common.h"
-#include "fpga_regs_standard.h"
 #include <libusb-1.0/libusb.h>
 #include <errno.h>
 #include <stdio.h>
@@ -37,11 +33,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <time.h>		// FIXME should check with autoconf (nanosleep)
-#include <algorithm>
 #include <ad9862.h>
 #include <assert.h>
-#include "std_paths.h"
 
 extern "C" {
 #include "md5.h"
@@ -79,9 +72,9 @@ _get_usb_string_descriptor (struct libusb_device_handle *udh, int index,
 }
 
 int
-_usb_control_transfer (struct libusb_dev_handle *udh, int request_type,
-                      int request, int value, int index,
-                      unsigned char *data, int length, unsigned int timeout)
+_usb_control_transfer (struct libusb_device_handle *udh, int request_type,
+                       int request, int value, int index,
+                       unsigned char *data, int length, unsigned int timeout)
 {
   return libusb_control_transfer (udh, request_type, request, value, index,
                                   data, length, timeout);

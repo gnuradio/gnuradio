@@ -45,7 +45,7 @@ AC_DEFUN([GRC_USRP],[
         AC_CHECK_FUNCS([sigaction snprintf])
 
 	dnl Make sure libusb version is installed; required for legacy USB
-        USRP_LIBUSB([$req_libusb1],[passed=no;AC_MSG_RESULT([Unable to find dependency libusb.])])
+        USRP_LIBUSB([$req_libusb1],[],[passed=no;AC_MSG_RESULT([Unable to find dependency libusb.])])
 
 	dnl Make sure SDCC >= 2.4.0 is available.
         USRP_SDCC([2.4.0],[],[passed=no;AC_MSG_RESULT([Unable to find firmware compiler SDCC.])])
