@@ -26,10 +26,7 @@
 
 #include "usrp/usrp_prims.h"
 #include "usrp_commands.h"
-#include "usrp_ids.h"
-#include "usrp_i2c_addr.h"
-#include "fpga_regs_common.h"
-#include "fpga_regs_standard.h"
+//#include "usrp_ids.h"
 #include <usb.h>
 #include <errno.h>
 #include <stdio.h>
@@ -37,8 +34,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <time.h>		// FIXME should check with autoconf (nanosleep)
-#include <algorithm>
 #include <ad9862.h>
 #include <assert.h>
 
@@ -46,23 +41,33 @@ extern "C" {
 #include "md5.h"
 };
 
-#define VERBOSE 0
-
 using namespace ad9862;
 
-static const int FIRMWARE_HASH_SLOT	= 0;
-static const int FPGA_HASH_SLOT 	= 1;
+struct usb_device_descriptor
+get_usb_device_descriptor (struct usb_device *q)
+{
+  return q->descriptor;
+}
 
-static const int hash_slot_addr[2] = {
-  USRP_HASH_SLOT_0_ADDR,
-  USRP_HASH_SLOT_1_ADDR
-};
+struct usb_device *
+get_usb_device (struct usb_dev_handle *udh)
+{
+  return usb_device (udh);
+}
 
-static const char *default_firmware_filename = "std.ihx";
-static const char *default_fpga_filename     = "std_2rxhb_2tx.rbf";
+int
+usb_control_transfer (struct usb_dev_handle *udh, int request_type,
+                      int request, int value, int index,
+                      unsigned char *data, int length, unsigned int timeout)
+{
+  return usb_control_msg (udh, request_type, request, value, index,
+                          (char*) *data, length, (int) timeout);
 
-#include "std_paths.h"
-#include <stdio.h>
+}
+
+
+// ----------------------------------------------------------------
+
 
 void
 usrp_one_time_init (libusb_context **ctx)
@@ -84,41 +89,9 @@ usrp_rescan ()
   usb_find_devices ();
 }
 
-// ----------------------------------------------------------------
-
-/*
- * q must be a real USRP, not an FX2.  Return its hardware rev number.
- */
-int
-usrp_hw_rev (struct usb_device *q)
-{
-  return q->descriptor.bcdDevice & 0x00FF;
-}
-
-/*
- * q must be a real USRP, not an FX2.  Return true if it's configured.
- */
-bool
-_usrp_configured_p (struct usb_device *q)
-{
-  return (q->descriptor.bcdDevice & 0xFF00) != 0;
-}
-
-bool
-usrp_usrp_p (struct usb_device *q)
-{
-  return (q->descriptor.idVendor == USB_VID_FSF
-	  && q->descriptor.idProduct == USB_PID_FSF_USRP);
-}
-
-bool
-usrp_fx2_p (struct usb_device *q)
-{
-  return (q->descriptor.idVendor == USB_VID_CYPRESS
-	  && q->descriptor.idProduct == USB_PID_CYPRESS_FX2);
-}
 
 // ----------------------------------------------------------------
+
 
 struct usb_device *
 usrp_find_device (int nth, bool fx2_ok_p, libusb_context *ctx)
@@ -201,37 +174,10 @@ usrp_close_interface (struct usb_dev_handle *udh)
   return usb_close (udh) == 0;
 }
 
-// ----------------------------------------------------------------
-// write internal ram using Cypress vendor extension
-
-bool
-write_internal_ram (struct usb_dev_handle *udh, unsigned char *buf,
-		    int start_addr, size_t len)
-{
-  int addr;
-  int n;
-  int a;
-  int quanta = MAX_EP0_PKTSIZE;
-
-  for (addr = start_addr; addr < start_addr + (int) len; addr += quanta){
-    n = len + start_addr - addr;
-    if (n > quanta)
-      n = quanta;
-
-    a = usb_control_msg (udh, 0x40, 0xA0,
-			 addr, 0, (char *)(buf + (addr - start_addr)), n, 1000);
-
-    if (a < 0){
-      fprintf(stderr,"write_internal_ram failed: %s\n", usb_strerror());
-      return false;
-    }
-  }
-  return true;
-}
-
 
 // ----------------------------------------------------------------
 // write vendor extension command to USRP
+
 
 int
 write_cmd (struct usb_dev_handle *udh,
@@ -252,75 +198,8 @@ write_cmd (struct usb_dev_handle *udh,
 }
 
 
-bool
-usrp_set_hash (struct usb_dev_handle *udh, int which,
-	       const unsigned char hash[USRP_HASH_SIZE])
-{
-  which &= 1;
-  
-  // we use the Cypress firmware down load command to jam it in.
-  int r = usb_control_msg (udh, 0x40, 0xa0, hash_slot_addr[which], 0,
-			   (char *) hash, USRP_HASH_SIZE, 1000);
-  return r == USRP_HASH_SIZE;
-}
-
-bool
-usrp_get_hash (struct usb_dev_handle *udh, int which, 
-	       unsigned char hash[USRP_HASH_SIZE])
-{
-  which &= 1;
-  
-  // we use the Cypress firmware upload command to fetch it.
-  int r = usb_control_msg (udh, 0xc0, 0xa0, hash_slot_addr[which], 0,
-			   (char *) hash, USRP_HASH_SIZE, 1000);
-  return r == USRP_HASH_SIZE;
-}
-
-bool
-usrp_write_fpga_reg (struct usb_dev_handle *udh, int reg, int value)
-{
-  switch (usrp_hw_rev (usb_device (udh))){
-  case 0:			// not supported ;)
-    abort();	
-
-  default:
-    return usrp1_fpga_write (udh, reg, value);
-  }
-}
-
-bool
-usrp_read_fpga_reg (struct usb_dev_handle *udh, int reg, int *value)
-{
-  switch (usrp_hw_rev (usb_device (udh))){
-  case 0:		// not supported ;)
-    abort();
-    
-  default:
-    return usrp1_fpga_read (udh, reg, value);
-  }
-}
-
-
-void
-power_down_9862s (struct usb_dev_handle *udh)
-{
-  static const unsigned char regs[] = {
-    REG_RX_PWR_DN,      0x01,              // everything
-    REG_TX_PWR_DN,      0x0f,              // pwr dn digital and analog_both
-    REG_TX_MODULATOR,   0x00               // coarse & fine modulators disabled
-  };
-
-  switch (usrp_hw_rev (usb_device (udh))){
-  case 0:
-    break;
-
-  default:
-    usrp_9862_write_many_all (udh, regs, sizeof (regs));
-    break;
-  }
-}
-
 // ----------------------------------------------------------------
+
 
 std::string
 usrp_serial_number(struct usb_dev_handle *udh)

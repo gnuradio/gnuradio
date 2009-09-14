@@ -43,13 +43,6 @@ using namespace ad9862;
 
 #define NELEM(x) (sizeof (x) / sizeof (x[0]))
 
-// These set the buffer size used for each end point using the fast
-// usb interface.  The kernel ends up locking down this much memory.
-
-static const int FUSB_BUFFER_SIZE = fusb_sysconfig::default_buffer_size();
-static const int FUSB_BLOCK_SIZE = fusb_sysconfig::max_block_size();
-static const int FUSB_NBLOCKS    = FUSB_BUFFER_SIZE / FUSB_BLOCK_SIZE;
-
 
 static const double POLLING_INTERVAL = 0.1;	// seconds
 
@@ -65,7 +58,6 @@ static const double POLLING_INTERVAL = 0.1;	// seconds
 //   CLKIN = 64 MHz
 //   CLKSEL pin = high 
 //
-// These settings give us:
 //   CLKOUT1 = CLKIN = 64 MHz
 //   CLKOUT2 = CLKIN = 64 MHz
 //   ADC is clocked at  64 MHz

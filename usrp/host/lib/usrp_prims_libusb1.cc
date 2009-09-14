@@ -41,28 +41,47 @@
 #include <algorithm>
 #include <ad9862.h>
 #include <assert.h>
+#include "std_paths.h"
 
 extern "C" {
 #include "md5.h"
 };
 
-#define VERBOSE 0
-
 using namespace ad9862;
 
-static const int FIRMWARE_HASH_SLOT	= 0;
-static const int FPGA_HASH_SLOT 	= 1;
 
-static const int hash_slot_addr[2] = {
-  USRP_HASH_SLOT_0_ADDR,
-  USRP_HASH_SLOT_1_ADDR
-};
+struct libusb_device_descriptor
+get_usb_device_descriptor(struct libusb_device *q)
+{
+  int ret;
+  struct libusb_device_descriptor desc;
 
-static const char *default_firmware_filename = "std.ihx";
-static const char *default_fpga_filename     = "std_2rxhb_2tx.rbf";
+  if ((ret = libusb_get_device_descriptor(q, &desc)) < 0)
+    fprintf (stderr, "usrp: libusb_get_device_descriptor failed %d\n", ret);
 
-#include "std_paths.h"
-#include <stdio.h>
+  return desc;
+}
+
+struct libusb_device *
+get_usb_device (struct libusb_device_handle *udh)
+{
+  return libusb_get_device (udh);
+}
+
+int
+usb_control_transfer (struct usb_dev_handle *udh, uint8_t request_type,
+                      uint8_t request, uint16_t value, uint16_t index,
+                      unsigned char *data, uint16_t length,
+                      unsigned int timeout)
+{
+  return libusb_control_transfer (udh, request_type, request, value, index,
+                                  *data, length, timeout);
+
+}
+
+
+// ----------------------------------------------------------------
+
 
 void
 usrp_one_time_init (libusb_context **ctx)
@@ -79,58 +98,6 @@ usrp_rescan ()
   // nop
 }
 
-// ----------------------------------------------------------------
-
-/*
- * q must be a real USRP, not an FX2.  Return its hardware rev number.
- */
-int
-usrp_hw_rev (struct libusb_device *q)
-{
-  struct libusb_device_descriptor desc;
-  if (libusb_get_device_descriptor(q, &desc) < 0)
-    fprintf (stderr, "usrp: libusb_get_device_descriptor failed\n");
-
-  return desc.bcdDevice & 0x00FF;
-}
-
-/*
- * q must be a real USRP, not an FX2.  Return true if it's configured.
- */
-bool
-_usrp_configured_p (struct libusb_device *q)
-{
-  struct libusb_device_descriptor desc;
-  if (libusb_get_device_descriptor(q, &desc) < 0)
-    fprintf (stderr, "usrp: libusb_get_device_descriptor failed\n");
-
-  return (desc.bcdDevice & 0xFF00) != 0;
-}
-
-bool
-usrp_usrp_p (struct libusb_device *q)
-{
-  struct libusb_device_descriptor desc;
-  if (libusb_get_device_descriptor(q, &desc) < 0)
-    fprintf (stderr, "usrp: libusb_get_device_descriptor failed\n");
-
-  return (desc.idVendor == USB_VID_FSF
-	  && desc.idProduct == USB_PID_FSF_USRP);
-}
-
-bool
-usrp_fx2_p (struct libusb_device *q)
-{
-  struct libusb_device_descriptor desc;
-  if (libusb_get_device_descriptor(q, &desc) < 0)
-    fprintf (stderr, "usrp: libusb_get_device_descriptor failed\n");
-
-  return (desc.idVendor == USB_VID_CYPRESS
-	  && desc.idProduct == USB_PID_CYPRESS_FX2);
-}
-
-
-// ----------------------------------------------------------------
 
 struct libusb_device *
 usrp_find_device (int nth, bool fx2_ok_p, libusb_context *ctx)
@@ -207,36 +174,10 @@ usrp_close_interface (libusb_device_handle *udh)
   return 0;
 }
 
-// ----------------------------------------------------------------
-// write internal ram using Cypress vendor extension
-
-bool
-write_internal_ram (struct libusb_device_handle *udh, unsigned char *buf,
-                    int start_addr, size_t len)
-{
-  int addr;
-  int n;
-  int a;
-  int quanta = MAX_EP0_PKTSIZE;
-
-  for (addr = start_addr; addr < start_addr + (int) len; addr += quanta){
-    n = len + start_addr - addr;
-    if (n > quanta)
-      n = quanta;
-
-    a = libusb_control_transfer (udh, 0x40, 0xA0,
-                         addr, 0, (unsigned char *)(buf + (addr - start_addr)), n, 1000);
-
-    if (a < 0){
-      fprintf(stderr,"write_internal_ram failed: %u\n", a);
-      return false;
-    }
-  }
-  return true;
-}
 
 // ----------------------------------------------------------------
 // write vendor extension command to USRP
+
 
 int
 write_cmd (struct libusb_device_handle *udh,
@@ -256,75 +197,6 @@ write_cmd (struct libusb_device_handle *udh,
   }
 
   return r;
-}
-
-bool
-usrp_set_hash (struct libusb_device_handle *udh, int which,
-               const unsigned char hash[USRP_HASH_SIZE])
-{
-  which &= 1;
-
-  // we use the Cypress firmware down load command to jam it in.
-  int r = libusb_control_transfer (udh, 0x40, 0xa0, hash_slot_addr[which], 0,
-                           (unsigned char *) hash, USRP_HASH_SIZE, 1000);
-  return r == USRP_HASH_SIZE;
-}
-  
-bool
-usrp_get_hash (struct libusb_device_handle *udh, int which,
-               unsigned char hash[USRP_HASH_SIZE])
-{
-  which &= 1;
-
-  // we use the Cypress firmware upload command to fetch it.
-  int r = libusb_control_transfer (udh, 0xc0, 0xa0, hash_slot_addr[which], 0,
-                           (unsigned char *) hash, USRP_HASH_SIZE, 1000);
-  return r == USRP_HASH_SIZE;
-}
-
-bool
-usrp_write_fpga_reg (struct libusb_device_handle *udh, int reg, int value)
-{
-  switch (usrp_hw_rev (libusb_get_device (udh))){
-  case 0:                       // not supported ;)
-    abort();
-
-  default:
-    return usrp1_fpga_write (udh, reg, value);
-  }
-}
-
-bool
-usrp_read_fpga_reg (struct libusb_device_handle *udh, int reg, int *value)
-{
-  switch (usrp_hw_rev (libusb_get_device (udh))){
-  case 0:               // not supported ;)
-    abort();
-
-  default:
-    return usrp1_fpga_read (udh, reg, value);
-  }
-}
-
-
-
-void
-power_down_9862s (struct libusb_device_handle *udh)
-{
-  static const unsigned char regs[] = {
-    REG_RX_PWR_DN,	0x01,			// everything
-    REG_TX_PWR_DN,	0x0f,			// pwr dn digital and analog_both
-    REG_TX_MODULATOR,	0x00			// coarse & fine modulators disabled
-  };
-
-  switch (usrp_hw_rev (libusb_get_device (udh))){
-  case 0:
-    break;
-
-  default:
-    usrp_9862_write_many_all (udh, regs, sizeof (regs));
-    break;
-  }
 }
 
 

@@ -108,8 +108,10 @@ _EOF_
         if test x$have_libusb1 = xno; then
           echo 'struct usb_device;'>> $tmpfile
           echo 'struct usb_dev_handle;'>> $tmpfile
-          echo 'typedef struct usb_device libusb_device;' >> $tmpfile
-          echo 'typedef struct usb_dev_handle libusb_device_handle;' >> $tmpfile
+          echo 'struct usb_device_descriptor;' >> $tmpfile
+          echo 'typedef usb_device libusb_device;' >> $tmpfile
+          echo 'typedef usb_dev_handle libusb_device_handle;' >> $tmpfile
+          echo 'typedef usb_device_descriptor libusb_device_descriptor;' >> $tmpfile
           echo >> $tmpfile
         fi
 

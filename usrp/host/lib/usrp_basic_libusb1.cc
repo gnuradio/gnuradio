@@ -44,13 +44,6 @@ using namespace ad9862;
 
 #define NELEM(x) (sizeof (x) / sizeof (x[0]))
 
-// These set the buffer size used for each end point using the fast
-// usb interface.  The kernel ends up locking down this much memory.
-
-static const int FUSB_BUFFER_SIZE = fusb_sysconfig::default_buffer_size();
-static const int FUSB_BLOCK_SIZE = fusb_sysconfig::max_block_size();
-static const int FUSB_NBLOCKS    = FUSB_BUFFER_SIZE / FUSB_BLOCK_SIZE;
-
 
 static const double POLLING_INTERVAL = 0.1;	// seconds
 
@@ -103,7 +96,6 @@ usrp_basic::usrp_basic (int which_board,
    */
   memset (d_fpga_shadows, 0, sizeof (d_fpga_shadows));
 
-//  d_ctx = usrp_one_time_init(true);
   usrp_one_time_init (&d_ctx);
 
   if (!usrp_load_standard_bits (which_board, false, fpga_filename, firmware_filename, d_ctx))
@@ -144,9 +136,8 @@ usrp_basic::~usrp_basic ()
   if (d_udh)
     libusb_close (d_udh);
 
-  // Each object should be running in it's own context. If running in default
-  // context then leave the instance open as it may be shared. This might
-  // occur in mixed libusb-0.12 and libusb-1.0 environments.  
+  // Each object _should_ be running in its own context. If running in default
+  // context then leave the instance open as it may be shared.
 
   if (d_ctx != NULL)
     libusb_exit (d_ctx);
