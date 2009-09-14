@@ -49,9 +49,18 @@ extern "C" {
 
 using namespace ad9862;
 
+/*
+ * libusb 0.12 / 1.0 compatibility
+ */
+
+struct libusb_device *
+_get_usb_device (struct libusb_device_handle *udh)
+{
+  return libusb_get_device (udh);
+}
 
 struct libusb_device_descriptor
-get_usb_device_descriptor(struct libusb_device *q)
+_get_usb_device_descriptor(struct libusb_device *q)
 {
   int ret;
   struct libusb_device_descriptor desc;
@@ -62,21 +71,20 @@ get_usb_device_descriptor(struct libusb_device *q)
   return desc;
 }
 
-struct libusb_device *
-get_usb_device (struct libusb_device_handle *udh)
+int
+_get_usb_string_descriptor (struct libusb_device_handle *udh, int index,
+                           unsigned char* data, int length)
 {
-  return libusb_get_device (udh);
+  return libusb_get_string_descriptor_ascii (udh, (uint8_t) index, data, length);
 }
 
 int
-usb_control_transfer (struct usb_dev_handle *udh, uint8_t request_type,
-                      uint8_t request, uint16_t value, uint16_t index,
-                      unsigned char *data, uint16_t length,
-                      unsigned int timeout)
+_usb_control_transfer (struct libusb_dev_handle *udh, int request_type,
+                      int request, int value, int index,
+                      unsigned char *data, int length, unsigned int timeout)
 {
   return libusb_control_transfer (udh, request_type, request, value, index,
-                                  *data, length, timeout);
-
+                                  data, length, timeout);
 }
 
 
@@ -199,23 +207,3 @@ write_cmd (struct libusb_device_handle *udh,
   return r;
 }
 
-
-// ----------------------------------------------------------------
-
-std::string
-usrp_serial_number(struct libusb_device_handle *udh)
-{
-  struct libusb_device_descriptor desc;
-  if (libusb_get_device_descriptor(libusb_get_device(udh), &desc) < 0)
-    fprintf (stderr, "usrp: libusb_get_device_descriptor failed\n");
-
-  unsigned char iserial = desc.iSerialNumber;
-  if (iserial == 0)
-    return "";
-
-  unsigned char buf[1024];
-  if (libusb_get_string_descriptor_ascii(udh, iserial, buf, sizeof(buf)) < 0)
-    return "";
-
-  return (char*) buf;
-}

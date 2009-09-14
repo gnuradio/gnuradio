@@ -42,27 +42,35 @@ extern "C" {
 
 using namespace ad9862;
 
-struct usb_device_descriptor
-get_usb_device_descriptor (struct usb_device *q)
-{
-  return q->descriptor;
-}
+/*
+ * libusb 0.12 / 1.0 compatibility
+ */
 
 struct usb_device *
-get_usb_device (struct usb_dev_handle *udh)
+_get_usb_device (struct usb_dev_handle *udh)
 {
   return usb_device (udh);
 }
 
+struct usb_device_descriptor
+_get_usb_device_descriptor (struct usb_device *q)
+{
+  return q->descriptor;
+}
 int
-usb_control_transfer (struct usb_dev_handle *udh, int request_type,
+_get_usb_string_descriptor (struct usb_dev_handle *udh, int index,
+                           unsigned char* data, int length)
+{
+  return usb_get_string_simple (udh, index, (char*) data, length);
+}
+
+int
+_usb_control_transfer (struct usb_dev_handle *udh, int request_type,
                       int request, int value, int index,
                       unsigned char *data, int length, unsigned int timeout)
 {
-  return usb_control_msg (udh, request_type, 
-                          request, value, index,
+  return usb_control_msg (udh, request_type,request, value, index,
                           (char*) data, length, (int) timeout);
-
 }
 
 
@@ -197,20 +205,3 @@ write_cmd (struct usb_dev_handle *udh,
   return r;
 }
 
-
-// ----------------------------------------------------------------
-
-
-std::string
-usrp_serial_number(struct usb_dev_handle *udh)
-{
-  unsigned char iserial = usb_device(udh)->descriptor.iSerialNumber;
-  if (iserial == 0)
-    return "";
-
-  char buf[1024];
-  if (usb_get_string_simple(udh, iserial, buf, sizeof(buf)) < 0)
-    return "";
-
-  return buf;
-}

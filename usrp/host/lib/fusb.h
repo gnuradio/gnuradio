@@ -25,6 +25,10 @@
 #ifndef _FUSB_H_
 #define _FUSB_H_
 
+/*
+ * This is bad, but it works for now. The fusb header files are not installed.
+ */
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -33,7 +37,7 @@
 struct  libusb_device_handle;
 #else
 struct	usb_dev_handle;
-typedef struct usb_dev_handle libusb_device_handle;
+typedef usb_dev_handle libusb_device_handle;
 #endif
 
 struct 	libusb_context;

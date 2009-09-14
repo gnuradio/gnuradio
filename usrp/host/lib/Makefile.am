@@ -75,15 +75,15 @@ darwin_CODE =				\
 win32_CODE =				\
 	fusb_win32.cc			\
 	fusb_sysconfig_win32.cc 	\
-	usrp_prims_libusb.cc		\
-	usrp_basic_libusb.cc
+	usrp_prims_libusb0.cc		\
+	usrp_basic_libusb0.cc
 
 
 linux_CODE =				\
 	fusb_linux.cc			\
 	fusb_sysconfig_linux.cc		\
-	usrp_prims_libusb.cc		\
-	usrp_basic_libusb.cc
+	usrp_prims_libusb0.cc		\
+	usrp_basic_libusb0.cc
 
 ra_wb_CODE =				\
 	fusb_ra_wb.cc			\

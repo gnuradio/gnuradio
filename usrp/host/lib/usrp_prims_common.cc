@@ -67,7 +67,6 @@ static const int hash_slot_addr[2] = {
 static const char *default_firmware_filename = "std.ihx";
 static const char *default_fpga_filename     = "std_2rxhb_2tx.rbf";
 
-
 static char *
 find_file (const char *filename, int hw_rev)
 {
@@ -117,7 +116,7 @@ static void power_down_9862s (libusb_device_handle *udh);
 int
 usrp_hw_rev (libusb_device *q)
 {
-  libusb_device_descriptor desc = get_usb_device_descriptor(q);
+  libusb_device_descriptor desc = _get_usb_device_descriptor(q);
   return desc.bcdDevice & 0x00FF;
 }
 
@@ -127,14 +126,14 @@ usrp_hw_rev (libusb_device *q)
 static bool
 _usrp_configured_p (libusb_device *q)
 {
-  libusb_device_descriptor desc = get_usb_device_descriptor(q);
+  libusb_device_descriptor desc = _get_usb_device_descriptor(q);
   return (desc.bcdDevice & 0xFF00) != 0;
 }
 
 bool
 usrp_usrp_p (libusb_device *q)
 {
-  libusb_device_descriptor desc = get_usb_device_descriptor(q);
+  libusb_device_descriptor desc = _get_usb_device_descriptor(q);
   return (desc.idVendor == USB_VID_FSF
           && desc.idProduct == USB_PID_FSF_USRP);
 }
@@ -142,7 +141,7 @@ usrp_usrp_p (libusb_device *q)
 bool
 usrp_fx2_p (libusb_device *q)
 {
-  libusb_device_descriptor desc = get_usb_device_descriptor(q);
+  libusb_device_descriptor desc = _get_usb_device_descriptor(q);
   return (desc.idVendor == USB_VID_CYPRESS
           && desc.idProduct == USB_PID_CYPRESS_FX2);
 }
@@ -218,7 +217,7 @@ write_internal_ram (libusb_device_handle *udh, unsigned char *buf,
     if (n > quanta)
       n = quanta;
 
-    a = usb_control_transfer (udh, 0x40, 0xA0, addr, 0,
+    a = _usb_control_transfer (udh, 0x40, 0xA0, addr, 0,
                        (unsigned char*)(buf + (addr - start_addr)), n, 1000);
 
     if (a < 0){
@@ -424,7 +423,7 @@ usrp_set_hash (libusb_device_handle *udh, int which,
   which &= 1;
 
   // we use the Cypress firmware down load command to jam it in.
-  int r = usb_control_transfer (udh, 0x40, 0xa0, hash_slot_addr[which], 0,
+  int r = _usb_control_transfer (udh, 0x40, 0xa0, hash_slot_addr[which], 0,
                                 (unsigned char *) hash, USRP_HASH_SIZE, 1000);
   return r == USRP_HASH_SIZE;
 }
@@ -436,7 +435,7 @@ usrp_get_hash (libusb_device_handle *udh, int which,
   which &= 1;
 
   // we use the Cypress firmware upload command to fetch it.
-  int r = usb_control_transfer (udh, 0xc0, 0xa0, hash_slot_addr[which], 0,
+  int r = _usb_control_transfer (udh, 0xc0, 0xa0, hash_slot_addr[which], 0,
                                 (unsigned char *) hash, USRP_HASH_SIZE, 1000);
   return r == USRP_HASH_SIZE;
 }
@@ -489,7 +488,7 @@ usrp1_fpga_read (libusb_device_handle *udh,
 bool
 usrp_write_fpga_reg (libusb_device_handle *udh, int reg, int value)
 {
-  switch (usrp_hw_rev (get_usb_device (udh))){
+  switch (usrp_hw_rev (_get_usb_device (udh))){
   case 0:                       // not supported ;)
     abort();
 
@@ -501,7 +500,7 @@ usrp_write_fpga_reg (libusb_device_handle *udh, int reg, int value)
 bool
 usrp_read_fpga_reg (libusb_device_handle *udh, int reg, int *value)
 {
-  switch (usrp_hw_rev (get_usb_device (udh))){
+  switch (usrp_hw_rev (_get_usb_device (udh))){
   case 0:               // not supported ;)
     abort();
 
@@ -935,12 +934,12 @@ static void
 power_down_9862s (libusb_device_handle *udh)
 {
   static const unsigned char regs[] = {
-    REG_RX_PWR_DN,	0x01,			// everything
-    REG_TX_PWR_DN,	0x0f,			// pwr dn digital and analog_both
-    REG_TX_MODULATOR,	0x00			// coarse & fine modulators disabled
+    REG_RX_PWR_DN,	0x01,		// everything
+    REG_TX_PWR_DN,	0x0f,		// pwr dn digital and analog_both
+    REG_TX_MODULATOR,	0x00		// coarse & fine modulators disabled
   };
 
-  switch (usrp_hw_rev (get_usb_device (udh))){
+  switch (usrp_hw_rev (_get_usb_device (udh))){
   case 0:
     break;
 
@@ -1214,6 +1213,24 @@ usrp_write_dboard_offsets (libusb_device_handle *udh, int slot_id,
 			    0, buf, sizeof (buf));
 }
 
+// ----------------------------------------------------------------
+
+std::string
+usrp_serial_number(libusb_device_handle *udh)
+{
+  libusb_device_descriptor desc =
+    _get_usb_device_descriptor (_get_usb_device (udh));
+
+  unsigned char iserial = desc.iSerialNumber;
+  if (iserial == 0)
+    return "";
+
+  unsigned char buf[1024];
+  if (_get_usb_string_descriptor (udh, iserial, buf, sizeof(buf)) < 0)
+    return "";
+
+  return (char*) buf;
+}
 
 
 

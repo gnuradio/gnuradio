@@ -260,20 +260,26 @@ std::string usrp_serial_number(libusb_device_handle *udh);
  * Internal functions 
  */
 
-libusb_device_handle *usrp_open_interface(libusb_device *dev,
-                                          int interface,
-                                          int altinterface);
+libusb_device_handle *
+usrp_open_interface(libusb_device *dev, int interface, int altinterface);
 
-int write_cmd (libusb_device_handle *udh, int request, int value,
-               int index, unsigned char *bytes, int len);
+int write_cmd (libusb_device_handle *udh, int request, int value, int index,
+               unsigned char *bytes, int len);
 
-libusb_device_descriptor get_usb_device_descriptor (libusb_device *q);
+/*
+ * Compatibility functions 
+ */
 
-libusb_device *get_usb_device (libusb_device_handle *udh);
+libusb_device *_get_usb_device (libusb_device_handle *udh);
 
-int usb_control_transfer (struct usb_dev_handle *udh, int request_type,
-                          int request, int value, int index,
-                          unsigned char *data, int length,
-                          unsigned int timeout);
+libusb_device_descriptor _get_usb_device_descriptor (libusb_device *q);
+
+int _get_usb_string_descriptor (libusb_device_handle *udh, int index,
+                                unsigned char* data, int length);
+
+int _usb_control_transfer (struct usb_dev_handle *udh, int request_type,
+                           int request, int value, int index,
+                           unsigned char *data, int length,
+                           unsigned int timeout);
 
 #endif /* _USRP_PRIMS_H_ */
