@@ -218,8 +218,8 @@ write_internal_ram (libusb_device_handle *udh, unsigned char *buf,
     if (n > quanta)
       n = quanta;
 
-    a = usb_control_transfer (udh, 0x40, 0xA0,
-                         addr, 0, (unsigned char *)(buf + (addr - start_addr)), n, 1000);
+    a = usb_control_transfer (udh, 0x40, 0xA0, addr, 0,
+                       (unsigned char*)(buf + (addr - start_addr)), n, 1000);
 
     if (a < 0){
       fprintf(stderr,"write_internal_ram failed: %u\n", a);
@@ -425,7 +425,7 @@ usrp_set_hash (libusb_device_handle *udh, int which,
 
   // we use the Cypress firmware down load command to jam it in.
   int r = usb_control_transfer (udh, 0x40, 0xa0, hash_slot_addr[which], 0,
-                           (unsigned char *) hash, USRP_HASH_SIZE, 1000);
+                                (unsigned char *) hash, USRP_HASH_SIZE, 1000);
   return r == USRP_HASH_SIZE;
 }
   
@@ -437,7 +437,7 @@ usrp_get_hash (libusb_device_handle *udh, int which,
 
   // we use the Cypress firmware upload command to fetch it.
   int r = usb_control_transfer (udh, 0xc0, 0xa0, hash_slot_addr[which], 0,
-                           (unsigned char *) hash, USRP_HASH_SIZE, 1000);
+                                (unsigned char *) hash, USRP_HASH_SIZE, 1000);
   return r == USRP_HASH_SIZE;
 }
 

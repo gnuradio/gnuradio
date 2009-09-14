@@ -275,7 +275,5 @@ int usb_control_transfer (struct usb_dev_handle *udh, int request_type,
                           int request, int value, int index,
                           unsigned char *data, int length,
                           unsigned int timeout);
-}
-
 
 #endif /* _USRP_PRIMS_H_ */

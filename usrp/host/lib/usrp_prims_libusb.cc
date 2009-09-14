@@ -26,7 +26,6 @@
 
 #include "usrp/usrp_prims.h"
 #include "usrp_commands.h"
-//#include "usrp_ids.h"
 #include <usb.h>
 #include <errno.h>
 #include <stdio.h>
@@ -60,8 +59,9 @@ usb_control_transfer (struct usb_dev_handle *udh, int request_type,
                       int request, int value, int index,
                       unsigned char *data, int length, unsigned int timeout)
 {
-  return usb_control_msg (udh, request_type, request, value, index,
-                          (char*) *data, length, (int) timeout);
+  return usb_control_msg (udh, request_type, 
+                          request, value, index,
+                          (char*) data, length, (int) timeout);
 
 }
 
