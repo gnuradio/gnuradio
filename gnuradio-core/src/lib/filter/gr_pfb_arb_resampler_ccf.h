@@ -91,8 +91,8 @@ class gr_fir_ccf;
  * The theory behind this block can be found in Chapter 7.5 of 
  * the following book.
  *
- *    <B><EM>f. harris, Multirate Signal Processing for Communication 
- *       Systems," Upper Saddle River, NJ: Prentice Hall, Inc. 2004.</EM></B>
+ *    <B><EM>f. harris, "Multirate Signal Processing for Communication 
+ *       Systems", Upper Saddle River, NJ: Prentice Hall, Inc. 2004.</EM></B>
  */
 
 class gr_pfb_arb_resampler_ccf : public gr_block
