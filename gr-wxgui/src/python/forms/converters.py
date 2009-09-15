@@ -72,12 +72,14 @@ class bool_converter(abstract_converter):
 		self._true = true
 		self._false = false
 	def external_to_internal(self, v):
-		return bool(v)
+		if v == self._true: return True
+		if v == self._false: return False
+		raise Exception, 'Value "%s" is not a possible option.'%v
 	def internal_to_external(self, v):
 		if v: return self._true
 		else: return self._false
 	def help(self):
-		return "Value must be cast-able to type bool."
+		return "Value must be in (%s, %s)."%(self._true, self._false)
 
 class eval_converter(abstract_converter):
 	"""

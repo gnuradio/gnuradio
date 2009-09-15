@@ -51,7 +51,7 @@ class PropsDialog(gtk.Dialog):
 		LABEL_SPACING = 7
 		gtk.Dialog.__init__(self,
 			title='Properties: %s'%block.get_name(),
-			buttons=(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE),
+			buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT, gtk.STOCK_OK, gtk.RESPONSE_ACCEPT),
 		)
 		self._block = block
 		self.set_size_request(MIN_DIALOG_WIDTH, MIN_DIALOG_HEIGHT)
@@ -82,7 +82,7 @@ class PropsDialog(gtk.Dialog):
 		vbox.pack_start(self._error_box, False)
 		vbox.pack_start(self._docs_box, False)
 		#connect events
-		self.connect('key_press_event', self._handle_key_press)
+		self.connect('key-press-event', self._handle_key_press)
 		self.connect('show', self._update_gui)
 		#show all (performs initial gui update)
 		self.show_all()
@@ -91,6 +91,8 @@ class PropsDialog(gtk.Dialog):
 		"""
 		Have the params in this dialog changed?
 		Ex: Added, removed, type change, hide change...
+		To the props dialog, the hide setting of 'none' and 'part' are identical.
+		Therfore, the props dialog only cares if the hide setting is/not 'all'.
 		Make a hash that uniquely represents the params state.
 		@return true if changed
 		"""
@@ -99,7 +101,7 @@ class PropsDialog(gtk.Dialog):
 		for param in self._block.get_params():
 			self._hash ^= hash(param)
 			self._hash ^= hash(param.get_type())
-			self._hash ^= hash(param.get_hide())
+			self._hash ^= hash(param.get_hide() == 'all')
 		return self._hash != old_hash
 
 	def _handle_changed(self, *args):
@@ -154,21 +156,16 @@ class PropsDialog(gtk.Dialog):
 		Call the ok response when enter is pressed.
 		@return false to forward the keypress
 		"""
-		keyname = gtk.gdk.keyval_name(event.keyval)
-		if keyname == 'Return': self.response(gtk.RESPONSE_OK)
+		if event.keyval == gtk.keysyms.Return:
+			self.response(gtk.RESPONSE_ACCEPT)
+			return True #handled here
 		return False #forward the keypress
 
 	def run(self):
 		"""
-		Call run().
-		@return true if a change occured.
+		Run the dialog and get its response.
+		@return true if the response was accept
 		"""
-		original_data = list()
-		for param in self._block.get_params():
-			original_data.append(param.get_value())
-		gtk.Dialog.run(self)
+		response = gtk.Dialog.run(self)
 		self.destroy()
-		new_data = list()
-		for param in self._block.get_params():
-			new_data.append(param.get_value())
-		return original_data != new_data
+		return response == gtk.RESPONSE_ACCEPT
