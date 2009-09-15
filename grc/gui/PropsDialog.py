@@ -91,6 +91,8 @@ class PropsDialog(gtk.Dialog):
 		"""
 		Have the params in this dialog changed?
 		Ex: Added, removed, type change, hide change...
+		To the props dialog, the hide setting of 'none' and 'part' are identical.
+		Therfore, the props dialog only cares if the hide setting is/not 'all'.
 		Make a hash that uniquely represents the params state.
 		@return true if changed
 		"""
@@ -99,7 +101,7 @@ class PropsDialog(gtk.Dialog):
 		for param in self._block.get_params():
 			self._hash ^= hash(param)
 			self._hash ^= hash(param.get_type())
-			self._hash ^= hash(param.get_hide())
+			self._hash ^= hash(param.get_hide() == 'all')
 		return self._hash != old_hash
 
 	def _handle_changed(self, *args):
