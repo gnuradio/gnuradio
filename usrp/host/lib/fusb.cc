@@ -24,11 +24,7 @@
 #include "config.h"
 #endif
 
-#ifdef HAVE_LIBUSB_1 
-#include <fusb_libusb1_base.h>
-#else
 #include <fusb.h>
-#endif
 
 // ------------------------------------------------------------------------
 // 			     device handle

@@ -25,6 +25,7 @@
 #endif
 
 #include <fusb_libusb1.h>
+#include <fusb.h>
 #include <libusb-1.0/libusb.h>
 #include <stdexcept>
 #include <cstdio>
@@ -41,7 +42,7 @@ static const int DEFAULT_BLOCK_SIZE = MAX_BLOCK_SIZE;
 static const int DEFAULT_BUFFER_SIZE = 4 * (1L << 20);  // 4 MB endpoint
 static const int LIBUSB_TIMEOUT = 0; 			// no timeout
 
-inline static fusb_ephandle_libusb1*
+inline static fusb_ephandle_libusb1 *
 lut_get_ephandle (libusb_transfer *lut)
 {
   return (fusb_ephandle_libusb1 *) lut->user_data;

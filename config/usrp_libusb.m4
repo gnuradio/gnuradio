@@ -68,11 +68,19 @@ AC_DEFUN([USRP_LIBUSB], [
     fi
     AC_OUTPUT_COMMANDS([
       case "$CONFIG_OTHER" in
+      fusb*)
+        outfile=usrp/host/lib/$CONFIG_OTHER
+        ;;
       usrp*)
         outfile=usrp/host/include/usrp/$CONFIG_OTHER
+        ;;
+      esac
+
+      case "$CONFIG_OTHER" in
+      fusb*|usrp*)
         tmpfile=${outfile}T
         dirname="sed s,^.*/,,g"
-
+     
         echo creating $outfile
         cat > $tmpfile << _EOF_
  /*  -*- Mode: C++ -*-
@@ -102,7 +110,6 @@ AC_DEFUN([USRP_LIBUSB], [
  * Boston, MA 02110-1301, USA.
  */
 
-
 _EOF_
         echo "#ifndef _`echo $outfile | $dirname | tr a-z. A-Z_`_" >> $tmpfile
         echo "#define _`echo $outfile | $dirname | tr a-z. A-Z_`_" >> $tmpfile
@@ -129,9 +136,10 @@ _EOF_
           echo 'struct usb_device;'>> $tmpfile
           echo 'struct usb_dev_handle;'>> $tmpfile
           echo 'struct usb_device_descriptor;' >> $tmpfile
-          echo 'typedef usb_device libusb_device;' >> $tmpfile
-          echo 'typedef usb_dev_handle libusb_device_handle;' >> $tmpfile
-          echo 'typedef usb_device_descriptor libusb_device_descriptor;' >> $tmpfile
+          echo >> $tmpfile
+          echo 'typedef struct usb_device libusb_device;' >> $tmpfile
+          echo 'typedef struct usb_dev_handle libusb_device_handle;' >> $tmpfile
+          echo 'typedef struct usb_device_descriptor libusb_device_descriptor;' >> $tmpfile
           echo >> $tmpfile
         fi
 
@@ -143,9 +151,9 @@ _EOF_
         fi
 
         # The ugly but portable cpp stuff comes from here
-        infile=usrp/host/include/usrp/`echo $outfile | sed 's,.*/,,g;s,\..*$,,g'`.h.in
+        infile=usrp/host/lib/`echo $outfile | sed 's,.*/,,g;s,\..*$,,g'`.h.in
         sed '/^##.*$/d' $infile >> $tmpfile 
-        mv ${tmpfile} ${outfile}
+        mv -f ${tmpfile} ${outfile}
         ;;
       esac
 

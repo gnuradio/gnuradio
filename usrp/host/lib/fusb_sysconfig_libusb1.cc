@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <fusb_libusb1_base.h>
+#include <fusb.h>
 #include <fusb_libusb1.h>
 
 static const int MAX_BLOCK_SIZE = 16 * 1024;		// hard limit
