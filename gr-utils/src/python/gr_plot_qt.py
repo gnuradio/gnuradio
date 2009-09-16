@@ -64,9 +64,12 @@ class SpectrogramData(Qwt.QwtRasterData):
         return Qwt.QwtDoubleInterval(self.sp.min(), self.sp.max())
 
     def value(self, x, y):
-        f = int(self.freq.searchsorted(x))
-        t = int(self.time.searchsorted(y))
-        return self.sp[f][t-1]
+        try:
+            f = int(self.freq.searchsorted(x))
+            t = int(self.time.searchsorted(y))
+            return self.sp[f][t-1]
+        except AttributeError: # if no file loaded yet
+            return 0
 
 
 class gr_plot_qt(QtGui.QMainWindow):
@@ -451,7 +454,11 @@ class gr_plot_qt(QtGui.QMainWindow):
 
         # If there's a non-digit character, reset box
         else:
-            self.set_file_pos_box(self.cur_start, self.cur_stop)
+            try:
+                self.set_file_pos_box(self.cur_start, self.cur_stop)
+            except AttributeError:
+                pass
+            
 
     def file_time_changed(self):
         tstart = self.gui.fileTimeStartLineEdit.text().toDouble()
