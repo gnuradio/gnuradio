@@ -310,7 +310,7 @@ class gr_plot_qt(QtGui.QMainWindow):
         self.get_psd()
         self.get_specgram() 
         self.gui.plotHBar.setSliderPosition(0)
-        self.gui.plotHBar.setMaximum(self.signal_size)
+        self.gui.plotHBar.setMaximum(self.signal_size-self.block_length)
 
 
         self.update_time_curves()
@@ -332,10 +332,8 @@ class gr_plot_qt(QtGui.QMainWindow):
                                     count=end-start)
 
                 if(len(iq) < (end-start)):
-                    end = len(iq)
-                    self.gui.filePosLengthLineEdit.setText(Qt.QString("%1").arg(end))
-                    self.gui.plotHBar.setMaximum(end)
-                    self.gui.plotHBar.setSingleStep(end)
+                    end = start + len(iq)
+                    self.gui.filePosLengthLineEdit.setText(Qt.QString("%1").arg(len(iq)))
                     self.file_length_changed()
 
                 tstep = 1.0 / self.sample_rate
