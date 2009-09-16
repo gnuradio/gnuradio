@@ -30,7 +30,7 @@
 #include <usb.h>
 #endif
 
-#include "usrp/usrp_prims.h"
+#include "usrp_primsi.h"
 #include "usrp_commands.h"
 #include "usrp_ids.h"
 #include "usrp_i2c_addr.h"

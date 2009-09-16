@@ -24,7 +24,7 @@
 #include "config.h"
 #endif
 
-#include "usrp/usrp_prims.h"
+#include "usrp_primsi.h"
 #include "usrp_commands.h"
 #include <libusb-1.0/libusb.h>
 #include <errno.h>

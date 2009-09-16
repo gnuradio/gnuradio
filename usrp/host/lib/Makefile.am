@@ -78,7 +78,10 @@ darwin_CODE =				\
 	circular_buffer.h		\
 	circular_linked_list.h		\
 	darwin_libusb.h			\
-	mld_threads.h			
+	mld_threads.h			\
+	usrp_prims_libusb0.cc		\
+	usrp_basic_libusb0.cc
+
 
 win32_CODE =				\
 	fusb_win32.cc			\
@@ -178,7 +181,8 @@ noinst_HEADERS =			\
 	fusb_win32.h			\
 	md5.h				\
 	rate_to_regval.h		\
-	usrp_config.h
+	usrp_config.h			\
+	usrp_primsi.h
 
 if PYTHON
 usrppython_PYTHON =			\
