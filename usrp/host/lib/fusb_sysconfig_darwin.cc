@@ -27,7 +27,7 @@ static const int MAX_BLOCK_SIZE = 32 * 1024;		// hard limit
 static const int FUSB_BUFFER_SIZE = 2 * (1L << 20);	// 2 MB
 
 fusb_devhandle *
-fusb_sysconfig::make_devhandle (usb_dev_handle *udh)
+fusb_sysconfig::make_devhandle (usb_dev_handle *udh, libusb_context *ctx)
 {
   return new fusb_devhandle_darwin (udh);
 }
