@@ -143,6 +143,8 @@ namespace usrp2 {
     bool write_gpio(int bank, uint16_t value, uint16_t mask);
     bool read_gpio(int bank, uint16_t *value);
     bool start_rx_streaming(unsigned int channel, unsigned int items_per_frame);
+    bool start_rx_streaming_at(unsigned int channel, unsigned int items_per_frame, unsigned int time);
+    bool sync_and_start_rx_streaming_at(unsigned int channel, unsigned int items_per_frame, unsigned int time);
     bool rx_samples(unsigned int channel, rx_sample_handler *handler);
     bool flush_rx_samples(unsigned int channel);
     bool stop_rx_streaming(unsigned int channel);

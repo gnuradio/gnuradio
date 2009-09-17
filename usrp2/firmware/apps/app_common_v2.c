@@ -478,7 +478,10 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
       break;
 
     case OP_START_RX_STREAMING:
-      start_rx_streaming_cmd(&pkt->ehdr.src, (op_start_rx_streaming_t *) payload);
+      if (pkt->fixed.timestamp == -1) // Start now (default)
+        start_rx_streaming_cmd(&pkt->ehdr.src, (op_start_rx_streaming_t *) payload);
+      else
+        start_rx_streaming_at_cmd(&pkt->ehdr.src, (op_start_rx_streaming_t *)payload, pkt->fixed.timestamp);
       ok = true;
       goto generic_reply;
     

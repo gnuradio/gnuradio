@@ -177,6 +177,27 @@ namespace usrp2 {
      * \param items_per_frame  Number of 32-bit items per frame.
      */
     bool start_rx_streaming(unsigned int channel=0, unsigned int items_per_frame=0);
+    
+    /*!
+     * Start streaming receive mode at specified timestamp. USRP2 will send a
+     * continuous stream of DSP pipeline samples to host. Call rx_samples(...)
+     * to access.
+     *
+     * \param channel          Stream channel number (0-30)
+     * \param items_per_frame  Number of 32-bit items per frame.
+     * \param time             Timestamp to start streaming at
+     */
+    bool start_rx_streaming_at(unsigned int channel=0, unsigned int items_per_frame=0, unsigned int time=0);
+    
+    /*!
+     * Sync to PPS and start streaming receive mode at specified timestamp.
+     * Just like calling sync_to_pps() and start_rx_streaming_at().
+     *
+     * \param channel          Stream channel number (0-30)
+     * \param items_per_frame  Number of 32-bit items per frame.
+     * \param time             Timestamp to start streaming at
+     */
+    bool sync_and_start_rx_streaming_at(unsigned int channel=0, unsigned int items_per_frame=0, uint32_t time=0);
   
     /*!
      * Stop streaming receive mode.

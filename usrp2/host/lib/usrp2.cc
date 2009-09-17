@@ -242,6 +242,18 @@ namespace usrp2 {
   }
   
   bool
+  usrp2::start_rx_streaming_at(unsigned int channel, unsigned int items_per_frame, unsigned int time)
+  {
+    return d_impl->start_rx_streaming_at(channel, items_per_frame,time);
+  }
+  
+  bool
+  usrp2::sync_and_start_rx_streaming_at(unsigned int channel, unsigned int items_per_frame, unsigned int time)
+  {
+    return d_impl->sync_and_start_rx_streaming_at(channel, items_per_frame, time);
+  }
+  
+  bool
   usrp2::rx_samples(unsigned int channel, rx_sample_handler *handler)
   {
     return d_impl->rx_samples(channel, handler);

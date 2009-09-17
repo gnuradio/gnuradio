@@ -666,6 +666,110 @@ namespace usrp2 {
       return success;
     }
   }
+
+  bool
+  usrp2::impl::start_rx_streaming_at(unsigned int channel, unsigned int items_per_frame, unsigned int time)
+  {
+    if (channel > MAX_CHAN) {
+      std::cerr << "usrp2: invalid channel number (" << channel
+		<< ")" << std::endl;
+      return false;
+    }
+
+    if (channel > 0) { // until firmware supports multiple streams
+      std::cerr << "usrp2: channel " << channel
+		<< " not implemented" << std::endl;
+      return false;
+    }
+
+    {
+      omni_mutex_lock l(d_channel_rings_mutex);
+      if (d_channel_rings[channel]) {
+	std::cerr << "usrp2: channel " << channel
+		  << " already streaming" << std::endl;
+	return false;
+      }
+      
+      if (items_per_frame == 0)
+	items_per_frame = U2_MAX_SAMPLES;		// minimize overhead
+      
+      op_start_rx_streaming_cmd cmd;
+      op_generic_t reply;
+
+      memset(&cmd, 0, sizeof(cmd));
+      init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, time);
+      cmd.op.opcode = OP_START_RX_STREAMING;
+      cmd.op.len = sizeof(cmd.op);
+      cmd.op.rid = d_next_rid++;
+      cmd.op.items_per_frame = htonl(items_per_frame);
+      cmd.eop.opcode = OP_EOP;
+      cmd.eop.len = sizeof(cmd.eop);
+    
+      bool success = false;
+      pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+      success = transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
+      success = success && (ntohx(reply.ok) == 1);
+      
+      if (success)
+	d_channel_rings[channel] = ring_sptr(new ring(d_eth_buf->max_frames()));
+
+      return success;
+    }
+  }
+  
+  bool
+  usrp2::impl::sync_and_start_rx_streaming_at(unsigned int channel, unsigned int items_per_frame, unsigned int time)
+  {
+  
+    if (channel > MAX_CHAN) {
+      std::cerr << "usrp2: invalid channel number (" << channel
+		<< ")" << std::endl;
+      return false;
+    }
+
+    if (channel > 0) { // until firmware supports multiple streams
+      std::cerr << "usrp2: channel " << channel
+		<< " not implemented" << std::endl;
+      return false;
+    }
+
+    {
+      omni_mutex_lock l(d_channel_rings_mutex);
+      if (d_channel_rings[channel]) {
+	std::cerr << "usrp2: channel " << channel
+		  << " already streaming" << std::endl;
+	return false;
+      }
+      
+      if (items_per_frame == 0)
+	items_per_frame = U2_MAX_SAMPLES;		// minimize overhead
+      
+      op_sync_and_start_rx_streaming_cmd cmd;
+      op_generic_t reply;
+
+      memset(&cmd, 0, sizeof(cmd));
+      init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, time);
+      cmd.sync_op.opcode = OP_SYNC_TO_PPS;
+      cmd.sync_op.len = sizeof(cmd.sync_op);
+      cmd.sync_op.rid = d_next_rid++;
+      cmd.rx_op.opcode = OP_START_RX_STREAMING;
+      cmd.rx_op.len = sizeof(cmd.rx_op);
+      cmd.rx_op.rid = d_next_rid++;
+      cmd.rx_op.items_per_frame = htonl(items_per_frame);
+      cmd.eop.opcode = OP_EOP;
+      cmd.eop.len = sizeof(cmd.eop);
+    
+      bool success = false;
+      pending_reply p(cmd.sync_op.rid, &reply, sizeof(reply));
+      success = transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
+      success = success && (ntohx(reply.ok) == 1);
+      
+      if (success)
+	d_channel_rings[channel] = ring_sptr(new ring(d_eth_buf->max_frames()));
+
+      return success;
+    }
+  }
   
   bool
   usrp2::impl::stop_rx_streaming(unsigned int channel)

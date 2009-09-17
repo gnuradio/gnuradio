@@ -184,6 +184,10 @@ start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p)
   restart_streaming();
 }
 
+void start_rx_streaming_at_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p, uint32_t time)
+{}
+void restart_streaming_at(uint32_t time)
+{}
 
 void
 stop_rx_cmd(void)

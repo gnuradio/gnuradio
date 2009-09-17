@@ -46,6 +46,14 @@ namespace usrp2 {
     op_start_rx_streaming_t op;
     op_generic_t	    eop;
   };
+  
+  struct op_sync_and_start_rx_streaming_cmd 
+  {
+    u2_eth_packet_t	    h;
+    op_generic_t            sync_op;
+    op_start_rx_streaming_t rx_op;
+    op_generic_t	    eop;
+  };
     
   struct op_stop_rx_cmd {
     u2_eth_packet_t h;

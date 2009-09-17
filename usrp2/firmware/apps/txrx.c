@@ -158,6 +158,34 @@ restart_streaming(void)
 }
 
 void
+restart_streaming_at(uint32_t time)
+{
+  // setup RX DSP regs
+  dsp_rx_regs->clear_state = 1;			// reset
+
+  streaming_p = true;
+  streaming_frame_count = FRAMES_PER_CMD;
+
+  dsp_rx_regs->rx_command =
+    MK_RX_CMD(FRAMES_PER_CMD * streaming_items_per_frame,
+	      streaming_items_per_frame,
+	      0, 1);			// set "chain" bit
+
+  // kick off the state machine
+  dbsm_start(&dsp_rx_sm);
+
+  dsp_rx_regs->rx_time = time;		// enqueue first of two commands
+
+  // make sure this one and the rest have the "now" and "chain" bits set.
+  dsp_rx_regs->rx_command =
+    MK_RX_CMD(FRAMES_PER_CMD * streaming_items_per_frame,
+	      streaming_items_per_frame,
+	      1, 1);				
+
+  dsp_rx_regs->rx_time = 0;		// enqueue second command
+}
+
+void
 start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p)
 {
   host_mac_addr = *host;	// remember who we're sending to
@@ -182,6 +210,32 @@ start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p)
 
   streaming_items_per_frame = p->items_per_frame;
   restart_streaming();
+}
+
+void
+start_rx_streaming_at_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p, uint32_t time)
+{
+  host_mac_addr = *host;	// remember who we're sending to
+
+  /*
+   * Construct  ethernet header and word0 and preload into two buffers
+   */
+  u2_eth_packet_t	pkt;
+  memset(&pkt, 0, sizeof(pkt));
+  pkt.ehdr.dst = *host;
+  pkt.ehdr.ethertype = U2_ETHERTYPE;
+  u2p_set_word0(&pkt.fixed, 0, 0);
+  // DSP RX will fill in timestamp
+
+  memcpy_wa(buffer_ram(DSP_RX_BUF_0), &pkt, sizeof(pkt));
+  memcpy_wa(buffer_ram(DSP_RX_BUF_1), &pkt, sizeof(pkt));
+
+
+  if (FW_SETS_SEQNO)
+    fw_seqno = 0;
+
+  streaming_items_per_frame = p->items_per_frame;
+  restart_streaming_at(time);
 }
 
 
