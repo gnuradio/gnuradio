@@ -385,7 +385,7 @@ class Param(_Param, _GUIParam):
 			try: notebook_block = filter(lambda b: b.get_id() == notebook_id, notebook_blocks)[0]
 			except: raise Exception, 'Notebook id "%s" is not an existing notebook id.'%notebook_id
 			#check that page index exists
-			try: assert int(page_index) in range(len(notebook_block.get_param('labels').get_evaluated()))
+			try: assert int(page_index) in range(len(notebook_block.get_param('labels').evaluate()))
 			except: raise Exception, 'Page index "%s" is not a valid index number.'%page_index
 			return notebook_id, page_index
 		#########################
