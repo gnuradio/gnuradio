@@ -215,6 +215,11 @@ BLOCK_PASTE = Action(
 	stock_id=gtk.STOCK_PASTE,
 	keypresses=(gtk.keysyms.v, gtk.gdk.CONTROL_MASK),
 )
+ERRORS_WINDOW_DISPLAY = Action(
+	label='_Errors',
+	tooltip='Flowgraph error messages',
+	stock_id=gtk.STOCK_DIALOG_ERROR,
+)
 ABOUT_WINDOW_DISPLAY = Action(
 	label='_About',
 	tooltip='About this program',

@@ -254,7 +254,7 @@ class Param(_Param, _GUIParam):
 		elif t in ('raw', 'complex', 'real', 'int', 'complex_vector', 'real_vector', 'int_vector', 'hex', 'bool'):
 			#raise exception if python cannot evaluate this value
 			try: e = self.get_parent().get_parent().evaluate(v)
-			except Exception, e: raise Exception, 'Value "%s" cannot be evaluated: %s'%(v, e)
+			except Exception, e: raise Exception, 'Value "%s" cannot be evaluated:\n%s'%(v, e)
 			#raise an exception if the data is invalid
 			if t == 'raw': return e
 			elif t == 'complex':

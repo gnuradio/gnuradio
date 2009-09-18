@@ -57,6 +57,20 @@ def MessageDialogHelper(type, buttons, title=None, markup=None):
 	message_dialog.destroy()
 	return response
 
+
+ERRORS_MARKUP_TMPL="""\
+#for $i, $err_msg in enumerate($errors)
+<b>Error $i:</b>
+$encode($err_msg.replace('\t', '  '))
+
+#end for"""
+def ErrorsDialog(flowgraph): MessageDialogHelper(
+	type=gtk.MESSAGE_ERROR,
+	buttons=gtk.BUTTONS_CLOSE,
+	title='Flowgraph Errors',
+	markup=Utils.parse_template(ERRORS_MARKUP_TMPL, errors=flowgraph.get_error_messages()),
+)
+
 class AboutDialog(gtk.AboutDialog):
 	"""A cute little about dialog."""
 

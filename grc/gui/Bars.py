@@ -81,6 +81,9 @@ MENU_BAR_LIST = (
 		None,
 		Actions.BLOCK_PARAM_MODIFY,
 	]),
+	(gtk.Action('View', '_View', None, None), [
+		Actions.ERRORS_WINDOW_DISPLAY,
+	]),
 	(gtk.Action('Build', '_Build', None, None), [
 		Actions.FLOW_GRAPH_GEN,
 		Actions.FLOW_GRAPH_EXEC,
