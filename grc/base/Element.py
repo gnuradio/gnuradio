@@ -50,11 +50,12 @@ class Element(object):
 	def get_error_messages(self):
 		"""
 		Get the list of error messages from this element and all of its children.
+		Do not include the error messages from disabled children.
 		Cleverly indent the children error messages for printing purposes.
 		@return a list of error message strings
 		"""
 		error_messages = list(self._error_messages) #make a copy
-		for child in self.get_children():
+		for child in filter(lambda c: c.get_enabled(), self.get_children()):
 			for msg in child.get_error_messages():
 				error_messages.append("%s:\n\t%s"%(child, msg.replace("\n", "\n\t")))
 		return error_messages
