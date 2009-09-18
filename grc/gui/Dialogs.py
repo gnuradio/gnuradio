@@ -67,7 +67,7 @@ $encode($err_msg.replace('\t', '  '))
 def ErrorsDialog(flowgraph): MessageDialogHelper(
 	type=gtk.MESSAGE_ERROR,
 	buttons=gtk.BUTTONS_CLOSE,
-	title='Flowgraph Errors',
+	title='Flow Graph Errors',
 	markup=Utils.parse_template(ERRORS_MARKUP_TMPL, errors=flowgraph.get_error_messages()),
 )
 
