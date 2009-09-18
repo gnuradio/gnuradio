@@ -72,12 +72,14 @@ namespace vrt {
 		 int *ctrl_fd_ptr, struct in_addr *ctrl_port_inaddr,
 		 int *data_fd_ptr, int *data_port_ptr);
 
+    // dsprxno selects the Rx DSP pipe (0 or 1) to configure
     static bool
-    send_rx_command(int ctrl_fd, bool start,
-		    struct in_addr addr, int data_port, int samples_per_pkt, int siggen_param);
+    send_rx_command(int ctrl_fd, int rxdspno, bool start,
+		    struct in_addr addr, int data_port, int samples_per_pkt);
 
+    // dsprxno selects the Rx DSP pipe (0 or 1) to stop
     static bool
-    send_stop_rx_command(int ctrl_fd);
+    send_stop_rx_command(int ctrl_fd, int rxdspno);
     
     static int control_port() { return 790; }
     int data_socket_fd() const { return d_data_fd; }
@@ -94,9 +96,11 @@ namespace vrt {
 
     vrt::rx::sptr vrt_rx() const { return d_rx; }
 
+    // FIXME add rxdspno as the first parameter
     bool start_streaming(int samples_per_pkt = 0);
-    bool stop_streaming();
 
+    // FIXME add rxdspno as the first parameter
+    bool stop_streaming();
 
     /* convenience methods that ultimately write the dboard pins */
     bool set_center_freq(double target_freq);

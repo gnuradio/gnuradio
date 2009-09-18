@@ -76,14 +76,18 @@ vrt::quadradio::open(const char *ip)
 bool
 vrt::quadradio::start_streaming(int samples_per_pkt)
 {
-  return send_rx_command(d_ctrl_fd, true, d_ctrl_port_inaddr,
-			 d_data_port, samples_per_pkt, 0);
+  int rxdspno = 0;	// FIXME make it the first param
+
+  return send_rx_command(d_ctrl_fd, rxdspno, true, d_ctrl_port_inaddr,
+			 d_data_port, samples_per_pkt);
 }
 
 bool
 vrt::quadradio::stop_streaming()
 {
-  return send_stop_rx_command(d_ctrl_fd);
+  int rxdspno = 0;	// FIXME make it the first param
+
+  return send_stop_rx_command(d_ctrl_fd, rxdspno);
 }
 
 bool
@@ -288,9 +292,9 @@ vrt::quadradio::open_sockets(const char *quad_radio_ip, int quad_radio_ctrl_port
 // ------------------------------------------------------------------------
 
 bool
-vrt::quadradio::send_rx_command(int ctrl_fd, bool start,
+vrt::quadradio::send_rx_command(int ctrl_fd, int rxdspno, bool start,
 				struct in_addr addr, int data_port,
-				int samples_per_pkt, int siggen_param)
+				int samples_per_pkt)
 {
   uint32_t cmd[7];
   cmd[0] = htonl(0);		   // verb: set
@@ -299,17 +303,17 @@ vrt::quadradio::send_rx_command(int ctrl_fd, bool start,
   cmd[3] = addr.s_addr;	  	   // ip address to send data to (already network endian)
   cmd[4] = htonl(data_port);	   // port to send data to
   cmd[5] = htonl(samples_per_pkt);
-  cmd[6] = htonl(siggen_param);
+  cmd[6] = htonl(rxdspno);	   // the DSP pipeline to configure
 
   return send_and_check(ctrl_fd, cmd, sizeof(cmd));
 }
 
 bool
-vrt::quadradio::send_stop_rx_command(int ctrl_fd)
+vrt::quadradio::send_stop_rx_command(int ctrl_fd, int rxdspno)
 {
   struct in_addr in_addr;
   in_addr.s_addr = 0;
-  return send_rx_command(ctrl_fd, false, in_addr, 0, 0, 0);
+  return send_rx_command(ctrl_fd, rxdspno, false, in_addr, 0, 0);
 }
 
 bool
