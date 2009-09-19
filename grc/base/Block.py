@@ -239,7 +239,7 @@ class Block(Element):
 		that are needed for the connections creation phase.
 		@param n the nested data odict
 		"""
-		get_hash = lambda: reduce(lambda x, y: x | y, [hash(param) for param in self.get_params()], 0)
+		get_hash = lambda: reduce(lambda x, y: x ^ y, [hash(param) for param in self.get_params()], 0)
 		my_hash = 0
 		while get_hash() != my_hash:
 			params_n = n.findall('param')
