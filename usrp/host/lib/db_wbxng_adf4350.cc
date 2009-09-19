@@ -31,7 +31,7 @@
 #define LD_PIN        (1 << 0)
 
 adf4350::adf4350(usrp_basic_sptr _usrp, int _which, int _spi_enable){
-	/* Initialize the pin directions. */
+    /* Initialize the pin directions. */
 
     d_usrp = _usrp;
     d_which = _which;
@@ -42,27 +42,17 @@ adf4350::adf4350(usrp_basic_sptr _usrp, int _which, int _spi_enable){
 
     /* Outputs */
     d_usrp->_write_oe(d_which, (CE_PIN | PDB_RF_PIN), (CE_PIN | PDB_RF_PIN));
-    d_usrp->write_io(d_which, (CE_PIN | PDB_RF_PIN), (CE_PIN | PDB_RF_PIN));
+    d_usrp->write_io(d_which, (0), (CE_PIN | PDB_RF_PIN));
 
-	/* Initialize the pin levels. */
-	_enable(true);
-	/* Initialize the registers. */
-    /*
-    timespec t;
-    t.tv_sec = 1;
-    t.tv_nsec = 0;
-    while (1) {
-    */
+    /* Initialize the pin levels. */
+    _enable(true);
+    /* Initialize the registers. */
     d_regs->_load_register(5);
-    /*
-        nanosleep(&t, NULL);
-    }
-    */
-	d_regs->_load_register(4);
-	d_regs->_load_register(3);
-	d_regs->_load_register(2);
-	d_regs->_load_register(1);
-	d_regs->_load_register(0);
+    d_regs->_load_register(4);
+    d_regs->_load_register(3);
+    d_regs->_load_register(2);
+    d_regs->_load_register(1);
+    d_regs->_load_register(0);
 }
 
 adf4350::~adf4350(){
@@ -71,12 +61,12 @@ adf4350::~adf4350(){
 
 freq_t 
 adf4350::_get_max_freq(void){
-	return MAX_FREQ;
+    return MAX_FREQ;
 }
 
 freq_t 
 adf4350::_get_min_freq(void){
-	return MIN_FREQ;
+    return MIN_FREQ;
 }
 
 bool 
@@ -86,16 +76,16 @@ adf4350::_get_locked(void){
 
 void 
 adf4350::_enable(bool enable){
-	if (enable){ /* chip enable */
+    if (enable){ /* chip enable */
         d_usrp->write_io(d_which, (CE_PIN | PDB_RF_PIN), (CE_PIN | PDB_RF_PIN));
-	}else{
+    }else{
         d_usrp->write_io(d_which, 0, (CE_PIN | PDB_RF_PIN));
-	}
+    }
 }
 
 void 
 adf4350::_write(uint8_t addr, uint32_t data){
-	data |= addr;
+    data |= addr;
 
     // create str from data here
     char s[4];
@@ -113,72 +103,76 @@ adf4350::_write(uint8_t addr, uint32_t data){
     d_usrp->_write_spi(0, d_spi_enable, d_spi_format, str);
     nanosleep(&t, NULL);
 
-    fprintf(stderr, "Wrote to WBXNG SPI address %d with data %8x\n", addr, data);
-	/* pulse latch */
+    //fprintf(stderr, "Wrote to WBXNG SPI address %d with data %8x\n", addr, data);
+    /* pulse latch */
     //d_usrp->write_io(d_which, 1, LE_PIN);
     //d_usrp->write_io(d_which, 0, LE_PIN);
 }
 
 bool 
 adf4350::_set_freq(freq_t freq){
-	/* Set the frequency by setting int, frac, mod, r, div */
-	if (freq > MAX_FREQ || freq < MIN_FREQ) return false;
-	/* Ramp up the RF divider until the VCO is within range. */
-	d_regs->d_divider_select = 0;
-	while (freq < MIN_VCO_FREQ){
-		freq <<= 1; //double the freq
-		d_regs->d_divider_select++; //double the divider
-	}
-	/* Ramp up the R divider until the N divider is at least the minimum. */
-	//d_regs->d_10_bit_r_counter = INPUT_REF_FREQ*MIN_INT_DIV/freq;
-	d_regs->d_10_bit_r_counter = 2;
-	uint64_t n_mod;
-	do{
-		d_regs->d_10_bit_r_counter++;
-		n_mod = freq;
-		n_mod *= d_regs->d_10_bit_r_counter;
-		n_mod *= d_regs->d_mod;
-		n_mod /= INPUT_REF_FREQ;
-		/* calculate int and frac */
-		d_regs->d_int = n_mod/d_regs->d_mod;
-		d_regs->d_frac = (n_mod - (freq_t)d_regs->d_int*d_regs->d_mod) & uint16_t(0xfff);
-		fprintf(stderr,
-			"VCO %lu KHz, Int %u, Frac %u, Mod %u, R %u, Div %u\n",
-			freq, d_regs->d_int, d_regs->d_frac,
-			d_regs->d_mod, d_regs->d_10_bit_r_counter, (1 << d_regs->d_divider_select)
-		);
-	}while(d_regs->d_int < MIN_INT_DIV);
-	/* calculate the band select so PFD is under 125 KHz */
-	d_regs->d_8_bit_band_select_clock_divider_value = \
-		INPUT_REF_FREQ/(FREQ_C(30e3)*d_regs->d_10_bit_r_counter) + 1;
+    /* Set the frequency by setting int, frac, mod, r, div */
+    if (freq > MAX_FREQ || freq < MIN_FREQ) return false;
+    /* Ramp up the RF divider until the VCO is within range. */
+    d_regs->d_divider_select = 0;
+    while (freq < MIN_VCO_FREQ){
+        freq <<= 1; //double the freq
+        d_regs->d_divider_select++; //double the divider
+    }
+    /* Ramp up the R divider until the N divider is at least the minimum. */
+    //d_regs->d_10_bit_r_counter = INPUT_REF_FREQ*MIN_INT_DIV/freq;
+    d_regs->d_10_bit_r_counter = 2;
+    uint64_t n_mod;
+    do{
+        d_regs->d_10_bit_r_counter++;
+        n_mod = freq;
+        n_mod *= d_regs->d_10_bit_r_counter;
+        n_mod *= d_regs->d_mod;
+        n_mod /= INPUT_REF_FREQ;
+        /* calculate int and frac */
+        d_regs->d_int = n_mod/d_regs->d_mod;
+        d_regs->d_frac = (n_mod - (freq_t)d_regs->d_int*d_regs->d_mod) & uint16_t(0xfff);
+        /*
+        fprintf(stderr,
+            "VCO %lu KHz, Int %u, Frac %u, Mod %u, R %u, Div %u\n",
+            freq, d_regs->d_int, d_regs->d_frac,
+            d_regs->d_mod, d_regs->d_10_bit_r_counter, (1 << d_regs->d_divider_select)
+        );
+        */
+    }while(d_regs->d_int < MIN_INT_DIV);
+    /* calculate the band select so PFD is under 125 KHz */
+    d_regs->d_8_bit_band_select_clock_divider_value = \
+        INPUT_REF_FREQ/(FREQ_C(30e3)*d_regs->d_10_bit_r_counter) + 1;
+    /*
     fprintf(stderr, "Band Selection: Div %u, Freq %lu\n", 
         d_regs->d_8_bit_band_select_clock_divider_value, 
-		INPUT_REF_FREQ/(d_regs->d_8_bit_band_select_clock_divider_value * d_regs->d_10_bit_r_counter) + 1
+        INPUT_REF_FREQ/(d_regs->d_8_bit_band_select_clock_divider_value * d_regs->d_10_bit_r_counter) + 1
     );
-	d_regs->_load_register(5);
-	d_regs->_load_register(3);
-	d_regs->_load_register(1);
-	/* load involved registers */
-	d_regs->_load_register(2);
-	d_regs->_load_register(4);
-	d_regs->_load_register(0); /* register 0 must be last */
-	return true;
+    */
+    d_regs->_load_register(5);
+    d_regs->_load_register(3);
+    d_regs->_load_register(1);
+    /* load involved registers */
+    d_regs->_load_register(2);
+    d_regs->_load_register(4);
+    d_regs->_load_register(0); /* register 0 must be last */
+    return true;
 }
 
 freq_t 
 adf4350::_get_freq(void){
-	/* Calculate the freq from int, frac, mod, ref, r, div:
-	 *  freq = (int + frac/mod) * (ref/r)
-	 * Keep precision by doing multiplies first:
-	 *  freq = (((((((int)*mod) + frac)*ref)/mod)/r)/div)
-	 */
-	uint64_t temp;
-	temp = d_regs->d_int;
-	temp *= d_regs->d_mod;
-	temp += d_regs->d_frac;
-	temp *= INPUT_REF_FREQ;
-	temp /= d_regs->d_mod;
-	temp /= d_regs->d_10_bit_r_counter;
-	temp /= (1 << d_regs->d_divider_select);
-	return temp;
+    /* Calculate the freq from int, frac, mod, ref, r, div:
+     *  freq = (int + frac/mod) * (ref/r)
+     * Keep precision by doing multiplies first:
+     *  freq = (((((((int)*mod) + frac)*ref)/mod)/r)/div)
+     */
+    uint64_t temp;
+    temp = d_regs->d_int;
+    temp *= d_regs->d_mod;
+    temp += d_regs->d_frac;
+    temp *= INPUT_REF_FREQ;
+    temp /= d_regs->d_mod;
+    temp /= d_regs->d_10_bit_r_counter;
+    temp /= (1 << d_regs->d_divider_select);
+    return temp;
 }

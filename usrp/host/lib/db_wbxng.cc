@@ -21,6 +21,7 @@
 #include <usrp/db_wbxng.h>
 #include <usrp/db_wbxng_adf4350.h>
 #include <db_base_impl.h>
+#include <stdio.h>
 
 // d'board i/o pin defs
 // Tx and Rx have shared defs, but different i/o regs
@@ -28,7 +29,7 @@
 #define ENABLE_33       (1 << 6)         // enables 3.3V supply
 #define RX_TXN          (1 << 5)         // Tx only: T/R antenna switch for TX/RX port
 #define RX2_RX1N        (1 << 5)         // Rx only: antenna switch between RX2 and TX/RX port
-#define BBAMP_EN        (1 << 4)
+#define TXMOD_EN        (1 << 4)
 #define PLL_CE          (1 << 3)
 #define PLL_PDBRF       (1 << 2)
 #define PLL_MUXOUT      (1 << 1)
@@ -204,8 +205,8 @@ wbxng_base::set_freq(double freq)
   */
 
   freq_t int_freq = freq_t(freq);
-  bool ok = d_common->_set_freq(int_freq);
-  double freq_result = (double) d_common->_get_freq();
+  bool ok = d_common->_set_freq(int_freq*2);
+  double freq_result = (double) d_common->_get_freq()/2.0;
   struct freq_result_t args = {ok, freq_result};
 
   /* Wait before reading Lock Detect*/
@@ -268,13 +269,13 @@ wbxng_base::is_quadrature()
 double
 wbxng_base::freq_min()
 {
-  return (double) d_common->_get_min_freq();
+  return (double) d_common->_get_min_freq()/2.0;
 }
 
 double
 wbxng_base::freq_max()
 {
-  return (double) d_common->_get_max_freq();
+  return (double) d_common->_get_max_freq()/2.0;
 }
 
 // ----------------------------------------------------------------
@@ -297,8 +298,9 @@ wbxng_base_tx::wbxng_base_tx(usrp_basic_sptr _usrp, int which, int _power_on)
   d_common = new adf4350(_usrp, d_which, d_spi_enable);
   
   // power up the transmit side, but don't enable the mixer
-  usrp()->_write_oe(d_which,(PLL_PDBRF|PLL_CE|RX_TXN|ENABLE_33|ENABLE_5), (PLL_PDBRF|PLL_CE|RX_TXN|ENABLE_33|ENABLE_5));
-  usrp()->write_io(d_which, (power_on()|PLL_PDBRF|PLL_CE|RX_TXN|ENABLE_33|ENABLE_5), (PLL_PDBRF|PLL_CE|RX_TXN|ENABLE_33|ENABLE_5));
+  usrp()->_write_oe(d_which,(RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5), (RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5));
+  usrp()->write_io(d_which, (power_on()|RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5), (RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5));
+  fprintf(stderr,"Setting WBXNG TXMOD on"); 
   //set_lo_offset(4e6);
 
   //set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
@@ -320,12 +322,12 @@ wbxng_base_tx::shutdown()
     // do whatever there is to do to shutdown
 
     // Power down and leave the T/R switch in the R position
-    usrp()->write_io(d_which, (power_off()|RX_TXN), (PLL_PDBRF|PLL_CE|RX_TXN|ENABLE_33|ENABLE_5));
+    usrp()->write_io(d_which, (power_off()|RX_TXN), (RX_TXN|ENABLE_33|ENABLE_5));
 
-    /*
     // Power down VCO/PLL
-    d_PD = 3;
+    d_common->_enable(false);
   
+    /*
     _write_control(_compute_control_reg());
     */
     _enable_refclk(false);                       // turn off refclk
@@ -337,7 +339,6 @@ bool
 wbxng_base_tx::set_auto_tr(bool on)
 {
   bool ok = true;
-  /*
   if(on) {
     ok &= set_atr_mask (RX_TXN | ENABLE_33 | ENABLE_5);
     ok &= set_atr_txval(0      | ENABLE_33 | ENABLE_5);
@@ -348,7 +349,6 @@ wbxng_base_tx::set_auto_tr(bool on)
     ok &= set_atr_txval(0);
     ok &= set_atr_rxval(0);
   }
-  */
   return ok;
 }
 
@@ -360,9 +360,9 @@ wbxng_base_tx::set_enable(bool on)
   */
 
   int v;
-  int mask = PLL_PDBRF | PLL_PDBRF | RX_TXN | ENABLE_5 | ENABLE_33;
+  int mask = RX_TXN | ENABLE_5 | ENABLE_33;
   if(on) {
-    v = PLL_PDBRF | PLL_CE | ENABLE_5 | ENABLE_33;
+    v = ENABLE_5 | ENABLE_33;
   }
   else {
     v = RX_TXN;
@@ -452,8 +452,7 @@ wbxng_base_rx::shutdown()
     usrp()->common_write_io(C_RX, d_which, power_off(), (ENABLE_33|ENABLE_5));
 
     // Power down VCO/PLL
-    d_PD = 3;
-  
+    d_common->_enable(false);
 
     // fprintf(stderr, "wbxng_base_rx::shutdown  before _write_control\n");
     //_write_control(_compute_control_reg());
@@ -471,8 +470,7 @@ wbxng_base_rx::shutdown()
 bool
 wbxng_base_rx::set_auto_tr(bool on)
 {
-  //bool ok = true;
-  /*
+  bool ok = true;
   if(on) {
     ok &= set_atr_mask (ENABLE_33|ENABLE_5);
     ok &= set_atr_txval(     0);
@@ -483,7 +481,6 @@ wbxng_base_rx::set_auto_tr(bool on)
     ok &= set_atr_txval(0);
     ok &= set_atr_rxval(0);
   }
-  */
   return true;
 }
 
