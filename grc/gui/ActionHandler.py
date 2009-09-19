@@ -210,6 +210,8 @@ class ActionHandler:
 			Dialogs.HelpDialog()
 		elif action == Actions.TYPES_WINDOW_DISPLAY:
 			Dialogs.TypesDialog(self.get_flow_graph().get_parent())
+		elif action == Actions.ERRORS_WINDOW_DISPLAY:
+			Dialogs.ErrorsDialog(self.get_flow_graph())
 		##################################################
 		# Param Modifications
 		##################################################
@@ -307,6 +309,7 @@ class ActionHandler:
 		# Global Actions for all States
 		##################################################
 		#update general buttons
+		Actions.ERRORS_WINDOW_DISPLAY.set_sensitive(not self.get_flow_graph().is_valid())
 		Actions.ELEMENT_DELETE.set_sensitive(bool(self.get_flow_graph().get_selected_elements()))
 		Actions.BLOCK_PARAM_MODIFY.set_sensitive(bool(self.get_flow_graph().get_selected_block()))
 		Actions.BLOCK_ROTATE_CCW.set_sensitive(bool(self.get_flow_graph().get_selected_blocks()))

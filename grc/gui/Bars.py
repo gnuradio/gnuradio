@@ -39,6 +39,7 @@ TOOLBAR_LIST = (
 	Actions.FLOW_GRAPH_UNDO,
 	Actions.FLOW_GRAPH_REDO,
 	None,
+	Actions.ERRORS_WINDOW_DISPLAY,
 	Actions.FLOW_GRAPH_GEN,
 	Actions.FLOW_GRAPH_EXEC,
 	Actions.FLOW_GRAPH_KILL,
@@ -80,6 +81,9 @@ MENU_BAR_LIST = (
 		Actions.BLOCK_DISABLE,
 		None,
 		Actions.BLOCK_PARAM_MODIFY,
+	]),
+	(gtk.Action('View', '_View', None, None), [
+		Actions.ERRORS_WINDOW_DISPLAY,
 	]),
 	(gtk.Action('Build', '_Build', None, None), [
 		Actions.FLOW_GRAPH_GEN,

@@ -215,6 +215,11 @@ BLOCK_PASTE = Action(
 	stock_id=gtk.STOCK_PASTE,
 	keypresses=(gtk.keysyms.v, gtk.gdk.CONTROL_MASK),
 )
+ERRORS_WINDOW_DISPLAY = Action(
+	label='_Errors',
+	tooltip='View flow graph errors',
+	stock_id=gtk.STOCK_DIALOG_ERROR,
+)
 ABOUT_WINDOW_DISPLAY = Action(
 	label='_About',
 	tooltip='About this program',
@@ -222,13 +227,13 @@ ABOUT_WINDOW_DISPLAY = Action(
 )
 HELP_WINDOW_DISPLAY = Action(
 	label='_Help',
-	tooltip='Usage Tips',
+	tooltip='Usage tips',
 	stock_id=gtk.STOCK_HELP,
 	keypresses=(gtk.keysyms.F1, NO_MODS_MASK),
 )
 TYPES_WINDOW_DISPLAY = Action(
 	label='_Types',
-	tooltip='Types Color Mapping',
+	tooltip='Types color mapping',
 	stock_id=gtk.STOCK_DIALOG_INFO,
 )
 FLOW_GRAPH_GEN = Action(
