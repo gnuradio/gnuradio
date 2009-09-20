@@ -9,4 +9,8 @@
     <name>in</name>
     <type>byte</type>
   </sink>
+  <source>
+    <name>out</name>
+    <type>short</type>
+  </source>
 </block>

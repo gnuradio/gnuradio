@@ -23,7 +23,11 @@
 #ifndef INCLUDED_NOAA_HRPT_DEFRAMER_H
 #define INCLUDED_NOAA_HRPT_DEFRAMER_H
 
-#include <gr_sync_block.h>
+#define HRPT_SYNC_WORDS        6
+#define HRPT_MINOR_FRAME_WORDS 11090
+#define HRPT_BITS_PER_WORD     10
+
+#include <gr_block.h>
 
 class noaa_hrpt_deframer;
 typedef boost::shared_ptr<noaa_hrpt_deframer> noaa_hrpt_deframer_sptr;
@@ -31,22 +35,25 @@ typedef boost::shared_ptr<noaa_hrpt_deframer> noaa_hrpt_deframer_sptr;
 noaa_hrpt_deframer_sptr
 noaa_make_hrpt_deframer();
 
-class noaa_hrpt_deframer : public gr_sync_block
+class noaa_hrpt_deframer : public gr_block
 {
   friend noaa_hrpt_deframer_sptr noaa_make_hrpt_deframer();
   noaa_hrpt_deframer();
 
   unsigned int       d_state;
-  unsigned int       d_count;
-  unsigned long long d_shifter; // 60 bit sync word
+  unsigned int       d_bit_count;
+  unsigned int       d_word_count;
+  unsigned long long d_shifter;     // 60 bit sync word
+  unsigned short     d_word;        // 10 bit HRPT word
 
   void enter_idle();
   void enter_synced();
  
 public:
-  int work(int noutput_items,
-	   gr_vector_const_void_star &input_items,
-	   gr_vector_void_star &output_items);
+  int general_work(int noutput_items,
+		   gr_vector_int &ninput_items,
+		   gr_vector_const_void_star &input_items,
+		   gr_vector_void_star &output_items);
 };
 
 #endif /* INCLUDED_NOAA_HRPT_DEFRAMER_H */

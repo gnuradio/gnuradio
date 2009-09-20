@@ -26,13 +26,19 @@
 
 #include <noaa_hrpt_deframer.h>
 #include <gr_io_signature.h>
+#include <cstring>
 
 #define ST_IDLE   0
 #define ST_SYNCED 1
 
-#define HRPT_MINOR_FRAME_SYNC 0x0A116FD719D83C95LL
-#define HRPT_BITS_PER_MINOR_FRAME 11090*10
-#define HRPT_SYNC_LENGTH 6*10
+#define SYNC1 0x0284
+#define SYNC2 0x016F
+#define SYNC3 0x035C
+#define SYNC4 0x019D
+#define SYNC5 0x020F
+#define SYNC6 0x0095
+
+#define HRPT_MINOR_FRAME_SYNC  0x0A116FD719D83C95LL
 
 static int frames_seen = 0;
 
@@ -43,10 +49,11 @@ noaa_make_hrpt_deframer()
 }
 
 noaa_hrpt_deframer::noaa_hrpt_deframer()
-  : gr_sync_block("noaa_hrpt_deframer",
-		  gr_make_io_signature(1, 1, sizeof(char)),
-		  gr_make_io_signature(0, 0, 0))
+  : gr_block("noaa_hrpt_deframer",
+	     gr_make_io_signature(1, 1, sizeof(char)),
+	     gr_make_io_signature(1, 1, sizeof(short)))
 {
+  set_output_multiple(6); // room for writing full sync when received
   enter_idle();
 }
 
@@ -60,36 +67,51 @@ void
 noaa_hrpt_deframer::enter_synced()
 {
   d_state = ST_SYNCED;
-  d_count = HRPT_BITS_PER_MINOR_FRAME-HRPT_SYNC_LENGTH;
+  d_bit_count = HRPT_BITS_PER_WORD;
+  d_word_count = HRPT_MINOR_FRAME_WORDS-HRPT_SYNC_WORDS;
+  d_word = 0;
 }
 
 int
-noaa_hrpt_deframer::work(int noutput_items,
-			 gr_vector_const_void_star &input_items,
-			 gr_vector_void_star &output_items)
+noaa_hrpt_deframer::general_work(int noutput_items,
+				 gr_vector_int &ninput_items,
+				 gr_vector_const_void_star &input_items,
+				 gr_vector_void_star &output_items)
 {
+  int ninputs = ninput_items[0];
   const char *in = (const char *)input_items[0];
+  unsigned short *out = (unsigned short *)output_items[0];
 
-  int i = 0;
-  while (i < noutput_items) {
+  int i = 0, j = 0;
+  while (i < ninputs && j < noutput_items) {
     char bit = in[i++];
-    if (d_state != ST_SYNCED)
-      fprintf(stderr, ".");
 
     switch (d_state) {
     case ST_IDLE:
       d_shifter = (d_shifter << 1) | bit; // MSB transmitted first
       
       if ((d_shifter & 0x0FFFFFFFFFFFFFFF) == HRPT_MINOR_FRAME_SYNC) {
-	fprintf(stderr, "\nSYNC #%i...", frames_seen++);
+	fprintf(stderr, "SYNC #%i", frames_seen++);
+	out[j++] = SYNC1;
+	out[j++] = SYNC2;
+	out[j++] = SYNC3;
+	out[j++] = SYNC4;
+	out[j++] = SYNC5;
+	out[j++] = SYNC6;
 	enter_synced();
       }
       break;
 
     case ST_SYNCED:
-      if (--d_count == 0) {
-	fprintf(stderr, "done.");
-	enter_idle();
+      d_word = (d_word << 1) | bit; // MSB transmitted first
+      if (--d_bit_count == 0) {
+	out[j++] = d_word;
+	d_word = 0;
+	d_bit_count = HRPT_BITS_PER_WORD;
+	if (--d_word_count == 0) {
+	  fprintf(stderr, "...done\n");
+	  enter_idle();
+	}
       }
       break;
 
@@ -98,5 +120,6 @@ noaa_hrpt_deframer::work(int noutput_items,
     }
   }
 
-  return i;
+  consume_each(i);
+  return j;
 }
