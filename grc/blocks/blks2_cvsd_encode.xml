@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## CVSD Encoder
+###################################################
+ -->
+<block>
+	<name>CVSD Encoder</name>
+	<key>blks2_cvsd_encode</key>
+	<import>from gnuradio import blks2</import>
+	<make>blks2.cvsd_encode($resample,$bw)</make>
+	<param>
+	  <name>Resample</name>
+	  <key>resample</key>
+	  <value>8</value>
+	  <type>int</type>
+	</param>
+	<param>
+	  <name>Frac. Bandwidth</name>
+	  <key>bw</key>
+	  <value>0.5</value>
+	  <type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>float</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>
