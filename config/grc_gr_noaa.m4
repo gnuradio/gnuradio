@@ -25,8 +25,10 @@ AC_DEFUN([GRC_GR_NOAA],[
 
     AC_CONFIG_FILES([\
         gr-noaa/Makefile \
+	gr-noaa/apps/Makefile \
 	gr-noaa/grc/Makefile \
 	gr-noaa/lib/Makefile \
+	gr-noaa/python/Makefile \
 	gr-noaa/swig/Makefile \
     ])
 

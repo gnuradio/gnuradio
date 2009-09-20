@@ -21,10 +21,13 @@
 
 include $(top_srcdir)/Makefile.common
 
-grcblocksdir = $(prefix)/share/gnuradio/grc/blocks
+if PYTHON
 
-dist_grcblocks_DATA = \
-	noaa_hrpt_deframer.xml \
-	noaa_hrpt_pll_cf.xml \
-	noaa_hrpt_sync_fb.xml
+dist_bin_SCRIPTS = \
+	usrp_rx_hrpt.py \
+	usrp_rx_lrit.py
 
+EXTRA_DIST = \
+	usrp_rx_hrpt.grc \
+	usrp_rx_lrit.grc
+endif
