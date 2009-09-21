@@ -77,25 +77,23 @@ module serdes_tx
    reg [3:0]   wait_count;
    
    // Internal FIFO, size 9 is 2K, size 10 is 4K bytes
-   wire        sop_o, eop_o, write, full, read, empty;
+   wire        sop_o, eop_o;
    wire [31:0] data_o;
-   reg 	       xfer_active;
 
    wire        rd_sop_i  = rd_flags_i[0];
    wire        rd_eop_i  = rd_flags_i[1];
    wire [1:0]  rd_occ_i = rd_flags_i[3:2];  // Unused
-   
-   cascadefifo2 #(.WIDTH(34),.SIZE(FIFOSIZE)) serdes_tx_fifo
-     (.clk(clk),.rst(rst),.clear(0),
-      .datain({rd_sop_i,rd_eop_i,rd_dat_i}), .write(write), .full(full),
-      .dataout({sop_o,eop_o,data_o}), .read(read), .empty(empty),
+
+   wire        have_data, empty;
+   fifo_cascade #(.WIDTH(34),.SIZE(FIFOSIZE)) serdes_tx_fifo
+     (.clk(clk),.reset(rst),.clear(0),
+      .datain({rd_sop_i,rd_eop_i,rd_dat_i}), .src_rdy_i(rd_ready_i), .dst_rdy_o(rd_ready_o),
+      .dataout({sop_o,eop_o,data_o}), .dst_rdy_i(read), .src_rdy_o(have_data),
       .space(), .occupied(fifo_occupied) );
-   assign      fifo_full   = full;
-   assign      fifo_empty  = empty;
-
-   assign write 	   = rd_ready_i & rd_ready_o;
-   assign rd_ready_o 	   = ~full;
-
+   
+   assign fifo_full   = ~rd_ready_o;
+   assign empty       = ~have_data;
+   assign fifo_empty  = empty;
    
    // FIXME Implement flow control   
    reg [15:0]  second_word;
@@ -182,7 +180,7 @@ module serdes_tx
    
    CRC16_D16 crc_blk( (state==RUN1) ? data_o[15:0] : data_o[31:16], CRC, nextCRC);
 
-   assign debug = { 26'd0, full, empty, xfer_active, state[2:0] };
+   assign debug = { 28'd0, state[2:0] };
    
 endmodule // serdes_tx
 
