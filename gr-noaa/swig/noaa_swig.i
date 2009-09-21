@@ -23,11 +23,13 @@
 %include "gnuradio.i"
 
 %{
+#include <noaa_hrpt_decoder.h>
 #include <noaa_hrpt_deframer.h>
 #include <noaa_hrpt_pll_cf.h>
 #include <noaa_hrpt_sync_fb.h>
 %}
 
+%include "noaa_hrpt_decoder.i"
 %include "noaa_hrpt_deframer.i"
 %include "noaa_hrpt_pll_cf.i"
 %include "noaa_hrpt_sync_fb.i"

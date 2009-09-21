@@ -20,13 +20,45 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(noaa,hrpt_deframer)
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-noaa_hrpt_deframer_sptr
-noaa_make_hrpt_deframer();
+#include <noaa_hrpt_decoder.h>
+#include <gr_io_signature.h>
 
-class noaa_hrpt_deframer : public gr_block
+#define SYNC1 0x0284
+#define SYNC2 0x016F
+#define SYNC3 0x035C
+#define SYNC4 0x019D
+#define SYNC5 0x020F
+#define SYNC6 0x0095
+
+noaa_hrpt_decoder_sptr
+noaa_make_hrpt_decoder()
 {
-private:
-  noaa_hrpt_deframer();
-};
+  return gnuradio::get_initial_sptr(new noaa_hrpt_decoder());
+}
+
+noaa_hrpt_decoder::noaa_hrpt_decoder()
+  : gr_sync_block("noaa_hrpt_decoder",
+		  gr_make_io_signature(1, 1, sizeof(short)),
+		  gr_make_io_signature(0, 0, 0))
+{
+  d_word_count = 0;
+}
+
+int
+noaa_hrpt_decoder::work(int noutput_items,
+			gr_vector_const_void_star &input_items,
+			gr_vector_void_star &output_items)
+{
+  const unsigned short *in = (const unsigned short*)input_items[0];
+
+  int i = 0;
+  while (i < noutput_items) {
+    unsigned short word = in[i++];
+  }
+
+  return i;
+}

@@ -20,13 +20,28 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(noaa,hrpt_deframer)
+#ifndef INCLUDED_NOAA_HRPT_DECODER_H
+#define INCLUDED_NOAA_HRPT_DECODER_H
 
-noaa_hrpt_deframer_sptr
-noaa_make_hrpt_deframer();
+#include <gr_sync_block.h>
 
-class noaa_hrpt_deframer : public gr_block
+class noaa_hrpt_decoder;
+typedef boost::shared_ptr<noaa_hrpt_decoder> noaa_hrpt_decoder_sptr;
+
+noaa_hrpt_decoder_sptr
+noaa_make_hrpt_decoder();
+
+class noaa_hrpt_decoder : public gr_sync_block
 {
-private:
-  noaa_hrpt_deframer();
+  friend noaa_hrpt_decoder_sptr noaa_make_hrpt_decoder();
+  noaa_hrpt_decoder();
+
+  unsigned int d_word_count;
+ 
+public:
+  int work(int noutput_items,
+	   gr_vector_const_void_star &input_items,
+	   gr_vector_void_star &output_items);
 };
+
+#endif /* INCLUDED_NOAA_HRPT_DECODER_H */

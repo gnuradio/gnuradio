@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: USRP HRPT Receiver
-# Generated: Sun Sep 20 19:09:57 2009
+# Generated: Sun Sep 20 19:30:17 2009
 ##################################################
 
 from gnuradio import eng_notation
@@ -105,10 +105,11 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self.agr = gr.agc_cc(1e-6, 1.0, 1.0, 1.0)
 		self.gr_deinterleave_0 = gr.deinterleave(gr.sizeof_float*1)
 		self.gr_file_sink_1 = gr.file_sink(gr.sizeof_short*1, "frames.dat")
-		self.gr_file_source_0 = gr.file_source(gr.sizeof_short*1, "filename", False)
+		self.gr_file_source_0 = gr.file_source(gr.sizeof_short*1, filename, False)
 		self.gr_float_to_complex_0 = gr.float_to_complex(1)
 		self.gr_short_to_float_0 = gr.short_to_float()
 		self.matched_filter = gr.moving_average_cc(hs, 1.0/hs, 4000)
+		self.noaa_hrpt_decoder_0 = noaa.hrpt_decoder()
 		self.noaa_hrpt_deframer_0 = noaa.hrpt_deframer()
 		self.noaa_hrpt_pll_cf_0 = noaa.hrpt_pll_cf(pll_alpha, pll_alpha**2/4.0, max_carrier_offset)
 		self.noaa_hrpt_sync_fb_0 = noaa.hrpt_sync_fb(sync_alpha, sync_alpha**2/4.0, sps, max_sync_offset)
@@ -169,6 +170,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self.connect((self.gr_deinterleave_0, 1), (self.gr_float_to_complex_0, 1))
 		self.connect((self.gr_deinterleave_0, 0), (self.gr_float_to_complex_0, 0))
 		self.connect((self.gr_file_source_0, 0), (self.gr_short_to_float_0, 0))
+		self.connect((self.noaa_hrpt_deframer_0, 0), (self.noaa_hrpt_decoder_0, 0))
 
 	def set_filename(self, filename):
 		self.filename = filename

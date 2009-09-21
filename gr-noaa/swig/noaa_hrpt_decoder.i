@@ -20,13 +20,13 @@
  * Boston, MA 02110-1301, USA.
  */
 
-GR_SWIG_BLOCK_MAGIC(noaa,hrpt_deframer)
+GR_SWIG_BLOCK_MAGIC(noaa,hrpt_decoder)
 
-noaa_hrpt_deframer_sptr
-noaa_make_hrpt_deframer();
+noaa_hrpt_decoder_sptr
+noaa_make_hrpt_decoder();
 
-class noaa_hrpt_deframer : public gr_block
+class noaa_hrpt_decoder : public gr_sync_block
 {
 private:
-  noaa_hrpt_deframer();
+  noaa_hrpt_decoder();
 };
