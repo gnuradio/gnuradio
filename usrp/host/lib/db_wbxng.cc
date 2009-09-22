@@ -29,6 +29,7 @@
 #define ENABLE_33       (1 << 6)         // enables 3.3V supply
 #define RX_TXN          (1 << 5)         // Tx only: T/R antenna switch for TX/RX port
 #define RX2_RX1N        (1 << 5)         // Rx only: antenna switch between RX2 and TX/RX port
+#define RXBB_EN         (1 << 4)
 #define TXMOD_EN        (1 << 4)
 #define PLL_CE          (1 << 3)
 #define PLL_PDBRF       (1 << 2)
@@ -421,8 +422,9 @@ wbxng_base_rx::wbxng_base_rx(usrp_basic_sptr _usrp, int which, int _power_on)
 
   d_common = new adf4350(_usrp, d_which, d_spi_enable);
 
-  usrp()->_write_oe(d_which, (RX2_RX1N|ENABLE_33|ENABLE_5), (RX2_RX1N|ENABLE_33|ENABLE_5));
-  usrp()->write_io(d_which,  (power_on()|RX2_RX1N|ENABLE_33|ENABLE_5), (RX2_RX1N|ENABLE_33|ENABLE_5));
+  usrp()->_write_oe(d_which, (RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5), (RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5));
+  usrp()->write_io(d_which,  (power_on()|RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5), (RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5));
+  fprintf(stderr,"Setting WBXNG RXBB on"); 
   
   // set up for RX on TX/RX port
   select_rx_antenna("TX/RX");
