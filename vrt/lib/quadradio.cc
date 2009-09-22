@@ -74,19 +74,15 @@ vrt::quadradio::open(const char *ip)
 }
 
 bool
-vrt::quadradio::start_streaming(int samples_per_pkt)
+vrt::quadradio::start_streaming(int rxdspno, int samples_per_pkt)
 {
-  int rxdspno = 0;	// FIXME make it the first param
-
   return send_rx_command(d_ctrl_fd, rxdspno, true, d_ctrl_port_inaddr,
 			 d_data_port, samples_per_pkt);
 }
 
 bool
-vrt::quadradio::stop_streaming()
+vrt::quadradio::stop_streaming(int rxdspno)
 {
-  int rxdspno = 0;	// FIXME make it the first param
-
   return send_stop_rx_command(d_ctrl_fd, rxdspno);
 }
 

@@ -29,25 +29,29 @@
 vrt_quadradio_source_32fc_sptr
 vrt_make_quadradio_source_32fc(const std::string &ip, 
 			       size_t rx_bufsize,
-			       size_t samples_per_pkt)
+			       size_t samples_per_pkt,
+                   int rxdspno)
 {
   return gnuradio::get_initial_sptr(new vrt_quadradio_source_32fc(ip,
 								  rx_bufsize,
-								  samples_per_pkt));
+								  samples_per_pkt,
+                                  rxdspno));
 }
 
 vrt_quadradio_source_32fc::vrt_quadradio_source_32fc(const std::string &ip,
 						     size_t rx_bufsize,
-						     size_t samples_per_pkt)
+						     size_t samples_per_pkt,
+                             int rxdspno)
   : vrt_source_32fc("quadradio_source_32fc"),
-    d_samples_per_pkt(samples_per_pkt == 0 ? 800 : samples_per_pkt),
-    d_qr(vrt::quadradio::sptr(new vrt::quadradio(ip, rx_bufsize)))
+    d_samples_per_pkt(samples_per_pkt == 0 ? (rxdspno == 0 ? 800 : 200) : samples_per_pkt),
+    d_qr(vrt::quadradio::sptr(new vrt::quadradio(ip, rx_bufsize))),
+    d_rxdspno(rxdspno)
 {
 }
 
 vrt_quadradio_source_32fc::~vrt_quadradio_source_32fc()
 {
-  d_qr->stop_streaming();
+  d_qr->stop_streaming(d_rxdspno);
 }
 
 vrt::rx::sptr 
@@ -64,13 +68,13 @@ vrt_quadradio_source_32fc::start()
   vrt_rx()->rx_packets(&nop, true);
   d_checker.resync();
 
-  return d_qr->start_streaming(d_samples_per_pkt);
+  return d_qr->start_streaming(d_rxdspno, d_samples_per_pkt);
 }  
 
 bool
 vrt_quadradio_source_32fc::stop()
 {
-  return d_qr->stop_streaming();
+  return d_qr->stop_streaming(d_rxdspno);
 }
 
 bool 
