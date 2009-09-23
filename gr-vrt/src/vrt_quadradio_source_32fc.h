@@ -34,13 +34,13 @@ vrt_quadradio_source_32fc_sptr
 vrt_make_quadradio_source_32fc(const std::string &ip,
 			       size_t rx_bufsize = 0,
 			       size_t samples_per_pkt = 0,
-                   int rxdspno = 0);
+			       int rxdspno = 0);
 
 class vrt_quadradio_source_32fc : public vrt_source_32fc
 {
   size_t				d_samples_per_pkt;
   boost::shared_ptr<vrt::quadradio>	d_qr;
-  int d_rxdspno;
+  int 					d_rxdspno;
 
   vrt_quadradio_source_32fc(const std::string &ip, size_t rx_bufsize,
 			    size_t samples_per_pkt, int rxdspno);

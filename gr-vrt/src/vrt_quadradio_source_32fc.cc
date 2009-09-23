@@ -30,12 +30,12 @@ vrt_quadradio_source_32fc_sptr
 vrt_make_quadradio_source_32fc(const std::string &ip, 
 			       size_t rx_bufsize,
 			       size_t samples_per_pkt,
-                   int rxdspno)
+			       int rxdspno)
 {
   return gnuradio::get_initial_sptr(new vrt_quadradio_source_32fc(ip,
 								  rx_bufsize,
 								  samples_per_pkt,
-                                  rxdspno));
+								  rxdspno));
 }
 
 vrt_quadradio_source_32fc::vrt_quadradio_source_32fc(const std::string &ip,
