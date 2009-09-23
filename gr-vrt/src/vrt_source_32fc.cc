@@ -30,6 +30,9 @@
 #include <gr_io_signature.h>
 #include <missing_pkt_checker.h>
 #include <iostream>
+#include <gruel/inet.h>
+#include <cstdio>
+
 
 #define VERBOSE 1		// define to 0 or 1
 
@@ -67,29 +70,43 @@ rx_32fc_handler::operator()(const uint32_t *payload,
 			    size_t n32_bit_words,
 			    const vrt::expanded_header *hdr)
 {
-  int nmissing = d_checker.check(hdr);
-  if (VERBOSE && nmissing != 0){
-    std::cerr << "S" << nmissing;
+  if (hdr->if_data_p()){
+    int nmissing = d_checker.check(hdr);
+    if (VERBOSE && nmissing != 0){
+      std::cerr << "S" << nmissing;
+    }
+
+    // copy as many as will fit into the output buffer.
+
+    size_t n = std::min(n32_bit_words, (size_t)(d_noutput_items - *d_oo));
+    vrt::copy_net_16sc_to_host_32fc(n, payload, &d_out[*d_oo]);
+    *d_oo += n;
+
+    // if there are any left over, copy them into remainder and tell
+    // our caller we're had enough for now.
+
+    size_t r = n32_bit_words - n;
+    if (r > 0){
+      assert(d_remainder.size() == 0);
+      d_remainder.resize(r);
+      vrt::copy_net_16sc_to_host_32fc(r, &payload[n], &d_remainder[0]);
+      return false;		// Stop calling us.
+    }
+
+    return true;			// Keep calling us, we've got more room
   }
-
-  // copy as many as will fit into the output buffer.
-
-  size_t n = std::min(n32_bit_words, (size_t)(d_noutput_items - *d_oo));
-  vrt::copy_net_16sc_to_host_32fc(n, payload, &d_out[*d_oo]);
-  *d_oo += n;
-
-  // if there are any left over, copy them into remainder and tell
-  // our caller we're had enough for now.
-
-  size_t r = n32_bit_words - n;
-  if (r > 0){
-    assert(d_remainder.size() == 0);
-    d_remainder.resize(r);
-    vrt::copy_net_16sc_to_host_32fc(r, &payload[n], &d_remainder[0]);
-    return false;		// Stop calling us.
+  else if (hdr->if_context_p()){
+    // FIXME print the IF-Context packet
+    fprintf(stderr, "\nIF-Context:\n");
+    for (size_t i = 0; i < n32_bit_words; i++)
+      fprintf(stderr, "%04x: %08x\n", (unsigned int) i, ntohl(payload[i]));
+    return true;
   }
-
-  return true;			// Keep calling us, we've got more room
+  else {
+    // It's most likely an Extension Data or Extension Context packet
+    // (that we don't know how to interpret...)
+    return true;
+  }
 }
 
 
