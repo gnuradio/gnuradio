@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 #include <vrt/expanded_header.h>
-#include <arpa/inet.h>			// needs autoconf'ing
+#include <gruel/inet.h>
 //#include <stdio.h>
 
 namespace vrt {
