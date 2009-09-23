@@ -221,7 +221,7 @@ write_internal_ram (libusb_device_handle *udh, unsigned char *buf,
                        (unsigned char*)(buf + (addr - start_addr)), n, 1000);
 
     if (a < 0){
-      fprintf(stderr,"write_internal_ram failed: %u\n", a);
+      fprintf(stderr,"write_internal_ram failed: %i\n", a);
       return false;
     }
   }
