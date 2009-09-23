@@ -91,7 +91,7 @@ noaa_hrpt_deframer::general_work(int noutput_items,
       d_shifter = (d_shifter << 1) | bit; // MSB transmitted first
       
       if ((d_shifter & 0x0FFFFFFFFFFFFFFF) == HRPT_MINOR_FRAME_SYNC) {
-	//fprintf(stderr, "SYNC #%i", frames_seen++);
+	fprintf(stderr, "SYNC #%i", frames_seen++);
 	out[j++] = SYNC1;
 	out[j++] = SYNC2;
 	out[j++] = SYNC3;
@@ -109,7 +109,7 @@ noaa_hrpt_deframer::general_work(int noutput_items,
 	d_word = 0;
 	d_bit_count = HRPT_BITS_PER_WORD;
 	if (--d_word_count == 0) {
-	  //fprintf(stderr, "...done\n");
+	  fprintf(stderr, "...done\n");
 	  enter_idle();
 	}
       }

@@ -59,17 +59,17 @@ noaa_hrpt_decoder::work(int noutput_items,
   while (i < noutput_items) {
     unsigned short word = in[i++];
     d_word_count++;
-    fprintf(stderr, "%5u:  ", d_word_count);
+    //fprintf(stderr, "%5u:  ", d_word_count);
     for (int pos = 0; pos < 10; pos++) {
       char ch = (word & (1 << 9)) ? '1' : '0';
       word = word << 1;
-      fprintf(stderr, "%c ", ch);
+      //fprintf(stderr, "%c ", ch);
     }
-    fprintf(stderr, "\n");
+    //fprintf(stderr, "\n");
 
     if (d_word_count == 11090) {
       d_word_count = 0;
-      fprintf(stderr, "\n");
+      //fprintf(stderr, "\n");
     }
   }
 
