@@ -22,6 +22,8 @@ AC_DEFUN([GRC_GR_NOAA],[
 
     dnl Don't do gr-noaa if gnuradio-core skipped
     GRC_CHECK_DEPENDENCY(gr-noaa, gnuradio-core)
+    GRC_CHECK_DEPENDENCY(gr-noaa, gr-wxgui)
+    GRC_CHECK_DEPENDENCY(gr-noaa, grc)
 
     AC_CONFIG_FILES([\
         gr-noaa/Makefile \
