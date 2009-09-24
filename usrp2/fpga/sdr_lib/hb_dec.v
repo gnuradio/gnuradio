@@ -9,6 +9,7 @@ module hb_dec
     (input clk,
      input rst,
      input bypass,
+     input run,
      input [8:0] cpi,  // Clocks per input -- equal to the decimation ratio ahead of this block
      input stb_in,
      input [IWIDTH-1:0] data_in,
@@ -25,7 +26,7 @@ module hb_dec
    assign 		do_mult = 1;
    
    always @(posedge clk)
-     if(rst)
+     if(rst | ~run)
        odd <= 0;
      else if(stb_in)
        odd <= ~odd;
@@ -34,7 +35,7 @@ module hb_dec
    assign 		write_even = stb_in & ~odd;
 
    always @(posedge clk)
-     if(rst)
+     if(rst | ~run)
        phase <= 0;
      else if(stb_in & odd)
        phase <= 1;
