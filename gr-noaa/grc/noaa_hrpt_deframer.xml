@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<block>
+  <name>HRPT Deframer</name>
+  <key>noaa_hrpt_deframer</key>
+  <category>NOAA</category>
+  <import>from gnuradio import noaa</import>
+  <make>noaa.hrpt_deframer()</make>
+  <sink>
+    <name>in</name>
+    <type>byte</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>short</type>
+  </source>
+</block>
