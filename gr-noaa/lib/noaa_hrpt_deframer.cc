@@ -90,7 +90,7 @@ noaa_hrpt_deframer::general_work(int noutput_items,
     case ST_IDLE:
       d_shifter = (d_shifter << 1) | bit; // MSB transmitted first
       
-      if ((d_shifter & 0x0FFFFFFFFFFFFFFF) == HRPT_MINOR_FRAME_SYNC) {
+      if ((d_shifter & 0x0FFFFFFFFFFFFFFFLL) == HRPT_MINOR_FRAME_SYNC) {
 	fprintf(stderr, "SYNC #%i", frames_seen++);
 	out[j++] = SYNC1;
 	out[j++] = SYNC2;
