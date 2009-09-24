@@ -69,8 +69,6 @@
 * threads dont die on exit in probe and variable sink
 * align param titles in properties dialog
 * weird grid params misbehaving
-* the block's import data does not handle variable params
-  * call rewrite after load, if new params appear, try load again...
 
 ##################################################
 # Future
