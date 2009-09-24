@@ -42,8 +42,8 @@ $EXTRACT gnuradio-core/src/lib/swig/Makefile swiginclude_HEADERS >>$NAME
 echo usr/lib/libgnuradio-core.so >>$NAME
 echo usr/lib/pkgconfig/gnuradio-core.pc >>$NAME
 
-# libgnuradio-audio-alsa
-NAME=debian/libgnuradio-audio-alsa.install
+# libgnuradio-audio-alsa0
+NAME=debian/libgnuradio-audio-alsa0.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gr-audio-alsa/src/Makefile lib_LTLIBRARIES >>$NAME
@@ -59,8 +59,8 @@ $EXTRACT gr-audio-alsa/src/Makefile grinclude_HEADERS >>$NAME
 $EXTRACT gr-audio-alsa/Makefile dist_pkgconfig_DATA >>$NAME
 echo usr/lib/libgnuradio-audio-alsa.so >>$NAME
 
-# libgnuradio-audio-jack
-NAME=debian/libgnuradio-audio-jack.install
+# libgnuradio-audio-jack0
+NAME=debian/libgnuradio-audio-jack0.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gr-audio-jack/src/Makefile lib_LTLIBRARIES >>$NAME
@@ -76,8 +76,8 @@ $EXTRACT gr-audio-jack/src/Makefile grinclude_HEADERS >>$NAME
 $EXTRACT gr-audio-jack/Makefile dist_pkgconfig_DATA >>$NAME
 echo usr/lib/libgnuradio-audio-jack.so >>$NAME
 
-# libgnuradio-audio-oss
-NAME=debian/libgnuradio-audio-oss.install
+# libgnuradio-audio-oss0
+NAME=debian/libgnuradio-audio-oss0.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gr-audio-oss/src/Makefile lib_LTLIBRARIES >>$NAME
@@ -93,8 +93,8 @@ $EXTRACT gr-audio-oss/src/Makefile grinclude_HEADERS >>$NAME
 $EXTRACT gr-audio-oss/Makefile dist_pkgconfig_DATA >>$NAME
 echo usr/lib/libgnuradio-audio-oss.so >>$NAME
 
-# libgnuradio-audio-portaudio
-NAME=debian/libgnuradio-audio-portaudio.install
+# libgnuradio-audio-portaudio0
+NAME=debian/libgnuradio-audio-portaudio0.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gr-audio-portaudio/src/Makefile lib_LTLIBRARIES >>$NAME
@@ -110,8 +110,8 @@ $EXTRACT gr-audio-portaudio/src/Makefile grinclude_HEADERS >>$NAME
 $EXTRACT gr-audio-portaudio/Makefile dist_pkgconfig_DATA >>$NAME
 echo usr/lib/libgnuradio-audio-portaudio.so >>$NAME
 
-# libgnuradio-cvsd-vocoder
-NAME=debian/libgnuradio-cvsd-vocoder.install
+# libgnuradio-cvsd-vocoder0
+NAME=debian/libgnuradio-cvsd-vocoder0.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gr-cvsd-vocoder/src/lib/Makefile lib_LTLIBRARIES >>$NAME
@@ -126,8 +126,8 @@ $EXTRACT gr-cvsd-vocoder/src/lib/Makefile grinclude_HEADERS >>$NAME
 $EXTRACT gr-cvsd-vocoder/Makefile dist_pkgconfig_DATA >>$NAME
 echo usr/lib/libgnuradio-cvsd-vocoder.so >>$NAME
 
-# libgnuradio-gsm-fr-vocoder
-NAME=debian/libgnuradio-gsm-fr-vocoder.install
+# libgnuradio-gsm-fr-vocoder0
+NAME=debian/libgnuradio-gsm-fr-vocoder0.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gr-gsm-fr-vocoder/src/lib/Makefile lib_LTLIBRARIES >>$NAME
@@ -142,8 +142,8 @@ $EXTRACT gr-gsm-fr-vocoder/src/lib/Makefile grinclude_HEADERS >>$NAME
 $EXTRACT gr-gsm-fr-vocoder/Makefile dist_pkgconfig_DATA >>$NAME
 echo usr/lib/libgnuradio-gsm-fr-vocoder.so >>$NAME
 
-# libgnuradio-pager
-NAME=debian/libgnuradio-pager.install
+# libgnuradio-pager0
+NAME=debian/libgnuradio-pager0.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gr-pager/src/Makefile lib_LTLIBRARIES >>$NAME
@@ -158,8 +158,8 @@ $EXTRACT gr-pager/src/Makefile grinclude_HEADERS >>$NAME
 $EXTRACT gr-pager/Makefile dist_pkgconfig_DATA >>$NAME
 echo usr/lib/libgnuradio-pager.so >>$NAME
 
-# libgnuradio-qtgui
-NAME=debian/libgnuradio-qtgui.install
+# libgnuradio-qtgui0
+NAME=debian/libgnuradio-qtgui0.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gr-qtgui/src/lib/Makefile lib_LTLIBRARIES >>$NAME
@@ -173,8 +173,8 @@ touch $NAME
 $EXTRACT gr-qtgui/src/lib/Makefile grinclude_HEADERS >>$NAME
 echo usr/lib/libgnuradio-qtgui.so >>$NAME
 
-# libgnuradio-trellis
-NAME=debian/libgnuradio-trellis.install
+# libgnuradio-trellis0
+NAME=debian/libgnuradio-trellis0.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gr-trellis/src/lib/Makefile lib_LTLIBRARIES >>$NAME
@@ -189,8 +189,8 @@ $EXTRACT gr-trellis/src/lib/Makefile grinclude_HEADERS >>$NAME
 $EXTRACT gr-trellis/Makefile dist_pkgconfig_DATA >>$NAME
 echo usr/lib/libgnuradio-trellis.so >>$NAME
 
-# libgnuradio-usrp
-NAME=debian/libgnuradio-usrp.install
+# libgnuradio-usrp0
+NAME=debian/libgnuradio-usrp0.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gr-usrp/src/Makefile lib_LTLIBRARIES >>$NAME
@@ -205,8 +205,8 @@ touch $NAME
 $EXTRACT gr-usrp/src/Makefile grinclude_HEADERS >>$NAME
 echo usr/lib/libgnuradio-usrp.so >>$NAME
 
-# libgnuradio-usrp2
-NAME=debian/libgnuradio-usrp2.install
+# libgnuradio-usrp2-0
+NAME=debian/libgnuradio-usrp2-0.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gr-usrp2/src/Makefile lib_LTLIBRARIES >>$NAME
@@ -221,8 +221,8 @@ touch $NAME
 $EXTRACT gr-usrp2/src/Makefile grinclude_HEADERS >>$NAME
 echo usr/lib/libgnuradio-usrp2.so >>$NAME
 
-# libgnuradio-video-sdl
-NAME=debian/libgnuradio-video-sdl.install
+# libgnuradio-video-sdl0
+NAME=debian/libgnuradio-video-sdl0.install
 rm -f $NAME
 touch $NAME
 $EXTRACT gr-video-sdl/src/Makefile lib_LTLIBRARIES >>$NAME
