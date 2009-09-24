@@ -36,6 +36,10 @@
 #define PLL_MUXOUT      (1 << 1)
 #define PLL_LOCK_DETECT (1 << 0)
 
+// RX Attenuator constants
+#define ATTN_SHIFT	8
+#define ATTN_MASK	(63 << ATTN_SHIFT)
+
 wbxng_base::wbxng_base(usrp_basic_sptr _usrp, int which, int _power_on)
   : db_base(_usrp, which), d_power_on(_power_on)
 {
@@ -243,7 +247,6 @@ wbxng_base::set_freq(double freq)
 bool
 wbxng_base::_set_pga(float pga_gain)
 {
-  /*
   if(d_which == 0) {
     usrp()->set_pga(0, pga_gain);
     usrp()->set_pga(1, pga_gain);
@@ -252,7 +255,6 @@ wbxng_base::_set_pga(float pga_gain)
     usrp()->set_pga(2, pga_gain);
     usrp()->set_pga(3, pga_gain);
   }
-  */
   return true;
 }
 
@@ -304,7 +306,7 @@ wbxng_base_tx::wbxng_base_tx(usrp_basic_sptr _usrp, int which, int _power_on)
   fprintf(stderr,"Setting WBXNG TXMOD on"); 
   //set_lo_offset(4e6);
 
-  //set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
+  set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
 }
 
 wbxng_base_tx::~wbxng_base_tx()
@@ -380,7 +382,7 @@ wbxng_base_tx::gain_min()
 float
 wbxng_base_tx::gain_max()
 {
-  return usrp()->pga_max();
+  return usrp()->pga_max() + 25.0;
 }
 
 float
@@ -398,7 +400,35 @@ wbxng_base_tx::set_gain(float gain)
     @param gain:  gain in decibels
     @returns True/False
   */
-  return _set_pga(usrp()->pga_max());
+  
+  // clamp gain
+  gain = std::max(gain_min(), std::min(gain, gain_max()));
+
+  float pga_gain, agc_gain;
+  float V_maxgain, V_mingain, V_fullscale, dac_value;
+
+  float maxgain = gain_max() - usrp()->pga_max();
+  float mingain = gain_min();
+  if(gain > maxgain) {
+    pga_gain = gain-maxgain;
+    assert(pga_gain <= usrp()->pga_max());
+    agc_gain = maxgain;
+  }
+  else {
+    pga_gain = 0;
+    agc_gain = gain;
+  }
+  
+  V_maxgain = 0.7;
+  V_mingain = 1.4;
+  V_fullscale = 3.3;
+  dac_value = (agc_gain*(V_maxgain-V_mingain)/(maxgain-mingain) + V_mingain)*4096/V_fullscale;
+
+  fprintf(stderr, "TXGAIN: %f dB, Dac Code: %d, Voltage: %f\n", gain, int(dac_value), float((dac_value/4096.0)*V_fullscale));
+  assert(dac_value>=0 && dac_value<4096);
+
+  return (usrp()->write_aux_dac(d_which, 0, int(dac_value))
+	  && _set_pga(int(pga_gain)));
 }
 
 
@@ -422,8 +452,8 @@ wbxng_base_rx::wbxng_base_rx(usrp_basic_sptr _usrp, int which, int _power_on)
 
   d_common = new adf4350(_usrp, d_which, d_spi_enable);
 
-  usrp()->_write_oe(d_which, (RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5), (RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5));
-  usrp()->write_io(d_which,  (power_on()|RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5), (RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5));
+  usrp()->_write_oe(d_which, (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5), (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
+  usrp()->write_io(d_which,  (power_on()|RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5), (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
   fprintf(stderr,"Setting WBXNG RXBB on"); 
   
   // set up for RX on TX/RX port
@@ -540,12 +570,10 @@ wbxng_base_rx::set_gain(float gain)
     @returns True/False
   */
   
-  /*
   // clamp gain
   gain = std::max(gain_min(), std::min(gain, gain_max()));
 
   float pga_gain, agc_gain;
-  float V_maxgain, V_mingain, V_fullscale, dac_value;
 
   float maxgain = gain_max() - usrp()->pga_max();
   float mingain = gain_min();
@@ -559,17 +587,16 @@ wbxng_base_rx::set_gain(float gain)
     agc_gain = gain;
   }
   
-  V_maxgain = .2;
-  V_mingain = 1.2;
-  V_fullscale = 3.3;
-  dac_value = (agc_gain*(V_maxgain-V_mingain)/(maxgain-mingain) + V_mingain)*4096/V_fullscale;
+  return _set_attn(maxgain-agc_gain) && _set_pga(int(pga_gain));
+}
 
-  assert(dac_value>=0 && dac_value<4096);
-
-  return (usrp()->write_aux_dac(d_which, 0, int(dac_value))
-	  && _set_pga(int(pga_gain)));
-  */
-  return false;
+bool
+wbxng_base_rx::_set_attn(float attn)
+{
+  int attn_code = int(floor(attn/0.5));
+  unsigned int iobits = (~attn_code) << ATTN_SHIFT;
+  fprintf(stderr, "Attenuation: %f dB, Code: %d, IO Bits %x, Mask: %x \n", attn, attn_code, iobits & ATTN_MASK, ATTN_MASK);
+  return usrp()->write_io(d_which, iobits, ATTN_MASK);
 }
 
 // ----------------------------------------------------------------
@@ -613,7 +640,7 @@ db_wbxng_rx::gain_min()
 float
 db_wbxng_rx::gain_max()
 {
-  return usrp()->pga_max()+70;
+  return usrp()->pga_max()+30.5;
 }
 
 float
@@ -626,7 +653,7 @@ db_wbxng_rx::gain_db_per_step()
 bool
 db_wbxng_rx::i_and_q_swapped()
 {
-  return true;
+  return false;
 }
 
 /*

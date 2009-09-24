@@ -95,6 +95,7 @@ class wbxng_base_rx : public wbxng_base
 {
 protected:
   void shutdown();
+  bool _set_attn(float attn);
 
 public:
   wbxng_base_rx(usrp_basic_sptr usrp, int which, int _power_on=0);
