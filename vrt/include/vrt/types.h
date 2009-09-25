@@ -74,7 +74,7 @@ vrt_geo_angle_to_double(vrt_geo_angle_t fx){
  **********************************************************************/
 typedef int64_t vrt_freq_t;
 #define VRT_FREQ_RP 20
-#define VRT_FREQ_C(_x) _FXPT_C(vrt_altitude_t, _x, VRT_FREQ_RP)
+#define VRT_FREQ_C(_x) _FXPT_C(vrt_freq_t, _x, VRT_FREQ_RP)
 
 static inline vrt_freq_t
 double_to_vrt_freq(double num){

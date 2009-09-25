@@ -27,6 +27,8 @@
 #include <vrt_source_32fc.h>
 #include <vrt/expanded_header.h>
 #include <vrt/copiers.h>
+#include <vrt/types.h>
+#include <vrt/if_context.h>
 #include <gr_io_signature.h>
 #include <missing_pkt_checker.h>
 #include <iostream>
@@ -96,10 +98,17 @@ rx_32fc_handler::operator()(const uint32_t *payload,
     return true;			// Keep calling us, we've got more room
   }
   else if (hdr->if_context_p()){
-    // FIXME print the IF-Context packet
+    // print the IF-Context packet
     fprintf(stderr, "\nIF-Context:\n");
     for (size_t i = 0; i < n32_bit_words; i++)
       fprintf(stderr, "%04x: %08x\n", (unsigned int) i, ntohl(payload[i]));
+    // copy the context into struct so we cant reference bad memory
+    // print the components of the struct, prove that it works!
+    all_context_t if_context;
+    memcpy(((uint32_t*)&if_context) + 5, payload, sizeof(uint32_t)*n32_bit_words);//FIXME
+    fprintf(stderr, "\nIF-Context-Components:\n");
+    if_context.beamformer.rf_ref_freq = ntohll(if_context.beamformer.rf_ref_freq);
+    fprintf(stderr, "Ref Freq %f Hz\n", vrt_freq_to_double(if_context.beamformer.rf_ref_freq));
     return true;
   }
   else {
