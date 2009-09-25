@@ -1,59 +1,36 @@
-gnuradio (3.3svn-@SVNVERSION@) unstable; urgency=low
+gnuradio (3.3git-1) unstable; urgency=low
 
-  * Development trunk updates as of revision @SVNVERSION@
-  * See http://gnuradio.org/trac
+  * upstream unstable version from git repository
 
- -- Johnathan Corgan <jcorgan@corganenterprises.com>  @BUILD_DATE@
+ -- Johnathan Corgan <jcorgan@corganenterprises.com>  Thu, 24 Sep 2009 23:00:00 -0600
+  
+gnuradio (3.2.2-1) unstable; urgency=low
 
-gnuradio (3.2) unstable; urgency=low
+  * new upstream version, includes gcc4.3 support, closes: #474801, #524387
+  * merge debian/ content restructuring from upstream svn
+  * change build-dep from fftw3-dev to libfftw3-dev, closes: #458231
+  * fix problem with rebuilding, closes: #441739
+  * no longer need to move to contrib now that sdcc is fully back in main, 
+    we just need to build depend on sdcc 2.9.0 or later, closes: #457402
+  * rebuild reflects python-central file location change, closes: #490513
+  * change Jack build depend to libjack-dev, closes: #527413
 
-  * New upstream release 3.2
-  * See http://gnuradio.org/trac
+ -- Bdale Garbee <bdale@gag.com>  Tue, 15 Sep 2009 23:37:57 -0600
 
- -- Johnathan Corgan <jcorgan@corganenterprises.com>  Sat,  23 May 2009 18:00:00 -0800
+gnuradio (3.0.4-2) unstable; urgency=high
 
-gnuradio (3.1.3) stable; urgency=low
+  * rebuild with new version number and upload to finally (?) recover from
+    over-zealous removal in response to bug 453154
+  * recommend udev instead of hotplug, closes: #448907
 
-  * "Upstream" release, see http://gnuradio.org/trac/wiki/Release3.1Branch
+ -- Bdale Garbee <bdale@gag.com>  Sun, 23 Dec 2007 12:11:49 -0700
 
- -- Johnathan Corgan <jcorgan@corganenterprises.com>  Sat, 23 Aug 2008 19:00:00 -0800
+gnuradio (3.0.4-1) unstable; urgency=low
 
-gnuradio (3.1.2) stable; urgency=low
-
-  * "Upstream" release, see http://gnuradio.org/trac/wiki/Release3.1Branch
-
- -- Johnathan Corgan <jcorgan@corganenterprises.com>  Wed, 24 Mar 2008 09:00:00 -0800
-
-gnuradio (3.1.1) stable; urgency=high
-
-  * Fixed regressions in digital packet radio (t196,t198)
-  * Fixed RX phase offset causing sidebands (t195)
-  * Fixed TX I/Q swapping bug (t179)
-  * Fixed loopback bug in gr-sounder
-  * Added complex and dual-channel options to oscope for
-    BasicRX and LFRX
-
- -- Johnathan Corgan <jcorgan@corganenterprises.com>  Sun,  4 Nov 2007 21:15:00 -0800
-
-gnuradio (3.1.0) stable; urgency=low
-
-  * Release 3.1 stable branch
-  * add/split packages to cover entire GNU Radio distribution
-
- -- Johnathan Corgan <jcorgan@corganenterprises.com>  Mon, 22 Oct 2007 10:37:00 -0800
-
-gnuradio (3.0.svn) unstable; urgency=low
-
-  * add/split packages to cover entire GNU Radio distribution
+  * new upstream version
   * fix build failure with gcc-4.3 by adding a #include, closes: #420896
-  * update copyright assertion on the debian/ contents, since I have
-    assigned my copyright to the FSF and now have upstream commit rights
-  * merge debian/ into upstream SVN repository
-  * add --disable-gr-qtgui (at least until we figure out qwt build deps!)
-  * add build dep on python-numpy
-  * conditionalize configure and clean targets to handle build from SVN
 
- -- Bdale Garbee <bdale@gag.com>  Thu, 26 Jul 2007 18:07:52 -0600
+ -- Bdale Garbee <bdale@gag.com>  Tue, 14 Aug 2007 22:38:32 -0600
 
 gnuradio (3.0.3-1) unstable; urgency=low
 
