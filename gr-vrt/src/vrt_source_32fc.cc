@@ -105,6 +105,9 @@ rx_32fc_handler::operator()(const uint32_t *payload,
   else {
     // It's most likely an Extension Data or Extension Context packet
     // (that we don't know how to interpret...)
+    fprintf(stderr, "\nIF-Extension:\n");
+    for (size_t i = 0; i < n32_bit_words; i++)
+      fprintf(stderr, "%04x: %08x\n", (unsigned int) i, ntohl(payload[i]));
     return true;
   }
 }
