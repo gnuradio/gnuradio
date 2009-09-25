@@ -105,7 +105,7 @@ rx_32fc_handler::operator()(const uint32_t *payload,
     // copy the context into struct so we cant reference bad memory
     // print the components of the struct, prove that it works!
     all_context_t if_context;
-    memcpy(((uint32_t*)&if_context) + 5, payload, sizeof(uint32_t)*n32_bit_words);//FIXME
+    memcpy(&if_context, payload, sizeof(uint32_t)*n32_bit_words);//FIXME
     fprintf(stderr, "\nIF-Context-Components:\n");
     if_context.beamformer.rf_ref_freq = ntohll(if_context.beamformer.rf_ref_freq);
     fprintf(stderr, "Ref Freq %f Hz\n", vrt_freq_to_double(if_context.beamformer.rf_ref_freq));
