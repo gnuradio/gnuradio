@@ -93,14 +93,15 @@ class PropsDialog(gtk.Dialog):
 		Ex: Added, removed, type change, hide change...
 		To the props dialog, the hide setting of 'none' and 'part' are identical.
 		Therfore, the props dialog only cares if the hide setting is/not 'all'.
-		Make a hash that uniquely represents the params' state.
+		Make a hash that uniquely represents the params state.
 		@return true if changed
 		"""
 		old_hash = self._hash
-		#create a tuple of things from each param that affects the params box
-		self._hash = hash(tuple([(
-			hash(param), param.get_type(), param.get_hide() == 'all',
-		) for param in self._block.get_params()]))
+		self._hash = 0
+		for param in self._block.get_params():
+			self._hash ^= hash(param)
+			self._hash ^= hash(param.get_type())
+			self._hash ^= hash(param.get_hide() == 'all')
 		return self._hash != old_hash
 
 	def _handle_changed(self, *args):

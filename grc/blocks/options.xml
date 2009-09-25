@@ -78,36 +78,19 @@ else: self.stop(); self.wait()</callback>
 		<hide>#if $generate_options() == 'hb' then 'none' else 'all'#</hide>
 	</param>
 	<param>
-		<name>Run Options</name>
-		<key>run_options</key>
-		<value>prompt</value>
-		<type>enum</type>
-		<hide>#if $generate_options() == 'no_gui' then 'none' else 'all'#</hide>
-		<option>
-			<name>Run to Completion</name>
-			<key>run</key>
-		</option>
-		<option>
-			<name>Prompt for Exit</name>
-			<key>prompt</key>
-		</option>
-	</param>
-	<param>
 		<name>Run</name>
 		<key>run</key>
 		<value>True</value>
 		<type>bool</type>
-		<hide>
-#if $generate_options() == 'wx_gui'
-	#if $run()
-		part
+		<hide>#if $generate_options() == 'wx_gui'
+	#if str($run) == 'True'
+part#slurp
 	#else
-		none
+none#slurp
 	#end if
 #else
-	all
-#end if
-		</hide>
+all#slurp
+#end if</hide>
 		<option>
 			<name>Autostart</name>
 			<key>True</key>

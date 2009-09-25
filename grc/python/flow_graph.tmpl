@@ -233,14 +233,9 @@ if __name__ == '__main__':
 	#if $generate_options == 'wx_gui'
 	tb.Run($flow_graph.get_option('run'))
 	#elif $generate_options == 'no_gui'
-		#set $run_options = $flow_graph.get_option('run_options')
-		#if $run_options == 'prompt'
 	tb.start()
 	raw_input('Press Enter to quit: ')
 	tb.stop()
-		#elif $run_options == 'run'
-	tb.run()
-		#end if
 	#end if
 #end if
 
