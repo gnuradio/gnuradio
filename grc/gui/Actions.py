@@ -21,149 +21,254 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-######################################################################################################
-# Action Names
-######################################################################################################
-APPLICATION_INITIALIZE = 'app init'
-APPLICATION_QUIT = 'app quit'
-PARAM_MODIFY = 'param modify'
-BLOCK_MOVE = 'block move'
-BLOCK_ROTATE_CCW = 'block rotate ccw'
-BLOCK_ROTATE_CW = 'block rotate cw'
-BLOCK_PARAM_MODIFY = 'block param modify'
-BLOCK_INC_TYPE = 'block increment type'
-BLOCK_DEC_TYPE = 'block decrement type'
-BLOCK_ENABLE = 'block enable'
-BLOCK_DISABLE = 'block disable'
-BLOCK_CUT = 'block cut'
-BLOCK_COPY = 'block copy'
-BLOCK_PASTE = 'block paste'
-PORT_CONTROLLER_INC = 'port controller increment'
-PORT_CONTROLLER_DEC = 'port controller decrement'
-ELEMENT_CREATE = 'element create'
-ELEMENT_DELETE = 'element delete'
-ELEMENT_SELECT = 'element select'
-NOTHING_SELECT = 'nothing select'
-FLOW_GRAPH_OPEN = 'flow graph open'
-FLOW_GRAPH_UNDO = 'flow graph undo'
-FLOW_GRAPH_REDO = 'flow graph redo'
-FLOW_GRAPH_SAVE = 'flow graph save'
-FLOW_GRAPH_SAVE_AS = 'flow graph save as'
-FLOW_GRAPH_CLOSE = 'flow graph close'
-FLOW_GRAPH_NEW = 'flow graph new'
-FLOW_GRAPH_GEN = 'flow graph gen'
-FLOW_GRAPH_EXEC = 'flow graph exec'
-FLOW_GRAPH_KILL = 'flow graph kill'
-FLOW_GRAPH_SCREEN_CAPTURE = 'flow graph screen capture'
-ABOUT_WINDOW_DISPLAY = 'about window display'
-HELP_WINDOW_DISPLAY = 'help window display'
-COLORS_WINDOW_DISPLAY = 'colors window display'
+NO_MODS_MASK = 0
 
-######################################################################################################
-# Action Key Map
-######################################################################################################
-_actions_key_list = (
-	#action name, key name, mod mask
-	(FLOW_GRAPH_NEW, 'n', gtk.gdk.CONTROL_MASK),
-	(FLOW_GRAPH_OPEN, 'o', gtk.gdk.CONTROL_MASK),
-	(FLOW_GRAPH_SAVE, 's', gtk.gdk.CONTROL_MASK),
-	(FLOW_GRAPH_SAVE_AS, 's', gtk.gdk.CONTROL_MASK | gtk.gdk.SHIFT_MASK),
-	(FLOW_GRAPH_CLOSE, 'w', gtk.gdk.CONTROL_MASK),
-	(APPLICATION_QUIT, 'q', gtk.gdk.CONTROL_MASK),
-	(FLOW_GRAPH_UNDO, 'z', gtk.gdk.CONTROL_MASK),
-	(FLOW_GRAPH_REDO, 'y', gtk.gdk.CONTROL_MASK),
-	(ELEMENT_DELETE, 'Delete', 0),
-	(BLOCK_ROTATE_CCW, 'Left', 0),
-	(BLOCK_ROTATE_CW, 'Right', 0),
-	(BLOCK_DEC_TYPE, 'Up', 0),
-	(BLOCK_INC_TYPE, 'Down', 0),
-	(BLOCK_PARAM_MODIFY, 'Return', 0),
-	(BLOCK_ENABLE, 'e', 0),
-	(BLOCK_DISABLE, 'd', 0),
-	(BLOCK_CUT, 'x', gtk.gdk.CONTROL_MASK),
-	(BLOCK_COPY, 'c', gtk.gdk.CONTROL_MASK),
-	(BLOCK_PASTE, 'v', gtk.gdk.CONTROL_MASK),
-	(FLOW_GRAPH_GEN, 'F5', 0),
-	(FLOW_GRAPH_EXEC, 'F6', 0),
-	(FLOW_GRAPH_KILL, 'F7', 0),
-	(FLOW_GRAPH_SCREEN_CAPTURE, 'Print', 0),
-	(HELP_WINDOW_DISPLAY, 'F1', 0),
-	#the following have no associated gtk.Action
-	(PORT_CONTROLLER_INC, 'equal', 0),
-	(PORT_CONTROLLER_INC, 'plus', 0),
-	(PORT_CONTROLLER_INC, 'KP_Add', 0),
-	(PORT_CONTROLLER_DEC, 'minus', 0),
-	(PORT_CONTROLLER_DEC, 'KP_Subtract', 0),
-)
-
-_actions_key_dict = dict(((key_name, mod_mask), action_name) for action_name, key_name, mod_mask in _actions_key_list)
-def get_action_name_from_key_name(key_name, mod_mask=0):
+########################################################################
+# Actions API
+########################################################################
+_actions_keypress_dict = dict()
+_keymap = gtk.gdk.keymap_get_default()
+_used_mods_mask = NO_MODS_MASK
+def handle_key_press(event):
 	"""
-	Get the action name associated with the key name and mask.
-	Both keyname and mask have to match.
-	@param key_name the name of the key
-	@param mod_mask the key press mask (shift, ctrl) 0 for none
-	@return the action name or blank string
+	Call the action associated with the key press event.
+	Both the key value and the mask must have a match.
+	@param event a gtk key press event
+	@return true if handled
 	"""
-	key_name_mod_mask = (key_name, mod_mask)
-	if key_name_mod_mask in _actions_key_dict: return _actions_key_dict[key_name_mod_mask]
-	return ''
+	_used_mods_mask = reduce(lambda x, y: x | y, [mod_mask for keyval, mod_mask in _actions_keypress_dict], NO_MODS_MASK)
+	#extract the key value and the consumed modifiers
+	keyval, egroup, level, consumed = _keymap.translate_keyboard_state(
+		event.hardware_keycode, event.state, event.group)
+	#get the modifier mask and ignore irrelevant modifiers
+	mod_mask = event.state & ~consumed & _used_mods_mask
+	#look up the keypress and call the action
+	try: _actions_keypress_dict[(keyval, mod_mask)]()
+	except KeyError: return False #not handled
+	return True #handled here
 
-######################################################################################################
-# Actions
-######################################################################################################
-_actions_list = (
-	gtk.Action(FLOW_GRAPH_NEW, '_New', 'Create a new flow graph', gtk.STOCK_NEW),
-	gtk.Action(FLOW_GRAPH_OPEN, '_Open', 'Open an existing flow graph', gtk.STOCK_OPEN),
-	gtk.Action(FLOW_GRAPH_SAVE, '_Save', 'Save the current flow graph', gtk.STOCK_SAVE),
-	gtk.Action(FLOW_GRAPH_SAVE_AS, 'Save _As', 'Save the current flow graph as...', gtk.STOCK_SAVE_AS),
-	gtk.Action(FLOW_GRAPH_CLOSE, '_Close', 'Close the current flow graph', gtk.STOCK_CLOSE),
-	gtk.Action(APPLICATION_QUIT, '_Quit', 'Quit program', gtk.STOCK_QUIT),
-	gtk.Action(FLOW_GRAPH_UNDO, '_Undo', 'Undo a change to the flow graph', gtk.STOCK_UNDO),
-	gtk.Action(FLOW_GRAPH_REDO, '_Redo', 'Redo a change to the flow graph', gtk.STOCK_REDO),
-	gtk.Action(ELEMENT_DELETE, '_Delete', 'Delete the selected blocks', gtk.STOCK_DELETE),
-	gtk.Action(BLOCK_ROTATE_CCW, 'Rotate Counterclockwise', 'Rotate the selected blocks 90 degrees to the left', gtk.STOCK_GO_BACK),
-	gtk.Action(BLOCK_ROTATE_CW, 'Rotate Clockwise', 'Rotate the selected blocks 90 degrees to the right', gtk.STOCK_GO_FORWARD),
-	gtk.Action(BLOCK_PARAM_MODIFY, '_Properties', 'Modify params for the selected block', gtk.STOCK_PROPERTIES),
-	gtk.Action(BLOCK_ENABLE, 'E_nable', 'Enable the selected blocks', gtk.STOCK_CONNECT),
-	gtk.Action(BLOCK_DISABLE, 'D_isable', 'Disable the selected blocks', gtk.STOCK_DISCONNECT),
-	gtk.Action(BLOCK_CUT, 'Cu_t', 'Cut', gtk.STOCK_CUT),
-	gtk.Action(BLOCK_COPY, '_Copy', 'Copy', gtk.STOCK_COPY),
-	gtk.Action(BLOCK_PASTE, '_Paste', 'Paste', gtk.STOCK_PASTE),
-	gtk.Action(ABOUT_WINDOW_DISPLAY, '_About', 'About this program', gtk.STOCK_ABOUT),
-	gtk.Action(HELP_WINDOW_DISPLAY, '_Help', 'Usage Tips', gtk.STOCK_HELP),
-	gtk.Action(COLORS_WINDOW_DISPLAY, '_Colors', 'Color Mapping', gtk.STOCK_DIALOG_INFO),
-	gtk.Action(FLOW_GRAPH_GEN, '_Generate', 'Generate the flow graph', gtk.STOCK_CONVERT),
-	gtk.Action(FLOW_GRAPH_EXEC, '_Execute', 'Execute the flow graph', gtk.STOCK_EXECUTE),
-	gtk.Action(FLOW_GRAPH_KILL, '_Kill', 'Kill the flow graph', gtk.STOCK_STOP),
-	gtk.Action(FLOW_GRAPH_SCREEN_CAPTURE, 'S_creen Capture', 'Create a screen capture of the flow graph', gtk.STOCK_PRINT),
-)
-def get_all_actions(): return _actions_list
+_all_actions_list = list()
+def get_all_actions(): return _all_actions_list
 
-_actions_dict = dict((action.get_name(), action) for action in _actions_list)
-def get_action_from_name(action_name):
-	"""
-	Retrieve the action from the action list.
-	Search the list and find an action with said name.
-	@param action_name the action name(string)
-	@throw KeyError bad action name
-	@return a gtk action object
-	"""
-	if action_name in _actions_dict: return _actions_dict[action_name]
-	raise KeyError('Action Name: "%s" does not exist'%action_name)
-
-######################################################################################################
-# Accelerators
-######################################################################################################
 _accel_group = gtk.AccelGroup()
 def get_accel_group(): return _accel_group
 
-#set the accelerator group, and accelerator path
-#register the key name and mod mask with the accelerator path
-for action_name, key_name, mod_mask in _actions_key_list:
-	try:
-		accel_path = '<main>/'+action_name
-		get_action_from_name(action_name).set_accel_group(get_accel_group())
-		get_action_from_name(action_name).set_accel_path(accel_path)
-		gtk.accel_map_add_entry(accel_path, gtk.gdk.keyval_from_name(key_name), mod_mask)
-	except KeyError: pass #no action was created for this action name
+class Action(gtk.Action):
+	"""
+	A custom Action class based on gtk.Action.
+	Pass additional arguments such as keypresses.
+	Register actions and keypresses with this module.
+	"""
+
+	def __init__(self, keypresses=(), name=None, label=None, tooltip=None, stock_id=None):
+		"""
+		Create a new Action instance.
+		@param key_presses a tuple of (keyval1, mod_mask1, keyval2, mod_mask2, ...)
+		@param the regular gtk.Action parameters (defaults to None)
+		"""
+		if name is None: name = label
+		gtk.Action.__init__(self,
+			name=name, label=label,
+			tooltip=tooltip, stock_id=stock_id,
+		)
+		#register this action
+		_all_actions_list.append(self)
+		for i in range(len(keypresses)/2):
+			keyval, mod_mask = keypresses[i*2:(i+1)*2]
+			#register this keypress
+			assert not _actions_keypress_dict.has_key((keyval, mod_mask))
+			_actions_keypress_dict[(keyval, mod_mask)] = self
+			#set the accelerator group, and accelerator path
+			#register the key name and mod mask with the accelerator path
+			if label is None: continue #dont register accel
+			accel_path = '<main>/'+self.get_name()
+			self.set_accel_group(get_accel_group())
+			self.set_accel_path(accel_path)
+			gtk.accel_map_add_entry(accel_path, keyval, mod_mask)
+
+	def __str__(self):
+		"""
+		The string representation should be the name of the action id.
+		Try to find the action id for this action by searching this module.
+		"""
+		try:
+			import Actions
+			return filter(lambda attr: getattr(Actions, attr) == self, dir(Actions))[0]
+		except: return self.get_name()
+
+	def __repr__(self): return str(self)
+
+	def __call__(self):
+		"""
+		Emit the activate signal when called with ().
+		"""
+		self.emit('activate')
+
+########################################################################
+# Actions
+########################################################################
+PAGE_CHANGE = Action()
+FLOW_GRAPH_NEW = Action(
+	label='_New',
+	tooltip='Create a new flow graph',
+	stock_id=gtk.STOCK_NEW,
+	keypresses=(gtk.keysyms.n, gtk.gdk.CONTROL_MASK),
+)
+FLOW_GRAPH_OPEN = Action(
+	label='_Open',
+	tooltip='Open an existing flow graph',
+	stock_id=gtk.STOCK_OPEN,
+	keypresses=(gtk.keysyms.o, gtk.gdk.CONTROL_MASK),
+)
+FLOW_GRAPH_SAVE = Action(
+	label='_Save',
+	tooltip='Save the current flow graph',
+	stock_id=gtk.STOCK_SAVE,
+	keypresses=(gtk.keysyms.s, gtk.gdk.CONTROL_MASK),
+)
+FLOW_GRAPH_SAVE_AS = Action(
+	label='Save _As',
+	tooltip='Save the current flow graph as...',
+	stock_id=gtk.STOCK_SAVE_AS,
+	keypresses=(gtk.keysyms.s, gtk.gdk.CONTROL_MASK | gtk.gdk.SHIFT_MASK),
+)
+FLOW_GRAPH_CLOSE = Action(
+	label='_Close',
+	tooltip='Close the current flow graph',
+	stock_id=gtk.STOCK_CLOSE,
+	keypresses=(gtk.keysyms.w, gtk.gdk.CONTROL_MASK),
+)
+APPLICATION_INITIALIZE = Action()
+APPLICATION_QUIT = Action(
+	label='_Quit',
+	tooltip='Quit program',
+	stock_id=gtk.STOCK_QUIT,
+	keypresses=(gtk.keysyms.q, gtk.gdk.CONTROL_MASK),
+)
+FLOW_GRAPH_UNDO = Action(
+	label='_Undo',
+	tooltip='Undo a change to the flow graph',
+	stock_id=gtk.STOCK_UNDO,
+	keypresses=(gtk.keysyms.z, gtk.gdk.CONTROL_MASK),
+)
+FLOW_GRAPH_REDO = Action(
+	label='_Redo',
+	tooltip='Redo a change to the flow graph',
+	stock_id=gtk.STOCK_REDO,
+	keypresses=(gtk.keysyms.y, gtk.gdk.CONTROL_MASK),
+)
+NOTHING_SELECT = Action()
+ELEMENT_SELECT = Action()
+ELEMENT_CREATE = Action()
+ELEMENT_DELETE = Action(
+	label='_Delete',
+	tooltip='Delete the selected blocks',
+	stock_id=gtk.STOCK_DELETE,
+	keypresses=(gtk.keysyms.Delete, NO_MODS_MASK),
+)
+BLOCK_MOVE = Action()
+BLOCK_ROTATE_CCW = Action(
+	label='Rotate Counterclockwise',
+	tooltip='Rotate the selected blocks 90 degrees to the left',
+	stock_id=gtk.STOCK_GO_BACK,
+	keypresses=(gtk.keysyms.Left, NO_MODS_MASK),
+)
+BLOCK_ROTATE_CW = Action(
+	label='Rotate Clockwise',
+	tooltip='Rotate the selected blocks 90 degrees to the right',
+	stock_id=gtk.STOCK_GO_FORWARD,
+	keypresses=(gtk.keysyms.Right, NO_MODS_MASK),
+)
+BLOCK_PARAM_MODIFY = Action(
+	label='_Properties',
+	tooltip='Modify params for the selected block',
+	stock_id=gtk.STOCK_PROPERTIES,
+	keypresses=(gtk.keysyms.Return, NO_MODS_MASK),
+)
+BLOCK_ENABLE = Action(
+	label='E_nable',
+	tooltip='Enable the selected blocks',
+	stock_id=gtk.STOCK_CONNECT,
+	keypresses=(gtk.keysyms.e, NO_MODS_MASK),
+)
+BLOCK_DISABLE = Action(
+	label='D_isable',
+	tooltip='Disable the selected blocks',
+	stock_id=gtk.STOCK_DISCONNECT,
+	keypresses=(gtk.keysyms.d, NO_MODS_MASK),
+)
+BLOCK_CUT = Action(
+	label='Cu_t',
+	tooltip='Cut',
+	stock_id=gtk.STOCK_CUT,
+	keypresses=(gtk.keysyms.x, gtk.gdk.CONTROL_MASK),
+)
+BLOCK_COPY = Action(
+	label='_Copy',
+	tooltip='Copy',
+	stock_id=gtk.STOCK_COPY,
+	keypresses=(gtk.keysyms.c, gtk.gdk.CONTROL_MASK),
+)
+BLOCK_PASTE = Action(
+	label='_Paste',
+	tooltip='Paste',
+	stock_id=gtk.STOCK_PASTE,
+	keypresses=(gtk.keysyms.v, gtk.gdk.CONTROL_MASK),
+)
+ERRORS_WINDOW_DISPLAY = Action(
+	label='_Errors',
+	tooltip='View flow graph errors',
+	stock_id=gtk.STOCK_DIALOG_ERROR,
+)
+ABOUT_WINDOW_DISPLAY = Action(
+	label='_About',
+	tooltip='About this program',
+	stock_id=gtk.STOCK_ABOUT,
+)
+HELP_WINDOW_DISPLAY = Action(
+	label='_Help',
+	tooltip='Usage tips',
+	stock_id=gtk.STOCK_HELP,
+	keypresses=(gtk.keysyms.F1, NO_MODS_MASK),
+)
+TYPES_WINDOW_DISPLAY = Action(
+	label='_Types',
+	tooltip='Types color mapping',
+	stock_id=gtk.STOCK_DIALOG_INFO,
+)
+FLOW_GRAPH_GEN = Action(
+	label='_Generate',
+	tooltip='Generate the flow graph',
+	stock_id=gtk.STOCK_CONVERT,
+	keypresses=(gtk.keysyms.F5, NO_MODS_MASK),
+)
+FLOW_GRAPH_EXEC = Action(
+	label='_Execute',
+	tooltip='Execute the flow graph',
+	stock_id=gtk.STOCK_EXECUTE,
+	keypresses=(gtk.keysyms.F6, NO_MODS_MASK),
+)
+FLOW_GRAPH_KILL = Action(
+	label='_Kill',
+	tooltip='Kill the flow graph',
+	stock_id=gtk.STOCK_STOP,
+	keypresses=(gtk.keysyms.F7, NO_MODS_MASK),
+)
+FLOW_GRAPH_SCREEN_CAPTURE = Action(
+	label='S_creen Capture',
+	tooltip='Create a screen capture of the flow graph',
+	stock_id=gtk.STOCK_PRINT,
+	keypresses=(gtk.keysyms.Print, NO_MODS_MASK),
+)
+PORT_CONTROLLER_DEC = Action(
+	keypresses=(gtk.keysyms.minus, NO_MODS_MASK, gtk.keysyms.KP_Subtract, NO_MODS_MASK),
+)
+PORT_CONTROLLER_INC = Action(
+	keypresses=(gtk.keysyms.plus, NO_MODS_MASK, gtk.keysyms.KP_Add, NO_MODS_MASK),
+)
+BLOCK_INC_TYPE = Action(
+	keypresses=(gtk.keysyms.Down, NO_MODS_MASK),
+)
+BLOCK_DEC_TYPE = Action(
+	keypresses=(gtk.keysyms.Up, NO_MODS_MASK),
+)

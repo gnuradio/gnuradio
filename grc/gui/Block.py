@@ -37,15 +37,15 @@ BLOCK_MARKUP_TMPL="""\
 class Block(Element):
 	"""The graphical signal block."""
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self):
 		"""
 		Block contructor.
 		Add graphics related params to the block.
 		"""
 		#add the position param
 		self.get_params().append(self.get_parent().get_parent().Param(
-			self,
-			odict({
+			block=self,
+			n=odict({
 				'name': 'GUI Coordinate',
 				'key': '_coordinate',
 				'type': 'raw',
@@ -54,8 +54,8 @@ class Block(Element):
 			})
 		))
 		self.get_params().append(self.get_parent().get_parent().Param(
-			self,
-			odict({
+			block=self,
+			n=odict({
 				'name': 'GUI Rotation',
 				'key': '_rotation',
 				'type': 'raw',
@@ -113,23 +113,16 @@ class Block(Element):
 		"""
 		self.get_param('_rotation').set_value(str(rot))
 
-	def update(self):
+	def create_shapes(self):
 		"""Update the block, parameters, and ports when a change occurs."""
-		self._bg_color = self.get_enabled() and Colors.BLOCK_ENABLED_COLOR or Colors.BLOCK_DISABLED_COLOR
-		self.clear()
-		self._create_labels()
-		self.W = self.label_width + 2*BLOCK_LABEL_PADDING
-		self.H = max(*(
-			[self.label_height+2*BLOCK_LABEL_PADDING] + [2*PORT_BORDER_SEPARATION + \
-			sum([port.H + PORT_SEPARATION for port in ports]) - PORT_SEPARATION
-			for ports in (self.get_sources(), self.get_sinks())]
-		))
+		Element.create_shapes(self)
 		if self.is_horizontal(): self.add_area((0, 0), (self.W, self.H))
 		elif self.is_vertical(): self.add_area((0, 0), (self.H, self.W))
-		map(lambda p: p.update(), self.get_ports())
 
-	def _create_labels(self):
+	def create_labels(self):
 		"""Create the labels for the signal block."""
+		Element.create_labels(self)
+		self._bg_color = self.get_enabled() and Colors.BLOCK_ENABLED_COLOR or Colors.BLOCK_DISABLED_COLOR
 		layouts = list()
 		#create the main layout
 		layout = gtk.DrawingArea().create_pango_layout('')
@@ -142,7 +135,7 @@ class Block(Element):
 			layouts.append(layout)
 			w,h = layout.get_pixel_size()
 			self.label_width = max(w, self.label_width)
-			self.label_height = self.label_height + h + LABEL_SEPARATION
+			self.label_height += h + LABEL_SEPARATION
 		width = self.label_width
 		height = self.label_height
 		#setup the pixmap
@@ -164,7 +157,13 @@ class Block(Element):
 			self.vertical_label = vimage = gtk.gdk.Image(gtk.gdk.IMAGE_NORMAL, pixmap.get_visual(), height, width)
 			for i in range(width):
 				for j in range(height): vimage.put_pixel(j, width-i-1, image.get_pixel(i, j))
-		map(lambda p: p._create_labels(), self.get_ports())
+		#calculate width and height needed
+		self.W = self.label_width + 2*BLOCK_LABEL_PADDING
+		self.H = max(*(
+			[self.label_height+2*BLOCK_LABEL_PADDING] + [2*PORT_BORDER_SEPARATION + \
+			sum([port.H + PORT_SEPARATION for port in ports]) - PORT_SEPARATION
+			for ports in (self.get_sources(), self.get_sinks())]
+		))
 
 	def draw(self, gc, window):
 		"""

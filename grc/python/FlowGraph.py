@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import expr_utils
 from .. base.FlowGraph import FlowGraph as _FlowGraph
+from .. gui.FlowGraph import FlowGraph as _GUIFlowGraph
 from Block import Block
 from Connection import Connection
 import re
@@ -26,9 +27,13 @@ import re
 _variable_matcher = re.compile('^(variable\w*)$')
 _parameter_matcher = re.compile('^(parameter)$')
 
-class FlowGraph(_FlowGraph):
+class FlowGraph(_FlowGraph, _GUIFlowGraph):
 
-	_eval_cache = dict()
+	def __init__(self, **kwargs):
+		_FlowGraph.__init__(self, **kwargs)
+		_GUIFlowGraph.__init__(self)
+		self._eval_cache = dict()
+
 	def _eval(self, code, namespace, namespace_hash):
 		"""
 		Evaluate the code with the given namespace.
@@ -37,6 +42,7 @@ class FlowGraph(_FlowGraph):
 		@param namespace_hash a unique hash for the namespace
 		@return the resultant object
 		"""
+		if not code: raise Exception, 'Cannot evaluate empty statement.'
 		my_hash = hash(code) ^ namespace_hash
 		#cache if does not exist
 		if not self._eval_cache.has_key(my_hash):
@@ -109,6 +115,13 @@ class FlowGraph(_FlowGraph):
 		parameters = filter(lambda b: _parameter_matcher.match(b.get_key()), self.get_enabled_blocks())
 		return parameters
 
+	def rewrite(self):
+		"""
+		Flag the namespace to be renewed.
+		"""
+		self._renew_eval_ns = True
+		_FlowGraph.rewrite(self)
+
 	def evaluate(self, expr):
 		"""
 		Evaluate the expression.
@@ -116,8 +129,8 @@ class FlowGraph(_FlowGraph):
 		@throw Exception bad expression
 		@return the evaluated data
 		"""
-		if self.is_flagged():
-			self.deflag()
+		if self._renew_eval_ns:
+			self._renew_eval_ns = False
 			#reload namespace
 			n = dict()
 			#load imports

@@ -20,10 +20,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 import os
 from gnuradio import gr
 from .. base.Platform import Platform as _Platform
+from .. gui.Platform import Platform as _GUIPlatform
 from FlowGraph import FlowGraph as _FlowGraph
 from Connection import Connection as _Connection
 from Block import Block as _Block
-from Port import Source,Sink
+from Port import Port as _Port
 from Param import Param as _Param
 from Generator import Generator
 from Constants import \
@@ -46,7 +47,7 @@ COLORS = (#title, #color spec
 	('Message', Constants.MSG_COLOR_SPEC),
 )
 
-class Platform(_Platform):
+class Platform(_Platform, _GUIPlatform):
 
 	def __init__(self):
 		"""
@@ -70,6 +71,7 @@ class Platform(_Platform):
 			generator=Generator,
 			colors=COLORS,
 		)
+		_GUIPlatform.__init__(self)
 
 	##############################################
 	# Constructors
@@ -77,6 +79,5 @@ class Platform(_Platform):
 	FlowGraph = _FlowGraph
 	Connection = _Connection
 	Block = _Block
-	Source = Source
-	Sink = Sink
+	Port = _Port
 	Param = _Param

@@ -27,7 +27,7 @@ class _parser_groups(object):
         self.usrp1exp_grp = parser.add_option_group("USRP1 Expert Options")
         self.usrp2_grp = parser.add_option_group("USRP2 Specific Options")
 
-import generic_usrp
+from gnuradio import blks2
 
 def _add_options(parser):
     """
@@ -76,7 +76,7 @@ def add_rx_options(parser):
                       help="set fpga decimation rate to DECIM [default=%default]")
 
 def create_usrp_source(options):
-    u = generic_usrp.generic_usrp_source_c(
+    u = blks2.generic_usrp_source_c(
         usrpx=options.usrpx,
         which=options.which,
         subdev_spec=options.rx_subdev_spec,
@@ -107,7 +107,7 @@ def add_tx_options(parser):
                       help="set fpga interpolation rate to INTERP [default=%default]")
 
 def create_usrp_sink(options):
-    u = generic_usrp.generic_usrp_sink_c(
+    u = blks2.generic_usrp_sink_c(
         usrpx=options.usrpx,
         which=options.which,
         subdev_spec=options.tx_subdev_spec,

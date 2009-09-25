@@ -40,7 +40,7 @@
 		<name>Noise Type</name>
 		<key>noise_type</key>
 		<value>gr.GR_GAUSSIAN</value>
-		<type>raw</type>
+		<type>int</type>
 		<option>
 			<name>Uniform</name>
 			<key>gr.GR_UNIFORM</key>

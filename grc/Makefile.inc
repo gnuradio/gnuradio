@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2009 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -20,5 +20,5 @@
 #
 
 include $(top_srcdir)/Makefile.common
-grc_src_prefix = $(pythondir)/gnuradio/grc
+grc_src_prefix = $(pkgpythondir)/grc
 grc_blocksdir = $(pkgdatadir)/grc/blocks

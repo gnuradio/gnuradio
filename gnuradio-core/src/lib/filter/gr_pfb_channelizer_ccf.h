@@ -91,8 +91,8 @@ class gri_fft_complex;
  * The theory behind this block can be found in Chapter 6 of 
  * the following book.
  *
- *    <B><EM>f. harris, Multirate Signal Processing for Communication 
- *       Systems," Upper Saddle River, NJ: Prentice Hall, Inc. 2004.
+ *    <B><EM>f. harris, "Multirate Signal Processing for Communication 
+ *       Systems," Upper Saddle River, NJ: Prentice Hall, Inc. 2004.</EM></B>
  *
  */
 

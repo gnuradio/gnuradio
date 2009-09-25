@@ -1,5 +1,5 @@
 """
-Copyright 2007 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -17,11 +17,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import Colors
 import pygtk
 pygtk.require('2.0')
 import gtk
-import pango
 from Constants import LINE_SELECT_SENSITIVITY
 from Constants import POSSIBLE_ROTATIONS
 
@@ -32,7 +30,7 @@ class Element(object):
 	and methods to detect selection of those areas.
 	"""
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self):
 		"""
 		Make a new list of rectangular areas and lines, and set the coordinate and the rotation.
 		"""
@@ -61,6 +59,21 @@ class Element(object):
 		rotation = rotation or self.get_rotation()
 		return rotation in (90, 270)
 
+	def create_labels(self):
+		"""
+		Create labels (if applicable) and call on all children.
+		Call this base method before creating labels in the element.
+		"""
+		for child in self.get_children(): child.create_labels()
+
+	def create_shapes(self):
+		"""
+		Create shapes (if applicable) and call on all children.
+		Call this base method before creating shapes in the element.
+		"""
+		self.clear()
+		for child in self.get_children(): child.create_shapes()
+
 	def draw(self, gc, window, border_color, bg_color):
 		"""
 		Draw in the given window.
@@ -70,14 +83,14 @@ class Element(object):
 		@param bg_color the color for the inside of the rectangle
 		"""
 		X,Y = self.get_coordinate()
-		for (rX,rY),(W,H) in self.areas_dict[self.get_rotation()]:
+		for (rX,rY),(W,H) in self._areas_list:
 			aX = X + rX
 			aY = Y + rY
 			gc.set_foreground(bg_color)
 			window.draw_rectangle(gc, True, aX, aY, W, H)
 			gc.set_foreground(border_color)
 			window.draw_rectangle(gc, False, aX, aY, W, H)
-		for (x1, y1),(x2, y2) in self.lines_dict[self.get_rotation()]:
+		for (x1, y1),(x2, y2) in self._lines_list:
 			gc.set_foreground(border_color)
 			window.draw_line(gc, X+x1, Y+y1, X+x2, Y+y2)
 
@@ -90,8 +103,8 @@ class Element(object):
 
 	def clear(self):
 		"""Empty the lines and areas."""
-		self.areas_dict = dict((rotation, list()) for rotation in POSSIBLE_ROTATIONS)
-		self.lines_dict = dict((rotation, list()) for rotation in POSSIBLE_ROTATIONS)
+		self._areas_list = list()
+		self._lines_list = list()
 
 	def set_coordinate(self, coor):
 		"""
@@ -136,7 +149,7 @@ class Element(object):
 		X, Y = self.get_coordinate()
 		self.set_coordinate((X+deltaX, Y+deltaY))
 
-	def add_area(self, rel_coor, area, rotation=None):
+	def add_area(self, rel_coor, area):
 		"""
 		Add an area to the area list.
 		An area is actually a coordinate relative to the main coordinate
@@ -144,25 +157,21 @@ class Element(object):
 		A positive width is to the right of the coordinate.
 		A positive height is above the coordinate.
 		The area is associated with a rotation.
-		If rotation is not specified, the element's current rotation is used.
 		@param rel_coor (x,y) offset from this element's coordinate
 		@param area (width,height) tuple
-		@param rotation rotation in degrees
 		"""
-		self.areas_dict[rotation or self.get_rotation()].append((rel_coor, area))
+		self._areas_list.append((rel_coor, area))
 
-	def add_line(self, rel_coor1, rel_coor2, rotation=None):
+	def add_line(self, rel_coor1, rel_coor2):
 		"""
 		Add a line to the line list.
 		A line is defined by 2 relative coordinates.
 		Lines must be horizontal or vertical.
 		The line is associated with a rotation.
-		If rotation is not specified, the element's current rotation is used.
 		@param rel_coor1 relative (x1,y1) tuple
 		@param rel_coor2 relative (x2,y2) tuple
-		@param rotation rotation in degrees
 		"""
-		self.lines_dict[rotation or self.get_rotation()].append((rel_coor1, rel_coor2))
+		self._lines_list.append((rel_coor1, rel_coor2))
 
 	def what_is_selected(self, coor, coor_m=None):
 		"""
@@ -183,24 +192,24 @@ class Element(object):
 		if coor_m:
 			x_m, y_m = [a-b for a,b in zip(coor_m, self.get_coordinate())]
 			#handle rectangular areas
-			for (x1,y1), (w,h) in self.areas_dict[self.get_rotation()]:
+			for (x1,y1), (w,h) in self._areas_list:
 				if in_between(x1, x, x_m) and in_between(y1, y, y_m) or \
 					in_between(x1+w, x, x_m) and in_between(y1, y, y_m) or \
 					in_between(x1, x, x_m) and in_between(y1+h, y, y_m) or \
 					in_between(x1+w, x, x_m) and in_between(y1+h, y, y_m):
 					return self
 			#handle horizontal or vertical lines
-			for (x1, y1), (x2, y2) in self.lines_dict[self.get_rotation()]:
+			for (x1, y1), (x2, y2) in self._lines_list:
 				if in_between(x1, x, x_m) and in_between(y1, y, y_m) or \
 					in_between(x2, x, x_m) and in_between(y2, y, y_m):
 					return self
 			return None
 		else:
 			#handle rectangular areas
-			for (x1,y1), (w,h) in self.areas_dict[self.get_rotation()]:
+			for (x1,y1), (w,h) in self._areas_list:
 				if in_between(x, x1, x1+w) and in_between(y, y1, y1+h): return self
 			#handle horizontal or vertical lines
-			for (x1, y1), (x2, y2) in self.lines_dict[self.get_rotation()]:
+			for (x1, y1), (x2, y2) in self._lines_list:
 				if x1 == x2: x1, x2 = x1-LINE_SELECT_SENSITIVITY, x2+LINE_SELECT_SENSITIVITY
 				if y1 == y2: y1, y2 = y1-LINE_SELECT_SENSITIVITY, y2+LINE_SELECT_SENSITIVITY
 				if in_between(x, x1, x2) and in_between(y, y1, y2): return self
@@ -220,7 +229,3 @@ class Element(object):
 		if rotation not in POSSIBLE_ROTATIONS:
 			raise Exception('"%s" is not one of the possible rotations: (%s)'%(rotation, POSSIBLE_ROTATIONS))
 		self.rotation = rotation
-
-	def update(self):
-		"""Do nothing for the update. Dummy method."""
-		pass

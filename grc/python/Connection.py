@@ -1,5 +1,5 @@
 """
-Copyright 2008 Free Software Foundation, Inc.
+Copyright 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -18,8 +18,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from .. base.Connection import Connection as _Connection
+from .. gui.Connection import Connection as _GUIConnection
 
-class Connection(_Connection):
+class Connection(_Connection, _GUIConnection):
+
+	def __init__(self, **kwargs):
+		_Connection.__init__(self, **kwargs)
+		_GUIConnection.__init__(self)
 
 	def is_msg(self):
 		return self.get_source().get_type() == self.get_sink().get_type() == 'msg'

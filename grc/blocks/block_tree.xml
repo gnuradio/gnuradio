@@ -22,6 +22,7 @@
 		<block>gr_wavfile_source</block>
 		<block>gr_message_source</block>
 		<block>pad_source</block>
+		<block>virtual_source</block>
 	</cat>
 	<cat>
 		<name>Sinks</name>
@@ -35,6 +36,7 @@
 		<block>gr_wavfile_sink</block>
 		<block>gr_message_sink</block>
 		<block>pad_sink</block>
+		<block>virtual_sink</block>
 	</cat>
 	<cat>
 		<name>Graphical Sinks</name>
@@ -248,6 +250,11 @@
 		<name>Line Coding</name>
 		<block>gr_scrambler_bb</block>
 		<block>gr_descrambler_bb</block>
+	</cat>
+	<cat>
+	        <name>Vocoders</name>
+		<block>blks2_cvsd_encode</block>
+		<block>blks2_cvsd_decode</block>
 	</cat>
 	<cat>
 		<name>Probes</name>

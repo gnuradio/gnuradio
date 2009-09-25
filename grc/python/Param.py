@@ -18,7 +18,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 import expr_utils
-from .. base.Param import Param as _Param, EntryParam
+from .. base.Param import Param as _Param
+from .. gui.Param import Param as _GUIParam
+from .. gui.Param import EntryParam
 import Constants
 import numpy
 import os
@@ -83,21 +85,24 @@ COMPLEX_TYPES = tuple(COMPLEX_TYPES + REAL_TYPES + INT_TYPES)
 REAL_TYPES = tuple(REAL_TYPES + INT_TYPES)
 INT_TYPES = tuple(INT_TYPES)
 
-class Param(_Param):
+class Param(_Param, _GUIParam):
 
-	_init = False
-	_hostage_cells = list()
+	def __init__(self, **kwargs):
+		_Param.__init__(self, **kwargs)
+		_GUIParam.__init__(self)
+		self._init = False
+		self._hostage_cells = list()
 
-	##possible param types
-	TYPES = _Param.TYPES + [
+	def get_types(self): return (
+		'raw', 'enum',
 		'complex', 'real', 'int',
 		'complex_vector', 'real_vector', 'int_vector',
 		'hex', 'string', 'bool',
 		'file_open', 'file_save',
-		'id',
+		'id', 'stream_id',
 		'grid_pos', 'notebook',
 		'import',
-	]
+	)
 
 	def __repr__(self):
 		"""
@@ -148,9 +153,9 @@ class Param(_Param):
 				dt_str = dt_str[:max_len-3] + '...'
 		return dt_str
 
-	def get_input_class(self):
-		if self.get_type() in ('file_open', 'file_save'): return FileParam
-		return _Param.get_input_class(self)
+	def get_input(self, *args, **kwargs):
+		if self.get_type() in ('file_open', 'file_save'): return FileParam(self, *args, **kwargs)
+		return _GUIParam.get_input(self, *args, **kwargs)
 
 	def get_color(self):
 		"""
@@ -172,6 +177,7 @@ class Param(_Param):
 				'hex': Constants.INT_COLOR_SPEC,
 				'string': Constants.BYTE_VECTOR_COLOR_SPEC,
 				'id': Constants.ID_COLOR_SPEC,
+				'stream_id': Constants.ID_COLOR_SPEC,
 				'grid_pos': Constants.INT_VECTOR_COLOR_SPEC,
 				'notebook': Constants.INT_VECTOR_COLOR_SPEC,
 				'raw': Constants.WILDCARD_COLOR_SPEC,
@@ -248,7 +254,7 @@ class Param(_Param):
 		elif t in ('raw', 'complex', 'real', 'int', 'complex_vector', 'real_vector', 'int_vector', 'hex', 'bool'):
 			#raise exception if python cannot evaluate this value
 			try: e = self.get_parent().get_parent().evaluate(v)
-			except Exception, e: raise Exception, 'Value "%s" cannot be evaluated: %s'%(v, e)
+			except Exception, e: raise Exception, 'Value "%s" cannot be evaluated:\n%s'%(v, e)
 			#raise an exception if the data is invalid
 			if t == 'raw': return e
 			elif t == 'complex':
@@ -310,12 +316,29 @@ class Param(_Param):
 			#can python use this as a variable?
 			try: assert _check_id_matcher.match(v)
 			except AssertionError: raise Exception, 'ID "%s" must begin with a letter and may contain letters, numbers, and underscores.'%v
-			params = self.get_all_params('id')
-			keys = [param.get_value() for param in params]
-			try: assert keys.count(v) <= 1 #id should only appear once, or zero times if block is disabled
+			ids = [param.get_value() for param in self.get_all_params(t)]
+			try: assert ids.count(v) <= 1 #id should only appear once, or zero times if block is disabled
 			except: raise Exception, 'ID "%s" is not unique.'%v
 			try: assert v not in ID_BLACKLIST
 			except: raise Exception, 'ID "%s" is blacklisted.'%v
+			return v
+		#########################
+		# Stream ID Type
+		#########################
+		elif t == 'stream_id':
+			#get a list of all stream ids used in the virtual sinks 
+			ids = [param.get_value() for param in filter(
+				lambda p: p.get_parent().is_virtual_sink(),
+				self.get_all_params(t),
+			)]
+			#check that the virtual sink's stream id is unique
+			if self.get_parent().is_virtual_sink():
+				try: assert ids.count(v) <= 1 #id should only appear once, or zero times if block is disabled
+				except: raise Exception, 'Stream ID "%s" is not unique.'%v
+			#check that the virtual source's steam id is found
+			if self.get_parent().is_virtual_source():
+				try: assert v in ids
+				except: raise Exception, 'Stream ID "%s" is not found.'%v
 			return v
 		#########################
 		# Grid Position Type
@@ -362,7 +385,7 @@ class Param(_Param):
 			try: notebook_block = filter(lambda b: b.get_id() == notebook_id, notebook_blocks)[0]
 			except: raise Exception, 'Notebook id "%s" is not an existing notebook id.'%notebook_id
 			#check that page index exists
-			try: assert int(page_index) in range(len(notebook_block.get_param('labels').get_evaluated()))
+			try: assert int(page_index) in range(len(notebook_block.get_param('labels').evaluate()))
 			except: raise Exception, 'Page index "%s" is not a valid index number.'%page_index
 			return notebook_id, page_index
 		#########################
@@ -380,17 +403,18 @@ class Param(_Param):
 	def to_code(self):
 		"""
 		Convert the value to code.
+		For string and list types, check the init flag, call evaluate().
+		This ensures that evaluate() was called to set the xxxify_flags.
 		@return a string representing the code
 		"""
-		#run init tasks in evaluate
-		#such as setting flags
-		if not self._init: self.evaluate()
 		v = self.get_value()
 		t = self.get_type()
 		if t in ('string', 'file_open', 'file_save'): #string types
+			if not self._init: self.evaluate()
 			if self._stringify_flag: return '"%s"'%v.replace('"', '\"')
 			else: return v
 		elif t in ('complex_vector', 'real_vector', 'int_vector'): #vector types
+			if not self._init: self.evaluate()
 			if self._lisitify_flag: return '(%s, )'%v
 			else: return '(%s)'%v
 		else: return v

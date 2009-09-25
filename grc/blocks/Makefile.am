@@ -30,6 +30,8 @@ dist_ourdata_DATA = \
 	band_reject_filter.xml \
 	blks2_am_demod_cf.xml \
 	blks2_analysis_filterbank.xml \
+	blks2_cvsd_encode.xml \
+	blks2_cvsd_decode.xml \
 	blks2_dxpsk_demod.xml \
 	blks2_dxpsk_mod.xml \
 	blks2_error_rate.xml \
@@ -218,6 +220,8 @@ dist_ourdata_DATA = \
 	variable_slider.xml \
 	variable_static_text.xml \
 	variable_text_box.xml \
+	virtual_sink.xml \
+	virtual_source.xml \
 	wxgui_constellationsink2.xml \
 	wxgui_fftsink2.xml \
 	wxgui_histosink2.xml \

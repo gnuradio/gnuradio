@@ -59,10 +59,7 @@
 		<nports>$nports</nports>
 	</sink>
 	<doc>
-This is a sink pad block for creating hierarchical flow graphs. \
 The inputs of this block will become the outputs to this flow graph when it is instantiated as a hierarchical block. \
 Limit one sink pad block per flow graph.
-
-Remember to set the generate options to hier block.
 	</doc>
 </block>

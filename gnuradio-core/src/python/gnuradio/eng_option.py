@@ -23,29 +23,11 @@
 
 from copy import copy
 from optparse import Option, OptionValueError
-
-scale_factor = {}
-scale_factor['E'] = 1e18
-scale_factor['P'] = 1e15
-scale_factor['T'] = 1e12
-scale_factor['G'] = 1e9
-scale_factor['M'] = 1e6
-scale_factor['k'] = 1e3
-scale_factor['m'] = 1e-3
-scale_factor['u'] = 1e-6
-scale_factor['n'] = 1e-9
-scale_factor['p'] = 1e-12
-scale_factor['f'] = 1e-15
-scale_factor['a'] = 1e-18
-
+import eng_notation
 
 def check_eng_float (option, opt, value):
     try:
-        scale = 1.0
-        suffix = value[-1]
-        if scale_factor.has_key (suffix):
-            return float (value[0:-1]) * scale_factor[suffix]
-        return float (value)
+        return eng_notation.str_to_num(value)
     except:
         raise OptionValueError (
             "option %s: invalid engineering notation value: %r" % (opt, value))

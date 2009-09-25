@@ -25,6 +25,7 @@ from gnuradio import usrp
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
+from gnuradio import usrp_options
 
 import random
 import struct
@@ -33,7 +34,6 @@ import sys
 # from current dir
 from receive_path import receive_path
 from pick_bitrate import pick_rx_bitrate
-import usrp_options
 
 try:
     from gnuradio.qtgui import qtgui

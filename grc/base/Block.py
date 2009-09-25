@@ -47,7 +47,9 @@ class TemplateArg(UserDict):
 		return self._param.get_evaluated()
 
 def _get_keys(lst): return [elem.get_key() for elem in lst]
-def _get_elem(lst, key): return lst[_get_keys(lst).index(key)]
+def _get_elem(lst, key):
+	try: return lst[_get_keys(lst).index(key)]
+	except ValueError: raise ValueError, 'Key "%s" not found in %s.'%(key, _get_keys(lst))
 
 class Block(Element):
 
@@ -72,16 +74,16 @@ class Block(Element):
 		self._params = list()
 		#add the id param
 		self.get_params().append(self.get_parent().get_parent().Param(
-			self,
-			odict({
+			block=self,
+			n=odict({
 				'name': 'ID',
 				'key': 'id',
 				'type': 'id',
 			})
 		))
 		self.get_params().append(self.get_parent().get_parent().Param(
-			self,
-			odict({
+			block=self,
+			n=odict({
 				'name': 'Enabled',
 				'key': '_enabled',
 				'type': 'raw',
@@ -89,7 +91,7 @@ class Block(Element):
 				'hide': 'all',
 			})
 		))
-		for param in map(lambda n: self.get_parent().get_parent().Param(self, n), params):
+		for param in map(lambda n: self.get_parent().get_parent().Param(block=self, n=n), params):
 			key = param.get_key()
 			#test against repeated keys
 			try: assert key not in self.get_param_keys()
@@ -98,7 +100,7 @@ class Block(Element):
 			self.get_params().append(param)
 		#create the source objects
 		self._sources = list()
-		for source in map(lambda n: self.get_parent().get_parent().Source(self, n), sources):
+		for source in map(lambda n: self.get_parent().get_parent().Port(block=self, n=n, dir='source'), sources):
 			key = source.get_key()
 			#test against repeated keys
 			try: assert key not in self.get_source_keys()
@@ -107,21 +109,13 @@ class Block(Element):
 			self.get_sources().append(source)
 		#create the sink objects
 		self._sinks = list()
-		for sink in map(lambda n: self.get_parent().get_parent().Sink(self, n), sinks):
+		for sink in map(lambda n: self.get_parent().get_parent().Port(block=self, n=n, dir='sink'), sinks):
 			key = sink.get_key()
 			#test against repeated keys
 			try: assert key not in self.get_sink_keys()
 			except AssertionError: raise Exception, 'Key "%s" already exists in sinks'%key
 			#store the port
 			self.get_sinks().append(sink)
-		#begin the testing
-		self.test()
-
-	def test(self):
-		"""
-		Call test on all children.
-		"""
-		map(lambda c: c.test(), self.get_params() + self.get_sinks() + self.get_sources())
 
 	def get_enabled(self):
 		"""
@@ -138,21 +132,6 @@ class Block(Element):
 		"""
 		self.get_param('_enabled').set_value(str(enabled))
 
-	def validate(self):
-		"""
-		Validate the block.
-		All ports and params must be valid.
-		All checks must evaluate to true.
-		"""
-		Element.validate(self)
-		for c in self.get_params() + self.get_ports() + self.get_connections():
-			try:
-				c.validate()
-				assert c.is_valid()
-			except AssertionError:
-				for msg in c.get_error_messages():
-					self.add_error_message('>>> %s:\n\t%s'%(c, msg))
-
 	def __str__(self): return 'Block - %s - %s(%s)'%(self.get_id(), self.get_name(), self.get_key())
 
 	def get_id(self): return self.get_param('id').get_value()
@@ -162,6 +141,7 @@ class Block(Element):
 	def get_category(self): return self._category
 	def get_doc(self): return ''
 	def get_ports(self): return self.get_sources() + self.get_sinks()
+	def get_children(self): return self.get_ports() + self.get_params()
 	def get_block_wrapper_path(self): return self._block_wrapper_path
 
 	##############################################
@@ -253,12 +233,22 @@ class Block(Element):
 		"""
 		Import this block's params from nested data.
 		Any param keys that do not exist will be ignored.
+		Since params can be dynamically created based another param,
+		call rewrite, and repeat the load until the params stick.
+		This call to rewrite will also create any dynamic ports
+		that are needed for the connections creation phase.
 		@param n the nested data odict
 		"""
-		params_n = n.findall('param')
-		for param_n in params_n:
-			key = param_n.find('key')
-			value = param_n.find('value')
-			#the key must exist in this block's params
-			if key in self.get_param_keys():
-				self.get_param(key).set_value(value)
+		get_hash = lambda: reduce(lambda x, y: x ^ y, [hash(param) for param in self.get_params()], 0)
+		my_hash = 0
+		while get_hash() != my_hash:
+			params_n = n.findall('param')
+			for param_n in params_n:
+				key = param_n.find('key')
+				value = param_n.find('value')
+				#the key must exist in this block's params
+				if key in self.get_param_keys():
+					self.get_param(key).set_value(value)
+			#store hash and call rewrite
+			my_hash = get_hash()
+			self.rewrite()

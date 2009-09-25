@@ -18,28 +18,68 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
 from .. base.Port import Port as _Port
+from .. gui.Port import Port as _GUIPort
 import Constants
 
-class Port(_Port):
+def _get_source_from_virtual_sink_port(vsp):
+	"""
+	Resolve the source port that is connected to the given virtual sink port.
+	Use the get source from virtual source to recursively resolve subsequent ports. 
+	"""
+	try: return _get_source_from_virtual_source_port(
+		vsp.get_enabled_connections()[0].get_source())
+	except: raise Exception, 'Could not resolve source for virtual sink port %s'%vsp
 
-	##possible port types
-	TYPES = ['complex', 'float', 'int', 'short', 'byte', 'msg']
+def _get_source_from_virtual_source_port(vsp, traversed=[]):
+	"""
+	Recursively resolve source ports over the virtual connections.
+	Keep track of traversed sources to avoid recursive loops.
+	"""
+	if not vsp.get_parent().is_virtual_source(): return vsp
+	if vsp in traversed: raise Exception, 'Loop found when resolving virtual source %s'%vsp
+	try: return _get_source_from_virtual_source_port(
+		_get_source_from_virtual_sink_port(
+			filter(#get all virtual sinks with a matching stream id
+				lambda vs: vs.get_param('stream_id').get_value() == vsp.get_parent().get_param('stream_id').get_value(),
+				filter(#get all enabled blocks that are also virtual sinks
+					lambda b: b.is_virtual_sink(),
+					vsp.get_parent().get_parent().get_enabled_blocks(),
+				),
+			)[0].get_sinks()[0]
+		), traversed + [vsp],
+	)
+	except: raise Exception, 'Could not resolve source for virtual source port %s'%vsp
 
-	def __init__(self, block, n):
+class Port(_Port, _GUIPort):
+
+	def __init__(self, block, n, dir):
 		"""
 		Make a new port from nested data.
 		@param block the parent element
 		@param n the nested odict
+		@param dir the direction
 		"""
+		self._n = n
+		if n['type'] == 'msg': n['key'] = 'msg'
+		if dir == 'source' and not n.find('key'):
+			n['key'] = str(block._source_count)
+			block._source_count += 1
+		if dir == 'sink' and not n.find('key'):
+			n['key'] = str(block._sink_count)
+			block._sink_count += 1
 		#build the port
 		_Port.__init__(
 			self,
 			block=block,
 			n=n,
+			dir=dir,
 		)
+		_GUIPort.__init__(self)
 		self._nports = n.find('nports') or ''
 		self._vlen = n.find('vlen') or ''
 		self._optional = bool(n.find('optional'))
+
+	def get_types(self): return ('complex', 'float', 'int', 'short', 'byte', 'msg', '')
 
 	def validate(self):
 		_Port.validate(self)
@@ -47,11 +87,30 @@ class Port(_Port):
 		except AssertionError: self.add_error_message('Port is not connected.')
 		try: assert self.is_source() or len(self.get_enabled_connections()) <= 1
 		except AssertionError: self.add_error_message('Port has too many connections.')
+		#message port logic
 		if self.get_type() == 'msg':
 			try: assert not self.get_nports()
 			except AssertionError: self.add_error_message('A port of type "msg" cannot have "nports" set.')
 			try: assert self.get_vlen() == 1
 			except AssertionError: self.add_error_message('A port of type "msg" must have a "vlen" of 1.')
+
+	def rewrite(self):
+		"""
+		Handle the port cloning for virtual blocks.
+		"""
+		_Port.rewrite(self)
+		if self.get_parent().is_virtual_sink() or self.get_parent().is_virtual_source():
+			try: #clone type and vlen
+				source = self.resolve_virtual_source()
+				self._type = str(source.get_type())
+				self._vlen = str(source.get_vlen())
+			except: #reset type and vlen
+				self._type = ''
+				self._vlen = ''
+
+	def resolve_virtual_source(self):
+		if self.get_parent().is_virtual_sink(): return _get_source_from_virtual_sink_port(self)
+		if self.get_parent().is_virtual_source(): return _get_source_from_virtual_source_port(self)
 
 	def get_vlen(self):
 		"""
@@ -109,24 +168,4 @@ class Port(_Port):
 	def copy(self, new_key=None):
 		n = self._n.copy()
 		if new_key: n['key'] = new_key
-		return self.__class__(self.get_parent(), n)
-
-class Source(Port):
-
-	def __init__(self, block, n):
-		self._n = n #save n
-		if n['type'] == 'msg': n['key'] = 'msg'
-		if not n.find('key'):
-			n['key'] = str(block._source_count)
-			block._source_count = block._source_count + 1
-		Port.__init__(self, block, n)
-
-class Sink(Port):
-
-	def __init__(self, block, n):
-		self._n = n #save n
-		if n['type'] == 'msg': n['key'] = 'msg'
-		if not n.find('key'):
-			n['key'] = str(block._sink_count)
-			block._sink_count = block._sink_count + 1
-		Port.__init__(self, block, n)
+		return self.__class__(self.get_parent(), n, self._dir)

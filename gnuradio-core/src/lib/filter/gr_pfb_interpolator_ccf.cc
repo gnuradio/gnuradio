@@ -28,6 +28,7 @@
 #include <gr_fir_ccf.h>
 #include <gr_fir_util.h>
 #include <gr_io_signature.h>
+#include <cstdio>
 
 gr_pfb_interpolator_ccf_sptr gr_make_pfb_interpolator_ccf (unsigned int interp, 
 							   const std::vector<float> &taps)

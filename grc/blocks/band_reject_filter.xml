@@ -10,8 +10,8 @@
 	<import>from gnuradio import gr</import>
 	<import>from gnuradio.gr import firdes</import>
 	<make>gr.$(type)(#if str($type).startswith('interp') then $interp else $decim#, firdes.band_reject(
-	$gain, $samp_rate, $low_cutoff_freq, $high_cutoff_freq, $width, firdes.$window, $beta))</make>
-	<callback>set_taps(firdes.band_reject($gain, $samp_rate, $low_cutoff_freq, $high_cutoff_freq, $width, firdes.$window, $beta))</callback>
+	$gain, $samp_rate, $low_cutoff_freq, $high_cutoff_freq, $width, $win, $beta))</make>
+	<callback>set_taps(firdes.band_reject($gain, $samp_rate, $low_cutoff_freq, $high_cutoff_freq, $width, $win, $beta))</callback>
 	<param>
 		<name>FIR Type</name>
 		<key>type</key>
@@ -84,27 +84,28 @@
 	</param>
 	<param>
 		<name>Window</name>
-		<key>window</key>
-		<type>enum</type>
+		<key>win</key>
+		<value>firdes.WIN_HAMMING</value>
+		<type>int</type>
 		<option>
 			<name>Hamming</name>
-			<key>WIN_HAMMING</key>
+			<key>firdes.WIN_HAMMING</key>
 		</option>
 		<option>
 			<name>Hann</name>
-			<key>WIN_HANN</key>
+			<key>firdes.WIN_HANN</key>
 		</option>
 		<option>
 			<name>Blackman</name>
-			<key>WIN_BLACKMAN</key>
+			<key>firdes.WIN_BLACKMAN</key>
 		</option>
 		<option>
 			<name>Rectangular</name>
-			<key>WIN_RECTANGULAR</key>
+			<key>firdes.WIN_RECTANGULAR</key>
 		</option>
 		<option>
 			<name>Kaiser</name>
-			<key>WIN_KAISER</key>
+			<key>firdes.WIN_KAISER</key>
 		</option>
 	</param>
 	<param>

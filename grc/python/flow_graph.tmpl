@@ -154,6 +154,13 @@ class $(class_name)(gr.hier_block2):
 ##	The port name should be the id of the parent block.
 ##	However, port names for IO pads should be self.
 ########################################################
+#def make_port_name($port)
+	#if $port.get_parent().get_key().startswith('pad_')
+self#slurp
+	#else
+self.$port.get_parent().get_id()#slurp
+	#end if
+#end def
 #if $connections
 
 		$DIVIDER
@@ -163,17 +170,14 @@ class $(class_name)(gr.hier_block2):
 #for $con in $connections
 	#set $source = $con.get_source()
 	#set $sink = $con.get_sink()
-	#if $source.get_parent().get_key() == 'pad_source'
-		#set $source_name = 'self'
-	#else
-		#set $source_name = 'self.' + $source.get_parent().get_id()
+	##resolve virtual sources to the actual sources
+	#if $source.get_parent().is_virtual_source()
+		#set $source = $source.resolve_virtual_source()
 	#end if
-	#if $sink.get_parent().get_key() == 'pad_sink'
-		#set $sink_name = 'self'
-	#else
-		#set $sink_name = 'self.' + $sink.get_parent().get_id()
+	##do not generate connections with virtual sinks
+	#if not $sink.get_parent().is_virtual_sink()
+		self.connect(($make_port_name($source), $source.get_key()), ($make_port_name($sink), $sink.get_key()))
 	#end if
-		self.connect(($source_name, $source.get_key()), ($sink_name, $sink.get_key()))
 #end for
 
 ########################################################
@@ -194,6 +198,20 @@ class $(class_name)(gr.hier_block2):
 ##	For top block code, generate a main routine.
 ##	Instantiate the top block and run as gui or cli.
 ########################################################
+#def make_default($type, $param)
+	#if $type == 'eng_float'
+eng_notation.num_to_str($param.get_make())#slurp
+	#else
+$param.get_make()#slurp
+	#end if
+#end def
+#def make_short_id($param)
+	#set $short_id = $param.get_param('short_id').get_evaluated()
+	#if $short_id
+		#set $short_id = '-' + $short_id
+	#end if
+$short_id#slurp
+#end def
 #if $generate_options != 'hb'
 if __name__ == '__main__':
 	parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
@@ -202,12 +220,8 @@ if __name__ == '__main__':
 		#set $type = $param.get_param('type').get_value()
 		#if $type
 			#silent $params_eq_list.append('%s=options.%s'%($param.get_id(), $param.get_id()))
-			#set $short_id = $param.get_param('short_id').get_evaluated()
-			#if $short_id
-				#set $short_id = '-' + $short_id
-			#end if
-	parser.add_option("$short_id", "--$param.get_id()", dest="$param.get_id()", type="$type", default=$param.get_make(),
-		help="Set $($param.get_param('label').evaluate() or $param.get_id()) [default=%default]")
+	parser.add_option("$make_short_id($param)", "--$param.get_id().replace('_', '-')", dest="$param.get_id()", type="$type", default=$make_default($type, $param),
+		help="Set $($param.get_param('label').get_evaluated() or $param.get_id()) [default=%default]")
 		#end if
 	#end for
 	(options, args) = parser.parse_args()

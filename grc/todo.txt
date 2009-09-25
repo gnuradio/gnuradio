@@ -25,8 +25,7 @@
 * size params for the graphical sinks
 * callbacks for set average on fft, waterfall, number sinks
 * add units to params: Sps, Hz, dB...
-* command line options should replace _ with - for the --option
-  * add bool type to command line option store_true or store_false
+* add bool type to command line option store_true or store_false
 
 ##################################################
 # Features
@@ -59,6 +58,8 @@
 ##################################################
 # Problems
 ##################################################
+* msg ports dont work with virtual connections
+  * dont fix this until pmts are used?
 * hier block generation
   * auto generate hier library on changes
   * auto clean hier library when block removed
@@ -66,15 +67,8 @@
 * dont generate py files in saved flowgraph dir
 * save/restore cwd
 * threads dont die on exit in probe and variable sink
-* overloaded gui classes for each platform, move param input objects into overloaded
-* align param titles in paramsdialog
-* better error for blank string params
+* align param titles in properties dialog
 * weird grid params misbehaving
-* params dialog needs to dynamically update for all params
-  * will not update for non-enum params
-  * needs to account for added or removed params
-  * example with grid params need update after notebook change
-* use .strip() on the hide property so we can do away with #slurp(s) in the templates
 
 ##################################################
 # Future

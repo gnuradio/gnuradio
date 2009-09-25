@@ -1,5 +1,5 @@
 """
-Copyright 2007 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ PORT_MARKUP_TMPL="""\
 class Port(Element):
 	"""The graphical port."""
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self):
 		"""
 		Port contructor.
 		Create list of connector coordinates.
@@ -42,9 +42,9 @@ class Port(Element):
 		Element.__init__(self)
 		self.connector_coordinates = dict()
 
-	def update(self):
+	def create_shapes(self):
 		"""Create new areas and labels for the port."""
-		self.clear()
+		Element.create_shapes(self)
 		#get current rotation
 		rotation = self.get_rotation()
 		#get all sibling ports
@@ -82,8 +82,9 @@ class Port(Element):
 		#the connector length
 		self._connector_length = CONNECTOR_EXTENSION_MINIMAL + CONNECTOR_EXTENSION_INCREMENT*index
 
-	def _create_labels(self):
+	def create_labels(self):
 		"""Create the labels for the socket."""
+		Element.create_labels(self)
 		self._bg_color = Colors.get_color(self.get_color())
 		#create the layout
 		layout = gtk.DrawingArea().create_pango_layout('')
@@ -114,7 +115,7 @@ class Port(Element):
 			border_color=self.is_highlighted() and Colors.HIGHLIGHT_COLOR or Colors.BORDER_COLOR,
 		)
 		X,Y = self.get_coordinate()
-		(x,y),(w,h) = self.areas_dict[self.get_rotation()][0] #use the first area's sizes to place the labels
+		(x,y),(w,h) = self._areas_list[0] #use the first area's sizes to place the labels
 		if self.is_horizontal():
 			window.draw_image(gc, self.horizontal_label, 0, 0, x+X+(self.W-self.w)/2, y+Y+(self.H-self.h)/2, -1, -1)
 		elif self.is_vertical():

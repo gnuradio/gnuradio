@@ -59,10 +59,8 @@
 		<nports>$nports</nports>
 	</source>
 	<doc>
-This is a source pad block for creating hierarchical flow graphs. \
 The outputs of this block will become the inputs to this flow graph when it is instantiated as a hierarchical block. \
-Limit one source pad block per flow graph.
-
-Remember to set the generate options to hier block.
+Limit one source pad block per flow graph. \
+The "pad sink id" will be ignored in this mode.
 	</doc>
 </block>

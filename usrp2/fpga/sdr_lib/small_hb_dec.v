@@ -8,6 +8,7 @@ module small_hb_dec
     (input clk,
      input rst,
      input bypass,
+     input run,
      input stb_in,
      input [WIDTH-1:0] data_in,
      output reg stb_out,
@@ -21,15 +22,26 @@ module small_hb_dec
    wire 		go;
    reg 			phase, go_d1, go_d2, go_d3, go_d4;
    always @(posedge clk)
-     if(rst)
+     if(rst | ~run)
        phase <= 0;
      else if(stb_in_d1)
        phase <= ~phase;
    assign 		go = stb_in_d1 & phase;
-   always @(posedge clk) go_d1 <= go;
-   always @(posedge clk) go_d2 <= go_d1;
-   always @(posedge clk) go_d3 <= go_d2;
-   always @(posedge clk) go_d4 <= go_d3;
+   always @(posedge clk) 
+     if(rst | ~run)
+       begin
+	  go_d1 <= 0;
+	  go_d2 <= 0;
+	  go_d3 <= 0;
+	  go_d4 <= 0;
+       end
+     else
+       begin
+	  go_d1 <= go;
+	  go_d2 <= go_d1;
+	  go_d3 <= go_d2;
+	  go_d4 <= go_d3;
+       end
 
    wire [17:0] 		coeff_a = -10690;
    wire [17:0] 		coeff_b = 75809;
