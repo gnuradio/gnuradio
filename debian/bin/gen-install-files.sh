@@ -427,6 +427,9 @@ $EXTRACT gnuradio-examples/python/multi_usrp/Makefile dist_ourdata_SCRIPTS >>$NA
 $EXTRACT gnuradio-examples/python/network/Makefile dist_ourdata_SCRIPTS >>$NAME
 $EXTRACT gnuradio-examples/python/ofdm/Makefile dist_ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/ofdm/Makefile dist_ourdata_SCRIPTS >>$NAME
+$EXTRACT gnuradio-examples/python/pfb/Makefile dist_ourdata_SCRIPTS >>$NAME
+$EXTRACT gnuradio-examples/python/pfb/Makefile dist_ourdata_PYTHON >>$NAME
+$EXTRACT gnuradio-examples/python/pfb/Makefile dist_ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/usrp/Makefile dist_ourdata_SCRIPTS >>$NAME
 $EXTRACT gnuradio-examples/python/usrp2/Makefile dist_ourdata_SCRIPTS >>$NAME
 $EXTRACT gnuradio-examples/python/usrp2/Makefile dist_ourdata_DATA >>$NAME
