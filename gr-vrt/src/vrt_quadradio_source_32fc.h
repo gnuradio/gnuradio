@@ -112,6 +112,9 @@ public:
   bool set_cal_freq(double freq);
   bool set_beamforming(std::vector<gr_complex> gains);
   bool set_cal_enb(bool enb);
+  
+  double get_cal_freq(void){return d_actual_cal_freq;}
+  double get_lo_freq(void){return d_actual_lo_freq;}
 };
 
 

@@ -46,7 +46,8 @@ class rx_32fc_handler : public vrt::rx_packet_handler
   int				     *d_oo;		// output index
   std::vector< std::complex<float> > &d_remainder;
   missing_pkt_checker		     &d_checker;
-  
+  all_context_t d_if_context;
+  size_t d_if_context_n32_bit_words;
 
 public:
 
@@ -54,13 +55,16 @@ public:
 		  int *oo, std::vector< std::complex<float> > &remainder,
 		  missing_pkt_checker &checker)
     : d_noutput_items(noutput_items), d_out(out),
-      d_oo(oo), d_remainder(remainder), d_checker(checker) {}
+      d_oo(oo), d_remainder(remainder), d_checker(checker),
+      d_if_context_n32_bit_words(0) {}
 
   ~rx_32fc_handler();
 
   bool operator()(const uint32_t *payload,
 		  size_t n32_bit_words,
 		  const vrt::expanded_header *hdr);
+  all_context_t* get_if_context(void){
+    return d_if_context_n32_bit_words? &d_if_context : NULL;};
 };
 
 rx_32fc_handler::~rx_32fc_handler()
@@ -100,15 +104,10 @@ rx_32fc_handler::operator()(const uint32_t *payload,
   else if (hdr->if_context_p()){
     // print the IF-Context packet
     fprintf(stderr, "\nIF-Context:\n");
-    for (size_t i = 0; i < n32_bit_words; i++)
-      fprintf(stderr, "%04x: %08x\n", (unsigned int) i, ntohl(payload[i]));
-    // copy the context into struct so we cant reference bad memory
-    // print the components of the struct, prove that it works!
-    all_context_t if_context;
-    memcpy(&if_context, payload, sizeof(uint32_t)*n32_bit_words);//FIXME
-    fprintf(stderr, "\nIF-Context-Components:\n");
-    if_context.beamformer.rf_ref_freq = ntohll(if_context.beamformer.rf_ref_freq);
-    fprintf(stderr, "Ref Freq %f Hz\n", vrt_freq_to_double(if_context.beamformer.rf_ref_freq));
+    //for (size_t i = 0; i < n32_bit_words; i++)
+    //  fprintf(stderr, "%04x: %08x\n", (unsigned int) i, ntohl(payload[i]));
+    memcpy(&d_if_context, payload, sizeof(uint32_t)*n32_bit_words);
+    d_if_context_n32_bit_words = n32_bit_words;
     return true;
   }
   else {
@@ -167,6 +166,12 @@ vrt_source_32fc::work(int noutput_items,
   if (!ok){
     std::cerr << "vrt_source_32fc: vrt::rx_packets() failed" << std::endl;
     return -1;	// say we're done
+  }
+
+  //we have a context packet, grab its useful information...
+  //remember that things are in network byte order!
+  if (h.get_if_context()){
+    d_actual_lo_freq = vrt_freq_to_double(ntohll(h.get_if_context()->beamformer.rf_ref_freq));
   }
 
   return oo;

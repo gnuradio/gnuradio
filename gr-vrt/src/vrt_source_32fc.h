@@ -33,6 +33,8 @@ protected:
 
   std::vector< std::complex<float> >	d_remainder;
   missing_pkt_checker			d_checker;
+  double d_actual_lo_freq;
+  double d_actual_cal_freq;
 
 public:
   ~vrt_source_32fc();
@@ -42,7 +44,6 @@ public:
 	   gr_vector_void_star &output_items);
 
   void reset() { d_remainder.clear(); }
-
 };
 
 #endif /* INCLUDED_VRT_SOURCE_32FC_H */
