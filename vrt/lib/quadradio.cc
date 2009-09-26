@@ -22,6 +22,8 @@
 #include <config.h>
 #endif
 #include <vrt/quadradio.h>
+#include <vrt/types.h>
+#include <gruel/inet.h>
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
@@ -377,12 +379,11 @@ vrt::quadradio::set_mem32(int addr, int value)
 bool
 vrt::quadradio::set_lo_freq(double freq)
 {
-  uint64_t lo_freq = uint64_t(freq * (uint64_t(1)<<20)); //q20 format
+  vrt_freq_t lo_freq = htonll(double_to_vrt_freq(freq));
   uint32_t cmd[4];
   cmd[0] = htonl(0);		   // verb: set
   cmd[1] = htonl(6);		   // id: lo freq
-  cmd[2] = htonl((lo_freq >> 32) & 0xffffffff);
-  cmd[3] = htonl((lo_freq >> 0) & 0xffffffff);
+  memcpy(cmd+2, &lo_freq, sizeof(lo_freq));
 
   return send_and_check(d_ctrl_fd, cmd, sizeof(cmd));
 }
@@ -390,12 +391,11 @@ vrt::quadradio::set_lo_freq(double freq)
 bool
 vrt::quadradio::set_cal_freq(double freq)
 {
-  uint64_t cal_freq = uint64_t(freq * (uint64_t(1)<<20)); //q20 format
+  vrt_freq_t cal_freq = htonll(double_to_vrt_freq(freq));
   uint32_t cmd[4];
   cmd[0] = htonl(0);		   // verb: set
   cmd[1] = htonl(7);		   // id: cal freq
-  cmd[2] = htonl((cal_freq >> 32) & 0xffffffff);
-  cmd[3] = htonl((cal_freq >> 0) & 0xffffffff);
+  memcpy(cmd+2, &cal_freq, sizeof(cal_freq));
 
   return send_and_check(d_ctrl_fd, cmd, sizeof(cmd));
 }
