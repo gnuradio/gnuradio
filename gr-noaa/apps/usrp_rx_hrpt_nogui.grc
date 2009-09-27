@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sun Sep 27 09:51:42 2009</timestamp>
+  <timestamp>Sun Sep 27 10:13:25 2009</timestamp>
   <block>
     <key>options</key>
     <param>
       <key>id</key>
-      <value>demod_hrpt_file</value>
+      <value>usrp_rx_hrpt_nogui</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -41,34 +41,11 @@
     </param>
     <param>
       <key>realtime_scheduling</key>
-      <value></value>
+      <value>1</value>
     </param>
     <param>
       <key>_coordinate</key>
       <value>(10, 10)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>max_sync_offset</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0.01</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(705, 19)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -102,7 +79,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>hs</value>
+      <value>sym_rate</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -110,11 +87,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>int(sps/2.0)</value>
+      <value>600*1109</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(499, 19)</value>
+      <value>(301, 19)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -148,7 +125,7 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>sym_rate</value>
+      <value>hs</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -156,11 +133,11 @@
     </param>
     <param>
       <key>value</key>
-      <value>600*1109</value>
+      <value>int(sps/2.0)</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(301, 19)</value>
+      <value>(499, 19)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -191,6 +168,52 @@
     </param>
   </block>
   <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>max_sync_offset</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0.01</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(705, 19)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>config_filename</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>'usrp_rx_hrpt.cfg'</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(12, 167)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
     <key>import</key>
     <param>
       <key>id</key>
@@ -206,7 +229,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(9, 92)</value>
+      <value>(11, 112)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -214,34 +237,42 @@
     </param>
   </block>
   <block>
-    <key>parameter</key>
+    <key>variable_config</key>
     <param>
       <key>id</key>
-      <value>filename</value>
+      <value>output_filename</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>label</key>
-      <value>Filename</value>
-    </param>
-    <param>
       <key>value</key>
-      <value>usrp.dat</value>
+      <value>'frames.dat'</value>
     </param>
     <param>
       <key>type</key>
       <value>string</value>
     </param>
     <param>
-      <key>short_id</key>
-      <value>F</value>
+      <key>config_file</key>
+      <value>config_filename</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>'output'</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>'filename'</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>output_filename</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(200, 101)</value>
+      <value>(1146, 122)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -249,34 +280,257 @@
     </param>
   </block>
   <block>
-    <key>parameter</key>
+    <key>variable_config</key>
     <param>
       <key>id</key>
-      <value>output</value>
+      <value>sync_alpha</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
     </param>
     <param>
-      <key>label</key>
-      <value>Output</value>
+      <key>value</key>
+      <value>0.05</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>config_filename</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>'demod'</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>'sync_alpha'</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>sync_alpha</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(988, 121)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>id</key>
+      <value>pll_alpha</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
     </param>
     <param>
       <key>value</key>
-      <value>frames.dat</value>
+      <value>0.05</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>config_filename</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>'demod'</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>'pll_alpha'</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>pll_alpha</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(830, 121)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>id</key>
+      <value>gain</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>35</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>config_filename</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>'usrp'</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>'gain'</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>gain</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(671, 122)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>id</key>
+      <value>freq</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>1698e6</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>config_filename</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>'usrp'</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>'freq'</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>freq</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(514, 121)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>id</key>
+      <value>decim</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>16</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>config_filename</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>'usrp'</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>'decim'</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>decim</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(358, 118)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>id</key>
+      <value>side</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>'A'</value>
     </param>
     <param>
       <key>type</key>
       <value>string</value>
     </param>
     <param>
-      <key>short_id</key>
-      <value>o</value>
+      <key>config_file</key>
+      <value>config_filename</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>'usrp'</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>'side'</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>side</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(302, 101)</value>
+      <value>(201, 116)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -284,14 +538,181 @@
     </param>
   </block>
   <block>
-    <key>gr_float_to_complex</key>
+    <key>noaa_hrpt_decoder</key>
     <param>
       <key>id</key>
-      <value>f2c</value>
+      <value>decoder</value>
     </param>
     <param>
       <key>_enabled</key>
       <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1247, 347)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>usrp_simple_source_x</key>
+    <param>
+      <key>id</key>
+      <value>usrp_source</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>format</key>
+      <value></value>
+    </param>
+    <param>
+      <key>which</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>decimation</key>
+      <value>decim</value>
+    </param>
+    <param>
+      <key>frequency</key>
+      <value>freq</value>
+    </param>
+    <param>
+      <key>lo_offset</key>
+      <value>float('inf')</value>
+    </param>
+    <param>
+      <key>gain</key>
+      <value>gain</value>
+    </param>
+    <param>
+      <key>side</key>
+      <value>side</value>
+    </param>
+    <param>
+      <key>rx_ant</key>
+      <value>RXA</value>
+    </param>
+    <param>
+      <key>hb_filters</key>
+      <value></value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(29, 303)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>mf_taps</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>[-0.5/hs,]*hs+[0.5/hs,]*hs</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(825, 19)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_agc_xx</key>
+    <param>
+      <key>id</key>
+      <value>agc</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>rate</key>
+      <value>1e-6</value>
+    </param>
+    <param>
+      <key>reference</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>gain</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>max_gain</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(246, 319)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>noaa_hrpt_deframer</key>
+    <param>
+      <key>id</key>
+      <value>deframer</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1060, 347)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_file_sink</key>
+    <param>
+      <key>id</key>
+      <value>frame_sink</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>file</key>
+      <value>output_filename</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>short</value>
     </param>
     <param>
       <key>vlen</key>
@@ -299,30 +720,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(832, 363)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>virtual_sink</key>
-    <param>
-      <key>id</key>
-      <value>samples_sink</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>stream_id</key>
-      <value>samples</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1070, 376)</value>
+      <value>(1251, 454)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -357,212 +755,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(813, 455)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>noaa_hrpt_deframer</key>
-    <param>
-      <key>id</key>
-      <value>deframer</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1037, 483)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_file_sink</key>
-    <param>
-      <key>id</key>
-      <value>file_sink</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>file</key>
-      <value>output</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>short</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1238, 479)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>noaa_hrpt_decoder</key>
-    <param>
-      <key>id</key>
-      <value>decoder</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1237, 542)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_deinterleave</key>
-    <param>
-      <key>id</key>
-      <value>deinterleave</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>num_streams</key>
-      <value>2</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(628, 363)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>parameter</key>
-    <param>
-      <key>id</key>
-      <value>decim</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value>Decimation</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>16</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>intx</value>
-    </param>
-    <param>
-      <key>short_id</key>
-      <value>d</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(415, 101)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>parameter</key>
-    <param>
-      <key>id</key>
-      <value>pll_alpha</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value></value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0.05</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>eng_float</value>
-    </param>
-    <param>
-      <key>short_id</key>
-      <value>p</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(527, 101)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>parameter</key>
-    <param>
-      <key>id</key>
-      <value>sync_alpha</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>label</key>
-      <value></value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0.05</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>eng_float</value>
-    </param>
-    <param>
-      <key>short_id</key>
-      <value>s</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(615, 99)</value>
+      <value>(833, 319)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -593,107 +786,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(606, 463)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>virtual_source</key>
-    <param>
-      <key>id</key>
-      <value>samples_source</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>stream_id</key>
-      <value>samples</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(164, 479)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_short_to_float</key>
-    <param>
-      <key>id</key>
-      <value>s2f</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(365, 380)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_file_source</key>
-    <param>
-      <key>id</key>
-      <value>file_source</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>file</key>
-      <value>filename</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>short</value>
-    </param>
-    <param>
-      <key>repeat</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(162, 368)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>mf_taps</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>[-0.5/hs,]*hs+[0.5/hs,]*hs</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(829, 21)</value>
+      <value>(638, 327)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -724,7 +817,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(359, 471)</value>
+      <value>(402, 335)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -732,32 +825,8 @@
     </param>
   </block>
   <connection>
-    <source_block_id>deframer</source_block_id>
-    <sink_block_id>file_sink</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>sync</source_block_id>
-    <sink_block_id>deframer</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>pll</source_block_id>
-    <sink_block_id>sync</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>deinterleave</source_block_id>
-    <sink_block_id>f2c</sink_block_id>
-    <source_key>1</source_key>
-    <sink_key>1</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>deinterleave</source_block_id>
-    <sink_block_id>f2c</sink_block_id>
+    <source_block_id>usrp_source</source_block_id>
+    <sink_block_id>agc</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -768,32 +837,32 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>f2c</source_block_id>
-    <sink_block_id>samples_sink</sink_block_id>
+    <source_block_id>pll</source_block_id>
+    <sink_block_id>sync</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>sync</source_block_id>
+    <sink_block_id>deframer</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>deframer</source_block_id>
+    <sink_block_id>frame_sink</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>agc</source_block_id>
+    <sink_block_id>gr_fir_filter_xxx_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>gr_fir_filter_xxx_0</source_block_id>
     <sink_block_id>pll</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>samples_source</source_block_id>
-    <sink_block_id>gr_fir_filter_xxx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>s2f</source_block_id>
-    <sink_block_id>deinterleave</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>file_source</source_block_id>
-    <sink_block_id>s2f</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
