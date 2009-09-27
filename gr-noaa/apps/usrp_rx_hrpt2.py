@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: USRP HRPT Receiver
-# Generated: Sun Sep 27 10:06:41 2009
+# Generated: Sun Sep 27 13:32:48 2009
 ##################################################
 
 from gnuradio import eng_notation
@@ -19,7 +19,7 @@ import ConfigParser
 import math
 import wx
 
-class usrp_rx_hrpt(grc_wxgui.top_block_gui):
+class usrp_rx_hrpt2(grc_wxgui.top_block_gui):
 
 	def __init__(self):
 		grc_wxgui.top_block_gui.__init__(self, title="USRP HRPT Receiver")
@@ -396,6 +396,6 @@ if __name__ == '__main__':
 	(options, args) = parser.parse_args()
 	if gr.enable_realtime_scheduling() != gr.RT_OK:
 		print "Error: failed to enable realtime scheduling."
-	tb = usrp_rx_hrpt()
+	tb = usrp_rx_hrpt2()
 	tb.Run(True)
 
