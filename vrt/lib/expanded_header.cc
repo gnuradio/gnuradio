@@ -113,7 +113,7 @@ namespace vrt {
     }
 
     /* is this a if context packet? */
-    if (ntohl(p[0]) & VRTH_PT_IF_CONTEXT){
+    if (h->if_context_p()){
         *payload = p;
         *n32_bit_words_payload = n32_bit_words_packet;
     }
