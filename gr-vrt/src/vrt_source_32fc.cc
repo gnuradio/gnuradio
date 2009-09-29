@@ -171,14 +171,20 @@ vrt_source_32fc::work(int noutput_items,
   //we have a context packet, grab its useful information...
   //remember that things are in network byte order!
   if (h.get_if_context()){
-    d_lo_freq = vrt_freq_to_double(ntohll(h.get_if_context()->caldiv.lo_freq));
-    d_cal_freq = vrt_freq_to_double(ntohll(h.get_if_context()->caldiv.cal_freq));
-    d_lo_locked = bool(ntohl(h.get_if_context()->caldiv.lo_locked));
-    d_cal_locked = bool(ntohl(h.get_if_context()->caldiv.cal_locked));
-    d_cal_enabled = bool(ntohl(h.get_if_context()->caldiv.cal_enabled));
-    d_caldiv_temp = vrt_temp_to_double(ntohl(h.get_if_context()->caldiv.temp));
-    d_caldiv_ser = ntohl(h.get_if_context()->caldiv.ser);
-    d_caldiv_rev = ntohl(h.get_if_context()->caldiv.rev);
+    //extract caldiv stuff
+    d_lo_freq = vrt_freq_to_double(ntohx(h.get_if_context()->caldiv.lo_freq));
+    d_cal_freq = vrt_freq_to_double(ntohx(h.get_if_context()->caldiv.cal_freq));
+    d_lo_locked = bool(ntohx(h.get_if_context()->caldiv.lo_locked));
+    d_cal_locked = bool(ntohx(h.get_if_context()->caldiv.cal_locked));
+    d_cal_enabled = bool(ntohx(h.get_if_context()->caldiv.cal_enabled));
+    d_caldiv_temp = vrt_temp_to_double(ntohx(h.get_if_context()->caldiv.temp));
+    d_caldiv_ser = ntohx(h.get_if_context()->caldiv.ser);
+    d_caldiv_rev = ntohx(h.get_if_context()->caldiv.rev);
+    //extract gps stuff
+    d_utc_time = ntohx(h.get_if_context()->gps.formatted_gps.integer_secs);
+    d_altitude = vrt_altitude_to_double(ntohx(h.get_if_context()->gps.formatted_gps.altitude));
+    d_longitude = vrt_geo_angle_to_double(ntohx(h.get_if_context()->gps.formatted_gps.longitude));
+    d_latitude = vrt_geo_angle_to_double(ntohx(h.get_if_context()->gps.formatted_gps.latitude));
   }
 
   return oo;

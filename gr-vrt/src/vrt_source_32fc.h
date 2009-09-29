@@ -43,6 +43,12 @@ protected:
   double d_caldiv_temp;
   int    d_caldiv_rev;
   int    d_caldiv_ser;
+  
+  //gps settings parsed from if context
+  int    d_utc_time;
+  double d_altitude;
+  double d_longitude;
+  double d_latitude;
 
 public:
   ~vrt_source_32fc();

@@ -120,8 +120,14 @@ public:
   double get_lo_freq(void){return d_lo_freq;}
   bool get_lo_locked(void){return d_lo_locked;}
   double get_caldiv_temp(void){return d_caldiv_temp;}
-  int get_caldiv_ser_no(void){return d_caldiv_rev;}
-  int get_caldiv_rev_no(void){return d_caldiv_ser;}
+  int get_caldiv_serial(void){return d_caldiv_rev;}
+  int get_caldiv_revision(void){return d_caldiv_ser;}
+  
+  //gps public access methods
+  int get_utc_time(void){return d_utc_time;}
+  double get_altitude(void){return d_altitude;}
+  double get_longitude(void){return d_longitude;}
+  double get_latitude(void){return d_latitude;}
 };
 
 
