@@ -5,10 +5,10 @@ As the scripts are generated using GRC, GRC must be installed at runtime
 in order for them to operate.
 
 
-HRPT Operation
---------------
+HRPT OPERATION
 
 usrp_rx_hrpt.py
+---------------
 
 This GUI script will receive HRPT RF, demodulate, synchronize, and deframe
 HRPT minor frames into a file.  The file stores a series of 11090 word,
@@ -24,12 +24,26 @@ The present HRPT demodulator is only tested at decimation 16.  The only other
 valid decimation rates are 24 and 32, which may word but with more bit
 errors.  No other decimation rates will work.
 
+usrp_rx_hrpt2.py
+----------------
+
+This GUI script uses fewer graphical displays to reduce CPU consumption on
+slower machines, but otherwise operates identically to userp_rx_hrpt.py.
+
+usrp_rx_hrpt_nogui.py
+---------------------
+
+This non-GUI script operates without a display and requires that all parameters
+be set in the configuration file prior to running.  It has no command-line
+parameters, and works identically to the GUI scripts.
 
 demod_hrpt_file.py
+------------------
 
-This command-line only script will operate on a file generated with
+This non-GUI script will operate on a file generated with
 usrp_rx_cfile.py and output frames in the same format as above.  It does
-*not* use the configuration file above.
+*not* use the configuration file above; instead you must pass parameters to
+it on the command line.  To exit the program, press Enter.
 
 Usage: demod_hrpt_file.py: [options]
 
