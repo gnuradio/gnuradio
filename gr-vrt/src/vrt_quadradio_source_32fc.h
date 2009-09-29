@@ -113,8 +113,15 @@ public:
   bool set_beamforming(std::vector<gr_complex> gains);
   bool set_cal_enb(bool enb);
   
-  double get_cal_freq(void){return d_actual_cal_freq;}
-  double get_lo_freq(void){return d_actual_lo_freq;}
+  //caldiv public access methods
+  double get_cal_freq(void){return d_cal_freq;}
+  bool get_cal_locked(void){return d_cal_locked;}
+  bool get_cal_enabled(void){return d_cal_enabled;}
+  double get_lo_freq(void){return d_lo_freq;}
+  bool get_lo_locked(void){return d_lo_locked;}
+  double get_caldiv_temp(void){return d_caldiv_temp;}
+  int get_caldiv_ser_no(void){return d_caldiv_rev;}
+  int get_caldiv_rev_no(void){return d_caldiv_ser;}
 };
 
 

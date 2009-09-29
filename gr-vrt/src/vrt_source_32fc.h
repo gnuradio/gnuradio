@@ -33,8 +33,16 @@ protected:
 
   std::vector< std::complex<float> >	d_remainder;
   missing_pkt_checker			d_checker;
-  double d_actual_lo_freq;
-  double d_actual_cal_freq;
+
+  //caldiv settings parsed from if context
+  double d_cal_freq;
+  bool   d_cal_locked;
+  bool   d_cal_enabled;
+  double d_lo_freq;
+  bool   d_lo_locked;
+  double d_caldiv_temp;
+  int    d_caldiv_rev;
+  int    d_caldiv_ser;
 
 public:
   ~vrt_source_32fc();

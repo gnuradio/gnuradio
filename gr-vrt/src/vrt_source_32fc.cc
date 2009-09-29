@@ -171,7 +171,14 @@ vrt_source_32fc::work(int noutput_items,
   //we have a context packet, grab its useful information...
   //remember that things are in network byte order!
   if (h.get_if_context()){
-    d_actual_lo_freq = vrt_freq_to_double(ntohll(h.get_if_context()->beamformer.rf_ref_freq));
+    d_lo_freq = vrt_freq_to_double(ntohll(h.get_if_context()->caldiv.lo_freq));
+    d_cal_freq = vrt_freq_to_double(ntohll(h.get_if_context()->caldiv.cal_freq));
+    d_lo_locked = bool(ntohl(h.get_if_context()->caldiv.lo_locked));
+    d_cal_locked = bool(ntohl(h.get_if_context()->caldiv.cal_locked));
+    d_cal_enabled = bool(ntohl(h.get_if_context()->caldiv.cal_enabled));
+    d_caldiv_temp = vrt_temp_to_double(ntohl(h.get_if_context()->caldiv.temp));
+    d_caldiv_ser = ntohl(h.get_if_context()->caldiv.ser);
+    d_caldiv_rev = ntohl(h.get_if_context()->caldiv.rev);
   }
 
   return oo;
