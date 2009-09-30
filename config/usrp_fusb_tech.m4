@@ -26,6 +26,7 @@ dnl
 
 AC_DEFUN([USRP_SET_FUSB_TECHNIQUE],[
   req_libusb1=no
+  USE_LIBUSB1=0
   AC_ARG_WITH([fusb-tech],
               AC_HELP_STRING([--with-fusb-tech=OS],
 		             [Set fast USB technique (default=auto)]),
@@ -36,6 +37,7 @@ AC_DEFUN([USRP_SET_FUSB_TECHNIQUE],[
         libusb1*)
           FUSB_TECH=libusb1
           req_libusb1=yes
+	  USE_LIBUSB1=1
           ;;
         linux*)
           AC_CHECK_HEADER([linux/usbdevice_fs.h],
@@ -77,4 +79,9 @@ AC_DEFUN([USRP_SET_FUSB_TECHNIQUE],[
   AM_CONDITIONAL(FUSB_TECH_linux,    test x$FUSB_TECH = xlinux)
   AM_CONDITIONAL(FUSB_TECH_libusb1,  test x$FUSB_TECH = xlibusb1)
   AM_CONDITIONAL(FUSB_TECH_ra_wb,    test x$FUSB_TECH = xra_wb)
+
+  AC_SUBST(USE_LIBUSB1)
+  AC_CONFIG_FILES([\
+	usrp/host/include/usrp/libusb_types.h \
+  ])
 ])

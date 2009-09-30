@@ -24,12 +24,6 @@
 #include "config.h"
 #endif
 
-#ifdef HAVE_LIBUSB_1
-#include <libusb-1.0/libusb.h>
-#else
-#include <usb.h>
-#endif
-
 #include "usrp/usrp_basic.h"
 #include "usrp/usrp_prims.h"
 #include "usrp_interfaces.h"

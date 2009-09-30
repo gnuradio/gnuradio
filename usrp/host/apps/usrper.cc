@@ -33,13 +33,6 @@
 
 #include "usrp/usrp_prims.h"
 #include "usrp_spi_defs.h"
-#include <string.h>
-
-#ifdef HAVE_LIBUSB_1
-#include <libusb-1.0/libusb.h>
-#else
-#include <usb.h>
-#endif
 
 char *prog_name;
 

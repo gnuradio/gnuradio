@@ -44,19 +44,12 @@ endif
 
 EXTRA_DIST = 				\
 	std_paths.h.in			\
-	usrp_dbid.dat			\
-	fusb.h.in			\
-	usrp_prims.h.in			\
-	usrp_basic.h.in	
+	usrp_dbid.dat
 
-BUILT_SOURCES = 			\
-	$(abs_top_builddir)/usrp/host/include/usrp/usrp_dbid.h	\
-	fusb.h							\
-	usrp_prims.h						\
-	usrp_basic.h
+BUILT_SOURCES = $(abs_top_builddir)/usrp/host/include/usrp/usrp_dbid.h
 
 BUILT_SOURCES += usrp_dbid.cc \
-	         usrp_dbid.py
+		 usrp_dbid.py
 
 # ----------------------------------------------------------------
 # FUSB_TECH is set at configure time by way of
@@ -200,23 +193,3 @@ gen_sources = $(BUILT_SOURCES)
 gen_sources_deps = gen_usrp_dbid.py usrp_dbid.dat
 par_gen_command = PYTHONPATH=$(top_srcdir)/usrp/src srcdir=$(srcdir) $(PYTHON) $(srcdir)/gen_usrp_dbid.py $(srcdir)/usrp_dbid.dat
 include $(top_srcdir)/Makefile.par.gen
-
-
-# Generate libusb dependent header files from configure.
-# These are already defined, but override them here, which throws warnings.
-# Need to figure out how to separate rules for BUILD_SOURCES.
-fusb.h: fusb.h.in $(top_srcdir)/config.status
-	cd $(top_srcdir) \
-	  && CONFIG_FILES= CONFIG_HEADERS= CONFIG_OTHER=fusb.h \
-	$(SHELL) ./config.status
-
-usrp_prims.h: usrp_prims.h.in $(top_srcdir)/config.status
-	cd $(top_srcdir) \
-	  && CONFIG_FILES= CONFIG_HEADERS= CONFIG_OTHER=usrp_prims.h \
-	$(SHELL) ./config.status
-
-usrp_basic.h: usrp_basic.h.in $(top_srcdir)/config.status
-	cd $(top_srcdir) \
-	  && CONFIG_FILES= CONFIG_HEADERS= CONFIG_OTHER=usrp_basic.h \
-	$(SHELL) ./config.status
-
