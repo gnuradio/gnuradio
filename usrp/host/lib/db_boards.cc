@@ -20,6 +20,10 @@
 // Boston, MA 02110-1301, USA.
 //
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <db_boards.h>
 #include <usrp/usrp_dbid.h>
 #include <usrp/db_basic.h>

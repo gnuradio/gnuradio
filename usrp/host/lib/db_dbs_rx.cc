@@ -18,6 +18,10 @@
 // the Free Software Foundation, Inc., 51 Franklin Street,
 // Boston, MA 02110-1301, USA.
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <usrp/db_dbs_rx.h>
 #include <db_base_impl.h>
 #include <cmath>
