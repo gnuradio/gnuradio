@@ -20,7 +20,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-common_INCLUDES = $(USRP_INCLUDES)
+common_INCLUDES = $(USRP_INCLUDES) -I$(USB_INCLUDEDIR)
 
 lib_LTLIBRARIES = libusrp.la
 
@@ -44,13 +44,12 @@ endif
 
 EXTRA_DIST = 				\
 	std_paths.h.in			\
-	usrp_dbid.dat			
+	usrp_dbid.dat
 
-BUILT_SOURCES = 			\
-	$(abs_top_builddir)/usrp/host/include/usrp/usrp_dbid.h
+BUILT_SOURCES = $(abs_top_builddir)/usrp/host/include/usrp/usrp_dbid.h
 
 BUILT_SOURCES += usrp_dbid.cc \
-	         usrp_dbid.py
+		 usrp_dbid.py
 
 # ----------------------------------------------------------------
 # FUSB_TECH is set at configure time by way of
@@ -61,7 +60,9 @@ BUILT_SOURCES += usrp_dbid.cc \
 
 generic_CODE = 				\
 	fusb_generic.cc			\
-	fusb_sysconfig_generic.cc
+	fusb_sysconfig_generic.cc	\
+	usrp_prims_libusb0.cc		\
+	usrp_basic_libusb0.cc
 
 darwin_CODE =				\
 	fusb_darwin.cc			\
@@ -70,20 +71,35 @@ darwin_CODE =				\
 	circular_buffer.h		\
 	circular_linked_list.h		\
 	darwin_libusb.h			\
-	mld_threads.h			
+	mld_threads.h			\
+	usrp_prims_libusb0.cc		\
+	usrp_basic_libusb0.cc
+
 
 win32_CODE =				\
 	fusb_win32.cc			\
-	fusb_sysconfig_win32.cc 	
+	fusb_sysconfig_win32.cc 	\
+	usrp_prims_libusb0.cc		\
+	usrp_basic_libusb0.cc
+
 
 linux_CODE =				\
 	fusb_linux.cc			\
-	fusb_sysconfig_linux.cc 	
+	fusb_sysconfig_linux.cc		\
+	usrp_prims_libusb0.cc		\
+	usrp_basic_libusb0.cc
 
 ra_wb_CODE =				\
 	fusb_ra_wb.cc			\
-	fusb_sysconfig_ra_wb.cc
+	fusb_sysconfig_ra_wb.cc		\
+	usrp_prims_libusb0.cc		\
+	usrp_basic_libusb0.cc
 
+libusb1_CODE =				\
+	fusb_libusb1.cc			\
+	fusb_sysconfig_libusb1.cc	\
+	usrp_prims_libusb1.cc		\
+	usrp_basic_libusb1.cc
 
 #
 # include each <foo>_CODE entry here...
@@ -93,24 +109,24 @@ EXTRA_libusrp_la_SOURCES =		\
 	$(darwin_CODE)			\
 	$(win32_CODE)			\
 	$(linux_CODE)			\
-	$(ra_wb_CODE)
-
+	$(ra_wb_CODE)			\
+	$(libusb1_CODE)
 
 # work around automake deficiency
 libusrp_la_common_SOURCES = 		\
 	fusb.cc				\
 	md5.c				\
-	usrp_basic.cc			\
+	usrp_basic_common.cc		\
 	usrp_config.cc			\
 	usrp_dbid.cc			\
 	usrp_local_sighandler.cc	\
-	usrp_prims.cc			\
+	usrp_prims_common.cc		\
 	usrp_standard.cc		\
 	db_boards.cc			\
 	db_base.cc			\
 	db_basic.cc			\
 	db_tv_rx.cc			\
-	db_tv_rx_mimo.cc			\
+	db_tv_rx_mimo.cc		\
 	db_flexrf.cc			\
 	db_flexrf_mimo.cc		\
 	db_dbs_rx.cc			\
@@ -118,8 +134,6 @@ libusrp_la_common_SOURCES = 		\
 	db_dtt754.cc			\
 	db_dtt768.cc			\
 	db_util.cc
-
-
 
 if FUSB_TECH_generic
 libusrp_la_SOURCES = $(libusrp_la_common_SOURCES) $(generic_CODE)
@@ -141,6 +155,11 @@ if FUSB_TECH_ra_wb
 libusrp_la_SOURCES = $(libusrp_la_common_SOURCES) $(ra_wb_CODE)
 endif
 
+if FUSB_TECH_libusb1
+libusrp_la_SOURCES = $(libusrp_la_common_SOURCES) $(libusb1_CODE)
+endif
+
+
 noinst_HEADERS =			\
 	ad9862.h			\
 	db_base_impl.h			\
@@ -150,11 +169,13 @@ noinst_HEADERS =			\
 	fusb_darwin.h			\
 	fusb_generic.h			\
 	fusb_linux.h			\
+	fusb_libusb1.h			\
 	fusb_ra_wb.h			\
 	fusb_win32.h			\
 	md5.h				\
 	rate_to_regval.h		\
-	usrp_config.h
+	usrp_config.h			\
+	usrp_primsi.h
 
 if PYTHON
 usrppython_PYTHON =			\

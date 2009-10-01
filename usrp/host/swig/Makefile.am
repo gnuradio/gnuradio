@@ -25,6 +25,7 @@ AM_CPPFLAGS =			\
 	$(USRP_INCLUDES)	\
 	$(PYTHON_CPPFLAGS)	\
 	-I$(srcdir)		\
+	-I$(USB_INCLUDEDIR)	\
 	$(WITH_INCLUDES)
 
 #################################
