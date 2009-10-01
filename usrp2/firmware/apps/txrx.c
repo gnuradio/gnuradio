@@ -263,10 +263,7 @@ main(void)
   newline();
 
   ethernet_register_link_changed_callback(link_changed_callback);
-  putstr("Before ethernet_init()\n");
   ethernet_init();
-  putstr("After ethernet_init()\n");
-
 
 #if 0
   // make bit 15 of Tx gpio's be a s/w output

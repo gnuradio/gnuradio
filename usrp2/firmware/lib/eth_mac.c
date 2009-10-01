@@ -36,7 +36,6 @@ eth_mac_set_addr(const u2_mac_addr_t *src)
     (((unsigned int)src->addr[3])<<16) +
     (((unsigned int)src->addr[4])<<8) +
     (((unsigned int)src->addr[5]));
-  printf("RDBK %x:%x\n",eth_mac->ucast_hi,eth_mac->ucast_lo);
 }
 
 
