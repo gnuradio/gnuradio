@@ -27,6 +27,7 @@
 #include <noaa_hrpt_deframer.h>
 #include <gr_io_signature.h>
 #include <cstring>
+#include <cstdio>
 
 #define ST_IDLE   0
 #define ST_SYNCED 1

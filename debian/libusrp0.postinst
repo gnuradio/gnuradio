@@ -11,5 +11,6 @@ if ! getent group usrp >/dev/null; then
     addgroup --system usrp
 fi
 
-ldconfig
+#DEBHELPER#
+
 exit 0

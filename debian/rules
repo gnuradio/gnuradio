@@ -8,6 +8,8 @@ export DH_OPTIONS
 
 export DH_PYCENTRAL=nomove
 
+DEB_BUILD_GNU_TYPE = $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
 clean:
 	dh_testdir
 	dh_testroot
@@ -37,6 +39,7 @@ configure-stamp:
 	dh_testdir
 	[ -f ./configure ] || ./bootstrap
 	./configure \
+		--build=$(DEB_BUILD_GNU_TYPE) \
 		--prefix=/usr \
 		--mandir=\$${prefix}/share/man \
 		--infodir=\$${prefix}/share/info \
@@ -46,7 +49,7 @@ configure-stamp:
 		--disable-gr-audio-osx \
 		--disable-gr-audio-windows \
 		--disable-gcell --disable-gr-gcell \
-		--disable-gr-comedi --disable-usrp2-firmware
+		--disable-gr-comedi --disable-usrp2-firmware 
 	touch configure-stamp
 
 build: build-stamp
@@ -59,7 +62,8 @@ build-stamp: configure-stamp
 extract: extract-stamp
 extract-stamp: build-stamp debian/bin/gen-install-files.sh
 	dh_testdir
-	debian/bin/gen-install-files.sh 
+	chmod +x debian/bin/gen-install-files.sh debian/bin/extract-install-filenames
+	debian/bin/gen-install-files.sh
 	touch $@
 
 install: install-stamp
@@ -79,12 +83,12 @@ install-stamp: extract-stamp debian/control
 	done
 
 	: # Deposit rule to allow group 'usrp' access to USRP hardware
-	install -m 0644 -D debian/custom/libusrp.udev \
+	install -m 0644 -D debian/custom/libusrp0.udev \
 		debian/tmp/etc/udev/rules.d/40-usrp.rules
 
 	: # Deposit rule to allow group 'usrp' access to USRP2 hardware
-	install -m 0644 -D debian/custom/libusrp2.limits \
-		debian/tmp/etc/security/limits.d/libusrp2.limits
+	install -m 0644 -D debian/custom/libusrp2-0.limits \
+		debian/tmp/etc/security/limits.d/libusrp2-0.limits
 
 	: # Install custom grc.conf
 	install -m 0644 -D debian/custom/grc.conf \

@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: USRP HRPT Receiver
-# Generated: Sun Sep 27 13:37:23 2009
+# Generated: Sun Sep 27 13:32:48 2009
 ##################################################
 
 from gnuradio import eng_notation
@@ -10,7 +10,6 @@ from gnuradio import gr
 from gnuradio import noaa
 from gnuradio.eng_option import eng_option
 from gnuradio.gr import firdes
-from gnuradio.wxgui import fftsink2
 from gnuradio.wxgui import forms
 from gnuradio.wxgui import scopesink2
 from grc_gnuradio import usrp as grc_usrp
@@ -20,7 +19,7 @@ import ConfigParser
 import math
 import wx
 
-class usrp_rx_hrpt(grc_wxgui.top_block_gui):
+class usrp_rx_hrpt2(grc_wxgui.top_block_gui):
 
 	def __init__(self):
 		grc_wxgui.top_block_gui.__init__(self, title="USRP HRPT Receiver")
@@ -71,20 +70,12 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		try: output_filename = self._output_filename_config.get('output', 'filename')
 		except: output_filename = 'frames.dat'
 		self.output_filename = output_filename
-		self.mf_taps = mf_taps = [-0.5/hs,]*hs+[0.5/hs]*hs
+		self.mf_taps = mf_taps = [-0.5/hs,]*hs+[0.5/hs,]*hs
 		self.max_sync_offset = max_sync_offset = 0.01
 		self.max_carrier_offset = max_carrier_offset = 2*math.pi*100e3/sample_rate
 		self.gain = gain = saved_gain
 		self.freq = freq = saved_freq
 		self.decim_text = decim_text = decim
-
-		##################################################
-		# Notebooks
-		##################################################
-		self.displays = wx.Notebook(self.GetWin(), style=wx.NB_TOP)
-		self.displays.AddPage(grc_wxgui.Panel(self.displays), "RX")
-		self.displays.AddPage(grc_wxgui.Panel(self.displays), "Demod")
-		self.GridAdd(self.displays, 2, 0, 1, 4)
 
 		##################################################
 		# Controls
@@ -193,7 +184,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self.gr_fir_filter_xxx_0 = gr.fir_filter_ccc(1, (mf_taps))
 		self.pll = noaa.hrpt_pll_cf(pll_alpha, pll_alpha**2/4.0, max_carrier_offset)
 		self.pll_scope = scopesink2.scope_sink_f(
-			self.displays.GetPage(1).GetWin(),
+			self.GetWin(),
 			title="Demod Waveform",
 			sample_rate=sample_rate,
 			v_scale=0.5,
@@ -202,34 +193,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 			xy_mode=False,
 			num_inputs=1,
 		)
-		self.displays.GetPage(1).GridAdd(self.pll_scope.win, 0, 0, 1, 1)
-		self.rx_fft = fftsink2.fft_sink_c(
-			self.displays.GetPage(0).GetWin(),
-			baseband_freq=freq,
-			y_per_div=5,
-			y_divs=8,
-			ref_level=-5,
-			ref_scale=2.0,
-			sample_rate=sample_rate,
-			fft_size=1024,
-			fft_rate=15,
-			average=True,
-			avg_alpha=0.1,
-			title="RX Spectrum",
-			peak_hold=False,
-		)
-		self.displays.GetPage(0).GridAdd(self.rx_fft.win, 0, 0, 1, 1)
-		self.rx_scope = scopesink2.scope_sink_c(
-			self.displays.GetPage(0).GetWin(),
-			title="RX Waveform",
-			sample_rate=sample_rate,
-			v_scale=0,
-			t_scale=20.0/sample_rate,
-			ac_couple=False,
-			xy_mode=False,
-			num_inputs=1,
-		)
-		self.displays.GetPage(0).GridAdd(self.rx_scope.win, 1, 0, 1, 1)
+		self.GridAdd(self.pll_scope.win, 2, 0, 1, 4)
 		self.sync = noaa.hrpt_sync_fb(sync_alpha, sync_alpha**2/4.0, sps, max_sync_offset)
 		self.usrp_source = grc_usrp.simple_source_c(which=0, side=side, rx_ant="RXA")
 		self.usrp_source.set_decim_rate(decim)
@@ -239,16 +203,14 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		##################################################
 		# Connections
 		##################################################
-		self.connect((self.deframer, 0), (self.frame_sink, 0))
-		self.connect((self.sync, 0), (self.deframer, 0))
-		self.connect((self.pll, 0), (self.sync, 0))
-		self.connect((self.pll, 0), (self.pll_scope, 0))
-		self.connect((self.agc, 0), (self.rx_scope, 0))
-		self.connect((self.agc, 0), (self.rx_fft, 0))
-		self.connect((self.deframer, 0), (self.decoder, 0))
-		self.connect((self.agc, 0), (self.gr_fir_filter_xxx_0, 0))
 		self.connect((self.gr_fir_filter_xxx_0, 0), (self.pll, 0))
+		self.connect((self.agc, 0), (self.gr_fir_filter_xxx_0, 0))
 		self.connect((self.usrp_source, 0), (self.agc, 0))
+		self.connect((self.deframer, 0), (self.decoder, 0))
+		self.connect((self.pll, 0), (self.pll_scope, 0))
+		self.connect((self.pll, 0), (self.sync, 0))
+		self.connect((self.sync, 0), (self.deframer, 0))
+		self.connect((self.deframer, 0), (self.frame_sink, 0))
 
 	def set_config_filename(self, config_filename):
 		self.config_filename = config_filename
@@ -315,8 +277,6 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self.sample_rate = sample_rate
 		self.set_max_carrier_offset(2*math.pi*100e3/self.sample_rate)
 		self.set_sps(self.sample_rate/self.sym_rate)
-		self.rx_scope.set_sample_rate(self.sample_rate)
-		self.rx_fft.set_sample_rate(self.sample_rate)
 		self.pll_scope.set_sample_rate(self.sample_rate)
 
 	def set_sps(self, sps):
@@ -351,7 +311,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 
 	def set_hs(self, hs):
 		self.hs = hs
-		self.set_mf_taps([-0.5/self.hs,]*self.hs+[0.5/self.hs]*self.hs)
+		self.set_mf_taps([-0.5/self.hs,]*self.hs+[0.5/self.hs,]*self.hs)
 
 	def set_sync_alpha(self, sync_alpha):
 		self.sync_alpha = sync_alpha
@@ -426,7 +386,6 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self._saved_freq_config.set('usrp', 'freq', str(self.freq))
 		self._saved_freq_config.write(open(self.config_filename, 'w'))
 		self.usrp_source.set_frequency(self.freq)
-		self.rx_fft.set_baseband_freq(self.freq)
 
 	def set_decim_text(self, decim_text):
 		self.decim_text = decim_text
@@ -435,6 +394,8 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 if __name__ == '__main__':
 	parser = OptionParser(option_class=eng_option, usage="%prog: [options]")
 	(options, args) = parser.parse_args()
-	tb = usrp_rx_hrpt()
+	if gr.enable_realtime_scheduling() != gr.RT_OK:
+		print "Error: failed to enable realtime scheduling."
+	tb = usrp_rx_hrpt2()
 	tb.Run(True)
 
