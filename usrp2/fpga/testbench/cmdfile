@@ -9,6 +9,8 @@
 -y ../timing
 -y ../coregen
 -y ../extram
+-y ../simple_gemac
+-y ../simple_gemac/miim
 
 # Models
 -y ../models
@@ -18,24 +20,8 @@
 -y ../opencores/8b10b
 -y ../opencores/spi/rtl/verilog
 +incdir+../opencores/spi/rtl/verilog
--y ../opencores/wb_conbus/rtl/verilog
-+incdir+../opencores/wb_conbus/rtl/verilog
 -y ../opencores/i2c/rtl/verilog
 +incdir+../opencores/i2c/rtl/verilog
 -y ../opencores/aemb/rtl/verilog
 -y ../opencores/simple_pic/rtl
 
-# Ethernet
-+incdir+../eth/rtl/verilog
--y ../eth/rtl/verilog
--y ../eth/rtl/verilog/MAC_tx
--y ../eth/rtl/verilog/MAC_rx
--y ../eth/rtl/verilog/miim
--y ../eth/rtl/verilog/TECH
--y ../eth/rtl/verilog/TECH/xilinx
--y ../eth/rtl/verilog/RMON
--y ../eth
--y ../eth/bench/verilog
-
-# Ethernet Models
--y ../eth/bench/verilog

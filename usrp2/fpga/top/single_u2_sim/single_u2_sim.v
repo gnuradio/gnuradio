@@ -178,7 +178,7 @@ module single_u2_sim();
       .adc_b(adc_b),.adc_ovf_b(adc_ovf_b),.adc_on_b(adc_on_b),.adc_oe_b(adc_oe_b) );
 
    wire [2:0] speed;
-   Phy_sim phy_model
+   phy_sim phy_model
      (.Gtx_clk(GMII_GTX_CLK), . Rx_clk(GMII_RX_CLK), .Tx_clk(GMII_TX_CLK),
       .Tx_er(GMII_TX_ER), .Tx_en(GMII_TX_EN), .Txd(GMII_TXD),
       .Rx_er(GMII_RX_ER), .Rx_dv(GMII_RX_DV), .Rxd(GMII_RXD),
