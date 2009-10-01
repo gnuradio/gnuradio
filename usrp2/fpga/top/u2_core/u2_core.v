@@ -525,8 +525,10 @@ module u2_core
      (.clk(wb_clk),.rst(wb_rst),
       .sd_clk(sd_clk),.sd_csn(sd_csn),.sd_mosi(sd_mosi),.sd_miso(sd_miso),
       .wb_cyc_i(sd_cyc),.wb_stb_i(sd_stb),.wb_we_i(sd_we),
-      .wb_adr_i(sd_adr[3:2]),.wb_dat_i(sd_dat_o),.wb_dat_o(sd_dat_i),
+      .wb_adr_i(sd_adr[3:2]),.wb_dat_i(sd_dat_o[7:0]),.wb_dat_o(sd_dat_i[7:0]),
       .wb_ack_o(sd_ack) );
+
+   assign sd_dat_i[31:8] = 0;
 
    // /////////////////////////////////////////////////////////////////////////
    // DSP

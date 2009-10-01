@@ -42,6 +42,7 @@ module flow_ctrl_rx
        countdown <= countdown - 1;
 
    // Cross clock domains
+   wire        xon_tx, xoff_tx;
    oneshot_2clk send_xon (.clk_in(rx_clk), .in(xon), .clk_out(tx_clk), .out(xon_tx));
    oneshot_2clk send_xoff (.clk_in(rx_clk), .in(xoff), .clk_out(tx_clk), .out(xoff_tx));
    

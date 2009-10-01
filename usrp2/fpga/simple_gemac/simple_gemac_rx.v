@@ -47,7 +47,7 @@ module simple_gemac_rx
 
    localparam DELAY  = 6;
    delay_line #(.WIDTH(10)) rx_delay
-     (.clk(rx_clk), .delay(DELAY), .din({rx_dv_d1,rx_er_d1,rxd_d1}),.dout({rx_dv_del,rx_er_dl,rxd_del}));
+     (.clk(rx_clk), .delay(DELAY), .din({rx_dv_d1,rx_er_d1,rxd_d1}),.dout({rx_dv_del,rx_er_del,rxd_del}));
 
    always @(posedge rx_clk)
      if(reset)

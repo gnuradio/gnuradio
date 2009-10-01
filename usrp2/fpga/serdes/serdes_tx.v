@@ -84,7 +84,7 @@ module serdes_tx
    wire        rd_eop_i  = rd_flags_i[1];
    wire [1:0]  rd_occ_i = rd_flags_i[3:2];  // Unused
 
-   wire        have_data, empty;
+   wire        have_data, empty, read;
    fifo_cascade #(.WIDTH(34),.SIZE(FIFOSIZE)) serdes_tx_fifo
      (.clk(clk),.reset(rst),.clear(0),
       .datain({rd_sop_i,rd_eop_i,rd_dat_i}), .src_rdy_i(rd_ready_i), .dst_rdy_o(rd_ready_o),

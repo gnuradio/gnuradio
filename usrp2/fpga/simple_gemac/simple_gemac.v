@@ -26,7 +26,8 @@ module simple_gemac
    reset_sync reset_sync_rx (.clk(rx_clk),.reset_in(reset),.reset_out(rst_rxclk));
 
    wire [15:0] pause_quanta_rcvd;
-
+   wire        pause_rcvd, pause_apply, paused;
+   
    simple_gemac_tx simple_gemac_tx
      (.clk125(clk125),.reset(rst_txclk),
       .GMII_GTX_CLK(GMII_GTX_CLK), .GMII_TX_EN(GMII_TX_EN),
