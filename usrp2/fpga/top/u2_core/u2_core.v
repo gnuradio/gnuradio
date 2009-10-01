@@ -168,57 +168,68 @@ module u2_core
    wire [dw-1:0] m0_dat_o, m0_dat_i;
    wire [dw-1:0] s0_dat_o, s1_dat_o, s0_dat_i, s1_dat_i, s2_dat_o, s3_dat_o, s2_dat_i, s3_dat_i,
 		 s4_dat_o, s5_dat_o, s4_dat_i, s5_dat_i, s6_dat_o, s7_dat_o, s6_dat_i, s7_dat_i,
-		 s8_dat_o, s9_dat_o, s8_dat_i, s9_dat_i, s10_dat_o, s10_dat_i, s11_dat_i, s11_dat_o,
-		 s12_dat_i, s12_dat_o, s13_dat_i, s13_dat_o, s14_dat_i, s14_dat_o;
-   wire [aw-1:0] m0_adr,s0_adr,s1_adr,s2_adr,s3_adr,s4_adr,s5_adr,s6_adr,s7_adr,s8_adr,s9_adr,s10_adr,s11_adr,s12_adr, s13_adr, s14_adr;
-   wire [sw-1:0] m0_sel,s0_sel,s1_sel,s2_sel,s3_sel,s4_sel,s5_sel,s6_sel,s7_sel,s8_sel,s9_sel,s10_sel,s11_sel,s12_sel, s13_sel, s14_sel;
-   wire 	 m0_ack,s0_ack,s1_ack,s2_ack,s3_ack,s4_ack,s5_ack,s6_ack,s7_ack,s8_ack,s9_ack,s10_ack,s11_ack,s12_ack, s13_ack, s14_ack;
-   wire 	 m0_stb,s0_stb,s1_stb,s2_stb,s3_stb,s4_stb,s5_stb,s6_stb,s7_stb,s8_stb,s9_stb,s10_stb,s11_stb,s12_stb, s13_stb, s14_stb;
-   wire 	 m0_cyc,s0_cyc,s1_cyc,s2_cyc,s3_cyc,s4_cyc,s5_cyc,s6_cyc,s7_cyc,s8_cyc,s9_cyc,s10_cyc,s11_cyc,s12_cyc, s13_cyc, s14_cyc;
-   wire 	 m0_err,s0_err,s1_err,s2_err,s3_err,s4_err,s5_err,s6_err,s7_err,s8_err,s9_err,s10_err,s11_err,s12_err, s13_err, s14_err;
-   wire 	 m0_rty,s0_rty,s1_rty,s2_rty,s3_rty,s4_rty,s5_rty,s6_rty,s7_rty,s8_rty,s9_rty,s10_rty,s11_rty,s12_rty, s13_rty, s14_rty;
-   wire 	 m0_we,s0_we,s1_we,s2_we,s3_we,s4_we,s5_we,s6_we,s7_we,s8_we,s9_we,s10_we,s11_we,s12_we,s13_we, s14_we;
+		 s8_dat_o, s9_dat_o, s8_dat_i, s9_dat_i, sa_dat_o, sa_dat_i, sb_dat_i, sb_dat_o,
+		 sc_dat_i, sc_dat_o, sd_dat_i, sd_dat_o, se_dat_i, se_dat_o;
+   wire [aw-1:0] m0_adr,s0_adr,s1_adr,s2_adr,s3_adr,s4_adr,s5_adr,s6_adr,s7_adr,s8_adr,s9_adr,sa_adr,sb_adr,sc_adr, sd_adr, se_adr;
+   wire [sw-1:0] m0_sel,s0_sel,s1_sel,s2_sel,s3_sel,s4_sel,s5_sel,s6_sel,s7_sel,s8_sel,s9_sel,sa_sel,sb_sel,sc_sel, sd_sel, se_sel;
+   wire 	 m0_ack,s0_ack,s1_ack,s2_ack,s3_ack,s4_ack,s5_ack,s6_ack,s7_ack,s8_ack,s9_ack,sa_ack,sb_ack,sc_ack, sd_ack, se_ack;
+   wire 	 m0_stb,s0_stb,s1_stb,s2_stb,s3_stb,s4_stb,s5_stb,s6_stb,s7_stb,s8_stb,s9_stb,sa_stb,sb_stb,sc_stb, sd_stb, se_stb;
+   wire 	 m0_cyc,s0_cyc,s1_cyc,s2_cyc,s3_cyc,s4_cyc,s5_cyc,s6_cyc,s7_cyc,s8_cyc,s9_cyc,sa_cyc,sb_cyc,sc_cyc, sd_cyc, se_cyc;
+   wire 	 m0_err, m0_rty;
+   wire 	 m0_we,s0_we,s1_we,s2_we,s3_we,s4_we,s5_we,s6_we,s7_we,s8_we,s9_we,sa_we,sb_we,sc_we,sd_we, se_we;
    
-   wb_1master #(.s0_addr_w(1),.s0_addr(1'b0),.s1_addr_w(2),.s1_addr(2'b10),
-		.s215_addr_w(6),.s2_addr(6'b1100_00),.s3_addr(6'b1100_01),.s4_addr(6'b1100_10),
-		.s5_addr(6'b1100_11),.s6_addr(6'b1101_00),.s7_addr(6'b1101_01),.s8_addr(6'b1101_10),
-		.s9_addr(6'b1101_11),.s10_addr(6'b1110_00),.s11_addr(6'b1110_01),.s12_addr(6'b1110_10),
-		.s13_addr(6'b1110_11),.s14_addr(6'b1111_00),.s15_addr(6'b1111_01),
+   wb_1master #(.decode_w(6),
+		.s0_addr(6'b0000_00),.s0_mask(6'b100000),
+		.s1_addr(6'b1000_00),.s1_mask(6'b110000),
+ 		.s2_addr(6'b1100_00),.s2_mask(6'b111111),
+		.s3_addr(6'b1100_01),.s3_mask(6'b111111),
+		.s4_addr(6'b1100_10),.s4_mask(6'b111111),
+		.s5_addr(6'b1100_11),.s5_mask(6'b111111),
+		.s6_addr(6'b1101_00),.s6_mask(6'b111111),
+		.s7_addr(6'b1101_01),.s7_mask(6'b111111),
+		.s8_addr(6'b1101_10),.s8_mask(6'b111111),
+		.s9_addr(6'b1101_11),.s9_mask(6'b111111),
+		.sa_addr(6'b1110_00),.sa_mask(6'b111111),
+		.sb_addr(6'b1110_01),.sb_mask(6'b111111),
+		.sc_addr(6'b1110_10),.sc_mask(6'b111111),
+		.sd_addr(6'b1110_11),.sd_mask(6'b111111),
+		.se_addr(6'b1111_00),.se_mask(6'b111111),
+		.sf_addr(6'b1111_01),.sf_mask(6'b111111),
 		.dw(dw),.aw(aw),.sw(sw)) wb_1master
      (.clk_i(wb_clk),.rst_i(wb_rst),       
       .m0_dat_o(m0_dat_o),.m0_ack_o(m0_ack),.m0_err_o(m0_err),.m0_rty_o(m0_rty),.m0_dat_i(m0_dat_i),
       .m0_adr_i(m0_adr),.m0_sel_i(m0_sel),.m0_we_i(m0_we),.m0_cyc_i(m0_cyc),.m0_stb_i(m0_stb),
       .s0_dat_o(s0_dat_o),.s0_adr_o(s0_adr),.s0_sel_o(s0_sel),.s0_we_o	(s0_we),.s0_cyc_o(s0_cyc),.s0_stb_o(s0_stb),
-      .s0_dat_i(s0_dat_i),.s0_ack_i(s0_ack),.s0_err_i(s0_err),.s0_rty_i(s0_rty),
+      .s0_dat_i(s0_dat_i),.s0_ack_i(s0_ack),.s0_err_i(0),.s0_rty_i(0),
       .s1_dat_o(s1_dat_o),.s1_adr_o(s1_adr),.s1_sel_o(s1_sel),.s1_we_o	(s1_we),.s1_cyc_o(s1_cyc),.s1_stb_o(s1_stb),
-      .s1_dat_i(s1_dat_i),.s1_ack_i(s1_ack),.s1_err_i(s1_err),.s1_rty_i(s1_rty),
+      .s1_dat_i(s1_dat_i),.s1_ack_i(s1_ack),.s1_err_i(0),.s1_rty_i(0),
       .s2_dat_o(s2_dat_o),.s2_adr_o(s2_adr),.s2_sel_o(s2_sel),.s2_we_o	(s2_we),.s2_cyc_o(s2_cyc),.s2_stb_o(s2_stb),
-      .s2_dat_i(s2_dat_i),.s2_ack_i(s2_ack),.s2_err_i(s2_err),.s2_rty_i(s2_rty),
+      .s2_dat_i(s2_dat_i),.s2_ack_i(s2_ack),.s2_err_i(0),.s2_rty_i(0),
       .s3_dat_o(s3_dat_o),.s3_adr_o(s3_adr),.s3_sel_o(s3_sel),.s3_we_o	(s3_we),.s3_cyc_o(s3_cyc),.s3_stb_o(s3_stb),
-      .s3_dat_i(s3_dat_i),.s3_ack_i(s3_ack),.s3_err_i(s3_err),.s3_rty_i(s3_rty),
+      .s3_dat_i(s3_dat_i),.s3_ack_i(s3_ack),.s3_err_i(0),.s3_rty_i(0),
       .s4_dat_o(s4_dat_o),.s4_adr_o(s4_adr),.s4_sel_o(s4_sel),.s4_we_o	(s4_we),.s4_cyc_o(s4_cyc),.s4_stb_o(s4_stb),
-      .s4_dat_i(s4_dat_i),.s4_ack_i(s4_ack),.s4_err_i(s4_err),.s4_rty_i(s4_rty),
+      .s4_dat_i(s4_dat_i),.s4_ack_i(s4_ack),.s4_err_i(0),.s4_rty_i(0),
       .s5_dat_o(s5_dat_o),.s5_adr_o(s5_adr),.s5_sel_o(s5_sel),.s5_we_o	(s5_we),.s5_cyc_o(s5_cyc),.s5_stb_o(s5_stb),
-      .s5_dat_i(s5_dat_i),.s5_ack_i(s5_ack),.s5_err_i(s5_err),.s5_rty_i(s5_rty),
+      .s5_dat_i(s5_dat_i),.s5_ack_i(s5_ack),.s5_err_i(0),.s5_rty_i(0),
       .s6_dat_o(s6_dat_o),.s6_adr_o(s6_adr),.s6_sel_o(s6_sel),.s6_we_o	(s6_we),.s6_cyc_o(s6_cyc),.s6_stb_o(s6_stb),
-      .s6_dat_i(s6_dat_i),.s6_ack_i(s6_ack),.s6_err_i(s6_err),.s6_rty_i(s6_rty),
+      .s6_dat_i(s6_dat_i),.s6_ack_i(s6_ack),.s6_err_i(0),.s6_rty_i(0),
       .s7_dat_o(s7_dat_o),.s7_adr_o(s7_adr),.s7_sel_o(s7_sel),.s7_we_o	(s7_we),.s7_cyc_o(s7_cyc),.s7_stb_o(s7_stb),
-      .s7_dat_i(s7_dat_i),.s7_ack_i(s7_ack),.s7_err_i(s7_err),.s7_rty_i(s7_rty),
+      .s7_dat_i(s7_dat_i),.s7_ack_i(s7_ack),.s7_err_i(0),.s7_rty_i(0),
       .s8_dat_o(s8_dat_o),.s8_adr_o(s8_adr),.s8_sel_o(s8_sel),.s8_we_o	(s8_we),.s8_cyc_o(s8_cyc),.s8_stb_o(s8_stb),
-      .s8_dat_i(s8_dat_i),.s8_ack_i(s8_ack),.s8_err_i(s8_err),.s8_rty_i(s8_rty),
+      .s8_dat_i(s8_dat_i),.s8_ack_i(s8_ack),.s8_err_i(0),.s8_rty_i(0),
       .s9_dat_o(s9_dat_o),.s9_adr_o(s9_adr),.s9_sel_o(s9_sel),.s9_we_o	(s9_we),.s9_cyc_o(s9_cyc),.s9_stb_o(s9_stb),
-      .s9_dat_i(s9_dat_i),.s9_ack_i(s9_ack),.s9_err_i(s9_err),.s9_rty_i(s9_rty),
-      .s10_dat_o(s10_dat_o),.s10_adr_o(s10_adr),.s10_sel_o(s10_sel),.s10_we_o(s10_we),.s10_cyc_o(s10_cyc),.s10_stb_o(s10_stb),
-      .s10_dat_i(s10_dat_i),.s10_ack_i(s10_ack),.s10_err_i(s10_err),.s10_rty_i(s10_rty),
-      .s11_dat_o(s11_dat_o),.s11_adr_o(s11_adr),.s11_sel_o(s11_sel),.s11_we_o(s11_we),.s11_cyc_o(s11_cyc),.s11_stb_o(s11_stb),
-      .s11_dat_i(s11_dat_i),.s11_ack_i(s11_ack),.s11_err_i(s11_err),.s11_rty_i(s11_rty),
-      .s12_dat_o(s12_dat_o),.s12_adr_o(s12_adr),.s12_sel_o(s12_sel),.s12_we_o(s12_we),.s12_cyc_o(s12_cyc),.s12_stb_o(s12_stb),
-      .s12_dat_i(s12_dat_i),.s12_ack_i(s12_ack),.s12_err_i(s12_err),.s12_rty_i(s12_rty),
-      .s13_dat_o(s13_dat_o),.s13_adr_o(s13_adr),.s13_sel_o(s13_sel),.s13_we_o(s13_we),.s13_cyc_o(s13_cyc),.s13_stb_o(s13_stb),
-      .s13_dat_i(s13_dat_i),.s13_ack_i(s13_ack),.s13_err_i(s13_err),.s13_rty_i(s13_rty),
-      .s14_dat_o(s14_dat_o),.s14_adr_o(s14_adr),.s14_sel_o(s14_sel),.s14_we_o(s14_we),.s14_cyc_o(s14_cyc),.s14_stb_o(s14_stb),
-      .s14_dat_i(s14_dat_i),.s14_ack_i(s14_ack),.s14_err_i(s14_err),.s14_rty_i(s14_rty),
-      .s15_dat_i(0),.s15_ack_i(0),.s15_err_i(0),.s15_rty_i(0)  );
+      .s9_dat_i(s9_dat_i),.s9_ack_i(s9_ack),.s9_err_i(0),.s9_rty_i(0),
+      .sa_dat_o(sa_dat_o),.sa_adr_o(sa_adr),.sa_sel_o(sa_sel),.sa_we_o(sa_we),.sa_cyc_o(sa_cyc),.sa_stb_o(sa_stb),
+      .sa_dat_i(sa_dat_i),.sa_ack_i(sa_ack),.sa_err_i(0),.sa_rty_i(0),
+      .sb_dat_o(sb_dat_o),.sb_adr_o(sb_adr),.sb_sel_o(sb_sel),.sb_we_o(sb_we),.sb_cyc_o(sb_cyc),.sb_stb_o(sb_stb),
+      .sb_dat_i(sb_dat_i),.sb_ack_i(sb_ack),.sb_err_i(0),.sb_rty_i(0),
+      .sc_dat_o(sc_dat_o),.sc_adr_o(sc_adr),.sc_sel_o(sc_sel),.sc_we_o(sc_we),.sc_cyc_o(sc_cyc),.sc_stb_o(sc_stb),
+      .sc_dat_i(sc_dat_i),.sc_ack_i(sc_ack),.sc_err_i(0),.sc_rty_i(0),
+      .sd_dat_o(sd_dat_o),.sd_adr_o(sd_adr),.sd_sel_o(sd_sel),.sd_we_o(sd_we),.sd_cyc_o(sd_cyc),.sd_stb_o(sd_stb),
+      .sd_dat_i(sd_dat_i),.sd_ack_i(sd_ack),.sd_err_i(0),.sd_rty_i(0),
+      .se_dat_o(se_dat_o),.se_adr_o(se_adr),.se_sel_o(se_sel),.se_we_o(se_we),.se_cyc_o(se_cyc),.se_stb_o(se_stb),
+      .se_dat_i(se_dat_i),.se_ack_i(se_ack),.se_err_i(0),.se_rty_i(0),
+      .sf_dat_i(0),.sf_ack_i(0),.sf_err_i(0),.sf_rty_i(0)  );
    
    //////////////////////////////////////////////////////////////////////////////////////////
    // Reset Controller
@@ -300,9 +311,6 @@ module u2_core
 	     .dwb_we_i(s0_we), .dwb_ack_o(s0_ack), .dwb_stb_i(s0_stb), .dwb_sel_i(s0_sel),
 	     .flush_icache(flush_icache));
    
-   assign 	 s0_err = 1'b0;
-   assign 	 s0_rty = 1'b0;
-
    setting_reg #(.my_addr(7)) sr_icache (.clk(wb_clk),.rst(wb_rst),.strobe(set_stb),.addr(set_addr),
 					 .in(set_data),.out(),.changed(flush_icache));
 
@@ -322,7 +330,7 @@ module u2_core
    buffer_pool buffer_pool
      (.wb_clk_i(wb_clk),.wb_rst_i(wb_rst),
       .wb_we_i(s1_we),.wb_stb_i(s1_stb),.wb_adr_i(s1_adr),.wb_dat_i(s1_dat_o),   
-      .wb_dat_o(s1_dat_i),.wb_ack_o(s1_ack),.wb_err_o(s1_err),.wb_rty_o(s1_rty),
+      .wb_dat_o(s1_dat_i),.wb_ack_o(s1_ack),.wb_err_o(),.wb_rty_o(),
    
       .stream_clk(dsp_clk), .stream_rst(dsp_rst),
       .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
@@ -355,12 +363,10 @@ module u2_core
    spi_top shared_spi
      (.wb_clk_i(wb_clk),.wb_rst_i(wb_rst),.wb_adr_i(s2_adr[4:0]),.wb_dat_i(s2_dat_o),
       .wb_dat_o(s2_dat_i),.wb_sel_i(s2_sel),.wb_we_i(s2_we),.wb_stb_i(s2_stb),
-      .wb_cyc_i(s2_cyc),.wb_ack_o(s2_ack),.wb_err_o(s2_err),.wb_int_o(spi_int),
+      .wb_cyc_i(s2_cyc),.wb_ack_o(s2_ack),.wb_err_o(),.wb_int_o(spi_int),
       .ss_pad_o({sen_tx_db,sen_tx_adc,sen_tx_dac,sen_rx_db,sen_rx_adc,sen_rx_dac,sen_dac,sen_clk}),
       .sclk_pad_o(sclk),.mosi_pad_o(mosi),.miso_pad_i(miso) );
 
-   assign 	 s2_rty = 1'b0;
-   
    // I2C -- Slave #3
    i2c_master_top #(.ARST_LVL(1)) 
      i2c (.wb_clk_i(wb_clk),.wb_rst_i(wb_rst),.arst_i(1'b0), 
@@ -371,8 +377,6 @@ module u2_core
 	  .sda_pad_i(sda_pad_i),.sda_pad_o(sda_pad_o),.sda_padoen_o(sda_pad_oen_o) );
 
    assign 	 s3_dat_i[31:8] = 24'd0;
-   assign 	 s3_err = 1'b0;
-   assign 	 s3_rty = 1'b0;
    
    // GPIOs -- Slave #4
    nsgpio nsgpio(.clk_i(wb_clk),.rst_i(wb_rst),
@@ -380,8 +384,6 @@ module u2_core
 		 .dat_i(s4_dat_o),.dat_o(s4_dat_i),.ack_o(s4_ack),
 		 .atr(atr_lines),.debug_0(debug_gpio_0),.debug_1(debug_gpio_1),
 		 .gpio( {io_tx,io_rx} ) );
-   assign 	 s4_err = 1'b0;
-   assign 	 s4_rty = 1'b0;
 
    // Buffer Pool Status -- Slave #5
    wb_readback_mux buff_pool_status
@@ -398,9 +400,6 @@ module u2_core
       .word11(32'b0),.word12(32'b0),.word13(32'b0),.word14(32'b0),.word15(32'b0)
       );
 
-   assign 	 s5_err = 1'b0;
-   assign 	 s5_rty = 1'b0;
-
    // Slave, #6 Ethernet MAC, see below
    
    // Settings Bus -- Slave #7
@@ -409,8 +408,6 @@ module u2_core
       .wb_stb_i(s7_stb),.wb_we_i(s7_we),.wb_ack_o(s7_ack),
       .sys_clk(dsp_clk),.strobe(set_stb),.addr(set_addr),.data(set_data));
    
-   assign 	 s7_err = 1'b0;
-   assign 	 s7_rty = 1'b0;
    assign 	 s7_dat_i = 32'd0;
 
    // Output control lines
@@ -476,9 +473,6 @@ module u2_core
 	.tx_fifo_occupied(),.tx_fifo_full(),.tx_fifo_empty(),
 	.debug0(debug_mac0),.debug1(debug_mac1) );
 
-   assign 	 s6_err = 1'b0;
-   assign 	 s6_rty = 1'b0;
-
    mac_rxfifo_int mac_rxfifo_int
      (.clk(dsp_clk),.rst(dsp_rst),
       .Rx_mac_empty(Rx_mac_empty),.Rx_mac_rd(Rx_mac_rd),.Rx_mac_data(Rx_mac_data),
@@ -506,8 +500,6 @@ module u2_core
      (.clk_i(wb_clk),.rst_i(wb_rst),.cyc_i(s8_cyc),.stb_i(s8_stb),.adr_i(s8_adr[3:2]),
       .we_i(s8_we),.dat_i(s8_dat_o),.dat_o(s8_dat_i),.ack_o(s8_ack),.int_o(proc_int),
       .irq(irq) );
-   assign 	 s8_err = 0;
-   assign 	 s8_rty = 0;
  	 
    // /////////////////////////////////////////////////////////////////////////
    // Master Timer, Slave #9
@@ -518,21 +510,16 @@ module u2_core
       .cyc_i(s9_cyc),.stb_i(s9_stb),.adr_i(s9_adr[4:2]),
       .we_i(s9_we),.dat_i(s9_dat_o),.dat_o(s9_dat_i),.ack_o(s9_ack),
       .sys_clk_i(dsp_clk),.master_time_i(master_time),.int_o(timer_int) );
-   assign 	 s9_err = 0;
-   assign 	 s9_rty = 0;
 
    // /////////////////////////////////////////////////////////////////////////
    // UART, Slave #10
 
    simple_uart #(.TXDEPTH(3),.RXDEPTH(3)) uart  // depth of 3 is 128 entries
      (.clk_i(wb_clk),.rst_i(wb_rst),
-      .we_i(s10_we),.stb_i(s10_stb),.cyc_i(s10_cyc),.ack_o(s10_ack),
-      .adr_i(s10_adr[4:2]),.dat_i(s10_dat_o),.dat_o(s10_dat_i),
+      .we_i(sa_we),.stb_i(sa_stb),.cyc_i(sa_cyc),.ack_o(sa_ack),
+      .adr_i(sa_adr[4:2]),.dat_i(sa_dat_o),.dat_o(sa_dat_i),
       .rx_int_o(uart_rx_int),.tx_int_o(uart_tx_int),
       .tx_o(uart_tx_o),.rx_i(uart_rx_i),.baud_o(uart_baud_o));
-   
-   assign 	 s10_err = 0;
-   assign 	 s10_rty = 0;
    
    // /////////////////////////////////////////////////////////////////////////
    // ATR Controller, Slave #11
@@ -544,11 +531,9 @@ module u2_core
    
    atr_controller atr_controller
      (.clk_i(wb_clk),.rst_i(wb_rst),
-      .adr_i(s11_adr[5:0]),.sel_i(s11_sel),.dat_i(s11_dat_o),.dat_o(s11_dat_i),
-      .we_i(s11_we),.stb_i(s11_stb),.cyc_i(s11_cyc),.ack_o(s11_ack),
+      .adr_i(sb_adr[5:0]),.sel_i(sb_sel),.dat_i(sb_dat_o),.dat_o(sb_dat_i),
+      .we_i(sb_we),.stb_i(sb_stb),.cyc_i(sb_cyc),.ack_o(sb_ack),
       .run_rx(run_rx_d1),.run_tx(run_tx),.ctrl_lines(atr_lines) );
-   assign 	 s11_err = 0;
-   assign 	 s11_rty = 0;
    
    // //////////////////////////////////////////////////////////////////////////
    // Time Sync, Slave #12 
@@ -562,14 +547,12 @@ module u2_core
    wire 	 pps_o;
    time_sync time_sync
      (.wb_clk_i(wb_clk),.rst_i(wb_rst),
-      .cyc_i(s12_cyc),.stb_i(s12_stb),.adr_i(s12_adr[4:2]),
-      .we_i(s12_we),.dat_i(s12_dat_o),.dat_o(s12_dat_i),.ack_o(s12_ack),
+      .cyc_i(sc_cyc),.stb_i(sc_stb),.adr_i(sc_adr[4:2]),
+      .we_i(sc_we),.dat_i(sc_dat_o),.dat_o(sc_dat_i),.ack_o(sc_ack),
       .sys_clk_i(dsp_clk),.master_time_o(master_time),
       .pps_posedge(pps_posedge),.pps_negedge(pps_negedge),
       .exp_pps_in(exp_pps_in),.exp_pps_out(exp_pps_out),
       .int_o(pps_int),.epoch_o(epoch),.pps_o(pps_o) );
-   assign 	 s12_err = 0;
-   assign 	 s12_rty = 0;
 
    // /////////////////////////////////////////////////////////////////////////
    // SD Card Reader / Writer, Slave #13
@@ -577,11 +560,10 @@ module u2_core
    sd_spi_wb sd_spi_wb
      (.clk(wb_clk),.rst(wb_rst),
       .sd_clk(sd_clk),.sd_csn(sd_csn),.sd_mosi(sd_mosi),.sd_miso(sd_miso),
-      .wb_cyc_i(s13_cyc),.wb_stb_i(s13_stb),.wb_we_i(s13_we),
-      .wb_adr_i(s13_adr[3:2]),.wb_dat_i(s13_dat_o),.wb_dat_o(s13_dat_i),
-      .wb_ack_o(s13_ack) );
-   assign 	 s13_err = 0;
-   assign 	 s13_rty = 0;
+      .wb_cyc_i(sd_cyc),.wb_stb_i(sd_stb),.wb_we_i(sd_we),
+      .wb_adr_i(sd_adr[3:2]),.wb_dat_i(sd_dat_o),.wb_dat_o(sd_dat_i),
+      .wb_ack_o(sd_ack) );
+
    // /////////////////////////////////////////////////////////////////////////
    // DSP
    wire [31:0] 	 sample_rx, sample_tx;
@@ -655,8 +637,8 @@ module u2_core
 
    wb_bridge_16_32 bridge
      (.wb_clk(wb_clk),.wb_rst(wb_rst),
-      .A_cyc_i(s14_cyc),.A_stb_i(s14_stb),.A_we_i(s14_we),.A_sel_i(s14_sel),
-      .A_adr_i(s14_adr),.A_dat_i(s14_dat_o),.A_dat_o(s14_dat_i),.A_ack_o(s14_ack),
+      .A_cyc_i(se_cyc),.A_stb_i(se_stb),.A_we_i(se_we),.A_sel_i(se_sel),
+      .A_adr_i(se_adr),.A_dat_i(se_dat_o),.A_dat_o(se_dat_i),.A_ack_o(se_ack),
       .B_cyc_o(bridge_cyc),.B_stb_o(bridge_stb),.B_we_o(bridge_we),.B_sel_o(bridge_sel),
       .B_adr_o(bridge_adr),.B_dat_o(bus2ram),.B_dat_i(ram2bus),.B_ack_i(bridge_ack));
 
@@ -668,7 +650,6 @@ module u2_core
       .sram_bw(),.sram_adv(RAM_LDn),.sram_ce(RAM_CENn),.sram_oe(RAM_OEn),
       .sram_mode(),.sram_zz() );
 
-   assign      s14_err = 0; assign s14_rty = 0;
    assign      RAM_CE1n = 0;
    assign      RAM_D[17:16] = 2'bzz;
    

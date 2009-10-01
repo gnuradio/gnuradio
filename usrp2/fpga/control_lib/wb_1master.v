@@ -38,26 +38,40 @@
 //   Up to 8 slaves share a Wishbone Bus connection to 1 master
 
   module wb_1master
-    #(parameter	s0_addr_w = 4,			// slave 0 address decode width
-      parameter	s0_addr = 4'h0,			// slave 0 address
-      parameter	s1_addr_w = 4 ,			// slave 1 address decode width
-      parameter	s1_addr = 4'h1,			// slave 1 address 
-      parameter	s215_addr_w = 8 ,		// slave 2 to slave 7 address decode width
-      parameter	s2_addr = 8'h92,		// slave 2 address
-      parameter	s3_addr = 8'h93,		// slave 3 address
-      parameter	s4_addr = 8'h94,		// slave 4 address
-      parameter	s5_addr = 8'h95,		// slave 5 address
-      parameter	s6_addr = 8'h96,		// slave 6 address
-      parameter	s7_addr = 8'h97,		// slave 7 address
-      parameter	s8_addr = 8'h98,		// slave 7 address
-      parameter	s9_addr = 8'h99,		// slave 7 address
-      parameter	s10_addr = 8'h9a,		// slave 7 address
-      parameter	s11_addr = 8'h9b,		// slave 7 address
-      parameter	s12_addr = 8'h9c,		// slave 7 address
-      parameter	s13_addr = 8'h9d,		// slave 7 address
-      parameter	s14_addr = 8'h9e,		// slave 7 address
-      parameter	s15_addr = 8'h9f,		// slave 7 address
-      
+    #(parameter	decode_w = 8,			// address decode width
+      parameter	s0_addr = 8'h0,			// slave 0 address
+      parameter	s0_mask = 8'h0,			// slave 0 don't cares
+      parameter	s1_addr = 8'h0,			// slave 1 address
+      parameter	s1_mask = 8'h0,			// slave 1 don't cares
+      parameter	s2_addr = 8'h0,			// slave 2 address
+      parameter	s2_mask = 8'h0,			// slave 2 don't cares
+      parameter	s3_addr = 8'h0,			// slave 3 address
+      parameter	s3_mask = 8'h0,			// slave 3 don't cares
+      parameter	s4_addr = 8'h0,			// slave 4 address
+      parameter	s4_mask = 8'h0,			// slave 4 don't cares
+      parameter	s5_addr = 8'h0,			// slave 5 address
+      parameter	s5_mask = 8'h0,			// slave 5 don't cares
+      parameter	s6_addr = 8'h0,			// slave 6 address
+      parameter	s6_mask = 8'h0,			// slave 6 don't cares
+      parameter	s7_addr = 8'h0,			// slave 7 address
+      parameter	s7_mask = 8'h0,			// slave 7 don't cares
+      parameter	s8_addr = 8'h0,			// slave 8 address
+      parameter	s8_mask = 8'h0,			// slave 8 don't cares
+      parameter	s9_addr = 8'h0,			// slave 9 address
+      parameter	s9_mask = 8'h0,			// slave 9 don't cares
+      parameter	sa_addr = 8'h0,			// slave a address
+      parameter	sa_mask = 8'h0,			// slave a don't cares
+      parameter	sb_addr = 8'h0,			// slave b address
+      parameter	sb_mask = 8'h0,			// slave b don't cares
+      parameter	sc_addr = 8'h0,			// slave c address
+      parameter	sc_mask = 8'h0,			// slave c don't cares
+      parameter	sd_addr = 8'h0,			// slave d address
+      parameter	sd_mask = 8'h0,			// slave d don't cares
+      parameter	se_addr = 8'h0,			// slave e address
+      parameter	se_mask = 8'h0,			// slave e don't cares
+      parameter	sf_addr = 8'h0,			// slave f address
+      parameter	sf_mask = 8'h0,			// slave f don't cares
+            
       parameter	dw = 32,		// Data bus Width
       parameter	aw = 32,		// Address bus Width
       parameter	sw = 4)                 // Number of Select Lines
@@ -188,71 +202,71 @@
        input 		s9_err_i,
        input 		s9_rty_i,
        
-       input [dw-1:0] 	s10_dat_i,
-       output [dw-1:0] 	s10_dat_o,
-       output [aw-1:0] 	s10_adr_o,
-       output [sw-1:0] 	s10_sel_o,
-       output 		s10_we_o,
-       output 		s10_cyc_o,
-       output 		s10_stb_o,
-       input 		s10_ack_i,
-       input 		s10_err_i,
-       input 		s10_rty_i,
+       input [dw-1:0] 	sa_dat_i,
+       output [dw-1:0] 	sa_dat_o,
+       output [aw-1:0] 	sa_adr_o,
+       output [sw-1:0] 	sa_sel_o,
+       output 		sa_we_o,
+       output 		sa_cyc_o,
+       output 		sa_stb_o,
+       input 		sa_ack_i,
+       input 		sa_err_i,
+       input 		sa_rty_i,
        
-       input [dw-1:0] 	s11_dat_i,
-       output [dw-1:0] 	s11_dat_o,
-       output [aw-1:0] 	s11_adr_o,
-       output [sw-1:0] 	s11_sel_o,
-       output 		s11_we_o,
-       output 		s11_cyc_o,
-       output 		s11_stb_o,
-       input 		s11_ack_i,
-       input 		s11_err_i,
-       input 		s11_rty_i,
+       input [dw-1:0] 	sb_dat_i,
+       output [dw-1:0] 	sb_dat_o,
+       output [aw-1:0] 	sb_adr_o,
+       output [sw-1:0] 	sb_sel_o,
+       output 		sb_we_o,
+       output 		sb_cyc_o,
+       output 		sb_stb_o,
+       input 		sb_ack_i,
+       input 		sb_err_i,
+       input 		sb_rty_i,
        
-       input [dw-1:0] 	s12_dat_i,
-       output [dw-1:0] 	s12_dat_o,
-       output [aw-1:0] 	s12_adr_o,
-       output [sw-1:0] 	s12_sel_o,
-       output 		s12_we_o,
-       output 		s12_cyc_o,
-       output 		s12_stb_o,
-       input 		s12_ack_i,
-       input 		s12_err_i,
-       input 		s12_rty_i,
+       input [dw-1:0] 	sc_dat_i,
+       output [dw-1:0] 	sc_dat_o,
+       output [aw-1:0] 	sc_adr_o,
+       output [sw-1:0] 	sc_sel_o,
+       output 		sc_we_o,
+       output 		sc_cyc_o,
+       output 		sc_stb_o,
+       input 		sc_ack_i,
+       input 		sc_err_i,
+       input 		sc_rty_i,
        
-       input [dw-1:0] 	s13_dat_i,
-       output [dw-1:0] 	s13_dat_o,
-       output [aw-1:0] 	s13_adr_o,
-       output [sw-1:0] 	s13_sel_o,
-       output 		s13_we_o,
-       output 		s13_cyc_o,
-       output 		s13_stb_o,
-       input 		s13_ack_i,
-       input 		s13_err_i,
-       input 		s13_rty_i,
+       input [dw-1:0] 	sd_dat_i,
+       output [dw-1:0] 	sd_dat_o,
+       output [aw-1:0] 	sd_adr_o,
+       output [sw-1:0] 	sd_sel_o,
+       output 		sd_we_o,
+       output 		sd_cyc_o,
+       output 		sd_stb_o,
+       input 		sd_ack_i,
+       input 		sd_err_i,
+       input 		sd_rty_i,
        
-       input [dw-1:0] 	s14_dat_i,
-       output [dw-1:0] 	s14_dat_o,
-       output [aw-1:0] 	s14_adr_o,
-       output [sw-1:0] 	s14_sel_o,
-       output 		s14_we_o,
-       output 		s14_cyc_o,
-       output 		s14_stb_o,
-       input 		s14_ack_i,
-       input 		s14_err_i,
-       input 		s14_rty_i,
+       input [dw-1:0] 	se_dat_i,
+       output [dw-1:0] 	se_dat_o,
+       output [aw-1:0] 	se_adr_o,
+       output [sw-1:0] 	se_sel_o,
+       output 		se_we_o,
+       output 		se_cyc_o,
+       output 		se_stb_o,
+       input 		se_ack_i,
+       input 		se_err_i,
+       input 		se_rty_i,
        
-       input [dw-1:0] 	s15_dat_i,
-       output [dw-1:0] 	s15_dat_o,
-       output [aw-1:0] 	s15_adr_o,
-       output [sw-1:0] 	s15_sel_o,
-       output 		s15_we_o,
-       output 		s15_cyc_o,
-       output 		s15_stb_o,
-       input 		s15_ack_i,
-       input 		s15_err_i,
-       input 		s15_rty_i
+       input [dw-1:0] 	sf_dat_i,
+       output [dw-1:0] 	sf_dat_o,
+       output [aw-1:0] 	sf_adr_o,
+       output [sw-1:0] 	sf_sel_o,
+       output 		sf_we_o,
+       output 		sf_cyc_o,
+       output 		sf_stb_o,
+       input 		sf_ack_i,
+       input 		sf_err_i,
+       input 		sf_rty_i
        );
    
    // ////////////////////////////////////////////////////////////////
@@ -278,22 +292,22 @@
        128 : i_dat_s <= s7_dat_i;
        256 : i_dat_s <= s8_dat_i;
        512 : i_dat_s <= s9_dat_i;
-       1024 : i_dat_s <= s10_dat_i;
-       2048 : i_dat_s <= s11_dat_i;
-       4096 : i_dat_s <= s12_dat_i;
-       8192 : i_dat_s <= s13_dat_i;
-       16384 : i_dat_s <= s14_dat_i;
-       32768 : i_dat_s <= s15_dat_i;
+       1024 : i_dat_s <= sa_dat_i;
+       2048 : i_dat_s <= sb_dat_i;
+       4096 : i_dat_s <= sc_dat_i;
+       8192 : i_dat_s <= sd_dat_i;
+       16384 : i_dat_s <= se_dat_i;
+       32768 : i_dat_s <= sf_dat_i;
        default : i_dat_s <= s0_dat_i;
      endcase // case(ssel_dec)
    
    assign 		{m0_ack_o, m0_err_o, m0_rty_o} 
      =  {s0_ack_i | s1_ack_i | s2_ack_i | s3_ack_i | s4_ack_i | s5_ack_i | s6_ack_i | s7_ack_i |
-	 s8_ack_i | s9_ack_i | s10_ack_i | s11_ack_i | s12_ack_i | s13_ack_i | s14_ack_i | s15_ack_i ,
+	 s8_ack_i | s9_ack_i | sa_ack_i | sb_ack_i | sc_ack_i | sd_ack_i | se_ack_i | sf_ack_i ,
 	 s0_err_i | s1_err_i | s2_err_i | s3_err_i | s4_err_i | s5_err_i | s6_err_i | s7_err_i |
-	 s8_err_i | s9_err_i | s10_err_i | s11_err_i | s12_err_i | s13_err_i | s14_err_i | s15_err_i ,
+	 s8_err_i | s9_err_i | sa_err_i | sb_err_i | sc_err_i | sd_err_i | se_err_i | sf_err_i ,
 	 s0_rty_i | s1_rty_i | s2_rty_i | s3_rty_i | s4_rty_i | s5_rty_i | s6_rty_i | s7_rty_i |
-	 s8_rty_i | s9_rty_i | s10_rty_i | s11_rty_i | s12_rty_i | s13_rty_i | s14_rty_i | s15_rty_i };
+	 s8_rty_i | s9_rty_i | sa_rty_i | sb_rty_i | sc_rty_i | sd_rty_i | se_rty_i | sf_rty_i };
 
    // Slave output interfaces
    assign 		s0_adr_o = m0_adr_i;
@@ -366,65 +380,85 @@
    assign 		s9_cyc_o = m0_cyc_i;
    assign 		s9_stb_o = m0_cyc_i & m0_stb_i & ssel_dec[9];   
    
-   assign 		s10_adr_o = m0_adr_i;
-   assign 		s10_sel_o = m0_sel_i;
-   assign 		s10_dat_o = m0_dat_i;
-   assign 		s10_we_o = m0_we_i;
-   assign 		s10_cyc_o = m0_cyc_i;
-   assign 		s10_stb_o = m0_cyc_i & m0_stb_i & ssel_dec[10];   
+   assign 		sa_adr_o = m0_adr_i;
+   assign 		sa_sel_o = m0_sel_i;
+   assign 		sa_dat_o = m0_dat_i;
+   assign 		sa_we_o = m0_we_i;
+   assign 		sa_cyc_o = m0_cyc_i;
+   assign 		sa_stb_o = m0_cyc_i & m0_stb_i & ssel_dec[10];   
    
-   assign 		s11_adr_o = m0_adr_i;
-   assign 		s11_sel_o = m0_sel_i;
-   assign 		s11_dat_o = m0_dat_i;
-   assign 		s11_we_o = m0_we_i;
-   assign 		s11_cyc_o = m0_cyc_i;
-   assign 		s11_stb_o = m0_cyc_i & m0_stb_i & ssel_dec[11];   
+   assign 		sb_adr_o = m0_adr_i;
+   assign 		sb_sel_o = m0_sel_i;
+   assign 		sb_dat_o = m0_dat_i;
+   assign 		sb_we_o = m0_we_i;
+   assign 		sb_cyc_o = m0_cyc_i;
+   assign 		sb_stb_o = m0_cyc_i & m0_stb_i & ssel_dec[11];   
    
-   assign 		s12_adr_o = m0_adr_i;
-   assign 		s12_sel_o = m0_sel_i;
-   assign 		s12_dat_o = m0_dat_i;
-   assign 		s12_we_o = m0_we_i;
-   assign 		s12_cyc_o = m0_cyc_i;
-   assign 		s12_stb_o = m0_cyc_i & m0_stb_i & ssel_dec[12];   
+   assign 		sc_adr_o = m0_adr_i;
+   assign 		sc_sel_o = m0_sel_i;
+   assign 		sc_dat_o = m0_dat_i;
+   assign 		sc_we_o = m0_we_i;
+   assign 		sc_cyc_o = m0_cyc_i;
+   assign 		sc_stb_o = m0_cyc_i & m0_stb_i & ssel_dec[12];   
    
-   assign 		s13_adr_o = m0_adr_i;
-   assign 		s13_sel_o = m0_sel_i;
-   assign 		s13_dat_o = m0_dat_i;
-   assign 		s13_we_o = m0_we_i;
-   assign 		s13_cyc_o = m0_cyc_i;
-   assign 		s13_stb_o = m0_cyc_i & m0_stb_i & ssel_dec[13];   
+   assign 		sd_adr_o = m0_adr_i;
+   assign 		sd_sel_o = m0_sel_i;
+   assign 		sd_dat_o = m0_dat_i;
+   assign 		sd_we_o = m0_we_i;
+   assign 		sd_cyc_o = m0_cyc_i;
+   assign 		sd_stb_o = m0_cyc_i & m0_stb_i & ssel_dec[13];   
    
-   assign 		s14_adr_o = m0_adr_i;
-   assign 		s14_sel_o = m0_sel_i;
-   assign 		s14_dat_o = m0_dat_i;
-   assign 		s14_we_o = m0_we_i;
-   assign 		s14_cyc_o = m0_cyc_i;
-   assign 		s14_stb_o = m0_cyc_i & m0_stb_i & ssel_dec[14];   
+   assign 		se_adr_o = m0_adr_i;
+   assign 		se_sel_o = m0_sel_i;
+   assign 		se_dat_o = m0_dat_i;
+   assign 		se_we_o = m0_we_i;
+   assign 		se_cyc_o = m0_cyc_i;
+   assign 		se_stb_o = m0_cyc_i & m0_stb_i & ssel_dec[14];   
    
-   assign 		s15_adr_o = m0_adr_i;
-   assign 		s15_sel_o = m0_sel_i;
-   assign 		s15_dat_o = m0_dat_i;
-   assign 		s15_we_o = m0_we_i;
-   assign 		s15_cyc_o = m0_cyc_i;
-   assign 		s15_stb_o = m0_cyc_i & m0_stb_i & ssel_dec[15];   
+   assign 		sf_adr_o = m0_adr_i;
+   assign 		sf_sel_o = m0_sel_i;
+   assign 		sf_dat_o = m0_dat_i;
+   assign 		sf_we_o = m0_we_i;
+   assign 		sf_cyc_o = m0_cyc_i;
+   assign 		sf_stb_o = m0_cyc_i & m0_stb_i & ssel_dec[15];   
    
    // Address decode logic
    // WARNING -- must make sure these are mutually exclusive!
-   assign 		ssel_dec[0] = (m0_adr_i[aw -1 : aw - s0_addr_w ] == s0_addr);
-   assign 		ssel_dec[1] = (m0_adr_i[aw -1 : aw - s1_addr_w ] == s1_addr);
-   assign 		ssel_dec[2] = (m0_adr_i[aw -1 : aw - s215_addr_w ] == s2_addr);
-   assign 		ssel_dec[3] = (m0_adr_i[aw -1 : aw - s215_addr_w ] == s3_addr);
-   assign 		ssel_dec[4] = (m0_adr_i[aw -1 : aw - s215_addr_w ] == s4_addr);
-   assign 		ssel_dec[5] = (m0_adr_i[aw -1 : aw - s215_addr_w ] == s5_addr);
-   assign 		ssel_dec[6] = (m0_adr_i[aw -1 : aw - s215_addr_w ] == s6_addr);
-   assign 		ssel_dec[7] = (m0_adr_i[aw -1 : aw - s215_addr_w ] == s7_addr);
-   assign 		ssel_dec[8] = (m0_adr_i[aw -1 : aw - s215_addr_w ] == s8_addr);
-   assign 		ssel_dec[9] = (m0_adr_i[aw -1 : aw - s215_addr_w ] == s9_addr);
-   assign 		ssel_dec[10] = (m0_adr_i[aw -1 : aw - s215_addr_w ] == s10_addr);
-   assign 		ssel_dec[11] = (m0_adr_i[aw -1 : aw - s215_addr_w ] == s11_addr);
-   assign 		ssel_dec[12] = (m0_adr_i[aw -1 : aw - s215_addr_w ] == s12_addr);
-   assign 		ssel_dec[13] = (m0_adr_i[aw -1 : aw - s215_addr_w ] == s13_addr);
-   assign 		ssel_dec[14] = (m0_adr_i[aw -1 : aw - s215_addr_w ] == s14_addr);
-   assign 		ssel_dec[15] = (m0_adr_i[aw -1 : aw - s215_addr_w ] == s15_addr);
-   
+
+
+   assign 		ssel_dec[0] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ s0_addr) & s0_mask);
+   assign 		ssel_dec[1] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ s1_addr) & s1_mask);
+   assign 		ssel_dec[2] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ s2_addr) & s2_mask);
+   assign 		ssel_dec[3] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ s3_addr) & s3_mask);
+   assign 		ssel_dec[4] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ s4_addr) & s4_mask);
+   assign 		ssel_dec[5] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ s5_addr) & s5_mask);
+   assign 		ssel_dec[6] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ s6_addr) & s6_mask);
+   assign 		ssel_dec[7] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ s7_addr) & s7_mask);
+   assign 		ssel_dec[8] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ s8_addr) & s8_mask);
+   assign 		ssel_dec[9] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ s9_addr) & s9_mask);
+   assign 		ssel_dec[10] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ sa_addr) & sa_mask);
+   assign 		ssel_dec[11] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ sb_addr) & sb_mask);
+   assign 		ssel_dec[12] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ sc_addr) & sc_mask);
+   assign 		ssel_dec[13] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ sd_addr) & sd_mask);
+   assign 		ssel_dec[14] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ se_addr) & se_mask);
+   assign 		ssel_dec[15] = ~|((m0_adr_i[aw-1:aw-decode_w] ^ sf_addr) & sf_mask);
+
+/*
+   assign 		ssel_dec[0] = (m0_adr_i[aw -1 : aw - decode_w ] == s0_addr);
+   assign 		ssel_dec[1] = (m0_adr_i[aw -1 : aw - decode_w ] == s1_addr);
+   assign 		ssel_dec[2] = (m0_adr_i[aw -1 : aw - decode_w ] == s2_addr);
+   assign 		ssel_dec[3] = (m0_adr_i[aw -1 : aw - decode_w ] == s3_addr);
+   assign 		ssel_dec[4] = (m0_adr_i[aw -1 : aw - decode_w ] == s4_addr);
+   assign 		ssel_dec[5] = (m0_adr_i[aw -1 : aw - decode_w ] == s5_addr);
+   assign 		ssel_dec[6] = (m0_adr_i[aw -1 : aw - decode_w ] == s6_addr);
+   assign 		ssel_dec[7] = (m0_adr_i[aw -1 : aw - decode_w ] == s7_addr);
+   assign 		ssel_dec[8] = (m0_adr_i[aw -1 : aw - decode_w ] == s8_addr);
+   assign 		ssel_dec[9] = (m0_adr_i[aw -1 : aw - decode_w ] == s9_addr);
+   assign 		ssel_dec[10] = (m0_adr_i[aw -1 : aw - decode_w ] == sa_addr);
+   assign 		ssel_dec[11] = (m0_adr_i[aw -1 : aw - decode_w ] == sb_addr);
+   assign 		ssel_dec[12] = (m0_adr_i[aw -1 : aw - decode_w ] == sc_addr);
+   assign 		ssel_dec[13] = (m0_adr_i[aw -1 : aw - decode_w ] == sd_addr);
+   assign 		ssel_dec[14] = (m0_adr_i[aw -1 : aw - decode_w ] == se_addr);
+   assign 		ssel_dec[15] = (m0_adr_i[aw -1 : aw - decode_w ] == sf_addr);
+ */ 
 endmodule // wb_1master
