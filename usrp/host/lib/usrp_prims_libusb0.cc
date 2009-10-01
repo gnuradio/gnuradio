@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2003,2004,2006,2009 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -109,7 +109,7 @@ usrp_find_device (int nth, bool fx2_ok_p, libusb_context *ctx)
   int	 n_found = 0;
 
   usrp_one_time_init ();
-  
+
   p = usb_get_busses();
   while (p != NULL){
     q = p->devices;
@@ -147,7 +147,7 @@ usrp_open_interface (struct usb_device *dev, int interface, int altinterface)
   // Appears to be required for libusb-win32 and Cygwin -- dew 09/20/06
   if (usb_set_configuration (udh, 1) < 0){
     /*
-     * Ignore this error.  
+     * Ignore this error.
      *
      * Seems that something changed in drivers/usb/core/devio.c:proc_setconfig such that
      * it returns -EBUSY if _any_ of the interfaces of a device are open.

@@ -1,4 +1,4 @@
-/*  -*- Mode: C++ -*- */
+/*  -*- c++ -*- */
 /*
  * Copyright 2005,2009 Free Software Foundation, Inc.
  *

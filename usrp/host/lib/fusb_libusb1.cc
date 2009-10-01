@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003 Free Software Foundation, Inc.
- * 
+ * Copyright 2003,2009 Free Software Foundation, Inc.
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -35,9 +35,9 @@
 #include <errno.h>
 #include <string.h>
 
-#define MINIMIZE_TX_BUFFERING true 
+#define MINIMIZE_TX_BUFFERING true
 
-static const int MAX_BLOCK_SIZE = fusb_sysconfig::max_block_size(); 
+static const int MAX_BLOCK_SIZE = fusb_sysconfig::max_block_size();
 static const int DEFAULT_BLOCK_SIZE = MAX_BLOCK_SIZE;
 static const int DEFAULT_BUFFER_SIZE = 4 * (1L << 20);  // 4 MB endpoint
 static const int LIBUSB_TIMEOUT = 0; 			// no timeout
@@ -49,7 +49,7 @@ lut_get_ephandle (libusb_transfer *lut)
 }
 
 // ------------------------------------------------------------------------
-// 	libusb_transfer allocation, deallocation, and callback 
+// 	libusb_transfer allocation, deallocation, and callback
 // ------------------------------------------------------------------------
 
 static void
@@ -60,14 +60,14 @@ free_lut (libusb_transfer *lut)
   if (lut->endpoint & 0x80)
     delete [] ((unsigned char *) lut->buffer);
 
-  libusb_free_transfer(lut); 
+  libusb_free_transfer(lut);
 
 }
 
 /*
  * The callback means the libusb_transfer is completed whether sent, cancelled,
  * or failed. Move the libusb_transfer from the pending list to the
- * completed list. If the cancel is from the destructor then free the 
+ * completed list. If the cancel is from the destructor then free the
  * transfer instead; normally this won't happen since all endpoints should be
  * destroyed first leaving the pending list empty.
  */
@@ -77,7 +77,7 @@ generic_callback(struct libusb_transfer *lut)
 {
 
   // Fish out devhandle from endpoint
-  fusb_devhandle_libusb1* dev_handle = 
+  fusb_devhandle_libusb1* dev_handle =
     lut_get_ephandle(lut)->get_fusb_devhandle_libusb1();
 
   dev_handle->pending_remove(lut);
@@ -87,10 +87,10 @@ generic_callback(struct libusb_transfer *lut)
     free_lut (lut);
     return;
   }
-  
+
   lut_get_ephandle(lut)->completed_list_add(lut);
 
-} 
+}
 
 static libusb_transfer*
 alloc_lut (fusb_ephandle_libusb1 *self, int buffer_length, int endpoint,
@@ -110,11 +110,11 @@ alloc_lut (fusb_ephandle_libusb1 *self, int buffer_length, int endpoint,
 
   // Load the libusb_transfer for bulk transfer
   libusb_fill_bulk_transfer (lut,		// transfer
-                             dev_handle,        // dev_handle 
+                             dev_handle,        // dev_handle
                              endpoint,		// endpoint
                              write_buffer,	// buffer
                              buffer_length,	// length
-                             generic_callback,	// callback 
+                             generic_callback,	// callback
                              self,		// user_data
                              LIBUSB_TIMEOUT);	// timeout
 
@@ -129,7 +129,7 @@ fusb_devhandle_libusb1::fusb_devhandle_libusb1 (libusb_device_handle *udh,
                                                 libusb_context *ctx)
   : fusb_devhandle (udh), d_ctx (ctx), d_teardown (false)
 {
-  // that's it 
+  // that's it
 }
 
 fusb_devhandle_libusb1::~fusb_devhandle_libusb1 ()
@@ -160,10 +160,10 @@ fusb_devhandle_libusb1::make_ephandle (int endpoint, bool input_p,
 }
 
 /*
- * devhandle list manipulators 
+ * devhandle list manipulators
  */
 
-void 
+void
 fusb_devhandle_libusb1::pending_add (libusb_transfer *lut)
 {
   d_pending_rqsts.push_back (lut);
@@ -201,7 +201,7 @@ fusb_devhandle_libusb1::pending_get ()
 }
 
 /*
- * Match libusb_tranfer with the pending list and erase 
+ * Match libusb_tranfer with the pending list and erase
  * Return true if found, false otherwise
  */
 
@@ -241,11 +241,11 @@ fusb_devhandle_libusb1::_submit_lut (libusb_transfer *lut)
 }
 
 /*
- * Attempt to cancel any pending libusb_transfer transactions. 
+ * Attempt to cancel any pending libusb_transfer transactions.
  * Return true in the absence of errors, which does not mean that the transfer
  * is cancelled. Cancellation can be checked after the callback is fired off
- * by libusb. 
- */ 
+ * by libusb.
+ */
 
 bool
 fusb_devhandle_libusb1::_cancel_lut (libusb_transfer *lut)
@@ -287,12 +287,12 @@ fusb_devhandle_libusb1::_reap (bool ok_to_block_p)
     tv.tv_sec = 0;
     tv.tv_usec =  0;
   }
- 
+
   if ((ret = libusb_handle_events_timeout(d_ctx, &tv)) < 0) {
     fprintf (stderr, "fusb::_reap libusb_handle_events() %i\n", ret);
     return false;
   }
-  
+
   return true;
 }
 
@@ -300,9 +300,9 @@ void
 fusb_devhandle_libusb1::_wait_for_completion ()
 {
 
-  while (!d_pending_rqsts.empty ()) 
-    if (!_reap(true)) 
-      break; 
+  while (!d_pending_rqsts.empty ())
+    if (!_reap(true))
+      break;
 
 }
 
@@ -339,7 +339,7 @@ fusb_ephandle_libusb1::fusb_ephandle_libusb1 (fusb_devhandle_libusb1 *dh,
     fprintf(stderr, "fusb_ephandle_libusb1::ctor: d_block_size = %d  d_nblocks = %d\n",
       d_block_size, d_nblocks);
 
-  // allocate libusb_transfers 
+  // allocate libusb_transfers
   for (int i = 0; i < d_nblocks; i++)
     d_free_list.push_back (alloc_lut (this, d_block_size, d_endpoint,
                                       d_input_p, d_write_buffer, d_devhandle));
@@ -391,7 +391,7 @@ fusb_ephandle_libusb1::start ()
 }
 
 /*
- * Cancel all transfers in progress or pending and return to initial state 
+ * Cancel all transfers in progress or pending and return to initial state
  */
 
 bool
@@ -434,7 +434,7 @@ fusb_ephandle_libusb1::stop ()
 }
 
 // ------------------------------------------------------------------------
-// 			routines for writing	
+// 			routines for writing
 // ------------------------------------------------------------------------
 
 #if (MINIMIZE_TX_BUFFERING)
@@ -444,7 +444,7 @@ fusb_ephandle_libusb1::write (const void *buffer, int nbytes)
 {
   if (!d_started)	// doesn't matter here, but keeps semantics constant
     return -1;
-  
+
   if (d_input_p)
     return -1;
 
@@ -465,7 +465,7 @@ fusb_ephandle_libusb1::write (const void *buffer, int nbytes)
 
     n += m;
     src += m;
-   
+
     if (!submit_lut(lut))
       return -1;
 
@@ -547,11 +547,11 @@ fusb_ephandle_libusb1::reap_complete_writes ()
   while ((lut = completed_list_get ()) != 0) {
 
     // Check for any errors or short writes that were reporetd in the transfer.
-    // libusb1 sets status, actual_length. 
+    // libusb1 sets status, actual_length.
 
-    if (lut->status != LIBUSB_TRANSFER_COMPLETED) { 
+    if (lut->status != LIBUSB_TRANSFER_COMPLETED) {
       fprintf (stderr, "fusb: (status %d) \n", lut->status );
-    } 
+    }
     else if (lut->actual_length != lut->length){
       fprintf (stderr, "fusb: short write xfer: %d != %d\n",
                lut->actual_length, lut->length);
@@ -568,7 +568,7 @@ fusb_ephandle_libusb1::wait_for_completion ()
 }
 
 // ------------------------------------------------------------------------
-// 			routines for reading	
+// 			routines for reading
 // ------------------------------------------------------------------------
 
 int
@@ -619,12 +619,12 @@ fusb_ephandle_libusb1::reload_read_buffer ()
 
   while (1) {
 
-    while ((lut = completed_list_get ()) == 0 ) 
+    while ((lut = completed_list_get ()) == 0 )
       if (!d_devhandle->_reap(true))
-        return false; 
+        return false;
 
     if (lut->status != LIBUSB_TRANSFER_COMPLETED) {
-      fprintf (stderr, "fust: (rd status %d) %s\n", lut->status, 
+      fprintf (stderr, "fust: (rd status %d) %s\n", lut->status,
                strerror (-lut->status));
       lut->actual_length = 0;
       free_list_add (lut);
@@ -641,7 +641,7 @@ fusb_ephandle_libusb1::reload_read_buffer ()
 
 
 /*
- * ephandle list manipulation	
+ * ephandle list manipulation
  */
 
 

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2003,2004,2006,2009 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -255,7 +255,7 @@ _usrp_load_firmware (libusb_device_handle *udh, const char *filename,
   if (!reset_cpu (udh, true))	// hold CPU in reset while loading firmware
     goto fail;
 
-  
+
   char s[1024];
   int length;
   int addr;
@@ -347,7 +347,7 @@ _usrp_load_fpga (libusb_device_handle *udh, const char *filename,
 
   if (write_cmd (udh, VRQ_FPGA_LOAD, 0, FL_BEGIN, 0, 0) != 0)
     goto fail;
-  
+
   while ((n = fread (buf, 1, sizeof (buf), fp)) > 0){
     if (write_cmd (udh, VRQ_FPGA_LOAD, 0, FL_XFER, buf, n) != n)
       goto fail;
@@ -355,7 +355,7 @@ _usrp_load_fpga (libusb_device_handle *udh, const char *filename,
 
   if (write_cmd (udh, VRQ_FPGA_LOAD, 0, FL_END, 0, 0) != 0)
     goto fail;
-  
+
   fclose (fp);
 
   if (!usrp_set_hash (udh, FPGA_HASH_SLOT, hash))
@@ -368,7 +368,7 @@ _usrp_load_fpga (libusb_device_handle *udh, const char *filename,
   usrp_set_fpga_reset (udh, 0);		// fpga out of master reset
 
   // now these commands will work
-  
+
   ok &= usrp_set_fpga_tx_enable (udh, 0);
   ok &= usrp_set_fpga_rx_enable (udh, 0);
 
@@ -402,7 +402,7 @@ _usrp_load_fpga (libusb_device_handle *udh, const char *filename,
 
 // ----------------------------------------------------------------
 
-bool 
+bool
 usrp_set_led (libusb_device_handle *udh, int which, bool on)
 {
   int r = write_cmd (udh, VRQ_SET_LED, on, which, 0, 0);
@@ -421,7 +421,7 @@ usrp_set_hash (libusb_device_handle *udh, int which,
                                 (unsigned char *) hash, USRP_HASH_SIZE, 1000);
   return r == USRP_HASH_SIZE;
 }
-  
+
 bool
 usrp_get_hash (libusb_device_handle *udh, int which,
                unsigned char hash[USRP_HASH_SIZE])
@@ -454,7 +454,7 @@ usrp1_fpga_write (libusb_device_handle *udh,
   buf[1] = (value >> 16) & 0xff;
   buf[2] = (value >>  8) & 0xff;
   buf[3] = (value >>  0) & 0xff;
-  
+
   return usrp_spi_write (udh, 0x00 | (regno & 0x7f),
 			 SPI_ENABLE_FPGA,
 			 SPI_FMT_MSB | SPI_FMT_HDR_1,
@@ -503,31 +503,31 @@ usrp_read_fpga_reg (libusb_device_handle *udh, int reg, int *value)
   }
 }
 
-bool 
+bool
 usrp_set_fpga_reset (libusb_device_handle *udh, bool on)
 {
   return usrp_set_switch (udh, VRQ_FPGA_SET_RESET, on);
 }
 
-bool 
+bool
 usrp_set_fpga_tx_enable (libusb_device_handle *udh, bool on)
 {
   return usrp_set_switch (udh, VRQ_FPGA_SET_TX_ENABLE, on);
 }
 
-bool 
+bool
 usrp_set_fpga_rx_enable (libusb_device_handle *udh, bool on)
 {
   return usrp_set_switch (udh, VRQ_FPGA_SET_RX_ENABLE, on);
 }
 
-bool 
+bool
 usrp_set_fpga_tx_reset (libusb_device_handle *udh, bool on)
 {
   return usrp_set_switch (udh, VRQ_FPGA_SET_TX_RESET, on);
 }
 
-bool 
+bool
 usrp_set_fpga_rx_reset (libusb_device_handle *udh, bool on)
 {
   return usrp_set_switch (udh, VRQ_FPGA_SET_RX_RESET, on);
@@ -550,7 +550,7 @@ compute_hash (const char *filename, unsigned char hash[USRP_HASH_SIZE])
   }
   int r = md5_stream (fp, hash);
   fclose (fp);
-  
+
   return r == 0;
 }
 
@@ -565,7 +565,7 @@ usrp_conditionally_load_something (libusb_device_handle *udh,
 {
   unsigned char file_hash[USRP_HASH_SIZE];
   unsigned char usrp_hash[USRP_HASH_SIZE];
-  
+
   if (access (filename, R_OK) != 0){
     perror (filename);
     return ULS_ERROR;
@@ -677,13 +677,13 @@ usrp_load_firmware_nth (int nth, const char *filename, bool force, libusb_contex
 
   case ULS_OK:
     // we loaded firmware successfully.
- 
+
     // It's highly likely that the board will renumerate (simulate a
     // disconnect/reconnect sequence), invalidating our current
     // handle.
 
     // FIXME.  Turn this into a loop that rescans until we refind ourselves
-   
+
     struct timespec     t;      // delay for 1 second
     t.tv_sec = 2;
     t.tv_nsec = 0;
@@ -702,12 +702,12 @@ load_status_msg (usrp_load_status_t s, const char *type, const char *filename)
 {
   char *e = getenv("USRP_VERBOSE");
   bool verbose = e != 0;
-  
+
   switch (s){
   case ULS_ERROR:
     fprintf (stderr, "usrp: failed to load %s %s.\n", type, filename);
     break;
-    
+
   case ULS_ALREADY_LOADED:
     if (verbose)
       fprintf (stderr, "usrp: %s %s already loaded.\n", type, filename);
@@ -772,7 +772,7 @@ usrp_load_standard_bits (int nth, bool force,
   libusb_device_handle *udh = open_nth_cmd_interface (nth, ctx);
   if (udh == 0)
     return false;
-  
+
   s = usrp_load_fpga (udh, filename, force);
   usrp_close_interface (udh);
   load_status_msg (s, "fpga bitstream", filename);
@@ -789,7 +789,7 @@ _usrp_get_status (libusb_device_handle *udh, int which, bool *trouble)
 {
   unsigned char	status;
   *trouble = true;
-  
+
   if (write_cmd (udh, VRQ_GET_STATUS, 0, which,
 		 &status, sizeof (status)) != sizeof (status))
     return false;
@@ -874,7 +874,7 @@ usrp_9862_write (libusb_device_handle *udh, int which_codec,
   unsigned char buf[1];
 
   buf[0] = value;
-  
+
   return usrp_spi_write (udh, 0x00 | (regno & 0x3f),
 			 which_codec == 0 ? SPI_ENABLE_CODEC_A : SPI_ENABLE_CODEC_B,
 			 SPI_FMT_MSB | SPI_FMT_HDR_1,
@@ -952,7 +952,7 @@ usrp_eeprom_write (libusb_device_handle *udh, int i2c_addr,
 {
   unsigned char cmd[2];
   const unsigned char *p = (unsigned char *) buf;
-  
+
   // The simplest thing that could possibly work:
   //   all writes are single byte writes.
   //
@@ -967,7 +967,7 @@ usrp_eeprom_write (libusb_device_handle *udh, int i2c_addr,
     if (!r)
       return false;
   }
-  
+
   return true;
 }
 
@@ -994,14 +994,14 @@ usrp_eeprom_read (libusb_device_handle *udh, int i2c_addr,
   }
   return true;
 }
- 
+
 // ----------------------------------------------------------------
 
 static bool
 slot_to_codec (int slot, int *which_codec)
 {
   *which_codec = 0;
-  
+
   switch (slot){
   case SLOT_TX_A:
   case SLOT_RX_A:
@@ -1038,7 +1038,7 @@ usrp_write_aux_dac (libusb_device_handle *udh, int slot,
 		    int which_dac, int value)
 {
   int which_codec;
-  
+
   if (!slot_to_codec (slot, &which_codec))
     return false;
 
@@ -1048,7 +1048,7 @@ usrp_write_aux_dac (libusb_device_handle *udh, int slot,
   }
 
   value &= 0x0fff;	// mask to 12-bits
-  
+
   if (which_dac == 3){
     // dac 3 is really 12-bits.  Use value as is.
     bool r = true;
@@ -1057,7 +1057,7 @@ usrp_write_aux_dac (libusb_device_handle *udh, int slot,
     return r;
   }
   else {
-    // dac 0, 1, and 2 are really 8 bits.  
+    // dac 0, 1, and 2 are really 8 bits.
     value = value >> 4;		// shift value appropriately
     return usrp_9862_write (udh, which_codec, 36 + which_dac, value);
   }
@@ -1084,7 +1084,7 @@ usrp_read_aux_adc (libusb_device_handle *udh, int slot,
     | AUX_ADC_CTRL_REFSEL_B;		// on chip reference
 
   int	rd_reg = 26;	// base address of two regs to read for result
-  
+
   // program the ADC mux bits
   if (tx_slot_p (slot))
     aux_adc_control |= AUX_ADC_CTRL_SELECT_A2 | AUX_ADC_CTRL_SELECT_B2;
@@ -1092,7 +1092,7 @@ usrp_read_aux_adc (libusb_device_handle *udh, int slot,
     rd_reg += 2;
     aux_adc_control |= AUX_ADC_CTRL_SELECT_A1 | AUX_ADC_CTRL_SELECT_B1;
   }
-  
+
   // I'm not sure if we can set the mux and issue a start conversion
   // in the same cycle, so let's do them one at a time.
 
@@ -1116,7 +1116,7 @@ usrp_read_aux_adc (libusb_device_handle *udh, int slot,
 
   if (r)
     *value = ((v_hi << 2) | ((v_lo >> 6) & 0x3)) << 2;	// format as 12-bit
-  
+
   return r;
 }
 

@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003 Free Software Foundation, Inc.
- * 
+ * Copyright 2003,2009 Free Software Foundation, Inc.
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -85,8 +85,8 @@ private:
   libusb_transfer *get_write_work_in_progress ();
   void reap_complete_writes ();
   bool reload_read_buffer ();
-  bool submit_lut (libusb_transfer *lut); 
- 
+  bool submit_lut (libusb_transfer *lut);
+
 public:
   // CREATORS
   fusb_ephandle_libusb1 (fusb_devhandle_libusb1 *dh, int endpoint, bool input_p,
@@ -121,7 +121,7 @@ public:
   struct libusb_transfer *free_list_get ();
   struct libusb_transfer *completed_list_get ();
 
-  // accessor to work from callback context 
+  // accessor to work from callback context
   fusb_devhandle_libusb1* get_fusb_devhandle_libusb1 () const {
     return d_devhandle;
   }

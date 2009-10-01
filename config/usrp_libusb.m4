@@ -18,9 +18,9 @@ dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
 # $1 is $req_libusb1:
-#   yes : check libusb-1.0 
-#   no  : check libusb-0.12 
-#   ""  : check libusb-0.12 
+#   yes : check libusb-1.0
+#   no  : check libusb-0.12
+#   ""  : check libusb-0.12
 
 
 AC_DEFUN([USRP_LIBUSB], [

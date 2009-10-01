@@ -1,4 +1,4 @@
-/*  -*- Mode: C++ -*- */
+/*  -*- c++ -*- */
 /*
  * Copyright 2005,2009 Free Software Foundation, Inc.
  *
@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _USRP_PRIMS_H_
-#define _USRP_PRIMS_H_
+#ifndef INCLUDED_USRP_PRIMS_H
+#define INCLUDED_USRP_PRIMS_H
 
 #include <usrp/usrp_slots.h>
 #include <usrp/libusb_types.h>
@@ -40,15 +40,15 @@ enum usrp_load_status_t { ULS_ERROR = 0, ULS_OK, ULS_ALREADY_LOADED };
  *
  * Probe busses and devices. The argument is ignored and defaults to NULL.
  * Safe to call more than once.
- * 
+ *
  * libusb-1.0
  *
  * If an location to a libusb_context is passed in, create and write in the new
  * context. If no argument is provided, initialize libusb with the default
- * (NULL) context. 
+ * (NULL) context.
  *
  * Generally _not_ safe to call more than once with non-NULL argument since a
- * new context will be created each time. 
+ * new context will be created each time.
  */
 
 void usrp_one_time_init (libusb_context **ctx = NULL);
@@ -295,4 +295,4 @@ bool usrp_write_dboard_offsets (libusb_device_handle *udh, int slot_id,
  */
 std::string usrp_serial_number(libusb_device_handle *udh);
 
-#endif /* _USRP_PRIMS_H_ */
+#endif /* INCLUDED_USRP_PRIMS_H */

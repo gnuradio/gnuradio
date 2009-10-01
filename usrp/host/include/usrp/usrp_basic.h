@@ -1,4 +1,4 @@
-/*  -*- Mode: C++ -*- */
+/*  -*- c++ -*- */
 /*
  * Copyright 2005,2009 Free Software Foundation, Inc.
  *
@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _USRP_BASIC_H_
-#define _USRP_BASIC_H_
+#ifndef INCLUDED_USRP_BASIC_H
+#define INCLUDED_USRP_BASIC_H
 
 #include <usrp/db_base.h>
 #include <usrp/usrp_slots.h>
@@ -990,4 +990,4 @@ public:
   bool stop ();
 };
 
-#endif
+#endif /* INCLUDED_USRP_BASIC_H */

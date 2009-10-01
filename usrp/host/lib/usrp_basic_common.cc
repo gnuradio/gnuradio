@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2003,2004,2008,2009 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -84,7 +84,7 @@ open_tx_interface (libusb_device *dev)
 
 // Given:
 //   CLKIN = 64 MHz
-//   CLKSEL pin = high 
+//   CLKSEL pin = high
 //
 // These settings give us:
 //   CLKOUT1 = CLKIN = 64 MHz
@@ -107,8 +107,8 @@ usrp_basic::shutdown_daughterboards()
   // nuke d'boards before we close down USB in ~usrp_basic
   // shutdown() will do any board shutdown while the USRP can still
   // be talked to
-  for(size_t i = 0; i < d_db.size(); i++) 
-    for(size_t j = 0; j < d_db[i].size(); j++) 
+  for(size_t i = 0; i < d_db.size(); i++)
+    for(size_t j = 0; j < d_db[i].size(); j++)
       d_db[i][j]->shutdown();
 }
 
@@ -122,7 +122,7 @@ usrp_basic::init_db(usrp_basic_sptr u)
   d_db[1] = instantiate_dbs(d_dbid[1], u, 1);
 }
 
-std::vector<db_base_sptr> 
+std::vector<db_base_sptr>
 usrp_basic::db(int which_side)
 {
   which_side &= 0x1;	// clamp it to avoid any reporting any errors
@@ -307,7 +307,7 @@ usrp_basic::set_adc_buffer_bypass (int which_adc, bool bypass)
 bool
 usrp_basic::set_dc_offset_cl_enable(int bits, int mask)
 {
-  return _write_fpga_reg(FR_DC_OFFSET_CL_EN, 
+  return _write_fpga_reg(FR_DC_OFFSET_CL_EN,
 			 (d_fpga_shadows[FR_DC_OFFSET_CL_EN] & ~mask) | (bits & mask));
 }
 
@@ -399,7 +399,7 @@ usrp_basic::_read_spi (int optional_header, int enables, int format, int len)
 {
   if (len <= 0)
     return "";
-  
+
   char buf[len];
 
   if (!usrp_spi_read (d_udh, optional_header, enables, format, buf, len))
@@ -741,7 +741,7 @@ usrp_basic_rx::usrp_basic_rx (int which_board, int fusb_block_size, int fusb_nbl
 
   if (fusb_nblocks < 0)
     throw std::out_of_range ("usrp_basic_rx: invalid fusb_nblocks");
-  
+
   if (fusb_block_size == 0)
     fusb_block_size = fusb_sysconfig::default_block_size();
 
@@ -799,7 +799,7 @@ usrp_basic_rx::start ()
     fprintf (stderr, "usrp_basic_rx: set_rx_enable failed\n");
     return false;
   }
- 
+
   return true;
 }
 
@@ -827,7 +827,7 @@ usrp_basic_rx::make (int which_board, int fusb_block_size, int fusb_nblocks,
 		     const std::string firmware_filename)
 {
   usrp_basic_rx *u = 0;
-  
+
   try {
     u = new usrp_basic_rx (which_board, fusb_block_size, fusb_nblocks,
 			   fpga_filename, firmware_filename);
@@ -860,10 +860,10 @@ int
 usrp_basic_rx::read (void *buf, int len, bool *overrun)
 {
   int	r;
-  
+
   if (overrun)
     *overrun = false;
-  
+
   if (len < 0 || (len % 512) != 0){
     fprintf (stderr, "usrp_basic_rx::read: invalid length = %d\n", len);
     return -1;
@@ -890,7 +890,7 @@ usrp_basic_rx::read (void *buf, int len, bool *overrun)
       fprintf (stderr, "usrp_basic_rx: usrp_check_rx_overrun failed\n");
     }
   }
-    
+
   return r;
 }
 
@@ -940,21 +940,21 @@ usrp_basic_rx::probe_rx_slots (bool verbose)
       _write_fpga_reg (slot_id_to_oe_reg(slot_id), (0xffff << 16) | eeprom.oe);
       _write_fpga_reg (slot_id_to_io_reg(slot_id), (0xffff << 16) | 0x0000);
       break;
-      
+
     case UDBE_NO_EEPROM:
       d_dbid[i] = -1;
       msg = "<none>";
       _write_fpga_reg (slot_id_to_oe_reg(slot_id), (0xffff << 16) | 0x0000);
       _write_fpga_reg (slot_id_to_io_reg(slot_id), (0xffff << 16) | 0x0000);
       break;
-      
+
     case UDBE_INVALID_EEPROM:
       d_dbid[i] = -2;
       msg = "Invalid EEPROM contents";
       _write_fpga_reg (slot_id_to_oe_reg(slot_id), (0xffff << 16) | 0x0000);
       _write_fpga_reg (slot_id_to_io_reg(slot_id), (0xffff << 16) | 0x0000);
       break;
-      
+
     case UDBE_BAD_SLOT:
     default:
       assert (0);
@@ -1144,7 +1144,7 @@ usrp_basic_tx::usrp_basic_tx (int which_board, int fusb_block_size, int fusb_nbl
 
   if (fusb_nblocks < 0)
     throw std::out_of_range ("usrp_basic_rx: invalid fusb_nblocks");
-  
+
   if (fusb_block_size == 0)
     fusb_block_size = FUSB_BLOCK_SIZE;
 
@@ -1194,7 +1194,7 @@ usrp_basic_tx::start ()
     fprintf (stderr, "usrp_basic_tx: set_tx_enable failed\n");
     return false;
   }
-  
+
   if (!d_ephandle->start ()){
     fprintf (stderr, "usrp_basic_tx: failed to start end point streaming");
     return false;
@@ -1227,7 +1227,7 @@ usrp_basic_tx::make (int which_board, int fusb_block_size, int fusb_nblocks,
 		     const std::string firmware_filename)
 {
   usrp_basic_tx *u = 0;
-  
+
   try {
     u = new usrp_basic_tx (which_board, fusb_block_size, fusb_nblocks,
 			   fpga_filename, firmware_filename);
@@ -1260,10 +1260,10 @@ int
 usrp_basic_tx::write (const void *buf, int len, bool *underrun)
 {
   int	r;
-  
+
   if (underrun)
     *underrun = false;
-  
+
   if (len < 0 || (len % 512) != 0){
     fprintf (stderr, "usrp_basic_tx::write: invalid length = %d\n", len);
     return -1;
@@ -1272,7 +1272,7 @@ usrp_basic_tx::write (const void *buf, int len, bool *underrun)
   r = d_ephandle->write (buf, len);
   if (r > 0)
     d_bytes_seen += r;
-    
+
   /*
    * In many cases, the FPGA reports an tx underrun right after we
    * enable the Tx path.  If this is our first write, check for the
@@ -1347,21 +1347,21 @@ usrp_basic_tx::probe_tx_slots (bool verbose)
       _write_fpga_reg (slot_id_to_oe_reg(slot_id), (0xffff << 16) | eeprom.oe);
       _write_fpga_reg (slot_id_to_io_reg(slot_id), (0xffff << 16) | 0x0000);
       break;
-      
+
     case UDBE_NO_EEPROM:
       d_dbid[i] = -1;
       msg = "<none>";
       _write_fpga_reg (slot_id_to_oe_reg(slot_id), (0xffff << 16) | 0x0000);
       _write_fpga_reg (slot_id_to_io_reg(slot_id), (0xffff << 16) | 0x0000);
       break;
-      
+
     case UDBE_INVALID_EEPROM:
       d_dbid[i] = -2;
       msg = "Invalid EEPROM contents";
       _write_fpga_reg (slot_id_to_oe_reg(slot_id), (0xffff << 16) | 0x0000);
       _write_fpga_reg (slot_id_to_io_reg(slot_id), (0xffff << 16) | 0x0000);
       break;
-      
+
     case UDBE_BAD_SLOT:
     default:
       assert (0);

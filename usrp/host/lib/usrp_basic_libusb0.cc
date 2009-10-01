@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2003,2004,2008,2009 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -56,7 +56,7 @@ static const double POLLING_INTERVAL = 0.1;	// seconds
 
 // Given:
 //   CLKIN = 64 MHz
-//   CLKSEL pin = high 
+//   CLKSEL pin = high
 //
 //   CLKOUT1 = CLKIN = 64 MHz
 //   CLKOUT2 = CLKIN = 64 MHz
@@ -73,7 +73,7 @@ static unsigned char common_regs[] = {
 };
 
 
-usrp_basic::usrp_basic (int which_board, 
+usrp_basic::usrp_basic (int which_board,
 			struct usb_dev_handle *
 			open_interface (struct usb_device *dev),
 			const std::string fpga_filename,
@@ -87,7 +87,7 @@ usrp_basic::usrp_basic (int which_board,
    * SWAG: Scientific Wild Ass Guess.
    *
    * d_usb_data_rate is used only to determine how often to poll for over- and under-runs.
-   * We defualt it to 1/2  of our best case.  Classes derived from usrp_basic (e.g., 
+   * We defualt it to 1/2  of our best case.  Classes derived from usrp_basic (e.g.,
    * usrp_standard_tx and usrp_standard_rx) call set_usb_data_rate() to tell us the
    * actual rate.  This doesn't change our throughput, that's determined by the signal
    * processing code in the FPGA (which we know nothing about), and the system limits
