@@ -510,7 +510,7 @@ module u2_core
      (.clk_i(wb_clk),.rst_i(wb_rst),
       .adr_i(s11_adr[5:0]),.sel_i(s11_sel),.dat_i(s11_dat_o),.dat_o(s11_dat_i),
       .we_i(s11_we),.stb_i(s11_stb),.cyc_i(s11_cyc),.ack_o(s11_ack),
-      .run_rx(run_rx_d1),.run_tx(run_tx),.master_time(), .ctrl_lines(atr_lines) );
+      .run_rx(run_rx_d1),.run_tx(run_tx), .ctrl_lines(atr_lines) );
    assign 	 s11_err = 0;
    assign 	 s11_rty = 0;
    
