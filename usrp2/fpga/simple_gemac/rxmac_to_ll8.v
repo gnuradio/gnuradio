@@ -6,6 +6,13 @@ module rxmac_to_ll8
 
    reg [2:0] xfer_state;
 
+   localparam XFER_IDLE     = 0;
+   localparam XFER_ACTIVE   = 1;
+   localparam XFER_ERROR    = 2;
+   localparam XFER_ERROR2   = 3;
+   localparam XFER_OVERRUN  = 4;
+   localparam XFER_OVERRUN2 = 5;
+      
    assign ll_data 	    = rx_data;
    assign ll_src_rdy 	    = ((rx_valid & (xfer_state != XFER_OVERRUN2) )
 			       | (xfer_state == XFER_ERROR) 
@@ -14,13 +21,6 @@ module rxmac_to_ll8
    assign ll_eof 	    = (rx_ack | (xfer_state==XFER_ERROR) | (xfer_state==XFER_OVERRUN));
    assign ll_error 	    = (xfer_state == XFER_ERROR)|(xfer_state==XFER_OVERRUN);
    
-   localparam XFER_IDLE     = 0;
-   localparam XFER_ACTIVE   = 1;
-   localparam XFER_ERROR    = 2;
-   localparam XFER_ERROR2   = 3;
-   localparam XFER_OVERRUN  = 4;
-   localparam XFER_OVERRUN2 = 5;
-      
    always @(posedge clk)
      if(reset | clear)
        xfer_state 	   <= XFER_IDLE;

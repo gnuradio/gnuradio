@@ -20,69 +20,33 @@
 #define INCLUDED_ETH_MAC_REGS_H
 
 /*
- * See opencores.org 10_100_1000 Mbps Tri-mode Ethernet MAC Specification
+ * Simple GEMAC
  *
- * In reality, these are 16-bit regs, but are assigned
- * on 32-bit boundaries.  Because we're little endian,
- * declaring them "int" works.
  */
 typedef struct {
-  volatile int	tx_hwmark;
-  volatile int	tx_lwmark;
-
-  //! if set, send pause frames automatically
-  volatile int	pause_frame_send_en;
-
-  //! quanta value for pause frame in units of 512 bit times.
-  volatile int	pause_quanta_set;
-
-  volatile int	ifg_set;
-  volatile int	full_duplex;
-  volatile int	max_retry;
-  volatile int	mac_tx_add_en;
-  volatile int	mac_tx_add_prom_data;
-  volatile int	mac_tx_add_prom_add;
-  volatile int	mac_tx_add_prom_wr;
-
-  //! if set, other end can pause us (i.e., we pay attention to pause frames)
-  volatile int	tx_pause_en;
-
-  // Flow Control high and low water marks
-  //! when space available (in 32-bit lines) > hwmark, send un-pause frame
-  volatile int	fc_hwmark;	
-
-  //! when space avail (in 32-bit lines) < lwmark, send pause frame
-  volatile int	fc_lwmark;	
-
-  volatile int	mac_rx_add_chk_en;
-  volatile int	mac_rx_add_prom_data;
-  volatile int	mac_rx_add_prom_add;
-  volatile int	mac_rx_add_prom_wr;
-  volatile int	broadcast_filter_en;
-  volatile int	broadcast_bucket_depth;
-  volatile int	broadcast_bucket_interval;
-  volatile int	rx_append_crc;
-  volatile int	rx_hwmark;
-  volatile int	rx_lwmark;
-  volatile int	crc_chk_en;
-  volatile int	rx_ifg_set;
-  volatile int	rx_max_length;
-  volatile int	rx_min_length;
-  volatile int	rmon_rd_addr;		// performance counter access
-  volatile int	rmon_rd_apply;		
-  volatile int	rmon_rd_grant;		// READONLY
-  volatile int	rmon_rd_dout;	        // READONLY
-  volatile int	dummy;	// READONLY
-  volatile int	line_loop_en;
-  volatile int	speed;
-  volatile int	miimoder;
-  volatile int	miicommand;
-  volatile int	miiaddress;
-  volatile int	miitx_data;
-  volatile int	miirx_data;
-  volatile int	miistatus;
-  volatile int	fc_padtime;
+  volatile int settings;
+  volatile int ucast_hi;
+  volatile int ucast_lo;
+  volatile int mcast_hi;
+  volatile int mcast_lo;
+  volatile int miimoder;
+  volatile int miiaddress;
+  volatile int miitx_data;
+  volatile int miicommand;
+  volatile int miistatus;
+  volatile int miirx_data;
+  volatile int pause_time;
+  volatile int pause_thresh;
 } eth_mac_regs_t;
+
+// settings register
+#define MAC_SET_PAUSE_EN  (1 << 0)   // Makes us respect received pause frames (normally on)
+#define MAC_SET_PASS_ALL  (1 << 1)   // Enables promiscuous mode, currently broken
+#define MAC_SET_PASS_PAUSE (1 << 2)  // Sends pause frames through (normally off)
+#define MAC_SET_PASS_BCAST (1 << 3)  // Sends broadcast frames through (normally on)
+#define MAC_SET_PASS_MCAST (1 << 4)  // Sends multicast frames that match mcast addr (normally off)
+#define MAC_SET_PASS_UCAST (1 << 5)  // Sends unicast (normal) frames through if they hit in address filter (normally on)
+#define MAC_SET_PAUSE_SEND_EN (1 << 6) // Enables sending pause frames
 
 // miicommand register
 #define MIIC_SCANSSTAT	(1 << 0)	// Scan status

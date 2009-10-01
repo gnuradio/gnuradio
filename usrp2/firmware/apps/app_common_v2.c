@@ -70,6 +70,7 @@ void
 set_reply_hdr(u2_eth_packet_t *reply_pkt, u2_eth_packet_t const *cmd_pkt)
 {
   reply_pkt->ehdr.dst = cmd_pkt->ehdr.src;
+  reply_pkt->ehdr.src = *ethernet_mac_addr();
   reply_pkt->ehdr.ethertype = U2_ETHERTYPE;
   reply_pkt->thdr.flags = 0;
   reply_pkt->thdr.fifo_status = 0;	// written by protocol engine
@@ -599,7 +600,7 @@ bool
 eth_pkt_inspector(dbsm_t *sm, int bufno)
 {
   u2_eth_packet_t *pkt = (u2_eth_packet_t *) buffer_ram(bufno);
-  size_t byte_len = (buffer_pool_status->last_line[bufno] - 3) * 4;
+  size_t byte_len = (buffer_pool_status->last_line[bufno] - 1) * 4;
 
   //static size_t last_len = 0;
 

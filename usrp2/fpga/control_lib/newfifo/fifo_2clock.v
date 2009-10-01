@@ -1,9 +1,58 @@
 
+// FIXME ignores the AWIDTH (fifo size) parameter
+
 module fifo_2clock
-  #(parameter DWIDTH=32, AWIDTH=9)
-    (input wclk, input [DWIDTH-1:0] datain, input write, output full, output reg [AWIDTH-1:0] level_wclk,
-     input rclk, output [DWIDTH-1:0] dataout, input read, output empty, output reg [AWIDTH-1:0] level_rclk,
-     input arst);
+  #(parameter WIDTH=36, SIZE=6)
+   (input wclk, input [WIDTH-1:0] datain, input src_rdy_i, output dst_rdy_o, output [15:0] space,
+    input rclk, output [WIDTH-1:0] dataout, output src_rdy_o, input dst_rdy_i, output [15:0] occupied,
+    input arst);
+   
+   wire [SIZE:0] level_rclk, level_wclk; // xilinx adds an extra bit if you ask for accurate levels
+   wire 	 full, empty, write, read;
+
+   assign dst_rdy_o  = ~full;
+   assign src_rdy_o  = ~empty;
+   assign write      = src_rdy_i & dst_rdy_o;
+   assign read 	     = src_rdy_o & dst_rdy_i;
+
+   generate
+      if(WIDTH==36)
+	if(SIZE==9)
+	  fifo_xlnx_512x36_2clk fifo_xlnx_512x36_2clk
+	       (.rst(rst),
+		.wr_clk(wclk),.din(datain),.full(full),.wr_en(write),.wr_data_count(level_wclk),
+		.rd_clk(rclk),.dout(dataout),.empty(empty),.rd_en(read),.rd_data_count(level_rclk) );
+	else if(SIZE==11)
+	  fifo_xlnx_2Kx36_2clk fifo_xlnx_2Kx36_2clk 
+		     (.rst(rst),
+		      .wr_clk(wclk),.din(datain),.full(full),.wr_en(write),.wr_data_count(level_wclk),
+		      .rd_clk(rclk),.dout(dataout),.empty(empty),.rd_en(read),.rd_data_count(level_rclk) );
+	else if(SIZE==6)
+	  fifo_xlnx_64x36_2clk fifo_xlnx_64x36_2clk 
+		     (.rst(rst),
+		      .wr_clk(wclk),.din(datain),.full(full),.wr_en(write),.wr_data_count(level_wclk),
+		      .rd_clk(rclk),.dout(dataout),.empty(empty),.rd_en(read),.rd_data_count(level_rclk) );
+	else
+	  fifo_xlnx_512x36_2clk fifo_xlnx_512x36_2clk
+	       (.rst(rst),
+		.wr_clk(wclk),.din(datain),.full(full),.wr_en(write),.wr_data_count(level_wclk),
+		.rd_clk(rclk),.dout(dataout),.empty(empty),.rd_en(read),.rd_data_count(level_rclk) );
+      else if((WIDTH==19)|(WIDTH==18))
+	if(SIZE==4)
+	  fifo_xlnx_16x19_2clk fifo_xlnx_16x19_2clk
+		     (.rst(rst),
+		      .wr_clk(wclk),.din(datain),.full(full),.wr_en(write),.wr_data_count(level_wclk),
+		      .rd_clk(rclk),.dout(dataout),.empty(empty),.rd_en(read),.rd_data_count(level_rclk) );
+   endgenerate
+   
+   assign occupied  = {{(16-SIZE-1){1'b0}},level_rclk};
+   assign space     = ((1<<SIZE)+1)-level_wclk;
+   
+endmodule // fifo_2clock
+
+/*
+`else
+   // ISE sucks, so the following doesn't work properly
 
    reg [AWIDTH-1:0] wr_addr, rd_addr;
    wire [AWIDTH-1:0] wr_addr_rclk, rd_addr_wclk;
@@ -62,5 +111,7 @@ module fifo_2clock
      level_wclk <= wr_addr - rd_addr_wclk;
    always @(posedge rclk) 
      level_rclk <= wr_addr_rclk - rd_addr;
-   
+`endif
 endmodule // fifo_2clock
+
+*/

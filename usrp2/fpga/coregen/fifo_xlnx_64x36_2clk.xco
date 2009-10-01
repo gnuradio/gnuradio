@@ -1,0 +1,82 @@
+##############################################################
+#
+# Xilinx Core Generator version K.39
+# Date: Thu Sep  3 17:22:56 2009
+#
+##############################################################
+#
+#  This file contains the customisation parameters for a
+#  Xilinx CORE Generator IP GUI. It is strongly recommended
+#  that you do not manually alter this file as it may cause
+#  unexpected and unsupported behavior.
+#
+##############################################################
+#
+# BEGIN Project Options
+SET addpads = False
+SET asysymbol = False
+SET busformat = BusFormatAngleBracketNotRipped
+SET createndf = False
+SET designentry = Verilog
+SET device = xc3s2000
+SET devicefamily = spartan3
+SET flowvendor = Other
+SET formalverification = False
+SET foundationsym = False
+SET implementationfiletype = Ngc
+SET package = fg456
+SET removerpms = False
+SET simulationfiles = Behavioral
+SET speedgrade = -5
+SET verilogsim = True
+SET vhdlsim = False
+# END Project Options
+# BEGIN Select
+SELECT Fifo_Generator family Xilinx,_Inc. 4.3
+# END Select
+# BEGIN Parameters
+CSET almost_empty_flag=false
+CSET almost_full_flag=false
+CSET component_name=fifo_xlnx_64x36_2clk
+CSET data_count=false
+CSET data_count_width=7
+CSET disable_timing_violations=false
+CSET dout_reset_value=0
+CSET empty_threshold_assert_value=4
+CSET empty_threshold_negate_value=5
+CSET enable_ecc=false
+CSET enable_int_clk=false
+CSET fifo_implementation=Independent_Clocks_Distributed_RAM
+CSET full_flags_reset_value=1
+CSET full_threshold_assert_value=63
+CSET full_threshold_negate_value=62
+CSET input_data_width=36
+CSET input_depth=64
+CSET output_data_width=36
+CSET output_depth=64
+CSET overflow_flag=false
+CSET overflow_sense=Active_High
+CSET performance_options=First_Word_Fall_Through
+CSET programmable_empty_type=No_Programmable_Empty_Threshold
+CSET programmable_full_type=No_Programmable_Full_Threshold
+CSET read_clock_frequency=1
+CSET read_data_count=true
+CSET read_data_count_width=7
+CSET reset_pin=true
+CSET reset_type=Asynchronous_Reset
+CSET underflow_flag=false
+CSET underflow_sense=Active_High
+CSET use_dout_reset=true
+CSET use_embedded_registers=false
+CSET use_extra_logic=true
+CSET valid_flag=false
+CSET valid_sense=Active_High
+CSET write_acknowledge_flag=false
+CSET write_acknowledge_sense=Active_High
+CSET write_clock_frequency=1
+CSET write_data_count=true
+CSET write_data_count_width=7
+# END Parameters
+GENERATE
+# CRC: 2bb925ae
+

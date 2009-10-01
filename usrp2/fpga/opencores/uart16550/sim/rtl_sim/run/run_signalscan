@@ -1,2 +1,0 @@
-signalscan ../out/uart/uart.trn &
-# -do ../out/uart/uart.do &

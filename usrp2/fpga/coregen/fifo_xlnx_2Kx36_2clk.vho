@@ -40,8 +40,8 @@ component fifo_xlnx_2Kx36_2clk
 	dout: OUT std_logic_VECTOR(35 downto 0);
 	empty: OUT std_logic;
 	full: OUT std_logic;
-	rd_data_count: OUT std_logic_VECTOR(10 downto 0);
-	wr_data_count: OUT std_logic_VECTOR(10 downto 0));
+	rd_data_count: OUT std_logic_VECTOR(11 downto 0);
+	wr_data_count: OUT std_logic_VECTOR(11 downto 0));
 end component;
 
 -- Synplicity black box declaration

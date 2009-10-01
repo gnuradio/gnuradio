@@ -41,8 +41,8 @@ fifo_xlnx_512x36_2clk YourInstanceName (
 	.dout(dout), // Bus [35 : 0] 
 	.empty(empty),
 	.full(full),
-	.rd_data_count(rd_data_count), // Bus [8 : 0] 
-	.wr_data_count(wr_data_count)); // Bus [8 : 0] 
+	.rd_data_count(rd_data_count), // Bus [9 : 0] 
+	.wr_data_count(wr_data_count)); // Bus [9 : 0] 
 
 // INST_TAG_END ------ End INSTANTIATION Template ---------
 

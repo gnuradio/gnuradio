@@ -1,5 +1,5 @@
 The following files were generated for 'fifo_xlnx_2Kx36_2clk' in directory 
-/home/matt/usrp2/fpga/coregen:
+/home/matt/gnuradio.git/usrp2/fpga/coregen/:
 
 fifo_xlnx_2Kx36_2clk.asy:
    Graphical symbol information file. Used by the ISE tools and some

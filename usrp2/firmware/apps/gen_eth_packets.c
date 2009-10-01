@@ -104,8 +104,7 @@ init_packets(void)
   memset(&pkt, 0, sizeof(pkt));
 
   pkt.ehdr.dst = dst_mac_addr;
-  // src address filled in by mac
-
+  pkt.ehdr.src = *ethernet_mac_addr();
   pkt.ehdr.ethertype = U2_ETHERTYPE;
   pkt.fixed.word0 = 0x01234567;
   pkt.fixed.timestamp = 0xffffffff;
@@ -141,10 +140,12 @@ main(void)
   ethernet_register_link_changed_callback(link_changed_callback);
   ethernet_init();
 
+  /*
   if (hwconfig_simulation_p()){
     eth_mac->speed = 4;	// hardcode mac speed to 1000
     link_is_up = true;
   }
+  */
 
   // fire off a receive from the ethernet
   bp_receive_to_buf(CPU_RX_BUF, PORT_ETH, 1, 0, BP_LAST_LINE);
@@ -159,10 +160,15 @@ main(void)
     }
 
     if (status & (BPS_DONE(CPU_TX_BUF) | BPS_ERROR(CPU_TX_BUF))){
+      if (status & BPS_ERROR(CPU_TX_BUF)){
+	putchar('E');
+      }
       bp_clear_buf(CPU_TX_BUF);
       npackets_sent++;
-      if ((npackets_sent & 0xF) == 0)	// print after every 16 packets
-	print_rmon_regs();
+      if ((npackets_sent & 0xF) == 0){	// print after every 16 packets
+	//print_rmon_regs();
+	putchar('.');
+      }
     }
 
     if (link_is_up && send_packet_now && (status & BPS_IDLE(CPU_TX_BUF))){

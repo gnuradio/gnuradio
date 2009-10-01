@@ -60,15 +60,15 @@ input wr_en;
 output [35 : 0] dout;
 output empty;
 output full;
-output [8 : 0] rd_data_count;
-output [8 : 0] wr_data_count;
+output [9 : 0] rd_data_count;
+output [9 : 0] wr_data_count;
 
 // synthesis translate_off
 
       FIFO_GENERATOR_V4_3 #(
 		.C_COMMON_CLOCK(0),
 		.C_COUNT_TYPE(0),
-		.C_DATA_COUNT_WIDTH(9),
+		.C_DATA_COUNT_WIDTH(10),
 		.C_DEFAULT_VALUE("BlankString"),
 		.C_DIN_WIDTH(36),
 		.C_DOUT_RST_VAL("0"),
@@ -108,19 +108,19 @@ output [8 : 0] wr_data_count;
 		.C_PROG_FULL_THRESH_ASSERT_VAL(511),
 		.C_PROG_FULL_THRESH_NEGATE_VAL(510),
 		.C_PROG_FULL_TYPE(0),
-		.C_RD_DATA_COUNT_WIDTH(9),
+		.C_RD_DATA_COUNT_WIDTH(10),
 		.C_RD_DEPTH(512),
 		.C_RD_FREQ(1),
 		.C_RD_PNTR_WIDTH(9),
 		.C_UNDERFLOW_LOW(0),
-		.C_USE_DOUT_RST(0),
+		.C_USE_DOUT_RST(1),
 		.C_USE_ECC(0),
 		.C_USE_EMBEDDED_REG(0),
 		.C_USE_FIFO16_FLAGS(0),
-		.C_USE_FWFT_DATA_COUNT(0),
+		.C_USE_FWFT_DATA_COUNT(1),
 		.C_VALID_LOW(0),
 		.C_WR_ACK_LOW(0),
-		.C_WR_DATA_COUNT_WIDTH(9),
+		.C_WR_DATA_COUNT_WIDTH(10),
 		.C_WR_DEPTH(512),
 		.C_WR_FREQ(1),
 		.C_WR_PNTR_WIDTH(9),
@@ -164,10 +164,6 @@ output [8 : 0] wr_data_count;
 
 
 // synthesis translate_on
-
-// XST black box declaration
-// box_type "black_box"
-// synthesis attribute box_type of fifo_xlnx_512x36_2clk is "black_box"
 
 endmodule
 

@@ -1,7 +1,0 @@
--y rtl/verilog
--y rtl/verilog/TECH
--y rtl/verilog/MAC_tx
--y rtl/verilog/MAC_rx
--y rtl/verilog/RMON
--y rtl/verilog/miim
-+incdir+rtl/verilog

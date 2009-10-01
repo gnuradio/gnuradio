@@ -43,6 +43,8 @@ ethernet_register_link_changed_callback(ethernet_link_changed_callback_t new_cal
 static void
 ed_set_mac_speed(int speed)
 {
+  printf("Speed set to %d\n",speed);
+  /*
   switch(speed){
   case 10:
     eth_mac->speed = 1;
@@ -56,6 +58,7 @@ ed_set_mac_speed(int speed)
   default:
     break;
   }
+  */
 }
 
 static void
@@ -196,17 +199,17 @@ ethernet_init(void)
   ed_state.link_speed = S_UNKNOWN;
 
   // initialize MAC registers
-  eth_mac->tx_hwmark = 0x1e;
-  eth_mac->tx_lwmark = 0x19;
+  //  eth_mac->tx_hwmark = 0x1e;
+  //eth_mac->tx_lwmark = 0x19;
 
-  eth_mac->crc_chk_en = 1;
-  eth_mac->rx_max_length = 2048;
+  //eth_mac->crc_chk_en = 1;
+  //eth_mac->rx_max_length = 2048;
 
   // configure PAUSE frame stuff
-  eth_mac->tx_pause_en = 1;		// pay attn to pause frames sent to us
+  //eth_mac->tx_pause_en = 1;		// pay attn to pause frames sent to us
 
-  eth_mac->pause_quanta_set = 38;	// a bit more than 1 max frame 16kb/512 + fudge
-  eth_mac->pause_frame_send_en = 1;	// enable sending pause frames
+  //eth_mac->pause_quanta_set = 38;	// a bit more than 1 max frame 16kb/512 + fudge
+  //eth_mac->pause_frame_send_en = 1;	// enable sending pause frames
 
 
   // setup PHY to interrupt on changes
@@ -256,6 +259,10 @@ ethernet_init(void)
   t &= ~(NWAY_AR_10T_HD_CAPS | NWAY_AR_10T_FD_CAPS | NWAY_AR_100TX_HD_CAPS | NWAY_AR_100TX_FD_CAPS);
 
   eth_mac_miim_write(PHY_AUTONEG_ADV, t);
+  int r = eth_mac_miim_read(PHY_AUTONEG_ADV);  		// DEBUG, read back
+  if (t != r){
+    printf("PHY_AUTONEG_ADV: wrote 0x%x, got 0x%x\n", t, r);
+  }
 
   // Restart autonegotation.  
   // We want to ensure that we're advertising our PAUSE capabilities.
@@ -322,6 +329,7 @@ ethernet_check_errors(void)
   // these registers are reset when read
   
   int	r = 0;
+  /*
   if (eth_mac_read_rmon(0x05) != 0)
     r |= RME_RX_CRC;
   if (eth_mac_read_rmon(0x06) != 0)
@@ -335,6 +343,6 @@ ethernet_check_errors(void)
     r |= RME_TX_FIFO_UNDER;
   if (eth_mac_read_rmon(0x27) != 0)
     r |= RME_TX_FIFO_OVER;
-
+  */
   return r;
 }
