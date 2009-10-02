@@ -419,6 +419,10 @@ usrp_set_hash (libusb_device_handle *udh, int which,
   // we use the Cypress firmware down load command to jam it in.
   int r = _usb_control_transfer (udh, 0x40, 0xa0, hash_slot_addr[which], 0,
                                 (unsigned char *) hash, USRP_HASH_SIZE, 1000);
+
+  if (r < 0)
+     fprintf (stderr, "usrp: failed to set hash: %i\n", r);
+
   return r == USRP_HASH_SIZE;
 }
 
@@ -431,6 +435,10 @@ usrp_get_hash (libusb_device_handle *udh, int which,
   // we use the Cypress firmware upload command to fetch it.
   int r = _usb_control_transfer (udh, 0xc0, 0xa0, hash_slot_addr[which], 0,
                                 (unsigned char *) hash, USRP_HASH_SIZE, 1000);
+
+  if (r < 0)
+     fprintf (stderr, "usrp: failed to get hash: %i\n", r);
+
   return r == USRP_HASH_SIZE;
 }
 
