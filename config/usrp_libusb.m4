@@ -31,7 +31,7 @@ AC_DEFUN([USRP_LIBUSB], [
       AC_LANG_PUSH(C)
       AC_CHECK_HEADERS([libusb-1.0/libusb.h], [have_libusb1=yes],
                        [libusbok=no; AC_MSG_RESULT([USRP requires libusb-1.0. libusb.h not found. See http://www.libusb.org])])
-      AC_SEARCH_LIBS(libusb_bulk_transfer, [usb], [USB_LIBS="$LIBS"],
+      AC_SEARCH_LIBS(libusb_bulk_transfer, [usb-1.0], [USB_LIBS="$LIBS"],
                      [libusbok=no; AC_MSG_RESULT([USRP requires libusb-1.0. libusb_bulk_transfer not found. See http://www.libusb.org])])
       AC_LANG_POP
     ])
@@ -53,6 +53,10 @@ AC_DEFUN([USRP_LIBUSB], [
       LIBS="$save_LIBS"
       AC_LANG_POP
     ])
+  fi
+
+  if x$USB_INCLUDEDIR != x; then
+    USB_INCLUDES=-I$USB_INCLUDEDIR
   fi
 
   if test x$libusbok = xyes; then

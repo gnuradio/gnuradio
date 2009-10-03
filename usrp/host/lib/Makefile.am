@@ -20,7 +20,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-common_INCLUDES = $(USRP_INCLUDES) -I$(USB_INCLUDEDIR)
+common_INCLUDES = $(USRP_INCLUDES) $(USB_INCLUDES)
 
 lib_LTLIBRARIES = libusrp.la
 
