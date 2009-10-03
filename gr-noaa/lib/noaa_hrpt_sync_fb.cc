@@ -67,11 +67,16 @@ noaa_hrpt_sync_fb::general_work(int noutput_items,
 
     // Train on zero crossings in center region of symbol
     if (sign != d_last_sign) {
-      if (d_phase > 0.25 && d_phase < 0.75) {
-	float phase_err = d_phase-0.5;
-	d_phase -= phase_err*d_alpha;        // 1st order phase adjustment
-	d_freq -= phase_err*d_beta;          // 2nd order frequency adjustment
-      }
+      float phase_err = 0.0;
+      if (d_phase > 0.25 && d_phase < 0.75)
+	phase_err = d_phase-0.5;
+      else if (d_phase >= 0.75)
+	phase_err = d_phase - 1.0;
+      else
+	phase_err = d_phase;
+
+      d_phase -= phase_err*d_alpha;        // 1st order phase adjustment
+      d_freq -= phase_err*d_beta;          // 2nd order frequency adjustment
 
       d_last_sign = sign;
     }
