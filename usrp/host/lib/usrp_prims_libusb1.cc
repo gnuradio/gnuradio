@@ -46,6 +46,43 @@ using namespace ad9862;
  * libusb 0.12 / 1.0 compatibility
  */
 
+static const char *
+_get_usb_error_str (int usb_err)
+{
+  switch (usb_err) {
+  case LIBUSB_SUCCESS:
+    return "Success (no error)";
+  case LIBUSB_ERROR_IO:
+    return "Input/output error";
+  case LIBUSB_ERROR_INVALID_PARAM:
+    return "Invalid parameter";
+  case LIBUSB_ERROR_ACCESS:
+    return "Access denied (insufficient permissions";
+  case LIBUSB_ERROR_NO_DEVICE:
+    return "No such device (it may have been disconnected)";
+  case LIBUSB_ERROR_NOT_FOUND:
+    return "Entity not found";
+  case LIBUSB_ERROR_BUSY:
+    return "Resource busy";
+  case LIBUSB_ERROR_TIMEOUT:
+    return "Operation timed out";
+  case LIBUSB_ERROR_OVERFLOW:
+    return "Overflow";
+  case LIBUSB_ERROR_PIPE:
+    return "Pipe error";
+   case LIBUSB_ERROR_INTERRUPTED:
+    return "System call interrupted (perhaps due to signal)";
+  case LIBUSB_ERROR_NO_MEM:
+    return "Insufficient memory";
+  case LIBUSB_ERROR_NOT_SUPPORTED:
+    return "Operation not supported or unimplemented on this platform";
+  case LIBUSB_ERROR_OTHER:
+    return "Unknown error";
+  }
+
+  return "Unknown error";
+}
+
 struct libusb_device *
 _get_usb_device (struct libusb_device_handle *udh)
 {
@@ -58,17 +95,27 @@ _get_usb_device_descriptor(struct libusb_device *q)
   int ret;
   struct libusb_device_descriptor desc;
 
-  if ((ret = libusb_get_device_descriptor(q, &desc)) < 0)
-    fprintf (stderr, "usrp: libusb_get_device_descriptor failed %d\n", ret);
+  ret = libusb_get_device_descriptor(q, &desc);
 
+  if (ret < 0) {
+    fprintf (stderr, "usrp: libusb_get_device_descriptor failed: %s\n",
+             _get_usb_error_str(ret));
+  }
   return desc;
 }
 
 int
 _get_usb_string_descriptor (struct libusb_device_handle *udh, int index,
-                           unsigned char* data, int length)
+                            unsigned char* data, int length)
 {
-  return libusb_get_string_descriptor_ascii (udh, (uint8_t) index, data, length);
+  int ret;
+  ret = libusb_get_string_descriptor_ascii (udh, (uint8_t) index, data, length);
+
+  if (ret < 0) {
+    fprintf (stderr, "usrp: libusb_get_string_descriptor_ascii failed: %s\n",
+             _get_usb_error_str(ret));
+  }
+  return ret;
 }
 
 int
@@ -76,10 +123,15 @@ _usb_control_transfer (struct libusb_device_handle *udh, int request_type,
                        int request, int value, int index,
                        unsigned char *data, int length, unsigned int timeout)
 {
-  return libusb_control_transfer (udh, request_type, request, value, index,
-                                  data, length, timeout);
+  int ret;
+  ret = libusb_control_transfer (udh, request_type, request, value, index,
+                                 data, length, timeout);
+  if (ret < 0) {
+    fprintf (stderr, "usrp: libusb_control_transfer failed: %s\n",
+             _get_usb_error_str(ret));
+  }
+  return ret;
 }
-
 
 // ----------------------------------------------------------------
 
@@ -90,7 +142,7 @@ usrp_one_time_init (libusb_context **ctx)
   int ret;
 
   if ((ret = libusb_init (ctx)) < 0)
-    fprintf (stderr, "usrp: libusb_init failed %i\n", ret);
+    fprintf (stderr, "usrp: libusb_init failed: %s\n", _get_usb_error_str(ret));
 }
 
 void
@@ -117,7 +169,8 @@ usrp_find_device (int nth, bool fx2_ok_p, libusb_context *ctx)
   size_t i = 0;
 
   if (cnt < 0)
-    fprintf(stderr, "usrp: libusb_get_device_list failed %d\n", cnt);
+    fprintf(stderr, "usrp: libusb_get_device_list failed: %s\n",
+            _get_usb_error_str(cnt));
 
   for (i = 0; i < cnt; i++) {
     q = list[i];
@@ -149,16 +202,17 @@ usrp_open_interface (libusb_device *dev, int interface, int altinterface)
   }
 
   if ((ret = libusb_claim_interface (udh, interface)) < 0) {
-    fprintf (stderr, "%s:usb_claim_interface: failed interface %d\n", __FUNCTION__,interface);
-    fprintf (stderr, "%d\n", ret);
+    fprintf (stderr, "%s:usb_claim_interface: failed interface %d\n",
+             __FUNCTION__, interface);
+    fprintf (stderr, "%s\n", _get_usb_error_str(ret));
     libusb_close (udh);
     return 0;
   }
 
   if ((ret = libusb_set_interface_alt_setting (udh, interface,
-                                                   altinterface)) < 0) {
+                                               altinterface)) < 0) {
     fprintf (stderr, "%s:usb_set_alt_interface: failed\n", __FUNCTION__);
-    fprintf (stderr, "%d\n", ret);
+    fprintf (stderr, "%s\n", _get_usb_error_str(ret));
     libusb_release_interface (udh, interface);
     libusb_close (udh);
     return 0;
@@ -185,18 +239,20 @@ write_cmd (struct libusb_device_handle *udh,
            int request, int value, int index,
            unsigned char *bytes, int len)
 {
-  int   requesttype = (request & 0x80) ? VRT_VENDOR_IN : VRT_VENDOR_OUT;
+  int requesttype = (request & 0x80) ? VRT_VENDOR_IN : VRT_VENDOR_OUT;
 
-  int r = libusb_control_transfer(udh, requesttype, request, value, index,
-                                  (unsigned char *) bytes, len, 1000);
+  int ret = libusb_control_transfer(udh, requesttype, request, value, index,
+                                    bytes, len, 1000);
 
-  if (r < 0){
+  if (ret < 0) {
     // we get EPIPE if the firmware stalls the endpoint.
-    if (r != LIBUSB_ERROR_PIPE) {
-      fprintf (stderr, "libusb_control_transfer failed: %i\n", r);
+    if (ret != LIBUSB_ERROR_PIPE) {
+      fprintf (stderr, "usrp: libusb_control_transfer failed: %s\n",
+               _get_usb_error_str(ret));
+      fprintf (stderr, "usrp: write_cmd failed\n");
     }
   }
 
-  return r;
+  return ret;
 }
 
