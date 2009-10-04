@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: USRP HRPT Receiver
-# Generated: Sun Sep 27 09:34:15 2009
+# Generated: Sun Oct  4 08:40:03 2009
 ##################################################
 
 from gnuradio import eng_notation
@@ -129,7 +129,5 @@ if __name__ == '__main__':
 		help="Set sync_alpha [default=%default]")
 	(options, args) = parser.parse_args()
 	tb = demod_hrpt_file(filename=options.filename, output=options.output, decim=options.decim, pll_alpha=options.pll_alpha, sync_alpha=options.sync_alpha)
-	tb.start()
-	raw_input('Press Enter to quit: ')
-	tb.stop()
+	tb.run()
 
