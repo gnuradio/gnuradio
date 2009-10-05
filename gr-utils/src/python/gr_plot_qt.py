@@ -154,6 +154,10 @@ class gr_plot_qt(QtGui.QMainWindow):
                      Qt.SIGNAL("activated()"),
                      self.open_file)
         
+        self.connect(self.gui.action_reload,
+                     Qt.SIGNAL("activated()"),
+                     self.reload_file)       
+
         # Set up file position boxes to update current figure
         self.connect(self.gui.filePosStartLineEdit,
                      Qt.SIGNAL("editingFinished()"),
@@ -225,7 +229,11 @@ class gr_plot_qt(QtGui.QMainWindow):
             print filename
             self.initialize(filename)
 
+    def reload_file(self):
+        initialize(self.filename)
+
     def initialize(self, filename):
+        self.filename = filename
         self.hfile = open(filename, "r")
 
         self.setWindowTitle(("GNU Radio File Plot Utility: %s" % filename))
