@@ -35,7 +35,7 @@
 
 #define M_TWOPI (2*M_PI)
 #define VERBOSE_MM     0     // Used for debugging symbol timing loop
-#define VERBOSE_COSTAS 0     // Used for debugging phase and frequency tracking
+#define VERBOSE_COSTAS 1     // Used for debugging phase and frequency tracking
 
 // Public constructor
 
@@ -265,8 +265,6 @@ gr_mpsk_receiver_cc::phase_error_tracking(gr_complex sample)
 
   // Make phase and frequency corrections based on sampled value
   phase_error = (*this.*d_phase_error_detector)(sample);
-
-  phase_error = gr_branchless_clip(phase_error, 1.0);
     
   d_freq += d_beta*phase_error;             // adjust frequency based on error
   d_phase += d_freq + d_alpha*phase_error;  // adjust phase based on error
