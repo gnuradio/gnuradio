@@ -55,11 +55,11 @@ AC_DEFUN([USRP_LIBUSB], [
     ])
   fi
 
-  if x$USB_INCLUDEDIR != x; then
-    USB_INCLUDES=-I$USB_INCLUDEDIR
-  fi
-
   if test x$libusbok = xyes; then
+    if test x$USB_INCLUDEDIR != x; then
+      USB_INCLUDES="-I$USB_INCLUDEDIR"
+      AC_SUBST(USB_INCLUDES)
+    fi
     AC_SUBST(USB_LIBS)
     ifelse([$2], , :, [$2])
   else
