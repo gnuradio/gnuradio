@@ -51,7 +51,7 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
   : gr_block ("pfb_clock_sync_ccf",
 	      gr_make_io_signature (1, 1, sizeof(gr_complex)),
 	      gr_make_io_signature2 (1, 2, sizeof(gr_complex), sizeof(float))),
-    d_updated (false), d_sps(sps), d_alpha(gain)
+    d_updated (false), d_sps(sps)
 {
   d_nfilters = filter_size;
 
@@ -59,10 +59,9 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
   // The accumulator keeps track of overflow to increment the stride correctly.
   // set it here to the fractional difference based on the initial phaes
   // assert(init_phase <= 2*M_PI);
-  float x = init_phase / (2*M_PI); //normalize initial phase
-  d_acc = 0.5; //x*(d_nfilters-1);
-  d_last_filter = (int)floor(d_acc);
-  d_acc = fmodf(d_acc, 1);
+  set_gain(gain);
+  d_k = d_nfilters / 2;
+  d_rate = 0;
   d_start_count = 0;
   
 
@@ -227,28 +226,29 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
 
   // produce output as long as we can and there are enough input samples
   while((i < noutput_items) && (count < nrequired)) {
-    out[i] = d_filters[d_last_filter]->filter(&in[count]);
-    error =  (out[i] * d_diff_filters[d_last_filter]->filter(&in[count])).real();
+    int filtnum = (int)d_k;
+    out[i] = d_filters[filtnum]->filter(&in[count]);
+    error =  (out[i] * d_diff_filters[filtnum]->filter(&in[count])).real();
 
     if(ninput_items.size() == 2)
       err[i] = error;
 
-    d_acc += d_alpha*error;
-    if(d_acc >= (int)d_nfilters) {
-      d_acc -= d_nfilters;
+    d_k = d_k + d_alpha*error + d_rate;
+    d_rate = d_rate + d_beta*error;
+    while(d_k >= d_nfilters) {
+      d_k -= d_nfilters;
       count++;
     }
-    else if(d_acc < 0) {
-      d_acc += d_nfilters-1;
+    while(d_k < 0) {
+      d_k += d_nfilters;
       count--;
     }
 
-    d_last_filter = (int)floor(d_acc);
-    printf("error: %e  d_acc: %e  filter: %d\n",
-	   error, d_acc, d_last_filter);
-
     i++;
     count += d_sps;
+
+    printf("error: %f  k: %f  rate: %f\n",
+	   error, d_k, d_rate);
   }
 
   // Set the start index at the next entrance to the work function
