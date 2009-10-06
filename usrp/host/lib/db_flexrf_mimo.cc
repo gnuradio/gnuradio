@@ -19,6 +19,10 @@
  * Boston, MA 02110-1301, USA.
  */ 
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <usrp/db_flexrf_mimo.h>
 #include <fpga_regs_standard.h>
 #include <fpga_regs_common.h>

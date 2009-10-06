@@ -34,6 +34,7 @@ usrpinclude_HEADERS = \
 	db_tv_rx.h \
  	db_tv_rx_mimo.h	\
 	db_xcvr2450.h \
+	libusb_types.h \
 	usrp_basic.h \
 	usrp_bytesex.h \
 	usrp_dbid.h \
@@ -43,6 +44,9 @@ usrpinclude_HEADERS = \
 	usrp_standard.h \
 	usrp_subdev_spec.h \
 	usrp_tune_result.h
+
+EXTRA_DIST = \
+	libusb_types.h.in
 
 if PYTHON
 swiginclude_HEADERS = \

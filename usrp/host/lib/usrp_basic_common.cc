@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2003,2004,2008,2009 Free Software Foundation, Inc.
- * 
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -24,14 +24,13 @@
 #include "config.h"
 #endif
 
-#include <usrp/usrp_basic.h>
+#include "usrp/usrp_basic.h"
 #include "usrp/usrp_prims.h"
 #include "usrp_interfaces.h"
 #include "fpga_regs_common.h"
 #include "fpga_regs_standard.h"
 #include "fusb.h"
 #include "db_boards.h"
-#include <usb.h>
 #include <stdexcept>
 #include <assert.h>
 #include <math.h>
@@ -55,24 +54,22 @@ static const double POLLING_INTERVAL = 0.1;	// seconds
 
 ////////////////////////////////////////////////////////////////
 
-static struct usb_dev_handle *
-open_rx_interface (struct usb_device *dev)
+static libusb_device_handle *
+open_rx_interface (libusb_device *dev)
 {
-  struct usb_dev_handle *udh = usrp_open_rx_interface (dev);
+  libusb_device_handle *udh = usrp_open_rx_interface (dev);
   if (udh == 0){
     fprintf (stderr, "usrp_basic_rx: can't open rx interface\n");
-    usb_strerror ();
   }
   return udh;
 }
 
-static struct usb_dev_handle *
-open_tx_interface (struct usb_device *dev)
+static libusb_device_handle *
+open_tx_interface (libusb_device *dev)
 {
-  struct usb_dev_handle *udh = usrp_open_tx_interface (dev);
+  libusb_device_handle *udh = usrp_open_tx_interface (dev);
   if (udh == 0){
     fprintf (stderr, "usrp_basic_tx: can't open tx interface\n");
-    usb_strerror ();
   }
   return udh;
 }
@@ -87,7 +84,7 @@ open_tx_interface (struct usb_device *dev)
 
 // Given:
 //   CLKIN = 64 MHz
-//   CLKSEL pin = high 
+//   CLKSEL pin = high
 //
 // These settings give us:
 //   CLKOUT1 = CLKIN = 64 MHz
@@ -104,78 +101,15 @@ static unsigned char common_regs[] = {
   REG_AUX_ADC_CLK,	AUX_ADC_CLK_CLK_OVER_4
 };
 
-
-usrp_basic::usrp_basic (int which_board, 
-			struct usb_dev_handle *
-			open_interface (struct usb_device *dev),
-			const std::string fpga_filename,
-			const std::string firmware_filename)
-  : d_udh (0),
-    d_usb_data_rate (16000000),	// SWAG, see below
-    d_bytes_per_poll ((int) (POLLING_INTERVAL * d_usb_data_rate)),
-    d_verbose (false), d_fpga_master_clock_freq(64000000), d_db(2)
-{
-  /*
-   * SWAG: Scientific Wild Ass Guess.
-   *
-   * d_usb_data_rate is used only to determine how often to poll for over- and under-runs.
-   * We defualt it to 1/2  of our best case.  Classes derived from usrp_basic (e.g., 
-   * usrp_standard_tx and usrp_standard_rx) call set_usb_data_rate() to tell us the
-   * actual rate.  This doesn't change our throughput, that's determined by the signal
-   * processing code in the FPGA (which we know nothing about), and the system limits
-   * determined by libusb, fusb_*, and the underlying drivers.
-   */
-  memset (d_fpga_shadows, 0, sizeof (d_fpga_shadows));
-
-  usrp_one_time_init ();
-
-  if (!usrp_load_standard_bits (which_board, false, fpga_filename, firmware_filename))
-    throw std::runtime_error ("usrp_basic/usrp_load_standard_bits");
-
-  struct usb_device *dev = usrp_find_device (which_board);
-  if (dev == 0){
-    fprintf (stderr, "usrp_basic: can't find usrp[%d]\n", which_board);
-    throw std::runtime_error ("usrp_basic/usrp_find_device");
-  }
-
-  if (!(usrp_usrp_p(dev) && usrp_hw_rev(dev) >= 1)){
-    fprintf (stderr, "usrp_basic: sorry, this code only works with USRP revs >= 1\n");
-    throw std::runtime_error ("usrp_basic/bad_rev");
-  }
-
-  if ((d_udh = open_interface (dev)) == 0)
-    throw std::runtime_error ("usrp_basic/open_interface");
-
-  // initialize registers that are common to rx and tx
-
-  if (!usrp_9862_write_many_all (d_udh, common_regs, sizeof (common_regs))){
-    fprintf (stderr, "usrp_basic: failed to init common AD9862 regs\n");
-    throw std::runtime_error ("usrp_basic/init_9862");
-  }
-
-  _write_fpga_reg (FR_MODE, 0);		// ensure we're in normal mode
-  _write_fpga_reg (FR_DEBUG_EN, 0);	// disable debug outputs
-}
-
 void
 usrp_basic::shutdown_daughterboards()
 {
   // nuke d'boards before we close down USB in ~usrp_basic
   // shutdown() will do any board shutdown while the USRP can still
   // be talked to
-  for(size_t i = 0; i < d_db.size(); i++) 
-    for(size_t j = 0; j < d_db[i].size(); j++) 
+  for(size_t i = 0; i < d_db.size(); i++)
+    for(size_t j = 0; j < d_db[i].size(); j++)
       d_db[i][j]->shutdown();
-}
-
-usrp_basic::~usrp_basic ()
-{
-  // shutdown_daughterboards();		// call from ~usrp_basic_{tx,rx}
-
-  d_db.resize(0); // forget db shared ptrs
-
-  if (d_udh)
-    usb_close (d_udh);
 }
 
 void
@@ -188,7 +122,7 @@ usrp_basic::init_db(usrp_basic_sptr u)
   d_db[1] = instantiate_dbs(d_dbid[1], u, 1);
 }
 
-std::vector<db_base_sptr> 
+std::vector<db_base_sptr>
 usrp_basic::db(int which_side)
 {
   which_side &= 0x1;	// clamp it to avoid any reporting any errors
@@ -373,7 +307,7 @@ usrp_basic::set_adc_buffer_bypass (int which_adc, bool bypass)
 bool
 usrp_basic::set_dc_offset_cl_enable(int bits, int mask)
 {
-  return _write_fpga_reg(FR_DC_OFFSET_CL_EN, 
+  return _write_fpga_reg(FR_DC_OFFSET_CL_EN,
 			 (d_fpga_shadows[FR_DC_OFFSET_CL_EN] & ~mask) | (bits & mask));
 }
 
@@ -465,7 +399,7 @@ usrp_basic::_read_spi (int optional_header, int enables, int format, int len)
 {
   if (len <= 0)
     return "";
-  
+
   char buf[len];
 
   if (!usrp_spi_read (d_udh, optional_header, enables, format, buf, len))
@@ -807,14 +741,14 @@ usrp_basic_rx::usrp_basic_rx (int which_board, int fusb_block_size, int fusb_nbl
 
   if (fusb_nblocks < 0)
     throw std::out_of_range ("usrp_basic_rx: invalid fusb_nblocks");
-  
+
   if (fusb_block_size == 0)
     fusb_block_size = fusb_sysconfig::default_block_size();
 
   if (fusb_nblocks == 0)
     fusb_nblocks = std::max (1, FUSB_BUFFER_SIZE / fusb_block_size);
 
-  d_devhandle = fusb_sysconfig::make_devhandle (d_udh);
+  d_devhandle = fusb_sysconfig::make_devhandle (d_udh, d_ctx);
   d_ephandle = d_devhandle->make_ephandle (USRP_RX_ENDPOINT, true,
 					   fusb_block_size, fusb_nblocks);
 
@@ -834,7 +768,6 @@ usrp_basic_rx::~usrp_basic_rx ()
 {
   if (!set_rx_enable (false)){
     fprintf (stderr, "usrp_basic_rx: set_fpga_rx_enable failed\n");
-    usb_strerror ();
   }
 
   d_ephandle->stop ();
@@ -859,16 +792,14 @@ usrp_basic_rx::start ()
 
   if (!d_ephandle->start ()){
     fprintf (stderr, "usrp_basic_rx: failed to start end point streaming");
-    usb_strerror ();
     return false;
   }
 
   if (!set_rx_enable (true)){
     fprintf (stderr, "usrp_basic_rx: set_rx_enable failed\n");
-    usb_strerror ();
     return false;
   }
-  
+
   return true;
 }
 
@@ -879,13 +810,11 @@ usrp_basic_rx::stop ()
 
   if (!set_rx_enable(false)){
     fprintf (stderr, "usrp_basic_rx: set_rx_enable(false) failed\n");
-    usb_strerror ();
     ok = false;
   }
 
   if (!d_ephandle->stop()){
     fprintf (stderr, "usrp_basic_rx: failed to stop end point streaming");
-    usb_strerror ();
     ok = false;
   }
 
@@ -898,7 +827,7 @@ usrp_basic_rx::make (int which_board, int fusb_block_size, int fusb_nblocks,
 		     const std::string firmware_filename)
 {
   usrp_basic_rx *u = 0;
-  
+
   try {
     u = new usrp_basic_rx (which_board, fusb_block_size, fusb_nblocks,
 			   fpga_filename, firmware_filename);
@@ -931,10 +860,10 @@ int
 usrp_basic_rx::read (void *buf, int len, bool *overrun)
 {
   int	r;
-  
+
   if (overrun)
     *overrun = false;
-  
+
   if (len < 0 || (len % 512) != 0){
     fprintf (stderr, "usrp_basic_rx::read: invalid length = %d\n", len);
     return -1;
@@ -959,10 +888,9 @@ usrp_basic_rx::read (void *buf, int len, bool *overrun)
     d_bytes_seen = 0;
     if (!usrp_check_rx_overrun (d_udh, overrun)){
       fprintf (stderr, "usrp_basic_rx: usrp_check_rx_overrun failed\n");
-      usb_strerror ();
     }
   }
-    
+
   return r;
 }
 
@@ -1012,21 +940,21 @@ usrp_basic_rx::probe_rx_slots (bool verbose)
       _write_fpga_reg (slot_id_to_oe_reg(slot_id), (0xffff << 16) | eeprom.oe);
       _write_fpga_reg (slot_id_to_io_reg(slot_id), (0xffff << 16) | 0x0000);
       break;
-      
+
     case UDBE_NO_EEPROM:
       d_dbid[i] = -1;
       msg = "<none>";
       _write_fpga_reg (slot_id_to_oe_reg(slot_id), (0xffff << 16) | 0x0000);
       _write_fpga_reg (slot_id_to_io_reg(slot_id), (0xffff << 16) | 0x0000);
       break;
-      
+
     case UDBE_INVALID_EEPROM:
       d_dbid[i] = -2;
       msg = "Invalid EEPROM contents";
       _write_fpga_reg (slot_id_to_oe_reg(slot_id), (0xffff << 16) | 0x0000);
       _write_fpga_reg (slot_id_to_io_reg(slot_id), (0xffff << 16) | 0x0000);
       break;
-      
+
     case UDBE_BAD_SLOT:
     default:
       assert (0);
@@ -1216,14 +1144,14 @@ usrp_basic_tx::usrp_basic_tx (int which_board, int fusb_block_size, int fusb_nbl
 
   if (fusb_nblocks < 0)
     throw std::out_of_range ("usrp_basic_rx: invalid fusb_nblocks");
-  
+
   if (fusb_block_size == 0)
     fusb_block_size = FUSB_BLOCK_SIZE;
 
   if (fusb_nblocks == 0)
     fusb_nblocks = std::max (1, FUSB_BUFFER_SIZE / fusb_block_size);
 
-  d_devhandle = fusb_sysconfig::make_devhandle (d_udh);
+  d_devhandle = fusb_sysconfig::make_devhandle (d_udh, d_ctx);
   d_ephandle = d_devhandle->make_ephandle (USRP_TX_ENDPOINT, false,
 					   fusb_block_size, fusb_nblocks);
 
@@ -1264,13 +1192,11 @@ usrp_basic_tx::start ()
 
   if (!set_tx_enable (true)){
     fprintf (stderr, "usrp_basic_tx: set_tx_enable failed\n");
-    usb_strerror ();
     return false;
   }
-  
+
   if (!d_ephandle->start ()){
     fprintf (stderr, "usrp_basic_tx: failed to start end point streaming");
-    usb_strerror ();
     return false;
   }
 
@@ -1284,13 +1210,11 @@ usrp_basic_tx::stop ()
 
   if (!d_ephandle->stop ()){
     fprintf (stderr, "usrp_basic_tx: failed to stop end point streaming");
-    usb_strerror ();
     ok = false;
   }
 
   if (!set_tx_enable (false)){
     fprintf (stderr, "usrp_basic_tx: set_tx_enable(false) failed\n");
-    usb_strerror ();
     ok = false;
   }
 
@@ -1303,7 +1227,7 @@ usrp_basic_tx::make (int which_board, int fusb_block_size, int fusb_nblocks,
 		     const std::string firmware_filename)
 {
   usrp_basic_tx *u = 0;
-  
+
   try {
     u = new usrp_basic_tx (which_board, fusb_block_size, fusb_nblocks,
 			   fpga_filename, firmware_filename);
@@ -1336,10 +1260,10 @@ int
 usrp_basic_tx::write (const void *buf, int len, bool *underrun)
 {
   int	r;
-  
+
   if (underrun)
     *underrun = false;
-  
+
   if (len < 0 || (len % 512) != 0){
     fprintf (stderr, "usrp_basic_tx::write: invalid length = %d\n", len);
     return -1;
@@ -1348,7 +1272,7 @@ usrp_basic_tx::write (const void *buf, int len, bool *underrun)
   r = d_ephandle->write (buf, len);
   if (r > 0)
     d_bytes_seen += r;
-    
+
   /*
    * In many cases, the FPGA reports an tx underrun right after we
    * enable the Tx path.  If this is our first write, check for the
@@ -1364,7 +1288,6 @@ usrp_basic_tx::write (const void *buf, int len, bool *underrun)
     d_bytes_seen = 0;
     if (!usrp_check_tx_underrun (d_udh, underrun)){
       fprintf (stderr, "usrp_basic_tx: usrp_check_tx_underrun failed\n");
-      usb_strerror ();
     }
   }
 
@@ -1424,21 +1347,21 @@ usrp_basic_tx::probe_tx_slots (bool verbose)
       _write_fpga_reg (slot_id_to_oe_reg(slot_id), (0xffff << 16) | eeprom.oe);
       _write_fpga_reg (slot_id_to_io_reg(slot_id), (0xffff << 16) | 0x0000);
       break;
-      
+
     case UDBE_NO_EEPROM:
       d_dbid[i] = -1;
       msg = "<none>";
       _write_fpga_reg (slot_id_to_oe_reg(slot_id), (0xffff << 16) | 0x0000);
       _write_fpga_reg (slot_id_to_io_reg(slot_id), (0xffff << 16) | 0x0000);
       break;
-      
+
     case UDBE_INVALID_EEPROM:
       d_dbid[i] = -2;
       msg = "Invalid EEPROM contents";
       _write_fpga_reg (slot_id_to_oe_reg(slot_id), (0xffff << 16) | 0x0000);
       _write_fpga_reg (slot_id_to_io_reg(slot_id), (0xffff << 16) | 0x0000);
       break;
-      
+
     case UDBE_BAD_SLOT:
     default:
       assert (0);

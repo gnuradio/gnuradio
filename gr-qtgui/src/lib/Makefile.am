@@ -79,7 +79,7 @@ grinclude_HEADERS =			\
 
 if BUILD_QT
 %_moc.cc : %.h
-	$(QT_MOC_EXEC) -DQT_SHARED -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB $< -o $@
+	$(QT_MOC_EXEC) -DQT_SHARED -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB -p $(srcdir) $< -o $@
 
 %_ui.h : %.ui
 	$(QT_UIC_EXEC) $< -o $@

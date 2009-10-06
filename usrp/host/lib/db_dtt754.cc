@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 //
-// Copyright 2008 Free Software Foundation, Inc.
+// Copyright 2008,2009 Free Software Foundation, Inc.
 // 
 // This file is part of GNU Radio
 // 
@@ -18,6 +18,10 @@
 // along with GNU Radio; see the file COPYING.  If not, write to
 // the Free Software Foundation, Inc., 51 Franklin Street,
 // Boston, MA 02110-1301, USA.
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 #include <usrp/db_dtt754.h>
 #include <db_base_impl.h>
