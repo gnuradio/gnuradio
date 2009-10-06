@@ -28,6 +28,10 @@ dist_audiodata_DATA = \
 	audio/dial_tone.grc \
 	audio/cvsd_sweep.grc
 
+demoddatadir = $(grc_examples_prefix)/demod
+dist_demoddata_DATA = \
+	demod/mpsk_demod.grc
+
 simpledatadir = $(grc_examples_prefix)/simple
 dist_simpledata_DATA = \
 	simple/ber_simulation.grc \
