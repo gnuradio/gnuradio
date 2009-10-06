@@ -50,7 +50,7 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
 					      float init_phase)
   : gr_block ("pfb_clock_sync_ccf",
 	      gr_make_io_signature (1, 1, sizeof(gr_complex)),
-	      gr_make_io_signature2 (2, 2, sizeof(gr_complex), sizeof(float))),
+	      gr_make_io_signature2 (1, 2, sizeof(gr_complex), sizeof(float))),
     d_updated (false), d_sps(sps), d_alpha(gain)
 {
   d_nfilters = filter_size;
@@ -209,7 +209,10 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
 {
   gr_complex *in = (gr_complex *) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
-  float *err = (float *) output_items[1];
+
+  float *err;
+  if(ninput_items.size() == 2)
+    err = (float *) output_items[1];
   
   if (d_updated) {
     d_updated = false;
@@ -226,7 +229,9 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
   while((i < noutput_items) && (count < nrequired)) {
     out[i] = d_filters[d_last_filter]->filter(&in[count]);
     error =  (out[i] * d_diff_filters[d_last_filter]->filter(&in[count])).real();
-    err[i] = error;
+
+    if(ninput_items.size() == 2)
+      err[i] = error;
 
     d_acc += d_alpha*error;
     if(d_acc >= (int)d_nfilters) {
