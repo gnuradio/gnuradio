@@ -60,7 +60,7 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
   // set it here to the fractional difference based on the initial phaes
   // assert(init_phase <= 2*M_PI);
   float x = init_phase / (2*M_PI); //normalize initial phase
-  d_acc = x*(d_nfilters-1);
+  d_acc = 0.5; //x*(d_nfilters-1);
   d_last_filter = (int)floor(d_acc);
   d_acc = fmodf(d_acc, 1);
   d_start_count = 0;
@@ -133,12 +133,22 @@ void
 gr_pfb_clock_sync_ccf::create_diff_taps(const std::vector<float> &newtaps,
 					std::vector<float> &difftaps)
 {
+  float maxtap = -1e12;
   difftaps.clear();
   difftaps.push_back(0); //newtaps[0]);
   for(unsigned int i = 1; i < newtaps.size()-1; i++) {
-    difftaps.push_back(newtaps[i+1] - newtaps[i-1]);
+    float tap = newtaps[i+1] - newtaps[i-1];
+    if(tap > maxtap) {
+     maxtap = tap;
+    }
+    //maxtap += tap;
+    difftaps.push_back(tap);
   }
   difftaps.push_back(0);//-newtaps[newtaps.size()-1]);
+
+  for(unsigned int i = 0; i < difftaps.size(); i++) {
+    difftaps[i] /= 1;//maxtap;
+  }
 }
 
 void
@@ -219,24 +229,18 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     err[i] = error;
 
     d_acc += d_alpha*error;
-    gr_branchless_clip(d_acc, 1);
-
-    int newfilter;
-    newfilter = (int)((float)d_last_filter + d_acc);
-    if(newfilter != (int)d_last_filter)
-      d_acc = 0.5;
-
-    if(newfilter >= (int)d_nfilters) {
-      d_last_filter = newfilter - d_nfilters;
+    if(d_acc >= (int)d_nfilters) {
+      d_acc -= d_nfilters;
       count++;
     }
-    else if(newfilter < 0) {
-      d_last_filter = d_nfilters + newfilter;
+    else if(d_acc < 0) {
+      d_acc += d_nfilters-1;
       count--;
     }
-    else {
-      d_last_filter = newfilter;
-    }
+
+    d_last_filter = (int)floor(d_acc);
+    printf("error: %e  d_acc: %e  filter: %d\n",
+	   error, d_acc, d_last_filter);
 
     i++;
     count += d_sps;

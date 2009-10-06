@@ -29,9 +29,9 @@
 class gr_pfb_clock_sync_ccf;
 typedef boost::shared_ptr<gr_pfb_clock_sync_ccf> gr_pfb_clock_sync_ccf_sptr;
 gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (float sps, float gain,
-							   const std::vector<float> &taps,
-							   unsigned int filter_size=32,
-							   float init_phase=0);
+						       const std::vector<float> &taps,
+						       unsigned int filter_size=32,
+						       float init_phase=0);
 
 class gr_fir_ccf;
 
@@ -96,6 +96,9 @@ public:
    */
   void print_taps();
   void print_diff_taps();
+
+  void set_gain(float gain)
+  { d_alpha = gain; }
   
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,
