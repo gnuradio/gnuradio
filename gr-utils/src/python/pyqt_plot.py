@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'pyqt_plot.ui'
 #
-# Created: Mon Aug 31 22:12:05 2009
+# Created: Tue Oct  6 10:39:58 2009
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!

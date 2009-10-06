@@ -61,6 +61,7 @@ m4macros = \
 	grc_gr_gcell.m4 \
 	grc_gr_gpio.m4 \
 	grc_gr_gsm_fr_vocoder.m4 \
+	grc_gr_noaa.m4 \
 	grc_gr_radar_mono.m4 \
 	grc_gr_radio_astronomy.m4 \
 	grc_gr_sounder.m4 \
@@ -82,6 +83,7 @@ m4macros = \
 	gr_doxygen.m4 \
 	gr_fortran.m4 \
 	gr_gcell.m4 \
+	gr_git.m4 \
 	gr_gprof.m4 \
 	gr_lib64.m4 \
 	gr_libgnuradio_core_extra_ldflags.m4 \
@@ -96,6 +98,7 @@ m4macros = \
 	gr_subversion.m4 \
 	gr_swig.m4 \
 	gr_sysv_shm.m4 \
+	gr_version.m4 \
 	lf_cc.m4 \
 	lf_cxx.m4 \
 	lf_warnings.m4 \

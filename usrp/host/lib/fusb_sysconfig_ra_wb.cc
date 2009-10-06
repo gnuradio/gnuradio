@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003,2006 Free Software Foundation, Inc.
+ * Copyright 2003,2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,7 +31,7 @@ static const int MAX_BLOCK_SIZE = 64 * 1024;
 static const int FUSB_BUFFER_SIZE = 256 * (1L << 10);	// 256 kB
 
 fusb_devhandle *
-fusb_sysconfig::make_devhandle (usb_dev_handle *udh)
+fusb_sysconfig::make_devhandle (usb_dev_handle *udh, libusb_context *ctx)
 {
   return new fusb_devhandle_ra_wb (udh);
 }

@@ -50,17 +50,15 @@ bin_SCRIPTS = \
     gr_plot_qt.py \
     gr_filter_design.py \
     lsusrp \
-    qr_fft.py \
     usrp_fft.py \
     usrp_oscope.py \
     usrp_print_db.py \
     usrp_rx_cfile.py \
     usrp_rx_nogui.py \
     usrp_siggen.py \
+    usrp_siggen_gui.py \
     usrp_test_counting.py \
     usrp_test_loopback.py \
     usrp2_fft.py \
-    usrp2_rx_cfile.py \
-    usrp2_siggen.py \
-    usrp2_siggen_gui.py
+    usrp2_rx_cfile.py
 

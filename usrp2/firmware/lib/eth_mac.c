@@ -21,38 +21,21 @@
 #include "bool.h"
 #include "eth_phy.h"	// for simulation constants
 #include "mdelay.h"
-
+#include "stdio.h"
 
 #define PHY_ADDR 1
 
 void
 eth_mac_set_addr(const u2_mac_addr_t *src)
 {
-  int i;
-
-  // tell mac our source address and enable automatic insertion on Tx.
-  eth_mac->mac_tx_add_prom_wr = 0;	// just in case
-  for (i = 0; i < 6; i++){
-    eth_mac->mac_tx_add_prom_add = i;
-    eth_mac->mac_tx_add_prom_data = src->addr[i];
-    eth_mac->mac_tx_add_prom_wr = 1;
-    mdelay(1);
-    eth_mac->mac_tx_add_prom_wr = 0;
-    mdelay(1);
-  }
-  eth_mac->mac_tx_add_en = 1;  // overwrite pkt src addr field with this stuff
-
-  // set up receive destination address filter
-  eth_mac->mac_rx_add_prom_wr = 0;	// just in case
-  for (i = 0; i < 6; i++){
-    eth_mac->mac_rx_add_prom_add = i;
-    eth_mac->mac_rx_add_prom_data = src->addr[i];
-    eth_mac->mac_rx_add_prom_wr = 1;
-    mdelay(1);
-    eth_mac->mac_rx_add_prom_wr = 0;
-    mdelay(1);
-  }
-  // eth_mac->mac_rx_add_chk_en = 1;  // FIXME enable when everything's working
+  eth_mac->ucast_hi = 
+    (((unsigned int)src->addr[0])<<8) + 
+    ((unsigned int)src->addr[1]);
+  eth_mac->ucast_lo = 
+    (((unsigned int)src->addr[2])<<24) + 
+    (((unsigned int)src->addr[3])<<16) +
+    (((unsigned int)src->addr[4])<<8) +
+    (((unsigned int)src->addr[5]));
 }
 
 
@@ -62,14 +45,18 @@ eth_mac_init(const u2_mac_addr_t *src)
   eth_mac->miimoder = 25;	// divider from CPU clock (50MHz/25 = 2MHz)
 
   eth_mac_set_addr(src);
+  eth_mac->settings = MAC_SET_PAUSE_EN | MAC_SET_PASS_BCAST | MAC_SET_PASS_UCAST | MAC_SET_PAUSE_SEND_EN; 
+
+  eth_mac->pause_time = 38;
+  eth_mac->pause_thresh = 1200;
 
   // set rx flow control high and low water marks
   // unsigned int lwmark = (2*2048 + 64)/4; // 2 * 2048-byte frames + 1 * 64-byte pause frame
   // eth_mac->fc_hwmark = lwmark + 2048/4;  // plus a 2048-byte frame
 
-  eth_mac->fc_lwmark = 600;		// there are currently 2047 lines in the fifo
-  eth_mac->fc_hwmark = 1200;
-  eth_mac->fc_padtime = 1700;           // how long before flow control runs out do we 
+  //  eth_mac->fc_lwmark = 600;		// there are currently 2047 lines in the fifo
+  // eth_mac->fc_hwmark = 1200;
+  //eth_mac->fc_padtime = 1700;           // how long before flow control runs out do we 
                                         // request a re-pause.  Units of 8ns (bytes)
 
   //eth_mac->tx_pause_en = 0;		// pay attn to pause frames sent to us
@@ -80,8 +67,8 @@ eth_mac_init(const u2_mac_addr_t *src)
 int
 eth_mac_read_rmon(int addr)
 {
-  int t;
-  
+  int t = 0;
+  /*  
   eth_mac->rmon_rd_addr = addr;
   eth_mac->rmon_rd_apply = 1;
   while(eth_mac->rmon_rd_grant == 0)
@@ -89,6 +76,7 @@ eth_mac_read_rmon(int addr)
 
   t = eth_mac->rmon_rd_dout;
   eth_mac->rmon_rd_apply = 0;
+  */
   return t;
 }
 
@@ -111,7 +99,9 @@ eth_mac_miim_read(int addr)
   while((eth_mac->miistatus & MIIS_BUSY) != 0)
     ;
 
-  return eth_mac->miirx_data;
+  int r = eth_mac->miirx_data;
+  //printf("MIIM-READ ADDR 0x%x DATA 0x%x\n",addr, r);
+  return r;
 }
 
 void
@@ -122,6 +112,7 @@ eth_mac_miim_write(int addr, int value)
   eth_mac->miitx_data = value;
   eth_mac->miicommand = MIIC_WCTRLDATA;
 
+  //printf("MIIM-WRITE ADDR 0x%x VAL 0x%x\n",addr,value);
   while((eth_mac->miistatus & MIIS_BUSY) != 0)
     ;
 }

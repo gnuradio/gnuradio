@@ -139,20 +139,20 @@ module dsp_core_rx
    always @(posedge clk) strobe_cic_d1 <= strobe_cic;
    
    small_hb_dec #(.WIDTH(18)) small_hb_i
-     (.clk(clk),.rst(rst),.bypass(~enable_hb1),
+     (.clk(clk),.rst(rst),.bypass(~enable_hb1),.run(run),
       .stb_in(strobe_cic_d1),.data_in(i_cic_scaled),.stb_out(strobe_hb1),.data_out(i_hb1));
    
    small_hb_dec #(.WIDTH(18)) small_hb_q
-     (.clk(clk),.rst(rst),.bypass(~enable_hb1),
+     (.clk(clk),.rst(rst),.bypass(~enable_hb1),.run(run),
       .stb_in(strobe_cic_d1),.data_in(q_cic_scaled),.stb_out(),.data_out(q_hb1));
 
    wire [8:0]  cpi_hb = enable_hb1 ? {cic_decim_rate,1'b0} : {1'b0,cic_decim_rate};
    hb_dec #(.IWIDTH(18), .OWIDTH(18), .CWIDTH(18), .ACCWIDTH(24)) hb_i
-     (.clk(clk),.rst(rst),.bypass(~enable_hb2),.cpi(cpi_hb),
+     (.clk(clk),.rst(rst),.bypass(~enable_hb2),.run(run),.cpi(cpi_hb),
       .stb_in(strobe_hb1),.data_in(i_hb1),.stb_out(strobe_hb2),.data_out(i_hb2));
 
    hb_dec #(.IWIDTH(18), .OWIDTH(18), .CWIDTH(18), .ACCWIDTH(24)) hb_q
-     (.clk(clk),.rst(rst),.bypass(~enable_hb2),.cpi(cpi_hb),
+     (.clk(clk),.rst(rst),.bypass(~enable_hb2),.run(run),.cpi(cpi_hb),
       .stb_in(strobe_hb1),.data_in(q_hb1),.stb_out(),.data_out(q_hb2));
 
    round #(.bits_in(18),.bits_out(16)) round_iout (.in(i_hb2),.out(i_out));

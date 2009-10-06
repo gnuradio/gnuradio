@@ -9,13 +9,11 @@ module tx_control
      input [31:0] master_time, 
      output underrun,
      
-     // To Buffer interface
+     // To FIFO interface from Buffer Pool
      input [31:0] rd_dat_i,
-     input rd_sop_i,
-     input rd_eop_i,
-     output rd_read_o,
-     output rd_done_o,
-     output rd_error_o,
+     input [3:0] rd_flags_i,
+     input rd_ready_i,
+     output rd_ready_o,
      
      // To DSP Core
      output [31:0] sample,
@@ -31,6 +29,10 @@ module tx_control
      output [31:0] debug
      );
 
+   wire 	   rd_sop_i  = rd_flags_i[0];  // Unused
+   wire 	   rd_eop_i  = rd_flags_i[1];
+   wire 	   rd_occ_i = rd_flags_i[3:2]; // Unused, should always be 0
+
    // Buffer interface to internal FIFO
    wire     write_data, write_ctrl, full_data, full_ctrl;
    wire     read_data, read_ctrl, empty_data, empty_ctrl;
@@ -39,57 +41,63 @@ module tx_control
    reg [2:0] held_flags;
    
    localparam XFER_IDLE = 0;
-   localparam XFER_1 = 1;
-   localparam XFER_2 = 2;
-   localparam XFER_DATA = 3;
+   localparam XFER_CTRL = 1;
+   localparam XFER_PKT = 2;
+   // Add underrun state?
    
    always @(posedge clk)
      if(rst)
        xfer_state <= XFER_IDLE;
+     else if(clear_state)
+       xfer_state <= XFER_IDLE;
      else
-       if(clear_state)
-	 xfer_state <= XFER_IDLE;
-       else
+       if(rd_ready_i & rd_ready_o)
 	 case(xfer_state)
 	   XFER_IDLE :
-	     if(rd_sop_i)
-	       xfer_state <= XFER_1;
-	   XFER_1 :
 	     begin
-		xfer_state <= XFER_2;
+		xfer_state <= XFER_CTRL;
 		held_flags <= rd_dat_i[2:0];
 	     end
-	   XFER_2 :
-	     if(~full_ctrl)
-	       xfer_state <= XFER_DATA;
-	   XFER_DATA :
-	     if(rd_eop_i & ~full_data)
+	   XFER_CTRL :
+	     xfer_state <= XFER_PKT;
+	   XFER_PKT :
+	     if(rd_eop_i)
 	       xfer_state <= XFER_IDLE;
 	 endcase // case(xfer_state)
-   
-   assign write_data = (xfer_state == XFER_DATA) & ~full_data;
-   assign write_ctrl = (xfer_state == XFER_2) & ~full_ctrl;
 
-   assign rd_read_o = (xfer_state == XFER_1) | write_data | write_ctrl;
-   assign rd_done_o = 0;  // Always take everything we're given
-   assign rd_error_o = 0;  // Should we indicate overruns here?
+   wire have_data_space;
+   assign full_data   = ~have_data_space;
+   
+   assign write_data  = (xfer_state == XFER_PKT) & rd_ready_i & rd_ready_o;
+   assign write_ctrl  = (xfer_state == XFER_CTRL) & rd_ready_i & rd_ready_o;
+
+   assign rd_ready_o  = ~full_data & ~full_ctrl;
    
    wire [31:0] data_o;
-   wire        sop_o, eop_o, eob, sob, send_imm;
+   wire        eop_o, eob, sob, send_imm;
    wire [31:0] sendtime;
    wire [4:0]  occ_ctrl;
-   
-   cascadefifo2 #(.WIDTH(34),.SIZE(FIFOSIZE)) txctrlfifo
+/*   
+   cascadefifo2 #(.WIDTH(33),.SIZE(FIFOSIZE)) txctrlfifo
      (.clk(clk),.rst(rst),.clear(clear_state),
-      .datain({rd_sop_i,rd_eop_i,rd_dat_i}), .write(write_data), .full(full_data),
-      .dataout({sop_o,eop_o,data_o}), .read(read_data), .empty(empty_data),
+      .datain({rd_eop_i,rd_dat_i[31:0]}), .write(write_data), .full(full_data),
+      .dataout({eop_o,data_o}), .read(read_data), .empty(empty_data),
+      .space(), .occupied(fifo_occupied) );
+*/
+   wire        have_data;
+   assign empty_data  = ~have_data;
+   
+   fifo_cascade #(.WIDTH(33),.SIZE(FIFOSIZE)) txctrlfifo
+     (.clk(clk),.reset(rst),.clear(clear_state),
+      .datain({rd_eop_i,rd_dat_i[31:0]}), .src_rdy_i(write_data), .dst_rdy_o(have_data_space),
+      .dataout({eop_o,data_o}), .src_rdy_o(have_data), .dst_rdy_i(read_data),
       .space(), .occupied(fifo_occupied) );
    assign      fifo_full = full_data;
    assign      fifo_empty = empty_data;
 
    shortfifo #(.WIDTH(35)) ctrlfifo
      (.clk(clk),.rst(rst),.clear(clear_state),
-      .datain({held_flags[2:0],rd_dat_i}), .write(write_ctrl), .full(full_ctrl),
+      .datain({held_flags[2:0],rd_dat_i[31:0]}), .write(write_ctrl), .full(full_ctrl),
       .dataout({send_imm,sob,eob,sendtime}), .read(read_ctrl), .empty(empty_ctrl),
       .space(), .occupied(occ_ctrl) );
 

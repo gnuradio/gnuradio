@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<block>
+  <name>HRPT PLL</name>
+  <key>noaa_hrpt_pll_cf</key>
+  <category>NOAA</category>
+  <import>from gnuradio import noaa</import>
+  <make>noaa.hrpt_pll_cf($alpha, $beta, $max_offset)</make>
+  <callback>set_alpha($alpha)</callback>
+  <callback>set_beta($beta)</callback>
+  <callback>set_max_offset($max_offset)</callback>
+  <param>
+    <name>Alpha</name>
+    <key>alpha</key>
+    <type>real</type>
+  </param>
+  <param>
+    <name>Beta</name>
+    <key>beta</key>
+    <type>real</type>
+  </param>
+  <param>
+    <name>Max Offset</name>
+    <key>max_offset</key>
+    <type>real</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>float</type>
+  </source>
+</block>

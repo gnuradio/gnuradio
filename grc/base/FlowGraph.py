@@ -68,6 +68,7 @@ class FlowGraph(Element):
 	def get_block(self, id): return filter(lambda b: b.get_id() == id, self.get_blocks())[0]
 	def get_blocks(self): return filter(lambda e: e.is_block(), self.get_elements())
 	def get_connections(self): return filter(lambda e: e.is_connection(), self.get_elements())
+	def get_children(self): return self.get_elements()
 	def get_elements(self):
 		"""
 		Get a list of all the elements.
@@ -144,26 +145,6 @@ class FlowGraph(Element):
 		"""
 		raise NotImplementedError
 
-	def rewrite(self):
-		"""
-		Rewrite critical structures.
-		Call rewrite on all sub elements.
-		"""
-		Element.rewrite(self)
-		for elem in self.get_elements(): elem.rewrite()
-
-	def validate(self):
-		"""
-		Validate the flow graph.
-		Validate only the blocks.
-		Connections will be validated within the blocks.
-		"""
-		Element.validate(self)
-		for c in self.get_blocks():
-			c.validate()
-			if not c.is_valid():
-				self.add_error_message('Element "%s" is not valid.'%c)
-
 	##############################################
 	## Import/Export Methods
 	##############################################
@@ -203,7 +184,6 @@ class FlowGraph(Element):
 			#only load the block when the block key was valid
 			if block: block.import_data(block_n)
 			else: Messages.send_error_load('Block key "%s" not found in %s'%(key, self.get_parent()))
-		self.rewrite() #rewrite all blocks before connections are made (ex: nports)
 		#build the connections
 		for connection_n in connections_n:
 			#try to make the connection

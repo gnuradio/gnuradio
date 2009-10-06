@@ -1,32 +1,31 @@
-/* -*- c++ -*- */
+/*  -*- c++ -*- */
 /*
- * Copyright 2003 Free Software Foundation, Inc.
- * 
+ * Copyright 2005,2009 Free Software Foundation, Inc.
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
 
-// Fast USB interface
-
 #ifndef _FUSB_H_
 #define _FUSB_H_
 
+#include <usrp/libusb_types.h>
 
-struct  usb_dev_handle;
+struct 	libusb_context;
 class   fusb_ephandle;
 
 /*!
@@ -39,11 +38,11 @@ private:
   fusb_devhandle &operator= (const fusb_devhandle &rhs);  // no assignment operator
 
 protected:
-  usb_dev_handle		*d_udh;
+  libusb_device_handle		*d_udh;
 
 public:
   // CREATORS
-  fusb_devhandle (usb_dev_handle *udh);
+  fusb_devhandle (libusb_device_handle *udh);
   virtual ~fusb_devhandle ();
 
   // MANIPULATORS
@@ -55,7 +54,7 @@ public:
 					int block_size = 0, int nblocks = 0) = 0;
   
   // ACCESSORS
-  usb_dev_handle *get_usb_dev_handle () const { return d_udh; }
+  libusb_device_handle *get_usb_dev_handle () const { return d_udh; }
 };
 
 
@@ -116,7 +115,8 @@ public:
   /*!
    * \brief returns fusb_devhandle or throws if trouble
    */
-  static fusb_devhandle *make_devhandle (usb_dev_handle *udh);
+  static fusb_devhandle *make_devhandle (libusb_device_handle *udh,
+                                         libusb_context *ctx = 0);
 
   /*!
    * \brief Returns max block size in bytes (hard limit).

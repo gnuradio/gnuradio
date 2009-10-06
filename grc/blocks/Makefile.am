@@ -30,6 +30,8 @@ dist_ourdata_DATA = \
 	band_reject_filter.xml \
 	blks2_am_demod_cf.xml \
 	blks2_analysis_filterbank.xml \
+	blks2_cvsd_encode.xml \
+	blks2_cvsd_decode.xml \
 	blks2_dxpsk_demod.xml \
 	blks2_dxpsk_mod.xml \
 	blks2_error_rate.xml \

@@ -9,15 +9,12 @@ module rx_control
      input [31:0] master_time,
      output overrun,
      
-     // To Buffer interface
+     // To FIFO interface of Buffer Pool
      output [31:0] wr_dat_o,
-     output wr_write_o,
-     output wr_done_o,
-     output wr_error_o,
-
+     output [3:0] wr_flags_o,
      input wr_ready_i,
-     input wr_full_i,
-     
+     output wr_ready_o,
+
      // From DSP Core
      input [31:0] sample,
      output run,
@@ -66,47 +63,17 @@ module rx_control
       .read(read_ctrl), .empty(empty_ctrl) );
 
    // Buffer interface to internal FIFO
-   wire    write, full, read, empty;
-   wire    sop_o, eop_o;
-
-   reg 	   xfer_state;
-   localparam XFER_IDLE = 1'b0;
-   localparam XFER_GO = 1'b1;
-
-   always @(posedge clk)
-     if(rst)
-       xfer_state <= XFER_IDLE;
-     else
-       if(clear_overrun)
-	 xfer_state <= XFER_IDLE;
-       else
-	 case(xfer_state)
-	   XFER_IDLE :
-	     if(wr_ready_i)
-	       xfer_state <= XFER_GO;
-	   XFER_GO :
-	     if((eop_o | wr_full_i) & wr_write_o)
-	       xfer_state <= XFER_IDLE;
-	   default :
-	     xfer_state <= XFER_IDLE;
-	 endcase // case(xfer_state)
-   
-   assign     wr_write_o = (xfer_state == XFER_GO) & ~empty;
-   assign     wr_done_o = (eop_o & wr_write_o);
-   assign     wr_error_o = 0;   // FIXME add check here for eop if we have wr_full_i once we have IBS
-
-   assign     read = wr_write_o | (~empty & ~sop_o);   // FIXME  what if there is junk between packets?
-
-   wire [33:0] fifo_line;
+   wire        have_space, write;
+   wire [35:0] fifo_line;
    
    // Internal FIFO, size 9 is 2K, size 10 is 4K
-   cascadefifo2 #(.WIDTH(34),.SIZE(FIFOSIZE)) rxfifo
-     (.clk(clk),.rst(rst),.clear(clear_overrun),
-      .datain(fifo_line), .write(write), .full(full),
-      .dataout({sop_o,eop_o,wr_dat_o}), .read(read), .empty(empty),
+   fifo_cascade #(.WIDTH(36),.SIZE(FIFOSIZE)) rxfifo
+     (.clk(clk),.reset(rst),.clear(clear_overrun),
+      .datain(fifo_line), .src_rdy_i(write), .dst_rdy_o(have_space),
+      .dataout({wr_flags_o,wr_dat_o}), .src_rdy_o(wr_ready_o), .dst_rdy_i(wr_ready_i),
       .space(),.occupied(fifo_occupied) );
-   assign      fifo_full = full;
-   assign      fifo_empty = empty;
+   assign      fifo_full = ~have_space;
+   assign      fifo_empty = ~wr_ready_o;
 
    // Internal FIFO to DSP interface
    reg [22:0] lines_left;
@@ -161,13 +128,13 @@ module rx_control
 	     else if(too_late)
 	       ibs_state <= IBS_OVERRUN;
 	   IBS_FIRSTLINE :
-	     if(full | strobe)
+	     if(~have_space | strobe)
 	       ibs_state <= IBS_OVERRUN;
 	     else
 	       ibs_state <= IBS_RUNNING;
 	   IBS_RUNNING :
 	     if(strobe)
-	       if(full)
+	       if(~have_space)
 		 ibs_state <= IBS_OVERRUN;
 	       else
 		 begin
@@ -193,21 +160,21 @@ module rx_control
 		      end
 		    else
 		      lines_left_frame <= lines_left_frame - 1;
-		 end // else: !if(full)
+		 end // else: !if(~have_space)
 	 endcase // case(ibs_state)
    
-   assign fifo_line = (ibs_state == IBS_FIRSTLINE) ? {1'b1,1'b0,master_time} :
-		      {1'b0,((lines_left==1)|(lines_left_frame==1)),sample};
+   assign fifo_line = (ibs_state == IBS_FIRSTLINE) ? {2'b0,1'b0,1'b1,master_time} :
+		      {2'b0,((lines_left==1)|(lines_left_frame==1)),1'b0,sample};
    
-   assign write = ((ibs_state == IBS_FIRSTLINE) | strobe) & ~full;  // & (ibs_state == IBS_RUNNING) should strobe only when running
+   assign write = ((ibs_state == IBS_FIRSTLINE) | strobe) & have_space;  // & (ibs_state == IBS_RUNNING) should strobe only when running
    assign overrun = (ibs_state == IBS_OVERRUN);
    assign run = (ibs_state == IBS_RUNNING) | (ibs_state == IBS_FIRSTLINE);
    assign read_ctrl = ( (ibs_state == IBS_IDLE) | 
-			((ibs_state == IBS_RUNNING) & strobe & ~full & (lines_left==1) & chain) )
+			((ibs_state == IBS_RUNNING) & strobe & have_space & (lines_left==1) & chain) )
 	  & ~empty_ctrl;
    
-   assign debug_rx = { 6'd0,send_imm,chain,
-		       wr_write_o, wr_done_o, wr_ready_i, wr_full_i,xfer_state,eop_o, sop_o, run,
-		       write,full,read,empty,write_ctrl,full_ctrl,read_ctrl,empty_ctrl,
+   assign debug_rx = { 8'd0,
+		       1'd0, send_imm, chain, wr_ready_i,wr_ready_o, 2'b0, run,
+		       write,have_space,wr_flags_o[1:0],write_ctrl,full_ctrl,read_ctrl,empty_ctrl,
 		       sc_pre1, clear_overrun, go_now, too_late, overrun, ibs_state[2:0] };
 endmodule // rx_control

@@ -25,7 +25,8 @@ grc_examples_prefix = $(exampledir)/grc
 
 audiodatadir = $(grc_examples_prefix)/audio
 dist_audiodata_DATA = \
-	audio/dial_tone.grc
+	audio/dial_tone.grc \
+	audio/cvsd_sweep.grc
 
 simpledatadir = $(grc_examples_prefix)/simple
 dist_simpledata_DATA = \

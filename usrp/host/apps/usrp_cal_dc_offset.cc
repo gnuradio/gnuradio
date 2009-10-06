@@ -28,7 +28,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <usb.h>			/* needed for usb functions */
 #include <getopt.h>
 #include <assert.h>
 #include <math.h>

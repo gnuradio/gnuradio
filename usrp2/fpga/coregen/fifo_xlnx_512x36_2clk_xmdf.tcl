@@ -36,16 +36,8 @@ utilities_xmdf::xmdfSetData $instance FileSet $fcount type logical_library
 utilities_xmdf::xmdfSetData $instance FileSet $fcount logical_library unisim
 incr fcount
 
-utilities_xmdf::xmdfSetData $instance FileSet $fcount relative_path fifo_xlnx_512x36_2clk.asy
-utilities_xmdf::xmdfSetData $instance FileSet $fcount type asy
-incr fcount
-
 utilities_xmdf::xmdfSetData $instance FileSet $fcount relative_path fifo_xlnx_512x36_2clk.ngc
 utilities_xmdf::xmdfSetData $instance FileSet $fcount type ngc
-incr fcount
-
-utilities_xmdf::xmdfSetData $instance FileSet $fcount relative_path fifo_xlnx_512x36_2clk.sym
-utilities_xmdf::xmdfSetData $instance FileSet $fcount type symbol
 incr fcount
 
 utilities_xmdf::xmdfSetData $instance FileSet $fcount relative_path fifo_xlnx_512x36_2clk.v
@@ -54,14 +46,6 @@ incr fcount
 
 utilities_xmdf::xmdfSetData $instance FileSet $fcount relative_path fifo_xlnx_512x36_2clk.veo
 utilities_xmdf::xmdfSetData $instance FileSet $fcount type verilog_template
-incr fcount
-
-utilities_xmdf::xmdfSetData $instance FileSet $fcount relative_path fifo_xlnx_512x36_2clk.vhd
-utilities_xmdf::xmdfSetData $instance FileSet $fcount type vhdl
-incr fcount
-
-utilities_xmdf::xmdfSetData $instance FileSet $fcount relative_path fifo_xlnx_512x36_2clk.vho
-utilities_xmdf::xmdfSetData $instance FileSet $fcount type vhdl_template
 incr fcount
 
 utilities_xmdf::xmdfSetData $instance FileSet $fcount relative_path fifo_xlnx_512x36_2clk.xco

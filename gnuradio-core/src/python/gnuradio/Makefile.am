@@ -34,5 +34,6 @@ grpython_PYTHON = 			\
 	packet_utils.py			\
 	gr_unittest.py			\
 	optfir.py			\
+	usrp_options.py		\
 	window.py
 endif

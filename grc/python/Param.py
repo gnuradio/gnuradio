@@ -153,9 +153,9 @@ class Param(_Param, _GUIParam):
 				dt_str = dt_str[:max_len-3] + '...'
 		return dt_str
 
-	def get_input_class(self):
-		if self.get_type() in ('file_open', 'file_save'): return FileParam
-		return _GUIParam.get_input_class(self)
+	def get_input(self, *args, **kwargs):
+		if self.get_type() in ('file_open', 'file_save'): return FileParam(self, *args, **kwargs)
+		return _GUIParam.get_input(self, *args, **kwargs)
 
 	def get_color(self):
 		"""
@@ -254,7 +254,7 @@ class Param(_Param, _GUIParam):
 		elif t in ('raw', 'complex', 'real', 'int', 'complex_vector', 'real_vector', 'int_vector', 'hex', 'bool'):
 			#raise exception if python cannot evaluate this value
 			try: e = self.get_parent().get_parent().evaluate(v)
-			except Exception, e: raise Exception, 'Value "%s" cannot be evaluated: %s'%(v, e)
+			except Exception, e: raise Exception, 'Value "%s" cannot be evaluated:\n%s'%(v, e)
 			#raise an exception if the data is invalid
 			if t == 'raw': return e
 			elif t == 'complex':
@@ -385,7 +385,7 @@ class Param(_Param, _GUIParam):
 			try: notebook_block = filter(lambda b: b.get_id() == notebook_id, notebook_blocks)[0]
 			except: raise Exception, 'Notebook id "%s" is not an existing notebook id.'%notebook_id
 			#check that page index exists
-			try: assert int(page_index) in range(len(notebook_block.get_param('labels').get_evaluated()))
+			try: assert int(page_index) in range(len(notebook_block.get_param('labels').evaluate()))
 			except: raise Exception, 'Page index "%s" is not a valid index number.'%page_index
 			return notebook_id, page_index
 		#########################

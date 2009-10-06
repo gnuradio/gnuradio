@@ -1,3 +1,0 @@
-{1000Mbps mode 46-80 length packet testcase} 46-50.ini 1000Mbps_duplex.vec
-{100 Mbps mode 46-50 length packet testcase} 46-50.ini 100Mbps_duplex.vec
-{10  Mbps mode 46-50 length packet testcase} 46-50.ini 10Mbps_duplex.vec

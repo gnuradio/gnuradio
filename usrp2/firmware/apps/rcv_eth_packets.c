@@ -135,7 +135,7 @@ init_packets(void)
   u2_eth_packet_t	pkt __attribute__((aligned (4)));
 
   pkt.ehdr.dst = dst_mac_addr;
-  // src filled in by mac
+  pkt.ehdr.src = *ethernet_mac_addr();
   pkt.ehdr.ethertype = U2_ETHERTYPE;
 
   // fill ALL buffers for debugging

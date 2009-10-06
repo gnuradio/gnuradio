@@ -1,0 +1,20 @@
+#! /bin/sh
+
+set -e
+
+if [ "$1" != "configure" ]; then
+	exit 0
+fi
+
+# Create usrp group for access
+if ! getent group usrp >/dev/null; then
+    addgroup --system usrp
+fi
+
+# Create setuid root for group usrp on socket opener
+chown root:usrp /usr/bin/usrp2_socket_opener
+chmod 04750 /usr/bin/usrp2_socket_opener
+
+#DEBHELPER#
+
+exit 0

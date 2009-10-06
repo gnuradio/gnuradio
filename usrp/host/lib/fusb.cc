@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2003 Free Software Foundation, Inc.
+ * Copyright 2003,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -26,12 +26,11 @@
 
 #include <fusb.h>
 
-
 // ------------------------------------------------------------------------
 // 			     device handle
 // ------------------------------------------------------------------------
 
-fusb_devhandle::fusb_devhandle (usb_dev_handle *udh)
+fusb_devhandle::fusb_devhandle (libusb_device_handle *udh)
   : d_udh (udh)
 {
   // that's it
