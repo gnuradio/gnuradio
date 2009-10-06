@@ -144,7 +144,7 @@ dist_ourdata_DATA = \
 	gr_packed_to_unpacked_xx.xml \
 	gr_peak_detector2_fb.xml \
 	gr_peak_detector_xb.xml \
-	gr_pfb_clock_recovery.xml \
+	gr_pfb_clock_sync.xml \
 	gr_phase_modulator_fc.xml \
 	gr_pll_carriertracking_cc.xml \
 	gr_pll_freqdet_cf.xml \
