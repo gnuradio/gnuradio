@@ -19,6 +19,41 @@
 # Boston, MA 02110-1301, USA.
 #
 
+import wx
+
+def bind_to_visible_event(win, callback):
+	"""
+	Bind a callback to a window when its visibility changes.
+	Specifically, callback when the window changes visibility
+	when a notebook tab event in one of the parents occurs.
+	@param win the wx window
+	@param callback a 1 param function
+	"""
+	#is the window visible in the hierarchy
+	def is_wx_window_visible(my_win):
+		while True:
+			parent = my_win.GetParent()
+			if not parent: return True #reached the top of the hierarchy
+			#if we are hidden, then finish, otherwise keep traversing up
+			if isinstance(parent, wx.Notebook) and parent.GetCurrentPage() != my_win: return False
+			my_win = parent
+	#call the callback, the arg is shown or not
+	def callback_factory(my_win, my_callback):
+		cache = [None]
+		def the_callback(*args):
+			visible = is_wx_window_visible(my_win)
+			if cache[0] != visible: my_callback(visible)
+			cache[0] = visible
+		return the_callback
+	handler = callback_factory(win, callback)
+	#bind the handler to all the parent notebooks
+	while win:
+		if isinstance(win, wx.Notebook):
+			win.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, handler)
+		if not win.GetParent():
+			win.Bind(wx.EVT_ACTIVATE, handler)
+		win = win.GetParent()
+
 #A macro to apply an index to a key
 index_key = lambda key, i: "%s_%d"%(key, i+1)
 
