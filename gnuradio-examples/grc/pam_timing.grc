@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue Oct  6 17:50:59 2009</timestamp>
+  <timestamp>Tue Oct  6 18:00:19 2009</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -464,45 +464,6 @@
     </param>
   </block>
   <block>
-    <key>gr_pfb_clock_sync_ccf</key>
-    <param>
-      <key>id</key>
-      <value>gr_pfb_clock_sync_ccf_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>sps</key>
-      <value>spb</value>
-    </param>
-    <param>
-      <key>gain</key>
-      <value>gain</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>rrctaps</value>
-    </param>
-    <param>
-      <key>filter_size</key>
-      <value>nfilts</value>
-    </param>
-    <param>
-      <key>init_phase</key>
-      <value>14</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(341, 777)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_fractional_interpolator_xx</key>
     <param>
       <key>id</key>
@@ -788,7 +749,164 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(724, 796)</value>
+      <value>(798, 638)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>wxgui_scopesink2</key>
+    <param>
+      <key>id</key>
+      <value>wxgui_scopesink2_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>title</key>
+      <value>Scope Plot</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>v_scale</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>t_scale</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>ac_couple</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>xy_mode</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value></value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value>notebook_0,1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(792, 777)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_pfb_clock_sync_ccf</key>
+    <param>
+      <key>id</key>
+      <value>gr_pfb_clock_sync_ccf_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>sps</key>
+      <value>spb</value>
+    </param>
+    <param>
+      <key>gain</key>
+      <value>gain</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>rrctaps</value>
+    </param>
+    <param>
+      <key>filter_size</key>
+      <value>nfilts</value>
+    </param>
+    <param>
+      <key>init_phase</key>
+      <value>14</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(341, 777)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>wxgui_scopesink2</key>
+    <param>
+      <key>id</key>
+      <value>wxgui_scopesink2_0_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>title</key>
+      <value>Scope Plot</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>v_scale</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>t_scale</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>ac_couple</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>xy_mode</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value></value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value>notebook_0,2</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(797, 915)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -871,6 +989,18 @@
     <source_block_id>gr_fractional_interpolator_xx_0</source_block_id>
     <sink_block_id>gr_pfb_clock_sync_ccf_0</sink_block_id>
     <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_pfb_clock_sync_ccf_0</source_block_id>
+    <sink_block_id>wxgui_scopesink2_0_0_0</sink_block_id>
+    <source_key>3</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_pfb_clock_sync_ccf_0</source_block_id>
+    <sink_block_id>wxgui_scopesink2_0_0_0_0</sink_block_id>
+    <source_key>2</source_key>
     <sink_key>0</sink_key>
   </connection>
 </flow_graph>
