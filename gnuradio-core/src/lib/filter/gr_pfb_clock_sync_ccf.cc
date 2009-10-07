@@ -209,9 +209,12 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
   gr_complex *in = (gr_complex *) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
 
-  float *err;
-  if(ninput_items.size() == 2)
+  float *err, *outrate, *outk;
+  if(output_items.size() > 2) {
     err = (float *) output_items[1];
+    outrate = (float*)output_items[2];
+    outk = (float*)output_items[3];
+  }
   
   if (d_updated) {
     d_updated = false;
@@ -230,9 +233,6 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     out[i] = d_filters[filtnum]->filter(&in[count]);
     error =  (out[i] * d_diff_filters[filtnum]->filter(&in[count])).real();
 
-    if(ninput_items.size() == 2)
-      err[i] = error;
-
     d_k = d_k + d_alpha*error + d_rate;
     d_rate = d_rate + d_beta*error;
     while(d_k >= d_nfilters) {
@@ -247,8 +247,14 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     i++;
     count += d_sps;
 
-    printf("error: %f  k: %f  rate: %f\n",
-	   error, d_k, d_rate);
+    if(output_items.size() > 2) {
+      err[i] = error;
+      outrate[i] = d_rate;
+      outk[i] = d_k;
+    }
+
+    //printf("error: %f  k: %f  rate: %f\n",
+    //	   error, d_k, d_rate);
   }
 
   // Set the start index at the next entrance to the work function
