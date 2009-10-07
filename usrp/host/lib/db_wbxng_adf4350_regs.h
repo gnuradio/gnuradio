@@ -5,7 +5,6 @@
 #ifndef ADF4350_REGS_H
 #define ADF4350_REGS_H
 
-#include <usrp/db_wbxng_adf4350.h>
 #include <usrp/db_base.h>
 #include <stdint.h>
 

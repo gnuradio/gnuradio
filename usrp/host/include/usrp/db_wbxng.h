@@ -1,32 +1,29 @@
 /* -*- c++ -*- */
 //
-// Copyright 2008,2009 Free Software Foundation, Inc.
-// 
+// Copyright 2009 Free Software Foundation, Inc.
+//
 // This file is part of GNU Radio
-// 
+//
 // GNU Radio is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either asversion 3, or (at your option)
 // any later version.
-// 
+//
 // GNU Radio is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with GNU Radio; see the file COPYING.  If not, write to
 // the Free Software Foundation, Inc., 51 Franklin Street,
 // Boston, MA 02110-1301, USA.
 
-#ifndef DB_WBXNG_H
-#define DB_WBXNG_H
+#ifndef INCLUDED_DB_WBXNG_H
+#define INCLUDED_DB_WBXNG_H
 
 #include <usrp/db_base.h>
 #include <cmath>
-
-//debug_using_gui = true                // Must be set to True or False
-#define debug_using_gui false           // Must be set to True or False
 
 class adf4350;
 
@@ -43,11 +40,6 @@ public:
   double freq_max();
 
 protected:
-  void _write_all(int R, int control, int N);
-  void _write_control(int control);
-  void _write_R(int R);
-  void _write_N(int N);
-  void _write_it(int v);
   bool _lock_detect();
 
   //virtual bool _compute_regs(double freq, int &retR, int &retcontrol, int &retN, double &retfreq);
@@ -80,8 +72,6 @@ public:
   wbxng_base_tx(usrp_basic_sptr usrp, int which, int _power_on=0);
   ~wbxng_base_tx();
 
-  //*** TODO *** Fix comment
-  // All RFX tx d'boards have fixed gain
   float gain_min();
   float gain_max();
   float gain_db_per_step();
@@ -100,12 +90,11 @@ protected:
 public:
   wbxng_base_rx(usrp_basic_sptr usrp, int which, int _power_on=0);
   ~wbxng_base_rx();
-    
+
   bool set_auto_tr(bool on);
   bool select_rx_antenna(int which_antenna);
   bool select_rx_antenna(const std::string &which_antenna);
   bool set_gain(float gain);
-
 };
 
 // ----------------------------------------------------------------
@@ -115,9 +104,6 @@ class db_wbxng_tx : public wbxng_base_tx
  public:
   db_wbxng_tx(usrp_basic_sptr usrp, int which);
   ~db_wbxng_tx();
-
-  // Wrapper calls to d_common functions
-  //bool _compute_regs(double freq, int &retR, int &retcontrol, int &retN, double &retfreq);
 };
 
 class db_wbxng_rx : public wbxng_base_rx
@@ -125,14 +111,11 @@ class db_wbxng_rx : public wbxng_base_rx
 public:
   db_wbxng_rx(usrp_basic_sptr usrp, int which);
   ~db_wbxng_rx();
-  
+
   float gain_min();
   float gain_max();
   float gain_db_per_step();
   bool i_and_q_swapped();
-
-  //bool _compute_regs(double freq, int &retR, int &retcontrol, int &retN, double &retfreq);
 };
 
-
-#endif
+#endif /* INCLUDED_DB_WBXNG_H */

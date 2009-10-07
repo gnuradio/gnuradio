@@ -1,21 +1,33 @@
-/*
- * Copyright 2009 Ettus Research LLC
- */
+//
+// Copyright 2009 Free Software Foundation, Inc.
+//
+// This file is part of GNU Radio
+//
+// GNU Radio is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either asversion 3, or (at your option)
+// any later version.
+//
+// GNU Radio is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with GNU Radio; see the file COPYING.  If not, write to
+// the Free Software Foundation, Inc., 51 Franklin Street,
+// Boston, MA 02110-1301, USA.
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#include <usrp/db_wbxng_adf4350.h>
-#include <usrp/db_wbxng_adf4350_regs.h>
+#include "db_wbxng_adf4350.h"
 #include <db_base_impl.h>
 #include <stdio.h>
-//#include "io.h"
-//#include "spi.h"
 
 #define INPUT_REF_FREQ FREQ_C(64e6)
 #define DIV_ROUND(num, denom) (((num) + ((denom)/2))/(denom))
-//#define FREQ_C(freq) ((uint64_t)DIV_ROUND(freq, (uint64_t)1000))
 #define FREQ_C(freq) uint64_t(freq)
 #define INPUT_REF_FREQ_2X (2*INPUT_REF_FREQ)                            /* input ref freq with doubler turned on */
 #define MIN_INT_DIV uint16_t(23)                                        /* minimum int divider, prescaler 4/5 only */
@@ -30,7 +42,8 @@
 #define MUX_PIN       (1 << 1)
 #define LD_PIN        (1 << 0)
 
-adf4350::adf4350(usrp_basic_sptr _usrp, int _which, int _spi_enable){
+adf4350::adf4350(usrp_basic_sptr _usrp, int _which, int _spi_enable)
+{
     /* Initialize the pin directions. */
 
     d_usrp = _usrp;
@@ -55,27 +68,32 @@ adf4350::adf4350(usrp_basic_sptr _usrp, int _which, int _spi_enable){
     d_regs->_load_register(0);
 }
 
-adf4350::~adf4350(){
+adf4350::~adf4350()
+{
     delete d_regs;
 }
 
-freq_t 
-adf4350::_get_max_freq(void){
+freq_t
+adf4350::_get_max_freq(void)
+{
     return MAX_FREQ;
 }
 
-freq_t 
-adf4350::_get_min_freq(void){
+freq_t
+adf4350::_get_min_freq(void)
+{
     return MIN_FREQ;
 }
 
-bool 
-adf4350::_get_locked(void){
+bool
+adf4350::_get_locked(void)
+{
     return d_usrp->read_io(d_which) & LD_PIN;
 }
 
-void 
-adf4350::_enable(bool enable){
+void
+adf4350::_enable(bool enable)
+{
     if (enable){ /* chip enable */
         d_usrp->write_io(d_which, (CE_PIN | PDB_RF_PIN), (CE_PIN | PDB_RF_PIN));
     }else{
@@ -83,8 +101,9 @@ adf4350::_enable(bool enable){
     }
 }
 
-void 
-adf4350::_write(uint8_t addr, uint32_t data){
+void
+adf4350::_write(uint8_t addr, uint32_t data)
+{
     data |= addr;
 
     // create str from data here
@@ -109,8 +128,9 @@ adf4350::_write(uint8_t addr, uint32_t data){
     //d_usrp->write_io(d_which, 0, LE_PIN);
 }
 
-bool 
-adf4350::_set_freq(freq_t freq){
+bool
+adf4350::_set_freq(freq_t freq)
+{
     /* Set the frequency by setting int, frac, mod, r, div */
     if (freq > MAX_FREQ || freq < MIN_FREQ) return false;
     /* Ramp up the RF divider until the VCO is within range. */
@@ -144,8 +164,8 @@ adf4350::_set_freq(freq_t freq){
     d_regs->d_8_bit_band_select_clock_divider_value = \
         INPUT_REF_FREQ/(FREQ_C(30e3)*d_regs->d_10_bit_r_counter) + 1;
     /*
-    fprintf(stderr, "Band Selection: Div %u, Freq %lu\n", 
-        d_regs->d_8_bit_band_select_clock_divider_value, 
+    fprintf(stderr, "Band Selection: Div %u, Freq %lu\n",
+        d_regs->d_8_bit_band_select_clock_divider_value,
         INPUT_REF_FREQ/(d_regs->d_8_bit_band_select_clock_divider_value * d_regs->d_10_bit_r_counter) + 1
     );
     */
@@ -159,8 +179,9 @@ adf4350::_set_freq(freq_t freq){
     return true;
 }
 
-freq_t 
-adf4350::_get_freq(void){
+freq_t
+adf4350::_get_freq(void)
+{
     /* Calculate the freq from int, frac, mod, ref, r, div:
      *  freq = (int + frac/mod) * (ref/r)
      * Keep precision by doing multiplies first:

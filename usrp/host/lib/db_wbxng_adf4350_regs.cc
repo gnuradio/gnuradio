@@ -2,8 +2,9 @@
  * Copyright 2009 Ettus Research LLC
  */
 
-#include <usrp/db_wbxng_adf4350_regs.h>
-#include <usrp/db_wbxng_adf4350.h>
+#include "db_wbxng_adf4350_regs.h"
+#include "db_wbxng_adf4350.h"
+
 //#include "cal_div.h"
 
 /* reg 0 */
@@ -59,12 +60,12 @@ adf4350_regs::adf4350_regs(adf4350* _adf4350){
 adf4350_regs::~adf4350_regs(void){
 }
 
-uint32_t 
+uint32_t
 adf4350_regs::_reg_shift(uint32_t data, uint32_t shift){
         return data << shift;
     }
 
-void 
+void
 adf4350_regs::_load_register(uint8_t addr){
 	uint32_t data;
 	switch (addr){
