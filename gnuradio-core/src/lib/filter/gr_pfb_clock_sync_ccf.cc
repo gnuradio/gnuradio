@@ -50,8 +50,8 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
 					      float init_phase)
   : gr_block ("pfb_clock_sync_ccf",
 	      gr_make_io_signature (1, 1, sizeof(gr_complex)),
-	      gr_make_io_signature2 (2, 2, sizeof(gr_complex), sizeof(float))),
-    d_updated (false), d_sps(sps), d_alpha(gain)
+	      gr_make_io_signature2 (1, 2, sizeof(gr_complex), sizeof(float))),
+    d_updated (false), d_sps(sps)
 {
   d_nfilters = filter_size;
 
@@ -59,10 +59,9 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
   // The accumulator keeps track of overflow to increment the stride correctly.
   // set it here to the fractional difference based on the initial phaes
   // assert(init_phase <= 2*M_PI);
-  float x = init_phase / (2*M_PI); //normalize initial phase
-  d_acc = x*(d_nfilters-1);
-  d_last_filter = (int)floor(d_acc);
-  d_acc = fmodf(d_acc, 1);
+  set_gain(gain);
+  d_k = d_nfilters / 2;
+  d_rate = 0;
   d_start_count = 0;
   
 
@@ -133,12 +132,22 @@ void
 gr_pfb_clock_sync_ccf::create_diff_taps(const std::vector<float> &newtaps,
 					std::vector<float> &difftaps)
 {
+  float maxtap = -1e12;
   difftaps.clear();
   difftaps.push_back(0); //newtaps[0]);
   for(unsigned int i = 1; i < newtaps.size()-1; i++) {
-    difftaps.push_back(newtaps[i+1] - newtaps[i-1]);
+    float tap = newtaps[i+1] - newtaps[i-1];
+    if(tap > maxtap) {
+     maxtap = tap;
+    }
+    //maxtap += tap;
+    difftaps.push_back(tap);
   }
   difftaps.push_back(0);//-newtaps[newtaps.size()-1]);
+
+  for(unsigned int i = 0; i < difftaps.size(); i++) {
+    difftaps[i] /= 1;//maxtap;
+  }
 }
 
 void
@@ -199,7 +208,10 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
 {
   gr_complex *in = (gr_complex *) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
-  float *err = (float *) output_items[1];
+
+  float *err;
+  if(ninput_items.size() == 2)
+    err = (float *) output_items[1];
   
   if (d_updated) {
     d_updated = false;
@@ -214,32 +226,29 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
 
   // produce output as long as we can and there are enough input samples
   while((i < noutput_items) && (count < nrequired)) {
-    out[i] = d_filters[d_last_filter]->filter(&in[count]);
-    error =  (out[i] * d_diff_filters[d_last_filter]->filter(&in[count])).real();
-    err[i] = error;
+    int filtnum = (int)d_k;
+    out[i] = d_filters[filtnum]->filter(&in[count]);
+    error =  (out[i] * d_diff_filters[filtnum]->filter(&in[count])).real();
 
-    d_acc += d_alpha*error;
-    gr_branchless_clip(d_acc, 1);
+    if(ninput_items.size() == 2)
+      err[i] = error;
 
-    int newfilter;
-    newfilter = (int)((float)d_last_filter + d_acc);
-    if(newfilter != (int)d_last_filter)
-      d_acc = 0.5;
-
-    if(newfilter >= (int)d_nfilters) {
-      d_last_filter = newfilter - d_nfilters;
+    d_k = d_k + d_alpha*error + d_rate;
+    d_rate = d_rate + d_beta*error;
+    while(d_k >= d_nfilters) {
+      d_k -= d_nfilters;
       count++;
     }
-    else if(newfilter < 0) {
-      d_last_filter = d_nfilters + newfilter;
+    while(d_k < 0) {
+      d_k += d_nfilters;
       count--;
-    }
-    else {
-      d_last_filter = newfilter;
     }
 
     i++;
     count += d_sps;
+
+    printf("error: %f  k: %f  rate: %f\n",
+	   error, d_k, d_rate);
   }
 
   // Set the start index at the next entrance to the work function

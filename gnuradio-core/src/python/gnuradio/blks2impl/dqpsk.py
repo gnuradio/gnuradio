@@ -255,16 +255,32 @@ class dqpsk_demod(gr.hier_block2):
         self._mm_omega = self._samples_per_symbol
         self._mm_gain_omega = .25 * self._mm_gain_mu * self._mm_gain_mu
         self._costas_beta  = 0.25 * self._costas_alpha * self._costas_alpha
-        fmin = -0.025
-        fmax = 0.025
+        fmin = -0.25
+        fmax = 0.25
         
-        self.receiver=gr.mpsk_receiver_cc(arity, pi/4.0,
-                                          self._costas_alpha, self._costas_beta,
-                                          fmin, fmax,
-                                          self._mm_mu, self._mm_gain_mu,
-                                          self._mm_omega, self._mm_gain_omega,
-                                          self._mm_omega_relative_limit)
-
+        #self.receiver=gr.mpsk_receiver_cc(arity, pi/4.0,
+        #                                  self._costas_alpha, self._costas_beta,
+        #                                  fmin, fmax,
+        #                                  self._mm_mu, self._mm_gain_mu,
+        #                                  self._mm_omega, self._mm_gain_omega,
+        #                                  self._mm_omega_relative_limit)
+        self.clock_recov = gr.costas_loop_cc(self._costas_alpha,
+                                             self._costas_beta,
+                                             fmax, fmin, arity)
+        if 0:
+            self.time_recov = gr.clock_recovery_mm_cc(self._mm_omega,
+                                                      self._mm_gain_omega,
+                                                      self._mm_mu,
+                                                      self._mm_gain_mu,
+                                                      self._mm_omega_relative_limit)
+        else:
+            ntaps = 32*ntaps
+            taps = gr.firdes.root_raised_cosine(
+                32, 1.0, 0.25/32.0, self._excess_bw, ntaps)
+            self.time_recov = gr.pfb_clock_sync_ccf(self._mm_omega,
+                                                    self._mm_gain_mu,
+                                                    taps)
+        
         # Perform Differential decoding on the constellation
         self.diffdec = gr.diff_phasor_cc()
         
@@ -288,7 +304,8 @@ class dqpsk_demod(gr.hier_block2):
             self._setup_logging()
  
         # Connect & Initialize base class
-        self.connect(self, self.pre_scaler, self.agc, self.rrc_filter, self.receiver,
+        self.connect(self, self.pre_scaler, self.agc, #self.rrc_filter, #self.receiver,
+                     self.clock_recov, self.time_recov,
                      self.diffdec, self.slicer, self.symbol_mapper, self.unpack, self)
 
     def samples_per_symbol(self):

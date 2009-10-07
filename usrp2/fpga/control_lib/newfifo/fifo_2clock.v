@@ -19,28 +19,28 @@ module fifo_2clock
       if(WIDTH==36)
 	if(SIZE==9)
 	  fifo_xlnx_512x36_2clk fifo_xlnx_512x36_2clk
-	       (.rst(rst),
+	       (.rst(arst),
 		.wr_clk(wclk),.din(datain),.full(full),.wr_en(write),.wr_data_count(level_wclk),
 		.rd_clk(rclk),.dout(dataout),.empty(empty),.rd_en(read),.rd_data_count(level_rclk) );
 	else if(SIZE==11)
 	  fifo_xlnx_2Kx36_2clk fifo_xlnx_2Kx36_2clk 
-		     (.rst(rst),
+		     (.rst(arst),
 		      .wr_clk(wclk),.din(datain),.full(full),.wr_en(write),.wr_data_count(level_wclk),
 		      .rd_clk(rclk),.dout(dataout),.empty(empty),.rd_en(read),.rd_data_count(level_rclk) );
 	else if(SIZE==6)
 	  fifo_xlnx_64x36_2clk fifo_xlnx_64x36_2clk 
-		     (.rst(rst),
+		     (.rst(arst),
 		      .wr_clk(wclk),.din(datain),.full(full),.wr_en(write),.wr_data_count(level_wclk),
 		      .rd_clk(rclk),.dout(dataout),.empty(empty),.rd_en(read),.rd_data_count(level_rclk) );
 	else
 	  fifo_xlnx_512x36_2clk fifo_xlnx_512x36_2clk
-	       (.rst(rst),
+	       (.rst(arst),
 		.wr_clk(wclk),.din(datain),.full(full),.wr_en(write),.wr_data_count(level_wclk),
 		.rd_clk(rclk),.dout(dataout),.empty(empty),.rd_en(read),.rd_data_count(level_rclk) );
       else if((WIDTH==19)|(WIDTH==18))
 	if(SIZE==4)
 	  fifo_xlnx_16x19_2clk fifo_xlnx_16x19_2clk
-		     (.rst(rst),
+		     (.rst(arst),
 		      .wr_clk(wclk),.din(datain),.full(full),.wr_en(write),.wr_data_count(level_wclk),
 		      .rd_clk(rclk),.dout(dataout),.empty(empty),.rd_en(read),.rd_data_count(level_rclk) );
    endgenerate

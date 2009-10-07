@@ -33,10 +33,11 @@ EXTRA_DIST = \
 	Makefile.swig.gen.t \
 	Makefile.par.gen \
 	Makefile.gen.gen \
-	debian/changelog
+	version.sh
 
 SUBDIRS = @build_dirs@
 DIST_SUBDIRS = @build_dirs@ @skipped_dirs@ @with_dirs@
+DISTCLEANFILES = gnuradio*.tar.gz
 
 if PYTHON
 

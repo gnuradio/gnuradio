@@ -46,4 +46,5 @@ class gr_pfb_clock_sync_ccf : public gr_block
   std::vector<float> diff_channel_taps(int channel);
   void print_taps();
   void print_diff_taps();
+  void set_gain(float gain);
 };

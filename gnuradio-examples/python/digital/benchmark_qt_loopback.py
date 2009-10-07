@@ -234,22 +234,30 @@ class my_top_block(gr.top_block):
                 self.snk_rx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
                                            0, 1,
                                            "Rx", True, True, False, True, True)
+                self.snk_err = qtgui.sink_f(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
+                                            0, 1,
+                                            "Error", True, True, False, False, False)
 
                 self.snk_tx.set_frequency_axis(-80, 0)
                 self.snk_rx.set_frequency_axis(-60, 20)
             
                 # Connect to the QT sinks
                 # FIXME: make better exposure to receiver from rxpath
-                self.receiver = self.rxpath.packet_receiver._demodulator.receiver
+                #self.freq_recov = self.rxpath.packet_receiver._demodulator.clock_recov
+                self.time_recov = self.rxpath.packet_receiver._demodulator.time_recov
                 self.connect(self.channel, self.snk_tx)
-                self.connect(self.receiver, self.snk_rx)
+                self.connect(self.time_recov, self.snk_rx)
+                self.connect((self.time_recov, 1), self.snk_err)
 
                 pyTxQt  = self.snk_tx.pyqwidget()
                 pyTx = sip.wrapinstance(pyTxQt, QtGui.QWidget)
-                
+                 
                 pyRxQt  = self.snk_rx.pyqwidget()
                 pyRx = sip.wrapinstance(pyRxQt, QtGui.QWidget)
-                
+
+                pyErrQt  = self.snk_err.pyqwidget()
+                pyErr = sip.wrapinstance(pyRxQt, QtGui.QWidget)
+
                 self.main_box = dialog_box(pyTx, pyRx, self)
                 self.main_box.show()
                 
@@ -308,8 +316,9 @@ class my_top_block(gr.top_block):
     def set_rx_gain_mu(self, gain):
         self._gain_mu = gain
         self.gain_omega = .25 * self._gain_mu * self._gain_mu
-        self.receiver.set_gain_mu(self._gain_mu)
-        self.receiver.set_gain_omega(self.gain_omega)
+        #self.time_recov.set_gain_mu(self._gain_mu)
+        #self.time_recov.set_gain_omega(self.gain_omega)
+        self.time_recov.set_gain(self._gain_mu)
 
     def rx_alpha(self):
         return self._alpha
@@ -320,8 +329,8 @@ class my_top_block(gr.top_block):
     def set_rx_alpha(self, alpha):
         self._alpha = alpha
         self.beta = .25 * self._alpha * self._alpha
-        self.receiver.set_alpha(self._alpha)
-        self.receiver.set_beta(self.beta)
+        #self.freq_recov.set_alpha(self._alpha)
+        #self.freq_recov.set_beta(self.beta)
 
 
 

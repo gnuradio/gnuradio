@@ -26,10 +26,10 @@ AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-
-VERSION=3.3git
-AC_SUBST(VERSION)
-AM_INIT_AUTOMAKE(gnuradio,$VERSION)
+GR_VERSION
+dnl ustar required to have pathnames > 99 chars
+_AM_SET_OPTION([tar-ustar])
+AM_INIT_AUTOMAKE(gnuradio,$RELEASE)
 
 DEFINES=""
 AC_SUBST(DEFINES)
@@ -437,3 +437,4 @@ if test "$with_dirs" != ""; then
     echo
 fi
 
+echo Configured GNU Radio release $RELEASE for build.

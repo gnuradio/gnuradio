@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Polyphase Filter based Clock Sync
+###################################################
+ -->
+<block>
+	<name>Polyphase Clock Sync</name>
+	<key>gr_pfb_clock_sync_ccf</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.pfb_clock_sync_ccf($sps, $gain, $taps, $filter_size, $init_phase)</make>
+	<callback>set_taps($taps)</callback>
+	<callback>set_gain($gain)</callback>
+
+	<param>
+		<name>Samples/Symbol</name>
+		<key>sps</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Gain</name>
+		<key>gain</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<type>real_vector</type>
+	</param>
+	<param>
+		<name>Filter Size</name>
+		<key>filter_size</key>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Initial Phase</name>
+		<key>init_phase</key>
+		<type>real</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+	<source>
+		<name>err</name>
+		<type>float</type>
+		<optional>1</optional>
+	</source>
+</block>
