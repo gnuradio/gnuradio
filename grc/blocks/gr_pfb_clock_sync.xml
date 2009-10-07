@@ -50,4 +50,14 @@
 		<type>float</type>
 		<optional>1</optional>
 	</source>
+	<source>
+		<name>rate</name>
+		<type>float</type>
+		<optional>1</optional>
+	</source>
+	<source>
+		<name>phase</name>
+		<type>float</type>
+		<optional>1</optional>
+	</source>
 </block>
