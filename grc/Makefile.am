@@ -25,7 +25,6 @@ if PYTHON
 SUBDIRS = \
 	base \
 	blocks \
-	examples \
 	grc_gnuradio \
 	gui \
 	python \
