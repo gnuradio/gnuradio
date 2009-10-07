@@ -8,7 +8,7 @@
 	<name>Polyphase Clock Sync</name>
 	<key>gr_pfb_clock_sync_ccf</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.pfb_clock_sync_ccf($sps, $gain, $taps, $filter_size, $init_phase)</make>
+	<make>gr.pfb_clock_sync_ccf($sps, $alpha, $taps, $filter_size, $init_phase)</make>
 	<callback>set_taps($taps)</callback>
 	<callback>set_gain($gain)</callback>
 
@@ -18,8 +18,13 @@
 		<type>real</type>
 	</param>
 	<param>
-		<name>Gain</name>
-		<key>gain</key>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Beta</name>
+		<key>beta</key>
 		<type>real</type>
 	</param>
 	<param>

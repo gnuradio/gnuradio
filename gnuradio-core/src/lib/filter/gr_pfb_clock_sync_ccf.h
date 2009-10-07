@@ -98,10 +98,13 @@ public:
   void print_taps();
   void print_diff_taps();
 
-  void set_gain(float gain)
+  void set_alpha(float alpha)
   { 
-    d_alpha = gain;
-    d_beta = 0.25*d_alpha*d_alpha;
+    d_alpha = alpha;
+  }
+  void set_beta(float beta)
+  {
+    d_beta = beta;
   }
   
   int general_work (int noutput_items,

@@ -60,7 +60,8 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
   // The accumulator keeps track of overflow to increment the stride correctly.
   // set it here to the fractional difference based on the initial phaes
   // assert(init_phase <= 2*M_PI);
-  set_gain(gain);
+  set_alpha(gain);
+  set_beta(0.25*gain*gain);
   d_k = d_nfilters / 2;
   d_rate = 0;
   d_start_count = 0;
