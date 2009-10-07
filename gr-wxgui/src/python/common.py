@@ -19,6 +19,9 @@
 # Boston, MA 02110-1301, USA.
 #
 
+##################################################
+# conditional disconnections of wx flow graph
+##################################################
 import wx
 
 def bind_to_visible_event(win, callback):
@@ -51,14 +54,14 @@ def bind_to_visible_event(win, callback):
 
 from gnuradio import gr
 
-def special_connect(source, sink, hb, win, size):
+def conditional_connect(source, sink, hb, win, size):
 	nulls = list()
 	cache = [None]
 	def callback(visible, init=False):
 		if visible == cache[0]: return
 		cache[0] = visible
 		if not init: hb.lock()
-		print 'visible', visible
+		print 'visible', visible, source, sink
 		if visible:
 			if not init:
 				hb.disconnect(source, nulls[0])
@@ -74,6 +77,24 @@ def special_connect(source, sink, hb, win, size):
 		if not init: hb.unlock()
 	callback(False, init=True) #initially connect
 	bind_to_visible_event(win, callback)
+
+class wxgui_hb(object):
+	def wxgui_connect(self, *points):
+		"""
+		Use wxgui connect when the first point is the self source of the hb.
+		The win property of this object should be set to the wx window.
+		When this method tries to connect self to the next point,
+		it will conditionally make this connection based on the visibility state.
+		"""
+		try:
+			assert points[0] == self or points[0][0] == self
+			conditional_connect(
+				points[0], points[1],
+				win=self.win, hb=self,
+				size=self._hb.input_signature().sizeof_stream_item(0),
+			)
+			if len(points[1:]) > 1: self.connect(*points[1:])
+		except (AssertionError, IndexError): self.connect(*points)
 
 #A macro to apply an index to a key
 index_key = lambda key, i: "%s_%d"%(key, i+1)

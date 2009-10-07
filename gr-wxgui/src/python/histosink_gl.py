@@ -31,7 +31,7 @@ from constants import *
 ##################################################
 # histo sink block (wrapper for old wxgui)
 ##################################################
-class histo_sink_f(gr.hier_block2):
+class histo_sink_f(gr.hier_block2, common.wxgui_hb):
 	"""
 	A histogram block and a gui window.
 	"""
@@ -56,8 +56,6 @@ class histo_sink_f(gr.hier_block2):
 		histo = gr.histo_sink_f(msgq)
 		histo.set_num_bins(num_bins)
 		histo.set_frame_size(frame_size)
-		#connect
-		self.connect(self, histo)
 		#controller
 		self.controller = pubsub()
 		self.controller.subscribe(NUM_BINS_KEY, histo.set_num_bins)
@@ -79,6 +77,8 @@ class histo_sink_f(gr.hier_block2):
 			msg_key=MSG_KEY,
 		)
 		common.register_access_methods(self, self.win)
+		#connect
+		self.wxgui_connect(self, histo)
 
 # ----------------------------------------------------------------
 # Standalone test app

@@ -31,7 +31,7 @@ from constants import *
 ##################################################
 # Number sink block (wrapper for old wxgui)
 ##################################################
-class _number_sink_base(gr.hier_block2):
+class _number_sink_base(gr.hier_block2, common.wxgui_hb):
 	"""
 	An decimator block with a number window display
 	"""
@@ -81,8 +81,6 @@ class _number_sink_base(gr.hier_block2):
 			avg = gr.single_pole_iir_filter_cc(1.0)
 		msgq = gr.msg_queue(2)
 		sink = gr.message_sink(self._item_size, msgq, True)
-		#connect
-		self.connect(self, sd, mult, add, avg, sink)
 		#controller
 		self.controller = pubsub()
 		self.controller.subscribe(SAMPLE_RATE_KEY, sd.set_sample_rate)
@@ -118,6 +116,8 @@ class _number_sink_base(gr.hier_block2):
 		common.register_access_methods(self, self.controller)
 		#backwards compadibility
 		self.set_show_gauge = self.win.show_gauges
+		#connect
+		self.wxgui_connect(self, sd, mult, add, avg, sink)
 
 class number_sink_f(_number_sink_base):
 	_item_size = gr.sizeof_float
