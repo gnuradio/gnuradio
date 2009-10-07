@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-## Polyphase Filter based Clock Recovery
+## Polyphase Filter based Clock Sync
 ###################################################
  -->
 <block>
-	<name>Polyphase Clock Recovery</name>
-	<key>gr_pfb_clock_recovery_ccf</key>
+	<name>Polyphase Clock Sync</name>
+	<key>gr_pfb_clock_sync_ccf</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.pfb_clock_recovery_ccf($sps, $gain, $taps, $filter_size, $init_phase)</make>
+	<make>gr.pfb_clock_sync_ccf($sps, $gain, $taps, $filter_size, $init_phase)</make>
 	<callback>set_taps($taps)</callback>
 	<callback>set_gain($gain)</callback>
 
@@ -48,5 +48,6 @@
 	<source>
 		<name>err</name>
 		<type>float</type>
+		<optional>1</optional>
 	</source>
 </block>

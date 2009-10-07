@@ -124,7 +124,7 @@
 	<cat>
 		<name>Synchronizers</name>
 		<block>gr_clock_recovery_mm_xx</block>
-		<block>gr_pfb_clock_recovery_ccf</block>
+		<block>gr_pfb_clock_sync_ccf</block>
 
 		<block>gr_costas_loop_cc</block>
 		<block>gr_dd_mpsk_sync_cc</block>
