@@ -92,6 +92,9 @@ BUILT_SOURCES = 				\
 libgnuradio_atsc_la_LIBADD = 			\
 	$(GNURADIO_CORE_LA)
 
+libgnuradio_atsc_la_LDFLAGS = \
+	$(NO_UNDEFINED)
+
 noinst_LTLIBRARIES = libgnuradio-atsc-qa.la
 
 libgnuradio_atsc_qa_la_SOURCES = 		\
@@ -112,6 +115,9 @@ libgnuradio_atsc_qa_la_SOURCES = 		\
 
 libgnuradio_atsc_qa_la_LIBADD =			\
 	$(GNURADIO_CORE_LA)
+
+libgnuradio_atsc_qa_la_LDFLAGS = \
+	$(NO_UNDEFINED)
 
 
 # These headers get installed in ${prefix}/include/gnuradio

@@ -58,5 +58,5 @@ libgruel_la_LIBADD = 			\
 # ----------------------------------------------------------------
 
 test_gruel_SOURCES = test_gruel.cc
-test_gruel_LDADD   = libgruel.la pmt/libpmt-qa.la
+test_gruel_LDADD   = pmt/libpmt-qa.la libgruel.la
 

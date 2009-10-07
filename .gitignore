@@ -16,6 +16,7 @@
 *.lo
 *.py[oc]
 *.gz
+*.exe
 *.patch
 *~
 \#*#
