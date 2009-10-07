@@ -39,12 +39,7 @@ def bind_to_visible_event(win, callback):
 			my_win = parent
 	#call the callback, the arg is shown or not
 	def callback_factory(my_win, my_callback):
-		cache = [None]
-		def the_callback(*args):
-			visible = is_wx_window_visible(my_win)
-			if cache[0] != visible: my_callback(visible)
-			cache[0] = visible
-		return the_callback
+		return lambda *args: my_callback(is_wx_window_visible(my_win))
 	handler = callback_factory(win, callback)
 	#bind the handler to all the parent notebooks
 	while win:
@@ -57,19 +52,25 @@ def bind_to_visible_event(win, callback):
 from gnuradio import gr
 
 def special_connect(source, sink, hb, win, size):
-	nulls = [gr.null_sink(size), gr.null_source(size)]
+	nulls = list()
+	cache = [None]
 	def callback(visible, init=False):
+		if visible == cache[0]: return
+		cache[0] = visible
 		if not init: hb.lock()
+		print 'visible', visible
 		if visible:
-			if not init: hb.disconnect(source, nulls[0])
-			if not init: hb.disconnect(nulls[1], sink)
+			if not init:
+				hb.disconnect(source, nulls[0])
+				hb.disconnect(nulls[1], nulls[2])
+				hb.disconnect(nulls[2], sink)
+				while nulls: nulls.pop()
 			hb.connect(source, sink)
-			#hb.connect(nulls[1], nulls[0])
 		else:
 			if not init: hb.disconnect(source, sink)
-			#if not init: hb.disconnect(nulls[1], nulls[0])
+			nulls.extend([gr.null_sink(size), gr.null_source(size), gr.head(size, 0)])
 			hb.connect(source, nulls[0])
-			hb.connect(nulls[1], sink)
+			hb.connect(nulls[1], nulls[2], sink)
 		if not init: hb.unlock()
 	callback(False, init=True) #initially connect
 	bind_to_visible_event(win, callback)
