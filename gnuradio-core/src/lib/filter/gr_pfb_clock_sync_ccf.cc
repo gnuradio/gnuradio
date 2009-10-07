@@ -115,13 +115,15 @@ gr_pfb_clock_sync_ccf::set_taps (const std::vector<float> &newtaps,
   // Partition the filter
   for(i = 0; i < d_nfilters; i++) {
     // Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
-    ourtaps[i] = std::vector<float>(d_taps_per_filter, 0);
+    //ourtaps[i] = std::vector<float>(d_taps_per_filter, 0);
+    ourtaps[d_nfilters-1-i] = std::vector<float>(d_taps_per_filter, 0);
     for(j = 0; j < d_taps_per_filter; j++) {
-      ourtaps[i][j] = tmp_taps[i + j*d_nfilters];  // add taps to channels in reverse order
+      ourtaps[d_nfilters - 1 - i][j] = tmp_taps[i + j*d_nfilters];
     }
     
     // Build a filter for each channel and add it's taps to it
-    ourfilter[i]->set_taps(ourtaps[i]);
+    //ourfilter[i]->set_taps(ourtaps[i]);
+    ourfilter[i]->set_taps(ourtaps[d_nfilters-1-i]);
   }
 
   // Set the history to ensure enough input items for each filter
@@ -156,26 +158,30 @@ void
 gr_pfb_clock_sync_ccf::print_taps()
 {
   unsigned int i, j;
+  printf("[ ");
   for(i = 0; i < d_nfilters; i++) {
-    printf("filter[%d]: [%.4e, ", i, d_taps[i][0]);
+    printf("[%.4e, ", d_taps[i][0]);
     for(j = 1; j < d_taps_per_filter-1; j++) {
       printf("%.4e,", d_taps[i][j]);
     }
-    printf("%.4e]\n", d_taps[i][j]);
+    printf("%.4e],", d_taps[i][j]);
   }
+  printf(" ]\n");
 }
 
 void
 gr_pfb_clock_sync_ccf::print_diff_taps()
 {
   unsigned int i, j;
+  printf("[ ");
   for(i = 0; i < d_nfilters; i++) {
-    printf("filter[%d]: [%.4e, ", i, d_dtaps[i][0]);
+    printf("[%.4e, ", d_dtaps[i][0]);
     for(j = 1; j < d_taps_per_filter-1; j++) {
       printf("%.4e,", d_dtaps[i][j]);
     }
-    printf("%.4e]\n", d_dtaps[i][j]);
+    printf("%.4e],", d_dtaps[i][j]);
   }
+  printf(" ]\n");
 }
 
 
@@ -232,12 +238,15 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
   // produce output as long as we can and there are enough input samples
   while((i < noutput_items) && (count < nrequired)) {
     int filtnum = (int)d_k;
+
+    // FIXME: prevent this from asserting
+    assert(filtnum < d_nfilters);
     out[i] = d_filters[filtnum]->filter(&in[count]);
     error =  (out[i] * d_diff_filters[filtnum]->filter(&in[count])).real();
 
     d_k = d_k + d_alpha*error + d_rate;
     d_rate = d_rate + d_beta*error;
-    while(d_k >= d_nfilters) {
+    while(d_k >= (float)d_nfilters) {
       d_k -= d_nfilters;
       count++;
     }
@@ -245,6 +254,9 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
       d_k += d_nfilters;
       count--;
     }
+    
+    // Keep our rate within a good range
+    d_rate = gr_branchless_clip(d_rate, 1.5);
 
     i++;
     count += d_sps;
