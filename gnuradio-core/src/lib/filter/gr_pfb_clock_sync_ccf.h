@@ -99,7 +99,7 @@ public:
   void print_diff_taps();
 
   void set_alpha(float alpha)
-  { 
+  {
     d_alpha = alpha;
   }
   void set_beta(float beta)
