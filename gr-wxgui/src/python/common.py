@@ -54,6 +54,26 @@ def bind_to_visible_event(win, callback):
 			win.Bind(wx.EVT_ACTIVATE, handler)
 		win = win.GetParent()
 
+from gnuradio import gr
+
+def special_connect(source, sink, hb, win, size):
+	nulls = [gr.null_sink(size), gr.null_source(size)]
+	def callback(visible, init=False):
+		if not init: hb.lock()
+		if visible:
+			if not init: hb.disconnect(source, nulls[0])
+			if not init: hb.disconnect(nulls[1], sink)
+			hb.connect(source, sink)
+			#hb.connect(nulls[1], nulls[0])
+		else:
+			if not init: hb.disconnect(source, sink)
+			#if not init: hb.disconnect(nulls[1], nulls[0])
+			hb.connect(source, nulls[0])
+			hb.connect(nulls[1], sink)
+		if not init: hb.unlock()
+	callback(False, init=True) #initially connect
+	bind_to_visible_event(win, callback)
+
 #A macro to apply an index to a key
 index_key = lambda key, i: "%s_%d"%(key, i+1)
 

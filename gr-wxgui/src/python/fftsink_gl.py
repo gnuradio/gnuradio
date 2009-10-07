@@ -73,8 +73,6 @@ class _fft_sink_base(gr.hier_block2):
 		)
 		msgq = gr.msg_queue(2)
 		sink = gr.message_sink(gr.sizeof_float*fft_size, msgq, True)
-		#connect
-		self.connect(self, fft, sink)
 		#controller
 		self.controller = pubsub()
 		self.controller.subscribe(AVERAGE_KEY, fft.set_average)
@@ -106,6 +104,9 @@ class _fft_sink_base(gr.hier_block2):
 		common.register_access_methods(self, self.win)
 		setattr(self.win, 'set_baseband_freq', getattr(self, 'set_baseband_freq')) #BACKWARDS
 		setattr(self.win, 'set_peak_hold', getattr(self, 'set_peak_hold')) #BACKWARDS
+		#connect
+		common.special_connect(self, fft, hb=self, win=self.win, size=self._item_size)
+		self.connect(fft, sink)
 
 class fft_sink_f(_fft_sink_base):
 	_fft_chain = blks2.logpwrfft_f
