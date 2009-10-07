@@ -28,7 +28,7 @@ def bind_to_visible_event(win, callback):
 	"""
 	Bind a callback to a window when its visibility changes.
 	Specifically, callback when the window changes visibility
-	when a notebook tab event in one of the parents occurs.
+	when a update ui event in the window occurs.
 	@param win the wx window
 	@param callback a 1 param function
 	"""
@@ -45,23 +45,18 @@ def bind_to_visible_event(win, callback):
 		return lambda *args: my_callback(is_wx_window_visible(my_win))
 	handler = callback_factory(win, callback)
 	#bind the handler to all the parent notebooks
-	while win:
-		if isinstance(win, wx.Notebook):
-			win.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, handler)
-		if not win.GetParent():
-			win.Bind(wx.EVT_ACTIVATE, handler)
-		win = win.GetParent()
+	win.Bind(wx.EVT_UPDATE_UI, handler)
 
 from gnuradio import gr
 
-def conditional_connect(source, sink, hb, win, size):
+def conditional_connect_callback_factory(source, sink, hb, win, size):
 	nulls = list()
 	cache = [None]
 	def callback(visible, init=False):
 		if visible == cache[0]: return
 		cache[0] = visible
 		if not init: hb.lock()
-		print 'visible', visible, source, sink
+		#print 'visible', visible, source, sink
 		if visible:
 			if not init:
 				hb.disconnect(source, nulls[0])
@@ -75,8 +70,12 @@ def conditional_connect(source, sink, hb, win, size):
 			hb.connect(source, nulls[0])
 			hb.connect(nulls[1], nulls[2], sink)
 		if not init: hb.unlock()
-	callback(False, init=True) #initially connect
-	bind_to_visible_event(win, callback)
+	return callback
+
+def conditional_connect(source, sink, hb, win, size):
+	handler = conditional_connect_callback_factory(source, sink, hb, win, size)
+	handler(False, init=True) #initially connect
+	bind_to_visible_event(win, handler)
 
 class wxgui_hb(object):
 	def wxgui_connect(self, *points):
