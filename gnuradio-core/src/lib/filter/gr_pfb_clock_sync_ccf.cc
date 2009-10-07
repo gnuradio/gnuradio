@@ -43,14 +43,15 @@ gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (float sps, float gain,
 								init_phase));
 }
 
-
+int ios[] = {sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float)};
+std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
 gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
 					      const std::vector<float> &taps,
 					      unsigned int filter_size,
 					      float init_phase)
   : gr_block ("pfb_clock_sync_ccf",
 	      gr_make_io_signature (1, 1, sizeof(gr_complex)),
-	      gr_make_io_signature2 (1, 2, sizeof(gr_complex), sizeof(float))),
+	      gr_make_io_signaturev (1, 4, iosig)),
     d_updated (false), d_sps(sps)
 {
   d_nfilters = filter_size;
