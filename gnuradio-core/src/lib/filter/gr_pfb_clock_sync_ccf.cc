@@ -234,15 +234,18 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
   int nrequired = ninput_items[0] - d_taps_per_filter;
 
   int i = 0, count = d_start_count;
-  float error = 0;
+  float error;
+  float error_r, error_i;
 
   // produce output as long as we can and there are enough input samples
   while((i < noutput_items) && (count < nrequired)) {
 
     // FIXME: prevent this from asserting
-    assert(filtnum < d_nfilters);
+    assert(d_filtnum < d_nfilters);
     out[i] = d_filters[d_filtnum]->filter(&in[count]);
-    error =  (out[i] * d_diff_filters[d_filtnum]->filter(&in[count])).real();
+    error_r  = out[i].real() * d_diff_filters[d_filtnum]->filter(&in[count]).real();
+    error_i  = out[i].imag() * d_diff_filters[d_filtnum]->filter(&in[count]).imag();
+    error = error_i + error_r;
 
     d_k = d_k + d_alpha*error + d_rate;
     d_rate = d_rate + d_beta*error;
