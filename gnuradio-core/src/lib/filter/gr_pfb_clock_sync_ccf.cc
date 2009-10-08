@@ -63,6 +63,7 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
   set_alpha(gain);
   set_beta(0.25*gain*gain);
   d_k = d_nfilters / 2;
+  d_filtnum = (int)floor(d_k);
   d_rate = 0;
   d_start_count = 0;
   
@@ -237,21 +238,24 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
 
   // produce output as long as we can and there are enough input samples
   while((i < noutput_items) && (count < nrequired)) {
-    int filtnum = (int)d_k;
 
     // FIXME: prevent this from asserting
     assert(filtnum < d_nfilters);
-    out[i] = d_filters[filtnum]->filter(&in[count]);
-    error =  (out[i] * d_diff_filters[filtnum]->filter(&in[count])).real();
+    out[i] = d_filters[d_filtnum]->filter(&in[count]);
+    error =  (out[i] * d_diff_filters[d_filtnum]->filter(&in[count])).real();
 
     d_k = d_k + d_alpha*error + d_rate;
     d_rate = d_rate + d_beta*error;
-    while(d_k >= (float)d_nfilters) {
+    d_filtnum = (int)floor(d_k);
+
+    while(d_filtnum >= d_nfilters) {
       d_k -= d_nfilters;
+      d_filtnum -= d_nfilters;
       count++;
     }
-    while(d_k < 0) {
+    while(d_filtnum < 0) {
       d_k += d_nfilters;
+      d_filtnum += d_nfilters;
       count--;
     }
     

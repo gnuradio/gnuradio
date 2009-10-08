@@ -59,13 +59,14 @@ class gr_pfb_clock_sync_ccf : public gr_block
   unsigned int             d_sps;
   float                    d_alpha;
   float                    d_beta;
-  unsigned int             d_nfilters;
+  int                      d_nfilters;
   std::vector<gr_fir_ccf*> d_filters;
   std::vector<gr_fir_ccf*> d_diff_filters;
   std::vector< std::vector<float> > d_taps;
   std::vector< std::vector<float> > d_dtaps;
   float                    d_k;
   float                    d_rate;
+  int                      d_filtnum;
   unsigned int             d_start_count;
   unsigned int             d_taps_per_filter;
 
