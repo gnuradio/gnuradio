@@ -149,21 +149,19 @@ class BlockTreeWindow(gtk.VBox):
 	## Event Handlers
 	############################################################
 	def _handle_search(self, model, column, key, iter):
-		#determine what block keys match the search key
-		platform = self.get_flow_graph().get_parent()
-		block_keys = platform.get_block_keys()
-		matching_keys = filter(lambda k: key in k, block_keys)
-		if not matching_keys: return
-		#clear the old search category
+		#determine which blocks match the search key
+		blocks = self.get_flow_graph().get_parent().get_blocks()
+		matching_blocks = filter(lambda b: key in b.get_key() or key in b.get_name().lower(), blocks)
+		#remove the old search category
 		try: self.treestore.remove(self._categories.pop((self._search_category, )))
-		except AttributeError: pass
+		except (KeyError, AttributeError): pass #nothing to remove
 		#create a search category
+		if not matching_blocks: return
 		self._search_category = 'Search: %s'%key
-		for matching_key in matching_keys:
-			self.add_block(self._search_category, platform.get_block(matching_key))
-		#expand the category
-		iter = self._categories[(self._search_category, )]
-		path = self.treestore.get_path(iter)
+		for block in matching_blocks: self.add_block(self._search_category, block)
+		#expand the search category
+		path = self.treestore.get_path(self._categories[(self._search_category, )])
+		self.treeview.collapse_all()
 		self.treeview.expand_row(path, open_all=False)
 
 	def _handle_drag_get_data(self, widget, drag_context, selection_data, info, time):

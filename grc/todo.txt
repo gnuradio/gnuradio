@@ -35,7 +35,6 @@
   * remove blocks in block tree covered by doxygen
 * param editor, expand entry boxes in focus
 * change param dialog to panel within main window
-* search for blocks in category window
 * gui grid editor for configuring grid params/placing wxgui plots and controls
 * drag from one port to another to connect
 * per parameter docs
