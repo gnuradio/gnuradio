@@ -23,77 +23,100 @@
 # conditional disconnections of wx flow graph
 ##################################################
 import wx
-
-def bind_to_visible_event(win, callback):
-	"""
-	Bind a callback to a window when its visibility changes.
-	Specifically, callback when the window changes visibility
-	when a update ui event in the window occurs.
-	@param win the wx window
-	@param callback a 1 param function
-	"""
-	#is the window visible in the hierarchy
-	def is_wx_window_visible(my_win):
-		while True:
-			parent = my_win.GetParent()
-			if not parent: return True #reached the top of the hierarchy
-			#if we are hidden, then finish, otherwise keep traversing up
-			if isinstance(parent, wx.Notebook) and parent.GetCurrentPage() != my_win: return False
-			my_win = parent
-	#call the callback, the arg is shown or not
-	def callback_factory(my_win, my_callback):
-		return lambda *args: my_callback(is_wx_window_visible(my_win))
-	handler = callback_factory(win, callback)
-	#bind the handler to all the parent notebooks
-	win.Bind(wx.EVT_UPDATE_UI, handler)
-
 from gnuradio import gr
 
-def conditional_connect_callback_factory(source, sink, hb, win, size):
-	nulls = list()
-	cache = [None]
-	def callback(visible, init=False):
-		if visible == cache[0]: return
-		cache[0] = visible
-		if not init: hb.lock()
-		#print 'visible', visible, source, sink
-		if visible:
-			if not init:
-				hb.disconnect(source, nulls[0])
-				hb.disconnect(nulls[1], nulls[2])
-				hb.disconnect(nulls[2], sink)
-				while nulls: nulls.pop()
-			hb.connect(source, sink)
-		else:
-			if not init: hb.disconnect(source, sink)
-			nulls.extend([gr.null_sink(size), gr.null_source(size), gr.head(size, 0)])
-			hb.connect(source, nulls[0])
-			hb.connect(nulls[1], nulls[2], sink)
-		if not init: hb.unlock()
-	return callback
-
-def conditional_connect(source, sink, hb, win, size):
-	handler = conditional_connect_callback_factory(source, sink, hb, win, size)
-	handler(False, init=True) #initially connect
-	bind_to_visible_event(win, handler)
-
 class wxgui_hb(object):
+	"""
+	The wxgui hier block helper/wrapper class:
+	A hier block should inherit from this class to make use of the wxgui connect method.
+	To use, call wxgui_connect in place of regular connect; self.win must be defined.
+	The implementation will conditionally connect or disconnect the self (source) of the hb.
+	This condition depends on weather or not the window is visible with the parent notebooks.
+	This condition will be re-checked on every ui update event.
+	"""
+
 	def wxgui_connect(self, *points):
 		"""
 		Use wxgui connect when the first point is the self source of the hb.
 		The win property of this object should be set to the wx window.
 		When this method tries to connect self to the next point,
 		it will conditionally make this connection based on the visibility state.
+		All other points will be connected normally.
 		"""
 		try:
 			assert points[0] == self or points[0][0] == self
-			conditional_connect(
-				points[0], points[1],
-				win=self.win, hb=self,
-				size=self._hb.input_signature().sizeof_stream_item(0),
-			)
+			self._conditional_connect(points[0], points[1])
 			if len(points[1:]) > 1: self.connect(*points[1:])
 		except (AssertionError, IndexError): self.connect(*points)
+
+	def _conditional_connect(self, source, sink):
+		"""
+		Create a handler for visibility changes.
+		Initially call the handler to setup the fg.
+		Bind the handler to the visibility meta event.
+		"""
+		handler = self._conditional_connect_handler_factory(
+			source=source, sink=sink, win=self.win, hb=self,
+			size=self._hb.input_signature().sizeof_stream_item(0),
+		)
+		handler(False, init=True) #initially connect
+		self._bind_to_visible_event(win=self.win, handler=handler)
+
+	@staticmethod
+	def _conditional_connect_handler_factory(source, sink, hb, win, size):
+		"""
+		Create a function that will handle the re-connections based on a flag.
+		The current state of the connection is stored in the namespace.
+		"""
+		nulls = list()
+		cache = [None]
+		def callback(visible, init=False):
+			if visible == cache[0]: return
+			cache[0] = visible
+			if not init: hb.lock()
+			#print 'visible', visible, source, sink
+			if visible:
+				if not init:
+					hb.disconnect(source, nulls[0])
+					hb.disconnect(nulls[1], nulls[2])
+					hb.disconnect(nulls[2], sink)
+					while nulls: nulls.pop()
+				hb.connect(source, sink)
+			else:
+				if not init: hb.disconnect(source, sink)
+				nulls.extend([gr.null_sink(size), gr.null_source(size), gr.head(size, 0)])
+				hb.connect(source, nulls[0])
+				hb.connect(nulls[1], nulls[2], sink)
+			if not init: hb.unlock()
+		return callback
+
+	@staticmethod
+	def _bind_to_visible_event(win, handler):
+		"""
+		Bind a handler to a window when its visibility changes.
+		Specifically, call the handler when the window visibility changes.
+		This condition is checked on every update ui event.
+		@param win the wx window
+		@param handler a function of 1 param
+		"""
+		#is the window visible in the hierarchy
+		def is_wx_window_visible(my_win):
+			while True:
+				parent = my_win.GetParent()
+				if not parent: return True #reached the top of the hierarchy
+				#if we are hidden, then finish, otherwise keep traversing up
+				if isinstance(parent, wx.Notebook) and parent.GetCurrentPage() != my_win: return False
+				my_win = parent
+		#call the handler, the arg is shown or not
+		def handler_factory(my_win, my_handler):
+			return lambda *args: my_handler(is_wx_window_visible(my_win))
+		handler = handler_factory(win, handler)
+		#bind the handler to all the parent notebooks
+		win.Bind(wx.EVT_UPDATE_UI, handler)
+
+##################################################
+# Helpful Functions
+##################################################
 
 #A macro to apply an index to a key
 index_key = lambda key, i: "%s_%d"%(key, i+1)
