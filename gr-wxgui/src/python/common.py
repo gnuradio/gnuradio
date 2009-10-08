@@ -55,39 +55,37 @@ class wxgui_hb(object):
 		Initially call the handler to setup the fg.
 		Bind the handler to the visibility meta event.
 		"""
-		handler = self._conditional_connect_handler_factory(
-			source=source, sink=sink, win=self.win, hb=self,
-			size=self._hb.input_signature().sizeof_stream_item(0),
-		)
+		handler = self._conditional_connect_handler_factory(source=source, sink=sink)
 		handler(False, init=True) #initially connect
 		self._bind_to_visible_event(win=self.win, handler=handler)
 
-	@staticmethod
-	def _conditional_connect_handler_factory(source, sink, hb, win, size):
+	def _conditional_connect_handler_factory(self, source, sink):
 		"""
 		Create a function that will handle the re-connections based on a flag.
 		The current state of the connection is stored in the namespace.
+		!!!#TODO This entire method could be replaced with a mute block that starves the stream.
 		"""
 		nulls = list()
 		cache = [None]
+		size = self._hb.input_signature().sizeof_stream_item(0)
 		def callback(visible, init=False):
 			if visible == cache[0]: return
 			cache[0] = visible
-			if not init: hb.lock()
+			if not init: self.lock()
 			#print 'visible', visible, source, sink
 			if visible:
 				if not init:
-					hb.disconnect(source, nulls[0])
-					hb.disconnect(nulls[1], nulls[2])
-					hb.disconnect(nulls[2], sink)
+					self.disconnect(source, nulls[0])
+					self.disconnect(nulls[1], nulls[2])
+					self.disconnect(nulls[2], sink)
 					while nulls: nulls.pop()
-				hb.connect(source, sink)
+				self.connect(source, sink)
 			else:
-				if not init: hb.disconnect(source, sink)
+				if not init: self.disconnect(source, sink)
 				nulls.extend([gr.null_sink(size), gr.null_source(size), gr.head(size, 0)])
-				hb.connect(source, nulls[0])
-				hb.connect(nulls[1], nulls[2], sink)
-			if not init: hb.unlock()
+				self.connect(source, nulls[0])
+				self.connect(nulls[1], nulls[2], sink)
+			if not init: self.unlock()
 		return callback
 
 	@staticmethod
