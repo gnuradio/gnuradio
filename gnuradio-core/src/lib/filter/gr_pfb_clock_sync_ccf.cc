@@ -55,11 +55,11 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float gain,
   : gr_block ("pfb_clock_sync_ccf",
 	      gr_make_io_signature (1, 1, sizeof(gr_complex)),
 	      gr_make_io_signaturev (1, 4, iosig)),
-    d_updated (false), d_sps(sps), d_nfilters(filter_size),
+    d_updated (false), d_nfilters(filter_size),
     d_max_dev(max_rate_deviation), d_start_count(0)
 {
-  printf("SPS: %f\n", d_sps);
   d_nfilters = filter_size;
+  d_sps = floor(sps);
 
   // Store the last filter between calls to work
   // The accumulator keeps track of overflow to increment the stride correctly.
@@ -68,7 +68,8 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float gain,
   set_alpha(gain);
   set_beta(0.25*gain*gain);
   d_k = d_nfilters / 2;
-  d_rate = 0;
+  d_rate = (sps-floor(sps))*(double)d_nfilters;
+  printf("RATE: %f\n", d_rate);
   d_filtnum = (int)floor(d_k);
 
   d_filters = std::vector<gr_fir_ccf*>(d_nfilters);
@@ -270,19 +271,14 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     d_rate = gr_branchless_clip(d_rate, d_max_dev);
 
     i++;
-    int a = (int)floor(d_sample_num);
     d_sample_num += d_sps;
-    int b = a + (int)floor(d_sps);
     count = (int)floor(d_sample_num);
 
     if(output_items.size() > 2) {
       err[i] = error;
+      outrate[i] = d_rate;
       outk[i] = d_k;
     }
-    if(b != count) {
-      outrate[i] = 1;
-    }
-
   }
 
   // Set the start index at the next entrance to the work function
