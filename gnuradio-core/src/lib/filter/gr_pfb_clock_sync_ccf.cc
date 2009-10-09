@@ -36,11 +36,13 @@
 gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (float sps, float gain,
 						       const std::vector<float> &taps,
 						       unsigned int filter_size,
-						       float init_phase)
+						       float init_phase,
+						       float max_rate_deviation)
 {
   return gr_pfb_clock_sync_ccf_sptr (new gr_pfb_clock_sync_ccf (sps, gain, taps,
 								filter_size,
-								init_phase));
+								init_phase,
+								max_rate_deviation));
 }
 
 int ios[] = {sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float)};
@@ -48,11 +50,13 @@ std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
 gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
 					      const std::vector<float> &taps,
 					      unsigned int filter_size,
-					      float init_phase)
+					      float init_phase,
+					      float max_rate_deviation)
   : gr_block ("pfb_clock_sync_ccf",
 	      gr_make_io_signature (1, 1, sizeof(gr_complex)),
 	      gr_make_io_signaturev (1, 4, iosig)),
-    d_updated (false), d_sps(sps)
+    d_updated (false), d_sps(sps), d_nfilters(filter_size),
+    d_max_dev(max_rate_deviation), d_start_count(0)
 {
   d_nfilters = filter_size;
 
@@ -63,10 +67,8 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
   set_alpha(gain);
   set_beta(0.25*gain*gain);
   d_k = d_nfilters / 2;
-  d_filtnum = (int)floor(d_k);
   d_rate = 0;
-  d_start_count = 0;
-  
+  d_filtnum = (int)floor(d_k);
 
   d_filters = std::vector<gr_fir_ccf*>(d_nfilters);
   d_diff_filters = std::vector<gr_fir_ccf*>(d_nfilters);
@@ -97,7 +99,7 @@ gr_pfb_clock_sync_ccf::set_taps (const std::vector<float> &newtaps,
 				 std::vector< std::vector<float> > &ourtaps,
 				 std::vector<gr_fir_ccf*> &ourfilter)
 {
-  unsigned int i,j;
+  int i,j;
 
   unsigned int ntaps = newtaps.size();
   d_taps_per_filter = (unsigned int)ceil((double)ntaps/(double)d_nfilters);
@@ -233,62 +235,65 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
   // We need this many to process one output
   int nrequired = ninput_items[0] - d_taps_per_filter;
 
-  int i = 0, count = d_start_count;
-  float error;
-  float error_r, error_i;
+  int i = 0, count = (int)floor(d_sample_num);
+  float error, error_r, error_i;
 
   // produce output as long as we can and there are enough input samples
   while((i < noutput_items) && (count < nrequired)) {
-
-    // FIXME: prevent this from asserting
-    assert(d_filtnum < d_nfilters);
     out[i] = d_filters[d_filtnum]->filter(&in[count]);
-    error_r  = out[i].real() * d_diff_filters[d_filtnum]->filter(&in[count]).real();
-    error_i  = out[i].imag() * d_diff_filters[d_filtnum]->filter(&in[count]).imag();
+    gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
+    error_r  = out[i].real() * diff.real();
+    error_i  = out[i].imag() * diff.imag();
     error = error_i + error_r;
 
     d_k = d_k + d_alpha*error + d_rate;
     d_rate = d_rate + d_beta*error;
     d_filtnum = (int)floor(d_k);
 
+    // Keep the current filter number in [0, d_nfilters]
+    // If we've run beyond the last filter, wrap around and go to next sample
+    // If we've go below 0, wrap around and go to previous sample
     while(d_filtnum >= d_nfilters) {
       d_k -= d_nfilters;
       d_filtnum -= d_nfilters;
-      count++;
+      d_sample_num += 1.0;
     }
     while(d_filtnum < 0) {
       d_k += d_nfilters;
       d_filtnum += d_nfilters;
-      count--;
+      d_sample_num -= 1.0;
     }
     
     // Keep our rate within a good range
-    d_rate = gr_branchless_clip(d_rate, 1.5);
+    d_rate = gr_branchless_clip(d_rate, d_max_dev);
 
     i++;
-    count += d_sps;
+    d_sample_num += d_sps;
+    count = (int)floor(d_sample_num);
 
     if(output_items.size() > 2) {
       err[i] = error;
       outrate[i] = d_rate;
       outk[i] = d_k;
     }
-
-    //printf("error: %f  k: %f  rate: %f\n",
-    //	   error, d_k, d_rate);
   }
 
   // Set the start index at the next entrance to the work function
   // if we stop because we run out of input items, jump ahead in the
   // next call to work. Otherwise, we can start at zero.
+  /*
   if(count > nrequired) {
-    d_start_count = count - (nrequired);
+    //d_start_count = count - (nrequired);
+    d_sample_num -= nrequired;
     consume_each(ninput_items[0]-d_taps_per_filter);
   }
   else {
-    d_start_count = 0;
+    d_sample_num -= floor(d_sample_num);
     consume_each(count);
   }
-  
+  */
+  d_sample_num -= floor(d_sample_num);
+  consume_each(count);
+
   return i;
 }

@@ -31,7 +31,8 @@ typedef boost::shared_ptr<gr_pfb_clock_sync_ccf> gr_pfb_clock_sync_ccf_sptr;
 gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (float sps, float gain,
 						       const std::vector<float> &taps,
 						       unsigned int filter_size=32,
-						       float init_phase=0);
+						       float init_phase=0,
+						       float max_rate_deviation=1.5);
 
 class gr_fir_ccf;
 
@@ -53,12 +54,14 @@ class gr_pfb_clock_sync_ccf : public gr_block
   friend gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (float sps, float gain,
 								const std::vector<float> &taps,
 								unsigned int filter_size,
-								float init_phase);
+								float init_phase,
+								float max_rate_deviation);
 
   bool			   d_updated;
-  unsigned int             d_sps;
+  float                    d_sps;
   float                    d_alpha;
   float                    d_beta;
+  float                    d_sample_num;
   int                      d_nfilters;
   std::vector<gr_fir_ccf*> d_filters;
   std::vector<gr_fir_ccf*> d_diff_filters;
@@ -66,9 +69,10 @@ class gr_pfb_clock_sync_ccf : public gr_block
   std::vector< std::vector<float> > d_dtaps;
   float                    d_k;
   float                    d_rate;
+  float                    d_max_dev;
   int                      d_filtnum;
+  int                      d_taps_per_filter;
   unsigned int             d_start_count;
-  unsigned int             d_taps_per_filter;
 
   /*!
    * Build the polyphase filterbank timing synchronizer.
@@ -76,7 +80,8 @@ class gr_pfb_clock_sync_ccf : public gr_block
   gr_pfb_clock_sync_ccf (float sps, float gain,
 			 const std::vector<float> &taps,
 			 unsigned int filter_size,
-			 float init_phase);
+			 float init_phase,
+			 float max_rate_deviation);
   
   void create_diff_taps(const std::vector<float> &newtaps,
 			std::vector<float> &difftaps);
@@ -106,6 +111,11 @@ public:
   void set_beta(float beta)
   {
     d_beta = beta;
+  }
+
+  void set_max_rate_deviation(float m)
+  {
+    d_max_dev = m;
   }
   
   int general_work (int noutput_items,
