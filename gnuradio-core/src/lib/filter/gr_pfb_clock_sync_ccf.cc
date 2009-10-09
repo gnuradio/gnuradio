@@ -33,7 +33,7 @@
 #include <gr_io_signature.h>
 #include <gr_math.h>
 
-gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (float sps, float gain,
+gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
 						       const std::vector<float> &taps,
 						       unsigned int filter_size,
 						       float init_phase,
@@ -47,7 +47,7 @@ gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (float sps, float gain,
 
 int ios[] = {sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float)};
 std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
-gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
+gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float gain,
 					      const std::vector<float> &taps,
 					      unsigned int filter_size,
 					      float init_phase,
@@ -58,6 +58,7 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
     d_updated (false), d_sps(sps), d_nfilters(filter_size),
     d_max_dev(max_rate_deviation), d_start_count(0)
 {
+  printf("SPS: %f\n", d_sps);
   d_nfilters = filter_size;
 
   // Store the last filter between calls to work
@@ -240,14 +241,6 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
 
   // produce output as long as we can and there are enough input samples
   while((i < noutput_items) && (count < nrequired)) {
-    out[i] = d_filters[d_filtnum]->filter(&in[count]);
-    gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
-    error_r  = out[i].real() * diff.real();
-    error_i  = out[i].imag() * diff.imag();
-    error = error_i + error_r;
-
-    d_k = d_k + d_alpha*error + d_rate;
-    d_rate = d_rate + d_beta*error;
     d_filtnum = (int)floor(d_k);
 
     // Keep the current filter number in [0, d_nfilters]
@@ -264,18 +257,32 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
       d_sample_num -= 1.0;
     }
     
+    out[i] = d_filters[d_filtnum]->filter(&in[count]);
+    gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
+    error_r  = out[i].real() * diff.real();
+    error_i  = out[i].imag() * diff.imag();
+    error = error_i + error_r;
+
+    d_k = d_k + d_alpha*error + d_rate;
+    d_rate = d_rate + d_beta*error;
+
     // Keep our rate within a good range
     d_rate = gr_branchless_clip(d_rate, d_max_dev);
 
     i++;
+    int a = (int)floor(d_sample_num);
     d_sample_num += d_sps;
+    int b = a + (int)floor(d_sps);
     count = (int)floor(d_sample_num);
 
     if(output_items.size() > 2) {
       err[i] = error;
-      outrate[i] = d_rate;
       outk[i] = d_k;
     }
+    if(b != count) {
+      outrate[i] = 1;
+    }
+
   }
 
   // Set the start index at the next entrance to the work function

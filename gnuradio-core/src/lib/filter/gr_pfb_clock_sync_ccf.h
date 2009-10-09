@@ -28,7 +28,7 @@
 
 class gr_pfb_clock_sync_ccf;
 typedef boost::shared_ptr<gr_pfb_clock_sync_ccf> gr_pfb_clock_sync_ccf_sptr;
-gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (float sps, float gain,
+gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
 						       const std::vector<float> &taps,
 						       unsigned int filter_size=32,
 						       float init_phase=0,
@@ -51,17 +51,17 @@ class gr_pfb_clock_sync_ccf : public gr_block
   /*!
    * Build the polyphase filterbank timing synchronizer.
    */
-  friend gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (float sps, float gain,
+  friend gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
 								const std::vector<float> &taps,
 								unsigned int filter_size,
 								float init_phase,
 								float max_rate_deviation);
 
   bool			   d_updated;
-  float                    d_sps;
+  double                   d_sps;
+  double                   d_sample_num;
   float                    d_alpha;
   float                    d_beta;
-  float                    d_sample_num;
   int                      d_nfilters;
   std::vector<gr_fir_ccf*> d_filters;
   std::vector<gr_fir_ccf*> d_diff_filters;
@@ -77,7 +77,7 @@ class gr_pfb_clock_sync_ccf : public gr_block
   /*!
    * Build the polyphase filterbank timing synchronizer.
    */
-  gr_pfb_clock_sync_ccf (float sps, float gain,
+  gr_pfb_clock_sync_ccf (double sps, float gain,
 			 const std::vector<float> &taps,
 			 unsigned int filter_size,
 			 float init_phase,

@@ -22,7 +22,7 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,pfb_clock_sync_ccf);
 
-gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (float sps, float gain,
+gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
 						       const std::vector<float> &taps,
 						       unsigned int filter_size=32,
 						       float init_phase=0,
@@ -31,7 +31,7 @@ gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (float sps, float gain,
 class gr_pfb_clock_sync_ccf : public gr_block
 {
  private:
-  gr_pfb_clock_sync_ccf (float sps, float gain,
+  gr_pfb_clock_sync_ccf (double sps, float gain,
 			 const std::vector<float> &taps,
 			 unsigned int filter_size,
 			 float init_phase,
