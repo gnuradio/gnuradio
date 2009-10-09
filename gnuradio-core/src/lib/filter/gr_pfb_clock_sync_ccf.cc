@@ -242,22 +242,6 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
 
   // produce output as long as we can and there are enough input samples
   while((i < noutput_items) && (count < nrequired)) {
-    d_filtnum = (int)floor(d_k);
-
-    // Keep the current filter number in [0, d_nfilters]
-    // If we've run beyond the last filter, wrap around and go to next sample
-    // If we've go below 0, wrap around and go to previous sample
-    while(d_filtnum >= d_nfilters) {
-      d_k -= d_nfilters;
-      d_filtnum -= d_nfilters;
-      d_sample_num += 1.0;
-    }
-    while(d_filtnum < 0) {
-      d_k += d_nfilters;
-      d_filtnum += d_nfilters;
-      d_sample_num -= 1.0;
-    }
-    
     out[i] = d_filters[d_filtnum]->filter(&in[count]);
     gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
     error_r  = out[i].real() * diff.real();
@@ -266,13 +250,31 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
 
     d_k = d_k + d_alpha*error + d_rate;
     d_rate = d_rate + d_beta*error;
+    d_filtnum = (int)floor(d_k);
 
+    // Keep the current filter number in [0, d_nfilters]
+    // If we've run beyond the last filter, wrap around and go to next sample
+    // If we've go below 0, wrap around and go to previous sample
+    while(d_filtnum >= d_nfilters) {
+      d_k -= d_nfilters;
+      d_filtnum -= d_nfilters;
+      //d_sample_num += 1.0;
+      count += 1;
+    }
+    while(d_filtnum < 0) {
+      d_k += d_nfilters;
+      d_filtnum += d_nfilters;
+      //d_sample_num -= 1.0;
+      count -= 1;
+    }
+    
     // Keep our rate within a good range
     d_rate = gr_branchless_clip(d_rate, d_max_dev);
 
     i++;
-    d_sample_num += d_sps;
-    count = (int)floor(d_sample_num);
+    //d_sample_num += d_sps;
+    //count = (int)floor(d_sample_num);
+    count += (int)floor(d_sps);
 
     if(output_items.size() > 2) {
       err[i] = error;
@@ -295,7 +297,8 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     consume_each(count);
   }
   */
-  d_sample_num -= floor(d_sample_num);
+  //d_sample_num -= floor(d_sample_num);
+  d_sample_num = 0;
   consume_each(count);
 
   return i;
