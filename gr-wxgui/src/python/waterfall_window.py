@@ -41,6 +41,7 @@ DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'waterfall_rate', 30)
 DEFAULT_WIN_SIZE = (600, 300)
 DIV_LEVELS = (1, 2, 5, 10, 20)
 MIN_DYNAMIC_RANGE, MAX_DYNAMIC_RANGE = 10, 200
+DYNAMIC_RANGE_STEP = 10.
 COLOR_MODES = (
 	('RGB1', 'rgb1'),
 	('RGB2', 'rgb2'),
@@ -145,13 +146,13 @@ class control_panel(wx.Panel):
 	def _on_clear_button(self, event):
 		self.parent[NUM_LINES_KEY] = self.parent[NUM_LINES_KEY]
 	def _on_incr_dynamic_range(self, event):
-		self.parent[DYNAMIC_RANGE_KEY] = min(self.parent[DYNAMIC_RANGE_KEY] + 10, MAX_DYNAMIC_RANGE)
+		self.parent[DYNAMIC_RANGE_KEY] = min(MAX_DYNAMIC_RANGE, common.get_clean_incr(self.parent[DYNAMIC_RANGE_KEY]))
 	def _on_decr_dynamic_range(self, event):
-		self.parent[DYNAMIC_RANGE_KEY] = max(self.parent[DYNAMIC_RANGE_KEY] - 10, MIN_DYNAMIC_RANGE)
+		self.parent[DYNAMIC_RANGE_KEY] = max(MIN_DYNAMIC_RANGE, common.get_clean_decr(self.parent[DYNAMIC_RANGE_KEY]))
 	def _on_incr_ref_level(self, event):
-		self.parent[REF_LEVEL_KEY] = self.parent[REF_LEVEL_KEY] + self.parent[DYNAMIC_RANGE_KEY]*.1
+		self.parent[REF_LEVEL_KEY] = self.parent[REF_LEVEL_KEY] + self.parent[DYNAMIC_RANGE_KEY]/DYNAMIC_RANGE_STEP
 	def _on_decr_ref_level(self, event):
-		self.parent[REF_LEVEL_KEY] = self.parent[REF_LEVEL_KEY] - self.parent[DYNAMIC_RANGE_KEY]*.1
+		self.parent[REF_LEVEL_KEY] = self.parent[REF_LEVEL_KEY] - self.parent[DYNAMIC_RANGE_KEY]/DYNAMIC_RANGE_STEP
 	def _on_incr_time_scale(self, event):
 		old_rate = self.parent[FRAME_RATE_KEY]
 		self.parent[FRAME_RATE_KEY] *= 0.75
@@ -241,8 +242,8 @@ class waterfall_window(wx.Panel, pubsub.pubsub):
 		if not len(self.samples): return
 		min_level, max_level = common.get_min_max_fft(self.samples)
 		#set the range and level
-		self[REF_LEVEL_KEY] = max_level
-		self[DYNAMIC_RANGE_KEY] = max_level - min_level
+		self[DYNAMIC_RANGE_KEY] = common.get_clean_num(max_level - min_level)
+		self[REF_LEVEL_KEY] = DYNAMIC_RANGE_STEP*round(.5+max_level/DYNAMIC_RANGE_STEP)
 
 	def handle_msg(self, msg):
 		"""
