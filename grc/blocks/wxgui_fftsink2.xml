@@ -23,6 +23,9 @@ fftsink2.$(type.fcn)(
 	avg_alpha=#if $avg_alpha() then $avg_alpha else 'None'#,
 	title=$title,
 	peak_hold=$peak_hold,
+#if $win_size()
+	size=$win_size,
+#end if
 )
 #if not $grid_pos()
 $(parent).Add(self.$(id).win)
@@ -159,6 +162,13 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<hide>#if $average() == 'True' then 'none' else 'all'#</hide>
 	</param>
 	<param>
+		<name>Window Size</name>
+		<key>win_size</key>
+		<value></value>
+		<type>int_vector</type>
+		<hide>#if $win_size() then 'none' else 'part'#</hide>
+	</param>
+	<param>
 		<name>Grid Position</name>
 		<key>grid_pos</key>
 		<value></value>
@@ -170,12 +180,15 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<value></value>
 		<type>notebook</type>
 	</param>
+	<check>not $win_size or len($win_size) == 2</check>
 	<sink>
 		<name>in</name>
 		<type>$type</type>
 	</sink>
 	<doc>
 Set Average Alpha to 0 for automatic setting.
+
+Leave the window blank for the default size, otherwise enter a tuple of (width, height) pixels.
 
 Use the Grid Position (row, column, row span, column span) to position the graphical element in the window.
 
