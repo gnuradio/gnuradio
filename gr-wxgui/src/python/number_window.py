@@ -58,6 +58,8 @@ class control_panel(wx.Panel):
 		"""
 		self.parent = parent
 		wx.Panel.__init__(self, parent)
+		parent[SHOW_CONTROL_PANEL_KEY] = True
+		parent.subscribe(SHOW_CONTROL_PANEL_KEY, self.Show)
 		control_box = wx.BoxSizer(wx.VERTICAL)
 		#checkboxes for average and peak hold
 		control_box.AddStretchSpacer()

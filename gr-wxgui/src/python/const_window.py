@@ -64,6 +64,8 @@ class control_panel(wx.Panel):
 		"""
 		self.parent = parent
 		wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
+		parent[SHOW_CONTROL_PANEL_KEY] = True
+		parent.subscribe(SHOW_CONTROL_PANEL_KEY, self.Show)
 		control_box = forms.static_box_sizer(
 			parent=self, label='Options',
 			bold=True, orient=wx.VERTICAL,
