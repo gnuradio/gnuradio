@@ -213,12 +213,13 @@ def get_min_max(samples):
 	@param samples the array of real values
 	@return a tuple of min, max
 	"""
-	scale_factor = 3
+	factor = 2.0
 	mean = numpy.average(samples)
-	rms = numpy.max([scale_factor*((numpy.sum((samples-mean)**2)/len(samples))**.5), .1])
-	min_val = mean - rms
-	max_val = mean + rms
-	return min_val, max_val
+	std = numpy.std(samples)
+	fft = numpy.abs(numpy.fft.fft(samples - mean))
+	envelope = 2*numpy.max(fft)/len(samples)
+	ampl = max(std, envelope) or 0.1
+	return mean - factor*ampl, mean + factor*ampl
 
 def get_min_max_fft(fft_samps):
 	"""
