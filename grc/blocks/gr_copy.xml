@@ -46,6 +46,14 @@ self.$(id).set_enabled($enabled)</make>
 		<key>enabled</key>
 		<value>True</value>
 		<type>bool</type>
+		<option>
+			<name>Enabled</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Disabled</name>
+			<key>False</key>
+		</option>
 	</param>
 	<param>
 		<name>Vec Length</name>
