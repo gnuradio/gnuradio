@@ -56,7 +56,7 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float gain,
 	      gr_make_io_signature (1, 1, sizeof(gr_complex)),
 	      gr_make_io_signaturev (1, 4, iosig)),
     d_updated (false), d_nfilters(filter_size),
-    d_max_dev(max_rate_deviation), d_start_count(0)
+    d_max_dev(max_rate_deviation)
 {
   d_nfilters = filter_size;
   d_sps = floor(sps);
@@ -69,7 +69,6 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float gain,
   set_beta(0.25*gain*gain);
   d_k = d_nfilters / 2;
   d_rate = (sps-floor(sps))*(double)d_nfilters;
-  printf("RATE: %f\n", d_rate);
   d_filtnum = (int)floor(d_k);
 
   d_filters = std::vector<gr_fir_ccf*>(d_nfilters);
@@ -237,7 +236,7 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
   // We need this many to process one output
   int nrequired = ninput_items[0] - d_taps_per_filter;
 
-  int i = 0, count = (int)floor(d_sample_num);
+  int i = 0, count = 0;
   float error, error_r, error_i;
 
   // produce output as long as we can and there are enough input samples
@@ -258,13 +257,11 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     while(d_filtnum >= d_nfilters) {
       d_k -= d_nfilters;
       d_filtnum -= d_nfilters;
-      //d_sample_num += 1.0;
       count += 1;
     }
     while(d_filtnum < 0) {
       d_k += d_nfilters;
       d_filtnum += d_nfilters;
-      //d_sample_num -= 1.0;
       count -= 1;
     }
     
@@ -272,8 +269,6 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     d_rate = gr_branchless_clip(d_rate, d_max_dev);
 
     i++;
-    //d_sample_num += d_sps;
-    //count = (int)floor(d_sample_num);
     count += (int)floor(d_sps);
 
     if(output_items.size() > 2) {
@@ -282,23 +277,6 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
       outk[i] = d_k;
     }
   }
-
-  // Set the start index at the next entrance to the work function
-  // if we stop because we run out of input items, jump ahead in the
-  // next call to work. Otherwise, we can start at zero.
-  /*
-  if(count > nrequired) {
-    //d_start_count = count - (nrequired);
-    d_sample_num -= nrequired;
-    consume_each(ninput_items[0]-d_taps_per_filter);
-  }
-  else {
-    d_sample_num -= floor(d_sample_num);
-    consume_each(count);
-  }
-  */
-  //d_sample_num -= floor(d_sample_num);
-  d_sample_num = 0;
   consume_each(count);
 
   return i;
