@@ -143,6 +143,10 @@ usrp_one_time_init (libusb_context **ctx)
 
   if ((ret = libusb_init (ctx)) < 0)
     fprintf (stderr, "usrp: libusb_init failed: %s\n", _get_usb_error_str(ret));
+
+  // Set debug verbosity to max. This will only work if the debug option is
+  // compiled into libusb. Otherwise this call does nothing.
+  libusb_set_debug(*ctx, 3);
 }
 
 void
