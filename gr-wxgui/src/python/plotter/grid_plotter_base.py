@@ -36,8 +36,9 @@ AXIS_LABEL_PADDING = 5
 TICK_LABEL_PADDING = 5
 TITLE_LABEL_PADDING = 7
 POINT_LABEL_FONT_SIZE = 8
-POINT_LABEL_COLOR_SPEC = (1, 1, .5)
+POINT_LABEL_COLOR_SPEC = (1, 1, 0.5, 0.75)
 POINT_LABEL_PADDING = 3
+POINT_LABEL_OFFSET = 10
 GRID_LINE_DASH_LEN = 4
 
 ##################################################
@@ -395,8 +396,12 @@ class grid_plotter_base(plotter_base):
 		if not label_str: return
 		txt = gltext.Text(label_str, font_size=POINT_LABEL_FONT_SIZE)
 		w, h = txt.get_size()
+		#enable transparency
+		GL.glEnable(GL.GL_BLEND)
+		GL.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
 		#draw rect + text
-		GL.glColor3f(*POINT_LABEL_COLOR_SPEC)
-		if x > self.width/2: x -= w+2*POINT_LABEL_PADDING
+		GL.glColor4f(*POINT_LABEL_COLOR_SPEC)
+		if x > self.width/2: x -= w+2*POINT_LABEL_PADDING + POINT_LABEL_OFFSET
+		else: x += POINT_LABEL_OFFSET
 		self._draw_rect(x, y-h-2*POINT_LABEL_PADDING, w+2*POINT_LABEL_PADDING, h+2*POINT_LABEL_PADDING)
 		txt.draw_text(wx.Point(x+POINT_LABEL_PADDING, y-h-POINT_LABEL_PADDING))

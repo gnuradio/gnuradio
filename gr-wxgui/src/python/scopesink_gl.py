@@ -34,7 +34,7 @@ class ac_couple_block(gr.hier_block2):
 	Mute the low pass filter to disable ac coupling.
 	"""
 
-	def __init__(self, controller, ac_couple_key, ac_couple, sample_rate_key):
+	def __init__(self, controller, ac_couple_key, sample_rate_key):
 		gr.hier_block2.__init__(
 			self,
 			"ac_couple",
@@ -52,13 +52,13 @@ class ac_couple_block(gr.hier_block2):
 		controller.subscribe(ac_couple_key, lambda x: mute.set_mute(not x))
 		controller.subscribe(sample_rate_key, lambda x: lpf.set_taps(0.05))
 		#initialize
-		controller[ac_couple_key] = ac_couple
+		controller[ac_couple_key] = controller[ac_couple_key]
 		controller[sample_rate_key] = controller[sample_rate_key]
 
 ##################################################
 # Scope sink block (wrapper for old wxgui)
 ##################################################
-class _scope_sink_base(gr.hier_block2):
+class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 	"""
 	A scope block with a gui window.
 	"""
@@ -102,25 +102,10 @@ class _scope_sink_base(gr.hier_block2):
 		self.controller.publish(TRIGGER_SLOPE_KEY, scope.get_trigger_slope)
 		self.controller.subscribe(TRIGGER_CHANNEL_KEY, scope.set_trigger_channel)
 		self.controller.publish(TRIGGER_CHANNEL_KEY, scope.get_trigger_channel)
-		#connect
-		if self._real:
-			for i in range(num_inputs):
-				self.connect(
-					(self, i),
-					ac_couple_block(self.controller, common.index_key(AC_COUPLE_KEY, i), ac_couple, SAMPLE_RATE_KEY),
-					(scope, i),
-				)
-		else:
-			for i in range(num_inputs):
-				c2f = gr.complex_to_float() 
-				self.connect((self, i), c2f)
-				for j in range(2):
-					self.connect(
-						(c2f, j), 
-						ac_couple_block(self.controller, common.index_key(AC_COUPLE_KEY, 2*i+j), ac_couple, SAMPLE_RATE_KEY),
-						(scope, 2*i+j),
-					)
-			num_inputs *= 2
+		actual_num_inputs = self._real and num_inputs or num_inputs*2
+		#init ac couple
+		for i in range(actual_num_inputs):
+			self.controller[common.index_key(AC_COUPLE_KEY, i)] = ac_couple
 		#start input watcher
 		common.input_watcher(msgq, self.controller, MSG_KEY)
 		#create window
@@ -130,7 +115,7 @@ class _scope_sink_base(gr.hier_block2):
 			size=size,
 			title=title,
 			frame_rate=frame_rate,
-			num_inputs=num_inputs,
+			num_inputs=actual_num_inputs,
 			sample_rate_key=SAMPLE_RATE_KEY,
 			t_scale=t_scale,
 			v_scale=v_scale,
@@ -144,6 +129,24 @@ class _scope_sink_base(gr.hier_block2):
 			msg_key=MSG_KEY,
 		)
 		common.register_access_methods(self, self.win)
+		#connect
+		if self._real:
+			for i in range(num_inputs):
+				self.wxgui_connect(
+					(self, i),
+					ac_couple_block(self.controller, common.index_key(AC_COUPLE_KEY, i), SAMPLE_RATE_KEY),
+					(scope, i),
+				)
+		else:
+			for i in range(num_inputs):
+				c2f = gr.complex_to_float() 
+				self.wxgui_connect((self, i), c2f)
+				for j in range(2):
+					self.connect(
+						(c2f, j), 
+						ac_couple_block(self.controller, common.index_key(AC_COUPLE_KEY, 2*i+j), SAMPLE_RATE_KEY),
+						(scope, 2*i+j),
+					)
 
 class scope_sink_f(_scope_sink_base):
 	_item_size = gr.sizeof_float
