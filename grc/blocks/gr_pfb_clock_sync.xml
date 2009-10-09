@@ -8,7 +8,7 @@
 	<name>Polyphase Clock Sync</name>
 	<key>gr_pfb_clock_sync_ccf</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.pfb_clock_sync_ccf($sps, $alpha, $taps, $filter_size, $init_phase)
+	<make>gr.pfb_clock_sync_ccf($sps, $alpha, $taps, $filter_size, $init_phase, $max_dev)
 self.$(id).set_beta($beta)</make>
 	<callback>set_taps($taps)</callback>
 	<callback>set_alpha($alpha)</callback>
@@ -42,6 +42,11 @@ self.$(id).set_beta($beta)</make>
 	<param>
 		<name>Initial Phase</name>
 		<key>init_phase</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Maximum Rate Deviation</name>
+		<key>max_dev</key>
 		<type>real</type>
 	</param>
 	<sink>
