@@ -30,7 +30,7 @@ class wxgui_hb(object):
 	The wxgui hier block helper/wrapper class:
 	A hier block should inherit from this class to make use of the wxgui connect method.
 	To use, call wxgui_connect in place of regular connect; self.win must be defined.
-	The implementation will conditionally connect or disconnect the self (source) of the hb.
+	The implementation will conditionally enable the copy block after the source (self).
 	This condition depends on weather or not the window is visible with the parent notebooks.
 	This condition will be re-checked on every ui update event.
 	"""
@@ -45,47 +45,29 @@ class wxgui_hb(object):
 		"""
 		try:
 			assert points[0] == self or points[0][0] == self
-			self._conditional_connect(points[0], points[1])
-			if len(points[1:]) > 1: self.connect(*points[1:])
-		except (AssertionError, IndexError): self.connect(*points)
+			copy = gr.copy(self._hb.input_signature().sizeof_stream_item(0))
+			handler = self._handler_factory(copy.set_enabled)
+			handler(False) #initially disable the copy block
+			self._bind_to_visible_event(win=self.win, handler=handler)
+			points = list(points)
+			points.insert(1, copy) #insert the copy block into the chain
+		except (AssertionError, IndexError): pass
+		self.connect(*points) #actually connect the blocks
 
-	def _conditional_connect(self, source, sink):
+	@staticmethod
+	def _handler_factory(handler):
 		"""
-		Create a handler for visibility changes.
-		Initially call the handler to setup the fg.
-		Bind the handler to the visibility meta event.
+		Create a function that will cache the visibility flag,
+		and only call the handler when that flag changes.
+		@param handler the function to call on a change
+		@return a function of 1 argument
 		"""
-		handler = self._conditional_connect_handler_factory(source=source, sink=sink)
-		handler(False, init=True) #initially connect
-		self._bind_to_visible_event(win=self.win, handler=handler)
-
-	def _conditional_connect_handler_factory(self, source, sink):
-		"""
-		Create a function that will handle the re-connections based on a flag.
-		The current state of the connection is stored in the namespace.
-		!!!#TODO This entire method could be replaced with a mute block that starves the stream.
-		"""
-		nulls = list()
 		cache = [None]
-		size = self._hb.input_signature().sizeof_stream_item(0)
-		def callback(visible, init=False):
-			if visible == cache[0]: return
+		def callback(visible):
+			if cache[0] == visible: return
 			cache[0] = visible
-			if not init: self.lock()
-			#print 'visible', visible, source, sink
-			if visible:
-				if not init:
-					self.disconnect(source, nulls[0])
-					self.disconnect(nulls[1], nulls[2])
-					self.disconnect(nulls[2], sink)
-					while nulls: nulls.pop()
-				self.connect(source, sink)
-			else:
-				if not init: self.disconnect(source, sink)
-				nulls.extend([gr.null_sink(size), gr.null_source(size), gr.head(size, 0)])
-				self.connect(source, nulls[0])
-				self.connect(nulls[1], nulls[2], sink)
-			if not init: self.unlock()
+			#print visible, handler
+			handler(visible)
 		return callback
 
 	@staticmethod

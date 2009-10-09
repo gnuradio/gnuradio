@@ -1,14 +1,16 @@
 <?xml version="1.0"?>
 <!--
 ###################################################
-##Kludge Copy
+##Copy
 ###################################################
  -->
 <block>
-	<name>Kludge Copy</name>
-	<key>gr_kludge_copy</key>
+	<name>Copy</name>
+	<key>gr_copy</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.kludge_copy($type.size*$vlen)</make>
+	<make>gr.copy($type.size*$vlen)
+self.$(id).set_enabled($enabled)</make>
+	<callback>set_enabled($enabled)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
@@ -40,10 +42,10 @@
 		</option>
 	</param>
 	<param>
-		<name>Num Ports</name>
-		<key>num_ports</key>
-		<value>1</value>
-		<type>int</type>
+		<name>Enabled</name>
+		<key>enabled</key>
+		<value>True</value>
+		<type>bool</type>
 	</param>
 	<param>
 		<name>Vec Length</name>
@@ -51,18 +53,15 @@
 		<value>1</value>
 		<type>int</type>
 	</param>
-	<check>$num_ports &gt; 0</check>
 	<check>$vlen &gt; 0</check>
 	<sink>
 		<name>in</name>
 		<type>$type</type>
 		<vlen>$vlen</vlen>
-		<nports>$num_ports</nports>
 	</sink>
 	<source>
 		<name>out</name>
 		<type>$type</type>
 		<vlen>$vlen</vlen>
-		<nports>$num_ports</nports>
 	</source>
 </block>
