@@ -64,10 +64,9 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float gain,
   // Store the last filter between calls to work
   // The accumulator keeps track of overflow to increment the stride correctly.
   // set it here to the fractional difference based on the initial phaes
-  // assert(init_phase <= 2*M_PI);
   set_alpha(gain);
   set_beta(0.25*gain*gain);
-  d_k = d_nfilters / 2;
+  d_k = init_phase;
   d_rate = (sps-floor(sps))*(double)d_nfilters;
   d_filtnum = (int)floor(d_k);
 
