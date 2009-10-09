@@ -241,14 +241,6 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
 
   // produce output as long as we can and there are enough input samples
   while((i < noutput_items) && (count < nrequired)) {
-    out[i] = d_filters[d_filtnum]->filter(&in[count]);
-    gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
-    error_r  = out[i].real() * diff.real();
-    error_i  = out[i].imag() * diff.imag();
-    error = error_i + error_r;
-
-    d_k = d_k + d_alpha*error + d_rate;
-    d_rate = d_rate + d_beta*error;
     d_filtnum = (int)floor(d_k);
 
     // Keep the current filter number in [0, d_nfilters]
@@ -264,6 +256,15 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
       d_filtnum += d_nfilters;
       count -= 1;
     }
+
+    out[i] = d_filters[d_filtnum]->filter(&in[count]);
+    gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
+    error_r  = out[i].real() * diff.real();
+    error_i  = out[i].imag() * diff.imag();
+    error = error_i + error_r;
+
+    d_k = d_k + d_alpha*error + d_rate;
+    d_rate = d_rate + d_beta*error;
     
     // Keep our rate within a good range
     d_rate = gr_branchless_clip(d_rate, d_max_dev);
