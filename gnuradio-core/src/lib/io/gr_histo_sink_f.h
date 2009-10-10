@@ -25,7 +25,7 @@
 
 #include <gr_sync_block.h>
 #include <gr_msg_queue.h>
-#include <pthread.h>
+#include <gruel/thread.h>
 
 class gr_histo_sink_f;
 typedef boost::shared_ptr<gr_histo_sink_f> gr_histo_sink_f_sptr;
@@ -45,7 +45,7 @@ private:
   unsigned int d_sample_count;
   unsigned int *d_bins;
   float *d_samps;
-  pthread_mutex_t d_mutex;
+  gruel::mutex d_mutex;
 
   friend gr_histo_sink_f_sptr gr_make_histo_sink_f (gr_msg_queue_sptr msgq);
   gr_histo_sink_f (gr_msg_queue_sptr msgq);

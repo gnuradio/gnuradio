@@ -53,7 +53,6 @@ gr_histo_sink_f::gr_histo_sink_f (gr_msg_queue_sptr msgq)
   : gr_sync_block ("histo_sink_f", gr_make_io_signature (1, 1, sizeof (float)), gr_make_io_signature (0, 0, 0)),
   d_msgq (msgq), d_num_bins(11), d_frame_size(1000), d_sample_count(0), d_bins(NULL), d_samps(NULL)
 {
-  pthread_mutex_init(&d_mutex, 0);
   //allocate arrays and clear
   set_num_bins(d_num_bins);
   set_frame_size(d_frame_size);
@@ -61,7 +60,6 @@ gr_histo_sink_f::gr_histo_sink_f (gr_msg_queue_sptr msgq)
 
 gr_histo_sink_f::~gr_histo_sink_f (void)
 {
-  pthread_mutex_destroy(&d_mutex);
   delete [] d_samps;
   delete [] d_bins;
 }
@@ -72,7 +70,7 @@ gr_histo_sink_f::work (int noutput_items,
   gr_vector_void_star &output_items)
 {
   const float *in = (const float *) input_items[0];
-  pthread_mutex_lock(&d_mutex);
+  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
   for (unsigned int i = 0; i < (unsigned int)noutput_items; i++){
     d_samps[d_sample_count] = in[i];
     d_sample_count++;
@@ -82,7 +80,6 @@ gr_histo_sink_f::work (int noutput_items,
       clear();
     }
   }
-  pthread_mutex_unlock(&d_mutex);
   return noutput_items;
 }
 
@@ -148,22 +145,20 @@ gr_histo_sink_f::get_num_bins(void){
  **************************************************/
 void
 gr_histo_sink_f::set_frame_size(unsigned int frame_size){
-  pthread_mutex_lock(&d_mutex);
+  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
   d_frame_size = frame_size;
   /* allocate a new sample array */
   delete [] d_samps;
   d_samps = new float[d_frame_size];
   clear();
-  pthread_mutex_unlock(&d_mutex);
 }
 
 void
 gr_histo_sink_f::set_num_bins(unsigned int num_bins){
-  pthread_mutex_lock(&d_mutex);
+  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
   d_num_bins = num_bins;
   /* allocate a new bin array */
   delete [] d_bins;
   d_bins = new unsigned int[d_num_bins];
   clear();
-  pthread_mutex_unlock(&d_mutex);
 }
