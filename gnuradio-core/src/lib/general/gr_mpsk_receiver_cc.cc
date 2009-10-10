@@ -35,7 +35,7 @@
 
 #define M_TWOPI (2*M_PI)
 #define VERBOSE_MM     0     // Used for debugging symbol timing loop
-#define VERBOSE_COSTAS 1     // Used for debugging phase and frequency tracking
+#define VERBOSE_COSTAS 0     // Used for debugging phase and frequency tracking
 
 // Public constructor
 

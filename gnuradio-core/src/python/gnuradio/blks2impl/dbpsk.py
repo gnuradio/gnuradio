@@ -251,37 +251,19 @@ class dbpsk_demod(gr.hier_block2):
         # symbol clock recovery
         if not self._mm_gain_mu:
             self._mm_gain_mu = 0.1
-            
+
         self._mm_omega = self._samples_per_symbol
         self._mm_gain_omega = .25 * self._mm_gain_mu * self._mm_gain_mu
         self._costas_beta  = 0.25 * self._costas_alpha * self._costas_alpha
         fmin = -0.25
         fmax = 0.25
         
-        #self.receiver=gr.mpsk_receiver_cc(arity, 0,
-        #                                 self._costas_alpha, self._costas_beta,
-        #                                 fmin, fmax,
-        #                                 self._mm_mu, self._mm_gain_mu,
-        #                                 self._mm_omega, self._mm_gain_omega,
-        #                                 self._mm_omega_relative_limit)
-
-        self.clock_recov = gr.costas_loop_cc(self._costas_alpha,
-                                             self._costas_beta,
-                                             fmax, fmin, arity)
-        if 0:
-            self.time_recov = gr.clock_recovery_mm_cc(self._mm_omega,
-                                                      self._mm_gain_omega,
-                                                      self._mm_mu,
-                                                      self._mm_gain_mu,
-                                                      self._mm_omega_relative_limit)
-        else:
-            nfilts = 8
-            ntaps = nfilts*ntaps
-            taps = gr.firdes.root_raised_cosine(
-                nfilts, 1.0, 0.25/nfilts, self._excess_bw, ntaps)
-            self.time_recov = gr.pfb_clock_sync_ccf(self._mm_omega,
-                                                    self._mm_gain_mu,
-                                                    taps, nfilts)
+        self.receiver=gr.mpsk_receiver_cc(arity, 0,
+                                          self._costas_alpha, self._costas_beta,
+                                          fmin, fmax,
+                                          self._mm_mu, self._mm_gain_mu,
+                                          self._mm_omega, self._mm_gain_omega,
+                                          self._mm_omega_relative_limit)
             
         # Do differential decoding based on phase change of symbols
         self.diffdec = gr.diff_phasor_cc()
@@ -306,9 +288,7 @@ class dbpsk_demod(gr.hier_block2):
             self._setup_logging()
 
         # Connect and Initialize base class
-        self.connect(self, self.pre_scaler, self.agc, #self.rrc_filter, self.receiver,
-                     #self.clock_recov,
-                     self.time_recov,
+        self.connect(self, self.pre_scaler, self.agc, self.rrc_filter, self.receiver,
                      self.diffdec, self.slicer, self.symbol_mapper, self.unpack, self)
 
     def samples_per_symbol(self):
