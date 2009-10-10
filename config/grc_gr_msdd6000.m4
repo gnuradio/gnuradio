@@ -29,7 +29,7 @@ AC_DEFUN([GRC_GR_MSDD6000],[
     dnl Don't do gr-msdd6000 if gnuradio-core skipped
     GRC_CHECK_DEPENDENCY(gr-msdd6000, gnuradio-core)
 
-    AC_CHECK_HEADERS(netinet/in.h arpa/inet.h sys/socket.h netdb.h)
+    AC_CHECK_HEADERS(netinet/in.h arpa/inet.h sys/socket.h netdb.h, [], [passed=no])
 
     GRC_BUILD_CONDITIONAL([gr-msdd6000],[
         dnl run_tests is created from run_tests.in.  Make it executable.

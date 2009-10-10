@@ -99,6 +99,9 @@ struct timespec {
 	long	tv_nsec;
 };
 #endif
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 static inline int nanosleep(const struct timespec *req, struct timespec *rem) { return usleep(req->tv_sec*1000000+req->tv_nsec/1000); }
 #endif
 
