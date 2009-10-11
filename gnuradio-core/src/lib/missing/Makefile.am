@@ -1,5 +1,5 @@
 #
-# Copyright 2003,2004,2008 Free Software Foundation, Inc.
+# Copyright 2003,2004,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -33,6 +33,14 @@ EXTRA_DIST = 			\
 
 noinst_LTLIBRARIES = libmissing.la
 
-libmissing_la_SOURCES = 	\
-	bug_work_around_8.cc	\
+libmissing_la_common_SOURCES =	\
+	bug_work_around_8.cc
+
+powerpc_CODE = \
 	posix_memalign.cc	
+
+if MD_CPU_powerpc
+libmissing_la_SOURCES = $(libmissing_la_common_SOURCES) $(powerpc_CODE)
+else
+libmissing_la_SOURCES = $(libmissing_la_common_SOURCES)
+endif

@@ -25,6 +25,10 @@ AC_DEFUN([GRC_GRUEL],[
     dnl   with : if the --with code didn't error out
     dnl   yes  : if the --enable code passed muster and all dependencies are met
     dnl   no   : otherwise
+    if test $passed = yes; then
+	dnl Don't do gruel if guile not available
+	GRC_CHECK_GUILE(gruel)
+    fi
     if test $passed != with; then
 	dnl how and where to find INCLUDES and LA and such
 	gruel_INCLUDES="\

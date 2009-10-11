@@ -123,6 +123,12 @@ print path
 	      ;;
 	    esac
 
+	    case $host_os in
+		 *mingw* )
+	      # Python 2.5 requires ".pyd" instead of ".dll" for extensions
+	      PYTHON_LDFLAGS="-shrext .pyd ${PYTHON_LDFLAGS}"
+	    esac
+
 	    AC_SUBST(PYTHON_LDFLAGS)
 	fi
 ])

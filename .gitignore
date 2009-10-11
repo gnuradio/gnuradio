@@ -24,6 +24,7 @@
 .libs
 TAGS
 *-stamp
+!.gitattributes
 !.gitignore
 make.log
 /configure
