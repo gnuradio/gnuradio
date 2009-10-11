@@ -26,6 +26,10 @@ if PYTHON
 dist_bin_SCRIPTS = \
 	usrp_flex.py \
 	usrp_flex_all.py \
-	usrp_flex_band.py 
-
+	usrp_flex_band.py \
+	usrp_rx_flex.py
 endif
+
+EXTRA_DIST = \
+	usrp_rx_flex.grc
+
