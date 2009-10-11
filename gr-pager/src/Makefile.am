@@ -59,11 +59,6 @@ libgnuradio_pager_la_LDFLAGS =	\
 
 if PYTHON
 
-dist_bin_SCRIPTS = \
-	usrp_flex.py \
-	usrp_flex_all.py \
-	usrp_flex_band.py
-
 ##############################
 # SWIG interface and library
 TESTS = run_tests

@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2009 Free Software Foundation, Inc.
+# Copyright 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,11 +21,11 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = src
-
 if PYTHON
-SUBDIRS += apps
-endif
 
-pkgconfigdir = $(libdir)/pkgconfig
-dist_pkgconfig_DATA = gnuradio-pager.pc
+dist_bin_SCRIPTS = \
+	usrp_flex.py \
+	usrp_flex_all.py \
+	usrp_flex_band.py 
+
+endif

@@ -26,6 +26,7 @@ AC_DEFUN([GRC_GR_PAGER],[
     AC_CONFIG_FILES([\
         gr-pager/Makefile \
 	gr-pager/gnuradio-pager.pc \
+	gr-pager/apps/Makefile \
         gr-pager/src/Makefile \
         gr-pager/src/run_tests
     ])
