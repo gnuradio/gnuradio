@@ -230,12 +230,13 @@ class dbpsk2_demod(gr.hier_block2):
         arity = pow(2,self.bits_per_symbol())
 
         # Automatic gain control
-        #self.agc = gr.agc2_cc(0.6e-1, 1e-3, 1, 1, 100)
-        self.agc = gr.feedforward_agc_cc(16, 1.0)
+        self.agc = gr.agc2_cc(0.6e-1, 1e-3, 1, 1, 100)
+        #self.agc = gr.feedforward_agc_cc(16, 1.0)
 
         self._costas_beta  = 0.25 * self._costas_alpha * self._costas_alpha
-        fmin = -0.25
-        fmax = 0.25
+        # Allow a frequency swing of +/- half of the sample rate
+        fmin = -0.5
+        fmax = 0.5
         
         self.clock_recov = gr.costas_loop_cc(self._costas_alpha,
                                              self._costas_beta,
@@ -247,9 +248,9 @@ class dbpsk2_demod(gr.hier_block2):
             self._timing_beta = 0.020
             
         # RRC data filter
-        nfilts = 8
+        nfilts = 32
         ntaps = 11 * samples_per_symbol*nfilts
-        taps = gr.firdes.root_raised_cosine(nfilts, nfilts, 0.25, self._excess_bw, ntaps)
+        taps = gr.firdes.root_raised_cosine(nfilts, nfilts, 1.0/float(self._samples_per_symbol), self._excess_bw, ntaps)
         self.time_recov = gr.pfb_clock_sync_ccf(self._samples_per_symbol,
                                                 self._timing_alpha,
                                                 taps, nfilts, nfilts/2, self._timing_max_dev)
@@ -279,7 +280,7 @@ class dbpsk2_demod(gr.hier_block2):
 
         # Connect and Initialize base class
         self.connect(self, self.agc,
-                     #self.clock_recov,
+                     self.clock_recov,
                      self.time_recov,
                      self.diffdec, self.slicer, self.symbol_mapper, self.unpack, self)
 
