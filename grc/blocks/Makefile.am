@@ -84,6 +84,7 @@ dist_ourdata_DATA = \
 	gr_complex_to_real.xml \
 	gr_conjugate_cc.xml \
 	gr_constellation_decoder_cb.xml \
+	gr_copy.xml \
 	gr_correlate_access_code_bb.xml \
 	gr_costas_loop_cc.xml \
 	gr_cpfsk_bc.xml \

@@ -1,24 +1,43 @@
-/* -*- c++ -*- */
+/*  -*- c++ -*- */
 /*
- * Copyright 2003,2004,2008,2009 Free Software Foundation, Inc.
- * 
+ * Copyright 2005,2009 Free Software Foundation, Inc.
+ *
  * This file is part of GNU Radio
- * 
+ *
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
+
+#ifndef INCLUDED_USRP_BASIC_H
+#define INCLUDED_USRP_BASIC_H
+
+#include <usrp/db_base.h>
+#include <usrp/usrp_slots.h>
+#include <usrp/usrp_subdev_spec.h>
+#include <usrp/libusb_types.h>
+#include <string>
+#include <vector>
+#include <boost/utility.hpp>
+
+class  fusb_devhandle;
+class  fusb_ephandle;
+
+enum txrx_t {
+  C_RX = 0,
+  C_TX = 1
+};
 
 /*
  * ----------------------------------------------------------------------
@@ -36,24 +55,6 @@
  * ----------------------------------------------------------------------
  */
 
-#ifndef INCLUDED_USRP_BASIC_H
-#define INCLUDED_USRP_BASIC_H
-
-#include <usrp/db_base.h>
-#include <usrp/usrp_slots.h>
-#include <string>
-#include <vector>
-#include <boost/utility.hpp>
-#include <usrp/usrp_subdev_spec.h>
-
-struct usb_dev_handle;
-class  fusb_devhandle;
-class  fusb_ephandle;
-
-enum txrx_t {
-  C_RX = 0,
-  C_TX = 1
-};
 
 /*!
  * \brief abstract base class for usrp operations
@@ -65,16 +66,17 @@ protected:
   void shutdown_daughterboards();
 
 protected:
-  struct usb_dev_handle	*d_udh;
-  int			 d_usb_data_rate;	// bytes/sec
-  int			 d_bytes_per_poll;	// how often to poll for overruns
-  bool			 d_verbose;
-  long                   d_fpga_master_clock_freq;
+  libusb_device_handle		*d_udh;
+  struct libusb_context		*d_ctx;
+  int				 d_usb_data_rate;	// bytes/sec
+  int				 d_bytes_per_poll;	// how often to poll for overruns
+  bool				 d_verbose;
+  long   			 d_fpga_master_clock_freq;
 
-  static const int	 MAX_REGS = 128;
-  unsigned int		 d_fpga_shadows[MAX_REGS];
+  static const int		 MAX_REGS = 128;
+  unsigned int			 d_fpga_shadows[MAX_REGS];
 
-  int			 d_dbid[2];		// daughterboard ID's (side A, side B)
+  int				 d_dbid[2];		// daughterboard ID's (side A, side B)
 
   /*!
    * Shared pointers to subclasses of db_base.
@@ -91,7 +93,7 @@ protected:
 
 
   usrp_basic (int which_board,
-	      struct usb_dev_handle *open_interface (struct usb_device *dev),
+	      libusb_device_handle *open_interface (libusb_device *dev),
 	      const std::string fpga_filename = "",
 	      const std::string firmware_filename = "");
 
@@ -988,4 +990,4 @@ public:
   bool stop ();
 };
 
-#endif
+#endif /* INCLUDED_USRP_BASIC_H */

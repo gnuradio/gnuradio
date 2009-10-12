@@ -1,10 +1,10 @@
-# Date: Mon Feb  4 20:12:22 2008
+# Date: Thu Sep  3 17:40:48 2009
 SET addpads = False
 SET asysymbol = False
 SET busformat = BusFormatAngleBracketNotRipped
 SET createndf = False
 SET designentry = Verilog
-SET device = xc3s1500
+SET device = xc3s2000
 SET devicefamily = spartan3
 SET flowvendor = Other
 SET formalverification = False

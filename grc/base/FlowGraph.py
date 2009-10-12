@@ -184,7 +184,6 @@ class FlowGraph(Element):
 			#only load the block when the block key was valid
 			if block: block.import_data(block_n)
 			else: Messages.send_error_load('Block key "%s" not found in %s'%(key, self.get_parent()))
-		self.rewrite() #rewrite all blocks before connections are made (ex: nports)
 		#build the connections
 		for connection_n in connections_n:
 			#try to make the connection

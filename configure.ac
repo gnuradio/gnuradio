@@ -26,10 +26,10 @@ AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-
-VERSION=3.3svn
-AC_SUBST(VERSION)
-AM_INIT_AUTOMAKE(gnuradio,$VERSION)
+GR_VERSION
+dnl ustar required to have pathnames > 99 chars
+_AM_SET_OPTION([tar-ustar])
+AM_INIT_AUTOMAKE(gnuradio,$RELEASE)
 
 DEFINES=""
 AC_SUBST(DEFINES)
@@ -352,6 +352,7 @@ GRC_GR_COMEDI
 GRC_GR_CVSD_VOCODER
 GRC_GR_GPIO
 GRC_GR_GSM_FR_VOCODER
+GRC_GR_NOAA
 GRC_GR_PAGER
 GRC_GR_RADAR_MONO
 GRC_GR_RADIO_ASTRONOMY
@@ -391,7 +392,6 @@ AC_CONFIG_FILES([\
     Makefile \
     run_tests.sh \
     config/Makefile \
-    debian/changelog \
 ])
 
 dnl run_tests.sh is created from run_tests.sh.in .  Make it executable.
@@ -437,3 +437,4 @@ if test "$with_dirs" != ""; then
     echo
 fi
 
+echo Configured GNU Radio release $RELEASE for build.

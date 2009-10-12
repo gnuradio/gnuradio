@@ -102,6 +102,7 @@ class point_label_thread(threading.Thread, mutex):
 		#bind plotter mouse events
 		self._plotter.Bind(wx.EVT_MOTION, lambda evt: self.enqueue(evt.GetPosition()))
 		self._plotter.Bind(wx.EVT_LEAVE_WINDOW, lambda evt: self.enqueue(None))
+		self._plotter.Bind(wx.EVT_RIGHT_DOWN, lambda evt: plotter.enable_point_label(not plotter.enable_point_label()))
 		#start the thread
 		threading.Thread.__init__(self)
 		self.start()

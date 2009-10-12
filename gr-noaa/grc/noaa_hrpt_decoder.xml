@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<block>
+  <name>HRPT Decoder</name>
+  <key>noaa_hrpt_decoder</key>
+  <category>NOAA</category>
+  <import>from gnuradio import noaa</import>
+  <make>noaa.hrpt_decoder()</make>
+  <sink>
+    <name>in</name>
+    <type>short</type>
+  </sink>
+</block>

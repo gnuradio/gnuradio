@@ -133,12 +133,11 @@ module time_sync
    always @(posedge wb_clk_i)
      if(rst_i)
        int_o <= 0;
-/*
-      else if(tick_int_enable & (internal_tick | internal_tick_d1))
+     else if(tick_int_enable & (internal_tick | internal_tick_d1))
        int_o <= 1;
      else
        int_o <= 0;
-*/
+
    always @(posedge sys_clk_i)
      if(rst_i)
        epoch_o <= 0;

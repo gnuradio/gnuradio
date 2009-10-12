@@ -32,12 +32,10 @@ module serdes_rx
      input ser_rkmsb,
      
      output [31:0] wr_dat_o,
-     output wr_write_o,
-     output wr_done_o,
-     output wr_error_o,
+     output [3:0] wr_flags_o,
      input wr_ready_i,
-     input wr_full_i,
-
+     output wr_ready_o,
+     
      output [15:0] fifo_space,
      output xon_rcvd, output xoff_rcvd,
 
@@ -72,7 +70,7 @@ module serdes_rx
    
    reg [31:0]  line_i;
    reg 	       sop_i, eop_i, error_i;
-   wire        error_o, sop_o, eop_o, write, read, empty, full;
+   wire        error_o, sop_o, eop_o, write;
    reg [15:0]  halfline;
    reg [8:0]   holder;
    wire [31:0] line_o;
@@ -83,14 +81,11 @@ module serdes_rx
    wire [15:0] nextCRC;
    reg 	       write_d;
 
+   wire        rst_rxclk;
+   wire        have_space;
+
    oneshot_2clk rst_1s(.clk_in(clk),.in(rst),.clk_out(ser_rx_clk),.out(rst_rxclk));
 
-   /*
-   ss_rcvr #(.WIDTH(18)) ss_rcvr
-     (.rxclk(ser_rx_clk),.sysclk(clk),.rst(rst),
-      .data_in({ser_rkmsb,ser_rklsb,ser_r}),.data_out(even_data),
-      .clock_present());
-   */
    assign      even_data = {ser_rkmsb,ser_rklsb,ser_r};
    
    always @(posedge ser_rx_clk)
@@ -172,7 +167,7 @@ module serdes_rx
 	   if(chosen_data[17:16] == 0)
 	     begin
 		line_i <= {chosen_data[15:0],halfline};
-		if(full)  // No space to write to!  Should have been avoided by flow control
+		if(~have_space)  // No space to write to!  Should have been avoided by flow control
 		  state <= ERROR;
 		else
 		  begin
@@ -205,7 +200,7 @@ module serdes_rx
 	   if(chosen_data[17:16] == 0)
 	     begin
 		line_i <= {1'b0,1'b0,1'b0,chosen_data[15:0],halfline};
-		if(full)  // No space to write to!
+		if(~have_space)  // No space to write to!
 		  state <= ERROR;
 		else
 		  begin
@@ -221,7 +216,7 @@ module serdes_rx
 	 CRC_CHECK :
 	   if(chosen_data[17:0] == {2'b00,CRC})
 	     begin
-		if(full)
+		if(~have_space)
 		  state <= ERROR;
 		else
 		  begin
@@ -237,7 +232,7 @@ module serdes_rx
 	 ERROR :
 	   begin
 	      error_i <= 1;
-	      if(~full)
+	      if(have_space)
 		state <= IDLE;
 	   end
 	 DONE :
@@ -264,81 +259,25 @@ module serdes_rx
      else write_d <= write_pre;
 
    // Internal FIFO, size 9 is 2K, size 10 is 4K Bytes
-   assign write = eop_i | (error_i & ~full) | (write_d & (state != CRC_CHECK));
+   assign write = eop_i | (error_i & have_space) | (write_d & (state != CRC_CHECK));
 
-
-//`define CASC 1
-`define MYFIFO 1   
-//`define XILFIFO 1
-
-`ifdef CASC   
-   cascadefifo2 #(.WIDTH(35),.SIZE(FIFOSIZE)) serdes_rx_fifo
-     (.clk(clk),.rst(rst),.clear(0),
-      .datain({error_i,sop_i,eop_i,line_i}), .write(write), .full(full),
-      .dataout({error_o,sop_o,eop_o,line_o}), .read(read), .empty(empty),
-      .space(fifo_space),.occupied(fifo_occupied) );
-   assign fifo_full = full;
-   assign fifo_empty = empty;
-`endif
-
-`ifdef MYFIFO
-   wire [FIFOSIZE-1:0] level;
-    fifo_2clock_casc #(.DWIDTH(35),.AWIDTH(FIFOSIZE)) serdes_rx_fifo
+   fifo_2clock_cascade #(.WIDTH(35),.SIZE(FIFOSIZE)) serdes_rx_fifo
      (.arst(rst),
-      .wclk(ser_rx_clk),.datain({error_i,sop_i,eop_i,line_i}), .write(write), .full(full),
-      .rclk(clk),.dataout({error_o,sop_o,eop_o,line_o}), .read(read), .empty(empty),
-      .level_rclk(level) );
-   assign 	       fifo_space = {{(16-FIFOSIZE){1'b0}},{FIFOSIZE{1'b1}}} - 
-		       {{(16-FIFOSIZE){1'b0}},level};
-   assign 	       fifo_occupied = { {(16-FIFOSIZE){1'b0}} ,level};
-   assign 	       fifo_full = full;   // Note -- fifo_full is in the wrong clock domain
-   assign 	       fifo_empty = empty;
-`endif
+      .wclk(ser_rx_clk),.datain({error_i,sop_i,eop_i,line_i}), 
+      .src_rdy_i(write), .dst_rdy_o(have_space), .space(fifo_space), 
+      .rclk(clk),.dataout({error_o,sop_o,eop_o,line_o}), 
+      .src_rdy_o(wr_ready_o), .dst_rdy_i(wr_ready_i), .occupied(fifo_occupied) );
 
-`ifdef XILFIFO
-   wire [FIFOSIZE-1:0] level;
-   fifo_generator_v4_1 ser_rx_fifo
-     (.din({error_i,sop_i,eop_i,line_i}),
-      .rd_clk(clk),
-      .rd_en(read),
-      .rst(rst),
-      .wr_clk(ser_rx_clk),
-      .wr_en(write),
-      .dout({error_o,sop_o,eop_o,line_o}),
-      .empty(empty),
-      .full(full),
-      .rd_data_count(level),
-      .wr_data_count() );
-   assign 	       fifo_space = {{(16-FIFOSIZE){1'b0}},{FIFOSIZE{1'b1}}} - 
-		       {{(16-FIFOSIZE){1'b0}},level};
-   assign 	       fifo_occupied = { {(16-FIFOSIZE){1'b0}}, level };
-   assign 	       fifo_full = full;   // Note -- fifo_full is in the wrong clock domain
-   assign 	       fifo_empty = empty;
-`endif //  `ifdef XILFIFO
-   
+   assign 	       fifo_full = ~have_space;   // Note -- in the wrong clock domain
+   assign 	       fifo_empty = ~wr_ready_o;
    
    // Internal FIFO to Buffer interface
-   reg 	       xfer_active;
-
-   always @(posedge clk)
-     if(rst)
-       xfer_active <= 0;
-     else if(xfer_active & ~empty & (eop_o | wr_full_i | error_o))
-       xfer_active <= 0;
-     else if(wr_ready_i & sop_o)
-       xfer_active <= 1;
-
-   assign      read = (xfer_active | ~sop_o) & ~empty;
-
-   assign      wr_write_o = xfer_active & ~empty;
-   assign      wr_done_o = eop_o & ~empty & xfer_active;
-   //assign      wr_error_o = xfer_active & ((wr_full_i & ~eop_o & ~empty)|error_o);
-   assign      wr_error_o = xfer_active & ~empty & error_o;
-
-   assign      wr_dat_o = line_o;
-
-   wire        slu = ~(({2'b11,K_ERROR,K_ERROR}=={ser_rkmsb,ser_rklsb,ser_r}) ||
+   assign wr_dat_o 		      = line_o;
+   assign wr_flags_o = { 2'b00, eop_o | error_o, sop_o | error_o };
+   
+   wire slu = ~(({2'b11,K_ERROR,K_ERROR}=={ser_rkmsb,ser_rklsb,ser_r}) ||
 		       ({2'b11,K_LOS,K_LOS}=={ser_rkmsb,ser_rklsb,ser_r}));
+   
    reg [3:0]   slu_reg;
    
    always @(posedge clk)
@@ -348,6 +287,6 @@ module serdes_rx
    always @(posedge clk)
      serdes_link_up <= &slu_reg[3:1];
    
-   assign      debug = { full, empty, odd, xfer_active, sop_i, eop_i, error_i, state[2:0] };
+   assign      debug = { have_space, wr_ready_o, odd, sop_i, eop_i, error_i, state[2:0] };
    
 endmodule // serdes_rx

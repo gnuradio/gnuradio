@@ -300,6 +300,7 @@
 		<block>gr_skiphead</block>
 
 		<block>gr_kludge_copy</block>
+		<block>gr_copy</block>
 		<block>gr_nop</block>
 
 		<block>xmlrpc_server</block>

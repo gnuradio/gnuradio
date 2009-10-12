@@ -23,14 +23,6 @@ module simple_gemac_tx
 
    wire [31:0] crc_out;
    
-   localparam MIN_FRAME_LEN  = 64 + 8 - 4; // Min frame length includes preamble but not CRC
-   localparam MAX_FRAME_LEN  = 8192;       // How big are the jumbo frames we want to handle?
-   always @(posedge tx_clk)
-     if(reset |(tx_state == TX_IDLE))
-       frame_len_ctr 	    <= 0;
-     else
-       frame_len_ctr 	    <= frame_len_ctr + 1;
-   
    localparam TX_IDLE 	     = 0;
    localparam TX_PREAMBLE    = 1;
    localparam TX_SOF_DEL     = TX_PREAMBLE + 7;
@@ -48,6 +40,14 @@ module simple_gemac_tx
    localparam TX_PAUSE_FIRST = TX_PAUSE_SOF + 1;
    localparam TX_PAUSE_END   = TX_PAUSE_SOF + 18;
 
+   localparam MIN_FRAME_LEN  = 64 + 8 - 4; // Min frame length includes preamble but not CRC
+   localparam MAX_FRAME_LEN  = 8192;       // How big are the jumbo frames we want to handle?
+   always @(posedge tx_clk)
+     if(reset |(tx_state == TX_IDLE))
+       frame_len_ctr 	    <= 0;
+     else
+       frame_len_ctr 	    <= frame_len_ctr + 1;
+   
    reg send_pause;
    reg [15:0] pause_time_held;
 

@@ -51,8 +51,8 @@ ENTITY fifo_xlnx_2Kx36_2clk IS
 	dout: OUT std_logic_VECTOR(35 downto 0);
 	empty: OUT std_logic;
 	full: OUT std_logic;
-	rd_data_count: OUT std_logic_VECTOR(10 downto 0);
-	wr_data_count: OUT std_logic_VECTOR(10 downto 0));
+	rd_data_count: OUT std_logic_VECTOR(11 downto 0);
+	wr_data_count: OUT std_logic_VECTOR(11 downto 0));
 END fifo_xlnx_2Kx36_2clk;
 
 ARCHITECTURE fifo_xlnx_2Kx36_2clk_a OF fifo_xlnx_2Kx36_2clk IS
@@ -68,8 +68,8 @@ component wrapped_fifo_xlnx_2Kx36_2clk
 	dout: OUT std_logic_VECTOR(35 downto 0);
 	empty: OUT std_logic;
 	full: OUT std_logic;
-	rd_data_count: OUT std_logic_VECTOR(10 downto 0);
-	wr_data_count: OUT std_logic_VECTOR(10 downto 0));
+	rd_data_count: OUT std_logic_VECTOR(11 downto 0);
+	wr_data_count: OUT std_logic_VECTOR(11 downto 0));
 end component;
 
 -- Configuration specification 
@@ -88,7 +88,7 @@ end component;
 			c_use_embedded_reg => 0,
 			c_has_wr_rst => 0,
 			c_wr_freq => 1,
-			c_use_dout_rst => 0,
+			c_use_dout_rst => 1,
 			c_underflow_low => 0,
 			c_has_meminit_file => 0,
 			c_has_overflow => 0,
@@ -102,21 +102,21 @@ end component;
 			c_has_rd_rst => 0,
 			c_has_almost_full => 0,
 			c_has_rst => 1,
-			c_data_count_width => 11,
+			c_data_count_width => 12,
 			c_has_wr_ack => 0,
 			c_use_ecc => 0,
 			c_wr_ack_low => 0,
 			c_common_clock => 0,
 			c_rd_pntr_width => 11,
-			c_use_fwft_data_count => 0,
+			c_use_fwft_data_count => 1,
 			c_has_almost_empty => 0,
-			c_rd_data_count_width => 11,
+			c_rd_data_count_width => 12,
 			c_enable_rlocs => 0,
 			c_wr_pntr_width => 11,
 			c_overflow_low => 0,
 			c_prog_empty_type => 0,
 			c_optimization_mode => 0,
-			c_wr_data_count_width => 11,
+			c_wr_data_count_width => 12,
 			c_preload_regs => 1,
 			c_dout_rst_val => "0",
 			c_has_data_count => 0,

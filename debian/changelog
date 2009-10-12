@@ -1,0 +1,99 @@
+gnuradio (3.3git-1) unstable; urgency=low
+
+  * upstream unstable version from git repository
+
+ -- Johnathan Corgan <jcorgan@corganenterprises.com>  Thu, 24 Sep 2009 23:00:00 -0600
+  
+gnuradio (3.2.2-1) unstable; urgency=low
+
+  * new upstream version, includes gcc4.3 support, closes: #474801, #524387
+  * merge debian/ content restructuring from upstream svn
+  * change build-dep from fftw3-dev to libfftw3-dev, closes: #458231
+  * fix problem with rebuilding, closes: #441739
+  * no longer need to move to contrib now that sdcc is fully back in main, 
+    we just need to build depend on sdcc 2.9.0 or later, closes: #457402
+  * rebuild reflects python-central file location change, closes: #490513
+  * change Jack build depend to libjack-dev, closes: #527413
+
+ -- Bdale Garbee <bdale@gag.com>  Tue, 15 Sep 2009 23:37:57 -0600
+
+gnuradio (3.0.4-2) unstable; urgency=high
+
+  * rebuild with new version number and upload to finally (?) recover from
+    over-zealous removal in response to bug 453154
+  * recommend udev instead of hotplug, closes: #448907
+
+ -- Bdale Garbee <bdale@gag.com>  Sun, 23 Dec 2007 12:11:49 -0700
+
+gnuradio (3.0.4-1) unstable; urgency=low
+
+  * new upstream version
+  * fix build failure with gcc-4.3 by adding a #include, closes: #420896
+
+ -- Bdale Garbee <bdale@gag.com>  Tue, 14 Aug 2007 22:38:32 -0600
+
+gnuradio (3.0.3-1) unstable; urgency=low
+
+  * new upstream version
+  * tweak gnuradio-doc package to eliminate spurious subdirectory level
+  * add a usrp-doc binary package, recommended by the usrp package, and 
+    include xmlto in build dependencies so usrp_guide.html gets generated, 
+    closes: #407368
+
+ -- Bdale Garbee <bdale@gag.com>  Sun, 11 Mar 2007 23:55:32 -0600
+
+gnuradio (3.0.2-2) unstable; urgency=high
+
+  * add run-time dependency on python-wxgtk2.6.  leaving urgency high since 
+    this would be a silly bug to release etch with if we can avoid it.
+
+ -- Bdale Garbee <bdale@gag.com>  Mon,  4 Dec 2006 15:35:53 -0700
+
+gnuradio (3.0.2-1) unstable; urgency=high
+
+  * new upstream version, fixes FTBFS issues
+
+ -- Bdale Garbee <bdale@gag.com>  Sun, 12 Nov 2006 14:52:33 -0800
+
+gnuradio (3.0-3) unstable; urgency=high
+
+  * put python-all-dev back in the build-depends list, closes: #398246
+  * move gr-wxgui conflicts/depends to python-gnuradio, closes: #396302
+  * fix up sections in control to match overrides
+
+ -- Bdale Garbee <bdale@gag.com>  Sun, 12 Nov 2006 10:59:58 -0800
+
+gnuradio (3.0-2) unstable; urgency=high
+
+  * reworked package dependencies so that the 'gnuradio' binary package no
+    longer depends on the pieces in contrib.  instead, the 'usrp' binary
+    package in contrib now depends on all the USRP-related pieces.  A user
+    who doesn't have a USRP board can just install 'gnuradio' and get all
+    the relevant pieces, a USRP user needs to install both 'gnuradio' and
+    'usrp'.  Closes: #394533
+  * improve consistency of references to 'GNU Radio' as upstream project name
+  * make the gnuradio package dependencies on python-gnuradio and python-usrp
+    be version specific on suggestion from Ramakrishnan Muthukrishnan
+
+ -- Bdale Garbee <bdale@gag.com>  Fri, 10 Nov 2006 00:39:38 -0800
+
+gnuradio (3.0-1) unstable; urgency=low
+
+  * new maintainer, new upstream version
+  * Restructuring source and binary packages to follow upstream changes, more
+    or less repackaging from scratch taking ideas from the previous packaging
+    by Ramakrishnan Muthukrishnan and Steinar H. Gunderson.  This single 
+    source package replaces all of: 
+        gnuradio-core
+        gnuradio-examples
+        gr-audio-alsa
+        gr-audio-jack
+        gr-audio-oss
+        gr-usrp
+        gr-wxgui
+        usrp
+    In addition, the 'gnuradio' binary package is a new meta-package that 
+    conveniently depends on everything gnuradio related to ease installation.
+
+ -- Bdale Garbee <bdale@gag.com>  Sun,  8 Oct 2006 13:28:21 -0600
+

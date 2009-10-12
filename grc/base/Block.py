@@ -233,12 +233,22 @@ class Block(Element):
 		"""
 		Import this block's params from nested data.
 		Any param keys that do not exist will be ignored.
+		Since params can be dynamically created based another param,
+		call rewrite, and repeat the load until the params stick.
+		This call to rewrite will also create any dynamic ports
+		that are needed for the connections creation phase.
 		@param n the nested data odict
 		"""
-		params_n = n.findall('param')
-		for param_n in params_n:
-			key = param_n.find('key')
-			value = param_n.find('value')
-			#the key must exist in this block's params
-			if key in self.get_param_keys():
-				self.get_param(key).set_value(value)
+		get_hash = lambda: hash(tuple(map(hash, self.get_params())))
+		my_hash = 0
+		while get_hash() != my_hash:
+			params_n = n.findall('param')
+			for param_n in params_n:
+				key = param_n.find('key')
+				value = param_n.find('value')
+				#the key must exist in this block's params
+				if key in self.get_param_keys():
+					self.get_param(key).set_value(value)
+			#store hash and call rewrite
+			my_hash = get_hash()
+			self.rewrite()

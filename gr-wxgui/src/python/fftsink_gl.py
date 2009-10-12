@@ -31,7 +31,7 @@ from constants import *
 ##################################################
 # FFT sink block (wrapper for old wxgui)
 ##################################################
-class _fft_sink_base(gr.hier_block2):
+class _fft_sink_base(gr.hier_block2, common.wxgui_hb):
 	"""
 	An fft block with real/complex inputs and a gui window.
 	"""
@@ -73,8 +73,6 @@ class _fft_sink_base(gr.hier_block2):
 		)
 		msgq = gr.msg_queue(2)
 		sink = gr.message_sink(gr.sizeof_float*fft_size, msgq, True)
-		#connect
-		self.connect(self, fft, sink)
 		#controller
 		self.controller = pubsub()
 		self.controller.subscribe(AVERAGE_KEY, fft.set_average)
@@ -106,6 +104,8 @@ class _fft_sink_base(gr.hier_block2):
 		common.register_access_methods(self, self.win)
 		setattr(self.win, 'set_baseband_freq', getattr(self, 'set_baseband_freq')) #BACKWARDS
 		setattr(self.win, 'set_peak_hold', getattr(self, 'set_peak_hold')) #BACKWARDS
+		#connect
+		self.wxgui_connect(self, fft, sink)
 
 class fft_sink_f(_fft_sink_base):
 	_fft_chain = blks2.logpwrfft_f

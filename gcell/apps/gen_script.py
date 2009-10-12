@@ -57,6 +57,7 @@ def main():
         parser.print_help()
         sys.exit(1)
 
+    #FIXME to use git now
     svn_rev = get_svn_rev()
 
     os.environ['TZ'] = 'PST8PDT'        # always pacific

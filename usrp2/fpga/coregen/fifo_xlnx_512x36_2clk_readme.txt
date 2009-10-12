@@ -1,16 +1,9 @@
 The following files were generated for 'fifo_xlnx_512x36_2clk' in directory 
-/home/jblum/proj/usrp2/trunk/fpga/coregen/:
-
-fifo_xlnx_512x36_2clk.asy:
-   Graphical symbol information file. Used by the ISE tools and some
-   third party tools to create a symbol representing the core.
+/home/matt/gnuradio.git/usrp2/fpga/coregen/:
 
 fifo_xlnx_512x36_2clk.ngc:
    Binary Xilinx implementation netlist file containing the information
    required to implement the module in a Xilinx (R) FPGA.
-
-fifo_xlnx_512x36_2clk.sym:
-   Please see the core data sheet.
 
 fifo_xlnx_512x36_2clk.v:
    Verilog wrapper file provided to support functional simulation.
@@ -20,15 +13,6 @@ fifo_xlnx_512x36_2clk.v:
 fifo_xlnx_512x36_2clk.veo:
    VEO template file containing code that can be used as a model for
    instantiating a CORE Generator module in a Verilog design.
-
-fifo_xlnx_512x36_2clk.vhd:
-   VHDL wrapper file provided to support functional simulation. This
-   file contains simulation model customization data that is passed to
-   a parameterized simulation model for the core.
-
-fifo_xlnx_512x36_2clk.vho:
-   VHO template file containing code that can be used as a model for
-   instantiating a CORE Generator module in a VHDL design.
 
 fifo_xlnx_512x36_2clk.xco:
    CORE Generator input file containing the parameters used to

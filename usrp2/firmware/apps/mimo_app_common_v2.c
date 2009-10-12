@@ -67,6 +67,7 @@ void
 set_reply_hdr(u2_eth_packet_t *reply_pkt, u2_eth_packet_t const *cmd_pkt)
 {
   reply_pkt->ehdr.dst = cmd_pkt->ehdr.src;
+  reply_pkt->ehdr.src = *ethernet_mac_addr();
   reply_pkt->ehdr.ethertype = U2_ETHERTYPE;
   reply_pkt->thdr.flags = 0;
   reply_pkt->thdr.fifo_status = 0;	// written by protocol engine

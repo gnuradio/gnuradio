@@ -31,7 +31,7 @@ from constants import *
 ##################################################
 # Constellation sink block (wrapper for old wxgui)
 ##################################################
-class const_sink_c(gr.hier_block2):
+class const_sink_c(gr.hier_block2, common.wxgui_hb):
 	"""
 	A constellation block with a gui window.
 	"""
@@ -94,8 +94,6 @@ class const_sink_c(gr.hier_block2):
 		agc = gr.feedforward_agc_cc(16, 1)
 		msgq = gr.msg_queue(2)
 		sink = gr.message_sink(gr.sizeof_gr_complex*const_size, msgq, True)
-		#connect
-		self.connect(self, self._costas, self._retime, agc, sd, sink)
 		#controller
 		def setter(p, k, x): p[k] = x
 		self.controller = pubsub()
@@ -131,5 +129,7 @@ class const_sink_c(gr.hier_block2):
 			sample_rate_key=SAMPLE_RATE_KEY,
 		)
 		common.register_access_methods(self, self.win)
+		#connect
+		self.wxgui_connect(self, self._costas, self._retime, agc, sd, sink)
 
 
