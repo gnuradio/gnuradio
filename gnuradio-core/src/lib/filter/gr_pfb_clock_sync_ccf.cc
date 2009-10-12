@@ -75,7 +75,7 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float gain,
 
   // Create an FIR filter for each channel and zero out the taps
   std::vector<float> vtaps(0, d_nfilters);
-  for(unsigned int i = 0; i < d_nfilters; i++) {
+  for(int i = 0; i < d_nfilters; i++) {
     d_filters[i] = gr_fir_util::create_gr_fir_ccf(vtaps);
     d_diff_filters[i] = gr_fir_util::create_gr_fir_ccf(vtaps);
   }
@@ -89,7 +89,7 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float gain,
 
 gr_pfb_clock_sync_ccf::~gr_pfb_clock_sync_ccf ()
 {
-  for(unsigned int i = 0; i < d_nfilters; i++) {
+  for(int i = 0; i < d_nfilters; i++) {
     delete d_filters[i];
   }
 }
@@ -149,7 +149,7 @@ gr_pfb_clock_sync_ccf::create_diff_taps(const std::vector<float> &newtaps,
 void
 gr_pfb_clock_sync_ccf::print_taps()
 {
-  unsigned int i, j;
+  int i, j;
   printf("[ ");
   for(i = 0; i < d_nfilters; i++) {
     printf("[%.4e, ", d_taps[i][0]);
@@ -164,7 +164,7 @@ gr_pfb_clock_sync_ccf::print_taps()
 void
 gr_pfb_clock_sync_ccf::print_diff_taps()
 {
-  unsigned int i, j;
+  int i, j;
   printf("[ ");
   for(i = 0; i < d_nfilters; i++) {
     printf("[%.4e, ", d_dtaps[i][0]);
@@ -181,8 +181,7 @@ std::vector<float>
 gr_pfb_clock_sync_ccf::channel_taps(int channel)
 {
   std::vector<float> taps;
-  unsigned int i;
-  for(i = 0; i < d_taps_per_filter; i++) {
+  for(int i = 0; i < d_taps_per_filter; i++) {
     taps.push_back(d_taps[channel][i]);
   }
   return taps;
@@ -192,8 +191,7 @@ std::vector<float>
 gr_pfb_clock_sync_ccf::diff_channel_taps(int channel)
 {
   std::vector<float> taps;
-  unsigned int i;
-  for(i = 0; i < d_taps_per_filter; i++) {
+  for(int i = 0; i < d_taps_per_filter; i++) {
     taps.push_back(d_dtaps[channel][i]);
   }
   return taps;
