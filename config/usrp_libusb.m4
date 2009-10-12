@@ -58,7 +58,8 @@ AC_DEFUN([USRP_LIBUSB], [
   fi
   if test x$1 != xyes || test $have_libusb1 = yes; then
     dnl Either (1) libusb1 was specified and found; or
-    dnl (2) libusb1 was not specified.
+    dnl (2) libusb1 was not specified. Restart checking.
+    libusbok=yes
 
     dnl Verify that $usb_header is a valid header, and if so,
     dnl then verify that $usb_lib_func can be found in the
