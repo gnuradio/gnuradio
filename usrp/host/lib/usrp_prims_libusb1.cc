@@ -42,6 +42,8 @@ extern "C" {
 
 using namespace ad9862;
 
+static const int LIBUSB1_DEBUG = 0;
+
 /*
  * libusb 0.12 / 1.0 compatibility
  */
@@ -144,9 +146,12 @@ usrp_one_time_init (libusb_context **ctx)
   if ((ret = libusb_init (ctx)) < 0)
     fprintf (stderr, "usrp: libusb_init failed: %s\n", _get_usb_error_str(ret));
 
-  // Set debug verbosity to max. This will only work if the debug option is
-  // compiled into libusb. Otherwise this call does nothing.
-  libusb_set_debug(*ctx, 3);
+  // Enable debug verbosity if requested. This will only work if the debug
+  // option is compiled into libusb and may produce a generous amount of output
+  // on stdout. If debug output is not compiled into libusb, this call does
+  // nothing. 
+  if (LIBUSB1_DEBUG)
+    libusb_set_debug(*ctx, 3);
 }
 
 void
