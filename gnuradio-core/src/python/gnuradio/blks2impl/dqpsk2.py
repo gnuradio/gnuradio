@@ -39,8 +39,8 @@ _def_verbose = False
 _def_log = False
 
 _def_costas_alpha = 0.01
-_def_timing_alpha = None
-_def_timing_beta = None
+_def_timing_alpha = 0.100
+_def_timing_beta = 0.010
 _def_timing_max_dev = 1.5
 
 
@@ -220,7 +220,7 @@ class dqpsk2_demod(gr.hier_block2):
         self._excess_bw = excess_bw
         self._costas_alpha = costas_alpha
         self._timing_alpha = timing_alpha
-        self._timing_beta = _def_timing_alpha
+        self._timing_beta = _def_timing_beta
         self._timing_max_dev=timing_max_dev
         self._gray_code = gray_code
 
@@ -242,12 +242,7 @@ class dqpsk2_demod(gr.hier_block2):
                                              self._costas_beta,
                                              fmax, fmin, arity)
 
-        # symbol clock recovery
-        if not self._timing_alpha:
-            self._timing_alpha = 2
-            self._timing_beta = 0.020
-            
-        # RRC data filter
+        # symbol timing recovery with RRC data filter
         nfilts = 32
         ntaps = 11 * samples_per_symbol*nfilts
         taps = gr.firdes.root_raised_cosine(nfilts, nfilts, 1.0/float(self._samples_per_symbol), self._excess_bw, ntaps)
