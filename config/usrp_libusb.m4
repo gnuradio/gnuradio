@@ -90,17 +90,20 @@ AC_DEFUN([USRP_LIBUSB], [
 
       AC_LANG_PUSH(C)
       save_LIBS="$LIBS"
-      case "$host_os" in
-        darwin*)
-          USB_LIBS="$USB_LIBS -lIOKit"
-          ;;
-        *) ;;
-      esac
-      LIBS="$LIBS $USB_LIBS"
+      LIBS=""
       AC_CHECK_LIB([$usb_lib_name], [$usb_lib_func], [], [
         libusbok=no
         AC_MSG_RESULT([USRP requires library '$usb_lib_name' with function '$usb_lib_func', which was either not found or was not usable. See http://www.libusb.org])
       ])
+      case "$host_os" in
+        darwin*)
+          USB_LIBS="$USB_LIBS -lIOKit"
+          ;;
+        cygwin* | mingw*)
+          USB_LIBS="$LIBS"
+          ;;
+        *) ;;
+      esac
       LIBS="$save_LIBS"
       AC_LANG_POP(C)
     fi
