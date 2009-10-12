@@ -69,6 +69,8 @@ class gr_pfb_clock_sync_ccf : public gr_block
   std::vector< std::vector<float> > d_dtaps;
   float                    d_k;
   float                    d_rate;
+  float                    d_rate_i;
+  float                    d_rate_f;
   float                    d_max_dev;
   int                      d_filtnum;
   int                      d_taps_per_filter;

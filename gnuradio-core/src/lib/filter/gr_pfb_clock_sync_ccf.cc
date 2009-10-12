@@ -68,6 +68,8 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float gain,
   set_beta(0.25*gain*gain);
   d_k = init_phase;
   d_rate = (sps-floor(sps))*(double)d_nfilters;
+  d_rate_i = (int)floor(d_rate);
+  d_rate_f = d_rate - (float)d_rate_i;
   d_filtnum = (int)floor(d_k);
 
   d_filters = std::vector<gr_fir_ccf*>(d_nfilters);
@@ -137,13 +139,23 @@ void
 gr_pfb_clock_sync_ccf::create_diff_taps(const std::vector<float> &newtaps,
 					std::vector<float> &difftaps)
 {
+  float maxtap = 1e-20;
   difftaps.clear();
   difftaps.push_back(0); //newtaps[0]);
   for(unsigned int i = 1; i < newtaps.size()-1; i++) {
     float tap = newtaps[i+1] - newtaps[i-1];
     difftaps.push_back(tap);
+    if(tap > maxtap) {
+      maxtap = tap;
+    }
   }
   difftaps.push_back(0);//-newtaps[newtaps.size()-1]);
+
+  // Scale the differential taps; helps scale error term to better update state
+  // FIXME: should this be scaled this way or use the same gain as the taps?
+  for(unsigned int i = 0; i < difftaps.size(); i++) {
+    difftaps[i] /= maxtap;
+  }
 }
 
 void
@@ -250,18 +262,18 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     error = (error_i + error_r) / 2.0;       // average error from I&Q channel
 
     // Run the control loop to update the current phase (k) and tracking rate
-    d_k = d_k + d_alpha*error + d_rate;
-    d_rate = d_rate + d_beta*error;
+    d_k = d_k + d_alpha*error + d_rate_i + d_rate_f;
+    d_rate_f = d_rate_f + d_beta*error;
     
     // Keep our rate within a good range
-    d_rate = gr_branchless_clip(d_rate, d_max_dev);
+    d_rate_f = gr_branchless_clip(d_rate_f, d_max_dev);
 
     i++;
     count += (int)floor(d_sps);
 
     if(output_items.size() > 2) {
       err[i] = error;
-      outrate[i] = d_rate;
+      outrate[i] = d_rate_f;
       outk[i] = d_k;
     }
   }
