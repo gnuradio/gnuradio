@@ -21,10 +21,10 @@ except ImportError:
     sys.exit(1)
     
 try:
-    from qt_digital_window import Ui_DigitalWindow
+    from qt_digital_window2 import Ui_DigitalWindow
 except ImportError:
-    print "Error: could not find qt_digital_window.py:"
-    print "\t\"pyuic4 qt_digital_window.ui -o qt_digital_window.py\""
+    print "Error: could not find qt_digital_window2.py:"
+    print "\t\"pyuic4 qt_digital_window2.ui -o qt_digital_window2.py\""
     sys.exit(1)
 
 
