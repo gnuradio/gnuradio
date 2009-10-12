@@ -118,14 +118,12 @@ gr_pfb_clock_sync_ccf::set_taps (const std::vector<float> &newtaps,
   // Partition the filter
   for(i = 0; i < d_nfilters; i++) {
     // Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
-    //ourtaps[i] = std::vector<float>(d_taps_per_filter, 0);
     ourtaps[d_nfilters-1-i] = std::vector<float>(d_taps_per_filter, 0);
     for(j = 0; j < d_taps_per_filter; j++) {
       ourtaps[d_nfilters - 1 - i][j] = tmp_taps[i + j*d_nfilters];
     }
     
     // Build a filter for each channel and add it's taps to it
-    //ourfilter[i]->set_taps(ourtaps[i]);
     ourfilter[i]->set_taps(ourtaps[d_nfilters-1-i]);
   }
 
@@ -139,22 +137,13 @@ void
 gr_pfb_clock_sync_ccf::create_diff_taps(const std::vector<float> &newtaps,
 					std::vector<float> &difftaps)
 {
-  float maxtap = -1e12;
   difftaps.clear();
   difftaps.push_back(0); //newtaps[0]);
   for(unsigned int i = 1; i < newtaps.size()-1; i++) {
     float tap = newtaps[i+1] - newtaps[i-1];
-    if(tap > maxtap) {
-     maxtap = tap;
-    }
-    //maxtap += tap;
     difftaps.push_back(tap);
   }
   difftaps.push_back(0);//-newtaps[newtaps.size()-1]);
-
-  for(unsigned int i = 0; i < difftaps.size(); i++) {
-    difftaps[i] /= 1;//maxtap;
-  }
 }
 
 void
@@ -260,8 +249,9 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
     gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
     error_r  = out[i].real() * diff.real();
     error_i  = out[i].imag() * diff.imag();
-    error = error_i + error_r;
+    error = (error_i + error_r) / 2.0;       // average error from I&Q channel
 
+    // Run the control loop to update the current phase (k) and tracking rate
     d_k = d_k + d_alpha*error + d_rate;
     d_rate = d_rate + d_beta*error;
     
