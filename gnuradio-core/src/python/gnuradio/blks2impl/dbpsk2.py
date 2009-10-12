@@ -278,7 +278,7 @@ class dbpsk2_demod(gr.hier_block2):
         if log:
             self._setup_logging()
 
-        # Connect and Initialize base class
+        # Connect
         self.connect(self, self.agc,
                      self.clock_recov,
                      self.time_recov,
@@ -310,8 +310,10 @@ class dbpsk2_demod(gr.hier_block2):
                      gr.file_sink(gr.sizeof_gr_complex, "rx_agc.dat"))
         self.connect(self.rrc_filter,
                      gr.file_sink(gr.sizeof_gr_complex, "rx_rrc_filter.dat"))
-        self.connect(self.receiver,
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_receiver.dat"))
+        self.connect(self.clock_recov,
+                     gr.file_sink(gr.sizeof_gr_complex, "rx_clock_recov.dat"))
+        self.connect(self.time_recov,
+                     gr.file_sink(gr.sizeof_gr_complex, "rx_time_recov.dat"))
         self.connect(self.diffdec,
                      gr.file_sink(gr.sizeof_gr_complex, "rx_diffdec.dat"))        
         self.connect(self.slicer,
