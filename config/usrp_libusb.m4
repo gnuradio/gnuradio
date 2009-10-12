@@ -38,12 +38,11 @@ AC_DEFUN([USRP_LIBUSB], [
       usb_lib_func='libusb_bulk_transfer'
       usb_lib_name='usb-1.0'
     ])
-  fi
-  if test $libusbok = no; then
-    dnl not using libusb1, or PKGCONFIG check for libusb1 failed;
-    dnl see if legacy version is found.
+  else
+    dnl not using libusb1 (for now); see if legacy version is found.
     dnl it might be installed under the name either 'libusb' or
-    dnl 'libusb-legacy'. check them in that order.
+    dnl 'libusb-legacy', or just available via the
+    dnl user's shell environment
 
     dnl see if the pkgconfig module 'libusb' is available
     PKG_CHECK_MODULES(USB, libusb, [libusbok=yes], [libusbok=no])
@@ -52,20 +51,23 @@ AC_DEFUN([USRP_LIBUSB], [
       dnl if not, see if the pkgconfig module 'libusb-legacy' is available
       PKG_CHECK_MODULES(USB, [libusb-legacy], [libusbok=yes], [libusbok=no])
     fi
-    if test $libusbok = yes; then
-      dnl if PKGCONFIG worked, set variables for further testing
-      usb_header='usb.h'
-      usb_lib_func='usb_bulk_write'
-      usb_lib_name='usb'
-    fi
+    dnl set variables for further testing
+    usb_header='usb.h'
+    usb_lib_func='usb_bulk_write'
+    usb_lib_name='usb'
   fi
-  if test $libusbok = no; then
-    AC_MSG_RESULT([USRP requires libusb, which was not found. See http://www.libusb.org])
-  else
+  if test x$1 != xyes || test $have_libusb1 = yes; then
+    dnl Either (1) libusb1 was specified and found; or
+    dnl (2) libusb1 was not specified.
 
-    dnl either some pkgconfig LIBUSB* variant was found, or USB_*
-    dnl variables were overridden by the user as arguments to configure.
-    dnl either way, check the USB_* variables to make sure they work
+    dnl Verify that $usb_header is a valid header, and if so,
+    dnl then verify that $usb_lib_func can be found in the
+    dnl library $usb_lib_name.
+
+    dnl If PKGCONFIG found variable USB_INCLUDEDIR, and it is
+    dnl not empty, use it for checking for $usb_header.
+    dnl Otherwise, maybe the user's shell environment is already
+    dnl configured to find this header.
 
     AC_LANG_PUSH(C)
     save_CPPFLAGS="$CPPFLAGS"
@@ -83,6 +85,7 @@ AC_DEFUN([USRP_LIBUSB], [
     else
 
       dnl found the header; now make sure the library is OK
+      dnl On Darwin, need to include the IOKit library.     
 
       AC_LANG_PUSH(C)
       save_LIBS="$LIBS"
