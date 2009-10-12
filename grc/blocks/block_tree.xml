@@ -109,8 +109,10 @@
 
 		<block>gr_stream_to_vector</block>
 		<block>gr_vector_to_stream</block>
-		
+
 		<block>blks2_stream_to_vector_decimator</block>
+
+		<block>gr_stream_mux</block>
 	</cat>
 	<cat>
 		<name>Misc Conversions</name>

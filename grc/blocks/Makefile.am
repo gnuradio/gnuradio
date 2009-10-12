@@ -167,6 +167,7 @@ dist_ourdata_DATA = \
 	gr_simple_squelch_cc.xml \
 	gr_single_pole_iir_filter_xx.xml \
 	gr_skiphead.xml \
+	gr_stream_mux.xml \
 	gr_stream_to_streams.xml \
 	gr_stream_to_vector.xml \
 	gr_streams_to_stream.xml \

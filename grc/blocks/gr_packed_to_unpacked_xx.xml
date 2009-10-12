@@ -38,7 +38,7 @@
 	<param>
 		<name>Endianness</name>
 		<key>endianness</key>
-		<type>enum</type>
+		<type>int</type>
 		<option>
 			<name>MSB</name>
 			<key>gr.GR_MSB_FIRST</key>
@@ -48,12 +48,21 @@
 			<key>gr.GR_LSB_FIRST</key>
 		</option>
 	</param>
+	<param>
+		<name>Num Ports</name>
+		<key>num_ports</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<check>$num_ports &gt; 0</check>
 	<sink>
 		<name>in</name>
 		<type>$type</type>
+		<nports>$num_ports</nports>
 	</sink>
 	<source>
 		<name>out</name>
 		<type>$type</type>
+		<nports>$num_ports</nports>
 	</source>
 </block>
