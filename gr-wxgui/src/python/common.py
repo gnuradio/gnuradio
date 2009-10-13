@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2009 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -89,7 +89,10 @@ class wxgui_hb(object):
 				my_win = parent
 		#call the handler, the arg is shown or not
 		def handler_factory(my_win, my_handler):
-			return lambda *args: my_handler(is_wx_window_visible(my_win))
+			def callback(evt):
+				my_handler(is_wx_window_visible(my_win))
+				evt.Skip() #skip so all bound handlers are called
+			return callback
 		handler = handler_factory(win, handler)
 		#bind the handler to all the parent notebooks
 		win.Bind(wx.EVT_UPDATE_UI, handler)
