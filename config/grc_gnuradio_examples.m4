@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2008,2009 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -27,13 +27,14 @@ AC_DEFUN([GRC_GNURADIO_EXAMPLES],[
         gnuradio-examples/Makefile \
 	gnuradio-examples/c++/Makefile \
 	gnuradio-examples/python/Makefile \
+	gnuradio-examples/grc/Makefile \
 	gnuradio-examples/python/apps/hf_explorer/Makefile \
    	gnuradio-examples/python/apps/hf_radio/Makefile \
    	gnuradio-examples/python/apps/Makefile \
    	gnuradio-examples/python/audio/Makefile \
    	gnuradio-examples/python/digital/Makefile \
    	gnuradio-examples/python/digital_voice/Makefile \
-        gnuradio-examples/python/digital-bert/Makefile \
+	gnuradio-examples/python/digital-bert/Makefile \
    	gnuradio-examples/python/mp-sched/Makefile \
    	gnuradio-examples/python/multi-antenna/Makefile \
    	gnuradio-examples/python/multi_usrp/Makefile \

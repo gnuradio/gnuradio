@@ -50,7 +50,6 @@ AC_DEFUN([GRC_GRC],[
         grc/Makefile \
         grc/base/Makefile \
         grc/blocks/Makefile \
-        grc/examples/Makefile \
         grc/freedesktop/Makefile \
         grc/grc_gnuradio/Makefile \
         grc/gui/Makefile \

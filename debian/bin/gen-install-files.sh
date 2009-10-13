@@ -433,6 +433,12 @@ $EXTRACT gnuradio-examples/python/pfb/Makefile dist_ourdata_DATA >>$NAME
 $EXTRACT gnuradio-examples/python/usrp/Makefile dist_ourdata_SCRIPTS >>$NAME
 $EXTRACT gnuradio-examples/python/usrp2/Makefile dist_ourdata_SCRIPTS >>$NAME
 $EXTRACT gnuradio-examples/python/usrp2/Makefile dist_ourdata_DATA >>$NAME
+$EXTRACT gnuradio-examples/grc/Makefile dist_audiodata_DATA >>$NAME
+$EXTRACT gnuradio-examples/grc/Makefile dist_demoddata_DATA >>$NAME
+$EXTRACT gnuradio-examples/grc/Makefile dist_simpledata_DATA >>$NAME
+$EXTRACT gnuradio-examples/grc/Makefile dist_trellisdata_DATA >>$NAME
+$EXTRACT gnuradio-examples/grc/Makefile dist_usrpdata_DATA >>$NAME
+$EXTRACT gnuradio-examples/grc/Makefile dist_xmlrpcdata_DATA >>$NAME
 
 # gnuradio-pager
 NAME=debian/gnuradio-pager.install
@@ -492,11 +498,6 @@ $EXTRACT grc/Makefile dist_etc_DATA >>$NAME
 $EXTRACT grc/base/Makefile ourpython_PYTHON >>$NAME
 $EXTRACT grc/base/Makefile dist_ourdata_DATA >>$NAME
 $EXTRACT grc/blocks/Makefile dist_ourdata_DATA >>$NAME
-$EXTRACT grc/examples/Makefile dist_audiodata_DATA >>$NAME
-$EXTRACT grc/examples/Makefile dist_simpledata_DATA >>$NAME
-$EXTRACT grc/examples/Makefile dist_trellisdata_DATA >>$NAME
-$EXTRACT grc/examples/Makefile dist_usrpdata_DATA >>$NAME
-$EXTRACT grc/examples/Makefile dist_xmlrpcdata_DATA >>$NAME
 $EXTRACT grc/freedesktop/Makefile dist_ourdata_DATA >>$NAME
 $EXTRACT grc/freedesktop/Makefile dist_bin_SCRIPTS >>$NAME
 $EXTRACT grc/grc_gnuradio/Makefile root_python_PYTHON >>$NAME

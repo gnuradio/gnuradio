@@ -33,45 +33,51 @@
 #include <gr_io_signature.h>
 #include <gr_math.h>
 
-gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (float sps, float gain,
+gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
 						       const std::vector<float> &taps,
 						       unsigned int filter_size,
-						       float init_phase)
+						       float init_phase,
+						       float max_rate_deviation)
 {
   return gr_pfb_clock_sync_ccf_sptr (new gr_pfb_clock_sync_ccf (sps, gain, taps,
 								filter_size,
-								init_phase));
+								init_phase,
+								max_rate_deviation));
 }
 
-
-gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
+int ios[] = {sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float)};
+std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
+gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (double sps, float gain,
 					      const std::vector<float> &taps,
 					      unsigned int filter_size,
-					      float init_phase)
+					      float init_phase,
+					      float max_rate_deviation)
   : gr_block ("pfb_clock_sync_ccf",
 	      gr_make_io_signature (1, 1, sizeof(gr_complex)),
-	      gr_make_io_signature2 (2, 2, sizeof(gr_complex), sizeof(float))),
-    d_updated (false), d_sps(sps), d_alpha(gain)
+	      gr_make_io_signaturev (1, 4, iosig)),
+    d_updated (false), d_nfilters(filter_size),
+    d_max_dev(max_rate_deviation)
 {
   d_nfilters = filter_size;
+  d_sps = floor(sps);
 
   // Store the last filter between calls to work
   // The accumulator keeps track of overflow to increment the stride correctly.
   // set it here to the fractional difference based on the initial phaes
-  // assert(init_phase <= 2*M_PI);
-  float x = init_phase / (2*M_PI); //normalize initial phase
-  d_acc = x*(d_nfilters-1);
-  d_last_filter = (int)floor(d_acc);
-  d_acc = fmodf(d_acc, 1);
-  d_start_count = 0;
-  
+  set_alpha(gain);
+  set_beta(0.25*gain*gain);
+  d_k = init_phase;
+  d_rate = (sps-floor(sps))*(double)d_nfilters;
+  d_rate_i = (int)floor(d_rate);
+  d_rate_f = d_rate - (float)d_rate_i;
+  d_filtnum = (int)floor(d_k);
 
   d_filters = std::vector<gr_fir_ccf*>(d_nfilters);
   d_diff_filters = std::vector<gr_fir_ccf*>(d_nfilters);
 
   // Create an FIR filter for each channel and zero out the taps
   std::vector<float> vtaps(0, d_nfilters);
-  for(unsigned int i = 0; i < d_nfilters; i++) {
+  for(int i = 0; i < d_nfilters; i++) {
     d_filters[i] = gr_fir_util::create_gr_fir_ccf(vtaps);
     d_diff_filters[i] = gr_fir_util::create_gr_fir_ccf(vtaps);
   }
@@ -85,7 +91,7 @@ gr_pfb_clock_sync_ccf::gr_pfb_clock_sync_ccf (float sps, float gain,
 
 gr_pfb_clock_sync_ccf::~gr_pfb_clock_sync_ccf ()
 {
-  for(unsigned int i = 0; i < d_nfilters; i++) {
+  for(int i = 0; i < d_nfilters; i++) {
     delete d_filters[i];
   }
 }
@@ -95,7 +101,7 @@ gr_pfb_clock_sync_ccf::set_taps (const std::vector<float> &newtaps,
 				 std::vector< std::vector<float> > &ourtaps,
 				 std::vector<gr_fir_ccf*> &ourfilter)
 {
-  unsigned int i,j;
+  int i,j;
 
   unsigned int ntaps = newtaps.size();
   d_taps_per_filter = (unsigned int)ceil((double)ntaps/(double)d_nfilters);
@@ -114,13 +120,13 @@ gr_pfb_clock_sync_ccf::set_taps (const std::vector<float> &newtaps,
   // Partition the filter
   for(i = 0; i < d_nfilters; i++) {
     // Each channel uses all d_taps_per_filter with 0's if not enough taps to fill out
-    ourtaps[i] = std::vector<float>(d_taps_per_filter, 0);
+    ourtaps[d_nfilters-1-i] = std::vector<float>(d_taps_per_filter, 0);
     for(j = 0; j < d_taps_per_filter; j++) {
-      ourtaps[i][j] = tmp_taps[i + j*d_nfilters];  // add taps to channels in reverse order
+      ourtaps[d_nfilters - 1 - i][j] = tmp_taps[i + j*d_nfilters];
     }
     
     // Build a filter for each channel and add it's taps to it
-    ourfilter[i]->set_taps(ourtaps[i]);
+    ourfilter[i]->set_taps(ourtaps[d_nfilters-1-i]);
   }
 
   // Set the history to ensure enough input items for each filter
@@ -133,38 +139,53 @@ void
 gr_pfb_clock_sync_ccf::create_diff_taps(const std::vector<float> &newtaps,
 					std::vector<float> &difftaps)
 {
+  float maxtap = 1e-20;
   difftaps.clear();
   difftaps.push_back(0); //newtaps[0]);
   for(unsigned int i = 1; i < newtaps.size()-1; i++) {
-    difftaps.push_back(newtaps[i+1] - newtaps[i-1]);
+    float tap = newtaps[i+1] - newtaps[i-1];
+    difftaps.push_back(tap);
+    if(tap > maxtap) {
+      maxtap = tap;
+    }
   }
   difftaps.push_back(0);//-newtaps[newtaps.size()-1]);
+
+  // Scale the differential taps; helps scale error term to better update state
+  // FIXME: should this be scaled this way or use the same gain as the taps?
+  for(unsigned int i = 0; i < difftaps.size(); i++) {
+    difftaps[i] /= maxtap;
+  }
 }
 
 void
 gr_pfb_clock_sync_ccf::print_taps()
 {
-  unsigned int i, j;
+  int i, j;
+  printf("[ ");
   for(i = 0; i < d_nfilters; i++) {
-    printf("filter[%d]: [%.4e, ", i, d_taps[i][0]);
+    printf("[%.4e, ", d_taps[i][0]);
     for(j = 1; j < d_taps_per_filter-1; j++) {
       printf("%.4e,", d_taps[i][j]);
     }
-    printf("%.4e]\n", d_taps[i][j]);
+    printf("%.4e],", d_taps[i][j]);
   }
+  printf(" ]\n");
 }
 
 void
 gr_pfb_clock_sync_ccf::print_diff_taps()
 {
-  unsigned int i, j;
+  int i, j;
+  printf("[ ");
   for(i = 0; i < d_nfilters; i++) {
-    printf("filter[%d]: [%.4e, ", i, d_dtaps[i][0]);
+    printf("[%.4e, ", d_dtaps[i][0]);
     for(j = 1; j < d_taps_per_filter-1; j++) {
       printf("%.4e,", d_dtaps[i][j]);
     }
-    printf("%.4e]\n", d_dtaps[i][j]);
+    printf("%.4e],", d_dtaps[i][j]);
   }
+  printf(" ]\n");
 }
 
 
@@ -172,8 +193,7 @@ std::vector<float>
 gr_pfb_clock_sync_ccf::channel_taps(int channel)
 {
   std::vector<float> taps;
-  unsigned int i;
-  for(i = 0; i < d_taps_per_filter; i++) {
+  for(int i = 0; i < d_taps_per_filter; i++) {
     taps.push_back(d_taps[channel][i]);
   }
   return taps;
@@ -183,8 +203,7 @@ std::vector<float>
 gr_pfb_clock_sync_ccf::diff_channel_taps(int channel)
 {
   std::vector<float> taps;
-  unsigned int i;
-  for(i = 0; i < d_taps_per_filter; i++) {
+  for(int i = 0; i < d_taps_per_filter; i++) {
     taps.push_back(d_dtaps[channel][i]);
   }
   return taps;
@@ -199,7 +218,13 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
 {
   gr_complex *in = (gr_complex *) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
-  float *err = (float *) output_items[1];
+
+  float *err, *outrate, *outk;
+  if(output_items.size() > 2) {
+    err = (float *) output_items[1];
+    outrate = (float*)output_items[2];
+    outk = (float*)output_items[3];
+  }
   
   if (d_updated) {
     d_updated = false;
@@ -209,50 +234,50 @@ gr_pfb_clock_sync_ccf::general_work (int noutput_items,
   // We need this many to process one output
   int nrequired = ninput_items[0] - d_taps_per_filter;
 
-  int i = 0, count = d_start_count;
-  float error = 0;
+  int i = 0, count = 0;
+  float error, error_r, error_i;
 
   // produce output as long as we can and there are enough input samples
   while((i < noutput_items) && (count < nrequired)) {
-    out[i] = d_filters[d_last_filter]->filter(&in[count]);
-    error =  (out[i] * d_diff_filters[d_last_filter]->filter(&in[count])).real();
-    err[i] = error;
+    d_filtnum = (int)floor(d_k);
 
-    d_acc += d_alpha*error;
-    gr_branchless_clip(d_acc, 1);
+    // Keep the current filter number in [0, d_nfilters]
+    // If we've run beyond the last filter, wrap around and go to next sample
+    // If we've go below 0, wrap around and go to previous sample
+    while(d_filtnum >= d_nfilters) {
+      d_k -= d_nfilters;
+      d_filtnum -= d_nfilters;
+      count += 1;
+    }
+    while(d_filtnum < 0) {
+      d_k += d_nfilters;
+      d_filtnum += d_nfilters;
+      count -= 1;
+    }
 
-    int newfilter;
-    newfilter = (int)((float)d_last_filter + d_acc);
-    if(newfilter != (int)d_last_filter)
-      d_acc = 0.5;
+    out[i] = d_filters[d_filtnum]->filter(&in[count]);
+    gr_complex diff = d_diff_filters[d_filtnum]->filter(&in[count]);
+    error_r  = out[i].real() * diff.real();
+    error_i  = out[i].imag() * diff.imag();
+    error = (error_i + error_r) / 2.0;       // average error from I&Q channel
 
-    if(newfilter >= (int)d_nfilters) {
-      d_last_filter = newfilter - d_nfilters;
-      count++;
-    }
-    else if(newfilter < 0) {
-      d_last_filter = d_nfilters + newfilter;
-      count--;
-    }
-    else {
-      d_last_filter = newfilter;
-    }
+    // Run the control loop to update the current phase (k) and tracking rate
+    d_k = d_k + d_alpha*error + d_rate_i + d_rate_f;
+    d_rate_f = d_rate_f + d_beta*error;
+    
+    // Keep our rate within a good range
+    d_rate_f = gr_branchless_clip(d_rate_f, d_max_dev);
 
     i++;
-    count += d_sps;
-  }
+    count += (int)floor(d_sps);
 
-  // Set the start index at the next entrance to the work function
-  // if we stop because we run out of input items, jump ahead in the
-  // next call to work. Otherwise, we can start at zero.
-  if(count > nrequired) {
-    d_start_count = count - (nrequired);
-    consume_each(ninput_items[0]-d_taps_per_filter);
+    if(output_items.size() > 2) {
+      err[i] = error;
+      outrate[i] = d_rate_f;
+      outk[i] = d_k;
+    }
   }
-  else {
-    d_start_count = 0;
-    consume_each(count);
-  }
-  
+  consume_each(count);
+
   return i;
 }

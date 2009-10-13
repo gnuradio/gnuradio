@@ -551,16 +551,6 @@ XB-Python-Version: ${python:Versions}
 Description: GNU Radio Utilities
  This package provides commonly used utilities for GNU Radio
 
-Package: gnuradio-examples
-Architecture: any
-Depends: ${python:Depends}, python-gnuradio-core
-Provides: ${python:Provides}
-Recommends: python-gnuradio-wxgui, python-gnuradio
-Section: comm
-XB-Python-Version: ${python:Versions}
-Description: GNU Radio Example Programs
- This package provides examples of GNU Radio usage using Python.
-
 Package: gnuradio-pager
 Architecture: any
 Depends: ${python:Depends}, ${shlibs:Depends}, python-gnuradio-usrp
@@ -620,6 +610,16 @@ Section: comm
 XB-Python-Version: ${python:Versions}
 Description: The GNU Radio Companion
  GRC is a graphical flowgraph editor for the GNU Software Radio
+
+Package: gnuradio-examples
+Architecture: any
+Depends: ${python:Depends}, python-gnuradio-core, gnuradio-companion
+Provides: ${python:Provides}
+Recommends: python-gnuradio-wxgui, python-gnuradio
+Section: comm
+XB-Python-Version: ${python:Versions}
+Description: GNU Radio Example Programs
+ This package provides examples of GNU Radio usage using Python.
 
 ################################################################################
 # Documentation packages                                                       #

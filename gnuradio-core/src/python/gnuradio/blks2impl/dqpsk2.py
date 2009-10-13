@@ -38,17 +38,17 @@ _def_gray_code = True
 _def_verbose = False
 _def_log = False
 
-_def_costas_alpha = 0.15
-_def_gain_mu = None
-_def_mu = 0.5
-_def_omega_relative_limit = 0.005
+_def_costas_alpha = 0.01
+_def_timing_alpha = 0.100
+_def_timing_beta = 0.010
+_def_timing_max_dev = 1.5
 
 
 # /////////////////////////////////////////////////////////////////////////////
 #                           DQPSK modulator
 # /////////////////////////////////////////////////////////////////////////////
 
-class dqpsk_mod(gr.hier_block2):
+class dqpsk2_mod(gr.hier_block2):
 
     def __init__(self,
                  samples_per_symbol=_def_samples_per_symbol,
@@ -74,7 +74,7 @@ class dqpsk_mod(gr.hier_block2):
         @type debug: bool
 	"""
 
-	gr.hier_block2.__init__(self, "dqpsk_mod",
+	gr.hier_block2.__init__(self, "dqpsk2_mod",
 				gr.io_signature(1, 1, gr.sizeof_char),       # Input signature
 				gr.io_signature(1, 1, gr.sizeof_gr_complex)) # Output signature
 
@@ -166,7 +166,7 @@ class dqpsk_mod(gr.hier_block2):
         """
         Given command line options, create dictionary suitable for passing to __init__
         """
-        return modulation_utils.extract_kwargs_from_options(dqpsk_mod.__init__,
+        return modulation_utils.extract_kwargs_from_options(dqpsk2_mod.__init__,
                                                             ('self',), options)
     extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
 
@@ -177,15 +177,14 @@ class dqpsk_mod(gr.hier_block2):
 # Differentially coherent detection of differentially encoded qpsk
 # /////////////////////////////////////////////////////////////////////////////
 
-class dqpsk_demod(gr.hier_block2):
+class dqpsk2_demod(gr.hier_block2):
 
     def __init__(self, 
                  samples_per_symbol=_def_samples_per_symbol,
                  excess_bw=_def_excess_bw,
                  costas_alpha=_def_costas_alpha,
-                 gain_mu=_def_gain_mu,
-                 mu=_def_mu,
-                 omega_relative_limit=_def_omega_relative_limit,
+                 timing_alpha=_def_timing_alpha,
+                 timing_max_dev=_def_timing_max_dev,
                  gray_code=_def_gray_code,
                  verbose=_def_verbose,
                  log=_def_log):
@@ -201,12 +200,10 @@ class dqpsk_demod(gr.hier_block2):
 	@type excess_bw: float
         @param costas_alpha: loop filter gain
         @type costas_alphas: float
-        @param gain_mu: for M&M block
-        @type gain_mu: float
-        @param mu: for M&M block
-        @type mu: float
-        @param omega_relative_limit: for M&M block
-        @type omega_relative_limit: float
+        @param timing_alpha: timing loop alpha gain
+        @type timing_alpha: float
+        @param timing_max: timing loop maximum rate deviations
+        @type timing_max: float
         @param gray_code: Tell modulator to Gray code the bits
         @type gray_code: bool
         @param verbose: Print information about modulator?
@@ -215,16 +212,16 @@ class dqpsk_demod(gr.hier_block2):
         @type debug: bool
 	"""
 
-	gr.hier_block2.__init__(self, "dqpsk_demod",
+	gr.hier_block2.__init__(self, "dqpsk2_demod",
 			        gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
 			        gr.io_signature(1, 1, gr.sizeof_char))       # Output signature
 
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
         self._costas_alpha = costas_alpha
-        self._mm_gain_mu = gain_mu
-        self._mm_mu = mu
-        self._mm_omega_relative_limit = omega_relative_limit
+        self._timing_alpha = timing_alpha
+        self._timing_beta = _def_timing_beta
+        self._timing_max_dev=timing_max_dev
         self._gray_code = gray_code
 
         if samples_per_symbol < 2:
@@ -233,37 +230,26 @@ class dqpsk_demod(gr.hier_block2):
         arity = pow(2,self.bits_per_symbol())
  
         # Automatic gain control
-        scale = (1.0/16384.0)
-        self.pre_scaler = gr.multiply_const_cc(scale)   # scale the signal from full-range to +-1
-        #self.agc = gr.agc2_cc(0.6e-1, 1e-3, 1, 1, 100)
-        self.agc = gr.feedforward_agc_cc(16, 2.0)
-       
-        # RRC data filter
-        ntaps = 11 * samples_per_symbol
-        self.rrc_taps = gr.firdes.root_raised_cosine(
-            1.0,                      # gain
-            self._samples_per_symbol, # sampling rate
-            1.0,                      # symbol rate
-            self._excess_bw,          # excess bandwidth (roll-off factor)
-            ntaps)
-        self.rrc_filter=gr.interp_fir_filter_ccf(1, self.rrc_taps)        
+        self.agc = gr.agc2_cc(0.6e-1, 1e-3, 1, 1, 100)
+        #self.agc = gr.feedforward_agc_cc(16, 2.0)
 
-        if not self._mm_gain_mu:
-            sbs_to_mm = {2: 0.050, 3: 0.075, 4: 0.11, 5: 0.125, 6: 0.15, 7: 0.15}
-            self._mm_gain_mu = sbs_to_mm[samples_per_symbol]
-
-        self._mm_omega = self._samples_per_symbol
-        self._mm_gain_omega = .25 * self._mm_gain_mu * self._mm_gain_mu
         self._costas_beta  = 0.25 * self._costas_alpha * self._costas_alpha
-        fmin = -0.25
-        fmax = 0.25
-        
-        self.receiver=gr.mpsk_receiver_cc(arity, pi/4.0,
-                                          self._costas_alpha, self._costas_beta,
-                                          fmin, fmax,
-                                          self._mm_mu, self._mm_gain_mu,
-                                          self._mm_omega, self._mm_gain_omega,
-                                          self._mm_omega_relative_limit)
+        # Allow a frequency swing of +/- half of the sample rate
+        fmin = -0.5
+        fmax = 0.5
+
+        self.clock_recov = gr.costas_loop_cc(self._costas_alpha,
+                                             self._costas_beta,
+                                             fmax, fmin, arity)
+
+        # symbol timing recovery with RRC data filter
+        nfilts = 32
+        ntaps = 11 * samples_per_symbol*nfilts
+        taps = gr.firdes.root_raised_cosine(nfilts, nfilts, 1.0/float(self._samples_per_symbol), self._excess_bw, ntaps)
+        self.time_recov = gr.pfb_clock_sync_ccf(self._samples_per_symbol,
+                                                self._timing_alpha,
+                                                taps, nfilts, nfilts/2, self._timing_max_dev)
+        self.time_recov.set_beta(self._timing_beta)
         
         # Perform Differential decoding on the constellation
         self.diffdec = gr.diff_phasor_cc()
@@ -287,8 +273,10 @@ class dqpsk_demod(gr.hier_block2):
         if log:
             self._setup_logging()
  
-        # Connect & Initialize base class
-        self.connect(self, self.pre_scaler, self.agc, self.rrc_filter, self.receiver,
+        # Connect
+        self.connect(self, self.agc, 
+                     self.clock_recov,
+                     self.time_recov,
                      self.diffdec, self.slicer, self.symbol_mapper, self.unpack, self)
 
     def samples_per_symbol(self):
@@ -305,11 +293,9 @@ class dqpsk_demod(gr.hier_block2):
         print "RRC roll-off factor: %.2f" % self._excess_bw
         print "Costas Loop alpha:   %.2e" % self._costas_alpha
         print "Costas Loop beta:    %.2e" % self._costas_beta
-        print "M&M mu:              %.2f" % self._mm_mu
-        print "M&M mu gain:         %.2e" % self._mm_gain_mu
-        print "M&M omega:           %.2f" % self._mm_omega
-        print "M&M omega gain:      %.2e" % self._mm_gain_omega
-        print "M&M omega limit:     %.2f" % self._mm_omega_relative_limit
+        print "Timing alpha gain:   %.2f" % self._timing_alpha
+        print "Timing beta gain:    %.2f" % self._timing_beta
+        print "Timing max dev:      %.2f" % self._timing_max_dev
 
     def _setup_logging(self):
         print "Modulation logging turned on."
@@ -319,8 +305,10 @@ class dqpsk_demod(gr.hier_block2):
                      gr.file_sink(gr.sizeof_gr_complex, "rx_agc.dat"))
         self.connect(self.rrc_filter,
                      gr.file_sink(gr.sizeof_gr_complex, "rx_rrc_filter.dat"))
-        self.connect(self.receiver,
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_receiver.dat"))
+        self.connect(self.clock_recov,
+                     gr.file_sink(gr.sizeof_gr_complex, "rx_clock_recov.dat"))
+        self.connect(self.time_recov,
+                     gr.file_sink(gr.sizeof_gr_complex, "rx_time_recov.dat"))
         self.connect(self.diffdec,
                      gr.file_sink(gr.sizeof_gr_complex, "rx_diffdec.dat"))        
         self.connect(self.slicer,
@@ -341,10 +329,12 @@ class dqpsk_demod(gr.hier_block2):
                           help="disable gray coding on modulated bits (PSK)")
         parser.add_option("", "--costas-alpha", type="float", default=_def_costas_alpha,
                           help="set Costas loop alpha value [default=%default] (PSK)")
-        parser.add_option("", "--gain-mu", type="float", default=_def_gain_mu,
-                          help="set M&M symbol sync loop gain mu value [default=%default] (PSK)")
-        parser.add_option("", "--mu", type="float", default=_def_mu,
-                          help="set M&M symbol sync loop mu value [default=%default] (PSK)")
+        parser.add_option("", "--gain-alpha", type="float", default=_def_timing_alpha,
+                          help="set timing symbol sync loop gain alpha value [default=%default] (GMSK/PSK)")
+        parser.add_option("", "--gain-beta", type="float", default=_def_timing_beta,
+                          help="set timing symbol sync loop gain beta value [default=%default] (GMSK/PSK)")
+        parser.add_option("", "--timing-max-dev", type="float", default=_def_timing_max_dev,
+                          help="set timing symbol sync loop maximum deviation [default=%default] (GMSK/PSK)")
     add_options=staticmethod(add_options)
 
     def extract_kwargs_from_options(options):
@@ -352,12 +342,12 @@ class dqpsk_demod(gr.hier_block2):
         Given command line options, create dictionary suitable for passing to __init__
         """
         return modulation_utils.extract_kwargs_from_options(
-            dqpsk_demod.__init__, ('self',), options)
+            dqpsk2_demod.__init__, ('self',), options)
     extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
 
 
 #
 # Add these to the mod/demod registry
 #
-modulation_utils.add_type_1_mod('dqpsk', dqpsk_mod)
-modulation_utils.add_type_1_demod('dqpsk', dqpsk_demod)
+modulation_utils.add_type_1_mod('dqpsk2', dqpsk2_mod)
+modulation_utils.add_type_1_demod('dqpsk2', dqpsk2_demod)

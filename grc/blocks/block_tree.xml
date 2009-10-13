@@ -126,6 +126,7 @@
 	<cat>
 		<name>Synchronizers</name>
 		<block>gr_clock_recovery_mm_xx</block>
+		<block>gr_pfb_clock_sync_ccf</block>
 
 		<block>gr_costas_loop_cc</block>
 		<block>gr_dd_mpsk_sync_cc</block>
@@ -169,7 +170,7 @@
 		<block>band_pass_filter</block>
 		<block>band_reject_filter</block>
 		<block>root_raised_cosine_filter</block>
-		<!-- Filters that take taps as aruments -->
+		<!-- Filters that take taps as arguments -->
 		<block>gr_fir_filter_xxx</block>
 		<block>gr_interp_fir_filter_xxx</block>
 		<block>gr_fft_filter_xxx</block>
@@ -180,7 +181,7 @@
 		<!-- Filter banks -->
 		<block>blks2_synthesis_filterbank</block>
 		<block>blks2_analysis_filterbank</block>
-		<!-- Polyphase filers -->
+		<!-- Polyphase filters -->
 		<block>blks2_pfb_arb_resampler_ccf</block>
 		<!-- Other filters -->
 		<block>gr_single_pole_iir_filter_xx</block>

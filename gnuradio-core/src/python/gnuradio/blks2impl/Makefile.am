@@ -31,7 +31,9 @@ grblkspython_PYTHON =		\
 	am_demod.py		\
 	channel_model.py	\
 	dbpsk.py		\
+	dbpsk2.py		\
 	dqpsk.py		\
+	dqpsk2.py		\
 	d8psk.py		\
 	filterbank.py		\
 	fm_demod.py		\

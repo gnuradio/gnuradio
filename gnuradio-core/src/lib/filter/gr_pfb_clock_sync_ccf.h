@@ -28,10 +28,11 @@
 
 class gr_pfb_clock_sync_ccf;
 typedef boost::shared_ptr<gr_pfb_clock_sync_ccf> gr_pfb_clock_sync_ccf_sptr;
-gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (float sps, float gain,
-							   const std::vector<float> &taps,
-							   unsigned int filter_size=32,
-							   float init_phase=0);
+gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
+						       const std::vector<float> &taps,
+						       unsigned int filter_size=32,
+						       float init_phase=0,
+						       float max_rate_deviation=1.5);
 
 class gr_fir_ccf;
 
@@ -50,31 +51,38 @@ class gr_pfb_clock_sync_ccf : public gr_block
   /*!
    * Build the polyphase filterbank timing synchronizer.
    */
-  friend gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (float sps, float gain,
+  friend gr_pfb_clock_sync_ccf_sptr gr_make_pfb_clock_sync_ccf (double sps, float gain,
 								const std::vector<float> &taps,
 								unsigned int filter_size,
-								float init_phase);
+								float init_phase,
+								float max_rate_deviation);
 
   bool			   d_updated;
-  unsigned int             d_sps;
+  double                   d_sps;
+  double                   d_sample_num;
   float                    d_alpha;
-  unsigned int             d_nfilters;
+  float                    d_beta;
+  int                      d_nfilters;
   std::vector<gr_fir_ccf*> d_filters;
   std::vector<gr_fir_ccf*> d_diff_filters;
   std::vector< std::vector<float> > d_taps;
   std::vector< std::vector<float> > d_dtaps;
-  float                    d_acc;
-  unsigned int             d_last_filter;
-  unsigned int             d_start_count;
-  unsigned int             d_taps_per_filter;
+  float                    d_k;
+  float                    d_rate;
+  float                    d_rate_i;
+  float                    d_rate_f;
+  float                    d_max_dev;
+  int                      d_filtnum;
+  int                      d_taps_per_filter;
 
   /*!
    * Build the polyphase filterbank timing synchronizer.
    */
-  gr_pfb_clock_sync_ccf (float sps, float gain,
+  gr_pfb_clock_sync_ccf (double sps, float gain,
 			 const std::vector<float> &taps,
 			 unsigned int filter_size,
-			 float init_phase);
+			 float init_phase,
+			 float max_rate_deviation);
   
   void create_diff_taps(const std::vector<float> &newtaps,
 			std::vector<float> &difftaps);
@@ -96,6 +104,20 @@ public:
    */
   void print_taps();
   void print_diff_taps();
+
+  void set_alpha(float alpha)
+  {
+    d_alpha = alpha;
+  }
+  void set_beta(float beta)
+  {
+    d_beta = beta;
+  }
+
+  void set_max_rate_deviation(float m)
+  {
+    d_max_dev = m;
+  }
   
   int general_work (int noutput_items,
 		    gr_vector_int &ninput_items,
