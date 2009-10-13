@@ -40,6 +40,7 @@ AC_DEFUN([GR_VERSION],[
   if test "$MINOR_VERSION" == "git"; then
     dnl 3.3git-xxx-gxxxxxxxx
     RELEASE=$RELEASE$MINOR_VERSION
+    DOCVER=$RELEASE
     if test "$GIT_VERSION" != "" ; then
       RELEASE=$RELEASE-$GIT_VERSION
     fi
@@ -47,6 +48,7 @@ AC_DEFUN([GR_VERSION],[
     if test "$MAINT_VERSION" == "git" ; then
       dnl 3.3.1git-xxx-gxxxxxxxx
       RELEASE=$RELEASE.$MINOR_VERSION$MAINT_VERSION
+      DOCVER=$RELEASE
       if test "$GIT_VERSION" != "" ; then
         RELEASE=$RELEASE-$GIT_VERSION
       fi
@@ -61,9 +63,12 @@ AC_DEFUN([GR_VERSION],[
           dnl 3.3.0.1, 3.3.1.1
           RELEASE=$RELEASE.$MAINT_VERSION
         fi
+	DOCVER=$RELEASE
       fi
     fi
   fi
 
   AC_MSG_NOTICE([GNU Radio Release $RELEASE])
+  AC_SUBST(RELEASE)
+  AC_SUBST(DOCVER)
 ])

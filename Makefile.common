@@ -108,7 +108,7 @@ exampledir = $(datadir)/gnuradio/examples
 
 # Base directory for documentation (docdir undefined in autoconf < 1.60)
 docdir ?= $(datadir)/doc/$(PACKAGE)
-gr_docdir = $(docdir)-$(VERSION)
+gr_docdir = $(docdir)-$(DOCVER)
 
 # System configuration files
 gr_prefsdir = $(GR_PREFSDIR)

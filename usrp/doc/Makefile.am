@@ -25,7 +25,7 @@ include $(top_srcdir)/Makefile.common
 SUBDIRS = other
 
 man3dir = $(mandir)/man3
-usrp_docdir  = $(prefix)/share/doc/usrp-@VERSION@
+usrp_docdir  = $(prefix)/share/doc/usrp-$(DOCVER)
 
 EXTRA_DIST = 			\
 	Doxyfile.in		\
