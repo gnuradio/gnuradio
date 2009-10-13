@@ -57,11 +57,18 @@ _get_usb_device_descriptor (struct usb_device *q)
 {
   return q->descriptor;
 }
+
 int
 _get_usb_string_descriptor (struct usb_dev_handle *udh, int index,
                            unsigned char* data, int length)
 {
-  return usb_get_string_simple (udh, index, (char*) data, length);
+  int ret;
+  ret =  usb_get_string_simple (udh, index, (char*) data, length);
+
+  if (ret < 0) {
+    fprintf (stderr, "usrp: usb_get_string_descriptor failed: %s\n",
+             usb_strerror());
+  }
 }
 
 int
@@ -69,8 +76,12 @@ _usb_control_transfer (struct usb_dev_handle *udh, int request_type,
                       int request, int value, int index,
                       unsigned char *data, int length, unsigned int timeout)
 {
-  return usb_control_msg (udh, request_type,request, value, index,
-                          (char*) data, length, (int) timeout);
+  int ret;
+
+  ret = usb_control_msg (udh, request_type,request, value, index,
+                         (char*) data, length, (int) timeout);
+  if (ret < 0) 
+    fprintf (stderr, "usrp: usb_claim_interface failed: %s\n", usb_strerror());
 }
 
 
@@ -198,8 +209,10 @@ write_cmd (struct usb_dev_handle *udh,
 			   (char *) bytes, len, 1000);
   if (r < 0){
     // we get EPIPE if the firmware stalls the endpoint.
-    if (errno != EPIPE)
+    if (errno != EPIPE) {
       fprintf (stderr, "usb_control_msg failed: %s\n", usb_strerror ());
+      fprintf (stderr, "write_cmd failed\n");
+    }
   }
 
   return r;

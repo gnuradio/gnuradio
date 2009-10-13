@@ -215,7 +215,7 @@ write_internal_ram (libusb_device_handle *udh, unsigned char *buf,
                        (unsigned char*)(buf + (addr - start_addr)), n, 1000);
 
     if (a < 0){
-      fprintf(stderr,"write_internal_ram failed: %i\n", a);
+      fprintf(stderr,"write_internal_ram failed\n");
       return false;
     }
   }
@@ -297,7 +297,7 @@ _usrp_load_firmware (libusb_device_handle *udh, const char *filename,
       break;
     }
     else if (type == 0x02){
-      fprintf(stderr, "Extended address: whatever I do with it?\n");
+      fprintf (stderr, "Extended address: whatever I do with it?\n");
       fprintf (stderr, "%s: invalid line: \"%s\"\n", filename, s);
       goto fail;
     }
@@ -419,6 +419,10 @@ usrp_set_hash (libusb_device_handle *udh, int which,
   // we use the Cypress firmware down load command to jam it in.
   int r = _usb_control_transfer (udh, 0x40, 0xa0, hash_slot_addr[which], 0,
                                 (unsigned char *) hash, USRP_HASH_SIZE, 1000);
+
+  if (r < 0)
+     fprintf (stderr, "usrp: failed to set hash\n");
+
   return r == USRP_HASH_SIZE;
 }
 
@@ -431,6 +435,10 @@ usrp_get_hash (libusb_device_handle *udh, int which,
   // we use the Cypress firmware upload command to fetch it.
   int r = _usb_control_transfer (udh, 0xc0, 0xa0, hash_slot_addr[which], 0,
                                 (unsigned char *) hash, USRP_HASH_SIZE, 1000);
+
+  if (r < 0)
+     fprintf (stderr, "usrp: failed to get hash\n");
+
   return r == USRP_HASH_SIZE;
 }
 

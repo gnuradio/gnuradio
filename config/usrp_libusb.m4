@@ -24,45 +24,100 @@ dnl Boston, MA 02110-1301, USA.
 
 
 AC_DEFUN([USRP_LIBUSB], [
-  libusbok=yes
+  dnl Use PKGCONFIG to check for packages first, then check to
+  dnl make sure the USB_* variables work (whether from PKGCONFIG
+  dnl or overridden by the user)
+
+  libusbok=no
   have_libusb1=no
-  if test [x]$1 = xyes; then
-    PKG_CHECK_MODULES(USB, libusb-1.0, [have_libusb1=yes], [
-      AC_LANG_PUSH(C)
-      AC_CHECK_HEADERS([libusb-1.0/libusb.h], [have_libusb1=yes],
-                       [libusbok=no; AC_MSG_RESULT([USRP requires libusb-1.0. libusb.h not found. See http://www.libusb.org])])
-      AC_SEARCH_LIBS(libusb_bulk_transfer, [usb-1.0], [USB_LIBS="$LIBS"],
-                     [libusbok=no; AC_MSG_RESULT([USRP requires libusb-1.0. libusb_bulk_transfer not found. See http://www.libusb.org])])
-      AC_LANG_POP
+  if test x$1 = xyes; then
+    PKG_CHECK_MODULES(USB, libusb-1.0, [
+      libusbok=yes
+      have_libusb1=yes
+      usb_header='libusb-1.0/libusb.h'
+      usb_lib_func='libusb_bulk_transfer'
+      usb_lib_name='usb-1.0'
     ])
   else
-    PKG_CHECK_MODULES(USB, libusb, [], [
+    dnl not using libusb1 (for now); see if legacy version is found.
+    dnl it might be installed under the name either 'libusb' or
+    dnl 'libusb-legacy', or just available via the
+    dnl user's shell environment
+
+    dnl see if the pkgconfig module 'libusb' is available
+    PKG_CHECK_MODULES(USB, libusb, [libusbok=yes], [libusbok=no])
+    dnl PKG_CHECK_MODULES does not work correctly when embedded
+    if test $libusbok = no; then
+      dnl if not, see if the pkgconfig module 'libusb-legacy' is available
+      PKG_CHECK_MODULES(USB, [libusb-legacy], [libusbok=yes], [libusbok=no])
+    fi
+    dnl set variables for further testing
+    usb_header='usb.h'
+    usb_lib_func='usb_bulk_write'
+    usb_lib_name='usb'
+  fi
+  if test x$1 != xyes || test $have_libusb1 = yes; then
+    dnl Either (1) libusb1 was specified and found; or
+    dnl (2) libusb1 was not specified. Restart checking.
+    libusbok=yes
+
+    dnl Verify that $usb_header is a valid header, and if so,
+    dnl then verify that $usb_lib_func can be found in the
+    dnl library $usb_lib_name.
+
+    dnl If PKGCONFIG found variable USB_INCLUDEDIR, and it is
+    dnl not empty, use it for checking for $usb_header.
+    dnl Otherwise, maybe the user's shell environment is already
+    dnl configured to find this header.
+
+    AC_LANG_PUSH(C)
+    save_CPPFLAGS="$CPPFLAGS"
+    if test x$USB_INCLUDEDIR != x; then
+      USB_INCLUDES="-I$USB_INCLUDEDIR"
+      CPPFLAGS="$CPPFLAGS $USB_INCLUDES"
+      AC_SUBST(USB_INCLUDES)
+    fi
+    AC_CHECK_HEADERS([$usb_header], [], [libusbok=no])
+    CPPFLAGS="$save_CPPFLAGS"
+    AC_LANG_POP(C)
+
+    if test $libusbok = no; then
+      AC_MSG_RESULT([USRP requires libusb header '$usb_header' which was not found or was not usable. See http://www.libusb.org])
+    else
+
+      dnl found the header; now make sure the library is OK
+      dnl On Darwin, need to include the IOKit library.     
+
       AC_LANG_PUSH(C)
-      AC_CHECK_HEADERS([usb.h], [],
-                       [libusbok=no; AC_MSG_RESULT([USRP requires libusb. usb.h not found. See http://www.libusb.org])])
       save_LIBS="$LIBS"
+      LIBS=""
       case "$host_os" in
         darwin*)
-          LIBS="$LIBS -lIOKit"
+          USB_LIBS="$USB_LIBS -lIOKit"
+          LIBS="$USB_LIBS"
           ;;
         *) ;;
       esac
-
-      AC_SEARCH_LIBS(usb_bulk_write, [usb], [USB_LIBS="$LIBS"],
-                     [libusbok=no; AC_MSG_RESULT([USRP requires libusb. usb_bulk_write not found. See http://www.libusb.org])])
+      AC_CHECK_LIB([$usb_lib_name], [$usb_lib_func], [], [
+        libusbok=no
+        AC_MSG_RESULT([USRP requires library '$usb_lib_name' with function '$usb_lib_func', which was either not found or was not usable. See http://www.libusb.org])
+      ])
+      case "$host_os" in
+        cygwin* | mingw*)
+          USB_LIBS="$LIBS"
+          ;;
+        *) ;;
+      esac
       LIBS="$save_LIBS"
-      AC_LANG_POP
-    ])
-  fi
-
-  if test x$libusbok = xyes; then
-    if test x$USB_INCLUDEDIR != x; then
-      USB_INCLUDES="-I$USB_INCLUDEDIR"
-      AC_SUBST(USB_INCLUDES)
+      AC_LANG_POP(C)
     fi
+  fi
+  if test $libusbok = yes; then
     AC_SUBST(USB_LIBS)
     ifelse([$2], , :, [$2])
   else
+    USB_INCLUDES=
+    USB_LIBS=
     ifelse([$3], , :, [$3])
   fi
 ])
