@@ -36,11 +36,13 @@ self.$(id).set_center_freq($frequency)</callback>
 			<name>Complex</name>
 			<key>complex</key>
 			<opt>fcn:32fc</opt>
+			<opt>vlen:1</opt>
 		</option>
 		<option>
 			<name>Short</name>
 			<key>short</key>
 			<opt>fcn:16sc</opt>
+			<opt>vlen:2</opt>
 		</option>
 	</param>
 	<param>
@@ -85,6 +87,7 @@ self.$(id).set_center_freq($frequency)</callback>
 	<sink>
 		<name>in</name>
 		<type>$type</type>
+		<vlen>$type.vlen</vlen>
 	</sink>
 	<doc>
 The USRP2 sink inputs 100 Megasamples per second / interpolation.
