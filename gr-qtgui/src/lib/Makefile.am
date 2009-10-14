@@ -26,7 +26,6 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 
 # Only include these files in the build if qtgui passes configure checks
 # This is mostly to help make distcheck pass
-if BUILD_QT
 QMAKE_SOURCES = 				\
 	spectrumdisplayform_moc.cc		\
 	FrequencyDisplayPlot_moc.cc	 	\
@@ -35,7 +34,6 @@ QMAKE_SOURCES = 				\
 	Waterfall3DDisplayPlot_moc.cc		\
 	ConstellationDisplayPlot_moc.cc		\
 	spectrumdisplayform_ui.h
-endif
 
 EXTRA_DIST = spectrumdisplayform.ui
 
@@ -77,19 +75,11 @@ grinclude_HEADERS =			\
 	qtgui_sink_c.h			\
 	qtgui_sink_f.h
 
-if BUILD_QT
 %_moc.cc : %.h
 	$(QT_MOC_EXEC) -DQT_SHARED -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB -p $(srcdir) $< -o $@
 
 %_ui.h : %.ui
 	$(QT_UIC_EXEC) $< -o $@
-else
-%_moc.cc : %.h
-	touch $@
-
-%_ui.h : %.ui
-	touch $@
-endif
 
 # magic flags
 libgnuradio_qtgui_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
