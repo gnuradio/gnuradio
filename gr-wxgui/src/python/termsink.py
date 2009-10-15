@@ -24,7 +24,10 @@ import common
 from gnuradio import gr
 
 class termsink(gr.hier_block2, common.wxgui_hb):
-	def __init__(self,parent):
+	def __init__(self,
+		     parent,
+		     ):
+
 		gr.hier_block2.__init__(
 			self,
 			"termsink",
@@ -34,5 +37,5 @@ class termsink(gr.hier_block2, common.wxgui_hb):
 
 		self.win = term_window.term_window(
 			parent=parent,
+			size=term_window.DEFAULT_WIN_SIZE,
 		)
-

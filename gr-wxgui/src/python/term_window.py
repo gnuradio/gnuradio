@@ -22,7 +22,28 @@
 import wx
 import pubsub
 
+DEFAULT_WIN_SIZE = (600, 300)
+
 class term_window(wx.Panel, pubsub.pubsub):
-	def __init__(self, parent):
+	def __init__(self,
+		     parent,
+		     size,
+		     ):
+
 		pubsub.pubsub.__init__(self)
-		wx.Panel.__init__(self, parent, style=wx.SIMPLE_BORDER)
+		wx.Panel.__init__(self,
+				  parent,
+				  size=size,
+				  style=wx.SIMPLE_BORDER,
+				  )
+
+		self.text_ctrl = wx.TextCtrl(self,
+					     wx.ID_ANY,
+					     value="BOO",
+					     size=size,
+					     style=wx.TE_MULTILINE|wx.TE_READONLY,
+					)
+
+		main_sizer = wx.BoxSizer(wx.VERTICAL)
+		main_sizer.Add(self.text_ctrl, 1, wx.EXPAND)
+		self.SetSizerAndFit(main_sizer)
