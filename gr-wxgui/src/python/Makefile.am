@@ -53,6 +53,8 @@ ourpython_PYTHON =			\
 	scopesink_nongl.py		\
 	scopesink_gl.py			\
 	scope_window.py			\
+	term_window.py			\
+	termsink.py			\
 	waterfallsink2.py		\
 	waterfallsink_nongl.py		\
 	waterfallsink_gl.py		\

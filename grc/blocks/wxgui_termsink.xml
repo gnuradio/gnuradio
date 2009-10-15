@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##Terminal window
+###################################################
+ -->
+<block>
+	<name>Terminal Sink</name>
+	<key>wxgui_termsink</key>
+	<import>from gnuradio.wxgui import termsink</import>
+	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
+termsink.termsink(
+	$(parent).GetWin(),
+)
+#if not $grid_pos()
+$(parent).Add(self.$(id).win)
+#else
+$(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
+#end if</make>
+	<param>
+		<name>Grid Position</name>
+		<key>grid_pos</key>
+		<value></value>
+		<type>grid_pos</type>
+	</param>
+	<param>
+		<name>Notebook</name>
+		<key>notebook</key>
+		<value></value>
+		<type>notebook</type>
+	</param>
+</block>
