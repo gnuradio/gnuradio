@@ -251,7 +251,7 @@ class Param(_Param, _GUIParam):
 		#########################
 		# Numeric Types
 		#########################
-		elif t in ('raw', 'complex', 'real', 'int', 'complex_vector', 'real_vector', 'int_vector', 'hex', 'bool'):
+		elif t in ('raw', 'complex', 'real', 'int', 'hex', 'bool'):
 			#raise exception if python cannot evaluate this value
 			try: e = self.get_parent().get_parent().evaluate(v)
 			except Exception, e: raise Exception, 'Value "%s" cannot be evaluated:\n%s'%(v, e)
@@ -269,10 +269,22 @@ class Param(_Param, _GUIParam):
 				try: assert isinstance(e, INT_TYPES)
 				except AssertionError: raise Exception, 'Expression "%s" is invalid for type integer.'%str(e)
 				return e
-			#########################
-			# Numeric Vector Types
-			#########################
-			elif t == 'complex_vector':
+			elif t == 'hex': return hex(e)
+			elif t == 'bool':
+				try: assert isinstance(e, bool)
+				except AssertionError: raise Exception, 'Expression "%s" is invalid for type bool.'%str(e)
+				return e
+			else: raise TypeError, 'Type "%s" not handled'%t
+		#########################
+		# Numeric Vector Types
+		#########################
+		elif t in ('complex_vector', 'real_vector', 'int_vector'):
+			if not v: v = '()' #turn a blank string into an empty list, so it will eval
+			#raise exception if python cannot evaluate this value
+			try: e = self.get_parent().get_parent().evaluate(v)
+			except Exception, e: raise Exception, 'Value "%s" cannot be evaluated:\n%s'%(v, e)
+			#raise an exception if the data is invalid
+			if t == 'complex_vector':
 				if not isinstance(e, VECTOR_TYPES):
 					self._lisitify_flag = True
 					e = [e]
@@ -296,12 +308,6 @@ class Param(_Param, _GUIParam):
 					for ei in e: assert isinstance(ei, INT_TYPES)
 				except AssertionError: raise Exception, 'Expression "%s" is invalid for type integer vector.'%str(e)
 				return e
-			elif t == 'hex': return hex(e)
-			elif t == 'bool':
-				try: assert isinstance(e, bool)
-				except AssertionError: raise Exception, 'Expression "%s" is invalid for type bool.'%str(e)
-				return e
-			else: raise TypeError, 'Type "%s" not handled'%t
 		#########################
 		# String Types
 		#########################
