@@ -23,27 +23,49 @@
 #ifndef INCLUDED_AUDIO_OSX_H
 #define INCLUDED_AUDIO_OSX_H
 
-#define CheckErrorAndThrow(err,what,throw_str) \
-if (err) { \
-  OSStatus error = static_cast<OSStatus>(err); \
-  fprintf (stderr, "%s\n  Error# %ld ('%4s')\n  %s:%d\n", \
-	   what, error, (char*)(&err), __FILE__, __LINE__); \
-  fflush (stdout); \
-  throw std::runtime_error (throw_str); \
-}
+#include <iostream>
+#include <string.h>
 
-#define CheckError(err,what) \
-if (err) { \
-  OSStatus error = static_cast<OSStatus>(err); \
-  fprintf (stderr, "%s\n  Error# %ld ('%4s')\n  %s:%d\n", \
-	   what, error, (char*)(&err), __FILE__, __LINE__); \
-  fflush (stdout); \
-}
+#define CheckErrorAndThrow(err,what,throw_str)				\
+  if (err) {								\
+    OSStatus error = static_cast<OSStatus>(err);			\
+    char err_str[4];							\
+    strncpy (err_str, (char*)(&err), 4);				\
+    std::cerr << what << std::endl;					\
+    std::cerr << "  Error# " << error << " ('" << err_str		\
+	      << "')" << std::endl;					\
+    std::cerr << "  " << __FILE__ << ":" << __LINE__ << std::endl;	\
+    fflush (stderr);							\
+    throw std::runtime_error (throw_str);				\
+  }
+
+#define CheckError(err,what)						\
+  if (err) {								\
+    OSStatus error = static_cast<OSStatus>(err);			\
+    char err_str[4];							\
+    strncpy (err_str, (char*)(&err), 4);				\
+    std::cerr << what << std::endl;					\
+    std::cerr << "  Error# " << error << " ('" << err_str		\
+	      << "')" << std::endl;					\
+    std::cerr << "  " << __FILE__ << ":" << __LINE__ << std::endl;	\
+    fflush (stderr);							\
+  }
 
 #ifdef WORDS_BIGENDIAN
 #define GR_PCM_ENDIANNESS kLinearPCMFormatFlagIsBigEndian
 #else
 #define GR_PCM_ENDIANNESS 0
+#endif
+
+// Check the version of MacOSX being used
+#ifdef __APPLE_CC__
+#include <AvailabilityMacros.h>
+#ifndef MAC_OS_X_VERSION_10_6
+#define MAC_OS_X_VERSION_10_6 1060
+#endif
+#if MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_6
+#define GR_USE_OLD_AUDIO_UNIT
+#endif
 #endif
 
 #endif /* INCLUDED_AUDIO_OSX_H */

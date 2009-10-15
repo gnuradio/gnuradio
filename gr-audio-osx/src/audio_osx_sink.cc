@@ -47,19 +47,19 @@ audio_osx_sink::audio_osx_sink (int sample_rate,
     d_OutputAU (0)
 {
   if (sample_rate <= 0) {
-    fprintf (stderr, "Invalid Sample Rate: %d\n", sample_rate);
+    std::cerr << "Invalid Sample Rate: " << sample_rate << std::endl;
     throw std::invalid_argument ("audio_osx_sink::audio_osx_sink");
   } else
     d_sample_rate = (Float64) sample_rate;
 
   if (channel_config <= 0 & channel_config != -1) {
-    fprintf (stderr, "Invalid Channel Config: %d\n", channel_config);
+    std::cerr << "Invalid Channel Config: " << channel_config << std::endl;
     throw std::invalid_argument ("audio_osx_sink::audio_osx_sink");
   } else if (channel_config == -1) {
 // no user input; try "device name" instead
     int l_n_channels = (int) strtol (device_name.data(), (char **)NULL, 10);
     if (l_n_channels == 0 & errno) {
-      fprintf (stderr, "Error Converting Device Name: %d\n", errno);
+      std::cerr << "Error Converting Device Name: " << errno << std::endl;
       throw std::invalid_argument ("audio_osx_sink::audio_osx_sink");
     }
     if (l_n_channels <= 0)
@@ -79,7 +79,7 @@ audio_osx_sink::audio_osx_sink (int sample_rate,
   if (max_sample_count == -1)
     max_sample_count = sample_rate;
   else if (max_sample_count <= 0) {
-    fprintf (stderr, "Invalid Max Sample Count: %d\n", max_sample_count);
+    std::cerr << "Invalid Max Sample Count: " << max_sample_count << std::endl;
     throw std::invalid_argument ("audio_osx_sink::audio_osx_sink");
   }
 
@@ -98,21 +98,39 @@ audio_osx_sink::audio_osx_sink (int sample_rate,
   OSStatus err = noErr;
 
 // Open the default output unit
+#ifndef GR_USE_OLD_AUDIO_UNIT
+  AudioComponentDescription desc;
+#else
   ComponentDescription desc;
+#endif
+
   desc.componentType = kAudioUnitType_Output;
   desc.componentSubType = kAudioUnitSubType_DefaultOutput;
   desc.componentManufacturer = kAudioUnitManufacturer_Apple;
   desc.componentFlags = 0;
   desc.componentFlagsMask = 0;
 
-  Component comp = FindNextComponent (NULL, &desc);
+#ifndef GR_USE_OLD_AUDIO_UNIT
+  AudioComponent comp = AudioComponentFindNext(NULL, &desc);
   if (comp == NULL) {
-    fprintf (stderr, "FindNextComponent Error\n");
+    std::cerr << "AudioComponentFindNext Error" << std::endl;
     throw std::runtime_error ("audio_osx_sink::audio_osx_sink");
   }
+#else
+  Component comp = FindNextComponent (NULL, &desc);
+  if (comp == NULL) {
+    std::cerr << "FindNextComponent Error" << std::endl;
+    throw std::runtime_error ("audio_osx_sink::audio_osx_sink");
+  }
+#endif
 
+#ifndef GR_USE_OLD_AUDIO_UNIT
+  err = AudioComponentInstanceNew (comp, &d_OutputAU);
+  CheckErrorAndThrow (err, "AudioComponentInstanceNew", "audio_osx_sink::audio_osx_sink");
+#else
   err = OpenAComponent (comp, &d_OutputAU);
   CheckErrorAndThrow (err, "OpenAComponent", "audio_osx_sink::audio_osx_sink");
+#endif
 
 // Set up a callback function to generate output to the output unit
 
@@ -167,11 +185,10 @@ audio_osx_sink::audio_osx_sink (int sample_rate,
 		      "audio_osx_sink::audio_osx_sink");
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "audio_osx_sink Parameters:\n");
-  fprintf (stderr, "  Sample Rate is %g\n", d_sample_rate);
-  fprintf (stderr, "  Number of Channels is %ld\n", d_n_channels);
-  fprintf (stderr, "  Max # samples to store per channel is %ld",
-	   d_max_sample_count);
+  std::cerr << "audio_osx_sink Parameters:" << std::endl;
+  std::cerr << "  Sample Rate is " << d_sample_rate << std::endl;
+  std::cerr << "  Number of Channels is " << d_n_channels << std::endl;
+  std::cerr << "  Max # samples to store per channel is " << d_max_sample_count << std::endl;
 #endif
 }
 
@@ -220,7 +237,11 @@ audio_osx_sink::~audio_osx_sink ()
 // stop and close the AudioUnit
   stop ();
   AudioUnitUninitialize (d_OutputAU);
+#ifndef GR_USE_OLD_AUDIO_UNIT
+  AudioComponentInstanceDispose (d_OutputAU);
+#else
   CloseComponent (d_OutputAU);
+#endif
 
 // empty and delete the queues
   for (UInt32 n = 0; n < d_n_channels; n++) {
@@ -275,8 +296,8 @@ audio_osx_sink::work (int noutput_items,
 #endif
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "work1: qSC = %ld, lMC = %ld, dmSC = %ld, nOI = %d\n",
-	   d_queueSampleCount, l_max_count, d_max_sample_count, noutput_items);
+  std::cerr << "work1: qSC = " << d_queueSampleCount << ", lMC = "<< l_max_count
+	    << ", dmSC = " << d_max_sample_count << ", nOI = " << noutput_items << std::endl;
 #endif
 
   if (d_queueSampleCount > l_max_count) {
@@ -318,7 +339,7 @@ audio_osx_sink::work (int noutput_items,
   if (res == -1) {
 // data coming in too fast
 // drop oldest buffer
-    fputs ("oX", stderr);
+    fputs ("aO", stderr);
     fflush (stderr);
 // set the local number of samples available to the max
     d_queueSampleCount = d_buffers[0]->buffer_length_items ();
@@ -328,8 +349,8 @@ audio_osx_sink::work (int noutput_items,
   }
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "work2: #OI = %4d, #Cnt = %4ld, mSC = %ld\n",
-	   noutput_items, d_queueSampleCount, d_max_sample_count);
+  std::cerr << "work2: #OI = " << noutput_items << ", #Cnt = "
+	    << d_queueSampleCount << ", mSC = " << d_max_sample_count << std::endl;
 #endif
 
 // release control to allow for other processing parts to run
@@ -352,8 +373,8 @@ OSStatus audio_osx_sink::AUOutputCallback
   This->d_internal->lock ();
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "cb_in: SC = %4ld, in#F = %4ld\n",
-	   This->d_queueSampleCount, inNumberFrames);
+  std::cerr << "cb_in: SC = " << This->d_queueSampleCount
+	    << ", in#F = " << inNumberFrames << std::endl;
 #endif
 
   if (This->d_queueSampleCount < inNumberFrames) {
@@ -364,7 +385,7 @@ OSStatus audio_osx_sink::AUOutputCallback
     int l_counter = This->d_n_channels;
 
     while (--l_counter >= 0) {
-      UInt32 t_n_output_items = inNumberFrames;
+      size_t t_n_output_items = inNumberFrames;
       float* outBuffer = (float*) ioData->mBuffers[l_counter].mData;
       This->d_buffers[l_counter]->dequeue (outBuffer, &t_n_output_items);
       if (t_n_output_items != inNumberFrames) {
@@ -378,7 +399,7 @@ OSStatus audio_osx_sink::AUOutputCallback
   }
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "cb_out: SC = %4ld\n", This->d_queueSampleCount);
+  std::cerr << "cb_out: SC = " << This->d_queueSampleCount << std::endl;
 #endif
 
 // signal that data is available
