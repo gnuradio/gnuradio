@@ -33,6 +33,7 @@
 #include "fusb.h"
 #include "fusb_darwin.h"
 #include "darwin_libusb.h"
+#include <iostream>
 
 static const int USB_TIMEOUT = 100;	// in milliseconds
 static const UInt8 NUM_QUEUE_ITEMS = 20;
@@ -153,9 +154,10 @@ fusb_ephandle_darwin::start ()
     USB_ERROR_STR (false, -ENOENT, "fusb_ephandle_darwin::start: "
 		   "device not initialized");
 
-  if (usb_debug)
-    fprintf (stderr, "fusb_ephandle_darwin::start: "
-	     "dev = %p, device = %p\n", dev, device);
+  if (usb_debug) {
+    std::cerr << "fusb_ephandle_darwin::start: dev = " <<
+      (void*) dev << ", device = " << (void*) device << std::endl;
+  }
 
   d_interfaceRef = device->interface;
   if (! d_interfaceRef)
@@ -165,10 +167,10 @@ fusb_ephandle_darwin::start ()
 
 // get read or write pipe info (depends on "d_input_p")
 
-  if (usb_debug > 3)
-    fprintf (stderr, "fusb_ephandle_darwin::start "
-	     "d_endpoint = %d, d_input_p = %s\n",
-	     d_endpoint, d_input_p ? "TRUE" : "FALSE");
+  if (usb_debug > 3) {
+    std::cerr << "fusb_ephandle_darwin::start d_endpoint = " << d_endpoint
+	      << ", d_input_p = " << (d_input_p ? "TRUE" : "FALSE") << std::endl;
+  }
 
   int l_endpoint = (d_input_p ? USB_ENDPOINT_IN : USB_ENDPOINT_OUT);
   int pipeRef = ep_to_pipeRef (device, d_endpoint | l_endpoint);
@@ -184,12 +186,14 @@ fusb_ephandle_darwin::start ()
 				  &d_transferType,
 				  &maxPacketSize,
 				  &interval);
-  if (usb_debug == 3)
-    fprintf (stderr, "fusb_ephandle_darwin::start: %s: ep = 0x%02x, "
-	     "pipeRef = %d, d_i = %p, d_iR = %p, if_dir = %d, if_# = %d, "
-	     "if_int = %d, if_maxPS = %d\n", d_input_p ? "read" : "write",
-	     d_endpoint, d_pipeRef, d_interface, d_interfaceRef, direction,
-	     number, interval, maxPacketSize);
+  if (usb_debug == 3) {
+    std::cerr << "fusb_ephandle_darwin::start: " << (d_input_p ? "read" : "write")
+	      << ": ep = " << d_endpoint << ", pipeRef = " << d_pipeRef << "interface = "
+	      << d_interface << ", interfaceRef = " << d_interfaceRef
+	      << ", if_direction = " << direction << ", if_# = " << number
+	      << ", if_interval = " << interval << ", if_maxPacketSize = "
+	      << maxPacketSize << std::endl;
+  }
 
   // set global start boolean
   d_started = true;
@@ -205,9 +209,10 @@ fusb_ephandle_darwin::start ()
   // going; this will unlock the mutex before waiting for a signal ()
   d_runBlock->wait ();
 
-  if (usb_debug)
-    fprintf (stderr, "fusb_ephandle_darwin::start: %s started.\n",
-	     d_input_p ? "read" : "write");
+  if (usb_debug) {
+    std::cerr << "fusb_ephandle_darwin::start: " << (d_input_p ? "read" : "write")
+	      << " started." << std::endl;
+  }
 
   return (true);
 }
@@ -229,10 +234,10 @@ fusb_ephandle_darwin::run_thread (void* arg)
 
   bool l_input_p = This->d_input_p;
 
-  if (usb_debug)
-    fprintf (stderr, "fusb_ephandle_darwin::run_thread: "
-	     "starting for %s.\n",
-	     l_input_p ? "read" : "write");
+  if (usb_debug) {
+    std::cerr << "fusb_ephandle_darwin::run_thread: starting for "
+	      << (l_input_p ? "read" : "write") << "." << std::endl;
+  }
 
   usb_interface_t** l_interfaceRef = This->d_interfaceRef;
   usb_interface_t* l_interface = This->d_interface;
@@ -286,9 +291,10 @@ fusb_ephandle_darwin::run_thread (void* arg)
   CFRunLoopRemoveSource (CFRunLoopGetCurrent (),
 			 l_cfSource, kCFRunLoopDefaultMode);
 
-  if (usb_debug)
-    fprintf (stderr, "fusb_ephandle_darwin::run_thread: finished for %s.\n",
-	     l_input_p ? "read" : "write");
+  if (usb_debug) {
+    std::cerr << "fusb_ephandle_darwin::run_thread: finished for "
+	      << (l_input_p ? "read" : "write") << "." << std::endl;
+  }
 
   // release the run thread running mutex
   l_runThreadRunning->unlock ();
@@ -297,8 +303,9 @@ fusb_ephandle_darwin::run_thread (void* arg)
 void
 fusb_ephandle_darwin::read_thread (void* arg)
 {
-  if (usb_debug)
-    fprintf (stderr, "fusb_ephandle_darwin::read_thread: starting.\n");
+  if (usb_debug) {
+    std::cerr << "fusb_ephandle_darwin::read_thread: starting." << std::endl;
+  }
 
   fusb_ephandle_darwin* This = static_cast<fusb_ephandle_darwin*>(arg);
 
@@ -331,8 +338,9 @@ fusb_ephandle_darwin::read_thread (void* arg)
     l_node = l_queue->iterate_next ();
   }
 
-  if (usb_debug)
-    fprintf (stderr, "fusb_ephandle_darwin::read_thread: finished.\n");
+  if (usb_debug) {
+    std::cerr << "fusb_ephandle_darwin::read_thread: finished." << std::endl;
+  }
 
   // release the read running mutex, to let the parent thread knows
   // that this thread is finished
@@ -343,10 +351,11 @@ void
 fusb_ephandle_darwin::read_issue (s_both_ptr l_both)
 {
   if ((! l_both) || (! d_started)) {
-    if (usb_debug > 4)
-      fprintf (stderr, "fusb_ephandle_darwin::read_issue: Doing nothing; "
-	       "l_both is %X; started is %s\n", (unsigned int) l_both,
-	       d_started ? "TRUE" : "FALSE");
+    if (usb_debug > 4) {
+      std::cerr << "fusb_ephandle_darwin::read_issue: Doing nothing; "
+		<< "l_both is " << (void*) l_both << "; started is "
+		<< (d_started ? "TRUE" : "FALSE") << std::endl;
+    }
     return;
   }
 
@@ -356,7 +365,7 @@ fusb_ephandle_darwin::read_issue (s_both_ptr l_both)
   void* v_buffer = (void*) l_buf->buffer ();
 
 // read up to d_bufLenBytes
-  UInt32 bufLen = d_bufLenBytes;
+  size_t bufLen = d_bufLenBytes;
   l_buf->n_used (bufLen);
 
 // setup system call result
@@ -378,9 +387,10 @@ fusb_ephandle_darwin::read_issue (s_both_ptr l_both)
 			  "(ReadPipeAsync%s): %s",
 			  d_transferType == kUSBInterrupt ? "" : "TO",
 			  darwin_error_str (result));
-  else if (usb_debug > 4)
-    fprintf (stderr, "fusb_ephandle_darwin::read_issue: "
-	     "Queued %X (%ld Bytes)\n", (unsigned int) l_both, bufLen);
+  else if (usb_debug > 4) {
+    std::cerr << "fusb_ephandle_darwin::read_issue: Queued " << (void*) l_both
+	      << " (" << bufLen << " Bytes)" << std::endl;
+  }
 }
 
 void
@@ -388,22 +398,21 @@ fusb_ephandle_darwin::read_completed (void* refCon,
 				      io_return_t result,
 				      void* io_size)
 {
-  UInt32 l_size = (UInt32) io_size;
+  size_t l_size = (size_t) io_size;
   s_both_ptr l_both = static_cast<s_both_ptr>(refCon);
   fusb_ephandle_darwin* This = static_cast<fusb_ephandle_darwin*>(l_both->This ());
   s_node_ptr l_node = l_both->node ();
   circular_buffer<char>* l_buffer = This->d_buffer;
   s_buffer_ptr l_buf = l_node->object ();
-  UInt32 l_i_size = l_buf->n_used ();
+  size_t l_i_size = l_buf->n_used ();
 
-  if (This->d_started && (l_i_size != l_size))
-    fprintf (stderr, "fusb_ephandle_darwin::read_completed: "
-	     "Expected %ld bytes; read %ld.\n",
-	     l_i_size, l_size);
-  else if (usb_debug > 4)
-    fprintf (stderr, "fusb_ephandle_darwin::read_completed: "
-	     "Read %X (%ld bytes)\n",
-	     (unsigned int) l_both, l_size);
+  if (This->d_started && (l_i_size != l_size)) {
+    std::cerr << "fusb_ephandle_darwin::read_completed: Expected " << l_i_size
+	      << " bytes; read " << l_size << "." << std::endl;
+  } else if (usb_debug > 4) {
+    std::cerr << "fusb_ephandle_darwin::read_completed: Read " << (void*) l_both
+	      << " (" << l_size << " bytes)" << std::endl;
+  }
 
 // add this read to the transfer buffer
   if (l_buffer->enqueue (l_buf->buffer (), l_size) == -1) {
@@ -421,11 +430,13 @@ fusb_ephandle_darwin::read_completed (void* refCon,
 int
 fusb_ephandle_darwin::read (void* buffer, int nbytes)
 {
-  UInt32 l_nbytes = (UInt32) nbytes;
+  size_t l_nbytes = (size_t) nbytes;
   d_buffer->dequeue ((char*) buffer, &l_nbytes);
 
-  if (usb_debug > 4)
-    fprintf (stderr, "fusb_ephandle_darwin::read: request for %d bytes, %ld bytes retrieved.\n", nbytes, l_nbytes);
+  if (usb_debug > 4) {
+    std::cerr << "fusb_ephandle_darwin::read: request for " << nbytes
+	      << " bytes, " << l_nbytes << " bytes retrieved." << std::endl;
+  }
 
   return ((int) l_nbytes);
 }
@@ -433,18 +444,18 @@ fusb_ephandle_darwin::read (void* buffer, int nbytes)
 int
 fusb_ephandle_darwin::write (const void* buffer, int nbytes)
 {
-  UInt32 l_nbytes = (UInt32) nbytes;
+  size_t l_nbytes = (size_t) nbytes;
 
   if (! d_started) {
-    if (usb_debug)
-      fprintf (stderr, "fusb_ephandle_darwin::write: Not yet started.\n");
-
+    if (usb_debug) {
+      std::cerr << "fusb_ephandle_darwin::write: Not yet started." << std::endl;
+    }
     return (0);
   }
 
   while (l_nbytes != 0) {
 // find out how much data to copy; limited to "d_bufLenBytes" per node
-    UInt32 t_nbytes = (l_nbytes > d_bufLenBytes) ? d_bufLenBytes : l_nbytes;
+    size_t t_nbytes = (l_nbytes > d_bufLenBytes) ? d_bufLenBytes : l_nbytes;
 
 // get next available node to write into;
 // blocks internally if none available
@@ -476,8 +487,8 @@ fusb_ephandle_darwin::write (const void* buffer, int nbytes)
 		     d_transferType == kUSBInterrupt ? "" : "TO",
 		     darwin_error_str (result));
     else if (usb_debug > 4) {
-      fprintf (stderr, "fusb_ephandle_darwin::write_thread: "
-	       "Queued %X (%ld Bytes)\n", (unsigned int) l_both, t_nbytes);
+      std::cerr << "fusb_ephandle_darwin::write_thread: Queued " << (void*) l_both
+		<< " (" << t_nbytes << " Bytes)" << std::endl;
     }
     l_nbytes -= t_nbytes;
   }
@@ -492,19 +503,19 @@ fusb_ephandle_darwin::write_completed (void* refCon,
 {
   s_both_ptr l_both = static_cast<s_both_ptr>(refCon);
   fusb_ephandle_darwin* This = static_cast<fusb_ephandle_darwin*>(l_both->This ());
-  UInt32 l_size = (UInt32) io_size;
+  size_t l_size = (size_t) io_size;
   s_node_ptr l_node = l_both->node ();
   s_queue_ptr l_queue = This->d_queue;
   s_buffer_ptr l_buf = l_node->object ();
-  UInt32 l_i_size = l_buf->n_used ();
+  size_t l_i_size = l_buf->n_used ();
 
-  if (This->d_started && (l_i_size != l_size))
-    fprintf (stderr, "fusb_ephandle_darwin::write_completed: "
-	     "Expected %ld bytes written; wrote %ld.\n",
-	     l_i_size, l_size);
-  else if (usb_debug > 4)
-    fprintf (stderr, "fusb_ephandle_darwin::write_completed: "
-	     "Wrote %X (%ld Bytes)\n", (unsigned int) l_both, l_size);
+  if (This->d_started && (l_i_size != l_size)) {
+    std::cerr << "fusb_ephandle_darwin::write_completed: Expected " << l_i_size
+	      << " bytes written; wrote " << l_size << "." << std::endl;
+  } else if (usb_debug > 4) {
+    std::cerr << "fusb_ephandle_darwin::write_completed: Wrote " << (void*) l_both
+	      << " (" << l_size << " Bytes)" << std::endl;
+  }
 
 // set buffer's # data to 0
   l_buf->n_used (0);
@@ -515,8 +526,9 @@ fusb_ephandle_darwin::write_completed (void* refCon,
 void
 fusb_ephandle_darwin::abort ()
 {
-  if (usb_debug)
-    fprintf (stderr, "fusb_ephandle_darwin::abort: starting.\n");
+  if (usb_debug) {
+    std::cerr << "fusb_ephandle_darwin::abort: starting." << std::endl;
+  }
 
   io_return_t result = d_interface->AbortPipe (d_interfaceRef, d_pipeRef);
 
@@ -524,8 +536,9 @@ fusb_ephandle_darwin::abort ()
     USB_ERROR_STR_NO_RET (- darwin_to_errno (result),
 			  "fusb_ephandle_darwin::abort "
 			  "(AbortPipe): %s", darwin_error_str (result));
-  if (usb_debug)
-    fprintf (stderr, "fusb_ephandle_darwin::abort: finished.\n");
+  if (usb_debug) {
+    std::cerr << "fusb_ephandle_darwin::abort: finished." << std::endl;
+  }
 }
 
 bool
@@ -534,9 +547,10 @@ fusb_ephandle_darwin::stop ()
   if (! d_started)
     return (true);
 
-  if (usb_debug)
-    fprintf (stderr, "fusb_ephandle_darwin::stop: stopping %s.\n",
-	     d_input_p ? "read" : "write");
+  if (usb_debug) {
+    std::cerr << "fusb_ephandle_darwin::stop: stopping "
+	      << (d_input_p ? "read" : "write") << "." << std::endl;
+  }
 
   d_started = false;
 
@@ -556,9 +570,10 @@ fusb_ephandle_darwin::stop ()
   d_runThreadRunning->lock ();
   d_runThreadRunning->unlock ();
 
-  if (usb_debug)
-    fprintf (stderr, "fusb_ephandle_darwin::stop: %s stopped.\n",
-	     d_input_p ? "read" : "write");
+  if (usb_debug) {
+    std::cerr << "fusb_ephandle_darwin::stop: " << (d_input_p ? "read" : "write")
+	      << " stopped." << std::endl;
+  }
 
   return (true);
 }

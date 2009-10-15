@@ -50,8 +50,19 @@ AC_DEFUN([GR_SET_MD_CPU],[
   AC_ARG_WITH(md-cpu,
 	AC_HELP_STRING([--with-md-cpu=ARCH],[set machine dependent speedups (auto)]),
 		[cf_with_md_cpu="$withval"],
-		[cf_with_md_cpu="$host_cpu"])
-
+		[
+    dnl temporary fix for Darwin 10.6; $host_cpu is always "i386" no matter
+    dnl if the kernel is in 32-bit or 64-bit mode.
+    case "$host_os" in
+      darwin*)
+        cf_with_md_cpu=`uname -m`
+        ;;
+      *)
+        cf_with_md_cpu="$host_cpu"
+        ;;
+    esac
+  ])
+  AC_MSG_RESULT($cf_with_md_cpu)
   case "$cf_with_md_cpu" in
    x86 | i[[3-7]]86)	MD_CPU=x86	MD_SUBCPU=x86 ;;
    x86_64)		MD_CPU=x86	MD_SUBCPU=x86_64 ;;

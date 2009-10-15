@@ -43,8 +43,8 @@ private:
   T* d_buffer;
 
 // the following are in Items (type T)
-  UInt32 d_bufLen_I, d_readNdx_I, d_writeNdx_I;
-  UInt32 d_n_avail_write_I, d_n_avail_read_I;
+  size_t d_bufLen_I, d_readNdx_I, d_writeNdx_I;
+  size_t d_n_avail_write_I, d_n_avail_read_I;
 
 // stuff to control access to class internals
   mld_mutex_ptr d_internal;
@@ -69,7 +69,7 @@ private:
   };
 
 public:
-  circular_buffer (UInt32 bufLen_I,
+  circular_buffer (size_t bufLen_I,
 		   bool doWriteBlock = true, bool doFullRead = false) {
     if (bufLen_I == 0)
       throw std::runtime_error ("circular_buffer(): "
@@ -92,21 +92,21 @@ public:
     delete [] d_buffer;
   };
 
-  inline UInt32 n_avail_write_items () {
+  inline size_t n_avail_write_items () {
     d_internal->lock ();
-    UInt32 retVal = d_n_avail_write_I;
+    size_t retVal = d_n_avail_write_I;
     d_internal->unlock ();
     return (retVal);
   };
 
-  inline UInt32 n_avail_read_items () {
+  inline size_t n_avail_read_items () {
     d_internal->lock ();
-    UInt32 retVal = d_n_avail_read_I;
+    size_t retVal = d_n_avail_read_I;
     d_internal->unlock ();
     return (retVal);
   };
 
-  inline UInt32 buffer_length_items () {return (d_bufLen_I);};
+  inline size_t buffer_length_items () {return (d_bufLen_I);};
   inline bool do_write_block () {return (d_doWriteBlock);};
   inline bool do_full_read () {return (d_doFullRead);};
 
@@ -149,7 +149,7 @@ public:
  *     buffer length is larger than the instantiated buffer length
  */
 
-  int enqueue (T* buf, UInt32 bufLen_I) {
+  int enqueue (T* buf, size_t bufLen_I) {
     DEBUG (fprintf (stderr, "enqueue: buf = %X, bufLen = %ld, #av_wr = %ld, "
 		    "#av_rd = %ld.\n", (unsigned int)buf, bufLen_I,
 		    d_n_avail_write_I, d_n_avail_read_I););
@@ -193,7 +193,7 @@ public:
 	retval = -1;
       }
     }
-    UInt32 n_now_I = d_bufLen_I - d_writeNdx_I, n_start_I = 0;
+    size_t n_now_I = d_bufLen_I - d_writeNdx_I, n_start_I = 0;
     if (n_now_I > bufLen_I)
       n_now_I = bufLen_I;
     else if (n_now_I < bufLen_I)
@@ -232,7 +232,7 @@ public:
  *     buffer length is larger than the instantiated buffer length
  */
 
-  int dequeue (T* buf, UInt32* bufLen_I) {
+  int dequeue (T* buf, size_t* bufLen_I) {
     DEBUG (fprintf (stderr, "dequeue: buf = %X, *bufLen = %ld, #av_wr = %ld, "
 		    "#av_rd = %ld.\n", (unsigned int)buf, *bufLen_I,
 		    d_n_avail_write_I, d_n_avail_read_I););
@@ -242,7 +242,7 @@ public:
     if (!buf)
       throw std::runtime_error ("circular_buffer::dequeue(): "
 				"input buffer pointer is NULL.\n");
-    UInt32 l_bufLen_I = *bufLen_I;
+    size_t l_bufLen_I = *bufLen_I;
     if (l_bufLen_I == 0)
       return (0);
     if (l_bufLen_I > d_bufLen_I) {
@@ -286,7 +286,7 @@ public:
     }
     if (l_bufLen_I > d_n_avail_read_I)
       l_bufLen_I = d_n_avail_read_I;
-    UInt32 n_now_I = d_bufLen_I - d_readNdx_I, n_start_I = 0;
+    size_t n_now_I = d_bufLen_I - d_readNdx_I, n_start_I = 0;
     if (n_now_I > l_bufLen_I)
       n_now_I = l_bufLen_I;
     else if (n_now_I < l_bufLen_I)

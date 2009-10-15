@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio.
  *
@@ -42,28 +42,41 @@
 #include <IOKit/IOKitLib.h>
 
 extern "C" {
-static char *
+
+static const char* darwin_error_strings[] = {
+  "no error",
+  "device not opened for exclusive access",
+  "no connection to an IOService",
+  "no asyc port has been opened for interface",
+  "another process has device opened for exclusive access",
+  "pipe is stalled",
+  "could not establish a connection to Darin kernel",
+  "invalid argument",
+  "unknown error"
+};
+
+static const char *
 darwin_error_str (int result)
 {
   switch (result) {
   case kIOReturnSuccess:
-    return "no error";
+    return (darwin_error_strings[0]);
   case kIOReturnNotOpen:
-    return "device not opened for exclusive access";
+    return (darwin_error_strings[1]);
   case kIOReturnNoDevice:
-    return "no connection to an IOService";
+    return (darwin_error_strings[2]);
   case kIOUSBNoAsyncPortErr:
-    return "no asyc port has been opened for interface";
+    return (darwin_error_strings[3]);
   case kIOReturnExclusiveAccess:
-    return "another process has device opened for exclusive access";
+    return (darwin_error_strings[4]);
   case kIOUSBPipeStalled:
-    return "pipe is stalled";
+    return (darwin_error_strings[5]);
   case kIOReturnError:
-    return "could not establish a connection to Darin kernel";
+    return (darwin_error_strings[6]);
   case kIOReturnBadArgument:
-    return "invalid argument";
+    return (darwin_error_strings[7]);
   default:
-    return "unknown error";
+    return (darwin_error_strings[8]);
   }
 }
 
