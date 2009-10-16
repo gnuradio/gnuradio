@@ -692,10 +692,12 @@ usrp_load_firmware_nth (int nth, const char *filename, bool force, libusb_contex
 
     // FIXME.  Turn this into a loop that rescans until we refind ourselves
 
-    struct timespec     t;      // delay for 1 second
+    struct timespec     t;      // delay for 2 second
     t.tv_sec = 2;
     t.tv_nsec = 0;
     our_nanosleep (&t);
+
+    usrp_rescan ();
 
     return ULS_OK;
 
