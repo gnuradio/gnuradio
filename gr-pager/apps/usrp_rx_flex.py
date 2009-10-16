@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: USRP FLEX Pager Receiver (Single Channel)
-# Generated: Sun Oct 11 14:15:06 2009
+# Generated: Sat Oct 17 11:46:38 2009
 ##################################################
 
 from gnuradio import eng_notation
@@ -16,7 +16,7 @@ from grc_gnuradio import usrp as grc_usrp
 from grc_gnuradio import wxgui as grc_wxgui
 from optparse import OptionParser
 import ConfigParser
-import os
+import os, math
 import wx
 
 class usrp_rx_flex(grc_wxgui.top_block_gui):
@@ -28,6 +28,7 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		# Variables
 		##################################################
 		self.config_filename = config_filename = os.environ["HOME"]+"/.gnuradio/config.conf"
+		self.symbol_rate = symbol_rate = 3200
 		self._saved_channel_config = ConfigParser.ConfigParser()
 		self._saved_channel_config.read(config_filename)
 		try: saved_channel = self._saved_channel_config.getint("gr-pager", "channel")
@@ -38,10 +39,14 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		try: saved_band_freq = self._saved_band_freq_config.getfloat("gr-pager", "band_center")
 		except: saved_band_freq = 930.5125e6
 		self.saved_band_freq = saved_band_freq
-		self.decim = decim = 16
+		self.deviation = deviation = 4800
+		self.decim = decim = 20
+		self.adc_rate = adc_rate = 64e6
+		self.sample_rate = sample_rate = adc_rate/decim
+		self.passband = passband = 2*(deviation+symbol_rate)
+		self.channel_rate = channel_rate = 8*3200
 		self.channel = channel = saved_channel
 		self.band_freq = band_freq = saved_band_freq
-		self.adc_rate = adc_rate = 64e6
 		self._saved_rx_gain_config = ConfigParser.ConfigParser()
 		self._saved_rx_gain_config.read(config_filename)
 		try: saved_rx_gain = self._saved_rx_gain_config.getint("gr-pager", "rx_gain")
@@ -52,13 +57,14 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		try: saved_offset = self._saved_offset_config.getfloat("gr-pager", "freq_offset")
 		except: saved_offset = 0
 		self.saved_offset = saved_offset
-		self.sample_rate = sample_rate = adc_rate/decim
 		self.freq = freq = band_freq+(channel-61)*25e3
-		self.channel_rate = channel_rate = 25e3
+		self.channel_taps = channel_taps = firdes.low_pass(10, sample_rate, passband/2.0, (channel_rate-passband)/2.0)
 		self.rx_gain = rx_gain = saved_rx_gain
 		self.offset = offset = saved_offset
+		self.nchan_taps = nchan_taps = len(channel_taps)
+		self.ma_ntaps = ma_ntaps = channel_rate/symbol_rate
 		self.freq_text = freq_text = freq
-		self.channel_taps = channel_taps = firdes.low_pass(10**1, sample_rate, 10e3, 2.5e3)
+		self.demod_k = demod_k = 3*channel_rate/(2*math.pi*deviation)
 		self.channel_decim = channel_decim = int(sample_rate/channel_rate)
 
 		##################################################
@@ -79,7 +85,7 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 			value=self.channel,
 			callback=self.set_channel,
 			label="Channel",
-			converter=forms.float_converter(),
+			converter=forms.int_converter(),
 			proportion=0,
 		)
 		self._channel_slider = forms.slider(
@@ -91,7 +97,7 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 			maximum=120,
 			num_steps=119,
 			style=wx.SL_HORIZONTAL,
-			cast=float,
+			cast=int,
 			proportion=1,
 		)
 		self.GridAdd(_channel_sizer, 0, 1, 1, 1)
@@ -110,7 +116,7 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 			value=self.rx_gain,
 			callback=self.set_rx_gain,
 			label="Analog Gain",
-			converter=forms.float_converter(),
+			converter=forms.int_converter(),
 			proportion=0,
 		)
 		self._rx_gain_slider = forms.slider(
@@ -122,7 +128,7 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 			maximum=100,
 			num_steps=100,
 			style=wx.SL_HORIZONTAL,
-			cast=float,
+			cast=int,
 			proportion=1,
 		)
 		self.GridAdd(_rx_gain_sizer, 0, 4, 1, 1)
@@ -161,7 +167,9 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		##################################################
 		# Blocks
 		##################################################
+		self.fm_demod = gr.quadrature_demod_cf(demod_k)
 		self.gr_freq_xlating_fir_filter_xxx_0 = gr.freq_xlating_fir_filter_ccc(channel_decim, (channel_taps), band_freq-freq+offset, sample_rate)
+		self.gr_moving_average_xx_0 = gr.moving_average_ff(8, 1.0/8.0, 4000)
 		self.usrp_source = grc_usrp.simple_source_c(which=0, side="A", rx_ant="RXA")
 		self.usrp_source.set_decim_rate(decim)
 		self.usrp_source.set_frequency(band_freq, verbose=True)
@@ -200,15 +208,26 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		self.displays.GetPage(0).GridAdd(self.wxgui_fftsink2_1.win, 1, 0, 1, 1)
 		self.wxgui_scopesink2_0 = scopesink2.scope_sink_c(
 			self.displays.GetPage(1).GetWin(),
-			title="Baseband Waveform",
+			title="Channel Waveform",
 			sample_rate=channel_rate,
-			v_scale=1e3,
+			v_scale=8e3,
 			t_scale=20.0/channel_rate,
 			ac_couple=False,
 			xy_mode=False,
 			num_inputs=1,
 		)
 		self.displays.GetPage(1).GridAdd(self.wxgui_scopesink2_0.win, 0, 0, 1, 1)
+		self.wxgui_scopesink2_0_0 = scopesink2.scope_sink_f(
+			self.displays.GetPage(1).GetWin(),
+			title="Baseband",
+			sample_rate=channel_rate,
+			v_scale=1,
+			t_scale=40.0/channel_rate,
+			ac_couple=False,
+			xy_mode=False,
+			num_inputs=1,
+		)
+		self.displays.GetPage(1).GridAdd(self.wxgui_scopesink2_0_0.win, 1, 0, 1, 1)
 
 		##################################################
 		# Connections
@@ -217,6 +236,9 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		self.connect((self.usrp_source, 0), (self.gr_freq_xlating_fir_filter_xxx_0, 0))
 		self.connect((self.usrp_source, 0), (self.wxgui_fftsink2_0, 0))
 		self.connect((self.gr_freq_xlating_fir_filter_xxx_0, 0), (self.wxgui_scopesink2_0, 0))
+		self.connect((self.gr_freq_xlating_fir_filter_xxx_0, 0), (self.fm_demod, 0))
+		self.connect((self.fm_demod, 0), (self.gr_moving_average_xx_0, 0))
+		self.connect((self.gr_moving_average_xx_0, 0), (self.wxgui_scopesink2_0_0, 0))
 
 	def set_config_filename(self, config_filename):
 		self.config_filename = config_filename
@@ -245,6 +267,11 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		self._saved_rx_gain_config.set("gr-pager", "rx_gain", str(self.rx_gain))
 		self._saved_rx_gain_config.write(open(self.config_filename, 'w'))
 
+	def set_symbol_rate(self, symbol_rate):
+		self.symbol_rate = symbol_rate
+		self.set_ma_ntaps(self.channel_rate/self.symbol_rate)
+		self.set_passband(2*(self.deviation+self.symbol_rate))
+
 	def set_saved_channel(self, saved_channel):
 		self.saved_channel = saved_channel
 		self.set_channel(self.saved_channel)
@@ -253,10 +280,39 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		self.saved_band_freq = saved_band_freq
 		self.set_band_freq(self.saved_band_freq)
 
+	def set_deviation(self, deviation):
+		self.deviation = deviation
+		self.set_demod_k(3*self.channel_rate/(2*math.pi*self.deviation))
+		self.set_passband(2*(self.deviation+self.symbol_rate))
+
 	def set_decim(self, decim):
 		self.decim = decim
 		self.set_sample_rate(self.adc_rate/self.decim)
 		self.usrp_source.set_decim_rate(self.decim)
+
+	def set_adc_rate(self, adc_rate):
+		self.adc_rate = adc_rate
+		self.set_sample_rate(self.adc_rate/self.decim)
+
+	def set_sample_rate(self, sample_rate):
+		self.sample_rate = sample_rate
+		self.wxgui_fftsink2_0.set_sample_rate(self.sample_rate)
+		self.set_channel_decim(int(self.sample_rate/self.channel_rate))
+		self.set_channel_taps(firdes.low_pass(10, self.sample_rate, self.passband/2.0, (self.channel_rate-self.passband)/2.0))
+
+	def set_passband(self, passband):
+		self.passband = passband
+		self.set_channel_taps(firdes.low_pass(10, self.sample_rate, self.passband/2.0, (self.channel_rate-self.passband)/2.0))
+
+	def set_channel_rate(self, channel_rate):
+		self.channel_rate = channel_rate
+		self.wxgui_scopesink2_0.set_sample_rate(self.channel_rate)
+		self.wxgui_fftsink2_1.set_sample_rate(self.channel_rate)
+		self.set_ma_ntaps(self.channel_rate/self.symbol_rate)
+		self.set_channel_decim(int(self.sample_rate/self.channel_rate))
+		self.set_demod_k(3*self.channel_rate/(2*math.pi*self.deviation))
+		self.set_channel_taps(firdes.low_pass(10, self.sample_rate, self.passband/2.0, (self.channel_rate-self.passband)/2.0))
+		self.wxgui_scopesink2_0_0.set_sample_rate(self.channel_rate)
 
 	def set_channel(self, channel):
 		self.channel = channel
@@ -275,18 +331,14 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		self.set_freq(self.band_freq+(self.channel-61)*25e3)
 		self.wxgui_fftsink2_0.set_baseband_freq(self.band_freq)
 		self.usrp_source.set_frequency(self.band_freq)
+		self.gr_freq_xlating_fir_filter_xxx_0.set_center_freq(self.band_freq-self.freq+self.offset)
 		self._saved_band_freq_config = ConfigParser.ConfigParser()
 		self._saved_band_freq_config.read(self.config_filename)
 		if not self._saved_band_freq_config.has_section("gr-pager"):
 			self._saved_band_freq_config.add_section("gr-pager")
 		self._saved_band_freq_config.set("gr-pager", "band_center", str(self.band_freq))
 		self._saved_band_freq_config.write(open(self.config_filename, 'w'))
-		self.gr_freq_xlating_fir_filter_xxx_0.set_center_freq(self.band_freq-self.freq+self.offset)
 		self._band_freq_text_box.set_value(self.band_freq)
-
-	def set_adc_rate(self, adc_rate):
-		self.adc_rate = adc_rate
-		self.set_sample_rate(self.adc_rate/self.decim)
 
 	def set_saved_rx_gain(self, saved_rx_gain):
 		self.saved_rx_gain = saved_rx_gain
@@ -296,23 +348,16 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		self.saved_offset = saved_offset
 		self.set_offset(self.saved_offset)
 
-	def set_sample_rate(self, sample_rate):
-		self.sample_rate = sample_rate
-		self.set_channel_decim(int(self.sample_rate/self.channel_rate))
-		self.set_channel_taps(firdes.low_pass(10**1, self.sample_rate, 10e3, 2.5e3))
-		self.wxgui_fftsink2_0.set_sample_rate(self.sample_rate)
-
 	def set_freq(self, freq):
 		self.freq = freq
-		self.wxgui_fftsink2_1.set_baseband_freq(self.freq)
 		self.gr_freq_xlating_fir_filter_xxx_0.set_center_freq(self.band_freq-self.freq+self.offset)
+		self.wxgui_fftsink2_1.set_baseband_freq(self.freq)
 		self.set_freq_text(self.freq)
 
-	def set_channel_rate(self, channel_rate):
-		self.channel_rate = channel_rate
-		self.set_channel_decim(int(self.sample_rate/self.channel_rate))
-		self.wxgui_fftsink2_1.set_sample_rate(self.channel_rate)
-		self.wxgui_scopesink2_0.set_sample_rate(self.channel_rate)
+	def set_channel_taps(self, channel_taps):
+		self.channel_taps = channel_taps
+		self.gr_freq_xlating_fir_filter_xxx_0.set_taps((self.channel_taps))
+		self.set_nchan_taps(len(self.channel_taps))
 
 	def set_rx_gain(self, rx_gain):
 		self.rx_gain = rx_gain
@@ -328,23 +373,28 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 
 	def set_offset(self, offset):
 		self.offset = offset
+		self.gr_freq_xlating_fir_filter_xxx_0.set_center_freq(self.band_freq-self.freq+self.offset)
 		self._saved_offset_config = ConfigParser.ConfigParser()
 		self._saved_offset_config.read(self.config_filename)
 		if not self._saved_offset_config.has_section("gr-pager"):
 			self._saved_offset_config.add_section("gr-pager")
 		self._saved_offset_config.set("gr-pager", "freq_offset", str(self.offset))
 		self._saved_offset_config.write(open(self.config_filename, 'w'))
-		self.gr_freq_xlating_fir_filter_xxx_0.set_center_freq(self.band_freq-self.freq+self.offset)
 		self._offset_slider.set_value(self.offset)
 		self._offset_text_box.set_value(self.offset)
+
+	def set_nchan_taps(self, nchan_taps):
+		self.nchan_taps = nchan_taps
+
+	def set_ma_ntaps(self, ma_ntaps):
+		self.ma_ntaps = ma_ntaps
 
 	def set_freq_text(self, freq_text):
 		self.freq_text = freq_text
 		self._freq_text_static_text.set_value(self.freq_text)
 
-	def set_channel_taps(self, channel_taps):
-		self.channel_taps = channel_taps
-		self.gr_freq_xlating_fir_filter_xxx_0.set_taps((self.channel_taps))
+	def set_demod_k(self, demod_k):
+		self.demod_k = demod_k
 
 	def set_channel_decim(self, channel_decim):
 		self.channel_decim = channel_decim
