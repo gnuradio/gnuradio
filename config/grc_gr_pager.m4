@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2008 Free Software Foundation, Inc.
+dnl Copyright 2006,2008,2009 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -27,12 +27,14 @@ AC_DEFUN([GRC_GR_PAGER],[
         gr-pager/Makefile \
 	gr-pager/gnuradio-pager.pc \
 	gr-pager/apps/Makefile \
-        gr-pager/src/Makefile \
-        gr-pager/src/run_tests
+        gr-pager/lib/Makefile \
+	gr-pager/python/Makefile \
+	gr-pager/python/run_tests \
+	gr-pager/swig/Makefile \
     ])
 
     GRC_BUILD_CONDITIONAL(gr-pager,[
         dnl run_tests is created from run_tests.in.  Make it executable.
-        AC_CONFIG_COMMANDS([run_tests_pager], [chmod +x gr-pager/src/run_tests])
+        AC_CONFIG_COMMANDS([run_tests_pager], [chmod +x gr-pager/python/run_tests])
     ])
 ])
