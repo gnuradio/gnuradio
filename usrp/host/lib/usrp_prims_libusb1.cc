@@ -59,7 +59,7 @@ _get_usb_error_str (int usb_err)
   case LIBUSB_ERROR_INVALID_PARAM:
     return "Invalid parameter";
   case LIBUSB_ERROR_ACCESS:
-    return "Access denied (insufficient permissions";
+    return "Access denied (insufficient permissions)";
   case LIBUSB_ERROR_NO_DEVICE:
     return "No such device (it may have been disconnected)";
   case LIBUSB_ERROR_NOT_FOUND:
