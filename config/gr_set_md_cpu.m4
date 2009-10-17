@@ -51,18 +51,31 @@ AC_DEFUN([GR_SET_MD_CPU],[
 	AC_HELP_STRING([--with-md-cpu=ARCH],[set machine dependent speedups (auto)]),
 		[cf_with_md_cpu="$withval"],
 		[
-    dnl temporary fix for Darwin 10.6; $host_cpu is always "i386" no matter
-    dnl if the kernel is in 32-bit or 64-bit mode.
+  dnl see if the user has specified --host or --build, via 'cross_compiling'
+  if test "$cross_compiling" != no; then
+    dnl when cross-compiling, because the user specified it either via
+    dnl --target or --build, just keep the user's specs & hope for the best.
+    cf_with_md_cpu="$host_cpu"
+  else
+    dnl when the user didn't specify --target or --build, on Darwin 10
+    dnl (OSX 10.6.0 and .1) and GNU libtoool 2.2.6, 'configure' doesn't
+    dnl figure out the CPU type correctly, so do it by hand here using
+    dnl the sizeof (void*): if 4 then use i386, and otherwise use x86_64.
     case "$host_os" in
-      darwin*)
-        cf_with_md_cpu=`uname -m`
-        ;;
-      *)
-        cf_with_md_cpu="$host_cpu"
-        ;;
+     *darwin*10*)
+      AC_CHECK_SIZEOF(void*)
+      if test "$ac_cv_sizeof_voidp" = 4; then
+       cf_with_md_cpu="i386"
+      else
+       cf_with_md_cpu="x86_64"
+      fi
+      ;;
+     *)
+      cf_with_md_cpu="$host_cpu"
+      ;;
     esac
+  fi
   ])
-  AC_MSG_RESULT($cf_with_md_cpu)
   case "$cf_with_md_cpu" in
    x86 | i[[3-7]]86)	MD_CPU=x86	MD_SUBCPU=x86 ;;
    x86_64)		MD_CPU=x86	MD_SUBCPU=x86_64 ;;
