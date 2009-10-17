@@ -33,35 +33,35 @@ namespace usrp2 {
   /*!
    * OP_CONFIG_RX_V2 command packet
    */
-  struct op_config_rx_v2_cmd 
+  struct op_config_rx_v2_cmd
   {
     u2_eth_packet_t   h;
     op_config_rx_v2_t op;
     op_generic_t      eop;
   };
 
-  struct op_start_rx_streaming_cmd 
+  struct op_start_rx_streaming_cmd
   {
     u2_eth_packet_t	    h;
     op_start_rx_streaming_t op;
     op_generic_t	    eop;
   };
-  
-  struct op_sync_and_start_rx_streaming_cmd 
+
+  struct op_sync_and_start_rx_streaming_cmd
   {
     u2_eth_packet_t	    h;
     op_generic_t            sync_op;
     op_start_rx_streaming_t rx_op;
     op_generic_t	    eop;
   };
-    
+
   struct op_stop_rx_cmd {
     u2_eth_packet_t h;
     op_generic_t    op;
     op_generic_t    eop;
   };
 
-  struct op_config_tx_v2_cmd 
+  struct op_config_tx_v2_cmd
   {
     u2_eth_packet_t   h;
     op_config_tx_v2_t op;
@@ -75,7 +75,7 @@ namespace usrp2 {
     op_generic_t      eop;
   };
 
-  struct op_burn_mac_addr_cmd 
+  struct op_burn_mac_addr_cmd
   {
     u2_eth_packet_t    h;
     op_burn_mac_addr_t op;
@@ -121,20 +121,20 @@ namespace usrp2 {
 
   /*!
    * Control mechanism to allow API calls to block waiting for reply packets
-   */    
+   */
   class pending_reply
   {
   private:
     unsigned int    d_rid;
     void           *d_buffer;
     size_t	    d_len;
-    
+
     // d_mutex is used with d_cond and also protects d_complete
     omni_mutex      d_mutex;
     omni_condition  d_cond;
     bool	    d_complete;
 
-  public:  
+  public:
     /*!
      * Construct a pending reply from the reply ID, response packet
      * buffer, and buffer length.
@@ -173,7 +173,7 @@ namespace usrp2 {
      */
     size_t len() const { return d_len; }
   };
-  
+
 } // namespace usrp2
 
 #endif /* INCLUDED_CONTROL_H */

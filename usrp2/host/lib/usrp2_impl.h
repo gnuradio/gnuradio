@@ -30,7 +30,7 @@
 #define MAX_SUBPKT_LEN 252
 
 namespace usrp2 {
-  
+
   class eth_buffer;
   class pktfilter;
   class usrp2_thread;
@@ -62,7 +62,7 @@ namespace usrp2 {
     std::string    d_addr;       // FIXME: use u2_mac_addr_t instead
     usrp2_thread  *d_bg_thread;
     volatile bool  d_bg_running; // TODO: multistate if needed
-    
+
     int            d_rx_seqno;
     int            d_tx_seqno;
     int            d_next_rid;
@@ -84,7 +84,7 @@ namespace usrp2 {
     db_info	   d_tx_db_info;
     db_info	   d_rx_db_info;
 
-    int		   d_tx_interp;		// shadow tx interp 
+    int		   d_tx_interp;		// shadow tx interp
     int		   d_rx_decim;		// shadow rx decim
 
     bool	   d_dont_enqueue;
@@ -93,13 +93,13 @@ namespace usrp2 {
       omni_mutex_lock l(d_enqueued_mutex);
       d_num_enqueued++;
     }
-    
+
     void dec_enqueued() {
       omni_mutex_lock l(d_enqueued_mutex);
       if (--d_num_enqueued == 0)
         d_bg_pending_cond.signal();
     }
-    
+
     static bool parse_mac_addr(const std::string &s, u2_mac_addr_t *p);
     void init_et_hdrs(u2_eth_packet_t *p, const std::string &dst);
     void init_etf_hdrs(u2_eth_packet_t *p, const std::string &dst,
@@ -118,7 +118,7 @@ namespace usrp2 {
   public:
     impl(const std::string &ifc, props *p, size_t rx_bufsize);
     ~impl();
-    
+
     void bg_loop();
 
     std::string mac_addr() const { return d_addr; } // FIXME: convert from u2_mac_addr_t
@@ -198,7 +198,7 @@ namespace usrp2 {
     std::vector<uint32_t> peek32(uint32_t addr, uint32_t words);
     bool poke32(uint32_t addr, const std::vector<uint32_t> &data);
   };
-  
+
 } // namespace usrp2
 
 #endif /* INCLUDED_USRP2_IMPL_H */

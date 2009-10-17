@@ -1,5 +1,5 @@
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -152,7 +152,7 @@ restart_streaming(void)
   dsp_rx_regs->rx_command =
     MK_RX_CMD(FRAMES_PER_CMD * streaming_items_per_frame,
 	      streaming_items_per_frame,
-	      1, 1);				
+	      1, 1);
 
   dsp_rx_regs->rx_time = 0;		// enqueue second command
 }
@@ -180,7 +180,7 @@ restart_streaming_at(uint32_t time)
   dsp_rx_regs->rx_command =
     MK_RX_CMD(FRAMES_PER_CMD * streaming_items_per_frame,
 	      streaming_items_per_frame,
-	      1, 1);				
+	      1, 1);
 
   dsp_rx_regs->rx_time = 0;		// enqueue second command
 }
@@ -277,7 +277,7 @@ setup_tx()
  * that we didn't handle the packet.  A bit of a kludge
  * but it should work.
  */
-bool 
+bool
 fw_sets_seqno_inspector(dbsm_t *sm, int buf_this)	// returns false
 {
   uint32_t *p = buffer_ram(buf_this);
