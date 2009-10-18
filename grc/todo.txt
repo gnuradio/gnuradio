@@ -26,6 +26,7 @@
 * callbacks for set average on fft, waterfall, number sinks
 * add units to params: Sps, Hz, dB...
 * add bool type to command line option store_true or store_false
+* messages for packet blocks and probe blocks
 
 ##################################################
 # Features
@@ -53,6 +54,7 @@
 * concept of a project, or project flow graph
   * collection of blocks, hier and top
   * system-wide, default/work, and user created
+* use templates/macros to generate the repetative stuff in the xml
 
 ##################################################
 # Problems
@@ -68,6 +70,7 @@
 * threads dont die on exit in probe and variable sink
 * align param titles in properties dialog
 * weird grid params misbehaving
+* gr hier blocks have more diverse IO capabilities than we allow for
 
 ##################################################
 # Future
