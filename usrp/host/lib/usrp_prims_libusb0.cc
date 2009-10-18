@@ -106,6 +106,12 @@ usrp_one_time_init (libusb_context **ctx)
 }
 
 void
+usrp_deinit (libusb_context *ctx)
+{
+  // nop
+}
+
+void
 usrp_rescan ()
 {
   usb_find_busses ();

@@ -135,6 +135,7 @@ _usb_control_transfer (struct libusb_device_handle *udh, int request_type,
   return ret;
 }
 
+
 // ----------------------------------------------------------------
 
 
@@ -155,11 +156,19 @@ usrp_one_time_init (libusb_context **ctx)
 }
 
 void
+usrp_deinit (struct libusb_context *ctx)
+{
+  // Each object _should_ be running in its own context. If running in default
+  // context then leave the instance open as it may be shared.
+  if (ctx != NULL)
+    libusb_exit (ctx);
+}
+
+void
 usrp_rescan ()
 {
   // nop
 }
-
 
 struct libusb_device *
 usrp_find_device (int nth, bool fx2_ok_p, libusb_context *ctx)

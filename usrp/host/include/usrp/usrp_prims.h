@@ -53,6 +53,15 @@ enum usrp_load_status_t { ULS_ERROR = 0, ULS_OK, ULS_ALREADY_LOADED };
 
 void usrp_one_time_init (libusb_context **ctx = NULL);
 
+/*!
+ * \brief deinitialize libusb
+ *
+ * libusb-0.1: No effect
+ *
+ * libusb-1.0: Deinitialize context ctx 
+ */
+void usrp_deinit (libusb_context *ctx);
+
 /*
  * force a rescan of the buses and devices
  */
