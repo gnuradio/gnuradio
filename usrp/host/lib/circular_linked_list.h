@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio.
  *
@@ -109,12 +109,12 @@ template <class T> class circular_linked_list {
 
 private:
   s_node_ptr d_current, d_iterate, d_available, d_inUse;
-  UInt32 d_n_nodes, d_n_used;
+  size_t d_n_nodes, d_n_used;
   mld_mutex_ptr d_internal;
   mld_condition_ptr d_ioBlock;
 
 public:
-  circular_linked_list (UInt32 n_nodes) {
+  circular_linked_list (size_t n_nodes) {
     if (n_nodes == 0)
       throw std::runtime_error ("circular_linked_list(): n_nodes == 0");
 
@@ -136,7 +136,7 @@ public:
       l_prev->next (l_next);
       l_prev->prev (l_next);
       if (n_nodes > 2) {
-	UInt32 n = n_nodes - 2;
+	size_t n = n_nodes - 2;
 	while (n-- > 0) {
 	  d_current = new s_node<T> (l_prev, l_next);
 	  d_current->set_available ();
@@ -171,17 +171,17 @@ public:
     d_internal->lock ();
 // find an available node
     s_node_ptr l_node = d_available; 
-    DEBUG (fprintf (stderr, "w "););
+    DEBUG (std::cerr << "w ");
     while (! l_node) {
-      DEBUG (fprintf (stderr, "x\n"););
+      DEBUG (std::cerr << "x" << std::endl);
       // the ioBlock condition will automatically unlock() d_internal
       d_ioBlock->wait ();
       // and lock() is here
-      DEBUG (fprintf (stderr, "y\n"););
+      DEBUG (std::cerr << "y" << std::endl);
       l_node = d_available;
     }
-    DEBUG (fprintf (stderr, "::f_n_a_n: #u = %ld, node = %p\n",
-		    num_used(), l_node););
+    DEBUG (std::cerr << "::f_n_a_n: #u = " << num_used()
+	   << ", node = " << l_node << std::endl);
 // remove this one from the current available list
     if (num_available () == 1) {
 // last one, just set available to NULL
@@ -203,8 +203,8 @@ public:
   void make_node_available (s_node_ptr l_node) {
     if (!l_node) return;
     d_internal->lock ();
-    DEBUG (fprintf (stderr, "::m_n_a: #u = %ld, node = %p\n",
-		    num_used(), l_node););
+    DEBUG (std::cerr << "::m_n_a: #u = " << num_used()
+	   << ", node = " << l_node << std::endl);
 // remove this node from the inUse list
     if (num_used () == 1) {
 // last one, just set inUse to NULL
@@ -219,10 +219,10 @@ public:
       l_node->insert_before (d_available);
     d_n_used--;
 
-    DEBUG (fprintf (stderr, "s%ld ", d_n_used););
+    DEBUG (std::cerr << "s" << d_n_used);
 // signal the condition when new data arrives
     d_ioBlock->signal ();
-    DEBUG (fprintf (stderr, "t "););
+    DEBUG (std::cerr << "t ");
 
 // unlock the mutex for thread safety
     d_internal->unlock ();
@@ -251,10 +251,10 @@ public:
 
   __INLINE__ T object () { return (d_current->d_object); };
   __INLINE__ void object (T l_object) { d_current->d_object = l_object; };
-  __INLINE__ UInt32 num_nodes () { return (d_n_nodes); };
-  __INLINE__ UInt32 num_used () { return (d_n_used); };
-  __INLINE__ void num_used (UInt32 l_n_used) { d_n_used = l_n_used; };
-  __INLINE__ UInt32 num_available () { return (d_n_nodes - d_n_used); };
+  __INLINE__ size_t num_nodes () { return (d_n_nodes); };
+  __INLINE__ size_t num_used () { return (d_n_used); };
+  __INLINE__ void num_used (size_t l_n_used) { d_n_used = l_n_used; };
+  __INLINE__ size_t num_available () { return (d_n_nodes - d_n_used); };
   __INLINE__ void num_used_inc (void) {
     if (d_n_used < d_n_nodes) ++d_n_used;
   };

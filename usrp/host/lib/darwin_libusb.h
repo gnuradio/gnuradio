@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio.
  *
@@ -42,28 +42,41 @@
 #include <IOKit/IOKitLib.h>
 
 extern "C" {
-static char *
+
+static const char* darwin_error_strings[] = {
+  "no error",
+  "device not opened for exclusive access",
+  "no connection to an IOService",
+  "no asyc port has been opened for interface",
+  "another process has device opened for exclusive access",
+  "pipe is stalled",
+  "could not establish a connection to Darin kernel",
+  "invalid argument",
+  "unknown error"
+};
+
+static const char *
 darwin_error_str (int result)
 {
   switch (result) {
   case kIOReturnSuccess:
-    return "no error";
+    return (darwin_error_strings[0]);
   case kIOReturnNotOpen:
-    return "device not opened for exclusive access";
+    return (darwin_error_strings[1]);
   case kIOReturnNoDevice:
-    return "no connection to an IOService";
+    return (darwin_error_strings[2]);
   case kIOUSBNoAsyncPortErr:
-    return "no asyc port has been opened for interface";
+    return (darwin_error_strings[3]);
   case kIOReturnExclusiveAccess:
-    return "another process has device opened for exclusive access";
+    return (darwin_error_strings[4]);
   case kIOUSBPipeStalled:
-    return "pipe is stalled";
+    return (darwin_error_strings[5]);
   case kIOReturnError:
-    return "could not establish a connection to Darin kernel";
+    return (darwin_error_strings[6]);
   case kIOReturnBadArgument:
-    return "invalid argument";
+    return (darwin_error_strings[7]);
   default:
-    return "unknown error";
+    return (darwin_error_strings[8]);
   }
 }
 
@@ -103,40 +116,49 @@ extern char usb_error_str[1024];
 extern int usb_error_errno;
 extern usb_error_type_t usb_error_type;
 
-#define USB_ERROR(r, x)				\
-	do { \
-          usb_error_type = USB_ERROR_TYPE_ERRNO; \
-          usb_error_errno = x; \
-	  return r; \
-	} while (0)
+#define USB_ERROR(r, x)				 \
+  do {						 \
+    usb_error_type = USB_ERROR_TYPE_ERRNO;	 \
+    usb_error_errno = x;			 \
+    return (r);					 \
+  } while (0)
 
-#define USB_ERROR_STR(r, x, format, args...)	\
-	do { \
-	  usb_error_type = USB_ERROR_TYPE_STRING; \
-	  snprintf(usb_error_str, sizeof(usb_error_str) - 1, format, ## args); \
-          if (usb_debug) \
-            fprintf(stderr, "USB error: %s\n", usb_error_str);	\
-	  return r; \
-	} while (0)
+#define USB_ERROR_STR(r, x, format, args...)				\
+  do {									\
+    usb_error_type = USB_ERROR_TYPE_STRING;				\
+    snprintf (usb_error_str, sizeof (usb_error_str) - 1,		\
+	      format, ## args);						\
+    if (usb_debug) {							\
+      std::cerr << "USB error: " << usb_error_str << std::cerr;		\
+    }									\
+    return (r);								\
+  } while (0)
 
-#define USB_ERROR_STR_ORIG(x, format, args...)	\
-	do { \
-	  usb_error_type = USB_ERROR_TYPE_STRING; \
-	  snprintf(usb_error_str, sizeof(usb_error_str) - 1, format, ## args); \
-          if (usb_debug) \
-            fprintf(stderr, "USB error: %s\n", usb_error_str);	\
-	  return x; \
-	} while (0)
+#define USB_ERROR_STR_ORIG(x, format, args...)				\
+  do {									\
+    usb_error_type = USB_ERROR_TYPE_STRING;				\
+    snprintf (usb_error_str, sizeof (usb_error_str) - 1,		\
+	      format, ## args);						\
+    if (usb_debug) {							\
+      std::cerr << "USB error: " << usb_error_str << std::endl;		\
+    }									\
+    return (x);								\
+  } while (0)
 
-#define USB_ERROR_STR_NO_RET(x, format, args...)	\
-	do { \
-	  usb_error_type = USB_ERROR_TYPE_STRING; \
-	  snprintf(usb_error_str, sizeof(usb_error_str) - 1, format, ## args); \
-          if (usb_debug) \
-            fprintf(stderr, "USB error: %s\n", usb_error_str);	\
-	} while (0)
+#define USB_ERROR_STR_NO_RET(x, format, args...)			\
+  do {									\
+    usb_error_type = USB_ERROR_TYPE_STRING;				\
+    snprintf (usb_error_str, sizeof (usb_error_str) - 1,		\
+	      format, ## args);						\
+    if (usb_debug) {							\
+      std::cerr << "USB error: " << usb_error_str << std::endl;		\
+    }									\
+  } while (0)
 
-/* simple function that figures out what pipeRef is associated with an endpoint */
+/*
+ * simple function that figures out what pipeRef
+ * is associated with an endpoint
+ */
 static int ep_to_pipeRef (darwin_dev_handle *device, int ep)
 {
   io_return_t ret;
@@ -145,45 +167,60 @@ static int ep_to_pipeRef (darwin_dev_handle *device, int ep)
   UInt16 dont_care2;
   int i;
 
-  if (usb_debug > 3)
-    fprintf(stderr, "Converting ep address to pipeRef.\n");
+  if (usb_debug > 3) {
+    std::cerr << "Converting ep address to pipeRef." << std::endl;
+  }
 
   /* retrieve the total number of endpoints on this interface */
   ret = (*(device->interface))->GetNumEndpoints(device->interface, &numep);
   if ( ret ) {
-    if ( usb_debug > 3 )
-      fprintf ( stderr, "ep_to_pipeRef: interface is %p\n", device->interface );
-    USB_ERROR_STR_ORIG ( -ret, "ep_to_pipeRef: can't get number of endpoints for interface" );
+    if ( usb_debug > 3 ) {
+      std::cerr << "ep_to_pipeRef: interface is "
+		<< device->interface << std::endl;
+    }
+    USB_ERROR_STR_ORIG ( -ret, "ep_to_pipeRef: can't get number of "
+			 "endpoints for interface" );
   }
 
   /* iterate through the pipeRefs until we find the correct one */
   for (i = 1 ; i <= numep ; i++) {
-    ret = (*(device->interface))->GetPipeProperties(device->interface, i, &direction, &number,
-						    &dont_care1, &dont_care2, &dont_care3);
+    ret = (*(device->interface))->GetPipeProperties
+      (device->interface, i, &direction, &number,
+       &dont_care1, &dont_care2, &dont_care3);
 
     if (ret != kIOReturnSuccess) {
-      fprintf (stderr, "ep_to_pipeRef: an error occurred getting pipe information on pipe %d\n",
-	       i );
-      USB_ERROR_STR_ORIG (-darwin_to_errno(ret), "ep_to_pipeRef(GetPipeProperties): %s", darwin_error_str(ret));
+      std::cerr << "ep_to_pipeRef: an error occurred getting "
+		<< "pipe information on pipe " << i << std::endl;
+
+      USB_ERROR_STR_ORIG (-darwin_to_errno(ret),
+			  "ep_to_pipeRef(GetPipeProperties): %s",
+			  darwin_error_str(ret));
     }
 
-    if (usb_debug > 3)
-      fprintf (stderr, "ep_to_pipeRef: Pipe %i: DIR: %i number: %i\n", i, direction, number);
+    if (usb_debug > 3) {
+      std::cerr << "ep_to_pipeRef: Pipe " << i << ": DIR: "
+		<< direction << " number: " << number << std::endl;
+    }
 
-    /* calculate the endpoint of the pipe and check it versus the requested endpoint */
-    if ( ((direction << 7 & USB_ENDPOINT_DIR_MASK) | (number & USB_ENDPOINT_ADDRESS_MASK)) == ep ) {
-      if (usb_debug > 3)
-	fprintf(stderr, "ep_to_pipeRef: pipeRef for ep address 0x%02x found: 0x%02x\n", ep, i);
-
-      return i;
+    /* calculate the endpoint of the pipe and check it versus
+       the requested endpoint */
+    if ( ((direction << 7 & USB_ENDPOINT_DIR_MASK) |
+	  (number & USB_ENDPOINT_ADDRESS_MASK)) == ep ) {
+      if (usb_debug > 3) {
+	std::cerr << "ep_to_pipeRef: pipeRef for ep address "
+		  << ep << " found: " << i << std::endl;
+      }
+      return (i);
     }
   }
 
-  if (usb_debug > 3)
-    fprintf(stderr, "ep_to_pipeRef: No pipeRef found with endpoint address 0x%02x.\n", ep);
-  
+  if (usb_debug > 3) {
+    std::cerr << "ep_to_pipeRef: No pipeRef found with endpoint address "
+	      << ep << std::endl;
+  }
+
   /* none of the found pipes match the requested endpoint */
-  return -1;
+  return (-1);
 }
 
 }

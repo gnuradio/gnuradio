@@ -37,18 +37,20 @@
 void PrintStreamDesc (AudioStreamBasicDescription *inDesc)
 {
   if (inDesc == NULL) {
-    fprintf (stderr, "PrintStreamDesc: Can't print a NULL desc!\n");
+    std::cerr << "PrintStreamDesc: Can't print a NULL desc!" << std::endl;
     return;
   }
 
-  fprintf (stderr, "  Sample Rate        : %g\n", inDesc->mSampleRate);
-  fprintf (stderr, "  Format ID          : %4s\n", (char*)&inDesc->mFormatID);
-  fprintf (stderr, "  Format Flags       : %lX\n", inDesc->mFormatFlags);
-  fprintf (stderr, "  Bytes per Packet   : %ld\n", inDesc->mBytesPerPacket);
-  fprintf (stderr, "  Frames per Packet  : %ld\n", inDesc->mFramesPerPacket);
-  fprintf (stderr, "  Bytes per Frame    : %ld\n", inDesc->mBytesPerFrame);
-  fprintf (stderr, "  Channels per Frame : %ld\n", inDesc->mChannelsPerFrame);
-  fprintf (stderr, "  Bits per Channel   : %ld\n", inDesc->mBitsPerChannel);
+  std::cerr << "  Sample Rate        : " << inDesc->mSampleRate << std::endl;
+  char format_id[4];
+  strncpy (format_id, (char*)(&inDesc->mFormatID), 4);
+  std::cerr << "  Format ID          : " << format_id << std::endl;
+  std::cerr << "  Format Flags       : " << inDesc->mFormatFlags << std::endl;
+  std::cerr << "  Bytes per Packet   : " << inDesc->mBytesPerPacket << std::endl;
+  std::cerr << "  Frames per Packet  : " << inDesc->mFramesPerPacket << std::endl;
+  std::cerr << "  Bytes per Frame    : " << inDesc->mBytesPerFrame << std::endl;
+  std::cerr << "  Channels per Frame : " << inDesc->mChannelsPerFrame << std::endl;
+  std::cerr << "  Bits per Channel   : " << inDesc->mBitsPerChannel << std::endl;
 }
 
 // FIXME these should query some kind of user preference
@@ -79,19 +81,19 @@ audio_osx_source::audio_osx_source (int sample_rate,
     d_AudioConverter (0)
 {
   if (sample_rate <= 0) {
-    fprintf (stderr, "Invalid Sample Rate: %d\n", sample_rate);
+    std::cerr << "Invalid Sample Rate: " << sample_rate << std::endl;
     throw std::invalid_argument ("audio_osx_source::audio_osx_source");
   } else
     d_outputSampleRate = (Float64) sample_rate;
 
   if (channel_config <= 0 & channel_config != -1) {
-    fprintf (stderr, "Invalid Channel Config: %d\n", channel_config);
+    std::cerr << "Invalid Channel Config: " << channel_config << std::endl;
     throw std::invalid_argument ("audio_osx_source::audio_osx_source");
   } else if (channel_config == -1) {
 // no user input; try "device name" instead
     int l_n_channels = (int) strtol (device_name.data(), (char **)NULL, 10);
     if (l_n_channels == 0 & errno) {
-      fprintf (stderr, "Error Converting Device Name: %d\n", errno);
+      std::cerr << "Error Converting Device Name: " << errno << std::endl;
       throw std::invalid_argument ("audio_osx_source::audio_osx_source");
     }
     if (l_n_channels <= 0)
@@ -107,14 +109,14 @@ audio_osx_source::audio_osx_source (int sample_rate,
   if (max_sample_count == -1)
     max_sample_count = sample_rate;
   else if (max_sample_count <= 0) {
-    fprintf (stderr, "Invalid Max Sample Count: %d\n", max_sample_count);
+    std::cerr << "Invalid Max Sample Count: " << max_sample_count << std::endl;
     throw std::invalid_argument ("audio_osx_source::audio_osx_source");
   }
 
   d_max_sample_count = max_sample_count;
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "source(): max # samples = %ld\n", d_max_sample_count);
+  std::cerr << "source(): max # samples = " << d_max_sample_count << std::endl;
 #endif
 
   OSStatus err = noErr;
@@ -122,7 +124,12 @@ audio_osx_source::audio_osx_source (int sample_rate,
 // create the default AudioUnit for input
 
 // Open the default input unit
+#ifndef GR_USE_OLD_AUDIO_UNIT
+  AudioComponentDescription InputDesc;
+#else
   ComponentDescription InputDesc;
+#endif
+  
 
   InputDesc.componentType = kAudioUnitType_Output;
   InputDesc.componentSubType = kAudioUnitSubType_HALOutput;
@@ -130,15 +137,31 @@ audio_osx_source::audio_osx_source (int sample_rate,
   InputDesc.componentFlags = 0;
   InputDesc.componentFlagsMask = 0;
 
+#ifndef GR_USE_OLD_AUDIO_UNIT
+  AudioComponent comp = AudioComponentFindNext (NULL, &InputDesc);
+#else
   Component comp = FindNextComponent (NULL, &InputDesc);
+#endif
+  
   if (comp == NULL) {
-    fprintf (stderr, "FindNextComponent Error\n");
+#ifndef GR_USE_OLD_AUDIO_UNIT
+    std::cerr << "AudioComponentFindNext Error" << std::endl;
+#else
+    std::cerr << "FindNextComponent Error" << std::endl;
+#endif
     throw std::runtime_error ("audio_osx_source::audio_osx_source");
   }
 
+#ifndef GR_USE_OLD_AUDIO_UNIT
+  err = AudioComponentInstanceNew (comp, &d_InputAU);
+  CheckErrorAndThrow (err, "AudioComponentInstanceNew",
+		      "audio_osx_source::audio_osx_source");
+#else
   err = OpenAComponent (comp, &d_InputAU);
   CheckErrorAndThrow (err, "OpenAComponent",
 		      "audio_osx_source::audio_osx_source");
+#endif
+  
 
   UInt32 enableIO;
 
@@ -208,7 +231,7 @@ audio_osx_source::audio_osx_source (int sample_rate,
   CheckErrorAndThrow (err, "AudioUnitGetProperty HasIO",
 		      "audio_osx_source::audio_osx_source");
   if (hasInput == 0) {
-    fprintf (stderr, "Selected Audio Device does not support Input.\n");
+    std::cerr << "Selected Audio Device does not support Input." << std::endl;
     throw std::runtime_error ("audio_osx_source::audio_osx_source");
   }
 
@@ -248,7 +271,7 @@ audio_osx_source::audio_osx_source (int sample_rate,
 		      "audio_osx_source::audio_osx_source");
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "\n---- Device Stream Format ----\n" );
+  std::cerr << std::endl << "---- Device Stream Format ----" << std::endl;
   PrintStreamDesc (&asbd_device);
 #endif
 
@@ -264,7 +287,7 @@ audio_osx_source::audio_osx_source (int sample_rate,
 		      "audio_osx_source::audio_osx_source");
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "\n---- Client Stream Format ----\n");
+  std::cerr << std::endl << "---- Client Stream Format ----" << std::endl;
   PrintStreamDesc (&asbd_client);
 #endif
 
@@ -436,22 +459,17 @@ audio_osx_source::audio_osx_source (int sample_rate,
 		      "audio_osx_source::audio_osx_source");
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "audio_osx_source Parameters:\n");
-  fprintf (stderr, "  Device Sample Rate is %g\n", d_deviceSampleRate);
-  fprintf (stderr, "  User Sample Rate is %g\n", d_outputSampleRate);
-  fprintf (stderr, "  Max Sample Count is %ld\n", d_max_sample_count);
-  fprintf (stderr, "  # Device Channels is %ld\n", d_n_deviceChannels);
-  fprintf (stderr, "  # Max Channels is %ld\n", d_n_max_channels);
-  fprintf (stderr, "  Device Buffer Size is Frames = %ld\n",
-	   d_deviceBufferSizeFrames);
-  fprintf (stderr, "  Lead Size is Frames = %ld\n",
-	   d_leadSizeFrames);
-  fprintf (stderr, "  Trail Size is Frames = %ld\n",
-	   d_trailSizeFrames);
-  fprintf (stderr, "  Input Buffer Size is Frames = %ld\n",
-	   d_inputBufferSizeFrames);
-  fprintf (stderr, "  Output Buffer Size is Frames = %ld\n",
-	   d_outputBufferSizeFrames);
+  std::cerr << "audio_osx_source Parameters:" << std::endl;
+  std::cerr << "  Device Sample Rate is " << d_deviceSampleRate << std::endl;
+  std::cerr << "  User Sample Rate is " << d_outputSampleRate << std::endl;
+  std::cerr << "  Max Sample Count is " << d_max_sample_count << std::endl;
+  std::cerr << "  # Device Channels is " << d_n_deviceChannels << std::endl;
+  std::cerr << "  # Max Channels is " << d_n_max_channels << std::endl;
+  std::cerr << "  Device Buffer Size is Frames = " << d_deviceBufferSizeFrames << std::endl;
+  std::cerr << "  Lead Size is Frames = " << d_leadSizeFrames << std::endl;
+  std::cerr << "  Trail Size is Frames = " << d_trailSizeFrames << std::endl;
+  std::cerr << "  Input Buffer Size is Frames = " << d_inputBufferSizeFrames << std::endl;
+  std::cerr << "  Output Buffer Size is Frames = " << d_outputBufferSizeFrames << std::endl;
 #endif
 }
 
@@ -564,8 +582,13 @@ audio_osx_source::~audio_osx_source ()
   err = AudioUnitUninitialize (d_InputAU);
   CheckError (err, "~audio_osx_source: AudioUnitUninitialize");
 
+#ifndef GR_USE_OLD_AUDIO_UNIT
+  err = AudioComponentInstanceDispose (d_InputAU);
+  CheckError (err, "~audio_osx_source: AudioComponentInstanceDispose");
+#else
   err = CloseComponent (d_InputAU);
   CheckError (err, "~audio_osx_source: CloseComponent");
+#endif
 
 // empty and delete the queues
   for (UInt32 n = 0; n < d_n_max_channels; n++) {
@@ -598,18 +621,18 @@ audio_osx_source::check_topology (int ninputs, int noutputs)
 {
 // check # inputs to make sure it's valid
   if (ninputs != 0) {
-    fprintf (stderr, "audio_osx_source::check_topology(): "
-	     "number of input streams provided (%d) should be 0.\n",
-	     ninputs);
+    std::cerr << "audio_osx_source::check_topology(): number of input "
+	      << "streams provided (" << ninputs
+	      << ") should be 0." << std::endl;
     throw std::runtime_error ("audio_osx_source::check_topology()");
   }
 
 // check # outputs to make sure it's valid
   if ((noutputs < 1) | (noutputs > (int) d_n_max_channels)) {
-    fprintf (stderr, "audio_osx_source::check_topology(): "
-	     "number of output streams provided (%d) should be in "
-	     "[1,%ld] for the selected audio device.\n",
-	     noutputs, d_n_max_channels);
+    std::cerr << "audio_osx_source::check_topology(): number of output "
+	      << "streams provided (" << noutputs << ") should be in [1,"
+	      << d_n_max_channels << "] for the selected audio device."
+	      << std::endl;
     throw std::runtime_error ("audio_osx_source::check_topology()");
   }
 
@@ -617,8 +640,8 @@ audio_osx_source::check_topology (int ninputs, int noutputs)
   d_n_user_channels = noutputs;
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "chk_topo: Actual # user output channels = %d\n",
-	   noutputs);
+  std::cerr << "chk_topo: Actual # user output channels = "
+	    << noutputs << std::endl;
 #endif
 
   return (true);
@@ -634,8 +657,9 @@ audio_osx_source::work
   d_internal->lock ();
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "work1: SC = %4ld, #OI = %4d, #Chan = %ld\n",
-	   d_queueSampleCount, noutput_items, output_items.size());
+  std::cerr << "work1: SC = " << d_queueSampleCount
+	    << ", #OI = " << noutput_items
+	    << ", #Chan = " << output_items.size() << std::endl;
 #endif
 
   // set the actual # of output items to the 'desired' amount then
@@ -675,14 +699,14 @@ audio_osx_source::work
   // verify that the number copied out is as expected.
 
   while (--l_counter >= 0) {
-    UInt32 t_n_output_items = actual_noutput_items;
+    size_t t_n_output_items = actual_noutput_items;
     d_buffers[l_counter]->dequeue ((float*) output_items[l_counter],
 				   &t_n_output_items);
     if (t_n_output_items != actual_noutput_items) {
-      fprintf (stderr, "audio_osx_source::work(): "
-	       "number of available items changing "
-	       "unexpectedly; expecting %ld, got %ld.\n",
-	       actual_noutput_items, t_n_output_items);
+      std::cerr << "audio_osx_source::work(): ERROR: number of "
+		<< "available items changing unexpectedly; expecting "
+		<< actual_noutput_items << ", got "
+		<< t_n_output_items << "." << std::endl;
       throw std::runtime_error ("audio_osx_source::work()");
     }
   }
@@ -693,8 +717,8 @@ audio_osx_source::work
   d_queueSampleCount -= actual_noutput_items;
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "work2: SC = %4ld, act#OI = %4ld\n",
-	   d_queueSampleCount, actual_noutput_items);
+  std::cerr << "work2: SC = " << d_queueSampleCount
+	    << ", act#OI = " << actual_noutput_items << std::endl;
 #endif
 
   // release control to allow for other processing parts to run
@@ -702,7 +726,7 @@ audio_osx_source::work
   d_internal->unlock ();
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "work3: Returning.\n");
+  std::cerr << "work3: Returning." << std::endl;
 #endif
 
   return (actual_noutput_items);
@@ -728,8 +752,9 @@ audio_osx_source::ConverterCallback
   This->d_n_ActualInputFrames = (*ioNumberDataPackets);
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "cc1: io#DP = %ld, TIBSB = %ld, #C = %d\n",
-	   *ioNumberDataPackets, totalInputBufferSizeBytes, counter);
+  std::cerr << "cc1: io#DP = " << (*ioNumberDataPackets)
+	    << ", TIBSB = " << totalInputBufferSizeBytes
+	    << ", #C = " << counter << std::endl;
 #endif
 
   while (--counter >= 0)  {
@@ -740,7 +765,7 @@ audio_osx_source::ConverterCallback
   }
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "cc2: Returning.\n");
+  std::cerr << "cc2: Returning." << std::endl;
 #endif
 
   return (noErr);
@@ -760,8 +785,9 @@ audio_osx_source::AUInputCallback (void* inRefCon,
   This->d_internal->lock ();
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "cb0: in#F = %4ld, inBN = %ld, SC = %4ld\n",
-	   inNumberFrames, inBusNumber, This->d_queueSampleCount);
+  std::cerr << "cb0: in#F = " << inNumberFrames
+	    << ", inBN = " << inBusNumber
+	    << ", SC = " << This->d_queueSampleCount << std::endl;
 #endif
 
 // Get the new audio data from the input device
@@ -821,8 +847,8 @@ audio_osx_source::AUInputCallback (void* inRefCon,
 #endif
 
 #if _OSX_AU_DEBUG_
-    fprintf (stderr, "cb1:  avail: #IF = %ld, #OF = %ld\n",
-	     AvailableInputFrames, AvailableOutputFrames);
+    std::cerr << "cb1:  avail: #IF = " << AvailableInputFrames
+	      << ", #OF = " << AvailableOutputFrames << std::endl;
 #endif
     ActualOutputFrames = AvailableOutputFrames;
 
@@ -841,11 +867,11 @@ audio_osx_source::AUInputCallback (void* inRefCon,
 // on output, ActualOutputFrames is the actual number of output frames
 
 #if _OSX_AU_DEBUG_
-    fprintf (stderr, "cb2: actual: #IF = %ld, #OF = %ld\n",
-	     This->d_n_ActualInputFrames, AvailableOutputFrames);
+    std::cerr << "cb2: actual: #IF = " << This->d_n_ActualInputFrames
+	      << ", #OF = " << AvailableOutputFrames << std::endl;
     if (This->d_n_ActualInputFrames != AvailableInputFrames)
-      fprintf (stderr, "cb2.1: avail#IF = %ld, actual#IF = %ld\n",
-	       AvailableInputFrames, This->d_n_ActualInputFrames);
+      std::cerr << "cb2.1: avail#IF = " << AvailableInputFrames
+		<< ", actual#IF = " << This->d_n_ActualInputFrames << std::endl;
 #endif
   }
 
@@ -858,7 +884,7 @@ audio_osx_source::AUInputCallback (void* inRefCon,
     float* inBuffer = (float*) This->d_OutputBuffer->mBuffers[l_counter].mData;
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "cb3: enqueuing audio data.\n");
+    std::cerr << "cb3: enqueuing audio data." << std::endl;
 #endif
 
     int l_res = This->d_buffers[l_counter]->enqueue (inBuffer, ActualOutputFrames);
@@ -879,23 +905,23 @@ audio_osx_source::AUInputCallback (void* inRefCon,
   }
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "cb4: #OI = %4ld, #Cnt = %4ld, mSC = %ld, \n",
-	   ActualOutputFrames, This->d_queueSampleCount,
-	   This->d_max_sample_count);
+  std::cerr << "cb4: #OI = " << ActualOutputFrames
+	    << ", #Cnt = " << This->d_queueSampleCount
+	    << ", mSC = " << This->d_max_sample_count << std::endl;
 #endif
 
 // signal that data is available, if appropraite
   This->d_cond_data->signal ();
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "cb5: releasing internal mutex.\n");
+  std::cerr << "cb5: releasing internal mutex." << std::endl;
 #endif
 
 // release control to allow for other processing parts to run
   This->d_internal->unlock ();
 
 #if _OSX_AU_DEBUG_
-  fprintf (stderr, "cb6: returning.\n");
+  std::cerr << "cb6: returning." << std::endl;
 #endif
 
   return (err);
@@ -930,7 +956,7 @@ audio_osx_source::HardwareListener
   OSStatus err = noErr;
   audio_osx_source* This = static_cast<audio_osx_source*>(inClientData);
 
-  fprintf (stderr, "a_o_s::HardwareListener\n");
+  std::cerr << "a_o_s::HardwareListener" << std::endl;
 
 // set the new default hardware input device for use by our AU
 
@@ -957,7 +983,7 @@ audio_osx_source::UnitListener
   audio_osx_source* This = static_cast<audio_osx_source*>(inRefCon);
   AudioStreamBasicDescription asbd;			
 
-  fprintf (stderr, "a_o_s::UnitListener\n");
+  std::cerr << "a_o_s::UnitListener" << std::endl;
 
 // get the converter's input ASBD (for printing)
 
@@ -970,8 +996,8 @@ audio_osx_source::UnitListener
 		      "CurrentInputStreamDescription",
 		      "audio_osx_source::UnitListener");
 
-  fprintf (stderr, "UnitListener: Input Source changed.\n"
-	   "Old Source Output Info:\n");
+  std::cerr << "UnitListener: Input Source changed." << std::endl
+	    << "Old Source Output Info:" << std::endl;
   PrintStreamDesc (&asbd);
 
 // get the new input unit's output ASBD
@@ -984,7 +1010,7 @@ audio_osx_source::UnitListener
   CheckErrorAndThrow (err, "AudioUnitGetProperty StreamFormat",
 		      "audio_osx_source::UnitListener");
 
-  fprintf (stderr, "New Source Output Info:\n");
+  std::cerr << "New Source Output Info:" << std::endl;
   PrintStreamDesc (&asbd);
 
 // set the converter's input ASBD to this

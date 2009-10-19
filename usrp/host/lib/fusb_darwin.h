@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio.
  *
@@ -75,10 +75,10 @@ class s_buffer
 {
 private:
   char* d_buffer;
-  UInt32 d_n_used, d_n_alloc;
+  size_t d_n_used, d_n_alloc;
 
 public:
-  inline s_buffer (UInt32 n_alloc = 0) {
+  inline s_buffer (size_t n_alloc = 0) {
     d_n_used = 0;
     d_n_alloc = n_alloc;
     if (n_alloc) {
@@ -92,17 +92,17 @@ public:
       delete [] d_buffer;
     }
   };
-  inline UInt32 n_used () { return (d_n_used); };
-  inline void n_used (UInt32 bufLen) {
+  inline size_t n_used () { return (d_n_used); };
+  inline void n_used (size_t bufLen) {
     d_n_used = (bufLen > d_n_alloc) ? d_n_alloc : bufLen; };
-  inline UInt32 n_alloc () { return (d_n_alloc); };
-  void buffer (char* l_buffer, UInt32 bufLen) {
+  inline size_t n_alloc () { return (d_n_alloc); };
+  void buffer (char* l_buffer, size_t bufLen) {
     if (bufLen > d_n_alloc) {
-      fprintf (stderr, "s_buffer::set: Copying only allocated bytes.\n");
+      std::cerr << "s_buffer::set: Copying only allocated bytes." << std::endl;
       bufLen = d_n_alloc;
     }
     if (!l_buffer) {
-      fprintf (stderr, "s_buffer::set: NULL buffer.\n");
+      std::cerr << "s_buffer::set: NULL buffer." << std::endl;
       return;
     }
     bcopy (l_buffer, d_buffer, bufLen);
@@ -173,7 +173,7 @@ public:
   usb_interface_t* d_interface;
   s_queue_ptr d_queue;
   circular_buffer<char>* d_buffer;
-  UInt32 d_bufLenBytes;
+  size_t d_bufLenBytes;
   mld_mutex_ptr d_readRunning;
   mld_condition_ptr d_runBlock, d_readBlock;
 

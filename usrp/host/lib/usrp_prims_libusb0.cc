@@ -69,6 +69,7 @@ _get_usb_string_descriptor (struct usb_dev_handle *udh, int index,
     fprintf (stderr, "usrp: usb_get_string_descriptor failed: %s\n",
              usb_strerror());
   }
+
   return ret;
 }
 
