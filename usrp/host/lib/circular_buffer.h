@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio.
  *
@@ -24,6 +24,7 @@
 #define _CIRCULAR_BUFFER_H_
 
 #include "mld_threads.h"
+#include <iostream>
 #include <stdexcept>
 
 #ifndef DO_DEBUG
@@ -81,10 +82,10 @@ public:
     d_internal = NULL;
     d_readBlock = d_writeBlock = NULL;
     reset ();
-    DEBUG (fprintf (stderr, "c_b(): buf len (items) = %ld, "
-		    "doWriteBlock = %s, doFullRead = %s\n", d_bufLen_I,
-		    (d_doWriteBlock ? "true" : "false"),
-		    (d_doFullRead ? "true" : "false")););
+    DEBUG (std::cerr << "c_b(): buf len (items) = " << d_bufLen_
+	   << ", doWriteBlock = " << (d_doWriteBlock ? "true" : "false")
+	   << ", doFullRead = " << (d_doFullRead ? "true" : "false")
+	   << std::endl);
   };
 
   ~circular_buffer () {
@@ -150,13 +151,14 @@ public:
  */
 
   int enqueue (T* buf, size_t bufLen_I) {
-    DEBUG (fprintf (stderr, "enqueue: buf = %X, bufLen = %ld, #av_wr = %ld, "
-		    "#av_rd = %ld.\n", (unsigned int)buf, bufLen_I,
-		    d_n_avail_write_I, d_n_avail_read_I););
+    DEBUG (std::cerr << "enqueue: buf = " << (void*) buf
+	   << ", bufLen = " << bufLen_I
+	   << ", #av_wr = " << d_n_avail_write_I
+	   << ", #av_rd = " << d_n_avail_read_I << std::endl);
     if (bufLen_I > d_bufLen_I) {
-      fprintf (stderr, "cannot add buffer longer (%ld"
-	       ") than instantiated length (%ld"
-	       ").\n", bufLen_I, d_bufLen_I);
+      std::cerr << "ERROR: cannot add buffer longer ("
+		<< bufLen_I << ") than instantiated length ("
+		<< d_bufLen_I << ")." << std::endl;
       throw std::runtime_error ("circular_buffer::enqueue()");
     }
 
@@ -175,21 +177,21 @@ public:
     if (bufLen_I > d_n_avail_write_I) {
       if (d_doWriteBlock) {
 	while (bufLen_I > d_n_avail_write_I) {
-	  DEBUG (fprintf (stderr, "enqueue: #len > #a, waiting.\n"););
+	  DEBUG (std::cerr << "enqueue: #len > #a, waiting." << std::endl);
 	  // wait will automatically unlock() the internal mutex
 	  d_writeBlock->wait ();
 	  // and lock() it here.
 	  if (d_doAbort) {
 	    d_internal->unlock ();
-	    DEBUG (fprintf (stderr, "enqueue: #len > #a, aborting.\n"););
+	    DEBUG (std::cerr << "enqueue: #len > #a, aborting." << std::endl);
 	    return (2);
 	  }
-	  DEBUG (fprintf (stderr, "enqueue: #len > #a, done waiting.\n"););
+	  DEBUG (std::cerr << "enqueue: #len > #a, done waiting." << std::endl);
 	}
       } else {
 	d_n_avail_read_I = d_bufLen_I - bufLen_I;
 	d_n_avail_write_I = bufLen_I;
-	DEBUG (fprintf (stderr, "circular_buffer::enqueue: overflow\n"););
+	DEBUG (std::cerr << "circular_buffer::enqueue: overflow" << std::endl);
 	retval = -1;
       }
     }
@@ -233,9 +235,10 @@ public:
  */
 
   int dequeue (T* buf, size_t* bufLen_I) {
-    DEBUG (fprintf (stderr, "dequeue: buf = %X, *bufLen = %ld, #av_wr = %ld, "
-		    "#av_rd = %ld.\n", (unsigned int)buf, *bufLen_I,
-		    d_n_avail_write_I, d_n_avail_read_I););
+    DEBUG (std::cerr << "dequeue: buf = " << ((void*) buf)
+	   << ", *bufLen = " << (*bufLen_I)
+	   << ", #av_wr = " <<  d_n_avail_write_I
+	   << ", #av_rd = " << d_n_avail_read_I << std::endl);
     if (!bufLen_I)
       throw std::runtime_error ("circular_buffer::dequeue(): "
 				"input bufLen pointer is NULL.\n");
@@ -246,9 +249,9 @@ public:
     if (l_bufLen_I == 0)
       return (0);
     if (l_bufLen_I > d_bufLen_I) {
-      fprintf (stderr, "cannot remove buffer longer (%ld"
-	       ") than instantiated length (%ld"
-	       ").\n", l_bufLen_I, d_bufLen_I);
+      std::cerr << "ERROR: cannot remove buffer longer ("
+		<< l_bufLen_I << ") than instantiated length ("
+		<< d_bufLen_I << ")." << std::endl;
       throw std::runtime_error ("circular_buffer::dequeue()");
     }
 
@@ -259,29 +262,29 @@ public:
     }
     if (d_doFullRead) {
       while (d_n_avail_read_I < l_bufLen_I) {
-	DEBUG (fprintf (stderr, "dequeue: #a < #len, waiting.\n"););
+	DEBUG (std::cerr << "dequeue: #a < #len, waiting." << std::endl);
 	// wait will automatically unlock() the internal mutex
 	d_readBlock->wait ();
 	// and lock() it here.
 	if (d_doAbort) {
 	  d_internal->unlock ();
-	  DEBUG (fprintf (stderr, "dequeue: #a < #len, aborting.\n"););
+	  DEBUG (std::cerr << "dequeue: #a < #len, aborting." << std::endl);
 	  return (2);
 	}
-	DEBUG (fprintf (stderr, "dequeue: #a < #len, done waiting.\n"););
+	DEBUG (std::cerr << "dequeue: #a < #len, done waiting." << std::endl);
      }
     } else {
       while (d_n_avail_read_I == 0) {
-	DEBUG (fprintf (stderr, "dequeue: #a == 0, waiting.\n"););
+	DEBUG (std::cerr << "dequeue: #a == 0, waiting." << std::endl);
 	// wait will automatically unlock() the internal mutex
 	d_readBlock->wait ();
 	// and lock() it here.
 	if (d_doAbort) {
 	  d_internal->unlock ();
-	  DEBUG (fprintf (stderr, "dequeue: #a == 0, aborting.\n"););
+	  DEBUG (std::cerr << "dequeue: #a == 0, aborting." << std::endl);
 	  return (2);
 	}
-	DEBUG (fprintf (stderr, "dequeue: #a == 0, done waiting.\n"););
+	DEBUG (std::cerr << "dequeue: #a == 0, done waiting." << std::endl);
       }
     }
     if (l_bufLen_I > d_n_avail_read_I)

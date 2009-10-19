@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio.
  *
@@ -98,11 +98,11 @@ public:
   inline size_t n_alloc () { return (d_n_alloc); };
   void buffer (char* l_buffer, size_t bufLen) {
     if (bufLen > d_n_alloc) {
-      fprintf (stderr, "s_buffer::set: Copying only allocated bytes.\n");
+      std::cerr << "s_buffer::set: Copying only allocated bytes." << std::endl;
       bufLen = d_n_alloc;
     }
     if (!l_buffer) {
-      fprintf (stderr, "s_buffer::set: NULL buffer.\n");
+      std::cerr << "s_buffer::set: NULL buffer." << std::endl;
       return;
     }
     bcopy (l_buffer, d_buffer, bufLen);

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2009 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio.
  *
@@ -414,9 +414,11 @@ fusb_ephandle_darwin::read_completed (void* refCon,
 	      << " (" << l_size << " bytes)" << std::endl;
   }
 
-// add this read to the transfer buffer
+// add this read to the transfer buffer, and check for overflow
+// -> data is being enqueued faster than it can be dequeued
   if (l_buffer->enqueue (l_buf->buffer (), l_size) == -1) {
-    fputs ("iU", stderr);
+// print out that there's an overflow
+    fputs ("uO", stderr);
     fflush (stderr);
   }
 

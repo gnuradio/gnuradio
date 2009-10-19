@@ -69,6 +69,7 @@ _get_usb_string_descriptor (struct usb_dev_handle *udh, int index,
     fprintf (stderr, "usrp: usb_get_string_descriptor failed: %s\n",
              usb_strerror());
   }
+  return (ret);
 }
 
 int
@@ -82,6 +83,8 @@ _usb_control_transfer (struct usb_dev_handle *udh, int request_type,
                          (char*) data, length, (int) timeout);
   if (ret < 0) 
     fprintf (stderr, "usrp: usb_claim_interface failed: %s\n", usb_strerror());
+
+  return (ret);
 }
 
 
