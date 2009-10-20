@@ -184,7 +184,8 @@ gr_pfb_arb_resampler_ccf::general_work (int noutput_items,
       d_acc = fmodf(d_acc, 1.0);
     }
     if(i < noutput_items) {              // keep state for next entry
-      count++;                           // we have fully consumed another input
+      float ss = (int)(j / d_int_rate);  // number of items to skip ahead by
+      count += ss;                       // we have fully consumed another input
       j = j % d_int_rate;                // roll filter around
     }
   }
