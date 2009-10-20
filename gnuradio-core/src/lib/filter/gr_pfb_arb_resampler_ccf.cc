@@ -64,6 +64,8 @@ gr_pfb_arb_resampler_ccf::gr_pfb_arb_resampler_ccf (float rate,
 
   // Store the last filter between calls to work
   d_last_filter = 0;
+
+  d_start_index = 0;
   
   d_filters = std::vector<gr_fir_ccf*>(d_int_rate);
 
@@ -148,7 +150,7 @@ gr_pfb_arb_resampler_ccf::general_work (int noutput_items,
     return 0;		     // history requirements may have changed.
   }
 
-  int i = 0, j, count = 0;
+  int i = 0, j, count = d_start_index;
   gr_complex o0, o1;
 
   // Restore the last filter position
@@ -190,9 +192,11 @@ gr_pfb_arb_resampler_ccf::general_work (int noutput_items,
     }
   }
 
-  // Store the current filter position
+  // Store the current filter position and start of next sample
   d_last_filter = j;
+  d_start_index = std::max(0, count - ninput_items[0]);
 
-  consume_each(count);
+  // consume all we've processed but no more than we can
+  consume_each(std::min(count, ninput_items[0]));
   return i;
 }

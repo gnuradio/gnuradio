@@ -118,6 +118,7 @@ class gr_pfb_arb_resampler_ccf : public gr_block
   float                    d_flt_rate;          // residual rate for the linear interpolation
   float                    d_acc;
   unsigned int             d_last_filter;
+  int                      d_start_index;
   unsigned int             d_taps_per_filter;
   bool			   d_updated;
 
