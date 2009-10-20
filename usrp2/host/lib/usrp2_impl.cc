@@ -707,7 +707,7 @@ namespace usrp2 {
 
       bool success = false;
       pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-      success = transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
+      success = transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
       success = success && (ntohx(reply.ok) == 1);
 
       if (success)
@@ -761,7 +761,7 @@ namespace usrp2 {
 
       bool success = false;
       pending_reply p(cmd.sync_op.rid, &reply, sizeof(reply));
-      success = transmit_cmd(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
+      success = transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
       success = success && (ntohx(reply.ok) == 1);
 
       if (success)
