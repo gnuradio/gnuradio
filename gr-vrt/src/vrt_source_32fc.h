@@ -43,6 +43,7 @@ protected:
   double d_caldiv_temp;
   int    d_caldiv_rev;
   int    d_caldiv_ser;
+  int    d_caldiv_mod;
   
   //gps settings parsed from if context
   int    d_utc_time;

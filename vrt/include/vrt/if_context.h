@@ -216,6 +216,7 @@ typedef struct caldiv_if_cntx_tag {
   uint32_t temp;
   uint32_t rev;
   uint32_t ser;
+  uint32_t mod;
 } __attribute__((packed)) caldiv_if_cntx_t;
 
 // FIXME the rest...

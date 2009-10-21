@@ -178,8 +178,9 @@ vrt_source_32fc::work(int noutput_items,
     d_cal_locked = bool(ntohx(h.get_if_context()->caldiv.cal_locked));
     d_cal_enabled = bool(ntohx(h.get_if_context()->caldiv.cal_enabled));
     d_caldiv_temp = vrt_temp_to_double(ntohx(h.get_if_context()->caldiv.temp));
-    d_caldiv_ser = ntohx(h.get_if_context()->caldiv.ser);
     d_caldiv_rev = ntohx(h.get_if_context()->caldiv.rev);
+    d_caldiv_ser = ntohx(h.get_if_context()->caldiv.ser);
+    d_caldiv_mod = ntohx(h.get_if_context()->caldiv.mod);
     //extract gps stuff
     d_utc_time = ntohx(h.get_if_context()->gps.formatted_gps.integer_secs);
     d_altitude = vrt_altitude_to_double(ntohx(h.get_if_context()->gps.formatted_gps.altitude));
