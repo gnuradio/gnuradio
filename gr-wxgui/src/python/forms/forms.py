@@ -194,15 +194,19 @@ class static_text(_form_base):
 	@param label title label for this widget (optional)
 	@param width the width of the form in px
 	@param bold true to bold-ify the text (default=False)
+	@param units a suffix to add after the text
 	@param converter forms.str_converter(), int_converter(), float_converter()...
 	"""
-	def __init__(self, label='', width=-1, bold=False, converter=converters.str_converter(), **kwargs):
+	def __init__(self, label='', width=-1, bold=False, units='', converter=converters.str_converter(), **kwargs):
+		self._units = units
 		_form_base.__init__(self, converter=converter, **kwargs)
 		self._static_text = wx.StaticText(self._parent, size=wx.Size(width, -1))
 		if bold: make_bold(self._static_text)
 		self._add_widget(self._static_text, label)
 
-	def _update(self, label): self._static_text.SetLabel(label); self._parent.Layout()
+	def _update(self, label):
+			if self._units: label += ' ' + self._units
+			self._static_text.SetLabel(label); self._parent.Layout()
 
 ########################################################################
 # Text Box Form

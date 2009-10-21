@@ -365,7 +365,7 @@ main(int argc, char **argv)
 
   printf("samples_per_pkt = %d\n", samples_per_pkt);
 
-  if (!qr->start_streaming(samples_per_pkt)){
+  if (!qr->start_streaming(0, samples_per_pkt)){
     fprintf(stderr, "failed to send_rx_command\n");
     return 1;
   }
@@ -383,7 +383,7 @@ main(int argc, char **argv)
     }
   }
 
-  qr->stop_streaming();
+  qr->stop_streaming(0);
 
   printf("%llu packets received, %llu bad pkt_cnt field values, %llu samples\n",
 	 handler->npackets(), handler->nwrong_pkt_cnt(), handler->nsamples());

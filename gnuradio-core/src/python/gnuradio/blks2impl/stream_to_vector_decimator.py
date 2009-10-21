@@ -72,8 +72,7 @@ class stream_to_vector_decimator(gr.hier_block2):
         self.one_in_n.set_n(self._decim)
 
     def _update_decimator(self):
-        self._decim = max(1, int(round(self._sample_rate/self._vec_len/self._vec_rate)))
-        self.one_in_n.set_n(self._decim)
+        self.set_decimation(self._sample_rate/self._vec_len/self._vec_rate)
 
     def decimation(self):
         """

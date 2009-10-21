@@ -1,24 +1,20 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2009 Free Software Foundation, Inc.
- * 
- * This file is part of GNU Radio
- * 
- * GNU Radio is free software; you can redistribute it and/or modify
+ *
+ * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3, or (at your option)
- * any later version.
- * 
- * GNU Radio is distributed in the hope that it will be useful,
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #ifndef INCLUDED_VRT_BITS_H
 #define INCLUDED_VRT_BITS_H
 
@@ -53,7 +49,9 @@
 #define	VRTH_TSF_REAL_TIME_PS	  (0x2 << 20)
 #define	VRTH_TSF_FREE_RUNNING	  (0x3 << 20)
 
+#define	VRTH_PKT_CNT_SHIFT	  16
 #define	VRTH_PKT_CNT_MASK	  (0xf << 16)
+
 #define	VRTH_PKT_SIZE_MASK	  0xffff		    
 
 
@@ -68,5 +66,27 @@ vrth_pkt_size(uint32_t h)
 {
   return h & VRTH_PKT_SIZE_MASK;
 }
+
+/*
+ * Trailer bits
+ */
+#define	TR_E		      (1 << 8)
+
+#define TR_ENABLE(x) ((x) << 20)
+#define	TR_STATE(x)  ((x) <<  8)
+
+// Use these with TR_ENABLE and TR_STATE
+#define	TR_CAL_TIME	      (1 << 11)
+#define	TR_VALID_DATA	      (1 << 10)
+#define TR_REF_LOCK	      (1 <<  9)
+#define	TR_AGC		      (1 <<  8)
+#define TR_DETECTED_SIG	      (1 <<  7)
+#define	TR_SPECTRAL_INVERSION (1 <<  6)
+#define	TR_OVER_RANGE	      (1 <<  5)
+#define	TR_SAMPLE_LOSS	      (1 <<  4)
+#define TR_USER_3	      (1 <<  3)
+#define TR_USER_2	      (1 <<  2)
+#define TR_USER_1	      (1 <<  1)
+#define TR_USER_0	      (1 <<  0)
 
 #endif /* INCLUDED_VRT_BITS_H */

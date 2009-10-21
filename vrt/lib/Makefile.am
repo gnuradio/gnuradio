@@ -20,7 +20,8 @@ include $(top_srcdir)/Makefile.common
 AM_CPPFLAGS = \
     $(VRT_INCLUDES) \
     $(BOOST_CPPFLAGS) \
-    $(CPPUNIT_INCLUDES)
+    $(CPPUNIT_INCLUDES) \
+    $(GRUEL_INCLUDES)
 
 bin_PROGRAMS = 
 

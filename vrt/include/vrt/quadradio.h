@@ -96,11 +96,9 @@ namespace vrt {
 
     vrt::rx::sptr vrt_rx() const { return d_rx; }
 
-    // FIXME add rxdspno as the first parameter
-    bool start_streaming(int samples_per_pkt = 0);
+    bool start_streaming(int rxdspno, int samples_per_pkt = 0);
 
-    // FIXME add rxdspno as the first parameter
-    bool stop_streaming();
+    bool stop_streaming(int rxdspno);
 
     /* convenience methods that ultimately write the dboard pins */
     bool set_center_freq(double target_freq);
