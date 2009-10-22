@@ -1,5 +1,0 @@
-usr/lib/libusrp2.la
-usr/lib/libusrp2.so.*
-usr/bin/usrp2_socket_opener
-usr/bin/find_usrps
-etc/security/limits.d/libusrp2-0.limits
