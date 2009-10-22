@@ -20,17 +20,27 @@
 #
 
 import wx
-import pubsub
 
 DEFAULT_WIN_SIZE = (600, 300)
+APPEND_EVENT = wx.NewEventType()
+EVT_APPEND_EVENT = wx.PyEventBinder(APPEND_EVENT, 0)
 
-class term_window(wx.Panel, pubsub.pubsub):
+class AppendEvent(wx.PyEvent):
+    def __init__(self, text):
+        wx.PyEvent.__init__(self)
+        self.SetEventType(APPEND_EVENT)
+        self.text = text
+
+    def Clone(self): 
+        self.__class__(self.GetId())
+
+
+class term_window(wx.Panel):
 	def __init__(self,
 		     parent,
 		     size,
 		     ):
 
-		pubsub.pubsub.__init__(self)
 		wx.Panel.__init__(self,
 				  parent,
 				  size=size,
@@ -39,7 +49,7 @@ class term_window(wx.Panel, pubsub.pubsub):
 
 		self.text_ctrl = wx.TextCtrl(self,
 					     wx.ID_ANY,
-					     value="BOO",
+					     value="",
 					     size=size,
 					     style=wx.TE_MULTILINE|wx.TE_READONLY,
 					)
@@ -47,3 +57,14 @@ class term_window(wx.Panel, pubsub.pubsub):
 		main_sizer = wx.BoxSizer(wx.VERTICAL)
 		main_sizer.Add(self.text_ctrl, 1, wx.EXPAND)
 		self.SetSizerAndFit(main_sizer)
+
+                EVT_APPEND_EVENT(self, self.evt_append)
+
+        def append_text(self, text):
+            evt = AppendEvent(text)
+            wx.PostEvent(self, evt)
+            del evt
+
+        def evt_append(self, evt):
+            print "appending", len(evt.text), "bytes"
+            self.text_ctrl.AppendText(evt.text)

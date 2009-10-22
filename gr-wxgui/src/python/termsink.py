@@ -20,22 +20,24 @@
 #
 
 import term_window
-import common
-from gnuradio import gr
+from gnuradio import gru
 
-class termsink(gr.hier_block2, common.wxgui_hb):
+class termsink(object):
 	def __init__(self,
 		     parent,
+		     msgq,
+		     size=term_window.DEFAULT_WIN_SIZE,
 		     ):
-
-		gr.hier_block2.__init__(
-			self,
-			"termsink",
-			gr.io_signature(0, 0, 0),
-			gr.io_signature(0, 0, 0),
-		)
-
+		
 		self.win = term_window.term_window(
 			parent=parent,
-			size=term_window.DEFAULT_WIN_SIZE,
+			size=size,
 		)
+
+		self.runner = gru.msgq_runner(msgq, self.handle_msg)
+
+	def handle_msg(self, msg):
+		# Just append text for now
+		text = msg.to_string()
+		print "handle_msg: received", len(text), "bytes"
+		self.win.append_text(text)
