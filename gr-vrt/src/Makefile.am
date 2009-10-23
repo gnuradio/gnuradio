@@ -77,15 +77,15 @@ libgnuradio_vrt_la_LIBADD = \
 grinclude_HEADERS = \
 	vrt_source_base.h \
 	vrt_source_32fc.h \
-	vrt_quadradio_source_32fc.h
+	vrt_quadradio_source_32fc.h \
+	missing_pkt_checker.h
 
 #	vrt_source_16sc.h \
 #	vrt_sink_base.h \
 #	vrt_sink_16sc.h \
 #	vrt_sink_32fc.h
 
-noinst_HEADERS = \
-	missing_pkt_checker.h
+noinst_HEADERS = 
 
 
 # ----------------------------------------------------------------------
