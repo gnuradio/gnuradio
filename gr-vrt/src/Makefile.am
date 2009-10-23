@@ -54,8 +54,7 @@ lib_LTLIBRARIES = libgnuradio-vrt.la
 libgnuradio_vrt_la_SOURCES = \
 	missing_pkt_checker.cc \
 	vrt_source_base.cc \
-	vrt_source_32fc.cc \
-	vrt_quadradio_source_32fc.cc
+	vrt_source_32fc.cc
 
 
 #libgnuradio_vrt_la_SOURCES = \
@@ -77,7 +76,6 @@ libgnuradio_vrt_la_LIBADD = \
 grinclude_HEADERS = \
 	vrt_source_base.h \
 	vrt_source_32fc.h \
-	vrt_quadradio_source_32fc.h \
 	missing_pkt_checker.h
 
 #	vrt_source_16sc.h \
@@ -95,28 +93,28 @@ noinst_HEADERS =
 # _vrt.so
 # ----------------------------------------------------------------------
 
-TOP_SWIG_IFILES =		\
-	vrt.i
+#TOP_SWIG_IFILES =		\
+#	vrt.i
 
 # Install so that they end up available as:
 #   import gnuradio.vrt
 # This ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-vrt_pythondir_category =	\
-	gnuradio
+#vrt_pythondir_category =	\
+#	gnuradio
 
 # additional arguments to the SWIG command
-vrt_swig_args =		\
-	$(VRT_INCLUDES)
+#vrt_swig_args =		\
+#	$(VRT_INCLUDES)
 
 # additional libraries for linking with the SWIG-generated library
-vrt_la_swig_libadd =		\
-	libgnuradio-vrt.la
+#vrt_la_swig_libadd =		\
+#	libgnuradio-vrt.la
 
-include $(top_srcdir)/Makefile.swig
+#include $(top_srcdir)/Makefile.swig
 
 # add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
+#BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
+#no_dist_files = $(swig_built_sources)
