@@ -206,32 +206,18 @@ typedef struct gain_if_cntx_tag {
   uint32_t		gain;
 } __attribute__((packed)) gain_if_cntx_t;
 
-typedef struct caldiv_if_cntx_tag {
-  if_context_hdr_t	cntx_hdr;
-  uint64_t lo_freq;
-  uint32_t lo_locked;
-  uint64_t cal_freq;
-  uint32_t cal_locked;
-  uint32_t cal_enabled;
-  uint32_t temp;
-  uint32_t rev;
-  uint32_t ser;
-  uint32_t mod;
-} __attribute__((packed)) caldiv_if_cntx_t;
-
 // FIXME the rest...
 
 // ------------------------------------------------------------------------
 // All of them concatenated
 
-#define	NCONTEXT_PKTS	7	// number of context pkts aggregated here
+#define	NCONTEXT_PKTS	6	// number of context pkts aggregated here
 
 typedef struct all_context_tag {
   beamformer_if_cntx_t	beamformer;
   gain_if_cntx_t	db[4];
 
   // FIXME add Extension Context for board types, revs, serial numbers, temps
-  caldiv_if_cntx_t caldiv;
 
   gps_if_cntx_t		gps;		// must be last
 } __attribute__((packed)) all_context_t;
