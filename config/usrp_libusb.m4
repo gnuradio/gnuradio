@@ -30,6 +30,7 @@ AC_DEFUN([USRP_LIBUSB], [
 
   libusbok=no
   have_libusb1=no
+  LIBUSB_PKG_CONFIG_NAME=''
   if test x$1 = xyes; then
     PKG_CHECK_MODULES(USB, libusb-1.0, [
       libusbok=yes
@@ -37,6 +38,7 @@ AC_DEFUN([USRP_LIBUSB], [
       usb_header='libusb-1.0/libusb.h'
       usb_lib_func='libusb_bulk_transfer'
       usb_lib_name='usb-1.0'
+      LIBUSB_PKG_CONFIG_NAME='libusb-1.0'
     ])
   else
     dnl not using libusb1 (for now); see if legacy version is found.
@@ -45,17 +47,24 @@ AC_DEFUN([USRP_LIBUSB], [
     dnl user's shell environment
 
     dnl see if the pkgconfig module 'libusb' is available
-    PKG_CHECK_MODULES(USB, libusb, [libusbok=yes], [libusbok=no])
+    PKG_CHECK_MODULES(USB, libusb, [
+      libusbok=yes
+      LIBUSB_PKG_CONFIG_NAME='libusb'
+      ], [libusbok=no])
     dnl PKG_CHECK_MODULES does not work correctly when embedded
     if test $libusbok = no; then
       dnl if not, see if the pkgconfig module 'libusb-legacy' is available
-      PKG_CHECK_MODULES(USB, [libusb-legacy], [libusbok=yes], [libusbok=no])
+      PKG_CHECK_MODULES(USB, [libusb-legacy], [
+        libusbok=yes
+        LIBUSB_PKG_CONFIG_NAME='libusb-legacy'
+        ], [libusbok=no])
     fi
     dnl set variables for further testing
     usb_header='usb.h'
     usb_lib_func='usb_bulk_write'
     usb_lib_name='usb'
   fi
+  AC_SUBST(LIBUSB_PKG_CONFIG_NAME)
   if test x$1 != xyes || test $have_libusb1 = yes; then
     dnl Either (1) libusb1 was specified and found; or
     dnl (2) libusb1 was not specified. Restart checking.

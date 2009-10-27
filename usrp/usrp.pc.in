@@ -5,7 +5,7 @@ includedir=@includedir@
 
 Name: usrp
 Description: USRP Client Side C++ interface
-Requires: libusb @usrp_darwin_omnithread_pc_requires@
+Requires: @LIBUSB_PKG_CONFIG_NAME@ @usrp_darwin_omnithread_pc_requires@
 Version: @VERSION@
 Libs: -L${libdir} -lusrp
 Cflags: -I${includedir}
