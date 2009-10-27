@@ -16,21 +16,3 @@
 #
 
 include $(top_srcdir)/Makefile.common
-
-AM_CPPFLAGS = \
-    $(VRT_INCLUDES) \
-    $(STD_DEFINES_AND_INCLUDES) \
-    $(CPPUNIT_INCLUDES)
-
-LDADD = \
-	$(VRT_LA) \
-	$(GRUEL_LA)
-
-
-bin_PROGRAMS = 
-
-noinst_PROGRAMS = \
-	simple_rx_samples
-
-simple_rx_samples_SOURCES = simple_rx_samples.cc
-

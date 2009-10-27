@@ -68,7 +68,6 @@ m4macros = \
 	grc_gr_trellis.m4 \
 	grc_gr_usrp.m4 \
 	grc_gr_video_sdl.m4 \
-	grc_gr_vrt.m4 \
 	grc_gr_wxgui.m4 \
 	grc_mblock.m4 \
 	grc_gruel.m4 \

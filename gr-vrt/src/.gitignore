@@ -1,8 +1,0 @@
-Makefile
-Makefile.in
-.deps
-.libs
-run_tests
-vrt.py
-vrt.pyc
-vrt.cc
