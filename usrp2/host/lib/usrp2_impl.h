@@ -32,6 +32,7 @@
 namespace usrp2 {
   
   class eth_buffer;
+  class ethernet;
   class pktfilter;
   class usrp2_thread;
   class usrp2_tune_result;
@@ -56,9 +57,12 @@ namespace usrp2 {
     static const size_t NRIDS = 256;
     static const size_t NCHANS = 32;
 
-    eth_buffer    *d_eth_buf;
+    eth_buffer    *d_eth_data;	// packet ring buffered data frames
+    ethernet      *d_eth_ctrl;  // unbuffered control frames
+    pktfilter     *d_pf_data;
+    pktfilter     *d_pf_ctrl;
+
     std::string    d_interface_name;
-    pktfilter     *d_pf;
     std::string    d_addr;       // FIXME: use u2_mac_addr_t instead
     usrp2_thread  *d_bg_thread;
     volatile bool  d_bg_running; // TODO: multistate if needed

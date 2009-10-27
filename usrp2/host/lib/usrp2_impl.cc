@@ -28,6 +28,7 @@
 #include "usrp2_impl.h"
 #include "usrp2_thread.h"
 #include "eth_buffer.h"
+#include "ethernet.h"
 #include "pktfilter.h"
 #include "control.h"
 #include "ring.h"
@@ -87,7 +88,6 @@ namespace usrp2 {
     }
   }
 
-
   /*!
    * \param p points to fixed header
    * \param payload_len_in_bytes is length of the fixed hdr and the payload
@@ -129,23 +129,44 @@ namespace usrp2 {
 
 
   usrp2::impl::impl(const std::string &ifc, props *p, size_t rx_bufsize)
-    : d_eth_buf(new eth_buffer(rx_bufsize)), d_interface_name(ifc), d_pf(0), d_bg_thread(0),
-      d_bg_running(false), d_rx_seqno(-1), d_tx_seqno(0), d_next_rid(0),
-      d_num_rx_frames(0), d_num_rx_missing(0), d_num_rx_overruns(0), d_num_rx_bytes(0), 
-      d_num_enqueued(0), d_enqueued_mutex(), d_bg_pending_cond(&d_enqueued_mutex),
-      d_channel_rings(NCHANS), d_tx_interp(0), d_rx_decim(0), d_dont_enqueue(true)
+    : d_eth_data(new eth_buffer(rx_bufsize)),
+      d_eth_ctrl(new ethernet()),
+      d_pf_data(0), 
+      d_pf_ctrl(0),
+      d_interface_name(ifc),
+      d_bg_thread(0),
+      d_bg_running(false),
+      d_rx_seqno(-1),
+      d_tx_seqno(0),
+      d_next_rid(0),
+      d_num_rx_frames(0),
+      d_num_rx_missing(0),
+      d_num_rx_overruns(0),
+      d_num_rx_bytes(0), 
+      d_num_enqueued(0),
+      d_enqueued_mutex(),
+      d_bg_pending_cond(&d_enqueued_mutex),
+      d_channel_rings(NCHANS),
+      d_tx_interp(0),
+      d_rx_decim(0),
+      d_dont_enqueue(true)
   {
-    if (!d_eth_buf->open(ifc, htons(U2_ETHERTYPE)))
-      throw std::runtime_error("Unable to register USRP2 protocol");
-    
+    if (!d_eth_data->open(ifc, htons(U2_ETHERTYPE)))
+      throw std::runtime_error("Unable to open/register USRP2 data protocol");
+    if (!d_eth_ctrl->open(ifc, htons(U2_ETHERTYPE+1)))
+      throw std::runtime_error("Unable to open/register USRP2 data protocol");
+
     d_addr = p->addr;
 
     // Create a packet filter for U2_ETHERTYPE packets sourced from target USRP2
     u2_mac_addr_t usrp_mac;
     parse_mac_addr(d_addr, &usrp_mac);
-    d_pf = pktfilter::make_ethertype_inbound_target(U2_ETHERTYPE, (const unsigned char*)&(usrp_mac.addr));
-    if (!d_pf || !d_eth_buf->attach_pktfilter(d_pf))
-      throw std::runtime_error("Unable to attach packet filter.");
+    d_pf_data = pktfilter::make_ethertype_inbound_target(U2_ETHERTYPE, (const unsigned char*)&(usrp_mac.addr));
+    if (!d_pf_data || !d_eth_data->attach_pktfilter(d_pf_data))
+      throw std::runtime_error("Unable to attach packet filter for data packets.");
+    d_pf_ctrl = pktfilter::make_ethertype_inbound_target(U2_ETHERTYPE+1, (const unsigned char*)&(usrp_mac.addr));
+    if (!d_pf_ctrl || !d_eth_ctrl->attach_pktfilter(d_pf_ctrl))
+      throw std::runtime_error("Unable to attach packet filter for control packets.");
     
     if (USRP2_IMPL_DEBUG)
       std::cerr << "usrp2 constructor: using USRP2 at " << d_addr << std::endl;
@@ -209,10 +230,13 @@ namespace usrp2 {
   {
     stop_bg();
     d_bg_thread = 0; // thread class deletes itself
-    delete d_pf;
-    d_eth_buf->close();
-    delete d_eth_buf;
-    
+    delete d_pf_data;
+    delete d_pf_ctrl;
+    d_eth_data->close();
+    delete d_eth_data;
+    d_eth_ctrl->close();
+    delete d_eth_ctrl;
+
     if (USRP2_IMPL_DEBUG) {
       std::cerr << std::endl
                 << "usrp2 destructor: received " << d_num_rx_frames 
@@ -254,7 +278,7 @@ namespace usrp2 {
   {
     p->ehdr.ethertype = htons(U2_ETHERTYPE);
     parse_mac_addr(dst, &p->ehdr.dst); 
-    memcpy(&p->ehdr.src, d_eth_buf->mac(), 6);
+    memcpy(&p->ehdr.src, d_eth_data->mac(), 6);
     p->thdr.flags = 0; // FIXME transport header values?
     p->thdr.seqno = d_tx_seqno++;
     p->thdr.ack = 0;
@@ -313,7 +337,7 @@ namespace usrp2 {
       len = sizeof(tmp);
     }
 
-    return d_eth_buf->tx_frame(cmd, len) == eth_buffer::EB_OK;
+    return d_eth_data->tx_frame(cmd, len) == eth_buffer::EB_OK;
   }
 
   bool
@@ -354,7 +378,7 @@ namespace usrp2 {
       // Receive available frames from ethernet buffer.  Handler will
       // process control frames, enqueue data packets in channel
       // rings, and signal blocked API threads
-      int res = d_eth_buf->rx_frames(this, 100); // FIXME magic timeout
+      int res = d_eth_data->rx_frames(this, 100); // FIXME magic timeout
       if (res == eth_buffer::EB_ERROR)
 	break;  
 
@@ -658,7 +682,7 @@ namespace usrp2 {
       success = success && (ntohx(reply.ok) == 1);
       
       if (success)
-	d_channel_rings[channel] = ring_sptr(new ring(d_eth_buf->max_frames()));
+	d_channel_rings[channel] = ring_sptr(new ring(d_eth_data->max_frames()));
       else
 	d_dont_enqueue = true;
 
@@ -747,7 +771,7 @@ namespace usrp2 {
 	return false;
 
       bool want_more = (*handler)(items, nitems_in_uint32s, &md);
-      d_eth_buf->release_frame(p);
+      d_eth_data->release_frame(p);
       DEBUG_LOG("-");
       dec_enqueued();
 
@@ -781,7 +805,7 @@ namespace usrp2 {
     void *p;
     size_t frame_len_in_bytes;
     while (rp->dequeue(&p, &frame_len_in_bytes)) {
-      d_eth_buf->release_frame(p);
+      d_eth_data->release_frame(p);
       dec_enqueued();
     }
     return true;
@@ -1035,7 +1059,7 @@ namespace usrp2 {
       if (total < 64)
 	fprintf(stderr, "usrp2::tx_raw: FIXME: short packet: %zd items (%zd bytes)\n", i, total);
 
-      if (d_eth_buf->tx_framev(iov, 2) != eth_buffer::EB_OK){
+      if (d_eth_data->tx_framev(iov, 2) != eth_buffer::EB_OK){
 	return false;
       }
 
