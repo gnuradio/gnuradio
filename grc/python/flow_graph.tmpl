@@ -135,7 +135,7 @@ class $(class_name)(gr.hier_block2):
 		$DIVIDER
 #end if
 #for $msg in $messages
-		$(msg.get_source().get_parent().get_id())_msgq = $(msg.get_sink().get_parent().get_id())_msgq = gr.msg_queue(2)
+		$(msg.get_source().get_parent().get_id())_msgq_out = $(msg.get_sink().get_parent().get_id())_msgq_in = gr.msg_queue(2)
 #end for
 ########################################################
 ##Create Blocks

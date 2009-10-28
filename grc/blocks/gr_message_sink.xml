@@ -8,7 +8,7 @@
 	<name>Message Sink</name>
 	<key>gr_message_sink</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.message_sink($type.size*$vlen, $(id)_msgq, $dont_block)</make>
+	<make>gr.message_sink($type.size*$vlen, $(id)_msgq_out, $dont_block)</make>
 	<param>
 		<name>Input Type</name>
 		<key>type</key>
