@@ -21,7 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-grcblocksdir = $(prefix)/share/gnuradio/grc/blocks
+grcblocksdir = $(grc_blocksdir)
 
 dist_grcblocks_DATA = \
 	noaa_hrpt_decoder.xml \

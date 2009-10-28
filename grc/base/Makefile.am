@@ -19,9 +19,9 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/grc/Makefile.inc
+include $(top_srcdir)/Makefile.common
 
-ourpythondir = $(grc_src_prefix)/base
+ourpythondir = $(pkgpythondir)/grc/base
 ourpython_PYTHON = \
 	odict.py \
 	ParseXML.py \
@@ -35,7 +35,7 @@ ourpython_PYTHON = \
 	Port.py \
 	__init__.py
 
-ourdatadir = $(grc_src_prefix)/base
+ourdatadir = $(pkgpythondir)/grc/base
 dist_ourdata_DATA = \
 	block_tree.dtd \
 	flow_graph.dtd

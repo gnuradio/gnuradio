@@ -19,9 +19,9 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/grc/Makefile.inc
+include $(top_srcdir)/Makefile.common
 
-ourpythondir = $(grc_src_prefix)/python
+ourpythondir = $(pkgpythondir)/grc/python
 ourpython_PYTHON = \
 	convert_hier.py \
 	expr_utils.py \
@@ -37,7 +37,7 @@ ourpython_PYTHON = \
 	Port.py \
 	__init__.py
 
-ourdatadir = $(grc_src_prefix)/python
+ourdatadir = $(pkgpythondir)/grc/python
 dist_ourdata_DATA = \
 	block.dtd \
 	default_flow_graph.grc \

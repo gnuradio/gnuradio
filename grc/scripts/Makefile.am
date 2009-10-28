@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,6 +19,6 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/grc/Makefile.inc
+include $(top_srcdir)/Makefile.common
 
 dist_bin_SCRIPTS = grc usrp2_probe usrp_probe

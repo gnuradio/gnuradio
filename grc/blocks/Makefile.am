@@ -19,7 +19,7 @@
 # Boston, MA 02110-1301, USA.
 #
 
-include $(top_srcdir)/grc/Makefile.inc
+include $(top_srcdir)/Makefile.common
 
 ourdatadir = $(grc_blocksdir)
 dist_ourdata_DATA = \

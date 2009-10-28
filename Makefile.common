@@ -113,6 +113,9 @@ gr_docdir = $(docdir)-$(DOCVER)
 # System configuration files
 gr_prefsdir = $(GR_PREFSDIR)
 
+# Data directory for grc block wrappers
+grc_blocksdir = $(pkgdatadir)/grc/blocks
+
 # Other common defines; use "+=" to add to these
 STAMPS =
 MOSTLYCLEANFILES = $(BUILT_SOURCES) $(STAMPS) *.pyc *.pyo *~ *.tmp *.loT
