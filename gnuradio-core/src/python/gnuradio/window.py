@@ -177,3 +177,4 @@ blackmanharris = coswindow((0.35875,0.48829,0.14128,0.01168))
 nuttall = coswindow((0.3635819,0.4891775,0.1365995,0.0106411))  # Wikipedia calls this Blackman-Nuttall
 nuttall_cfd = coswindow((0.355768,0.487396,0.144232,0.012604)) # Wikipedia calls this Nuttall, continuous first deriv
 flattop = coswindow((1.0,1.93,1.29,0.388,0.032)) # Flat top window, coeffs from Wikipedia
+rectangular = lambda fft_size: [1]*fft_size

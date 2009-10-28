@@ -52,6 +52,8 @@ class _fft_sink_base(gr.hier_block2, common.wxgui_hb):
 		title='',
 		size=fft_window.DEFAULT_WIN_SIZE,
 		peak_hold=False,
+		win=None,
+		**kwargs #do not end with a comma
 	):
 		#ensure avg alpha
 		if avg_alpha is None: avg_alpha = 2.0/fft_rate
@@ -70,6 +72,7 @@ class _fft_sink_base(gr.hier_block2, common.wxgui_hb):
 			ref_scale=ref_scale,
 			avg_alpha=avg_alpha,
 			average=average,
+			win=win,
 		)
 		msgq = gr.msg_queue(2)
 		sink = gr.message_sink(gr.sizeof_float*fft_size, msgq, True)

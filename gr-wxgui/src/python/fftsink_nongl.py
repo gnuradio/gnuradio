@@ -93,7 +93,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
     def __init__(self, parent, baseband_freq=0, ref_scale=2.0,
                  y_per_div=10, y_divs=8, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
-                 title='', size=default_fftsink_size, peak_hold=False):
+                 title='', size=default_fftsink_size, peak_hold=False, **kwargs):
 
         gr.hier_block2.__init__(self, "fft_sink_f",
                                 gr.io_signature(1, 1, gr.sizeof_float),
@@ -136,7 +136,7 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
     def __init__(self, parent, baseband_freq=0, ref_scale=2.0,
                  y_per_div=10, y_divs=8, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
-                 title='', size=default_fftsink_size, peak_hold=False):
+                 title='', size=default_fftsink_size, peak_hold=False, **kwargs):
 
         gr.hier_block2.__init__(self, "fft_sink_c",
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex),

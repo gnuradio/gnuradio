@@ -28,7 +28,7 @@ class _logpwrfft_base(gr.hier_block2):
     Create a log10(abs(fft)) stream chain, with real or complex input.
     """
 
-    def __init__(self, sample_rate, fft_size, ref_scale, frame_rate, avg_alpha, average):
+    def __init__(self, sample_rate, fft_size, ref_scale, frame_rate, avg_alpha, average, win=None):
         """
         Create an log10(abs(fft)) stream chain.
         Provide access to the setting the filter and sample rate.
@@ -38,6 +38,7 @@ class _logpwrfft_base(gr.hier_block2):
         @param frame_rate        Output frame rate
         @param avg_alpha        FFT averaging (over time) constant [0.0-1.0]
         @param average                Whether to average [True, False]
+        @param win              the window taps generation function
         """
         gr.hier_block2.__init__(self, self._name,
                                 gr.io_signature(1, 1, self._item_size),          # Input signature
@@ -48,7 +49,8 @@ class _logpwrfft_base(gr.hier_block2):
                                               vec_rate=frame_rate,
                                               vec_len=fft_size)
 
-        fft_window = window.blackmanharris(fft_size)
+        if win is None: win = window.blackmanharris
+        fft_window = win(fft_size)
         fft = self._fft_block[0](fft_size, True, fft_window)
         window_power = sum(map(lambda x: x*x, fft_window))
 

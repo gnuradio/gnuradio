@@ -51,6 +51,7 @@ class _waterfall_sink_base(gr.hier_block2, common.wxgui_hb):
 		ref_scale=2.0,
 		dynamic_range=80,
 		num_lines=256,
+		win=None,
 		**kwargs #do not end with a comma
 	):
 		#ensure avg alpha
@@ -70,6 +71,7 @@ class _waterfall_sink_base(gr.hier_block2, common.wxgui_hb):
 			ref_scale=ref_scale,
 			avg_alpha=avg_alpha,
 			average=average,
+			win=win,
 		)
 		msgq = gr.msg_queue(2)
 		sink = gr.message_sink(gr.sizeof_float*fft_size, msgq, True)
