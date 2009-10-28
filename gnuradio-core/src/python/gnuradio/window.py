@@ -153,32 +153,6 @@ def riemann(fft_size):
         j -= 1
     return window
 
-def blackmanharris(fft_size):
-    a0 = 0.35875
-    a1 = 0.48829
-    a2 = 0.14128
-    a3 = 0.01168
-    window = [0 for i in range(fft_size)]
-    for index in xrange(fft_size):
-        window[index] = a0 
-        window[index] -= a1*math.cos(2.0*math.pi*(index+0.5)/(fft_size - 1))
-        window[index] += a2*math.cos(4.0*math.pi*(index+0.5)/(fft_size - 1))
-        window[index] -= a3*math.cos(6.0*math.pi*(index+0.5)/(fft_size - 1))
-    return window
-
-def nuttall(fft_size):
-    a0 = 0.3635819
-    a1 = 0.4891775
-    a2 = 0.1365995
-    a3 = 0.0106411
-    window = [0 for i in range(fft_size)]
-    for index in xrange(fft_size):
-        window[index] = a0 
-        window[index] -= a1*math.cos(2.0*math.pi*(index+0.5)/(fft_size - 1))
-        window[index] += a2*math.cos(4.0*math.pi*(index+0.5)/(fft_size - 1))
-        window[index] -= a3*math.cos(6.0*math.pi*(index+0.5)/(fft_size - 1))
-    return window
-
 def kaiser(fft_size,beta):
     ibeta = 1.0/izero(beta)
     inm1 = 1.0/(fft_size)
@@ -187,4 +161,19 @@ def kaiser(fft_size,beta):
         window[index] = izero(beta*math.sqrt(1.0 - (index * inm1)*(index * inm1))) * ibeta
     return window
 
-    
+# Closure to generate functions to create cos windows
+
+def coswindow(coeffs):
+    def closure(fft_size):
+        window = [0] * fft_size
+        print list(enumerate(coeffs))
+        for w_index in range(fft_size):
+            for (c_index, coeff) in enumerate(coeffs):
+                window[w_index] += (-1)**c_index * coeff * math.cos(2.0*c_index*math.pi*(w_index+0.5)/(fft_size-1))
+        return window
+    return closure
+
+blackmanharris = coswindow((0.35875,0.48829,0.14128,0.01168))
+nuttall = coswindow((0.3635819,0.4891775,0.1365995,0.0106411))  # Wikipedia calls this Blackman-Nuttall
+nuttall_cfd = coswindow((0.355768,0.487396,0.144232,0.012604)) # Wikipedia calls this Nuttall, continuous first deriv
+flattop = coswindow((1.0,1.93,1.29,0.388,0.032)) # Flat top window, coeffs from Wikipedia
