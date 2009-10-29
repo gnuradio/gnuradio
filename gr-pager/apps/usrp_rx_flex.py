@@ -2,12 +2,13 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: USRP FLEX Pager Receiver (Single Channel)
-# Generated: Thu Oct 29 08:04:51 2009
+# Generated: Thu Oct 29 11:03:16 2009
 ##################################################
 
 from gnuradio import blks2
 from gnuradio import eng_notation
 from gnuradio import gr
+from gnuradio import pager
 from gnuradio import window
 from gnuradio.eng_option import eng_option
 from gnuradio.gr import firdes
@@ -64,10 +65,13 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		self.rx_gain = rx_gain = saved_rx_gain
 		self.offset = offset = saved_offset
 		self.nchan_taps = nchan_taps = len(channel_taps)
-		self.ma_ntaps = ma_ntaps = channel_rate/symbol_rate
+		self.ma_ntaps = ma_ntaps = int(channel_rate/symbol_rate)
 		self.freq_text = freq_text = freq
 		self.demod_k = demod_k = 3*channel_rate/(2*math.pi*deviation)
 		self.channel_decim = channel_decim = int(sample_rate/channel_rate)
+		self.bb_interp = bb_interp = 5
+		self.bb_decim = bb_decim = 8
+		self.baseband_rate = baseband_rate = 16000
 
 		##################################################
 		# Notebooks
@@ -169,14 +173,24 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		##################################################
 		# Blocks
 		##################################################
-		self.blks2_rational_resampler_xxx_0 = blks2.rational_resampler_fff(
-			interpolation=5,
-			decimation=8,
-			taps=([1.0/8.0,]*40),
-			fractional_bw=None,
-		)
 		self.fm_demod = gr.quadrature_demod_cf(demod_k)
 		self.gr_freq_xlating_fir_filter_xxx_0 = gr.freq_xlating_fir_filter_ccc(channel_decim, (channel_taps), band_freq-freq+offset, sample_rate)
+		self.gr_null_sink_0 = gr.null_sink(gr.sizeof_int*1)
+		self.gr_null_sink_0_0 = gr.null_sink(gr.sizeof_int*1)
+		self.gr_null_sink_0_1 = gr.null_sink(gr.sizeof_int*1)
+		self.gr_null_sink_0_2 = gr.null_sink(gr.sizeof_int*1)
+		self.pager_flex_deinterleave_0 = pager.flex_deinterleave()
+		self.pager_flex_deinterleave_0_0 = pager.flex_deinterleave()
+		self.pager_flex_deinterleave_0_1 = pager.flex_deinterleave()
+		self.pager_flex_deinterleave_0_1_0 = pager.flex_deinterleave()
+		self.pager_flex_sync_0 = pager.flex_sync()
+		self.pager_slicer_fb_0 = pager.slicer_fb(1e-6)
+		self.resampler = blks2.rational_resampler_fff(
+			interpolation=bb_interp,
+			decimation=bb_decim,
+			taps=([1.0/ma_ntaps,]*ma_ntaps*bb_interp),
+			fractional_bw=None,
+		)
 		self.usrp_source = grc_usrp.simple_source_c(which=0, side="A", rx_ant="RXA")
 		self.usrp_source.set_decim_rate(decim)
 		self.usrp_source.set_frequency(band_freq, verbose=True)
@@ -213,18 +227,6 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 			peak_hold=False,
 		)
 		self.displays.GetPage(0).GridAdd(self.wxgui_fftsink2_1.win, 1, 0, 1, 1)
-		self.wxgui_scopesink2_0 = scopesink2.scope_sink_c(
-			self.displays.GetPage(1).GetWin(),
-			title="Channel Waveform",
-			sample_rate=channel_rate,
-			v_scale=8e3,
-			v_offset=0,
-			t_scale=20.0/channel_rate,
-			ac_couple=False,
-			xy_mode=False,
-			num_inputs=1,
-		)
-		self.displays.GetPage(1).GridAdd(self.wxgui_scopesink2_0.win, 0, 0, 1, 1)
 		self.wxgui_scopesink2_0_0 = scopesink2.scope_sink_f(
 			self.displays.GetPage(1).GetWin(),
 			title="Baseband",
@@ -236,7 +238,7 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 			xy_mode=False,
 			num_inputs=1,
 		)
-		self.displays.GetPage(1).GridAdd(self.wxgui_scopesink2_0_0.win, 1, 0, 1, 1)
+		self.displays.GetPage(1).GridAdd(self.wxgui_scopesink2_0_0.win, 0, 0, 1, 1)
 
 		##################################################
 		# Connections
@@ -244,10 +246,19 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		self.connect((self.gr_freq_xlating_fir_filter_xxx_0, 0), (self.wxgui_fftsink2_1, 0))
 		self.connect((self.usrp_source, 0), (self.gr_freq_xlating_fir_filter_xxx_0, 0))
 		self.connect((self.usrp_source, 0), (self.wxgui_fftsink2_0, 0))
-		self.connect((self.gr_freq_xlating_fir_filter_xxx_0, 0), (self.wxgui_scopesink2_0, 0))
 		self.connect((self.gr_freq_xlating_fir_filter_xxx_0, 0), (self.fm_demod, 0))
-		self.connect((self.blks2_rational_resampler_xxx_0, 0), (self.wxgui_scopesink2_0_0, 0))
-		self.connect((self.fm_demod, 0), (self.blks2_rational_resampler_xxx_0, 0))
+		self.connect((self.resampler, 0), (self.wxgui_scopesink2_0_0, 0))
+		self.connect((self.fm_demod, 0), (self.resampler, 0))
+		self.connect((self.pager_slicer_fb_0, 0), (self.pager_flex_sync_0, 0))
+		self.connect((self.resampler, 0), (self.pager_slicer_fb_0, 0))
+		self.connect((self.pager_flex_sync_0, 1), (self.pager_flex_deinterleave_0_1_0, 0))
+		self.connect((self.pager_flex_sync_0, 2), (self.pager_flex_deinterleave_0_1, 0))
+		self.connect((self.pager_flex_sync_0, 0), (self.pager_flex_deinterleave_0, 0))
+		self.connect((self.pager_flex_sync_0, 3), (self.pager_flex_deinterleave_0_0, 0))
+		self.connect((self.pager_flex_deinterleave_0, 0), (self.gr_null_sink_0, 0))
+		self.connect((self.pager_flex_deinterleave_0_1_0, 0), (self.gr_null_sink_0_0, 0))
+		self.connect((self.pager_flex_deinterleave_0_1, 0), (self.gr_null_sink_0_1, 0))
+		self.connect((self.pager_flex_deinterleave_0_0, 0), (self.gr_null_sink_0_2, 0))
 
 	def set_config_filename(self, config_filename):
 		self.config_filename = config_filename
@@ -279,7 +290,7 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 	def set_symbol_rate(self, symbol_rate):
 		self.symbol_rate = symbol_rate
 		self.set_passband(2*(self.deviation+self.symbol_rate))
-		self.set_ma_ntaps(self.channel_rate/self.symbol_rate)
+		self.set_ma_ntaps(int(self.channel_rate/self.symbol_rate))
 
 	def set_saved_channel(self, saved_channel):
 		self.saved_channel = saved_channel
@@ -315,12 +326,11 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 
 	def set_channel_rate(self, channel_rate):
 		self.channel_rate = channel_rate
-		self.wxgui_scopesink2_0.set_sample_rate(self.channel_rate)
 		self.wxgui_fftsink2_1.set_sample_rate(self.channel_rate)
 		self.set_channel_decim(int(self.sample_rate/self.channel_rate))
 		self.set_demod_k(3*self.channel_rate/(2*math.pi*self.deviation))
 		self.set_channel_taps(firdes.low_pass(10, self.sample_rate, self.passband/2.0, (self.channel_rate-self.passband)/2.0))
-		self.set_ma_ntaps(self.channel_rate/self.symbol_rate)
+		self.set_ma_ntaps(int(self.channel_rate/self.symbol_rate))
 
 	def set_channel(self, channel):
 		self.channel = channel
@@ -406,6 +416,15 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 
 	def set_channel_decim(self, channel_decim):
 		self.channel_decim = channel_decim
+
+	def set_bb_interp(self, bb_interp):
+		self.bb_interp = bb_interp
+
+	def set_bb_decim(self, bb_decim):
+		self.bb_decim = bb_decim
+
+	def set_baseband_rate(self, baseband_rate):
+		self.baseband_rate = baseband_rate
 
 if __name__ == '__main__':
 	parser = OptionParser(option_class=eng_option, usage="%prog: [options]")

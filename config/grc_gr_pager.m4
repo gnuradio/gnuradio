@@ -27,6 +27,7 @@ AC_DEFUN([GRC_GR_PAGER],[
         gr-pager/Makefile \
 	gr-pager/gnuradio-pager.pc \
 	gr-pager/apps/Makefile \
+	gr-pager/grc/Makefile \
         gr-pager/lib/Makefile \
 	gr-pager/python/Makefile \
 	gr-pager/python/run_tests \
