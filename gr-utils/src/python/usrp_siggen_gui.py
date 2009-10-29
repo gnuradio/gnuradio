@@ -284,7 +284,7 @@ class app_gui(pubsub):
         self.vbox.AddSpacer(5)
         self.vbox.AddStretchSpacer()
 
-if __name__ == "__main__":
+def main():
     try:
         # Get command line parameters
         (options, args) = usrp_siggen.get_options()
@@ -308,3 +308,10 @@ if __name__ == "__main__":
     except RuntimeError, e:
         print e
         sys.exit(1)
+
+# Make sure to create the top block (tb) within a function:
+# That code in main will allow tb to go out of scope on return,
+# which will call the decontructor on usrp and stop transmit.
+# Whats odd is that grc works fine with tb in the __main__,
+# perhaps its because the try/except clauses around tb.
+if __name__ == "__main__": main()

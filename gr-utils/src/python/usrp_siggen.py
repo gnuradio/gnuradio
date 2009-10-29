@@ -305,7 +305,7 @@ def get_options():
     return (options, args)
 
 # If this script is executed, the following runs. If it is imported, the below does not run.
-if __name__ == "__main__":
+def main():
     if gr.enable_realtime_scheduling() != gr.RT_OK:
         print "Note: failed to enable realtime scheduling, continuing"
     
@@ -321,3 +321,11 @@ if __name__ == "__main__":
     tb.start()
     raw_input('Press Enter to quit: ')
     tb.stop()
+    tb.wait()
+
+# Make sure to create the top block (tb) within a function:
+# That code in main will allow tb to go out of scope on return,
+# which will call the decontructor on usrp and stop transmit.
+# Whats odd is that grc works fine with tb in the __main__,
+# perhaps its because the try/except clauses around tb.
+if __name__ == "__main__": main()
