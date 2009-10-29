@@ -123,7 +123,7 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<key>average</key>
 		<value>False</value>
 		<type>enum</type>
-		<hide>#if $average() == 'True' then 'none' else 'part'#</hide>
+		<hide>part</hide>
 		<option>
 			<name>On</name>
 			<key>True</key>

@@ -7,6 +7,7 @@
 <block>
 	<name>FFT Sink</name>
 	<key>wxgui_fftsink2</key>
+	<import>from gnuradio import window</import>
 	<import>from gnuradio.wxgui import fftsink2</import>
 	<make>#set $parent = $notebook() and 'self.%s.GetPage(%s)'%$notebook() or 'self'
 fftsink2.$(type.fcn)(
@@ -23,6 +24,9 @@ fftsink2.$(type.fcn)(
 	avg_alpha=#if $avg_alpha() then $avg_alpha else 'None'#,
 	title=$title,
 	peak_hold=$peak_hold,
+#if $win()
+	win=$win,
+#end if
 #if $win_size()
 	size=$win_size,
 #end if
@@ -144,7 +148,7 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<key>average</key>
 		<value>False</value>
 		<type>enum</type>
-		<hide>#if $average() == 'True' then 'none' else 'part'#</hide>
+		<hide>part</hide>
 		<option>
 			<name>On</name>
 			<key>True</key>
@@ -160,6 +164,37 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<value>0</value>
 		<type>real</type>
 		<hide>#if $average() == 'True' then 'none' else 'all'#</hide>
+	</param>
+	<param>
+		<name>Window</name>
+		<key>win</key>
+		<value>None</value>
+		<type>raw</type>
+		<hide>#if $win() is None then 'part' else 'none'#</hide>
+		<option>
+			<name>Automatic</name>
+			<key>None</key>
+		</option>
+		<option>
+			<name>Blackman-Harris</name>
+			<key>window.blackmanharris</key>
+		</option>
+		<option>
+			<name>Hamming</name>
+			<key>window.hamming</key>
+		</option>
+		<option>
+			<name>Hanning</name>
+			<key>window.hanning</key>
+		</option>
+		<option>
+			<name>Rectangular</name>
+			<key>window.rectangular</key>
+		</option>
+		<option>
+			<name>Flattop</name>
+			<key>window.flattop</key>
+		</option>
 	</param>
 	<param>
 		<name>Window Size</name>
