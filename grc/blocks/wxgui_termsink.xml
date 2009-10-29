@@ -16,12 +16,12 @@ termsink.termsink(
 #if $win_size()
 	size=$win_size,
 #end if
-	msgq=$(id)_msgq,
+	msgq=$(id)_msgq_in,
 )
 #if not $grid_pos()
-$(parent).Add(self.$(id).win)
+$(parent).Add(self.$(id))
 #else
-$(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
+$(parent).GridAdd(self.$(id), $(', '.join(map(str, $grid_pos()))))
 #end if</make>
 
 	<param>
@@ -51,5 +51,5 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<name>in</name>
 		<type>msg</type>
 	</sink>
-	
+
 </block>

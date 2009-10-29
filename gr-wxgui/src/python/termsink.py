@@ -19,25 +19,61 @@
 # Boston, MA 02110-1301, USA.
 #
 
-import term_window
 from gnuradio import gru
+import wx
 
-class termsink(object):
+DEFAULT_WIN_SIZE = (600, 300)
+APPEND_EVENT = wx.NewEventType()
+EVT_APPEND_EVENT = wx.PyEventBinder(APPEND_EVENT, 0)
+
+class AppendEvent(wx.PyEvent):
+    def __init__(self, text):
+        wx.PyEvent.__init__(self)
+        self.SetEventType(APPEND_EVENT)
+        self.text = text
+
+    def Clone(self):
+        self.__class__(self.GetId())
+
+class termsink(wx.Panel):
 	def __init__(self,
 		     parent,
 		     msgq,
-		     size=term_window.DEFAULT_WIN_SIZE,
+		     size=DEFAULT_WIN_SIZE,
 		     ):
-		
-		self.win = term_window.term_window(
-			parent=parent,
-			size=size,
-		)
 
+		wx.Panel.__init__(self,
+				  parent,
+				  size=size,
+				  style=wx.SIMPLE_BORDER,
+				  )
+
+		self.text_ctrl = wx.TextCtrl(self,
+					     wx.ID_ANY,
+					     value="",
+					     size=size,
+					     style=wx.TE_MULTILINE|wx.TE_READONLY,
+					     )
+
+		main_sizer = wx.BoxSizer(wx.VERTICAL)
+		main_sizer.Add(self.text_ctrl, 1, wx.EXPAND)
+		self.SetSizerAndFit(main_sizer)
+
+                EVT_APPEND_EVENT(self, self.evt_append)
 		self.runner = gru.msgq_runner(msgq, self.handle_msg)
 
 	def handle_msg(self, msg):
-		# Just append text for now
+		# This gets called in the queue runner thread context
+		# For now, just add whatever the user sends to the text control
 		text = msg.to_string()
 		print "handle_msg: received", len(text), "bytes"
-		self.win.append_text(text)
+
+		# Create a wxPython event and post it to the event queue
+		evt = AppendEvent(text)
+		wx.PostEvent(self, evt)
+		del evt
+
+        def evt_append(self, evt):
+		# This gets called by the wxPython event queue runner
+		print "appending", len(evt.text), "bytes"
+		self.text_ctrl.AppendText(evt.text)
