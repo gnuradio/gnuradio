@@ -122,10 +122,13 @@ class _generic_usrp_base(object):
         if self._type == USRP1_TYPE: return self._subdev.set_auto_tr(enable)
 
     def __del__(self):
-        try: # Avoid weak reference error
-            del self._u
+        #delete usrp1 specific subdev
+        if self._type == USRP1_TYPE:
             del self._subdev
-        except: pass
+            self._subdev = None
+        #delete the usrp device
+        del self._u
+        self._u = None
 
 ########################################################################
 # generic usrp source

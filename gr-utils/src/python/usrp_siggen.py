@@ -318,9 +318,6 @@ if __name__ == "__main__":
         print e
         sys.exit(1)
 
-    # Run it
-    try:
-        tb.run()
-
-    except KeyboardInterrupt:
-        pass
+    tb.start()
+    raw_input('Press Enter to quit: ')
+    tb.stop()
