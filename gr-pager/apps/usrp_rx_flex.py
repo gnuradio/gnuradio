@@ -2,11 +2,13 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: USRP FLEX Pager Receiver (Single Channel)
-# Generated: Sat Oct 17 11:46:38 2009
+# Generated: Thu Oct 29 08:04:51 2009
 ##################################################
 
+from gnuradio import blks2
 from gnuradio import eng_notation
 from gnuradio import gr
+from gnuradio import window
 from gnuradio.eng_option import eng_option
 from gnuradio.gr import firdes
 from gnuradio.wxgui import fftsink2
@@ -147,8 +149,8 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 			sizer=_offset_sizer,
 			value=self.offset,
 			callback=self.set_offset,
-			minimum=-10e3,
-			maximum=10e3,
+			minimum=-12.5e3,
+			maximum=12.5e3,
 			num_steps=100,
 			style=wx.SL_HORIZONTAL,
 			cast=float,
@@ -167,9 +169,14 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		##################################################
 		# Blocks
 		##################################################
+		self.blks2_rational_resampler_xxx_0 = blks2.rational_resampler_fff(
+			interpolation=5,
+			decimation=8,
+			taps=([1.0/8.0,]*40),
+			fractional_bw=None,
+		)
 		self.fm_demod = gr.quadrature_demod_cf(demod_k)
 		self.gr_freq_xlating_fir_filter_xxx_0 = gr.freq_xlating_fir_filter_ccc(channel_decim, (channel_taps), band_freq-freq+offset, sample_rate)
-		self.gr_moving_average_xx_0 = gr.moving_average_ff(8, 1.0/8.0, 4000)
 		self.usrp_source = grc_usrp.simple_source_c(which=0, side="A", rx_ant="RXA")
 		self.usrp_source.set_decim_rate(decim)
 		self.usrp_source.set_frequency(band_freq, verbose=True)
@@ -211,6 +218,7 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 			title="Channel Waveform",
 			sample_rate=channel_rate,
 			v_scale=8e3,
+			v_offset=0,
 			t_scale=20.0/channel_rate,
 			ac_couple=False,
 			xy_mode=False,
@@ -220,9 +228,10 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		self.wxgui_scopesink2_0_0 = scopesink2.scope_sink_f(
 			self.displays.GetPage(1).GetWin(),
 			title="Baseband",
-			sample_rate=channel_rate,
+			sample_rate=16e3,
 			v_scale=1,
-			t_scale=40.0/channel_rate,
+			v_offset=0,
+			t_scale=40.0/16e3,
 			ac_couple=False,
 			xy_mode=False,
 			num_inputs=1,
@@ -237,8 +246,8 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		self.connect((self.usrp_source, 0), (self.wxgui_fftsink2_0, 0))
 		self.connect((self.gr_freq_xlating_fir_filter_xxx_0, 0), (self.wxgui_scopesink2_0, 0))
 		self.connect((self.gr_freq_xlating_fir_filter_xxx_0, 0), (self.fm_demod, 0))
-		self.connect((self.fm_demod, 0), (self.gr_moving_average_xx_0, 0))
-		self.connect((self.gr_moving_average_xx_0, 0), (self.wxgui_scopesink2_0_0, 0))
+		self.connect((self.blks2_rational_resampler_xxx_0, 0), (self.wxgui_scopesink2_0_0, 0))
+		self.connect((self.fm_demod, 0), (self.blks2_rational_resampler_xxx_0, 0))
 
 	def set_config_filename(self, config_filename):
 		self.config_filename = config_filename
@@ -269,8 +278,8 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 
 	def set_symbol_rate(self, symbol_rate):
 		self.symbol_rate = symbol_rate
-		self.set_ma_ntaps(self.channel_rate/self.symbol_rate)
 		self.set_passband(2*(self.deviation+self.symbol_rate))
+		self.set_ma_ntaps(self.channel_rate/self.symbol_rate)
 
 	def set_saved_channel(self, saved_channel):
 		self.saved_channel = saved_channel
@@ -308,11 +317,10 @@ class usrp_rx_flex(grc_wxgui.top_block_gui):
 		self.channel_rate = channel_rate
 		self.wxgui_scopesink2_0.set_sample_rate(self.channel_rate)
 		self.wxgui_fftsink2_1.set_sample_rate(self.channel_rate)
-		self.set_ma_ntaps(self.channel_rate/self.symbol_rate)
 		self.set_channel_decim(int(self.sample_rate/self.channel_rate))
 		self.set_demod_k(3*self.channel_rate/(2*math.pi*self.deviation))
 		self.set_channel_taps(firdes.low_pass(10, self.sample_rate, self.passband/2.0, (self.channel_rate-self.passband)/2.0))
-		self.wxgui_scopesink2_0_0.set_sample_rate(self.channel_rate)
+		self.set_ma_ntaps(self.channel_rate/self.symbol_rate)
 
 	def set_channel(self, channel):
 		self.channel = channel
