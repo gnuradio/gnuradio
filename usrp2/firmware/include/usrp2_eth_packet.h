@@ -27,6 +27,8 @@
 __U2_BEGIN_DECLS
 
 #define U2_ETHERTYPE 		0xBEEF	// used in our frames
+#define U2_DATA_ETHERTYPE 		U2_ETHERTYPE
+#define U2_CTRL_ETHERTYPE 		U2_ETHERTYPE+1
 #define	MAC_CTRL_ETHERTYPE	0x8808	// used in PAUSE frames
 
 /*

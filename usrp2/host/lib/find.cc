@@ -127,10 +127,10 @@ namespace usrp2 {
     
     std::auto_ptr<ethernet> enet(new ethernet()); 
     
-    if (!enet->open(ifc, htons(U2_ETHERTYPE)))
+    if (!enet->open(ifc, htons(U2_CTRL_ETHERTYPE)))
       return result;
     
-    std::auto_ptr<pktfilter> pf(pktfilter::make_ethertype_inbound(U2_ETHERTYPE, enet->mac()));
+    std::auto_ptr<pktfilter> pf(pktfilter::make_ethertype_inbound(U2_CTRL_ETHERTYPE, enet->mac()));
     if (!enet->attach_pktfilter(pf.get()))
       return result;
     
@@ -141,7 +141,7 @@ namespace usrp2 {
     memset(pktbuf, 0, sizeof(pktbuf));
     
     command *c = (command *)pktbuf;
-    c->h.ehdr.ethertype = htons(U2_ETHERTYPE);
+    c->h.ehdr.ethertype = htons(U2_CTRL_ETHERTYPE);
     c->h.ehdr.dst = broadcast_mac_addr;
     memcpy(&c->h.ehdr.src, enet->mac(), 6);
     c->h.thdr.flags = 0;

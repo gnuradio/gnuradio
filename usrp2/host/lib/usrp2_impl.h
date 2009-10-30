@@ -23,6 +23,7 @@
 #include <usrp2/data_handler.h>
 #include <usrp2_eth_packet.h>
 #include <boost/scoped_ptr.hpp>
+#include <boost/thread.hpp>
 #include "control.h"
 #include "ring.h"
 #include <string>
@@ -118,6 +119,13 @@ namespace usrp2 {
     data_handler::result handle_data_packet(const void *base, size_t len);
     bool dboard_info();
     bool reset_db();
+
+    //control thread stuff
+    boost::thread_group d_ctrl_tg;
+    volatile bool d_ctrl_running;
+    void start_ctrl();
+    void stop_ctrl();
+    void ctrl_loop();
 
   public:
     impl(const std::string &ifc, props *p, size_t rx_bufsize);

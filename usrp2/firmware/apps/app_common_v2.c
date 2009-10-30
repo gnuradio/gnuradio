@@ -71,7 +71,7 @@ set_reply_hdr(u2_eth_packet_t *reply_pkt, u2_eth_packet_t const *cmd_pkt)
 {
   reply_pkt->ehdr.dst = cmd_pkt->ehdr.src;
   reply_pkt->ehdr.src = *ethernet_mac_addr();
-  reply_pkt->ehdr.ethertype = U2_ETHERTYPE+1;
+  reply_pkt->ehdr.ethertype = U2_CTRL_ETHERTYPE;
   reply_pkt->thdr.flags = 0;
   reply_pkt->thdr.fifo_status = 0;	// written by protocol engine
   reply_pkt->thdr.seqno = 0;		// written by protocol engine
@@ -608,12 +608,12 @@ eth_pkt_inspector(dbsm_t *sm, int bufno)
 
   // inspect rcvd frame and figure out what do do.
 
-  if (pkt->ehdr.ethertype == U2_ETHERTYPE+1){
+  if (pkt->ehdr.ethertype == U2_CTRL_ETHERTYPE){
     handle_control_chan_frame(pkt, byte_len);
     return true;
   }
 
-  if (pkt->ehdr.ethertype != U2_ETHERTYPE)
+  if (pkt->ehdr.ethertype != U2_DATA_ETHERTYPE)
     return true;	// ignore, probably bogus PAUSE frame from MAC
 
   int chan = u2p_chan(&pkt->fixed);

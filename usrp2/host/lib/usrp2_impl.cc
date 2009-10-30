@@ -151,20 +151,20 @@ namespace usrp2 {
       d_rx_decim(0),
       d_dont_enqueue(true)
   {
-    if (!d_eth_data->open(ifc, htons(U2_ETHERTYPE)))
+    if (!d_eth_data->open(ifc, htons(U2_DATA_ETHERTYPE)))
       throw std::runtime_error("Unable to open/register USRP2 data protocol");
-    if (!d_eth_ctrl->open(ifc, htons(U2_ETHERTYPE+1)))
+    if (!d_eth_ctrl->open(ifc, htons(U2_CTRL_ETHERTYPE)))
       throw std::runtime_error("Unable to open/register USRP2 control protocol");
 
     d_addr = p->addr;
 
-    // Create a packet filter for U2_ETHERTYPE packets sourced from target USRP2
+    // Create a packet filter for U2_DATA_ETHERTYPE packets sourced from target USRP2
     u2_mac_addr_t usrp_mac;
     parse_mac_addr(d_addr, &usrp_mac);
-    d_pf_data = pktfilter::make_ethertype_inbound_target(U2_ETHERTYPE, (const unsigned char*)&(usrp_mac.addr));
+    d_pf_data = pktfilter::make_ethertype_inbound_target(U2_DATA_ETHERTYPE, (const unsigned char*)&(usrp_mac.addr));
     if (!d_pf_data || !d_eth_data->attach_pktfilter(d_pf_data))
       throw std::runtime_error("Unable to attach packet filter for data packets.");
-    d_pf_ctrl = pktfilter::make_ethertype_inbound_target(U2_ETHERTYPE+1, (const unsigned char*)&(usrp_mac.addr));
+    d_pf_ctrl = pktfilter::make_ethertype_inbound_target(U2_CTRL_ETHERTYPE, (const unsigned char*)&(usrp_mac.addr));
     if (!d_pf_ctrl || !d_eth_ctrl->attach_pktfilter(d_pf_ctrl))
       throw std::runtime_error("Unable to attach packet filter for control packets.");
     
@@ -175,6 +175,8 @@ namespace usrp2 {
 
     d_bg_thread = new usrp2_thread(this);
     d_bg_thread->start();
+
+    start_ctrl();
 
     // In case the USRP2 was left streaming RX
     // FIXME: only one channel right now
@@ -229,6 +231,7 @@ namespace usrp2 {
   usrp2::impl::~impl()
   {
     stop_bg();
+    stop_ctrl();
     d_bg_thread = 0; // thread class deletes itself
     delete d_pf_data;
     delete d_pf_ctrl;
@@ -288,7 +291,7 @@ namespace usrp2 {
   usrp2::impl::init_etf_hdrs(u2_eth_packet_t *p, const std::string &dst,
 			     int word0_flags, int chan, uint32_t timestamp)
   {
-    init_et_hdrs(p, dst, (chan == CONTROL_CHAN) ? U2_ETHERTYPE+1 : U2_ETHERTYPE);
+    init_et_hdrs(p, dst, (chan == CONTROL_CHAN) ? U2_CTRL_ETHERTYPE : U2_DATA_ETHERTYPE);
     u2p_set_word0(&p->fixed, word0_flags, chan);
     u2p_set_timestamp(&p->fixed, timestamp);
     
@@ -358,6 +361,31 @@ namespace usrp2 {
   // ----------------------------------------------------------------
   //        Background loop: received packet demuxing
   // ----------------------------------------------------------------
+
+  void
+  usrp2::impl::start_ctrl()
+  {
+    d_ctrl_tg.create_thread(boost::bind(&usrp2::impl::ctrl_loop, this));
+  }
+
+  void
+  usrp2::impl::stop_ctrl()
+  {
+    d_ctrl_running = false;
+    d_ctrl_tg.join_all();
+  }
+
+  void
+  usrp2::impl::ctrl_loop()
+  {
+    d_ctrl_running = true;
+    while (d_ctrl_running){
+      uint32_t buff[100];
+      int ctrl_recv_len = d_eth_ctrl->read_packet_dont_block(buff, sizeof(buff));
+      if (ctrl_recv_len >= 0) handle_control_packet(buff, ctrl_recv_len);
+      boost::thread::sleep(boost::get_system_time() + boost::posix_time::milliseconds(long(0.01*1e3))); //10ms timeout
+    }
+  }
 
   void
   usrp2::impl::stop_bg()
