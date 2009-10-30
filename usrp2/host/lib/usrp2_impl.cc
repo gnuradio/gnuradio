@@ -298,7 +298,7 @@ namespace usrp2 {
     p->thdr.flags = 0; // FIXME transport header values?
     p->thdr.seqno = 0;
     p->thdr.ack = 0;
-    u2p_set_word0(&p->fixed, word0_flags, CONTROL_CHAN);
+    u2p_set_word0(&p->fixed, word0_flags, 0);
     u2p_set_timestamp(&p->fixed, timestamp);
   }
   

@@ -26,9 +26,8 @@
 
 __U2_BEGIN_DECLS
 
-#define U2_ETHERTYPE 		0xBEEF	// used in our frames
-#define U2_DATA_ETHERTYPE 		U2_ETHERTYPE
-#define U2_CTRL_ETHERTYPE 		U2_ETHERTYPE+1
+#define U2_DATA_ETHERTYPE 		0xBEEF	// used in our data frames
+#define U2_CTRL_ETHERTYPE 		0xBEF0	// used in our control frames
 #define	MAC_CTRL_ETHERTYPE	0x8808	// used in PAUSE frames
 
 /*
@@ -102,7 +101,6 @@ typedef struct {
 
 #define	U2P_ALL_FLAGS		0x00000007
 
-#define	CONTROL_CHAN		0x1f
 
 static inline int
 u2p_chan(u2_fixed_hdr_t *p)

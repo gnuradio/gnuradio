@@ -96,7 +96,7 @@ namespace usrp2 {
 	break;
       
       reply *rp = (reply *)pktbuf;
-      if (u2p_chan(&rp->h.fixed) != CONTROL_CHAN)  	// ignore
+      if (u2p_chan(&rp->h.fixed) != 0)  	// ignore
 	continue;
       if (rp->op_id_reply.opcode != OP_ID_REPLY)	// ignore
 	continue;
@@ -147,7 +147,7 @@ namespace usrp2 {
     c->h.thdr.flags = 0;
     c->h.thdr.seqno = 0;
     c->h.thdr.ack = 0;
-    u2p_set_word0(&c->h.fixed, 0, CONTROL_CHAN);
+    u2p_set_word0(&c->h.fixed, 0, 0);
     u2p_set_timestamp(&c->h.fixed, -1);
     c->op_id.opcode = OP_ID;
     c->op_id.len = sizeof(c->op_id);

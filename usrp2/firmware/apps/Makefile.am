@@ -26,12 +26,9 @@ noinst_PROGRAMS = \
 	burn_dbsrx_eeprom \
 	can_i_sub \
 	echo \
-	eth_serdes \
-	gen_eth_packets \
 	hello \
 	ibs_rx_test \
 	ibs_tx_test \
-	rcv_eth_packets \
 	read_dbids \
 	set_hw_rev \
 	test1 \
@@ -43,19 +40,22 @@ noinst_PROGRAMS = \
 	test_lsadc \
 	test_lsdac \
 	timer_test \
-	tx_standalone \
 	txrx \
-	factory_test \
 	burnrev30 \
 	burnrev31 \
 	burnrev40 \
-	serdes_txrx \
 	sd_gentest \
-	sd_bounce \
+	sd_bounce
+
+nononono =  \
+	eth_serdes \
+	gen_eth_packets \
+	rcv_eth_packets \
+	tx_standalone \
+	factory_test \
+	serdes_txrx \
 	mimo_tx \
 	mimo_tx_slave
-
-
 
 # tx_drop_SOURCES = tx_drop.c app_common.c
 # tx_drop_rate_limited_SOURCES = tx_drop_rate_limited.c app_common.c

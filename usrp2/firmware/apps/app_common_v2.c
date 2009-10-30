@@ -76,7 +76,7 @@ set_reply_hdr(u2_eth_packet_t *reply_pkt, u2_eth_packet_t const *cmd_pkt)
   reply_pkt->thdr.fifo_status = 0;	// written by protocol engine
   reply_pkt->thdr.seqno = 0;		// written by protocol engine
   reply_pkt->thdr.ack = 0;		// written by protocol engine
-  u2p_set_word0(&reply_pkt->fixed, 0, CONTROL_CHAN);
+  u2p_set_word0(&reply_pkt->fixed, 0, 0);
   reply_pkt->fixed.timestamp = timer_regs->time;
 }
 
