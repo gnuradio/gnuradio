@@ -25,7 +25,7 @@ public:
     uint16_t d_int;
     uint16_t d_frac;
     /* reg 1 */
-    static const uint8_t s_prescaler;
+    uint8_t d_prescaler;
     static const uint16_t s_phase;
     uint16_t d_mod;
     /* reg 2 */

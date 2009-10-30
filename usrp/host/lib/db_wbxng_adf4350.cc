@@ -34,7 +34,7 @@
 #define MAX_RF_DIV uint8_t(16)                                          /* max rf divider, divides rf output */
 #define MIN_VCO_FREQ FREQ_C(2.2e9)                                      /* minimum vco freq */
 #define MAX_VCO_FREQ FREQ_C(4.4e9)                                      /* minimum vco freq */
-#define MAX_FREQ MAX_VCO_FREQ                                           /* upper bound freq (rf div = 1) */
+#define MAX_FREQ DIV_ROUND(MAX_VCO_FREQ, 1)                                           /* upper bound freq (rf div = 1) */
 #define MIN_FREQ DIV_ROUND(MIN_VCO_FREQ, MAX_RF_DIV)                    /* calculated lower bound freq */
 
 #define CE_PIN        (1 << 3)
@@ -133,6 +133,12 @@ adf4350::_set_freq(freq_t freq)
 {
     /* Set the frequency by setting int, frac, mod, r, div */
     if (freq > MAX_FREQ || freq < MIN_FREQ) return false;
+    int min_int_div = 23;
+    d_regs->d_prescaler = 0;
+    if (freq > FREQ_C(3e9)) {
+        min_int_div = 75;
+        d_regs->d_prescaler = 1;
+    }
     /* Ramp up the RF divider until the VCO is within range. */
     d_regs->d_divider_select = 0;
     while (freq < MIN_VCO_FREQ){
@@ -159,7 +165,7 @@ adf4350::_set_freq(freq_t freq)
             d_regs->d_mod, d_regs->d_10_bit_r_counter, (1 << d_regs->d_divider_select)
         );
         */
-    }while(d_regs->d_int < MIN_INT_DIV);
+    }while(d_regs->d_int < min_int_div);
     /* calculate the band select so PFD is under 125 KHz */
     d_regs->d_8_bit_band_select_clock_divider_value = \
         INPUT_REF_FREQ/(FREQ_C(30e3)*d_regs->d_10_bit_r_counter) + 1;
