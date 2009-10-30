@@ -106,9 +106,8 @@ namespace usrp2 {
     }
     
     static bool parse_mac_addr(const std::string &s, u2_mac_addr_t *p);
-    void init_et_hdrs(u2_eth_packet_t *p, const std::string &dst, unsigned short ethertype);
-    void init_etf_hdrs(u2_eth_packet_t *p, const std::string &dst,
-		       int word0_flags, int chan, uint32_t timestamp);
+    void init_etf_data_hdrs(u2_eth_packet_t *p, const std::string &dst, int word0_flags, int chan, uint32_t timestamp);
+    void init_etf_ctrl_hdrs(u2_eth_packet_t *p, const std::string &dst, int word0_flags, uint32_t timestamp);
     void stop_bg();
     void init_config_rx_v2_cmd(op_config_rx_v2_cmd *cmd);
     void init_config_tx_v2_cmd(op_config_tx_v2_cmd *cmd);

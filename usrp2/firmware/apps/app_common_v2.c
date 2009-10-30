@@ -602,47 +602,18 @@ eth_pkt_inspector(dbsm_t *sm, int bufno)
   u2_eth_packet_t *pkt = (u2_eth_packet_t *) buffer_ram(bufno);
   size_t byte_len = (buffer_pool_status->last_line[bufno] - 3) * 4;
 
-  //static size_t last_len = 0;
-
-  // hal_toggle_leds(0x1);
-
   // inspect rcvd frame and figure out what do do.
+  switch (pkt->ehdr.ethertype){
 
-  if (pkt->ehdr.ethertype == U2_CTRL_ETHERTYPE){
+  case U2_DATA_ETHERTYPE:
+    return false;	// pass it on to Tx DSP
+
+  case U2_CTRL_ETHERTYPE:
     handle_control_chan_frame(pkt, byte_len);
     return true;
+
   }
-
-  if (pkt->ehdr.ethertype != U2_DATA_ETHERTYPE)
-    return true;	// ignore, probably bogus PAUSE frame from MAC
-
-  int chan = u2p_chan(&pkt->fixed);
-
-  switch (chan){
-
-  case 0:
-  default:
-#if 0
-    if (last_len != 0){
-      if (byte_len != last_len){
-	printf("Len: %d last: %d\n", byte_len, last_len);
-      }
-    }
-    last_len = byte_len;
-
-    if((pkt->thdr.seqno) == exp_seqno){
-      exp_seqno++;
-      //putchar('.');
-    }
-    else {
-      // putchar('S');
-      //printf("S%d %d ",exp_seqno,pkt->thdr.seqno);
-      exp_seqno = pkt->thdr.seqno + 1;
-    }
-#endif
-    return false;	// pass it on to Tx DSP
-    break;
-  }
+  return true;	// ignore, probably bogus PAUSE frame from MAC
 }
 
 /*

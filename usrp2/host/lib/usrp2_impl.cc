@@ -277,35 +277,36 @@ namespace usrp2 {
   }
   
   void
-  usrp2::impl::init_et_hdrs(u2_eth_packet_t *p, const std::string &dst, unsigned short ethertype)
+  usrp2::impl::init_etf_data_hdrs(u2_eth_packet_t *p, const std::string &dst,
+			     int word0_flags, int chan, uint32_t timestamp)
   {
-    p->ehdr.ethertype = htons(ethertype);
+    p->ehdr.ethertype = htons(U2_DATA_ETHERTYPE);
     parse_mac_addr(dst, &p->ehdr.dst); 
     memcpy(&p->ehdr.src, d_eth_data->mac(), 6);
     p->thdr.flags = 0; // FIXME transport header values?
     p->thdr.seqno = d_tx_seqno++;
     p->thdr.ack = 0;
-  }
-  
-  void 
-  usrp2::impl::init_etf_hdrs(u2_eth_packet_t *p, const std::string &dst,
-			     int word0_flags, int chan, uint32_t timestamp)
-  {
-    init_et_hdrs(p, dst, (chan == CONTROL_CHAN) ? U2_CTRL_ETHERTYPE : U2_DATA_ETHERTYPE);
     u2p_set_word0(&p->fixed, word0_flags, chan);
     u2p_set_timestamp(&p->fixed, timestamp);
-    
-    if (chan == CONTROL_CHAN) { // no sequence numbers, back it out
-      p->thdr.seqno = 0;
-      d_tx_seqno--;
-    }
+  }
+  
+  void
+  usrp2::impl::init_etf_ctrl_hdrs(u2_eth_packet_t *p, const std::string &dst, int word0_flags, uint32_t timestamp){
+    p->ehdr.ethertype = htons(U2_CTRL_ETHERTYPE);
+    parse_mac_addr(dst, &p->ehdr.dst); 
+    memcpy(&p->ehdr.src, d_eth_data->mac(), 6);
+    p->thdr.flags = 0; // FIXME transport header values?
+    p->thdr.seqno = 0;
+    p->thdr.ack = 0;
+    u2p_set_word0(&p->fixed, word0_flags, CONTROL_CHAN);
+    u2p_set_timestamp(&p->fixed, timestamp);
   }
   
   void
   usrp2::impl::init_config_rx_v2_cmd(op_config_rx_v2_cmd *cmd)
   {
     memset(cmd, 0, sizeof(*cmd)); 
-    init_etf_hdrs(&cmd->h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd->h, d_addr, 0, -1);
     cmd->op.opcode = OP_CONFIG_RX_V2;
     cmd->op.len = sizeof(cmd->op);
     cmd->op.rid = d_next_rid++;
@@ -317,7 +318,7 @@ namespace usrp2 {
   usrp2::impl::init_config_tx_v2_cmd(op_config_tx_v2_cmd *cmd)
   {
     memset(cmd, 0, sizeof(*cmd)); 
-    init_etf_hdrs(&cmd->h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd->h, d_addr, 0, -1);
     cmd->op.opcode = OP_CONFIG_TX_V2;
     cmd->op.len = sizeof(cmd->op);
     cmd->op.rid = d_next_rid++;
@@ -428,24 +429,10 @@ namespace usrp2 {
   data_handler::result
   usrp2::impl::operator()(const void *base, size_t len)
   {
-    u2_eth_samples_t *pkt = (u2_eth_samples_t *)base;
-
-    // FIXME unaligned load!
-    int chan = u2p_chan(&pkt->hdrs.fixed);
-
-    if (chan == CONTROL_CHAN) {	        // control packets
-      DEBUG_LOG("c");
-      return handle_control_packet(base, len);
-    }
-    else {				// data packets
-
       if (d_dont_enqueue)		// toss packet
-	return data_handler::RELEASE;
+        return data_handler::RELEASE;
 
       return handle_data_packet(base, len);
-    }
-
-    // not reached
   }
 
   data_handler::result
@@ -568,7 +555,7 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
     cmd.op.opcode = OP_SET_RX_LO_OFFSET;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -695,7 +682,7 @@ namespace usrp2 {
       op_generic_t reply;
 
       memset(&cmd, 0, sizeof(cmd));
-      init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+      init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
       cmd.op.opcode = OP_START_RX_STREAMING;
       cmd.op.len = sizeof(cmd.op);
       cmd.op.rid = d_next_rid++;
@@ -744,7 +731,7 @@ namespace usrp2 {
       omni_mutex_lock l(d_channel_rings_mutex);
 
       memset(&cmd, 0, sizeof(cmd));
-      init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+      init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
       cmd.op.opcode = OP_STOP_RX;
       cmd.op.len = sizeof(cmd.op);
       cmd.op.rid = d_next_rid++;
@@ -868,7 +855,7 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
     cmd.op.opcode = OP_SET_TX_LO_OFFSET;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1068,7 +1055,7 @@ namespace usrp2 {
 	  flags |= U2P_TX_END_OF_BURST;
       }
 
-      init_etf_hdrs(&hdrs, d_addr, flags, channel, timestamp);
+      init_etf_data_hdrs(&hdrs, d_addr, flags, channel, timestamp);
 
       // Avoid short packet by splitting last two packets if reqd
       size_t i;
@@ -1108,7 +1095,7 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
     cmd.op.opcode = OP_CONFIG_MIMO;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1168,7 +1155,7 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
     cmd.op.opcode = OP_BURN_MAC_ADDR;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1207,7 +1194,7 @@ namespace usrp2 {
     op_dboard_info_reply_t	reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
     cmd.op.opcode = OP_DBOARD_INFO;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1234,7 +1221,7 @@ namespace usrp2 {
     op_generic_t   reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
     cmd.op.opcode = OP_SYNC_TO_PPS;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1255,7 +1242,7 @@ namespace usrp2 {
     op_generic_t   reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
     cmd.op.opcode = OP_SYNC_EVERY_PPS;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1292,7 +1279,7 @@ namespace usrp2 {
     size_t bytes = words*wlen;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
     cmd.op.opcode = OP_PEEK;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1348,7 +1335,7 @@ namespace usrp2 {
     cmd = (op_poke_cmd *)malloc(l);
     //fprintf(stderr, "cmd=%p l=%i\n", cmd, l);
     memset(cmd, 0, l);
-    init_etf_hdrs(&cmd->h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd->h, d_addr, 0, -1);
     cmd->op.opcode = OP_POKE;
     cmd->op.len = sizeof(cmd->op)+bytes;
     cmd->op.rid = d_next_rid++;
@@ -1385,7 +1372,7 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
     cmd.op.opcode = OP_RESET_DB;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1411,7 +1398,7 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
     cmd.op.opcode = OP_GPIO_SET_DDR;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1445,7 +1432,7 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
     cmd.op.opcode = OP_GPIO_SET_SELS;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1473,7 +1460,7 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
     cmd.op.opcode = OP_GPIO_WRITE;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1502,7 +1489,7 @@ namespace usrp2 {
     op_gpio_read_reply_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
     cmd.op.opcode = OP_GPIO_READ;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1539,7 +1526,7 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);
     cmd.op.opcode = OP_GPIO_STREAM;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
