@@ -134,8 +134,8 @@ namespace usrp2 {
       d_pf_data(0), 
       d_pf_ctrl(0),
       d_interface_name(ifc),
-      d_bg_thread(0),
-      d_bg_running(false),
+      d_data_thread(0),
+      d_data_running(false),
       d_rx_seqno(-1),
       d_tx_seqno(0),
       d_next_rid(0),
@@ -145,7 +145,7 @@ namespace usrp2 {
       d_num_rx_bytes(0), 
       d_num_enqueued(0),
       d_enqueued_mutex(),
-      d_bg_pending_cond(&d_enqueued_mutex),
+      d_data_pending_cond(&d_enqueued_mutex),
       d_channel_rings(NCHANS),
       d_tx_interp(0),
       d_rx_decim(0),
@@ -173,10 +173,8 @@ namespace usrp2 {
 
     memset(d_pending_replies, 0, sizeof(d_pending_replies));
 
-    d_bg_thread = new usrp2_thread(this);
-    d_bg_thread->start();
-
-    start_ctrl();
+    start_data_thread();
+    start_ctrl_thread();
 
     // In case the USRP2 was left streaming RX
     // FIXME: only one channel right now
@@ -230,9 +228,8 @@ namespace usrp2 {
   
   usrp2::impl::~impl()
   {
-    stop_bg();
-    stop_ctrl();
-    d_bg_thread = 0; // thread class deletes itself
+    stop_data_thread();
+    stop_ctrl_thread();
     delete d_pf_data;
     delete d_pf_ctrl;
     d_eth_data->close();
@@ -360,49 +357,61 @@ namespace usrp2 {
   }
 
   // ----------------------------------------------------------------
-  //        Background loop: received packet demuxing
+  //        Background loop for handling control packets
   // ----------------------------------------------------------------
 
   void
-  usrp2::impl::start_ctrl()
+  usrp2::impl::start_ctrl_thread()
   {
-    d_ctrl_tg.create_thread(boost::bind(&usrp2::impl::ctrl_loop, this));
+    d_ctrl_tg.create_thread(boost::bind(&usrp2::impl::run_ctrl_thread, this));
   }
 
   void
-  usrp2::impl::stop_ctrl()
+  usrp2::impl::stop_ctrl_thread()
   {
     d_ctrl_running = false;
     d_ctrl_tg.join_all();
   }
 
   void
-  usrp2::impl::ctrl_loop()
+  usrp2::impl::run_ctrl_thread()
   {
     d_ctrl_running = true;
+    uint32_t buff[100];
     while (d_ctrl_running){
-      uint32_t buff[100];
       int ctrl_recv_len = d_eth_ctrl->read_packet_dont_block(buff, sizeof(buff));
       if (ctrl_recv_len >= 0) handle_control_packet(buff, ctrl_recv_len);
-      boost::thread::sleep(boost::get_system_time() + boost::posix_time::milliseconds(long(0.01*1e3))); //10ms timeout
+      boost::thread::sleep(boost::get_system_time() + boost::posix_time::milliseconds(long(0.05*1e3))); //50ms timeout
     }
   }
 
+  // ----------------------------------------------------------------
+  //        Background loop for handling data packets
+  // ----------------------------------------------------------------
+
   void
-  usrp2::impl::stop_bg()
+  usrp2::impl::start_data_thread(){
+    d_data_thread = new usrp2_thread(this);
+    d_data_thread->start();
+  }
+
+  void
+  usrp2::impl::stop_data_thread()
   {
-    d_bg_running = false;
-    d_bg_pending_cond.signal();
+    d_data_running = false;
+    d_data_pending_cond.signal();
     
     void *dummy_status;
-    d_bg_thread->join(&dummy_status);  
+    d_data_thread->join(&dummy_status);
+
+    d_data_thread = 0; // thread class deletes itself
   }
   
   void
-  usrp2::impl::bg_loop()
+  usrp2::impl::run_data_thread()
   {
-    d_bg_running = true;
-    while(d_bg_running) {
+    d_data_running = true;
+    while(d_data_running) {
       DEBUG_LOG(":");
       // Receive available frames from ethernet buffer.  Handler will
       // process control frames, enqueue data packets in channel
@@ -416,11 +425,11 @@ namespace usrp2 {
       // will signal this thread to continue.
       {
         omni_mutex_lock l(d_enqueued_mutex);
-        while(d_num_enqueued > 0 && d_bg_running)
-	  d_bg_pending_cond.wait();
+        while(d_num_enqueued > 0 && d_data_running)
+	  d_data_pending_cond.wait();
       }
     }
-    d_bg_running = false;
+    d_data_running = false;
   }
   
   //

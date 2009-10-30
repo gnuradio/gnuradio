@@ -55,7 +55,7 @@ namespace usrp2 {
       std::cerr << "usrp2: failed to enable realtime scheduling" << std::endl;    
 
     // This is the first code to run in the new thread context.
-    d_u2->bg_loop();
+    d_u2->run_data_thread();
     
     return 0;
   }

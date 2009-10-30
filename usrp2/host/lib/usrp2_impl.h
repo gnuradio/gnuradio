@@ -65,8 +65,8 @@ namespace usrp2 {
 
     std::string    d_interface_name;
     std::string    d_addr;       // FIXME: use u2_mac_addr_t instead
-    usrp2_thread  *d_bg_thread;
-    volatile bool  d_bg_running; // TODO: multistate if needed
+    usrp2_thread  *d_data_thread;
+    volatile bool  d_data_running; // TODO: multistate if needed
     
     int            d_rx_seqno;
     int            d_tx_seqno;
@@ -78,7 +78,7 @@ namespace usrp2 {
 
     unsigned int   d_num_enqueued;
     omni_mutex     d_enqueued_mutex;
-    omni_condition d_bg_pending_cond;
+    omni_condition d_data_pending_cond;
 
     // all pending_replies are stack allocated, thus no possibility of leaking these
     pending_reply *d_pending_replies[NRIDS]; // indexed by 8-bit reply id
@@ -102,13 +102,14 @@ namespace usrp2 {
     void dec_enqueued() {
       omni_mutex_lock l(d_enqueued_mutex);
       if (--d_num_enqueued == 0)
-        d_bg_pending_cond.signal();
+        d_data_pending_cond.signal();
     }
     
     static bool parse_mac_addr(const std::string &s, u2_mac_addr_t *p);
     void init_etf_data_hdrs(u2_eth_packet_t *p, const std::string &dst, int word0_flags, int chan, uint32_t timestamp);
     void init_etf_ctrl_hdrs(u2_eth_packet_t *p, const std::string &dst, int word0_flags, uint32_t timestamp);
-    void stop_bg();
+    void start_data_thread();
+    void stop_data_thread();
     void init_config_rx_v2_cmd(op_config_rx_v2_cmd *cmd);
     void init_config_tx_v2_cmd(op_config_tx_v2_cmd *cmd);
     bool transmit_cmd_and_wait(void *cmd, size_t len, pending_reply *p, double secs=0.0);
@@ -122,15 +123,15 @@ namespace usrp2 {
     //control thread stuff
     boost::thread_group d_ctrl_tg;
     volatile bool d_ctrl_running;
-    void start_ctrl();
-    void stop_ctrl();
-    void ctrl_loop();
+    void start_ctrl_thread();
+    void stop_ctrl_thread();
+    void run_ctrl_thread();
 
   public:
     impl(const std::string &ifc, props *p, size_t rx_bufsize);
     ~impl();
     
-    void bg_loop();
+    void run_data_thread();
 
     std::string mac_addr() const { return d_addr; } // FIXME: convert from u2_mac_addr_t
     std::string interface_name() const { return d_interface_name; }
