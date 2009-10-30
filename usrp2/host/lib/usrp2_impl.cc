@@ -154,7 +154,7 @@ namespace usrp2 {
     if (!d_eth_data->open(ifc, htons(U2_ETHERTYPE)))
       throw std::runtime_error("Unable to open/register USRP2 data protocol");
     if (!d_eth_ctrl->open(ifc, htons(U2_ETHERTYPE+1)))
-      throw std::runtime_error("Unable to open/register USRP2 data protocol");
+      throw std::runtime_error("Unable to open/register USRP2 control protocol");
 
     d_addr = p->addr;
 
@@ -274,9 +274,9 @@ namespace usrp2 {
   }
   
   void
-  usrp2::impl::init_et_hdrs(u2_eth_packet_t *p, const std::string &dst)
+  usrp2::impl::init_et_hdrs(u2_eth_packet_t *p, const std::string &dst, unsigned short ethertype)
   {
-    p->ehdr.ethertype = htons(U2_ETHERTYPE);
+    p->ehdr.ethertype = htons(ethertype);
     parse_mac_addr(dst, &p->ehdr.dst); 
     memcpy(&p->ehdr.src, d_eth_data->mac(), 6);
     p->thdr.flags = 0; // FIXME transport header values?
@@ -288,7 +288,7 @@ namespace usrp2 {
   usrp2::impl::init_etf_hdrs(u2_eth_packet_t *p, const std::string &dst,
 			     int word0_flags, int chan, uint32_t timestamp)
   {
-    init_et_hdrs(p, dst);
+    init_et_hdrs(p, dst, (chan == CONTROL_CHAN) ? U2_ETHERTYPE+1 : U2_ETHERTYPE);
     u2p_set_word0(&p->fixed, word0_flags, chan);
     u2p_set_timestamp(&p->fixed, timestamp);
     
@@ -337,7 +337,7 @@ namespace usrp2 {
       len = sizeof(tmp);
     }
 
-    return d_eth_data->tx_frame(cmd, len) == eth_buffer::EB_OK;
+    return d_eth_ctrl->write_packet(cmd, len) >= 0;
   }
 
   bool
