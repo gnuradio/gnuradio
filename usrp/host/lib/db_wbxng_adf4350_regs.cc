@@ -9,7 +9,6 @@
 
 /* reg 0 */
 /* reg 1 */
-const uint8_t adf4350_regs::s_prescaler = 0;
 const uint16_t adf4350_regs::s_phase = 0;
 /* reg 2 */
 const uint8_t adf4350_regs::s_low_noise_and_low_spur_modes = 0;
@@ -32,9 +31,9 @@ const uint16_t adf4350_regs::s_12_bit_clock_divider_value = 0;
 const uint8_t adf4350_regs::s_feedback_select = 1;
 const uint8_t adf4350_regs::s_vco_power_down = 0;
 const uint8_t adf4350_regs::s_mtld = 0;
-const uint8_t adf4350_regs::s_aux_output_select = 0;
-const uint8_t adf4350_regs::s_aux_output_enable = 1;
-const uint8_t adf4350_regs::s_aux_output_power = 3;
+const uint8_t adf4350_regs::s_aux_output_select = 1;
+const uint8_t adf4350_regs::s_aux_output_enable = 0;
+const uint8_t adf4350_regs::s_aux_output_power = 0;
 const uint8_t adf4350_regs::s_rf_output_enable = 1;
 const uint8_t adf4350_regs::s_output_power = 3;
 /* reg 5 */
@@ -47,6 +46,7 @@ adf4350_regs::adf4350_regs(adf4350* _adf4350){
     d_int = uint16_t(100);
     d_frac = 0;
     /* reg 1 */
+    d_prescaler = uint8_t(0);
     d_mod = uint16_t(0xfff);                      /* max fractional accuracy */
     /* reg 2 */
     d_10_bit_r_counter = uint16_t(2);
@@ -73,7 +73,7 @@ adf4350_regs::_load_register(uint8_t addr){
 			_reg_shift(d_int, 15)                           |
 			_reg_shift(d_frac, 3)); break;
 		case 1: data = (
-			_reg_shift(s_prescaler, 27)                     |
+			_reg_shift(d_prescaler, 27)                     |
 			_reg_shift(s_phase, 15)                         |
 			_reg_shift(d_mod, 3)); break;
 		case 2: data = (
