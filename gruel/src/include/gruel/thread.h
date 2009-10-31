@@ -22,12 +22,14 @@
 #define INCLUDED_THREAD_H
 
 #include <boost/thread.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace gruel {
 
   typedef boost::mutex                     mutex;
   typedef boost::unique_lock<boost::mutex> scoped_lock;
   typedef boost::condition_variable        condition_variable;
+  typedef boost::posix_time::time_duration duration;
 
 } /* namespace gruel */
 

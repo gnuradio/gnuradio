@@ -135,8 +135,6 @@ namespace usrp2 {
       d_pf_data(0), 
       d_pf_ctrl(0),
       d_interface_name(ifc),
-      d_data_running(false),
-      d_ctrl_running(false),
       d_rx_seqno(-1),
       d_tx_seqno(0),
       d_next_rid(0),
@@ -146,11 +144,13 @@ namespace usrp2 {
       d_num_rx_bytes(0), 
       d_num_enqueued(0),
       d_enqueued_mutex(),
-      d_data_pending_cond(&d_enqueued_mutex),
+      d_data_pending_cond(),
       d_channel_rings(NCHANS),
       d_tx_interp(0),
       d_rx_decim(0),
-      d_dont_enqueue(true)
+      d_dont_enqueue(true),
+      d_ctrl_running(false),
+      d_data_running(false)
   {
     if (!d_eth_data->open(ifc, htons(U2_DATA_ETHERTYPE)))
       throw std::runtime_error("Unable to open/register USRP2 data protocol");
@@ -401,7 +401,7 @@ namespace usrp2 {
   usrp2::impl::stop_data_thread()
   {
     d_data_running = false;
-    d_data_pending_cond.signal();
+    d_data_pending_cond.notify_one();
     d_data_thread->join();
   }
   
@@ -424,9 +424,9 @@ namespace usrp2 {
       // The channel ring thread that decrements d_num_enqueued to zero 
       // will signal this thread to continue.
       {
-        omni_mutex_lock l(d_enqueued_mutex);
+        gruel::scoped_lock l(d_enqueued_mutex);
         while(d_num_enqueued > 0 && d_data_running)
-	  d_data_pending_cond.wait();
+	  d_data_pending_cond.wait(l);
       }
     }
     d_data_running = false;
@@ -511,7 +511,7 @@ namespace usrp2 {
     unsigned int chan = u2p_chan(&pkt->hdrs.fixed);
 
     {
-      omni_mutex_lock l(d_channel_rings_mutex);
+      gruel::scoped_lock l(d_channel_rings_mutex);
 
       if (!d_channel_rings[chan]) {
 	DEBUG_LOG("!");
@@ -677,7 +677,7 @@ namespace usrp2 {
     }
 
     {
-      omni_mutex_lock l(d_channel_rings_mutex);
+      gruel::scoped_lock l(d_channel_rings_mutex);
       if (d_channel_rings[channel]) {
 	std::cerr << "usrp2: channel " << channel
 		  << " already streaming" << std::endl;
@@ -737,7 +737,7 @@ namespace usrp2 {
     op_generic_t reply;
 
     {
-      omni_mutex_lock l(d_channel_rings_mutex);
+      gruel::scoped_lock l(d_channel_rings_mutex);
 
       memset(&cmd, 0, sizeof(cmd));
       init_etf_ctrl_hdrs(&cmd.h, d_addr, 0, -1);

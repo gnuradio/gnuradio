@@ -22,6 +22,7 @@
 #include <usrp2/usrp2.h>
 #include <usrp2/data_handler.h>
 #include <usrp2_eth_packet.h>
+#include <gruel/thread.h>
 #include <boost/scoped_ptr.hpp>
 #include <boost/thread.hpp>
 #include "control.h"
@@ -75,14 +76,14 @@ namespace usrp2 {
     unsigned int   d_num_rx_bytes;
 
     unsigned int   d_num_enqueued;
-    omni_mutex     d_enqueued_mutex;
-    omni_condition d_data_pending_cond;
+    gruel::mutex   d_enqueued_mutex;
+    gruel::condition_variable d_data_pending_cond;
 
     // all pending_replies are stack allocated, thus no possibility of leaking these
     pending_reply *d_pending_replies[NRIDS]; // indexed by 8-bit reply id
 
     std::vector<ring_sptr>   d_channel_rings; // indexed by 5-bit channel number
-    omni_mutex     d_channel_rings_mutex;
+    gruel::mutex   d_channel_rings_mutex;
 
     db_info	   d_tx_db_info;
     db_info	   d_rx_db_info;
@@ -93,14 +94,14 @@ namespace usrp2 {
     bool	   d_dont_enqueue;
 
     void inc_enqueued() {
-      omni_mutex_lock l(d_enqueued_mutex);
+      gruel::scoped_lock l(d_enqueued_mutex);
       d_num_enqueued++;
     }
     
     void dec_enqueued() {
-      omni_mutex_lock l(d_enqueued_mutex);
+      gruel::scoped_lock l(d_enqueued_mutex);
       if (--d_num_enqueued == 0)
-        d_data_pending_cond.signal();
+        d_data_pending_cond.notify_one();
     }
     
     static bool parse_mac_addr(const std::string &s, u2_mac_addr_t *p);

@@ -48,7 +48,6 @@ libusrp2_la_SOURCES = \
 	usrp2_impl.cc
 
 libusrp2_la_LIBADD = \
-	$(OMNITHREAD_LA) \
 	$(GRUEL_LA) \
 	$(BOOST_LDFLAGS) $(BOOST_THREAD_LIB)
 
