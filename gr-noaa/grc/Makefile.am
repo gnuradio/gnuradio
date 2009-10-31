@@ -24,8 +24,8 @@ include $(top_srcdir)/Makefile.common
 grcblocksdir = $(grc_blocksdir)
 
 dist_grcblocks_DATA = \
+	noaa_hrpt_bit_sync.xml \
 	noaa_hrpt_decoder.xml \
 	noaa_hrpt_deframer.xml \
-	noaa_hrpt_pll_cf.xml \
-	noaa_hrpt_sync_fb.xml
+	noaa_hrpt_pll_cf.xml
 

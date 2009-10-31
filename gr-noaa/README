@@ -15,20 +15,22 @@ HRPT minor frames into a file.  The file stores a series of 11090 word,
 16-bits per word corresponding to the HRPT minor frame format (only the
 lower 10-bits per word are significant.)
 
-The script file by default uses USRP side A, 1698 MHz, at decimation 16. A
-configuration file 'usrp_rx_hrpt.cfg' in the current working directory will
-allow changing this, as well as implementing persistent storage of GUI
+The script file by default uses USRP side A, 1698 MHz, at decimation 16. The
+gnuradio configuration file ~/.gnuradio/config.conf, section 'usrp_rx_hrpt.cfg',
+will allow changing this, as well as implementing persistent storage of GUI
 entered parameters from invocation to invocation.
 
 The present HRPT demodulator is only tested at decimation 16.  The only other
-valid decimation rates are 24 and 32, which may word but with more bit
+valid decimation rates are 24 and 32, which may work but with more bit
 errors.  No other decimation rates will work.
 
-usrp_rx_hrpt2.py
-----------------
 
-This GUI script uses fewer graphical displays to reduce CPU consumption on
-slower machines, but otherwise operates identically to userp_rx_hrpt.py.
+file_rx_hrpt.py
+---------------
+
+This GUI script operates like usrp_rx_hrpt.py, but reads from a pre-captured
+data file supplied by -F on the command line.
+
 
 usrp_rx_hrpt_nogui.py
 ---------------------
@@ -36,6 +38,7 @@ usrp_rx_hrpt_nogui.py
 This non-GUI script operates without a display and requires that all parameters
 be set in the configuration file prior to running.  It has no command-line
 parameters, and works identically to the GUI scripts.
+
 
 demod_hrpt_file.py
 ------------------
@@ -53,11 +56,11 @@ Options:
                         Set Decimation [default=16]
   -p PLL_ALPHA, --pll-alpha=PLL_ALPHA
                         Set pll_alpha [default=50m]
-  -s SYNC_ALPHA, --sync-alpha=SYNC_ALPHA
-                        Set sync_alpha [default=50m]
-  -F FILENAME, --filename=FILENAME
+  -s CLOCK_ALPHA, --clock-alpha=CLOCK_ALPHA
+                        Set clock_alpha [default=50m]
+  -F INPUT_FILENAME, --input-filename=INPUT_FILENAME
                         Set Filename [default=usrp.dat]
-  -o OUTPUT, --output=OUTPUT
+  -o OUTPUT_FILENAME, --output-filename=OUTPUT_FILENAME
                         Set Output [default=frames.dat]
 
 
