@@ -380,10 +380,10 @@ namespace usrp2 {
   usrp2::impl::run_ctrl_thread()
   {
     d_ctrl_running = true;
-    uint32_t buff[100];
+    uint32_t buff[100]; // FIXME use MTU
     while (d_ctrl_running){
       int ctrl_recv_len = d_eth_ctrl->read_packet_dont_block(buff, sizeof(buff));
-      if (ctrl_recv_len >= 0) handle_control_packet(buff, ctrl_recv_len);
+      if (ctrl_recv_len > 0) handle_control_packet(buff, ctrl_recv_len);
       boost::thread::sleep(gruel::get_new_timeout(0.05)); //50ms timeout
     }
   }
