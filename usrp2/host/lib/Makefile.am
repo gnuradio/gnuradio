@@ -45,8 +45,7 @@ libusrp2_la_SOURCES = \
 	rx_sample_handler.cc \
 	strtod_si.c \
 	usrp2.cc \
-	usrp2_impl.cc \
-	usrp2_thread.cc
+	usrp2_impl.cc
 
 libusrp2_la_LIBADD = \
 	$(OMNITHREAD_LA) \
@@ -59,9 +58,8 @@ noinst_HEADERS = \
 	eth_buffer.h \
 	eth_common.h \
 	ethernet.h \
-        open_usrp2_socket.h \
+	open_usrp2_socket.h \
 	pktfilter.h \
 	ring.h \
 	usrp2_bytesex.h \
-	usrp2_impl.h \
-	usrp2_thread.h
+	usrp2_impl.h

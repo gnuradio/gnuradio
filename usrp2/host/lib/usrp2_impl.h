@@ -65,8 +65,6 @@ namespace usrp2 {
 
     std::string    d_interface_name;
     std::string    d_addr;       // FIXME: use u2_mac_addr_t instead
-    usrp2_thread  *d_data_thread;
-    volatile bool  d_data_running; // TODO: multistate if needed
     
     int            d_rx_seqno;
     int            d_tx_seqno;
@@ -108,8 +106,6 @@ namespace usrp2 {
     static bool parse_mac_addr(const std::string &s, u2_mac_addr_t *p);
     void init_etf_data_hdrs(u2_eth_packet_t *p, const std::string &dst, int word0_flags, int chan, uint32_t timestamp);
     void init_etf_ctrl_hdrs(u2_eth_packet_t *p, const std::string &dst, int word0_flags, uint32_t timestamp);
-    void start_data_thread();
-    void stop_data_thread();
     void init_config_rx_v2_cmd(op_config_rx_v2_cmd *cmd);
     void init_config_tx_v2_cmd(op_config_tx_v2_cmd *cmd);
     bool transmit_cmd_and_wait(void *cmd, size_t len, pending_reply *p, double secs=0.0);
@@ -121,17 +117,22 @@ namespace usrp2 {
     bool reset_db();
 
     //control thread stuff
-    boost::thread_group d_ctrl_tg;
     volatile bool d_ctrl_running;
+    boost::thread *d_ctrl_thread;
     void start_ctrl_thread();
     void stop_ctrl_thread();
     void run_ctrl_thread();
 
+    //data thread stuff
+    volatile bool d_data_running; // TODO: multistate if needed
+    boost::thread *d_data_thread;
+    void start_data_thread();
+    void stop_data_thread();
+    void run_data_thread();
+
   public:
     impl(const std::string &ifc, props *p, size_t rx_bufsize);
     ~impl();
-    
-    void run_data_thread();
 
     std::string mac_addr() const { return d_addr; } // FIXME: convert from u2_mac_addr_t
     std::string interface_name() const { return d_interface_name; }

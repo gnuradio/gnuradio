@@ -24,9 +24,10 @@
 #include <usrp2/tune_result.h>
 #include <usrp2/copiers.h>
 #include <gruel/inet.h>
+#include <gruel/realtime.h>
+#include <gruel/sys_pri.h>
 #include <usrp2_types.h>
 #include "usrp2_impl.h"
-#include "usrp2_thread.h"
 #include "eth_buffer.h"
 #include "ethernet.h"
 #include "pktfilter.h"
@@ -134,8 +135,8 @@ namespace usrp2 {
       d_pf_data(0), 
       d_pf_ctrl(0),
       d_interface_name(ifc),
-      d_data_thread(0),
       d_data_running(false),
+      d_ctrl_running(false),
       d_rx_seqno(-1),
       d_tx_seqno(0),
       d_next_rid(0),
@@ -228,8 +229,10 @@ namespace usrp2 {
   
   usrp2::impl::~impl()
   {
+    //thread cleanup
     stop_data_thread();
     stop_ctrl_thread();
+    //socket cleanup
     delete d_pf_data;
     delete d_pf_ctrl;
     d_eth_data->close();
@@ -363,14 +366,14 @@ namespace usrp2 {
   void
   usrp2::impl::start_ctrl_thread()
   {
-    d_ctrl_tg.create_thread(boost::bind(&usrp2::impl::run_ctrl_thread, this));
+    d_ctrl_thread = new boost::thread(boost::bind(&usrp2::impl::run_ctrl_thread, this));
   }
 
   void
   usrp2::impl::stop_ctrl_thread()
   {
     d_ctrl_running = false;
-    d_ctrl_tg.join_all();
+    d_ctrl_thread->join();
   }
 
   void
@@ -391,8 +394,7 @@ namespace usrp2 {
 
   void
   usrp2::impl::start_data_thread(){
-    d_data_thread = new usrp2_thread(this);
-    d_data_thread->start();
+    d_data_thread = new boost::thread(boost::bind(&usrp2::impl::run_data_thread, this));
   }
 
   void
@@ -400,16 +402,14 @@ namespace usrp2 {
   {
     d_data_running = false;
     d_data_pending_cond.signal();
-    
-    void *dummy_status;
-    d_data_thread->join(&dummy_status);
-
-    d_data_thread = 0; // thread class deletes itself
+    d_data_thread->join();
   }
   
   void
   usrp2::impl::run_data_thread()
   {
+    if (gruel::enable_realtime_scheduling(gruel::sys_pri::usrp2_backend()) != gruel::RT_OK)
+      std::cerr << "usrp2: failed to enable realtime scheduling" << std::endl;
     d_data_running = true;
     while(d_data_running) {
       DEBUG_LOG(":");
