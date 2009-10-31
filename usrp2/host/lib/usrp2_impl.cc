@@ -384,7 +384,7 @@ namespace usrp2 {
     while (d_ctrl_running){
       int ctrl_recv_len = d_eth_ctrl->read_packet_dont_block(buff, sizeof(buff));
       if (ctrl_recv_len >= 0) handle_control_packet(buff, ctrl_recv_len);
-      boost::thread::sleep(boost::get_system_time() + boost::posix_time::milliseconds(long(0.05*1e3))); //50ms timeout
+      boost::thread::sleep(gruel::get_new_timeout(0.05)); //50ms timeout
     }
   }
 

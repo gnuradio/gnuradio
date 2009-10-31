@@ -29,7 +29,11 @@ namespace gruel {
   typedef boost::mutex                     mutex;
   typedef boost::unique_lock<boost::mutex> scoped_lock;
   typedef boost::condition_variable        condition_variable;
-  typedef boost::posix_time::time_duration duration;
+
+  /*!
+   * Returns absolute time 'secs' into the future
+   */
+  boost::system_time get_new_timeout(double secs);
 
 } /* namespace gruel */
 
