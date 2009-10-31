@@ -37,6 +37,7 @@
 #include <gr_pfb_interpolator_ccf.h>
 #include <gr_pfb_arb_resampler_ccf.h>
 #include <gr_pfb_clock_sync_ccf.h>
+#include <gr_pfb_clock_sync_fff.h>
 %}
 
 %include "gr_iir_filter_ffd.i"
@@ -58,5 +59,6 @@
 %include "gr_pfb_interpolator_ccf.i"
 %include "gr_pfb_arb_resampler_ccf.i"
 %include "gr_pfb_clock_sync_ccf.i"
+%include "gr_pfb_clock_sync_fff.i"
 
 %include "filter_generated.i"
