@@ -279,6 +279,9 @@ fusb_devhandle_libusb1::_reap (bool ok_to_block_p)
   int ret;
   struct timeval tv;
 
+  // Save pending size
+  int pnd_size = d_pending_rqsts.size();
+
   if (ok_to_block_p) {
     tv.tv_sec = 2;
     tv.tv_usec =  0;
@@ -293,7 +296,12 @@ fusb_devhandle_libusb1::_reap (bool ok_to_block_p)
     return false;
   }
 
-  return true;
+  // Check that a pending transfer was removed
+  if (pnd_size > d_pending_rqsts.size())
+    return true;
+  else {
+    return false;
+  }
 }
 
 void
