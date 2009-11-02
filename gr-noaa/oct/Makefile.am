@@ -21,9 +21,6 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = lib grc oct
-
-if PYTHON
-SUBDIRS += swig python apps
-endif
-
+EXTRA_DIST = \
+	frames_to_ppm.m \
+	frames-to-png.sh

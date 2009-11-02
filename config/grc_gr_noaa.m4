@@ -30,6 +30,7 @@ AC_DEFUN([GRC_GR_NOAA],[
 	gr-noaa/apps/Makefile \
 	gr-noaa/grc/Makefile \
 	gr-noaa/lib/Makefile \
+	gr-noaa/oct/Makefile \
 	gr-noaa/python/Makefile \
 	gr-noaa/swig/Makefile \
     ])
