@@ -27,6 +27,10 @@ AM_CPPFLAGS = \
 bin_PROGRAMS = usrp2_socket_opener
 usrp2_socket_opener_SOURCES = usrp2_socket_opener.cc
 
+install-data-hook:
+	chown root:usrp $(bindir)/usrp2_socket_opener
+	chmod 04750 $(bindir)/usrp2_socket_opener
+
 lib_LTLIBRARIES = \
 	libusrp2.la
 

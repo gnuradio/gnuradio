@@ -380,11 +380,11 @@ namespace usrp2 {
   usrp2::impl::run_ctrl_thread()
   {
     d_ctrl_running = true;
-    uint32_t buff[100]; // FIXME use MTU
+    uint32_t buff[1500]; // FIXME use MTU
     while (d_ctrl_running){
       int ctrl_recv_len = d_eth_ctrl->read_packet_dont_block(buff, sizeof(buff));
       if (ctrl_recv_len > 0) handle_control_packet(buff, ctrl_recv_len);
-      boost::thread::sleep(gruel::get_new_timeout(0.05)); //50ms timeout
+      else boost::this_thread::sleep(gruel::get_new_timeout(0.05)); //50ms timeout
     }
   }
 
@@ -444,7 +444,7 @@ namespace usrp2 {
       return handle_data_packet(base, len);
   }
 
-  data_handler::result
+  void
   usrp2::impl::handle_control_packet(const void *base, size_t len)
   {
     // point to beginning of payload (subpackets)
@@ -471,12 +471,11 @@ namespace usrp2 {
       memcpy(rp->buffer(), p, std::min(oplen, buflen));
       rp->notify_completion();
       d_pending_replies[rid] = 0;
-      return data_handler::RELEASE;
+      return;
     }
 
     // TODO: handle unsolicited, USRP2 initiated, or late replies
     DEBUG_LOG("l");
-    return data_handler::RELEASE;
   }
   
   data_handler::result

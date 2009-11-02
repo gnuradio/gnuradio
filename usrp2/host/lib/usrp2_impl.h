@@ -112,7 +112,7 @@ namespace usrp2 {
     bool transmit_cmd_and_wait(void *cmd, size_t len, pending_reply *p, double secs=0.0);
     bool transmit_cmd(void *cmd, size_t len);
     virtual data_handler::result operator()(const void *base, size_t len);
-    data_handler::result handle_control_packet(const void *base, size_t len);
+    void handle_control_packet(const void *base, size_t len);
     data_handler::result handle_data_packet(const void *base, size_t len);
     bool dboard_info();
     bool reset_db();
