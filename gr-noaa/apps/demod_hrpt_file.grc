@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sun Nov  1 18:39:07 2009</timestamp>
+  <timestamp>Mon Nov  2 07:06:57 2009</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -630,25 +630,6 @@
     </param>
   </block>
   <block>
-    <key>gr_binary_slicer_fb</key>
-    <param>
-      <key>id</key>
-      <value>gr_binary_slicer_fb_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(112, 537)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_file_sink</key>
     <param>
       <key>id</key>
@@ -699,10 +680,10 @@
     </param>
   </block>
   <block>
-    <key>noaa_hrpt_bit_sync</key>
+    <key>gr_binary_slicer_fb</key>
     <param>
       <key>id</key>
-      <value>noaa_hrpt_bit_sync_0</value>
+      <value>gr_binary_slicer_fb_0</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -710,7 +691,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(330, 537)</value>
+      <value>(112, 537)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -761,12 +742,6 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_binary_slicer_fb_0</source_block_id>
-    <sink_block_id>noaa_hrpt_bit_sync_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>cs2cf</source_block_id>
     <sink_block_id>agc</sink_block_id>
     <source_key>0</source_key>
@@ -791,7 +766,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>noaa_hrpt_bit_sync_0</source_block_id>
+    <source_block_id>gr_binary_slicer_fb_0</source_block_id>
     <sink_block_id>noaa_hrpt_deframer_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>

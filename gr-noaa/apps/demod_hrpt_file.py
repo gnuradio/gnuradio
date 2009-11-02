@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Demod Hrpt File
-# Generated: Sun Nov  1 18:39:07 2009
+# Generated: Mon Nov  2 07:06:57 2009
 ##################################################
 
 from gnuradio import eng_notation
@@ -48,7 +48,6 @@ class demod_hrpt_file(gr.top_block):
 		self.gr_clock_recovery_mm_xx_0 = gr.clock_recovery_mm_ff(sps/2.0, clock_alpha**2/4.0, 0.5, clock_alpha, max_clock_offset)
 		self.gr_file_sink_0 = gr.file_sink(gr.sizeof_short*1, output_filename)
 		self.gr_moving_average_xx_0 = gr.moving_average_ff(hs, 1.0/hs, 4000)
-		self.noaa_hrpt_bit_sync_0 = noaa.hrpt_bit_sync()
 		self.noaa_hrpt_decoder_0 = noaa.hrpt_decoder()
 		self.noaa_hrpt_deframer_0 = noaa.hrpt_deframer()
 		self.pll = noaa.hrpt_pll_cf(pll_alpha, pll_alpha**2/4.0, max_carrier_offset)
@@ -60,12 +59,11 @@ class demod_hrpt_file(gr.top_block):
 		self.connect((self.gr_clock_recovery_mm_xx_0, 0), (self.gr_binary_slicer_fb_0, 0))
 		self.connect((self.gr_moving_average_xx_0, 0), (self.gr_clock_recovery_mm_xx_0, 0))
 		self.connect((self.pll, 0), (self.gr_moving_average_xx_0, 0))
-		self.connect((self.gr_binary_slicer_fb_0, 0), (self.noaa_hrpt_bit_sync_0, 0))
 		self.connect((self.cs2cf, 0), (self.agc, 0))
 		self.connect((self.agc, 0), (self.pll, 0))
 		self.connect((self.noaa_hrpt_deframer_0, 0), (self.gr_file_sink_0, 0))
 		self.connect((self.noaa_hrpt_deframer_0, 0), (self.noaa_hrpt_decoder_0, 0))
-		self.connect((self.noaa_hrpt_bit_sync_0, 0), (self.noaa_hrpt_deframer_0, 0))
+		self.connect((self.gr_binary_slicer_fb_0, 0), (self.noaa_hrpt_deframer_0, 0))
 
 	def set_decim(self, decim):
 		self.decim = decim

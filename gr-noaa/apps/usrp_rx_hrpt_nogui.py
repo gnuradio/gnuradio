@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: Usrp Rx Hrpt Nogui
-# Generated: Sun Nov  1 19:32:32 2009
+# Generated: Mon Nov  2 08:31:35 2009
 ##################################################
 
 from gnuradio import eng_notation
@@ -76,7 +76,6 @@ class usrp_rx_hrpt_nogui(gr.top_block):
 		self.gr_binary_slicer_fb_0 = gr.binary_slicer_fb()
 		self.gr_clock_recovery_mm_xx_0 = gr.clock_recovery_mm_ff(sps/2.0, clock_alpha**2/4.0, 0.5, clock_alpha, max_clock_offset)
 		self.gr_moving_average_xx_0 = gr.moving_average_ff(hs, 1.0/hs, 4000)
-		self.noaa_hrpt_bit_sync_0 = noaa.hrpt_bit_sync()
 		self.pll = noaa.hrpt_pll_cf(pll_alpha, pll_alpha**2/4.0, max_carrier_offset)
 		self.usrp_source = grc_usrp.simple_source_c(which=0, side=side, rx_ant="RXA")
 		self.usrp_source.set_decim_rate(decim)
@@ -90,11 +89,10 @@ class usrp_rx_hrpt_nogui(gr.top_block):
 		self.connect((self.agc, 0), (self.pll, 0))
 		self.connect((self.pll, 0), (self.gr_moving_average_xx_0, 0))
 		self.connect((self.gr_moving_average_xx_0, 0), (self.gr_clock_recovery_mm_xx_0, 0))
-		self.connect((self.noaa_hrpt_bit_sync_0, 0), (self.deframer, 0))
-		self.connect((self.gr_binary_slicer_fb_0, 0), (self.noaa_hrpt_bit_sync_0, 0))
 		self.connect((self.gr_clock_recovery_mm_xx_0, 0), (self.gr_binary_slicer_fb_0, 0))
 		self.connect((self.deframer, 0), (self.frame_sink, 0))
 		self.connect((self.deframer, 0), (self.decoder, 0))
+		self.connect((self.gr_binary_slicer_fb_0, 0), (self.deframer, 0))
 
 	def set_config_filename(self, config_filename):
 		self.config_filename = config_filename

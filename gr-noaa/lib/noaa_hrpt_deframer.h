@@ -41,6 +41,8 @@ class noaa_hrpt_deframer : public gr_block
   noaa_hrpt_deframer();
 
   unsigned int       d_state;
+  bool               d_mid_bit;
+  unsigned char      d_last_bit;
   unsigned int       d_bit_count;
   unsigned int       d_word_count;
   unsigned long long d_shifter;     // 60 bit sync word

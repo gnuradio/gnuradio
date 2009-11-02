@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sun Nov  1 19:32:32 2009</timestamp>
+  <timestamp>Mon Nov  2 08:31:35 2009</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -772,25 +772,6 @@
     </param>
   </block>
   <block>
-    <key>noaa_hrpt_deframer</key>
-    <param>
-      <key>id</key>
-      <value>deframer</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(815, 673)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_file_sink</key>
     <param>
       <key>id</key>
@@ -815,44 +796,6 @@
     <param>
       <key>_coordinate</key>
       <value>(1026, 722)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>noaa_hrpt_bit_sync</key>
-    <param>
-      <key>id</key>
-      <value>noaa_hrpt_bit_sync_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(624, 673)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_binary_slicer_fb</key>
-    <param>
-      <key>id</key>
-      <value>gr_binary_slicer_fb_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(446, 673)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -901,6 +844,44 @@
       <value>0</value>
     </param>
   </block>
+  <block>
+    <key>gr_binary_slicer_fb</key>
+    <param>
+      <key>id</key>
+      <value>gr_binary_slicer_fb_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(446, 673)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>noaa_hrpt_deframer</key>
+    <param>
+      <key>id</key>
+      <value>deframer</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(815, 673)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
   <connection>
     <source_block_id>usrp_source</source_block_id>
     <sink_block_id>agc</sink_block_id>
@@ -932,18 +913,6 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>noaa_hrpt_bit_sync_0</source_block_id>
-    <sink_block_id>deframer</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_binary_slicer_fb_0</source_block_id>
-    <sink_block_id>noaa_hrpt_bit_sync_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>virtual_source_0</source_block_id>
     <sink_block_id>gr_binary_slicer_fb_0</sink_block_id>
     <source_key>0</source_key>
@@ -958,6 +927,12 @@
   <connection>
     <source_block_id>deframer</source_block_id>
     <sink_block_id>decoder</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_binary_slicer_fb_0</source_block_id>
+    <sink_block_id>deframer</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>

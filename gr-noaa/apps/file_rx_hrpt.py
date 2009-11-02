@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: USRP HRPT Receiver
-# Generated: Sun Nov  1 19:26:11 2009
+# Generated: Mon Nov  2 08:30:47 2009
 ##################################################
 
 from gnuradio import eng_notation
@@ -146,7 +146,6 @@ class file_rx_hrpt(grc_wxgui.top_block_gui):
 		self.gr_file_source_0 = gr.file_source(gr.sizeof_short*1, input_filename, False)
 		self.gr_interleaved_short_to_complex_0 = gr.interleaved_short_to_complex()
 		self.gr_moving_average_xx_0 = gr.moving_average_ff(hs, 1.0/hs, 4000)
-		self.noaa_hrpt_bit_sync_0 = noaa.hrpt_bit_sync()
 		self.pll = noaa.hrpt_pll_cf(pll_alpha, pll_alpha**2/4.0, max_carrier_offset)
 		self.rx_fft = fftsink2.fft_sink_c(
 			self.displays.GetPage(0).GetWin(),
@@ -170,8 +169,6 @@ class file_rx_hrpt(grc_wxgui.top_block_gui):
 		##################################################
 		# Connections
 		##################################################
-		self.connect((self.noaa_hrpt_bit_sync_0, 0), (self.deframer, 0))
-		self.connect((self.gr_binary_slicer_fb_0, 0), (self.noaa_hrpt_bit_sync_0, 0))
 		self.connect((self.gr_clock_recovery_mm_xx_0, 0), (self.gr_binary_slicer_fb_0, 0))
 		self.connect((self.deframer, 0), (self.frame_sink, 0))
 		self.connect((self.deframer, 0), (self.decoder, 0))
@@ -183,6 +180,7 @@ class file_rx_hrpt(grc_wxgui.top_block_gui):
 		self.connect((self.gr_interleaved_short_to_complex_0, 0), (self.agc, 0))
 		self.connect((self.throttle, 0), (self.gr_interleaved_short_to_complex_0, 0))
 		self.connect((self.gr_file_source_0, 0), (self.throttle, 0))
+		self.connect((self.gr_binary_slicer_fb_0, 0), (self.deframer, 0))
 
 	def set_input_filename(self, input_filename):
 		self.input_filename = input_filename

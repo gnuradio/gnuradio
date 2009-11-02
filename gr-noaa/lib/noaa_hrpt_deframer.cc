@@ -55,6 +55,8 @@ noaa_hrpt_deframer::noaa_hrpt_deframer()
 	     gr_make_io_signature(1, 1, sizeof(short)))
 {
   set_output_multiple(6); // room for writing full sync when received
+  d_mid_bit = true;
+  d_last_bit = 0;
   enter_idle();
 }
 
@@ -86,38 +88,48 @@ noaa_hrpt_deframer::general_work(int noutput_items,
   int i = 0, j = 0;
   while (i < ninputs && j < noutput_items) {
     char bit = in[i++];
+    char diff = bit^d_last_bit;
+    d_last_bit = bit;
 
-    switch (d_state) {
-    case ST_IDLE:
-      d_shifter = (d_shifter << 1) | bit; // MSB transmitted first
-      
-      if ((d_shifter & 0x0FFFFFFFFFFFFFFFLL) == HRPT_MINOR_FRAME_SYNC) {
-	fprintf(stderr, "SYNC #%i", frames_seen++);
-	out[j++] = SYNC1;
-	out[j++] = SYNC2;
-	out[j++] = SYNC3;
-	out[j++] = SYNC4;
-	out[j++] = SYNC5;
-	out[j++] = SYNC6;
-	enter_synced();
-      }
-      break;
-
-    case ST_SYNCED:
-      d_word = (d_word << 1) | bit; // MSB transmitted first
-      if (--d_bit_count == 0) {
-	out[j++] = d_word;
-	d_word = 0;
-	d_bit_count = HRPT_BITS_PER_WORD;
-	if (--d_word_count == 0) {
-	  fprintf(stderr, "...done\n");
-	  enter_idle();
+    // Wait for transition if not synced, otherwise, alternate bits
+    if (d_mid_bit && (diff | (d_state == ST_SYNCED))) {
+      switch (d_state) {
+      case ST_IDLE:
+	d_shifter = (d_shifter << 1) | bit; // MSB transmitted first
+	
+	if ((d_shifter & 0x0FFFFFFFFFFFFFFFLL) == HRPT_MINOR_FRAME_SYNC) {
+	  fprintf(stderr, "SYNC #%i", frames_seen++);
+	  out[j++] = SYNC1;
+	  out[j++] = SYNC2;
+	  out[j++] = SYNC3;
+	  out[j++] = SYNC4;
+	  out[j++] = SYNC5;
+	  out[j++] = SYNC6;
+	  enter_synced();
 	}
+	break;
+	
+      case ST_SYNCED:
+	d_word = (d_word << 1) | bit; // MSB transmitted first
+	if (--d_bit_count == 0) {
+	  out[j++] = d_word;
+	  d_word = 0;
+	  d_bit_count = HRPT_BITS_PER_WORD;
+	  if (--d_word_count == 0) {
+	    fprintf(stderr, "...done\n");
+	    enter_idle();
+	  }
+	}
+	break;
+	
+      default:
+	throw std::runtime_error("noaa_hrpt_deframer: bad state\n");
       }
-      break;
 
-    default:
-      throw std::runtime_error("noaa_hrpt_deframer: bad state\n");
+      d_mid_bit = false;
+    }
+    else {
+      d_mid_bit = true;
     }
   }
 
