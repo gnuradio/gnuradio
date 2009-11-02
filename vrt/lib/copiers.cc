@@ -24,6 +24,8 @@
 #endif
 #include <vrt/copiers.h>
 #include <arpa/inet.h>
+#include <assert.h>
+#include <string.h>
 
 namespace vrt {
 
