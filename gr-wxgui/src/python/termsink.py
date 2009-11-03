@@ -66,7 +66,6 @@ class termsink(wx.Panel):
 		# This gets called in the queue runner thread context
 		# For now, just add whatever the user sends to the text control
 		text = msg.to_string()
-		print "handle_msg: received", len(text), "bytes"
 
 		# Create a wxPython event and post it to the event queue
 		evt = AppendEvent(text)
@@ -75,5 +74,4 @@ class termsink(wx.Panel):
 
         def evt_append(self, evt):
 		# This gets called by the wxPython event queue runner
-		print "appending", len(evt.text), "bytes"
 		self.text_ctrl.AppendText(evt.text)
