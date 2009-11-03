@@ -19,9 +19,19 @@ dnl  the Free Software Foundation, Inc., 51 Franklin Street,
 dnl  Boston, MA 02110-1301, USA.
 dnl 
 
-AC_INIT(gr-howto-write-a-block,3.3svn)
+
+AC_INIT
 AC_PREREQ(2.57)
 AC_CONFIG_AUX_DIR([.])	
+
+AC_CANONICAL_BUILD
+AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
+
+GR_VERSION
+dnl ustar required to have pathnames > 99 chars
+_AM_SET_OPTION([tar-ustar])
+AM_INIT_AUTOMAKE(gr-howto-write-a-block,$RELEASE)
 
 dnl This is kind of non-standard, but it sure shortens up this file :-)
 m4_include([config/gr_standalone.m4])
@@ -73,3 +83,5 @@ dnl run_tests is created from run_tests.in.  Make it executable.
 AC_CONFIG_COMMANDS([run_tests], [chmod +x src/python/run_tests])
 
 AC_OUTPUT
+
+echo Configured gr-howto-write-a-block release $RELEASE for build.

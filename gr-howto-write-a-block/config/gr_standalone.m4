@@ -31,12 +31,6 @@ m4_define([GR_STANDALONE],
   AC_CONFIG_SRCDIR([config/gr_standalone.m4])
   AM_CONFIG_HEADER(config.h)
 
-  AC_CANONICAL_BUILD
-  AC_CANONICAL_HOST
-  AC_CANONICAL_TARGET
-
-  AM_INIT_AUTOMAKE
-
   dnl Remember if the user explicity set CXXFLAGS
   if test -n "${CXXFLAGS}"; then
     user_set_cxxflags=yes
