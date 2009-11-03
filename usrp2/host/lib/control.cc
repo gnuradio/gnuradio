@@ -43,6 +43,7 @@ namespace usrp2 {
   int
   pending_reply::wait_for_completion(double secs)
   {
+    boost::this_thread::disable_interruption di;
     gruel::scoped_lock l(d_mutex);
     boost::system_time to(gruel::get_new_timeout(secs));
 

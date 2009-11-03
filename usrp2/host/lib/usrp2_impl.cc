@@ -379,8 +379,9 @@ namespace usrp2 {
   void
   usrp2::impl::run_ctrl_thread()
   {
+    boost::this_thread::disable_interruption di;
     d_ctrl_running = true;
-    uint32_t buff[1500]; // FIXME use MTU
+    uint8_t buff[1500]; // FIXME use MTU
     while (d_ctrl_running){
       int ctrl_recv_len = d_eth_ctrl->read_packet_dont_block(buff, sizeof(buff));
       if (ctrl_recv_len > 0) handle_control_packet(buff, ctrl_recv_len);
@@ -408,6 +409,7 @@ namespace usrp2 {
   void
   usrp2::impl::run_data_thread()
   {
+    boost::this_thread::disable_interruption di;
     if (gruel::enable_realtime_scheduling(gruel::sys_pri::usrp2_backend()) != gruel::RT_OK)
       std::cerr << "usrp2: failed to enable realtime scheduling" << std::endl;
     d_data_running = true;
