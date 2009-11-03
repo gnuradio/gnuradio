@@ -13,7 +13,7 @@ exec_prefix=@exec_prefix@
 # Where to look in the build tree for our shared library
 libbld=@abs_top_builddir@/lib
 # Where to look in the build tree for swig generated python code
-libsrc=@abs_top_builddir@/swig
+libswig=@abs_top_builddir@/swig
 # Where to look in the src tree for hand written python code
 py=@abs_top_srcdir@/python
 
@@ -23,7 +23,8 @@ py=@abs_top_srcdir@/python
 installed_pythondir=@pythondir@
 installed_pyexecdir=@pyexecdir@
 
-PYTHONPATH="$libbld:$libbld/.libs:$libsrc:$libsrc/.libs:$py:$installed_pythondir:$installed_pyexecdir:$PYTHONPATH"
+PYTHONPATH="$libbld:$libbld/.libs:$libswig:$libswig/.libs:$py:$installed_pythondir:$installed_pyexecdir:$PYTHONPATH"
+echo $PYTHONPATH
 
 export PYTHONPATH
 
