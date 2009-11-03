@@ -32,7 +32,6 @@ EXTRA_DIST = \
 	version.sh
 
 SUBDIRS = config lib swig python
-DIST_SUBDIRS = config lib swig python doc
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA =
