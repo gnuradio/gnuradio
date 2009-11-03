@@ -230,6 +230,7 @@ dist_ourdata_DATA = \
 	wxgui_histosink2.xml \
 	wxgui_numbersink2.xml \
 	wxgui_scopesink2.xml \
+	wxgui_termsink.xml \
 	wxgui_waterfallsink2.xml \
 	xmlrpc_client.xml \
 	xmlrpc_server.xml
