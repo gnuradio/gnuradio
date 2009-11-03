@@ -40,29 +40,3 @@ libgnuradio_howto_la_LIBADD =	\
 
 libgnuradio_howto_la_LDFLAGS =	\
 	$(NO_UNDEFINED)
-
-if PYTHON
-###################################
-# SWIG Python interface and library
-
-TOP_SWIG_IFILES = 		\
-	howto.i
-
-# Install so that they end up available as:
-#   import gnuradio.howto
-# This ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-howto_pythondir_category =	\
-	gnuradio
-
-howto_la_swig_libadd =		\
-	libgnuradio-howto.la
-
-include $(top_srcdir)/Makefile.swig
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
-endif

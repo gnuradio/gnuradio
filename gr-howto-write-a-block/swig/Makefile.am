@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2009 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,8 +19,32 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-SUBDIRS = lib
+include $(top_srcdir)/Makefile.common
+
+AM_CPPFLAGS += -I$(top_srcdir)/lib
 
 if PYTHON
-SUBDIRS += python
+###################################
+# SWIG Python interface and library
+
+TOP_SWIG_IFILES = 		\
+	howto.i
+
+# Install so that they end up available as:
+#   import gnuradio.howto
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+howto_pythondir_category =	\
+	gnuradio
+
+howto_la_swig_libadd =		\
+	$(top_builddir)/lib/libgnuradio-howto.la
+
+include $(top_srcdir)/Makefile.swig
+
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
+
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)
 endif

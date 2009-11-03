@@ -73,14 +73,14 @@ AC_CONFIG_FILES([\
 	  Makefile \
 	  config/Makefile \
 	  doc/Makefile \
-	  src/Makefile \
-	  src/lib/Makefile \
-	  src/python/Makefile \
-	  src/python/run_tests \
+	  lib/Makefile \
+	  python/Makefile \
+	  python/run_tests \
+	  swig/Makefile \
 	])
 
 dnl run_tests is created from run_tests.in.  Make it executable.
-AC_CONFIG_COMMANDS([run_tests], [chmod +x src/python/run_tests])
+AC_CONFIG_COMMANDS([run_tests], [chmod +x python/run_tests])
 
 AC_OUTPUT
 

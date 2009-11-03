@@ -31,8 +31,8 @@ EXTRA_DIST = \
 	Makefile.swig.gen.t \
 	version.sh
 
-SUBDIRS = config src
-DIST_SUBDIRS = config src doc
+SUBDIRS = config lib swig python
+DIST_SUBDIRS = config lib swig python doc
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA =
