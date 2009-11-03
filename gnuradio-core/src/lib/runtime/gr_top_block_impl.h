@@ -24,10 +24,7 @@
 #define INCLUDED_GR_TOP_BLOCK_IMPL_H
 
 #include <gr_scheduler.h>
-#include <boost/thread.hpp>
-
-typedef boost::mutex			gr_mutex; 	// FIXME move these elsewhere
-typedef boost::lock_guard<boost::mutex>	gr_lock_guard;
+#include <gruel/thread.h>
 
 /*!
  *\brief Abstract implementation details of gr_top_block
@@ -69,7 +66,7 @@ protected:
   gr_flat_flowgraph_sptr         d_ffg;
   gr_scheduler_sptr		 d_scheduler;
 
-  gr_mutex                       d_mutex;	// protects d_state and d_lock_count
+  gruel::mutex                   d_mutex;	// protects d_state and d_lock_count
   tb_state			 d_state;
   int                            d_lock_count;
   

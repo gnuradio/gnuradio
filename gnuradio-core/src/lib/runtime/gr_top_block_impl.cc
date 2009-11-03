@@ -90,7 +90,7 @@ gr_top_block_impl::~gr_top_block_impl()
 void
 gr_top_block_impl::start()
 {
-  gr_lock_guard	l(d_mutex);
+  gruel::scoped_lock	l(d_mutex);
 
   if (d_state != IDLE)
     throw std::runtime_error("top_block::start: top block already running or wait() not called after previous stop()");
@@ -131,14 +131,14 @@ gr_top_block_impl::wait()
 void
 gr_top_block_impl::lock()
 {
-  gr_lock_guard lock(d_mutex);
+  gruel::scoped_lock lock(d_mutex);
   d_lock_count++;
 }
 
 void
 gr_top_block_impl::unlock()
 {
-  gr_lock_guard lock(d_mutex);
+  gruel::scoped_lock lock(d_mutex);
 
   if (d_lock_count <= 0){
     d_lock_count = 0;		// fix it, then complain
