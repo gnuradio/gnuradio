@@ -1,0 +1,6 @@
+/.deps
+/.libs
+/Makefile.in
+/Makefile
+/howto.cc
+/howto.py

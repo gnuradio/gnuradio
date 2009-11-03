@@ -21,25 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-###################################
-# howto C++ library
-
-# C/C++ headers get installed in ${prefix}/include/gnuradio
-grinclude_HEADERS =		\
-	howto_square_ff.h	\
-	howto_square2_ff.h
-
-lib_LTLIBRARIES = libgnuradio-howto.la
-
-libgnuradio_howto_la_SOURCES = 	\
-	howto_square_ff.cc	\
-	howto_square2_ff.cc
-
-libgnuradio_howto_la_LIBADD =	\
-	$(GNURADIO_CORE_LA)
-
-libgnuradio_howto_la_LDFLAGS =	\
-	$(NO_UNDEFINED)
+AM_CPPFLAGS += -I$(top_srcdir)/lib
 
 if PYTHON
 ###################################
@@ -56,7 +38,7 @@ howto_pythondir_category =	\
 	gnuradio
 
 howto_la_swig_libadd =		\
-	libgnuradio-howto.la
+	$(top_builddir)/lib/libgnuradio-howto.la
 
 include $(top_srcdir)/Makefile.swig
 
@@ -65,4 +47,10 @@ BUILT_SOURCES = $(swig_built_sources)
 
 # Do not distribute the output of SWIG
 no_dist_files = $(swig_built_sources)
+
+# additional SWIG files to be installed
+howto_swiginclude_headers =	\
+	howto_square_ff.i \
+	howto_square2_ff.i
+
 endif

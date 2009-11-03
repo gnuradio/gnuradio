@@ -21,7 +21,6 @@
 
 TARGETS = howto-write-a-block.html
 
-
 # To avoid build problems for folks who don't have xmlto installed, we
 # don't build the docs by default.
 
@@ -30,6 +29,7 @@ all: $(TARGETS)
 
 
 EXTRA_DIST = 				\
+	README				\
 	howto-write-a-block.xml		\
 	howto_1.i			\
 	make_numbered_listing.py	\

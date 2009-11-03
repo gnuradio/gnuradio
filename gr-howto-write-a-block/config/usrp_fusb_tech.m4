@@ -1,5 +1,5 @@
 dnl
-dnl Copyright 2003,2008 Free Software Foundation, Inc.
+dnl Copyright 2003,2008,2009 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -25,6 +25,8 @@ dnl
 #   ""  : do these tests
 
 AC_DEFUN([USRP_SET_FUSB_TECHNIQUE],[
+  req_libusb1=no
+  USE_LIBUSB1=0
   AC_ARG_WITH([fusb-tech],
               AC_HELP_STRING([--with-fusb-tech=OS],
 		             [Set fast USB technique (default=auto)]),
@@ -32,6 +34,11 @@ AC_DEFUN([USRP_SET_FUSB_TECHNIQUE],[
 	      [cf_with_fusb_tech="$host_os"])
   if test [x]$1 != xno; then
       case "$cf_with_fusb_tech" in
+        libusb1*)
+          FUSB_TECH=libusb1
+          req_libusb1=yes
+	  USE_LIBUSB1=1
+          ;;
         linux*)
           AC_CHECK_HEADER([linux/usbdevice_fs.h],
 	                  [x_have_usbdevice_fs_h=yes],
@@ -70,5 +77,11 @@ AC_DEFUN([USRP_SET_FUSB_TECHNIQUE],[
   AM_CONDITIONAL(FUSB_TECH_win32,    test x$FUSB_TECH = xwin32)
   AM_CONDITIONAL(FUSB_TECH_generic,  test x$FUSB_TECH = xgeneric)
   AM_CONDITIONAL(FUSB_TECH_linux,    test x$FUSB_TECH = xlinux)
+  AM_CONDITIONAL(FUSB_TECH_libusb1,  test x$FUSB_TECH = xlibusb1)
   AM_CONDITIONAL(FUSB_TECH_ra_wb,    test x$FUSB_TECH = xra_wb)
+
+  AC_SUBST(USE_LIBUSB1)
+  AC_CONFIG_FILES([\
+	usrp/host/include/usrp/libusb_types.h \
+  ])
 ])

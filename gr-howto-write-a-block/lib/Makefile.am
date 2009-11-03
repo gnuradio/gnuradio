@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2009 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,8 +19,24 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-SUBDIRS = lib
+include $(top_srcdir)/Makefile.common
 
-if PYTHON
-SUBDIRS += python
-endif
+###################################
+# howto C++ library
+
+# C/C++ headers get installed in ${prefix}/include/gnuradio
+grinclude_HEADERS =		\
+	howto_square_ff.h	\
+	howto_square2_ff.h
+
+lib_LTLIBRARIES = libgnuradio-howto.la
+
+libgnuradio_howto_la_SOURCES = 	\
+	howto_square_ff.cc	\
+	howto_square2_ff.cc
+
+libgnuradio_howto_la_LIBADD =	\
+	$(GNURADIO_CORE_LA)
+
+libgnuradio_howto_la_LDFLAGS =	\
+	$(NO_UNDEFINED)

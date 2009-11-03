@@ -11,11 +11,11 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 
 # Where to look in the build tree for our shared library
-libbld=@abs_top_builddir@/src/lib
-# Where to look in the src tree for swig generated python code
-libsrc=@abs_top_srcdir@/src/lib
+libbld=@abs_top_builddir@/lib
+# Where to look in the build tree for swig generated python code
+libswig=@abs_top_builddir@/swig
 # Where to look in the src tree for hand written python code
-py=@abs_top_srcdir@/src/python
+py=@abs_top_srcdir@/python
 
 # Where to look for installed GNU Radio python modules
 # FIXME this is wrong on a distcheck.  We really need to ask gnuradio-core
@@ -23,8 +23,8 @@ py=@abs_top_srcdir@/src/python
 installed_pythondir=@pythondir@
 installed_pyexecdir=@pyexecdir@
 
-PYTHONPATH="$libbld:$libbld/.libs:$libsrc:$py:$installed_pythondir:$installed_pyexecdir:$PYTHONPATH"
-#PYTHONPATH="$libbld:$libbld/.libs:$libsrc:$py:$installed_pythondir:$installed_pyexecdir"
+PYTHONPATH="$libbld:$libbld/.libs:$libswig:$libswig/.libs:$py:$installed_pythondir:$installed_pyexecdir:$PYTHONPATH"
+echo $PYTHONPATH
 
 export PYTHONPATH
 

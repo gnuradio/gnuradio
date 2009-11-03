@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006 Free Software Foundation, Inc.
+dnl Copyright 2009 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -17,17 +17,19 @@ dnl along with GNU Radio; see the file COPYING.  If not, write to
 dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
-AC_DEFUN([GR_FORTRAN],[
-    dnl if you want to generate a different table of interpolator taps, you need fortran.
-    dnl we default to off, since almost no one wants to do this.
-    AC_ARG_ENABLE(fortran, AC_HELP_STRING([--enable-fortran],[enable fortran (no)]),
-		  [], [enable_fortran=no])
-    AM_CONDITIONAL(ENABLE_FORTRAN, test "x$enable_fortran" = xyes)
 
-    if test "x$enable_fortran" = xyes
-    then
-        AC_PROG_F77
-        AC_F77_LIBRARY_LDFLAGS
+AC_DEFUN([GR_GIT],[
+  dnl Identify git binary
+  AC_PATH_PROG([GIT],[git])
+  
+  dnl If it exists, get either 'git describe' or fallback to current commit
+  if test x$GIT != x ; then
+    if (cd $srcdir && $GIT describe >/dev/null 2>&1); then
+      GIT_VERSION=`cd $srcdir && $GIT describe --abbrev=8 | cut -f 2- -d '-'`
+    else
+      if (cd $srcdir && $GIT describe --always --abbrev=8 >/dev/null 2>&1); then
+        GIT_VERSION=`cd $srcdir && $GIT describe --always --abbrev=8`
+      fi
     fi
-    AC_PROG_CC dnl bug fix to restore $ac_ext
+  fi
 ])
