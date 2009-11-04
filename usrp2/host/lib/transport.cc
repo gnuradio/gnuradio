@@ -24,12 +24,8 @@
 #include <stdexcept>
 #include <cstdio>
 
-static void nop_cb(void *buff, size_t len){
-    //NOP
-}
-
 usrp2::transport::transport(const std::string &type_str){
-    d_cb = nop_cb;
+    d_cb = NULL;
     d_type_str = type_str;
     d_running = false;
 }
@@ -43,6 +39,9 @@ void usrp2::transport::init(){
 }
 
 void usrp2::transport::start(){
+    if (not d_cb){
+        throw std::runtime_error("usrp2::transport for" + d_type_str + " has no callback\n");
+    }
     if (d_running){
         throw std::runtime_error("usrp2::transport for" + d_type_str + " already started\n");
     }

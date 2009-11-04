@@ -107,7 +107,7 @@ namespace usrp2 {
     
     static bool parse_mac_addr(const std::string &s, u2_mac_addr_t *p);
     void init_etf_data_hdrs(u2_eth_packet_t *p, const std::string &dst, int word0_flags, int chan, uint32_t timestamp);
-    void init_etf_ctrl_hdrs(u2_eth_packet_t *p, const std::string &dst, int word0_flags, uint32_t timestamp);
+    void init_op_ctrl_hdrs(op_fixed_hdr_t *p, int word0_flags, uint32_t timestamp);
     void init_config_rx_v2_cmd(op_config_rx_v2_cmd *cmd);
     void init_config_tx_v2_cmd(op_config_tx_v2_cmd *cmd);
     bool transmit_cmd_and_wait(void *cmd, size_t len, pending_reply *p, double secs=0.0);
@@ -117,13 +117,6 @@ namespace usrp2 {
     data_handler::result handle_data_packet(const void *base, size_t len);
     bool dboard_info();
     bool reset_db();
-
-    //control thread stuff
-    volatile bool d_ctrl_running;
-    boost::thread *d_ctrl_thread;
-    //void start_ctrl_thread();
-    //void stop_ctrl_thread();
-    //void run_ctrl_thread();
 
     //data thread stuff
     volatile bool d_data_running; // TODO: multistate if needed
