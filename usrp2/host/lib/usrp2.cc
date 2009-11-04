@@ -31,6 +31,33 @@
 #include "eth_ctrl_transport.h"
 
 
+//FIXME this is the Nth instance of this function, find it a home
+static bool
+parse_mac_addr(const std::string &s, u2_mac_addr_t *p)
+{
+    p->addr[0] = 0x00;		// Matt's IAB
+    p->addr[1] = 0x50;
+    p->addr[2] = 0xC2;
+    p->addr[3] = 0x85;
+    p->addr[4] = 0x30;
+    p->addr[5] = 0x00;
+
+    int len = s.size();
+
+    switch (len){
+      
+    case 5:
+      return sscanf(s.c_str(), "%hhx:%hhx", &p->addr[4], &p->addr[5]) == 2;
+      
+    case 17:
+      return sscanf(s.c_str(), "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
+            &p->addr[0], &p->addr[1], &p->addr[2],
+            &p->addr[3], &p->addr[4], &p->addr[5]) == 6;
+    default:
+      return false;
+    }
+}
+
 namespace usrp2 {
 
   // --- Table of weak pointers to usrps we know about ---
@@ -147,7 +174,10 @@ namespace usrp2 {
   // Private constructor.  Sole function is to create an impl.
   usrp2::usrp2(const std::string &ifc, props *p, size_t rx_bufsize)
   {
-    transport::sptr ctrl_transport(new eth_ctrl_transport(ifc, p));
+    u2_mac_addr_t mac;
+    parse_mac_addr(p->addr, &mac);
+    
+    transport::sptr ctrl_transport(new eth_ctrl_transport(ifc, mac));
     d_impl = std::auto_ptr<impl>(new usrp2::impl(ifc, p, rx_bufsize, ctrl_transport));
   }
   

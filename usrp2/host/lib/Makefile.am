@@ -37,6 +37,7 @@ libusrp2_la_SOURCES = \
 	data_handler.cc \
 	eth_buffer.cc \
 	eth_ctrl_transport.cc \
+	eth_data_transport.cc \
 	ethernet.cc \
 	find.cc \
 	open_usrp2_socket.cc \
@@ -59,6 +60,7 @@ noinst_HEADERS = \
 	eth_buffer.h \
 	eth_common.h \
 	eth_ctrl_transport.h \
+	eth_data_transport.h \
 	ethernet.h \
 	open_usrp2_socket.h \
 	pktfilter.h \

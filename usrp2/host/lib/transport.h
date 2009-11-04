@@ -21,6 +21,7 @@
 
 #include <boost/thread.hpp>
 #include <cstring>
+#include <sys/uio.h>
 
 namespace usrp2 {
 
@@ -62,11 +63,11 @@ namespace usrp2 {
     virtual void init();
     /*!
      * \brief send the contents of the buffer (override in a subclass)
-     * \param buff a pointer into memory
-     * \param len the length of the buffer in bytes
+     * \param iovec a list of iovecs
+     * \param iovlen the number of iovecs
      * \return the number of bytes sent, -1 for error
      */
-    virtual int send(const void *buff, int len);
+    virtual int sendv(const iovec *iov, size_t iovlen);
     /*!
      * \brief receive data into the buffer (override in a subclass)
      * \param buff a pointer to a pointer into memory

@@ -16,31 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INCLUDED_ETH_CTRL_TRANSPORT_H
-#define INCLUDED_ETH_CTRL_TRANSPORT_H
+#ifndef INCLUDED_ETH_DATA_TRANSPORT_H
+#define INCLUDED_ETH_DATA_TRANSPORT_H
 
 #include "transport.h"
-#include "ethernet.h"
+#include "eth_buffer.h"
 #include "pktfilter.h"
 #include "usrp2_impl.h"
 
 namespace usrp2{
 
-    class eth_ctrl_transport: public transport{
+    class eth_data_transport: public transport{
     private:
-        uint8_t              d_buff[1500]; //FIXME use MTU
-        ethernet      *d_eth_ctrl;  // unbuffered control frames
-        pktfilter     *d_pf_ctrl;
+        eth_buffer    *d_eth_data;	// packet ring buffered data frames
+        pktfilter     *d_pf_data;
         u2_mac_addr_t d_mac;
+        int           d_tx_seqno;
 
     public:
-        eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac);
-        ~eth_ctrl_transport();
+        eth_data_transport(const std::string &ifc, u2_mac_addr_t mac, size_t rx_bufsize);
+        ~eth_data_transport();
         int sendv(const iovec *iov, size_t iovlen);
         int recv(void **buff);
+        void init();
 };
 
 
 } // namespace usrp2
 
-#endif /* INCLUDED_ETH_CTRL_TRANSPORT_H */
+#endif /* INCLUDED_ETH_DATA_TRANSPORT_H */

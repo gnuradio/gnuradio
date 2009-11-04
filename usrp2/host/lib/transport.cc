@@ -72,7 +72,7 @@ void usrp2::transport::run(){
     }
 }
 
-int usrp2::transport::send(const void *buff, int len){
+int usrp2::transport::sendv(const iovec *iov, size_t iovlen){
     return -1; //NOP
 }
 

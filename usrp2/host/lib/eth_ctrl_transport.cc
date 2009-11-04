@@ -18,46 +18,15 @@
 
 #include "eth_ctrl_transport.h"
 
-//FIXME this is the third instance of this function, find it a home
-static bool
-parse_mac_addr(const std::string &s, u2_mac_addr_t *p)
-{
-    p->addr[0] = 0x00;		// Matt's IAB
-    p->addr[1] = 0x50;
-    p->addr[2] = 0xC2;
-    p->addr[3] = 0x85;
-    p->addr[4] = 0x30;
-    p->addr[5] = 0x00;
-
-    int len = s.size();
-
-    switch (len){
-      
-    case 5:
-      return sscanf(s.c_str(), "%hhx:%hhx", &p->addr[4], &p->addr[5]) == 2;
-      
-    case 17:
-      return sscanf(s.c_str(), "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
-            &p->addr[0], &p->addr[1], &p->addr[2],
-            &p->addr[3], &p->addr[4], &p->addr[5]) == 6;
-    default:
-      return false;
-    }
-}
-
-
-usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, props *p) : transport("ethernet control"){
+usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac) : transport("ethernet control"), d_mac(mac){
 
     //create raw ethernet device
     d_eth_ctrl = new ethernet();
     if (!d_eth_ctrl->open(ifc, htons(U2_CTRL_ETHERTYPE)))
         throw std::runtime_error("Unable to open/register USRP2 control protocol");
 
-    //extract mac addr
-    parse_mac_addr(p->addr, &d_usrp_mac);
-
     //create and attach packet filter
-    d_pf_ctrl = pktfilter::make_ethertype_inbound_target(U2_CTRL_ETHERTYPE, (const unsigned char*)&(d_usrp_mac.addr));
+    d_pf_ctrl = pktfilter::make_ethertype_inbound_target(U2_CTRL_ETHERTYPE, (const unsigned char*)&(d_mac.addr));
     if (!d_pf_ctrl || !d_eth_ctrl->attach_pktfilter(d_pf_ctrl))
         throw std::runtime_error("Unable to attach packet filter for control packets.");
 }
@@ -76,25 +45,40 @@ typedef struct {
   u2_transport_hdr_t	thdr;
 } u2_eth_packet_only_t;
 
-int usrp2::eth_ctrl_transport::send(const void *buff, int len){
-    //return d_eth_ctrl->write_packet(buff, len);
+int usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
+    //create a new iov array with a space for ethernet header and padding
+    // and move the current iovs to the center of the new array
+    size_t all_iov_len = iovlen + 2;
+    iovec all_iov[all_iov_len];
+    for (size_t i = 0; i < iovlen; i++){
+        all_iov[i+1] = iov[i];
+    }
     //setup a new ethernet header
     u2_eth_packet_only_t hdr;
     hdr.ehdr.ethertype = htons(U2_CTRL_ETHERTYPE);
-    memcpy(&hdr.ehdr.dst, d_usrp_mac.addr, 6);
+    memcpy(&hdr.ehdr.dst, d_mac.addr, 6);
     memcpy(&hdr.ehdr.src, d_eth_ctrl->mac(), 6);
     hdr.thdr.flags = 0; // FIXME transport header values?
     hdr.thdr.seqno = 0;
     hdr.thdr.ack = 0;
-    //load the buffer with header and control data
-    uint8_t packet[len+sizeof(hdr)];
-    memcpy(packet, &hdr, sizeof(hdr));
-    memcpy(packet+sizeof(hdr), buff, len);
-    return d_eth_ctrl->write_packet(packet, len+sizeof(hdr));
+    //feed the first iov the header
+    all_iov[0].iov_base = &hdr;
+    all_iov[0].iov_len = sizeof(hdr);
+    //get number of bytes in current iovs
+    int num_bytes = 0;
+    for (size_t i = 0; i < all_iov_len-1; i++){
+        num_bytes += all_iov[i].iov_len;
+    }
+    //handle padding, must be at least 64 bytes
+    uint8_t padding[64];
+    all_iov[all_iov_len-1].iov_base = padding;
+    all_iov[all_iov_len-1].iov_len = (num_bytes < 64) ? (64 - num_bytes) : 0;
+    return d_eth_ctrl->write_packetv(all_iov, all_iov_len);
 }
 
 int usrp2::eth_ctrl_transport::recv(void **buff){
     int recv_len = d_eth_ctrl->read_packet_dont_block(d_buff, sizeof(d_buff));
+    //strip the ethernet headers from the buffer
     if (recv_len > sizeof(u2_eth_packet_only_t)){
         *buff = d_buff + sizeof(u2_eth_packet_only_t);
         return recv_len - sizeof(u2_eth_packet_only_t);
