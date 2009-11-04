@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2007,2008,2009 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,6 +41,7 @@ libusrp2_la_SOURCES = \
 	open_usrp2_socket.cc \
 	pktfilter.cc \
 	ring.cc \
+	transport.cc \
 	rx_nop_handler.cc \
 	rx_sample_handler.cc \
 	strtod_si.c \
@@ -60,5 +61,6 @@ noinst_HEADERS = \
 	open_usrp2_socket.h \
 	pktfilter.h \
 	ring.h \
+	transport.h \
 	usrp2_bytesex.h \
 	usrp2_impl.h

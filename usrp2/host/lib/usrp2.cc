@@ -29,6 +29,91 @@
 #include <stdexcept>
 #include <cstdio>
 
+  //FIXME this is the third instance of this function, find it a home
+  static bool
+  parse_mac_addr(const std::string &s, u2_mac_addr_t *p)
+  {
+    p->addr[0] = 0x00;		// Matt's IAB
+    p->addr[1] = 0x50;
+    p->addr[2] = 0xC2;
+    p->addr[3] = 0x85;
+    p->addr[4] = 0x30;
+    p->addr[5] = 0x00;
+    
+    int len = s.size();
+    
+    switch (len){
+      
+    case 5:
+      return sscanf(s.c_str(), "%hhx:%hhx", &p->addr[4], &p->addr[5]) == 2;
+      
+    case 17:
+      return sscanf(s.c_str(), "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
+		    &p->addr[0], &p->addr[1], &p->addr[2],
+		    &p->addr[3], &p->addr[4], &p->addr[5]) == 6;
+    default:
+      return false;
+    }
+  }
+
+// ----------------------------------------------------------------
+//        Ethernet transport classes for data and control
+// ----------------------------------------------------------------
+#include "transport.h"
+#include "ethernet.h"
+#include "pktfilter.h"
+class eth_ctrl_transport: public usrp2::transport{
+  private:
+    uint8_t              d_buff[1500]; //FIXME use MTU
+    usrp2::ethernet      *d_eth_ctrl;  // unbuffered control frames
+    usrp2::pktfilter     *d_pf_ctrl;
+
+  public:
+  eth_ctrl_transport(const std::string &ifc, usrp2::props *p) : usrp2::transport("ethernet control"){
+
+    //create raw ethernet device
+    d_eth_ctrl = new usrp2::ethernet();
+    if (!d_eth_ctrl->open(ifc, htons(U2_CTRL_ETHERTYPE)))
+      throw std::runtime_error("Unable to open/register USRP2 control protocol");
+
+    //extract mac addr
+    u2_mac_addr_t usrp_mac;
+    parse_mac_addr(p->addr, &usrp_mac);
+
+    //create and attach packet filter
+    d_pf_ctrl = usrp2::pktfilter::make_ethertype_inbound_target(U2_CTRL_ETHERTYPE, (const unsigned char*)&(usrp_mac.addr));
+    if (!d_pf_ctrl || !d_eth_ctrl->attach_pktfilter(d_pf_ctrl))
+        throw std::runtime_error("Unable to attach packet filter for control packets.");
+
+    start(); //start thread now
+  }
+
+  ~eth_ctrl_transport(){
+    delete d_pf_ctrl;
+    d_eth_ctrl->close();
+    delete d_eth_ctrl;
+  }
+
+  int send(const void *buff, int len){
+    return d_eth_ctrl->write_packet(buff, len);
+  }
+
+  int recv(void **buff){
+    int recv_len = d_eth_ctrl->read_packet_dont_block(d_buff, sizeof(d_buff));
+    if (recv_len > 0){
+        *buff = d_buff;
+        return recv_len;
+    }
+    boost::this_thread::sleep(gruel::get_new_timeout(0.05)); //50ms timeout
+    return 0; //nothing yet
+  }
+
+};
+
+
+// ----------------------------------------------------------------
+//        The USRP2 class wrapper for impl
+// ----------------------------------------------------------------
 namespace usrp2 {
 
   // --- Table of weak pointers to usrps we know about ---
@@ -144,9 +229,8 @@ namespace usrp2 {
 
   // Private constructor.  Sole function is to create an impl.
   usrp2::usrp2(const std::string &ifc, props *p, size_t rx_bufsize)
-    : d_impl(new usrp2::impl(ifc, p, rx_bufsize))
   {
-    // NOP
+    d_impl = std::auto_ptr<impl>(new usrp2::impl(ifc, p, rx_bufsize, new eth_ctrl_transport(ifc, p)));
   }
   
   // Public class destructor.  d_impl will auto-delete.

@@ -129,7 +129,7 @@ namespace usrp2 {
   }
 
 
-  usrp2::impl::impl(const std::string &ifc, props *p, size_t rx_bufsize)
+  usrp2::impl::impl(const std::string &ifc, props *p, size_t rx_bufsize, transport *ctrl_transport)
     : d_eth_data(new eth_buffer(rx_bufsize)),
       d_eth_ctrl(new ethernet()),
       d_pf_data(0), 
@@ -150,12 +150,15 @@ namespace usrp2 {
       d_rx_decim(0),
       d_dont_enqueue(true),
       d_ctrl_running(false),
-      d_data_running(false)
+      d_data_running(false),
+      d_ctrl_transport(ctrl_transport)
   {
+    d_ctrl_transport->set_callback(boost::bind(&usrp2::impl::handle_control_packet, this, _1, _2));
+
     if (!d_eth_data->open(ifc, htons(U2_DATA_ETHERTYPE)))
       throw std::runtime_error("Unable to open/register USRP2 data protocol");
-    if (!d_eth_ctrl->open(ifc, htons(U2_CTRL_ETHERTYPE)))
-      throw std::runtime_error("Unable to open/register USRP2 control protocol");
+    //if (!d_eth_ctrl->open(ifc, htons(U2_CTRL_ETHERTYPE)))
+    //  throw std::runtime_error("Unable to open/register USRP2 control protocol");
 
     d_addr = p->addr;
 
@@ -165,9 +168,9 @@ namespace usrp2 {
     d_pf_data = pktfilter::make_ethertype_inbound_target(U2_DATA_ETHERTYPE, (const unsigned char*)&(usrp_mac.addr));
     if (!d_pf_data || !d_eth_data->attach_pktfilter(d_pf_data))
       throw std::runtime_error("Unable to attach packet filter for data packets.");
-    d_pf_ctrl = pktfilter::make_ethertype_inbound_target(U2_CTRL_ETHERTYPE, (const unsigned char*)&(usrp_mac.addr));
-    if (!d_pf_ctrl || !d_eth_ctrl->attach_pktfilter(d_pf_ctrl))
-      throw std::runtime_error("Unable to attach packet filter for control packets.");
+    //d_pf_ctrl = pktfilter::make_ethertype_inbound_target(U2_CTRL_ETHERTYPE, (const unsigned char*)&(usrp_mac.addr));
+    //if (!d_pf_ctrl || !d_eth_ctrl->attach_pktfilter(d_pf_ctrl))
+    //  throw std::runtime_error("Unable to attach packet filter for control packets.");
     
     if (USRP2_IMPL_DEBUG)
       std::cerr << "usrp2 constructor: using USRP2 at " << d_addr << std::endl;
@@ -175,7 +178,7 @@ namespace usrp2 {
     memset(d_pending_replies, 0, sizeof(d_pending_replies));
 
     start_data_thread();
-    start_ctrl_thread();
+    //start_ctrl_thread();
 
     // In case the USRP2 was left streaming RX
     // FIXME: only one channel right now
@@ -231,14 +234,14 @@ namespace usrp2 {
   {
     //thread cleanup
     stop_data_thread();
-    stop_ctrl_thread();
+    //stop_ctrl_thread();
     //socket cleanup
     delete d_pf_data;
-    delete d_pf_ctrl;
+    //delete d_pf_ctrl;
     d_eth_data->close();
     delete d_eth_data;
-    d_eth_ctrl->close();
-    delete d_eth_ctrl;
+    //d_eth_ctrl->close();
+    //delete d_eth_ctrl;
 
     if (USRP2_IMPL_DEBUG) {
       std::cerr << std::endl
@@ -341,7 +344,7 @@ namespace usrp2 {
       len = sizeof(tmp);
     }
 
-    return d_eth_ctrl->write_packet(cmd, len) >= 0;
+    return d_ctrl_transport->send(cmd, len) >= 0;
   }
 
   bool
@@ -363,7 +366,7 @@ namespace usrp2 {
   //        Background loop for handling control packets
   // ----------------------------------------------------------------
 
-  void
+  /*void
   usrp2::impl::start_ctrl_thread()
   {
     d_ctrl_thread = new boost::thread(boost::bind(&usrp2::impl::run_ctrl_thread, this));
@@ -387,7 +390,7 @@ namespace usrp2 {
       if (ctrl_recv_len > 0) handle_control_packet(buff, ctrl_recv_len);
       else boost::this_thread::sleep(gruel::get_new_timeout(0.05)); //50ms timeout
     }
-  }
+  }*/
 
   // ----------------------------------------------------------------
   //        Background loop for handling data packets

@@ -27,6 +27,7 @@
 #include <boost/thread.hpp>
 #include "control.h"
 #include "ring.h"
+#include "transport.h"
 #include <string>
 
 #define MAX_SUBPKT_LEN 252
@@ -120,9 +121,9 @@ namespace usrp2 {
     //control thread stuff
     volatile bool d_ctrl_running;
     boost::thread *d_ctrl_thread;
-    void start_ctrl_thread();
-    void stop_ctrl_thread();
-    void run_ctrl_thread();
+    //void start_ctrl_thread();
+    //void stop_ctrl_thread();
+    //void run_ctrl_thread();
 
     //data thread stuff
     volatile bool d_data_running; // TODO: multistate if needed
@@ -131,8 +132,10 @@ namespace usrp2 {
     void stop_data_thread();
     void run_data_thread();
 
+    transport *d_ctrl_transport;
+
   public:
-    impl(const std::string &ifc, props *p, size_t rx_bufsize);
+    impl(const std::string &ifc, props *p, size_t rx_bufsize, transport *ctrl_transport);
     ~impl();
 
     std::string mac_addr() const { return d_addr; } // FIXME: convert from u2_mac_addr_t
