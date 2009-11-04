@@ -129,7 +129,7 @@ namespace usrp2 {
   }
 
 
-  usrp2::impl::impl(const std::string &ifc, props *p, size_t rx_bufsize, transport *ctrl_transport)
+  usrp2::impl::impl(const std::string &ifc, props *p, size_t rx_bufsize, transport::sptr ctrl_transport)
     : d_eth_data(new eth_buffer(rx_bufsize)),
       d_eth_ctrl(new ethernet()),
       d_pf_data(0), 

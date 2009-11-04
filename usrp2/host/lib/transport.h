@@ -27,6 +27,7 @@ namespace usrp2 {
   class transport {
   public:
     typedef boost::function<void(void*, size_t)> callback_t;
+    typedef boost::shared_ptr<transport> sptr;
   private:
     std::string              d_type_str;
     volatile bool            d_running;
@@ -40,7 +41,7 @@ namespace usrp2 {
      * \param type_str a descriptive string
      */
     transport(const std::string &type_str);
-    ~transport();
+    virtual ~transport();
     /*!
      * \brief Set the callback
      * \param cb the callback created by boost::bind

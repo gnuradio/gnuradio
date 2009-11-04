@@ -132,10 +132,10 @@ namespace usrp2 {
     void stop_data_thread();
     void run_data_thread();
 
-    transport *d_ctrl_transport;
+    transport::sptr d_ctrl_transport;
 
   public:
-    impl(const std::string &ifc, props *p, size_t rx_bufsize, transport *ctrl_transport);
+    impl(const std::string &ifc, props *p, size_t rx_bufsize, transport::sptr ctrl_transport);
     ~impl();
 
     std::string mac_addr() const { return d_addr; } // FIXME: convert from u2_mac_addr_t

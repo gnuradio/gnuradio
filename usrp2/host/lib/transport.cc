@@ -22,6 +22,7 @@
 
 #include "transport.h"
 #include <stdexcept>
+#include <cstdio>
 
 static void nop_cb(void *buff, size_t len){
     //NOP
@@ -45,6 +46,7 @@ void usrp2::transport::start(){
     if (d_running){
         throw std::runtime_error("usrp2::transport for" + d_type_str + " already started\n");
     }
+    d_running = true;
     d_thread = new boost::thread(boost::bind(&usrp2::transport::run, this));
 }
 
@@ -58,7 +60,6 @@ void usrp2::transport::stop(){
 
 void usrp2::transport::run(){
     init();
-    d_running = true;
     void *buff;
     while (d_running){
         try{

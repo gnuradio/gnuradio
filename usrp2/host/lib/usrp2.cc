@@ -230,7 +230,8 @@ namespace usrp2 {
   // Private constructor.  Sole function is to create an impl.
   usrp2::usrp2(const std::string &ifc, props *p, size_t rx_bufsize)
   {
-    d_impl = std::auto_ptr<impl>(new usrp2::impl(ifc, p, rx_bufsize, new eth_ctrl_transport(ifc, p)));
+    transport::sptr ctrl_transport(new eth_ctrl_transport(ifc, p));
+    d_impl = std::auto_ptr<impl>(new usrp2::impl(ifc, p, rx_bufsize, ctrl_transport));
   }
   
   // Public class destructor.  d_impl will auto-delete.
