@@ -165,7 +165,7 @@ wbxng_base_tx::wbxng_base_tx(usrp_basic_sptr _usrp, int which, int _power_on)
   //set_lo_offset(4e6);
   
   // Disable VCO/PLL
-  d_common->_enable(false);
+  d_common->_enable(true);
 
   set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
 }
@@ -229,12 +229,12 @@ wbxng_base_tx::set_enable(bool on)
   if(on) {
     v = TXMOD_EN;
     // Enable VCO/PLL
-    d_common->_enable(true);
+    //d_common->_enable(true);
   }
   else {
     v = RX_TXN;
     // Disable VCO/PLL
-    d_common->_enable(false);
+    //d_common->_enable(false);
   }
   return usrp()->write_io(d_which, v, mask);
 }
@@ -349,9 +349,6 @@ wbxng_base_rx::shutdown()
     d_is_shutdown = true;
     // do whatever there is to do to shutdown
 
-    // Power down
-    usrp()->common_write_io(C_RX, d_which, power_off(), (ENABLE_33|ENABLE_5));
-
     // Power down VCO/PLL
     d_common->_enable(false);
 
@@ -363,6 +360,9 @@ wbxng_base_rx::shutdown()
 
     // fprintf(stderr, "wbxng_base_rx::shutdown  before set_auto_tr\n");
     set_auto_tr(false);
+
+    // Power down
+    usrp()->write_io(d_which, power_off(), (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
 
     // fprintf(stderr, "wbxng_base_rx::shutdown  after set_auto_tr\n");
   }
