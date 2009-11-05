@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define DEBUG_LOG(x) ::write(2, (x), 1)
+
 #include "eth_data_transport.h"
 #include <gruel/inet.h>
 #include <gruel/realtime.h>
@@ -23,7 +25,8 @@
 #include <iostream>
 
 usrp2::eth_data_transport::eth_data_transport(const std::string &ifc, u2_mac_addr_t mac, size_t rx_bufsize)
- : transport("ethernet control"), d_mac(mac), d_tx_seqno(0){
+ : transport("ethernet control"), d_mac(mac), d_tx_seqno(0), d_rx_seqno(0),
+ d_num_rx_frames(0), d_num_rx_missing(0), d_num_rx_overruns(0), d_num_rx_bytes(0){
 
     //create raw ethernet device
     d_eth_data = new eth_buffer(rx_bufsize);
@@ -47,10 +50,66 @@ void usrp2::eth_data_transport::init(){
         std::cerr << "usrp2: failed to enable realtime scheduling" << std::endl;
 }
 
+//FIXME clean this up, probably when we get vrt headers
+//eth transport is only responsible for eth headers and transport headers
+//that leaves the u2 fixed headers to be handled by the usrp2 impl
+typedef struct {
+  u2_eth_hdr_t		ehdr;
+  u2_transport_hdr_t	thdr;
+} u2_eth_packet_only_t;
+
 int usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
-   return 0;
+    //create a new iov array with a space for ethernet header
+    // and move the current iovs to the center of the new array
+    size_t all_iov_len = iovlen + 1;
+    iovec all_iov[all_iov_len];
+    for (size_t i = 0; i < iovlen; i++){
+        all_iov[i+1] = iov[i];
+    }
+    //setup a new ethernet header
+    u2_eth_packet_only_t hdr;
+    hdr.ehdr.ethertype = htons(U2_DATA_ETHERTYPE);
+    memcpy(&hdr.ehdr.dst, d_mac.addr, 6);
+    memcpy(&hdr.ehdr.src, d_eth_data->mac(), 6);
+    hdr.thdr.flags = 0; // FIXME transport header values?
+    hdr.thdr.seqno = d_tx_seqno++;
+    hdr.thdr.ack = 0;
+
+    return d_eth_data->tx_framev(all_iov, all_iov_len);
 }
 
 int usrp2::eth_data_transport::recv(void **buff){
+    void *base;
+
+    DEBUG_LOG(":");
+    // Receive available frames from ethernet buffer.  Handler will
+    // process control frames, enqueue data packets in channel
+    // rings, and signal blocked API threads
+    int len = d_eth_data->rx_frame(&base, 100); // FIXME magic timeout
+    
+    u2_eth_samples_t *pkt = (u2_eth_samples_t *)base;
+    d_num_rx_frames++;
+    d_num_rx_bytes += len;
+    
+    /* --- FIXME start of fake transport layer handler --- */
+
+    if (d_rx_seqno != -1) {
+      int expected_seqno = (d_rx_seqno + 1) & 0xFF;
+      int seqno = pkt->hdrs.thdr.seqno; 
+      
+      if (seqno != expected_seqno) {
+        DEBUG_LOG("S"); // missing sequence number
+        int missing = seqno - expected_seqno;
+        if (missing < 0)
+            missing += 256;
+        d_num_rx_overruns++;
+        d_num_rx_missing += missing;
+      }
+    }
+
+    d_rx_seqno = pkt->hdrs.thdr.seqno;
+
+    /* --- end of fake transport layer handler --- */
+    
     return 0;
 }

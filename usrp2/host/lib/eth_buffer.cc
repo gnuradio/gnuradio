@@ -234,6 +234,57 @@ namespace usrp2 {
     return EB_OK;
   }
 
+int
+  eth_buffer::rx_frame(void **buff, int timeout_in_ms)
+  {
+    DEBUG_LOG("\n");
+      
+    while (!frame_available()) {
+      if (timeout_in_ms == 0) {
+        DEBUG_LOG("w");
+        return -1;
+      }
+      
+      struct pollfd pfd;
+      pfd.fd = d_fd;
+      pfd.revents = 0;
+      pfd.events = POLLIN;
+
+      DEBUG_LOG("P");
+
+      int pres = poll(&pfd, 1, timeout_in_ms);
+      if (pres == -1) {
+        perror("poll");
+        return -1;
+      }
+
+      if (pres == 0) {
+        DEBUG_LOG("t");
+        return -1;
+      }
+    }
+
+    // Iterate through available packets
+    if (frame_available()) {
+        // Get start of ethernet frame and length
+        tpacket_hdr *hdr = (tpacket_hdr *)d_ring[d_head];
+        void *base = (uint8_t *)hdr+hdr->tp_mac;
+        size_t len = hdr->tp_len;
+
+        // FYI, (base % 4 == 2) Not what we want given the current FPGA
+        // code.  This means that our uint32_t samples are not 4-byte
+        // aligned.  We'll have to deal with it downstream.
+
+        *buff = base;
+
+        hdr->tp_status = TP_STATUS_KERNEL; // mark it free
+        inc_head();
+
+        return len;
+    }
+    return -1;
+  }
+
   eth_buffer::result
   eth_buffer::tx_frame(const void *base, size_t len, int flags)
   {

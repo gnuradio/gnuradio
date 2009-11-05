@@ -33,6 +33,10 @@ namespace usrp2 {
 
   class ring
   {
+  public:
+    //typedef for void no argument function
+    typedef boost::function<void()> cb_t;
+
   private:
  
     size_t d_max;
@@ -43,6 +47,7 @@ namespace usrp2 {
     {
       void *d_base;
       size_t d_len;
+      cb_t d_cb;
     };
     std::vector<ring_desc> d_ring;
 
@@ -69,13 +74,13 @@ namespace usrp2 {
     bool full() const { return (d_write_ind+1)%d_max == d_read_ind; }
 
   public:
-    
+
     ring(unsigned int entries);
 
     void wait_for_not_empty();
 
-    bool enqueue(void *p, size_t len);
-    bool dequeue(void **p, size_t *len);
+    bool enqueue(void *p, size_t len, cb_t cb);
+    bool dequeue(void **p, size_t *len, cb_t *cb);
   };
 
 }  // namespace usrp2

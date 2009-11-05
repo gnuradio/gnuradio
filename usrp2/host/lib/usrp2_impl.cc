@@ -472,7 +472,9 @@ namespace usrp2 {
       // Strip off ethernet header and transport header and enqueue the rest
       
       size_t offset = offsetof(u2_eth_samples_t, hdrs.fixed);
-      if (d_channel_rings[chan]->enqueue(&pkt->hdrs.fixed, len-offset)) {
+      
+      ring::cb_t callback = boost::bind(&eth_buffer::release_frame, d_eth_data, (void*)base);
+      if (d_channel_rings[chan]->enqueue(&pkt->hdrs.fixed, len-offset, callback)) {
 	inc_enqueued();
 	DEBUG_LOG("+");
 	return data_handler::KEEP;	// channel ring runner will mark frame done
@@ -737,8 +739,9 @@ namespace usrp2 {
     
     // Iterate through frames and present to user
     void *p;
+    ring::cb_t callback;
     size_t frame_len_in_bytes;
-    while (rp->dequeue(&p, &frame_len_in_bytes)) {
+    while (rp->dequeue(&p, &frame_len_in_bytes, &callback)) {
       uint32_t	       *items;			// points to beginning of data items
       size_t 		nitems_in_uint32s;
       rx_metadata	md;
@@ -746,8 +749,8 @@ namespace usrp2 {
 	return false;
 
       bool want_more = (*handler)(items, nitems_in_uint32s, &md);
-      d_eth_data->release_frame(p);
       DEBUG_LOG("-");
+      callback();
       dec_enqueued();
 
       if (!want_more)
@@ -778,9 +781,10 @@ namespace usrp2 {
 
     // Iterate through frames and drop them
     void *p;
+    ring::cb_t callback;
     size_t frame_len_in_bytes;
-    while (rp->dequeue(&p, &frame_len_in_bytes)) {
-      d_eth_data->release_frame(p);
+    while (rp->dequeue(&p, &frame_len_in_bytes, &callback)) {
+      callback();
       dec_enqueued();
     }
     return true;

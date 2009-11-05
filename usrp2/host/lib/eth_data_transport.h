@@ -19,6 +19,7 @@
 #ifndef INCLUDED_ETH_DATA_TRANSPORT_H
 #define INCLUDED_ETH_DATA_TRANSPORT_H
 
+#include <usrp2/data_handler.h>
 #include "transport.h"
 #include "eth_buffer.h"
 #include "pktfilter.h"
@@ -32,6 +33,12 @@ namespace usrp2{
         pktfilter     *d_pf_data;
         u2_mac_addr_t d_mac;
         int           d_tx_seqno;
+        int           d_rx_seqno;
+        data_handler::result operator()(const void *base, size_t len);
+        unsigned int   d_num_rx_frames;
+        unsigned int   d_num_rx_missing;
+        unsigned int   d_num_rx_overruns;
+        unsigned int   d_num_rx_bytes;
 
     public:
         eth_data_transport(const std::string &ifc, u2_mac_addr_t mac, size_t rx_bufsize);

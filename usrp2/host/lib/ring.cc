@@ -46,7 +46,7 @@ namespace usrp2 {
   }
 
   bool
-  ring::enqueue(void *p, size_t len)
+  ring::enqueue(void *p, size_t len, cb_t cb)
   {
     gruel::scoped_lock l(d_mutex);
     if (full())
@@ -54,6 +54,7 @@ namespace usrp2 {
       
     d_ring[d_write_ind].d_len = len;
     d_ring[d_write_ind].d_base = p;
+    d_ring[d_write_ind].d_cb = cb;
 
     inc_write_ind();
     d_not_empty.notify_one();
@@ -61,7 +62,7 @@ namespace usrp2 {
   }
 
   bool
-  ring::dequeue(void **p, size_t *len)
+  ring::dequeue(void **p, size_t *len, cb_t *cb)
   {
     gruel::scoped_lock l(d_mutex);
     if (empty())
@@ -69,6 +70,7 @@ namespace usrp2 {
       
     *p   = d_ring[d_read_ind].d_base;
     *len = d_ring[d_read_ind].d_len;
+    *cb = d_ring[d_read_ind].d_cb;
 
     inc_read_ind();
     return true;

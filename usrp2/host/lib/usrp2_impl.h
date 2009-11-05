@@ -71,7 +71,7 @@ namespace usrp2 {
     int            d_rx_seqno;
     int            d_tx_seqno;
     int            d_next_rid;
-    unsigned int   d_num_rx_frames;
+    unsigned int   d_num_rx_frames; //TODO remove this stuff, its in transport data
     unsigned int   d_num_rx_missing;
     unsigned int   d_num_rx_overruns;
     unsigned int   d_num_rx_bytes;

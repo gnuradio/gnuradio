@@ -147,7 +147,7 @@ namespace usrp2 {
      * \returns EB_ERROR if there was an unrecoverable error.
      */
     result rx_frames(data_handler *f, int timeout=-1);
-
+    int rx_frame(void **buff, int timeout_in_ms);
     /*
      * \brief Release frame from buffer
      *
