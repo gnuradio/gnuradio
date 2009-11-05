@@ -32,8 +32,7 @@ namespace usrp2 {
       d_mutex(), d_not_empty()
   {
     for (unsigned int i = 0; i < entries; i++) {
-      d_ring[i].d_base = 0;
-      d_ring[i].d_len = 0;
+      d_ring[i] = sbuff::make(); //load empty sbuff
     }
   }
 
@@ -46,15 +45,13 @@ namespace usrp2 {
   }
 
   bool
-  ring::enqueue(void *p, size_t len, cb_t cb)
+  ring::enqueue(sbuff::sptr sb)
   {
     gruel::scoped_lock l(d_mutex);
     if (full())
       return false;
       
-    d_ring[d_write_ind].d_len = len;
-    d_ring[d_write_ind].d_base = p;
-    d_ring[d_write_ind].d_cb = cb;
+    d_ring[d_write_ind] = sb;
 
     inc_write_ind();
     d_not_empty.notify_one();
@@ -62,15 +59,14 @@ namespace usrp2 {
   }
 
   bool
-  ring::dequeue(void **p, size_t *len, cb_t *cb)
+  ring::dequeue(sbuff::sptr *sb)
   {
     gruel::scoped_lock l(d_mutex);
     if (empty())
       return false;
       
-    *p   = d_ring[d_read_ind].d_base;
-    *len = d_ring[d_read_ind].d_len;
-    *cb = d_ring[d_read_ind].d_cb;
+    *sb = d_ring[d_read_ind];
+    d_ring[d_read_ind] = sbuff::make(); //replace it with an empty sbuff
 
     inc_read_ind();
     return true;

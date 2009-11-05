@@ -25,6 +25,7 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <gruel/thread.h>
+#include "sbuff.h"
 
 namespace usrp2 {
 
@@ -33,23 +34,13 @@ namespace usrp2 {
 
   class ring
   {
-  public:
-    //typedef for void no argument function
-    typedef boost::function<void()> cb_t;
-
   private:
  
     size_t d_max;
     size_t d_read_ind;
     size_t d_write_ind;
 
-    struct ring_desc
-    {
-      void *d_base;
-      size_t d_len;
-      cb_t d_cb;
-    };
-    std::vector<ring_desc> d_ring;
+    std::vector<sbuff::sptr> d_ring;
 
     gruel::mutex d_mutex;
     gruel::condition_variable d_not_empty;
@@ -79,8 +70,8 @@ namespace usrp2 {
 
     void wait_for_not_empty();
 
-    bool enqueue(void *p, size_t len, cb_t cb);
-    bool dequeue(void **p, size_t *len, cb_t *cb);
+    bool enqueue(sbuff::sptr sb);
+    bool dequeue(sbuff::sptr *sb);
   };
 
 }  // namespace usrp2

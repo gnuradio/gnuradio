@@ -78,7 +78,7 @@ int usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
     return d_eth_data->tx_framev(all_iov, all_iov_len);
 }
 
-int usrp2::eth_data_transport::recv(void **buff){
+usrp2::sbuff::sptr usrp2::eth_data_transport::recv(){
     void *base;
 
     DEBUG_LOG(":");
@@ -86,8 +86,10 @@ int usrp2::eth_data_transport::recv(void **buff){
     // process control frames, enqueue data packets in channel
     // rings, and signal blocked API threads
     int len = d_eth_data->rx_frame(&base, 100); // FIXME magic timeout
-    
-    u2_eth_samples_t *pkt = (u2_eth_samples_t *)base;
+
+    if (len <= 0) return sbuff::make();
+
+    u2_eth_packet_only_t *hdr = (u2_eth_packet_only_t *)base;
     d_num_rx_frames++;
     d_num_rx_bytes += len;
     
@@ -95,7 +97,7 @@ int usrp2::eth_data_transport::recv(void **buff){
 
     if (d_rx_seqno != -1) {
       int expected_seqno = (d_rx_seqno + 1) & 0xFF;
-      int seqno = pkt->hdrs.thdr.seqno; 
+      int seqno = hdr->thdr.seqno; 
       
       if (seqno != expected_seqno) {
         DEBUG_LOG("S"); // missing sequence number
@@ -107,9 +109,13 @@ int usrp2::eth_data_transport::recv(void **buff){
       }
     }
 
-    d_rx_seqno = pkt->hdrs.thdr.seqno;
+    d_rx_seqno = hdr->thdr.seqno;
 
     /* --- end of fake transport layer handler --- */
-    
-    return 0;
+
+    //drop the ethernet and transport headers
+    return sbuff::make(
+        (uint8_t*)base + sizeof(u2_eth_packet_only_t),
+        len - sizeof(u2_eth_packet_only_t),
+        boost::bind(&eth_buffer::release_frame, d_eth_data, base));
 }

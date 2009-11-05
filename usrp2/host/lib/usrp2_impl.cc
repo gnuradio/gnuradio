@@ -152,7 +152,7 @@ namespace usrp2 {
       d_data_running(false),
       d_ctrl_transport(ctrl_transport)
   {
-    d_ctrl_transport->set_callback(boost::bind(&usrp2::impl::handle_control_packet, this, _1, _2));
+    d_ctrl_transport->set_callback(boost::bind(&usrp2::impl::handle_control_packet, this, _1));
     d_ctrl_transport->start();
 
     if (!d_eth_data->open(ifc, htons(U2_DATA_ETHERTYPE)))
@@ -397,8 +397,11 @@ namespace usrp2 {
   }
 
   void
-  usrp2::impl::handle_control_packet(const void *base, size_t len)
+  usrp2::impl::handle_control_packet(sbuff::sptr sb)
   {
+    void *base = sb->buff();
+    size_t len = sb->len();
+    
     // point to beginning of payload (subpackets)
     unsigned char *p = (unsigned char *)base + sizeof(u2_fixed_hdr_t);
     
@@ -473,8 +476,8 @@ namespace usrp2 {
       
       size_t offset = offsetof(u2_eth_samples_t, hdrs.fixed);
       
-      ring::cb_t callback = boost::bind(&eth_buffer::release_frame, d_eth_data, (void*)base);
-      if (d_channel_rings[chan]->enqueue(&pkt->hdrs.fixed, len-offset, callback)) {
+      sbuff::cb_t callback = boost::bind(&eth_buffer::release_frame, d_eth_data, (void*)base);
+      if (d_channel_rings[chan]->enqueue(sbuff::make(&pkt->hdrs.fixed, len-offset, callback))) {
 	inc_enqueued();
 	DEBUG_LOG("+");
 	return data_handler::KEEP;	// channel ring runner will mark frame done
@@ -738,19 +741,17 @@ namespace usrp2 {
     DEBUG_LOG("s");
     
     // Iterate through frames and present to user
-    void *p;
-    ring::cb_t callback;
-    size_t frame_len_in_bytes;
-    while (rp->dequeue(&p, &frame_len_in_bytes, &callback)) {
+    sbuff::sptr sb;
+    while (rp->dequeue(&sb)) {
       uint32_t	       *items;			// points to beginning of data items
       size_t 		nitems_in_uint32s;
       rx_metadata	md;
-      if (!parse_rx_metadata(p, frame_len_in_bytes, &items, &nitems_in_uint32s, &md))
+      if (!parse_rx_metadata(sb->buff(), sb->len(), &items, &nitems_in_uint32s, &md))
 	return false;
 
       bool want_more = (*handler)(items, nitems_in_uint32s, &md);
       DEBUG_LOG("-");
-      callback();
+      sb.reset(); //reset shared ptr so sbuff decontructs
       dec_enqueued();
 
       if (!want_more)
@@ -780,11 +781,9 @@ namespace usrp2 {
     }
 
     // Iterate through frames and drop them
-    void *p;
-    ring::cb_t callback;
-    size_t frame_len_in_bytes;
-    while (rp->dequeue(&p, &frame_len_in_bytes, &callback)) {
-      callback();
+    sbuff::sptr sb;
+    while (rp->dequeue(&sb)) {
+      sb.reset(); //reset shared ptr so sbuff decontructs
       dec_enqueued();
     }
     return true;

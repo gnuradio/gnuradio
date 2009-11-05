@@ -76,13 +76,14 @@ int usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
     return d_eth_ctrl->write_packetv(all_iov, all_iov_len);
 }
 
-int usrp2::eth_ctrl_transport::recv(void **buff){
+usrp2::sbuff::sptr usrp2::eth_ctrl_transport::recv(){
     int recv_len = d_eth_ctrl->read_packet_dont_block(d_buff, sizeof(d_buff));
     //strip the ethernet headers from the buffer
     if (recv_len > sizeof(u2_eth_packet_only_t)){
-        *buff = d_buff + sizeof(u2_eth_packet_only_t);
-        return recv_len - sizeof(u2_eth_packet_only_t);
+        return sbuff::make(
+            d_buff + sizeof(u2_eth_packet_only_t),
+            recv_len - sizeof(u2_eth_packet_only_t));
     }
     boost::this_thread::sleep(gruel::get_new_timeout(0.05)); //50ms timeout
-    return 0; //nothing yet
+    return sbuff::make(); //nothing yet
 }

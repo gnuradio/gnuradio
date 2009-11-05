@@ -59,13 +59,12 @@ void usrp2::transport::stop(){
 
 void usrp2::transport::run(){
     init();
-    void *buff;
     while (d_running){
         try{
-            // call recv to get a pointer into memory
+            // call recv to get a new sbuffer
             // pass the buffer into the callback
-            int len = recv(&buff);
-            if (len > 0) d_cb(buff, len);
+            usrp2::sbuff::sptr sb = recv();
+            if (sb->len()) d_cb(sb);
         //catch thread interrupts from join, sleep, etc
         //the running condition will be re-checked
         }catch(boost::thread_interrupted const &){}
@@ -76,7 +75,6 @@ int usrp2::transport::sendv(const iovec *iov, size_t iovlen){
     return -1; //NOP
 }
 
-int usrp2::transport::recv(void **buff){
-    *buff = NULL;
-    return -1; //NOP
+usrp2::sbuff::sptr usrp2::transport::recv(){
+    return usrp2::sbuff::make(); //NOP
 }
