@@ -297,7 +297,7 @@ hwconfig_wishbone_divisor(void)
 #define BUFFER_POOL_CTRL_BASE   0xD500
 #define DSP_TX_BASE             0xD600
 #define DSP_RX_BASE             0xD680
-
+#define TIME64                  0xD700
 #define LAST_SETTING_REG        0xD7FC	// last valid setting register
 
 // --- buffer pool control regs ---
@@ -507,6 +507,16 @@ typedef struct {
 #define MK_RX_CMD(num_lines, lines_per_frame, now, chain) \
   (((num_lines) << 9) | ((lines_per_frame) & 0x1ff) \
    | (((now) & 0x1) << 31) | (((chain) & 0x1) << 30))
+
+// ----------------------------------------------------------------
+// VITA49 64 bit time
+typedef struct {
+  volatile uint32_t	secs;	// value to set absolute secs to on next PPS
+  volatile uint32_t	ticks;	// value to set absolute ticks to on next PPS
+} sr_time64_t;
+
+#define sr_time64 ((sr_time64_t *) TIME64
+
 
 /* 
  * --- ethernet tx protocol engine regs (write only) ---

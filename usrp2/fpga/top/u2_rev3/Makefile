@@ -171,6 +171,7 @@ serdes/serdes_fc_rx.v \
 serdes/serdes_fc_tx.v \
 serdes/serdes_rx.v \
 serdes/serdes_tx.v \
+timing/time_64bit.v \
 timing/time_receiver.v \
 timing/time_sender.v \
 timing/time_sync.v \

@@ -135,6 +135,8 @@ module u2_core
    input sim_mode,
    input [3:0] clock_divider
    );
+
+   localparam SR_TIME64 = 192;
    
    wire [7:0] 	set_addr;
    wire [31:0] 	set_data;
@@ -159,6 +161,7 @@ module u2_core
    wire 	serdes_link_up;
    wire 	epoch;
    wire [31:0] 	irq;
+   wire [63:0] 	vita_time;
    
    // ///////////////////////////////////////////////////////////////////////////////////////////////
    // Wishbone Single Master INTERCON
@@ -560,7 +563,7 @@ module u2_core
       .fifo_occupied(dsp_rx_occ),.fifo_full(dsp_rx_full),.fifo_empty(dsp_rx_empty),
       .debug_rx(debug_rx) );
    
-   // dummy_rx dsp_core_rx
+   // dumkmy_rx dsp_core_rx
    dsp_core_rx dsp_core_rx
      (.clk(dsp_clk),.rst(dsp_rst),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
@@ -630,6 +633,13 @@ module u2_core
 
    assign      RAM_CE1n = 0;
    assign      RAM_D[17:16] = 2'bzz;
+   
+   // /////////////////////////////////////////////////////////////////////////
+   // VITA Timing
+
+   time_64bit #(.TICKS_PER_SEC(32'd100000000),.BASE(SR_TIME64)) time_64bit
+     (.clk(dsp_clk), .rst(dsp_rst), .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
+      .pps(pps_o), .vita_time(vita_time));
    
    // /////////////////////////////////////////////////////////////////////////////////////////
    // Debug Pins
