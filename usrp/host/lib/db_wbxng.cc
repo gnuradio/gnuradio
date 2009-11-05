@@ -159,11 +159,13 @@ wbxng_base_tx::wbxng_base_tx(usrp_basic_sptr _usrp, int which, int _power_on)
 
   d_common = new adf4350(_usrp, d_which, d_spi_enable);
 
-  // FIXME: power up the transmit side, but don't enable the mixer
+  // power up the transmit side, but don't enable the mixer
   usrp()->_write_oe(d_which,(RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5), (RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5));
-  usrp()->write_io(d_which, (power_on()|RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5), (RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5));
-  fprintf(stderr,"Setting WBXNG TXMOD on");
+  usrp()->write_io(d_which, (power_on()|RX_TXN|ENABLE_33|ENABLE_5), (RX_TXN|ENABLE_33|ENABLE_5));
   //set_lo_offset(4e6);
+  
+  // Disable VCO/PLL
+  d_common->_enable(false);
 
   set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
 }
@@ -183,11 +185,12 @@ wbxng_base_tx::shutdown()
     d_is_shutdown = true;
     // do whatever there is to do to shutdown
 
+    // Disable VCO/PLL
+    d_common->_enable(false);
+
     // Power down and leave the T/R switch in the R position
     usrp()->write_io(d_which, (power_off()|RX_TXN), (RX_TXN|ENABLE_33|ENABLE_5));
 
-    // Power down VCO/PLL
-    d_common->_enable(false);
 
     /*
     _write_control(_compute_control_reg());
@@ -202,9 +205,9 @@ wbxng_base_tx::set_auto_tr(bool on)
 {
   bool ok = true;
   if(on) {
-    ok &= set_atr_mask (RX_TXN | ENABLE_33 | ENABLE_5);
-    ok &= set_atr_txval(0      | ENABLE_33 | ENABLE_5);
-    ok &= set_atr_rxval(RX_TXN | 0);
+    ok &= set_atr_mask (RX_TXN | TXMOD_EN);
+    ok &= set_atr_txval(0      | TXMOD_EN);
+    ok &= set_atr_rxval(RX_TXN);
   }
   else {
     ok &= set_atr_mask (0);
@@ -222,12 +225,16 @@ wbxng_base_tx::set_enable(bool on)
   */
 
   int v;
-  int mask = RX_TXN | ENABLE_5 | ENABLE_33;
+  int mask = RX_TXN | TXMOD_EN;
   if(on) {
-    v = ENABLE_5 | ENABLE_33;
+    v = TXMOD_EN;
+    // Enable VCO/PLL
+    d_common->_enable(true);
   }
   else {
     v = RX_TXN;
+    // Disable VCO/PLL
+    d_common->_enable(false);
   }
   return usrp()->write_io(d_which, v, mask);
 }
@@ -310,6 +317,9 @@ wbxng_base_rx::wbxng_base_rx(usrp_basic_sptr _usrp, int which, int _power_on)
   }
 
   d_common = new adf4350(_usrp, d_which, d_spi_enable);
+  
+  // Disable VCO/PLL
+  d_common->_enable(true);
 
   usrp()->_write_oe(d_which, (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5), (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
   usrp()->write_io(d_which,  (power_on()|RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5), (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
@@ -363,9 +373,9 @@ wbxng_base_rx::set_auto_tr(bool on)
 {
   bool ok = true;
   if(on) {
-    ok &= set_atr_mask (ENABLE_33|ENABLE_5);
-    ok &= set_atr_txval(     0);
-    ok &= set_atr_rxval(ENABLE_33|ENABLE_5);
+    ok &= set_atr_mask (RXBB_EN|RX2_RX1N);
+    ok &= set_atr_txval(      0|RX2_RX1N);
+    ok &= set_atr_rxval(RXBB_EN|       0);
   }
   else {
     ok &= set_atr_mask (0);

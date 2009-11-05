@@ -55,7 +55,7 @@ adf4350::adf4350(usrp_basic_sptr _usrp, int _which, int _spi_enable)
 
     /* Outputs */
     d_usrp->_write_oe(d_which, (CE_PIN | PDB_RF_PIN), (CE_PIN | PDB_RF_PIN));
-    d_usrp->write_io(d_which, (0), (CE_PIN | PDB_RF_PIN));
+    d_usrp->write_io(d_which, (CE_PIN), (CE_PIN | PDB_RF_PIN));
 
     /* Initialize the pin levels. */
     _enable(true);
@@ -70,6 +70,7 @@ adf4350::adf4350(usrp_basic_sptr _usrp, int _which, int _spi_enable)
 
 adf4350::~adf4350()
 {
+    d_usrp->write_io(d_which, (0), (CE_PIN | PDB_RF_PIN));
     delete d_regs;
 }
 
@@ -95,9 +96,9 @@ void
 adf4350::_enable(bool enable)
 {
     if (enable){ /* chip enable */
-        d_usrp->write_io(d_which, (CE_PIN | PDB_RF_PIN), (CE_PIN | PDB_RF_PIN));
+        d_usrp->write_io(d_which, (PDB_RF_PIN), (PDB_RF_PIN));
     }else{
-        d_usrp->write_io(d_which, 0, (CE_PIN | PDB_RF_PIN));
+        d_usrp->write_io(d_which, 0, (PDB_RF_PIN));
     }
 }
 
