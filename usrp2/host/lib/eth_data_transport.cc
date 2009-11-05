@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define DEBUG_LOG(x) ::write(2, (x), 1)
-
 #include "eth_data_transport.h"
 #include <gruel/inet.h>
 #include <gruel/realtime.h>
@@ -74,7 +72,9 @@ int usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
     hdr.thdr.flags = 0; // FIXME transport header values?
     hdr.thdr.seqno = d_tx_seqno++;
     hdr.thdr.ack = 0;
-
+    //feed the first iov the header
+    all_iov[0].iov_base = &hdr;
+    all_iov[0].iov_len = sizeof(hdr);
     return d_eth_data->tx_framev(all_iov, all_iov_len);
 }
 

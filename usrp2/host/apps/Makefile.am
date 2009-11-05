@@ -25,8 +25,7 @@ AM_CPPFLAGS = \
 
 LDADD = \
 	$(USRP2_LA) \
-	$(GRUEL_LA) \
-        $(OMNITHREAD_LA)
+	$(GRUEL_LA)
 
 bin_PROGRAMS = \
 	find_usrps \

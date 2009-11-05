@@ -29,6 +29,7 @@
 #include <stdexcept>
 #include <cstdio>
 #include "eth_ctrl_transport.h"
+#include "eth_data_transport.h"
 
 
 //FIXME this is the Nth instance of this function, find it a home
@@ -175,10 +176,15 @@ namespace usrp2 {
   usrp2::usrp2(const std::string &ifc, props *p, size_t rx_bufsize)
   {
     u2_mac_addr_t mac;
-    parse_mac_addr(p->addr, &mac);
-    
+    d_mac = p->addr;
+    d_ifc = ifc;
+    parse_mac_addr(d_mac, &mac);
+    //create transports for data and control
     transport::sptr ctrl_transport(new eth_ctrl_transport(ifc, mac));
-    d_impl = std::auto_ptr<impl>(new usrp2::impl(ifc, p, rx_bufsize, ctrl_transport));
+    eth_data_transport *data_transport_p = new eth_data_transport(ifc, mac, rx_bufsize);
+    transport::sptr data_transport(data_transport_p);
+    //pass the transports into a new usrp2 impl
+    d_impl = std::auto_ptr<impl>(new usrp2::impl(data_transport, ctrl_transport, data_transport_p->max_frames()));
   }
   
   // Public class destructor.  d_impl will auto-delete.
@@ -190,13 +196,13 @@ namespace usrp2 {
   std::string
   usrp2::mac_addr()
   {
-    return d_impl->mac_addr();
+    return d_mac;
   }
 
   std::string
   usrp2::interface_name()
   {
-    return d_impl->interface_name();
+    return d_ifc;
   }
 
   // Receive
@@ -288,13 +294,13 @@ namespace usrp2 {
   unsigned int
   usrp2::rx_overruns()
   {
-    return d_impl->rx_overruns();
+    return 0;//FIXME d_impl->rx_overruns();
   }
   
   unsigned int
   usrp2::rx_missing()
   {
-    return d_impl->rx_missing();
+    return 0;//FIXME d_impl->rx_missing();
   }
 
   // Transmit
@@ -443,7 +449,9 @@ namespace usrp2 {
   bool
   usrp2::burn_mac_addr(const std::string &new_addr)
   {
-    return d_impl->burn_mac_addr(new_addr);
+    u2_mac_addr_t mac;
+    parse_mac_addr(new_addr, &mac);
+    return d_impl->burn_mac_addr(&mac);
   }
 
   bool

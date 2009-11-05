@@ -276,10 +276,7 @@ int
         // aligned.  We'll have to deal with it downstream.
 
         *buff = base;
-
-        hdr->tp_status = TP_STATUS_KERNEL; // mark it free
         inc_head();
-
         return len;
     }
     return -1;

@@ -582,6 +582,10 @@ namespace usrp2 {
     class impl;		// implementation details
 
   private:
+
+    std::string d_mac;
+    std::string d_ifc;
+
     // Static function to retrieve or create usrp2 instance
     static sptr find_existing_or_make_new(const std::string &ifc, props *p, size_t rx_bufsize);
 

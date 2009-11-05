@@ -26,6 +26,13 @@
 #include <boost/shared_ptr.hpp>
 #include <cstdio>
 
+#define USRP2_IMPL_DEBUG 0
+#if USRP2_IMPL_DEBUG
+#define DEBUG_LOG(x) ::write(2, x, 1)
+#else
+#define DEBUG_LOG(x)
+#endif
+
 namespace usrp2 {
 
     /*******************************************************************

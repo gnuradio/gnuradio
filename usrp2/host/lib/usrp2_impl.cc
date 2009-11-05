@@ -40,13 +40,6 @@
 #include <assert.h>
 #include <string.h>
 
-#define USRP2_IMPL_DEBUG 0
-#if USRP2_IMPL_DEBUG
-#define DEBUG_LOG(x) ::write(2, x, 1)
-#else
-#define DEBUG_LOG(x)
-#endif
-
 static const int DEFAULT_RX_SCALE = 1024;
 
 namespace usrp2 {
@@ -129,19 +122,19 @@ namespace usrp2 {
   }
 
 
-  usrp2::impl::impl(const std::string &ifc, props *p, size_t rx_bufsize, transport::sptr ctrl_transport)
-    : d_eth_data(new eth_buffer(rx_bufsize)),
-      d_eth_ctrl(new ethernet()),
-      d_pf_data(0), 
-      d_pf_ctrl(0),
-      d_interface_name(ifc),
-      d_rx_seqno(-1),
-      d_tx_seqno(0),
+  usrp2::impl::impl(transport::sptr data_transport, transport::sptr ctrl_transport, size_t ring_size)
+    : //d_eth_data(new eth_buffer(rx_bufsize)),
+      //d_eth_ctrl(new ethernet()),
+      //d_pf_data(0), 
+      //d_pf_ctrl(0),
+      //d_interface_name(ifc),
+      //d_rx_seqno(-1),
+      //d_tx_seqno(0),
       d_next_rid(0),
-      d_num_rx_frames(0),
-      d_num_rx_missing(0),
-      d_num_rx_overruns(0),
-      d_num_rx_bytes(0), 
+      //d_num_rx_frames(0),
+      //d_num_rx_missing(0),
+      //d_num_rx_overruns(0),
+      //d_num_rx_bytes(0), 
       d_num_enqueued(0),
       d_enqueued_mutex(),
       d_data_pending_cond(),
@@ -149,19 +142,24 @@ namespace usrp2 {
       d_tx_interp(0),
       d_rx_decim(0),
       d_dont_enqueue(true),
-      d_data_running(false),
-      d_ctrl_transport(ctrl_transport)
+      //d_data_running(false),
+      d_ctrl_transport(ctrl_transport),
+      d_data_transport(data_transport),
+      d_ring_size(ring_size)
   {
     d_ctrl_transport->set_callback(boost::bind(&usrp2::impl::handle_control_packet, this, _1));
     d_ctrl_transport->start();
 
-    if (!d_eth_data->open(ifc, htons(U2_DATA_ETHERTYPE)))
-      throw std::runtime_error("Unable to open/register USRP2 data protocol");
+    d_data_transport->set_callback(boost::bind(&usrp2::impl::handle_data_packet, this, _1));
+    d_data_transport->start();
 
-    d_addr = p->addr;
+    //if (!d_eth_data->open(ifc, htons(U2_DATA_ETHERTYPE)))
+    //  throw std::runtime_error("Unable to open/register USRP2 data protocol");
+
+    //d_addr = p->addr;
 
     // Create a packet filter for U2_DATA_ETHERTYPE packets sourced from target USRP2
-    u2_mac_addr_t usrp_mac;
+    /*u2_mac_addr_t usrp_mac;
     parse_mac_addr(d_addr, &usrp_mac);
     d_pf_data = pktfilter::make_ethertype_inbound_target(U2_DATA_ETHERTYPE, (const unsigned char*)&(usrp_mac.addr));
     if (!d_pf_data || !d_eth_data->attach_pktfilter(d_pf_data))
@@ -170,9 +168,11 @@ namespace usrp2 {
     if (USRP2_IMPL_DEBUG)
       std::cerr << "usrp2 constructor: using USRP2 at " << d_addr << std::endl;
 
-    memset(d_pending_replies, 0, sizeof(d_pending_replies));
+    
 
-    start_data_thread();
+    start_data_thread();*/
+
+    memset(d_pending_replies, 0, sizeof(d_pending_replies));
 
     // In case the USRP2 was left streaming RX
     // FIXME: only one channel right now
@@ -227,24 +227,25 @@ namespace usrp2 {
   usrp2::impl::~impl()
   {
     d_ctrl_transport->stop();
-    //thread cleanup
+    d_data_transport->stop();
+    /*//thread cleanup
     stop_data_thread();
     //socket cleanup
     delete d_pf_data;
     d_eth_data->close();
-    delete d_eth_data;
+    delete d_eth_data;*/
 
-    if (USRP2_IMPL_DEBUG) {
+    /*if (USRP2_IMPL_DEBUG) {
       std::cerr << std::endl
                 << "usrp2 destructor: received " << d_num_rx_frames 
 		<< " frames, with " << d_num_rx_missing << " lost ("
 		<< (d_num_rx_frames == 0 ? 0 : (int)(100.0*d_num_rx_missing/d_num_rx_frames))
 		<< "%), totaling " << d_num_rx_bytes
 		<< " bytes" << std::endl;
-    }
+    }*/
   }
   
-  bool
+  /*bool
   usrp2::impl::parse_mac_addr(const std::string &s, u2_mac_addr_t *p)
   {
     p->addr[0] = 0x00;		// Matt's IAB
@@ -268,20 +269,13 @@ namespace usrp2 {
     default:
       return false;
     }
-  }
+  }*/
   
   void
-  usrp2::impl::init_etf_data_hdrs(u2_eth_packet_t *p, const std::string &dst,
-			     int word0_flags, int chan, uint32_t timestamp)
+  usrp2::impl::init_fx_data_hdrs(u2_fixed_hdr_t *p, int word0_flags, int chan, uint32_t timestamp)
   {
-    p->ehdr.ethertype = htons(U2_DATA_ETHERTYPE);
-    parse_mac_addr(dst, &p->ehdr.dst); 
-    memcpy(&p->ehdr.src, d_eth_data->mac(), 6);
-    p->thdr.flags = 0; // FIXME transport header values?
-    p->thdr.seqno = d_tx_seqno++;
-    p->thdr.ack = 0;
-    u2p_set_word0(&p->fixed, word0_flags, chan);
-    u2p_set_timestamp(&p->fixed, timestamp);
+    u2p_set_word0(p, word0_flags, chan);
+    u2p_set_timestamp(p, timestamp);
   }
   
   void
@@ -343,7 +337,7 @@ namespace usrp2 {
   //        Background loop for handling data packets
   // ----------------------------------------------------------------
 
-  void
+ /* void
   usrp2::impl::start_data_thread(){
     d_data_thread = new boost::thread(boost::bind(&usrp2::impl::run_data_thread, this));
   }
@@ -382,28 +376,25 @@ namespace usrp2 {
       }
     }
     d_data_running = false;
-  }
+  }*/
   
   //
   // passed to eth_buffer::rx_frames
   //
-  data_handler::result
+  /*data_handler::result
   usrp2::impl::operator()(const void *base, size_t len)
   {
       if (d_dont_enqueue)		// toss packet
         return data_handler::RELEASE;
 
-      return handle_data_packet(base, len);
-  }
+      //return handle_data_packet(base, len);
+  }*/
 
   void
   usrp2::impl::handle_control_packet(sbuff::sptr sb)
-  {
-    void *base = sb->buff();
-    size_t len = sb->len();
-    
+  {    
     // point to beginning of payload (subpackets)
-    unsigned char *p = (unsigned char *)base + sizeof(u2_fixed_hdr_t);
+    unsigned char *p = (unsigned char *)sb->buff() + sizeof(u2_fixed_hdr_t);
     
     // FIXME (p % 4) == 2.  Not good.  Must watch for unaligned loads.
 
@@ -433,60 +424,44 @@ namespace usrp2 {
     DEBUG_LOG("l");
   }
   
-  data_handler::result
-  usrp2::impl::handle_data_packet(const void *base, size_t len)
+  void
+  usrp2::impl::handle_data_packet(sbuff::sptr sb)
   {
-    u2_eth_samples_t *pkt = (u2_eth_samples_t *)base;
-    d_num_rx_frames++;
-    d_num_rx_bytes += len;
-    
-    /* --- FIXME start of fake transport layer handler --- */
-
-    if (d_rx_seqno != -1) {
-      int expected_seqno = (d_rx_seqno + 1) & 0xFF;
-      int seqno = pkt->hdrs.thdr.seqno; 
-      
-      if (seqno != expected_seqno) {
-	::write(2, "S", 1); // missing sequence number
-	int missing = seqno - expected_seqno;
-	if (missing < 0)
-	  missing += 256;
-	
-	d_num_rx_overruns++;
-	d_num_rx_missing += missing;
-      }
-    }
-
-    d_rx_seqno = pkt->hdrs.thdr.seqno;
-
-    /* --- end of fake transport layer handler --- */
+    //d_num_rx_frames++;
+    //d_num_rx_bytes += sb->len();
+    u2_fixed_hdr_t *fixed_hdr = (u2_fixed_hdr_t*)sb->buff();
 
     // FIXME unaligned load!
-    unsigned int chan = u2p_chan(&pkt->hdrs.fixed);
+    unsigned int chan = u2p_chan(fixed_hdr);
+
+    //printf("Recv over eth data %d (%d)\n", sb->len(), chan);
 
     {
       gruel::scoped_lock l(d_channel_rings_mutex);
 
-      if (!d_channel_rings[chan]) {
-	DEBUG_LOG("!");
-	return data_handler::RELEASE; 	// discard packet, no channel handler
+      if (!d_channel_rings[chan] or d_dont_enqueue) {
+        DEBUG_LOG("!");
+        return; 	// discard packet, no channel handler
       }
       
-      // Strip off ethernet header and transport header and enqueue the rest
       
-      size_t offset = offsetof(u2_eth_samples_t, hdrs.fixed);
-      
-      sbuff::cb_t callback = boost::bind(&eth_buffer::release_frame, d_eth_data, (void*)base);
-      if (d_channel_rings[chan]->enqueue(sbuff::make(&pkt->hdrs.fixed, len-offset, callback))) {
-	inc_enqueued();
-	DEBUG_LOG("+");
-	return data_handler::KEEP;	// channel ring runner will mark frame done
+      if (d_channel_rings[chan]->enqueue(sb)) {
+        inc_enqueued();
+        DEBUG_LOG("+");
       }
       else {
-	DEBUG_LOG("!");
-	return data_handler::RELEASE;	// discard, no room in channel ring
-      }  	
-      return data_handler::RELEASE;
+        DEBUG_LOG("!");
+        return;     //discard packet, enqueue failed
+      }
+    }
+
+    // Wait for user API thread(s) to process all enqueued packets.
+    // The channel ring thread that decrements d_num_enqueued to zero 
+    // will signal this thread to continue.
+    if (d_num_enqueued > 0){
+        gruel::scoped_lock l(d_enqueued_mutex);
+        while(d_num_enqueued > 0)
+            d_data_pending_cond.wait(l);
     }
   }
 
@@ -662,7 +637,7 @@ namespace usrp2 {
       success = success && (ntohx(reply.ok) == 1);
       
       if (success)
-	d_channel_rings[channel] = ring_sptr(new ring(d_eth_data->max_frames()));
+	d_channel_rings[channel] = ring_sptr(new ring(d_ring_size));
       else
 	d_dont_enqueue = true;
 
@@ -996,7 +971,7 @@ namespace usrp2 {
 
     size_t nframes = (nitems + U2_MAX_SAMPLES - 1) / U2_MAX_SAMPLES;
     size_t last_frame = nframes - 1;
-    u2_eth_packet_t	hdrs;
+    u2_fixed_hdr_t	hdrs;
 
     size_t n = 0;
     for (size_t fn = 0; fn < nframes; fn++){
@@ -1018,7 +993,7 @@ namespace usrp2 {
 	  flags |= U2P_TX_END_OF_BURST;
       }
 
-      init_etf_data_hdrs(&hdrs, d_addr, flags, channel, timestamp);
+      init_fx_data_hdrs(&hdrs, flags, channel, timestamp);
 
       // Avoid short packet by splitting last two packets if reqd
       size_t i;
@@ -1037,7 +1012,7 @@ namespace usrp2 {
       if (total < 64)
 	fprintf(stderr, "usrp2::tx_raw: FIXME: short packet: %zd items (%zd bytes)\n", i, total);
 
-      if (d_eth_data->tx_framev(iov, 2) != eth_buffer::EB_OK){
+      if (d_data_transport->sendv(iov, 2) != eth_buffer::EB_OK){
 	return false;
       }
 
@@ -1112,7 +1087,7 @@ namespace usrp2 {
   // ----------------------------------------------------------------
 
   bool
-  usrp2::impl::burn_mac_addr(const std::string &new_addr)
+  usrp2::impl::burn_mac_addr(u2_mac_addr_t *new_mac)
   {
     op_burn_mac_addr_cmd cmd;
     op_generic_t reply;
@@ -1122,8 +1097,7 @@ namespace usrp2 {
     cmd.op.opcode = OP_BURN_MAC_ADDR;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
-    if (!parse_mac_addr(new_addr, &cmd.op.addr))
-      return false;
+    memcpy(&cmd.op.addr, new_mac, sizeof(u2_mac_addr_t));
 
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
     if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, 4*DEF_CMD_TIMEOUT))
