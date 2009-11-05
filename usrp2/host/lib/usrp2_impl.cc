@@ -391,68 +391,80 @@ namespace usrp2 {
   }*/
 
   void
-  usrp2::impl::handle_control_packet(sbuff::sptr sb)
+  usrp2::impl::handle_control_packet(std::vector<sbuff::sptr> sbs)
   {    
-    // point to beginning of payload (subpackets)
-    unsigned char *p = (unsigned char *)sb->buff() + sizeof(u2_fixed_hdr_t);
-    
-    // FIXME (p % 4) == 2.  Not good.  Must watch for unaligned loads.
+    for (size_t i = 0; i < sbs.size(); i++) {
+        sbuff::sptr sb = sbs[i];
 
-    // FIXME iterate over payload, handling more than a single subpacket.
-    
-    int opcode = p[0];
-    unsigned int oplen = p[1];
-    unsigned int rid = p[2];
+        // point to beginning of payload (subpackets)
+        unsigned char *p = (unsigned char *)sb->buff() + sizeof(u2_fixed_hdr_t);
+        
+        // FIXME (p % 4) == 2.  Not good.  Must watch for unaligned loads.
 
-    pending_reply *rp = d_pending_replies[rid];
-    if (rp) {
-      unsigned int buflen = rp->len();
-      if (oplen != buflen) {
-	std::cerr << "usrp2: mismatched command reply length (expected: "
-		  << buflen << " got: " << oplen << "). "
-		  << "op = " << opcode_to_string(opcode) << std::endl;
-      }     
-    
-      // Copy reply into caller's buffer
-      memcpy(rp->buffer(), p, std::min(oplen, buflen));
-      rp->notify_completion();
-      d_pending_replies[rid] = 0;
-      return;
+        // FIXME iterate over payload, handling more than a single subpacket.
+        
+        int opcode = p[0];
+        unsigned int oplen = p[1];
+        unsigned int rid = p[2];
+
+        pending_reply *rp = d_pending_replies[rid];
+        if (rp) {
+          unsigned int buflen = rp->len();
+          if (oplen != buflen) {
+        std::cerr << "usrp2: mismatched command reply length (expected: "
+              << buflen << " got: " << oplen << "). "
+              << "op = " << opcode_to_string(opcode) << std::endl;
+          }     
+        
+          // Copy reply into caller's buffer
+          memcpy(rp->buffer(), p, std::min(oplen, buflen));
+          rp->notify_completion();
+          d_pending_replies[rid] = 0;
+          return;
+        }
+
+        // TODO: handle unsolicited, USRP2 initiated, or late replies
+        DEBUG_LOG("l");
     }
-
-    // TODO: handle unsolicited, USRP2 initiated, or late replies
-    DEBUG_LOG("l");
   }
   
   void
-  usrp2::impl::handle_data_packet(sbuff::sptr sb)
+  usrp2::impl::handle_data_packet(std::vector<sbuff::sptr> sbs)
   {
-    //d_num_rx_frames++;
-    //d_num_rx_bytes += sb->len();
-    u2_fixed_hdr_t *fixed_hdr = (u2_fixed_hdr_t*)sb->buff();
+    if (d_dont_enqueue){
+        for (size_t i = 0; i < sbs.size(); i++) {
+            sbs[i]->done();
+        }
+        return;
+    }
 
-    // FIXME unaligned load!
-    unsigned int chan = u2p_chan(fixed_hdr);
+    for (size_t i = 0; i < sbs.size(); i++) {
+        sbuff::sptr sb = sbs[i];
 
-    //printf("Recv over eth data %d (%d)\n", sb->len(), chan);
+        u2_fixed_hdr_t *fixed_hdr = (u2_fixed_hdr_t*)sb->buff();
+        // FIXME unaligned load!
+        unsigned int chan = u2p_chan(fixed_hdr);
 
-    {
-      gruel::scoped_lock l(d_channel_rings_mutex);
+        // process all data packets handed to us
+        // enqueue data packets in channel rings
+        {
+            gruel::scoped_lock l(d_channel_rings_mutex);
 
-      if (!d_channel_rings[chan] or d_dont_enqueue) {
-        DEBUG_LOG("!");
-        return; 	// discard packet, no channel handler
-      }
-      
-      
-      if (d_channel_rings[chan]->enqueue(sb)) {
-        inc_enqueued();
-        DEBUG_LOG("+");
-      }
-      else {
-        DEBUG_LOG("!");
-        return;     //discard packet, enqueue failed
-      }
+            if (!d_channel_rings[chan]) {
+                DEBUG_LOG("!");
+                sb->done();
+                continue; 	// discard packet, no channel handler
+            }
+
+            if (d_channel_rings[chan]->enqueue(sb)) {
+                inc_enqueued();
+                DEBUG_LOG("+");
+            } else {
+                DEBUG_LOG("!");
+                sb->done();
+                continue;     //discard packet, enqueue failed
+            }
+        }
     }
 
     // Wait for user API thread(s) to process all enqueued packets.
@@ -726,7 +738,7 @@ namespace usrp2 {
 
       bool want_more = (*handler)(items, nitems_in_uint32s, &md);
       DEBUG_LOG("-");
-      sb.reset(); //reset shared ptr so sbuff decontructs
+      sb->done(); //make done to call cleanup callback
       dec_enqueued();
 
       if (!want_more)
@@ -758,7 +770,7 @@ namespace usrp2 {
     // Iterate through frames and drop them
     sbuff::sptr sb;
     while (rp->dequeue(&sb)) {
-      sb.reset(); //reset shared ptr so sbuff decontructs
+      sb->done(); //make done to call cleanup callback
       dec_enqueued();
     }
     return true;

@@ -64,10 +64,11 @@ namespace usrp2 {
         }
         sbuff(void *buff, size_t len, cb_t cb)
          : d_buff(buff), d_len(len), d_cb(cb){}
-        ~sbuff(){if (d_cb) d_cb();}
+        ~sbuff(){done();}
         //access methods
         void *buff(){return d_buff;}
         size_t len(){return d_len;}
+        void done(){if (d_cb) d_cb();}
 
     };
 

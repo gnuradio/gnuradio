@@ -22,13 +22,14 @@
 #include <boost/thread.hpp>
 #include <cstring>
 #include <sys/uio.h>
+#include <vector>
 #include "sbuff.h"
 
 namespace usrp2 {
 
   class transport {
   public:
-    typedef boost::function<void(sbuff::sptr)> callback_t;
+    typedef boost::function<void(std::vector<sbuff::sptr>)> callback_t;
     typedef boost::shared_ptr<transport> sptr;
   private:
     std::string              d_type_str;
@@ -73,7 +74,7 @@ namespace usrp2 {
      * \brief receive data into the sbuffer (override in a subclass)
      * \return a new sbuff, for now, an empty sbuff means nothing was recvd
      */
-    virtual sbuff::sptr recv();
+    virtual std::vector<sbuff::sptr> recv();
   };
   
 } // namespace usrp2

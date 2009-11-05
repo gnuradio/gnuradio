@@ -44,7 +44,7 @@ namespace usrp2{
         eth_data_transport(const std::string &ifc, u2_mac_addr_t mac, size_t rx_bufsize);
         ~eth_data_transport();
         int sendv(const iovec *iov, size_t iovlen);
-        sbuff::sptr recv();
+        std::vector<sbuff::sptr> recv();
         void init();
         size_t max_frames(){return d_eth_data->max_frames();} //FIXME hate to have this here
 };

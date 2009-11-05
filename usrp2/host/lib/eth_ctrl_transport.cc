@@ -76,14 +76,17 @@ int usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
     return d_eth_ctrl->write_packetv(all_iov, all_iov_len);
 }
 
-usrp2::sbuff::sptr usrp2::eth_ctrl_transport::recv(){
+std::vector<usrp2::sbuff::sptr> usrp2::eth_ctrl_transport::recv(){
+    //TODO perform multiple non blocking recvs and pack into sbs
     int recv_len = d_eth_ctrl->read_packet_dont_block(d_buff, sizeof(d_buff));
     //strip the ethernet headers from the buffer
-    if (recv_len > sizeof(u2_eth_packet_only_t)){
-        return sbuff::make(
+    if (recv_len > (signed)sizeof(u2_eth_packet_only_t)){
+        std::vector<sbuff::sptr> sbs;
+        sbs.push_back(sbuff::make(
             d_buff + sizeof(u2_eth_packet_only_t),
-            recv_len - sizeof(u2_eth_packet_only_t));
+            recv_len - sizeof(u2_eth_packet_only_t)));
+        return sbs;
     }
     boost::this_thread::sleep(gruel::get_new_timeout(0.05)); //50ms timeout
-    return sbuff::make(); //nothing yet
+    return std::vector<sbuff::sptr>(); //nothing yet
 }

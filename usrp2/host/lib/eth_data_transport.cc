@@ -78,44 +78,47 @@ int usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
     return d_eth_data->tx_framev(all_iov, all_iov_len);
 }
 
-usrp2::sbuff::sptr usrp2::eth_data_transport::recv(){
+std::vector<usrp2::sbuff::sptr> usrp2::eth_data_transport::recv(){
     void *base;
-
+    std::vector<sbuff::sptr> sbs;
     DEBUG_LOG(":");
     // Receive available frames from ethernet buffer.  Handler will
     // process control frames, enqueue data packets in channel
     // rings, and signal blocked API threads
-    int len = d_eth_data->rx_frame(&base, 100); // FIXME magic timeout
+    std::vector<iovec> iovs = d_eth_data->rx_framev(100); // FIXME magic timeout
+    for (size_t i = 0; i < iovs.size(); i++){
+        void *base = iovs[i].iov_base;
+        size_t len = iovs[i].iov_len;
 
-    if (len <= 0) return sbuff::make();
+        u2_eth_packet_only_t *hdr = (u2_eth_packet_only_t *)base;
+        d_num_rx_frames++;
+        d_num_rx_bytes += len;
+        
+        /* --- FIXME start of fake transport layer handler --- */
 
-    u2_eth_packet_only_t *hdr = (u2_eth_packet_only_t *)base;
-    d_num_rx_frames++;
-    d_num_rx_bytes += len;
-    
-    /* --- FIXME start of fake transport layer handler --- */
+        if (d_rx_seqno != -1) {
+          int expected_seqno = (d_rx_seqno + 1) & 0xFF;
+          int seqno = hdr->thdr.seqno; 
+          
+          if (seqno != expected_seqno) {
+            DEBUG_LOG("S"); // missing sequence number
+            int missing = seqno - expected_seqno;
+            if (missing < 0)
+                missing += 256;
+            d_num_rx_overruns++;
+            d_num_rx_missing += missing;
+          }
+        }
 
-    if (d_rx_seqno != -1) {
-      int expected_seqno = (d_rx_seqno + 1) & 0xFF;
-      int seqno = hdr->thdr.seqno; 
-      
-      if (seqno != expected_seqno) {
-        DEBUG_LOG("S"); // missing sequence number
-        int missing = seqno - expected_seqno;
-        if (missing < 0)
-            missing += 256;
-        d_num_rx_overruns++;
-        d_num_rx_missing += missing;
-      }
+        d_rx_seqno = hdr->thdr.seqno;
+
+        /* --- end of fake transport layer handler --- */
+
+        //drop the ethernet and transport headers
+        sbs.push_back(sbuff::make(
+            (uint8_t*)base + sizeof(u2_eth_packet_only_t),
+            len - sizeof(u2_eth_packet_only_t),
+            boost::bind(&eth_buffer::release_frame, d_eth_data, base)));
     }
-
-    d_rx_seqno = hdr->thdr.seqno;
-
-    /* --- end of fake transport layer handler --- */
-
-    //drop the ethernet and transport headers
-    return sbuff::make(
-        (uint8_t*)base + sizeof(u2_eth_packet_only_t),
-        len - sizeof(u2_eth_packet_only_t),
-        boost::bind(&eth_buffer::release_frame, d_eth_data, base));
+    return sbs;
 }

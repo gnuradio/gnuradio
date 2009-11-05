@@ -37,7 +37,7 @@ namespace usrp2{
         eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac);
         ~eth_ctrl_transport();
         int sendv(const iovec *iov, size_t iovlen);
-        sbuff::sptr recv();
+        std::vector<sbuff::sptr> recv();
 };
 
 

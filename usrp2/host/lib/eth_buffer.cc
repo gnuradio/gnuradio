@@ -234,15 +234,16 @@ namespace usrp2 {
     return EB_OK;
   }
 
-int
-  eth_buffer::rx_frame(void **buff, int timeout_in_ms)
+std::vector<iovec>
+  eth_buffer::rx_framev(int timeout_in_ms)
   {
+    std::vector<iovec> iovs;
     DEBUG_LOG("\n");
       
     while (!frame_available()) {
       if (timeout_in_ms == 0) {
         DEBUG_LOG("w");
-        return -1;
+        return iovs;
       }
       
       struct pollfd pfd;
@@ -255,17 +256,17 @@ int
       int pres = poll(&pfd, 1, timeout_in_ms);
       if (pres == -1) {
         perror("poll");
-        return -1;
+        return iovs;
       }
 
       if (pres == 0) {
         DEBUG_LOG("t");
-        return -1;
+        return iovs;
       }
     }
 
     // Iterate through available packets
-    if (frame_available()) {
+    while (frame_available()) {
         // Get start of ethernet frame and length
         tpacket_hdr *hdr = (tpacket_hdr *)d_ring[d_head];
         void *base = (uint8_t *)hdr+hdr->tp_mac;
@@ -275,11 +276,14 @@ int
         // code.  This means that our uint32_t samples are not 4-byte
         // aligned.  We'll have to deal with it downstream.
 
-        *buff = base;
+        iovec iov;
+        iov.iov_base = base;
+        iov.iov_len = len;
+        iovs.push_back(iov);
+
         inc_head();
-        return len;
     }
-    return -1;
+    return iovs;
   }
 
   eth_buffer::result

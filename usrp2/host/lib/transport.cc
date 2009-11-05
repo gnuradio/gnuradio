@@ -63,8 +63,8 @@ void usrp2::transport::run(){
         try{
             // call recv to get a new sbuffer
             // pass the buffer into the callback
-            usrp2::sbuff::sptr sb = recv();
-            if (sb->len()) d_cb(sb);
+            std::vector<sbuff::sptr> sbs = recv();
+            if (sbs.size()) d_cb(sbs);
         //catch thread interrupts from join, sleep, etc
         //the running condition will be re-checked
         }catch(boost::thread_interrupted const &){}
@@ -75,6 +75,6 @@ int usrp2::transport::sendv(const iovec *iov, size_t iovlen){
     return -1; //NOP
 }
 
-usrp2::sbuff::sptr usrp2::transport::recv(){
-    return usrp2::sbuff::make(); //NOP
+std::vector<usrp2::sbuff::sptr> usrp2::transport::recv(){
+    return std::vector<sbuff::sptr>(); //NOP
 }
