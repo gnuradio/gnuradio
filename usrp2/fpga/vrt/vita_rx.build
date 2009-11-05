@@ -1,0 +1,1 @@
+iverilog -Wimplict -Wportbind -y ../models -y . -y ../control_lib/ -y ../coregen -y /opt/Xilinx/10.1/ISE/verilog/src/XilinxCoreLib -y /opt/Xilinx/10.1/ISE/verilog/src/unisims/ -y ../timing -o vita_rx_tb vita_rx_tb.v
