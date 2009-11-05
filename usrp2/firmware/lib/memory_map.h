@@ -175,6 +175,10 @@ typedef struct {
   volatile uint32_t last_line[NBUFFERS]; // last line xfer'd in buffer
   volatile uint32_t status;	         // error and done flags
   volatile uint32_t hw_config;	         // see below
+  volatile uint32_t dummy[3];
+  volatile uint32_t irqs;
+  volatile uint32_t pri_enc_bp_status;
+  volatile uint32_t cycle_count;
 } buffer_pool_status_t;
 
 #define buffer_pool_status ((buffer_pool_status_t *) BUFFER_POOL_STATUS_BASE)
