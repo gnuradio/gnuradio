@@ -40,7 +40,7 @@ be set in the configuration file prior to running.  It has no command-line
 parameters, and works identically to the GUI scripts.
 
 
-demod_hrpt_file.py
+hrpt_demod_file.py
 ------------------
 
 This non-GUI script will operate on a file generated with

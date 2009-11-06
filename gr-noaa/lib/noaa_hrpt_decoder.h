@@ -29,16 +29,45 @@ class noaa_hrpt_decoder;
 typedef boost::shared_ptr<noaa_hrpt_decoder> noaa_hrpt_decoder_sptr;
 
 noaa_hrpt_decoder_sptr
-noaa_make_hrpt_decoder();
+noaa_make_hrpt_decoder(bool verbose, bool output_files);
 
 class noaa_hrpt_decoder : public gr_sync_block
 {
-  friend noaa_hrpt_decoder_sptr noaa_make_hrpt_decoder();
-  noaa_hrpt_decoder();
+  friend noaa_hrpt_decoder_sptr noaa_make_hrpt_decoder(bool verbose, bool output_files);
+  noaa_hrpt_decoder(bool verbose, bool output_files);
 
-  unsigned int d_word_count;
- 
+  // Configuration
+  bool d_verbose;
+  bool d_output_files;
+
+  // Frame-level state
+  unsigned short d_current_word;
+  unsigned int   d_word_num;
+  int            d_frames_seen;
+
+  // Minor frame number
+  int d_current_mfnum;
+  int d_expected_mfnum;
+  int d_seq_errs;
+
+  // Spacecraft address
+  int d_address;
+
+  // Minor frame timestamp
+  int d_day_of_year;
+  int d_milliseconds;
+  int d_last_time;
+
+  void process_mfnum();
+  void process_address();
+  void process_day_of_year();
+  void process_milli1();
+  void process_milli2();
+  void process_milli3();
+
 public:
+  ~noaa_hrpt_decoder();
+
   int work(int noutput_items,
 	   gr_vector_const_void_star &input_items,
 	   gr_vector_void_star &output_items);

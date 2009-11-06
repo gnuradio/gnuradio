@@ -4,7 +4,20 @@
   <key>noaa_hrpt_decoder</key>
   <category>NOAA</category>
   <import>from gnuradio import noaa</import>
-  <make>noaa.hrpt_decoder()</make>
+  <make>noaa.hrpt_decoder($verbose,$output)</make>
+
+  <param>
+    <name>Verbose</name>
+    <key>verbose</key>
+    <type>bool</type>
+  </param>
+
+  <param>
+    <name>Output Files</name>
+    <key>output</key>
+    <type>bool</type>
+  </param>
+
   <sink>
     <name>in</name>
     <type>short</type>
