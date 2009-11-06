@@ -31,10 +31,8 @@
 #include "eth_ctrl_transport.h"
 #include "eth_data_transport.h"
 
-
-//FIXME this is the Nth instance of this function, find it a home
 static bool
-parse_mac_addr(const std::string &s, u2_mac_addr_t *p)
+string_to_mac_addr(const std::string &s, u2_mac_addr_t *p)
 {
     p->addr[0] = 0x00;		// Matt's IAB
     p->addr[1] = 0x50;
@@ -57,6 +55,23 @@ parse_mac_addr(const std::string &s, u2_mac_addr_t *p)
     default:
       return false;
     }
+}
+
+static bool
+parse_mac_addr(const std::string &s, std::string &ns)
+{
+    u2_mac_addr_t p;
+
+    if (not string_to_mac_addr(s, &p))
+        return false;
+
+    char buf[128];
+    snprintf(buf, sizeof(buf),
+         "%02x:%02x:%02x:%02x:%02x:%02x",
+         p.addr[0],p.addr[1],p.addr[2],
+         p.addr[3],p.addr[4],p.addr[5]);
+    ns = std::string(buf);
+    return true;
 }
 
 namespace usrp2 {
@@ -109,52 +124,15 @@ namespace usrp2 {
 
   // --- end of table code ---
 
-  static bool
-  parse_mac_addr(const std::string &s, std::string &ns)
-  {
-    u2_mac_addr_t p;
-
-    p.addr[0] = 0x00;		// Matt's IAB
-    p.addr[1] = 0x50;
-    p.addr[2] = 0xC2;
-    p.addr[3] = 0x85;
-    p.addr[4] = 0x30;
-    p.addr[5] = 0x00;
-    
-    int len = s.size();
-    switch (len) {
-      
-    case 5:
-      if (sscanf(s.c_str(), "%hhx:%hhx", &p.addr[4], &p.addr[5]) != 2)
-	return false;
-      break;
-      
-    case 17:
-      if (sscanf(s.c_str(), "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
-		 &p.addr[0], &p.addr[1], &p.addr[2],
-		 &p.addr[3], &p.addr[4], &p.addr[5]) != 6)
-	return false;
-      break;
-
-    default:
-      return false;
-    }
-    
-    char buf[128];
-    snprintf(buf, sizeof(buf),
-	     "%02x:%02x:%02x:%02x:%02x:%02x",
-	     p.addr[0],p.addr[1],p.addr[2],
-	     p.addr[3],p.addr[4],p.addr[5]);
-    ns = std::string(buf);
-    return true;
-  }
-
   usrp2::sptr
   usrp2::make(const std::string &ifc, const std::string &addr, size_t rx_bufsize)
   {
-    std::string naddr = "";
-    if (addr != "" && !parse_mac_addr(addr, naddr))
+    u2_mac_addr_t mac;
+    if (addr != "" && !string_to_mac_addr(addr, &mac))
       throw std::runtime_error("Invalid MAC address");
+
+    std::string naddr = "";
+    parse_mac_addr(addr, naddr);
 
     props_vector_t u2s = find(ifc, naddr);
     int n = u2s.size();
@@ -178,13 +156,12 @@ namespace usrp2 {
     u2_mac_addr_t mac;
     d_mac = p->addr;
     d_ifc = ifc;
-    parse_mac_addr(d_mac, &mac);
+    string_to_mac_addr(d_mac, &mac);
     //create transports for data and control
     transport::sptr ctrl_transport(new eth_ctrl_transport(ifc, mac));
-    eth_data_transport *data_transport_p = new eth_data_transport(ifc, mac, rx_bufsize);
-    transport::sptr data_transport(data_transport_p);
+    transport::sptr data_transport(new eth_data_transport(ifc, mac, rx_bufsize));
     //pass the transports into a new usrp2 impl
-    d_impl = std::auto_ptr<impl>(new usrp2::impl(data_transport, ctrl_transport, data_transport_p->max_frames()));
+    d_impl = std::auto_ptr<impl>(new usrp2::impl(data_transport, ctrl_transport, data_transport->max_buffs()));
   }
   
   // Public class destructor.  d_impl will auto-delete.
@@ -294,12 +271,14 @@ namespace usrp2 {
   unsigned int
   usrp2::rx_overruns()
   {
+    //will probably fix with vrt and usrp2 impl
     return 0;//FIXME d_impl->rx_overruns();
   }
   
   unsigned int
   usrp2::rx_missing()
   {
+    //will probably fix with vrt and usrp2 impl
     return 0;//FIXME d_impl->rx_missing();
   }
 
@@ -450,7 +429,7 @@ namespace usrp2 {
   usrp2::burn_mac_addr(const std::string &new_addr)
   {
     u2_mac_addr_t mac;
-    parse_mac_addr(new_addr, &mac);
+    string_to_mac_addr(new_addr, &mac);
     return d_impl->burn_mac_addr(&mac);
   }
 

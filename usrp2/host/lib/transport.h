@@ -59,22 +59,30 @@ namespace usrp2 {
      */
     void stop();
     /*!
+     * \brief get the maximum number of buffs (override in a subclass)
+     * This number is the maximum number of buffers that recv can return at once.
+     * This number should be based upon the limitations of the internals of a subclass.
+     * Ex: for an ethernet packet ring, max buffs will be the max ring size.
+     * \return the number of buffs or 0 for undefined
+     */
+    virtual size_t max_buffs(){return 0;}
+    /*!
      * \brief called from thread on init (override in a subclass)
      * Purpose: to have a thread initialization hook.
      */
-    virtual void init();
+    virtual void init(){/*NOP*/}
     /*!
      * \brief send the contents of the buffer (override in a subclass)
      * \param iovec a list of iovecs
      * \param iovlen the number of iovecs
      * \return the number of bytes sent, -1 for error
      */
-    virtual int sendv(const iovec *iov, size_t iovlen);
+    virtual int sendv(const iovec *iov, size_t iovlen){return -1;}
     /*!
      * \brief receive data, possibly multiple buffers (override in a subclass)
      * \return a new vector of sbuffs, an empty vector is no data
      */
-    virtual std::vector<sbuff::sptr> recv();
+    virtual std::vector<sbuff::sptr> recv(){return std::vector<sbuff::sptr>();}
   };
   
 } // namespace usrp2

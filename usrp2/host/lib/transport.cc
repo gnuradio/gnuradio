@@ -34,10 +34,6 @@ usrp2::transport::~transport(){
     if (d_running) stop();
 }
 
-void usrp2::transport::init(){
-    //NOP
-}
-
 void usrp2::transport::start(){
     if (not d_cb){
         throw std::runtime_error("usrp2::transport for" + d_type_str + " has no callback\n");
@@ -69,12 +65,4 @@ void usrp2::transport::run(){
         //the running condition will be re-checked
         }catch(boost::thread_interrupted const &){}
     }
-}
-
-int usrp2::transport::sendv(const iovec *iov, size_t iovlen){
-    return -1; //NOP
-}
-
-std::vector<usrp2::sbuff::sptr> usrp2::transport::recv(){
-    return std::vector<sbuff::sptr>(); //NOP
 }

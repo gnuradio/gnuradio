@@ -46,7 +46,7 @@ namespace usrp2{
         int sendv(const iovec *iov, size_t iovlen);
         std::vector<sbuff::sptr> recv();
         void init();
-        size_t max_frames(){return d_eth_data->max_frames();} //FIXME hate to have this here
+        size_t max_buffs(){return d_eth_data->max_frames();}
 };
 
 
