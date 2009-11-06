@@ -29,7 +29,7 @@ namespace usrp2 {
 
   class transport {
   public:
-    typedef boost::function<void(std::vector<sbuff::sptr>)> callback_t;
+    typedef boost::function<void(std::vector<sbuff::sptr> &)> callback_t;
     typedef boost::shared_ptr<transport> sptr;
   private:
     std::string              d_type_str;

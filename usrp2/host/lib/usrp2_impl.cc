@@ -254,7 +254,7 @@ namespace usrp2 {
   }
 
   void
-  usrp2::impl::handle_control_packet(std::vector<sbuff::sptr> sbs)
+  usrp2::impl::handle_control_packet(std::vector<sbuff::sptr> &sbs)
   {    
     for (size_t i = 0; i < sbs.size(); i++) {
         sbuff::sptr sb = sbs[i];
@@ -292,7 +292,7 @@ namespace usrp2 {
   }
   
   void
-  usrp2::impl::handle_data_packet(std::vector<sbuff::sptr> sbs)
+  usrp2::impl::handle_data_packet(std::vector<sbuff::sptr> &sbs)
   {
     if (d_dont_enqueue) return;
 
