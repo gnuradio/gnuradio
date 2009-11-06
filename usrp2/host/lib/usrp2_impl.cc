@@ -583,7 +583,7 @@ namespace usrp2 {
     
     // Iterate through frames and present to user
     sbuff::sptr sb;
-    while (rp->dequeue(&sb)) {
+    while (rp->dequeue(sb)) {
       uint32_t	       *items;			// points to beginning of data items
       size_t 		nitems_in_uint32s;
       rx_metadata	md;
@@ -623,7 +623,7 @@ namespace usrp2 {
 
     // Iterate through frames and drop them
     sbuff::sptr sb;
-    while (rp->dequeue(&sb)) {
+    while (rp->dequeue(sb)) {
       sb.reset(); //reset to call cleanup callback
       dec_enqueued();
     }

@@ -71,7 +71,7 @@ namespace usrp2 {
     void wait_for_not_empty();
 
     bool enqueue(sbuff::sptr sb);
-    bool dequeue(sbuff::sptr *sb);
+    bool dequeue(sbuff::sptr &sb);
   };
 
 }  // namespace usrp2

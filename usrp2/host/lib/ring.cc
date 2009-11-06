@@ -28,13 +28,10 @@
 namespace usrp2 {
 
   ring::ring(unsigned int entries)
-    : d_max(entries), d_read_ind(0), d_write_ind(0), d_ring(entries),
+    : d_max(entries), d_read_ind(0), d_write_ind(0),
+      d_ring(entries, sbuff::make()),
       d_mutex(), d_not_empty()
-  {
-    for (unsigned int i = 0; i < entries; i++) {
-      d_ring[i] = sbuff::make(); //load empty sbuff
-    }
-  }
+  {/*NOP*/}
 
   void 
   ring::wait_for_not_empty() 
@@ -59,13 +56,13 @@ namespace usrp2 {
   }
 
   bool
-  ring::dequeue(sbuff::sptr *sb)
+  ring::dequeue(sbuff::sptr &sb)
   {
     gruel::scoped_lock l(d_mutex);
     if (empty())
       return false;
-      
-    *sb = d_ring[d_read_ind];
+
+    sb = d_ring[d_read_ind];
     d_ring[d_read_ind] = sbuff::make(); //replace it with an empty sbuff
 
     inc_read_ind();

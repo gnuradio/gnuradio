@@ -71,7 +71,6 @@ int usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
 }
 
 std::vector<usrp2::sbuff::sptr> usrp2::eth_data_transport::recv(){
-    void *base;
     std::vector<sbuff::sptr> sbs;
     DEBUG_LOG(":");
     // Receive available frames from ethernet buffer.  Handler will
