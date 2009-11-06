@@ -136,7 +136,8 @@ module u2_core
    input [3:0] clock_divider
    );
 
-   localparam SR_RXCTRL = 160;
+   localparam SR_RX_DSP = 160;
+   localparam SR_RX_CTRL = 176;
    localparam SR_TIME64 = 192;
    
    wire [7:0] 	set_addr;
@@ -565,14 +566,14 @@ module u2_core
       .fifo_occupied(dsp_rx_occ),.fifo_full(dsp_rx_full),.fifo_empty(dsp_rx_empty),
       .debug_rx(debug_rx) );
 */
-   vita_rx_control #(.BASE(SR_RXCTRL)) vita_rx_control
+   vita_rx_control #(.BASE(SR_RX_CTRL)) vita_rx_control
      (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .vita_time(vita_time), .overrun(overrun),
       .sample(sample_rx), .run(run_rx), .strobe(strobe_rx),
       .sample_fifo_o(rx_data), .sample_fifo_dst_rdy_i(rx_dst_rdy), .sample_fifo_src_rdy_o(rx_src_rdy));
 
-   vita_rx_framer #(.BASE(SR_RXCTRL)) vita_rx_framer
+   vita_rx_framer #(.BASE(SR_RX_CTRL)) vita_rx_framer
      (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .sample_fifo_i(rx_data), .sample_fifo_dst_rdy_o(rx_dst_rdy), .sample_fifo_src_rdy_i(rx_src_rdy),
@@ -584,7 +585,7 @@ module u2_core
       .datain(rx1_data), .src_rdy_i(rx1_src_rdy), .dst_rdy_o(rx1_dst_rdy),
       .dataout({wr1_flags,wr1_dat}), .src_rdy_o(wr1_ready_i), .dst_rdy_i(wr1_ready_o));
 
-   dsp_core_rx dsp_core_rx
+   dsp_core_rx #(.BASE(SR_RX_DSP)) dsp_core_rx
      (.clk(dsp_clk),.rst(dsp_rst),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .adc_a(adc_a),.adc_ovf_a(adc_ovf_a),.adc_b(adc_b),.adc_ovf_b(adc_ovf_b),

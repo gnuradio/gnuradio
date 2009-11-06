@@ -1,6 +1,6 @@
 
-`define DSP_CORE_RX_BASE 160
 module dsp_core_rx
+  #(parameter BASE = 160)
   (input clk, input rst,
    input set_stb, input [7:0] set_addr, input [31:0] set_data,
 
@@ -33,33 +33,33 @@ module dsp_core_rx
    wire        enable_hb1, enable_hb2;
    wire [7:0]  cic_decim_rate;
    
-   setting_reg #(.my_addr(`DSP_CORE_RX_BASE+0)) sr_0
+   setting_reg #(.my_addr(BASE+0)) sr_0
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out(phase_inc),.changed());
    
-   setting_reg #(.my_addr(`DSP_CORE_RX_BASE+1)) sr_1
+   setting_reg #(.my_addr(BASE+1)) sr_1
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out({scale_i,scale_q}),.changed());
    
-   setting_reg #(.my_addr(`DSP_CORE_RX_BASE+2)) sr_2
+   setting_reg #(.my_addr(BASE+2)) sr_2
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out({enable_hb1, enable_hb2, cic_decim_rate}),.changed());
 
-   rx_dcoffset #(.WIDTH(14),.ADDR(`DSP_CORE_RX_BASE+6)) rx_dcoffset_a
+   rx_dcoffset #(.WIDTH(14),.ADDR(BASE+3)) rx_dcoffset_a
      (.clk(clk),.rst(rst),.set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .adc_in(adc_a),.adc_out(adc_a_ofs));
    
-   rx_dcoffset #(.WIDTH(14),.ADDR(`DSP_CORE_RX_BASE+7)) rx_dcoffset_b
+   rx_dcoffset #(.WIDTH(14),.ADDR(BASE+4)) rx_dcoffset_b
      (.clk(clk),.rst(rst),.set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .adc_in(adc_b),.adc_out(adc_b_ofs));
 
    wire [3:0]  muxctrl;
-   setting_reg #(.my_addr(`DSP_CORE_RX_BASE+8)) sr_8
+   setting_reg #(.my_addr(BASE+5)) sr_8
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out(muxctrl),.changed());
 
    wire [1:0] gpio_ena;
-   setting_reg #(.my_addr(`DSP_CORE_RX_BASE+9)) sr_9
+   setting_reg #(.my_addr(BASE+6)) sr_9
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out(gpio_ena),.changed());
 
