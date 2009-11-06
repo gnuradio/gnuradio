@@ -309,7 +309,7 @@ hwconfig_wishbone_divisor(void)
 #define SR_TIME64 192
 #define SR_LAST 255
 
-#define	_SR_ADDR(sr)	(SETTINGS_BASE + (sr) * sizeof(uint32_t))
+#define	_SR_ADDR(sr)	(MISC_OUTPUT_BASE + (sr) * sizeof(uint32_t))
 
 // --- buffer pool control regs ---
 

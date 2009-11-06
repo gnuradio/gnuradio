@@ -161,11 +161,6 @@ typedef struct {
 #define U2_MAX_SAMPLES	370
 #define	U2_MIN_SAMPLES   10
 
-typedef struct {
-  u2_eth_packet_t	hdrs;
-  uint32_t		samples[U2_MAX_SAMPLES];
-} u2_eth_samples_t;
-
 /*
  * Opcodes for control channel
  *

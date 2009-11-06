@@ -267,7 +267,7 @@ dbsm_handle_tx_underrun(dbsm_t *sm)
 void
 dbsm_handle_rx_overrun(dbsm_t *sm)
 {
-  dsp_rx_regs->clear_state = 1;
+  sr_rx_ctrl->clear_overrun = 1;
 
   // If there's a buffer that's filling, clear it.
   // Any restart will be the job of the caller.

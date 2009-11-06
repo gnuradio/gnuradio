@@ -133,28 +133,28 @@ void
 restart_streaming(void)
 {
   // setup RX DSP regs
-  dsp_rx_regs->clear_state = 1;			// reset
+  sr_rx_ctrl->nsamples_per_pkt = streaming_items_per_frame;
+  sr_rx_ctrl->nchannels = 1;
+  sr_rx_ctrl->clear_overrun = 1;			// reset
 
   streaming_p = true;
   streaming_frame_count = FRAMES_PER_CMD;
 
-  dsp_rx_regs->rx_command =
+  sr_rx_ctrl->cmd =
     MK_RX_CMD(FRAMES_PER_CMD * streaming_items_per_frame,
-	      streaming_items_per_frame,
 	      1, 1);			// set "chain" bit
 
   // kick off the state machine
   dbsm_start(&dsp_rx_sm);
 
-  dsp_rx_regs->rx_time = 0;		// enqueue first of two commands
+  sr_rx_ctrl->time_ticks = 0;		// enqueue first of two commands
 
   // make sure this one and the rest have the "now" and "chain" bits set.
-  dsp_rx_regs->rx_command =
+  sr_rx_ctrl->cmd =
     MK_RX_CMD(FRAMES_PER_CMD * streaming_items_per_frame,
-	      streaming_items_per_frame,
-	      1, 1);				
+	      1, 1);
 
-  dsp_rx_regs->rx_time = 0;		// enqueue second command
+  sr_rx_ctrl->time_ticks = 0;		// enqueue second command
 }
 
 void
@@ -189,7 +189,7 @@ void
 stop_rx_cmd(void)
 {
   streaming_p = false;
-  dsp_rx_regs->clear_state = 1;	// flush cmd queue
+  sr_rx_ctrl->clear_overrun = 1;	// flush cmd queue
   bp_clear_buf(DSP_RX_BUF_0);
   bp_clear_buf(DSP_RX_BUF_1);
 }
@@ -236,7 +236,7 @@ fw_sets_seqno_inspector(dbsm_t *sm, int buf_this)	// returns false
   // queue up another rx command when required
   if (streaming_p && --streaming_frame_count == 0){
     streaming_frame_count = FRAMES_PER_CMD;
-    dsp_rx_regs->rx_time = 0;
+    sr_rx_ctrl->time_ticks = 0;
   }
 
   return false;		// we didn't handle the packet
