@@ -122,19 +122,8 @@ namespace usrp2 {
   }
 
 
-  usrp2::impl::impl(transport::sptr data_transport, transport::sptr ctrl_transport, size_t ring_size)
-    : //d_eth_data(new eth_buffer(rx_bufsize)),
-      //d_eth_ctrl(new ethernet()),
-      //d_pf_data(0), 
-      //d_pf_ctrl(0),
-      //d_interface_name(ifc),
-      //d_rx_seqno(-1),
-      //d_tx_seqno(0),
+  usrp2::impl::impl(transport::sptr data_transport, transport::sptr ctrl_transport, size_t ring_size) :
       d_next_rid(0),
-      //d_num_rx_frames(0),
-      //d_num_rx_missing(0),
-      //d_num_rx_overruns(0),
-      //d_num_rx_bytes(0), 
       d_num_enqueued(0),
       d_enqueued_mutex(),
       d_data_pending_cond(),
@@ -142,7 +131,6 @@ namespace usrp2 {
       d_tx_interp(0),
       d_rx_decim(0),
       d_dont_enqueue(true),
-      //d_data_running(false),
       d_ctrl_transport(ctrl_transport),
       d_data_transport(data_transport),
       d_ring_size(ring_size)
@@ -152,25 +140,6 @@ namespace usrp2 {
 
     d_data_transport->set_callback(boost::bind(&usrp2::impl::handle_data_packet, this, _1));
     d_data_transport->start();
-
-    //if (!d_eth_data->open(ifc, htons(U2_DATA_ETHERTYPE)))
-    //  throw std::runtime_error("Unable to open/register USRP2 data protocol");
-
-    //d_addr = p->addr;
-
-    // Create a packet filter for U2_DATA_ETHERTYPE packets sourced from target USRP2
-    /*u2_mac_addr_t usrp_mac;
-    parse_mac_addr(d_addr, &usrp_mac);
-    d_pf_data = pktfilter::make_ethertype_inbound_target(U2_DATA_ETHERTYPE, (const unsigned char*)&(usrp_mac.addr));
-    if (!d_pf_data || !d_eth_data->attach_pktfilter(d_pf_data))
-      throw std::runtime_error("Unable to attach packet filter for data packets.");
-    
-    if (USRP2_IMPL_DEBUG)
-      std::cerr << "usrp2 constructor: using USRP2 at " << d_addr << std::endl;
-
-    
-
-    start_data_thread();*/
 
     memset(d_pending_replies, 0, sizeof(d_pending_replies));
 
@@ -228,48 +197,7 @@ namespace usrp2 {
   {
     d_ctrl_transport->stop();
     d_data_transport->stop();
-    /*//thread cleanup
-    stop_data_thread();
-    //socket cleanup
-    delete d_pf_data;
-    d_eth_data->close();
-    delete d_eth_data;*/
-
-    /*if (USRP2_IMPL_DEBUG) {
-      std::cerr << std::endl
-                << "usrp2 destructor: received " << d_num_rx_frames 
-		<< " frames, with " << d_num_rx_missing << " lost ("
-		<< (d_num_rx_frames == 0 ? 0 : (int)(100.0*d_num_rx_missing/d_num_rx_frames))
-		<< "%), totaling " << d_num_rx_bytes
-		<< " bytes" << std::endl;
-    }*/
   }
-  
-  /*bool
-  usrp2::impl::parse_mac_addr(const std::string &s, u2_mac_addr_t *p)
-  {
-    p->addr[0] = 0x00;		// Matt's IAB
-    p->addr[1] = 0x50;
-    p->addr[2] = 0xC2;
-    p->addr[3] = 0x85;
-    p->addr[4] = 0x30;
-    p->addr[5] = 0x00;
-    
-    int len = s.size();
-    
-    switch (len){
-      
-    case 5:
-      return sscanf(s.c_str(), "%hhx:%hhx", &p->addr[4], &p->addr[5]) == 2;
-      
-    case 17:
-      return sscanf(s.c_str(), "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
-		    &p->addr[0], &p->addr[1], &p->addr[2],
-		    &p->addr[3], &p->addr[4], &p->addr[5]) == 6;
-    default:
-      return false;
-    }
-  }*/
   
   void
   usrp2::impl::init_fx_data_hdrs(u2_fixed_hdr_t *p, int word0_flags, int chan, uint32_t timestamp)
@@ -333,63 +261,6 @@ namespace usrp2 {
     return res == 1;
   }
 
-  // ----------------------------------------------------------------
-  //        Background loop for handling data packets
-  // ----------------------------------------------------------------
-
- /* void
-  usrp2::impl::start_data_thread(){
-    d_data_thread = new boost::thread(boost::bind(&usrp2::impl::run_data_thread, this));
-  }
-
-  void
-  usrp2::impl::stop_data_thread()
-  {
-    d_data_running = false;
-    d_data_pending_cond.notify_one();
-    d_data_thread->join();
-  }
-  
-  void
-  usrp2::impl::run_data_thread()
-  {
-    boost::this_thread::disable_interruption di;
-    if (gruel::enable_realtime_scheduling(gruel::sys_pri::usrp2_backend()) != gruel::RT_OK)
-      std::cerr << "usrp2: failed to enable realtime scheduling" << std::endl;
-    d_data_running = true;
-    while(d_data_running) {
-      DEBUG_LOG(":");
-      // Receive available frames from ethernet buffer.  Handler will
-      // process control frames, enqueue data packets in channel
-      // rings, and signal blocked API threads
-      int res = d_eth_data->rx_frames(this, 100); // FIXME magic timeout
-      if (res == eth_buffer::EB_ERROR)
-	break;  
-
-      // Wait for user API thread(s) to process all enqueued packets.
-      // The channel ring thread that decrements d_num_enqueued to zero 
-      // will signal this thread to continue.
-      {
-        gruel::scoped_lock l(d_enqueued_mutex);
-        while(d_num_enqueued > 0 && d_data_running)
-	  d_data_pending_cond.wait(l);
-      }
-    }
-    d_data_running = false;
-  }*/
-  
-  //
-  // passed to eth_buffer::rx_frames
-  //
-  /*data_handler::result
-  usrp2::impl::operator()(const void *base, size_t len)
-  {
-      if (d_dont_enqueue)		// toss packet
-        return data_handler::RELEASE;
-
-      //return handle_data_packet(base, len);
-  }*/
-
   void
   usrp2::impl::handle_control_packet(std::vector<sbuff::sptr> sbs)
   {    
@@ -431,12 +302,7 @@ namespace usrp2 {
   void
   usrp2::impl::handle_data_packet(std::vector<sbuff::sptr> sbs)
   {
-    if (d_dont_enqueue){
-        for (size_t i = 0; i < sbs.size(); i++) {
-            sbs[i]->done();
-        }
-        return;
-    }
+    if (d_dont_enqueue) return;
 
     for (size_t i = 0; i < sbs.size(); i++) {
         sbuff::sptr sb = sbs[i];
@@ -452,7 +318,6 @@ namespace usrp2 {
 
             if (!d_channel_rings[chan]) {
                 DEBUG_LOG("!");
-                sb->done();
                 continue; 	// discard packet, no channel handler
             }
 
@@ -461,7 +326,6 @@ namespace usrp2 {
                 DEBUG_LOG("+");
             } else {
                 DEBUG_LOG("!");
-                sb->done();
                 continue;     //discard packet, enqueue failed
             }
         }
@@ -738,7 +602,7 @@ namespace usrp2 {
 
       bool want_more = (*handler)(items, nitems_in_uint32s, &md);
       DEBUG_LOG("-");
-      sb->done(); //make done to call cleanup callback
+      sb.reset(); //reset to call cleanup callback
       dec_enqueued();
 
       if (!want_more)
@@ -770,7 +634,7 @@ namespace usrp2 {
     // Iterate through frames and drop them
     sbuff::sptr sb;
     while (rp->dequeue(&sb)) {
-      sb->done(); //make done to call cleanup callback
+      sb.reset(); //reset to call cleanup callback
       dec_enqueued();
     }
     return true;

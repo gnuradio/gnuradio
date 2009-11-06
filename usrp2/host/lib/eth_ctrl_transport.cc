@@ -37,14 +37,6 @@ usrp2::eth_ctrl_transport::~eth_ctrl_transport(){
     delete d_eth_ctrl;
 }
 
-//FIXME clean this up, probably when we get vrt headers
-//eth transport is only responsible for eth headers and transport headers
-//that leaves the u2 fixed headers to be handled by the usrp2 impl
-typedef struct {
-  u2_eth_hdr_t		ehdr;
-  u2_transport_hdr_t	thdr;
-} u2_eth_packet_only_t;
-
 int usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
     //create a new iov array with a space for ethernet header and padding
     // and move the current iovs to the center of the new array

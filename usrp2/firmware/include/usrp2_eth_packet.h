@@ -134,6 +134,14 @@ u2p_set_timestamp(u2_fixed_hdr_t *p, uint32_t ts)
 }
 
 /*!
+ * \brief consolidated packet: ethernet header + transport header
+ */
+typedef struct {
+  u2_eth_hdr_t		ehdr;
+  u2_transport_hdr_t	thdr;
+} u2_eth_packet_only_t;
+
+/*!
  * \brief consolidated packet: ethernet header + transport header + fixed header
  */
 typedef struct {

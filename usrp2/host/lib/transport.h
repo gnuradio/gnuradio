@@ -71,8 +71,8 @@ namespace usrp2 {
      */
     virtual int sendv(const iovec *iov, size_t iovlen);
     /*!
-     * \brief receive data into the sbuffer (override in a subclass)
-     * \return a new sbuff, for now, an empty sbuff means nothing was recvd
+     * \brief receive data, possibly multiple buffers (override in a subclass)
+     * \return a new vector of sbuffs, an empty vector is no data
      */
     virtual std::vector<sbuff::sptr> recv();
   };

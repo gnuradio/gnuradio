@@ -60,21 +60,7 @@ namespace usrp2 {
     static const size_t NRIDS = 256;
     static const size_t NCHANS = 32;
 
-    /*eth_buffer    *d_eth_data;	// packet ring buffered data frames
-    ethernet      *d_eth_ctrl;  // unbuffered control frames
-    pktfilter     *d_pf_data;
-    pktfilter     *d_pf_ctrl;*/
-
-    /*std::string    d_interface_name;
-    std::string    d_addr;       // FIXME: use u2_mac_addr_t instead*/
-    
-    /*int            d_rx_seqno;
-    int            d_tx_seqno;*/
     int            d_next_rid;
-    /*unsigned int   d_num_rx_frames; //TODO remove this stuff, its in transport data
-    unsigned int   d_num_rx_missing;
-    unsigned int   d_num_rx_overruns;
-    unsigned int   d_num_rx_bytes;*/
 
     unsigned int   d_num_enqueued;
     gruel::mutex   d_enqueued_mutex;
@@ -105,25 +91,16 @@ namespace usrp2 {
         d_data_pending_cond.notify_one();
     }
     
-    //static bool parse_mac_addr(const std::string &s, u2_mac_addr_t *p);
     void init_fx_data_hdrs(u2_fixed_hdr_t *p, int word0_flags, int chan, uint32_t timestamp);
     void init_op_ctrl_hdrs(op_fixed_hdr_t *p, int word0_flags, uint32_t timestamp);
     void init_config_rx_v2_cmd(op_config_rx_v2_cmd *cmd);
     void init_config_tx_v2_cmd(op_config_tx_v2_cmd *cmd);
     bool transmit_cmd_and_wait(void *cmd, size_t len, pending_reply *p, double secs=0.0);
     bool transmit_cmd(void *cmd, size_t len);
-    //virtual data_handler::result operator()(const void *base, size_t len);
     void handle_control_packet(std::vector<sbuff::sptr> sbs);
     void handle_data_packet(std::vector<sbuff::sptr> sbs);
     bool dboard_info();
     bool reset_db();
-
-    //data thread stuff
-   /* volatile bool d_data_running; // TODO: multistate if needed
-    boost::thread *d_data_thread;
-    void start_data_thread();
-    void stop_data_thread();
-    void run_data_thread();*/
 
     transport::sptr d_ctrl_transport;
     transport::sptr d_data_transport;
@@ -132,9 +109,6 @@ namespace usrp2 {
   public:
     impl(transport::sptr data_transport, transport::sptr ctrl_transport, size_t ring_size);
     ~impl();
-
-    //std::string mac_addr() const { return d_addr; } // FIXME: convert from u2_mac_addr_t
-    //std::string interface_name() const { return d_interface_name; }
 
     // Rx
 
@@ -158,8 +132,6 @@ namespace usrp2 {
     bool rx_samples(unsigned int channel, rx_sample_handler *handler);
     bool flush_rx_samples(unsigned int channel);
     bool stop_rx_streaming(unsigned int channel);
-    //unsigned int rx_overruns() const { return d_num_rx_overruns; }
-    //unsigned int rx_missing() const { return d_num_rx_missing; }
 
     // Tx
 
