@@ -161,7 +161,7 @@ namespace usrp2 {
     transport::sptr ctrl_transport(new eth_ctrl_transport(ifc, mac));
     transport::sptr data_transport(new eth_data_transport(ifc, mac, rx_bufsize));
     //pass the transports into a new usrp2 impl
-    d_impl = std::auto_ptr<impl>(new usrp2::impl(data_transport, ctrl_transport, data_transport->max_buffs()));
+    d_impl = std::auto_ptr<impl>(new usrp2::impl(data_transport, ctrl_transport));
   }
   
   // Public class destructor.  d_impl will auto-delete.

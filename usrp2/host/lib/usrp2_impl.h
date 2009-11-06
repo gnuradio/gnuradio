@@ -90,8 +90,7 @@ namespace usrp2 {
       if (--d_num_enqueued == 0)
         d_data_pending_cond.notify_one();
     }
-    
-    void init_fx_data_hdrs(u2_fixed_hdr_t *p, int word0_flags, int chan, uint32_t timestamp);
+
     void init_op_ctrl_hdrs(op_fixed_hdr_t *p, int word0_flags, uint32_t timestamp);
     void init_config_rx_v2_cmd(op_config_rx_v2_cmd *cmd);
     void init_config_tx_v2_cmd(op_config_tx_v2_cmd *cmd);
@@ -104,10 +103,9 @@ namespace usrp2 {
 
     transport::sptr d_ctrl_transport;
     transport::sptr d_data_transport;
-    size_t d_ring_size;
 
   public:
-    impl(transport::sptr data_transport, transport::sptr ctrl_transport, size_t ring_size);
+    impl(transport::sptr data_transport, transport::sptr ctrl_transport);
     ~impl();
 
     // Rx

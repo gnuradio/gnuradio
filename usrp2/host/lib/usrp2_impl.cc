@@ -122,7 +122,7 @@ namespace usrp2 {
   }
 
 
-  usrp2::impl::impl(transport::sptr data_transport, transport::sptr ctrl_transport, size_t ring_size) :
+  usrp2::impl::impl(transport::sptr data_transport, transport::sptr ctrl_transport) :
       d_next_rid(0),
       d_num_enqueued(0),
       d_enqueued_mutex(),
@@ -132,8 +132,7 @@ namespace usrp2 {
       d_rx_decim(0),
       d_dont_enqueue(true),
       d_ctrl_transport(ctrl_transport),
-      d_data_transport(data_transport),
-      d_ring_size(ring_size)
+      d_data_transport(data_transport)
   {
     d_ctrl_transport->set_callback(boost::bind(&usrp2::impl::handle_control_packet, this, _1));
     d_ctrl_transport->start();
@@ -198,14 +197,7 @@ namespace usrp2 {
     d_ctrl_transport->stop();
     d_data_transport->stop();
   }
-  
-  void
-  usrp2::impl::init_fx_data_hdrs(u2_fixed_hdr_t *p, int word0_flags, int chan, uint32_t timestamp)
-  {
-    u2p_set_word0(p, word0_flags, chan);
-    u2p_set_timestamp(p, timestamp);
-  }
-  
+
   void
   usrp2::impl::init_op_ctrl_hdrs(op_fixed_hdr_t *p, int word0_flags, uint32_t timestamp){
     u2p_set_word0(&p->fixed, word0_flags, 0);
@@ -304,6 +296,8 @@ namespace usrp2 {
   {
     if (d_dont_enqueue) return;
 
+    // process all data packets handed to us
+    // enqueue data packets in channel rings
     for (size_t i = 0; i < sbs.size(); i++) {
         sbuff::sptr sb = sbs[i];
 
@@ -311,23 +305,19 @@ namespace usrp2 {
         // FIXME unaligned load!
         unsigned int chan = u2p_chan(fixed_hdr);
 
-        // process all data packets handed to us
-        // enqueue data packets in channel rings
-        {
-            gruel::scoped_lock l(d_channel_rings_mutex);
+        gruel::scoped_lock l(d_channel_rings_mutex);
 
-            if (!d_channel_rings[chan]) {
-                DEBUG_LOG("!");
-                continue; 	// discard packet, no channel handler
-            }
+        if (!d_channel_rings[chan]) {
+            DEBUG_LOG("!");
+            continue; 	// discard packet, no channel handler
+        }
 
-            if (d_channel_rings[chan]->enqueue(sb)) {
-                inc_enqueued();
-                DEBUG_LOG("+");
-            } else {
-                DEBUG_LOG("!");
-                continue;     //discard packet, enqueue failed
-            }
+        if (d_channel_rings[chan]->enqueue(sb)) {
+            inc_enqueued();
+            DEBUG_LOG("+");
+        } else {
+            DEBUG_LOG("!");
+            continue;     //discard packet, enqueue failed
         }
     }
 
@@ -513,7 +503,7 @@ namespace usrp2 {
       success = success && (ntohx(reply.ok) == 1);
       
       if (success)
-	d_channel_rings[channel] = ring_sptr(new ring(d_ring_size));
+	d_channel_rings[channel] = ring_sptr(new ring(d_data_transport->max_buffs()));
       else
 	d_dont_enqueue = true;
 
@@ -847,7 +837,6 @@ namespace usrp2 {
 
     size_t nframes = (nitems + U2_MAX_SAMPLES - 1) / U2_MAX_SAMPLES;
     size_t last_frame = nframes - 1;
-    u2_fixed_hdr_t	hdrs;
 
     size_t n = 0;
     for (size_t fn = 0; fn < nframes; fn++){
@@ -869,7 +858,10 @@ namespace usrp2 {
 	  flags |= U2P_TX_END_OF_BURST;
       }
 
-      init_fx_data_hdrs(&hdrs, flags, channel, timestamp);
+      //setup the fixed header
+      u2_fixed_hdr_t	fixed_hdr;
+      u2p_set_word0(&fixed_hdr, flags, channel);
+      u2p_set_timestamp(&fixed_hdr, timestamp);
 
       // Avoid short packet by splitting last two packets if reqd
       size_t i;
@@ -879,8 +871,8 @@ namespace usrp2 {
 	i = std::min((size_t) U2_MAX_SAMPLES, nitems - n);
 
       eth_iovec iov[2];
-      iov[0].iov_base = &hdrs;
-      iov[0].iov_len = sizeof(hdrs);
+      iov[0].iov_base = &fixed_hdr;
+      iov[0].iov_len = sizeof(fixed_hdr);
       iov[1].iov_base = const_cast<uint32_t *>(&items[n]);
       iov[1].iov_len = i * sizeof(uint32_t);
 
