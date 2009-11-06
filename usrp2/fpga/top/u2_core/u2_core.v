@@ -135,6 +135,10 @@ module u2_core
    input sim_mode,
    input [3:0] clock_divider
    );
+
+   localparam SR_RX_DSP = 160;
+   localparam SR_RX_CTRL = 176;
+   localparam SR_TIME64 = 192;
    
    wire [7:0] 	set_addr;
    wire [31:0] 	set_data;
@@ -158,6 +162,8 @@ module u2_core
 	
    wire 	serdes_link_up;
    wire 	epoch;
+   wire [31:0] 	irq;
+   wire [63:0] 	vita_time;
    
    // ///////////////////////////////////////////////////////////////////////////////////////////////
    // Wishbone Single Master INTERCON
@@ -278,6 +284,7 @@ module u2_core
 		 .wb_we_o(ram_loader_we),.wb_ack_i(ram_loader_ack),
 		 .ram_loader_done_o(ram_loader_done));
 
+   // /////////////////////////////////////////////////////////////////////////
    // Processor
    aeMB_core_BE #(.ISIZ(16),.DSIZ(16),.MUL(0),.BSF(1))
      aeMB (.sys_clk_i(wb_clk), .sys_rst_i(wb_rst),
@@ -292,6 +299,7 @@ module u2_core
    
    assign 	 bus_error = m0_err | m0_rty;
    
+   // /////////////////////////////////////////////////////////////////////////
    // Dual Ported RAM -- D-Port is Slave #0 on main Wishbone
    // I-port connects directly to processor and ram loader
 
@@ -314,6 +322,7 @@ module u2_core
    setting_reg #(.my_addr(7)) sr_icache (.clk(wb_clk),.rst(wb_rst),.strobe(set_stb),.addr(set_addr),
 					 .in(set_data),.out(),.changed(flush_icache));
 
+   // /////////////////////////////////////////////////////////////////////////
    // Buffer Pool, slave #1
    wire 	 rd0_ready_i, rd0_ready_o;
    wire 	 rd1_ready_i, rd1_ready_o;
@@ -353,6 +362,10 @@ module u2_core
       .rd3_data_o(rd3_dat), .rd3_flags_o(rd3_flags), .rd3_ready_i(rd3_ready_i), .rd3_ready_o(rd3_ready_o)
       );
 
+   wire [31:0] 	 status_enc;
+   priority_enc priority_enc (.in({16'b0,status[15:0]}), .out(status_enc));
+   
+   // /////////////////////////////////////////////////////////////////////////
    // SPI -- Slave #2
    spi_top shared_spi
      (.wb_clk_i(wb_clk),.wb_rst_i(wb_rst),.wb_adr_i(s2_adr[4:0]),.wb_dat_i(s2_dat_o),
@@ -361,6 +374,7 @@ module u2_core
       .ss_pad_o({sen_tx_db,sen_tx_adc,sen_tx_dac,sen_rx_db,sen_rx_adc,sen_rx_dac,sen_dac,sen_clk}),
       .sclk_pad_o(sclk),.mosi_pad_o(mosi),.miso_pad_i(miso) );
 
+   // /////////////////////////////////////////////////////////////////////////
    // I2C -- Slave #3
    i2c_master_top #(.ARST_LVL(1)) 
      i2c (.wb_clk_i(wb_clk),.wb_rst_i(wb_rst),.arst_i(1'b0), 
@@ -372,6 +386,7 @@ module u2_core
 
    assign 	 s3_dat_i[31:8] = 24'd0;
    
+   // /////////////////////////////////////////////////////////////////////////
    // GPIOs -- Slave #4
    nsgpio nsgpio(.clk_i(wb_clk),.rst_i(wb_rst),
 		 .cyc_i(s4_cyc),.stb_i(s4_stb),.adr_i(s4_adr[3:0]),.we_i(s4_we),
@@ -379,19 +394,24 @@ module u2_core
 		 .atr(atr_lines),.debug_0(debug_gpio_0),.debug_1(debug_gpio_1),
 		 .gpio( {io_tx,io_rx} ) );
 
-   // Buffer Pool Status -- Slave #5
+   // /////////////////////////////////////////////////////////////////////////
+   // Buffer Pool Status -- Slave #5   
+   
+   reg [31:0] 	 cycle_count;
+   always @(posedge wb_clk)
+     if(wb_rst)
+       cycle_count <= 0;
+     else
+       cycle_count <= cycle_count + 1;
+   
    wb_readback_mux buff_pool_status
-     (.wb_clk_i(wb_clk),
-      .wb_rst_i(wb_rst),
-      .wb_stb_i(s5_stb),
-      .wb_adr_i(s5_adr),
-      .wb_dat_o(s5_dat_i),
-      .wb_ack_o(s5_ack),
+     (.wb_clk_i(wb_clk), .wb_rst_i(wb_rst), .wb_stb_i(s5_stb),
+      .wb_adr_i(s5_adr), .wb_dat_o(s5_dat_i), .wb_ack_o(s5_ack),
       
       .word00(status_b0),.word01(status_b1),.word02(status_b2),.word03(status_b3),
       .word04(status_b4),.word05(status_b5),.word06(status_b6),.word07(status_b7),
       .word08(status),.word09({sim_mode,27'b0,clock_divider[3:0]}),.word10(32'b0),
-      .word11(32'b0),.word12(32'b0),.word13(32'b0),.word14(32'b0),.word15(32'b0)
+      .word11(32'b0),.word12(32'b0),.word13(irq),.word14(status_enc),.word15(cycle_count)
       );
 
    // /////////////////////////////////////////////////////////////////////////
@@ -457,13 +477,14 @@ module u2_core
    // /////////////////////////////////////////////////////////////////////////
    // Interrupt Controller, Slave #8
 
-   wire [15:0] 	 irq={{4'b0, clk_status, serdes_link_up, uart_tx_int, uart_rx_int},
-		      {pps_int,overrun,underrun,PHY_INTn,i2c_int,spi_int,timer_int,buffer_int}};
+   assign irq= {{8'b0},
+		{8'b0},
+		{4'b0, clk_status, serdes_link_up, uart_tx_int, uart_rx_int},
+		{pps_int,overrun,underrun,PHY_INTn,i2c_int,spi_int,timer_int,buffer_int}};
    
-   simple_pic #(.is(16),.dwidth(32)) simple_pic
-     (.clk_i(wb_clk),.rst_i(wb_rst),.cyc_i(s8_cyc),.stb_i(s8_stb),.adr_i(s8_adr[3:2]),
-      .we_i(s8_we),.dat_i(s8_dat_o),.dat_o(s8_dat_i),.ack_o(s8_ack),.int_o(proc_int),
-      .irq(irq) );
+   pic pic(.clk_i(wb_clk),.rst_i(wb_rst),.cyc_i(s8_cyc),.stb_i(s8_stb),.adr_i(s8_adr[3:2]),
+	   .we_i(s8_we),.dat_i(s8_dat_o),.dat_o(s8_dat_i),.ack_o(s8_ack),.int_o(proc_int),
+	   .irq(irq) );
  	 
    // /////////////////////////////////////////////////////////////////////////
    // Master Timer, Slave #9
@@ -535,6 +556,7 @@ module u2_core
    wire [31:0] 	 sample_rx, sample_tx;
    wire 	 strobe_rx, strobe_tx;
 
+   /*
    rx_control #(.FIFOSIZE(10)) rx_control
      (.clk(dsp_clk), .rst(dsp_rst),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
@@ -543,9 +565,27 @@ module u2_core
       .sample(sample_rx), .run(run_rx), .strobe(strobe_rx),
       .fifo_occupied(dsp_rx_occ),.fifo_full(dsp_rx_full),.fifo_empty(dsp_rx_empty),
       .debug_rx(debug_rx) );
-   
-   // dummy_rx dsp_core_rx
-   dsp_core_rx dsp_core_rx
+*/
+   vita_rx_control #(.BASE(SR_RX_CTRL)) vita_rx_control
+     (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
+      .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
+      .vita_time(vita_time), .overrun(overrun),
+      .sample(sample_rx), .run(run_rx), .strobe(strobe_rx),
+      .sample_fifo_o(rx_data), .sample_fifo_dst_rdy_i(rx_dst_rdy), .sample_fifo_src_rdy_o(rx_src_rdy));
+
+   vita_rx_framer #(.BASE(SR_RX_CTRL)) vita_rx_framer
+     (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
+      .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
+      .sample_fifo_i(rx_data), .sample_fifo_dst_rdy_o(rx_dst_rdy), .sample_fifo_src_rdy_i(rx_src_rdy),
+      .data_o(rx1_data), .dst_rdy_i(rx1_dst_rdy), .src_rdy_o(rx1_src_rdy),
+      .fifo_occupied(), .fifo_full(), .fifo_empty() );
+
+   fifo_cascade #(.WIDTH(36), .SIZE(10)) rx_fifo_cascade
+     (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
+      .datain(rx1_data), .src_rdy_i(rx1_src_rdy), .dst_rdy_o(rx1_dst_rdy),
+      .dataout({wr1_flags,wr1_dat}), .src_rdy_o(wr1_ready_i), .dst_rdy_i(wr1_ready_o));
+
+   dsp_core_rx #(.BASE(SR_RX_DSP)) dsp_core_rx
      (.clk(dsp_clk),.rst(dsp_rst),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .adc_a(adc_a),.adc_ovf_a(adc_ovf_a),.adc_b(adc_b),.adc_ovf_b(adc_ovf_b),
@@ -614,6 +654,13 @@ module u2_core
 
    assign      RAM_CE1n = 0;
    assign      RAM_D[17:16] = 2'bzz;
+   
+   // /////////////////////////////////////////////////////////////////////////
+   // VITA Timing
+
+   time_64bit #(.TICKS_PER_SEC(32'd100000000),.BASE(SR_TIME64)) time_64bit
+     (.clk(dsp_clk), .rst(dsp_rst), .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
+      .pps(pps_o), .vita_time(vita_time));
    
    // /////////////////////////////////////////////////////////////////////////////////////////
    // Debug Pins

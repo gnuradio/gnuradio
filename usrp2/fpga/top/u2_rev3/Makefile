@@ -82,6 +82,10 @@ control_lib/sd_spi.v \
 control_lib/sd_spi_wb.v \
 control_lib/wb_bridge_16_32.v \
 control_lib/reset_sync.v \
+control_lib/priority_enc.v \
+control_lib/pic.v \
+vrt/vita_rx_control.v \
+vrt/vita_rx_framer.v \
 simple_gemac/simple_gemac_wrapper.v \
 simple_gemac/simple_gemac.v \
 simple_gemac/simple_gemac_wb.v \
@@ -132,7 +136,6 @@ opencores/i2c/rtl/verilog/i2c_master_byte_ctrl.v \
 opencores/i2c/rtl/verilog/i2c_master_defines.v \
 opencores/i2c/rtl/verilog/i2c_master_top.v \
 opencores/i2c/rtl/verilog/timescale.v \
-opencores/simple_pic/rtl/simple_pic.v \
 opencores/spi/rtl/verilog/spi_clgen.v \
 opencores/spi/rtl/verilog/spi_defines.v \
 opencores/spi/rtl/verilog/spi_shift.v \
@@ -170,6 +173,8 @@ serdes/serdes_fc_rx.v \
 serdes/serdes_fc_tx.v \
 serdes/serdes_rx.v \
 serdes/serdes_tx.v \
+timing/time_64bit.v \
+timing/time_compare.v \
 timing/time_receiver.v \
 timing/time_sender.v \
 timing/time_sync.v \

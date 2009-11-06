@@ -9,10 +9,13 @@ module time_64bit
      output [63:0] vita_time
      );
 
-   localparam 	   NEXT_TICKS = 0;
-   localparam 	   NEXT_SECS = 1;   
+   localparam 	   NEXT_TICKS = 1;
+   localparam 	   NEXT_SECS = 0;   
    localparam 	   ROLLOVER = TICKS_PER_SEC - 1;	   
    
+   reg [31:0] 	   seconds;
+   reg [31:0] 	   ticks;
+   wire 	   end_of_second;
    assign 	   vita_time = {seconds,ticks};
    
    wire [31:0] 	   next_ticks_preset;
@@ -27,11 +30,6 @@ module time_64bit
    setting_reg #(.my_addr(BASE+NEXT_SECS)) sr_next_secs
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out(next_seconds_preset),.changed(set_on_pps_trig));
-   
-   reg [31:0] 	   seconds;
-   reg [31:0] 	   ticks;
-   
-   wire 	   end_of_second;
    
    always @(posedge clk)
      if(rst)
