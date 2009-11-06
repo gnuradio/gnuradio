@@ -296,9 +296,20 @@ hwconfig_wishbone_divisor(void)
 #define	RX_PROTOCOL_ENGINE_BASE 0xD4C0
 #define BUFFER_POOL_CTRL_BASE   0xD500
 #define DSP_TX_BASE             0xD600
-#define DSP_RX_BASE             0xD680
-#define TIME64                  0xD700
 #define LAST_SETTING_REG        0xD7FC	// last valid setting register
+
+#define SR_MISC 0
+#define SR_TX_PROT_ENG 32
+#define SR_RX_PROT_ENG 48
+#define SR_BUFFER_POOL_CTRL 64
+#define SR_TX_DSP 128
+#define SR_TX_CTRL 144
+#define SR_RX_DSP 160
+#define SR_RX_CTRL 176
+#define SR_TIME64 192
+#define SR_LAST 255
+
+#define	_SR_ADDR(sr)	(SETTINGS_BASE + (sr) * sizeof(uint32_t))
 
 // --- buffer pool control regs ---
 
@@ -433,10 +444,29 @@ typedef struct {
   
 #define dsp_tx_regs ((dsp_tx_regs_t *) DSP_TX_BASE)
 
+// --- VITA RX CTRL regs ---
+typedef struct {
+  // The following 3 are logically a single command register.
+  // They are clocked into the underlying fifo when time_ticks is written.
+  volatile uint32_t	cmd;		// {now, chain, num_samples(30)
+  volatile uint32_t	time_secs;
+  volatile uint32_t	time_ticks;
+
+  volatile uint32_t	clear_overrun;	// write anything to clear overrun
+  volatile uint32_t	vrt_header;	// word 0 of packet.  FPGA fills in packet counter
+  volatile uint32_t	vrt_stream_id;	// word 1 of packet. 
+  volatile uint32_t	vrt_trailer;
+  volatile uint32_t	nsamples_per_pkt;
+  volatile uint32_t     nchannels;      // 1 in basic case, up to 4 for vector sources
+  volatile uint32_t     pad[7];         // Make each structure 16 elements long
+} sr_rx_ctrl_t;
+
+#define	MK_RX_CMD(nsamples, now, chain) \
+  ((((now) & 0x1) << 31) | ((chain & 0x1) << 30) | ((nsamples) & 0x3fffffff))
+
+#define sr_rx_ctrl ((sr_rx_ctrl_t *) _SR_ADDR(SR_RX_CTRL))
+
 // --- dsp rx regs ---
-
-#define T_NOW (-1)
-
 #define	MIN_CIC_DECIM	1
 #define	MAX_CIC_DECIM   128
 
@@ -444,10 +474,6 @@ typedef struct {
   volatile int32_t	freq;
   volatile uint32_t	scale_iq;	// {scale_i,scale_q}
   volatile uint32_t     decim_rate;
-  volatile uint32_t     rx_time;	// when to begin reception
-  volatile uint32_t     rx_command;	// {now, chain, num_lines(21), lines_per_frame(9)
-  volatile uint32_t     clear_state;    // clears out state machine, fifos,
-                                        //   cmd queue, NOT freq, scale, decim
   volatile uint32_t     dcoffset_i;     // Bit 31 high sets fixed offset mode, using lower 14 bits,
                                         // otherwise it is automatic 
   volatile uint32_t     dcoffset_q;     // Bit 31 high sets fixed offset mode, using lower 14 bits
@@ -502,11 +528,7 @@ typedef struct {
 
 } dsp_rx_regs_t;
   
-#define dsp_rx_regs ((dsp_rx_regs_t *) DSP_RX_BASE)
-
-#define MK_RX_CMD(num_lines, lines_per_frame, now, chain) \
-  (((num_lines) << 9) | ((lines_per_frame) & 0x1ff) \
-   | (((now) & 0x1) << 31) | (((chain) & 0x1) << 30))
+#define dsp_rx_regs ((dsp_rx_regs_t *) _SR_ADDR(SR_RX_DSP))
 
 // ----------------------------------------------------------------
 // VITA49 64 bit time
@@ -515,7 +537,7 @@ typedef struct {
   volatile uint32_t	ticks;	// value to set absolute ticks to on next PPS
 } sr_time64_t;
 
-#define sr_time64 ((sr_time64_t *) TIME64
+#define sr_time64 ((sr_time64_t *) _SR_ADDR(SR_TIME64))
 
 
 /* 
