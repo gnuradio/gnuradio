@@ -64,10 +64,24 @@ namespace usrp2 {
         }
         sbuff(void *buff, size_t len, cb_t cb)
          : d_buff(buff), d_len(len), d_cb(cb){}
-        ~sbuff(){if (d_cb) d_cb();}
+        ~sbuff(){done();}
         //access methods
         void *buff(){return d_buff;}
         size_t len(){return d_len;}
+        /*!
+         * \brief mark this sbuff as done
+         * This method allows one to explicitly tell the sbuff that its no longer needed.
+         * Doing so will make the callback (if set) and zero out the other data.
+         *
+         * Although this method will be called automatically when the sptr calls delete,
+         * it is useful for the fast-path to have the ability to call done explicitly.
+         */
+        void done(){
+            if (d_cb) d_cb();
+            d_buff = NULL;
+            d_len = 0;
+            d_cb = NULL;
+        }
 
     };
 

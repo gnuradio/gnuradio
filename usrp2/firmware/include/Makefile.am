@@ -24,4 +24,6 @@ noinst_HEADERS = \
     usrp2_i2c_addr.h \
     usrp2_mac_addr.h \
     usrp2_mimo_config.h \
-    usrp2_types.h
+    usrp2_types.h \
+    vrt/bits.h \
+    vrt/types.h

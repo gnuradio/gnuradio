@@ -84,7 +84,7 @@ std::vector<usrp2::sbuff::sptr> usrp2::eth_data_transport::recv(){
         u2_eth_packet_only_t *hdr = (u2_eth_packet_only_t *)base;
         d_num_rx_frames++;
         d_num_rx_bytes += len;
-        
+
         /* --- FIXME start of fake transport layer handler --- */
 
         if (d_rx_seqno != -1) {

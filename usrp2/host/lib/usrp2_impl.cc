@@ -39,6 +39,7 @@
 #include <stddef.h>
 #include <assert.h>
 #include <string.h>
+#include <vrt/expanded_header.h>
 
 static const int DEFAULT_RX_SCALE = 1024;
 
@@ -93,6 +94,18 @@ namespace usrp2 {
   parse_rx_metadata(void *p, size_t payload_len_in_bytes,
 		    uint32_t **items, size_t *nitems_in_uint32s, rx_metadata *md)
   {
+
+    uint32_t *d = (uint32_t*)p;
+    vrt::expanded_header vrt_hdr;
+
+    if (vrt::expanded_header::parse(
+        (const uint32_t*)(d+1), payload_len_in_bytes/sizeof(uint32_t), //in
+        &vrt_hdr, (const uint32_t**)items, nitems_in_uint32s) and vrt_hdr.if_data_p()){ //out
+        return true;
+    } else {
+        printf("Bad vrt header %x\n", vrt_hdr.header);
+    }
+
     if (payload_len_in_bytes < sizeof(u2_fixed_hdr_t))	// invalid format
       return false;
 
@@ -309,6 +322,7 @@ namespace usrp2 {
 
         if (!d_channel_rings[chan]) {
             DEBUG_LOG("!");
+            sb->done(); //mark done, this sbuff is no longer needed
             continue; 	// discard packet, no channel handler
         }
 
@@ -317,6 +331,7 @@ namespace usrp2 {
             DEBUG_LOG("+");
         } else {
             DEBUG_LOG("!");
+            sb->done(); //mark done, this sbuff is no longer needed
             continue;     //discard packet, enqueue failed
         }
     }
@@ -592,7 +607,7 @@ namespace usrp2 {
 
       bool want_more = (*handler)(items, nitems_in_uint32s, &md);
       DEBUG_LOG("-");
-      sb.reset(); //reset to call cleanup callback
+      sb->done(); //mark done, this sbuff is no longer needed
       dec_enqueued();
 
       if (!want_more)
@@ -624,7 +639,7 @@ namespace usrp2 {
     // Iterate through frames and drop them
     sbuff::sptr sb;
     while (rp->dequeue(sb)) {
-      sb.reset(); //reset to call cleanup callback
+      sb->done(); //mark done, this sbuff is no longer needed
       dec_enqueued();
     }
     return true;

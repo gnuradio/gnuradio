@@ -22,7 +22,8 @@ AM_CPPFLAGS = \
     $(BOOST_CPPFLAGS) \
     $(STD_DEFINES_AND_INCLUDES) \
     $(CPPUNIT_INCLUDES) \
-    $(GRUEL_INCLUDES) 
+    $(GRUEL_INCLUDES) \
+    $(VRT_INCLUDES)
 
 bin_PROGRAMS = usrp2_socket_opener
 usrp2_socket_opener_SOURCES = usrp2_socket_opener.cc
@@ -52,7 +53,9 @@ libusrp2_la_SOURCES = \
 
 libusrp2_la_LIBADD = \
 	$(GRUEL_LA) \
-	$(BOOST_LDFLAGS) $(BOOST_THREAD_LIB)
+	$(BOOST_LDFLAGS) \
+	$(BOOST_THREAD_LIB) \
+	$(VRT_LA)
 
 # Private headers not needed for above the API development
 noinst_HEADERS = \

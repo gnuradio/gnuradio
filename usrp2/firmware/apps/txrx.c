@@ -36,6 +36,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "clocks.h"
+#include <vrt/bits.h>
 
 #define FW_SETS_SEQNO	1	// define to 0 or 1 (FIXME must be 1 for now)
 
@@ -128,7 +129,6 @@ bool is_streaming(void){ return streaming_p; }
 
 // ----------------------------------------------------------------
 
-
 void
 restart_streaming(void)
 {
@@ -136,6 +136,13 @@ restart_streaming(void)
   sr_rx_ctrl->nsamples_per_pkt = streaming_items_per_frame;
   sr_rx_ctrl->nchannels = 1;
   sr_rx_ctrl->clear_overrun = 1;			// reset
+  sr_rx_ctrl->vrt_header = (0
+     | VRTH_PT_IF_DATA_WITH_SID
+     | VRTH_HAS_TRAILER
+     | VRTH_TSF_SAMPLE_CNT
+     | (6+streaming_items_per_frame)); //MAGIC number 6
+  sr_rx_ctrl->vrt_stream_id = 0xabab;
+  sr_rx_ctrl->vrt_trailer = 0;
 
   streaming_p = true;
   streaming_frame_count = FRAMES_PER_CMD;

@@ -158,7 +158,7 @@ typedef struct {
  *   (sample numbers are made even to force pairwise alignment in the interleaved case)
  */
 
-#define U2_MAX_SAMPLES	370
+#define U2_MAX_SAMPLES	350
 #define	U2_MIN_SAMPLES   10
 
 /*
