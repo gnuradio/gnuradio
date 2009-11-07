@@ -566,6 +566,10 @@ module u2_core
       .fifo_occupied(dsp_rx_occ),.fifo_full(dsp_rx_full),.fifo_empty(dsp_rx_empty),
       .debug_rx(debug_rx) );
 */
+   wire 	 rx_dst_rdy, rx_src_rdy, rx1_dst_rdy, rx1_src_rdy;
+   wire [99:0] 	 rx_data;
+   wire [35:0] 	 rx1_data;
+   
    vita_rx_control #(.BASE(SR_RX_CTRL)) vita_rx_control
      (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
