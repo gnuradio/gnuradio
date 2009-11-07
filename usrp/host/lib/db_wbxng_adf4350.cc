@@ -28,16 +28,14 @@
 
 #define FREQ_C(freq) uint64_t(freq)
 #define INPUT_REF_FREQ FREQ_C(64e6)
-#define DIV_ROUND(num, denom) FREQ_C((double(num) + (double(denom)/2))/double(denom))
+#define DIV_ROUND(num, denom) (((num) + ((denom)/2))/(denom))
 #define INPUT_REF_FREQ_2X (2*INPUT_REF_FREQ)                            /* input ref freq with doubler turned on */
 #define MIN_INT_DIV uint16_t(23)                                        /* minimum int divider, prescaler 4/5 only */
 #define MAX_RF_DIV uint8_t(16)                                          /* max rf divider, divides rf output */
 #define MIN_VCO_FREQ FREQ_C(2.2e9)                                      /* minimum vco freq */
 #define MAX_VCO_FREQ FREQ_C(4.4e9)                                      /* minimum vco freq */
-//#define MAX_FREQ DIV_ROUND(MAX_VCO_FREQ, 1)                                           /* upper bound freq (rf div = 1) */
-#define MAX_FREQ FREQ_C(2.3e9)
-//#define MIN_FREQ DIV_ROUND(MIN_VCO_FREQ, MAX_RF_DIV)                    /* calculated lower bound freq */
-#define MIN_FREQ FREQ_C(60e6)
+#define MAX_FREQ DIV_ROUND(MAX_VCO_FREQ, 1)                                           /* upper bound freq (rf div = 1) */
+#define MIN_FREQ DIV_ROUND(MIN_VCO_FREQ, MAX_RF_DIV)                    /* calculated lower bound freq */
 
 #define CE_PIN        (1 << 3)
 #define PDB_RF_PIN    (1 << 2)
