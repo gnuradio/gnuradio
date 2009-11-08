@@ -17,6 +17,12 @@ dnl along with GNU Radio; see the file COPYING.  If not, write to
 dnl the Free Software Foundation, Inc., 51 Franklin Street,
 dnl Boston, MA 02110-1301, USA.
 
+dnl Fix 2.64 cross compile detection for AVR and RTEMS
+dnl by not trying to compile fopen.
+m4_if(m4_defn([m4_PACKAGE_VERSION]), [2.64],
+  [m4_foreach([_GCC_LANG], [C, C++, Fortran, Fortran 77],
+     [m4_define([_AC_LANG_IO_PROGRAM(]_GCC_LANG[)], m4_defn([AC_LANG_PROGRAM(]_GCC_LANG[)]))])]) 
+
 AC_DEFUN([GRC_USRP2_FIRMWARE],[
     dnl we use  --enable-usrp2-firmware to enable this
     GRC_ENABLE(usrp2-firmware)
