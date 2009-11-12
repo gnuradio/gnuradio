@@ -50,6 +50,9 @@ swigincludedir = $(grincludedir)/swig
 grpythondir = $(pythondir)/gnuradio
 grpyexecdir = $(pyexecdir)/gnuradio
 
+# Data directory for grc block wrappers
+grc_blocksdir = $(prefix)/share/gnuradio/grc/blocks
+
 # Don't assume that make predefines $(RM), because BSD make does
 # not. We define it now in configure.ac using AM_PATH_PROG, but now
 # here have to add a -f to be like GNU make.
