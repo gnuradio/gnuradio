@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2008,2009 Free Software Foundation, Inc.
+# Copyright 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -19,21 +19,14 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-ACLOCAL_AMFLAGS = -I config
-
 include $(top_srcdir)/Makefile.common
 
+if PYTHON
+
+dist_bin_SCRIPTS = \
+	howto_square.py
+
 EXTRA_DIST = \
-	bootstrap \
-	configure \
-	config.h.in \
-	Makefile.swig \
-	Makefile.swig.gen.t \
-	version.sh
+	howto_square.grc
 
-SUBDIRS = config lib swig python grc apps
-
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA =
-
-DISTCLEANFILES = gr-howto-write-a-block*.tar.gz
+endif
