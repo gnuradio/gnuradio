@@ -2,5 +2,5 @@
 /.libs
 /Makefile.in
 /Makefile
-/howto.cc
-/howto.py
+/howto_swig.cc
+/howto_swig.py
