@@ -21,8 +21,12 @@
 
 include $(top_srcdir)/Makefile.common
 
-###################################
-# howto C++ library
+# list of programs run by "make check" and "make distcheck"
+TESTS = test_all
+
+# ----------------------------------------------------------------
+# howto C++ library: libgnuradio-howto.so
+# ----------------------------------------------------------------
 
 # C/C++ headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS =		\
@@ -40,3 +44,37 @@ libgnuradio_howto_la_LIBADD =	\
 
 libgnuradio_howto_la_LDFLAGS =	\
 	$(NO_UNDEFINED)
+
+# ----------------------------------------------------------------
+# howto C++ QA library: libgnuradio-howto-qa.so (not installed)
+# ----------------------------------------------------------------
+
+noinst_LTLIBRARIES = libgnuradio-howto-qa.la
+
+libgnuradio_howto_qa_la_SOURCES = 	\
+	qa_howto.cc 			\
+	qa_howto_square_ff.cc 		\
+	qa_howto_square2_ff.cc
+
+libgnuradio_howto_qa_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
+
+libgnuradio_howto_qa_la_LIBADD = 	\
+	libgnuradio-howto.la 		\
+	$(CPPUNIT_LIBS)
+
+# ----------------------------------------------------------------
+# headers that don't get installed
+# ----------------------------------------------------------------
+noinst_HEADERS = 		\
+	qa_howto.h 		\
+	qa_howto_square_ff.h 	\
+	qa_howto_square2_ff.h
+
+# ----------------------------------------------------------------
+# test program
+# ----------------------------------------------------------------
+noinst_PROGRAMS = \
+	test_all
+
+test_all_SOURCES = test_all.cc
+test_all_LDADD   = libgnuradio-howto-qa.la

@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,13 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-ourpythondir = $(grpythondir)/howto
+grcblocksdir = $(grc_blocksdir)
 
-EXTRA_DIST = run_tests.in
-TESTS = run_tests
+dist_grcblocks_DATA = \
+	howto_square_ff.xml \
+	howto_square2_ff.xml
 
-ourpython_PYTHON = \
-	__init__.py
-
-noinst_PYTHON = \
-	qa_howto.py			

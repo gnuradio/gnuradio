@@ -72,42 +72,42 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += howto.py howto.cc
+swig_built_sources += howto_swig.py howto_swig.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
 ## Makefile.swig .
 
 howto_swiginclude_HEADERS =		\
-	howto.i			\
+	howto.i				\
 	$(howto_swiginclude_headers)
 
 howto_pylib_LTLIBRARIES =		\
-	_howto.la
+	_howto_swig.la
 
-_howto_la_SOURCES = 			\
-	howto.cc			\
+_howto_swig_la_SOURCES = 		\
+	howto_swig.cc			\
 	$(howto_la_swig_sources)
 
-_howto_la_LIBADD =			\
+_howto_swig_la_LIBADD =			\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(howto_la_swig_libadd)
 
-_howto_la_LDFLAGS =			\
+_howto_swig_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(howto_la_swig_ldflags)
 
-_howto_la_CXXFLAGS =			\
+_howto_swig_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(howto_la_swig_cxxflags)
 
 howto_python_PYTHON =			\
-	howto.py			\
+	howto_swig.py			\
 	$(howto_python)
 
 ## Entry rule for running SWIG
 
-howto.h howto.py howto.cc: howto.i
+howto.h howto_swig.py howto_swig.cc: howto.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -202,7 +202,7 @@ $(DEPDIR)/howto-generate-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(howto_swig_args) \
 		-MD -MF $(DEPDIR)/howto.Std \
-		-module howto -o howto.cc $(WHAT); then \
+		-module howto_swig -o howto_swig.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/howto.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/howto.Std \

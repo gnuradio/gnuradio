@@ -71,7 +71,9 @@ dnl AX_BOOST_WSERIALIZATION
 
 AC_CONFIG_FILES([\
 	  Makefile \
+	  apps/Makefile \
 	  config/Makefile \
+	  grc/Makefile \
 	  lib/Makefile \
 	  python/Makefile \
 	  python/run_tests \
