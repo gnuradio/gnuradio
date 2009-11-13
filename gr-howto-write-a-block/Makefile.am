@@ -29,7 +29,9 @@ EXTRA_DIST = \
 	config.h.in \
 	Makefile.swig \
 	Makefile.swig.gen.t \
-	version.sh
+	version.sh \
+	README \
+	README.hacking
 
 SUBDIRS = config lib swig python grc apps
 
