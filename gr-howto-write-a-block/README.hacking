@@ -69,16 +69,16 @@ that exports the C++ API into a Python namespace.  Each GNU Radio block gets a
 .i file (using SWIG syntax).  The master howto.i file must also have a line
 to include the block header file and a line to import the block .i file. The
 resulting _howto_swig.so and _howto_swig.py files are installed into the
-system Python lib directory under howto/ and become part of the gnuradio.howto
-Python namespace.  The Makefile.am must be customized to recognize new files
-created here.
+system Python lib directory under gnuradio/howto and become part of the
+gnuradio.howto Python namespace.  The Makefile.am must be customized to
+recognize new files created here.
 
 The 'python' directory contains pure Python modules that get installed into
-the system Python lib directory under howto/ and the __init__.py module
-needed to turn the directory into the gnuradio.howto namespace.  This is the
-appropriate place to put hierarchical blocks and utility classes.  Be sure
-to edit the __init__.py to add your module/symbol imports as necessary, and
-to modify the Makefile.am accordingly.
+the system Python lib directory under gnuradio/howto and the __init__.py
+module needed to turn the directory into the gnuradio.howto namespace.
+This is the appropriate place to put hierarchical blocks and utility classes.
+Be sure to edit the __init__.py to add your module/symbol imports as
+necessary, and to modify the Makefile.am accordingly.
 
 This directory also contains Python-based QA code, which is executed during
 'make check'.
