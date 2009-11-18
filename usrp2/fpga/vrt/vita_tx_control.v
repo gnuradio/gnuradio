@@ -1,28 +1,24 @@
 
-module vita_rx_control
+module vita_tx_control
   #(parameter BASE=0,
     parameter WIDTH=32)
    (input clk, input reset, input clear,
     input set_stb, input [7:0] set_addr, input [31:0] set_data,
     
     input [63:0] vita_time,
-    output overrun,
+    output underrun,
 
-    // To vita_rx_framer
-    output [4+64+WIDTH-1:0] sample_fifo_o,
-    output sample_fifo_src_rdy_o,
-    input sample_fifo_dst_rdy_i,
+    // From vita_tx_deframer
+    input [4+64+WIDTH-1:0] sample_fifo_o,
+    input sample_fifo_src_rdy_i,
+    output sample_fifo_dst_rdy_o,
     
-    // From DSP Core
-    input [WIDTH-1:0] sample,
+    // To DSP Core
+    output [WIDTH-1:0] sample,
     output run,
-    input strobe,
-    
-    output [31:0] debug_rx
+    input strobe
     );
 
-   // FIXME add TX Interruption (halt, pause, continue) functionality
-   
    wire [63:0] 	  new_time;
    wire [31:0] 	  new_command;
    wire 	  sc_pre1, clear_int, clear_reg;
