@@ -95,18 +95,12 @@ namespace usrp2 {
 		    uint32_t **items, size_t *nitems_in_uint32s, rx_metadata *md)
   {
 
-    uint32_t *d = (uint32_t*)p;
     vrt::expanded_header vrt_hdr;
 
     if (vrt::expanded_header::parse(
         (const uint32_t*)p, payload_len_in_bytes/sizeof(uint32_t), //in
         &vrt_hdr, (const uint32_t**)items, nitems_in_uint32s) and vrt_hdr.if_data_p()){ //out
-        
-        (*items)++;//FIXME wrong ptr from parse
-        
-        //strip off the trailer if present
-        if (vrt_hdr.trailer_p()) (*nitems_in_uint32s)--;
-        
+        //printf("%d --- %d time %d:%.8llx\n", *nitems_in_uint32s, (*items) - (uint32_t*)p, vrt_hdr.integer_secs, vrt_hdr.fractional_secs);
     } else {
         *items = (uint32_t*)p; //KLUDGE until we move this code
         *nitems_in_uint32s = payload_len_in_bytes/sizeof(uint32_t);
@@ -296,7 +290,7 @@ namespace usrp2 {
     for (size_t i = 0; i < sbs.size(); i++) {
         sbuff::sptr sb = sbs[i];
 
-        u2_fixed_hdr_t *fixed_hdr = (u2_fixed_hdr_t*)sb->buff();
+        //u2_fixed_hdr_t *fixed_hdr = (u2_fixed_hdr_t*)sb->buff();
         // FIXME get channel from vrt
         unsigned int chan = 0;
 

@@ -33,14 +33,9 @@
 #define MAX_SUBPKT_LEN 252
 
 namespace usrp2 {
-  
-  class eth_buffer;
-  class ethernet;
-  class pktfilter;
-  class usrp2_thread;
+
   class usrp2_tune_result;
   class pending_reply;
-  class ring;
 
   //! High-level d'board info
   struct db_info {

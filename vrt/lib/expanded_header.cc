@@ -91,7 +91,20 @@ namespace vrt {
       return false;
     }
 
-    h->header = ntohl(p[0]);
+    /*
+     * Load vrt header entries into the expanded_header h.
+     * Check h to see if the entry exists, then load and handle byte ordering.
+     */
+    size_t word_offset = 0;
+    if (true)                   h->header          = ntohx(p[word_offset++]);
+    if (h->stream_id_p())       h->stream_id       = ntohx(p[word_offset++]);
+    if (h->class_id_p())        h->class_id        = ntohx(p[word_offset++]);
+    if (h->integer_secs_p())    h->integer_secs    = ntohx(p[word_offset++]);
+    if (h->fractional_secs_p()){
+        h->fractional_secs = ntohx(*((uint64_t*)p+word_offset));
+        word_offset+=2;
+    }
+    if (h->trailer_p())         h->trailer         = ntohx(p[n32_bit_words_packet-1]);
 
     if (h->pkt_size() > len)
       return false;		// VRT header says packet is bigger than what we've got

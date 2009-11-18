@@ -142,6 +142,7 @@ restart_streaming(void)
   sr_rx_ctrl->vrt_header = (0
      | VRTH_PT_IF_DATA_WITH_SID
      | VRTH_HAS_TRAILER
+     | VRTH_TSI_OTHER
      | VRTH_TSF_SAMPLE_CNT
      | (VRT_HEADER_WORDS+streaming_items_per_frame+VRT_TRAILER_WORDS));
   sr_rx_ctrl->vrt_stream_id = 0;
