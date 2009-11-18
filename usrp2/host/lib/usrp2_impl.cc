@@ -99,37 +99,19 @@ namespace usrp2 {
     vrt::expanded_header vrt_hdr;
 
     if (vrt::expanded_header::parse(
-        (const uint32_t*)(d+1), payload_len_in_bytes/sizeof(uint32_t), //in
+        (const uint32_t*)p, payload_len_in_bytes/sizeof(uint32_t), //in
         &vrt_hdr, (const uint32_t**)items, nitems_in_uint32s) and vrt_hdr.if_data_p()){ //out
-        return true;
+        
+        (*items)++;//FIXME wrong ptr from parse
+        
+        //strip off the trailer if present
+        if (vrt_hdr.trailer_p()) (*nitems_in_uint32s)--;
+        
     } else {
+        *items = (uint32_t*)p; //KLUDGE until we move this code
+        *nitems_in_uint32s = payload_len_in_bytes/sizeof(uint32_t);
         printf("Bad vrt header %x\n", vrt_hdr.header);
     }
-
-    if (payload_len_in_bytes < sizeof(u2_fixed_hdr_t))	// invalid format
-      return false;
-
-    // FIXME deal with the fact that (p % 4) == 2
-    //assert((((uintptr_t) p) % 4) == 0);		// must be 4-byte aligned
-
-    u2_fixed_hdr_t *fh = static_cast<u2_fixed_hdr_t *>(p);
-    
-    // FIXME unaligned loads!
-    md->word0 = u2p_word0(fh);
-    md->timestamp = u2p_timestamp(fh);
-
-    // FIXME when we've got more info
-    // md->start_of_burst = (md->word0 & XXX) != 0;
-    // md->end_of_burst =   (md->word0 & XXX) != 0;
-    // md->rx_overrun =     (md->word0 & XXX) != 0;
-    md->start_of_burst = 0;
-    md->end_of_burst =   0;
-    md->rx_overrun =     0;
-
-    *items = (uint32_t *)(&fh[1]);
-    size_t nbytes = payload_len_in_bytes - sizeof(u2_fixed_hdr_t);
-    assert((nbytes % sizeof(uint32_t)) == 0);
-    *nitems_in_uint32s = nbytes / sizeof(uint32_t);
 
     return true;
   }
@@ -315,8 +297,8 @@ namespace usrp2 {
         sbuff::sptr sb = sbs[i];
 
         u2_fixed_hdr_t *fixed_hdr = (u2_fixed_hdr_t*)sb->buff();
-        // FIXME unaligned load!
-        unsigned int chan = u2p_chan(fixed_hdr);
+        // FIXME get channel from vrt
+        unsigned int chan = 0;
 
         gruel::scoped_lock l(d_channel_rings_mutex);
 

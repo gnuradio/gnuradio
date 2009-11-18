@@ -94,7 +94,7 @@ dbsm_t dsp_tx_sm;	// the state machine
 
 // 4 lines of ethernet hdr + 1 line transport hdr + 1 line (word0)
 // DSP Rx writes timestamp followed by nlines_per_frame of samples
-#define DSP_RX_FIRST_LINE ((sizeof(u2_eth_hdr_t) + sizeof(u2_transport_hdr_t))/4 + 1)
+#define DSP_RX_FIRST_LINE ((sizeof(u2_eth_hdr_t) + sizeof(u2_transport_hdr_t))/4)
 
 // receive from DSP
 buf_cmd_args_t dsp_rx_recv_args = {
@@ -129,6 +129,9 @@ bool is_streaming(void){ return streaming_p; }
 
 // ----------------------------------------------------------------
 
+#define VRT_HEADER_WORDS 5
+#define VRT_TRAILER_WORDS 1
+
 void
 restart_streaming(void)
 {
@@ -140,8 +143,8 @@ restart_streaming(void)
      | VRTH_PT_IF_DATA_WITH_SID
      | VRTH_HAS_TRAILER
      | VRTH_TSF_SAMPLE_CNT
-     | (6+streaming_items_per_frame)); //MAGIC number 6
-  sr_rx_ctrl->vrt_stream_id = 0xabab;
+     | (VRT_HEADER_WORDS+streaming_items_per_frame+VRT_TRAILER_WORDS));
+  sr_rx_ctrl->vrt_stream_id = 0;
   sr_rx_ctrl->vrt_trailer = 0;
 
   streaming_p = true;
@@ -170,15 +173,13 @@ start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p)
   host_mac_addr = *host;	// remember who we're sending to
 
   /*
-   * Construct  ethernet header and word0 and preload into two buffers
+   * Construct  ethernet header and preload into two buffers
    */
-  u2_eth_packet_t	pkt;
+  u2_eth_packet_only_t	pkt;
   memset(&pkt, 0, sizeof(pkt));
   pkt.ehdr.dst = *host;
   pkt.ehdr.src = *ethernet_mac_addr();
   pkt.ehdr.ethertype = U2_DATA_ETHERTYPE;
-  u2p_set_word0(&pkt.fixed, 0, 0);
-  // DSP RX will fill in timestamp
 
   memcpy_wa(buffer_ram(DSP_RX_BUF_0), &pkt, sizeof(pkt));
   memcpy_wa(buffer_ram(DSP_RX_BUF_1), &pkt, sizeof(pkt));
