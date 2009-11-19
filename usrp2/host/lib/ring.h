@@ -81,7 +81,7 @@ namespace usrp2 {
 
     void wait_for_not_empty();
 
-    bool enqueue(ring_data &rd);
+    bool enqueue(const ring_data &rd);
     bool dequeue(ring_data &rd);
   };
 

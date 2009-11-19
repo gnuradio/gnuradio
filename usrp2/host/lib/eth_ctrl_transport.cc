@@ -18,7 +18,8 @@
 
 #include "eth_ctrl_transport.h"
 
-usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac) : transport("ethernet control"), d_mac(mac){
+usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac, double timeout, bool target)
+ : transport("ethernet control"), d_mac(mac), d_buff(NULL), d_timeout(timeout){
 
     //create raw ethernet device
     d_eth_ctrl = new ethernet();
@@ -26,7 +27,8 @@ usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, u2_mac_add
         throw std::runtime_error("Unable to open/register USRP2 control protocol");
 
     //create and attach packet filter
-    d_pf_ctrl = pktfilter::make_ethertype_inbound_target(U2_CTRL_ETHERTYPE, (const unsigned char*)&(d_mac.addr));
+    if (target) d_pf_ctrl = pktfilter::make_ethertype_inbound_target(U2_CTRL_ETHERTYPE, (const unsigned char*)&(d_mac.addr));
+    else        d_pf_ctrl = pktfilter::make_ethertype_inbound(U2_CTRL_ETHERTYPE, d_eth_ctrl->mac());
     if (!d_pf_ctrl || !d_eth_ctrl->attach_pktfilter(d_pf_ctrl))
         throw std::runtime_error("Unable to attach packet filter for control packets.");
 }
@@ -35,6 +37,7 @@ usrp2::eth_ctrl_transport::~eth_ctrl_transport(){
     delete d_pf_ctrl;
     d_eth_ctrl->close();
     delete d_eth_ctrl;
+    delete[] d_buff;
 }
 
 int usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
@@ -61,24 +64,34 @@ int usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
     for (size_t i = 0; i < all_iov_len-1; i++){
         num_bytes += all_iov[i].iov_len;
     }
-    //handle padding, must be at least 64 bytes
-    uint8_t padding[64];
+    //handle padding, must be at least minimum length
+    uint8_t padding[ethernet::MIN_PKTLEN];
+    memset(padding, 0, ethernet::MIN_PKTLEN);
     all_iov[all_iov_len-1].iov_base = padding;
-    all_iov[all_iov_len-1].iov_len = (num_bytes < 64) ? (64 - num_bytes) : 0;
+    all_iov[all_iov_len-1].iov_len = std::max(ethernet::MIN_PKTLEN-num_bytes, 0);
     return d_eth_ctrl->write_packetv(all_iov, all_iov_len);
 }
 
+//helper function that deletes an array allocated by new
+//FIXME replace with the boost::lambda::delete_array
+static void delete_array(uint8_t *array){delete[] array;}
+
 std::vector<usrp2::sbuff::sptr> usrp2::eth_ctrl_transport::recv(){
-    //TODO perform multiple non blocking recvs and pack into sbs
-    int recv_len = d_eth_ctrl->read_packet_dont_block(d_buff, sizeof(d_buff));
-    //strip the ethernet headers from the buffer
-    if (recv_len > (signed)sizeof(u2_eth_packet_t)){
-        std::vector<sbuff::sptr> sbs;
-        sbs.push_back(sbuff::make(
-            d_buff + sizeof(u2_eth_packet_t),
-            recv_len - sizeof(u2_eth_packet_t)));
-        return sbs;
+    std::vector<sbuff::sptr> sbs;
+    for (size_t i = 0; i < max_buffs(); i++){
+        //allocate a new buffer and recv
+        if (d_buff == NULL) d_buff = new uint8_t[ethernet::MAX_PKTLEN];
+        int recv_len = d_eth_ctrl->read_packet_dont_block(d_buff, ethernet::MAX_PKTLEN);
+        //strip the ethernet headers from the buffer
+        if (recv_len > (signed)sizeof(u2_eth_packet_t)){
+            sbs.push_back(sbuff::make(
+                d_buff + sizeof(u2_eth_packet_t),
+                recv_len - sizeof(u2_eth_packet_t),
+                boost::bind(delete_array, d_buff)));
+            d_buff = NULL; //set to null to flag for a new allocation
+        } else break;
     }
-    boost::this_thread::sleep(gruel::get_new_timeout(0.05)); //50ms timeout
-    return std::vector<sbuff::sptr>(); //nothing yet
+    //if nothing was received, busy sleep to save cpu
+    if (sbs.size() == 0) boost::this_thread::sleep(gruel::get_new_timeout(d_timeout));
+    return sbs;
 }

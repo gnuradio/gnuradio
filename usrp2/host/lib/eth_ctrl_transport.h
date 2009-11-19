@@ -28,16 +28,27 @@ namespace usrp2{
 
     class eth_ctrl_transport: public transport{
     private:
-        uint8_t              d_buff[1500]; //FIXME use MTU
         ethernet      *d_eth_ctrl;  // unbuffered control frames
         pktfilter     *d_pf_ctrl;
         u2_mac_addr_t d_mac;
+        uint8_t       *d_buff;
+        double_t      d_timeout;
 
     public:
-        eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac);
+        /*!
+         * \brief Create a new transport for the raw ethernet control
+         * When the target is true, the packet filter is setup for the usrp mac address.
+         * When the target is false, the packet filter is setup to ignore our mac address.
+         * \param ifc the ethernet device name
+         * \param mac the destination mac address
+         * \param timeout the timeout in seconds (default 50ms)
+         * \param target true for an inbound target
+         */
+        eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac, double timeout=0.05, bool target = true);
         ~eth_ctrl_transport();
         int sendv(const iovec *iov, size_t iovlen);
         std::vector<sbuff::sptr> recv();
+        size_t max_buffs(){return 3;}
 };
 
 

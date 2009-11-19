@@ -206,7 +206,7 @@ namespace usrp2 {
   }
 
   void
-  usrp2::impl::handle_control_packet(std::vector<sbuff::sptr> &sbs)
+  usrp2::impl::handle_control_packet(const std::vector<sbuff::sptr> &sbs)
   {    
     for (size_t i = 0; i < sbs.size(); i++) {
         sbuff::sptr sb = sbs[i];
@@ -244,7 +244,7 @@ namespace usrp2 {
   }
   
   void
-  usrp2::impl::handle_data_packet(std::vector<sbuff::sptr> &sbs)
+  usrp2::impl::handle_data_packet(const std::vector<sbuff::sptr> &sbs)
   {
     if (d_dont_enqueue) return; //FIXME call done, or let the sptrs do it?
 
@@ -259,7 +259,7 @@ namespace usrp2 {
             &rd.hdr, &rd.payload, &rd.n32_bit_words_payload) //out
             or not rd.hdr.stream_id_p()
         ){
-            printf("Bad vrt header 0x%.8x, Packet len %u\n", rd.hdr.header, rd.sb->len());
+            printf("Bad vrt header 0x%.8x, Packet len %d\n", rd.hdr.header, (int)rd.sb->len());
             DEBUG_LOG("!");
             rd.sb->done(); //mark done, this sbuff is no longer needed
             continue;

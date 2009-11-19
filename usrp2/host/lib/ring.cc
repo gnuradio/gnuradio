@@ -42,7 +42,7 @@ namespace usrp2 {
   }
 
   bool
-  ring::enqueue(ring_data &rd)
+  ring::enqueue(const ring_data &rd)
   {
     gruel::scoped_lock l(d_mutex);
     if (full())
