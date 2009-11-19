@@ -64,7 +64,7 @@ namespace usrp2 {
     // all pending_replies are stack allocated, thus no possibility of leaking these
     pending_reply *d_pending_replies[NRIDS]; // indexed by 8-bit reply id
 
-    std::vector<ring_sptr>   d_channel_rings; // indexed by 5-bit channel number
+    std::vector<ring::sptr>   d_channel_rings; // indexed by 5-bit channel number
     gruel::mutex   d_channel_rings_mutex;
 
     db_info	   d_tx_db_info;

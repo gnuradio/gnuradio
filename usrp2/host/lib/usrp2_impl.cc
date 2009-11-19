@@ -39,7 +39,6 @@
 #include <stddef.h>
 #include <assert.h>
 #include <string.h>
-#include <vrt/expanded_header.h>
 
 static const int DEFAULT_RX_SCALE = 1024;
 
@@ -82,34 +81,6 @@ namespace usrp2 {
       return buf;
     }
   }
-
-  /*!
-   * \param p points to fixed header
-   * \param payload_len_in_bytes is length of the fixed hdr and the payload
-   * \param[out] items is set to point to the first uint32 item in the payload
-   * \param[out] nitems is set to the number of uint32 items in the payload
-   * \param[out] md is filled in with the parsed metadata from the frame.
-   */
-  static bool
-  parse_rx_metadata(void *p, size_t payload_len_in_bytes,
-		    uint32_t **items, size_t *nitems_in_uint32s, rx_metadata *md)
-  {
-
-    vrt::expanded_header vrt_hdr;
-
-    if (vrt::expanded_header::parse(
-        (const uint32_t*)p, payload_len_in_bytes/sizeof(uint32_t), //in
-        &vrt_hdr, (const uint32_t**)items, nitems_in_uint32s) and vrt_hdr.if_data_p()){ //out
-        //printf("%d --- %d time %d:%.8llx\n", *nitems_in_uint32s, (*items) - (uint32_t*)p, vrt_hdr.integer_secs, vrt_hdr.fractional_secs);
-    } else {
-        *items = (uint32_t*)p; //KLUDGE until we move this code
-        *nitems_in_uint32s = payload_len_in_bytes/sizeof(uint32_t);
-        printf("Bad vrt header %x\n", vrt_hdr.header);
-    }
-
-    return true;
-  }
-
 
   usrp2::impl::impl(transport::sptr data_transport, transport::sptr ctrl_transport) :
       d_next_rid(0),
@@ -283,32 +254,36 @@ namespace usrp2 {
   void
   usrp2::impl::handle_data_packet(std::vector<sbuff::sptr> &sbs)
   {
-    if (d_dont_enqueue) return;
+    if (d_dont_enqueue) return; //FIXME call done, or let the sptrs do it?
 
-    // process all data packets handed to us
-    // enqueue data packets in channel rings
+    // Try to parse each packet and enqueue the data into the channel ring.
+    // Bad packets will be ignored and their data freed by done().
     for (size_t i = 0; i < sbs.size(); i++) {
         sbuff::sptr sb = sbs[i];
 
-        //u2_fixed_hdr_t *fixed_hdr = (u2_fixed_hdr_t*)sb->buff();
-        // FIXME get channel from vrt
-        unsigned int chan = 0;
-
-        gruel::scoped_lock l(d_channel_rings_mutex);
-
-        if (!d_channel_rings[chan]) {
+        //parse the vrt header and store into the ring data structure
+        ring_data rd; rd.sb = sb;
+        if (not vrt::expanded_header::parse(
+            (const uint32_t*)rd.sb->buff(), rd.sb->len()/sizeof(uint32_t), //in
+            &rd.hdr, &rd.payload, &rd.n32_bit_words_payload) //out
+            or not rd.hdr.stream_id_p()
+        ){
+            printf("Bad vrt header 0x%x\n", rd.hdr.header);
             DEBUG_LOG("!");
-            sb->done(); //mark done, this sbuff is no longer needed
-            continue; 	// discard packet, no channel handler
+            rd.sb->done(); //mark done, this sbuff is no longer needed
+            continue;
         }
 
-        if (d_channel_rings[chan]->enqueue(sb)) {
+        //try to enqueue the data into the ring
+        gruel::scoped_lock l(d_channel_rings_mutex);
+        unsigned int chan = rd.hdr.stream_id;
+        if (d_channel_rings[chan] and d_channel_rings[chan]->enqueue(rd)) {
             inc_enqueued();
             DEBUG_LOG("+");
         } else {
             DEBUG_LOG("!");
-            sb->done(); //mark done, this sbuff is no longer needed
-            continue;     //discard packet, enqueue failed
+            rd.sb->done(); //mark done, this sbuff is no longer needed
+            continue;
         }
     }
 
@@ -494,7 +469,7 @@ namespace usrp2 {
       success = success && (ntohx(reply.ok) == 1);
       
       if (success)
-	d_channel_rings[channel] = ring_sptr(new ring(d_data_transport->max_buffs()));
+	d_channel_rings[channel] = ring::sptr(new ring(d_data_transport->max_buffs()));
       else
 	d_dont_enqueue = true;
 
@@ -560,7 +535,7 @@ namespace usrp2 {
       return false;
     }
     
-    ring_sptr rp = d_channel_rings[channel];
+    ring::sptr rp = d_channel_rings[channel];
     if (!rp){
       std::cerr << "usrp2: channel " << channel
                 << " not receiving" << std::endl;
@@ -573,17 +548,13 @@ namespace usrp2 {
     DEBUG_LOG("s");
     
     // Iterate through frames and present to user
-    sbuff::sptr sb;
-    while (rp->dequeue(sb)) {
-      uint32_t	       *items;			// points to beginning of data items
-      size_t 		nitems_in_uint32s;
+    ring_data rd;
+    while (rp->dequeue(rd)) {
       rx_metadata	md;
-      if (!parse_rx_metadata(sb->buff(), sb->len(), &items, &nitems_in_uint32s, &md))
-	return false;
-
-      bool want_more = (*handler)(items, nitems_in_uint32s, &md);
+      md.timestamp = rd.hdr.fractional_secs; //FIXME temporary until we figure out new md for vrt
+      bool want_more = (*handler)(rd.payload, rd.n32_bit_words_payload, &md);
       DEBUG_LOG("-");
-      sb->done(); //mark done, this sbuff is no longer needed
+      rd.sb->done(); //mark done, this sbuff is no longer needed
       dec_enqueued();
 
       if (!want_more)
@@ -607,15 +578,15 @@ namespace usrp2 {
       return false;
     }
 
-    ring_sptr rp = d_channel_rings[channel];
+    ring::sptr rp = d_channel_rings[channel];
     if (!rp){
       return false;
     }
 
     // Iterate through frames and drop them
-    sbuff::sptr sb;
-    while (rp->dequeue(sb)) {
-      sb->done(); //mark done, this sbuff is no longer needed
+    ring_data rd;
+    while (rp->dequeue(rd)) {
+      rd.sb->done(); //mark done, this sbuff is no longer needed
       dec_enqueued();
     }
     return true;

@@ -25,22 +25,33 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <gruel/thread.h>
+#include <vrt/expanded_header.h>
 #include "sbuff.h"
 
 namespace usrp2 {
 
-  class ring;
-  typedef boost::shared_ptr<ring> ring_sptr;
+  /* container class for data held by the ring */
+  class ring_data
+  {
+    public:
+        sbuff::sptr sb;
+        vrt::expanded_header hdr;
+        const uint32_t *payload;
+        size_t n32_bit_words_payload;
+  };
 
   class ring
   {
+  public:
+    typedef boost::shared_ptr<ring> sptr;
+
   private:
  
     size_t d_max;
     size_t d_read_ind;
     size_t d_write_ind;
 
-    std::vector<sbuff::sptr> d_ring;
+    std::vector<ring_data> d_ring;
 
     gruel::mutex d_mutex;
     gruel::condition_variable d_not_empty;
@@ -70,8 +81,8 @@ namespace usrp2 {
 
     void wait_for_not_empty();
 
-    bool enqueue(sbuff::sptr &sb);
-    bool dequeue(sbuff::sptr &sb);
+    bool enqueue(ring_data &rd);
+    bool dequeue(ring_data &rd);
   };
 
 }  // namespace usrp2
