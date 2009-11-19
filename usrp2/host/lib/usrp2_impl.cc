@@ -259,16 +259,15 @@ namespace usrp2 {
     // Try to parse each packet and enqueue the data into the channel ring.
     // Bad packets will be ignored and their data freed by done().
     for (size_t i = 0; i < sbs.size(); i++) {
-        sbuff::sptr sb = sbs[i];
+        ring_data rd; rd.sb = sbs[i];
 
         //parse the vrt header and store into the ring data structure
-        ring_data rd; rd.sb = sb;
         if (not vrt::expanded_header::parse(
             (const uint32_t*)rd.sb->buff(), rd.sb->len()/sizeof(uint32_t), //in
             &rd.hdr, &rd.payload, &rd.n32_bit_words_payload) //out
             or not rd.hdr.stream_id_p()
         ){
-            printf("Bad vrt header 0x%x\n", rd.hdr.header);
+            printf("Bad vrt header 0x%.8x, Packet len %d\n", rd.hdr.header, rd.sb->len());
             DEBUG_LOG("!");
             rd.sb->done(); //mark done, this sbuff is no longer needed
             continue;
