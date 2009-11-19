@@ -86,7 +86,7 @@ typedef struct {
  *  mbz == must be zero
  */
 
-typedef struct {
+typedef struct { // FIXME remove when we get vrt tx
   uint32_t	word0;		// flags etc
   uint32_t	timestamp;	// time of rx or tx (100 MHz)
 } u2_fixed_hdr_t;
@@ -102,32 +102,32 @@ typedef struct {
 #define	U2P_ALL_FLAGS		0x00000007
 
 
-static inline int
+static inline int // FIXME remove when we get vrt tx
 u2p_chan(u2_fixed_hdr_t *p)
 {
   return (ntohl(p->word0) >> U2P_CHAN_SHIFT) & U2P_CHAN_MASK;
 }
 
-inline static uint32_t
+inline static uint32_t // FIXME remove when we get vrt tx
 u2p_word0(u2_fixed_hdr_t *p)
 {
   return ntohl(p->word0);
 }
 
-inline static uint32_t
+inline static uint32_t // FIXME remove when we get vrt tx
 u2p_timestamp(u2_fixed_hdr_t *p)
 {
   return ntohl(p->timestamp);
 }
 
-inline static void
+inline static void  // FIXME remove when we get vrt tx
 u2p_set_word0(u2_fixed_hdr_t *p, int flags, int chan)
 {
   p->word0 = htonl((flags & U2P_ALL_FLAGS)
 		   | ((chan & U2P_CHAN_MASK) << U2P_CHAN_SHIFT));
 }
 
-inline static void
+inline static void  // FIXME remove when we get vrt tx
 u2p_set_timestamp(u2_fixed_hdr_t *p, uint32_t ts)
 {
   p->timestamp = htonl(ts);
@@ -139,15 +139,6 @@ u2p_set_timestamp(u2_fixed_hdr_t *p, uint32_t ts)
 typedef struct {
   u2_eth_hdr_t		ehdr;
   u2_transport_hdr_t	thdr;
-} u2_eth_packet_only_t;
-
-/*!
- * \brief consolidated packet: ethernet header + transport header + fixed header
- */
-typedef struct {
-  u2_eth_hdr_t		ehdr;
-  u2_transport_hdr_t	thdr;
-  u2_fixed_hdr_t	fixed;
 } u2_eth_packet_t;
 
 /*

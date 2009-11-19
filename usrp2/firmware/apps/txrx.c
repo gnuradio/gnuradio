@@ -176,7 +176,7 @@ start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p)
   /*
    * Construct  ethernet header and preload into two buffers
    */
-  u2_eth_packet_only_t	pkt;
+  u2_eth_packet_t	pkt;
   memset(&pkt, 0, sizeof(pkt));
   pkt.ehdr.dst = *host;
   pkt.ehdr.src = *ethernet_mac_addr();

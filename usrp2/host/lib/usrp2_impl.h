@@ -86,7 +86,6 @@ namespace usrp2 {
         d_data_pending_cond.notify_one();
     }
 
-    void init_op_ctrl_hdrs(op_fixed_hdr_t *p, int word0_flags, uint32_t timestamp);
     void init_config_rx_v2_cmd(op_config_rx_v2_cmd *cmd);
     void init_config_tx_v2_cmd(op_config_tx_v2_cmd *cmd);
     bool transmit_cmd_and_wait(void *cmd, size_t len, pending_reply *p, double secs=0.0);

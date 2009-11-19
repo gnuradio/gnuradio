@@ -24,12 +24,7 @@
 
 namespace usrp2 {
 
-  typedef struct{
-    u2_fixed_hdr_t fixed;
-  } op_fixed_hdr_t;
-
   struct op_generic_cmd {
-    op_fixed_hdr_t h;
     op_generic_t    op;
     op_generic_t    eop;
   };
@@ -39,78 +34,66 @@ namespace usrp2 {
    */
   struct op_config_rx_v2_cmd 
   {
-    op_fixed_hdr_t   h;
     op_config_rx_v2_t op;
     op_generic_t      eop;
   };
 
   struct op_start_rx_streaming_cmd 
   {
-    op_fixed_hdr_t	    h;
     op_start_rx_streaming_t op;
     op_generic_t	    eop;
   };
     
   struct op_stop_rx_cmd {
-    op_fixed_hdr_t h;
     op_generic_t    op;
     op_generic_t    eop;
   };
 
   struct op_config_tx_v2_cmd 
   {
-    op_fixed_hdr_t   h;
     op_config_tx_v2_t op;
     op_generic_t      eop;
   };
 
   struct op_config_mimo_cmd
   {
-    op_fixed_hdr_t   h;
     op_config_mimo_t  op;
     op_generic_t      eop;
   };
 
   struct op_burn_mac_addr_cmd 
   {
-    op_fixed_hdr_t    h;
     op_burn_mac_addr_t op;
     op_generic_t       eop;
   };
 
   struct op_dboard_info_cmd {
-    op_fixed_hdr_t h;
     op_generic_t    op;
     op_generic_t    eop;
   };
 
   struct op_peek_cmd {
-    op_fixed_hdr_t h;
     op_peek_t       op;
     op_generic_t    eop;
   };
 
   struct op_poke_cmd {
-    op_fixed_hdr_t h;
     op_poke_t       op;
     // words to write go here
     // eop must be dynamically written here
   };
 
   struct op_freq_cmd {
-    op_fixed_hdr_t h;
     op_freq_t       op;
     op_generic_t    eop;
   };
 
   struct op_gpio_cmd {
-    op_fixed_hdr_t h;
     op_gpio_t       op;
     op_generic_t    eop;
   };
 
   struct op_gpio_set_sels_cmd {
-    op_fixed_hdr_t h;
     op_gpio_set_sels_t op;
     op_generic_t    eop;
   };

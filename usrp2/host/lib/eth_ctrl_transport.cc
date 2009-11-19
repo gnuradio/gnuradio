@@ -46,7 +46,7 @@ int usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
         all_iov[i+1] = iov[i];
     }
     //setup a new ethernet header
-    u2_eth_packet_only_t hdr;
+    u2_eth_packet_t hdr;
     hdr.ehdr.ethertype = htons(U2_CTRL_ETHERTYPE);
     memcpy(&hdr.ehdr.dst, d_mac.addr, 6);
     memcpy(&hdr.ehdr.src, d_eth_ctrl->mac(), 6);
@@ -72,11 +72,11 @@ std::vector<usrp2::sbuff::sptr> usrp2::eth_ctrl_transport::recv(){
     //TODO perform multiple non blocking recvs and pack into sbs
     int recv_len = d_eth_ctrl->read_packet_dont_block(d_buff, sizeof(d_buff));
     //strip the ethernet headers from the buffer
-    if (recv_len > (signed)sizeof(u2_eth_packet_only_t)){
+    if (recv_len > (signed)sizeof(u2_eth_packet_t)){
         std::vector<sbuff::sptr> sbs;
         sbs.push_back(sbuff::make(
-            d_buff + sizeof(u2_eth_packet_only_t),
-            recv_len - sizeof(u2_eth_packet_only_t)));
+            d_buff + sizeof(u2_eth_packet_t),
+            recv_len - sizeof(u2_eth_packet_t)));
         return sbs;
     }
     boost::this_thread::sleep(gruel::get_new_timeout(0.05)); //50ms timeout

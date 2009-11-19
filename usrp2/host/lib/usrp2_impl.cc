@@ -159,16 +159,9 @@ namespace usrp2 {
   }
 
   void
-  usrp2::impl::init_op_ctrl_hdrs(op_fixed_hdr_t *p, int word0_flags, uint32_t timestamp){
-    u2p_set_word0(&p->fixed, word0_flags, 0);
-    u2p_set_timestamp(&p->fixed, timestamp);
-  }
-  
-  void
   usrp2::impl::init_config_rx_v2_cmd(op_config_rx_v2_cmd *cmd)
   {
-    memset(cmd, 0, sizeof(*cmd)); 
-    init_op_ctrl_hdrs(&cmd->h, 0, -1);
+    memset(cmd, 0, sizeof(*cmd));
     cmd->op.opcode = OP_CONFIG_RX_V2;
     cmd->op.len = sizeof(cmd->op);
     cmd->op.rid = d_next_rid++;
@@ -179,8 +172,7 @@ namespace usrp2 {
   void
   usrp2::impl::init_config_tx_v2_cmd(op_config_tx_v2_cmd *cmd)
   {
-    memset(cmd, 0, sizeof(*cmd)); 
-    init_op_ctrl_hdrs(&cmd->h, 0, -1);
+    memset(cmd, 0, sizeof(*cmd));
     cmd->op.opcode = OP_CONFIG_TX_V2;
     cmd->op.len = sizeof(cmd->op);
     cmd->op.rid = d_next_rid++;
@@ -220,7 +212,7 @@ namespace usrp2 {
         sbuff::sptr sb = sbs[i];
 
         // point to beginning of payload (subpackets)
-        unsigned char *p = (unsigned char *)sb->buff() + sizeof(u2_fixed_hdr_t);
+        unsigned char *p = (unsigned char *)sb->buff();
         
         // FIXME (p % 4) == 2.  Not good.  Must watch for unaligned loads.
 
@@ -267,7 +259,7 @@ namespace usrp2 {
             &rd.hdr, &rd.payload, &rd.n32_bit_words_payload) //out
             or not rd.hdr.stream_id_p()
         ){
-            printf("Bad vrt header 0x%.8x, Packet len %d\n", rd.hdr.header, rd.sb->len());
+            printf("Bad vrt header 0x%.8x, Packet len %u\n", rd.hdr.header, rd.sb->len());
             DEBUG_LOG("!");
             rd.sb->done(); //mark done, this sbuff is no longer needed
             continue;
@@ -326,7 +318,6 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_op_ctrl_hdrs(&cmd.h, 0, -1);
     cmd.op.opcode = OP_SET_RX_LO_OFFSET;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -453,7 +444,6 @@ namespace usrp2 {
       op_generic_t reply;
 
       memset(&cmd, 0, sizeof(cmd));
-      init_op_ctrl_hdrs(&cmd.h, 0, -1);
       cmd.op.opcode = OP_START_RX_STREAMING;
       cmd.op.len = sizeof(cmd.op);
       cmd.op.rid = d_next_rid++;
@@ -502,7 +492,6 @@ namespace usrp2 {
       gruel::scoped_lock l(d_channel_rings_mutex);
 
       memset(&cmd, 0, sizeof(cmd));
-      init_op_ctrl_hdrs(&cmd.h, 0, -1);
       cmd.op.opcode = OP_STOP_RX;
       cmd.op.len = sizeof(cmd.op);
       cmd.op.rid = d_next_rid++;
@@ -620,7 +609,6 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_op_ctrl_hdrs(&cmd.h, 0, -1);
     cmd.op.opcode = OP_SET_TX_LO_OFFSET;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -862,7 +850,6 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_op_ctrl_hdrs(&cmd.h, 0, -1);
     cmd.op.opcode = OP_CONFIG_MIMO;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -922,7 +909,6 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_op_ctrl_hdrs(&cmd.h, 0, -1);
     cmd.op.opcode = OP_BURN_MAC_ADDR;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -960,7 +946,6 @@ namespace usrp2 {
     op_dboard_info_reply_t	reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_op_ctrl_hdrs(&cmd.h, 0, -1);
     cmd.op.opcode = OP_DBOARD_INFO;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -987,7 +972,6 @@ namespace usrp2 {
     op_generic_t   reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_op_ctrl_hdrs(&cmd.h, 0, -1);
     cmd.op.opcode = OP_SYNC_TO_PPS;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1008,7 +992,6 @@ namespace usrp2 {
     op_generic_t   reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_op_ctrl_hdrs(&cmd.h, 0, -1);
     cmd.op.opcode = OP_SYNC_EVERY_PPS;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1045,7 +1028,6 @@ namespace usrp2 {
     size_t bytes = words*wlen;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_op_ctrl_hdrs(&cmd.h, 0, -1);
     cmd.op.opcode = OP_PEEK;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1101,7 +1083,6 @@ namespace usrp2 {
     cmd = (op_poke_cmd *)malloc(l);
     //fprintf(stderr, "cmd=%p l=%i\n", cmd, l);
     memset(cmd, 0, l);
-    init_op_ctrl_hdrs(&cmd->h, 0, -1);
     cmd->op.opcode = OP_POKE;
     cmd->op.len = sizeof(cmd->op)+bytes;
     cmd->op.rid = d_next_rid++;
@@ -1138,7 +1119,6 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_op_ctrl_hdrs(&cmd.h, 0, -1);
     cmd.op.opcode = OP_RESET_DB;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1164,7 +1144,6 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_op_ctrl_hdrs(&cmd.h, 0, -1);
     cmd.op.opcode = OP_GPIO_SET_DDR;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1198,7 +1177,6 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_op_ctrl_hdrs(&cmd.h, 0, -1);
     cmd.op.opcode = OP_GPIO_SET_SELS;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1226,7 +1204,6 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_op_ctrl_hdrs(&cmd.h, 0, -1);
     cmd.op.opcode = OP_GPIO_WRITE;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1255,7 +1232,6 @@ namespace usrp2 {
     op_gpio_read_reply_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_op_ctrl_hdrs(&cmd.h, 0, -1);
     cmd.op.opcode = OP_GPIO_READ;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
@@ -1292,7 +1268,6 @@ namespace usrp2 {
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    init_op_ctrl_hdrs(&cmd.h, 0, -1);
     cmd.op.opcode = OP_GPIO_STREAM;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;

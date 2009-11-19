@@ -57,7 +57,7 @@ int usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
         all_iov[i+1] = iov[i];
     }
     //setup a new ethernet header
-    u2_eth_packet_only_t hdr;
+    u2_eth_packet_t hdr;
     hdr.ehdr.ethertype = htons(U2_DATA_ETHERTYPE);
     memcpy(&hdr.ehdr.dst, d_mac.addr, 6);
     memcpy(&hdr.ehdr.src, d_eth_data->mac(), 6);
@@ -81,7 +81,7 @@ std::vector<usrp2::sbuff::sptr> usrp2::eth_data_transport::recv(){
         void *base = iovs[i].iov_base;
         size_t len = iovs[i].iov_len;
 
-        u2_eth_packet_only_t *hdr = (u2_eth_packet_only_t *)base;
+        u2_eth_packet_t *hdr = (u2_eth_packet_t *)base;
         d_num_rx_frames++;
         d_num_rx_bytes += len;
 
@@ -107,8 +107,8 @@ std::vector<usrp2::sbuff::sptr> usrp2::eth_data_transport::recv(){
 
         //drop the ethernet and transport headers
         sbs.push_back(sbuff::make(
-            (uint8_t*)base + sizeof(u2_eth_packet_only_t),
-            len - sizeof(u2_eth_packet_only_t),
+            (uint8_t*)base + sizeof(u2_eth_packet_t),
+            len - sizeof(u2_eth_packet_t),
             boost::bind(&eth_buffer::release_frame, d_eth_data, base)));
     }
     return sbs;
