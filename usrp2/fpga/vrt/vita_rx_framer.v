@@ -30,13 +30,17 @@ module vita_rx_framer
    wire [63:0] 	  vita_time_fifo_o = sample_fifo_i[SAMP_WIDTH-5:SAMP_WIDTH-68];
 
    reg [31:0] 	  data_fifo_o;
-   wire [127:0]   XILINX_SUCKS = sample_fifo_i;
+
+   // The tools won't synthesize properly without this kludge because of the variable
+   // parameter length
+   
+   wire [127:0]   FIXED_WIDTH_KLUDGE = sample_fifo_i;
    always @*
      case(sample_phase)
-       4'd0 : data_fifo_o = XILINX_SUCKS[31:0];
-       4'd1 : data_fifo_o = XILINX_SUCKS[63:32];
-       4'd2 : data_fifo_o = XILINX_SUCKS[95:64];
-       4'd3 : data_fifo_o = XILINX_SUCKS[127:96];
+       4'd0 : data_fifo_o = FIXED_WIDTH_KLUDGE[31:0];
+       4'd1 : data_fifo_o = FIXED_WIDTH_KLUDGE[63:32];
+       4'd2 : data_fifo_o = FIXED_WIDTH_KLUDGE[95:64];
+       4'd3 : data_fifo_o = FIXED_WIDTH_KLUDGE[127:96];
        default : data_fifo_o = 32'hDEADBEEF;
      endcase // case (sample_phase)
    
