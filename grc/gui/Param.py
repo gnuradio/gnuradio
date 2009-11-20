@@ -38,6 +38,7 @@ class InputParam(gtk.HBox):
 		#connect events
 		self.connect('show', self._update_gui)
 	def set_color(self, color): pass
+	def set_tooltip_text(self, text): pass
 
 	def _update_gui(self, *args):
 		"""
@@ -51,8 +52,7 @@ class InputParam(gtk.HBox):
 		#set the color
 		self.set_color(self.param.get_color())
 		#set the tooltip
-		if self.tp: self.tp.set_tip(
-			self.entry,
+		self.set_tooltip_text(
 			Utils.parse_template(TIP_MARKUP_TMPL, param=self.param).strip(),
 		)
 		#show/hide
@@ -77,16 +77,13 @@ class EntryParam(InputParam):
 
 	def __init__(self, *args, **kwargs):
 		InputParam.__init__(self, *args, **kwargs)
-		self.entry = input = gtk.Entry()
-		input.set_text(self.param.get_value())
-		input.connect('changed', self._handle_changed)
-		self.pack_start(input, True)
-		self.get_text = input.get_text
-		#tool tip
-		self.tp = gtk.Tooltips()
-		self.tp.set_tip(self.entry, '')
-		self.tp.enable()
-	def set_color(self, color): self.entry.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
+		self._input = gtk.Entry()
+		self._input.set_text(self.param.get_value())
+		self._input.connect('changed', self._handle_changed)
+		self.pack_start(self._input, True)
+	def get_text(self): return self._input.get_text()
+	def set_color(self, color): self._input.modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
+	def set_tooltip_text(self, text): self._input.set_tooltip_text(text)
 
 class EnumParam(InputParam):
 	"""Provide an entry box for Enum types with a drop down menu."""
@@ -99,6 +96,7 @@ class EnumParam(InputParam):
 		self._input.connect('changed', self._handle_changed)
 		self.pack_start(self._input, False)
 	def get_text(self): return self.param.get_option_keys()[self._input.get_active()]
+	def set_tooltip_text(self, text): self._input.set_tooltip_text(text)
 
 class EnumEntryParam(InputParam):
 	"""Provide an entry box and drop down menu for Raw Enum types."""
@@ -117,6 +115,10 @@ class EnumEntryParam(InputParam):
 	def get_text(self):
 		if self._input.get_active() == -1: return self._input.get_child().get_text()
 		return self.param.get_option_keys()[self._input.get_active()]
+	def set_tooltip_text(self, text):
+		if self._input.get_active() == -1: #custom entry
+			self._input.get_child().set_tooltip_text(text)
+		else: self._input.set_tooltip_text(text)
 	def set_color(self, color):
 		if self._input.get_active() == -1: #custom entry, use color
 			self._input.get_child().modify_base(gtk.STATE_NORMAL, gtk.gdk.color_parse(color))
