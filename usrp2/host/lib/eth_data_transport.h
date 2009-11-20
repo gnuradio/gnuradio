@@ -43,8 +43,8 @@ namespace usrp2{
     public:
         eth_data_transport(const std::string &ifc, u2_mac_addr_t mac, size_t rx_bufsize);
         ~eth_data_transport();
-        int sendv(const iovec *iov, size_t iovlen);
-        std::vector<sbuff::sptr> recv();
+        bool sendv(const iovec *iov, size_t iovlen);
+        sbuff_vec_t recv();
         void init();
         size_t max_buffs(){return d_eth_data->max_frames();}
 };

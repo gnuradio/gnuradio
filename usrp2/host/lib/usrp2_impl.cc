@@ -187,7 +187,7 @@ namespace usrp2 {
     iovec iov;
     iov.iov_base = cmd;
     iov.iov_len = len;
-    return d_ctrl_transport->sendv(&iov, 1) >= 0;
+    return d_ctrl_transport->sendv(&iov, 1);
   }
 
   bool
@@ -206,7 +206,7 @@ namespace usrp2 {
   }
 
   void
-  usrp2::impl::handle_control_packet(const std::vector<sbuff::sptr> &sbs)
+  usrp2::impl::handle_control_packet(const transport::sbuff_vec_t &sbs)
   {    
     for (size_t i = 0; i < sbs.size(); i++) {
         sbuff::sptr sb = sbs[i];
@@ -244,7 +244,7 @@ namespace usrp2 {
   }
   
   void
-  usrp2::impl::handle_data_packet(const std::vector<sbuff::sptr> &sbs)
+  usrp2::impl::handle_data_packet(const transport::sbuff_vec_t &sbs)
   {
     if (d_dont_enqueue) return; //FIXME call done, or let the sptrs do it?
 
@@ -829,7 +829,7 @@ namespace usrp2 {
       if (total < 64)
 	fprintf(stderr, "usrp2::tx_raw: FIXME: short packet: %zd items (%zd bytes)\n", i, total);
 
-      if (d_data_transport->sendv(iov, 2) != eth_buffer::EB_OK){
+      if (not d_data_transport->sendv(iov, 2)){
 	return false;
       }
 

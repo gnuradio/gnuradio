@@ -46,8 +46,8 @@ namespace usrp2{
          */
         eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac, double timeout=0.05, bool target = true);
         ~eth_ctrl_transport();
-        int sendv(const iovec *iov, size_t iovlen);
-        std::vector<sbuff::sptr> recv();
+        bool sendv(const iovec *iov, size_t iovlen);
+        sbuff_vec_t recv();
         size_t max_buffs(){return 3;}
 };
 

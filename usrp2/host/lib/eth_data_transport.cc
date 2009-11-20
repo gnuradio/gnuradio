@@ -48,7 +48,7 @@ void usrp2::eth_data_transport::init(){
         std::cerr << "usrp2: failed to enable realtime scheduling" << std::endl;
 }
 
-int usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
+bool usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
     //create a new iov array with a space for ethernet header
     // and move the current iovs to the center of the new array
     size_t all_iov_len = iovlen + 1;
@@ -67,11 +67,11 @@ int usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
     //feed the first iov the header
     all_iov[0].iov_base = &hdr;
     all_iov[0].iov_len = sizeof(hdr);
-    return d_eth_data->tx_framev(all_iov, all_iov_len);
+    return (d_eth_data->tx_framev(all_iov, all_iov_len) == eth_buffer::EB_OK)? true : false;
 }
 
-std::vector<usrp2::sbuff::sptr> usrp2::eth_data_transport::recv(){
-    std::vector<sbuff::sptr> sbs;
+usrp2::transport::sbuff_vec_t usrp2::eth_data_transport::recv(){
+    sbuff_vec_t sbs;
     DEBUG_LOG(":");
     // Receive available frames from ethernet buffer.  Handler will
     // process control frames, enqueue data packets in channel

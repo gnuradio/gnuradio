@@ -89,7 +89,7 @@ namespace usrp2{
             return p;
         }
 
-        void handle_control_packet(const std::vector<sbuff::sptr> &sbs){
+        void handle_control_packet(const transport::sbuff_vec_t &sbs){
             for (size_t i = 0; i < sbs.size(); i++){
 
                 //copy the packet into an reply structure

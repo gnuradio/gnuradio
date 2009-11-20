@@ -158,6 +158,7 @@ restart_streaming(void)
   // kick off the state machine
   dbsm_start(&dsp_rx_sm);
 
+  sr_rx_ctrl->time_secs = 0;
   sr_rx_ctrl->time_ticks = 0;		// enqueue first of two commands
 
   // make sure this one and the rest have the "now" and "chain" bits set.
@@ -165,6 +166,7 @@ restart_streaming(void)
     MK_RX_CMD(FRAMES_PER_CMD * streaming_items_per_frame,
 	      1, 1);
 
+  sr_rx_ctrl->time_secs = 0;
   sr_rx_ctrl->time_ticks = 0;		// enqueue second command
 }
 
@@ -245,6 +247,7 @@ fw_sets_seqno_inspector(dbsm_t *sm, int buf_this)	// returns false
   // queue up another rx command when required
   if (streaming_p && --streaming_frame_count == 0){
     streaming_frame_count = FRAMES_PER_CMD;
+    sr_rx_ctrl->time_secs = 0;
     sr_rx_ctrl->time_ticks = 0;
   }
 

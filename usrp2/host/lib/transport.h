@@ -29,7 +29,8 @@ namespace usrp2 {
 
   class transport {
   public:
-    typedef boost::function<void(const std::vector<sbuff::sptr> &)> callback_t;
+    typedef std::vector<sbuff::sptr> sbuff_vec_t;
+    typedef boost::function<void(const sbuff_vec_t &)> callback_t;
     typedef boost::shared_ptr<transport> sptr;
   private:
     std::string              d_type_str;
@@ -75,14 +76,14 @@ namespace usrp2 {
      * \brief send the contents of the buffer (override in a subclass)
      * \param iovec a list of iovecs
      * \param iovlen the number of iovecs
-     * \return the number of bytes sent, -1 for error
+     * \return true for completion, false for error
      */
-    virtual int sendv(const iovec *iov, size_t iovlen){return -1;}
+    virtual bool sendv(const iovec *iov, size_t iovlen){return false;}
     /*!
      * \brief receive data, possibly multiple buffers (override in a subclass)
      * \return a new vector of sbuffs, an empty vector is no data
      */
-    virtual std::vector<sbuff::sptr> recv(){return std::vector<sbuff::sptr>();}
+    virtual sbuff_vec_t recv(){return sbuff_vec_t();}
   };
   
 } // namespace usrp2

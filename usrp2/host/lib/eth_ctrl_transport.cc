@@ -40,7 +40,7 @@ usrp2::eth_ctrl_transport::~eth_ctrl_transport(){
     delete[] d_buff;
 }
 
-int usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
+bool usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
     //create a new iov array with a space for ethernet header and padding
     // and move the current iovs to the center of the new array
     size_t all_iov_len = iovlen + 2;
@@ -69,15 +69,15 @@ int usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
     memset(padding, 0, ethernet::MIN_PKTLEN);
     all_iov[all_iov_len-1].iov_base = padding;
     all_iov[all_iov_len-1].iov_len = std::max(ethernet::MIN_PKTLEN-num_bytes, 0);
-    return d_eth_ctrl->write_packetv(all_iov, all_iov_len);
+    return d_eth_ctrl->write_packetv(all_iov, all_iov_len) > 0;
 }
 
 //helper function that deletes an array allocated by new
 //FIXME replace with the boost::lambda::delete_array
 static void delete_array(uint8_t *array){delete[] array;}
 
-std::vector<usrp2::sbuff::sptr> usrp2::eth_ctrl_transport::recv(){
-    std::vector<sbuff::sptr> sbs;
+usrp2::transport::sbuff_vec_t usrp2::eth_ctrl_transport::recv(){
+    sbuff_vec_t sbs;
     for (size_t i = 0; i < max_buffs(); i++){
         //allocate a new buffer and recv
         if (d_buff == NULL) d_buff = new uint8_t[ethernet::MAX_PKTLEN];

@@ -36,10 +36,10 @@ usrp2::transport::~transport(){
 
 void usrp2::transport::start(){
     if (not d_cb){
-        throw std::runtime_error("usrp2::transport for" + d_type_str + " has no callback\n");
+        throw std::runtime_error("usrp2::transport for " + d_type_str + " has no callback\n");
     }
     if (d_running){
-        throw std::runtime_error("usrp2::transport for" + d_type_str + " already started\n");
+        throw std::runtime_error("usrp2::transport for " + d_type_str + " already started\n");
     }
     d_running = true;
     d_thread = new boost::thread(boost::bind(&usrp2::transport::run, this));
@@ -47,7 +47,7 @@ void usrp2::transport::start(){
 
 void usrp2::transport::stop(){
     if (not d_running){
-        throw std::runtime_error("usrp2::transport for" + d_type_str + " already stopped\n");
+        throw std::runtime_error("usrp2::transport for " + d_type_str + " already stopped\n");
     }
     d_running = false;
     d_thread->join();
@@ -59,7 +59,7 @@ void usrp2::transport::run(){
         try{
             // call recv to get a new sbuffer
             // pass the buffer into the callback
-            std::vector<sbuff::sptr> sbs = recv();
+            sbuff_vec_t sbs = recv();
             if (d_running and sbs.size()) d_cb(sbs);
         //catch thread interrupts from join, sleep, etc
         //the running condition will be re-checked
