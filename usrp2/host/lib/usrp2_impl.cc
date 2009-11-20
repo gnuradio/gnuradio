@@ -779,7 +779,6 @@ namespace usrp2 {
     if (nitems == 0)
       return true;
 
-    // FIXME can't deal with nitems < U2_MIN_SAMPLES (will be fixed in VRT)
     // FIXME need to check the MTU instead of assuming 1500 bytes
 
     // fragment as necessary then fire away
@@ -812,12 +811,7 @@ namespace usrp2 {
       u2p_set_word0(&fixed_hdr, flags, channel);
       u2p_set_timestamp(&fixed_hdr, timestamp);
 
-      // Avoid short packet by splitting last two packets if reqd
-      size_t i;
-      if ((nitems - n) > U2_MAX_SAMPLES && (nitems - n) < (U2_MAX_SAMPLES + U2_MIN_SAMPLES))
-	i = (nitems - n) / 2;
-      else
-	i = std::min((size_t) U2_MAX_SAMPLES, nitems - n);
+      size_t i = std::min((size_t) U2_MAX_SAMPLES, nitems - n);
 
       eth_iovec iov[2];
       iov[0].iov_base = &fixed_hdr;
@@ -825,12 +819,8 @@ namespace usrp2 {
       iov[1].iov_base = const_cast<uint32_t *>(&items[n]);
       iov[1].iov_len = i * sizeof(uint32_t);
 
-      size_t total = iov[0].iov_len + iov[1].iov_len;
-      if (total < 64)
-	fprintf(stderr, "usrp2::tx_raw: FIXME: short packet: %zd items (%zd bytes)\n", i, total);
-
       if (not d_data_transport->sendv(iov, 2)){
-	return false;
+        return false;
       }
 
       n += i;

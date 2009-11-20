@@ -68,7 +68,7 @@ bool usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
     uint8_t padding[ethernet::MIN_PKTLEN];
     memset(padding, 0, ethernet::MIN_PKTLEN);
     all_iov[all_iov_len-1].iov_base = padding;
-    all_iov[all_iov_len-1].iov_len = std::max(ethernet::MIN_PKTLEN-num_bytes, 0);
+    all_iov[all_iov_len-1].iov_len = std::max(int(ethernet::MIN_PKTLEN)-num_bytes, 0);
     return d_eth_ctrl->write_packetv(all_iov, all_iov_len) > 0;
 }
 

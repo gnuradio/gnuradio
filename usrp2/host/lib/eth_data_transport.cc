@@ -51,7 +51,7 @@ void usrp2::eth_data_transport::init(){
 bool usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
     //create a new iov array with a space for ethernet header
     // and move the current iovs to the center of the new array
-    size_t all_iov_len = iovlen + 1;
+    size_t all_iov_len = iovlen + 2;
     iovec all_iov[all_iov_len];
     for (size_t i = 0; i < iovlen; i++){
         all_iov[i+1] = iov[i];
@@ -67,6 +67,16 @@ bool usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
     //feed the first iov the header
     all_iov[0].iov_base = &hdr;
     all_iov[0].iov_len = sizeof(hdr);
+    //get number of bytes in current iovs
+    int num_bytes = 0;
+    for (size_t i = 0; i < all_iov_len-1; i++){
+        num_bytes += all_iov[i].iov_len;
+    }
+    //handle padding, must be at least minimum length
+    uint8_t padding[eth_buffer::MIN_PKTLEN];
+    memset(padding, 0, eth_buffer::MIN_PKTLEN);
+    all_iov[all_iov_len-1].iov_base = padding;
+    all_iov[all_iov_len-1].iov_len = std::max(int(eth_buffer::MIN_PKTLEN)-num_bytes, 0);
     return (d_eth_data->tx_framev(all_iov, all_iov_len) == eth_buffer::EB_OK)? true : false;
 }
 
