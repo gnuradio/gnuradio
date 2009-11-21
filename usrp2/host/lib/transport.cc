@@ -50,6 +50,7 @@ void usrp2::transport::stop(){
         throw std::runtime_error("usrp2::transport for " + d_type_str + " already stopped\n");
     }
     d_running = false;
+    d_thread->interrupt();
     d_thread->join();
 }
 
@@ -61,7 +62,7 @@ void usrp2::transport::run(){
             // pass the buffer into the callback
             sbuff_vec_t sbs = recv();
             if (d_running and sbs.size()) d_cb(sbs);
-        //catch thread interrupts from join, sleep, etc
+        //catch thread interrupts, possibly from stop
         //the running condition will be re-checked
         }catch(boost::thread_interrupted const &){}
     }

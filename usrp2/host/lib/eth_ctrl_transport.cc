@@ -31,6 +31,8 @@ usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, u2_mac_add
     else        d_pf_ctrl = pktfilter::make_ethertype_inbound(U2_CTRL_ETHERTYPE, d_eth_ctrl->mac());
     if (!d_pf_ctrl || !d_eth_ctrl->attach_pktfilter(d_pf_ctrl))
         throw std::runtime_error("Unable to attach packet filter for control packets.");
+
+    memset(d_padding, 0, sizeof(d_padding));
 }
 
 usrp2::eth_ctrl_transport::~eth_ctrl_transport(){
@@ -65,9 +67,7 @@ bool usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
         num_bytes += all_iov[i].iov_len;
     }
     //handle padding, must be at least minimum length
-    uint8_t padding[ethernet::MIN_PKTLEN];
-    memset(padding, 0, ethernet::MIN_PKTLEN);
-    all_iov[all_iov_len-1].iov_base = padding;
+    all_iov[all_iov_len-1].iov_base = d_padding;
     all_iov[all_iov_len-1].iov_len = std::max(int(ethernet::MIN_PKTLEN)-num_bytes, 0);
     return d_eth_ctrl->write_packetv(all_iov, all_iov_len) > 0;
 }

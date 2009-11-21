@@ -35,6 +35,8 @@ usrp2::eth_data_transport::eth_data_transport(const std::string &ifc, u2_mac_add
     d_pf_data = pktfilter::make_ethertype_inbound_target(U2_DATA_ETHERTYPE, (const unsigned char*)&(d_mac.addr));
     if (!d_pf_data || !d_eth_data->attach_pktfilter(d_pf_data))
         throw std::runtime_error("Unable to attach packet filter for data packets.");
+
+    memset(d_padding, 0, sizeof(d_padding));
 }
 
 usrp2::eth_data_transport::~eth_data_transport(){
@@ -73,9 +75,7 @@ bool usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
         num_bytes += all_iov[i].iov_len;
     }
     //handle padding, must be at least minimum length
-    uint8_t padding[eth_buffer::MIN_PKTLEN];
-    memset(padding, 0, eth_buffer::MIN_PKTLEN);
-    all_iov[all_iov_len-1].iov_base = padding;
+    all_iov[all_iov_len-1].iov_base = d_padding;
     all_iov[all_iov_len-1].iov_len = std::max(int(eth_buffer::MIN_PKTLEN)-num_bytes, 0);
     return (d_eth_data->tx_framev(all_iov, all_iov_len) == eth_buffer::EB_OK)? true : false;
 }
@@ -90,6 +90,11 @@ usrp2::transport::sbuff_vec_t usrp2::eth_data_transport::recv(){
     for (size_t i = 0; i < iovs.size(); i++){
         void *base = iovs[i].iov_base;
         size_t len = iovs[i].iov_len;
+
+        if (len <= sizeof(u2_eth_packet_t)){
+            DEBUG_LOG("D");
+            continue; //drop truncated packet
+        }
 
         u2_eth_packet_t *hdr = (u2_eth_packet_t *)base;
         d_num_rx_frames++;

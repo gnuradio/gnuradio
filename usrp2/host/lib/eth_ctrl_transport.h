@@ -33,6 +33,7 @@ namespace usrp2{
         u2_mac_addr_t d_mac;
         uint8_t       *d_buff;
         double_t      d_timeout;
+        uint8_t       d_padding[ethernet::MIN_PKTLEN];
 
     public:
         /*!

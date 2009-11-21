@@ -39,6 +39,7 @@ namespace usrp2{
         unsigned int   d_num_rx_missing;
         unsigned int   d_num_rx_overruns;
         unsigned int   d_num_rx_bytes;
+        uint8_t        d_padding[eth_buffer::MIN_PKTLEN];
 
     public:
         eth_data_transport(const std::string &ifc, u2_mac_addr_t mac, size_t rx_bufsize);
