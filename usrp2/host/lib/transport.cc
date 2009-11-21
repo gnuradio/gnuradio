@@ -61,7 +61,7 @@ void usrp2::transport::run(){
             // call recv to get a new sbuffer
             // pass the buffer into the callback
             sbuff_vec_t sbs = recv();
-            if (d_running and sbs.size()) d_cb(sbs);
+            if (sbs.size()) d_cb(sbs);
         //catch thread interrupts, possibly from stop
         //the running condition will be re-checked
         }catch(boost::thread_interrupted const &){}

@@ -92,7 +92,20 @@ namespace usrp2 {
      * Returned packet includes 14-byte ethhdr
      */
     int read_packet_dont_block (void *buf, int buflen);
-    
+
+    /*!
+     * \brief Read packet from interface, but with timeout
+     *
+     * \param buf		where to put the packet
+     * \param buflen	maximum length of packet in bytes (should be >= 1528)
+     * \param timeout_in_ms   the timeout in milliseconds
+     *
+     * \returns number of bytes read, -1 if trouble or 0 if nothing available.
+     *
+     * Returned packet includes 14-byte ethhdr
+     */
+    int read_packet_timeout (void *buf, int buflen, int timeout_in_ms);
+
     /*
      * \brief Write ethernet packet to interface.
      *

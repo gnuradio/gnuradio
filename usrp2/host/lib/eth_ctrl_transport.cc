@@ -18,8 +18,8 @@
 
 #include "eth_ctrl_transport.h"
 
-usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac, double timeout, bool target)
- : transport("ethernet control"), d_mac(mac), d_buff(NULL), d_timeout(timeout){
+usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac, bool target)
+ : transport("ethernet control"), d_mac(mac), d_buff(NULL){
 
     //create raw ethernet device
     d_eth_ctrl = new ethernet();
@@ -79,9 +79,15 @@ static void delete_array(uint8_t *array){delete[] array;}
 usrp2::transport::sbuff_vec_t usrp2::eth_ctrl_transport::recv(){
     sbuff_vec_t sbs;
     for (size_t i = 0; i < max_buffs(); i++){
-        //allocate a new buffer and recv
+        //conditionally allocate a new buffer
         if (d_buff == NULL) d_buff = new uint8_t[ethernet::MAX_PKTLEN];
-        int recv_len = d_eth_ctrl->read_packet_dont_block(d_buff, ethernet::MAX_PKTLEN);
+        // This method must return immediately after getting a packet.
+        // Therefore, only the first call to read_packet (when size==0)
+        // may have a timeout and further calls must return immediately.
+        // This way, we return once all available packets have been read.
+        int recv_len = sbs.size()?
+            d_eth_ctrl->read_packet_dont_block(d_buff, ethernet::MAX_PKTLEN):
+            d_eth_ctrl->read_packet_timeout(d_buff, ethernet::MAX_PKTLEN, 100); // FIXME magic timeout
         //strip the ethernet headers from the buffer
         if (recv_len > (signed)sizeof(u2_eth_packet_t)){
             sbs.push_back(sbuff::make(
@@ -91,7 +97,5 @@ usrp2::transport::sbuff_vec_t usrp2::eth_ctrl_transport::recv(){
             d_buff = NULL; //set to null to flag for a new allocation
         } else break;
     }
-    //if nothing was received, busy sleep to save cpu
-    if (sbs.size() == 0) boost::this_thread::sleep(gruel::get_new_timeout(d_timeout));
     return sbs;
 }

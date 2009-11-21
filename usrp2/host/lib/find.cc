@@ -32,9 +32,6 @@
 
 #define FIND_DEBUG false
 
-#define TRANSPORT_RECV_TIMEOUT 0.01 //10ms
-#define FIND_RESPONSE_TIMEOUT 0.05 //50ms
-
 static const u2_mac_addr_t broadcast_mac_addr =
       {{ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff }};
 
@@ -49,7 +46,7 @@ namespace usrp2{
         typedef boost::shared_ptr<find_helper> sptr;
 
         find_helper(const std::string &ifc, const std::string &addr): d_target_addr(addr){
-            d_ctrl_transport = transport::sptr(new eth_ctrl_transport(ifc, broadcast_mac_addr, TRANSPORT_RECV_TIMEOUT, false));
+            d_ctrl_transport = transport::sptr(new eth_ctrl_transport(ifc, broadcast_mac_addr, false));
             d_ctrl_transport->set_callback(boost::bind(&find_helper::handle_control_packet, this, _1));
         }
 
@@ -67,7 +64,7 @@ namespace usrp2{
             d_ctrl_transport->sendv(&iov, 1);
             //allow responses to gather
             d_ctrl_transport->start();
-            boost::this_thread::sleep(gruel::get_new_timeout(FIND_RESPONSE_TIMEOUT));
+            boost::this_thread::sleep(gruel::get_new_timeout(0.05)); //50ms
             d_ctrl_transport->stop();
             return d_result;
         }

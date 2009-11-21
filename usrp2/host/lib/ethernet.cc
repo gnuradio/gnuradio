@@ -37,6 +37,7 @@
 #include <sys/socket.h>
 #include <net/ethernet.h>
 #include <netinet/in.h>
+#include <sys/poll.h>
 
 #include <linux/types.h>
 #include <netpacket/packet.h>
@@ -178,7 +179,20 @@ namespace usrp2 {
     
     return len;
   }
-  
+
+  int
+  ethernet::read_packet_timeout (void *buf, int buflen, int timeout_in_ms)
+  {
+      struct pollfd pfd;
+      pfd.fd = d_fd;
+      pfd.revents = 0;
+      pfd.events = POLLIN;
+
+      poll(&pfd, 1, timeout_in_ms);
+
+      return read_packet_dont_block(buf, buflen);
+  }
+
   int
   ethernet::write_packet (const void *buf, int buflen)
   {

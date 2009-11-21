@@ -42,14 +42,18 @@ namespace usrp2{
          * When the target is false, the packet filter is setup to ignore our mac address.
          * \param ifc the ethernet device name
          * \param mac the destination mac address
-         * \param timeout the timeout in seconds (default 50ms)
          * \param target true for an inbound target
          */
-        eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac, double timeout=0.05, bool target = true);
+        eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac, bool target = true);
         ~eth_ctrl_transport();
         bool sendv(const iovec *iov, size_t iovlen);
         sbuff_vec_t recv();
-        size_t max_buffs(){return 3;}
+        /*!
+         * \brief Controls the maximum size returned by recv
+         * Any integer larger than 0 would work here.
+         * \return the max size of sbuffs recv vector
+         */
+        size_t max_buffs(){return 7;} 
 };
 
 
