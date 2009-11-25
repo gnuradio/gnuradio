@@ -30,7 +30,7 @@
 #include <stdexcept>
 
 static void
-print_words(FILE *fp, size_t offset, uint32_t *buf, size_t n)
+print_words(FILE *fp, size_t offset, const uint32_t *buf, size_t n)
 {
   size_t i;
   for (i = 0; i < n; i++){
@@ -85,27 +85,31 @@ namespace vrt {
 
   vrt_data_handler::~vrt_data_handler(){}
 
+  // N.B., There may be more than 1 VRT packet in a frame (usually IF-Context packets)
   data_handler::result
   vrt_data_handler::operator()(const void *base, size_t len)
   {
-#if 0
-    print_words(0, (uint32_t *)base, len/(sizeof(uint32_t)));
-    return 0;
-#else
-    const uint32_t *payload;
-    size_t n32_bit_words;
-    expanded_header hdr;
-    if (!expanded_header::parse((const uint32_t*) base, len/(sizeof(uint32_t)),
-				&hdr, &payload, &n32_bit_words)){
-      if (1){
-	fprintf(stderr, "vrt_data_handler: malformed VRT packet!\n");
-	print_words(stderr, 0, (uint32_t *)base, len/(sizeof(uint32_t)));
+    const uint32_t *word_base = (const uint32_t *) base;
+    size_t word_len = len/(sizeof(uint32_t));
+
+    bool want_more = true;
+    while (word_len > 0 && want_more){
+      const uint32_t *payload;
+      size_t n32_bit_words;
+      expanded_header hdr;
+      if (!expanded_header::parse(word_base, word_len,
+				  &hdr, &payload, &n32_bit_words)){
+	if (1){
+	  fprintf(stderr, "vrt_data_handler: malformed VRT packet!\n");
+	  print_words(stderr, 0, word_base, word_len);
+	}
+	return 0;
       }
-      return 0;
+      want_more = (*d_handler)(payload, n32_bit_words, &hdr);
+      word_base += hdr.pkt_size();
+      word_len -= hdr.pkt_size();
     }
-    bool want_more = (*d_handler)(payload, n32_bit_words, &hdr);
     return !want_more ? data_handler::DONE : 0;
-#endif
   }
 
 
