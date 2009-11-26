@@ -19,6 +19,9 @@
 	log=$log,
 	sync_out=$sync_out,
 )</make>
+	<callback>clock_recov.set_alpha($costas_alpha)</callback>
+	<callback>clock_recov.set_beta(0.25*$costas_alpha**2)</callback>
+	<callback>time_recov.set_alpha($timing_alpha)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
