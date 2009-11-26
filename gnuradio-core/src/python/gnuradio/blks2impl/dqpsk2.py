@@ -187,7 +187,8 @@ class dqpsk2_demod(gr.hier_block2):
                  timing_max_dev=_def_timing_max_dev,
                  gray_code=_def_gray_code,
                  verbose=_def_verbose,
-                 log=_def_log):
+                 log=_def_log,
+                 sync_out=False):
         """
 	Hierarchical block for RRC-filtered DQPSK demodulation
 
@@ -208,13 +209,17 @@ class dqpsk2_demod(gr.hier_block2):
         @type gray_code: bool
         @param verbose: Print information about modulator?
         @type verbose: bool
-        @param debug: Print modualtion data to files?
-        @type debug: bool
+        @param log: Print modualtion data to files?
+        @type log: bool
+        @param sync_out: Output a sync signal on :1?
+        @type sync_out: bool
 	"""
+	if sync_out: io_sig_out = gr.io_signaturev(2, 2, (gr.sizeof_char, gr.sizeof_gr_complex))
+	else: io_sig_out = gr.io_signature(1, 1, gr.sizeof_char)
 
 	gr.hier_block2.__init__(self, "dqpsk2_demod",
 			        gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
-			        gr.io_signature(1, 1, gr.sizeof_char))       # Output signature
+			        io_sig_out)       # Output signature
 
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
@@ -278,6 +283,7 @@ class dqpsk2_demod(gr.hier_block2):
                      self.clock_recov,
                      self.time_recov,
                      self.diffdec, self.slicer, self.symbol_mapper, self.unpack, self)
+        if sync_out: self.connect(self.time_recov, (self, 1))
 
     def samples_per_symbol(self):
         return self._samples_per_symbol

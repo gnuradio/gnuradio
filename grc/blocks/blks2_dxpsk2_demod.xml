@@ -17,6 +17,7 @@
 	gray_code=$gray_code,
 	verbose=$verbose,
 	log=$log,
+	sync_out=$sync_out,
 )</make>
 	<param>
 		<name>Type</name>
@@ -71,7 +72,7 @@
 		<name>Gray Code</name>
 		<key>gray_code</key>
 		<value>True</value>
-		<type>enum</type>
+		<type>bool</type>
 		<option>
 			<name>Yes</name>
 			<key>True</key>
@@ -111,6 +112,20 @@
 			<key>False</key>
 		</option>
 	</param>
+	<param>
+		<name>Sync Out</name>
+		<key>sync_out</key>
+		<value>False</value>
+		<type>bool</type>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
+	</param>
 	<sink>
 		<name>in</name>
 		<type>complex</type>
@@ -118,5 +133,10 @@
 	<source>
 		<name>out</name>
 		<type>byte</type>
+	</source>
+	<source>
+		<name>sync</name>
+		<type>complex</type>
+		<optional>1</optional>
 	</source>
 </block>
