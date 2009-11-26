@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##DPSK2 Mod - 2, 4
+###################################################
+ -->
+<block>
+	<name>DPSK2 Mod</name>
+	<key>blks2_dxpsk2_mod</key>
+	<import>from gnuradio import blks2</import>
+	<make>blks2.$(type)2_mod(
+	samples_per_symbol=$samples_per_symbol,
+	excess_bw=$excess_bw,
+	gray_code=$gray_code,
+	verbose=$verbose,
+	log=$log,
+)</make>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>DBPSK</name>
+			<key>dbpsk</key>
+		</option>
+		<option>
+			<name>DQPSK</name>
+			<key>dqpsk</key>
+		</option>
+	</param>
+	<param>
+		<name>Samples/Symbol</name>
+		<key>samples_per_symbol</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Excess BW</name>
+		<key>excess_bw</key>
+		<value>0.35</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Gray Code</name>
+		<key>gray_code</key>
+		<value>True</value>
+		<type>bool</type>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Verbose</name>
+		<key>verbose</key>
+		<value>False</value>
+		<type>bool</type>
+		<hide>#if str($verbose) == 'False' then 'part' else 'none'#</hide>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Logging</name>
+		<key>log</key>
+		<value>False</value>
+		<type>bool</type>
+		<hide>#if str($log) == 'False' then 'part' else 'none'#</hide>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>complex</type>
+	</source>
+</block>
