@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Wed Nov 25 20:45:29 2009</timestamp>
+  <timestamp>Thu Dec  3 11:42:41 2009</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -73,29 +73,6 @@
     <param>
       <key>_coordinate</key>
       <value>(15, 76)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>1e6</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(12, 207)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -550,6 +527,29 @@
     <param>
       <key>_coordinate</key>
       <value>(576, 410)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>1e6/4</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(12, 207)</value>
     </param>
     <param>
       <key>_rotation</key>
