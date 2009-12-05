@@ -29,6 +29,7 @@ from Constants import \
 import pygtk
 pygtk.require('2.0')
 import gtk
+import pango
 
 BLOCK_MARKUP_TMPL="""\
 #set $foreground = $block.is_valid() and 'black' or 'red'
@@ -130,8 +131,11 @@ class Block(Element):
 		layout.set_markup(Utils.parse_template(BLOCK_MARKUP_TMPL, block=self))
 		self.label_width, self.label_height = layout.get_pixel_size()
 		#display the params
-		for param in filter(lambda p: p.get_hide() not in ('all', 'part'), self.get_params()):
-			layout = param.get_layout()
+		markups = [param.get_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
+		if markups:
+			layout = gtk.DrawingArea().create_pango_layout('')
+			layout.set_spacing(LABEL_SEPARATION*pango.SCALE)
+			layout.set_markup('\n'.join(markups))
 			layouts.append(layout)
 			w,h = layout.get_pixel_size()
 			self.label_width = max(w, self.label_width)

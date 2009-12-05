@@ -165,11 +165,9 @@ class Param(Element):
 		if self.get_options(): return EnumEntryParam(self, *args, **kwargs)
 		return EntryParam(self, *args, **kwargs)
 
-	def get_layout(self):
+	def get_markup(self):
 		"""
-		Create a layout based on the current markup.
-		@return the pango layout
+		Get the markup for this param.
+		@return a pango markup string
 		"""
-		layout = gtk.DrawingArea().create_pango_layout('')
-		layout.set_markup(Utils.parse_template(PARAM_MARKUP_TMPL, param=self))
-		return layout
+		return Utils.parse_template(PARAM_MARKUP_TMPL, param=self)
