@@ -29,7 +29,6 @@ import Preferences
 from threading import Thread
 import Messages
 from .. base import ParseXML
-import random
 from MainWindow import MainWindow
 from PropsDialog import PropsDialog
 import Dialogs
