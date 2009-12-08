@@ -20,11 +20,12 @@ case "$1" in
 	echo "Begin freedesktop install..."
 	for size in ${ICON_SIZES}; do \
 		echo "Install icon: ${size}x${size}"
-		xdg-icon-resource install --context mimetypes --theme gnome --size ${size} ${SRCDIR}/grc-icon-${size}.png application-gnuradio-grc; \
-		xdg-icon-resource install --context mimetypes --size ${size} ${SRCDIR}/grc-icon-${size}.png application-gnuradio-grc; \
-		xdg-icon-resource install --context apps --theme gnome --size ${size} ${SRCDIR}/grc-icon-${size}.png gnuradio-grc; \
-		xdg-icon-resource install --context apps --size ${size} ${SRCDIR}/grc-icon-${size}.png gnuradio-grc; \
+		xdg-icon-resource install --noupdate --context mimetypes --theme gnome --size ${size} ${SRCDIR}/grc-icon-${size}.png application-gnuradio-grc; \
+		xdg-icon-resource install --noupdate --context mimetypes --size ${size} ${SRCDIR}/grc-icon-${size}.png application-gnuradio-grc; \
+		xdg-icon-resource install --noupdate --context apps --theme gnome --size ${size} ${SRCDIR}/grc-icon-${size}.png gnuradio-grc; \
+		xdg-icon-resource install --noupdate --context apps --size ${size} ${SRCDIR}/grc-icon-${size}.png gnuradio-grc; \
 	done
+	xdg-icon-resource forceupdate
 	echo "Install mime type"
 	xdg-mime install ${SRCDIR}/gnuradio-grc.xml
 	echo "Install menu items"
