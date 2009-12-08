@@ -25,6 +25,7 @@
 #include <msdd_rs_source_simple.h>
 #include <gr_io_signature.h>
 #include <string.h>
+#include <cstdio>
 
 
 msdd_rs_source_simple_sptr
