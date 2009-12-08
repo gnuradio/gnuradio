@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,8 +55,10 @@ print_tune_result(char *msg, bool tune_ok,
 
 
 void start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p);
+void start_rx_streaming_at_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p, uint32_t time);
 void stop_rx_cmd(void);
 void restart_streaming(void);
+void restart_streaming_at(uint32_t time);
 bool is_streaming(void);
 
 void handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len);

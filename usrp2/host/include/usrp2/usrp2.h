@@ -60,7 +60,7 @@ namespace usrp2 {
    *
    * \returns a vector of properties, 1 entry for each matching USRP2 found.
    */
-  props_vector_t find(const std::string &ifc, const std::string &mac_addr=""); 
+  props_vector_t find(const std::string &ifc, const std::string &mac_addr="");
 
   class tune_result;
 
@@ -79,10 +79,10 @@ namespace usrp2 {
 
     /*!
      * Shared pointer to this class
-     */ 
+     */
     typedef boost::shared_ptr<usrp2> sptr;
- 
-    /*! 
+
+    /*!
      * Static function to return an instance of usrp2 as a shared pointer
      *
      * \param ifc   Network interface name, e.g., "eth0"
@@ -96,7 +96,7 @@ namespace usrp2 {
     /*!
      * Class destructor
      */
-    ~usrp2();  
+    ~usrp2();
 
     /*!
      * Returns the MAC address associated with this USRP
@@ -120,10 +120,10 @@ namespace usrp2 {
      */
     bool set_rx_gain(double gain);
 
-    //! return minimum Rx gain 
+    //! return minimum Rx gain
     double rx_gain_min();
 
-    //! return maximum Rx gain 
+    //! return maximum Rx gain
     double rx_gain_max();
 
     //! return Rx gain db_per_step
@@ -160,7 +160,7 @@ namespace usrp2 {
 
     /*!
      * Set received sample format
-     *   
+     *
      *    domain: complex or real
      *      type: floating, fixed point, or raw
      *     depth: bits per sample
@@ -172,12 +172,33 @@ namespace usrp2 {
     /*!
      * Start streaming receive mode.  USRP2 will send a continuous stream of
      * DSP pipeline samples to host.  Call rx_samples(...) to access.
-     * 
+     *
      * \param channel          Stream channel number (0-30)
      * \param items_per_frame  Number of 32-bit items per frame.
      */
     bool start_rx_streaming(unsigned int channel=0, unsigned int items_per_frame=0);
-  
+
+    /*!
+     * Start streaming receive mode at specified timestamp. USRP2 will send a
+     * continuous stream of DSP pipeline samples to host. Call rx_samples(...)
+     * to access.
+     *
+     * \param channel          Stream channel number (0-30)
+     * \param items_per_frame  Number of 32-bit items per frame.
+     * \param time             Timestamp to start streaming at
+     */
+    bool start_rx_streaming_at(unsigned int channel=0, unsigned int items_per_frame=0, unsigned int time=0);
+
+    /*!
+     * Sync to PPS and start streaming receive mode at specified timestamp.
+     * Just like calling sync_to_pps() and start_rx_streaming_at().
+     *
+     * \param channel          Stream channel number (0-30)
+     * \param items_per_frame  Number of 32-bit items per frame.
+     * \param time             Timestamp to start streaming at
+     */
+    bool sync_and_start_rx_streaming_at(unsigned int channel=0, unsigned int items_per_frame=0, uint32_t time=0);
+
     /*!
      * Stop streaming receive mode.
      */
@@ -193,7 +214,7 @@ namespace usrp2 {
      * Returns number of times receive overruns have occurred
      */
     unsigned int rx_overruns();
-    
+
     /*!
      * Returns total number of missing frames from overruns.
      */
@@ -210,10 +231,10 @@ namespace usrp2 {
      */
     bool set_tx_gain(double gain);
 
-    //! return minimum Tx gain 
+    //! return minimum Tx gain
     double tx_gain_min();
 
-    //! return maximum Tx gain 
+    //! return maximum Tx gain
     double tx_gain_max();
 
     //! return Tx gain db_per_step
@@ -255,7 +276,7 @@ namespace usrp2 {
 
     /*!
      * Set transmit sample format
-     *   
+     *
      *    domain: complex or real
      *      type: floating, fixed point, or raw
      *     depth: bits per sample
@@ -272,7 +293,7 @@ namespace usrp2 {
      * \param nsamples is the number of samples to transmit
      * \param metadata provides the timestamp and flags
      *
-     * The complex<float> samples are converted to the appropriate 
+     * The complex<float> samples are converted to the appropriate
      * "on the wire" representation, depending on the current USRP2
      * configuration.  Typically, this is big-endian 16-bit I & Q.
      */
@@ -400,12 +421,12 @@ namespace usrp2 {
      *
      * \param addr      32-bit aligned address.  Only the lower 16-bits are significant.
      * \param words     Number of 32-bit words
-     * 
+     *
      * \returns         Vector of 32-bit read values
      *
      * WARNING: Attempts to read memory from addresses that do not correspond to RAM or
      * memory-mapped peripherals may cause the USRP2 to hang, requiring a power cycle.
-     * 
+     *
      */
     std::vector<uint32_t> peek32(uint32_t addr, uint32_t words);
 
@@ -419,7 +440,7 @@ namespace usrp2 {
      *
      * WARNING: Attempts to read memory from addresses that do not correspond to RAM or
      * memory-mapped peripherals may cause the USRP2 to hang, requiring a power cycle.
-     * 
+     *
      */
     bool poke32(uint32_t addr, const std::vector<uint32_t> &data);
 
@@ -587,7 +608,7 @@ namespace usrp2 {
 
     // Only class members can instantiate this class
     usrp2(const std::string &ifc, props *p, size_t rx_bufsize);
-  
+
     // All private state is held in opaque pointer
     std::auto_ptr<impl> d_impl;
   };
