@@ -28,13 +28,21 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) \
 grinclude_HEADERS =			\
 	msdd_source_simple.h		\
 	msdd_buffer_copy_behaviors.h	\
-	msdd6000.h
+	msdd6000.h			\
+	msdd_rs_source_simple.h		\
+	msdd6000_rs.h
 
-lib_LTLIBRARIES = libgnuradio-msdd6000.la
+lib_LTLIBRARIES = libgnuradio-msdd6000.la \
+	libgnuradio-msdd6000_rs.la
 
 libgnuradio_msdd6000_la_SOURCES = 	\
 	msdd_source_simple.cc		\
 	msdd6000.cc
+
+
+libgnuradio_msdd6000_rs_la_SOURCES = 	\
+	msdd_rs_source_simple.cc		\
+	msdd6000_rs.cc
 
 libgnuradio_msdd6000_la_LIBADD = 	\
 	$(GNURADIO_CORE_LA)
@@ -42,12 +50,18 @@ libgnuradio_msdd6000_la_LIBADD = 	\
 libgnuradio_msdd6000_la_LDFLAGS =	\
 	$(NO_UNDEFINED)
 
+libgnuradio_msdd6000_rs_la_LIBADD = 	\
+	$(GNURADIO_CORE_LA)
+
+libgnuradio_msdd6000_rs_la_LDFLAGS =	\
+	$(NO_UNDEFINED)
+
 if PYTHON
 #################################
 # SWIG interface and library
 
 TOP_SWIG_IFILES =			\
-	msdd.i
+	msdd.i msdd_rs.i
 
 # Install so that they end up available as:
 #   import gnuradio.msdd
@@ -56,9 +70,15 @@ TOP_SWIG_IFILES =			\
 msdd_pythondir_category =		\
 	gnuradio
 
+msdd_rs_pythondir_category =	\ 
+	gnuradio
+
 # additional libraries for linking with the SWIG-generated library
 msdd_la_swig_libadd =			\
 	libgnuradio-msdd6000.la
+
+msdd_rs_la_swig_libadd =			\
+	libgnuradio-msdd6000_rs.la
 
 include $(top_srcdir)/Makefile.swig
 
