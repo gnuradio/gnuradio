@@ -225,6 +225,9 @@
 		<block>blks2_dxpsk_mod</block>
 		<block>blks2_dxpsk_demod</block>
 
+		<block>blks2_dxpsk2_mod</block>
+		<block>blks2_dxpsk2_demod</block>
+
 		<block>blks2_gmsk_mod</block>
 		<block>blks2_gmsk_demod</block>
 

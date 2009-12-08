@@ -49,6 +49,8 @@ usrpdatadir = $(grc_examples_prefix)/usrp
 dist_usrpdata_DATA = \
 	usrp/usrp2_const_wave.grc \
 	usrp/usrp2_dpsk_mod.grc \
+	usrp/usrp_rx_dpsk.grc \
+	usrp/usrp_tx_dpsk.grc \
 	usrp/usrp2_fft.grc \
 	usrp/usrp_two_tone_loopback.grc \
 	usrp/usrp_wbfm_receive.grc

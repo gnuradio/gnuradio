@@ -34,6 +34,8 @@ dist_ourdata_DATA = \
 	blks2_cvsd_decode.xml \
 	blks2_dxpsk_demod.xml \
 	blks2_dxpsk_mod.xml \
+	blks2_dxpsk2_demod.xml \
+	blks2_dxpsk2_mod.xml \
 	blks2_error_rate.xml \
 	blks2_fm_deemph.xml \
 	blks2_fm_demod_cf.xml \

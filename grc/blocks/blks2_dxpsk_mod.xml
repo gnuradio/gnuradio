@@ -48,7 +48,7 @@
 		<name>Gray Code</name>
 		<key>gray_code</key>
 		<value>True</value>
-		<type>enum</type>
+		<type>bool</type>
 		<option>
 			<name>Yes</name>
 			<key>True</key>
