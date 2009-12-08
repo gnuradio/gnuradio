@@ -65,15 +65,25 @@ class $(class_name)(gr.top_block):
 	def __init__($param_str):
 		gr.top_block.__init__(self, "$title")
 #elif $generate_options == 'hb'
-	#set $in_sig = $flow_graph.get_input_signature()
-	#set $out_sig = $flow_graph.get_output_signature()
+	#set $in_sigs = $flow_graph.get_input_signaturev()
+	#set $out_sigs = $flow_graph.get_output_signaturev()
 class $(class_name)(gr.hier_block2):
+#def make_io_sig($io_sigs)
+	#set $size_strs = ['%s*%s'%(io_sig['size'], io_sig['vlen']) for io_sig in $io_sigs]
+	#if len($io_sigs) == 0
+gr.io_signature(0, 0, 0)#slurp
+	#elif len($io_sigs) == 1
+gr.io_signature(1, 1, $size_strs[0])#slurp
+	#else
+gr.io_signaturev($(len($io_sigs)), $(len($io_sigs)), [$(', '.join($size_strs))])#slurp
+	#end if
+#end def
 
 	def __init__($param_str):
 		gr.hier_block2.__init__(
 			self, "$title",
-			gr.io_signature($in_sig.nports, $in_sig.nports, $in_sig.size*$in_sig.vlen),
-			gr.io_signature($out_sig.nports, $out_sig.nports, $out_sig.size*$out_sig.vlen),
+			$make_io_sig($in_sigs),
+			$make_io_sig($out_sigs),
 		)
 #end if
 ########################################################
