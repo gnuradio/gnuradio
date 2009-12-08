@@ -29,6 +29,7 @@ from Constants import \
 import pygtk
 pygtk.require('2.0')
 import gtk
+import pango
 
 BLOCK_MARKUP_TMPL="""\
 #set $foreground = $block.is_valid() and 'black' or 'red'
@@ -130,8 +131,11 @@ class Block(Element):
 		layout.set_markup(Utils.parse_template(BLOCK_MARKUP_TMPL, block=self))
 		self.label_width, self.label_height = layout.get_pixel_size()
 		#display the params
-		for param in filter(lambda p: p.get_hide() not in ('all', 'part'), self.get_params()):
-			layout = param.get_layout()
+		markups = [param.get_markup() for param in self.get_params() if param.get_hide() not in ('all', 'part')]
+		if markups:
+			layout = gtk.DrawingArea().create_pango_layout('')
+			layout.set_spacing(LABEL_SEPARATION*pango.SCALE)
+			layout.set_markup('\n'.join(markups))
 			layouts.append(layout)
 			w,h = layout.get_pixel_size()
 			self.label_width = max(w, self.label_width)
@@ -151,12 +155,11 @@ class Block(Element):
 			else: w_off = 0
 			pixmap.draw_layout(gc, w_off, h_off, layout)
 			h_off = h + h_off + LABEL_SEPARATION
-		#create vertical and horizontal images
-		self.horizontal_label = image = pixmap.get_image(0, 0, width, height)
+		#create vertical and horizontal pixmaps
+		self.horizontal_label = pixmap
 		if self.is_vertical():
-			self.vertical_label = vimage = gtk.gdk.Image(gtk.gdk.IMAGE_NORMAL, pixmap.get_visual(), height, width)
-			for i in range(width):
-				for j in range(height): vimage.put_pixel(j, width-i-1, image.get_pixel(i, j))
+			self.vertical_label = self.get_parent().new_pixmap(height, width)
+			Utils.rotate_pixmap(gc, self.horizontal_label, self.vertical_label)
 		#calculate width and height needed
 		self.W = self.label_width + 2*BLOCK_LABEL_PADDING
 		self.H = max(*(
@@ -179,9 +182,9 @@ class Block(Element):
 		)
 		#draw label image
 		if self.is_horizontal():
-			window.draw_image(gc, self.horizontal_label, 0, 0, x+BLOCK_LABEL_PADDING, y+(self.H-self.label_height)/2, -1, -1)
+			window.draw_drawable(gc, self.horizontal_label, 0, 0, x+BLOCK_LABEL_PADDING, y+(self.H-self.label_height)/2, -1, -1)
 		elif self.is_vertical():
-			window.draw_image(gc, self.vertical_label, 0, 0, x+(self.H-self.label_height)/2, y+BLOCK_LABEL_PADDING, -1, -1)
+			window.draw_drawable(gc, self.vertical_label, 0, 0, x+(self.H-self.label_height)/2, y+BLOCK_LABEL_PADDING, -1, -1)
 		#draw ports
 		for port in self.get_ports(): port.draw(gc, window)
 
