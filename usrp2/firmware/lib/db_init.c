@@ -69,7 +69,9 @@ struct db_base *all_dboards[] = {
   &db_rfx_2400_tx,
   &db_rfx_2400_rx,
   &db_tvrx1,
+#if 0
   &db_tvrx2,
+#endif
   &db_tvrx3,
   &db_dbsrx,
   &db_xcvr2450_tx,

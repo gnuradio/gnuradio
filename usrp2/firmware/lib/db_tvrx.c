@@ -101,6 +101,7 @@ struct db_tvrx1 db_tvrx1 = {
   .common.second_if = U2_DOUBLE_TO_FXPT_FREQ(5.75e6),
 };
 
+#if 0
 struct db_tvrx2 db_tvrx2 = {
   .base.dbid = 0x000c,
   .base.is_tx = false,
@@ -127,6 +128,7 @@ struct db_tvrx2 db_tvrx2 = {
   .common.first_if = U2_DOUBLE_TO_FXPT_FREQ(44e6),
   .common.second_if = U2_DOUBLE_TO_FXPT_FREQ(56e6),	// Fs - 44e6
 };
+#endif
 
 struct db_tvrx3 db_tvrx3 = {
   .base.dbid = 0x0040,
