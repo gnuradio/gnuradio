@@ -28,7 +28,7 @@ bool tvrx_set_freq(struct db_base *db, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc);
 bool tvrx_set_gain(struct db_base *db, u2_fxpt_gain_t gain);
 
 #define I2C_ADDR 0x60
-#define ref_freq (U2_DOUBLE_TO_FXPT_FREQ(4e6)/640*8)
+#define REF_FREQ (U2_DOUBLE_TO_FXPT_FREQ(4e6)/640*8)
 
 #define ref_div 640  /* choices are 640, 512, 1024 */
 
@@ -173,25 +173,25 @@ tvrx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc)
   struct db_tvrx_dummy *db = (struct db_tvrx_dummy *) dbb;
 
   u2_fxpt_freq_t target_lo_freq = freq + db->common.first_if;
-  int N_DIV = u2_fxpt_freq_round_to_int(((1LL<<20) * target_lo_freq)/ref_freq);
+  int n_div = u2_fxpt_freq_round_to_int(((1LL<<20) * target_lo_freq)/REF_FREQ);
   
-  u2_fxpt_freq_t actual_lo_freq = ref_freq * N_DIV;
+  u2_fxpt_freq_t actual_lo_freq = REF_FREQ * n_div;
   u2_fxpt_freq_t actual_freq = actual_lo_freq - db->common.first_if;
-  if(N_DIV > 32767)
+  if(n_div > 32767)
     return false;
 
   if (0)
-    printf("N_DIV = %d, actual_freq = %d, actual_lo_freq = %d\n",
-	   N_DIV, u2_fxpt_freq_round_to_int(actual_freq),
+    printf("n_div = %d, actual_freq = %d, actual_lo_freq = %d\n",
+	   n_div, u2_fxpt_freq_round_to_int(actual_freq),
 	   u2_fxpt_freq_round_to_int(actual_lo_freq));
 
   unsigned char buf[4];
-  buf[0] = (N_DIV>>8) & 0xff;
-  buf[1] = N_DIV & 0xff;
+  buf[0] = (n_div>>8) & 0xff;
+  buf[1] = n_div & 0xff;
   buf[2] = control_byte_1;
-  buf[3] = (freq < U2_DOUBLE_TO_FXPT_FREQ(158e6)) ? 0xa8 :  // VHF LOW
-    (freq < U2_DOUBLE_TO_FXPT_FREQ(464e6)) ? 0x98 :  // VHF HIGH
-    0x38;  // UHF
+  buf[3] = ((actual_freq < U2_DOUBLE_TO_FXPT_FREQ(158e6)) ? 0xa8 :  // VHF LOW
+	    (actual_freq < U2_DOUBLE_TO_FXPT_FREQ(464e6)) ? 0x98 :  // VHF HIGH
+	    0x38);  // UHF
 
   *dc = actual_freq - db->common.second_if;
   return i2c_write(I2C_ADDR,buf,4);
