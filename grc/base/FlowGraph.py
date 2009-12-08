@@ -19,8 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from . import odict
 from Element import Element
-from Block import Block
-from Connection import Connection
 from .. gui import Messages
 
 class FlowGraph(Element):

@@ -19,8 +19,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from . import odict
 from Element import Element
-from Param import Param
-from Port import Port
 
 from Cheetah.Template import Template
 from UserDict import UserDict
