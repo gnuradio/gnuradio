@@ -113,7 +113,7 @@ struct db_tvrx2 db_tvrx2 = {
   .base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(1),
   .base.is_quadrature = false,
   .base.i_and_q_swapped = false,
-  .base.spectrum_inverted = true,
+  .base.spectrum_inverted = false,
   .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
   .base.init = tvrx_init,
   .base.set_freq = tvrx_set_freq,
@@ -125,7 +125,7 @@ struct db_tvrx2 db_tvrx2 = {
   // .base.atr_tx_delay =
   // .base.atr_rx_delay =
   .common.first_if = U2_DOUBLE_TO_FXPT_FREQ(44e6),
-  .common.second_if = U2_DOUBLE_TO_FXPT_FREQ(44e6),
+  .common.second_if = U2_DOUBLE_TO_FXPT_FREQ(56e6),	// Fs - 44e6
 };
 
 struct db_tvrx3 db_tvrx3 = {
@@ -140,7 +140,7 @@ struct db_tvrx3 db_tvrx3 = {
   .base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(1),
   .base.is_quadrature = false,
   .base.i_and_q_swapped = false,
-  .base.spectrum_inverted = true,
+  .base.spectrum_inverted = false,
   .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
   .base.init = tvrx_init,
   .base.set_freq = tvrx_set_freq,
@@ -152,7 +152,7 @@ struct db_tvrx3 db_tvrx3 = {
   // .base.atr_tx_delay =
   // .base.atr_rx_delay =
   .common.first_if = U2_DOUBLE_TO_FXPT_FREQ(44e6),
-  .common.second_if = U2_DOUBLE_TO_FXPT_FREQ(44e6),
+  .common.second_if = U2_DOUBLE_TO_FXPT_FREQ(56e6),	// Fs - 44e6
 };
 
 bool
