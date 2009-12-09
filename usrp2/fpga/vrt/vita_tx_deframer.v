@@ -38,8 +38,10 @@ module vita_tx_deframer
    
    reg 	     has_streamid_reg, has_classid_reg, has_secs_reg, has_tics_reg;
    reg 	     has_trailer_reg, is_sob_reg, is_eob_reg;
-   reg [1:0] vector_phase;
-   wire      line_done;
+
+   reg [15:0] pkt_len;
+   reg [1:0]  vector_phase;
+   wire       line_done;
    
    // Output FIFO for packetized data
    localparam VITA_HEADER 	 = 0;
@@ -50,9 +52,14 @@ module vita_tx_deframer
    localparam VITA_TICS 	 = 5;
    localparam VITA_TICS2 	 = 6;
    localparam VITA_PAYLOAD 	 = 7;
-   localparam VITA_WAIT          = 8;
+   localparam VITA_STORE         = 8;
    localparam VITA_TRAILER 	 = 9;
 
+   wire [15:0] hdr_len = 2 + has_streamid_reg + has_classid_reg + has_classid_reg + has_secs_reg + 
+	       has_tics_reg + has_tics_reg + has_trailer_reg;
+
+   wire        eop = eof | (pkt_len==hdr_len);  // FIXME would ignoring eof allow larger VITA packets?
+   
    always @(posedge clk)
      if(reset | clear)
        begin
@@ -61,20 +68,24 @@ module vita_tx_deframer
 	    <= 0;
        end
      else 
-       if((vita_state == VITA_WAIT) & fifo_space)
-	 if(eof)  // FIXME
+       if((vita_state == VITA_STORE) & fifo_space)
+	 if(eop)  
 	   if(has_trailer_reg)
 	     vita_state <= VITA_TRAILER;
 	   else
 	     vita_state <= VITA_HEADER;
 	 else
-	   vita_state <= VITA_PAYLOAD;
+	   begin
+	      vita_state <= VITA_PAYLOAD;
+	      pkt_len <= pkt_len - 1;
+	   end
        else if(src_rdy_i)
 	 case(vita_state)
 	   VITA_HEADER :
 	     begin
 		{has_streamid_reg, has_classid_reg, has_secs_reg, has_tics_reg, has_trailer_reg, is_sob_reg, is_eob_reg} 
  		  <= {has_streamid, has_classid, has_secs, has_tics, has_trailer, is_sob, is_eob};
+		pkt_len <= data_i[15:0];
 		vector_phase <= 0;
 		if(has_streamid)
 		  vita_state <= VITA_STREAMID;
@@ -118,13 +129,13 @@ module vita_tx_deframer
 	     if(line_done)
 	       begin
 		  vector_phase <= 0;
-		  vita_state <= VITA_WAIT;
+		  vita_state <= VITA_STORE;
 	       end
 	     else
 	       vector_phase <= vector_phase + 1;
 	   VITA_TRAILER :
 	     vita_state <= VITA_HEADER;
-	   VITA_WAIT :
+	   VITA_STORE :
 	     ;
 	   default :
 	     vita_state <= VITA_HEADER;
@@ -142,7 +153,7 @@ module vita_tx_deframer
 	 send_time[63:32] <= data_i[31:0];
        VITA_TICS2 :
 	 send_time[31:0] <= data_i[31:0];
-       VITA_WAIT, VITA_HEADER :
+       VITA_STORE, VITA_HEADER :
 	 send_time[63:0] <= 64'd0;
      endcase // case (vita_state)
    
@@ -155,14 +166,14 @@ module vita_tx_deframer
 	 3: sample_d <= data_i[31:0];
        endcase // case (vector_phase)
    
-
+   wire 		      store = (vita_state == VITA_STORE);
    fifo_short #(.WIDTH(4+64+32*MAXCHAN)) short_tx_q
      (.clk(clk), .reset(reset), .clear(clear),
-      .datain(fifo_i), .src_rdy_i(vita_state == VITA_IDLE), .dst_rdy_o(fifo_space),
+      .datain(fifo_i), .src_rdy_i(store), .dst_rdy_o(fifo_space),
       .dataout(sample_fifo_o), .src_rdy_o(sample_fifo_src_rdy_o), .dst_rdy_i(sample_fifo_dst_rdy_i) );
 
    // sob, eob, has_secs (send_at) ignored on all lines except first
-   assign fifo_i = {sample_d,sample_c,sample_b,sample_a,has_secs_reg,is_sob_reg,is_eob_reg,eof,send_time};
+   assign fifo_i = {sample_d,sample_c,sample_b,sample_a,has_secs_reg,is_sob_reg,is_eob_reg,eop,send_time};
 
    assign dst_rdy_o = (vita_state != VITA_PAYLOAD);
    
