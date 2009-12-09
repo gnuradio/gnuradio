@@ -29,24 +29,26 @@ module vita_rx_tb;
    wire [7:0]  set_addr_dsp;
    wire [31:0] set_data_dsp;
 
+   /*
    settings_bus_crossclock settings_bus_xclk_dsp
      (.clk_i(clk), .rst_i(reset), .set_stb_i(set_stb), .set_addr_i(set_addr), .set_data_i(set_data),
       .clk_o(clk), .rst_o(reset), .set_stb_o(set_stb_dsp), .set_addr_o(set_addr_dsp), .set_data_o(set_data_dsp));
-      
+    */
+   
    wire        sample_dst_rdy, sample_src_rdy;
    //wire [99:0] sample_data_o;
    wire [64+4+(MAXCHAN*32)-1:0] sample_data_o;
 
    vita_rx_control #(.BASE(0), .WIDTH(32*MAXCHAN)) vita_rx_control
      (.clk(clk), .reset(reset), .clear(0),
-      .set_stb(set_stb_dsp), .set_addr(set_addr_dsp), .set_data(set_data_dsp),
+      .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
       .vita_time(vita_time), .overrun(overrun),
       .sample_fifo_o(sample_data_o), .sample_fifo_dst_rdy_i(sample_dst_rdy), .sample_fifo_src_rdy_o(sample_src_rdy),
       .sample(sample), .run(run), .strobe(strobe));
 
    vita_rx_framer #(.BASE(0), .MAXCHAN(MAXCHAN)) vita_rx_framer
      (.clk(clk), .reset(reset), .clear(0),
-      .set_stb(set_stb_dsp), .set_addr(set_addr_dsp), .set_data(set_data_dsp),
+      .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
       .data_o(data_o), .dst_rdy_i(dst_rdy), .src_rdy_o(src_rdy),
       .sample_fifo_i(sample_data_o), .sample_fifo_dst_rdy_o(sample_dst_rdy), .sample_fifo_src_rdy_i(sample_src_rdy),
       .fifo_occupied(), .fifo_full(), .fifo_empty() );
@@ -61,7 +63,7 @@ module vita_rx_tb;
    
    time_64bit #(.TICKS_PER_SEC(120000000), .BASE(0)) time_64bit
      (.clk(clk), .rst(reset),
-      .set_stb(set_stb_dsp), .set_addr(set_addr_dsp), .set_data(set_data_dsp),
+      .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
       .pps(0), .vita_time(vita_time));
    
    always @(posedge clk)
