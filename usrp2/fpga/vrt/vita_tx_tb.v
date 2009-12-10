@@ -17,7 +17,7 @@ module vita_tx_tb;
    initial $dumpfile("vita_tx_tb.vcd");
    initial $dumpvars(0,vita_tx_tb);
 
-   wire [(MAXCHAN*32)-1:0] sample;
+   wire [(MAXCHAN*32)-1:0] sample, sample_tx;
    wire        strobe, run;
    wire [35:0] data_o;
    wire        src_rdy;
@@ -42,7 +42,7 @@ module vita_tx_tb;
    //wire [99:0] sample_data_o;
    wire [64+4+(MAXCHAN*32)-1:0] sample_data_o, sample_data_tx;
 
-   time_64bit #(.TICKS_PER_SEC(120000000), .BASE(0)) time_64bit
+   time_64bit #(.TICKS_PER_SEC(100000000), .BASE(0)) time_64bit
      (.clk(clk), .rst(reset),
       .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
       .pps(0), .vita_time(vita_time));
@@ -86,8 +86,16 @@ module vita_tx_tb;
       .sample_fifo_dst_rdy_i(sample_dst_rdy_tx), .sample_fifo_src_rdy_o(sample_src_rdy_tx),
       .fifo_occupied(), .fifo_full(), .fifo_empty() );
 
+   vita_tx_control #(.BASE(16), .WIDTH(MAXCHAN*32)) vita_tx_control
+     (.clk(clk), .reset(reset), .clear(0),
+      .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
+      .vita_time(vita_time-100), .underrun(underrun),
+      .sample_fifo_i(sample_data_tx), 
+      .sample_fifo_dst_rdy_o(sample_dst_rdy_tx), .sample_fifo_src_rdy_i(sample_src_rdy_tx),
+      .sample(sample_tx), .run(run_tx), .strobe(strobe_tx));
+   
    tx_dsp_model tx_dsp_model
-     (.clk(clk), .reset(reset), .run(run), .interp(INTERP), .strobe(strobe), .sample(sample[31:0] ));
+     (.clk(clk), .reset(reset), .run(run_tx), .interp(INTERP), .strobe(strobe_tx), .sample(sample_tx[31:0] ));
 
    always @(posedge clk)
      if(src_rdy & dst_rdy)
@@ -120,6 +128,8 @@ module vita_tx_tb;
 	write_setting(6,32'h98765432);  // VITA trailer
 	write_setting(7,8);  // Samples per VITA packet
 	write_setting(8,NUMCHAN);  // Samples per VITA packet
+	#10000;
+	
 	queue_rx_cmd(1,0,8,32'h0,32'h0);  // send imm, single packet
 /*
  	queue_rx_cmd(1,0,16,32'h0,32'h0);  // send imm, 2 packets worth
