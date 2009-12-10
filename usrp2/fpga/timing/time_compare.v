@@ -6,7 +6,8 @@ module time_compare
    input [63:0] trigger_time,
    output now,
    output early,
-   output late);
+   output late, 
+   output too_early);
    
    wire    sec_match   = (time_now[63:32] == trigger_time[63:32]);
    wire    sec_late    = (time_now[63:32] > trigger_time[63:32]);
@@ -17,5 +18,6 @@ module time_compare
    assign now 	       = sec_match & tick_match;
    assign late 	       = sec_late | (sec_match & tick_late);
    assign early        = ~now & ~late;
-
+   assign too_early    = (trigger_time[63:32] > (time_now[63:32] + 4));  // Don't wait too long
+   
 endmodule // time_compare
