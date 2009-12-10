@@ -78,7 +78,19 @@ public:
    * Resets the filter taps with the new prototype filter
    * \param taps    (vector/list of gr_complex) The band-edge filter
    */
-   void set_taps (const std::vector<gr_complex> &taps);
+  void set_taps (const std::vector<gr_complex> &taps);
+
+  /*!
+   * Set the alpha gainvalue
+   * \param alpha    (float) new gain value
+   */
+  void set_alpha(float alpha) { d_alpha = alpha; }
+
+  /*!
+   * Set the beta gain value
+   * \param beta    (float) new gain value
+   */
+  void set_beta(float beta) { d_beta = beta; }
 
   /*!
    * Print the taps to screen.

@@ -35,4 +35,6 @@ class gr_fll_band_edge_cc : public gr_sync_block
   ~gr_fll_band_edge_cc ();
 
   void set_taps (const std::vector<gr_complex> &taps);
+  void set_alpha (float alpha);
+  void set_beta (float beta);
 };
