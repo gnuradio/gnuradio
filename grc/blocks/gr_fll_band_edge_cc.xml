@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## FLL using Band-Edge Filters
+###################################################
+ -->
+<block>
+	<name>FLL Band-Edge</name>
+	<key>gr_fll_band_edge_cc</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.fll_band_edge_cc($taps)</make>
+	<callback>set_taps($taps)</callback>
+
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex->Complex</name>
+			<key>cc</key>
+			<opt>input:complex</opt>
+			<opt>output:complex</opt>
+			<opt>taps:complex_vector</opt>
+		</option>
+	</param>
+
+	<param>
+		<name>Taps</name>
+		<key>taps</key>
+		<type>complex_vector</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>$type.input</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>$type.output</type>
+	</source>
+</block>

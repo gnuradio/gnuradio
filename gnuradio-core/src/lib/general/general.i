@@ -140,6 +140,7 @@
 #include <gr_wavelet_ff.h>
 #include <gr_wvps_ff.h>
 #include <gr_copy.h>
+#include <gr_fll_band_edge_cc.h>
 %}
 
 %include "gr_nop.i"
@@ -260,3 +261,4 @@
 %include "gr_wavelet_ff.i"
 %include "gr_wvps_ff.i"
 %include "gr_copy.i"
+%include "gr_fll_band_edge_cc.i"
