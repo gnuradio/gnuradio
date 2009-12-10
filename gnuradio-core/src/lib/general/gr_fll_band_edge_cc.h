@@ -28,7 +28,8 @@
 
 class gr_fll_band_edge_cc;
 typedef boost::shared_ptr<gr_fll_band_edge_cc> gr_fll_band_edge_cc_sptr;
-gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (const std::vector<gr_complex> &taps);
+gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float alpha, float beta,
+						   const std::vector<gr_complex> &taps);
 
 class gr_fir_ccc;
 class gri_fft_complex;
@@ -47,7 +48,8 @@ class gr_fll_band_edge_cc : public gr_sync_block
    * Build the FLL
    * \param taps    (vector/list of gr_complex) The taps of the band-edge filter
    */
-  friend gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (const std::vector<gr_complex> &taps);
+  friend gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float alpha, float beta,
+							    const std::vector<gr_complex> &taps);
 
   float                   d_alpha;
   float                   d_beta;
@@ -66,7 +68,8 @@ class gr_fll_band_edge_cc : public gr_sync_block
    * Build the FLL
    * \param taps    (vector/list of gr_complex) The taps of the band-edge filter
    */
-  gr_fll_band_edge_cc(const std::vector<gr_complex> &taps);
+  gr_fll_band_edge_cc(float alpha, float beta,
+		      const std::vector<gr_complex> &taps);
 
 public:
   ~gr_fll_band_edge_cc ();

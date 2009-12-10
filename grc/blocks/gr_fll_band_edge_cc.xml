@@ -8,7 +8,7 @@
 	<name>FLL Band-Edge</name>
 	<key>gr_fll_band_edge_cc</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.fll_band_edge_cc($taps)</make>
+	<make>gr.fll_band_edge_cc($alpha, $beta, $taps)</make>
 	<callback>set_taps($taps)</callback>
 
 	<param>
@@ -24,6 +24,16 @@
 		</option>
 	</param>
 
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Beta</name>
+		<key>beta</key>
+		<type>real</type>
+	</param>
 	<param>
 		<name>Taps</name>
 		<key>taps</key>

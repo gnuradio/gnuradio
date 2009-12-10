@@ -35,20 +35,22 @@
 
 #define M_TWOPI (2*M_PI)
 
-gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (const std::vector<gr_complex> &taps)
+gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float alpha, float beta,
+						   const std::vector<gr_complex> &taps)
 {
-  return gr_fll_band_edge_cc_sptr (new gr_fll_band_edge_cc (taps));
+  return gr_fll_band_edge_cc_sptr (new gr_fll_band_edge_cc (alpha, beta,
+							    taps));
 }
 
 
-gr_fll_band_edge_cc::gr_fll_band_edge_cc (const std::vector<gr_complex> &taps)
+gr_fll_band_edge_cc::gr_fll_band_edge_cc (float alpha, float beta,
+					  const std::vector<gr_complex> &taps)
   : gr_sync_block ("fll_band_edge_cc",
 		   gr_make_io_signature (1, 1, sizeof(gr_complex)),
 		   gr_make_io_signature (1, 1, sizeof(gr_complex))),
-    d_updated (false)
+    d_alpha(alpha), d_beta(beta), d_updated (false)
 {
-  d_alpha = 0.01;
-  d_beta = 0.25*d_alpha*d_alpha;
+  // base this on the number of samples per symbol
   d_max_freq = M_TWOPI * 0.25;
   d_min_freq = M_TWOPI * -0.5;
 
@@ -125,8 +127,7 @@ gr_fll_band_edge_cc::work (int noutput_items,
 
     out_upper = norm(d_filter_upper->filter(&out[i]));
     out_lower = norm(d_filter_lower->filter(&out[i]));
-    error = 0.1*(out_lower - out_upper);
-    printf("error: %f\n", out_upper);
+    error = out_lower - out_upper;
 
     d_freq = d_freq + d_beta * error;
     d_phase = d_phase + d_freq + d_alpha * error;

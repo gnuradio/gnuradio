@@ -22,12 +22,14 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,fll_band_edge_cc);
 
-gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (const std::vector<gr_complex> &taps);
+gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float alpha, float beta,
+						   const std::vector<gr_complex> &taps);
 
 class gr_fll_band_edge_cc : public gr_sync_block
 {
  private:
-  gr_fll_band_edge_cc (const std::vector<gr_complex> &taps);
+  gr_fll_band_edge_cc (float alpha, float beta,
+		       const std::vector<gr_complex> &taps);
 
  public:
   ~gr_fll_band_edge_cc ();
