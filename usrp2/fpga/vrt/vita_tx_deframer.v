@@ -59,6 +59,7 @@ module vita_tx_deframer
 	       has_tics_reg + has_tics_reg + has_trailer_reg;
 
    wire        eop = eof | (pkt_len==hdr_len);  // FIXME would ignoring eof allow larger VITA packets?
+   wire        fifo_space;
    
    always @(posedge clk)
      if(reset | clear)
