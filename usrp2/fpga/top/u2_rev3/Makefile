@@ -86,6 +86,8 @@ control_lib/priority_enc.v \
 control_lib/pic.v \
 vrt/vita_rx_control.v \
 vrt/vita_rx_framer.v \
+vrt/vita_tx_control.v \
+vrt/vita_tx_deframer.v \
 simple_gemac/simple_gemac_wrapper.v \
 simple_gemac/simple_gemac.v \
 simple_gemac/simple_gemac_wb.v \
