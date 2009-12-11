@@ -24,6 +24,7 @@
 #include "eth_buffer.h"
 #include "pktfilter.h"
 #include "usrp2_impl.h"
+#include "ring.h"
 
 namespace usrp2{
 
@@ -40,14 +41,20 @@ namespace usrp2{
         unsigned int   d_num_rx_overruns;
         unsigned int   d_num_rx_bytes;
         uint8_t        d_padding[eth_buffer::MIN_PKTLEN];
+        ring::sptr     d_ring;
+
+        //for the recv thread
+        bool           d_recv_on;
+        boost::thread  *d_thread;
+        void recv_bg(void);
+        void recv_loop(void);
 
     public:
         eth_data_transport(const std::string &ifc, u2_mac_addr_t mac, size_t rx_bufsize);
         ~eth_data_transport();
         bool sendv(const iovec *iov, size_t iovlen);
-        sbuff_vec_t recv();
-        void init();
-        size_t max_buffs(){return d_eth_data->max_frames();}
+        void recv(data_handler *handler);
+        void flush(void);
 };
 
 

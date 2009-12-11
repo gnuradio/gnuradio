@@ -19,71 +19,51 @@
 #ifndef INCLUDED_TRANSPORT_H
 #define INCLUDED_TRANSPORT_H
 
-#include <boost/thread.hpp>
-#include <cstring>
+#include <string>
 #include <sys/uio.h>
-#include <vector>
-#include "sbuff.h"
+#include <usrp2/data_handler.h>
+#include <boost/shared_ptr.hpp>
+
+#define USRP2_IMPL_DEBUG 0
+#if USRP2_IMPL_DEBUG
+#define DEBUG_LOG(x) ::write(2, x, 1)
+#else
+#define DEBUG_LOG(x)
+#endif
 
 namespace usrp2 {
 
   class transport {
   public:
-    typedef std::vector<sbuff::sptr> sbuff_vec_t;
-    typedef boost::function<void(const sbuff_vec_t &)> callback_t;
     typedef boost::shared_ptr<transport> sptr;
+
   private:
     std::string              d_type_str;
-    volatile bool            d_running;
-    boost::thread            *d_thread;
-    callback_t               d_cb;
-    void run();
   public:
     /*!
      * \brief create a new transport
      * The callback takes a void * pointer and a length in bytes.
      * \param type_str a descriptive string
      */
-    transport(const std::string &type_str);
-    virtual ~transport();
-    /*!
-     * \brief Set the callback
-     * \param cb the callback created by boost::bind
-     */
-    void set_callback(callback_t cb){d_cb=cb;}
-    /*!
-     * \brief create a new thread for receiving
-     */
-    void start();
-    /*!
-     * \brief stop and join the current thread
-     */
-    void stop();
-    /*!
-     * \brief get the maximum number of buffs (override in a subclass)
-     * This number is the maximum number of buffers that recv can return at once.
-     * This number should be based upon the limitations of the internals of a subclass.
-     * Ex: for an ethernet packet ring, max buffs will be the max ring size.
-     * \return the number of buffs or 0 for undefined
-     */
-    virtual size_t max_buffs(){return 0;}
-    /*!
-     * \brief called from thread on init (override in a subclass)
-     * Purpose: to have a thread initialization hook.
-     */
-    virtual void init(){/*NOP*/}
+    transport(const std::string &type_str){d_type_str=type_str;}
     /*!
      * \brief send the contents of the buffer (override in a subclass)
      * \param iovec a list of iovecs
      * \param iovlen the number of iovecs
      * \return true for completion, false for error
      */
-    virtual bool sendv(const iovec *iov, size_t iovlen){return false;}
+    virtual bool sendv(const iovec *iov, size_t iovlen) = 0;
     /*!
-     * \brief receive data, possibly multiple buffers (override in a subclass)
-     * \return a new vector of sbuffs, an empty vector is no data
+     * \brief receive data and pass it to the handler
+     * \param handler the data handler callable object
+     * The handler will be called on the recieved data.
+     * If the handler returns done, recv must exit.
      */
-    virtual sbuff_vec_t recv(){return sbuff_vec_t();}
+    virtual void recv(data_handler *handler) = 0;
+    /*!
+     * \brief flush any samples in the rx buffers
+     */
+    virtual void flush(void){};
   };
   
 } // namespace usrp2

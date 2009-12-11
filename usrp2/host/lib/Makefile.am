@@ -44,7 +44,6 @@ libusrp2_la_SOURCES = \
 	open_usrp2_socket.cc \
 	pktfilter.cc \
 	ring.cc \
-	transport.cc \
 	rx_nop_handler.cc \
 	rx_sample_handler.cc \
 	strtod_si.c \
@@ -68,7 +67,6 @@ noinst_HEADERS = \
 	open_usrp2_socket.h \
 	pktfilter.h \
 	ring.h \
-	sbuff.h \
 	transport.h \
 	usrp2_bytesex.h \
 	usrp2_impl.h

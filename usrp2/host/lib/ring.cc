@@ -30,15 +30,23 @@ namespace usrp2 {
   ring::ring(unsigned int entries)
     : d_max(entries), d_read_ind(0), d_write_ind(0),
       d_ring(entries),
-      d_mutex(), d_not_empty()
+      d_mutex(), d_empty_cond()
   {/*NOP*/}
+
+  void 
+  ring::wait_for_empty() 
+  { 
+    gruel::scoped_lock l(d_mutex);
+    while (not empty()) 
+      d_empty_cond.wait(l);
+  }
 
   void 
   ring::wait_for_not_empty() 
   { 
     gruel::scoped_lock l(d_mutex);
     while (empty()) 
-      d_not_empty.wait(l);
+      d_not_empty_cond.wait(l);
   }
 
   bool
@@ -51,7 +59,7 @@ namespace usrp2 {
     d_ring[d_write_ind] = rd;
 
     inc_write_ind();
-    d_not_empty.notify_one();
+    d_not_empty_cond.notify_one();
     return true;
   }
 
@@ -65,6 +73,7 @@ namespace usrp2 {
     rd = d_ring[d_read_ind];
 
     inc_read_ind();
+    d_empty_cond.notify_one();
     return true;
   }
   

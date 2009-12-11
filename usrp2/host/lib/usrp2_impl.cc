@@ -27,12 +27,9 @@
 #include <gruel/realtime.h>
 #include <gruel/sys_pri.h>
 #include <usrp2_types.h>
+#include <usrp2/rx_sample_handler.h>
 #include "usrp2_impl.h"
-#include "eth_buffer.h"
-#include "ethernet.h"
-#include "pktfilter.h"
 #include "control.h"
-#include "ring.h"
 #include <stdexcept>
 #include <iostream>
 #include <stdio.h>
@@ -82,24 +79,94 @@ namespace usrp2 {
     }
   }
 
+  /*********************************************************************
+   * control packet handler for control packets
+   *   creates a data handler with access to the pending replies
+   *   the operator() is called by the transport for each packet
+   ********************************************************************/
+  class ctrl_packet_handler : public data_handler{
+  private:
+    pending_reply **d_pending_replies;
+
+  public:
+    ctrl_packet_handler(pending_reply **pending_replies): d_pending_replies(pending_replies){}
+
+    data_handler::result operator()(const void *base, size_t len){
+        // point to beginning of payload (subpackets)
+        unsigned char *p = (unsigned char *)base;
+
+        // FIXME iterate over payload, handling more than a single subpacket.
+        
+        int opcode = p[0];
+        unsigned int oplen = p[1];
+        unsigned int rid = p[2];
+
+        pending_reply *rp = d_pending_replies[rid];
+        if (rp) {
+          unsigned int buflen = rp->len();
+          if (oplen != buflen) {
+        std::cerr << "usrp2: mismatched command reply length (expected: "
+              << buflen << " got: " << oplen << "). "
+              << "op = " << opcode_to_string(opcode) << std::endl;
+          }     
+        
+          // Copy reply into caller's buffer
+          memcpy(rp->buffer(), p, std::min(oplen, buflen));
+          rp->notify_completion();
+          d_pending_replies[rid] = NULL;
+          return data_handler::DONE;
+        }
+
+        // TODO: handle unsolicited, USRP2 initiated, or late replies
+        DEBUG_LOG("l");
+        return data_handler::DONE;
+    }
+  };
+
+  /*********************************************************************
+   * data packet handler for incoming samples
+   *   creates a data handler with rx sample handler
+   *   the operator() is called by the transport for each packet
+   ********************************************************************/
+  class data_packet_handler : public data_handler{
+  private:
+    rx_sample_handler *d_handler;
+
+  public:
+    data_packet_handler(rx_sample_handler *handler): d_handler(handler){}
+
+    data_handler::result operator()(const void *base, size_t len){
+        vrt::expanded_header hdr;
+        const uint32_t *payload;
+        size_t n32_bit_words_payload;
+        //parse the vrt header and store into the ring data structure
+        if (not vrt::expanded_header::parse(
+            (const uint32_t*)base,len/sizeof(uint32_t), //in
+            &hdr, &payload, &n32_bit_words_payload) //out
+            or not hdr.stream_id_p()
+        ){
+            printf("Bad vrt header 0x%.8x, Packet len %d\n", hdr.header, (int)len);
+            DEBUG_LOG("!");
+            return data_handler::RELEASE;
+        }
+        rx_metadata	md;
+        md.timestamp = hdr.fractional_secs; //FIXME temporary until we figure out new md for vrt
+        bool want_more = (*d_handler)(payload, n32_bit_words_payload, &md);
+        DEBUG_LOG("-"); 
+
+        return want_more? data_handler::RELEASE : data_handler::DONE;
+    }
+  };
+
   usrp2::impl::impl(transport::sptr data_transport, transport::sptr ctrl_transport) :
       d_next_rid(0),
-      d_num_enqueued(0),
-      d_enqueued_mutex(),
-      d_data_pending_cond(),
-      d_channel_rings(NCHANS),
       d_tx_interp(0),
       d_rx_decim(0),
-      d_dont_enqueue(true),
       d_ctrl_transport(ctrl_transport),
       d_data_transport(data_transport)
   {
-    d_ctrl_transport->set_callback(boost::bind(&usrp2::impl::handle_control_packet, this, _1));
-    d_ctrl_transport->start();
-
-    d_data_transport->set_callback(boost::bind(&usrp2::impl::handle_data_packet, this, _1));
-    d_data_transport->start();
-
+    d_ctrl_thread_running = true;
+    d_ctrl_thread = new boost::thread(boost::bind(&usrp2::impl::ctrl_thread_loop, this));
     memset(d_pending_replies, 0, sizeof(d_pending_replies));
 
     // In case the USRP2 was left streaming RX
@@ -154,8 +221,11 @@ namespace usrp2 {
   
   usrp2::impl::~impl()
   {
-    d_ctrl_transport->stop();
-    d_data_transport->stop();
+    //stop the control thread
+    d_ctrl_thread_running = false;
+    d_ctrl_thread->interrupt();
+    d_ctrl_thread->join();
+
   }
 
   void
@@ -205,89 +275,15 @@ namespace usrp2 {
     return res == 1;
   }
 
-  void
-  usrp2::impl::handle_control_packet(const transport::sbuff_vec_t &sbs)
-  {    
-    for (size_t i = 0; i < sbs.size(); i++) {
-        sbuff::sptr sb = sbs[i];
-
-        // point to beginning of payload (subpackets)
-        unsigned char *p = (unsigned char *)sb->buff();
-        
-        // FIXME (p % 4) == 2.  Not good.  Must watch for unaligned loads.
-
-        // FIXME iterate over payload, handling more than a single subpacket.
-        
-        int opcode = p[0];
-        unsigned int oplen = p[1];
-        unsigned int rid = p[2];
-
-        pending_reply *rp = d_pending_replies[rid];
-        if (rp) {
-          unsigned int buflen = rp->len();
-          if (oplen != buflen) {
-        std::cerr << "usrp2: mismatched command reply length (expected: "
-              << buflen << " got: " << oplen << "). "
-              << "op = " << opcode_to_string(opcode) << std::endl;
-          }     
-        
-          // Copy reply into caller's buffer
-          memcpy(rp->buffer(), p, std::min(oplen, buflen));
-          rp->notify_completion();
-          d_pending_replies[rid] = 0;
-          return;
-        }
-
-        // TODO: handle unsolicited, USRP2 initiated, or late replies
-        DEBUG_LOG("l");
-    }
-  }
-  
-  void
-  usrp2::impl::handle_data_packet(const transport::sbuff_vec_t &sbs)
+  void 
+  usrp2::impl::ctrl_thread_loop(void)
   {
-    if (d_dont_enqueue) return; //FIXME call done, or let the sptrs do it?
-
-    // Try to parse each packet and enqueue the data into the channel ring.
-    // Bad packets will be ignored and their data freed by done().
-    for (size_t i = 0; i < sbs.size(); i++) {
-        ring_data rd; rd.sb = sbs[i];
-
-        //parse the vrt header and store into the ring data structure
-        if (not vrt::expanded_header::parse(
-            (const uint32_t*)rd.sb->buff(), rd.sb->len()/sizeof(uint32_t), //in
-            &rd.hdr, &rd.payload, &rd.n32_bit_words_payload) //out
-            or not rd.hdr.stream_id_p()
-        ){
-            printf("Bad vrt header 0x%.8x, Packet len %d\n", rd.hdr.header, (int)rd.sb->len());
-            DEBUG_LOG("!");
-            rd.sb->done(); //mark done, this sbuff is no longer needed
-            continue;
-        }
-
-        //try to enqueue the data into the ring
-        gruel::scoped_lock l(d_channel_rings_mutex);
-        unsigned int chan = rd.hdr.stream_id;
-        if (d_channel_rings[chan] and d_channel_rings[chan]->enqueue(rd)) {
-            inc_enqueued();
-            DEBUG_LOG("+");
-        } else {
-            DEBUG_LOG("!");
-            rd.sb->done(); //mark done, this sbuff is no longer needed
-            continue;
-        }
+    data_handler *handler = new ctrl_packet_handler(d_pending_replies);
+    while (d_ctrl_thread_running){
+        d_ctrl_transport->recv(handler);
     }
-
-    // Wait for user API thread(s) to process all enqueued packets.
-    // The channel ring thread that decrements d_num_enqueued to zero 
-    // will signal this thread to continue.
-    if (d_num_enqueued > 0){
-        gruel::scoped_lock l(d_enqueued_mutex);
-        while(d_num_enqueued > 0)
-            d_data_pending_cond.wait(l);
-    }
+    delete handler;
   }
-
 
   // ----------------------------------------------------------------
   // 			       Receive
@@ -429,14 +425,9 @@ namespace usrp2 {
       return false;
     }
 
-    {
-      gruel::scoped_lock l(d_channel_rings_mutex);
-      if (d_channel_rings[channel]) {
-	std::cerr << "usrp2: channel " << channel
-		  << " already streaming" << std::endl;
-	return false;
-      }
-      
+    //flush any old samples in the data transport
+    d_data_transport->flush();
+
       if (items_per_frame == 0)
 	items_per_frame = U2_MAX_SAMPLES;		// minimize overhead
       
@@ -451,20 +442,14 @@ namespace usrp2 {
       cmd.eop.opcode = OP_EOP;
       cmd.eop.len = sizeof(cmd.eop);
     
-      d_dont_enqueue = false;
       bool success = false;
       pending_reply p(cmd.op.rid, &reply, sizeof(reply));
       success = transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
       success = success && (ntohx(reply.ok) == 1);
-      
-      if (success)
-	d_channel_rings[channel] = ring::sptr(new ring(d_data_transport->max_buffs()));
-      else
-	d_dont_enqueue = true;
 
       //fprintf(stderr, "usrp2::start_rx_streaming: success = %d\n", success);
       return success;
-    }
+
   }
   
   bool
@@ -482,14 +467,10 @@ namespace usrp2 {
       return false;
     }
 
-    d_dont_enqueue = true;	// no new samples
-    flush_rx_samples(channel);	// dump any we may already have
-
     op_stop_rx_cmd cmd;
     op_generic_t reply;
 
     {
-      gruel::scoped_lock l(d_channel_rings_mutex);
 
       memset(&cmd, 0, sizeof(cmd));
       cmd.op.opcode = OP_STOP_RX;
@@ -502,7 +483,6 @@ namespace usrp2 {
       pending_reply p(cmd.op.rid, &reply, sizeof(reply));
       success = transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
       success = success && (ntohx(reply.ok) == 1);
-      d_channel_rings[channel].reset();
       //fprintf(stderr, "usrp2::stop_rx_streaming:  success = %d\n", success);
       return success;
     }
@@ -511,72 +491,9 @@ namespace usrp2 {
   bool
   usrp2::impl::rx_samples(unsigned int channel, rx_sample_handler *handler)
   {
-    if (channel > MAX_CHAN) {
-      std::cerr << "usrp2: invalid channel (" << channel
-                << " )" << std::endl;
-      return false;
-    }
-    
-    if (channel > 0) {
-      std::cerr << "usrp2: channel " << channel
-                << " not implemented" << std::endl;
-      return false;
-    }
-    
-    ring::sptr rp = d_channel_rings[channel];
-    if (!rp){
-      std::cerr << "usrp2: channel " << channel
-                << " not receiving" << std::endl;
-      return false;
-    }
-    
-    // Wait for frames available in channel ring
-    DEBUG_LOG("W");
-    rp->wait_for_not_empty();
-    DEBUG_LOG("s");
-    
-    // Iterate through frames and present to user
-    ring_data rd;
-    while (rp->dequeue(rd)) {
-      rx_metadata	md;
-      md.timestamp = rd.hdr.fractional_secs; //FIXME temporary until we figure out new md for vrt
-      bool want_more = (*handler)(rd.payload, rd.n32_bit_words_payload, &md);
-      DEBUG_LOG("-");
-      rd.sb->done(); //mark done, this sbuff is no longer needed
-      dec_enqueued();
-
-      if (!want_more)
-        break;
-    }
-    return true;
-  }
-
-  bool
-  usrp2::impl::flush_rx_samples(unsigned int channel)
-  {
-    if (channel > MAX_CHAN) {
-      std::cerr << "usrp2: invalid channel (" << channel
-                << " )" << std::endl;
-      return false;
-    }
-
-    if (channel > 0) {
-      std::cerr << "usrp2: channel " << channel
-                << " not implemented" << std::endl;
-      return false;
-    }
-
-    ring::sptr rp = d_channel_rings[channel];
-    if (!rp){
-      return false;
-    }
-
-    // Iterate through frames and drop them
-    ring_data rd;
-    while (rp->dequeue(rd)) {
-      rd.sb->done(); //mark done, this sbuff is no longer needed
-      dec_enqueued();
-    }
+    data_handler *pkt_handler = new data_packet_handler(handler);
+    d_data_transport->recv(pkt_handler);
+    delete pkt_handler;
     return true;
   }
 
@@ -813,7 +730,7 @@ namespace usrp2 {
 
       size_t i = std::min((size_t) U2_MAX_SAMPLES, nitems - n);
 
-      eth_iovec iov[2];
+      iovec iov[2];
       iov[0].iov_base = &fixed_hdr;
       iov[0].iov_len = sizeof(fixed_hdr);
       iov[1].iov_base = const_cast<uint32_t *>(&items[n]);

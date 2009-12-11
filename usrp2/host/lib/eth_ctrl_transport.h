@@ -31,7 +31,7 @@ namespace usrp2{
         ethernet      *d_eth_ctrl;  // unbuffered control frames
         pktfilter     *d_pf_ctrl;
         u2_mac_addr_t d_mac;
-        uint8_t       *d_buff;
+        uint8_t       d_buff[ethernet::MAX_PKTLEN];
         double_t      d_timeout;
         uint8_t       d_padding[ethernet::MIN_PKTLEN];
 
@@ -47,13 +47,7 @@ namespace usrp2{
         eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac, bool target = true);
         ~eth_ctrl_transport();
         bool sendv(const iovec *iov, size_t iovlen);
-        sbuff_vec_t recv();
-        /*!
-         * \brief Controls the maximum size returned by recv
-         * Any integer larger than 0 would work here.
-         * \return the max size of sbuffs recv vector
-         */
-        size_t max_buffs(){return 7;} 
+        void recv(data_handler *handler);
 };
 
 

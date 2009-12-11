@@ -19,7 +19,7 @@
 #include "eth_ctrl_transport.h"
 
 usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac, bool target)
- : transport("ethernet control"), d_mac(mac), d_buff(NULL){
+ : transport("ethernet control"), d_mac(mac){
 
     //create raw ethernet device
     d_eth_ctrl = new ethernet();
@@ -39,7 +39,6 @@ usrp2::eth_ctrl_transport::~eth_ctrl_transport(){
     delete d_pf_ctrl;
     d_eth_ctrl->close();
     delete d_eth_ctrl;
-    delete[] d_buff;
 }
 
 bool usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
@@ -72,30 +71,11 @@ bool usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
     return d_eth_ctrl->write_packetv(all_iov, all_iov_len) > 0;
 }
 
-//helper function that deletes an array allocated by new
-//FIXME replace with the boost::lambda::delete_array
-static void delete_array(uint8_t *array){delete[] array;}
-
-usrp2::transport::sbuff_vec_t usrp2::eth_ctrl_transport::recv(){
-    sbuff_vec_t sbs;
-    for (size_t i = 0; i < max_buffs(); i++){
-        //conditionally allocate a new buffer
-        if (d_buff == NULL) d_buff = new uint8_t[ethernet::MAX_PKTLEN];
-        // This method must return immediately after getting a packet.
-        // Therefore, only the first call to read_packet (when size==0)
-        // may have a timeout and further calls must return immediately.
-        // This way, we return once all available packets have been read.
-        int recv_len = sbs.size()?
-            d_eth_ctrl->read_packet_dont_block(d_buff, ethernet::MAX_PKTLEN):
-            d_eth_ctrl->read_packet_timeout(d_buff, ethernet::MAX_PKTLEN, 100); // FIXME magic timeout
-        //strip the ethernet headers from the buffer
-        if (recv_len > (signed)sizeof(u2_eth_packet_t)){
-            sbs.push_back(sbuff::make(
-                d_buff + sizeof(u2_eth_packet_t),
-                recv_len - sizeof(u2_eth_packet_t),
-                boost::bind(delete_array, d_buff)));
-            d_buff = NULL; //set to null to flag for a new allocation
-        } else break;
+void usrp2::eth_ctrl_transport::recv(data_handler *handler){
+    int recv_len = d_eth_ctrl->read_packet_timeout(d_buff, ethernet::MAX_PKTLEN, 100); // FIXME magic timeout
+    //strip the ethernet headers from the buffer
+    if (recv_len > (signed)sizeof(u2_eth_packet_t)){
+        data_handler::result result = (*handler)(d_buff + sizeof(u2_eth_packet_t), recv_len - sizeof(u2_eth_packet_t));
+        if (result == data_handler::DONE) return; //get out of here
     }
-    return sbs;
 }

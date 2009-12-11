@@ -26,7 +26,6 @@
 #include <boost/shared_ptr.hpp>
 #include <gruel/thread.h>
 #include <vrt/expanded_header.h>
-#include "sbuff.h"
 
 namespace usrp2 {
 
@@ -34,10 +33,8 @@ namespace usrp2 {
   class ring_data
   {
     public:
-        sbuff::sptr sb;
-        vrt::expanded_header hdr;
-        const uint32_t *payload;
-        size_t n32_bit_words_payload;
+        void *base;
+        size_t len;
   };
 
   class ring
@@ -54,7 +51,8 @@ namespace usrp2 {
     std::vector<ring_data> d_ring;
 
     gruel::mutex d_mutex;
-    gruel::condition_variable d_not_empty;
+    gruel::condition_variable d_empty_cond;
+    gruel::condition_variable d_not_empty_cond;
 
     void inc_read_ind()
     {
@@ -79,6 +77,7 @@ namespace usrp2 {
 
     ring(unsigned int entries);
 
+    void wait_for_empty();
     void wait_for_not_empty();
 
     bool enqueue(const ring_data &rd);

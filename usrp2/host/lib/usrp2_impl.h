@@ -53,19 +53,11 @@ namespace usrp2 {
   class usrp2::impl
   {
     static const size_t NRIDS = 256;
-    static const size_t NCHANS = 32;
 
     int            d_next_rid;
 
-    unsigned int   d_num_enqueued;
-    gruel::mutex   d_enqueued_mutex;
-    gruel::condition_variable d_data_pending_cond;
-
     // all pending_replies are stack allocated, thus no possibility of leaking these
     pending_reply *d_pending_replies[NRIDS]; // indexed by 8-bit reply id
-
-    std::vector<ring::sptr>   d_channel_rings; // indexed by 5-bit channel number
-    gruel::mutex   d_channel_rings_mutex;
 
     db_info	   d_tx_db_info;
     db_info	   d_rx_db_info;
@@ -73,28 +65,16 @@ namespace usrp2 {
     int		   d_tx_interp;		// shadow tx interp 
     int		   d_rx_decim;		// shadow rx decim
 
-    bool	   d_dont_enqueue;
-
-    void inc_enqueued() {
-      gruel::scoped_lock l(d_enqueued_mutex);
-      d_num_enqueued++;
-    }
-    
-    void dec_enqueued() {
-      gruel::scoped_lock l(d_enqueued_mutex);
-      if (--d_num_enqueued == 0)
-        d_data_pending_cond.notify_one();
-    }
-
     void init_config_rx_v2_cmd(op_config_rx_v2_cmd *cmd);
     void init_config_tx_v2_cmd(op_config_tx_v2_cmd *cmd);
     bool transmit_cmd_and_wait(void *cmd, size_t len, pending_reply *p, double secs=0.0);
     bool transmit_cmd(void *cmd, size_t len);
-    void handle_control_packet(const transport::sbuff_vec_t &sbs);
-    void handle_data_packet(const transport::sbuff_vec_t &sbs);
     bool dboard_info();
     bool reset_db();
 
+    void ctrl_thread_loop(void);
+    boost::thread *d_ctrl_thread;
+    bool d_ctrl_thread_running;
     transport::sptr d_ctrl_transport;
     transport::sptr d_data_transport;
 
@@ -122,7 +102,6 @@ namespace usrp2 {
     bool read_gpio(int bank, uint16_t *value);
     bool start_rx_streaming(unsigned int channel, unsigned int items_per_frame);
     bool rx_samples(unsigned int channel, rx_sample_handler *handler);
-    bool flush_rx_samples(unsigned int channel);
     bool stop_rx_streaming(unsigned int channel);
 
     // Tx

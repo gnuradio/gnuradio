@@ -36,7 +36,7 @@ static const u2_mac_addr_t broadcast_mac_addr =
       {{ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff }};
 
 namespace usrp2{
-    class find_helper{
+    class find_helper : private data_handler{
     private:
         const std::string d_target_addr;
         transport::sptr   d_ctrl_transport;
@@ -47,7 +47,6 @@ namespace usrp2{
 
         find_helper(const std::string &ifc, const std::string &addr): d_target_addr(addr){
             d_ctrl_transport = transport::sptr(new eth_ctrl_transport(ifc, broadcast_mac_addr, false));
-            d_ctrl_transport->set_callback(boost::bind(&find_helper::handle_control_packet, this, _1));
         }
 
         ~find_helper(void){/*NOP*/}
@@ -63,10 +62,35 @@ namespace usrp2{
             iov.iov_len = sizeof(op_generic_t);
             d_ctrl_transport->sendv(&iov, 1);
             //allow responses to gather
-            d_ctrl_transport->start();
+            boost::thread *ctrl_thread = new boost::thread(boost::bind(&find_helper::ctrl_thread_loop, this));
             boost::this_thread::sleep(gruel::get_new_timeout(0.05)); //50ms
-            d_ctrl_transport->stop();
+            ctrl_thread->interrupt();
+            ctrl_thread->join();
             return d_result;
+        }
+
+        data_handler::result operator()(const void *base, size_t len){
+            //copy the packet into an reply structure
+            op_id_reply_t op_id_reply;
+            memset(&op_id_reply, 0, sizeof(op_id_reply_t));
+            memcpy(&op_id_reply, base, std::min(sizeof(op_id_reply_t), len));
+
+            //inspect the reply packet and store into result
+            if (op_id_reply.opcode != OP_ID_REPLY) // ignore
+                return data_handler::DONE;
+            props p = reply_to_props(&op_id_reply);
+            if (FIND_DEBUG)
+                std::cerr << "usrp2::find: response from " << p.addr << std::endl;
+            if ((d_target_addr == "") || (d_target_addr == p.addr))
+                d_result.push_back(p);
+            return data_handler::DONE;
+        }
+
+        void ctrl_thread_loop(void){
+            while(true){
+                d_ctrl_transport->recv(this);
+                boost::this_thread::interruption_point();
+            }
         }
 
     private:
@@ -84,25 +108,6 @@ namespace usrp2{
             memcpy(p.fpga_md5sum, r->fpga_md5sum, sizeof(p.fpga_md5sum));
             memcpy(p.sw_md5sum, r->sw_md5sum, sizeof(p.sw_md5sum));
             return p;
-        }
-
-        void handle_control_packet(const transport::sbuff_vec_t &sbs){
-            for (size_t i = 0; i < sbs.size(); i++){
-
-                //copy the packet into an reply structure
-                op_id_reply_t op_id_reply;
-                memset(&op_id_reply, 0, sizeof(op_id_reply_t));
-                memcpy(&op_id_reply, sbs[i]->buff(), std::min(sizeof(op_id_reply_t), sbs[i]->len()));
-
-                //inspect the reply packet and store into result
-                if (op_id_reply.opcode != OP_ID_REPLY) // ignore
-                    continue;
-                props p = reply_to_props(&op_id_reply);
-                if (FIND_DEBUG)
-                    std::cerr << "usrp2::find: response from " << p.addr << std::endl;
-                if ((d_target_addr == "") || (d_target_addr == p.addr))
-                    d_result.push_back(p);
-            }
         }
     };
 
