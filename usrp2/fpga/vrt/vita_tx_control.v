@@ -40,9 +40,14 @@ module vita_tx_control
    localparam IBS_UNDERRUN = 3;
 
    reg [2:0] ibs_state;
+
+   wire      clear_state;
+   setting_reg #(.my_addr(`DSP_CORE_TX_BASE+3)) sr_3
+     (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
+      .in(set_data),.out(),.changed(clear_state));
    
    always @(posedge clk)
-     if(reset | clear)
+     if(reset | clear_state)
        ibs_state <= 0;
      else
        case(ibs_state)
