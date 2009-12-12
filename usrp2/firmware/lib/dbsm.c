@@ -243,19 +243,19 @@ void
 dbsm_handle_tx_underrun(dbsm_t *sm)
 {
   // clear the DSP Tx state machine
-  dsp_tx_regs->clear_state = 1;
+  sr_tx_ctrl->clear_state = 1;
 
   // If there's a buffer that's empyting, clear it & flush xfer
 
   if (buffer_state[sm->buf0] == BS_EMPTYING){
     bp_clear_buf(sm->buf0);
-    dsp_tx_regs->clear_state = 1;	// flush partial packet
+    sr_tx_ctrl->clear_state = 1;	// flush partial packet
     // drop frame in progress on ground.  Pretend it finished
     dbsm_process_helper(sm, sm->buf0);
   }
   else if (buffer_state[sm->buf0 ^ 1] == BS_EMPTYING){
     bp_clear_buf(sm->buf0 ^ 1);
-    dsp_tx_regs->clear_state = 1;	// flush partial packet
+    sr_tx_ctrl->clear_state = 1;	// flush partial packet
     // drop frame in progress on ground.  Pretend it finished
     dbsm_process_helper(sm, sm->buf0 ^ 1);
   }
