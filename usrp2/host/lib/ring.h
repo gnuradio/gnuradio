@@ -25,7 +25,6 @@
 #include <vector>
 #include <boost/shared_ptr.hpp>
 #include <gruel/thread.h>
-#include <vrt/expanded_header.h>
 
 namespace usrp2 {
 

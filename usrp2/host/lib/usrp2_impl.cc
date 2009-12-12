@@ -27,7 +27,6 @@
 #include <gruel/realtime.h>
 #include <gruel/sys_pri.h>
 #include <usrp2_types.h>
-#include <usrp2/rx_sample_handler.h>
 #include "usrp2_impl.h"
 #include "control.h"
 #include <stdexcept>
@@ -36,6 +35,7 @@
 #include <stddef.h>
 #include <assert.h>
 #include <string.h>
+#include <vrt/expanded_header.h>
 
 static const int DEFAULT_RX_SCALE = 1024;
 
@@ -160,6 +160,7 @@ namespace usrp2 {
 
   usrp2::impl::impl(transport::sptr data_transport, transport::sptr ctrl_transport) :
       d_next_rid(0),
+      d_tx_pkt_cnt(0),
       d_tx_interp(0),
       d_rx_decim(0),
       d_ctrl_transport(ctrl_transport),
@@ -705,38 +706,45 @@ namespace usrp2 {
 
     size_t n = 0;
     for (size_t fn = 0; fn < nframes; fn++){
-      uint32_t timestamp = 0;
-      uint32_t flags = 0;
+      uint32_t burst_flags = 0;
 
-      if (fn == 0){
-	timestamp = metadata->timestamp;
-	if (metadata->send_now)
-	  flags |= U2P_TX_IMMEDIATE;
-	if (metadata->start_of_burst)
-	  flags |= U2P_TX_START_OF_BURST;
+      if (fn == 0 and metadata->start_of_burst){
+        burst_flags |= VRTH_START_OF_BURST;
       }
-      if (fn > 0){
-	flags |= U2P_TX_IMMEDIATE;
+      if (fn == last_frame and metadata->end_of_burst){
+        burst_flags |= VRTH_END_OF_BURST;
       }
-      if (fn == last_frame){
-	if (metadata->end_of_burst)
-	  flags |= U2P_TX_END_OF_BURST;
+      if (metadata->send_now){
+        burst_flags |= VRTH_START_OF_BURST | VRTH_END_OF_BURST;
       }
 
-      //setup the fixed header
-      u2_fixed_hdr_t	fixed_hdr;
-      u2p_set_word0(&fixed_hdr, flags, channel);
-      u2p_set_timestamp(&fixed_hdr, timestamp);
-
+      //calculate the packet length
       size_t i = std::min((size_t) U2_MAX_SAMPLES, nitems - n);
 
+      //setup the header
+      uint32_t vrt_if_data_pkt_hdr[2];
+      d_tx_pkt_cnt++; //increment the tx packet count
+      vrt_if_data_pkt_hdr[0] =
+        VRTH_PT_IF_DATA_WITH_SID |
+        burst_flags              |
+        (i & VRTH_PKT_SIZE_MASK) |
+        ((d_tx_pkt_cnt << VRTH_PKT_CNT_SHIFT) & VRTH_PKT_CNT_MASK);
+      vrt_if_data_pkt_hdr[1] = channel;
+
+      //make the header nbo
+      for (size_t j = 0; j < dimof(vrt_if_data_pkt_hdr); j++){
+        printf("0x%.8x\n", vrt_if_data_pkt_hdr[j]);
+        vrt_if_data_pkt_hdr[j] = htonx(vrt_if_data_pkt_hdr[i]);
+      }
+
+      //pack the iovecs with the header and data
       iovec iov[2];
-      iov[0].iov_base = &fixed_hdr;
-      iov[0].iov_len = sizeof(fixed_hdr);
+      iov[0].iov_base = vrt_if_data_pkt_hdr;
+      iov[0].iov_len = sizeof(vrt_if_data_pkt_hdr);
       iov[1].iov_base = const_cast<uint32_t *>(&items[n]);
       iov[1].iov_len = i * sizeof(uint32_t);
 
-      if (not d_data_transport->sendv(iov, 2)){
+      if (not d_data_transport->sendv(iov, dimof(iov))){
         return false;
       }
 

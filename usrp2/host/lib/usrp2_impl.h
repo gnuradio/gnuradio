@@ -26,11 +26,12 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/thread.hpp>
 #include "control.h"
-#include "ring.h"
 #include "transport.h"
 #include <string>
 
 #define MAX_SUBPKT_LEN 252
+
+#define dimof(_x) (sizeof(_x)/sizeof(_x[0]))
 
 namespace usrp2 {
 
@@ -55,6 +56,7 @@ namespace usrp2 {
     static const size_t NRIDS = 256;
 
     int            d_next_rid;
+    int            d_tx_pkt_cnt;
 
     // all pending_replies are stack allocated, thus no possibility of leaking these
     pending_reply *d_pending_replies[NRIDS]; // indexed by 8-bit reply id
