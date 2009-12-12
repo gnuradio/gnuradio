@@ -16,9 +16,11 @@ module vita_tx_control
     // To DSP Core
     output [WIDTH-1:0] sample,
     output run,
-    input strobe
-    );
+    input strobe,
 
+    output [31:0] debug
+    );
+   
    assign sample = sample_fifo_i[4+64+WIDTH-1:4+64];
 
    wire [63:0] send_time = sample_fifo_i[63:0];
@@ -38,9 +40,14 @@ module vita_tx_control
    localparam IBS_UNDERRUN = 3;
 
    reg [2:0] ibs_state;
+
+   wire      clear_state;
+   setting_reg #(.my_addr(BASE+3)) sr
+     (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
+      .in(set_data),.out(),.changed(clear_state));
    
    always @(posedge clk)
-     if(reset | clear)
+     if(reset | clear_state)
        ibs_state <= 0;
      else
        case(ibs_state)
@@ -66,5 +73,10 @@ module vita_tx_control
    assign sample_fifo_dst_rdy_o = (strobe & (ibs_state == IBS_RUN));  // FIXME also cleanout
    assign run = (ibs_state == IBS_RUN);
    assign underrun = (ibs_state == IBS_UNDERRUN);
+
+   assign debug = { { now,early,late,too_early,eop,eob,sob,send_at },
+		    { sample_fifo_src_rdy_i, sample_fifo_dst_rdy_o, strobe, run, underrun, ibs_state[2:0] },
+		    { 8'b0 },
+		    { 8'b0 } };
    
 endmodule // vita_tx_control

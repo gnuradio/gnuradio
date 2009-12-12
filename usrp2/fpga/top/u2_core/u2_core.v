@@ -593,25 +593,31 @@ module u2_core
    wire [35:0] 	 tx_data;
    wire [99:0] 	 tx1_data;
    wire 	 tx_src_rdy, tx_dst_rdy, tx1_src_rdy, tx1_dst_rdy;
+
+   wire [31:0] 	 debug_vtc, debug_vtd, debug_vt;
    
    fifo_cascade #(.WIDTH(36), .SIZE(10)) tx_fifo_cascade
      (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
-      .datain({rd1_flags,rd1_dat}), .src_rdy_i(rd1_ready_o), .dst_rdy_o(rd_ready_i),
+      .datain({rd1_flags,rd1_dat}), .src_rdy_i(rd1_ready_o), .dst_rdy_o(rd1_ready_i),
       .dataout(tx_data), .src_rdy_o(tx_src_rdy), .dst_rdy_i(tx_dst_rdy) );
 
    vita_tx_deframer #(.BASE(SR_TX_CTRL), .MAXCHAN(1)) vita_tx_deframer
      (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .data_i(tx_data), .src_rdy_i(tx_src_rdy), .dst_rdy_o(tx_dst_rdy),
-      .sample_fifo_o(tx1_data), .sample_fifo_src_rdy_o(tx1_src_rdy), .sample_fifo_dst_rdy_i(tx1_dst_rdy));
+      .sample_fifo_o(tx1_data), .sample_fifo_src_rdy_o(tx1_src_rdy), .sample_fifo_dst_rdy_i(tx1_dst_rdy),
+      .debug(debug_vtd) );
 
    vita_tx_control #(.BASE(SR_TX_CTRL), .WIDTH(32)) vita_tx_control
      (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .vita_time(vita_time),.underrun(underrun),
       .sample_fifo_i(tx1_data), .sample_fifo_src_rdy_i(tx1_src_rdy), .sample_fifo_dst_rdy_o(tx1_dst_rdy),
-      .sample(sample_tx), .run(run_tx), .strobe(strobe_tx) );
-      
+      .sample(sample_tx), .run(run_tx), .strobe(strobe_tx),
+      .debug(debug_vtc) );
+   
+   assign debug_vt = debug_vtc | debug_vtd;
+   
    dsp_core_tx dsp_core_tx
      (.clk(dsp_clk),.rst(dsp_rst),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
@@ -622,7 +628,7 @@ module u2_core
 
    // ///////////////////////////////////////////////////////////////////////////////////
    // SERDES
-
+/*
    serdes #(.TXFIFOSIZE(9),.RXFIFOSIZE(9)) serdes
      (.clk(dsp_clk),.rst(dsp_rst),
       .ser_tx_clk(ser_tx_clk),.ser_t(ser_t),.ser_tklsb(ser_tklsb),.ser_tkmsb(ser_tkmsb),
@@ -632,7 +638,7 @@ module u2_core
       .tx_occupied(ser_tx_occ),.tx_full(ser_tx_full),.tx_empty(ser_tx_empty),
       .rx_occupied(ser_rx_occ),.rx_full(ser_rx_full),.rx_empty(ser_rx_empty),
       .serdes_link_up(serdes_link_up),.debug0(debug_serdes0), .debug1(debug_serdes1) );
-
+*/
    // ///////////////////////////////////////////////////////////////////////////////////
    // External RAM Interface
 
@@ -700,7 +706,8 @@ module u2_core
 			{eth_rx_full2, eth_rx_empty2, eth_rx_occ2[13:0]} };
    
    assign  debug_clk[0]  = 0; // wb_clk;
-   assign  debug_clk[1]  = clk_to_mac;	
+   assign  debug_clk[1]  = dsp_clk;
+
 /*
  
    wire        mdio_cpy  = MDIO;
@@ -714,14 +721,15 @@ module u2_core
 			     { 5'd0, GMII_TX_EN, GMII_TX_ER, GMII_GTX_CLK },
 			     { wr2_flags, rd2_flags },
 			     { 4'd0, wr2_ready_i, wr2_ready_o, rd2_ready_i, rd2_ready_o } };
- */        
    assign debug 	 = { { GMII_RXD },
 			     { 5'd0, GMII_RX_DV, GMII_RX_ER, GMII_RX_CLK },
 			     { wr2_flags, rd2_flags },
 			     { GMII_TX_EN,3'd0, wr2_ready_i, wr2_ready_o, rd2_ready_i, rd2_ready_o } };
-          
-   assign  debug_gpio_0 = debug_mac; //eth_mac_debug;
-   assign  debug_gpio_1 = 0;
+ */
+
+   assign debug = debug_vt;
+   assign debug_gpio_0 = sample_tx;
+   assign debug_gpio_1 = 0;
    
 endmodule // u2_core
 
