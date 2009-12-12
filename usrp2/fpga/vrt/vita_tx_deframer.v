@@ -177,7 +177,7 @@ module vita_tx_deframer
    // sob, eob, has_secs (send_at) ignored on all lines except first
    assign fifo_i = {sample_d,sample_c,sample_b,sample_a,has_secs_reg,is_sob_reg,is_eob_reg,eop,send_time};
 
-   assign dst_rdy_o = (vita_state != VITA_PAYLOAD);
+   assign dst_rdy_o = ~(vita_state == VITA_PAYLOAD) & ~((vita_state==VITA_STORE)& ~fifo_space) ;
 
    assign debug = { { 8'b0 },
 		    { 8'b0 },
