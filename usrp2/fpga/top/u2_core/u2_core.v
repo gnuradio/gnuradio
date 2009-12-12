@@ -621,8 +621,9 @@ module u2_core
    dsp_core_tx dsp_core_tx
      (.clk(dsp_clk),.rst(dsp_rst),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
+      .sample(sample_tx), .run(run_tx), .strobe(strobe_tx),
       .dac_a(dac_a),.dac_b(dac_b),
-      .sample(sample_tx), .run(run_tx), .strobe(strobe_tx), .debug(debug_tx_dsp) );
+      .debug(debug_tx_dsp) );
 
    assign dsp_rst = wb_rst;
 
@@ -728,8 +729,8 @@ module u2_core
  */
 
    assign debug = debug_vt;
-   assign debug_gpio_0 = sample_tx;
-   assign debug_gpio_1 = 0;
+   assign debug_gpio_0 = tx_data;
+   assign debug_gpio_1 = sample_tx;
    
 endmodule // u2_core
 
