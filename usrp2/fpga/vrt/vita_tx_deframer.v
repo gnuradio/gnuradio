@@ -22,7 +22,7 @@ module vita_tx_deframer
     );
 
    wire [1:0] numchan;
-   setting_reg #(.my_addr(BASE+8), .at_reset(0)) sr_numchan
+   setting_reg #(.my_addr(BASE), .at_reset(0)) sr_numchan
      (.clk(clk),.rst(reset),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out(numchan),.changed());
 

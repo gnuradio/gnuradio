@@ -42,7 +42,7 @@ module vita_tx_control
    reg [2:0] ibs_state;
 
    wire      clear_state;
-   setting_reg #(.my_addr(BASE+3)) sr
+   setting_reg #(.my_addr(BASE+1)) sr
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out(),.changed(clear_state));
    
