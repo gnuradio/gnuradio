@@ -84,6 +84,10 @@ control_lib/wb_bridge_16_32.v \
 control_lib/reset_sync.v \
 control_lib/priority_enc.v \
 control_lib/pic.v \
+vrt/vita_rx_control.v \
+vrt/vita_rx_framer.v \
+vrt/vita_tx_control.v \
+vrt/vita_tx_deframer.v \
 simple_gemac/simple_gemac_wrapper.v \
 simple_gemac/simple_gemac.v \
 simple_gemac/simple_gemac_wb.v \
@@ -171,6 +175,8 @@ serdes/serdes_fc_rx.v \
 serdes/serdes_fc_tx.v \
 serdes/serdes_rx.v \
 serdes/serdes_tx.v \
+timing/time_64bit.v \
+timing/time_compare.v \
 timing/time_receiver.v \
 timing/time_sender.v \
 timing/time_sync.v \

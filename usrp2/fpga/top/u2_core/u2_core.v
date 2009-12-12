@@ -135,6 +135,12 @@ module u2_core
    input sim_mode,
    input [3:0] clock_divider
    );
+
+   localparam SR_RX_DSP = 160;
+   localparam SR_RX_CTRL = 176;
+   localparam SR_TX_DSP = 208;
+   localparam SR_TX_CTRL = 224;
+   localparam SR_TIME64 = 192;
    
    wire [7:0] 	set_addr;
    wire [31:0] 	set_data;
@@ -159,6 +165,7 @@ module u2_core
    wire 	serdes_link_up;
    wire 	epoch;
    wire [31:0] 	irq;
+   wire [63:0] 	vita_time;
    
    // ///////////////////////////////////////////////////////////////////////////////////////////////
    // Wishbone Single Master INTERCON
@@ -547,35 +554,69 @@ module u2_core
    assign sd_dat_i[31:8] = 0;
 
    // /////////////////////////////////////////////////////////////////////////
-   // DSP
+   // DSP RX
    wire [31:0] 	 sample_rx, sample_tx;
    wire 	 strobe_rx, strobe_tx;
-
-   rx_control #(.FIFOSIZE(10)) rx_control
-     (.clk(dsp_clk), .rst(dsp_rst),
-      .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
-      .master_time(master_time),.overrun(overrun),
-      .wr_dat_o(wr1_dat), .wr_flags_o(wr1_flags), .wr_ready_o(wr1_ready_i), .wr_ready_i(wr1_ready_o),
-      .sample(sample_rx), .run(run_rx), .strobe(strobe_rx),
-      .fifo_occupied(dsp_rx_occ),.fifo_full(dsp_rx_full),.fifo_empty(dsp_rx_empty),
-      .debug_rx(debug_rx) );
+   wire 	 rx_dst_rdy, rx_src_rdy, rx1_dst_rdy, rx1_src_rdy;
+   wire [99:0] 	 rx_data;
+   wire [35:0] 	 rx1_data;
    
-   // dummy_rx dsp_core_rx
-   dsp_core_rx dsp_core_rx
+   dsp_core_rx #(.BASE(SR_RX_DSP)) dsp_core_rx
      (.clk(dsp_clk),.rst(dsp_rst),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .adc_a(adc_a),.adc_ovf_a(adc_ovf_a),.adc_b(adc_b),.adc_ovf_b(adc_ovf_b),
       .sample(sample_rx), .run(run_rx_d1), .strobe(strobe_rx),
       .debug(debug_rx_dsp) );
 
-   tx_control #(.FIFOSIZE(10)) tx_control
-     (.clk(dsp_clk), .rst(dsp_rst),
+   vita_rx_control #(.BASE(SR_RX_CTRL), .WIDTH(32)) vita_rx_control
+     (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
-      .master_time(master_time),.underrun(underrun),
-      .rd_dat_i(rd1_dat), .rd_flags_i(rd1_flags), .rd_ready_i(rd1_ready_o), .rd_ready_o(rd1_ready_i),
+      .vita_time(vita_time), .overrun(overrun),
+      .sample(sample_rx), .run(run_rx), .strobe(strobe_rx),
+      .sample_fifo_o(rx_data), .sample_fifo_dst_rdy_i(rx_dst_rdy), .sample_fifo_src_rdy_o(rx_src_rdy));
+
+   vita_rx_framer #(.BASE(SR_RX_CTRL), .MAXCHAN(1)) vita_rx_framer
+     (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
+      .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
+      .sample_fifo_i(rx_data), .sample_fifo_dst_rdy_o(rx_dst_rdy), .sample_fifo_src_rdy_i(rx_src_rdy),
+      .data_o(rx1_data), .dst_rdy_i(rx1_dst_rdy), .src_rdy_o(rx1_src_rdy),
+      .fifo_occupied(), .fifo_full(), .fifo_empty() );
+
+   fifo_cascade #(.WIDTH(36), .SIZE(10)) rx_fifo_cascade
+     (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
+      .datain(rx1_data), .src_rdy_i(rx1_src_rdy), .dst_rdy_o(rx1_dst_rdy),
+      .dataout({wr1_flags,wr1_dat}), .src_rdy_o(wr1_ready_i), .dst_rdy_i(wr1_ready_o));
+
+   // ///////////////////////////////////////////////////////////////////////////////////
+   // DSP TX
+
+   wire [35:0] 	 tx_data;
+   wire [99:0] 	 tx1_data;
+   wire 	 tx_src_rdy, tx_dst_rdy, tx1_src_rdy, tx1_dst_rdy;
+
+   wire [31:0] 	 debug_vtc, debug_vtd, debug_vt;
+   
+   fifo_cascade #(.WIDTH(36), .SIZE(10)) tx_fifo_cascade
+     (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
+      .datain({rd1_flags,rd1_dat}), .src_rdy_i(rd1_ready_o), .dst_rdy_o(rd1_ready_i),
+      .dataout(tx_data), .src_rdy_o(tx_src_rdy), .dst_rdy_i(tx_dst_rdy) );
+
+   vita_tx_deframer #(.BASE(SR_TX_CTRL), .MAXCHAN(1)) vita_tx_deframer
+     (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
+      .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
+      .data_i(tx_data), .src_rdy_i(tx_src_rdy), .dst_rdy_o(tx_dst_rdy),
+      .sample_fifo_o(tx1_data), .sample_fifo_src_rdy_o(tx1_src_rdy), .sample_fifo_dst_rdy_i(tx1_dst_rdy),
+      .debug(debug_vtd) );
+
+   vita_tx_control #(.BASE(SR_TX_CTRL), .WIDTH(32)) vita_tx_control
+     (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
+      .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
+      .vita_time(vita_time),.underrun(underrun),
+      .sample_fifo_i(tx1_data), .sample_fifo_src_rdy_i(tx1_src_rdy), .sample_fifo_dst_rdy_o(tx1_dst_rdy),
       .sample(sample_tx), .run(run_tx), .strobe(strobe_tx),
-      .fifo_occupied(dsp_tx_occ),.fifo_full(dsp_tx_full),.fifo_empty(dsp_tx_empty),
-      .debug(debug_txc) );
+      .debug(debug_vtc) );
+   
+   assign debug_vt = debug_vtc | debug_vtd;
    
    dsp_core_tx dsp_core_tx
      (.clk(dsp_clk),.rst(dsp_rst),
@@ -587,7 +628,7 @@ module u2_core
 
    // ///////////////////////////////////////////////////////////////////////////////////
    // SERDES
-
+/*
    serdes #(.TXFIFOSIZE(9),.RXFIFOSIZE(9)) serdes
      (.clk(dsp_clk),.rst(dsp_rst),
       .ser_tx_clk(ser_tx_clk),.ser_t(ser_t),.ser_tklsb(ser_tklsb),.ser_tkmsb(ser_tkmsb),
@@ -597,7 +638,7 @@ module u2_core
       .tx_occupied(ser_tx_occ),.tx_full(ser_tx_full),.tx_empty(ser_tx_empty),
       .rx_occupied(ser_rx_occ),.rx_full(ser_rx_full),.rx_empty(ser_rx_empty),
       .serdes_link_up(serdes_link_up),.debug0(debug_serdes0), .debug1(debug_serdes1) );
-
+*/
    // ///////////////////////////////////////////////////////////////////////////////////
    // External RAM Interface
 
@@ -631,6 +672,13 @@ module u2_core
    assign      RAM_CE1n = 0;
    assign      RAM_D[17:16] = 2'bzz;
    
+   // /////////////////////////////////////////////////////////////////////////
+   // VITA Timing
+
+   time_64bit #(.TICKS_PER_SEC(32'd100000000),.BASE(SR_TIME64)) time_64bit
+     (.clk(dsp_clk), .rst(dsp_rst), .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
+      .pps(pps_o), .vita_time(vita_time));
+   
    // /////////////////////////////////////////////////////////////////////////////////////////
    // Debug Pins
    
@@ -658,7 +706,8 @@ module u2_core
 			{eth_rx_full2, eth_rx_empty2, eth_rx_occ2[13:0]} };
    
    assign  debug_clk[0]  = 0; // wb_clk;
-   assign  debug_clk[1]  = clk_to_mac;	
+   assign  debug_clk[1]  = dsp_clk;
+
 /*
  
    wire        mdio_cpy  = MDIO;
@@ -672,14 +721,15 @@ module u2_core
 			     { 5'd0, GMII_TX_EN, GMII_TX_ER, GMII_GTX_CLK },
 			     { wr2_flags, rd2_flags },
 			     { 4'd0, wr2_ready_i, wr2_ready_o, rd2_ready_i, rd2_ready_o } };
- */        
    assign debug 	 = { { GMII_RXD },
 			     { 5'd0, GMII_RX_DV, GMII_RX_ER, GMII_RX_CLK },
 			     { wr2_flags, rd2_flags },
 			     { GMII_TX_EN,3'd0, wr2_ready_i, wr2_ready_o, rd2_ready_i, rd2_ready_o } };
-          
-   assign  debug_gpio_0 = debug_mac; //eth_mac_debug;
-   assign  debug_gpio_1 = 0;
+ */
+
+   assign debug = debug_vt;
+   assign debug_gpio_0 = sample_tx;
+   assign debug_gpio_1 = 0;
    
 endmodule // u2_core
 
