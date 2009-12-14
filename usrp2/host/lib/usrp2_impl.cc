@@ -702,20 +702,16 @@ namespace usrp2 {
     // fragment as necessary then fire away
 
     size_t nframes = (nitems + U2_MAX_SAMPLES - 1) / U2_MAX_SAMPLES;
-    size_t last_frame = nframes - 1;
 
     size_t n = 0;
     for (size_t fn = 0; fn < nframes; fn++){
+      //setup the burst flags (vrt header reserved bits)
       uint32_t burst_flags = 0;
-
-      if (fn == 0 and metadata->start_of_burst){
+      if ((metadata->send_now or metadata->start_of_burst) and fn == 0){
         burst_flags |= VRTH_START_OF_BURST;
       }
-      if (fn == last_frame and metadata->end_of_burst){
+      if ((metadata->send_now or metadata->end_of_burst) and fn == nframes - 1){
         burst_flags |= VRTH_END_OF_BURST;
-      }
-      if (metadata->send_now){
-        burst_flags |= VRTH_START_OF_BURST | VRTH_END_OF_BURST;
       }
 
       //calculate the packet length
