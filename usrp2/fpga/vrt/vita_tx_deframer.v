@@ -17,11 +17,12 @@ module vita_tx_deframer
     // FIFO Levels
     output [15:0] fifo_occupied,
     output fifo_full,
-    output fifo_empty    
+    output fifo_empty,
+    output [31:0] debug
     );
 
    wire [1:0] numchan;
-   setting_reg #(.my_addr(BASE+8), .at_reset(0)) sr_numchan
+   setting_reg #(.my_addr(BASE), .at_reset(0)) sr_numchan
      (.clk(clk),.rst(reset),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out(numchan),.changed());
 
@@ -176,6 +177,11 @@ module vita_tx_deframer
    // sob, eob, has_secs (send_at) ignored on all lines except first
    assign fifo_i = {sample_d,sample_c,sample_b,sample_a,has_secs_reg,is_sob_reg,is_eob_reg,eop,send_time};
 
-   assign dst_rdy_o = (vita_state != VITA_PAYLOAD);
+   assign dst_rdy_o = ~(vita_state == VITA_PAYLOAD) & ~((vita_state==VITA_STORE)& ~fifo_space) ;
+
+   assign debug = { { 8'b0 },
+		    { 8'b0 },
+		    { eof, line_done, store, fifo_space, src_rdy_i, dst_rdy_o, vector_phase[1:0] },
+		    { has_secs_reg, is_sob_reg, is_eob_reg, eop, vita_state[3:0] } };
    
 endmodule // vita_tx_deframer
