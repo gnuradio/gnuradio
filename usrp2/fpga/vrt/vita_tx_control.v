@@ -62,7 +62,7 @@ module vita_tx_control
 	   if(strobe)
 	     if(~sample_fifo_src_rdy_i)
 	       ibs_state <= IBS_UNDERRUN;
-	     else if(eob)
+	     else if(eop & eob)
 	       ibs_state <= IBS_IDLE;
 	     // else if(eop)  FIXME do we care if the packet ends?
 

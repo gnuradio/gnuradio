@@ -618,7 +618,7 @@ module u2_core
    
    assign debug_vt = debug_vtc | debug_vtd;
    
-   dsp_core_tx dsp_core_tx
+   dsp_core_tx #(.BASE(SR_TX_DSP)) dsp_core_tx
      (.clk(dsp_clk),.rst(dsp_rst),
       .set_stb(set_stb),.set_addr(set_addr),.set_data(set_data),
       .sample(sample_tx), .run(run_tx), .strobe(strobe_tx),
@@ -729,8 +729,8 @@ module u2_core
  */
 
    assign debug = debug_vt;
-   assign debug_gpio_0 = tx_data;
-   assign debug_gpio_1 = sample_tx;
+   assign debug_gpio_0 = sample_tx;
+   assign debug_gpio_1 = 32'hDEAD_BEEF;
    
 endmodule // u2_core
 
