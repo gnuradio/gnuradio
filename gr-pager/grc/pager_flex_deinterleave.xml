@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## FLEX Pager Deinterleaver
+###################################################
+ -->
+<block>
+	<name>FLEX Deinterleave</name>
+	<key>pager_flex_deinterleave</key>
+	<category>Pager</category>
+	<import>from gnuradio import pager</import>
+	<make>pager.flex_deinterleave()</make>
+
+	<sink>
+		<name>bits</name>
+		<type>byte</type>
+	</sink>
+
+	<source>
+		<name>codes</name>
+		<type>int</type>
+	</source>
+</block>
