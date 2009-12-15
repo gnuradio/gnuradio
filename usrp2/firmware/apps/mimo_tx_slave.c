@@ -160,7 +160,7 @@ restart_streaming(void)
   dsp_rx_regs->rx_command =
     MK_RX_CMD(FRAMES_PER_CMD * streaming_items_per_frame,
 	      streaming_items_per_frame,
-	      1, 1);
+	      1, 1);				
 
   dsp_rx_regs->rx_time = 0;		// enqueue second command
 }
@@ -192,10 +192,6 @@ start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p)
   restart_streaming();
 }
 
-void start_rx_streaming_at_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p, uint32_t time)
-{}
-void restart_streaming_at(uint32_t time)
-{}
 
 void
 stop_rx_cmd(void)
@@ -234,7 +230,7 @@ setup_tx()
  * that we didn't handle the packet.  A bit of a kludge
  * but it should work.
  */
-bool
+bool 
 fw_sets_seqno_inspector(dbsm_t *sm, int buf_this)	// returns false
 {
   uint32_t *p = buffer_ram(buf_this);
@@ -314,7 +310,7 @@ main(void)
 
 
   //output_regs->flush_icache = 1;
-
+ 
   // initialize double buffering state machine for DSP RX -> Ethernet
 
   if (FW_SETS_SEQNO){

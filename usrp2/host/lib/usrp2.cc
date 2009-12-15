@@ -62,7 +62,7 @@ namespace usrp2 {
       else {
 	if (key == p->key)	// found it
 	  return usrp2::sptr(p->value);
-	else
+	else		        
 	  ++p;			// keep looking
       }
     }
@@ -90,15 +90,15 @@ namespace usrp2 {
     p.addr[3] = 0x85;
     p.addr[4] = 0x30;
     p.addr[5] = 0x00;
-
+    
     int len = s.size();
     switch (len) {
-
+      
     case 5:
       if (sscanf(s.c_str(), "%hhx:%hhx", &p.addr[4], &p.addr[5]) != 2)
 	return false;
       break;
-
+      
     case 17:
       if (sscanf(s.c_str(), "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
 		 &p.addr[0], &p.addr[1], &p.addr[2],
@@ -109,7 +109,7 @@ namespace usrp2 {
     default:
       return false;
     }
-
+    
     char buf[128];
     snprintf(buf, sizeof(buf),
 	     "%02x:%02x:%02x:%02x:%02x:%02x",
@@ -148,13 +148,13 @@ namespace usrp2 {
   {
     // NOP
   }
-
+  
   // Public class destructor.  d_impl will auto-delete.
   usrp2::~usrp2()
   {
     // NOP
   }
-
+  
   std::string
   usrp2::mac_addr()
   {
@@ -169,12 +169,12 @@ namespace usrp2 {
 
   // Receive
 
-  bool
+  bool 
   usrp2::set_rx_gain(double gain)
   {
     return d_impl->set_rx_gain(gain);
   }
-
+  
   double
   usrp2::rx_gain_min()
   {
@@ -204,7 +204,7 @@ namespace usrp2 {
   {
     return d_impl->set_rx_center_freq(frequency, result);
   }
-
+  
   double
   usrp2::rx_freq_min()
   {
@@ -222,7 +222,7 @@ namespace usrp2 {
   {
     return d_impl->set_rx_decim(decimation_factor);
   }
-
+  
   int
   usrp2::rx_decim()
   {
@@ -234,25 +234,13 @@ namespace usrp2 {
   {
     return d_impl->set_rx_scale_iq(scale_i, scale_q);
   }
-
+  
   bool
   usrp2::start_rx_streaming(unsigned int channel, unsigned int items_per_frame)
   {
     return d_impl->start_rx_streaming(channel, items_per_frame);
   }
-
-  bool
-  usrp2::start_rx_streaming_at(unsigned int channel, unsigned int items_per_frame, unsigned int time)
-  {
-    return d_impl->start_rx_streaming_at(channel, items_per_frame,time);
-  }
-
-  bool
-  usrp2::sync_and_start_rx_streaming_at(unsigned int channel, unsigned int items_per_frame, unsigned int time)
-  {
-    return d_impl->sync_and_start_rx_streaming_at(channel, items_per_frame, time);
-  }
-
+  
   bool
   usrp2::rx_samples(unsigned int channel, rx_sample_handler *handler)
   {
@@ -270,7 +258,7 @@ namespace usrp2 {
   {
     return d_impl->rx_overruns();
   }
-
+  
   unsigned int
   usrp2::rx_missing()
   {
@@ -279,12 +267,12 @@ namespace usrp2 {
 
   // Transmit
 
-  bool
+  bool 
   usrp2::set_tx_gain(double gain)
   {
     return d_impl->set_tx_gain(gain);
   }
-
+  
   double
   usrp2::tx_gain_min()
   {
@@ -314,7 +302,7 @@ namespace usrp2 {
   {
     return d_impl->set_tx_center_freq(frequency, result);
   }
-
+  
   double
   usrp2::tx_freq_min()
   {
@@ -333,7 +321,7 @@ namespace usrp2 {
   {
     return d_impl->set_tx_interp(interpolation_factor);
   }
-
+  
   int
   usrp2::tx_interp()
   {
@@ -351,7 +339,7 @@ namespace usrp2 {
   {
     return d_impl->set_tx_scale_iq(scale_i, scale_q);
   }
-
+  
   bool
   usrp2::tx_32fc(unsigned int channel,
 		 const std::complex<float> *samples,
@@ -416,7 +404,7 @@ namespace usrp2 {
   {
     return d_impl->rx_daughterboard_id(dbid);
   }
-
+  
 
   // low level methods
 

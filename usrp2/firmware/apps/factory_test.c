@@ -1,5 +1,5 @@
 /*
- * Copyright 2007,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2007,2008 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -154,7 +154,7 @@ restart_streaming(void)
   dsp_rx_regs->rx_command =
     MK_RX_CMD(FRAMES_PER_CMD * streaming_items_per_frame,
 	      streaming_items_per_frame,
-	      1, 1);
+	      1, 1);				
 
   dsp_rx_regs->rx_time = 0;		// enqueue second command
 }
@@ -186,11 +186,6 @@ start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p)
   restart_streaming();
 }
 
-
-void start_rx_streaming_at_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p, uint32_t time)
-{}
-void restart_streaming_at(uint32_t time)
-{}
 
 void
 stop_rx_cmd(void)
@@ -229,7 +224,7 @@ setup_tx()
  * that we didn't handle the packet.  A bit of a kludge
  * but it should work.
  */
-bool
+bool 
 fw_sets_seqno_inspector(dbsm_t *sm, int buf_this)	// returns false
 {
   uint32_t *p = buffer_ram(buf_this);
@@ -264,22 +259,22 @@ int test_ram()
 {
   int i,j,k;
   output_regs->ram_page = 1<<10;
-
+  
   extram[0] = 0xDEADBEEF;
   extram[1] = 0xF00D1234;
   extram[7] = 0x76543210;
-
+  
   output_regs->ram_page = 2<<10;
   extram[7] = 0x55555555;
   extram[1] = 0xaaaaaaaa;
   extram[0] = 0xeeeeeeee;
-
+  
   output_regs->ram_page = 1<<10;
-
+  
   i = extram[0];
   k = extram[1];
   j = extram[7];
-
+  
   if((i != 0xDEADBEEF)||(j!=0x76543210)||(k!=0xF00D1234)) {
     puts("RAM FAIL1!\n");
     puthex32_nl(i);
@@ -287,7 +282,7 @@ int test_ram()
     puthex32_nl(k);
     return 0;
   }
-
+  
   output_regs->ram_page = 2<<10;
 
   j = extram[7];
@@ -311,7 +306,7 @@ int test_sd()
     puts("FAILED INIT of Card\n");
     return 0;
   }
-
+  
   unsigned char buf[512];
   i = sd_read_block(2048,buf);
   if(i == 0) {
