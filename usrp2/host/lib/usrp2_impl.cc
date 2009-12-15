@@ -707,10 +707,12 @@ namespace usrp2 {
     for (size_t fn = 0; fn < nframes; fn++){
       //setup the burst flags (vrt header reserved bits)
       uint32_t burst_flags = 0;
+      //set start of burst on the first fragment when send-now or start-of-burst is set
       if ((metadata->send_now or metadata->start_of_burst) and fn == 0){
         burst_flags |= VRTH_START_OF_BURST;
       }
-      if ((metadata->send_now or metadata->end_of_burst) and fn == nframes - 1){
+      //set end of burst on the last fragment when end-of-bust is set
+      if ((/*metadata->send_now or */metadata->end_of_burst) and fn == nframes - 1){
         burst_flags |= VRTH_END_OF_BURST;
       }
 
@@ -723,14 +725,14 @@ namespace usrp2 {
       vrt_if_data_pkt_hdr[0] =
         VRTH_PT_IF_DATA_WITH_SID |
         burst_flags              |
-        (i & VRTH_PKT_SIZE_MASK) |
+        ((i+dimof(vrt_if_data_pkt_hdr)) & VRTH_PKT_SIZE_MASK) |
         ((d_tx_pkt_cnt << VRTH_PKT_CNT_SHIFT) & VRTH_PKT_CNT_MASK);
       vrt_if_data_pkt_hdr[1] = channel;
 
       //make the header nbo
       for (size_t j = 0; j < dimof(vrt_if_data_pkt_hdr); j++){
-        printf("0x%.8x\n", vrt_if_data_pkt_hdr[j]);
-        vrt_if_data_pkt_hdr[j] = htonx(vrt_if_data_pkt_hdr[i]);
+        //printf("0x%.8x\n", vrt_if_data_pkt_hdr[j]);
+        vrt_if_data_pkt_hdr[j] = htonx(vrt_if_data_pkt_hdr[j]);
       }
 
       //pack the iovecs with the header and data
