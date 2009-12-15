@@ -295,15 +295,14 @@ hwconfig_wishbone_divisor(void)
 #define	TX_PROTOCOL_ENGINE_BASE 0xD480
 #define	RX_PROTOCOL_ENGINE_BASE 0xD4C0
 #define BUFFER_POOL_CTRL_BASE   0xD500
-#define DSP_TX_BASE             0xD600
 #define LAST_SETTING_REG        0xD7FC	// last valid setting register
 
 #define SR_MISC 0
 #define SR_TX_PROT_ENG 32
 #define SR_RX_PROT_ENG 48
 #define SR_BUFFER_POOL_CTRL 64
-#define SR_TX_DSP 128
-#define SR_TX_CTRL 144
+#define SR_TX_DSP 208
+#define SR_TX_CTRL 224
 #define SR_RX_DSP 160
 #define SR_RX_CTRL 176
 #define SR_TIME64 192
@@ -399,10 +398,17 @@ typedef struct {
 #define	MAX_CIC_INTERP  128
 
 typedef struct {
+  volatile uint32_t     num_chan;
+  volatile uint32_t     clear_state;	// clears out state machine, fifos,
+} sr_tx_ctrl_t;
+
+#define sr_tx_ctrl ((sr_tx_ctrl_t *) _SR_ADDR(SR_TX_CTRL))
+
+typedef struct {
   volatile int32_t	freq;
   volatile uint32_t	scale_iq;	// {scale_i,scale_q}
   volatile uint32_t     interp_rate;
-  volatile uint32_t     clear_state;	// clears out state machine, fifos,
+  volatile uint32_t     _padding0;      // padding for the tx_mux
                                         //   NOT freq, scale, interp
   /*!
    * \brief output mux configuration.
@@ -442,7 +448,7 @@ typedef struct {
 
 } dsp_tx_regs_t;
   
-#define dsp_tx_regs ((dsp_tx_regs_t *) DSP_TX_BASE)
+#define dsp_tx_regs ((dsp_tx_regs_t *) _SR_ADDR(SR_TX_DSP))
 
 // --- VITA RX CTRL regs ---
 typedef struct {

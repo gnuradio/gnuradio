@@ -209,7 +209,7 @@ stop_rx_cmd(void)
 static void
 setup_tx()
 {
-  dsp_tx_regs->clear_state = 1;
+  sr_tx_ctrl->clear_state = 1;
   bp_clear_buf(DSP_TX_BUF_0);
   bp_clear_buf(DSP_TX_BUF_1);
 
