@@ -83,7 +83,7 @@ _usb_control_transfer (struct usb_dev_handle *udh, int request_type,
   ret = usb_control_msg (udh, request_type,request, value, index,
                          (char*) data, length, (int) timeout);
   if (ret < 0) 
-    fprintf (stderr, "usrp: usb_claim_interface failed: %s\n", usb_strerror());
+    fprintf (stderr, "usrp: usb_control_msg failed: %s\n", usb_strerror());
 
   return ret;
 }

@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+##DPSK2 Demod - 2, 4
+###################################################
+ -->
+<block>
+	<name>DPSK2 Demod</name>
+	<key>blks2_dxpsk2_demod</key>
+	<import>from gnuradio import blks2</import>
+	<make>blks2.$(type)2_demod(
+	samples_per_symbol=$samples_per_symbol,
+	excess_bw=$excess_bw,
+	costas_alpha=$costas_alpha,
+	timing_alpha=$timing_alpha,
+	timing_max_dev=$timing_max_dev,
+	gray_code=$gray_code,
+	verbose=$verbose,
+	log=$log,
+	sync_out=$sync_out,
+)</make>
+	<callback>clock_recov.set_alpha($costas_alpha)</callback>
+	<callback>clock_recov.set_beta(0.25*$costas_alpha**2)</callback>
+	<callback>time_recov.set_alpha($timing_alpha)</callback>
+	<param>
+		<name>Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>DBPSK</name>
+			<key>dbpsk</key>
+		</option>
+		<option>
+			<name>DQPSK</name>
+			<key>dqpsk</key>
+		</option>
+	</param>
+	<param>
+		<name>Samples/Symbol</name>
+		<key>samples_per_symbol</key>
+		<value>2</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Excess BW</name>
+		<key>excess_bw</key>
+		<value>0.35</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Costas Alpha</name>
+		<key>costas_alpha</key>
+		<value>0.175</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Timing Alpha</name>
+		<key>timing_alpha</key>
+		<value>0.100</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Timing Max Dev</name>
+		<key>timing_max_dev</key>
+		<value>1.5</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Omega Relative Limit</name>
+		<key>omega_relative_limit</key>
+		<value>0.005</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Gray Code</name>
+		<key>gray_code</key>
+		<value>True</value>
+		<type>bool</type>
+		<option>
+			<name>Yes</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>No</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Verbose</name>
+		<key>verbose</key>
+		<value>False</value>
+		<type>bool</type>
+		<hide>#if str($verbose) == 'False' then 'part' else 'none'#</hide>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Logging</name>
+		<key>log</key>
+		<value>False</value>
+		<type>bool</type>
+		<hide>#if str($log) == 'False' then 'part' else 'none'#</hide>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
+	</param>
+	<param>
+		<name>Sync Out</name>
+		<key>sync_out</key>
+		<value>False</value>
+		<type>bool</type>
+		<option>
+			<name>On</name>
+			<key>True</key>
+		</option>
+		<option>
+			<name>Off</name>
+			<key>False</key>
+		</option>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>complex</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+	<source>
+		<name>sync</name>
+		<type>complex</type>
+		<optional>1</optional>
+	</source>
+</block>

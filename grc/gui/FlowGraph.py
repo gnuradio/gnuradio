@@ -22,7 +22,6 @@ import Actions
 import Colors
 import Utils
 from Element import Element
-from .. base import FlowGraph as _FlowGraph
 import pygtk
 pygtk.require('2.0')
 import gtk

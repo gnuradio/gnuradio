@@ -19,7 +19,7 @@
 #
 
 import common
-from gnuradio import gr, usrp
+from gnuradio import gr
 
 ####################################################################
 # Simple USRP Source

@@ -19,7 +19,6 @@
 #
 
 import wx
-import sys, os
 from gnuradio import gr
 import panel
 

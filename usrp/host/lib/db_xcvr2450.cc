@@ -322,8 +322,8 @@ xcvr2450::set_reg_lpf()
 {
   d_reg_lpf = (
 	     (d_rssi_hbw<<15)  |
-	     (d_txlpf_bw<<10)  |
-	     (d_rxlpf_bw<<9)   |
+	     (d_txlpf_bw<<9)  |
+	     (d_rxlpf_bw<<7)   |
 	     (d_rxlpf_fine<<4) | 7);
   send_reg(d_reg_lpf);
 }

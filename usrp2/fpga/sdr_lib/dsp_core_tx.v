@@ -1,7 +1,6 @@
 
-`define DSP_CORE_TX_BASE 128
-
 module dsp_core_tx
+  #(parameter BASE=0)
   (input clk, input rst,
    input set_stb, input [7:0] set_addr, input [31:0] set_data,
 
@@ -22,19 +21,19 @@ module dsp_core_tx
    wire [3:0]  dacmux_a, dacmux_b;
    wire        enable_hb1, enable_hb2;
 
-   setting_reg #(.my_addr(`DSP_CORE_TX_BASE+0)) sr_0
+   setting_reg #(.my_addr(BASE+0)) sr_0
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out(phase_inc),.changed());
 
-   setting_reg #(.my_addr(`DSP_CORE_TX_BASE+1)) sr_1
+   setting_reg #(.my_addr(BASE+1)) sr_1
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out({scale_i,scale_q}),.changed());
    
-   setting_reg #(.my_addr(`DSP_CORE_TX_BASE+2)) sr_2
+   setting_reg #(.my_addr(BASE+2)) sr_2
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out({enable_hb1, enable_hb2, interp_rate}),.changed());
 
-   setting_reg #(.my_addr(`DSP_CORE_TX_BASE+4)) sr_4
+   setting_reg #(.my_addr(BASE+4)) sr_4
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out({dacmux_b,dacmux_a}),.changed());
 

@@ -125,12 +125,6 @@ namespace vrt {
 #include "expanded_header_switch_body.h"
     }
 
-    /* is this a if context packet? */
-    if (h->if_context_p()){
-        *payload = p;
-        *n32_bit_words_payload = n32_bit_words_packet;
-    }
-
     return true;
   }
 

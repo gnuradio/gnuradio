@@ -38,11 +38,11 @@ typedef boost::shared_ptr<gr_head> gr_head_sptr;
 
 class gr_head : public gr_sync_block
 {
-  friend gr_head_sptr gr_make_head (size_t sizeof_stream_item, int nitems);
-  gr_head (size_t sizeof_stream_item, int nitems);
+  friend gr_head_sptr gr_make_head (size_t sizeof_stream_item, unsigned long long nitems);
+  gr_head (size_t sizeof_stream_item, unsigned long long nitems);
 
-  int	d_nitems;
-  int	d_ncopied_items;
+  unsigned long long	d_nitems;
+  unsigned long long	d_ncopied_items;
 
  public:
   int work (int noutput_items,
@@ -53,7 +53,7 @@ class gr_head : public gr_sync_block
 };
 
 gr_head_sptr
-gr_make_head (size_t sizeof_stream_item, int nitems);
+gr_make_head (size_t sizeof_stream_item, unsigned long long nitems);
 
 
 #endif /* INCLUDED_GR_HEAD_H */

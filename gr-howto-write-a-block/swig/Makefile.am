@@ -34,8 +34,7 @@ TOP_SWIG_IFILES = 		\
 #   import gnuradio.howto
 # This ends up at:
 #   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-howto_pythondir_category =	\
-	gnuradio
+howto_pythondir_category = gnuradio/howto
 
 howto_la_swig_libadd =		\
 	$(top_builddir)/lib/libgnuradio-howto.la

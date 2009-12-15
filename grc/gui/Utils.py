@@ -19,7 +19,30 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 from Constants import POSSIBLE_ROTATIONS
 from Cheetah.Template import Template
+import pygtk
+pygtk.require('2.0')
+import gtk
 import gobject
+
+def rotate_pixmap(gc, src_pixmap, dst_pixmap, angle=gtk.gdk.PIXBUF_ROTATE_COUNTERCLOCKWISE):
+	"""
+	Load the destination pixmap with a rotated version of the source pixmap.
+	The source pixmap will be loaded into a pixbuf, rotated, and drawn to the destination pixmap.
+	The pixbuf is a client-side drawable, where a pixmap is a server-side drawable.
+	@param gc the graphics context
+	@param src_pixmap the source pixmap
+	@param dst_pixmap the destination pixmap
+	@param angle the angle to rotate by
+	"""
+	width, height = src_pixmap.get_size()
+	pixbuf = gtk.gdk.Pixbuf(
+		colorspace=gtk.gdk.COLORSPACE_RGB,
+		has_alpha=False, bits_per_sample=8,
+		width=width, height=height,
+	)
+	pixbuf.get_from_drawable(src_pixmap, src_pixmap.get_colormap(), 0, 0, 0, 0, -1, -1)
+	pixbuf = pixbuf.rotate_simple(angle)
+	dst_pixmap.draw_pixbuf(gc, pixbuf, 0, 0, 0, 0)
 
 def get_rotated_coordinate(coor, rotation):
 	"""

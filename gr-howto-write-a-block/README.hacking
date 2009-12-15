@@ -1,0 +1,95 @@
+#
+# Copyright 2009 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
+
+The layout of this tree is as follows. The top-level directory contains
+the autoconf/automake build definition files:
+
+bootstrap
+config.guess
+config.sub
+configure.ac
+Makefile.am
+Makefile.common
+Makefile.swig
+Makefile.swig.gen.t
+version.sh
+
+Of these files, only configure.ac, Makefile.am, and Makefile.common  would
+likely need changing in order to customize this into a new out-of-tree
+project.
+
+Subdirectory Layout
+-------------------
+
+config  - autoconf configuration macros
+lib     - GNU Radio blocks C++ API, shared lib and headers and QA code
+swig    - Generates Python API from C++ blocks
+python  - Pure Python modules (hierarchical blocks, other classes)
+grc     - GNU Radio Companion block wrappers
+apps    - GRC applications, scripts, or other executables installed to bin
+
+The 'config' directory contains autoconf configuration files which help the
+configuration script discover various things about the software development
+environment during the execution of the 'configure' script.  These files
+would likely not need any changing to customize this tree.
+
+The 'lib' directory contains those files needed to generate GNU Radio
+signal processing blocks.  These take the form of a shared library that one
+dynamically links against, and header files that one would include in
+their C++ GNU Radio application.  This directory also contains the framework
+for adding QA tests that are executed during 'make check' using the cppunit
+unit testing framework.  The generated shared library is installed into
+$prefix/lib and the header files are installed into $prefix/include/gnuradio.
+
+Adding new blocks starts here, by adding new .cc and new .h files for each
+new block, and modifying Makefile.am to add them to the build and link.  If
+desired, one can add unit tests to the QA framework that get executed during
+'make check'.
+
+The 'swig' directory contains the SWIG machinery to create a Python module
+that exports the C++ API into a Python namespace.  Each GNU Radio block gets a
+.i file (using SWIG syntax).  The master howto.i file must also have a line
+to include the block header file and a line to import the block .i file. The
+resulting _howto_swig.so and _howto_swig.py files are installed into the
+system Python lib directory under gnuradio/howto and become part of the
+gnuradio.howto Python namespace.  The Makefile.am must be customized to
+recognize new files created here.
+
+The 'python' directory contains pure Python modules that get installed into
+the system Python lib directory under gnuradio/howto and the __init__.py
+module needed to turn the directory into the gnuradio.howto namespace.
+This is the appropriate place to put hierarchical blocks and utility classes.
+Be sure to edit the __init__.py to add your module/symbol imports as
+necessary, and to modify the Makefile.am accordingly.
+
+This directory also contains Python-based QA code, which is executed during
+'make check'.
+
+The 'grc' directory contains the XML-based wrappers that describe your blocks
+to the GNU Radio Companion graphical flowgraph editor.  These get installed
+into the $prefix/share/gnuradio/grc/blocks directory and require modification
+of the Makefile.am to recognize new files put here.  Note: GRC only scans the
+system directory for wrapper files, so you must do a 'make install' before
+GRC will see your new files or modifications to existing ones.
+
+The 'apps' directory contains those Python and C++ programs which are to be
+installed into the system $prefix/bin directory. (FIXME: there is not
+currently an example of building a C++ binary in this directory.)

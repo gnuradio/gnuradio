@@ -35,10 +35,11 @@ module vita_tx_control
 		   .late(late), .too_early(too_early));
    
    localparam IBS_IDLE = 0;
-   localparam IBS_WAIT = 1;  // FIXME do we need this?
-   localparam IBS_RUN = 2;
+   localparam IBS_RUN = 1;  // FIXME do we need this?
+   localparam IBS_CONT_BURST = 2;
    localparam IBS_UNDERRUN = 3;
-
+   localparam IBS_UNDERRUN_DONE = 4;
+   
    reg [2:0] ibs_state;
 
    wire      clear_state;
@@ -62,17 +63,29 @@ module vita_tx_control
 	   if(strobe)
 	     if(~sample_fifo_src_rdy_i)
 	       ibs_state <= IBS_UNDERRUN;
-	     else if(eob)
-	       ibs_state <= IBS_IDLE;
-	     // else if(eop)  FIXME do we care if the packet ends?
+	     else if(eop)
+	       if(eob)
+		 ibs_state <= IBS_IDLE;
+	       else
+		 ibs_state <= IBS_CONT_BURST;
 
+	 IBS_CONT_BURST :
+	   if(strobe)
+	     ibs_state <= IBS_UNDERRUN_DONE;
+	   else if(sample_fifo_src_rdy_i)
+	     ibs_state <= IBS_RUN;
+	 
 	 IBS_UNDERRUN :
+	   if(sample_fifo_src_rdy_i & eop)
+	     ibs_state <= IBS_UNDERRUN_DONE;
+
+	 IBS_UNDERRUN_DONE :
 	   ;
        endcase // case (ibs_state)
 
-   assign sample_fifo_dst_rdy_o = (strobe & (ibs_state == IBS_RUN));  // FIXME also cleanout
-   assign run = (ibs_state == IBS_RUN);
-   assign underrun = (ibs_state == IBS_UNDERRUN);
+   assign sample_fifo_dst_rdy_o = (ibs_state == IBS_UNDERRUN) | (strobe & (ibs_state == IBS_RUN));  // FIXME also cleanout
+   assign run = (ibs_state == IBS_RUN) | (ibs_state == IBS_CONT_BURST);
+   assign underrun = (ibs_state == IBS_UNDERRUN_DONE);
 
    assign debug = { { now,early,late,too_early,eop,eob,sob,send_at },
 		    { sample_fifo_src_rdy_i, sample_fifo_dst_rdy_o, strobe, run, underrun, ibs_state[2:0] },

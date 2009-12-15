@@ -1,5 +1,5 @@
 #
-# Copyright 2005, 2006 Free Software Foundation, Inc.
+# Copyright 2005,2006,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -27,7 +27,8 @@ rest of GNU Radio in order to avoid problems for people who have begun
 to write blocks with a modified copy of gr-howto-write-a-block.
 
 This package requires that gnuradio-core is already installed.  It
-also depends on some GNU Radio prerequisites, such as boost.
+also depends on some GNU Radio prerequisites, such as Boost and
+cppunit.
 
 To build the examples from the tarball use the normal recipe:
 
@@ -35,16 +36,10 @@ To build the examples from the tarball use the normal recipe:
   $ make
   $ make check
 
-If you're building from CVS, you'll need to use this sequence, since
-CVS doesn't contain configure or the generated Makefiles.
+If you're building from git, you'll need to use this sequence, since
+git doesn't contain configure or the generated Makefiles.
 
   $ ./bootstrap
   $ ./configure
   $ make
   $ make check
-
-
-The doc directory is not built by default.  This is to avoid spurious
-build problems on systems that don't have xmlto installed.  If you
-have xmlto and its dependencies installed, you can build the html
-version of the howto article by cd'ing to doc and invoking make.

@@ -26,22 +26,12 @@
 
 #include <noaa_hrpt_deframer.h>
 #include <gr_io_signature.h>
+#include <noaa_hrpt.h>
 #include <cstring>
 #include <cstdio>
 
 #define ST_IDLE   0
 #define ST_SYNCED 1
-
-#define SYNC1 0x0284
-#define SYNC2 0x016F
-#define SYNC3 0x035C
-#define SYNC4 0x019D
-#define SYNC5 0x020F
-#define SYNC6 0x0095
-
-#define HRPT_MINOR_FRAME_SYNC  0x0A116FD719D83C95LL
-
-static int frames_seen = 0;
 
 noaa_hrpt_deframer_sptr
 noaa_make_hrpt_deframer()
@@ -98,13 +88,12 @@ noaa_hrpt_deframer::general_work(int noutput_items,
 	d_shifter = (d_shifter << 1) | bit; // MSB transmitted first
 	
 	if ((d_shifter & 0x0FFFFFFFFFFFFFFFLL) == HRPT_MINOR_FRAME_SYNC) {
-	  fprintf(stderr, "SYNC #%i", frames_seen++);
-	  out[j++] = SYNC1;
-	  out[j++] = SYNC2;
-	  out[j++] = SYNC3;
-	  out[j++] = SYNC4;
-	  out[j++] = SYNC5;
-	  out[j++] = SYNC6;
+	  out[j++] = HRPT_SYNC1;
+	  out[j++] = HRPT_SYNC2;
+	  out[j++] = HRPT_SYNC3;
+	  out[j++] = HRPT_SYNC4;
+	  out[j++] = HRPT_SYNC5;
+	  out[j++] = HRPT_SYNC6;
 	  enter_synced();
 	}
 	break;
@@ -116,7 +105,6 @@ noaa_hrpt_deframer::general_work(int noutput_items,
 	  d_word = 0;
 	  d_bit_count = HRPT_BITS_PER_WORD;
 	  if (--d_word_count == 0) {
-	    fprintf(stderr, "...done\n");
 	    enter_idle();
 	  }
 	}

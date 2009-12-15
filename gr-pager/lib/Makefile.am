@@ -21,12 +21,7 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST = run_tests.in
-
 AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(PYTHON_CPPFLAGS) $(WITH_INCLUDES)
-
-noinst_PYTHON = \
-	qa_pager.py
 
 # These headers get installed in ${prefix}/include/gnuradio
 grinclude_HEADERS = \
@@ -56,48 +51,3 @@ libgnuradio_pager_la_LIBADD =	\
 
 libgnuradio_pager_la_LDFLAGS =	\
 	$(NO_UNDEFINED)
-
-if PYTHON
-
-dist_bin_SCRIPTS = \
-	usrp_flex.py \
-	usrp_flex_all.py \
-	usrp_flex_band.py
-
-##############################
-# SWIG interface and library
-TESTS = run_tests
-DISTCLEANFILES = run_tests
-
-TOP_SWIG_IFILES = \
-	pager_swig.i
-
-# Install so that they end up available as:
-#   import gnuradio.pager
-# This ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/pager
-pager_swig_pythondir_category = \
-	gnuradio/pager
-
-# additional libraries for linking with the SWIG-generated library
-pager_swig_la_swig_libadd = \
-	libgnuradio-pager.la
-
-# additional Python files to be installed along with the SWIG-generated one
-pager_swig_python = \
-	__init__.py \
-	pager_utils.py \
-	flex_demod.py
-
-# additional SWIG files to be installed
-pager_swig_swiginclude_headers = \
-	pager_flex_frame.i
-
-include $(top_srcdir)/Makefile.swig
-
-# add some of the variables generated inside the Makefile.swig.gen
-BUILT_SOURCES = $(swig_built_sources)
-
-# Do not distribute the output of SWIG
-no_dist_files = $(swig_built_sources)
-endif

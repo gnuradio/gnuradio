@@ -97,12 +97,11 @@ class Port(Element):
 		gc.set_foreground(self._bg_color)
 		pixmap.draw_rectangle(gc, True, 0, 0, self.w, self.h)
 		pixmap.draw_layout(gc, 0, 0, layout)
-		#create the images
-		self.horizontal_label = image = pixmap.get_image(0, 0, self.w, self.h)
+		#create vertical and horizontal pixmaps
+		self.horizontal_label = pixmap
 		if self.is_vertical():
-			self.vertical_label = vimage = gtk.gdk.Image(gtk.gdk.IMAGE_NORMAL, pixmap.get_visual(), self.h, self.w)
-			for i in range(self.w):
-				for j in range(self.h): vimage.put_pixel(j, self.w-i-1, image.get_pixel(i, j))
+			self.vertical_label = self.get_parent().get_parent().new_pixmap(self.h, self.w)
+			Utils.rotate_pixmap(gc, self.horizontal_label, self.vertical_label)
 
 	def draw(self, gc, window):
 		"""
@@ -117,9 +116,9 @@ class Port(Element):
 		X,Y = self.get_coordinate()
 		(x,y),(w,h) = self._areas_list[0] #use the first area's sizes to place the labels
 		if self.is_horizontal():
-			window.draw_image(gc, self.horizontal_label, 0, 0, x+X+(self.W-self.w)/2, y+Y+(self.H-self.h)/2, -1, -1)
+			window.draw_drawable(gc, self.horizontal_label, 0, 0, x+X+(self.W-self.w)/2, y+Y+(self.H-self.h)/2, -1, -1)
 		elif self.is_vertical():
-			window.draw_image(gc, self.vertical_label, 0, 0, x+X+(self.H-self.h)/2, y+Y+(self.W-self.w)/2, -1, -1)
+			window.draw_drawable(gc, self.vertical_label, 0, 0, x+X+(self.H-self.h)/2, y+Y+(self.W-self.w)/2, -1, -1)
 
 	def get_connector_coordinate(self):
 		"""

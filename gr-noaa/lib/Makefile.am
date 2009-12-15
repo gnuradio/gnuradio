@@ -33,6 +33,9 @@ libgnuradio_noaa_la_SOURCES = \
 	noaa_hrpt_deframer.cc \
 	noaa_hrpt_pll_cf.cc
 
+noinst_HEADERS = \
+	noaa_hrpt.h
+
 libgnuradio_noaa_la_LIBADD = \
 	$(GNURADIO_CORE_LA)
 

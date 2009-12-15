@@ -23,8 +23,8 @@ from .. base import odict
 
 def convert_hier(flow_graph, python_file):
 	#extract info from the flow graph
-	input_sig = flow_graph.get_input_signature()
-	output_sig = flow_graph.get_output_signature()
+	input_sigs = flow_graph.get_input_signaturev()
+	output_sigs = flow_graph.get_output_signaturev()
 	parameters = flow_graph.get_parameters()
 	block_key = flow_graph.get_option('id')
 	block_name = flow_graph.get_option('title')
@@ -56,20 +56,18 @@ def convert_hier(flow_graph, python_file):
 		params_n.append(param_n)
 	block_n['param'] = params_n
 	#sink data
-	if int(input_sig['nports']):
+	for input_sig in input_sigs:
 		sink_n = odict()
-		sink_n['name'] = 'in'
+		sink_n['name'] = input_sig['label']
 		sink_n['type'] = input_sig['type']
 		sink_n['vlen'] = input_sig['vlen']
-		sink_n['nports'] = input_sig['nports']
 		block_n['sink'] = sink_n
 	#source data
-	if int(output_sig['nports']):
+	for output_sig in output_sigs:
 		source_n = odict()
-		source_n['name'] = 'out'
+		source_n['name'] = output_sig['label']
 		source_n['type'] = output_sig['type']
 		source_n['vlen'] = output_sig['vlen']
-		source_n['nports'] = output_sig['nports']
 		block_n['source'] = source_n
 	#doc data
 	block_n['doc'] = "%s\n%s\n%s"%(block_author, block_desc, python_file)

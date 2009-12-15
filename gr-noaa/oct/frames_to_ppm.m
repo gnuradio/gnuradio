@@ -23,7 +23,7 @@
 % Extract AVHRR images from HRPT frames.dat
 clear
 
-fid = fopen('frames.dat');
+fid = fopen('frames.hrpt');
 dat = fread(fid, 'uint16');
 
 frame_len = 11090;

@@ -23,7 +23,7 @@
 GR_SWIG_BLOCK_MAGIC(noaa,hrpt_decoder)
 
 noaa_hrpt_decoder_sptr
-noaa_make_hrpt_decoder();
+noaa_make_hrpt_decoder(bool verbose, bool output_files);
 
 class noaa_hrpt_decoder : public gr_sync_block
 {

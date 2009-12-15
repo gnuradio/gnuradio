@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon Nov  2 08:31:35 2009</timestamp>
+  <timestamp>Mon Nov  9 08:03:25 2009</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -175,29 +175,6 @@
     <key>variable</key>
     <param>
       <key>id</key>
-      <value>max_clock_offset</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0.1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(705, 19)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
       <value>config_filename</value>
     </param>
     <param>
@@ -234,49 +211,6 @@
     <param>
       <key>_coordinate</key>
       <value>(11, 109)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_config</key>
-    <param>
-      <key>id</key>
-      <value>clock_alpha</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0.05</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>real</value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>config_filename</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>'usrp_rx_hrpt'</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>'clock_alpha'</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>clock_alpha</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(986, 101)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -363,135 +297,6 @@
     <param>
       <key>_coordinate</key>
       <value>(511, 100)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_config</key>
-    <param>
-      <key>id</key>
-      <value>decim</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>16</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>real</value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>config_filename</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>'usrp_rx_hrpt'</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>'decim'</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>decim</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(355, 97)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_config</key>
-    <param>
-      <key>id</key>
-      <value>output_filename</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>'frames.dat'</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>string</value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>config_filename</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>'usrp_rx_hrpt'</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>'filename'</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>output_filename</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1143, 101)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable_config</key>
-    <param>
-      <key>id</key>
-      <value>pll_alpha</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>0.05</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>real</value>
-    </param>
-    <param>
-      <key>config_file</key>
-      <value>config_filename</value>
-    </param>
-    <param>
-      <key>section</key>
-      <value>'usrp_rx_hrpt'</value>
-    </param>
-    <param>
-      <key>option</key>
-      <value>'pll_alpha'</value>
-    </param>
-    <param>
-      <key>writeback</key>
-      <value>pll_alpha</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(827, 100)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -826,25 +631,6 @@
     </param>
   </block>
   <block>
-    <key>noaa_hrpt_decoder</key>
-    <param>
-      <key>id</key>
-      <value>decoder</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1027, 623)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_binary_slicer_fb</key>
     <param>
       <key>id</key>
@@ -876,6 +662,228 @@
     <param>
       <key>_coordinate</key>
       <value>(815, 673)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>id</key>
+      <value>decim</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>32</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>config_filename</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>'usrp_rx_hrpt'</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>'decim'</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>decim</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(355, 97)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>id</key>
+      <value>pll_alpha</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0.01</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>config_filename</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>'usrp_rx_hrpt'</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>'pll_alpha'</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>pll_alpha</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(827, 100)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>id</key>
+      <value>clock_alpha</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>0.01</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>real</value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>config_filename</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>'usrp_rx_hrpt'</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>'clock_alpha'</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>clock_alpha</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(986, 101)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable_config</key>
+    <param>
+      <key>id</key>
+      <value>output_filename</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>'frames.hrpt'</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>string</value>
+    </param>
+    <param>
+      <key>config_file</key>
+      <value>config_filename</value>
+    </param>
+    <param>
+      <key>section</key>
+      <value>'usrp_rx_hrpt'</value>
+    </param>
+    <param>
+      <key>option</key>
+      <value>'filename'</value>
+    </param>
+    <param>
+      <key>writeback</key>
+      <value>output_filename</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1143, 101)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>max_clock_offset</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>100e-6</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(705, 19)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>noaa_hrpt_decoder</key>
+    <param>
+      <key>id</key>
+      <value>decoder</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>verbose</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>output</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1027, 623)</value>
     </param>
     <param>
       <key>_rotation</key>

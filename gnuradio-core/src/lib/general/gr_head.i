@@ -22,7 +22,7 @@
 
 GR_SWIG_BLOCK_MAGIC(gr,head);
 
-gr_head_sptr gr_make_head(size_t sizeof_stream_item, int nitems);
+gr_head_sptr gr_make_head(size_t sizeof_stream_item, unsigned long long nitems);
 
 class gr_head : public gr_block {
   gr_head();

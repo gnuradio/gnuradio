@@ -250,8 +250,8 @@ static void
 set_reg_lpf(struct db_xcvr2450_dummy *db){
   int reg_lpf = (
     (db->common->d_rssi_hbw<<15)  |
-    (db->common->d_txlpf_bw<<10)  |
-    (db->common->d_rxlpf_bw<<9)   |
+    (db->common->d_txlpf_bw<<9)  |
+    (db->common->d_rxlpf_bw<<7)   |
     (db->common->d_rxlpf_fine<<4) | 7);
   send_reg(reg_lpf);
 }

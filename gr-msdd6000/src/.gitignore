@@ -4,3 +4,5 @@
 /.deps
 /msdd.cc
 /msdd.py
+/msdd_rs.cc
+/msdd_rs.py

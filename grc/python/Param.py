@@ -17,7 +17,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 """
 
-import expr_utils
 from .. base.Param import Param as _Param
 from .. gui.Param import Param as _GUIParam
 from .. gui.Param import EntryParam

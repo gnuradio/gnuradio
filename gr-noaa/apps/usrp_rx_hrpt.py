@@ -2,7 +2,7 @@
 ##################################################
 # Gnuradio Python Flow Graph
 # Title: USRP HRPT Receiver
-# Generated: Mon Nov  2 08:31:10 2009
+# Generated: Mon Nov  9 07:56:11 2009
 ##################################################
 
 from gnuradio import eng_notation
@@ -33,7 +33,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self._decim_config = ConfigParser.ConfigParser()
 		self._decim_config.read(config_filename)
 		try: decim = self._decim_config.getfloat('usrp_rx_hrpt', 'decim')
-		except: decim = 16
+		except: decim = 32
 		self.decim = decim
 		self.sym_rate = sym_rate = 600*1109
 		self.sample_rate = sample_rate = 64e6/decim
@@ -46,7 +46,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self._saved_pll_alpha_config = ConfigParser.ConfigParser()
 		self._saved_pll_alpha_config.read(config_filename)
 		try: saved_pll_alpha = self._saved_pll_alpha_config.getfloat('usrp_rx_hrpt', 'pll_alpha')
-		except: saved_pll_alpha = 0.05
+		except: saved_pll_alpha = 0.01
 		self.saved_pll_alpha = saved_pll_alpha
 		self._saved_gain_config = ConfigParser.ConfigParser()
 		self._saved_gain_config.read(config_filename)
@@ -61,16 +61,16 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self._saved_clock_alpha_config = ConfigParser.ConfigParser()
 		self._saved_clock_alpha_config.read(config_filename)
 		try: saved_clock_alpha = self._saved_clock_alpha_config.getfloat('usrp_rx_hrpt', 'clock_alpha')
-		except: saved_clock_alpha = 0.05
+		except: saved_clock_alpha = 0.01
 		self.saved_clock_alpha = saved_clock_alpha
 		self.side_text = side_text = side
 		self.pll_alpha = pll_alpha = saved_pll_alpha
 		self._output_filename_config = ConfigParser.ConfigParser()
 		self._output_filename_config.read(config_filename)
 		try: output_filename = self._output_filename_config.get('usrp_rx_hrpt', 'filename')
-		except: output_filename = 'frames.dat'
+		except: output_filename = 'frames.hrpt'
 		self.output_filename = output_filename
-		self.max_clock_offset = max_clock_offset = 0.1
+		self.max_clock_offset = max_clock_offset = 100e-6
 		self.max_carrier_offset = max_carrier_offset = 2*math.pi*100e3/sample_rate
 		self.hs = hs = int(sps/2.0)
 		self.gain = gain = saved_gain
@@ -187,7 +187,7 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		# Blocks
 		##################################################
 		self.agc = gr.agc_cc(1e-6, 1.0, 1.0, 1.0)
-		self.decoder = noaa.hrpt_decoder()
+		self.decoder = noaa.hrpt_decoder(True,True)
 		self.deframer = noaa.hrpt_deframer()
 		self.demod_scope = scopesink2.scope_sink_f(
 			self.displays.GetPage(1).GetWin(),
@@ -256,12 +256,18 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 			self._saved_gain_config.add_section('usrp_rx_hrpt')
 		self._saved_gain_config.set('usrp_rx_hrpt', 'gain', str(self.gain))
 		self._saved_gain_config.write(open(self.config_filename, 'w'))
-		self._output_filename_config = ConfigParser.ConfigParser()
-		self._output_filename_config.read(self.config_filename)
-		if not self._output_filename_config.has_section('usrp_rx_hrpt'):
-			self._output_filename_config.add_section('usrp_rx_hrpt')
-		self._output_filename_config.set('usrp_rx_hrpt', 'filename', str(self.output_filename))
-		self._output_filename_config.write(open(self.config_filename, 'w'))
+		self._side_config = ConfigParser.ConfigParser()
+		self._side_config.read(self.config_filename)
+		if not self._side_config.has_section('usrp_rx_hrpt'):
+			self._side_config.add_section('usrp_rx_hrpt')
+		self._side_config.set('usrp_rx_hrpt', 'side', str(self.side))
+		self._side_config.write(open(self.config_filename, 'w'))
+		self._decim_config = ConfigParser.ConfigParser()
+		self._decim_config.read(self.config_filename)
+		if not self._decim_config.has_section('usrp_rx_hrpt'):
+			self._decim_config.add_section('usrp_rx_hrpt')
+		self._decim_config.set('usrp_rx_hrpt', 'decim', str(self.decim))
+		self._decim_config.write(open(self.config_filename, 'w'))
 		self._saved_pll_alpha_config = ConfigParser.ConfigParser()
 		self._saved_pll_alpha_config.read(self.config_filename)
 		if not self._saved_pll_alpha_config.has_section('usrp_rx_hrpt'):
@@ -274,30 +280,24 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 			self._saved_clock_alpha_config.add_section('usrp_rx_hrpt')
 		self._saved_clock_alpha_config.set('usrp_rx_hrpt', 'clock_alpha', str(self.clock_alpha))
 		self._saved_clock_alpha_config.write(open(self.config_filename, 'w'))
-		self._decim_config = ConfigParser.ConfigParser()
-		self._decim_config.read(self.config_filename)
-		if not self._decim_config.has_section('usrp_rx_hrpt'):
-			self._decim_config.add_section('usrp_rx_hrpt')
-		self._decim_config.set('usrp_rx_hrpt', 'decim', str(self.decim))
-		self._decim_config.write(open(self.config_filename, 'w'))
-		self._side_config = ConfigParser.ConfigParser()
-		self._side_config.read(self.config_filename)
-		if not self._side_config.has_section('usrp_rx_hrpt'):
-			self._side_config.add_section('usrp_rx_hrpt')
-		self._side_config.set('usrp_rx_hrpt', 'side', str(self.side))
-		self._side_config.write(open(self.config_filename, 'w'))
+		self._output_filename_config = ConfigParser.ConfigParser()
+		self._output_filename_config.read(self.config_filename)
+		if not self._output_filename_config.has_section('usrp_rx_hrpt'):
+			self._output_filename_config.add_section('usrp_rx_hrpt')
+		self._output_filename_config.set('usrp_rx_hrpt', 'filename', str(self.output_filename))
+		self._output_filename_config.write(open(self.config_filename, 'w'))
 
 	def set_decim(self, decim):
 		self.decim = decim
 		self.set_sample_rate(64e6/self.decim)
 		self.set_decim_text(self.decim)
+		self.usrp_source.set_decim_rate(self.decim)
 		self._decim_config = ConfigParser.ConfigParser()
 		self._decim_config.read(self.config_filename)
 		if not self._decim_config.has_section('usrp_rx_hrpt'):
 			self._decim_config.add_section('usrp_rx_hrpt')
 		self._decim_config.set('usrp_rx_hrpt', 'decim', str(self.decim))
 		self._decim_config.write(open(self.config_filename, 'w'))
-		self.usrp_source.set_decim_rate(self.decim)
 
 	def set_sym_rate(self, sym_rate):
 		self.sym_rate = sym_rate
@@ -349,14 +349,14 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self.pll_alpha = pll_alpha
 		self._pll_alpha_slider.set_value(self.pll_alpha)
 		self._pll_alpha_text_box.set_value(self.pll_alpha)
+		self.pll.set_alpha(self.pll_alpha)
+		self.pll.set_beta(self.pll_alpha**2/4.0)
 		self._saved_pll_alpha_config = ConfigParser.ConfigParser()
 		self._saved_pll_alpha_config.read(self.config_filename)
 		if not self._saved_pll_alpha_config.has_section('usrp_rx_hrpt'):
 			self._saved_pll_alpha_config.add_section('usrp_rx_hrpt')
 		self._saved_pll_alpha_config.set('usrp_rx_hrpt', 'pll_alpha', str(self.pll_alpha))
 		self._saved_pll_alpha_config.write(open(self.config_filename, 'w'))
-		self.pll.set_alpha(self.pll_alpha)
-		self.pll.set_beta(self.pll_alpha**2/4.0)
 
 	def set_output_filename(self, output_filename):
 		self.output_filename = output_filename
@@ -410,14 +410,14 @@ class usrp_rx_hrpt(grc_wxgui.top_block_gui):
 		self.clock_alpha = clock_alpha
 		self._clock_alpha_slider.set_value(self.clock_alpha)
 		self._clock_alpha_text_box.set_value(self.clock_alpha)
+		self.gr_clock_recovery_mm_xx_0.set_gain_omega(self.clock_alpha**2/4.0)
+		self.gr_clock_recovery_mm_xx_0.set_gain_mu(self.clock_alpha)
 		self._saved_clock_alpha_config = ConfigParser.ConfigParser()
 		self._saved_clock_alpha_config.read(self.config_filename)
 		if not self._saved_clock_alpha_config.has_section('usrp_rx_hrpt'):
 			self._saved_clock_alpha_config.add_section('usrp_rx_hrpt')
 		self._saved_clock_alpha_config.set('usrp_rx_hrpt', 'clock_alpha', str(self.clock_alpha))
 		self._saved_clock_alpha_config.write(open(self.config_filename, 'w'))
-		self.gr_clock_recovery_mm_xx_0.set_gain_omega(self.clock_alpha**2/4.0)
-		self.gr_clock_recovery_mm_xx_0.set_gain_mu(self.clock_alpha)
 
 if __name__ == '__main__':
 	parser = OptionParser(option_class=eng_option, usage="%prog: [options]")

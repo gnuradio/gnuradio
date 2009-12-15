@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## FLEX Pager Synchronizer
+###################################################
+ -->
+<block>
+	<name>FLEX Synchronizer</name>
+	<key>pager_flex_sync</key>
+	<category>Pager</category>
+	<import>from gnuradio import pager</import>
+	<make>pager.flex_sync()</make>
+
+	<sink>
+		<name>dibits</name>
+		<type>byte</type>
+	</sink>
+
+	<source>
+		<name>A</name>
+		<type>byte</type>
+	</source>
+	<source>
+		<name>B</name>
+		<type>byte</type>
+	</source>
+	<source>
+		<name>C</name>
+		<type>byte</type>
+	</source>
+	<source>
+		<name>D</name>
+		<type>byte</type>
+	</source>
+
+</block>

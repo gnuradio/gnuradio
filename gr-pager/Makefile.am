@@ -21,7 +21,11 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = src
+SUBDIRS = lib
+
+if PYTHON
+SUBDIRS += swig python apps grc
+endif
 
 pkgconfigdir = $(libdir)/pkgconfig
 dist_pkgconfig_DATA = gnuradio-pager.pc
