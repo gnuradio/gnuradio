@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2009 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,11 +21,19 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = lib
-
 if PYTHON
-SUBDIRS += swig python apps grc
-endif
+pagerdir = $(grpythondir)/pager
 
-pkgconfigdir = $(libdir)/pkgconfig
-dist_pkgconfig_DATA = gnuradio-pager.pc
+noinst_PYTHON = \
+	qa_pager.py
+
+pager_PYTHON = \
+	__init__.py \
+	pager_utils.py \
+	flex_demod.py
+
+TESTS = run_tests
+
+EXTRA_DIST = run_tests.in
+
+endif

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## FLEX Pager Slicer w/DC offset removal
+###################################################
+ -->
+<block>
+	<name>4-Level Slicer/DCR</name>
+	<key>pager_slicer_fb</key>
+	<category>Pager</category>
+	<import>from gnuradio import pager</import>
+	<make>pager.slicer_fb($alpha)</make>
+
+	<param>
+		<name>Alpha</name>
+		<key>alpha</key>
+		<value>1e-6</value>
+		<type>real</type>
+	</param>
+
+	<sink>
+		<name>bb</name>
+		<type>float</type>
+	</sink>
+
+	<source>
+		<name>dibits</name>
+		<type>byte</type>
+	</source>
+
+</block>

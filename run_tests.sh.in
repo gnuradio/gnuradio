@@ -14,7 +14,7 @@ abs_top_builddir=@abs_top_builddir@
 export srcdir=$3
 
 # Where to find my swig generated shared library
-mylibdir=$2/src:$2/src/.libs:$2/src/lib:$2/src/lib/.libs
+mylibdir=$2/src:$2/src/.libs:$2/src/lib:$2/src/lib/.libs:$2/swig:$2/swig/.libs
 
 # Where to find my swig generated python module
 mysrcdir=$1/src:$1/src/lib

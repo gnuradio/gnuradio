@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2009 Free Software Foundation, Inc.
+# Copyright 2009 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,11 +21,9 @@
 
 include $(top_srcdir)/Makefile.common
 
-SUBDIRS = lib
+grcblocksdir = $(grc_blocksdir)
 
-if PYTHON
-SUBDIRS += swig python apps grc
-endif
-
-pkgconfigdir = $(libdir)/pkgconfig
-dist_pkgconfig_DATA = gnuradio-pager.pc
+dist_grcblocks_DATA = \
+	pager_slicer_fb.xml \
+	pager_flex_sync.xml \
+	pager_flex_deinterleave.xml
