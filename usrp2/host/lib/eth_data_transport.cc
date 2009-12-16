@@ -21,6 +21,7 @@
 #include <gruel/realtime.h>
 #include <gruel/sys_pri.h>
 #include <iostream>
+#include <cstdio>
 
 usrp2::eth_data_transport::eth_data_transport(const std::string &ifc, u2_mac_addr_t mac, size_t rx_bufsize)
  : transport("ethernet control"), d_mac(mac), d_tx_seqno(0), d_rx_seqno(0),
@@ -63,6 +64,7 @@ void usrp2::eth_data_transport::recv_bg(void){
 
         if (len <= sizeof(u2_eth_packet_t)){
             DEBUG_LOG("D");
+            d_eth_data->release_frame(base);
             continue; //drop truncated packet
         }
 
@@ -159,5 +161,7 @@ void usrp2::eth_data_transport::recv(data_handler *handler){
 void usrp2::eth_data_transport::flush(void){
     //dequeue everything in the ring
     ring_data rd;
-    while (d_ring->dequeue(rd)){}
+    while (d_ring->dequeue(rd)){
+        d_eth_data->release_frame(rd.base);
+    }
 }
