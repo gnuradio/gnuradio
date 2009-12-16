@@ -67,7 +67,6 @@ usrp2_sink_32fc::work(int noutput_items,
     return 0;
 
   usrp2::tx_metadata metadata;
-  metadata.timestamp = -1;
   metadata.send_now = 1;
   metadata.start_of_burst = 1;
 

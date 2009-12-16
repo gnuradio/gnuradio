@@ -19,6 +19,7 @@
 #define INCLUDED_USRP2_RX_SAMPLE_HANDLER_H
 
 #include <usrp2/metadata.h>
+#include <vrt/expanded_header.h>
 #include <stddef.h>
 
 
@@ -51,7 +52,7 @@ namespace usrp2 {
      * \returns true if the object wants to be called again with new data;
      * false if no additional data is wanted.
      */
-    virtual bool operator()(const uint32_t *items, size_t nitems, const rx_metadata *metadata) = 0;
+    virtual bool operator()(const uint32_t *items, size_t nitems, const vrt::expanded_header *vrt_header) = 0;
   };
 
 };

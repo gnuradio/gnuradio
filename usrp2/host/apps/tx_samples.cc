@@ -234,7 +234,6 @@ main(int argc, char **argv)
   }
 
   usrp2::tx_metadata	md;
-  md.timestamp = -1;
   md.start_of_burst = 1;
   md.send_now = 1;
 

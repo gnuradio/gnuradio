@@ -279,7 +279,6 @@ gen_and_send(usrp2::usrp2::sptr u2, int chan,
   std::complex<float>	buf[MAX_SAMPLES];
 
   usrp2::tx_metadata	md;
-  md.timestamp = -1;
   md.start_of_burst = 1;
   md.send_now = 1;
 

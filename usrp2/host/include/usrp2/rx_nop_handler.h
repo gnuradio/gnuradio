@@ -113,7 +113,7 @@ namespace usrp2 {
      * \returns true if the object wants to be called again with new data;
      * false if no additional data is wanted.
      */
-    virtual bool operator()(const uint32_t *items, size_t nitems, const rx_metadata *metadata)
+    virtual bool operator()(const uint32_t *items, size_t nitems, const vrt::expanded_header *vrt_header)
     {
       // printf("W0: %08x  TS: %08x\n", metadata->word0, metadata->timestamp);
       // printf("I0: %08x\n", items[0]);

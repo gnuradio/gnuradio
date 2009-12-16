@@ -46,7 +46,7 @@ public:
   }
 
   // Invoked by USRP2 API when samples are available
-  bool operator()(const uint32_t *items, size_t nitems, const usrp2::rx_metadata *metadata)
+  bool operator()(const uint32_t *items, size_t nitems, const vrt::expanded_header *vrt_header)
   {
     // Copy/reformat/endian swap USRP2 data to destination buffer
     usrp2::copy_u2_16sc_to_host_32fc(nitems, items, d_dest);
@@ -55,7 +55,7 @@ public:
     // FIXME: do something with metadata
 
     // Call parent to determine if there is room to be called again
-    return rx_nop_handler::operator()(items, nitems, metadata);
+    return rx_nop_handler::operator()(items, nitems, vrt_header);
   }
 
   ~rx_32fc_handler();

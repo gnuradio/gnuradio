@@ -35,7 +35,6 @@
 #include <stddef.h>
 #include <assert.h>
 #include <string.h>
-#include <vrt/expanded_header.h>
 
 static const int DEFAULT_RX_SCALE = 1024;
 
@@ -149,9 +148,7 @@ namespace usrp2 {
             DEBUG_LOG("!");
             return data_handler::RELEASE;
         }
-        rx_metadata	md;
-        md.timestamp = hdr.fractional_secs; //FIXME temporary until we figure out new md for vrt
-        bool want_more = (*d_handler)(payload, n32_bit_words_payload, &md);
+        bool want_more = (*d_handler)(payload, n32_bit_words_payload, &hdr);
         DEBUG_LOG("-"); 
 
         return want_more? data_handler::RELEASE : data_handler::DONE;

@@ -83,9 +83,9 @@ public:
   ~file_writer_16sc();
 
   bool 
-  operator()(const uint32_t *items, size_t nitems, const usrp2::rx_metadata *metadata)
+  operator()(const uint32_t *items, size_t nitems, const vrt::expanded_header *vrt_header)
   {
-    bool ok = rx_nop_handler::operator()(items, nitems, metadata);
+    bool ok = rx_nop_handler::operator()(items, nitems, vrt_header);
 
     size_t host_nitems = nitems;
     std::complex<int16_t> host_items[host_nitems];
@@ -135,9 +135,9 @@ public:
   ~file_writer_32fc();
 
   bool 
-  operator()(const uint32_t *items, size_t nitems, const usrp2::rx_metadata *metadata)
+  operator()(const uint32_t *items, size_t nitems, const vrt::expanded_header *vrt_header)
   {
-    bool ok = rx_nop_handler::operator()(items, nitems, metadata);
+    bool ok = rx_nop_handler::operator()(items, nitems, vrt_header);
 
     size_t host_nitems = nitems;
     std::complex<float> host_items[host_nitems];

@@ -22,39 +22,18 @@
 
 namespace usrp2 {
 
-  //! type of the timestamp returned from the USRP2 FPGA
-  typedef uint32_t	fpga_timestamp;
-
-  /*!
-   * \brief metadata associated with received frames
-   * \ingroup usrp2
-   */
-  struct rx_metadata {
-    uint32_t		word0;			//< debugging, extensions
-    fpga_timestamp	timestamp;		//< time that first sample of frame was received
-    unsigned int	start_of_burst : 1;	//< this frame is the start of a burst
-    unsigned int	end_of_burst   : 1;	//< this frame is the end of a burst
-    unsigned int	rx_overrun     : 1;	//< An Rx overrun occurred in the FPGA
-    // rssi
-    // agc_mode
-
-    rx_metadata() :
-      word0(0), timestamp(0), start_of_burst(0), end_of_burst(0), rx_overrun(0) {}
-  };
-
   /*!
    * \brief metadata associated with transmitted frames
    * \ingroup usrp2
    */
   struct tx_metadata {
-    fpga_timestamp	timestamp;		//< time to transmit first sample of frame
     unsigned int	send_now       : 1;	//< ignore timestamp, send now
     unsigned int	start_of_burst : 1;	//< this frame is the start of a burst
     unsigned int	end_of_burst   : 1;	//< this frame is the end of a burst
     // ...
 
     tx_metadata() :
-      timestamp(0), send_now(0), start_of_burst(0), end_of_burst(0) {}
+      send_now(0), start_of_burst(0), end_of_burst(0) {}
   };
 
 }; // usrp2
