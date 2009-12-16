@@ -135,6 +135,7 @@ namespace usrp2 {
     data_packet_handler(rx_sample_handler *handler): d_handler(handler){}
 
     data_handler::result operator()(const void *base, size_t len){
+        DEBUG_LOG("h"); 
         vrt::expanded_header hdr;
         const uint32_t *payload;
         size_t n32_bit_words_payload;
@@ -149,7 +150,6 @@ namespace usrp2 {
             return data_handler::RELEASE;
         }
         bool want_more = (*d_handler)(payload, n32_bit_words_payload, &hdr);
-        DEBUG_LOG("-"); 
 
         return want_more? data_handler::RELEASE : data_handler::DONE;
     }
