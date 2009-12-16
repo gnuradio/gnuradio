@@ -101,7 +101,7 @@ void usrp2::eth_data_transport::recv_bg(void){
             d_eth_data->release_frame(rd.base);
         }
     }
-    d_ring->wait_for_empty();
+    d_ring->wait_for_empty(gruel::get_new_timeout(0.1)); //magic timeout in sec
 }
 
 void usrp2::eth_data_transport::recv_loop(){
@@ -145,7 +145,7 @@ bool usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
 }
 
 void usrp2::eth_data_transport::recv(data_handler *handler){
-    d_ring->wait_for_not_empty();
+    d_ring->wait_for_not_empty(gruel::get_new_timeout(0.1)); //magic timeout in sec
     while (true){
         ring_data rd;
         DEBUG_LOG("-");

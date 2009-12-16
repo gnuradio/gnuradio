@@ -34,19 +34,19 @@ namespace usrp2 {
   {/*NOP*/}
 
   void 
-  ring::wait_for_empty() 
+  ring::wait_for_empty(boost::system_time timeout)
   { 
     gruel::scoped_lock l(d_mutex);
     while (not empty()) 
-      d_empty_cond.wait(l);
+      d_empty_cond.timed_wait(l, timeout);
   }
 
   void 
-  ring::wait_for_not_empty() 
+  ring::wait_for_not_empty(boost::system_time timeout)
   { 
     gruel::scoped_lock l(d_mutex);
     while (empty()) 
-      d_not_empty_cond.wait(l);
+      d_not_empty_cond.timed_wait(l, timeout);
   }
 
   bool

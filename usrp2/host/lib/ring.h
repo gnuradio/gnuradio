@@ -76,8 +76,8 @@ namespace usrp2 {
 
     ring(unsigned int entries);
 
-    void wait_for_empty();
-    void wait_for_not_empty();
+    void wait_for_empty(boost::system_time timeout);
+    void wait_for_not_empty(boost::system_time timeout);
 
     bool enqueue(const ring_data &rd);
     bool dequeue(ring_data &rd);
