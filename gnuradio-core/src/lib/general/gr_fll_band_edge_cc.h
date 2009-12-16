@@ -28,8 +28,8 @@
 
 class gr_fll_band_edge_cc;
 typedef boost::shared_ptr<gr_fll_band_edge_cc> gr_fll_band_edge_cc_sptr;
-gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float alpha, float beta,
-						   const std::vector<gr_complex> &taps);
+gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float samps_per_sym, float rolloff,
+						   int filter_size, float alpha, float beta);
 
 class gr_fir_ccc;
 class gri_fft_complex;
@@ -48,8 +48,8 @@ class gr_fll_band_edge_cc : public gr_sync_block
    * Build the FLL
    * \param taps    (vector/list of gr_complex) The taps of the band-edge filter
    */
-  friend gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float alpha, float beta,
-							    const std::vector<gr_complex> &taps);
+  friend gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float samps_per_sym, float rolloff,
+							    int filter_size, float alpha, float beta);
 
   float                   d_alpha;
   float                   d_beta;
@@ -61,6 +61,7 @@ class gr_fll_band_edge_cc : public gr_sync_block
   std::vector<gr_complex> d_taps_upper;
   std::vector<gr_complex> d_taps_lower;
   bool			  d_updated;
+  float                   d_error;
   float                   d_freq;
   float                   d_phase;
 
@@ -68,8 +69,8 @@ class gr_fll_band_edge_cc : public gr_sync_block
    * Build the FLL
    * \param taps    (vector/list of gr_complex) The taps of the band-edge filter
    */
-  gr_fll_band_edge_cc(float alpha, float beta,
-		      const std::vector<gr_complex> &taps);
+  gr_fll_band_edge_cc(float samps_per_sym, float rolloff,
+		      int filter_size, float alpha, float beta);
 
 public:
   ~gr_fll_band_edge_cc ();
@@ -78,7 +79,8 @@ public:
    * Resets the filter taps with the new prototype filter
    * \param taps    (vector/list of gr_complex) The band-edge filter
    */
-  void set_taps (const std::vector<gr_complex> &taps);
+  void set_taps_lower (const std::vector<gr_complex> &taps);
+  void set_taps_upper (const std::vector<gr_complex> &taps);
 
   /*!
    * Set the alpha gainvalue

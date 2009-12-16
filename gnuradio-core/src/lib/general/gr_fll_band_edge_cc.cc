@@ -35,33 +35,70 @@
 
 #define M_TWOPI (2*M_PI)
 
-gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float alpha, float beta,
-						   const std::vector<gr_complex> &taps)
+float sinc(float x)
 {
-  return gr_fll_band_edge_cc_sptr (new gr_fll_band_edge_cc (alpha, beta,
-							    taps));
+  if(x == 0)
+    return 1;
+  else
+    return sin(M_PI*x)/(M_PI*x);
+}
+  
+
+
+gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float samps_per_sym, float rolloff,
+						   int filter_size, float gain_alpha, float gain_beta)
+{
+  return gr_fll_band_edge_cc_sptr (new gr_fll_band_edge_cc (samps_per_sym, rolloff,
+							    filter_size, gain_alpha, gain_beta));
 }
 
 
-gr_fll_band_edge_cc::gr_fll_band_edge_cc (float alpha, float beta,
-					  const std::vector<gr_complex> &taps)
+gr_fll_band_edge_cc::gr_fll_band_edge_cc (float samps_per_sym, float rolloff,
+					  int filter_size, float alpha, float beta)
   : gr_sync_block ("fll_band_edge_cc",
 		   gr_make_io_signature (1, 1, sizeof(gr_complex)),
 		   gr_make_io_signature (1, 1, sizeof(gr_complex))),
     d_alpha(alpha), d_beta(beta), d_updated (false)
 {
   // base this on the number of samples per symbol
-  d_max_freq = M_TWOPI * 0.25;
-  d_min_freq = M_TWOPI * -0.5;
+  d_max_freq =  M_TWOPI * (2.0/samps_per_sym);
+  d_min_freq = -M_TWOPI * (2.0/samps_per_sym);
 
   d_freq = 0;
   d_phase = 0;
 
-  std::vector<gr_complex> vtaps(0, taps.size());
+  int M = rint(filter_size / samps_per_sym);
+  float power = 0;
+  std::vector<float> bb_taps;
+  for(int i = 0; i < filter_size; i++) {
+    float k = -M + i*2.0/samps_per_sym;
+    float tap = sinc(rolloff*k - 0.5) + sinc(rolloff*k + 0.5);
+    power += tap;
+
+    bb_taps.push_back(tap);
+  }
+
+  int N = (bb_taps.size() - 1.0)/2.0;
+  std::vector<gr_complex> taps_lower;
+  std::vector<gr_complex> taps_upper;
+  for(int i = 0; i < bb_taps.size(); i++) {
+    float tap = bb_taps[i] / power;
+
+    float k = (-N + i)/(2.0*samps_per_sym);     //rng = scipy.arange(-nn2, nn2+1) / (2*spb);
+
+    gr_complex t1 = tap * gr_expj(-2*M_PI*(1+rolloff)*k);
+    gr_complex t2 = tap * gr_expj(2*M_PI*(1+rolloff)*k);
+
+    taps_lower.push_back(t1);
+    taps_upper.push_back(t2);
+  }
+
+  std::vector<gr_complex> vtaps(0, taps_lower.size());
   d_filter_upper = gr_fir_util::create_gr_fir_ccc(vtaps);
   d_filter_lower = gr_fir_util::create_gr_fir_ccc(vtaps);
 
-  set_taps(taps);
+  set_taps_lower(taps_lower);
+  set_taps_upper(taps_upper);
 }
 
 gr_fll_band_edge_cc::~gr_fll_band_edge_cc ()
@@ -69,17 +106,32 @@ gr_fll_band_edge_cc::~gr_fll_band_edge_cc ()
 }
 
 void
-gr_fll_band_edge_cc::set_taps (const std::vector<gr_complex> &taps)
+gr_fll_band_edge_cc::set_taps_lower (const std::vector<gr_complex> &taps)
+{
+  unsigned int i;
+
+  for(i = 0; i < taps.size(); i++) {
+    d_taps_lower.push_back(taps[i]);
+  }
+
+  d_filter_lower->set_taps(d_taps_lower);
+
+  // Set the history to ensure enough input items for each filter
+  set_history(d_taps_lower.size()+1);
+
+  d_updated = true;
+}
+
+void
+gr_fll_band_edge_cc::set_taps_upper (const std::vector<gr_complex> &taps)
 {
   unsigned int i;
 
   for(i = 0; i < taps.size(); i++) {
     d_taps_upper.push_back(taps[i]);
-    d_taps_lower.push_back(conj(taps[i]));
   }
 
   d_filter_upper->set_taps(d_taps_upper);
-  d_filter_lower->set_taps(d_taps_lower);
 
   // Set the history to ensure enough input items for each filter
   set_history(d_taps_upper.size()+1);
@@ -93,13 +145,13 @@ gr_fll_band_edge_cc::print_taps()
   unsigned int i;
   printf("Upper Band-edge: [");
   for(i = 0; i < d_taps_upper.size(); i++) {
-    printf(" %.4e + j%.4e,", d_taps_upper[i].real(), d_taps_upper[i].imag());
+    printf(" %.4e + %.4ej,", d_taps_upper[i].real(), d_taps_upper[i].imag());
   }
   printf("]\n\n");
 
   printf("Lower Band-edge: [");
   for(i = 0; i < d_taps_lower.size(); i++) {
-    printf(" %.4e + j%.4e,", d_taps_lower[i].real(), d_taps_lower[i].imag());
+    printf(" %.4e + %.4ej,", d_taps_lower[i].real(), d_taps_lower[i].imag());
   }
   printf("]\n\n");
 }
@@ -128,9 +180,10 @@ gr_fll_band_edge_cc::work (int noutput_items,
     out_upper = norm(d_filter_upper->filter(&out[i]));
     out_lower = norm(d_filter_lower->filter(&out[i]));
     error = out_lower - out_upper;
+    d_error = 0.1*error + 0.9*d_error;  // average error
 
     d_freq = d_freq + d_beta * error;
-    d_phase = d_phase + d_freq; // + d_alpha * error;
+    d_phase = d_phase + d_freq + d_alpha * error;
 
     if(d_phase > M_PI)
       d_phase -= M_TWOPI;
