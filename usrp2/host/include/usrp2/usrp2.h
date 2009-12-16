@@ -23,7 +23,8 @@
 #include <boost/utility.hpp>
 #include <vector>
 #include <complex>
-#include <usrp2/rx_sample_handler.h>
+#include <vrt/rx_packet_handler.h>
+#include <usrp2/metadata.h> //FIXME remove for vrt
 #include <usrp2/tune_result.h>
 #include <usrp2/mimo_config.h>
 
@@ -173,21 +174,20 @@ namespace usrp2 {
      * Start streaming receive mode.  USRP2 will send a continuous stream of
      * DSP pipeline samples to host.  Call rx_samples(...) to access.
      * 
-     * \param channel          Stream channel number (0-30)
      * \param items_per_frame  Number of 32-bit items per frame.
      */
-    bool start_rx_streaming(unsigned int channel=0, unsigned int items_per_frame=0);
+    bool start_rx_streaming(unsigned int items_per_frame=0);
   
     /*!
      * Stop streaming receive mode.
      */
-    bool stop_rx_streaming(unsigned int channel=0);
+    bool stop_rx_streaming();
 
     /*!
      * \brief Receive data from the specified channel
      * This method is used to receive all data: streaming or discrete.
      */
-    bool rx_samples(unsigned int channel, rx_sample_handler *handler);
+    bool rx_samples(vrt::rx_packet_handler *handler);
 
     /*!
      * Returns number of times receive overruns have occurred
@@ -267,7 +267,6 @@ namespace usrp2 {
     /*!
      * \brief transmit complex<float> samples to USRP2
      *
-     * \param channel specifies the channel to send them to
      * \param samples are the samples to transmit.  They should be in the range [-1.0, +1.0]
      * \param nsamples is the number of samples to transmit
      * \param metadata provides the timestamp and flags
@@ -276,7 +275,7 @@ namespace usrp2 {
      * "on the wire" representation, depending on the current USRP2
      * configuration.  Typically, this is big-endian 16-bit I & Q.
      */
-    bool tx_32fc(unsigned int channel,
+    bool tx_32fc(
 		 const std::complex<float> *samples,
 		 size_t nsamples,
 		 const tx_metadata *metadata);
@@ -284,7 +283,6 @@ namespace usrp2 {
     /*!
      * \brief transmit complex<int16_t> samples to USRP2
      *
-     * \param channel specifies the channel to send them to
      * \param samples are the samples to transmit
      * \param nsamples is the number of samples to transmit
      * \param metadata provides the timestamp and flags
@@ -293,7 +291,7 @@ namespace usrp2 {
      * "on the wire" representation, depending on the current USRP2
      * configuration.  Typically, this is big-endian 16-bit I & Q.
      */
-    bool tx_16sc(unsigned int channel,
+    bool tx_16sc(
 		 const std::complex<int16_t> *samples,
 		 size_t nsamples,
 		 const tx_metadata *metadata);
@@ -306,12 +304,11 @@ namespace usrp2 {
      * This method is used primarily by the system itself.  Users
      * should call tx_32fc or tx_16sc instead.
      *
-     * \param channel specifies the channel to send them to
      * \param items are the data items to transmit
      * \param nitems is the number of items to transmit
      * \param metadata provides the timestamp and flags
      */
-    bool tx_raw(unsigned int channel,
+    bool tx_raw(
 		const uint32_t *items,
 		size_t nitems,
 		const tx_metadata *metadata);

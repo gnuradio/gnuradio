@@ -60,18 +60,11 @@ usrp2_sink_32fc::work(int noutput_items,
 {
   gr_complex *in = (gr_complex *)input_items[0];
 
-  // FIXME: Current libusrp2 can't handle short packets.
-  // Returning 0 assumes there will be more samples
-  // the next round...
-  if (noutput_items < U2_MIN_SAMPLES)
-    return 0;
-
   usrp2::tx_metadata metadata;
   metadata.send_now = 1;
   metadata.start_of_burst = 1;
 
-  bool ok = d_u2->tx_32fc(0, // FIXME: someday, streams will have channel numbers
-			  in, noutput_items, &metadata);
+  bool ok = d_u2->tx_32fc(in, noutput_items, &metadata);
   if (!ok){
     std::cerr << "usrp2_sink_32fc: tx_32fc failed" << std::endl;
     return -1;	// say we're done

@@ -129,10 +129,10 @@ namespace usrp2 {
    ********************************************************************/
   class data_packet_handler : public data_handler{
   private:
-    rx_sample_handler *d_handler;
+    vrt::rx_packet_handler *d_handler;
 
   public:
-    data_packet_handler(rx_sample_handler *handler): d_handler(handler){}
+    data_packet_handler(vrt::rx_packet_handler *handler): d_handler(handler){}
 
     data_handler::result operator()(const void *base, size_t len){
         DEBUG_LOG("h"); 
@@ -168,8 +168,7 @@ namespace usrp2 {
     memset(d_pending_replies, 0, sizeof(d_pending_replies));
 
     // In case the USRP2 was left streaming RX
-    // FIXME: only one channel right now
-    stop_rx_streaming(0);
+    stop_rx_streaming();
 
     if (!dboard_info())		// we're hosed
       throw std::runtime_error("Unable to retrieve daughterboard info");
@@ -409,26 +408,15 @@ namespace usrp2 {
   }
   
   bool
-  usrp2::impl::start_rx_streaming(unsigned int channel, unsigned int items_per_frame)
+  usrp2::impl::start_rx_streaming(unsigned int items_per_frame)
   {
-    if (channel > MAX_CHAN) {
-      std::cerr << "usrp2: invalid channel number (" << channel
-		<< ")" << std::endl;
-      return false;
-    }
-
-    if (channel > 0) { // until firmware supports multiple streams
-      std::cerr << "usrp2: channel " << channel
-		<< " not implemented" << std::endl;
-      return false;
-    }
 
     //flush any old samples in the data transport
     d_data_transport->flush();
 
       if (items_per_frame == 0)
-	items_per_frame = U2_MAX_SAMPLES;		// minimize overhead
-      
+        items_per_frame = U2_MAX_SAMPLES;		// minimize overhead
+
       op_start_rx_streaming_cmd cmd;
       op_generic_t reply;
 
@@ -451,19 +439,8 @@ namespace usrp2 {
   }
   
   bool
-  usrp2::impl::stop_rx_streaming(unsigned int channel)
+  usrp2::impl::stop_rx_streaming()
   {
-    if (channel > MAX_CHAN) {
-      std::cerr << "usrp2: invalid channel number (" << channel
-		<< ")" << std::endl;
-      return false;
-    }
-
-    if (channel > 0) { // until firmware supports multiple streams
-      std::cerr << "usrp2: channel " << channel
-		<< " not implemented" << std::endl;
-      return false;
-    }
 
     op_stop_rx_cmd cmd;
     op_generic_t reply;
@@ -487,7 +464,7 @@ namespace usrp2 {
   }
 
   bool
-  usrp2::impl::rx_samples(unsigned int channel, rx_sample_handler *handler)
+  usrp2::impl::rx_samples(vrt::rx_packet_handler *handler)
   {
     data_handler *pkt_handler = new data_packet_handler(handler);
     d_data_transport->recv(pkt_handler);
@@ -652,18 +629,18 @@ namespace usrp2 {
   }
 
   bool
-  usrp2::impl::tx_32fc(unsigned int channel,
+  usrp2::impl::tx_32fc(
 		       const std::complex<float> *samples,
 		       size_t nsamples,
 		       const tx_metadata *metadata)
   {
     uint32_t items[nsamples];
     copy_host_32fc_to_u2_16sc(nsamples, samples, items);
-    return tx_raw(channel, items, nsamples, metadata);
+    return tx_raw(items, nsamples, metadata);
   }
 
   bool
-  usrp2::impl::tx_16sc(unsigned int channel,
+  usrp2::impl::tx_16sc(
 		       const std::complex<int16_t> *samples,
 		       size_t nsamples,
 		       const tx_metadata *metadata)
@@ -674,19 +651,19 @@ namespace usrp2 {
     // No conversion required.
 
     assert(sizeof(samples[0]) == sizeof(uint32_t));
-    return tx_raw(channel, (const uint32_t *) samples, nsamples, metadata);
+    return tx_raw((const uint32_t *) samples, nsamples, metadata);
 
 #else
 
     uint32_t items[nsamples];
     copy_host_16sc_to_u2_16sc(nsamples, samples, items);
-    return tx_raw(channel, items, nsamples, metadata);
+    return tx_raw(items, nsamples, metadata);
 
 #endif
   }
 
   bool
-  usrp2::impl::tx_raw(unsigned int channel,
+  usrp2::impl::tx_raw(
 		      const uint32_t *items,
 		      size_t nitems,
 		      const tx_metadata *metadata)
@@ -717,14 +694,13 @@ namespace usrp2 {
       size_t i = std::min((size_t) U2_MAX_SAMPLES, nitems - n);
 
       //setup the header
-      uint32_t vrt_if_data_pkt_hdr[2];
+      uint32_t vrt_if_data_pkt_hdr[1];
       d_tx_pkt_cnt++; //increment the tx packet count
       vrt_if_data_pkt_hdr[0] =
-        VRTH_PT_IF_DATA_WITH_SID |
+        VRTH_PT_IF_DATA_NO_SID |
         burst_flags              |
         ((i+dimof(vrt_if_data_pkt_hdr)) & VRTH_PKT_SIZE_MASK) |
         ((d_tx_pkt_cnt << VRTH_PKT_CNT_SHIFT) & VRTH_PKT_CNT_MASK);
-      vrt_if_data_pkt_hdr[1] = channel;
 
       //make the header nbo
       for (size_t j = 0; j < dimof(vrt_if_data_pkt_hdr); j++){

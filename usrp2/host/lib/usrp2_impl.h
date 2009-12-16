@@ -102,9 +102,9 @@ namespace usrp2 {
     bool enable_gpio_streaming(int bank, int enable);
     bool write_gpio(int bank, uint16_t value, uint16_t mask);
     bool read_gpio(int bank, uint16_t *value);
-    bool start_rx_streaming(unsigned int channel, unsigned int items_per_frame);
-    bool rx_samples(unsigned int channel, rx_sample_handler *handler);
-    bool stop_rx_streaming(unsigned int channel);
+    bool start_rx_streaming(unsigned int items_per_frame);
+    bool rx_samples(vrt::rx_packet_handler *handler);
+    bool stop_rx_streaming();
 
     // Tx
 
@@ -121,17 +121,17 @@ namespace usrp2 {
     void default_tx_scale_iq(int interpolation_factor, int *scale_i, int *scale_q);
     bool set_tx_scale_iq(int scale_i, int scale_q);
 
-    bool tx_32fc(unsigned int channel,
+    bool tx_32fc(
 		 const std::complex<float> *samples,
 		 size_t nsamples,
 		 const tx_metadata *metadata);
 
-    bool tx_16sc(unsigned int channel,
+    bool tx_16sc(
 		 const std::complex<int16_t> *samples,
 		 size_t nsamples,
 		 const tx_metadata *metadata);
 
-    bool tx_raw(unsigned int channel,
+    bool tx_raw(
 		const uint32_t *items,
 		size_t nitems,
 		const tx_metadata *metadata);

@@ -60,18 +60,11 @@ usrp2_sink_16sc::work(int noutput_items,
 {
   std::complex<int16_t> *in = (std::complex<int16_t> *)input_items[0];
 
-  // FIXME: Current libusrp2 can't handle short packets.
-  // Returning 0 assumes there will be more samples
-  // the next round...
-  if (noutput_items < U2_MIN_SAMPLES)
-    return 0;
-
   usrp2::tx_metadata metadata;
   metadata.send_now = 1;
   metadata.start_of_burst = 1;
 
-  bool ok = d_u2->tx_16sc(0,  // FIXME: someday, streams will have channel numbers
-			  in, noutput_items, &metadata);
+  bool ok = d_u2->tx_16sc(in, noutput_items, &metadata);
   if (!ok){
     std::cerr << "usrp2_sink_16sc: tx_16sc failed" << std::endl;
     return -1;	// say we're done

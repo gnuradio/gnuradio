@@ -251,21 +251,21 @@ namespace usrp2 {
   }
   
   bool
-  usrp2::start_rx_streaming(unsigned int channel, unsigned int items_per_frame)
+  usrp2::start_rx_streaming(unsigned int items_per_frame)
   {
-    return d_impl->start_rx_streaming(channel, items_per_frame);
+    return d_impl->start_rx_streaming(items_per_frame);
   }
   
   bool
-  usrp2::rx_samples(unsigned int channel, rx_sample_handler *handler)
+  usrp2::rx_samples(vrt::rx_packet_handler *handler)
   {
-    return d_impl->rx_samples(channel, handler);
+    return d_impl->rx_samples(handler);
   }
 
   bool
-  usrp2::stop_rx_streaming(unsigned int channel)
+  usrp2::stop_rx_streaming()
   {
-    return d_impl->stop_rx_streaming(channel);
+    return d_impl->stop_rx_streaming();
   }
 
   unsigned int
@@ -358,30 +358,30 @@ namespace usrp2 {
   }
   
   bool
-  usrp2::tx_32fc(unsigned int channel,
+  usrp2::tx_32fc(
 		 const std::complex<float> *samples,
 		 size_t nsamples,
 		 const tx_metadata *metadata)
   {
-    return d_impl->tx_32fc(channel, samples, nsamples, metadata);
+    return d_impl->tx_32fc(samples, nsamples, metadata);
   }
 
   bool
-  usrp2::tx_16sc(unsigned int channel,
+  usrp2::tx_16sc(
 		 const std::complex<int16_t> *samples,
 		 size_t nsamples,
 		 const tx_metadata *metadata)
   {
-    return d_impl->tx_16sc(channel, samples, nsamples, metadata);
+    return d_impl->tx_16sc(samples, nsamples, metadata);
   }
 
   bool
-  usrp2::tx_raw(unsigned int channel,
+  usrp2::tx_raw(
 		const uint32_t *items,
 		size_t nitems,
 		const tx_metadata *metadata)
   {
-    return d_impl->tx_raw(channel, items, nitems, metadata);
+    return d_impl->tx_raw(items, nitems, metadata);
   }
 
   // miscellaneous methods

@@ -59,7 +59,7 @@ usrp2_source_16sc::work(int noutput_items,
 
   rx_16sc_handler::sptr handler = rx_16sc_handler::make(noutput_items, USRP2_MIN_RX_SAMPLES, out);
 
-  bool ok = d_u2->rx_samples(0, handler.get()); // FIXME: channel number instead of 0
+  bool ok = d_u2->rx_samples(handler.get());
   if (!ok){
     std::cerr << "usrp2::rx_samples() failed" << std::endl;
     return -1;	// say we're done

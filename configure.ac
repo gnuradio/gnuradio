@@ -334,11 +334,10 @@ GRC_GCELL
 GRC_GNURADIO_CORE
 GRC_MBLOCK			dnl this must come after GRC_GRUEL
 GRC_USRP
+GRC_VRT			dnl this must come before GRC_USRP2
 GRC_USRP2
-GRC_VRT
 GRC_GR_USRP			dnl this must come after GRC_USRP
 GRC_GR_USRP2
-GRC_GR_VRT
 GRC_GR_GCELL			dnl this must come after GRC_GCELL and GRC_GNURADIO_CORE
 GRC_GR_MSDD6000	
 GRC_GR_AUDIO_ALSA

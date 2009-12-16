@@ -19,7 +19,7 @@
 #ifndef INCLUDED_RX_NOP_HANDLER_H
 #define INCLUDED_RX_NOP_HANDLER_H
 
-#include <usrp2/rx_sample_handler.h>
+#include <vrt/rx_packet_handler.h>
 #include <boost/shared_ptr.hpp>
 
 /*!
@@ -37,7 +37,7 @@
 
 namespace usrp2 {
 
-  class rx_nop_handler : public rx_sample_handler
+  class rx_nop_handler : public vrt::rx_packet_handler
   {
     uint64_t	d_max_samples;
     uint64_t    d_max_quantum;

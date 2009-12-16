@@ -343,7 +343,7 @@ main(int argc, char **argv)
   while (!signaled && 
          !handler->has_errored_p() && 
          !handler->has_finished_p()) {
-    bool ok = u2->rx_samples(0, handler.get());
+    bool ok = u2->rx_samples(handler.get());
     if (!ok){
       fprintf(stderr, "u2->rx_samples failed\n");
       return 1;

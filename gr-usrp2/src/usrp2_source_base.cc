@@ -139,13 +139,13 @@ usrp2_source_base::missing()
 bool
 usrp2_source_base::start()
 {
-  return d_u2->start_rx_streaming(0); // FIXME: someday sources will have channel #s
+  return d_u2->start_rx_streaming();
 }
 
 bool
 usrp2_source_base::stop()
 {
-  return d_u2->stop_rx_streaming(0); // FIXME: someday sources will have channel #s
+  return d_u2->stop_rx_streaming();
 }
 
 bool
