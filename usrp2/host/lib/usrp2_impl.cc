@@ -632,18 +632,18 @@ namespace usrp2 {
   usrp2::impl::tx_32fc(
 		       const std::complex<float> *samples,
 		       size_t nsamples,
-		       const tx_metadata *metadata)
+		       const vrt::expanded_header *hdr)
   {
     uint32_t items[nsamples];
     copy_host_32fc_to_u2_16sc(nsamples, samples, items);
-    return tx_raw(items, nsamples, metadata);
+    return tx_raw(items, nsamples, hdr);
   }
 
   bool
   usrp2::impl::tx_16sc(
 		       const std::complex<int16_t> *samples,
 		       size_t nsamples,
-		       const tx_metadata *metadata)
+		       const vrt::expanded_header *hdr)
   {
 #ifdef WORDS_BIGENDIAN
 
@@ -657,7 +657,7 @@ namespace usrp2 {
 
     uint32_t items[nsamples];
     copy_host_16sc_to_u2_16sc(nsamples, samples, items);
-    return tx_raw(items, nsamples, metadata);
+    return tx_raw(items, nsamples, hdr);
 
 #endif
   }
@@ -666,60 +666,89 @@ namespace usrp2 {
   usrp2::impl::tx_raw(
 		      const uint32_t *items,
 		      size_t nitems,
-		      const tx_metadata *metadata)
+		      const vrt::expanded_header *hdr)
   {
     if (nitems == 0)
       return true;
 
-    // FIXME need to check the MTU instead of assuming 1500 bytes
+    // FIXME need to check the transport's max size before fragmenting
 
     // fragment as necessary then fire away
 
     size_t nframes = (nitems + U2_MAX_SAMPLES - 1) / U2_MAX_SAMPLES;
 
-    size_t n = 0;
+    uint32_t trailer = htonx(hdr->trailer);
+
+    size_t items_sent = 0;
     for (size_t fn = 0; fn < nframes; fn++){
-      //setup the burst flags (vrt header reserved bits)
-      uint32_t burst_flags = 0;
-      //set start of burst on the first fragment when send-now or start-of-burst is set
-      if ((metadata->send_now or metadata->start_of_burst) and fn == 0){
-        burst_flags |= VRTH_START_OF_BURST;
+
+      //calculate the data length
+      size_t data_len = std::min((size_t) U2_MAX_SAMPLES, nitems - items_sent);
+
+      //------------------ load the header contents ------------------//
+      uint32_t packet_header[sizeof(vrt::expanded_header)];
+      size_t n32_bit_words_packet_header = 0;
+      //load header word
+      packet_header[n32_bit_words_packet_header] = hdr->header;
+      n32_bit_words_packet_header += 1;
+      //load stream id
+      if (hdr->stream_id_p()){
+        packet_header[n32_bit_words_packet_header] = hdr->stream_id;
+        n32_bit_words_packet_header += 1;
       }
-      //set end of burst on the last fragment when end-of-bust is set
-      if ((/*metadata->send_now or */metadata->end_of_burst) and fn == nframes - 1){
-        burst_flags |= VRTH_END_OF_BURST;
+      //load class id
+      if (hdr->class_id_p()){
+        ((uint64_t*)(packet_header+n32_bit_words_packet_header))[0] = hdr->class_id;
+        n32_bit_words_packet_header += 2;
+      }
+      //load integer secs
+      if (hdr->integer_secs_p()){
+        packet_header[n32_bit_words_packet_header] = hdr->integer_secs;
+        n32_bit_words_packet_header += 1;
+      }
+      //load fractional secs
+      if (hdr->fractional_secs_p()){
+        ((uint64_t*)(packet_header+n32_bit_words_packet_header))[0] = hdr->fractional_secs;
+        n32_bit_words_packet_header += 2;
       }
 
-      //calculate the packet length
-      size_t i = std::min((size_t) U2_MAX_SAMPLES, nitems - n);
+      //------- set burst flags, header size, and packet count -------//
+      packet_header[0] &= ~( //clear the relevant flags and counts
+        VRTH_START_OF_BURST | VRTH_END_OF_BURST   |
+        (VRTH_PKT_CNT_MASK << VRTH_PKT_CNT_SHIFT) |
+        VRTH_PKT_SIZE_MASK);
 
-      //setup the header
-      uint32_t vrt_if_data_pkt_hdr[1];
-      d_tx_pkt_cnt++; //increment the tx packet count
-      vrt_if_data_pkt_hdr[0] =
-        VRTH_PT_IF_DATA_NO_SID |
-        burst_flags              |
-        ((i+dimof(vrt_if_data_pkt_hdr)) & VRTH_PKT_SIZE_MASK) |
-        ((d_tx_pkt_cnt << VRTH_PKT_CNT_SHIFT) & VRTH_PKT_CNT_MASK);
+      //set the new packet header length and count
+      packet_header[0] &=
+        ((data_len+n32_bit_words_packet_header) & VRTH_PKT_SIZE_MASK) |
+        ((d_tx_pkt_cnt++ << VRTH_PKT_CNT_SHIFT) & VRTH_PKT_CNT_MASK);
 
-      //make the header nbo
-      for (size_t j = 0; j < dimof(vrt_if_data_pkt_hdr); j++){
-        //printf("0x%.8x\n", vrt_if_data_pkt_hdr[j]);
-        vrt_if_data_pkt_hdr[j] = htonx(vrt_if_data_pkt_hdr[j]);
-      }
+      //start of burst can only be set on the first fragment
+      if (hdr->header & VRTH_START_OF_BURST and fn == 0)
+        packet_header[0] &= VRTH_START_OF_BURST;
 
-      //pack the iovecs with the header and data
-      iovec iov[2];
-      iov[0].iov_base = vrt_if_data_pkt_hdr;
-      iov[0].iov_len = sizeof(vrt_if_data_pkt_hdr);
-      iov[1].iov_base = const_cast<uint32_t *>(&items[n]);
-      iov[1].iov_len = i * sizeof(uint32_t);
+      //end of burst can only be set on the last fragment
+      if (hdr->header & VRTH_END_OF_BURST and fn == nframes - 1)
+        packet_header[0] &= VRTH_END_OF_BURST;
+
+      //conver the header to network byte order
+      for (int i = 0; i < n32_bit_words_packet_header; i++)
+        packet_header[i] = htonx(packet_header[i]);
+
+      //------- pack the iovecs with the header, data, trailer -------//
+      iovec iov[3];
+      iov[0].iov_base = packet_header;
+      iov[0].iov_len  = n32_bit_words_packet_header*sizeof(uint32_t);
+      iov[1].iov_base = const_cast<uint32_t *>(&items[items_sent]);
+      iov[1].iov_len  = data_len * sizeof(uint32_t);
+      iov[2].iov_base = &trailer;
+      iov[2].iov_len  = hdr->trailer_p()? sizeof(trailer) : 0;
 
       if (not d_data_transport->sendv(iov, dimof(iov))){
         return false;
       }
 
-      n += i;
+      items_sent += data_len;
     }
 
     return true;

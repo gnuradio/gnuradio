@@ -361,27 +361,27 @@ namespace usrp2 {
   usrp2::tx_32fc(
 		 const std::complex<float> *samples,
 		 size_t nsamples,
-		 const tx_metadata *metadata)
+		 const vrt::expanded_header *hdr)
   {
-    return d_impl->tx_32fc(samples, nsamples, metadata);
+    return d_impl->tx_32fc(samples, nsamples, hdr);
   }
 
   bool
   usrp2::tx_16sc(
 		 const std::complex<int16_t> *samples,
 		 size_t nsamples,
-		 const tx_metadata *metadata)
+		 const vrt::expanded_header *hdr)
   {
-    return d_impl->tx_16sc(samples, nsamples, metadata);
+    return d_impl->tx_16sc(samples, nsamples, hdr);
   }
 
   bool
   usrp2::tx_raw(
 		const uint32_t *items,
 		size_t nitems,
-		const tx_metadata *metadata)
+		const vrt::expanded_header *hdr)
   {
-    return d_impl->tx_raw(items, nitems, metadata);
+    return d_impl->tx_raw(items, nitems, hdr);
   }
 
   // miscellaneous methods

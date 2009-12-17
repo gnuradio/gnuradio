@@ -233,9 +233,8 @@ main(int argc, char **argv)
     }
   }
 
-  usrp2::tx_metadata	md;
-  md.start_of_burst = 1;
-  md.send_now = 1;
+  vrt::expanded_header hdr;
+  hdr.header = VRTH_PT_IF_DATA_NO_SID | VRTH_START_OF_BURST;
 
   while (!signaled){
 
@@ -254,7 +253,7 @@ main(int argc, char **argv)
 
     // FIXME if r < 9, pad to 9 for minimum packet size constraint
 
-    if (!u2->tx_16sc(samples, r, &md)){
+    if (!u2->tx_16sc(samples, r, &hdr)){
       fprintf(stderr, "tx_complex_int16 failed\n");
       break;
     }

@@ -278,9 +278,9 @@ gen_and_send(usrp2::usrp2::sptr u2, int chan,
   
   std::complex<float>	buf[MAX_SAMPLES];
 
-  usrp2::tx_metadata	md;
-  md.start_of_burst = 1;
-  md.send_now = 1;
+  vrt::expanded_header hdr;
+  hdr.header = VRTH_PT_IF_DATA_WITH_SID | VRTH_START_OF_BURST;
+  hdr.stream_id = chan; //load the stream id with the channel
 
   float ampl;
 
@@ -301,7 +301,7 @@ gen_and_send(usrp2::usrp2::sptr u2, int chan,
 #endif
   }
 
-  if (!u2->tx_32fc(chan, buf, nsamples, &md)){
+  if (!u2->tx_32fc(buf, nsamples, &hdr)){
     fprintf(stderr, "tx_32fc failed\n");
   }
 

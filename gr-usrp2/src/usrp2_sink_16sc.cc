@@ -25,7 +25,6 @@
 #endif
 
 #include <usrp2_sink_16sc.h>
-#include <usrp2/metadata.h>
 #include <gr_io_signature.h>
 #include <iostream>
 
@@ -60,11 +59,10 @@ usrp2_sink_16sc::work(int noutput_items,
 {
   std::complex<int16_t> *in = (std::complex<int16_t> *)input_items[0];
 
-  usrp2::tx_metadata metadata;
-  metadata.send_now = 1;
-  metadata.start_of_burst = 1;
+  vrt::expanded_header hdr;
+  hdr.header = VRTH_PT_IF_DATA_NO_SID | VRTH_START_OF_BURST;
 
-  bool ok = d_u2->tx_16sc(in, noutput_items, &metadata);
+  bool ok = d_u2->tx_16sc(in, noutput_items, &hdr);
   if (!ok){
     std::cerr << "usrp2_sink_16sc: tx_16sc failed" << std::endl;
     return -1;	// say we're done

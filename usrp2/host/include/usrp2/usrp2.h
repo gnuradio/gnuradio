@@ -24,7 +24,6 @@
 #include <vector>
 #include <complex>
 #include <vrt/rx_packet_handler.h>
-#include <usrp2/metadata.h> //FIXME remove for vrt
 #include <usrp2/tune_result.h>
 #include <usrp2/mimo_config.h>
 
@@ -269,7 +268,7 @@ namespace usrp2 {
      *
      * \param samples are the samples to transmit.  They should be in the range [-1.0, +1.0]
      * \param nsamples is the number of samples to transmit
-     * \param metadata provides the timestamp and flags
+     * \param hdr provides ids, times, flags
      *
      * The complex<float> samples are converted to the appropriate 
      * "on the wire" representation, depending on the current USRP2
@@ -278,14 +277,14 @@ namespace usrp2 {
     bool tx_32fc(
 		 const std::complex<float> *samples,
 		 size_t nsamples,
-		 const tx_metadata *metadata);
+		 const vrt::expanded_header *hdr);
 
     /*!
      * \brief transmit complex<int16_t> samples to USRP2
      *
      * \param samples are the samples to transmit
      * \param nsamples is the number of samples to transmit
-     * \param metadata provides the timestamp and flags
+     * \param hdr provides ids, times, flags
      *
      * The complex<int16_t> samples are converted to the appropriate
      * "on the wire" representation, depending on the current USRP2
@@ -294,7 +293,7 @@ namespace usrp2 {
     bool tx_16sc(
 		 const std::complex<int16_t> *samples,
 		 size_t nsamples,
-		 const tx_metadata *metadata);
+		 const vrt::expanded_header *hdr);
 
     /*!
      * \brief transmit raw uint32_t data items to USRP2
@@ -306,12 +305,12 @@ namespace usrp2 {
      *
      * \param items are the data items to transmit
      * \param nitems is the number of items to transmit
-     * \param metadata provides the timestamp and flags
+     * \param hdr provides ids, times, flags
      */
     bool tx_raw(
 		const uint32_t *items,
 		size_t nitems,
-		const tx_metadata *metadata);
+		const vrt::expanded_header *hdr);
 
     /*
      * ----------------------------------------------------------------
