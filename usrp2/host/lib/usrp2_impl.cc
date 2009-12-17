@@ -408,7 +408,7 @@ namespace usrp2 {
   }
   
   bool
-  usrp2::impl::start_rx_streaming(unsigned int items_per_frame)
+  usrp2::impl::start_rx_streaming(unsigned int items_per_frame, const time_spec_t *time_spec)
   {
 
     //flush any old samples in the data transport
@@ -425,9 +425,11 @@ namespace usrp2 {
       cmd.op.len = sizeof(cmd.op);
       cmd.op.rid = d_next_rid++;
       cmd.op.items_per_frame = htonl(items_per_frame);
+      cmd.op.time_secs = time_spec->secs;
+      cmd.op.time_tics = time_spec->tics;
       cmd.eop.opcode = OP_EOP;
       cmd.eop.len = sizeof(cmd.eop);
-    
+
       bool success = false;
       pending_reply p(cmd.op.rid, &reply, sizeof(reply));
       success = transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);

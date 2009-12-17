@@ -102,7 +102,7 @@ namespace usrp2 {
     bool enable_gpio_streaming(int bank, int enable);
     bool write_gpio(int bank, uint16_t value, uint16_t mask);
     bool read_gpio(int bank, uint16_t *value);
-    bool start_rx_streaming(unsigned int items_per_frame);
+    bool start_rx_streaming(unsigned int items_per_frame, const time_spec_t *time_spec);
     bool rx_samples(vrt::rx_packet_handler *handler);
     bool stop_rx_streaming();
 

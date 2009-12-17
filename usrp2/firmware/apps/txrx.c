@@ -116,11 +116,14 @@ dbsm_t dsp_rx_sm;	// the state machine
 // The mac address of the host we're sending to.
 u2_mac_addr_t host_mac_addr;
 
+#define TIME_NOW ((uint32_t)(~0))
 
 // variables for streaming mode
 
 static bool         streaming_p = false;
 static unsigned int streaming_items_per_frame = 0;
+static uint32_t     time_secs = TIME_NOW;
+static uint32_t     time_tics = TIME_NOW;
 static int          streaming_frame_count = 0;
 #define FRAMES_PER_CMD	1000
 
@@ -153,21 +156,20 @@ restart_streaming(void)
 
   sr_rx_ctrl->cmd =
     MK_RX_CMD(FRAMES_PER_CMD * streaming_items_per_frame,
-	      1, 1);			// set "chain" bit
+    (time_tics==TIME_NOW)?1:0, 1);  // conditionally set "now" bit, set "chain" bit
 
   // kick off the state machine
   dbsm_start(&dsp_rx_sm);
 
-  sr_rx_ctrl->time_secs = 0;
-  sr_rx_ctrl->time_ticks = 0;		// enqueue first of two commands
+  sr_rx_ctrl->time_secs = time_secs;
+  sr_rx_ctrl->time_tics = time_tics;		// enqueue first of two commands
 
   // make sure this one and the rest have the "now" and "chain" bits set.
   sr_rx_ctrl->cmd =
-    MK_RX_CMD(FRAMES_PER_CMD * streaming_items_per_frame,
-	      1, 1);
+    MK_RX_CMD(FRAMES_PER_CMD * streaming_items_per_frame, 1, 1);
 
   sr_rx_ctrl->time_secs = 0;
-  sr_rx_ctrl->time_ticks = 0;		// enqueue second command
+  sr_rx_ctrl->time_tics = 0;		// enqueue second command
 }
 
 void
@@ -192,6 +194,8 @@ start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p)
     fw_seqno = 0;
 
   streaming_items_per_frame = p->items_per_frame;
+  time_secs = p->time_secs;
+  time_tics = p->time_tics;
   restart_streaming();
 }
 
@@ -248,7 +252,7 @@ fw_sets_seqno_inspector(dbsm_t *sm, int buf_this)	// returns false
   if (streaming_p && --streaming_frame_count == 0){
     streaming_frame_count = FRAMES_PER_CMD;
     sr_rx_ctrl->time_secs = 0;
-    sr_rx_ctrl->time_ticks = 0;
+    sr_rx_ctrl->time_tics = 0;
   }
 
   return false;		// we didn't handle the packet

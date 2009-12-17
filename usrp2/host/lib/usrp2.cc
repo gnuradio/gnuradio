@@ -251,9 +251,9 @@ namespace usrp2 {
   }
   
   bool
-  usrp2::start_rx_streaming(unsigned int items_per_frame)
+  usrp2::start_rx_streaming(unsigned int items_per_frame, const time_spec_t *time_spec)
   {
-    return d_impl->start_rx_streaming(items_per_frame);
+    return d_impl->start_rx_streaming(items_per_frame, time_spec);
   }
   
   bool

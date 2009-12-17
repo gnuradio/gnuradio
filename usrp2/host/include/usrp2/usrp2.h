@@ -51,6 +51,18 @@ namespace usrp2 {
   typedef std::vector<props> props_vector_t;
 
   /*!
+   * Structure to hold a time specification for a usrp hardware device
+   */
+  typedef struct time_spec{
+      uint32_t secs;
+      uint32_t tics;
+      time_spec(void){
+        secs = ~0;
+        tics = ~0;
+      }
+  } time_spec_t;
+
+  /*!
    * \brief Search the ethernet for all USRP2s or for a specific USRP2.
    *
    * \param ifc is the name of the OS ethernet interface (e.g., "eth0")
@@ -174,8 +186,9 @@ namespace usrp2 {
      * DSP pipeline samples to host.  Call rx_samples(...) to access.
      * 
      * \param items_per_frame  Number of 32-bit items per frame.
+     * \param time_spec        When to start streaming (default == whenever)
      */
-    bool start_rx_streaming(unsigned int items_per_frame=0);
+    bool start_rx_streaming(unsigned int items_per_frame=0, const time_spec_t *time_spec=new time_spec_t());
   
     /*!
      * Stop streaming receive mode.
