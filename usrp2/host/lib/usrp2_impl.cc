@@ -678,77 +678,73 @@ namespace usrp2 {
     size_t nframes = (nitems + U2_MAX_SAMPLES - 1) / U2_MAX_SAMPLES;
 
     uint32_t trailer = htonx(hdr->trailer);
+    size_t n32_bit_words_trailer = hdr->trailer_p()? 1 : 0;
 
     size_t items_sent = 0;
     for (size_t fn = 0; fn < nframes; fn++){
 
       //calculate the data length
-      size_t data_len = std::min((size_t) U2_MAX_SAMPLES, nitems - items_sent);
+      size_t n32_bit_words_payload = std::min((size_t) U2_MAX_SAMPLES, nitems - items_sent);
 
       //------------------ load the header contents ------------------//
-      uint32_t packet_header[sizeof(vrt::expanded_header)];
-      size_t n32_bit_words_packet_header = 0;
+      uint32_t header[sizeof(vrt::expanded_header)];
+      size_t n32_bit_words_header = 0;
       //load header word
-      packet_header[n32_bit_words_packet_header] = hdr->header;
-      n32_bit_words_packet_header += 1;
+      header[n32_bit_words_header] = hdr->header; //leave in host byte order (handled below)
+      n32_bit_words_header += 1;
       //load stream id
       if (hdr->stream_id_p()){
-        packet_header[n32_bit_words_packet_header] = hdr->stream_id;
-        n32_bit_words_packet_header += 1;
+        header[n32_bit_words_header] = htonx(hdr->stream_id);
+        n32_bit_words_header += 1;
       }
       //load class id
       if (hdr->class_id_p()){
-        ((uint64_t*)(packet_header+n32_bit_words_packet_header))[0] = hdr->class_id;
-        n32_bit_words_packet_header += 2;
+        ((uint64_t*)(header+n32_bit_words_header))[0] = htonx(hdr->class_id);
+        n32_bit_words_header += 2;
       }
       //load integer secs
       if (hdr->integer_secs_p()){
-        packet_header[n32_bit_words_packet_header] = hdr->integer_secs;
-        n32_bit_words_packet_header += 1;
+        header[n32_bit_words_header] = htonx(hdr->integer_secs);
+        n32_bit_words_header += 1;
       }
       //load fractional secs
       if (hdr->fractional_secs_p()){
-        ((uint64_t*)(packet_header+n32_bit_words_packet_header))[0] = hdr->fractional_secs;
-        n32_bit_words_packet_header += 2;
+        ((uint64_t*)(header+n32_bit_words_header))[0] = htonx(hdr->fractional_secs);
+        n32_bit_words_header += 2;
       }
 
       //------- set burst flags, header size, and packet count -------//
-      packet_header[0] &= ~( //clear the relevant flags and counts
+      header[0] &= ~( //clear the relevant flags and counts
         VRTH_START_OF_BURST | VRTH_END_OF_BURST   |
         (VRTH_PKT_CNT_MASK << VRTH_PKT_CNT_SHIFT) |
         VRTH_PKT_SIZE_MASK);
 
       //set the new packet header length and count
-      packet_header[0] &=
-        ((data_len+n32_bit_words_packet_header) & VRTH_PKT_SIZE_MASK) |
+      header[0] &=
+        ((n32_bit_words_header+n32_bit_words_payload+n32_bit_words_trailer) & VRTH_PKT_SIZE_MASK) |
         ((d_tx_pkt_cnt++ << VRTH_PKT_CNT_SHIFT) & VRTH_PKT_CNT_MASK);
-
       //start of burst can only be set on the first fragment
       if (hdr->header & VRTH_START_OF_BURST and fn == 0)
-        packet_header[0] &= VRTH_START_OF_BURST;
-
+        header[0] &= VRTH_START_OF_BURST;
       //end of burst can only be set on the last fragment
       if (hdr->header & VRTH_END_OF_BURST and fn == nframes - 1)
-        packet_header[0] &= VRTH_END_OF_BURST;
-
-      //conver the header to network byte order
-      for (int i = 0; i < n32_bit_words_packet_header; i++)
-        packet_header[i] = htonx(packet_header[i]);
+        header[0] &= VRTH_END_OF_BURST;
+      header[0] = htonx(header[0]); //finally, convert word zero to nbo
 
       //------- pack the iovecs with the header, data, trailer -------//
       iovec iov[3];
-      iov[0].iov_base = packet_header;
-      iov[0].iov_len  = n32_bit_words_packet_header*sizeof(uint32_t);
+      iov[0].iov_base = header;
+      iov[0].iov_len  = n32_bit_words_header*sizeof(uint32_t);
       iov[1].iov_base = const_cast<uint32_t *>(&items[items_sent]);
-      iov[1].iov_len  = data_len * sizeof(uint32_t);
+      iov[1].iov_len  = n32_bit_words_payload*sizeof(uint32_t);
       iov[2].iov_base = &trailer;
-      iov[2].iov_len  = hdr->trailer_p()? sizeof(trailer) : 0;
+      iov[2].iov_len  = n32_bit_words_trailer*sizeof(uint32_t);
 
       if (not d_data_transport->sendv(iov, dimof(iov))){
         return false;
       }
 
-      items_sent += data_len;
+      items_sent += n32_bit_words_payload;
     }
 
     return true;
