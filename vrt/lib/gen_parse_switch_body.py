@@ -48,13 +48,17 @@ def do_case(f, cw):
             f.write("h->%s = 0;\n" % (name,))
             return 0
 
+    def dolength(index):
+        f.write("    n32_bit_words_header = %d;\n"%index)
+
     def dotrailer(name, mask):
-        f.write("    ")
         if cw & mask:
-            f.write("h->%s = ntohl(p[len-1]);\n" % (name,))
+            f.write("    h->%s = ntohl(p[len-1]);\n" % (name,))
+            f.write("    n32_bit_words_trailer = 1;\n")
             return 1
         else:
-            f.write("h->%s = 0;\n" % (name,))
+            f.write("    h->%s = 0;\n" % (name,))
+            f.write("    n32_bit_words_trailer = 0;\n")
             return 0
         
     f.write("  case %d:\n" % (cw,))
@@ -64,6 +68,7 @@ def do_case(f, cw):
     index += do64("class_id",  HAS_CLASS_ID,  index)
     index += do32("integer_secs", HAS_INTEGER_SECS, index)
     index += do64("fractional_secs", HAS_FRACTIONAL_SECS, index)
+    dolength(index)
     dotrailer("trailer", HAS_TRAILER)
     
     f.write("    break;\n\n")
