@@ -3,7 +3,9 @@
     h->class_id = 0;
     h->integer_secs = 0;
     h->fractional_secs = 0;
+    n32_bit_words_header = 1;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 1:
@@ -11,7 +13,9 @@
     h->class_id = 0;
     h->integer_secs = 0;
     h->fractional_secs = 0;
+    n32_bit_words_header = 2;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 2:
@@ -19,7 +23,9 @@
     h->class_id = ((uint64_t)(ntohl(p[1])) << 32) | ntohl(p[2]);
     h->integer_secs = 0;
     h->fractional_secs = 0;
+    n32_bit_words_header = 3;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 3:
@@ -27,7 +33,9 @@
     h->class_id = ((uint64_t)(ntohl(p[2])) << 32) | ntohl(p[3]);
     h->integer_secs = 0;
     h->fractional_secs = 0;
+    n32_bit_words_header = 4;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 4:
@@ -35,7 +43,9 @@
     h->class_id = 0;
     h->integer_secs = ntohl(p[1]);
     h->fractional_secs = 0;
+    n32_bit_words_header = 2;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 5:
@@ -43,7 +53,9 @@
     h->class_id = 0;
     h->integer_secs = ntohl(p[2]);
     h->fractional_secs = 0;
+    n32_bit_words_header = 3;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 6:
@@ -51,7 +63,9 @@
     h->class_id = ((uint64_t)(ntohl(p[1])) << 32) | ntohl(p[2]);
     h->integer_secs = ntohl(p[3]);
     h->fractional_secs = 0;
+    n32_bit_words_header = 4;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 7:
@@ -59,7 +73,9 @@
     h->class_id = ((uint64_t)(ntohl(p[2])) << 32) | ntohl(p[3]);
     h->integer_secs = ntohl(p[4]);
     h->fractional_secs = 0;
+    n32_bit_words_header = 5;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 8:
@@ -67,7 +83,9 @@
     h->class_id = 0;
     h->integer_secs = 0;
     h->fractional_secs = ((uint64_t)(ntohl(p[1])) << 32) | ntohl(p[2]);
+    n32_bit_words_header = 3;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 9:
@@ -75,7 +93,9 @@
     h->class_id = 0;
     h->integer_secs = 0;
     h->fractional_secs = ((uint64_t)(ntohl(p[2])) << 32) | ntohl(p[3]);
+    n32_bit_words_header = 4;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 10:
@@ -83,7 +103,9 @@
     h->class_id = ((uint64_t)(ntohl(p[1])) << 32) | ntohl(p[2]);
     h->integer_secs = 0;
     h->fractional_secs = ((uint64_t)(ntohl(p[3])) << 32) | ntohl(p[4]);
+    n32_bit_words_header = 5;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 11:
@@ -91,7 +113,9 @@
     h->class_id = ((uint64_t)(ntohl(p[2])) << 32) | ntohl(p[3]);
     h->integer_secs = 0;
     h->fractional_secs = ((uint64_t)(ntohl(p[4])) << 32) | ntohl(p[5]);
+    n32_bit_words_header = 6;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 12:
@@ -99,7 +123,9 @@
     h->class_id = 0;
     h->integer_secs = ntohl(p[1]);
     h->fractional_secs = ((uint64_t)(ntohl(p[2])) << 32) | ntohl(p[3]);
+    n32_bit_words_header = 4;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 13:
@@ -107,7 +133,9 @@
     h->class_id = 0;
     h->integer_secs = ntohl(p[2]);
     h->fractional_secs = ((uint64_t)(ntohl(p[3])) << 32) | ntohl(p[4]);
+    n32_bit_words_header = 5;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 14:
@@ -115,7 +143,9 @@
     h->class_id = ((uint64_t)(ntohl(p[1])) << 32) | ntohl(p[2]);
     h->integer_secs = ntohl(p[3]);
     h->fractional_secs = ((uint64_t)(ntohl(p[4])) << 32) | ntohl(p[5]);
+    n32_bit_words_header = 6;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 15:
@@ -123,7 +153,9 @@
     h->class_id = ((uint64_t)(ntohl(p[2])) << 32) | ntohl(p[3]);
     h->integer_secs = ntohl(p[4]);
     h->fractional_secs = ((uint64_t)(ntohl(p[5])) << 32) | ntohl(p[6]);
+    n32_bit_words_header = 7;
     h->trailer = 0;
+    n32_bit_words_trailer = 0;
     break;
 
   case 16:
@@ -131,7 +163,9 @@
     h->class_id = 0;
     h->integer_secs = 0;
     h->fractional_secs = 0;
+    n32_bit_words_header = 1;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 17:
@@ -139,7 +173,9 @@
     h->class_id = 0;
     h->integer_secs = 0;
     h->fractional_secs = 0;
+    n32_bit_words_header = 2;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 18:
@@ -147,7 +183,9 @@
     h->class_id = ((uint64_t)(ntohl(p[1])) << 32) | ntohl(p[2]);
     h->integer_secs = 0;
     h->fractional_secs = 0;
+    n32_bit_words_header = 3;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 19:
@@ -155,7 +193,9 @@
     h->class_id = ((uint64_t)(ntohl(p[2])) << 32) | ntohl(p[3]);
     h->integer_secs = 0;
     h->fractional_secs = 0;
+    n32_bit_words_header = 4;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 20:
@@ -163,7 +203,9 @@
     h->class_id = 0;
     h->integer_secs = ntohl(p[1]);
     h->fractional_secs = 0;
+    n32_bit_words_header = 2;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 21:
@@ -171,7 +213,9 @@
     h->class_id = 0;
     h->integer_secs = ntohl(p[2]);
     h->fractional_secs = 0;
+    n32_bit_words_header = 3;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 22:
@@ -179,7 +223,9 @@
     h->class_id = ((uint64_t)(ntohl(p[1])) << 32) | ntohl(p[2]);
     h->integer_secs = ntohl(p[3]);
     h->fractional_secs = 0;
+    n32_bit_words_header = 4;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 23:
@@ -187,7 +233,9 @@
     h->class_id = ((uint64_t)(ntohl(p[2])) << 32) | ntohl(p[3]);
     h->integer_secs = ntohl(p[4]);
     h->fractional_secs = 0;
+    n32_bit_words_header = 5;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 24:
@@ -195,7 +243,9 @@
     h->class_id = 0;
     h->integer_secs = 0;
     h->fractional_secs = ((uint64_t)(ntohl(p[1])) << 32) | ntohl(p[2]);
+    n32_bit_words_header = 3;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 25:
@@ -203,7 +253,9 @@
     h->class_id = 0;
     h->integer_secs = 0;
     h->fractional_secs = ((uint64_t)(ntohl(p[2])) << 32) | ntohl(p[3]);
+    n32_bit_words_header = 4;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 26:
@@ -211,7 +263,9 @@
     h->class_id = ((uint64_t)(ntohl(p[1])) << 32) | ntohl(p[2]);
     h->integer_secs = 0;
     h->fractional_secs = ((uint64_t)(ntohl(p[3])) << 32) | ntohl(p[4]);
+    n32_bit_words_header = 5;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 27:
@@ -219,7 +273,9 @@
     h->class_id = ((uint64_t)(ntohl(p[2])) << 32) | ntohl(p[3]);
     h->integer_secs = 0;
     h->fractional_secs = ((uint64_t)(ntohl(p[4])) << 32) | ntohl(p[5]);
+    n32_bit_words_header = 6;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 28:
@@ -227,7 +283,9 @@
     h->class_id = 0;
     h->integer_secs = ntohl(p[1]);
     h->fractional_secs = ((uint64_t)(ntohl(p[2])) << 32) | ntohl(p[3]);
+    n32_bit_words_header = 4;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 29:
@@ -235,7 +293,9 @@
     h->class_id = 0;
     h->integer_secs = ntohl(p[2]);
     h->fractional_secs = ((uint64_t)(ntohl(p[3])) << 32) | ntohl(p[4]);
+    n32_bit_words_header = 5;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 30:
@@ -243,7 +303,9 @@
     h->class_id = ((uint64_t)(ntohl(p[1])) << 32) | ntohl(p[2]);
     h->integer_secs = ntohl(p[3]);
     h->fractional_secs = ((uint64_t)(ntohl(p[4])) << 32) | ntohl(p[5]);
+    n32_bit_words_header = 6;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
   case 31:
@@ -251,6 +313,8 @@
     h->class_id = ((uint64_t)(ntohl(p[2])) << 32) | ntohl(p[3]);
     h->integer_secs = ntohl(p[4]);
     h->fractional_secs = ((uint64_t)(ntohl(p[5])) << 32) | ntohl(p[6]);
+    n32_bit_words_header = 7;
     h->trailer = ntohl(p[len-1]);
+    n32_bit_words_trailer = 1;
     break;
 
