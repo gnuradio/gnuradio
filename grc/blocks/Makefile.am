@@ -108,6 +108,7 @@ dist_ourdata_DATA = \
 	gr_file_source.xml \
 	gr_filter_delay_fc.xml \
 	gr_fir_filter_xxx.xml \
+	gr_fll_band_edge_cc.xml \
 	gr_float_to_char.xml \
 	gr_float_to_complex.xml \
 	gr_float_to_short.xml \

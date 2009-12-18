@@ -76,6 +76,7 @@ libgeneral_la_SOURCES = 		\
 	gr_fft_vcc_fftw.cc		\
 	gr_fft_vfc.cc			\
 	gr_firdes.cc			\
+	gr_fll_band_edge_cc.cc		\
 	gr_float_to_char.cc		\
 	gr_float_to_complex.cc		\
 	gr_float_to_short.cc		\
@@ -229,6 +230,7 @@ grinclude_HEADERS = 			\
 	gr_fft_vcc_fftw.h		\
 	gr_fft_vfc.h			\
 	gr_firdes.h			\
+	gr_fll_band_edge_cc.h		\
 	gr_float_to_char.h		\
 	gr_float_to_complex.h		\
 	gr_float_to_short.h		\
@@ -396,6 +398,7 @@ swiginclude_HEADERS =			\
 	gr_fft_vcc.i			\
 	gr_fft_vfc.i			\
 	gr_firdes.i			\
+	gr_fll_band_edge_cc.i		\
 	gr_float_to_char.i		\
 	gr_float_to_complex.i		\
 	gr_float_to_short.i		\
