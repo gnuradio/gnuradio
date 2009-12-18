@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2009 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ usrp2includedir = $(includedir)/usrp2
 
 usrp2include_HEADERS = \
 	copiers.h \
-	copy_handler.h \
 	data_handler.h \
 	mimo_config.h \
 	rx_nop_handler.h \

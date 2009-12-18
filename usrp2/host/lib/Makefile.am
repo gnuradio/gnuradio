@@ -34,7 +34,6 @@ lib_LTLIBRARIES = \
 libusrp2_la_SOURCES = \
 	control.cc \
 	copiers.cc \
-	copy_handler.cc \
 	data_handler.cc \
 	eth_buffer.cc \
 	eth_ctrl_transport.cc \
