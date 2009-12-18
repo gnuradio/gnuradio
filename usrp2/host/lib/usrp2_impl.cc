@@ -679,59 +679,33 @@ namespace usrp2 {
 
     size_t nframes = (nitems + U2_MAX_SAMPLES - 1) / U2_MAX_SAMPLES;
 
-    uint32_t trailer = htonx(hdr->trailer);
-    size_t n32_bit_words_trailer = hdr->trailer_p()? 1 : 0;
+    uint32_t header[vrt::HEADER_MAX_N32_BIT_WORDS];
+    size_t n32_bit_words_header;
+    uint32_t trailer[vrt::TRAILER_MAX_N32_BIT_WORDS];
+    size_t n32_bit_words_trailer;
+    vrt::expanded_header hdr_frag;
+    memcpy(&hdr_frag, hdr, sizeof(vrt::expanded_header));
 
     size_t items_sent = 0;
     for (size_t fn = 0; fn < nframes; fn++){
 
-      //calculate the data length
+      //calculate the payload length
       size_t n32_bit_words_payload = std::min((size_t) U2_MAX_SAMPLES, nitems - items_sent);
 
-      //------------------ load the header contents ------------------//
-      uint32_t header[sizeof(vrt::expanded_header)];
-      size_t n32_bit_words_header = 0;
-      //load header word
-      header[n32_bit_words_header] = hdr->header; //leave in host byte order (handled below)
-      n32_bit_words_header += 1;
-      //load stream id
-      if (hdr->stream_id_p()){
-        header[n32_bit_words_header] = htonx(hdr->stream_id);
-        n32_bit_words_header += 1;
-      }
-      //load class id
-      if (hdr->class_id_p()){
-        ((uint64_t*)(header+n32_bit_words_header))[0] = htonx(hdr->class_id);
-        n32_bit_words_header += 2;
-      }
-      //load integer secs
-      if (hdr->integer_secs_p()){
-        header[n32_bit_words_header] = htonx(hdr->integer_secs);
-        n32_bit_words_header += 1;
-      }
-      //load fractional secs
-      if (hdr->fractional_secs_p()){
-        ((uint64_t*)(header+n32_bit_words_header))[0] = htonx(hdr->fractional_secs);
-        n32_bit_words_header += 2;
-      }
-
-      //------- set burst flags, header size, and packet count -------//
-      header[0] &= ~( //clear the relevant flags and counts
-        VRTH_START_OF_BURST | VRTH_END_OF_BURST   |
-        (VRTH_PKT_CNT_MASK << VRTH_PKT_CNT_SHIFT) |
-        VRTH_PKT_SIZE_MASK);
-
-      //set the new packet header length and count
-      header[0] &=
-        ((n32_bit_words_header+n32_bit_words_payload+n32_bit_words_trailer) & VRTH_PKT_SIZE_MASK) |
-        ((d_tx_pkt_cnt++ << VRTH_PKT_CNT_SHIFT) & VRTH_PKT_CNT_MASK);
+      //clear the burst flags and count
+      hdr_frag.header &= ~(VRTH_START_OF_BURST | VRTH_END_OF_BURST | VRTH_PKT_CNT_MASK);
+      //set the packet count
+      hdr_frag.header |= ((d_tx_pkt_cnt++ << VRTH_PKT_CNT_SHIFT) & VRTH_PKT_CNT_MASK);
       //start of burst can only be set on the first fragment
       if (hdr->header & VRTH_START_OF_BURST and fn == 0)
-        header[0] &= VRTH_START_OF_BURST;
+        hdr_frag.header |= VRTH_START_OF_BURST;
       //end of burst can only be set on the last fragment
       if (hdr->header & VRTH_END_OF_BURST and fn == nframes - 1)
-        header[0] &= VRTH_END_OF_BURST;
-      header[0] = htonx(header[0]); //finally, convert word zero to nbo
+        hdr_frag.header |= VRTH_END_OF_BURST;
+
+      //--------- load the header, trailer, and word counts ----------//
+      vrt::expanded_header::unparse(&hdr_frag, n32_bit_words_payload,    // in
+        header, &n32_bit_words_header, trailer, &n32_bit_words_trailer); // out
 
       //------- pack the iovecs with the header, data, trailer -------//
       iovec iov[3];
@@ -739,7 +713,7 @@ namespace usrp2 {
       iov[0].iov_len  = n32_bit_words_header*sizeof(uint32_t);
       iov[1].iov_base = const_cast<uint32_t *>(&items[items_sent]);
       iov[1].iov_len  = n32_bit_words_payload*sizeof(uint32_t);
-      iov[2].iov_base = &trailer;
+      iov[2].iov_base = trailer;
       iov[2].iov_len  = n32_bit_words_trailer*sizeof(uint32_t);
 
       if (not d_data_transport->sendv(iov, dimof(iov))){
