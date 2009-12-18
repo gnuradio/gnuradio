@@ -286,6 +286,12 @@ namespace usrp2 {
      * The complex<float> samples are converted to the appropriate 
      * "on the wire" representation, depending on the current USRP2
      * configuration.  Typically, this is big-endian 16-bit I & Q.
+     *
+     * The underlying implementation is responsible for the packet count field,
+     * the packet size field, and fragmenting the samples into multiple packets.
+     * When the "start of burst flag" is set, only the first fragment will contain the start of burst.
+     * When the "end of burst flag" is set, only the last fragment will contain the end of burst.
+     * When the "has trailer flag" is set, every fragment will contain a copy of the trailer.
      */
     bool tx_32fc(
 		 const std::complex<float> *samples,
@@ -302,6 +308,12 @@ namespace usrp2 {
      * The complex<int16_t> samples are converted to the appropriate
      * "on the wire" representation, depending on the current USRP2
      * configuration.  Typically, this is big-endian 16-bit I & Q.
+     *
+     * The underlying implementation is responsible for the packet count field,
+     * the packet size field, and fragmenting the samples into multiple packets.
+     * When the "start of burst flag" is set, only the first fragment will contain the start of burst.
+     * When the "end of burst flag" is set, only the last fragment will contain the end of burst.
+     * When the "has trailer flag" is set, every fragment will contain a copy of the trailer.
      */
     bool tx_16sc(
 		 const std::complex<int16_t> *samples,
@@ -315,6 +327,12 @@ namespace usrp2 {
      * formatted appropriately for the USRP2 and its configuration.
      * This method is used primarily by the system itself.  Users
      * should call tx_32fc or tx_16sc instead.
+     *
+     * The underlying implementation is responsible for the packet count field,
+     * the packet size field, and fragmenting the samples into multiple packets.
+     * When the "start of burst flag" is set, only the first fragment will contain the start of burst.
+     * When the "end of burst flag" is set, only the last fragment will contain the end of burst.
+     * When the "has trailer flag" is set, every fragment will contain a copy of the trailer.
      *
      * \param items are the data items to transmit
      * \param nitems is the number of items to transmit
