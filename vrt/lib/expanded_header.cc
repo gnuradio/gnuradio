@@ -71,6 +71,22 @@ namespace vrt {
     return cw;
   }
 
+  void expanded_header::unparse(const expanded_header *h,   // in
+                        size_t n32_bit_words_payload,  // in
+                        uint32_t *header,              // out
+                        size_t *n32_bit_words_header,  // out
+                        uint32_t *trailer,             // out
+                        size_t *n32_bit_words_trailer){// out
+    int cw = compute_codeword(*h);
+    //fills in the header (except word0), header length, trailer, trailer length
+    switch (cw & 0x1f){
+#include "expanded_header_unparse_switch_body.h"
+    }
+    //fill in the header word 0 with the calculated length
+    size_t n32_bit_words_packet = *n32_bit_words_header + n32_bit_words_payload + *n32_bit_words_trailer;
+    header[0] = htonl((h->header & ~VRTH_PKT_SIZE_MASK) | (n32_bit_words_packet & VRTH_PKT_SIZE_MASK));
+  }
+
   bool 
   expanded_header::parse(const uint32_t *packet,	// in
 			size_t n32_bit_words_packet,	// in
@@ -109,7 +125,7 @@ namespace vrt {
     //   h->header, cw, cw_header_len(cw), cw_trailer_len(cw));
 
     switch (cw & 0x1f){
-#include "expanded_header_switch_body.h"
+#include "expanded_header_parse_switch_body.h"
     }
 
     return true;

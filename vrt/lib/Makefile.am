@@ -42,9 +42,11 @@ libvrt_la_LIBADD =
 noinst_HEADERS = \
 	data_handler.h \
 	expanded_header_cw_tables.h \
-	expanded_header_switch_body.h \
+	expanded_header_parse_switch_body.h \
+	expanded_header_unparse_switch_body.h \
 	socket_rx_buffer.h
 
 EXTRA_DIST = \
 	gen_cw_tables.py \
-	gen_switch_body.py
+	gen_parse_switch_body.py \
+	gen_unparse_switch_body.py

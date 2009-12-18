@@ -27,6 +27,9 @@
 
 namespace vrt {
 
+  static const size_t HEADER_MAX_N32_BIT_WORDS = 7;
+  static const size_t TRAILER_MAX_N32_BIT_WORDS = 1;
+
   /*!
    * \brief All headers and trailer for VRT IF-Data, Extension-Data,
    * IF-Context and Extension-Context packets.
@@ -73,7 +76,17 @@ namespace vrt {
     bool trailer_p() const { return (header & VRTH_HAS_TRAILER) != 0 && data_p(); }
 
 
-    // parser
+    /*!
+     * \brief unparse expanded header, fill-in the words of a vrt packet header and trailer
+     * This method is only intended to fill the buffers with header and trailer information.
+     * The actual handling of the separate header, payload, trailer buffers is up to the caller.
+     */
+    static void unparse(const expanded_header *hdr,    // in
+                        size_t n32_bit_words_payload,  // in
+                        uint32_t *header,              // out
+                        size_t *n32_bit_words_header,  // out
+                        uint32_t *trailer,             // out
+                        size_t *n32_bit_words_trailer);// out
 
     /*!
      * \brief parse packet, fill-in expanded header, start of payload and len of payload
