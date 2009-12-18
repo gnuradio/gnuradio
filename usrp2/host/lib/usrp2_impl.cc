@@ -414,8 +414,10 @@ namespace usrp2 {
     //flush any old samples in the data transport
     d_data_transport->flush();
 
-      if (items_per_frame == 0)
-        items_per_frame = U2_MAX_SAMPLES;		// minimize overhead
+      if (items_per_frame == 0){
+        items_per_frame = d_data_transport->max_bytes()/sizeof(uint32_t) -
+        (vrt::HEADER_MAX_N32_BIT_WORDS + vrt::TRAILER_MAX_N32_BIT_WORDS);
+      }
 
       op_start_rx_streaming_cmd cmd;
       op_generic_t reply;
@@ -673,12 +675,12 @@ namespace usrp2 {
     if (nitems == 0)
       return true;
 
-    // FIXME need to check the transport's max size before fragmenting
+    // fragment as necessary based on the transport's max size
+    size_t max_frames = d_data_transport->max_bytes()/sizeof(uint32_t) -
+        (vrt::HEADER_MAX_N32_BIT_WORDS + vrt::TRAILER_MAX_N32_BIT_WORDS);
+    size_t nframes = (nitems + max_frames - 1) / max_frames;
 
-    // fragment as necessary then fire away
-
-    size_t nframes = (nitems + U2_MAX_SAMPLES - 1) / U2_MAX_SAMPLES;
-
+    // memory and lengths to be filled in by the expanded header
     uint32_t header[vrt::HEADER_MAX_N32_BIT_WORDS];
     size_t n32_bit_words_header;
     uint32_t trailer[vrt::TRAILER_MAX_N32_BIT_WORDS];
@@ -690,7 +692,7 @@ namespace usrp2 {
     for (size_t fn = 0; fn < nframes; fn++){
 
       //calculate the payload length
-      size_t n32_bit_words_payload = std::min((size_t) U2_MAX_SAMPLES, nitems - items_sent);
+      size_t n32_bit_words_payload = std::min<size_t>(max_frames, nitems - items_sent);
 
       //clear the burst flags and count
       hdr_frag.header &= ~(VRTH_START_OF_BURST | VRTH_END_OF_BURST | VRTH_PKT_CNT_MASK);

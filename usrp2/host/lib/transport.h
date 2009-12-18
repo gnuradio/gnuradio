@@ -64,6 +64,10 @@ namespace usrp2 {
      * \brief flush any samples in the rx buffers
      */
     virtual void flush(void){};
+    /*!
+     * \brief get the maximum number of bytes that can be passed into sendv
+     */
+    virtual size_t max_bytes(void){return 0;}
   };
   
 } // namespace usrp2

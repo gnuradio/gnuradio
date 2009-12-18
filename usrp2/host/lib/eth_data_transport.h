@@ -48,6 +48,9 @@ namespace usrp2{
         bool sendv(const iovec *iov, size_t iovlen);
         void recv(data_handler *handler);
         void flush(void);
+        size_t max_bytes(void){
+            return eth_buffer::MAX_PKTLEN - sizeof(u2_eth_packet_t);
+        }
 };
 
 
