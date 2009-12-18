@@ -17,6 +17,7 @@
  */
 
 #include "eth_ctrl_transport.h"
+#include <gruel/inet.h>
 
 usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac, bool target)
  : transport("ethernet control"), d_mac(mac){

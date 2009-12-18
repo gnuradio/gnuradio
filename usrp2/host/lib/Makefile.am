@@ -65,5 +65,4 @@ noinst_HEADERS = \
 	open_usrp2_socket.h \
 	pktfilter.h \
 	transport.h \
-	usrp2_bytesex.h \
 	usrp2_impl.h

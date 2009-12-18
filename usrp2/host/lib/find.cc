@@ -28,6 +28,7 @@
 #include <stdexcept>
 #include <cstdio>
 #include <gruel/thread.h>
+#include <gruel/inet.h>
 #include "eth_ctrl_transport.h"
 
 #define FIND_DEBUG false

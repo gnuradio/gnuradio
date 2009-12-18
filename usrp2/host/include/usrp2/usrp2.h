@@ -87,7 +87,6 @@ namespace usrp2 {
   class usrp2 : boost::noncopyable
   {
   public:
-    static const unsigned int MAX_CHAN = 30;
 
     /*!
      * Shared pointer to this class

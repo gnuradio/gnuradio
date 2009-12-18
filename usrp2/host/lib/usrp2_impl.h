@@ -22,7 +22,6 @@
 #include <usrp2/usrp2.h>
 #include <usrp2/data_handler.h>
 #include <usrp2_eth_packet.h>
-#include <gruel/thread.h>
 #include <boost/scoped_ptr.hpp>
 #include <boost/thread.hpp>
 #include "control.h"

@@ -694,7 +694,7 @@ namespace usrp2 {
 
       //clear the burst flags and count
       hdr_frag.header &= ~(VRTH_START_OF_BURST | VRTH_END_OF_BURST | VRTH_PKT_CNT_MASK);
-      //set the packet count
+      //set the packet count //FIXME packet count should be per stream id
       hdr_frag.header |= ((d_tx_pkt_cnt++ << VRTH_PKT_CNT_SHIFT) & VRTH_PKT_CNT_MASK);
       //start of burst can only be set on the first fragment
       if (hdr->header & VRTH_START_OF_BURST and fn == 0)

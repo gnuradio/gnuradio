@@ -20,7 +20,6 @@
 #define INCLUDED_USRP2_ETH_PACKET_H
 
 #include "usrp2_cdefs.h"
-#include "usrp2_bytesex.h"
 #include "usrp2_mac_addr.h"
 #include "usrp2_mimo_config.h"
 
