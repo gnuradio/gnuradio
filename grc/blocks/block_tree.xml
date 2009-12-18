@@ -138,6 +138,8 @@
 		<block>gr_pll_freqdet_cf</block>
 		<block>gr_pll_refout_cc</block>
 
+                <block>gr_fll_band_edge_cc</block>
+
 		<block>gr_correlate_access_code_bb</block>
 		<block>gr_pn_correlator_cc</block>
 		<block>gr_simple_correlator</block>
