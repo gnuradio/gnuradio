@@ -33,12 +33,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <errno.h>
-#ifdef HAVE_ARPA_INET_H
-#include <arpa/inet.h>
-#elif defined(HAVE_NETINET_IN_H)
-#include <netinet/in.h>
-#endif
-
+#include <gruel/inet.h>
 
 ssize_t
 write_fd(int fd, const void *ptr, size_t nbytes, int sendfd)

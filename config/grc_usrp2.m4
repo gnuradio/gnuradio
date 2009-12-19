@@ -59,9 +59,9 @@ AC_DEFUN([GRC_USRP2],[
     fi
     if test $passed != with; then
 	dnl how and where to find INCLUDES and LA
-	USRP2_INCLUDES="-I\${abs_top_srcdir}/usrp2/host/include \
+	USRP2_INCLUDES="-I\${abs_top_srcdir}/usrp2/include \
 		-I\${abs_top_srcdir}/usrp2/firmware/include"
-        USRP2_LA="\${abs_top_builddir}/usrp2/host/lib/libusrp2.la"
+        USRP2_LA="\${abs_top_builddir}/usrp2/lib/libusrp2.la"
     fi
 
     dnl Include the usrp2 INCLUDES and LA
@@ -69,13 +69,12 @@ AC_DEFUN([GRC_USRP2],[
     AC_SUBST(USRP2_LA)
 
     AC_CONFIG_FILES([ \
-        usrp2/Makefile
-        usrp2/host/Makefile \
-        usrp2/host/usrp2.pc \
-        usrp2/host/include/Makefile
-        usrp2/host/include/usrp2/Makefile
-        usrp2/host/lib/Makefile
-        usrp2/host/apps/Makefile
+        usrp2/Makefile \
+        usrp2/usrp2.pc \
+        usrp2/include/Makefile
+        usrp2/include/usrp2/Makefile
+        usrp2/lib/Makefile
+        usrp2/apps/Makefile
     ])
 
     GRC_BUILD_CONDITIONAL(usrp2)
