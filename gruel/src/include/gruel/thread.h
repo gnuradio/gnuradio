@@ -22,7 +22,7 @@
 #define INCLUDED_THREAD_H
 
 #include <boost/thread.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/bind.hpp> //boost::bind used when creating threads
 
 namespace gruel {
 
@@ -33,7 +33,12 @@ namespace gruel {
   /*!
    * Returns absolute time 'secs' into the future
    */
-  boost::system_time get_new_timeout(double secs);
+  boost::system_time abs_time(double secs);
+
+  /*!
+   * Returns a delta time of 'secs' in duration
+   */
+  boost::posix_time::time_duration delta_time(double secs);
 
 } /* namespace gruel */
 

@@ -27,10 +27,16 @@
 
 namespace gruel {
 
-  boost::system_time
-  get_new_timeout(double secs)
+  boost::posix_time::time_duration
+  delta_time(double secs)
   {
-    return boost::get_system_time() + boost::posix_time::milliseconds(long(secs*1e3));
+    return boost::posix_time::milliseconds(long(secs*1e3));
+  }
+
+  boost::system_time
+  abs_time(double secs)
+  {
+    return boost::system_time() + boost::posix_time::milliseconds(long(secs*1e3));
   }
 
 } /* namespace gruel */

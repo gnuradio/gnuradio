@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008, 2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ namespace usrp2{
             d_ctrl_transport->sendv(&iov, 1);
             //allow responses to gather
             boost::thread *ctrl_thread = new boost::thread(boost::bind(&find_helper::ctrl_thread_loop, this));
-            boost::this_thread::sleep(gruel::get_new_timeout(0.05)); //50ms
+            boost::this_thread::sleep(gruel::delta_time(0.05)); //50ms
             ctrl_thread->interrupt();
             ctrl_thread->join();
             return d_result;

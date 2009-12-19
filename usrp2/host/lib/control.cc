@@ -45,7 +45,7 @@ namespace usrp2 {
   {
     boost::this_thread::disable_interruption di;
     gruel::scoped_lock l(d_mutex);
-    boost::system_time to(gruel::get_new_timeout(secs));
+    boost::system_time to(gruel::abs_time(secs));
 
     while (!d_complete) {
       if (!d_cond.timed_wait(l, to))
