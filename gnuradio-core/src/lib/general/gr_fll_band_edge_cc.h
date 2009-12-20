@@ -58,8 +58,6 @@ class gr_fll_band_edge_cc : public gr_sync_block
 
   gr_fir_ccc*             d_filter_upper;
   gr_fir_ccc*             d_filter_lower;
-  std::vector<gr_complex> d_taps_upper;
-  std::vector<gr_complex> d_taps_lower;
   bool			  d_updated;
   float                   d_error;
   float                   d_freq;
@@ -72,21 +70,26 @@ class gr_fll_band_edge_cc : public gr_sync_block
   gr_fll_band_edge_cc(float samps_per_sym, float rolloff,
 		      int filter_size, float alpha, float beta);
 
+  void set_filter_taps (const std::vector<gr_complex> &taps,
+			gr_fir_ccc *filter);
+
 public:
   ~gr_fll_band_edge_cc ();
   
   /*!
-   * Resets the filter taps with the new prototype filter
-   * \param taps    (vector/list of gr_complex) The band-edge filter
+   * Design the band-edge filter based on the number of samples per symbol,
+   * filter rolloff factor, and the filter size
+   * \param samps_per_sym    (float) Number of samples per symbol of signal
+   * \param rolloff          (float) Rolloff factor of signal
+   * \param filter_size      (int)   Size (in taps) of the filter
    */
-  void set_taps_lower (const std::vector<gr_complex> &taps);
-  void set_taps_upper (const std::vector<gr_complex> &taps);
+  void design_filter(float samps_per_sym, float rolloff, int filter_size);
 
   /*!
    * Set the alpha gainvalue
    * \param alpha    (float) new gain value
    */
-  void set_alpha(float alpha) { d_alpha = alpha; }
+  void set_alpha(float alpha);
 
   /*!
    * Set the beta gain value

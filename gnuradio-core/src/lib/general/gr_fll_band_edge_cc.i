@@ -36,5 +36,6 @@ class gr_fll_band_edge_cc : public gr_sync_block
 
   void set_alpha (float alpha);
   void set_beta (float beta);
+  void design_filter(float samps_per_sym, float rolloff, int filter_size);
   void print_taps();
 };

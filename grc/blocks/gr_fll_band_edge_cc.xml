@@ -58,4 +58,19 @@
 		<name>out</name>
 		<type>$type.output</type>
 	</source>
+	<source>
+		<name>freq</name>
+		<type>float</type>
+		<optional>1</optional>
+	</source>
+	<source>
+		<name>phase</name>
+		<type>float</type>
+		<optional>1</optional>
+	</source>
+	<source>
+		<name>error</name>
+		<type>float</type>
+		<optional>1</optional>
+	</source>
 </block>
