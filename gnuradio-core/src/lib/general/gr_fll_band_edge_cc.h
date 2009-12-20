@@ -39,6 +39,26 @@ class gri_fft_complex;
  * \brief Frequency Lock Loop using band-edge filters
  *
  * \ingroup general
+ *
+ * The frequency lock loop derives a band-edge filter that covers the upper and lower bandwidths
+ * of a digitally-modulated signal. The bandwidth range is determined by the excess bandwidth
+ * (e.g., rolloff factor) of the modulated signal. The placement in frequency of the band-edges
+ * is determined by the oversampling ratio (number of samples per symbol) and the excess bandwidth.
+ * The size of the filters should be fairly large so as to average over a number of symbols.
+ * The FLL works by calculating the power in both the upper and lower bands and comparing them. The
+ * difference in power between the filters is proportional to the frequency offset.
+ *
+ * In theory, the band-edge filter is the derivative of the matched filter in frequency, 
+ * (H_be(f) = \frac{H(f)}{df}. In practice, this comes down to a quarter sine wave at the point
+ * of the matched filter's rolloff (if it's a raised-cosine, the derivative of a cosine is a sine).
+ * Extend this sine by another quarter wave to make a half wave around the band-edges is equivalent
+ * in time to the sum of two sinc functions. The baseband filter fot the band edges is therefore
+ * derived from this sum of sincs. The band edge filters are then just the baseband signal
+ * modulated to the correct place in frequency. All of these calculations are done in the
+ * 'design_filter' function.
+ *
+ * Note: We use FIR filters here because the filters have to have a flat phase response over the
+ * entire frequency range to allow their comparisons to be valid.
  */
 
 class gr_fll_band_edge_cc : public gr_sync_block
@@ -46,7 +66,11 @@ class gr_fll_band_edge_cc : public gr_sync_block
  private:
   /*!
    * Build the FLL
-   * \param taps    (vector/list of gr_complex) The taps of the band-edge filter
+   * \param samps_per_sym    (float) Number of samples per symbol of signal
+   * \param rolloff          (float) Rolloff factor of signal
+   * \param filter_size      (int)   Size (in taps) of the filter
+   * \param alpha            (float) Loop gain 1
+   * \param beta             (float) Loop gain 2
    */
   friend gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float samps_per_sym, float rolloff,
 							    int filter_size, float alpha, float beta);
