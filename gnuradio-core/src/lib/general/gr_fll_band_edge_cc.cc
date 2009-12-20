@@ -122,20 +122,14 @@ gr_fll_band_edge_cc::design_filter(float samps_per_sym, float rolloff, int filte
   d_filter_upper = gr_fir_util::create_gr_fir_ccc(vtaps);
   d_filter_lower = gr_fir_util::create_gr_fir_ccc(vtaps);
 
-  set_filter_taps(taps_lower, d_filter_lower);
-  set_filter_taps(taps_upper, d_filter_upper);
-}
-
-void
-gr_fll_band_edge_cc::set_filter_taps(const std::vector<gr_complex> &taps, 
-				     gr_fir_ccc *filter)
-{
-  filter->set_taps(taps);
-
-  // Set the history to ensure enough input items for each filter
-  set_history(taps.size()+1);
+  d_filter_lower->set_taps(taps_lower);
+  d_filter_upper->set_taps(taps_upper);
 
   d_updated = true;
+
+  // Set the history to ensure enough input items for each filter
+  set_history(filter_size+1);
+
 }
 
 void

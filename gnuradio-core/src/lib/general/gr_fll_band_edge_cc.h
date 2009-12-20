@@ -70,9 +70,6 @@ class gr_fll_band_edge_cc : public gr_sync_block
   gr_fll_band_edge_cc(float samps_per_sym, float rolloff,
 		      int filter_size, float alpha, float beta);
 
-  void set_filter_taps (const std::vector<gr_complex> &taps,
-			gr_fir_ccc *filter);
-
 public:
   ~gr_fll_band_edge_cc ();
   
