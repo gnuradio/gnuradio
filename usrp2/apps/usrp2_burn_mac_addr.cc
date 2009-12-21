@@ -64,37 +64,6 @@ usage(const char *progname)
   fprintf(stderr, "  new_mac_address must be HH:HH or HH:HH:HH:HH:HH:HH\n");
 }
 
-static bool
-check_mac_addr_syntax(const std::string &s)
-{
-  unsigned char addr[6];
-
-  addr[0] = 0x00;		// Matt's IAB
-  addr[1] = 0x50;
-  addr[2] = 0xC2;
-  addr[3] = 0x85;
-  addr[4] = 0x30;
-  addr[5] = 0x00;
-    
-  int len = s.size();
-    
-  switch (len){
-      
-  case 5:
-    return sscanf(s.c_str(), "%hhx:%hhx", &addr[4], &addr[5]) == 2;
-      
-  case 17:
-    return sscanf(s.c_str(), "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
-		  &addr[0], &addr[1], &addr[2],
-		  &addr[3], &addr[4], &addr[5]) == 6;
-  default:
-    return false;
-  }
-
-  return true;
-}
-
-
 int
 main(int argc, char **argv)
 {
@@ -126,29 +95,23 @@ main(int argc, char **argv)
   }
 
   new_mac_addr = argv[optind];
-
-  if (!check_mac_addr_syntax(old_mac_addr)){
-    fprintf(stderr, "invalid mac address: %s\n", old_mac_addr);
-    exit(1);
-  }
-  if (!check_mac_addr_syntax(new_mac_addr)){
-    fprintf(stderr, "invalid mac address: %s\n", new_mac_addr);
-    exit(1);
-  }
   
   install_sig_handler(SIGINT, sig_handler);
 
   usrp2::usrp2::sptr u2;
 
   try {
-    u2 = usrp2::usrp2::make(interface, old_mac_addr);
+    usrp2::props p(usrp2::USRP_TYPE_ETH);
+    p.eth_args.ifc = interface;
+    p.eth_args.mac_addr = usrp2::u2_mac_addr(old_mac_addr);
+    u2 = usrp2::usrp2::make(p);
   }
   catch (std::exception const &e){
     std::cerr << e.what() << std::endl;
     return 1;
   }
 
-  if (!u2->burn_mac_addr(new_mac_addr)){
+  if (!u2->burn_mac_addr(usrp2::u2_mac_addr(new_mac_addr))){
     std::cerr << "Failed to burn mac address: "
 	      << new_mac_addr << std::endl;
     return 1;
@@ -163,7 +126,10 @@ main(int argc, char **argv)
   nanosleep(&ts, 0);
 
   try {
-    u2 = usrp2::usrp2::make(interface, new_mac_addr);
+    usrp2::props p(usrp2::USRP_TYPE_ETH);
+    p.eth_args.ifc = interface;
+    p.eth_args.mac_addr = usrp2::u2_mac_addr(new_mac_addr);
+    u2 = usrp2::usrp2::make(p);
   }
   catch (std::exception const &e){
     std::cerr << "Failed to connect to USRP2 using new addr: "

@@ -20,108 +20,124 @@
 #include <config.h>
 #endif
 
-#include <usrp2_eth_packet.h>
 #include <usrp2/usrp2.h>
 #include <boost/shared_ptr.hpp>
-#include <string.h>
+#include <cstring>
 #include <iostream>
 #include <stdexcept>
 #include <cstdio>
 #include <gruel/thread.h>
-#include <gruel/inet.h>
+#include <boost/foreach.hpp>
+
+/*!
+ * A properties accumulator allows finders to register found props.
+ * Registering and getting the props is a thread safe operation.
+ */
+class props_accum{
+private:
+    usrp2::props_vector_t    d_found;
+    gruel::mutex             d_mutex;
+public:
+    void operator()(const usrp2::props &p){
+        gruel::scoped_lock l(d_mutex);
+        d_found.push_back(p);
+    }
+    usrp2::props_vector_t get(void){
+        gruel::scoped_lock l(d_mutex);
+        return d_found;
+    }
+};
+
+/*!
+ * The base class for all finders.
+ * TODO: expanded this base class to house common stuff (when more finders are implemented).
+ */
+class finder{
+    public: virtual ~finder(){}
+};
+
 #include "eth_ctrl_transport.h"
+/*!
+ * The ethernet finder for locating usrps over raw ethernet.
+ * The hint parameter must specify the name of an interface.
+ */
+class eth_finder : private usrp2::data_handler, public finder{
+private:
+    props_accum              *d_props_accum;
+    usrp2::props             d_hint;
+    usrp2::transport::sptr   d_ctrl_transport;
+    boost::thread            *d_ctrl_thread;
 
-#define FIND_DEBUG false
+public:
+    eth_finder(props_accum *pa, const usrp2::props &hint): d_props_accum(pa), d_hint(hint){
+        d_ctrl_transport = usrp2::transport::sptr(new usrp2::eth_ctrl_transport(d_hint.eth_args.ifc, d_hint.eth_args.mac_addr));
+        //build the control packet
+        op_generic_t op_id;
+        op_id.opcode = OP_ID;
+        op_id.len = sizeof(op_generic_t);
+        //send the control packet
+        iovec iov;
+        iov.iov_base = &op_id;
+        iov.iov_len = sizeof(op_generic_t);
+        d_ctrl_transport->sendv(&iov, 1);
+        //spawn new thread
+        d_ctrl_thread = new boost::thread(boost::bind(&eth_finder::ctrl_thread_loop, this));
+    }
 
-static const u2_mac_addr_t broadcast_mac_addr =
-      {{ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff }};
+    ~eth_finder(void){
+        d_ctrl_thread->interrupt();
+        d_ctrl_thread->join();
+    }
+
+    data_handler::result operator()(const void *base, size_t len){
+        //copy the packet into an reply structure
+        op_id_reply_t op_id_reply;
+        memset(&op_id_reply, 0, sizeof(op_id_reply_t));
+        memcpy(&op_id_reply, base, std::min(sizeof(op_id_reply_t), len));
+
+        //inspect the reply packet and store into result
+        if (op_id_reply.opcode != OP_ID_REPLY) // ignore
+            return data_handler::DONE;
+        usrp2::props p(usrp2::USRP_TYPE_ETH);
+        p.eth_args.ifc = d_hint.eth_args.ifc;
+        memcpy(&p.eth_args.mac_addr, &op_id_reply.addr, sizeof(p.eth_args.mac_addr));
+        (*d_props_accum)(p);
+        return data_handler::DONE;
+    }
+
+    void ctrl_thread_loop(void){
+        while(true){
+            d_ctrl_transport->recv(this);
+            boost::this_thread::interruption_point();
+        }
+    }
+};
 
 namespace usrp2{
-    class find_helper : private data_handler{
-    private:
-        const std::string d_target_addr;
-        transport::sptr   d_ctrl_transport;
-        props_vector_t    d_result;
-
-    public:
-        typedef boost::shared_ptr<find_helper> sptr;
-
-        find_helper(const std::string &ifc, const std::string &addr): d_target_addr(addr){
-            d_ctrl_transport = transport::sptr(new eth_ctrl_transport(ifc, broadcast_mac_addr, false));
-        }
-
-        ~find_helper(void){/*NOP*/}
-
-        props_vector_t find(void){
-            //build the control packet
-            op_generic_t op_id;
-            op_id.opcode = OP_ID;
-            op_id.len = sizeof(op_generic_t);
-            //send the control packet
-            iovec iov;
-            iov.iov_base = &op_id;
-            iov.iov_len = sizeof(op_generic_t);
-            d_ctrl_transport->sendv(&iov, 1);
-            //allow responses to gather
-            boost::thread *ctrl_thread = new boost::thread(boost::bind(&find_helper::ctrl_thread_loop, this));
-            boost::this_thread::sleep(gruel::delta_time(0.05)); //50ms
-            ctrl_thread->interrupt();
-            ctrl_thread->join();
-            return d_result;
-        }
-
-        data_handler::result operator()(const void *base, size_t len){
-            //copy the packet into an reply structure
-            op_id_reply_t op_id_reply;
-            memset(&op_id_reply, 0, sizeof(op_id_reply_t));
-            memcpy(&op_id_reply, base, std::min(sizeof(op_id_reply_t), len));
-
-            //inspect the reply packet and store into result
-            if (op_id_reply.opcode != OP_ID_REPLY) // ignore
-                return data_handler::DONE;
-            props p = reply_to_props(&op_id_reply);
-            if (FIND_DEBUG)
-                std::cerr << "usrp2::find: response from " << p.addr << std::endl;
-            if ((d_target_addr == "") || (d_target_addr == p.addr))
-                d_result.push_back(p);
-            return data_handler::DONE;
-        }
-
-        void ctrl_thread_loop(void){
-            while(true){
-                d_ctrl_transport->recv(this);
-                boost::this_thread::interruption_point();
-            }
-        }
-
-    private:
-        static props
-        reply_to_props(const op_id_reply_t *r)
-        {
-            const uint8_t *mac = (const uint8_t *)&r->addr;
-            char addr_buf[128];
-            snprintf(addr_buf, sizeof(addr_buf), "%02x:%02x:%02x:%02x:%02x:%02x",
-                 mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-              
-            props p;
-            p.addr = std::string(addr_buf);  
-            p.hw_rev = ntohs(r->hw_rev);
-            memcpy(p.fpga_md5sum, r->fpga_md5sum, sizeof(p.fpga_md5sum));
-            memcpy(p.sw_md5sum, r->sw_md5sum, sizeof(p.sw_md5sum));
-            return p;
-        }
-    };
 
     props_vector_t
-    find(const std::string &ifc, const std::string &addr)
+    find(const props &hint)
     {
-        if (FIND_DEBUG) {
-            std::cerr << "usrp2::find: Searching interface " << ifc << " for "
-                      << (addr == "" ? "all USRP2s" : addr)
-                      << std::endl;
+        props_accum pa;
+        std::vector <finder*> finders;
+        //create finders based on the hint
+        switch (hint.type){
+        case USRP_TYPE_AUTO:
+            finders.push_back(new eth_finder(&pa, hint));
+            break;
+        case USRP_TYPE_VIRTUAL: break;
+        case USRP_TYPE_USB: break;
+        case USRP_TYPE_ETH:
+            finders.push_back(new eth_finder(&pa, hint));
+            break;
+        case USRP_TYPE_UDP: break;
+        case USRP_TYPE_GPMC: break;
         }
-        find_helper::sptr fh(new find_helper(ifc, addr));
-        return fh->find();
+        //allow responses to gather
+        boost::this_thread::sleep(gruel::delta_time(0.05)); //50ms
+        //destroy all the finders
+        BOOST_FOREACH(finder *f, finders){delete f;}
+        return pa.get();
     }
 
 } // namespace usrp2

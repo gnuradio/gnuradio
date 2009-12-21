@@ -18,12 +18,10 @@
 
 #include "eth_data_transport.h"
 #include <gruel/inet.h>
-#include <gruel/realtime.h>
-#include <gruel/sys_pri.h>
-#include <iostream>
-#include <cstdio>
+#include <stdexcept>
+#include <cstring>
 
-usrp2::eth_data_transport::eth_data_transport(const std::string &ifc, u2_mac_addr_t mac, size_t rx_bufsize)
+usrp2::eth_data_transport::eth_data_transport(const std::string &ifc, const u2_mac_addr &mac, size_t rx_bufsize)
  : transport("ethernet control"), d_mac(mac), d_tx_seqno(0), d_rx_seqno(0),
  d_num_rx_frames(0), d_num_rx_missing(0), d_num_rx_overruns(0), d_num_rx_bytes(0){
 
@@ -33,7 +31,7 @@ usrp2::eth_data_transport::eth_data_transport(const std::string &ifc, u2_mac_add
         throw std::runtime_error("Unable to open/register USRP2 data protocol");
 
     //create and attach packet filter
-    d_pf_data = pktfilter::make_ethertype_inbound_target(U2_DATA_ETHERTYPE, (const unsigned char*)&(d_mac.addr));
+    d_pf_data = pktfilter::make_ethertype_inbound_target(U2_DATA_ETHERTYPE, (const unsigned char*)&d_mac);
     if (!d_pf_data || !d_eth_data->attach_pktfilter(d_pf_data))
         throw std::runtime_error("Unable to attach packet filter for data packets.");
 
@@ -57,7 +55,7 @@ bool usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
     //setup a new ethernet header
     u2_eth_packet_t hdr;
     hdr.ehdr.ethertype = htons(U2_DATA_ETHERTYPE);
-    memcpy(&hdr.ehdr.dst, d_mac.addr, 6);
+    memcpy(&hdr.ehdr.dst, &d_mac, 6);
     memcpy(&hdr.ehdr.src, d_eth_data->mac(), 6);
     hdr.thdr.flags = 0; // FIXME transport header values?
     hdr.thdr.seqno = d_tx_seqno++;

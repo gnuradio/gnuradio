@@ -18,8 +18,12 @@
 
 #include "eth_ctrl_transport.h"
 #include <gruel/inet.h>
+#include <cstring>
+#include <stdexcept>
 
-usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac, bool target)
+static const usrp2::u2_mac_addr broadcast_mac_addr("ff:ff:ff:ff:ff:ff");
+
+usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, const u2_mac_addr &mac)
  : transport("ethernet control"), d_mac(mac){
 
     //create raw ethernet device
@@ -28,8 +32,10 @@ usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, u2_mac_add
         throw std::runtime_error("Unable to open/register USRP2 control protocol");
 
     //create and attach packet filter
-    if (target) d_pf_ctrl = pktfilter::make_ethertype_inbound_target(U2_CTRL_ETHERTYPE, (const unsigned char*)&(d_mac.addr));
-    else        d_pf_ctrl = pktfilter::make_ethertype_inbound(U2_CTRL_ETHERTYPE, d_eth_ctrl->mac());
+    if (memcmp(&d_mac, &broadcast_mac_addr, sizeof(d_mac)) == 0)
+        d_pf_ctrl = pktfilter::make_ethertype_inbound(U2_CTRL_ETHERTYPE, d_eth_ctrl->mac());
+    else
+        d_pf_ctrl = pktfilter::make_ethertype_inbound_target(U2_CTRL_ETHERTYPE, (const unsigned char*)&d_mac);
     if (!d_pf_ctrl || !d_eth_ctrl->attach_pktfilter(d_pf_ctrl))
         throw std::runtime_error("Unable to attach packet filter for control packets.");
 
@@ -53,7 +59,7 @@ bool usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
     //setup a new ethernet header
     u2_eth_packet_t hdr;
     hdr.ehdr.ethertype = htons(U2_CTRL_ETHERTYPE);
-    memcpy(&hdr.ehdr.dst, d_mac.addr, 6);
+    memcpy(&hdr.ehdr.dst, &d_mac, 6);
     memcpy(&hdr.ehdr.src, d_eth_ctrl->mac(), 6);
     hdr.thdr.flags = 0; // FIXME transport header values?
     hdr.thdr.seqno = 0;

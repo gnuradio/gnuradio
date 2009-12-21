@@ -19,10 +19,11 @@
 #ifndef INCLUDED_ETH_CTRL_TRANSPORT_H
 #define INCLUDED_ETH_CTRL_TRANSPORT_H
 
+#include <usrp2_eth_packet.h>
+#include <usrp2/props.h>
 #include "transport.h"
 #include "ethernet.h"
 #include "pktfilter.h"
-#include "usrp2_impl.h"
 
 namespace usrp2{
 
@@ -30,21 +31,17 @@ namespace usrp2{
     private:
         ethernet      *d_eth_ctrl;  // unbuffered control frames
         pktfilter     *d_pf_ctrl;
-        u2_mac_addr_t d_mac;
+        u2_mac_addr   d_mac;
         uint8_t       d_buff[ethernet::MAX_PKTLEN];
-        double_t      d_timeout;
         uint8_t       d_padding[ethernet::MIN_PKTLEN];
 
     public:
         /*!
          * \brief Create a new transport for the raw ethernet control
-         * When the target is true, the packet filter is setup for the usrp mac address.
-         * When the target is false, the packet filter is setup to ignore our mac address.
          * \param ifc the ethernet device name
          * \param mac the destination mac address
-         * \param target true for an inbound target
          */
-        eth_ctrl_transport(const std::string &ifc, u2_mac_addr_t mac, bool target = true);
+        eth_ctrl_transport(const std::string &ifc, const u2_mac_addr &mac);
         ~eth_ctrl_transport();
         bool sendv(const iovec *iov, size_t iovlen);
         void recv(data_handler *handler);

@@ -31,49 +31,6 @@
 #include "eth_ctrl_transport.h"
 #include "eth_data_transport.h"
 
-static bool
-string_to_mac_addr(const std::string &s, u2_mac_addr_t *p)
-{
-    p->addr[0] = 0x00;		// Matt's IAB
-    p->addr[1] = 0x50;
-    p->addr[2] = 0xC2;
-    p->addr[3] = 0x85;
-    p->addr[4] = 0x30;
-    p->addr[5] = 0x00;
-
-    int len = s.size();
-
-    switch (len){
-      
-    case 5:
-      return sscanf(s.c_str(), "%hhx:%hhx", &p->addr[4], &p->addr[5]) == 2;
-      
-    case 17:
-      return sscanf(s.c_str(), "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx",
-            &p->addr[0], &p->addr[1], &p->addr[2],
-            &p->addr[3], &p->addr[4], &p->addr[5]) == 6;
-    default:
-      return false;
-    }
-}
-
-static bool
-parse_mac_addr(const std::string &s, std::string &ns)
-{
-    u2_mac_addr_t p;
-
-    if (not string_to_mac_addr(s, &p))
-        return false;
-
-    char buf[128];
-    snprintf(buf, sizeof(buf),
-         "%02x:%02x:%02x:%02x:%02x:%02x",
-         p.addr[0],p.addr[1],p.addr[2],
-         p.addr[3],p.addr[4],p.addr[5]);
-    ns = std::string(buf);
-    return true;
-}
-
 namespace usrp2 {
 
   // --- Table of weak pointers to usrps we know about ---
@@ -95,9 +52,9 @@ namespace usrp2 {
   static usrp_table s_table;
 
   usrp2::sptr
-  usrp2::find_existing_or_make_new(const std::string &ifc, props *pr, size_t rx_bufsize)
+  usrp2::find_existing_or_make_new(const props &pr, size_t rx_bufsize)
   {
-    std::string key = ifc + ":" + pr->addr;
+    std::string key = props::to_string(pr);
 
     boost::mutex::scoped_lock	guard(s_table_mutex);
 
@@ -115,7 +72,7 @@ namespace usrp2 {
     // We don't have the USRP2 we're looking for
 
     // create a new one and stick it in the table.
-    usrp2::sptr r(new usrp2::usrp2(ifc, pr, rx_bufsize));
+    usrp2::sptr r(new usrp2::usrp2(pr, rx_bufsize));
     usrp_table_entry t(key, r);
     s_table.push_back(t);
 
@@ -125,41 +82,40 @@ namespace usrp2 {
   // --- end of table code ---
 
   usrp2::sptr
-  usrp2::make(const std::string &ifc, const std::string &addr, size_t rx_bufsize)
+  usrp2::make(const props &hint, size_t rx_bufsize)
   {
-    u2_mac_addr_t mac;
-    if (addr != "" && !string_to_mac_addr(addr, &mac))
-      throw std::runtime_error("Invalid MAC address");
 
-    std::string naddr = "";
-    parse_mac_addr(addr, naddr);
+    props_vector_t props = find(hint);
+    int n = props.size();
 
-    props_vector_t u2s = find(ifc, naddr);
-    int n = u2s.size();
-
-    if (n == 0) {
-      if (addr == "")
-	throw std::runtime_error("No USRPs found on interface " + ifc);
-      else
-	throw std::runtime_error("No USRP found with addr " + addr + " on interface " + ifc);
-    }
+    if (n == 0)
+      throw std::runtime_error("No USRPs found");
 
     if (n > 1)
-      throw std::runtime_error("Multiple USRPs found on interface; must select by MAC address.");
+      throw std::runtime_error("Multiple USRPs found; must select by args.");
 
-    return find_existing_or_make_new(ifc, &u2s[0], rx_bufsize);
+    return find_existing_or_make_new(props[0], rx_bufsize);
   }
 
   // Private constructor.  Sole function is to create an impl.
-  usrp2::usrp2(const std::string &ifc, props *p, size_t rx_bufsize)
+  usrp2::usrp2(const props &p, size_t rx_bufsize): d_props(p)
   {
-    u2_mac_addr_t mac;
-    d_mac = p->addr;
-    d_ifc = ifc;
-    string_to_mac_addr(d_mac, &mac);
-    //create transports for data and control
-    transport::sptr ctrl_transport(new eth_ctrl_transport(ifc, mac));
-    transport::sptr data_transport(new eth_data_transport(ifc, mac, rx_bufsize));
+    transport::sptr ctrl_transport;
+    transport::sptr data_transport;
+
+    //create the transports based on the usrp type
+    switch (p.type){
+    case USRP_TYPE_AUTO: throw std::runtime_error("Not supported");
+    case USRP_TYPE_VIRTUAL: throw std::runtime_error("Not supported");
+    case USRP_TYPE_USB: throw std::runtime_error("Not supported");
+    case USRP_TYPE_ETH:
+        ctrl_transport = transport::sptr(new eth_ctrl_transport(p.eth_args.ifc, p.eth_args.mac_addr));
+        data_transport = transport::sptr(new eth_data_transport(p.eth_args.ifc, p.eth_args.mac_addr, rx_bufsize));
+        break;
+    case USRP_TYPE_UDP: throw std::runtime_error("Not supported");
+    case USRP_TYPE_GPMC: throw std::runtime_error("Not supported");
+    }
+
     //pass the transports into a new usrp2 impl
     d_impl = std::auto_ptr<impl>(new usrp2::impl(data_transport, ctrl_transport));
   }
@@ -168,18 +124,6 @@ namespace usrp2 {
   usrp2::~usrp2()
   {
     // NOP
-  }
-  
-  std::string
-  usrp2::mac_addr()
-  {
-    return d_mac;
-  }
-
-  std::string
-  usrp2::interface_name()
-  {
-    return d_ifc;
   }
 
   // Receive
@@ -426,10 +370,10 @@ namespace usrp2 {
   // low level methods
 
   bool
-  usrp2::burn_mac_addr(const std::string &new_addr)
+  usrp2::burn_mac_addr(const u2_mac_addr &new_addr)
   {
     u2_mac_addr_t mac;
-    string_to_mac_addr(new_addr, &mac);
+    memcpy(&mac, &new_addr, sizeof(u2_mac_addr));
     return d_impl->burn_mac_addr(&mac);
   }
 
@@ -488,14 +432,3 @@ namespace usrp2 {
   }
 
 } // namespace usrp2
-
-std::ostream& operator<<(std::ostream &os, const usrp2::props &x)
-{
-  os << x.addr;
-
-  char buf[128];
-  snprintf(buf, sizeof(buf)," hw_rev = 0x%04x", x.hw_rev);
-
-  os << buf;
-  return os;
-}

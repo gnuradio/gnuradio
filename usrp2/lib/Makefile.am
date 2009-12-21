@@ -42,6 +42,7 @@ libusrp2_la_SOURCES = \
 	find.cc \
 	open_usrp2_socket.cc \
 	pktfilter.cc \
+	props.cc \
 	rx_nop_handler.cc \
 	strtod_si.c \
 	usrp2.cc \

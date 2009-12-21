@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,12 +36,12 @@ int
 main(int argc, char **argv)
 {
   int ch;
-  const char *interface = "eth0";
+  usrp2::props hint(usrp2::USRP_TYPE_ETH);
 
   while ((ch = getopt(argc, argv, "he:")) != EOF){
     switch (ch){
     case 'e':
-      interface = optarg;
+      hint.eth_args.ifc = std::string(optarg);
       break;
       
     case 'h':
@@ -55,11 +55,14 @@ main(int argc, char **argv)
     usage(argv[0]);
     exit(1);
   }
-  
-  usrp2::props_vector_t r = usrp2::find(interface);
+
+  usrp2::props_vector_t r = usrp2::find(hint);
 
   for (size_t i = 0; i < r.size(); i++){
-    std::cout << r[i] << std::endl;
+    std::cout << "------------------------------" << std::endl;
+    std::cout << "-- Found USRP " << i << std::endl;
+    std::cout << "------------------------------" << std::endl;
+    std::cout << r[i] << std::endl << std::endl;
   }
 
   if (r.size() == 0){

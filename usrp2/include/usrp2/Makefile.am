@@ -28,5 +28,6 @@ usrp2include_HEADERS = \
 	rx_nop_handler.h \
 	strtod_si.h \
 	tune_result.h \
+	props.h \
 	usrp2.h \
 	usrp2_cdefs.h
