@@ -54,7 +54,7 @@ class dialog_box(QtGui.QMainWindow):
 
         self.set_alpha_time(self.fg.rx_timing_gain_alpha())
         self.set_beta_time(self.fg.rx_timing_gain_beta())
-        self.set_alpha_freq(self.fg.rx_freq_gain_alpha())
+        self.set_alpha_phase(self.fg.rx_phase_gain_alpha())
 
         # Add the qtsnk widgets to the hlayout box
         self.gui.sinkLayout.addWidget(snkTx)
@@ -79,8 +79,8 @@ class dialog_box(QtGui.QMainWindow):
                      self.alphaTimeEditText)
         self.connect(self.gui.betaTimeEdit, QtCore.SIGNAL("editingFinished()"),
                      self.betaTimeEditText)
-        self.connect(self.gui.alphaFreqEdit, QtCore.SIGNAL("editingFinished()"),
-                     self.alphaFreqEditText)
+        self.connect(self.gui.alphaPhaseEdit, QtCore.SIGNAL("editingFinished()"),
+                     self.alphaPhaseEditText)
 
         # Build a timer to update the packet number and PER fields
         self.update_delay = 250  # time between updating packet rate fields
@@ -151,13 +151,13 @@ class dialog_box(QtGui.QMainWindow):
     def set_beta_time(self, beta):
         self.gui.betaTimeEdit.setText(QtCore.QString("%1").arg(beta))
 
-    def set_alpha_freq(self, alpha):
-        self.gui.alphaFreqEdit.setText(QtCore.QString("%1").arg(alpha))
+    def set_alpha_phase(self, alpha):
+        self.gui.alphaPhaseEdit.setText(QtCore.QString("%1").arg(alpha))
 
-    def alphaFreqEditText(self):
+    def alphaPhaseEditText(self):
         try:
-            alpha = self.gui.alphaFreqEdit.text().toDouble()[0]
-            self.fg.set_rx_freq_gain_alpha(alpha)
+            alpha = self.gui.alphaPhaseEdit.text().toDouble()[0]
+            self.fg.set_rx_phase_gain_alpha(alpha)
         except RuntimeError:
             pass
 
@@ -220,7 +220,7 @@ class my_top_block(gr.top_block):
         # FIXME: do better exposure to lower issues for control
         self._timing_gain_alpha = self.rxpath.packet_receiver._demodulator._timing_alpha
         self._timing_gain_beta = self.rxpath.packet_receiver._demodulator._timing_beta
-        self._freq_gain_alpha = self.rxpath.packet_receiver._demodulator._costas_alpha
+        self._phase_gain_alpha = self.rxpath.packet_receiver._demodulator._costas_alpha
 
         if channelon:
             self.channel = gr.channel_model(self._noise_voltage,
@@ -257,14 +257,16 @@ class my_top_block(gr.top_block):
             
                 # Connect to the QT sinks
                 # FIXME: make better exposure to receiver from rxpath
-                self.freq_recov = self.rxpath.packet_receiver._demodulator.clock_recov
+                self.freq_recov = self.rxpath.packet_receiver._demodulator.freq_recov
+                self.phase_recov = self.rxpath.packet_receiver._demodulator.phase_recov
                 self.time_recov = self.rxpath.packet_receiver._demodulator.time_recov
-                self.freq_recov.set_alpha(self._freq_gain_alpha)
-                self.freq_recov.set_beta(0.25*self._freq_gain_alpha*self._freq_gain_alpha)
+                self.phase_recov.set_alpha(self._phase_gain_alpha)
+                self.phase_recov.set_beta(0.25*self._phase_gain_alpha*self._phase_gain_alpha)
                 self.time_recov.set_alpha(self._timing_gain_alpha)
                 self.time_recov.set_beta(self._timing_gain_beta)
                 self.connect(self.channel, self.snk_tx)
-                self.connect(self.time_recov, self.snk_rx)
+                self.connect(self.phase_recov, self.snk_rx)
+                #self.connect(self.freq_recov, self.snk_rx)
 
                 pyTxQt  = self.snk_tx.pyqwidget()
                 pyTx = sip.wrapinstance(pyTxQt, QtGui.QWidget)
@@ -335,17 +337,17 @@ class my_top_block(gr.top_block):
         self._timing_gain_beta = gain
         self.time_recov.set_beta(self._timing_gain_beta)
 
-    def rx_freq_gain_alpha(self):
-        return self._freq_gain_alpha
+    def rx_phase_gain_alpha(self):
+        return self._phase_gain_alpha
 
-    def rx_freq_gain_beta(self):
-        return self._freq_gain_beta
+    def rx_phase_gain_beta(self):
+        return self._phase_gain_beta
     
-    def set_rx_freq_gain_alpha(self, alpha):
-        self._freq_gain_alpha = alpha
-        self._freq_gain_beta = .25 * self._freq_gain_alpha * self._freq_gain_alpha
-        self.freq_recov.set_alpha(self._freq_gain_alpha)
-        self.freq_recov.set_beta(self._freq_gain_beta)
+    def set_rx_phase_gain_alpha(self, alpha):
+        self._phase_gain_alpha = alpha
+        self._phase_gain_beta = .25 * self._phase_gain_alpha * self._phase_gain_alpha
+        self.phase_recov.set_alpha(self._phase_gain_alpha)
+        self.phase_recov.set_beta(self._phase_gain_beta)
 
 
 
