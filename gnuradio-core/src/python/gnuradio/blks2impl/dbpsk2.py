@@ -38,6 +38,7 @@ _def_gray_code = True
 _def_verbose = False
 _def_log = False
 
+_def_freq_alpha = 4e-3
 _def_costas_alpha = 0.1
 _def_timing_alpha = 0.100
 _def_timing_beta = 0.010
@@ -182,6 +183,7 @@ class dbpsk2_demod(gr.hier_block2):
     def __init__(self,
                  samples_per_symbol=_def_samples_per_symbol,
                  excess_bw=_def_excess_bw,
+                 freq_alpha=_def_freq_alpha,
                  costas_alpha=_def_costas_alpha,
                  timing_alpha=_def_timing_alpha,
                  timing_max_dev=_def_timing_max_dev,
@@ -199,9 +201,11 @@ class dbpsk2_demod(gr.hier_block2):
 	@type samples_per_symbol: float
 	@param excess_bw: Root-raised cosine filter excess bandwidth
 	@type excess_bw: float
-        @param costas_alpha: loop filter gain
+        @param freq_alpha: loop filter gain for frequency recovery
+        @type freq_alpha: float
+        @param costas_alpha: loop filter gain for phase/fine frequency recovery
         @type costas_alpha: float
-        @param timing_alpha: timing loop alpha gain
+        @param timing_alpha: loop alpha gain for timing recovery
         @type timing_alpha: float
         @param timing_max: timing loop maximum rate deviations
         @type timing_max: float
@@ -223,6 +227,8 @@ class dbpsk2_demod(gr.hier_block2):
 
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
+        self._freq_alpha = freq_alpha
+        self._freq_beta = 0.25*self._freq_alpha**2
         self._costas_alpha = costas_alpha
         self._timing_alpha = timing_alpha
         self._timing_beta = _def_timing_beta
@@ -238,14 +244,12 @@ class dbpsk2_demod(gr.hier_block2):
         self.agc = gr.agc2_cc(0.6e-1, 1e-3, 1, 1, 100)
         #self.agc = gr.feedforward_agc_cc(16, 1.0)
 
-        self._costas_beta  = 0.25 * self._costas_alpha * self._costas_alpha
-        # Allow a frequency swing of +/- half of the sample rate
-        fmin = -0.5
-        fmax = 0.5
-        
-        self.clock_recov = gr.costas_loop_cc(self._costas_alpha,
-                                             self._costas_beta,
-                                             fmax, fmin, arity)
+
+        # Frequency correction
+        self.freq_recov = gr.fll_band_edge_cc(self._samples_per_symbol, self._excess_bw,
+                                              11*self._samples_per_symbol,
+                                              self._freq_alpha, self._freq_beta)
+                                              
 
         # symbol timing recovery with RRC data filter
         nfilts = 32
@@ -255,7 +259,17 @@ class dbpsk2_demod(gr.hier_block2):
                                                 self._timing_alpha,
                                                 taps, nfilts, nfilts/2, self._timing_max_dev)
         self.time_recov.set_beta(self._timing_beta)
-            
+
+        # Perform phase / fine frequency correction
+        self._costas_beta  = 0.25 * self._costas_alpha * self._costas_alpha
+        # Allow a frequency swing of +/- half of the sample rate
+        fmin = -0.5
+        fmax = 0.5
+        
+        self.phase_recov = gr.costas_loop_cc(self._costas_alpha,
+                                             self._costas_beta,
+                                             fmax, fmin, arity)
+
         # Do differential decoding based on phase change of symbols
         self.diffdec = gr.diff_phasor_cc()
 
@@ -280,8 +294,7 @@ class dbpsk2_demod(gr.hier_block2):
 
         # Connect
         self.connect(self, self.agc,
-                     self.clock_recov,
-                     self.time_recov,
+                     self.freq_recov, self.time_recov, self.phase_recov,
                      self.diffdec, self.slicer, self.symbol_mapper, self.unpack, self)
         if sync_out: self.connect(self.time_recov, (self, 1))
 
@@ -333,6 +346,8 @@ class dbpsk2_demod(gr.hier_block2):
         parser.add_option("", "--no-gray-code", dest="gray_code",
                           action="store_false", default=_def_gray_code,
                           help="disable gray coding on modulated bits (PSK)")
+        parser.add_option("", "--freq-alpha", type="float", default=_def_freq_alpha,
+                          help="set frequency lock loop alpha gain value [default=%default] (PSK)")
         parser.add_option("", "--costas-alpha", type="float", default=None,
                           help="set Costas loop alpha value [default=%default] (PSK)")
         parser.add_option("", "--gain-alpha", type="float", default=_def_timing_alpha,
