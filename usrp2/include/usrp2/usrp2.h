@@ -55,10 +55,10 @@ namespace usrp2 {
    */
   typedef struct time_spec{
       uint32_t secs;
-      uint32_t tics;
+      uint32_t ticks;
       time_spec(void){
         secs = ~0;
-        tics = ~0;
+        ticks = ~0;
       }
   } time_spec_t;
 

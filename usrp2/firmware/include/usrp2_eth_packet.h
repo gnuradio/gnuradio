@@ -186,7 +186,7 @@ typedef struct {
   uint8_t	mbz;
   uint32_t	items_per_frame;  // # of 32-bit data items; MTU=1500: [9,371]
   uint32_t	time_secs;
-  uint32_t	time_tics;
+  uint32_t	time_ticks;
 } _AL4 op_start_rx_streaming_t;
 
 typedef struct {

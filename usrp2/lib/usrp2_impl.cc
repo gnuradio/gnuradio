@@ -428,7 +428,7 @@ namespace usrp2 {
       cmd.op.rid = d_next_rid++;
       cmd.op.items_per_frame = htonl(items_per_frame);
       cmd.op.time_secs = time_spec->secs;
-      cmd.op.time_tics = time_spec->tics;
+      cmd.op.time_ticks = time_spec->ticks;
       cmd.eop.opcode = OP_EOP;
       cmd.eop.len = sizeof(cmd.eop);
 

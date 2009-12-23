@@ -453,10 +453,10 @@ typedef struct {
 // --- VITA RX CTRL regs ---
 typedef struct {
   // The following 3 are logically a single command register.
-  // They are clocked into the underlying fifo when time_tics is written.
+  // They are clocked into the underlying fifo when time_ticks is written.
   volatile uint32_t	cmd;		// {now, chain, num_samples(30)
   volatile uint32_t	time_secs;
-  volatile uint32_t	time_tics;
+  volatile uint32_t	time_ticks;
 
   volatile uint32_t	clear_overrun;	// write anything to clear overrun
   volatile uint32_t	vrt_header;	// word 0 of packet.  FPGA fills in packet counter
