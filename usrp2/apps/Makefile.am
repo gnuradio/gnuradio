@@ -19,12 +19,14 @@ include $(top_srcdir)/Makefile.common
 
 AM_CPPFLAGS = \
     $(USRP2_INCLUDES) \
+    $(VRT_INCLUDES) \
     $(STD_DEFINES_AND_INCLUDES) \
     $(CPPUNIT_INCLUDES) \
     $(GRUEL_INCLUDES)
 
 LDADD = \
 	$(USRP2_LA) \
+	$(VRT_LA) \
 	$(GRUEL_LA)
 
 bin_PROGRAMS = \
