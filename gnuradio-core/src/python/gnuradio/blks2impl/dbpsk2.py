@@ -310,6 +310,7 @@ class dbpsk2_demod(gr.hier_block2):
         print "bits per symbol:     %d"   % self.bits_per_symbol()
         print "Gray code:           %s"   % self._gray_code
         print "RRC roll-off factor: %.2f" % self._excess_bw
+        print "FLL gain:            %.2f" % self._freq_alpha
         print "Costas Loop alpha:   %.2f" % self._costas_alpha
         print "Costas Loop beta:    %.2f" % self._costas_beta
         print "Timing alpha gain:   %.2f" % self._timing_alpha
