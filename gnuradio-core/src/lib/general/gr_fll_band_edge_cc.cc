@@ -185,8 +185,8 @@ gr_fll_band_edge_cc::work (int noutput_items,
     error = out_lower - out_upper;
     d_error = 0.01*error + 0.99*d_error;  // average error
 
-    d_freq = d_freq + d_beta * error;
-    d_phase = d_phase + d_freq + d_alpha * error;
+    d_freq = d_freq + d_beta * d_error;
+    d_phase = d_phase + d_freq + d_alpha * d_error;
 
     if(d_phase > M_PI)
       d_phase -= M_TWOPI;
