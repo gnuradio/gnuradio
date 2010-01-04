@@ -31,8 +31,10 @@
 // Tx and Rx have shared defs, but different i/o regs
 #define ENABLE_5        (1 << 7)         // enables 5.0V power supply
 #define ENABLE_33       (1 << 6)         // enables 3.3V supply
-#define RX_TXN          (1 << 5)         // Tx only: T/R antenna switch for TX/RX port
-#define RX2_RX1N        (1 << 5)         // Rx only: antenna switch between RX2 and TX/RX port
+//#define RX_TXN          (1 << 15)         // Tx only: T/R antenna switch for TX/RX port
+//#define RX2_RX1N        (1 << 15)         // Rx only: antenna switch between RX2 and TX/RX port
+#define RX_TXN          ((1 << 5)|(1 << 15))         // Tx only: T/R antenna switch for TX/RX port
+#define RX2_RX1N        ((1 << 5)|(1 << 15))         // Rx only: antenna switch between RX2 and TX/RX port
 #define RXBB_EN         (1 << 4)
 #define TXMOD_EN        (1 << 4)
 #define PLL_CE          (1 << 3)
