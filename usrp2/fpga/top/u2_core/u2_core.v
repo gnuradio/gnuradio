@@ -689,7 +689,7 @@ module u2_core
 
    time_64bit #(.TICKS_PER_SEC(32'd100000000),.BASE(SR_TIME64)) time_64bit
      (.clk(dsp_clk), .rst(dsp_rst), .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
-      .pps(pps_o), .vita_time(vita_time));
+      .pps(pps_o), .vita_time(vita_time), .pps_int());
    
    // /////////////////////////////////////////////////////////////////////////////////////////
    // Debug Pins
