@@ -1,0 +1,1 @@
+iverilog -Wimplict -Wportbind -y ../control_lib/newfifo/ -y ../models/ -y . -y miim -y ../coregen/ -y ../control_lib/ -o simple_gemac_wrapper19_tb simple_gemac_wrapper19_tb.v

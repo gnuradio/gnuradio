@@ -10,68 +10,64 @@ module ll8_to_fifo19
    output [18:0] f19_data,
    output f19_src_rdy_o,
    input f19_dst_rdy_i );
-
+   
+   localparam XFER_EMPTY       = 0;
+   localparam XFER_HALF        = 1;
+   localparam XFER_HALF_WRITE  = 3;
+   
    // Why anybody would use active low in an FPGA is beyond me...
    wire  ll_sof      = ~ll_sof_n;
    wire  ll_eof      = ~ll_eof_n;
    wire  ll_src_rdy  = ~ll_src_rdy_n;
    wire  ll_dst_rdy;
    assign    ll_dst_rdy_n  = ~ll_dst_rdy;
-
-   wire xfer_out 	   = f19_src_rdy_o & f19_dst_rdy_i;
-   //  wire xfer_in 	   = ll_src_rdy & ll_dst_rdy;   Not needed
    
-   reg 	 f19_sof, f19_eof, f19_occ;
+   wire  xfer_out 	   = f19_src_rdy_o & f19_dst_rdy_i;
+   wire  xfer_in 	   = ll_src_rdy & ll_dst_rdy; 
+   
+   reg 	 hold_sof;
+   wire  f19_sof, f19_eof, f19_occ;
    
    reg [1:0] state;
-   reg [7:0] dat0, dat1;
-
-   always @(posedge clk)
-     if(ll_src_rdy & ((state==0)|xfer_out))
-       f19_sof <= ll_sof;
-
-   always @(posedge clk)
-     if(ll_src_rdy & ((state != 2)|xfer_out))
-       f19_eof <= ll_eof;
-
-   always @(posedge clk)
-     if(ll_eof)
-       f19_occ <= ~state[0];
-     else
-       f19_occ <= 0;
+   reg [7:0] hold_reg;
    
    always @(posedge clk)
-     if(reset)
-       state   <= 0;
+     if(ll_src_rdy & (state==XFER_EMPTY))
+       hold_reg 	      <= ll_data;
+   
+   always @(posedge clk)
+     if(ll_sof & (state==XFER_EMPTY))
+       hold_sof 	      <= 1;
+     else if(xfer_out)
+       hold_sof 	      <= 0;
+   
+   always @(posedge clk)
+     if(reset | clear)
+       state 		      <= XFER_EMPTY;
      else
-       if(ll_src_rdy)
-	 case(state)
-	   0 : 
+       case(state)
+	 XFER_EMPTY :
+	   if(ll_src_rdy)
 	     if(ll_eof)
-	       state <= 2;
+	       state 	      <= XFER_HALF_WRITE;
 	     else
-	       state <= 1;
-	   1 : 
-	     state <= 2;
-	   2 : 
-	     if(xfer_out)
-	       state 	   <= 1;
-	 endcase // case(state)
-       else
-	 if(xfer_out)
-	   state 	   <= 0;
-
-   always @(posedge clk)
-     if(ll_src_rdy & (state==1))
-       dat1 		   <= ll_data;
-
-   always @(posedge clk)
-     if(ll_src_rdy & ((state==0) | xfer_out))
-       dat0 		   <= ll_data;
+	       state 	      <= XFER_HALF;
+	 XFER_HALF :
+	   if(ll_src_rdy & f19_dst_rdy_i)
+	       state 	      <= XFER_EMPTY;
+         XFER_HALF_WRITE :
+	   if(f19_dst_rdy_i)
+	     state 	<= XFER_EMPTY;
+       endcase // case (state)
+      
+   assign ll_dst_rdy 	 = (state==XFER_EMPTY) | ((state==XFER_HALF)&f19_dst_rdy_i);
+   assign f19_src_rdy_o  = (state==XFER_HALF_WRITE) | ((state==XFER_HALF)&ll_src_rdy);
    
-   assign    ll_dst_rdy     = xfer_out | (state != 2);
-   assign    f19_data 	    = {f19_occ,f19_eof,f19_sof,dat0,dat1};
-   assign    f19_src_rdy_o  = (state == 2);
+   assign f19_sof 	 = hold_sof | (ll_sof & (state==XFER_HALF));
+   assign f19_eof 	 = (state == XFER_HALF_WRITE) | ll_eof;
+   assign f19_occ 	 = (state == XFER_HALF_WRITE);
+   
+   assign f19_data 	 = {f19_occ,f19_eof,f19_sof,hold_reg,ll_data};
       
 endmodule // ll8_to_fifo19
 
