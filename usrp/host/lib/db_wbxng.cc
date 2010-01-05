@@ -91,8 +91,8 @@ wbxng_base::set_freq(double freq)
   t.tv_nsec = 10000000;
   nanosleep(&t, NULL);
 
-  fprintf(stderr,"Setting WBXNG frequency, requested %d, obtained %f, lock_detect %d\n",
-          int_freq, freq_result, d_common->_get_locked());
+  //fprintf(stderr,"Setting WBXNG frequency, requested %d, obtained %f, lock_detect %d\n",
+  //        int_freq, freq_result, d_common->_get_locked());
 
   // FIXME
   // Offsetting the LO helps get the Tx carrier leakage out of the way.
@@ -244,19 +244,19 @@ wbxng_base_tx::set_enable(bool on)
 float
 wbxng_base_tx::gain_min()
 {
-  return usrp()->pga_max();
+  return 0.0;
 }
 
 float
 wbxng_base_tx::gain_max()
 {
-  return usrp()->pga_max() + 25.0;
+  return 25.0;
 }
 
 float
 wbxng_base_tx::gain_db_per_step()
 {
-  return 1;
+  return gain_max()/(1+(1.4-0.5)*4096/3.3);
 }
 
 bool
@@ -275,28 +275,22 @@ wbxng_base_tx::set_gain(float gain)
   float pga_gain, agc_gain;
   float V_maxgain, V_mingain, V_fullscale, dac_value;
 
-  float maxgain = gain_max() - usrp()->pga_max();
+  float maxgain = gain_max();
   float mingain = gain_min();
-  if(gain > maxgain) {
-    pga_gain = gain-maxgain;
-    assert(pga_gain <= usrp()->pga_max());
-    agc_gain = maxgain;
-  }
-  else {
-    pga_gain = 0;
-    agc_gain = gain;
-  }
+  pga_gain = 0;
+  agc_gain = gain;
 
-  V_maxgain = 0.7;
+  V_maxgain = 0.5;
   V_mingain = 1.4;
   V_fullscale = 3.3;
   dac_value = (agc_gain*(V_maxgain-V_mingain)/(maxgain-mingain) + V_mingain)*4096/V_fullscale;
 
-  fprintf(stderr, "TXGAIN: %f dB, Dac Code: %d, Voltage: %f\n", gain, int(dac_value), float((dac_value/4096.0)*V_fullscale));
+  //fprintf(stderr, "TXGAIN: %f dB, Dac Code: %d, Voltage: %f\n", gain, int(dac_value), float((dac_value/4096.0)*V_fullscale));
   assert(dac_value>=0 && dac_value<4096);
 
   return (usrp()->write_aux_dac(d_which, 0, int(dac_value))
-	  && _set_pga(int(pga_gain)));
+     && _set_pga(usrp()->pga_max()));
+
 }
 
 
@@ -325,7 +319,7 @@ wbxng_base_rx::wbxng_base_rx(usrp_basic_sptr _usrp, int which, int _power_on)
 
   usrp()->_write_oe(d_which, (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5), (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
   usrp()->write_io(d_which,  (power_on()|RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5), (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
-  fprintf(stderr,"Setting WBXNG RXBB on");
+  //fprintf(stderr,"Setting WBXNG RXBB on");
 
   // set up for RX on TX/RX port
   select_rx_antenna("TX/RX");
@@ -464,7 +458,7 @@ wbxng_base_rx::_set_attn(float attn)
 {
   int attn_code = int(floor(attn/0.5));
   unsigned int iobits = (~attn_code) << ATTN_SHIFT;
-  fprintf(stderr, "Attenuation: %f dB, Code: %d, IO Bits %x, Mask: %x \n", attn, attn_code, iobits & ATTN_MASK, ATTN_MASK);
+  //fprintf(stderr, "Attenuation: %f dB, Code: %d, IO Bits %x, Mask: %x \n", attn, attn_code, iobits & ATTN_MASK, ATTN_MASK);
   return usrp()->write_io(d_which, iobits, ATTN_MASK);
 }
 
