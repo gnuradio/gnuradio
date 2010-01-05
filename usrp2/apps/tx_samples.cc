@@ -200,7 +200,10 @@ main(int argc, char **argv)
     std::cerr << "Failed to enable realtime scheduling" << std::endl;
 
 
-  usrp2::usrp2::sptr u2 = usrp2::usrp2::make(interface, mac_addr_str);
+  usrp2::props p(usrp2::USRP_TYPE_ETH);
+  p.eth_args.ifc = interface;
+  p.eth_args.mac_addr = usrp2::u2_mac_addr(mac_addr_str);
+  usrp2::usrp2::sptr u2 = usrp2::usrp2::make(p);
   
   if (gain != GAIN_NOT_SET){
     if (!u2->set_tx_gain(gain)){

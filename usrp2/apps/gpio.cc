@@ -27,7 +27,9 @@
 int
 main(int argc, char **argv)
 {
-  usrp2::usrp2::sptr u2 = usrp2::usrp2::make("eth0");
+  usrp2::props p(usrp2::USRP_TYPE_ETH);
+  p.eth_args.ifc = "eth0";
+  usrp2::usrp2::sptr u2 = usrp2::usrp2::make(p);
 
   // Set io_tx[15] as FPGA output
   u2->set_gpio_ddr(usrp2::GPIO_TX_BANK, 0x8000, 0x8000);

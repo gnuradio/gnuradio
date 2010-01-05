@@ -39,7 +39,10 @@ usrp2_base::usrp2_base(const char *name,
 		  output_signature),
     d_u2(usrp2::usrp2::sptr())
 {
-  d_u2 = usrp2::usrp2::make(ifc, mac);
+  usrp2::props hint(usrp2::USRP_TYPE_ETH);
+  hint.eth_args.ifc = ifc;
+  if (mac != "") hint.eth_args.mac_addr = usrp2::u2_mac_addr(mac);
+  d_u2 = usrp2::usrp2::make(hint);
   if (!d_u2)
     throw std::runtime_error("Unable to initialize USRP2!");
 }
@@ -47,18 +50,6 @@ usrp2_base::usrp2_base(const char *name,
 usrp2_base::~usrp2_base ()
 {
   // NOP
-}
-
-std::string
-usrp2_base::mac_addr() const
-{
-  return d_u2->mac_addr();
-}
-
-std::string
-usrp2_base::interface_name() const
-{
-  return d_u2->interface_name();
 }
 
 bool

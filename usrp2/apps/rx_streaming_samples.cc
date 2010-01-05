@@ -290,7 +290,10 @@ main(int argc, char **argv)
   if (rt != gruel::RT_OK)
     std::cerr << "Failed to enable realtime scheduling" << std::endl;
 
-  usrp2::usrp2::sptr u2 = usrp2::usrp2::make(interface, mac_addr_str);
+  usrp2::props p(usrp2::USRP_TYPE_ETH);
+  p.eth_args.ifc = interface;
+  p.eth_args.mac_addr = usrp2::u2_mac_addr(mac_addr_str);
+  usrp2::usrp2::sptr u2 = usrp2::usrp2::make(p);
   
   // FIXME in case it was left running...
   if (!u2->stop_rx_streaming()){
@@ -309,7 +312,7 @@ main(int argc, char **argv)
   }
 
   if (verbose){
-    printf("USRP2 MAC address: %s\n\n", u2->mac_addr().c_str());
+    //printf("USRP2 MAC address: %s\n\n", u2->mac_addr().c_str());
     printf("Daughterboard configuration:\n");
     printf("  baseband_freq=%f\n", tr.baseband_freq);
     printf("       ddc_freq=%f\n", tr.dxc_freq);

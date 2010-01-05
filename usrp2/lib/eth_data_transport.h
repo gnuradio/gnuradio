@@ -19,11 +19,12 @@
 #ifndef INCLUDED_ETH_DATA_TRANSPORT_H
 #define INCLUDED_ETH_DATA_TRANSPORT_H
 
+#include <usrp2_eth_packet.h>
 #include <usrp2/data_handler.h>
+#include <usrp2/props.h>
 #include "transport.h"
 #include "eth_buffer.h"
 #include "pktfilter.h"
-#include "usrp2_impl.h"
 
 namespace usrp2{
 
@@ -31,7 +32,7 @@ namespace usrp2{
     private:
         eth_buffer    *d_eth_data;	// packet ring buffered data frames
         pktfilter     *d_pf_data;
-        u2_mac_addr_t d_mac;
+        u2_mac_addr   d_mac;
         int           d_tx_seqno;
         int           d_rx_seqno;
         data_handler::result operator()(const void *base, size_t len);
@@ -43,7 +44,7 @@ namespace usrp2{
         data_handler   *d_curr_handler;
 
     public:
-        eth_data_transport(const std::string &ifc, u2_mac_addr_t mac, size_t rx_bufsize);
+        eth_data_transport(const std::string &ifc, const u2_mac_addr &mac, size_t rx_bufsize);
         ~eth_data_transport();
         bool sendv(const iovec *iov, size_t iovlen);
         void recv(data_handler *handler);

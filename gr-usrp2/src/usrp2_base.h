@@ -49,16 +49,6 @@ public:
   ~usrp2_base();
 
   /*!
-   * \brief Get USRP2 hardware MAC address
-   */
-  std::string mac_addr() const;
-  
-  /*!
-   * \brief Get interface name used to communicat with USRP2
-   */
-  std::string interface_name() const;
-
-  /*!
    * \brief Get USRP2 master clock rate
    */
   bool fpga_master_clock_freq(long *freq) const;

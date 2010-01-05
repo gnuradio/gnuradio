@@ -26,6 +26,7 @@
 #include <vrt/rx_packet_handler.h>
 #include <usrp2/tune_result.h>
 #include <usrp2/mimo_config.h>
+#include <usrp2/props.h>
 
 /*
  * N.B., The interfaces described here are still in flux.
@@ -35,20 +36,6 @@
  */
 
 namespace usrp2 {
-
-  /*!
-   * Structure to hold properties of USRP2 hardware devices.
-   *
-   */
-  struct props
-  {
-    std::string addr;
-    uint16_t hw_rev;
-    uint8_t fpga_md5sum[16];
-    uint8_t sw_md5sum[16];
-  };
-
-  typedef std::vector<props> props_vector_t;
 
   /*!
    * Structure to hold a time specification for a usrp hardware device
@@ -72,7 +59,7 @@ namespace usrp2 {
    *
    * \returns a vector of properties, 1 entry for each matching USRP2 found.
    */
-  props_vector_t find(const std::string &ifc, const std::string &mac_addr=""); 
+  props_vector_t find(const props &hint); 
 
   class tune_result;
 
@@ -96,28 +83,15 @@ namespace usrp2 {
     /*! 
      * Static function to return an instance of usrp2 as a shared pointer
      *
-     * \param ifc   Network interface name, e.g., "eth0"
-     * \param addr  Network mac address, e.g., "01:23:45:67:89:ab", "89:ab" or "".
-     *              If \p addr is HH:HH, it's treated as if it were 00:50:c2:85:HH:HH
-     *              "" will autoselect a USRP2 if there is only a single one on the local ethernet.
+     * \param hint a props structure with filled in args and flags
      * \param rx_bufsize is the length in bytes of the kernel networking buffer to allocate.
      */
-    static sptr make(const std::string &ifc, const std::string &addr="", size_t rx_bufsize=0);
+    static sptr make(const props &hint, size_t rx_bufsize=0);
 
     /*!
      * Class destructor
      */
-    ~usrp2();  
-
-    /*!
-     * Returns the MAC address associated with this USRP
-     */
-    std::string mac_addr();
-
-    /*!
-     * Returns the GbE interface name associated with this USRP
-     */
-    std::string interface_name();
+    ~usrp2();
 
     /*
      * ----------------------------------------------------------------
@@ -406,10 +380,9 @@ namespace usrp2 {
     /*!
      * Burn new mac address into EEPROM on USRP2
      *
-     * \param new_addr  Network mac address, e.g., "01:23:45:67:89:ab" or "89:ab".
-     *                  If \p addr is HH:HH, it's treated as if it were 00:50:c2:85:HH:HH
+     * \param new_addr the new mac address
      */
-    bool burn_mac_addr(const std::string &new_addr);
+    bool burn_mac_addr(const u2_mac_addr &new_addr);
 
     /*!
      * Reset master time to 0 at next PPS edge
@@ -609,22 +582,18 @@ namespace usrp2 {
 
   private:
 
-    std::string d_mac;
-    std::string d_ifc;
+    props d_props;
 
     // Static function to retrieve or create usrp2 instance
-    static sptr find_existing_or_make_new(const std::string &ifc, props *p, size_t rx_bufsize);
+    static sptr find_existing_or_make_new(const props &p, size_t rx_bufsize);
 
     // Only class members can instantiate this class
-    usrp2(const std::string &ifc, props *p, size_t rx_bufsize);
+    usrp2(const props &p, size_t rx_bufsize);
   
     // All private state is held in opaque pointer
     std::auto_ptr<impl> d_impl;
   };
 
 };
-
-std::ostream& operator<<(std::ostream &os, const usrp2::props &x);
-
 
 #endif /* INCLUDED_USRP2_H */
