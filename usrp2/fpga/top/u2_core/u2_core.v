@@ -136,12 +136,15 @@ module u2_core
    input [3:0] clock_divider
    );
 
-   localparam SR_RX_DSP = 160;
-   localparam SR_RX_CTRL = 176;
-   localparam SR_TX_DSP = 208;
-   localparam SR_TX_CTRL = 224;
-   localparam SR_TIME64 = 192;
+   localparam SR_BUF_POOL = 64;   // Uses 1 reg
+   localparam SR_UDP_SM   = 96;   // 64 regs
+   localparam SR_RX_DSP   = 160;  // 16
+   localparam SR_RX_CTRL  = 176;  // 16
+   localparam SR_TIME64   = 192;  //  3
+   localparam SR_TX_DSP   = 208;  // 16
+   localparam SR_TX_CTRL  = 224;  // 16
    
+			 
    wire [7:0] 	set_addr;
    wire [31:0] 	set_data;
    wire 	set_stb;
@@ -340,7 +343,7 @@ module u2_core
    wire [3:0] 	 wr0_flags, wr1_flags, wr2_flags, wr3_flags;
    wire [31:0] 	 wr0_dat, wr1_dat, wr2_dat, wr3_dat;
    
-   buffer_pool #(.BUF_SIZE(9), .SET_ADDR(64)) buffer_pool
+   buffer_pool #(.BUF_SIZE(9), .SET_ADDR(SR_BUF_POOL)) buffer_pool
      (.wb_clk_i(wb_clk),.wb_rst_i(wb_rst),
       .wb_we_i(s1_we),.wb_stb_i(s1_stb),.wb_adr_i(s1_adr),.wb_dat_i(s1_dat_o),   
       .wb_dat_o(s1_dat_i),.wb_ack_o(s1_ack),.wb_err_o(),.wb_rty_o(),
@@ -436,7 +439,7 @@ module u2_core
       .mdio(MDIO), .mdc(MDC),
       .debug(debug_mac));
 
-   udp_wrapper #(.BASE(0)) udp_wrapper
+   udp_wrapper #(.BASE(SR_UDP_SM)) udp_wrapper
      (.clk(dsp_clk), .reset(dsp_rst), .clear(0),
       .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
       .rx_f19_data(rx_f19_data), .rx_f19_src_rdy_i(rx_f19_src_rdy), .rx_f19_dst_rdy_o(rx_f19_dst_rdy),

@@ -46,7 +46,7 @@ module udp_wrapper
    wire [35:0] rx_int3_data;
    
 `ifdef USE_PROT_ENG
-   prot_eng_rx #(.BASE(BASE)) prot_eng_rx
+   prot_eng_rx #(.BASE(BASE+32)) prot_eng_rx
      (.clk(clk), .reset(reset), .clear(clear),
       .datain(rx_f19_data), .src_rdy_i(rx_f19_src_rdy_i), .dst_rdy_o(rx_f19_dst_rdy_o),
       .dataout(rx_int1_data), .src_rdy_o(rx_int1_src_rdy), .dst_rdy_i(rx_int1_dst_rdy) );
