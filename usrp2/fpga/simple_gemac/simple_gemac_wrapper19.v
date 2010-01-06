@@ -148,18 +148,17 @@ module simple_gemac_wrapper19
    
    wire [31:0] 	  debug_tx, debug_rx;
 
-   /*
    assign debug_tx  = { { tx_ll_data },
 			{ tx_ll_sof, tx_ll_eof, tx_ll_src_rdy, tx_ll_dst_rdy, 
 			  tx_ll_sof2, tx_ll_eof2, tx_ll_src_rdy2, tx_ll_dst_rdy2 },
-			{ tx_valid, tx_error, tx_ack, tx_f19_src_rdy_int1, tx_f19_dst_rdy_int1, tx_f19_data_int1[34:32]},
+			{ tx_valid, tx_error, tx_ack, tx_f19_src_rdy_int1, tx_f19_dst_rdy_int1, tx_f19_data_int1[18:16]},
 			{ tx_data} };
    assign debug_rx  = { { rx_ll_data },
 			{ rx_ll_sof, rx_ll_eof, rx_ll_src_rdy, rx_ll_dst_rdy, 
 			  rx_ll_sof2, rx_ll_eof2, rx_ll_src_rdy2, rx_ll_dst_rdy2 },
-			{ rx_valid, rx_error, rx_ack, rx_f19_src_rdy_int1, rx_f19_dst_rdy_int1, rx_f19_data_int1[34:32]},
+			{ rx_valid, rx_error, rx_ack, rx_f19_src_rdy_int1, rx_f19_dst_rdy_int1, rx_f19_data_int1[18:16]},
 			{ rx_data} };
-    */
+
    assign debug  = debug_rx;
    
 endmodule // simple_gemac_wrapper19

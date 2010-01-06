@@ -158,8 +158,8 @@ module u2_core
    wire [31:0] 	debug_gpio_0, debug_gpio_1;
    wire [31:0] 	atr_lines;
 
-   wire [31:0] 	debug_rx, debug_mac, debug_mac0, debug_mac1, debug_tx_dsp, debug_txc, 
-		debug_serdes0, debug_serdes1, debug_serdes2, debug_rx_dsp;
+   wire [31:0] 	debug_rx, debug_mac, debug_mac0, debug_mac1, debug_tx_dsp, debug_txc,
+		debug_serdes0, debug_serdes1, debug_serdes2, debug_rx_dsp, debug_udp;
 
    wire [15:0] 	ser_rx_occ, ser_tx_occ, dsp_rx_occ, dsp_tx_occ, eth_rx_occ, eth_tx_occ, eth_rx_occ2;
    wire 	ser_rx_full, ser_tx_full, dsp_rx_full, dsp_tx_full, eth_rx_full, eth_tx_full, eth_rx_full2;
@@ -445,7 +445,8 @@ module u2_core
       .rx_f19_data(rx_f19_data), .rx_f19_src_rdy_i(rx_f19_src_rdy), .rx_f19_dst_rdy_o(rx_f19_dst_rdy),
       .tx_f19_data(tx_f19_data), .tx_f19_src_rdy_o(tx_f19_src_rdy), .tx_f19_dst_rdy_i(tx_f19_dst_rdy),
       .rx_f36_data({wr2_flags,wr2_dat}), .rx_f36_src_rdy_o(wr2_ready_i), .rx_f36_dst_rdy_i(wr2_ready_o),
-      .tx_f36_data({rd2_flags,rd2_dat}), .tx_f36_src_rdy_i(rd2_ready_o), .tx_f36_dst_rdy_o(rd2_ready_i) );
+      .tx_f36_data({rd2_flags,rd2_dat}), .tx_f36_src_rdy_i(rd2_ready_o), .tx_f36_dst_rdy_o(rd2_ready_i),
+      .debug(debug_udp) );
    
    // /////////////////////////////////////////////////////////////////////////
    // Settings Bus -- Slave #7
@@ -742,8 +743,8 @@ module u2_core
 			     { GMII_TX_EN,3'd0, wr2_ready_i, wr2_ready_o, rd2_ready_i, rd2_ready_o } };
  */
 
-   assign debug = debug_vt;
-   assign debug_gpio_0 = sample_tx;
+   assign debug = debug_udp;
+   assign debug_gpio_0 = debug_mac;
    assign debug_gpio_1 = 32'hDEAD_BEEF;
    
 endmodule // u2_core
