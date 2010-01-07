@@ -1,5 +1,5 @@
 #
-# Copyright 2008, 2009 Free Software Foundation, Inc.
+# Copyright 2008, 2009, 2010 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -38,8 +38,8 @@ MIN_PADDING = 0, 60, 0, 0 #top, right, bottom, left
 
 ceil_log2 = lambda x: 2**int(math.ceil(math.log(x)/math.log(2)))
 
-pack_color   = lambda x: struct.pack('BBBB', *x)
-unpack_color = lambda s: struct.unpack('BBBB', s)
+pack_color   = lambda x: struct.unpack('I', struct.pack('BBBB', *x))[0]
+unpack_color = lambda x: struct.unpack('BBBB', struct.pack('I', int(x)))
 
 def _get_rbga(red_pts, green_pts, blue_pts, alpha_pts=[(0, 0), (1, 0)]):
 	"""
@@ -57,11 +57,10 @@ def _get_rbga(red_pts, green_pts, blue_pts, alpha_pts=[(0, 0), (1, 0)]):
 			#linear interpolation
 			if x <= x2: return float(y1 - y2)/(x1 - x2)*(x - x1) + y1
 		raise Exception
-	return [pack_color(map(
-			lambda pw: int(255*_fcn(i/255.0, pw)),
-			(red_pts, green_pts, blue_pts, alpha_pts),
-		)) for i in range(0, 256)
-	]
+	return numpy.array([pack_color(map(
+		lambda pw: int(255*_fcn(i/255.0, pw)),
+		(red_pts, green_pts, blue_pts, alpha_pts),
+	)) for i in range(0, 256)], numpy.uint32)
 
 COLORS = {
 	'rgb1': _get_rbga( #http://www.ks.uiuc.edu/Research/vmd/vmd-1.7.1/ug/img47.gif
@@ -265,7 +264,7 @@ class waterfall_plotter(grid_plotter_base):
 		samples = numpy.clip(samples, 0, 255) #clip
 		samples = numpy.array(samples, numpy.uint8)
 		#convert the samples to RGBA data
-		data = ''.join([COLORS[self._color_mode][sample] for sample in samples])
+		data = COLORS[self._color_mode][samples].tostring()
 		self._buffer.append(data)
 		self._waterfall_cache.changed(True)
 		self.unlock()
