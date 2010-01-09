@@ -70,7 +70,7 @@ TOP_SWIG_IFILES =			\
 msdd_pythondir_category =		\
 	gnuradio
 
-msdd_rs_pythondir_category =	\ 
+msdd_rs_pythondir_category =	\
 	gnuradio
 
 # additional libraries for linking with the SWIG-generated library
