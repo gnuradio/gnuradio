@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2003,2004,2005,2007 Free Software Foundation, Inc.
+# Copyright 2003,2004,2005,2007,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -82,7 +82,7 @@ class ra_fft_sink_base(object):
         self.peak_hold = enable
         if enable:
             self.set_average(False)
-        self.win.set_peak_hold(enable)
+        self.set_peak_hold(enable)
 
     def set_autoscale(self, auto):
         self.autoscale = auto
