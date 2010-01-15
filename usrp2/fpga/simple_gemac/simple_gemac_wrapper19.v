@@ -30,7 +30,9 @@ module simple_gemac_wrapper19
    wire 	  pause_req;
    wire 	  pause_request_en, pause_respect_en;
    wire [15:0] 	  pause_time, pause_thresh, pause_time_req, rx_fifo_space;
-   
+
+   wire [31:0] 	  debug_state;
+      
    wire 	  tx_reset, rx_reset;
    reset_sync reset_sync_tx (.clk(tx_clk),.reset_in(reset),.reset_out(tx_reset));
    reset_sync reset_sync_rx (.clk(rx_clk),.reset_in(reset),.reset_out(rx_reset));
