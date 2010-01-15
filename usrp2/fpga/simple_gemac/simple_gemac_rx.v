@@ -6,7 +6,8 @@ module simple_gemac_rx
    output rx_clk, output [7:0] rx_data, output reg rx_valid, output rx_error, output reg rx_ack,
    input [47:0] ucast_addr, input [47:0] mcast_addr, 
    input pass_ucast, input pass_mcast, input pass_bcast, input pass_pause, input pass_all,
-   output reg [15:0] pause_quanta_rcvd, output pause_rcvd );
+   output reg [15:0] pause_quanta_rcvd, output pause_rcvd,
+   output [31:0] debug );
 
    localparam RX_IDLE 		  = 0;
    localparam RX_PREAMBLE 	  = 1;
@@ -170,5 +171,7 @@ module simple_gemac_rx
        pause_quanta_rcvd[7:0] <= rxd_d1;
    
    assign rx_clk 	  = GMII_RX_CLK;
+
+   assign debug = rx_state;
    
 endmodule // simple_gemac_rx

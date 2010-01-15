@@ -16,7 +16,9 @@ module simple_gemac
    output rx_clk, output [7:0] rx_data, output rx_valid, output rx_error, output rx_ack,
 
    // TX Client Interface
-   output tx_clk, input [7:0] tx_data, input tx_valid, input tx_error, output tx_ack
+   output tx_clk, input [7:0] tx_data, input tx_valid, input tx_error, output tx_ack,
+
+   output [31:0] debug
    );
 
    localparam SGE_IFG 		     = 8'd12;  // 12 should be the absolute minimum
@@ -46,7 +48,8 @@ module simple_gemac
       .ucast_addr(ucast_addr), .mcast_addr(mcast_addr),
       .pass_ucast(pass_ucast), .pass_mcast(pass_mcast), .pass_bcast(pass_bcast), 
       .pass_pause(pass_pause), .pass_all(pass_all),
-      .pause_quanta_rcvd(pause_quanta_rcvd), .pause_rcvd(pause_rcvd) 
+      .pause_quanta_rcvd(pause_quanta_rcvd), .pause_rcvd(pause_rcvd),
+      .debug(debug)
       );
 
    flow_ctrl_tx flow_ctrl_tx
