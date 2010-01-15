@@ -119,7 +119,7 @@ module simple_gemac_wrapper19
      (.wclk(sys_clk), .datain(tx_f19_data), 
       .src_rdy_i(tx_f19_src_rdy), .dst_rdy_o(tx_f19_dst_rdy), .space(),
       .rclk(tx_clk), .dataout(tx_f19_data_int1), 
-      .src_rdy_o(tx_f19_src_rdy_int1), .dst_rdy_i(tx_f19_dst_rdy_int1), .occupied(), .arst(reset));
+      .src_rdy_o(tx_f19_src_rdy_int1), .dst_rdy_i(tx_f19_dst_rdy_int1), .occupied(), .arst(rx_reset));
    
    fifo19_to_ll8 fifo19_to_ll8
      (.clk(tx_clk), .reset(tx_reset), .clear(clear),
