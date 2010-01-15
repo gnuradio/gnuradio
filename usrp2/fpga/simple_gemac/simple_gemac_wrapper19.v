@@ -19,13 +19,15 @@ module simple_gemac_wrapper19
     // MIIM
     inout mdio, output mdc,
     output [31:0] debug);
-   
+
+   wire 	  clear = 0;
    wire [7:0] 	  rx_data, tx_data;
    wire 	  tx_clk, tx_valid, tx_error, tx_ack;
    wire 	  rx_clk, rx_valid, rx_error, rx_ack;
    
    wire [47:0] 	  ucast_addr, mcast_addr;
    wire 	  pass_ucast, pass_mcast, pass_bcast, pass_pause, pass_all;
+   wire 	  pause_req;
    wire 	  pause_request_en, pause_respect_en;
    wire [15:0] 	  pause_time, pause_thresh, pause_time_req, rx_fifo_space;
    
@@ -75,15 +77,15 @@ module simple_gemac_wrapper19
    rxmac_to_ll8 rx_adapt
      (.clk(rx_clk), .reset(rx_reset), .clear(0),
       .rx_data(rx_data), .rx_valid(rx_valid), .rx_error(rx_error), .rx_ack(rx_ack),
-      .ll_data(rx_ll_data), .ll_sof(rx_ll_sof), .ll_eof(rx_ll_eof), .ll_error(rx_ll_error),
+      .ll_data(rx_ll_data), .ll_sof(rx_ll_sof), .ll_eof(rx_ll_eof), .ll_error(),  // error also encoded in sof/eof
       .ll_src_rdy(rx_ll_src_rdy), .ll_dst_rdy(rx_ll_dst_rdy));
 
    ll8_shortfifo rx_sfifo
      (.clk(rx_clk), .reset(rx_reset), .clear(0),
       .datain(rx_ll_data), .sof_i(rx_ll_sof), .eof_i(rx_ll_eof),
-      .error_i(rx_ll_error), .src_rdy_i(rx_ll_src_rdy), .dst_rdy_o(rx_ll_dst_rdy),
+      .error_i(0), .src_rdy_i(rx_ll_src_rdy), .dst_rdy_o(rx_ll_dst_rdy),
       .dataout(rx_ll_data2), .sof_o(rx_ll_sof2), .eof_o(rx_ll_eof2),
-      .error_o(rx_ll_error2), .src_rdy_o(rx_ll_src_rdy2), .dst_rdy_i(rx_ll_dst_rdy2));
+      .error_o(), .src_rdy_o(rx_ll_src_rdy2), .dst_rdy_i(rx_ll_dst_rdy2));
 
    assign rx_ll_dst_rdy2  = ~rx_ll_dst_rdy2_n;
    assign rx_ll_src_rdy2_n = ~rx_ll_src_rdy2;

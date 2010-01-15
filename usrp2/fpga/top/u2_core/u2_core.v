@@ -721,7 +721,7 @@ module u2_core
      eth_mac_debug <= { { 6'd0, GMII_TX_EN, GMII_RX_DV, debug_mac0[7:0]},
 			{eth_rx_full2, eth_rx_empty2, eth_rx_occ2[13:0]} };
    
-   assign  debug_clk[0]  = 0; // wb_clk;
+   assign  debug_clk[0]  = GMII_RX_CLK; // wb_clk;
    assign  debug_clk[1]  = dsp_clk;
 
 /*
@@ -745,7 +745,7 @@ module u2_core
 
    assign debug = debug_udp;
    assign debug_gpio_0 = debug_mac;
-   assign debug_gpio_1 = 32'hDEAD_BEEF;
+   assign debug_gpio_1 = { rx_f19_src_rdy, rx_f19_dst_rdy, rx_f19_data };
    
 endmodule // u2_core
 
