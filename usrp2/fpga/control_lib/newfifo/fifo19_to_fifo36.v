@@ -7,7 +7,8 @@ module fifo19_to_fifo36
 
    output [35:0] f36_dataout,
    output f36_src_rdy_o,
-   input f36_dst_rdy_i
+   input f36_dst_rdy_i,
+   output [31:0] debug
    );
 
    reg 	 f36_sof, f36_eof, f36_occ;
@@ -67,5 +68,7 @@ module fifo19_to_fifo36
    assign    f19_dst_rdy_o  = xfer_out | (state != 2);
    assign    f36_dataout    = {f36_occ,f36_eof,f36_sof,dat0,dat1};
    assign    f36_src_rdy_o  = (state == 2);
-      
+
+   assign    debug = state;
+   
 endmodule // fifo19_to_fifo36

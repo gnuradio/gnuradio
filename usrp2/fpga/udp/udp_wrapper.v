@@ -17,6 +17,7 @@ module udp_wrapper
    
    wire 	 tx_int2_src_rdy, tx_int2_dst_rdy;
    wire [18:0] 	 tx_int2_data;
+   wire [31:0] 	 debug_state;
    
    // TX side
    fifo36_to_fifo19 fifo36_to_fifo19
@@ -67,7 +68,8 @@ module udp_wrapper
    fifo19_to_fifo36 fifo19_to_fifo36
      (.clk(clk), .reset(reset), .clear(clear),
       .f19_datain(rx_int2_data), .f19_src_rdy_i(rx_int2_src_rdy), .f19_dst_rdy_o(rx_int2_dst_rdy),
-      .f36_dataout(rx_int3_data), .f36_src_rdy_o(rx_int3_src_rdy), .f36_dst_rdy_i(rx_int3_dst_rdy) );
+      .f36_dataout(rx_int3_data), .f36_src_rdy_o(rx_int3_src_rdy), .f36_dst_rdy_i(rx_int3_dst_rdy),
+      .debug(debug_state);
    
    fifo_cascade #(.WIDTH(36),.SIZE(RXFIFOSIZE)) eth0_rxfifo
      (.clk(clk), .reset(reset), .clear(clear),
@@ -78,6 +80,6 @@ module udp_wrapper
    assign debug = { { 1'b0, rx_f19_data[18:16], rx_f19_src_rdy_i, rx_f19_dst_rdy_o, rx_f36_src_rdy_o, rx_f36_dst_rdy_i },
 		    { 2'b0, rx_int1_src_rdy, rx_int1_dst_rdy, rx_int2_src_rdy, rx_int2_dst_rdy, rx_int3_src_rdy, rx_int3_dst_rdy},
 		    { rx_int3_data[35:32], rx_f36_data[35:32] },
-		    { 2'b0, rx_int1_data[18:16], rx_int2_data[18:16] } };
+		    { debug_state[1:0], rx_int1_data[18:16], rx_int2_data[18:16] } };
    
 endmodule // udp_wrapper
