@@ -69,7 +69,7 @@ module udp_wrapper
      (.clk(clk), .reset(reset), .clear(clear),
       .f19_datain(rx_int2_data), .f19_src_rdy_i(rx_int2_src_rdy), .f19_dst_rdy_o(rx_int2_dst_rdy),
       .f36_dataout(rx_int3_data), .f36_src_rdy_o(rx_int3_src_rdy), .f36_dst_rdy_i(rx_int3_dst_rdy),
-      .debug(debug_state);
+      .debug(debug_state));
    
    fifo_cascade #(.WIDTH(36),.SIZE(RXFIFOSIZE)) eth0_rxfifo
      (.clk(clk), .reset(reset), .clear(clear),
