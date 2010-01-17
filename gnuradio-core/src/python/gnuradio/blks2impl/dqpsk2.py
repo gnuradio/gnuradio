@@ -38,6 +38,7 @@ _def_gray_code = True
 _def_verbose = False
 _def_log = False
 
+_def_freq_alpha = 4e-3
 _def_costas_alpha = 0.01
 _def_timing_alpha = 0.100
 _def_timing_beta = 0.010
@@ -182,6 +183,7 @@ class dqpsk2_demod(gr.hier_block2):
     def __init__(self, 
                  samples_per_symbol=_def_samples_per_symbol,
                  excess_bw=_def_excess_bw,
+                 freq_alpha=_def_freq_alpha,
                  costas_alpha=_def_costas_alpha,
                  timing_alpha=_def_timing_alpha,
                  timing_max_dev=_def_timing_max_dev,
@@ -199,6 +201,8 @@ class dqpsk2_demod(gr.hier_block2):
 	@type samples_per_symbol: float
 	@param excess_bw: Root-raised cosine filter excess bandwidth
 	@type excess_bw: float
+        @param freq_alpha: loop filter gain for frequency recovery
+        @type freq_alpha: float
         @param costas_alpha: loop filter gain
         @type costas_alphas: float
         @param timing_alpha: timing loop alpha gain
@@ -223,6 +227,8 @@ class dqpsk2_demod(gr.hier_block2):
 
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
+        self._freq_alpha = freq_alpha
+        self._freq_beta = 0.25*self._freq_alpha**2
         self._costas_alpha = costas_alpha
         self._timing_alpha = timing_alpha
         self._timing_beta = _def_timing_beta
@@ -238,6 +244,25 @@ class dqpsk2_demod(gr.hier_block2):
         self.agc = gr.agc2_cc(0.6e-1, 1e-3, 1, 1, 100)
         #self.agc = gr.feedforward_agc_cc(16, 2.0)
 
+        # Frequency correction
+        self.freq_recov = gr.fll_band_edge_cc(self._samples_per_symbol, self._excess_bw,
+                                              11*self._samples_per_symbol,
+                                              self._freq_alpha, self._freq_beta)
+
+
+        # symbol timing recovery with RRC data filter
+        nfilts = 32
+        ntaps = 11 * samples_per_symbol*nfilts
+        taps = gr.firdes.root_raised_cosine(nfilts, nfilts,
+                                            1.0/float(self._samples_per_symbol),
+                                            self._excess_bw, ntaps)
+        self.time_recov = gr.pfb_clock_sync_ccf(self._samples_per_symbol,
+                                                self._timing_alpha,
+                                                taps, nfilts, nfilts/2, self._timing_max_dev)
+        self.time_recov.set_beta(self._timing_beta)
+        
+
+        # Perform phase / fine frequency correction
         self._costas_beta  = 0.25 * self._costas_alpha * self._costas_alpha
         # Allow a frequency swing of +/- half of the sample rate
         fmin = -0.5
@@ -247,15 +272,7 @@ class dqpsk2_demod(gr.hier_block2):
                                              self._costas_beta,
                                              fmax, fmin, arity)
 
-        # symbol timing recovery with RRC data filter
-        nfilts = 32
-        ntaps = 11 * samples_per_symbol*nfilts
-        taps = gr.firdes.root_raised_cosine(nfilts, nfilts, 1.0/float(self._samples_per_symbol), self._excess_bw, ntaps)
-        self.time_recov = gr.pfb_clock_sync_ccf(self._samples_per_symbol,
-                                                self._timing_alpha,
-                                                taps, nfilts, nfilts/2, self._timing_max_dev)
-        self.time_recov.set_beta(self._timing_beta)
-        
+
         # Perform Differential decoding on the constellation
         self.diffdec = gr.diff_phasor_cc()
         
@@ -280,8 +297,7 @@ class dqpsk2_demod(gr.hier_block2):
  
         # Connect
         self.connect(self, self.agc, 
-                     self.clock_recov,
-                     self.time_recov,
+                     self.freq_recov, self.time_recov, self.clock_recov,
                      self.diffdec, self.slicer, self.symbol_mapper, self.unpack, self)
         if sync_out: self.connect(self.time_recov, (self, 1))
 
@@ -297,6 +313,7 @@ class dqpsk2_demod(gr.hier_block2):
         print "bits per symbol:     %d"   % self.bits_per_symbol()
         print "Gray code:           %s"   % self._gray_code
         print "RRC roll-off factor: %.2f" % self._excess_bw
+        print "FLL gain:            %.2f" % self._freq_alpha
         print "Costas Loop alpha:   %.2e" % self._costas_alpha
         print "Costas Loop beta:    %.2e" % self._costas_beta
         print "Timing alpha gain:   %.2f" % self._timing_alpha
@@ -333,6 +350,8 @@ class dqpsk2_demod(gr.hier_block2):
         parser.add_option("", "--no-gray-code", dest="gray_code",
                           action="store_false", default=_def_gray_code,
                           help="disable gray coding on modulated bits (PSK)")
+        parser.add_option("", "--freq-alpha", type="float", default=_def_freq_alpha,
+                          help="set frequency lock loop alpha gain value [default=%default] (PSK)")
         parser.add_option("", "--costas-alpha", type="float", default=_def_costas_alpha,
                           help="set Costas loop alpha value [default=%default] (PSK)")
         parser.add_option("", "--gain-alpha", type="float", default=_def_timing_alpha,
