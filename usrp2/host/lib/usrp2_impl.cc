@@ -705,6 +705,7 @@ namespace usrp2 {
       cmd.eop.opcode = OP_EOP;
       cmd.eop.len = sizeof(cmd.eop);
 
+      d_dont_enqueue = false;
       bool success = false;
       pending_reply p(cmd.op.rid, &reply, sizeof(reply));
       success = transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
@@ -712,6 +713,8 @@ namespace usrp2 {
 
       if (success)
 	d_channel_rings[channel] = ring_sptr(new ring(d_eth_buf->max_frames()));
+      else
+	d_dont_enqueue = true;
 
       return success;
     }
@@ -759,6 +762,7 @@ namespace usrp2 {
       cmd.eop.opcode = OP_EOP;
       cmd.eop.len = sizeof(cmd.eop);
 
+      d_dont_enqueue = false;
       bool success = false;
       pending_reply p(cmd.sync_op.rid, &reply, sizeof(reply));
       success = transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
@@ -766,6 +770,8 @@ namespace usrp2 {
 
       if (success)
 	d_channel_rings[channel] = ring_sptr(new ring(d_eth_buf->max_frames()));
+      else
+	d_dont_enqueue = true;
 
       return success;
     }
