@@ -1025,29 +1025,33 @@ usrp_standard_tx::set_tx_freq (int channel, double freq)
   coarse_mod_t	cm;
   double	coarse;
 
-  assert (dac_rate () == 128000000);
+  double coarse_freq_1 = dac_rate () / 8; // First coarse frequency
+  double coarse_freq_2 = dac_rate () / 4; // Second coarse frequency
+  double coarse_limit_1 = coarse_freq_1 / 2; // Midpoint of [0 , freq1] range
+  double coarse_limit_2 = (coarse_freq_1 + coarse_freq_2) / 2; // Midpoint of [freq1 , freq2] range
+  double high_limit = (double)44e6/128e6*dac_rate (); // Highest meaningful frequency
 
-  if (freq < -44e6)		// too low
+  if (freq < -high_limit)		// too low
     return false;
-  else if (freq < -24e6){	// [-44, -24)
+  else if (freq < -coarse_limit_2){	// For 64MHz: [-44, -24)
     cm = CM_NEG_FDAC_OVER_4;
-    coarse = -dac_rate () / 4;
+    coarse = -coarse_freq_2;
   }
-  else if (freq < -8e6){	// [-24, -8)
+  else if (freq < -coarse_limit_1){	// For 64MHz: [-24, -8)
     cm = CM_NEG_FDAC_OVER_8;
-    coarse = -dac_rate () / 8;
+    coarse = -coarse_freq_1;
   }
-  else if (freq < 8e6){		// [-8, 8)
+  else if (freq < coarse_limit_1){		// For 64MHz: [-8, 8)
     cm = CM_OFF;
     coarse = 0;
   }
-  else if (freq < 24e6){	// [8, 24)
+  else if (freq < coarse_limit_2){	// For 64MHz: [8, 24)
     cm = CM_POS_FDAC_OVER_8;
-    coarse = dac_rate () / 8;
+    coarse = coarse_freq_1;
   }
-  else if (freq <= 44e6){	// [24, 44]
+  else if (freq <= high_limit){	// For 64MHz: [24, 44]
     cm = CM_POS_FDAC_OVER_4;
-    coarse = dac_rate () / 4;
+    coarse = coarse_freq_2;
   }
   else				// too high
     return false;
