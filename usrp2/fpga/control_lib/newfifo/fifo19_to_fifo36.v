@@ -51,7 +51,9 @@ module fifo19_to_fifo36
 	     state <= 2;
 	   2 : 
 	     if(xfer_out)
-	       state 	   <= 1;
+	       if(~f19_eof)
+		 state 	   <= 1;
+	   // remain in state 2 if we are at eof
 	 endcase // case(state)
        else
 	 if(xfer_out)
