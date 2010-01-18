@@ -177,12 +177,6 @@ flexrf_base::_refclk_divisor()
   return d_common->_refclk_divisor();
 }
 
-double
-flexrf_base::_refclk_freq()
-{
-  return 64e6/_refclk_divisor();
-}
-
 struct freq_result_t
 flexrf_base::set_freq(double freq)
 {
