@@ -63,15 +63,22 @@ class usrp_receive_path(gr.hier_block2):
         for attr in dir(rx_path): #forward the methods
             if not attr.startswith('_') and not hasattr(self, attr):
                 setattr(self, attr, getattr(rx_path, attr))
+
         #setup usrp
         self._demod_class = demod_class
         self._setup_usrp_source(options)
+
+        # Set up resampler based on rate determined by _setup_usrp_source
+        rs_taps = gr.firdes.low_pass_2(32, 32, 0.45, 0.1, 60)
+        self.resampler = gr.pfb_arb_resampler_ccf(self.rs_rate, rs_taps)
+
         #connect
-        self.connect(self.u, rx_path)
+        self.connect(self.u, self.resampler, rx_path)
 
     def _setup_usrp_source(self, options):
         self.u = usrp_options.create_usrp_source(options)
         adc_rate = self.u.adc_rate()
+        self.rs_rate = options.bitrate
         if options.verbose:
             print 'USRP Source:', self.u
         (self._bitrate, self._samples_per_symbol, self._decim) = \
@@ -79,6 +86,11 @@ class usrp_receive_path(gr.hier_block2):
                                         options.samples_per_symbol, options.decim, adc_rate,  \
                                         self.u.get_decim_rates())
 
+        # Calculate resampler rate based on requested and actual rates
+        self.rs_rate = 1.0 /(self._bitrate / self.rs_rate)
+        
+        print "Resampling by %f to get bitrate of %ssps" % ( self.rs_rate, eng_notation.num_to_str(self._bitrate/self.rs_rate))
+        
         self.u.set_decim(self._decim)
 
         if not self.u.set_center_freq(options.rx_freq):
