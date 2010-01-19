@@ -412,8 +412,8 @@ module u2_core
       
       .word00(status_b0),.word01(status_b1),.word02(status_b2),.word03(status_b3),
       .word04(status_b4),.word05(status_b5),.word06(status_b6),.word07(status_b7),
-      .word08(status),.word09({sim_mode,27'b0,clock_divider[3:0]}),.word10(32'b0),
-      .word11(32'b0),.word12(32'b0),.word13(irq),.word14(status_enc),.word15(cycle_count)
+      .word08(status),.word09({sim_mode,27'b0,clock_divider[3:0]}),.word10(vita_time[63:32]),
+      .word11(vita_time[31:0]),.word12(32'b0),.word13(irq),.word14(status_enc),.word15(cycle_count)
       );
 
    // /////////////////////////////////////////////////////////////////////////
