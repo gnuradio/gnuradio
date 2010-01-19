@@ -25,7 +25,8 @@ module time_64bit
    wire 	   set_on_pps_trig;
    reg 		   set_on_next_pps;
    wire 	   pps_polarity;
-   
+   wire            set_imm;
+	   
    setting_reg #(.my_addr(BASE+NEXT_TICKS)) sr_next_ticks
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out(next_ticks_preset),.changed());
@@ -36,7 +37,7 @@ module time_64bit
 
    setting_reg #(.my_addr(BASE+PPS_POL)) sr_pps_pol
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
-      .in(set_data),.out(pps_polarity),.changed());
+      .in(set_data),.out({set_imm,pps_polarity}),.changed());
 
    reg [1:0] 	   pps_del;
    reg 		   pps_reg_p, pps_reg_n, pps_reg;
@@ -59,7 +60,7 @@ module time_64bit
        set_on_next_pps <= 0;
      else if(set_on_pps_trig)
        set_on_next_pps <= 1;
-     else if(pps_edge)
+     else if(set_imm | pps_edge)
        set_on_next_pps <= 0;
    
    always @(posedge clk)
@@ -68,7 +69,7 @@ module time_64bit
 	  seconds <= 32'd0;
 	  ticks <= 32'd0;
        end
-     else if(pps_edge & set_on_next_pps)
+     else if((set_imm | pps_edge) & set_on_next_pps)
        begin
 	  seconds <= next_seconds_preset;
 	  ticks <= next_ticks_preset;
