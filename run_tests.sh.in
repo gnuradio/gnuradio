@@ -13,14 +13,14 @@ abs_top_builddir=@abs_top_builddir@
 # current QA srcdir
 export srcdir=$3
 
-# Where to find my swig generated shared library
-mylibdir=$2/src:$2/src/.libs:$2/src/lib:$2/src/lib/.libs:$2/swig:$2/swig/.libs
+# Where to find my C++ and swig generated shared libraries
+mylibdir=$2/src:$2/src/.libs:$2/src/lib:$2/src/lib/.libs:$2/lib:$2/lib/.libs:$2/swig:$2/swig/.libs
 
 # Where to find my swig generated python module
 mysrcdir=$1/src:$1/src/lib
 
 # Where to find my hand written python modules
-mypydir=$1/src:$1/src/python
+mypydir=$1/src:$1/src/python:$1/python
 
 # Where to find core's swig generated shared libraries,
 # and hand generated swig glue
