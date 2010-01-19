@@ -11,7 +11,8 @@ module time_64bit
 
    localparam 	   NEXT_SECS = 0;   
    localparam 	   NEXT_TICKS = 1;
-   localparam      PPS_POL = 2;
+   localparam      PPS_POLSRC = 2;
+   localparam      PPS_IMM = 3;
    
    localparam 	   ROLLOVER = TICKS_PER_SEC - 1;	   
    
@@ -26,7 +27,8 @@ module time_64bit
    reg 		   set_on_next_pps;
    wire 	   pps_polarity;
    wire            set_imm;
-	   
+   wire 	   pps_source;
+   
    setting_reg #(.my_addr(BASE+NEXT_TICKS)) sr_next_ticks
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out(next_ticks_preset),.changed());
@@ -35,9 +37,13 @@ module time_64bit
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
       .in(set_data),.out(next_seconds_preset),.changed(set_on_pps_trig));
 
-   setting_reg #(.my_addr(BASE+PPS_POL)) sr_pps_pol
+   setting_reg #(.my_addr(BASE+PPS_POLSRC)) sr_pps_polsrc
      (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
-      .in(set_data),.out({set_imm,pps_polarity}),.changed());
+      .in(set_data),.out({pps_source,pps_polarity}),.changed());
+
+   setting_reg #(.my_addr(BASE+PPS_IMM)) sr_pps_imm
+     (.clk(clk),.rst(rst),.strobe(set_stb),.addr(set_addr),
+      .in(set_data),.out(set_imm),.changed());
 
    reg [1:0] 	   pps_del;
    reg 		   pps_reg_p, pps_reg_n, pps_reg;
