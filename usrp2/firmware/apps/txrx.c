@@ -125,7 +125,7 @@ static unsigned int streaming_items_per_frame = 0;
 static uint32_t     time_secs = TIME_NOW;
 static uint32_t     time_ticks = TIME_NOW;
 static int          streaming_frame_count = 0;
-#define FRAMES_PER_CMD	1000
+#define FRAMES_PER_CMD	2
 
 bool is_streaming(void){ return streaming_p; }
 
@@ -203,10 +203,16 @@ start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p)
 void
 stop_rx_cmd(void)
 {
-  streaming_p = false;
-  sr_rx_ctrl->clear_overrun = 1;	// flush cmd queue
-  bp_clear_buf(DSP_RX_BUF_0);
-  bp_clear_buf(DSP_RX_BUF_1);
+  if (is_streaming()){
+    streaming_p = false;
+
+    // no samples, "now", not chained
+    sr_rx_ctrl->cmd = MK_RX_CMD(0, 1, 0);
+
+    sr_rx_ctrl->time_secs = 0;
+    sr_rx_ctrl->time_ticks = 0;	// enqueue command
+  }
+
 }
 
 

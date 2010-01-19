@@ -43,8 +43,8 @@ static unsigned char exp_seqno __attribute__((unused)) = 0;
 static bool
 set_time(const op_set_time_t *p)
 {
-  printf("Setting time: secs %u, ticks %u\n", p->time_secs, p->time_ticks);
-  sr_time64->secs = p->time_secs;
+  //printf("Setting time: secs %u, ticks %u\n", p->time_secs, p->time_ticks);
+  //sr_time64->secs = p->time_secs; //set below...
   sr_time64->ticks = p->time_ticks;
   switch (p->type){
   case OP_SET_TIME_TYPE_NOW:
@@ -54,6 +54,7 @@ set_time(const op_set_time_t *p)
     sr_time64->imm = 0;
     break;
   }
+  sr_time64->secs = p->time_secs; //set this last to latch the regs
   return true;
 }
 

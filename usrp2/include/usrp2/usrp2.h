@@ -60,6 +60,10 @@ namespace usrp2 {
         secs = ~0;
         ticks = ~0;
       }
+      time_spec(uint32_t new_secs, uint32_t new_ticks = 0){
+        secs = new_secs;
+        ticks = new_ticks;
+      }
   } time_spec_t;
 
   /*!

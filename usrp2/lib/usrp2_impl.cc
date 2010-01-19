@@ -425,8 +425,8 @@ namespace usrp2 {
       cmd.op.len = sizeof(cmd.op);
       cmd.op.rid = d_next_rid++;
       cmd.op.items_per_frame = htonl(items_per_frame);
-      cmd.op.time_secs = time_spec.secs;
-      cmd.op.time_ticks = time_spec.ticks;
+      cmd.op.time_secs = htonx(time_spec.secs);
+      cmd.op.time_ticks = htonx(time_spec.ticks);
       cmd.eop.opcode = OP_EOP;
       cmd.eop.len = sizeof(cmd.eop);
 
@@ -778,7 +778,7 @@ namespace usrp2 {
     cmd.op.opcode = OP_CONFIG_CLOCK;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
-    cmd.op.flags = flags;
+    cmd.op.flags = htonx(flags);
     cmd.eop.opcode = OP_EOP;
     cmd.eop.len = sizeof(cmd.eop);
     
@@ -900,8 +900,8 @@ namespace usrp2 {
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
     cmd.op.type = OP_SET_TIME_TYPE_PPS;
-    cmd.op.time_secs = time_spec.secs;
-    cmd.op.time_ticks = time_spec.ticks;
+    cmd.op.time_secs = htonx(time_spec.secs);
+    cmd.op.time_ticks = htonx(time_spec.ticks);
 
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
     if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, 4*DEF_CMD_TIMEOUT))
@@ -922,8 +922,8 @@ namespace usrp2 {
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
     cmd.op.type = OP_SET_TIME_TYPE_NOW;
-    cmd.op.time_secs = time_spec.secs;
-    cmd.op.time_ticks = time_spec.ticks;
+    cmd.op.time_secs = htonx(time_spec.secs);
+    cmd.op.time_ticks = htonx(time_spec.ticks);
 
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
     if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, 4*DEF_CMD_TIMEOUT))
