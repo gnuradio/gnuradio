@@ -29,6 +29,11 @@ namespace usrp2 {
     op_generic_t    eop;
   };
 
+  struct op_set_time_cmd {
+    op_set_time_t    op;
+    op_generic_t    eop;
+  };
+
   /*!
    * OP_CONFIG_RX_V2 command packet
    */
@@ -55,9 +60,9 @@ namespace usrp2 {
     op_generic_t      eop;
   };
 
-  struct op_config_mimo_cmd
+  struct op_config_clock_cmd
   {
-    op_config_mimo_t  op;
+    op_config_clock_t  op;
     op_generic_t      eop;
   };
 

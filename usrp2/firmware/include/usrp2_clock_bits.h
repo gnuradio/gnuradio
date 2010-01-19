@@ -1,6 +1,6 @@
 /* -*- c -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008, 2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -18,8 +18,8 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_USRP2_MIMO_CONFIG_H
-#define INCLUDED_USRP2_MIMO_CONFIG_H
+#ifndef INCLUDED_USRP2_CLOCK_BITS_H
+#define INCLUDED_USRP2_CLOCK_BITS_H
 
 #define	_MC_WE_LOCK			0x0001
 #define	_MC_MIMO_CLK_INPUT		0x0002		// else SMA input
@@ -42,5 +42,12 @@
  */
 #define	MC_PROVIDE_CLK_TO_MIMO		0x0004
 
+#define MC_REF_CLK_MASK          0x0f
 
-#endif /* INCLUDED_USRP2_MIMO_CONFIG_H */
+#define MC_PPS_SOURCE_SMA        (0x00 << 4)
+#define MC_PPS_SOURCE_MIMO       (0x01 << 4)
+
+#define MC_PPS_POLARITY_NEG      (0x00 << 5)
+#define MC_PPS_POLARITY_POS      (0x01 << 5)
+
+#endif /* INCLUDED_USRP2_CLOCK_BITS_H */

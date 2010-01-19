@@ -42,7 +42,7 @@ main(void)
   u2_init();
 
   putstr("blink_leds2\n");
-  pic_register_handler(IRQ_TIMER, timer_handler);
+  pic_register_handler(IRQ_ONETIME, timer_handler);
   hal_set_timeout(DELTA_T);	// schedule next timeout
 
   while(1){

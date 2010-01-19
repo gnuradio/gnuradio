@@ -35,6 +35,7 @@
 #include <stddef.h>
 #include <assert.h>
 #include <string.h>
+#include <usrp2_clock_bits.h>
 
 static const int DEFAULT_RX_SCALE = 1024;
 
@@ -50,26 +51,23 @@ namespace usrp2 {
     case OP_ID: return "OP_ID";
     case OP_ID_REPLY: return "OP_ID_REPLY";
     case OP_BURN_MAC_ADDR: return "OP_BURN_MAC_ADDR";
-    case OP_READ_TIME: return "OP_READ_TIME";
-    case OP_READ_TIME_REPLY: return "OP_READ_TIME_REPLY";
     case OP_CONFIG_RX_V2: return "OP_CONFIG_RX_V2";
     case OP_CONFIG_RX_REPLY_V2: return "OP_CONFIG_RX_REPLY_V2";
     case OP_CONFIG_TX_V2: return "OP_CONFIG_TX_V2";
     case OP_CONFIG_TX_REPLY_V2: return "OP_CONFIG_TX_REPLY_V2";
     case OP_START_RX_STREAMING: return "OP_START_RX_STREAMING";
     case OP_STOP_RX: return "OP_STOP_RX";
-    case OP_CONFIG_MIMO: return "OP_CONFIG_MIMO";
+    case OP_CONFIG_CLOCK: return "OP_CONFIG_CLOCK";
     case OP_DBOARD_INFO: return "OP_DBOARD_INFO";
     case OP_DBOARD_INFO_REPLY: return "OP_DBOARD_INFO_REPLY";
-    case OP_SYNC_TO_PPS: return "OP_SYNC_TO_PPS";
     case OP_PEEK: return "OP_PEEK";
     case OP_PEEK_REPLY: return "OP_PEEK_REPLY";
     case OP_SET_TX_LO_OFFSET: return "OP_SET_TX_LO_OFFSET";
     case OP_SET_TX_LO_OFFSET_REPLY: return "OP_SET_TX_LO_OFFSET_REPLY";
     case OP_SET_RX_LO_OFFSET: return "OP_SET_RX_LO_OFFSET";
     case OP_SET_RX_LO_OFFSET_REPLY: return "OP_SET_RX_LO_OFFSET_REPLY";
-    case OP_SYNC_EVERY_PPS: return "OP_SYNC_EVERY_PPS";
-    case OP_SYNC_EVERY_PPS_REPLY: return "OP_SYNC_EVERY_PPS_REPLY";
+    case OP_SET_TIME: return "OP_SET_TIME";
+    case OP_SET_TIME_REPLY: return "OP_SET_TIME_REPLY";
 
     default:
       char buf[64];
@@ -406,9 +404,9 @@ namespace usrp2 {
     bool success = (ntohx(reply.ok) == 1);
     return success;
   }
-  
+
   bool
-  usrp2::impl::start_rx_streaming(unsigned int items_per_frame, const time_spec_t *time_spec)
+  usrp2::impl::start_rx_streaming(unsigned int items_per_frame, const time_spec_t &time_spec)
   {
 
     //flush any old samples in the data transport
@@ -427,8 +425,8 @@ namespace usrp2 {
       cmd.op.len = sizeof(cmd.op);
       cmd.op.rid = d_next_rid++;
       cmd.op.items_per_frame = htonl(items_per_frame);
-      cmd.op.time_secs = time_spec->secs;
-      cmd.op.time_ticks = time_spec->ticks;
+      cmd.op.time_secs = time_spec.secs;
+      cmd.op.time_ticks = time_spec.ticks;
       cmd.eop.opcode = OP_EOP;
       cmd.eop.len = sizeof(cmd.eop);
 
@@ -733,13 +731,51 @@ namespace usrp2 {
   // ----------------------------------------------------------------
 
   bool
-  usrp2::impl::config_mimo(int flags)
+  usrp2::impl::config_clock(const clock_config_t &clock_config)
   {
-    op_config_mimo_cmd cmd;
+    uint8_t flags = 0;
+
+    //determine flags for the reference source
+    switch(clock_config.ref_source){
+    case clock_config_t::REF_INT:
+        flags |= MC_WE_DONT_LOCK;
+        break;
+    case clock_config_t::REF_SMA:
+        flags |= MC_WE_LOCK_TO_SMA;
+        break;
+    case clock_config_t::REF_MIMO:
+        flags |= MC_WE_LOCK_TO_MIMO;
+        break;
+    }
+
+    //determine flags for reference provider
+    flags |= (clock_config.provide_ref_to_mimo)? MC_PROVIDE_CLK_TO_MIMO : 0x00;
+
+    //determine flags for the pps source
+    switch(clock_config.pps_source){
+    case clock_config_t::PPS_SMA:
+        flags |= MC_PPS_SOURCE_SMA;
+        break;
+    case clock_config_t::PPS_MIMO:
+        flags |= MC_PPS_SOURCE_MIMO;
+        break;
+    }
+
+    //determine flags for the pps polarity
+    switch(clock_config.pps_source){
+    case clock_config_t::PPS_NEG:
+        flags |= MC_PPS_POLARITY_NEG;
+        break;
+    case clock_config_t::PPS_POS:
+        flags |= MC_PPS_POLARITY_POS;
+        break;
+    }
+
+    op_config_clock_cmd cmd;
     op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    cmd.op.opcode = OP_CONFIG_MIMO;
+    cmd.op.opcode = OP_CONFIG_CLOCK;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
     cmd.op.flags = flags;
@@ -853,46 +889,48 @@ namespace usrp2 {
     return success;
   }
 
-
   bool
-  usrp2::impl::sync_to_pps()
+  usrp2::impl::set_time_at_next_pps(const time_spec_t &time_spec)
   {
-    op_generic_cmd cmd;
-    op_generic_t   reply;
+    op_set_time_cmd cmd;
+    op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    cmd.op.opcode = OP_SYNC_TO_PPS;
+    cmd.op.opcode = OP_SET_TIME;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
-    cmd.eop.opcode = OP_EOP;
-    cmd.eop.len = sizeof(cmd.eop);
-    
+    cmd.op.type = OP_SET_TIME_TYPE_PPS;
+    cmd.op.time_secs = time_spec.secs;
+    cmd.op.time_ticks = time_spec.ticks;
+
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, 4*DEF_CMD_TIMEOUT))
       return false;
 
-    return ntohx(reply.ok) == 1;
+    bool success = (ntohx(reply.ok) == 1);
+    return success;
   }
 
   bool
-  usrp2::impl::sync_every_pps(bool enable)
+  usrp2::impl::set_time(const time_spec_t &time_spec)
   {
-    op_generic_cmd cmd;
-    op_generic_t   reply;
+    op_set_time_cmd cmd;
+    op_generic_t reply;
 
     memset(&cmd, 0, sizeof(cmd));
-    cmd.op.opcode = OP_SYNC_EVERY_PPS;
+    cmd.op.opcode = OP_SET_TIME;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
-    cmd.op.ok = enable ? 1 : 0;
-    cmd.eop.opcode = OP_EOP;
-    cmd.eop.len = sizeof(cmd.eop);
-    
+    cmd.op.type = OP_SET_TIME_TYPE_NOW;
+    cmd.op.time_secs = time_spec.secs;
+    cmd.op.time_ticks = time_spec.ticks;
+
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
-    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, 4*DEF_CMD_TIMEOUT))
       return false;
 
-    return ntohx(reply.ok) == 1;
+    bool success = (ntohx(reply.ok) == 1);
+    return success;
   }
 
   std::vector<uint32_t>

@@ -630,7 +630,7 @@ module u2_core
 
    // ///////////////////////////////////////////////////////////////////////////////////
    // SERDES
-/*
+
    serdes #(.TXFIFOSIZE(9),.RXFIFOSIZE(9)) serdes
      (.clk(dsp_clk),.rst(dsp_rst),
       .ser_tx_clk(ser_tx_clk),.ser_t(ser_t),.ser_tklsb(ser_tklsb),.ser_tkmsb(ser_tkmsb),
@@ -640,7 +640,7 @@ module u2_core
       .tx_occupied(ser_tx_occ),.tx_full(ser_tx_full),.tx_empty(ser_tx_empty),
       .rx_occupied(ser_rx_occ),.rx_full(ser_rx_full),.rx_empty(ser_rx_empty),
       .serdes_link_up(serdes_link_up),.debug0(debug_serdes0), .debug1(debug_serdes1) );
-*/
+
    // ///////////////////////////////////////////////////////////////////////////////////
    // External RAM Interface
 

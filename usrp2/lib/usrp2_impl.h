@@ -101,7 +101,7 @@ namespace usrp2 {
     bool enable_gpio_streaming(int bank, int enable);
     bool write_gpio(int bank, uint16_t value, uint16_t mask);
     bool read_gpio(int bank, uint16_t *value);
-    bool start_rx_streaming(unsigned int items_per_frame, const time_spec_t *time_spec);
+    bool start_rx_streaming(unsigned int items_per_frame, const time_spec_t &time_spec);
     bool rx_samples(vrt::rx_packet_handler *handler);
     bool stop_rx_streaming();
 
@@ -137,7 +137,7 @@ namespace usrp2 {
 
     // misc
 
-    bool config_mimo(int flags);
+    bool config_clock(const clock_config_t &clock_config);
     bool fpga_master_clock_freq(long *freq);
     bool adc_rate(long *rate);
     bool dac_rate(long *rate);
@@ -147,8 +147,8 @@ namespace usrp2 {
     // low level
 
     bool burn_mac_addr(u2_mac_addr_t *new_mac);
-    bool sync_to_pps();
-    bool sync_every_pps(bool enable);
+    bool set_time_at_next_pps(const time_spec_t &time_spec);
+    bool set_time(const time_spec_t &time_spec);
     std::vector<uint32_t> peek32(uint32_t addr, uint32_t words);
     bool poke32(uint32_t addr, const std::vector<uint32_t> &data);
   };

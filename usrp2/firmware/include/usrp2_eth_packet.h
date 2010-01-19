@@ -21,7 +21,6 @@
 
 #include "usrp2_cdefs.h"
 #include "usrp2_mac_addr.h"
-#include "usrp2_mimo_config.h"
 
 __U2_BEGIN_DECLS
 
@@ -58,33 +57,6 @@ typedef struct {
 } __attribute__((packed)) u2_transport_hdr_t;
 
 
-/*
- * The fixed payload header of a USRP2 ethernet packet...
- *
- * Basically there's 1 word of flags and routing info, and 1 word
- * of timestamp that specifies when the data was received, or
- * when it should be transmitted. The data samples follow immediately.
- *
- * Transmit packets (from host to U2)
- * 
- *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *  |  Chan   |                    mbz                        |I|S|E|
- *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *  |                           Timestamp                           |
- *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *
- *
- * Received packets (from U2 to host)
- *
- *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *  |  Chan   |                    mbz                              |
- *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *  |                           Timestamp                           |
- *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *
- *  mbz == must be zero
- */
-
 /*!
  * \brief consolidated packet: ethernet header + transport header
  */
@@ -106,8 +78,6 @@ typedef struct {
 #define	OP_ID_REPLY		     (OP_ID | OP_REPLY_BIT)
 #define	OP_BURN_MAC_ADDR	     2
 #define OP_BURN_MAC_ADDR_REPLY	     (OP_BURN_MAC_ADDR | OP_REPLY_BIT)
-#define	OP_READ_TIME	             3	// What time is it? (100 MHz counter)
-#define	OP_READ_TIME_REPLY           (OP_READ_TIME | OP_REPLY_BIT)
 #define	OP_CONFIG_RX_V2	             4
 #define	OP_CONFIG_RX_REPLY_V2        (OP_CONFIG_RX_V2 | OP_REPLY_BIT)
 #define	OP_CONFIG_TX_V2	             5
@@ -116,12 +86,10 @@ typedef struct {
 #define	OP_START_RX_STREAMING_REPLY  (OP_START_RX_STREAMING | OP_REPLY_BIT)
 #define	OP_STOP_RX	             7
 #define	OP_STOP_RX_REPLY	     (OP_STOP_RX | OP_REPLY_BIT)
-#define	OP_CONFIG_MIMO	       	     8
-#define OP_CONFIG_MIMO_REPLY	     (OP_CONFIG_MIMO | OP_REPLY_BIT)
+#define	OP_CONFIG_CLOCK              8
+#define OP_CONFIG_CLOCK_REPLY        (OP_CONFIG_CLOCK | OP_REPLY_BIT)
 #define	OP_DBOARD_INFO		     9
 #define	OP_DBOARD_INFO_REPLY	     (OP_DBOARD_INFO | OP_REPLY_BIT)
-#define	OP_SYNC_TO_PPS               10
-#define	OP_SYNC_TO_PPS_REPLY	     (OP_SYNC_TO_PPS | OP_REPLY_BIT)
 #define OP_PEEK                      11
 #define OP_PEEK_REPLY                (OP_PEEK | OP_REPLY_BIT)
 #define OP_POKE                      12
@@ -132,8 +100,6 @@ typedef struct {
 #define OP_SET_RX_LO_OFFSET_REPLY    (OP_SET_RX_LO_OFFSET | OP_REPLY_BIT)
 #define OP_RESET_DB                  15
 #define OP_RESET_DB_REPLY            (OP_RESET_DB | OP_REPLY_BIT)
-#define OP_SYNC_EVERY_PPS            16
-#define OP_SYNC_EVERY_PPS_REPLY      (OP_SYNC_EVERY_PPS | OP_REPLY_BIT)
 #define OP_GPIO_SET_DDR              17
 #define OP_GPIO_SET_DDR_REPLY        (OP_GPIO_SET_DDR | OP_REPLY_BIT)
 #define OP_GPIO_SET_SELS             18
@@ -144,6 +110,8 @@ typedef struct {
 #define OP_GPIO_WRITE_REPLY          (OP_GPIO_WRITE | OP_REPLY_BIT)
 #define OP_GPIO_STREAM               21
 #define OP_GPIO_STREAM_REPLY         (OP_GPIO_STREAM | OP_REPLY_BIT)
+#define OP_SET_TIME                  22
+#define OP_SET_TIME_REPLY            (OP_SET_TIME | OP_REPLY_BIT)
 
 /*
  * All subpackets are a multiple of 4 bytes long.
@@ -164,6 +132,23 @@ typedef struct {
   uint8_t	rid;
   uint8_t	ok;		// bool
 } _AL4 op_generic_t;
+
+/*!
+ * \brief Set the ticks and secs on a usrp2
+ */
+typedef struct {
+  uint8_t	opcode;
+  uint8_t	len;
+  uint8_t	rid;
+  uint8_t	type;
+  uint32_t	time_secs;
+  uint32_t	time_ticks;
+} _AL4 op_set_time_t;
+
+typedef enum {
+    OP_SET_TIME_TYPE_NOW,
+    OP_SET_TIME_TYPE_PPS
+} op_set_time_type_t;
 
 /*!
  * \brief Reply info from a USRP2
@@ -195,15 +180,6 @@ typedef struct {
   uint8_t	rid;
   u2_mac_addr_t	addr;
 } _AL4 op_burn_mac_addr_t;
-
-typedef struct {
-  uint8_t	opcode;
-  uint8_t	len;
-  uint8_t	rid;
-  uint8_t	mbz;
-  uint32_t	time;
-} _AL4 op_read_time_reply_t;
-
 
 /*!
  * \brief Configure receiver
@@ -297,15 +273,14 @@ typedef struct {
 } _AL4 op_config_tx_reply_v2_t;
 
 /*!
- * \brief Configure MIMO clocking, etc (uses generic reply)
+ * \brief Configure clocking, etc (uses generic reply)
  */
 typedef struct {
   uint8_t	opcode;
   uint8_t	len;
   uint8_t	rid;
-  uint8_t	flags;	// from usrp_mimo_config.h
-} op_config_mimo_t;
-
+  uint8_t	flags;
+} op_config_clock_t;
 
 /*!
  * \brief High-level information about daughterboards
@@ -412,18 +387,18 @@ typedef union {
   op_id_reply_t			op_id_reply;
   op_start_rx_streaming_t	op_start_rx_streaming;
   op_burn_mac_addr_t		op_burn_mac_addr;
-  op_read_time_reply_t		op_read_time_reply;
   op_config_rx_v2_t		op_config_rx_v2;
   op_config_rx_reply_v2_t	op_config_rx_reply_v2;
   op_config_tx_v2_t		op_config_tx_v2;
   op_config_tx_reply_v2_t	op_config_tx_reply_v2;
-  op_config_mimo_t 		op_config_mimo;
+  op_config_clock_t 		op_config_clock;
   op_peek_t                     op_peek;
   op_poke_t                     op_poke;
   op_freq_t                     op_freq;
   op_gpio_t                     op_gpio;
   op_gpio_set_sels_t            op_gpio_set_sels;
   op_gpio_read_reply_t          op_gpio_read_reply;
+  op_set_time_t                 op_set_time;
 
 } u2_subpkt_t;
 

@@ -22,9 +22,9 @@ INCLUDES = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES)
 usrp2includedir = $(includedir)/usrp2
 
 usrp2include_HEADERS = \
+	clock_config.h \
 	copiers.h \
 	data_handler.h \
-	mimo_config.h \
 	rx_nop_handler.h \
 	strtod_si.h \
 	tune_result.h \

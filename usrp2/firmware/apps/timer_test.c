@@ -21,7 +21,7 @@
 #include "buffer_pool.h"
 #include "pic.h"
 #include "nonstdio.h"
-
+#include "hal_io.h"
 
 #define DELTA_T  500  		// 5 us (10ns per tick)
 
@@ -29,11 +29,10 @@
 void 
 timer_handler(unsigned irq)
 {
-  int t = timer_regs->time;
-  timer_regs->time = t + DELTA_T;
+  hal_set_timeout(DELTA_T);
 
   putstr("Tick: ");
-  puthex_nl(t);
+  puthex_nl(0);
 }
 
 int
@@ -44,10 +43,9 @@ main(void)
   // setup timer
 
   putstr("Setting up timer\n");
-  pic_register_handler(IRQ_TIMER, timer_handler);
+  pic_register_handler(IRQ_ONETIME, timer_handler);
 
-  int t = timer_regs->time;
-  timer_regs->time = t + DELTA_T;
+  hal_set_timeout(DELTA_T);
 
   while (1)
     ;

@@ -40,29 +40,37 @@ dbsm_t *ac_could_be_sending_to_eth;
 
 static unsigned char exp_seqno __attribute__((unused)) = 0;
 
-static inline bool
-sync_to_pps(const op_generic_t *p)
-{
-  timesync_regs->sync_on_next_pps = 1;
-  //putstr("SYNC to PPS\n");
-  return true;
-}
-
 static bool
-sync_every_pps(const op_generic_t *p)
+set_time(const op_set_time_t *p)
 {
-  if (p->ok)
-    timesync_regs->tick_control |= TSC_TRIGGER_EVERYPPS;
-  else
-    timesync_regs->tick_control &= ~TSC_TRIGGER_EVERYPPS;
-
+  printf("Setting time: secs %u, ticks %u\n", p->time_secs, p->time_ticks);
+  sr_time64->secs = p->time_secs;
+  sr_time64->ticks = p->time_ticks;
+  switch (p->type){
+  case OP_SET_TIME_TYPE_NOW:
+    sr_time64->imm = 1;
+    break;
+  case OP_SET_TIME_TYPE_PPS:
+    sr_time64->imm = 0;
+    break;
+  }
   return true;
 }
 
 static inline bool
-config_mimo_cmd(const op_config_mimo_t *p)
+config_clock_cmd(const op_config_clock_t *p)
 {
-  clocks_mimo_config(p->flags);
+  //handle the 10 mhz ref source
+  clocks_mimo_config(p->flags & MC_REF_CLK_MASK);
+
+  //handle the pps config
+  uint32_t pps_flags = 0;
+  if (p->flags & MC_PPS_POLARITY_NEG) pps_flags |= 0x00 << 0;
+  if (p->flags & MC_PPS_POLARITY_POS) pps_flags |= 0x01 << 0;
+  if (p->flags & MC_PPS_SOURCE_SMA)   pps_flags |= 0x00 << 1;
+  if (p->flags & MC_PPS_SOURCE_MIMO)  pps_flags |= 0x01 << 1;
+  sr_time64->flags = pps_flags;
+
   return true;
 }
 
@@ -287,22 +295,6 @@ config_rx_v2_cmd(const op_config_rx_v2_t *p,
   return r->len;
 }
 
-static size_t
-read_time_cmd(const op_generic_t *p,
-	      void *reply_payload, size_t reply_payload_space)
-{
-  op_read_time_reply_t *r = (op_read_time_reply_t *) reply_payload;
-  if (reply_payload_space < sizeof(*r))		
-    return 0;					// no room
-
-  r->opcode = OP_READ_TIME_REPLY;
-  r->len = sizeof(*r);
-  r->rid = p->rid;
-  r->time = timer_regs->time;
-
-  return r->len;
-}
-
 static void
 fill_db_info(u2_db_info_t *p, const struct db_base *db)
 {
@@ -489,21 +481,16 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
       ok = ethernet_set_mac_addr(&((op_burn_mac_addr_t *)payload)->addr);
       goto generic_reply;
 
-    case OP_CONFIG_MIMO:
-      ok = config_mimo_cmd((op_config_mimo_t *) payload);
+    case OP_CONFIG_CLOCK:
+      ok = config_clock_cmd((op_config_clock_t *) payload);
       goto generic_reply;
-
-    case OP_READ_TIME:
-      subpktlen = read_time_cmd(gp, reply_payload, reply_payload_space);
-      break;
 
     case OP_DBOARD_INFO:
       subpktlen = dboard_info_cmd(gp, reply_payload, reply_payload_space);
       break;
 
-    case OP_SYNC_TO_PPS:
-      sync_to_pps((op_generic_t *) payload);
-      ok = true;
+    case OP_SET_TIME:
+      ok = set_time((op_set_time_t *) payload);
       goto generic_reply;
 
     case OP_PEEK:
@@ -522,10 +509,6 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
     case OP_RESET_DB:
       db_init();
       ok = true;
-      goto generic_reply;
-
-    case OP_SYNC_EVERY_PPS:
-      ok = sync_every_pps((op_generic_t *) payload);
       goto generic_reply;
 
     case OP_GPIO_SET_DDR:

@@ -106,10 +106,7 @@ void hal_toggle_leds(int mask);
 static inline void
 hal_set_timeout(int delta_ticks)
 {
-  int t = timer_regs->time + delta_ticks;
-  if (t == 0)			// kills timer
-    t = 1;
-  timer_regs->time = t;
+  sr_simple_timer->onetime = delta_ticks;
 }
 
 /*

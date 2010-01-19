@@ -25,7 +25,7 @@
 #include <complex>
 #include <vrt/rx_packet_handler.h>
 #include <usrp2/tune_result.h>
-#include <usrp2/mimo_config.h>
+#include <usrp2/clock_config.h>
 
 /*
  * N.B., The interfaces described here are still in flux.
@@ -183,11 +183,14 @@ namespace usrp2 {
     /*!
      * Start streaming receive mode.  USRP2 will send a continuous stream of
      * DSP pipeline samples to host.  Call rx_samples(...) to access.
-     * 
+     *
+     * The timestamp specifies a future time when the usrp2 will begin streaming.
+     * If a time spec is not provided, it will default to doing a "stream now".
+     *
      * \param items_per_frame  Number of 32-bit items per frame.
-     * \param time_spec        When to start streaming (default == whenever)
+     * \param time_spec        When to start streaming (default == now)
      */
-    bool start_rx_streaming(unsigned int items_per_frame=0, const time_spec_t *time_spec=new time_spec_t());
+    bool start_rx_streaming(unsigned int items_per_frame=0, const time_spec_t &time_spec = time_spec_t());
   
     /*!
      * Stop streaming receive mode.
@@ -349,23 +352,15 @@ namespace usrp2 {
      */
 
     /*!
-     * \brief MIMO configuration
+     * \brief clock configuration
      *
-     * \param flags from usrp2_mimo_config.h
+     * Sets the source for the pps and reference.
+     * Set the polarity of the pps and other options.
+     * \see clock_config.h
      *
-     * <pre>
-     *   one of these:
-     *
-     *     MC_WE_DONT_LOCK
-     *     MC_WE_LOCK_TO_SMA
-     *     MC_WE_LOCK_TO_MIMO
-     *
-     *   and optionally this:
-     *
-     *     MC_PROVIDE_CLK_TO_MIMO
-     * </pre>
+     * \param clock_config the clock config options
      */
-    bool config_mimo(int flags);
+    bool config_clock(const clock_config_t &clock_config);
 
 
     //! Get frequency of master oscillator in Hz
@@ -412,14 +407,28 @@ namespace usrp2 {
     bool burn_mac_addr(const std::string &new_addr);
 
     /*!
-     * Reset master time to 0 at next PPS edge
+     * \brief Set the time registers on the usrp2 (when the pps pulses).
+     * \param time_spec the seconds and ticks to set
+     *
+     * The new time will be latched on the next pps.
+     * The pps must be setup in the clock config.
+     *
+     * Using with a GPS example:
+     *   Connect pps and reference to the usrp2 external inputs.
+     *   Configure your gps to send a new timestamp over the serial terminal.
+     *   When the host gets a new timestamp from the gps (absolute seconds),
+     *   call set_time with (gps_seconds + 1) for the seconds and 0 for the ticks.
+     *   Set the ticks to something other than zero to correct for timing issues.
      */
-    bool sync_to_pps();
+    bool set_time_at_next_pps(const time_spec_t &time_spec);
 
     /*!
-     * Reset master time to 0 at every PPS edge
+     * \brief Set the time registers on the usrp2.
+     * \param time_spec the seconds and ticks to set
+     *
+     * The new time will be latched asap.
      */
-    bool sync_every_pps(bool enable);
+    bool set_time(const time_spec_t &time_spec);
 
     /*!
      * Read memory from Wishbone bus as 32-bit words.  Handles endian swapping if needed.
