@@ -141,6 +141,7 @@ module u2_core
    localparam SR_TX_DSP = 208;
    localparam SR_TX_CTRL = 224;
    localparam SR_TIME64 = 192;
+   localparam SR_SIMTIMER = 198;
    
    wire [7:0] 	set_addr;
    wire [31:0] 	set_data;
@@ -150,7 +151,8 @@ module u2_core
    wire 	ram_loader_rst, wb_rst, dsp_rst;
 
    wire [31:0] 	status, status_b0, status_b1, status_b2, status_b3, status_b4, status_b5, status_b6, status_b7;
-   wire 	bus_error, spi_int, i2c_int, pps_int, timer_int, buffer_int, proc_int, overrun, underrun, uart_tx_int, uart_rx_int;
+   wire 	bus_error, spi_int, i2c_int, pps_int, onetime_int, periodic_int, buffer_int;
+   wire 	proc_int, overrun, underrun, uart_tx_int, uart_rx_int;
 
    wire [31:0] 	debug_gpio_0, debug_gpio_1;
    wire [31:0] 	atr_lines;
@@ -481,8 +483,8 @@ module u2_core
 
    assign irq= {{8'b0},
 		{8'b0},
-		{4'b0, clk_status, serdes_link_up, uart_tx_int, uart_rx_int},
-		{pps_int,overrun,underrun,PHY_INTn,i2c_int,spi_int,timer_int,buffer_int}};
+		{3'b0, periodic_int, clk_status, serdes_link_up, uart_tx_int, uart_rx_int},
+		{pps_int,overrun,underrun,PHY_INTn,i2c_int,spi_int,onetime_int,buffer_int}};
    
    pic pic(.clk_i(wb_clk),.rst_i(wb_rst),.cyc_i(s8_cyc),.stb_i(s8_stb),.adr_i(s8_adr[3:2]),
 	   .we_i(s8_we),.dat_i(s8_dat_o),.dat_o(s8_dat_i),.ack_o(s8_ack),.int_o(proc_int),
@@ -491,13 +493,25 @@ module u2_core
    // /////////////////////////////////////////////////////////////////////////
    // Master Timer, Slave #9
 
+   // No longer used, replaced with simple_timer below
+   /*
    wire [31:0] 	 master_time;
    timer timer
      (.wb_clk_i(wb_clk),.rst_i(wb_rst),
       .cyc_i(s9_cyc),.stb_i(s9_stb),.adr_i(s9_adr[4:2]),
       .we_i(s9_we),.dat_i(s9_dat_o),.dat_o(s9_dat_i),.ack_o(s9_ack),
       .sys_clk_i(dsp_clk),.master_time_i(master_time),.int_o(timer_int) );
-
+    */
+   assign s9_ack = 0;
+   
+   // /////////////////////////////////////////////////////////////////////////
+   //  Simple Timer interrupts
+   
+   simple_timer #(.BASE(SR_SIMTIMER)) simple_timer
+     (.clk(wb_clk), .reset(wb_rst),
+      .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
+      .onetime_int(onetime_int), .periodic_int(periodic_int));
+   
    // /////////////////////////////////////////////////////////////////////////
    // UART, Slave #10
 
@@ -525,22 +539,9 @@ module u2_core
    // //////////////////////////////////////////////////////////////////////////
    // Time Sync, Slave #12 
 
-   reg 		 pps_posedge, pps_negedge, pps_pos_d1, pps_neg_d1;
-   always @(negedge dsp_clk) pps_negedge <= pps_in;
-   always @(posedge dsp_clk) pps_posedge <= pps_in;
-   always @(posedge dsp_clk) pps_pos_d1 <= pps_posedge;
-   always @(posedge dsp_clk) pps_neg_d1 <= pps_negedge;   
+   // No longer used, see time_64bit.  Still need to handle mimo time, though
+   assign sc_ack = 0;
    
-   wire 	 pps_o;
-   time_sync time_sync
-     (.wb_clk_i(wb_clk),.rst_i(wb_rst),
-      .cyc_i(sc_cyc),.stb_i(sc_stb),.adr_i(sc_adr[4:2]),
-      .we_i(sc_we),.dat_i(sc_dat_o),.dat_o(sc_dat_i),.ack_o(sc_ack),
-      .sys_clk_i(dsp_clk),.master_time_o(master_time),
-      .pps_posedge(pps_posedge),.pps_negedge(pps_negedge),
-      .exp_pps_in(exp_pps_in),.exp_pps_out(exp_pps_out),
-      .int_o(pps_int),.epoch_o(epoch),.pps_o(pps_o) );
-
    // /////////////////////////////////////////////////////////////////////////
    // SD Card Reader / Writer, Slave #13
 
@@ -678,7 +679,7 @@ module u2_core
 
    time_64bit #(.TICKS_PER_SEC(32'd100000000),.BASE(SR_TIME64)) time_64bit
      (.clk(dsp_clk), .rst(dsp_rst), .set_stb(set_stb), .set_addr(set_addr), .set_data(set_data),
-      .pps(pps_o), .vita_time(vita_time), .pps_int());
+      .pps(pps_in), .vita_time(vita_time), .pps_int(pps_int));
    
    // /////////////////////////////////////////////////////////////////////////////////////////
    // Debug Pins
