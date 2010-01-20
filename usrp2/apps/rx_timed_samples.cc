@@ -54,7 +54,7 @@ public:
   bool //print the timestamps, increment the number of samples
   operator()(const uint32_t *items, size_t nitems, const vrt::expanded_header *vrt_header)
   {
-    std::cout << boost::format("Got packet: Secs %d, Ticks %d\n")
+    std::cout << boost::format("Got packet: %u secs, %u ticks\n")
         % vrt_header->integer_secs % vrt_header->fractional_secs;
     d_num_samples += nitems;
     return true;
@@ -89,12 +89,18 @@ usage(const char *progname)
   std::cerr << boost::format("  -s SECONDS           specify number of seconds in the future to receive [default=3]\n");
 }
 
+static inline double get_time_now(void){
+    timeval tim; gettimeofday(&tim, NULL);
+    return double(tim.tv_sec) + double(tim.tv_usec)/1e6;
+}
+
 int
 main(int argc, char **argv)
 {
   // options and their defaults
   const char *interface = "eth0";
   const char *mac_addr_str = "";
+  const size_t num_rtt_tests = 42;
   size_t nsamples = 1000;
   size_t nseconds = 3;
 
@@ -126,7 +132,7 @@ main(int argc, char **argv)
     }
   }
 
-  std::cout << std::endl << std::endl;
+  std::cout << std::endl;
 
   //create a new handler to print info about packets
   rx_handler my_handler(nsamples);
@@ -135,16 +141,29 @@ main(int argc, char **argv)
   usrp2::usrp2::sptr u2 = usrp2::usrp2::make(interface, mac_addr_str);
   u2->set_rx_decim(16);
 
-  //set the current host time to the usrp2
-  struct timeval curr_time;
-  gettimeofday(&curr_time, NULL);
-  uint32_t curr_secs = curr_time.tv_sec;
+  //get the master clock rate
   long clk_rate; u2->fpga_master_clock_freq(&clk_rate);
-  uint32_t curr_ticks = (uint64_t)curr_time.tv_usec*clk_rate/1000000ul;
-  std::cout << boost::format("Current time: Secs %u, Ticks %u\n") % curr_secs % curr_ticks;
-  u2->set_time(usrp2::time_spec_t(curr_secs, curr_ticks));
+  std::cout << boost::format("USRP2 master clock rate: %f MHz\n") % (clk_rate/1e6);
 
-  //begin streaming n seconds in the future
+  //estimate the round trip time
+  double avg_rtt = 0.0;
+  for (size_t i = 0; i < num_rtt_tests; i++){
+    double start_time = get_time_now();
+    u2->set_time(usrp2::time_spec_t());
+    avg_rtt += get_time_now() - start_time;
+  }
+  avg_rtt /= num_rtt_tests;
+  std::cout << boost::format("Average round trip time: %f usecs\n") % (avg_rtt*1e6);
+
+  //set the system time to the usrp2
+  double curr_time = get_time_now() + avg_rtt/2.0;
+  uint32_t curr_secs = floor(curr_time);
+  uint32_t curr_ticks = (curr_time - curr_secs)*clk_rate;
+  u2->set_time(usrp2::time_spec_t(curr_secs, curr_ticks));
+  std::cout << boost::format("Current time + RTT/2:    %f secs\n") % curr_time;
+  std::cout << boost::format("USRP2 time was set to:   %u secs, %u ticks\n") % curr_secs % curr_ticks;
+
+  //begin streaming in the future
   std::cout << boost::format("Begin streaming %u seconds in the future...\n\n") % nseconds;
   u2->start_rx_streaming(0, usrp2::time_spec_t(curr_secs+nseconds, curr_ticks));
   while(not my_handler.done()){
@@ -154,6 +173,6 @@ main(int argc, char **argv)
   //done, stop streaming
   u2->stop_rx_streaming();
 
-  std::cout << std::endl << std::endl;
+  std::cout << std::endl;
   return 0;
 }
