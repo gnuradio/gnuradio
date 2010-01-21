@@ -63,6 +63,7 @@
 /tx_only_v2
 /rx_only_v2
 /txrx
+/txrx_wbx
 /eth_serdes
 /serdes_txrx
 /set_hw_rev
