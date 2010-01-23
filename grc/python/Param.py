@@ -65,7 +65,7 @@ class FileParam(EntryParam):
 		file_dialog.set_local_only(True)
 		if gtk.RESPONSE_OK == file_dialog.run(): #run the dialog
 			file_path = file_dialog.get_filename() #get the file path
-			self.entry.set_text(file_path)
+			self._input.set_text(file_path)
 			self._handle_changed()
 		file_dialog.destroy() #destroy the dialog
 
