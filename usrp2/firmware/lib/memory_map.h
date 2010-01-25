@@ -307,6 +307,7 @@ hwconfig_wishbone_divisor(void)
 #define SR_RX_DSP 160
 #define SR_RX_CTRL 176
 #define SR_TIME64 192
+#define SR_SIMTIMER 198
 #define SR_LAST 255
 
 #define	_SR_ADDR(sr)	(MISC_OUTPUT_BASE + (sr) * sizeof(uint32_t))
@@ -510,10 +511,10 @@ typedef struct {
 // --- VITA RX CTRL regs ---
 typedef struct {
   // The following 3 are logically a single command register.
-  // They are clocked into the underlying fifo when time_tics is written.
+  // They are clocked into the underlying fifo when time_ticks is written.
   volatile uint32_t	cmd;		// {now, chain, num_samples(30)
   volatile uint32_t	time_secs;
-  volatile uint32_t	time_tics;
+  volatile uint32_t	time_ticks;
 
   volatile uint32_t	clear_overrun;	// write anything to clear overrun
   volatile uint32_t	vrt_header;	// word 0 of packet.  FPGA fills in packet counter
@@ -594,10 +595,28 @@ typedef struct {
 #define dsp_rx_regs ((dsp_rx_regs_t *) _SR_ADDR(SR_RX_DSP))
 
 // ----------------------------------------------------------------
-// VITA49 64 bit time
+// VITA49 64 bit time (write only)
+  /*!
+   * \brief Time 64 flags
+   *
+   * <pre>
+   *
+   *    3                   2                   1                       
+   *  1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0
+   * +-----------------------------------------------------------+-+-+
+   * |                                                           |S|P|
+   * +-----------------------------------------------------------+-+-+
+   *
+   * P - PPS edge selection (0=negedge, 1=posedge, default=0)
+   * S - Source (0=sma, 1=mimo, 0=default)
+   *
+   * </pre>
+   */
 typedef struct {
   volatile uint32_t	secs;	// value to set absolute secs to on next PPS
   volatile uint32_t	ticks;	// value to set absolute ticks to on next PPS
+  volatile uint32_t flags;  // flags - see chart above
+  volatile uint32_t imm;    // set immediate (0=latch on next pps, 1=latch immediate, default=0)
 } sr_time64_t;
 
 #define sr_time64 ((sr_time64_t *) _SR_ADDR(SR_TIME64))
@@ -667,7 +686,7 @@ typedef struct {
 // Bit numbers (LSB == 0) that correpond to interrupts into PIC
 
 #define	IRQ_BUFFER	0	// buffer manager
-#define	IRQ_TIMER	1
+#define	IRQ_ONETIME	1
 #define	IRQ_SPI		2
 #define	IRQ_I2C		3
 #define	IRQ_PHY		4	// ethernet PHY
@@ -678,11 +697,12 @@ typedef struct {
 #define	IRQ_UART_TX	9
 #define	IRQ_SERDES	10
 #define	IRQ_CLKSTATUS	11
+#define IRQ_PERIODIC    12
 
 #define IRQ_TO_MASK(x) (1 << (x))
 
 #define PIC_BUFFER_INT    IRQ_TO_MASK(IRQ_BUFFER)
-#define PIC_TIMER_INT     IRQ_TO_MASK(IRQ_TIMER)
+#define PIC_ONETIME_INT   IRQ_TO_MASK(IRQ_ONETIME)
 #define PIC_SPI_INT       IRQ_TO_MASK(IRQ_SPI)
 #define PIC_I2C_INT       IRQ_TO_MASK(IRQ_I2C)
 #define PIC_PHY_INT       IRQ_TO_MASK(IRQ_PHY)
@@ -703,16 +723,14 @@ typedef struct {
 
 #define pic_regs ((pic_regs_t *) PIC_BASE)
 
-///////////////////////////////////////////////////
-// Timer, Slave 9
-
-#define TIMER_BASE  0xDC00
-
+// ----------------------------------------------------------------
+// WB_CLK_RATE is the time base for this
 typedef struct {
-  volatile uint32_t time;	// R: current, W: set time to interrupt
-} timer_regs_t;
+  volatile uint32_t	onetime;   // Number of wb clk cycles till the onetime interrupt
+  volatile uint32_t	periodic;  // Repeat rate of periodic interrupt
+} sr_simple_timer_t;
 
-#define timer_regs ((timer_regs_t *) TIMER_BASE)
+#define sr_simple_timer ((sr_simple_timer_t *) _SR_ADDR(SR_SIMTIMER))
 
 ///////////////////////////////////////////////////
 // UART, Slave 10
@@ -746,47 +764,6 @@ typedef struct {
 #define	ATR_FULL	0x3
 
 #define atr_regs ((atr_regs_t *) ATR_BASE)
-
-///////////////////////////////////////////////////
-// Time Sync Controller, Slave 12
-#define TIMESYNC_BASE  0xE800
-
-typedef struct {
-  /*!
-   * \brief Time sync configuration.
-   *
-   * <pre>
-   *
-   *    3                   2                   1                       
-   *  1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0 9 8 7 6 5 4 3 2 1 0
-   * +-----------------------------------------------------+-+-+-+-+-+
-   * |                                                     |T|G|X|I|S|
-   * +-----------------------------------------------------+-+-+-+-+-+
-   *
-   * S - Tick source (0 = free run, 1 = pps, default=0)
-   * I - Tick interrupt enable (not implemented)
-   * X - Use external sync source (default=1)
-   * G - PPS edge selection (0=negedge, 1=posedge, default=0)
-   * T - Trigger sync every pps edge (default=0)
-   *
-   * </pre>
-   */
-  volatile uint32_t tick_control;
-  volatile uint32_t tick_interval;
-  volatile uint32_t delta_time;
-  volatile uint32_t sync_on_next_pps;
-} timesync_regs_t;
-
-#define timesync_regs ((timesync_regs_t *) TIMESYNC_BASE)
-
-#define TSC_SOURCE_PPS        (1 << 0)
-//#define TSC_SOURCE_FREE_RUN (0 << 0)
-#define TSC_IENABLE           (1 << 1)
-#define TSC_EXTSYNC           (1 << 2)
-#define TSC_PPSEDGE_POS       (1 << 3)
-//#define TSC_PPSEDGE_NEG     (0 << 3)
-#define TSC_TRIGGER_EVERYPPS  (1 << 4)
-//#define TSC_TRIGGER_ONCE    (0 << 4)
 
 ///////////////////////////////////////////////////
 // SD Card SPI interface, Slave 13

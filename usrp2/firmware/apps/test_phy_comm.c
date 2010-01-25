@@ -92,7 +92,7 @@ main(void)
 
   putstr("\n test_phy_comm\n");
 
-  pic_register_handler(IRQ_TIMER, timer_handler);
+  pic_register_handler(IRQ_ONETIME, timer_handler);
   hal_set_timeout(DELTA_T);	// schedule timeout
 
   // setup tx gpio bits for GPIOM_FPGA_1 -- fpga debug output

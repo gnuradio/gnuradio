@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008, 2010 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ noinst_HEADERS = \
     usrp2_udp_packet.h \
     usrp2_fpga_regs.h \
     usrp2_i2c_addr.h \
-    usrp2_mimo_config.h \
+    usrp2_clock_bits.h \
     usrp2_types.h \
     network.h \
     vrt/bits.h \

@@ -21,8 +21,8 @@
 #include <stdexcept>
 #include <cstring>
 
-usrp2::eth_data_transport::eth_data_transport(const std::string &ifc, const u2_mac_addr &mac, size_t rx_bufsize)
- : transport("ethernet control"), d_mac(mac){
+usrp2::eth_data_transport::eth_data_transport(const std::string &ifc, const std::string &mac, size_t rx_bufsize)
+ : transport("ethernet control"), d_mac(u2_mac_addr(mac)){
 
     //create raw ethernet device
     d_eth_data = new eth_buffer(rx_bufsize);

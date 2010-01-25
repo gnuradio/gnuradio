@@ -101,7 +101,7 @@ public:
             return data_handler::DONE;
         usrp2::props p(usrp2::USRP_TYPE_ETH);
         p.eth_args.ifc = d_hint.eth_args.ifc;
-        memcpy(&p.eth_args.mac_addr, &op_id_reply.addr, sizeof(p.eth_args.mac_addr));
+        p.eth_args.mac_addr = reinterpret_cast<usrp2::u2_mac_addr&>(op_id_reply.addr).to_string();
         (*d_props_accum)(p);
         return data_handler::DONE;
     }
@@ -126,13 +126,10 @@ namespace usrp2{
         case USRP_TYPE_AUTO:
             finders.push_back(new eth_finder(&pa, hint));
             break;
-        case USRP_TYPE_VIRTUAL: break;
-        case USRP_TYPE_USB: break;
         case USRP_TYPE_ETH:
             finders.push_back(new eth_finder(&pa, hint));
             break;
         case USRP_TYPE_UDP: break;
-        case USRP_TYPE_GPMC: break;
         }
         //allow responses to gather
         boost::this_thread::sleep(gruel::delta_time(0.05)); //50ms

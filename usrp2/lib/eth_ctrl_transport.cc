@@ -23,8 +23,8 @@
 
 static const usrp2::u2_mac_addr broadcast_mac_addr("ff:ff:ff:ff:ff:ff");
 
-usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, const u2_mac_addr &mac)
- : transport("ethernet control"), d_mac(mac){
+usrp2::eth_ctrl_transport::eth_ctrl_transport(const std::string &ifc, const std::string &mac)
+ : transport("ethernet control"), d_mac(u2_mac_addr(mac)){
 
     //create raw ethernet device
     d_eth_ctrl = new ethernet();

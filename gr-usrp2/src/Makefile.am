@@ -46,6 +46,7 @@ AM_CPPFLAGS = \
 	$(GRUEL_INCLUDES) \
 	$(PYTHON_CPPFLAGS) \
 	$(USRP2_INCLUDES) \
+	$(VRT_INCLUDES) \
 	$(WITH_INCLUDES)
 
 lib_LTLIBRARIES = libgnuradio-usrp2.la
@@ -63,6 +64,7 @@ libgnuradio_usrp2_la_SOURCES = \
 
 libgnuradio_usrp2_la_LIBADD = \
 	$(USRP2_LA) \
+	$(VRT_LA) \
 	$(GNURADIO_CORE_LA) 
 
 grinclude_HEADERS = \

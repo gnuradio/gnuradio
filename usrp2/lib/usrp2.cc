@@ -106,14 +106,11 @@ namespace usrp2 {
     //create the transports based on the usrp type
     switch (p.type){
     case USRP_TYPE_AUTO: throw std::runtime_error("Not supported");
-    case USRP_TYPE_VIRTUAL: throw std::runtime_error("Not supported");
-    case USRP_TYPE_USB: throw std::runtime_error("Not supported");
     case USRP_TYPE_ETH:
         ctrl_transport = transport::sptr(new eth_ctrl_transport(p.eth_args.ifc, p.eth_args.mac_addr));
         data_transport = transport::sptr(new eth_data_transport(p.eth_args.ifc, p.eth_args.mac_addr, rx_bufsize));
         break;
     case USRP_TYPE_UDP: throw std::runtime_error("Not supported");
-    case USRP_TYPE_GPMC: throw std::runtime_error("Not supported");
     }
 
     //pass the transports into a new usrp2 impl
@@ -195,7 +192,7 @@ namespace usrp2 {
   }
   
   bool
-  usrp2::start_rx_streaming(unsigned int items_per_frame, const time_spec_t *time_spec)
+  usrp2::start_rx_streaming(unsigned int items_per_frame, const time_spec_t &time_spec)
   {
     return d_impl->start_rx_streaming(items_per_frame, time_spec);
   }
@@ -331,9 +328,9 @@ namespace usrp2 {
   // miscellaneous methods
 
   bool
-  usrp2::config_mimo(int flags)
+  usrp2::config_clock(const clock_config_t &clock_config)
   {
-    return d_impl->config_mimo(flags);
+    return d_impl->config_clock(clock_config);
   }
 
   bool
@@ -376,15 +373,15 @@ namespace usrp2 {
   }
 
   bool
-  usrp2::sync_to_pps()
+  usrp2::set_time_at_next_pps(const time_spec_t &time_spec)
   {
-    return d_impl->sync_to_pps();
+    return d_impl->set_time_at_next_pps(time_spec);
   }
 
   bool
-  usrp2::sync_every_pps(bool enable)
+  usrp2::set_time(const time_spec_t &time_spec)
   {
-    return d_impl->sync_every_pps(enable);
+    return d_impl->set_time(time_spec);
   }
 
   std::vector<uint32_t>

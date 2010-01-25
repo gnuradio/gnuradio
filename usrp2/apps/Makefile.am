@@ -1,5 +1,5 @@
 #
-# Copyright 2007, 2008 Free Software Foundation, Inc.
+# Copyright 2007, 2008, 2010 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,12 +19,14 @@ include $(top_srcdir)/Makefile.common
 
 AM_CPPFLAGS = \
     $(USRP2_INCLUDES) \
+    $(VRT_INCLUDES) \
     $(STD_DEFINES_AND_INCLUDES) \
     $(CPPUNIT_INCLUDES) \
     $(GRUEL_INCLUDES)
 
 LDADD = \
 	$(USRP2_LA) \
+	$(VRT_LA) \
 	$(GRUEL_LA)
 
 bin_PROGRAMS = \
@@ -34,6 +36,7 @@ bin_PROGRAMS = \
 noinst_PROGRAMS = \
 	gen_const \
 	rx_streaming_samples \
+	rx_timed_samples \
 	test_mimo_tx \
 	tx_samples \
 	gpio
@@ -41,6 +44,7 @@ noinst_PROGRAMS = \
 find_usrps_SOURCES = find_usrps.cc
 usrp2_burn_mac_addr_SOURCES = usrp2_burn_mac_addr.cc
 rx_streaming_samples_SOURCES = rx_streaming_samples.cc
+rx_timed_samples_SOURCES = rx_timed_samples.cc
 gen_const_SOURCES = gen_const.cc
 tx_samples_SOURCES = tx_samples.cc
 test_mimo_tx_SOURCES = test_mimo_tx.cc

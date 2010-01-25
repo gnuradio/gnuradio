@@ -53,11 +53,8 @@ namespace usrp2{
    */
   typedef enum{
     USRP_TYPE_AUTO,
-    USRP_TYPE_VIRTUAL,
-    USRP_TYPE_USB,
     USRP_TYPE_ETH,
-    USRP_TYPE_UDP,
-    USRP_TYPE_GPMC
+    USRP_TYPE_UDP
   } usrp_type_t;
 
   /*!
@@ -66,25 +63,13 @@ namespace usrp2{
    */
   struct props{
     usrp_type_t type;
-    int side;
-    int subdev;
-    struct{
-        //TODO perhaps file paths
-    } virtual_args;
-    struct{
-        uint16_t vendor_id;
-        uint16_t product_id;
-    } usb_args;
     struct{
         std::string ifc;
-        u2_mac_addr mac_addr;
+        std::string mac_addr;
     } eth_args;
     struct{
-        u2_ip_addr ip_addr;
+        std::string addr;
     } udp_args;
-    struct{
-        //TODO unknown for now
-    } gpmc_args;
 
     /*!
      * \brief Convert a usrp props into a string representation

@@ -103,7 +103,7 @@ main(int argc, char **argv)
   try {
     usrp2::props p(usrp2::USRP_TYPE_ETH);
     p.eth_args.ifc = interface;
-    p.eth_args.mac_addr = usrp2::u2_mac_addr(old_mac_addr);
+    p.eth_args.mac_addr = old_mac_addr;
     u2 = usrp2::usrp2::make(p);
   }
   catch (std::exception const &e){
@@ -128,7 +128,7 @@ main(int argc, char **argv)
   try {
     usrp2::props p(usrp2::USRP_TYPE_ETH);
     p.eth_args.ifc = interface;
-    p.eth_args.mac_addr = usrp2::u2_mac_addr(new_mac_addr);
+    p.eth_args.mac_addr = new_mac_addr;
     u2 = usrp2::usrp2::make(p);
   }
   catch (std::exception const &e){

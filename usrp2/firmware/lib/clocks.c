@@ -44,10 +44,6 @@ clocks_init(void)
   // Reg 7, Loss of reference detect, doesn't work yet, 0
   ad9510_write_reg(0x5A, 0x01); // Update Regs
 
-
-  // FIXME, probably need interface to this...
-  timesync_regs->tick_control = 4;
-
   // Primary clock configuration
   clocks_mimo_config(MC_WE_DONT_LOCK);
 

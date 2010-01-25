@@ -54,19 +54,19 @@ public:
   bool fpga_master_clock_freq(long *freq) const;
 
   /*!
-   * \brief MIMO configuration
+   * \brief clock configuration
    */
-  bool config_mimo(int flags);
+  bool config_clock(const usrp2::clock_config_t &clock_config);
   
   /*!
    * \brief Set master time to 0 at next PPS rising edge
    */
-  bool sync_to_pps();
+  bool set_time_at_next_pps(const usrp2::time_spec_t &time_spec);
 
   /*!
-   * Reset master time to 0 at every PPS edge
+   * Reset master time asap
    */
-  bool sync_every_pps(bool enable);
+  bool set_time(const usrp2::time_spec_t &time_spec);
 
   /*!
    * \brief Read memory from Wishbone bus as words

@@ -38,7 +38,7 @@ namespace usrp2{
         data_handler   *d_curr_handler;
 
     public:
-        eth_data_transport(const std::string &ifc, const u2_mac_addr &mac, size_t rx_bufsize);
+        eth_data_transport(const std::string &ifc, const std::string &mac, size_t rx_bufsize);
         ~eth_data_transport();
         bool sendv(const iovec *iov, size_t iovlen);
         void recv(data_handler *handler);

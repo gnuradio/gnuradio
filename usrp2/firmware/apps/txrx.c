@@ -123,9 +123,9 @@ eth_mac_addr_t host_mac_addr;
 static bool         streaming_p = false;
 static unsigned int streaming_items_per_frame = 0;
 static uint32_t     time_secs = TIME_NOW;
-static uint32_t     time_tics = TIME_NOW;
+static uint32_t     time_ticks = TIME_NOW;
 static int          streaming_frame_count = 0;
-#define FRAMES_PER_CMD	1000
+#define FRAMES_PER_CMD	2
 
 bool is_streaming(void){ return streaming_p; }
 
@@ -156,20 +156,20 @@ restart_streaming(void)
 
   sr_rx_ctrl->cmd =
     MK_RX_CMD(FRAMES_PER_CMD * streaming_items_per_frame,
-    (time_tics==TIME_NOW)?1:0, 1);  // conditionally set "now" bit, set "chain" bit
+    (time_ticks==TIME_NOW)?1:0, 1);  // conditionally set "now" bit, set "chain" bit
 
   // kick off the state machine
   dbsm_start(&dsp_rx_sm);
 
   sr_rx_ctrl->time_secs = time_secs;
-  sr_rx_ctrl->time_tics = time_tics;		// enqueue first of two commands
+  sr_rx_ctrl->time_ticks = time_ticks;		// enqueue first of two commands
 
   // make sure this one and the rest have the "now" and "chain" bits set.
   sr_rx_ctrl->cmd =
     MK_RX_CMD(FRAMES_PER_CMD * streaming_items_per_frame, 1, 1);
 
   sr_rx_ctrl->time_secs = 0;
-  sr_rx_ctrl->time_tics = 0;		// enqueue second command
+  sr_rx_ctrl->time_ticks = 0;		// enqueue second command
 }
 
 void
@@ -200,7 +200,7 @@ start_rx_streaming_cmd(const eth_mac_addr_t *host, op_start_rx_streaming_t *p)
 
   streaming_items_per_frame = p->items_per_frame;
   time_secs = p->time_secs;
-  time_tics = p->time_tics;
+  time_ticks = p->time_ticks;
   restart_streaming();
 }
 
@@ -208,10 +208,16 @@ start_rx_streaming_cmd(const eth_mac_addr_t *host, op_start_rx_streaming_t *p)
 void
 stop_rx_cmd(void)
 {
-  streaming_p = false;
-  sr_rx_ctrl->clear_overrun = 1;	// flush cmd queue
-  bp_clear_buf(DSP_RX_BUF_0);
-  bp_clear_buf(DSP_RX_BUF_1);
+  if (is_streaming()){
+    streaming_p = false;
+
+    // no samples, "now", not chained
+    sr_rx_ctrl->cmd = MK_RX_CMD(0, 1, 0);
+
+    sr_rx_ctrl->time_secs = 0;
+    sr_rx_ctrl->time_ticks = 0;	// enqueue command
+  }
+
 }
 
 
@@ -249,7 +255,7 @@ fw_sets_seqno_inspector(dbsm_t *sm, int buf_this)	// returns false
   if (streaming_p && --streaming_frame_count == 0){
     streaming_frame_count = FRAMES_PER_CMD;
     sr_rx_ctrl->time_secs = 0;
-    sr_rx_ctrl->time_tics = 0;
+    sr_rx_ctrl->time_ticks = 0;
   }
 
   return false;		// we didn't handle the packet

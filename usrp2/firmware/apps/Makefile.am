@@ -27,7 +27,6 @@ noinst_PROGRAMS = \
 	can_i_sub \
 	echo \
 	hello \
-	ibs_tx_test \
 	read_dbids \
 	set_hw_rev \
 	test1 \
@@ -55,7 +54,8 @@ nononono =  \
 	serdes_txrx \
 	mimo_tx \
 	mimo_tx_slave \
-	ibs_rx_test
+	ibs_rx_test \
+	ibs_tx_test
 
 # tx_drop_SOURCES = tx_drop.c app_common.c
 # tx_drop_rate_limited_SOURCES = tx_drop_rate_limited.c app_common.c

@@ -44,7 +44,7 @@ pic_init(void)
   // uP is level triggered
 
   pic_regs->mask = ~0;				       // mask all interrupts
-  pic_regs->edge_enable = PIC_TIMER_INT | PIC_PHY_INT;
+  pic_regs->edge_enable = PIC_ONETIME_INT | PIC_PHY_INT;
   pic_regs->polarity = ~0 & ~PIC_PHY_INT;	       // rising edge
   pic_regs->pending = ~0;			       // clear all pending ints
 }

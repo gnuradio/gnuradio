@@ -23,7 +23,8 @@
 #include <stdexcept>
 
 //----------------------- u2 mac addr wrapper ------------------------//
-usrp2::u2_mac_addr::u2_mac_addr(const std::string &str){
+usrp2::u2_mac_addr::u2_mac_addr(const std::string &str_){
+    std::string str = (str_ == "")? "ff:ff:ff:ff:ff:ff" : str_; 
     //ether_aton_r(str.c_str(), &d_mac_addr);
     bool good = false;
     char p[6] = {0x00, 0x50, 0xC2, 0x85, 0x30, 0x00}; // Matt's IAB
@@ -57,7 +58,8 @@ std::ostream& operator<<(std::ostream &os, const usrp2::u2_mac_addr &x){
 }
 
 //----------------------- u2 ipv4 wrapper ----------------------------//
-usrp2::u2_ip_addr::u2_ip_addr(const std::string &str){
+usrp2::u2_ip_addr::u2_ip_addr(const std::string &str_){
+    std::string str = (str_ == "")? "255.255.255.255" : str_; 
     int ret = inet_pton(AF_INET, str.c_str(), &d_ip_addr);
     if (ret == 0) throw std::runtime_error("Invalid ip address: " + str);
 }
@@ -76,13 +78,9 @@ std::ostream& operator<<(std::ostream &os, const usrp2::u2_ip_addr &x){
 //----------------------- usrp props wrapper -------------------------//
 usrp2::props::props(usrp_type_t _type){
     type = _type;
-    side = ~0;
-    subdev = ~0;
-    usb_args.vendor_id = 0xffff;
-    usb_args.product_id = 0xffff;
     eth_args.ifc = "eth0";
-    eth_args.mac_addr = u2_mac_addr("ff:ff:ff:ff:ff:ff");
-    udp_args.ip_addr = u2_ip_addr("255.255.255.255");
+    eth_args.mac_addr = "";
+    udp_args.addr = "";
 }
 
 const std::string usrp2::props::to_string(const props &x){
@@ -92,14 +90,6 @@ const std::string usrp2::props::to_string(const props &x){
     case USRP_TYPE_AUTO:
         out << "Automatic" << std::endl;
         break;
-    case USRP_TYPE_VIRTUAL:
-        out << "Virtual" << std::endl;
-        break;
-    case USRP_TYPE_USB:
-        out << "USB Port" << std::endl;
-        out << "Vendor ID: 0x" << std::hex << x.usb_args.vendor_id << std::endl;
-        out << "Product ID: 0x" << std::hex << x.usb_args.product_id << std::endl;
-        break;
     case USRP_TYPE_ETH:
         out << "Raw Ethernet" << std::endl;
         out << "Interface: " << x.eth_args.ifc << std::endl;
@@ -107,16 +97,11 @@ const std::string usrp2::props::to_string(const props &x){
         break;
     case USRP_TYPE_UDP:
         out << "UDP Socket" << std::endl;
-        out << "IP Addr: " << x.udp_args.ip_addr << std::endl;
-        break;
-    case USRP_TYPE_GPMC:
-        out << "GPMC" << std::endl;
+        out << "IP Addr: " << x.udp_args.addr << std::endl;
         break;
     default:
         out << "Unknown" << std::endl;
     }
-    out << "Side: " << x.side << std::endl;
-    out << "Subdevice: " << x.subdev << std::endl;
     out << std::endl;
     return out.str();
 }

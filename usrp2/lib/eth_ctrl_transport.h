@@ -41,7 +41,7 @@ namespace usrp2{
          * \param ifc the ethernet device name
          * \param mac the destination mac address
          */
-        eth_ctrl_transport(const std::string &ifc, const u2_mac_addr &mac);
+        eth_ctrl_transport(const std::string &ifc, const std::string &mac);
         ~eth_ctrl_transport();
         bool sendv(const iovec *iov, size_t iovlen);
         void recv(data_handler *handler);
