@@ -20,7 +20,7 @@
 #define INCLUDED_USRP2_ETH_PACKET_H
 
 #include "usrp2_cdefs.h"
-#include "usrp2_mac_addr.h"
+#include "network.h"
 #include "usrp2_mimo_config.h"
 
 __U2_BEGIN_DECLS
@@ -36,62 +36,29 @@ __U2_BEGIN_DECLS
 // FIXME gcc specific.  Really ought to come from compiler.h
 #define _AL4   __attribute__((aligned (4)))
 
-/*
+/*!
  * \brief The classic 14-byte ethernet header
  */
 typedef struct {
-  u2_mac_addr_t dst;
-  u2_mac_addr_t src;
+  eth_mac_addr_t dst;
+  eth_mac_addr_t src;
   uint16_t 	ethertype;
 } __attribute__((packed)) u2_eth_hdr_t;
 
 /*!
- * \brief USRP2 transport header
- *
- * This enables host->usrp2 flow control and dropped packet detection.
- */
-typedef struct {
-  uint16_t	flags;		// MBZ, may be used for channel in future
-  uint16_t	fifo_status;	// free space in Rx fifo in 32-bit lines
-  uint8_t	seqno;		// sequence number of this packet
-  uint8_t	ack;		// sequence number of next packet expected
-} __attribute__((packed)) u2_transport_hdr_t;
-
-
-/*
- * The fixed payload header of a USRP2 ethernet packet...
- *
- * Basically there's 1 word of flags and routing info, and 1 word
- * of timestamp that specifies when the data was received, or
- * when it should be transmitted. The data samples follow immediately.
- *
- * Transmit packets (from host to U2)
- * 
- *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *  |  Chan   |                    mbz                        |I|S|E|
- *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *  |                           Timestamp                           |
- *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *
- *
- * Received packets (from U2 to host)
- *
- *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *  |  Chan   |                    mbz                              |
- *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *  |                           Timestamp                           |
- *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- *
- *  mbz == must be zero
- */
-
-/*!
- * \brief consolidated packet: ethernet header + transport header
+ * \brief consolidated packet: ethernet header
  */
 typedef struct {
   u2_eth_hdr_t		ehdr;
-  u2_transport_hdr_t	thdr;
 } u2_eth_packet_t;
+
+/*!
+ * \brief consolidated packet: padding + ethernet header
+ */
+typedef struct {
+  uint16_t          padding;
+  u2_eth_hdr_t		ehdr;
+} u2_eth_packet_pad_before_t;
 
 /*
  * Opcodes for control channel
@@ -173,7 +140,7 @@ typedef struct {
   uint8_t	len;
   uint8_t	rid;
   uint8_t	mbz;
-  u2_mac_addr_t	addr;
+  eth_mac_addr_t	addr;
   uint16_t	hw_rev;
   uint8_t	fpga_md5sum[16];
   uint8_t	sw_md5sum[16];
@@ -193,7 +160,7 @@ typedef struct {
   uint8_t	opcode;
   uint8_t	len;
   uint8_t	rid;
-  u2_mac_addr_t	addr;
+  eth_mac_addr_t	addr;
 } _AL4 op_burn_mac_addr_t;
 
 typedef struct {

@@ -20,10 +20,12 @@ include $(top_srcdir)/Makefile.common
 noinst_HEADERS = \
     usrp2_cdefs.h \
     usrp2_eth_packet.h \
+    usrp2_ipv4_packet.h \
+    usrp2_udp_packet.h \
     usrp2_fpga_regs.h \
     usrp2_i2c_addr.h \
-    usrp2_mac_addr.h \
     usrp2_mimo_config.h \
     usrp2_types.h \
+    network.h \
     vrt/bits.h \
     vrt/types.h

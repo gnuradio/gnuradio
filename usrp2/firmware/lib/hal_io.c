@@ -21,7 +21,7 @@
 #include "hal_io.h"
 #include "memory_map.h"
 #include "hal_uart.h"
-#include "bool.h"
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 //#include <assert.h>

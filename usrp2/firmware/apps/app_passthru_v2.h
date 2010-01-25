@@ -19,7 +19,7 @@
 #ifndef INCLUDED_APP_COMMON_H
 #define INCLUDED_APP_COMMON_H
 
-#include "bool.h"
+#include <stdbool.h>
 #include "usrp2_eth_packet.h"
 #include "dbsm.h"
 #include "memory_map.h"

@@ -17,7 +17,7 @@
 
 #include "u2_init.h"
 #include "memory_map.h"
-#include "bool.h"
+#include <stdbool.h>
 #include "nonstdio.h"
 #include "hal_io.h"
 #include "mdelay.h"

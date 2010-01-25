@@ -33,13 +33,7 @@ namespace usrp2{
         eth_buffer    *d_eth_data;	// packet ring buffered data frames
         pktfilter     *d_pf_data;
         u2_mac_addr   d_mac;
-        int           d_tx_seqno;
-        int           d_rx_seqno;
         data_handler::result operator()(const void *base, size_t len);
-        unsigned int   d_num_rx_frames;
-        unsigned int   d_num_rx_missing;
-        unsigned int   d_num_rx_overruns;
-        unsigned int   d_num_rx_bytes;
         uint8_t        d_padding[eth_buffer::MIN_PKTLEN];
         data_handler   *d_curr_handler;
 

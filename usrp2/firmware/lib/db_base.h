@@ -20,7 +20,7 @@
 #define INCLUDED_DB_BASE_H
 
 #include <usrp2_types.h>
-#include <bool.h>
+#include <stdbool.h>
 
 /*!
  * \brief "base class" for firmware version of daughterboard code

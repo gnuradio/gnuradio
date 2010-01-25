@@ -24,7 +24,7 @@
 #include "hal_io.h"
 #include "buffer_pool.h"
 #include "pic.h"
-#include "bool.h"
+#include <stdbool.h>
 #include "ethernet.h"
 #include "nonstdio.h"
 #include "usrp2_eth_packet.h"
@@ -37,7 +37,7 @@
 
 // ----------------------------------------------------------------
 
-static u2_mac_addr_t dst_mac_addr =
+static eth_mac_addr_t dst_mac_addr =
   {{  0xff, 0xff, 0xff, 0xff, 0xff, 0xff }};
 
 // ----------------------------------------------------------------

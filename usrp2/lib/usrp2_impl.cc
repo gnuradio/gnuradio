@@ -792,7 +792,7 @@ namespace usrp2 {
   // ----------------------------------------------------------------
 
   bool
-  usrp2::impl::burn_mac_addr(u2_mac_addr_t *new_mac)
+  usrp2::impl::burn_mac_addr(const u2_mac_addr &new_mac)
   {
     op_burn_mac_addr_cmd cmd;
     op_generic_t reply;
@@ -801,7 +801,7 @@ namespace usrp2 {
     cmd.op.opcode = OP_BURN_MAC_ADDR;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
-    memcpy(&cmd.op.addr, new_mac, sizeof(u2_mac_addr_t));
+    memcpy(&cmd.op.addr, &new_mac, sizeof(u2_mac_addr));
 
     pending_reply p(cmd.op.rid, &reply, sizeof(reply));
     if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, 4*DEF_CMD_TIMEOUT))

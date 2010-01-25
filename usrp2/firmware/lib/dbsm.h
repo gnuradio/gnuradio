@@ -23,7 +23,7 @@
  */
 
 #include <stdint.h>
-#include "bool.h"
+#include <stdbool.h>
 
 struct _dbsm;
 typedef struct _dbsm dbsm_t;

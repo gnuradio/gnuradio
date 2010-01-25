@@ -25,7 +25,7 @@
 #include "hal_io.h"
 #include "buffer_pool.h"
 #include "pic.h"
-#include "bool.h"
+#include <stdbool.h>
 #include "ethernet.h"
 #include "nonstdio.h"
 #include "usrp2_eth_packet.h"

@@ -25,7 +25,7 @@
 #include "hal_io.h"
 #include "buffer_pool.h"
 #include "pic.h"
-#include "bool.h"
+#include <stdbool.h>
 #include "ethernet.h"
 #include "nonstdio.h"
 #include "usrp2_eth_packet.h"
@@ -84,11 +84,11 @@ dbsm_t dsp_tx_sm;	// the state machine
 
 
 // The mac address of the host we're sending to.
-u2_mac_addr_t host_mac_addr;
+eth_mac_addr_t host_mac_addr;
 
 
 void
-start_rx_cmd(const u2_mac_addr_t *host, op_start_rx_t *p)
+start_rx_cmd(const eth_mac_addr_t *host, op_start_rx_t *p)
 {
 }
 

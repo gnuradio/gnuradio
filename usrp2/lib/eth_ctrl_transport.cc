@@ -61,9 +61,6 @@ bool usrp2::eth_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
     hdr.ehdr.ethertype = htons(U2_CTRL_ETHERTYPE);
     memcpy(&hdr.ehdr.dst, &d_mac, 6);
     memcpy(&hdr.ehdr.src, d_eth_ctrl->mac(), 6);
-    hdr.thdr.flags = 0; // FIXME transport header values?
-    hdr.thdr.seqno = 0;
-    hdr.thdr.ack = 0;
     //feed the first iov the header
     all_iov[0].iov_base = &hdr;
     all_iov[0].iov_len = sizeof(hdr);

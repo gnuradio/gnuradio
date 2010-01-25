@@ -30,7 +30,7 @@
 #include "bsm12.h"
 #include "memory_map.h"
 #include "buffer_pool.h"
-#include "bool.h"
+#include <stdbool.h>
 #include "nonstdio.h"
 #include <stdlib.h>
 

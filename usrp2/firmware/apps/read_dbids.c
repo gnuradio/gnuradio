@@ -18,7 +18,7 @@
 
 #include <nonstdio.h>
 #include <u2_init.h>
-#include <bool.h>
+#include <stdbool.h>
 #include <usrp2_i2c_addr.h>
 #include <i2c.h>
 

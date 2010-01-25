@@ -31,6 +31,7 @@
 #include "clocks.h"
 #include "u2_init.h"
 #include <string.h>
+#include <stddef.h>
 
 volatile bool link_is_up = false;	// eth handler sets this
 int cpu_tx_buf_dest_port = PORT_ETH;
@@ -66,20 +67,8 @@ config_mimo_cmd(const op_config_mimo_t *p)
   return true;
 }
 
-void
-set_reply_hdr(u2_eth_packet_t *reply_pkt, u2_eth_packet_t const *cmd_pkt)
-{
-  reply_pkt->ehdr.dst = cmd_pkt->ehdr.src;
-  reply_pkt->ehdr.src = *ethernet_mac_addr();
-  reply_pkt->ehdr.ethertype = U2_CTRL_ETHERTYPE;
-  reply_pkt->thdr.flags = 0;
-  reply_pkt->thdr.fifo_status = 0;	// written by protocol engine
-  reply_pkt->thdr.seqno = 0;		// written by protocol engine
-  reply_pkt->thdr.ack = 0;		// written by protocol engine
-}
-
 static void
-send_reply(unsigned char *reply, size_t reply_len)
+send_reply(void *reply, size_t reply_len)
 {
   if (reply_len < 64)
     reply_len = 64;
@@ -436,19 +425,25 @@ add_eop(void *reply_payload, size_t reply_payload_space)
 }
 
 void
-handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
+handle_control_chan_frame(u2_eth_packet_pad_before_t *pkt, size_t len)
 {
-  unsigned char reply[sizeof(u2_eth_packet_t) + 4 * sizeof(u2_subpkt_t)] _AL4;
-  unsigned char *reply_payload = &reply[sizeof(u2_eth_packet_t)];
-  int reply_payload_space = sizeof(reply) - sizeof(u2_eth_packet_t);
+  struct {
+    uint32_t ctrl_word;
+    u2_eth_packet_pad_before_t eth_pkt;
+    uint8_t payload[4 * sizeof(u2_subpkt_t)];
+  } reply _AL4;
+  uint8_t *reply_payload = reply.payload;
+  size_t reply_payload_space = sizeof(reply) - ((size_t)&reply - (size_t)&reply.payload);
   
   // initialize reply
-  memset(reply, 0, sizeof(reply));
-  set_reply_hdr((u2_eth_packet_t *) reply, pkt);
-  
+  memset(&reply, 0, sizeof(reply));
+  reply.eth_pkt.ehdr.dst = pkt->ehdr.src;
+  reply.eth_pkt.ehdr.src = *ethernet_mac_addr();
+  reply.eth_pkt.ehdr.ethertype = U2_CTRL_ETHERTYPE;
+
   // point to beginning of payload (subpackets)
-  unsigned char *payload = ((unsigned char *) pkt) + sizeof(u2_eth_packet_t);
-  int payload_len = len - sizeof(u2_eth_packet_t);
+  uint8_t *payload = ((uint8_t *) pkt) + sizeof(u2_eth_packet_pad_before_t);
+  size_t payload_len = len - sizeof(u2_eth_packet_pad_before_t);
   
   size_t subpktlen = 0;
   bool ok = false;
@@ -585,7 +580,9 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
   reply_payload += subpktlen;
   reply_payload_space -= subpktlen;
 
-  send_reply(reply, reply_payload - reply);
+  size_t reply_len = (size_t)reply_payload - (size_t)&reply;
+  reply.ctrl_word = reply_len;
+  send_reply(&reply, reply_len);
 }
 
 
@@ -597,7 +594,7 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
 bool
 eth_pkt_inspector(dbsm_t *sm, int bufno)
 {
-  u2_eth_packet_t *pkt = (u2_eth_packet_t *) buffer_ram(bufno);
+  u2_eth_packet_pad_before_t *pkt = (u2_eth_packet_pad_before_t *) buffer_ram(bufno);
   size_t byte_len = (buffer_pool_status->last_line[bufno] - 3) * 4;
 
   // inspect rcvd frame and figure out what do do.

@@ -73,6 +73,7 @@ public:
         d_ctrl_transport = usrp2::transport::sptr(new usrp2::eth_ctrl_transport(d_hint.eth_args.ifc, d_hint.eth_args.mac_addr));
         //build the control packet
         op_generic_t op_id;
+        memset(&op_id, 0, sizeof(op_id));
         op_id.opcode = OP_ID;
         op_id.len = sizeof(op_generic_t);
         //send the control packet

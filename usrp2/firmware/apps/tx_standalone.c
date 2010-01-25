@@ -25,7 +25,7 @@
 #include "hal_io.h"
 #include "buffer_pool.h"
 #include "pic.h"
-#include "bool.h"
+#include <stdbool.h>
 #include "ethernet.h"
 #include "nonstdio.h"
 #include "usrp2_eth_packet.h"
@@ -133,7 +133,7 @@ SEND_CONST_TO_DSP_TX(void)
 
 
 // The mac address of the host we're sending to.
-u2_mac_addr_t host_mac_addr;
+eth_mac_addr_t host_mac_addr;
 
 
 void link_changed_callback(int speed);
@@ -281,7 +281,7 @@ main(void)
 #if 0
   if (hwconfig_simulation_p()){
     // If we're simulating, pretend that we got a start command from the host
-    u2_mac_addr_t host = {{ 0x00, 0x0A, 0xE4, 0x3E, 0xD2, 0xD5 }};
+    eth_mac_addr_t host = {{ 0x00, 0x0A, 0xE4, 0x3E, 0xD2, 0xD5 }};
     start_rx_cmd(&host);
   }
 #endif

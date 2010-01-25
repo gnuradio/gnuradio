@@ -24,7 +24,7 @@
 #include "hal_io.h"
 #include "buffer_pool.h"
 #include "pic.h"
-#include "bool.h"
+#include <stdbool.h>
 #include "nonstdio.h"
 #include "memset_wa.h"
 #include <stddef.h>

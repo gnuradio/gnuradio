@@ -1,6 +1,6 @@
-/* -*- c -*- */
+/* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2010 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INCLUDED_BOOL_H
-#define INCLUDED_BOOL_H
+#ifndef INCLUDED_USRP2_UDP_PACKET_H
+#define INCLUDED_USRP2_UDP_PACKET_H
 
-typedef int bool;
-#define true	1
-#define	false	0
+#include "usrp2_cdefs.h"
 
-#endif /* INCLUDED_BOOL_H */
+__U2_BEGIN_DECLS
+
+/*!
+ * \brief The classic udp header
+ */
+typedef struct {
+  uint16_t src_port;
+  uint16_t dst_port;
+  uint16_t length;
+  uint16_t checksum;
+} __attribute__((packed)) u2_udp_hdr_t;
+
+__U2_END_DECLS
+
+#endif /* INCLUDED_USRP2_UDP_PACKET_H */

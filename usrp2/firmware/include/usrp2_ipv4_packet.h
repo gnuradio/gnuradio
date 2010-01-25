@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2010 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INCLUDED_USRP2_MAC_ADDR_H
-#define INCLUDED_USRP2_MAC_ADDR_H
+#ifndef INCLUDED_USRP2_IPV4_PACKET_H
+#define INCLUDED_USRP2_IPV4_PACKET_H
 
-#include <stdint.h>
+#include "usrp2_cdefs.h"
+#include "network.h"
 
+__U2_BEGIN_DECLS
+
+/*!
+ * \brief The classic ipv4 header
+ */
 typedef struct {
-  uint8_t	addr[6];
-} u2_mac_addr_t;
+  unsigned int   ip_hl:4; /* both fields are 4 bits */
+  unsigned int   ip_v:4;
+  uint8_t        ip_tos;
+  uint16_t       ip_len;
+  uint16_t       ip_id;
+  uint16_t       ip_off;
+  uint8_t        ip_ttl;
+  uint8_t        ip_p;
+  uint16_t       ip_sum;
+  struct in_addr ip_src;
+  struct in_addr ip_dst;
+} __attribute__((packed)) u2_ipv4_hdr_t;
 
-#endif /* INCLUDED_USRP2_MAC_ADDR_H */
+__U2_END_DECLS
+
+#endif /* INCLUDED_USRP2_IPV4_PACKET_H */

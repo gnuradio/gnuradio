@@ -19,8 +19,8 @@
 #ifndef INCLUDED_ETHERNET_H
 #define INCLUDED_ETHERNET_H
 
-#include "usrp2_mac_addr.h"
-#include "bool.h"
+#include "network.h"
+#include <stdbool.h>
 
 typedef void (*ethernet_link_changed_callback_t)(int speed);
 
@@ -41,12 +41,12 @@ void ethernet_register_link_changed_callback(ethernet_link_changed_callback_t cb
 /*!
  * \returns ethernet MAC address
  */
-const u2_mac_addr_t *ethernet_mac_addr(void);
+const eth_mac_addr_t *ethernet_mac_addr(void);
 
 /*!
  * \brief write mac address to eeprom and begin using it
  */
-bool ethernet_set_mac_addr(const u2_mac_addr_t *t);
+bool ethernet_set_mac_addr(const eth_mac_addr_t *t);
 
 
 /*

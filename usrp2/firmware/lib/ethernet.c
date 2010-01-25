@@ -23,7 +23,7 @@
 #include "pic.h"
 #include "hal_io.h"
 #include "nonstdio.h"
-#include "bool.h"
+#include <stdbool.h>
 #include "i2c.h"
 #include "usrp2_i2c_addr.h"
 
@@ -271,7 +271,7 @@ ethernet_init(void)
 }
 
 static bool 
-unprogrammed(const u2_mac_addr_t *t)
+unprogrammed(const eth_mac_addr_t *t)
 {
   int i;
   bool all_zeros = true;
@@ -284,11 +284,11 @@ unprogrammed(const u2_mac_addr_t *t)
 }
 
 static int8_t src_addr_initialized = false;
-static u2_mac_addr_t src_addr = {{
+static eth_mac_addr_t src_addr = {{
     0x00, 0x50, 0xC2, 0x85, 0x3f, 0xff
   }};
 
-const u2_mac_addr_t *
+const eth_mac_addr_t *
 ethernet_mac_addr(void)
 {
   if (!src_addr_initialized){    // fetch from eeprom
@@ -298,7 +298,7 @@ ethernet_mac_addr(void)
     if (hwconfig_simulation_p())	
       return &src_addr;
     
-    u2_mac_addr_t tmp;
+    eth_mac_addr_t tmp;
     bool ok = eeprom_read(I2C_ADDR_MBOARD, MBOARD_MAC_ADDR, &tmp.addr[0], 6);
     if (!ok || unprogrammed(&tmp)){
       // use the default
@@ -311,7 +311,7 @@ ethernet_mac_addr(void)
 }
 
 bool
-ethernet_set_mac_addr(const u2_mac_addr_t *t)
+ethernet_set_mac_addr(const eth_mac_addr_t *t)
 {
   bool ok = eeprom_write(I2C_ADDR_MBOARD, MBOARD_MAC_ADDR, &t->addr[0], 6);
   if (ok){

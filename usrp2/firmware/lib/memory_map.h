@@ -301,6 +301,7 @@ hwconfig_wishbone_divisor(void)
 #define SR_TX_PROT_ENG 32
 #define SR_RX_PROT_ENG 48
 #define SR_BUFFER_POOL_CTRL 64
+#define SR_UDP_SM 96
 #define SR_TX_DSP 208
 #define SR_TX_CTRL 224
 #define SR_RX_DSP 160
@@ -391,6 +392,62 @@ typedef struct {
 #define	LED_RJ45	(1 << 5)
 
 #define output_regs ((output_regs_t *) MISC_OUTPUT_BASE)
+
+// --- udp tx regs ---
+
+typedef struct {
+  // Bits 19:16 are control info; bits 15:0 are data (see below)
+  // First two words are unused.
+  volatile uint32_t _nope[2];
+  //--- ethernet header - 14 bytes---
+  volatile struct{
+    uint32_t mac_dst_0_1; //word 2
+    uint32_t mac_dst_2_3;
+    uint32_t mac_dst_4_5;
+    uint32_t mac_src_0_1;
+    uint32_t mac_src_2_3;
+    uint32_t mac_src_4_5;
+    uint32_t ether_type; //word 8
+  } eth_hdr;
+  //--- ip header - 20 bytes ---
+  volatile struct{
+    uint32_t ver_ihl_tos; //word 9
+    uint32_t total_length;
+    uint32_t identification;
+    uint32_t flags_frag_off;
+    uint32_t ttl_proto;
+    uint32_t checksum;
+    uint32_t src_addr_high;
+    uint32_t src_addr_low;
+    uint32_t dst_addr_high;
+    uint32_t dst_addr_low; //word 18
+  } ip_hdr;
+  //--- udp header - 8 bytes ---
+  volatile struct{
+    uint32_t src_port; //word 19
+    uint32_t dst_port;
+    uint32_t length;
+    uint32_t checksum; //word 22
+  } udp_hdr;
+  volatile uint32_t _pad[32-23];
+} sr_udp_sm_t;
+
+// control bits (all expect UDP_SM_LAST_WORD are mutually exclusive)
+
+// This is the last word of the header
+#define	UDP_SM_LAST_WORD		(1 << 19)
+
+// Insert IP header checksum here.  Data is the xor of 16'hFFFF and
+// the values written into regs 9-13 and 15-18.
+#define	UDP_SM_INS_IP_HDR_CHKSUM	(1 << 18)
+
+// Insert IP Length here (data ignored)
+#define	UDP_SM_INS_IP_LEN		(1 << 17)
+
+// Insert UDP Length here (data ignore)
+#define	UDP_SM_INS_UDP_LEN		(1 << 16)
+
+#define sr_udp_sm ((sr_udp_sm_t *) _SR_ADDR(SR_UDP_SM))
 
 // --- dsp tx regs ---
 

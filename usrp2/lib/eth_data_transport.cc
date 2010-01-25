@@ -22,8 +22,7 @@
 #include <cstring>
 
 usrp2::eth_data_transport::eth_data_transport(const std::string &ifc, const u2_mac_addr &mac, size_t rx_bufsize)
- : transport("ethernet control"), d_mac(mac), d_tx_seqno(0), d_rx_seqno(0),
- d_num_rx_frames(0), d_num_rx_missing(0), d_num_rx_overruns(0), d_num_rx_bytes(0){
+ : transport("ethernet control"), d_mac(mac){
 
     //create raw ethernet device
     d_eth_data = new eth_buffer(rx_bufsize);
@@ -57,9 +56,6 @@ bool usrp2::eth_data_transport::sendv(const iovec *iov, size_t iovlen){
     hdr.ehdr.ethertype = htons(U2_DATA_ETHERTYPE);
     memcpy(&hdr.ehdr.dst, &d_mac, 6);
     memcpy(&hdr.ehdr.src, d_eth_data->mac(), 6);
-    hdr.thdr.flags = 0; // FIXME transport header values?
-    hdr.thdr.seqno = d_tx_seqno++;
-    hdr.thdr.ack = 0;
     //feed the first iov the header
     all_iov[0].iov_base = &hdr;
     all_iov[0].iov_len = sizeof(hdr);
@@ -85,30 +81,6 @@ usrp2::data_handler::result usrp2::eth_data_transport::operator()(const void *ba
         DEBUG_LOG("D");
         return data_handler::RELEASE; //drop truncated packet
     }
-
-    u2_eth_packet_t *hdr = (u2_eth_packet_t *)base;
-    d_num_rx_frames++;
-    d_num_rx_bytes += len;
-
-    /* --- FIXME start of fake transport layer handler --- */
-
-    if (d_rx_seqno != -1) {
-      int expected_seqno = (d_rx_seqno + 1) & 0xFF;
-      int seqno = hdr->thdr.seqno;
-
-      if (seqno != expected_seqno) {
-        DEBUG_LOG("S"); // missing sequence number
-        int missing = seqno - expected_seqno;
-        if (missing < 0)
-            missing += 256;
-        d_num_rx_overruns++;
-        d_num_rx_missing += missing;
-      }
-    }
-
-    d_rx_seqno = hdr->thdr.seqno;
-
-    /* --- end of fake transport layer handler --- */
 
     return (*d_curr_handler)((uint8_t*)base + sizeof(u2_eth_packet_t), len - sizeof(u2_eth_packet_t));
 }

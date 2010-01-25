@@ -23,7 +23,7 @@
  * Routines to configure our multitude of clocks
  */
 
-#include <bool.h>
+#include <stdbool.h>
 #include <usrp2_mimo_config.h>
 
 

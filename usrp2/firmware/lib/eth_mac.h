@@ -19,11 +19,11 @@
 #ifndef INCLUDED_ETH_MAC_H
 #define INCLUDED_ETH_MAC_H
 
-#include "usrp2_mac_addr.h"
+#include "network.h"
 
-void eth_mac_init(const u2_mac_addr_t *src);
+void eth_mac_init(const eth_mac_addr_t *src);
 
-void eth_mac_set_addr(const u2_mac_addr_t *src);
+void eth_mac_set_addr(const eth_mac_addr_t *src);
 int  eth_mac_read_rmon(int addr);
 int  eth_mac_miim_read(int addr);
 void eth_mac_miim_write(int addr, int value);

@@ -146,7 +146,7 @@ namespace usrp2 {
 
     // low level
 
-    bool burn_mac_addr(u2_mac_addr_t *new_mac);
+    bool burn_mac_addr(const u2_mac_addr &new_mac);
     bool sync_to_pps();
     bool sync_every_pps(bool enable);
     std::vector<uint32_t> peek32(uint32_t addr, uint32_t words);

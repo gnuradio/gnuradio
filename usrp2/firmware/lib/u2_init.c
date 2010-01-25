@@ -25,7 +25,6 @@
 #include "buffer_pool.h"
 #include "hal_uart.h"
 #include "i2c.h"
-#include "bool.h"
 #include "mdelay.h"
 #include "ad9777.h"
 #include "clocks.h"

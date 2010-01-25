@@ -18,12 +18,14 @@
 #ifndef INCLUDED_U2_INIT_H
 #define INCLUDED_U2_INIT_H
 
+#include <stdbool.h>
+
 extern unsigned char u2_hw_rev_major;
 extern unsigned char u2_hw_rev_minor;
 
 /*!
  * one-time init
  */
-int u2_init(void);
+bool u2_init(void);
 
 #endif /* INCLUDED_U2_INIT_H */

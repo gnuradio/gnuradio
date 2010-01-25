@@ -64,7 +64,6 @@ noinst_HEADERS = \
 	ad9510.h \
 	ad9777.h \
 	ad9777_regs.h \
-	bool.h \
 	bsm12.h \
 	buffer_pool.h \
 	clocks.h \

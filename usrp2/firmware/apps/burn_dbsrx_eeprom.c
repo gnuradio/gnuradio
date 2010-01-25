@@ -26,7 +26,7 @@
 #include "mdelay.h"
 #include "hal_io.h"
 #include "nonstdio.h"
-#include "bool.h"
+#include <stdbool.h>
 
 
 

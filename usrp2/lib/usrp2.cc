@@ -372,9 +372,7 @@ namespace usrp2 {
   bool
   usrp2::burn_mac_addr(const u2_mac_addr &new_addr)
   {
-    u2_mac_addr_t mac;
-    memcpy(&mac, &new_addr, sizeof(u2_mac_addr));
-    return d_impl->burn_mac_addr(&mac);
+    return d_impl->burn_mac_addr(new_addr);
   }
 
   bool

@@ -20,7 +20,7 @@
 #define INCLUDED_SPI_H
 
 #include <memory_map.h>
-#include <bool.h>
+#include <stdbool.h>
 
 /*!
  * \brief One time call to initialize SPI

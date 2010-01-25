@@ -25,10 +25,12 @@
 #include "hal_io.h"
 #include "buffer_pool.h"
 #include "pic.h"
-#include "bool.h"
+#include <stdbool.h>
 #include "ethernet.h"
 #include "nonstdio.h"
 #include "usrp2_eth_packet.h"
+#include "usrp2_ipv4_packet.h"
+#include "usrp2_udp_packet.h"
 #include "dbsm.h"
 #include "app_common_v2.h"
 #include "memcpy_wa.h"
@@ -65,10 +67,9 @@ static int fw_seqno;	// used when f/w is filling in sequence numbers
  * ================================================================
  */
 
-// 4 lines of ethernet hdr + 1 line transport hdr + 2 lines (word0 + timestamp)
-// DSP Tx reads word0 (flags) + timestamp followed by samples
+// DSP Tx reads ethernet header words
 
-#define DSP_TX_FIRST_LINE ((sizeof(u2_eth_hdr_t) + sizeof(u2_transport_hdr_t))/4)
+#define DSP_TX_FIRST_LINE ((sizeof(u2_eth_packet_pad_before_t))/4)
 
 // Receive from ethernet
 buf_cmd_args_t dsp_tx_recv_args = {
@@ -92,9 +93,8 @@ dbsm_t dsp_tx_sm;	// the state machine
  * ================================================================
  */
 
-// 4 lines of ethernet hdr + 1 line transport hdr + 1 line (word0)
-// DSP Rx writes timestamp followed by nlines_per_frame of samples
-#define DSP_RX_FIRST_LINE ((sizeof(u2_eth_hdr_t) + sizeof(u2_transport_hdr_t))/4)
+// DSP Rx writes ethernet header words
+#define DSP_RX_FIRST_LINE ((sizeof(u2_eth_packet_pad_before_t))/4) + 1 //1 = control stuff to udp sm
 
 // receive from DSP
 buf_cmd_args_t dsp_rx_recv_args = {
@@ -114,7 +114,7 @@ dbsm_t dsp_rx_sm;	// the state machine
 
 
 // The mac address of the host we're sending to.
-u2_mac_addr_t host_mac_addr;
+eth_mac_addr_t host_mac_addr;
 
 #define TIME_NOW ((uint32_t)(~0))
 
@@ -173,21 +173,26 @@ restart_streaming(void)
 }
 
 void
-start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p)
+start_rx_streaming_cmd(const eth_mac_addr_t *host, op_start_rx_streaming_t *p)
 {
   host_mac_addr = *host;	// remember who we're sending to
 
   /*
    * Construct  ethernet header and preload into two buffers
    */
-  u2_eth_packet_t	pkt;
-  memset(&pkt, 0, sizeof(pkt));
-  pkt.ehdr.dst = *host;
-  pkt.ehdr.src = *ethernet_mac_addr();
-  pkt.ehdr.ethertype = U2_DATA_ETHERTYPE;
+  struct {
+    uint32_t ctrl_word;
+    u2_eth_packet_pad_before_t	eth_pkt;
+  } mem _AL4;
 
-  memcpy_wa(buffer_ram(DSP_RX_BUF_0), &pkt, sizeof(pkt));
-  memcpy_wa(buffer_ram(DSP_RX_BUF_1), &pkt, sizeof(pkt));
+  memset(&mem, 0, sizeof(mem));
+  mem.ctrl_word = sizeof(u2_eth_packet_t) + p->items_per_frame*sizeof(uint32_t);
+  mem.eth_pkt.ehdr.dst = *host;
+  mem.eth_pkt.ehdr.src = *ethernet_mac_addr();
+  mem.eth_pkt.ehdr.ethertype = U2_DATA_ETHERTYPE;
+
+  memcpy_wa(buffer_ram(DSP_RX_BUF_0), &mem, sizeof(mem));
+  memcpy_wa(buffer_ram(DSP_RX_BUF_1), &mem, sizeof(mem));
 
 
   if (FW_SETS_SEQNO)
@@ -240,14 +245,6 @@ setup_tx()
 bool 
 fw_sets_seqno_inspector(dbsm_t *sm, int buf_this)	// returns false
 {
-  uint32_t *p = buffer_ram(buf_this);
-  uint32_t seqno = fw_seqno++;
-
-  // KLUDGE all kinds of nasty magic numbers and embedded knowledge
-  uint32_t t = p[4];
-  t = (t & 0xffff00ff) | ((seqno & 0xff) << 8);
-  p[4] = t;
-
   // queue up another rx command when required
   if (streaming_p && --streaming_frame_count == 0){
     streaming_frame_count = FRAMES_PER_CMD;
@@ -359,4 +356,13 @@ main(void)
       putchar('O');
     }
   }
+}
+
+//-------------------compile time checks--------------------------------
+#define COMPILE_TIME_ASSERT(pred) switch(0){case 0:case pred:;}
+
+void compile_time_checks(void){
+    COMPILE_TIME_ASSERT(sizeof(u2_eth_hdr_t) == 14);
+    COMPILE_TIME_ASSERT(sizeof(u2_ipv4_hdr_t) == 20);
+    COMPILE_TIME_ASSERT(sizeof(u2_udp_hdr_t) == 8);
 }

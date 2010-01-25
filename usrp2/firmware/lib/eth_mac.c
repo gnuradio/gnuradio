@@ -18,7 +18,7 @@
 
 #include "eth_mac.h"
 #include "memory_map.h"
-#include "bool.h"
+#include <stdbool.h>
 #include "eth_phy.h"	// for simulation constants
 #include "mdelay.h"
 #include "stdio.h"
@@ -26,7 +26,7 @@
 #define PHY_ADDR 1
 
 void
-eth_mac_set_addr(const u2_mac_addr_t *src)
+eth_mac_set_addr(const eth_mac_addr_t *src)
 {
   eth_mac->ucast_hi = 
     (((unsigned int)src->addr[0])<<8) + 
@@ -40,7 +40,7 @@ eth_mac_set_addr(const u2_mac_addr_t *src)
 
 
 void 
-eth_mac_init(const u2_mac_addr_t *src)
+eth_mac_init(const eth_mac_addr_t *src)
 {
   eth_mac->miimoder = 25;	// divider from CPU clock (50MHz/25 = 2MHz)
 

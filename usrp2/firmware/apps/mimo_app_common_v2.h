@@ -19,7 +19,7 @@
 #ifndef INCLUDED_APP_COMMON_H
 #define INCLUDED_APP_COMMON_H
 
-#include "bool.h"
+#include <stdbool.h>
 #include "usrp2_eth_packet.h"
 #include "bsm12.h"
 #include "memory_map.h"
@@ -53,7 +53,7 @@ print_tune_result(char *msg, bool tune_ok,
 		  u2_fxpt_freq_t target_freq, struct tune_result *r);
 
 
-void start_rx_streaming_cmd(const u2_mac_addr_t *host, op_start_rx_streaming_t *p);
+void start_rx_streaming_cmd(const eth_mac_addr_t *host, op_start_rx_streaming_t *p);
 void stop_rx_cmd(void);
 void restart_streaming(void);
 bool is_streaming(void);

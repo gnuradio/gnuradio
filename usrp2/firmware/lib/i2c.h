@@ -19,7 +19,7 @@
 #ifndef INCLUDED_I2C_H
 #define INCLUDED_I2C_H
 
-#include "bool.h"
+#include <stdbool.h>
 
 void i2c_init(void);
 bool i2c_read (unsigned char i2c_addr, unsigned char *buf, unsigned int len);
