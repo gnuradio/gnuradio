@@ -36,6 +36,6 @@ class gr_pfb_arb_resampler_ccf : public gr_block
  public:
   ~gr_pfb_arb_resampler_ccf ();
 
-  void set_taps (const std::vector<float> &taps);
+  //void set_taps (const std::vector<float> &taps);
   void print_taps();
 };

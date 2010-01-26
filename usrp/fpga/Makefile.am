@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,5 +20,3 @@
 # 
 
 SUBDIRS = rbf
-
-include Makefile.extra

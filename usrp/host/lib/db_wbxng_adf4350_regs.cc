@@ -11,7 +11,7 @@
 /* reg 1 */
 const uint16_t adf4350_regs::s_phase = 0;
 /* reg 2 */
-const uint8_t adf4350_regs::s_low_noise_and_low_spur_modes = 0;
+const uint8_t adf4350_regs::s_low_noise_and_low_spur_modes = 3;
 const uint8_t adf4350_regs::s_muxout = 6;
 const uint8_t adf4350_regs::s_reference_doubler = 0;
 const uint8_t adf4350_regs::s_rdiv2 = 0;

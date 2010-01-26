@@ -26,9 +26,9 @@
 #include <db_base_impl.h>
 #include <stdio.h>
 
+#define FREQ_C(freq) uint64_t(freq)
 #define INPUT_REF_FREQ FREQ_C(64e6)
 #define DIV_ROUND(num, denom) (((num) + ((denom)/2))/(denom))
-#define FREQ_C(freq) uint64_t(freq)
 #define INPUT_REF_FREQ_2X (2*INPUT_REF_FREQ)                            /* input ref freq with doubler turned on */
 #define MIN_INT_DIV uint16_t(23)                                        /* minimum int divider, prescaler 4/5 only */
 #define MAX_RF_DIV uint8_t(16)                                          /* max rf divider, divides rf output */
@@ -55,7 +55,7 @@ adf4350::adf4350(usrp_basic_sptr _usrp, int _which, int _spi_enable)
 
     /* Outputs */
     d_usrp->_write_oe(d_which, (CE_PIN | PDB_RF_PIN), (CE_PIN | PDB_RF_PIN));
-    d_usrp->write_io(d_which, (0), (CE_PIN | PDB_RF_PIN));
+    d_usrp->write_io(d_which, (CE_PIN), (CE_PIN | PDB_RF_PIN));
 
     /* Initialize the pin levels. */
     _enable(true);
@@ -70,6 +70,7 @@ adf4350::adf4350(usrp_basic_sptr _usrp, int _which, int _spi_enable)
 
 adf4350::~adf4350()
 {
+    d_usrp->write_io(d_which, (0), (CE_PIN | PDB_RF_PIN));
     delete d_regs;
 }
 
@@ -95,9 +96,9 @@ void
 adf4350::_enable(bool enable)
 {
     if (enable){ /* chip enable */
-        d_usrp->write_io(d_which, (CE_PIN | PDB_RF_PIN), (CE_PIN | PDB_RF_PIN));
+        d_usrp->write_io(d_which, (PDB_RF_PIN), (PDB_RF_PIN));
     }else{
-        d_usrp->write_io(d_which, 0, (CE_PIN | PDB_RF_PIN));
+        d_usrp->write_io(d_which, 0, (PDB_RF_PIN));
     }
 }
 

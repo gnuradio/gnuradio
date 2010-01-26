@@ -54,7 +54,6 @@ protected:
 			     int &retN, double &retfreq);
   int  _compute_control_reg();
   int _refclk_divisor();
-  double _refclk_freq();
 
   bool _set_pga(float pga_gain);
 

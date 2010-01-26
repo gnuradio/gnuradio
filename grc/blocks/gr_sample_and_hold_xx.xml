@@ -40,7 +40,7 @@
 	</sink>
 	<sink>
 		<name>ctrl</name>
-		<type>$type</type>
+		<type>byte</type>
 	</sink>
 	<source>
 		<name>out</name>

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2004,2005,2007,2008,2009 Free Software Foundation, Inc.
+# Copyright 2004,2005,2007,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -279,7 +279,7 @@ class app_top_block(stdgui2.std_top_block):
                 self.myform['baseband'].set_value(r.baseband_freq)
                 self.myform['ddc'].set_value(r.dxc_freq)
 	    if not self.options.waterfall and not self.options.oscilloscope:
-		self.scope.win.set_baseband_freq(target_freq)
+		self.scope.set_baseband_freq(target_freq)
     	    return True
 
         return False
