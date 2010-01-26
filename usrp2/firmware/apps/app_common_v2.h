@@ -57,6 +57,4 @@ void stop_rx_cmd(void);
 void restart_streaming(void);
 bool is_streaming(void);
 
-void handle_control_chan_frame(u2_eth_packet_pad_before_t *pkt, size_t len);
-
 #endif /* INCLUDED_APP_COMMON_H */

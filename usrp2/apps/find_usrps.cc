@@ -36,7 +36,7 @@ int
 main(int argc, char **argv)
 {
   int ch;
-  usrp2::props hint(usrp2::USRP_TYPE_ETH);
+  usrp2::props hint(usrp2::USRP_TYPE_UDP);
 
   while ((ch = getopt(argc, argv, "he:")) != EOF){
     switch (ch){

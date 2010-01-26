@@ -114,6 +114,62 @@ public:
     }
 };
 
+#include "udp_ctrl_transport.h"
+/*!
+ * The udp finder for locating usrps over udp.
+ */
+class udp_finder : private usrp2::data_handler, public finder{
+private:
+    props_accum              *d_props_accum;
+    usrp2::props             d_hint;
+    usrp2::transport::sptr   d_ctrl_transport;
+    boost::thread            *d_ctrl_thread;
+
+public:
+    udp_finder(props_accum *pa, const usrp2::props &hint): d_props_accum(pa), d_hint(hint){
+        d_ctrl_transport = usrp2::transport::sptr(new usrp2::udp_ctrl_transport(d_hint.udp_args.addr));
+        //build the control packet
+        op_generic_t op_id;
+        memset(&op_id, 0, sizeof(op_id));
+        op_id.opcode = OP_ID;
+        op_id.len = sizeof(op_generic_t);
+        //send the control packet
+        iovec iov;
+        iov.iov_base = &op_id;
+        iov.iov_len = sizeof(op_generic_t);
+        d_ctrl_transport->sendv(&iov, 1);
+        //spawn new thread
+        d_ctrl_thread = new boost::thread(boost::bind(&udp_finder::ctrl_thread_loop, this));
+    }
+
+    ~udp_finder(void){
+        d_ctrl_thread->interrupt();
+        d_ctrl_thread->join();
+    }
+
+    data_handler::result operator()(const void *base, size_t len){
+        //copy the packet into an reply structure
+        op_id_reply_t op_id_reply;
+        memset(&op_id_reply, 0, sizeof(op_id_reply_t));
+        memcpy(&op_id_reply, base, std::min(sizeof(op_id_reply_t), len));
+
+        //inspect the reply packet and store into result
+        if (op_id_reply.opcode != OP_ID_REPLY) // ignore
+            return data_handler::DONE;
+        usrp2::props p(usrp2::USRP_TYPE_UDP);
+        p.udp_args.addr = d_hint.udp_args.addr;
+        (*d_props_accum)(p);
+        return data_handler::DONE;
+    }
+
+    void ctrl_thread_loop(void){
+        while(true){
+            d_ctrl_transport->recv(this);
+            boost::this_thread::interruption_point();
+        }
+    }
+};
+
 namespace usrp2{
 
     props_vector_t
@@ -125,11 +181,14 @@ namespace usrp2{
         switch (hint.type){
         case USRP_TYPE_AUTO:
             finders.push_back(new eth_finder(&pa, hint));
+            finders.push_back(new udp_finder(&pa, hint));
             break;
         case USRP_TYPE_ETH:
             finders.push_back(new eth_finder(&pa, hint));
             break;
-        case USRP_TYPE_UDP: break;
+        case USRP_TYPE_UDP:
+            finders.push_back(new udp_finder(&pa, hint));
+            break;
         }
         //allow responses to gather
         boost::this_thread::sleep(gruel::delta_time(0.05)); //50ms

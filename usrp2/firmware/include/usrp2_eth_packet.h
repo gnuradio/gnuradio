@@ -27,6 +27,7 @@ __U2_BEGIN_DECLS
 #define U2_DATA_ETHERTYPE 		0xBEEF	// used in our data frames
 #define U2_CTRL_ETHERTYPE 		0xBEF0	// used in our control frames
 #define	MAC_CTRL_ETHERTYPE	0x8808	// used in PAUSE frames
+#define	ETHERTYPE_IPV4      0x0800	// used in ip packets
 
 /*
  * All these data structures are BIG-ENDIAN on the wire

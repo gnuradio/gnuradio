@@ -37,6 +37,7 @@ libusrp2_la_SOURCES = \
 	data_handler.cc \
 	eth_buffer.cc \
 	eth_ctrl_transport.cc \
+	udp_ctrl_transport.cc \
 	eth_data_transport.cc \
 	ethernet.cc \
 	find.cc \
@@ -52,6 +53,8 @@ libusrp2_la_LIBADD = \
 	$(GRUEL_LA) \
 	$(BOOST_LDFLAGS) \
 	$(BOOST_THREAD_LIB) \
+	$(BOOST_ASIO_LIB) \
+	$(BOOST_SYSTEM_LIB) \
 	$(VRT_LA)
 
 # Private headers not needed for above the API development
@@ -60,6 +63,7 @@ noinst_HEADERS = \
 	eth_buffer.h \
 	eth_common.h \
 	eth_ctrl_transport.h \
+	udp_ctrl_transport.h \
 	eth_data_transport.h \
 	ethernet.h \
 	open_usrp2_socket.h \

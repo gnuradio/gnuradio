@@ -79,8 +79,8 @@ std::ostream& operator<<(std::ostream &os, const usrp2::u2_ip_addr &x){
 usrp2::props::props(usrp_type_t _type){
     type = _type;
     eth_args.ifc = "eth0";
-    eth_args.mac_addr = "";
-    udp_args.addr = "";
+    eth_args.mac_addr = "ff:ff:ff:ff:ff:ff";
+    udp_args.addr = "192.168.10.255";
 }
 
 const std::string usrp2::props::to_string(const props &x){

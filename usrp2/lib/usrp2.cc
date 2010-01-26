@@ -29,6 +29,7 @@
 #include <stdexcept>
 #include <cstdio>
 #include "eth_ctrl_transport.h"
+#include "udp_ctrl_transport.h"
 #include "eth_data_transport.h"
 
 namespace usrp2 {
@@ -110,7 +111,10 @@ namespace usrp2 {
         ctrl_transport = transport::sptr(new eth_ctrl_transport(p.eth_args.ifc, p.eth_args.mac_addr));
         data_transport = transport::sptr(new eth_data_transport(p.eth_args.ifc, p.eth_args.mac_addr, rx_bufsize));
         break;
-    case USRP_TYPE_UDP: throw std::runtime_error("Not supported");
+    case USRP_TYPE_UDP:
+        ctrl_transport = transport::sptr(new udp_ctrl_transport(p.udp_args.addr));
+        data_transport = transport::sptr(new eth_data_transport(p.eth_args.ifc, p.eth_args.mac_addr, rx_bufsize));
+        break;
     }
 
     //pass the transports into a new usrp2 impl
