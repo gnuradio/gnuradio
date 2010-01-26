@@ -38,8 +38,6 @@ extern dbsm_t *ac_could_be_sending_to_eth;
 
 extern int cpu_tx_buf_dest_port;
 
-void set_reply_hdr(u2_eth_packet_t *reply_pkt, u2_eth_packet_t const *cmd_pkt);
-
 /*
  * Called when an ethernet packet is received.
  * Return true if we handled it here, otherwise

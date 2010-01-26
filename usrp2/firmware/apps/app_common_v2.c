@@ -76,44 +76,6 @@ config_clock_cmd(const op_config_clock_t *p)
   return true;
 }
 
-static void
-send_reply(void *reply, size_t reply_len)
-{
-  if (reply_len < 64)
-    reply_len = 64;
-
-  // wait for buffer to become idle
-  hal_set_leds(0x4, 0x4);
-  while((buffer_pool_status->status & BPS_IDLE(CPU_TX_BUF)) == 0)
-    ;
-  hal_set_leds(0x0, 0x4);
-
-  // copy reply into CPU_TX_BUF
-  memcpy_wa(buffer_ram(CPU_TX_BUF), reply, reply_len);
-
-  // wait until nobody else is sending to the ethernet
-  if (ac_could_be_sending_to_eth){
-    hal_set_leds(0x8, 0x8);
-    dbsm_wait_for_opening(ac_could_be_sending_to_eth);
-    hal_set_leds(0x0, 0x8);
-  }
-
-  if (0){
-    printf("sending_reply to port %d, len = %d\n", cpu_tx_buf_dest_port, (int)reply_len);
-    print_buffer(buffer_ram(CPU_TX_BUF), reply_len/4);
-  }
-
-  // fire it off
-  bp_send_from_buf(CPU_TX_BUF, cpu_tx_buf_dest_port, 1, 0, reply_len/4);
-
-  // wait for it to complete (not long, it's a small pkt)
-  while((buffer_pool_status->status & (BPS_DONE(CPU_TX_BUF) | BPS_ERROR(CPU_TX_BUF))) == 0)
-    ;
-
-  bp_clear_buf(CPU_TX_BUF);
-}
-
-
 static size_t
 op_id_cmd(const op_generic_t *p,
 	  void *reply_payload, size_t reply_payload_space)
@@ -417,26 +379,26 @@ add_eop(void *reply_payload, size_t reply_payload_space)
   return r->len;
 }
 
-void
-handle_control_chan_frame(u2_eth_packet_pad_before_t *pkt, size_t len)
-{
-  struct {
-    uint32_t ctrl_word;
-    u2_eth_packet_pad_before_t eth_pkt;
-    uint8_t payload[4 * sizeof(u2_subpkt_t)];
-  } reply _AL4;
-  uint8_t *reply_payload = reply.payload;
-  size_t reply_payload_space = sizeof(reply) - ((size_t)&reply - (size_t)&reply.payload);
-  
-  // initialize reply
-  memset(&reply, 0, sizeof(reply));
-  reply.eth_pkt.ehdr.dst = pkt->ehdr.src;
-  reply.eth_pkt.ehdr.src = *ethernet_mac_addr();
-  reply.eth_pkt.ehdr.ethertype = U2_CTRL_ETHERTYPE;
+#define REPLY_PAYLOAD_MAX_LEN (4 * sizeof(u2_subpkt_t))
+static eth_mac_addr_t host_mac_addr;
 
-  // point to beginning of payload (subpackets)
-  uint8_t *payload = ((uint8_t *) pkt) + sizeof(u2_eth_packet_pad_before_t);
-  size_t payload_len = len - sizeof(u2_eth_packet_pad_before_t);
+/***********************************************************************
+ * Handle input control data and produce output control data
+ **********************************************************************/
+static void handle_control_packets(
+    const void *data_in, size_t len_in,
+    void ** data_out, size_t *len_out
+){
+  //reply memory handled by this function
+  static uint8_t buff_out[REPLY_PAYLOAD_MAX_LEN] _AL4;
+
+  // point to the begining of outgoing payload (subpackets)
+  uint8_t *reply_payload = buff_out;
+  size_t reply_payload_space = sizeof(buff_out);
+
+  // point to beginning of incoming payload (subpackets)
+  uint8_t *payload = (uint8_t *)data_in;
+  size_t payload_len = len_in;
   
   size_t subpktlen = 0;
   bool ok = false;
@@ -464,7 +426,7 @@ handle_control_chan_frame(u2_eth_packet_pad_before_t *pkt, size_t len)
       break;
 
     case OP_START_RX_STREAMING:
-      start_rx_streaming_cmd(&pkt->ehdr.src, (op_start_rx_streaming_t *) payload);
+      start_rx_streaming_cmd(&host_mac_addr, (op_start_rx_streaming_t *) payload);
       ok = true;
       goto generic_reply;
     
@@ -556,7 +518,7 @@ handle_control_chan_frame(u2_eth_packet_pad_before_t *pkt, size_t len)
     reply_payload_space -= subpktlen;
   }
 
- end_of_subpackets:
+  end_of_subpackets:
 
   // add the EOP marker
   subpktlen = add_eop(reply_payload, reply_payload_space);
@@ -564,9 +526,75 @@ handle_control_chan_frame(u2_eth_packet_pad_before_t *pkt, size_t len)
   reply_payload += subpktlen;
   reply_payload_space -= subpktlen;
 
-  size_t reply_len = (size_t)reply_payload - (size_t)&reply;
-  reply.ctrl_word = reply_len;
-  send_reply(&reply, reply_len);
+  // set the output pointers
+  *data_out = buff_out;
+  *len_out = sizeof(buff_out) - reply_payload_space;
+}
+
+static void
+send_reply(void *reply, size_t reply_len)
+{
+  if (reply_len < 64) reply_len = 64;
+
+  // wait for buffer to become idle
+  hal_set_leds(0x4, 0x4);
+  while((buffer_pool_status->status & BPS_IDLE(CPU_TX_BUF)) == 0)
+    ;
+  hal_set_leds(0x0, 0x4);
+
+  // copy reply into CPU_TX_BUF
+  memcpy_wa(buffer_ram(CPU_TX_BUF), reply, reply_len);
+
+  // wait until nobody else is sending to the ethernet
+  if (ac_could_be_sending_to_eth){
+    hal_set_leds(0x8, 0x8);
+    dbsm_wait_for_opening(ac_could_be_sending_to_eth);
+    hal_set_leds(0x0, 0x8);
+  }
+
+  if (0){
+    printf("sending_reply to port %d, len = %d\n", cpu_tx_buf_dest_port, (int)reply_len);
+    print_buffer(buffer_ram(CPU_TX_BUF), reply_len/4);
+  }
+
+  // fire it off
+  bp_send_from_buf(CPU_TX_BUF, cpu_tx_buf_dest_port, 1, 0, reply_len/4);
+
+  // wait for it to complete (not long, it's a small pkt)
+  while((buffer_pool_status->status & (BPS_DONE(CPU_TX_BUF) | BPS_ERROR(CPU_TX_BUF))) == 0)
+    ;
+
+  bp_clear_buf(CPU_TX_BUF);
+}
+
+void
+handle_control_chan_frame(u2_eth_packet_pad_before_t *pkt, size_t len)
+{
+  // process the control data
+  host_mac_addr = pkt->ehdr.src;
+  void *data_out; size_t len_out;
+  handle_control_packets(
+    (uint8_t*)pkt + sizeof(u2_eth_packet_pad_before_t),
+    len - sizeof(u2_eth_packet_pad_before_t),
+    &data_out, &len_out
+  );
+
+  // setup reply
+  struct {
+    uint32_t ctrl_word;
+    u2_eth_packet_pad_before_t eth_pkt;
+    uint8_t payload[REPLY_PAYLOAD_MAX_LEN];
+  } reply _AL4;
+  memset(&reply, 0, sizeof(reply));
+  size_t total_len = sizeof(reply) - REPLY_PAYLOAD_MAX_LEN + len_out;
+  reply.ctrl_word = total_len;
+  reply.eth_pkt.ehdr.dst = pkt->ehdr.src;
+  reply.eth_pkt.ehdr.src = *ethernet_mac_addr();
+  reply.eth_pkt.ehdr.ethertype = U2_CTRL_ETHERTYPE;
+  memcpy(reply.payload, data_out, len_out);
+
+  //send the reply
+  send_reply(&reply, total_len);
 }
 
 
