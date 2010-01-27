@@ -433,7 +433,7 @@ xcvr2450_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc){
 
   bool ok = lock_detect();
   if(!ok){
-    printf("Fail lock detect %uKHz\n", u2_fxpt_freq_round_to_int(freq/1000));
+    //printf("Fail lock detect %uKHz\n", u2_fxpt_freq_round_to_int(freq/1000));
   }
   return ok;
 }

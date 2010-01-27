@@ -52,9 +52,29 @@ print_tune_result(char *msg, bool tune_ok,
 		  u2_fxpt_freq_t target_freq, struct tune_result *r);
 
 
-void start_rx_streaming_cmd(const eth_mac_addr_t *host, op_start_rx_streaming_t *p);
+void start_rx_streaming_cmd(op_start_rx_streaming_t *p);
 void stop_rx_cmd(void);
 void restart_streaming(void);
 bool is_streaming(void);
+
+#include "usrp2_ipv4_packet.h"
+#include "usrp2_udp_packet.h"
+
+/*!
+ * \brief consolidated packet: padding + ethernet header + ip header + udp header
+ */
+typedef struct {
+  uint16_t          padding;
+  u2_eth_hdr_t      eth;
+  u2_ipv4_hdr_t     ip;
+  u2_udp_hdr_t      udp;
+} u2_eth_ip_udp_t;
+
+extern uint16_t host_dst_udp_port;
+extern uint16_t host_src_udp_port;
+extern struct in_addr host_dst_ip_addr;
+extern struct in_addr host_src_ip_addr;
+extern eth_mac_addr_t host_dst_mac_addr;
+extern eth_mac_addr_t host_src_mac_addr;
 
 #endif /* INCLUDED_APP_COMMON_H */

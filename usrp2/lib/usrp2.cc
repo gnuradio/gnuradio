@@ -113,7 +113,13 @@ namespace usrp2 {
         break;
     case USRP_TYPE_UDP:
         ctrl_transport = transport::sptr(new udp_ctrl_transport(p.udp_args.addr));
-        data_transport = transport::sptr(new eth_data_transport(p.eth_args.ifc, p.eth_args.mac_addr, rx_bufsize));
+        data_transport = transport::sptr(new udp_ctrl_transport(p.udp_args.addr, "32769"));
+        //send a dummy data transport so the usrp2 can get the port number
+        iovec iov;
+        uint32_t nada = 0;
+        iov.iov_base = &nada;
+        iov.iov_len = sizeof(uint32_t);
+        data_transport->sendv(&iov, 1);
         break;
     }
 

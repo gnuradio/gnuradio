@@ -29,18 +29,21 @@ namespace usrp2{
         boost::asio::ip::udp::socket *socket_;
         boost::asio::ip::udp::endpoint receiver_endpoint_;
         boost::asio::io_service io_service_;
-        static const size_t _recv_buff_len = 1500/sizeof(uint32_t);
-        uint32_t _recv_buff[_recv_buff_len];
+        static const size_t _recv_buff_len = 1500;
+        uint32_t _recv_buff[_recv_buff_len/sizeof(uint32_t)];
 
     public:
         /*!
          * \brief Create a new transport for the udp control
          * \param addr the address
          */
-        udp_ctrl_transport(const std::string &addr);
+        udp_ctrl_transport(const std::string &addr, const std::string &port = "32768");
         ~udp_ctrl_transport();
         bool sendv(const iovec *iov, size_t iovlen);
         void recv(data_handler *handler);
+        size_t max_bytes(void){
+            return 1500 - 64; //size of headers FIXME magic numbers!!!
+        }
 };
 
 

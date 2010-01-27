@@ -173,8 +173,12 @@ public:
 namespace usrp2{
 
     props_vector_t
-    find(const props &hint)
+    find(const props &hint_)
     {
+        //force udp //FIXME
+        props hint = hint_;
+        hint.type = USRP_TYPE_UDP;
+
         props_accum pa;
         std::vector <finder*> finders;
         //create finders based on the hint

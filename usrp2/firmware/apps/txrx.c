@@ -68,8 +68,7 @@ static int fw_seqno;	// used when f/w is filling in sequence numbers
  */
 
 // DSP Tx reads ethernet header words
-
-#define DSP_TX_FIRST_LINE ((sizeof(u2_eth_packet_pad_before_t))/4)
+#define DSP_TX_FIRST_LINE ((sizeof(u2_eth_ip_udp_t))/4)
 
 // Receive from ethernet
 buf_cmd_args_t dsp_tx_recv_args = {
@@ -94,7 +93,7 @@ dbsm_t dsp_tx_sm;	// the state machine
  */
 
 // DSP Rx writes ethernet header words
-#define DSP_RX_FIRST_LINE ((sizeof(u2_eth_packet_pad_before_t))/4) + 1 //1 = control stuff to udp sm
+#define DSP_RX_FIRST_LINE 1 //1 = control stuff to udp sm
 
 // receive from DSP
 buf_cmd_args_t dsp_rx_recv_args = {
@@ -172,28 +171,67 @@ restart_streaming(void)
   sr_rx_ctrl->time_ticks = 0;		// enqueue second command
 }
 
-void
-start_rx_streaming_cmd(const eth_mac_addr_t *host, op_start_rx_streaming_t *p)
+/*
+ * 1's complement sum for IP and UDP headers
+ *
+ * init chksum to zero to start.
+ */
+static unsigned int
+CHKSUM(unsigned int x, unsigned int *chksum)
 {
-  host_mac_addr = *host;	// remember who we're sending to
+  *chksum += x;
+  *chksum = (*chksum & 0xffff) + (*chksum>>16);
+  *chksum = (*chksum & 0xffff) + (*chksum>>16);
+  return x;
+}
 
+void
+start_rx_streaming_cmd(op_start_rx_streaming_t *p)
+{
   /*
    * Construct  ethernet header and preload into two buffers
    */
   struct {
     uint32_t ctrl_word;
-    u2_eth_packet_pad_before_t	eth_pkt;
   } mem _AL4;
 
   memset(&mem, 0, sizeof(mem));
-  mem.ctrl_word = sizeof(u2_eth_packet_t) + p->items_per_frame*sizeof(uint32_t);
-  mem.eth_pkt.ehdr.dst = *host;
-  mem.eth_pkt.ehdr.src = *ethernet_mac_addr();
-  mem.eth_pkt.ehdr.ethertype = U2_DATA_ETHERTYPE;
+  p->items_per_frame = (1500 - sizeof(u2_eth_ip_udp_t))/sizeof(uint32_t) - (VRT_HEADER_WORDS + VRT_TRAILER_WORDS); //FIXME
+  mem.ctrl_word = (VRT_HEADER_WORDS+p->items_per_frame+VRT_TRAILER_WORDS)*sizeof(uint32_t) | 1 << 16;
 
   memcpy_wa(buffer_ram(DSP_RX_BUF_0), &mem, sizeof(mem));
   memcpy_wa(buffer_ram(DSP_RX_BUF_1), &mem, sizeof(mem));
 
+  //setup ethernet header machine
+  sr_udp_sm->eth_hdr.mac_dst_0_1 = (host_dst_mac_addr.addr[0] << 8) | host_dst_mac_addr.addr[1];
+  sr_udp_sm->eth_hdr.mac_dst_2_3 = (host_dst_mac_addr.addr[2] << 8) | host_dst_mac_addr.addr[3];
+  sr_udp_sm->eth_hdr.mac_dst_4_5 = (host_dst_mac_addr.addr[4] << 8) | host_dst_mac_addr.addr[5];
+  sr_udp_sm->eth_hdr.mac_src_0_1 = (host_src_mac_addr.addr[0] << 8) | host_src_mac_addr.addr[1];
+  sr_udp_sm->eth_hdr.mac_src_2_3 = (host_src_mac_addr.addr[2] << 8) | host_src_mac_addr.addr[3];
+  sr_udp_sm->eth_hdr.mac_src_4_5 = (host_src_mac_addr.addr[4] << 8) | host_src_mac_addr.addr[5];
+  sr_udp_sm->eth_hdr.ether_type = ETHERTYPE_IPV4;
+
+  //setup ip header machine
+  unsigned int chksum = 0;
+  sr_udp_sm->ip_hdr.ver_ihl_tos = CHKSUM(0x4500, &chksum);    // IPV4,  5 words of header (20 bytes), TOS=0
+  sr_udp_sm->ip_hdr.total_length = UDP_SM_INS_IP_LEN;             // Don't checksum this line in SW
+  sr_udp_sm->ip_hdr.identification = CHKSUM(0x0000, &chksum);    // ID
+  sr_udp_sm->ip_hdr.flags_frag_off = CHKSUM(0x4000, &chksum);    // don't fragment
+  sr_udp_sm->ip_hdr.ttl_proto = CHKSUM(0x2011, &chksum);    // TTL=32, protocol = UDP (17 decimal)
+  //sr_udp_sm->ip_hdr.checksum .... filled in below
+  uint32_t src_ip_addr = host_src_ip_addr.s_addr;
+  uint32_t dst_ip_addr = host_dst_ip_addr.s_addr;
+  sr_udp_sm->ip_hdr.src_addr_high = CHKSUM(src_ip_addr >> 16, &chksum);    // IP src high
+  sr_udp_sm->ip_hdr.src_addr_low = CHKSUM(src_ip_addr & 0xffff, &chksum); // IP src low
+  sr_udp_sm->ip_hdr.dst_addr_high = CHKSUM(dst_ip_addr >> 16, &chksum);    // IP dst high
+  sr_udp_sm->ip_hdr.dst_addr_low = CHKSUM(dst_ip_addr & 0xffff, &chksum); // IP dst low
+  sr_udp_sm->ip_hdr.checksum = UDP_SM_INS_IP_HDR_CHKSUM | (chksum & 0xffff);
+
+  //setup the udp header machine
+  sr_udp_sm->udp_hdr.src_port = host_src_udp_port;
+  sr_udp_sm->udp_hdr.dst_port = host_dst_udp_port;
+  sr_udp_sm->udp_hdr.length = UDP_SM_INS_UDP_LEN;
+  sr_udp_sm->udp_hdr.checksum = UDP_SM_LAST_WORD;		// zero UDP checksum
 
   if (FW_SETS_SEQNO)
     fw_seqno = 0;
@@ -203,7 +241,6 @@ start_rx_streaming_cmd(const eth_mac_addr_t *host, op_start_rx_streaming_t *p)
   time_ticks = p->time_ticks;
   restart_streaming();
 }
-
 
 void
 stop_rx_cmd(void)

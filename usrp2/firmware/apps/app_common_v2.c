@@ -33,19 +33,6 @@
 #include <string.h>
 #include <stddef.h>
 
-#include "usrp2_ipv4_packet.h"
-#include "usrp2_udp_packet.h"
-
-/*!
- * \brief consolidated packet: padding + ethernet header + ip header + udp header
- */
-typedef struct {
-  uint16_t          padding;
-  u2_eth_hdr_t      eth;
-  u2_ipv4_hdr_t     ip;
-  u2_udp_hdr_t      udp;
-} u2_eth_ip_udp_t;
-
 volatile bool link_is_up = false;	// eth handler sets this
 int cpu_tx_buf_dest_port = PORT_ETH;
 
@@ -396,21 +383,22 @@ add_eop(void *reply_payload, size_t reply_payload_space)
  * Global vars to make the control replies
  **********************************************************************/
 #define REPLY_PAYLOAD_MAX_LEN (4 * sizeof(u2_subpkt_t))
-static eth_mac_addr_t host_mac_addr;
+uint16_t host_dst_udp_port;
+uint16_t host_src_udp_port;
+struct in_addr host_dst_ip_addr;
+struct in_addr host_src_ip_addr;
+eth_mac_addr_t host_dst_mac_addr;
+eth_mac_addr_t host_src_mac_addr;
 
 /***********************************************************************
  * Handle input control data and produce output control data
  **********************************************************************/
-static void handle_control_packets(
-    const void *data_in, size_t len_in,
-    void ** data_out, size_t *len_out
+static size_t handle_control_packets(
+    const void *data_in, size_t len_in, void *data_out
 ){
-  //reply memory handled by this function
-  static uint8_t buff_out[REPLY_PAYLOAD_MAX_LEN] _AL4;
-
   // point to the begining of outgoing payload (subpackets)
-  uint8_t *reply_payload = buff_out;
-  size_t reply_payload_space = sizeof(buff_out);
+  uint8_t *reply_payload = data_out;
+  size_t reply_payload_space = REPLY_PAYLOAD_MAX_LEN;
 
   // point to beginning of incoming payload (subpackets)
   uint8_t *payload = (uint8_t *)data_in;
@@ -442,7 +430,7 @@ static void handle_control_packets(
       break;
 
     case OP_START_RX_STREAMING:
-      start_rx_streaming_cmd(&host_mac_addr, (op_start_rx_streaming_t *) payload);
+      start_rx_streaming_cmd((op_start_rx_streaming_t *) payload);
       ok = true;
       goto generic_reply;
     
@@ -542,9 +530,8 @@ static void handle_control_packets(
   reply_payload += subpktlen;
   reply_payload_space -= subpktlen;
 
-  // set the output pointers
-  *data_out = buff_out;
-  *len_out = sizeof(buff_out) - reply_payload_space;
+  // how big the payload?
+  return REPLY_PAYLOAD_MAX_LEN - reply_payload_space;
 }
 
 static void
@@ -617,20 +604,6 @@ create_ip_from_host(struct in_addr addr){
 static void
 handle_control_chan_frame(u2_eth_ip_udp_t *pkt, size_t len)
 {
-
-  // extract the source address stuff
-  host_mac_addr = pkt->eth.src;
-  struct in_addr host_ip_addr = pkt->ip.ip_src;
-  uint16_t host_udp_port = pkt->udp.src_port;
-
-  // process the control data
-  void *data_out; size_t len_out;
-  handle_control_packets(
-    (uint8_t*)pkt + sizeof(u2_eth_ip_udp_t),
-    len - sizeof(u2_eth_ip_udp_t),
-    &data_out, &len_out
-  );
-
   // setup reply
   struct {
     uint32_t ctrl_word;
@@ -638,12 +611,18 @@ handle_control_chan_frame(u2_eth_ip_udp_t *pkt, size_t len)
     uint8_t payload[REPLY_PAYLOAD_MAX_LEN];
   } reply _AL4;
   memset(&reply, 0, sizeof(reply));
+
+  // process the control data
+  size_t len_out = handle_control_packets(
+    (uint8_t*)pkt + sizeof(u2_eth_ip_udp_t),
+    len - sizeof(u2_eth_ip_udp_t), reply.payload
+  );
   size_t total_len = sizeof(reply) - REPLY_PAYLOAD_MAX_LEN + len_out;
   reply.ctrl_word = total_len;
 
   // load the ethernet header
-  reply.hdr.eth.dst = host_mac_addr;
-  reply.hdr.eth.src = *ethernet_mac_addr();
+  reply.hdr.eth.dst = host_dst_mac_addr;
+  reply.hdr.eth.src = host_src_mac_addr;
   reply.hdr.eth.ethertype = ETHERTYPE_IPV4;
 
   // load the ip header
@@ -656,16 +635,15 @@ handle_control_chan_frame(u2_eth_ip_udp_t *pkt, size_t len)
   reply.hdr.ip.ip_ttl = 255;
   reply.hdr.ip.ip_p = IP_PROTO_UDP;
   reply.hdr.ip.ip_sum = 0;
-  reply.hdr.ip.ip_src = create_ip_from_host(host_ip_addr);
-  reply.hdr.ip.ip_dst = host_ip_addr;
+  reply.hdr.ip.ip_src = host_src_ip_addr;
+  reply.hdr.ip.ip_dst = host_dst_ip_addr;
   reply.hdr.ip.ip_sum = chksum_buffer(&reply.hdr.ip, sizeof(u2_ipv4_hdr_t));
 
   // load the udp header
-  reply.hdr.udp.src_port = host_udp_port;
-  reply.hdr.udp.dst_port = host_udp_port;
+  reply.hdr.udp.src_port = pkt->udp.dst_port;
+  reply.hdr.udp.dst_port = pkt->udp.src_port;
   reply.hdr.udp.length = sizeof(u2_udp_hdr_t) + len_out;
   reply.hdr.udp.checksum = 0;
-  memcpy(reply.payload, data_out, len_out);
 
   //send the reply
   send_reply(&reply, total_len);
@@ -683,22 +661,29 @@ eth_pkt_inspector(dbsm_t *sm, int bufno)
   u2_eth_ip_udp_t *pkt = (u2_eth_ip_udp_t *) buffer_ram(bufno);
   size_t byte_len = (buffer_pool_status->last_line[bufno] - 3) * 4;
 
-  // inspect rcvd frame and figure out what do do.
-  switch (pkt->eth.ethertype){
+  if (pkt->eth.ethertype != ETHERTYPE_IPV4)
+    return true; // ignore, probably bogus PAUSE frame from MAC
 
-  case ETHERTYPE_IPV4:
+  // inspect rcvd frame and figure out what do do.
+  switch (pkt->udp.dst_port){
+
+  case 32768:
+    //record the ip and mac addrs (used when setting up data init)
+    host_dst_ip_addr = pkt->ip.ip_src;
+    host_src_ip_addr = create_ip_from_host(pkt->ip.ip_src);
+    host_dst_mac_addr = pkt->eth.src;
+    host_src_mac_addr = *ethernet_mac_addr();
     handle_control_chan_frame(pkt, byte_len);
     return true;
 
-  case U2_DATA_ETHERTYPE:
+  case 32769:
+    //record the udp data ports (used when setting up data init)
+    host_dst_udp_port = pkt->udp.src_port;
+    host_src_udp_port = pkt->udp.dst_port;
     return false;	// pass it on to Tx DSP
 
-  //case U2_CTRL_ETHERTYPE:
-  //  handle_control_chan_frame(pkt, byte_len);
-  //  return true;
-
   }
-  return true;	// ignore, probably bogus PAUSE frame from MAC
+  return true;	// ignore, whatever
 }
 
 /*

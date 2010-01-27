@@ -22,12 +22,12 @@
 
 using boost::asio::ip::udp;
 
-usrp2::udp_ctrl_transport::udp_ctrl_transport(const std::string &addr)
+usrp2::udp_ctrl_transport::udp_ctrl_transport(const std::string &addr, const std::string &port)
  : transport("udp control"){
 
     // resolve the address
     udp::resolver resolver(io_service_);
-    udp::resolver::query query(udp::v4(), addr, "12345");
+    udp::resolver::query query(udp::v4(), addr, port);
     receiver_endpoint_ = *resolver.resolve(query);
     
     // Create and open the socket
@@ -55,16 +55,19 @@ bool usrp2::udp_ctrl_transport::sendv(const iovec *iov, size_t iovlen){
 }
 
 void usrp2::udp_ctrl_transport::recv(data_handler *handler){
-    // make sure that bytes are available
-    if (not socket_->available()){
-        boost::this_thread::sleep(gruel::delta_time(0.001)); // 1 ms
-        return;
+    // make sure that bytes are available (crappy timeout)
+    for (size_t i = 0; i < 10; i++){
+        if (socket_->available()) break;
+        boost::this_thread::sleep(gruel::delta_time(0.01)); // 10 ms
     }
 
     // receive the bytes and call the handler
-    udp::endpoint sender_endpoint;
-    size_t len = socket_->receive_from(
-        boost::asio::buffer(_recv_buff, _recv_buff_len), sender_endpoint
-    );
-    (*handler)(_recv_buff, len);
+    while (socket_->available()){
+        udp::endpoint sender_endpoint;
+        size_t len = socket_->receive_from(
+            boost::asio::buffer(_recv_buff, _recv_buff_len), sender_endpoint
+        );
+        bool done = (*handler)(_recv_buff, len);
+        if (done) return;
+    }
 }
