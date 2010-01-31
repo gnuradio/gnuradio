@@ -196,7 +196,7 @@ class dialog_box(QtGui.QMainWindow):
             per = 0
         self.gui.pktsRcvdEdit.setText(QtCore.QString("%1").arg(n_rcvd))
         self.gui.pktsCorrectEdit.setText(QtCore.QString("%1").arg(n_right))
-        self.gui.perEdit.setText(QtCore.QString("%1").arg(per, 0, 'e', 4))
+        self.gui.perEdit.setText(QtCore.QString("%1").arg(float(per), 0, 'e', 4))
 
 
 
