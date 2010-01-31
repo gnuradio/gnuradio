@@ -47,6 +47,8 @@ gr_pfb_arb_resampler_ccf::gr_pfb_arb_resampler_ccf (float rate,
 	      gr_make_io_signature (1, 1, sizeof(gr_complex))),
     d_updated (false)
 {
+  d_acc = 0; // start accumulator at 0
+
   /* The number of filters is specified by the user as the filter size;
      this is also the interpolation rate of the filter. We use it and the
      rate provided to determine the decimation rate. This acts as a
@@ -131,23 +133,15 @@ void
 gr_pfb_arb_resampler_ccf::create_diff_taps(const std::vector<float> &newtaps,
 					   std::vector<float> &difftaps)
 {
-  float maxtap = 1e-20;
+  // Calculate the differential taps (derivative filter) by taking the difference
+  // between two taps. Duplicate the last one to make both filters the same length.
+  float tap;
   difftaps.clear();
-  difftaps.push_back(0); //newtaps[0]);
-  for(unsigned int i = 1; i < newtaps.size()-1; i++) {
-    float tap = newtaps[i+1] - newtaps[i-1];
+  for(unsigned int i = 0; i < newtaps.size()-1; i++) {
+    tap = newtaps[i+1] - newtaps[i];
     difftaps.push_back(tap);
-    if(tap > maxtap) {
-      maxtap = tap;
-    }
   }
-  difftaps.push_back(0);//-newtaps[newtaps.size()-1]);
-
-  // Scale the differential taps; helps scale error term to better update state
-  // FIXME: should this be scaled this way or use the same gain as the taps?
-  for(unsigned int i = 0; i < difftaps.size(); i++) {
-    difftaps[i] /= maxtap;
-  }
+  difftaps.push_back(tap);
 }
 
 void
@@ -188,14 +182,17 @@ gr_pfb_arb_resampler_ccf::general_work (int noutput_items,
 
     // start j by wrapping around mod the number of channels
     while((j < d_int_rate) && (i < noutput_items)) {
-      // Take the current filter output
+      // Take the current filter and derivative filter output
       o0 = d_filters[j]->filter(&in[count]);
       o1 = d_diff_filters[j]->filter(&in[count]);
 
-      out[i] = o0 + o1*d_flt_rate;     // linearly interpolate between samples
+      out[i] = o0 + o1*d_acc;     // linearly interpolate between samples
       i++;
-      
-      j += d_dec_rate;
+
+      // Adjust accumulator and index into filterbank
+      d_acc += d_flt_rate;
+      j += d_dec_rate + (int)floor(d_acc);
+      d_acc = fmodf(d_acc, 1.0);
     }
     if(i < noutput_items) {              // keep state for next entry
       float ss = (int)(j / d_int_rate);  // number of items to skip ahead by

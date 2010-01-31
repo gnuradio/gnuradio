@@ -118,6 +118,7 @@ class gr_pfb_arb_resampler_ccf : public gr_block
   unsigned int             d_int_rate;          // the number of filters (interpolation rate)
   unsigned int             d_dec_rate;          // the stride through the filters (decimation rate)
   float                    d_flt_rate;          // residual rate for the linear interpolation
+  float                    d_acc;
   unsigned int             d_last_filter;
   int                      d_start_index;
   unsigned int             d_taps_per_filter;
