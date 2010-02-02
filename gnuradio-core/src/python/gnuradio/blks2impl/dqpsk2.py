@@ -106,14 +106,15 @@ class dqpsk2_mod(gr.hier_block2):
         self.chunks2symbols = gr.chunks_to_symbols_bc(rotated_const)
 
         # pulse shaping filter
-	self.rrc_taps = gr.firdes.root_raised_cosine(
-	    self._samples_per_symbol, # gain  (sps since we're interpolating by sps)
-            self._samples_per_symbol, # sampling rate
-            1.0,		      # symbol rate
-            self._excess_bw,          # excess bandwidth (roll-off factor)
+        nfilts = 32
+        ntaps = nfilts * 11 * self._samples_per_symbol      # make nfilts filters of ntaps each
+        self.rrc_taps = gr.firdes.root_raised_cosine(
+            nfilts,          # gain
+            nfilts,          # sampling rate based on 32 filters in resampler
+            1.0,             # symbol rate
+            self._excess_bw, # excess bandwidth (roll-off factor)
             ntaps)
-
-	self.rrc_filter = gr.interp_fir_filter_ccf(self._samples_per_symbol, self.rrc_taps)
+        self.rrc_filter = gr.pfb_arb_resampler_ccf(self._samples_per_symbol, self.rrc_taps)
 
         if verbose:
             self._print_verbage()
@@ -246,13 +247,13 @@ class dqpsk2_demod(gr.hier_block2):
 
         # Frequency correction
         self.freq_recov = gr.fll_band_edge_cc(self._samples_per_symbol, self._excess_bw,
-                                              11*self._samples_per_symbol,
+                                              11*int(self._samples_per_symbol),
                                               self._freq_alpha, self._freq_beta)
 
 
         # symbol timing recovery with RRC data filter
         nfilts = 32
-        ntaps = 11 * samples_per_symbol*nfilts
+        ntaps = 11 * int(samples_per_symbol*nfilts)
         taps = gr.firdes.root_raised_cosine(nfilts, nfilts,
                                             1.0/float(self._samples_per_symbol),
                                             self._excess_bw, ntaps)
@@ -268,7 +269,7 @@ class dqpsk2_demod(gr.hier_block2):
         fmin = -0.5
         fmax = 0.5
 
-        self.clock_recov = gr.costas_loop_cc(self._costas_alpha,
+        self.phase_recov = gr.costas_loop_cc(self._costas_alpha,
                                              self._costas_beta,
                                              fmax, fmin, arity)
 
@@ -297,7 +298,7 @@ class dqpsk2_demod(gr.hier_block2):
  
         # Connect
         self.connect(self, self.agc, 
-                     self.freq_recov, self.time_recov, self.clock_recov,
+                     self.freq_recov, self.time_recov, self.phase_recov,
                      self.diffdec, self.slicer, self.symbol_mapper, self.unpack, self)
         if sync_out: self.connect(self.time_recov, (self, 1))
 

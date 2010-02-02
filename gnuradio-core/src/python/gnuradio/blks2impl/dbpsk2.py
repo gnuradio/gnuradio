@@ -101,6 +101,7 @@ class dbpsk2_mod(gr.hier_block2):
 
         self.chunks2symbols = gr.chunks_to_symbols_bc(psk.constellation[arity])
 
+        # pulse shaping filter
         nfilts = 32
         ntaps = nfilts * 11 * self._samples_per_symbol      # make nfilts filters of ntaps each
         self.rrc_taps = gr.firdes.root_raised_cosine(
