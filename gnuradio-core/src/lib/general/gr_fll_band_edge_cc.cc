@@ -53,11 +53,13 @@ gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float samps_per_sym, float ro
 }
 
 
+static int ios[] = {sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float)};
+static std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
 gr_fll_band_edge_cc::gr_fll_band_edge_cc (float samps_per_sym, float rolloff,
 					  int filter_size, float alpha, float beta)
   : gr_sync_block ("fll_band_edge_cc",
 		   gr_make_io_signature (1, 1, sizeof(gr_complex)),
-		   gr_make_io_signature (1, 1, sizeof(gr_complex))),
+		   gr_make_io_signaturev (1, 4, iosig)),
     d_alpha(alpha), d_beta(beta), d_updated (false)
 {
   // base this on the number of samples per symbol
@@ -67,6 +69,29 @@ gr_fll_band_edge_cc::gr_fll_band_edge_cc (float samps_per_sym, float rolloff,
   d_freq = 0;
   d_phase = 0;
 
+  set_alpha(alpha);
+
+  design_filter(samps_per_sym, rolloff, filter_size);
+}
+
+gr_fll_band_edge_cc::~gr_fll_band_edge_cc ()
+{
+  delete d_filter_lower;
+  delete d_filter_upper;
+}
+
+void
+gr_fll_band_edge_cc::set_alpha(float alpha) 
+{ 
+  float eta = sqrt(2.0)/2.0;
+  float theta = alpha;
+  d_alpha = (4*eta*theta) / (1.0 + 2.0*eta*theta + theta*theta);
+  d_beta = (4*theta*theta) / (1.0 + 2.0*eta*theta + theta*theta);
+}
+
+void
+gr_fll_band_edge_cc::design_filter(float samps_per_sym, float rolloff, int filter_size)
+{
   int M = rint(filter_size / samps_per_sym);
   float power = 0;
   std::vector<float> bb_taps;
@@ -81,11 +106,11 @@ gr_fll_band_edge_cc::gr_fll_band_edge_cc (float samps_per_sym, float rolloff,
   int N = (bb_taps.size() - 1.0)/2.0;
   std::vector<gr_complex> taps_lower;
   std::vector<gr_complex> taps_upper;
-  for(int i = 0; i < bb_taps.size(); i++) {
+  for(unsigned int i = 0; i < bb_taps.size(); i++) {
     float tap = bb_taps[i] / power;
 
-    float k = (-N + i)/(2.0*samps_per_sym);     //rng = scipy.arange(-nn2, nn2+1) / (2*spb);
-
+    float k = (-N + (int)i)/(2.0*samps_per_sym);
+    
     gr_complex t1 = tap * gr_expj(-2*M_PI*(1+rolloff)*k);
     gr_complex t2 = tap * gr_expj(2*M_PI*(1+rolloff)*k);
 
@@ -97,61 +122,32 @@ gr_fll_band_edge_cc::gr_fll_band_edge_cc (float samps_per_sym, float rolloff,
   d_filter_upper = gr_fir_util::create_gr_fir_ccc(vtaps);
   d_filter_lower = gr_fir_util::create_gr_fir_ccc(vtaps);
 
-  set_taps_lower(taps_lower);
-  set_taps_upper(taps_upper);
-}
-
-gr_fll_band_edge_cc::~gr_fll_band_edge_cc ()
-{
-}
-
-void
-gr_fll_band_edge_cc::set_taps_lower (const std::vector<gr_complex> &taps)
-{
-  unsigned int i;
-
-  for(i = 0; i < taps.size(); i++) {
-    d_taps_lower.push_back(taps[i]);
-  }
-
-  d_filter_lower->set_taps(d_taps_lower);
-
-  // Set the history to ensure enough input items for each filter
-  set_history(d_taps_lower.size()+1);
+  d_filter_lower->set_taps(taps_lower);
+  d_filter_upper->set_taps(taps_upper);
 
   d_updated = true;
-}
-
-void
-gr_fll_band_edge_cc::set_taps_upper (const std::vector<gr_complex> &taps)
-{
-  unsigned int i;
-
-  for(i = 0; i < taps.size(); i++) {
-    d_taps_upper.push_back(taps[i]);
-  }
-
-  d_filter_upper->set_taps(d_taps_upper);
 
   // Set the history to ensure enough input items for each filter
-  set_history(d_taps_upper.size()+1);
+  set_history(filter_size+1);
 
-  d_updated = true;
 }
 
 void
 gr_fll_band_edge_cc::print_taps()
 {
   unsigned int i;
+  std::vector<gr_complex> taps_upper = d_filter_upper->get_taps();
+  std::vector<gr_complex> taps_lower = d_filter_lower->get_taps();
+
   printf("Upper Band-edge: [");
-  for(i = 0; i < d_taps_upper.size(); i++) {
-    printf(" %.4e + %.4ej,", d_taps_upper[i].real(), d_taps_upper[i].imag());
+  for(i = 0; i < taps_upper.size(); i++) {
+    printf(" %.4e + %.4ej,", taps_upper[i].real(), taps_upper[i].imag());
   }
   printf("]\n\n");
 
   printf("Lower Band-edge: [");
-  for(i = 0; i < d_taps_lower.size(); i++) {
-    printf(" %.4e + %.4ej,", d_taps_lower[i].real(), d_taps_lower[i].imag());
+  for(i = 0; i < taps_lower.size(); i++) {
+    printf(" %.4e + %.4ej,", taps_lower[i].real(), taps_lower[i].imag());
   }
   printf("]\n\n");
 }
@@ -163,6 +159,13 @@ gr_fll_band_edge_cc::work (int noutput_items,
 {
   const gr_complex *in  = (const gr_complex *) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
+
+  float *frq, *phs, *err;
+  if(output_items.size() > 2) {
+    frq = (float *) output_items[1];
+    phs = (float *) output_items[2];
+    err = (float *) output_items[3];
+  }
 
   if (d_updated) {
     d_updated = false;
@@ -180,21 +183,28 @@ gr_fll_band_edge_cc::work (int noutput_items,
     out_upper = norm(d_filter_upper->filter(&out[i]));
     out_lower = norm(d_filter_lower->filter(&out[i]));
     error = out_lower - out_upper;
-    d_error = 0.1*error + 0.9*d_error;  // average error
+    d_error = 0.01*error + 0.99*d_error;  // average error
 
-    d_freq = d_freq + d_beta * error;
-    d_phase = d_phase + d_freq + d_alpha * error;
+    d_freq = d_freq + d_beta * d_error;
+    d_phase = d_phase + d_freq + d_alpha * d_error;
 
     if(d_phase > M_PI)
       d_phase -= M_TWOPI;
     else if(d_phase < -M_PI)
       d_phase += M_TWOPI;
-    
+
     if (d_freq > d_max_freq)
       d_freq = d_max_freq;
     else if (d_freq < d_min_freq)
       d_freq = d_min_freq;
+
+    if(output_items.size() > 2) {
+      frq[i] = d_freq;
+      phs[i] = d_phase;
+      err[i] = d_error;
+    }
   }
+
 
   return noutput_items;
 }

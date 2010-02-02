@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Tue Dec 15 22:45:39 2009</timestamp>
+  <timestamp>Fri Jan 29 18:10:00 2010</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -911,45 +911,6 @@
     </param>
   </block>
   <block>
-    <key>gr_channel_model</key>
-    <param>
-      <key>id</key>
-      <value>gr_channel_model_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>noise_voltage</key>
-      <value>noise_amp</value>
-    </param>
-    <param>
-      <key>freq_offset</key>
-      <value>freq_offset</value>
-    </param>
-    <param>
-      <key>epsilon</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>seed</key>
-      <value>42</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(346, 491)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable</key>
     <param>
       <key>id</key>
@@ -1216,6 +1177,45 @@
     <param>
       <key>_coordinate</key>
       <value>(874, 664)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_channel_model</key>
+    <param>
+      <key>id</key>
+      <value>gr_channel_model_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>noise_voltage</key>
+      <value>noise_amp</value>
+    </param>
+    <param>
+      <key>freq_offset</key>
+      <value>freq_offset</value>
+    </param>
+    <param>
+      <key>epsilon</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>seed</key>
+      <value>42</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(618, 376)</value>
     </param>
     <param>
       <key>_rotation</key>

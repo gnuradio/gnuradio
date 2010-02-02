@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Sat Oct 31 10:26:48 2009</timestamp>
+  <timestamp>Mon Feb  1 18:54:46 2010</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -173,29 +173,6 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>rrctaps</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>firdes.root_raised_cosine(nfilts,1.0,1.0/(spb*nfilts), .35, int(11*spb*nfilts))</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(513, 679)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>random_source_x</key>
     <param>
       <key>id</key>
@@ -328,45 +305,6 @@
     </param>
   </block>
   <block>
-    <key>gr_channel_model</key>
-    <param>
-      <key>id</key>
-      <value>gr_channel_model_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>noise_voltage</key>
-      <value>noise_amp</value>
-    </param>
-    <param>
-      <key>freq_offset</key>
-      <value>freq_offset</value>
-    </param>
-    <param>
-      <key>epsilon</key>
-      <value>interpratio</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>seed</key>
-      <value>42</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(59, 543)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>notebook</key>
     <param>
       <key>id</key>
@@ -395,73 +333,6 @@
     <param>
       <key>_coordinate</key>
       <value>(729, 769)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>wxgui_scopesink2</key>
-    <param>
-      <key>id</key>
-      <value>wxgui_scopesink2_0_0_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>title</key>
-      <value>Error</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>v_scale</key>
-      <value>.5</value>
-    </param>
-    <param>
-      <key>v_offset</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>t_scale</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>ac_couple</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>xy_mode</key>
-      <value>False</value>
-    </param>
-    <param>
-      <key>num_inputs</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>win_size</key>
-      <value></value>
-    </param>
-    <param>
-      <key>grid_pos</key>
-      <value></value>
-    </param>
-    <param>
-      <key>notebook</key>
-      <value>notebook_0,3</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1115, 358)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -524,29 +395,6 @@
     <param>
       <key>_coordinate</key>
       <value>(430, 330)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_float_to_complex</key>
-    <param>
-      <key>id</key>
-      <value>gr_float_to_complex_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(590, 184)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -687,29 +535,6 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>spb_gen</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>4</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(119, 841)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable_slider</key>
     <param>
       <key>id</key>
@@ -820,119 +645,6 @@
     </param>
   </block>
   <block>
-    <key>root_raised_cosine_filter</key>
-    <param>
-      <key>id</key>
-      <value>root_raised_cosine_filter_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>interp_fir_filter_ccf</value>
-    </param>
-    <param>
-      <key>decim</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>interp</key>
-      <value>spb_gen</value>
-    </param>
-    <param>
-      <key>gain</key>
-      <value>2*spb_gen</value>
-    </param>
-    <param>
-      <key>samp_rate</key>
-      <value>1.0</value>
-    </param>
-    <param>
-      <key>sym_rate</key>
-      <value>1./spb_gen</value>
-    </param>
-    <param>
-      <key>alpha</key>
-      <value>0.35</value>
-    </param>
-    <param>
-      <key>ntaps</key>
-      <value>11*spb_gen</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(834, 157)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>blks2_pfb_arb_resampler_ccf</key>
-    <param>
-      <key>id</key>
-      <value>blks2_pfb_arb_resampler_ccf_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>float(spb)/float(spb_gen)</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>firdes.low_pass(128, 128, 0.45, 0.1)</value>
-    </param>
-    <param>
-      <key>size</key>
-      <value>128</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(617, 374)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_multiply_const_vxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_multiply_const_vxx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>complex</value>
-    </param>
-    <param>
-      <key>const</key>
-      <value>sig_amp</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1096, 197)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>variable</key>
     <param>
       <key>id</key>
@@ -949,29 +661,6 @@
     <param>
       <key>_coordinate</key>
       <value>(223, 9)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>spb</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>4.1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(32, 842)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1170,6 +859,147 @@
     <key>wxgui_scopesink2</key>
     <param>
       <key>id</key>
+      <value>wxgui_scopesink2_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>title</key>
+      <value>Scope Plot</value>
+    </param>
+    <param>
+      <key>samp_rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>v_scale</key>
+      <value>9</value>
+    </param>
+    <param>
+      <key>v_offset</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>t_scale</key>
+      <value>0</value>
+    </param>
+    <param>
+      <key>ac_couple</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>xy_mode</key>
+      <value>False</value>
+    </param>
+    <param>
+      <key>num_inputs</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>win_size</key>
+      <value></value>
+    </param>
+    <param>
+      <key>grid_pos</key>
+      <value></value>
+    </param>
+    <param>
+      <key>notebook</key>
+      <value>notebook_0,1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1112, 881)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>rrctaps</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>firdes.root_raised_cosine(nfilts,1.0,1.0/(spb*nfilts), .35, int(11*spb*nfilts))</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(513, 679)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_pfb_clock_sync_xxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_pfb_clock_sync_xxx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>ccf</value>
+    </param>
+    <param>
+      <key>sps</key>
+      <value>spb</value>
+    </param>
+    <param>
+      <key>alpha</key>
+      <value>alpha</value>
+    </param>
+    <param>
+      <key>beta</key>
+      <value>beta</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>rrctaps</value>
+    </param>
+    <param>
+      <key>filter_size</key>
+      <value>nfilts</value>
+    </param>
+    <param>
+      <key>init_phase</key>
+      <value>16</value>
+    </param>
+    <param>
+      <key>max_dev</key>
+      <value>1.5</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(512, 527)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>wxgui_scopesink2</key>
+    <param>
+      <key>id</key>
       <value>wxgui_scopesink2_0_0_0_0</value>
     </param>
     <param>
@@ -1234,61 +1064,10 @@
     </param>
   </block>
   <block>
-    <key>gr_pfb_clock_sync_xxx</key>
-    <param>
-      <key>id</key>
-      <value>gr_pfb_clock_sync_xxx_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>ccf</value>
-    </param>
-    <param>
-      <key>sps</key>
-      <value>spb</value>
-    </param>
-    <param>
-      <key>alpha</key>
-      <value>alpha</value>
-    </param>
-    <param>
-      <key>beta</key>
-      <value>beta</value>
-    </param>
-    <param>
-      <key>taps</key>
-      <value>rrctaps</value>
-    </param>
-    <param>
-      <key>filter_size</key>
-      <value>nfilts</value>
-    </param>
-    <param>
-      <key>init_phase</key>
-      <value>16</value>
-    </param>
-    <param>
-      <key>max_dev</key>
-      <value>1.5</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(512, 527)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>wxgui_scopesink2</key>
     <param>
       <key>id</key>
-      <value>wxgui_scopesink2_0_0_0</value>
+      <value>wxgui_scopesink2_0_0_1</value>
     </param>
     <param>
       <key>_enabled</key>
@@ -1296,11 +1075,11 @@
     </param>
     <param>
       <key>type</key>
-      <value>float</value>
+      <value>complex</value>
     </param>
     <param>
       <key>title</key>
-      <value>Scope Plot</value>
+      <value>Error</value>
     </param>
     <param>
       <key>samp_rate</key>
@@ -1308,7 +1087,7 @@
     </param>
     <param>
       <key>v_scale</key>
-      <value>9</value>
+      <value>.5</value>
     </param>
     <param>
       <key>v_offset</key>
@@ -1340,11 +1119,158 @@
     </param>
     <param>
       <key>notebook</key>
-      <value>notebook_0,1</value>
+      <value>notebook_0,3</value>
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1112, 881)</value>
+      <value>(1115, 358)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_float_to_complex</key>
+    <param>
+      <key>id</key>
+      <value>gr_float_to_complex_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(590, 184)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>blks2_pfb_arb_resampler_ccf</key>
+    <param>
+      <key>id</key>
+      <value>blks2_pfb_arb_resampler_ccf_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>rate</key>
+      <value>spb</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>firdes.root_raised_cosine(32, 32, 1.0, 0.35, 44*32)</value>
+    </param>
+    <param>
+      <key>size</key>
+      <value>32</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(816, 181)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_channel_model</key>
+    <param>
+      <key>id</key>
+      <value>gr_channel_model_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>noise_voltage</key>
+      <value>noise_amp</value>
+    </param>
+    <param>
+      <key>freq_offset</key>
+      <value>freq_offset</value>
+    </param>
+    <param>
+      <key>epsilon</key>
+      <value>interpratio</value>
+    </param>
+    <param>
+      <key>taps</key>
+      <value>1.0</value>
+    </param>
+    <param>
+      <key>seed</key>
+      <value>42</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(59, 543)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_multiply_const_vxx</key>
+    <param>
+      <key>id</key>
+      <value>gr_multiply_const_vxx_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>complex</value>
+    </param>
+    <param>
+      <key>const</key>
+      <value>sig_amp</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(714, 382)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>spb</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>4.2563</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(42, 840)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1388,18 +1314,6 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>blks2_pfb_arb_resampler_ccf_0</source_block_id>
-    <sink_block_id>gr_channel_model_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>blks2_pfb_arb_resampler_ccf_0</source_block_id>
-    <sink_block_id>wxgui_scopesink2_0_0_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
     <source_block_id>gr_channel_model_0</source_block_id>
     <sink_block_id>gr_throttle_0</sink_block_id>
     <source_key>0</source_key>
@@ -1416,24 +1330,6 @@
     <sink_block_id>gr_float_to_complex_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>1</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_float_to_complex_0</source_block_id>
-    <sink_block_id>root_raised_cosine_filter_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>root_raised_cosine_filter_0</source_block_id>
-    <sink_block_id>gr_multiply_const_vxx_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_multiply_const_vxx_0</source_block_id>
-    <sink_block_id>blks2_pfb_arb_resampler_ccf_0</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
   </connection>
   <connection>
     <source_block_id>gr_pfb_clock_sync_xxx_0</source_block_id>
@@ -1455,14 +1351,38 @@
   </connection>
   <connection>
     <source_block_id>gr_pfb_clock_sync_xxx_0</source_block_id>
+    <sink_block_id>wxgui_scopesink2_0_0_0</sink_block_id>
+    <source_key>3</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_pfb_clock_sync_xxx_0</source_block_id>
     <sink_block_id>wxgui_scopesink2_0_0_0_0</sink_block_id>
     <source_key>2</source_key>
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>gr_pfb_clock_sync_xxx_0</source_block_id>
-    <sink_block_id>wxgui_scopesink2_0_0_0</sink_block_id>
-    <source_key>3</source_key>
+    <source_block_id>gr_multiply_const_vxx_0</source_block_id>
+    <sink_block_id>wxgui_scopesink2_0_0_1</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_float_to_complex_0</source_block_id>
+    <sink_block_id>blks2_pfb_arb_resampler_ccf_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>blks2_pfb_arb_resampler_ccf_0</source_block_id>
+    <sink_block_id>gr_multiply_const_vxx_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_multiply_const_vxx_0</source_block_id>
+    <sink_block_id>gr_channel_model_0</sink_block_id>
+    <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
 </flow_graph>
