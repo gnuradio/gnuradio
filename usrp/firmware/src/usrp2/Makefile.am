@@ -108,11 +108,11 @@ eeprom_boot.ihx: $(EEPROM_BOOT_OBJS) $(LIBDEP)
 	$(XCC) $(LINKOPTS) -o $@ $(EEPROM_BOOT_OBJS)
 
 burn-usrp2-eeprom: eeprom_boot.ihx
-	$(PYTHON) $(srcdir)/../common/build_eeprom.py -r2 eeprom_boot.ihx > $@
+	$(PYTHON) $(srcdir)/../common/build_eeprom.py -p$(prefix) -r2 eeprom_boot.ihx > $@
 	chmod +x $@
 
 burn-usrp4-eeprom: eeprom_boot.ihx
-	$(PYTHON) $(srcdir)/../common/build_eeprom.py -r4 eeprom_boot.ihx > $@
+	$(PYTHON) $(srcdir)/../common/build_eeprom.py -p$(prefix) -r4 eeprom_boot.ihx > $@
 	chmod +x $@
 
 
