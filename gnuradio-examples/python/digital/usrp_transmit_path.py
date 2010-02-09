@@ -22,7 +22,7 @@
 from gnuradio import gr
 from gnuradio import usrp_options
 import transmit_path
-from pick_bitrate import pick_tx_bitrate
+from pick_bitrate2 import pick_tx_bitrate
 from gnuradio import eng_notation
 
 def add_freq_option(parser):
@@ -84,15 +84,17 @@ class usrp_transmit_path(gr.hier_block2):
         self.rs_rate = options.bitrate    # Store requested bit rate
         if options.verbose:
             print 'USRP Sink:', self.u
+        #(self._bitrate, self._samples_per_symbol, self._interp) = \
+        #                pick_tx_bitrate(options.bitrate, self._modulator_class.bits_per_symbol(), \
+        #                                options.samples_per_symbol, options.interp, dac_rate, \
+        #                                self.u.get_interp_rates())
         (self._bitrate, self._samples_per_symbol, self._interp) = \
                         pick_tx_bitrate(options.bitrate, self._modulator_class.bits_per_symbol(), \
-                                        options.samples_per_symbol, options.interp, dac_rate, \
-                                        self.u.get_interp_rates())
+                                        dac_rate, self.u.get_interp_rates())
 
-        # Calculate resampler rate based on requested and actual rates
-        self.rs_rate = self._bitrate / self.rs_rate
-        print "Resampling by %f to get bitrate of %ssps" % (self.rs_rate, eng_notation.num_to_str(self._bitrate/self.rs_rate))
-
+        print "USRP Interpolation: ", self._interp
+        print "Samples Per Symbol: ", self._samples_per_symbol
+        
         self.u.set_interp(self._interp)
         self.u.set_auto_tr(True)
 

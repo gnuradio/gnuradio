@@ -22,7 +22,7 @@
 from gnuradio import gr
 from gnuradio import usrp_options
 import receive_path
-from pick_bitrate import pick_rx_bitrate
+from pick_bitrate2 import pick_rx_bitrate
 from gnuradio import eng_notation
 
 def add_freq_option(parser):
@@ -81,16 +81,19 @@ class usrp_receive_path(gr.hier_block2):
         self.rs_rate = options.bitrate
         if options.verbose:
             print 'USRP Source:', self.u
+
+            
+        #(self._bitrate, self._samples_per_symbol, self._decim) = \
+        #                pick_rx_bitrate(options.bitrate, self._demod_class.bits_per_symbol(), \
+        #                                options.samples_per_symbol, options.decim, adc_rate,  \
+        #                                self.u.get_decim_rates())
         (self._bitrate, self._samples_per_symbol, self._decim) = \
                         pick_rx_bitrate(options.bitrate, self._demod_class.bits_per_symbol(), \
-                                        options.samples_per_symbol, options.decim, adc_rate,  \
-                                        self.u.get_decim_rates())
+                                        adc_rate, self.u.get_decim_rates())
 
-        # Calculate resampler rate based on requested and actual rates
-        self.rs_rate = 1.0 /(self._bitrate / self.rs_rate)
-        
-        print "Resampling by %f to get bitrate of %ssps" % ( self.rs_rate, eng_notation.num_to_str(self._bitrate/self.rs_rate))
-        
+        print "USRP Decimation: ", self._decim
+        print "Samples Per Symbol: ", self._samples_per_symbol
+
         self.u.set_decim(self._decim)
 
         if not self.u.set_center_freq(options.rx_freq):
