@@ -68,12 +68,8 @@ class usrp_transmit_path(gr.hier_block2):
             if not attr.startswith('_') and not hasattr(self, attr):
                 setattr(self, attr, getattr(tx_path, attr))
 
-        # Set up resampler based on rate determined by _setup_usrp_sink
-        rs_taps = gr.firdes.low_pass_2(32, 32, 0.45, 0.1, 60)
-        self.resampler = gr.pfb_arb_resampler_ccf(self.rs_rate, rs_taps)
-
         #connect
-        self.connect(tx_path, self.resampler, self.u)
+        self.connect(tx_path, self.u)
         
     def _setup_usrp_sink(self, options):
         """
@@ -85,10 +81,7 @@ class usrp_transmit_path(gr.hier_block2):
         self.rs_rate = options.bitrate    # Store requested bit rate
         if options.verbose:
             print 'USRP Sink:', self.u
-        #(self._bitrate, self._samples_per_symbol, self._interp) = \
-        #                pick_tx_bitrate(options.bitrate, self._modulator_class.bits_per_symbol(), \
-        #                                options.samples_per_symbol, options.interp, dac_rate, \
-        #                                self.u.get_interp_rates())
+            
         (self._bitrate, self._samples_per_symbol, self._interp) = \
                         pick_tx_bitrate(options.bitrate, self._modulator_class.bits_per_symbol(), \
                                         dac_rate, self.u.get_interp_rates())
