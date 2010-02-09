@@ -33,7 +33,7 @@ import sys
 
 # from current dir
 from receive_path import receive_path
-from pick_bitrate import pick_rx_bitrate
+from pick_bitrate2 import pick_rx_bitrate
 
 try:
     from gnuradio.qtgui import qtgui
@@ -242,8 +242,8 @@ class my_top_block(gr.top_block):
             
             # Connect to the QT sinks
             # FIXME: make better exposure to receiver from rxpath
-            #self.receiver = self.rxpath.packet_receiver._demodulator.phase_recov
-            self.receiver = self.rxpath.packet_receiver._demodulator.freq_recov
+            self.receiver = self.rxpath.packet_receiver._demodulator.phase_recov
+            #self.receiver = self.rxpath.packet_receiver._demodulator.freq_recov
             self.connect(self.u, self.snk_rxin)
             self.connect(self.receiver, self.snk_rx)
             
@@ -267,9 +267,8 @@ class my_top_block(gr.top_block):
         self.u.set_decim(self._decim)
 
         (self._bitrate, self._samples_per_symbol, self._decim) = \
-                        pick_rx_bitrate(self._bitrate, self._demod_class.bits_per_symbol(), \
-                                        self._samples_per_symbol, self._decim, adc_rate,  \
-                                        self.u.get_decim_rates())
+                        pick_rx_bitrate(options.bitrate, self._demod_class.bits_per_symbol(), \
+                                        adc_rate, self.u.get_decim_rates())
 
         self.u.set_decim(self._decim)
         self.set_auto_tr(True)                 # enable Auto Transmit/Receive switching
