@@ -83,7 +83,7 @@ class dbpsk2_mod(gr.hier_block2):
         self._excess_bw = excess_bw
         self._gray_code = gray_code
 
-        if not isinstance(self._samples_per_symbol, int) or self._samples_per_symbol < 2:
+        if self._samples_per_symbol < 2:
             raise TypeError, ("sbp must be an integer >= 2, is %d" % self._samples_per_symbol)
         
         arity = pow(2,self.bits_per_symbol())
@@ -103,7 +103,7 @@ class dbpsk2_mod(gr.hier_block2):
 
         # pulse shaping filter
         nfilts = 32
-        ntaps = nfilts * 11 * self._samples_per_symbol      # make nfilts filters of ntaps each
+        ntaps = nfilts * 11 * int(self._samples_per_symbol)    # make nfilts filters of ntaps each
         self.rrc_taps = gr.firdes.root_raised_cosine(
             nfilts,          # gain
             nfilts,          # sampling rate based on 32 filters in resampler

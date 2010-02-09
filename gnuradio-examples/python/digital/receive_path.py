@@ -135,4 +135,4 @@ class receive_path(gr.hier_block2):
         print "\nReceive Path:"
         print "modulation:      %s"    % (self._demod_class.__name__)
         print "bitrate:         %sb/s" % (eng_notation.num_to_str(self._bitrate))
-        print "samples/symbol:  %3d"   % (self._samples_per_symbol)
+        print "samples/symbol:  %.4f"   % (self._samples_per_symbol)

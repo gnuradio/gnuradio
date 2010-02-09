@@ -58,14 +58,15 @@ class usrp_transmit_path(gr.hier_block2):
         if options.tx_freq is None:
             sys.stderr.write("-f FREQ or --freq FREQ or --tx-freq FREQ must be specified\n")
             raise SystemExit
-        tx_path = transmit_path.transmit_path(modulator_class, options)
-        for attr in dir(tx_path): #forward the methods
-            if not attr.startswith('_') and not hasattr(self, attr):
-                setattr(self, attr, getattr(tx_path, attr))
 
         #setup usrp
         self._modulator_class = modulator_class
         self._setup_usrp_sink(options)
+
+        tx_path = transmit_path.transmit_path(modulator_class, options)
+        for attr in dir(tx_path): #forward the methods
+            if not attr.startswith('_') and not hasattr(self, attr):
+                setattr(self, attr, getattr(tx_path, attr))
 
         # Set up resampler based on rate determined by _setup_usrp_sink
         rs_taps = gr.firdes.low_pass_2(32, 32, 0.45, 0.1, 60)
@@ -92,8 +93,8 @@ class usrp_transmit_path(gr.hier_block2):
                         pick_tx_bitrate(options.bitrate, self._modulator_class.bits_per_symbol(), \
                                         dac_rate, self.u.get_interp_rates())
 
-        print "USRP Interpolation: ", self._interp
-        print "Samples Per Symbol: ", self._samples_per_symbol
+        options.interp = self._interp
+        options.samples_per_symbol = self._samples_per_symbol
         
         self.u.set_interp(self._interp)
         self.u.set_auto_tr(True)

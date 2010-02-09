@@ -59,14 +59,15 @@ class usrp_receive_path(gr.hier_block2):
         if options.rx_freq is None:
             sys.stderr.write("-f FREQ or --freq FREQ or --rx-freq FREQ must be specified\n")
             raise SystemExit
-        rx_path = receive_path.receive_path(demod_class, rx_callback, options)
-        for attr in dir(rx_path): #forward the methods
-            if not attr.startswith('_') and not hasattr(self, attr):
-                setattr(self, attr, getattr(rx_path, attr))
 
         #setup usrp
         self._demod_class = demod_class
         self._setup_usrp_source(options)
+
+        rx_path = receive_path.receive_path(demod_class, rx_callback, options)
+        for attr in dir(rx_path): #forward the methods
+            if not attr.startswith('_') and not hasattr(self, attr):
+                setattr(self, attr, getattr(rx_path, attr))
 
         # Set up resampler based on rate determined by _setup_usrp_source
         rs_taps = gr.firdes.low_pass_2(32, 32, 0.45, 0.1, 60)
@@ -91,9 +92,9 @@ class usrp_receive_path(gr.hier_block2):
                         pick_rx_bitrate(options.bitrate, self._demod_class.bits_per_symbol(), \
                                         adc_rate, self.u.get_decim_rates())
 
-        print "USRP Decimation: ", self._decim
-        print "Samples Per Symbol: ", self._samples_per_symbol
-
+        options.samples_per_symbol = self._samples_per_symbol
+        options.decim = self._decim
+        
         self.u.set_decim(self._decim)
 
         if not self.u.set_center_freq(options.rx_freq):
