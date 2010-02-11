@@ -140,12 +140,12 @@ def build_eeprom_image (filename, rev):
     assert (len (image) <= 256)
     return image
 
-def build_shell_script (out, ihx_filename, rev):
+def build_shell_script (out, ihx_filename, rev, prefix):
 
     image = build_eeprom_image (ihx_filename, rev)
 
     out.write ('#!/bin/sh\n')
-    out.write ('usrper -x load_firmware /usr/local/share/usrp/rev%d/std.ihx\n' % rev)
+    out.write ('usrper -x load_firmware ' + prefix + '/share/usrp/rev%d/std.ihx\n' % rev)
     out.write ('sleep 1\n')
     
     # print "len(image) =", len(image)
@@ -164,8 +164,10 @@ def build_shell_script (out, ihx_filename, rev):
         out.write ('sleep 1\n')
 
 if __name__ == '__main__':
-    usage = "usage: %prog -r REV [options] bootfile.ihx"
+    usage = "usage: %prog -p PREFIX -r REV [options] bootfile.ihx"
     parser = OptionParser (usage=usage)
+    parser.add_option ("-p", "--prefix", type="string", default="",
+                       help="Specify install prefix from configure")
     parser.add_option ("-r", "--rev", type="int", default=-1,
                        help="Specify USRP revision number REV (2 or 4)")
     (options, args) = parser.parse_args ()
@@ -176,7 +178,15 @@ if __name__ == '__main__':
         sys.stderr.write (
             "You must specify the USRP revision number (2 or 4) with -r REV\n")
         sys.exit (1)
+    if options.prefix == "":
+        sys.stderr.write (
+            "You must specify the install prefix with -p PREFIX\n")
+        sys.exit (1)
+    if not os.path.isdir(options.prefix):
+        sys.stderr.write (
+            "PREFIX dir (" + options.prefix + "), does not exist\n")
+        sys.exit (1)
 
     ihx_filename = args[0]
 
-    build_shell_script (sys.stdout, ihx_filename, options.rev)
+    build_shell_script (sys.stdout, ihx_filename, options.rev, options.prefix)
