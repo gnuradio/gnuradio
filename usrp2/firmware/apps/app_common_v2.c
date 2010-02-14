@@ -31,7 +31,6 @@
 #include "clocks.h"
 #include "u2_init.h"
 #include <string.h>
-//#include "db_init.h"
 #include "usrp2_i2c_addr.h"
 
 volatile bool link_is_up = false;	// eth handler sets this
