@@ -24,47 +24,58 @@ from gnuradio import eng_notation
 _default_bitrate = 500e3
 
 def _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
-                  xrate, converter_rate, xrates, gen_info):
+                  xrate, converter_rate, xrates):
     """
     @returns tuple (bitrate, samples_per_symbol, interp_rate_or_decim_rate)
     """
 
     if not isinstance(bits_per_symbol, int) or bits_per_symbol < 1:
         raise ValueError, "bits_per_symbol must be an int >= 1"
-    
-    if samples_per_symbol is not None and xrate is not None:  # completely determined
-        return (float(converter_rate) / xrate / samples_per_symbol,
-                samples_per_symbol, xrate)
+
+    converter_rate = float(converter_rate)
+    bits_per_symbol = float(bits_per_symbol)
+
+    # completely determined; if bitrate is specified, this overwrites it
+    if (samples_per_symbol is not None) and (xrate is not None):
+        bitrate = converter_rate / bits_per_symbol / xrate / samples_per_symbol
+
+    # If only SPS is given
+    if (bitrate is None) and (samples_per_symbol is not None) and (xrate is None):
+        xrate = max(xrates)
+        bitrate = converter_rate / bits_per_symbol / xrate / samples_per_symbol
+        
+    # If only xrate is given
+    if (bitrate is None) and (samples_per_symbol is None) and (xrate is not None):
+        samples_per_symbol = 2.0
+        bitrate = converter_rate / bits_per_symbol / xrate / samples_per_symbol
 
     # If no parameters are give, use the default bit rate
-    if bitrate is None and samples_per_symbol is None and xrate is None:
+    if (bitrate is None) and (samples_per_symbol is None) and (xrate is None):
         bitrate = _default_bitrate
 
     # If only bitrate is specified, return max xrate and appropriate
-    # samples per symbol to reach bit rate
-    if samples_per_symbol is None and xrate is None:
+    # samples per symbol (minimum of 2.0) to reach bit rate
+    if (samples_per_symbol is None) and (xrate is None):
         xrates.sort()
         for i in xrange(len(xrates)):
-            if((converter_rate / float(bits_per_symbol) / xrates[i]) >= 2*bitrate):
-                decim = xrates[i]
+            if((converter_rate / bits_per_symbol / xrates[i]) >= 2*bitrate):
+                rate = xrates[i]
             else:
                 break
-            
-        sps = converter_rate / float(bits_per_symbol) / decim / bitrate
-        br = converter_rate / float(bits_per_symbol) / decim / sps
 
-        return (br, sps, int(decim))
+        xrate = rate
+        samples_per_symbol = converter_rate / bits_per_symbol / rate / bitrate
+        bitrate = converter_rate / bits_per_symbol / xrate / samples_per_symbol
 
+    # If bitrate and xrate are specified
+    if(samples_per_symbol is None):
+        samples_per_symbol = converter_rate / xrate / bits_per_symbol / bitrate
 
-    # now we have a target bitrate and possibly an xrate or
-    # samples_per_symbol constraint, but not both of them.
-    ret = _pick_best(bitrate, bits_per_symbol,
-                      _filter_info(gen_info(converter_rate, xrates),
-                                   samples_per_symbol, xrate))
+    # If bitrate and SPS are specified
+    if(xrate is None):
+        xrate = converter_rate / samples_per_symbol / bits_per_symbol / bitrate
 
-    print "Actual Bitrate:", eng_notation.num_to_str(ret[0])
-    return ret
-
+    return (bitrate, samples_per_symbol, int(xrate))
 
 
 def pick_tx_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
@@ -89,18 +100,29 @@ def pick_tx_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
     """
 
     return _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
-                         interp_rate, converter_rate, possible_interps, _gen_tx_info)
+                         interp_rate, converter_rate, possible_interps)
 
-    rates = list(possible_interps)
-    rates.sort()
 
-    for i in xrange(len(rates)):
-        if((converter_rate / float(bits_per_symbol) / rates[i]) >= 2*bitrate):
-            interp = rates[i]
-        else:
-            break
+def pick_rx_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
+                    decim_rate, converter_rate, possible_decims):
+    """
+    Given the 4 input parameters, return at configuration that matches
 
-    sps = converter_rate / float(bits_per_symbol) / interp / bitrate
-    br = converter_rate / float(bits_per_symbol) / interp / sps
+    @param bitrate: desired bitrate or None
+    @type bitrate: number or None
+    @param bits_per_symbol: E.g., BPSK -> 1, QPSK -> 2, 8-PSK -> 3
+    @type bits_per_symbol: integer >= 1
+    @param samples_per_symbol: samples/baud (aka samples/symbol)
+    @type samples_per_symbol: number or None
+    @param decim_rate: USRP decimation factor
+    @type decim_rate: integer or None
+    @param converter_rate: converter sample rate in Hz
+    @type converter_rate: number
+    @param possible_decims: a list of possible rates
+    @type possible_decims: a list of integers
 
-    return (br, sps, int(interp))
+    @returns tuple (bitrate, samples_per_symbol, decim_rate)
+    """
+
+    return _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
+                         decim_rate, converter_rate, possible_decims)
