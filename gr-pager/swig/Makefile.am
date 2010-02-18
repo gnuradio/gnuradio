@@ -41,7 +41,7 @@ pager_swig_pythondir_category = \
 
 # additional libraries for linking with the SWIG-generated library
 pager_swig_la_swig_libadd = \
-	$(builddir)/../lib/libgnuradio-pager.la
+	$(abs_top_builddir)/gr-pager/lib/libgnuradio-pager.la
 
 # additional SWIG files to be installed
 pager_swig_swiginclude_headers = \
