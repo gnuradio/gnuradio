@@ -31,6 +31,7 @@
 #include "clocks.h"
 #include "u2_init.h"
 #include <string.h>
+#include "usrp2_i2c_addr.h"
 
 volatile bool link_is_up = false;	// eth handler sets this
 int cpu_tx_buf_dest_port = PORT_ETH;
@@ -308,7 +309,7 @@ read_time_cmd(const op_generic_t *p,
 static void
 fill_db_info(u2_db_info_t *p, const struct db_base *db)
 {
-  p->dbid = db->dbid;
+  //p->dbid = db->dbid;
   p->freq_min_hi = u2_fxpt_freq_hi(db->freq_min);
   p->freq_min_lo = u2_fxpt_freq_lo(db->freq_min);
   p->freq_max_hi = u2_fxpt_freq_hi(db->freq_max);
@@ -333,6 +334,9 @@ dboard_info_cmd(const op_generic_t *p,
 
   fill_db_info(&r->tx_db_info, tx_dboard);
   fill_db_info(&r->rx_db_info, rx_dboard);
+
+  r->tx_db_info.dbid = read_dboard_eeprom(I2C_ADDR_TX_A);
+  r->rx_db_info.dbid = read_dboard_eeprom(I2C_ADDR_RX_A);
 
   return r->len;
 }

@@ -100,5 +100,10 @@ db_set_duc_freq(u2_fxpt_freq_t dxc_freq, u2_fxpt_freq_t *actual_dxc_freq);
 bool
 db_set_gain(struct db_base *db, u2_fxpt_gain_t gain);
  
+/*!
+ * \brief Read the eeprom value from the db, without defaulting to BasicRX/TX
+ */
+int
+read_dboard_eeprom(int i2c_addr);
 
 #endif /* INCLUDED_DB_H */
