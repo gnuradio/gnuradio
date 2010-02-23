@@ -21,7 +21,8 @@ self.$(id).set_interp($interpolation)
 self.$(id).set_lo_offset($lo_offset)
 #end if
 self.$(id).set_center_freq($frequency)
-self.$(id).set_gain($gain)</make>
+self.$(id).set_gain($gain)
+self.$(id).config_mimo($usrp2_clock_src)</make>
 	<callback>set_interp($interpolation)</callback>
 	<callback>#if $lo_offset() != float('inf')
 self.$(id).set_lo_offset($lo_offset)
@@ -83,6 +84,24 @@ self.$(id).set_center_freq($frequency)</callback>
 		<key>gain</key>
 		<value>0</value>
 		<type>real</type>
+	</param>
+	<param>
+		<name>Clock Source</name>
+		<key>usrp2_clock_src</key>
+		<value>usrp2.MC_WE_DONT_LOCK</value>
+		<type>enum</type>
+		<option>
+			<name>Internal</name>
+			<key>usrp2.MC_WE_DONT_LOCK</key>
+		</option>
+		<option>
+			<name>External SMA</name>
+			<key>usrp2.MC_WE_LOCK_TO_SMA</key>
+		</option>
+		<option>
+			<name>External MIMO</name>
+			<key>usrp2.MC_WE_LOCK_TO_MIMO</key>
+		</option>
 	</param>
 	<sink>
 		<name>in</name>
