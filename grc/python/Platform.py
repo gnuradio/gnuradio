@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008, 2009, 2010 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -64,7 +64,7 @@ class Platform(_Platform, _GUIPlatform):
 			version=gr.version(),
 			key='grc',
 			license=__doc__.strip(),
-			website='http://gnuradio.org/trac/wiki/GNURadioCompanion',
+			website='http://gnuradio.org/redmine/wiki/gnuradio/GNURadioCompanion',
 			block_paths=block_paths,
 			block_dtd=BLOCK_DTD,
 			default_flow_graph=DEFAULT_FLOW_GRAPH,
