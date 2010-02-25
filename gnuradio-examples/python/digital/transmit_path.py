@@ -99,7 +99,7 @@ class transmit_path(gr.hier_block2):
                           help="set transmitter digital amplitude: 0 <= AMPL < 1 [default=%default]")
         normal.add_option("-v", "--verbose", action="store_true", default=False)
 
-        expert.add_option("-S", "--samples-per-symbol", type="int", default=2,
+        expert.add_option("-S", "--samples-per-symbol", type="int", default=None,
                           help="set samples/symbol [default=%default]")
         expert.add_option("", "--log", action="store_true", default=False,
                           help="Log all parts of flow graph to file (CAUTION: lots of data)")

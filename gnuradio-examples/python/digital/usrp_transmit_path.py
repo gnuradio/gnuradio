@@ -79,15 +79,19 @@ class usrp_transmit_path(gr.hier_block2):
         self.u = usrp_options.create_usrp_sink(options)
         dac_rate = self.u.dac_rate()
         self.rs_rate = options.bitrate    # Store requested bit rate
-        if options.verbose:
-            print 'USRP Sink:', self.u
             
         (self._bitrate, self._samples_per_symbol, self._interp) = \
-                        pick_tx_bitrate(options.bitrate, self._modulator_class.bits_per_symbol(), \
+                        pick_tx_bitrate(options.bitrate, self._modulator_class.bits_per_symbol(),
+                                        options.samples_per_symbol, options.interp,
                                         dac_rate, self.u.get_interp_rates())
 
         options.interp = self._interp
         options.samples_per_symbol = self._samples_per_symbol
+        options.bitrate = self._bitrate
+
+        if options.verbose:
+            print 'USRP Sink:', self.u
+            print "Interpolation Rate: ", self._interp
         
         self.u.set_interp(self._interp)
         self.u.set_auto_tr(True)

@@ -22,6 +22,8 @@
 from gnuradio import eng_notation
 
 _default_bitrate = 500e3
+_sps_min = 2
+_sps_max = 100
 
 def _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
                   xrate, converter_rate, xrates):
@@ -44,7 +46,7 @@ def _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
         xrate = max(xrates)
         bitrate = converter_rate / bits_per_symbol / xrate / samples_per_symbol
         
-    # If only xrate is given
+    # If only xrate is given, just set SPS to 2 and calculate bitrate
     if (bitrate is None) and (samples_per_symbol is None) and (xrate is not None):
         samples_per_symbol = 2.0
         bitrate = converter_rate / bits_per_symbol / xrate / samples_per_symbol
@@ -63,7 +65,12 @@ def _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
             else:
                 break
 
-        xrate = rate
+        try:
+            xrate = rate
+        except UnboundLocalError:
+            print "Requested bitrate out of bounds"
+            sys.exit(1)
+            
         samples_per_symbol = converter_rate / bits_per_symbol / rate / bitrate
         bitrate = converter_rate / bits_per_symbol / xrate / samples_per_symbol
 
@@ -74,7 +81,27 @@ def _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
     # If bitrate and SPS are specified
     if(xrate is None):
         xrate = converter_rate / samples_per_symbol / bits_per_symbol / bitrate
+        if((xrate in xrates) == False):
+            # Find the closest avaiable rate larger than the calculated one
+            xrates.sort()
+            for x in xrates:
+                if(x > xrate):
+                    xrate = x
+                    break
+            if(xrate > max(xrates)):
+                xrate = max(xrates)
+            
+            bitrate = converter_rate / bits_per_symbol / xrate / samples_per_symbol
+            print "Could not find suitable rate for specified SPS and Bitrate"
+            print "Using rate = %d for bitrate of %sbps" % \
+                  (xrate, (eng_notation.num_to_str(bitrate)))
 
+    if((xrate in xrates) == False):
+        raise ValueError(("Invalid rate (rate = %d)" % xrate))
+    if((samples_per_symbol < _sps_min) or (samples_per_symbol > _sps_max)):
+        raise ValueError(("Invalid samples per symbol (sps = %.2f). Must be in [%.0f, %.0f]." \
+                          % (xrate, _sps_min, _sps_max)))
+        
     return (bitrate, samples_per_symbol, int(xrate))
 
 
