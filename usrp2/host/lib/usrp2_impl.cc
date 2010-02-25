@@ -492,6 +492,27 @@ namespace usrp2 {
   // ----------------------------------------------------------------
 
   bool
+  usrp2::impl::set_rx_antenna(int ant){
+    op_config_mimo_cmd cmd;
+    op_generic_t reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_TX_ANTENNA;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+    cmd.op.flags = ant;
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+      return false;
+
+    return true;//ntohx(reply.ok) == 1;
+  }
+
+  bool
   usrp2::impl::set_rx_gain(double gain)
   {
     op_config_rx_v2_cmd cmd;
@@ -900,6 +921,27 @@ namespace usrp2 {
   // ----------------------------------------------------------------
   // 				Transmit
   // ----------------------------------------------------------------
+
+  bool
+  usrp2::impl::set_tx_antenna(int ant){
+    op_config_mimo_cmd cmd;
+    op_generic_t reply;
+
+    memset(&cmd, 0, sizeof(cmd));
+    init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
+    cmd.op.opcode = OP_RX_ANTENNA;
+    cmd.op.len = sizeof(cmd.op);
+    cmd.op.rid = d_next_rid++;
+    cmd.op.flags = ant;
+    cmd.eop.opcode = OP_EOP;
+    cmd.eop.len = sizeof(cmd.eop);
+
+    pending_reply p(cmd.op.rid, &reply, sizeof(reply));
+    if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
+      return false;
+
+    return true;//ntohx(reply.ok) == 1;
+  }
 
   bool
   usrp2::impl::set_tx_gain(double gain)

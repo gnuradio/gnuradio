@@ -494,6 +494,14 @@ handle_control_chan_frame(u2_eth_packet_t *pkt, size_t len)
       ok = true;
       goto generic_reply;
 
+    case OP_RX_ANTENNA:
+        db_set_antenna(rx_dboard, ((op_config_mimo_t *)payload)->flags);
+        goto generic_reply;
+
+    case OP_TX_ANTENNA:
+        db_set_antenna(tx_dboard, ((op_config_mimo_t *)payload)->flags);
+        goto generic_reply;
+
     case OP_BURN_MAC_ADDR:
       ok = ethernet_set_mac_addr(&((op_burn_mac_addr_t *)payload)->addr);
       goto generic_reply;

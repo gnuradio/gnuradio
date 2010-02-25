@@ -99,7 +99,10 @@ db_set_duc_freq(u2_fxpt_freq_t dxc_freq, u2_fxpt_freq_t *actual_dxc_freq);
  */
 bool
 db_set_gain(struct db_base *db, u2_fxpt_gain_t gain);
- 
+
+bool
+db_set_antenna(struct db_base *db, int ant);
+
 /*!
  * \brief Read the eeprom value from the db, without defaulting to BasicRX/TX
  */

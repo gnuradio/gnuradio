@@ -47,6 +47,12 @@ usrp2_source_base::~usrp2_source_base ()
 }
 
 bool
+usrp2_source_base::set_antenna(int ant)
+{
+  return d_u2->set_rx_antenna(ant);
+}
+
+bool
 usrp2_source_base::set_gain(double gain)
 {
   return d_u2->set_rx_gain(gain);
