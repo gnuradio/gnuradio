@@ -76,12 +76,15 @@ class usrp_receive_path(gr.hier_block2):
         self.u = usrp_options.create_usrp_source(options)
         adc_rate = self.u.adc_rate()
         self.rs_rate = options.bitrate
-        if options.verbose:
-            print 'USRP Source:', self.u
 
         (self._bitrate, self._samples_per_symbol, self._decim) = \
                         pick_rx_bitrate(options.bitrate, self._demod_class.bits_per_symbol(), \
+                                        options.samples_per_symbol, options.decim,
                                         adc_rate, self.u.get_decim_rates())
+
+        if options.verbose:
+            print 'USRP Source:', self.u
+            print 'Decimation: ', self._decim
 
         options.samples_per_symbol = self._samples_per_symbol
         options.decim = self._decim
