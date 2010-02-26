@@ -19,23 +19,10 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-include $(top_srcdir)/Makefile.common
+# The presence of this file turns this directory into a Python package
 
-AM_CPPFLAGS = \
-	$(STD_DEFINES_AND_INCLUDES) \
-	$(WITH_INCLUDES) \
-	$(UHD_CFLAGS)
+# Add SWIG generated code to this namespace
+from uhd_swig import *
 
-lib_LTLIBRARIES = libgnuradio-uhd.la
+# Add other content from pure-Python modules here
 
-libgnuradio_uhd_la_SOURCES = \
-	uhd_simple_source.cc
-
-libgnuradio_uhd_la_LIBADD = \
-	$(GNURADIO_CORE_LA) \
-	$(UHD_LIBS)
-
-grinclude_HEADERS = \
-	uhd_simple_source.h
-
-noinst_HEADERS =

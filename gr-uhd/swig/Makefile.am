@@ -20,3 +20,47 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+
+AM_CPPFLAGS = \
+	$(STD_DEFINES_AND_INCLUDES) \
+	$(PYTHON_CPPFLAGS) \
+	$(WITH_INCLUDES) \
+	-I$(top_srcdir)/gr-uhd/lib
+
+if PYTHON
+# ----------------------------------------------------------------
+# The SWIG library
+# TESTS = run_tests
+
+TOP_SWIG_IFILES = \
+	uhd_swig.i
+
+# Install so that they end up available as:
+#   import gnuradio.uhd
+# This ends up at:
+#   ${prefix}/lib/python${python_version}/site-packages/gnuradio/uhd
+uhd_swig_pythondir_category = \
+	gnuradio/uhd
+
+# additional libraries for linking with the SWIG-generated library
+uhd_swig_la_swig_libadd = \
+	$(top_builddir)/gr-uhd/lib/libgnuradio-uhd.la
+
+# additional Python files to be installed along with the SWIG-generated one
+uhd_swig_python = \
+	__init__.py
+
+# additional SWIG files to be installed
+uhd_swig_swiginclude_headers =
+
+include $(top_srcdir)/Makefile.swig
+
+# FIXME better way to set this?
+STD_SWIG_PYTHON_ARGS += -I$(top_srcdir)/gr-uhd/lib
+
+# add some of the variables generated inside the Makefile.swig.gen
+BUILT_SOURCES = $(swig_built_sources)
+
+# Do not distribute the output of SWIG
+no_dist_files = $(swig_built_sources)
+endif
