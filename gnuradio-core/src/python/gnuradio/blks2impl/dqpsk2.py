@@ -83,8 +83,8 @@ class dqpsk2_mod(gr.hier_block2):
         self._excess_bw = excess_bw
         self._gray_code = gray_code
 
-        if not isinstance(samples_per_symbol, int) or samples_per_symbol < 2:
-            raise TypeError, ("sbp must be an integer >= 2, is %d" % samples_per_symbol)
+        if samples_per_symbol < 2:
+            raise TypeError, ("sbp must be >= 2, is %f" % samples_per_symbol)
 
 	ntaps = 11 * samples_per_symbol
  
@@ -107,7 +107,7 @@ class dqpsk2_mod(gr.hier_block2):
 
         # pulse shaping filter
         nfilts = 32
-        ntaps = nfilts * 11 * self._samples_per_symbol      # make nfilts filters of ntaps each
+        ntaps = 11 * int(nfilts * self._samples_per_symbol)  # make nfilts filters of ntaps each
         self.rrc_taps = gr.firdes.root_raised_cosine(
             nfilts,          # gain
             nfilts,          # sampling rate based on 32 filters in resampler

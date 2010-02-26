@@ -68,8 +68,7 @@ def _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
         try:
             xrate = rate
         except UnboundLocalError:
-            print "Requested bitrate out of bounds"
-            sys.exit(1)
+            raise ValueError("Requested bitrate out of bounds")
             
         samples_per_symbol = converter_rate / bits_per_symbol / rate / bitrate
         bitrate = converter_rate / bits_per_symbol / xrate / samples_per_symbol
@@ -100,7 +99,7 @@ def _pick_bitrate(bitrate, bits_per_symbol, samples_per_symbol,
         raise ValueError(("Invalid rate (rate = %d)" % xrate))
     if((samples_per_symbol < _sps_min) or (samples_per_symbol > _sps_max)):
         raise ValueError(("Invalid samples per symbol (sps = %.2f). Must be in [%.0f, %.0f]." \
-                          % (xrate, _sps_min, _sps_max)))
+                          % (samples_per_symbol, _sps_min, _sps_max)))
         
     return (bitrate, samples_per_symbol, int(xrate))
 
