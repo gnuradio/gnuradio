@@ -498,7 +498,7 @@ namespace usrp2 {
 
     memset(&cmd, 0, sizeof(cmd));
     init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
-    cmd.op.opcode = OP_TX_ANTENNA;
+    cmd.op.opcode = OP_RX_ANTENNA;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
     cmd.op.flags = ant;
@@ -509,7 +509,7 @@ namespace usrp2 {
     if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
-    return true;//ntohx(reply.ok) == 1;
+    return ntohx(reply.ok) == 1;
   }
 
   bool
@@ -929,7 +929,7 @@ namespace usrp2 {
 
     memset(&cmd, 0, sizeof(cmd));
     init_etf_hdrs(&cmd.h, d_addr, 0, CONTROL_CHAN, -1);
-    cmd.op.opcode = OP_RX_ANTENNA;
+    cmd.op.opcode = OP_TX_ANTENNA;
     cmd.op.len = sizeof(cmd.op);
     cmd.op.rid = d_next_rid++;
     cmd.op.flags = ant;
@@ -940,7 +940,7 @@ namespace usrp2 {
     if (!transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT))
       return false;
 
-    return true;//ntohx(reply.ok) == 1;
+    return ntohx(reply.ok) == 1;
   }
 
   bool
