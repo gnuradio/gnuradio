@@ -20,8 +20,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GRI_FFT_FILTER_H
-#define INCLUDED_GRI_FFT_FILTER_H
+#ifndef INCLUDED_GRI_FFT_FILTER_FFF_H
+#define INCLUDED_GRI_FFT_FILTER_FFF_H
 
 #include <gr_complex.h>
 #include <vector>
@@ -29,7 +29,7 @@
 class gri_fft_real_fwd;
 class gri_fft_real_rev;
 
-class gri_fft_filter
+class gri_fft_filter_fff
 {
  private:
   int			   d_ntaps;
@@ -46,8 +46,8 @@ class gri_fft_filter
   int tailsize() const { return d_ntaps - 1; }
   
  public:
-  gri_fft_filter (int decimation, const std::vector<float> &taps);
-  ~gri_fft_filter ();
+  gri_fft_filter_fff (int decimation, const std::vector<float> &taps);
+  ~gri_fft_filter_fff ();
 
   int set_taps (const std::vector<float> &taps);
   
@@ -55,4 +55,4 @@ class gri_fft_filter
 
 };
 
-#endif /* INCLUDED_GRI_FFT_FILTER_H */
+#endif /* INCLUDED_GRI_FFT_FILTER_FFF_H */

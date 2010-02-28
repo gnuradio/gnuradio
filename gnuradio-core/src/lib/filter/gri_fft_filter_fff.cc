@@ -24,19 +24,19 @@
 #include "config.h"
 #endif
 
-#include <gri_fft_filter.h>
+#include <gri_fft_filter_fff.h>
 #include <gri_fft.h>
 #include <assert.h>
 #include <stdexcept>
 #include <cstdio>
 
-gri_fft_filter::gri_fft_filter (int decimation, const std::vector<float> &taps)
+gri_fft_filter_fff::gri_fft_filter_fff (int decimation, const std::vector<float> &taps)
   : d_fftsize(-1), d_decimation(decimation), d_fwdfft(0), d_invfft(0)
 {
   set_taps(taps);
 }
 
-gri_fft_filter::~gri_fft_filter ()
+gri_fft_filter_fff::~gri_fft_filter_fff ()
 {
   delete d_fwdfft;
   delete d_invfft;
@@ -46,7 +46,7 @@ gri_fft_filter::~gri_fft_filter ()
  * determines d_ntaps, d_nsamples, d_fftsize, d_xformed_taps
  */
 int
-gri_fft_filter::set_taps (const std::vector<float> &taps)
+gri_fft_filter_fff::set_taps (const std::vector<float> &taps)
 {
   int i = 0;
   compute_sizes(taps.size());
@@ -80,7 +80,7 @@ gri_fft_filter::set_taps (const std::vector<float> &taps)
 // determine and set d_ntaps, d_nsamples, d_fftsize
 
 void
-gri_fft_filter::compute_sizes(int ntaps)
+gri_fft_filter_fff::compute_sizes(int ntaps)
 {
   int old_fftsize = d_fftsize;
   d_ntaps = ntaps;
@@ -88,7 +88,7 @@ gri_fft_filter::compute_sizes(int ntaps)
   d_nsamples = d_fftsize - d_ntaps + 1;
 
   if (0)
-    fprintf(stderr, "gri_fft_filter: ntaps = %d, fftsize = %d, nsamples = %d\n",
+    fprintf(stderr, "gri_fft_filter_fff: ntaps = %d, fftsize = %d, nsamples = %d\n",
 	    d_ntaps, d_fftsize, d_nsamples);
 
   assert(d_fftsize == d_ntaps + d_nsamples -1 );
@@ -103,7 +103,7 @@ gri_fft_filter::compute_sizes(int ntaps)
 }
 
 int
-gri_fft_filter::filter (int nitems, const float *input, float *output)
+gri_fft_filter_fff::filter (int nitems, const float *input, float *output)
 {
   int dec_ctr = 0;
   int j = 0;
