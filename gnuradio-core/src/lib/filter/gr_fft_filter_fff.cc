@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2005 Free Software Foundation, Inc.
+ * Copyright 2005,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -25,13 +25,10 @@
 #endif
 
 #include <gr_fft_filter_fff.h>
+#include <gri_fft_filter.h>
 #include <gr_io_signature.h>
-#include <gri_fft.h>
-#include <math.h>
 #include <assert.h>
 #include <stdexcept>
-#include <gr_firdes.h>
-
 
 #include <cstdio>
 #include <iostream>
@@ -48,105 +45,25 @@ gr_fft_filter_fff::gr_fft_filter_fff (int decimation, const std::vector<float> &
 		       gr_make_io_signature (1, 1, sizeof (float)),
 		       gr_make_io_signature (1, 1, sizeof (float)),
 		       decimation),
-    d_fftsize(-1), d_fwdfft(0), d_invfft(0), d_updated(false)
+    d_updated(false)
 {
   set_history(1);
-  actual_set_taps(taps);
+
+  d_filter = new gri_fft_filter(decimation, taps);
+  d_nsamples = d_filter->set_taps(taps);
+  set_output_multiple(d_nsamples);
 }
 
 gr_fft_filter_fff::~gr_fft_filter_fff ()
 {
-  delete d_fwdfft;
-  delete d_invfft;
+  delete d_filter;
 }
-
-#if 0
-static void 
-print_vector_complex(const std::string label, const std::vector<gr_complex> &x)
-{
-  std::cout << label;
-  for (unsigned i = 0; i < x.size(); i++)
-    std::cout << x[i] << " ";
-  std::cout << "\n";
-}
-
-static void 
-print_vector_float(const std::string label, const std::vector<float> &x)
-{
-  std::cout << label;
-  for (unsigned i = 0; i < x.size(); i++)
-    std::cout << x[i] << " ";
-  std::cout << "\n";
-}
-#endif
 
 void
 gr_fft_filter_fff::set_taps (const std::vector<float> &taps)
 {
   d_new_taps = taps;
   d_updated = true;
-}
-
-/*
- * determines d_ntaps, d_nsamples, d_fftsize, d_xformed_taps
- */
-void
-gr_fft_filter_fff::actual_set_taps (const std::vector<float> &taps)
-{
-  int i = 0;
-  compute_sizes(taps.size());
-
-  d_tail.resize(tailsize());
-  for (i = 0; i < tailsize(); i++)
-    d_tail[i] = 0;
-
-  float *in = d_fwdfft->get_inbuf();
-  gr_complex *out = d_fwdfft->get_outbuf();
-
-  float scale = 1.0 / d_fftsize;
-  
-  // Compute forward xform of taps.
-  // Copy taps into first ntaps slots, then pad with zeros
-  for (i = 0; i < d_ntaps; i++)
-    in[i] = taps[i] * scale;
-
-  for (; i < d_fftsize; i++)
-    in[i] = 0;
-
-  d_fwdfft->execute();		// do the xform
-
-  // now copy output to d_xformed_taps
-  for (i = 0; i < d_fftsize/2+1; i++)
-    d_xformed_taps[i] = out[i];
-
-  //print_vector_complex("transformed taps:", d_xformed_taps);
-}
-
-// determine and set d_ntaps, d_nsamples, d_fftsize
-
-void
-gr_fft_filter_fff::compute_sizes(int ntaps)
-{
-  int old_fftsize = d_fftsize;
-  d_ntaps = ntaps;
-  d_fftsize = (int) (2 * pow(2.0, ceil(log(ntaps) / log(2))));
-  d_nsamples = d_fftsize - d_ntaps + 1;
-
-  if (0)
-    fprintf(stderr, "gr_fft_filter: ntaps = %d, fftsize = %d, nsamples = %d\n",
-	    d_ntaps, d_fftsize, d_nsamples);
-
-  assert(d_fftsize == d_ntaps + d_nsamples -1 );
-
-  if (d_fftsize != old_fftsize){	// compute new plans
-    delete d_fwdfft;
-    delete d_invfft;
-    d_fwdfft = new gri_fft_real_fwd(d_fftsize);
-    d_invfft = new gri_fft_real_rev(d_fftsize);
-    d_xformed_taps.resize(d_fftsize/2+1);
-  }
-
-  set_output_multiple(d_nsamples);
 }
 
 int
@@ -158,59 +75,17 @@ gr_fft_filter_fff::work (int noutput_items,
   float *out = (float *) output_items[0];
 
   if (d_updated){
-    actual_set_taps(d_new_taps);
+    d_nsamples = d_filter->set_taps(d_new_taps);
     d_updated = false;
+    set_output_multiple(d_nsamples);
     return 0;				// output multiple may have changed
   }
 
   assert(noutput_items % d_nsamples == 0);
+  
+  d_filter->filter(noutput_items, in, out);
 
-  int dec_ctr = 0;
-  int j = 0;
-  int ninput_items = noutput_items * decimation();
-
-  for (int i = 0; i < ninput_items; i += d_nsamples){
-    
-    memcpy(d_fwdfft->get_inbuf(), &in[i], d_nsamples * sizeof(float));
-
-    for (j = d_nsamples; j < d_fftsize; j++)
-      d_fwdfft->get_inbuf()[j] = 0;
-
-    d_fwdfft->execute();	// compute fwd xform
-
-    gr_complex *a = d_fwdfft->get_outbuf();
-    gr_complex *b = &d_xformed_taps[0];
-    gr_complex *c = d_invfft->get_inbuf();
-
-    for (j = 0; j < d_fftsize/2+1; j++)	// filter in the freq domain
-      c[j] = a[j] * b[j];
-    
-    d_invfft->execute();	// compute inv xform
-
-    // add in the overlapping tail
-
-    for (j = 0; j < tailsize(); j++)
-      d_invfft->get_outbuf()[j] += d_tail[j];
-
-    // copy nsamples to output
-
-    //memcpy(out, d_invfft->get_outbuf(), d_nsamples * sizeof(float));
-    //out += d_nsamples;
-
-    j = dec_ctr;
-    while (j < d_nsamples) {
-      *out++ = d_invfft->get_outbuf()[j];
-      j += decimation();
-    }
-    dec_ctr = (j - d_nsamples);
-
-    // stash the tail
-    memcpy(&d_tail[0], d_invfft->get_outbuf() + d_nsamples,
-	   tailsize() * sizeof(float));
-  }
-
-  assert((out - (float *) output_items[0]) == noutput_items);
-  assert(dec_ctr == 0);
+  //assert((out - (float *) output_items[0]) == noutput_items);
 
   return noutput_items;
 }
