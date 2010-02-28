@@ -20,5 +20,3 @@
 # 
 
 SUBDIRS = rbf
-
-include Makefile.extra
