@@ -46,11 +46,32 @@ class gri_fft_filter_fff
   int tailsize() const { return d_ntaps - 1; }
   
  public:
+  /*!
+   * \brief Construct a FFT filter for float vectors with the given taps and decimation rate.
+   *
+   * This is the basic implementation for performing FFT filter for fast convolution
+   * in other blocks for floating point vectors (such as gr_fft_filter_fff).
+   * \param decimation The decimation rate of the filter (int)
+   * \param taps       The filter taps (float)
+   */
   gri_fft_filter_fff (int decimation, const std::vector<float> &taps);
   ~gri_fft_filter_fff ();
 
+  /*!
+   * \brief Set new taps for the filter.
+   *
+   * Sets new taps and resets the class properties to handle different sizes
+   * \param taps       The filter taps (float)
+   */
   int set_taps (const std::vector<float> &taps);
   
+  /*!
+   * \brief Perform the filter operation
+   *
+   * \param nitems  The number of items to produce
+   * \param input   The input vector to be filtered
+   * \param output  The result of the filter operation
+   */
   int filter (int nitems, const float *input, float *output);
 
 };

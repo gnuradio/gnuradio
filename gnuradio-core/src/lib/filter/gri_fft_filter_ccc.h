@@ -28,6 +28,10 @@
 
 class gri_fft_complex;
 
+/*!
+ * \brief Fast FFT filter with gr_complex input, gr_complex output and gr_complex taps
+ * \ingroup filter_blk
+ */
 class gri_fft_filter_ccc
 {
  private:
@@ -45,11 +49,32 @@ class gri_fft_filter_ccc
   int tailsize() const { return d_ntaps - 1; }
   
  public:
+  /*!
+   * \brief Construct an FFT filter for complex vectors with the given taps and decimation rate.
+   *
+   * This is the basic implementation for performing FFT filter for fast convolution
+   * in other blocks for complex vectors (such as gr_fft_filter_ccc).
+   * \param decimation The decimation rate of the filter (int)
+   * \param taps       The filter taps (complex)
+   */
   gri_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
   ~gri_fft_filter_ccc ();
 
+  /*!
+   * \brief Set new taps for the filter.
+   *
+   * Sets new taps and resets the class properties to handle different sizes
+   * \param taps       The filter taps (complex)
+   */
   int set_taps (const std::vector<gr_complex> &taps);
   
+  /*!
+   * \brief Perform the filter operation
+   *
+   * \param nitems  The number of items to produce
+   * \param input   The input vector to be filtered
+   * \param output  The result of the filter operation
+   */
   int filter (int nitems, const gr_complex *input, gr_complex *output);
 
 };
