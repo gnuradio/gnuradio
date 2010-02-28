@@ -184,7 +184,8 @@ libfilter_la_common_SOURCES = 		\
 	$(GENERATED_CC)			\
 	gr_adaptive_fir_ccf.cc		\
 	gr_cma_equalizer_cc.cc		\
-	gri_fft_filter.cc		\
+	gri_fft_filter_fff.cc		\
+	gri_fft_filter_ccc.cc		\
 	gr_fft_filter_ccc.cc		\
 	gr_fft_filter_fff.cc		\
 	gr_goertzel_fc.cc		\
@@ -260,7 +261,8 @@ grinclude_HEADERS = 			\
 	gr_altivec.h			\
 	gr_cma_equalizer_cc.h		\
 	gr_cpu.h			\
-	gri_fft_filter.h			\
+	gri_fft_filter_fff.h		\
+	gri_fft_filter_ccc.h		\
 	gr_fft_filter_ccc.h		\
 	gr_fft_filter_fff.h		\
 	gr_filter_delay_fc.h		\
