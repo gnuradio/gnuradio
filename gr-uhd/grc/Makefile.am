@@ -20,3 +20,8 @@
 # 
 
 include $(top_srcdir)/Makefile.common
+
+grcblocksdir = $(grc_blocksdir)
+
+dist_grcblocks_DATA = \
+	uhd_simple_source.xml

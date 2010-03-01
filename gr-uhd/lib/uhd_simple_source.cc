@@ -22,17 +22,19 @@
 
 #include <uhd_simple_source.h>
 #include <gr_io_signature.h>
+#include <boost/thread.hpp>
 #include <stdexcept>
+#include "utils.h"
 
 /***********************************************************************
  * Helper Functions
  **********************************************************************/
-static gr_io_signature_sptr make_io_sig(const std::string &type){
+static size_t get_size(const std::string &type){
     if(type == "32fc"){
-        return gr_make_io_signature(1, 1, sizeof(std::complex<float>));
+        return sizeof(std::complex<float>);
     }
     if(type == "16sc"){
-        return gr_make_io_signature(1, 1, sizeof(std::complex<short>));
+        return sizeof(std::complex<short>);
     }
     throw std::runtime_error("unknown type");
 }
@@ -41,11 +43,11 @@ static gr_io_signature_sptr make_io_sig(const std::string &type){
  * Make UHD Source
  **********************************************************************/
 boost::shared_ptr<uhd_simple_source> uhd_make_simple_source(
-    const uhd::device_addr_t &addr,
+    const std::string &args,
     const std::string &type
 ){
     return boost::shared_ptr<uhd_simple_source>(
-        new uhd_simple_source(addr, type)
+        new uhd_simple_source(args_to_device_addr(args), type)
     );
 }
 
@@ -58,14 +60,27 @@ uhd_simple_source::uhd_simple_source(
 ) : gr_sync_block(
     "uhd source",
     gr_make_io_signature(0, 0, 0),
-    make_io_sig(type)
+    gr_make_io_signature(1, 1, get_size(type))
 ){
     _type = type;
     _dev = uhd::device::make(addr);
+    _sizeof_samp = get_size(type);
+
+    set_streaming(true);
 }
 
 uhd_simple_source::~uhd_simple_source(void){
-    /* NOP */
+    set_streaming(false);
+}
+
+/***********************************************************************
+ * DDC Control
+ **********************************************************************/
+void uhd_simple_source::set_streaming(bool enb){
+    wax::obj ddc = (*_dev)
+        [uhd::DEVICE_PROP_MBOARD]
+        [uhd::named_prop_t(uhd::MBOARD_PROP_RX_DSP, "ddc0")];
+    ddc[std::string("enabled")] = enb;
 }
 
 /***********************************************************************
@@ -76,6 +91,31 @@ int uhd_simple_source::work(
     gr_vector_const_void_star &input_items,
     gr_vector_void_star &output_items
 ){
+
+    size_t total_items_read = 0;
+    size_t count = 0;
     uhd::metadata_t metadata;
-    return _dev->recv(boost::asio::buffer(output_items[0], noutput_items), metadata, _type);
+    while(total_items_read == 0 or total_items_read + 1500/_sizeof_samp < size_t(noutput_items)){
+        size_t items_read = _dev->recv(
+            boost::asio::buffer(
+                (uint8_t *)output_items[0]+(total_items_read*_sizeof_samp),
+                (noutput_items-total_items_read)*_sizeof_samp
+            ), metadata, _type
+        );
+
+        //record items read and recv again
+        if (items_read > 0){
+            total_items_read += items_read;
+            continue;
+        }
+
+        //if we have read at least once, but not this time, get out
+        if (total_items_read > 0) break;
+
+        //the timeout part
+        boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+        count++; if (count > 50) break;
+    }
+    
+    return total_items_read;
 }

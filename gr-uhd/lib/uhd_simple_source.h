@@ -29,7 +29,7 @@
 class uhd_simple_source;
 
 boost::shared_ptr<uhd_simple_source>
-uhd_make_simple_source(const uhd::device_addr_t &addr, const std::string &type);
+uhd_make_simple_source(const std::string &args, const std::string &type);
 
 class uhd_simple_source : public gr_sync_block{
 public:
@@ -43,8 +43,11 @@ public:
     );
 
 protected:
+    void set_streaming(bool enb);
+
     uhd::device::sptr _dev;
     std::string _type;
+    size_t _sizeof_samp;
 };
 
 #endif /* INCLUDED_UHD_SIMPLE_SOURCE_H */
