@@ -399,5 +399,6 @@ db_set_gain(struct db_base *db, u2_fxpt_gain_t gain)
 bool
 db_set_antenna(struct db_base *db, int ant)
 {
+  if (db->set_antenna == 0) return false;
   return db->set_antenna(db, ant);
 }

@@ -97,6 +97,7 @@ struct db_tvrx1 db_tvrx1 = {
   .base.atr_rxval = 0,
   // .base.atr_tx_delay =
   // .base.atr_rx_delay =
+  .base.set_antenna = 0,
   .common.first_if = U2_DOUBLE_TO_FXPT_FREQ(43.75e6),
   .common.second_if = U2_DOUBLE_TO_FXPT_FREQ(5.75e6),
 };
@@ -125,6 +126,7 @@ struct db_tvrx2 db_tvrx2 = {
   .base.atr_rxval = 0,
   // .base.atr_tx_delay =
   // .base.atr_rx_delay =
+  .base.set_antenna = 0,
   .common.first_if = U2_DOUBLE_TO_FXPT_FREQ(44e6),
   .common.second_if = U2_DOUBLE_TO_FXPT_FREQ(56e6),	// Fs - 44e6
 };
@@ -153,6 +155,7 @@ struct db_tvrx3 db_tvrx3 = {
   .base.atr_rxval = 0,
   // .base.atr_tx_delay =
   // .base.atr_rx_delay =
+  .base.set_antenna = 0,
   .common.first_if = U2_DOUBLE_TO_FXPT_FREQ(44e6),
   .common.second_if = U2_DOUBLE_TO_FXPT_FREQ(56e6),	// Fs - 44e6
 };
