@@ -92,10 +92,12 @@ int uhd_simple_source::work(
     gr_vector_void_star &output_items
 ){
 
+    const size_t max_samples = wax::cast<size_t>((*_dev)[uhd::DEVICE_PROP_MAX_RX_SAMPLES]);
+
     size_t total_items_read = 0;
     size_t count = 0;
     uhd::metadata_t metadata;
-    while(total_items_read == 0 or total_items_read + 1500/_sizeof_samp < size_t(noutput_items)){
+    while(total_items_read == 0 or total_items_read + max_samples < size_t(noutput_items)){
         size_t items_read = _dev->recv(
             boost::asio::buffer(
                 (uint8_t *)output_items[0]+(total_items_read*_sizeof_samp),
@@ -114,7 +116,7 @@ int uhd_simple_source::work(
 
         //the timeout part
         boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-        count++; if (count > 50) break;
+        if (++count > 50) break;
     }
     
     return total_items_read;

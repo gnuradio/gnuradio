@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## UHD Simple Source
+###################################################
+ -->
+<block>
+	<name>UHD Simple Source</name>
+	<key>uhd_simple_source</key>
+	<category>UHD</category>
+	<import>from gnuradio import uhd</import>
+	<make>uhd.simple_source($args, "$type.type")</make>
+	<param>
+		<name>Output Type</name>
+		<key>type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>type:32fc</opt>
+			<opt>vlen:1</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>type:16sc</opt>
+			<opt>vlen:2</opt>
+		</option>
+	</param>
+	<param>
+		<name>Args</name>
+		<key>args</key>
+		<value></value>
+		<type>string</type>
+	</param>
+	<source>
+		<name>out</name>
+		<type>$type</type>
+		<vlen>$type.vlen</vlen>
+	</source>
+	<doc>
+	</doc>
+</block>
