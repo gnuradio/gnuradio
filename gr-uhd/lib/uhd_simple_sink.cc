@@ -20,91 +20,68 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <uhd_simple_source.h>
+#include <uhd_simple_sink.h>
 #include <gr_io_signature.h>
 #include <boost/thread.hpp>
 #include <stdexcept>
 #include "utils.h"
 
 /***********************************************************************
- * Make UHD Source
+ * Make UHD Sink
  **********************************************************************/
-boost::shared_ptr<uhd_simple_source> uhd_make_simple_source(
+boost::shared_ptr<uhd_simple_sink> uhd_make_simple_sink(
     const std::string &args,
     const std::string &type
 ){
-    return boost::shared_ptr<uhd_simple_source>(
-        new uhd_simple_source(args_to_device_addr(args), type)
+    return boost::shared_ptr<uhd_simple_sink>(
+        new uhd_simple_sink(args_to_device_addr(args), type)
     );
 }
 
 /***********************************************************************
- * UHD Source
+ * UHD Sink
  **********************************************************************/
-uhd_simple_source::uhd_simple_source(
+uhd_simple_sink::uhd_simple_sink(
     const uhd::device_addr_t &addr,
     const std::string &type
 ) : gr_sync_block(
-    "uhd source",
-    gr_make_io_signature(0, 0, 0),
-    gr_make_io_signature(1, 1, get_size(type))
+    "uhd sink",
+    gr_make_io_signature(1, 1, get_size(type)),
+    gr_make_io_signature(0, 0, 0)
 ){
     _type = type;
     _dev = uhd::device::make(addr);
     _sizeof_samp = get_size(type);
-
-    set_streaming(true);
 }
 
-uhd_simple_source::~uhd_simple_source(void){
-    set_streaming(false);
-}
-
-/***********************************************************************
- * DDC Control
- **********************************************************************/
-void uhd_simple_source::set_streaming(bool enb){
-    wax::obj ddc = (*_dev)
-        [uhd::DEVICE_PROP_MBOARD]
-        [uhd::named_prop_t(uhd::MBOARD_PROP_RX_DSP, "ddc0")];
-    ddc[std::string("enabled")] = enb;
+uhd_simple_sink::~uhd_simple_sink(void){
+    //NOP
 }
 
 /***********************************************************************
  * Work
  **********************************************************************/
-int uhd_simple_source::work(
+int uhd_simple_sink::work(
     int noutput_items,
     gr_vector_const_void_star &input_items,
     gr_vector_void_star &output_items
 ){
 
-    const size_t max_samples = wax::cast<size_t>((*_dev)[uhd::DEVICE_PROP_MAX_RX_SAMPLES]);
-
-    size_t total_items_read = 0;
-    size_t count = 50;
+    const size_t max_samples = wax::cast<size_t>((*_dev)[uhd::DEVICE_PROP_MAX_TX_SAMPLES]);
+    size_t total_items_sent = 0;
     uhd::metadata_t metadata;
-    while(total_items_read < size_t(noutput_items)){
-        size_t items_read = _dev->recv(
+    metadata.start_of_burst = true;
+
+    //handles fragmentation
+    while(total_items_sent < size_t(noutput_items)){
+        size_t items_sent = _dev->send(
             boost::asio::buffer(
-                (uint8_t *)output_items[0]+(total_items_read*_sizeof_samp),
-                (noutput_items-total_items_read)*_sizeof_samp
+                (uint8_t *)input_items[0]+(total_items_sent*_sizeof_samp),
+                std::min(max_samples, noutput_items-total_items_sent)*_sizeof_samp
             ), metadata, _type
         );
-
-        //record items read and recv again
-        if (items_read > 0){
-            total_items_read += items_read;
-            continue;
-        }
-
-        //if we have read at least once, but not this time, get out
-        if (total_items_read > 0) break;
-
-        //the timeout part
-        boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-        if (--count == 0) break;
+        total_items_sent += items_sent;
     }
 
-    return total_items_read;
+    return noutput_items;
 }

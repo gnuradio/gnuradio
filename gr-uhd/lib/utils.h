@@ -27,4 +27,6 @@
 
 uhd::device_addr_t args_to_device_addr(const std::string &args);
 
+size_t get_size(const std::string &type);
+
 #endif /* INCLUDED_NOINST_UTILS_H */

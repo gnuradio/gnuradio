@@ -20,15 +20,33 @@
  * Boston, MA 02110-1301, USA.
  */
 
-%include "gnuradio.i"
+#ifndef INCLUDED_UHD_SIMPLE_SINK_H
+#define INCLUDED_UHD_SIMPLE_SINK_H
 
-%{
-#include <uhd_simple_source.h>
-#include <uhd_simple_sink.h>
-%}
+#include <gr_sync_block.h>
+#include <uhd/device.hpp>
 
-GR_SWIG_BLOCK_MAGIC(uhd,simple_source)
-%include <uhd_simple_source.h>
+class uhd_simple_sink;
 
-GR_SWIG_BLOCK_MAGIC(uhd,simple_sink)
-%include <uhd_simple_sink.h>
+boost::shared_ptr<uhd_simple_sink>
+uhd_make_simple_sink(const std::string &args, const std::string &type);
+
+class uhd_simple_sink : public gr_sync_block{
+public:
+    uhd_simple_sink(const uhd::device_addr_t &addr, const std::string &type);
+    ~uhd_simple_sink(void);
+
+    int work(
+        int noutput_items,
+        gr_vector_const_void_star &input_items,
+        gr_vector_void_star &output_items
+    );
+
+protected:
+
+    uhd::device::sptr _dev;
+    std::string _type;
+    size_t _sizeof_samp;
+};
+
+#endif /* INCLUDED_UHD_SIMPLE_SINK_H */

@@ -30,14 +30,16 @@ lib_LTLIBRARIES = libgnuradio-uhd.la
 
 libgnuradio_uhd_la_SOURCES = \
 	utils.cc \
-	uhd_simple_source.cc
+	uhd_simple_source.cc \
+	uhd_simple_sink.cc
 
 libgnuradio_uhd_la_LIBADD = \
 	$(GNURADIO_CORE_LA) \
 	$(UHD_LIBS)
 
 grinclude_HEADERS = \
-	uhd_simple_source.h
+	uhd_simple_source.h \
+	uhd_simple_sink.h
 
 noinst_HEADERS = \
 	utils.h

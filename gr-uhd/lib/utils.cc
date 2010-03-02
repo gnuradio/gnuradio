@@ -24,6 +24,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/foreach.hpp>
+#include <complex>
 
 static std::string trim(const std::string &in){
     return boost::algorithm::trim_copy(in);
@@ -46,4 +47,14 @@ uhd::device_addr_t args_to_device_addr(const std::string &args){
     }
 
     return addr;
+}
+
+size_t get_size(const std::string &type){
+    if(type == "32fc"){
+        return sizeof(std::complex<float>);
+    }
+    if(type == "16sc"){
+        return sizeof(std::complex<short>);
+    }
+    throw std::runtime_error("unknown type");
 }
