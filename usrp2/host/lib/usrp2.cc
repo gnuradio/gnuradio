@@ -170,6 +170,11 @@ namespace usrp2 {
   // Receive
 
   bool
+  usrp2::set_rx_antenna(int ant){
+    return d_impl->set_rx_antenna(ant);
+  }
+
+  bool
   usrp2::set_rx_gain(double gain)
   {
     return d_impl->set_rx_gain(gain);
@@ -278,6 +283,11 @@ namespace usrp2 {
   }
 
   // Transmit
+
+  bool
+  usrp2::set_tx_antenna(int ant){
+    return d_impl->set_tx_antenna(ant);
+  }
 
   bool
   usrp2::set_tx_gain(double gain)

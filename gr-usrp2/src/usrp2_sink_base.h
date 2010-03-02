@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -39,6 +39,11 @@ protected:
 
 public:
   ~usrp2_sink_base();
+
+  /*!
+   * \brief Set antenna
+   */
+  bool set_antenna(int ant);
 
   /*!
    * \brief Set transmitter gain

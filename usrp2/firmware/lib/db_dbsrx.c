@@ -103,6 +103,7 @@ struct db_dbsrx db_dbsrx = {
   .common.d_adl = 0,
   .common.d_gc2 = 31,
   .common.d_diag = 0,
+  .base.set_antenna = 0,
 };
 
 bool

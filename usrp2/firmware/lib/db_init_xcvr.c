@@ -35,16 +35,16 @@ extern struct db_base db_basic_tx;
 extern struct db_base db_basic_rx;
 extern struct db_base db_lf_tx;
 extern struct db_base db_lf_rx;
-extern struct db_base db_wbxng_rx;
-extern struct db_base db_wbxng_tx;
+extern struct db_base db_xcvr2450_tx;
+extern struct db_base db_xcvr2450_rx;
 
 struct db_base *all_dboards[] = {
   &db_basic_tx,
   &db_basic_rx,
   &db_lf_tx,
   &db_lf_rx,
-  &db_wbxng_rx,
-  &db_wbxng_tx,
+  &db_xcvr2450_rx,
+  &db_xcvr2450_tx,
   0
 };
 

@@ -115,6 +115,11 @@ namespace usrp2 {
      */
 
     /*!
+     * Set the rx antenna
+     */
+    bool set_rx_antenna(int ant);
+
+    /*!
      * Set receiver gain
      * \param gain in dB (more or less)
      */
@@ -225,6 +230,11 @@ namespace usrp2 {
      * Tx configuration and control
      * ----------------------------------------------------------------
      */
+
+    /*!
+     * Set the tx antenna
+     */
+    bool set_tx_antenna(int ant);
 
     /*!
      * Set transmitter gain

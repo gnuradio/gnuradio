@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -44,6 +44,12 @@ usrp2_sink_base::usrp2_sink_base(const char *name,
 usrp2_sink_base::~usrp2_sink_base ()
 {
   // NOP
+}
+
+bool
+usrp2_sink_base::set_antenna(int ant)
+{
+  return d_u2->set_tx_antenna(ant);
 }
 
 bool

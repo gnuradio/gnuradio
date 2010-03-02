@@ -63,6 +63,7 @@ struct db_base {
   bool	(*set_freq)(struct db_base *, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc);
   bool	(*set_gain)(struct db_base *, u2_fxpt_gain_t gain);
   bool	(*set_tx_enable)(struct db_base *, bool on);
+  bool	(*set_antenna)(struct db_base *, int ant);
 };
 
 
