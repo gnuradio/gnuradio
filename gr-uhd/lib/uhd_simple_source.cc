@@ -53,7 +53,7 @@ uhd_simple_source::uhd_simple_source(
     _dev = uhd::device::make(addr);
     _sizeof_samp = get_size(type);
 
-    set_streaming(true);
+    set_streaming(false);
 }
 
 uhd_simple_source::~uhd_simple_source(void){
@@ -68,6 +68,7 @@ void uhd_simple_source::set_streaming(bool enb){
         [uhd::DEVICE_PROP_MBOARD]
         [uhd::named_prop_t(uhd::MBOARD_PROP_RX_DSP, "ddc0")];
     ddc[std::string("enabled")] = enb;
+    _is_streaming = enb;
 }
 
 /***********************************************************************
@@ -78,12 +79,16 @@ int uhd_simple_source::work(
     gr_vector_const_void_star &input_items,
     gr_vector_void_star &output_items
 ){
-
-    const size_t max_samples = wax::cast<size_t>((*_dev)[uhd::DEVICE_PROP_MAX_RX_SAMPLES]);
+    //conditionally start streaming in the work call
+    //this prevents streaming before the runtime is ready
+    if (not _is_streaming) set_streaming(true);
 
     size_t total_items_read = 0;
-    size_t count = 50;
-    uhd::metadata_t metadata;
+    size_t timeout_count = 50;
+    uhd::rx_metadata_t metadata;
+
+    //call until the output items are all filled
+    //or an exit condition below is encountered
     while(total_items_read < size_t(noutput_items)){
         size_t items_read = _dev->recv(
             boost::asio::buffer(
@@ -99,11 +104,13 @@ int uhd_simple_source::work(
         }
 
         //if we have read at least once, but not this time, get out
-        if (total_items_read > 0) break;
+        //  commented out behaviour: I believe that it would be better to
+        //  fill the buffer entirely to mimimize scheduler context switching
+        //if (total_items_read > 0) break;
 
         //the timeout part
         boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-        if (--count == 0) break;
+        if (--timeout_count == 0) break;
     }
 
     return total_items_read;

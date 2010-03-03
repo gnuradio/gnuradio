@@ -44,6 +44,7 @@ public:
 
 protected:
     void set_streaming(bool enb);
+    bool _is_streaming; //shadow for the streaming status
 
     uhd::device::sptr _dev;
     std::string _type;

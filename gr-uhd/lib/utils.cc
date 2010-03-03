@@ -20,7 +20,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "utils.h"
+#include "utils.h" //local include
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/foreach.hpp>
@@ -54,7 +54,7 @@ size_t get_size(const std::string &type){
         return sizeof(std::complex<float>);
     }
     if(type == "16sc"){
-        return sizeof(std::complex<short>);
+        return sizeof(std::complex<int16_t>);
     }
     throw std::runtime_error("unknown type");
 }

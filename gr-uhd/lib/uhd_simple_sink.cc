@@ -66,18 +66,16 @@ int uhd_simple_sink::work(
     gr_vector_const_void_star &input_items,
     gr_vector_void_star &output_items
 ){
-
-    const size_t max_samples = wax::cast<size_t>((*_dev)[uhd::DEVICE_PROP_MAX_TX_SAMPLES]);
     size_t total_items_sent = 0;
-    uhd::metadata_t metadata;
+    uhd::tx_metadata_t metadata;
     metadata.start_of_burst = true;
 
-    //handles fragmentation
+    //call until the input items are all sent
     while(total_items_sent < size_t(noutput_items)){
         size_t items_sent = _dev->send(
             boost::asio::buffer(
                 (uint8_t *)input_items[0]+(total_items_sent*_sizeof_samp),
-                std::min(max_samples, noutput_items-total_items_sent)*_sizeof_samp
+                (noutput_items-total_items_sent)*_sizeof_samp
             ), metadata, _type
         );
         total_items_sent += items_sent;
