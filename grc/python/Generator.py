@@ -48,7 +48,7 @@ class Generator(object):
 			dirname = os.path.dirname(file_path)
 			#handle the case where the directory is read-only
 			#in this case, use the system's temp directory
-			if not os.access('dirname', os.W_OK):
+			if not os.access(dirname, os.W_OK):
 				dirname = tempfile.gettempdir()
 		filename = self._flow_graph.get_option('id') + '.py'
 		self._file_path = os.path.join(dirname, filename)
