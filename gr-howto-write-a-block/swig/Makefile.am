@@ -47,7 +47,7 @@ BUILT_SOURCES = $(swig_built_sources)
 no_dist_files = $(swig_built_sources)
 
 # additional SWIG files to be installed
-swiginclude_headers = \
+howto_swiginclude_headers = \
 	howto_square_ff.i \
 	howto_square2_ff.i
 
