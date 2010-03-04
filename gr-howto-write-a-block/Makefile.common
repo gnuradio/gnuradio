@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 #
-# Copyright 2004,2006,2009 Free Software Foundation, Inc.
+# Copyright 2004,2006,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,6 +20,9 @@
 # Boston, MA 02110-1301, USA.
 # 
 
+# The name of this "out-of-tree" module
+modname = howto
+
 # these flags are used when compiling non-SWIG-wrapper files
 # when going in to non-SWIG libraries
 AM_CXXFLAGS = @autoconf_default_CXXFLAGS@
@@ -34,21 +37,22 @@ AM_CPPFLAGS = \
 # these are used by both SWIG and CXX
 STD_DEFINES_AND_INCLUDES = \
 	$(DEFINES) \
+	-I$(abs_top_srcdir)/include \
 	-I$(GNURADIO_CORE_INCLUDEDIR) \
 	-I$(GNURADIO_CORE_INCLUDEDIR)/swig
 
 # includes
-grincludedir = $(includedir)/gnuradio
+modincludedir = $(includedir)/$(modname)
 
 # swig includes 
-swigincludedir = $(grincludedir)/swig
+swigincludedir = $(modincludedir)/swig
 
 # Install this stuff in the appropriate subdirectory
 # This usually ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
+#   ${prefix}/lib/python${python_version}/site-packages/$(modname)
 
-grpythondir = $(pythondir)/gnuradio
-grpyexecdir = $(pyexecdir)/gnuradio
+modpythondir = $(pythondir)/$(modname)
+modpyexecdir = $(pyexecdir)/$(modname)
 
 # Data directory for grc block wrappers
 grc_blocksdir = $(prefix)/share/gnuradio/grc/blocks
