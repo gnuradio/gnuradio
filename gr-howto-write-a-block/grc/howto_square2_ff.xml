@@ -3,7 +3,7 @@
   <name>Square2</name>
   <key>howto_square2_ff</key>
   <category>HOWTO</category>
-  <import>from gnuradio import howto</import>
+  <import>import howto</import>
   <make>howto.square2_ff()</make>
 
   <sink>

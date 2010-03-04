@@ -1,5 +1,5 @@
 #
-# Copyright 2004 Free Software Foundation, Inc.
+# Copyright 2004,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -21,12 +21,10 @@
 
 include $(top_srcdir)/Makefile.common
 
-ourpythondir = $(grpythondir)/howto
-
 EXTRA_DIST = run_tests.in
 TESTS = run_tests
 
-ourpython_PYTHON = \
+modpython_PYTHON = \
 	__init__.py
 
 noinst_PYTHON = \
