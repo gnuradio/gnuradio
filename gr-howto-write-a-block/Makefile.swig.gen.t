@@ -25,9 +25,9 @@
 ## Default install locations for these files:
 ##
 ## Default location for the Python directory is:
-##  ${prefix}/lib/python${python_version}/site-packages/[category]/@NAME@
+##  ${prefix}/lib/python${python_version}/site-packages/@NAME@
 ## Default location for the Python exec directory is:
-##  ${exec_prefix}/lib/python${python_version}/site-packages/[category]/@NAME@
+##  ${exec_prefix}/lib/python${python_version}/site-packages/@NAME@
 ##
 ## The following can be overloaded to change the install location, but
 ## this has to be done in the including Makefile.am -before-
