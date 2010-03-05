@@ -22,7 +22,6 @@
 
 #include <uhd_simple_source.h>
 #include <gr_io_signature.h>
-#include <boost/thread.hpp>
 #include <stdexcept>
 #include "utils.h"
 
@@ -84,7 +83,6 @@ int uhd_simple_source::work(
     if (not _is_streaming) set_streaming(true);
 
     size_t total_items_read = 0;
-    size_t timeout_count = 50;
     uhd::rx_metadata_t metadata;
 
     //call until the output items are all filled
@@ -96,21 +94,10 @@ int uhd_simple_source::work(
                 (noutput_items-total_items_read)*_sizeof_samp
             ), metadata, _type
         );
+        total_items_read += items_read;
 
-        //record items read and recv again
-        if (items_read > 0){
-            total_items_read += items_read;
-            continue;
-        }
-
-        //if we have read at least once, but not this time, get out
-        //  commented out behaviour: I believe that it would be better to
-        //  fill the buffer entirely to mimimize scheduler context switching
-        //if (total_items_read > 0) break;
-
-        //the timeout part
-        boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-        if (--timeout_count == 0) break;
+        //we timed out, get out of here
+        if (items_read == 0) break;
     }
 
     return total_items_read;
