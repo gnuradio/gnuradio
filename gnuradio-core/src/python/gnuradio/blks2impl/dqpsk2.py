@@ -38,7 +38,7 @@ _def_gray_code = True
 _def_verbose = False
 _def_log = False
 
-_def_freq_alpha = 4e-3
+_def_freq_alpha = 0.010
 _def_costas_alpha = 0.01
 _def_timing_alpha = 0.100
 _def_timing_beta = 0.010

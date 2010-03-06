@@ -38,7 +38,7 @@ _def_gray_code = True
 _def_verbose = False
 _def_log = False
 
-_def_freq_alpha = 4e-3
+_def_freq_alpha = 0.010
 _def_costas_alpha = 0.1
 _def_timing_alpha = 0.100
 _def_timing_beta = 0.010
@@ -226,7 +226,7 @@ class dbpsk2_demod(gr.hier_block2):
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
         self._freq_alpha = freq_alpha
-        self._freq_beta = 0.25*self._freq_alpha**2
+        self._freq_beta = 0.10*self._freq_alpha
         self._costas_alpha = costas_alpha
         self._timing_alpha = timing_alpha
         self._timing_beta = _def_timing_beta
@@ -308,11 +308,11 @@ class dbpsk2_demod(gr.hier_block2):
         print "bits per symbol:     %d"   % self.bits_per_symbol()
         print "Gray code:           %s"   % self._gray_code
         print "RRC roll-off factor: %.2f" % self._excess_bw
-        print "FLL gain:            %.2f" % self._freq_alpha
-        print "Costas Loop alpha:   %.2f" % self._costas_alpha
-        print "Costas Loop beta:    %.2f" % self._costas_beta
-        print "Timing alpha gain:   %.2f" % self._timing_alpha
-        print "Timing beta gain:    %.2f" % self._timing_beta
+        print "FLL gain:            %.2e" % self._freq_alpha
+        print "Costas Loop alpha:   %.2e" % self._costas_alpha
+        print "Costas Loop beta:    %.2e" % self._costas_beta
+        print "Timing alpha gain:   %.2e" % self._timing_alpha
+        print "Timing beta gain:    %.2e" % self._timing_beta
         print "Timing max dev:      %.2f" % self._timing_max_dev
 
     def _setup_logging(self):
