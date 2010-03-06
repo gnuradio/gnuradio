@@ -53,7 +53,7 @@ gr_fll_band_edge_cc_sptr gr_make_fll_band_edge_cc (float samps_per_sym, float ro
 }
 
 
-static int ios[] = {sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(float)};
+static int ios[] = {sizeof(gr_complex), sizeof(float), sizeof(float), sizeof(gr_complex)};
 static std::vector<int> iosig(ios, ios+sizeof(ios)/sizeof(int));
 gr_fll_band_edge_cc::gr_fll_band_edge_cc (float samps_per_sym, float rolloff,
 					  int filter_size, float alpha, float beta)
@@ -83,10 +83,11 @@ gr_fll_band_edge_cc::~gr_fll_band_edge_cc ()
 void
 gr_fll_band_edge_cc::set_alpha(float alpha) 
 { 
-  float eta = sqrt(2.0)/2.0;
-  float theta = alpha;
-  d_alpha = (4*eta*theta) / (1.0 + 2.0*eta*theta + theta*theta);
-  d_beta = (4*theta*theta) / (1.0 + 2.0*eta*theta + theta*theta);
+  //float eta = sqrt(2.0)/2.0;
+  //float theta = alpha;
+  //d_alpha = (4*eta*theta) / (1.0 + 2.0*eta*theta + theta*theta);
+  //d_beta = (4*theta*theta) / (1.0 + 2.0*eta*theta + theta*theta);
+  d_alpha = alpha;
 }
 
 void
@@ -160,11 +161,12 @@ gr_fll_band_edge_cc::work (int noutput_items,
   const gr_complex *in  = (const gr_complex *) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
 
-  float *frq, *phs, *err;
+  float *frq, *phs;
+  gr_complex *err;
   if(output_items.size() > 2) {
     frq = (float *) output_items[1];
     phs = (float *) output_items[2];
-    err = (float *) output_items[3];
+    err = (gr_complex *) output_items[3];
   }
 
   if (d_updated) {
@@ -174,16 +176,17 @@ gr_fll_band_edge_cc::work (int noutput_items,
 
   int i;
   gr_complex nco_out;
-  float out_upper, out_lower;
+  gr_complex out_upper, out_lower;
   float error;
+  float avg_k = 0.1;
   for(i = 0; i < noutput_items; i++) {
     nco_out = gr_expj(d_phase);
     out[i] = in[i] * nco_out;
 
-    out_upper = norm(d_filter_upper->filter(&out[i]));
-    out_lower = norm(d_filter_lower->filter(&out[i]));
-    error = out_lower - out_upper;
-    d_error = 0.01*error + 0.99*d_error;  // average error
+    out_upper = (d_filter_upper->filter(&out[i]));
+    out_lower = (d_filter_lower->filter(&out[i]));
+    error = -real((out_upper + out_lower) * conj(out_upper - out_lower));
+    d_error = avg_k*error + avg_k*d_error;  // average error
 
     d_freq = d_freq + d_beta * d_error;
     d_phase = d_phase + d_freq + d_alpha * d_error;
