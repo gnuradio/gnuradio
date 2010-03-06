@@ -223,6 +223,11 @@ class my_top_block(gr.top_block):
 
         self._noise_voltage = self.get_noise_voltage(self._snr_dB)
 
+        # With new interface, sps does not get set by default, but
+        # in the loopback, we don't recalculate it; so just force it here
+        if(options.samples_per_symbol == None):
+            options.samples_per_symbol = 2
+
         self.txpath = transmit_path(mod_class, options)
         self.throttle = gr.throttle(gr.sizeof_gr_complex, self.sample_rate())
         self.rxpath = receive_path(demod_class, rx_callback, options)
@@ -269,6 +274,7 @@ class my_top_block(gr.top_block):
                 self.phase_recov = self.rxpath.packet_receiver._demodulator.phase_recov
                 self.time_recov = self.rxpath.packet_receiver._demodulator.time_recov
                 self.freq_recov.set_alpha(self._gain_freq)
+                self.freq_recov.set_beta(self._gain_freq/10.0)
                 self.phase_recov.set_alpha(self._gain_phase)
                 self.phase_recov.set_beta(0.25*self._gain_phase*self._gain_phase)
                 self.time_recov.set_alpha(self._gain_clock)
@@ -367,6 +373,7 @@ class my_top_block(gr.top_block):
         self._gain_freq = gain_freq
         #self._gain_freq_beta = .25 * self._gain_freq * self._gain_freq
         self.rxpath.packet_receiver._demodulator.freq_recov.set_alpha(self._gain_freq)
+        self.rxpath.packet_receiver._demodulator.freq_recov.set_beta(self._gain_freq/10.0)
         #self.rxpath.packet_receiver._demodulator.freq_recov.set_beta(self._gain_fre_beta)
 
 
