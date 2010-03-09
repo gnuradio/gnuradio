@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009 Free Software Foundation, Inc.
+ * Copyright 2006,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -36,14 +36,14 @@ qa_pmt_prims::test_symbols()
   CPPUNIT_ASSERT(!pmt_is_symbol(PMT_F));
   CPPUNIT_ASSERT_THROW(pmt_symbol_to_string(PMT_F), pmt_wrong_type);
 
-  pmt_t sym1 = pmt_string_to_symbol("test");
+  pmt_t sym1 = mp("test");
   CPPUNIT_ASSERT(pmt_is_symbol(sym1));
   CPPUNIT_ASSERT_EQUAL(std::string("test"), pmt_symbol_to_string(sym1));
   CPPUNIT_ASSERT(pmt_is_true(sym1));
   CPPUNIT_ASSERT(!pmt_is_false(sym1));
 
-  pmt_t sym2 = pmt_string_to_symbol("foo");
-  pmt_t sym3 = pmt_string_to_symbol("test");
+  pmt_t sym2 = mp("foo");
+  pmt_t sym3 = mp("test");
   CPPUNIT_ASSERT_EQUAL(sym1, sym3);
   CPPUNIT_ASSERT(sym1 != sym2);
   CPPUNIT_ASSERT(sym1 == sym3);
@@ -56,7 +56,7 @@ qa_pmt_prims::test_symbols()
   for (int i = 0; i < N; i++){
     char buf[100];
     snprintf(buf, sizeof(buf), "test-%d", i);
-    v1[i] = pmt_string_to_symbol(buf);
+    v1[i] = mp(buf);
   }
 
   // confirm that they are all unique
@@ -68,7 +68,7 @@ qa_pmt_prims::test_symbols()
   for (int i = 0; i < N; i++){
     char buf[100];
     snprintf(buf, sizeof(buf), "test-%d", i);
-    v2[i] = pmt_string_to_symbol(buf);
+    v2[i] = mp(buf);
   }
 
   // confirm that we get the same ones back
@@ -79,7 +79,7 @@ qa_pmt_prims::test_symbols()
 void
 qa_pmt_prims::test_booleans()
 {
-  pmt_t sym = pmt_string_to_symbol("test");
+  pmt_t sym = mp("test");
   CPPUNIT_ASSERT(pmt_is_bool(PMT_T));
   CPPUNIT_ASSERT(pmt_is_bool(PMT_F));
   CPPUNIT_ASSERT(!pmt_is_bool(sym));
@@ -137,9 +137,9 @@ qa_pmt_prims::test_pairs()
 {
   CPPUNIT_ASSERT(pmt_is_null(PMT_NIL));
   CPPUNIT_ASSERT(!pmt_is_pair(PMT_NIL));
-  pmt_t s1 = pmt_string_to_symbol("s1");
-  pmt_t s2 = pmt_string_to_symbol("s2");
-  pmt_t s3 = pmt_string_to_symbol("s3");
+  pmt_t s1 = mp("s1");
+  pmt_t s2 = mp("s2");
+  pmt_t s3 = mp("s3");
 
 
   CPPUNIT_ASSERT_EQUAL((size_t)0, pmt_length(PMT_NIL));
@@ -174,9 +174,9 @@ qa_pmt_prims::test_vectors()
   static const size_t N = 3;
   pmt_t v1 = pmt_make_vector(N, PMT_NIL);
   CPPUNIT_ASSERT_EQUAL(N, pmt_length(v1));
-  pmt_t s0 = pmt_string_to_symbol("s0");
-  pmt_t s1 = pmt_string_to_symbol("s1");
-  pmt_t s2 = pmt_string_to_symbol("s2");
+  pmt_t s0 = mp("s0");
+  pmt_t s1 = mp("s1");
+  pmt_t s2 = mp("s2");
 
   pmt_vector_set(v1, 0, s0);
   pmt_vector_set(v1, 1, s1);
@@ -213,7 +213,7 @@ qa_pmt_prims::test_tuples()
   for (size_t i = 0; i < 10; i++){
     std::ostringstream os;
     os << "s" << i;
-    s[i] = pmt_string_to_symbol(os.str());
+    s[i] = mp(os.str());
     pmt_vector_set(v, i, s[i]);
   }
 
@@ -282,9 +282,9 @@ qa_pmt_prims::test_tuples()
 void
 qa_pmt_prims::test_equivalence()
 {
-  pmt_t s0 = pmt_string_to_symbol("s0");
-  pmt_t s1 = pmt_string_to_symbol("s1");
-  pmt_t s2 = pmt_string_to_symbol("s2");
+  pmt_t s0 = mp("s0");
+  pmt_t s1 = mp("s1");
+  pmt_t s2 = mp("s2");
   pmt_t list0 = pmt_cons(s0, pmt_cons(s1, pmt_cons(s2, PMT_NIL)));
   pmt_t list1 = pmt_cons(s0, pmt_cons(s1, pmt_cons(s2, PMT_NIL)));
   pmt_t i0 = pmt_from_long(42);
@@ -324,13 +324,13 @@ qa_pmt_prims::test_equivalence()
 void
 qa_pmt_prims::test_misc()
 {
-  pmt_t k0 = pmt_string_to_symbol("k0");
-  pmt_t k1 = pmt_string_to_symbol("k1");
-  pmt_t k2 = pmt_string_to_symbol("k2");
-  pmt_t k3 = pmt_string_to_symbol("k3");
-  pmt_t v0 = pmt_string_to_symbol("v0");
-  pmt_t v1 = pmt_string_to_symbol("v1");
-  pmt_t v2 = pmt_string_to_symbol("v2");
+  pmt_t k0 = mp("k0");
+  pmt_t k1 = mp("k1");
+  pmt_t k2 = mp("k2");
+  pmt_t k3 = mp("k3");
+  pmt_t v0 = mp("v0");
+  pmt_t v1 = mp("v1");
+  pmt_t v2 = mp("v2");
   pmt_t p0 = pmt_cons(k0, v0);
   pmt_t p1 = pmt_cons(k1, v1);
   pmt_t p2 = pmt_cons(k2, v2);
@@ -383,10 +383,10 @@ qa_pmt_prims::test_dict()
 void
 qa_pmt_prims::test_io()
 {
-  pmt_t k0 = pmt_string_to_symbol("k0");
-  pmt_t k1 = pmt_string_to_symbol("k1");
-  pmt_t k2 = pmt_string_to_symbol("k2");
-  pmt_t k3 = pmt_string_to_symbol("k3");
+  pmt_t k0 = mp("k0");
+  pmt_t k1 = mp("k1");
+  pmt_t k2 = mp("k2");
+  pmt_t k3 = mp("k3");
 
   CPPUNIT_ASSERT_EQUAL(std::string("k0"), pmt_write_string(k0));
 }
@@ -394,10 +394,10 @@ qa_pmt_prims::test_io()
 void
 qa_pmt_prims::test_lists()
 {
-  pmt_t s0 = pmt_intern("s0");
-  pmt_t s1 = pmt_intern("s1");
-  pmt_t s2 = pmt_intern("s2");
-  pmt_t s3 = pmt_intern("s3");
+  pmt_t s0 = mp("s0");
+  pmt_t s1 = mp("s1");
+  pmt_t s2 = mp("s2");
+  pmt_t s3 = mp("s3");
 
   pmt_t l1 = pmt_list4(s0, s1, s2, s3);
   pmt_t l2 = pmt_list3(s0, s1, s2);
@@ -468,7 +468,7 @@ qa_pmt_msg_accepter_nop::~qa_pmt_msg_accepter_nop(){}
 void
 qa_pmt_prims::test_msg_accepter()
 {
-  pmt_t sym = pmt_intern("my-symbol");
+  pmt_t sym = mp("my-symbol");
 
   boost::any a0;
   a0 = std::string("Hello!");
@@ -495,16 +495,16 @@ void
 qa_pmt_prims::test_serialize()
 {
   std::stringbuf sb;		// fake channel
-  pmt_t a = pmt_intern("a");
-  pmt_t b = pmt_intern("b");
-  pmt_t c = pmt_intern("c");
+  pmt_t a = mp("a");
+  pmt_t b = mp("b");
+  pmt_t c = mp("c");
 
   sb.str("");			// reset channel to empty
 
   // write stuff to channel
 
   pmt_serialize(PMT_NIL, sb);
-  pmt_serialize(pmt_intern("foobarvia"), sb);
+  pmt_serialize(mp("foobarvia"), sb);
   pmt_serialize(pmt_from_long(123456789), sb);
   pmt_serialize(pmt_from_long(-123456789), sb);
   pmt_serialize(pmt_cons(PMT_NIL, PMT_NIL), sb);
@@ -519,7 +519,7 @@ qa_pmt_prims::test_serialize()
   // read it back
 
   CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), PMT_NIL));
-  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), pmt_intern("foobarvia")));
+  CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), mp("foobarvia")));
   CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), pmt_from_long(123456789)));
   CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), pmt_from_long(-123456789)));
   CPPUNIT_ASSERT(pmt_equal(pmt_deserialize(sb), pmt_cons(PMT_NIL, PMT_NIL)));
@@ -542,9 +542,9 @@ qa_pmt_prims::test_serialize()
 void
 qa_pmt_prims::test_sets()
 {
-  pmt_t s1 = pmt_intern("s1");
-  pmt_t s2 = pmt_intern("s2");
-  pmt_t s3 = pmt_intern("s3");
+  pmt_t s1 = mp("s1");
+  pmt_t s2 = mp("s2");
+  pmt_t s3 = mp("s3");
 
   pmt_t l1 = pmt_list1(s1);
   pmt_t l2 = pmt_list2(s2,s3);
