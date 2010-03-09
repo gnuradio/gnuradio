@@ -351,29 +351,31 @@ qa_pmt_prims::test_dict()
   pmt_t dict = pmt_make_dict();
   CPPUNIT_ASSERT(pmt_is_dict(dict));
 
-  pmt_t k0 = pmt_string_to_symbol("k0");
-  pmt_t k1 = pmt_string_to_symbol("k1");
-  pmt_t k2 = pmt_string_to_symbol("k2");
-  pmt_t k3 = pmt_string_to_symbol("k3");
-  pmt_t v0 = pmt_string_to_symbol("v0");
-  pmt_t v1 = pmt_string_to_symbol("v1");
-  pmt_t v2 = pmt_string_to_symbol("v2");
-  pmt_t v3 = pmt_string_to_symbol("v3");
+  pmt_t k0 = mp("k0");
+  pmt_t k1 = mp("k1");
+  pmt_t k2 = mp("k2");
+  pmt_t k3 = mp("k3");
+  pmt_t v0 = mp("v0");
+  pmt_t v1 = mp("v1");
+  pmt_t v2 = mp("v2");
+  pmt_t v3 = mp("v3");
   pmt_t not_found = pmt_cons(PMT_NIL, PMT_NIL);
   
   CPPUNIT_ASSERT(!pmt_dict_has_key(dict, k0));
-  pmt_dict_set(dict, k0, v0);
+  dict = pmt_dict_add(dict, k0, v0);
   CPPUNIT_ASSERT(pmt_dict_has_key(dict, k0));
   CPPUNIT_ASSERT(pmt_eqv(pmt_dict_ref(dict, k0, not_found), v0));
   CPPUNIT_ASSERT(pmt_eqv(pmt_dict_ref(dict, k1, not_found), not_found));
-  pmt_dict_set(dict, k1, v1);
-  pmt_dict_set(dict, k2, v2);
+  dict = pmt_dict_add(dict, k1, v1);
+  dict = pmt_dict_add(dict, k2, v2);
   CPPUNIT_ASSERT(pmt_eqv(pmt_dict_ref(dict, k1, not_found), v1));
-  pmt_dict_set(dict, k1, v3);
+  dict = pmt_dict_add(dict, k1, v3);
   CPPUNIT_ASSERT(pmt_eqv(pmt_dict_ref(dict, k1, not_found), v3));
 
-  pmt_t keys = pmt_cons(k2, pmt_cons(k1, pmt_cons(k0, PMT_NIL)));
-  pmt_t vals = pmt_cons(v2, pmt_cons(v3, pmt_cons(v0, PMT_NIL)));
+  pmt_t keys = pmt_list3(k1, k2, k0);
+  pmt_t vals = pmt_list3(v3, v2, v0);
+  //std::cout << "pmt_dict_keys:   " << pmt_dict_keys(dict) << std::endl;
+  //std::cout << "pmt_dict_values: " << pmt_dict_values(dict) << std::endl;
   CPPUNIT_ASSERT(pmt_equal(keys, pmt_dict_keys(dict)));
   CPPUNIT_ASSERT(pmt_equal(vals, pmt_dict_values(dict)));
 }
