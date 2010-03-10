@@ -1,4 +1,4 @@
-# Copyright 2009 Free Software Foundation, Inc.
+# Copyright 2009, 2010 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -27,7 +27,7 @@ from gnuradio import gr
 class _dual_source(gr.hier_block2):
 	"""A dual usrp source of IO type short or complex."""
 
-	def __init__(self, which, rx_ant_a='RXA', rx_ant_b='RXA'):
+	def __init__(self, which, rx_ant_a='RXA', rx_ant_b='RXA', rx_source_a='A', rx_source_b='B'):
 		"""
 		USRP dual source contructor.
 		@param which the unit number
@@ -42,8 +42,8 @@ class _dual_source(gr.hier_block2):
 		)
 		#create usrp object
 		self._make_usrp(which=which, nchan=2)
-		subdev_spec_a = common.to_spec('A', rx_ant_a)
-		subdev_spec_b = common.to_spec('B', rx_ant_b)
+		subdev_spec_a = common.to_spec(rx_source_a, rx_ant_a)
+		subdev_spec_b = common.to_spec(rx_source_b, rx_ant_b)
 		self._get_u().set_mux(self._get_u().determine_rx_mux_value(subdev_spec_a, subdev_spec_b))
 		self._subdev_a = self._get_u().selected_subdev(subdev_spec_a)
 		self._subdev_b = self._get_u().selected_subdev(subdev_spec_b)
