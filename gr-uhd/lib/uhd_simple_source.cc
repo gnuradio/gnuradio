@@ -33,7 +33,7 @@ boost::shared_ptr<uhd_simple_source> uhd_make_simple_source(
     const std::string &type
 ){
     return boost::shared_ptr<uhd_simple_source>(
-        new uhd_simple_source(args_to_device_addr(args), type)
+        new uhd_simple_source(args, type)
     );
 }
 
@@ -41,7 +41,7 @@ boost::shared_ptr<uhd_simple_source> uhd_make_simple_source(
  * UHD Source
  **********************************************************************/
 uhd_simple_source::uhd_simple_source(
-    const uhd::device_addr_t &addr,
+    const std::string &args,
     const std::string &type
 ) : gr_sync_block(
     "uhd source",
@@ -49,25 +49,23 @@ uhd_simple_source::uhd_simple_source(
     gr_make_io_signature(1, 1, get_size(type))
 ){
     _type = type;
-    _dev = uhd::device::make(addr);
+    _dev = uhd::simple_device::make(args);
     _sizeof_samp = get_size(type);
 
-    set_streaming(false);
+    _dev->set_streaming(false);
+    _is_streaming = false;
 }
 
 uhd_simple_source::~uhd_simple_source(void){
-    set_streaming(false);
+    _dev->set_streaming(false);
 }
 
-/***********************************************************************
- * DDC Control
- **********************************************************************/
-void uhd_simple_source::set_streaming(bool enb){
-    wax::obj ddc = (*_dev)
-        [uhd::DEVICE_PROP_MBOARD]
-        [uhd::named_prop_t(uhd::MBOARD_PROP_RX_DSP, "ddc0")];
-    ddc[std::string("enabled")] = enb;
-    _is_streaming = enb;
+void uhd_simple_source::set_samp_rate(double rate){
+    return _dev->set_rx_rate(rate);
+}
+
+double uhd_simple_source::get_samp_rate(void){
+    return _dev->get_rx_rate();
 }
 
 /***********************************************************************
@@ -80,7 +78,10 @@ int uhd_simple_source::work(
 ){
     //conditionally start streaming in the work call
     //this prevents streaming before the runtime is ready
-    if (not _is_streaming) set_streaming(true);
+    if (not _is_streaming){
+        _dev->set_streaming(true);
+        _is_streaming = true;
+    }
 
     size_t total_items_read = 0;
     uhd::rx_metadata_t metadata;
@@ -88,7 +89,7 @@ int uhd_simple_source::work(
     //call until the output items are all filled
     //or an exit condition below is encountered
     while(total_items_read < size_t(noutput_items)){
-        size_t items_read = _dev->recv(
+        size_t items_read = _dev->get_device()->recv(
             boost::asio::buffer(
                 (uint8_t *)output_items[0]+(total_items_read*_sizeof_samp),
                 (noutput_items-total_items_read)*_sizeof_samp

@@ -23,9 +23,8 @@
 #ifndef INCLUDED_NOINST_UTILS_H
 #define INCLUDED_NOINST_UTILS_H
 
-#include <uhd/device_addr.hpp>
-
-uhd::device_addr_t args_to_device_addr(const std::string &args);
+#include <cstddef>
+#include <string>
 
 size_t get_size(const std::string &type);
 

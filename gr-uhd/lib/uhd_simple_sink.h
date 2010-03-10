@@ -24,7 +24,7 @@
 #define INCLUDED_UHD_SIMPLE_SINK_H
 
 #include <gr_sync_block.h>
-#include <uhd/device.hpp>
+#include <uhd/simple_device.hpp>
 
 class uhd_simple_sink;
 
@@ -33,8 +33,11 @@ uhd_make_simple_sink(const std::string &args, const std::string &type);
 
 class uhd_simple_sink : public gr_sync_block{
 public:
-    uhd_simple_sink(const uhd::device_addr_t &addr, const std::string &type);
+    uhd_simple_sink(const std::string &args, const std::string &type);
     ~uhd_simple_sink(void);
+
+    void set_samp_rate(double rate);
+    double get_samp_rate(void);
 
     int work(
         int noutput_items,
@@ -43,8 +46,7 @@ public:
     );
 
 protected:
-
-    uhd::device::sptr _dev;
+    uhd::simple_device::sptr _dev;
     std::string _type;
     size_t _sizeof_samp;
 };

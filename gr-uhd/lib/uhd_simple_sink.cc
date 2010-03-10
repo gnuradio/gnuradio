@@ -34,7 +34,7 @@ boost::shared_ptr<uhd_simple_sink> uhd_make_simple_sink(
     const std::string &type
 ){
     return boost::shared_ptr<uhd_simple_sink>(
-        new uhd_simple_sink(args_to_device_addr(args), type)
+        new uhd_simple_sink(args, type)
     );
 }
 
@@ -42,7 +42,7 @@ boost::shared_ptr<uhd_simple_sink> uhd_make_simple_sink(
  * UHD Sink
  **********************************************************************/
 uhd_simple_sink::uhd_simple_sink(
-    const uhd::device_addr_t &addr,
+    const std::string &args,
     const std::string &type
 ) : gr_sync_block(
     "uhd sink",
@@ -50,12 +50,20 @@ uhd_simple_sink::uhd_simple_sink(
     gr_make_io_signature(0, 0, 0)
 ){
     _type = type;
-    _dev = uhd::device::make(addr);
+    _dev = uhd::simple_device::make(args);
     _sizeof_samp = get_size(type);
 }
 
 uhd_simple_sink::~uhd_simple_sink(void){
     //NOP
+}
+
+void uhd_simple_sink::set_samp_rate(double rate){
+    return _dev->set_tx_rate(rate);
+}
+
+double uhd_simple_sink::get_samp_rate(void){
+    return _dev->get_tx_rate();
 }
 
 /***********************************************************************
@@ -72,7 +80,7 @@ int uhd_simple_sink::work(
 
     //call until the input items are all sent
     while(total_items_sent < size_t(noutput_items)){
-        size_t items_sent = _dev->send(
+        size_t items_sent = _dev->get_device()->send(
             boost::asio::buffer(
                 (uint8_t *)input_items[0]+(total_items_sent*_sizeof_samp),
                 (noutput_items-total_items_sent)*_sizeof_samp

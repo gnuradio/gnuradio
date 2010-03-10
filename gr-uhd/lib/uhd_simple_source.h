@@ -24,7 +24,7 @@
 #define INCLUDED_UHD_SIMPLE_SOURCE_H
 
 #include <gr_sync_block.h>
-#include <uhd/device.hpp>
+#include <uhd/simple_device.hpp>
 
 class uhd_simple_source;
 
@@ -33,8 +33,11 @@ uhd_make_simple_source(const std::string &args, const std::string &type);
 
 class uhd_simple_source : public gr_sync_block{
 public:
-    uhd_simple_source(const uhd::device_addr_t &addr, const std::string &type);
+    uhd_simple_source(const std::string &args, const std::string &type);
     ~uhd_simple_source(void);
+
+    void set_samp_rate(double rate);
+    double get_samp_rate(void);
 
     int work(
         int noutput_items,
@@ -43,12 +46,10 @@ public:
     );
 
 protected:
-    void set_streaming(bool enb);
-    bool _is_streaming; //shadow for the streaming status
-
-    uhd::device::sptr _dev;
+    uhd::simple_device::sptr _dev;
     std::string _type;
     size_t _sizeof_samp;
+    bool _is_streaming;
 };
 
 #endif /* INCLUDED_UHD_SIMPLE_SOURCE_H */

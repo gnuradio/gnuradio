@@ -21,33 +21,9 @@
  */
 
 #include "utils.h" //local include
-#include <boost/algorithm/string.hpp>
-#include <boost/algorithm/string/trim.hpp>
-#include <boost/foreach.hpp>
+#include <stdint.h>
 #include <complex>
-
-static std::string trim(const std::string &in){
-    return boost::algorithm::trim_copy(in);
-}
-
-uhd::device_addr_t args_to_device_addr(const std::string &args){
-    uhd::device_addr_t addr;
-
-    //split the args at the semi-colons
-    std::vector<std::string> pairs;
-    boost::split(pairs, args, boost::is_any_of(";"));
-    BOOST_FOREACH(std::string pair, pairs){
-        if (trim(pair) == "") continue;
-
-        //split the key value pairs at the equals
-        std::vector<std::string> key_val;
-        boost::split(key_val, pair, boost::is_any_of("="));
-        if (key_val.size() != 2) throw std::runtime_error("invalid args string: "+args);
-        addr[trim(key_val[0])] = trim(key_val[1]);
-    }
-
-    return addr;
-}
+#include <stdexcept>
 
 size_t get_size(const std::string &type){
     if(type == "32fc"){
