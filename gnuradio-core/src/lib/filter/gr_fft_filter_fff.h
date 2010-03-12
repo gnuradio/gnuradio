@@ -28,7 +28,7 @@ class gr_fft_filter_fff;
 typedef boost::shared_ptr<gr_fft_filter_fff> gr_fft_filter_fff_sptr;
 gr_fft_filter_fff_sptr gr_make_fft_filter_fff (int decimation, const std::vector<float> &taps);
 
-class gri_fft_filter_fff;
+class gri_fft_filter_fff_generic;
 
 /*!
  * \brief Fast FFT filter with float input, float output and float taps
@@ -41,7 +41,7 @@ class gr_fft_filter_fff : public gr_sync_decimator
 
   int			   d_nsamples;
   bool			   d_updated;
-  gri_fft_filter_fff	  *d_filter;
+  gri_fft_filter_fff_generic  *d_filter;
   std::vector<float>	   d_new_taps;
 
   /*!

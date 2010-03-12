@@ -20,53 +20,51 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GRI_FFT_FILTER_CCC_H
-#define INCLUDED_GRI_FFT_FILTER_CCC_H
+#ifndef INCLUDED_GRI_FFT_FILTER_FFF_GENERIC_H
+#define INCLUDED_GRI_FFT_FILTER_FFF_GENERIC_H
 
 #include <gr_complex.h>
 #include <vector>
 
-class gri_fft_complex;
+class gri_fft_real_fwd;
+class gri_fft_real_rev;
 
-/*!
- * \brief Fast FFT filter with gr_complex input, gr_complex output and gr_complex taps
- * \ingroup filter_blk
- */
-class gri_fft_filter_ccc
+class gri_fft_filter_fff_generic
 {
  private:
   int			   d_ntaps;
   int			   d_nsamples;
   int			   d_fftsize;		// fftsize = ntaps + nsamples - 1
   int                      d_decimation;
-  gri_fft_complex	  *d_fwdfft;		// forward "plan"
-  gri_fft_complex	  *d_invfft;		// inverse "plan"
-  std::vector<gr_complex>  d_tail;		// state carried between blocks for overlap-add
+  gri_fft_real_fwd	  *d_fwdfft;		// forward "plan"
+  gri_fft_real_rev	  *d_invfft;		// inverse "plan"
+  std::vector<float>       d_tail;		// state carried between blocks for overlap-add
   std::vector<gr_complex>  d_xformed_taps;	// Fourier xformed taps
-  std::vector<gr_complex>  d_new_taps;
+  std::vector<float>	   d_new_taps;
+
 
   void compute_sizes(int ntaps);
   int tailsize() const { return d_ntaps - 1; }
   
  public:
   /*!
-   * \brief Construct an FFT filter for complex vectors with the given taps and decimation rate.
+   * \brief Construct a FFT filter for float vectors with the given taps and decimation rate.
    *
    * This is the basic implementation for performing FFT filter for fast convolution
-   * in other blocks for complex vectors (such as gr_fft_filter_ccc).
+   * in other blocks for floating point vectors (such as gr_fft_filter_fff).
    * \param decimation The decimation rate of the filter (int)
-   * \param taps       The filter taps (complex)
+   * \param taps       The filter taps (float)
    */
-  gri_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
-  ~gri_fft_filter_ccc ();
+  gri_fft_filter_fff_generic (int decimation, const std::vector<float> &taps);
+  ~gri_fft_filter_fff_generic ();
 
   /*!
    * \brief Set new taps for the filter.
    *
    * Sets new taps and resets the class properties to handle different sizes
-   * \param taps       The filter taps (complex)
+   * \param taps       The filter taps (float)
    */
-  int set_taps (const std::vector<gr_complex> &taps);
+  int set_taps (const std::vector<float> &taps);
   
   /*!
    * \brief Perform the filter operation
@@ -75,8 +73,8 @@ class gri_fft_filter_ccc
    * \param input   The input vector to be filtered
    * \param output  The result of the filter operation
    */
-  int filter (int nitems, const gr_complex *input, gr_complex *output);
+  int filter (int nitems, const float *input, float *output);
 
 };
 
-#endif /* INCLUDED_GRI_FFT_FILTER_CCC_H */
+#endif /* INCLUDED_GRI_FFT_FILTER_FFF_GENERIC_H */

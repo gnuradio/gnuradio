@@ -24,19 +24,20 @@
 #include "config.h"
 #endif
 
-#include <gri_fft_filter_fff.h>
+#include <gri_fft_filter_fff_generic.h>
 #include <gri_fft.h>
 #include <assert.h>
 #include <stdexcept>
 #include <cstdio>
 
-gri_fft_filter_fff::gri_fft_filter_fff (int decimation, const std::vector<float> &taps)
+gri_fft_filter_fff_generic::gri_fft_filter_fff_generic (int decimation, 
+							const std::vector<float> &taps)
   : d_fftsize(-1), d_decimation(decimation), d_fwdfft(0), d_invfft(0)
 {
   set_taps(taps);
 }
 
-gri_fft_filter_fff::~gri_fft_filter_fff ()
+gri_fft_filter_fff_generic::~gri_fft_filter_fff_generic ()
 {
   delete d_fwdfft;
   delete d_invfft;
@@ -46,7 +47,7 @@ gri_fft_filter_fff::~gri_fft_filter_fff ()
  * determines d_ntaps, d_nsamples, d_fftsize, d_xformed_taps
  */
 int
-gri_fft_filter_fff::set_taps (const std::vector<float> &taps)
+gri_fft_filter_fff_generic::set_taps (const std::vector<float> &taps)
 {
   int i = 0;
   compute_sizes(taps.size());
@@ -80,7 +81,7 @@ gri_fft_filter_fff::set_taps (const std::vector<float> &taps)
 // determine and set d_ntaps, d_nsamples, d_fftsize
 
 void
-gri_fft_filter_fff::compute_sizes(int ntaps)
+gri_fft_filter_fff_generic::compute_sizes(int ntaps)
 {
   int old_fftsize = d_fftsize;
   d_ntaps = ntaps;
@@ -88,7 +89,7 @@ gri_fft_filter_fff::compute_sizes(int ntaps)
   d_nsamples = d_fftsize - d_ntaps + 1;
 
   if (0)
-    fprintf(stderr, "gri_fft_filter_fff: ntaps = %d, fftsize = %d, nsamples = %d\n",
+    fprintf(stderr, "gri_fft_filter_fff_generic: ntaps = %d, fftsize = %d, nsamples = %d\n",
 	    d_ntaps, d_fftsize, d_nsamples);
 
   assert(d_fftsize == d_ntaps + d_nsamples -1 );
@@ -103,7 +104,7 @@ gri_fft_filter_fff::compute_sizes(int ntaps)
 }
 
 int
-gri_fft_filter_fff::filter (int nitems, const float *input, float *output)
+gri_fft_filter_fff_generic::filter (int nitems, const float *input, float *output)
 {
   int dec_ctr = 0;
   int j = 0;
@@ -122,9 +123,10 @@ gri_fft_filter_fff::filter (int nitems, const float *input, float *output)
     gr_complex *b = &d_xformed_taps[0];
     gr_complex *c = d_invfft->get_inbuf();
 
-    for (j = 0; j < d_fftsize/2+1; j++)	// filter in the freq domain
+    for (j = 0; j < d_fftsize/2+1; j++) {	// filter in the freq domain
       c[j] = a[j] * b[j];
-    
+    }      
+   
     d_invfft->execute();	// compute inv xform
 
     // add in the overlapping tail

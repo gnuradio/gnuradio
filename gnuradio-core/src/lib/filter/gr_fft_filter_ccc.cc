@@ -30,7 +30,7 @@
 #endif
 
 #include <gr_fft_filter_ccc.h>
-#include <gri_fft_filter_ccc.h>
+#include <gri_fft_filter_ccc_sse.h>
 #include <gr_io_signature.h>
 #include <gri_fft.h>
 #include <math.h>
@@ -56,7 +56,7 @@ gr_fft_filter_ccc::gr_fft_filter_ccc (int decimation, const std::vector<gr_compl
     d_updated(false)
 {
   set_history(1);
-  d_filter = new gri_fft_filter_ccc(decimation, taps);
+  d_filter = new gri_fft_filter_ccc_sse(decimation, taps);
   d_nsamples = d_filter->set_taps(taps);
   set_output_multiple(d_nsamples);
 }

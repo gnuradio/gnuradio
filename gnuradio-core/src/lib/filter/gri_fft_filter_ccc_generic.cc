@@ -24,19 +24,22 @@
 #include "config.h"
 #endif
 
-#include <gri_fft_filter_ccc.h>
+#include <gri_fft_filter_ccc_generic.h>
 #include <gri_fft.h>
 #include <assert.h>
 #include <stdexcept>
 #include <cstdio>
+#include <xmmintrin.h>
+#include <fftw3.h>
 
-gri_fft_filter_ccc::gri_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps)
+gri_fft_filter_ccc_generic::gri_fft_filter_ccc_generic (int decimation, 
+							const std::vector<gr_complex> &taps)
   : d_fftsize(-1), d_decimation(decimation), d_fwdfft(0), d_invfft(0)
 {
   set_taps(taps);
 }
 
-gri_fft_filter_ccc::~gri_fft_filter_ccc ()
+gri_fft_filter_ccc_generic::~gri_fft_filter_ccc_generic ()
 {
   delete d_fwdfft;
   delete d_invfft;
@@ -58,7 +61,7 @@ print_vector_complex(const std::string label, const std::vector<gr_complex> &x)
  * determines d_ntaps, d_nsamples, d_fftsize, d_xformed_taps
  */
 int
-gri_fft_filter_ccc::set_taps (const std::vector<gr_complex> &taps)
+gri_fft_filter_ccc_generic::set_taps (const std::vector<gr_complex> &taps)
 {
   int i = 0;
   compute_sizes(taps.size());
@@ -92,7 +95,7 @@ gri_fft_filter_ccc::set_taps (const std::vector<gr_complex> &taps)
 // determine and set d_ntaps, d_nsamples, d_fftsize
 
 void
-gri_fft_filter_ccc::compute_sizes(int ntaps)
+gri_fft_filter_ccc_generic::compute_sizes(int ntaps)
 {
   int old_fftsize = d_fftsize;
   d_ntaps = ntaps;
@@ -100,7 +103,7 @@ gri_fft_filter_ccc::compute_sizes(int ntaps)
   d_nsamples = d_fftsize - d_ntaps + 1;
 
   if (0)
-    fprintf(stderr, "gri_fft_filter_ccc: ntaps = %d, fftsize = %d, nsamples = %d\n",
+    fprintf(stderr, "gri_fft_filter_ccc_generic: ntaps = %d, fftsize = %d, nsamples = %d\n",
 	    d_ntaps, d_fftsize, d_nsamples);
 
   assert(d_fftsize == d_ntaps + d_nsamples -1 );
@@ -115,7 +118,7 @@ gri_fft_filter_ccc::compute_sizes(int ntaps)
 }
 
 int
-gri_fft_filter_ccc::filter (int nitems, const gr_complex *input, gr_complex *output)
+gri_fft_filter_ccc_generic::filter (int nitems, const gr_complex *input, gr_complex *output)
 {
   int dec_ctr = 0;
   int j = 0;
@@ -129,13 +132,14 @@ gri_fft_filter_ccc::filter (int nitems, const gr_complex *input, gr_complex *out
       d_fwdfft->get_inbuf()[j] = 0;
 
     d_fwdfft->execute();	// compute fwd xform
-
+    
     gr_complex *a = d_fwdfft->get_outbuf();
     gr_complex *b = &d_xformed_taps[0];
     gr_complex *c = d_invfft->get_inbuf();
 
-    for (j = 0; j < d_fftsize; j++)	// filter in the freq domain
+    for (j = 0; j < d_fftsize; j+=1) {	// filter in the freq domain
       c[j] = a[j] * b[j];
+    } 
     
     d_invfft->execute();	// compute inv xform
 
