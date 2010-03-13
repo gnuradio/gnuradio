@@ -29,6 +29,7 @@ typedef boost::shared_ptr<gr_fft_filter_ccc> gr_fft_filter_ccc_sptr;
 gr_fft_filter_ccc_sptr gr_make_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
 
 class gri_fft_filter_ccc_sse;
+class gri_fft_filter_ccc_generic;
 
 /*!
  * \brief Fast FFT filter with gr_complex input, gr_complex output and gr_complex taps
@@ -41,7 +42,11 @@ class gr_fft_filter_ccc : public gr_sync_decimator
 
   int			   d_nsamples;
   bool			   d_updated;
+#if 0
+  gri_fft_filter_ccc_generic  *d_filter;  
+#else
   gri_fft_filter_ccc_sse  *d_filter;  
+#endif
   std::vector<gr_complex>  d_new_taps;
 
   /*!
