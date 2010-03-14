@@ -352,7 +352,9 @@ class my_top_block(gr.top_block):
     def set_rx_gain_freq(self, gain_freq):
         self._gain_freq = gain_freq
         #self._gain_freq_beta = .25 * self._gain_freq * self._gain_freq
+        print self._gain_freq
         self.rxpath.packet_receiver._demodulator.freq_recov.set_alpha(self._gain_freq)
+        self.rxpath.packet_receiver._demodulator.freq_recov.set_beta(self._gain_freq/10.0)
         #self.rxpath.packet_receiver._demodulator.freq_recov.set_beta(self._gain_fre_beta)
 
 
