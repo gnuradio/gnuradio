@@ -44,6 +44,11 @@ class my_top_block(gr.top_block):
         noise_power = power_in_signal/SNR
         noise_voltage = math.sqrt(noise_power)
 
+        # With new interface, sps does not get set by default, but
+        # in the loopback, we don't recalculate it; so just force it here
+        if(options.samples_per_symbol == None):
+            options.samples_per_symbol = 2
+
         self.txpath = transmit_path(mod_class, options)
         self.throttle = gr.throttle(gr.sizeof_gr_complex, options.sample_rate)
         self.rxpath = receive_path(demod_class, rx_callback, options)

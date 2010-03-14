@@ -268,7 +268,7 @@ class my_top_block(gr.top_block):
 
         (self._bitrate, self._samples_per_symbol, self._decim) = \
                         pick_rx_bitrate(options.bitrate, self._demod_class.bits_per_symbol(), \
-                                        options.samples_per_symbol, options.decim,
+                                        options.samples_per_symbol, options.decim, \
                                         adc_rate, self.u.get_decim_rates())
 
         self.u.set_decim(self._decim)

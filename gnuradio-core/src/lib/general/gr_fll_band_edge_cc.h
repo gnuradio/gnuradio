@@ -45,8 +45,12 @@ class gri_fft_complex;
  * (e.g., rolloff factor) of the modulated signal. The placement in frequency of the band-edges
  * is determined by the oversampling ratio (number of samples per symbol) and the excess bandwidth.
  * The size of the filters should be fairly large so as to average over a number of symbols.
- * The FLL works by calculating the power in both the upper and lower bands and comparing them. The
- * difference in power between the filters is proportional to the frequency offset.
+ *
+ * The FLL works by filtering the upper and lower band edges into x_u(t) and x_l(t), respectively.
+ * These are combined to form cc(t) = x_u(t) + x_l(t) and ss(t) = x_u(t) - x_l(t). Combining
+ * these to form the signal e(t) = Re{cc(t) \times ss(t)^*} (where ^* is the complex conjugate)
+ * provides an error signal at the DC term that is directly proportional to the carrier frequency.
+ * We then make a second-order loop using the error signal that is the running average of e(t).
  *
  * In theory, the band-edge filter is the derivative of the matched filter in frequency, 
  * (H_be(f) = \frac{H(f)}{df}. In practice, this comes down to a quarter sine wave at the point
