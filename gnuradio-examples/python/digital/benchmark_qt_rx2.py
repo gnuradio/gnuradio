@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2005,2006,2007,2009 Free Software Foundation, Inc.
+# Copyright 2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, modulation_utils
+from gnuradio import gr, gru, modulation_utils2
 from gnuradio import usrp
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
@@ -33,7 +33,7 @@ import sys
 
 # from current dir
 from receive_path import receive_path
-from pick_bitrate import pick_rx_bitrate
+from pick_bitrate2 import pick_rx_bitrate
 
 try:
     from gnuradio.qtgui import qtgui
@@ -219,7 +219,7 @@ class my_top_block(gr.top_block):
 
         # FIXME: do better exposure to lower issues for control
         self._gain_clock = self.rxpath.packet_receiver._demodulator._timing_alpha
-        self._gain_phase = self.rxpath.packet_receiver._demodulator._costas_alpha
+        self._gain_phase = self.rxpath.packet_receiver._demodulator._phase_alpha
         self._gain_freq  = self.rxpath.packet_receiver._demodulator._freq_alpha
 
         self.connect(self.u, self.rxpath)
@@ -242,8 +242,8 @@ class my_top_block(gr.top_block):
             
             # Connect to the QT sinks
             # FIXME: make better exposure to receiver from rxpath
-            #self.receiver = self.rxpath.packet_receiver._demodulator.phase_recov
-            self.receiver = self.rxpath.packet_receiver._demodulator.freq_recov
+            self.receiver = self.rxpath.packet_receiver._demodulator.phase_recov
+            #self.receiver = self.rxpath.packet_receiver._demodulator.freq_recov
             self.connect(self.u, self.snk_rxin)
             self.connect(self.receiver, self.snk_rx)
             
@@ -267,9 +267,9 @@ class my_top_block(gr.top_block):
         self.u.set_decim(self._decim)
 
         (self._bitrate, self._samples_per_symbol, self._decim) = \
-                        pick_rx_bitrate(self._bitrate, self._demod_class.bits_per_symbol(), \
-                                        self._samples_per_symbol, self._decim, adc_rate,  \
-                                        self.u.get_decim_rates())
+                        pick_rx_bitrate(options.bitrate, self._demod_class.bits_per_symbol(), \
+                                        options.samples_per_symbol, options.decim, \
+                                        adc_rate, self.u.get_decim_rates())
 
         self.u.set_decim(self._decim)
         self.set_auto_tr(True)                 # enable Auto Transmit/Receive switching
@@ -353,6 +353,7 @@ class my_top_block(gr.top_block):
         self._gain_freq = gain_freq
         #self._gain_freq_beta = .25 * self._gain_freq * self._gain_freq
         self.rxpath.packet_receiver._demodulator.freq_recov.set_alpha(self._gain_freq)
+        self.rxpath.packet_receiver._demodulator.freq_recov.set_beta(self._gain_freq/10.0)
         #self.rxpath.packet_receiver._demodulator.freq_recov.set_beta(self._gain_fre_beta)
 
 
@@ -423,14 +424,14 @@ def main():
                 ok, pktno, n_rcvd, n_right)
 
 
-    demods = modulation_utils.type_1_demods()
+    demods = modulation_utils2.type_1_demods()
 
     # Create Options Parser:
     parser = OptionParser (option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
 
     parser.add_option("-m", "--modulation", type="choice", choices=demods.keys(), 
-                      default='dbpsk',
+                      default='dbpsk2',
                       help="Select modulation from: %s [default=%%default]"
                             % (', '.join(demods.keys()),))
 

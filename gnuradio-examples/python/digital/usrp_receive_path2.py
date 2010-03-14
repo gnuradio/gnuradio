@@ -1,5 +1,5 @@
 #
-# Copyright 2009 Free Software Foundation, Inc.
+# Copyright 2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -22,7 +22,7 @@
 from gnuradio import gr
 from gnuradio import usrp_options
 import receive_path
-from pick_bitrate import pick_rx_bitrate
+from pick_bitrate2 import pick_rx_bitrate
 from gnuradio import eng_notation
 
 def add_freq_option(parser):
