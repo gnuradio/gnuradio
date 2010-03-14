@@ -323,16 +323,14 @@ class dqpsk2_demod(gr.hier_block2):
 
     def _setup_logging(self):
         print "Modulation logging turned on."
-        self.connect(self.pre_scaler,
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_prescaler.dat"))
         self.connect(self.agc,
                      gr.file_sink(gr.sizeof_gr_complex, "rx_agc.dat"))
-        self.connect(self.rrc_filter,
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_rrc_filter.dat"))
-        self.connect(self.clock_recov,
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_clock_recov.dat"))
+        self.connect(self.freq_recov,
+                     gr.file_sink(gr.sizeof_gr_complex, "rx_freq_recov.dat"))
         self.connect(self.time_recov,
                      gr.file_sink(gr.sizeof_gr_complex, "rx_time_recov.dat"))
+        self.connect(self.phase_recov,
+                     gr.file_sink(gr.sizeof_gr_complex, "rx_phase_recov.dat"))
         self.connect(self.diffdec,
                      gr.file_sink(gr.sizeof_gr_complex, "rx_diffdec.dat"))        
         self.connect(self.slicer,
