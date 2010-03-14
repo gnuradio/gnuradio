@@ -42,7 +42,7 @@ class my_top_block(gr.top_block):
         gr.top_block.__init__(self)
 
         # Set up receive path
-        self.rxpath = usrp_receive_path.usrp_receive_path(demodulator, rx_callback, options) 
+        self.rxpath = usrp_receive_path2.usrp_receive_path(demodulator, rx_callback, options) 
 
         self.connect(self.rxpath)
 
@@ -80,7 +80,7 @@ def main():
                       help="Select modulation from: %s [default=%%default]"
                             % (', '.join(demods.keys()),))
 
-    usrp_receive_path.add_options(parser, expert_grp)
+    usrp_receive_path2.add_options(parser, expert_grp)
 
     for mod in demods.values():
         mod.add_options(expert_grp)
