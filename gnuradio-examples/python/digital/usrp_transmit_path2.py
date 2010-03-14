@@ -22,7 +22,7 @@
 from gnuradio import gr
 from gnuradio import usrp_options
 import transmit_path
-from pick_bitrate import pick_tx_bitrate
+from pick_bitrate2 import pick_tx_bitrate
 from gnuradio import eng_notation
 
 def add_freq_option(parser):
