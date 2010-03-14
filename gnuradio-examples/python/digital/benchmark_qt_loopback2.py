@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from gnuradio import gr, gru, modulation_utils
+from gnuradio import gr, gru, modulation_utils2
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -438,15 +438,15 @@ def main():
     def send_pkt(payload='', eof=False):
         return tb.txpath.send_pkt(payload, eof)
 
-    mods = modulation_utils.type_1_mods()
-    demods = modulation_utils.type_1_demods()
+    mods = modulation_utils2.type_1_mods()
+    demods = modulation_utils2.type_1_demods()
 
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
     channel_grp = parser.add_option_group("Channel")
 
     parser.add_option("-m", "--modulation", type="choice", choices=mods.keys(),
-                      default='dbpsk',
+                      default='dbpsk2',
                       help="Select modulation from: %s [default=%%default]"
                             % (', '.join(mods.keys()),))
 

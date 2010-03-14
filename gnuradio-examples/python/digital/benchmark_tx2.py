@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, modulation_utils
+from gnuradio import gr, gru, modulation_utils2
 from gnuradio import usrp
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
@@ -55,13 +55,13 @@ def main():
     def rx_callback(ok, payload):
         print "ok = %r, payload = '%s'" % (ok, payload)
 
-    mods = modulation_utils.type_1_mods()
+    mods = modulation_utils2.type_1_mods()
 
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
 
     parser.add_option("-m", "--modulation", type="choice", choices=mods.keys(),
-                      default='gmsk',
+                      default='dbpsk2',
                       help="Select modulation from: %s [default=%%default]"
                             % (', '.join(mods.keys()),))
 

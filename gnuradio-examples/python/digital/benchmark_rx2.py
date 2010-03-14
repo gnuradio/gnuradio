@@ -20,7 +20,7 @@
 # Boston, MA 02110-1301, USA.
 # 
 
-from gnuradio import gr, gru, modulation_utils
+from gnuradio import gr, gru, modulation_utils2
 from gnuradio import usrp
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
@@ -69,14 +69,14 @@ def main():
             ok, pktno, n_rcvd, n_right)
 
 
-    demods = modulation_utils.type_1_demods()
+    demods = modulation_utils2.type_1_demods()
 
     # Create Options Parser:
     parser = OptionParser (option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
 
     parser.add_option("-m", "--modulation", type="choice", choices=demods.keys(), 
-                      default='gmsk',
+                      default='dbpsk2',
                       help="Select modulation from: %s [default=%%default]"
                             % (', '.join(demods.keys()),))
 
