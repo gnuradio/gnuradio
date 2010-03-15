@@ -28,8 +28,8 @@ class gr_fft_filter_ccc;
 typedef boost::shared_ptr<gr_fft_filter_ccc> gr_fft_filter_ccc_sptr;
 gr_fft_filter_ccc_sptr gr_make_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
 
-class gr_fir_ccc;
-class gri_fft_complex;
+//class gri_fft_filter_ccc_sse;
+class gri_fft_filter_ccc_generic;
 
 /*!
  * \brief Fast FFT filter with gr_complex input, gr_complex output and gr_complex taps
@@ -40,15 +40,14 @@ class gr_fft_filter_ccc : public gr_sync_decimator
  private:
   friend gr_fft_filter_ccc_sptr gr_make_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
 
-  int			   d_ntaps;
   int			   d_nsamples;
-  int			   d_fftsize;		// fftsize = ntaps + nsamples - 1
-  gri_fft_complex	  *d_fwdfft;		// forward "plan"
-  gri_fft_complex	  *d_invfft;		// inverse "plan"
-  std::vector<gr_complex>  d_tail;		// state carried between blocks for overlap-add
-  std::vector<gr_complex>  d_xformed_taps;	// Fourier xformed taps
-  std::vector<gr_complex>  d_new_taps;
   bool			   d_updated;
+#if 1  // don't enable the sse version until handling it is worked out
+  gri_fft_filter_ccc_generic  *d_filter;  
+#else
+  gri_fft_filter_ccc_sse  *d_filter;  
+#endif
+  std::vector<gr_complex>  d_new_taps;
 
   /*!
    * Construct a FFT filter with the given taps
@@ -57,10 +56,6 @@ class gr_fft_filter_ccc : public gr_sync_decimator
    * \param taps        complex filter taps
    */
   gr_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
-
-  void compute_sizes(int ntaps);
-  int tailsize() const { return d_ntaps - 1; }
-  void actual_set_taps (const std::vector<gr_complex> &taps);
 
  public:
   ~gr_fft_filter_ccc ();
