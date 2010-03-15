@@ -28,7 +28,7 @@ class gr_fft_filter_ccc;
 typedef boost::shared_ptr<gr_fft_filter_ccc> gr_fft_filter_ccc_sptr;
 gr_fft_filter_ccc_sptr gr_make_fft_filter_ccc (int decimation, const std::vector<gr_complex> &taps);
 
-class gri_fft_filter_ccc_sse;
+//class gri_fft_filter_ccc_sse;
 class gri_fft_filter_ccc_generic;
 
 /*!
@@ -42,7 +42,7 @@ class gr_fft_filter_ccc : public gr_sync_decimator
 
   int			   d_nsamples;
   bool			   d_updated;
-#if 0
+#if 1  // don't enable the sse version until handling it is worked out
   gri_fft_filter_ccc_generic  *d_filter;  
 #else
   gri_fft_filter_ccc_sse  *d_filter;  

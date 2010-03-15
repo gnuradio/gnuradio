@@ -30,7 +30,7 @@
 #endif
 
 #include <gr_fft_filter_ccc.h>
-#include <gri_fft_filter_ccc_sse.h>
+//#include <gri_fft_filter_ccc_sse.h>
 #include <gri_fft_filter_ccc_generic.h>
 #include <gr_io_signature.h>
 #include <gri_fft.h>
@@ -57,7 +57,7 @@ gr_fft_filter_ccc::gr_fft_filter_ccc (int decimation, const std::vector<gr_compl
     d_updated(false)
 {
   set_history(1);
-#if 0
+#if 1 // don't enable the sse version until handling it is worked out
   d_filter = new gri_fft_filter_ccc_generic(decimation, taps);
 #else
   d_filter = new gri_fft_filter_ccc_sse(decimation, taps);
