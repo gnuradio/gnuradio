@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -93,7 +93,14 @@ gr_pfb_clock_sync_fff::~gr_pfb_clock_sync_fff ()
 {
   for(int i = 0; i < d_nfilters; i++) {
     delete d_filters[i];
+    delete d_diff_filters[i];
   }
+}
+
+bool
+gr_pfb_clock_sync_fff::check_topology(int ninputs, int noutputs)
+{
+  return noutputs == 1 || noutputs == 4;
 }
 
 void
@@ -219,8 +226,8 @@ gr_pfb_clock_sync_fff::general_work (int noutput_items,
   float *in = (float *) input_items[0];
   float *out = (float *) output_items[0];
 
-  float *err, *outrate, *outk;
-  if(output_items.size() > 2) {
+  float *err = 0, *outrate = 0, *outk = 0;
+  if(output_items.size() == 4) {
     err = (float *) output_items[1];
     outrate = (float*)output_items[2];
     outk = (float*)output_items[3];
@@ -269,7 +276,7 @@ gr_pfb_clock_sync_fff::general_work (int noutput_items,
     i++;
     count += (int)floor(d_sps);
 
-    if(output_items.size() > 2) {
+    if(output_items.size() == 4) {
       err[i] = error;
       outrate[i] = d_rate_f;
       outk[i] = d_k;

@@ -233,10 +233,10 @@ class dbpsk_demod(gr.hier_block2):
         arity = pow(2,self.bits_per_symbol())
 
         # Automatic gain control
-        scale = (1.0/16384.0)
-        self.pre_scaler = gr.multiply_const_cc(scale)   # scale the signal from full-range to +-1
-        #self.agc = gr.agc2_cc(0.6e-1, 1e-3, 1, 1, 100)
-        self.agc = gr.feedforward_agc_cc(16, 2.0)
+        #scale = (1.0/16384.0)
+        #self.pre_scaler = gr.multiply_const_cc(scale)   # scale the signal from full-range to +-1
+        self.agc = gr.agc2_cc(0.6e-1, 1e-3, 1, 1, 100)
+        #self.agc = gr.feedforward_agc_cc(16, 2.0)
 
         # RRC data filter
         ntaps = 11 * samples_per_symbol
@@ -288,7 +288,7 @@ class dbpsk_demod(gr.hier_block2):
             self._setup_logging()
 
         # Connect and Initialize base class
-        self.connect(self, self.pre_scaler, self.agc, self.rrc_filter, self.receiver,
+        self.connect(self, self.agc, self.rrc_filter, self.receiver,
                      self.diffdec, self.slicer, self.symbol_mapper, self.unpack, self)
 
     def samples_per_symbol(self):

@@ -25,18 +25,16 @@
 ## Default install locations for these files:
 ##
 ## Default location for the Python directory is:
-##  ${prefix}/lib/python${python_version}/site-packages/[category]/howto
+##  ${prefix}/lib/python${python_version}/site-packages/howto
 ## Default location for the Python exec directory is:
-##  ${exec_prefix}/lib/python${python_version}/site-packages/[category]/howto
+##  ${exec_prefix}/lib/python${python_version}/site-packages/howto
 ##
 ## The following can be overloaded to change the install location, but
 ## this has to be done in the including Makefile.am -before-
 ## Makefile.swig is included.
 
-howto_pythondir_category ?= gnuradio/howto
-howto_pylibdir_category ?= $(howto_pythondir_category)
-howto_pythondir = $(pythondir)/$(howto_pythondir_category)
-howto_pylibdir = $(pyexecdir)/$(howto_pylibdir_category)
+howto_pythondir = $(pythondir)/howto
+howto_pylibdir = $(pyexecdir)/howto
 
 ## SWIG headers are always installed into the same directory.
 
@@ -79,7 +77,7 @@ swig_built_sources += howto_swig.py howto_swig.cc
 ## Makefile.swig .
 
 howto_swiginclude_HEADERS =		\
-	howto.i				\
+	howto.i			\
 	$(howto_swiginclude_headers)
 
 howto_pylib_LTLIBRARIES =		\
@@ -89,7 +87,7 @@ _howto_swig_la_SOURCES = 		\
 	howto_swig.cc			\
 	$(howto_la_swig_sources)
 
-_howto_swig_la_LIBADD =			\
+_howto_swig_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(howto_la_swig_libadd)
 

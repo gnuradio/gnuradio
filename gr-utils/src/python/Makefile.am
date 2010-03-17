@@ -35,6 +35,7 @@ ourpython_PYTHON = \
     pyqt_filter.py
 
 bin_SCRIPTS = \
+    create-gnuradio-out-of-tree-project \
     gr_plot_char.py \
     gr_plot_const.py \
     gr_plot_fft.py \

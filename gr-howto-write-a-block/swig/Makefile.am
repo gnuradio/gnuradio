@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2008,2009 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -27,14 +27,13 @@ if PYTHON
 ###################################
 # SWIG Python interface and library
 
-TOP_SWIG_IFILES = 		\
+TOP_SWIG_IFILES = \
 	howto.i
 
 # Install so that they end up available as:
-#   import gnuradio.howto
+#   import howto
 # This ends up at:
-#   ${prefix}/lib/python${python_version}/site-packages/gnuradio
-howto_pythondir_category = gnuradio/howto
+#   ${prefix}/lib/python${python_version}/site-packages/$(modname)
 
 howto_la_swig_libadd =		\
 	$(top_builddir)/lib/libgnuradio-howto.la
@@ -48,7 +47,7 @@ BUILT_SOURCES = $(swig_built_sources)
 no_dist_files = $(swig_built_sources)
 
 # additional SWIG files to be installed
-howto_swiginclude_headers =	\
+howto_swiginclude_headers = \
 	howto_square_ff.i \
 	howto_square2_ff.i
 

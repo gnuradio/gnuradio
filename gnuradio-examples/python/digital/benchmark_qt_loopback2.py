@@ -1,6 +1,26 @@
 #!/usr/bin/env python
+#
+# Copyright 2010 Free Software Foundation, Inc.
+# 
+# This file is part of GNU Radio
+# 
+# GNU Radio is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+# 
+# GNU Radio is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with GNU Radio; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street,
+# Boston, MA 02110-1301, USA.
+# 
 
-from gnuradio import gr, gru, modulation_utils
+from gnuradio import gr, gru, modulation_utils2
 from gnuradio import eng_notation
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
@@ -223,6 +243,11 @@ class my_top_block(gr.top_block):
 
         self._noise_voltage = self.get_noise_voltage(self._snr_dB)
 
+        # With new interface, sps does not get set by default, but
+        # in the loopback, we don't recalculate it; so just force it here
+        if(options.samples_per_symbol == None):
+            options.samples_per_symbol = 2
+
         self.txpath = transmit_path(mod_class, options)
         self.throttle = gr.throttle(gr.sizeof_gr_complex, self.sample_rate())
         self.rxpath = receive_path(demod_class, rx_callback, options)
@@ -269,6 +294,7 @@ class my_top_block(gr.top_block):
                 self.phase_recov = self.rxpath.packet_receiver._demodulator.phase_recov
                 self.time_recov = self.rxpath.packet_receiver._demodulator.time_recov
                 self.freq_recov.set_alpha(self._gain_freq)
+                self.freq_recov.set_beta(self._gain_freq/10.0)
                 self.phase_recov.set_alpha(self._gain_phase)
                 self.phase_recov.set_beta(0.25*self._gain_phase*self._gain_phase)
                 self.time_recov.set_alpha(self._gain_clock)
@@ -367,6 +393,7 @@ class my_top_block(gr.top_block):
         self._gain_freq = gain_freq
         #self._gain_freq_beta = .25 * self._gain_freq * self._gain_freq
         self.rxpath.packet_receiver._demodulator.freq_recov.set_alpha(self._gain_freq)
+        self.rxpath.packet_receiver._demodulator.freq_recov.set_beta(self._gain_freq/10.0)
         #self.rxpath.packet_receiver._demodulator.freq_recov.set_beta(self._gain_fre_beta)
 
 
@@ -431,15 +458,15 @@ def main():
     def send_pkt(payload='', eof=False):
         return tb.txpath.send_pkt(payload, eof)
 
-    mods = modulation_utils.type_1_mods()
-    demods = modulation_utils.type_1_demods()
+    mods = modulation_utils2.type_1_mods()
+    demods = modulation_utils2.type_1_demods()
 
     parser = OptionParser(option_class=eng_option, conflict_handler="resolve")
     expert_grp = parser.add_option_group("Expert")
     channel_grp = parser.add_option_group("Channel")
 
     parser.add_option("-m", "--modulation", type="choice", choices=mods.keys(),
-                      default='dbpsk',
+                      default='dbpsk2',
                       help="Select modulation from: %s [default=%%default]"
                             % (', '.join(mods.keys()),))
 

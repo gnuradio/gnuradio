@@ -5,9 +5,9 @@
 # Generated: Thu Nov 12 11:26:07 2009
 ##################################################
 
+import howto
 from gnuradio import eng_notation
 from gnuradio import gr
-from gnuradio import howto
 from gnuradio.eng_option import eng_option
 from gnuradio.gr import firdes
 from gnuradio.wxgui import scopesink2

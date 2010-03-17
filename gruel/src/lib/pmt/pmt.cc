@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009 Free Software Foundation, Inc.
+ * Copyright 2006,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -139,12 +139,6 @@ static pmt_uniform_vector *
 _uniform_vector(pmt_t x)
 {
   return dynamic_cast<pmt_uniform_vector*>(x.get());
-}
-
-static pmt_dict *
-_dict(pmt_t x)
-{
-  return dynamic_cast<pmt_dict*>(x.get());
 }
 
 static pmt_any *
@@ -728,27 +722,54 @@ pmt_uniform_vector_writable_elements(pmt_t vector, size_t &len)
 //                            Dictionaries
 ////////////////////////////////////////////////////////////////////////////
 
-pmt_dict::pmt_dict()
-  : d_alist(PMT_NIL)
-{
-}
+/*
+ * This is an a-list implementation.
+ *
+ * When we need better performance for large dictionaries, consider implementing
+ * persistent Red-Black trees as described in "Purely Functional Data Structures", 
+ * Chris Okasaki, 1998, section 3.3.
+ */
 
-void
-pmt_dict::set(pmt_t key, pmt_t value)
+bool
+pmt_is_dict(const pmt_t &obj)
 {
-  pmt_t	p = pmt_assv(key, d_alist);	// look for (key . value) pair
-  if (pmt_is_pair(p)){			// found existing pair...
-    pmt_set_cdr(p, value);		// overrwrite cdr with new value
-  }
-  else {				// not in the dict
-    d_alist = pmt_cons(pmt_cons(key, value), d_alist);	// add new (key . value) pair
-  }
+  return pmt_is_null(obj) || pmt_is_pair(obj);
 }
 
 pmt_t
-pmt_dict::ref(pmt_t key, pmt_t not_found) const
+pmt_make_dict()
 {
-  pmt_t	p = pmt_assv(key, d_alist);	// look for (key . value) pair
+  return PMT_NIL;
+}
+
+pmt_t
+pmt_dict_add(const pmt_t &dict, const pmt_t &key, const pmt_t &value)
+{
+  if (pmt_is_null(dict))
+    return pmt_acons(key, value, PMT_NIL);
+
+  if (pmt_dict_has_key(dict, key))
+    return pmt_acons(key, value, pmt_dict_delete(dict, key));
+
+  return pmt_acons(key, value, dict);
+}
+
+pmt_t
+pmt_dict_delete(const pmt_t &dict, const pmt_t &key)
+{
+  if (pmt_is_null(dict))
+    return dict;
+
+  if (pmt_eqv(pmt_caar(dict), key))
+    return pmt_cdr(dict);
+  
+  return pmt_cons(pmt_car(dict), pmt_dict_delete(pmt_cdr(dict), key));
+}
+
+pmt_t
+pmt_dict_ref(const pmt_t &dict, const pmt_t &key, const pmt_t &not_found)
+{
+  pmt_t	p = pmt_assv(key, dict);	// look for (key . value) pair
   if (pmt_is_pair(p))
     return pmt_cdr(p);
   else
@@ -756,96 +777,36 @@ pmt_dict::ref(pmt_t key, pmt_t not_found) const
 }
 
 bool
-pmt_dict::has_key(pmt_t key) const
+pmt_dict_has_key(const pmt_t &dict, const pmt_t &key)
 {
-  return pmt_is_pair(pmt_assv(key, d_alist));
-}
-
-pmt_t
-pmt_dict::items() const
-{
-  return d_alist;
-}
-
-pmt_t
-pmt_dict::keys() const
-{
-  return pmt_map(pmt_car, d_alist);
-}
-
-pmt_t
-pmt_dict::values() const
-{
-  return pmt_map(pmt_cdr, d_alist);
-}
-
-bool
-pmt_is_dict(pmt_t obj)
-{
-  return obj->is_dict();
-}
-
-pmt_t
-pmt_make_dict()
-{
-  return pmt_t(new pmt_dict());
-}
-
-void
-pmt_dict_set(pmt_t dict, pmt_t key, pmt_t value)
-{
-  pmt_dict* d = _dict(dict);
-  if (!d)
-    throw pmt_wrong_type("pmt_dict_set", dict);
-
-  d->set(key, value);
-}
-
-bool
-pmt_dict_has_key(pmt_t dict, pmt_t key)
-{
-  pmt_dict* d = _dict(dict);
-  if (!d)
-    throw pmt_wrong_type("pmt_dict_has_key", dict);
-
-  return d->has_key(key);
-}
-
-pmt_t
-pmt_dict_ref(pmt_t dict, pmt_t key, pmt_t not_found)
-{
-  pmt_dict* d = _dict(dict);
-  if (!d)
-    throw pmt_wrong_type("pmt_dict_ref", dict);
-
-  return d->ref(key, not_found);
+  return pmt_is_pair(pmt_assv(key, dict));
 }
 
 pmt_t
 pmt_dict_items(pmt_t dict)
 {
-  if (!dict->is_dict())
-    throw pmt_wrong_type("pmt_dict_items", dict);
+  if (!pmt_is_dict(dict))
+    throw pmt_wrong_type("pmt_dict_values", dict);
 
-  return _dict(dict)->items();
+  return dict;		// equivalent to dict in the a-list case
 }
 
 pmt_t
 pmt_dict_keys(pmt_t dict)
 {
-  if (!dict->is_dict())
+  if (!pmt_is_dict(dict))
     throw pmt_wrong_type("pmt_dict_keys", dict);
 
-  return _dict(dict)->keys();
+  return pmt_map(pmt_car, dict);
 }
 
 pmt_t
 pmt_dict_values(pmt_t dict)
 {
-  if (!dict->is_dict())
-    throw pmt_wrong_type("pmt_dict_values", dict);
+  if (!pmt_is_dict(dict))
+    throw pmt_wrong_type("pmt_dict_keys", dict);
 
-  return _dict(dict)->values();
+  return pmt_map(pmt_cdr, dict);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -978,6 +939,24 @@ pmt_eqv(const pmt_t& x, const pmt_t& y)
 }
 
 bool
+pmt_eqv_raw(pmt_base *x, pmt_base *y)
+{
+  if (x == y)
+    return true;
+
+  if (x->is_integer() && y->is_integer())
+    return _integer(x)->value() == _integer(y)->value();
+
+  if (x->is_real() && y->is_real())
+    return _real(x)->value() == _real(y)->value();
+
+  if (x->is_complex() && y->is_complex())
+    return _complex(x)->value() == _complex(y)->value();
+
+  return false;
+}
+
+bool
 pmt_equal(const pmt_t& x, const pmt_t& y)
 {
   if (pmt_eqv(x, y))
@@ -1082,6 +1061,35 @@ pmt_assq(pmt_t obj, pmt_t alist)
   return PMT_F;
 }
 
+/*
+ * This avoids a bunch of shared_pointer reference count manipulation.
+ */
+pmt_t
+pmt_assv_raw(pmt_base *obj, pmt_base *alist)
+{
+  while (alist->is_pair()){
+    pmt_base *p = ((pmt_pair *)alist)->d_car.get();
+    if (!p->is_pair())		// malformed alist
+      return PMT_F;
+
+    if (pmt_eqv_raw(obj, ((pmt_pair *)p)->d_car.get()))
+      return ((pmt_pair *)alist)->d_car;
+
+    alist = (((pmt_pair *)alist)->d_cdr).get();
+  }
+  return PMT_F;
+}
+
+#if 1
+
+pmt_t
+pmt_assv(pmt_t obj, pmt_t alist)
+{
+  return pmt_assv_raw(obj.get(), alist.get());
+}
+
+#else
+
 pmt_t
 pmt_assv(pmt_t obj, pmt_t alist)
 {
@@ -1097,6 +1105,9 @@ pmt_assv(pmt_t obj, pmt_t alist)
   }
   return PMT_F;
 }
+
+#endif
+
 
 pmt_t
 pmt_assoc(pmt_t obj, pmt_t alist)
@@ -1322,7 +1333,6 @@ pmt_dump_sizeof()
   printf("sizeof(pmt_null)           = %3zd\n", sizeof(pmt_null));
   printf("sizeof(pmt_pair)           = %3zd\n", sizeof(pmt_pair));
   printf("sizeof(pmt_vector)         = %3zd\n", sizeof(pmt_vector));
-  printf("sizeof(pmt_dict)           = %3zd\n", sizeof(pmt_dict));
   printf("sizeof(pmt_uniform_vector) = %3zd\n", sizeof(pmt_uniform_vector));
 }
 

@@ -58,21 +58,18 @@ class usrp_transmit_path(gr.hier_block2):
         if options.tx_freq is None:
             sys.stderr.write("-f FREQ or --freq FREQ or --tx-freq FREQ must be specified\n")
             raise SystemExit
-        tx_path = transmit_path.transmit_path(modulator_class, options)
-        for attr in dir(tx_path): #forward the methods
-            if not attr.startswith('_') and not hasattr(self, attr):
-                setattr(self, attr, getattr(tx_path, attr))
 
         #setup usrp
         self._modulator_class = modulator_class
         self._setup_usrp_sink(options)
 
-        # Set up resampler based on rate determined by _setup_usrp_sink
-        rs_taps = gr.firdes.low_pass_2(32, 32, 0.45, 0.1, 60)
-        self.resampler = gr.pfb_arb_resampler_ccf(self.rs_rate, rs_taps)
+        tx_path = transmit_path.transmit_path(modulator_class, options)
+        for attr in dir(tx_path): #forward the methods
+            if not attr.startswith('_') and not hasattr(self, attr):
+                setattr(self, attr, getattr(tx_path, attr))
 
         #connect
-        self.connect(tx_path, self.resampler, self.u)
+        self.connect(tx_path, self.u)
         
     def _setup_usrp_sink(self, options):
         """
@@ -82,17 +79,20 @@ class usrp_transmit_path(gr.hier_block2):
         self.u = usrp_options.create_usrp_sink(options)
         dac_rate = self.u.dac_rate()
         self.rs_rate = options.bitrate    # Store requested bit rate
+            
+        (self._bitrate, self._samples_per_symbol, self._interp) = \
+                        pick_tx_bitrate(options.bitrate, self._modulator_class.bits_per_symbol(),
+                                        options.samples_per_symbol, options.interp,
+                                        dac_rate, self.u.get_interp_rates())
+
+        options.interp = self._interp
+        options.samples_per_symbol = self._samples_per_symbol
+        options.bitrate = self._bitrate
+
         if options.verbose:
             print 'USRP Sink:', self.u
-        (self._bitrate, self._samples_per_symbol, self._interp) = \
-                        pick_tx_bitrate(options.bitrate, self._modulator_class.bits_per_symbol(), \
-                                        options.samples_per_symbol, options.interp, dac_rate, \
-                                        self.u.get_interp_rates())
-
-        # Calculate resampler rate based on requested and actual rates
-        self.rs_rate = self._bitrate / self.rs_rate
-        print "Resampling by %f to get bitrate of %ssps" % (self.rs_rate, eng_notation.num_to_str(self._bitrate/self.rs_rate))
-
+            print "Interpolation Rate: ", self._interp
+        
         self.u.set_interp(self._interp)
         self.u.set_auto_tr(True)
 

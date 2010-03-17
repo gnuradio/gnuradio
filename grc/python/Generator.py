@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008, 2009, 2010 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 
 import os
 import subprocess
+import tempfile
 from Cheetah.Template import Template
 import expr_utils
 from Constants import \
@@ -45,6 +46,10 @@ class Generator(object):
 		else:
 			self._mode = TOP_BLOCK_FILE_MODE
 			dirname = os.path.dirname(file_path)
+			#handle the case where the directory is read-only
+			#in this case, use the system's temp directory
+			if not os.access(dirname, os.W_OK):
+				dirname = tempfile.gettempdir()
 		filename = self._flow_graph.get_option('id') + '.py'
 		self._file_path = os.path.join(dirname, filename)
 

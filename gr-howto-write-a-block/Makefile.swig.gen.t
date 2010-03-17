@@ -25,18 +25,16 @@
 ## Default install locations for these files:
 ##
 ## Default location for the Python directory is:
-##  ${prefix}/lib/python${python_version}/site-packages/[category]/@NAME@
+##  ${prefix}/lib/python${python_version}/site-packages/@NAME@
 ## Default location for the Python exec directory is:
-##  ${exec_prefix}/lib/python${python_version}/site-packages/[category]/@NAME@
+##  ${exec_prefix}/lib/python${python_version}/site-packages/@NAME@
 ##
 ## The following can be overloaded to change the install location, but
 ## this has to be done in the including Makefile.am -before-
 ## Makefile.swig is included.
 
-@NAME@_pythondir_category ?= gnuradio/@NAME@
-@NAME@_pylibdir_category ?= $(@NAME@_pythondir_category)
-@NAME@_pythondir = $(pythondir)/$(@NAME@_pythondir_category)
-@NAME@_pylibdir = $(pyexecdir)/$(@NAME@_pylibdir_category)
+@NAME@_pythondir = $(pythondir)/@NAME@
+@NAME@_pylibdir = $(pyexecdir)/@NAME@
 
 ## SWIG headers are always installed into the same directory.
 
@@ -72,7 +70,7 @@ MOSTLYCLEANFILES += $(DEPDIR)/*.S*
 ## .h file is sometimes built, but not always ... so that one has to
 ## be added manually by the including Makefile.am .
 
-swig_built_sources += @NAME@.py @NAME@.cc
+swig_built_sources += @NAME@_swig.py @NAME@_swig.cc
 
 ## Various SWIG variables.  These can be overloaded in the including
 ## Makefile.am by setting the variable value there, then including
@@ -83,31 +81,31 @@ swig_built_sources += @NAME@.py @NAME@.cc
 	$(@NAME@_swiginclude_headers)
 
 @NAME@_pylib_LTLIBRARIES =		\
-	_@NAME@.la
+	_@NAME@_swig.la
 
-_@NAME@_la_SOURCES = 			\
-	@NAME@.cc			\
+_@NAME@_swig_la_SOURCES = 		\
+	@NAME@_swig.cc			\
 	$(@NAME@_la_swig_sources)
 
-_@NAME@_la_LIBADD =			\
+_@NAME@_swig_la_LIBADD =		\
 	$(STD_SWIG_LA_LIB_ADD)		\
 	$(@NAME@_la_swig_libadd)
 
-_@NAME@_la_LDFLAGS =			\
+_@NAME@_swig_la_LDFLAGS =		\
 	$(STD_SWIG_LA_LD_FLAGS)		\
 	$(@NAME@_la_swig_ldflags)
 
-_@NAME@_la_CXXFLAGS =			\
+_@NAME@_swig_la_CXXFLAGS =		\
 	$(STD_SWIG_CXX_FLAGS)		\
 	$(@NAME@_la_swig_cxxflags)
 
 @NAME@_python_PYTHON =			\
-	@NAME@.py			\
+	@NAME@_swig.py			\
 	$(@NAME@_python)
 
 ## Entry rule for running SWIG
 
-@NAME@.h @NAME@.py @NAME@.cc: @NAME@.i
+@NAME@.h @NAME@_swig.py @NAME@_swig.cc: @NAME@.i
 ## This rule will get called only when MAKE decides that one of the
 ## targets needs to be created or re-created, because:
 ##
@@ -202,7 +200,7 @@ $(DEPDIR)/@NAME@-generate-stamp:
 ##
 	if $(SWIG) $(STD_SWIG_PYTHON_ARGS) $(@NAME@_swig_args) \
 		-MD -MF $(DEPDIR)/@NAME@.Std \
-		-module @NAME@ -o @NAME@.cc $(WHAT); then \
+		-module @NAME@_swig -o @NAME@_swig.cc $(WHAT); then \
 	    if test $(host_os) = mingw32; then \
 		$(RM) $(DEPDIR)/@NAME@.Sd; \
 		$(SED) 's,\\\\,/,g' < $(DEPDIR)/@NAME@.Std \

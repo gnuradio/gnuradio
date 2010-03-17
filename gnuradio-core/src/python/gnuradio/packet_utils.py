@@ -143,7 +143,7 @@ def make_packet(payload, samples_per_symbol, bits_per_symbol,
                        (payload_with_crc), '\x55'))
 
     if pad_for_usrp:
-        pkt = pkt + (_npadding_bytes(len(pkt), samples_per_symbol, bits_per_symbol) * '\x55')
+        pkt = pkt + (_npadding_bytes(len(pkt), int(samples_per_symbol), bits_per_symbol) * '\x55')
 
     #print "make_packet: len(pkt) =", len(pkt)
     return pkt

@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+
+from optparse import OptionParser
+import os
+import re
+import sys
+import subprocess
+
+tarball_url="http://gnuradio.org/releases/gnuradio/gr-howto-write-a-block-3.3git-651-g642252d8.tar.gz"
+
+def open_tarball(tarball_name=None):
+    """Return a readable fileobject that references the tarball.
+    If tarball_name is None, download from the net
+    """
+    if tarball_name:
+        return open(tarball_name, 'r')
+    p = subprocess.Popen(["wget", "-O", "-", tarball_url],
+                         close_fds=True, stdout=subprocess.PIPE)
+    return p.stdout
+
+def extract_and_rename_files(tarball, module_name):
+    #  Requires GNU tar.
+    tar_cmd = 'tar xz --strip-components=1 --transform="s/howto/%s/g"' % (module_name,)
+    p = subprocess.Popen(tar_cmd, shell=True, stdin=tarball, close_fds=True)
+    sts = os.waitpid(p.pid, 0)
+    return sts == 0
+
+def main():
+    usage = "%prog: [options] new_module_name"
+    description="Create a prototype 'out of tree' GNU Radio project"
+    parser = OptionParser(usage=usage, description=description)
+    parser.add_option("-T", "--tarball", type="string", default=None,
+                      help="path to gr-howto-build-a-block gzipped tarball [default=<get from web>]")
+    (options, args) = parser.parse_args()
+    if len(args) != 1:
+        parser.print_help()
+        raise SystemExit,2
+    module_name = args[0]
+    if not re.match(r'[_a-z][_a-z0-9]*$', module_name):
+        sys.stderr.write("module_name '%s' may only contain [a-z0-9_]\n" % (module_name))
+        raise SystemExit, 1
+
+    # Ensure there's no file or directory called <module_name>
+    if os.path.exists(module_name):
+        sys.stderr.write("A file or directory named '%s' already exists\n" % (module_name,))
+        raise SystemExit, 1
+
+    os.mkdir(module_name)
+    os.chdir(module_name)
+
+    ok = extract_and_rename_files(open_tarball(options.tarball), module_name)
+
+    # rename file contents
+    upper_module_name = module_name.upper()
+    sed_cmd = 'sed -i -e "s/howto/%s/g" -e "s/HOWTO/%s/g"' % (module_name,
+                                                                 upper_module_name)
+    os.system('find . -type f -print0 | xargs -0 ' + sed_cmd)
+
+    sys.stdout.write("""
+Project '%s' is now ready to build.
+
+  $ ./bootstrap
+  $ ./configure --prefix=/home/[user]/install
+  $ (make && make check && make install) 2>&1 | tee make.log
+
+""" % (module_name,))
+
+if __name__ == '__main__':
+    main()

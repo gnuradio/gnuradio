@@ -66,6 +66,7 @@ protected:
 public:
   ~usrp2_source_base();
 
+  bool set_antenna(int ant);
   bool set_gain(double gain);
   %rename(_real_set_center_freq) set_center_freq;
   bool set_lo_offset(double frequency);
@@ -138,6 +139,7 @@ protected:
 public:
   ~usrp2_sink_base();
 
+  bool set_antenna(int ant);
   bool set_gain(double gain);
   %rename(_real_set_center_freq) set_center_freq;
   bool set_lo_offset(double frequency);

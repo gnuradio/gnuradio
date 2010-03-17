@@ -1,5 +1,5 @@
 #
-# Copyright 2005,2006,2007 Free Software Foundation, Inc.
+# Copyright 2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,7 +25,7 @@
 differential BPSK modulation and demodulation.
 """
 
-from gnuradio import gr, gru, modulation_utils
+from gnuradio import gr, gru, modulation_utils2
 from math import pi, sqrt, ceil
 import psk
 import cmath
@@ -38,8 +38,8 @@ _def_gray_code = True
 _def_verbose = False
 _def_log = False
 
-_def_freq_alpha = 4e-3
-_def_costas_alpha = 0.1
+_def_freq_alpha = 0.010
+_def_phase_alpha = 0.1
 _def_timing_alpha = 0.100
 _def_timing_beta = 0.010
 _def_timing_max_dev = 1.5
@@ -83,7 +83,7 @@ class dbpsk2_mod(gr.hier_block2):
         self._excess_bw = excess_bw
         self._gray_code = gray_code
 
-        if not isinstance(self._samples_per_symbol, int) or self._samples_per_symbol < 2:
+        if self._samples_per_symbol < 2:
             raise TypeError, ("sbp must be an integer >= 2, is %d" % self._samples_per_symbol)
         
         arity = pow(2,self.bits_per_symbol())
@@ -103,7 +103,7 @@ class dbpsk2_mod(gr.hier_block2):
 
         # pulse shaping filter
         nfilts = 32
-        ntaps = nfilts * 11 * self._samples_per_symbol      # make nfilts filters of ntaps each
+        ntaps = nfilts * 11 * int(self._samples_per_symbol)    # make nfilts filters of ntaps each
         self.rrc_taps = gr.firdes.root_raised_cosine(
             nfilts,          # gain
             nfilts,          # sampling rate based on 32 filters in resampler
@@ -145,7 +145,7 @@ class dbpsk2_mod(gr.hier_block2):
         """
         Given command line options, create dictionary suitable for passing to __init__
         """
-        return modulation_utils.extract_kwargs_from_options(dbpsk2_mod.__init__,
+        return modulation_utils2.extract_kwargs_from_options(dbpsk2_mod.__init__,
                                                             ('self',), options)
     extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
 
@@ -182,7 +182,7 @@ class dbpsk2_demod(gr.hier_block2):
                  samples_per_symbol=_def_samples_per_symbol,
                  excess_bw=_def_excess_bw,
                  freq_alpha=_def_freq_alpha,
-                 costas_alpha=_def_costas_alpha,
+                 phase_alpha=_def_phase_alpha,
                  timing_alpha=_def_timing_alpha,
                  timing_max_dev=_def_timing_max_dev,
                  gray_code=_def_gray_code,
@@ -201,8 +201,8 @@ class dbpsk2_demod(gr.hier_block2):
 	@type excess_bw: float
         @param freq_alpha: loop filter gain for frequency recovery
         @type freq_alpha: float
-        @param costas_alpha: loop filter gain for phase/fine frequency recovery
-        @type costas_alpha: float
+        @param phase_alpha: loop filter gain for phase/fine frequency recovery
+        @type phase_alpha: float
         @param timing_alpha: loop alpha gain for timing recovery
         @type timing_alpha: float
         @param timing_max: timing loop maximum rate deviations
@@ -226,8 +226,8 @@ class dbpsk2_demod(gr.hier_block2):
         self._samples_per_symbol = samples_per_symbol
         self._excess_bw = excess_bw
         self._freq_alpha = freq_alpha
-        self._freq_beta = 0.25*self._freq_alpha**2
-        self._costas_alpha = costas_alpha
+        self._freq_beta = 0.10*self._freq_alpha
+        self._phase_alpha = phase_alpha
         self._timing_alpha = timing_alpha
         self._timing_beta = _def_timing_beta
         self._timing_max_dev=timing_max_dev
@@ -259,13 +259,13 @@ class dbpsk2_demod(gr.hier_block2):
         self.time_recov.set_beta(self._timing_beta)
 
         # Perform phase / fine frequency correction
-        self._costas_beta  = 0.25 * self._costas_alpha * self._costas_alpha
+        self._phase_beta  = 0.25 * self._phase_alpha * self._phase_alpha
         # Allow a frequency swing of +/- half of the sample rate
         fmin = -0.5
         fmax = 0.5
         
-        self.phase_recov = gr.costas_loop_cc(self._costas_alpha,
-                                             self._costas_beta,
+        self.phase_recov = gr.costas_loop_cc(self._phase_alpha,
+                                             self._phase_beta,
                                              fmax, fmin, arity)
 
         # Do differential decoding based on phase change of symbols
@@ -308,29 +308,27 @@ class dbpsk2_demod(gr.hier_block2):
         print "bits per symbol:     %d"   % self.bits_per_symbol()
         print "Gray code:           %s"   % self._gray_code
         print "RRC roll-off factor: %.2f" % self._excess_bw
-        print "FLL gain:            %.2f" % self._freq_alpha
-        print "Costas Loop alpha:   %.2f" % self._costas_alpha
-        print "Costas Loop beta:    %.2f" % self._costas_beta
-        print "Timing alpha gain:   %.2f" % self._timing_alpha
-        print "Timing beta gain:    %.2f" % self._timing_beta
+        print "FLL gain:            %.2e" % self._freq_alpha
+        print "Timing alpha gain:   %.2e" % self._timing_alpha
+        print "Timing beta gain:    %.2e" % self._timing_beta
         print "Timing max dev:      %.2f" % self._timing_max_dev
+        print "Phase track alpha:   %.2e" % self._phase_alpha
+        print "Phase track beta:    %.2e" % self._phase_beta
 
     def _setup_logging(self):
         print "Modulation logging turned on."
-        self.connect(self.pre_scaler,
-                         gr.file_sink(gr.sizeof_gr_complex, "rx_prescaler.dat"))
         self.connect(self.agc,
                      gr.file_sink(gr.sizeof_gr_complex, "rx_agc.dat"))
-        self.connect(self.rrc_filter,
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_rrc_filter.dat"))
-        self.connect(self.clock_recov,
-                     gr.file_sink(gr.sizeof_gr_complex, "rx_clock_recov.dat"))
+        self.connect(self.freq_recov,
+                     gr.file_sink(gr.sizeof_gr_complex, "rx_freq_recov.dat"))
         self.connect(self.time_recov,
                      gr.file_sink(gr.sizeof_gr_complex, "rx_time_recov.dat"))
+        self.connect(self.phase_recov,
+                     gr.file_sink(gr.sizeof_gr_complex, "rx_phase_recov.dat"))
         self.connect(self.diffdec,
                      gr.file_sink(gr.sizeof_gr_complex, "rx_diffdec.dat"))        
         self.connect(self.slicer,
-                    gr.file_sink(gr.sizeof_char, "rx_slicer.dat"))
+                     gr.file_sink(gr.sizeof_char, "rx_slicer.dat"))
         self.connect(self.symbol_mapper,
                      gr.file_sink(gr.sizeof_char, "rx_symbol_mapper.dat"))
         self.connect(self.unpack,
@@ -347,11 +345,11 @@ class dbpsk2_demod(gr.hier_block2):
                           help="disable gray coding on modulated bits (PSK)")
         parser.add_option("", "--freq-alpha", type="float", default=_def_freq_alpha,
                           help="set frequency lock loop alpha gain value [default=%default] (PSK)")
-        parser.add_option("", "--costas-alpha", type="float", default=None,
-                          help="set Costas loop alpha value [default=%default] (PSK)")
-        parser.add_option("", "--gain-alpha", type="float", default=_def_timing_alpha,
+        parser.add_option("", "--phase-alpha", type="float", default=_def_phase_alpha,
+                          help="set phase tracking loop alpha value [default=%default] (PSK)")
+        parser.add_option("", "--timing-alpha", type="float", default=_def_timing_alpha,
                           help="set timing symbol sync loop gain alpha value [default=%default] (GMSK/PSK)")
-        parser.add_option("", "--gain-beta", type="float", default=_def_timing_beta,
+        parser.add_option("", "--timing-beta", type="float", default=_def_timing_beta,
                           help="set timing symbol sync loop gain beta value [default=%default] (GMSK/PSK)")
         parser.add_option("", "--timing-max-dev", type="float", default=_def_timing_max_dev,
                           help="set timing symbol sync loop maximum deviation [default=%default] (GMSK/PSK)")
@@ -361,11 +359,11 @@ class dbpsk2_demod(gr.hier_block2):
         """
         Given command line options, create dictionary suitable for passing to __init__
         """
-        return modulation_utils.extract_kwargs_from_options(
+        return modulation_utils2.extract_kwargs_from_options(
                  dbpsk2_demod.__init__, ('self',), options)
     extract_kwargs_from_options=staticmethod(extract_kwargs_from_options)
 #
 # Add these to the mod/demod registry
 #
-modulation_utils.add_type_1_mod('dbpsk2', dbpsk2_mod)
-modulation_utils.add_type_1_demod('dbpsk2', dbpsk2_demod)
+modulation_utils2.add_type_1_mod('dbpsk2', dbpsk2_mod)
+modulation_utils2.add_type_1_demod('dbpsk2', dbpsk2_demod)

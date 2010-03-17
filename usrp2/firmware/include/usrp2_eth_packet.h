@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009,2010 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -209,6 +209,10 @@ typedef struct {
 #define OP_GPIO_WRITE_REPLY          (OP_GPIO_WRITE | OP_REPLY_BIT)
 #define OP_GPIO_STREAM               21
 #define OP_GPIO_STREAM_REPLY         (OP_GPIO_STREAM | OP_REPLY_BIT)
+#define OP_RX_ANTENNA                22
+#define OP_RX_ANTENNA_REPLY          (OP_RX_ANTENNA | OP_REPLY_BIT)
+#define OP_TX_ANTENNA                23
+#define OP_TX_ANTENNA_REPLY          (OP_RX_ANTENNA | OP_REPLY_BIT)
 
 /*
  * All subpackets are a multiple of 4 bytes long.

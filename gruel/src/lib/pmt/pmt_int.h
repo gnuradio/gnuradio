@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009 Free Software Foundation, Inc.
+ * Copyright 2006,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -107,9 +107,9 @@ public:
 
 class pmt_integer : public pmt_base
 {
+public:
   long		d_value;
 
-public:
   pmt_integer(long value);
   //~pmt_integer(){}
 
@@ -120,9 +120,9 @@ public:
 
 class pmt_real : public pmt_base
 {
+public:
   double	d_value;
 
-public:
   pmt_real(double value);
   //~pmt_real(){}
 
@@ -133,9 +133,9 @@ public:
 
 class pmt_complex : public pmt_base
 {
+public:
   std::complex<double>	d_value;
 
-public:
   pmt_complex(std::complex<double> value);
   //~pmt_complex(){}
 
@@ -155,10 +155,10 @@ public:
 
 class pmt_pair : public pmt_base
 {
+public:
   pmt_t		d_car;
   pmt_t		d_cdr;
 
-public:
   pmt_pair(const pmt_t& car, const pmt_t& cdr);
   //~pmt_pair(){};
 
@@ -201,23 +201,6 @@ public:
 
   pmt_t _ref(size_t k) const { return d_v[k]; }
   void _set(size_t k, pmt_t v) { d_v[k] = v; }
-};
-
-class pmt_dict : public pmt_base
-{
-  pmt_t		d_alist;	// list of (key . value) pairs
-
-public:
-  pmt_dict();
-  //~pmt_dict();
-
-  bool  is_dict() const { return true; }
-  void  set(pmt_t key, pmt_t value);
-  pmt_t ref(pmt_t key, pmt_t default_value) const;
-  bool  has_key(pmt_t key) const;
-  pmt_t items() const;
-  pmt_t keys() const;
-  pmt_t values() const;
 };
 
 class pmt_any : public pmt_base

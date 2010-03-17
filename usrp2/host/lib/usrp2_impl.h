@@ -126,6 +126,7 @@ namespace usrp2 {
 
     // Rx
 
+    bool set_rx_antenna(int ant);
     bool set_rx_gain(double gain);
     double rx_gain_min() { return d_rx_db_info.gain_min; }
     double rx_gain_max() { return d_rx_db_info.gain_max; }
@@ -153,6 +154,7 @@ namespace usrp2 {
 
     // Tx
 
+    bool set_tx_antenna(int ant);
     bool set_tx_gain(double gain);
     double tx_gain_min() { return d_tx_db_info.gain_min; }
     double tx_gain_max() { return d_tx_db_info.gain_max; }

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009 Free Software Foundation, Inc.
+ * Copyright 2006,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -465,23 +465,30 @@ std::complex<double> *pmt_c64vector_writable_elements(pmt_t v, size_t &len); //<
 /*
  * ------------------------------------------------------------------------
  *	   Dictionary (a.k.a associative array, hash, map)
+ *
+ * This is a functional data structure that is persistent.  Updating a
+ * functional data structure does not destroy the existing version, but
+ * rather creates a new version that coexists with the old.
  * ------------------------------------------------------------------------
  */
 
 //! Return true if \p obj is a dictionary
-bool pmt_is_dict(pmt_t obj);
+bool pmt_is_dict(const pmt_t &obj);
 
-//! make an empty dictionary
+//! Make an empty dictionary
 pmt_t pmt_make_dict();
 
-//! dict[key] = value
-void  pmt_dict_set(pmt_t dict, pmt_t key, pmt_t value);
+//! Return a new dictionary with \p key associated with \p value.
+pmt_t pmt_dict_add(const pmt_t &dict, const pmt_t &key, const pmt_t &value);
+
+//! Return a new dictionary with \p key removed.
+pmt_t pmt_dict_delete(const pmt_t &dict, const pmt_t &key);
 
 //! Return true if \p key exists in \p dict
-bool  pmt_dict_has_key(pmt_t dict, pmt_t key);
+bool  pmt_dict_has_key(const pmt_t &dict, const pmt_t &key);
 
 //! If \p key exists in \p dict, return associated value; otherwise return \p not_found.
-pmt_t pmt_dict_ref(pmt_t dict, pmt_t key, pmt_t not_found);
+pmt_t pmt_dict_ref(const pmt_t &dict, const pmt_t &key, const pmt_t &not_found);
 
 //! Return list of (key . value) pairs
 pmt_t pmt_dict_items(pmt_t dict);

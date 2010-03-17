@@ -46,6 +46,7 @@ noinst_PROGRAMS = \
 	tx_standalone \
 	txrx \
 	txrx_wbx \
+	txrx_xcvr \
 	factory_test \
 	burnrev30 \
 	burnrev31 \
@@ -63,6 +64,7 @@ noinst_PROGRAMS = \
 # tx_drop2_SOURCES = tx_drop2.c app_common.c
 txrx_SOURCES = txrx.c app_common_v2.c
 txrx_wbx_SOURCES = txrx.c app_common_v2.c
+txrx_xcvr_SOURCES = txrx.c app_common_v2.c
 factory_test_SOURCES = factory_test.c app_common_v2.c
 eth_serdes_SOURCES = eth_serdes.c app_passthru_v2.c
 serdes_txrx_SOURCES = serdes_txrx.c app_common_v2.c
@@ -70,6 +72,8 @@ mimo_tx_SOURCES = mimo_tx.c mimo_app_common_v2.c
 mimo_tx_slave_SOURCES = mimo_tx_slave.c app_common_v2.c
 
 txrx_wbx_LDADD = ../lib/libu2fw_wbx.a
+
+txrx_xcvr_LDADD = ../lib/libu2fw_xcvr.a
 
 noinst_HEADERS = \
         app_common_v2.h \
