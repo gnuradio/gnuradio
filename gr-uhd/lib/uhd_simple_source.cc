@@ -68,6 +68,10 @@ double uhd_simple_source::get_samp_rate(void){
     return _dev->get_rx_rate();
 }
 
+void uhd_simple_source::set_center_freq(double freq){
+    _dev->set_rx_freq(freq);
+}
+
 /***********************************************************************
  * Work
  **********************************************************************/

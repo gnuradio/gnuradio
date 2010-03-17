@@ -66,6 +66,10 @@ double uhd_simple_sink::get_samp_rate(void){
     return _dev->get_tx_rate();
 }
 
+void uhd_simple_sink::set_center_freq(double freq){
+    _dev->set_tx_freq(freq);
+}
+
 /***********************************************************************
  * Work
  **********************************************************************/

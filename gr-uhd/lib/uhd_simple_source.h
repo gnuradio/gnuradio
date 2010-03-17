@@ -39,6 +39,8 @@ public:
     void set_samp_rate(double rate);
     double get_samp_rate(void);
 
+    void set_center_freq(double freq);
+
     int work(
         int noutput_items,
         gr_vector_const_void_star &input_items,

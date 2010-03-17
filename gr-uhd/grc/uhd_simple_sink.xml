@@ -10,8 +10,10 @@
 	<category>UHD</category>
 	<import>from gnuradio import uhd</import>
 	<make>uhd.simple_sink($args, "$type.type")
-self.$(id).set_samp_rate($samp_rate)</make>
+self.$(id).set_samp_rate($samp_rate)
+self.$(id).set_center_freq($center_freq)</make>
 	<callback>set_samp_rate($samp_rate)</callback>
+	<callback>set_center_freq($center_freq)</callback>
 	<param>
 		<name>Input Type</name>
 		<key>type</key>
@@ -39,6 +41,11 @@ self.$(id).set_samp_rate($samp_rate)</make>
 		<name>Samp Rate (Sps)</name>
 		<key>samp_rate</key>
 		<value>samp_rate</value>
+		<type>real</type>
+	</param>
+	<param>
+		<name>Center Freq (Hz)</name>
+		<key>center_freq</key>
 		<type>real</type>
 	</param>
 	<sink>
