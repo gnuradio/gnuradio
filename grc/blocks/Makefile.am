@@ -67,6 +67,7 @@ dist_ourdata_DATA = \
 	const_source_x.xml \
 	gr_add_const_vxx.xml \
 	gr_add_xx.xml \
+	gr_additive_scrambler_bb.xml \
 	gr_agc2_xx.xml \
 	gr_agc_xx.xml \
 	gr_and_xx.xml \
