@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -82,10 +82,13 @@ class DrawingArea(gtk.DrawingArea):
 		Forward button click information to the flow graph.
 		"""
 		self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
-		self._flow_graph.handle_mouse_button_press(
-			left_click=(event.button == 1),
+		if event.button == 1: self._flow_graph.handle_mouse_selector_press(
 			double_click=(event.type == gtk.gdk._2BUTTON_PRESS),
 			coordinate=(event.x, event.y),
+		)
+		if event.button == 3: self._flow_graph.handle_mouse_context_press(
+			coordinate=(event.x, event.y),
+			event=event,
 		)
 
 	def _handle_mouse_button_release(self, widget, event):
@@ -93,8 +96,7 @@ class DrawingArea(gtk.DrawingArea):
 		Forward button release information to the flow graph.
 		"""
 		self.ctrl_mask = event.state & gtk.gdk.CONTROL_MASK
-		self._flow_graph.handle_mouse_button_release(
-			left_click=(event.button == 1),
+		if event.button == 1: self._flow_graph.handle_mouse_selector_release(
 			coordinate=(event.x, event.y),
 		)
 
