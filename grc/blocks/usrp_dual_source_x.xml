@@ -8,7 +8,11 @@
 	<name>USRP Dual Source</name>
 	<key>usrp_dual_source_x</key>
 	<import>from grc_gnuradio import usrp as grc_usrp</import>
-	<make>grc_usrp.dual_source_$(type.fcn)(which=$which, rx_ant_a=$rx_ant_a, rx_ant_b=$rx_ant_b)
+	<make>grc_usrp.dual_source_$(type.fcn)(
+	which=$which,
+	rx_ant_a=$rx_ant_a, rx_ant_b=$rx_ant_b,
+	rx_source_a=$rx_source_a, rx_source_b=$rx_source_b,
+)
 #if $format()
 self.$(id).set_format(width=$format.width, shift=$format.shift)
 #end if
@@ -187,6 +191,36 @@ self.$(id).set_gain_b($gain_b)</make>
 		<option>
 			<name>RX2</name>
 			<key>RX2</key>
+		</option>
+	</param>
+	<param>
+		<name>RX Source A</name>
+		<key>rx_source_a</key>
+		<value>A</value>
+		<type>string</type>
+		<hide>#if $rx_source_a() == 'A' then 'part' else 'none'#</hide>
+		<option>
+			<name>Side A</name>
+			<key>A</key>
+		</option>
+		<option>
+			<name>Side B</name>
+			<key>B</key>
+		</option>
+	</param>
+	<param>
+		<name>RX Source B</name>
+		<key>rx_source_b</key>
+		<value>B</value>
+		<type>string</type>
+		<hide>#if $rx_source_b() == 'B' then 'part' else 'none'#</hide>
+		<option>
+			<name>Side A</name>
+			<key>A</key>
+		</option>
+		<option>
+			<name>Side B</name>
+			<key>B</key>
 		</option>
 	</param>
 	<source>
