@@ -29,6 +29,7 @@
 #include <assert.h>
 #include <stdexcept>
 #include <cstdio>
+#include <cstring>
 
 gri_fft_filter_fff_generic::gri_fft_filter_fff_generic (int decimation, 
 							const std::vector<float> &taps)

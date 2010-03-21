@@ -29,6 +29,7 @@
 #include <assert.h>
 #include <stdexcept>
 #include <cstdio>
+#include <cstring>
 #include <fftw3.h>
 
 gri_fft_filter_ccc_generic::gri_fft_filter_ccc_generic (int decimation, 
