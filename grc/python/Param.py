@@ -1,5 +1,5 @@
 """
-Copyright 2008, 2009 Free Software Foundation, Inc.
+Copyright 2008, 2009, 2010 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -108,7 +108,23 @@ class Param(_Param, _GUIParam):
 		Get the repr (nice string format) for this param.
 		@return the string representation
 		"""
-		if not self.is_valid(): return self.get_value()
+		##################################################
+		# truncate helper method
+		##################################################
+		def _truncate(string, style=0):
+			max_len = max(27 - len(self.get_name()), 3)
+			if len(string) > max_len:
+				if style < 0: #front truncate
+					string = '...' + string[3-max_len:]
+				elif style == 0: #center truncate
+					string = string[:max_len/2 -3] + '...' + string[-max_len/2:]
+				elif style > 0: #rear truncate
+					string = string[:max_len-3] + '...'
+			return string
+		##################################################
+		# simple conditions
+		##################################################
+		if not self.is_valid(): return _truncate(self.get_value())
 		if self.get_value() in self.get_option_keys(): return self.get_option(self.get_value()).get_name()
 		##################################################
 		# display logic for numbers
@@ -126,7 +142,6 @@ class Param(_Param, _GUIParam):
 		# split up formatting by type
 		##################################################
 		truncate = 0 #default center truncate
-		max_len = max(27 - len(self.get_name()), 3)
 		e = self.get_evaluated()
 		t = self.get_type()
 		if isinstance(e, bool): return str(e)
@@ -141,16 +156,9 @@ class Param(_Param, _GUIParam):
 			truncate = -1
 		else: dt_str = str(e) #other types
 		##################################################
-		# truncate
+		# done
 		##################################################
-		if len(dt_str) > max_len:
-			if truncate < 0: #front truncate
-				dt_str = '...' + dt_str[3-max_len:]
-			elif truncate == 0: #center truncate
-				dt_str = dt_str[:max_len/2 -3] + '...' + dt_str[-max_len/2:]
-			elif truncate > 0: #rear truncate
-				dt_str = dt_str[:max_len-3] + '...'
-		return dt_str
+		return _truncate(dt_str, truncate)
 
 	def get_input(self, *args, **kwargs):
 		if self.get_type() in ('file_open', 'file_save'): return FileParam(self, *args, **kwargs)
