@@ -52,6 +52,7 @@ protected:
     std::string _type;
     size_t _sizeof_samp;
     bool _is_streaming;
+    void set_streaming(bool enb);
 };
 
 #endif /* INCLUDED_UHD_SIMPLE_SOURCE_H */

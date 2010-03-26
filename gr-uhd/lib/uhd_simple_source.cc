@@ -52,12 +52,19 @@ uhd_simple_source::uhd_simple_source(
     _dev = uhd::simple_device::make(args);
     _sizeof_samp = get_size(type);
 
-    _dev->set_streaming(false);
-    _is_streaming = false;
+    set_streaming(false);
 }
 
 uhd_simple_source::~uhd_simple_source(void){
-    _dev->set_streaming(false);
+    set_streaming(false);
+}
+
+void uhd_simple_source::set_streaming(bool enb){
+    uhd::stream_cmd_t stream_cmd;
+    stream_cmd.stream_now = true;
+    stream_cmd.continuous = enb;
+    _dev->issue_stream_cmd(stream_cmd);
+    _is_streaming = enb;
 }
 
 void uhd_simple_source::set_samp_rate(double rate){
@@ -82,10 +89,7 @@ int uhd_simple_source::work(
 ){
     //conditionally start streaming in the work call
     //this prevents streaming before the runtime is ready
-    if (not _is_streaming){
-        _dev->set_streaming(true);
-        _is_streaming = true;
-    }
+    if (not _is_streaming) set_streaming(true);
 
     size_t total_items_read = 0;
     uhd::rx_metadata_t metadata;
