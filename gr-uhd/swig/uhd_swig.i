@@ -27,6 +27,9 @@
 #include <uhd_simple_sink.h>
 %}
 
+%include <uhd/types/ranges.hpp>
+%include <uhd/types/tune_result.hpp>
+
 GR_SWIG_BLOCK_MAGIC(uhd,simple_source)
 %include <uhd_simple_source.h>
 
