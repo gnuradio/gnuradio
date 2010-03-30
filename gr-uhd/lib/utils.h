@@ -23,9 +23,4 @@
 #ifndef INCLUDED_NOINST_UTILS_H
 #define INCLUDED_NOINST_UTILS_H
 
-#include <cstddef>
-#include <string>
-
-size_t get_size(const std::string &type);
-
 #endif /* INCLUDED_NOINST_UTILS_H */

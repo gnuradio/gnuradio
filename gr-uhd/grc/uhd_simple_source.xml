@@ -9,7 +9,7 @@
 	<key>uhd_simple_source</key>
 	<category>UHD</category>
 	<import>from gnuradio import uhd</import>
-	<make>uhd.simple_source($args, "$type.type")
+	<make>uhd.simple_source($args, uhd.io_type_t.$type.type)
 self.$(id).set_samp_rate($samp_rate)
 self.$(id).set_center_freq($center_freq)</make>
 	<callback>set_samp_rate($samp_rate)</callback>
@@ -21,13 +21,13 @@ self.$(id).set_center_freq($center_freq)</make>
 		<option>
 			<name>Complex</name>
 			<key>complex</key>
-			<opt>type:32fc</opt>
+			<opt>type:COMPLEX_FLOAT32</opt>
 			<opt>vlen:1</opt>
 		</option>
 		<option>
 			<name>Short</name>
 			<key>short</key>
-			<opt>type:16sc</opt>
+			<opt>type:COMPLEX_INT16</opt>
 			<opt>vlen:2</opt>
 		</option>
 	</param>

@@ -29,11 +29,11 @@
 class uhd_simple_source;
 
 boost::shared_ptr<uhd_simple_source>
-uhd_make_simple_source(const std::string &args, const std::string &type);
+uhd_make_simple_source(const std::string &args, const uhd::io_type_t::tid_t &type);
 
 class uhd_simple_source : public gr_sync_block{
 public:
-    uhd_simple_source(const std::string &args, const std::string &type);
+    uhd_simple_source(const std::string &args, const uhd::io_type_t &type);
     ~uhd_simple_source(void);
 
     void set_samp_rate(double rate);
@@ -49,8 +49,7 @@ public:
 
 protected:
     uhd::simple_device::sptr _dev;
-    std::string _type;
-    size_t _sizeof_samp;
+    const uhd::io_type_t _type;
     bool _is_streaming;
     void set_streaming(bool enb);
 };

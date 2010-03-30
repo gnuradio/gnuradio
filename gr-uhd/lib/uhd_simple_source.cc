@@ -30,7 +30,7 @@
  **********************************************************************/
 boost::shared_ptr<uhd_simple_source> uhd_make_simple_source(
     const std::string &args,
-    const std::string &type
+    const uhd::io_type_t::tid_t &type
 ){
     return boost::shared_ptr<uhd_simple_source>(
         new uhd_simple_source(args, type)
@@ -42,15 +42,13 @@ boost::shared_ptr<uhd_simple_source> uhd_make_simple_source(
  **********************************************************************/
 uhd_simple_source::uhd_simple_source(
     const std::string &args,
-    const std::string &type
+    const uhd::io_type_t &type
 ) : gr_sync_block(
     "uhd source",
     gr_make_io_signature(0, 0, 0),
-    gr_make_io_signature(1, 1, get_size(type))
-){
-    _type = type;
+    gr_make_io_signature(1, 1, type.size)
+), _type(type){
     _dev = uhd::simple_device::make(args);
-    _sizeof_samp = get_size(type);
 
     set_streaming(false);
 }
@@ -99,8 +97,8 @@ int uhd_simple_source::work(
     while(total_items_read < size_t(noutput_items)){
         size_t items_read = _dev->get_device()->recv(
             boost::asio::buffer(
-                (uint8_t *)output_items[0]+(total_items_read*_sizeof_samp),
-                (noutput_items-total_items_read)*_sizeof_samp
+                (uint8_t *)output_items[0]+(total_items_read*_type.size),
+                (noutput_items-total_items_read)*_type.size
             ), metadata, _type
         );
         total_items_read += items_read;

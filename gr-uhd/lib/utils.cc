@@ -21,16 +21,3 @@
  */
 
 #include "utils.h" //local include
-#include <stdint.h>
-#include <complex>
-#include <stdexcept>
-
-size_t get_size(const std::string &type){
-    if(type == "32fc"){
-        return sizeof(std::complex<float>);
-    }
-    if(type == "16sc"){
-        return sizeof(std::complex<int16_t>);
-    }
-    throw std::runtime_error("unknown type");
-}
