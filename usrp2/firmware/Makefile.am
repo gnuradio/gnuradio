@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2007 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,20 +15,201 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-ACLOCAL_AMFLAGS = -I config
-
 include $(top_srcdir)/Makefile.common
 
+noinst_LIBRARIES = \
+	libu2fw.a \
+	libu2fw_wbx.a \
+	libu2fw_burx.a \
+	libu2fw_xcvr.a
+
+
+libu2fw_a_SOURCES = \
+	abort.c \
+	ad9510.c \
+	adf4350.c \
+	adf4350_regs.c \
+	ad9777.c \
+	bsm12.c \
+	buffer_pool.c \
+	clocks.c \
+	db_basic.c \
+	db_dbsrx.c \
+	db_rfx.c \
+	db_tvrx.c \
+	db_init.c \
+	dbsm.c \
+	eeprom.c \
+	ethernet.c \
+	eth_mac.c \
+	_exit.c \
+	exit.c \
+	hal_io.c \
+	hal_uart.c \
+	i2c.c \
+	lsadc.c \
+	lsdac.c \
+	mdelay.c \
+	memcpy_wa.c \
+	memset_wa.c \
+	nonstdio.c \
+	pic.c \
+	print_mac_addr.c \
+	print_rmon_regs.c \
+	print_fxpt.c \
+	print_buffer.c \
+	printf.c \
+	sd.c \
+	spi.c \
+	u2_init.c	
+
+libu2fw_wbx_a_SOURCES = \
+	abort.c \
+	ad9510.c \
+	adf4350.c \
+	adf4350_regs.c \
+	ad9777.c \
+	bsm12.c \
+	buffer_pool.c \
+	clocks.c \
+	db_basic.c \
+	db_wbxng.c \
+	db_init_wbx.c \
+	dbsm.c \
+	eeprom.c \
+	ethernet.c \
+	eth_mac.c \
+	_exit.c \
+	exit.c \
+	hal_io.c \
+	hal_uart.c \
+	i2c.c \
+	lsadc.c \
+	lsdac.c \
+	mdelay.c \
+	memcpy_wa.c \
+	memset_wa.c \
+	nonstdio.c \
+	pic.c \
+	print_mac_addr.c \
+	print_rmon_regs.c \
+	print_fxpt.c \
+	print_buffer.c \
+	printf.c \
+	sd.c \
+	spi.c \
+	u2_init.c	
+
+libu2fw_burx_a_SOURCES = \
+	abort.c \
+	ad9510.c \
+	ad9777.c \
+	bsm12.c \
+	buffer_pool.c \
+	clocks.c \
+	db_basic.c \
+	db_bitshark_rx.c \
+	db_init_bitshark_rx.c \
+	dbsm.c \
+	eeprom.c \
+	ethernet.c \
+	eth_mac.c \
+	_exit.c \
+	exit.c \
+	hal_io.c \
+	hal_uart.c \
+	i2c.c \
+	lsadc.c \
+	lsdac.c \
+	mdelay.c \
+	memcpy_wa.c \
+	memset_wa.c \
+	nonstdio.c \
+	pic.c \
+	print_mac_addr.c \
+	print_rmon_regs.c \
+	print_fxpt.c \
+	print_buffer.c \
+	printf.c \
+	sd.c \
+	spi.c \
+	u2_init.c
+
+libu2fw_xcvr_a_SOURCES = \
+	abort.c \
+	ad9510.c \
+	adf4350.c \
+	adf4350_regs.c \
+	ad9777.c \
+	bsm12.c \
+	buffer_pool.c \
+	clocks.c \
+	db_basic.c \
+	db_xcvr2450.c \
+	db_init_xcvr.c \
+	dbsm.c \
+	eeprom.c \
+	ethernet.c \
+	eth_mac.c \
+	_exit.c \
+	exit.c \
+	hal_io.c \
+	hal_uart.c \
+	i2c.c \
+	lsadc.c \
+	lsdac.c \
+	mdelay.c \
+	memcpy_wa.c \
+	memset_wa.c \
+	nonstdio.c \
+	pic.c \
+	print_mac_addr.c \
+	print_rmon_regs.c \
+	print_fxpt.c \
+	print_buffer.c \
+	printf.c \
+	sd.c \
+	spi.c \
+	u2_init.c	
+
+noinst_HEADERS = \
+	ad9510.h \
+	adf4350.h \
+	adf4350_regs.h \
+	ad9777.h \
+	ad9777_regs.h \
+	bool.h \
+	bsm12.h \
+	buffer_pool.h \
+	clocks.h \
+	db.h \
+	db_base.h \
+	db_wbxng.h \
+	db_bitshark_rx.h
+	dbsm.h \
+	eth_mac.h \
+	eth_mac_regs.h \
+	eth_phy.h \
+	ethernet.h \
+	hal_io.h \
+	hal_uart.h \
+	i2c.h \
+	lsadc.h \
+	lsdac.h \
+	mdelay.h \
+	memcpy_wa.h \
+	memory_map.h \
+	memset_wa.h \
+	nonstdio.h \
+	pic.h \
+	print_rmon_regs.h \
+	sd.h \
+	spi.h \
+	stdint.h \
+	stdio.h \
+	u2_init.h \
+	usrp2_bytesex.h \
+        wb16550.h
+
 EXTRA_DIST = \
-	bootstrap \
-	configure \
-	configure.gnu \
-	u2_flash_tool
-
-SUBDIRS = config 
-
-if BUILDING_USRP2_FIRMWARE
-SUBDIRS += include lib apps
-endif
-
-
+        microblaze.ld
