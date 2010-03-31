@@ -26,6 +26,7 @@ usrpincludedir = $(includedir)/usrp
 usrpinclude_HEADERS = \
 	db_base.h \
 	db_basic.h \
+	db_bitshark_rx.h \
 	db_dbs_rx.h \
 	db_dtt754.h \
 	db_dtt768.h \
