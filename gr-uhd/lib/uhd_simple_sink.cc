@@ -49,7 +49,7 @@ uhd_simple_sink::uhd_simple_sink(
     gr_make_io_signature(1, 1, type.size),
     gr_make_io_signature(0, 0, 0)
 ), _type(type){
-    _dev = uhd::simple_device::make(args);
+    _dev = uhd::usrp::simple_usrp::make(args);
 }
 
 uhd_simple_sink::~uhd_simple_sink(void){

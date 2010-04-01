@@ -48,7 +48,7 @@ uhd_simple_source::uhd_simple_source(
     gr_make_io_signature(0, 0, 0),
     gr_make_io_signature(1, 1, type.size)
 ), _type(type){
-    _dev = uhd::simple_device::make(args);
+    _dev = uhd::usrp::simple_usrp::make(args);
 
     set_streaming(false);
 }

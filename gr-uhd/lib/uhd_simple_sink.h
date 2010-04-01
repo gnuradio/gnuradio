@@ -24,7 +24,7 @@
 #define INCLUDED_UHD_SIMPLE_SINK_H
 
 #include <gr_sync_block.h>
-#include <uhd/simple_device.hpp>
+#include <uhd/usrp/simple_usrp.hpp>
 
 class uhd_simple_sink;
 
@@ -48,7 +48,7 @@ public:
     );
 
 protected:
-    uhd::simple_device::sptr _dev;
+    uhd::usrp::simple_usrp::sptr _dev;
     const uhd::io_type_t _type;
 };
 
