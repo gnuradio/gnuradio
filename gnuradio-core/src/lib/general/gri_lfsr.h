@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -86,6 +86,7 @@ class gri_lfsr
  private:
   uint32_t d_shift_register;
   uint32_t d_mask;
+  uint32_t d_seed;
   uint32_t d_shift_register_length;	// less than 32
 
   static uint32_t
@@ -99,7 +100,10 @@ class gri_lfsr
  public:
 
   gri_lfsr(uint32_t mask, uint32_t seed, uint32_t reg_len)
-    : d_shift_register(seed), d_mask(mask), d_shift_register_length(reg_len)
+    : d_shift_register(seed), 
+      d_mask(mask), 
+      d_seed(seed),
+      d_shift_register_length(reg_len)
   {
     if (reg_len > 31)
       throw std::invalid_argument("reg_len must be <= 31");
@@ -126,6 +130,10 @@ class gri_lfsr
     return output;
   }
 
+  /*!
+   * Reset shift register to initial seed value
+   */
+  void reset() { d_shift_register = d_seed; }
 
   /*!
    * Rotate the register through x number of bits

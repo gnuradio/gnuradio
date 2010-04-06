@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Additive Scrambler
+###################################################
+ -->
+<block>
+	<name>Additive Scrambler</name>
+	<key>gr_additive_scrambler_bb</key>
+	<import>from gnuradio import gr</import>
+	<make>gr.additive_scrambler_bb($mask, $seed, $len, $count)</make>
+	<param>
+		<name>Mask</name>
+		<key>mask</key>
+		<value>0x8A</value>
+		<type>hex</type>
+	</param>
+	<param>
+		<name>Seed</name>
+		<key>seed</key>
+		<value>0x7F</value>
+		<type>hex</type>
+	</param>
+	<param>
+		<name>Length</name>
+		<key>len</key>
+		<value>7</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Count</name>
+		<key>count</key>
+		<value>0</value>
+		<type>int</type>
+	</param>
+	<sink>
+		<name>in</name>
+		<type>byte</type>
+	</sink>
+	<source>
+		<name>out</name>
+		<type>byte</type>
+	</source>
+</block>

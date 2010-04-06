@@ -34,6 +34,7 @@ EXTRA_DIST = 				\
 	gr_constants.cc.in			
 
 libgeneral_la_SOURCES = 		\
+	gr_additive_scrambler_bb.cc	\
 	gr_agc_cc.cc                	\
 	gr_agc_ff.cc                	\
 	gr_agc2_cc.cc                	\
@@ -188,6 +189,7 @@ libgeneral_qa_la_SOURCES = 		\
 	qa_gri_lfsr.cc
 
 grinclude_HEADERS = 			\
+	gr_additive_scrambler_bb.h	\
 	gr_agc_cc.h                 	\
 	gr_agc_ff.h                 	\
 	gr_agc2_cc.h                	\
@@ -360,6 +362,7 @@ noinst_HEADERS = 			\
 if PYTHON
 swiginclude_HEADERS =			\
 	general.i			\
+	gr_additive_scrambler_bb.i	\
 	gr_agc_cc.i                 	\
 	gr_agc_ff.i                 	\
 	gr_agc2_cc.i                 	\

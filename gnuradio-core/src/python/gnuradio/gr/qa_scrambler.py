@@ -40,5 +40,25 @@ class test_scrambler(gr_unittest.TestCase):
         self.tb.run()
         self.assertEqual(tuple(src_data[:-8]), dst.data()[8:]) # skip garbage during synchronization
 
+    def test_additive_scrambler(self):
+        src_data = (1,)*1000
+        src = gr.vector_source_b(src_data, False)
+        scrambler = gr.additive_scrambler_bb(0x8a, 0x7f, 7)
+        descrambler = gr.additive_scrambler_bb(0x8a, 0x7f, 7)
+        dst = gr.vector_sink_b()
+        self.tb.connect(src, scrambler, descrambler, dst)
+        self.tb.run()
+        self.assertEqual(src_data, dst.data())                            
+
+    def test_additive_scrambler_reset(self):
+        src_data = (1,)*1000
+        src = gr.vector_source_b(src_data, False)
+        scrambler = gr.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
+        descrambler = gr.additive_scrambler_bb(0x8a, 0x7f, 7, 100)
+        dst = gr.vector_sink_b()
+        self.tb.connect(src, scrambler, descrambler, dst)
+        self.tb.run()
+        self.assertEqual(src_data, dst.data())                            
+
 if __name__ == '__main__':
     gr_unittest.main ()

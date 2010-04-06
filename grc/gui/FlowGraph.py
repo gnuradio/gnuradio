@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -51,6 +51,19 @@ class FlowGraph(Element):
 		#selected ports
 		self._old_selected_port = None
 		self._new_selected_port = None
+		#context menu
+		self._context_menu = gtk.Menu()
+		for action in [
+			Actions.BLOCK_CUT,
+			Actions.BLOCK_COPY,
+			Actions.BLOCK_PASTE,
+			Actions.ELEMENT_DELETE,
+			Actions.BLOCK_ROTATE_CCW,
+			Actions.BLOCK_ROTATE_CW,
+			Actions.BLOCK_ENABLE,
+			Actions.BLOCK_DISABLE,
+			Actions.BLOCK_PARAM_MODIFY,
+		]: self._context_menu.append(action.create_menu_item())
 
 	###########################################################################
 	# Access Drawing Area
@@ -425,14 +438,27 @@ class FlowGraph(Element):
 	##########################################################################
 	## Event Handlers
 	##########################################################################
-	def handle_mouse_button_press(self, left_click, double_click, coordinate):
+	def handle_mouse_context_press(self, coordinate, event):
 		"""
-		A mouse button is pressed, only respond to left clicks.
+		The context mouse button was pressed:
+		If no elements were selected, perform re-selection at this coordinate.
+		Then, show the context menu at the mouse click location.
+		"""
+		selections = self.what_is_selected(coordinate)
+		if not set(selections).intersection(self.get_selected_elements()):
+			self.set_coordinate(coordinate)
+			self.mouse_pressed = True
+			self.update_selected_elements()
+			self.mouse_pressed = False
+		self._context_menu.popup(None, None, None, event.button, event.time)
+
+	def handle_mouse_selector_press(self, double_click, coordinate):
+		"""
+		The selector mouse button was pressed:
 		Find the selected element. Attempt a new connection if possible.
 		Open the block params window on a double click.
 		Update the selection state of the flow graph.
 		"""
-		if not left_click: return
 		self.press_coor = coordinate
 		self.set_coordinate(coordinate)
 		self.time = 0
@@ -444,11 +470,12 @@ class FlowGraph(Element):
 			self.mouse_pressed = False
 			Actions.BLOCK_PARAM_MODIFY()
 
-	def handle_mouse_button_release(self, left_click, coordinate):
+	def handle_mouse_selector_release(self, coordinate):
 		"""
-		A mouse button is released, record the state.
+		The selector mouse button was released:
+		Update the state, handle motion (dragging).
+		And update the selected flowgraph elements.
 		"""
-		if not left_click: return
 		self.set_coordinate(coordinate)
 		self.time = 0
 		self.mouse_pressed = False
