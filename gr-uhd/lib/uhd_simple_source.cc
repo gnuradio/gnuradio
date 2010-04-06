@@ -58,10 +58,10 @@ uhd_simple_source::~uhd_simple_source(void){
 }
 
 void uhd_simple_source::set_streaming(bool enb){
-    uhd::stream_cmd_t stream_cmd;
-    stream_cmd.stream_now = true;
-    stream_cmd.continuous = enb;
-    _dev->issue_stream_cmd(stream_cmd);
+    if (enb)
+        _dev->issue_stream_cmd(uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
+    else
+        _dev->issue_stream_cmd(uhd::stream_cmd_t::STREAM_MODE_STOP_CONTINUOUS);
     _is_streaming = enb;
 }
 
