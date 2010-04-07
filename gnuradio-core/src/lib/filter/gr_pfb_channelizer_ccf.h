@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -29,7 +29,8 @@
 class gr_pfb_channelizer_ccf;
 typedef boost::shared_ptr<gr_pfb_channelizer_ccf> gr_pfb_channelizer_ccf_sptr;
 gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans, 
-							 const std::vector<float> &taps);
+							 const std::vector<float> &taps,
+							 float oversample_rate=1);
 
 class gr_fir_ccf;
 class gri_fft_complex;
@@ -105,7 +106,8 @@ class gr_pfb_channelizer_ccf : public gr_sync_block
    * \param taps    (vector/list of floats) The prototype filter to populate the filterbank.
    */
   friend gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans,
-								  const std::vector<float> &taps);
+								  const std::vector<float> &taps,
+								  float oversample_rate);
 
   std::vector<gr_fir_ccf*> d_filters;
   std::vector< std::vector<float> > d_taps;
@@ -113,6 +115,7 @@ class gr_pfb_channelizer_ccf : public gr_sync_block
   unsigned int             d_numchans;
   unsigned int             d_taps_per_filter;
   bool			   d_updated;
+  float                    d_oversample_rate;
 
   /*!
    * Build the polyphase filterbank decimator.
@@ -120,7 +123,8 @@ class gr_pfb_channelizer_ccf : public gr_sync_block
    * \param taps    (vector/list of floats) The prototype filter to populate the filterbank.
    */
   gr_pfb_channelizer_ccf (unsigned int numchans, 
-			  const std::vector<float> &taps);
+			  const std::vector<float> &taps,
+			  float oversample_rate);
 
 public:
   ~gr_pfb_channelizer_ccf ();
