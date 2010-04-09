@@ -137,43 +137,6 @@ gr_pfb_channelizer_ccf::work (int noutput_items,
     return 0;		     // history requirements may have changed.
   }
 
-#if 0
-  int M = d_numchans;
-  int N = d_oversample_rate;
-  int lastidx = 0, i = 1, k = 0, m = 0, n = 0;
-
-  int *idx = new int[M];
-  for(k = 0; k < M; k++)
-    idx[k] = 0;
-
-  while(i <= noutput_items/N) {
-    unsigned int x = 0;
-    unsigned int y = 0;
-    for(n = N-1; n >= 0; n--) {
-      for(k = 0; k < M/N; k++)
-	idx[(lastidx + k) % M]++;
-      lastidx = (lastidx + M/N) % M;
-
-      x += M/N;
-      y  = M/N;
-      for(m = 0; m < M; m++) {
-	in = (gr_complex*)input_items[m];
-
-	x = (M + x - 1) % M;
-	y = (M + y - 1) % M;
-
-	d_fft->get_inbuf()[y] = d_filters[x]->filter(&in[idx[m]]);
-      }
-      
-      d_fft->execute();
-      memcpy(out, d_fft->get_outbuf(), d_numchans*sizeof(gr_complex));
-      out += d_numchans;
-    }
-    i++;
-  }
-      
-#else
-
   int M = d_oversample_rate;
   int N = d_numchans;
   int r = N / M;
@@ -221,7 +184,5 @@ gr_pfb_channelizer_ccf::work (int noutput_items,
   
   delete [] idxlut; 
 
-#endif
-  
   return noutput_items;
 }
