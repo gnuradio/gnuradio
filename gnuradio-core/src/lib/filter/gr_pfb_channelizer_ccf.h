@@ -24,7 +24,7 @@
 #ifndef INCLUDED_GR_PFB_CHANNELIZER_CCF_H
 #define	INCLUDED_GR_PFB_CHANNELIZER_CCF_H
 
-#include <gr_sync_block.h>
+#include <gr_sync_interpolator.h>
 
 class gr_pfb_channelizer_ccf;
 typedef boost::shared_ptr<gr_pfb_channelizer_ccf> gr_pfb_channelizer_ccf_sptr;
@@ -97,7 +97,7 @@ class gri_fft_complex;
  *
  */
 
-class gr_pfb_channelizer_ccf : public gr_sync_block
+class gr_pfb_channelizer_ccf : public gr_sync_interpolator
 {
  private:
   /*!

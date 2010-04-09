@@ -44,9 +44,10 @@ gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans,
 gr_pfb_channelizer_ccf::gr_pfb_channelizer_ccf (unsigned int numchans, 
 						const std::vector<float> &taps,
 						float oversample_rate)
-  : gr_sync_block ("pfb_channelizer_ccf",
-		   gr_make_io_signature (numchans, numchans, sizeof(gr_complex)),
-		   gr_make_io_signature (1, 1, numchans*sizeof(gr_complex))),
+  : gr_sync_interpolator ("pfb_channelizer_ccf",
+			  gr_make_io_signature (numchans, numchans, sizeof(gr_complex)),
+			  gr_make_io_signature (1, 1, numchans*sizeof(gr_complex)),
+			  oversample_rate),
     d_updated (false), d_oversample_rate(oversample_rate)
 {
   d_numchans = numchans;
@@ -136,54 +137,91 @@ gr_pfb_channelizer_ccf::work (int noutput_items,
     return 0;		     // history requirements may have changed.
   }
 
+#if 0
+  int M = d_numchans;
+  int N = d_oversample_rate;
+  int lastidx = 0, i = 1, k = 0, m = 0, n = 0;
+
+  int *idx = new int[M];
+  for(k = 0; k < M; k++)
+    idx[k] = 0;
+
+  while(i <= noutput_items/N) {
+    unsigned int x = 0;
+    unsigned int y = 0;
+    for(n = N-1; n >= 0; n--) {
+      for(k = 0; k < M/N; k++)
+	idx[(lastidx + k) % M]++;
+      lastidx = (lastidx + M/N) % M;
+
+      x += M/N;
+      y  = M/N;
+      for(m = 0; m < M; m++) {
+	in = (gr_complex*)input_items[m];
+
+	x = (M + x - 1) % M;
+	y = (M + y - 1) % M;
+
+	d_fft->get_inbuf()[y] = d_filters[x]->filter(&in[idx[m]]);
+      }
+      
+      d_fft->execute();
+      memcpy(out, d_fft->get_outbuf(), d_numchans*sizeof(gr_complex));
+      out += d_numchans;
+    }
+    i++;
+  }
+      
+#else
+
   int M = d_oversample_rate;
   int N = d_numchans;
   int r = N / M;
 
-  int n=0, i=0, j=0;
-  
-  printf("\nnoutput_items = %d\n", noutput_items);
-  printf("N = %d   M  = %d   r = %d\n", N, M, r);
+  int n=1, i=-1, j=0, last;
+  //int state = 0;
 
-  //for(int n = 1; n < noutput_items; n++) {
-  while(n < noutput_items) {
+  // Although the filters change, we use this look up table
+  // to set the index of the FFT input buffer, which equivalently
+  // performs the FFT shift operation on every other turn.
+  int *idxlut = new int[N];
+  for(int ii = 0; ii < N; ii++) {
+    idxlut[ii] = N - ((ii + r) % N) - 1;
+  }
+
+  while(n <= noutput_items/M) {
     j = 0;
-    i = (i + r - 1) % N;
-    //printf("i = %d   i >= 0   n = %d\n", i, n);
+    i = (i + r) % N;
+    last = i;
     while(i >= 0) {
       in = (gr_complex*)input_items[j];
-      d_fft->get_inbuf()[i] = d_filters[i]->filter(&in[n]);
+      //d_fft->get_inbuf()[(i + state*r) % N] = d_filters[i]->filter(&in[n]);
+      d_fft->get_inbuf()[idxlut[j]] = d_filters[i]->filter(&in[n]);
       j++;
       i--;
     }
 
-    i = N;
-    //printf("i = %d   r = %d   i >= r\n", i, r);
-    while(i > r) {
-      i--;
+    i = N-1;
+    while(i > last) {
       in = (gr_complex*)input_items[j];
-      d_fft->get_inbuf()[i] = d_filters[i]->filter(&in[n-1]);
+      //d_fft->get_inbuf()[(i + state*r) % N] = d_filters[i]->filter(&in[n-1]);
+      d_fft->get_inbuf()[idxlut[j]] = d_filters[i]->filter(&in[n-1]);
       j++;
+      i--;
     }
 
     n += (i+r) >= N;
-
-    /*
-    // Move through filters from bottom to top
-    for(int j = d_numchans-1; j >= 0; j--) {
-      // Take in the items from the first input stream to d_numchans
-      in = (gr_complex*)input_items[d_numchans - 1 - j];
-
-      // Filter current input stream from bottom filter to top
-      d_fft->get_inbuf()[j] = d_filters[j]->filter(&in[i]);
-    }
-    */
+    //state ^= 1;
 
     // despin through FFT
     d_fft->execute();
-    memcpy(&out[d_numchans*n], d_fft->get_outbuf(), d_numchans*sizeof(gr_complex));
-    //memcpy(&out[d_numchans*i], d_fft->get_outbuf(), d_numchans*sizeof(gr_complex));
+    memcpy(out, d_fft->get_outbuf(), d_numchans*sizeof(gr_complex));
+    out += d_numchans;
   }
+  
+  delete [] idxlut; 
+
+#endif
   
   return noutput_items;
 }

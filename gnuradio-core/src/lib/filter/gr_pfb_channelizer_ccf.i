@@ -26,7 +26,7 @@ gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans,
 							 const std::vector<float> &taps,
 							 float oversample_rate=1);
 
-class gr_pfb_channelizer_ccf : public gr_sync_block
+class gr_pfb_channelizer_ccf : public gr_sync_interpolator
 {
  private:
   gr_pfb_channelizer_ccf (unsigned int numchans,
