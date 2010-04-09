@@ -142,7 +142,6 @@ gr_pfb_channelizer_ccf::work (int noutput_items,
   int r = N / M;
 
   int n=1, i=-1, j=0, last;
-  //int state = 0;
 
   // Although the filters change, we use this look up table
   // to set the index of the FFT input buffer, which equivalently
@@ -158,7 +157,6 @@ gr_pfb_channelizer_ccf::work (int noutput_items,
     last = i;
     while(i >= 0) {
       in = (gr_complex*)input_items[j];
-      //d_fft->get_inbuf()[(i + state*r) % N] = d_filters[i]->filter(&in[n]);
       d_fft->get_inbuf()[idxlut[j]] = d_filters[i]->filter(&in[n]);
       j++;
       i--;
@@ -167,14 +165,12 @@ gr_pfb_channelizer_ccf::work (int noutput_items,
     i = N-1;
     while(i > last) {
       in = (gr_complex*)input_items[j];
-      //d_fft->get_inbuf()[(i + state*r) % N] = d_filters[i]->filter(&in[n-1]);
       d_fft->get_inbuf()[idxlut[j]] = d_filters[i]->filter(&in[n-1]);
       j++;
       i--;
     }
 
     n += (i+r) >= N;
-    //state ^= 1;
 
     // despin through FFT
     d_fft->execute();
