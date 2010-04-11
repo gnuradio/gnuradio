@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009,2010 Free Software Foundation, Inc.
+ * Copyright 2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -18,24 +18,18 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_THREAD_H
-#define INCLUDED_THREAD_H
 
-#include <boost/thread.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+#include <gruel/thread.h>
 
 namespace gruel {
 
-  typedef boost::mutex                     mutex;
-  typedef boost::unique_lock<boost::mutex> scoped_lock;
-  typedef boost::condition_variable        condition_variable;
-  typedef boost::posix_time::time_duration duration;
+  boost::system_time
+  get_new_timeout(double secs)
+  {
+    return boost::get_system_time() + boost::posix_time::milliseconds(long(secs*1e3));
+  }
 
-  /*!
-   * Returns absolute time 'secs' into the future
-   */
-  boost::system_time get_new_timeout(double secs);
-
-} /* namespace gruel */
-
-#endif /* INCLUDED_THREAD_H */
+}

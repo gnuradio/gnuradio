@@ -1,4 +1,4 @@
-dnl Copyright 2008 Free Software Foundation, Inc.
+dnl Copyright 2008,2010 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -23,9 +23,8 @@ AC_DEFUN([GRC_USRP2],[
     dnl firmware uses a subsidiary configure.ac
     AC_CONFIG_SUBDIRS([usrp2/firmware])
 
-    dnl Don't do usrp if omnithread or gruel is skipped
+    dnl Don't do usrp if gruel is skipped
     GRC_CHECK_DEPENDENCY(usrp2, gruel)
-    GRC_CHECK_DEPENDENCY(usrp2, omnithread)
 
     dnl USRP2 host code only works on Linux at the moment
     AC_MSG_CHECKING([whether host_os is linux*])

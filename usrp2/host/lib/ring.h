@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,10 +21,10 @@
 #ifndef INCLUDED_RING_H
 #define INCLUDED_RING_H
 
-#include <gnuradio/omnithread.h>
 #include <stddef.h>
 #include <vector>
 #include <boost/shared_ptr.hpp>
+#include <gruel/thread.h>
 
 namespace usrp2 {
 
@@ -46,8 +46,8 @@ namespace usrp2 {
     };
     std::vector<ring_desc> d_ring;
 
-    omni_mutex d_mutex;
-    omni_condition d_not_empty;
+    gruel::mutex d_mutex;
+    gruel::condition_variable d_not_empty;
 
     void inc_read_ind()
     {
