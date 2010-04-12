@@ -24,7 +24,7 @@
 #ifndef INCLUDED_GR_PFB_CHANNELIZER_CCF_H
 #define	INCLUDED_GR_PFB_CHANNELIZER_CCF_H
 
-#include <gr_sync_interpolator.h>
+#include <gr_block.h>
 
 class gr_pfb_channelizer_ccf;
 typedef boost::shared_ptr<gr_pfb_channelizer_ccf> gr_pfb_channelizer_ccf_sptr;
@@ -97,7 +97,7 @@ class gri_fft_complex;
  *
  */
 
-class gr_pfb_channelizer_ccf : public gr_sync_interpolator
+class gr_pfb_channelizer_ccf : public gr_block
 {
  private:
   /*!
@@ -109,13 +109,14 @@ class gr_pfb_channelizer_ccf : public gr_sync_interpolator
 								  const std::vector<float> &taps,
 								  float oversample_rate);
 
+  bool			   d_updated;
+  unsigned int             d_numchans;
+  float                    d_oversample_rate;
   std::vector<gr_fir_ccf*> d_filters;
   std::vector< std::vector<float> > d_taps;
-  gri_fft_complex         *d_fft;
-  unsigned int             d_numchans;
   unsigned int             d_taps_per_filter;
-  bool			   d_updated;
-  float                    d_oversample_rate;
+  gri_fft_complex         *d_fft;
+  int                     *d_idxlut;
 
   /*!
    * Build the polyphase filterbank decimator.
@@ -140,9 +141,10 @@ public:
    */
   void print_taps();
   
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+  int general_work (int noutput_items,
+		    gr_vector_int &ninput_items,
+		    gr_vector_const_void_star &input_items,
+		    gr_vector_void_star &output_items);
 };
 
 #endif

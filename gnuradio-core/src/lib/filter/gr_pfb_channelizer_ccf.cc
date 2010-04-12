@@ -44,13 +44,11 @@ gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans,
 gr_pfb_channelizer_ccf::gr_pfb_channelizer_ccf (unsigned int numchans, 
 						const std::vector<float> &taps,
 						float oversample_rate)
-  : gr_sync_interpolator ("pfb_channelizer_ccf",
-			  gr_make_io_signature (numchans, numchans, sizeof(gr_complex)),
-			  gr_make_io_signature (1, 1, numchans*sizeof(gr_complex)),
-			  oversample_rate),
-    d_updated (false), d_oversample_rate(oversample_rate)
+  : gr_block ("pfb_channelizer_ccf",
+	      gr_make_io_signature (numchans, numchans, sizeof(gr_complex)),
+	      gr_make_io_signature (1, 1, numchans*sizeof(gr_complex))),
+    d_updated (false), d_numchans(numchans), d_oversample_rate(oversample_rate)
 {
-  d_numchans = numchans;
   d_filters = std::vector<gr_fir_ccf*>(d_numchans);
 
   // Create an FIR filter for each channel and zero out the taps
@@ -64,10 +62,23 @@ gr_pfb_channelizer_ccf::gr_pfb_channelizer_ccf (unsigned int numchans,
 
   // Create the FFT to handle the output de-spinning of the channels
   d_fft = new gri_fft_complex (d_numchans, false);
+
+  // Although the filters change, we use this look up table
+  // to set the index of the FFT input buffer, which equivalently
+  // performs the FFT shift operation on every other turn.
+  int r = d_numchans / d_oversample_rate;
+  d_idxlut = new int[d_numchans];
+  for(int i = 0; i < d_numchans; i++) {
+    d_idxlut[i] = d_numchans - ((i + r) % d_numchans) - 1;
+  }
+
+  set_output_multiple(d_oversample_rate);
 }
 
 gr_pfb_channelizer_ccf::~gr_pfb_channelizer_ccf ()
 {
+  delete [] d_idxlut; 
+  
   for(unsigned int i = 0; i < d_numchans; i++) {
     delete d_filters[i];
   }
@@ -125,9 +136,10 @@ gr_pfb_channelizer_ccf::print_taps()
 
 
 int
-gr_pfb_channelizer_ccf::work (int noutput_items,
-			      gr_vector_const_void_star &input_items,
-			      gr_vector_void_star &output_items)
+gr_pfb_channelizer_ccf::general_work (int noutput_items,
+				      gr_vector_int &ninput_items,
+				      gr_vector_const_void_star &input_items,
+				      gr_vector_void_star &output_items)
 {
   gr_complex *in = (gr_complex *) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
@@ -143,21 +155,13 @@ gr_pfb_channelizer_ccf::work (int noutput_items,
 
   int n=1, i=-1, j=0, last;
 
-  // Although the filters change, we use this look up table
-  // to set the index of the FFT input buffer, which equivalently
-  // performs the FFT shift operation on every other turn.
-  int *idxlut = new int[N];
-  for(int ii = 0; ii < N; ii++) {
-    idxlut[ii] = N - ((ii + r) % N) - 1;
-  }
-
   while(n <= noutput_items/M) {
     j = 0;
     i = (i + r) % N;
     last = i;
     while(i >= 0) {
       in = (gr_complex*)input_items[j];
-      d_fft->get_inbuf()[idxlut[j]] = d_filters[i]->filter(&in[n]);
+      d_fft->get_inbuf()[d_idxlut[j]] = d_filters[i]->filter(&in[n]);
       j++;
       i--;
     }
@@ -165,7 +169,7 @@ gr_pfb_channelizer_ccf::work (int noutput_items,
     i = N-1;
     while(i > last) {
       in = (gr_complex*)input_items[j];
-      d_fft->get_inbuf()[idxlut[j]] = d_filters[i]->filter(&in[n-1]);
+      d_fft->get_inbuf()[d_idxlut[j]] = d_filters[i]->filter(&in[n-1]);
       j++;
       i--;
     }
@@ -178,7 +182,6 @@ gr_pfb_channelizer_ccf::work (int noutput_items,
     out += d_numchans;
   }
   
-  delete [] idxlut; 
-
+  consume_each(noutput_items/M);
   return noutput_items;
 }
