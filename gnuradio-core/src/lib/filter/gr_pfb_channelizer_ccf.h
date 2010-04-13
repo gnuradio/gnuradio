@@ -89,6 +89,19 @@ class gri_fft_complex;
  *      <B><EM>self._taps = gr.firdes.low_pass_2(1, fs, BW, TB, 
  *           attenuation_dB=ATT, window=gr.firdes.WIN_BLACKMAN_hARRIS)</EM></B>
  *
+ * The filter output can also be overs ampled. The over sampling rate 
+ * is the ratio of the the actual output sampling rate to the normal 
+ * output sampling rate. It must be rationally related to the number 
+ * of channels as N/i for i in [1,N], which gives an outputsample rate
+ * of [fs/N, fs] where fs is the input sample rate and N is the number
+ * of channels.
+ *
+ * For example, for 6 channels with fs = 6000 Hz, the normal rate is 
+ * 6000/6 = 1000 Hz. Allowable oversampling rates are 6/6, 6/5, 6/4, 
+ * 6/3, 6/2, and 6/1 where the output sample rate of a 6/1 oversample
+ * ratio is 6000 Hz, or 6 times the normal 1000 Hz. A rate of 6/5 = 1.2,
+ * so the output rate would be 1200 Hz.
+ *
  * The theory behind this block can be found in Chapter 6 of 
  * the following book.
  *
@@ -104,6 +117,18 @@ class gr_pfb_channelizer_ccf : public gr_block
    * Build the polyphase filterbank decimator.
    * \param numchans (unsigned integer) Specifies the number of channels <EM>M</EM>
    * \param taps    (vector/list of floats) The prototype filter to populate the filterbank.
+   * \param oversample_rate (float)   The over sampling rate is the ratio of the the actual
+   *                                  output sampling rate to the normal output sampling rate.
+   *                                   It must be rationally related to the number of channels
+   *				      as N/i for i in [1,N], which gives an outputsample rate 
+   *				      of [fs/N, fs] where fs is the input sample rate and N is
+   *				      the number of channels.
+   *				      
+   *				      For example, for 6 channels with fs = 6000 Hz, the normal
+   *				      rate is 6000/6 = 1000 Hz. Allowable oversampling rates
+   *				      are 6/6, 6/5, 6/4, 6/3, 6/2, and 6/1 where the output
+   *				      sample rate of a 6/1 oversample ratio is 6000 Hz, or
+   *				      6 times the normal 1000 Hz.
    */
   friend gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans,
 								  const std::vector<float> &taps,

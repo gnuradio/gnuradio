@@ -49,6 +49,17 @@ gr_pfb_channelizer_ccf::gr_pfb_channelizer_ccf (unsigned int numchans,
 	      gr_make_io_signature (1, 1, numchans*sizeof(gr_complex))),
     d_updated (false), d_numchans(numchans), d_oversample_rate(oversample_rate)
 {
+  // The over sampling rate must be rationally related to the number of channels
+  // in that it must be N/i for i in [1,N], which gives an outputsample rate 
+  // of [fs/N, fs] where fs is the input sample rate.
+  // This tests the specified input sample rate to see if it conforms to this
+  // requirement within a few significant figures.
+  double intp = 0;
+  double x = (10000.0*rint(numchans / oversample_rate)) / 10000.0;
+  double fltp = modf(numchans / oversample_rate, &intp);
+  if(fltp != 0.0)
+    throw std::invalid_argument("gr_pfb_channelizer: oversample rate must be N/i for i in [1, N]"); 
+
   d_filters = std::vector<gr_fir_ccf*>(d_numchans);
 
   // Create an FIR filter for each channel and zero out the taps
@@ -68,7 +79,7 @@ gr_pfb_channelizer_ccf::gr_pfb_channelizer_ccf (unsigned int numchans,
   // performs the FFT shift operation on every other turn.
   d_rate_ratio = (int)rintf(d_numchans / d_oversample_rate);
   d_idxlut = new int[d_numchans];
-  for(int i = 0; i < d_numchans; i++) {
+  for(unsigned int i = 0; i < d_numchans; i++) {
     d_idxlut[i] = d_numchans - ((i + d_rate_ratio) % d_numchans) - 1;
   }
 
@@ -175,7 +186,7 @@ gr_pfb_channelizer_ccf::general_work (int noutput_items,
       i--;
     }
 
-    n += (i+d_rate_ratio) >= d_numchans;
+    n += (i+d_rate_ratio) >= (int)d_numchans;
 
     // despin through FFT
     d_fft->execute();
