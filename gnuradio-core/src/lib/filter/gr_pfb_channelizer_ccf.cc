@@ -66,16 +66,16 @@ gr_pfb_channelizer_ccf::gr_pfb_channelizer_ccf (unsigned int numchans,
   // Although the filters change, we use this look up table
   // to set the index of the FFT input buffer, which equivalently
   // performs the FFT shift operation on every other turn.
-  int r = (int)rintf(d_numchans / d_oversample_rate);
+  d_rate_ratio = (int)rintf(d_numchans / d_oversample_rate);
   d_idxlut = new int[d_numchans];
   for(int i = 0; i < d_numchans; i++) {
-    d_idxlut[i] = d_numchans - ((i + r) % d_numchans) - 1;
+    d_idxlut[i] = d_numchans - ((i + d_rate_ratio) % d_numchans) - 1;
   }
 
   // Calculate the number of filtering rounds to do to evenly
   // align the input vectors with the output channels
   d_output_multiple = 1;
-  while((d_output_multiple * r) % d_numchans != 0)
+  while((d_output_multiple * d_rate_ratio) % d_numchans != 0)
     d_output_multiple++;
   set_output_multiple(d_output_multiple);
 }
@@ -154,16 +154,11 @@ gr_pfb_channelizer_ccf::general_work (int noutput_items,
     return 0;		     // history requirements may have changed.
   }
 
-  float M = d_oversample_rate;
-  int N = d_numchans;
-  int r = (int)rintf(N / M);
-
-  int toconsume = (int)rintf(noutput_items/M);
-
   int n=1, i=-1, j=0, last;
+  int toconsume = (int)rintf(noutput_items/d_oversample_rate);
   while(n <= toconsume) {
     j = 0;
-    i = (i + r) % N;
+    i = (i + d_rate_ratio) % d_numchans;
     last = i;
     while(i >= 0) {
       in = (gr_complex*)input_items[j];
@@ -172,7 +167,7 @@ gr_pfb_channelizer_ccf::general_work (int noutput_items,
       i--;
     }
 
-    i = N-1;
+    i = d_numchans-1;
     while(i > last) {
       in = (gr_complex*)input_items[j];
       d_fft->get_inbuf()[d_idxlut[j]] = d_filters[i]->filter(&in[n-1]);
@@ -180,7 +175,7 @@ gr_pfb_channelizer_ccf::general_work (int noutput_items,
       i--;
     }
 
-    n += (i+r) >= N;
+    n += (i+d_rate_ratio) >= d_numchans;
 
     // despin through FFT
     d_fft->execute();

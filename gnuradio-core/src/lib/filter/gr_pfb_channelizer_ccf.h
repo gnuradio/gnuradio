@@ -117,6 +117,7 @@ class gr_pfb_channelizer_ccf : public gr_block
   unsigned int             d_taps_per_filter;
   gri_fft_complex         *d_fft;
   int                     *d_idxlut;
+  int                      d_rate_ratio;
   int                      d_output_multiple;
 
   /*!
