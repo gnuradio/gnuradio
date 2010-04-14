@@ -57,7 +57,8 @@ uhd_simple_sink::~uhd_simple_sink(void){
 }
 
 void uhd_simple_sink::set_samp_rate(double rate){
-    return _dev->set_tx_rate(rate);
+    _dev->set_tx_rate(rate);
+    do_samp_rate_error_message(rate, get_samp_rate());
 }
 
 double uhd_simple_sink::get_samp_rate(void){
@@ -66,6 +67,34 @@ double uhd_simple_sink::get_samp_rate(void){
 
 uhd::tune_result_t uhd_simple_sink::set_center_freq(double freq){
     return _dev->set_tx_freq(freq);
+}
+
+uhd::freq_range_t uhd_simple_sink::get_freq_range(void){
+    return _dev->get_tx_freq_range();
+}
+
+void uhd_simple_sink::set_gain(float gain){
+    return _dev->set_tx_gain(gain);
+}
+
+float uhd_simple_sink::get_gain(void){
+    return _dev->get_tx_gain();
+}
+
+uhd::gain_range_t uhd_simple_sink::get_gain_range(void){
+    return _dev->get_tx_gain_range();
+}
+
+void uhd_simple_sink::set_antenna(const std::string &ant){
+    return _dev->set_tx_antenna(ant);
+}
+
+std::string uhd_simple_sink::get_antenna(void){
+    return _dev->get_tx_antenna();
+}
+
+std::vector<std::string> uhd_simple_sink::get_antennas(void){
+    return _dev->get_tx_antennas();
 }
 
 /***********************************************************************

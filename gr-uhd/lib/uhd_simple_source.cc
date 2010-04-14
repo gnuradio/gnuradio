@@ -66,7 +66,8 @@ void uhd_simple_source::set_streaming(bool enb){
 }
 
 void uhd_simple_source::set_samp_rate(double rate){
-    return _dev->set_rx_rate(rate);
+    _dev->set_rx_rate(rate);
+    do_samp_rate_error_message(rate, get_samp_rate());
 }
 
 double uhd_simple_source::get_samp_rate(void){
@@ -75,6 +76,34 @@ double uhd_simple_source::get_samp_rate(void){
 
 uhd::tune_result_t uhd_simple_source::set_center_freq(double freq){
     return _dev->set_rx_freq(freq);
+}
+
+uhd::freq_range_t uhd_simple_source::get_freq_range(void){
+    return _dev->get_rx_freq_range();
+}
+
+void uhd_simple_source::set_gain(float gain){
+    return _dev->set_rx_gain(gain);
+}
+
+float uhd_simple_source::get_gain(void){
+    return _dev->get_rx_gain();
+}
+
+uhd::gain_range_t uhd_simple_source::get_gain_range(void){
+    return _dev->get_rx_gain_range();
+}
+
+void uhd_simple_source::set_antenna(const std::string &ant){
+    return _dev->set_rx_antenna(ant);
+}
+
+std::string uhd_simple_source::get_antenna(void){
+    return _dev->get_rx_antenna();
+}
+
+std::vector<std::string> uhd_simple_source::get_antennas(void){
+    return _dev->get_rx_antennas();
 }
 
 /***********************************************************************

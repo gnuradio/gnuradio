@@ -23,4 +23,6 @@
 #ifndef INCLUDED_NOINST_UTILS_H
 #define INCLUDED_NOINST_UTILS_H
 
+void do_samp_rate_error_message(double target_rate, double actual_rate);
+
 #endif /* INCLUDED_NOINST_UTILS_H */

@@ -21,3 +21,17 @@
  */
 
 #include "utils.h" //local include
+#include <boost/format.hpp>
+#include <iostream>
+#include <cmath>
+
+void do_samp_rate_error_message(double target_rate, double actual_rate){
+    static const double max_allowed_error = 1.0; //Sps
+    if (std::abs(target_rate - actual_rate) > max_allowed_error){
+        std::cerr << boost::format(
+            "The hardware does not support the requested sample rate:\n"
+            "    Target sample rate: %f MSps\n"
+            "    Actual sample rate: %f MSps\n"
+        ) % (target_rate/1e6) % (actual_rate/1e6) << std::endl;
+    }
+}
