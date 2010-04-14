@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2007,2008,2010 Free Software Foundation, Inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,11 +45,9 @@ libusrp2_la_SOURCES = \
 	rx_sample_handler.cc \
 	strtod_si.c \
 	usrp2.cc \
-	usrp2_impl.cc \
-	usrp2_thread.cc
+	usrp2_impl.cc
 
 libusrp2_la_LIBADD = \
-	$(OMNITHREAD_LA) \
 	$(GRUEL_LA) \
 	$(BOOST_LDFLAGS) $(BOOST_THREAD_LIB)
 
@@ -63,5 +61,4 @@ noinst_HEADERS = \
 	pktfilter.h \
 	ring.h \
 	usrp2_bytesex.h \
-	usrp2_impl.h \
-	usrp2_thread.h
+	usrp2_impl.h

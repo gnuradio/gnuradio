@@ -1,5 +1,5 @@
 #
-# Copyright 2008,2009 Free Software Foundation, Inc.
+# Copyright 2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -45,6 +45,7 @@ MSG_LIB = msg/libmsg.la
 libgruel_la_SOURCES = 			\
 	realtime.cc 			\
 	sys_pri.cc 			\
+	thread.cc			\
 	thread_body_wrapper.cc 		\
 	thread_group.cc
 

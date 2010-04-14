@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2010 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include <usrp2/usrp2.h>
 #include <usrp2/data_handler.h>
 #include <usrp2_eth_packet.h>
+#include <gruel/thread.h>
 #include <boost/scoped_ptr.hpp>
 #include "control.h"
 #include "ring.h"
@@ -60,7 +61,8 @@ namespace usrp2 {
     std::string    d_interface_name;
     pktfilter     *d_pf;
     std::string    d_addr;       // FIXME: use u2_mac_addr_t instead
-    usrp2_thread  *d_bg_thread;
+
+    boost::thread_group d_rx_tg;
     volatile bool  d_bg_running; // TODO: multistate if needed
 
     int            d_rx_seqno;
@@ -72,14 +74,14 @@ namespace usrp2 {
     unsigned int   d_num_rx_bytes;
 
     unsigned int   d_num_enqueued;
-    omni_mutex     d_enqueued_mutex;
-    omni_condition d_bg_pending_cond;
+    gruel::mutex   d_enqueued_mutex;
+    gruel::condition_variable d_bg_pending_cond;
 
     // all pending_replies are stack allocated, thus no possibility of leaking these
     pending_reply *d_pending_replies[NRIDS]; // indexed by 8-bit reply id
 
     std::vector<ring_sptr>   d_channel_rings; // indexed by 5-bit channel number
-    omni_mutex     d_channel_rings_mutex;
+    gruel::mutex   d_channel_rings_mutex;
 
     db_info	   d_tx_db_info;
     db_info	   d_rx_db_info;
@@ -90,20 +92,21 @@ namespace usrp2 {
     bool	   d_dont_enqueue;
 
     void inc_enqueued() {
-      omni_mutex_lock l(d_enqueued_mutex);
+      gruel::scoped_lock l(d_enqueued_mutex);
       d_num_enqueued++;
     }
 
     void dec_enqueued() {
-      omni_mutex_lock l(d_enqueued_mutex);
+      gruel::scoped_lock l(d_enqueued_mutex);
       if (--d_num_enqueued == 0)
-        d_bg_pending_cond.signal();
+        d_bg_pending_cond.notify_one();
     }
 
     static bool parse_mac_addr(const std::string &s, u2_mac_addr_t *p);
     void init_et_hdrs(u2_eth_packet_t *p, const std::string &dst);
     void init_etf_hdrs(u2_eth_packet_t *p, const std::string &dst,
 		       int word0_flags, int chan, uint32_t timestamp);
+    void start_bg();
     void stop_bg();
     void init_config_rx_v2_cmd(op_config_rx_v2_cmd *cmd);
     void init_config_tx_v2_cmd(op_config_tx_v2_cmd *cmd);
@@ -118,8 +121,6 @@ namespace usrp2 {
   public:
     impl(const std::string &ifc, props *p, size_t rx_bufsize);
     ~impl();
-
-    void bg_loop();
 
     std::string mac_addr() const { return d_addr; } // FIXME: convert from u2_mac_addr_t
     std::string interface_name() const { return d_interface_name; }
@@ -199,6 +200,9 @@ namespace usrp2 {
     bool sync_every_pps(bool enable);
     std::vector<uint32_t> peek32(uint32_t addr, uint32_t words);
     bool poke32(uint32_t addr, const std::vector<uint32_t> &data);
+
+    // Receive thread, need to be public for boost::bind
+    void bg_loop();
   };
 
 } // namespace usrp2

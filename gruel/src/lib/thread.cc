@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009,2010 Free Software Foundation, Inc.
+ * Copyright 2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -22,45 +22,14 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-
-#include "control.h"
-#include <iostream>
 #include <gruel/thread.h>
 
-namespace usrp2 {
+namespace gruel {
 
-  pending_reply::pending_reply(unsigned int rid, void *buffer, size_t len)
-    : d_rid(rid), d_buffer(buffer), d_len(len), d_mutex(), d_cond(),
-      d_complete(false)
+  boost::system_time
+  get_new_timeout(double secs)
   {
+    return boost::get_system_time() + boost::posix_time::milliseconds(long(secs*1e3));
   }
 
-  pending_reply::~pending_reply()
-  {
-    notify_completion(); // Needed?
-  }
-
-  int
-  pending_reply::wait_for_completion(double secs)
-  {
-    gruel::scoped_lock l(d_mutex);
-    boost::system_time to(gruel::get_new_timeout(secs));
-
-    while (!d_complete) {
-      if (!d_cond.timed_wait(l, to))
-	return 0; // timed out
-    }
-
-    return 1;
-  }
-
-  void
-  pending_reply::notify_completion()
-  {
-    gruel::scoped_lock l(d_mutex);
-    d_complete = true;
-    d_cond.notify_one();
-  }
-  
-} // namespace usrp2
-
+}
