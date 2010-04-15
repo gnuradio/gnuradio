@@ -165,9 +165,9 @@ gr_pfb_channelizer_ccf::general_work (int noutput_items,
     return 0;		     // history requirements may have changed.
   }
 
-  int n=1, i=-1, j=0, last;
+  int n=0, i=-1, j=0, last;
   int toconsume = (int)rintf(noutput_items/d_oversample_rate);
-  while(n <= toconsume) {
+  while(n < toconsume) {
     j = 0;
     i = (i + d_rate_ratio) % d_numchans;
     last = i;
