@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,13 +23,15 @@
 GR_SWIG_BLOCK_MAGIC(gr,pfb_channelizer_ccf);
 
 gr_pfb_channelizer_ccf_sptr gr_make_pfb_channelizer_ccf (unsigned int numchans,
-							 const std::vector<float> &taps);
+							 const std::vector<float> &taps,
+							 float oversample_rate=1);
 
-class gr_pfb_channelizer_ccf : public gr_sync_block
+class gr_pfb_channelizer_ccf : public gr_block
 {
  private:
   gr_pfb_channelizer_ccf (unsigned int numchans,
-			  const std::vector<float> &taps);
+			  const std::vector<float> &taps,
+			  float oversample_rate);
 
  public:
   ~gr_pfb_channelizer_ccf ();

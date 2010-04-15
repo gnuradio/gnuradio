@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2009 Free Software Foundation, Inc.
+# Copyright 2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -29,16 +29,18 @@ class pfb_channelizer_ccf(gr.hier_block2):
     This simplifies the interface by allowing a single input stream to connect to this block.
     It will then output a stream for each channel.
     '''
-    def __init__(self, numchans, taps):
+    def __init__(self, numchans, taps, oversample_rate=1):
 	gr.hier_block2.__init__(self, "pfb_channelizer_ccf",
 				gr.io_signature(1, 1, gr.sizeof_gr_complex), # Input signature
 				gr.io_signature(numchans, numchans, gr.sizeof_gr_complex)) # Output signature
 
         self._numchans = numchans
         self._taps = taps
+        self._oversample_rate = oversample_rate
 
         self.s2ss = gr.stream_to_streams(gr.sizeof_gr_complex, self._numchans)
-        self.pfb = gr.pfb_channelizer_ccf(self._numchans, self._taps)
+        self.pfb = gr.pfb_channelizer_ccf(self._numchans, self._taps,
+                                          self._oversample_rate)
         self.v2s = gr.vector_to_streams(gr.sizeof_gr_complex, self._numchans)
 
         self.connect(self, self.s2ss)
