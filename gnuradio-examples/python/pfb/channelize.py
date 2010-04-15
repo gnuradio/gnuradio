@@ -101,7 +101,7 @@ def main():
         X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen/4, Fs=fs,
                           window = lambda d: d*winfunc(fftlen),
                           scale_by_freq=True)
-        X_in = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
+        X_in = 10.0*scipy.log10(abs(X))
         f_in = scipy.arange(-fs/2.0, fs/2.0, fs/float(X_in.size))
         pin_f = spin_f.plot(f_in, X_in, "b")
         spin_f.set_xlim([min(f_in), max(f_in)+1]) 
@@ -144,7 +144,7 @@ def main():
             X,freq = mlab.psd(d, NFFT=fftlen, noverlap=fftlen/4, Fs=fs_o,
                               window = lambda d: d*winfunc(fftlen),
                               scale_by_freq=True)
-            X_o = 10.0*scipy.log10(abs(fftpack.fftshift(X)))
+            X_o = 10.0*scipy.log10(abs(X))
             f_o = scipy.arange(-fs_o/2.0, fs_o/2.0, fs_o/float(X_o.size))
             p2_f = sp1_f.plot(f_o, X_o, "b")
             sp1_f.set_xlim([min(f_o), max(f_o)+1]) 
