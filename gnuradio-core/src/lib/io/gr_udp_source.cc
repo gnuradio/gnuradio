@@ -110,8 +110,10 @@ gr_udp_source::open()
   lngr.l_onoff  = 1;
   lngr.l_linger = 0;
   if(setsockopt(d_socket, SOL_SOCKET, SO_LINGER, (optval_t)&lngr, sizeof(linger)) == -1) {
-    perror("SO_LINGER");
-    throw std::runtime_error("can't set socket option SO_LINGER");
+    if(errno != ENOPROTOOPT) {  // no SO_LINGER for SOCK_DGRAM on Windows
+      perror("SO_LINGER");
+      throw std::runtime_error("can't set socket option SO_LINGER");
+    }
   }
 
   // Set a timeout on the receive function to not block indefinitely
