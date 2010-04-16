@@ -29,6 +29,9 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#define min(X,Y) ((X) < (Y) ? (X) : (Y))
+#define max(X,Y) ((X) > (Y) ? (X) : (Y))
+
 bool wbxng_init_rx(struct db_base *dbb);
 bool wbxng_init_tx(struct db_base *dbb);
 bool wbxng_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc);
@@ -45,7 +48,7 @@ struct db_wbxng_rx db_wbxng_rx = {
   .base.is_tx = false,
   .base.output_enables = RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5|PLL_CE|PLL_PDBRF|ATTN_MASK,
   .base.used_pins = 0xFFFF,
-  .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(67.5e6),
+  .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(68.75e6),
   .base.freq_max = U2_DOUBLE_TO_FXPT_FREQ(2200e6),
   .base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(0),
   .base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(31.5),
@@ -81,7 +84,7 @@ struct db_wbxng_tx db_wbxng_tx = {
   .base.is_tx = true,
   .base.output_enables = RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5|PLL_CE|PLL_PDBRF,
   .base.used_pins = 0xFFFF,
-  .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(67.5e6),
+  .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(68.75e6),
   .base.freq_max = U2_DOUBLE_TO_FXPT_FREQ(2200e6),
   .base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(0),
   .base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(25),
@@ -149,8 +152,11 @@ wbxng_init_rx(struct db_base *dbb)
 bool
 wbxng_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc)
 {
-  bool ok = adf4350_set_freq(2*freq,dbb);
-  *dc = adf4350_get_freq(dbb)/2;
+  // clamp freq
+  u2_fxpt_freq_t clamp_freq = max(dbb->freq_min, min(freq, dbb->freq_max));
+  //printf("Requested LO freq = %u", (uint32_t) ((clamp_freq >> U2_FPF_RP)/1000));
+  bool ok = adf4350_set_freq(clamp_freq<<1,dbb);
+  *dc = adf4350_get_freq(dbb)>>1;
 
   return ok;
 }
