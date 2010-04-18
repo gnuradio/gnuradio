@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -79,8 +79,8 @@ gr_pfb_arb_resampler_ccf::gr_pfb_arb_resampler_ccf (float rate,
   // Now, actually set the filters' taps
   std::vector<float> dtaps;
   create_diff_taps(taps, dtaps);
-  set_taps(taps, d_taps, d_filters);
-  set_taps(dtaps, d_dtaps, d_diff_filters);
+  create_taps(taps, d_taps, d_filters);
+  create_taps(dtaps, d_dtaps, d_diff_filters);
 }
 
 gr_pfb_arb_resampler_ccf::~gr_pfb_arb_resampler_ccf ()
@@ -91,9 +91,9 @@ gr_pfb_arb_resampler_ccf::~gr_pfb_arb_resampler_ccf ()
 }
 
 void
-gr_pfb_arb_resampler_ccf::set_taps (const std::vector<float> &newtaps,
-				    std::vector< std::vector<float> > &ourtaps,
-				    std::vector<gr_fir_ccf*> &ourfilter)
+gr_pfb_arb_resampler_ccf::create_taps (const std::vector<float> &newtaps,
+				       std::vector< std::vector<float> > &ourtaps,
+				       std::vector<gr_fir_ccf*> &ourfilter)
 {
   int i,j;
 
