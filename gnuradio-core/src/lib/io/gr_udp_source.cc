@@ -29,14 +29,12 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
-#if defined(HAVE_SOCKET)
-#include <netdb.h>
+#if defined(HAVE_NETDB_H)
 typedef void* optval_t;
 #else
-// Not posix, assume winsock
+// if not posix, assume winsock
 #define USING_WINSOCK
 #define SHUT_RDWR 2
-#define inet_aton(N,A) ( (A)->s_addr = inet_addr(N), ( (A)->s_addr != INADDR_NONE ) )
 typedef char* optval_t;
 #define ENOPROTOOPT 109
 #endif
@@ -98,22 +96,17 @@ gr_udp_source::gr_udp_source(size_t itemsize, const char *src,
   
   // Set up the address stucture for the source address and port numbers
   // Get the source IP address from the host name
-  struct hostent *hsrc = gethostbyname(src);
-  if(hsrc) {   // if the source was provided as a host namex
-    d_ip_src = *(struct in_addr*)hsrc->h_addr_list[0];    
-  }
-  else { // assume it was specified as an IP address
-    if((ret=inet_aton(src, &d_ip_src)) == 0) {            // format IP address
-      report_error("Not a valid source IP address or host name",
-		   "can't initialize source socket");
-    }
-  }
-
-  d_port_src = htons(port_src);     // format port number
-  
-  d_sockaddr_src.sin_family = AF_INET;
-  d_sockaddr_src.sin_addr   = d_ip_src;
-  d_sockaddr_src.sin_port   = d_port_src;
+  struct addrinfo hints;
+  memset( (void*)&hints, 0, sizeof(hints) );
+  hints.ai_family = AF_INET;
+  hints.ai_socktype = SOCK_DGRAM;
+  hints.ai_protocol = IPPROTO_UDP;
+  char port_str[7];
+  sprintf( port_str, "%d", port_src );
+  ret = getaddrinfo( src, port_str, &hints, &d_ip_src );
+  if( ret != 0 )
+    report_error("gr_udp_source/getaddrinfo",
+		 "can't initialize source socket" );
 
   d_temp_buff = new char[d_payload_size];   // allow it to hold up to payload_size bytes
   
@@ -130,6 +123,7 @@ gr_make_udp_source (size_t itemsize, const char *ipaddr,
 
 gr_udp_source::~gr_udp_source ()
 {
+  freeaddrinfo(d_ip_src);
   delete [] d_temp_buff;
   close();
 
@@ -144,7 +138,8 @@ gr_udp_source::open()
 {
   gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
   // create socket
-  d_socket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  d_socket = socket(d_ip_src->ai_family, d_ip_src->ai_socktype,
+		    d_ip_src->ai_protocol);
   if(d_socket == -1) {
     report_error("socket open","can't open socket");
   }
@@ -180,10 +175,10 @@ gr_udp_source::open()
   }
 
   // bind socket to an address and port number to listen on
-  if(bind (d_socket, (sockaddr*)&d_sockaddr_src, sizeof(struct sockaddr)) == -1) {
+  if(bind (d_socket, d_ip_src->ai_addr, d_ip_src->ai_addrlen) == -1) {
     report_error("socket bind","can't bind socket");
   }
-  
+
   d_updated = true;
   return d_socket != 0;
 }
@@ -195,6 +190,11 @@ gr_udp_source::close()
 
   if (d_socket){
     shutdown(d_socket, SHUT_RDWR);
+#if defined(USING_WINSOCK)
+    closesocket(d_socket);
+#else
+    ::close(d_socket);
+#endif
     d_socket = 0;
   }
   d_updated = true;

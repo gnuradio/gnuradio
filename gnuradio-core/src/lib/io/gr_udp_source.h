@@ -24,15 +24,12 @@
 #define INCLUDED_GR_UDP_SOURCE_H
 
 #include <gr_sync_block.h>
-#if defined(HAVE_SOCKET)
-#include <sys/socket.h>
-#include <arpa/inet.h>
+#if defined(HAVE_NETDB_H)
+#include <netdb.h>
+#include <sys/socket.h>  // usually #included by <netdb.h>?
 #elif defined(HAVE_WINDOWS_H)
 #include <winsock2.h>
-#include <windows.h>
-#endif
-#if defined(HAVE_NETINET_IN_H)
-#include <netinet/in.h>
+#include <ws2tcpip.h>
 #endif
 
 #include <gruel/thread.h>
@@ -68,10 +65,7 @@ class gr_udp_source : public gr_sync_block
 
   int            d_payload_size;  // maximum transmission unit (packet length)
   int            d_socket;        // handle to socket
-  int            d_socket_rcv;    // handle to socket retuned in the accept call
-  struct in_addr d_ip_src;        // store the source IP address to use
-  unsigned short d_port_src;      // the port number to open for connections to this service
-  struct sockaddr_in    d_sockaddr_src;  // store the source sockaddr data (formatted IP address and port number)
+  struct addrinfo *d_ip_src;      // store the source IP address to use
   char *d_temp_buff;    // hold buffer between calls
   ssize_t d_residual;   // hold information about number of bytes stored in the temp buffer
   size_t d_temp_offset; // point to temp buffer location offset

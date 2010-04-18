@@ -24,16 +24,12 @@
 #define INCLUDED_GR_UDP_SINK_H
 
 #include <gr_sync_block.h>
-#include <boost/thread.hpp>
-#if defined(HAVE_SOCKET)
-#include <sys/socket.h>
-#include <arpa/inet.h>
+#if defined(HAVE_NETDB_H)
+#include <netdb.h>
+#include <sys/socket.h>  // usually #included by <netdb.h>?
 #elif defined(HAVE_WINDOWS_H)
 #include <winsock2.h>
-#include <windows.h>
-#endif
-#if defined(HAVE_NETINET_IN_H)
-#include <netinet/in.h>
+#include <ws2tcpip.h>
 #endif
 
 #include <gruel/thread.h>
@@ -75,13 +71,8 @@ class gr_udp_sink : public gr_sync_block
 
   int            d_payload_size;    // maximum transmission unit (packet length)
   int            d_socket;          // handle to socket
-  int            d_socket_rcv;      // handle to socket retuned in the accept call
-  struct in_addr d_ip_src;          // store the source ip info
-  struct in_addr d_ip_dst;          // store the destination ip info
-  unsigned short d_port_src;        // the port number to open for connections to this service
-  unsigned short d_port_dst;        // port number of the remove system
-  struct sockaddr_in    d_sockaddr_src;    // store the source sockaddr data (formatted IP address and port number)
-  struct sockaddr_in    d_sockaddr_dst;    // store the destination sockaddr data (formatted IP address and port number)
+  struct addrinfo *d_ip_src;        // store the source ip info
+  struct addrinfo *d_ip_dst;        // store the destination ip info
 
  protected:
   /*!

@@ -26,14 +26,15 @@
 #include <gr_udp_sink.h>
 #include <gr_io_signature.h>
 #include <stdexcept>
-#if defined(HAVE_SOCKET)
-#include <netdb.h>
+#include <errno.h>
 #include <stdio.h>
+#include <string.h>
+#if defined(HAVE_NETDB_H)
 typedef void* optval_t;
 #else
+// if not posix, assume winsock
 #define USING_WINSOCK
 #define SHUT_RDWR 2
-#define inet_aton(N,A) ( (A)->s_addr = inet_addr(N), ( (A)->s_addr != INADDR_NONE ) )
 typedef char* optval_t;
 #define ENOPROTOOPT 109
 #endif
@@ -99,39 +100,24 @@ gr_udp_sink::gr_udp_sink (size_t itemsize,
   
   // Set up the address stucture for the source address and port numbers
   // Get the source IP address from the host name
-  struct hostent *hsrc = gethostbyname(src);
-  if(hsrc) {   // if the source was provided as a host namex
-    d_ip_src = *(struct in_addr*)hsrc->h_addr_list[0];    
-  }
-  else { // assume it was specified as an IP address
-    if((ret=inet_aton(src, &d_ip_src)) == 0) {            // format IP address
-      report_error("Not a valid source IP address or host name",
-		   "can't initialize source socket");
-    }
-  }
+  struct addrinfo hints;
+  memset( (void*)&hints, 0, sizeof(hints) );
+  hints.ai_family = AF_INET;
+  hints.ai_socktype = SOCK_DGRAM;
+  hints.ai_protocol = IPPROTO_UDP;
+  char port_str[7];
+  sprintf( port_str, "%d", port_src );
+  ret = getaddrinfo( src, port_str, &hints, &d_ip_src );
+  if( ret != 0 )
+    report_error("gr_udp_source/getaddrinfo",
+		 "can't initialize source socket" );
 
   // Get the destination IP address from the host name
-  struct hostent *hdst = gethostbyname(dst);
-  if(hdst) {   // if the source was provided as a host namex
-    d_ip_dst = *(struct in_addr*)hdst->h_addr_list[0];    
-  }
-  else { // assume it was specified as an IP address
-    if((ret=inet_aton(dst, &d_ip_dst)) == 0) {            // format IP address
-      report_error("Not a valid destination IP address or host name",
-		   "can't initialize destination socket");
-    }
-  }
-
-  d_port_src = htons(port_src);           // format port number
-  d_port_dst = htons(port_dst);           // format port number
-
-  d_sockaddr_src.sin_family = AF_INET;
-  d_sockaddr_src.sin_addr   = d_ip_src;
-  d_sockaddr_src.sin_port   = d_port_src;
-
-  d_sockaddr_dst.sin_family = AF_INET;
-  d_sockaddr_dst.sin_addr   = d_ip_dst;
-  d_sockaddr_dst.sin_port   = d_port_dst;
+  sprintf( port_str, "%d", port_dst );
+  ret = getaddrinfo( dst, port_str, &hints, &d_ip_dst );
+  if( ret != 0 )
+    report_error("gr_udp_source/getaddrinfo",
+		 "can't initialize destination socket" );
   
   open();
 }
@@ -152,6 +138,8 @@ gr_make_udp_sink (size_t itemsize,
 
 gr_udp_sink::~gr_udp_sink ()
 {
+  freeaddrinfo(d_ip_src);
+  freeaddrinfo(d_ip_dst);
   close();
 
 #if !defined(HAVE_SOCKET) // for Windows (with MinGW)
@@ -166,7 +154,9 @@ gr_udp_sink::open()
   gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
 
   // create socket
-  if((d_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
+  d_socket = socket(d_ip_src->ai_family, d_ip_src->ai_socktype,
+		    d_ip_src->ai_protocol);
+  if(d_socket == -1) {
     report_error("socket open","can't open socket");
   }
 
@@ -187,12 +177,12 @@ gr_udp_sink::open()
   }
 
   // bind socket to an address and port number to listen on
-  if(bind (d_socket, (sockaddr*)&d_sockaddr_src, sizeof(struct sockaddr)) == -1) {
+  if(bind (d_socket, d_ip_src->ai_addr, d_ip_src->ai_addrlen) == -1) {
     report_error("socket bind","can't bind socket");
   }
 
   // Not sure if we should throw here or allow retries
-  if(connect(d_socket, (sockaddr*)&d_sockaddr_dst, sizeof(struct sockaddr)) == -1) {
+  if(connect(d_socket, d_ip_dst->ai_addr, d_ip_dst->ai_addrlen) == -1) {
     report_error("socket connect","can't connect to socket");
   }
 
@@ -207,6 +197,11 @@ gr_udp_sink::close()
 
   if (d_socket){
     shutdown(d_socket, SHUT_RDWR);
+#if defined(USING_WINSOCK)
+    closesocket(d_socket);
+#else
+    ::close(d_socket);
+#endif
     d_socket = 0;
   }
   d_updated = true;
