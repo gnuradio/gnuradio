@@ -36,7 +36,6 @@ typedef void* optval_t;
 #define USING_WINSOCK
 #define SHUT_RDWR 2
 typedef char* optval_t;
-#define ENOPROTOOPT 109
 #endif
 
 #include <gruel/thread.h>
@@ -47,6 +46,8 @@ static int is_error( int perr )
 {
   // Compare error to posix error code; return nonzero if match.
 #if defined(USING_WINSOCK)
+#define ENOPROTOOPT 109
+#define ECONNREFUSED 111
   // All codes to be checked for must be defined below
   int werr = WSAGetLastError();
   switch( werr ) {
@@ -54,6 +55,8 @@ static int is_error( int perr )
     return( perr == EAGAIN );
   case WSAENOPROTOOPT:
     return( perr == ENOPROTOOPT );
+  case WSAECONNREFUSED:
+    return( perr == ECONNREFUSED );
   default:
     fprintf(stderr,"gr_udp_source/is_error: unknown error %d\n", perr );
     throw std::runtime_error("internal error");
@@ -64,7 +67,7 @@ static int is_error( int perr )
 #endif
 }
 
-static void report_error( char *msg1, char *msg2 )
+static void report_error( const char *msg1, const char *msg2 )
 {
   // Deal with errors, both posix and winsock
 #if defined(USING_WINSOCK)
@@ -217,7 +220,7 @@ gr_udp_sink::work (int noutput_items,
   ssize_t total_size = noutput_items*d_itemsize;
 
   #if SNK_VERBOSE
-  printf("Entered upd_sink\n");
+  printf("Entered udp_sink\n");
   #endif
 
   while(bytes_sent <  total_size) {
@@ -225,8 +228,12 @@ gr_udp_sink::work (int noutput_items,
   
     r = send(d_socket, (in+bytes_sent), bytes_to_send, 0);
     if(r == -1) {         // error on send command
-      report_error("udp_sink",NULL); // there should be no error case where
-      return -1;                   // this function should not exit immediately
+      if( is_error(ECONNREFUSED) )
+	r = bytes_to_send;  // discard data until receiver is started
+      else {
+	report_error("udp_sink",NULL); // there should be no error case where
+	return -1;                  // this function should not exit immediately
+      }
     }
     bytes_sent += r;
     

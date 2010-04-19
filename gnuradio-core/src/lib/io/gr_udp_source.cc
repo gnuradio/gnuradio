@@ -36,7 +36,6 @@ typedef void* optval_t;
 #define USING_WINSOCK
 #define SHUT_RDWR 2
 typedef char* optval_t;
-#define ENOPROTOOPT 109
 #endif
 
 #define SRC_VERBOSE 0
@@ -45,6 +44,7 @@ static int is_error( int perr )
 {
   // Compare error to posix error code; return nonzero if match.
 #if defined(USING_WINSOCK)
+#define ENOPROTOOPT 109
   // All codes to be checked for must be defined below
   int werr = WSAGetLastError();
   switch( werr ) {
