@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 #include <gcell/gc_job_manager.h>
-#include <gnuradio/omni_time.h>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <getopt.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -47,6 +47,8 @@ init_jd(gc_job_desc *jd, unsigned int usecs)
 static void
 run_test(unsigned int nspes, unsigned int usecs, int njobs)
 {
+  using namespace boost::posix_time;
+
   static const int NJDS = 64;
   int nsubmitted = 0;
   int ncompleted = 0;
@@ -73,7 +75,7 @@ run_test(unsigned int nspes, unsigned int usecs, int njobs)
     init_jd(all_jds[i], usecs);
   }
 
-  omni_time t_start = omni_time::time();
+  ptime t_start(microsec_clock::universal_time());
 
   ci = 0;
   njds[0] = 0;
@@ -122,8 +124,8 @@ run_test(unsigned int nspes, unsigned int usecs, int njobs)
   }
 
   // stop timing
-  omni_time t_stop = omni_time::time();
-  double delta = (t_stop - t_start).double_time();
+  ptime t_stop(microsec_clock::universal_time());
+  double delta = (t_stop - t_start).total_microseconds() * 1e-6;
   printf("nspes: %2d  udelay: %4d  elapsed_time: %7.3f  njobs: %g  speedup: %6.3f\n",
 	 mgr->nspes(), usecs, delta, (double) njobs,
 	 njobs * usecs * 1e-6 / delta);

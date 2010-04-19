@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,7 +23,7 @@
 #include <config.h>
 #endif
 #include <gcell/gc_job_manager.h>
-#include <gnuradio/omni_time.h>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <getopt.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -96,6 +96,8 @@ static void
 run_test(unsigned int nspes, unsigned int usecs, unsigned int dma_size,
 	 int getput_mask, int njobs_at_once)
 {
+  using namespace boost::posix_time;
+
   int NJDS = njobs_at_once;
   gc_job_desc *all_jds[NJDS];
   bool done[NJDS];
@@ -140,7 +142,7 @@ run_test(unsigned int nspes, unsigned int usecs, unsigned int dma_size,
   }
 
   int niter = 100000;
-  omni_time t_start = omni_time::time();
+  ptime t_start(microsec_clock::universal_time());
 
   for (int iter = 0; iter < niter; iter++){
 
@@ -164,8 +166,8 @@ run_test(unsigned int nspes, unsigned int usecs, unsigned int dma_size,
   }
 
   // stop timing
-  omni_time t_stop = omni_time::time();
-  double delta = (t_stop - t_start).double_time();
+  ptime t_stop(microsec_clock::universal_time());
+  double delta = (t_stop - t_start).total_microseconds() * 1e-6;
   printf("nspes: %2d  udelay: %4d  elapsed_time: %7.3f  dma_size: %5d  dma_throughput: %7.3e  round_trip: %gus\n",
 	 mgr->nspes(), usecs, delta, dma_size,
 	 (double) NJDS * niter * dma_size / delta * (getput_mask == BENCHMARK_GET_PUT ? 2.0 : 1.0),
