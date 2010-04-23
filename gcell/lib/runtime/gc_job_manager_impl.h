@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -107,16 +107,16 @@ class gc_job_manager_impl : public gc_job_manager
   boost::shared_ptr<void> _d_comp_info_boost;	// hack for automatic storage mgmt
 
   // used to coordinate communication w/ the event handling thread
-  omni_mutex		 d_eh_mutex;
-  omni_condition	 d_eh_cond;
+  boost::mutex		 d_eh_mutex;
+  boost::condition_variable d_eh_cond;
   pthread_t		 d_eh_thread;		// the event handler thread
   volatile evt_handler_state	d_eh_state;
   volatile bool		 	d_shutdown_requested;
   spe_event_handler	 d_spe_event_handler;
   
   // used to coordinate communication w/ the job completer thread
-  omni_mutex		 d_jc_mutex;
-  omni_condition	 d_jc_cond;
+  boost::mutex		 d_jc_mutex;
+  boost::condition_variable d_jc_cond;
   pthread_t		 d_jc_thread;		// the job completion thread
   volatile job_completer_state	d_jc_state;
   int		      	 d_jc_njobs_active;	// # of jobs submitted but not yet reaped

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -39,6 +39,7 @@
 #include <string.h>
 #include <sched.h>
 
+typedef boost::unique_lock<boost::mutex> scoped_lock;
 
 #define __nop() __asm__ volatile ("ori 0,0,0" : : : "memory")
 #define __cctpl() __asm__ volatile ("or 1,1,1" : : : "memory")
@@ -116,9 +117,9 @@ is_power_of_2(uint32_t x)
 
 gc_job_manager_impl::gc_job_manager_impl(const gc_jm_options *options)
   : d_debug(0), d_spu_args(0),
-    d_eh_cond(&d_eh_mutex), d_eh_thread(0), d_eh_state(EHS_INIT),
+    d_eh_cond(), d_eh_thread(0), d_eh_state(EHS_INIT),
     d_shutdown_requested(false),
-    d_jc_cond(&d_jc_mutex), d_jc_thread(0), d_jc_state(JCS_INIT), d_jc_njobs_active(0),
+    d_jc_cond(), d_jc_thread(0), d_jc_state(JCS_INIT), d_jc_njobs_active(0),
     d_ntell(0), d_tell_start(0),
     d_client_thread(0), d_ea_args_maxsize(0),
     d_proc_def(0), d_proc_def_ls_addr(0), d_nproc_defs(0)
@@ -368,12 +369,12 @@ gc_job_manager_impl::~gc_job_manager_impl()
 bool
 gc_job_manager_impl::shutdown()
 {
-  omni_mutex_lock	l(d_eh_mutex);
+  scoped_lock 	l(d_eh_mutex);
 
   {
-    omni_mutex_lock	l2(d_jc_mutex);
+    scoped_lock 	l2(d_jc_mutex);
     d_shutdown_requested = true;	// set flag for event handler thread
-    d_jc_cond.signal();			// wake up job completer
+    d_jc_cond.notify_one();			// wake up job completer
   }
 
   // should only happens during early QA code
@@ -381,7 +382,7 @@ gc_job_manager_impl::shutdown()
     return false;
 
   while (d_eh_state != EHS_DEAD)	// wait for it to finish
-    d_eh_cond.wait();
+    d_eh_cond.wait(l);
 
   return true;
 }
@@ -459,13 +460,13 @@ gc_job_manager_impl::free_job_desc(gc_job_desc *jd)
 inline bool
 gc_job_manager_impl::incr_njobs_active()
 {
-  omni_mutex_lock	l(d_jc_mutex);
+  scoped_lock	l(d_jc_mutex);
 
   if (d_shutdown_requested)
     return false;
 
   if (d_jc_njobs_active++ == 0)	// signal on 0 to 1 transition
-    d_jc_cond.signal();
+    d_jc_cond.notify_one();
 
   return true;
 }
@@ -473,7 +474,7 @@ gc_job_manager_impl::incr_njobs_active()
 inline void
 gc_job_manager_impl::decr_njobs_active(int n)
 {
-  omni_mutex_lock	l(d_jc_mutex);
+  scoped_lock	l(d_jc_mutex);
   d_jc_njobs_active -= n;
 }
 
@@ -614,7 +615,7 @@ gc_job_manager_impl::wait_jobs(unsigned int njobs,
   }
 
   {
-    omni_mutex_lock	l(cti->d_mutex);
+    scoped_lock	l(cti->d_mutex);
 
     // setup info for event handler
     cti->d_state = (mode == GC_WAIT_ANY) ? CT_WAIT_ANY : CT_WAIT_ALL;
@@ -646,7 +647,7 @@ gc_job_manager_impl::wait_jobs(unsigned int njobs,
 
       // FIXME what happens when somebody calls shutdown?
 
-      cti->d_cond.wait();	// wait for event handler to wake us up
+      cti->d_cond.wait(l);	// wait for event handler to wake us up
     }
 
     cti->d_state = CT_NOT_WAITING;  
@@ -835,17 +836,17 @@ gc_job_manager_impl::create_event_handler()
 void
 gc_job_manager_impl::set_eh_state(evt_handler_state s)
 {
-  omni_mutex_lock	l(d_eh_mutex);
+  scoped_lock	l(d_eh_mutex);
   d_eh_state = s;
-  d_eh_cond.broadcast();
+  d_eh_cond.notify_all();
 }
 
 void
 gc_job_manager_impl::set_ea_args_maxsize(int maxsize)
 {
-  omni_mutex_lock	l(d_eh_mutex);
+  scoped_lock	l(d_eh_mutex);
   d_ea_args_maxsize = maxsize;
-  d_eh_cond.broadcast();
+  d_eh_cond.notify_all();
 }
 
 void
@@ -956,7 +957,7 @@ gc_job_manager_impl::notify_clients_jobs_are_done(unsigned int spe_num,
       // FIXME we could distinguish between CT_WAIT_ALL & CT_WAIT_ANY
 
       if (last_cti->d_state == CT_WAIT_ANY || last_cti->d_state == CT_WAIT_ALL)
-	last_cti->d_cond.signal();	// wake client thread up
+	last_cti->d_cond.notify_one();	// wake client thread up
 
       last_cti->d_mutex.unlock();
       cti->d_mutex.lock();
@@ -970,7 +971,7 @@ gc_job_manager_impl::notify_clients_jobs_are_done(unsigned int spe_num,
   // "wind-out"
 
   if (last_cti->d_state == CT_WAIT_ANY || last_cti->d_state == CT_WAIT_ALL)
-    last_cti->d_cond.signal();	// wake client thread up
+    last_cti->d_cond.notify_one();	// wake client thread up
   last_cti->d_mutex.unlock();
 
   ci->in_use = 0;		// clear flag so SPE knows we're done with it
@@ -1189,13 +1190,13 @@ gc_job_manager_impl::job_completer_loop()
 
   while (1){
     {
-      omni_mutex_lock	l(d_jc_mutex);
+      scoped_lock l(d_jc_mutex);
       if (d_jc_njobs_active == 0){
 	if (d_shutdown_requested){
 	  d_jc_state = JCS_DEAD;
 	  return;
 	}
-	d_jc_cond.wait();
+	d_jc_cond.wait(l);
       }
     }
 
@@ -1280,10 +1281,10 @@ gc_job_manager_impl::free_cti(gc_client_thread_info *cti)
 int
 gc_job_manager_impl::ea_args_maxsize()
 {
-  omni_mutex_lock	l(d_eh_mutex);
+  scoped_lock	l(d_eh_mutex);
 
   while (d_ea_args_maxsize == 0)	// wait for it to be initialized
-    d_eh_cond.wait();
+    d_eh_cond.wait(l);
 
   return d_ea_args_maxsize;
 }
