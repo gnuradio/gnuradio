@@ -72,5 +72,22 @@ self.$(id).set_antenna($ant)
 		<vlen>$type.vlen</vlen>
 	</sink>
 	<doc>
+The UHD Sink Block:
+
+Args:
+Args is a delimited string used to locate UHD devices on your system. \
+If left blank, the first UHD device found will be used. \
+Used args to specify a specfic device. \
+USRP2 Example: addr=192.168.10.2
+
+Sample rate:
+The sample rate is the number of samples per second input by this block. \
+The UHD device driver will try its best to match the requested sample rate. \
+If the requested rate is not possible, the UHD block will print an error at runtime.
+
+Antenna:
+For subdevices/daughterboards with only one antenna, this may be left blank. \
+Otherwise, the user should specify one of the possible antenna choices. \
+See the daughterboard application notes for the possible antenna choices.
 	</doc>
 </block>
