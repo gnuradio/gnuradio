@@ -37,6 +37,7 @@ import forms
 ##################################################
 SLIDER_STEPS = 100
 AVG_ALPHA_MIN_EXP, AVG_ALPHA_MAX_EXP = -3, 0
+ANALOG_ALPHA_MIN_EXP, ANALOG_ALPHA_MAX_EXP = -2, 0
 DEFAULT_WIN_SIZE = (600, 300)
 DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'fft_rate', 30)
 DB_DIV_MIN, DB_DIV_MAX = 1, 20
@@ -95,7 +96,38 @@ class control_panel(wx.Panel):
 		for widget in (avg_alpha_text, avg_alpha_slider):
 			parent.subscribe(AVERAGE_KEY, widget.Enable)
 			widget.Enable(parent[AVERAGE_KEY])
+			parent.subscribe(AVERAGE_KEY, widget.ShowItems)
+                        #allways show initially, so room is reserved for them
+			widget.ShowItems(True) # (parent[AVERAGE_KEY])
+
+                parent.subscribe(AVERAGE_KEY, self._update_layout)
+
+		forms.check_box(
+			sizer=options_box, parent=self, label='Emulate Analog',
+			ps=parent, key=EMULATE_ANALOG_KEY,
+		)
+		#static text and slider for analog alpha
+		analog_alpha_text = forms.static_text(
+			sizer=options_box, parent=self, label='Analog Alpha',
+			converter=forms.float_converter(lambda x: '%.4f'%x),
+			ps=parent, key=ANALOG_ALPHA_KEY, width=50,
+		)
+		analog_alpha_slider = forms.log_slider(
+			sizer=options_box, parent=self,
+			min_exp=ANALOG_ALPHA_MIN_EXP,
+			max_exp=ANALOG_ALPHA_MAX_EXP,
+			num_steps=SLIDER_STEPS,
+			ps=parent, key=ANALOG_ALPHA_KEY,
+		)
+		for widget in (analog_alpha_text, analog_alpha_slider):
+			parent.subscribe(EMULATE_ANALOG_KEY, widget.Enable)
+			widget.Enable(parent[EMULATE_ANALOG_KEY])
+			parent.subscribe(EMULATE_ANALOG_KEY, widget.ShowItems)
+                        #allways show initially, so room is reserved for them
+			widget.ShowItems(True) # (parent[EMULATE_ANALOG_KEY])
 		
+                parent.subscribe(EMULATE_ANALOG_KEY, self._update_layout)
+
 		#trace menu
 		for trace in TRACES:
 			trace_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -142,6 +174,7 @@ class control_panel(wx.Panel):
 		)
 		#set sizer
 		self.SetSizerAndFit(control_box)
+
 		#mouse wheel event
 		def on_mouse_wheel(event):
 			if event.GetWheelRotation() < 0: self._on_incr_ref_level(event)
@@ -159,6 +192,14 @@ class control_panel(wx.Panel):
 		self.parent[Y_PER_DIV_KEY] = min(DB_DIV_MAX, common.get_clean_incr(self.parent[Y_PER_DIV_KEY]))
 	def _on_decr_db_div(self, event):
 		self.parent[Y_PER_DIV_KEY] = max(DB_DIV_MIN, common.get_clean_decr(self.parent[Y_PER_DIV_KEY]))
+	##################################################
+	# subscriber handlers
+	##################################################
+        def _update_layout(self,key):
+          # Just ignore the key value we get
+          # we only need to now that the visability or size of something has changed
+          self.parent.Layout()
+          #self.parent.Fit()          
 
 ##################################################
 # FFT window with plotter and control panel
@@ -181,7 +222,10 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		avg_alpha_key,
 		peak_hold,
 		msg_key,
+                emulate_analog,
+                analog_alpha,
 	):
+
 		pubsub.pubsub.__init__(self)
 		#setup
 		self.samples = EMPTY_TRACE
@@ -202,6 +246,8 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		self[REF_LEVEL_KEY] = ref_level
 		self[BASEBAND_FREQ_KEY] = baseband_freq
 		self[RUNNING_KEY] = True
+		self[EMULATE_ANALOG_KEY] = emulate_analog
+		self[ANALOG_ALPHA_KEY] = analog_alpha
 		for trace in TRACES:
 			#a function that returns a function
 			#so the function wont use local trace
@@ -230,6 +276,8 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		self.plotter.enable_legend(True)
 		self.plotter.enable_point_label(True)
 		self.plotter.enable_grid_lines(True)
+                self.plotter.set_emulate_analog(emulate_analog)
+                self.plotter.set_analog_alpha(analog_alpha)
 		#setup the box with plot and controls
 		self.control_panel = control_panel(self)
 		main_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -245,8 +293,11 @@ class fft_window(wx.Panel, pubsub.pubsub):
 			Y_PER_DIV_KEY, X_DIVS_KEY,
 			Y_DIVS_KEY, REF_LEVEL_KEY,
 		): self.subscribe(key, self.update_grid)
+		self.subscribe(EMULATE_ANALOG_KEY, self.plotter.set_emulate_analog)
+		self.subscribe(ANALOG_ALPHA_KEY, self.plotter.set_analog_alpha)
 		#initial update
 		self.update_grid()
+
 
 	def autoscale(self, *args):
 		"""

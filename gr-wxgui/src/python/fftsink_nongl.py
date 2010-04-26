@@ -37,7 +37,7 @@ class fft_sink_base(object):
                  y_divs=8, ref_level=50,
                  sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate,
-                 average=False, avg_alpha=None, title='', peak_hold=False):
+                 average=False, avg_alpha=None, title='', peak_hold=False,emulate_analog=False,analog_alpha=0.2):
 
         # initialize common attributes
         self.baseband_freq = baseband_freq
@@ -52,6 +52,9 @@ class fft_sink_base(object):
             self.avg_alpha = 2.0 / fft_rate
         else:
             self.avg_alpha = avg_alpha
+        self.emulate_analog = emulate_analog
+        self.analog_alpha = analog_alpha
+
         self.title = title
         self.peak_hold = peak_hold
         self.input_is_real = input_is_real
@@ -75,6 +78,14 @@ class fft_sink_base(object):
         self.peak_hold = enable
         self.win.set_peak_hold(enable)
 
+    def set_emulate_analog(self, enable):
+        self.emulate_analog = enable
+        self.win.set_emulate_analog(enable)
+
+    def set_analog_alpha(self, analog_alpha):
+        self.analog_alpha = analog_alpha
+        self.win.set_analog_alpha(analog_alpha)
+
     def set_avg_alpha(self, avg_alpha):
         self.avg_alpha = avg_alpha
 
@@ -93,7 +104,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
     def __init__(self, parent, baseband_freq=0, ref_scale=2.0,
                  y_per_div=10, y_divs=8, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
-                 title='', size=default_fftsink_size, peak_hold=False):
+                 title='', size=default_fftsink_size, peak_hold=False, emulate_analog=False,analog_alpha=0.2):
 
         gr.hier_block2.__init__(self, "fft_sink_f",
                                 gr.io_signature(1, 1, gr.sizeof_float),
@@ -104,7 +115,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
                                sample_rate=sample_rate, fft_size=fft_size,
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, title=title,
-                               peak_hold=peak_hold)
+                               peak_hold=peak_hold,emulate_analog=emulate_analog,analog_alpha=analog_alpha)
                                
         self.s2p = gr.stream_to_vector(gr.sizeof_float, self.fft_size)
         self.one_in_n = gr.keep_one_in_n(gr.sizeof_float * self.fft_size,
@@ -131,12 +142,14 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
         self.win = fft_window(self, parent, size=size)
         self.set_average(self.average)
         self.set_peak_hold(self.peak_hold)
+        self.set_emulate_analog(self.emulate_analog)
+        self.set_analog_alpha(self.analog_alpha)
 
 class fft_sink_c(gr.hier_block2, fft_sink_base):
     def __init__(self, parent, baseband_freq=0, ref_scale=2.0,
                  y_per_div=10, y_divs=8, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
-                 title='', size=default_fftsink_size, peak_hold=False):
+                 title='', size=default_fftsink_size, peak_hold=False, emulate_analog=False,analog_alpha=0.2):
 
         gr.hier_block2.__init__(self, "fft_sink_c",
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex),
@@ -147,7 +160,7 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
                                sample_rate=sample_rate, fft_size=fft_size,
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, title=title,
-                               peak_hold=peak_hold)
+                               peak_hold=peak_hold, emulate_analog=emulate_analog,analog_alpha=analog_alpha)
 
         self.s2p = gr.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
         self.one_in_n = gr.keep_one_in_n(gr.sizeof_gr_complex * self.fft_size,
@@ -173,6 +186,8 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
 
         self.win = fft_window(self, parent, size=size)
         self.set_average(self.average)
+        self.set_emulate_analog(self.emulate_analog)
+        self.set_analog_alpha(self.analog_alpha)
         self.set_peak_hold(self.peak_hold)
 
 
@@ -236,6 +251,9 @@ class control_panel(wx.Panel):
         self.average_check_box = wx.CheckBox(parent=self, style=wx.CHK_2STATE, label="Average")
         self.average_check_box.Bind(wx.EVT_CHECKBOX, parent.on_average)
         control_box.Add(self.average_check_box, 0, wx.EXPAND)
+        self.emulate_analog_check_box = wx.CheckBox(parent=self, style=wx.CHK_2STATE, label="Emulate Analog")
+        self.emulate_analog_check_box.Bind(wx.EVT_CHECKBOX, parent.on_emulate_analog)
+        control_box.Add(self.emulate_analog_check_box, 0, wx.EXPAND)
         self.peak_hold_check_box = wx.CheckBox(parent=self, style=wx.CHK_2STATE, label="Peak Hold")
         self.peak_hold_check_box.Bind(wx.EVT_CHECKBOX, parent.on_peak_hold) 
         control_box.Add(self.peak_hold_check_box, 0, wx.EXPAND)
@@ -276,6 +294,7 @@ class control_panel(wx.Panel):
         """
         #update checkboxes
         self.average_check_box.SetValue(self.parent.fftsink.average)
+        self.emulate_analog_check_box.SetValue(self.parent.fftsink.emulate_analog)
         self.peak_hold_check_box.SetValue(self.parent.fftsink.peak_hold)
         #update radio buttons    
         try:
@@ -306,6 +325,10 @@ class fft_window (wx.Panel):
         
         self.peak_hold = False
         self.peak_vals = None
+
+        self.emulate_analog=False
+        self.analog_alpha=0.2
+
         
         self.plot.SetEnableGrid (True)
         # self.SetEnableZoom (True)
@@ -394,6 +417,14 @@ class fft_window (wx.Panel):
         y_range = ymin, ymax
         self.plot.Draw (graphics, xAxis=x_range, yAxis=y_range, step=self.fftsink.y_per_div)        
 
+    def set_emulate_analog(self, enable):
+        self.emulate_analog = enable
+        self.plot.set_emulate_analog( enable)
+
+    def set_analog_alpha(self, analog_alpha):
+        self.analog_alpha = analog_alpha
+        self.plot.set_analog_alpha(analog_alpha)
+
     def set_peak_hold(self, enable):
         self.peak_hold = enable
         self.peak_vals = None
@@ -401,6 +432,11 @@ class fft_window (wx.Panel):
     def on_average(self, evt):
         # print "on_average"
         self.fftsink.set_average(evt.IsChecked())
+        self.control_panel.update()
+
+    def on_emulate_analog(self, evt):
+        # print "on_analog"
+        self.fftsink.set_emulate_analog(evt.IsChecked())
         self.control_panel.update()
 
     def on_peak_hold(self, evt):
@@ -486,9 +522,11 @@ class fft_window (wx.Panel):
         self.id_y_per_div_10 = wx.NewId()
         self.id_y_per_div_20 = wx.NewId()
         self.id_average = wx.NewId()
+        self.id_emulate_analog = wx.NewId()
         self.id_peak_hold = wx.NewId()
         
         self.plot.Bind(wx.EVT_MENU, self.on_average, id=self.id_average)
+        self.plot.Bind(wx.EVT_MENU, self.on_emulate_analog, id=self.id_emulate_analog)
         self.plot.Bind(wx.EVT_MENU, self.on_peak_hold, id=self.id_peak_hold)
         self.plot.Bind(wx.EVT_MENU, self.on_incr_ref_level, id=self.id_incr_ref_level)
         self.plot.Bind(wx.EVT_MENU, self.on_decr_ref_level, id=self.id_decr_ref_level)
@@ -504,6 +542,7 @@ class fft_window (wx.Panel):
         menu = wx.Menu()
         self.popup_menu = menu
         menu.AppendCheckItem(self.id_average, "Average")
+        menu.AppendCheckItem(self.id_emulate_analog, "Emulate Analog")
         menu.AppendCheckItem(self.id_peak_hold, "Peak Hold")
         menu.Append(self.id_incr_ref_level, "Incr Ref Level")
         menu.Append(self.id_decr_ref_level, "Decr Ref Level")
@@ -519,6 +558,7 @@ class fft_window (wx.Panel):
 
         self.checkmarks = {
             self.id_average : lambda : self.fftsink.average,
+            self.id_emulate_analog : lambda : self.fftsink.emulate_analog,
             self.id_peak_hold : lambda : self.fftsink.peak_hold,
             self.id_y_per_div_1 : lambda : self.fftsink.y_per_div == 1,
             self.id_y_per_div_2 : lambda : self.fftsink.y_per_div == 2,
@@ -561,11 +601,11 @@ class test_app_block (stdgui2.std_top_block):
         fft_size = 256
 
         # build our flow graph
-        input_rate = 20.48e3
+        input_rate = 100*20.48e3
 
         # Generate a complex sinusoid
-        #src1 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 2e3, 1)
-        src1 = gr.sig_source_c (input_rate, gr.GR_CONST_WAVE, 5.75e3, 1)
+        #src1 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 100*2e3, 1)
+        src1 = gr.sig_source_c (input_rate, gr.GR_CONST_WAVE, 100*5.75e3, 1)
 
         # We add these throttle blocks so that this demo doesn't
         # suck down all the CPU available.  Normally you wouldn't use these.
@@ -578,8 +618,8 @@ class test_app_block (stdgui2.std_top_block):
 
         self.connect(src1, thr1, sink1)
 
-        #src2 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 2e3, 1)
-        src2 = gr.sig_source_f (input_rate, gr.GR_CONST_WAVE, 5.75e3, 1)
+        #src2 = gr.sig_source_f (input_rate, gr.GR_SIN_WAVE, 100*2e3, 1)
+        src2 = gr.sig_source_f (input_rate, gr.GR_CONST_WAVE, 100*5.75e3, 1)
         thr2 = gr.throttle(gr.sizeof_float, input_rate)
         sink2 = fft_sink_f (panel, title="Real Data", fft_size=fft_size*2,
                             sample_rate=input_rate, baseband_freq=100e3,

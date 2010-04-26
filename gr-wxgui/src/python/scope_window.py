@@ -36,6 +36,8 @@ import forms
 # Constants
 ##################################################
 DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'scope_rate', 30)
+ANALOG_ALPHA_MIN_EXP, ANALOG_ALPHA_MAX_EXP = -2, 0
+SLIDER_STEPS = 100
 DEFAULT_WIN_SIZE = (600, 300)
 COUPLING_MODES = (
 	('DC', False),
@@ -83,6 +85,37 @@ class control_panel(wx.Panel):
 		self.parent = parent
 		wx.Panel.__init__(self, parent, style=wx.SUNKEN_BORDER)
 		control_box = wx.BoxSizer(wx.VERTICAL)
+
+		##################################################
+		# Emulate Analog
+		##################################################
+
+		forms.check_box(
+			sizer=control_box, parent=self, label='Emulate Analog',
+			ps=parent, key=EMULATE_ANALOG_KEY,
+		)
+		#static text and slider for analog alpha
+		analog_alpha_text = forms.static_text(
+			sizer=control_box, parent=self, label='Analog Alpha',
+			converter=forms.float_converter(lambda x: '%.4f'%x),
+			ps=parent, key=ANALOG_ALPHA_KEY, width=50,
+		)
+		analog_alpha_slider = forms.log_slider(
+			sizer=control_box, parent=self,
+			min_exp=ANALOG_ALPHA_MIN_EXP,
+			max_exp=ANALOG_ALPHA_MAX_EXP,
+			num_steps=SLIDER_STEPS,
+			ps=parent, key=ANALOG_ALPHA_KEY,
+		)
+		for widget in (analog_alpha_text, analog_alpha_slider):
+			parent.subscribe(EMULATE_ANALOG_KEY, widget.Enable)
+			widget.Enable(parent[EMULATE_ANALOG_KEY])
+			parent.subscribe(EMULATE_ANALOG_KEY, widget.ShowItems)
+                        #allways show initially, so room is reserved for them
+			widget.ShowItems(True) # (parent[EMULATE_ANALOG_KEY])
+		
+                parent.subscribe(EMULATE_ANALOG_KEY, self._update_layout)
+
 		##################################################
 		# Axes Options
 		##################################################
@@ -359,6 +392,15 @@ class control_panel(wx.Panel):
 	def _on_decr_y_off(self, event):
 		self.parent[Y_OFF_KEY] = self.parent[Y_OFF_KEY] - self.parent[Y_PER_DIV_KEY]
 
+	##################################################
+	# subscriber handlers
+	##################################################
+        def _update_layout(self,key):
+          # Just ignore the key value we get
+          # we only need to now that the visability or size of something has changed
+          self.parent.Layout()
+          #self.parent.Fit()  
+
 ##################################################
 # Scope window with plotter and control panel
 ##################################################
@@ -382,6 +424,8 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		trigger_channel_key,
 		decimation_key,
 		msg_key,
+                emulate_analog,
+                analog_alpha,
 	):
 		pubsub.pubsub.__init__(self)
 		#check num inputs
@@ -424,6 +468,8 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		self[TRIGGER_MODE_KEY] = gr.gr_TRIG_MODE_AUTO
 		self[TRIGGER_SLOPE_KEY] = gr.gr_TRIG_SLOPE_POS
 		self[T_FRAC_OFF_KEY] = 0.5
+		self[EMULATE_ANALOG_KEY] = emulate_analog
+		self[ANALOG_ALPHA_KEY] = analog_alpha
 		for i in range(num_inputs):
 			self.proxy(common.index_key(AC_COUPLE_KEY, i), controller, common.index_key(ac_couple_key, i))
 		#init panel and plot
@@ -434,6 +480,8 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		self.plotter.enable_legend(True)
 		self.plotter.enable_point_label(True)
 		self.plotter.enable_grid_lines(True)
+                self.plotter.set_emulate_analog(emulate_analog)
+                self.plotter.set_analog_alpha(analog_alpha)
 		#setup the box with plot and controls
 		self.control_panel = control_panel(self)
 		main_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -451,6 +499,9 @@ class scope_window(wx.Panel, pubsub.pubsub):
 			XY_MODE_KEY, AUTORANGE_KEY, T_FRAC_OFF_KEY,
 			TRIGGER_SHOW_KEY, XY_MARKER_KEY, X_CHANNEL_KEY, Y_CHANNEL_KEY,
 		]: self.subscribe(key, self.update_grid)
+                #register events for plotter settings
+		self.subscribe(EMULATE_ANALOG_KEY, self.plotter.set_emulate_analog)
+		self.subscribe(ANALOG_ALPHA_KEY, self.plotter.set_analog_alpha)
 		#initial update
 		self.update_grid()
 
@@ -615,3 +666,4 @@ class scope_window(wx.Panel, pubsub.pubsub):
 			self.plotter.set_y_grid(self.get_y_min(), self.get_y_max(), self[Y_PER_DIV_KEY])
 		#redraw current sample
 		self.handle_samples()
+
