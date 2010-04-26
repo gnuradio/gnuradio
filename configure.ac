@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -264,7 +264,17 @@ dnl We require the boost headers, thread lib and date_time lib.
 dnl AX_BOOST_BASE finds the headers and the lib dir (-L<foo>)
 dnl
 dnl calls AC_SUBST(BOOST_CPPFLAGS), AC_SUBST(BOOST_LDFLAGS) and defines HAVE_BOOST
-AX_BOOST_BASE([1.35])
+dnl
+dnl Current Boost version requirement is >=1.35 for all platforms except Darwin,
+dnl which requires >=1.37 for code in usrp host library.
+case "$host_os" in
+     darwin*)
+        AX_BOOST_BASE([1.37])
+        ;;
+      *)
+        AX_BOOST_BASE([1.35])
+        ;;
+esac
 
 dnl calls AC_SUBST(BOOST_THREAD_LIB), AC_SUBST(BOOST_CXXFLAGS) and defines HAVE_BOOST_THREAD
 AX_BOOST_THREAD

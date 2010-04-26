@@ -22,8 +22,8 @@ AC_DEFUN([GRC_USRP],[
 
     GRC_WITH(usrp)
 
-    dnl Don't do usrp if omnithread skipped
-    GRC_CHECK_DEPENDENCY(usrp, omnithread)
+    dnl Don't do usrp if gruel is skipped
+    GRC_CHECK_DEPENDENCY(usrp, gruel)
 
     dnl Make sure the fast usb technique is set, OS dependent.
     dnl This is always performed, since it puts out CLI flags.
