@@ -59,18 +59,6 @@ AC_DEFUN([GRC_USRP],[
         usrp_LA="\${abs_top_builddir}/usrp/host/lib/libusrp.la"
     fi
 
-    dnl There pkg-config file for usrp requires omnithread for Darwin only.  Create a variable
-    dnl for just the usrp.pc.in case.
-    case "$host_os" in
-      darwin*)
-        usrp_darwin_omnithread_pc_requires="gnuradio-omnithread"
-        ;;
-      *) dnl (blanks)
-        usrp_darwin_omnithread_pc_requires=""
-        ;;
-    esac
-    AC_SUBST(usrp_darwin_omnithread_pc_requires)
-
     AC_CONFIG_FILES([ \
 	usrp/Makefile \
 	usrp/usrp.pc \
