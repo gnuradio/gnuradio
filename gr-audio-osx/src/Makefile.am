@@ -1,5 +1,5 @@
 #
-# Copyright 2006,2008,2009 Free Software Foundation, Inc.
+# Copyright 2006,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio.
 # 
@@ -32,8 +32,7 @@ grinclude_HEADERS =			\
 
 noinst_HEADERS =			\
 	audio_osx.h			\
-	circular_buffer.h		\
-	mld_threads.h
+	circular_buffer.h
 
 noinst_PYTHON =				\
 	qa_osx.py			\
@@ -46,8 +45,7 @@ libgnuradio_audio_osx_la_SOURCES = 	\
 	audio_osx_source.cc
 
 libgnuradio_audio_osx_la_LIBADD =	\
-	$(GNURADIO_CORE_LA)		\
-	$(OMNITHREAD_LA)
+	$(GNURADIO_CORE_LA)
 
 libgnuradio_audio_osx_la_LDFLAGS =	\
 	-framework AudioUnit		\

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009 Free Software Foundation, Inc.
+ * Copyright 2006,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio.
  *
@@ -150,8 +150,8 @@ class fusb_ephandle_darwin : public fusb_ephandle
 {
 private:
   fusb_devhandle_darwin* d_devhandle;
-  mld_thread_ptr d_runThread;
-  mld_mutex_ptr d_runThreadRunning;
+  gruel::thread* d_runThread;
+  gruel::mutex* d_runThreadRunning;
 
   CFRunLoopRef d_CFRunLoopRef;
 
@@ -174,8 +174,11 @@ public:
   s_queue_ptr d_queue;
   circular_buffer<char>* d_buffer;
   size_t d_bufLenBytes;
-  mld_mutex_ptr d_readRunning;
-  mld_condition_ptr d_runBlock, d_readBlock;
+  gruel::mutex* d_readRunning;
+  gruel::mutex* d_runBlock_mutex;
+  gruel::mutex* d_readBlock_mutex;
+  gruel::condition_variable* d_runBlock;
+  gruel::condition_variable* d_readBlock;
 
 // CREATORS
 

@@ -22,8 +22,8 @@ AC_DEFUN([GRC_USRP],[
 
     GRC_WITH(usrp)
 
-    dnl Don't do usrp if omnithread skipped
-    GRC_CHECK_DEPENDENCY(usrp, omnithread)
+    dnl Don't do usrp if gruel is skipped
+    GRC_CHECK_DEPENDENCY(usrp, gruel)
 
     dnl Make sure the fast usb technique is set, OS dependent.
     dnl This is always performed, since it puts out CLI flags.
@@ -58,18 +58,6 @@ AC_DEFUN([GRC_USRP],[
 		-I\${abs_top_srcdir}/usrp/firmware/include"
         usrp_LA="\${abs_top_builddir}/usrp/host/lib/libusrp.la"
     fi
-
-    dnl There pkg-config file for usrp requires omnithread for Darwin only.  Create a variable
-    dnl for just the usrp.pc.in case.
-    case "$host_os" in
-      darwin*)
-        usrp_darwin_omnithread_pc_requires="gnuradio-omnithread"
-        ;;
-      *) dnl (blanks)
-        usrp_darwin_omnithread_pc_requires=""
-        ;;
-    esac
-    AC_SUBST(usrp_darwin_omnithread_pc_requires)
 
     AC_CONFIG_FILES([ \
 	usrp/Makefile \

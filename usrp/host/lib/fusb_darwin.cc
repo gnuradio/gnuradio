@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009 Free Software Foundation, Inc.
+ * Copyright 2006,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio.
  *
@@ -24,9 +24,6 @@
 #include "config.h"
 #endif
 
-// tell mld_threads to NOT use omni_threads,
-// but rather Darwin's pthreads
-#define _USE_OMNI_THREADS_
 #define DO_DEBUG 0
 
 #include <usb.h>
@@ -85,10 +82,12 @@ fusb_ephandle_darwin::fusb_ephandle_darwin (fusb_devhandle_darwin* dh,
     l_buf = NULL;
   }
 
-  d_readRunning = new mld_mutex ();
-  d_runThreadRunning = new mld_mutex ();
-  d_runBlock = new mld_condition ();
-  d_readBlock = new mld_condition ();
+  d_readRunning = new gruel::mutex ();
+  d_runThreadRunning = new gruel::mutex ();
+  d_runBlock = new gruel::condition_variable ();
+  d_readBlock = new gruel::condition_variable ();
+  d_runBlock_mutex = new gruel::mutex ();
+  d_readBlock_mutex = new gruel::mutex ();
 }
 
 fusb_ephandle_darwin::~fusb_ephandle_darwin ()
@@ -116,6 +115,10 @@ fusb_ephandle_darwin::~fusb_ephandle_darwin ()
   d_readRunning = NULL;
   delete d_runThreadRunning;
   d_runThreadRunning = NULL;
+  delete d_runBlock_mutex;
+  d_runBlock_mutex = NULL;
+  delete d_readBlock_mutex;
+  d_readBlock_mutex = NULL;
   delete d_runBlock;
   d_runBlock = NULL;
   delete d_readBlock;
@@ -200,14 +203,14 @@ fusb_ephandle_darwin::start ()
 
   // lock the runBlock mutex, before creating the run thread.
   // this guarantees that we can control execution between these 2 threads
-  d_runBlock->mutex ()->lock ();
+  gruel::scoped_lock l (*d_runBlock_mutex);
 
   // create the run thread, which allows OSX to process I/O separately
-  d_runThread = new mld_thread (run_thread, this);
+  d_runThread = new gruel::thread (run_thread, this);
 
   // wait until the run thread (and possibky read thread) are -really-
   // going; this will unlock the mutex before waiting for a signal ()
-  d_runBlock->wait ();
+  d_runBlock->wait (l);
 
   if (usb_debug) {
     std::cerr << "fusb_ephandle_darwin::start: " << (d_input_p ? "read" : "write")
@@ -225,12 +228,12 @@ fusb_ephandle_darwin::run_thread (void* arg)
   // lock the run thread running mutex; if ::stop() is called, it will
   // first abort() the pipe then wait for the run thread to finish,
   // via a lock() on this mutex
-  mld_mutex_ptr l_runThreadRunning = This->d_runThreadRunning;
-  l_runThreadRunning->lock ();
+  gruel::mutex* l_runThreadRunning = This->d_runThreadRunning;
+  gruel::scoped_lock l0 (*l_runThreadRunning);
 
-  mld_mutex_ptr l_readRunning = This->d_readRunning;
-  mld_condition_ptr l_readBlock = This->d_readBlock;
-  mld_mutex_ptr l_readBlock_mutex = l_readBlock->mutex ();
+  gruel::mutex* l_readRunning = This->d_readRunning;
+  gruel::condition_variable* l_readBlock = This->d_readBlock;
+  gruel::mutex* l_readBlock_mutex = This->d_readBlock_mutex;
 
   bool l_input_p = This->d_input_p;
 
@@ -250,41 +253,39 @@ fusb_ephandle_darwin::run_thread (void* arg)
 // get run loop reference, to allow other threads to stop
   This->d_CFRunLoopRef = CFRunLoopGetCurrent ();
 
-  mld_thread_ptr l_rwThread = NULL;
+  gruel::thread* l_rwThread = NULL;
 
   if (l_input_p) {
     // lock the readBlock mutex, before creating the read thread.
     // this guarantees that we can control execution between these 2 threads
-    l_readBlock_mutex->lock ();
+    gruel::scoped_lock l1 (*l_readBlock_mutex);
     // create the read thread, which just issues all of the starting
     // async read commands, then returns
-    l_rwThread = new mld_thread (read_thread, arg);
+    l_rwThread = new gruel::thread (read_thread, arg);
     // wait until the the read thread is -really- going; this will
     // unlock the read block mutex before waiting for a signal ()
-    l_readBlock->wait ();
+    l_readBlock->wait (l1);
   }
 
-  // now signal the run condition to release and finish ::start().
+  {
+    // now signal the run condition to release and finish ::start().
 
-  // lock the runBlock mutex first; this will force waiting until the
-  // ->wait() command is issued in ::start()
-  mld_mutex_ptr l_run_block_mutex = This->d_runBlock->mutex ();
-  l_run_block_mutex->lock ();
+    // lock the runBlock mutex first; this will force waiting until the
+    // ->wait() command is issued in ::start()
+    gruel::mutex* l_run_block_mutex = This->d_runBlock_mutex;
+    gruel::scoped_lock l2 (*l_run_block_mutex);
 
-  // now that the lock is in place, signal the parent thread that
-  // things are running
-  This->d_runBlock->signal ();
-
-  // release the run_block mutex, just in case
-  l_run_block_mutex->unlock ();
+    // now that the lock is in place, signal the parent thread that
+    // things are running
+    This->d_runBlock->notify_one ();
+  }
 
   // run the loop
   CFRunLoopRun ();
 
   if (l_input_p) {
     // wait for read_thread () to finish, if needed
-    l_readRunning->lock ();
-    l_readRunning->unlock ();
+    gruel::scoped_lock l3 (*l_readRunning);
   }
 
   // remove run loop stuff
@@ -295,9 +296,6 @@ fusb_ephandle_darwin::run_thread (void* arg)
     std::cerr << "fusb_ephandle_darwin::run_thread: finished for "
 	      << (l_input_p ? "read" : "write") << "." << std::endl;
   }
-
-  // release the run thread running mutex
-  l_runThreadRunning->unlock ();
 }
 
 void
@@ -311,23 +309,23 @@ fusb_ephandle_darwin::read_thread (void* arg)
 
   // before doing anything else, lock the read running mutex.  this
   // mutex does flow control between this thread and the run_thread
-  mld_mutex_ptr l_readRunning = This->d_readRunning;
-  l_readRunning->lock ();
+  gruel::mutex* l_readRunning = This->d_readRunning;
+  gruel::scoped_lock l0 (*l_readRunning);
 
   // signal the read condition from run_thread() to continue
 
   // lock the readBlock mutex first; this will force waiting until the
   // ->wait() command is issued in ::run_thread()
-  mld_condition_ptr l_readBlock = This->d_readBlock;
-  mld_mutex_ptr l_read_block_mutex = l_readBlock->mutex ();
-  l_read_block_mutex->lock ();
+  gruel::condition_variable* l_readBlock = This->d_readBlock;
+  gruel::mutex* l_read_block_mutex = This->d_readBlock_mutex;
 
-  // now that the lock is in place, signal the parent thread that
-  // things are running here
-  l_readBlock->signal ();
+  {
+    gruel::scoped_lock l1 (*l_read_block_mutex);
 
-  // release the run_block mutex, just in case
-  l_read_block_mutex->unlock ();
+    // now that the lock is in place, signal the parent thread that
+    // things are running here
+    l_readBlock->notify_one ();
+  }
 
   // queue up all of the available read requests
   s_queue_ptr l_queue = This->d_queue;
@@ -341,10 +339,6 @@ fusb_ephandle_darwin::read_thread (void* arg)
   if (usb_debug) {
     std::cerr << "fusb_ephandle_darwin::read_thread: finished." << std::endl;
   }
-
-  // release the read running mutex, to let the parent thread knows
-  // that this thread is finished
-  l_readRunning->unlock ();
 }
 
 void
@@ -569,8 +563,7 @@ fusb_ephandle_darwin::stop ()
   CFRunLoopStop (d_CFRunLoopRef);
 
 // wait for the runThread to stop
-  d_runThreadRunning->lock ();
-  d_runThreadRunning->unlock ();
+  gruel::scoped_lock l (*d_runThreadRunning);
 
   if (usb_debug) {
     std::cerr << "fusb_ephandle_darwin::stop: " << (d_input_p ? "read" : "write")
