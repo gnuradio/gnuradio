@@ -149,9 +149,6 @@ AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
 dnl Checks for libraries.
 AC_CHECK_LIB(socket,socket)
 
-dnl check for omnithreads (will soon be removed)
-GR_OMNITHREAD
-
 dnl Set the c++ compiler that we use for the build system when cross compiling
 if test x$CXX_FOR_BUILD = x
 then
@@ -339,7 +336,6 @@ AC_ARG_ENABLE(
 
 build_dirs="config"
 GRC_GRUEL                       dnl must come first
-GRC_OMNITHREAD			dnl must come before gnuradio-core and mblock
 GRC_GCELL
 GRC_GNURADIO_CORE
 GRC_USRP
@@ -347,7 +343,6 @@ GRC_USRP2
 GRC_VRT
 GRC_GR_USRP			dnl this must come after GRC_USRP
 GRC_GR_USRP2
-dnl GRC_GR_VRT
 GRC_GR_GCELL			dnl this must come after GRC_GCELL and GRC_GNURADIO_CORE
 GRC_GR_MSDD6000	
 GRC_GR_AUDIO_ALSA
