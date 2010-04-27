@@ -28,85 +28,87 @@
 
 class uhd_simple_sink;
 
-boost::shared_ptr<uhd_simple_sink>
-uhd_make_simple_sink(const std::string &args, const uhd::io_type_t::tid_t &type);
+boost::shared_ptr<uhd_simple_sink> uhd_make_simple_sink(
+    const std::string &args,
+    const uhd::io_type_t::tid_t &type
+);
 
 class uhd_simple_sink : public gr_sync_block{
 public:
-    uhd_simple_sink(const std::string &args, const uhd::io_type_t &type);
-    ~uhd_simple_sink(void);
+
+    /*!
+     * Set the IO signature for this block.
+     * \param sig the input signature
+     */
+    uhd_simple_sink(gr_io_signature_sptr sig);
 
     /*!
      * Set the sample rate for the usrp device.
      * \param rate a new rate in Sps
      */
-    void set_samp_rate(double rate);
+    virtual void set_samp_rate(double rate) = 0;
 
     /*!
      * Get the sample rate for the usrp device.
      * This is the actual sample rate and may differ from the rate set.
      * \return the actual rate in Sps
      */
-    double get_samp_rate(void);
+    virtual double get_samp_rate(void) = 0;
 
     /*!
      * Tune the usrp device to the desired center frequency.
      * \param freq the desired frequency in Hz
      * \return a tune result with the actual frequencies
      */
-    uhd::tune_result_t set_center_freq(double freq);
+    virtual uhd::tune_result_t set_center_freq(double freq) = 0;
 
     /*!
      * Get the tunable frequency range.
      * \return the frequency range in Hz
      */
-    uhd::freq_range_t get_freq_range(void);
+    virtual uhd::freq_range_t get_freq_range(void) = 0;
 
     /*!
      * Set the gain for the dboard.
      * \param gain the gain in dB
      */
-    void set_gain(float gain);
+    virtual void set_gain(float gain) = 0;
 
     /*!
      * Get the actual dboard gain setting.
      * \return the actual gain in dB
      */
-    float get_gain(void);
+    virtual float get_gain(void) = 0;
 
     /*!
      * Get the settable gain range.
      * \return the gain range in dB
      */
-    uhd::gain_range_t get_gain_range(void);
+    virtual uhd::gain_range_t get_gain_range(void) = 0;
 
     /*!
      * Set the antenna to use.
      * \param ant the antenna string
      */
-    void set_antenna(const std::string &ant);
+    virtual void set_antenna(const std::string &ant) = 0;
 
     /*!
      * Get the antenna in use.
      * \return the antenna string
      */
-    std::string get_antenna(void);
+    virtual std::string get_antenna(void) = 0;
 
     /*!
      * Get a list of possible antennas.
      * \return a vector of antenna strings
      */
-    std::vector<std::string> get_antennas(void);
+    virtual std::vector<std::string> get_antennas(void) = 0;
 
-    int work(
-        int noutput_items,
-        gr_vector_const_void_star &input_items,
-        gr_vector_void_star &output_items
-    );
-
-protected:
-    uhd::usrp::simple_usrp::sptr _dev;
-    const uhd::io_type_t _type;
+    /*!
+     * Get access to the underlying uhd device object.
+     * \return the simple usrp device object
+     */
+    virtual uhd::usrp::simple_usrp::sptr get_device(void) = 0;
 };
 
 #endif /* INCLUDED_UHD_SIMPLE_SINK_H */

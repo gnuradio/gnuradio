@@ -22,9 +22,109 @@
 
 #include <uhd_simple_sink.h>
 #include <gr_io_signature.h>
-#include <boost/thread.hpp>
 #include <stdexcept>
 #include "utils.h"
+
+/***********************************************************************
+ * UHD Sink
+ **********************************************************************/
+uhd_simple_sink::uhd_simple_sink(gr_io_signature_sptr sig)
+:gr_sync_block("uhd sink", sig, gr_make_io_signature(0, 0, 0)){
+    /* NOP */
+}
+
+/***********************************************************************
+ * UHD Sink Impl
+ **********************************************************************/
+class uhd_simple_sink_impl : public uhd_simple_sink{
+public:
+    uhd_simple_sink_impl(
+        const std::string &args,
+        const uhd::io_type_t &type
+    ) : uhd_simple_sink(gr_make_io_signature(1, 1, type.size)), _type(type)
+    {
+        _dev = uhd::usrp::simple_usrp::make(args);
+    }
+
+    ~uhd_simple_sink_impl(void){
+        //NOP
+    }
+
+    void set_samp_rate(double rate){
+        _dev->set_tx_rate(rate);
+        do_samp_rate_error_message(rate, get_samp_rate());
+    }
+
+    double get_samp_rate(void){
+        return _dev->get_tx_rate();
+    }
+
+    uhd::tune_result_t set_center_freq(double freq){
+        return _dev->set_tx_freq(freq);
+    }
+
+    uhd::freq_range_t get_freq_range(void){
+        return _dev->get_tx_freq_range();
+    }
+
+    void set_gain(float gain){
+        return _dev->set_tx_gain(gain);
+    }
+
+    float get_gain(void){
+        return _dev->get_tx_gain();
+    }
+
+    uhd::gain_range_t get_gain_range(void){
+        return _dev->get_tx_gain_range();
+    }
+
+    void set_antenna(const std::string &ant){
+        return _dev->set_tx_antenna(ant);
+    }
+
+    std::string get_antenna(void){
+        return _dev->get_tx_antenna();
+    }
+
+    std::vector<std::string> get_antennas(void){
+        return _dev->get_tx_antennas();
+    }
+
+/***********************************************************************
+ * Work
+ **********************************************************************/
+    int work(
+        int noutput_items,
+        gr_vector_const_void_star &input_items,
+        gr_vector_void_star &output_items
+    ){
+        size_t total_items_sent = 0;
+        uhd::tx_metadata_t metadata;
+        metadata.start_of_burst = true;
+
+        //call until the input items are all sent
+        while(total_items_sent < size_t(noutput_items)){
+            size_t items_sent = _dev->get_device()->send(
+                boost::asio::buffer(
+                    (uint8_t *)input_items[0]+(total_items_sent*_type.size),
+                    (noutput_items-total_items_sent)*_type.size
+                ), metadata, _type
+            );
+            total_items_sent += items_sent;
+        }
+
+        return noutput_items;
+    }
+
+    uhd::usrp::simple_usrp::sptr get_device(void){
+        return _dev;
+    }
+
+protected:
+    uhd::usrp::simple_usrp::sptr _dev;
+    const uhd::io_type_t _type;
+};
 
 /***********************************************************************
  * Make UHD Sink
@@ -34,91 +134,6 @@ boost::shared_ptr<uhd_simple_sink> uhd_make_simple_sink(
     const uhd::io_type_t::tid_t &type
 ){
     return boost::shared_ptr<uhd_simple_sink>(
-        new uhd_simple_sink(args, type)
+        new uhd_simple_sink_impl(args, type)
     );
-}
-
-/***********************************************************************
- * UHD Sink
- **********************************************************************/
-uhd_simple_sink::uhd_simple_sink(
-    const std::string &args,
-    const uhd::io_type_t &type
-) : gr_sync_block(
-    "uhd sink",
-    gr_make_io_signature(1, 1, type.size),
-    gr_make_io_signature(0, 0, 0)
-), _type(type){
-    _dev = uhd::usrp::simple_usrp::make(args);
-}
-
-uhd_simple_sink::~uhd_simple_sink(void){
-    //NOP
-}
-
-void uhd_simple_sink::set_samp_rate(double rate){
-    _dev->set_tx_rate(rate);
-    do_samp_rate_error_message(rate, get_samp_rate());
-}
-
-double uhd_simple_sink::get_samp_rate(void){
-    return _dev->get_tx_rate();
-}
-
-uhd::tune_result_t uhd_simple_sink::set_center_freq(double freq){
-    return _dev->set_tx_freq(freq);
-}
-
-uhd::freq_range_t uhd_simple_sink::get_freq_range(void){
-    return _dev->get_tx_freq_range();
-}
-
-void uhd_simple_sink::set_gain(float gain){
-    return _dev->set_tx_gain(gain);
-}
-
-float uhd_simple_sink::get_gain(void){
-    return _dev->get_tx_gain();
-}
-
-uhd::gain_range_t uhd_simple_sink::get_gain_range(void){
-    return _dev->get_tx_gain_range();
-}
-
-void uhd_simple_sink::set_antenna(const std::string &ant){
-    return _dev->set_tx_antenna(ant);
-}
-
-std::string uhd_simple_sink::get_antenna(void){
-    return _dev->get_tx_antenna();
-}
-
-std::vector<std::string> uhd_simple_sink::get_antennas(void){
-    return _dev->get_tx_antennas();
-}
-
-/***********************************************************************
- * Work
- **********************************************************************/
-int uhd_simple_sink::work(
-    int noutput_items,
-    gr_vector_const_void_star &input_items,
-    gr_vector_void_star &output_items
-){
-    size_t total_items_sent = 0;
-    uhd::tx_metadata_t metadata;
-    metadata.start_of_burst = true;
-
-    //call until the input items are all sent
-    while(total_items_sent < size_t(noutput_items)){
-        size_t items_sent = _dev->get_device()->send(
-            boost::asio::buffer(
-                (uint8_t *)input_items[0]+(total_items_sent*_type.size),
-                (noutput_items-total_items_sent)*_type.size
-            ), metadata, _type
-        );
-        total_items_sent += items_sent;
-    }
-
-    return noutput_items;
 }
