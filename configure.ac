@@ -342,7 +342,6 @@ GRC_GRUEL                       dnl must come first
 GRC_OMNITHREAD			dnl must come before gnuradio-core and mblock
 GRC_GCELL
 GRC_GNURADIO_CORE
-GRC_MBLOCK			dnl this must come after GRC_GRUEL
 GRC_USRP
 GRC_USRP2
 GRC_VRT
