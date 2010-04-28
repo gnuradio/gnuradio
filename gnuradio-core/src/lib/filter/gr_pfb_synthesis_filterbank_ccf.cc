@@ -150,11 +150,13 @@ gr_pfb_synthesis_filterbank_ccf::work (int noutput_items,
 
     for(i = 0; i < d_numchans; i++) {
       d_buffer[i][n+d_taps_per_filter-1] = d_fft->get_outbuf()[i];
-      out[i] = d_filters[i]->filter(&d_buffer[i][n]);
+      out[d_numchans-i-1] = d_filters[d_numchans-i-1]->filter(&d_buffer[i][n]);
     }
     out += d_numchans;
   }
 
+  // Move the last chunk of memory to the front for the next entry
+  // this make sure that the first taps_per_filter values are correct
   for(i = 0; i < d_numchans; i++) {
     memcpy(d_buffer[i], &d_buffer[i][n],
 	   (d_taps_per_filter)*sizeof(gr_complex));
