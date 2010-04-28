@@ -205,6 +205,7 @@ libfilter_la_common_SOURCES = 		\
 	float_dotprod_generic.c		\
 	short_dotprod_generic.c		\
 	gr_pfb_channelizer_ccf.cc	\
+	gr_pfb_synthesis_filterbank_ccf.cc\
 	gr_pfb_decimator_ccf.cc		\
 	gr_pfb_interpolator_ccf.cc	\
 	gr_pfb_arb_resampler_ccf.cc	\
@@ -288,6 +289,7 @@ grinclude_HEADERS = 			\
 	short_dotprod_x86.h		\
 	sse_debug.h			\
 	gr_pfb_channelizer_ccf.h	\
+	gr_pfb_synthesis_filterbank_ccf.h\
 	gr_pfb_decimator_ccf.h		\
 	gr_pfb_interpolator_ccf.h	\
 	gr_pfb_arb_resampler_ccf.h	\
@@ -344,6 +346,7 @@ swiginclude_HEADERS =			\
 	gr_single_pole_iir_filter_ff.i	\
 	gr_single_pole_iir_filter_cc.i	\
 	gr_pfb_channelizer_ccf.i	\
+	gr_pfb_synthesis_filterbank_ccf.i\
 	gr_pfb_decimator_ccf.i		\
 	gr_pfb_interpolator_ccf.i	\
 	gr_pfb_arb_resampler_ccf.i	\
