@@ -25,6 +25,7 @@
 #include <usrp2/copiers.h>
 #include <gruel/inet.h>
 #include <gruel/realtime.h>
+#include <boost/bind.hpp>
 #include <usrp2_types.h>
 #include "usrp2_impl.h"
 #include "eth_buffer.h"

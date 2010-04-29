@@ -21,7 +21,6 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/utility.hpp>
-#include <boost/bind.hpp>
 #include <vector>
 #include <complex>
 #include <usrp2/rx_sample_handler.h>
