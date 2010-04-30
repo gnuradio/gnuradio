@@ -25,9 +25,9 @@ from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
 class dial_tone_sink(gr.top_block):
-    def __init__(self, src, port, pkt_size, sample_rate):
+    def __init__(self, src, port, pkt_size, sample_rate, wait):
         gr.top_block.__init__(self, "dial_tone_sink")
-        udp = gr.udp_source(gr.sizeof_float, src, port, pkt_size)
+        udp = gr.udp_source(gr.sizeof_float, src, port, pkt_size, wait=wait)
         sink = audio.sink(sample_rate)
         self.connect(udp, sink)
         
@@ -41,6 +41,8 @@ if __name__ == '__main__':
                       help="packet size.")
     parser.add_option("-r", "--sample-rate", type="int", default=8000,
                       help="audio signal sample rate [default=%default]")
+    parser.add_option("-n", "--no-wait", action="store_true", default=False,
+                      help="don't wait for source")
     (options, args) = parser.parse_args()
     if len(args) != 0:
         parser.print_help()
@@ -48,7 +50,8 @@ if __name__ == '__main__':
 
     # Create an instance of a hierarchical block
     top_block = dial_tone_sink(options.src_name, options.src_port,
-                               options.packet_size, options.sample_rate)
+                               options.packet_size, options.sample_rate,
+                               not options.no_wait)
     
     try:    
         # Run forever

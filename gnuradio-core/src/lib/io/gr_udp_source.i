@@ -24,19 +24,18 @@ GR_SWIG_BLOCK_MAGIC(gr,udp_source)
 
 gr_udp_source_sptr 
 gr_make_udp_source (size_t itemsize, const char *src, 
-		    unsigned short port_src, int payload_size=1472);
+		    unsigned short port_src, int payload_size=1472,
+		    bool wait=true);
 
 class gr_udp_source : public gr_sync_block
 {
  protected:
   gr_udp_source (size_t itemsize, const char *src, 
-		 unsigned short port_src, int payload_size);
+		 unsigned short port_src, int payload_size, bool wait);
 
  public:
   ~gr_udp_source ();
 
-  bool open();
-  void close();
   int payload_size() { return d_payload_size; }
 
 };

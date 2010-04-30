@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -31,9 +31,11 @@
 #include <string.h>
 #if defined(HAVE_NETDB_H)
 typedef void* optval_t;
-#else
+#elif defined(HAVE_WINDOWS_H)
 // if not posix, assume winsock
 #define USING_WINSOCK
+#include <winsock2.h>
+#include <ws2tcpip.h>
 #define SHUT_RDWR 2
 typedef char* optval_t;
 #endif
@@ -88,11 +90,13 @@ gr_udp_sink::gr_udp_sink (size_t itemsize,
   : gr_sync_block ("udp_sink",
 		   gr_make_io_signature (1, 1, itemsize),
 		   gr_make_io_signature (0, 0, 0)),
-    d_itemsize (itemsize), d_updated(false), d_payload_size(payload_size)
+    d_itemsize (itemsize), d_payload_size(payload_size)
 {
   int ret = 0;
+  struct addrinfo *ip_src;        // store the source ip info
+  struct addrinfo *ip_dst;        // store the destination ip info
 
-#if !defined(HAVE_SOCKET) // for Windows (with MinGW)
+#if defined(USING_WINSOCK) // for Windows (with MinGW)
   // initialize winsock DLL
   WSADATA wsaData;
   int iResult = WSAStartup( MAKEWORD(2,2), &wsaData );
@@ -110,55 +114,21 @@ gr_udp_sink::gr_udp_sink (size_t itemsize,
   hints.ai_protocol = IPPROTO_UDP;
   char port_str[7];
   sprintf( port_str, "%d", port_src );
-  ret = getaddrinfo( src, port_str, &hints, &d_ip_src );
+  ret = getaddrinfo( src, port_str, &hints, &ip_src );
   if( ret != 0 )
     report_error("gr_udp_source/getaddrinfo",
 		 "can't initialize source socket" );
 
   // Get the destination IP address from the host name
   sprintf( port_str, "%d", port_dst );
-  ret = getaddrinfo( dst, port_str, &hints, &d_ip_dst );
+  ret = getaddrinfo( dst, port_str, &hints, &ip_dst );
   if( ret != 0 )
     report_error("gr_udp_source/getaddrinfo",
 		 "can't initialize destination socket" );
-  
-  open();
-}
-
-// public constructor that returns a shared_ptr
-
-gr_udp_sink_sptr
-gr_make_udp_sink (size_t itemsize, 
-		  const char *src, unsigned short port_src,
-		  const char *dst, unsigned short port_dst,
-		  int payload_size)
-{
-  return gr_udp_sink_sptr (new gr_udp_sink (itemsize, 
-					    src, port_src,
-					    dst, port_dst,
-					    payload_size));
-}
-
-gr_udp_sink::~gr_udp_sink ()
-{
-  freeaddrinfo(d_ip_src);
-  freeaddrinfo(d_ip_dst);
-  close();
-
-#if !defined(HAVE_SOCKET) // for Windows (with MinGW)
-  // free winsock resources
-  WSACleanup();
-#endif
-}
-
-bool
-gr_udp_sink::open()
-{
-  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
 
   // create socket
-  d_socket = socket(d_ip_src->ai_family, d_ip_src->ai_socktype,
-		    d_ip_src->ai_protocol);
+  d_socket = socket(ip_src->ai_family, ip_src->ai_socktype,
+		    ip_src->ai_protocol);
   if(d_socket == -1) {
     report_error("socket open","can't open socket");
   }
@@ -180,24 +150,35 @@ gr_udp_sink::open()
   }
 
   // bind socket to an address and port number to listen on
-  if(bind (d_socket, d_ip_src->ai_addr, d_ip_src->ai_addrlen) == -1) {
+  if(bind (d_socket, ip_src->ai_addr, ip_src->ai_addrlen) == -1) {
     report_error("socket bind","can't bind socket");
   }
 
   // Not sure if we should throw here or allow retries
-  if(connect(d_socket, d_ip_dst->ai_addr, d_ip_dst->ai_addrlen) == -1) {
+  if(connect(d_socket, ip_dst->ai_addr, ip_dst->ai_addrlen) == -1) {
     report_error("socket connect","can't connect to socket");
   }
 
-  d_updated = true;
-  return d_socket != 0;
+  freeaddrinfo(ip_src);
+  freeaddrinfo(ip_dst);
 }
 
-void
-gr_udp_sink::close()
-{
-  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
+// public constructor that returns a shared_ptr
 
+gr_udp_sink_sptr
+gr_make_udp_sink (size_t itemsize, 
+		  const char *src, unsigned short port_src,
+		  const char *dst, unsigned short port_dst,
+		  int payload_size)
+{
+  return gr_udp_sink_sptr (new gr_udp_sink (itemsize, 
+					    src, port_src,
+					    dst, port_dst,
+					    payload_size));
+}
+
+gr_udp_sink::~gr_udp_sink ()
+{
   if (d_socket){
     shutdown(d_socket, SHUT_RDWR);
 #if defined(USING_WINSOCK)
@@ -207,7 +188,11 @@ gr_udp_sink::close()
 #endif
     d_socket = 0;
   }
-  d_updated = true;
+
+#if defined(USING_WINSOCK) // for Windows (with MinGW)
+  // free winsock resources
+  WSACleanup();
+#endif
 }
 
 int 

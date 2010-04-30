@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -38,7 +38,8 @@ class gr_udp_source;
 typedef boost::shared_ptr<gr_udp_source> gr_udp_source_sptr;
 
 gr_udp_source_sptr gr_make_udp_source(size_t itemsize, const char *src, 
-				      unsigned short port_src, int payload_size=1472);
+				      unsigned short port_src,
+				      int payload_size=1472, bool wait=true);
 
 /*! 
  * \brief Read stream from an UDP socket.
@@ -50,22 +51,22 @@ gr_udp_source_sptr gr_make_udp_source(size_t itemsize, const char *src,
  * \param port_src     The port number on which the socket listens for data
  * \param payload_size UDP payload size by default set to 
  *                     1472 = (1500 MTU - (8 byte UDP header) - (20 byte IP header))
+ * \param wait         Wait for data if not immediately available (default: true)
  *
 */
 
 class gr_udp_source : public gr_sync_block
 {
   friend gr_udp_source_sptr gr_make_udp_source(size_t itemsize, const char *src, 
-					       unsigned short port_src, int payload_size);
+					       unsigned short port_src,
+					       int payload_size, bool wait);
 
  private:
   size_t	d_itemsize;
-  bool		d_updated;
-  gruel::mutex	d_mutex;
 
   int            d_payload_size;  // maximum transmission unit (packet length)
+  bool           d_wait;          // wait if data if not immediately available
   int            d_socket;        // handle to socket
-  struct addrinfo *d_ip_src;      // store the source IP address to use
   char *d_temp_buff;    // hold buffer between calls
   ssize_t d_residual;   // hold information about number of bytes stored in the temp buffer
   size_t d_temp_offset; // point to temp buffer location offset
@@ -80,26 +81,13 @@ class gr_udp_source : public gr_sync_block
    * \param port_src     The port number on which the socket listens for data
    * \param payload_size UDP payload size by default set to 
    *                     1472 = (1500 MTU - (8 byte UDP header) - (20 byte IP header))
+   * \param wait         Wait for data if not immediately available (default: true)
    */
-  gr_udp_source(size_t itemsize, const char *src, unsigned short port_src, int payload_size);
+  gr_udp_source(size_t itemsize, const char *src, unsigned short port_src,
+		int payload_size, bool wait);
 
  public:
   ~gr_udp_source();
-
-  /*!
-   * \brief open a socket specified by the port and ip address info
-   *
-   * Opens a socket, binds to the address, and waits for a connection
-   * over UDP. If any of these fail, the fuction retuns the error and exits.
-   */
-  bool open();
-
-  /*!
-   * \brief Close current socket.
-   *
-   * Shuts down read/write on the socket
-   */
-  void close();
 
   /*! \brief return the PAYLOAD_SIZE of the socket */
   int payload_size() { return d_payload_size; }

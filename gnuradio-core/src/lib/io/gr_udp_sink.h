@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -66,13 +66,9 @@ class gr_udp_sink : public gr_sync_block
 					    int payload_size);
  private:
   size_t	d_itemsize;
-  bool		d_updated;
-  gruel::mutex	d_mutex;
 
   int            d_payload_size;    // maximum transmission unit (packet length)
   int            d_socket;          // handle to socket
-  struct addrinfo *d_ip_src;        // store the source ip info
-  struct addrinfo *d_ip_dst;        // store the destination ip info
 
  protected:
   /*!
@@ -95,21 +91,6 @@ class gr_udp_sink : public gr_sync_block
 
  public:
   ~gr_udp_sink ();
-
-  /*!
-   * \brief open a socket specified by the port and ip address info
-   *
-   * Opens a socket, binds to the address, and makes connectionless association
-   * over UDP. If any of these fail, the fuction retuns the error and exits.
-   */
-  bool open();
-
-  /*!
-   * \brief Close current socket.
-   *
-   * Shuts down read/write on the socket
-   */
-  void close();
 
   /*! \brief return the PAYLOAD_SIZE of the socket */
   int payload_size() { return d_payload_size; }
