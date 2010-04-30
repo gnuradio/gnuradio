@@ -35,44 +35,16 @@ extern struct db_base db_basic_tx;
 extern struct db_base db_basic_rx;
 extern struct db_base db_lf_tx;
 extern struct db_base db_lf_rx;
-extern struct db_base db_rfx_400_tx;
-extern struct db_base db_rfx_400_rx;
-extern struct db_base db_rfx_900_tx;
-extern struct db_base db_rfx_900_rx;
-extern struct db_base db_rfx_1200_tx;
-extern struct db_base db_rfx_1200_rx;
-extern struct db_base db_rfx_1800_tx;
-extern struct db_base db_rfx_1800_rx;
-extern struct db_base db_rfx_2400_tx;
-extern struct db_base db_rfx_2400_rx;
 extern struct db_base db_wbxng_rx;
 extern struct db_base db_wbxng_tx;
-extern struct db_base db_tvrx1;
-extern struct db_base db_tvrx2;
-extern struct db_base db_tvrx3;
-extern struct db_base db_dbsrx;
 
 struct db_base *all_dboards[] = {
   &db_basic_tx,
   &db_basic_rx,
   &db_lf_tx,
   &db_lf_rx,
-  &db_rfx_400_tx,
-  &db_rfx_400_rx,
-  &db_rfx_900_tx,
-  &db_rfx_900_rx,
-  &db_rfx_1200_tx,
-  &db_rfx_1200_rx,
-  &db_rfx_1800_tx,
-  &db_rfx_1800_rx,
-  &db_rfx_2400_tx,
-  &db_rfx_2400_rx,
-  &db_tvrx1,
-#if 0
-  &db_tvrx2,
-#endif
-  &db_tvrx3,
-  &db_dbsrx,
+  &db_wbxng_rx,
+  &db_wbxng_tx,
   0
 };
 

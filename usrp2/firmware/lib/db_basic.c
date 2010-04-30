@@ -53,6 +53,7 @@ struct db_basic db_basic_tx = {
   .base.set_freq = db_basic_set_freq,
   .base.set_gain = db_basic_set_gain,
   .base.set_tx_enable = db_basic_set_tx_enable,
+  .base.set_antenna = 0,
 };
 
 struct db_basic db_basic_rx = {
@@ -79,6 +80,7 @@ struct db_basic db_basic_rx = {
   .base.set_freq = db_basic_set_freq,
   .base.set_gain = db_basic_set_gain,
   .base.set_tx_enable = db_basic_set_tx_enable,
+  .base.set_antenna = 0,
 };
 
 struct db_basic db_lf_tx = {
@@ -105,6 +107,7 @@ struct db_basic db_lf_tx = {
   .base.set_freq = db_basic_set_freq,
   .base.set_gain = db_basic_set_gain,
   .base.set_tx_enable = db_basic_set_tx_enable,
+  .base.set_antenna = 0,
 };
 
 struct db_basic db_lf_rx = {
@@ -131,6 +134,7 @@ struct db_basic db_lf_rx = {
   .base.set_freq = db_basic_set_freq,
   .base.set_gain = db_basic_set_gain,
   .base.set_tx_enable = db_basic_set_tx_enable,
+  .base.set_antenna = 0,
 };
 
 

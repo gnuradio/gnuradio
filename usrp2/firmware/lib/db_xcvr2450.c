@@ -64,6 +64,8 @@ bool xcvr2450_set_freq(struct db_base *db, u2_fxpt_freq_t freq, u2_fxpt_freq_t *
 bool xcvr2450_set_gain_rx(struct db_base *db, u2_fxpt_gain_t gain);
 bool xcvr2450_set_gain_tx(struct db_base *db, u2_fxpt_gain_t gain);
 bool xcvr2450_set_tx_enable(struct db_base *db, bool on);
+bool xcvr2450_set_rx_antenna(struct db_base *db, int ant);
+bool xcvr2450_set_tx_antenna(struct db_base *db, int ant);
 
 struct db_xcvr2450_common {
   int d_mimo, d_int_div, d_frac_div, d_highband, d_five_gig;
@@ -154,6 +156,7 @@ struct db_xcvr2450_rx db_xcvr2450_rx = {
   .base.atr_mask = RX_ATR_MASK,
   .base.atr_txval = 0x0,
   .base.atr_rxval = 0x0,
+  .base.set_antenna = xcvr2450_set_rx_antenna,
   .common = &db_xcvr2450_common,
 };
 
@@ -178,6 +181,7 @@ struct db_xcvr2450_tx db_xcvr2450_tx = {
   .base.atr_mask = TX_ATR_MASK,
   .base.atr_txval = 0x0,
   .base.atr_rxval = 0x0,
+  .base.set_antenna = xcvr2450_set_tx_antenna,
   .common = &db_xcvr2450_common,
 };
 
@@ -433,7 +437,7 @@ xcvr2450_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *dc){
 
   bool ok = lock_detect();
   if(!ok){
-    //printf("Fail lock detect %uKHz\n", u2_fxpt_freq_round_to_int(freq/1000));
+    printf("Fail lock detect %uKHz\n", u2_fxpt_freq_round_to_int(freq/1000));
   }
   return ok;
 }
@@ -493,4 +497,25 @@ xcvr2450_set_tx_enable(struct db_base *dbb, bool on){
   db->common->d_tx_enb = on;
   set_gpio(db);
   return true;
+}
+
+/**************************************************
+ * Set Antennas
+ **************************************************/
+bool xcvr2450_set_rx_antenna(struct db_base *dbb, int ant){
+    printf("xcvr set rx ant %d\n", ant);
+    if (ant > 1) return false;
+    struct db_xcvr2450_dummy *db = (struct db_xcvr2450_dummy *) dbb;
+    db->common->d_rx_ant = ant;
+    set_gpio(db);
+    return true;
+}
+
+bool xcvr2450_set_tx_antenna(struct db_base *dbb, int ant){
+    printf("xcvr set tx ant %d\n", ant);
+    if (ant > 1) return false;
+    struct db_xcvr2450_dummy *db = (struct db_xcvr2450_dummy *) dbb;
+    db->common->d_tx_ant = ant;
+    set_gpio(db);
+    return true;
 }
