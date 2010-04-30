@@ -80,7 +80,9 @@ wbxng_base::set_freq(double freq)
     actual_baseband_freq is the RF frequency that corresponds to DC in the IF.
   */
 
-  freq_t int_freq = freq_t(freq);
+  // clamp freq
+  freq_t int_freq = freq_t(std::max(freq_min(), std::min(freq, freq_max())));
+
   bool ok = d_common->_set_freq(int_freq*2);
   double freq_result = (double) d_common->_get_freq()/2.0;
   struct freq_result_t args = {ok, freq_result};

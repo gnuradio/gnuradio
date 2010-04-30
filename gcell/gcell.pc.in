@@ -6,7 +6,7 @@ gcell_embedspu_libtool=@bindir@/gcell-embedspu-libtool
 
 Name: gcell
 Description: The GNU Radio SPE scheduler and RPC mechanism
-Requires: gnuradio-omnithread
+Requires:
 Version: @VERSION@
 Libs: -L${libdir} -lgcell
 Cflags: -I${includedir} @DEFINES@

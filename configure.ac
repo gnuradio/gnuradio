@@ -1,4 +1,4 @@
-dnl Copyright 2001,2002,2003,2004,2005,2006,2007,2008,2009 Free Software Foundation, Inc.
+dnl Copyright 2001,2002,2003,2004,2005,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -149,9 +149,6 @@ AM_CONDITIONAL([HAS_XMLTO], [test x$XMLTO = xyes])
 dnl Checks for libraries.
 AC_CHECK_LIB(socket,socket)
 
-dnl check for omnithreads (will soon be removed)
-GR_OMNITHREAD
-
 dnl Set the c++ compiler that we use for the build system when cross compiling
 if test x$CXX_FOR_BUILD = x
 then
@@ -264,7 +261,17 @@ dnl We require the boost headers, thread lib and date_time lib.
 dnl AX_BOOST_BASE finds the headers and the lib dir (-L<foo>)
 dnl
 dnl calls AC_SUBST(BOOST_CPPFLAGS), AC_SUBST(BOOST_LDFLAGS) and defines HAVE_BOOST
-AX_BOOST_BASE([1.35])
+dnl
+dnl Current Boost version requirement is >=1.35 for all platforms except Darwin,
+dnl which requires >=1.37 for code in usrp host library.
+case "$host_os" in
+     darwin*)
+        AX_BOOST_BASE([1.37])
+        ;;
+      *)
+        AX_BOOST_BASE([1.35])
+        ;;
+esac
 
 dnl calls AC_SUBST(BOOST_THREAD_LIB), AC_SUBST(BOOST_CXXFLAGS) and defines HAVE_BOOST_THREAD
 AX_BOOST_THREAD
@@ -329,16 +336,13 @@ AC_ARG_ENABLE(
 
 build_dirs="config"
 GRC_GRUEL                       dnl must come first
-GRC_OMNITHREAD			dnl must come before gnuradio-core and mblock
 GRC_GCELL
 GRC_GNURADIO_CORE
-GRC_MBLOCK			dnl this must come after GRC_GRUEL
 GRC_USRP
 GRC_USRP2
 GRC_VRT
 GRC_GR_USRP			dnl this must come after GRC_USRP
 GRC_GR_USRP2
-dnl GRC_GR_VRT
 GRC_GR_GCELL			dnl this must come after GRC_GCELL and GRC_GNURADIO_CORE
 GRC_GR_MSDD6000	
 GRC_GR_AUDIO_ALSA

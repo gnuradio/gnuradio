@@ -648,8 +648,6 @@ EXCLUDE                = @abs_top_builddir@/docs/doxygen/html \
                          @abs_top_builddir@/gr-video-sdl/src/video_sdl.py \
                          @abs_top_builddir@/gr-wxgui/src/python \
                          @abs_top_builddir@/grc \
-                         @abs_top_builddir@/omnithread/mach.cc \
-                         @abs_top_builddir@/omnithread/nt.cc \
                          @abs_top_builddir@/usrp/doc \
                          @abs_top_builddir@/usrp/firmware \
                          @abs_top_builddir@/usrp/fpga \
@@ -689,7 +687,6 @@ EXCLUDE_PATTERNS       = */.deps/* \
                          */__init__.py \
                          */gr-atsc/src/lib/Gr* \
                          */moc_*.cc \
-                         */omnithread/ot_* \
                          */qa_*.cc \
                          */qa_*.h \
                          */qa_*.py

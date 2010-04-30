@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2009 Free Software Foundation, Inc.
+ * Copyright 2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -139,18 +139,23 @@ class gr_pfb_arb_resampler_ccf : public gr_block
 
   void create_diff_taps(const std::vector<float> &newtaps,
 			std::vector<float> &difftaps);
+
+  /*!
+   * Resets the filterbank's filter taps with the new prototype filter
+   * \param newtaps    (vector of floats) The prototype filter to populate the filterbank. 
+   *                   The taps should be generated at the interpolated sampling rate.
+   * \param ourtaps    (vector of floats) Reference to our internal member of holding the taps.
+   * \param ourfilter  (vector of filters) Reference to our internal filter to set the taps for.
+   */
+  void create_taps (const std::vector<float> &newtaps,
+		    std::vector< std::vector<float> > &ourtaps,
+		    std::vector<gr_fir_ccf*> &ourfilter);
+
   
 public:
   ~gr_pfb_arb_resampler_ccf ();
- 
-  /*!
-   * Resets the filterbank's filter taps with the new prototype filter
-   * \param taps    (vector/list of floats) The prototype filter to populate the filterbank. The taps
-   *                                        should be generated at the interpolated sampling rate.
-   */
-  void set_taps (const std::vector<float> &newtaps,
-		 std::vector< std::vector<float> > &ourtaps,
-		 std::vector<gr_fir_ccf*> &ourfilter);
+
+  // FIXME: See about a set_taps function during runtime.
 
   /*!
    * Print all of the filterbank taps to screen.

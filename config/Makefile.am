@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2006,2008,2009 Free Software Foundation, Inc.
+# Copyright 2001,2006,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -69,7 +69,6 @@ m4macros = \
 	grc_gr_usrp.m4 \
 	grc_gr_video_sdl.m4 \
 	grc_gr_wxgui.m4 \
-	grc_mblock.m4 \
 	grc_gruel.m4 \
 	grc_vrt.m4 \
 	gr_check_createfilemapping.m4 \
@@ -87,7 +86,6 @@ m4macros = \
 	gr_lib64.m4 \
 	gr_libgnuradio_core_extra_ldflags.m4 \
 	gr_no_undefined.m4 \
-	gr_omnithread.m4 \
 	gr_pwin32.m4 \
 	gr_python.m4 \
 	gr_require_mc4020.m4 \

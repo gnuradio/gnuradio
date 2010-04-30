@@ -1,5 +1,5 @@
 #
-# Copyright 2007,2008 Free Software Foundation, Inc.
+# Copyright 2007,2008,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -23,7 +23,7 @@ include $(top_srcdir)/Makefile.common
 IBM_PPU_SYNC_INCLUDES = -I$(top_srcdir)/gcell/ibm/sync/ppu_source
 
 
-AM_CPPFLAGS = $(DEFINES) $(OMNITHREAD_INCLUDES) $(MBLOCK_INCLUDES) $(CPPUNIT_INCLUDES) \
+AM_CPPFLAGS = $(DEFINES) $(BOOST_CPPFLAGS) $(CPPUNIT_INCLUDES) \
 	$(GCELL_INCLUDES) $(IBM_PPU_SYNC_INCLUDES) $(WITH_INCLUDES)
 
 

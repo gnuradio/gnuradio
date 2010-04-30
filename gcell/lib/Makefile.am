@@ -36,7 +36,7 @@ libgcell_la_LIBADD = \
 	runtime/libruntime.la \
 	wrapper/libwrapper.la \
 	-lspe2 \
-	$(OMNITHREAD_LA)
+	$(BOOST_LDFLAGS) $(BOOST_THREAD_LIB)
 
 libgcell_qa_la_LIBADD = \
 	runtime/libruntime-qa.la \
