@@ -1,5 +1,5 @@
 """
-Copyright 2007, 2008, 2009 Free Software Foundation, Inc.
+Copyright 2007, 2008, 2009, 2010 Free Software Foundation, Inc.
 This file is part of GNU Radio
 
 GNU Radio Companion is free software; you can redistribute it and/or
@@ -135,10 +135,21 @@ PARAM_LABEL_MARKUP_TMPL="""\
 <span underline="$underline" foreground="$foreground" font_desc="Sans 9">$encode($param.get_name())</span>"""
 
 TIP_MARKUP_TMPL="""\
+########################################
+#def truncate(string)
+	#set $max_len = 100
+	#set $string = str($string)
+	#if len($string) > $max_len
+$('%s...%s'%($string[:$max_len/2], $string[-$max_len/2:]))#slurp
+	#else
+$string#slurp
+	#end if
+#end def
+########################################
 Key: $param.get_key()
 Type: $param.get_type()
 #if $param.is_valid()
-Value: $param.get_evaluated()
+Value: $truncate($param.get_evaluated())
 #elif len($param.get_error_messages()) == 1
 Error: $(param.get_error_messages()[0])
 #else
