@@ -32,12 +32,11 @@ protected:
   }
 };
 
-TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent){
+TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent)
+{
   timespec_reset(&_lastReplot);
 
   resize(parent->width(), parent->height());
-
-  _displayIntervalTime = (1.0/10.0); // 1/10 of a second between updates
 
   _numPoints = 1024;
   _realDataPoints = new double[_numPoints];
@@ -114,7 +113,8 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent){
   legendDisplay->setItemMode(QwtLegend::CheckableItem);
   insertLegend(legendDisplay);
 
-  connect(this, SIGNAL( legendChecked(QwtPlotItem *, bool ) ), this, SLOT( LegendEntryChecked(QwtPlotItem *, bool ) ));
+  connect(this, SIGNAL( legendChecked(QwtPlotItem *, bool ) ), 
+	  this, SLOT( LegendEntryChecked(QwtPlotItem *, bool ) ));
 }
 
 TimeDomainDisplayPlot::~TimeDomainDisplayPlot(){
@@ -143,17 +143,7 @@ TimeDomainDisplayPlot::set_xaxis(double min, double max)
 
 void TimeDomainDisplayPlot::replot()
 {
-  const timespec startTime = get_highres_clock();
-  
   QwtPlot::replot();
-
-  double differenceTime = (diff_timespec(get_highres_clock(), startTime));
-
-  differenceTime *= 99.0;
-  // Require at least a 10% duty cycle
-  if(differenceTime > (1.0/10.0)){
-    _displayIntervalTime = differenceTime;
-  }
 }
 
 void
@@ -164,10 +154,12 @@ TimeDomainDisplayPlot::resizeSlot( QSize *s )
 
 void TimeDomainDisplayPlot::PlotNewData(const double* realDataPoints,
 					const double* imagDataPoints,
-					const int64_t numDataPoints)
+					const int64_t numDataPoints,
+					const double timeInterval)
 {
-  if(numDataPoints > 0){
-
+  if((numDataPoints > 0) && 
+     (diff_timespec(get_highres_clock(), _lastReplot) > timeInterval)) {
+  
     if(numDataPoints != _numPoints){
       _numPoints = numDataPoints;
 
@@ -185,17 +177,12 @@ void TimeDomainDisplayPlot::PlotNewData(const double* realDataPoints,
 
       _resetXAxisPoints();
     }
+
     memcpy(_realDataPoints, realDataPoints, numDataPoints*sizeof(double));
     memcpy(_imagDataPoints, imagDataPoints, numDataPoints*sizeof(double));
 
-  }
+    replot();
 
-  // Allow at least a 50% duty cycle
-  if(diff_timespec(get_highres_clock(), _lastReplot) > _displayIntervalTime){
-    // Only replot the screen if it is visible
-    if(isVisible()){
-      replot();
-    }
     _lastReplot = get_highres_clock();
   }
 }

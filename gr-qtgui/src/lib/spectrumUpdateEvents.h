@@ -10,14 +10,13 @@
 class SpectrumUpdateEvent:public QEvent{
 
 public:
-  SpectrumUpdateEvent(const std::complex<float>* fftPoints, const uint64_t numFFTDataPoints, const double* realTimeDomainPoints, const double* imagTimeDomainPoints, const uint64_t numTimeDomainDataPoints, const double timePerFFT, const timespec dataTimestamp, const bool repeatDataFlag, const bool lastOfMultipleUpdateFlag, const timespec generatedTimestamp, const int droppedFFTFrames);
+  SpectrumUpdateEvent(const std::complex<float>* fftPoints, const uint64_t numFFTDataPoints, const double* realTimeDomainPoints, const double* imagTimeDomainPoints, const uint64_t numTimeDomainDataPoints, const timespec dataTimestamp, const bool repeatDataFlag, const bool lastOfMultipleUpdateFlag, const timespec generatedTimestamp, const int droppedFFTFrames);
   ~SpectrumUpdateEvent();
   const std::complex<float>* getFFTPoints()const;
   const double* getRealTimeDomainPoints()const;
   const double* getImagTimeDomainPoints()const;
   uint64_t getNumFFTDataPoints()const;
   uint64_t getNumTimeDomainDataPoints()const;
-  double getTimePerFFT()const;
   timespec getDataTimestamp()const;
   bool getRepeatDataFlag()const;
   bool getLastOfMultipleUpdateFlag()const;
@@ -32,7 +31,6 @@ private:
   double* _imagDataTimeDomainPoints;
   uint64_t _numFFTDataPoints;
   uint64_t _numTimeDomainDataPoints;
-  double _timePerFFT;
   timespec _dataTimestamp;
   bool _repeatDataFlag;
   bool _lastOfMultipleUpdateFlag;

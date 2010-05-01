@@ -224,8 +224,6 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   resize(parent->width(), parent->height());
   _numPoints = 1024;
 
-  _displayIntervalTime = (1.0/5.0); // 1/5 of a second between updates
-
   _waterfallData = new WaterfallData(_startFrequency, _stopFrequency, _numPoints, 200);
 
   QPalette palette;
@@ -370,50 +368,46 @@ WaterfallDisplayPlot::GetStopFrequency() const
 
 void
 WaterfallDisplayPlot::PlotNewData(const double* dataPoints, 
-				       const int64_t numDataPoints,
-				       const double timePerFFT,
-				       const timespec timestamp,
-				       const int droppedFrames)
+				  const int64_t numDataPoints,
+				  const double timePerFFT,
+				  const timespec timestamp,
+				  const int droppedFrames)
 {
   if(numDataPoints > 0){
     if(numDataPoints != _numPoints){
       _numPoints = numDataPoints;
-
+      
       Reset();
-
+      
       d_spectrogram->invalidateCache();
       d_spectrogram->itemChanged();
-
+      
       if(isVisible()){
 	replot();
       }
-
+      
       _lastReplot = get_highres_clock();
     }
 
-    _waterfallData->addFFTData(dataPoints, numDataPoints, droppedFrames);
-    _waterfallData->IncrementNumLinesToUpdate();
-
-    QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
-    timeScale->SetSecondsPerLine(timePerFFT);
-    timeScale->SetZeroTime(timestamp);
-
-    ((WaterfallZoomer*)_zoomer)->SetSecondsPerLine(timePerFFT);
-    ((WaterfallZoomer*)_zoomer)->SetZeroTime(timestamp);
-  }
-
-  // Allow at least a 50% duty cycle
-  if(diff_timespec(get_highres_clock(), _lastReplot) > _displayIntervalTime){
-
-    d_spectrogram->invalidateCache();
-    d_spectrogram->itemChanged();
-
-    // Only update when window is visible
-    if(isVisible()){
+    if(diff_timespec(get_highres_clock(), _lastReplot) > timePerFFT) {
+      //FIXME: We may want to average the data between these updates to smooth display
+      _waterfallData->addFFTData(dataPoints, numDataPoints, droppedFrames);
+      _waterfallData->IncrementNumLinesToUpdate();
+      
+      QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
+      timeScale->SetSecondsPerLine(timePerFFT);
+      timeScale->SetZeroTime(timestamp);
+      
+      ((WaterfallZoomer*)_zoomer)->SetSecondsPerLine(timePerFFT);
+      ((WaterfallZoomer*)_zoomer)->SetZeroTime(timestamp);
+      
+      d_spectrogram->invalidateCache();
+      d_spectrogram->itemChanged();
+      
       replot();
-    }
 
-    _lastReplot = get_highres_clock();
+      _lastReplot = get_highres_clock();
+    }
   }
 }
 
@@ -432,8 +426,6 @@ WaterfallDisplayPlot::SetIntensityRange(const double minIntensity,
 void
 WaterfallDisplayPlot::replot()
 {
-  const timespec startTime = get_highres_clock();
-
   QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
   timeScale->initiateUpdate();
 
@@ -455,14 +447,6 @@ WaterfallDisplayPlot::replot()
   }
 
   QwtPlot::replot();
-
-  double differenceTime = (diff_timespec(get_highres_clock(), startTime));
-  
-  // Require at least a 5% duty cycle
-  differenceTime *= 19.0;
-  if(differenceTime > (1.0/5.0)){
-    _displayIntervalTime = differenceTime;
-  }
 }
 
 void

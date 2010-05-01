@@ -30,7 +30,7 @@ public:
 
   void PlotNewData(const double* dataPoints, const int64_t numDataPoints,
 		   const double noiseFloorAmplitude, const double peakFrequency,
-		   const double peakAmplitude);
+		   const double peakAmplitude, const double timeInterval);
   
   void ClearMaxData();
   void ClearMinData();
@@ -86,8 +86,6 @@ private:
   timespec _lastReplot;
 
   bool _useCenterFrequencyFlag;
-
-  double _displayIntervalTime;
 };
 
 #endif /* FREQUENCY_DISPLAY_PLOT_HPP */

@@ -73,8 +73,6 @@ private:
 
   int64_t _numPoints;
 
-  double _displayIntervalTime;
-
   int _intensityColorMapType;
   QColor _userDefinedLowIntensityColor;
   QColor _userDefinedHighIntensityColor;

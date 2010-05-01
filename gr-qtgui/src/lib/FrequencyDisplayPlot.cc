@@ -101,8 +101,6 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
 
   resize(parent->width(), parent->height());
   
-  _displayIntervalTime = (1.0/10.0); // 1/10 of a second between updates
-
   _useCenterFrequencyFlag = false;
 
   _numPoints = 1024;
@@ -299,8 +297,6 @@ FrequencyDisplayPlot::GetStopFrequency() const
 void
 FrequencyDisplayPlot::replot()
 {
-  const timespec startTime = get_highres_clock();
-
   _markerNoiseFloorAmplitude->setYValue(_noiseFloorAmplitude);
   
   // Make sure to take into account the start frequency
@@ -313,14 +309,6 @@ FrequencyDisplayPlot::replot()
   _markerPeakAmplitude->setYValue(_peakAmplitude);
   
   QwtPlot::replot();
-
-  double differenceTime = (diff_timespec(get_highres_clock(), startTime));
-
-  differenceTime *= 99.0;
-  // Require at least a 10% duty cycle
-  if(differenceTime > (1.0/10.0)){
-    _displayIntervalTime = differenceTime;
-  }
 }
  
 void
@@ -332,13 +320,15 @@ FrequencyDisplayPlot::resizeSlot( QSize *s )
 void
 FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDataPoints,
 				  const double noiseFloorAmplitude, const double peakFrequency,
-				  const double peakAmplitude)
+				  const double peakAmplitude, const double timeInterval)
 {
-  if(numDataPoints > 0){
-
-    if(numDataPoints != _numPoints){
+  // Only update plot if there is data and if the time interval has elapsed
+  if((numDataPoints > 0) && 
+     (diff_timespec(get_highres_clock(), _lastReplot) > timeInterval)) {
+    
+    if(numDataPoints != _numPoints) {
       _numPoints = numDataPoints;
-
+      
       delete[] _dataPoints;
       delete[] _minFFTPoints;
       delete[] _maxFFTPoints;
@@ -351,12 +341,12 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
       _fft_plot_curve->setRawData(_xAxisPoints, _dataPoints, _numPoints);
       _min_fft_plot_curve->setRawData(_xAxisPoints, _minFFTPoints, _numPoints);
       _max_fft_plot_curve->setRawData(_xAxisPoints, _maxFFTPoints, _numPoints);
-
+      
       _resetXAxisPoints();
       ClearMaxData();
       ClearMinData();
     }
-
+    
     memcpy(_dataPoints, dataPoints, numDataPoints*sizeof(double));
     for(int64_t point = 0; point < numDataPoints; point++){
       if(dataPoints[point] < _minFFTPoints[point]){
@@ -372,14 +362,9 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
     _peakAmplitude = peakAmplitude;
 
     SetUpperIntensityLevel(_peakAmplitude);
-  }
 
-  // Allow at least a 50% duty cycle
-  if(diff_timespec(get_highres_clock(), _lastReplot) > _displayIntervalTime){
-    // Only replot the screen if it is visible
-    if(isVisible()){
-      replot();
-    }
+    replot();
+    
     _lastReplot = get_highres_clock();
   }
 }

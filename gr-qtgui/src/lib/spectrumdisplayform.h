@@ -13,6 +13,7 @@ class SpectrumGUIClass;
 #include <TimeDomainDisplayPlot.h>
 #include <ConstellationDisplayPlot.h>
 #include <QValidator>
+#include <QTimer>
 #include <vector>
 
 class SpectrumDisplayForm : public QWidget, public Ui::SpectrumDisplayForm
@@ -70,9 +71,11 @@ public slots:
 			    double ymin, double ymax);
   void SetConstellationPenSize(int size);
   void SetFrequencyAxis(double min, double max);
+  void SetUpdateTime(double t);
 
 private slots:
   void newFrequencyData( const SpectrumUpdateEvent* );
+  void UpdateGuiTimer();
 
 protected:
 
@@ -110,6 +113,9 @@ private:
   int d_plot_waterfall3d;
   int d_plot_time;
   int d_plot_constellation;
+
+  QTimer *displayTimer;
+  double d_update_time;
 };
 
 #endif /* SPECTRUM_DISPLAY_FORM_H */

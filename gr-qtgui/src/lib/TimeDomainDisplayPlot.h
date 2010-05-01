@@ -21,7 +21,8 @@ public:
   TimeDomainDisplayPlot(QWidget*);
   virtual ~TimeDomainDisplayPlot();
 
-  void PlotNewData(const double* realDataPoints, const double* imagDataPoints, const int64_t numDataPoints);
+  void PlotNewData(const double* realDataPoints, const double* imagDataPoints, 
+		   const int64_t numDataPoints, const double timeInterval);
     
   void SetImaginaryDataVisible(const bool);
 				   
@@ -54,8 +55,6 @@ private:
   timespec _lastReplot;
 
   int64_t _numPoints;
-
-  double _displayIntervalTime;
 };
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_HPP */

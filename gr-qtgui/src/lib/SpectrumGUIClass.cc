@@ -111,7 +111,7 @@ SpectrumGUIClass::OpenSpectrumWindow(QWidget* parent,
   timespec_reset(&_lastGUIUpdateTime);
 
   // Draw Blank Display
-  UpdateWindow(false, NULL, 0, NULL, 0, NULL, 0, 1.0, get_highres_clock(), true);
+  UpdateWindow(false, NULL, 0, NULL, 0, NULL, 0, get_highres_clock(), true);
 
   // Set up the initial frequency axis settings
   SetFrequencyRange(_centerFrequency, _startFrequency, _stopFrequency);
@@ -220,7 +220,6 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
 			       const uint64_t realTimeDomainDataSize,
 			       const float* complexTimeDomainData,
 			       const uint64_t complexTimeDomainDataSize,
-			       const double timePerFFT,
 			       const timespec timestamp,
 			       const bool lastOfMultipleFFTUpdateFlag)
 {
@@ -277,7 +276,7 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
   const timespec currentTime = get_highres_clock();
   const timespec lastUpdateGUITime = GetLastGUIUpdateTime();
 
-  if((diff_timespec(currentTime, lastUpdateGUITime) > (4*timePerFFT)) &&
+  if((diff_timespec(currentTime, lastUpdateGUITime) > (4*_updateTime)) &&
      (GetPendingGUIUpdateEvents() > 0) && !timespec_empty(&lastUpdateGUITime)) {
     // Do not update the display if too much data is pending to be displayed
     _droppedEntriesCount++;
@@ -290,7 +289,7 @@ SpectrumGUIClass::UpdateWindow(const bool updateDisplayFlag,
 					    _realTimeDomainPoints,
 					    _imagTimeDomainPoints,
 					    timeDomainBufferSize,
-					    timePerFFT, timestamp,
+					    timestamp,
 					    repeatDataFlag,
 					    lastOfMultipleFFTUpdateFlag,
 					    currentTime,
@@ -459,5 +458,13 @@ SpectrumGUIClass::SetFrequencyAxis(double min, double max)
 {
   _spectrumDisplayForm->SetFrequencyAxis(min, max);
 }
+
+void
+SpectrumGUIClass::SetUpdateTime(double t)
+{
+  _updateTime = t;
+  _spectrumDisplayForm->SetUpdateTime(_updateTime);
+}
+
 
 #endif /* SPECTRUM_GUI_CLASS_CPP */

@@ -8,7 +8,6 @@ SpectrumUpdateEvent::SpectrumUpdateEvent(const std::complex<float>* fftPoints,
 					 const double* realTimeDomainPoints,
 					 const double* imagTimeDomainPoints,
 					 const uint64_t numTimeDomainDataPoints,
-					 const double timePerFFT,
 					 const timespec dataTimestamp,
 					 const bool repeatDataFlag,
 					 const bool lastOfMultipleUpdateFlag,
@@ -44,7 +43,6 @@ SpectrumUpdateEvent::SpectrumUpdateEvent(const std::complex<float>* fftPoints,
 	   numTimeDomainDataPoints*sizeof(double));
   }
   _dataTimestamp = dataTimestamp;
-  _timePerFFT = timePerFFT;
   _repeatDataFlag = repeatDataFlag;
   _lastOfMultipleUpdateFlag = lastOfMultipleUpdateFlag;
   _eventGeneratedTimestamp = generatedTimestamp;
@@ -85,12 +83,6 @@ uint64_t
 SpectrumUpdateEvent::getNumTimeDomainDataPoints() const
 {
   return _numTimeDomainDataPoints;
-}
-
-double
-SpectrumUpdateEvent::getTimePerFFT() const
-{
-  return _timePerFFT;
 }
 
 timespec
