@@ -66,8 +66,7 @@ public:
 
   QwtText label(double value) const
   {
-    return QString("%1").arg((value + GetCenterFrequency()) / ((GetFrequencyPrecision() == 0) ? 1.0 : 1000.0), 
-			     0, 'f', GetFrequencyPrecision());
+    return QString("%1").arg(value, 0, 'f', GetFrequencyPrecision());
   }
 
   virtual void initiateUpdate()
@@ -180,6 +179,11 @@ public:
     updateDisplay();
   }
 
+  void SetUnitType(const std::string &type)
+  {
+    _unitType = type;
+  }
+
 protected:
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
@@ -193,10 +197,14 @@ protected:
 				  timeTm.tm_mday, timeTm.tm_hour, timeTm.tm_min,
 				  timeTm.tm_sec, lineTime.tv_nsec/1000000));
 
-    QwtText t(QString("%1 %2, %3").arg((p.x() + GetCenterFrequency()) / ((GetFrequencyPrecision() == 0) ? 1.0 : 1000.0), 0, 'f', GetFrequencyPrecision()).arg( (GetFrequencyPrecision() == 0) ? "Hz" : "kHz").arg(yLabel));
+    QwtText t(QString("%1 %2, %3").arg(p.x(), 0, 'f',
+				       GetFrequencyPrecision()).arg(_unitType.c_str()).arg(yLabel));
 
     return t;
   }
+
+private:
+  std::string _unitType;
 };
 
 
@@ -310,27 +318,39 @@ WaterfallDisplayPlot::SetFrequencyRange(const double constStartFreq,
   double stopFreq = constStopFreq / units;
   double centerFreq = constCenterFreq / units;
 
+  _useCenterFrequencyFlag = useCenterFrequencyFlag;
+
+  if(_useCenterFrequencyFlag){
+    startFreq = (startFreq + centerFreq);
+    stopFreq = (stopFreq + centerFreq);
+  }
+
+  bool reset = false;
+  if((startFreq != _startFrequency) || (stopFreq != _stopFrequency))
+    reset = true;
+
   if(stopFreq > startFreq) {
-    _startFrequency = 1000*startFreq;
-    _stopFrequency = 1000*stopFreq;
+    _startFrequency = startFreq;
+    _stopFrequency = stopFreq;
 
-    setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
-
+ 
     if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (_zoomer != NULL)){
-      WaterfallFreqDisplayScaleDraw* freqScale = ((WaterfallFreqDisplayScaleDraw*)axisScaleDraw(QwtPlot::xBottom));
-      freqScale->SetCenterFrequency(centerFreq);
-      ((WaterfallZoomer*)_zoomer)->SetCenterFrequency(centerFreq);
+      double display_units = ceil(log10(units)/2.0);
+      setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
+      setAxisScaleDraw(QwtPlot::xBottom, new WaterfallFreqDisplayScaleDraw(display_units));
 
-      freqScale->SetFrequencyPrecision( 2 );
-      ((WaterfallZoomer*)_zoomer)->SetFrequencyPrecision( 2 );
-      setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
-    }
+      if(reset) {
+	Reset();
+      }
 
-    Reset();
+      ((WaterfallZoomer*)_zoomer)->SetFrequencyPrecision(display_units);
+      ((WaterfallZoomer*)_zoomer)->SetUnitType(strunits);
 
-    // Only replot if screen is visible
-    if(isVisible()){
-      replot();
+      // Load up the new base zoom settings
+      _zoomer->setZoomBase();
+      
+      // Zooms back to the base and clears any other zoom levels
+      _zoomer->zoom(0);
     }
   }
 }

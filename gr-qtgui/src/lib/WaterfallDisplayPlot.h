@@ -69,6 +69,8 @@ private:
 
   timespec _lastReplot;
 
+  bool _useCenterFrequencyFlag;
+
   int64_t _numPoints;
 
   double _displayIntervalTime;
