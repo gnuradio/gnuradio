@@ -43,7 +43,6 @@ public slots:
   void MaxHoldResetBtn_clicked();
   void TabChanged(int index);
 
-  void PowerLineEdit_textChanged( const QString& valueString );
   void SetFrequencyRange( const double newCenterFrequency,
 			  const double newStartFrequency,
 			  const double newStopFrequency );
