@@ -73,15 +73,22 @@ public:
     updateDisplay();
   }
 
+  void SetUnitType(const std::string &type)
+  {
+    _unitType = type;
+  }
+
 protected:
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
-    QString strunits = (GetFrequencyPrecision() == 0) ? "Hz" : "kHz";
     QwtText t(QString("%1 %2, %3 dB").arg(p.x(), 0, 'f', 
-					  GetFrequencyPrecision()).arg(strunits).arg(p.y(), 0, 'f', 2));
+					  GetFrequencyPrecision()).arg(_unitType.c_str()).arg(p.y(), 0, 'f', 2));
 
     return t;
   }
+
+private:
+  std::string _unitType;
 };
 
 FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
@@ -267,6 +274,7 @@ FrequencyDisplayPlot::SetFrequencyRange(const double constStartFreq,
   setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(display_units));
   setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
   ((FreqDisplayZoomer*)_zoomer)->SetFrequencyPrecision(display_units);
+  ((FreqDisplayZoomer*)_zoomer)->SetUnitType(strunits);
 
   // Load up the new base zoom settings
   _zoomer->setZoomBase();
