@@ -157,7 +157,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
 
   _upper_intensity_marker = new QwtPlotMarker();
   _upper_intensity_marker->setLineStyle(QwtPlotMarker::HLine);
-  _upper_intensity_marker->setLinePen(QPen(Qt::green));
+  _upper_intensity_marker->setLinePen(QPen(Qt::green, 0, Qt::DotLine));
   _upper_intensity_marker->attach(this);
 
   memset(_dataPoints, 0x0, _numPoints*sizeof(double));
@@ -371,6 +371,7 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
     _peakFrequency = peakFrequency;
     _peakAmplitude = peakAmplitude;
 
+    SetUpperIntensityLevel(_peakAmplitude);
   }
 
   // Allow at least a 50% duty cycle
