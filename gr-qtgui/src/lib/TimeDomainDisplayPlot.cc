@@ -7,10 +7,37 @@
 #include <qwt_legend.h>
 
 
-class TimeDomainDisplayZoomer: public QwtPlotZoomer
+class TimePrecisionClass
 {
 public:
-  TimeDomainDisplayZoomer(QwtPlotCanvas* canvas):QwtPlotZoomer(canvas)
+  TimePrecisionClass(const int timePrecision)
+  {
+    _timePrecision = timePrecision;
+  }
+
+  virtual ~TimePrecisionClass()
+  {
+  }
+
+  virtual unsigned int GetTimePrecision() const
+  {
+    return _timePrecision;
+  }
+
+  virtual void SetTimePrecision(const unsigned int newPrecision)
+  {
+    _timePrecision = newPrecision;
+  }
+protected:
+  unsigned int _timePrecision;
+};
+
+
+class TimeDomainDisplayZoomer: public QwtPlotZoomer, public TimePrecisionClass
+{
+public:
+  TimeDomainDisplayZoomer(QwtPlotCanvas* canvas, const unsigned int timePrecision)
+    : QwtPlotZoomer(canvas),TimePrecisionClass(timePrecision)
   {
     setTrackerMode(QwtPicker::AlwaysOn);
   }
@@ -23,13 +50,23 @@ public:
     updateDisplay();
   }
 
+  void SetUnitType(const std::string &type)
+  {
+    _unitType = type;
+  }
+
 protected:
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
-    QwtText t(QString("Sample %1, %2 V").arg(p.x(), 0, 'f', 0).arg(p.y(), 0, 'f', 4));
+    QwtText t(QString("%1 %2, %3 V").arg(p.x(), 0, 'f', GetTimePrecision()).
+	      arg(_unitType.c_str()).
+	      arg(p.y(), 0, 'f', 4));
 
     return t;
   }
+
+private:
+  std::string _unitType;
 };
 
 TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent)
@@ -43,7 +80,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent)
   _imagDataPoints = new double[_numPoints];
   _xAxisPoints = new double[_numPoints];
 
-  _zoomer = new TimeDomainDisplayZoomer(canvas());
+  _zoomer = new TimeDomainDisplayZoomer(canvas(), 0);
 
   // Disable polygon clipping
   QwtPainter::setDeviceClipping(false);
@@ -58,7 +95,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent)
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
   set_xaxis(0, _numPoints);
-  setAxisTitle(QwtPlot::xBottom, "Sample Number");
+  setAxisTitle(QwtPlot::xBottom, "Time (sec)");
 
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
   set_yaxis(-2.0, 2.0);
@@ -80,6 +117,7 @@ TimeDomainDisplayPlot::TimeDomainDisplayPlot(QWidget* parent):QwtPlot(parent)
   memset(_imagDataPoints, 0x0, _numPoints*sizeof(double));
   memset(_xAxisPoints, 0x0, _numPoints*sizeof(double));
 
+  _sampleRate = 1;
   _resetXAxisPoints();
 
   replot();
@@ -187,19 +225,39 @@ void TimeDomainDisplayPlot::PlotNewData(const double* realDataPoints,
   }
 }
 
-void TimeDomainDisplayPlot::SetImaginaryDataVisible(const bool visibleFlag){
+void TimeDomainDisplayPlot::SetImaginaryDataVisible(const bool visibleFlag)
+{
   _imag_plot_curve->setVisible(visibleFlag);
 }
 
-void TimeDomainDisplayPlot::_resetXAxisPoints(){
+void TimeDomainDisplayPlot::_resetXAxisPoints()
+{
+  double delt = 1.0/_sampleRate;
   for(long loc = 0; loc < _numPoints; loc++){
-    _xAxisPoints[loc] = loc;
+    _xAxisPoints[loc] = loc*delt;
   }
-  setAxisScale(QwtPlot::xBottom, 0, _numPoints);
+  setAxisScale(QwtPlot::xBottom, 0, _numPoints*delt);
 }
 
-void TimeDomainDisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on){
+void TimeDomainDisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on)
+{
   plotItem->setVisible(!on);
+}
+
+void
+TimeDomainDisplayPlot::SetSampleRate(double sr, double units,
+				     const std::string &strunits)
+{
+  _sampleRate = sr/units;
+  _resetXAxisPoints();
+
+  // While we could change the displayed sigfigs based on the unit being
+  // displayed, I think it looks better by just setting it to 4 regardless.
+  //double display_units = ceil(log10(units)/2.0);
+  double display_units = 4;
+  setAxisTitle(QwtPlot::xBottom, QString("Time (%1)").arg(strunits.c_str()));
+  ((TimeDomainDisplayZoomer*)_zoomer)->SetTimePrecision(display_units);
+  ((TimeDomainDisplayZoomer*)_zoomer)->SetUnitType(strunits);
 }
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_C */

@@ -415,6 +415,7 @@ SpectrumDisplayForm::SetFrequencyRange(const double newCenterFrequency,
 
   if(fdiff > 0) {
     std::string strunits[4] = {"Hz", "kHz", "MHz", "GHz"};
+    std::string strtime[4] = {"sec", "ms", "us", "ns"};
     double units10 = floor(log10(fdiff));
     double units3  = std::max(floor(units10 / 3.0), 0.0);
     double units = pow(10, (units10-fmod(units10, 3.0)));
@@ -424,23 +425,25 @@ SpectrumDisplayForm::SetFrequencyRange(const double newCenterFrequency,
     _stopFrequency = newStopFrequency;
     _centerFrequency = newCenterFrequency;
 
-    _frequencyDisplayPlot->SetFrequencyRange(newStartFrequency,
-					     newStopFrequency,
-					     newCenterFrequency,
+    _frequencyDisplayPlot->SetFrequencyRange(_startFrequency,
+					     _stopFrequency,
+					     _centerFrequency,
 					     UseRFFrequenciesCheckBox->isChecked(),
 					     units, strunits[iunit]);
-    _waterfallDisplayPlot->SetFrequencyRange(newStartFrequency,
-					     newStopFrequency,
-					     newCenterFrequency,
+    _waterfallDisplayPlot->SetFrequencyRange(_startFrequency,
+					     _stopFrequency,
+					     _centerFrequency,
 					     UseRFFrequenciesCheckBox->isChecked(),
 					     units, strunits[iunit]);
     if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
-      _waterfall3DDisplayPlot->SetFrequencyRange(newStartFrequency,
-						 newStopFrequency,
-						 newCenterFrequency,
+      _waterfall3DDisplayPlot->SetFrequencyRange(_startFrequency,
+						 _stopFrequency,
+						 _centerFrequency,
 						 UseRFFrequenciesCheckBox->isChecked(),
 						 units, strunits[iunit]);
     }
+    _timeDomainDisplayPlot->SetSampleRate(_stopFrequency - _startFrequency,
+					  units, strtime[iunit]);
   }
 }
 

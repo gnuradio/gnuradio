@@ -33,6 +33,8 @@ public:
 
 public slots:
   void resizeSlot( QSize *s );
+  void SetSampleRate(double sr, double units, 
+		     const std::string &strunits);
 
 protected slots:
   void LegendEntryChecked(QwtPlotItem *plotItem, bool on);
@@ -51,6 +53,8 @@ private:
   double* _realDataPoints;
   double* _imagDataPoints;
   double* _xAxisPoints;
+
+  double _sampleRate;
 
   timespec _lastReplot;
 
