@@ -141,7 +141,7 @@ qtgui_sink_f::initialize(const bool opengl)
 				 opengl);
 
   // initialize update time to 10 times a second
-  set_update_time(100);
+  set_update_time(0.1);
 
   d_object = new qtgui_obj(d_qApplication);
   qApp->postEvent(d_object, new qtgui_event(&d_pmutex));
