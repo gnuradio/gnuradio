@@ -289,6 +289,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
 WaterfallDisplayPlot::~WaterfallDisplayPlot()
 {
   delete _waterfallData;
+  delete d_spectrogram;
 }
 
 void 

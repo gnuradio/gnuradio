@@ -88,7 +88,7 @@ qtgui_sink_f::qtgui_sink_f (int fftsize, int wintype,
 
 qtgui_sink_f::~qtgui_sink_f()
 {
-  delete d_object;
+  delete d_main_gui;
   delete [] d_residbuf;
   delete d_fft;
 }
