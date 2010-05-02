@@ -26,8 +26,8 @@ public:
 protected:
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
-    QwtText t(QString("Sample %1, %2 V").arg(p.x(), 0, 'f', 0).arg(p.y(), 0, 'f', 4));
-
+    QwtText t(QString("(%1, %2)").arg(p.x(), 0, 'f', 4).
+	      arg(p.y(), 0, 'f', 4));
     return t;
   }
 };

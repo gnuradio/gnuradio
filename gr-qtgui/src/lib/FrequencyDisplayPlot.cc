@@ -81,9 +81,9 @@ public:
 protected:
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
-    QwtText t(QString("%1 %2, %3 dB").arg(p.x(), 0, 'f', 
-					  GetFrequencyPrecision()).arg(_unitType.c_str()).arg(p.y(), 0, 'f', 2));
-
+    QwtText t(QString("%1 %2, %3 dB").
+	      arg(p.x(), 0, 'f', GetFrequencyPrecision()).
+	      arg(_unitType.c_str()).arg(p.y(), 0, 'f', 2));
     return t;
   }
 

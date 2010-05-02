@@ -160,7 +160,8 @@ private:
 
 };
 
-class WaterfallZoomer: public QwtPlotZoomer, public TimeScaleData, public FreqOffsetAndPrecisionClass
+class WaterfallZoomer: public QwtPlotZoomer, public TimeScaleData, 
+		       public FreqOffsetAndPrecisionClass
 {
 public:
   WaterfallZoomer(QwtPlotCanvas* canvas, const unsigned int freqPrecision)
@@ -197,9 +198,9 @@ protected:
 				  timeTm.tm_mday, timeTm.tm_hour, timeTm.tm_min,
 				  timeTm.tm_sec, lineTime.tv_nsec/1000000));
 
-    QwtText t(QString("%1 %2, %3").arg(p.x(), 0, 'f',
-				       GetFrequencyPrecision()).arg(_unitType.c_str()).arg(yLabel));
-
+    QwtText t(QString("%1 %2, %3").
+	      arg(p.x(), 0, 'f', GetFrequencyPrecision()).
+	      arg(_unitType.c_str()).arg(yLabel));
     return t;
   }
 
