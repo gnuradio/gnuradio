@@ -25,6 +25,7 @@
 #include <usrp2/copiers.h>
 #include <gruel/inet.h>
 #include <gruel/realtime.h>
+#include <boost/bind.hpp>
 #include <usrp2_types.h>
 #include "usrp2_impl.h"
 #include "eth_buffer.h"
@@ -840,6 +841,7 @@ namespace usrp2 {
       success = transmit_cmd_and_wait(&cmd, sizeof(cmd), &p, DEF_CMD_TIMEOUT);
       success = success && (ntohx(reply.ok) == 1);
       d_channel_rings[channel].reset();
+      d_rx_seqno = -1;
       //fprintf(stderr, "usrp2::stop_rx_streaming:  success = %d\n", success);
       return success;
     }

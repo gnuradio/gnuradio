@@ -48,12 +48,12 @@ class gri_fft_complex;
  *
  * The FLL works by filtering the upper and lower band edges into x_u(t) and x_l(t), respectively.
  * These are combined to form cc(t) = x_u(t) + x_l(t) and ss(t) = x_u(t) - x_l(t). Combining
- * these to form the signal e(t) = Re{cc(t) \times ss(t)^*} (where ^* is the complex conjugate)
+ * these to form the signal e(t) = Re{cc(t) \\times ss(t)^*} (where ^* is the complex conjugate)
  * provides an error signal at the DC term that is directly proportional to the carrier frequency.
  * We then make a second-order loop using the error signal that is the running average of e(t).
  *
  * In theory, the band-edge filter is the derivative of the matched filter in frequency, 
- * (H_be(f) = \frac{H(f)}{df}. In practice, this comes down to a quarter sine wave at the point
+ * (H_be(f) = \\frac{H(f)}{df}. In practice, this comes down to a quarter sine wave at the point
  * of the matched filter's rolloff (if it's a raised-cosine, the derivative of a cosine is a sine).
  * Extend this sine by another quarter wave to make a half wave around the band-edges is equivalent
  * in time to the sum of two sinc functions. The baseband filter fot the band edges is therefore
@@ -93,7 +93,11 @@ class gr_fll_band_edge_cc : public gr_sync_block
 
   /*!
    * Build the FLL
-   * \param taps    (vector/list of gr_complex) The taps of the band-edge filter
+   * \param samps_per_sym (float) number of samples per symbol
+   * \param rolloff (float) Rolloff (excess bandwidth) of signal filter
+   * \param filter_size (int) number of filter taps to generate
+   * \param alpha (float) Alpha gain in the control loop
+   * \param beta  (float) Beta gain in the control loop
    */
   gr_fll_band_edge_cc(float samps_per_sym, float rolloff,
 		      int filter_size, float alpha, float beta);

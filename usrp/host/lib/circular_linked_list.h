@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009 Free Software Foundation, Inc.
+ * Copyright 2006,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio.
  *
@@ -23,7 +23,7 @@
 #ifndef _CIRCULAR_LINKED_LIST_H_
 #define _CIRCULAR_LINKED_LIST_H_
 
-#include <mld_threads.h>
+#include <gruel/thread.h>
 #include <stdexcept>
 
 #define __INLINE__ inline
@@ -110,8 +110,8 @@ template <class T> class circular_linked_list {
 private:
   s_node_ptr d_current, d_iterate, d_available, d_inUse;
   size_t d_n_nodes, d_n_used;
-  mld_mutex_ptr d_internal;
-  mld_condition_ptr d_ioBlock;
+  gruel::mutex* d_internal;
+  gruel::condition_variable* d_ioBlock;
 
 public:
   circular_linked_list (size_t n_nodes) {
@@ -150,8 +150,8 @@ public:
       }
     }
     d_available = d_current = l_prev;
-    d_ioBlock = new mld_condition ();
-    d_internal = d_ioBlock->mutex ();
+    d_ioBlock = new gruel::condition_variable ();
+    d_internal = new gruel::mutex ();
   };
 
   ~circular_linked_list () {
@@ -163,19 +163,21 @@ public:
     }
     delete d_ioBlock;
     d_ioBlock = NULL;
+    delete d_internal;
+    d_internal = NULL;
     d_available = d_inUse = d_iterate = d_current = NULL;
     d_n_used = d_n_nodes = 0;
   };
 
   s_node_ptr find_next_available_node () {
-    d_internal->lock ();
+    gruel::scoped_lock l (*d_internal);
 // find an available node
     s_node_ptr l_node = d_available; 
     DEBUG (std::cerr << "w ");
     while (! l_node) {
       DEBUG (std::cerr << "x" << std::endl);
       // the ioBlock condition will automatically unlock() d_internal
-      d_ioBlock->wait ();
+      d_ioBlock->wait (l);
       // and lock() is here
       DEBUG (std::cerr << "y" << std::endl);
       l_node = d_available;
@@ -196,13 +198,12 @@ public:
       l_node->insert_before (d_inUse);
     d_n_used++;
     l_node->set_not_available ();
-    d_internal->unlock ();
     return (l_node);
   };
 
   void make_node_available (s_node_ptr l_node) {
     if (!l_node) return;
-    d_internal->lock ();
+    gruel::scoped_lock l (*d_internal);
     DEBUG (std::cerr << "::m_n_a: #u = " << num_used()
 	   << ", node = " << l_node << std::endl);
 // remove this node from the inUse list
@@ -221,11 +222,8 @@ public:
 
     DEBUG (std::cerr << "s" << d_n_used);
 // signal the condition when new data arrives
-    d_ioBlock->signal ();
+    d_ioBlock->notify_one ();
     DEBUG (std::cerr << "t ");
-
-// unlock the mutex for thread safety
-    d_internal->unlock ();
   };
 
   __INLINE__ void iterate_start () { d_iterate = d_current; };
@@ -233,7 +231,7 @@ public:
   s_node_ptr iterate_next () {
 #if 0
 // lock the mutex for thread safety
-    d_internal->lock ();
+    gruel::scoped_lock l (*d_internal);
 #endif
     s_node_ptr l_this = NULL;
     if (d_iterate) {
@@ -242,10 +240,6 @@ public:
       if (d_iterate == d_current)
 	d_iterate = NULL;
     }
-#if 0
-// unlock the mutex for thread safety
-    d_internal->unlock ();
-#endif
     return (l_this);
   };
 
@@ -261,7 +255,7 @@ public:
   __INLINE__ void num_used_dec (void) {
     if (d_n_used != 0) --d_n_used;
 // signal the condition that new data has arrived
-    d_ioBlock->signal ();
+    d_ioBlock->notify_one ();
   };
   __INLINE__ bool in_use () { return (d_n_used != 0); };
 };

@@ -149,6 +149,7 @@ class gr_pfb_channelizer_ccf : public gr_block
    * Build the polyphase filterbank decimator.
    * \param numchans (unsigned integer) Specifies the number of channels <EM>M</EM>
    * \param taps    (vector/list of floats) The prototype filter to populate the filterbank.
+   * \param oversample_rate (float)   The output over sampling rate.
    */
   gr_pfb_channelizer_ccf (unsigned int numchans, 
 			  const std::vector<float> &taps,

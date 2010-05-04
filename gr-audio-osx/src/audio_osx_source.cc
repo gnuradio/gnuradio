@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio.
  *
@@ -23,8 +23,6 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-
-#define _USE_OMNI_THREADS_
 
 #include <audio_osx_source.h>
 #include <gr_io_signature.h>
@@ -446,11 +444,15 @@ audio_osx_source::audio_osx_source (int sample_rate,
 
 // create the stuff to regulate I/O
 
-  d_cond_data = new mld_condition ();
+  d_cond_data = new gruel::condition_variable ();
   if (d_cond_data == NULL)
-    CheckErrorAndThrow (errno, "new mld_condition (data)",
+    CheckErrorAndThrow (errno, "new condition (data)",
 			"audio_osx_source::audio_osx_source");
-  d_internal = d_cond_data->mutex ();
+
+  d_internal = new gruel::mutex ();
+  if (d_internal == NULL)
+    CheckErrorAndThrow (errno, "new mutex (internal)",
+			"audio_osx_source::audio_osx_source");
 
 // initialize the AU for input
 
@@ -600,6 +602,9 @@ audio_osx_source::~audio_osx_source ()
 
 // close and delete the control stuff
   delete d_cond_data;
+  d_cond_data = 0;
+  delete d_internal;
+  d_internal = 0;
 }
 
 audio_osx_source_sptr
@@ -654,7 +659,7 @@ audio_osx_source::work
  gr_vector_void_star &output_items)
 {
   // acquire control to do processing here only
-  d_internal->lock ();
+  gruel::scoped_lock l (*d_internal);
 
 #if _OSX_AU_DEBUG_
   std::cerr << "work1: SC = " << d_queueSampleCount
@@ -677,14 +682,12 @@ audio_osx_source::work
 	while (d_queueSampleCount == 0) {
 	  // release control so-as to allow data to be retrieved;
 	  // block until there is data to return
-	  d_cond_data->wait ();
-	  // the condition's signal() was called; acquire control to
+	  d_cond_data->wait (l);
+	  // the condition's 'notify' was called; acquire control to
 	  // keep thread safe
 	}
       } else {
 	// no data & not blocking; return nothing
-	// release control so-as to allow data to be retrieved
-	d_internal->unlock ();
 	return (0);
       }
     }
@@ -718,15 +721,8 @@ audio_osx_source::work
 
 #if _OSX_AU_DEBUG_
   std::cerr << "work2: SC = " << d_queueSampleCount
-	    << ", act#OI = " << actual_noutput_items << std::endl;
-#endif
-
-  // release control to allow for other processing parts to run
-
-  d_internal->unlock ();
-
-#if _OSX_AU_DEBUG_
-  std::cerr << "work3: Returning." << std::endl;
+	    << ", act#OI = " << actual_noutput_items << std::endl
+	    << "Returning." << std::endl;
 #endif
 
   return (actual_noutput_items);
@@ -782,7 +778,7 @@ audio_osx_source::AUInputCallback (void* inRefCon,
   OSStatus err = noErr;
   audio_osx_source* This = static_cast<audio_osx_source*>(inRefCon);
 
-  This->d_internal->lock ();
+  gruel::scoped_lock l (*This->d_internal);
 
 #if _OSX_AU_DEBUG_
   std::cerr << "cb0: in#F = " << inNumberFrames
@@ -911,17 +907,10 @@ audio_osx_source::AUInputCallback (void* inRefCon,
 #endif
 
 // signal that data is available, if appropraite
-  This->d_cond_data->signal ();
+  This->d_cond_data->notify_one ();
 
 #if _OSX_AU_DEBUG_
-  std::cerr << "cb5: releasing internal mutex." << std::endl;
-#endif
-
-// release control to allow for other processing parts to run
-  This->d_internal->unlock ();
-
-#if _OSX_AU_DEBUG_
-  std::cerr << "cb6: returning." << std::endl;
+  std::cerr << "cb5: returning." << std::endl;
 #endif
 
   return (err);

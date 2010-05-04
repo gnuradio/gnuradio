@@ -177,7 +177,7 @@ http://sourceforge.net/project/showfiles.php?group_id=1369&package_id=175103
 
 We use Smart Pointers, the thread library and a bunch of other boost stuff.
 If your system doesn't have boost 1.35 or later, see README.building-boost
-for additional info.
+for additional info.  (Note: Mac OSX systems require 1.37 or later.)
 
 
 (7) cppunit 1.9.14 or later.	http://cppunit.sourceforge.net
