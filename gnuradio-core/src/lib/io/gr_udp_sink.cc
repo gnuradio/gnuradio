@@ -30,6 +30,8 @@
 #include <stdio.h>
 #include <string.h>
 #if defined(HAVE_NETDB_H)
+#include <netdb.h>
+#include <sys/socket.h>  //usually included by <netdb.h>?
 typedef void* optval_t;
 #elif defined(HAVE_WINDOWS_H)
 // if not posix, assume winsock
@@ -84,18 +86,14 @@ static void report_error( const char *msg1, const char *msg2 )
 }
 
 gr_udp_sink::gr_udp_sink (size_t itemsize, 
-			  const char *src, unsigned short port_src,
-			  const char *dst, unsigned short port_dst,
-			  int payload_size)
+			  const char *host, unsigned short port,
+			  int payload_size, bool eof)
   : gr_sync_block ("udp_sink",
 		   gr_make_io_signature (1, 1, itemsize),
 		   gr_make_io_signature (0, 0, 0)),
-    d_itemsize (itemsize), d_payload_size(payload_size)
+    d_itemsize (itemsize), d_payload_size(payload_size), d_eof(eof),
+    d_connected(false)
 {
-  int ret = 0;
-  struct addrinfo *ip_src;        // store the source ip info
-  struct addrinfo *ip_dst;        // store the destination ip info
-
 #if defined(USING_WINSOCK) // for Windows (with MinGW)
   // initialize winsock DLL
   WSADATA wsaData;
@@ -104,39 +102,11 @@ gr_udp_sink::gr_udp_sink (size_t itemsize,
     report_error( "gr_udp_source WSAStartup", "can't open socket" );
   }
 #endif
-  
-  // Set up the address stucture for the source address and port numbers
-  // Get the source IP address from the host name
-  struct addrinfo hints;
-  memset( (void*)&hints, 0, sizeof(hints) );
-  hints.ai_family = AF_INET;
-  hints.ai_socktype = SOCK_DGRAM;
-  hints.ai_protocol = IPPROTO_UDP;
-  char port_str[7];
-  sprintf( port_str, "%d", port_src );
-  ret = getaddrinfo( src, port_str, &hints, &ip_src );
-  if( ret != 0 )
-    report_error("gr_udp_source/getaddrinfo",
-		 "can't initialize source socket" );
-
-  // Get the destination IP address from the host name
-  sprintf( port_str, "%d", port_dst );
-  ret = getaddrinfo( dst, port_str, &hints, &ip_dst );
-  if( ret != 0 )
-    report_error("gr_udp_source/getaddrinfo",
-		 "can't initialize destination socket" );
 
   // create socket
-  d_socket = socket(ip_src->ai_family, ip_src->ai_socktype,
-		    ip_src->ai_protocol);
+  d_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
   if(d_socket == -1) {
     report_error("socket open","can't open socket");
-  }
-
-  // Turn on reuse address
-  int opt_val = true;
-  if(setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, (optval_t)&opt_val, sizeof(int)) == -1) {
-    report_error("SO_REUSEADDR","can't set socket option SO_REUSEADDR");
   }
 
   // Don't wait when shutting down
@@ -149,36 +119,27 @@ gr_udp_sink::gr_udp_sink (size_t itemsize,
     }
   }
 
-  // bind socket to an address and port number to listen on
-  if(bind (d_socket, ip_src->ai_addr, ip_src->ai_addrlen) == -1) {
-    report_error("socket bind","can't bind socket");
-  }
-
-  // Not sure if we should throw here or allow retries
-  if(connect(d_socket, ip_dst->ai_addr, ip_dst->ai_addrlen) == -1) {
-    report_error("socket connect","can't connect to socket");
-  }
-
-  freeaddrinfo(ip_src);
-  freeaddrinfo(ip_dst);
+  // Get the destination address
+  connect(host, port);
 }
 
 // public constructor that returns a shared_ptr
 
 gr_udp_sink_sptr
 gr_make_udp_sink (size_t itemsize, 
-		  const char *src, unsigned short port_src,
-		  const char *dst, unsigned short port_dst,
-		  int payload_size)
+		  const char *host, unsigned short port,
+		  int payload_size, bool eof)
 {
   return gr_udp_sink_sptr (new gr_udp_sink (itemsize, 
-					    src, port_src,
-					    dst, port_dst,
-					    payload_size));
+					    host, port,
+					    payload_size, eof));
 }
 
 gr_udp_sink::~gr_udp_sink ()
 {
+  if (d_connected)
+    disconnect();
+
   if (d_socket){
     shutdown(d_socket, SHUT_RDWR);
 #if defined(USING_WINSOCK)
@@ -208,22 +169,28 @@ gr_udp_sink::work (int noutput_items,
   printf("Entered udp_sink\n");
   #endif
 
+  gruel::scoped_lock guard(d_mutex);  // protect d_socket
+
   while(bytes_sent <  total_size) {
     bytes_to_send = std::min((ssize_t)d_payload_size, (total_size-bytes_sent));
   
-    r = send(d_socket, (in+bytes_sent), bytes_to_send, 0);
-    if(r == -1) {         // error on send command
-      if( is_error(ECONNREFUSED) )
-	r = bytes_to_send;  // discard data until receiver is started
-      else {
-	report_error("udp_sink",NULL); // there should be no error case where
-	return -1;                  // this function should not exit immediately
+    if(d_connected) {
+      r = send(d_socket, (in+bytes_sent), bytes_to_send, 0);
+      if(r == -1) {         // error on send command
+	if( is_error(ECONNREFUSED) )
+	  r = bytes_to_send;  // discard data until receiver is started
+	else {
+	  report_error("udp_sink",NULL); // there should be no error case where
+	  return -1;                  // this function should not exit immediately
+	}
       }
     }
+    else
+      r = bytes_to_send;  // discarded for lack of connection
     bytes_sent += r;
     
     #if SNK_VERBOSE
-    printf("\tbyte sent: %d bytes\n", bytes);
+    printf("\tbyte sent: %d bytes\n", r);
     #endif
   }
 
@@ -232,4 +199,72 @@ gr_udp_sink::work (int noutput_items,
   #endif
 
   return noutput_items;
+}
+
+void gr_udp_sink::connect( const char *host, unsigned short port )
+{
+  if(d_connected)
+    disconnect();
+
+  if(host != NULL ) {
+    // Get the destination address
+    struct addrinfo *ip_dst;
+    struct addrinfo hints;
+    memset( (void*)&hints, 0, sizeof(hints) );
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_DGRAM;
+    hints.ai_protocol = IPPROTO_UDP;
+    char port_str[12];
+    sprintf( port_str, "%d", port );
+    int ret = getaddrinfo( host, port_str, &hints, &ip_dst );
+    if( ret != 0 )
+      report_error("gr_udp_source/getaddrinfo",
+		   "can't initialize destination socket" );
+
+    // don't need d_mutex lock when !d_connected
+    if(::connect(d_socket, ip_dst->ai_addr, ip_dst->ai_addrlen) == -1) {
+      report_error("socket connect","can't connect to socket");
+    }
+    d_connected = true;
+
+    freeaddrinfo(ip_dst);
+  }
+
+  return;
+}
+
+void gr_udp_sink::disconnect()
+{
+  if(!d_connected)
+    return;
+
+  #if SNK_VERBOSE
+  printf("gr_udp_sink disconnecting\n");
+  #endif
+
+  gruel::scoped_lock guard(d_mutex);  // protect d_socket from work()
+
+  // Send a few zero-length packets to signal receiver we are done
+  if(d_eof) {
+    int i;
+    for( i = 0; i < 3; i++ )
+      (void) send( d_socket, NULL, 0, 0 );  // ignore errors
+  }
+
+  // Since I can't find any way to disconnect a datagram socket in Cygwin,
+  // we just leave it connected but disable sending.
+#if 0
+  // zeroed address structure should reset connection
+  struct sockaddr addr;
+  memset( (void*)&addr, 0, sizeof(addr) );
+  // addr.sa_family = AF_UNSPEC;  // doesn't work on Cygwin
+  // addr.sa_family = AF_INET;  // doesn't work on Cygwin
+
+  if(::connect(d_socket, &addr, sizeof(addr)) == -1)
+    report_error("socket connect","can't connect to socket");
+#endif
+
+  d_connected = false;
+
+  return;
 }

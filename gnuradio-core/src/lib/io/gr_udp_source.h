@@ -24,49 +24,48 @@
 #define INCLUDED_GR_UDP_SOURCE_H
 
 #include <gr_sync_block.h>
-#if defined(HAVE_NETDB_H)
-#include <netdb.h>
-#include <sys/socket.h>  // usually #included by <netdb.h>?
-#elif defined(HAVE_WINDOWS_H)
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#endif
-
 #include <gruel/thread.h>
 
 class gr_udp_source;
 typedef boost::shared_ptr<gr_udp_source> gr_udp_source_sptr;
 
-gr_udp_source_sptr gr_make_udp_source(size_t itemsize, const char *src, 
-				      unsigned short port_src,
-				      int payload_size=1472, bool wait=true);
+gr_udp_source_sptr gr_make_udp_source(size_t itemsize, const char *host, 
+				      unsigned short port,
+				      int payload_size=1472,
+				      bool eof=true, bool wait=true);
 
 /*! 
  * \brief Read stream from an UDP socket.
  * \ingroup source_blk
  *
  * \param itemsize     The size (in bytes) of the item datatype
- * \param src          The source address as either the host name or the 'numbers-and-dots'
- *                     IP address
- * \param port_src     The port number on which the socket listens for data
- * \param payload_size UDP payload size by default set to 
- *                     1472 = (1500 MTU - (8 byte UDP header) - (20 byte IP header))
- * \param wait         Wait for data if not immediately available (default: true)
+ * \param host         The name or IP address of the receiving host; can be
+ *                     NULL, None, or "0.0.0.0" to allow reading from any
+ *                     interface on the host
+ * \param port         The port number on which to receive data; use 0 to
+ *                     have the system assign an unused port number
+ * \param payload_size UDP payload size by default set to 1472 =
+ *                     (1500 MTU - (8 byte UDP header) - (20 byte IP header))
+ * \param eof          Interpret zero-length packet as EOF (default: true)
+ * \param wait         Wait for data if not immediately available
+ *                     (default: true)
  *
 */
 
 class gr_udp_source : public gr_sync_block
 {
-  friend gr_udp_source_sptr gr_make_udp_source(size_t itemsize, const char *src, 
-					       unsigned short port_src,
-					       int payload_size, bool wait);
+  friend gr_udp_source_sptr gr_make_udp_source(size_t itemsize,
+					       const char *host, 
+					       unsigned short port,
+					       int payload_size,
+					       bool eof, bool wait);
 
  private:
   size_t	d_itemsize;
-
-  int            d_payload_size;  // maximum transmission unit (packet length)
-  bool           d_wait;          // wait if data if not immediately available
-  int            d_socket;        // handle to socket
+  int           d_payload_size;  // maximum transmission unit (packet length)
+  bool          d_eof;           // zero-length packet is EOF
+  bool          d_wait;          // wait if data if not immediately available
+  int           d_socket;        // handle to socket
   char *d_temp_buff;    // hold buffer between calls
   ssize_t d_residual;   // hold information about number of bytes stored in the temp buffer
   size_t d_temp_offset; // point to temp buffer location offset
@@ -76,21 +75,28 @@ class gr_udp_source : public gr_sync_block
    * \brief UDP Source Constructor
    * 
    * \param itemsize     The size (in bytes) of the item datatype
-   * \param src          The source address as either the host name or the 'numbers-and-dots'
-   *                     IP address
-   * \param port_src     The port number on which the socket listens for data
-   * \param payload_size UDP payload size by default set to 
-   *                     1472 = (1500 MTU - (8 byte UDP header) - (20 byte IP header))
-   * \param wait         Wait for data if not immediately available (default: true)
+   * \param host         The name or IP address of the receiving host; can be
+   *                     NULL, None, or "0.0.0.0" to allow reading from any
+   *                     interface on the host
+   * \param port         The port number on which to receive data; use 0 to
+   *                     have the system assign an unused port number
+   * \param payload_size UDP payload size by default set to 1472 =
+   *                     (1500 MTU - (8 byte UDP header) - (20 byte IP header))
+   * \param eof          Interpret zero-length packet as EOF (default: true)
+   * \param wait         Wait for data if not immediately available
+   *                     (default: true)
    */
-  gr_udp_source(size_t itemsize, const char *src, unsigned short port_src,
-		int payload_size, bool wait);
+  gr_udp_source(size_t itemsize, const char *host, unsigned short port,
+		int payload_size, bool eof, bool wait);
 
  public:
   ~gr_udp_source();
 
   /*! \brief return the PAYLOAD_SIZE of the socket */
   int payload_size() { return d_payload_size; }
+
+  /*! \breif return the port number of the socket */
+  int get_port();
 
   // should we export anything else?
 

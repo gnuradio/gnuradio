@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -23,19 +23,19 @@
 GR_SWIG_BLOCK_MAGIC(gr,udp_source)
 
 gr_udp_source_sptr 
-gr_make_udp_source (size_t itemsize, const char *src, 
-		    unsigned short port_src, int payload_size=1472,
-		    bool wait=true);
+gr_make_udp_source (size_t itemsize, const char *host, 
+		    unsigned short port, int payload_size=1472,
+		    bool eof=true, bool wait=true);
 
 class gr_udp_source : public gr_sync_block
 {
  protected:
-  gr_udp_source (size_t itemsize, const char *src, 
-		 unsigned short port_src, int payload_size, bool wait);
+  gr_udp_source (size_t itemsize, const char *host, 
+		 unsigned short port, int payload_size, bool eof, bool wait);
 
  public:
   ~gr_udp_source ();
 
   int payload_size() { return d_payload_size; }
-
+  int get_port();
 };

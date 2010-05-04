@@ -97,4 +97,5 @@ noinst_PYTHON = 			\
 	qa_unpack_k_bits.py		\
 	qa_repeat.py                    \
 	qa_scrambler.py			\
+	qa_udp_sink_source.py		\
 	qa_vector_sink_source.py	
