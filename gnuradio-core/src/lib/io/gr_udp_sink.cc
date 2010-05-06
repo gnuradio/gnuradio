@@ -251,6 +251,31 @@ void gr_udp_sink::disconnect()
       (void) send( d_socket, NULL, 0, 0 );  // ignore errors
   }
 
+  // Sending EOF can produce ERRCONNREFUSED errors that won't show up
+  //  until the next send or recv, which might confuse us if it happens
+  //  on a new connection.  The following does a nonblocking recv to
+  //  clear any such errors.
+  timeval timeout;
+  timeout.tv_sec = 0;    // zero time for immediate return
+  timeout.tv_usec = 0;
+  fd_set readfds;
+  FD_ZERO(&readfds);
+  FD_SET(d_socket, &readfds);
+  int r = select(FD_SETSIZE, &readfds, NULL, NULL, &timeout);
+  if(r < 0) {
+      #if SNK_VERBOSE
+      report_error("udp_sink/select",NULL);
+      #endif
+  }
+  else if(r > 0) {  // call recv() to get error return
+    r = recv(d_socket, (char*)&readfds, sizeof(readfds), 0);
+    if(r < 0) {
+	#if SNK_VERBOSE
+	report_error("udp_sink/recv",NULL);
+	#endif
+    }
+  }
+
   // Since I can't find any way to disconnect a datagram socket in Cygwin,
   // we just leave it connected but disable sending.
 #if 0
