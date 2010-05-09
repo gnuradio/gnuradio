@@ -122,7 +122,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   const double* realTimeDomainDataPoints = spectrumUpdateEvent->getRealTimeDomainPoints();
   const double* imagTimeDomainDataPoints = spectrumUpdateEvent->getImagTimeDomainPoints();
   const uint64_t numTimeDomainDataPoints = spectrumUpdateEvent->getNumTimeDomainDataPoints();
-  const timespec dataTimestamp = spectrumUpdateEvent->getDataTimestamp();;
+  const timespec dataTimestamp = spectrumUpdateEvent->getDataTimestamp();
   const bool repeatDataFlag = spectrumUpdateEvent->getRepeatDataFlag();
   const bool lastOfMultipleUpdatesFlag = spectrumUpdateEvent->getLastOfMultipleUpdateFlag();
   const timespec generatedTimestamp = spectrumUpdateEvent->getEventGeneratedTimestamp();
@@ -136,14 +136,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
 
   // Run this twice to perform the fftshift operation on the data here as well
   for(uint64_t point = 0; point < numFFTDataPoints/2; point++){
-    // Calculate dBm
-    // 50 ohm load assumption
-    // 10 * log10 (v^2 / (2 * 50.0 * .001)) = 10 * log10( v^2 * 10)
-    // 75 ohm load assumption
-    // 10 * log10 (v^2 / (2 * 75.0 * .001)) = 10 * log10( v^2 * 15)
-
-    // perform scaling here
-    std::complex<float> pt = (*complexDataPointsPtr) / std::complex<float>((float)numFFTDataPoints);
+    std::complex<float> pt = (*complexDataPointsPtr) / (float)numFFTDataPoints;
     *realFFTDataPointsPtr = 10.0*log10((pt.real() * pt.real() + pt.imag()*pt.imag()) + 1e-20);
 
     complexDataPointsPtr++;
@@ -154,7 +147,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   // second half of the plotted data
   complexDataPointsPtr = complexDataPoints;
   for(uint64_t point = 0; point < numFFTDataPoints/2; point++){
-    std::complex<float> pt = (*complexDataPointsPtr) / std::complex<float>((float)numFFTDataPoints);
+    std::complex<float> pt = (*complexDataPointsPtr) / (float)numFFTDataPoints;
     *realFFTDataPointsPtr = 10.0*log10((pt.real() * pt.real() + pt.imag()*pt.imag()) + 1e-20);
 
     complexDataPointsPtr++;
@@ -178,9 +171,7 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
 	// Calculate the frequency relative to the local bw, adjust for _startFrequency later
         _peakFrequency = (static_cast<float>(number) * fft_bin_size);
         _peakAmplitude = _realFFTDataPoints[number];
-        // _peakBin = number;
       }
-      // sum (for mean)
       sumMean += _realFFTDataPoints[number];
     }
 
@@ -232,15 +223,15 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
 					   d_update_time, dataTimestamp, 
 					   spectrumUpdateEvent->getDroppedFFTFrames());
       }
+      /*
       if((QGLFormat::hasOpenGL()) && (_useOpenGL)) {
 	if( _openGLWaterfall3DFlag == 1 && (tabindex == d_plot_waterfall3d)) {
-	  /*
 	  _waterfall3DDisplayPlot->PlotNewData(_realFFTDataPoints, numFFTDataPoints, 
 					       d_update_time, dataTimestamp, 
 					       spectrumUpdateEvent->getDroppedFFTFrames());
-	  */
 	}
       }
+      */
     }
 
     
