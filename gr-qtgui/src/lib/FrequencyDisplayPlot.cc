@@ -120,9 +120,8 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   palette.setColor(canvas()->backgroundRole(), QColor("white"));
   canvas()->setPalette(palette);  
 
-  setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(0));
-  setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
   setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
+  setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(0));
 
   _minYAxis = -120;
   _maxYAxis = 10;
@@ -165,9 +164,6 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
     _minFFTPoints[number] = 200.0;
     _maxFFTPoints[number] = -280.0;
   }
-
-  _resetXAxisPoints();
-
 
   // set up peak marker
   QwtSymbol symbol;
@@ -218,6 +214,9 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   const QColor c(Qt::darkRed);
   _zoomer->setRubberBandPen(c);
   _zoomer->setTrackerPen(c);
+
+  // Do this after the zoomer has been built
+  _resetXAxisPoints();
 }
 
 FrequencyDisplayPlot::~FrequencyDisplayPlot()
@@ -263,22 +262,26 @@ FrequencyDisplayPlot::SetFrequencyRange(const double constStartFreq,
     stopFreq = (stopFreq + centerFreq);
   }
 
-  _startFrequency = startFreq;
-  _stopFrequency = stopFreq;
-  _resetXAxisPoints();
+  bool reset = false;
+  if((startFreq != _startFrequency) || (stopFreq != _stopFrequency))
+    reset = true;
 
-  double display_units = ceil(log10(units)/2.0);
-  setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
-  setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(display_units));
-  setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
-  ((FreqDisplayZoomer*)_zoomer)->SetFrequencyPrecision(display_units);
-  ((FreqDisplayZoomer*)_zoomer)->SetUnitType(strunits);
+  if(stopFreq > startFreq) {
+    _startFrequency = startFreq;
+    _stopFrequency = stopFreq;
+    
+    if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (_zoomer != NULL)){
+      double display_units = ceil(log10(units)/2.0);
+      setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(display_units));
+      setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
 
-  // Load up the new base zoom settings
-  _zoomer->setZoomBase();
-  
-  // Zooms back to the base and clears any other zoom levels
-  _zoomer->zoom(0);
+      if(reset)
+	_resetXAxisPoints();
+      
+      ((FreqDisplayZoomer*)_zoomer)->SetFrequencyPrecision(display_units);
+      ((FreqDisplayZoomer*)_zoomer)->SetUnitType(strunits);
+    }
+  }
 }
 
 
@@ -406,6 +409,17 @@ FrequencyDisplayPlot::_resetXAxisPoints()
     _xAxisPoints[loc] = freqValue;
     freqValue += fft_bin_size;
   }
+
+  setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
+
+  // Set up zoomer base for maximum unzoom x-axis
+  // and reset to maximum unzoom level
+  QwtDoubleRect zbase = _zoomer->zoomBase();
+  zbase.setLeft(_startFrequency);
+  zbase.setRight(_stopFrequency);
+  _zoomer->zoom(zbase);
+  _zoomer->setZoomBase(zbase);
+  _zoomer->zoom(0);
 }
 
 void

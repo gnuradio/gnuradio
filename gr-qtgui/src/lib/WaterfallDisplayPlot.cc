@@ -298,6 +298,8 @@ WaterfallDisplayPlot::Reset()
   _waterfallData->ResizeData(_startFrequency, _stopFrequency, _numPoints);
   _waterfallData->Reset();
 
+  setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
+
   // Load up the new base zoom settings
   QwtDoubleRect newSize = _zoomer->zoomBase();
   newSize.setLeft(_startFrequency);
@@ -332,12 +334,11 @@ WaterfallDisplayPlot::SetFrequencyRange(const double constStartFreq,
   if(stopFreq > startFreq) {
     _startFrequency = startFreq;
     _stopFrequency = stopFreq;
-
  
     if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (_zoomer != NULL)){
       double display_units = ceil(log10(units)/2.0);
-      setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
       setAxisScaleDraw(QwtPlot::xBottom, new WaterfallFreqDisplayScaleDraw(display_units));
+      setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
 
       if(reset) {
 	Reset();
@@ -345,12 +346,6 @@ WaterfallDisplayPlot::SetFrequencyRange(const double constStartFreq,
 
       ((WaterfallZoomer*)_zoomer)->SetFrequencyPrecision(display_units);
       ((WaterfallZoomer*)_zoomer)->SetUnitType(strunits);
-
-      // Load up the new base zoom settings
-      _zoomer->setZoomBase();
-      
-      // Zooms back to the base and clears any other zoom levels
-      _zoomer->zoom(0);
     }
   }
 }

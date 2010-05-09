@@ -237,6 +237,15 @@ void TimeDomainDisplayPlot::_resetXAxisPoints()
     _xAxisPoints[loc] = loc*delt;
   }
   setAxisScale(QwtPlot::xBottom, 0, _numPoints*delt);
+
+  // Set up zoomer base for maximum unzoom x-axis
+  // and reset to maximum unzoom level
+  QwtDoubleRect zbase = _zoomer->zoomBase();
+  zbase.setLeft(0);
+  zbase.setRight(_numPoints*delt);
+  _zoomer->zoom(zbase);
+  _zoomer->setZoomBase(zbase);
+  _zoomer->zoom(0);
 }
 
 void TimeDomainDisplayPlot::LegendEntryChecked(QwtPlotItem* plotItem, bool on)
@@ -248,16 +257,19 @@ void
 TimeDomainDisplayPlot::SetSampleRate(double sr, double units,
 				     const std::string &strunits)
 {
-  _sampleRate = sr/units;
-  _resetXAxisPoints();
-
-  // While we could change the displayed sigfigs based on the unit being
-  // displayed, I think it looks better by just setting it to 4 regardless.
-  //double display_units = ceil(log10(units)/2.0);
-  double display_units = 4;
-  setAxisTitle(QwtPlot::xBottom, QString("Time (%1)").arg(strunits.c_str()));
-  ((TimeDomainDisplayZoomer*)_zoomer)->SetTimePrecision(display_units);
-  ((TimeDomainDisplayZoomer*)_zoomer)->SetUnitType(strunits);
+  double newsr = sr/units;
+  if(newsr != _sampleRate) {
+    _sampleRate = sr/units;
+    _resetXAxisPoints();
+    
+    // While we could change the displayed sigfigs based on the unit being
+    // displayed, I think it looks better by just setting it to 4 regardless.
+    //double display_units = ceil(log10(units)/2.0);
+    double display_units = 4;
+    setAxisTitle(QwtPlot::xBottom, QString("Time (%1)").arg(strunits.c_str()));
+    ((TimeDomainDisplayZoomer*)_zoomer)->SetTimePrecision(display_units);
+    ((TimeDomainDisplayZoomer*)_zoomer)->SetUnitType(strunits);
+  }
 }
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_C */

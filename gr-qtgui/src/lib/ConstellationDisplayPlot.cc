@@ -56,12 +56,10 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
   canvas()->setPalette(palette);  
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
-  //setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
   set_xaxis(-2.0, 2.0);
   setAxisTitle(QwtPlot::xBottom, "In-phase");
 
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
-  //setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
   set_yaxis(-2.0, 2.0);
   setAxisTitle(QwtPlot::yLeft, "Quadrature");
 
