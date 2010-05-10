@@ -10,18 +10,29 @@
 class SpectrumUpdateEvent:public QEvent{
 
 public:
-  SpectrumUpdateEvent(const std::complex<float>* fftPoints, const uint64_t numFFTDataPoints, const double* realTimeDomainPoints, const double* imagTimeDomainPoints, const uint64_t numTimeDomainDataPoints, const timespec dataTimestamp, const bool repeatDataFlag, const bool lastOfMultipleUpdateFlag, const timespec generatedTimestamp, const int droppedFFTFrames);
+  SpectrumUpdateEvent(const std::complex<float>* fftPoints,
+		      const uint64_t numFFTDataPoints,
+		      const double* realTimeDomainPoints,
+		      const double* imagTimeDomainPoints,
+		      const uint64_t numTimeDomainDataPoints,
+		      const timespec dataTimestamp,
+		      const bool repeatDataFlag,
+		      const bool lastOfMultipleUpdateFlag,
+		      const timespec generatedTimestamp,
+		      const int droppedFFTFrames);
+
   ~SpectrumUpdateEvent();
-  const std::complex<float>* getFFTPoints()const;
-  const double* getRealTimeDomainPoints()const;
-  const double* getImagTimeDomainPoints()const;
-  uint64_t getNumFFTDataPoints()const;
-  uint64_t getNumTimeDomainDataPoints()const;
-  timespec getDataTimestamp()const;
-  bool getRepeatDataFlag()const;
-  bool getLastOfMultipleUpdateFlag()const;
-  timespec getEventGeneratedTimestamp()const;
-  int getDroppedFFTFrames()const;
+
+  const std::complex<float>* getFFTPoints() const;
+  const double* getRealTimeDomainPoints() const;
+  const double* getImagTimeDomainPoints() const;
+  uint64_t getNumFFTDataPoints() const;
+  uint64_t getNumTimeDomainDataPoints() const;
+  timespec getDataTimestamp() const;
+  bool getRepeatDataFlag() const;
+  bool getLastOfMultipleUpdateFlag() const;
+  timespec getEventGeneratedTimestamp() const;
+  int getDroppedFFTFrames() const;
 
 protected:
 

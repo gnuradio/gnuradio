@@ -15,14 +15,18 @@ SpectrumUpdateEvent::SpectrumUpdateEvent(const std::complex<float>* fftPoints,
 					 const int droppedFFTFrames)
   : QEvent(QEvent::Type(10005))
 {
-  _numFFTDataPoints = numFFTDataPoints;
-  if(_numFFTDataPoints < 1){
+  if(numFFTDataPoints < 1) {
     _numFFTDataPoints = 1;
   }
+  else {
+    _numFFTDataPoints = numFFTDataPoints;
+  }
 
-  _numTimeDomainDataPoints = numTimeDomainDataPoints;
-  if(_numTimeDomainDataPoints < 1){
+  if(numTimeDomainDataPoints < 1) {
     _numTimeDomainDataPoints = 1;
+  }
+  else {
+    _numTimeDomainDataPoints = numTimeDomainDataPoints;
   }
 
   _fftPoints = new std::complex<float>[_numFFTDataPoints];
@@ -31,14 +35,14 @@ SpectrumUpdateEvent::SpectrumUpdateEvent(const std::complex<float>* fftPoints,
 
   _realDataTimeDomainPoints = new double[_numTimeDomainDataPoints];
   memset(_realDataTimeDomainPoints, 0x0, _numTimeDomainDataPoints*sizeof(double));
-  if(numTimeDomainDataPoints > 0){
+  if(numTimeDomainDataPoints > 0) {
     memcpy(_realDataTimeDomainPoints, realTimeDomainPoints,
 	   numTimeDomainDataPoints*sizeof(double));
   }
 
   _imagDataTimeDomainPoints = new double[_numTimeDomainDataPoints];
   memset(_imagDataTimeDomainPoints, 0x0, _numTimeDomainDataPoints*sizeof(double));
-  if(numTimeDomainDataPoints > 0){
+  if(numTimeDomainDataPoints > 0) {
     memcpy(_imagDataTimeDomainPoints, imagTimeDomainPoints,
 	   numTimeDomainDataPoints*sizeof(double));
   }
@@ -49,7 +53,8 @@ SpectrumUpdateEvent::SpectrumUpdateEvent(const std::complex<float>* fftPoints,
   _droppedFFTFrames = droppedFFTFrames;
 }
 
-SpectrumUpdateEvent::~SpectrumUpdateEvent(){
+SpectrumUpdateEvent::~SpectrumUpdateEvent()
+{
   delete[] _fftPoints;
   delete[] _realDataTimeDomainPoints;
   delete[] _imagDataTimeDomainPoints;
