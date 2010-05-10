@@ -30,3 +30,15 @@ def hexint(mask):
   if mask >= 2**31:
      return int(mask-2**32)
   return mask
+
+def hexshort(mask):
+  """
+  Convert unsigned masks into signed shorts.
+
+  This allows us to use hex constants like 0x8000 when talking to
+  our hardware and not get screwed by them getting treated as python
+  longs.
+  """
+  if mask >= 2**15:
+    return int(mask-2**16)
+  return mask
