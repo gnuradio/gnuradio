@@ -134,11 +134,24 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   const std::complex<float>* complexDataPointsPtr = complexDataPoints+numFFTDataPoints/2;
   double* realFFTDataPointsPtr = _realFFTDataPoints;
 
+  double sumMean, localPeakAmplitude, localPeakFrequency;
+  const double fftBinSize = (_stopFrequency-_startFrequency) /
+    static_cast<double>(numFFTDataPoints);
+  localPeakAmplitude = -HUGE_VAL;
+  sumMean = 0.0;
+
   // Run this twice to perform the fftshift operation on the data here as well
+  std::complex<float> scaleFactor = std::complex<float>((float)numFFTDataPoints);
   for(uint64_t point = 0; point < numFFTDataPoints/2; point++){
-    std::complex<float> pt = (*complexDataPointsPtr) / (float)numFFTDataPoints;
+    std::complex<float> pt = (*complexDataPointsPtr) / scaleFactor;
     *realFFTDataPointsPtr = 10.0*log10((pt.real() * pt.real() + pt.imag()*pt.imag()) + 1e-20);
 
+    if(*realFFTDataPointsPtr > localPeakAmplitude) {
+      localPeakFrequency = static_cast<float>(point) * fftBinSize;
+      localPeakAmplitude = *realFFTDataPointsPtr;
+    }
+    sumMean += *realFFTDataPointsPtr;
+    
     complexDataPointsPtr++;
     realFFTDataPointsPtr++;
   }
@@ -147,8 +160,14 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   // second half of the plotted data
   complexDataPointsPtr = complexDataPoints;
   for(uint64_t point = 0; point < numFFTDataPoints/2; point++){
-    std::complex<float> pt = (*complexDataPointsPtr) / (float)numFFTDataPoints;
+    std::complex<float> pt = (*complexDataPointsPtr) / scaleFactor;
     *realFFTDataPointsPtr = 10.0*log10((pt.real() * pt.real() + pt.imag()*pt.imag()) + 1e-20);
+
+    if(*realFFTDataPointsPtr > localPeakAmplitude) {
+      localPeakFrequency = static_cast<float>(point) * fftBinSize;
+      localPeakAmplitude = *realFFTDataPointsPtr;
+    }
+    sumMean += *realFFTDataPointsPtr;
 
     complexDataPointsPtr++;
     realFFTDataPointsPtr++;
@@ -158,22 +177,9 @@ SpectrumDisplayForm::newFrequencyData( const SpectrumUpdateEvent* spectrumUpdate
   if(!repeatDataFlag){
     _AverageHistory(_realFFTDataPoints);
 
-    double sumMean;
-    const double fft_bin_size = (_stopFrequency-_startFrequency) /
-      static_cast<double>(numFFTDataPoints);
-
-    // find the peak, sum (for mean), etc
-    _peakAmplitude = -HUGE_VAL;
-    sumMean = 0.0;
-    for(uint64_t number = 0; number < numFFTDataPoints; number++){
-      // find peak
-      if(_realFFTDataPoints[number] > _peakAmplitude){
-	// Calculate the frequency relative to the local bw, adjust for _startFrequency later
-        _peakFrequency = (static_cast<float>(number) * fft_bin_size);
-        _peakAmplitude = _realFFTDataPoints[number];
-      }
-      sumMean += _realFFTDataPoints[number];
-    }
+    // Only use the local info if we are not repeating data
+    _peakAmplitude = localPeakAmplitude;
+    _peakFrequency = localPeakFrequency;
 
     // calculate the spectral mean
     // +20 because for the comparison below we only want to throw out bins
