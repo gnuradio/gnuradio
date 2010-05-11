@@ -150,6 +150,8 @@ db_bitshark_rx::db_bitshark_rx(usrp_basic_sptr _usrp, int which)
     // the external clk input on the USRP
     set_clock_scheme(0,64000000);
 
+    set_bw(8e6); // Default IF bandwidth to match USRP1 max host bandwidth
+
     bypass_adc_buffers(true);
 }
 
@@ -259,7 +261,6 @@ db_bitshark_rx::set_gain(float gain)
     // @returns True/False
     
     std::vector<int> args(NUM_BYTES_IN_I2C_CMD,0);
-    uint8_t final_gain = (uint8_t)gain;
     bool result = false;
     uint8_t try_count = 0;
         
