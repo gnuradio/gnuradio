@@ -130,9 +130,9 @@ class my_top_block(gr.top_block):
 
         # Wrap the pointer as a PyQt SIP object
         # This can now be manipulated as a PyQt4.QtGui.QWidget
-        pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
+        self.pyWin = sip.wrapinstance(pyQt, QtGui.QWidget)
 
-        self.main_box = dialog_box(pyWin, self.ctrl_win)
+        self.main_box = dialog_box(self.pyWin, self.ctrl_win)
 
         self.main_box.show()
         

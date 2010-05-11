@@ -139,7 +139,7 @@ class my_top_block(gr.top_block):
 
         self.qapp = QtGui.QApplication(sys.argv)
 
-        self._sample_rate = 200e3
+        self._sample_rate = 2000e3
 
         self.sps = 2
         self.excess_bw = 0.35
@@ -182,11 +182,13 @@ class my_top_block(gr.top_block):
         self.to = 1.0
         self.channel = gr.channel_model(noise, self.fo, self.to)
 
-        self.thr = gr.throttle(gr.sizeof_char, 10*fftsize)
-        self.snk_tx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS, 0, 1,
+        self.thr = gr.throttle(gr.sizeof_char, self._sample_rate)
+        self.snk_tx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS, 
+                                   0, self._sample_rate*self.sps,
                                    "Tx", True, True, False, True, True)
 
-        self.snk_rx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS, 0, 1,
+        self.snk_rx = qtgui.sink_c(fftsize, gr.firdes.WIN_BLACKMAN_hARRIS,
+                                   0, self._sample_rate,
                                    "Rx", True, True, False, True, True)
 
         self.connect(self.src, self.thr, self.mod, self.channel, self.snk_tx)

@@ -171,9 +171,9 @@ class my_top_block(gr.top_block):
                           help="select Ethernet interface, default is eth0")
         parser.add_option("-m", "--mac-addr", type="string", default="",
                           help="select USRP by MAC address, default is auto-select")
-        parser.add_option("-W", "--bw", type="float", default=1e6,
+        parser.add_option("-W", "--bw", type="eng_float", default=1e6,
                           help="set bandwidth of receiver [default=%default]")
-        parser.add_option("-f", "--freq", type="eng_float", default=None,
+        parser.add_option("-f", "--freq", type="eng_float", default=2412e6,
                           help="set frequency to FREQ", metavar="FREQ")
         parser.add_option("-g", "--gain", type="eng_float", default=None,
                           help="set gain in dB (default is midpoint)")
