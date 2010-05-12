@@ -254,7 +254,7 @@ class my_top_block(gr.top_block):
 
         # FIXME: do better exposure to lower issues for control
         self._gain_clock = self.rxpath.packet_receiver._demodulator._timing_alpha
-        self._gain_phase = self.rxpath.packet_receiver._demodulator._costas_alpha
+        self._gain_phase = self.rxpath.packet_receiver._demodulator._phase_alpha
         self._gain_freq  = self.rxpath.packet_receiver._demodulator._freq_alpha
 
         if channelon:
