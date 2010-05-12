@@ -25,7 +25,7 @@ AC_DEFUN([GR_VERSION],[
   dnl 
   dnl MAJOR_VERSION          Major release generation (2.x, 3.x, etc.)
   dnl API_COMPAT             API compatibility version (3.2.x, 3.3.x, etc.)
-  dnl MINOR_VERSION          Minor release version
+  dnl MINOR_VERSION          Minor release version (3.3.0, 3.3.1, etc.)
   dnl MAINT_VERSION          Pure bugfix additions to make maintenance release
   dnl
   dnl The last two fields can have 'git' instead of a number to indicate
@@ -53,18 +53,13 @@ AC_DEFUN([GR_VERSION],[
         RELEASE=$RELEASE-$GIT_VERSION
       fi
     else
-      dnl This is a numbered reelase.
-      dnl Test if minor version is 0, which we don't encode, unless it is also
-      dnl a maintenance release
-      if test "$MINOR_VERSION" != "0" -o "$MAINT_VERSION" != "0"; then
-        dnl 3.3.1
-        RELEASE=$RELEASE.$MINOR_VERSION                          
-        if test "$MAINT_VERSION" != "0"; then
-          dnl 3.3.0.1, 3.3.1.1
-          RELEASE=$RELEASE.$MAINT_VERSION
-        fi
-	DOCVER=$RELEASE
+      dnl This is a numbered release.
+      RELEASE=$RELEASE.$MINOR_VERSION
+      if test "$MAINT_VERSION" != "0"; then
+        RELEASE=$RELEASE.$MAINT_VERSION
       fi
+
+      DOCVER=$RELEASE
     fi
   fi
 
