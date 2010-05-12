@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006.2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,11 +24,10 @@
 
 #include <gr_sync_block.h>
 #include <gr_buffer.h>
-#include <gnuradio/omnithread.h>
+#include <gruel/thread.h>
 #include <string>
 #include <portaudio.h>
 #include <stdexcept>
-//#include <gri_logger.h>
 
 class audio_portaudio_source;
 typedef boost::shared_ptr<audio_portaudio_source> audio_portaudio_source_sptr;
@@ -74,11 +73,13 @@ class audio_portaudio_source : public gr_sync_block {
 
   gr_buffer_sptr	d_writer;		// buffer used between work and callback
   gr_buffer_reader_sptr	d_reader;
-  omni_semaphore	d_ringbuffer_ready;	// binary semaphore
+
+  gruel::mutex          d_ringbuffer_mutex;
+  gruel::condition_variable d_ringbuffer_cond;
+  bool                  d_ringbuffer_ready;
 
   // random stats
   int			d_noverruns;		// count of overruns
-  //gri_logger_sptr	d_log;			// handle to non-blocking logging instance
 
   void output_error_msg (const char *msg, int err);
   void bail (const char *msg, int err) throw (std::runtime_error);
@@ -87,7 +88,7 @@ class audio_portaudio_source : public gr_sync_block {
 
  protected:
   audio_portaudio_source (int sampling_rate, const std::string device_name,
-			bool ok_to_block);
+			  bool ok_to_block);
 
  public:
   ~audio_portaudio_source ();

@@ -32,7 +32,6 @@
 #include <unistd.h>
 #include <stdexcept>
 #include <gri_portaudio.h>
-#include <gnuradio/omnithread.h>
 #include <string.h>
 
 //#define	LOGGING 0		// define to 0 or 1
@@ -88,32 +87,28 @@ portaudio_source_callback (const void *inputBuffer,
     //  self->d_log->printf("PAsrc  cb: f/b = %4ld\n", framesPerBuffer);
 
     // copy from input buffer to ringbuffer
-    memcpy(self->d_writer->write_pointer(),
-	   inputBuffer,
-	   nframes_to_copy * nchan * sizeof(sample_t));
-    self->d_writer->update_write_pointer(nframes_to_copy * nchan);
+    {
+      gruel::scoped_lock(d_ringbuffer_mutex);
+
+      memcpy(self->d_writer->write_pointer(),
+	     inputBuffer,
+	     nframes_to_copy * nchan * sizeof(sample_t));
+      self->d_writer->update_write_pointer(nframes_to_copy * nchan);
 	 
-    // Tell the source thread there is new data in the ringbuffer.
-    self->d_ringbuffer_ready.post();
+      // Tell the source thread there is new data in the ringbuffer.
+      self->d_ringbuffer_ready = true;
+    }
+
+    self->d_ringbuffer_cond.notify_one();
     return paContinue;
   }
 
   else {			// overrun
-    //if (LOGGING)
-    //  self->d_log->printf("PAsrc  cb: f/b = %4ld OVERRUN\n", framesPerBuffer);
-
     self->d_noverruns++;
     ::write(2, "aO", 2);	// FIXME change to non-blocking call
 
-#if 0
-    // copy any frames that will fit
-    memcpy(self->d_writer->write_pointer(),
-	   inputBuffer,
-	   nframes_room * nchan * sizeof(sample_t));
-    self->d_writer->update_write_pointer(nframes_room * nchan);
-#endif	 
-
-    self->d_ringbuffer_ready.post();  // Tell the sink to get going!
+    self->d_ringbuffer_ready = false;
+    self->d_ringbuffer_cond.notify_one();  // Tell the sink to get going!
     return paContinue;
   }
 }
@@ -140,7 +135,9 @@ audio_portaudio_source::audio_portaudio_source(int sampling_rate,
     d_verbose(gr_prefs::singleton()->get_bool("audio_portaudio", "verbose", false)),
     d_portaudio_buffer_size_frames(0),
     d_stream(0),
-    d_ringbuffer_ready(1, 1),		// binary semaphore
+    d_ringbuffer_mutex(),
+    d_ringbuffer_cond(),
+    d_ringbuffer_ready(false),
     d_noverruns(0)
 {
   memset(&d_input_parameters, 0, sizeof(d_input_parameters));
@@ -303,11 +300,13 @@ audio_portaudio_source::work (int noutput_items,
       if (k > 0)      		// If we've produced anything so far, return that
 	return k;
 
-      if (d_ok_to_block){
-	d_ringbuffer_ready.wait();	// block here, then try again
+      if (d_ok_to_block) {
+	gruel:: scoped_lock guard(d_ringbuffer_mutex);
+	while (d_ringbuffer_ready == false)
+	  d_ringbuffer_cond.wait(guard);	// block here, then try again
 	continue;
       }
-
+      
       assert(k == 0);
 
       // There's no data and we're not allowed to block.
@@ -320,27 +319,38 @@ audio_portaudio_source::work (int noutput_items,
       // FIXME We'll fill with zeros for now.  Yes, it will "click"...
 
       // Fill with some frames of zeros
-      int nf = std::min(noutput_items - k, (int) d_portaudio_buffer_size_frames);
-      for (int i = 0; i < nf; i++){
-	for (unsigned int c = 0; c < nchan; c++){
-	  out[c][k + i] = 0;
+      {
+	gruel::scoped_lock guard(d_ringbuffer_mutex);
+
+	int nf = std::min(noutput_items - k, (int) d_portaudio_buffer_size_frames);
+	for (int i = 0; i < nf; i++){
+	  for (unsigned int c = 0; c < nchan; c++){
+	    out[c][k + i] = 0;
+	  }
 	}
+	k += nf;
+
+	d_ringbuffer_ready = false;
+	return k;
       }
-      k += nf;
-      return k;
     }
 
     // We can read the smaller of the request and what's in the buffer.
-    int nf = std::min(noutput_items - k, nframes);
+    {
+      gruel::scoped_lock guard(d_ringbuffer_mutex);
 
-    const float *p = (const float *) d_reader->read_pointer();
-    for (int i = 0; i < nf; i++){
-      for (unsigned int c = 0; c < nchan; c++){
-	out[c][k + i] = *p++;
+      int nf = std::min(noutput_items - k, nframes);
+      
+      const float *p = (const float *) d_reader->read_pointer();
+      for (int i = 0; i < nf; i++){
+	for (unsigned int c = 0; c < nchan; c++){
+	  out[c][k + i] = *p++;
+	}
       }
+      d_reader->update_read_pointer(nf * nchan);
+      k += nf;
+      d_ringbuffer_ready = false;
     }
-    d_reader->update_read_pointer(nf * nchan);
-    k += nf;
   }
 
   return k;  // tell how many we actually did

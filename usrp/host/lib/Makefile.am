@@ -1,7 +1,7 @@
 #
 #  USRP - Universal Software Radio Peripheral
 #
-#  Copyright (C) 2003,2004,2006,2007,2008,2009 Free Software Foundation, Inc.
+#  Copyright (C) 2003,2004,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -31,10 +31,10 @@ libusrp_la_common_LIBADD = 		\
 	$(BOOST_THREAD_LIB)		\
 	../misc/libmisc.la
 
-# darwin fusb requires omnithreads
+# darwin fusb requires gruel (for threading)
 if FUSB_TECH_darwin
-AM_CPPFLAGS = $(common_INCLUDES) $(OMNITHREAD_INCLUDES) $(BOOST_CPPFLAGS) $(WITH_INCLUDES)
-libusrp_la_LIBADD = $(libusrp_la_common_LIBADD) $(OMNITHREAD_LA)
+AM_CPPFLAGS = $(common_INCLUDES) $(GRUEL_INCLUDES) $(BOOST_CPPFLAGS) $(WITH_INCLUDES)
+libusrp_la_LIBADD = $(libusrp_la_common_LIBADD) $(GRUEL_LA)
 libusrp_la_LDFLAGS = $(libusrp_la_common_LDFLAGS) -framework CoreFoundation
 else
 AM_CPPFLAGS = $(common_INCLUDES) $(BOOST_CPPFLAGS) $(WITH_INCLUDES)
@@ -70,7 +70,6 @@ darwin_CODE =				\
 	circular_buffer.h		\
 	circular_linked_list.h		\
 	darwin_libusb.h			\
-	mld_threads.h			\
 	usrp_prims_libusb0.cc		
 
 

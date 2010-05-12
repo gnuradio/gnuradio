@@ -30,7 +30,7 @@
 #define MIN_VCO_FREQ U2_DOUBLE_TO_FXPT_FREQ(2.2e9)                      /* minimum vco freq */
 #define MAX_VCO_FREQ U2_DOUBLE_TO_FXPT_FREQ(4.4e9)                      /* minimum vco freq */
 #define MAX_FREQ MAX_VCO_FREQ                                           /* upper bound freq (rf div = 1) */
-#define MIN_FREQ DIV_ROUND(MIN_VCO_FREQ, MAX_RF_DIV)                    /* calculated lower bound freq */
+#define MIN_FREQ U2_DOUBLE_TO_FXPT_FREQ(68.75e6)                        /* lower bound freq (rf div = 16) */
 
 u2_fxpt_freq_t adf4350_get_max_freq(void){
 	return MAX_FREQ;
@@ -170,7 +170,7 @@ bool adf4350_set_freq(u2_fxpt_freq_t freq, struct db_base *dbb){
 	adf4350_load_register(2, dbb);
 	adf4350_load_register(4, dbb);
 	adf4350_load_register(0, dbb); /* register 0 must be last */
-	return true;
+	return adf4350_get_locked(dbb);
 }
 
 u2_fxpt_freq_t adf4350_get_freq(struct db_base *dbb){

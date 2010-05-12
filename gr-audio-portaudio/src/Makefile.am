@@ -46,7 +46,6 @@ libgnuradio_audio_portaudio_la_SOURCES = \
 
 libgnuradio_audio_portaudio_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)		\
-	$(OMNITHREAD_LA)		\
 	$(PORTAUDIO_LIBS)
 
 libgnuradio_audio_portaudio_la_LDFLAGS = \

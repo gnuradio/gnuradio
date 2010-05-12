@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006,2009 Free Software Foundation, Inc.
+ * Copyright 2006,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio.
  *
@@ -23,7 +23,7 @@
 #ifndef _CIRCULAR_BUFFER_H_
 #define _CIRCULAR_BUFFER_H_
 
-#include "mld_threads.h"
+#include <gruel/thread.h>
 #include <iostream>
 #include <stdexcept>
 
@@ -37,7 +37,8 @@
 #define DEBUG(X) do{} while(0);
 #endif
 
-template <class T> class circular_buffer
+template <class T>
+class circular_buffer
 {
 private:
 // the buffer to use
@@ -48,8 +49,9 @@ private:
   size_t d_n_avail_write_I, d_n_avail_read_I;
 
 // stuff to control access to class internals
-  mld_mutex_ptr d_internal;
-  mld_condition_ptr d_readBlock, d_writeBlock;
+  gruel::mutex* d_internal;
+  gruel::condition_variable* d_readBlock;
+  gruel::condition_variable* d_writeBlock;
 
 // booleans to decide how to control reading, writing, and aborting
   bool d_doWriteBlock, d_doFullRead, d_doAbort;
@@ -94,16 +96,14 @@ public:
   };
 
   inline size_t n_avail_write_items () {
-    d_internal->lock ();
+    gruel::scoped_lock l (*d_internal);
     size_t retVal = d_n_avail_write_I;
-    d_internal->unlock ();
     return (retVal);
   };
 
   inline size_t n_avail_read_items () {
-    d_internal->lock ();
+    gruel::scoped_lock l (*d_internal);
     size_t retVal = d_n_avail_read_I;
-    d_internal->unlock ();
     return (retVal);
   };
 
@@ -120,13 +120,13 @@ public:
     // create a mutex to handle contention of shared resources;
     // any routine needed access to shared resources uses lock()
     // before doing anything, then unlock() when finished.
-    d_internal = new mld_mutex ();
+    d_internal = new gruel::mutex ();
     // link the internal mutex to the read and write conditions;
     // when wait() is called, the internal mutex will automatically
-    // be unlock()'ed.  Upon return (from a signal() to the condition),
+    // be unlock()'ed.  Upon return (from a notify_one() to the condition),
     // the internal mutex will be lock()'ed.
-    d_readBlock = new mld_condition (d_internal);
-    d_writeBlock = new mld_condition (d_internal);
+    d_readBlock = new gruel::condition_variable ();
+    d_writeBlock = new gruel::condition_variable ();
   };
 
 /*
@@ -167,9 +167,8 @@ public:
     if (!buf)
       throw std::runtime_error ("circular_buffer::enqueue(): "
 				"input buffer is NULL.\n");
-    d_internal->lock ();
+    gruel::scoped_lock l (*d_internal);
     if (d_doAbort) {
-      d_internal->unlock ();
       return (2);
     }
     // set the return value to 1: success; change if needed
@@ -178,11 +177,11 @@ public:
       if (d_doWriteBlock) {
 	while (bufLen_I > d_n_avail_write_I) {
 	  DEBUG (std::cerr << "enqueue: #len > #a, waiting." << std::endl);
-	  // wait will automatically unlock() the internal mutex
-	  d_writeBlock->wait ();
-	  // and lock() it here.
+	  // wait; will automatically unlock() the internal mutex via
+	  // the scoped lock
+	  d_writeBlock->wait (l);
+	  // and auto re-lock() it here.
 	  if (d_doAbort) {
-	    d_internal->unlock ();
 	    DEBUG (std::cerr << "enqueue: #len > #a, aborting." << std::endl);
 	    return (2);
 	  }
@@ -208,8 +207,7 @@ public:
       d_writeNdx_I += n_now_I;
     d_n_avail_read_I += bufLen_I;
     d_n_avail_write_I -= bufLen_I;
-    d_readBlock->signal ();
-    d_internal->unlock ();
+    d_readBlock->notify_one ();
     return (retval);
   };
 
@@ -255,19 +253,18 @@ public:
       throw std::runtime_error ("circular_buffer::dequeue()");
     }
 
-    d_internal->lock ();
+    gruel::scoped_lock l (*d_internal);
     if (d_doAbort) {
-      d_internal->unlock ();
       return (2);
     }
     if (d_doFullRead) {
       while (d_n_avail_read_I < l_bufLen_I) {
 	DEBUG (std::cerr << "dequeue: #a < #len, waiting." << std::endl);
-	// wait will automatically unlock() the internal mutex
-	d_readBlock->wait ();
-	// and lock() it here.
+	// wait; will automatically unlock() the internal mutex via
+	// the scoped lock
+	d_readBlock->wait (l);
+	// and re-lock() it here.
 	if (d_doAbort) {
-	  d_internal->unlock ();
 	  DEBUG (std::cerr << "dequeue: #a < #len, aborting." << std::endl);
 	  return (2);
 	}
@@ -276,11 +273,11 @@ public:
     } else {
       while (d_n_avail_read_I == 0) {
 	DEBUG (std::cerr << "dequeue: #a == 0, waiting." << std::endl);
-	// wait will automatically unlock() the internal mutex
-	d_readBlock->wait ();
-	// and lock() it here.
+	// wait; will automatically unlock() the internal mutex via
+	// the scoped lock
+	d_readBlock->wait (l);
+	// and re-lock() it here.
 	if (d_doAbort) {
-	  d_internal->unlock ();
 	  DEBUG (std::cerr << "dequeue: #a == 0, aborting." << std::endl);
 	  return (2);
 	}
@@ -303,17 +300,15 @@ public:
     *bufLen_I = l_bufLen_I;
     d_n_avail_read_I -= l_bufLen_I;
     d_n_avail_write_I += l_bufLen_I;
-    d_writeBlock->signal ();
-    d_internal->unlock ();
+    d_writeBlock->notify_one ();
     return (1);
   };
 
   void abort () {
-    d_internal->lock ();
+    gruel::scoped_lock l (*d_internal);
     d_doAbort = true;
-    d_writeBlock->signal ();
-    d_readBlock->signal ();
-    d_internal->unlock ();
+    d_writeBlock->notify_one ();
+    d_readBlock->notify_one ();
   };
 };
 

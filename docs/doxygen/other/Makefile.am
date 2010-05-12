@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2004 Free Software Foundation, Inc.
+# Copyright 2001,2004,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -24,9 +24,6 @@ include $(top_srcdir)/Makefile.common
 EXTRA_DIST = \
 	doxypy.py \
 	group_defs.dox \
-	omnithread.html	\
-	omnithread.pdf \
-	omnithread.ps \
 	shared_ptr_docstub.h \
 	tv-channel-frequencies \
 	vector_docstub.h

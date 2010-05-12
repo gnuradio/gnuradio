@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2007,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -21,7 +21,7 @@
 #ifndef INCLUDED_GC_CLIENT_THREAD_INFO_H
 #define INCLUDED_GC_CLIENT_THREAD_INFO_H
 
-#include <gnuradio/omnithread.h>
+#include <boost/thread.hpp>
 #include <boost/utility.hpp>
 
 enum gc_ct_state {
@@ -40,7 +40,7 @@ enum gc_ct_state {
 class gc_client_thread_info : boost::noncopyable {
 public:
   gc_client_thread_info() :
-    d_free(1), d_cond(&d_mutex), d_state(CT_NOT_WAITING),
+    d_free(1), d_cond(), d_state(CT_NOT_WAITING),
     d_jobs_done(0), d_njobs_waiting_for(0),
     d_jobs_waiting_for(0){ }
 
@@ -59,10 +59,10 @@ public:
   uint16_t	  d_client_id;
 
   //! hold this mutex to manipulate anything below here
-  omni_mutex	  d_mutex;
+  boost::mutex	  d_mutex;
 
   //! signaled by event handler to wake client thread up
-  omni_condition  d_cond;
+  boost::condition_variable d_cond;
 
   //! Is this client waiting?
   gc_ct_state	  d_state;

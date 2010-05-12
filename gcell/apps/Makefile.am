@@ -22,9 +22,7 @@ include $(top_srcdir)/Makefile.common
 
 SUBDIRS = spu .
 
-AM_CPPFLAGS = $(DEFINES) $(OMNITHREAD_INCLUDES) \
-	$(GCELL_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
-
+AM_CPPFLAGS = $(DEFINES) $(GCELL_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 GCELL_QA_LA = $(top_builddir)/gcell/lib/libgcell-qa.la
 

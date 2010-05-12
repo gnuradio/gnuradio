@@ -55,6 +55,8 @@
 #define USB_PID_FSF_BDALE_8		0x0012	  // Bdale Garbee <bdale@gag.com>
 #define USB_PID_FSF_BDALE_9		0x0013	  // Bdale Garbee <bdale@gag.com>
 #define USB_PID_FSF_HPSDR_HERMES	0x0014	  // HPSDR Hermes
+#define USB_PID_FSF_THINKRF		0x0015	  // Catalin Patulea <catalin.patulea@thinkrf.com>
+#define USB_PID_FSF_MSA			0x0016	  // Hans de Bok <hdbok@dionaea.demon.nl> Scotty's Modular Spectrum Analyzer
 
 #define USB_PID_FSF_LBNL_UXO            0x0018    // http://recycle.lbl.gov/~ldoolitt/uxo/
 

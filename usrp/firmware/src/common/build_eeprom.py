@@ -146,7 +146,7 @@ def build_shell_script (out, ihx_filename, rev, prefix):
 
     out.write ('#!/bin/sh\n')
     out.write ('usrper -x load_firmware ' + prefix + '/share/usrp/rev%d/std.ihx\n' % rev)
-    out.write ('sleep 1\n')
+    out.write ('sleep 2\n')
     
     # print "len(image) =", len(image)
     
@@ -161,7 +161,7 @@ def build_shell_script (out, ihx_filename, rev, prefix):
                    (i2c_addr, rom_addr, ''.join (hex_image[0:l])))
         hex_image = hex_image[l:]
         rom_addr = rom_addr + l
-        out.write ('sleep 1\n')
+        out.write ('sleep 2\n')
 
 if __name__ == '__main__':
     usage = "usage: %prog -p PREFIX -r REV [options] bootfile.ihx"

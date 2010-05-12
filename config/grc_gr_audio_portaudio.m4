@@ -22,7 +22,6 @@ AC_DEFUN([GRC_GR_AUDIO_PORTAUDIO],[
 
     dnl Don't do gr-audio-portaudio if gnuradio-core skipped
     GRC_CHECK_DEPENDENCY(gr-audio-portaudio, gnuradio-core)
-    GRC_CHECK_DEPENDENCY(gr-audio-portaudio, omnithread)
 
     dnl If execution gets to here, $passed will be:
     dnl   with : if the --with code didn't error out

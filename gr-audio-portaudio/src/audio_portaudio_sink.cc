@@ -32,7 +32,6 @@
 #include <unistd.h>
 #include <stdexcept>
 #include <gri_portaudio.h>
-#include <gnuradio/omnithread.h>
 #include <string.h>
 
 //#define	LOGGING   0		// define to 0 or 1
@@ -84,31 +83,33 @@ portaudio_sink_callback (const void *inputBuffer,
 
   int navail_samples = self->d_reader->items_available();
   
-  if (nreqd_samples <= navail_samples){  // We've got enough data...
-    //if (LOGGING)
-    //  self->d_log->printf("PAsink cb: f/b = %4ld\n", framesPerBuffer);
-    // copy from ringbuffer into output buffer
-    memcpy(outputBuffer,
-	   self->d_reader->read_pointer(),
-	   nreqd_samples * sizeof(sample_t));
-    self->d_reader->update_read_pointer(nreqd_samples);
-	 
+  if (nreqd_samples <= navail_samples) {  // We've got enough data...
+    {
+      gruel::scoped_lock guard(self->d_ringbuffer_mutex);
+
+      memcpy(outputBuffer,
+	     self->d_reader->read_pointer(),
+	     nreqd_samples * sizeof(sample_t));
+      self->d_reader->update_read_pointer(nreqd_samples);
+
+      self->d_ringbuffer_ready = true;
+    }
+
     // Tell the sink thread there is new room in the ringbuffer.
-    self->d_ringbuffer_ready.post();
+    self->d_ringbuffer_cond.notify_one();
     return paContinue;
   }
 
   else {			// underrun
-    //if (LOGGING)
-    //  self->d_log->printf("PAsink cb: f/b = %4ld UNDERRUN\n", framesPerBuffer);
-
     self->d_nunderuns++;
     ::write(2, "aU", 2);	// FIXME change to non-blocking call
 
     // FIXME we should transfer what we've got and pad the rest
     memset(outputBuffer, 0, nreqd_samples * sizeof(sample_t));
 
-    self->d_ringbuffer_ready.post();  // Tell the sink to get going!
+    self->d_ringbuffer_ready = true;
+    self->d_ringbuffer_cond.notify_one();  // Tell the sink to get going!
+
     return paContinue;
   }
 }
@@ -135,7 +136,9 @@ audio_portaudio_sink::audio_portaudio_sink(int sampling_rate,
     d_verbose(gr_prefs::singleton()->get_bool("audio_portaudio", "verbose", false)),
     d_portaudio_buffer_size_frames(0),
     d_stream(0),
-    d_ringbuffer_ready(1, 1),		// binary semaphore
+    d_ringbuffer_mutex(),
+    d_ringbuffer_cond(),
+    d_ringbuffer_ready(false),
     d_nunderuns(0)
 {
   memset(&d_output_parameters, 0, sizeof(d_output_parameters));
@@ -297,12 +300,17 @@ audio_portaudio_sink::work (int noutput_items,
   const unsigned nchan = d_output_parameters.channelCount; // # of channels == samples/frame
 
   int k;
-  for (k = 0; k < noutput_items; ){
 
+  for (k = 0; k < noutput_items; ){
     int nframes = d_writer->space_available() / nchan;	// How much space in ringbuffer
     if (nframes == 0){			// no room...
       if (d_ok_to_block){
-	d_ringbuffer_ready.wait();	// block here, then try again
+	{
+	  gruel::scoped_lock guard(d_ringbuffer_mutex);
+	  while (!d_ringbuffer_ready)
+	    d_ringbuffer_cond.wait(guard);
+	}
+
 	continue;
       }
       else {
@@ -316,16 +324,21 @@ audio_portaudio_sink::work (int noutput_items,
     }
 
     // We can write the smaller of the request and the room we've got
-    int nf = std::min(noutput_items - k, nframes);
+    {
+      gruel::scoped_lock guard(d_ringbuffer_mutex);
 
-    float *p = (float *) d_writer->write_pointer();
-    for (int i = 0; i < nf; i++){
-      for (unsigned int c = 0; c < nchan; c++){
-	*p++ = in[c][k + i];
-      }
+      int nf = std::min(noutput_items - k, nframes);
+      float *p = (float *) d_writer->write_pointer();
+      
+      for (int i = 0; i < nf; i++)
+	for (unsigned int c = 0; c < nchan; c++)
+	  *p++ = in[c][k + i];
+      
+      d_writer->update_write_pointer(nf * nchan);
+      k += nf;
+
+      d_ringbuffer_ready = false;
     }
-    d_writer->update_write_pointer(nf * nchan);
-    k += nf;
   }
 
   return k;  // tell how many we actually did

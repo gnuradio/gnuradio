@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008 Free Software Foundation, Inc.
+ * Copyright 2008,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -29,7 +29,7 @@ namespace usrp2 {
 
   ring::ring(unsigned int entries)
     : d_max(entries), d_read_ind(0), d_write_ind(0), d_ring(entries),
-      d_mutex(), d_not_empty(&d_mutex)
+      d_mutex(), d_not_empty()
   {
     for (unsigned int i = 0; i < entries; i++) {
       d_ring[i].d_base = 0;
@@ -40,15 +40,15 @@ namespace usrp2 {
   void 
   ring::wait_for_not_empty() 
   { 
-    omni_mutex_lock l(d_mutex);
+    gruel::scoped_lock l(d_mutex);
     while (empty()) 
-      d_not_empty.wait();
+      d_not_empty.wait(l);
   }
 
   bool
   ring::enqueue(void *p, size_t len)
   {
-    omni_mutex_lock l(d_mutex);
+    gruel::scoped_lock l(d_mutex);
     if (full())
       return false;
       
@@ -56,14 +56,14 @@ namespace usrp2 {
     d_ring[d_write_ind].d_base = p;
 
     inc_write_ind();
-    d_not_empty.signal();
+    d_not_empty.notify_one();
     return true;
   }
 
   bool
   ring::dequeue(void **p, size_t *len)
   {
-    omni_mutex_lock l(d_mutex);
+    gruel::scoped_lock l(d_mutex);
     if (empty())
       return false;
       

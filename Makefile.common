@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 #
-# Copyright 2004,2006,2007,2008,2009 Free Software Foundation, Inc.
+# Copyright 2004,2006,2007,2008,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -55,16 +55,12 @@ libspudir = $(libdir)spu
 # This used to be set in configure.ac but is now defined here for all 
 # Makefiles when this fragment is included.
 STD_DEFINES_AND_INCLUDES = $(DEFINES) $(BOOST_CPPFLAGS) \
-	$(OMNITHREAD_INCLUDES) $(GNURADIO_INCLUDES) $(GRUEL_INCLUDES)
+	$(GNURADIO_INCLUDES) $(GRUEL_INCLUDES)
 
 # when including for compilation from pre-installed libraries and such,
 # need to make sure those are put last on the compile command
 WITH_INCLUDES = @with_INCLUDES@
 WITH_SWIG_INCLUDES = @with_SWIG_INCLUDES@
-
-# How to link in the top-level omnithreads library from inside the tree
-OMNITHREAD_INCLUDES = @omnithread_INCLUDES@
-OMNITHREAD_LA = @omnithread_LA@
 
 # Where to find gnuradio include files in the current build tree
 # top_srcdir for original stuff, top_builddir for generated files
@@ -81,10 +77,6 @@ GRUEL_LA = @gruel_LA@
 USRP_INCLUDES = @usrp_INCLUDES@
 USRP_LA = @usrp_LA@
 
-# How to link the mblock library from inside the tree
-MBLOCK_INCLUDES = @mblock_INCLUDES@
-MBLOCK_LA = @mblock_LA@
-
 # How to link the gcell library from inside the tree (the PPU part)
 GCELL_INCLUDES = @gcell_INCLUDES@
 GCELL_LA = @gcell_LA@
@@ -100,8 +92,7 @@ GCELL_EMBEDSPU_LIBTOOL = @abs_top_srcdir@/gcell/lib/runtime/gcell-embedspu-libto
 # using AM_PATH_PROG, but now here have to add a -f to be like GNU make
 RM=$(RM_PROG) -f
 
-RUN_GUILE = GUILE_LOAD_PATH="@abs_top_srcdir@/gruel/src/scheme:@abs_top_srcdir@/mblock/src/scheme" @GUILE@ -e main -s
-COMPILE_MBH = $(RUN_GUILE) $(top_srcdir)/mblock/src/scheme/gnuradio/compile-mbh.scm
+RUN_GUILE = GUILE_LOAD_PATH="@abs_top_srcdir@/gruel/src/scheme" @GUILE@ -e main -s
 
 # Base directory for example applications
 exampledir = $(datadir)/gnuradio/examples

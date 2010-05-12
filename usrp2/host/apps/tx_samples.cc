@@ -150,6 +150,10 @@ main(int argc, char **argv)
       interp = strtol(optarg, 0, 0);
       break;
 
+    case 'g':
+      gain = strtod(optarg, 0);
+      break;
+
     case 'S':
       if (!strtod_si(optarg, &tmp)){
 	std::cerr << "invalid number: " << optarg << std::endl;

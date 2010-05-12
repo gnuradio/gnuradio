@@ -5,7 +5,7 @@ includedir=@includedir@/gnuradio
 
 Name: gnuradio-core
 Description: GNU Software Radio toolkit
-Requires: gruel fftw3f gsl gnuradio-omnithread
+Requires: gruel fftw3f gsl
 Version: @VERSION@
 Libs.private: @BOOST_LDFLAGS@ @BOOST_THREAD_LIB@ @BOOST_DATE_TIME_LIB@
 Libs: -L${libdir} -lgnuradio-core

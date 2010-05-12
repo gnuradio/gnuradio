@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2008,2009 Free Software Foundation, Inc.
+ * Copyright 2008,2009,2010 Free Software Foundation, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 #ifndef INCLUDED_CONTROL_H
 #define INCLUDED_CONTROL_H
 
-#include <gnuradio/omnithread.h>
+#include <gruel/thread.h>
 #include <usrp2_eth_packet.h>
 
 namespace usrp2 {
@@ -130,8 +130,8 @@ namespace usrp2 {
     size_t	    d_len;
 
     // d_mutex is used with d_cond and also protects d_complete
-    omni_mutex      d_mutex;
-    omni_condition  d_cond;
+    gruel::mutex      d_mutex;
+    gruel::condition_variable d_cond;
     bool	    d_complete;
 
   public:

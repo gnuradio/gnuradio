@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2006 Free Software Foundation, Inc.
+ * Copyright 2006,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio.
  *
@@ -23,8 +23,6 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-
-#define _USE_OMNI_THREADS_
 
 #include <audio_osx_sink.h>
 #include <gr_io_signature.h>
@@ -172,11 +170,15 @@ audio_osx_sink::audio_osx_sink (int sample_rate,
 
 // create the stuff to regulate I/O
 
-  d_cond_data = new mld_condition ();
+  d_cond_data = new gruel::condition_variable ();
   if (d_cond_data == NULL)
-    CheckErrorAndThrow (errno, "new mld_condition (data)",
-			"audio_osx_source::audio_osx_source");
-  d_internal = d_cond_data->mutex ();
+    CheckErrorAndThrow (errno, "new condition (data)",
+			"audio_osx_sink::audio_osx_sink");
+
+  d_internal = new gruel::mutex ();
+  if (d_internal == NULL)
+    CheckErrorAndThrow (errno, "new mutex (internal)",
+			"audio_osx_sink::audio_osx_sink");
 
 // initialize the AU for output
 
@@ -253,6 +255,9 @@ audio_osx_sink::~audio_osx_sink ()
 
 // close and delete control stuff
   delete d_cond_data;
+  d_cond_data = 0;
+  delete d_internal;
+  d_internal = 0;
 }
 
 audio_osx_sink_sptr
@@ -274,7 +279,7 @@ audio_osx_sink::work (int noutput_items,
 		      gr_vector_const_void_star &input_items,
 		      gr_vector_void_star &output_items)
 {
-  d_internal->lock ();
+  gruel::scoped_lock l (*d_internal);
 
   /* take the input data, copy it, and push it to the bottom of the queue
      mono input are pushed onto queue[0];
@@ -307,8 +312,8 @@ audio_osx_sink::work (int noutput_items,
       while (d_queueSampleCount > l_max_count) {
 // release control so-as to allow data to be retrieved;
 // block until there is data to return
-	d_cond_data->wait ();
-// the condition's signal() was called; acquire control
+	d_cond_data->wait (l);
+// the condition's 'notify' was called; acquire control
 // to keep thread safe
       }
     }
@@ -353,9 +358,6 @@ audio_osx_sink::work (int noutput_items,
 	    << d_queueSampleCount << ", mSC = " << d_max_sample_count << std::endl;
 #endif
 
-// release control to allow for other processing parts to run
-  d_internal->unlock ();
-
   return (noutput_items);
 }
 
@@ -370,7 +372,7 @@ OSStatus audio_osx_sink::AUOutputCallback
   audio_osx_sink* This = (audio_osx_sink*) inRefCon;
   OSStatus err = noErr;
 
-  This->d_internal->lock ();
+  gruel::scoped_lock l (*This->d_internal);
 
 #if _OSX_AU_DEBUG_
   std::cerr << "cb_in: SC = " << This->d_queueSampleCount
@@ -403,10 +405,7 @@ OSStatus audio_osx_sink::AUOutputCallback
 #endif
 
 // signal that data is available
-  This->d_cond_data->signal ();
-
-// release control to allow for other processing parts to run
-  This->d_internal->unlock ();
+  This->d_cond_data->notify_one ();
 
   return (err);
 }

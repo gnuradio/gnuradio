@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007 Free Software Foundation, Inc.
+ * Copyright 2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -18,19 +18,18 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-#ifndef INCLUDED_SYMBOLS_USRP_RX_H
-#define INCLUDED_SYMBOLS_USRP_RX_H
 
-#include <pmt.h>
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+#include <gruel/thread.h>
 
-// Outgoing
-static pmt_t s_cmd_start_recv_raw_samples = pmt_intern("cmd-start-recv-raw-samples");
-static pmt_t s_cmd_stop_recv_raw_samples = pmt_intern("cmd-stop-recv-raw-samples");
+namespace gruel {
 
-// Incoming
-static pmt_t s_response_recv_raw_samples = pmt_intern("response-recv-raw-samples");
+  boost::system_time
+  get_new_timeout(double secs)
+  {
+    return boost::get_system_time() + boost::posix_time::milliseconds(long(secs*1e3));
+  }
 
-// Errors
-static pmt_t s_err_already_receiving = pmt_intern("err-already-receiving");
-
-#endif /* INCLUDED_SYMBOLS_USRP_RX_H */
+}

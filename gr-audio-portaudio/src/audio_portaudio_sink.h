@@ -24,7 +24,7 @@
 
 #include <gr_sync_block.h>
 #include <gr_buffer.h>
-#include <gnuradio/omnithread.h>
+#include <gruel/thread.h>
 #include <string>
 #include <portaudio.h>
 #include <stdexcept>
@@ -74,8 +74,10 @@ class audio_portaudio_sink : public gr_sync_block {
 
   gr_buffer_sptr	d_writer;		// buffer used between work and callback
   gr_buffer_reader_sptr	d_reader;
-  omni_semaphore	d_ringbuffer_ready;	// binary semaphore
 
+  gruel::mutex          d_ringbuffer_mutex;
+  gruel::condition_variable d_ringbuffer_cond;
+  bool                  d_ringbuffer_ready;
 
   // random stats
   int			d_nunderuns;		// count of underruns
