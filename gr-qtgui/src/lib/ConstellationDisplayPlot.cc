@@ -26,8 +26,8 @@ public:
 protected:
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
-    QwtText t(QString("Sample %1, %2 V").arg(p.x(), 0, 'f', 0).arg(p.y(), 0, 'f', 4));
-
+    QwtText t(QString("(%1, %2)").arg(p.x(), 0, 'f', 4).
+	      arg(p.y(), 0, 'f', 4));
     return t;
   }
 };
@@ -38,8 +38,6 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
   timespec_reset(&_lastReplot);
 
   resize(parent->width(), parent->height());
-
-  _displayIntervalTime = (1.0/10.0); // 1/10 of a second between updates
 
   _numPoints = 1024;
   _penSize = 5;
@@ -58,12 +56,10 @@ ConstellationDisplayPlot::ConstellationDisplayPlot(QWidget* parent)
   canvas()->setPalette(palette);  
 
   setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine);
-  //setAxisScale(QwtPlot::xBottom, -1.0, 1.0);
   set_xaxis(-2.0, 2.0);
   setAxisTitle(QwtPlot::xBottom, "In-phase");
 
   setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine);
-  //setAxisScale(QwtPlot::yLeft, -1.0, 1.0);
   set_yaxis(-2.0, 2.0);
   setAxisTitle(QwtPlot::yLeft, "Quadrature");
 
@@ -148,19 +144,9 @@ ConstellationDisplayPlot::set_axis(double xmin, double xmax,
   set_yaxis(ymin, ymax);
 }
 
-void ConstellationDisplayPlot::replot(){
-
-  const timespec startTime = get_highres_clock();
-  
+void ConstellationDisplayPlot::replot()
+{
   QwtPlot::replot();
-
-  double differenceTime = (diff_timespec(get_highres_clock(), startTime));
-
-  differenceTime *= 99.0;
-  // Require at least a 10% duty cycle
-  if(differenceTime > (1.0/10.0)){
-    _displayIntervalTime = differenceTime;
-  }
 }
 
 void
@@ -171,10 +157,12 @@ ConstellationDisplayPlot::resizeSlot( QSize *s )
 
 void ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
 					   const double* imagDataPoints,
-					   const int64_t numDataPoints)
+					   const int64_t numDataPoints,
+					   const double timeInterval)
 {
-  if(numDataPoints > 0){
-
+  if((numDataPoints > 0) && 
+     (diff_timespec(get_highres_clock(), _lastReplot) > timeInterval)) {
+    
     if(numDataPoints != _numPoints){
       _numPoints = numDataPoints;
 
@@ -185,17 +173,12 @@ void ConstellationDisplayPlot::PlotNewData(const double* realDataPoints,
       
       _plot_curve->setRawData(_realDataPoints, _imagDataPoints, _numPoints);
     }
+
     memcpy(_realDataPoints, realDataPoints, numDataPoints*sizeof(double));
     memcpy(_imagDataPoints, imagDataPoints, numDataPoints*sizeof(double));
 
-  }
-
-  // Allow at least a 50% duty cycle
-  if(diff_timespec(get_highres_clock(), _lastReplot) > _displayIntervalTime){
-    // Only replot the screen if it is visible
-    if(isVisible()){
-      replot();
-    }
+    replot();
+    
     _lastReplot = get_highres_clock();
   }
 }

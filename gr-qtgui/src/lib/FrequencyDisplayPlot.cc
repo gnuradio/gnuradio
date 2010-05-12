@@ -73,15 +73,22 @@ public:
     updateDisplay();
   }
 
+  void SetUnitType(const std::string &type)
+  {
+    _unitType = type;
+  }
+
 protected:
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
-    QString strunits = (GetFrequencyPrecision() == 0) ? "Hz" : "kHz";
-    QwtText t(QString("%1 %2, %3 dB").arg(p.x(), 0, 'f', 
-					  GetFrequencyPrecision()).arg(strunits).arg(p.y(), 0, 'f', 2));
-
+    QwtText t(QString("%1 %2, %3 dB").
+	      arg(p.x(), 0, 'f', GetFrequencyPrecision()).
+	      arg(_unitType.c_str()).arg(p.y(), 0, 'f', 2));
     return t;
   }
+
+private:
+  std::string _unitType;
 };
 
 FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
@@ -94,8 +101,6 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
 
   resize(parent->width(), parent->height());
   
-  _displayIntervalTime = (1.0/10.0); // 1/10 of a second between updates
-
   _useCenterFrequencyFlag = false;
 
   _numPoints = 1024;
@@ -115,9 +120,8 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   palette.setColor(canvas()->backgroundRole(), QColor("white"));
   canvas()->setPalette(palette);  
 
-  setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(0));
-  setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
   setAxisTitle(QwtPlot::xBottom, "Frequency (Hz)");
+  setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(0));
 
   _minYAxis = -120;
   _maxYAxis = 10;
@@ -150,7 +154,7 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
 
   _upper_intensity_marker = new QwtPlotMarker();
   _upper_intensity_marker->setLineStyle(QwtPlotMarker::HLine);
-  _upper_intensity_marker->setLinePen(QPen(Qt::green));
+  _upper_intensity_marker->setLinePen(QPen(Qt::green, 0, Qt::DotLine));
   _upper_intensity_marker->attach(this);
 
   memset(_dataPoints, 0x0, _numPoints*sizeof(double));
@@ -160,9 +164,6 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
     _minFFTPoints[number] = 200.0;
     _maxFFTPoints[number] = -280.0;
   }
-
-  _resetXAxisPoints();
-
 
   // set up peak marker
   QwtSymbol symbol;
@@ -213,6 +214,9 @@ FrequencyDisplayPlot::FrequencyDisplayPlot(QWidget* parent)
   const QColor c(Qt::darkRed);
   _zoomer->setRubberBandPen(c);
   _zoomer->setTrackerPen(c);
+
+  // Do this after the zoomer has been built
+  _resetXAxisPoints();
 }
 
 FrequencyDisplayPlot::~FrequencyDisplayPlot()
@@ -258,21 +262,26 @@ FrequencyDisplayPlot::SetFrequencyRange(const double constStartFreq,
     stopFreq = (stopFreq + centerFreq);
   }
 
-  _startFrequency = startFreq;
-  _stopFrequency = stopFreq;
-  _resetXAxisPoints();
+  bool reset = false;
+  if((startFreq != _startFrequency) || (stopFreq != _stopFrequency))
+    reset = true;
 
-  double display_units = ceil(log10(units)/2.0);
-  setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
-  setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(display_units));
-  setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
-  ((FreqDisplayZoomer*)_zoomer)->SetFrequencyPrecision(display_units);
+  if(stopFreq > startFreq) {
+    _startFrequency = startFreq;
+    _stopFrequency = stopFreq;
+    
+    if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (_zoomer != NULL)){
+      double display_units = ceil(log10(units)/2.0);
+      setAxisScaleDraw(QwtPlot::xBottom, new FreqDisplayScaleDraw(display_units));
+      setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
 
-  // Load up the new base zoom settings
-  _zoomer->setZoomBase();
-  
-  // Zooms back to the base and clears any other zoom levels
-  _zoomer->zoom(0);
+      if(reset)
+	_resetXAxisPoints();
+      
+      ((FreqDisplayZoomer*)_zoomer)->SetFrequencyPrecision(display_units);
+      ((FreqDisplayZoomer*)_zoomer)->SetUnitType(strunits);
+    }
+  }
 }
 
 
@@ -291,8 +300,6 @@ FrequencyDisplayPlot::GetStopFrequency() const
 void
 FrequencyDisplayPlot::replot()
 {
-  const timespec startTime = get_highres_clock();
-
   _markerNoiseFloorAmplitude->setYValue(_noiseFloorAmplitude);
   
   // Make sure to take into account the start frequency
@@ -305,14 +312,6 @@ FrequencyDisplayPlot::replot()
   _markerPeakAmplitude->setYValue(_peakAmplitude);
   
   QwtPlot::replot();
-
-  double differenceTime = (diff_timespec(get_highres_clock(), startTime));
-
-  differenceTime *= 99.0;
-  // Require at least a 10% duty cycle
-  if(differenceTime > (1.0/10.0)){
-    _displayIntervalTime = differenceTime;
-  }
 }
  
 void
@@ -324,13 +323,15 @@ FrequencyDisplayPlot::resizeSlot( QSize *s )
 void
 FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDataPoints,
 				  const double noiseFloorAmplitude, const double peakFrequency,
-				  const double peakAmplitude)
+				  const double peakAmplitude, const double timeInterval)
 {
-  if(numDataPoints > 0){
-
-    if(numDataPoints != _numPoints){
+  // Only update plot if there is data and if the time interval has elapsed
+  if((numDataPoints > 0) && 
+     (diff_timespec(get_highres_clock(), _lastReplot) > timeInterval)) {
+    
+    if(numDataPoints != _numPoints) {
       _numPoints = numDataPoints;
-
+      
       delete[] _dataPoints;
       delete[] _minFFTPoints;
       delete[] _maxFFTPoints;
@@ -343,12 +344,12 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
       _fft_plot_curve->setRawData(_xAxisPoints, _dataPoints, _numPoints);
       _min_fft_plot_curve->setRawData(_xAxisPoints, _minFFTPoints, _numPoints);
       _max_fft_plot_curve->setRawData(_xAxisPoints, _maxFFTPoints, _numPoints);
-
+      
       _resetXAxisPoints();
       ClearMaxData();
       ClearMinData();
     }
-
+    
     memcpy(_dataPoints, dataPoints, numDataPoints*sizeof(double));
     for(int64_t point = 0; point < numDataPoints; point++){
       if(dataPoints[point] < _minFFTPoints[point]){
@@ -363,14 +364,10 @@ FrequencyDisplayPlot::PlotNewData(const double* dataPoints, const int64_t numDat
     _peakFrequency = peakFrequency;
     _peakAmplitude = peakAmplitude;
 
-  }
+    SetUpperIntensityLevel(_peakAmplitude);
 
-  // Allow at least a 50% duty cycle
-  if(diff_timespec(get_highres_clock(), _lastReplot) > _displayIntervalTime){
-    // Only replot the screen if it is visible
-    if(isVisible()){
-      replot();
-    }
+    replot();
+    
     _lastReplot = get_highres_clock();
   }
 }
@@ -412,6 +409,17 @@ FrequencyDisplayPlot::_resetXAxisPoints()
     _xAxisPoints[loc] = freqValue;
     freqValue += fft_bin_size;
   }
+
+  setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
+
+  // Set up zoomer base for maximum unzoom x-axis
+  // and reset to maximum unzoom level
+  QwtDoubleRect zbase = _zoomer->zoomBase();
+  zbase.setLeft(_startFrequency);
+  zbase.setRight(_stopFrequency);
+  _zoomer->zoom(zbase);
+  _zoomer->setZoomBase(zbase);
+  _zoomer->zoom(0);
 }
 
 void

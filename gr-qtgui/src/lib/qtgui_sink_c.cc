@@ -88,7 +88,7 @@ qtgui_sink_c::qtgui_sink_c (int fftsize, int wintype,
 
 qtgui_sink_c::~qtgui_sink_c()
 {
-  delete d_object;
+  delete d_main_gui;
   delete [] d_residbuf;
   delete d_fft;
 }
@@ -144,6 +144,9 @@ qtgui_sink_c::initialize(const bool opengl)
 				 d_plotwaterfall3d, d_plottime,
 				 d_plotconst,
 				 opengl);
+
+  // initialize update time to 10 times a second
+  set_update_time(0.1);
 
   d_object = new qtgui_obj(d_qApplication);
   qApp->postEvent(d_object, new qtgui_event(&d_pmutex));
@@ -205,6 +208,13 @@ void
 qtgui_sink_c::set_frequency_axis(double min, double max)
 {
   d_main_gui->SetFrequencyAxis(min, max);
+}
+
+void
+qtgui_sink_c::set_update_time(double t)
+{
+  d_update_time = t;
+  d_main_gui->SetUpdateTime(d_update_time);
 }
 
 void
@@ -300,7 +310,7 @@ qtgui_sink_c::general_work (int noutput_items,
       
       d_main_gui->UpdateWindow(true, d_fft->get_outbuf(), d_fftsize,
 			       NULL, 0, (float*)d_residbuf, d_fftsize,
-			       1.0/4.0, currentTime, true);
+			       currentTime, true);
     }
     // Otherwise, copy what we received into the residbuf for next time
     else {

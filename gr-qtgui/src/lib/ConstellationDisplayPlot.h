@@ -24,7 +24,8 @@ public:
 
   void PlotNewData(const double* realDataPoints, 
 		   const double* imagDataPoints, 
-		   const int64_t numDataPoints);
+		   const int64_t numDataPoints,
+		   const double timeInterval);
     
   virtual void replot();
 
@@ -55,8 +56,6 @@ private:
 
   int64_t _numPoints;
   int64_t _penSize;
-
-  double _displayIntervalTime;
 };
 
 #endif /* CONSTELLATION_DISPLAY_PLOT_HPP */
