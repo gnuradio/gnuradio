@@ -1,436 +1,240 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>DigitalWindow</class>
- <widget class="QMainWindow" name="DigitalWindow" >
-  <property name="geometry" >
+ <widget class="QMainWindow" name="DigitalWindow">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1019</width>
-    <height>754</height>
+    <width>1059</width>
+    <height>751</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget" >
-   <layout class="QGridLayout" name="gridLayout" >
-    <item row="0" column="0" colspan="6" >
-     <layout class="QVBoxLayout" name="verticalLayout_5" >
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <layout class="QHBoxLayout" name="sinkLayout"/>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QFrame" name="sinkFrame" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QGroupBox" name="sysBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>240</width>
+            <height>60</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>240</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>System Parameters</string>
+          </property>
+          <widget class="QWidget" name="formLayoutWidget">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>20</y>
+             <width>211</width>
+             <height>31</height>
+            </rect>
+           </property>
+           <layout class="QFormLayout" name="formLayout">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetFixedSize</enum>
+            </property>
+            <property name="verticalSpacing">
+             <number>20</number>
+            </property>
+            <item row="0" column="1">
+             <widget class="QLineEdit" name="sampleRateEdit">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>60</width>
+                <height>26</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>80</width>
+                <height>26</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="sampleRateLabel">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>20</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Sample Rate (sps)</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>60</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="channelModeBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="minimumSize" >
+        <property name="minimumSize">
          <size>
-          <width>500</width>
-          <height>550</height>
+          <width>245</width>
+          <height>130</height>
          </size>
         </property>
-        <property name="frameShape" >
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow" >
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_2" >
-         <item row="1" column="0" >
-          <layout class="QHBoxLayout" name="sinkLayout" />
-         </item>
-        </layout>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="2" column="1" >
-     <widget class="QGroupBox" name="channelModeBox" >
-      <property name="sizePolicy" >
-       <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize" >
-       <size>
-        <width>245</width>
-        <height>130</height>
-       </size>
-      </property>
-      <property name="maximumSize" >
-       <size>
-        <width>245</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="title" >
-       <string>Channel Model Parameters</string>
-      </property>
-      <widget class="QWidget" name="formLayoutWidget_2" >
-       <property name="geometry" >
-        <rect>
-         <x>10</x>
-         <y>20</y>
-         <width>221</width>
-         <height>98</height>
-        </rect>
-       </property>
-       <layout class="QFormLayout" name="formLayout_2" >
-        <property name="sizeConstraint" >
-         <enum>QLayout::SetFixedSize</enum>
-        </property>
-        <property name="fieldGrowthPolicy" >
-         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-        </property>
-        <item row="0" column="0" >
-         <widget class="QLabel" name="snrLabel" >
-          <property name="text" >
-           <string>SNR (dB)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1" >
-         <widget class="QLineEdit" name="snrEdit" >
-          <property name="minimumSize" >
-           <size>
-            <width>60</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize" >
-           <size>
-            <width>80</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" >
-         <widget class="QLabel" name="freqLabel" >
-          <property name="text" >
-           <string>Frequency Offset (Hz)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1" >
-         <widget class="QLineEdit" name="freqEdit" >
-          <property name="minimumSize" >
-           <size>
-            <width>60</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize" >
-           <size>
-            <width>80</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0" >
-         <widget class="QLabel" name="timeLabel" >
-          <property name="text" >
-           <string>Timing Offset</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1" >
-         <widget class="QLineEdit" name="timeEdit" >
-          <property name="minimumSize" >
-           <size>
-            <width>60</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize" >
-           <size>
-            <width>80</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-    </item>
-    <item row="2" column="5" >
-     <layout class="QVBoxLayout" name="verticalLayout" >
-      <item>
-       <widget class="QPushButton" name="pauseButton" >
-        <property name="minimumSize" >
+        <property name="maximumSize">
          <size>
-          <width>80</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize" >
-         <size>
-          <width>80</width>
+          <width>245</width>
           <height>16777215</height>
          </size>
         </property>
-        <property name="text" >
-         <string>Pause</string>
+        <property name="title">
+         <string>Channel Model Parameters</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacer" >
-        <property name="orientation" >
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeType" >
-         <enum>QSizePolicy::Fixed</enum>
-        </property>
-        <property name="sizeHint" stdset="0" >
-         <size>
-          <width>20</width>
-          <height>60</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="closeButton" >
-        <property name="minimumSize" >
-         <size>
-          <width>80</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize" >
-         <size>
-          <width>80</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text" >
-         <string>Close</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="2" column="3" >
-     <widget class="QGroupBox" name="rxBox_2" >
-      <property name="sizePolicy" >
-       <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize" >
-       <size>
-        <width>220</width>
-        <height>125</height>
-       </size>
-      </property>
-      <property name="maximumSize" >
-       <size>
-        <width>265</width>
-        <height>125</height>
-       </size>
-      </property>
-      <property name="title" >
-       <string>Received Packet Info</string>
-      </property>
-      <widget class="QWidget" name="formLayoutWidget_4" >
-       <property name="geometry" >
-        <rect>
-         <x>10</x>
-         <y>20</y>
-         <width>248</width>
-         <height>188</height>
-        </rect>
-       </property>
-       <layout class="QFormLayout" name="formLayout_4" >
-        <property name="sizeConstraint" >
-         <enum>QLayout::SetFixedSize</enum>
-        </property>
-        <property name="fieldGrowthPolicy" >
-         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-        </property>
-        <item row="0" column="0" >
-         <widget class="QLabel" name="pktsRcvdLabel" >
-          <property name="text" >
-           <string>Packets Rcvd.</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1" >
-         <widget class="QLineEdit" name="pktsRcvdEdit" >
-          <property name="minimumSize" >
-           <size>
-            <width>60</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize" >
-           <size>
-            <width>80</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" >
-         <widget class="QLabel" name="pktsCorrectLabel" >
-          <property name="text" >
-           <string>Packets Correct</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1" >
-         <widget class="QLineEdit" name="pktsCorrectEdit" >
-          <property name="minimumSize" >
-           <size>
-            <width>60</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize" >
-           <size>
-            <width>80</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0" >
-         <widget class="QLabel" name="perLabel" >
-          <property name="text" >
-           <string>PER</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1" >
-         <widget class="QLineEdit" name="perEdit" >
-          <property name="minimumSize" >
-           <size>
-            <width>60</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="maximumSize" >
-           <size>
-            <width>80</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-       </layout>
-       <zorder>pktsRcvdLabel</zorder>
-       <zorder>pktsCorrectLabel</zorder>
-       <zorder>perLabel</zorder>
-       <zorder>pktsRcvdEdit</zorder>
-       <zorder>pktsCorrectEdit</zorder>
-       <zorder>perEdit</zorder>
-      </widget>
-     </widget>
-    </item>
-    <item row="2" column="4" >
-     <spacer name="horizontalSpacer" >
-      <property name="orientation" >
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0" >
-       <size>
-        <width>20</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="2" column="0" >
-     <layout class="QVBoxLayout" name="verticalLayout_2" >
-      <item>
-       <widget class="QGroupBox" name="sysBox" >
-        <property name="sizePolicy" >
-         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize" >
-         <size>
-          <width>240</width>
-          <height>60</height>
-         </size>
-        </property>
-        <property name="maximumSize" >
-         <size>
-          <width>240</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="title" >
-         <string>System Parameters</string>
-        </property>
-        <widget class="QWidget" name="formLayoutWidget" >
-         <property name="geometry" >
+        <widget class="QWidget" name="formLayoutWidget_2">
+         <property name="geometry">
           <rect>
            <x>10</x>
            <y>20</y>
-           <width>211</width>
-           <height>31</height>
+           <width>221</width>
+           <height>98</height>
           </rect>
          </property>
-         <layout class="QFormLayout" name="formLayout" >
-          <property name="sizeConstraint" >
+         <layout class="QFormLayout" name="formLayout_2">
+          <property name="sizeConstraint">
            <enum>QLayout::SetFixedSize</enum>
           </property>
-          <property name="verticalSpacing" >
-           <number>20</number>
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
           </property>
-          <item row="0" column="1" >
-           <widget class="QLineEdit" name="sampleRateEdit" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+          <item row="0" column="0">
+           <widget class="QLabel" name="snrLabel">
+            <property name="text">
+             <string>SNR (dB)</string>
             </property>
-            <property name="minimumSize" >
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="snrEdit">
+            <property name="minimumSize">
              <size>
               <width>60</width>
-              <height>26</height>
+              <height>0</height>
              </size>
             </property>
-            <property name="maximumSize" >
+            <property name="maximumSize">
              <size>
               <width>80</width>
-              <height>26</height>
+              <height>16777215</height>
              </size>
             </property>
            </widget>
           </item>
-          <item row="0" column="0" >
-           <widget class="QLabel" name="sampleRateLabel" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+          <item row="1" column="0">
+           <widget class="QLabel" name="freqLabel">
+            <property name="text">
+             <string>Frequency Offset (Hz)</string>
             </property>
-            <property name="minimumSize" >
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="freqEdit">
+            <property name="minimumSize">
              <size>
-              <width>0</width>
-              <height>20</height>
+              <width>60</width>
+              <height>0</height>
              </size>
             </property>
-            <property name="maximumSize" >
+            <property name="maximumSize">
              <size>
-              <width>16777215</width>
-              <height>20</height>
+              <width>80</width>
+              <height>16777215</height>
              </size>
             </property>
-            <property name="text" >
-             <string>Sample Rate (sps)</string>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="timeLabel">
+            <property name="text">
+             <string>Timing Offset</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="timeEdit">
+            <property name="minimumSize">
+             <size>
+              <width>60</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
             </property>
            </widget>
           </item>
@@ -439,154 +243,321 @@
        </widget>
       </item>
       <item>
-       <spacer name="verticalSpacer_2" >
-        <property name="orientation" >
-         <enum>Qt::Vertical</enum>
+       <widget class="QGroupBox" name="rxBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
-        <property name="sizeType" >
-         <enum>QSizePolicy::Fixed</enum>
+        <property name="minimumSize">
+         <size>
+          <width>220</width>
+          <height>130</height>
+         </size>
         </property>
-        <property name="sizeHint" stdset="0" >
+        <property name="maximumSize">
+         <size>
+          <width>180</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>Receiver Parameters</string>
+        </property>
+        <widget class="QWidget" name="formLayoutWidget_3">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>20</y>
+           <width>201</width>
+           <height>101</height>
+          </rect>
+         </property>
+         <layout class="QFormLayout" name="formLayout_3">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="gainClockLabel">
+            <property name="text">
+             <string>Clock Loop Gain</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="gainPhaseLabel">
+            <property name="text">
+             <string>Freq. Loop Gain</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="gainClockEdit">
+            <property name="minimumSize">
+             <size>
+              <width>60</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="gainFreqEdit">
+            <property name="minimumSize">
+             <size>
+              <width>60</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="gainPhaseEdit">
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="gainPhaseLabel_2">
+            <property name="text">
+             <string>Phase Loop Gain</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="rxBox_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>220</width>
+          <height>125</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>265</width>
+          <height>125</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>Received Packet Info</string>
+        </property>
+        <widget class="QWidget" name="formLayoutWidget_4">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>20</y>
+           <width>201</width>
+           <height>91</height>
+          </rect>
+         </property>
+         <layout class="QFormLayout" name="formLayout_4">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
+          <property name="fieldGrowthPolicy">
+           <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="pktsRcvdLabel">
+            <property name="text">
+             <string>Packets Rcvd.</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="pktsRcvdEdit">
+            <property name="minimumSize">
+             <size>
+              <width>60</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="pktsCorrectLabel">
+            <property name="text">
+             <string>Packets Correct</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="pktsCorrectEdit">
+            <property name="minimumSize">
+             <size>
+              <width>60</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="perLabel">
+            <property name="text">
+             <string>PER</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="perEdit">
+            <property name="minimumSize">
+             <size>
+              <width>60</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+         <zorder>pktsRcvdLabel</zorder>
+         <zorder>pktsCorrectLabel</zorder>
+         <zorder>perLabel</zorder>
+         <zorder>pktsRcvdEdit</zorder>
+         <zorder>pktsCorrectEdit</zorder>
+         <zorder>perEdit</zorder>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
          <size>
           <width>20</width>
-          <height>60</height>
+          <height>20</height>
          </size>
         </property>
        </spacer>
       </item>
-     </layout>
-    </item>
-    <item row="2" column="2" >
-     <widget class="QGroupBox" name="rxBox" >
-      <property name="sizePolicy" >
-       <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize" >
-       <size>
-        <width>180</width>
-        <height>120</height>
-       </size>
-      </property>
-      <property name="maximumSize" >
-       <size>
-        <width>180</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="title" >
-       <string>Receiver Parameters</string>
-      </property>
-      <widget class="QWidget" name="formLayoutWidget_3" >
-       <property name="geometry" >
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>164</width>
-         <height>101</height>
-        </rect>
-       </property>
-       <layout class="QFormLayout" name="formLayout_3" >
-        <property name="sizeConstraint" >
-         <enum>QLayout::SetFixedSize</enum>
-        </property>
-        <item row="0" column="0" >
-         <widget class="QLabel" name="gainClockLabel" >
-          <property name="text" >
-           <string>Clock Loop Gain</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0" >
-         <widget class="QLabel" name="gainPhaseLabel" >
-          <property name="text" >
-           <string>Freq. Loop Gain</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1" >
-         <widget class="QLineEdit" name="gainClockEdit" >
-          <property name="minimumSize" >
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QPushButton" name="pauseButton">
+          <property name="minimumSize">
            <size>
-            <width>60</width>
+            <width>80</width>
             <height>0</height>
            </size>
           </property>
-          <property name="maximumSize" >
+          <property name="maximumSize">
            <size>
             <width>80</width>
             <height>16777215</height>
            </size>
           </property>
+          <property name="text">
+           <string>Pause</string>
+          </property>
          </widget>
         </item>
-        <item row="2" column="1" >
-         <widget class="QLineEdit" name="gainFreqEdit" >
-          <property name="minimumSize" >
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
            <size>
-            <width>60</width>
+            <width>20</width>
+            <height>60</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="closeButton">
+          <property name="minimumSize">
+           <size>
+            <width>80</width>
             <height>0</height>
            </size>
           </property>
-          <property name="maximumSize" >
+          <property name="maximumSize">
            <size>
             <width>80</width>
             <height>16777215</height>
            </size>
           </property>
-         </widget>
-        </item>
-        <item row="1" column="1" >
-         <widget class="QLineEdit" name="gainPhaseEdit" >
-          <property name="maximumSize" >
-           <size>
-            <width>80</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" >
-         <widget class="QLabel" name="gainPhaseLabel_2" >
-          <property name="text" >
-           <string>Phase Loop Gain</string>
+          <property name="text">
+           <string>Close</string>
           </property>
          </widget>
         </item>
        </layout>
-      </widget>
-     </widget>
+      </item>
+     </layout>
     </item>
    </layout>
-   <zorder>channelModeBox</zorder>
-   <zorder></zorder>
-   <zorder>rxBox_2</zorder>
-   <zorder>horizontalSpacer</zorder>
-   <zorder></zorder>
-   <zorder>rxBox</zorder>
   </widget>
-  <widget class="QMenuBar" name="menubar" >
-   <property name="geometry" >
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1019</width>
-     <height>24</height>
+     <width>1059</width>
+     <height>23</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile" >
-    <property name="title" >
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="actionExit" />
+    <addaction name="actionExit"/>
    </widget>
-   <addaction name="menuFile" />
+   <addaction name="menuFile"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar" />
-  <action name="actionExit" >
-   <property name="text" >
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionExit">
+   <property name="text">
     <string>E&amp;xit</string>
    </property>
   </action>
@@ -604,11 +575,11 @@
    <receiver>DigitalWindow</receiver>
    <slot>close()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>322</x>
      <y>623</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>66</x>
      <y>561</y>
     </hint>
@@ -620,11 +591,11 @@
    <receiver>DigitalWindow</receiver>
    <slot>close()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>-1</x>
      <y>-1</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>617</x>
      <y>327</y>
     </hint>
