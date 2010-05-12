@@ -170,7 +170,7 @@ bitshark_rx_init(struct db_base *dbb)
        straight-forward set_bw() method).  Not sure why this is, but
        for now, simply set the bandwidth once for the intended
        application. */
-    db->extra.set_bw(dbb, 20000);  /* 20 MHz channel bw */
+    db->extra.set_bw(dbb, 25000);  /* 25 MHz channel bw */
     
     return true;
 }
