@@ -47,7 +47,7 @@ class channel_plotter(grid_plotter_base):
 		"""
 		#init
 		grid_plotter_base.__init__(self, parent, MIN_PADDING)
-                self.set_emulate_analog(False)
+                self.set_use_persistence(False)
 		#setup legend cache
 		self._legend_cache = self.new_gl_cache(self._draw_legend, 50)
 		self.enable_legend(False)

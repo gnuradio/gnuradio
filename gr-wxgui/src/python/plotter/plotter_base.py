@@ -88,8 +88,8 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		"""
 		attribList = (wx.glcanvas.WX_GL_DOUBLEBUFFER, wx.glcanvas.WX_GL_RGBA)
 		wx.glcanvas.GLCanvas.__init__(self, parent, attribList=attribList);
-                self.emulate_analog=False
-                self.analog_alpha=2.0/15
+                self.use_persistence=False
+                self.persist_alpha=2.0/15
                 self.clear_accum=True
 		self._gl_init_flag = False
 		self._resized_flag = True
@@ -100,12 +100,12 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		self.Bind(wx.EVT_SIZE, self._on_size)
 		self.Bind(wx.EVT_ERASE_BACKGROUND, lambda e: None)
 
-        def set_emulate_analog(self,enable):
-                self.emulate_analog=enable 
+        def set_use_persistence(self,enable):
+                self.use_persistence=enable 
                 self.clear_accum=True
 
-        def set_analog_alpha(self,analog_alpha):
-                self.analog_alpha=analog_alpha
+        def set_persist_alpha(self,analog_alpha):
+                self.persist_alpha=analog_alpha
 
 	def new_gl_cache(self, draw_fcn, draw_pri=50):
 		"""
@@ -186,14 +186,14 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 
 		for fcn in self._draw_fcns: fcn[1]()
 
-                if self.emulate_analog:
+                if self.use_persistence:
                   if self.clear_accum:
                     #GL.glClear(GL.GL_ACCUM_BUFFER_BIT)
                     GL.glAccum(GL.GL_LOAD, 1.0)
                     self.clear_accum=False
 
-                  GL.glAccum(GL.GL_MULT, 1.0-self.analog_alpha)
-                  GL.glAccum(GL.GL_ACCUM, self.analog_alpha)
+                  GL.glAccum(GL.GL_MULT, 1.0-self.persist_alpha)
+                  GL.glAccum(GL.GL_ACCUM, self.persist_alpha)
                   GL.glAccum(GL.GL_RETURN, 1.0)
 		self.SwapBuffers()
 		self.unlock()

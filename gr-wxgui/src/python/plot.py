@@ -38,7 +38,7 @@
 #   - Converted from numarray to numpy
 #
 # Apr 23, 2010 Martin Dudok van Heel (http://www.olifantasia.com/gnuradio/contact_olifantasia.gif)
-#   - Added Emulate Analog option (emulate after glow of an analog CRT display using IIR)
+#   - Added Persistence option (emulate after glow of an analog CRT display using IIR)
 
 """
 This is a simple light weight plotting module that can be used with
@@ -426,7 +426,7 @@ class PlotCanvas(wx.Window):
     def __init__(self, parent, id = -1, pos=wx.DefaultPosition,
             size=wx.DefaultSize, style= wx.DEFAULT_FRAME_STYLE, name= ""):
 
-        self.emulate_analog=False
+        self.use_persistence=False
         self.alpha=0.3
         self.decimation=10
         self.decim_counter=0
@@ -498,11 +498,11 @@ class PlotCanvas(wx.Window):
                           # UNCONDITIONAL, needed to create self._Buffer
 
 
-    def set_emulate_analog(self, enable):
-        self.emulate_analog = enable
+    def set_use_persistence(self, enable):
+        self.use_persistence = enable
 
-    def set_analog_alpha(self, analog_alpha):
-        self.alpha = analog_alpha
+    def set_persist_alpha(self, persist_alpha):
+        self.alpha = persist_alpha
 
         
     # SaveFile
@@ -807,7 +807,7 @@ class PlotCanvas(wx.Window):
             
         if dc == None:
             # sets new dc and clears it 
-            if self.emulate_analog:
+            if self.use_persistence:
               dc = wx.MemoryDC()
               dc.SelectObject(self._Buffer)
               dc.Clear()
@@ -928,7 +928,7 @@ class PlotCanvas(wx.Window):
         dc.EndDrawing()
 
 
-        if self.emulate_analog:
+        if self.use_persistence:
           dc=None
           self._Buffer.CopyToBuffer(self._Bufferarray) #, format=wx.BitmapBufferFormat_RGB, stride=-1)
           ## do the IIR filter
@@ -1114,7 +1114,7 @@ class PlotCanvas(wx.Window):
         self._Buffer = wx.EmptyBitmap(Size[0],Size[1],24)
 
         
-        if True: #self.emulate_analog:
+        if True: #self.use_persistence:
           #self._Bufferarray = _numpy.zeros((Size[0], Size[1],3), dtype=_numpy.uint8)
           self._Bufferarray = _numpy.zeros((Size[0]* Size[1]*3), dtype=_numpy.uint8)
 

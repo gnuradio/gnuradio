@@ -37,7 +37,7 @@ class fft_sink_base(object):
                  y_divs=8, ref_level=50,
                  sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate,
-                 average=False, avg_alpha=None, title='', peak_hold=False,emulate_analog=False,analog_alpha=0.2):
+                 average=False, avg_alpha=None, title='', peak_hold=False,use_persistence=False,persist_alpha=0.2):
 
         # initialize common attributes
         self.baseband_freq = baseband_freq
@@ -52,8 +52,8 @@ class fft_sink_base(object):
             self.avg_alpha = 2.0 / fft_rate
         else:
             self.avg_alpha = avg_alpha
-        self.emulate_analog = emulate_analog
-        self.analog_alpha = analog_alpha
+        self.use_persistence = use_persistence
+        self.persist_alpha = persist_alpha
 
         self.title = title
         self.peak_hold = peak_hold
@@ -78,13 +78,13 @@ class fft_sink_base(object):
         self.peak_hold = enable
         self.win.set_peak_hold(enable)
 
-    def set_emulate_analog(self, enable):
-        self.emulate_analog = enable
-        self.win.set_emulate_analog(enable)
+    def set_use_persistence(self, enable):
+        self.use_persistence = enable
+        self.win.set_use_persistence(enable)
 
-    def set_analog_alpha(self, analog_alpha):
-        self.analog_alpha = analog_alpha
-        self.win.set_analog_alpha(analog_alpha)
+    def set_persist_alpha(self, persist_alpha):
+        self.persist_alpha = persist_alpha
+        self.win.set_persist_alpha(persist_alpha)
 
     def set_avg_alpha(self, avg_alpha):
         self.avg_alpha = avg_alpha
@@ -104,7 +104,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
     def __init__(self, parent, baseband_freq=0, ref_scale=2.0,
                  y_per_div=10, y_divs=8, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
-                 title='', size=default_fftsink_size, peak_hold=False, emulate_analog=False,analog_alpha=0.2, **kwargs):
+                 title='', size=default_fftsink_size, peak_hold=False, use_persistence=False,persist_alpha=0.2, **kwargs):
 
         gr.hier_block2.__init__(self, "fft_sink_f",
                                 gr.io_signature(1, 1, gr.sizeof_float),
@@ -115,7 +115,7 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
                                sample_rate=sample_rate, fft_size=fft_size,
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, title=title,
-                               peak_hold=peak_hold,emulate_analog=emulate_analog,analog_alpha=analog_alpha)
+                               peak_hold=peak_hold,use_persistence=use_persistence,persist_alpha=persist_alpha)
                                
         self.s2p = gr.stream_to_vector(gr.sizeof_float, self.fft_size)
         self.one_in_n = gr.keep_one_in_n(gr.sizeof_float * self.fft_size,
@@ -142,14 +142,14 @@ class fft_sink_f(gr.hier_block2, fft_sink_base):
         self.win = fft_window(self, parent, size=size)
         self.set_average(self.average)
         self.set_peak_hold(self.peak_hold)
-        self.set_emulate_analog(self.emulate_analog)
-        self.set_analog_alpha(self.analog_alpha)
+        self.set_use_persistence(self.use_persistence)
+        self.set_persist_alpha(self.persist_alpha)
 
 class fft_sink_c(gr.hier_block2, fft_sink_base):
     def __init__(self, parent, baseband_freq=0, ref_scale=2.0,
                  y_per_div=10, y_divs=8, ref_level=50, sample_rate=1, fft_size=512,
                  fft_rate=default_fft_rate, average=False, avg_alpha=None,
-                 title='', size=default_fftsink_size, peak_hold=False, emulate_analog=False,analog_alpha=0.2, **kwargs):
+                 title='', size=default_fftsink_size, peak_hold=False, use_persistence=False,persist_alpha=0.2, **kwargs):
 
         gr.hier_block2.__init__(self, "fft_sink_c",
                                 gr.io_signature(1, 1, gr.sizeof_gr_complex),
@@ -160,7 +160,7 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
                                sample_rate=sample_rate, fft_size=fft_size,
                                fft_rate=fft_rate,
                                average=average, avg_alpha=avg_alpha, title=title,
-                               peak_hold=peak_hold, emulate_analog=emulate_analog,analog_alpha=analog_alpha)
+                               peak_hold=peak_hold, use_persistence=use_persistence,persist_alpha=persist_alpha)
 
         self.s2p = gr.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
         self.one_in_n = gr.keep_one_in_n(gr.sizeof_gr_complex * self.fft_size,
@@ -186,8 +186,8 @@ class fft_sink_c(gr.hier_block2, fft_sink_base):
 
         self.win = fft_window(self, parent, size=size)
         self.set_average(self.average)
-        self.set_emulate_analog(self.emulate_analog)
-        self.set_analog_alpha(self.analog_alpha)
+        self.set_use_persistence(self.use_persistence)
+        self.set_persist_alpha(self.persist_alpha)
         self.set_peak_hold(self.peak_hold)
 
 
@@ -251,9 +251,9 @@ class control_panel(wx.Panel):
         self.average_check_box = wx.CheckBox(parent=self, style=wx.CHK_2STATE, label="Average")
         self.average_check_box.Bind(wx.EVT_CHECKBOX, parent.on_average)
         control_box.Add(self.average_check_box, 0, wx.EXPAND)
-        self.emulate_analog_check_box = wx.CheckBox(parent=self, style=wx.CHK_2STATE, label="Emulate Analog")
-        self.emulate_analog_check_box.Bind(wx.EVT_CHECKBOX, parent.on_emulate_analog)
-        control_box.Add(self.emulate_analog_check_box, 0, wx.EXPAND)
+        self.use_persistence_check_box = wx.CheckBox(parent=self, style=wx.CHK_2STATE, label="Persistence")
+        self.use_persistence_check_box.Bind(wx.EVT_CHECKBOX, parent.on_use_persistence)
+        control_box.Add(self.use_persistence_check_box, 0, wx.EXPAND)
         self.peak_hold_check_box = wx.CheckBox(parent=self, style=wx.CHK_2STATE, label="Peak Hold")
         self.peak_hold_check_box.Bind(wx.EVT_CHECKBOX, parent.on_peak_hold) 
         control_box.Add(self.peak_hold_check_box, 0, wx.EXPAND)
@@ -294,7 +294,7 @@ class control_panel(wx.Panel):
         """
         #update checkboxes
         self.average_check_box.SetValue(self.parent.fftsink.average)
-        self.emulate_analog_check_box.SetValue(self.parent.fftsink.emulate_analog)
+        self.use_persistence_check_box.SetValue(self.parent.fftsink.use_persistence)
         self.peak_hold_check_box.SetValue(self.parent.fftsink.peak_hold)
         #update radio buttons    
         try:
@@ -326,8 +326,8 @@ class fft_window (wx.Panel):
         self.peak_hold = False
         self.peak_vals = None
 
-        self.emulate_analog=False
-        self.analog_alpha=0.2
+        self.use_persistence=False
+        self.persist_alpha=0.2
 
         
         self.plot.SetEnableGrid (True)
@@ -417,13 +417,13 @@ class fft_window (wx.Panel):
         y_range = ymin, ymax
         self.plot.Draw (graphics, xAxis=x_range, yAxis=y_range, step=self.fftsink.y_per_div)        
 
-    def set_emulate_analog(self, enable):
-        self.emulate_analog = enable
-        self.plot.set_emulate_analog( enable)
+    def set_use_persistence(self, enable):
+        self.use_persistence = enable
+        self.plot.set_use_persistence( enable)
 
-    def set_analog_alpha(self, analog_alpha):
-        self.analog_alpha = analog_alpha
-        self.plot.set_analog_alpha(analog_alpha)
+    def set_persist_alpha(self, persist_alpha):
+        self.persist_alpha = persist_alpha
+        self.plot.set_persist_alpha(persist_alpha)
 
     def set_peak_hold(self, enable):
         self.peak_hold = enable
@@ -434,9 +434,9 @@ class fft_window (wx.Panel):
         self.fftsink.set_average(evt.IsChecked())
         self.control_panel.update()
 
-    def on_emulate_analog(self, evt):
+    def on_use_persistence(self, evt):
         # print "on_analog"
-        self.fftsink.set_emulate_analog(evt.IsChecked())
+        self.fftsink.set_use_persistence(evt.IsChecked())
         self.control_panel.update()
 
     def on_peak_hold(self, evt):
@@ -522,11 +522,11 @@ class fft_window (wx.Panel):
         self.id_y_per_div_10 = wx.NewId()
         self.id_y_per_div_20 = wx.NewId()
         self.id_average = wx.NewId()
-        self.id_emulate_analog = wx.NewId()
+        self.id_use_persistence = wx.NewId()
         self.id_peak_hold = wx.NewId()
         
         self.plot.Bind(wx.EVT_MENU, self.on_average, id=self.id_average)
-        self.plot.Bind(wx.EVT_MENU, self.on_emulate_analog, id=self.id_emulate_analog)
+        self.plot.Bind(wx.EVT_MENU, self.on_use_persistence, id=self.id_use_persistence)
         self.plot.Bind(wx.EVT_MENU, self.on_peak_hold, id=self.id_peak_hold)
         self.plot.Bind(wx.EVT_MENU, self.on_incr_ref_level, id=self.id_incr_ref_level)
         self.plot.Bind(wx.EVT_MENU, self.on_decr_ref_level, id=self.id_decr_ref_level)
@@ -542,7 +542,7 @@ class fft_window (wx.Panel):
         menu = wx.Menu()
         self.popup_menu = menu
         menu.AppendCheckItem(self.id_average, "Average")
-        menu.AppendCheckItem(self.id_emulate_analog, "Emulate Analog")
+        menu.AppendCheckItem(self.id_use_persistence, "Persistence")
         menu.AppendCheckItem(self.id_peak_hold, "Peak Hold")
         menu.Append(self.id_incr_ref_level, "Incr Ref Level")
         menu.Append(self.id_decr_ref_level, "Decr Ref Level")
@@ -558,7 +558,7 @@ class fft_window (wx.Panel):
 
         self.checkmarks = {
             self.id_average : lambda : self.fftsink.average,
-            self.id_emulate_analog : lambda : self.fftsink.emulate_analog,
+            self.id_use_persistence : lambda : self.fftsink.use_persistence,
             self.id_peak_hold : lambda : self.fftsink.peak_hold,
             self.id_y_per_div_1 : lambda : self.fftsink.y_per_div == 1,
             self.id_y_per_div_2 : lambda : self.fftsink.y_per_div == 2,

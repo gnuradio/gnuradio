@@ -37,7 +37,7 @@ import forms
 ##################################################
 SLIDER_STEPS = 100
 AVG_ALPHA_MIN_EXP, AVG_ALPHA_MAX_EXP = -3, 0
-ANALOG_ALPHA_MIN_EXP, ANALOG_ALPHA_MAX_EXP = -2, 0
+PERSIST_ALPHA_MIN_EXP, PERSIST_ALPHA_MAX_EXP = -2, 0
 DEFAULT_WIN_SIZE = (600, 300)
 DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'fft_rate', 30)
 DB_DIV_MIN, DB_DIV_MAX = 1, 20
@@ -105,30 +105,30 @@ class control_panel(wx.Panel):
                 parent.subscribe(AVERAGE_KEY, self._update_layout)
 
 		forms.check_box(
-			sizer=options_box, parent=self, label='Emulate Analog',
-			ps=parent, key=EMULATE_ANALOG_KEY,
+			sizer=options_box, parent=self, label='Persistence',
+			ps=parent, key=USE_PERSISTENCE_KEY,
 		)
-		#static text and slider for analog alpha
-		analog_alpha_text = forms.static_text(
-			sizer=options_box, parent=self, label='Analog Alpha',
+		#static text and slider for persist alpha
+		persist_alpha_text = forms.static_text(
+			sizer=options_box, parent=self, label='Persist Alpha',
 			converter=forms.float_converter(lambda x: '%.4f'%x),
-			ps=parent, key=ANALOG_ALPHA_KEY, width=50,
+			ps=parent, key=PERSIST_ALPHA_KEY, width=50,
 		)
-		analog_alpha_slider = forms.log_slider(
+		persist_alpha_slider = forms.log_slider(
 			sizer=options_box, parent=self,
-			min_exp=ANALOG_ALPHA_MIN_EXP,
-			max_exp=ANALOG_ALPHA_MAX_EXP,
+			min_exp=PERSIST_ALPHA_MIN_EXP,
+			max_exp=PERSIST_ALPHA_MAX_EXP,
 			num_steps=SLIDER_STEPS,
-			ps=parent, key=ANALOG_ALPHA_KEY,
+			ps=parent, key=PERSIST_ALPHA_KEY,
 		)
-		for widget in (analog_alpha_text, analog_alpha_slider):
-			parent.subscribe(EMULATE_ANALOG_KEY, widget.Enable)
-			widget.Enable(parent[EMULATE_ANALOG_KEY])
-			parent.subscribe(EMULATE_ANALOG_KEY, widget.ShowItems)
+		for widget in (persist_alpha_text, persist_alpha_slider):
+			parent.subscribe(USE_PERSISTENCE_KEY, widget.Enable)
+			widget.Enable(parent[USE_PERSISTENCE_KEY])
+			parent.subscribe(USE_PERSISTENCE_KEY, widget.ShowItems)
                         #allways show initially, so room is reserved for them
-			widget.ShowItems(True) # (parent[EMULATE_ANALOG_KEY])
+			widget.ShowItems(True) # (parent[USE_PERSISTENCE_KEY])
 		
-                parent.subscribe(EMULATE_ANALOG_KEY, self._update_layout)
+                parent.subscribe(USE_PERSISTENCE_KEY, self._update_layout)
 
 		#trace menu
 		for trace in TRACES:
@@ -224,8 +224,8 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		avg_alpha_key,
 		peak_hold,
 		msg_key,
-                emulate_analog,
-                analog_alpha,
+                use_persistence,
+                persist_alpha,
 	):
 
 		pubsub.pubsub.__init__(self)
@@ -248,8 +248,8 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		self[REF_LEVEL_KEY] = ref_level
 		self[BASEBAND_FREQ_KEY] = baseband_freq
 		self[RUNNING_KEY] = True
-		self[EMULATE_ANALOG_KEY] = emulate_analog
-		self[ANALOG_ALPHA_KEY] = analog_alpha
+		self[USE_PERSISTENCE_KEY] = use_persistence
+		self[PERSIST_ALPHA_KEY] = persist_alpha
 		for trace in TRACES:
 			#a function that returns a function
 			#so the function wont use local trace
@@ -278,8 +278,8 @@ class fft_window(wx.Panel, pubsub.pubsub):
 		self.plotter.enable_legend(True)
 		self.plotter.enable_point_label(True)
 		self.plotter.enable_grid_lines(True)
-                self.plotter.set_emulate_analog(emulate_analog)
-                self.plotter.set_analog_alpha(analog_alpha)
+                self.plotter.set_use_persistence(use_persistence)
+                self.plotter.set_persist_alpha(persist_alpha)
 		#setup the box with plot and controls
 		self.control_panel = control_panel(self)
 		main_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -295,8 +295,8 @@ class fft_window(wx.Panel, pubsub.pubsub):
 			Y_PER_DIV_KEY, X_DIVS_KEY,
 			Y_DIVS_KEY, REF_LEVEL_KEY,
 		): self.subscribe(key, self.update_grid)
-		self.subscribe(EMULATE_ANALOG_KEY, self.plotter.set_emulate_analog)
-		self.subscribe(ANALOG_ALPHA_KEY, self.plotter.set_analog_alpha)
+		self.subscribe(USE_PERSISTENCE_KEY, self.plotter.set_use_persistence)
+		self.subscribe(PERSIST_ALPHA_KEY, self.plotter.set_persist_alpha)
 		#initial update
 		self.update_grid()
 

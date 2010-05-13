@@ -1,5 +1,5 @@
 #
-# Copyright 2008,2009 Free Software Foundation, Inc.
+# Copyright 2008,2009,2010 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -54,20 +54,20 @@ class _fft_sink_base(gr.hier_block2, common.wxgui_hb):
 		size=fft_window.DEFAULT_WIN_SIZE,
 		peak_hold=False,
 		win=None,
-                emulate_analog=False,
-                analog_alpha=None,
+                use_persistence=False,
+                persist_alpha=None,
 		**kwargs #do not end with a comma
 	):
 		#ensure avg alpha
 		if avg_alpha is None: avg_alpha = 2.0/fft_rate
                 #ensure analog alpha
-                if analog_alpha is None: 
+                if persist_alpha is None: 
                   actual_fft_rate=float(sample_rate/fft_size)/float(max(1,int(float((sample_rate/fft_size)/fft_rate))))
                   #print "requested_fft_rate ",fft_rate
                   #print "actual_fft_rate    ",actual_fft_rate
                   analog_cutoff_freq=0.5 # Hertz
                   #calculate alpha from wanted cutoff freq
-                  analog_alpha = 1.0 - math.exp(-2.0*math.pi*analog_cutoff_freq/actual_fft_rate)
+                  persist_alpha = 1.0 - math.exp(-2.0*math.pi*analog_cutoff_freq/actual_fft_rate)
                   
 		#init
 		gr.hier_block2.__init__(
@@ -117,8 +117,8 @@ class _fft_sink_base(gr.hier_block2, common.wxgui_hb):
 			avg_alpha_key=AVG_ALPHA_KEY,
 			peak_hold=peak_hold,
 			msg_key=MSG_KEY,
-                        emulate_analog=emulate_analog,
-                        analog_alpha=analog_alpha,
+                        use_persistence=use_persistence,
+                        persist_alpha=persist_alpha,
 		)
 		common.register_access_methods(self, self.win)
 		setattr(self.win, 'set_baseband_freq', getattr(self, 'set_baseband_freq')) #BACKWARDS

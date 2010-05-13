@@ -77,16 +77,16 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 		ac_couple=False,
 		num_inputs=1,
 		frame_rate=scope_window.DEFAULT_FRAME_RATE,
-                emulate_analog=False,
-                analog_alpha=None,
+                use_persistence=False,
+                persist_alpha=None,
 		**kwargs #do not end with a comma
 	):
                 #ensure analog alpha
-                if analog_alpha is None: 
+                if persist_alpha is None: 
                   actual_frame_rate=float(frame_rate)
                   analog_cutoff_freq=0.5 # Hertz
                   #calculate alpha from wanted cutoff freq
-                  analog_alpha = 1.0 - math.exp(-2.0*math.pi*analog_cutoff_freq/actual_frame_rate)
+                  persist_alpha = 1.0 - math.exp(-2.0*math.pi*analog_cutoff_freq/actual_frame_rate)
 
 		if not t_scale: t_scale = 10.0/sample_rate
 		#init
@@ -139,8 +139,8 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 			trigger_channel_key=TRIGGER_CHANNEL_KEY,
 			decimation_key=DECIMATION_KEY,
 			msg_key=MSG_KEY,
-                        emulate_analog=emulate_analog,
-                        analog_alpha=analog_alpha,
+                        use_persistence=use_persistence,
+                        persist_alpha=persist_alpha,
 		)
 		common.register_access_methods(self, self.win)
 		#connect
