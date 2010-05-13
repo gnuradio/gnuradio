@@ -87,7 +87,10 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		@param parent the parent widgit
 		"""
 		attribList = (wx.glcanvas.WX_GL_DOUBLEBUFFER, wx.glcanvas.WX_GL_RGBA)
-		wx.glcanvas.GLCanvas.__init__(self, parent, attribList=attribList)
+		wx.glcanvas.GLCanvas.__init__(self, parent, attribList=attribList);
+                self.emulate_analog=False
+                self.analog_alpha=2.0/15
+                self.clear_accum=True
 		self._gl_init_flag = False
 		self._resized_flag = True
 		self._init_fcns = list()
@@ -96,6 +99,13 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		self.Bind(wx.EVT_PAINT, self._on_paint)
 		self.Bind(wx.EVT_SIZE, self._on_size)
 		self.Bind(wx.EVT_ERASE_BACKGROUND, lambda e: None)
+
+        def set_emulate_analog(self,enable):
+                self.emulate_analog=enable 
+                self.clear_accum=True
+
+        def set_analog_alpha(self,analog_alpha):
+                self.analog_alpha=analog_alpha
 
 	def new_gl_cache(self, draw_fcn, draw_pri=50):
 		"""
@@ -131,6 +141,7 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 		"""
 		self.lock()
 		self._resized_flag = True
+                self.clear_accum=True
 		self.unlock()
 
 	def _on_paint(self, event):
@@ -160,7 +171,30 @@ class plotter_base(wx.glcanvas.GLCanvas, common.mutex):
 			self._resized_flag = False
 		#clear, draw functions, swap
 		GL.glClear(GL.GL_COLOR_BUFFER_BIT)
+
+                if False:
+                  GL.glEnable (GL.GL_LINE_SMOOTH)
+                  GL.glEnable (GL.GL_POLYGON_SMOOTH)
+                  GL.glEnable (GL.GL_BLEND)
+                  GL.glBlendFunc (GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
+                  GL.glHint (GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST) #GL.GL_DONT_CARE)
+                  GL.glHint(GL.GL_POLYGON_SMOOTH_HINT, GL.GL_NICEST)
+                  #GL.glLineWidth (1.5)
+
+                  GL.glEnable(GL.GL_MULTISAMPLE) #Enable Multisampling anti-aliasing
+
+
 		for fcn in self._draw_fcns: fcn[1]()
+
+                if self.emulate_analog:
+                  if self.clear_accum:
+                    #GL.glClear(GL.GL_ACCUM_BUFFER_BIT)
+                    GL.glAccum(GL.GL_LOAD, 1.0)
+                    self.clear_accum=False
+
+                  GL.glAccum(GL.GL_MULT, 1.0-self.analog_alpha)
+                  GL.glAccum(GL.GL_ACCUM, self.analog_alpha)
+                  GL.glAccum(GL.GL_RETURN, 1.0)
 		self.SwapBuffers()
 		self.unlock()
 

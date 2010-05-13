@@ -27,6 +27,7 @@ import common
 from gnuradio import gr
 from pubsub import pubsub
 from constants import *
+import math
 
 class ac_couple_block(gr.hier_block2):
 	"""
@@ -76,8 +77,17 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 		ac_couple=False,
 		num_inputs=1,
 		frame_rate=scope_window.DEFAULT_FRAME_RATE,
+                emulate_analog=False,
+                analog_alpha=None,
 		**kwargs #do not end with a comma
 	):
+                #ensure analog alpha
+                if analog_alpha is None: 
+                  actual_frame_rate=float(frame_rate)
+                  analog_cutoff_freq=0.5 # Hertz
+                  #calculate alpha from wanted cutoff freq
+                  analog_alpha = 1.0 - math.exp(-2.0*math.pi*analog_cutoff_freq/actual_frame_rate)
+
 		if not t_scale: t_scale = 10.0/sample_rate
 		#init
 		gr.hier_block2.__init__(
@@ -129,6 +139,8 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 			trigger_channel_key=TRIGGER_CHANNEL_KEY,
 			decimation_key=DECIMATION_KEY,
 			msg_key=MSG_KEY,
+                        emulate_analog=emulate_analog,
+                        analog_alpha=analog_alpha,
 		)
 		common.register_access_methods(self, self.win)
 		#connect
@@ -169,10 +181,11 @@ class test_top_block (stdgui2.std_top_block):
     def __init__(self, frame, panel, vbox, argv):
         stdgui2.std_top_block.__init__ (self, frame, panel, vbox, argv)
 
+        default_input_rate = 1e6
         if len(argv) > 1:
-            frame_decim = int(argv[1]) 
+            input_rate = int(argv[1]) 
         else:
-            frame_decim = 1
+            input_rate = default_input_rate
 
         if len(argv) > 2:
             v_scale = float(argv[2])  # start up at this v_scale value
@@ -182,14 +195,17 @@ class test_top_block (stdgui2.std_top_block):
         if len(argv) > 3:
             t_scale = float(argv[3])  # start up at this t_scale value
         else:
-            t_scale = .00003  # old behavior
+            t_scale = .00003*default_input_rate/input_rate # old behavior
 
-        print "frame decim %s  v_scale %s  t_scale %s" % (frame_decim,v_scale,t_scale)
+        print "input rate %s  v_scale %s  t_scale %s" % (input_rate,v_scale,t_scale)
             
-        input_rate = 1e6
 
         # Generate a complex sinusoid
-        self.src0 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 25.1e3, 1e3)
+        ampl=1.0e3
+        self.src0 = gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 25.1e3*input_rate/default_input_rate, ampl)
+        self.noise =gr.sig_source_c (input_rate, gr.GR_SIN_WAVE, 11.1*25.1e3*input_rate/default_input_rate, ampl/10) 
+        #self.noise =gr.noise_source_c(gr.GR_GAUSSIAN, ampl/10)
+        self.combine=gr.add_cc()
 
         # We add this throttle block so that this demo doesn't suck down
         # all the CPU available.  You normally wouldn't use it...
@@ -201,7 +217,9 @@ class test_top_block (stdgui2.std_top_block):
 
         # Ultimately this will be
         # self.connect("src0 throttle scope")
-	self.connect(self.src0, self.thr, scope) 
+	self.connect(self.src0,(self.combine,0))
+        self.connect(self.noise,(self.combine,1))
+        self.connect(self.combine, self.thr, scope) 
 
 def main ():
     app = stdgui2.stdapp (test_top_block, "O'Scope Test App")
