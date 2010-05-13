@@ -6,7 +6,7 @@
 #
 # Created:     2003/11/03
 # RCS-ID:      $Id$
-# Copyright:   (c) 2002,2007
+# Copyright:   (c) 2002,2007,2010
 # Licence:     Use as you wish.
 #-----------------------------------------------------------------------------
 # 12/15/2003 - Jeff Grimmett (grimmtooth@softhome.net)
