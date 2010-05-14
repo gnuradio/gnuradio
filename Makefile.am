@@ -28,6 +28,7 @@ EXTRA_DIST = \
 	configure \
 	configure-cell-cross \
 	config.h.in \
+	ltmain.sh \
 	run_tests.sh.in \
 	Makefile.swig \
 	Makefile.swig.gen.t \
