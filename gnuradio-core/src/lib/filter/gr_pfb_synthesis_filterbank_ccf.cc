@@ -43,7 +43,7 @@ gr_pfb_synthesis_filterbank_ccf_sptr gr_make_pfb_synthesis_filterbank_ccf
 gr_pfb_synthesis_filterbank_ccf::gr_pfb_synthesis_filterbank_ccf
     (unsigned int numchans, const std::vector<float> &taps)
   : gr_sync_interpolator ("pfb_synthesis_filterbank_ccf",
-			  gr_make_io_signature (numchans, numchans, sizeof(gr_complex)),
+			  gr_make_io_signature (1, numchans, sizeof(gr_complex)),
 			  gr_make_io_signature (1, 1, sizeof(gr_complex)),
 			  numchans),
     d_updated (false), d_numchans(numchans)
@@ -132,6 +132,9 @@ gr_pfb_synthesis_filterbank_ccf::work (int noutput_items,
 {
   gr_complex *in = (gr_complex*) input_items[0];
   gr_complex *out = (gr_complex *) output_items[0];
+  int numsigs = input_items.size();
+  int ndiff   = d_numchans - numsigs;
+  int nhalf = (int)ceil((float)numsigs/2.0f);
 
   if (d_updated) {
     d_updated = false;
@@ -140,8 +143,21 @@ gr_pfb_synthesis_filterbank_ccf::work (int noutput_items,
 
   unsigned int n, i;
   for(n = 0; n < noutput_items/d_numchans; n++) {
-    for(i = 0; i < d_numchans; i++) {
+    // fill up the populated channels based on the 
+    // number of real input streams
+    for(i = 0; i < nhalf; i++) {
       in = (gr_complex*)input_items[i];
+      d_fft->get_inbuf()[i] = (in+i)[n];
+    }
+
+    // Make the ndiff channels around N/2 0
+    for(; i < nhalf+ndiff; i++) {
+      d_fft->get_inbuf()[i] = gr_complex(0,0);
+    }
+
+    // Finish off channels with data
+    for(; i < d_numchans; i++) {
+      in = (gr_complex*)input_items[i-ndiff];
       d_fft->get_inbuf()[i] = (in+i)[n];
     }
 
