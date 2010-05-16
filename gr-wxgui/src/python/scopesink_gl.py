@@ -75,6 +75,7 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 		xy_mode=False,
 		ac_couple=False,
 		num_inputs=1,
+		trig_mode=scope_window.DEFAULT_TRIG_MODE,
 		frame_rate=scope_window.DEFAULT_FRAME_RATE,
 		**kwargs #do not end with a comma
 	):
@@ -122,6 +123,7 @@ class _scope_sink_base(gr.hier_block2, common.wxgui_hb):
 			v_scale=v_scale,
 			v_offset=v_offset,
 			xy_mode=xy_mode,
+			trig_mode=trig_mode,
 			ac_couple_key=AC_COUPLE_KEY,
 			trigger_level_key=TRIGGER_LEVEL_KEY,
 			trigger_mode_key=TRIGGER_MODE_KEY,

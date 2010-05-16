@@ -36,6 +36,7 @@ import forms
 # Constants
 ##################################################
 DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'scope_rate', 30)
+DEFAULT_TRIG_MODE = gr.prefs().get_long('wxgui', 'trig_mode', gr.gr_TRIG_MODE_AUTO)
 DEFAULT_WIN_SIZE = (600, 300)
 COUPLING_MODES = (
 	('DC', False),
@@ -45,6 +46,7 @@ TRIGGER_MODES = (
 	('Freerun', gr.gr_TRIG_MODE_FREE),
 	('Auto', gr.gr_TRIG_MODE_AUTO),
 	('Normal', gr.gr_TRIG_MODE_NORM),
+	('Stripchart', gr.gr_TRIG_MODE_STRIPCHART),
 )
 TRIGGER_SLOPES = (
 	('Pos +', gr.gr_TRIG_SLOPE_POS),
@@ -388,6 +390,7 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		trigger_channel_key,
 		decimation_key,
 		msg_key,
+		trig_mode,
 	):
 		pubsub.pubsub.__init__(self)
 		#check num inputs
@@ -427,9 +430,14 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		self[FRAME_RATE_KEY] = frame_rate
 		self[TRIGGER_LEVEL_KEY] = 0
 		self[TRIGGER_CHANNEL_KEY] = 0
-		self[TRIGGER_MODE_KEY] = gr.gr_TRIG_MODE_AUTO
+		self[TRIGGER_MODE_KEY] = trig_mode
+		
 		self[TRIGGER_SLOPE_KEY] = gr.gr_TRIG_SLOPE_POS
 		self[T_FRAC_OFF_KEY] = 0.5
+		
+		if self[TRIGGER_MODE_KEY] == gr.gr_TRIG_MODE_STRIPCHART:
+			self[T_FRAC_OFF_KEY] = 0.0
+
 		for i in range(num_inputs):
 			self.proxy(common.index_key(AC_COUPLE_KEY, i), controller, common.index_key(ac_couple_key, i))
 		#init panel and plot
