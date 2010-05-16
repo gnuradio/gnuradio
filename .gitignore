@@ -31,6 +31,7 @@ make.log
 /Makefile.in
 /config.log
 /config.h
+/ltmain.sh
 /Makefile
 /config.status
 /stamp-h1
