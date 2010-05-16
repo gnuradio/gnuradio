@@ -70,5 +70,8 @@ gr_file_sink::work (int noutput_items,
     nwritten += count;
     inbuf += count * d_itemsize;
   }
+  if (d_unbuffered)
+	  fflush (d_fp);
+	  
   return nwritten;
 }
