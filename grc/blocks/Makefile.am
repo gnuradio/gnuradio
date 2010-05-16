@@ -71,6 +71,7 @@ dist_ourdata_DATA = \
 	gr_agc2_xx.xml \
 	gr_agc_xx.xml \
 	gr_and_xx.xml \
+	gr_and_const_xx.xml \
 	gr_argmax_xx.xml \
 	gr_binary_slicer_fb.xml \
 	gr_channel_model.xml \

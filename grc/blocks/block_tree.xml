@@ -58,6 +58,7 @@
 
 		<block>gr_add_const_vxx</block>
 		<block>gr_multiply_const_vxx</block>
+		<block>gr_and_const_xx</block>
 
 		<block>gr_not_xx</block>
 		<block>gr_and_xx</block>
