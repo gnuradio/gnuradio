@@ -154,30 +154,16 @@ bitshark_rx_init(struct db_base *dbb)
     /* hal_gpio_write( GPIO_RX_BANK, ENABLE_5|ENABLE_33, ENABLE_5|ENABLE_33 ); */
     /* above isn't needed, since we don't have any GPIO from the FPGA */
     
-    /* The next set of initialization commands sent to the bitshark board
-       require a brief delay after each command.  This only seems to be
-       necessary when sending a sequence of commands one after the other.
-       This issue appears to be specific to the USRP2, since it isn't
-       necessary on the USRP1.  The 5 mS delay is a bit of 
-       an emperical compromise: too short (say, 1 mS), and every once
-       in a great while a command will still be magically dropped on its
-       way out...too long (say, 500 mS) and higher-level apps such as
-       usrp2_fft.py seem to choke because the init sequence is taking
-       too long.  So 5 mS was tested repeatedly without, and deemed
-       reasonable. Not sure if this is an issue with the I2C master
-       code in the microblaze or some place else, and I hate magic
-       delays too, but this seems to be stable. */
-
     /* setup the clock scheme to accept the USRP2's 100 MHz ref clk */
     set_clock_scheme(0,100000000);
-    mdelay(5);
+
     /* initial setting of gain */
     dbb->set_gain(dbb,U2_DOUBLE_TO_FXPT_GAIN(20.0));
-    mdelay(5);
+
     /* Set the freq now to get the one time 10ms delay out of the way. */
     u2_fxpt_freq_t	dc;
     dbb->set_freq(dbb, dbb->freq_min, &dc);
-    mdelay(5);
+
     /* set up the RF bandwidth of the signal of interest...Note: there
        doesn't appear to be a standard way of setting this bandwidth
        in USRP2-land (compared to USRP1-land, where we have the
@@ -185,7 +171,6 @@ bitshark_rx_init(struct db_base *dbb)
        for now, simply set the bandwidth once for the intended
        application. */
     db->extra.set_bw(dbb, 25000);  /* 25 MHz channel bw */
-    mdelay(5);
 
     return true;
 }
@@ -196,7 +181,7 @@ bitshark_rx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *d
     struct db_bitshark_rx_dummy *db = (struct db_bitshark_rx_dummy *) dbb;    
     unsigned char args[NUM_BYTES_IN_I2C_CMD];
     unsigned char val[4];
-    uint32_t freq_in_khz = (uint32_t)(u2_fxpt_freq_to_double(freq)/1000.0);
+    uint32_t freq_in_khz = (uint32_t)(u2_fxpt_freq_round_to_uint(freq)/1000);
     
     if(!(freq>=db->base.freq_min && freq<=db->base.freq_max)) 
     {
@@ -212,7 +197,21 @@ bitshark_rx_set_freq(struct db_base *dbb, u2_fxpt_freq_t freq, u2_fxpt_freq_t *d
     args[8] = val[0];
     
     i2c_write(I2C_ADDR, args, NUM_BYTES_IN_I2C_CMD);
-    *dc = freq;
+    /* Add a brief delay after each command.  This only seems to be
+       necessary when sending a sequence of commands one after the other.
+       This issue appears to be specific to the USRP2, since it isn't
+       necessary on the USRP1.  The 5 mS delay is a bit of 
+       an emperical compromise: too short (say, 1 mS), and every once
+       in a great while a command will still be magically dropped on its
+       way out...too long (say, 500 mS) and higher-level apps such as
+       usrp2_fft.py seem to choke because the init sequence is taking
+       too long.  So 5 mS was tested repeatedly without error, and deemed
+       reasonable. Not sure if this is an issue with the I2C master
+       code in the microblaze or some place else, and I hate magic
+       delays too, but this seems to be stable. */
+    mdelay(5);
+
+   *dc = freq;
     return true;
 }
 
@@ -234,6 +233,19 @@ bitshark_rx_set_gain(struct db_base *dbb, u2_fxpt_gain_t gain)
     args[5] = final_gain;
 
     i2c_write(I2C_ADDR, args, NUM_BYTES_IN_I2C_CMD);
+    /* Add a brief delay after each command.  This only seems to be
+       necessary when sending a sequence of commands one after the other.
+       This issue appears to be specific to the USRP2, since it isn't
+       necessary on the USRP1.  The 5 mS delay is a bit of 
+       an emperical compromise: too short (say, 1 mS), and every once
+       in a great while a command will still be magically dropped on its
+       way out...too long (say, 500 mS) and higher-level apps such as
+       usrp2_fft.py seem to choke because the init sequence is taking
+       too long.  So 5 mS was tested repeatedly without error, and deemed
+       reasonable. Not sure if this is an issue with the I2C master
+       code in the microblaze or some place else, and I hate magic
+       delays too, but this seems to be stable. */
+    mdelay(5);
 
     return true;
 }
@@ -257,6 +269,19 @@ bitshark_rx_set_bw(struct db_base *dbb, uint16_t bw_in_khz)
     args[6] = val[0];
 
     i2c_write(I2C_ADDR, args, NUM_BYTES_IN_I2C_CMD);
+    /* Add a brief delay after each command.  This only seems to be
+       necessary when sending a sequence of commands one after the other.
+       This issue appears to be specific to the USRP2, since it isn't
+       necessary on the USRP1.  The 5 mS delay is a bit of 
+       an emperical compromise: too short (say, 1 mS), and every once
+       in a great while a command will still be magically dropped on its
+       way out...too long (say, 500 mS) and higher-level apps such as
+       usrp2_fft.py seem to choke because the init sequence is taking
+       too long.  So 5 mS was tested repeatedly without error, and deemed
+       reasonable. Not sure if this is an issue with the I2C master
+       code in the microblaze or some place else, and I hate magic
+       delays too, but this seems to be stable. */
+    mdelay(5);
 
     return true;
 }
@@ -293,6 +318,19 @@ set_clock_scheme(uint8_t clock_scheme, uint32_t ref_clk_freq)
     args[8] = val[0];
 
     i2c_write(I2C_ADDR, args, NUM_BYTES_IN_I2C_CMD);
+    /* Add a brief delay after each command.  This only seems to be
+       necessary when sending a sequence of commands one after the other.
+       This issue appears to be specific to the USRP2, since it isn't
+       necessary on the USRP1.  The 5 mS delay is a bit of 
+       an emperical compromise: too short (say, 1 mS), and every once
+       in a great while a command will still be magically dropped on its
+       way out...too long (say, 500 mS) and higher-level apps such as
+       usrp2_fft.py seem to choke because the init sequence is taking
+       too long.  So 5 mS was tested repeatedly without error, and deemed
+       reasonable. Not sure if this is an issue with the I2C master
+       code in the microblaze or some place else, and I hate magic
+       delays too, but this seems to be stable. */
+    mdelay(5);
 
     return true;
 }
