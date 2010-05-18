@@ -75,6 +75,7 @@ txrx_wbx_LDADD = ../lib/libu2fw_wbx.a
 
 txrx_xcvr_LDADD = ../lib/libu2fw_xcvr.a
 
+
 noinst_HEADERS = \
         app_common_v2.h \
         app_passthru_v2.h \

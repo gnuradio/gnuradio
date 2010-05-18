@@ -26,13 +26,12 @@ noinst_LIBRARIES = \
 libu2fw_a_SOURCES = \
 	abort.c \
 	ad9510.c \
-	adf4350.c \
-	adf4350_regs.c \
 	ad9777.c \
 	bsm12.c \
 	buffer_pool.c \
 	clocks.c \
 	db_basic.c \
+	db_bitshark_rx.c \
 	db_dbsrx.c \
 	db_rfx.c \
 	db_tvrx.c \
@@ -99,6 +98,7 @@ libu2fw_wbx_a_SOURCES = \
 	spi.c \
 	u2_init.c	
 
+
 libu2fw_xcvr_a_SOURCES = \
 	abort.c \
 	ad9510.c \
@@ -149,6 +149,7 @@ noinst_HEADERS = \
 	db.h \
 	db_base.h \
 	db_wbxng.h \
+	db_bitshark_rx.h
 	dbsm.h \
 	eth_mac.h \
 	eth_mac_regs.h \

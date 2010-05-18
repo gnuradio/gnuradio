@@ -71,6 +71,7 @@ daughterboards = {
     'wbx_lo'          : ((WBX_LO_TX, 0x0000),       (WBX_LO_RX, 0x0000)),
     'wbx_ng'          : ((WBX_NG_TX, 0x0000),       (WBX_NG_RX, 0x0000)),
     'xcvr2450'        : ((XCVR2450_TX, 0x0000),       (XCVR2450_RX, 0x0000)),
+    'bitshark_rx'     : (None,                      (BITSHARK_RX, 0x0000)),
     'experimental_tx' : ((EXPERIMENTAL_TX, 0x0000), None),
     'experimental_rx' : (None,                      (EXPERIMENTAL_RX, 0x0000)),
     }
