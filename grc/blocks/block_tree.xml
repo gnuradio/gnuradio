@@ -130,7 +130,6 @@
 		<block>gr_pfb_clock_sync_xxx</block>
 
 		<block>gr_costas_loop_cc</block>
-		<block>gr_dd_mpsk_sync_cc</block>
 		<block>gr_mpsk_sync_cc</block>
 		<block>gr_mpsk_receiver_cc</block>
 

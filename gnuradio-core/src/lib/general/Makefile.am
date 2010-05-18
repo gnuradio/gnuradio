@@ -60,7 +60,6 @@ libgeneral_la_SOURCES = 		\
 	gr_cpfsk_bc.cc			\
 	gr_crc32.cc			\
 	gr_ctcss_squelch_ff.cc		\
-	gr_dd_mpsk_sync_cc.cc		\
 	gr_decode_ccsds_27_fb.cc	\
 	gr_deinterleave.cc		\
 	gr_delay.cc			\
@@ -215,7 +214,6 @@ grinclude_HEADERS = 			\
 	gr_cpfsk_bc.h			\
 	gr_crc32.h			\
 	gr_ctcss_squelch_ff.h		\
-	gr_dd_mpsk_sync_cc.h		\
 	gr_decode_ccsds_27_fb.h		\
 	gr_diff_decoder_bb.h		\
 	gr_diff_encoder_bb.h		\
@@ -386,7 +384,6 @@ swiginclude_HEADERS =			\
 	gr_cpfsk_bc.i			\
 	gr_crc32.i			\
 	gr_ctcss_squelch_ff.i		\
-	gr_dd_mpsk_sync_cc.i		\
 	gr_decode_ccsds_27_fb.i		\
 	gr_diff_decoder_bb.i		\
 	gr_diff_encoder_bb.i		\
