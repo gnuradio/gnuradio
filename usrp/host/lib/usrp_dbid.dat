@@ -84,5 +84,7 @@
 "XCVR2450 Tx"		0x0060
 "XCVR2450 Rx"		0x0061
 
+"Bitshark Rx"           0x0070
+
 "Experimental Tx"	0xfffe
 "Experimental Rx"	0xffff

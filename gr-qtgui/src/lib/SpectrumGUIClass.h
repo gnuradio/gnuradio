@@ -47,7 +47,7 @@ public:
   void UpdateWindow(const bool, const std::complex<float>*,
 		    const uint64_t, const float*,
 		    const uint64_t, const float*,
-		    const uint64_t, const double,
+		    const uint64_t,
 		    const timespec, const bool);
 
   float GetPowerValue()const;
@@ -79,6 +79,8 @@ public:
   void SetConstellationPenSize(int size);
   void SetFrequencyAxis(double min, double max);
 
+  void SetUpdateTime(double t);
+
 protected:
 
 private:
@@ -98,6 +100,7 @@ private:
   unsigned int _pendingGUIUpdateEventsCount;
   int _droppedEntriesCount;
   bool _fftBuffersCreatedFlag;
+  double _updateTime;
 
   SpectrumDisplayForm* _spectrumDisplayForm;
 

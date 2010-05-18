@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2010 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -27,6 +27,8 @@ ALPHA_KEY = 'alpha'
 AUTORANGE_KEY = 'autorange'
 AVERAGE_KEY = 'average'
 AVG_ALPHA_KEY = 'avg_alpha'
+USE_PERSISTENCE_KEY = 'use_persistence'
+PERSIST_ALPHA_KEY = 'persist_alpha'
 BASEBAND_FREQ_KEY = 'baseband_freq'
 BETA_KEY = 'beta'
 COLOR_MODE_KEY = 'color_mode'

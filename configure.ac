@@ -124,7 +124,7 @@ dnl AC_DISABLE_SHARED	dnl don't build shared libraries
 AC_ENABLE_SHARED	dnl do build shared libraries
 AC_DISABLE_STATIC	dnl don't build static libraries
 m4_ifdef([LT_INIT],[LT_INIT],[AC_PROG_LIBTOOL])
-GR_FORTRAN
+dnl GR_FORTRAN
 
 GR_NO_UNDEFINED		dnl do we need the -no-undefined linker flag
 GR_SCRIPTING

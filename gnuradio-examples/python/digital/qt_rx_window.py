@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'qt_rx_window.ui'
 #
-# Created: Fri Jul  3 01:03:19 2009
-#      by: PyQt4 UI code generator 4.4.3
+# Created: Tue May 11 21:03:07 2010
+#      by: PyQt4 UI code generator 4.6.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,29 +12,14 @@ from PyQt4 import QtCore, QtGui
 class Ui_DigitalWindow(object):
     def setupUi(self, DigitalWindow):
         DigitalWindow.setObjectName("DigitalWindow")
-        DigitalWindow.resize(1000, 816)
+        DigitalWindow.resize(999, 519)
         self.centralwidget = QtGui.QWidget(DigitalWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.gridLayout = QtGui.QGridLayout(self.centralwidget)
-        self.gridLayout.setObjectName("gridLayout")
-        self.sinkFrame = QtGui.QFrame(self.centralwidget)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(1)
-        sizePolicy.setHeightForWidth(self.sinkFrame.sizePolicy().hasHeightForWidth())
-        self.sinkFrame.setSizePolicy(sizePolicy)
-        self.sinkFrame.setMinimumSize(QtCore.QSize(800, 500))
-        self.sinkFrame.setFrameShape(QtGui.QFrame.StyledPanel)
-        self.sinkFrame.setFrameShadow(QtGui.QFrame.Raised)
-        self.sinkFrame.setObjectName("sinkFrame")
-        self.horizontalLayout_2 = QtGui.QHBoxLayout(self.sinkFrame)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.verticalLayout = QtGui.QVBoxLayout(self.centralwidget)
+        self.verticalLayout.setObjectName("verticalLayout")
         self.sinkLayout = QtGui.QHBoxLayout()
         self.sinkLayout.setObjectName("sinkLayout")
-        self.horizontalLayout_2.addLayout(self.sinkLayout)
-        self.gridLayout.addWidget(self.sinkFrame, 0, 0, 1, 1)
-        spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        self.gridLayout.addItem(spacerItem, 1, 0, 1, 1)
+        self.verticalLayout.addLayout(self.sinkLayout)
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setSizeConstraint(QtGui.QLayout.SetFixedSize)
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -113,15 +98,15 @@ class Ui_DigitalWindow(object):
         self.perEdit.setGeometry(QtCore.QRect(120, 90, 113, 23))
         self.perEdit.setObjectName("perEdit")
         self.verticalLayout_3.addWidget(self.rxPacketBox)
-        spacerItem1 = QtGui.QSpacerItem(20, 60, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        self.verticalLayout_3.addItem(spacerItem1)
+        spacerItem = QtGui.QSpacerItem(20, 60, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        self.verticalLayout_3.addItem(spacerItem)
         self.horizontalLayout.addLayout(self.verticalLayout_3)
-        spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem2)
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem1)
         self.verticalLayout_5 = QtGui.QVBoxLayout()
         self.verticalLayout_5.setObjectName("verticalLayout_5")
-        spacerItem3 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.verticalLayout_5.addItem(spacerItem3)
+        spacerItem2 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.verticalLayout_5.addItem(spacerItem2)
         self.closeButton = QtGui.QPushButton(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -133,10 +118,10 @@ class Ui_DigitalWindow(object):
         self.closeButton.setObjectName("closeButton")
         self.verticalLayout_5.addWidget(self.closeButton)
         self.horizontalLayout.addLayout(self.verticalLayout_5)
-        self.gridLayout.addLayout(self.horizontalLayout, 2, 0, 1, 1)
+        self.verticalLayout.addLayout(self.horizontalLayout)
         DigitalWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(DigitalWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1000, 24))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 999, 23))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")

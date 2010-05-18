@@ -1,5 +1,5 @@
 #
-# Copyright 2008 Free Software Foundation, Inc.
+# Copyright 2008,2010 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -36,6 +36,8 @@ import forms
 # Constants
 ##################################################
 DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'scope_rate', 30)
+PERSIST_ALPHA_MIN_EXP, PERSIST_ALPHA_MAX_EXP = -2, 0
+SLIDER_STEPS = 100
 DEFAULT_WIN_SIZE = (600, 300)
 COUPLING_MODES = (
 	('DC', False),
@@ -88,6 +90,37 @@ class control_panel(wx.Panel):
 		parent[SHOW_CONTROL_PANEL_KEY] = True
 		parent.subscribe(SHOW_CONTROL_PANEL_KEY, self.Show)
 		control_box = wx.BoxSizer(wx.VERTICAL)
+
+		##################################################
+		# Persistence
+		##################################################
+
+		forms.check_box(
+			sizer=control_box, parent=self, label='Persistence',
+			ps=parent, key=USE_PERSISTENCE_KEY,
+		)
+		#static text and slider for analog alpha
+		persist_alpha_text = forms.static_text(
+			sizer=control_box, parent=self, label='Analog Alpha',
+			converter=forms.float_converter(lambda x: '%.4f'%x),
+			ps=parent, key=PERSIST_ALPHA_KEY, width=50,
+		)
+		persist_alpha_slider = forms.log_slider(
+			sizer=control_box, parent=self,
+			min_exp=PERSIST_ALPHA_MIN_EXP,
+			max_exp=PERSIST_ALPHA_MAX_EXP,
+			num_steps=SLIDER_STEPS,
+			ps=parent, key=PERSIST_ALPHA_KEY,
+		)
+		for widget in (persist_alpha_text, persist_alpha_slider):
+			parent.subscribe(USE_PERSISTENCE_KEY, widget.Enable)
+			widget.Enable(parent[USE_PERSISTENCE_KEY])
+			parent.subscribe(USE_PERSISTENCE_KEY, widget.ShowItems)
+                        #allways show initially, so room is reserved for them
+			widget.ShowItems(True) # (parent[USE_PERSISTENCE_KEY])
+		
+                parent.subscribe(USE_PERSISTENCE_KEY, self._update_layout)
+
 		##################################################
 		# Axes Options
 		##################################################
@@ -364,6 +397,15 @@ class control_panel(wx.Panel):
 	def _on_decr_y_off(self, event):
 		self.parent[Y_OFF_KEY] = self.parent[Y_OFF_KEY] - self.parent[Y_PER_DIV_KEY]
 
+	##################################################
+	# subscriber handlers
+	##################################################
+        def _update_layout(self,key):
+          # Just ignore the key value we get
+          # we only need to now that the visability or size of something has changed
+          self.parent.Layout()
+          #self.parent.Fit()  
+
 ##################################################
 # Scope window with plotter and control panel
 ##################################################
@@ -388,6 +430,8 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		trigger_channel_key,
 		decimation_key,
 		msg_key,
+                use_persistence,
+                persist_alpha,
 	):
 		pubsub.pubsub.__init__(self)
 		#check num inputs
@@ -430,6 +474,8 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		self[TRIGGER_MODE_KEY] = gr.gr_TRIG_MODE_AUTO
 		self[TRIGGER_SLOPE_KEY] = gr.gr_TRIG_SLOPE_POS
 		self[T_FRAC_OFF_KEY] = 0.5
+		self[USE_PERSISTENCE_KEY] = use_persistence
+		self[PERSIST_ALPHA_KEY] = persist_alpha
 		for i in range(num_inputs):
 			self.proxy(common.index_key(AC_COUPLE_KEY, i), controller, common.index_key(ac_couple_key, i))
 		#init panel and plot
@@ -440,6 +486,8 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		self.plotter.enable_legend(True)
 		self.plotter.enable_point_label(True)
 		self.plotter.enable_grid_lines(True)
+                self.plotter.set_use_persistence(use_persistence)
+                self.plotter.set_persist_alpha(persist_alpha)
 		#setup the box with plot and controls
 		self.control_panel = control_panel(self)
 		main_box = wx.BoxSizer(wx.HORIZONTAL)
@@ -457,6 +505,9 @@ class scope_window(wx.Panel, pubsub.pubsub):
 			XY_MODE_KEY, AUTORANGE_KEY, T_FRAC_OFF_KEY,
 			TRIGGER_SHOW_KEY, XY_MARKER_KEY, X_CHANNEL_KEY, Y_CHANNEL_KEY,
 		]: self.subscribe(key, self.update_grid)
+                #register events for plotter settings
+		self.subscribe(USE_PERSISTENCE_KEY, self.plotter.set_use_persistence)
+		self.subscribe(PERSIST_ALPHA_KEY, self.plotter.set_persist_alpha)
 		#initial update
 		self.update_grid()
 
@@ -621,3 +672,4 @@ class scope_window(wx.Panel, pubsub.pubsub):
 			self.plotter.set_y_grid(self.get_y_min(), self.get_y_max(), self[Y_PER_DIV_KEY])
 		#redraw current sample
 		self.handle_samples()
+

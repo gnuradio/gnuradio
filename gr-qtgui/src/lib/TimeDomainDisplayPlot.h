@@ -21,7 +21,8 @@ public:
   TimeDomainDisplayPlot(QWidget*);
   virtual ~TimeDomainDisplayPlot();
 
-  void PlotNewData(const double* realDataPoints, const double* imagDataPoints, const int64_t numDataPoints);
+  void PlotNewData(const double* realDataPoints, const double* imagDataPoints, 
+		   const int64_t numDataPoints, const double timeInterval);
     
   void SetImaginaryDataVisible(const bool);
 				   
@@ -32,6 +33,8 @@ public:
 
 public slots:
   void resizeSlot( QSize *s );
+  void SetSampleRate(double sr, double units, 
+		     const std::string &strunits);
 
 protected slots:
   void LegendEntryChecked(QwtPlotItem *plotItem, bool on);
@@ -51,11 +54,11 @@ private:
   double* _imagDataPoints;
   double* _xAxisPoints;
 
+  double _sampleRate;
+
   timespec _lastReplot;
 
   int64_t _numPoints;
-
-  double _displayIntervalTime;
 };
 
 #endif /* TIME_DOMAIN_DISPLAY_PLOT_HPP */

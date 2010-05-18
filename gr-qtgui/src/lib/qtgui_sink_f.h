@@ -84,6 +84,8 @@ private:
 
   bool d_plotfreq, d_plotwaterfall, d_plotwaterfall3d, d_plottime, d_plotconst;
 
+  double d_update_time;
+
   QWidget *d_parent;
   SpectrumGUIClass *d_main_gui; 
 
@@ -108,6 +110,8 @@ public:
 			      double ymin, double ymax);
   void set_constellation_pen_size(int size);
   void set_frequency_axis(double min, double max);
+
+  void set_update_time(double t);
 
   QApplication *d_qApplication;
   qtgui_obj *d_object;

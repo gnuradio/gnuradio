@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>657</width>
+    <width>712</width>
     <height>543</height>
    </rect>
   </property>
@@ -183,7 +183,7 @@
            <property name="minimumSize">
             <size>
              <width>400</width>
-             <height>332</height>
+             <height>350</height>
             </size>
            </property>
            <property name="sizeIncrement">
@@ -222,31 +222,6 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="3">
-            <widget class="QLabel" name="PowerLabel">
-             <property name="minimumSize">
-              <size>
-               <width>50</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>50</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>Power</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignCenter</set>
-             </property>
-             <property name="wordWrap">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="1">
             <widget class="QPushButton" name="MaxHoldResetBtn">
              <property name="sizePolicy">
@@ -266,7 +241,7 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="4">
+           <item row="1" column="3">
             <widget class="QLabel" name="AvgLabel">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -298,33 +273,8 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="4">
-            <widget class="QSpinBox" name="AvgLineEdit"/>
-           </item>
            <item row="2" column="3">
-            <widget class="QLineEdit" name="PowerLineEdit">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>50</width>
-               <height>0</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>50</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="text">
-              <string>1</string>
-             </property>
-            </widget>
+            <widget class="QSpinBox" name="AvgLineEdit"/>
            </item>
            <item row="1" column="2">
             <spacer name="horizontalSpacer_2">
@@ -836,22 +786,6 @@
     <hint type="sourcelabel">
      <x>107</x>
      <y>349</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>PowerLineEdit</sender>
-   <signal>textChanged(QString)</signal>
-   <receiver>SpectrumDisplayForm</receiver>
-   <slot>PowerLineEdit_textChanged(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>482</x>
-     <y>344</y>
     </hint>
     <hint type="destinationlabel">
      <x>20</x>

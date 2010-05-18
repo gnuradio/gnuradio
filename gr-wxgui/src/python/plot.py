@@ -6,7 +6,7 @@
 #
 # Created:     2003/11/03
 # RCS-ID:      $Id$
-# Copyright:   (c) 2002,2007
+# Copyright:   (c) 2002,2007,2010
 # Licence:     Use as you wish.
 #-----------------------------------------------------------------------------
 # 12/15/2003 - Jeff Grimmett (grimmtooth@softhome.net)
@@ -36,6 +36,9 @@
 #   
 # May 27, 2007 Johnathan Corgan (jcorgan@corganenterprises.com)
 #   - Converted from numarray to numpy
+#
+# Apr 23, 2010 Martin Dudok van Heel (http://www.olifantasia.com/gnuradio/contact_olifantasia.gif)
+#   - Added Persistence option (emulate after glow of an analog CRT display using IIR)
 
 """
 This is a simple light weight plotting module that can be used with
@@ -422,6 +425,11 @@ class PlotCanvas(wx.Window):
 
     def __init__(self, parent, id = -1, pos=wx.DefaultPosition,
             size=wx.DefaultSize, style= wx.DEFAULT_FRAME_STYLE, name= ""):
+
+        self.use_persistence=False
+        self.alpha=0.3
+        self.decimation=10
+        self.decim_counter=0
         """Constucts a window, which can be a child of a frame, dialog or
         any other non-control window"""
     
@@ -488,6 +496,14 @@ class PlotCanvas(wx.Window):
         # platforms at initialization, but little harm done.
         self.OnSize(None) # sets the initial size based on client size
                           # UNCONDITIONAL, needed to create self._Buffer
+
+
+    def set_use_persistence(self, enable):
+        self.use_persistence = enable
+
+    def set_persist_alpha(self, persist_alpha):
+        self.alpha = persist_alpha
+
         
     # SaveFile
     def SaveFile(self, fileName= ''):
@@ -791,12 +807,19 @@ class PlotCanvas(wx.Window):
             
         if dc == None:
             # sets new dc and clears it 
-            dc = wx.BufferedDC(wx.ClientDC(self), self._Buffer)
-            dc.Clear()
-            
+            if self.use_persistence:
+              dc = wx.MemoryDC()
+              dc.SelectObject(self._Buffer)
+              dc.Clear()
+            else:
+              dc = wx.BufferedDC(wx.ClientDC(self), self._Buffer)
+              dc.Clear() 
+           
         dc.BeginDrawing()
         # dc.Clear()
-        
+ 
+
+       
         # set font size for every thing but title and legend
         dc.SetFont(self._getFont(self._fontSizeAxis))
 
@@ -817,6 +840,15 @@ class PlotCanvas(wx.Window):
             p2= _numpy.array([xAxis[1], yAxis[1]])     # upper right corner user scale (xmax,ymax)
 
         self.last_draw = (graphics, xAxis, yAxis)       # saves most recient values
+
+        if False:
+          ptx,pty,rectWidth,rectHeight= self._point2ClientCoord(p1, p2)
+          #dc.SetPen(wx.Pen(wx.BLACK))
+          dc.SetBrush(wx.Brush( wx.BLACK, wx.SOLID ) ) #wx.SOLID wx.TRANSPARENT ) )
+          #dc.SetLogicalFunction(wx.INVERT) #wx.XOR wx.INVERT
+          dc.DrawRectangle( ptx,pty, rectWidth,rectHeight)
+          #dc.SetBrush(wx.Brush( wx.WHITE, wx.SOLID ) ) 
+          #dc.SetLogicalFunction(wx.COPY)
 
         # Get ticks and textExtents for axis if required
         if self._xSpec is not 'none':
@@ -874,8 +906,11 @@ class PlotCanvas(wx.Window):
         scale = (self.plotbox_size-textSize_scale) / (p2-p1)* _numpy.array((1,-1))
         shift = -p1*scale + self.plotbox_origin + textSize_shift * _numpy.array((1,-1))
         self._pointScale= scale  # make available for mouse events
-        self._pointShift= shift        
+        self._pointShift= shift
+
+        #dc.SetLogicalFunction(wx.INVERT) #wx.XOR wx.INVERT      
         self._drawAxes(dc, p1, p2, scale, shift, xticks, yticks)
+        #dc.SetLogicalFunction(wx.COPY) 
         
         graphics.scaleAndShift(scale, shift)
         graphics.setPrinterScale(self.printerScale)  # thicken up lines and markers if printing
@@ -885,11 +920,44 @@ class PlotCanvas(wx.Window):
         dc.SetClippingRegion(ptx,pty,rectWidth,rectHeight)
         # Draw the lines and markers
         #start = _time.clock()
+
         graphics.draw(dc)
         # print "entire graphics drawing took: %f second"%(_time.clock() - start)
         # remove the clipping region
         dc.DestroyClippingRegion()
         dc.EndDrawing()
+
+
+        if self.use_persistence:
+          dc=None
+          self._Buffer.CopyToBuffer(self._Bufferarray) #, format=wx.BitmapBufferFormat_RGB, stride=-1)
+          ## do the IIR filter
+          alpha_int=int(float(self.alpha*256))
+          if True:
+            _numpy.add(self._Bufferarray,0,self._Buffer3array)
+            _numpy.multiply(self._Buffer3array,alpha_int,self._Buffer3array)
+            _numpy.multiply(self._Buffer2array,(256-alpha_int),self._Buffer2array)
+            _numpy.add(self._Buffer3array,self._Buffer2array,self._Buffer2array)
+            _numpy.right_shift(self._Buffer2array,8,self._Buffer2array)
+          elif False:
+            self._Buffer2array=(self._Bufferarray.astype(_numpy.uint32) *alpha_int + self._Buffer2array*(256-alpha_int)).__rshift__(8)
+          elif False:
+            self._Buffer2array *=(256-alpha_int)
+            self._Buffer2array +=self._Bufferarray.astype(_numpy.uint32)*alpha_int
+            self._Buffer2array /=256
+
+          ##copy back to image buffer 
+          self._Buffer2.CopyFromBuffer(self._Buffer2array.astype(_numpy.uint8)) #, format=wx.BitmapBufferFormat_RGB, stride=-1)
+
+          #draw to the screen
+          #self.decim_counter=self.decim_counter+1
+          if True: #self.decim_counter>self.decimation:
+            #self.decim_counter=0
+            dc2 = wx.ClientDC( self )
+            dc2.BeginDrawing()
+            dc2.DrawBitmap(self._Buffer2, 0, 0, False)
+            #dc2.DrawBitmap(self._Buffer, 0, 0, False)
+            dc2.EndDrawing()
         
     def Redraw(self, dc= None):
         """Redraw the existing plot."""
@@ -1031,6 +1099,8 @@ class PlotCanvas(wx.Window):
         if self.last_PointLabel != None:
             self._drawPointLabel(self.last_PointLabel) #erase old
             self.last_PointLabel = None
+
+        #paint current buffer to screen
         dc = wx.BufferedPaintDC(self, self._Buffer)
 
     def OnSize(self,event):
@@ -1041,7 +1111,23 @@ class PlotCanvas(wx.Window):
         # Make new offscreen bitmap: this bitmap will always have the
         # current drawing in it, so it can be used to save the image to
         # a file, or whatever.
-        self._Buffer = wx.EmptyBitmap(Size[0],Size[1])
+        self._Buffer = wx.EmptyBitmap(Size[0],Size[1],24)
+
+        
+        if True: #self.use_persistence:
+          #self._Bufferarray = _numpy.zeros((Size[0], Size[1],3), dtype=_numpy.uint8)
+          self._Bufferarray = _numpy.zeros((Size[0]* Size[1]*3), dtype=_numpy.uint8)
+
+          # Make new second offscreen bitmap: this bitmap will always have the
+          # last drawing in it, so it can be used to do display time dependent processing 
+          # like averaging (IIR) or show differences between updates
+          self._Buffer2 = wx.EmptyBitmap(Size[0],Size[1],24)
+          # now the extra buffers for the IIR processing
+          # note the different datatype uint32
+          self._Buffer2array = _numpy.zeros((Size[0]* Size[1]*3), dtype=_numpy.uint32) #dtype=_numpy.float
+          self._Buffer3array = _numpy.zeros((Size[0]* Size[1]*3), dtype=_numpy.uint32) #dtype=_numpy.float
+          # optional you can set the ufunct buffer size to improve speed
+          #_numpy.setbufsize(16*((Size[0]* Size[1]*3)/16 +1))
         self._setSize()
 
         self.last_PointLabel = None        #reset pointLabel

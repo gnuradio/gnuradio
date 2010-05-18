@@ -50,6 +50,12 @@ u2_fxpt_freq_round_to_int(u2_fxpt_freq_t fx)
   return (int)((fx+(1<<(U2_FPF_RP-1)))>>U2_FPF_RP);
 }
 
+static inline unsigned int
+u2_fxpt_freq_round_to_uint(u2_fxpt_freq_t fx)
+{
+  return (unsigned int)((fx+(1<<(U2_FPF_RP-1)))>>U2_FPF_RP);
+}
+
 static inline double
 u2_fxpt_freq_to_double(u2_fxpt_freq_t fx)
 {

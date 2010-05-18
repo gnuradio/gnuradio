@@ -66,8 +66,7 @@ public:
 
   QwtText label(double value) const
   {
-    return QString("%1").arg((value + GetCenterFrequency()) / ((GetFrequencyPrecision() == 0) ? 1.0 : 1000.0), 
-			     0, 'f', GetFrequencyPrecision());
+    return QString("%1").arg(value, 0, 'f', GetFrequencyPrecision());
   }
 
   virtual void initiateUpdate()
@@ -161,7 +160,8 @@ private:
 
 };
 
-class WaterfallZoomer: public QwtPlotZoomer, public TimeScaleData, public FreqOffsetAndPrecisionClass
+class WaterfallZoomer: public QwtPlotZoomer, public TimeScaleData, 
+		       public FreqOffsetAndPrecisionClass
 {
 public:
   WaterfallZoomer(QwtPlotCanvas* canvas, const unsigned int freqPrecision)
@@ -180,6 +180,11 @@ public:
     updateDisplay();
   }
 
+  void SetUnitType(const std::string &type)
+  {
+    _unitType = type;
+  }
+
 protected:
   virtual QwtText trackerText( const QwtDoublePoint& p ) const 
   {
@@ -193,10 +198,14 @@ protected:
 				  timeTm.tm_mday, timeTm.tm_hour, timeTm.tm_min,
 				  timeTm.tm_sec, lineTime.tv_nsec/1000000));
 
-    QwtText t(QString("%1 %2, %3").arg((p.x() + GetCenterFrequency()) / ((GetFrequencyPrecision() == 0) ? 1.0 : 1000.0), 0, 'f', GetFrequencyPrecision()).arg( (GetFrequencyPrecision() == 0) ? "Hz" : "kHz").arg(yLabel));
-
+    QwtText t(QString("%1 %2, %3").
+	      arg(p.x(), 0, 'f', GetFrequencyPrecision()).
+	      arg(_unitType.c_str()).arg(yLabel));
     return t;
   }
+
+private:
+  std::string _unitType;
 };
 
 
@@ -215,8 +224,6 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
   
   resize(parent->width(), parent->height());
   _numPoints = 1024;
-
-  _displayIntervalTime = (1.0/5.0); // 1/5 of a second between updates
 
   _waterfallData = new WaterfallData(_startFrequency, _stopFrequency, _numPoints, 200);
 
@@ -282,6 +289,7 @@ WaterfallDisplayPlot::WaterfallDisplayPlot(QWidget* parent)
 WaterfallDisplayPlot::~WaterfallDisplayPlot()
 {
   delete _waterfallData;
+  delete d_spectrogram;
 }
 
 void 
@@ -289,6 +297,8 @@ WaterfallDisplayPlot::Reset()
 {
   _waterfallData->ResizeData(_startFrequency, _stopFrequency, _numPoints);
   _waterfallData->Reset();
+
+  setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
 
   // Load up the new base zoom settings
   QwtDoubleRect newSize = _zoomer->zoomBase();
@@ -310,27 +320,32 @@ WaterfallDisplayPlot::SetFrequencyRange(const double constStartFreq,
   double stopFreq = constStopFreq / units;
   double centerFreq = constCenterFreq / units;
 
+  _useCenterFrequencyFlag = useCenterFrequencyFlag;
+
+  if(_useCenterFrequencyFlag){
+    startFreq = (startFreq + centerFreq);
+    stopFreq = (stopFreq + centerFreq);
+  }
+
+  bool reset = false;
+  if((startFreq != _startFrequency) || (stopFreq != _stopFrequency))
+    reset = true;
+
   if(stopFreq > startFreq) {
-    _startFrequency = 1000*startFreq;
-    _stopFrequency = 1000*stopFreq;
-
-    setAxisScale(QwtPlot::xBottom, _startFrequency, _stopFrequency);
-
+    _startFrequency = startFreq;
+    _stopFrequency = stopFreq;
+ 
     if((axisScaleDraw(QwtPlot::xBottom) != NULL) && (_zoomer != NULL)){
-      WaterfallFreqDisplayScaleDraw* freqScale = ((WaterfallFreqDisplayScaleDraw*)axisScaleDraw(QwtPlot::xBottom));
-      freqScale->SetCenterFrequency(centerFreq);
-      ((WaterfallZoomer*)_zoomer)->SetCenterFrequency(centerFreq);
-
-      freqScale->SetFrequencyPrecision( 2 );
-      ((WaterfallZoomer*)_zoomer)->SetFrequencyPrecision( 2 );
+      double display_units = ceil(log10(units)/2.0);
+      setAxisScaleDraw(QwtPlot::xBottom, new WaterfallFreqDisplayScaleDraw(display_units));
       setAxisTitle(QwtPlot::xBottom, QString("Frequency (%1)").arg(strunits.c_str()));
-    }
 
-    Reset();
+      if(reset) {
+	Reset();
+      }
 
-    // Only replot if screen is visible
-    if(isVisible()){
-      replot();
+      ((WaterfallZoomer*)_zoomer)->SetFrequencyPrecision(display_units);
+      ((WaterfallZoomer*)_zoomer)->SetUnitType(strunits);
     }
   }
 }
@@ -350,50 +365,46 @@ WaterfallDisplayPlot::GetStopFrequency() const
 
 void
 WaterfallDisplayPlot::PlotNewData(const double* dataPoints, 
-				       const int64_t numDataPoints,
-				       const double timePerFFT,
-				       const timespec timestamp,
-				       const int droppedFrames)
+				  const int64_t numDataPoints,
+				  const double timePerFFT,
+				  const timespec timestamp,
+				  const int droppedFrames)
 {
   if(numDataPoints > 0){
     if(numDataPoints != _numPoints){
       _numPoints = numDataPoints;
-
+      
       Reset();
-
+      
       d_spectrogram->invalidateCache();
       d_spectrogram->itemChanged();
-
+      
       if(isVisible()){
 	replot();
       }
-
+      
       _lastReplot = get_highres_clock();
     }
 
-    _waterfallData->addFFTData(dataPoints, numDataPoints, droppedFrames);
-    _waterfallData->IncrementNumLinesToUpdate();
-
-    QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
-    timeScale->SetSecondsPerLine(timePerFFT);
-    timeScale->SetZeroTime(timestamp);
-
-    ((WaterfallZoomer*)_zoomer)->SetSecondsPerLine(timePerFFT);
-    ((WaterfallZoomer*)_zoomer)->SetZeroTime(timestamp);
-  }
-
-  // Allow at least a 50% duty cycle
-  if(diff_timespec(get_highres_clock(), _lastReplot) > _displayIntervalTime){
-
-    d_spectrogram->invalidateCache();
-    d_spectrogram->itemChanged();
-
-    // Only update when window is visible
-    if(isVisible()){
+    if(diff_timespec(get_highres_clock(), _lastReplot) > timePerFFT) {
+      //FIXME: We may want to average the data between these updates to smooth display
+      _waterfallData->addFFTData(dataPoints, numDataPoints, droppedFrames);
+      _waterfallData->IncrementNumLinesToUpdate();
+      
+      QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
+      timeScale->SetSecondsPerLine(timePerFFT);
+      timeScale->SetZeroTime(timestamp);
+      
+      ((WaterfallZoomer*)_zoomer)->SetSecondsPerLine(timePerFFT);
+      ((WaterfallZoomer*)_zoomer)->SetZeroTime(timestamp);
+      
+      d_spectrogram->invalidateCache();
+      d_spectrogram->itemChanged();
+      
       replot();
-    }
 
-    _lastReplot = get_highres_clock();
+      _lastReplot = get_highres_clock();
+    }
   }
 }
 
@@ -412,8 +423,6 @@ WaterfallDisplayPlot::SetIntensityRange(const double minIntensity,
 void
 WaterfallDisplayPlot::replot()
 {
-  const timespec startTime = get_highres_clock();
-
   QwtTimeScaleDraw* timeScale = (QwtTimeScaleDraw*)axisScaleDraw(QwtPlot::yLeft);
   timeScale->initiateUpdate();
 
@@ -435,14 +444,6 @@ WaterfallDisplayPlot::replot()
   }
 
   QwtPlot::replot();
-
-  double differenceTime = (diff_timespec(get_highres_clock(), startTime));
-  
-  // Require at least a 5% duty cycle
-  differenceTime *= 19.0;
-  if(differenceTime > (1.0/5.0)){
-    _displayIntervalTime = differenceTime;
-  }
 }
 
 void

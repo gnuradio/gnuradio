@@ -69,9 +69,9 @@ private:
 
   timespec _lastReplot;
 
-  int64_t _numPoints;
+  bool _useCenterFrequencyFlag;
 
-  double _displayIntervalTime;
+  int64_t _numPoints;
 
   int _intensityColorMapType;
   QColor _userDefinedLowIntensityColor;

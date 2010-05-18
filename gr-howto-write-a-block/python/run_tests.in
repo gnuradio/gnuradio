@@ -28,6 +28,30 @@ echo $PYTHONPATH
 
 export PYTHONPATH
 
+case "@host_os@" in
+  darwin*)
+    # FIXME: Code for Darwin guessed but not tested
+    # Special Code for executing on Darwin / Mac OS X only
+    if [ "$DYLD_LIBRARY_PATH" = "" ]
+    then
+	DYLD_LIBRARY_PATH=$libbld/.libs
+    else
+	DYLD_LIBRARY_PATH=$libbld/.libs:$DYLD_LIBRARY_PATH
+    fi
+    export DYLD_LIBRARY_PATH
+    ;;
+  cygwin*|win*|mingw*)
+    # Special Code for executing on Win32 variants only
+    if [ "$PATH" = "" ]
+    then
+	PATH=$libbld/.libs
+    else
+	PATH=$libbld/.libs:$PATH
+    fi
+    export PATH
+    ;;
+esac
+
 #
 # This is the simple part...
 # Run everything that matches qa_*.py and return the final result.

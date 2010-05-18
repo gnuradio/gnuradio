@@ -21,13 +21,13 @@
 
 include $(top_srcdir)/Makefile.common
 
-EXTRA_DIST			= praxis.txt simpson.h
+EXTRA_DIST			= praxis.txt simpson.h objective_fct.c gen_interpolator_taps.c simpson.c praxis.f
 
-if ENABLE_FORTRAN
-noinst_PROGRAMS			= gen_interpolator_taps
-noinst_HEADERS			= simpson.h
-
-gen_interpolator_taps_SOURCES	= gen_interpolator_taps.c objective_fct.c simpson.c praxis.f
-gen_interpolator_taps_LDADD	= $(FLIBS) -lm
-
-endif
+# if ENABLE_FORTRAN
+# noinst_PROGRAMS			= gen_interpolator_taps
+# noinst_HEADERS			= simpson.h
+# 
+# gen_interpolator_taps_SOURCES	= gen_interpolator_taps.c objective_fct.c simpson.c praxis.f
+# gen_interpolator_taps_LDADD	= $(FLIBS) -lm
+#
+# endif
