@@ -92,6 +92,10 @@ public:
         return _dev->get_rx_antennas();
     }
 
+    uhd::usrp::simple_usrp::sptr get_device(void){
+        return _dev;
+    }
+
 /***********************************************************************
  * Work
  **********************************************************************/
@@ -104,29 +108,12 @@ public:
         //this prevents streaming before the runtime is ready
         if (not _is_streaming) set_streaming(true);
 
-        size_t total_items_read = 0;
-        uhd::rx_metadata_t metadata;
+        uhd::rx_metadata_t metadata; //not passed out of this block
 
-        //call until the output items are all filled
-        //or an exit condition below is encountered
-        while(total_items_read < size_t(noutput_items)){
-            size_t items_read = _dev->get_device()->recv(
-                boost::asio::buffer(
-                    (uint8_t *)output_items[0]+(total_items_read*_type.size),
-                    (noutput_items-total_items_read)*_type.size
-                ), metadata, _type
-            );
-            total_items_read += items_read;
-
-            //we timed out, get out of here
-            if (items_read == 0) break;
-        }
-
-        return total_items_read;
-    }
-
-    uhd::usrp::simple_usrp::sptr get_device(void){
-        return _dev;
+        return _dev->get_device()->recv(
+            boost::asio::buffer(output_items[0], noutput_items*_type.size),
+            metadata, _type, uhd::device::RECV_MODE_FULL_BUFF
+        );
     }
 
 private:

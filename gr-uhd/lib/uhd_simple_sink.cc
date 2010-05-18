@@ -91,6 +91,10 @@ public:
         return _dev->get_tx_antennas();
     }
 
+    uhd::usrp::simple_usrp::sptr get_device(void){
+        return _dev;
+    }
+
 /***********************************************************************
  * Work
  **********************************************************************/
@@ -99,26 +103,13 @@ public:
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
     ){
-        size_t total_items_sent = 0;
         uhd::tx_metadata_t metadata;
         metadata.start_of_burst = true;
 
-        //call until the input items are all sent
-        while(total_items_sent < size_t(noutput_items)){
-            size_t items_sent = _dev->get_device()->send(
-                boost::asio::buffer(
-                    (uint8_t *)input_items[0]+(total_items_sent*_type.size),
-                    (noutput_items-total_items_sent)*_type.size
-                ), metadata, _type
-            );
-            total_items_sent += items_sent;
-        }
-
-        return noutput_items;
-    }
-
-    uhd::usrp::simple_usrp::sptr get_device(void){
-        return _dev;
+        return _dev->get_device()->send(
+            boost::asio::buffer(input_items[0], noutput_items*_type.size),
+            metadata, _type, uhd::device::SEND_MODE_FULL_BUFF
+        );
     }
 
 protected:
