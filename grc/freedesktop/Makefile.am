@@ -30,7 +30,7 @@ dist_ourdata_DATA = \
 	grc-icon-48.png \
 	grc-icon-32.png \
 	gnuradio-grc.xml \
-	gnuradio-grc.desktop \
+	gnuradio-gnuradio-companion.desktop \
 	gnuradio-usrp2_probe.desktop \
 	gnuradio-usrp_probe.desktop
 

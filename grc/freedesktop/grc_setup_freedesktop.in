@@ -8,7 +8,7 @@
 ##################################################
 
 ICON_SIZES="32 48 64 128 256"
-MENU_ITEMS="grc usrp2_probe usrp_probe"
+MENU_ITEMS="gnuradio-companion usrp2_probe usrp_probe"
 if [ -n "$2" ]; then
 	SRCDIR="$2"
 else
