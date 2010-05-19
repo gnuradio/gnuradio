@@ -182,10 +182,6 @@ if __name__ == '__main__':
         sys.stderr.write (
             "You must specify the install prefix with -p PREFIX\n")
         sys.exit (1)
-    if not os.path.isdir(options.prefix):
-        sys.stderr.write (
-            "PREFIX dir (" + options.prefix + "), does not exist\n")
-        sys.exit (1)
 
     ihx_filename = args[0]
 
