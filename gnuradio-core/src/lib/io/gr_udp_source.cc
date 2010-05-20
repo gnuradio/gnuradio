@@ -250,8 +250,6 @@ gr_udp_source::work (int noutput_items,
   // Use select() to determine when socket is readable
   fd_set readfds;
   timeval timeout;
-  timeout.tv_sec = 1;
-  timeout.tv_usec = 0;
 #endif
   
   while(1) {
@@ -260,6 +258,8 @@ gr_udp_source::work (int noutput_items,
 #if USE_SELECT
     // RCV_TIMEO doesn't work on all systems (e.g., Cygwin)
     // use select() instead of, or in addition to RCV_TIMEO
+    timeout.tv_sec = 1;	  // Init timeout each iteration.  Select can modify it.
+    timeout.tv_usec = 0;
     FD_ZERO(&readfds);
     FD_SET(d_socket, &readfds);
     r = select(FD_SETSIZE, &readfds, NULL, NULL, &timeout);
