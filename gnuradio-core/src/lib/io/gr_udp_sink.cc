@@ -221,6 +221,8 @@ void gr_udp_sink::connect( const char *host, unsigned short port )
     hints.ai_protocol = IPPROTO_UDP;
     char port_str[12];
     sprintf( port_str, "%d", port );
+
+    // FIXME leaks if report_error throws below
     int ret = getaddrinfo( host, port_str, &hints, &ip_dst );
     if( ret != 0 )
       report_error("gr_udp_source/getaddrinfo",

@@ -128,11 +128,14 @@ gr_udp_source::gr_udp_source(size_t itemsize, const char *host,
   hints.ai_flags = AI_PASSIVE;
   char port_str[12];
   sprintf( port_str, "%d", port );
+
+  // FIXME leaks if report_error throws below
   ret = getaddrinfo( host, port_str, &hints, &ip_src );
   if( ret != 0 )
     report_error("gr_udp_source/getaddrinfo",
 		 "can't initialize source socket" );
 
+  // FIXME leaks if report_error throws below
   d_temp_buff = new char[d_payload_size];   // allow it to hold up to payload_size bytes
 
   // create socket
