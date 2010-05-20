@@ -281,6 +281,11 @@ gr_udp_source::work (int noutput_items,
     // This is a non-blocking call with a timeout set in the constructor
     r = recv(d_socket, d_temp_buff, d_payload_size, 0);  // get the entire payload or the what's available
 
+    // If r > 0, round it down to a multiple of d_itemsize 
+    // (If sender is broken, don't propagate problem)
+    if (r > 0)
+      r = (r/d_itemsize) * d_itemsize;
+
     // Check if there was a problem; forget it if the operation just timed out
     if(r == -1) {
       if( is_error(EAGAIN) ) {  // handle non-blocking call timeout
