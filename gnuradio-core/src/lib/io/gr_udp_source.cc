@@ -104,7 +104,7 @@ gr_udp_source::gr_udp_source(size_t itemsize, const char *host,
 		   gr_make_io_signature(0, 0, 0),
 		   gr_make_io_signature(1, 1, itemsize)),
     d_itemsize(itemsize), d_payload_size(payload_size),
-    d_eof(eof), d_wait(wait), d_residual(0), d_temp_offset(0)
+    d_eof(eof), d_wait(wait), d_socket(-1), d_residual(0), d_temp_offset(0)
 {
   int ret = 0;
 
@@ -194,14 +194,14 @@ gr_udp_source::~gr_udp_source ()
 {
   delete [] d_temp_buff;
 
-  if (d_socket){
+  if (d_socket != -1){
     shutdown(d_socket, SHUT_RDWR);
 #if defined(USING_WINSOCK)
     closesocket(d_socket);
 #else
     ::close(d_socket);
 #endif
-    d_socket = 0;
+    d_socket = -1;
   }
 
 #if defined(USING_WINSOCK) // for Windows (with MinGW)

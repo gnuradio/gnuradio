@@ -97,7 +97,7 @@ gr_udp_sink::gr_udp_sink (size_t itemsize,
 		   gr_make_io_signature (1, 1, itemsize),
 		   gr_make_io_signature (0, 0, 0)),
     d_itemsize (itemsize), d_payload_size(payload_size), d_eof(eof),
-    d_connected(false)
+    d_socket(-1), d_connected(false)
 {
 #if defined(USING_WINSOCK) // for Windows (with MinGW)
   // initialize winsock DLL
@@ -145,14 +145,14 @@ gr_udp_sink::~gr_udp_sink ()
   if (d_connected)
     disconnect();
 
-  if (d_socket){
+  if (d_socket != -1){
     shutdown(d_socket, SHUT_RDWR);
 #if defined(USING_WINSOCK)
     closesocket(d_socket);
 #else
     ::close(d_socket);
 #endif
-    d_socket = 0;
+    d_socket = -1;
   }
 
 #if defined(USING_WINSOCK) // for Windows (with MinGW)
