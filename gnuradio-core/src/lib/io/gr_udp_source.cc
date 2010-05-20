@@ -243,7 +243,10 @@ gr_udp_source::work (int noutput_items,
     // Update indexing of amount of bytes left in the buffer
     d_residual -= nbytes;
     d_temp_offset += nbytes;
-    // FIXME? Returning here could simplify life...
+
+    // Return now with what we've got.
+    assert(nbytes % d_itemsize == 0);
+    return nbytes/d_itemsize;
   }
 
 #if USE_SELECT
