@@ -242,7 +242,8 @@ gr_udp_source::work (int noutput_items,
     
     // Update indexing of amount of bytes left in the buffer
     d_residual -= nbytes;
-    d_temp_offset = d_temp_offset+d_residual;
+    d_temp_offset += nbytes;
+    // FIXME? Returning here could simplify life...
   }
 
 #if USE_SELECT
