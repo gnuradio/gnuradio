@@ -249,18 +249,14 @@ gr_udp_source::work (int noutput_items,
     return nbytes/d_itemsize;
   }
 
-#if USE_SELECT
-  // Use select() to determine when socket is readable
-  fd_set readfds;
-  timeval timeout;
-#endif
-  
   while(1) {
     // get the data into our output buffer and record the number of bytes
 
 #if USE_SELECT
     // RCV_TIMEO doesn't work on all systems (e.g., Cygwin)
     // use select() instead of, or in addition to RCV_TIMEO
+    fd_set readfds;
+    timeval timeout;
     timeout.tv_sec = 1;	  // Init timeout each iteration.  Select can modify it.
     timeout.tv_usec = 0;
     FD_ZERO(&readfds);
