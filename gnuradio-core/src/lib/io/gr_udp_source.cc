@@ -32,6 +32,12 @@
 
 #if defined(HAVE_NETDB_H)
 #include <netdb.h>
+#ifdef HAVE_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
+#endif
 typedef void* optval_t;
 
 // ntohs() on FreeBSD may require both netinet/in.h and arpa/inet.h, in order

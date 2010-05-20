@@ -31,7 +31,12 @@
 #include <string.h>
 #if defined(HAVE_NETDB_H)
 #include <netdb.h>
+#ifdef HAVE_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>  //usually included by <netdb.h>?
+#endif
 typedef void* optval_t;
 #elif defined(HAVE_WINDOWS_H)
 // if not posix, assume winsock
