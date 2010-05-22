@@ -58,7 +58,7 @@ class Generator(object):
 	def write(self):
 		#do throttle warning
 		all_keys = ' '.join(map(lambda b: b.get_key(), self._flow_graph.get_enabled_blocks()))
-		if ('usrp' not in all_keys) and ('audio' not in all_keys) and ('throttle' not in all_keys) and self._generate_options != 'hb':
+		if ('usrp' not in all_keys) and ('uhd' not in all_keys) and ('audio' not in all_keys) and ('throttle' not in all_keys) and self._generate_options != 'hb':
 			Messages.send_warning('''\
 This flow graph may not have flow control: no audio or usrp blocks found. \
 Add a Misc->Throttle block to your flow graph to avoid CPU congestion.''')
