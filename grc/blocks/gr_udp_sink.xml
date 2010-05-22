@@ -8,7 +8,7 @@
 	<name>UDP Sink</name>
 	<key>gr_udp_sink</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.udp_sink($type.size*$vlen, $ipaddr_local, $port_local, $ipaddr_remote, $port_remote, $mtu)</make>
+	<make>gr.udp_sink($type.size*$vlen, $ipaddr, $port, $psize, $eof)</make>
 	<callback>set_mtu($mtu)</callback>
 	<param>
 		<name>Input Type</name>
@@ -41,34 +41,26 @@
 		</option>
 	</param>
 	<param>
-		<name>Local IP Address</name>
-		<key>ipaddr_local</key>
-		<value>127.0.0.1</value>
+		<name>Destination IP Address</name>
+		<key>ipaddr</key>
 		<type>string</type>
 	</param>
 	<param>
-		<name>Local Port</name>
-		<key>port_local</key>
-		<value>0</value>
+		<name>Destination Port</name>
+		<key>port</key>
 		<type>int</type>
 	</param>
 	<param>
-		<name>Remote IP Address</name>
-		<key>ipaddr_remote</key>
-		<value>127.0.0.1</value>
-		<type>string</type>
-	</param>
-	<param>
-		<name>Remote Port</name>
-		<key>port_remote</key>
-		<value>1234</value>
+		<name>Payload Size</name>
+		<key>psize</key>
+		<value>1472</value>
 		<type>int</type>
 	</param>
 	<param>
-		<name>MTU</name>
-		<key>mtu</key>
-		<value>1024</value>
-		<type>int</type>
+	        <name>Send Null Pkt as EOF</name>
+		<key>eof</key>
+		<value>True</value>
+		<type>bool</type>
 	</param>
 	<param>
 		<name>Vec Length</name>
