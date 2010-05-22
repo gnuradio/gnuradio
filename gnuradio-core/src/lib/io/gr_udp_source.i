@@ -25,13 +25,13 @@ GR_SWIG_BLOCK_MAGIC(gr,udp_source)
 gr_udp_source_sptr 
 gr_make_udp_source (size_t itemsize, const char *host, 
 		    unsigned short port, int payload_size=1472,
-		    bool eof=true, bool wait=true);
+		    bool eof=true, bool wait=true) throw (std::runtime_error);
 
 class gr_udp_source : public gr_sync_block
 {
  protected:
   gr_udp_source (size_t itemsize, const char *host, 
-		 unsigned short port, int payload_size, bool eof, bool wait);
+		 unsigned short port, int payload_size, bool eof, bool wait) throw (std::runtime_error);
 
  public:
   ~gr_udp_source ();

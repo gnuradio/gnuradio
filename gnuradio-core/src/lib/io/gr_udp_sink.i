@@ -26,14 +26,15 @@ GR_SWIG_BLOCK_MAGIC(gr,udp_sink)
 gr_udp_sink_sptr 
 gr_make_udp_sink (size_t itemsize, 
 		  const char *host, unsigned short port,
-		  int payload_size=1472, bool eof=true);
+		  int payload_size=1472, bool eof=true) throw (std::runtime_error);
 
 class gr_udp_sink : public gr_sync_block
 {
  protected:
   gr_udp_sink (size_t itemsize, 
 	       const char *host, unsigned short port,
-	       int payload_size, bool eof);
+	       int payload_size, bool eof) 
+    throw (std::runtime_error);
 
  public:
   ~gr_udp_sink ();
