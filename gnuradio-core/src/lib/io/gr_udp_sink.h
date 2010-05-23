@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -24,18 +24,6 @@
 #define INCLUDED_GR_UDP_SINK_H
 
 #include <gr_sync_block.h>
-#include <boost/thread.hpp>
-#if defined(HAVE_SOCKET)
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#elif defined(HAVE_WINDOWS_H)
-#include <winsock2.h>
-#include <windows.h>
-#endif
-#if defined(HAVE_NETINET_IN_H)
-#include <netinet/in.h>
-#endif
-
 #include <gruel/thread.h>
 
 class gr_udp_sink;
@@ -43,85 +31,75 @@ typedef boost::shared_ptr<gr_udp_sink> gr_udp_sink_sptr;
 
 gr_udp_sink_sptr
 gr_make_udp_sink (size_t itemsize, 
-		  const char *src, unsigned short port_src,
-		  const char *dst, unsigned short port_dst,
-		  int payload_size=1472);
+		  const char *host, unsigned short port,
+		  int payload_size=1472, bool eof=true);
 
 /*!
  * \brief Write stream to an UDP socket.
  * \ingroup sink_blk
  * 
  * \param itemsize     The size (in bytes) of the item datatype
- * \param src          The source address as either the host name or the 'numbers-and-dots'
- *                     IP address
- * \param port_src     Destination port to bind to (0 allows socket to choose an appropriate port)
- * \param dst          The destination address as either the host name or the 'numbers-and-dots'
- *                     IP address
- * \param port_dst     Destination port to connect to
- * \param payload_size UDP payload size by default set to 
- *                     1472 = (1500 MTU - (8 byte UDP header) - (20 byte IP header))
+ * \param host         The name or IP address of the receiving host; use
+ *                     NULL or None for no connection
+ * \param port         Destination port to connect to on receiving host
+ * \param payload_size UDP payload size by default set to 1472 =
+ *                     (1500 MTU - (8 byte UDP header) - (20 byte IP header))
+ * \param eof          Send zero-length packet on disconnect
  */
 
 class gr_udp_sink : public gr_sync_block
 {
   friend gr_udp_sink_sptr gr_make_udp_sink (size_t itemsize, 
-					    const char *src, unsigned short port_src,
-					    const char *dst, unsigned short port_dst,
-					    int payload_size);
+					    const char *host,
+					    unsigned short port,
+					    int payload_size, bool eof);
  private:
   size_t	d_itemsize;
-  bool		d_updated;
-  gruel::mutex	d_mutex;
 
-  int            d_payload_size;    // maximum transmission unit (packet length)
-  int            d_socket;          // handle to socket
-  int            d_socket_rcv;      // handle to socket retuned in the accept call
-  struct in_addr d_ip_src;          // store the source ip info
-  struct in_addr d_ip_dst;          // store the destination ip info
-  unsigned short d_port_src;        // the port number to open for connections to this service
-  unsigned short d_port_dst;        // port number of the remove system
-  struct sockaddr_in    d_sockaddr_src;    // store the source sockaddr data (formatted IP address and port number)
-  struct sockaddr_in    d_sockaddr_dst;    // store the destination sockaddr data (formatted IP address and port number)
+  int           d_payload_size;    // maximum transmission unit (packet length)
+  bool          d_eof;             // send zero-length packet on disconnect
+  int           d_socket;          // handle to socket
+  bool          d_connected;       // are we connected?
+  gruel::mutex  d_mutex;           // protects d_socket and d_connected
 
  protected:
   /*!
    * \brief UDP Sink Constructor
    * 
    * \param itemsize     The size (in bytes) of the item datatype
-   * \param src          The source address as either the host name or the 'numbers-and-dots'
-   *                     IP address
-   * \param port_src     Destination port to bind to (0 allows socket to choose an appropriate port)
-   * \param dst          The destination address as either the host name or the 'numbers-and-dots'
-   *                     IP address
-   * \param port_dst     Destination port to connect to
+   * \param host         The name or IP address of the receiving host; use
+   *                     NULL or None for no connection
+   * \param port         Destination port to connect to on receiving host
    * \param payload_size UDP payload size by default set to 
    *                     1472 = (1500 MTU - (8 byte UDP header) - (20 byte IP header))
+   * \param eof          Send zero-length packet on disconnect
    */
   gr_udp_sink (size_t itemsize, 
-	       const char *src, unsigned short port_src,
-	       const char *dst, unsigned short port_dst,
-	       int payload_size);
+	       const char *host, unsigned short port,
+	       int payload_size, bool eof);
 
  public:
   ~gr_udp_sink ();
 
-  /*!
-   * \brief open a socket specified by the port and ip address info
-   *
-   * Opens a socket, binds to the address, and makes connectionless association
-   * over UDP. If any of these fail, the fuction retuns the error and exits.
-   */
-  bool open();
-
-  /*!
-   * \brief Close current socket.
-   *
-   * Shuts down read/write on the socket
-   */
-  void close();
-
   /*! \brief return the PAYLOAD_SIZE of the socket */
   int payload_size() { return d_payload_size; }
+
+  /*! \brief Change the connection to a new destination
+   *
+   * \param host         The name or IP address of the receiving host; use
+   *                     NULL or None to break the connection without closing
+   * \param port         Destination port to connect to on receiving host
+   *
+   * Calls disconnect() to terminate any current connection first.
+   */
+  void connect( const char *host, unsigned short port );
+
+  /*! \brief Send zero-length packet (if eof is requested) then stop sending
+   *
+   * Zero-byte packets can be interpreted as EOF by gr_udp_source.  Note that
+   * disconnect occurs automatically when the sink is destroyed, but not when
+   * its top_block stops.*/
+  void disconnect();
 
   // should we export anything else?
 

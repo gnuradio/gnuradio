@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006 Free Software Foundation, Inc.
+# Copyright 2006,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,28 +25,35 @@ from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
 class vector_sink(gr.top_block):
-    def __init__(self, src, port, pkt_size):
+    def __init__(self, host, port, pkt_size, eof, wait):
         gr.top_block.__init__(self, "vector_sink")
 
-        udp = gr.udp_source(gr.sizeof_float, src, port, pkt_size)
+        udp = gr.udp_source(gr.sizeof_float, host, port, pkt_size,
+                            eof=eof, wait=wait)
         sink = gr.file_sink(gr.sizeof_float, "received.dat")
         self.connect(udp, sink)
 
 if __name__ == "__main__":
     parser = OptionParser(option_class=eng_option)
-    parser.add_option("", "--src-name", type="string", default="localhost",
+    parser.add_option("", "--host", type="string", default="0.0.0.0",
                       help="local host name (domain name or IP address)")
-    parser.add_option("", "--src-port", type="int", default=65500,
+    parser.add_option("", "--port", type="int", default=65500,
                       help="port value to listen to for connection")
     parser.add_option("", "--packet-size", type="int", default=1471,
                       help="packet size.")
+    parser.add_option("", "--no-eof", action="store_true", default=False,
+                      help="don't send EOF on disconnect")
+    parser.add_option("", "--no-wait", action="store_true", default=False,
+                      help="don't wait for source")
     (options, args) = parser.parse_args()
     if len(args) != 0:
         parser.print_help()
         raise SystemExit, 1
     
     # Create an instance of a hierarchical block
-    top_block = vector_sink(options.src_name, options.src_port, options.packet_size)
+    top_block = vector_sink(options.host, options.port,
+                            options.packet_size,
+                            not options.no_eof, not options.no_wait)
     
     try:    
         # Run forever

@@ -1,5 +1,5 @@
 #
-# Copyright 2004,2005,2006,2008 Free Software Foundation, Inc.
+# Copyright 2004,2005,2006,2008,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -97,4 +97,5 @@ noinst_PYTHON = 			\
 	qa_unpack_k_bits.py		\
 	qa_repeat.py                    \
 	qa_scrambler.py			\
+	qa_udp_sink_source.py		\
 	qa_vector_sink_source.py	
