@@ -22,8 +22,8 @@ noinst_LIBRARIES = \
 	libu2fw_wbx.a \
 	libu2fw_xcvr.a
 
-
-libu2fw_a_SOURCES = \
+U2FW_COMMON = \
+	_exit.c \
 	abort.c \
 	ad9510.c \
 	ad9777.c \
@@ -31,110 +31,52 @@ libu2fw_a_SOURCES = \
 	buffer_pool.c \
 	clocks.c \
 	db_basic.c \
+	dbsm.c \
+	eeprom.c \
+	eth_mac.c \
+	ethernet.c \
+	exit.c \
+	hal_io.c \
+	hal_uart.c \
+	i2c.c \
+	lsadc.c \
+	lsdac.c \
+	mdelay.c \
+	memcpy_wa.c \
+	memset_wa.c \
+	nonstdio.c \
+	pic.c \
+	print_buffer.c \
+	print_fxpt.c \
+	print_mac_addr.c \
+	print_rmon_regs.c \
+	printf.c \
+	sd.c \
+	spi.c \
+	u2_init.c
+
+libu2fw_a_SOURCES = \
+	$(U2FW_COMMON) \
+	db_init.c \
 	db_bitshark_rx.c \
 	db_dbsrx.c \
 	db_rfx.c \
-	db_tvrx.c \
-	db_init.c \
-	dbsm.c \
-	eeprom.c \
-	ethernet.c \
-	eth_mac.c \
-	_exit.c \
-	exit.c \
-	hal_io.c \
-	hal_uart.c \
-	i2c.c \
-	lsadc.c \
-	lsdac.c \
-	mdelay.c \
-	memcpy_wa.c \
-	memset_wa.c \
-	nonstdio.c \
-	pic.c \
-	print_mac_addr.c \
-	print_rmon_regs.c \
-	print_fxpt.c \
-	print_buffer.c \
-	printf.c \
-	sd.c \
-	spi.c \
-	u2_init.c	
+	db_tvrx.c
 
 libu2fw_wbx_a_SOURCES = \
-	abort.c \
-	ad9510.c \
+	$(U2FW_COMMON) \
+	db_init_wbx.c \
 	adf4350.c \
 	adf4350_regs.c \
-	ad9777.c \
-	bsm12.c \
-	buffer_pool.c \
-	clocks.c \
-	db_basic.c \
-	db_wbxng.c \
-	db_init_wbx.c \
-	dbsm.c \
-	eeprom.c \
-	ethernet.c \
-	eth_mac.c \
-	_exit.c \
-	exit.c \
-	hal_io.c \
-	hal_uart.c \
-	i2c.c \
-	lsadc.c \
-	lsdac.c \
-	mdelay.c \
-	memcpy_wa.c \
-	memset_wa.c \
-	nonstdio.c \
-	pic.c \
-	print_mac_addr.c \
-	print_rmon_regs.c \
-	print_fxpt.c \
-	print_buffer.c \
-	printf.c \
-	sd.c \
-	spi.c \
-	u2_init.c	
-
+	db_wbxng.c 
 
 libu2fw_xcvr_a_SOURCES = \
-	abort.c \
-	ad9510.c \
+	$(U2FW_COMMON) \
+	db_init_xcvr.c \
 	adf4350.c \
 	adf4350_regs.c \
-	ad9777.c \
-	bsm12.c \
-	buffer_pool.c \
-	clocks.c \
-	db_basic.c \
-	db_xcvr2450.c \
-	db_init_xcvr.c \
-	dbsm.c \
-	eeprom.c \
-	ethernet.c \
-	eth_mac.c \
-	_exit.c \
-	exit.c \
-	hal_io.c \
-	hal_uart.c \
-	i2c.c \
-	lsadc.c \
-	lsdac.c \
-	mdelay.c \
-	memcpy_wa.c \
-	memset_wa.c \
-	nonstdio.c \
-	pic.c \
-	print_mac_addr.c \
-	print_rmon_regs.c \
-	print_fxpt.c \
-	print_buffer.c \
-	printf.c \
-	sd.c \
-	spi.c \
-	u2_init.c	
+	db_xcvr2450.c
+
 
 noinst_HEADERS = \
 	ad9510.h \
