@@ -149,7 +149,7 @@ noinst_HEADERS = \
 	db.h \
 	db_base.h \
 	db_wbxng.h \
-	db_bitshark_rx.h
+	db_bitshark_rx.h \
 	dbsm.h \
 	eth_mac.h \
 	eth_mac_regs.h \
