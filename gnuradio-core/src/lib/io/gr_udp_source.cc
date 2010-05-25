@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2007,2008,2009 Free Software Foundation, Inc.
+ * Copyright 2007,2008,2009,2010 Free Software Foundation, Inc.
  * 
  * This file is part of GNU Radio
  * 
@@ -29,80 +29,126 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
-#if defined(HAVE_SOCKET)
+
+#if defined(HAVE_NETDB_H)
 #include <netdb.h>
+#ifdef HAVE_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+#ifdef HAVE_SYS_SOCKET_H
+#include <sys/socket.h>
+#endif
 typedef void* optval_t;
-#else
+
+// ntohs() on FreeBSD may require both netinet/in.h and arpa/inet.h, in order
+#if defined(HAVE_NETINET_IN_H)
+#include <netinet/in.h>
+#endif
+#if defined(HAVE_ARPA_INET_H)
+#include <arpa/inet.h>
+#endif
+
+#elif defined(HAVE_WINDOWS_H)
+// if not posix, assume winsock
+#define USING_WINSOCK
+#include <winsock2.h>
+#include <ws2tcpip.h>
 #define SHUT_RDWR 2
-#define inet_aton(N,A) ( (A)->s_addr = inet_addr(N), ( (A)->s_addr != INADDR_NONE ) )
 typedef char* optval_t;
 #endif
 
+#define USE_SELECT    1  // non-blocking receive on all platforms
+#define USE_RCV_TIMEO 0  // non-blocking receive on all but Cygwin
 #define SRC_VERBOSE 0
 
-gr_udp_source::gr_udp_source(size_t itemsize, const char *src, 
-			     unsigned short port_src, int payload_size)
+static int is_error( int perr )
+{
+  // Compare error to posix error code; return nonzero if match.
+#if defined(USING_WINSOCK)
+#define ENOPROTOOPT 109
+  // All codes to be checked for must be defined below
+  int werr = WSAGetLastError();
+  switch( werr ) {
+  case WSAETIMEDOUT:
+    return( perr == EAGAIN );
+  case WSAENOPROTOOPT:
+    return( perr == ENOPROTOOPT );
+  default:
+    fprintf(stderr,"gr_udp_source/is_error: unknown error %d\n", perr );
+    throw std::runtime_error("internal error");
+  }
+  return 0;
+#else
+  return( perr == errno );
+#endif
+}
+
+static void report_error( const char *msg1, const char *msg2 )
+{
+  // Deal with errors, both posix and winsock
+#if defined(USING_WINSOCK)
+  int werr = WSAGetLastError();
+  fprintf(stderr, "%s: winsock error %d\n", msg1, werr );
+#else
+  perror(msg1);
+#endif
+  if( msg2 != NULL )
+    throw std::runtime_error(msg2);
+  return;
+}
+
+gr_udp_source::gr_udp_source(size_t itemsize, const char *host, 
+			     unsigned short port, int payload_size,
+			     bool eof, bool wait)
   : gr_sync_block ("udp_source",
 		   gr_make_io_signature(0, 0, 0),
 		   gr_make_io_signature(1, 1, itemsize)),
-    d_itemsize(itemsize), d_updated(false), d_payload_size(payload_size), d_residual(0), d_temp_offset(0)
+    d_itemsize(itemsize), d_payload_size(payload_size),
+    d_eof(eof), d_wait(wait), d_socket(-1), d_residual(0), d_temp_offset(0)
 {
   int ret = 0;
+
+#if defined(USING_WINSOCK) // for Windows (with MinGW)
+  // initialize winsock DLL
+  WSADATA wsaData;
+  int iResult = WSAStartup( MAKEWORD(2,2), &wsaData );
+  if( iResult != NO_ERROR ) {
+    report_error( "gr_udp_source WSAStartup", "can't open socket" );
+  }
+#endif
   
   // Set up the address stucture for the source address and port numbers
   // Get the source IP address from the host name
-  struct hostent *hsrc = gethostbyname(src);
-  if(hsrc) {   // if the source was provided as a host namex
-    d_ip_src = *(struct in_addr*)hsrc->h_addr_list[0];    
-  }
-  else { // assume it was specified as an IP address
-    if((ret=inet_aton(src, &d_ip_src)) == 0) {            // format IP address
-      perror("Not a valid source IP address or host name");
-      throw std::runtime_error("can't initialize source socket");
-    }
-  }
+  struct addrinfo *ip_src;      // store the source IP address to use
+  struct addrinfo hints;
+  memset( (void*)&hints, 0, sizeof(hints) );
+  hints.ai_family = AF_INET;
+  hints.ai_socktype = SOCK_DGRAM;
+  hints.ai_protocol = IPPROTO_UDP;
+  hints.ai_flags = AI_PASSIVE;
+  char port_str[12];
+  sprintf( port_str, "%d", port );
 
-  d_port_src = htons(port_src);     // format port number
-  
-  d_sockaddr_src.sin_family = AF_INET;
-  d_sockaddr_src.sin_addr   = d_ip_src;
-  d_sockaddr_src.sin_port   = d_port_src;
+  // FIXME leaks if report_error throws below
+  ret = getaddrinfo( host, port_str, &hints, &ip_src );
+  if( ret != 0 )
+    report_error("gr_udp_source/getaddrinfo",
+		 "can't initialize source socket" );
 
+  // FIXME leaks if report_error throws below
   d_temp_buff = new char[d_payload_size];   // allow it to hold up to payload_size bytes
-  
-  open();
-}
 
-gr_udp_source_sptr
-gr_make_udp_source (size_t itemsize, const char *ipaddr, 
-		    unsigned short port, int payload_size)
-{
-  return gr_udp_source_sptr (new gr_udp_source (itemsize, ipaddr, 
-						port, payload_size));
-}
-
-gr_udp_source::~gr_udp_source ()
-{
-  delete [] d_temp_buff;
-  close();
-}
-
-bool
-gr_udp_source::open()
-{
-  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
   // create socket
-  d_socket = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  d_socket = socket(ip_src->ai_family, ip_src->ai_socktype,
+		    ip_src->ai_protocol);
   if(d_socket == -1) {
-    perror("socket open");
-    throw std::runtime_error("can't open socket");
+    report_error("socket open","can't open socket");
   }
 
   // Turn on reuse address
   int opt_val = 1;
   if(setsockopt(d_socket, SOL_SOCKET, SO_REUSEADDR, (optval_t)&opt_val, sizeof(int)) == -1) {
-    perror("SO_REUSEADDR");
-    throw std::runtime_error("can't set socket option SO_REUSEADDR");
+    report_error("SO_REUSEADDR","can't set socket option SO_REUSEADDR");
   }
 
   // Don't wait when shutting down
@@ -110,40 +156,61 @@ gr_udp_source::open()
   lngr.l_onoff  = 1;
   lngr.l_linger = 0;
   if(setsockopt(d_socket, SOL_SOCKET, SO_LINGER, (optval_t)&lngr, sizeof(linger)) == -1) {
-    perror("SO_LINGER");
-    throw std::runtime_error("can't set socket option SO_LINGER");
+    if( !is_error(ENOPROTOOPT) ) {  // no SO_LINGER for SOCK_DGRAM on Windows
+      report_error("SO_LINGER","can't set socket option SO_LINGER");
+    }
   }
 
+#if USE_RCV_TIMEO
   // Set a timeout on the receive function to not block indefinitely
   // This value can (and probably should) be changed
+  // Ignored on Cygwin
+#if defined(USING_WINSOCK)
+  DWORD timeout = 1000;  // milliseconds
+#else
   timeval timeout;
   timeout.tv_sec = 1;
   timeout.tv_usec = 0;
+#endif
   if(setsockopt(d_socket, SOL_SOCKET, SO_RCVTIMEO, (optval_t)&timeout, sizeof(timeout)) == -1) {
-    perror("SO_RCVTIMEO");
-    throw std::runtime_error("can't set socket option SO_RCVTIMEO");
+    report_error("SO_RCVTIMEO","can't set socket option SO_RCVTIMEO");
   }
+#endif // USE_RCV_TIMEO
 
   // bind socket to an address and port number to listen on
-  if(bind (d_socket, (sockaddr*)&d_sockaddr_src, sizeof(struct sockaddr)) == -1) {
-    perror("socket bind");
-    throw std::runtime_error("can't bind socket");
+  if(bind (d_socket, ip_src->ai_addr, ip_src->ai_addrlen) == -1) {
+    report_error("socket bind","can't bind socket");
   }
-  
-  d_updated = true;
-  return d_socket != 0;
+  freeaddrinfo(ip_src);
+
 }
 
-void
-gr_udp_source::close()
+gr_udp_source_sptr
+gr_make_udp_source (size_t itemsize, const char *ipaddr, 
+		    unsigned short port, int payload_size, bool eof, bool wait)
 {
-  gruel::scoped_lock guard(d_mutex);	// hold mutex for duration of this function
+  return gr_udp_source_sptr (new gr_udp_source (itemsize, ipaddr, 
+						port, payload_size, eof, wait));
+}
 
-  if (d_socket){
+gr_udp_source::~gr_udp_source ()
+{
+  delete [] d_temp_buff;
+
+  if (d_socket != -1){
     shutdown(d_socket, SHUT_RDWR);
-    d_socket = 0;
+#if defined(USING_WINSOCK)
+    closesocket(d_socket);
+#else
+    ::close(d_socket);
+#endif
+    d_socket = -1;
   }
-  d_updated = true;
+
+#if defined(USING_WINSOCK) // for Windows (with MinGW)
+  // free winsock resources
+  WSACleanup();
+#endif
 }
 
 int 
@@ -175,27 +242,83 @@ gr_udp_source::work (int noutput_items,
     
     // Update indexing of amount of bytes left in the buffer
     d_residual -= nbytes;
-    d_temp_offset = d_temp_offset+d_residual;
+    d_temp_offset += nbytes;
+
+    // Return now with what we've got.
+    assert(nbytes % d_itemsize == 0);
+    return nbytes/d_itemsize;
   }
 
   while(1) {
     // get the data into our output buffer and record the number of bytes
+
+#if USE_SELECT
+    // RCV_TIMEO doesn't work on all systems (e.g., Cygwin)
+    // use select() instead of, or in addition to RCV_TIMEO
+    fd_set readfds;
+    timeval timeout;
+    timeout.tv_sec = 1;	  // Init timeout each iteration.  Select can modify it.
+    timeout.tv_usec = 0;
+    FD_ZERO(&readfds);
+    FD_SET(d_socket, &readfds);
+    r = select(FD_SETSIZE, &readfds, NULL, NULL, &timeout);
+    if(r < 0) {
+	report_error("udp_source/select",NULL);
+	return -1;
+    }
+    else if(r == 0 ) {  // timed out
+      if( d_wait ) {
+	// Allow boost thread interrupt, then try again
+	boost::this_thread::interruption_point();
+	continue;
+      }
+      else
+	return -1;
+    }
+#endif // USE_SELECT
+
     // This is a non-blocking call with a timeout set in the constructor
     r = recv(d_socket, d_temp_buff, d_payload_size, 0);  // get the entire payload or the what's available
 
+    // If r > 0, round it down to a multiple of d_itemsize 
+    // (If sender is broken, don't propagate problem)
+    if (r > 0)
+      r = (r/d_itemsize) * d_itemsize;
+
     // Check if there was a problem; forget it if the operation just timed out
     if(r == -1) {
-      if(errno == EAGAIN) {  // handle non-blocking call timeout
+      if( is_error(EAGAIN) ) {  // handle non-blocking call timeout
         #if SRC_VERBOSE
 	printf("UDP receive timed out\n"); 
         #endif
 
-	// Break here to allow the rest of the flow graph time to run and so ctrl-C breaks
-	break;
+	if( d_wait ) {
+	  // Allow boost thread interrupt, then try again
+	  boost::this_thread::interruption_point();
+	  continue;
+	}
+	else
+	  return -1;
       }
       else {
-	perror("udp_source");
+	report_error("udp_source/recv",NULL);
 	return -1;
+      }
+    }
+    else if(r==0) {
+      if(d_eof) {
+	// zero-length packet interpreted as EOF
+
+	#if SNK_VERBOSE
+	printf("\tzero-length packet received; returning EOF\n");
+	#endif
+
+	return -1;
+      }
+      else{
+	// do we need to allow boost thread interrupt?
+	boost::this_thread::interruption_point();
+	continue;
       }
     }
     else {
@@ -235,3 +358,15 @@ gr_udp_source::work (int noutput_items,
   return bytes_received/d_itemsize;
 }
 
+// Return port number of d_socket
+int gr_udp_source::get_port(void)
+{
+  sockaddr_in name;
+  socklen_t len = sizeof(name);
+  int ret = getsockname( d_socket, (sockaddr*)&name, &len );
+  if( ret ) {
+    report_error("gr_udp_source/getsockname",NULL);
+    return -1;
+  }
+  return ntohs(name.sin_port);
+}

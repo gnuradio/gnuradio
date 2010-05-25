@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2006,2007 Free Software Foundation, Inc.
+# Copyright 2006,2007,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -25,7 +25,7 @@ from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 
 class dial_tone_source(gr.top_block):
-    def __init__(self, src, dst, port, pkt_size, sample_rate):
+    def __init__(self, host, port, pkt_size, sample_rate, eof):
         gr.top_block.__init__(self, "dial_tone_source")
 
         amplitude = 0.3
@@ -35,31 +35,32 @@ class dial_tone_source(gr.top_block):
 
         # Throttle needed here to account for the other side's audio card sampling rate
 	thr = gr.throttle(gr.sizeof_float, sample_rate)
-	sink = gr.udp_sink(gr.sizeof_float, src, 0, dst, port, pkt_size)
+	sink = gr.udp_sink(gr.sizeof_float, host, port, pkt_size, eof=eof)
 	self.connect(src0, (add, 0))
 	self.connect(src1, (add, 1))
 	self.connect(add, thr, sink)
 
 if __name__ == '__main__':
     parser = OptionParser(option_class=eng_option)
-    parser.add_option("", "--src-name", type="string", default="localhost",
-                      help="local host name (domain name or IP address)")
-    parser.add_option("", "--dst-name", type="string", default="localhost",
+    parser.add_option("", "--host", type="string", default="localhost",
                       help="Remote host name (domain name or IP address")
-    parser.add_option("", "--dst-port", type="int", default=65500,
-                      help="port value to connect to")
+    parser.add_option("", "--port", type="int", default=65500,
+                      help="port number to connect to")
     parser.add_option("", "--packet-size", type="int", default=1472,
                       help="packet size.")
     parser.add_option("-r", "--sample-rate", type="int", default=8000,
                       help="audio signal sample rate [default=%default]")
+    parser.add_option("", "--no-eof", action="store_true", default=False,
+                      help="don't send EOF on disconnect")
     (options, args) = parser.parse_args()
     if len(args) != 0:
         parser.print_help()
         raise SystemExit, 1
 
     # Create an instance of a hierarchical block
-    top_block = dial_tone_source(options.src_name, options.dst_name, options.dst_port,
-                                 options.packet_size, options.sample_rate)
+    top_block = dial_tone_source(options.host, options.port,
+                                 options.packet_size, options.sample_rate,
+                                 not options.no_eof)
     
     try:    
         # Run forever
@@ -67,4 +68,3 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         # Ctrl-C exits
         pass
-    

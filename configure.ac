@@ -170,9 +170,9 @@ AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(fcntl.h limits.h strings.h time.h sys/ioctl.h sys/time.h unistd.h)
 AC_CHECK_HEADERS(linux/ppdev.h dev/ppbus/ppi.h sys/mman.h sys/select.h sys/types.h)
 AC_CHECK_HEADERS(sys/resource.h stdint.h sched.h signal.h sys/syscall.h malloc.h)
-AC_CHECK_HEADERS(netinet/in.h)
 AC_CHECK_HEADERS(windows.h)
 AC_CHECK_HEADERS(vec_types.h)
+AC_CHECK_HEADERS(netdb.h netinet/in.h arpa/inet.h sys/types.h sys/socket.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
