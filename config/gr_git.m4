@@ -1,4 +1,4 @@
-dnl Copyright 2009 Free Software Foundation, Inc.
+dnl Copyright 2009,2010 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -29,14 +29,30 @@ AC_DEFUN([GR_GIT],[
       AC_MSG_RESULT([ok])
       AC_MSG_CHECKING([git description of current commit])
       if (cd $srcdir && $GIT describe >/dev/null 2>&1); then
-        GIT_VERSION=`cd $srcdir && $GIT describe --abbrev=8 | cut -f 2- -d '-'`
-        AC_MSG_RESULT([$GIT_DESCRIBE])
+        GIT_DESCRIBE=`cd $srcdir && $GIT describe --abbrev=8 --long`
+	GIT_TAG=`echo $GIT_DESCRIBE | cut -f 1 -d '-'`
+        GIT_SEQNO=`echo $GIT_DESCRIBE | cut -f 2 -d '-'`
+	GIT_COMMIT=`echo $GIT_DESCRIBE | cut -f 3 -d '-' | cut -f 2- -d 'g'`
+        # Release candidate tags create an extra -rcX field
+	if test x`echo $GIT_DESCRIBE | cut -f 1- -d '-' --output-delimiter=' ' | wc -w` = x4; then
+	  GIT_TAG=`echo $GIT_DESCRIBE | cut -f -2 -d '-'`
+	  GIT_SEQNO=`echo $GIT_DESCRIBE | cut -f 3 -d '-'`
+	  GIT_COMMIT=`echo $GIT_DESCRIBE | cut -f 4 -d '-' | cut -f 2- -d 'g'`
+	fi
+	AC_MSG_RESULT([$GIT_DESCRIBE])
       else
         AC_MSG_RESULT([unable to find, using current commit])
-	GIT_VERSION=`cd $srcdir && $GIT describe --always --abbrev=8`
+	GIT_TAG=''
+	GIT_SEQNO=''
+	GIT_COMMIT=`cd $srcdir && $GIT describe --always --abbrev=8`
       fi
     else
       AC_MSG_RESULT([not found])
     fi
+
+    AC_SUBST([GIT_DESCRIBE])
+    AC_SUBST([GIT_TAG])
+    AC_SUBST([GIT_SEQNO])
+    AC_SUBST([GIT_COMMIT])
   fi
 ])
