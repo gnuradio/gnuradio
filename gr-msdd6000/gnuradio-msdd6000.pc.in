@@ -4,8 +4,8 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: gnuradio-comedi
-Description: GNU Radio blocks for the comedi library
+Description: GNU Radio blocks for the Softronics MSDD 6000
 Requires: gnuradio-core
-Version: @VERSION@
-Libs: -L${libdir} -lgnuradio-comedi
+Version: @LIBVER@
+Libs: -L${libdir} -lgnuradio-msdd6000
 Cflags: -I${includedir}

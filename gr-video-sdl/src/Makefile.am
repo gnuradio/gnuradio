@@ -43,8 +43,7 @@ libgnuradio_video_sdl_la_LIBADD =	\
 	$(SDL_LIBS)			\
 	$(GNURADIO_CORE_LA)
 
-libgnuradio_video_sdl_la_LDFLAGS =	\
-	$(NO_UNDEFINED)
+libgnuradio_video_sdl_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 if PYTHON
 #################################

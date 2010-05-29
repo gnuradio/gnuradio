@@ -82,7 +82,7 @@ grinclude_HEADERS =			\
 	$(QT_UIC_EXEC) $< -o $@
 
 # magic flags
-libgnuradio_qtgui_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
+libgnuradio_qtgui_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 libgnuradio_qtgui_la_LIBADD = 		\
 	$(GNURADIO_CORE_LA)	\

@@ -35,6 +35,9 @@ grinclude_HEADERS =			\
 lib_LTLIBRARIES = libgnuradio-msdd6000.la \
 	libgnuradio-msdd6000_rs.la
 
+libgnuradio_msdd6000_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
+libgnuradio_msdd6000_rs_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
+
 libgnuradio_msdd6000_la_SOURCES = 	\
 	msdd_source_simple.cc		\
 	msdd6000.cc
@@ -47,14 +50,9 @@ libgnuradio_msdd6000_rs_la_SOURCES = 	\
 libgnuradio_msdd6000_la_LIBADD = 	\
 	$(GNURADIO_CORE_LA)
 
-libgnuradio_msdd6000_la_LDFLAGS =	\
-	$(NO_UNDEFINED)
-
 libgnuradio_msdd6000_rs_la_LIBADD = 	\
 	$(GNURADIO_CORE_LA)
 
-libgnuradio_msdd6000_rs_la_LDFLAGS =	\
-	$(NO_UNDEFINED)
 
 if PYTHON
 #################################

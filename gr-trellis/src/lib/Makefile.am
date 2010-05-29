@@ -82,10 +82,7 @@ libgnuradio_trellis_la_SOURCES = 	\
 libgnuradio_trellis_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)
 
-libgnuradio_trellis_la_LDFLAGS =	\
-	$(NO_UNDEFINED)
-
-
+libgnuradio_trellis_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 
 if PYTHON

@@ -6,6 +6,6 @@ includedir=@includedir@/gnuradio
 Name: gnuradio-usrp
 Description: GNU Software Radio support for Universal Software Radio Peripheral
 Requires: gnuradio-core usrp
-Version: @VERSION@
+Version: @LIBVER@
 Libs: -L${libdir} -lgnuradio-usrp
 Cflags: -I${includedir}

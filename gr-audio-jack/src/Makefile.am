@@ -42,8 +42,7 @@ libgnuradio_audio_jack_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)		\
 	$(JACK_LIBS)
 
-libgnuradio_audio_jack_la_LDFLAGS =	\
-	$(NO_UNDEFINED)
+libgnuradio_audio_jack_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 noinst_PYTHON = 			\
 	qa_jack.py

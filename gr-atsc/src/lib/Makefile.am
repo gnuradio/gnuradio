@@ -92,8 +92,7 @@ BUILT_SOURCES = 				\
 libgnuradio_atsc_la_LIBADD = 			\
 	$(GNURADIO_CORE_LA)
 
-libgnuradio_atsc_la_LDFLAGS = \
-	$(NO_UNDEFINED)
+libgnuradio_atsc_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 noinst_LTLIBRARIES = libgnuradio-atsc-qa.la
 

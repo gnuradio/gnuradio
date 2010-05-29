@@ -1,5 +1,5 @@
 #
-# Copyright 2001,2004,2009 Free Software Foundation, Inc.
+# Copyright 2001,2004,2009,2010 Free Software Foundation, Inc.
 # 
 # This file is part of GNU Radio
 # 
@@ -33,10 +33,11 @@ AM_CPPFLAGS = $(STD_DEFINES_AND_INCLUDES) $(CPPUNIT_INCLUDES) $(WITH_INCLUDES)
 
 # generate libgnuradio-core.la from the convenience libraries in subdirs
 
-lib_LTLIBRARIES = libgnuradio-core.la libgnuradio-core-qa.la
+lib_LTLIBRARIES = libgnuradio-core.la
+noinst_LTLIBRARIES = libgnuradio-core-qa.la
 
 libgnuradio_core_la_SOURCES = bug_work_around_6.cc
-libgnuradio_core_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
+libgnuradio_core_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 libgnuradio_core_qa_la_SOURCES = bug_work_around_6.cc
 libgnuradio_core_qa_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 \

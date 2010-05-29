@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: gruel
 Description: The GNU Radio Utility Etcetera Library
 Requires: 
-Version: @VERSION@
+Version: @LIBVER@
 Libs: -L${libdir} -lgruel
 Cflags: -I${includedir}

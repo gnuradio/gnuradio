@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: usrp2
 Description: Universal Software Radio Peripheral 2
 Requires: gruel
-Version: @VERSION@
+Version: @LIBVER@
 Libs: -L${libdir} -lusrp2
 Cflags: -I${includedir} @DEFINES@

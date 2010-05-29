@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: gnuradio-cvsd-vocoder
 Description: GNU Radio blocks implementing a CVSD vocoder
 Requires: gnuradio-core
-Version: @VERSION@
+Version: @LIBVER@
 Libs: -L${libdir} -lgnuradio-cvsd-vocoder
 Cflags: -I${includedir}

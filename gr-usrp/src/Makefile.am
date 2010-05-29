@@ -56,7 +56,7 @@ libgnuradio_usrp_la_LIBADD = \
 	$(GNURADIO_CORE_LA) \
 	$(USRP_LA)			
 
-libgnuradio_usrp_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
+libgnuradio_usrp_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 grinclude_HEADERS = \
 	usrp_base.h \
