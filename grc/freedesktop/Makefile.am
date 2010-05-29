@@ -1,5 +1,5 @@
 #
-# Copyright 2008,2009 Free Software Foundation, Inc.
+# Copyright 2008, 2009, 2010 Free Software Foundation, Inc.
 #
 # This file is part of GNU Radio
 #
@@ -22,7 +22,6 @@
 include $(top_srcdir)/Makefile.common
 
 ourdatadir = $(pkgdatadir)/grc/freedesktop
-
 dist_ourdata_DATA = \
 	grc-icon-256.png \
 	grc-icon-128.png \
@@ -30,11 +29,12 @@ dist_ourdata_DATA = \
 	grc-icon-48.png \
 	grc-icon-32.png \
 	gnuradio-grc.xml \
-	gnuradio-gnuradio-companion.desktop \
+	gnuradio-grc.desktop \
 	gnuradio-usrp2_probe.desktop \
 	gnuradio-usrp_probe.desktop
 
-dist_bin_SCRIPTS = grc_setup_freedesktop
+pkglibexecdir = $(libexecdir)/$(PACKAGE)
+dist_pkglibexec_SCRIPTS = grc_setup_freedesktop
 
 grc_setup_freedesktop: $(srcdir)/grc_setup_freedesktop.in Makefile
 	sed -e 's|@SRCDIR[@]|$(ourdatadir)|g' $< > $@
@@ -46,10 +46,10 @@ install-data-hook:
 	@printf "\n*** GRC Post-Install Message ***\
 	\nTo install icons, mime type, and menu items\
 	\nfor a freedesktop.org system (Gnome/KDE/Xfce):\
-	\n  >>> sudo grc_setup_freedesktop install\n\n"
+	\n  >>> sudo $(pkglibexecdir)/grc_setup_freedesktop install\n\n"
 
 uninstall-hook:
 	@printf "\n*** GRC Post-Uninstall Message ***\
 	\nTo uninstall icons, mime type, and menu items\
 	\nfor a freedesktop.org system (Gnome/KDE/Xfce):\
-	\n  >>> sudo grc_setup_freedesktop uninstall\n\n"
+	\n  >>> sudo $(pkglibexecdir)/grc_setup_freedesktop uninstall\n\n"
