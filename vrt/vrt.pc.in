@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: vrt
 Description: Host implementation of Virtual Radio Transport (VITA-49)
 Requires: 
-Version: @VERSION@
+Version: @LIBVER@
 Libs: -L${libdir} -lvrt
 Cflags: -I${includedir}

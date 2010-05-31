@@ -38,6 +38,8 @@ libvrt_la_SOURCES = \
 
 libvrt_la_LIBADD =
 
+libvrt_la_LDFLAGS = $(LTVERSIONFLAGS)
+
 # Private headers not needed for above the API development
 noinst_HEADERS = \
 	data_handler.h \
