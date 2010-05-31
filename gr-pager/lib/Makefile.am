@@ -49,5 +49,4 @@ libgnuradio_pager_la_SOURCES = \
 libgnuradio_pager_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)
 
-libgnuradio_pager_la_LDFLAGS =	\
-	$(NO_UNDEFINED)
+libgnuradio_pager_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)

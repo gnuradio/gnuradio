@@ -30,6 +30,8 @@ usrp2_socket_opener_SOURCES = usrp2_socket_opener.cc
 lib_LTLIBRARIES = \
 	libusrp2.la
 
+libusrp2_la_LDFLAGS = $(LTVERSIONFLAGS)
+
 libusrp2_la_SOURCES = \
 	control.cc \
 	copiers.cc \

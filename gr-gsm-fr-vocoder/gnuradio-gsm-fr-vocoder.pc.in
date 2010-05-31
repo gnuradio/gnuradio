@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: gnuradio-comedi
 Description: GNU Radio blocks implementing a GSM full rate vocoder
 Requires: gnuradio-core
-Version: @VERSION@
-Libs: -L${libdir} -lgnuradio-gsm-fr-vocoder
+Version: @LIBVER@
+Libs: -L${libdir} -lgnuradio-gsm-fr-vocoder-$@LIBVER@
 Cflags: -I${includedir}

@@ -39,7 +39,7 @@ noinst_HEADERS = \
 libgnuradio_noaa_la_LIBADD = \
 	$(GNURADIO_CORE_LA)
 
-libgnuradio_noaa_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
+libgnuradio_noaa_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 grinclude_HEADERS = \
 	noaa_hrpt_decoder.h \

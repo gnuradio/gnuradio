@@ -44,7 +44,8 @@ libgnuradio_audio_windows_la_LIBADD =	\
 
 libgnuradio_audio_windows_la_LDFLAGS =	\
 	$(LIBGNURADIO_CORE_EXTRA_LDFLAGS) \
-	$(NO_UNDEFINED)
+	$(NO_UNDEFINED) \
+	$(LTVERSIONFLAGS)
 
 if PYTHON
 ###################################

@@ -24,7 +24,7 @@ common_INCLUDES = $(USRP_INCLUDES) $(USB_INCLUDES)
 
 lib_LTLIBRARIES = libusrp.la
 
-libusrp_la_common_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0 $(BOOST_LDFLAGS)
+libusrp_la_common_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS) $(BOOST_LDFLAGS)
 
 libusrp_la_common_LIBADD = 		\
 	$(USB_LIBS) 			\

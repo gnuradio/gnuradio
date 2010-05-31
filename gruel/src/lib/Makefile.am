@@ -34,7 +34,7 @@ noinst_PROGRAMS = test_gruel
 lib_LTLIBRARIES = libgruel.la
 
 # magic flags
-libgruel_la_LDFLAGS = $(NO_UNDEFINED) $(BOOST_LDFLAGS) -version-info 0:0:0
+libgruel_la_LDFLAGS = $(NO_UNDEFINED) $(BOOST_LDFLAGS) $(LTVERSIONFLAGS)
 
 # ----------------------------------------------------------------
 

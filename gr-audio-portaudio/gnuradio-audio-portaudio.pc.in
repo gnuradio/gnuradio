@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: gnuradio-audio-portaudio
 Description: The GNU Radio block for the PORTAUDIO sound system
 Requires: gnuradio-core
-Version: @VERSION@
+Version: @LIBVER@
 Libs: -L${libdir} -lgnuradio-audio-portaudio
 Cflags: -I${includedir}

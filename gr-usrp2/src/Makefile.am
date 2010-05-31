@@ -50,6 +50,8 @@ AM_CPPFLAGS = \
 
 lib_LTLIBRARIES = libgnuradio-usrp2.la
 
+libgnuradio_usrp2_la_LDFLAGS = $(LTVERSIONFLAGS)
+
 libgnuradio_usrp2_la_SOURCES = \
 	rx_16sc_handler.cc \
 	rx_32fc_handler.cc \

@@ -51,7 +51,8 @@ libgnuradio_audio_osx_la_LDFLAGS =	\
 	-framework AudioUnit		\
 	-framework CoreAudio		\
 	-framework AudioToolbox		\
-	$(NO_UNDEFINED)
+	$(NO_UNDEFINED)			\
+	$(LTVERSIONFLAGS)
 
 if PYTHON
 ###################################

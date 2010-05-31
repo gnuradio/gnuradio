@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: gnuradio-comedi
 Description: GNU Radio blocks implementing a FLEX pager decoder
 Requires: gnuradio-core
-Version: @VERSION@
+Version: @LIBVER@
 Libs: -L${libdir} -lgnuradio-pager
 Cflags: -I${includedir}

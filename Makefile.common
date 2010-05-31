@@ -23,6 +23,9 @@
 AM_CFLAGS = @autoconf_default_CFLAGS@ @lf_CFLAGS@
 AM_CXXFLAGS = @autoconf_default_CXXFLAGS@ @lf_CXXFLAGS@
 
+# Sets ABI version in SONAME and appends -LIBVER to filename
+LTVERSIONFLAGS = -version-info 0:0:0 -release $(LIBVER)
+
 # includes
 grincludedir = $(includedir)/gnuradio
 

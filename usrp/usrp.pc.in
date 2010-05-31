@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: usrp
 Description: USRP Client Side C++ interface
 Requires: @LIBUSB_PKG_CONFIG_NAME@
-Version: @VERSION@
+Version: @LIBVER@
 Libs: -L${libdir} -lusrp
 Cflags: -I${includedir}

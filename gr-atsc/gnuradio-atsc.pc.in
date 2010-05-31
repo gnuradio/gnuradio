@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: gnuradio-atsc
 Description: The GNU Radio blocks for ATSC decoding
 Requires: gnuradio-core
-Version: @VERSION@
+Version: @LIBVER@
 Libs: -L${libdir} -lgnuradio-atsc
 Cflags: -I${includedir}

@@ -40,8 +40,7 @@ libgnuradio_gsm_fr_vocoder_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)		\
 	gsm/libgsm.la
 
-libgnuradio_gsm_fr_vocoder_la_LDFLAGS =	\
-	$(NO_UNDEFINED)
+libgnuradio_gsm_fr_vocoder_la_LDFLAGS =	$(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 if PYTHON
 # SWIG interface and library

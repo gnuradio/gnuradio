@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: gnuradio-audio-alsa
 Description: The GNU Radio block for the ALSA sound system
 Requires: gnuradio-core alsa
-Version: @VERSION@
+Version: @LIBVER@
 Libs: -L${libdir} -lgnuradio-audio-alsa
 Cflags: -I${includedir}

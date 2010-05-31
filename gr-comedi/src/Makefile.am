@@ -47,8 +47,7 @@ libgnuradio_comedi_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)	\
 	$(COMEDI_LIBS)
 
-libgnuradio_comedi_la_LDFLAGS =	\
-	$(NO_UNDEFINED)
+libgnuradio_comedi_la_LDFLAGS =	$(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 if PYTHON
 ###################################

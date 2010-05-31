@@ -6,6 +6,6 @@ includedir=@includedir@
 Name: gr-wxgui
 Description: A simple wx gui for GNU Radio applications
 Requires: gnuradio-core
-Version: @VERSION@
+Version: @LIBVER@
 Libs:
 Cflags:

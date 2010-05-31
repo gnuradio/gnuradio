@@ -27,6 +27,9 @@ modname = howto
 # when going in to non-SWIG libraries
 AM_CXXFLAGS = @autoconf_default_CXXFLAGS@
 
+# Sets ABI version in SONAME and appends -LIBVER to filename
+LTVERSIONFLAGS = -version-info 0:0:0 -release $(LIBVER)
+
 # these flags are used when compiling any CXX file
 AM_CPPFLAGS = \
 	$(STD_DEFINES_AND_INCLUDES) \

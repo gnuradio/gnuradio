@@ -50,8 +50,7 @@ libgnuradio_audio_alsa_la_LIBADD =	\
 	$(GNURADIO_CORE_LA)		\
 	$(ALSA_LIBS)
 
-libgnuradio_audio_alsa_la_LDFLAGS =	\
-	$(NO_UNDEFINED)
+libgnuradio_audio_alsa_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 if PYTHON
 ###################################
