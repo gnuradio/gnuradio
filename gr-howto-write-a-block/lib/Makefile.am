@@ -42,8 +42,7 @@ libgnuradio_howto_la_SOURCES = \
 libgnuradio_howto_la_LIBADD = \
 	$(GNURADIO_CORE_LA)
 
-libgnuradio_howto_la_LDFLAGS = \
-	$(NO_UNDEFINED)
+libgnuradio_howto_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 # ----------------------------------------------------------------
 # howto C++ QA library: libgnuradio-howto-qa.so (not installed)

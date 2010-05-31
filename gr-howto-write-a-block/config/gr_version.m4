@@ -1,4 +1,4 @@
-dnl Copyright 2009 Free Software Foundation, Inc.
+dnl Copyright 2009,2010 Free Software Foundation, Inc.
 dnl 
 dnl This file is part of GNU Radio
 dnl 
@@ -31,39 +31,43 @@ AC_DEFUN([GR_VERSION],[
   dnl The last two fields can have 'git' instead of a number to indicate
   dnl that this branch is between versions.
   . $srcdir/version.sh
-  RELEASE=$MAJOR_VERSION.$API_COMPAT
   
   dnl Get git version if available
   GR_GIT
 
   dnl Test if we should use git version
   if test "$MINOR_VERSION" == "git"; then
-    dnl 3.3git-xxx-gxxxxxxxx
-    RELEASE=$RELEASE$MINOR_VERSION
-    DOCVER=$RELEASE
-    if test "$GIT_VERSION" != "" ; then
-      RELEASE=$RELEASE-$GIT_VERSION
-    fi
+    dnl RELEASE: 3.3git-xxx-gxxxxxxxx
+    dnl DOCVER:  3.3git
+    dnl LIBVER:  3.3git
+    RELEASE=$GIT_DESCRIBE
+    DOCVER=$MAJOR_VERSION.$API_COMPAT$MINOR_VERSION
+    LIBVER=$MAJOR_VERSION.$API_COMPAT$MINOR_VERSION
   else
     if test "$MAINT_VERSION" == "git" ; then
-      dnl 3.3.1git-xxx-gxxxxxxxx
-      RELEASE=$RELEASE.$MINOR_VERSION$MAINT_VERSION
-      DOCVER=$RELEASE
-      if test "$GIT_VERSION" != "" ; then
-        RELEASE=$RELEASE-$GIT_VERSION
-      fi
+      dnl RELEASE: 3.3.1git-xxx-gxxxxxxxx
+      dnl DOCVER:  3.3.1git
+      dnl LIBVER:  3.3.1git
+      RELEASE=$GIT_DESCRIBE
+      DOCVER=$MAJOR_VERSION.$API_COMPAT.$MINOR_VERSION$MAINT_VERSION
+      LIBVER=$MAJOR_VERSION.$API_COMPAT.$MINOR_VERSION$MAINT_VERSION
     else
       dnl This is a numbered release.
-      RELEASE=$RELEASE.$MINOR_VERSION
+      dnl RELEASE: 3.3.1{.x}
+      dnl DOCVER:  3.3.1{.x}
+      dnl LIBVER:  3.3.1{.x}
+      RELEASE=$MAJOR_VERSION.$API_COMPAT.$MINOR_VERSION
       if test "$MAINT_VERSION" != "0"; then
         RELEASE=$RELEASE.$MAINT_VERSION
       fi
 
       DOCVER=$RELEASE
+      LIBVER=$RELEASE
     fi
   fi
 
   AC_MSG_NOTICE([GNU Radio Release $RELEASE])
   AC_SUBST(RELEASE)
   AC_SUBST(DOCVER)
+  AC_SUBST(LIBVER)
 ])
