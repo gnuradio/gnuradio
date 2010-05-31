@@ -37,6 +37,8 @@ libgnuradio_uhd_la_LIBADD = \
 	$(GNURADIO_CORE_LA) \
 	$(UHD_LIBS)
 
+libgnuradio_uhd_la_LDFLAGS = $(LTVERSIONFLAGS)
+
 grinclude_HEADERS = \
 	uhd_simple_source.h \
 	uhd_simple_sink.h
