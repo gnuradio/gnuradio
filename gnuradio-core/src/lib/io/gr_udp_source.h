@@ -95,7 +95,7 @@ class gr_udp_source : public gr_sync_block
   /*! \brief return the PAYLOAD_SIZE of the socket */
   int payload_size() { return d_payload_size; }
 
-  /*! \breif return the port number of the socket */
+  /*! \brief return the port number of the socket */
   int get_port();
 
   // should we export anything else?
