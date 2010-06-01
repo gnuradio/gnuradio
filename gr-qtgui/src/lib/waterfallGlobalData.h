@@ -3,6 +3,7 @@
 
 #include <qwt_raster_data.h>
 #include <qwt3d_function.h>
+#include <inttypes.h>
 
 class Waterfall3DDisplayPlot;
 
