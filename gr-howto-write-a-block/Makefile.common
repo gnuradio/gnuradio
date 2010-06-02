@@ -40,7 +40,7 @@ AM_CPPFLAGS = \
 # these are used by both SWIG and CXX
 STD_DEFINES_AND_INCLUDES = \
 	$(DEFINES) \
-	-I$(abs_top_srcdir)/include \
+	-I$(abs_top_srcdir)/lib \
 	-I$(GNURADIO_CORE_INCLUDEDIR) \
 	-I$(GNURADIO_CORE_INCLUDEDIR)/swig
 
