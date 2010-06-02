@@ -52,7 +52,7 @@ libgnuradio_gcell_la_LIBADD = \
 	$(GNURADIO_CORE_LA) \
 	$(GCELL_LA)
 
-libgnuradio_gcell_la_LDFLAGS = $(NO_UNDEFINED)
+libgnuradio_gcell_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 if PYTHON
 # ----------------------------------------------------------------

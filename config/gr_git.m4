@@ -30,18 +30,23 @@ AC_DEFUN([GR_GIT],[
       AC_MSG_CHECKING([git description of current commit])
       if (cd $srcdir && $GIT describe >/dev/null 2>&1); then
         GIT_DESCRIBE=`cd $srcdir && $GIT describe --abbrev=8 --long`
-	GIT_TAG=`echo $GIT_DESCRIBE | cut -f 1 -d '-'`
-        GIT_SEQNO=`echo $GIT_DESCRIBE | cut -f 2 -d '-'`
-	GIT_COMMIT=`echo $GIT_DESCRIBE | cut -f 3 -d '-' | cut -f 2- -d 'g'`
         # Release candidate tags create an extra -rcX field
-	if test x`echo $GIT_DESCRIBE | cut -f 1- -d '-' --output-delimiter=' ' | wc -w` = x4; then
-	  GIT_TAG=`echo $GIT_DESCRIBE | cut -f -2 -d '-'`
-	  GIT_SEQNO=`echo $GIT_DESCRIBE | cut -f 3 -d '-'`
-	  GIT_COMMIT=`echo $GIT_DESCRIBE | cut -f 4 -d '-' | cut -f 2- -d 'g'`
-	fi
+	case $GIT_DESCRIBE in
+	  *-*-*-*)
+	    GIT_TAG=`echo $GIT_DESCRIBE | cut -f -2 -d '-'`
+	    GIT_SEQNO=`echo $GIT_DESCRIBE | cut -f 3 -d '-'`
+	    GIT_COMMIT=`echo $GIT_DESCRIBE | cut -f 4 -d '-' | cut -f 2- -d 'g'`
+	    ;;
+	  *-*-*)
+	    GIT_TAG=`echo $GIT_DESCRIBE | cut -f 1 -d '-'`
+ 	    GIT_SEQNO=`echo $GIT_DESCRIBE | cut -f 2 -d '-'`
+	    GIT_COMMIT=`echo $GIT_DESCRIBE | cut -f 3 -d '-' | cut -f 2- -d 'g'`
+	    ;;
+	esac
+
 	AC_MSG_RESULT([$GIT_DESCRIBE])
       else
-        AC_MSG_RESULT([unable to find, using current commit])
+        AC_MSG_RESULT([no tag in history, using current commit])
 	GIT_TAG=''
 	GIT_SEQNO=''
 	GIT_COMMIT=`cd $srcdir && $GIT describe --always --abbrev=8`

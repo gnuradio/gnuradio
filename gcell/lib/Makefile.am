@@ -27,10 +27,10 @@ SUBDIRS = spu runtime general wrapper .
 lib_LTLIBRARIES = libgcell.la libgcell-qa.la
 
 libgcell_la_SOURCES = 
-libgcell_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
+libgcell_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 libgcell_qa_la_SOURCES = 
-libgcell_qa_la_LDFLAGS = $(NO_UNDEFINED) -version-info 0:0:0
+libgcell_qa_la_LDFLAGS = $(NO_UNDEFINED) $(LTVERSIONFLAGS)
 
 libgcell_la_LIBADD = \
 	runtime/libruntime.la \
@@ -42,9 +42,3 @@ libgcell_qa_la_LIBADD = \
 	runtime/libruntime-qa.la \
 	wrapper/libwrapper-qa.la \
 	$(CPPUNIT_LIBS)
-
-
-
-
-
-
