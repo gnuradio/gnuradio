@@ -69,4 +69,4 @@ libgnuradio_core_qa_la_LIBADD  = 	\
 
 bin_PROGRAMS = gnuradio-config-info
 gnuradio_config_info_SOURCES = gnuradio-config-info.cc
-gnuradio_config_info_LDADD = libgnuradio-core.la $(BOOST_PROGRAM_OPTIONS_LIB)
+gnuradio_config_info_LDADD = libgnuradio-core.la $(BOOST_LDFLAGS) $(BOOST_PROGRAM_OPTIONS_LIB)
