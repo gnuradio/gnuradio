@@ -40,6 +40,7 @@ public:
   double freq_max();
 
 protected:
+  int _refclk_divisor();
   bool _lock_detect();
   bool _set_pga(float pga_gain);
 

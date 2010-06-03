@@ -27,9 +27,7 @@
 #include <stdio.h>
 
 #define FREQ_C(freq) uint64_t(freq)
-#define INPUT_REF_FREQ FREQ_C(64e6)
 #define DIV_ROUND(num, denom) (((num) + ((denom)/2))/(denom))
-#define INPUT_REF_FREQ_2X (2*INPUT_REF_FREQ)                            /* input ref freq with doubler turned on */
 #define MIN_INT_DIV uint16_t(23)                                        /* minimum int divider, prescaler 4/5 only */
 #define MAX_RF_DIV uint8_t(16)                                          /* max rf divider, divides rf output */
 #define MIN_VCO_FREQ FREQ_C(2.2e9)                                      /* minimum vco freq */
@@ -130,7 +128,7 @@ adf4350::_write(uint8_t addr, uint32_t data)
 }
 
 bool
-adf4350::_set_freq(freq_t freq)
+adf4350::_set_freq(freq_t freq, freq_t refclock_freq)
 {
     /* Set the frequency by setting int, frac, mod, r, div */
     if (freq > MAX_FREQ || freq < MIN_FREQ) return false;
@@ -147,7 +145,7 @@ adf4350::_set_freq(freq_t freq)
         d_regs->d_divider_select++; //double the divider
     }
     /* Ramp up the R divider until the N divider is at least the minimum. */
-    //d_regs->d_10_bit_r_counter = INPUT_REF_FREQ*MIN_INT_DIV/freq;
+    //d_regs->d_10_bit_r_counter = refclock_freq*MIN_INT_DIV/freq;
     d_regs->d_10_bit_r_counter = 2;
     uint64_t n_mod;
     do{
@@ -155,7 +153,7 @@ adf4350::_set_freq(freq_t freq)
         n_mod = freq;
         n_mod *= d_regs->d_10_bit_r_counter;
         n_mod *= d_regs->d_mod;
-        n_mod /= INPUT_REF_FREQ;
+        n_mod /= refclock_freq;
         /* calculate int and frac */
         d_regs->d_int = n_mod/d_regs->d_mod;
         d_regs->d_frac = (n_mod - (freq_t)d_regs->d_int*d_regs->d_mod) & uint16_t(0xfff);
@@ -169,11 +167,11 @@ adf4350::_set_freq(freq_t freq)
     }while(d_regs->d_int < min_int_div);
     /* calculate the band select so PFD is under 125 KHz */
     d_regs->d_8_bit_band_select_clock_divider_value = \
-        INPUT_REF_FREQ/(FREQ_C(30e3)*d_regs->d_10_bit_r_counter) + 1;
+        refclock_freq/(FREQ_C(30e3)*d_regs->d_10_bit_r_counter) + 1;
     /*
     fprintf(stderr, "Band Selection: Div %u, Freq %lu\n",
         d_regs->d_8_bit_band_select_clock_divider_value,
-        INPUT_REF_FREQ/(d_regs->d_8_bit_band_select_clock_divider_value * d_regs->d_10_bit_r_counter) + 1
+        refclock_freq/(d_regs->d_8_bit_band_select_clock_divider_value * d_regs->d_10_bit_r_counter) + 1
     );
     */
     d_regs->_load_register(5);
@@ -187,7 +185,7 @@ adf4350::_set_freq(freq_t freq)
 }
 
 freq_t
-adf4350::_get_freq(void)
+adf4350::_get_freq(freq_t refclock_freq)
 {
     /* Calculate the freq from int, frac, mod, ref, r, div:
      *  freq = (int + frac/mod) * (ref/r)
@@ -198,7 +196,7 @@ adf4350::_get_freq(void)
     temp = d_regs->d_int;
     temp *= d_regs->d_mod;
     temp += d_regs->d_frac;
-    temp *= INPUT_REF_FREQ;
+    temp *= refclock_freq;
     temp /= d_regs->d_mod;
     temp /= d_regs->d_10_bit_r_counter;
     temp /= (1 << d_regs->d_divider_select);

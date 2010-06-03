@@ -37,8 +37,8 @@ public:
     bool _get_locked();
     void _enable(bool enable);
     void _write(uint8_t addr, uint32_t data);
-    bool _set_freq(freq_t freq);
-    freq_t _get_freq();
+    bool _set_freq(freq_t freq, freq_t refclock_freq);
+    freq_t _get_freq(freq_t refclock_freq);
     freq_t _get_max_freq();
     freq_t _get_min_freq();
 

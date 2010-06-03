@@ -71,6 +71,12 @@ wbxng_base::~wbxng_base()
     delete d_common;
 }
 
+int
+wbxng_base::_refclk_divisor()
+{
+  return 1;
+}
+
 struct freq_result_t
 wbxng_base::set_freq(double freq)
 {
@@ -83,8 +89,8 @@ wbxng_base::set_freq(double freq)
   // clamp freq
   freq_t int_freq = freq_t(std::max(freq_min(), std::min(freq, freq_max())));
 
-  bool ok = d_common->_set_freq(int_freq*2);
-  double freq_result = (double) d_common->_get_freq()/2.0;
+  bool ok = d_common->_set_freq(int_freq*2, _refclk_freq());
+  double freq_result = (double) d_common->_get_freq(_refclk_freq())/2.0;
   struct freq_result_t args = {ok, freq_result};
 
   /* Wait before reading Lock Detect*/
