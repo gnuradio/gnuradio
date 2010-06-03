@@ -30,7 +30,7 @@ class adf4350;
 class wbxng_base : public db_base
 {
 public:
-  wbxng_base(usrp_basic_sptr usrp, int which, int _power_on=0);
+  wbxng_base(usrp_basic_sptr usrp, int which);
   ~wbxng_base();
 
   struct freq_result_t set_freq(double freq);
@@ -44,9 +44,6 @@ protected:
   bool _lock_detect();
   bool _set_pga(float pga_gain);
 
-  int power_on() { return d_power_on; }
-  int power_off() { return 0; }
-
   bool d_first;
   int  d_spi_format;
   int  d_spi_enable;
@@ -58,14 +55,14 @@ protected:
 
 // ----------------------------------------------------------------
 
-class wbxng_base_tx : public wbxng_base
+class db_wbxng_tx : public wbxng_base
 {
 protected:
   void shutdown();
 
 public:
-  wbxng_base_tx(usrp_basic_sptr usrp, int which, int _power_on=0);
-  ~wbxng_base_tx();
+  db_wbxng_tx(usrp_basic_sptr usrp, int which);
+  ~db_wbxng_tx();
 
   float gain_min();
   float gain_max();
@@ -76,36 +73,20 @@ public:
   bool set_gain(float gain);
 };
 
-class wbxng_base_rx : public wbxng_base
+class db_wbxng_rx : public wbxng_base
 {
 protected:
   void shutdown();
   bool _set_attn(float attn);
 
 public:
-  wbxng_base_rx(usrp_basic_sptr usrp, int which, int _power_on=0);
-  ~wbxng_base_rx();
+  db_wbxng_rx(usrp_basic_sptr usrp, int which);
+  ~db_wbxng_rx();
 
   bool set_auto_tr(bool on);
   bool select_rx_antenna(int which_antenna);
   bool select_rx_antenna(const std::string &which_antenna);
   bool set_gain(float gain);
-};
-
-// ----------------------------------------------------------------
-
-class db_wbxng_tx : public wbxng_base_tx
-{
- public:
-  db_wbxng_tx(usrp_basic_sptr usrp, int which);
-  ~db_wbxng_tx();
-};
-
-class db_wbxng_rx : public wbxng_base_rx
-{
-public:
-  db_wbxng_rx(usrp_basic_sptr usrp, int which);
-  ~db_wbxng_rx();
 
   float gain_min();
   float gain_max();
