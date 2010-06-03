@@ -40,8 +40,9 @@ public:
   double freq_max();
 
 protected:
+  void _write_spi(std::string data);
   int _refclk_divisor();
-  bool _lock_detect();
+  bool _get_locked();
   bool _set_pga(float pga_gain);
 
   bool d_first;
@@ -50,7 +51,7 @@ protected:
   int  d_power_on;
   int  d_PD;
 
-  adf4350 *d_common;
+  boost::shared_ptr<adf4350> d_common;
 };
 
 // ----------------------------------------------------------------

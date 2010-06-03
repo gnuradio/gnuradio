@@ -67,8 +67,6 @@ wbxng_base::wbxng_base(usrp_basic_sptr _usrp, int which)
 
 wbxng_base::~wbxng_base()
 {
-  if (d_common)
-    delete d_common;
 }
 
 int
@@ -90,7 +88,18 @@ wbxng_base::set_freq(double freq)
   freq_t int_freq = freq_t(std::max(freq_min(), std::min(freq, freq_max())));
 
   bool ok = d_common->_set_freq(int_freq*2, _refclk_freq());
+
+  _write_spi(d_common->compute_register(5));
+  _write_spi(d_common->compute_register(4));
+  _write_spi(d_common->compute_register(3));
+  /* load involved registers */
+  _write_spi(d_common->compute_register(2));
+  _write_spi(d_common->compute_register(1));
+  _write_spi(d_common->compute_register(0));
+
   double freq_result = (double) d_common->_get_freq(_refclk_freq())/2.0;
+
+  //ok &= _get_locked();
   struct freq_result_t args = {ok, freq_result};
 
   /* Wait before reading Lock Detect*/
@@ -150,6 +159,18 @@ wbxng_base::freq_max()
   return (double) d_common->_get_max_freq()/2.0;
 }
 
+bool
+wbxng_base::_get_locked(void)
+{
+    return usrp()->read_io(d_which) & PLL_LOCK_DETECT;
+}
+
+void
+wbxng_base::_write_spi(std::string data)
+{
+    usrp()->_write_spi(0, d_spi_enable, d_spi_format, data);
+}
+
 // ----------------------------------------------------------------
 
 db_wbxng_tx::db_wbxng_tx(usrp_basic_sptr _usrp, int which)
@@ -167,15 +188,24 @@ db_wbxng_tx::db_wbxng_tx(usrp_basic_sptr _usrp, int which)
     d_spi_enable = SPI_ENABLE_TX_B;
   }
 
-  d_common = new adf4350(_usrp, d_which, d_spi_enable);
+  d_common = boost::shared_ptr<adf4350> (new adf4350());
+
+  /* Initialize the registers. */
+  _write_spi(d_common->compute_register(5));
+  _write_spi(d_common->compute_register(4));
+  _write_spi(d_common->compute_register(3));
+  _write_spi(d_common->compute_register(2));
+  _write_spi(d_common->compute_register(1));
+  _write_spi(d_common->compute_register(0));
 
   // power up the transmit side, but don't enable the mixer
-  usrp()->_write_oe(d_which,(RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5), (RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5));
-  usrp()->write_io(d_which, (RX_TXN|ENABLE_33|ENABLE_5), (RX_TXN|ENABLE_33|ENABLE_5));
+  usrp()->_write_oe(d_which,(PLL_CE|PLL_PDBRF|RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5), (PLL_CE|PLL_PDBRF|RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5));
+  usrp()->write_io(d_which, (PLL_CE|RX_TXN|ENABLE_33|ENABLE_5), (PLL_CE|PLL_PDBRF|RX_TXN|ENABLE_33|ENABLE_5));
   //set_lo_offset(4e6);
   
   // Disable VCO/PLL
-  d_common->_enable(true);
+  //d_common->_enable(true);
+  usrp()->write_io(d_which, (PLL_PDBRF), (PLL_PDBRF));
 
   set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
 }
@@ -184,7 +214,6 @@ db_wbxng_tx::~db_wbxng_tx()
 {
   shutdown();
 }
-
 
 void
 db_wbxng_tx::shutdown()
@@ -196,11 +225,11 @@ db_wbxng_tx::shutdown()
     // do whatever there is to do to shutdown
 
     // Disable VCO/PLL
-    d_common->_enable(false);
+    //d_common->_enable(false);
+    usrp()->write_io(d_which, 0, (PLL_PDBRF));
 
     // Power down and leave the T/R switch in the R position
-    usrp()->write_io(d_which, (RX_TXN), (RX_TXN|ENABLE_33|ENABLE_5));
-
+    usrp()->write_io(d_which, (RX_TXN), (PLL_CE|PLL_PDBRF|RX_TXN|ENABLE_33|ENABLE_5));
 
     /*
     _write_control(_compute_control_reg());
@@ -320,13 +349,22 @@ db_wbxng_rx::db_wbxng_rx(usrp_basic_sptr _usrp, int which)
     d_spi_enable = SPI_ENABLE_RX_B;
   }
 
-  d_common = new adf4350(_usrp, d_which, d_spi_enable);
+  d_common = boost::shared_ptr<adf4350> (new adf4350());
+
+  /* Initialize the registers. */
+  _write_spi(d_common->compute_register(5));
+  _write_spi(d_common->compute_register(4));
+  _write_spi(d_common->compute_register(3));
+  _write_spi(d_common->compute_register(2));
+  _write_spi(d_common->compute_register(1));
+  _write_spi(d_common->compute_register(0));
   
   // Disable VCO/PLL
-  d_common->_enable(true);
+  //d_common->_enable(true);
+  usrp()->write_io(d_which, (PLL_PDBRF), (PLL_PDBRF));
 
-  usrp()->_write_oe(d_which, (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5), (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
-  usrp()->write_io(d_which,  (RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5), (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
+  usrp()->_write_oe(d_which, (PLL_CE|PLL_PDBRF|RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5), (PLL_CE|PLL_PDBRF|RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
+  usrp()->write_io(d_which,  (PLL_CE|RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5), (PLL_CE|PLL_PDBRF|RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
   //fprintf(stderr,"Setting WBXNG RXBB on");
 
   // set up for RX on TX/RX port
@@ -356,7 +394,8 @@ db_wbxng_rx::shutdown()
     // do whatever there is to do to shutdown
 
     // Power down VCO/PLL
-    d_common->_enable(false);
+    //d_common->_enable(false);
+    usrp()->write_io(d_which, 0, (PLL_PDBRF));
 
     // fprintf(stderr, "db_wbxng_rx::shutdown  before _write_control\n");
     //_write_control(_compute_control_reg());
@@ -368,7 +407,7 @@ db_wbxng_rx::shutdown()
     set_auto_tr(false);
 
     // Power down
-    usrp()->write_io(d_which, 0, (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
+    usrp()->write_io(d_which, 0, (PLL_CE|PLL_PDBRF|RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
 
     // fprintf(stderr, "db_wbxng_rx::shutdown  after set_auto_tr\n");
   }
@@ -449,7 +488,6 @@ db_wbxng_rx::set_gain(float gain)
   float pga_gain, agc_gain;
 
   float maxgain = gain_max() - usrp()->pga_max();
-  float mingain = gain_min();
   if(gain > maxgain) {
     pga_gain = gain-maxgain;
     assert(pga_gain <= usrp()->pga_max());
