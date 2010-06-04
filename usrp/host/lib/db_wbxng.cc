@@ -207,7 +207,7 @@ db_wbxng_tx::db_wbxng_tx(usrp_basic_sptr _usrp, int which)
   //d_common->_enable(true);
   usrp()->write_io(d_which, (PLL_PDBRF), (PLL_PDBRF));
 
-  set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
+  set_gain(gain_min());  // initialize gain
 }
 
 db_wbxng_tx::~db_wbxng_tx()
@@ -359,13 +359,13 @@ db_wbxng_rx::db_wbxng_rx(usrp_basic_sptr _usrp, int which)
   _write_spi(d_common->compute_register(1));
   _write_spi(d_common->compute_register(0));
   
-  // Disable VCO/PLL
-  //d_common->_enable(true);
-  usrp()->write_io(d_which, (PLL_PDBRF), (PLL_PDBRF));
-
   usrp()->_write_oe(d_which, (PLL_CE|PLL_PDBRF|RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5), (PLL_CE|PLL_PDBRF|RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
   usrp()->write_io(d_which,  (PLL_CE|RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5), (PLL_CE|PLL_PDBRF|RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
   //fprintf(stderr,"Setting WBXNG RXBB on");
+
+  // Enable VCO/PLL
+  //d_common->_enable(true);
+  usrp()->write_io(d_which, (PLL_PDBRF), (PLL_PDBRF));
 
   // set up for RX on TX/RX port
   select_rx_antenna("TX/RX");
@@ -376,7 +376,7 @@ db_wbxng_rx::db_wbxng_rx(usrp_basic_sptr _usrp, int which)
   set_lo_offset(-4e6);
   */
 
-  set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
+  set_gain(gain_min());  // initialize gain
 }
 
 db_wbxng_rx::~db_wbxng_rx()
