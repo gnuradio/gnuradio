@@ -55,8 +55,7 @@ const uint8_t adf4350_regs::s_output_power = 3;
 /* reg 5 */
 const uint8_t adf4350_regs::s_ld_pin_mode = 1;
 
-adf4350_regs::adf4350_regs(adf4350* _adf4350){
-    d_adf4350 = _adf4350;
+adf4350_regs::adf4350_regs(){
 
     /* reg 0 */
     d_int = uint16_t(100);
@@ -79,10 +78,10 @@ adf4350_regs::~adf4350_regs(void){
 uint32_t
 adf4350_regs::_reg_shift(uint32_t data, uint32_t shift){
         return data << shift;
-    }
+}
 
-void
-adf4350_regs::_load_register(uint8_t addr){
+uint32_t
+adf4350_regs::compute_register(uint8_t addr){
 	uint32_t data;
 	switch (addr){
 		case 0: data = (
@@ -123,8 +122,9 @@ adf4350_regs::_load_register(uint8_t addr){
 			_reg_shift(s_output_power, 3)); break;
 		case 5: data = (
 			_reg_shift(s_ld_pin_mode, 22)); break;
-		default: return;
+		default: return data;
 	}
-	/* write the data out to spi */
-	d_adf4350->_write(addr, data);
+	/* return the data to write out to spi */
+    return data;
 }
+
