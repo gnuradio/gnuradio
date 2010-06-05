@@ -29,13 +29,11 @@ class adf4350;
 class adf4350_regs
 {
 public:
-    adf4350_regs(adf4350* _adf4350);
+    adf4350_regs();
     ~adf4350_regs();
 
-    adf4350* d_adf4350;
-
     uint32_t _reg_shift(uint32_t data, uint32_t shift);
-    void _load_register(uint8_t addr);
+    uint32_t compute_register(uint8_t addr);
 
     /* reg 0 */
     uint16_t d_int;
@@ -75,6 +73,11 @@ public:
     static const uint8_t s_output_power;
     /* reg 5 */
     static const uint8_t s_ld_pin_mode;
+
+protected:
+    usrp_basic_sptr d_usrp;
+    int d_spi_enable;
+    int d_spi_format;
 };
 
 #endif /* ADF4350_REGS_H */
