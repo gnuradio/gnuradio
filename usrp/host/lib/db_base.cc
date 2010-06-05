@@ -238,7 +238,7 @@ int
 db_base::_refclk_divisor()
 {
   // Return value to stick in REFCLK_DIVISOR register
-  throw std::runtime_error("_reflck_divisor() called from base class\n");;
+  throw std::runtime_error("_refclk_divisor() called from base class\n");;
 }
 
 bool

@@ -46,8 +46,8 @@
 #define ATTN_SHIFT	8
 #define ATTN_MASK	(63 << ATTN_SHIFT)
 
-wbxng_base::wbxng_base(usrp_basic_sptr _usrp, int which, int _power_on)
-  : db_base(_usrp, which), d_power_on(_power_on)
+wbxng_base::wbxng_base(usrp_basic_sptr _usrp, int which)
+  : db_base(_usrp, which)
 {
   /*
     @param usrp: instance of usrp.source_c
@@ -67,8 +67,12 @@ wbxng_base::wbxng_base(usrp_basic_sptr _usrp, int which, int _power_on)
 
 wbxng_base::~wbxng_base()
 {
-  if (d_common)
-    delete d_common;
+}
+
+int
+wbxng_base::_refclk_divisor()
+{
+  return 1;
 }
 
 struct freq_result_t
@@ -83,8 +87,19 @@ wbxng_base::set_freq(double freq)
   // clamp freq
   freq_t int_freq = freq_t(std::max(freq_min(), std::min(freq, freq_max())));
 
-  bool ok = d_common->_set_freq(int_freq*2);
-  double freq_result = (double) d_common->_get_freq()/2.0;
+  bool ok = d_common->_set_freq(int_freq*2, _refclk_freq());
+
+  _write_spi(d_common->compute_register(5));
+  _write_spi(d_common->compute_register(4));
+  _write_spi(d_common->compute_register(3));
+  /* load involved registers */
+  _write_spi(d_common->compute_register(2));
+  _write_spi(d_common->compute_register(1));
+  _write_spi(d_common->compute_register(0));
+
+  double freq_result = (double) d_common->_get_freq(_refclk_freq())/2.0;
+
+  //ok &= _get_locked();
   struct freq_result_t args = {ok, freq_result};
 
   /* Wait before reading Lock Detect*/
@@ -144,10 +159,22 @@ wbxng_base::freq_max()
   return (double) d_common->_get_max_freq()/2.0;
 }
 
+bool
+wbxng_base::_get_locked(void)
+{
+    return usrp()->read_io(d_which) & PLL_LOCK_DETECT;
+}
+
+void
+wbxng_base::_write_spi(std::string data)
+{
+    usrp()->_write_spi(0, d_spi_enable, d_spi_format, data);
+}
+
 // ----------------------------------------------------------------
 
-wbxng_base_tx::wbxng_base_tx(usrp_basic_sptr _usrp, int which, int _power_on)
-  : wbxng_base(_usrp, which, _power_on)
+db_wbxng_tx::db_wbxng_tx(usrp_basic_sptr _usrp, int which)
+  : wbxng_base(_usrp, which)
 {
   /*
     @param usrp: instance of usrp.sink_c
@@ -161,40 +188,48 @@ wbxng_base_tx::wbxng_base_tx(usrp_basic_sptr _usrp, int which, int _power_on)
     d_spi_enable = SPI_ENABLE_TX_B;
   }
 
-  d_common = new adf4350(_usrp, d_which, d_spi_enable);
+  d_common = boost::shared_ptr<adf4350> (new adf4350());
+
+  /* Initialize the registers. */
+  _write_spi(d_common->compute_register(5));
+  _write_spi(d_common->compute_register(4));
+  _write_spi(d_common->compute_register(3));
+  _write_spi(d_common->compute_register(2));
+  _write_spi(d_common->compute_register(1));
+  _write_spi(d_common->compute_register(0));
 
   // power up the transmit side, but don't enable the mixer
-  usrp()->_write_oe(d_which,(RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5), (RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5));
-  usrp()->write_io(d_which, (power_on()|RX_TXN|ENABLE_33|ENABLE_5), (RX_TXN|ENABLE_33|ENABLE_5));
+  usrp()->_write_oe(d_which,(PLL_CE|PLL_PDBRF|RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5), (PLL_CE|PLL_PDBRF|RX_TXN|TXMOD_EN|ENABLE_33|ENABLE_5));
+  usrp()->write_io(d_which, (PLL_CE|RX_TXN|ENABLE_33|ENABLE_5), (PLL_CE|PLL_PDBRF|RX_TXN|ENABLE_33|ENABLE_5));
   //set_lo_offset(4e6);
   
   // Disable VCO/PLL
-  d_common->_enable(true);
+  //d_common->_enable(true);
+  usrp()->write_io(d_which, (PLL_PDBRF), (PLL_PDBRF));
 
-  set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
+  set_gain(gain_min());  // initialize gain
 }
 
-wbxng_base_tx::~wbxng_base_tx()
+db_wbxng_tx::~db_wbxng_tx()
 {
   shutdown();
 }
 
-
 void
-wbxng_base_tx::shutdown()
+db_wbxng_tx::shutdown()
 {
-  // fprintf(stderr, "wbxng_base_tx::shutdown  d_is_shutdown = %d\n", d_is_shutdown);
+  // fprintf(stderr, "db_wbxng_tx::shutdown  d_is_shutdown = %d\n", d_is_shutdown);
 
   if (!d_is_shutdown){
     d_is_shutdown = true;
     // do whatever there is to do to shutdown
 
     // Disable VCO/PLL
-    d_common->_enable(false);
+    //d_common->_enable(false);
+    usrp()->write_io(d_which, 0, (PLL_PDBRF));
 
     // Power down and leave the T/R switch in the R position
-    usrp()->write_io(d_which, (power_off()|RX_TXN), (RX_TXN|ENABLE_33|ENABLE_5));
-
+    usrp()->write_io(d_which, (RX_TXN), (PLL_CE|PLL_PDBRF|RX_TXN|ENABLE_33|ENABLE_5));
 
     /*
     _write_control(_compute_control_reg());
@@ -205,7 +240,7 @@ wbxng_base_tx::shutdown()
 }
 
 bool
-wbxng_base_tx::set_auto_tr(bool on)
+db_wbxng_tx::set_auto_tr(bool on)
 {
   bool ok = true;
   if(on) {
@@ -222,7 +257,7 @@ wbxng_base_tx::set_auto_tr(bool on)
 }
 
 bool
-wbxng_base_tx::set_enable(bool on)
+db_wbxng_tx::set_enable(bool on)
 {
   /*
     Enable transmitter if on is true
@@ -244,25 +279,25 @@ wbxng_base_tx::set_enable(bool on)
 }
 
 float
-wbxng_base_tx::gain_min()
+db_wbxng_tx::gain_min()
 {
   return 0.0;
 }
 
 float
-wbxng_base_tx::gain_max()
+db_wbxng_tx::gain_max()
 {
   return 25.0;
 }
 
 float
-wbxng_base_tx::gain_db_per_step()
+db_wbxng_tx::gain_db_per_step()
 {
   return gain_max()/(1+(1.4-0.5)*4096/3.3);
 }
 
 bool
-wbxng_base_tx::set_gain(float gain)
+db_wbxng_tx::set_gain(float gain)
 {
   /*
     Set the gain.
@@ -299,8 +334,8 @@ wbxng_base_tx::set_gain(float gain)
 /**************************************************************************/
 
 
-wbxng_base_rx::wbxng_base_rx(usrp_basic_sptr _usrp, int which, int _power_on)
-  : wbxng_base(_usrp, which, _power_on)
+db_wbxng_rx::db_wbxng_rx(usrp_basic_sptr _usrp, int which)
+  : wbxng_base(_usrp, which)
 {
   /*
     @param usrp: instance of usrp.source_c
@@ -314,14 +349,23 @@ wbxng_base_rx::wbxng_base_rx(usrp_basic_sptr _usrp, int which, int _power_on)
     d_spi_enable = SPI_ENABLE_RX_B;
   }
 
-  d_common = new adf4350(_usrp, d_which, d_spi_enable);
-  
-  // Disable VCO/PLL
-  d_common->_enable(true);
+  d_common = boost::shared_ptr<adf4350> (new adf4350());
 
-  usrp()->_write_oe(d_which, (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5), (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
-  usrp()->write_io(d_which,  (power_on()|RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5), (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
+  /* Initialize the registers. */
+  _write_spi(d_common->compute_register(5));
+  _write_spi(d_common->compute_register(4));
+  _write_spi(d_common->compute_register(3));
+  _write_spi(d_common->compute_register(2));
+  _write_spi(d_common->compute_register(1));
+  _write_spi(d_common->compute_register(0));
+  
+  usrp()->_write_oe(d_which, (PLL_CE|PLL_PDBRF|RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5), (PLL_CE|PLL_PDBRF|RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
+  usrp()->write_io(d_which,  (PLL_CE|RX2_RX1N|RXBB_EN|ENABLE_33|ENABLE_5), (PLL_CE|PLL_PDBRF|RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
   //fprintf(stderr,"Setting WBXNG RXBB on");
+
+  // Enable VCO/PLL
+  //d_common->_enable(true);
+  usrp()->write_io(d_which, (PLL_PDBRF), (PLL_PDBRF));
 
   // set up for RX on TX/RX port
   select_rx_antenna("TX/RX");
@@ -331,43 +375,46 @@ wbxng_base_rx::wbxng_base_rx(usrp_basic_sptr _usrp, int which, int _power_on)
   /*
   set_lo_offset(-4e6);
   */
+
+  set_gain(gain_min());  // initialize gain
 }
 
-wbxng_base_rx::~wbxng_base_rx()
+db_wbxng_rx::~db_wbxng_rx()
 {
   shutdown();
 }
 
 void
-wbxng_base_rx::shutdown()
+db_wbxng_rx::shutdown()
 {
-  // fprintf(stderr, "wbxng_base_rx::shutdown  d_is_shutdown = %d\n", d_is_shutdown);
+  // fprintf(stderr, "db_wbxng_rx::shutdown  d_is_shutdown = %d\n", d_is_shutdown);
 
   if (!d_is_shutdown){
     d_is_shutdown = true;
     // do whatever there is to do to shutdown
 
     // Power down VCO/PLL
-    d_common->_enable(false);
+    //d_common->_enable(false);
+    usrp()->write_io(d_which, 0, (PLL_PDBRF));
 
-    // fprintf(stderr, "wbxng_base_rx::shutdown  before _write_control\n");
+    // fprintf(stderr, "db_wbxng_rx::shutdown  before _write_control\n");
     //_write_control(_compute_control_reg());
 
-    // fprintf(stderr, "wbxng_base_rx::shutdown  before _enable_refclk\n");
+    // fprintf(stderr, "db_wbxng_rx::shutdown  before _enable_refclk\n");
     _enable_refclk(false);                       // turn off refclk
 
-    // fprintf(stderr, "wbxng_base_rx::shutdown  before set_auto_tr\n");
+    // fprintf(stderr, "db_wbxng_rx::shutdown  before set_auto_tr\n");
     set_auto_tr(false);
 
     // Power down
-    usrp()->write_io(d_which, power_off(), (RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
+    usrp()->write_io(d_which, 0, (PLL_CE|PLL_PDBRF|RX2_RX1N|RXBB_EN|ATTN_MASK|ENABLE_33|ENABLE_5));
 
-    // fprintf(stderr, "wbxng_base_rx::shutdown  after set_auto_tr\n");
+    // fprintf(stderr, "db_wbxng_rx::shutdown  after set_auto_tr\n");
   }
 }
 
 bool
-wbxng_base_rx::set_auto_tr(bool on)
+db_wbxng_rx::set_auto_tr(bool on)
 {
   bool ok = true;
   if(on) {
@@ -384,7 +431,7 @@ wbxng_base_rx::set_auto_tr(bool on)
 }
 
 bool
-wbxng_base_rx::select_rx_antenna(int which_antenna)
+db_wbxng_rx::select_rx_antenna(int which_antenna)
 {
   /*
     Specify which antenna port to use for reception.
@@ -404,7 +451,7 @@ wbxng_base_rx::select_rx_antenna(int which_antenna)
 }
 
 bool
-wbxng_base_rx::select_rx_antenna(const std::string &which_antenna)
+db_wbxng_rx::select_rx_antenna(const std::string &which_antenna)
 {
   /*
     Specify which antenna port to use for reception.
@@ -426,7 +473,7 @@ wbxng_base_rx::select_rx_antenna(const std::string &which_antenna)
 }
 
 bool
-wbxng_base_rx::set_gain(float gain)
+db_wbxng_rx::set_gain(float gain)
 {
   /*
     Set the gain.
@@ -441,7 +488,6 @@ wbxng_base_rx::set_gain(float gain)
   float pga_gain, agc_gain;
 
   float maxgain = gain_max() - usrp()->pga_max();
-  float mingain = gain_min();
   if(gain > maxgain) {
     pga_gain = gain-maxgain;
     assert(pga_gain <= usrp()->pga_max());
@@ -456,33 +502,12 @@ wbxng_base_rx::set_gain(float gain)
 }
 
 bool
-wbxng_base_rx::_set_attn(float attn)
+db_wbxng_rx::_set_attn(float attn)
 {
   int attn_code = int(floor(attn/0.5));
   unsigned int iobits = (~attn_code) << ATTN_SHIFT;
   //fprintf(stderr, "Attenuation: %f dB, Code: %d, IO Bits %x, Mask: %x \n", attn, attn_code, iobits & ATTN_MASK, ATTN_MASK);
   return usrp()->write_io(d_which, iobits, ATTN_MASK);
-}
-
-// ----------------------------------------------------------------
-
-db_wbxng_tx::db_wbxng_tx(usrp_basic_sptr usrp, int which)
-  : wbxng_base_tx(usrp, which)
-{
-}
-
-db_wbxng_tx::~db_wbxng_tx()
-{
-}
-
-db_wbxng_rx::db_wbxng_rx(usrp_basic_sptr usrp, int which)
-  : wbxng_base_rx(usrp, which)
-{
-  set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
-}
-
-db_wbxng_rx::~db_wbxng_rx()
-{
 }
 
 float
@@ -502,7 +527,6 @@ db_wbxng_rx::gain_db_per_step()
 {
   return 0.05;
 }
-
 
 bool
 db_wbxng_rx::i_and_q_swapped()
