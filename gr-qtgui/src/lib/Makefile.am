@@ -54,7 +54,6 @@ libgnuradio_qtgui_la_SOURCES = 	\
 	SpectrumGUIClass.cc			\
 	spectrumUpdateEvents.cc			\
 	plot_waterfall.cc			\
-	$(QMAKE_SOURCES)			\
 	qtgui_sink_c.cc				\
 	qtgui_sink_f.cc
 
@@ -74,6 +73,8 @@ grinclude_HEADERS =			\
 	qtgui.h				\
 	qtgui_sink_c.h			\
 	qtgui_sink_f.h
+
+nodist_libqtsrc_la_SOURCES = $(QMAKE_SOURCES)
 
 %_moc.cc : %.h
 	$(QT_MOC_EXEC) -DQT_SHARED -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_GUI_LIB -DQT_CORE_LIB -p $(srcdir) $< -o $@
