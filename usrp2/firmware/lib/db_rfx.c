@@ -120,6 +120,16 @@ struct db_rfx_1800_tx {
   struct db_rfx_common	common;
 };
 
+struct db_rfx_2200_rx {
+  struct db_base	base;
+  struct db_rfx_common	common;
+};
+
+struct db_rfx_2200_tx {
+  struct db_base	base;
+  struct db_rfx_common	common;
+};
+
 struct db_rfx_2400_rx {
   struct db_base	base;
   struct db_rfx_common	common;
@@ -384,6 +394,70 @@ struct db_rfx_1800_tx db_rfx_1800_tx = {
   .common.CP2 = 7,
   .common.spi_mask = SPI_SS_TX_DB,
   .common.freq_mult = 1  
+};
+
+
+struct db_rfx_2200_rx db_rfx_2200_rx = {
+  .base.dbid = 0x002c,
+  .base.is_tx = false,
+  .base.output_enables = 0x00E0,
+  .base.used_pins = 0x00FF,
+  .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(2000e6),
+  .base.freq_max = U2_DOUBLE_TO_FXPT_FREQ(2400e6),
+  .base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(0),
+  .base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(70),
+  .base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(0.034),
+  .base.is_quadrature = true,
+  .base.i_and_q_swapped = true,
+  .base.spectrum_inverted = false,
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(0),
+  .base.init = rfx_init_rx,
+  .base.set_freq = rfx_set_freq,
+  .base.set_gain = rfx_set_gain_rx,
+  .base.set_tx_enable = 0,
+  .base.atr_mask = 0x00E0,
+  .base.atr_txval = 0,
+  .base.atr_rxval = MIX_EN,
+  // .base.atr_tx_delay =
+  // .base.atr_rx_delay =
+  .base.set_antenna = 0,
+  .common.DIV2 = 0,
+  .common.CP1 = 7,
+  .common.CP2 = 7,
+  .common.spi_mask = SPI_SS_RX_DB,
+  .common.freq_mult = 1
+};
+
+
+struct db_rfx_2200_tx db_rfx_2200_tx = {
+  .base.dbid = 0x002d,
+  .base.is_tx = true,
+  .base.output_enables = 0x00E0,
+  .base.used_pins = 0x00FF,
+  .base.freq_min = U2_DOUBLE_TO_FXPT_FREQ(2000e6),
+  .base.freq_max = U2_DOUBLE_TO_FXPT_FREQ(2400e6),
+  //.base.gain_min = U2_DOUBLE_TO_FXPT_GAIN(xxx),
+  //.base.gain_max = U2_DOUBLE_TO_FXPT_GAIN(xxx),
+  //.base.gain_step_size = U2_DOUBLE_TO_FXPT_GAIN(xxx),
+  .base.is_quadrature = true,
+  .base.i_and_q_swapped = false,
+  .base.spectrum_inverted = false,
+  .base.default_lo_offset = U2_DOUBLE_TO_FXPT_FREQ(12.5e6),
+  .base.init = rfx_init_tx,
+  .base.set_freq = rfx_set_freq,
+  .base.set_gain = rfx_set_gain_tx,
+  .base.set_tx_enable = rfx_set_tx_enable,
+  .base.atr_mask = 0x00E0,
+  .base.atr_txval = MIX_EN, 
+  .base.atr_rxval = ANT_SW,
+  // .base.atr_tx_delay =
+  // .base.atr_rx_delay =
+  .base.set_antenna = 0,
+  .common.DIV2 = 0,
+  .common.CP1 = 7,
+  .common.CP2 = 7,
+  .common.spi_mask = SPI_SS_TX_DB,
+  .common.freq_mult = 1
 };
 
 
