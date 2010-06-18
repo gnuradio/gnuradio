@@ -639,6 +639,38 @@ _AD4360_common::_prescaler()
 
 //----------------------------------------------------------------------
 
+_2200_common::_2200_common()
+  : _AD4360_common()
+{
+  // Band-specific R-Register Values
+  d_R_DIV = 16;  // bits 15:2
+   
+  // Band-specific C-Register values
+  d_P = 1;        // bits 23,22   Div by 16/17
+  d_CP2 = 7;      // bits 19:17
+  d_CP1 = 7;      // bits 16:14
+
+  // Band specifc N-Register Values
+  d_DIVSEL = 0;   // bit 23
+  d_DIV2 = 0;     // bit 22
+  d_CPGAIN = 0;   // bit 21
+  d_freq_mult = 1;
+}
+
+double
+_2200_common::freq_min()
+{
+  return 2000e6;
+}
+
+double
+_2200_common::freq_max()
+{
+  return 2400e6;
+}
+
+//----------------------------------------------------------------------
+
 _2400_common::_2400_common()
   : _AD4360_common()
 {
@@ -807,6 +839,72 @@ _400_rx::_400_rx()
   : _400_common()
 {
   d_DIV2 = 0;    // bit 22   // RX side has built-in DIV2 in AD8348
+}
+
+//------------------------------------------------------------    
+
+db_flexrf_2200_tx::db_flexrf_2200_tx(usrp_basic_sptr usrp, int which)
+  : flexrf_base_tx(usrp, which)
+{
+  d_common = new _2200_common();
+}
+
+db_flexrf_2200_tx::~db_flexrf_2200_tx()
+{
+}
+
+bool
+db_flexrf_2200_tx::_compute_regs(double freq, int &retR, int &retcontrol,
+				 int &retN, double &retfreq)
+{
+  return d_common->_compute_regs(_refclk_freq(), freq, retR,
+				 retcontrol, retN, retfreq);
+}
+
+
+
+db_flexrf_2200_rx::db_flexrf_2200_rx(usrp_basic_sptr usrp, int which)
+  : flexrf_base_rx(usrp, which)
+{
+  d_common = new _2200_common();
+  set_gain((gain_min() + gain_max()) / 2.0);  // initialize gain
+}
+
+db_flexrf_2200_rx::~db_flexrf_2200_rx()
+{
+}
+
+float
+db_flexrf_2200_rx::gain_min()
+{
+  return usrp()->pga_min();
+}
+
+float
+db_flexrf_2200_rx::gain_max()
+{
+  return usrp()->pga_max()+70;
+}
+
+float
+db_flexrf_2200_rx::gain_db_per_step()
+{
+  return 0.05;
+}
+
+
+bool
+db_flexrf_2200_rx::i_and_q_swapped()
+{
+  return true;
+}
+
+bool
+db_flexrf_2200_rx::_compute_regs(double freq, int &retR, int &retcontrol,
+				 int &retN, double &retfreq)
+{
+  return d_common->_compute_regs(_refclk_freq(), freq, retR,
+				 retcontrol, retN, retfreq);
 }
 
 //------------------------------------------------------------    
