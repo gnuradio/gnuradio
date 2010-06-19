@@ -36,7 +36,9 @@ usrp2_sink_base::usrp2_sink_base(const char *name,
   : usrp2_base(name,
                input_signature,
 	       gr_make_io_signature(0, 0, 0),
-	       ifc, mac)
+	       ifc, mac),
+    d_should_wait(false),
+    d_tx_time(0)
 {
   // NOP
 }
@@ -154,4 +156,11 @@ bool usrp2_sink_base::write_gpio(uint16_t value, uint16_t mask)
 bool usrp2_sink_base::read_gpio(uint16_t *value)
 {
   return d_u2->read_gpio(usrp2::GPIO_TX_BANK, value);
+}
+
+bool usrp2_sink_base::start_streaming_at(usrp2::fpga_timestamp time)
+{
+  d_should_wait = true;
+  d_tx_time = time;
+  return true;
 }

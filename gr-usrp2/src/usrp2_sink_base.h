@@ -37,6 +37,9 @@ protected:
 		  const std::string &mac)
     throw (std::runtime_error);
 
+  bool d_should_wait;
+  usrp2::fpga_timestamp d_tx_time;
+
 public:
   ~usrp2_sink_base();
 
@@ -139,6 +142,11 @@ public:
    * \brief Read daughterboard GPIO pin values
    */
   bool read_gpio(uint16_t *value);
+
+  /*!
+   * \brief First samples begin streaming to USRP2 at given time
+   */
+  bool start_streaming_at(usrp2::fpga_timestamp time);
 };
 
 #endif /* INCLUDED_USRP2_SINK_BASE_H */

@@ -67,12 +67,20 @@ usrp2_sink_32fc::work(int noutput_items,
     return 0;
 
   usrp2::tx_metadata metadata;
-  metadata.timestamp = -1;
-  metadata.send_now = 1;
+
+  // Set TX metadata to either start time or now
+  if (d_should_wait == true) {
+    metadata.timestamp = d_tx_time;
+    metadata.send_now = 0;
+    d_should_wait = false;
+  }
+  else {
+    metadata.timestamp = -1;
+    metadata.send_now = 1;
+  }
   metadata.start_of_burst = 1;
 
-  bool ok = d_u2->tx_32fc(0, // FIXME: someday, streams will have channel numbers
-			  in, noutput_items, &metadata);
+  bool ok = d_u2->tx_32fc(0, in, noutput_items, &metadata);
   if (!ok){
     std::cerr << "usrp2_sink_32fc: tx_32fc failed" << std::endl;
     return -1;	// say we're done
