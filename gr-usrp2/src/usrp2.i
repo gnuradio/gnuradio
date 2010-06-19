@@ -32,6 +32,7 @@
 
 %include <usrp2/tune_result.h>
 %include <usrp2/mimo_config.h>
+%include <usrp2/metadata.h>
 
 %template(uint32_t_vector) std::vector<uint32_t>;
 
@@ -163,6 +164,7 @@ public:
   bool write_gpio(uint16_t value, uint16_t mask);
   %rename(_real_read_gpio) read_gpio;
   bool read_gpio(uint16_t *value);
+  bool start_streaming_at(usrp2::fpga_timestamp time);
 };
 
 // ----------------------------------------------------------------
