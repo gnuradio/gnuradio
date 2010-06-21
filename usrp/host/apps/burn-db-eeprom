@@ -65,6 +65,7 @@ daughterboards = {
     'rfx900_mimo_b'   : ((FLEX_900_TX_MIMO_B, 0x0000),     (FLEX_900_RX_MIMO_B, 0x0000)),
     'rfx1200_mimo_b'  : ((FLEX_1200_TX_MIMO_B, 0x0000),    (FLEX_1200_RX_MIMO_B, 0x0000)),
     'rfx1800_mimo_b'  : ((FLEX_1800_TX_MIMO_B, 0x0000),    (FLEX_1800_RX_MIMO_B, 0x0000)),
+    'rfx2200_mimo_b'  : ((FLEX_2200_TX_MIMO_B, 0x0000),    (FLEX_2200_RX_MIMO_B, 0x0000)),
     'rfx2400_mimo_b'  : ((FLEX_2400_TX_MIMO_B, 0x0000),    (FLEX_2400_RX_MIMO_B, 0x0000)),
     'lftx'            : ((LF_TX, 0x0000),           None),
     'lfrx'            : (None,                      (LF_RX, 0x0000)),
