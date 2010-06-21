@@ -46,7 +46,7 @@ self._$(id)_config.write(open($config_file, 'w'))</callback>
 		<option>
 			<name>Bool</name>
 			<key>bool</key>
-			<opt>get:getbool</opt>
+			<opt>get:getboolean</opt>
 		</option>
 		<option>
 			<name>String</name>
