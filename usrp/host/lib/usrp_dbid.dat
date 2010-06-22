@@ -61,6 +61,9 @@
 "Flex 1200 Tx MIMO B"	0x002a
 "Flex 2400 Tx MIMO B"	0x002b
 
+"Flex 2200 Rx MIMO B"	0x002c
+"Flex 2200 Tx MIMO B"	0x002d
+
 "Flex 1800 Rx"		0x0030
 "Flex 1800 Tx"		0x0031
 "Flex 1800 Rx MIMO A"	0x0032

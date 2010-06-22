@@ -138,6 +138,18 @@ protected:
 
 //----------------------------------------------------------------------
 
+class _2200_common : public _AD4360_common
+{
+ public:
+  _2200_common();
+  ~_2200_common() {}
+ 
+  double freq_min();
+  double freq_max();
+};
+
+//----------------------------------------------------------------------
+
 class _2400_common : public _AD4360_common
 {
  public:
@@ -208,6 +220,34 @@ class _400_rx : public _400_common
 public:
   _400_rx();
   ~_400_rx() {}
+};
+
+//------------------------------------------------------------    
+
+class db_flexrf_2200_tx : public flexrf_base_tx
+{
+ public:
+  db_flexrf_2200_tx(usrp_basic_sptr usrp, int which);
+  ~db_flexrf_2200_tx();
+
+  // Wrapper calls to d_common functions
+  bool _compute_regs(double freq, int &retR, int &retcontrol,
+		     int &retN, double &retfreq);
+};
+
+class db_flexrf_2200_rx : public flexrf_base_rx
+{
+public:
+  db_flexrf_2200_rx(usrp_basic_sptr usrp, int which);
+  ~db_flexrf_2200_rx();
+  
+  float gain_min();
+  float gain_max();
+  float gain_db_per_step();
+  bool i_and_q_swapped();
+
+  bool _compute_regs(double freq, int &retR, int &retcontrol,
+		     int &retN, double &retfreq);
 };
 
 //------------------------------------------------------------    
