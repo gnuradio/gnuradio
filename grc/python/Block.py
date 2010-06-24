@@ -75,42 +75,48 @@ class Block(_Block, _GUIBlock):
 		Add and remove ports to adjust for the nports.
 		"""
 		_Block.rewrite(self)
+
+		def insert_port(get_ports, get_port, key):
+			prev_port = get_port(str(int(key)-1))
+			get_ports().insert(
+				get_ports().index(prev_port)+1,
+				prev_port.copy(new_key=key),
+			)
+			#restore integer contiguity after insertion
+			for i, port in enumerate(get_ports()): port._key = str(i)
+
+		def remove_port(get_ports, get_port, key):
+			port = get_port(key)
+			for connection in port.get_connections():
+				self.get_parent().remove_element(connection)
+			get_ports().remove(port)
+			#restore integer contiguity after insertion
+			for i, port in enumerate(get_ports()): port._key = str(i)
+
 		#adjust nports
 		for get_ports, get_port in (
 			(self.get_sources, self.get_source),
 			(self.get_sinks, self.get_sink),
 		):
-			#how many streaming (non-message) ports?
-			num_ports = len(filter(lambda p: p.get_type() != 'msg', get_ports()))
-			#do nothing for 0 ports
-			if not num_ports: continue
-			#get the nports setting
-			port0 = get_port(str(0))
-			nports = port0.get_nports()
-			#do nothing for no nports
-			if not nports: continue
-			#do nothing if nports is already num ports
-			if nports == num_ports: continue
-			#remove excess ports and connections
-			if nports < num_ports:
-				#remove the connections
-				for key in map(str, range(nports, num_ports)):
-					port = get_port(key)
-					for connection in port.get_connections():
-						self.get_parent().remove_element(connection)
-				#remove the ports
-				for key in map(str, range(nports, num_ports)):
-					get_ports().remove(get_port(key))
-				continue
-			#add more ports
-			if nports > num_ports:
-				for key in map(str, range(num_ports, nports)):
-					prev_port = get_port(str(int(key)-1))
-					get_ports().insert(
-						get_ports().index(prev_port)+1,
-						prev_port.copy(new_key=key),
-					)
-				continue
+			master_ports = filter(lambda p: p.get_nports(), get_ports())
+			for i, master_port in enumerate(master_ports):
+				nports = master_port.get_nports()
+				index_first = get_ports().index(master_port)
+				try: index_last = get_ports().index(master_ports[i+1])
+				except IndexError: index_last = len(get_ports())
+				num_ports = index_last - index_first
+				#do nothing if nports is already num ports
+				if nports == num_ports: continue
+				#remove excess ports and connections
+				if nports < num_ports:
+					for key in map(str, range(index_first+nports, index_first+num_ports)):
+						remove_port(get_ports, get_port, key)
+					continue
+				#add more ports
+				if nports > num_ports:
+					for key in map(str, range(index_first+num_ports, index_first+nports)):
+						insert_port(get_ports, get_port, key)
+					continue
 
 	def port_controller_modify(self, direction):
 		"""
@@ -119,10 +125,8 @@ class Block(_Block, _GUIBlock):
 		@return true for change
 		"""
 		changed = False
-		#concat the nports string from the private nports settings of both port0
-		nports_str = \
-			(self.get_sinks() and self.get_sinks()[0]._nports or '') + \
-			(self.get_sources() and self.get_sources()[0]._nports or '')
+		#concat the nports string from the private nports settings of all ports
+		nports_str = ' '.join([port._nports for port in self.get_ports()])
 		#modify all params whose keys appear in the nports string
 		for param in self.get_params():
 			if param.is_enum() or param.get_key() not in nports_str: continue
