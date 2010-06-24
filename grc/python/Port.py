@@ -167,5 +167,7 @@ class Port(_Port, _GUIPort):
 
 	def copy(self, new_key=None):
 		n = self._n.copy()
+		#remove nports from the key so the copy cannot be a duplicator
+		if n.has_key('nports'): n.pop('nports')
 		if new_key: n['key'] = new_key
 		return self.__class__(self.get_parent(), n, self._dir)
