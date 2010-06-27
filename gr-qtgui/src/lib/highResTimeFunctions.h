@@ -246,6 +246,9 @@ diff_timespec(const struct timespec* t1,
 }
 
 
+#ifdef CLOCK_REALTIME
+// If we can use clock_gettime, use it;
+// otherwise, use gettimeofday
 static inline void
 get_highres_clock(struct timespec* ret)
 {
@@ -258,6 +261,29 @@ get_highres_clock(struct timespec* ret)
     ret->tv_nsec = lowResTime.tv_usec*1000;
   }
 }
+
+#else
+
+// Test to see if timespec is defined; if not, define it here
+#if !defined __timespec_defined
+typedef struct _timespec
+{
+  long int tv_sec;
+  long int tv_nsec;
+} timespec;
+#endif
+
+// Trick the system into thinking it has an nsec timer
+// but only use the low resolution (usec) timer.
+static inline void
+get_highres_clock(struct timespec* ret)
+{
+  timeval lowResTime;
+  gettimeofday(&lowResTime, NULL);
+  ret->tv_sec = lowResTime.tv_sec;
+  ret->tv_nsec = lowResTime.tv_usec*1000;
+}
+#endif
 
 static inline struct timespec
 get_highres_clock()
