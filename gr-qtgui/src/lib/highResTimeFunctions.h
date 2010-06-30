@@ -264,16 +264,7 @@ get_highres_clock(struct timespec* ret)
 
 #else
 
-// Test to see if timespec is defined; if not, define it here
-#if !defined __timespec_defined
-typedef struct _timespec
-{
-  long int tv_sec;
-  long int tv_nsec;
-} timespec;
-#endif
-
-// Trick the system into thinking it has an nsec timer
+// Trick timer functions into thinking it has an nsec timer
 // but only use the low resolution (usec) timer.
 static inline void
 get_highres_clock(struct timespec* ret)
