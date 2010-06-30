@@ -31,6 +31,8 @@
 %include <uhd/types/ranges.hpp>
 %include <uhd/types/tune_result.hpp>
 %include <uhd/types/io_type.hpp>
+%include <uhd/types/time_spec.hpp>
+%include <uhd/types/clock_config.hpp>
 
 GR_SWIG_BLOCK_MAGIC(uhd,simple_source)
 %include <uhd_simple_source.h>

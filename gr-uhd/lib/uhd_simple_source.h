@@ -105,6 +105,24 @@ public:
     virtual std::vector<std::string> get_antennas(void) = 0;
 
     /*!
+     * Set the clock configuration.
+     * \param clock_config the new configuration
+     */
+    virtual void set_clock_config(const uhd::clock_config_t &clock_config) = 0;
+
+    /*!
+     * Set the time registers asap.
+     * \param time_spec the new time
+     */
+    virtual void set_time_now(const uhd::time_spec_t &time_spec) = 0;
+
+    /*!
+     * Set the time registers at the next pps.
+     * \param time_spec the new time
+     */
+    virtual void set_time_next_pps(const uhd::time_spec_t &time_spec) = 0;
+
+    /*!
      * Get access to the underlying uhd device object.
      * \return the simple usrp device object
      */

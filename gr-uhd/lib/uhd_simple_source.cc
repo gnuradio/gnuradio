@@ -92,6 +92,18 @@ public:
         return _dev->get_rx_antennas();
     }
 
+    void set_clock_config(const uhd::clock_config_t &clock_config){
+        return _dev->set_clock_config(clock_config);
+    }
+
+    void set_time_now(const uhd::time_spec_t &time_spec){
+        return _dev->set_time_now(time_spec);
+    }
+
+    void set_time_next_pps(const uhd::time_spec_t &time_spec){
+        return _dev->set_time_next_pps(time_spec);
+    }
+
     uhd::usrp::simple_usrp::sptr get_device(void){
         return _dev;
     }
