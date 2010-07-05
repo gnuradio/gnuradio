@@ -8,7 +8,9 @@
 	<name>File Sink</name>
 	<key>gr_file_sink</key>
 	<import>from gnuradio import gr</import>
-	<make>gr.file_sink($type.size*$vlen, $file)</make>
+	<make>gr.file_sink($type.size*$vlen, $file)
+self.$(id).set_unbuffered($unbuffered)</make>
+	<callback>set_unbuffered($unbuffered)</callback>
 	<param>
 		<name>File</name>
 		<key>file</key>
@@ -51,6 +53,21 @@
 		<value>1</value>
 		<type>int</type>
 	</param>
+	<param>
+		<name>Unbuffered</name>
+		<key>unbuffered</key>
+		<value>False</value>
+		<type>bool</type>
+		<option>
+				<name>Off</name>
+				<key>False</key>
+		</option>
+		<option>
+				<name>On</name>
+				<key>True</key>
+		</option>
+	</param>
+
 	<check>$vlen &gt; 0</check>
 	<sink>
 		<name>in</name>
