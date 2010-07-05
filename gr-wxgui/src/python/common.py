@@ -25,6 +25,8 @@
 import wx
 from gnuradio import gr
 
+RUN_ALWAYS = gr.prefs().get_bool ('wxgui', 'run_always', False)
+
 class wxgui_hb(object):
 	"""
 	The wxgui hier block helper/wrapper class:
@@ -47,7 +49,10 @@ class wxgui_hb(object):
 			assert points[0] == self or points[0][0] == self
 			copy = gr.copy(self._hb.input_signature().sizeof_stream_item(0))
 			handler = self._handler_factory(copy.set_enabled)
-			handler(False) #initially disable the copy block
+			if RUN_ALWAYS == False:
+				handler(False) #initially disable the copy block
+			else:
+				handler(True) #initially enable the copy block
 			self._bind_to_visible_event(win=self.win, handler=handler)
 			points = list(points)
 			points.insert(1, copy) #insert the copy block into the chain
@@ -67,7 +72,10 @@ class wxgui_hb(object):
 			if cache[0] == visible: return
 			cache[0] = visible
 			#print visible, handler
-			handler(visible)
+			if RUN_ALWAYS == False:
+				handler(visible)
+			else:
+				handler(True)
 		return callback
 
 	@staticmethod

@@ -38,6 +38,7 @@ import forms
 DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'scope_rate', 30)
 PERSIST_ALPHA_MIN_EXP, PERSIST_ALPHA_MAX_EXP = -2, 0
 SLIDER_STEPS = 100
+DEFAULT_TRIG_MODE = gr.prefs().get_long('wxgui', 'trig_mode', gr.gr_TRIG_MODE_AUTO)
 DEFAULT_WIN_SIZE = (600, 300)
 COUPLING_MODES = (
 	('DC', False),
@@ -47,6 +48,7 @@ TRIGGER_MODES = (
 	('Freerun', gr.gr_TRIG_MODE_FREE),
 	('Auto', gr.gr_TRIG_MODE_AUTO),
 	('Normal', gr.gr_TRIG_MODE_NORM),
+	('Stripchart', gr.gr_TRIG_MODE_STRIPCHART),
 )
 TRIGGER_SLOPES = (
 	('Pos +', gr.gr_TRIG_SLOPE_POS),
@@ -432,6 +434,7 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		msg_key,
                 use_persistence,
                 persist_alpha,
+		trig_mode,
 	):
 		pubsub.pubsub.__init__(self)
 		#check num inputs
@@ -471,11 +474,16 @@ class scope_window(wx.Panel, pubsub.pubsub):
 		self[FRAME_RATE_KEY] = frame_rate
 		self[TRIGGER_LEVEL_KEY] = 0
 		self[TRIGGER_CHANNEL_KEY] = 0
-		self[TRIGGER_MODE_KEY] = gr.gr_TRIG_MODE_AUTO
+		self[TRIGGER_MODE_KEY] = trig_mode
+		
 		self[TRIGGER_SLOPE_KEY] = gr.gr_TRIG_SLOPE_POS
 		self[T_FRAC_OFF_KEY] = 0.5
 		self[USE_PERSISTENCE_KEY] = use_persistence
 		self[PERSIST_ALPHA_KEY] = persist_alpha
+		
+		if self[TRIGGER_MODE_KEY] == gr.gr_TRIG_MODE_STRIPCHART:
+			self[T_FRAC_OFF_KEY] = 0.0
+
 		for i in range(num_inputs):
 			self.proxy(common.index_key(AC_COUPLE_KEY, i), controller, common.index_key(ac_couple_key, i))
 		#init panel and plot

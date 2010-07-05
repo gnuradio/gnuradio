@@ -104,34 +104,49 @@ gr_oscope_guts::process_sample (const float *channel_data)
 
   d_decimator_count = d_decimator_count_init;
   
-  for (int i = 0; i < d_nchannels; i++)
-    d_buffer[i][d_obi] = channel_data[i];                // copy data into buffer
+  if (d_trigger_mode != gr_TRIG_MODE_STRIPCHART)
+  {
+	  for (int i = 0; i < d_nchannels; i++)
+		d_buffer[i][d_obi] = channel_data[i];                // copy data into buffer
 
-  switch (d_state){
-  case HOLD_OFF:
-    d_hold_off_count--;
-    if (d_hold_off_count <= 0)
-      enter_look_for_trigger ();
-    break;
+	  switch (d_state){
+	  case HOLD_OFF:
+		d_hold_off_count--;
+		if (d_hold_off_count <= 0)
+		  enter_look_for_trigger ();
+		break;
 
-  case LOOK_FOR_TRIGGER:
-    if (found_trigger ())
-      enter_post_trigger ();
-    break;
+	  case LOOK_FOR_TRIGGER:
+		if (found_trigger ())
+		  enter_post_trigger ();
+		break;
 
-  case POST_TRIGGER:
-    d_post_trigger_count--;
-    if (d_post_trigger_count <= 0){
-      write_output_records ();
-      enter_hold_off ();
-    }
-    break;
+	  case POST_TRIGGER:
+		d_post_trigger_count--;
+		if (d_post_trigger_count <= 0){
+		  write_output_records ();
+		  enter_hold_off ();
+		}
+		break;
 
-  default:
-    assert (0);
+	  default:
+		assert (0);
+	  }
+
+	  d_obi = incr_bi (d_obi);
   }
-
-  d_obi = incr_bi (d_obi);
+  else
+  {
+	  for (int i = 0; i < d_nchannels; i++)
+	  {
+	    for (int j = OUTPUT_RECORD_SIZE-1; j >= 0; j--)
+	    {
+			d_buffer[i][j] = d_buffer[i][j-1];
+		}
+		d_buffer[i][0] = channel_data[i];
+	  }
+	  write_output_records();
+  }
 }
 
 /*

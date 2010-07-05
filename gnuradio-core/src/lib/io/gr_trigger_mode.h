@@ -27,6 +27,7 @@ enum gr_trigger_mode {
   gr_TRIG_MODE_FREE,
   gr_TRIG_MODE_AUTO,
   gr_TRIG_MODE_NORM,
+  gr_TRIG_MODE_STRIPCHART,
 };
 
 enum gr_trigger_slope {
