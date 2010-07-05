@@ -217,13 +217,13 @@ class input_watcher (gru.msgq_runner):
                 chan_data = s[start:start+bytes_per_chan]
                 rec = numpy.fromstring (chan_data, numpy.float32)
                 records.append (rec)
-                
-                # print "nrecords = %d, reclen = %d" % (len (records),nsamples)
-                
-                de = DataEvent (records)
-                wx.PostEvent (self.event_receiver, de)
-                records = []
-                del de
+            
+            # print "nrecords = %d, reclen = %d" % (len (records),nsamples)
+            
+            de = DataEvent (records)
+            wx.PostEvent (self.event_receiver, de)
+            records = []
+            del de
 
         self.iscan -= 1
     
