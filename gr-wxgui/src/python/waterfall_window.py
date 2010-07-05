@@ -38,6 +38,7 @@ import forms
 SLIDER_STEPS = 100
 AVG_ALPHA_MIN_EXP, AVG_ALPHA_MAX_EXP = -3, 0
 DEFAULT_FRAME_RATE = gr.prefs().get_long('wxgui', 'waterfall_rate', 30)
+DEFAULT_COLOR_MODE = gr.prefs().get_string('wxgui', 'waterfall_color', 'rgb1')
 DEFAULT_WIN_SIZE = (600, 300)
 DIV_LEVELS = (1, 2, 5, 10, 20)
 MIN_DYNAMIC_RANGE, MAX_DYNAMIC_RANGE = 10, 200
@@ -156,6 +157,9 @@ class control_panel(wx.Panel):
 	def _on_incr_time_scale(self, event):
 		old_rate = self.parent[FRAME_RATE_KEY]
 		self.parent[FRAME_RATE_KEY] *= 0.75
+		if self.parent[FRAME_RATE_KEY] < 1.0:
+			self.parent[FRAME_RATE_KEY] = 1.0
+		
 		if self.parent[FRAME_RATE_KEY] == old_rate:
 			self.parent[DECIMATION_KEY] += 1
 	def _on_decr_time_scale(self, event):
@@ -217,6 +221,7 @@ class waterfall_window(wx.Panel, pubsub.pubsub):
 		self[REF_LEVEL_KEY] = ref_level
 		self[BASEBAND_FREQ_KEY] = baseband_freq
 		self[COLOR_MODE_KEY] = COLOR_MODES[0][1]
+		self[COLOR_MODE_KEY] = DEFAULT_COLOR_MODE
 		self[RUNNING_KEY] = True
 		#setup the box with plot and controls
 		self.control_panel = control_panel(self)
@@ -280,6 +285,8 @@ class waterfall_window(wx.Panel, pubsub.pubsub):
 		#grid parameters
 		sample_rate = self[SAMPLE_RATE_KEY]
 		frame_rate = self[FRAME_RATE_KEY]
+		if frame_rate < 1.0 :
+			frame_rate = 1.0
 		baseband_freq = self[BASEBAND_FREQ_KEY]
 		num_lines = self[NUM_LINES_KEY]
 		y_divs = self[Y_DIVS_KEY]

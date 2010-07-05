@@ -37,6 +37,7 @@ class gr_file_sink_base
   bool		d_updated;	// is there a new FILE pointer?
   bool		d_is_binary;
   boost::mutex	d_mutex;
+  bool		d_unbuffered;
 
  protected:
   gr_file_sink_base(const char *filename, bool is_binary);
@@ -61,6 +62,12 @@ class gr_file_sink_base
    * \brief if we've had an update, do it now.
    */
   void do_update();
+  
+  
+  /*!
+   * \brief turn on unbuffered writes for slower outputs
+   */
+  void set_unbuffered(bool unbuffered);
 };
 
 

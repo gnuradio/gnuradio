@@ -20,6 +20,7 @@ scopesink2.$(type.fcn)(
 	ac_couple=$ac_couple,
 	xy_mode=$xy_mode,
 	num_inputs=$num_inputs,
+	trig_mode=$trig_mode,
 #if $win_size()
 	size=$win_size,
 #end if
@@ -133,6 +134,27 @@ $(parent).GridAdd(self.$(id).win, $(', '.join(map(str, $grid_pos()))))
 		<key>notebook</key>
 		<value></value>
 		<type>notebook</type>
+	</param>
+	<param>
+		<name>Trigger Mode</name>
+		<key>trig_mode</key>
+		<type>enum</type>
+		<option>
+			<name>Auto</name>
+			<key>gr.gr_TRIG_MODE_AUTO</key>
+		</option>
+		<option>
+			<name>Normal</name>
+			<key>gr.gr_TRIG_MODE_NORM</key>
+		</option>
+		<option>
+			<name>Freerun</name>
+			<key>gr.gr_TRIG_MODE_FREE</key>
+		</option>
+		<option>
+			<name>Stripchart</name>
+			<key>gr.gr_TRIG_MODE_STRIPCHART</key>
+		</option>
 	</param>
 	<check>not $win_size or len($win_size) == 2</check>
 	<check>not $xy_mode or '$type' == 'complex' or $num_inputs != 1</check>

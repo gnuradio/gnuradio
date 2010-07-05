@@ -52,8 +52,8 @@ def main():
 
     # rename file contents
     upper_module_name = module_name.upper()
-    sed_cmd = 'sed -i -e "s/howto/%s/g" -e "s/HOWTO/%s/g"' % (module_name,
-                                                                 upper_module_name)
+    sed_cmd = 'sed -i -e "s/howto-write-a-block/%s/g" -e "s/howto/%s/g" -e "s/HOWTO/%s/g"' % (module_name, module_name, \
+												upper_module_name)
     os.system('find . -type f -print0 | xargs -0 ' + sed_cmd)
 
     sys.stdout.write("""

@@ -43,4 +43,9 @@ class gr_file_sink_base
    * \brief if we've had an update, do it now.
    */
   void do_update();
+
+  /*!
+   *\brief turn on unbuffered mode for slow outputs
+   */
+  void set_unbuffered(bool unbuffered);
 };
