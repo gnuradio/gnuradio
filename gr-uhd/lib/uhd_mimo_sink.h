@@ -114,6 +114,12 @@ public:
     virtual std::vector<std::string> get_antennas(size_t chan) = 0;
 
     /*!
+     * Get the current time registers.
+     * \return the current usrp time
+     */
+    virtual uhd::time_spec_t get_time_now(void) = 0;
+
+    /*!
      * Set the time registers at the next pps (across all mboards).
      * \param time_spec the new time
      */

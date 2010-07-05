@@ -92,6 +92,10 @@ public:
         return _dev->get_tx_antennas(chan);
     }
 
+    uhd::time_spec_t get_time_now(void){
+        return _dev->get_time_now();
+    }
+
     void set_time_next_pps(const uhd::time_spec_t &time_spec){
         return _dev->set_time_next_pps(time_spec);
     }

@@ -96,6 +96,10 @@ public:
         return _dev->set_clock_config(clock_config);
     }
 
+    uhd::time_spec_t get_time_now(void){
+        return _dev->get_time_now();
+    }
+
     void set_time_now(const uhd::time_spec_t &time_spec){
         return _dev->set_time_now(time_spec);
     }
