@@ -46,7 +46,7 @@ public:
     {
         _dev = uhd::usrp::mimo_usrp::make(args);
         set_streaming(false);
-        sync_times(); //TODO may want option to disable this
+        _dev->set_time_unknown_pps(uhd::time_spec_t()); //TODO may want option to disable this
     }
 
     ~uhd_mimo_source_impl(void){
@@ -131,32 +131,12 @@ protected:
     const uhd::io_type_t _type;
     bool _is_streaming;
 
-    void sync_times(void){
-        //set the times to zero at the next pps and sleep (race condition)
-        set_time_next_pps(uhd::time_spec_t(0, 0)); sleep(1);
-
-        //catch the seconds rollover at the next pps
-        double last_frac_secs = 0.0, curr_frac_secs = 0.0;
-        while(curr_frac_secs > last_frac_secs){
-            last_frac_secs = curr_frac_secs;
-            curr_frac_secs = get_time_now().get_frac_secs();
-        }
-
-        //set the times to zero at the next pps and sleep (all boards synced)
-        set_time_next_pps(uhd::time_spec_t(0, 0)); sleep(1);
-    }
-
     void set_streaming(bool enb){
         if (enb){
-            //make an estimate of the trip time
-            uhd::time_spec_t time1 = get_time_now();
-            uhd::time_spec_t time2 = get_time_now();
-            double rtt = 2*(time2 - time1).get_real_secs();
-
             //setup a stream command that starts streaming slightly in the future
             uhd::stream_cmd_t stream_cmd(uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
             stream_cmd.stream_now = false;
-            stream_cmd.time_spec = time2 + uhd::time_spec_t(0, (_dev->get_num_channels()+1)*rtt);
+            stream_cmd.time_spec = get_time_now() + uhd::time_spec_t(0, 0.01); //10ms offset in future
             _dev->issue_stream_cmd(stream_cmd);
         }
         else

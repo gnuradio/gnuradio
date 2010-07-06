@@ -44,7 +44,9 @@ public:
         const uhd::io_type_t &type
     ) : uhd_mimo_sink(gr_make_io_signature(num_channels, num_channels, type.size)), _type(type)
     {
+        _first_run = false;
         _dev = uhd::usrp::mimo_usrp::make(args);
+        _dev->set_time_unknown_pps(uhd::time_spec_t()); //TODO may want option to disable this
     }
 
     ~uhd_mimo_sink_impl(void){
@@ -112,18 +114,31 @@ public:
         gr_vector_const_void_star &input_items,
         gr_vector_void_star &output_items
     ){
-        uhd::tx_metadata_t metadata;
-        metadata.start_of_burst = true;
+        //init the metadata on the first call to work
+        //and set the timespec with the current time + some offset
+        if (not _first_run){
+            _first_run = true;
+            _metadata.start_of_burst = true;
+            _metadata.has_time_spec = true;
+            _metadata.time_spec = get_time_now() + uhd::time_spec_t(0, 0.01); //10ms offset in future
+        }
 
-        return _dev->get_device()->send(
-            input_items, noutput_items, metadata,
+        //call to send with metadata slightly in the future (send-at)
+        size_t num_sent = _dev->get_device()->send(
+            input_items, noutput_items, _metadata,
             _type, uhd::device::SEND_MODE_FULL_BUFF
         );
+
+        //increment the send-at time by the number of samples sent
+        _metadata.time_spec += uhd::time_spec_t(0, num_sent, get_samp_rate_all());
+        return num_sent;
     }
 
 protected:
     uhd::usrp::mimo_usrp::sptr _dev;
     const uhd::io_type_t _type;
+    uhd::tx_metadata_t _metadata;
+    bool _first_run;
 };
 
 /***********************************************************************
