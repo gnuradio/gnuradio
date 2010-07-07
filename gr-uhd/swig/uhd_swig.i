@@ -23,6 +23,8 @@
 %include "gnuradio.i"
 
 %{
+#include <uhd_mimo_source.h>
+#include <uhd_mimo_sink.h>
 #include <uhd_simple_source.h>
 #include <uhd_simple_sink.h>
 %}
@@ -33,6 +35,12 @@
 %include <uhd/types/io_type.hpp>
 %include <uhd/types/time_spec.hpp>
 %include <uhd/types/clock_config.hpp>
+
+GR_SWIG_BLOCK_MAGIC(uhd,mimo_source)
+%include <uhd_mimo_source.h>
+
+GR_SWIG_BLOCK_MAGIC(uhd,mimo_sink)
+%include <uhd_mimo_sink.h>
 
 GR_SWIG_BLOCK_MAGIC(uhd,simple_source)
 %include <uhd_simple_source.h>

@@ -20,95 +20,98 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_UHD_SIMPLE_SINK_H
-#define INCLUDED_UHD_SIMPLE_SINK_H
+#ifndef INCLUDED_UHD_MIMO_SINK_H
+#define INCLUDED_UHD_MIMO_SINK_H
 
 #include <gr_sync_block.h>
-#include <uhd/usrp/simple_usrp.hpp>
+#include <uhd/usrp/mimo_usrp.hpp>
 
-class uhd_simple_sink;
+class uhd_mimo_sink;
 
-boost::shared_ptr<uhd_simple_sink> uhd_make_simple_sink(
+boost::shared_ptr<uhd_mimo_sink> uhd_make_mimo_sink(
+    size_t num_channels,
     const std::string &args,
     const uhd::io_type_t::tid_t &type
 );
 
-class uhd_simple_sink : public gr_sync_block{
+class uhd_mimo_sink : public gr_sync_block{
 public:
 
     /*!
      * Set the IO signature for this block.
      * \param sig the input signature
      */
-    uhd_simple_sink(gr_io_signature_sptr sig);
+    uhd_mimo_sink(gr_io_signature_sptr sig);
 
     /*!
-     * Set the sample rate for the usrp device.
+     * Set the sample rate for the usrp device (across all mboards).
      * \param rate a new rate in Sps
      */
-    virtual void set_samp_rate(double rate) = 0;
+    virtual void set_samp_rate_all(double rate) = 0;
 
     /*!
-     * Get the sample rate for the usrp device.
+     * Get the sample rate for the usrp device (across all mboards).
      * This is the actual sample rate and may differ from the rate set.
      * \return the actual rate in Sps
      */
-    virtual double get_samp_rate(void) = 0;
+    virtual double get_samp_rate_all(void) = 0;
 
     /*!
      * Tune the usrp device to the desired center frequency.
+     * \param chan the channel number from 0 to N-1
      * \param freq the desired frequency in Hz
      * \return a tune result with the actual frequencies
      */
-    virtual uhd::tune_result_t set_center_freq(double freq) = 0;
+    virtual uhd::tune_result_t set_center_freq(size_t chan, double freq) = 0;
 
     /*!
      * Get the tunable frequency range.
+     * \param chan the channel number from 0 to N-1
      * \return the frequency range in Hz
      */
-    virtual uhd::freq_range_t get_freq_range(void) = 0;
+    virtual uhd::freq_range_t get_freq_range(size_t chan) = 0;
 
     /*!
      * Set the gain for the dboard.
+     * \param chan the channel number from 0 to N-1
      * \param gain the gain in dB
      */
-    virtual void set_gain(float gain) = 0;
+    virtual void set_gain(size_t chan, float gain) = 0;
 
     /*!
      * Get the actual dboard gain setting.
+     * \param chan the channel number from 0 to N-1
      * \return the actual gain in dB
      */
-    virtual float get_gain(void) = 0;
+    virtual float get_gain(size_t chan) = 0;
 
     /*!
      * Get the settable gain range.
+     * \param chan the channel number from 0 to N-1
      * \return the gain range in dB
      */
-    virtual uhd::gain_range_t get_gain_range(void) = 0;
+    virtual uhd::gain_range_t get_gain_range(size_t chan) = 0;
 
     /*!
      * Set the antenna to use.
+     * \param chan the channel number from 0 to N-1
      * \param ant the antenna string
      */
-    virtual void set_antenna(const std::string &ant) = 0;
+    virtual void set_antenna(size_t chan, const std::string &ant) = 0;
 
     /*!
      * Get the antenna in use.
+     * \param chan the channel number from 0 to N-1
      * \return the antenna string
      */
-    virtual std::string get_antenna(void) = 0;
+    virtual std::string get_antenna(size_t chan) = 0;
 
     /*!
      * Get a list of possible antennas.
+     * \param chan the channel number from 0 to N-1
      * \return a vector of antenna strings
      */
-    virtual std::vector<std::string> get_antennas(void) = 0;
-
-    /*!
-     * Set the clock configuration.
-     * \param clock_config the new configuration
-     */
-    virtual void set_clock_config(const uhd::clock_config_t &clock_config) = 0;
+    virtual std::vector<std::string> get_antennas(size_t chan) = 0;
 
     /*!
      * Get the current time registers.
@@ -117,22 +120,16 @@ public:
     virtual uhd::time_spec_t get_time_now(void) = 0;
 
     /*!
-     * Set the time registers asap.
-     * \param time_spec the new time
-     */
-    virtual void set_time_now(const uhd::time_spec_t &time_spec) = 0;
-
-    /*!
-     * Set the time registers at the next pps.
+     * Set the time registers at the next pps (across all mboards).
      * \param time_spec the new time
      */
     virtual void set_time_next_pps(const uhd::time_spec_t &time_spec) = 0;
 
     /*!
      * Get access to the underlying uhd device object.
-     * \return the simple usrp device object
+     * \return the mimo usrp device object
      */
-    virtual uhd::usrp::simple_usrp::sptr get_device(void) = 0;
+    virtual uhd::usrp::mimo_usrp::sptr get_device(void) = 0;
 };
 
-#endif /* INCLUDED_UHD_SIMPLE_SINK_H */
+#endif /* INCLUDED_UHD_MIMO_SINK_H */

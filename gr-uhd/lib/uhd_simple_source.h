@@ -111,6 +111,12 @@ public:
     virtual void set_clock_config(const uhd::clock_config_t &clock_config) = 0;
 
     /*!
+     * Get the current time registers.
+     * \return the current usrp time
+     */
+    virtual uhd::time_spec_t get_time_now(void) = 0;
+
+    /*!
      * Set the time registers asap.
      * \param time_spec the new time
      */

@@ -29,7 +29,7 @@
  * UHD Sink
  **********************************************************************/
 uhd_simple_sink::uhd_simple_sink(gr_io_signature_sptr sig)
-:gr_sync_block("uhd sink", sig, gr_make_io_signature(0, 0, 0)){
+:gr_sync_block("uhd simple sink", sig, gr_make_io_signature(0, 0, 0)){
     /* NOP */
 }
 
@@ -95,6 +95,10 @@ public:
         return _dev->set_clock_config(clock_config);
     }
 
+    uhd::time_spec_t get_time_now(void){
+        return _dev->get_time_now();
+    }
+
     void set_time_now(const uhd::time_spec_t &time_spec){
         return _dev->set_time_now(time_spec);
     }
@@ -119,8 +123,8 @@ public:
         metadata.start_of_burst = true;
 
         return _dev->get_device()->send(
-            boost::asio::buffer(input_items[0], noutput_items*_type.size),
-            metadata, _type, uhd::device::SEND_MODE_FULL_BUFF
+            input_items, noutput_items, metadata,
+            _type, uhd::device::SEND_MODE_FULL_BUFF
         );
     }
 
