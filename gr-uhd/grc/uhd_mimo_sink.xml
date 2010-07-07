@@ -17,6 +17,9 @@ map(lambda x: self.$(id).set_gain(*x), enumerate($gains))
 map(lambda x: self.$(id).set_antenna(*x), enumerate($ants))
 #end if</make>
 	<callback>set_samp_rate($samp_rate)</callback>
+	<callback>map(lambda x: self.$(id).set_center_freq(*x), enumerate($center_freqs))</callback>
+	<callback>map(lambda x: self.$(id).set_gain(*x), enumerate($gains))</callback>
+	<callback>map(lambda x: self.$(id).set_antenna(*x), enumerate($ants))</callback>
 	<param>
 		<name>Input Type</name>
 		<key>type</key>
