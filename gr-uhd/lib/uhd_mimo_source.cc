@@ -55,7 +55,7 @@ public:
 
     void set_samp_rate_all(double rate){
         _dev->set_rx_rate_all(rate);
-        do_samp_rate_error_message(rate, get_samp_rate_all());
+        do_samp_rate_error_message(rate, get_samp_rate_all(), "RX");
     }
 
     double get_samp_rate_all(void){
@@ -63,7 +63,9 @@ public:
     }
 
     uhd::tune_result_t set_center_freq(size_t chan, double freq){
-        return _dev->set_rx_freq(chan, freq);
+        uhd::tune_result_t tr = _dev->set_rx_freq(chan, freq);
+        do_tune_freq_error_message(freq, _dev->get_rx_freq(chan), "RX");
+        return tr;
     }
 
     uhd::freq_range_t get_freq_range(size_t chan){
