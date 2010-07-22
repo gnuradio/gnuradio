@@ -193,7 +193,7 @@ class TextElement(object):
         img   = wx.ImageFromBitmap(bmp)
         alpha = img.GetData()
         
-        if isinstance(self._foreground, wx.Color):  
+        if isinstance(self._foreground, wx.Colour):
             """
             If we have a static color...  
             """    

@@ -34,4 +34,14 @@ class gri_agc2_ff {
  public:
   gri_agc2_ff (float attack_rate = 1e-1, float decay_rate = 1e-2,
 	       float reference = 1.0, float gain = 1.0, float max_gain = 0.0);
+  float attack_rate ();
+  float decay_rate ();
+  float reference ();
+  float gain ();
+  float max_gain ();
+  void set_attack_rate (float rate);
+  void set_decay_rate (float rate);
+  void set_reference (float reference);
+  void set_gain (float gain);
+  void set_max_gain (float max_gain);
   };
