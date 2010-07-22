@@ -39,4 +39,9 @@ class gri_agc2_cc {
   float reference ();
   float gain ();
   float max_gain ();
+  void set_decay_rate (float rate);
+  void set_attack_rate (float rate);
+  void set_reference (float reference);
+  void set_gain (float gain);
+  void set_max_gain(float max_gain);
   };

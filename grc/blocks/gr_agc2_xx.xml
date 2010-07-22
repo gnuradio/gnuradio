@@ -9,6 +9,11 @@
 	<key>gr_agc2_xx</key>
 	<import>from gnuradio import gr</import>
 	<make>gr.agc2_$(type.fcn)($attack_rate, $decay_rate, $reference, $gain, $max_gain)</make>
+    <callback>set_attack_rate($attack_rate)</callback>
+    <callback>set_decay_rate($decay_rate)</callback>
+    <callback>set_reference($reference)</callback>
+    <callback>set_gain($gain)</callback>
+    <callback>set_max_gain($max_gain)</callback>
 	<param>
 		<name>Type</name>
 		<key>type</key>
