@@ -23,6 +23,18 @@
 #ifndef INCLUDED_NOINST_UTILS_H
 #define INCLUDED_NOINST_UTILS_H
 
-void do_samp_rate_error_message(double target_rate, double actual_rate);
+#include <string>
+
+void do_samp_rate_error_message(
+    double target_rate,
+    double actual_rate,
+    const std::string &xx
+);
+
+void do_tune_freq_error_message(
+    double target_freq,
+    double actual_freq,
+    const std::string &xx
+);
 
 #endif /* INCLUDED_NOINST_UTILS_H */
