@@ -136,9 +136,10 @@ protected:
     void set_streaming(bool enb){
         if (enb){
             //setup a stream command that starts streaming slightly in the future
+            static const double reasonable_delay = 0.01; //10 ms (order of magnitude >> RTT)
             uhd::stream_cmd_t stream_cmd(uhd::stream_cmd_t::STREAM_MODE_START_CONTINUOUS);
             stream_cmd.stream_now = false;
-            stream_cmd.time_spec = get_time_now() + uhd::time_spec_t(0, 0.01); //10ms offset in future
+            stream_cmd.time_spec = get_time_now() + uhd::time_spec_t(_dev->get_num_channels() * reasonable_delay);
             _dev->issue_stream_cmd(stream_cmd);
         }
         else
