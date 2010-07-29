@@ -153,14 +153,16 @@ AC_DEFUN([PYTHON_CHECK_MODULE],[
 try:
     import $1
     assert $5
-except: exit(1)'
+except ImportError, AssertionError: exit(1)
+except: pass'
     dnl ########################################
     dnl # import checking only
     dnl ########################################
     else
         python_cmd='
 try: import $1
-except: exit(1)'
+except ImportError: exit(1)
+except: pass'
     fi
     if ! $PYTHON -c "$python_cmd" 2> /dev/null; then
         AC_MSG_RESULT([no])
